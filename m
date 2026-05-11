@@ -1,668 +1,414 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7B647D95B;
-	Mon, 11 May 2026 18:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778525868; cv=none; b=V1KYmEW1uw7eh+cle8jKt/FiCFbyokNOb2g+mY+SqN41x6yNGnR3qrITO3l5R7vPnZQxN6AxF0FtOypGPIb3/O6lD1dJNvuFflwf5mm6qiAd3faE7uRRsxh4s0B5VndNvZuovPJHiGlMFwCKbDBSRyvcBcTrz7yYG8q02lysxcs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778525868; c=relaxed/simple;
-	bh=n/Mf9gaae93WowS1BNNLfQeWI+glMXhHXEISWrOwmk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JAsJfH01IkHPAYw7MrKGHIL6UwdhDKb01Y1Lndju9xS/Qc0TJbfw1Gf/1r1pZ8JXR6hmcc5PNrgjxiVWPqKCXNeARMYD4F/RhaSDb3qQ/wjLfD+TG1z1JFC42BMrhROxMjoFn4JdAMo04A3ljbfz3QZZEmgQc4VCpgeMTDgg/8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF7Wtajt; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CBD4D2ECF;
+	Mon, 11 May 2026 19:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778527083; cv=pass; b=BI5NAe0ZJWY73PEe7p9HFPmAzkpKwdvl1+sUM8xvslttq25xn/FF/KYZBSciZ93GZ5P7291xmC22/72OAOkAvTocZx2A18Sdtd7uu/blceNGuTKCOycpb480s/jbYOcot8IlV8AKg5m/YOEZBVAl3zk4R/ROxxfuHSBWbYASqYU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778527083; c=relaxed/simple;
+	bh=1tHvLyXozR6pXs01H/7Be0MKqzITTj43KyGhkxPUITc=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=S1YOV8SqHAsxI9fJcxFRCAQODO8yig/G4R5pPPhKDlPHI0D+8P/1HsgptuS0u6AcIxNdr7ZDm9h7QKzhsBkCvEPe1eg05VHRNqfYCpRDuvZ0Z4KOVEfES0j4mUqW/GKDgf3p5DcbVKqs4ewAYuEOhRGMYcZho/j/tG+gfNIT6g0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=GeADWzqG; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF7Wtajt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F787C2BCB0;
-	Mon, 11 May 2026 18:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778525868;
-	bh=n/Mf9gaae93WowS1BNNLfQeWI+glMXhHXEISWrOwmk4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QF7Wtajt5ojtdQL5h0H9Dg14avthYvYKU5tu4NePAFGjHxmmLiwhe0TQZCjtMq1GE
-	 zyIrhCm2RcbSLwGPEsfmg1QVY+OgB7pJDKDPVrp+ct6CL/Of2mK88zO0ifdKDLYLy2
-	 u91c4IYGJjBGTY29vVKQ13k+uSMisKcIzMo+ueDb0e9jGu5MOG9O57RXdm76Iew2EO
-	 Rxout/vTe5csIoFgnwV/uDMo0wzMhyaJgj8KWMEhEAaHUOsZ64RFymA7xYGUKZzh70
-	 ZWwnFKHSePstXGWRR6h2rmv4gqJH18C3KOW+aUDjx8HEVqjkeYrMbN8QPIZ2kxwm1q
-	 L4TTlZUBXKiFQ==
-Message-ID: <88679560-d6cc-4eed-b539-5af2d98ed123@kernel.org>
-Date: Mon, 11 May 2026 20:57:44 +0200
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="GeADWzqG"
+ARC-Seal: i=1; a=rsa-sha256; t=1778527072; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=fVT7fhl/vylfDutE49NFrKdtKY6RmkWUskpia+n5dPA/rvrLBQ7yhmpfs1Ku0lH+Na1TXUL06Tnh3rYYqOcpfkKUVuoO5Np7HoSW0xVmgz4NtucQ93YC+bkrTn/jLEGF9+qau7h7qYdq7LJ2dW1xm7lNxYJsjuou4N7tD34WCWc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1778527072; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=UMzPmVCU3PePyPf4P8Qsb8SFyFcSl/yBmK6YyvaUr9Q=; 
+	b=exAG6QuqbR0CJBHma2Vnln2KDKlRvJugd0Ysm1wQpPX6OQJbD1+J/MrGlbxymu0y7hhvqfHXtCrsJilyBmKZ23DiPZGG00d54w/nu0HlHGhBMfmLm1HO5jFOFbGbs1Zt77c1bq8+3HKje7kQ4Z/BlL5wC4Qgj+dPvxQPZ36K+TY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1778527071;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=UMzPmVCU3PePyPf4P8Qsb8SFyFcSl/yBmK6YyvaUr9Q=;
+	b=GeADWzqGCSm+gwqPYjuSCdUGP8esxjF8y4pwOJkvCpOO0yK1RxI00Adn9Uj0hveU
+	C1wU6GW86meEOS0gDTf1fhAfqeIxxVEaRU5P/BtoqkXYqptrjAXCNd7CWXaMCy/EkSa
+	nesXaxmKiVZyQFKRGKBqZs6tPRfnNzQem23kfcuiBBEKrHE9kPuTg0ttCYMEzyUBHSc
+	cntIzUcaHGEhYzDKndYKs/3eFvZqJYzqmSfgFsMpXCrUyBYWUCn+OFk1my6krVT2zCc
+	cjwmV6i0m3S4XSm0KSmFWH7gu4eRUEVDhgWxEdylmCDBNlRh1uTFK5wyyGe6GDHVRer
+	F66EJLycLw==
+Received: by mx.zohomail.com with SMTPS id 1778527069435967.9514096803472;
+	Mon, 11 May 2026 12:17:49 -0700 (PDT)
+Message-ID: <c1df76ba422eebfc733f1c73655582804d0e2921.camel@rong.moe>
+Subject: Re: [PATCH] usb: typec: ucsi: acpi: Disable on devices with broken
+ firmware
+From: Rong Zhang <i@rong.moe>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Heikki Krogerus
+	 <heikki.krogerus@linux.intel.com>, Hans de Goede <hansg@kernel.org>, 
+	linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+In-Reply-To: <2026051146-husked-ladybug-0c9f@gregkh>
+References: <20260512-ucsi-acpi-broken-devices-v1-1-0f8cd90c35b5@rong.moe>
+	 <2026051146-husked-ladybug-0c9f@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 12 May 2026 03:12:43 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 13/16] platform/x86: lenovo-wmi-other: Add WMI battery
- charge limiting
-To: Rong Zhang <i@rong.moe>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, Armin Wolf <W_Armin@gmx.de>,
- Jonathan Corbet <corbet@lwn.net>, Kurt Borja <kuurtb@gmail.com>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- marshall@shzj.cc, hyacinth@shzj.cc, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260510042546.436874-1-derekjohn.clark@gmail.com>
- <20260510042546.436874-14-derekjohn.clark@gmail.com>
- <a0c4f6d3f52efb9837f35af82b1a16021221bf84.camel@rong.moe>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <a0c4f6d3f52efb9837f35af82b1a16021221bf84.camel@rong.moe>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Evolution 3.56.2-9 
+X-ZohoMailClient: External
 
-Hi,
+(+CC Mark Pearson from Lenovo)
 
-On 11-May-26 17:37, Rong Zhang wrote:
-> Hi Derek,
-> 
-> I am a little busy these days, sorry for not reviewing your series in
-> time.
-> 
-> On Sun, 2026-05-10 at 04:25 +0000, Derek J. Clark wrote:
->> Add charge_behaviour and charge_control_end_threshold attributes through
->> a power supply extension for devices that support WMI based charge enable
->> & disable.
->>
->> Lenovo Legion devices that implement WMI function and capdata ID
->> 0x03010001 in their BIOS are able to enable or disable charging at 80%
->> through the lenovo-wmi-other interface. Add a charge_control_end_threshold
->> attribute for BATX devices to expose this capability. The GET method for
->> this attribute is bugged. After analyzing the DSDT and some testing it
->> appears the method grabs bit(3) instead of bit(4) from the EC register
->> that stores the current status, and will only report if charging has
->> been inhibited or not. To work around this, store and report the last
->> setting written to the attribute.
-> 
-> You said "the GET method for charge_control_end_threshold is bugged"
-> here, but your code applied the workaround to charge_behaviour. Which is
-> the bugged one?
-> 
->>
->> Additionally, devices that support WMI function and capdata ID 0x03020000
->> are able to force discharge of the battery. Expose this capability with
->> a charge_behaviour attribute in the power supply extension, with the
->> AUTO and FORCE_DISCHARGE behaviors enabled.
->>
->> As some devices only expose one attribute or the other, a bitmask is
->> added with a lookup table and some helper macros to select the correct
->> configuration for the hardware at runtime.
->>
->> The ideapad_laptop driver provides the charge_type attribute to provide
->> similar functionality. When the WMI method is set this can corrupt the
->> ACPI method return and cause hardware and driver errors. To avoid
->> conflicts between the drivers, we get the acpi_handle and do the same
->> check that ideapad_laptop does when it enables the feature. If the
->> feature is supported in ideapad_laptop, abort adding the extension from
->> lenovo-wmi-other. The ACPI method is more reliable when both are
->> present, from my testing, so we can prefer that implementation and do
->> not need to worry about de-conflicting from inside that driver. A new
->> module parameter, force_load_psy_ext, is provided to bypass this ACPI
->> check, as well as feature supported checks, if desired.
->>
->> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
->> ---
->> v12:
->>   - Move force_load_psy_ext into its own patch after this.
->>   - Use correct type casting for args in new funtions.
->>   - Remove extra parenthesis.
->> v11:
->>   - Refactor to use charge_behaviour and charge_control_end_threshold,
->>     per the class documentation. The ideapad_laptop driver will be fixed
->>     in a separate patch series.
->>   - Due to the extensive refactoring, I have removed the reviewed-by
->>     tags from Rong and Mark to allow them to recertify the code in its
->>     current state.
+Hi Greg,
 
-I'm only seeing this now, but if there only is a "long life"
-(aka limit charging to a fixed max percentage e.g . 80%) then
-the correct userspace API to use is charge_types, sorry for
-the confusion about this.
+On Mon, 2026-05-11 at 20:25 +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 12, 2026 at 01:59:34AM +0800, Rong Zhang wrote:
+> > Some Lenovo devices have broken firmware, which reads/writes half-valid=
+-
+> > half-garbage values.
+>=20
+> How does this work with this firmware on other operating systems? =C2=A0
+>=20
 
-charge_control_end_threshold is only for devices on which the
-threshold is actually configurable.
+The timeout=C2=A0can hardly reached unless a bunch of events cause multiple
+drivers to compete for the same mutex simultaneously.
 
-Fixed threshold devices should use charge_types, see:
+If other operating systems' UCSI drivers don't send any command during
+power events, they won't suffer from the mutex acquisition timeout.
+Also, if other drivers on these operating systems don't touch the mutex
+on power events at all, their UCSI drivers should work well too.
 
-https://lore.kernel.org/linux-pm/49993a42-aa91-46bf-acef-4a089db4c2db@redhat.com/
-https://lore.kernel.org/platform-driver-x86/20241209204051.8786-1-hdegoede@redhat.com/
+These operating systems' UCSI drivers are powered by undefined behavior
+(TM) in both cases.
 
-and also here:
+> What
+> is the odds of fixing the firmware?
 
-https://vdwaa.nl/charge-types-api-upower.html
+They are not Linux-certified devices, so Lenovo is very unlikely to fix
+the firmware unless it breaks Windows :(
 
-Regards,
+Quoting Mark Pearson's reply to the bugzilla thread:
 
-Hans
+   I can't promise anything - I don't have any official levers to pull for
+   this platform I'm afraid (it is better to buy Linux supported/certified
+   systems ;) )
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c38
 
+>=20
+> > Given that everything is broken, disable ucsi_acpi on these devices. Th=
+e
+> > impact of disabling it is minimal, as Lenovo laptops usually have most
+> > USCI commands more or less stubbed, and the EC can always handles USB-C
+> > events on its own.
+> >=20
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D221065#c33
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> >  drivers/usb/typec/ucsi/ucsi_acpi.c | 91 ++++++++++++++++++++++++++++++=
+++++++++
+> >  1 file changed, 91 insertions(+)
+> >=20
+> > diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucs=
+i/ucsi_acpi.c
+> > index 6b92f296e985..7632b441d401 100644
+> > --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
+> > +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+> > @@ -155,6 +155,91 @@ static const struct dmi_system_id ucsi_acpi_quirks=
+[] =3D {
+> >  	{ }
+> >  };
+> > =20
+> > +static const struct dmi_system_id ucsi_acpi_broken_devices[] =3D {
+> > +	/* Firmware reads/writes half-valid-half-garbage values. */
+> > +
+> > +	/* BIOS: P1CN??WW */
+> > +	{
+> > +		.ident =3D "Lenovo IdeaPad 5 2-in-1 14AHP9",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83DR"),
+> > +		},
+> > +	},
+> > +	{
+> > +		.ident =3D "Lenovo IdeaPad 5 2-in-1 16AHP9",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83DS"),
+> > +		},
+> > +	},
+> > +
+> > +	/* BIOS: R0CN??WW */
+> > +	{
+> > +		.ident =3D "Lenovo IdeaPad Slim 5 14AKP10",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83NJ"),
+> > +		},
+> > +	},
+> > +	{
+> > +		.ident =3D "Lenovo IdeaPad Slim 5 14AKP10",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83HX"),
+> > +		},
+> > +	},
+> > +	{
+> > +		.ident =3D "Lenovo IdeaPad Slim 5 16AKP10",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83HY"),
+> > +		},
+> > +	},
+> > +
+> > +	/* BIOS: QXCN??WW */
+> > +	{
+> > +		.ident =3D "Lenovo Yoga 7 2-in-1 14AKP10",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83JR"),
+> > +		},
+> > +	},
+> > +	{
+> > +		.ident =3D "Lenovo Yoga 7 2-in-1 16AKP10",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83JU"),
+> > +		},
+> > +	},
+> > +
+> > +	/* BIOS: LNCN??WW */
+> > +	{
+> > +		.ident =3D "Lenovo Yoga Pro 7 14ARP8",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83AU"),
+> > +		},
+> > +	},
+> > +	{
+> > +		.ident =3D "Lenovo Slim Pro 7 14ARP8",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83AX"),
+> > +		},
+> > +	},
+> > +
+> > +	/* BIOS: PSCN??WW */
+> > +	{
+> > +		.ident =3D "Lenovo Yoga Pro 7 14ASP9",
+> > +		.matches =3D {
+> > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+> > +			DMI_MATCH(DMI_PRODUCT_NAME, "83HN"),
+> > +		},
+> > +	},
+> > +	{ }
+> > +};
+>=20
+> That is a lot of devices to exclude, are you sure that none of them will
+> ever work properly?
 
+Yes. I carefully checked all acpidumps for these devices provided by
+device owners who replied to the bugzilla thread, and confirmed that
+they all share the same UCSI-ACPI implementation.
 
->> v7:
->>   - Use devm_battery_hook_register, manually unregister during unbind.
->> v6:
->>   - Check feature flags to determine if the extension should be loaded
->>     and if it is writable.
->>   - Zero initialize wmi_method_args_32.
->>   - Fix formatting.
->> v5:
->>   - Use switch statement instead of if for battery charge state set/get.
->>   - use force_load_psy_ext to skip all ACPI interactions.
->>   - Various formatting fixes.
->> v4:
->>   - Remove unused defines.
->>   - Disambiguate charging defines by renaming them to be more consistent
->>     with the kernel modes they represent.
->>   - Add module parameter to ignore ACPI checks.
->>   - Don't fail if the ACPI handle isn't found, skip the ACPI check
->>     instead.
->> ---
->>  drivers/platform/x86/lenovo/Kconfig       |   1 +
->>  drivers/platform/x86/lenovo/wmi-capdata.h |   1 +
->>  drivers/platform/x86/lenovo/wmi-other.c   | 388 ++++++++++++++++++++++
->>  3 files changed, 390 insertions(+)
->>
->> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
->> index 09b1b055d2e0..b9a5d18caa1e 100644
->> --- a/drivers/platform/x86/lenovo/Kconfig
->> +++ b/drivers/platform/x86/lenovo/Kconfig
->> @@ -262,6 +262,7 @@ config LENOVO_WMI_GAMEZONE
->>  config LENOVO_WMI_TUNING
->>  	tristate "Lenovo Other Mode WMI Driver"
->>  	depends on ACPI_WMI
->> +	depends on ACPI_BATTERY
->>  	select HWMON
->>  	select FW_ATTR_CLASS
->>  	select LENOVO_WMI_CAPDATA
->> diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
->> index a7cfdeaa58f7..a49229cec245 100644
->> --- a/drivers/platform/x86/lenovo/wmi-capdata.h
->> +++ b/drivers/platform/x86/lenovo/wmi-capdata.h
->> @@ -21,6 +21,7 @@
->>  enum lwmi_device_id {
->>  	LWMI_DEVICE_ID_CPU = 0x01,
->>  	LWMI_DEVICE_ID_GPU = 0x02,
->> +	LWMI_DEVICE_ID_PSU = 0x03,
->>  	LWMI_DEVICE_ID_FAN = 0x04,
->>  };
->>  
->> diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
->> index 1cd2bb5244d2..4d95a9109f5e 100644
->> --- a/drivers/platform/x86/lenovo/wmi-other.c
->> +++ b/drivers/platform/x86/lenovo/wmi-other.c
->> @@ -41,9 +41,12 @@
->>  #include <linux/limits.h>
->>  #include <linux/module.h>
->>  #include <linux/platform_profile.h>
->> +#include <linux/power_supply.h>
->>  #include <linux/types.h>
->>  #include <linux/wmi.h>
->>  
->> +#include <acpi/battery.h>
->> +
->>  #include "wmi-capdata.h"
->>  #include "wmi-events.h"
->>  #include "wmi-helpers.h"
->> @@ -75,9 +78,15 @@ enum lwmi_feature_id_gpu {
->>  	LWMI_FEATURE_ID_GPU_NV_CPU_BOOST =	0x0b,
->>  };
->>  
->> +enum lwmi_feature_id_psu {
->> +	LWMI_FEATURE_ID_PSU_CHARGE_END_THRESHOLD =	0x01,
->> +	LWMI_FEATURE_ID_PSU_CHARGE_BEHAVIOR =		0x02,
->> +};
->> +
->>  #define LWMI_FEATURE_ID_FAN_RPM 0x03
->>  
->>  #define LWMI_TYPE_ID_CROSSLOAD	0x01
->> +#define LWMI_TYPE_ID_PSU_AC	0x01
->>  
->>  #define LWMI_FEATURE_VALUE_GET 17
->>  #define LWMI_FEATURE_VALUE_SET 18
->> @@ -88,10 +97,19 @@ enum lwmi_feature_id_gpu {
->>  
->>  #define LWMI_FAN_DIV 100
->>  
->> +#define LWMI_CHARGE_BEHAVIOR_DISCHARGE	0x00
->> +#define LWMI_CHARGE_BEHAVIOR_AUTO	0x01
->> +#define LWMI_CHARGE_END_100		0x00
->> +#define LWMI_CHARGE_END_80		0x01
->> +
->>  #define LWMI_ATTR_ID_FAN_RPM(x)                                   \
->>  	lwmi_attr_id(LWMI_DEVICE_ID_FAN, LWMI_FEATURE_ID_FAN_RPM, \
->>  		     LWMI_GZ_THERMAL_MODE_NONE, LWMI_FAN_ID(x))
->>  
->> +#define LWMI_ATTR_ID_PSU(feat, type)			\
->> +	lwmi_attr_id(LWMI_DEVICE_ID_PSU, feat,		\
->> +		     LWMI_GZ_THERMAL_MODE_NONE, type)
->> +
->>  #define LWMI_OM_SYSFS_NAME "lenovo-wmi-other"
->>  #define LWMI_OM_HWMON_NAME "lenovo_wmi_other"
->>  
->> @@ -131,6 +149,11 @@ struct lwmi_om_priv {
->>  		bool capdata00_collected : 1;
->>  		bool capdata_fan_collected : 1;
->>  	} fan_flags;
->> +
->> +	enum power_supply_charge_behaviour charge_behaviour;
->> +	const struct power_supply_ext *battery_ext;
->> +	struct acpi_battery_hook battery_hook;
->> +	bool bh_registered;
->>  };
->>  
->>  /*
->> @@ -555,6 +578,368 @@ static void lwmi_om_fan_info_collect_cd_fan(struct device *dev, struct cd_list *
->>  	lwmi_om_hwmon_add(priv);
->>  }
->>  
->> +/* ======== Power Supply Extension (component: lenovo-wmi-capdata 00) ======== */
->> +
->> +/**
->> + * lwmi_psy_ext_get_prop() - Get a power_supply_ext property
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer to the lwmi_om_priv drvdata
->> + * @prop: The property to read
->> + * @val: The value to return
->> + *
->> + * Writes the given value to the power_supply_ext property
->> + *
->> + * Return: 0 on success, or an error
->> + */
->> +static int lwmi_psy_ext_get_prop(struct power_supply *ps,
->> +				 const struct power_supply_ext *ext,
->> +				 void *ext_data,
->> +				 enum power_supply_property prop,
->> +				 union power_supply_propval *val)
->> +{
->> +	struct lwmi_om_priv *priv = ext_data;
->> +	struct wmi_method_args_32 args = {};
->> +	u32 retval;
->> +	int ret;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
->> +		/* Reading from BIOS reads the wrong bit. Use cached value */
->> +		val->intval = priv->charge_behaviour;
->> +		return 0;
->> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->> +		args.arg0 = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_END_THRESHOLD,
->> +					     LWMI_TYPE_ID_PSU_AC);
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_GET,
->> +				    (u8 *)&args, sizeof(args),
->> +				    &retval);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_dbg(&priv->wdev->dev, "Got return value %#x for property %#x\n", retval, prop);
->> +
->> +	switch (retval) {
->> +	case LWMI_CHARGE_END_80:
->> +		val->intval = 80;
->> +		break;
->> +	case LWMI_CHARGE_END_100:
->> +		val->intval = 100;
->> +		break;
->> +	default:
->> +		dev_err(&priv->wdev->dev, "Got invalid charge limit value: %#x\n", retval);
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_psy_ext_set_prop() - Set a power_supply_ext property
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer to the lwmi_om_priv drvdata
->> + * @prop: The property to write
->> + * @val: The value to write
->> + *
->> + * Writes the given value to the power_supply_ext property
->> + *
->> + * Return: 0 on success, or an error
->> + */
->> +static int lwmi_psy_ext_set_prop(struct power_supply *ps,
->> +				 const struct power_supply_ext *ext,
->> +				 void *ext_data,
->> +				 enum power_supply_property prop,
->> +				 const union power_supply_propval *val)
->> +{
->> +	struct lwmi_om_priv *priv = ext_data;
->> +	struct wmi_method_args_32 args = {};
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
->> +		args.arg0 = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_BEHAVIOR,
->> +					     LWMI_TYPE_ID_NONE);
->> +		switch (val->intval) {
->> +		case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
->> +			args.arg1 = LWMI_CHARGE_BEHAVIOR_AUTO;
->> +			break;
->> +		case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
->> +			args.arg1 = LWMI_CHARGE_BEHAVIOR_DISCHARGE;
->> +			break;
->> +		default:
->> +			dev_err(&priv->wdev->dev, "Got invalid charge behavior value: %#x\n",
->> +				val->intval);
->> +			return -EINVAL;
->> +		}
->> +		priv->charge_behaviour = val->intval;
-> 
-> The cache shouldn't be updated if lwmi_dev_evaluate_int() returns an
-> error, right?
-> 
->> +		break;
->> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->> +		args.arg0 = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_END_THRESHOLD,
->> +					     LWMI_TYPE_ID_PSU_AC);
->> +		switch (val->intval) {
->> +		case 0 ... 80:
->> +			args.arg1 = LWMI_CHARGE_END_80;
->> +			break;
->> +		case 81 ... 100:
->> +			args.arg1 = LWMI_CHARGE_END_100;
->> +			break;
->> +		default:
->> +			dev_err(&priv->wdev->dev, "Got invalid charge limit value: %#x\n",
->> +				val->intval);
->> +			return -EINVAL;
->> +		}
->> +		break;
->> +	default:
->> +		return false;
->> +	}
->> +
->> +	dev_dbg(&priv->wdev->dev, "Attempting to set %#010x for property %#x to %#x\n",
->> +		args.arg0, prop, args.arg1);
->> +
->> +	return lwmi_dev_evaluate_int(priv->wdev, 0x0, LWMI_FEATURE_VALUE_SET,
->> +				     (u8 *)&args, sizeof(args), NULL);
->> +}
->> +
->> +/**
->> + * lwmi_psy_prop_is_suppported() - Determine if the property is supported
->> + * @priv: Pointer to the lwmi_om_priv drvdata
->> + * @prop: The power supply property to be evaluated
->> + *
->> + * Checks capdata 00 to determine if the property is supported.
->> + *
->> + * Return: true if readable, or false
->> + */
->> +static bool lwmi_psy_prop_is_supported(struct lwmi_om_priv *priv, enum power_supply_property prop)
->> +{
->> +	struct capdata00 capdata;
->> +	u32 attribute_id;
->> +	int ret;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
->> +		attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_BEHAVIOR,
->> +						LWMI_TYPE_ID_NONE);
->> +		break;
->> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->> +		attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_END_THRESHOLD,
->> +						LWMI_TYPE_ID_PSU_AC);
->> +		break;
->> +	default:
->> +		return false;
->> +	}
->> +
->> +	ret = lwmi_cd00_get_data(priv->cd00_list, attribute_id, &capdata);
->> +	if (ret)
->> +		return false;
->> +
->> +	dev_dbg(&priv->wdev->dev, "Battery charge feature (%#010x) support level: %#x\n",
->> +		attribute_id, capdata.supported);
->> +
->> +	return (capdata.supported & LWMI_SUPP_VALID) && (capdata.supported & LWMI_SUPP_GET);
->> +}
->> +
->> +/**
->> + * lwmi_psy_prop_is_writeable() - Determine if the property is writeable
->> + * @ps: The battery that was extended
->> + * @ext: The extension
->> + * @ext_data: Pointer the lwmi_om_priv drvdata
->> + * @prop: The property to check
->> + *
->> + * Checks capdata 00 to determine if the property is writable.
->> + *
->> + * Return: true if writable, or false
->> + */
->> +static int lwmi_psy_prop_is_writeable(struct power_supply *ps,
->> +				      const struct power_supply_ext *ext,
->> +				      void *ext_data,
->> +				      enum power_supply_property prop)
->> +{
->> +	struct lwmi_om_priv *priv = ext_data;
->> +	struct capdata00 capdata;
->> +	u32 attribute_id;
->> +	int ret;
->> +
->> +	switch (prop) {
->> +	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
->> +		attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_BEHAVIOR,
->> +						LWMI_TYPE_ID_NONE);
->> +		break;
->> +	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
->> +		attribute_id = LWMI_ATTR_ID_PSU(LWMI_FEATURE_ID_PSU_CHARGE_END_THRESHOLD,
->> +						LWMI_TYPE_ID_PSU_AC);
->> +		break;
->> +	default:
->> +		return false;
->> +	}
->> +
->> +	ret = lwmi_cd00_get_data(priv->cd00_list, attribute_id, &capdata);
->> +	if (ret)
->> +		return false;
-> 
-> This shares a lot of lines of code with lwmi_psy_prop_is_supported().
-> I'd factor the common code into a helper function.
-> 
-> I don't have a strong preference though. It's fine to keep it as is.
-> 
->> +
->> +	return !!(capdata.supported & LWMI_SUPP_SET);
->> +}
->> +
->> +static const enum power_supply_property lwmi_psy_ext_props_all[] = {
->> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
->> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
->> +};
->> +
->> +static const enum power_supply_property lwmi_psy_ext_props_threshold[] = {
->> +	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
->> +};
->> +
->> +static const enum power_supply_property lwmi_psy_ext_props_behaviour[] = {
->> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
->> +};
->> +
->> +#define DEFINE_LWMI_POWER_SUPPLY_EXTENSION(_name, _props, _behaviours)	\
->> +	static const struct power_supply_ext _name = {			\
->> +		.name			= LWMI_OM_SYSFS_NAME,		\
->> +		.properties		= _props,			\
->> +		.num_properties		= ARRAY_SIZE(_props),		\
->> +		.charge_behaviours	= _behaviours,			\
->> +		.get_property		= lwmi_psy_ext_get_prop,	\
->> +		.set_property		= lwmi_psy_ext_set_prop,	\
->> +		.property_is_writeable	= lwmi_psy_prop_is_writeable,	\
->> +	}
->> +
->> +#define LWMI_CHARGE_BEHAVIOURS (BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) | \
->> +				BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE))
-> 
-> lwmi_psy_ext_get_prop() and lwmi_psy_ext_set_prop() use
-> POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE. Mismatch.
-> 
->> +
->> +DEFINE_LWMI_POWER_SUPPLY_EXTENSION(lwmi_psy_ext_all, lwmi_psy_ext_props_all,
->> +				   LWMI_CHARGE_BEHAVIOURS);
->> +DEFINE_LWMI_POWER_SUPPLY_EXTENSION(lwmi_psy_ext_threshold,
->> +				   lwmi_psy_ext_props_threshold, 0);
->> +DEFINE_LWMI_POWER_SUPPLY_EXTENSION(lwmi_psy_ext_behaviour,
->> +				   lwmi_psy_ext_props_behaviour,
->> +				   LWMI_CHARGE_BEHAVIOURS);
->> +
->> +#define LWMI_PSY_PROP_BEHAVIOUR BIT(0)
->> +#define LWMI_PSY_PROP_THRESHOLD BIT(1)
->> +
->> +static const struct power_supply_ext *lwmi_psy_exts[] = {
->> +	[LWMI_PSY_PROP_BEHAVIOUR] =				&lwmi_psy_ext_behaviour,
->> +	[LWMI_PSY_PROP_THRESHOLD] =				&lwmi_psy_ext_threshold,
->> +	[LWMI_PSY_PROP_BEHAVIOUR | LWMI_PSY_PROP_THRESHOLD] =	&lwmi_psy_ext_all,
->> +};
->> +
->> +/**
->> + * lwmi_add_battery() - Connect the power_supply_ext
->> + * @battery: The battery to extend
->> + * @hook: The driver hook used to extend the battery
->> + *
->> + * Return: 0 on success, or an error.
->> + */
->> +static int lwmi_add_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
->> +{
->> +	struct lwmi_om_priv *priv = container_of(hook, struct lwmi_om_priv, battery_hook);
->> +
->> +	return power_supply_register_extension(battery, priv->battery_ext, &priv->wdev->dev, priv);
->> +}
->> +
->> +/**
->> + * lwmi_remove_battery() - Disconnect the power_supply_ext
->> + * @battery: The battery that was extended
->> + * @hook: The driver hook used to extend the battery
->> + *
->> + * Return: 0 on success, or an error.
->> + */
->> +static int lwmi_remove_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
->> +{
->> +	struct lwmi_om_priv *priv = container_of(hook, struct lwmi_om_priv, battery_hook);
->> +
->> +	power_supply_unregister_extension(battery, priv->battery_ext);
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_acpi_match() - Attempts to return the ideapad acpi handle
->> + * @handle: The ACPI handle that manages battery charging
->> + * @lvl: Unused
->> + * @context: Void pointer to the acpi_handle object to return
->> + * @retval: Unused
->> + *
->> + * Checks if the ideapad_laptop driver is going to manage charge_type first,
->> + * then if not, hooks the battery to our WMI methods.
->> + *
->> + * Return: AE_CTRL_TERMINATE if found, AE_OK if not found.
->> + */
->> +static acpi_status lwmi_acpi_match(acpi_handle handle, u32 lvl,
->> +				   void *context, void **retval)
->> +{
->> +	acpi_handle *ahand = context;
->> +
->> +	if (!handle)
->> +		return AE_OK;
->> +
->> +	*ahand = handle;
->> +
->> +	return AE_CTRL_TERMINATE;
->> +}
->> +
->> +/**
->> + * lwmi_om_psy_ext_init() - Hooks power supply extension to device battery
->> + * @priv: Pointer to the lwmi_om_priv drvdata.
->> + *
->> + * Checks if the ideapad_laptop driver is going to manage charge attributes first,
->> + * then if not, hooks the battery to our WMI methods if they are supported.
->> + */
->> +static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
->> +{
->> +	static const char * const ideapad_hid = "VPC2004";
->> +	acpi_handle handle = NULL;
->> +	unsigned int props = 0;
->> +	int ret;
->> +
->> +	priv->bh_registered = false;
-> 
-> Why do we need this? priv was devm_kzalloc()ed.
-> 
->> +
->> +	/* Deconflict ideapad_laptop driver */
->> +	ret = acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL);
->> +	if (ret)
->> +		return;
->> +
->> +	if (handle && acpi_has_method(handle, "GBMD") && acpi_has_method(handle, "SBMC")) {
->> +		dev_dbg(&priv->wdev->dev, "ideapad_laptop driver manages battery for device\n");
->> +		return;
->> +	}
->> +
->> +	if (lwmi_psy_prop_is_supported(priv, POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR))
->> +		props |= LWMI_PSY_PROP_BEHAVIOUR;
->> +	if (lwmi_psy_prop_is_supported(priv, POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD))
->> +		props |= LWMI_PSY_PROP_THRESHOLD;
->> +	if (!props)
->> +		return;
->> +
->> +	/* Add battery hooks */
->> +	priv->battery_ext = lwmi_psy_exts[props];
->> +	priv->battery_hook.add_battery = lwmi_add_battery;
->> +	priv->battery_hook.remove_battery = lwmi_remove_battery;
->> +	priv->battery_hook.name = "Lenovo WMI Other Battery Extension";
->> +	priv->bh_registered = true;
-> 
-> I guess the default charge behavior is auto. If that's the case, let's
-> initialize priv->charge_behaviour to reflect this, so that it won't
-> confuse users in most cases.
-> 
-> Thanks,
-> Rong
-> 
->> +
->> +	battery_hook_register(&priv->battery_hook);
->> +}
->> +
->> +/**
->> + * lwmi_om_psy_remove() - Unregister battery hook
->> + * @priv: Driver private data
->> + *
->> + * Unregisters the battery hook if applicable.
->> + */
->> +static void lwmi_om_psy_remove(struct lwmi_om_priv *priv)
->> +{
->> +	if (!priv->bh_registered)
->> +		return;
->> +
->> +	battery_hook_unregister(&priv->battery_hook);
->> +	priv->bh_registered = false;
->> +}
->> +
->>  /* ======== fw_attributes (component: lenovo-wmi-capdata 01) ======== */
->>  
->>  struct tunable_attr_01 {
->> @@ -1241,6 +1626,7 @@ static int lwmi_om_master_bind(struct device *dev)
->>  	}
->>  
->>  	lwmi_om_fan_info_collect_cd00(priv);
->> +	lwmi_om_psy_ext_init(priv);
->>  
->>  	lwmi_om_fw_attr_add(priv);
->>  
->> @@ -1263,6 +1649,8 @@ static void lwmi_om_master_unbind(struct device *dev)
->>  
->>  	lwmi_om_hwmon_remove(priv);
->>  
->> +	lwmi_om_psy_remove(priv);
->> +
->>  	component_unbind_all(dev, NULL);
->>  }
->>  
+83DR, 83HN, 83HY, 83AU, 83JR are owned by these device owners. Other
+devices share the same BIOS images (see comments in the match table), so
+I added them as well.
 
+Device owners also reported their dmesg dumps/snips with ucsi_acpi
+errors.
+
+As a reference, buggy ASL methods are shown as below.
+
+\_SB.PCI0.LPC0.EC0:
+                    Method (ECRD, 1, Serialized)
+                    {
+                        Local0 =3D Acquire (ECMT, 0x03E8)
+                        If ((Local0 =3D=3D Zero))
+                        {
+                            If (ECAV)
+                            {
+                                Local1 =3D DerefOf (Arg0)
+                                Release (ECMT)
+                                Return (Local1)
+                            }
+                            Else
+                            {
+                                Release (ECMT)
+                            }
+                        }
+
+                        Return (Zero)
+                    }
+
+                    Method (ECWT, 2, Serialized)
+                    {
+                        Local0 =3D Acquire (ECMT, 0x03E8)
+                        If ((Local0 =3D=3D Zero))
+                        {
+                            If (ECAV)
+                            {
+                                Arg1 =3D Arg0
+                            }
+
+                            Release (ECMT)
+                        }
+                    }
+
+\_SB.UBTC:
+            Method (ECWR, 0, Serialized)
+            {
+                IO80 =3D 0xD0
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO0, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O0))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO1, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O1))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO2, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O2))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO3, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O3))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO4, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O4))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO5, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O5))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO6, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O6))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO7, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O7))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO8, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O8))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGO9, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+O9))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOA, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OA))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOB, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OB))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOC, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OC))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOD, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OD))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOE, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OE))
+                \_SB.PCI0.LPC0.EC0.ECWT (MGOF, RefOf (\_SB.PCI0.LPC0.EC0.MG=
+OF))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL0, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L0))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL1, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L1))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL2, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L2))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL3, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L3))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL4, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L4))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL5, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L5))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL6, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L6))
+                \_SB.PCI0.LPC0.EC0.ECWT (CTL7, RefOf (\_SB.PCI0.LPC0.EC0.CT=
+L7))
+                \_SB.PCI0.LPC0.EC0.ECWT (0xE0, RefOf (\_SB.PCI0.LPC0.EC0.US=
+DC))
+                IO80 =3D 0xD1
+            }
+
+            Method (ECRD, 0, Serialized)
+            {
+                IO80 =3D 0xD3
+                MGI0 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI0))
+                MGI1 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI1))
+                MGI2 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI2))
+                MGI3 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI3))
+                MGI4 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI4))
+                MGI5 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI5))
+                MGI6 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI6))
+                MGI7 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI7))
+                MGI8 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI8))
+                MGI9 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGI9))
+                MGIA =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGIA))
+                MGIB =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGIB))
+                MGIC =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGIC))
+                MGID =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGID))
+                MGIE =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGIE))
+                MGIF =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.MGIF))
+                VER1 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.VER1))
+                VER2 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.VER2))
+                RSV1 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.RSV1))
+                RSV2 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.RSV2))
+                CCI0 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.CCI0))
+                CCI1 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.CCI1))
+                CCI2 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.CCI2))
+                CCI3 =3D \_SB.PCI0.LPC0.EC0.ECRD (RefOf (\_SB.PCI0.LPC0.EC0=
+.CCI3))
+                \_SB.PCI0.LPC0.EC0.ECWT (0xE1, RefOf (\_SB.PCI0.LPC0.EC0.US=
+GC))
+                IO80 =3D 0xD4
+            }
+
+            Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
+            {
+                If ((Arg0 =3D=3D ToUUID ("6f8398c2-7ca4-11e4-ad36-631042b50=
+08f") /* Unknown UUID */))
+                {
+                    If ((ToInteger (Arg2) =3D=3D Zero))
+                    {
+                        Return (Buffer (One)
+                        {
+                             0x0F                                          =
+   // .
+                        })
+                    }
+                    ElseIf ((ToInteger (Arg2) =3D=3D One))
+                    {
+                        ECWR ()
+                    }
+                    ElseIf ((ToInteger (Arg2) =3D=3D 0x02))
+                    {
+                        ECRD ()
+                    }
+                    Else
+                    {
+                        Return (Zero)
+                    }
+                }
+
+                Return (Zero)
+            }
+        }
+
+Thanks,
+Rong
+
+>=20
+> thanks,
+>=20
+> greg k-h
