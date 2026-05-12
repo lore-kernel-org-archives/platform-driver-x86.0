@@ -1,129 +1,147 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841D2D7812
-	for <platform-driver-x86@vger.kernel.org>; Tue, 12 May 2026 15:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778599780; cv=pass; b=ZkUp98g6uCngBL19wzr10IXxVIwYnAFAy5MbmTBZCX0J290huEIlu1sqrIORYzWnRIbi6G7m5R/lQYVuC0P6tOsq4jv1n1XAth5BrgDpTIgpHYUTjKhQKzNXn/sFWMEBkkX/RCtPCSfQcphSQa6IqkASzgSyJ4HTnTZdsagPaeY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778599780; c=relaxed/simple;
-	bh=nBOsokuQTzbairGbsW+8mrF8HggOp9/BLLPnZTJwHvg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EXI7iOZ7EQ6mmuAAYTiaqFAaKVjklWYIJDEzsdypS7oh/qe/0X4ltjEDjqcC5zYx26swome1wH4wN8omiEO6VKwHl5eJLZQdY3nuhOly0O5U/2Mk5F5DAU9F+bRjGiJiPTT4cd1pwVuf0neNMyIBQxdNotbZ+fgDLRDJTJsbZJc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lmhjAiGQ; arc=pass smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAD43CDBC8;
+	Tue, 12 May 2026 16:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778603088; cv=none; b=lLH9Eda0XlY831lRFjcF4hV+BoSNDSR6O97q7f0kvXUtSLeXd72Gnk4ZO2DrjY/KuV3RPDNmWyfaDxu7dw3QGKeGLUmIjDEZ4G8p/OItke6Eb2NgfvPw07r70NUZKKd48bpPMhn83xvQ6y5TWME0gWg4q/i+yLWpTrbz7Khg+zc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778603088; c=relaxed/simple;
+	bh=drXqzUbTMfvLxVbW2I3oGWtQ5GIygsnUEErL0+BM/n0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=NORWJutMW8l7XqfQaHno2cwRmckFGvAaUjc5dvtFRB+Alepcm9/nNO3PxKXYBbg1WkZqTq1s51yJmWmk22ZTVuZkUOuF3Dj0e79/tTqLZk0DfBQC/yHnjFU1ugCVhl4hGUHCkkSA8XyJqE/MvDsuD6YhA5gr9Gr8xx66CGvmRVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rs1idOAU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmhjAiGQ"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38be5e86918so71419031fa.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 12 May 2026 08:29:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778599775; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HAuOXPRWSmocIYfN2XcfLnGRoZiTYsuPVvlIOlhoeOU45I+6zQIaOnfvQJy18Pl77V
-         hTtc/6kp4g5yXKA7vgwtJbYq8buevik+vYk+8lJ4cBEUdbxF+MV3LpR/46ES1s/Eof9r
-         9z0bCFaM5RTdTqAkB8FOY+tacJcoB+VKTvOINgb06NXXGNHDdoM6CDQQWsq+iSzq3K1U
-         afPI7KdtMhWrgcSqvZp+jZllvOHZSE5VW2wKbIOSbA56q976a5lozsVf2LAS2qBcNmTT
-         Ul/O074WFK++kXtLm3lSVF8ZhhOCPy2CDGis5fJGtqc1syvS04zVfeRIiXWTjeHokv3f
-         jOnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=1m8Vx7sSpkFzoMEAPBBuv0g6bgC7CqPm0P/FXD5R46g=;
-        fh=ftaXYH/taPAPxQTq0jSV3na0NjsXF1pyfZVWe12aeNo=;
-        b=VLwHsjUf0OPshhVqEslUqlF8LmUUo+pThyEpVfFWM5FDqjDNOry1Pwlh9IR4CrZXao
-         ptpFgkqhhFwJCKco/qZy3pvManyqEzZnPfuAbP/ySCs24xqjdv+74xMGkMoqLt5w/w4L
-         3mBtQVP+bCGufkIREsUW2o1lyAC5QunZ1HjoIT6miOPJJn3avHm14dhqv348DBpl7wl0
-         RFQ8tS7ppnfa0Xu83TQJq0nkUwUFTc1vd4wNp6ZwEcRhpFDpRUpnEa10elW8SuXq9v+4
-         VpZufStJkwAem8uA/dD9EoOqm8/7xCbOVGl+zbxGlyxyUKPmqrYM81+bfjlkqmom7hYD
-         erIg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778599775; x=1779204575; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1m8Vx7sSpkFzoMEAPBBuv0g6bgC7CqPm0P/FXD5R46g=;
-        b=lmhjAiGQCgHEWw+c7/vusbnRRTEmWd5mKRYWnFGpPjMi+92f7E1UmqoSaYt3CE3ExB
-         3G08pDqoHoST+dNCLHIjkeQsGOb8CgGROp5/xaS6EBUQjpRM63MIXOOw1uL2hdRasQRI
-         aaGHo5DvCsdZIvHxTirBWgMahpsyDRXXYAiHEDo3yXKt1urNqx/trlFsGhCZyPOc+uUi
-         eg30NdTqqdHkMbwduFBTbX2HAUCFLTnTPOUq+hR38Qtc1I04PhN9ICSTP1m0pGizDTMP
-         oeZLKSA+e6d8Vocyxzd9QPs6RC5nl22cjgC7D+fRZEFbI0wfulrxZ5ZYiZMVjqpOvRaH
-         Z41g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778599775; x=1779204575;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=1m8Vx7sSpkFzoMEAPBBuv0g6bgC7CqPm0P/FXD5R46g=;
-        b=gGdRWUuE3kvOqmAoQKSeRRGHzVEYRGLUSjc4RZofvX/AN+Imu5OLiBW6o1+MkRhXBr
-         iyjPwUtpyODXvwagk+wjw9ejtMSeVHSrsSx/OFoiliicU/4vTRV7eGdFq8TG7O7I863X
-         m3X9X535Bh5508paYrgiR9utUHvpcYhShFziomEujdKazwk+ngscJb3UgpqVuPpcQoqn
-         2HC8ZwmUEWIgUwRBy3DTswNzaO3CO63qvWiFcIWVzqMR0xfSFVQ6qxlA0MDFs46Q66lh
-         RwoUNXclq1W5ACjO4iHuiTUIbEibQZhF2MokbG0zCCvoJlxEewBBDqbd9i/7iIejebMC
-         urdg==
-X-Forwarded-Encrypted: i=1; AFNElJ+sFxIopCvGY34HKTcU4QAHoz6Eh8VzDBHznnFZ16WarHeZ3lX1PTdc5MD9S7d3QQW3YR7KN/zMEb6vIbwbh2DtOGhk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpA5ViifQi1j/CNGkYs3R6QZCw++FMrmVgEAp2ni8gKe1nnU4Q
-	o3UZoRGVyRdj5zktaNGpqy805T83HPGbD3Up/zpYnINwafJitDqggYfhKsqshhLCaOPUm+hHukI
-	VS8ETMDp1A7Bm0DY2wTPDIgsOrGnaWOCJRgZS8Dw=
-X-Gm-Gg: Acq92OHfja94Kg8X4zRcn0G8LJ9ODieXPwPc3MMAH79CDoLxx6UdoTeJJxD4WYKTCOP
-	pMO0CoWg9DnQzUFPwj9dR7o+bRmvl3b2YqX6h+z49zD77esuJCeDQI5JYc7C4ryeyQsVmWFaIi8
-	BxEh8bF1x83DuJB9VyYhCayzK8LPmoiHD6G5zpWJZUvhcCxhkWOCkyKvu1a/e/2zLbp1aqqTJYB
-	sDC2ZhUqDm6QLNvS6A2UEN7q4qkbYs4wH2PPQ1DdMRY10Qr7P6CdEqmfZjCDBMdrB6iKhvZq1o3
-	b4Q/Ub+9adUxF5uAy1OIOYVuoUfr3bEuV5uhHUd9J07CqmN3jPldk3dcQZ26uXzGne2nNIqrbFI
-	cbpgBGt36U31XcZ476Q==
-X-Received: by 2002:a2e:bc28:0:b0:394:2b8a:234a with SMTP id
- 38308e7fff4ca-3942b8a5e7fmr31619441fa.25.1778599775037; Tue, 12 May 2026
- 08:29:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rs1idOAU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579D6C2BCF6;
+	Tue, 12 May 2026 16:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778603087;
+	bh=drXqzUbTMfvLxVbW2I3oGWtQ5GIygsnUEErL0+BM/n0=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=rs1idOAUO5kWw4l1/ogPCcdfZkIzQY4a2hftTsjHA3s9KpYQ/aPElP+Xgdq0nmb/B
+	 JShuHC/4PU41siWXNy321Wgp7KouKn3Npn2or0DK8ty6ogJYjBPSWFL62vPChuj0wA
+	 bGBnLltR3wCbHs2mwbDp8HS/oXpShR4jL22XSWkH08XqrTFPQJkpzUJN6jN7tHQqRr
+	 yc/QOhlMEJkkObTI1nvVNUuwE3/imXdwUzgbLCmBliPxicARhvjk3jKMgJvnLAcCl2
+	 HiyKmOfuqhs25Q361Yf0ZQrYvdDITU/Z2fciMO4jjqMSEiD3GfX2HjgwoWXIdjYGSv
+	 nkVB7QBtHzEyA==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260512-swnode-remove-on-dev-unreg-v5-0-0035eff63812@oss.qualcomm.com>
- <20260512-swnode-remove-on-dev-unreg-v5-6-0035eff63812@oss.qualcomm.com>
-In-Reply-To: <20260512-swnode-remove-on-dev-unreg-v5-6-0035eff63812@oss.qualcomm.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 12 May 2026 18:28:58 +0300
-X-Gm-Features: AVHnY4L1_zJHNRi354c-jkblkHr8hmHJHYehCTnWbdMU5vf_KkUdHclsjlbuBjY
-Message-ID: <CAHp75VcdbpY+DfFh6b61U61X6or0KoVs_akygnAgW27XmmXo2Q@mail.gmail.com>
-Subject: Re: [PATCH v5 6/7] kunit: provide kunit_software_node_register()
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <david@davidgow.net>, 
-	Rae Moar <raemoar63@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
-	Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, brgl@kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, platform-driver-x86@vger.kernel.org, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 12 May 2026 18:24:41 +0200
+Message-Id: <DIGU67TAWF7W.1DWZMO4XAVK7G@kernel.org>
+Subject: Re: [PATCH v5 4/7] drm/xe/i2c: use
+ platform_device_add_software_node()
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
+ <david@davidgow.net>, "Rae Moar" <raemoar63@gmail.com>, "Andy Shevchenko"
+ <andy@kernel.org>, "Maximilian Luz" <luzmaximilian@gmail.com>, "Hans de
+ Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Matthew Brost" <matthew.brost@intel.com>,
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, <brgl@kernel.org>,
+ <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260512-swnode-remove-on-dev-unreg-v5-0-0035eff63812@oss.qualcomm.com> <20260512-swnode-remove-on-dev-unreg-v5-4-0035eff63812@oss.qualcomm.com>
+In-Reply-To: <20260512-swnode-remove-on-dev-unreg-v5-4-0035eff63812@oss.qualcomm.com>
 
-On Tue, May 12, 2026 at 3:00=E2=80=AFPM Bartosz Golaszewski
-<bartosz.golaszewski@oss.qualcomm.com> wrote:
->
-> Implement a helper for registering kunit test-managed software nodes.
+On Tue May 12, 2026 at 1:59 PM CEST, Bartosz Golaszewski wrote:
+> diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
+> index 706783863d07d66b4685005d6649b3cd143ecc3b..7f4295e7dc74f112abff84274=
+85b5c8a5ad71383 100644
+> --- a/drivers/gpu/drm/xe/xe_i2c.c
+> +++ b/drivers/gpu/drm/xe/xe_i2c.c
+> @@ -53,6 +53,10 @@ static const struct property_entry xe_i2c_adapter_prop=
+erties[] =3D {
+>  	{ }
+>  };
+> =20
+> +static const struct software_node xe_i2c_adapter_swnode =3D {
+> +	.properties =3D xe_i2c_adapter_properties,
+> +};
+> +
+>  static inline void xe_i2c_read_endpoint(struct xe_mmio *mmio, void *ep)
+>  {
+>  	u32 *val =3D ep;
+> @@ -96,10 +100,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c=
+)
+>  	struct fwnode_handle *fwnode;
+>  	int ret;
+> =20
+> -	fwnode =3D fwnode_create_software_node(xe_i2c_adapter_properties, NULL)=
+;
+> -	if (IS_ERR(fwnode))
+> -		return PTR_ERR(fwnode);
+> -
+>  	/*
+>  	 * Not using platform_device_register_full() here because we don't have
+>  	 * a handle to the platform_device before it returns. xe_i2c_notifier()
+> @@ -107,10 +107,12 @@ static int xe_i2c_register_adapter(struct xe_i2c *i=
+2c)
+>  	 * platform_device_register_full() is done.
+>  	 */
+>  	pdev =3D platform_device_alloc(adapter_name, pci_dev_id(pci));
+> -	if (!pdev) {
+> -		ret =3D -ENOMEM;
+> -		goto err_fwnode_remove;
+> -	}
+> +	if (!pdev)
+> +		return -ENOMEM;
+> +
+> +	ret =3D platform_device_add_software_node(pdev, &xe_i2c_adapter_swnode)=
+;
 
-...
+By calling platform_device_add_software_node() the platform device technica=
+lly
+takes ownership of the struct software_node managing its lifetime, by remov=
+ing
+it in release().
 
-> @@ -10,7 +10,8 @@ kunit-objs +=3D                         test.o \
->                                         executor.o \
->                                         attributes.o \
->                                         device.o \
-> -                                       platform.o
-> +                                       platform.o \
-> +                                       fwnode.o
+However, this is not properly reflected by the
+platform_device_add_software_node() API, as it just stores the pointer give=
+n by
+the driver, which in this case is a pointer to module memory.
 
-You may put it after device.o, 1 line less to change.
+The platform device is reference counted and can outlive the module.
 
---=20
-With Best Regards,
-Andy Shevchenko
+So, I think analogous to platform_device_add_data() we need to make a copy =
+of
+the struct software_node in platform_device_add_software_node().
+
+> +	if (ret)
+> +		goto err_pdev_put;
+> =20
+>  	if (i2c->adapter_irq) {
+>  		struct resource res;
+> @@ -123,7 +125,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c=
+)
+>  	}
+> =20
+>  	pdev->dev.parent =3D i2c->drm_dev;
+> -	pdev->dev.fwnode =3D fwnode;
+>  	i2c->adapter_node =3D fwnode;
+>  	i2c->pdev =3D pdev;
+> =20
+> @@ -135,8 +136,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c=
+)
+> =20
+>  err_pdev_put:
+>  	platform_device_put(pdev);
+> -err_fwnode_remove:
+> -	fwnode_remove_software_node(fwnode);
+
+There is another call to this in  xe_i2c_unregister_adapter(), which I thin=
+k was
+missed.
