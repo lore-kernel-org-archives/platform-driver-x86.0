@@ -1,412 +1,214 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336B13AB26B;
-	Tue, 12 May 2026 23:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15EF33EF;
+	Tue, 12 May 2026 23:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778628127; cv=none; b=N7ZrdEQu2maSuKEfjTWDD7lwm6cMKSC6DMlbUOH9P1/o9BFQeFm70Q2VC19QpSh/d/hoHJE31miOR+gnBAFTXvKhUiBjxMZ6yRwQJk40ebxuTl9gQFMbFWhlr+FA5YVEaFgaS2XtsnRJxL7SIyNLOAEMTXZu5AnmkD+cKl72X+c=
+	t=1778628169; cv=none; b=tjS8GyUiEh+gNkYwtz9FLCRWU6nDI/8PQm6gm9E5+HHmcDtljEYA+ceTDli0SpyRfqA0Ha8Pk8+wBB63htPBN9SHh/JXWohWuuAsvESpOoNYrEQf6eR+GNyG4RvANnyiDQduH+zJ8nig7Znt9f3EHn30+LtyLLwzbKwYoz/D+dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778628127; c=relaxed/simple;
-	bh=KpBew3LPN5Kt1RkK5urtax7zZazRJunhyU1iLqYK9mA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Whgl6feE3hGkbQuYkT4R5zpbiSVR6q+kcgZemHUDXEPCRdxwVLhNzbCh8uomjdd3i98wVEjKlZ7od96YF1+g1eBztPwniteid/pWWmaD+BuNbPZPLRwqQ+lmizUE2Ao/iwbsDYGUzE7+PemLm41PIXtJdYrmDTeWqXGK5QoZFj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MaEU++Bb; arc=none smtp.client-ip=212.227.17.20
+	s=arc-20240116; t=1778628169; c=relaxed/simple;
+	bh=A8d6/jK4qrEA6+A/yjR9v0k3bGfE6hoenH9je5p/11w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LgN8pEGQOqf81pHk1L+3z4yDhjJHFu0m4PUR7+gtjDGCwxHqG+Rqc2koKoCyr+oLNwg1nfEpuTjADQQ8CaxLJuZ8idrsKUdbr2AACsaK4GpzY8nA1UxmDasPIgGk40094q+c+sbV0JqCzA2eb1btEByJQJsGEoY6TEc7Qo9toh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Dk2PlYOv; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MaEU++Bb"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Dk2PlYOv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1778628116; x=1779232916; i=w_armin@gmx.de;
-	bh=vgSeByYt3HduI9qwuNRC0RK1o8v0kGzzs1/YyeR97a4=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=MaEU++BbqTSJjJjb2YrtbBCgZCNsWsP8S3lqhVpO90pjsZHNydmcaGIHvJEeLAH2
-	 5HB8uV/sRKDbtOVeGwC4Fd3fyTyxODKJ2iMXBjmV4lPywYTDT0a3BQGz4o6fHHwFT
-	 9bV9oCnNdANh5SxvCQqXmMJikODh6Nsjs2t2Uu8ByQ5hzmBaFyODI3yDv+1+se54k
-	 mKwOH8/IJvie+waROmxQhEk2mQPDazc/4CB0o1WZvojigvx73sMVUwlhHM8SuCXSS
-	 aavGIphREp/+9Bg4aZrL3Nc92ge9jua6yn2+qZRkIYyaybyrom/m87UJqP58oFFgD
-	 Dtsw1XxTreAyUNP9Ig==
+	s=s31663417; t=1778628159; x=1779232959; i=w_armin@gmx.de;
+	bh=Edvx6EvjCFF+Lk5tWi4yxGxDYJ6J5ryVG5TxVDgLw/k=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Dk2PlYOvUBSiwJuDmqizgGhqnq9RlhR0nSjdpoGhjPoJZ7jrx+pidto0AobU8AuX
+	 CnyN1iCUxDFwqYSnAiKyXiXcx1pMowFyg1Y1gxkwJGaCnKPVYxJ7Oa1e6/+wN6V3u
+	 ZJvlhNF+RzLB+0j/106Igqe5VmcM+TU1ZD1cCKDJPEtSuhoBRJT+i+NAKLvCPOAUw
+	 zLxJ6BKsQ0AHet/MUXT5LVSrub1BhROt1Bc9QZZBLGvJaL20Rg+a2jHEHLz7rSwgz
+	 hDBEv8jJTetRJaNHaKjezfP7rHVHY/qiA6U1S6ueSkaoIziwATbYhlotAIOuRT9ee
+	 XWkmXBwZpn79D6j3HQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MgvrB-1x3PmD2Zfp-00iqtc; Wed, 13
- May 2026 01:21:56 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: wse@tuxedocomputers.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/8] platform/x86: uniwill-laptop: Rework FN lock/super key suspend handling
-Date: Wed, 13 May 2026 01:21:42 +0200
-Message-Id: <20260512232145.329260-6-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260512232145.329260-1-W_Armin@gmx.de>
-References: <20260512232145.329260-1-W_Armin@gmx.de>
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MSKu0-1wpaBr1Q8O-00Ljnc; Wed, 13
+ May 2026 01:22:39 +0200
+Message-ID: <4e2c6b79-9616-4537-8b1a-0ceff5e4a5ae@gmx.de>
+Date: Wed, 13 May 2026 01:22:38 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] platform/x86: uniwill-laptop: Properly initialize
+ charging threshold
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, wse@tuxedocomputers.com,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20260417050912.5582-1-W_Armin@gmx.de>
+ <20260417050912.5582-2-W_Armin@gmx.de>
+ <9cc1d286-f41a-c920-aaad-1c24c4e6f2f7@linux.intel.com>
+ <903a013e-a3fb-49ea-a6f9-ad6577d57a44@gmx.de>
+ <4766afa5-4128-a9fc-0792-b83e2fb48e6e@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <4766afa5-4128-a9fc-0792-b83e2fb48e6e@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OtA0Kr37UUygrWS+VcuEm0AYzmKa6wicKnxAA/KXSZg3ddAVfj8
- gQkVvmRRUXowEcEotTdZfvl/D7A1XwMI9nmdo7rmJrw8odmcKBReLeXcPttSDtt2CMOXaFG
- ZyTfDnHCYHZ+n3DiRqMIPiiEb7ko5Lk9DJASVNubKqbeLpEDRmcU3V9XJnv1RbmIycAmEAb
- MVDh4wDTFiCO7ZxSR+nhg==
+X-Provags-ID: V03:K1:WeQDw8KkBtjVT+YeBqIk5+ULxIPAgbkvsfKPA+/dAKvveTVbhvb
+ lYC5Q5idqhyOJWD90ZY/FjLj97dcBav7Pk2afVNs/De+ZrD9ToRMu2736cx8cQt2vUBs45t
+ ULhQ4Bm1KUkploFl0MzyWbKwtI3xIXzo/vXfnPWjp8YsdSFZfbEA6d6OOYagRZAfqZVYxTh
+ br9UnIm6c1WWJavuzrHAg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:G1K14DUoR3M=;2jEG5IRadF3G5d8Pe52i1fsR71d
- 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
+UI-OutboundReport: notjunk:1;M01:P0:JUz2KfAZ+b8=;rzr4hGki4cIt2glI46YTp6OHp6E
+ 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
+ p4Bm4Q==
 
-Currently the suspend handling for the FN lock and super key enable
-features saves the whole values of the affected registers instead of
-the individual feature state. This duplicates the register access
-logic from the associated sysfs attributes.
+Am 06.05.26 um 15:42 schrieb Ilpo J=C3=A4rvinen:
 
-Rework the suspend handling to reuse said register access logic and
-only store the individual feature state as a boolean value.
+> On Sun, 3 May 2026, Armin Wolf wrote:
+>
+>> Am 30.04.26 um 14:53 schrieb Ilpo J=C3=A4rvinen:
+>>> On Fri, 17 Apr 2026, Armin Wolf wrote:
+>>>
+>>>> The EC might initialize the charge threshold with 0 to signal that
+>>>> said threshold is uninitialized. Detect this and replace said value
+>>>> with 100 to signal the EC that we want to take control of battery
+>>>> charging. Also set the threshold to 100 if the EC-provided value
+>>>> is invalid.
+>>>>
+>>>> Fixes: d050479693bb ("platform/x86: Add Uniwill laptop driver")
+>>>> Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>>> ---
+>>>>    drivers/platform/x86/uniwill/uniwill-acpi.c | 28 +++++++++++++++++=
++++-
+>>>>    1 file changed, 27 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> index faade4cf08be..8f16c94221aa 100644
+>>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>>> @@ -1404,7 +1404,12 @@ static int uniwill_get_property(struct power_s=
+upply
+>>>> *psy, const struct power_sup
+>>>>    		if (ret < 0)
+>>>>    			return ret;
+>>>>    -		val->intval =3D clamp_val(FIELD_GET(CHARGE_CTRL_MASK, regval),
+>>>> 0, 100);
+>>>> +		regval =3D FIELD_GET(CHARGE_CTRL_MASK, regval);
+>>>> +		if (!regval)
+>>>> +			val->intval =3D 100;
+>>>> +		else
+>>>> +			val->intval =3D min(regval, 100);
+>>> ...
+>>>
+>>>> +	/*
+>>>> +	 * The charge control threshold might be initialized with 0 by
+>>>> +	 * the EC to signal that said threshold is uninitialized. We thus
+>>>> +	 * need to replace this value with 100 to signal that we want to
+>>>> +	 * take control of battery charging. For the sake of completeness
+>>>> +	 * we also set the charging threshold to 100 if the EC-provided
+>>>> +	 * value is invalid.
+>>>> +	 */
+>>>> +	threshold =3D FIELD_GET(CHARGE_CTRL_MASK, value);
+>>>> +	if (threshold =3D=3D 0 || threshold > 100) {
+>>>> +		FIELD_MODIFY(CHARGE_CTRL_MASK, &value, 100);
+>>> AFAICT, this does exactly the same thing as the other code above (but
+>>> looks very different on surface). Wouldn't it make sense to have them
+>>> share code?
+>> I do not think that this would be a good idea. The two call sides are t=
+wo
+>> different, creating a helper function for both would likely be very
+>> difficult.
+> Both seem to be sanitizing the charge control threshold (AFAICT, both ma=
+p
+> 0 and out-of-range values to 100) isn't that the case? Why cannot we hav=
+e
+> uniwill_charge_ctrl_thres_sanitize() or something along those lines?
 
-Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/uniwill/uniwill-acpi.c | 117 ++++++++++++--------
- 1 file changed, 73 insertions(+), 44 deletions(-)
+Alright, i will implement this.
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
-m/x86/uniwill/uniwill-acpi.c
-index 8cc01bec77b9..c73e280a58bd 100644
-=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -341,8 +341,8 @@ struct uniwill_data {
- 	struct acpi_battery_hook hook;
- 	unsigned int last_charge_ctrl;
- 	struct mutex battery_lock;	/* Protects the list of currently registered =
-batteries */
--	unsigned int last_status;
--	unsigned int last_switch_status;
-+	bool last_fn_lock_state;
-+	bool last_super_key_enable_state;
- 	struct mutex super_key_lock;	/* Protects the toggling of the super key l=
-ock state */
- 	struct list_head batteries;
- 	struct mutex led_lock;		/* Protects writes to the lightbar registers */
-@@ -619,11 +619,22 @@ static const struct regmap_config uniwill_ec_config =
-=3D {
- 	.use_single_write =3D true,
- };
-=20
-+static int uniwill_write_fn_lock(struct uniwill_data *data, bool status)
-+{
-+	unsigned int value;
-+
-+	if (status)
-+		value =3D FN_LOCK_STATUS;
-+	else
-+		value =3D 0;
-+
-+	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
-, value);
-+}
-+
- static ssize_t fn_lock_store(struct device *dev, struct device_attribute =
-*attr, const char *buf,
- 			     size_t count)
- {
- 	struct uniwill_data *data =3D dev_get_drvdata(dev);
--	unsigned int value;
- 	bool enable;
- 	int ret;
-=20
-@@ -631,21 +642,15 @@ static ssize_t fn_lock_store(struct device *dev, str=
-uct device_attribute *attr,
- 	if (ret < 0)
- 		return ret;
-=20
--	if (enable)
--		value =3D FN_LOCK_STATUS;
--	else
--		value =3D 0;
--
--	ret =3D regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATU=
-S, value);
-+	ret =3D uniwill_write_fn_lock(data, enable);
- 	if (ret < 0)
- 		return ret;
-=20
- 	return count;
- }
-=20
--static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
-attr, char *buf)
-+static int uniwill_read_fn_lock(struct uniwill_data *data, bool *status)
- {
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
- 	unsigned int value;
- 	int ret;
-=20
-@@ -653,23 +658,31 @@ static ssize_t fn_lock_show(struct device *dev, stru=
-ct device_attribute *attr, c
- 	if (ret < 0)
- 		return ret;
-=20
--	return sysfs_emit(buf, "%d\n", !!(value & FN_LOCK_STATUS));
--}
-+	*status =3D !!(value & FN_LOCK_STATUS);
-=20
--static DEVICE_ATTR_RW(fn_lock);
-+	return 0;
-+}
-=20
--static ssize_t super_key_enable_store(struct device *dev, struct device_a=
-ttribute *attr,
--				      const char *buf, size_t count)
-+static ssize_t fn_lock_show(struct device *dev, struct device_attribute *=
-attr, char *buf)
- {
- 	struct uniwill_data *data =3D dev_get_drvdata(dev);
--	unsigned int value;
--	bool enable;
-+	bool status;
- 	int ret;
-=20
--	ret =3D kstrtobool(buf, &enable);
-+	ret =3D uniwill_read_fn_lock(data, &status);
- 	if (ret < 0)
- 		return ret;
-=20
-+	return sysfs_emit(buf, "%d\n", status);
-+}
-+
-+static DEVICE_ATTR_RW(fn_lock);
-+
-+static int uniwill_write_super_key_enable(struct uniwill_data *data, bool=
- status)
-+{
-+	unsigned int value;
-+	int ret;
-+
- 	guard(mutex)(&data->super_key_lock);
-=20
- 	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
-@@ -680,20 +693,33 @@ static ssize_t super_key_enable_store(struct device =
-*dev, struct device_attribut
- 	 * We can only toggle the super key lock, so we return early if the sett=
-ing
- 	 * is already in the correct state.
- 	 */
--	if (enable =3D=3D !(value & SUPER_KEY_LOCK_STATUS))
--		return count;
-+	if (status =3D=3D !(value & SUPER_KEY_LOCK_STATUS))
-+		return 0;
-+
-+	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_KE=
-Y_LOCK,
-+				 TRIGGER_SUPER_KEY_LOCK);
-+}
-+
-+static ssize_t super_key_enable_store(struct device *dev, struct device_a=
-ttribute *attr,
-+				      const char *buf, size_t count)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	bool enable;
-+	int ret;
-=20
--	ret =3D regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_K=
-EY_LOCK,
--				TRIGGER_SUPER_KEY_LOCK);
-+	ret =3D kstrtobool(buf, &enable);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D uniwill_write_super_key_enable(data, enable);
- 	if (ret < 0)
- 		return ret;
-=20
- 	return count;
- }
-=20
--static ssize_t super_key_enable_show(struct device *dev, struct device_at=
-tribute *attr, char *buf)
-+static int uniwill_read_super_key_enable(struct uniwill_data *data, bool =
-*status)
- {
--	struct uniwill_data *data =3D dev_get_drvdata(dev);
- 	unsigned int value;
- 	int ret;
-=20
-@@ -701,7 +727,22 @@ static ssize_t super_key_enable_show(struct device *d=
-ev, struct device_attribute
- 	if (ret < 0)
- 		return ret;
-=20
--	return sysfs_emit(buf, "%d\n", !(value & SUPER_KEY_LOCK_STATUS));
-+	*status =3D !(value & SUPER_KEY_LOCK_STATUS);
-+
-+	return 0;
-+}
-+
-+static ssize_t super_key_enable_show(struct device *dev, struct device_at=
-tribute *attr, char *buf)
-+{
-+	struct uniwill_data *data =3D dev_get_drvdata(dev);
-+	bool status;
-+	int ret;
-+
-+	ret =3D uniwill_read_super_key_enable(data, &status);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%d\n", status);
- }
-=20
- static DEVICE_ATTR_RW(super_key_enable);
-@@ -1723,10 +1764,10 @@ static int uniwill_suspend_fn_lock(struct uniwill_=
-data *data)
- 		return 0;
-=20
- 	/*
--	 * The EC_ADDR_BIOS_OEM is marked as volatile, so we have to restore it
-+	 * EC_ADDR_BIOS_OEM is marked as volatile, so we have to restore it
- 	 * ourselves.
- 	 */
--	return regmap_read(data->regmap, EC_ADDR_BIOS_OEM, &data->last_status);
-+	return uniwill_read_fn_lock(data, &data->last_fn_lock_state);
- }
-=20
- static int uniwill_suspend_super_key(struct uniwill_data *data)
-@@ -1735,10 +1776,10 @@ static int uniwill_suspend_super_key(struct uniwil=
-l_data *data)
- 		return 0;
-=20
- 	/*
--	 * The EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to restor=
-e it
-+	 * EC_ADDR_SWITCH_STATUS is marked as volatile, so we have to restore it
- 	 * ourselves.
- 	 */
--	return regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &data->last_swit=
-ch_status);
-+	return uniwill_read_super_key_enable(data, &data->last_super_key_enable_=
-state);
- }
-=20
- static int uniwill_suspend_battery(struct uniwill_data *data)
-@@ -1795,27 +1836,15 @@ static int uniwill_resume_fn_lock(struct uniwill_d=
-ata *data)
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_FN_LOCK))
- 		return 0;
-=20
--	return regmap_update_bits(data->regmap, EC_ADDR_BIOS_OEM, FN_LOCK_STATUS=
-,
--				  data->last_status);
-+	return uniwill_write_fn_lock(data, data->last_fn_lock_state);
- }
-=20
- static int uniwill_resume_super_key(struct uniwill_data *data)
- {
--	unsigned int value;
--	int ret;
--
- 	if (!uniwill_device_supports(data, UNIWILL_FEATURE_SUPER_KEY))
- 		return 0;
-=20
--	ret =3D regmap_read(data->regmap, EC_ADDR_SWITCH_STATUS, &value);
--	if (ret < 0)
--		return ret;
--
--	if ((data->last_switch_status & SUPER_KEY_LOCK_STATUS) =3D=3D (value & S=
-UPER_KEY_LOCK_STATUS))
--		return 0;
--
--	return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, TRIGGER_SUPER_KE=
-Y_LOCK,
--				 TRIGGER_SUPER_KEY_LOCK);
-+	return uniwill_write_super_key_enable(data, data->last_super_key_enable_=
-state);
- }
-=20
- static int uniwill_resume_battery(struct uniwill_data *data)
-=2D-=20
-2.39.5
+Thanks,
+Armin Wolf
 
