@@ -1,116 +1,231 @@
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9342236E3;
-	Tue, 12 May 2026 00:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCEF217704
+	for <platform-driver-x86@vger.kernel.org>; Tue, 12 May 2026 00:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778546549; cv=none; b=oOCmLXb6sy23fvkaiKEJ9VngZakd2vJXzPtzJT77IFHLuNMKfP7lVvhN9GX2g3c7u9ywhSqX6QY3opIxVHEftH6VOBXC7ZqSshVOTrhhL6zsWgFnIXMKURfSZO5A4V5CJuVKOY695Cf0eMZUy2vTlTKnFJv+qQGT2sXxh9t9paM=
+	t=1778546715; cv=none; b=GS4HB2cqCJYcPeEgQs8FWqDt5oLC131mxMbYJ9/YgL7ecBchUwsgY4K6HxFNJEnPgU3tGQW3IWg2AIkoYFfXIT/VcF2E+DliiG9FAgpmNqRz+psInx9sVUxCApKY+1Ru0NRyrrH2swlIYP0BwgJ0wrFV06x4zfiLbfAQJPnML4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778546549; c=relaxed/simple;
-	bh=QXxkJwcxM0kowTwE5lbEn5I2ePQXfBlaBtcfwyQtPcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Skr0wpQ1GlIA5nKFug0v/1ynFpAQvMRMmmnjsZfydbDJ8z8IRQypBnEQFWPJz9vQLVOqJixJdc9da//QGh4yUzAQ6RGfO2u07dhUoOIyHWgCPI5ClVbKQSZYyyZKSc+J+gTgSkwnRvI9mc6fSOei9oTN9VZydfYgQBKqX+gmcsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
-Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
-	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 64C0G6GH031500
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 12 May 2026 09:46:07 +0930
-Date: Tue, 12 May 2026 09:46:06 +0930
-From: Jonathan Woithe <jwoithe@just42.net>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        "Luke D. Jones" <luke@ljones.dev>,
-        Denis Benato <denis.benato@linux.dev>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Robert Gerlach <khnz@gmx.de>, Matan Ziv-Av <matan@svgalib.org>,
-        Kenneth Chan <kenneth.t.chan@gmail.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Jeremy Soller <jeremy@system76.com>,
-        Azael Avalos <coproscefalo@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v1] platform/x86: Check ACPI_COMPANION() against NULL
- during probe
-Message-ID: <agJxRrDj2M42R8S1@marvin.atrad.com.au>
-References: <5990022.DvuYhMxLoT@rafael.j.wysocki>
+	s=arc-20240116; t=1778546715; c=relaxed/simple;
+	bh=O5K7JhFmvQ7p4BOECWMRXTZuWHhFYTbESWD3CyaE+KU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=amb4ZcXc7fhTtUKPUtv1pInAhAW9qEmkpLP/ATCI6NPLYacLjVhLT0SRwgvjWzsX7e1EQmcf7yB7v0w6Fj+Ga3sKb5focaQmsiSatNYItvAWu05JTSDr2nHETMvHVMQtG0qGSVi+TkH+IGhtZGfWqD9SusBG1YxR6xwpPgOTyT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=KQkaxaza; arc=none smtp.client-ip=84.16.66.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="KQkaxaza"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gDyYD375lzhcB;
+	Tue, 12 May 2026 02:45:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
+	s=20260228; t=1778546704;
+	bh=AAWcl1fcFbV1ZDMBPYzHzHVSibCMBFWjUAaEe4z9QPs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KQkaxazaV5gHXbxhidq2cyaw4wxlQ5nrZaEVV1LDEyPIsmCyngaaYALMx3K4YPzRc
+	 u79jUjAtMxPD+Huae/w/5DF4TRQowIvMw3jJHbjRJjLkWRQ/UrUlRXArwEpBNF9N8R
+	 7ODfF+TcrqXbfZbc3f+u+TWV6aVNF2kwtpjuEASrQY83xe2cqrCUMdnjdhkKBMN+Wm
+	 /uyzM4O0igGhHerIPBkZd1bp7JZyhMWw8DfzfNJj7V+drnV1k/kudH8/gHdS3hwFAU
+	 aW213PCK3TjR24GsBdZTgHpyepHhuhOWHEHKstZsyA7pjTQ3rTEqoJROcSJ4LaqMVk
+	 woB751OqBJT9A==
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gDyYC2NCYzRLS;
+	Tue, 12 May 2026 02:45:02 +0200 (CEST)
+Message-ID: <397e5ce5-867c-4ff0-8de8-710c247f5125@gibson.sh>
+Date: Tue, 12 May 2026 02:45:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5990022.DvuYhMxLoT@rafael.j.wysocki>
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] platform/x86/amd/pmc: Delay suspend for some
+ Lenovo Laptops
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Sindre Henriksen <sindrehenriksen93@gmail.com>,
+ "Mario Limonciello (AMD)" <superm1@kernel.org>
+References: <20260509013105.816339-1-daniel@gibson.sh>
+ <20260509013105.816339-3-daniel@gibson.sh>
+ <2fd86d67-b9e6-57ab-775c-1297e34a2e7f@linux.intel.com>
+Content-Language: de-DE, en-GB
+From: Daniel Gibson <daniel@gibson.sh>
+In-Reply-To: <2fd86d67-b9e6-57ab-775c-1297e34a2e7f@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Mon, May 11, 2026 at 09:48:26PM +0200, Rafael J. Wysocki wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On 11.05.26 14:24, Ilpo Järvinen wrote:
+> On Sat, 9 May 2026, Daniel Gibson wrote:
 > 
-> Every platform driver can be forced to match a device that doesn't match
-> its list of device IDs because of device_match_driver_override(), so
-> platform drivers that rely on the existence of a device's ACPI companion
-> object need to verify its presence.
+>> Some IdeaPad Slim 3 devices and similar with AMD CPUs have a
+>> nonfunctional keyboard and lid switch after s2idle.
+>> It helps to delay suspend by 2.5 seconds so the EC has some time
+>> to do whatever it needs to get done before suspend - unfortunately
+>> at least on my 16ABR8 waking it with a timer (wakealarm) still
+>> triggers the issue, but at least normal resume via keypress or
+>> lid works fine.
+>>
+>> This issue has been reported for many different devices, this patch
+>> has been tested with the Zen3-based IdeaPad Slim 3 16ABR8 (82XR)
+>> and the Zen3+-based IdeaPad Slim 3 14ARP10 (83K6).
+>>
+>> Reported-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221383
 > 
-> Accordingly, add requisite ACPI_COMPANION() or ACPI_HANDLE() checks
-> against NULL to multiple platform/x86 drivers that have been converted
-> to platform drivers from ACPI drivers recently.
+> Cc: stable@vger.kernel.org
+> 
+> would be warranted for this.
 
-For the fujitsu-laptop portions of the patch as below:
+Same for the next patch introducing the module parameter?
 
-    Acked-by: Jonathan Woithe <jwoithe@just42.net>
+I already got one report from someone using the parameter that their
+laptop is affected (will include it in the next version of patches).
+I fear there are more - Lenovos naming schemes are wild...
 
-Regards
-  jonathan
+So I think it would be quite useful to get it to people using stable
+kernels as well
 
---
 
-> :
-> Fixes: 6da22b031a3c ("platform/x86: fujitsu: Convert laptop driver to a platform one")
-> Fixes: d5c9212ccfaa ("platform/x86: fujitsu: Convert backlight driver to a platform one")
-> :
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->  drivers/platform/x86/fujitsu-laptop.c     |   12 ++++++++++--
-> :
-> --- a/drivers/platform/x86/fujitsu-laptop.c
-> +++ b/drivers/platform/x86/fujitsu-laptop.c
-> @@ -530,10 +530,14 @@ static void acpi_fujitsu_bl_notify(acpi_
->  
->  static int acpi_fujitsu_bl_probe(struct platform_device *pdev)
->  {
-> -	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-> +	struct acpi_device *device;
->  	struct fujitsu_bl *priv;
->  	int ret;
->  
-> +	device = ACPI_COMPANION(&pdev->dev);
-> +	if (!device)
-> +		return -ENODEV;
-> +
->  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
->  		return -ENODEV;
->  
-> @@ -993,10 +997,14 @@ static void acpi_fujitsu_laptop_notify(a
->  
->  static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
->  {
-> -	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
->  	struct fujitsu_laptop *priv;
-> +	struct acpi_device *device;
->  	int ret, i = 0;
->  
-> +	device = ACPI_COMPANION(&pdev->dev);
-> +	if (!device)
-> +		return -ENODEV;
-> +
->  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
+> 
+>> Tested-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
+>> Suggested-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+>> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+>> ---
+>>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 31 +++++++++++++++++++++++
+>>  drivers/platform/x86/amd/pmc/pmc.c        | 24 +++++++++++++++++-
+>>  drivers/platform/x86/amd/pmc/pmc.h        |  1 +
+>>  3 files changed, 55 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>> index 24506e342943..842a8f442fb5 100644
+>> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+>> @@ -18,6 +18,7 @@
+>>  struct quirk_entry {
+>>  	u32 s2idle_bug_mmio;
+>>  	bool spurious_8042;
+>> +	bool need_suspend_delay;
+>>  };
+>>  
+>>  static struct quirk_entry quirk_s2idle_bug = {
+>> @@ -33,6 +34,10 @@ static struct quirk_entry quirk_s2idle_spurious_8042 = {
+>>  	.spurious_8042 = true,
+>>  };
+>>  
+>> +static struct quirk_entry quirk_s2idle_need_suspend_delay = {
+>> +	.need_suspend_delay = true,
+>> +};
+>> +
+>>  static const struct dmi_system_id fwbug_list[] = {
+>>  	{
+>>  		.ident = "L14 Gen2 AMD",
+>> @@ -203,6 +208,27 @@ static const struct dmi_system_id fwbug_list[] = {
+>>  			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
+>>  		}
+>>  	},
+>> +	/* https://bugzilla.kernel.org/show_bug.cgi?id=221383 */
+>> +	{
+>> +		.ident = "Zen3-based IdeaPad Slim and similar",
+>> +		.driver_data = &quirk_s2idle_need_suspend_delay,
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+>> +			/*
+>> +			 * Note: there are also some Zen2-based 82X* devices that
+>> +			 * need different quirks, they're already handled above
+>> +			 */
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "82X"),
+>> +		}
+>> +	},
+>> +	{
+>> +		.ident = "Zen3+-based IdeaPad Slim and similar",
+>> +		.driver_data = &quirk_s2idle_need_suspend_delay,
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+>> +			DMI_MATCH(DMI_PRODUCT_NAME, "83K"),
+>> +		}
+>> +	},
+>>  	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
+>>  	{
+>>  		.ident = "Thinkpad L14 Gen3",
+>> @@ -356,6 +382,11 @@ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
+>>  		amd_pmc_skip_nvme_smi_handler(dev->quirks->s2idle_bug_mmio);
+>>  }
+>>  
+>> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev)
+>> +{
+>> +	return dev->quirks && dev->quirks->need_suspend_delay;
+>> +}
+>> +
+>>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
+>>  {
+>>  	const struct dmi_system_id *dmi_id;
+>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+>> index 2b9e5730170a..6bafd8661d68 100644
+>> --- a/drivers/platform/x86/amd/pmc/pmc.c
+>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+>> @@ -611,6 +611,27 @@ static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
+>>  	return get_metrics_table(pdev, &table) == 0 && table.s0i3_last_entry_status;
+>>  }
+>>  
+>> +static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+>> +{
+>> +	/*
+>> +	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
+>> +	 * me-time before sleeping or they get uncooperative after waking
+>> +	 * up and don't send events for keyboard and lid switch anymore.
+>> +	 *
+>> +	 * Unfortunately this doesn't entirely fix the problem: It can still
+>> +	 * happen when resuming with a timer (wakealarm), but at least the
+>> +	 * more common usecases (wakeup by opening lid or pressing a key)
+>> +	 * work fine with this workaround.
+>> +	 *
+>> +	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>> +	 */
+>> +	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+>> +		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+>> +		return true;
+>> +	}
+>> +	return false;
+>> +}
+>> +
+>>  static void amd_pmc_s2idle_prepare(void)
+>>  {
+>>  	struct amd_pmc_dev *pdev = &pmc;
+>> @@ -647,7 +668,8 @@ static void amd_pmc_s2idle_check(void)
+>>  	struct amd_pmc_dev *pdev = &pmc;
+>>  	int rc;
+>>  
+>> -	if (amd_pmc_intermediate_wakeup_need_delay(pdev))
+>> +	if (amd_pmc_intermediate_wakeup_need_delay(pdev) ||
+>> +	    amd_pmc_want_suspend_delay(pdev))
+> 
+> Thanks, this looks much cleaner. :-)
+> 
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+Thanks!
+
+> 
+>>  		msleep(2500);
+>>  
+>>  	/* Dump the IdleMask before we add to the STB */
+>> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
+>> index fe3f53eb5955..f5257e47b8c4 100644
+>> --- a/drivers/platform/x86/amd/pmc/pmc.h
+>> +++ b/drivers/platform/x86/amd/pmc/pmc.h
+>> @@ -147,6 +147,7 @@ enum amd_pmc_def {
+>>  };
+>>  
+>>  void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev);
+>> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev);
+>>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
+>>  void amd_mp2_stb_init(struct amd_pmc_dev *dev);
+>>  void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
+>>
+> 
+
