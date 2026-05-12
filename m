@@ -1,97 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694B93E1717;
-	Tue, 12 May 2026 16:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DE9383327;
+	Tue, 12 May 2026 16:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778603430; cv=none; b=E/aEAi1qT5WCWzvq0o4/Q15W+nvcgamTseNDd/xMx9lfqf7y+yEE9EuWWhv47QgQNh+fwlR2qortoVArmumzS5dcXvWW+S3EH9VM2AhAg6fipCOTL8BIlHTZa9NXRWw+gmdzXqc7NIrge8ZtOlhhkx62y1pb5PqOgELs3+qswPw=
+	t=1778603510; cv=none; b=dLy9SJy9B6Y3QYHbklF+LGVxtBAjV2XIy/u53eN2mKD4HFUP2CV554Sql5Dv/5KEwxiT6flBBfb56hBg9EmHxGtWWoY56Zph8nqSJ/JaCYEdinoIYihqoMlymUtGor5tsgxhtebc2cF3FWPqxOexElRnoz/uaof0vSa122li8ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778603430; c=relaxed/simple;
-	bh=1ou0Z/biZbUrVhctWZqb9cyANBFEN59kkoI9R3EaQ/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PBP9Gwfgwcwg8mn6wbNEIZ0k8nMi6b65m6/F7X0MqIkLbuoij0RnPKulStNsnFMD8vuoJv5PXshQh79r8/rl+OVPMAp3sB3+AQJBQbDeleRj61VMPWTlMIv/HpB5S+WuNDW4eldiVFau7yhGYZyTduxdbCZSYHFN5AkRDYpm2Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JarZAgNr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778603510; c=relaxed/simple;
+	bh=sblpOtK2lQq5+S4Sem63m6E70MmkLH+vjHxwFv70MY0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=kSFl6kEc8uujDRLlEPMlvbwpCoYs/79npXVnaLPZAFmIDNu8By/NkcTJ0h4FkEb6AUGh9sYx2gRzKnAuvN/AFW52cmQUupQ188XzDTVAcsLxzywD5F9TcXGRXP3jzxe/XdA6JF6NTnAZMgXgjQW61dBVO2Lmmuw+psIwA2lekbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uG8OfP8I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JarZAgNr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7EBC2BCB0;
-	Tue, 12 May 2026 16:30:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uG8OfP8I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E460FC2BCB0;
+	Tue, 12 May 2026 16:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778603430;
-	bh=1ou0Z/biZbUrVhctWZqb9cyANBFEN59kkoI9R3EaQ/k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JarZAgNr5CR/1Y3K77CasemF6bw6LGu/LWlaOtOIawe+OA7cVOvLGa/Hh0puST2Nb
-	 H2RE7JqTK+S/fmqaFIk0wlQpmU+LMg9GVuSF9hPnX7PhX5Pvr1AWgN6snvAdqbJFd4
-	 9/IK1c+VpEIpl1ztHZBanpC2udQcmYPPtzjGlQz6+IrPPxpSQUsiE2bCcoyqdPGAfF
-	 uQ/CGcKskJLko0Q2RraUcZmq2RQ9KXjWEOPDpk5jUqd4MNdOmEiyic96jRLvT0FtDU
-	 K+BDldE4DGQnk4j9S7oO50HIaTKMvj6AIK8nOsBFsQI1alRGh/wPgrsgn7PRnRBys3
-	 Di7K7iA2BF1+w==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Chen Yu <yu.c.chen@intel.com>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org,
- Maximilian Luz <luzmaximilian@gmail.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>
-Subject:
- [PATCH v1] platform/surface: surfacepro3_button: Check ACPI_COMPANION()
-Date: Tue, 12 May 2026 18:30:26 +0200
-Message-ID: <23119222.EfDdHjke4D@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	s=k20201202; t=1778603510;
+	bh=sblpOtK2lQq5+S4Sem63m6E70MmkLH+vjHxwFv70MY0=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=uG8OfP8IAYLS92UPnfRbS+xC22SKgEeek73+SJbCW/Q1wxhtGAR5HsBttZZgsDjow
+	 W/gjOCl57L3P/aY4qksrIRtvOCHnVX+n75Oop6ji+09hKNZEitGmxPiOwazyIhkFtz
+	 ZcYnw7GxxMqBYqwv07DYMgLDxTjxK64e7sWNbuXNBOc0KpwZ3m5m36PcNNfWPdOruN
+	 6bV2yOdfJ0VB9wNp/3PpLzXkPdEprKrg6r0aJCLePQyKwQwvtlTZ/VljF8nhGdp5Ii
+	 GwvySQJMyKq0nvGiEkcL5JjUA2U1ms35IThuo3f5+8Y0vCMcblIQJ1KRqA2aCVvgsT
+	 HU+KchwapPiLQ==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 12 May 2026 18:31:44 +0200
+Message-Id: <DIGUBLZXZXPJ.8CX0K5EL6255@kernel.org>
+Subject: Re: [PATCH v5 3/7] driver core: platform: provide
+ platform_device_add_software_node()
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
+ <david@davidgow.net>, "Rae Moar" <raemoar63@gmail.com>, "Andy Shevchenko"
+ <andy@kernel.org>, "Maximilian Luz" <luzmaximilian@gmail.com>, "Hans de
+ Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Matthew Brost" <matthew.brost@intel.com>,
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, <brgl@kernel.org>,
+ <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260512-swnode-remove-on-dev-unreg-v5-0-0035eff63812@oss.qualcomm.com> <20260512-swnode-remove-on-dev-unreg-v5-3-0035eff63812@oss.qualcomm.com>
+In-Reply-To: <20260512-swnode-remove-on-dev-unreg-v5-3-0035eff63812@oss.qualcomm.com>
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Tue May 12, 2026 at 1:59 PM CEST, Bartosz Golaszewski wrote:
+> +int platform_device_add_software_node(struct platform_device *pdev,
+> +				      const struct software_node *swnode)
+> +{
+> +	return device_add_software_node(&pdev->dev, swnode);
 
-Every platform driver can be forced to match a device that doesn't match
-its list of device IDs because of device_match_driver_override(), so
-platform drivers that rely on the existence of a device's ACPI companion
-object need to verify its presence.
+I think this should be device_create_managed_software_node(), see also [1].
 
-Accordingly, add a requisite ACPI_COMPANION() check against NULL to the
-surfacepro3_button driver.
+That said, now that I see the resulting code and the corresponding subletie=
+s, I
+think we should reconsider your (well predicted) "temporary
+platform_device_release_full()" idea for -fixes, while iterating this for -=
+next.
 
-Fixes: d913a5a12b40 ("platform/surface: surfacepro3_button: Convert to a platform driver")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/platform/surface/surfacepro3_button.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
---- a/drivers/platform/surface/surfacepro3_button.c
-+++ b/drivers/platform/surface/surfacepro3_button.c
-@@ -185,12 +185,15 @@ static bool surface_button_check_MSHW004
- 
- static int surface_button_probe(struct platform_device *pdev)
- {
--	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
- 	struct surface_button *button;
-+	struct acpi_device *device;
- 	struct input_dev *input;
--	const char *hid = acpi_device_hid(device);
- 	int error;
- 
-+	device = ACPI_COMPANION(&pdev->dev);
-+	if (!device)
-+		return -ENODEV;
-+
- 	if (strncmp(acpi_device_bid(device), SURFACE_BUTTON_OBJ_NAME,
- 	    strlen(SURFACE_BUTTON_OBJ_NAME)))
- 		return -ENODEV;
-@@ -210,7 +213,8 @@ static int surface_button_probe(struct p
- 	}
- 
- 	strscpy(acpi_device_name(device), SURFACE_BUTTON_DEVICE_NAME);
--	snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
-+	snprintf(button->phys, sizeof(button->phys), "%s/buttons",
-+		 acpi_device_hid(device));
- 
- 	input->name = acpi_device_name(device);
- 	input->phys = button->phys;
-
-
-
+[1] https://lore.kernel.org/driver-core/DIGU67TAWF7W.1DWZMO4XAVK7G@kernel.o=
+rg/
