@@ -1,75 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DE9383327;
-	Tue, 12 May 2026 16:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDAC3C415D;
+	Tue, 12 May 2026 16:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778603510; cv=none; b=dLy9SJy9B6Y3QYHbklF+LGVxtBAjV2XIy/u53eN2mKD4HFUP2CV554Sql5Dv/5KEwxiT6flBBfb56hBg9EmHxGtWWoY56Zph8nqSJ/JaCYEdinoIYihqoMlymUtGor5tsgxhtebc2cF3FWPqxOexElRnoz/uaof0vSa122li8ps=
+	t=1778604123; cv=none; b=k1N4IMB+djSQMlQReD39xahdaIYlGfsd0QSHdwPLA8A44gbLse0Kks90mTePKgH3FUT/2FpZhWUfPaUBLWOdz0CIycq+xEGNkpEyS56+IVt9qOjVjS4DMrTDVL+E2wD2nwdCa/DMRvGhxJ6nhDih7zoO8sHIeD7d7875SQ3H1Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778603510; c=relaxed/simple;
-	bh=sblpOtK2lQq5+S4Sem63m6E70MmkLH+vjHxwFv70MY0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=kSFl6kEc8uujDRLlEPMlvbwpCoYs/79npXVnaLPZAFmIDNu8By/NkcTJ0h4FkEb6AUGh9sYx2gRzKnAuvN/AFW52cmQUupQ188XzDTVAcsLxzywD5F9TcXGRXP3jzxe/XdA6JF6NTnAZMgXgjQW61dBVO2Lmmuw+psIwA2lekbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uG8OfP8I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778604123; c=relaxed/simple;
+	bh=LIEmK4O64zW67Owrr3zes/boa8beiyttymS/DjPOLxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1Rg4ii0jxoA2T2uCQ4vbUeUmL+WbCf6f0lXXHV7eITKr+Ud5i+pcwQFBrzxhJqxRkG4Fy3LOebTmN1f9gXf2/10dt9vTgMZnca03+oTeQVxjx5bN+8kBEsO/L61dTuKAgnO/2BcJFEEM28r03urtzQnEGsWLavEvP22u+ohoJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dUbTCvfm; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uG8OfP8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E460FC2BCB0;
-	Tue, 12 May 2026 16:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778603510;
-	bh=sblpOtK2lQq5+S4Sem63m6E70MmkLH+vjHxwFv70MY0=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=uG8OfP8IAYLS92UPnfRbS+xC22SKgEeek73+SJbCW/Q1wxhtGAR5HsBttZZgsDjow
-	 W/gjOCl57L3P/aY4qksrIRtvOCHnVX+n75Oop6ji+09hKNZEitGmxPiOwazyIhkFtz
-	 ZcYnw7GxxMqBYqwv07DYMgLDxTjxK64e7sWNbuXNBOc0KpwZ3m5m36PcNNfWPdOruN
-	 6bV2yOdfJ0VB9wNp/3PpLzXkPdEprKrg6r0aJCLePQyKwQwvtlTZ/VljF8nhGdp5Ii
-	 GwvySQJMyKq0nvGiEkcL5JjUA2U1ms35IThuo3f5+8Y0vCMcblIQJ1KRqA2aCVvgsT
-	 HU+KchwapPiLQ==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dUbTCvfm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778604122; x=1810140122;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LIEmK4O64zW67Owrr3zes/boa8beiyttymS/DjPOLxw=;
+  b=dUbTCvfmHEYwGcZI8g8FLrMwkU5HoCuvqwuMaAkEEEmjLWxtzatwFk9O
+   94l4TxP/NGaVQ59/tmEiqdriS68hN8TfOiEWatOTMEAHbHlh4G6BgaNxq
+   teasghyM8pHmQQfr9GDqqNwU1V0U4uRLsfUYncNwzhh92EngUZIBVD2GT
+   j3pqqomqg7gosUTmJZXKc8FwdPh/9JrM3PF7hmEh+F06fUCO2i5RWv3Ql
+   r5nydBdzvHNfmxe8YlW3ZWHpLMfCHk/I+ve4AkmbqUXqr8ahtZUacCPkZ
+   IlUvhDAK953SFSgID6vgzPTSMtEZxIjR/epeU2UXXV6wxCvoQILBKUVP6
+   A==;
+X-CSE-ConnectionGUID: s8FxiNCiRhKMRM8RbyNRjA==
+X-CSE-MsgGUID: cfRmrTmVTGCkPBcj4rgZOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="79468833"
+X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
+   d="scan'208";a="79468833"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 09:42:00 -0700
+X-CSE-ConnectionGUID: Lml3n4MQRKCrTtbCnbIWRQ==
+X-CSE-MsgGUID: xNmPyyu7Q1epvLdKsjKb8w==
+X-ExtLoop1: 1
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.244])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 09:41:58 -0700
+Date: Tue, 12 May 2026 19:41:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Chen Yu <yu.c.chen@intel.com>, Hans de Goede <hansg@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v1] platform/surface: surfacepro3_button: Check
+ ACPI_COMPANION()
+Message-ID: <agNYU8Q7Aa9Nm_V2@ashevche-desk.local>
+References: <23119222.EfDdHjke4D@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 12 May 2026 18:31:44 +0200
-Message-Id: <DIGUBLZXZXPJ.8CX0K5EL6255@kernel.org>
-Subject: Re: [PATCH v5 3/7] driver core: platform: provide
- platform_device_add_software_node()
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
- <david@davidgow.net>, "Rae Moar" <raemoar63@gmail.com>, "Andy Shevchenko"
- <andy@kernel.org>, "Maximilian Luz" <luzmaximilian@gmail.com>, "Hans de
- Goede" <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Matthew Brost" <matthew.brost@intel.com>,
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, <brgl@kernel.org>,
- <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260512-swnode-remove-on-dev-unreg-v5-0-0035eff63812@oss.qualcomm.com> <20260512-swnode-remove-on-dev-unreg-v5-3-0035eff63812@oss.qualcomm.com>
-In-Reply-To: <20260512-swnode-remove-on-dev-unreg-v5-3-0035eff63812@oss.qualcomm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23119222.EfDdHjke4D@rafael.j.wysocki>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue May 12, 2026 at 1:59 PM CEST, Bartosz Golaszewski wrote:
-> +int platform_device_add_software_node(struct platform_device *pdev,
-> +				      const struct software_node *swnode)
-> +{
-> +	return device_add_software_node(&pdev->dev, swnode);
+On Tue, May 12, 2026 at 06:30:26PM +0200, Rafael J. Wysocki wrote:
 
-I think this should be device_create_managed_software_node(), see also [1].
+> Every platform driver can be forced to match a device that doesn't match
+> its list of device IDs because of device_match_driver_override(), so
+> platform drivers that rely on the existence of a device's ACPI companion
+> object need to verify its presence.
+> 
+> Accordingly, add a requisite ACPI_COMPANION() check against NULL to the
+> surfacepro3_button driver.
 
-That said, now that I see the resulting code and the corresponding subletie=
-s, I
-think we should reconsider your (well predicted) "temporary
-platform_device_release_full()" idea for -fixes, while iterating this for -=
-next.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[1] https://lore.kernel.org/driver-core/DIGU67TAWF7W.1DWZMO4XAVK7G@kernel.o=
-rg/
+...
+
+>  	strscpy(acpi_device_name(device), SURFACE_BUTTON_DEVICE_NAME);
+> -	snprintf(button->phys, sizeof(button->phys), "%s/buttons", hid);
+> +	snprintf(button->phys, sizeof(button->phys), "%s/buttons",
+> +		 acpi_device_hid(device));
+
+I'm wondering if some CIs will now generate a snprintf() warning
+(this was in the original code if the compiler can prove no truncation
+ of the string, though).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
