@@ -1,282 +1,157 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011025.outbound.protection.outlook.com [52.101.52.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681FD357CFF;
-	Tue, 12 May 2026 06:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778567375; cv=fail; b=K2gjqBEiIgSMnG8qqACMGTFEn44JmIsau8P1PZeaQiuBLhuUCPOti8vpo86qULiff1ickbRqoV4qccrDidGpnlVX4SjyI2Pa8TiDOqP/YWUq8Zr1JlQXk1pB4wARD/d3bye7iVnv9oOAAaDg8oMoiRAvjS9fyUUUXZNk+VlsZRo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778567375; c=relaxed/simple;
-	bh=eUuNSvnb0mSSViEpTVdiNEKOqEikCjgd7dcxvotdSuA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WYrP+pqbKCr+2nTOO9HTurgVKy8WFsccJKiiRiDHLfAP4FXED+xBIamuOpRYYG44bM7yrM7zr7ytH5vXDWP7S6xc+6fChbdq6xT40v51r1PIhYdhj1wM3wo424JuirPn0S/2Sc8Xn6OHV0/VHK/NC3/q56aIQya8z9R55kKzNaM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a9U4LqXd; arc=fail smtp.client-ip=52.101.52.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0B2379C27;
+	Tue, 12 May 2026 07:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778570736; cv=none; b=ECemgb2JaAXdLlKCNQYfqPWjWTinSD/BM+kBraeEhmUj8GAdiewC1ciyNxjHjg6subqRgEvliBLPFp7V7DKnPO56CfyUVRVc/i0CehKBOzXfpobY22o+uOXQ1vycthvJx+8blngszcZftmLZftk/Ew9ElGEl838i6oWmzVZZPx4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778570736; c=relaxed/simple;
+	bh=PeVOJjCFZ8afC7E8cxhQ0xbeqCctf6NNU/R60vKAtBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PiElhCowz91tqpNi2KI7zDDOXK8IFv3dpFB4F2CYM1lVOxWfQLKaldAOdQq3YCCOdMREpaeRRq35zysNVJX8Fv69sVV6QEJpq6c6Oy+fEfiF9UMRhuQJjtOd63U9QpisSN8LFTRoduj6/5JtAWrBnfKcZJbzYz3GFcW3y/zBbLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YB9GisrY; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a9U4LqXd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uhUtnMK5RrRaw4lxpdmoCV6MDXnWFn+qfr1BbwrKC1WJg6zD4NQhlQpOWCqTAGZXCAwCW+vNNmUCqN0BN3qKwbs6Ij/UABr1xAVL3wHIJWoBO+z/1AzTuNKZRATrYrxBeVBANQu4qUo0mld97HNZ0l0GytJvxVTDTnpS5SsKpB6ASB26p27sf6Husq1ptxISZb0URIHuCbil/XkAPcbHHMajQcPjUppHDfVkdychA6wIqsw+wCXJJ3bwIIhTgNtzvjdLMGosuB4nmfJxuR7Xi3OFQDVA+Ehb0pK0379Ex1qJ7zkkJLpeKXgs1HJwGvnNMtS0sgcqJIHZxJ2VoT6rfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0p5ein7Cu6mvqSn66Y6HVjTCG00V0v/Nde2arFW9l9M=;
- b=bqvfGv1OqMPE2f4q2sZtRxs7kEVsn9p8rpm9u/FYue2QpWkLiP/d6VT83Z5zvbvbZ5KrQR5qjkf+MxbbzFsPYcor9RQ2oMp14HL1lwW35/8WqIgmeyWIapSX1hzu33D5VaphgU2eZa8ynUa0rI+vcjGYKfKJqqoHMAbwhxDf9QTKizX30jYADvlQToZaf0z21cHE4YDMu6/RHDG2oZzS0Ho1es2ICIqjDAQvBOrEKODhyN0PmJvKpDGMfDRW9UJ4fVZ46z7O5FgBQGL23M8D+W1iVkWmCV/orGjEY7HhxclsdZ0TxLx5oxQrlw4MBlTBUETWh9jj0y0IgJdoj17VJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0p5ein7Cu6mvqSn66Y6HVjTCG00V0v/Nde2arFW9l9M=;
- b=a9U4LqXda9WeUzFaKeZD/ud1pppMUmjPYo9SeozSszwPCkWn6UP7yYNNdrF+h4po9gqK+8pfkjAQAqF3kZwig4q+7IzVCqWTeOWpziBioZAWaD+/56gADhjCp5KMMMbDonUzppOhTNqgc1Ez5YMHVSDDK8f8MWdeWxAdsCSaibQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
- by SA1PR12MB6776.namprd12.prod.outlook.com (2603:10b6:806:25b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.23; Tue, 12 May
- 2026 06:29:08 +0000
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.20.9891.021; Tue, 12 May 2026
- 06:29:08 +0000
-Message-ID: <5f20b0af-bb3a-499e-8ee0-c1ef0429345b@amd.com>
-Date: Tue, 12 May 2026 11:58:59 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] sysfs: Add SYSFS_HUGE_BIN_FILE flag for binary
- attributes larger than PAGE_SIZE
-To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com,
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- driver-core@lists.linux.dev, Nayak K Prateek <kprateek.nayak@amd.com>
-References: <20260427155129.545327-1-muralidhara.mk@amd.com>
- <20260427155129.545327-5-muralidhara.mk@amd.com>
-Content-Language: en-US
-From: "M K, Muralidhara" <muralimk@amd.com>
-In-Reply-To: <20260427155129.545327-5-muralidhara.mk@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0115.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::14) To PH8PR12MB7325.namprd12.prod.outlook.com
- (2603:10b6:510:217::19)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YB9GisrY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778570733; x=1810106733;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PeVOJjCFZ8afC7E8cxhQ0xbeqCctf6NNU/R60vKAtBA=;
+  b=YB9GisrYrntCCvu5i1+TJDia95+vIeObs8WzLHuQrBxB8IfiCTUtNYAV
+   tXNPfqoDREY8nbQ9xSb4zlMU+fzRMh9E+N/hXcnbWjkaD6eQLgLP0IvAK
+   h/58npQcd9MO8HwaF/vE9IxfDadBNjCh/8yRKD2Cxa8MdVYZn1/errH8y
+   1sTytFS+bbJTnMI+//N6NQSyGYGFNIv5/rPUzYAn9jQJkPWU3WMDUwdLA
+   gculBORt8fLvzN0t/VnsmfxXOwMBFMRZFxqtWqUnPWXWPsPizbb3LrWtc
+   YiSJVQM7+RhkcJM+h/5HwzbpElTtZkys+LyzmGebMm/PAOF4nMbrKpBHx
+   w==;
+X-CSE-ConnectionGUID: DAYVxT5QQs6oebnjvAIzPg==
+X-CSE-MsgGUID: BoOWENa+SMWt98QJfZwzeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="83088526"
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="83088526"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 00:25:32 -0700
+X-CSE-ConnectionGUID: Qub24myqQcO5Lh1e6PFbVg==
+X-CSE-MsgGUID: 04MBYrdYRgSGIUiGj3R/ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="237930127"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 00:25:27 -0700
+Date: Tue, 12 May 2026 10:25:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+	Jonathan Woithe <jwoithe@just42.net>, Robert Gerlach <khnz@gmx.de>,
+	Matan Ziv-Av <matan@svgalib.org>,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Mattia Dongili <malattia@linux.it>,
+	Jeremy Soller <jeremy@system76.com>,
+	Azael Avalos <coproscefalo@gmail.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86: Check ACPI_COMPANION() against NULL
+ during probe
+Message-ID: <agLV5STILBnNNfWH@ashevche-desk.local>
+References: <5990022.DvuYhMxLoT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7325:EE_|SA1PR12MB6776:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e7c9402-2858-4ce7-b115-08deafefc56a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|17002099007|18002099003|22082099003|56012099003|11063799003;
-X-Microsoft-Antispam-Message-Info:
-	gwaWBqeQt/qxwb0Vinac9c+A7XowE5WO3K+jMx2Pqr2lJtctuOMWLi8ybw3OoyNwh91brjUIG70wUN6d3eYdUtwx3THApsHIYS5ZUJilhje4FGEb7qg+AcShJrm4OJDNTG4J8hCzimr8p9C3JJdJPAsFKKuo9eJQS4sn8Q2vgVFjSxB+04MDUpGpUsSgfYNQbPNbxV4WF3n2I+b60auQdd5IYdOt9RcrzxK4BFE3u+tgBxJP+GqQp8iukXYOusAxBFq1uxQBm4deE2rY8O6nJ0fQ7OGdKWpd6ey7pibJpOZRIEcbRyGhAAuDxngN0MegIi+zvIMKrHIpqjEi4eTasSaun1a9+5RYVVhZTCxMt/VhtFGRDwL0BJhxvRYk3G06Jy86kGR9nhazrdNigcCDe32LX3ou2uqZzlVCkb1lZV3kEADg08QEotGH1CmKY5yWTeOXGQbPvEownwGRibcuYxLHelZHJKr1sr60QE8WqxFRqOUmIKxm1NvbZgsb0TouTEImw+tkMjulczXn2wnxs0jce7xrK2R/12PqnA6T8f2AhpuBZRooqSF56Gnl6GjjN7/Xm31BkJcrj+B7uKSCV+22lT40fYEbBXecBUBSJY2oKA8awe6g0obZ4gzLfBsxDGHMvVzEZ3HrSLLqWfJsKesrMc9CBEWIlHgDLPx/9/QTU+u8sTE+sEkse24XW6Ri
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(17002099007)(18002099003)(22082099003)(56012099003)(11063799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eUk0SEZDRTVtVkdSdzFtTEpuVXJBT1JjT3JRRVJub3NJNGVUMHpmd2JWUHZy?=
- =?utf-8?B?SnFUNGYwR0xuVkJuR2NRRGZzMXFtWGtIN1pMTGkxQ21GOHBOOXcvZkZ4djVu?=
- =?utf-8?B?a2c2M1VsWmxGd0J2cWhFZ3JzaUV3eEdNQnVWUEZjajNYQXE3WGNSNCt6dmRO?=
- =?utf-8?B?dHFUYWVraC9PcHgxTTZLSVhjc0dxbm9lMWRScksrVlAxek00Q1lvbnBwR0d4?=
- =?utf-8?B?N0dtOHFCRGYyaVpCVmVhd0dNV1BBWHQ5ODBjai9SaXdOVGo4eSt0Z1VSNEsv?=
- =?utf-8?B?akVzcFF6QzhGMW1ZZ1lnMUsvU3VPWlBOVE1SNHlNc0dCSGdyYXlzaWFWZ0dN?=
- =?utf-8?B?cGRLUkczZzJJV2NDNVBuZXpJVkVWeVdENnprNVVQMEhEcDRKMlkwb1FrT0Zo?=
- =?utf-8?B?NURsRTV6bHlQQ2VtaXN2SzhObzhIa0RHUTZMbzc2ZDhrZXU3TUNNcTNxUmU2?=
- =?utf-8?B?QmZCeGZZUk8xbE9keENqMGRpSENwYlJSQit6NDMrdzFRWUNlZHBja1Fra1R2?=
- =?utf-8?B?Uyt1Z09hMHNEb3R0Y1ZRWTd5Y0htbFdndHkvcThONFVBcEEyNXBvOWphNWdv?=
- =?utf-8?B?Q09sRHRIQ0NGSDd2ZHR0U3BZeXZNZ3NqWXExeFpWN0tmZVlRUU93UFVJQWhJ?=
- =?utf-8?B?YXhqeGVEbXN2ek9NT0EvM3I2WkNJT3d6bk05WTV0NEdRVkdCQVB1eEVOK1VL?=
- =?utf-8?B?K0Z1QWd1NHltRmVvU2Z3eThBeVJsekpJMnNNREk2Uk5WbmV0ZGtSejkydGJ2?=
- =?utf-8?B?RVlVWEg3YVJSQThGTUMyWGNPQ01JbjVZNjdmcEZGemlsZEhQNGxCb2pzUjJ4?=
- =?utf-8?B?M0FpU09NTFRNcmNhdmFGQjR2TDhPNnZyeitlbnZvOXpzRDdCdFlqanV5Qkcr?=
- =?utf-8?B?TGJQc1RMODY5MkdDeERZOGNjQ2NERFdEdy9qaDNSRG9pM3dEOEtYN3Jzejc1?=
- =?utf-8?B?UVlRQTc2Z3ZjUkpkVHg3L1VSVmdYU2VxY0dHbk9QaE1xVG1HN2JoS1ZLRmJk?=
- =?utf-8?B?Qnh0dS8xL21tMzJsS3RxaE4xODBFdGg4dnNVbWFZYjVrR3U3emwxY1ZQcWtL?=
- =?utf-8?B?NHNEL2xqNGNPNGJVSjVVWWFzWW9RbENOdUxEbkhaQlUxck5xUHhKb2xSZFVp?=
- =?utf-8?B?cEc5SC81UDR0QjQ4M0Q5ZTg2RGtEWXM1cFE3K25EZ2tZeEMydjByeVpPRmhS?=
- =?utf-8?B?OE9nM1lEeE8zNm1UOVc5YmtIektod0NWN2lsZlRwM0VQdlhCN3ZVWXlWTEhs?=
- =?utf-8?B?eGwycEEwakdkQVpwZVBObHY2MURYV2hra2RhM1RkSWtyQlkxSVVQamNXbnVh?=
- =?utf-8?B?bHBzWVFtSG1xa0ptaFUrZFBwSi9iM0JsblB6VlA3NzJyWkd3MkRFSGw1R0Fq?=
- =?utf-8?B?UzY2WGlmY2VHQkRmTWJMTXFPMFRCWUxCMXdJaVhrbXI5UzMxZjJIY2tKMGZL?=
- =?utf-8?B?RitURVNZRGdYZ1ZiRTJUYjBQSUNxdnZnSkZ5d2V6M1BSSkZERkhXaG8yTkdU?=
- =?utf-8?B?dm5yNnU3RmIwdHNseWFFVVNmWVB1QVRaazcvVHU0Yi9KM2dkaE1IZE5BOS9Y?=
- =?utf-8?B?ZCtpTkx3ajI1VkljR3RJQ3NRSFdyTzNJSkJFdGtJakdGK29UeW5wZjIxcGta?=
- =?utf-8?B?bVdjVElvQlBiSzZYZmcwMmZUWkE1YlQ2TFcxVXlmeDVVcytqa3JJeFByeDAr?=
- =?utf-8?B?KzZGS2xXNC9NQVE5UzRmWHR3dDVOSzUwY1h1SnpvdjRTMXpRVzdmQklIZmZm?=
- =?utf-8?B?TUlrQ3IrVlF1UHdmcE9uRGRJQ0V5NGJwRzBWWUx0TWdoN1hTbi9tSnJPQWFS?=
- =?utf-8?B?NFJEL2FGaXNyQTl1akFMWXVJZHNRSGszeXBaMERlcGhYWk5qTnlGUEFmZTl4?=
- =?utf-8?B?V1k2bmpIbktJQjJISCtNamJsRDhHaFFncWN6cEZFakM5MVRrT3QzTk1NRWcx?=
- =?utf-8?B?RkhNS3dwb3RPd2tHTmUzSkt1ZXhaeFRxZXRQMnJxUm5tb3Fwckl4V2xsVjdL?=
- =?utf-8?B?MnljVXhIaHJDRExIWWN4Q2szZGV2eGxacjFIWVQwc1A4ZFNtVDhTZTNEZTVq?=
- =?utf-8?B?dzlCenY5ai9ta1hISG5NcmtlOHZycDcydDRZdWc2TVdvUkxNSjAwWjl6SUFN?=
- =?utf-8?B?YkNkVytCN2poNERidUpGVklUZXJpNTVIc3lpNFhIRmMrQzVObUtmMUR5bkdL?=
- =?utf-8?B?RXBPU0l6UnBCYitibElYS3J6cHgzbDN5STRiRWNOc3R4enlna3JWSzBsM01K?=
- =?utf-8?B?VlFTYlFkYzczY1ZBV25POTRucjFHVDc2RGxaMzYxbXJlblpmZlBHOGZTVTJL?=
- =?utf-8?B?cnRCVEdBL1pJMUdpUkZtZERwMkpZaFhRVHowbjRyVGpSRjQyaWF5dz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e7c9402-2858-4ce7-b115-08deafefc56a
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2026 06:29:08.1119
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KDD5HGxKBl5voNJzKFUfMxHzbBX2MWkZhlHFvYh5lk6r9BvPr07LCZRrPEQ2svPY+6K4fssri6q7lBcfi0D4Bg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6776
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5990022.DvuYhMxLoT@rafael.j.wysocki>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Greg and rafael,
-Could you please review and provide your feedback on this patch.
+On Mon, May 11, 2026 at 09:48:26PM +0200, Rafael J. Wysocki wrote:
 
-On 4/27/2026 9:21 PM, Muralidhara M K wrote:
-> Historically, sysfs read buffers were allocated with get_zeroed_page(),
-> limiting reads to PAGE_SIZE.  Commit 13c589d5b0ac ("sysfs: use seq_file
-> when reading regular files") transitioned regular (text) attribute reads
-> to seq_file, which can dynamically grow buffers beyond PAGE_SIZE.
-> However, the PAGE_SIZE limit was intentionally preserved for
-> compatibility.  When binary attribute handling was later unified into
-> the same codebase, the non-seq_file read path (kernfs_file_read_iter)
-> retained this PAGE_SIZE cap for binary files as well.
+> Every platform driver can be forced to match a device that doesn't match
+> its list of device IDs because of device_match_driver_override(), so
+> platform drivers that rely on the existence of a device's ACPI companion
+> object need to verify its presence.
 > 
-> Drivers that expose binary attributes larger than PAGE_SIZE — such as
-> the AMD HSMP metric table (~13 KB) — cannot deliver the full content
-> in a single read() call through the existing path.
-> 
-> Introduce a new opt-in flag SYSFS_HUGE_BIN_FILE (040000) that drivers
-> can OR into their bin_attribute mode.  When set, sysfs selects a new
-> kernfs_ops (sysfs_bin_kfops_huge_file_ro) whose .seq_show callback
-> pipes the bin_attribute ->read() result through seq_file, allowing
-> reads of arbitrary size in one shot.  Existing binary attributes
-> without the flag continue using the legacy capped path.
-> 
-> Co-developed-by: Nayak K Prateek <kprateek.nayak@amd.com>
-> Signed-off-by: Nayak K Prateek <kprateek.nayak@amd.com>
-> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-> ---
-> Changes v1->v2: New patch
-> 
->   fs/sysfs/file.c       | 45 +++++++++++++++++++++++++++++++++++++++++++
->   fs/sysfs/group.c      |  8 ++++----
->   include/linux/sysfs.h |  1 +
->   3 files changed, 50 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> index 5709cede1d75..be42c3c1e056 100644
-> --- a/fs/sysfs/file.c
-> +++ b/fs/sysfs/file.c
-> @@ -38,6 +38,45 @@ static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
->   	return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
->   }
->   
-> +/*
-> + * Reads on huge sysfs bin files are handled through seq_file, which
-> + * takes care of hairy details like buffering and seeking.  The
-> + * following function pipes the bin_attribute ->read() result through
-> + * seq_file so that reads larger than PAGE_SIZE work in one shot.
-> + */
-> +static int sysfs_kf_huge_file_seq_show(struct seq_file *sf, void *v)
-> +{
-> +	struct kernfs_open_file *of = sf->private;
-> +	const struct bin_attribute *battr = of->kn->priv;
-> +	struct kobject *kobj = sysfs_file_kobj(of->kn);
-> +	loff_t size = file_inode(of->file)->i_size;
-> +	ssize_t count;
-> +	char *buf;
+> Accordingly, add requisite ACPI_COMPANION() or ACPI_HANDLE() checks
+> against NULL to multiple platform/x86 drivers that have been converted
+> to platform drivers from ACPI drivers recently.
+
+> Fixes: 578bc2a53ae2 ("platform/wmi: Convert drivers to use wmidev_invoke_procedure()")
+> Fixes: f7e648027d7e ("platform/x86: asus-wireless: Convert ACPI driver to a platform one")
+> Fixes: ba19eb10170b ("platform/x86: asus-laptop: Convert ACPI driver to a platform one")
+> Fixes: 3a96c7915d93 ("platform/x86: toshiba_haps: Convert ACPI driver to a platform one")
+> Fixes: 553b2ac59fbb ("platform/x86: toshiba_bluetooth: Convert ACPI driver to a platform one")
+> Fixes: 246d6cefe525 ("platform/x86: toshiba_acpi: Convert ACPI driver to a platform one")
+> Fixes: 19ebacfb442b ("platform/x86: dell/dell-rbtn: Convert ACPI driver to a platform one")
+> Fixes: 80b8f68b94ab ("platform/x86: system76: Convert ACPI driver to a platform one")
+> Fixes: de6837243af0 ("platform/x86: panasonic-laptop: Convert ACPI driver to a platform one")
+> Fixes: 6da22b031a3c ("platform/x86: fujitsu: Convert laptop driver to a platform one")
+> Fixes: d5c9212ccfaa ("platform/x86: fujitsu: Convert backlight driver to a platform one")
+> Fixes: bd13b265d386 ("platform/x86: fujitsu-tablet: Convert ACPI driver to a platform one")
+> Fixes: 8507277ef132 ("platform/x86: wireless-hotkey: Convert ACPI driver to a platform one")
+> Fixes: 3471415c8186 ("platform/x86: topstar-laptop: Convert ACPI driver to a platform one")
+> Fixes: 138db7ee58c0 ("platform/x86: sony-laptop: Convert PIC driver to a platform one")
+> Fixes: 14004dd31caa ("platform/x86: sony-laptop: Convert NC driver to a platform one")
+> Fixes: 2d9cb20610f7 ("platform/x86: lg-laptop: Convert ACPI driver to a platform one")
+> Fixes: 8a44bd3ffdb2 ("platform/x86: intel/smartconnect: Convert ACPI driver to a platform one")
+> Fixes: 163a68a31f74 ("platform/x86: intel/rst: Convert ACPI driver to a platform one")
+> Fixes: 079b59fd2d79 ("platform/x86: eeepc-laptop: Convert ACPI driver to a platform one")
+> Fixes: b30a462720ad ("platform/x86: acer-wireless: Convert ACPI driver to a platform one")
+
+Looking at this I would rather see the series, but am not a maintainer here and
+I'm fine with the result. As a single patch or as a series
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+...
+
+>  static int acpi_fujitsu_probe(struct platform_device *pdev)
+>  {
+> -	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
+> +	struct acpi_device *adev;
+>  	acpi_status status;
+>  	int error;
+>  
+> +	adev = ACPI_COMPANION(&pdev->dev);
+> +	if (!adev)
+> +		return -ENODEV;
 > +
-> +	if (!battr->read)
-> +		return -EIO;
+>  	status = acpi_walk_resources(adev->handle, METHOD_NAME__CRS,
+
+Don't you want ACPI_HANDLE() actually? (Note it's not directly related
+to this change, but perhaps a material for further improvements.)
+
+>  			fujitsu_walk_resources, NULL);
+
+...
+
+> +	device = ACPI_COMPANION(&pdev->dev);
+> +	if (!device)
+> +		return -ENODEV;
 > +
-> +	if (!size)
-> +		return -EIO;
+> +	pdev_info.fwnode = acpi_fwnode_handle(device),
 > +
-> +	/* acquire buffer and ensure that it's >= size */
-> +	count = seq_get_buf(sf, &buf);
-> +	if (count < size) {
-> +		seq_commit(sf, -1);
-> +		return 0;
-> +	}
-> +
-> +	memset(buf, 0, size);
-> +
-> +	count = battr->read(of->file, kobj, battr, buf, 0, size);
-> +	if (count < 0)
-> +		return count;
-> +
-> +	WARN_ON(count > size);
-> +	seq_commit(sf, min_t(ssize_t, count, size));
-> +	return 0;
-> +}
-> +
->   /*
->    * Reads on sysfs are handled through seq_file, which takes care of hairy
->    * details like buffering and seeking.  The following function pipes
-> @@ -249,6 +288,10 @@ static const struct kernfs_ops sysfs_prealloc_kfops_rw = {
->   	.prealloc	= true,
->   };
->   
-> +static const struct kernfs_ops sysfs_bin_kfops_huge_file_ro = {
-> +	.seq_show	= sysfs_kf_huge_file_seq_show,
-> +};
-> +
->   static const struct kernfs_ops sysfs_bin_kfops_ro = {
->   	.read		= sysfs_kf_bin_read,
->   };
-> @@ -333,6 +376,8 @@ int sysfs_add_bin_file_mode_ns(struct kernfs_node *parent,
->   		ops = &sysfs_bin_kfops_mmap;
->   	else if (battr->read && battr->write)
->   		ops = &sysfs_bin_kfops_rw;
-> +	else if (battr->read && (mode & SYSFS_HUGE_BIN_FILE))
-> +		ops = &sysfs_bin_kfops_huge_file_ro;
->   	else if (battr->read)
->   		ops = &sysfs_bin_kfops_ro;
->   	else if (battr->write)
-> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-> index b3edae0578c0..2d0b01c00a97 100644
-> --- a/fs/sysfs/group.c
-> +++ b/fs/sysfs/group.c
-> @@ -74,11 +74,11 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
->   					continue;
->   			}
->   
-> -			WARN(mode & ~(SYSFS_PREALLOC | 0664),
-> +			WARN(mode & ~(SYSFS_PREALLOC | SYSFS_HUGE_BIN_FILE | 0664),
->   			     "Attribute %s: Invalid permissions 0%o\n",
->   			     (*attr)->name, mode);
->   
-> -			mode &= SYSFS_PREALLOC | 0664;
-> +			mode &= SYSFS_PREALLOC | SYSFS_HUGE_BIN_FILE | 0664;
->   			error = sysfs_add_file_mode_ns(parent, *attr, mode, uid,
->   						       gid, NULL);
->   			if (unlikely(error))
-> @@ -107,11 +107,11 @@ static int create_files(struct kernfs_node *parent, struct kobject *kobj,
->   			if (grp->bin_size)
->   				size = grp->bin_size(kobj, *bin_attr, i);
->   
-> -			WARN(mode & ~(SYSFS_PREALLOC | 0664),
-> +			WARN(mode & ~(SYSFS_PREALLOC | SYSFS_HUGE_BIN_FILE | 0664),
->   			     "Attribute %s: Invalid permissions 0%o\n",
->   			     (*bin_attr)->attr.name, mode);
->   
-> -			mode &= SYSFS_PREALLOC | 0664;
-> +			mode &= SYSFS_PREALLOC | SYSFS_HUGE_BIN_FILE | 0664;
->   			error = sysfs_add_bin_file_mode_ns(parent, *bin_attr,
->   							   mode, size, uid, gid,
->   							   NULL);
-> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-> index b1a3a1e6ad09..78f6c6252cf9 100644
-> --- a/include/linux/sysfs.h
-> +++ b/include/linux/sysfs.h
-> @@ -124,6 +124,7 @@ struct attribute_group {
->   
->   #define SYSFS_PREALLOC		010000
->   #define SYSFS_GROUP_INVISIBLE	020000
-> +#define SYSFS_HUGE_BIN_FILE		040000
->   
->   /*
->    * DEFINE_SYSFS_GROUP_VISIBLE(name):
+>  	status = acpi_install_address_space_handler(device->handle, LG_ADDRESS_SPACE_ID,
+
+Similar Q here. And some more drivers seem use handle in the given context.
+
+>  						    &lg_laptop_address_space_handler,
+>  						    NULL, &pdev->dev);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
