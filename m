@@ -1,80 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00102FFF8F;
-	Tue, 12 May 2026 12:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9580639934E;
+	Tue, 12 May 2026 12:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778587303; cv=none; b=DUcsBl8HeS/BM6Agx9fQwABW9HCCNvEhCI0zitCY4hRgbZH5Zp9YQ6WYvubIsYZtz3dF6RCcm/b2SxYd4AcghQrCcb+l8ynofUMpqjHvLxiLiMKAAh+nzGFs8Kd+XcWM0xBLsRiFyxrNfS+WrpJM4SBnDO8lWzPAq0Wp6UYYSZg=
+	t=1778587679; cv=none; b=G451X4Nxw4cLZyZ9VFIPszvGzzqKMvJQdzrW3N8mzsqx/bg5qteM2fWdrdXwE4H0ByvavGDeQbnA98o8lirB4VktstiKw3RCisiYOUYHZuEbq4NnL1KuzylwnjRbOLoYUxdLm9JP0y63MITJzt8iDJ5sKnoFG3wtbH0thukpeC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778587303; c=relaxed/simple;
-	bh=Sh0sM2FhR9mvSbUXTbK1MR2ZOY+y5mmVCASXwjuJibo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUCRcvH3r7K+TrM0cnvQ6blvQbHpSv4IGH0977X1pTP9u55D1RsdidhDxJtAK4kjdTQ1+YmbuHgcADs2IyMHvSkWpAuuHAiUmsgcVAOz8dt350vnj2xLGCP12X333QZYsUfusdmz8gU6r2Hxh4g8MAGL0wNNvodBZ/qSO9xupoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PsRsHsym; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778587679; c=relaxed/simple;
+	bh=XRvu2EAGQKJez8lKSh7BUoZ+vPlqUOlqHaCW8zoUhBY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Quv9PQob1xaf9KZn7AX5NYx5jnGqzl8C4+BejMhl6fwzVpThYlMcM2rT9cPQXlPSoEdBDQ7p51pp9LR0Dc67X8ozN7+cQqjDqaQnLKlZmaDDJcLJcF+doEsa+HuK25O2/Pt6mpXeb5WAcSbHIhpq05FGNNdHb0cR7shw8mIk0IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hn4bCRYa; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PsRsHsym"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72EF5C2BCB0;
-	Tue, 12 May 2026 12:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1778587303;
-	bh=Sh0sM2FhR9mvSbUXTbK1MR2ZOY+y5mmVCASXwjuJibo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PsRsHsym3I0LehlqajPIWl49px1znrSjaPh6fA139i8jWH3YlinBZLmbDrGy0GITP
-	 MA1PNyUU6sb+sItw1XMGzrRrv7ycKtRMsbNVFLYO43mAmWvj4liXOR/429DKoxQrOF
-	 uzafBUxkWc+Z44PDMu9nmkIrZ+YfEWvhSpoqGb70=
-Date: Tue, 12 May 2026 14:01:45 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Muralidhara M K <muralidhara.mk@amd.com>
-Cc: ilpo.jarvinen@linux.intel.com, rafael@kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	Nayak K Prateek <kprateek.nayak@amd.com>
-Subject: Re: [PATCH v2 4/7] sysfs: Add SYSFS_HUGE_BIN_FILE flag for binary
- attributes larger than PAGE_SIZE
-Message-ID: <2026051214-getaway-mammary-debb@gregkh>
-References: <20260427155129.545327-1-muralidhara.mk@amd.com>
- <20260427155129.545327-5-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hn4bCRYa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778587677; x=1810123677;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=XRvu2EAGQKJez8lKSh7BUoZ+vPlqUOlqHaCW8zoUhBY=;
+  b=hn4bCRYaDAl8BYRjYYLifeSl74WqKUY4+YhAUt0pNLrxzVHrEypuR9Qh
+   4m/Qbkl/yvN1vC3SdK6rxncQzcWOVjJi7yBUs+NXn1QPnOIGMTeXUt3KI
+   ccl+XL+PPnfy5SCF5jBjftooK5QKV32Lncz+JlK/g6kqZlzfEMNToOMyJ
+   d+Czz9dVDkBOf4/ekGkdtJNCUVaAkjIQnB0Wkl8luULwy7WeVgbTo8Wp1
+   dFqpuzty61eoMEnELxRMpXlxGdPvDh84DeTmdjky0gHeeRnGqaGx9k/ag
+   FLYQblZXAaRlpulNALFhwV8ZcuvlPlOqkEk6/l6dWBRGWhhZCZ4SSiYcu
+   A==;
+X-CSE-ConnectionGUID: RTBym9AJRqiSsraiBoRlcg==
+X-CSE-MsgGUID: /rr+jOSIRvaHBQwv+1aVrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="90957067"
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="90957067"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 05:07:55 -0700
+X-CSE-ConnectionGUID: JB3cB9pXQw+XmpPy/2Q+Yg==
+X-CSE-MsgGUID: a0h9lT7SQAKb7P4kkEj0IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,230,1770624000"; 
+   d="scan'208";a="268095879"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.190])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 05:07:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 12 May 2026 15:07:42 +0300 (EEST)
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+    Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+    Bjorn Andersson <andersson@kernel.org>, 
+    Konrad Dybcio <konradybcio@kernel.org>, 
+    Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    Maya Matuszczyk <maccraft123mc@gmail.com>, 
+    Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+    Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+    Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Subject: Re: [PATCH v9 2/6] platform: arm64: Add driver for EC found on
+ Qualcomm reference devices
+In-Reply-To: <58b7b983-b717-49c7-9019-8862fd47695a@oss.qualcomm.com>
+Message-ID: <a29448e5-2998-6555-4ae4-a10f69c4e2b1@linux.intel.com>
+References: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com> <20260511-add-driver-for-ec-v9-2-e5437c39b7f8@oss.qualcomm.com> <84949728-7d0a-4ce9-f37c-8200ef792baf@linux.intel.com> <58b7b983-b717-49c7-9019-8862fd47695a@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260427155129.545327-5-muralidhara.mk@amd.com>
+Content-Type: multipart/mixed; boundary="8323328-92730628-1778587662=:11125"
 
-On Mon, Apr 27, 2026 at 09:21:26PM +0530, Muralidhara M K wrote:
-> Historically, sysfs read buffers were allocated with get_zeroed_page(),
-> limiting reads to PAGE_SIZE.  Commit 13c589d5b0ac ("sysfs: use seq_file
-> when reading regular files") transitioned regular (text) attribute reads
-> to seq_file, which can dynamically grow buffers beyond PAGE_SIZE.
-> However, the PAGE_SIZE limit was intentionally preserved for
-> compatibility.  When binary attribute handling was later unified into
-> the same codebase, the non-seq_file read path (kernfs_file_read_iter)
-> retained this PAGE_SIZE cap for binary files as well.
-> 
-> Drivers that expose binary attributes larger than PAGE_SIZE — such as
-> the AMD HSMP metric table (~13 KB) — cannot deliver the full content
-> in a single read() call through the existing path.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-That's fine, userspace must be able to handle a "short" read, and will
-just continue on and read everything afterward, right?  You can't rely
-on userspace always asking for more data.
+--8323328-92730628-1778587662=:11125
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> Introduce a new opt-in flag SYSFS_HUGE_BIN_FILE (040000) that drivers
-> can OR into their bin_attribute mode.  When set, sysfs selects a new
-> kernfs_ops (sysfs_bin_kfops_huge_file_ro) whose .seq_show callback
-> pipes the bin_attribute ->read() result through seq_file, allowing
-> reads of arbitrary size in one shot.  Existing binary attributes
-> without the flag continue using the legacy capped path.
+On Tue, 12 May 2026, Anvesh Jain P wrote:
 
-If this is such a big issue, why not just do it always for binary files?
-What is the benefit of keeping two different code paths just for this
-"new" flag?
+>=20
+>=20
+> On 5/11/2026 7:40 PM, Ilpo J=C3=A4rvinen wrote:
+> > On Mon, 11 May 2026, Anvesh Jain P wrote:
+> >=20
+> >> From: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> >>
+> >> Add Embedded controller driver support for Hamoa/Purwa/Glymur qualcomm
+> >> reference boards. It handles fan control, temperature sensors, access
+> >> to EC state changes and supports reporting suspend entry/exit to the
+> >> EC.
+> >>
+> >> Co-developed-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+> >> Signed-off-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+> >> Signed-off-by: Sibi Sankar <sibi.sankar@oss.qualcomm.com>
+> >> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> >> Acked-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >> Tested-by: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+> >> Co-developed-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> >> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+> >=20
+> > Thanks for the update.
+> >=20
+> > Patch 2 applied to the review-ilpo-next branch.
+> >
+>=20
+> Thank you!
+>=20
+> Will you be taking care of merging the bindings changes (patch 1/6) as we=
+ll?
 
-thanks,
+If the bindings and dts changes go separate ways, DT linters won't be=20
+happy so the bindings and dts changes should go in through the same tree.
 
-greg k-h
+As such, I only too the platform drivers patch. All this should come=20
+together in linux-next once all patches are in some tree (and obviously=20
+eventually in Linus' tree as well).
+
+--=20
+ i.
+
+--8323328-92730628-1778587662=:11125--
