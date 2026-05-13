@@ -1,70 +1,74 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2198C3890FD
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 19:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AD33ACF1D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 19:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778701181; cv=none; b=JxyZ0PDGSEFNJt5QI0x/GnJUFQh77D8krzYHW83XhNtQwXqSiDsYBbScb6X7SuHWIwSrgc5sr0ldiO8W9/uLrH4DukoseSj7Kd7y4wOhrGDsSx1IH2nlvln9A3tBJqWstx6ODflDAytAOnXLdATGe7UacAoPplzJIYfQH2NY4fY=
+	t=1778701187; cv=none; b=UHQ1sBv1Wk9/CXCtLyxHduu4JutdeC5M64v+Xq3K3tf/kcTUYGEq6VRjB4tGGGjyz9KQfhSf5C/d7UhB2ZQrilzaNtyttR2nG7PpbsXHp2OVn+1c0BPekHADXZMtA30ddzeNRaIrZYcxowaOf9tqBNfVq8hOJo8r9fMc4FotLxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778701181; c=relaxed/simple;
-	bh=lOG0qdRrbvNUzFIv/izounAcfIelTz4WVc2Gvfwknu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZwURKhvdDl641yl/fmRL5WQHaZLOAfbtPMQa9rOtVaNax8zpZWtAeVieop4XoEos+FcjI8Ql4QG3eX5//gC3ShTa4exYSfywFCs8XgcyE+zbihB+i9oyFWi6gJuyizyhTpPBOSmE358/HXKWkMDLbrrjrc5WchhHlblMvWo5/rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fusgMZMu; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1778701187; c=relaxed/simple;
+	bh=8L9XyBDEciL5WEEmF1jOQRk81AWM4Zk1x71LAZ8MBTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hL/4rWBhaRBEAO152TWI0jfhIKX7ZzBJG+WS+31ZJ6iCNBEETwzi1o6sglF+VEyZQvtaTf5KUKA81Tmc4NLlNB7auKLXvQQkfU/twnkiGMm7+HqAMOqQZVJJsHwVTSYy4erKNLbBD1bYZ8rD5GJ/NOpSgwGcuSb6aVsEoZ9qvFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dlMWe8nE; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fusgMZMu"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ba17c8cfacso73105885ad.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 12:39:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlMWe8nE"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2b941cd869cso46174395ad.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 12:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778701179; x=1779305979; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QadpiF3xBRLrL9yrWIqMtNvEZqGHEtKVC029NeDyX/0=;
-        b=fusgMZMuxuatKsyOuO5ztWd17LuBb0nvKkx6ICzVY7+bnn89H0ZDgneZ8W44vKv2AD
-         ssy2XAqDpv/buh8ijtt3qsuDzsEfBIxCUwLCslx+qnrDMhpJwl4uqD2ZsctMEqDXNlkU
-         KIkjVzFXCYbpEdjjEpJfd6cKEqmxzThIKLn5MATxRp1KNOM+q6lKiviV0jpSERW7C990
-         V22p+cMoSrdgFHdCnm72Dw3BWidAlbdueIeYYxgyQL25bNcywcOyD2vynK2DUQTlmIBk
-         ke+FHmzmbD0p4hEOIwuL9S9pU3KU2S0+AdtF+0XmabEQ2oC4Jsjq1PAry4phvecYIZq9
-         XBmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778701179; x=1779305979;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1778701184; x=1779305984; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QadpiF3xBRLrL9yrWIqMtNvEZqGHEtKVC029NeDyX/0=;
-        b=or/rkIg/fLihVHCfhuOkToOb71ZzrR0Xflqt2kBD81Wa5IZmZ8QwSbvmyRSqK/a5vh
-         mZmZfW7FgQvOAYMBK8b+YwklFCNL3IMsMTiv8Gru+XNrQD7DKt+WsSJGPYlo9pPv2yWB
-         SeF6MxEr6aT5nSsyO3ckNYARyFGc7O9k+Euzb3AF/raJXHU3LGpwvgSEbpF9Q+v+dzwE
-         kGDTWmLEuG9ah7hmErtg3dnOpxk6BS1YL26zwC/WIhyy99dEbIcRUdNcOYOz6WFFLJMp
-         dirEEzLO91T4f0xYE1FfGhZ1+O8urpeCcwcSroU7BrdlBZIkPSbEA5If0E+cpROkkuZx
-         9d4w==
-X-Gm-Message-State: AOJu0YyEn8eHX7F0wpHgL7+7hQG4GsVt/hq44wX4ZdtR/NIMPdU+c+0v
-	InagmZs+XZMN+W3JIXhB+LyNB0/cX/aZxl+AFQ+dktddEJv/0J2H6Diu
-X-Gm-Gg: Acq92OGmOMlkUxkrT1Co4dC8+L5gXgSCZbLwTpiUq9B2y5jAY4L8N9cO90xmOmTr1U6
-	BAsVcYXvKvlef6te74c/iExMXR2qKo3n/ahud1GcL/K1WHJPbmbmOF1c0jTMmd9gAFnaqCY9s4e
-	NT5yT3dC2m7NcW1YeBkyiLxioZpvqfWd5rKOe7N2GizuQLT57ix2Hcj/BsExuyrmWvxM9RXpwz7
-	cND0iYLYXYpBAfVupfzmp34eM0Ow+GFgziLqtsOtz+uKYnTzgowGuOw1ACAwqyLQNmE84e52T+S
-	ghsP5PdFUFD+BlYoXo03HoN8vOwH+S6HWrdQRBAcIFXySjmmEFDShGkI0q4YUx0eYaWUUUGPfJ+
-	seKKNva+1Rc8JWEvALb8/BvxgTTCBquSgjSGogrdIMtGyelt3kwtSQ7wZknA+uaLCsNv0O6npuz
-	X24Ihgr4Cbgflzw7efFVU2QLT3aJD/fxt9NW3i7ohr
-X-Received: by 2002:a17:903:2a90:b0:2ba:fed:7891 with SMTP id d9443c01a7336-2bd276e6e73mr53303515ad.30.1778701179166;
-        Wed, 13 May 2026 12:39:39 -0700 (PDT)
+        bh=mvqMlfps/2MIQrMqnTxZeXxhdXVuqBUVLTvsK3qKbEQ=;
+        b=dlMWe8nEB2q1BmtlK+kSARQZF3kbGneyu0sme9RDZEWlKy4DXZ4ipTeTmknz5ROVLl
+         ZmAdLlCqyJnYA+VuCfMg9NtHoS8qvVhosb0i13Gqahm/7fqweZPrAQys24X05DgGrujv
+         TkDobK2H4qc097gaXr4lSIlchIP7QDRtlrmgSeI4YJJOu1N5paaM4WqESmiEFnfXYSiv
+         j3x1a3Etc0IqzfEFfwVFxUbtEoxr8hJPzSuYis2Ixwgjiw1HXs1kC1n45/Rj+1sq7f1q
+         LStZgBYMysAM/rB+EM/hrzZfX7MoFO3w/Ue9LAwwM+duiLDTMgtfBnv+b2YPyhFpNF3X
+         zf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778701184; x=1779305984;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mvqMlfps/2MIQrMqnTxZeXxhdXVuqBUVLTvsK3qKbEQ=;
+        b=dATV3VWYidLMBkuzHSk54vsLZWkH0993p2AAfUGy2mDNAtICGsF0KmxsvJfOAgr+Nh
+         DOPoF3HtO0+59cunk7R3Cdn2HD0ji5jh2YIThz2H+qJPvmkzoYoKecXIoEIvrNC5B5PE
+         LKGfpg3rMKikLW3eLMINkrEP0cEZG8f3mC+zM9K5SB04qa3E8ZzQcMMpfVUUNlosd5w4
+         M0SwlekdtZSuV+FgJO/QR53VOT/X9ZbyLPqPiBSEVxQE5jdF5tnucXsGxvAJn7IJP22u
+         mW0AIHJ0ylT25LL+DhK0qcjuAxB9bqmZiDuub5Hydo69o0YJexNE5Z1S9z+W2ejpIqqN
+         oVVQ==
+X-Gm-Message-State: AOJu0YyOOAkiafrT+mLn2GmRaPOnj8qrSQzyTrkgHDDq8uVah5DsAi9n
+	ICdrtwEH3yXz72cJz1UMSb1be0ybsSGTGdDXLPQLpqXo0sUKBi1r00kY
+X-Gm-Gg: Acq92OHmZsRquuOzDTYihwnVZk4jolaHjOtlb9pRCum3L2q0fdeKU0MO/PBkG6bhmU5
+	pSmrzz4E+J8f9gGpjn5JiVJq2lg9VFeCE7xxmFYJ29sJyQwslgwoC4LxLI/4HRAl8fQ5v/B3ZR+
+	pJwzOnfAno9NmoG+De600wJhqwrxLITgvWwkugDGfrXAUVovTZfEu2GfvXLTjGrgNx/Zlq7uLUq
+	DkUyx1+D6HpvrxAnyv3g0u//1igpaHiaVZn+AW9DAAFqiL8oR3V1vz6uc8zL67tQDs+xn4s0Hd/
+	iqIYGk+7igAfM0MDQbU3OZglxLnJTim8V1sH6e763n7xa6oY4Omm2ouyjLDd+xbidpr6ZeSN+YU
+	e6Mk34DBLvx2QarMRso8dDiAV1JrmmZklleBdDTl+68vlfM2ItnZm2zsQi4ib9J0h4nLPccyJcB
+	33HYD/MOC+KjX+PMFRIXjnHgf+pN0DFw==
+X-Received: by 2002:a17:903:4b24:b0:2b0:6d56:8d29 with SMTP id d9443c01a7336-2bd30222604mr43304375ad.32.1778701184360;
+        Wed, 13 May 2026 12:39:44 -0700 (PDT)
 Received: from cachyos.lan ([2607:fb90:b200:b454:58a0:7e4d:a0a:684b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d11d659sm230595ad.73.2026.05.13.12.39.37
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d11d659sm230595ad.73.2026.05.13.12.39.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 12:39:38 -0700 (PDT)
+        Wed, 13 May 2026 12:39:43 -0700 (PDT)
 From: foobisdweik <dweikmferris@gmail.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	foobisdweik <dweikmferris@gmail.com>
-Subject: [PATCH 0/2] hp-wmi: Omen 16-b1xxx (8A13) support + per-fan pwm
-Date: Wed, 13 May 2026 12:39:14 -0700
-Message-ID: <20260513193916.84673-1-dweikmferris@gmail.com>
+Subject: [PATCH 1/2] platform/x86: hp-wmi: Add support for Omen 16-b1xxx (8A13)
+Date: Wed, 13 May 2026 12:39:15 -0700
+Message-ID: <20260513193916.84673-2-dweikmferris@gmail.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260513193916.84673-1-dweikmferris@gmail.com>
+References: <20260513193916.84673-1-dweikmferris@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,54 +77,59 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+Add board name 8A13 (OMEN by HP Laptop 16-b1xxx, 12th-gen Intel/RTX 30
+series) to the Omen thermal-profile, timed-thermal-profile, and Victus-S
+DMI lists.
 
-Two patches against drivers/platform/x86/hp/hp-wmi.c. They are
-independent but both required to make fan control fully work on
-HP OMEN 16-b1xxx laptops.
+The 8A13 firmware exposes the standard Omen "PerformanceControl" WMI
+feature, uses the legacy EC thermal-profile offset (0x95), and
+implements the Victus-S-style GM2D/GM2E WMI methods at EC offsets
+0xB0..0xB3 (RPM1..RPM4 tach) and 0x34..0x35 (SRP1/SRP2 setpoints).
+This makes it identical in interface to its same-era sibling 8A44
+(Omen 16-n0xxx), so reuse omen_v1_legacy_thermal_params.
 
-Patch 1 adds DMI board name 8A13 (OMEN by HP Laptop 16-b1xxx) to
-the existing Omen thermal-profile and Victus-S DMI tables. The
-firmware exposes the standard Omen PerformanceControl WMI feature
-and uses the same legacy EC layout and GM2D/GM2E methods as its
-sibling 8A44 (Omen 16-n0xxx). After this patch /sys/firmware/acpi/
-platform_profile and the hp hwmon device come up correctly on 8A13.
+After this change /sys/firmware/acpi/platform_profile reports
+cool/balanced/performance and the hp hwmon device exposes per-fan
+tachs plus the manual-mode pwm control on Omen 16-b1xxx.
 
-Patch 2 promotes the per-driver pwm setpoint to a two-element
-array so that hp-wmi exposes pwm1 (CPU fan) and pwm2 (GPU fan)
-independently on Victus-S-capable boards. The underlying WMI
-method (HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY) already takes a
-two-byte buffer and the EC honors per-fan setpoints; the driver
-just hadn't been wired up that way. This is the standard hwmon
-shape for multi-fan systems and makes fan-control tools such as
-fancontrol and fan2go work out of the box.
+Signed-off-by: foobisdweik <dweikmferris@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Tested on a stock HP OMEN 16-b1xxx (BIOS F.23, 12th-gen i7-12700H,
-RTX 3060) running 7.1-rc2 + these patches: platform_profile
-toggles cool/balanced/performance, fan1_input/fan2_input read
-independent tachs, and writing pwm1=60 + pwm2=200 simultaneously
-drives CPU fan to ~1600 RPM and GPU fan to ~5700 RPM (verified
-both via hwmon and direct read of EC offsets 0xB0..0xB3).
-
-Evidence from dmesg:
-[    0.000000] DMI: HP OMEN by HP Laptop 16-b1xxx/8A13, BIOS F.23 08/15/2025
-[    7.643551] hp_wmi: Registered as platform profile handler
-
-Evidence from sensors (manual control mode):
-hp-isa-0000
-Adapter: ISA adapter
-fan1:        2700 RPM
-fan2:        2800 RPM
-pwm1:             62%  MANUAL CONTROL
-pwm2:             64%  MANUAL CONTROL
-
-foobisdweik (2):
-  platform/x86: hp-wmi: Add support for Omen 16-b1xxx (8A13)
-  platform/x86: hp-wmi: Expose independent CPU/GPU pwm channels
-
- drivers/platform/x86/hp/hp-wmi.c | 53 +++++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 15 deletions(-)
-
---
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 24c151289dd3..389506a6d2e3 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -157,7 +157,7 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
+ 	"88F7", "88FD", "88FE", "88FF",
+ 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+-	"8A15", "8A42",
++	"8A13", "8A15", "8A42",
+ 	"8BAD",
+ 	"8C58",
+ 	"8E41",
+@@ -177,7 +177,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
+  * "balanced" when reaching zero.
+  */
+ static const char * const omen_timed_thermal_profile_boards[] = {
+-	"8A15", "8A42",
++	"8A13", "8A15", "8A42",
+ 	"8BAD",
+ };
+ 
+@@ -189,6 +189,10 @@ static const char * const victus_thermal_profile_boards[] = {
+ 
+ /* DMI Board names of Victus 16-r and Victus 16-s laptops */
+ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A13") },
++		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+ 		.driver_data = (void *)&omen_v1_legacy_thermal_params,
+-- 
 2.54.0
 
