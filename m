@@ -1,91 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8AB3FE651
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 11:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D1439023D;
+	Wed, 13 May 2026 11:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778673326; cv=none; b=lmC13MmQ0iDaAR7/7XOKxp8yTPYweiDTebWqUy4fG4vY59v/Tnk2n9WfaALdAdiGnEwiZR8JRWh6FkAYvKoKN5B5RFWUNycvjVKPJc3pUe4kzTfIg+Ff4jkzJ5ncO0Rqc5mhXa7+IXUiTS3N9p2Fmqz+7Lm0QJohSoyvQRAZl2w=
+	t=1778673586; cv=none; b=Qeq7ITRldX6sAWsdptwGSIL4101HSa3mCbDG0YyXZ7oKRHa/e4fTvv0ZV+v24VrhWrFLf2mlxz2xrvv3Od+He/jOL2W3fdMY804SBRDOTUmy/kKzYG7K7N0LTD3/j9N9hjzrPZAW7cPQfZ6b/E/jeqC817+PFYpOLObCal5k8yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778673326; c=relaxed/simple;
-	bh=C3ROoSAwEcHmpVj4q2nXE9Zx2ZOZUZAfV3pe+l9yKtQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AgFPNz3/TyoKfqznw+7xpDGhPTgqivx25j3//84zaPl+7L0AhOlCjM5R3l45IXeFAe2YZuwqiQ5CIiouJodur09O1hPwfecY6tnadDbsxoGoDLj71YUdxRszOhL/k/muUapMLFQwJoT17u4VHsST7YmV9EkGE0nOuUkdAmhfRIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bh0TgWy+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778673586; c=relaxed/simple;
+	bh=cEpEwbMJ0dYWdV/lcifL2bKTvaXZgn1iQfE4oO2C7KM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IAe55DB3zTPHfE6Uzo+zZrglPE5QQvMkuCX21JcSo161tH40J2OLQHAbwXHgblKuF6JkyfkXS9k4ztXonCcBeGmQiGknlZkA35wczTQ7vrjjdcUSsW3C3OefmWsaGJ3DaQboOQqTEIZs8uqaSvDvR/tdJwbUALFtj2f10NdjTjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=W1unUj1a; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bh0TgWy+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5400EC2BCFC
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 11:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778673326;
-	bh=C3ROoSAwEcHmpVj4q2nXE9Zx2ZOZUZAfV3pe+l9yKtQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bh0TgWy+eepwj2qnbn9Rc3qYpCqJLPwMWlEQbiwSrKH5tnYeUUxAyM+acmatna/d0
-	 bT+bKrITNGzPCW7k/nmRZFlOqsOwK8hE73H/w62ib0yp1843+uP6BxNttJwaMKvExP
-	 N1yvsRysJsvMOJvCF07i4kCwa8710Bf7vSOmvABfpxMurufWzXS1Wow/dqJJ5ybMdP
-	 dT7G/QMOcYEGUGyCcrrP5C9TGD/MGKFrOnoXNydAdFCCYKgsH5hiBcU7p48blC/lpy
-	 pVHuh+PGbdSN0o3cwqyC82SUJY/j0Bqp61k8JN/YjLFwO298TbChViZHTjcsEbVrGD
-	 Rc4Y5M8iAMRmA==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5a8c94cefcdso2693684e87.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 04:55:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/flJMv4QuvUm5pV8MQSJdldhTn8gjQTMKzlYZtVoRZP9H4SuptfTCMi7Npd14MajZzmLresr97KSiBGrZl20hxR9wG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd/3NBKeT/vK19iACrFEDSiBtFjCB4szU5v5YKH6ScAjIOgCfi
-	ejY1JYUEtZKS0FLc0A99POWkNx+lBJNIjtXr+6j6BUSk4pahyH+S7m8HrJxd/VLCwMNAOr/qPj6
-	tKbO2+2uv62RkmNgFjcJXyghuleGOgjnu0NjOoQodEQ==
-X-Received: by 2002:a05:6512:68a:b0:5a8:9b6a:5749 with SMTP id
- 2adb3069b0e04-5a8ef9af8a5mr1068752e87.28.1778673324966; Wed, 13 May 2026
- 04:55:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="W1unUj1a"
+Received: from killaraus.ideasonboard.com (2001-14ba-70f3-e800--a06.rev.dnainternet.fi [IPv6:2001:14ba:70f3:e800::a06])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DAFEF229;
+	Wed, 13 May 2026 13:59:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1778673575;
+	bh=cEpEwbMJ0dYWdV/lcifL2bKTvaXZgn1iQfE4oO2C7KM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W1unUj1aB6CIj14iO9UQm8oSipGyNQS7eJWrxapyHgtbJSRZk//HcVQe/ujYrtWx5
+	 7vthrgjmVyzHMaRkC/1/eruMzlUkxldGKyYK0Z4I7pUhKrqlw/QjKUnkISaVS7Nb7W
+	 S3q/PJExVTQaKfUH+XyLj+2Nek+v1f6bBcxFUSv4=
+Date: Wed, 13 May 2026 14:59:41 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jake Steinman <j@metarealtyinc.ca>
+Cc: linux-media@vger.kernel.org, mario.limonciello@dell.com,
+	sakari.ailus@linux.intel.com, tianshu.qiu@intel.com,
+	tomas.winkler@intel.com, hverkuil-cisco@xs4all.nl,
+	kieran.bingham@ideasonboard.com, dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org,
+	libcamera-devel@lists.libcamera.org,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>
+Subject: Re: [REQUEST FOR GUIDANCE] =?utf-8?Q?Dell_?=
+ =?utf-8?Q?Panther_Lake_IR_camera_=28HIMX1092_=2F_Synaptics_SVP7500_06CB?=
+ =?utf-8?Q?=3A0701=29_?= =?utf-8?B?4oCU?= port-2 streaming gated by bridge
+ secure-handshake
+Message-ID: <20260513115941.GC244931@killaraus.ideasonboard.com>
+References: <CAE_FnZKNn0TzpVi+kaDZd91WtO4FN9S9AtXd9UjQZfGDDsxgfA@mail.gmail.com>
+ <20260513075036.GA244931@killaraus.ideasonboard.com>
+ <CAE_FnZJ3P2uFOZhNorw-ZvTxrAPwBHrEZ5uHQvQ9Poz+pFew+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260512-swnode-remove-on-dev-unreg-v5-0-0035eff63812@oss.qualcomm.com>
- <20260512-swnode-remove-on-dev-unreg-v5-3-0035eff63812@oss.qualcomm.com> <DIGUBLZXZXPJ.8CX0K5EL6255@kernel.org>
-In-Reply-To: <DIGUBLZXZXPJ.8CX0K5EL6255@kernel.org>
-From: Bartosz Golaszewski <brgl@kernel.org>
-Date: Wed, 13 May 2026 13:55:11 +0200
-X-Gmail-Original-Message-ID: <CAMRc=MdnKgkxsiw7UtpXaSYf+5WHMWZidy4YukPhndZY2Uft9w@mail.gmail.com>
-X-Gm-Features: AVHnY4IuEQ8uACIYu2CQFY2xUnaqBV75CJzYWeWWso-yewElWdvH5VZ2Hb43cmI
-Message-ID: <CAMRc=MdnKgkxsiw7UtpXaSYf+5WHMWZidy4YukPhndZY2Uft9w@mail.gmail.com>
-Subject: Re: [PATCH v5 3/7] driver core: platform: provide platform_device_add_software_node()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>, 
-	Andy Shevchenko <andy@kernel.org>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, driver-core@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE_FnZJ3P2uFOZhNorw-ZvTxrAPwBHrEZ5uHQvQ9Poz+pFew+w@mail.gmail.com>
 
-On Tue, May 12, 2026 at 6:31=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Tue May 12, 2026 at 1:59 PM CEST, Bartosz Golaszewski wrote:
-> > +int platform_device_add_software_node(struct platform_device *pdev,
-> > +                                   const struct software_node *swnode)
-> > +{
-> > +     return device_add_software_node(&pdev->dev, swnode);
->
-> I think this should be device_create_managed_software_node(), see also [1=
-].
->
-> That said, now that I see the resulting code and the corresponding sublet=
-ies, I
-> think we should reconsider your (well predicted) "temporary
-> platform_device_release_full()" idea for -fixes, while iterating this for=
- -next.
->
+On Wed, May 13, 2026 at 07:47:41AM -0400, Jake Steinman wrote:
+> On Wed, May 13, 2026 at 3:50 AM Laurent Pinchart wrote:
+> > On Tue, May 12, 2026 at 09:24:13PM -0400, Jake Steinman wrote:
+> > > Hi all,
+> > >
+> > > Cold mail to a wide CC, sending once instead of many — apologies for the
+> > > broadcast. Community Linux camera-enable effort on Dell PB16250 (Panther Lake,
+> > > Synaptics SVP7500 bridge USB 06CB:0701). To my knowledge this is the first
+> > > working Linux RGB camera on any Panther Lake laptop — OV08X40 streams at
+> > > 28.57fps after our IRQF_ONESHOT stability fix in intel_cvs, independently
+> > > reproduced on Dell XPS DA16260 + Fedora 44 Silverblue by another community
+> > > user. IR (HIMX1092) does not stream, and I think we've narrowed it cleanly to a
+> > > bridge-internal secure-auth handshake we can't trigger from outside the Vision
+> > > driver stack.
+> > >
+> > > What works:
+> > >
+> > > HIMX1092 probes, chip ID 0x1091 confirmed, bound to ipu7-isys CSI-2 port 2, 1 lane
+> > > Geometry aligned to Dell production (648×368 SGRBG10, from v81 graph_settings_hm1092 files)
+> > > IPU7 firmware ACKs STREAM_START_AND_CAPTURE
+> > > intel_ipu7_isys: "stream on CSI2-2 with 1 lanes" (RX listening)
+> > > Sensor MODE_SELECT=0x01 ack'd, intel_cvs port-2 mipi config (0x830, verbatim
+> > > Windows USBPcap, 5×52-byte chunked) returns 0
+> > > Cape FW already at Dell v81 level (1.20.129.0, identical bytes)
+> > > What doesn't:
+> > >
+> > > ZERO sof_event::csi2-2 in any test, including with RGB streaming concurrently at 28.57fps
+> > > 10 host-side hypotheses falsified including geometry, format, MIPI replay
+> > > verbatim, AE-kicks, vision_sensing flag, dual-stream
+> > > Evidence the gate is bridge silicon: usbbridge.sys (Intel Vision driver,
+> > > Windows) ships strings RESET_HANDSHAKE_CTX and 1_BRIDGE_STATE_TRIGGER_CTX. Dell
+> > > v81 06CB0701.bin (1.97MB, magic VISSOCFW) is identical to what our cape boots.
+> > > The handshake exists in cape FW; the trigger isn't a wire opcode visible in
+> > > USBPcap, suggesting it crosses MEI/CSE.
+> > >
+> > > Pinging this group because the answer probably lives at the intersection: Mario
+> > > (Dell upstream routing), Hans (camera-stack architecture, prior bridge
+> > > enabling), Sakari/Bingbu/Tianshu (IPU7 maintainers), Hans Verkuil (V4L2 second
+> > > opinion), Tomas (MEI/CSE if the trigger crosses HECI), Daniel (INT3472 — DSC0
+> > > only exposes HANDSHAKE/IR_LED GPIOs, AVDD/DOVDD appear bridge-internal),
+> > > Laurent/Kieran (libcamera once unblocked).
+> >
+> > This seems to be a question for Intel at this point.
+> 
+> Thanks Laurent — matches our read.
+> 
+> Sakari and Bingbu (V4L2 + IPU7 maintainers) are already on this thread, but
+> my hunch is the answer lives one team over from them — the Vision-stack /
+> CSE side that owns the per-sensor bridge auth, not the kernel-V4L2 side.
 
-Agreed, I think it's much safer this way.
+Note that Bingbu has left Intel. His e-mail address bounces, I've
+dropped him from CC. Hans de Goede has also left Red Hat for Qualcomm,
+I've updated his e-mail.
 
-Bart
+Please also note that I only review code written by humans. If you would
+like me to be involved in this matter, please make sure to write your
+code manually. This also applies to e-mails.
+
+> Anyone from prior IPU3 / IPU6 enabling you've worked with who'd be the
+> right contact for that conversation? Even just a "forward this to X" closes
+> the loop — happy to take it from there.
+> 
+> > > Not asking anyone to debug — just a pointer on whether the secure-auth path can
+> > > be exposed to a non-Vision-stack driver, or who at Intel/Synaptics owns that
+> > > mechanism. Even "talk to <person>" is enormously helpful.
+> > >
+> > > Background + reproducer:
+> > >
+> > > - DKMS fix pack (v0.4, MOK-signed, single-command install):
+> > https://github.com/
+> > > jibsta210/svp7500-camera-fix-pack/releases/tag/v0.4
+> > >
+> > > - Forensic write-up + IR debug history:
+> > https://gist.github.com/jibsta210/
+> > > 8316b6a0bc58910891512945c4e91a08
+> > >
+> > > RELATED:
+> > >
+> > > https://github.com/intel/ipu7-drivers/issues/26
+> > > https://github.com/intel/ipu7-drivers/issues/51
+> > > https://github.com/intel/ipu7-drivers/issues/72
+> > > https://github.com/intel/vision-drivers/issues/37
+
+-- 
+Regards,
+
+Laurent Pinchart
