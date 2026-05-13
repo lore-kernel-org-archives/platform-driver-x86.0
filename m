@@ -1,41 +1,41 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAA337D136;
-	Wed, 13 May 2026 09:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF753A6B78
+	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 09:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778663783; cv=none; b=g5HjFuequZ9x4+Euk3loY6x0bZIysiek2TYb6e9+xyG+4bKQAo+SfTKCkRVLFdOJWodYdaZwyHM885EWFPoEQIq+5b7yUxyonRTjltpXx0S80JSE49AM67Ss6xBebycpGJYTFwwSiQDc2w0OSpXLVGSXWwi2rpTM2UJiYJfTWko=
+	t=1778663947; cv=none; b=ACCM3XEPEf7Kodghw2abY3dm1MOBLHa4O13gBdUCgqaAK8NdNmdgvGzH6f4JgVHIOepDO8nIYQfG6RgL+BjikbyLri+HPOOBBzqojCWVP34YXhOuNXziQwz++6Zg8243+IvJlk55T+3NbUcQWZ1+6Zc/IEUGZoMHIVewR1DWwak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778663783; c=relaxed/simple;
-	bh=cNFafccPgAKx+07KvgiLuGMTA32ctU1l5exEJA5weAA=;
+	s=arc-20240116; t=1778663947; c=relaxed/simple;
+	bh=wug/KcyVGnJO5zx93Xock+FnM3aHsTQOpe8xiUPzyHw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QoYc04z4nW3jB3tA7YWJ4/+10wReYson9ChcGgj7ZLt/qKmUK1ZQXvVWjqRXG9WUbO4HAE2ldAyVfXfciVNHaJOR1skjBqJO686E95KwUZXG0oXaJvb4qVWxQd3/3uilwOrbbcxsBYT5KjyaBqQQOvfmufflp42gcINRPsZIH0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=lUBlBWhK; arc=none smtp.client-ip=212.227.15.19
+	 In-Reply-To:Content-Type; b=Ssk4laY8P2tCSCk1V1FF5JV93sk76MlxRg1V2Z9rmBI1qhPxZqKcqskRSk7b9n1hFBXlFafY1CUWwKObcKtNzHpvSUsbB/pNhIXhpGL7QwsKc1wdjabmmt184VMXHf6SODzRniXOQ8MNVwANtWheEQMv2Lk4+kZAWLSnWvA9ENI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=awfHJlwJ; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="lUBlBWhK"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="awfHJlwJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1778663771; x=1779268571; i=w_armin@gmx.de;
-	bh=Ar01bkHbHiswo9d8o75LQFjvvzCIyVl1eKB+s8NJ078=;
+	s=s31663417; t=1778663942; x=1779268742; i=w_armin@gmx.de;
+	bh=wug/KcyVGnJO5zx93Xock+FnM3aHsTQOpe8xiUPzyHw=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=lUBlBWhKq5DtS2sFay/0/kxTEMpoEZK8RN83HpOCLEbzeGlmtNEM0qsORP/CrgJV
-	 DQvJUM13Dca2M+ZRgtWckTjlS/NIEXEbg3yVhn4xBsODCSg0f+HqPGwfNqj32WmRo
-	 2fBCIA4F99wThEMa02ip1nV4UQ638MJisjdtp6xTWbBt0PmpmcOIZIVy6b7c5Lfj8
-	 EeX/fI1MgmsUPZCwORFW+JN8fljGXX0YfORsm8TQOn7uMUskkO1TzG/1UUZS6MpJT
-	 tbBd6GO6iE7uumCt32SF21etIdWACoa1tu8vVNuudqKA1b/HjmwaFaSYxsLIXyOJv
-	 Gq02SXpWYv5Ppkf1gQ==
+	b=awfHJlwJGdWNm6V/9BJ8P8+z6CNYPHkMBEoCG3hDkCQk6h7nd+eSdvbYJGeWt5Jt
+	 Kp+NHkR7gW+HN7PSIE5W9jo6xoKOy6aDHvln7t09J3J6gnenA08GR8sHId1lsVF5o
+	 CFOQgSOh5cBR2yZy+e1obeK94i8/g/cS8uPRTR60uLBjr4owqonXTxBjCJjeaBD7n
+	 zCzmYj3uipD6dvKFjSPi1LlyMlhplzGrW7O9QI6EnIrogacfJQAqkkn7YV/9otByX
+	 D06OfhNNawa8KU4ibQeOe1qG0y0QNj1+Lr3W/R10PH9PS9MYZwZ8w22AnUV0I+VOH
+	 2EX9l9tzHGAjnb2gOg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M72sP-1wTRkS2bZX-0037pI; Wed, 13
- May 2026 11:16:11 +0200
-Message-ID: <59c00319-cff0-4559-8cdc-3ab6ad1d208a@gmx.de>
-Date: Wed, 13 May 2026 11:16:10 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MCsPy-1wVvRm1Sue-00EKTH; Wed, 13
+ May 2026 11:19:02 +0200
+Message-ID: <dd1b5be8-530b-4dfc-ad80-ea5f298d9230@gmx.de>
+Date: Wed, 13 May 2026 11:19:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,579 +43,625 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] platform/x86/amd: Introduce Halo Box RGB LED driver
-To: "Yo-Jung Leo Lin (AMD)" <leo.lin@amd.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Mario Limonciello (AMD)" <superm1@kernel.org>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260508-halo-leds-v2-plus-v3-1-91df458966ea@amd.com>
+Subject: Re: [PATCH v2 1/1] platform/x86: add Acer battery control driver
+To: Jelle van der Waa <jelle@vdwaa.nl>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Frederik Harwath <frederik@harwath.name>
+References: <20260125182314.735668-1-jelle@vdwaa.nl>
+ <20260125182314.735668-2-jelle@vdwaa.nl>
+ <ca22f9d8-7609-4023-956e-85687a5d5df6@gmx.de>
+ <8bc77786-2126-4b68-b52a-b2c75a683223@vdwaa.nl>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260508-halo-leds-v2-plus-v3-1-91df458966ea@amd.com>
+In-Reply-To: <8bc77786-2126-4b68-b52a-b2c75a683223@vdwaa.nl>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/eb4+o/pZ4J8E8C/RLeADZa1Jn+qXSwhepF8lPc6U88lIrm8B3R
- ZWHs4mXqCSJvTJlZqqttvfQSYSaR8iFBP6cRm6Lazsh1R7npED0c4/WlK0jd4qMKvr7r7ly
- LyovzafBuQj2qGu/ZtnEYQphcVvhOkI7Rrre0i4GWXDLZyqWuZWaTHkuk7rtfD1+Jtw8ljM
- S3SRjV4F8cFNTm8ljQxww==
+X-Provags-ID: V03:K1:RaYWpa/SV+u4VJpgI7lCer79bDLk9g6ObRiHcraGzM5e3X3ESqh
+ 5h6f37XfikwuPpkO9F3jvRAStH8W4G5qqEYxOVMoovQVIJzc7m0N5ZoQ6eV0CX7vA/QEtBu
+ 3DnbnVB9cjKxtQ5ZETcVJoJf6V2BAeoDCAyhaqz82ID+KpW/Y1CjGPcFRu5I1czHBHb7b6Q
+ WKntGZkGb6YG1JzzVi/pQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:o2EmFM07Vxg=;BsYWYSefMtrxLnWGbDoSkV8cLwM
- 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
+UI-OutboundReport: notjunk:1;M01:P0:75SAkITfjj0=;qA9fXtZdYNQPwAAtG6nOHpDKTg6
+ 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
+ 5LqL6RhVwQ/oriod621e5cu3MMysLlwtTiBukgt
 
-Am 08.05.26 um 10:42 schrieb Yo-Jung Leo Lin (AMD):
-> The Halo Box features an RGB LED light bar that can be controlled
-> through WMI methods to display any color combination.
->=20
-> The driver exposes the LED through the LED multicolor subsystem,
-> allowing userspace to control RGB values via sysfs:
->    /sys/class/leds/amd_halo:multicolor:status/multi_intensity
->    /sys/class/leds/amd_halo:multicolor:status/brightness
->=20
-> Hardware interface:
-> - Three separate RGB channels (Red, Green, Blue)
-> - Each channel controlled via individual WMI method calls
-> - Value range: 0-100 (matching hardware range directly)
->=20
-> Co-developed-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
-> Signed-off-by: Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
-> ---
-> v2 -> v3:
-> - Re-introduce OF/OFF method: implement them with wmidev_invoke_method
-> - Explicitly call the ON method on brightness_set callback for
->    brightness !=3D 0; call the OFF method when brightness =3D=3D 0
-> - Turn off light bar if TURN_ON/SET_LIGHTBAR can't function normally
-> - Replace get_unaligned_le64 with casting and le16_to_cpu()
-> - Add an inline function (wmi_status_to_err) to convert WMI return
->    values to errno
-> - Use amd_halo_wmi_set_channel in probe to set default color
-> - Use devm_mutex_init() instead
-> - Remove unused includes
-> - Link to v2: https://lore.kernel.org/r/20260504-halo-leds-v2-plus-v2-1-=
-af027727605b@amd.com
->=20
-> v1 -> v2:
-> - Fix Kconfig dependencies
-> - Remove amd_halo_wmi_turn_off(). Handle the case where brightness=3D0 w=
-ith the
->    same logic where brightness !=3D 0
-> - Remove the brightness_get callback, because currently there isn't a
->    well-defined global bightness in hardware. Note that the sysfs bright=
-ness
->    stil works. It just caches the value last set.
-> - Convert to wmidev_invoke_method()
-> - Convert to ARRAY_SIZE()
-> - Convert some macros to enum
-> - Convert to devm_led_classdev_multicolor_register_ext()
-> - Rename sysfs path to amd_halo:multicolor:status
-> - Fold default LED colors setting in probe, before registration
-> - Add no_singleton option
-> - Make default RGB values into macros and adjust their values
-> ---
->   MAINTAINERS                             |   7 +
->   drivers/platform/x86/amd/Kconfig        |  11 ++
->   drivers/platform/x86/amd/Makefile       |   1 +
->   drivers/platform/x86/amd/amd_halo_led.c | 312 ++++++++++++++++++++++++=
-++++++++
->   4 files changed, 331 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c871acf2179c..464bd4d16461 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1124,6 +1124,13 @@ F:	drivers/char/hw_random/geode-rng.c
->   F:	drivers/crypto/geode*
->   F:	drivers/video/fbdev/geode/
->  =20
-> +AMD HALO BOX RGB LED DRIVER
-> +M:	Mario Limonciello (AMD) <superm1@kernel.org>
-> +R:	Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/platform/x86/amd/amd_halo_led.c
-> +
->   AMD HSMP DRIVER
->   M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
->   R:	Carlos Bilbao <carlos.bilbao@kernel.org>
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd=
-/Kconfig
-> index b813f9265368..a1a74ef6c859 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -34,6 +34,17 @@ config AMD_WBRF
->   	  This mechanism will only be activated on platforms that advertise a
->   	  need for it.
->  =20
-> +config AMD_HALO_LED
-> +	tristate "AMD Halo Box RGB LED Driver"
-> +	depends on ACPI_WMI && LEDS_CLASS_MULTICOLOR
-> +	help
-> +	  This driver provides RGB LED control for AMD Halo Box devices
-> +	  through the LED multicolor subsystem. The Halo Box light bar can
-> +	  be controlled via sysfs to display any RGB color combination.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called amd_halo_led.
-> +
->   config AMD_ISP_PLATFORM
->   	tristate "AMD ISP4 platform driver"
->   	depends on I2C && X86_64 && ACPI
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/am=
-d/Makefile
-> index f6ff0c837f34..2f467dbbfc8a 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,5 +10,6 @@ obj-$(CONFIG_AMD_PMC)		+=3D pmc/
->   obj-$(CONFIG_AMD_HSMP)		+=3D hsmp/
->   obj-$(CONFIG_AMD_PMF)		+=3D pmf/
->   obj-$(CONFIG_AMD_WBRF)		+=3D wbrf.o
-> +obj-$(CONFIG_AMD_HALO_LED)	+=3D amd_halo_led.o
->   obj-$(CONFIG_AMD_ISP_PLATFORM)	+=3D amd_isp4.o
->   obj-$(CONFIG_AMD_HFI)		+=3D hfi/
-> diff --git a/drivers/platform/x86/amd/amd_halo_led.c b/drivers/platform/=
-x86/amd/amd_halo_led.c
-> new file mode 100644
-> index 000000000000..632ccdf07ffe
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/amd_halo_led.c
-> @@ -0,0 +1,312 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * AMD Halo Box RGB LED Driver
-> + *
-> + * Copyright (C) 2026 Advanced Micro Devices, Inc.
-> + *
-> + * This driver provides RGB LED control for AMD Halo Box devices throug=
-h
-> + * the LED multicolor subsystem. The Halo Box light bar can be controll=
-ed
-> + * via sysfs to display any RGB color combination.
-> + */
-> +
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/wmi.h>
-> +
-> +#define AMD_HALO_GUID "081E747B-E028-4232-AF24-EAAEAB2B1E86"
-> +
-> +/* WMI method IDs from MOF */
-> +enum {
-> +	AMD_HALO_WMI_GET_LIGHTBAR =3D 0x01,
-> +	AMD_HALO_WMI_SET_LIGHTBAR,
-> +	AMD_HALO_WMI_TURN_ON,
-> +	AMD_HALO_WMI_TURN_OFF
-> +};
-> +
-> +/* Channel selectors for Arg0 */
-> +enum {
-> +	AMD_HALO_CHANNEL_RED =3D 0x01,
-> +	AMD_HALO_CHANNEL_GREEN,
-> +	AMD_HALO_CHANNEL_BLUE
-> +};
-> +
-> +/* Status codes from spec */
-> +#define AMD_HALO_STATUS_SUCCESS		0x0000
-> +#define AMD_HALO_STATUS_INVALID_PARAM	0xFFFD
-> +
-> +/* Brightness uses 0-100 range */
-> +#define AMD_HALO_MAX_HW_BRIGHTNESS	100
-> +
-> +/* Default RGB brightness */
-> +#define AMD_HALO_DEFAULT_RED		50
-> +#define AMD_HALO_DEFAULT_GREEN		30
-> +#define AMD_HALO_DEFAULT_BLUE		30
-> +
-> +/**
-> + * struct amd_halo_led_data - Driver private data
-> + * @wdev: WMI device pointer
-> + * @led_mc: LED multicolor class device
-> + * @subled_info: RGB channel information
-> + * @lock: Mutex to protect WMI calls
-> + */
-> +struct amd_halo_led_data {
-> +	struct wmi_device *wdev;
-> +	struct led_classdev_mc led_mc;
-> +	struct mc_subled subled_info[3];
-> +	struct mutex lock;	/* Protects WMI method calls */
-> +};
-> +
-> +struct amd_halo_wmi_args {
-> +	u32 arg0;
-> +	u32 arg1;
-
-Hi,
-
-those two arguments are little-endian integers, so please use
-__le32 instead of u32. This will also require you to use le32_to_cpu()
-and cpu_to_le32() when populating and accesssing this struct.
-
-> +};
-> +
-> +static inline int wmi_status_to_err(u16 status)
-> +{
-> +	switch (status) {
-> +	case AMD_HALO_STATUS_SUCCESS:
-> +		return 0;
-> +	case AMD_HALO_STATUS_INVALID_PARAM:
-> +		return -EINVAL;
-> +	default:
-> +		return -EIO;
-> +	}
-> +}
-> +
-> +static int __amd_halo_wmi_call(struct wmi_device *wdev,
-> +			       u32 method_id,
-> +			       u32 arg0,
-> +			       u32 arg1)
-> +{
-> +	struct amd_halo_wmi_args args =3D {
-> +		.arg0 =3D arg0,
-> +		.arg1 =3D arg1,
-> +	};
-
-Use cpu_to_le32() to ensure that the firmware receives little-endian=20
-integers.
-
-> +	struct wmi_buffer input =3D {
-> +		.length =3D sizeof(args),
-> +		.data =3D &args,
-> +	};
-> +	struct wmi_buffer output =3D { 0 };
-> +	u16 result_status;
-> +	int ret;
-> +
-> +	ret =3D wmidev_invoke_method(wdev, 0, method_id,
-> +				   &input, &output, sizeof(result_status));
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Return buffer per spec: Bytes[0:1] =3D Status (little-endian) */
-> +	result_status =3D le16_to_cpu(*(__le16 *)output.data);
-> +	ret =3D wmi_status_to_err(result_status);
-> +
-> +	kfree(output.data);
-
-You could use "__le16 *result_status __free(kfree) =3D output.data" here=
+Am 10.05.26 um 20:48 schrieb Jelle van der Waa:
+> On 1/31/26 00:24, Armin Wolf wrote:
+>> Am 25.01.26 um 19:23 schrieb Jelle van der Waa:
+>>
+>>> Some Acer laptops can configure battery related features through Acer
+>>> Care Center on Windows. This driver uses the power supply extension to
+>>> set a battery charge limit and exposes the battery
+>>> temperature.
+>>>
+>>> This driver is based on the existing acer-wmi-battery project on GitHu=
+b
+>>> and was tested on an Acer Aspire A315-510P.
+>>>
+>>> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
+>>>
+>>> ---
+>>> v2:
+>>> - Alphabetically sort linux headers
+>>> - Include headers for types / _packed
+>>> - Use cleanup.h instead of goto + label
+>>> - Add missing prefix for set_battery_health_control
+>>> - General code formatting fixes
+>>> - Remove HWMON dependency in Kconfig
+>>> - Use wmidev_evaluate_method()
+>>> - Accept oversized ACPI buffers
+>>> - Use DRIVER_NAME for battery extension name
+>>> - Set no_singleton =3D true
+>>> - Implement DMI matching to support laptops with only battery
+>>> =C2=A0=C2=A0 temperature support.
+>>> ---
+>>> =C2=A0 drivers/platform/x86/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 11 +
+>>> =C2=A0 drivers/platform/x86/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+>>> =C2=A0 drivers/platform/x86/acer-wmi-battery.c | 355 +++++++++++++++++=
++++++++
+>>> =C2=A0 3 files changed, 367 insertions(+)
+>>> =C2=A0 create mode 100644 drivers/platform/x86/acer-wmi-battery.c
+>>>
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconf=
+ig
+>>> index 4cb7d97a9fcc..88c11a698fb9 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -170,6 +170,17 @@ config ACER_WMI
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If you have an ACPI-WMI com=
+patible Acer/ Wistron laptop, say=20
+>>> Y or M
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 here.
+>>> +config ACER_WMI_BATTERY
+>>> +=C2=A0=C2=A0=C2=A0 tristate "Acer WMI Battery"
+>>> +=C2=A0=C2=A0=C2=A0 depends on ACPI_WMI
+>>> +=C2=A0=C2=A0=C2=A0 depends on ACPI_BATTERY
+>>
+>> Please also depend on DMI so that dmi_check_system() will always be=20
+>> available
+>> when building this driver.
+>>
+>>> +=C2=A0=C2=A0=C2=A0 help
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This is a driver for Acer laptops with=
+ battery health control. It
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adds charge limit control and battery =
+temperature reporting.
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If you have an ACPI-WMI Battery compat=
+ible Acer laptop, say Y=20
+>>> or M
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 here.
+>>> +
+>>> =C2=A0 source "drivers/platform/x86/amd/Kconfig"
+>>> =C2=A0 config ADV_SWBUTTON
+>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/=20
+>>> Makefile
+>>> index d25762f7114f..9cf28baff3ae 100644
+>>> --- a/drivers/platform/x86/Makefile
+>>> +++ b/drivers/platform/x86/Makefile
+>>> @@ -19,6 +19,7 @@ obj-$(CONFIG_GIGABYTE_WMI)=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 +=3D gigabyte-wmi.o
+>>> =C2=A0 obj-$(CONFIG_ACERHDF)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ +=3D acerhdf.o
+>>> =C2=A0 obj-$(CONFIG_ACER_WIRELESS)=C2=A0=C2=A0=C2=A0 +=3D acer-wireles=
+s.o
+>>> =C2=A0 obj-$(CONFIG_ACER_WMI)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 +=3D acer-wmi.o
+>>> +obj-$(CONFIG_ACER_WMI_BATTERY)=C2=A0=C2=A0=C2=A0 +=3D acer-wmi-batter=
+y.o
+>>> =C2=A0 # AMD
+>>> =C2=A0 obj-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=3D amd/
+>>> diff --git a/drivers/platform/x86/acer-wmi-battery.c b/drivers/=20
+>>> platform/x86/acer-wmi-battery.c
+>>> new file mode 100644
+>>> index 000000000000..abb45cfcc6fe
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/acer-wmi-battery.c
+>>> @@ -0,0 +1,355 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>> +/*
+>>> + * acer-wmi-battery.c: Acer battery health control driver
+>>> + *
+>>> + * This is a driver for the WMI battery health control interface foun=
+d
+>>> + * on some Acer laptops.=C2=A0 This interface allows to enable/disabl=
+e a
+>>> + * battery charge limit ("health mode") and exposes the battery=20
+>>> temperature.
+>>> + *
+>>> + * Based on acer-wmi-battery https://github.com/frederik-h/acer-wmi-=
 =20
-to avoid having to call kfree() manually. You can also move this=20
-declaration to the top for the sizeof() expression, as long as you=20
-initialize it with NULL.
+>>> battery/
+>>> + *
+>>> + * Copyright (C) 2022-2025=C2=A0 Frederik Harwath <frederik@harwath.n=
+ame>
+>>> + */
+>>> +
+>>> +#include <linux/acpi.h>
+>>> +#include <linux/cleanup.h>
+>>> +#include <linux/compiler_attributes.h>
+>>> +#include <linux/dmi.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/limits.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/power_supply.h>
+>>> +#include <linux/types.h>
+>>> +#include <linux/unaligned.h>
+>>> +#include <linux/version.h>
+>>> +#include <linux/wmi.h>
+>>> +
+>>> +#include <acpi/battery.h>
+>>> +
+>>> +#define DRIVER_NAME=C2=A0=C2=A0=C2=A0 "acer-wmi-battery"
+>>> +
+>>> +#define ACER_BATTERY_GUID "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
+>>> +
+>>> +/*
+>>> + * The Acer OEM software seems to always use this battery index,
+>>> + * so we emulate this behaviour to not confuse the underlying firmwar=
+e.
+>>> + *
+>>> + * However this also means that we only fully support devices with a
+>>> + * single battery for now.
+>>> + */
+>>> +#define ACER_BATTERY_INDEX=C2=A0=C2=A0=C2=A0 0x1
+>>> +
+>>> +struct get_battery_health_control_status_input {
+>>> +=C2=A0=C2=A0=C2=A0 u8 uBatteryNo;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionQuery;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uReserved[2];
+>>> +} __packed;
+>>> +
+>>> +struct get_battery_health_control_status_output {
+>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionList;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uReturn[2];
+>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionStatus[5];
+>>> +} __packed;
+>>> +
+>>> +struct set_battery_health_control_input {
+>>> +=C2=A0=C2=A0=C2=A0 u8 uBatteryNo;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionMask;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionStatus;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uReservedIn[5];
+>>> +} __packed;
+>>> +
+>>> +struct set_battery_health_control_output {
+>>> +=C2=A0=C2=A0=C2=A0 u8 uReturn;
+>>> +=C2=A0=C2=A0=C2=A0 u8 uReservedOut;
+>>> +} __packed;
+>>> +
+>>> +enum battery_mode {
+>>> +=C2=A0=C2=A0=C2=A0 HEALTH_MODE =3D 1,
+>>> +=C2=A0=C2=A0=C2=A0 CALIBRATION_MODE =3D 2,
+>>> +};
+>>> +
+>>> +struct acer_wmi_battery_data {
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
+>>> +=C2=A0=C2=A0=C2=A0 struct wmi_device *wdev;
+>>> +=C2=A0=C2=A0=C2=A0 const struct power_supply_ext *battery_ext;
+>>> +=C2=A0=C2=A0=C2=A0 struct {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool health_mode : 1;
+>>> +=C2=A0=C2=A0=C2=A0 } features;
+>>> +};
+>>> +
+>>> +static int acer_wmi_battery_get_information(struct=20
+>>> acer_wmi_battery_data *data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 =
+index, u32 battery, u32 *result)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 u32 args[2] =3D { index, battery };
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFF=
+ER, NULL };
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { sizeof(args), args =
+};
+>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 19, =
+&input, &output);
+>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj __free(kfree) =3D output.po=
+inter;
+>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < sizeof(u32)) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&data->wdev->dev, =
+"WMI battery information call=20
+>>> returned buffer of unexpected length %u\n",
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ob=
+j->buffer.length);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 *result =3D get_unaligned_le32(obj->buffer.pointer=
+);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +static int acer_wmi_battery_get_health_control_status(struct=20
+>>> acer_wmi_battery_data *data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool *health_mode)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 /*
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Acer Care Center seems to always call the =
+WMI method
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * with fixed parameters. This yields informa=
+tion about
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * the availability and state of both health =
+and
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * calibration mode. The modes probably apply=
+ to
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * all batteries of the system.
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>> +=C2=A0=C2=A0=C2=A0 struct get_battery_health_control_status_input arg=
+s =3D {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uBatteryNo =3D ACER_BATTE=
+RY_INDEX,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionQuery =3D 0x1,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uReserved =3D { 0x0, 0x0 =
+}
+>>> +=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { (acpi_size) sizeof(=
+args), &args };
+>>> +=C2=A0=C2=A0=C2=A0 struct get_battery_health_control_status_output *s=
+tatus_output;
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFF=
+ER, NULL };
+>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 20, =
+&input, &output);
+>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj __free(kfree) =3D output.po=
+inter;
+>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < 8) {
+>>
+>> Better use sizeof(*status_output) here.
+>>
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&data->wdev->dev, =
+"WMI battery status call returned=20
+>>> a buffer of unexpected length %d\n",
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ob=
+j->buffer.length);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 status_output =3D (struct get_battery_health_contr=
+ol_status_output=20
+>>> *)obj->buffer.pointer;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (health_mode) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (status_output->uFuncti=
+onList & HEALTH_MODE)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *h=
+ealth_mode =3D status_output->uFunctionStatus[0] > 0;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+t =3D -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +static int acer_wmi_battery_set_battery_health_control(struct=20
+>>> acer_wmi_battery_data *data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8 function, bool function_status)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct set_battery_health_control_input args =3D {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uBatteryNo =3D ACER_BATTE=
+RY_INDEX,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionMask =3D functio=
+n,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionStatus =3D funct=
+ion_status ? 1 : 0,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uReservedIn =3D { 0x0, 0x=
+0, 0x0, 0x0, 0x0 }
+>>> +=C2=A0=C2=A0=C2=A0 };
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { (acpi_size) sizeof(=
+args), &args };
+>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFF=
+ER, NULL };
+>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj;
+>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 21, =
+&input, &output);
+>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 obj =3D output.pointer;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < 4) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&data->wdev->dev, =
+"WMI battery status set operation=20
+>>> returned a buffer of unexpected length %d\n",
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ob=
+j->buffer.length);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return ret;
+>>> +}
+>>> +
+>>> +static int acer_battery_ext_property_get(struct power_supply *psy,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct power_sup=
+ply_ext *ext,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *ext_data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum power_supply_prop=
+erty psp,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union power_supply_pro=
+pval *val)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct acer_wmi_battery_data *data =3D ext_data;
+>>> +=C2=A0=C2=A0=C2=A0 bool health_mode;
+>>> +=C2=A0=C2=A0=C2=A0 u32 value;
+>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
+>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D acer_wmi_battery_g=
+et_health_control_status(data,=20
+>>> &health_mode);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D health_mod=
+e
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ? POWER_SUPPLY_CHARGE_TYPE_LONGLIFE
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_TEMP:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D acer_wmi_battery_g=
+et_information(data, 0x8,=20
+>>> ACER_BATTERY_INDEX, &value);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn ret;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (value > U16_MAX)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 re=
+turn -ERANGE;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D value - 27=
+31;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
+>>> +=C2=A0=C2=A0=C2=A0 default:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static int acer_battery_ext_property_set(struct power_supply *psy,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct power_sup=
+ply_ext *ext,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *ext_data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum power_supply_prop=
+erty psp,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const union power_supp=
+ly_propval *val)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct acer_wmi_battery_data *data =3D ext_data;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
+>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return acer_wmi_battery_se=
+t_battery_health_control(data,=20
+>>> HEALTH_MODE,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE=
+);
+>>> +=C2=A0=C2=A0=C2=A0 default:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +}
+>>> +
+>>> +static int acer_battery_ext_property_is_writeable(struct=20
+>>> power_supply *psy,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 const struct power_supply_ext *ext,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 void *ext_data,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 enum power_supply_property psp)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
+>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
+>>> +=C2=A0=C2=A0=C2=A0 default:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +}
+>>> +
+>>> +static const struct dmi_system_id=20
+>>> acer_wmi_battery_health_mode_table[] =3D {
+>>> +=C2=A0=C2=A0=C2=A0 {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DM=
+I_MATCH(DMI_SYS_VENDOR, "Acer"),
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DM=
+I_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P")
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 },
+>>> +=C2=A0=C2=A0=C2=A0 {}
+>>> +};
+>>
+>> I suggest that you perform the DMI check during module initialization.=
+=20
+>> This way
+>> the DMI table can be marked as __initconst and does not consume any=20
+>> memory after
+>> anymore after module initialization is complete.
+>>
+>> The result of the DMI check could then be stored inside a global=20
+>> variable.
+>>
+>> Other than that, the driver seems fine to me.
+>=20
+> Thanks for the review comments, due to some personal circumstances it=20
+> has taken me while to spin up v3.
+>=20
+> I've been digging into the WMI dump data looking if I could figure out=
+=20
+> if there was a way to check if health checks are available but only=20
+> stumbled on another battery related WMI method.
+>=20
+> Method 0x16: GetBatteryFunctionData
+> - Input: uFunctionMask (uint8), uReservedIn (uint8 array)
+> - Output: uReturnCode (uint8 array), uBACStartTime (uint8 array),=20
+> uBACStopTime (uint8 array), uBACStatus (uint8), uReservedOut (uint8 arra=
+y)
+> Method 0x17: SetBatteryFunctionData
+> - Input: uFunctionMask (uint8), uBACSwitch (uint8), uReservedIn (uint8=
+=20
+> array)
+>=20
+> But I was wondering why in probe or init, the driver couldn't call=20
+> "acer_wmi_battery_get_health_control_status". Then we wouldn't need to=
+=20
+> add a WMI whitelist for every device that supports this.
+>=20
+> If I recall correctly you own an Acer laptop which supports the battery=
+=20
+> temperature but lacks health control? Seeing how many WMI methods are=20
+> exposed on my device I suppose it is also exposed for you, but it should=
+=20
+> hopefully error out?
 
-> +	return ret;
-> +}
-> +
-> +/**
-> + * amd_halo_wmi_turn_on - Turn on all LED channels
-> + * @wdev: WMI device pointer
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int amd_halo_wmi_turn_on(struct wmi_device *wdev)
-> +{
-> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_TURN_ON, 0, 0);
-> +}
-> +
-> +/**
-> + * amd_halo_wmi_turn_off - Turn off all LED channels
-> + * @wdev: WMI device pointer
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int amd_halo_wmi_turn_off(struct wmi_device *wdev)
-> +{
-> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_TURN_OFF, 0, 0);
-> +}
-> +
-> +/**
-> + * amd_halo_wmi_set_channel - Set a single RGB channel value
-> + * @wdev: WMI device pointer
-> + * @channel: Channel selector (1=3DRed, 2=3DGreen, 3=3DBlue)
-> + * @brightness: brightness to set (0-100)
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int amd_halo_wmi_set_channel(struct wmi_device *wdev, u32 channe=
-l,
-> +				    u32 brightness)
-> +{
-> +	if (channel < AMD_HALO_CHANNEL_RED ||
-> +	    channel > AMD_HALO_CHANNEL_BLUE ||
-> +	    brightness > AMD_HALO_MAX_HW_BRIGHTNESS)
-> +		return -EINVAL;
-> +
-> +	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_SET_LIGHTBAR,
-> +				   channel, brightness);
-> +}
-> +
-> +/**
-> + * amd_halo_brightness_set - Set LED brightness and color
-> + * @cdev: LED class device
-> + * @brightness: Brightness value
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int amd_halo_brightness_set(struct led_classdev *cdev,
-> +				   enum led_brightness brightness)
-> +{
-> +	struct led_classdev_mc *mc_cdev =3D lcdev_to_mccdev(cdev);
-> +	struct amd_halo_led_data *data =3D container_of(mc_cdev,
-> +						       struct amd_halo_led_data,
-> +						       led_mc);
-> +	u32 red_hw, green_hw, blue_hw;
-> +	int ret;
-> +
-> +	guard(mutex)(&data->lock);
-> +
-> +	led_mc_calc_color_components(mc_cdev, brightness);
-> +
-> +	if (brightness =3D=3D 0)
-> +		return amd_halo_wmi_turn_off(data->wdev);
+Calling an non-existing WMI method is undefined behavior and could in=20
+the worst cast cause the ACPI firmware to crash. Because of this we have=
+=20
+to use a DMI whitelist for now :(
 
-When turning on this LED after turning it off, the RGB color might be=20
-wrong for a short amount of time. I suggest that you still update the=20
-RGB color even when the brightness is 0.
-
-> +
-> +	red_hw =3D mc_cdev->subled_info[0].brightness;
-> +	green_hw =3D mc_cdev->subled_info[1].brightness;
-> +	blue_hw =3D mc_cdev->subled_info[2].brightness;
-> +
-> +	ret =3D amd_halo_wmi_turn_on(data->wdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_RED,
-> +				       red_hw);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_GREEN,
-> +				       green_hw);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(data->wdev, AMD_HALO_CHANNEL_BLUE,
-> +				       blue_hw);
-> +	if (ret)
-> +		goto out;
-> +
-> +	return 0;
-> +
-> +out:
-> +	/*
-> +	 * Consider the light bar non-functional if TURN_ON or SET_LIGHTBAR fa=
-iled.
-> +	 * Attempt to turn the LED off completely as clean-up.
-> +	 */
-> +	if (amd_halo_wmi_turn_off(data->wdev))
-> +		dev_warn_ratelimited(&data->wdev->dev, "Failed to turn LED off on cle=
-anup\n");
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * amd_halo_probe - Driver probe function
-> + * @wdev: WMI device
-> + * @context: Context data (unused)
-> + *
-> + * Return: 0 on success, negative error code on failure
-> + */
-> +static int amd_halo_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct led_init_data led_init_data =3D {
-> +		.devicename =3D "amd_halo",
-> +		.default_label =3D "multicolor:" LED_FUNCTION_STATUS,
-> +		.devname_mandatory =3D true
-> +	};
-> +	struct amd_halo_led_data *data;
-> +	int ret;
-> +
-> +	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	ret =3D devm_mutex_init(&wdev->dev, &data->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	data->wdev =3D wdev;
-> +	dev_set_drvdata(&wdev->dev, data);
-> +
-> +	data->subled_info[0].color_index =3D LED_COLOR_ID_RED;
-> +	data->subled_info[1].color_index =3D LED_COLOR_ID_GREEN;
-> +	data->subled_info[2].color_index =3D LED_COLOR_ID_BLUE;
-> +	data->subled_info[0].intensity =3D AMD_HALO_DEFAULT_RED;
-> +	data->subled_info[1].intensity =3D AMD_HALO_DEFAULT_GREEN;
-> +	data->subled_info[2].intensity =3D AMD_HALO_DEFAULT_BLUE;
-> +
-> +	data->led_mc.led_cdev.brightness =3D AMD_HALO_MAX_HW_BRIGHTNESS;
-> +	data->led_mc.led_cdev.max_brightness =3D AMD_HALO_MAX_HW_BRIGHTNESS;
-> +	data->led_mc.led_cdev.brightness_set_blocking =3D amd_halo_brightness_=
-set;
-> +	data->led_mc.led_cdev.flags =3D LED_CORE_SUSPENDRESUME | LED_RETAIN_AT=
-_SHUTDOWN;
-> +	data->led_mc.num_colors =3D ARRAY_SIZE(data->subled_info);
-> +	data->led_mc.subled_info =3D data->subled_info;
-> +
-> +	ret =3D amd_halo_wmi_turn_on(wdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_RED,
-> +				       AMD_HALO_DEFAULT_RED);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_GREEN,
-> +				       AMD_HALO_DEFAULT_GREEN);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D amd_halo_wmi_set_channel(wdev, AMD_HALO_CHANNEL_BLUE,
-> +				       AMD_HALO_DEFAULT_BLUE);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret =3D devm_led_classdev_multicolor_register_ext(&wdev->dev, &data->l=
-ed_mc,
-> +							&led_init_data);
-> +	if (ret)
-> +		return dev_err_probe(&wdev->dev, ret,
-> +				     "Failed to register multicolor LED\n");
-> +	return 0;
-> +
-> +out:
-> +	/*
-> +	 * Attempt to turn LED off as a cleanup if either TURN_ON or SET_LIGHT=
-BAR
-> +	 * fails. For probe failure due to non-WMI errors, keep the LED in the
-> +	 * default color.
-> +	 */
-> +	dev_warn(&data->wdev->dev, "Light bar non-functional, turning it off\n=
-");
-> +
-> +	if (amd_halo_wmi_turn_off(data->wdev))
-> +		dev_warn(&data->wdev->dev, "Failed to turn LED off on cleanup\n");
-
-I do not think that this cleanup is necessary during probe, please=20
-remove it and just return an error instead.
-
-Otherwise the driver seems good to me.
+I am working on a in-kernel BMOF parser, but i am currently occupied by=20
+other work.
 
 Thanks,
 Armin Wolf
 
-> +
-> +	return dev_err_probe(&wdev->dev, ret, "WMI call failed during probe!\n=
-");
-> +}
-> +
-> +static const struct wmi_device_id amd_halo_id_table[] =3D {
-> +	{ .guid_string =3D AMD_HALO_GUID },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(wmi, amd_halo_id_table);
-> +
-> +static struct wmi_driver amd_halo_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "amd_halo_led",
-> +	},
-> +	.id_table =3D amd_halo_id_table,
-> +	.probe =3D amd_halo_probe,
-> +	.no_singleton =3D true,
-> +};
-> +
-> +module_wmi_driver(amd_halo_driver);
-> +
-> +MODULE_AUTHOR("Mario Limonciello (AMD) <superm1@kernel.org>");
-> +MODULE_AUTHOR("Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>");
-> +MODULE_DESCRIPTION("AMD Halo Box RGB LED Control Driver");
-> +MODULE_LICENSE("GPL");
 >=20
-> ---
-> base-commit: 39704f00f747aba3144289870b5fd8ac230a9aaf
-> change-id: 20260429-halo-leds-v2-plus-722c8083afe8
+> Thanks,
 >=20
-> Best regards,
+> Jelle van der Waa
 
