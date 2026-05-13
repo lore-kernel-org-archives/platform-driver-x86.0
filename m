@@ -1,71 +1,71 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AD33ACF1D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 19:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F38372067
+	for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 19:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778701187; cv=none; b=UHQ1sBv1Wk9/CXCtLyxHduu4JutdeC5M64v+Xq3K3tf/kcTUYGEq6VRjB4tGGGjyz9KQfhSf5C/d7UhB2ZQrilzaNtyttR2nG7PpbsXHp2OVn+1c0BPekHADXZMtA30ddzeNRaIrZYcxowaOf9tqBNfVq8hOJo8r9fMc4FotLxY=
+	t=1778701190; cv=none; b=AUSZbx2prB83udKlb4pFb4TQq+KAmTkJDkLDcuE7n7EGprOyuB7vplEo1jrtVWVFGjd/aPqXrAvlrMJVCC3nCrNSwUJ0+JIEwzbI8frEwblYVWjRqG0z/b8xRRPWPjznzdIvnpsoKy/rPbOq/O3Xi3dWiDDAA6v07uGTtYonuhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778701187; c=relaxed/simple;
-	bh=8L9XyBDEciL5WEEmF1jOQRk81AWM4Zk1x71LAZ8MBTI=;
+	s=arc-20240116; t=1778701190; c=relaxed/simple;
+	bh=2LpbpK+U2F8gSPVy0ZsEE6DeZc0jwJ/UVGwHbr2t1Cs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hL/4rWBhaRBEAO152TWI0jfhIKX7ZzBJG+WS+31ZJ6iCNBEETwzi1o6sglF+VEyZQvtaTf5KUKA81Tmc4NLlNB7auKLXvQQkfU/twnkiGMm7+HqAMOqQZVJJsHwVTSYy4erKNLbBD1bYZ8rD5GJ/NOpSgwGcuSb6aVsEoZ9qvFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dlMWe8nE; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=RlrS3pfbEpQ84Ed2IR4hPEpBO7Z6zyD+EtsPLZMCDGUazkGXc4pj1p5BaSszXrfjlEY7/m77ag/QZg50bfUoN0mQF+p5jIQhG0Fm4LCgWVg9eCLZWxKPFNG1E7fsdHQ3XvgXSn1HMWNFBKkzRkK3c/NlMNX1vXoaSVRqdgAy/GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zld/bdEc; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlMWe8nE"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2b941cd869cso46174395ad.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 12:39:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zld/bdEc"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-366139223e4so4453796a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 May 2026 12:39:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778701184; x=1779305984; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1778701188; x=1779305988; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mvqMlfps/2MIQrMqnTxZeXxhdXVuqBUVLTvsK3qKbEQ=;
-        b=dlMWe8nEB2q1BmtlK+kSARQZF3kbGneyu0sme9RDZEWlKy4DXZ4ipTeTmknz5ROVLl
-         ZmAdLlCqyJnYA+VuCfMg9NtHoS8qvVhosb0i13Gqahm/7fqweZPrAQys24X05DgGrujv
-         TkDobK2H4qc097gaXr4lSIlchIP7QDRtlrmgSeI4YJJOu1N5paaM4WqESmiEFnfXYSiv
-         j3x1a3Etc0IqzfEFfwVFxUbtEoxr8hJPzSuYis2Ixwgjiw1HXs1kC1n45/Rj+1sq7f1q
-         LStZgBYMysAM/rB+EM/hrzZfX7MoFO3w/Ue9LAwwM+duiLDTMgtfBnv+b2YPyhFpNF3X
-         zf9g==
+        bh=0VWaQJbUL9pRHD+HAski7/KKQkSw7u7kU3PLj+7Qq6o=;
+        b=Zld/bdEcdkuTfJMlo6PjN297Sdl66NqeP4NDG2zEEHEg4xiFVNeEMjW96cvRuAOTV/
+         HvfzXZk5lgD1smQv4zjYBI/BxF6a/GZ7GLhlwEZOYsE0G2Thh2MqVqRLo9pveNlWiyV/
+         3yl+hHjxzB/RpvEZn4OPK0DKaRIDdGzvWmsPXeX6dESwk+ebkw2BK07j6BabQjU86ufr
+         QwI0n1mUaSGjDLOFkCjry1nZ69Epmf49u3fyH0J+oUBgd37zCjkGR3RrWQCIHzloeFoI
+         siJSG9Ibfj69ojg74QtAJM0NDcW9+MwaEN4fQjKcsZkFXSaRgLwjsIg5PitTtc67RbO/
+         mTKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778701184; x=1779305984;
+        d=1e100.net; s=20251104; t=1778701188; x=1779305988;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mvqMlfps/2MIQrMqnTxZeXxhdXVuqBUVLTvsK3qKbEQ=;
-        b=dATV3VWYidLMBkuzHSk54vsLZWkH0993p2AAfUGy2mDNAtICGsF0KmxsvJfOAgr+Nh
-         DOPoF3HtO0+59cunk7R3Cdn2HD0ji5jh2YIThz2H+qJPvmkzoYoKecXIoEIvrNC5B5PE
-         LKGfpg3rMKikLW3eLMINkrEP0cEZG8f3mC+zM9K5SB04qa3E8ZzQcMMpfVUUNlosd5w4
-         M0SwlekdtZSuV+FgJO/QR53VOT/X9ZbyLPqPiBSEVxQE5jdF5tnucXsGxvAJn7IJP22u
-         mW0AIHJ0ylT25LL+DhK0qcjuAxB9bqmZiDuub5Hydo69o0YJexNE5Z1S9z+W2ejpIqqN
-         oVVQ==
-X-Gm-Message-State: AOJu0YyOOAkiafrT+mLn2GmRaPOnj8qrSQzyTrkgHDDq8uVah5DsAi9n
-	ICdrtwEH3yXz72cJz1UMSb1be0ybsSGTGdDXLPQLpqXo0sUKBi1r00kY
-X-Gm-Gg: Acq92OHmZsRquuOzDTYihwnVZk4jolaHjOtlb9pRCum3L2q0fdeKU0MO/PBkG6bhmU5
-	pSmrzz4E+J8f9gGpjn5JiVJq2lg9VFeCE7xxmFYJ29sJyQwslgwoC4LxLI/4HRAl8fQ5v/B3ZR+
-	pJwzOnfAno9NmoG+De600wJhqwrxLITgvWwkugDGfrXAUVovTZfEu2GfvXLTjGrgNx/Zlq7uLUq
-	DkUyx1+D6HpvrxAnyv3g0u//1igpaHiaVZn+AW9DAAFqiL8oR3V1vz6uc8zL67tQDs+xn4s0Hd/
-	iqIYGk+7igAfM0MDQbU3OZglxLnJTim8V1sH6e763n7xa6oY4Omm2ouyjLDd+xbidpr6ZeSN+YU
-	e6Mk34DBLvx2QarMRso8dDiAV1JrmmZklleBdDTl+68vlfM2ItnZm2zsQi4ib9J0h4nLPccyJcB
-	33HYD/MOC+KjX+PMFRIXjnHgf+pN0DFw==
-X-Received: by 2002:a17:903:4b24:b0:2b0:6d56:8d29 with SMTP id d9443c01a7336-2bd30222604mr43304375ad.32.1778701184360;
-        Wed, 13 May 2026 12:39:44 -0700 (PDT)
+        bh=0VWaQJbUL9pRHD+HAski7/KKQkSw7u7kU3PLj+7Qq6o=;
+        b=H5UHZG0DGRYEdaoXOf3mW1pErop+h+TcU6PlJDptF3IIBTU/6wK7S6r0SWxbtdaSk8
+         rIsCryhX4+Dlx6K8J3A7YVX0vpkkdTYTV7CpVax4gdhfmcxQ/fY0eBijJ3O5H2uv4m8X
+         imR8iTuLv1hFHIr2jMyBVDQA7TGon05gDw02KoQqVwtUBSbGJPqKkcXJvmX/oS6lJqk2
+         mtIal1czEFUE+JEhyjxe6BXw3n5BB48DjYkYptRT5kpnViTMaQwG5vfLotHmfWumIrAj
+         LMvaSzEY2mAWJBaMUguy0n9DHf+uoox0ypeT1Jd8BKHB8z01iicPG8VSOliGK2vuad7f
+         8mdg==
+X-Gm-Message-State: AOJu0YyWwh+EWopT8agyIqLRqLzwX+QMAJ9lYdY9AtmiCpkAfntC4aaX
+	v+Fq5OHGaU5kvNvYgg55Lp1IEg64aZaWTfBtuYAZOp7AXPSUQj9CnC7D
+X-Gm-Gg: Acq92OFVD1rKRrPFtUrn1VF7jBOjnNEZHyhieyVP2e+0kigHCffw5TSwKBxmxV2t0kB
+	OSt8hK+bD9ZfrMkAYzZgnaTQgNpdf2V1FJMkObPSrPDhJ3d+6K1VHIxwojOwZOogZN6fHAHnGjq
+	otCrAIO74bLJ3oGHsx8r0bOwlvQZ8L8NhmZ3RykUZQPBySjxzydBzzSdnLVIivEXF8+IRuzACjk
+	4o+sjmBVxvEdYYpuS9GlhoxjqpaXc0flEsQuSmo02tLOD6fgXEDTaK+jPa7xix8eX2b+kfgjzZZ
+	QUevowYwEcOQKEvhpJec76tKEkyFtAzvm9/vAVzck/twvfsG+zRrZCvOx1xFZg9gBNjVIEoeeP9
+	Zw+gTNPUHKj6bHAX1OpHhlAWKG8uV9LNiNQuDODDhoI8cl51nOz4rX221LNS7CdUKaX22ty+wK8
+	js5HbrfQdkuf2edXKlP64m2Yq5b1WEijvvLH27lAFY/RbquPvE0jY=
+X-Received: by 2002:a17:90b:4f92:b0:368:f179:ba07 with SMTP id 98e67ed59e1d1-368f3aa9f3cmr5029819a91.9.1778701187661;
+        Wed, 13 May 2026 12:39:47 -0700 (PDT)
 Received: from cachyos.lan ([2607:fb90:b200:b454:58a0:7e4d:a0a:684b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d11d659sm230595ad.73.2026.05.13.12.39.42
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d11d659sm230595ad.73.2026.05.13.12.39.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2026 12:39:43 -0700 (PDT)
+        Wed, 13 May 2026 12:39:47 -0700 (PDT)
 From: foobisdweik <dweikmferris@gmail.com>
 To: Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	foobisdweik <dweikmferris@gmail.com>
-Subject: [PATCH 1/2] platform/x86: hp-wmi: Add support for Omen 16-b1xxx (8A13)
-Date: Wed, 13 May 2026 12:39:15 -0700
-Message-ID: <20260513193916.84673-2-dweikmferris@gmail.com>
+Subject: [PATCH 2/2] platform/x86: hp-wmi: Expose independent CPU/GPU pwm channels
+Date: Wed, 13 May 2026 12:39:16 -0700
+Message-ID: <20260513193916.84673-3-dweikmferris@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260513193916.84673-1-dweikmferris@gmail.com>
 References: <20260513193916.84673-1-dweikmferris@gmail.com>
@@ -77,59 +77,137 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add board name 8A13 (OMEN by HP Laptop 16-b1xxx, 12th-gen Intel/RTX 30
-series) to the Omen thermal-profile, timed-thermal-profile, and Victus-S
-DMI lists.
+The Victus-S WMI fan-speed-set query (HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY,
+GM2E in firmware) takes a two-byte buffer [cpu, gpu] and writes the
+values to EC SRP1/SRP2 setpoints independently. The driver however drove
+both fans from a single hwmon pwm1 attribute, with the GPU value
+derived as cpu + priv->gpu_delta from the fan table. This makes
+asymmetric fan curves (common ask: GPU fan louder than CPU under
+heavy gaming load) impossible from userspace fan-control tools that
+expect one pwm attribute per fan.
 
-The 8A13 firmware exposes the standard Omen "PerformanceControl" WMI
-feature, uses the legacy EC thermal-profile offset (0x95), and
-implements the Victus-S-style GM2D/GM2E WMI methods at EC offsets
-0xB0..0xB3 (RPM1..RPM4 tach) and 0x34..0x35 (SRP1/SRP2 setpoints).
-This makes it identical in interface to its same-era sibling 8A44
-(Omen 16-n0xxx), so reuse omen_v1_legacy_thermal_params.
+Promote priv->pwm to a two-element array, add a second pwm hwmon
+channel, and extend hp_wmi_hwmon_write() / hp_wmi_apply_fan_settings()
+to drive the per-channel setpoints through GM2E.
 
-After this change /sys/firmware/acpi/platform_profile reports
-cool/balanced/performance and the hp hwmon device exposes per-fan
-tachs plus the manual-mode pwm control on Omen 16-b1xxx.
+The U8_MAX sentinel in hp_wmi_fan_speed_set() selects the new
+per-fan path; existing callers using HP_FAN_SPEED_AUTOMATIC or a
+direct rpm value keep their behavior. The second pwm channel is only
+visible on Victus-S-capable boards, since other HP laptops still use
+the legacy single-fan WMI commands.
+
+Tested on OMEN by HP Laptop 16-b1xxx (8A13): writing pwm1=60, pwm2=200
+in manual mode drives CPU fan to ~1600 RPM and GPU fan to ~5700 RPM
+simultaneously, verified via fan1_input/fan2_input tachs and direct
+read of EC offsets 0xB0..0xB3.
 
 Signed-off-by: foobisdweik <dweikmferris@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 45 +++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 24c151289dd3..389506a6d2e3 100644
+index 389506a6d2e3..40eb3715583a 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -157,7 +157,7 @@ static const char * const omen_thermal_profile_boards[] = {
- 	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
- 	"88F7", "88FD", "88FE", "88FF",
- 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
--	"8A15", "8A42",
-+	"8A13", "8A15", "8A42",
- 	"8BAD",
- 	"8C58",
- 	"8E41",
-@@ -177,7 +177,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
-  * "balanced" when reaching zero.
-  */
- static const char * const omen_timed_thermal_profile_boards[] = {
--	"8A15", "8A42",
-+	"8A13", "8A15", "8A42",
- 	"8BAD",
+@@ -486,7 +486,7 @@ struct hp_wmi_hwmon_priv {
+ 	u8 max_rpm;
+ 	int gpu_delta;
+ 	u8 mode;
+-	u8 pwm;
++	u8 pwm[2];
+ 	struct delayed_work keep_alive_dwork;
  };
  
-@@ -189,6 +189,10 @@ static const char * const victus_thermal_profile_boards[] = {
+@@ -822,12 +822,18 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed)
+ 	fan_speed[GPU_FAN] = speed;
  
- /* DMI Board names of Victus 16-r and Victus 16-s laptops */
- static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A13") },
-+		.driver_data = (void *)&omen_v1_legacy_thermal_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
- 		.driver_data = (void *)&omen_v1_legacy_thermal_params,
+ 	/*
+-	 * GPU fan speed is always a little higher than CPU fan speed, we fetch
+-	 * this delta value from the fan table during hwmon init.
+-	 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
+-	 * automatic mode.
++	 * Pass-through value U8_MAX: drive each fan from its own
++	 * priv->pwm[] setpoint converted via pwm_to_rpm(). Used by the
++	 * hwmon pwm1/pwm2 path that allows independent CPU/GPU fan control.
++	 *
++	 * Otherwise: GPU fan speed is always a little higher than CPU fan
++	 * speed; we fetch this delta from the fan table during hwmon init.
++	 * Exception: HP_FAN_SPEED_AUTOMATIC reverts to automatic mode.
+ 	 */
+-	if (speed != HP_FAN_SPEED_AUTOMATIC) {
++	if (speed == U8_MAX) {
++		fan_speed[CPU_FAN] = pwm_to_rpm(priv->pwm[CPU_FAN], priv);
++		fan_speed[GPU_FAN] = pwm_to_rpm(priv->pwm[GPU_FAN], priv);
++	} else if (speed != HP_FAN_SPEED_AUTOMATIC) {
+ 		gpu_speed = speed + priv->gpu_delta;
+ 		fan_speed[GPU_FAN] = clamp_val(gpu_speed, 0, U8_MAX);
+ 	}
+@@ -2398,7 +2404,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	case PWM_MODE_MANUAL:
+ 		if (!is_victus_s_thermal_profile())
+ 			return -EOPNOTSUPP;
+-		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
++		ret = hp_wmi_fan_speed_set(priv, U8_MAX);
+ 		if (ret < 0)
+ 			return ret;
+ 		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
+@@ -2429,6 +2435,12 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+ {
+ 	switch (type) {
+ 	case hwmon_pwm:
++		/*
++		 * Second pwm channel only exists on Victus-S-style boards
++		 * which expose an independent GPU fan setpoint.
++		 */
++		if (channel == 1 && !is_victus_s_thermal_profile())
++			return 0;
+ 		if (attr == hwmon_pwm_input && !is_victus_s_thermal_profile())
+ 			return 0;
+ 		return 0644;
+@@ -2514,7 +2526,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			/* ensure PWM input is within valid fan speeds */
+ 			rpm = pwm_to_rpm(val, priv);
+ 			rpm = clamp_val(rpm, priv->min_rpm, priv->max_rpm);
+-			priv->pwm = rpm_to_pwm(rpm, priv);
++			priv->pwm[channel] = rpm_to_pwm(rpm, priv);
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		}
+ 		switch (val) {
+@@ -2525,13 +2537,18 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			if (!is_victus_s_thermal_profile())
+ 				return -EOPNOTSUPP;
+ 			/*
+-			 * When switching to manual mode, set fan speed to
+-			 * current RPM values to ensure a smooth transition.
++			 * When switching to manual mode, seed each per-fan
++			 * setpoint from its current measured RPM so the
++			 * transition is smooth.
+ 			 */
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			rpm = hp_wmi_get_fan_speed_victus_s(CPU_FAN);
++			if (rpm < 0)
++				return rpm;
++			priv->pwm[CPU_FAN] = rpm_to_pwm(rpm / 100, priv);
++			rpm = hp_wmi_get_fan_speed_victus_s(GPU_FAN);
+ 			if (rpm < 0)
+ 				return rpm;
+-			priv->pwm = rpm_to_pwm(rpm / 100, priv);
++			priv->pwm[GPU_FAN] = rpm_to_pwm(rpm / 100, priv);
+ 			priv->mode = PWM_MODE_MANUAL;
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		case PWM_MODE_AUTO:
+@@ -2547,7 +2564,9 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 
+ static const struct hwmon_channel_info * const info[] = {
+ 	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+-	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
++	HWMON_CHANNEL_INFO(pwm,
++			   HWMON_PWM_ENABLE | HWMON_PWM_INPUT,
++			   HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
+ 	NULL
+ };
+ 
 -- 
 2.54.0
 
