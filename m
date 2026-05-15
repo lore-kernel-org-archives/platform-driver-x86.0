@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995AE3D3490
-	for <platform-driver-x86@vger.kernel.org>; Fri, 15 May 2026 10:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0013C3439
+	for <platform-driver-x86@vger.kernel.org>; Fri, 15 May 2026 10:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778842416; cv=none; b=A/8MFs13jsTx7nsjcngzpM1NMaEH2yP6tuK4gI0sAxTWiz/d3KCBWXQZpt5z3F2mMFxnGUSJ83X+CPnWmIZjs0FScRv9wns0WoCG5SdNLc2v5ps239i28xgmzE9odhpwiHaUPG9qf8VWFV7OLcqs2LxkX0Bmo6CcfKFFCPdncVY=
+	t=1778842431; cv=none; b=bea0GuyMKwjc3xO3Y7hKuvvnZlkndlzGeRf0+cHK3v14YLeIUfXruquPBxS5eOEWkmcp7+b/1YzjOwwBdaANVpHFj+pDaPmm/4vIvk2CeOu/EWFCeGhouG3vRYY4/Np9hynC6RmqofTnqZFb4MPBveEVHiS42RDA7E8buxUEvoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778842416; c=relaxed/simple;
-	bh=ri7TbDXx6vPSuvgSRmj1OfCihNluSzUipJfm8u2ekKw=;
+	s=arc-20240116; t=1778842431; c=relaxed/simple;
+	bh=gAxDEV3cDkXjJnfInoSfjkSYHZP5qXeV4SNY+aCNmhI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HpAQGuOjan9kllKYXpNNJZBWXtpc/3tRfxuBMll17SD4zsiYPb0OjxagLB9CWVvxQuXy8gES8s4tVvSxvrdLShi3vCNlPsrSU7C6LV4WCs3RYpJegdiK2tIWAjH5EnOl91HehcD/z95Fk588CyhavJ9i9IHXRTWV/s9DK2JgBWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxbyvS0R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=W2IfSX7FzeFzpZJ+T8E19WqZSVjHXADElUoM4LzjgP50YjPhJRkmO8U+uks+Op43Mv7W3HaOXGaFQOMr7899Kz4ZooiplK4QWUKXk2zAxDrxRaNrPiWAu1FEYiO7//spxCMVvSiEp5cBLPZIEIRiOC4fMS244IwVtfCmute5wH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYwsxbOi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxbyvS0R"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5300FC2BCB0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 15 May 2026 10:53:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYwsxbOi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 11630C2BCB7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 15 May 2026 10:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778842416;
-	bh=ri7TbDXx6vPSuvgSRmj1OfCihNluSzUipJfm8u2ekKw=;
+	s=k20201202; t=1778842431;
+	bh=gAxDEV3cDkXjJnfInoSfjkSYHZP5qXeV4SNY+aCNmhI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=TxbyvS0RZvewogj0qDGMGkXnEltvRnXjcoXyVgGm4n8PmpGTRr+wu83qQvDZlQO0A
-	 0/7O3jzvfDVp2Mvtej1vo0KIiA25Xt3/NRtrY9dQQVerxnyYybllNhYZU0TxrxvlqY
-	 HqJvV7OAU9Pd8Ys6ct1DvNgZYZd5ACAlIFPtdTzWJzaHk7H2gCwe1b+5beTXC03V/d
-	 KdR6o/lZFiuvMcVRFGrfu5cgjSjSOLbWYttnud20efINkGKbKBkHVIArLqWt5vGg17
-	 BM5NGxa0Qtd6QUznLLQSmyhytHPhR53K0jACSuX0HTJ23QkPGFOm8QrP6/quEsDaIi
-	 mHXEvfodDJipg==
+	b=UYwsxbOiKHqYBdU+NN4m1PnFCE799DhT0cD5NfS6dxLNOviMEhTXaHSwA4sUVdihG
+	 y7BWh/Y8kLF+A2U7/WeTVS7hn+R5PT/wx7pZvOA96eEa9lUhEke1TuofLJdWUTOdBW
+	 p+IbLQ1jjiCXWM+yQbQWTK9I39MEHn/ZgmLIW+1WhDaKJXtNtqr5EbAMYzmDSn2WK/
+	 gapmssNetFByISkbZEsql0RRyBNvOqqxdOuA5pI1cZcFb8iJyibmK6Gpi1c+ckMI2c
+	 CMTfBjPvF+gtq1fByGm5u2nTu6FgNfOISmitq9KloVMb/Rl7fUoVGC9lzPMH4nSV+1
+	 g4nrDljtWBHhQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 47A7BC433E1; Fri, 15 May 2026 10:53:36 +0000 (UTC)
+	id 08098C4160E; Fri, 15 May 2026 10:53:51 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221523] [BUG] hp-wmi: OMEN 16-ap0xxx (8E35) - fan control not
  available (no PWM)
-Date: Fri, 15 May 2026 10:53:36 +0000
+Date: Fri, 15 May 2026 10:53:50 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221523-215701-Q3yPcqCxUP@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cf_kernel_version
+Message-ID: <bug-221523-215701-Gh40IsXGY4@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221523-215701@https.bugzilla.kernel.org/>
 References: <bug-221523-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221523
 
---- Comment #1 from Ahmet =C3=96zt (sivasli-ahmet@gmx.de) ---
-Created attachment 310127
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310127&action=3Dedit
-Omen Gaming hub log
+Ahmet =C3=96zt (sivasli-ahmet@gmx.de) changed:
+
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+     Kernel Version|                            |Linux 6.17.0-23-generic
 
 --=20
 You may reply to this email to add a comment.
