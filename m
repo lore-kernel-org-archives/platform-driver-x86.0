@@ -1,165 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0DF43636A;
-	Fri, 15 May 2026 11:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CC8478E20;
+	Fri, 15 May 2026 11:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778845653; cv=none; b=iqxVqK322xCXY8Q85f9nDkIZ0iLKqzYlUeeqpI/R8maPRxrUhiS89JPUoqbNjpcsld0xhJ/oLg2Md9bGt44a7Q+hD3xIrK30TbhrbGPcPSUP02PlneU3kvDnXqXljpyDbfmsl3IF024SW2mftxEVaYapWXaxOmp6DBDaikOtUbg=
+	t=1778845780; cv=none; b=mkmlUAyQ5k0+03Wo3EexCAIF5x4Kirn0iHvLPMIgw3EHbIDXqBOifnACHR8QCPAtKhAhh+l8SoG1Nih2I3cFdI/Gbbn2S7J+/gY4K7su2CmMaU20NgGalUoBR+29qEby6b+Ky7pA6Gi3xtwLl14EBls67zTcs7YCr4bAEFvJgao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778845653; c=relaxed/simple;
-	bh=IHy6tCCL6ZboGN6XiT9mrdDppkHa9GfP65Sh+0zol1g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MvA9tznQBYzpY/YZWQX7UwsIfNUYqbHYnvRgfBxL5W6TBc/TNp83rjT6dtwb2PrWAq+O8htRuUZiurv+DgCohaTQw3C2nyhAUizF/sCQ+vBI4Om68ZvIfHW24dT0kLQn0Ad8uvXeA0CvFq0tYDNuL4AY9tjZ5zijy5UqPOyBIMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pG8E7XbG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778845780; c=relaxed/simple;
+	bh=ED21O/dN+NhhTHEmGSH3zc8nGLkq1JGuRU2sNp2tl68=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=SQHmvvS1WzBWg/Ulb23vS+r2dBMYyM7hQpKHwwgcO0CSVWUMm0bbjaVLCaiy7nXULxYsLMrWrQIkp32Fibhy83EMUjhZXwZq77heYziSHGjZMcgBu3WUKaaThSbgcgsYTVgN++tIq+A7svvata35ILUAs74HExn/317ORW3e9uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8Iu/j4X; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pG8E7XbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E78C2BCB8;
-	Fri, 15 May 2026 11:47:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778845653;
-	bh=IHy6tCCL6ZboGN6XiT9mrdDppkHa9GfP65Sh+0zol1g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pG8E7XbG6uMsr4TOp31ODdvYiRZp+lbJ8ue3eQow6PhqKykU6CFDuh4PuSaEEOfzW
-	 pLAkfHNiK3hWidJS611fHC+K9uGuyoelu+s9G+vj+Tua3v1JgvurDGNiqt2ImKUpoV
-	 K1V+2wStsYzrGL8cqcQ30TWNnOTrZoW1FCDi2HSrpZ/vUQ7XcV2zGoqOJ98hbBeSVc
-	 ZeZpj1JnJh9Udyrbr7oGcjEOZhVjjZ1dLTNJcMWWgQ2WCmJc7qj6wZGxUexs50oiuz
-	 EhHe+F/frYelmeI8/6VwvAFEk9+9H94W/vg2Cr29JStRdDvT+0RYXeMoGrVF5+pOrZ
-	 3YVlUCNJiDmYQ==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject:
- [PATCH v2] platform/x86: xo15-ebook: Use devres-based resource management
-Date: Fri, 15 May 2026 13:47:29 +0200
-Message-ID: <6015220.DvuYhMxLoT@rafael.j.wysocki>
-Organization: Linux Kernel Development
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8Iu/j4X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778845778; x=1810381778;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ED21O/dN+NhhTHEmGSH3zc8nGLkq1JGuRU2sNp2tl68=;
+  b=Y8Iu/j4XpPDIuxCwAO1Wgs7zgxMvPsJzq/oY6gC8Qsh5jren58QL8U+9
+   wutovQN1SJZ3f9y0a3RF1nIInmt9+iEyI0Z+rj7dXaf5N69SbaJI0TOLY
+   x8mTlup/HHz6Gk1kJQLp/jxRqG1FwpztFqyoW1g04Jewpwq2RQ2n71E0h
+   5ibOEfZ7sc60JaqfGVQFD+HdXbWNpYM81EytJQRNaKNQ5M1VyKMMzmEIn
+   71cY7HKh+FUceQAeaX6hW2cf4yx+vRR66usHmunNVhskt2R4UPJjRh50L
+   d9C7TZmXAhJea7UZ2pCKyWRPx56wL0urGAideg7J9Ss3w3zNvBPrhB9CJ
+   A==;
+X-CSE-ConnectionGUID: 1RUQfHMkSTSUWlJ3XPAUkQ==
+X-CSE-MsgGUID: /ECw9JEDTaSOrbamR8IpZw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="105258080"
+X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
+   d="scan'208";a="105258080"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 04:49:38 -0700
+X-CSE-ConnectionGUID: 1AwA1l7TTWax7VvAGFpw7w==
+X-CSE-MsgGUID: /IlMfcXmTzibQCeBEz2cnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
+   d="scan'208";a="262195301"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.115])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 04:49:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Date: Fri, 15 May 2026 14:47:50 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v7.1-3
+Message-ID: <pdx86-pr-20260515144750-2668315946@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Hi Linus,
 
-Use devm_kzalloc() and devm_input_allocate_device() in
-ebook_switch_probe() for allocating the button object and the
-input device, respectively, to simplify the rollback path in
-that function and ebook_switch_remove().
+Here is a platform-drivers-x86 fixes PR for v7.1.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+Fixes and New HW Support:
 
-v1 -> v2: Use dev_err_probe() after failing acpi_match_acpi_device() (Andy)
+- asus-nb-wmi: Use existing keyboard quirk for ASUS Zenbook Duo UX8407AA
 
-Applies on top of the driver conversion series
+- hp-wmi: Add support for Victus 16-r0xxx (8BC2)
 
-https://lore.kernel.org/linux-acpi/2420444.ElGaqSPkdT@rafael.j.wysocki/
+- intel/vsec_tpmi:
 
----
- drivers/platform/x86/xo15-ebook.c |   43 ++++++++++++--------------------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
+  - Move debugfs register before creating devices
 
---- a/drivers/platform/x86/xo15-ebook.c
-+++ b/drivers/platform/x86/xo15-ebook.c
-@@ -82,30 +82,28 @@ static SIMPLE_DEV_PM_OPS(ebook_switch_pm
- 
- static int ebook_switch_probe(struct platform_device *pdev)
- {
--	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+	struct device *dev = &pdev->dev;
-+	struct acpi_device *device = ACPI_COMPANION(dev);
- 	const struct acpi_device_id *id;
- 	struct ebook_switch *button;
- 	struct input_dev *input;
- 	int error;
- 
--	button = kzalloc_obj(struct ebook_switch);
-+	button = devm_kzalloc(dev, sizeof(*button), GFP_KERNEL);
- 	if (!button)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, button);
- 
--	button->input = input = input_allocate_device();
--	if (!input) {
--		error = -ENOMEM;
--		goto err_free_button;
--	}
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	button->input = input;
- 
- 	id = acpi_match_acpi_device(ebook_device_ids, device);
--	if (!id) {
--		dev_err(&pdev->dev, "Unsupported hid\n");
--		error = -ENODEV;
--		goto err_free_input;
--	}
-+	if (!id)
-+		return dev_err_probe(dev, -ENODEV, "Unsupported hid\n");
- 
- 	strscpy(acpi_device_name(device), XO15_EBOOK_DEVICE_NAME);
- 	strscpy(acpi_device_class(device), XO15_EBOOK_CLASS "/" XO15_EBOOK_SUBCLASS);
-@@ -115,21 +113,20 @@ static int ebook_switch_probe(struct pla
- 	input->name = acpi_device_name(device);
- 	input->phys = button->phys;
- 	input->id.bustype = BUS_HOST;
--	input->dev.parent = &pdev->dev;
- 
- 	input->evbit[0] = BIT_MASK(EV_SW);
- 	set_bit(SW_TABLET_MODE, input->swbit);
- 
- 	error = input_register_device(input);
- 	if (error)
--		goto err_free_input;
-+		return error;
- 
- 	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
--						ebook_switch_notify, &pdev->dev);
-+						ebook_switch_notify, dev);
- 	if (error)
--		goto err_unregister_input;
-+		return error;
- 
--	ebook_send_state(&pdev->dev);
-+	ebook_send_state(dev);
- 
- 	if (device->wakeup.flags.valid) {
- 		/* Button's GPE is run-wake GPE */
-@@ -139,16 +136,6 @@ static int ebook_switch_probe(struct pla
- 	}
- 
- 	return 0;
--
--err_free_input:
--	input_free_device(input);
--err_free_button:
--	kfree(button);
--	return error;
--
--err_unregister_input:
--	input_unregister_device(input);
--	goto err_free_button;
- }
- 
- static void ebook_switch_remove(struct platform_device *pdev)
-@@ -162,8 +149,6 @@ static void ebook_switch_remove(struct p
- 
- 	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY,
- 				       ebook_switch_notify);
--	input_unregister_device(button->input);
--	kfree(button);
- }
- 
- static struct platform_driver xo15_ebook_driver = {
+  - Prevent fault during unbind
+
+- lenovo-wmi-*:
+
+  - Fix memory leak in lwmi_dev_evaluate_int()
+
+  - Balance IDA id allocation and free
+
+  - Balance component bind and unbind
+
+  - Prevent sending uninitialized WMI arguments to the device
+
+  - Decouple lenovo-wmi-gamezone and lenovo-wmi-other to simplify module
+    dependency graph
+
+  - Limit adding attributes to supported devices
+
+- samsung-galaxybook: Handle kbd backlight, mic mure and camera block
+                      hotkeys
+
+Regards, i.
 
 
+The following changes since commit 863810d4985ad214f70c1623f24384ccc850f2a2:
 
+  platform/x86: lenovo: wmi-other: Fix uninitialized variable in lwmi_om_hwmon_write() (2026-04-30 15:41:18 +0300)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.1-3
+
+for you to fetch changes up to 2997606dd17729404cef9821ce66dd037b6019eb:
+
+  platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8407AA (2026-05-11 17:15:16 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v7.1-3
+
+Fixes and New HW Support:
+
+- asus-nb-wmi: Use existing keyboard quirk for ASUS Zenbook Duo UX8407AA
+
+- hp-wmi: Add support for Victus 16-r0xxx (8BC2)
+
+- intel/vsec_tpmi:
+
+  - Move debugfs register before creating devices
+
+  - Prevent fault during unbind
+
+- lenovo-wmi-*:
+
+  - Fix memory leak in lwmi_dev_evaluate_int()
+
+  - Balance IDA id allocation and free
+
+  - Balance component bind and unbind
+
+  - Prevent sending uninitialized WMI arguments to the device
+
+  - Decouple lenovo-wmi-gamezone and lenovo-wmi-other to simplify module
+    dependency graph
+
+  - Limit adding attributes to supported devices
+
+- samsung-galaxybook: Handle kbd backlight, mic mure and camera block
+                      hotkeys
+
+The following is an automated shortlog grouped by driver:
+
+asus-nb-wmi:
+ -  add DMI quirk for ASUS Zenbook Duo UX8407AA
+
+hp-wmi:
+ -  Add support for Victus 16-r0xxx (8BC2)
+
+intel:
+ -  Add notifiers support
+ -  Move debugfs register before creating devices
+
+intel/tpmi/plr:
+ -  Prevent fault during unbind
+
+lenovo:
+ -  Decouple lenovo-wmi-gamezone and lenovo-wmi-other
+
+lenovo-wmi-helpers:
+ -  Fix memory leak in lwmi_dev_evaluate_int()
+ -  Move gamezone enums to wmi-helpers
+
+lenovo-wmi-other:
+ -  Add Attribute ID helper functions
+ -  Balance component bind and unbind
+ -  Balance IDA id allocation and free
+ -  Fix tunable_attr_01 struct members
+ -  Limit adding attributes to supported devices
+ -  Zero initialize WMI arguments
+
+samsung-galaxybook:
+ -  Handle ACPI hotkey notifications
+ -  Refactor camera lens cover input device
+
+----------------------------------------------------------------
+Ayaan Mirza Baig (2):
+      platform/x86: samsung-galaxybook: Refactor camera lens cover input device
+      platform/x86: samsung-galaxybook: Handle ACPI hotkey notifications
+
+Derek J. Clark (5):
+      platform/x86: lenovo-wmi-other: Zero initialize WMI arguments
+      platform/x86: lenovo-wmi-other: Fix tunable_attr_01 struct members
+      platform/x86: lenovo-wmi-helpers: Move gamezone enums to wmi-helpers
+      platform/x86: lenovo-wmi-other: Add Attribute ID helper functions
+      platform/x86: lenovo-wmi-other: Limit adding attributes to supported devices
+
+Haichen Feng (1):
+      platform/x86: hp-wmi: Add support for Victus 16-r0xxx (8BC2)
+
+Paolo Pisati (1):
+      platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8407AA
+
+Rong Zhang (4):
+      platform/x86: lenovo-wmi-helpers: Fix memory leak in lwmi_dev_evaluate_int()
+      platform/x86: lenovo-wmi-other: Balance IDA id allocation and free
+      platform/x86: lenovo-wmi-other: Balance component bind and unbind
+      platform/x86: lenovo: Decouple lenovo-wmi-gamezone and lenovo-wmi-other
+
+Srinivas Pandruvada (3):
+      platform/x86: intel: Move debugfs register before creating devices
+      platform/x86: intel: Add notifiers support
+      platform/x86/intel/tpmi/plr: Prevent fault during unbind
+
+ drivers/platform/x86/asus-nb-wmi.c         |   9 +
+ drivers/platform/x86/hp/hp-wmi.c           |   4 +
+ drivers/platform/x86/intel/plr_tpmi.c      |  45 ++++-
+ drivers/platform/x86/intel/vsec_tpmi.c     |  29 ++-
+ drivers/platform/x86/lenovo/Kconfig        |   1 -
+ drivers/platform/x86/lenovo/wmi-capdata.c  |   8 +-
+ drivers/platform/x86/lenovo/wmi-capdata.h  |  20 ++
+ drivers/platform/x86/lenovo/wmi-events.c   |   2 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.c |   7 +-
+ drivers/platform/x86/lenovo/wmi-gamezone.h |  20 --
+ drivers/platform/x86/lenovo/wmi-helpers.c  | 105 ++++++++++-
+ drivers/platform/x86/lenovo/wmi-helpers.h  |  21 +++
+ drivers/platform/x86/lenovo/wmi-other.c    | 294 ++++++++++++++---------------
+ drivers/platform/x86/lenovo/wmi-other.h    |  16 --
+ drivers/platform/x86/samsung-galaxybook.c  |  69 ++++---
+ include/linux/intel_tpmi.h                 |   6 +
+ 16 files changed, 424 insertions(+), 232 deletions(-)
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-gamezone.h
+ delete mode 100644 drivers/platform/x86/lenovo/wmi-other.h
