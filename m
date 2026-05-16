@@ -1,150 +1,213 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62737475E
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 21:02:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646A8363C4B;
+	Sat, 16 May 2026 21:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778965366; cv=none; b=MjkUD09z3NokALcnQP2coEMZNpY4NHiPpiCmGQaXWG5lYceinxP4l5p0fYgsFYCd39Dm8XveD1ebW0RYZTV3riqcIppDyOP8PgG9xKhx7tLXpoAw+XQhjxc6AlxaOdnZwRo3bXKQKGR/itDxnHuI7/mWrs70ygTMLcW/hdwTc3M=
+	t=1778966150; cv=none; b=ZPn6rqDMnCNauv4xgjcZT2r+BhreUKmS5hChMwXS14RyydO/C8KE1YJwd92Vlz+9DMuM/WgNxiO5hE2iU6R9/u0hUiwrCT9rTIERlBhdqi1+vyaiGPnD5Diafvid5Rx3YBB+cPm9l7b1ftW98T/S2CvCAoFQTiSCQC89OW6pNs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778965366; c=relaxed/simple;
-	bh=L2kySP4UBGSw590dOuynA/LpCmEeBvEGQYVpM0uzgYk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m4ocMMzB6XAolr5fqmkqQvsxTg03c/TVfytMKuUhFapNR7ZXOtvlWxP6yfsJUuHcKhFYBfgsUUwOwy6YKWNrRdby6ddTvsF6/bsQPL/OryASTVSrY7UiRK1SwxtoRBsb1sP8LDVMAX2Jb0fOaMALYP/c+L6rYQ4eB3RW6DyB0a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+DPsqAu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778966150; c=relaxed/simple;
+	bh=L7Gad1gfIs9d4CtZuSv35gqWfq2mUyJAL4yx1MC/BTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R0nX8l3nHmD/ISTODslocNBCQ71SObNwXB2i4CdaUD6ieuauCFYNzavLXdXDO3XcBnzZSBF0N7fbDJGqAo86uMq/uyV/1fAe86DlFEtjoIiai0bx8RhC0SpM95sucx0L60/fbFtGetr2y2w4yxIwmER1J9EpksE+OWxnVhOKqyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEeNdeKc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+DPsqAu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B005C2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 21:02:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEeNdeKc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3013C19425;
+	Sat, 16 May 2026 21:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778965365;
-	bh=L2kySP4UBGSw590dOuynA/LpCmEeBvEGQYVpM0uzgYk=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Z+DPsqAuHbu3d4k0IdzlwlVlRHr/idJvmAo2//KC3282kJJitOUYNBv5kYeTFtERx
-	 S+hcpE8YTzCzZ/X2E/fCRRK+0rz1atcGEfgNwo4Ok6hnPdbRgtE5RZjCujddPXCFUC
-	 ghpZ++Xkt7KSAfHMQd1SYD62Qj+RA2iDG+igkmvSqTOSBuYLhipUM9ccboBOD9OAy6
-	 OJtH7/jL6Ep5ajgDp8nABIeS9V7a5d/De9LNiROUcD2gz+SZ2qzgO/u3FB7RidQbTi
-	 3Rr5FimNmQXJKBcu8i4QFaxsaYKgP99X/gFXtA3J66IzIbG33eGmrsraXo0dpvh8LY
-	 JPiyd1nyORv7A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 9422AC41613; Sat, 16 May 2026 21:02:45 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Sat, 16 May 2026 21:02:45 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: rickk1166@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-Z4T3yKPU10@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	s=k20201202; t=1778966150;
+	bh=L7Gad1gfIs9d4CtZuSv35gqWfq2mUyJAL4yx1MC/BTk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UEeNdeKcinRfxHJhE6sMRhfZRWx694GrU3IP0fZetTRaAdb2jPCIRxm+py/y0acOc
+	 nO4uqF+gMR+Bp6G50My6MKsWaEVwE+Pq2xPDV95fk1mTEnStmJMqLKmvE9qFMZfwVi
+	 Dj0zNbXhjHYKI0VQubyl0Wb4ZxSxETtUCzvAfhUy7XO88cdugBWtOt3BOPXzMd+tdr
+	 f+teVumqcVcVSoEKirsb88/SZqhwU3Xevt4USmhbl+wZHnJBuuH9dtfxAC+IzvFZ1S
+	 Py70O4NXAOFQDjDtii1zfZAN7hpMmo1YeL9LyIcvNsmPOjR14rWLzRT5WfYSSXkQA7
+	 vaScE6l750mvg==
+Message-ID: <c621a2ce-74cd-42d3-8390-98ec3f792614@kernel.org>
+Date: Sat, 16 May 2026 16:15:46 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] platform/x86: asus-armoury: gate PPT writes behind
+ active fan curve
+To: Ahmed Yaseen <yaseen@ghoul.dev>, platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
+ derekjohn.clark@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ prasanth.ksr@dell.com, mpearson-lenovo@squebb.ca,
+ Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
+References: <20260511061901.907540-1-yaseen@ghoul.dev>
+ <20260513154714.25160-2-yaseen@ghoul.dev>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20260513154714.25160-2-yaseen@ghoul.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
---- Comment #82 from Rick (rickk1166@gmail.com) ---
-(In reply to Rong Zhang from comment #81)
 
-> Anyway, my suggestions on monitoring and testing should reveal more
-> information on this.
+On 5/13/26 10:47 AM, Ahmed Yaseen wrote:
+> On models flagged with requires_fan_curve in the DMI power_data table
+> (28 entries), the BIOS ACPI method SPLX only writes PPT values to the
+> EC when the fan mode is set to Manual (FANM=4). FANM is set to 4 by
+> the DEFC method when a custom fan curve is written. Without an active
+> custom fan curve, the WMI DEVS call returns success but the firmware
+> silently ignores the PPT value, so userspace observes no effect from
+> its write.
+> 
+> Gate writes to ASUS_WMI_DEVID_PPT_{PL1_SPL,PL2_SPPT,PL3_FPPT,APU_SPPT,
+> PLAT_SPPT} on a check of asus_wmi_custom_fan_curve_is_enabled(), and
+> return -EBUSY with a pr_warn() when no fan curve is active on an
+> affected model. Export the helper from asus-wmi so asus-armoury can
+> call it across module boundaries.
+> 
+> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
+> ---
+>   drivers/platform/x86/asus-armoury.c        | 20 ++++++++++++++++
+>   drivers/platform/x86/asus-wmi.c            | 28 ++++++++++++++++++++++
+>   include/linux/platform_data/x86/asus-wmi.h |  5 ++++
+>   3 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index 5b0987ccc270..9b1c41a25b38 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -93,6 +93,8 @@ struct asus_armoury_priv {
+>   
+>   	u32 mini_led_dev_id;
+>   	u32 gpu_mux_dev_id;
+> +
+> +	bool requires_fan_curve;
+>   };
+>   
+>   static struct asus_armoury_priv asus_armoury = {
+> @@ -216,6 +218,22 @@ static int armoury_set_devstate(struct kobj_attribute *attr,
+>   	u32 result;
+>   	int err;
+>   
+> +	/* On some models, PPT changes require an active fan curve */
+> +	if (asus_armoury.requires_fan_curve) {
+> +		switch (dev_id) {
+> +		case ASUS_WMI_DEVID_PPT_PL1_SPL:
+> +		case ASUS_WMI_DEVID_PPT_PL2_SPPT:
+> +		case ASUS_WMI_DEVID_PPT_PL3_FPPT:
+> +		case ASUS_WMI_DEVID_PPT_APU_SPPT:
+> +		case ASUS_WMI_DEVID_PPT_PLAT_SPPT:
+> +			if (!asus_wmi_custom_fan_curve_is_enabled()) {
+> +				pr_warn("PPT change requires an active fan curve on this model. Enable a custom fan curve first.\n");
 
-I do not have SSH setup at all and have never used remote SSH so that seemed
-like it was going to take more time to setup than I wanted to spend right n=
-ow.=20
-Sorry there was limited testing today and I don't think the below is going =
-to
-add much - but here is what I did get done:
+To avoid userspace causing spam about this - I would say pr_warn_once().
 
-Using s-tui:
+> +				return -EBUSY;
+> +			}
+> +			break;
+> +		}
+> +	}
+> +
+>   	/*
+>   	 * Prevent developers from bricking devices or issuing dangerous
+>   	 * commands that can be difficult or impossible to recover from.
+> @@ -1002,6 +1020,8 @@ static void init_rog_tunables(void)
+>   		return;
+>   	}
+>   
+> +	asus_armoury.requires_fan_curve = power_data->requires_fan_curve;
+> +
+>   	/* Initialize AC power tunables */
+>   	ac_limits = power_data->ac_data;
+>   	if (ac_limits) {
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 80144c412b90..b05218d31d90 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -341,6 +341,9 @@ struct asus_wmi {
+>   /* Global to allow setting externally without requiring driver data */
+>   static enum asus_ally_mcu_hack use_ally_mcu_hack = ASUS_WMI_ALLY_MCU_HACK_INIT;
+>   
+> +/* Global asus_wmi instance for use by exported functions */
+> +static struct asus_wmi *asus_wmi_instance;
 
-Running in a standard terminal window results in it's graphs stopping during
-the pause events but when it comes back it looks like the power usage was
-reduced during the event.  This does not seem surprising as the entire GUI
-stops updating.
+Why do you need a global?
 
-Running in a virtual terminal (the ones built into Mint using ctrl-alt-F1 f=
-or a
-terminal and ctrl-alt-F7 to return to the GUI) I did not see any variation
-whatsoever while watching it through enough time for an event to happen.  P=
-ower
-was lower than the test in a standard terminal window (I suspect because the
-GUI was not updating).  There were no pauses as you suspected.
+This couldn't be part of "struct asus_wmi"?
 
-Running in a virtual terminal and turning stress on I got the same results =
-(I
-did not see any parameter substantially change when an event should have
-happened).
+> +
+>   #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>   static void asus_wmi_show_deprecated(void)
+>   {
+> @@ -4001,6 +4004,28 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Returns true if at least one custom fan curve is active
+> + *
+> + * Used by asus-armoury to check if PPT writes will be accepted by the BIOS
+> + * on models that require an active fan curve for TDP changes.
+> + */
+> +bool asus_wmi_custom_fan_curve_is_enabled(void)
+> +{
+> +	struct asus_wmi *asus = asus_wmi_instance;
+> +	struct fan_curve_data *curves;
+> +
+> +	if (!asus)
+> +		return false;
+> +
+> +	curves = asus->custom_fan_curves;
+> +
+> +	return (asus->cpu_fan_curve_available && curves[FAN_CURVE_DEV_CPU].enabled) ||
+> +	       (asus->gpu_fan_curve_available && curves[FAN_CURVE_DEV_GPU].enabled) ||
+> +	       (asus->mid_fan_curve_available && curves[FAN_CURVE_DEV_MID].enabled);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(asus_wmi_custom_fan_curve_is_enabled, "ASUS_WMI");
+> +
+>   /* Throttle thermal policy ****************************************************/
+>   static int throttle_thermal_policy_write(struct asus_wmi *asus)
+>   {
+> @@ -5156,6 +5181,8 @@ static int asus_wmi_add(struct platform_device *pdev)
+>   
+>   	asus_wmi_debugfs_init(asus);
+>   
+> +	asus_wmi_instance = asus;
+> +
+>   	return 0;
+>   
+>   fail_wmi_handler:
+> @@ -5199,6 +5226,7 @@ static void asus_wmi_remove(struct platform_device *device)
+>   	throttle_thermal_policy_set_default(asus);
+>   	asus_wmi_battery_exit(asus);
+>   
+> +	asus_wmi_instance = NULL;
+>   	kfree(asus);
+>   }
+>   
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index 554f41b827e1..5d57293ced6c 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -196,6 +196,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+>   int asus_hid_register_listener(struct asus_hid_listener *cdev);
+>   void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
+>   int asus_hid_event(enum asus_hid_event event);
+> +bool asus_wmi_custom_fan_curve_is_enabled(void);
+>   #else
+>   static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
+>   {
+> @@ -227,6 +228,10 @@ static inline int asus_hid_event(enum asus_hid_event event)
+>   {
+>   	return -ENODEV;
+>   }
+> +static inline bool asus_wmi_custom_fan_curve_is_enabled(void)
+> +{
+> +	return false;
+> +}
+>   #endif
+>   
+>   #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
 
-> So I speculate that some userspace utilities (probably upower or the desk=
-top
-> environment?) read charge_types regularly or upon power events. Before v6=
-.17,=20
-> ideapad-laptop didn't support it, so nothing could be read. However, sinc=
-e=20
-> v6.17, they can actually read it, and reading it triggers ECMT chaos upon
-> power events.
-
-This seems highly likely as there is a tray applet called Power Manager whi=
-ch
-shows battery and charging information.  I know in Mint Cinnamon the tray i=
-cons
-do their stuff in the same process as the UI (they warn that misbehaved app=
-lets
-can cause system pauses and lockups).  I think it uses upower to get it's i=
-nfo.
-Disabling these applets does not make the problem go completely away (upowe=
-r is
-still running).
-
-> Oh, that was when the charge_types attribute was added to ideapad-laptop.
-
-This makes sense and ties into everything else - and explains the kernel
-versions and why disabling ideapad_laptop removes the pauses.
-
-At this point is there really value in me taking the time to get SSH working
-from  my phone to get the information on processes running or kernel
-information you mentioned above?  Let me know if this would provide value to
-you and I will see what I can do.
-
-I would think running s-tui from the phone would be the same as running it =
-in
-the virtual terminal (which didn't really show anything interesting happeni=
-ng).
- Unless you think the pause events just don't happen while I am watching a
-virtual terminal?
-
-I am currently running with ideapad_laptop blocked and the system seems
-functional - so my assumption is I have to wait for a BIOS update and try t=
-his
-again to see if the BIOS is working correctly.  From previous discussions a=
-bove
-it did not sound like there were any really good other options to investiga=
-te.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
