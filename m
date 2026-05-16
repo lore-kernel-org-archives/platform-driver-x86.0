@@ -1,74 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D29B2B9B7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E514F5E0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 05:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778892546; cv=none; b=T4xUZ9EuhoD1IY8nEcCuhs+p2q9ZL8U9n4H6XKg8gcqNM5t47Pxo1bIZpQH3+xiyUyZVw1hFppZJaaaH9MpbCJP6a1QoZ2dY+FL7RTJUC2p2uZg9I+cmpjBVed227q2wBeUurpdqiytAviuMKgS6pMcWcv4ULuSQtu9V2D5fiLE=
+	t=1778909223; cv=none; b=VI/e1wTCVBXtD2jC0oSMOORlMXMplSB4rbNNrkjfewO48Yry7nt103PeC1MkR4DaTTetZwvNXaR9KF8vzTN/gtx0ncY2L1f7s9jimicPR9YluaZ92Pei73GsbMoABIU5vFI/3VCyEm6+8OFyYCH6bdbMrwwjYnif28LjfSnNt/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778892546; c=relaxed/simple;
-	bh=O2+SH7RnieWOl6wOKwquYClu3z1DJIvH96sGrsj8n2s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hfsmoBnUAfKlN1qQ3Zq6kyfAs+IXU24IbTG4mMN56KHtrwHlXAnJTuD1TVzrm9RUGK36BpPmpEU2cV9AVqmryiBmRho4NzfleLg7ZUC5i88ThP3CSvSf+WdyYWfNKBEg2PdtgYZis1588u8bqPoGOn24cMcnTjV24dqNJuIc7Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnL0JMaE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778909223; c=relaxed/simple;
+	bh=r5pwNixhZF0iPZD4fZelruSCDRVBVEqUKZZeeDOtYtU=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=t8iwjKdRrfndatPXKn+pBmrcOadoyVh7GQh4djAmsDMqTuCxaN0opPZFkklDt3Ot1WpQczU6FluggVQ7EZQpNCMG1i1p4gaNUjWOnqx0x8JODpLJ6JjJj33dMtKULIacC37wX/ad4XhUK7wnehH2Nxx8dJjoWq2U9L7MUTRHVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bkE19GVc; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnL0JMaE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 92D42C2BCB7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778892545;
-	bh=O2+SH7RnieWOl6wOKwquYClu3z1DJIvH96sGrsj8n2s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=CnL0JMaEAfmbzBbzpnkXMMyNgDKFyuDFMQQfSr1rq1/8BuBnxMPnS8495YMQ7Em4x
-	 Bh1nnsn9MH6dMc/upEiSKcgiaXoGs2A2eVWnyz7d53yxBOM//zh0WXz60VpHgtMOiS
-	 PuOLzvAvzTb2IaVPftNd+DauBR1gFzGpyxmz7KIgUlX5oaBFF2DWNLNrrtD7qzmLa6
-	 zEW+GwqJ9GCR5JIP44qc2WnIFGY1c3xnURMrJV2d1h31bw1rf/NA/JyABCKFYRU3Pd
-	 c4iKV0J7UZ22+ShkwgsAAWdb2h1gVraFDvuKrCRWjQkeklOcWIz9xR3lcVmGg+/WGI
-	 EjNzGJroxTGHQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7A80AC433E1; Sat, 16 May 2026 00:49:05 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221523] [BUG] hp-wmi: OMEN 16-ap0xxx (8E35) - fan control not
- available (no PWM)
-Date: Sat, 16 May 2026 00:49:05 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: sivasli-ahmet@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221523-215701-oGeLuvKbh8@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221523-215701@https.bugzilla.kernel.org/>
-References: <bug-221523-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkE19GVc"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ba4a1a0325so4290295ad.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 15 May 2026 22:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778909220; x=1779514020; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R4/KgBgy4dDxKBqEfIFfWYs4uhVav1KCc5r7s4FP0pY=;
+        b=bkE19GVcpj06YhbpMAciuKcC6m9nDpEsPQ8iQ2r1ecycQeSuCpw7VQX9Em5qeY3jxl
+         EtZvzPuf1aj+o6gEtvnj7jFtC0lEx3+XAXMLdzg37Y/xtFr5r5FIfNN0iIUg9sQt0C6j
+         NsSaWOvLsnbs/eKg6yQUVdEBtlyd+8It4gtUvHzTFuzyQsTYM4Ve6FaXrskUrRU5YEpj
+         ovFMMBJ1XiuesgjXIb49NXIf30K7ZCNQLfbKXSb2LBh73R2dpy6QwmCElCBwIVqGHPkl
+         PpiH3PWZy9bNXs0eMCIjhCuA4dcyjpzO1JUX8k8FTcQ20r44NsOLi5LBI4Mx38sVdGdo
+         kWEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778909220; x=1779514020;
+        h=content-transfer-encoding:subject:from:cc:content-language:to
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R4/KgBgy4dDxKBqEfIFfWYs4uhVav1KCc5r7s4FP0pY=;
+        b=aCPDv1VMo9aLQ9XuJjc/wRlqXd9w+f9Rp2md+nifzg/bbyLPGyrJCnBsgceBcX9dAF
+         YFVRw1p/Ast0xwgchDePugkmdQTIai/HwUiH1eCOk6TfJeucov/u4ulMHHEa3NNvgViy
+         O2S798e+Tcyyd4bu9xRlJS9rCHKQu8RhskLOQrT9O9otGhQnP59txVW5kRpPO6yd1xI7
+         DSZRfsD6e+vGEO1WoHLGDbyLLL7GezjTdreXcu14ZBWTT7+fg1FaJAZANL1M7LiJ2g5R
+         of835j+pwsJA8IBZlTmVGDf2p/ch+4Q98P99kseEZDuntzxjktLC+cWo+8he2w1BnLve
+         mLTQ==
+X-Gm-Message-State: AOJu0YyP+sx1hN0h++Z4rpeVJEh9bgf9hPxvl30R7X4HdZRzzqxnvknE
+	6d1MzX2rpB7052fiQNt0YoziVG/3RcT4qWSCUQ0T1nrAuMF28sRhtJSGEp4zn51n2Ro=
+X-Gm-Gg: Acq92OHydAarkLsUXosWHWgrkILiDARZ8Z4jG8Kx3J41mjCUloAloZlVyc66iZptIvO
+	abt/UVlQCU28TKv3rkBJmfD0FWoLLydoTqBpe/j2AlkBlcbO9OiQdF+vjZp9FE3tQwph5FABeMO
+	HKZ2d7oARgWnW+K7qGgjDVIGpnJGLNRO8yBnpkXpJJ9tqYG8FFE+9/C7l9XYAWU61aZGu67jlfI
+	SPKUnLC9iRtn8woX/FTotpywnOJYUdze3aD7oYneH7rSBd2rqmNr+yaW0Kg214uctIBF0ZOW2eE
+	kARtuzoMncT/t9DU+BRJQ6CPol+Ea2d2O2izCLXL4qWdtnrDMjHEOPL5YPf/seHuVWsCXxTCbWQ
+	vg63HcoNtwld63WP4F2DvuX8/hEtTrfxjLWsS/iOddyCnTDh0aMaCS0tc0eLp3KlG4QimVy9LZj
+	3v1zy/AveSeyCw9MKezGxLdi7vN3+LhKPHvqRb7qAsorWKgjIIiOLHDkqYtEhNBMUmG0ys2BR0E
+	2L6gzhSYS0H0f0AFkgXawwdRO3Bq01c
+X-Received: by 2002:a17:902:cec7:b0:2b4:5d51:ce96 with SMTP id d9443c01a7336-2bd7e87ed84mr77006875ad.24.1778909220408;
+        Fri, 15 May 2026 22:27:00 -0700 (PDT)
+Received: from [192.168.101.5] ([103.10.119.110])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d2360e8sm82951805ad.82.2026.05.15.22.26.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 May 2026 22:26:59 -0700 (PDT)
+Message-ID: <80491e5a-1ead-43ff-ba48-6596b29498ce@gmail.com>
+Date: Sat, 16 May 2026 10:56:54 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: platform-driver-x86@vger.kernel.org
+Content-Language: en-US
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, ikepanhc@gmail.com,
+ hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org, maxtram95@gmail.com
+From: Sourajyoti Basak <basak.sb2006@gmail.com>
+Subject: [BUG] ideapad_acpi: fan_mode values 1/2/4 all trigger dust cleaning
+ mode on IdeaPad 3 15ALC6 Ub
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221523
+Hi everyone,
 
---- Comment #6 from Ahmet =C3=96zt (sivasli-ahmet@gmx.de) ---
-BTW, the fanX_max values are 0.
+I am forwarding a bug I initially opened on Bugzilla (Bug 221353)
+regarding the ideapad_acpi fan_mode behavior on the Lenovo IdeaPad 3
+15ALC6 Ub.
 
---=20
-You may reply to this email to add a comment.
+Note: This is the exact same hardware I recently reported regarding the
+EC thermal throttling limits.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+## DMI
+
+- system-manufacturer: LENOVO
+- system-version: IdeaPad 3 15ALC6 Ub
+- system-product-name: 82KU
+- bios-version: GLCN46WW
+
+## Kernel
+
+Linux ideapad 7.0.8-1-cachyos #1 SMP PREEMPT_DYNAMIC Fri, 15 May 2026
+18:31:42 +0000 x86_64 GNU/Linux
+
+
+# Description
+
+According to Documentation/ABI/testing/sysfs-platform-ideapad-laptop
+
+fan_mode supports:
+0 = Super Silent
+1 = Standard
+2 = Dust Cleaning
+4 = Efficient Thermal Dissipation
+
+However, on this device:
+- Writing 1, 2, or 4 all produce identical behavior.
+- Fan enters a pulsing high-speed mode where it ramps up to max speed
+and then ramps down to 0 RPM about 10 times. Consistent with "dust
+cleaning" mode.
+- Only value 0 behaves differently. It changes it to the default/"Super
+Silent" mode.
+
+Here is the observation table:
+| Input | Transition (immediately afterwards)   | Finish (after 1 min) |
+|-------|---------------------------------------|----------------------|
+| 0     | immediately 133, minimal fan activity | 133                  |
+
+| 1     | 3, enters "dust cleaning" mode        | 5                    |
+
+| 2     | 3                                     | 5                    |
+
+| 4     | 3                                     | 5                    |
+
+
+# Steps to Reproduce
+
+1. Switch to a fan mode.
+- echo 0 | sudo tee
+/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_mode
+- echo 1 | sudo tee
+/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_mode
+- echo 2 | sudo tee
+/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_mode
+- echo 4 | sudo tee
+/sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fan_mode
+
+2. Observe that all of them except mode "0" (a.k.a. "Super Silent" mode)
+make the fan enter the "dust cleaning" mode.
+
+
+# Expected
+
+Different fan behaviors per documented modes.
+
+
+# Actual
+
+All non-zero modes behave like dust cleaning.
+
+
+Best Regards,
+Sourajyoti Basak
