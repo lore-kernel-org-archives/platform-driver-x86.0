@@ -1,90 +1,226 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14E2381AF;
-	Sat, 16 May 2026 17:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616743ED5C7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 17:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778951704; cv=none; b=bM41pBqPOcn60aIkNi2TlDCRtFG0hDlFwQEPn0Eb+NYSBIutbWfx0jVqPveNFGRDttO9ooo9Z73GQgjg2rmM3gDgHnqOETHHCi3hKkozLlI8m9D3wch7A9kItHoyLA8Oin8esb7m3euhUMzPkEB2e9vqtDSdM6geTQ0XzbGCBYM=
+	t=1778953075; cv=none; b=tw6P5SjlHmg4hOFXKAMKh0+r5Dneoi2SEecCtQ8O6DgQK/VQ9gadjw14BdasNF8l9/fbt3JZ0fNrfUR45sOktLXT7LvIRq8C4xTMH1eHyKXCEYXFiPPpNoSnhyme8Nac1EDZRVOxuSfQpVKe/XVbDMGqUmtfsSTkY7NoO0c6oQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778951704; c=relaxed/simple;
-	bh=PTaFdiP0zvdQAQZh3l4J1kxx+h7sbOpyKW827AxPK5Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJslMBrtTDYoOGY8UowVEQAgBFX2dLgvAiTwitiukOCz6VBWeC/LiOpU5uQN+m5NiZMOpzYToLbncCC4S5xFMvtkPK3vd5wRxv3CzqHrE5XW283hy9wDqLs1CdETnaOvywKRw7SjsbIFg0G18x/NjXJK0tmlMTM8wwW9h7hNgLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aWn6tp5C; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1778953075; c=relaxed/simple;
+	bh=wpnQ8vMJ66im2r4lPvFUheM3Jr0ajLwIUHDSkS1EcyQ=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XBjdZHmyjPH4wr+eGUjI04CkVhhSuPn/Wr1ihQs61w3l/yX3UrypklPD7I7/2gt/lBDVE/fnAqOJudSxElVnzmEiFzcuzILxaz/FKjbYNdgeZfItDbKNu5kgWyqjDZcmIGidREf4gBI4W4H1bG/aFKo9T70X6SK9UmkLtI4Lp70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvoDS4PU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aWn6tp5C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=GGZo+B4gbkzBypGAJrfp0pJ03H1aSk19wI+pAVwppSo=; b=aWn6tp5CL4aPAFlcWcgLgaGs7x
-	H/cRD8IO79FmRcAQ6tZIJb2znqrA//0Dul1Vf35kk7g4xbbETDcrBxAEtBoTmTcNOtSar7CScZh86
-	m2xiLdQo+psCZNQyD7D8TtoLBQX4D/uDbNvy7TxVrS6klrBckbYGW02U5yHEXKhRvb3u0NVyd1JAx
-	hPmjUNso/Hy33A1ukAX6/xOhhnC5/Y7YVjhsa6v+5sxrLmQTvQP+xElW+uyA4Gi8p53yYvvPGs79T
-	+dvmp1u9nc+XvMNVKgwUrBlCx3WwH7mAgrYbTjw7pa80KD9vgIG34clpUpSzVcffRPlMyPVOWzA1g
-	363os3Bg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wOIbG-0000000B5Du-26Xw;
-	Sat, 16 May 2026 17:14:54 +0000
-Message-ID: <8177891c-7103-489f-9384-105ab101301f@infradead.org>
-Date: Sat, 16 May 2026 10:14:53 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvoDS4PU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F00DFC2BCFC
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 17:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778953075;
+	bh=wpnQ8vMJ66im2r4lPvFUheM3Jr0ajLwIUHDSkS1EcyQ=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=VvoDS4PU0zDLyoj4WYSPkdX5M6NtPSg1kFl3rYXs3nrLHWEZYqL5EyqDOtWhUJEeq
+	 jLORYLPhACQVzD38NAAcXchD6z5azaMh6QBQF+HqFy+OEgd97eZAkbkBYjDLV+lQFC
+	 2MsnRqmegE0zrRuE/JZzz7yvoTfRzT0xzUzmZ9qmb1RzH/x78Bx9+TTn8T/vMs9GfE
+	 i1zHrdSzyy0VvLwcc8Za2bU+3gWgurEm9C5VnoLDRv7+V5cDxCCyU3952PTmYY+2Dw
+	 vFnjry1szKSoWD94CyuKp//Fm90GetE/Q+xQi8Lc+2DS0WAvQC/OBSa/xq/JIKmSPj
+	 oDhjDDApoQYrA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id E8F94C53BBF; Sat, 16 May 2026 17:37:54 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Sat, 16 May 2026 17:37:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: i@rong.moe
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-sMzqgVJp90@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: fix typo in lenovo-wmi-other.rst
-To: Cheesecake <cheesecake2960@icloud.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260516075020.16745-1-cheesecake2960@icloud.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260516075020.16745-1-cheesecake2960@icloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
+--- Comment #80 from Rong Zhang (i@rong.moe) ---
+(In reply to Rick from comment #78)
+> (In reply to Rong Zhang from comment #77)
+> > (In reply to Rick from comment #76)
+> > Hmm, interesting. I assume the pauses had existed before I introduced t=
+he
+> > warning message (unexpected charge_types...), right?
+>=20
+> Correct - this pause happens in Kernel 6.17 with no messages, when I load
+> Kernel 6.19 I started getting the messages and that lead me to this threa=
+d.
+> I tried Kernel 6.16 and the pause does not happen - so I believe this
+> behavior was introduced in Kernel 6.17
 
-On 5/16/26 12:50 AM, Cheesecake wrote:
-> Replace "Minumum" with "Minimum".
-> 
-> Signed-off-by: Cheesecake <cheesecake2960@icloud.com>
-> ---
->  Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> index 01d471156..1d0410500 100644
-> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> @@ -144,5 +144,5 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
->      [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
->      [WmiDataId(2), read, Description("Fan ID."), WmiSizeIs("NumOfFans")] uint32 FanId[];
->      [WmiDataId(3), read, Description("Maximum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
-> -    [WmiDataId(4), read, Description("Minumum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
-> +    [WmiDataId(4), read, Description("Minimum Fan Speed."), WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
->    };
+Oh, that was when the charge_types attribute was added to ideapad-laptop.
 
-This is a well-known misspelling but apparently it's what the hardware/device
-reports (or contains), so it should remain as is.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
+id=3Dda8f2708f9b69707f4efeb432a18395e46b4666f
 
-https://lore.kernel.org/platform-driver-x86/BAA4F3A7-E892-4904-95A6-64B177CDA7AD@gmail.com/
+> > This sounds like a slow SMI handling due to the broken firmware.
+> >=20
+> > Could you kindly provide more detailed information about the pause? Whe=
+n it
+> > happened, did you notice a spike in CPU usage? Did you see any dmesg
+> message
+> > at that time? Did it freeze your system completely or just make things
+> laggy?
+>=20
+> The system appears to freeze solid for about 1 to 2 seconds (hard to tell
+> the exact timing - but the pause feels like it is always the same duratio=
+n).
+> Nothing on screen changes.
+>=20
+> When running system monitor during the event I see it freeze but when it
+> restarts I don't see any spikes or anything interesting on any graph.
+
+Did it have a power consumption graph and a CPU frequency graph? I will talk
+more about monitoring later.
+
+>=20
+> When I was running the "perf stat" stuff below I did notice that during t=
+he
+> freeze it stopped updating and when it resumed it looked like it filled in
+> all the data that was paused. Normally the perf stat seems to just produc=
+e a
+> row of data on a periodic basis and when the pause happens it stops but
+> after the freeze it looks like it prints a bunch of rows to catch up to
+> where it should be.
+>=20
+> There is no laggy behavior either before or after the freeze. The system
+> works perfectly at all times except for the duration of the freeze.=20
+>=20
+> No message in dmesg under Kernel 6.17 (the default kernel in Mint - my da=
+ily
+> driver).
+>=20
+> The dmesg message shows up (Kernel 6.19 used for this) as soon as the fre=
+eze
+> is finished (here are three consecutive events captured using "dmesg -w" =
+so
+> you can see the timing between them:
+> [ 107.554265] ideapad_acpi VPC2004:00: unexpected charge_types: both [Fas=
+t]
+> and [Long_Life] are enabled
+> [ 501.851737] ideapad_acpi VPC2004:00: unexpected charge_types: both [Fas=
+t]
+> and [Long_Life] are enabled
+> [ 933.076412] ideapad_acpi VPC2004:00: unexpected charge_types: both [Fas=
+t]
+> and [Long_Life] are enabled
+
+So I speculate that some userspace utilities (probably upower or the desktop
+environment?) read charge_types regularly or upon power events. Before v6.1=
+7,
+ideapad-laptop didn't support it, so nothing could be read. However, since
+v6.17, they can actually read it, and reading it triggers ECMT chaos upon p=
+ower
+events.
+
+>=20
+> >=20
+> > Could you also monitor the SMI count, i.e.,
+> >=20
+> >   sudo perf stat -e ls_smi_rx -I 1000
+> >=20
+> > ..., wait for the pause to occur, and check how many SMIs have occurred
+> > during the pause?
+>=20
+> There number stayed at 0 the entire time I was testing the pause - the pa=
+use
+> did not make the number increment.
+
+Hmm, that's weird...
+
+> Let me clarify this - After further testing: the mouse cursor continues to
+> move on screen during a pause event.
+
+Thanks a lot for the information. It's very helpful.
+
+I suppose it could be a CPU/GPU throttle that delayed some rendering work. =
+On
+modern desktop environments, the cursor is rendered on a different layer --
+that may be why it continues to move.
+
+> For testing I was in a text editor scrolling a long document up and down
+> (using mouse wheel) while moving the mouse in a circle.  When the pause
+> happens the document stops scrolling and the performance monitor stops
+> updating.
+>=20
+> During the freeze the mouse cursor stayed fully responsive to my movements
+> and did not seem laggy or out of the ordinary.
+>=20
+> For reference I am running Linux Mint 22.3 - Cinnamon 64-bit - Cinnamon 6=
+.6.7
+>=20
+> I was also typing this comment with the ideapad_laptop kernel module enab=
+led
+> and I think the pause also allows keyboard input to buffer and not be
+> ignored. (I was typing when a pause happened and I could have sworn that a
+> key didn't register on screen so I hit it again and when the pause ended I
+> ended up with two of the characters).
+
+Sounds like rendering delays, too. Such rendering delays usually don't free=
+ze
+remote shells, e.g., SSH.
+
+Could you try monitoring your laptop using s-tui? You would need to run it =
+as
+root so that it can read the power consumption. The refresh interval should=
+ be
+set to 0.5s so that you can see measurements during pause events.
+
+If possible, please SSH to your laptop from another PC and watch s-tui from=
+ the
+latter so that you can immediately see what's happening during the pause.
+
+It would also be helpful to monitor twice with s-tui: once with its stress
+feature on and once with it off.
+
+If you have enough time to mess around with pause event, could you also che=
+ck
+if it freezes virtual terminals (use the kernel one instead of kmscon)? I g=
+uess
+it won't.
+
+You may also try to SSH to your laptop from another PC or your smartphone, =
+type
+`echo l | sudo tee /proc/sysrq-trigger' in the shell, wait for a pause even=
+t,
+and press Enter immediately. This should reveal what processes are running =
 and
-https://lore.kernel.org/platform-driver-x86/cfd7977e-d612-4e08-a68a-65fed8e164b6@gmx.de/
+what the kernel is doing during the event. `echo w | sudo tee
+/proc/sysrq-trigger' would also be helpful, as it reveals what processes are
+blocked during the pause.
 
-Looks like we should add a NOTE: there.
+--=20
+You may reply to this email to add a comment.
 
-
--- 
-~Randy
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
