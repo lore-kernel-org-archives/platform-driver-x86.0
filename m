@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646A8363C4B;
-	Sat, 16 May 2026 21:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE9929827E;
+	Sat, 16 May 2026 21:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778966150; cv=none; b=ZPn6rqDMnCNauv4xgjcZT2r+BhreUKmS5hChMwXS14RyydO/C8KE1YJwd92Vlz+9DMuM/WgNxiO5hE2iU6R9/u0hUiwrCT9rTIERlBhdqi1+vyaiGPnD5Diafvid5Rx3YBB+cPm9l7b1ftW98T/S2CvCAoFQTiSCQC89OW6pNs4=
+	t=1778966236; cv=none; b=qkhjLeW2yZc3HFwJxxYlLhaUqf+xOogyMiHh0C0HGWy7NAM9tJQTu9NXcFaAWsv5iyiJCbAzY1sGmWeoXx5I0pwk26wicv0Qv2kU81ad7Tsgaxrqq6DkhLraP55KrhMGzPwY59nDQ5uuNkry/sn6QQtvXqAkBHj9lYQeSUCV7JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778966150; c=relaxed/simple;
-	bh=L7Gad1gfIs9d4CtZuSv35gqWfq2mUyJAL4yx1MC/BTk=;
+	s=arc-20240116; t=1778966236; c=relaxed/simple;
+	bh=cKdJXrRdEthruexr76euAsgSOx8d0TO0kZkQQjy+uyU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R0nX8l3nHmD/ISTODslocNBCQ71SObNwXB2i4CdaUD6ieuauCFYNzavLXdXDO3XcBnzZSBF0N7fbDJGqAo86uMq/uyV/1fAe86DlFEtjoIiai0bx8RhC0SpM95sucx0L60/fbFtGetr2y2w4yxIwmER1J9EpksE+OWxnVhOKqyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UEeNdeKc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bK3GxXhFdFPCTwd1JLdS0QO/DO3c8fihY0TcUUU5y6WIoX8nI5B6vPdlBXMjo4exii/b8vd4swZLuWuzntHLESTJ2WdfP5jsWJoGnxzyJ2bR7HjLzrMstzZVRbcXU/vHkcwseCIEzn6tknliN6sAskowIQ9Z5v9KNQCiq6gGPWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgk8qPcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UEeNdeKc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3013C19425;
-	Sat, 16 May 2026 21:15:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgk8qPcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED22C19425;
+	Sat, 16 May 2026 21:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778966150;
-	bh=L7Gad1gfIs9d4CtZuSv35gqWfq2mUyJAL4yx1MC/BTk=;
+	s=k20201202; t=1778966235;
+	bh=cKdJXrRdEthruexr76euAsgSOx8d0TO0kZkQQjy+uyU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UEeNdeKcinRfxHJhE6sMRhfZRWx694GrU3IP0fZetTRaAdb2jPCIRxm+py/y0acOc
-	 nO4uqF+gMR+Bp6G50My6MKsWaEVwE+Pq2xPDV95fk1mTEnStmJMqLKmvE9qFMZfwVi
-	 Dj0zNbXhjHYKI0VQubyl0Wb4ZxSxETtUCzvAfhUy7XO88cdugBWtOt3BOPXzMd+tdr
-	 f+teVumqcVcVSoEKirsb88/SZqhwU3Xevt4USmhbl+wZHnJBuuH9dtfxAC+IzvFZ1S
-	 Py70O4NXAOFQDjDtii1zfZAN7hpMmo1YeL9LyIcvNsmPOjR14rWLzRT5WfYSSXkQA7
-	 vaScE6l750mvg==
-Message-ID: <c621a2ce-74cd-42d3-8390-98ec3f792614@kernel.org>
-Date: Sat, 16 May 2026 16:15:46 -0500
+	b=lgk8qPclY0D4zmYpy7w4AFDI47AY+Kg9qF8Xyeswc7Kx29Olmo97GUNvSLZnPHJxZ
+	 57xaRKoOcYVD3ekwd9ZGG76MsDczdCGDGYpVtLPOpi8kg8/wF0jgkJWVockAFDzOT8
+	 8WgL8gZhR1poIAP8IQank0wQaiWp4dSyCCvHyee7vR6tnLffkhMOJfyz8pgYMIEtPu
+	 1xHdHbuOrAGbb37TOqMz732CI58H1x8Ou6kVJxQoxuOOTfZSyL7tKSCvMBbm2zDMWa
+	 3s023OGfPRMqhGA0tEZ5+ZAA4cEHcEdIe/AK+7/kvFjHhNjH6Ync4oDwN7rmnG/voR
+	 lj2uo7ioEHENg==
+Message-ID: <e7731725-0460-463f-9092-7fb30c6e46c3@kernel.org>
+Date: Sat, 16 May 2026 16:17:12 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,179 +35,123 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] platform/x86: asus-armoury: gate PPT writes behind
- active fan curve
+Subject: Re: [PATCH v2 2/2] platform/x86: asus-armoury: expose
+ requires_fan_curve via sysfs
 To: Ahmed Yaseen <yaseen@ghoul.dev>, platform-driver-x86@vger.kernel.org
 Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
  derekjohn.clark@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
  prasanth.ksr@dell.com, mpearson-lenovo@squebb.ca,
  Dell.Client.Kernel@dell.com, linux-kernel@vger.kernel.org
 References: <20260511061901.907540-1-yaseen@ghoul.dev>
- <20260513154714.25160-2-yaseen@ghoul.dev>
+ <20260513154714.25160-3-yaseen@ghoul.dev>
 Content-Language: en-US
 From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260513154714.25160-2-yaseen@ghoul.dev>
+In-Reply-To: <20260513154714.25160-3-yaseen@ghoul.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
 On 5/13/26 10:47 AM, Ahmed Yaseen wrote:
-> On models flagged with requires_fan_curve in the DMI power_data table
-> (28 entries), the BIOS ACPI method SPLX only writes PPT values to the
-> EC when the fan mode is set to Manual (FANM=4). FANM is set to 4 by
-> the DEFC method when a custom fan curve is written. Without an active
-> custom fan curve, the WMI DEVS call returns success but the firmware
-> silently ignores the PPT value, so userspace observes no effect from
-> its write.
+> Expose the per-model requires_fan_curve flag as a read-only sysfs
+> attribute so userspace tools (asusctl, rogcc) can discover whether
+> the system requires an active custom fan curve for PPT changes to
+> take effect, and warn the user before issuing such writes.
 > 
-> Gate writes to ASUS_WMI_DEVID_PPT_{PL1_SPL,PL2_SPPT,PL3_FPPT,APU_SPPT,
-> PLAT_SPPT} on a check of asus_wmi_custom_fan_curve_is_enabled(), and
-> return -EBUSY with a pr_warn() when no fan curve is active on an
-> affected model. Export the helper from asus-wmi so asus-armoury can
-> call it across module boundaries.
+> The attribute appears at:
+>    /sys/class/firmware-attributes/asus-armoury/attributes/requires_fan_curve
+> 
+> Document the attribute in
+> Documentation/ABI/testing/sysfs-class-firmware-attributes.
 > 
 > Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
 > ---
->   drivers/platform/x86/asus-armoury.c        | 20 ++++++++++++++++
->   drivers/platform/x86/asus-wmi.c            | 28 ++++++++++++++++++++++
->   include/linux/platform_data/x86/asus-wmi.h |  5 ++++
->   3 files changed, 53 insertions(+)
+>   .../testing/sysfs-class-firmware-attributes   | 25 +++++++++++++++++++
+>   drivers/platform/x86/asus-armoury.c           | 15 +++++++++++
+>   2 files changed, 40 insertions(+)
 > 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 2713efa509b4..12700a077f43 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -492,3 +492,28 @@ Description:
+>   		log entry size identifies audit log size for the current BIOS version.
+>   		The current size is 16 bytes but it can be up to 128 bytes long in future BIOS
+>   		versions.
+> +
+> +What:		/sys/class/firmware-attributes/asus-armoury/attributes/requires_fan_curve
+> +Date:		May 2026
+> +KernelVersion:	7.1
+
+Right now we're submitting content for 7.2 or later, so this should be 
+updated.
+
+> +Contact:	platform-driver-x86@vger.kernel.org
+> +Description:
+> +		A read-only attribute that reads 1 on ASUS ROG models where the
+> +		BIOS requires a custom fan curve to be active before Package
+> +		Power Tracking (PPT) writes take effect. On affected models, the
+> +		BIOS silently ignores writes to ppt_pl1_spl, ppt_pl2_sppt,
+> +		ppt_pl3_fppt, ppt_apu_sppt and ppt_platform_sppt unless a custom
+> +		fan curve has been written via the asus_custom_fan_curve hwmon
+> +		device.
+> +
+> +		The kernel rejects PPT writes with -EBUSY on these models when
+> +		no fan curve is active. Userspace tools can read this attribute
+> +		to surface a clear prerequisite to the user instead of letting
+> +		the write appear to succeed at the firmware-attribute layer
+> +		while the BIOS discards it.
+> +
+> +			==	==============================================
+> +			0	No fan curve prerequisite for PPT writes.
+> +			1	A custom fan curve must be active; PPT writes
+> +				return -EBUSY otherwise.
+> +			==	==============================================
 > diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 5b0987ccc270..9b1c41a25b38 100644
+> index 9b1c41a25b38..9b483d7e9855 100644
 > --- a/drivers/platform/x86/asus-armoury.c
 > +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -93,6 +93,8 @@ struct asus_armoury_priv {
+> @@ -127,6 +127,13 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
 >   
->   	u32 mini_led_dev_id;
->   	u32 gpu_mux_dev_id;
+>   static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+>   
+> +static ssize_t requires_fan_curve_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+> +{
+> +	return sysfs_emit(buf, "%d\n", asus_armoury.requires_fan_curve);
+> +}
 > +
-> +	bool requires_fan_curve;
->   };
->   
->   static struct asus_armoury_priv asus_armoury = {
-> @@ -216,6 +218,22 @@ static int armoury_set_devstate(struct kobj_attribute *attr,
->   	u32 result;
->   	int err;
->   
-> +	/* On some models, PPT changes require an active fan curve */
-> +	if (asus_armoury.requires_fan_curve) {
-> +		switch (dev_id) {
-> +		case ASUS_WMI_DEVID_PPT_PL1_SPL:
-> +		case ASUS_WMI_DEVID_PPT_PL2_SPPT:
-> +		case ASUS_WMI_DEVID_PPT_PL3_FPPT:
-> +		case ASUS_WMI_DEVID_PPT_APU_SPPT:
-> +		case ASUS_WMI_DEVID_PPT_PLAT_SPPT:
-> +			if (!asus_wmi_custom_fan_curve_is_enabled()) {
-> +				pr_warn("PPT change requires an active fan curve on this model. Enable a custom fan curve first.\n");
-
-To avoid userspace causing spam about this - I would say pr_warn_once().
-
-> +				return -EBUSY;
-> +			}
-> +			break;
-> +		}
-> +	}
+> +static struct kobj_attribute requires_fan_curve = __ATTR_RO(requires_fan_curve);
 > +
->   	/*
->   	 * Prevent developers from bricking devices or issuing dangerous
->   	 * commands that can be difficult or impossible to recover from.
-> @@ -1002,6 +1020,8 @@ static void init_rog_tunables(void)
->   		return;
+>   static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
+>   {
+>   	return !strcmp(attr->attr.name, "gpu_mux_mode") ||
+> @@ -914,6 +921,12 @@ static int asus_fw_attr_add(void)
+>   		goto err_destroy_kset;
 >   	}
 >   
-> +	asus_armoury.requires_fan_curve = power_data->requires_fan_curve;
+> +	err = sysfs_create_file(&asus_armoury.fw_attr_kset->kobj, &requires_fan_curve.attr);
+> +	if (err) {
+> +		pr_err("Failed to create requires_fan_curve attribute\n");
+> +		goto err_destroy_kset;
+> +	}
 > +
->   	/* Initialize AC power tunables */
->   	ac_limits = power_data->ac_data;
->   	if (ac_limits) {
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 80144c412b90..b05218d31d90 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -341,6 +341,9 @@ struct asus_wmi {
->   /* Global to allow setting externally without requiring driver data */
->   static enum asus_ally_mcu_hack use_ally_mcu_hack = ASUS_WMI_ALLY_MCU_HACK_INIT;
+>   	asus_armoury.mini_led_dev_id = 0;
+>   	if (armoury_has_devstate(ASUS_WMI_DEVID_MINI_LED_MODE))
+>   		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
+> @@ -987,6 +1000,7 @@ static int asus_fw_attr_add(void)
+>   	if (asus_armoury.mini_led_dev_id)
+>   		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
+>   err_remove_file:
+> +	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &requires_fan_curve.attr);
+>   	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
+>   err_destroy_kset:
+>   	kset_unregister(asus_armoury.fw_attr_kset);
+> @@ -1161,6 +1175,7 @@ static void __exit asus_fw_exit(void)
+>   	if (asus_armoury.mini_led_dev_id)
+>   		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
 >   
-> +/* Global asus_wmi instance for use by exported functions */
-> +static struct asus_wmi *asus_wmi_instance;
-
-Why do you need a global?
-
-This couldn't be part of "struct asus_wmi"?
-
-> +
->   #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
->   static void asus_wmi_show_deprecated(void)
->   {
-> @@ -4001,6 +4004,28 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
->   	return 0;
->   }
->   
-> +/*
-> + * Returns true if at least one custom fan curve is active
-> + *
-> + * Used by asus-armoury to check if PPT writes will be accepted by the BIOS
-> + * on models that require an active fan curve for TDP changes.
-> + */
-> +bool asus_wmi_custom_fan_curve_is_enabled(void)
-> +{
-> +	struct asus_wmi *asus = asus_wmi_instance;
-> +	struct fan_curve_data *curves;
-> +
-> +	if (!asus)
-> +		return false;
-> +
-> +	curves = asus->custom_fan_curves;
-> +
-> +	return (asus->cpu_fan_curve_available && curves[FAN_CURVE_DEV_CPU].enabled) ||
-> +	       (asus->gpu_fan_curve_available && curves[FAN_CURVE_DEV_GPU].enabled) ||
-> +	       (asus->mid_fan_curve_available && curves[FAN_CURVE_DEV_MID].enabled);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(asus_wmi_custom_fan_curve_is_enabled, "ASUS_WMI");
-> +
->   /* Throttle thermal policy ****************************************************/
->   static int throttle_thermal_policy_write(struct asus_wmi *asus)
->   {
-> @@ -5156,6 +5181,8 @@ static int asus_wmi_add(struct platform_device *pdev)
->   
->   	asus_wmi_debugfs_init(asus);
->   
-> +	asus_wmi_instance = asus;
-> +
->   	return 0;
->   
->   fail_wmi_handler:
-> @@ -5199,6 +5226,7 @@ static void asus_wmi_remove(struct platform_device *device)
->   	throttle_thermal_policy_set_default(asus);
->   	asus_wmi_battery_exit(asus);
->   
-> +	asus_wmi_instance = NULL;
->   	kfree(asus);
->   }
->   
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 554f41b827e1..5d57293ced6c 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -196,6 +196,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
->   int asus_hid_register_listener(struct asus_hid_listener *cdev);
->   void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
->   int asus_hid_event(enum asus_hid_event event);
-> +bool asus_wmi_custom_fan_curve_is_enabled(void);
->   #else
->   static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
->   {
-> @@ -227,6 +228,10 @@ static inline int asus_hid_event(enum asus_hid_event event)
->   {
->   	return -ENODEV;
->   }
-> +static inline bool asus_wmi_custom_fan_curve_is_enabled(void)
-> +{
-> +	return false;
-> +}
->   #endif
->   
->   #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
+> +	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &requires_fan_curve.attr);
+>   	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
+>   	kset_unregister(asus_armoury.fw_attr_kset);
+>   	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
 
