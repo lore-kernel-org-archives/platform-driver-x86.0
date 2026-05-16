@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501FE1ACED5
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D29B2B9B7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778891626; cv=none; b=lL/HMMatsdXPM8+G9AvLHi3TZtYOPpWH9JY9gdf+4Dom761ehft8fA04zy43iIfdYyoeLhH71pj7tamhnhRlYcZ4MPL+SDS5tOGHcVqqtr6hA3haVIUZ4rjTYlqyuACAYF29kac3DrW2B/eV2Ah6KBgmh7TmjFDE5k7BvIhf+2s=
+	t=1778892546; cv=none; b=T4xUZ9EuhoD1IY8nEcCuhs+p2q9ZL8U9n4H6XKg8gcqNM5t47Pxo1bIZpQH3+xiyUyZVw1hFppZJaaaH9MpbCJP6a1QoZ2dY+FL7RTJUC2p2uZg9I+cmpjBVed227q2wBeUurpdqiytAviuMKgS6pMcWcv4ULuSQtu9V2D5fiLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778891626; c=relaxed/simple;
-	bh=hat7dZq+w8OU/JoJ3y99jz+e9sK125AF8GkLJ1OS+hk=;
+	s=arc-20240116; t=1778892546; c=relaxed/simple;
+	bh=O2+SH7RnieWOl6wOKwquYClu3z1DJIvH96sGrsj8n2s=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=swj9v2xn40tppkjtSUXh/LIiR+6Vqw/cxiLh3RNPF+Be8SqyN8bu2Zh9U/0Cf5Ys0mksik0K0SYMKML+wDNBN1dE5RJLtLBx6RJQTMnNjjOhRjAWbRv2ImR7tS3X05xL6PVYnb73QHtD6ZlwI2nZOzwC5jHPZ9MSDu6esKqaE/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqQwdwms; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=hfsmoBnUAfKlN1qQ3Zq6kyfAs+IXU24IbTG4mMN56KHtrwHlXAnJTuD1TVzrm9RUGK36BpPmpEU2cV9AVqmryiBmRho4NzfleLg7ZUC5i88ThP3CSvSf+WdyYWfNKBEg2PdtgYZis1588u8bqPoGOn24cMcnTjV24dqNJuIc7Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnL0JMaE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqQwdwms"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 022E5C2BCB7
-	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:33:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnL0JMaE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 92D42C2BCB7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 16 May 2026 00:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778891626;
-	bh=hat7dZq+w8OU/JoJ3y99jz+e9sK125AF8GkLJ1OS+hk=;
+	s=k20201202; t=1778892545;
+	bh=O2+SH7RnieWOl6wOKwquYClu3z1DJIvH96sGrsj8n2s=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=YqQwdwms/Kt9vEBCYKDf/ziguHkwCVEHwQ+CoMb/ZQ3L/CPRMfCvsFeSj/kN8r85u
-	 Vw3JRazCRd36ugxmPjAuE1teZRu0H9z18DZInpUleFIHTnwKvWtJ4msyo8R7cjwrRe
-	 ltiPNZazDGTjZe1VbIDmbPVvV57uB3T2fthiovND9+llexPSAyfx8pgQ1bQmL5pmJI
-	 M9INbYQkCH21hXxVmCQwoPUlWza3dLfAPUI9O0BAISXQ28vWDN36Zrgge2Y4cy7n4w
-	 3GzSyCuYibPOVbfeWJqQj/ZBK5RzkDvazmfYPAENeXfyUhWeNveKX5cZVnNnLA30+3
-	 fQUQQkNW9xR7A==
+	b=CnL0JMaEAfmbzBbzpnkXMMyNgDKFyuDFMQQfSr1rq1/8BuBnxMPnS8495YMQ7Em4x
+	 Bh1nnsn9MH6dMc/upEiSKcgiaXoGs2A2eVWnyz7d53yxBOM//zh0WXz60VpHgtMOiS
+	 PuOLzvAvzTb2IaVPftNd+DauBR1gFzGpyxmz7KIgUlX5oaBFF2DWNLNrrtD7qzmLa6
+	 zEW+GwqJ9GCR5JIP44qc2WnIFGY1c3xnURMrJV2d1h31bw1rf/NA/JyABCKFYRU3Pd
+	 c4iKV0J7UZ22+ShkwgsAAWdb2h1gVraFDvuKrCRWjQkeklOcWIz9xR3lcVmGg+/WGI
+	 EjNzGJroxTGHQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id DC359C433E1; Sat, 16 May 2026 00:33:45 +0000 (UTC)
+	id 7A80AC433E1; Sat, 16 May 2026 00:49:05 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221523] [BUG] hp-wmi: OMEN 16-ap0xxx (8E35) - fan control not
  available (no PWM)
-Date: Sat, 16 May 2026 00:33:45 +0000
+Date: Sat, 16 May 2026 00:49:05 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221523-215701-rAYZvGhipW@https.bugzilla.kernel.org/>
+Message-ID: <bug-221523-215701-oGeLuvKbh8@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221523-215701@https.bugzilla.kernel.org/>
 References: <bug-221523-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,31 +64,8 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221523
 
---- Comment #5 from Ahmet =C3=96zt (sivasli-ahmet@gmx.de) ---
-(In reply to Krishna Chomal from comment #3)
-> Hi Ahmet,
->=20
-> Your device ID 8E35 was not present in any whitelist, which caused platfo=
-rm
-> profile switching and fan control to fail.
->=20
-> Could you please apply the patch (attachment 310134 [details]) and test t=
-he
-> following:
->=20
-> 1. Check dmesg for successful registration message:
->    "hp_wmi: Registered as platform profile handler"
->=20
-> 2. Verify that fan RPM is readable and controllable via sysfs
-> (/sys/devices/platform/hp-wmi/hwmon/*).
->=20
-> 3. Verify that on changing platform profile, and it does physically change
-> the amount of power drawn in the CPU/GPU.
-
-Hi Krishna,
-
-I was now able to update the hp_wmi with dkms. The board is now detected by
-hp_wmi. But I cannot control the PWMs.
+--- Comment #6 from Ahmet =C3=96zt (sivasli-ahmet@gmx.de) ---
+BTW, the fanX_max values are 0.
 
 --=20
 You may reply to this email to add a comment.
