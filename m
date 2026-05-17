@@ -1,393 +1,189 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011001.outbound.protection.outlook.com [40.107.208.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74CF32E729
-	for <platform-driver-x86@vger.kernel.org>; Sun, 17 May 2026 15:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779030156; cv=none; b=bh46eYbH5UkHkLfW8qE27RHVBKzMt2k88YQg7GomkcRuWUh6BI4mp5/2GsnerJN2KtU7HB/GF8H+KgGgXZbbiaWPYWocWPIehvXkne8L+i0tNooUW/qm8Gz5G7d7ByH+0gLUgZByaAUKMFiR2WLWeMuM1WOxOu5S5OtFXyJ6RPk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779030156; c=relaxed/simple;
-	bh=wxjYC7gAJmXbvVdDxfp/M8UohPrEPkWz1bx2JIWFXQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JMik+O6kqC5fp2tSpTvGiCWBL0SVrFXj2eGPyPVZzFch4KExtNDo+djt/oKJ3xKq5yoYq8Cm3JdPgokakoHkRuV/ZVMS9GK/2c9AhzHmTOQMlBykv5AWlKYrFx6aP9VIA3ApA4W5C0OVglc/D/R1O2iH+qJidqtODpC0Du/CjUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JiIJ/pG7; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0848C1C84A2;
+	Sun, 17 May 2026 15:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779030763; cv=fail; b=FDAq+mPvE+bhtuvFW3EAyBUyGg4a0NMg6gmFjmzqRwm1vg7XnHsJZvlG+RgIjGhpSkxhIv5H5WIvor9UjuKikRRTFnbqxYOAwFXE9135r4I97z85CUsMYb5TrmqFwZF08IRCzhxzhVJS7IBX3zsg28tyKpaykB6hfOIw8Dg0xy8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779030763; c=relaxed/simple;
+	bh=q3vSaNQfqFWU4FD+7jcdHFGcWo9nNjThb7AXsf9J40M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eppHrP9seDAYNgylebPSTP8HKjRN52xfWU/aEvBzigNlCc2Ci2uM+eFIYR1Zmlu/qaUOiZ0zF1CsBqKEa9T9G37T0wbo7yAUseRIssmZpB4DeqOEuPxijcEczP3wuXHC82ZU7anLQVum25L/7Rpc5loVz7guO3es0Sl1JrkZv3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IOM9nPJl; arc=fail smtp.client-ip=40.107.208.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JiIJ/pG7"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-9102e90bcbeso188448385a.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 May 2026 08:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779030154; x=1779634954; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FZ5dMrJOu2VDkpK4E4GvRpu/OR2O95cehaSbIxqBQyg=;
-        b=JiIJ/pG7fzdX3v3haG3Gfz/iG9WKz50TKeLk0QWxgXjjRK/3tRgMpJClxu/BCA9YVe
-         iNGX8kJe+g+LvzjPbUhy5ISqe9DJ0bBBhB1ClU9fTTxry/QqBGdopI+J5rdZwLbIC9Sp
-         BAG1qOCYAH9LNICRBwFjQSbvbF1m9ojVveczXKfmxpKBgH9uNotXKXYlftOeo6xE/8x2
-         d7YxaE7Lh0+a56tEitDwO6i1vyrjxQyUEvw0EEOrrbXwS/yxoEabKAjyyVNm1cT8ePd+
-         bbWPKe7PuxkzOJPa4A0in86d2EqySj/cY6yctDdjceneDhLFn8IAzXUztHK0HMkRDfW7
-         h5lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779030154; x=1779634954;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FZ5dMrJOu2VDkpK4E4GvRpu/OR2O95cehaSbIxqBQyg=;
-        b=WHUfO1m01C1jAcS+0JAPaEJOV+DDmyIr6fVUIqeeH3N76qdlXEYYxg/Q+2dUcyCk42
-         M62HJVIzbMSzJruobSYV/zrW08uBiryAh3Jko8rh+AcMtsXDsQWMIvrGWXW/dV/G+lsY
-         6Y6MDROvl62oEe2hgxNdHnoiLydH5trmvPIB18kTI+xWO3W3Q9Xfx7RFSsTlC4xEru5G
-         /UlAC/L3Ydv5ENmSF6Ja5xk5xZ5DYFxuXD0jxUrhtVokCikLyZReWNTiEZY4UOoFmO7Y
-         ll8OTgnOmMenhnN+HYWtwJbFTje42VNi+S7fU5jLkmlE3owW97SN2W7e223kHtESMHqy
-         QJHA==
-X-Forwarded-Encrypted: i=1; AFNElJ9ucglqzQap8C4bGyo3faizUSXEKUyps2LQa8zgxIDdDpONDYxGsNa8p9k3/gEQBotKK2Xcs6njWZd/LvT7EiUMez0e@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWUZp2NMtgWHHb3PqpWYC8hY3jgCau7DdC6gAqQ3M+BL5Zhue1
-	SYsivtxNCAcUcZLFNAt63OkFugrjYp33TLgfISCkUxvLBNQtR0VzYuzs
-X-Gm-Gg: Acq92OGXCZHrDlZEYvxh/2iuiSISGhtZtakQxePsx4q3PLJZGOwaNhJkgsGd1Ff3t1K
-	f3uBDbWj7p9p9qeBQ5gkyqUPNF0FfqR6jYLzHodGFp336wnUyNJvN1zJmn16kSYymeQsVbNcb2s
-	Ge2rR4/RxK28BlKqsqJwVYyIq++GOqiMd2WMJgacPqT1XGCQkfclOSIISi7m9h6ieAZygNZnTVW
-	gXUoPFL2t1F2nubWLylsElYxgI2FPGSmjiJPhqyf92RUXDlth6DAlI5iNNDMrXyMosIDi2hEaGd
-	GND2zwh9tg1E4P1vyNdweqwuuYsSrO9mnBA/mNjsqgo2UUqI7tLUVF1NvZVwqP5Tov05FBJDQu1
-	n16ah4z4hanjx0y2nxyQ24fiVIEfjZAE2B4DDZkYZogpxatvzZuzPejjvXJx7B+PPbgz5psWaF5
-	Dc9QMk6qTTu/YP8rBm3KVEyIbby70fIKNXT7IB0w+VF4+ucGXbiLy8CsoCQxMoawEWhYfq
-X-Received: by 2002:a05:620a:1a1a:b0:912:c611:80ff with SMTP id af79cd13be357-912c611880cmr1185477885a.52.1779030153734;
-        Sun, 17 May 2026 08:02:33 -0700 (PDT)
-Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bc936407sm1200753485a.22.2026.05.17.08.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 May 2026 08:02:33 -0700 (PDT)
-From: Dave Carey <carvsdriver@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: hdegoede@redhat.com,
-	pithenrich2d@googlemail.com,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	W_Armin@gmx.de,
-	platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dave Carey <carvsdriver@gmail.com>
-Subject: [PATCH v2] platform/x86/lenovo: add Yoga Book 9 keyboard dock driver
-Date: Sun, 17 May 2026 11:02:24 -0400
-Message-ID: <20260517150224.50191-1-carvsdriver@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <9459f535-d140-a431-3f76-a5d8623f3e2d@linux.intel.com>
-References: <9459f535-d140-a431-3f76-a5d8623f3e2d@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IOM9nPJl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uivQggc7deKEeu9jq93SBjXQkxXXiaRYaQwaTjlT+dm008uimqdZ8Sm11ftQbShORBHWwtKsEYqh0wvfS6MXRNxLUez+rajphms3rv/rO1RMu9JJYlfFpZfRRIPVFGzod9s/p9hfdhifNEVmrkcwdalMBpw06jKND9lWw/qJwMGY/uDKle7dHosSko5U4If4YTBT8a/4HjE6KqAaNTg8nR4gUBf0aQ3Sm+YHRjpggTooCMJDTq04+9JLWkaytcjzvq0u72/oj/SSejHAzFA+jTSzKx+m9Unldf0xn/lVVp9cHQkoX7t9HWnUkQgyE4WnepsOrJgIe1b//vQN8t3XCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v0KJDSADaXGATlzDWV1GFJhP57fRn0qfC1c31BWT1y0=;
+ b=kd3kR4JuUW1DFnaBsQeYKCb+OIw7aroy+yxEwtVaBL7DiyRZs+cRAGfA4cfykbC3dLQp1NCZFVjlyRGpKowO5kPNGzRBnCmE1L1oGVl7MklxYIj5YXg69ALcat84jT69ZcxZSPW9J+t3s4NXBDTo9Fu/bABzkKsl6JRMd3UuD++LOb4HGZjGl6WZNrFsaZbMWLFOrxpjwssLF1u1f2KZcGI3v43o92A353nx6ULSR94c4nj1AKknXVNu60QZGCoblnt8WSbkMFLasIuwG9umRBvKiq8gzrB0DpRByIN0NKOefADQUVZCPidzG+4AmTubQbfZ31NpWRPZBF1IT7cJnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v0KJDSADaXGATlzDWV1GFJhP57fRn0qfC1c31BWT1y0=;
+ b=IOM9nPJlZWcruXiwHpdx5Ko0Hg6ajmsa0EtE0cUQD4Nys1UGgYn17maDKHH9f5+v25G7jHFYdAOURAAhZ6g399wI3BXD5JCWbTfQd4cnWV9HPaImCNlrixGM5AQruknk/nF/eNRyExoRABOK66DaL2GjE+ypcj/Y4Zcyh7Raa/I=
+Received: from MW4PR03CA0254.namprd03.prod.outlook.com (2603:10b6:303:b4::19)
+ by DS0PR12MB7928.namprd12.prod.outlook.com (2603:10b6:8:14c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.21; Sun, 17 May
+ 2026 15:12:37 +0000
+Received: from CO1PEPF000075ED.namprd03.prod.outlook.com
+ (2603:10b6:303:b4:cafe::ed) by MW4PR03CA0254.outlook.office365.com
+ (2603:10b6:303:b4::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.25.22 via Frontend Transport; Sun, 17
+ May 2026 15:12:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CO1PEPF000075ED.mail.protection.outlook.com (10.167.249.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.11 via Frontend Transport; Sun, 17 May 2026 15:12:37 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sun, 17 May
+ 2026 10:12:34 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v3 0/7] platform/x86/amd/hsmp: Add support for Family 1Ah, Model 50h-5Fh
+Date: Sun, 17 May 2026 20:42:04 +0530
+Message-ID: <20260517151211.415627-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000075ED:EE_|DS0PR12MB7928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 777a71d2-e330-4240-1865-08deb426baf6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700016|56012099003|18002099003|3023799003|11063799003;
+X-Microsoft-Antispam-Message-Info:
+	vIGD2NMmpaG+H/nXJb8PaQgHb1WIaLw79WLsOkdr72B9rjWHdDPdWhsUkKrpKXIEvNZnouoQUD4+qH70bvddMAP1LB+Fq4YkgJhloms1a19tsFc3PGqJBZwL3w7hACgjSs3N6xKCQQmC3gS2ewraMJK9jVCxvxKfJ76sOZdFjIqY/f/0AUBjgH2GLColyCsvm1iv9U/oJ4CmIGR7j41t+NHQKLDLyt4L5wm9KLtSpMuOk5kkQpAU+z9m2IxdZimQMHf66jfnJLuMuY0a7kcJoHpSxfzxxRMmqCpZ9ObGjeETaxcqCOmJTzHVH0WIrSq5r9HMfWW9LqhcAAYgMLnWMjKyA0o1ry93AGdTo5Hou1DwBk5cmgOXX+de6FO889nO2+J4eh68QXSB8fQ8T0mVD4SpzqFTLD4EH7Mi4MQKJHjJZfUajtUVbfqOIAZEnoqbQIp20dPQm9W/66CREtTXNmpa20LdLwjQmsAioc+9/McWMFZ0PThYkaCMk09T3TdnkEb4RR5BV5VA2JhE7cbEiZM/Y8j6P0ctSey5NaVOT4t9grz1ydu7Ey62li/IopdfZqJAb/UnQeWg5V4S9ZU0e9TQbPqWu4fmaL+TSWVv9qrp7mzCqao1keAZAR2L9NOBgh4tB73X/5fPPnXpFLyo7rveSnHCOGgjb9QZgm4yZYaOUswVKPXXi2g2+FTdT3xRYfyVjvZ/uevmn3kgLiAZ8Gp6R+1m6nzV0urofq3a2A8=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700016)(56012099003)(18002099003)(3023799003)(11063799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	bu6n9pegDL8XbIvLe7ORWWZM6VEqVH0wdj4QGm4D7BfNyPXhJRZvJC8GsFKJjbOP8Kqv/NEVMh4Bmiysi2pvnn6ibMtc7mADHUVhtCApHp4z4o0OexdfLaq4Qq1MjRF5YhIEwgBSvYqrwhrC2yMByBFOv53FYfdsnl7vNdnWU45vLLat/7iU3v9X9RL4DK8RgDvuTbJjwlTQXv1ZP7cr+2D/AV/wm7TPMaZBtZqhxZbNnaF5h/xap/D2jSyyMEftWEFCSYPr8xoKZsDt+15F+FLdRNQTSXYMhGX5ZI5r0oucNJ8zPa8+GjQrDW4b/zYnRNJZEg7WtR8tX/aBTtqG6y0b5PV8rcw5PXKN4iF5cJfEclfQLV7mJ/IT48ILIqxh5VdRN0KYU+z7TDJg9EYg1WHL5HM/rJ5t2UMgjKT84bIN0WdoR2x4eCfU9pcmNasx
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2026 15:12:37.0273
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 777a71d2-e330-4240-1865-08deb426baf6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000075ED.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7928
 
-The Lenovo Yoga Book 9 14IAH10 (83KJ) ships with a detachable Bluetooth
-keyboard that magnetically attaches to the bottom screen in one of two
-positions.
+Hi,
 
-The Embedded Controller tracks the attachment state in a 2-bit field called
-BKBD (byte 0x23 of EC RAM, bits 4-5) and signals changes via EC query _QB0,
-which calls Notify(WM10, 0xEB) on the WM10 ACPI WMI device (_UID "GMZN").
-The WMI event GUID 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 fires on every
-state change.  The current state is readable at any time via WMI data block
-E7F300FA-21CD-4003-ADAC-2696135982E6 (WQAF), which returns an 8-byte buffer
-whose upper four bytes hold the BKBD value.  BKBD encodes the attachment
-state as: 0 = keyboard detached, 1 = docked on the top half of the bottom
-screen, 2 = docked on the bottom half, 3 = reserved (treated as an error by
-this driver).
+This series adds AMD HSMP (Host System Management Port) support for
+Family 1Ah, Model 50h-5Fh processors (HSMP protocol version 7) on top
+of the existing platform/x86/amd/hsmp driver.
 
-Add a new driver, lenovo-yb9-kbdock, that queries the BKBD state on probe
-and on each WMI event notification.  Both docked positions indicate a
-physical keyboard is present and report SW_TABLET_MODE=0 (laptop mode);
-keyboard detached reports SW_TABLET_MODE=1 (tablet mode).  The raw BKBD
-value is additionally exposed via the read-only sysfs attribute
-"keyboard_position" for userspace that needs to distinguish the two docked
-positions (e.g. to choose a different UI layout).
+Highlights:
 
-Tested on Lenovo Yoga Book 9 14IAH10 (83KJ): all three BKBD states
-(detached, top-half dock, bottom-half dock) reported correctly;
-SW_TABLET_MODE transitions verified with evtest.
+ - New HSMP messages for Family 1Ah Model 50h-5Fh: PC6/CC6 control,
+   CCD power, Tdelta, SVI3 VR temperature, DIMM sideband, Floor/SDPS
+   limit control and an "enabled HSMP commands" capability query.
+ - UAPI structures (hsmp_metric_table_zen6 and friends) describing
+   the per-IOD/per-CCD metric table layout for protocol version 7.
+ - response_sz validation is unified to a single upper-bound check
+   so older userspace built against an earlier descriptor table
+   keeps working as new response words are added on newer platforms.
+ - Metric-table region size is sourced from firmware (args[2] of
+   HSMP_GET_METRIC_TABLE_DRAM_ADDR) rather than hard-coded to
+   sizeof(struct hsmp_metric_table), so the driver can map and
+   validate the larger ~13 KB protocol-version-7 layout (and any
+   future growth) without further code changes.
+ - Concurrent metric-table reads on the same socket are serialized
+   with a per-socket mutex managed via scoped guard(mutex), so two
+   simultaneous readers can no longer interleave the SMU refresh
+   command and the memcpy_fromio() and produce a torn snapshot.
 
-Signed-off-by: Dave Carey <carvsdriver@gmail.com>
----
- drivers/platform/x86/lenovo/Kconfig       | 14 ++++
- drivers/platform/x86/lenovo/Makefile      |  1 +
- drivers/platform/x86/lenovo/yb9-kbdock.c | 233 +++++++++++++++++++++
- 3 files changed, 248 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
+Changes in v3:
 
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -43,6 +43,20 @@
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called lenovo-wmi-camera.
+ - Switched the method of reading the metric table from the binary
+   sysfs attribute (metrics_bin) to a character-device IOCTL
+   (HSMP_IOCTL_GET_TELEMETRY_DATA on /dev/hsmp), as suggested during
+   the v2 review. The sysfs binary attribute is capped at PAGE_SIZE
+   (4 KB) on the standard read path, which cannot accommodate the
+   ~13 KB hsmp_metric_table_zen6 layout used on Family 1Ah Model
+   50h-5Fh; the IOCTL has no such cap and works for both the
+   existing protocol-version-6 table and the new protocol-version-7
+   table. Userspace sizes its buffer using the matching UAPI struct
+   (hsmp_metric_table or hsmp_metric_table_zen6) and the kernel
+   rejects any size that disagrees with the firmware-reported table
+   size with -EINVAL, so a short copy can never silently truncate
+   the snapshot.
+ - The metrics_bin sysfs attribute is dropped from the ACPI driver
+   path (AMDI0097) in favour of the new IOCTL. This is an ABI change
+   for ACPI-driver users: userspace must now read telemetry via
+   HSMP_IOCTL_GET_TELEMETRY_DATA on /dev/hsmp. The non-ACPI plat.c
+   path (Family 1Ah Model 0h-Fh, fixed at protocol version 6) is
+   intentionally left untouched and its per-socket metrics_bin
+   remains available for existing tooling on those systems.
+ - The proto_ver gate that enables metric-table discovery in
+   init_acpi() is widened from "== HSMP_PROTO_VER6" to
+   ">= HSMP_PROTO_VER6" so hsmp_get_tbl_dram_base() runs on
+   protocol version 7 (and any future compatible version).
+ - Per-socket metric_tbl_lock is now initialised with
+   devm_mutex_init() and taken via scoped guard(mutex) in
+   hsmp_metric_tbl_read(), instead of an open-coded
+   mutex_init()/mutex_destroy() pair.
 
-+config LENOVO_YB9_KBDOCK
-+	tristate "Lenovo Yoga Book 9 keyboard dock detection"
-+	depends on ACPI_WMI
-+	depends on DMI
-+	depends on INPUT
-+	help
-+	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book 9
-+	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
-+	  either screen; this driver reports SW_TABLET_MODE input events based
-+	  on the attachment state and exposes the raw position in sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called lenovo-yb9-kbdock.
-+
- config LENOVO_YMC
- 	tristate "Lenovo Yoga Tablet Mode Control"
- 	depends on ACPI_WMI
---- a/drivers/platform/x86/lenovo/Makefile
-+++ b/drivers/platform/x86/lenovo/Makefile
-@@ -8,6 +8,7 @@
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+Link to v2:
+https://lore.kernel.org/platform-driver-x86/20260427155129.545327-1-muralidhara.mk@amd.com/T/#m9f1a19ba6e037e5a7f30441620f2fe4b2c3cf0fa
 
- lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= wmi-hotkey-utilities.o
-+lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+= yb9-kbdock.o
- lenovo-target-$(CONFIG_LENOVO_YMC)	+= ymc.o
- lenovo-target-$(CONFIG_YOGABOOK)	+= yogabook.o
- lenovo-target-$(CONFIG_YT2_1380)	+= yoga-tab2-pro-1380-fastcharger.o
---- a/drivers/platform/x86/lenovo/yb9-kbdock.c
-+++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo Yoga Book 9 keyboard-dock detection
-+ *
-+ * Reports SW_TABLET_MODE based on keyboard attachment state and exposes the
-+ * raw dock position via sysfs.
-+ *
-+ * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/dmi.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/wmi.h>
-+
-+/*
-+ * WM10 ACPI device (_UID "GMZN") exposes two relevant WMI GUIDs:
-+ *   YB9_KBDOCK_EVENT_GUID — notify ID 0xEB fires on attachment state change.
-+ *   YB9_KBDOCK_QUERY_GUID — object "AF" (WQAF), returns an 8-byte buffer
-+ *                           whose upper four bytes hold the BKBD value.
-+ *
-+ * BKBD encoding:
-+ *   0 (BKBD_DETACHED)    — keyboard detached       → SW_TABLET_MODE = 1
-+ *   1 (BKBD_TOP_HALF)    — docked, top half        → SW_TABLET_MODE = 0
-+ *   2 (BKBD_BOTTOM_HALF) — docked, bottom half     → SW_TABLET_MODE = 0
-+ *   3                    — reserved; treated as an error
-+ */
-+#define YB9_KBDOCK_EVENT_GUID		"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
-+#define YB9_KBDOCK_QUERY_GUID		"E7F300FA-21CD-4003-ADAC-2696135982E6"
-+#define YB9_KBDOCK_QUERY_INSTANCE	0
-+
-+#define BKBD_DETACHED		0
-+#define BKBD_TOP_HALF		1
-+#define BKBD_BOTTOM_HALF	2
-+#define BKBD_MASK		GENMASK(1, 0)
-+
-+/* Distinguish the two GUIDs via the id_table context field. */
-+enum yb9_guid_type { YB9_GUID_EVENT, YB9_GUID_QUERY };
-+
-+/*
-+ * Both GUIDs are children of the same ACPI device (WM10).  Store the query
-+ * WMI device globally so the event-device probe and notify path can reach it
-+ * via wmidev_block_query().  Protected by yb9_query_lock during probe/remove.
-+ */
-+static struct wmi_device *yb9_query_wdev;
-+static DEFINE_MUTEX(yb9_query_lock);
-+
-+struct yb9_kbdock_priv {
-+	struct wmi_device *query_wdev;
-+	struct input_dev *input_dev;
-+	unsigned int bkbd;
-+};
-+
-+/* Returns 0–2 on success, -errno on error. */
-+static int yb9_kbdock_query(struct wmi_device *event_wdev,
-+			     struct wmi_device *query_wdev)
-+{
-+	u32 bkbd;
-+
-+	union acpi_object *obj __free(kfree) =
-+		wmidev_block_query(query_wdev, YB9_KBDOCK_QUERY_INSTANCE);
-+	if (!obj) {
-+		dev_warn(&event_wdev->dev, "WQAF query returned NULL\n");
-+		return -EIO;
-+	}
-+
-+	/*
-+	 * WQAF returns an 8-byte buffer: bytes [0..3] = LFID (0x00060000),
-+	 * bytes [4..7] = BKBD value.  Guard against short buffers.
-+	 */
-+	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length >= 8)
-+		memcpy(&bkbd, obj->buffer.pointer + 4, sizeof(bkbd));
-+	else if (obj->type == ACPI_TYPE_INTEGER)
-+		bkbd = obj->integer.value;
-+	else {
-+		dev_warn(&event_wdev->dev,
-+			 "WQAF: unexpected result type %d len %u\n",
-+			 obj->type, obj->type == ACPI_TYPE_BUFFER ? obj->buffer.length : 0);
-+		return -EIO;
-+	}
-+
-+	bkbd = FIELD_GET(BKBD_MASK, bkbd);
-+	if (bkbd == 3) {
-+		dev_warn(&event_wdev->dev, "BKBD value 3 is reserved\n");
-+		return -EINVAL;
-+	}
-+
-+	return bkbd;
-+}
-+
-+static void yb9_kbdock_update(struct wmi_device *wdev)
-+{
-+	struct yb9_kbdock_priv *priv = dev_get_drvdata(&wdev->dev);
-+	int tablet_mode;
-+	int bkbd;
-+
-+	bkbd = yb9_kbdock_query(wdev, priv->query_wdev);
-+	if (bkbd < 0)
-+		return;
-+
-+	priv->bkbd = bkbd;
-+	tablet_mode = (bkbd == BKBD_DETACHED) ? 1 : 0;
-+
-+	input_report_switch(priv->input_dev, SW_TABLET_MODE, tablet_mode);
-+	input_sync(priv->input_dev);
-+
-+	dev_dbg(&wdev->dev, "BKBD=%u tablet_mode=%d\n", bkbd, tablet_mode);
-+}
-+
-+static void yb9_kbdock_notify(struct wmi_device *wdev, union acpi_object *data)
-+{
-+	yb9_kbdock_update(wdev);
-+}
-+
-+static ssize_t keyboard_position_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	static const char * const names[] = {
-+		"detached", "top-half", "bottom-half",
-+	};
-+	struct yb9_kbdock_priv *priv = dev_get_drvdata(dev);
-+	unsigned int bkbd = priv->bkbd;
-+
-+	if (WARN_ON_ONCE(bkbd >= ARRAY_SIZE(names)))
-+		return -EINVAL;
-+	return sysfs_emit(buf, "%u (%s)\n", bkbd, names[bkbd]);
-+}
-+static DEVICE_ATTR_RO(keyboard_position);
-+
-+static struct attribute *yb9_kbdock_attrs[] = {
-+	&dev_attr_keyboard_position.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(yb9_kbdock);
-+
-+static const struct dmi_system_id yb9_kbdock_dmi_table[] = {
-+	{
-+		/* Lenovo Yoga Book 9 14IAH10 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static int yb9_kbdock_probe(struct wmi_device *wdev, const void *ctx)
-+{
-+	enum yb9_guid_type type = (enum yb9_guid_type)(uintptr_t)ctx;
-+	struct yb9_kbdock_priv *priv;
-+	struct input_dev *input_dev;
-+	struct wmi_device *qwdev;
-+	int err;
-+
-+	if (type == YB9_GUID_QUERY) {
-+		mutex_lock(&yb9_query_lock);
-+		yb9_query_wdev = wdev;
-+		mutex_unlock(&yb9_query_lock);
-+		return 0;
-+	}
-+
-+	if (!dmi_check_system(yb9_kbdock_dmi_table))
-+		return -ENODEV;
-+
-+	mutex_lock(&yb9_query_lock);
-+	qwdev = yb9_query_wdev;
-+	mutex_unlock(&yb9_query_lock);
-+	if (!qwdev)
-+		return -EPROBE_DEFER;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name = "Lenovo Yoga Book 9 keyboard dock switch";
-+	input_dev->phys = YB9_KBDOCK_EVENT_GUID "/input0";
-+	input_dev->id.bustype = BUS_HOST;
-+	input_dev->dev.parent = &wdev->dev;
-+	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-+
-+	err = input_register_device(input_dev);
-+	if (err) {
-+		dev_err(&wdev->dev, "failed to register input device: %d\n", err);
-+		return err;
-+	}
-+
-+	priv->query_wdev = qwdev;
-+	priv->input_dev = input_dev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	yb9_kbdock_update(wdev);
-+	return 0;
-+}
-+
-+static void yb9_kbdock_remove(struct wmi_device *wdev)
-+{
-+	mutex_lock(&yb9_query_lock);
-+	if (wdev == yb9_query_wdev)
-+		yb9_query_wdev = NULL;
-+	mutex_unlock(&yb9_query_lock);
-+}
-+
-+static const struct wmi_device_id yb9_kbdock_wmi_id_table[] = {
-+	{ .guid_string = YB9_KBDOCK_EVENT_GUID, .context = (void *)YB9_GUID_EVENT },
-+	{ .guid_string = YB9_KBDOCK_QUERY_GUID, .context = (void *)YB9_GUID_QUERY },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, yb9_kbdock_wmi_id_table);
-+
-+static struct wmi_driver yb9_kbdock_driver = {
-+	.driver = {
-+		.name = "lenovo-yb9-kbdock",
-+		.dev_groups = yb9_kbdock_groups,
-+	},
-+	.id_table = yb9_kbdock_wmi_id_table,
-+	.probe    = yb9_kbdock_probe,
-+	.remove   = yb9_kbdock_remove,
-+	.notify   = yb9_kbdock_notify,
-+};
-+module_wmi_driver(yb9_kbdock_driver);
-+
-+MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
-+MODULE_LICENSE("GPL");
+Thanks,
+Murali
 
-2.47.0
+Muralidhara M K (6):
+  platform/x86/amd/hsmp: Add UAPI structures for Family 1Ah Model
+    50h-5Fh metrics table
+  platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound
+    check
+  platform/x86/amd/hsmp: Source metric-table size from firmware
+  platform/x86/amd/hsmp: Add IOCTL_GET_TELEMETRY_DATA for metric table
+    reads
+  platform/x86/amd/hsmp: Drop ACPI sysfs metrics_bin in favour of the
+    IOCTL
+  platform/x86/amd/hsmp: Make metric table read locking use guard(mutex)
+
+Suma Hegde (1):
+  platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model
+    50h-5Fh
+
+ arch/x86/include/uapi/asm/amd_hsmp.h | 278 +++++++++++++++++++++++++--
+ drivers/platform/x86/amd/hsmp/acpi.c |  34 +---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 125 ++++++++++--
+ drivers/platform/x86/amd/hsmp/hsmp.h |   6 +-
+ 4 files changed, 373 insertions(+), 70 deletions(-)
+
+-- 
+2.34.1
+
