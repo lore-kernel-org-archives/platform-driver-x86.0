@@ -1,128 +1,101 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from outbound.st.icloud.com (p-east2-cluster3-host10-snip4-4.eps.apple.com [57.103.77.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7507134A3D6;
-	Sun, 17 May 2026 22:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5952F3043DE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 17 May 2026 22:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.77.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779056130; cv=none; b=Of/2TZSGXQVPLGvCrvWuIAFm072/z+p1uWkbb00DuhhzLCVMjRJ0ko5fSY7vmzDLKMzHZk0sCiV5HdfBDnTC6rr5uVnQuKLq4msmeoa52uhPSgrIBX+gXzyMPnljBdSwzJcYAbjHYpocbqgWKbMDpYSPoNrBw8t0v48RapERb+E=
+	t=1779056220; cv=none; b=XC0IEJuoawKUVxz8xvs4V2Iq4y/DGD3uia5cpMShS6/U22+BALbO3kLHUIKKPIorRySsrdMSRF+ZK3M6+mlatRloc3O1DiFHtoCBGbr0vqXm+nbtpt6rIXiv3x/vcmhbEjEwNJH6R88y6sWLXQndVU3szqd1jW05tJcN3JhGKxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779056130; c=relaxed/simple;
-	bh=8ns/E8OglbvjQ/qWiUNWyPzVJJADm40UPYDKgOv+96o=;
+	s=arc-20240116; t=1779056220; c=relaxed/simple;
+	bh=/jvnP5BEgPIVvnD0g6bgpGqeZMd7YIi6EJcNGgJAKmk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ca1Zxlw2rBlQYKpv4l0ml86ib0pZo430aQ73Niuvhp/eLRxWIQ+WOs0GSEmHOogE+DVUgu+lDkQHKnlR3+l52woh6tTLiY7sGow1Tv6cl3pyYVimqkVwbAjT9qp9YEgAAGKq8eZpTyV3xys8ADMd9rrD75xT/+xoIkLEYNVxXY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MwSlX5Pa; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=fuDwAXIsf7ftPuMM92uJBdFwRWBjJ2o1vogb35UfqfmyB4WVw6M7YzBdDDjh+xrHOIalwcCZz2FLl0GZAOentbEZkFXSEHHf/ciyVlHtZZGaf+OpjN3/5RZU6l06TfUK39yhM4YFflnYWlksGpbfLyx/qc9GoVHULRquQfflK4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=YX3m+FXZ; arc=none smtp.client-ip=57.103.77.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MwSlX5Pa"
-Message-ID: <3e341b1d-6176-41f4-a7d0-e1a977f763a1@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779056123;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l2MZpepXtcJYW6IeWyEIAYJfafJa7nBO/DQw4UfbQvw=;
-	b=MwSlX5Pa2QcnqHMeTmrXYmj0y+mM1taqqb6WeKV7o10XLp/MrQIuzga0PEMgaBuyM3u+jv
-	1vMbZYosVr/arUNlVh6bnvo8/REhrT1uLG4vN2eKV+WzMVoar8L58MKA2+K6+SCFx82G5O
-	jV75qcEeSNHh+b3PG0wFkMuityKe1Ng=
-Date: Mon, 18 May 2026 00:14:57 +0200
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="YX3m+FXZ"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-0 (Postfix) with ESMTPS id B8C431801BDB;
+	Sun, 17 May 2026 22:16:54 +0000 (UTC)
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhKBUMDRQBBCFYBWANLVxQEG1sIUhhXE1gTVl8OXQIwUBtfAkIPHBNWFRMLU1ZRGFwdQAhUClkVC0EFXXcCURxWDVdDVARfUEsbDlsXA1ccVkVcGEMJXQVXHB0eQ0VbE1UXRgkZCF0dGQhHHwowA0IOVgNDB0UALRkcV1BeCF4fTBwdDlgGEh1QHA5RDlsCFgBKAlUaUgcWW1UHCQJcHxELGgBAAA8BFQ4aV1sGD1cVeRFQAVgeVl5aF15TFx9LAFxFWg5bBEcU
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1779056217; x=1781648217; bh=ulCzw2NgUu2BUgWlvH3hNeQX1YXWt94X8MJSULohJC4=; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme; b=YX3m+FXZ817fqgAuD7Z5IIcE2zYf2plqg5/r+5yBgfbZCAB7Akm6xOuuhkPqVbaNqH/KKDGrA0GmKGLbAH9zg0m8q0GPwAzx+9Iz8Xs1sMbEerYJbZGifZeUEN37ht280TS7mKiIrOwmLK3OWkOgmermQdZqGBGBwwIl4AdOqJbRV3q5jwe9twiBAganJXeX0K7dMMKBdxafhcOqmCR+WFEv9ijmCYQJaeagA2bLsDEjKqAsVj8E/BdPeYI+5NWHRb2SW/lQaITmzDG4lAay4JrYKpisNZAecEsZmsCj9rolMeiLgr0PfYJcfqCf1mEOLdEWxIGK4VmOayJcSmN1mQ==
+Received: from [192.168.1.34] (unknown [17.42.251.67])
+	by p00-icloudmta-asmtp-us-east-1a-60-percent-0 (Postfix) with ESMTPSA id 61C131800C0F;
+	Sun, 17 May 2026 22:16:52 +0000 (UTC)
+Message-ID: <900f9218-95fb-4d57-a2b3-7d3e7bd61dee@icloud.com>
+Date: Mon, 18 May 2026 07:16:48 +0900
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] platform/x86: asus-armoury: fix mini-LED mode get/set on
- MODE2 devices
-To: Ahmed Yaseen <yaseen@ghoul.dev>, Corentin Chary
- <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260517182957.11069-1-yaseen@ghoul.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: fix typo in uniwill-laptop.rst
+To: Armin Wolf <W_Armin@gmx.de>, corbet@lwn.net
+Cc: skhan@linuxfoundation.org, platform-driver-x86@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260516070650.9454-1-cheesecake2960@icloud.com>
+ <d693ffc6-08f0-44ad-a274-c25efc3fcfb2@gmx.de>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260517182957.11069-1-yaseen@ghoul.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+From: Cheesecake <cheesecake2960@icloud.com>
+In-Reply-To: <d693ffc6-08f0-44ad-a274-c25efc3fcfb2@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE3MDI0MiBTYWx0ZWRfX/rh9Fn3abkri
+ YsPejqtXoj3JoEAHFEwbxgcHu5wlKzMG2snGf2hmV7MBOmFYATZ4j4DZTuE9k3e9Nhaf5f7nf3U
+ nivQm7bYsL8MVj9QkzltfSRmwxiQyC4D0oieEMAFOCTcuIaE632Of8mgORVq2g1+aGXfZsKjYM1
+ /pmmjClmO0EKVymDj7SqjpPGB1YGuzOKwqeMvJ0h1VFxOzkQzpElvR1nIX9t/rGfmUmDKEvc3OC
+ cytuI5KJpM4WoIITeBNWL9PgXm2WxkwxrWuU6M58hj2USW5fUb6jIb9X7jYRIqUaIgogl71ZJQk
+ bVUHJqM40bNUv2gU1RhsGPUDGIIx/VQqshJT50p0CRQfBOHkYqmVpaQO6xZyQU=
+X-Authority-Info-Out: v=2.4 cv=IfmKmGqa c=1 sm=1 tr=0 ts=6a0a3e57
+ cx=c_apl:c_pps:t_out a=YrL12D//S6tul8v/L+6tKg==:117
+ a=YrL12D//S6tul8v/L+6tKg==:17 a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10
+ a=x7bEGLp0ZPQA:10 a=sIGCgqHK338A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=NEAV23lmAAAA:8 a=v3ZZPjhaAAAA:8 a=Ass7DQ-I9p7-9zMoZ8AA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=zY0JdQc1-4EAyPf5TuXT:22
+X-Proofpoint-ORIG-GUID: 19vxy5Lj4Lk_VDVTE7hB0S82MlYSIk2c
+X-Proofpoint-GUID: 19vxy5Lj4Lk_VDVTE7hB0S82MlYSIk2c
+
+On 2026/05/18 1:01, Armin Wolf wrote:
+
+> Am 16.05.26 um 09:06 schrieb Cheesecake:
+>
+>> Replace "benifit" with "benefit".
+>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+>
+>> Signed-off-by: Cheesecake <cheesecake2960@icloud.com>
+>> ---
+>>   Documentation/wmi/devices/uniwill-laptop.rst | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/wmi/devices/uniwill-laptop.rst 
+>> b/Documentation/wmi/devices/uniwill-laptop.rst
+>> index e246bf293..65583b239 100644
+>> --- a/Documentation/wmi/devices/uniwill-laptop.rst
+>> +++ b/Documentation/wmi/devices/uniwill-laptop.rst
+>> @@ -189,7 +189,7 @@ Indexed IO
+>>     Indexed IO with IO ports with a granularity of a single byte can 
+>> be performed using the ``RIOP``
+>>   (read) and ``WIOP`` (write) ACPI control methods. Those ACPI 
+>> methods are unused because they
+>> -provide no benifit when compared to the native IO port access 
+>> functions provided by the kernel.
+>> +provide no benefit when compared to the native IO port access 
+>> functions provided by the kernel.
+>>     Special thanks go to github user `pobrn` which developed the
+>>   `qc71_laptop <https://github.com/pobrn/qc71_laptop>`_ driver on 
+>> which this driver is partly based.
+
+Hello,
+
+I accidentally used my nickname.
+
+I'll resend this patch with a proper signoff.
 
 
-On 5/17/26 20:30, Ahmed Yaseen wrote:
-> The mini-LED current_value attribute does not work on devices that use
-> ASUS_WMI_DEVID_MINI_LED_MODE2 (2024 and newer models).
->
-> Reading is broken: mini_led_mode_current_value_show() fetches the mode
-> from the device but then decodes a literal 0 instead of the value it
-> just read:
->
->     mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
->
-> So mode is always 0, and the attribute always reports the same thing
-> regardless of the real hardware state.
->
-> Writing is broken too. The number a user writes is an index; the value
-> the firmware actually wants is looked up from that index in
-> mini_led_mode_map[]. mini_led_mode_current_value_store() skips that
-> lookup and passes the raw index straight to armoury_attr_uint_store().
-> On 2024 devices the firmware numbers its modes differently from the
-> index, so some writes are rejected with -EINVAL and the rest send the
-> wrong mode to the hardware.
->
-> Fix both paths: decode the value actually read from the device when
-> reading, and look up the firmware value before sending it when
-> writing. Older (MODE1) devices were unaffected because there the index
-> and the firmware value are the same.
-Thank for finding and fixing this!
+Thank you for your time.
 
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
-> Fixes: f99eb098090e ("platform/x86: asus-armoury: move existing tunings to asus-armoury module")
-> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
-> ---
->  drivers/platform/x86/asus-armoury.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 5b0987ccc270..495dc1e31d40 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -370,7 +370,7 @@ static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
->  	if (err)
->  		return err;
->  
-> -	mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
-> +	mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, mode);
->  
->  	for (i = 0; i < mini_led_mode_map_size; i++)
->  		if (mode == mini_led_mode_map[i])
-> @@ -386,6 +386,7 @@ static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
->  {
->  	u32 *mini_led_mode_map;
->  	size_t mini_led_mode_map_size;
-> +	char mapped_value[12];
->  	u32 mode;
->  	int err;
->  
-> @@ -414,9 +415,16 @@ static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
->  		return -ENODEV;
->  	}
->  
-> -	return armoury_attr_uint_store(kobj, attr, buf, count,
-> -				       0, mini_led_mode_map[mode],
-> -				       NULL, asus_armoury.mini_led_dev_id);
-> +	/*
-> +	 * armoury_attr_uint_store() parses and sends the value from the
-> +	 * passed buffer; hand it the mapped firmware value so the device
-> +	 * receives the translated mode instead of the raw index.
-> +	 */
-> +	snprintf(mapped_value, sizeof(mapped_value), "%u", mini_led_mode_map[mode]);
-> +
-> +	return armoury_attr_uint_store(kobj, attr, mapped_value, count, 0,
-> +				       mini_led_mode_map[mode], NULL,
-> +				       asus_armoury.mini_led_dev_id);
->  }
->  
->  static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
