@@ -1,67 +1,128 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D451A331A44
-	for <platform-driver-x86@vger.kernel.org>; Sun, 17 May 2026 22:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7507134A3D6;
+	Sun, 17 May 2026 22:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779055229; cv=none; b=kQ9T1ETU0bY80AjjZ7xSia2CStvwxfMEQGmZQMGwcDsD/IY6pTAIvDO7fHMJxPId85+PD7ZkwhRkTK9NZDBpQs+I46APSN4acN5N2WFMCE4mq8vh+7EPK9leKtj5VNyOgGSqw+Hj9qz3t3Pz7RggQKOkCiLkREPVEWsJV4F35oA=
+	t=1779056130; cv=none; b=Of/2TZSGXQVPLGvCrvWuIAFm072/z+p1uWkbb00DuhhzLCVMjRJ0ko5fSY7vmzDLKMzHZk0sCiV5HdfBDnTC6rr5uVnQuKLq4msmeoa52uhPSgrIBX+gXzyMPnljBdSwzJcYAbjHYpocbqgWKbMDpYSPoNrBw8t0v48RapERb+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779055229; c=relaxed/simple;
-	bh=FckaJVo5QuleU/s6OEl/yhbw4UyH4DEsqWqc2EYp+Yc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rZp0T9jAXpJvFVSWzPG1p3jk1hb6pUlyKKKM7BsNp05hX329/Z+LQnPq6JthTRn/bzSw5FjhnLcpLMDTNq5mgpYHhroBGHTkfa6XukVelOXh/1aDGqc8VeWtW8T5JQOyZwee3fHjW7vQEa6L7e+be/M77SQCqM+/W+Juzyigccs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KV/gTlQW; arc=none smtp.client-ip=95.215.58.187
+	s=arc-20240116; t=1779056130; c=relaxed/simple;
+	bh=8ns/E8OglbvjQ/qWiUNWyPzVJJADm40UPYDKgOv+96o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ca1Zxlw2rBlQYKpv4l0ml86ib0pZo430aQ73Niuvhp/eLRxWIQ+WOs0GSEmHOogE+DVUgu+lDkQHKnlR3+l52woh6tTLiY7sGow1Tv6cl3pyYVimqkVwbAjT9qp9YEgAAGKq8eZpTyV3xys8ADMd9rrD75xT/+xoIkLEYNVxXY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MwSlX5Pa; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KV/gTlQW"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MwSlX5Pa"
+Message-ID: <3e341b1d-6176-41f4-a7d0-e1a977f763a1@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1779055215;
+	t=1779056123;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DYc6bSFYtDfDmsNTzoL7uPXyfEhUlDYo49Hk46ywxeg=;
-	b=KV/gTlQWK7BwXcUDjUBmJkbbJRbrTvZCpuJtDY+5bnSQqEffbtonXGs6jMZFtXSz6ma2wi
-	RyZy1a+giXk+aGF4Vjk9RC9sPRE9YWlyru2AS5AUHmsn+wK9aZVoe7Hhhw8G9HAXRLTe8P
-	KDBmEkIDyEnYhdR+WBpQEZZjr97t+O8=
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schyboll" <dragonn@op.pl>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH 0/4] Add four more ASUS models to asus-armoury driver
-Date: Sun, 17 May 2026 22:00:01 +0000
-Message-ID: <20260517220005.4594-1-denis.benato@linux.dev>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l2MZpepXtcJYW6IeWyEIAYJfafJa7nBO/DQw4UfbQvw=;
+	b=MwSlX5Pa2QcnqHMeTmrXYmj0y+mM1taqqb6WeKV7o10XLp/MrQIuzga0PEMgaBuyM3u+jv
+	1vMbZYosVr/arUNlVh6bnvo8/REhrT1uLG4vN2eKV+WzMVoar8L58MKA2+K6+SCFx82G5O
+	jV75qcEeSNHh+b3PG0wFkMuityKe1Ng=
+Date: Mon, 18 May 2026 00:14:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] platform/x86: asus-armoury: fix mini-LED mode get/set on
+ MODE2 devices
+To: Ahmed Yaseen <yaseen@ghoul.dev>, Corentin Chary
+ <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260517182957.11069-1-yaseen@ghoul.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260517182957.11069-1-yaseen@ghoul.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
-Hi all,
 
-This patch series adds support for four more ASUS models to the asus-armoury driver:
-the FA401EA, G614FR, GU605CP, and FX607VU.
+On 5/17/26 20:30, Ahmed Yaseen wrote:
+> The mini-LED current_value attribute does not work on devices that use
+> ASUS_WMI_DEVID_MINI_LED_MODE2 (2024 and newer models).
+>
+> Reading is broken: mini_led_mode_current_value_show() fetches the mode
+> from the device but then decodes a literal 0 instead of the value it
+> just read:
+>
+>     mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
+>
+> So mode is always 0, and the attribute always reports the same thing
+> regardless of the real hardware state.
+>
+> Writing is broken too. The number a user writes is an index; the value
+> the firmware actually wants is looked up from that index in
+> mini_led_mode_map[]. mini_led_mode_current_value_store() skips that
+> lookup and passes the raw index straight to armoury_attr_uint_store().
+> On 2024 devices the firmware numbers its modes differently from the
+> index, so some writes are rejected with -EINVAL and the rest send the
+> wrong mode to the hardware.
+>
+> Fix both paths: decode the value actually read from the device when
+> reading, and look up the firmware value before sending it when
+> writing. Older (MODE1) devices were unaffected because there the index
+> and the firmware value are the same.
+Thank for finding and fixing this!
 
-Cheers!
-
-Denis Benato (4):
-  platform/x86: asus-armoury: add support for FX607VU
-  platform/x86: asus-armoury: add support for G614FR
-  platform/x86: asus-armoury: add support for FA401EA
-  platform/x86: asus-armoury: add support for GU605CP
-
- drivers/platform/x86/asus-armoury.h | 113 ++++++++++++++++++++++++++++
- 1 file changed, 113 insertions(+)
-
--- 
-2.47.3
-
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+> Fixes: f99eb098090e ("platform/x86: asus-armoury: move existing tunings to asus-armoury module")
+> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
+> ---
+>  drivers/platform/x86/asus-armoury.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index 5b0987ccc270..495dc1e31d40 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -370,7 +370,7 @@ static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
+>  	if (err)
+>  		return err;
+>  
+> -	mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, 0);
+> +	mode = FIELD_GET(ASUS_MINI_LED_MODE_MASK, mode);
+>  
+>  	for (i = 0; i < mini_led_mode_map_size; i++)
+>  		if (mode == mini_led_mode_map[i])
+> @@ -386,6 +386,7 @@ static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
+>  {
+>  	u32 *mini_led_mode_map;
+>  	size_t mini_led_mode_map_size;
+> +	char mapped_value[12];
+>  	u32 mode;
+>  	int err;
+>  
+> @@ -414,9 +415,16 @@ static ssize_t mini_led_mode_current_value_store(struct kobject *kobj,
+>  		return -ENODEV;
+>  	}
+>  
+> -	return armoury_attr_uint_store(kobj, attr, buf, count,
+> -				       0, mini_led_mode_map[mode],
+> -				       NULL, asus_armoury.mini_led_dev_id);
+> +	/*
+> +	 * armoury_attr_uint_store() parses and sends the value from the
+> +	 * passed buffer; hand it the mapped firmware value so the device
+> +	 * receives the translated mode instead of the raw index.
+> +	 */
+> +	snprintf(mapped_value, sizeof(mapped_value), "%u", mini_led_mode_map[mode]);
+> +
+> +	return armoury_attr_uint_store(kobj, attr, mapped_value, count, 0,
+> +				       mini_led_mode_map[mode], NULL,
+> +				       asus_armoury.mini_led_dev_id);
+>  }
+>  
+>  static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
