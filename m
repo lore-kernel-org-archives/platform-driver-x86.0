@@ -1,86 +1,83 @@
-Received: from outbound.mr.icloud.com (mr-2003l-snip4-3.eps.apple.com [57.103.69.36])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A64305683
-	for <platform-driver-x86@vger.kernel.org>; Sun, 17 May 2026 02:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.69.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236D7194AE6;
+	Sun, 17 May 2026 08:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778985734; cv=none; b=PWxEhlwVmLBugfoFe3WvG9TTGEYpeVRV+HkblxTUHdDWcopDy6ZauBjE2NyOl1sE4uLWxNSsQGH0AGG7Hi5746XtaD1XyKbX7xlUIMVIWdKRhjRe+7xo1IVQ14QzVcO5i5eL1nIClVzToFJcRnyAM9Is/raFCPT//9IkwXs0ius=
+	t=1779005366; cv=none; b=k67VyIuzovGiwCawQvNEREoFh/plGjPvx8L3dhzLYY835J/LQiDdFxBcqBPrm+Hqxwf1q0Ls4qtsq8hMFmcxM60Ieea0I0hActraEfXAM2Hnrrkbqv+Dt87JbNkT8+6OtwOilGDiHdmw7Oc37Nb4aE/2oXBuTLchGE8g8k9+Lcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778985734; c=relaxed/simple;
-	bh=OncIe2gC/SnKNAlI0PaLDvao53WJKsQj2EsPQVs6ulQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hW5Jp1Nwu/79VhFSyZcf3opTaHW1cJrsmSFjTCa/hA8y+Z0yULov3lfstErLS/U7nYD532SiZ7d3r2o0sSGVqzEcHnx3AFTVM+B8g/UyOa4hjk0WdTd8o7gHOgZBTeJiWbXm6hpBhM7Aa40jaYd6+PnhonjD4h0CfkPKnzZzDZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Qoij4whv; arc=none smtp.client-ip=57.103.69.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1779005366; c=relaxed/simple;
+	bh=1KA+FT9ACf4j7LRSsFIc1VNoUA14XVi9smNHYBJ1pcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BWngESG816YYM5fCETm/KuLvNN1QXo/1Fxe/pl8Mlym0Ms7+e1CnXXQtPNVk7K3++H9uKlbCkKCEmYblHmRRfZc+wbXwY9JYdSeocmq3dcIXhoPUvWOVbCqsTkA+fCRT6nDal+fIfrDPL5FfiAmP1oW+4FW4yAKdl6HDp8vShf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L0ny9L+W; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Qoij4whv"
-Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-10 (Postfix) with ESMTPS id 8D5E91800098;
-	Sun, 17 May 2026 02:42:10 +0000 (UTC)
-X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQhKBUMDRQBBCFYBWANLVxQEC0AFBlgARnkRUAFYHlZeWhdeTVEPDwNKEAJeBV1yGVoUXBhTRVEfVFhBDgpcEhhcFFxQWB5GElYNXQkZBkBeUBtfAkIPHBNWFRMdQxkPKwhKBEMHRQJeCyUTCVNWWxNVF0YJGQhdHRkVWgkKVwBAC04DWAZcAkINSQdVGVIERAtVAkBEGFpBCkoFLV4IXh9MHB0OWAYMUE0BQwgKAlEcVg1X
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1778985732; x=1781577732; bh=bzlf5Lht+VNUH6k5XPHKKikglKgLmfJ8JUdQJHN9xt0=; h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme; b=Qoij4whvPvFyG6dGJm9O54sNgXOOu1YU5AkxTXkllw+/0spaKob4xnpHzoWumEMYfTIrELu0CT8zDgDi0GiCw+n86YxAMddgglHFDKieHL7+NWlaft39JUNyavhar9AZhHveehaNGHEMf52t400b+2OwK4V8bGHi3B7Hz3mCwv5dJIjRWfB6d4PBhPFLxImy0iidQaBLEPO1f1FrvUiUOgtdq/tdaUoob/wV7Lkm65uJa1oZrkeYihWWeBdFq9TmpNrg7qIDAc8Nsx28W2Uv2wK/8i+vVlKYAQXZQ8BoLenpwqtwwLm8nr2K7zEbw5nGa3gQUBUxfSyps8X1QzjQGQ==
-mail-alias-created-date: 1778972301885
-Received: from localhost.localdomain (unknown [17.57.152.38])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-10 (Postfix) with ESMTPSA id 624B31800144;
-	Sun, 17 May 2026 02:42:08 +0000 (UTC)
-From: Sakurai Shun <ssh1326@icloud.com>
-To: Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: Sakurai Shun <ssh1326@icloud.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] docs: fix typo in uniwill-laptop.rst
-Date: Sun, 17 May 2026 11:41:44 +0900
-Message-ID: <20260517024148.9642-1-ssh1326@icloud.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260516070650.9454-1-cheesecake2960@icloud.com>
-References: <20260516070650.9454-1-cheesecake2960@icloud.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L0ny9L+W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779005365; x=1810541365;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1KA+FT9ACf4j7LRSsFIc1VNoUA14XVi9smNHYBJ1pcQ=;
+  b=L0ny9L+Wy7GwqvREIRkXSwmRMwwDtEoMGeUgr91Fy0nImEop7m0ZOIvd
+   SvwAyVtH5vZXwLMvXaQmZzpoO6jGVTIwS+u0/j53Bm4LkTknnQ6X+mKVG
+   5nn8AygAT6fbDwRMG/T8S1By6lq63IcSBIjTbKcecY4uiwo1ntMVJuJmS
+   Cgjx6WL+iA5eKdjH7uVmpVqqbSx+03kD0NAv7fD6JHYsKrb5tLa4LtyHi
+   BKYh5LrC+R4lpqP/1XUgKIuz3iQOtYbbG43rNpHbXuzKaEqPiGLqpwAIv
+   Fy7rcwchl8FmUhpELcMaGTjxAx5Lbf5cNAaQXbnaZlV92HucC90aewa+9
+   g==;
+X-CSE-ConnectionGUID: ddVxhirER5+VtoSbeU7lAA==
+X-CSE-MsgGUID: uc749RwVQsChq4t4Kp499w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11788"; a="79790299"
+X-IronPort-AV: E=Sophos;i="6.23,239,1770624000"; 
+   d="scan'208";a="79790299"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2026 01:09:25 -0700
+X-CSE-ConnectionGUID: 1/JGTNW+RRGY3etWycPgww==
+X-CSE-MsgGUID: 57mWu3ZkTkyhafnxaj2nKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,239,1770624000"; 
+   d="scan'208";a="238996469"
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.182])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2026 01:09:23 -0700
+Date: Sun, 17 May 2026 11:09:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: xo15-ebook: Use devres-based resource
+ management
+Message-ID: <agl3sBxZ_trXkwIy@ashevche-desk.local>
+References: <6015220.DvuYhMxLoT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: fmD5T8WNA0bub2IpHn8hB5XszSeSJ8tQ
-X-Authority-Info-Out: v=2.4 cv=XMY9iAhE c=1 sm=1 tr=0 ts=6a092b03
- cx=c_apl:c_pps:t_out a=9OgfyREA4BUYbbCgc0Y0oA==:117
- a=9OgfyREA4BUYbbCgc0Y0oA==:17 a=NGcC8JguVDcA:10 a=x7bEGLp0ZPQA:10
- a=ZxuoajvSgW0A:10 a=VkNPw1HP01LnGYTKEx00:22 a=NEAV23lmAAAA:8 a=v3ZZPjhaAAAA:8
- a=t6UtJALps7SRIqVoZyYA:9 a=IxSG75etxsVYPPdR13TJ:22 a=STymlzgejnUetJ8yQWeq:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTE3MDAyOCBTYWx0ZWRfX17qT3lushQGu
- aArG4o8YSPPboQpIU9xZzDf7nNYB5Pe8Egca/zdqi3d3zd5pBpPwncRwUlctOmDEUYtIxTTqHJN
- 9bNG1IvOlQUYoJ9vsNLHV8tAzwcNAYviMpocU7sYfurLk2h7GTGEBIt+eUudPs/9iptPRb4Soms
- ADKNtub4CiJuCtViej+DEPKMBvPWYWyvwyeDD259oJnkwDqzXI0ir6e3+u1bukiQApSu2mMRQt2
- 9gAkuAirB6KEUtWBo9ZEANXK5ZKvHLrENB+q0pQ8YHL3Umd4Sw4Ix/Jpy2p1+YnckBqKUOc69V6
- 5x3qQTauMC24UrxjkdELVfldviPV1qHdzpDQdB/6VXNd/NPLZqSS62nriEMTBQ=
-X-Proofpoint-GUID: fmD5T8WNA0bub2IpHn8hB5XszSeSJ8tQ
-X-Apple-Category-Label: MjE0Nzk4NjU5NzY6JGNhdGVnb3J5JF9QZXJzb25hbCw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6015220.DvuYhMxLoT@rafael.j.wysocki>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Replace "benifit" with "benefit".
+On Fri, May 15, 2026 at 01:47:29PM +0200, Rafael J. Wysocki wrote:
 
-Signed-off-by: Sakurai Shun <ssh1326@icloud.com>
----
- Documentation/wmi/devices/uniwill-laptop.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Use devm_kzalloc() and devm_input_allocate_device() in
+> ebook_switch_probe() for allocating the button object and the
+> input device, respectively, to simplify the rollback path in
+> that function and ebook_switch_remove().
 
-diff --git a/Documentation/wmi/devices/uniwill-laptop.rst b/Documentation/wmi/devices/uniwill-laptop.rst
-index e246bf293..65583b239 100644
---- a/Documentation/wmi/devices/uniwill-laptop.rst
-+++ b/Documentation/wmi/devices/uniwill-laptop.rst
-@@ -189,7 +189,7 @@ Indexed IO
- 
- Indexed IO with IO ports with a granularity of a single byte can be performed using the ``RIOP``
- (read) and ``WIOP`` (write) ACPI control methods. Those ACPI methods are unused because they
--provide no benifit when compared to the native IO port access functions provided by the kernel.
-+provide no benefit when compared to the native IO port access functions provided by the kernel.
- 
- Special thanks go to github user `pobrn` which developed the
- `qc71_laptop <https://github.com/pobrn/qc71_laptop>`_ driver on which this driver is partly based.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 -- 
-2.54.0
+With Best Regards,
+Andy Shevchenko
+
 
