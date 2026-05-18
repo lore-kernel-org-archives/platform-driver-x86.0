@@ -1,123 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA87481A8A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 16:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8213648C3EE;
+	Mon, 18 May 2026 16:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779122892; cv=none; b=KRaBzjc9RDmdJj6nHIsLWMGuT0j1b3I7Bl6rAoOMgb8crWBEI+kFyz2zccCniC4tL/wzlO532qpLY23m1OwLFnftTmkazpxtmzYph+pXBsQizaVs6ha15g/Zc7eIwJlEQiUbIPI6/llVpdpKnBk2qD7u84Ek/uFde8Tzfny4p8w=
+	t=1779122949; cv=none; b=Vruy3qLYo9Qm0dyE+KLwgMKcsuZD7kw+cCTDfdNJOmFDdC4LhbBHeklvC6zSLUUUwIHq6E/rQMSovLDkPufvkvhcDbvuSyQaN65/rO6MrZdYFhxKc0Cxn6vMK6y29hyRYNt2Jkv54StVyQ3ufp65v2fFWm4eZBdLiylrnZDimyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779122892; c=relaxed/simple;
-	bh=YYWykHRwoqA5YfPaQ78bMeahTfJEAfHzidpaGUk3qUM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Xd1acr89vgRD5ZWv/9V1u7EVEYLuCbLCnJQZ1LkAXreakzf0UXBqsMOzzaNV973TYVH59L33l9HFvlL+vAiH9Mry+/57mGLmkYh52M5XrP5/0RbDqc5OzG05O7BA9Sqp/4tCvMk+cD0WioX04GoOmdLTUPp+8N4W75tENLEl/Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ5gJY8j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779122949; c=relaxed/simple;
+	bh=zc4shDdIDKEM495ywc+RfCGBRoKJfYNcgDvXFgNvkgI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tPKYn3N7sBMP4MPff8+grlicZ9M9D6MoCHolYgkYR+xQVCKqcaCWN3EdS5QD43ZdVDaDkidUX5yHroy0Ol6QiXX+XYFx1LIRkldEvPS4AAnmljiAMcUoK+rSBdagC2eDMZOI6h7urvpy3eaYaHSS8q9tgeKHXsgtF/IWRA92grU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EyujC3+N; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ5gJY8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3476CC2BCF7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 16:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779122892;
-	bh=YYWykHRwoqA5YfPaQ78bMeahTfJEAfHzidpaGUk3qUM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=KQ5gJY8j4nrjEX5SI/nraIO+tcTAgZu4fsCLB8MIV3OE9iq9XmHQp3OZscRGZ7omF
-	 YdeiQ0YROcKeTQUE8MWICLlFRIch0HT6W2zLO0EkFWvCQDZQGNL+MDRZFLIs/S1pqZ
-	 cNFYtLFyv/ZLyz80x+uEjZS/IzQZ48dH+XqfVle+Tm5wgaVb9igwW2jFYGb5DgcZQD
-	 R31WDdBn2ruylvHRNd4z0fkhUNmblTeoch63U/hroO/53GCDy80nN8qR7wN1O7QzyY
-	 WnTGMV+OZj2Jj7PV9J2upzMtvqtW+ZyosCUeLssSMq2gBVnRdL2i52MCa3uZFDXaG2
-	 axz99GAl6eHHg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2D8F9C433E1; Mon, 18 May 2026 16:48:12 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
- 7 14ASP9
-Date: Mon, 18 May 2026 16:48:11 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: i@rong.moe
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221065-215701-B0wp42Wd90@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
-References: <bug-221065-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EyujC3+N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779122949; x=1810658949;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=zc4shDdIDKEM495ywc+RfCGBRoKJfYNcgDvXFgNvkgI=;
+  b=EyujC3+NT9vTwp0nXB9BF8EcxlP5hLKpuZbm6JIWPVMN3Qryxk19b5jw
+   VtwwcCfDUrI6FvZrrjMVFyeO3Jqko1TzPzdNo3m4g+w2bkRHhqJuCe37Z
+   eUuaioJTeYmyVv7ulhmmddyee40+EnCr0kdSEWdeEiKfH1abmFuY0WabK
+   XMNxFqVGFZKVuve3omMOZeQhOLQXrDO2IvbJ3XBkIAtJMX23N5CPw9/8e
+   Xv25T54K8dgmMPsavGo6cXTkF8dD2YPRe2eZHHCCMURJK7lh8KMH/1XBx
+   2qlkObVRqbsr1WE4CFlWFzACohmaMwjI8RnD0z5J7VbVGENwVCpX/G4/j
+   w==;
+X-CSE-ConnectionGUID: XGmqEWT1RkS/YGmAoa7zSA==
+X-CSE-MsgGUID: fTfZxxxiQHO6qbPKcR8UeA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="82551337"
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="82551337"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 09:48:56 -0700
+X-CSE-ConnectionGUID: dwsaMYPzSEyZxKjCA3m2vg==
+X-CSE-MsgGUID: rl7K7FxNRVOuOKGNYdKQwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="239345055"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.101])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 09:48:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 18 May 2026 19:48:49 +0300 (EEST)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org, 
+    Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/2] rtc: Add rtc_read_next_alarm() to read next expiring
+ timer
+In-Reply-To: <20260518133853.851027-2-mario.limonciello@amd.com>
+Message-ID: <6be68c57-929b-ccf0-84a5-6f40c4c0c330@linux.intel.com>
+References: <20260518133853.851027-1-mario.limonciello@amd.com> <20260518133853.851027-2-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
+On Mon, 18 May 2026, Mario Limonciello wrote:
 
---- Comment #90 from Rong Zhang (i@rong.moe) ---
-(In reply to Rick from comment #89)
-> As there is now more output into the dmesg window I decided to capture ju=
-st
-> the system sitting alone through two pause events and captured that in my
-> first upload #310145
+> Add a new function rtc_read_next_alarm() that reads the next expiring
+> alarm from the RTC timerqueue. This is different from rtc_read_alarm(),
+> which only reads the aie_timer.
+> 
+> The wakealarm sysfs file programs the rtc->aie_timer, whereas the
+> alarmtimer suspend routine programs its own timer into the RTC timerqueue.
+> Both timers end up in the RTC's timerqueue, and the first expiring timer
+> is what gets armed in the hardware.
+> 
+> This new function allows code to query which alarm will actually fire
+> next, regardless of which subsystem programmed it. This is needed by
+> platform code that needs to program secondary timers based on the
+> actual next wakeup time.
+> 
+> Link: https://lore.kernel.org/all/87ed50z0le.ffs@tglx
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Assisted-by: Claude:claude-opus-4-6
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/rtc/interface.c | 42 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/rtc.h     |  2 ++
+>  2 files changed, 44 insertions(+)
+> 
+> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> index 1906f4884a834..dfcb32e272eb9 100644
+> --- a/drivers/rtc/interface.c
+> +++ b/drivers/rtc/interface.c
+> @@ -384,6 +384,48 @@ int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>  	return err;
+>  }
+>  
+> +/**
+> + * rtc_read_next_alarm - read the next expiring alarm
+> + * @rtc: RTC device
+> + * @alarm: storage for the alarm information
+> + *
+> + * Read the next expiring alarm from the RTC timerqueue. This returns
+> + * the alarm that will actually fire next, which may be different from
+> + * rtc_read_alarm() if multiple timers are queued (e.g., alarmtimer
+> + * and wakealarm sysfs both active).
+> + *
+> + * Returns 0 on success, -ENOENT if no alarm is pending, or other error.
 
-The EC query was \_SB.PCI0.LPC0.EC0._Q0B. It indeed notifies BAT0 twice!
+Missing :
 
-Method (_Q0B, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
-{
-    M459 ("Q0B Event\n", 0x00)
-    P80H =3D 0x0B
-    If ((Acquire (ECMT, 0x2000) =3D=3D 0x00))
-    {
-        Notify (BAT0, 0x80) // Status Change
-        Notify (BAT0, 0x81) // Information Change
-        Release (ECMT)
-    }
-}
+> + */
+> +int rtc_read_next_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+> +{
+> +	struct timerqueue_node *next;
+> +	int err;
+> +
+> +	if (!rtc || !alarm)
+> +		return -EINVAL;
+> +
+> +	err = mutex_lock_interruptible(&rtc->ops_lock);
+> +	if (err)
+> +		return err;
+> +
+> +	next = timerqueue_getnext(&rtc->timerqueue);
+> +	if (!next) {
+> +		err = -ENOENT;
+> +		goto unlock;
+> +	}
+> +
+> +	memset(alarm, 0, sizeof(struct rtc_wkalrm));
+> +	alarm->time = rtc_ktime_to_tm(next->expires);
+> +	alarm->enabled = 1;
+> +	alarm->pending = 0;
 
->=20
-> Next I did the spamming requested (both l and w alternating until the pau=
-se
-> ended)
-> This is contained in attachment #310146 [details]
->=20
-> I noticed with the first spamming attempt that the new output ACPI messag=
-es
-> happen in the dmesg window before the system actually pauses.  So I did
-> another spamming attempt but this time I tried to start spamming as soon =
-as
-> I saw the dmesg window start displaying the new ACPI messages.  It is lik=
-ely
-> this file has data that starts earlier and personally I would start looki=
-ng
-> at this one first.
-> This is contained in attachment #310147 [details]
+Doesn't the preceeding memset() already clear everything?
 
-Thanks. They look fine. At first glance, I did find some new information th=
-at
-confirmed my previous assumptions. I will find some time looking into them
-carefully.
+> +	err = 0;
 
->=20
-> As always - let me know if you want more.
+Why is this needed?
 
-The current ones should be enough. Now I already have some thoughts on how =
-to
-improve battery event handling. The current code path is really awful and
-"contributes" quite a bit to the unfortunate combination of FW and SW bugs.
+> +
+> +unlock:
+> +	mutex_unlock(&rtc->ops_lock);
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(rtc_read_next_alarm);
+> +
+>  int rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>  {
+>  	int err;
+> diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+> index 95da051fb155d..c09fc22819d0c 100644
+> --- a/include/linux/rtc.h
+> +++ b/include/linux/rtc.h
+> @@ -190,6 +190,8 @@ extern int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm);
+>  int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm);
+>  extern int rtc_read_alarm(struct rtc_device *rtc,
+>  			struct rtc_wkalrm *alrm);
+> +extern int rtc_read_next_alarm(struct rtc_device *rtc,
+> +			       struct rtc_wkalrm *alrm);
+>  extern int rtc_set_alarm(struct rtc_device *rtc,
+>  				struct rtc_wkalrm *alrm);
+>  extern int rtc_initialize_alarm(struct rtc_device *rtc,
+> 
 
---=20
-You may reply to this email to add a comment.
+-- 
+ i.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
