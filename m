@@ -1,574 +1,124 @@
-Received: from hope.aquinas.su (hope.aquinas.su [82.148.24.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012022.outbound.protection.outlook.com [40.93.195.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445CC481643;
-	Mon, 18 May 2026 13:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.148.24.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779111416; cv=none; b=nFcfKZiF1zpudVDUTYurlv93gBpIj0gcyOswXzpfddBICuhOuu6VQtxVHKfZInfC0jtmrj0wZ0I+L0/l0xA2FFm+ARqt04cQb00ktlR/jg+oJOebYgYK5NIV+7MjyvcznPuQ5kCspU/2Mb48WofLkm2uXc5Xu+aIO2kErAXZxGo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779111416; c=relaxed/simple;
-	bh=gaYQgzBKu+pB0hOTWwFWiFlZoWQl/VsbkVqAz5UGLiw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DngOefgkLzpye94kYDRd9htajrtTmYh4Lmm8YKXpmzxgxBrfDHMQrdKQgNtqUGDNd4/C2IK9N5oabGwdM37QnIgxuxl7C+JqIdN8oaUp2ozEjzualDgAJNPl0ePV5aXUTrmwCRY3SaGoYtwo7f2Y1gOnv4PApIqQ4zTHctF3CKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su; spf=pass smtp.mailfrom=aquinas.su; dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b=omu5e2bG; arc=none smtp.client-ip=82.148.24.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aquinas.su
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559C8846A;
+	Mon, 18 May 2026 13:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779111551; cv=fail; b=oDsgBK5oSOlnmqc2v5x7htBLYa4WYL4GWXh2R8Pfi4ZVR3ix9UDnbC8cY59ZpSUmAARJ8gX6SJIxMuF2mNrf6gdvpPkSZrD472ChAF0OXIYYIGiamndZ/y350Anx8q2F5yPXWRmyUBhHvvF0Z9zMDX9u7CJzHuP71Ct6506UbQw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779111551; c=relaxed/simple;
+	bh=n/Y85/PXWC1bjDuWmoGu3dHAX4t9SMsDiq381mDES8I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HhFBab0oMmrWDbtYgIzK68LsBl2CGBagoFV0ZeFwYW14yV/gfg2SFkbY6ZpN5x5Jr1IFIf3wr7E6Vw5VWn/MUGtgTJ/ePO5zWr9h64uX1kfwF+TJvphtoo4sVp+uKB3pcrA8lLIz1qeahcfzdGuuqOAYceSCHJeIdm2smIwxkfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1OOxy8/z; arc=fail smtp.client-ip=40.93.195.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b="omu5e2bG"
-Received: from woolf.localdomain (unknown [158.46.243.40])
-	(Authenticated sender: admin@aquinas.su)
-	by hope.aquinas.su (Postfix) with ESMTPSA id 585C068563;
-	Mon, 18 May 2026 16:36:42 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aquinas.su; s=default;
-	t=1779111404;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1Nid0g7pGzKu1pDZke+ZUQywGWSmwxJzV+hccfAQOTo=;
-	b=omu5e2bGEH0PHZ9QQ6r3Xi3crj/IECFPMFPuLyMmBGAEeYWHc2YQ5mf2ZbtCdqSr8m8sQU
-	3mFUGs/h2nzSf2mf6XU32KtivzbeKTHAtWghtc14CA6yPHf22r/zptgABjdq3dtds5c/mi
-	8xuphCMJaT4ggUWfv9/Ieleor9SIZNGp+83/4Wa1bBLfjzXBYS+xGt0iYQgdxtj2lPx8vZ
-	9VH8NKJeZB/IqMu3wUsWlgZ8acVNfgpc4Vaz8h+KdLLAq/46UEhv2d4UpwOYNh40Scd9Xr
-	jKUzu/CfwYDVgPNpP5zcFDlJ26OlkfPL9tywCpuw7J9W5+n8AaEtDw2Ni2k+OQ==
-Authentication-Results: hope.aquinas.su;
-	auth=pass smtp.auth=admin@aquinas.su smtp.mailfrom=admin@aquinas.su
-From:
- =?UTF-8?B?0JrQvtC90LXQvdC60L4g0JDQvdC00YDQtdC5INCS0LjQutGC0L7RgNC+0LLQuNGH?=
- <admin@aquinas.su>
-To: ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
-Subject:
- [PATCH v8] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard
- backlight
-Date: Mon, 18 May 2026 20:36:41 +0700
-Message-ID: <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
-In-Reply-To: <e1bce5de-34e8-4351-96ae-7edf4379b99b@kernel.org>
-References:
- <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su> <Yum2UkOKSk-F7vHbhPXMxA@aquinas.su>
- <e1bce5de-34e8-4351-96ae-7edf4379b99b@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1OOxy8/z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SyXDFp67YHohoRiQ2bw/M++Ztzh7H6W/z+GlJWuYo5+QcFbm2JdYBgnb3zl5vj1NQMW7wMNcPCGaWrVJ36itC9SJzANRpaDJAw1Jlqn98er15hFf/n3hMJYvcZkOLYRviBX3YahfZbvgvKsF4fC/Mb6+7eQW2CAQDFDWV3HbajJKVHbOjpVRK+xVNr7LY29r5EyHMob7mJ7WAMud3Yk42NjbxxOIGiykTWVhcCCrjc+L4N6CXXZSFmNn1dC459VqLjMqrW8xxxqi77hzRawrgwNuQYCYYkgQrMnDtUPNantmb2kkJr896VENiqJofgX9E+4lbFNWzCHBRh4o0MPwWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pKbHbnsbIE4z3FDq+CYyItA/FK1+9DPBrqpf3wL/3dc=;
+ b=SB8lTBBar4XejaRIgxRB7eSyJMhVqP+l3kvkCZZEcMJWuQK1NPyXXhPah/sAeds5aXNWAqtqn1SSSf+zp+DpoMpsfPVuY40EQEg7uapQ9b+Gq43jglRoyvU9NXwZDnj+g76O+WA3GzbvmxYLrTw/A+NwiD0u9lJX1zJbqpaHDQ1I/t3qCG3nxfA7UouYqKD6nTi/a+roUgeZiWALlLCHiM7Uh2q5TcE6qiSPfh/caRHwnCGpA7VNgBqGcZLkziwtFJ3YFJyqWZ/JyplEAL6XF8Hoh8COEwMAJKO/ZZiUPX/JpO27jn+kuEgYueyAGoCxi4COC6diEgxr0naAmt2EgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pKbHbnsbIE4z3FDq+CYyItA/FK1+9DPBrqpf3wL/3dc=;
+ b=1OOxy8/zMXWB8IuNgrr1KH/wn5q9T3Zd2DB4LVAJaM/+8hb4ATNh0AWFVcBUxkXQQCLTIdTIzK57oiZEDIiM8MAsv2fZR6V/eNQu6zDPY38ldkQInRqq2tfZEn/zXSziLZTEJQeAK683U1RXr/ZGVLbyYk3ALcqjTj++jmtNZ8c=
+Received: from DS2PEPF0000455F.namprd21.prod.outlook.com
+ (2603:10b6:f:fc00::50d) by SA1PR12MB8699.namprd12.prod.outlook.com
+ (2603:10b6:806:389::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.21; Mon, 18 May
+ 2026 13:39:03 +0000
+Received: from SA2PEPF000015CB.namprd03.prod.outlook.com
+ (2603:10b6:82c:400:0:1003:0:9) by DS2PEPF0000455F.outlook.office365.com
+ (2603:10b6:f:fc00::50d) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.2 via Frontend Transport; Mon, 18
+ May 2026 13:39:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF000015CB.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.11 via Frontend Transport; Mon, 18 May 2026 13:39:02 +0000
+Received: from ausmlimonci-lx1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 18 May
+ 2026 08:39:01 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Alexandre Belloni
+	<alexandre.belloni@bootlin.com>
+CC: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>, Thomas Gleixner
+	<tglx@linutronix.de>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH 0/2] Fix S0i3 wakeup with alarmtimer
+Date: Mon, 18 May 2026 08:38:51 -0500
+Message-ID: <20260518133853.851027-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CB:EE_|SA1PR12MB8699:EE_
+X-MS-Office365-Filtering-Correlation-Id: 732bef78-4f02-4f1d-a6e9-08deb4e2d2eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700016|82310400026|56012099003|11063799003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	M9WQyD/tPbpqXLrDOzjwIIVCB+Xw2CND8lQiexO8xO3LstWgvQAtkIY60ThDWVLB/XEJ2C+jlhv1HHXRb7jjQvcFhOB+Jm18Pz/dB1jSSQmDTVxYfsBOpIxjAfO3LrUUIbHzDNJckz4PaMTY15dqm9TAruZgtE7qyKyvFIJxnXnDVCrWnHuR2t9QKQxqZ7iJGoaIbf2aU3WxvzC7guyZXla9cTaH4HZBE7NqUiNlh7siVsCezsS9u0KJCXXTG+XWJmut/Aw/PEczpvsCttnn3hLAs2ZcYFZp5dNN72/YXhJpX8z0E/U907AaRNmg8C7EA3mUiba9m6ssy53p8xnzcRketkHQHcg7Z4zUpd6us4Nb6j3mbn8gfvd5yNXMF6EkEH5Mjyj6DMGNPij1RqI0QkgGfNH+xPQQOlkYF7ffvRXy8fqoH89XrqYe/C67GfSN58LwzAuIfY+geec0zRRWa+gyAiCm2j4FT/mynhOhsRdnWvXhftJ0own0A5SW4uNuBjkRQnZjjMjyd1Z1LTIzfoVSQUhAWJd401zdmv2dRx6semnpuIQSS+dFwWeNFeyhPGbvgSqdR3d/xUknT1w+1o2GI7GixKNmzawil04mLUG/Nwzc+3DuPhaygt6kHocBp05drugsDAsCdUVql4rv6vh9CcnpFguyRj5mQQiD//ZemaXUrj1G5Nydmh0U6bEeE9srgD7tmBFjTgW7Egt4sk63p9WY/8Nt1mGoLDegwmg=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700016)(82310400026)(56012099003)(11063799003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	woB97IU5z3FTy38zbM3xtUK98ZWo3t2VFRcthuaVfveYp4b8ndqKDWmX0TRQqPaTO5aWI7nLtLj0QtJ0zuiM1Ub8igVkMxg/sSuoBc9fZWmZ0EWtEeoq0vbnnSZJtV8h0Uo0Cr3ZNthIpJh5zdBRJ1JEb2V+HAwQ1gcAgVknoD/6BOjhxG6BrCZX8PJVlCqi91249HOEdR2HSaQmg1SvCqYmqBlPAW/2tAncWCIZtRDlZRAZqnsIg79b7j5lcLt+1wiuhVWXOYb9rJpsHPfI/JzzQxGfqFBWDW2hfAwUqyckpvXjhhQNrnBLByqXifcsUdJIRZyYSjJb+OH+9k+vXbs82T2KDTtnx+mbAKS7VoVYEKQNHKISBjL/NePmim5qfp95nSN6BOO1432jqTTWFcHuq1kWsPNX4qMNCgHACU//edA6XElqFkrh81+y3XKf
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 13:39:02.6806
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 732bef78-4f02-4f1d-a6e9-08deb4e2d2eb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CB.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8699
 
-> 
-> I'm afraid the names are still wrong. Your patch results in e.g. :
-> 
-> hp::kbd_backlight_zone-right
-> 
-> where as per:
-> 
-> https://lore.kernel.org/linux-leds/20260504145434.12746-1-johannes.goede@oss
-> .qualcomm.com/
-> 
-> this should be:
-> 
-> hp::kbd_zoned_backlight-right
-> 
-> Regards,
-> 
-> Hans
-> 
+It was reported that suspend-then-hibernate stopped working with modern
+systemd versions on AMD Cezanne systems. The reason for this breakage
+was because systemd switched to using alarmtimer instead of the wakealarm
+sysfs file.
 
-I would like to sincerely apologize for the mistake in understanding the 
-documentation. I received feedback pointing out my error, corrected it 
-accordingly, but unfortunately, there was still an oversight. After being 
-notified of the second error, I have now thoroughly reviewed everything again 
-and made all necessary corrections.
+But really it uncovered deeper problems with how these timers work.  Adjust
+the code accordingly.
 
-I truly appreciate your patience and guidance throughout this process. Your 
-feedback has been extremely helpful in helping me reach the correct 
-understanding. I am committed to ensuring that all future submissions are 
-fully compliant with the documentation requirements.
+Mario Limonciello (2):
+  rtc: Add rtc_read_next_alarm() to read next expiring timer
+  platform/x86: amd-pmc: Fix S0i3 wakeup with alarmtimer
 
-Thank you for your time and understanding.
+ drivers/platform/x86/amd/pmc/pmc.c |  9 ++++---
+ drivers/rtc/interface.c            | 42 ++++++++++++++++++++++++++++++
+ include/linux/rtc.h                |  2 ++
+ 3 files changed, 50 insertions(+), 3 deletions(-)
 
----
-
-From: Edip Hazuri <edip@medip.dev>
-
-Add support for the HP keyboard RGB backlight found on HP OMEN and
-HP Victus laptops. These keyboards expose per-zone RGB control through
-WMI commands.
-
-Register multicolor LED class devices for each keyboard zone (up to 4
-zones, depending on the keyboard type). Each zone exposes individual
-red, green, and blue channels via the multicolor LED subsystem.
-
-Also hardware-initiated brightness changes (e.g. via the keyboard
-backlight hotkey, mostly fn+f4) are reported.
-
-The color data is stored in a 128-byte color table managed by the
-firmware, with RGB values starting at offset 25, packed sequentially
-per zone.
-
-Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
-
----
-
-Changes since v7:
- - The LED class device names changed to be consistent with the documentation.
-
-Changes since v6:
- - The LED class device names have been made more consistent with the 
-documentation, in accordance with patch https://lore.kernel.org/linux-leds/
-20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
-underscores have been replaced with dashes where indicated.
-
-Changes since v5:
- - LED class device names changed from a number to using a descriptive name 
-for each zone.
-
-v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
-
-Changes since v4:
- - Fix circular dependencies
-
-Changes since v3:
- - Merge the changes into a single commit
-
-Changes since v1:
- - Fix mentioned style errors
- - Add Kconfig dependencies
-
----
-
- drivers/platform/x86/hp/Kconfig  |   2 +
- drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
- 2 files changed, 285 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
-index dd51491b9bcd..2a1841cbec76 100644
---- a/drivers/platform/x86/hp/Kconfig
-+++ b/drivers/platform/x86/hp/Kconfig
-@@ -45,6 +45,8 @@ config HP_WMI
- 	select INPUT_SPARSEKMAP
- 	select ACPI_PLATFORM_PROFILE
- 	select HWMON
-+	select LEDS_CLASS
-+	select LEDS_CLASS_MULTICOLOR
- 	help
- 	  Say Y here if you want to support WMI-based hotkeys on HP laptops 
-and
- 	  to read data from WMI such as docking or ambient light sensor 
-state.
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-
-wmi.c
-index d1cc6e7d176c..19da18f68337 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
- #include <linux/cleanup.h>
- #include <linux/compiler_attributes.h>
- #include <linux/dmi.h>
-@@ -23,6 +24,8 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/kernel.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/leds.h>
- #include <linux/limits.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-@@ -57,6 +60,7 @@ enum hp_ec_offsets {
- 
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
-+#define HP_COLOR_TABLE_PADDING	 25
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
- 
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero 
-insize is required
-@@ -97,6 +101,14 @@ enum hp_thermal_profile {
- 	HP_THERMAL_PROFILE_QUIET			= 0x03,
- };
- 
-+enum hp_keyboard_type {
-+	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
-+	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
-+	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
-+	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
-+	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
-+	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
-+};
- 
- struct thermal_profile_params {
- 	u8 performance;
-@@ -338,16 +350,27 @@ enum hp_wmi_gm_commandtype {
- 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
- 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
- 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
-+	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
- 	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
- 	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
- 	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
- };
- 
-+enum hp_wmi_backlight_commandtype {
-+	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
-+	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
-+	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
-+	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
-+	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
-+	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
-+};
-+
- enum hp_wmi_command {
- 	HPWMI_READ	= 0x01,
- 	HPWMI_WRITE	= 0x02,
- 	HPWMI_ODM	= 0x03,
- 	HPWMI_GM	= 0x20008,
-+	HPWMI_BACKLIGHT = 0x20009,
- };
- 
- enum hp_wmi_hardware_mask {
-@@ -355,6 +378,24 @@ enum hp_wmi_hardware_mask {
- 	HPWMI_TABLET_MASK	= 0x04,
- };
- 
-+struct hp_kbd_led_priv {
-+	int zone;               /* Zone index (0-3) */
-+	enum led_brightness last_brightness;  /* Brightness before turning 
-off */
-+};
-+
-+struct hp_mc_leds {
-+	struct led_classdev_mc devices[4];
-+	struct hp_kbd_led_priv priv[4];
-+};
-+
-+/* zone naming for 4-zone keyboards (HP Omen) */
-+static const char *const hp_zone_names_4[] = {
-+	[0] = "zoned_backlight-right",
-+	[1] = "zoned_backlight-center",
-+	[2] = "zoned_backlight-left",
-+	[3] = "zoned_backlight-wasd",
-+};
-+
- struct bios_return {
- 	u32 sigpass;
- 	u32 return_code;
-@@ -435,6 +476,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
- static struct input_dev *hp_wmi_input_dev;
- static struct input_dev *camera_shutter_input_dev;
- static struct platform_device *hp_wmi_platform_dev;
-+static struct hp_mc_leds hp_multicolor_leds;
- static struct device *platform_profile_device;
- static struct notifier_block platform_power_source_nb;
- static enum platform_profile_option active_platform_profile;
-@@ -1122,6 +1164,8 @@ static struct attribute *hp_wmi_attrs[] = {
- };
- ATTRIBUTE_GROUPS(hp_wmi);
- 
-+static void hp_kbd_brightness_set_by_hwd(u32 event_data);
-+
- static void hp_wmi_notify(union acpi_object *obj, void *context)
- {
- 	u32 event_id, event_data;
-@@ -1222,6 +1266,7 @@ static void hp_wmi_notify(union acpi_object *obj, void 
-*context)
- 	case HPWMI_PROXIMITY_SENSOR:
- 		break;
- 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
-+		hp_kbd_brightness_set_by_hwd(event_data);
- 		break;
- 	case HPWMI_PEAKSHIFT_PERIOD:
- 		break;
-@@ -1484,6 +1529,241 @@ static int __init hp_wmi_rfkill2_setup(struct 
-platform_device *device)
- 	return err;
- }
- 
-+static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
-+{
-+	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
-+	int zone = mc_cdev - hp_multicolor_leds.devices;
-+
-+	return &hp_multicolor_leds.priv[zone];
-+}
-+
-+static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int 
-blue)
-+{
-+	u8 color_table[128];
-+	int ret;
-+
-+	/*
-+	 * Get the current color table and then change only the relevant 
-parts.
-+	 */
-+	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
-+				   HPWMI_BACKLIGHT, color_table,
-+				   zero_if_sup(color_table),
-+				   sizeof(color_table));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * RGB color data starts at offset 25 +3 per zone (r g b)
-+	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
-+	 */
-+	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
-+	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
-+	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
-+
-+	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, 
-HPWMI_BACKLIGHT,
-+				   color_table, sizeof(color_table), 
-sizeof(color_table));
-+	if (ret < 0)
-+		return ret;
-+	if (ret)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static bool hp_kbd_backlight_is_on(void)
-+{
-+	u8 data;
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, 
-HPWMI_BACKLIGHT, &data,
-+				sizeof(data), sizeof(data));
-+	if (ret)
-+		return false;
-+
-+	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
-+}
-+
-+static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
-+					enum led_brightness 
-brightness)
-+{
-+	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
-+	struct led_classdev_mc *mc_cdev;
-+	struct led_classdev_mc *device;
-+	int red, green, blue;
-+	int ret;
-+
-+	if (!hp_kbd_backlight_is_on()) {
-+		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
-+
-+		ret = 
-hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
-+					   HPWMI_BACKLIGHT, &data,
-+					   sizeof(data), 
-sizeof(data));
-+		if (ret)
-+			return ret;
-+
-+		/*
-+		 * Turning the backlight on via WMI turns all zones,
-+		 * so we need to restore the other zones' off state.
-+		 */
-+		for (int i = 0; i < 
-ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
-+			if (i == priv->zone)
-+				continue;
-+
-+			device = &hp_multicolor_leds.devices[i];
-+			if (!device->led_cdev.name)
-+				continue;
-+			hp_kbd_backlight_set_rgb_color(i,
-+				device->subled_info[0].brightness,
-+				device->subled_info[1].brightness,
-+				device->subled_info[2].brightness);
-+		}
-+	}
-+
-+	led_cdev->brightness = brightness;
-+
-+	mc_cdev = lcdev_to_mccdev(led_cdev);
-+	led_mc_calc_color_components(mc_cdev, brightness);
-+
-+	red = mc_cdev->subled_info[0].brightness;
-+	green = mc_cdev->subled_info[1].brightness;
-+	blue = mc_cdev->subled_info[2].brightness;
-+
-+	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
-+}
-+
-+static void hp_kbd_brightness_set_by_hwd(u32 event_data)
-+{
-+	struct device *dev = &hp_wmi_platform_dev->dev;
-+	struct led_classdev *led_cdev;
-+	struct hp_kbd_led_priv *priv;
-+	u8 brightness;
-+
-+	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); 
-zone++) {
-+		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
-+			continue;
-+
-+		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
-+		if (!led_cdev->dev)
-+			continue;
-+
-+		priv = hp_led_get_priv(led_cdev);
-+
-+		if (event_data == 0x2) {
-+			brightness = priv->last_brightness ? : LED_FULL;
-+		} else if (event_data == 0x0) {
-+			priv->last_brightness = led_cdev->brightness;
-+			brightness = LED_OFF;
-+		} else {
-+			dev_warn(dev, "Unknown keyboard backlight event 
-- 0x%x\n",
-+				 event_data);
-+			return;
-+		}
-+
-+		led_cdev->brightness = brightness;
-+		led_classdev_notify_brightness_hw_changed(led_cdev, 
-brightness);
-+	}
-+}
-+
-+static int __init hp_mc_leds_register(int num_zones)
-+{
-+	u8 color_table[128];
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, 
-HPWMI_BACKLIGHT,
-+				   color_table, 
-zero_if_sup(color_table),
-+				   sizeof(color_table));
-+	if (ret)
-+		return ret;
-+
-+	for (int zone = 0; zone < num_zones; zone++) {
-+		struct led_classdev_mc *multicolor_led_dev;
-+		struct led_classdev *led_cdev;
-+		struct mc_subled *mc_subled_info;
-+		struct hp_kbd_led_priv *priv;
-+		struct device *dev;
-+
-+		dev = &hp_wmi_platform_dev->dev;
-+		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
-+		led_cdev = &multicolor_led_dev->led_cdev;
-+		priv = &hp_multicolor_leds.priv[zone];
-+
-+		if (num_zones == 1)
-+			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
-+							
-"hp::kbd_backlight");
-+		else if (num_zones == 4 && zone < 
-ARRAY_SIZE(hp_zone_names_4))
-+			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
-+							
-"hp::kbd_%s",
-+							
-hp_zone_names_4[zone]);
-+		else if (num_zones > 1)
-+			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
-+							
-"hp::kbd_zoned_backlight-%d",
-+							zone);
-+
-+		if (!led_cdev->name)
-+			return -ENOMEM;
-+		led_cdev->brightness = hp_kbd_backlight_is_on() ?
-+				       LED_FULL : LED_OFF;
-+		led_cdev->max_brightness = LED_FULL;
-+		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
-+		led_cdev->flags = LED_CORE_SUSPENDRESUME |
-+				  LED_RETAIN_AT_SHUTDOWN |
-+				  LED_BRIGHT_HW_CHANGED;
-+
-+		mc_subled_info = devm_kzalloc(dev, sizeof(*mc_subled_info) 
-* 3,
-+					      GFP_KERNEL);
-+		if (!mc_subled_info)
-+			return -ENOMEM;
-+
-+		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
-+		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
-+		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
-+
-+		for (int i = 0; i < 3; i++) {
-+			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
-+
-+			mc_subled_info[i].channel = zone * 3 + i;
-+			mc_subled_info[i].intensity = color_table[off];
-+			mc_subled_info[i].brightness = LED_FULL;
-+		}
-+
-+		multicolor_led_dev->subled_info = mc_subled_info;
-+		multicolor_led_dev->num_colors = 3;
-+
-+		ret = devm_led_classdev_multicolor_register(dev, 
-multicolor_led_dev);
-+		if (ret) {
-+			dev_err(dev, "Failed to register multicolor RGB 
-backlight\n");
-+			return ret;
-+		}
-+
-+		/* Initialize private data */
-+		priv->zone = zone;
-+		priv->last_brightness = LED_FULL;
-+	}
-+	return 0;
-+}
-+
-+static int __init hp_kbd_rgb_setup(void)
-+{
-+	u8 keyboard_type;
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, 
-&keyboard_type,
-+				   sizeof(keyboard_type), 
-sizeof(keyboard_type));
-+	if (ret)
-+		return ret;
-+
-+	switch (keyboard_type) {
-+	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
-+	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
-+		return hp_mc_leds_register(4);
-+	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
-+	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
-+		return hp_mc_leds_register(1);
-+	default:
-+		return 0;
-+	}
-+}
-+
- static int platform_profile_omen_get_ec(enum platform_profile_option 
-*profile)
- {
- 	int tp;
-@@ -2285,7 +2565,9 @@ static int __init hp_wmi_bios_setup(struct 
-platform_device *device)
- 		return err;
- 
- 	thermal_profile_setup(device);
--
-+	err = hp_kbd_rgb_setup();
-+	if (err)
-+		dev_err(&device->dev, "Failed to initialize keyboard 
-RGB\n");
- 	return 0;
- }
- 
 -- 
-2.54.0
-
-
-
-
+2.43.0
 
