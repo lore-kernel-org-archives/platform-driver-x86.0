@@ -1,155 +1,123 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012009.outbound.protection.outlook.com [40.93.195.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342E23F1653;
-	Mon, 18 May 2026 13:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779111553; cv=fail; b=OA+tPKYP0ObkDoIaPkoa/8nfdShLAWktYJVl1rAadZnORluvWPZxn9RRkrBYD6GKrkTvW+9z4qQNqz7FBrwQ+SP5FMQT5KwHYhxedyRCd/07JDDlbkP1T/D7U75NUMP7H50FXcRun04C94GttqCqFh+57u89auGwvco/HsYcMOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779111553; c=relaxed/simple;
-	bh=tI7QH4DFYaarys5Fjp42DkFCG6vXxhQ+I/o9FNxWbM4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P4/l9O6FuHsUeSiNcHhAkyMlj4dlV8sley0btXhQrsW/2hLwnv/A9EbtHx0+LQd2KduHwMKs82FpZ0u/+uJyW+QnUq7K0tp0laN7TqVbslGSXelyuCQRXJwRkRu5Ks78AAyMb6Q7H82ARDXgBLYwkMyGP9ouebgCj9xraNtE4g8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BzGDarUX; arc=fail smtp.client-ip=40.93.195.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA87481A8A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 16:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779122892; cv=none; b=KRaBzjc9RDmdJj6nHIsLWMGuT0j1b3I7Bl6rAoOMgb8crWBEI+kFyz2zccCniC4tL/wzlO532qpLY23m1OwLFnftTmkazpxtmzYph+pXBsQizaVs6ha15g/Zc7eIwJlEQiUbIPI6/llVpdpKnBk2qD7u84Ek/uFde8Tzfny4p8w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779122892; c=relaxed/simple;
+	bh=YYWykHRwoqA5YfPaQ78bMeahTfJEAfHzidpaGUk3qUM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Xd1acr89vgRD5ZWv/9V1u7EVEYLuCbLCnJQZ1LkAXreakzf0UXBqsMOzzaNV973TYVH59L33l9HFvlL+vAiH9Mry+/57mGLmkYh52M5XrP5/0RbDqc5OzG05O7BA9Sqp/4tCvMk+cD0WioX04GoOmdLTUPp+8N4W75tENLEl/Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQ5gJY8j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BzGDarUX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BYnHl46dW9welzuQZAEg+W/MQdfLb9vZZnFILwSKqpfS0IfZL84+kiVP0EApo7ZypIedL/6LOpakVL1Zn3r65qgwfCIfii09qA0JIADYUP2jldcpadrV6NT0SDjE/v/0v6kT2x4mwp87BJH9aJZ1UcFUrz4dHqpOpHdb4CKfxa8TN4BQ9tu89PLtmEfpXbkBIGhyQlIADSbrbi4r9mqY9VYT+7BHA6Nq2tcIi+QqrOrk1XAJdtSVtK3PYyHJdsFvfl2akKlK9UlvBC3vab3JFNN7I8HFq+Sl7lsHRvtoPxWIblgFNVDed9kgrn93de8qRLdHuKSajDwSIP5VCJdutA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oGrxSfgx9jUgbI3xaJUQk9EKdeW4sTzz1Yi1wx/8OPQ=;
- b=esXQkEZzsnuu2rOO3xwBpwiTzlFvXCmBKf+UWNJ8/B7ZByIvrhBqVJqdqPOFax8fQgFC7SMsUE2w8NYqgDTxBm5LBn4ZJnmjHVE6+HIVFjbPS7Zci7JSRdaLm+diZ8dbxxScE6Y99PoChkPFultXZoyPMbbrfXjXRqST1eFb34MeR1idu5CUrgQ8E3RPrujd3XpXp+f6xF+4BiRlFgwV7ocETWY4F+EAENGVC6lEFjQNs4NYHXxL6q7pfBTlz1LHotXXU5Fa0WoBXH2FDEaGw53Pn5SCWdJki1TsfSbg0N8oZrmWriMyfqjTxpXqLBg77JSGqqMcfr+csltlrKmoAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oGrxSfgx9jUgbI3xaJUQk9EKdeW4sTzz1Yi1wx/8OPQ=;
- b=BzGDarUXF9qiwSj2ghiPgjUq0K2SNsQCeYC5D57XYstIQUFI6IC/D199QRKe6bSSa9D/429E9AwqDIio3uBxN27XnLH5l6yFG804KBx3I57l7HDWFOwg77+MDji+8nCKZVAPfv6+NTlRjxYUB5Bk/e6FKPoLWM+hvygM3g5MWt0=
-Received: from DS2PEPF0000455D.namprd21.prod.outlook.com
- (2603:10b6:f:fc00::515) by DS7PR12MB8249.namprd12.prod.outlook.com
- (2603:10b6:8:ea::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Mon, 18 May
- 2026 13:39:06 +0000
-Received: from SA2PEPF000015CB.namprd03.prod.outlook.com
- (2603:10b6:82c:400:0:1003:0:9) by DS2PEPF0000455D.outlook.office365.com
- (2603:10b6:f:fc00::515) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.2 via Frontend Transport; Mon, 18
- May 2026 13:39:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF000015CB.mail.protection.outlook.com (10.167.241.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.11 via Frontend Transport; Mon, 18 May 2026 13:39:06 +0000
-Received: from ausmlimonci-lx1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 18 May
- 2026 08:39:03 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>
-CC: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 2/2] platform/x86: amd-pmc: Fix S0i3 wakeup with alarmtimer
-Date: Mon, 18 May 2026 08:38:53 -0500
-Message-ID: <20260518133853.851027-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260518133853.851027-1-mario.limonciello@amd.com>
-References: <20260518133853.851027-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQ5gJY8j"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3476CC2BCF7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 16:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779122892;
+	bh=YYWykHRwoqA5YfPaQ78bMeahTfJEAfHzidpaGUk3qUM=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=KQ5gJY8j4nrjEX5SI/nraIO+tcTAgZu4fsCLB8MIV3OE9iq9XmHQp3OZscRGZ7omF
+	 YdeiQ0YROcKeTQUE8MWICLlFRIch0HT6W2zLO0EkFWvCQDZQGNL+MDRZFLIs/S1pqZ
+	 cNFYtLFyv/ZLyz80x+uEjZS/IzQZ48dH+XqfVle+Tm5wgaVb9igwW2jFYGb5DgcZQD
+	 R31WDdBn2ruylvHRNd4z0fkhUNmblTeoch63U/hroO/53GCDy80nN8qR7wN1O7QzyY
+	 WnTGMV+OZj2Jj7PV9J2upzMtvqtW+ZyosCUeLssSMq2gBVnRdL2i52MCa3uZFDXaG2
+	 axz99GAl6eHHg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 2D8F9C433E1; Mon, 18 May 2026 16:48:12 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221065] ideapad_acpi: unexpected charge_types spam on Yoga Pro
+ 7 14ASP9
+Date: Mon, 18 May 2026 16:48:11 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: i@rong.moe
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221065-215701-B0wp42Wd90@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221065-215701@https.bugzilla.kernel.org/>
+References: <bug-221065-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015CB:EE_|DS7PR12MB8249:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b4b411d-fc0b-4f38-b2f5-08deb4e2d4e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700016|1800799024|13003099007|11063799003|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	NQYDT7tjLisRtpozK5ttMBHgXrQtc9VOumecf5YZF9hxRkwfpmp30nKyRm92f4OJxHLSdCW7lcR1CcNTAtSzdPV0iBs5kM+exWRdWlnHpQgusKfMNyyT4RqcZWxEdFRew915vB7kfqfwbQAeBbXfTUkT86jLI7HtXxNzyMGVESAJYIlX9Xj06DLAv6ids8+79i94778O7rk8bBWS6KFgiXsXhEunrhN5CJrqI09h/tLhl9PUTKETCgc4CHKD732oqDkkGO7Jn3OgkSOvzwK8a/gMISmCzmXJ2HiJ4dYyYLOV9QzAkmhPw3Nnm7K0JqQEvuiETUZQoYcJehlv9Cm7MQT397FVutAOhvH/RFUxLWaITR8Wp5yaTghPDC4/w8IiF0M6kHZ8JqjwGRn32cKAt8Fk2/krXuV5HSy+8LCSIEkEyk6HZ+6FMjimYYDn9V5ZTjw0Axva4m/DfG2IoBKMsakjK2ZS+SPTkb4jrr68WykFkRGJC4IT+F9yU7otrzaj+v3B+QTcqZW0S3QG5DWrU62OeKVRBcS7eQCP/Y8lv+0QXN558AqUoxbWdMPg29vCbKoNoxwAxznMIviyEfIv8wX+e7bSCfupT6owfksaakPja22XHHbrd69uEvt2Ag8InR9UR581gmggJ2MdZ0rMVBdL1mP07S8c1XT9WI+HY3IPGVYnBeI9qVT/tqXRTTSr
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700016)(1800799024)(13003099007)(11063799003)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	OTSShPaKLSqxbh0HicXKOCyKwNxfrbNo35nm/wicC9UBAgfyNFHCzaIsmDzAsRlTGmwmyBeA769YZXTA3sMPnL327xeZqeonPxVBzO+ckk8pdS6faKNi84iCC6Bf5a885RrGGKAthwQVYIjqwPKYn0/NT0gfH9gq/jGJ7wqHAOqS9D7t9gV+Wf6W5hGnycDgr8NnCXpT8kxnSDG5+9RYn+/8twhAyfepXM9DKfoKfPn8WNb1FD8f7VZc2Zqt+7wdeD/NsJW33wCnPwRkrfah7XenCUfNMt3DRD28JGdQvoNNOp4K3lsV9TFhOGYZXN9OkKbkDLh1rq0OWRQf2PwwSrCRw2PY/HEP/Pl8DzTzpZhUOCNEIg4mFQDmorYPS2O/O6T+7g8QyDTs6Ob/lcjVucGgSwzlXlg4mj2HYd49OwAAHtjZt0KZwCfCsovDw/9W
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 13:39:06.0218
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b4b411d-fc0b-4f38-b2f5-08deb4e2d4e9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015CB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8249
 
-It was reported that suspend-then-hibernate stopped working with modern
-systemd versions on AMD Cezanne systems. The reason for this breakage
-was because systemd switched to using alarmtimer instead of the wakealarm
-sysfs file.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221065
 
-On AMD Cezanne systems, amd_pmc_verify_czn_rtc() programs a secondary
-timer with the alarm time. This was introduced by
-commit 59348401ebed ("platform/x86: amd-pmc: Add special handling for
-timer based S0i3 wakeup"). However, this function uses rtc_read_alarm(),
-which only reads the aie_timer, not the next expiring timer from the
-timerqueue.
+--- Comment #90 from Rong Zhang (i@rong.moe) ---
+(In reply to Rick from comment #89)
+> As there is now more output into the dmesg window I decided to capture ju=
+st
+> the system sitting alone through two pause events and captured that in my
+> first upload #310145
 
-When both alarmtimer and wakealarm are active, the first expiring timer
-might be the alarmtimer, but amd_pmc_verify_czn_rtc() would only see
-the aie_timer, potentially missing the earlier alarm.
+The EC query was \_SB.PCI0.LPC0.EC0._Q0B. It indeed notifies BAT0 twice!
 
-Switch to rtc_read_next_alarm() to read whichever timer will fire next.
-Also handle -ENOENT (no alarm pending) explicitly as a non-error case.
+Method (_Q0B, 0, NotSerialized)  // _Qxx: EC Query, xx=3D0x00-0xFF
+{
+    M459 ("Q0B Event\n", 0x00)
+    P80H =3D 0x0B
+    If ((Acquire (ECMT, 0x2000) =3D=3D 0x00))
+    {
+        Notify (BAT0, 0x80) // Status Change
+        Notify (BAT0, 0x81) // Information Change
+        Release (ECMT)
+    }
+}
 
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3591
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+>=20
+> Next I did the spamming requested (both l and w alternating until the pau=
+se
+> ended)
+> This is contained in attachment #310146 [details]
+>=20
+> I noticed with the first spamming attempt that the new output ACPI messag=
+es
+> happen in the dmesg window before the system actually pauses.  So I did
+> another spamming attempt but this time I tried to start spamming as soon =
+as
+> I saw the dmesg window start displaying the new ACPI messages.  It is lik=
+ely
+> this file has data that starts earlier and personally I would start looki=
+ng
+> at this one first.
+> This is contained in attachment #310147 [details]
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 50f5784f2aa2e..8cd2db0ccaacd 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -595,9 +595,12 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- 	rtc_device = rtc_class_open("rtc0");
- 	if (!rtc_device)
- 		return 0;
--	rc = rtc_read_alarm(rtc_device, &alarm);
--	if (rc)
--		return rc;
-+	rc = rtc_read_next_alarm(rtc_device, &alarm);
-+	if (rc) {
-+		if (rc == -ENOENT)
-+			dev_dbg(pdev->dev, "no alarm pending\n");
-+		return rc == -ENOENT ? 0 : rc;
-+	}
- 	if (!alarm.enabled) {
- 		dev_dbg(pdev->dev, "alarm not enabled\n");
- 		return 0;
--- 
-2.43.0
+Thanks. They look fine. At first glance, I did find some new information th=
+at
+confirmed my previous assumptions. I will find some time looking into them
+carefully.
 
+>=20
+> As always - let me know if you want more.
+
+The current ones should be enough. Now I already have some thoughts on how =
+to
+improve battery event handling. The current code path is really awful and
+"contributes" quite a bit to the unfortunate combination of FW and SW bugs.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
