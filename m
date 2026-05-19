@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF31624C5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 14:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701593769E4;
+	Tue, 19 May 2026 14:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779201949; cv=none; b=AinU51I51U8rD0DD5LUpJAcpS9Q64rqkXZzWom4LvtaI9foLgUQGkbqxcInk00xpTGpyyyDUKxmQC3qJqPTsQ34t+J/Rvn+b+Zwp1PCoxSYDEEjmgSUDVHUNYrMUquP41W2QPqRexEM9TO8EgsOkjWHq/UCNJJ2VX2rXBouyvCw=
+	t=1779201957; cv=none; b=Uu6coQ4+o3LxkmrIXPTnrAAjX0lQlNaer+F2LBDx1mGseuFoKb3D51gCpmPCPAJJYPD/FqC4hvu2rfnIQjmditwy64ts8FS197u9nscr1jtpQ5ixGnkKdSZl58m0L78zXYL6CjwrFx+VoqBHSJfjbcfTlZf0K/62mWtgISCkv60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779201949; c=relaxed/simple;
-	bh=fCg4FUOovRoRkZqQdF/aXUlP+noGsKr/r80nGXEHOyU=;
+	s=arc-20240116; t=1779201957; c=relaxed/simple;
+	bh=H4nKXXanJ5QDISUhT1dhPDZC8s5e/w1mHL9S/Yl8SSY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=W2IoLCkeuh3Agy/R5oPHY1RxMe1vRstQLoHoCcphQaJ1rN2IjCUv2XLl/RnXGPKbyYhGxeQAHd209sBD1NpjXmGc0Ay3CKfzijfU1vVde+gEAxSbIfJ134kPZQI8W+xrlK9u/WR5GezY2AZpYhVRpTcwPQDh15tRIGhrT5rRvG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmqV8hDc; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=raydWbpMlq36NjdpvBbCIm2W8k5uAL3/aZjRS6mypqUMlvuOahTv6vQKFlAFfvFCVngk9sbtwEefZKf0HFQsiB1UvWaVP/FGUazyhcGSDG0RN/V1b0FsZ11+K+4Cl2j/kfpkC8aSBNbOVPoly+JEijerD1Zy48G7e/n6VgS//W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWN58OA4; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmqV8hDc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWN58OA4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779201949; x=1810737949;
+  t=1779201957; x=1810737957;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=fCg4FUOovRoRkZqQdF/aXUlP+noGsKr/r80nGXEHOyU=;
-  b=kmqV8hDcMNXfNffyd5GwmFzX5Xc9mwAJshh376fn/LUoCptCIOhXxWJ7
-   GvFzX1t6Zwc9C6/gsSHjCNZ3u76XntZqKYXkDLHpgPaYldkkyRqvryq6K
-   ESfVVqmo19tDpQsXM9pRNp1u+4PZrKRS2GciBnywuynivyRlRkvMtiySr
-   x1/OGMjZIXp3tzToqA4O24EW8OrrUV9box5P+CYNL1wQcrApfwjw9vYqI
-   qzJ7OAFPtomvFqBIJkRdit4xno+//09Ap3aXf4ltY52Fpro5YBXpj+wvE
-   xk93fovoKshzuNBslKQVWezjWn7Nq5xnwk42DrJ5qurakRYYuVvIOZdVI
-   Q==;
-X-CSE-ConnectionGUID: eClm78hvTACek5WpOQF1Dg==
-X-CSE-MsgGUID: j9RVNWaMRkiroLLJMGnFkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90383163"
+  bh=H4nKXXanJ5QDISUhT1dhPDZC8s5e/w1mHL9S/Yl8SSY=;
+  b=AWN58OA4TCiiBfAjEisEOaDJ7SF8bBsrv/gL4TYkv5RVuZZRtuD0ANrT
+   JNJl2o1tvbCSHYYl0OQ12uN1y/SyfNc/FDkzczlByA9qyN58tYjMf3FKF
+   tmST7JpjRkSwZ4mer9oZGnE+ga1CL7NbB6mluRtppWhQuHTC+OO+WVrr4
+   D5mkyArFhNJBaSjurVWbkDeMEhC5FwyK/rgBlM8apEp0M7xKQPpi/lnMV
+   Jk2Ps3znOf3ruX7Xo5dwHCKRpQT+o84pRg/XK4PKLSEIZ/TKhRN0YJPlC
+   EesYylTXN+Q+eBZwlI5ruFf9PZfl/WMpEWibHzvJpqXWrg7Hx5b22GKvN
+   A==;
+X-CSE-ConnectionGUID: OiANWIhHTreNdngtw0qenw==
+X-CSE-MsgGUID: Iak6o3l5SKuoJitcrwKZqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90383171"
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="90383163"
+   d="scan'208";a="90383171"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:48 -0700
-X-CSE-ConnectionGUID: 7rnmYMltS+6LuwK08jg4WA==
-X-CSE-MsgGUID: tZmySV92T6ePi6tF2LN10A==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:56 -0700
+X-CSE-ConnectionGUID: homFnKz+RhCO33j3pWV7nw==
+X-CSE-MsgGUID: SOJCNLynR/aGSKwzhyD28A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="238793303"
+   d="scan'208";a="238793328"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:46 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:54 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Lukas Wunner <lukas@wunner.de>
-Cc: platform-driver-x86@vger.kernel.org, 
- Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <bd594d09fa866dc51dddc9a447c3b23f9b1402cc.1778736835.git.lukas@wunner.de>
-References: <bd594d09fa866dc51dddc9a447c3b23f9b1402cc.1778736835.git.lukas@wunner.de>
-Subject: Re: [PATCH] platform/x86/intel/vsec: Fix enable_cnt imbalance on
- PCIe error recovery
-Message-Id: <177920194118.22546.5310422538363395935.b4-ty@linux.intel.com>
-Date: Tue, 19 May 2026 17:45:41 +0300
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, Ahmed Yaseen <yaseen@ghoul.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260517182957.11069-1-yaseen@ghoul.dev>
+References: <20260517182957.11069-1-yaseen@ghoul.dev>
+Subject: Re: [PATCH] platform/x86: asus-armoury: fix mini-LED mode get/set
+ on MODE2 devices
+Message-Id: <177920194856.22546.8977556965820011272.b4-ty@linux.intel.com>
+Date: Tue, 19 May 2026 17:45:48 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,15 +64,14 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Thu, 14 May 2026 07:40:42 +0200, Lukas Wunner wrote:
+On Sun, 17 May 2026 18:30:11 +0000, Ahmed Yaseen wrote:
 
-> After a PCIe Uncorrectable Error has been reported by a device with
-> Intel Vendor Specific Extended Capabilities and has been recovered
-> through a Secondary Bus Reset, its driver calls intel_vsec_pci_probe()
-> to rescan and reinitialize VSECs.
+> The mini-LED current_value attribute does not work on devices that use
+> ASUS_WMI_DEVID_MINI_LED_MODE2 (2024 and newer models).
 > 
-> intel_vsec_pci_probe() invokes pcim_enable_device() and thereby adds
-> another devm action which calls pcim_disable_device() on driver unbind.
+> Reading is broken: mini_led_mode_current_value_show() fetches the mode
+> from the device but then decodes a literal 0 instead of the value it
+> just read:
 > 
 > [...]
 
@@ -83,8 +82,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86/intel/vsec: Fix enable_cnt imbalance on PCIe error recovery
-      commit: 348ccc754d8939e21ca5956ff45720b81d6e407f
+[1/1] platform/x86: asus-armoury: fix mini-LED mode get/set on MODE2 devices
+      commit: d2d2e7c8fb37b27301ee5c8343b2f7037efc6ea6
 
 --
  i.
