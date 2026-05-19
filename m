@@ -1,100 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E73A1E7B;
-	Tue, 19 May 2026 11:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3AF335BDB
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 11:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779188976; cv=none; b=owF0pwBhMpetYZi48QWDMgGV9holFgkCuoxdj6tx52G3SRf1Wij3lQDQzG+iwIomlx2zYnCuINHvAadE/q35xkvAcT3OcUdPODskBhWSe/ZzXe3tqqQbZJdH0dxPAB/NYGyDEhlPpxytQpUNgO5v78LUKEKPdLvD73a8ARk3+po=
+	t=1779191338; cv=none; b=HGGfmQDX/hqi62s9XCURb0jqA6wbACkgWM1VXNpGn4lu8R1Qqc7rAwzpft0v6RQRLfu+5Ui8/8ORYBywincpFm9CV+XmBa1dmD5//rQ1/r1MfoHRH1TRJ1q7kmiYD5fn6ENO4hrd3r+Yj2yuHlD6mT1KEwmOChoKEZaYQsAwIF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779188976; c=relaxed/simple;
-	bh=LHpSYqOACSXL6AviOxrQQLK3j9WhMa9CKdbDp/NsWJM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DzqJ/XagKQB5EaHEwPXxdJtA5HAhfMueg00ld7I3dPSIOAY4/my/Wx8Dvq1WzIibSBAD5w5FlPT4dmskRtWnEcGsxSAfIa4isETgA1IlN7HtTsfZJUEXGviLgjnjIqcvf8F+i4ClK2HR5KksxZzBzDCQymvMOHkvaVPlKFdWsws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ng+zX5iF; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779191338; c=relaxed/simple;
+	bh=P8tH35z/uw0sUKZFgOPDgy73UQSBzwGUIBPWsAuyH6s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nmqUFihRuiMKNxsjCjQvHc/9ytjiSr4xqWdrsy48JfkEkHeEWDEIj8BUVkwjsMuOgXXQH2T45XkdSfpXL3Do1drk9XuXB3NrnUjrifByWMWiXVway0PHM0MNcujZVzoe6NG3orft5oLTVfIcNeNrheh9W6cW9xNBrMTTwMeOzts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyIyPC+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ng+zX5iF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779188975; x=1810724975;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LHpSYqOACSXL6AviOxrQQLK3j9WhMa9CKdbDp/NsWJM=;
-  b=Ng+zX5iFW/jHWW9A1S0j+BQYx4i1Cko6crfuy75W5X5IbE1PauWKZdK0
-   6e+dRDlSZvkMn7sPW/KMdL4rK6cmcH2cyJg9Sc4tKJs465p5In6PsVAef
-   ejQnxdaPpxIcM+v5yLwXxNpz1ToKw9ErrA8Q9Y2nO/M1BJiLfr3yJYBzt
-   ePeCXtnPn6OqmoM3jG1yk9bxXMzTYGcQlD7BKikLoiBLOTjs/MGCE7/ic
-   hKSdjVPUyoR1D3fgYolcu7+ivom99ZY9k+pJy6s1W1DjIJ1CTWlU1UeMk
-   2Ty+gL+q9Zg7LZag6LwEti0RtjQ2OVBog5RXXP1UL0KYlWxtdgog7KHjy
-   w==;
-X-CSE-ConnectionGUID: Fs3tSIygQ62AjmNSYf6oWw==
-X-CSE-MsgGUID: em2KoHY2TwaHMXL07Dmb3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="97497170"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="97497170"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 04:09:35 -0700
-X-CSE-ConnectionGUID: b43nfzXnTrCsoUAdnQI0BQ==
-X-CSE-MsgGUID: BKKf8LOHQTWsSRNYnEWzdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="243728332"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 04:09:32 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 19 May 2026 14:09:28 +0300 (EEST)
-To: Sakurai Shun <ssh1326@icloud.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>, 
-    Shuah Khan <skhan@linuxfoundation.org>, 
-    platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] docs: fix typo in uniwill-laptop.rst
-In-Reply-To: <20260517024148.9642-1-ssh1326@icloud.com>
-Message-ID: <69dcee54-cb48-aa66-f958-0de00060847b@linux.intel.com>
-References: <20260516070650.9454-1-cheesecake2960@icloud.com> <20260517024148.9642-1-ssh1326@icloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyIyPC+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A46CC2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 11:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779191338;
+	bh=P8tH35z/uw0sUKZFgOPDgy73UQSBzwGUIBPWsAuyH6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=AyIyPC+Th7V8akdW2YEbMD7D6pYR0JZw+wVug4nh6QxWBviCvESRqZsU9E8y3TUrF
+	 FOZREpj5dz9FH2KgXYy7g9biXVpVK8inm6xv8GG8AFxRBBow0lZlmArtlxlYUV/S5Q
+	 bm2siEC/VPlZYV8n0V/A0pi/5QTTI0XzbBwqKz0vKuY1KMMhie3NAw67j7CqXVddd+
+	 Kfrx6k2Aiehd7ebuR7WKGZqovjL+yjdp17CRl85zKQVAHT772t3TRRVO/dGL7vzmGj
+	 brtYp54Xfya0cTNcHG3/dARudZ01yO4tgQg8/Nw8IvCmoqrUAKp8s519tBEjWAvRtC
+	 desOjo5DtIt6g==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-393d6025f99so42470041fa.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 04:48:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+VCuJwHljxD5SKACSiW2InAnCrMaFBPbbYFhwrTDRALCb4/i8ozoscrp3K8unHoERfs32vl5xxXCqd/DQZE+5ylCUl@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSzrMoq1rHz4EqYa/J9JZvTB8z+iR3pGYIaM3CyoHc+EzxfG0P
+	blft0rzA/JOTK6qCaGcl8aAXQ2wNi+iDQKqvtVc0UThoyfjG4cw0vVnfILtfseM9mWcA40XtMm6
+	vIoHRR7V5qg1GirXpwmm0lV0UPkkXxYk=
+X-Received: by 2002:a05:6512:15a7:b0:5a8:7ed5:7462 with SMTP id
+ 2adb3069b0e04-5a8ffc4b5cemr5829232e87.6.1779191336447; Tue, 19 May 2026
+ 04:48:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <4bba4c5a-debb-4844-a032-986f761a74af@leemhuis.info>
+In-Reply-To: <4bba4c5a-debb-4844-a032-986f761a74af@leemhuis.info>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 19 May 2026 13:48:42 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g6aHsdmNhW3Yr54KnGkOHn81bXFVHD-6+bvYWUsmZZdw@mail.gmail.com>
+X-Gm-Features: AVHnY4KxJPOE1zcY4KC6fhnc9_2se9KlcaGnCNlMQYBIAtVrV38iYDqoTJo8Dgs
+Message-ID: <CAJZ5v0g6aHsdmNhW3Yr54KnGkOHn81bXFVHD-6+bvYWUsmZZdw@mail.gmail.com>
+Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Nick <nick@kousu.ca>, 
+	regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	todd.e.brandt@linux.intel.com, xi.pardee@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, 
+	Azael Avalos <coproscefalo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 17 May 2026, Sakurai Shun wrote:
+On Tue, May 19, 2026 at 10:56=E2=80=AFAM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> [CCing Azael, just in case]
+>
+> On 5/12/26 18:49, Nick wrote:
+> > My Toshiba Tecra X40 laptop's function keys no longer send events.
+>
+> Rafael, have you seen that this regression seems to be caused by a
+> change of yours? Namely 57c31e6d620f13 ("ACPI: scan: Use
+> acpi_setup_gpe_for_wake() for buttons") [v7.0-rc1]
 
-> Replace "benifit" with "benefit".
-> 
-> Signed-off-by: Sakurai Shun <ssh1326@icloud.com>
+Yes, I have.
 
-Thanks for the patch.
+> No complains, just wondering, as it was easy to miss. Ciao, Thorsten
 
-When sending an update, you should collect the tags from the earlier 
-version.
-
-No need to send another version because of it, I've added Armin's 
-Reviewed-by while applying to review-ilpo-next (it will appear there later 
-once I push the local changes into the public repo).
-
--- 
- i.
-
-> ---
->  Documentation/wmi/devices/uniwill-laptop.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/wmi/devices/uniwill-laptop.rst b/Documentation/wmi/devices/uniwill-laptop.rst
-> index e246bf293..65583b239 100644
-> --- a/Documentation/wmi/devices/uniwill-laptop.rst
-> +++ b/Documentation/wmi/devices/uniwill-laptop.rst
-> @@ -189,7 +189,7 @@ Indexed IO
->  
->  Indexed IO with IO ports with a granularity of a single byte can be performed using the ``RIOP``
->  (read) and ``WIOP`` (write) ACPI control methods. Those ACPI methods are unused because they
-> -provide no benifit when compared to the native IO port access functions provided by the kernel.
-> +provide no benefit when compared to the native IO port access functions provided by the kernel.
->  
->  Special thanks go to github user `pobrn` which developed the
->  `qc71_laptop <https://github.com/pobrn/qc71_laptop>`_ driver on which this driver is partly based.
-> 
+Sure, thanks for pointing this out.
