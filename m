@@ -1,110 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FD126FA60;
-	Tue, 19 May 2026 16:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0668F332615;
+	Tue, 19 May 2026 18:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779208546; cv=none; b=op4P5qDLiytyPrRbMzg+40B2Tzha6iGWzZgnVBgpiOtugfRmUeFmDHG4j2skQ7VZsb31QDmq80cHRZ52DNfm5kYIl9fSIxnQtKpx7OnEmuli1OCdFNFoEeRkFTIcsXGaIHzIA/CWJ9xD2ICNBk/UjTu/b59S20HHng1L4yF6CDk=
+	t=1779214346; cv=none; b=S9NKfZxu9mX+lBf+rJE6xvFWiug/ACXpSnR2Gc+j0DmAMi8NEwxrdPAw3zl30crrtU/L24vBluHKUP9EyUnBlQNV5KO5TiDD4PgMMm7nsim5bqXDcP1u6Fpd8PXafH2EkEszha4tZwd66PqsySLrCbE0TlD0jhUTunI6kU3sGNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779208546; c=relaxed/simple;
-	bh=nGSKoZMzIr9BKzFNVz4QVlZQ9FzIPaO4AomP3ItvBho=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ud/Te4a7eznVGJpm+HV+HJXaX2qqDTHuckxc7MnaMo/Hu7zuzv8XjzIx5GaZ8MKFQeRVEoVgpxpoGfYv1I2avXO7cwdCLv17lzAj50ZoDM4g1h4tZ+YoAZ2s5PN64W/E0Qo287gMdo42yL1Btj0Jd1+iLTBdJK7HC4qOlqR0wIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n0bQA3Fx; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779214346; c=relaxed/simple;
+	bh=a7MZcD97G4LyE2jZJrim3SQQdKHmxH88QrV0HOb2AKI=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UpjyMOhamVFFNrGenzPDyfw0EgRcUlIj+mV5OGBoKz2KVilVl/WMQUfFHeoNK5SQcLksS7x/MB585a2dAEOskdfcQm719uq3im46G1eRIjiW7mW1ocQyxQ+CbFQtW8cNRHKBMPrNpju1oYCfZtYAGN4HYlaAC0UYGzzFHwiu3R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=AU4XHpc/; arc=none smtp.client-ip=57.129.93.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n0bQA3Fx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779208545; x=1810744545;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=nGSKoZMzIr9BKzFNVz4QVlZQ9FzIPaO4AomP3ItvBho=;
-  b=n0bQA3Fx6U3YmeO3dhG7YtNwk1okreVRONvAv91L6zqZMHFcl18MZ1b7
-   VrnKHVjeTRWEinaJuZdLCAk3vDbKYhOdgm5fctx28oQ/XJPCXDd01zI0b
-   d2qT/pQlsyl9Bc6WjP2uHkgGORZNTcKj0s/zHSs71bLDiH5f1Dqd6s+6B
-   OayN+Ervn0EU13b+Go9oT1k9HigbeUxTujSriXP3OaQFBImw/NkqV1hwQ
-   GDLltRbENzdXqDnOGajBYzZicZ1PJADMyCJAhYdy22Q1CRA+u7YhEoIrF
-   jCYW0AWjrBVNkdXrNrERxquWPR4TUCdHsAGeYj3YCGmI3bn42ZjbB4Nd+
-   A==;
-X-CSE-ConnectionGUID: hVUBHp0ATW6KhDpXuSqa5w==
-X-CSE-MsgGUID: sGFN5TcsS1KLBHs1jDI0+g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90671265"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="90671265"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 09:35:45 -0700
-X-CSE-ConnectionGUID: T8vq8c/3Ts+fWuimYi1eYA==
-X-CSE-MsgGUID: cInvoIgvRgup/bZMehVkKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="263337386"
-Received: from unknown (HELO [10.241.243.24]) ([10.241.243.24])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 09:35:45 -0700
-Message-ID: <c47199b1f71b1afbeb6fa982c5a71a240e2703ea.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86/intel/tpmi: Fix memory leak in mem_write()
- error path
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: ZhaoJinming <zhaojinming@uniontech.com>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Date: Tue, 19 May 2026 09:35:43 -0700
-In-Reply-To: <20260519082136.2999917-1-zhaojinming@uniontech.com>
-References: <20260519082136.2999917-1-zhaojinming@uniontech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="AU4XHpc/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
+	s=protonmail; t=1779214329; x=1779473529;
+	bh=Hdr9pSyw+GyCDpSFG9XwUZeJs/aRO9kXcB/217T1CGU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=AU4XHpc/SQwSWRGfyzGf3K2Wl55QPePuQd4r1gfcuBVJaQyHCqqY5qJQ1bJjiLbUa
+	 BRlWb+zL+Zy5Xm53dBLzwRk3UFQMeqoFMg1imbHZuIadsRfcYwvele5oh2w6OdUI9d
+	 zdBj/h1/31BMMm1LM5ehtUwHj/sziqRm1gGfddq7IBNPfZ1SwgDr64nV8TdmDlHVjn
+	 HslSanoq2Hy38G4phTvWGrv4Kc+8VwJVHFQHguk/ITWRqKHl3MbxzuIyMoZIQF/LY7
+	 IDrOYtk+fmj57KLTaHDWrjCKaD8rzkn6SYIy8QH/pPAnBcGRoAOTayu8P9uSGhw9DR
+	 CVkqPqu3WFuOA==
+Date: Tue, 19 May 2026 18:12:04 +0000
+To: Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Ahmed Yaseen <yaseen@ghoul.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello <superm1@kernel.org>, Ahmed Yaseen <yaseen@ghoul.dev>
+Subject: [PATCH v3 0/1] asus-armoury: gate PPT writes on active fan curves
+Message-ID: <20260519181155.46044-1-yaseen@ghoul.dev>
+Feedback-ID: 177610485:user:proton
+X-Pm-Message-ID: 39dc1090540eac96512c2242e56e6925535fb0c2
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-05-19 at 16:21 +0800, ZhaoJinming wrote:
-> In mem_write(), when the IS_ALIGNED() check fails, the function
-> returns
-> -EINVAL directly without freeing the 'array' allocated by
-> parse_int_array_user(). This causes a memory leak.
->=20
-> Other error paths in the same function correctly use 'goto
-> exit_write'
-> to free the array before returning. Fix this inconsistency by using
-> the same pattern for the alignment check.
->=20
+My first kernel patch series, posted in agreement with Denis Benato (Cc'd).
 
-Thanks. I see Ilpo suggested using cleanup.h. Let me know if you have
-issue in doing that.
+On 30 ASUS ROG laptop models flagged with requires_fan_curve in the
+asus-armoury DMI power_data table, the BIOS ACPI method SPLX silently
+discards Package Power Tracking (PPT) writes unless the fan mode is
+set to Manual (FANM=3D4). FANM is set to 4 by the DEFC method when a
+custom fan curve is written. Until then, the WMI DEVS call returns
+success but the firmware ignores the value, so userspace sees no
+effect from writes to ppt_pl1_spl, ppt_pl2_sppt, ppt_pl3_fppt,
+ppt_apu_sppt or ppt_platform_sppt.
 
--Srinivas
+The requires_fan_curve flag has existed in the per-model power_data
+entries for some time but was never read. This patch wires it up:
 
-> Fixes: 8e0a2fc68ec3 ("platform/x86/intel/tpmi: Use 32 bit aligned
-> address for debugfs mem write")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: ZhaoJinming <zhaojinming@uniontech.com>
-> ---
-> =C2=A0drivers/platform/x86/intel/vsec_tpmi.c | 6 ++++--
-> =C2=A01 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c
-> b/drivers/platform/x86/intel/vsec_tpmi.c
-> index 16fd7aa41f20..2a428bfcb209 100644
-> --- a/drivers/platform/x86/intel/vsec_tpmi.c
-> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-> @@ -495,8 +495,10 @@ static ssize_t mem_write(struct file *file,
-> const char __user *userbuf, size_t l
-> =C2=A0	addr =3D array[2];
-> =C2=A0	value =3D array[3];
-> =C2=A0
-> -	if (!IS_ALIGNED(addr, sizeof(u32)))
-> -		return -EINVAL;
-> +	if (!IS_ALIGNED(addr, sizeof(u32))) {
-> +		ret =3D -EINVAL;
-> +		goto exit_write;
-> +	}
-> =C2=A0
-> =C2=A0	if (punit >=3D pfs->pfs_header.num_entries) {
-> =C2=A0		ret =3D -EINVAL;
+  Patch 1: Adds the actual gate. Exports
+    asus_wmi_custom_fan_curve_is_enabled() from asus-wmi so
+    asus-armoury can query fan-curve state across module boundaries,
+    and returns -EBUSY with a pr_warn_once() from the PPT write path on
+    affected models when no fan curve is active.
+
+Testing:
+  Verified on G835LW (ROG Strix SCAR 18 2025, requires_fan_curve=3Dtrue):
+  - With no fan curve active, writes to ppt_pl1_spl return -EBUSY
+    and the cached value is unchanged.
+  - With pwm1_enable=3D1 on /sys/class/hwmon/.../asus_custom_fan_curve,
+    PPT writes succeed and readback matches.
+  - The pr_warn_once fires on the first rejected write and stays
+    silent on subsequent ones, as expected.
+
+  I do not have access to the other 29 affected models. Testers from
+  any of these would be appreciated: FX507VI, FX507VV, FX507Z,
+  GA402X, GA403UI, GA403UV, GA403WM, GA403WR, GA403WW, GA605W,
+  GU605CR, GU605CW, GU605CX, GU605M, GU605MU, G513I, G513QM,
+  G513QY, G513R, G614FP, G614J, G615LR, G634J, G713PV, G733C,
+  G733P, G814J, G834J, G835LR.
+
+Changes since v2:
+  - Drop the new global asus_wmi_instance and reach the asus_wmi
+    instance through the existing asus_ref reference (already shared
+    with hid-asus), so it's accessed under its spinlock
+  - Use pr_warn_once instead of pr_warn (Suggested by Mario Limonciello)
+  - Drop the requires_fan_curve sysfs attribute (patch 2) so we're
+    not locked into the ABI before a kernel-managed 'custom' platform
+    profile design lands (Suggested by Derek J. Clark)
+
+Changes since v1:
+  - Return EBUSY instead of ENODEV for userspace clarity
+    (Suggested by Derek J. Clark)
+  - Update ABI Documents to reflect the change to EBUSY
+
+Ahmed Yaseen (1):
+  platform/x86: asus-armoury: gate PPT writes behind active fan curve
+
+ drivers/platform/x86/asus-armoury.c        | 20 ++++++++++++++++++
+ drivers/platform/x86/asus-wmi.c            | 24 ++++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  5 +++++
+ 3 files changed, 49 insertions(+)
+
+--=20
+2.54.0
+
+
