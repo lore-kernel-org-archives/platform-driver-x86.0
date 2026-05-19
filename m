@@ -1,129 +1,126 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F51F26B777
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 15:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601AE3B83F9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 15:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779205251; cv=none; b=OEnOoV3pgZXTsi00Nq+dZFsDNWc7UCxvrcEHLv4s4Yu8dmcGVk4ertEUI5KRPXILRs4JX+Rk//Zsr5lSc23t384ZTUCq+GbpIfsZytWI3fD6xc2L2vFpyvTih1SAnhVRr4OG/CUAKzJWfZRzKPqZoZj2jDcsn8U5YKJb03yp7WQ=
+	t=1779206112; cv=none; b=lFL5KzXNpmJ3e37GFbc3876HZfupX7VY7o/MBBAagIaeQL3tPvFO6h/t1cxH5QrVOF4WcP7IARm4/TSqs3+U8TEo3os4jJQ60C6avVHkdTGPxK5/dXEW/gIC9IxfUPf0wiqvig0THKb2pKFDid0ICIWR/CK0CA1U8q6aREd3ykg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779205251; c=relaxed/simple;
-	bh=U7tQin3VDAvG7LiVpjo+/J5UEFaFKhlDK1ivz+wCwWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AkpbS0eXhyCvLBVHYisL7zlueL6BD80rs1m4lIBMp0mG38ty3jBtCiLn99UhlA4F6n6HUBhcCNhxo7zO+TiIr23OVVbgkuFvI0h5zLqfi6w6TLB2S03X7xeMP30Nx/JGaUtQzm6QK6Q0czLpaJCH9aFnkNLAmt5v+gToGmbCgjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=kE3Dpohn; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1779206112; c=relaxed/simple;
+	bh=0qxlwSEBtbUX5Mbiayq3T5AjFL3tkdr15qOZWNv57Z4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eFAl/xR5ehQ0TMg/S6havWDzOCwjWkqfi5Kzle6HjO6V9LrwM+BQjNrXWkqv5B9TCkGGvjnjZnKhs7DzHFVoO0rlN2wSyyMlrfRb+yduW2KBKV/NlwM6THvdlSawp1ft2Z2oTvjHUwV3mhAvtWax6FEtBCsnpqRmJbqH/I4rgkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjHknIqx; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="kE3Dpohn"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-488e1a8ac40so36462885e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 08:40:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjHknIqx"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4891e5b9c1fso32325325e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 08:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1779205248; x=1779810048; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jpv7/FIndg818vIl83cmQXaZd5aETp4Y6mW3mRgGkUY=;
-        b=kE3DpohnRxGByF9WDI8P60HOd3t/76VPubF4oNLg/sHhhOnlEE3PWNUoWCzqtQsK6O
-         UH1ppdyrIdwxsurF+lMjbZbylusIuhsKt1/61bsnS36j5HOp8+dDMguXlXZHpN+lH6Gx
-         kCKrRrdHIN0+Zes3UDEeXYumvLiUBbvnRSprxYEjrfVe82IjjqtGYgRJISo2l3BC/shS
-         bzWh1i1pnRfmb/S6MJ70aEVmGeYcx1YoIiQRlVdki5yZMbzofFKHiJSF9FbzEw65Hqja
-         PDO3lAsCEclcCJwLiSsEpnlD1i7A88DEkXq+QJV4pE3wCp4g/JZH827sXWu0PRtp9Tj7
-         wrvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779205248; x=1779810048;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779206108; x=1779810908; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jpv7/FIndg818vIl83cmQXaZd5aETp4Y6mW3mRgGkUY=;
-        b=HIujzGotmW95jSbRUxsht7Q0+jDlUHPUYmFfaEBt0iXDlAO0/lxYvl0JIVtv9bCANR
-         PkwHJW6DPqZ68QPbIJQOi1lDVgnTHPSAiBeh96evDEqt9crWWgMcfUKsHRvhFBeHuVKf
-         J7HTsB/qtIGqwgm3PMAi/XYdb/YFtudcwuR2tdoeg77X/XUBrDjzxzQKrSZAeDSItBA2
-         SC610eh6XmuX/bNAkRtZCNEzM1vGtRVCWoEIQg8PXrBXb/XEX8JYc905yPnYhs0aC9oU
-         GoYKN7uGwswXuS3tKPkpZgS9fxBTAtGRfSZG5mi+IB24Jh3NNBR/njmhVj72dVe6yp2B
-         3tyQ==
-X-Gm-Message-State: AOJu0YyKzdKMC15q+EgUeEBwO6yx8lOGYR0zbQ60Fj5dtw9wvKZkZ8XG
-	5jEoH1+79l1FZt0oW+jiSUf12wsoA+mqbwH+6xNT+XqK18KJu0aXmXgJ/JSLTLH7qJs=
-X-Gm-Gg: Acq92OG8ht3XIU4sSKf5FdCFOwa80DAr5zZsvii8MtsXQGcxbYLqQgqxH073s84NPdx
-	tTCOLfryC8Sv5tab44SU1VIAICwf9Fci2FXOE+2bNY4sGGhLElfd4W87+uy3fDA7bWpgtOg9W40
-	flPy5ZN6gIkdKcF2GuAl2p7DY610MtOBa60FoIm/dunoiTWNvJJhZNYT6V4UK5T6V3Oh63CboTb
-	avI1xREF01k627m0aWoEHCCz1xfjIypMcMvnZq3OdqOeHZUgmChoVuOOTXNm7QvrqclcUOhQWQM
-	lyidyy7DaagSVHcEpdbataXaWfmO/fGScYScr+Wi1FQTSvfbj1qV+v58r/F6df6I4NxEOAC69wu
-	Jeff1tXqaMREng6I9aOZpYB+tBXKR/WsIf9H7+/b/xUx32VdBBLI3Vyohh+b/twY1sU9iDKjE1m
-	xfJYTixiYlUxg6+QbcJw5dsmunCT5l1sZs4tGVFUWU/TGbY7lAc7UfyTgz7ATh2CTeOGwx8z3rV
-	f95PbPqph0wzznVSQhLGD/QDA==
-X-Received: by 2002:a05:600c:a4f:b0:48f:e230:2a24 with SMTP id 5b1f17b1804b1-48fe66204e8mr293281235e9.31.1779205248022;
-        Tue, 19 May 2026 08:40:48 -0700 (PDT)
-Received: from localhost (p200300f65f47db048a8dfcf61053817f.dip0.t-ipconnect.de. [2003:f6:5f47:db04:8a8d:fcf6:1053:817f])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48fe537c788sm317273835e9.12.2026.05.19.08.40.47
+        bh=KmoB9de73/KDDkoDtBGgd593icpTpub6hzqFGag/CKY=;
+        b=NjHknIqxlwJ1odXiWcfYs9Jz4Y9oBbetVEif7mH1mkBBF0kngxzTs/oi0euC+3FpRt
+         RCP8aziMmjXs/r5nUeFDMFLX5QGkMKAxLU0HT0olu5/2Aj5wPCoh3tTp6UIt3/wqbXmw
+         GatvlJ/w+qU7Z8D77iwMRXfUJTYsSQu+azkzyp2TyFxnDVRWujMoDQrOmFYUSoAPKUF6
+         zQx3WbW66D9J47hQCY5j++DrlF9NUyJ+OlTayfFLAOyTT37ka5MBfti1ZHAX1HEsJ0PL
+         xWb+Hypcw4VtsU4cT8EJdM5Tk2j4rd/gPkcL9KXwvns7o0WLARi1cgw31ehYONKeelUa
+         jWeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779206108; x=1779810908;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KmoB9de73/KDDkoDtBGgd593icpTpub6hzqFGag/CKY=;
+        b=Dw0yee+FcDwJNjjUbJH3iBGzivXHC7Kvz3VjL9e6+tDi1qq1F5HrXLQci0fOiTsq6V
+         4l7X1gl/hbWyMmgcet+SpvQRiThz6Y1FPTxoouFPrJ6Q//juyGV1HybFPQ969mqc9I5p
+         3FSK2NplyC4NJhcCEyYAGpXW/VVLW3wsOW92vz47hkqab9r8gwQNOfh7P9Xq2c4UWarr
+         burOMf0uLWDaW0V+hroQ/ITb+enVVvNg4/vcuiJm62iYhM2x3XYNWvZ4PtC2jyGztlF/
+         DHEbdZO6vnmfQhj+bXwJ4oSe+QQEyvUPuoDwgaIuyVT5MCxYC+msBWLR9qIJndHRAKB1
+         F2hQ==
+X-Gm-Message-State: AOJu0YxnspVlgjWJqRWQYulk5p54vvqRmHxg03PzAKDOdgjU+JEEQosr
+	dGqWw7TLdLD0Lro0MmRhGUiDaTdAEZX6SWkQlw5pGsrzfF3ZNadE+OY5NBg/8bqaftM=
+X-Gm-Gg: Acq92OHOOE4dkdS6i0GTYv+t4wFLC8aefWK9E6wAI4T8vOUbs/7PDIlYbBaX87zYKZj
+	+oF8a2u3EqC8ue4/9jVXaR/lPZIv3Jm5+56u9hme+2USQBLtK0r1Py6QBjpIaupMvwOeOevuGc+
+	ZrelHVetvHNScKEGsBM7RXTqkL5kPcb70ltXMcNwWPgobrBIRaRZ+A6k0FPjYpgqHhc6jOnqnSj
+	EGzzd8TLVhp4QHVBi8Gjlz1ZBFdvm8+janoN3BXYKFF9HsTmd6jnKWHxucdu3M61rsDJPgOTzFz
+	fIvOVJwO/UO4tzyRWHG8H2/fuWihCyef+vqL1D3NopiBFpr0sh86LMTpgEtdQBD/yBXFnRQw3bX
+	VSCPu1VmylH4uPtIWiY5A05RP4APkFbwEMVcA6eN63jA3ez/fn96wqNtw4CGetr0OKV3qOb0E7G
+	SK83LBQMc4G+dy1iu6Fzj5/idqvBw6DBVuTP9AI3ZaYwMaSNqMw9HE9PYjb6nkfRGckMBrL6U=
+X-Received: by 2002:a05:600c:a11c:b0:48f:e230:8cac with SMTP id 5b1f17b1804b1-48fe662a1cbmr231983635e9.32.1779206107539;
+        Tue, 19 May 2026 08:55:07 -0700 (PDT)
+Received: from fedora.dev.gazprombank.ru (yeal.ru. [94.103.95.240])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48febe582d0sm133723775e9.18.2026.05.19.08.55.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 08:40:47 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] platform/x86: x86-android-tablets: Use named initializers for struct i2c_device_id
-Date: Tue, 19 May 2026 17:40:40 +0200
-Message-ID: <20260519154040.1594878-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
+        Tue, 19 May 2026 08:55:07 -0700 (PDT)
+From: Alexander Egorov <begeebe@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	lkml@antheas.dev,
+	derekjohn.clark@gmail.com,
+	samsagax@gmail.com
+Subject: [PATCH v3] platform/x86: oxpec: add support for OneXPlayer Super X
+Date: Tue, 19 May 2026 18:51:24 +0300
+Message-ID: <20260519155124.3240359-1-begeebe@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260330101028.876277-1-begeebe@gmail.com>
+References: <20260330101028.876277-1-begeebe@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1920; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=U7tQin3VDAvG7LiVpjo+/J5UEFaFKhlDK1ivz+wCwWI=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqDIR4GYQGZYDQsoQ8VftEhQH+xgGh96WVbqZUx 7SAkX8ioguJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCagyEeAAKCRCPgPtYfRL+ TvmVCACjSRY/usBwxK/ZfluD/3LgQy2svB7V1+7XwJioxtuGEYkjIgyArkPABK3N/ahve6pDaZx AA0f3UI7SH/HiEzruhZP3IW3KYxNX6Gb+yr+9Z2EXcgh88qN5U7H0OEH6M5FpcMdjeYccNT+hLO OyimdcEV2eys2T9eXeCxkUKqdpd1e9AjPBt3EXUGJ+OwFzBXz+aL6IFY9FkRIJgV4+dzgQTPBvs Gj1RLRba0DtYcbRePhdhmzW4OcqQIabioMiEzPGmW4D3hy8knUPnTJ3lmgc0PKn77lz53OJDKCE 3Ncl5M3qvBne08s+Ao41X0u4i8Iy40VFf2/4oHHqTcCkq8eG
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-While being less compact, using named initializers allows to more easily
-see which members of the structs are assigned which value without having
-to lookup the declaration of the struct. And it's also more robust
-against changes to the struct definition.
+OneXPlayer Super X identifies itself via DMI as:
 
-This patch doesn't modify the compiled array, only its representation in
-source form benefits. The former was confirmed with x86 and arm64
-builds.
+  board vendor: ONE-NETBOOK
+  board name:   ONEXPLAYER SUPER X
+  product name: ONEXPLAYER SUPER X
 
-Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+Current mainline oxpec does not contain a matching DMI entry for this
+system, so the in-tree driver is not auto-loaded.
+
+The tested Super X fan, PWM, turbo-toggle, and battery charge-control EC
+layout matches the existing ONEXPLAYER G1 A handling.
+
+Add a DMI match for OneXPlayer Super X and reuse the oxp_g1_a board data.
+
+Reviewed-by: Derek J Clark <derekjohn.clark@gmail.com>
+Reviewed-by: Antheas Kapenekakis <lkml@antheas.dev>
+Signed-off-by: Alexander Egorov <begeebe@gmail.com>
 ---
-Hello,
+Changes in v3:
+- Reuse oxp_g1_a instead of adding a dedicated oxp_superx board id.
+- Add Derek's Reviewed-by tag.
+- Add Antheas' Reviewed-by tag.
+- Use consistent submitter identity.
 
-this patch is part of a bigger quest to use named initializers for
-mainly struct i2c_device_id::driver_data to be able to modify
-i2c_device_id. See e.g.
-https://lore.kernel.org/all/20260518111203.639603-2-u.kleine-koenig@baylibre.com/
-for the details.
+ drivers/platform/x86/oxpec.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-This patch here isn't critical for this quest, as this driver doesn't
-make use of .driver_data, so apart from the better readability this is
-only about consistency with other subsystems.
-
-This is the only i2c driver under drivers/platform/x86, so this is the
-only patch needed to adapt the whole subsystem to the new style for
-initializing i2c_device_id arrays.
-
-Best regards
-Uwe
-
- drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-index ebbedfe5f4e8..67dba9aa51f6 100644
---- a/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-+++ b/drivers/platform/x86/x86-android-tablets/vexia_atla10_ec.c
-@@ -242,7 +242,7 @@ static int atla10_ec_probe(struct i2c_client *client)
- }
- 
- static const struct i2c_device_id atla10_ec_id_table[] = {
--	{ "vexia_atla10_ec" },
-+	{ .name = "vexia_atla10_ec" },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, atla10_ec_id_table);
-
-base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 6d4a53a..99c0dfc 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -205,6 +205,13 @@ static const struct dmi_system_id dmi_table[] = {
+ 		},
+ 		.driver_data = (void *)oxp_g1_a,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
++			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER SUPER X"),
++		},
++		.driver_data = (void *)oxp_g1_a,
++	},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
 -- 
-2.47.3
-
+2.54.0
