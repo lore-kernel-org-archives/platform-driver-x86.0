@@ -1,58 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119063769E0;
-	Tue, 19 May 2026 14:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF31624C5
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 14:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779201942; cv=none; b=MIHXdHrrYQIf4Jpzsg4u7i3+K23WTcBE1bv3p1iLQYijJKFHwaaLrFvldK8SYhv1e9SR89yHkjeuqGegeWOdwyhfkxt6lkIy8eSNySTxZLui9Qor+oHH1Q0psyBzyr6vxbKq/yhvJvN+eWYRGIkPlKKmAleSe6xosmWohuFVOeY=
+	t=1779201949; cv=none; b=AinU51I51U8rD0DD5LUpJAcpS9Q64rqkXZzWom4LvtaI9foLgUQGkbqxcInk00xpTGpyyyDUKxmQC3qJqPTsQ34t+J/Rvn+b+Zwp1PCoxSYDEEjmgSUDVHUNYrMUquP41W2QPqRexEM9TO8EgsOkjWHq/UCNJJ2VX2rXBouyvCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779201942; c=relaxed/simple;
-	bh=gjuog5jtlBgGVNimu63hAJrNFdO9QfjyzXDf6gVwS4Y=;
+	s=arc-20240116; t=1779201949; c=relaxed/simple;
+	bh=fCg4FUOovRoRkZqQdF/aXUlP+noGsKr/r80nGXEHOyU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=V7bk7854hB/H8UDwP2NUBybxEhxvp7Uf6K/K5wrCTE4dHecuyC1JubhVlUgaDHHK/ea/ntCtB1qxCzMD3Zi+G9CAbsPZ2kRZBLuYOhsKIYKGECHr3aXJw/JESbmid4F/zRo6j8wpXZyx6ttLH3pYebVpV/i1PQtNM4R8DnFav+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Py/8KM+8; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=W2IoLCkeuh3Agy/R5oPHY1RxMe1vRstQLoHoCcphQaJ1rN2IjCUv2XLl/RnXGPKbyYhGxeQAHd209sBD1NpjXmGc0Ay3CKfzijfU1vVde+gEAxSbIfJ134kPZQI8W+xrlK9u/WR5GezY2AZpYhVRpTcwPQDh15tRIGhrT5rRvG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmqV8hDc; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Py/8KM+8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmqV8hDc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779201941; x=1810737941;
+  t=1779201949; x=1810737949;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=gjuog5jtlBgGVNimu63hAJrNFdO9QfjyzXDf6gVwS4Y=;
-  b=Py/8KM+8rPT1IirQH0JtZE/O52v4QpC/JfsFbmivfv5BNdi7LJWM0z7z
-   ZKFlF2z4Azhw3lgq3Cvb8hbXLbiH7Ar70EoKEczc04q5QEVYv/N+LVJTu
-   3cAZvrLaCumhCqdxpGpxtigBCDO4VmzuhmCnZ8PubBfN23+BLOdk5hdVO
-   z978ylB0fiLcJurSKsYWQMgbUx45icYeZnqkMNBEBC36tnxRK1DbuH77w
-   JKsNdmwgHp2OmAMaUgjid3kOamc+ymeJtrdUOa53YYQckWM45UI9s33lc
-   p9YPmtW33STInFyvMWBLPoSuA9Sg6n71rrOzTmrOcVH2RRdHFC//dA33K
-   g==;
-X-CSE-ConnectionGUID: b//PjabCQgq/AqD95+O8wg==
-X-CSE-MsgGUID: 2NmOmwxHTsWAacUw7jn/xQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90383146"
+  bh=fCg4FUOovRoRkZqQdF/aXUlP+noGsKr/r80nGXEHOyU=;
+  b=kmqV8hDcMNXfNffyd5GwmFzX5Xc9mwAJshh376fn/LUoCptCIOhXxWJ7
+   GvFzX1t6Zwc9C6/gsSHjCNZ3u76XntZqKYXkDLHpgPaYldkkyRqvryq6K
+   ESfVVqmo19tDpQsXM9pRNp1u+4PZrKRS2GciBnywuynivyRlRkvMtiySr
+   x1/OGMjZIXp3tzToqA4O24EW8OrrUV9box5P+CYNL1wQcrApfwjw9vYqI
+   qzJ7OAFPtomvFqBIJkRdit4xno+//09Ap3aXf4ltY52Fpro5YBXpj+wvE
+   xk93fovoKshzuNBslKQVWezjWn7Nq5xnwk42DrJ5qurakRYYuVvIOZdVI
+   Q==;
+X-CSE-ConnectionGUID: eClm78hvTACek5WpOQF1Dg==
+X-CSE-MsgGUID: j9RVNWaMRkiroLLJMGnFkw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90383163"
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="90383146"
+   d="scan'208";a="90383163"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:41 -0700
-X-CSE-ConnectionGUID: UVmtVK8PQtuHpshX5b1qWw==
-X-CSE-MsgGUID: wdwc2MJJR02rvMImBs+9Pw==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:48 -0700
+X-CSE-ConnectionGUID: 7rnmYMltS+6LuwK08jg4WA==
+X-CSE-MsgGUID: tZmySV92T6ePi6tF2LN10A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="238793279"
+   d="scan'208";a="238793303"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:39 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:45:46 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
-Cc: wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20260512232145.329260-1-W_Armin@gmx.de>
-References: <20260512232145.329260-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v3 0/8] platform/x86: uniwill-laptop: Charging-related
- improvements
-Message-Id: <177920193411.22546.9855747319755001624.b4-ty@linux.intel.com>
-Date: Tue, 19 May 2026 17:45:34 +0300
+To: "David E. Box" <david.e.box@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>, Lukas Wunner <lukas@wunner.de>
+Cc: platform-driver-x86@vger.kernel.org, 
+ Xi Pardee <xi.pardee@linux.intel.com>
+In-Reply-To: <bd594d09fa866dc51dddc9a447c3b23f9b1402cc.1778736835.git.lukas@wunner.de>
+References: <bd594d09fa866dc51dddc9a447c3b23f9b1402cc.1778736835.git.lukas@wunner.de>
+Subject: Re: [PATCH] platform/x86/intel/vsec: Fix enable_cnt imbalance on
+ PCIe error recovery
+Message-Id: <177920194118.22546.5310422538363395935.b4-ty@linux.intel.com>
+Date: Tue, 19 May 2026 17:45:41 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,16 +64,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Wed, 13 May 2026 01:21:37 +0200, Armin Wolf wrote:
+On Thu, 14 May 2026 07:40:42 +0200, Lukas Wunner wrote:
 
-> This patch series contains various charging-related improvements
-> for the uniwill-laptop driver. The first two patches fix some minor
-> issues inside the charging threshold code, while the third patch
-> fixes an issue inside the module initialization code. The next two
-> patches contain some preparations for the main patch. Said patch
-> introduces support for controlling the charging modes available
-> on many Uniwill-based devices not sold by Intel. The last patch
-> whitelists most Tuxedo devices for using the battery charge modes.
+> After a PCIe Uncorrectable Error has been reported by a device with
+> Intel Vendor Specific Extended Capabilities and has been recovered
+> through a Secondary Bus Reset, its driver calls intel_vsec_pci_probe()
+> to rescan and reinitialize VSECs.
+> 
+> intel_vsec_pci_probe() invokes pcim_enable_device() and thereby adds
+> another devm action which calls pcim_disable_device() on driver unbind.
 > 
 > [...]
 
@@ -83,22 +83,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/8] platform/x86: uniwill-laptop: Properly initialize charging threshold
-      commit: c12cc42dadd85dea210d5699d4f21def827382eb
-[2/8] platform/x86: uniwill-laptop: Accept charging threshold of 0
-      commit: c16a4823cc60a32b891f7a148bb30c0f51d12cf4
-[3/8] platform/x86: uniwill-laptop: Fix behavior of "force" module param
-      commit: fb4b67c44557cb4cbb15900083d4e1af22320339
-[4/8] platform/x86: uniwill-laptop: Do not enable the charging limit even when forced
-      commit: 26cbe119f99c86dcb4a0136d2bc73c0c716d80e4
-[5/8] platform/x86: uniwill-laptop: Rework FN lock/super key suspend handling
-      (no commit info)
-[6/8] platform/x86: uniwill-laptop: Mark EC_ADDR_OEM_4 as volatile
-      (no commit info)
-[7/8] platform/x86: uniwill-laptop: Add support for battery charge modes
-      (no commit info)
-[8/8] platform/x86: uniwill-laptop: Enable battery charge modes on supported devices
-      (no commit info)
+[1/1] platform/x86/intel/vsec: Fix enable_cnt imbalance on PCIe error recovery
+      commit: 348ccc754d8939e21ca5956ff45720b81d6e407f
 
 --
  i.
