@@ -1,116 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FCB45349C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 14:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FE6326D45;
+	Tue, 19 May 2026 14:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779200999; cv=none; b=ff8DTRS0ErhZYsPmZokrgx0W7vq4HkSczhUm0aXcCI1AoPUNbkfdY/Ln+iFihwMAGahwvQBn8jLqcqhQxpVH8TwzrRLpqoYQpwQmE9gVliPXlHdKeY97lr47VyniERWxIB3UOe1Ud2B5L5Fb1ddB4jepT0EDH2klNPsHxLlOWWQ=
+	t=1779201147; cv=none; b=ZyW9+ALKdqwpPKP55J415bXz0ZaprGLLbxfV7O7K4MbBMWTw7sxh6oI7NQNPnJRKhgwhVJ22+RDYPmFEWU7KwPfmxy8+9w7t57FfGJKTZCNj9fHoK2BmoT9YiWpdNEetQThtKduRVsSYozTnL4EJmRkoGumscL1hoX31xvKDzbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779200999; c=relaxed/simple;
-	bh=aWkLOZuvmk6r4Lo3NfCvt5TcEBBPjJyW911t4jmHR60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JSbkBZ61E+IvB0do1XrY6Ow5D01D4z9Kq3oHaquibavz1KkFvvQaMH4r666FU3EwZy2l6bS0XcOox+oq52MWk3Ld9sdqT6Y0Mnast6ULI3V56Un/B/3/7Djd9TzHElE3htXELmo7JuqjITpDxNIDgIMpS/PqcH0/iVaSXbtbueU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lojPPS3g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779201147; c=relaxed/simple;
+	bh=2PJptEChJaCA6iOrUEbZlahop1pl1YR76qbc3eR5LI0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EuTE9RtTknpk87xiyATOTonWDPXFh08AiGoyEgZWLFQhyxhnGc0KdkybopLII/q4p2SjpM1FBD3l5zJ4TFJOEJ5e5MhD/VEXxw2x2M/8eYfoPLhk/QaTuU3iys0dxht70eMy8qNGSZDhJAZwC3JuwOXsvDljq4Z3H20hHZm0afU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AolN45es; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lojPPS3g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B9CC4AF0C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 14:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779200998;
-	bh=aWkLOZuvmk6r4Lo3NfCvt5TcEBBPjJyW911t4jmHR60=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lojPPS3gLkdJNjoKaDA4B5NeBo72fz6EaM5kfcaLN46n66SVWZ/94RFrSk/7fyUxi
-	 kEzapsFWH1blY1Bpm3q9ZaoeRiPZEIPebU/xFjDxkOMOBjPEJmSmHRAZFRp8WsRnT4
-	 RMpZdyMWKSC5uUOCm7zzE5CBVurx0Y9EXoeo/9oxsVThXLNrfOchBbf9+xWnQg+ClT
-	 aZZkAbveuLIe3tcFTqNdfZYjaY/HJ7bHR045wvJc/qN6U9xN6DK28Wadr7F1rV40Rj
-	 feCXOdgtbY8IKgjIC76QIyIqw0ZioJV90O3whys7eUzXhhl/4UM59i2YAdF0J880P/
-	 p5fzonNeXMagw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a995ab70d1so5545612e87.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 07:29:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/eLqNO8yjNgUEVCOZ+Clk4nhJxSD8br790pRHmK1YNzU7DZWqEh2F8HccbN1fI0hfFx0dO9RxC3qltkpJXKaXhQd9S@vger.kernel.org
-X-Gm-Message-State: AOJu0YymhmVcRAITV7tyv3WClI3T9IdGCLF0d8ZFkfCgnYTyAUuFmU/J
-	ra276hlj+2eGPotj8dOcxiDW3TAzLSADptoyhz4VCJ9drVfyVKvdUe0oLyoKB0NV76aCOT84yzo
-	RUQXAyZ3Y5tk4YD9/SAKwe4lVFQS9HOs=
-X-Received: by 2002:a05:6512:39c6:b0:5a8:881c:9cec with SMTP id
- 2adb3069b0e04-5aa0e619193mr5461017e87.1.1779200997187; Tue, 19 May 2026
- 07:29:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AolN45es"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779201146; x=1810737146;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2PJptEChJaCA6iOrUEbZlahop1pl1YR76qbc3eR5LI0=;
+  b=AolN45escv27d/+zfHEcILJbABxw/m++IZtazzEOSM21IjhQlt0ePHGC
+   1XojqrnUAHbTVv6OvX1T/692DToAc6BFSfN9z8QuxXcj9zqdEQAdor5px
+   I7G/Ia8DqifW51PEcjF9k3EB1nPEa/il18Z8A2AMzdsqEki6FzCQXqwmD
+   kIHfd5kNo8CvqMeX0CYIVwqHiGJLwtifviRgRJlfXJwDd1kQ/KFtd1FEL
+   DaReQdkPYFs8Ga3zLzHhUoBgauw8fOgFaEzinO5rQtRlsCY424YuovIvu
+   40MXhUJYTopDgL9sNoUjUFbVwxugHDOq/5YUSiUczIEj0NFlm0Z81TP1V
+   w==;
+X-CSE-ConnectionGUID: 6Kj1lv57QV+pX7ksasfPug==
+X-CSE-MsgGUID: MVbHEtTqRfaWrt3imSK1lg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="102757202"
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="102757202"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:32:25 -0700
+X-CSE-ConnectionGUID: xedhRpiMRS2e5I/krbvSDQ==
+X-CSE-MsgGUID: GNsVSIvCTsSo0qnuQk/pIw==
+X-ExtLoop1: 1
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 07:32:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 19 May 2026 17:32:19 +0300 (EEST)
+To: ZhaoJinming <zhaojinming@uniontech.com>
+cc: srinivas.pandruvada@linux.intel.com, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel/tpmi: Fix memory leak in mem_write()
+ error path
+In-Reply-To: <20260519082136.2999917-1-zhaojinming@uniontech.com>
+Message-ID: <b1006ce4-f596-b2aa-421a-518fe3cfe1f0@linux.intel.com>
+References: <20260519082136.2999917-1-zhaojinming@uniontech.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6007701.DvuYhMxLoT@rafael.j.wysocki> <CAJZ5v0iZV9dEY=wEiwmruY7o9kiuMyWr_bG3HbWuBDxxypAzWg@mail.gmail.com>
- <e364e3c0-1ca0-67f9-40fa-eaaaa913559f@linux.intel.com>
-In-Reply-To: <e364e3c0-1ca0-67f9-40fa-eaaaa913559f@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 19 May 2026 16:29:45 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iLwfE6cFF6gS+Q7aUjRt8+rTJFMvvB=TXkHj1rWA1XiQ@mail.gmail.com>
-X-Gm-Features: AVHnY4LO-iogoq_D35cM_u5MzQR2X5rDBsoJaDzQ3iUIZSP5g0YIA-mqIpWGTRs
-Message-ID: <CAJZ5v0iLwfE6cFF6gS+Q7aUjRt8+rTJFMvvB=TXkHj1rWA1XiQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] platform/x86: Check ACPI_COMPANION() or
- ACPI_HANDLE() against NULL
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	Andrea Ho <Andrea.Ho@advantech.com.tw>, Eric Piel <eric.piel@tremplin-utc.net>, 
-	Alex Hung <alexhung@gmail.com>, Shravan Sudhakar <s.shravan@intel.com>, 
-	AceLan Kao <acelan.kao@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, May 19, 2026 at 4:26=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Tue, 19 May 2026, Rafael J. Wysocki wrote:
->
-> > Hi Ilpo,
-> >
-> > On Tue, May 12, 2026 at 5:17=E2=80=AFPM Rafael J. Wysocki <rafael@kerne=
-l.org> wrote:
-> > >
-> > > Hi All,
-> > >
-> > > This series replaces
-> > >
-> > > https://lore.kernel.org/linux-acpi/4731840.LvFx2qVVIh@rafael.j.wysock=
-i/
-> > >
-> > > and as a whole it makes exactly the same code changes.
-> > >
-> > > Every platform driver can be forced to match a device that doesn't ma=
-tch
-> > > its list of device IDs because of device_match_driver_override(), so
-> > > platform drivers that rely on the existence of a device's ACPI compan=
-ion
-> > > object need to verify its presence.
-> > >
-> > > Accordingly, add requisite ACPI_COMPANION() or ACPI_HANDLE() checks
-> > > against NULL to 5 platform/x86 drivers where they are missing.
-> > >
-> > > Thanks!
-> >
-> > I've noticed that you've picked up all of my patches except for this se=
-ries.
-> >
-> > Has it been deferred on purpose or has it fallen through cracks?
->
-> Somebody is a bit impatient... ;-) Nothing has fallen through the
-> cracks, I just cannot apply patches infinitely fast because I also do
-> take time to review them while applying... :-)
+On Tue, 19 May 2026, ZhaoJinming wrote:
 
-Oh, sorry, I should have waited a bit longer, but it is similar to one
-of the other series, so I wasn't quite sure what happened.
+> In mem_write(), when the IS_ALIGNED() check fails, the function returns
+> -EINVAL directly without freeing the 'array' allocated by
+> parse_int_array_user(). This causes a memory leak.
+> 
+> Other error paths in the same function correctly use 'goto exit_write'
+> to free the array before returning. Fix this inconsistency by using
+> the same pattern for the alignment check.
+> 
+> Fixes: 8e0a2fc68ec3 ("platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: ZhaoJinming <zhaojinming@uniontech.com>
+> ---
+>  drivers/platform/x86/intel/vsec_tpmi.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
+> index 16fd7aa41f20..2a428bfcb209 100644
+> --- a/drivers/platform/x86/intel/vsec_tpmi.c
+> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
+> @@ -495,8 +495,10 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
+>  	addr = array[2];
+>  	value = array[3];
+>  
+> -	if (!IS_ALIGNED(addr, sizeof(u32)))
+> -		return -EINVAL;
+> +	if (!IS_ALIGNED(addr, sizeof(u32))) {
+> +		ret = -EINVAL;
+> +		goto exit_write;
+> +	}
+>  
+>  	if (punit >= pfs->pfs_header.num_entries) {
+>  		ret = -EINVAL;
 
-> ~/linux/platform-fixes$ b4 ty -l 2>&1 | grep -B1 'Rafael'
->   3: [PATCH v2 0/5] platform/x86: Check ACPI_COMPANION() or ACPI_HANDLE()=
- against NULL
->        From: Rafael J. Wysocki <rafael@kernel.org>
-> --
->   4: [PATCH v1] platform/surface: surfacepro3_button: Check ACPI_COMPANIO=
-N()
->        From: Rafael J. Wysocki <rafael@kernel.org>
->
-> --
+Hi,
+
+Thanks for finding this problem. This function looks a prime candidate for 
+cleanup.h conversion.
+
+Please do this with a 2 patch series. The first patch converts kfree() to 
+__free() and moves array declaration next to parse_int_array_user() (as 
+instructed by the long comment in cleanup.h) and has fixes tag. The second 
+patch should converyt the mutex lock/unlock to guard and doesn't need 
+fixes tag. This way, we get rid of all gotos here.
+
+-- 
+ i.
+
