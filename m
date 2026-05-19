@@ -1,497 +1,493 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4D414F70
-	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 00:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8896833BBC5
+	for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 03:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779148968; cv=none; b=CWqoV0G1iB55PbnZGLufPM/soW5ELcUnINNd89Hto1VK4/8r4QCMxwhN8zJTeb9Xn9KI0Lotu49TPah0V79Qf1VDXx7/skwclZXIeClHEQXWnaxTRZ1sIEzVnU3R38rChdkQHijN5qruv5zkE9sPEr1giJ+1IMDSdoE6UKGXW8Q=
+	t=1779160162; cv=none; b=gNFZPidR0mcxDiQSy09p77P/ClfrRVNZEocpP3Dxi/zADoTEKLK/1j1DRo+RnVep/Osxfwo/YYloUNdqkk8xUY0H1maF22GRjgLi3k20t8dWTtxOGpoAkyXwN8Y56byQ9iChKFY2V3HJtUrtq9EoD+Db6Jug0OCBcyuGai58CQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779148968; c=relaxed/simple;
-	bh=MSQXlns5mTREbDHEDBBrSbveWDwxysleG9QJiW3eFjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W+71x34HMSct63ci7lmMbRO/GdXAY0390mz71xVHDRBltP2GTHh0ggD+r1Sf/+HkrZG70M+l49Wr/Cu5EPjhBqoOueTk3SFOXRJU8iLfXFty47yBiqVollcHnPuBqlb/Y8lqZU6sqpV9TLnKfJTST3ciEWVwjQAYQojNDZOo+vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iLC3OROO; arc=none smtp.client-ip=209.85.217.42
+	s=arc-20240116; t=1779160162; c=relaxed/simple;
+	bh=u04aM9poOxxFpx2PUGg6b/TwGZAW+pbQ14ogkrzL/ys=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FlMhEpuOOaT8NVlLMN852aCIqilae4BJJpG5kH4uFY2XNZxLZQCCCZ2wL7yIH/H6TK7PuMmOX9VzxCaoyywqx7oaxeHWqoaRIrIpP2n4dZRIzXcE4N1bKj94MN3d/rT36YYoBq6LMED6X+rmiVr1per/FpwVbg2/LKUcOqcmTQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BK+unaq7; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLC3OROO"
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-63124a80693so1009551137.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 17:02:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BK+unaq7"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3660daea6a5so1498579a91.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 May 2026 20:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779148965; x=1779753765; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=og5TLqDWN0Dl1SdHjFhH0Odcad8jc06CRMJ4sL/bUfA=;
-        b=iLC3OROOnb7vXeAUJzUTke7ZEcZYrJumPHZmtZpTKm5OZ0PI5DFxJV5OUIXQfltQ99
-         3RcsO1cHcUtox/9Gb1N/q+wTiZafkCcDqLIre/gdsmXGIfFTxalK14v9TL7x7e+Gga6g
-         DV9Vcff4e9VNhI+mEAUC6J9eeQPZugA+57apSY6KCuaWAOJ5Kn22/XwQv72tRJf/vEdX
-         Tc8jPVDGaVxW/Nq1LGwVRYNsXdIewGqktjP0pIiDdqfcJS+aVHq7mxeI0mFTHoVZhGNl
-         Xj11uNoFsFlCF1zdgoWlbrKWaX5Djb7Ciu7wPNkcgVYLCUMcCiaqPTmp8GA9168JjzRm
-         c9gw==
+        d=gmail.com; s=20251104; t=1779160160; x=1779764960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cAH9fsH/dzFzgxhUFRcYfI+ZjZWg1y6JBV00neoluA4=;
+        b=BK+unaq73BRmLRCfge09N8Dru36Z+nwLEM2VZTj/8YPDtjrDzU4Lt08s1gEgN834lN
+         cHMKObi6gQd0VETUjMMtagpW2Kg0lLKv84LegstTTXOdpQISiHxzrlt8XcPoP6Ky9H7S
+         R5fIzArSeBkPVuXLf4ILO/2iqJ6LXfFx2NWo2JSPkTxqIexBn3l00n2vfoVZcrHIWy7q
+         YtSA+tc+9K1eNw4ewgOaQJfjI+CjzKvLcKKFtngo+y5ZQ+S2Eu2O40+cr7/SxSFcqU+n
+         OK620qXasS7qPC7kigoWiuPlnGN/qWGwy+GNZIiKz1gZi0mD0W3Nvqhht4hXBEepxypT
+         VKTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779148965; x=1779753765;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=og5TLqDWN0Dl1SdHjFhH0Odcad8jc06CRMJ4sL/bUfA=;
-        b=idaoAf0qPQ0AutocZWr8A9vIT9+cIFo5o9YiA5ng6+PHLQihIxO2lnCCHyB7eBBynO
-         W0C3Nzje8OJXihs3z71fwCTsczIlXIalZceWk/5eC1VAs6dnrQ8tyxhd7PkVcYPu0Xbj
-         Il23L+ZrFxyyje4COabnQ5IjH6yxllGZlqpWHP8vpL/va6W7m9EynlDPexj8bmL7pap0
-         s0uF7x9jQEju6fwP7YX4KzN+LQspIaBHRrqrjX8LxfChOan9Xxhm7jjmQAqqrVVqHkgI
-         CQsctm9721FJzypQI396txyAUnpo60CZAnmmWYxnkSAIMiBy94+EZPWBYEuzNW9x9ahu
-         EcOA==
-X-Forwarded-Encrypted: i=1; AFNElJ9CL9t+fI5Q5XQ8QHAftVT3b3ntqvdRJjmDg4BEuzuZVuT0bY1CJ81fQEVLybFMx/7vh7EiPxD3oZcu7fqvRlZYLKxM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV7kMC+kR7R3BLBif3onT9UIf8GTpNkun9UcDI4ZGei9WJTi9+
-	hf1XcE7zn2+9Dn3IZ9TKEdAmlboliTE7pmdspyXQyO5v7nzrATUPN038
-X-Gm-Gg: Acq92OFx2X6lqlk0Ko3DzL+3QPged9k70JUEYt0IMJgAIVxnOM6VJIew491yMyeSZgd
-	47IYnclTHGWfSRVCsXxIxmZO0XYMm/Axy1j9mZHS4fapgX+6QioWvNO/l9XAa6lA7Gd81MgeJ29
-	MueDU+SIY4IX+WdsaREyfQoA4tzVrA7wplnz1WYkkvQ6cYirSsJ9TaJn5V0xV1gQp50ljYG2fiY
-	NXaKoJvhnHCPJbF2f/O0N/wBRxN9zDywpfc6ulWR6FwmHhQA+FHoyg51VFGfkrYSX3lzIFrlGnX
-	oLFppA4YhSiKh9cuf1g/c3xAhJ9rFirt0F0u3j+GLA7JpDrGmvMDRNRWtI3vWKqo+HKSKC2OyTh
-	jhmcpoMkidpKJ+OLWmbN34k8LQFwvxsaPFJAs1kyfECAl1zW8/5oFkZL9Qj6Z303agakIyCe0ig
-	RayH3eumSC/Xv01UMyfQ5tlVba8/1B2qcluaW9dRIrjQ0AzQonod94fmIyXEJowhOCP5Oo+AcPi
-	eNwdRQ=
-X-Received: by 2002:a67:ef12:0:b0:650:aa33:5f2c with SMTP id ada2fe7eead31-650aa3367bbmr2769131137.7.1779148965210;
-        Mon, 18 May 2026 17:02:45 -0700 (PDT)
-Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-910bae24879sm1751895585a.18.2026.05.18.17.02.44
+        d=1e100.net; s=20251104; t=1779160160; x=1779764960;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cAH9fsH/dzFzgxhUFRcYfI+ZjZWg1y6JBV00neoluA4=;
+        b=DysZtXSb4liTBcpLQQgnIoYw4okaA8nMNBOpwNBliaG1ACic1eynCP90zoFB8gaGPP
+         1nIv2u+2nTfI1/iBNHZ7B9GWsANoYrp0DBzJhT7xZoYX0gH5cZaSGvGInCRJI1Zmpjcy
+         pJ/HdSuJGt56qmNKIz+5akG/JrtNG9tiX5Uo4yXDpEQsHb6sn6ctXbNutE1rrhKhaLm1
+         p4NRXpk6R8Z4Fbkw6fqSjzme7a+jhLTBorNfDSMkDP3d92dLcSpXs2hA38oCc298nguW
+         TnYAhmeRpN7J4LCKw/stVYPQBMg0exxR5PTkQcSDlf10lV4XA9EeMwPPieUTUyNBIaMK
+         pjFQ==
+X-Gm-Message-State: AOJu0Yxq6s75SsWjoknMz2/scWHBqxbckrJW5s8kX/0gVGLDTcdNcVn8
+	mrSQ5pTT70Gr/Kkv5DXejk36nqgkfRP/vgpgrZPI08mi4vVPjzOiEd/loBDcHT50ywg=
+X-Gm-Gg: Acq92OGf4t35IXiPVAW6l4+/iMpjKAih/FbmDOJyPuoq//QY9gPEnthund0krPmXWPn
+	6fcccjUVYyw2XuC5QGwmzOIWiK+Gn4E+24M+VURzAI2mQ9GLGHu7RIYY3PFS+uA/WwZI3Aj3YcZ
+	C9XDdGcUJnSsUguxWMBiIyGPez44Agx1lMKN7KkjD9qP72l9CeFS/e+rcveAx+4j6acj/7d2ELG
+	z5UlW/UmNhanxlqK4fm8yprjhhyHlrqkvy5HcelHfYt7+fGK8vet+9mln7ciHO1Bh3cc7mVlZXT
+	wNO1FuRPOS8VlUeu3O8EnmN/zoC3w6M/hvSAd3Nz2ReILxe3ZVJWEni4v4tvdJQ3c0ZWTkljZqe
+	N2xRd12YcHXWtOgohkLmgrpUqT9AR/NZTvpd9Z7RTXUpiOyYZjvjp4fHh4+Ea2DMsPjsPF56QNM
+	sM79gaKoU6XE3I59Pi
+X-Received: by 2002:a17:902:ea03:b0:2bd:9c0a:32c with SMTP id d9443c01a7336-2bd9c0a065cmr136726965ad.19.1779160159730;
+        Mon, 18 May 2026 20:09:19 -0700 (PDT)
+Received: from pico-cachyos ([2a09:bac5:3e08:7eb::ca:188])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bd5d0fbc05sm163079495ad.57.2026.05.18.20.09.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 17:02:44 -0700 (PDT)
-From: Dave Carey <carvsdriver@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: pithenrich2d@googlemail.com,
-	mpearson-lenovo@squebb.ca,
-	derekjohn.clark@gmail.com,
-	W_Armin@gmx.de,
-	platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmitry.torokhov@gmail.com,
-	Dave Carey <carvsdriver@gmail.com>
-Subject: [PATCH v3] platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
-Date: Mon, 18 May 2026 20:02:39 -0400
-Message-ID: <20260519000239.29446-1-carvsdriver@gmail.com>
+        Mon, 18 May 2026 20:09:19 -0700 (PDT)
+From: Radhey Kalra <radheykalra901@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	krishna.chomal108@gmail.com,
+	hansg@kernel.org,
+	Radhey Kalra <radheykalra901@gmail.com>
+Subject: [PATCH v3] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+Date: Tue, 19 May 2026 08:38:50 +0530
+Message-ID: <20260519030850.59398-1-radheykalra901@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260517150224.50191-1-carvsdriver@gmail.com>
-References: <20260517150224.50191-1-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
-that magnetically attaches to the bottom (secondary) screen in one of two
-positions.  The Embedded Controller tracks the attachment state in a 2-bit
-field called BKBD and signals changes via WMI event GUID
-806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
-device).
+HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
+the existing Victus fan-speed WMI control path. Add it as a
+fan-control-only board so the hwmon PWM interface is enabled without
+forcing Victus S thermal-profile handling on this model.
 
-The current BKBD state is read via a separate WMI query GUID
-E7F300FA-21CD-4003-ADAC-2696135982E6 (WQAF method), which returns an
-8-byte buffer: bytes [0..3] hold the LFID constant 0x00060000 and bytes
-[4..7] hold the BKBD value.
+Extend the DMI .driver_data from thermal-profile-only parameters to board
+parameters containing thermal-profile and fan-control data. Existing table
+entries keep both thermal and fan-control data, while 8A3D only selects
+the fan-control profile.
 
-BKBD encoding:
-  0 = keyboard detached
-  1 = keyboard docked on top half of bottom screen
-  2 = keyboard docked on bottom half of bottom screen
-  3 = reserved (not observed in practice)
+The 8A3D fan table starts with a valid CPU row whose GPU RPM field is
+zero. Derive gpu_delta from the first row with non-zero GPU RPM instead of
+always using row 0.
 
-Both GUIDs are children of the same ACPI device (WM10), so both are
-matched by a single WMI driver.  The query device pointer is stored in a
-module-level variable protected by a mutex; the event device uses
-wmidev_block_query() via the stored pointer rather than the deprecated
-global wmi_query_block().  get_device()/put_device() bracket each use of
-the stored pointer so probe/remove races cannot produce a use-after-free.
+Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS F.22.
+The fan table query succeeded and returned rows including cpu=23/gpu=0
+followed by cpu=24/gpu=22. With 8A3D enabled in the fan-control path, pwm1
+and pwm1_enable were exposed through hwmon.
 
-This driver:
-  - Registers as a WMI driver on both the event and query GUIDs.
-  - Queries BKBD state synchronously on probe and on each WMI
-    notification.
-  - Sets the initial SW_TABLET_MODE bit before input_register_device()
-    via __set_bit() so userspace always reads the correct state on first
-    open.
-  - Reports SW_TABLET_MODE=1 when detached, SW_TABLET_MODE=0 when docked
-    in either position (a physical keyboard is present in both cases).
-  - Exposes the raw BKBD value via a read-only sysfs attribute
-    "keyboard_position" for use by userspace (e.g. to distinguish between
-    the two docked positions for different UI layouts).  The attribute is
-    registered per-device via devm_device_add_groups() in the event-device
-    probe path only; the query device has no priv and no sysfs groups.
-
-Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 6.19.
-
-Signed-off-by: Dave Carey <carvsdriver@gmail.com>
+Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
 ---
- .../testing/sysfs-driver-lenovo-yb9-kbdock    |  21 ++
- MAINTAINERS                                   |   6 +
- drivers/platform/x86/lenovo/Kconfig           |  14 ++
- drivers/platform/x86/lenovo/Makefile          |   1 +
- drivers/platform/x86/lenovo/yb9-kbdock.c      | 270 ++++++++++++++++++
- 5 files changed, 312 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
- create mode 100644 MAINTAINERS
- create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
+Changes in v3:
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Send as an independent thread instead of replying to the v1 thread.
+- Keep the v2 board-data approach and 8A3D fan-control-only handling.
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-new file mode 100644
-index 0000000..bb57690
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-@@ -0,0 +1,21 @@
-+What:		/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_position
-+Date:		April 2026
-+KernelVersion:	6.10
-+Contact:	Dave Carey <carvsdriver@gmail.com>
-+Description:
-+		Read-only attribute reporting the current keyboard dock position
-+		as reported by the Embedded Controller on the Lenovo Yoga Book 9
-+		14IAH10.
-+
-+		Possible values:
-+
-+		==  ============================================================
-+		0   detached  — keyboard is not docked to any screen
-+		1   top-half  — keyboard docked on the top half of the bottom screen
-+		2   bottom-half — keyboard docked on the bottom half of the bottom screen
-+		==  ============================================================
-+
-+		The value is formatted as "<n> (<name>)\n", e.g. "1 (top-half)\n".
-+
-+		SW_TABLET_MODE input events are also emitted: 0 when the keyboard
-+		is docked (either position), 1 when detached.
-diff --git a/MAINTAINERS b/MAINTAINERS
-new file mode 100644
-index 0000000..cb765b4
---- /dev/null
-+++ b/MAINTAINERS
-@@ -0,0 +1,6 @@
-+LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
-+M:	Dave Carey <carvsdriver@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-+F:	drivers/platform/x86/lenovo/yb9-kbdock.c
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 9c48487..938b361 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called lenovo-wmi-camera.
+Changes in v2:
+- Use real name in Signed-off-by.
+- Replace the ad-hoc fan-control DMI table with board data in .driver_data.
+- Keep 8A3D fan-control-only instead of enabling Victus S thermal profiles.
+- Use the fixed fan-table parser path and derive gpu_delta from the first non-zero GPU row.
 
-+config LENOVO_YB9_KBDOCK
-+	tristate "Lenovo Yoga Book 9 keyboard dock detection"
-+	depends on ACPI_WMI
-+	depends on DMI
-+	depends on INPUT
-+	help
-+	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book 9
-+	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
-+	  either screen; this driver reports SW_TABLET_MODE input events based
-+	  on the attachment state and exposes the raw position in sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called lenovo-yb9-kbdock.
-+
- config LENOVO_YMC
- 	tristate "Lenovo Yoga Tablet Mode Control"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
-index 7b2128e..2842d7d 100644
---- a/drivers/platform/x86/lenovo/Makefile
-+++ b/drivers/platform/x86/lenovo/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ drivers/platform/x86/hp/hp-wmi.c | 197 +++++++++++++++++++++----------
+ 1 file changed, 136 insertions(+), 61 deletions(-)
 
- lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= wmi-hotkey-utilities.o
-+lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+= yb9-kbdock.o
- lenovo-target-$(CONFIG_LENOVO_YMC)	+= ymc.o
- lenovo-target-$(CONFIG_YOGABOOK)	+= yogabook.o
- lenovo-target-$(CONFIG_YT2_1380)	+= yoga-tab2-pro-1380-fastcharger.o
-diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/x86/lenovo/yb9-kbdock.c
-new file mode 100644
-index 0000000..0000000
---- /dev/null
-+++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo Yoga Book 9 keyboard-dock detection
-+ *
-+ * Reports SW_TABLET_MODE based on keyboard attachment state and exposes the
-+ * raw dock position via sysfs.
-+ *
-+ * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
-+ */
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index d1cc6e7..514c28c 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -133,11 +133,50 @@ static const struct thermal_profile_params omen_v1_no_ec_thermal_params = {
+ 	.ec_tp_offset	= HP_NO_THERMAL_PROFILE_OFFSET,
+ };
+ 
+-/*
+- * A generic pointer for the currently-active board's thermal profile
+- * parameters.
+- */
+-static struct thermal_profile_params *active_thermal_profile_params;
++static const struct thermal_profile_params *active_thermal_profile_params;
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/dmi.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/wmi.h>
-+
-+/*
-+ * WM10 ACPI device (_UID "GMZN") exposes two relevant WMI GUIDs:
-+ *   YB9_KBDOCK_EVENT_GUID — notify ID 0xEB fires on attachment state change.
-+ *   YB9_KBDOCK_QUERY_GUID — object "AF" (WQAF), returns an 8-byte buffer
-+ *                           whose upper four bytes hold the BKBD value.
-+ *
-+ * BKBD encoding:
-+ *   0 (BKBD_DETACHED)    — keyboard detached       → SW_TABLET_MODE = 1
-+ *   1 (BKBD_TOP_HALF)    — docked, top half        → SW_TABLET_MODE = 0
-+ *   2 (BKBD_BOTTOM_HALF) — docked, bottom half     → SW_TABLET_MODE = 0
-+ *   3                    — reserved; treated as an error
-+ */
-+#define YB9_KBDOCK_EVENT_GUID		"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
-+#define YB9_KBDOCK_QUERY_GUID		"E7F300FA-21CD-4003-ADAC-2696135982E6"
-+#define YB9_KBDOCK_QUERY_INSTANCE	0
-+
-+#define BKBD_DETACHED		0
-+#define BKBD_TOP_HALF		1
-+#define BKBD_BOTTOM_HALF	2
-+#define BKBD_MASK		GENMASK(1, 0)
-+
-+/* Distinguish the two GUIDs via the id_table context field. */
-+enum yb9_guid_type { YB9_GUID_EVENT, YB9_GUID_QUERY };
-+
-+/*
-+ * Both GUIDs are children of the same ACPI device (WM10).  Store the query
-+ * WMI device globally so the event-device probe and notify path can reach it
-+ * via wmidev_block_query().  Protected by yb9_query_lock during probe/remove.
-+ */
-+static struct wmi_device *yb9_query_wdev;
-+static DEFINE_MUTEX(yb9_query_lock);
-+
-+struct yb9_kbdock_priv {
-+	struct input_dev *input_dev;
-+	unsigned int bkbd;
++struct hp_wmi_fan_profile_params {
++	int (*get_fan_speed)(int fan);
++	bool fan_table;
 +};
 +
-+/* Returns 0–2 on success, -errno on error. */
-+static int yb9_kbdock_query(struct wmi_device *event_wdev,
-+			     struct wmi_device *query_wdev)
-+{
-+	u32 bkbd;
-+
-+	union acpi_object *obj __free(kfree) =
-+		wmidev_block_query(query_wdev, YB9_KBDOCK_QUERY_INSTANCE);
-+	if (!obj) {
-+		dev_warn(&event_wdev->dev, "WQAF query returned NULL\n");
-+		return -EIO;
-+	}
-+
-+	/*
-+	 * WQAF returns an 8-byte buffer: bytes [0..3] = LFID (0x00060000),
-+	 * bytes [4..7] = BKBD value.  Guard against short buffers.
-+	 */
-+	if (obj->type == ACPI_TYPE_BUFFER && obj->buffer.length >= 8)
-+		memcpy(&bkbd, obj->buffer.pointer + 4, sizeof(bkbd));
-+	else if (obj->type == ACPI_TYPE_INTEGER)
-+		bkbd = obj->integer.value;
-+	else {
-+		dev_warn(&event_wdev->dev,
-+			 "WQAF: unexpected result type %d len %u\n",
-+			 obj->type, obj->type == ACPI_TYPE_BUFFER ? obj->buffer.length : 0);
-+		return -EIO;
-+	}
-+
-+	bkbd = FIELD_GET(BKBD_MASK, bkbd);
-+	if (bkbd == 3) {
-+		dev_warn(&event_wdev->dev, "BKBD value 3 is reserved\n");
-+		return -EINVAL;
-+	}
-+
-+	return bkbd;
-+}
-+
-+static void yb9_kbdock_update(struct wmi_device *wdev)
-+{
-+	struct yb9_kbdock_priv *priv = dev_get_drvdata(&wdev->dev);
-+	struct wmi_device *qwdev;
-+	int tablet_mode;
-+	int bkbd;
-+
-+	mutex_lock(&yb9_query_lock);
-+	qwdev = yb9_query_wdev;
-+	if (qwdev)
-+		get_device(&qwdev->dev);
-+	mutex_unlock(&yb9_query_lock);
-+	if (!qwdev)
-+		return;
-+
-+	bkbd = yb9_kbdock_query(wdev, qwdev);
-+	put_device(&qwdev->dev);
-+	if (bkbd < 0)
-+		return;
-+
-+	priv->bkbd = bkbd;
-+	tablet_mode = (bkbd == BKBD_DETACHED) ? 1 : 0;
-+
-+	input_report_switch(priv->input_dev, SW_TABLET_MODE, tablet_mode);
-+	input_sync(priv->input_dev);
-+
-+	dev_dbg(&wdev->dev, "BKBD=%u tablet_mode=%d\n", bkbd, tablet_mode);
-+}
-+
-+static void yb9_kbdock_notify(struct wmi_device *wdev, union acpi_object *data)
-+{
-+	yb9_kbdock_update(wdev);
-+}
-+
-+static ssize_t keyboard_position_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	static const char * const names[] = {
-+		"detached", "top-half", "bottom-half",
-+	};
-+	struct yb9_kbdock_priv *priv = dev_get_drvdata(dev);
-+	unsigned int bkbd = priv->bkbd;
-+
-+	if (WARN_ON_ONCE(bkbd >= ARRAY_SIZE(names)))
-+		return -EINVAL;
-+	return sysfs_emit(buf, "%u (%s)\n", bkbd, names[bkbd]);
-+}
-+static DEVICE_ATTR_RO(keyboard_position);
-+
-+static struct attribute *yb9_kbdock_attrs[] = {
-+	&dev_attr_keyboard_position.attr,
-+	NULL,
++struct hp_wmi_board_params {
++	const struct thermal_profile_params *thermal_profile;
++	const struct hp_wmi_fan_profile_params *fan_profile;
 +};
 +
-+static const struct attribute_group yb9_kbdock_group = {
-+	.attrs = yb9_kbdock_attrs,
++static int hp_wmi_get_fan_speed_victus_s(int fan);
++
++static const struct hp_wmi_fan_profile_params victus_s_fan_profile_params = {
++	.get_fan_speed	= hp_wmi_get_fan_speed_victus_s,
++	.fan_table	= true,
 +};
 +
-+static const struct dmi_system_id yb9_kbdock_dmi_table[] = {
++static const struct hp_wmi_board_params victus_s_board_params = {
++	.thermal_profile	= &victus_s_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_board_params = {
++	.thermal_profile	= &omen_v1_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_legacy_board_params = {
++	.thermal_profile	= &omen_v1_legacy_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
++	.thermal_profile	= &omen_v1_no_ec_thermal_params,
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
++static const struct hp_wmi_board_params victus_8a3d_board_params = {
++	.fan_profile		= &victus_s_fan_profile_params,
++};
++
++static const struct hp_wmi_board_params *active_board_params;
+ 
+ /* DMI board names of devices that should use the omen specific path for
+  * thermal profiles.
+@@ -187,67 +226,71 @@ static const char * const victus_thermal_profile_boards[] = {
+ 	"8A25",
+ };
+ 
+-/* DMI Board names of Victus 16-r and Victus 16-s laptops */
+-static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
++/* DMI board-specific feature data for Omen and Victus laptops. */
++static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
 +	{
-+		/* Lenovo Yoga Book 9 14IAH10 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
-+		},
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
++		.driver_data = (void *)&victus_8a3d_board_params,
 +	},
-+	{ }
-+};
-+
-+static int yb9_kbdock_probe(struct wmi_device *wdev, const void *ctx)
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCA") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD5") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C76") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C77") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C78") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C99") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
+-		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
++		.driver_data = (void *)&omen_v1_no_ec_board_params,
+ 	},
+ 	{},
+ };
+@@ -1769,6 +1812,38 @@ static bool is_victus_s_thermal_profile(void)
+ 	return is_victus_s_board;
+ }
+ 
++static const struct hp_wmi_fan_profile_params *hp_wmi_fan_profile(void)
 +{
-+	enum yb9_guid_type type = (enum yb9_guid_type)(uintptr_t)ctx;
-+	struct yb9_kbdock_priv *priv;
-+	struct input_dev *input_dev;
-+	struct wmi_device *qwdev;
-+	int bkbd_init;
-+	int err;
++	if (!active_board_params)
++		return NULL;
 +
-+	if (type == YB9_GUID_QUERY) {
-+		if (!dmi_check_system(yb9_kbdock_dmi_table))
-+			return -ENODEV;
-+		mutex_lock(&yb9_query_lock);
-+		yb9_query_wdev = wdev;
-+		mutex_unlock(&yb9_query_lock);
-+		return 0;
-+	}
-+
-+	if (!dmi_check_system(yb9_kbdock_dmi_table))
-+		return -ENODEV;
-+
-+	mutex_lock(&yb9_query_lock);
-+	qwdev = yb9_query_wdev;
-+	if (qwdev)
-+		get_device(&qwdev->dev);
-+	mutex_unlock(&yb9_query_lock);
-+	if (!qwdev)
-+		return -EPROBE_DEFER;
-+
-+	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		put_device(&qwdev->dev);
-+		return -ENOMEM;
-+	}
-+
-+	input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!input_dev) {
-+		put_device(&qwdev->dev);
-+		return -ENOMEM;
-+	}
-+
-+	input_dev->name = "Lenovo Yoga Book 9 keyboard dock switch";
-+	input_dev->phys = YB9_KBDOCK_EVENT_GUID "/input0";
-+	input_dev->id.bustype = BUS_HOST;
-+	input_dev->dev.parent = &wdev->dev;
-+	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-+
-+	priv->input_dev = input_dev;
-+	dev_set_drvdata(&wdev->dev, priv);
-+
-+	/*
-+	 * Query the initial dock state and preset the switch bit before
-+	 * input_register_device() so userspace never sees SW_TABLET_MODE = 0
-+	 * for a detached keyboard on first open.
-+	 */
-+	bkbd_init = yb9_kbdock_query(wdev, qwdev);
-+	put_device(&qwdev->dev);
-+	if (bkbd_init >= 0) {
-+		priv->bkbd = bkbd_init;
-+		if (bkbd_init == BKBD_DETACHED)
-+			__set_bit(SW_TABLET_MODE, input_dev->sw);
-+	}
-+
-+	err = input_register_device(input_dev);
-+	if (err) {
-+		dev_err(&wdev->dev, "failed to register input device: %d\n", err);
-+		return err;
-+	}
-+
-+	err = devm_device_add_group(&wdev->dev, &yb9_kbdock_group);
-+	if (err) {
-+		dev_err(&wdev->dev, "failed to add sysfs group: %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
++	return active_board_params->fan_profile;
 +}
 +
-+static void yb9_kbdock_remove(struct wmi_device *wdev)
++static bool hp_wmi_fan_control_supported(void)
 +{
-+	mutex_lock(&yb9_query_lock);
-+	if (wdev == yb9_query_wdev)
-+		yb9_query_wdev = NULL;
-+	mutex_unlock(&yb9_query_lock);
++	const struct hp_wmi_fan_profile_params *params = hp_wmi_fan_profile();
++
++	return params && params->get_fan_speed;
 +}
 +
-+static const struct wmi_device_id yb9_kbdock_wmi_id_table[] = {
-+	{ .guid_string = YB9_KBDOCK_EVENT_GUID, .context = (void *)YB9_GUID_EVENT },
-+	{ .guid_string = YB9_KBDOCK_QUERY_GUID, .context = (void *)YB9_GUID_QUERY },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, yb9_kbdock_wmi_id_table);
++static bool hp_wmi_fan_table_supported(void)
++{
++	const struct hp_wmi_fan_profile_params *params = hp_wmi_fan_profile();
 +
-+static struct wmi_driver yb9_kbdock_driver = {
-+	.driver = {
-+		.name = "lenovo-yb9-kbdock",
-+	},
-+	.id_table = yb9_kbdock_wmi_id_table,
-+	.probe    = yb9_kbdock_probe,
-+	.remove   = yb9_kbdock_remove,
-+	.notify   = yb9_kbdock_notify,
-+};
-+module_wmi_driver(yb9_kbdock_driver);
++	return params && params->fan_table;
++}
 +
-+MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
-+MODULE_LICENSE("GPL");
---
-2.53.0
++static int hp_wmi_get_active_fan_speed(int fan)
++{
++	const struct hp_wmi_fan_profile_params *params = hp_wmi_fan_profile();
++
++	if (!params || !params->get_fan_speed)
++		return -EOPNOTSUPP;
++
++	return params->get_fan_speed(fan);
++}
++
+ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
+ 					    bool *ppab_enable,
+ 					    u8 *dstate,
+@@ -1904,7 +1979,7 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 
+ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
+ {
+-	struct thermal_profile_params *params;
++	const struct thermal_profile_params *params;
+ 	bool gpu_ctgp_enable, gpu_ppab_enable;
+ 	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
+ 	int err, tp;
+@@ -2380,7 +2455,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 
+ 	switch (priv->mode) {
+ 	case PWM_MODE_MAX:
+-		if (is_victus_s_thermal_profile()) {
++		if (hp_wmi_fan_control_supported()) {
+ 			ret = hp_wmi_get_fan_count_userdefine_trigger();
+ 			if (ret < 0)
+ 				return ret;
+@@ -2392,7 +2467,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_MANUAL:
+-		if (!is_victus_s_thermal_profile())
++		if (!hp_wmi_fan_control_supported())
+ 			return -EOPNOTSUPP;
+ 		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
+ 		if (ret < 0)
+@@ -2401,7 +2476,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 				 secs_to_jiffies(KEEP_ALIVE_DELAY_SECS));
+ 		return 0;
+ 	case PWM_MODE_AUTO:
+-		if (is_victus_s_thermal_profile()) {
++		if (hp_wmi_fan_control_supported()) {
+ 			ret = hp_wmi_get_fan_count_userdefine_trigger();
+ 			if (ret < 0)
+ 				return ret;
+@@ -2425,12 +2500,12 @@ static umode_t hp_wmi_hwmon_is_visible(const void *data,
+ {
+ 	switch (type) {
+ 	case hwmon_pwm:
+-		if (attr == hwmon_pwm_input && !is_victus_s_thermal_profile())
++		if (attr == hwmon_pwm_input && !hp_wmi_fan_control_supported())
+ 			return 0;
+ 		return 0644;
+ 	case hwmon_fan:
+-		if (is_victus_s_thermal_profile()) {
+-			if (hp_wmi_get_fan_speed_victus_s(channel) >= 0)
++		if (hp_wmi_fan_control_supported()) {
++			if (hp_wmi_get_active_fan_speed(channel) >= 0)
+ 				return 0444;
+ 		} else {
+ 			if (hp_wmi_get_fan_speed(channel) >= 0)
+@@ -2454,8 +2529,8 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 	priv = dev_get_drvdata(dev);
+ 	switch (type) {
+ 	case hwmon_fan:
+-		if (is_victus_s_thermal_profile())
+-			ret = hp_wmi_get_fan_speed_victus_s(channel);
++		if (hp_wmi_fan_control_supported())
++			ret = hp_wmi_get_active_fan_speed(channel);
+ 		else
+ 			ret = hp_wmi_get_fan_speed(channel);
+ 		if (ret < 0)
+@@ -2464,10 +2539,10 @@ static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 		return 0;
+ 	case hwmon_pwm:
+ 		if (attr == hwmon_pwm_input) {
+-			if (!is_victus_s_thermal_profile())
++			if (!hp_wmi_fan_control_supported())
+ 				return -EOPNOTSUPP;
+ 
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			rpm = hp_wmi_get_active_fan_speed(channel);
+ 			if (rpm < 0)
+ 				return rpm;
+ 			*val = rpm_to_pwm(rpm / 100, priv);
+@@ -2501,7 +2576,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 	switch (type) {
+ 	case hwmon_pwm:
+ 		if (attr == hwmon_pwm_input) {
+-			if (!is_victus_s_thermal_profile())
++			if (!hp_wmi_fan_control_supported())
+ 				return -EOPNOTSUPP;
+ 			/* PWM input is invalid when not in manual mode */
+ 			if (priv->mode != PWM_MODE_MANUAL)
+@@ -2518,13 +2593,13 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			priv->mode = PWM_MODE_MAX;
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		case PWM_MODE_MANUAL:
+-			if (!is_victus_s_thermal_profile())
++			if (!hp_wmi_fan_control_supported())
+ 				return -EOPNOTSUPP;
+ 			/*
+ 			 * When switching to manual mode, set fan speed to
+ 			 * current RPM values to ensure a smooth transition.
+ 			 */
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			rpm = hp_wmi_get_active_fan_speed(channel);
+ 			if (rpm < 0)
+ 				return rpm;
+ 			priv->pwm = rpm_to_pwm(rpm / 100, priv);
+@@ -2585,13 +2660,14 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	u8 min_rpm, max_rpm;
+ 	u8 cpu_rpm, gpu_rpm, noise_db;
+ 	int gpu_delta, i, num_entries, ret;
++	bool gpu_delta_found = false;
+ 	size_t header_size, entry_size;
+ 
+ 	/* Default behaviour on hwmon init is automatic mode */
+ 	priv->mode = PWM_MODE_AUTO;
+ 
+-	/* Bypass all non-Victus S devices */
+-	if (!is_victus_s_thermal_profile())
++	/* Bypass devices without fan control support. */
++	if (!hp_wmi_fan_table_supported())
+ 		return 0;
+ 
+ 	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY,
+@@ -2625,12 +2701,15 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 			min_rpm = cpu_rpm;
+ 		if (cpu_rpm > max_rpm)
+ 			max_rpm = cpu_rpm;
++		if (!gpu_delta_found && gpu_rpm > 0) {
++			gpu_delta = gpu_rpm - cpu_rpm;
++			gpu_delta_found = true;
++		}
+ 	}
+ 
+-	if (min_rpm == U8_MAX || max_rpm == 0)
++	if (min_rpm == U8_MAX || max_rpm == 0 || !gpu_delta_found)
+ 		return -EINVAL;
+ 
+-	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
+ 	priv->min_rpm = min_rpm;
+ 	priv->max_rpm = max_rpm;
+ 	priv->gpu_delta = gpu_delta;
+@@ -2673,26 +2752,25 @@ static int hp_wmi_hwmon_init(void)
+ 	return 0;
+ }
+ 
+-static void __init setup_active_thermal_profile_params(void)
++static void __init setup_active_board_params(void)
+ {
+ 	const struct dmi_system_id *id;
+ 
+-	/*
+-	 * Currently only victus_s devices use the
+-	 * active_thermal_profile_params
+-	 */
+-	id = dmi_first_match(victus_s_thermal_profile_boards);
++	id = dmi_first_match(hp_wmi_feature_boards);
+ 	if (id) {
+-		/*
+-		 * Marking this boolean is required to ensure that
+-		 * is_victus_s_thermal_profile() behaves like a valid
+-		 * wrapper.
+-		 */
+-		is_victus_s_board = true;
+-		active_thermal_profile_params = id->driver_data;
+-		if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
+-			pr_warn("Unknown EC layout for board %s. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org\n",
+-				dmi_get_system_info(DMI_BOARD_NAME));
++		active_board_params = id->driver_data;
++		active_thermal_profile_params = active_board_params->thermal_profile;
++		if (active_thermal_profile_params) {
++			/*
++			 * Marking this boolean is required to ensure that
++			 * is_victus_s_thermal_profile() behaves like a valid
++			 * wrapper.
++			 */
++			is_victus_s_board = true;
++			if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
++				pr_warn("Unknown EC layout for board %s. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org\n",
++					dmi_get_system_info(DMI_BOARD_NAME));
++			}
+ 		}
+ 	}
+ }
+@@ -2724,11 +2802,8 @@ static int __init hp_wmi_init(void)
+ 			goto err_destroy_input;
+ 		}
+ 
+-		/*
+-		 * Setup active board's thermal profile parameters before
+-		 * starting platform driver probe.
+-		 */
+-		setup_active_thermal_profile_params();
++		/* Setup active board feature data before starting platform driver probe. */
++		setup_active_board_params();
+ 		err = platform_driver_probe(&hp_wmi_driver, hp_wmi_bios_setup);
+ 		if (err)
+ 			goto err_unregister_device;
+-- 
+2.54.0
 
