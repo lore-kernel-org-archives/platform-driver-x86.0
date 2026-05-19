@@ -1,110 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F7D23393D;
-	Tue, 19 May 2026 13:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AAF3ED3BF;
+	Tue, 19 May 2026 13:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779196636; cv=none; b=tTJ3eqCxIH7QgDSOGSfPymnoaEp6jlW4kCexAYRVoivVgz/tQtWMq485YVDb2E2UR8W8tQ/K2MWyoq6754t5IiLOMqrIf/jdDeuP4+9O9QHPUPo88y54EYJ14YV0lFuIs0SRs8JJ3W0O1EG5mNGjQJ3FV9fRkHgpsoMzYWaCtRo=
+	t=1779199114; cv=none; b=h4kf7dVPEZeFZA2JMzTcKfAvy68jlxr5Mbvsnb97wtoawBk44dxb8y448VU3hwaEB+/nWxNQtdkmrNKWIBkAivR23wMT56k5M8+djPG8apx/lRxmJpynOMh7lAc1B/5lyOFr3wlEK1+HGF/0M4vDlFjMznIFeLHptloEU/y6Uu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779196636; c=relaxed/simple;
-	bh=kUeIDw2Ng9suzTxDeE2KvE6gHW9XGNMheoyVDX1/y6A=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PrLMVzQSNZz7VahyAjx/bhK3OY+8K4ZjSyeiP97Q7tKvK+IikcDaNDF6xApSLx2diS0/JMOho08penJuCq54JD1FZwYeePTbbPbbXszx9fbLGmO1b2Fwkrv9zyxXN9LNmKE3MrRawfivOHten4qaF0yldLDvW5coNPPI9ANeJ6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YdUHgCGl; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1779199114; c=relaxed/simple;
+	bh=xYPfb8j49SZYO9HzJea+iFMdPFT06oUvLrSimk8X714=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=DW2TO1xFgYxxOPpnxiSJwvCSerSrhb5OoM115mmCDnGHWS1Q0tLS/qCveVfFWmaq3nkWwLpnuHgX1cttN2fA6DrBN57hdW0rHbg7jidXvWBGhdVCn1SzGpW5B2jkD5kNOb+yLmFF8Bpf43jvNRP+uKFWhn6tvHbzBgeItIaDJY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PKDrh0Nv; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YdUHgCGl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PKDrh0Nv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779196635; x=1810732635;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=kUeIDw2Ng9suzTxDeE2KvE6gHW9XGNMheoyVDX1/y6A=;
-  b=YdUHgCGlhu4Q8f8j70lxRDFgejwyRZ3krXYAhCJWZWCk1pYmexgYhWDq
-   XNe09JQE+bSHHVAry7GL7vYsLl4QmtujMic+s9TM97VyRWa4qudTLQdQz
-   VnEK6UoAdIZC+Q8h9kGjnZ1TvqNhjNQtNgeug5p9ChirOmdXlkUAzVusX
-   UIQ50Djl798rGLhZPpJ9T+5OXNmMrfg0SDlUaJaAN+s8EX31pdAeoeeNk
-   G8uyjJ9qYHs3NLXBAMPpI5nbwcRRYdceh4cVFdUjYdFuvJD2s1yE+eFVJ
-   mMOOk1E/ZJ9K1clebTW4aJXj7DRHdt9qZm34jiZAhokUC33G5P31TPIqz
-   Q==;
-X-CSE-ConnectionGUID: uMvQIyEZRYWBgYqiW7cdvA==
-X-CSE-MsgGUID: bPfd3CfxR2aasJt9kHsjPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="67600821"
+  t=1779199112; x=1810735112;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=xYPfb8j49SZYO9HzJea+iFMdPFT06oUvLrSimk8X714=;
+  b=PKDrh0NvIDceTnogv5GKVD4UYh04bi2fHvnwkdinH+maSLVC71VQpitv
+   AbPcJNdlNdH9iTe4VxI8GTy6Ko15jN12TldfkMA9cLnBH+78a7zM8qD7C
+   wvlRHnpOVeZxsdlUN0T1leuFX7di9xCvt9C3OHZE3wgtUrZns+Q9H+stK
+   CmDmIlQj5zEI1/qnFCzw5HygCo1YZTaIfYieXgJ3OsJqLvKrW1t7VmFsq
+   adn+darkInUXAVdn0vXg7OzgxPJjRunvDvHaFatzhnXfw66hY5i2sxipG
+   QvMwFWP0q57vOwKtMhDFKgrwSArsHmSVxi3VVbtpjXleHFDPxcuBLfAMp
+   A==;
+X-CSE-ConnectionGUID: QDZI8vEmS8a4kdQ5pIqS9g==
+X-CSE-MsgGUID: vxhV82aQS5mA94woTOI72A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="80107435"
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="67600821"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 06:17:14 -0700
-X-CSE-ConnectionGUID: yI1boj+LS/OigIFRKzSMYQ==
-X-CSE-MsgGUID: 0vSba3VZS9+sdUvqeWO/AQ==
+   d="scan'208";a="80107435"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 06:58:31 -0700
+X-CSE-ConnectionGUID: SVCzvbN3QlaOgLhMKtZQKQ==
+X-CSE-MsgGUID: wJ9Pv92vT429JBP9rp6oFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="263277105"
+   d="scan'208";a="236766306"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.236])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 06:17:12 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 06:58:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
- Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
- platform-driver-x86@vger.kernel.org, 
- Thadeu Lima de Souza Cascardo <cascardo@holoscopio.com>
-In-Reply-To: <3415394.44csPzL39Z@rafael.j.wysocki>
-References: <3415394.44csPzL39Z@rafael.j.wysocki>
-Subject: Re: [PATCH v2 00/10] platform/x86: classmate-laptop: Bind to
- platform devices instead of ACPI ones
-Message-Id: <177919662711.13822.9649273823554227132.b4-ty@linux.intel.com>
-Date: Tue, 19 May 2026 16:17:07 +0300
+Date: Tue, 19 May 2026 16:58:25 +0300 (EEST)
+To: foobisdweik <dweikmferris@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] platform/x86: hp-wmi: Add support for Omen 16-b1xxx
+ (8A13)
+In-Reply-To: <20260513193916.84673-2-dweikmferris@gmail.com>
+Message-ID: <c3873f59-eeb0-e596-94ea-462afb863aa0@linux.intel.com>
+References: <20260513193916.84673-1-dweikmferris@gmail.com> <20260513193916.84673-2-dweikmferris@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 11 May 2026 22:01:45 +0200, Rafael J. Wysocki wrote:
+On Wed, 13 May 2026, foobisdweik wrote:
 
-> This is an update of
+> Add board name 8A13 (OMEN by HP Laptop 16-b1xxx, 12th-gen Intel/RTX 30
+> series) to the Omen thermal-profile, timed-thermal-profile, and Victus-S
+> DMI lists.
 > 
-> https://lore.kernel.org/linux-acpi/1956046.tdWV9SEqCh@rafael.j.wysocki/
+> The 8A13 firmware exposes the standard Omen "PerformanceControl" WMI
+> feature, uses the legacy EC thermal-profile offset (0x95), and
+> implements the Victus-S-style GM2D/GM2E WMI methods at EC offsets
+> 0xB0..0xB3 (RPM1..RPM4 tach) and 0x34..0x35 (SRP1/SRP2 setpoints).
+> This makes it identical in interface to its same-era sibling 8A44
+> (Omen 16-n0xxx), so reuse omen_v1_legacy_thermal_params.
 > 
-> sent mostly because I have realized that using devm_kzalloc() in the first
-> patch simplifies things going forward, but also it adds ACPI companion
-> checks against NULL at probe time that were missing previously.
+> After this change /sys/firmware/acpi/platform_profile reports
+> cool/balanced/performance and the hp hwmon device exposes per-fan
+> tachs plus the manual-mode pwm control on Omen 16-b1xxx.
 > 
-> [...]
+> Signed-off-by: foobisdweik <dweikmferris@gmail.com>
 
+Hi,
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Thanks for the patch, but we're not allowed to take in patches with sign 
+off lines using nicknames or pseudo names (please see 
+Documentation/process/submitting-patches.rst).
 
-The list of commits applied:
-[01/10] platform/x86: classmate-laptop: Address memory leaks on driver removal
-        commit: 4727a7b46fb264ee85f5a5b858ebde97b1a424d8
-[02/10] platform/x86: classmate-laptop: Unify probe rollback and remove code
-        commit: 5a45e962ee10d756fc945057000122ac258f4c2b
-[03/10] platform/x86: classmate-laptop: Pass struct device pointer to helpers
-        commit: 9daf8ebbca4ab6ff0bb114d8b3dfa579c63ddfec
-[04/10] platform/x86: classmate-laptop: Rename two helper functions
-        commit: 491e41d697a4ef602b05aadc03f4a881b48cbdf8
-[05/10] platform/x86: classmate-laptop: Register ACPI notify handlers directly
-        commit: 8dbe106718efbcb72d175cc472ccae885fd6471e
-[06/10] platform/x86: classmate-laptop: Convert v4 accel driver to a platform one
-        commit: 2f677df5ceda1cbb8704ffad35d5fd2479e4a667
-[07/10] platform/x86: classmate-laptop: Convert accel driver to a platform one
-        commit: 01feb0f446c1fbdf1daee2d95b0206fa1a7c3548
-[08/10] platform/x86: classmate-laptop: Convert tablet driver to a platform one
-        commit: 966c5bfa52d89b8701963f8587d7eb9cbe1ae5fd
-[09/10] platform/x86: classmate-laptop: Convert ipml driver to a platform one
-        commit: b207f8c36ea1fceb9b924af3b956f42dafdfa657
-[10/10] platform/x86: classmate-laptop: Convert keys driver to a platform one
-        commit: d1f01dfa7f1fda58a95846dc2c5ce50a71e18580
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index 24c151289dd3..389506a6d2e3 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -157,7 +157,7 @@ static const char * const omen_thermal_profile_boards[] = {
+>  	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
+>  	"88F7", "88FD", "88FE", "88FF",
+>  	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+> -	"8A15", "8A42",
+> +	"8A13", "8A15", "8A42",
+>  	"8BAD",
+>  	"8C58",
+>  	"8E41",
+> @@ -177,7 +177,7 @@ static const char * const omen_thermal_profile_force_v0_boards[] = {
+>   * "balanced" when reaching zero.
+>   */
+>  static const char * const omen_timed_thermal_profile_boards[] = {
+> -	"8A15", "8A42",
+> +	"8A13", "8A15", "8A42",
+>  	"8BAD",
+>  };
+>  
+> @@ -189,6 +189,10 @@ static const char * const victus_thermal_profile_boards[] = {
+>  
+>  /* DMI Board names of Victus 16-r and Victus 16-s laptops */
+>  static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
+> +	{
+> +		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A13") },
+> +		.driver_data = (void *)&omen_v1_legacy_thermal_params,
+> +	},
 
---
+I'll soon be pushing out review-ilpo-fixes branch, which will add 8902 
+here. In order to avoid conflict with it, please base this change on top 
+of it.
+
+>  	{
+>  		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+>  		.driver_data = (void *)&omen_v1_legacy_thermal_params,
+> 
+
+-- 
  i.
 
