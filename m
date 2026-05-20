@@ -1,62 +1,64 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC6E35B645
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 06:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2688C367B8B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 06:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779257266; cv=none; b=WXldmbfobhjxnxxvoF2hpPUfjiDj5JclSM0yPonmTyF8GcQ8CyUVH7Sp2TUuLon7rzx3fOj5HbbekAgWa0W48DH+QXCb9fhVxfIkAhoHqHXWXXZLfBKi766RWOIs4SzdgJ62m2QU4LI1a61+yKb6u7Oot71SRsC1OKlQLNVjdZk=
+	t=1779257268; cv=none; b=dCQ4vUuGGI12Dcf97GkImi4jIcu7n6QxjlN646rsqpfwVGUUKL2E1w3nsChMkQJZEAwoP1ZI96tIhmQzXbijlaqNJra2PRUEBpjdXFqOlwj4prcNk76SW5FNbwSP1Pkd/I7loZGUnuV20OCot5N9lV9XJueQJOSsgXuhXzXCp/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779257266; c=relaxed/simple;
-	bh=MbQblLqyoLUuMolclqfdr7YHnURB8919NSENYR7kzls=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Haf3oR4oGTt9pyeoIF+HK4zsqIEy8VAnoy+VwKdD+54ccdZ8irWs8vNp9b2naEYJ9tufusqnrqU6xi1EGkieOYQmL+tpASZkRkGVB6oncSmIxjgsMRsa1+z6iYrpufA+gOW/VGekYphqaQwcuCddhRdT5Wh95AnYndGiugoQF0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ROWOEAnL; arc=none smtp.client-ip=74.125.82.46
+	s=arc-20240116; t=1779257268; c=relaxed/simple;
+	bh=cvBWj2KS0C5CFGM8Pwuf+eDapN5TbgqVM/JSY1erLUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XPoiGKcl8mKWjZRtzIIDJjDmLLZLVGzD16yrBZLeR3C1CZ1bUP6nB4Vx89VLDtgR/v3DuYPJ6sj7LkAa6yGRc71iw4M8ZarqwmlbacDb1gDzjtTRdHT1MaR50BoqI8HxCQxOaICjmOHWzRXSptUEXGcZuBP7FwtTV/GuWUjJ+vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CR1AW31r; arc=none smtp.client-ip=74.125.82.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROWOEAnL"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-135e88b8e55so2026764c88.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 23:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CR1AW31r"
+Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-135e88b8e55so2026816c88.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 23:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779257264; x=1779862064; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nx6XU+xRLvrYq1SSpcMKF1EExYoYD5t+Ot3W5K+uvxI=;
-        b=ROWOEAnL42uv96SMlA2s7x2BJPsiKuMQlXznhfs3mprNlMDmcsmk2+tbJjNv+STrdY
-         BvmBppDTkj5xcKOcMlgWFZgViLGro2qBg5IRXjkQPLdSIEohCXSnjsf93HTSxpahLS7g
-         KL77yHWmDcDx+TAEUo5yEZuRsToN58fszaCgnDD6VRw7LOR+ZNI+YbEOgfrnO8OJn0So
-         bza+Y7g+cImPnKbq7+OOx+jMhxbjmuca8kaLjBlQYItOS7l7PIfHYV0UFrlP9kniKKF3
-         ibs36KtMYtCk3+9urY9j9v12KSNgnvcX9Hk+lbfDF/q7m8MubvqS9Qv5inBlLUtyn9/R
-         /32g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779257264; x=1779862064;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779257265; x=1779862065; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nx6XU+xRLvrYq1SSpcMKF1EExYoYD5t+Ot3W5K+uvxI=;
-        b=Ca5AaAG+9xI3uf8mf5zrejrhEEfa4bWonZlWmfJ3kOWzdJK3EAC53hk6mNQsRes2GJ
-         VDbAIqgaRWW5bZW4zMLFMPXFBSNUBq9lrPQ8AQW3Rfa1rDZWiZPCalVRzDL0AEmH3DeW
-         5ZPYgUAmkVjkWtGNFZVo2ljKdOPkde6mfzzHzNUEB7pfGmC29KsDS/EcYMxA3MHK0PJO
-         izpJ/jverkm0XXSMPIdmoUnT7YemAJTxcmnZLsybDN3QyimoCQ8qV0XZUo3toY2TEoLV
-         xDCntQlXQdj4wElhdAb76vrcp/t7HTSy2kkQOfDwPpX5Zs+XZSU8kbrW7UAKjdOjTUU+
-         2P0A==
-X-Forwarded-Encrypted: i=1; AFNElJ+PTQCv+i+1ehrhyX8eWSaapgY2C/vrAWSKjHeRH+LNCu7lU5UFKf/Hxg7zpriRmOkxfCz6q7bIgAG5/Ahj6GyyKPst@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUe4jWgdy+z+L7V33NSOOFNd2FoAuQvi090vuJkSIvb0ZdzbkF
-	W41kwkojsc1kPVXwUFVESmozq2b25UC1+xwVgoTI5aHqmT/UHA/WtbB5
-X-Gm-Gg: Acq92OFWhmkl9p7Fk4gcvPYJbNY/zlXkcSnJkYrpW3kFDGGnhDVFCLwJ/RlJCpP/2/m
-	R+xJfWVZjK9MUVDVfZKFGOQSymnSFHbWlBCn/rSegRPZBQcBFkBFvkYH8vkuzZJYpZgb0I9wDPH
-	YMH3RVH03pqqgJ6aQ1dukYj5gZU7NBtwgbQVVNR0lQ4Bscx44M3O/mrqIDcJHoORt5ohM0kuZBO
-	Fet0LA6lWwSAKZlkc+vv/c3or1kl1SX5jw+Wno2TcOVtJVzOBTpwqY6r18sZblpVE70vgnxS9UI
-	/7sJvDX83BF4tI7DFjmt15DWKKWTqgrnq3QiHYBctN5ZHksxcNyUCUbard7+juXUVNAlQnSONqn
-	nSEPIYmzjkYjfl03784y2i6gxzgR5SAZ2x4MAalcK5TvdXufrcUzXf4woxagAGGhs+tULzszv+u
-	C1LYi8FJx8MKjidnVKDnFqLx6APoJUTjMsgzPKE4zHy5gSYf0p3d11l/fJtwFlddmz9YD7ED/Z/
-	PTIBJxqRGtITPE=
-X-Received: by 2002:a05:7022:ec88:b0:134:a731:e778 with SMTP id a92af1059eb24-1350563c2aemr9393265c88.39.1779257263958;
-        Tue, 19 May 2026 23:07:43 -0700 (PDT)
+        bh=RasGlteF+K33aN/SbpNWfGwT+9lCHJ5HMQsoJjlLjcs=;
+        b=CR1AW31r2EDO1rhk10nL4uOjKOt8B2+PKHMk414HcUo9DbEdk6G23S4qfoTvN4EGXp
+         5CxCzP6HjmU0AIioqyT85QX32aqJvoYWXVBuMwbUbIlefPhulYn3z83MUewTeanN42HU
+         Fe1Do9bn8ktSD/x0M4gK0+OcNEEH42MHizOrc3JLGC8lph6qDKioYy8OKXCWScw7WI7Y
+         Fok6zeZg+FNrEhg//PJvgGrRNh7TUbmxavg+g+XvbH5+HJ4Tfu047IcRpmp3aVsTZg4M
+         I5yk1MZxGAaROT51phif95UGeaQie7kL5cZe+JOfT6F9y6vqg3xB8CavvYYKbHfbyRkl
+         m2qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779257265; x=1779862065;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RasGlteF+K33aN/SbpNWfGwT+9lCHJ5HMQsoJjlLjcs=;
+        b=auIO2bfIcg+mCZVPu3sS1zgFlvDaN/2QyFgHLs4Qte5YG2A2TdQS5k/PSv2IC1hxKA
+         M2TVd6Nlb+morVeYVhV78vEcONn2Do0vpBzK2usfVyel6uLE5qsJCx1WuEtGk+vlzCPE
+         QyjYOblYIRIc1M7kmO10iUTO8Qfl6+qQAJKqHvGzWlqy/VagmpnrVVVwZKc0fWX9yYWx
+         cVbwqm8cTgsoEm5t16e8ZAPK3l3RxZdCwovMxYq73DN+5D3lPhAlohbsvpEte1eohQV4
+         TwG6UqOrSyUBnGPygKQKDfG/DheFLTHIgYX3n2NDXyUd3bcq+fH4Rz07YIkqWpIMsqNY
+         0QhQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+j/rwaSe1iBk273DrCvVBAnz3xvubWeb1PSpUuw7zIxDaEkH3UeRLD3rdZDyCeUWSWS39vZhT1MOkZ+A81vuZOAUAM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCjew2B8DOtHWLlCvnW6IcoqY7C/xMwpGynR8dCq8iFM9D1L0o
+	/MSxOwZq/iV8Fy1mNKTNf4k27ZPPjfvMzrK1X3MPv+LeHdQlTcXOblwj
+X-Gm-Gg: Acq92OG67Zu2mWoANnSNynPF4DLvmLFI1tc3WEL9Djyp21uebU+JY2CJrqDqaOlPk+M
+	xMOi+qUu0QcU0LeEu2r9tjWeHGWrh+QYXxQa5S+FEAjMXfv5zbifctv9EpgeG8yriqOQ1k6yOD7
+	iDsnRSsy/jLIHiD3tVdDeG/iiECJkQW3hT/kwjz7bk06OtRy+dKzhGy/IWEj8BsfK+yAhQ3V895
+	WeyXDJVvAMg/RDL6GckdQ+ID/62haZFyV626FwYBVLznawynDiMtK0oRL4HTkZFV88YyIz0xPn4
+	M01OQUwfcOAHrOXmHmgXGIZOWsf5H6q3mgbVCwPxMzqTpheDkkQLqvP3KgKXJC2yyrXcDMIPYag
+	XweawnsdbqAZyspEOBeyLmYNfLKPuaHt+TP7yrQseIirb48ZF3L9+8cVz9uZhj9R/gL9VBLQfac
+	orSjhIMdrNp2zigLsH2J2eosf4wrcXbLxTJmH08rqx2vJ+aIbpOMZyyncbFqhX99bcDiRTsS4px
+	lRi
+X-Received: by 2002:a05:7022:4187:b0:134:7497:2148 with SMTP id a92af1059eb24-1350552c4fbmr12226332c88.28.1779257265172;
+        Tue, 19 May 2026 23:07:45 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cc2351c3sm27906026c88.11.2026.05.19.23.07.42
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cc2351c3sm27906026c88.11.2026.05.19.23.07.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 23:07:43 -0700 (PDT)
+        Tue, 19 May 2026 23:07:44 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -72,10 +74,12 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	hyacinth@shzj.cc,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v14 0/7] lenovo-wmi: Add fixes and enhancement
-Date: Wed, 20 May 2026 06:07:33 +0000
-Message-ID: <20260520060740.119554-1-derekjohn.clark@gmail.com>
+Subject: [PATCH v14 1/7] platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
+Date: Wed, 20 May 2026 06:07:34 +0000
+Message-ID: <20260520060740.119554-2-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260520060740.119554-1-derekjohn.clark@gmail.com>
+References: <20260520060740.119554-1-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,151 +88,216 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds many much needed features to the lenovo-wmi* drivers.
-This version is based off platform-driver-x86/review-ilpo-fixes branch,
-so patches 1-9 from v12 have been dropped.
+Use an enum for all device ID's and CPU attribute feature ID's,
+add missing CPU attributes.
 
-Patch 1 adds the remaining CPU attributes that weren't previously
-exposed.
-
-Patch 2 adds GPU attributes.
-
-Patch 3 renames a name constant in preparation for patch 6.
-
-Patch 4 adds battery charge-types limiting when supported only by WMI, or
-when a module parameter to skip compatibility checks is set. The
-MODULE_PARM_DESC macro creates one check and two warnings in checkpatch.
-I reviewed other examples from the kernel and I am following the same
-convention, so I left it as is.
-
-Patch 5 adds a module parameter, force_load_psy_ext, to bypass ACPI and
-BIOS compatibility checks for the power supply extension.
-
-Patch 6 adds a debugfs directory.
-
-Patch 7 adds a debugfs file for dumping capdata.
-
+Reviewed-by: Rong Zhang <i@rong.moe>
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
-v14:
-  - Change charge limit -> charge types in dev_dbg.
-  - Stop casting u32 to int in lwmi_psy_prop_get_supported.
-v13: https://lore.kernel.org/platform-driver-x86/20260512235808.691046-1-derekjohn.clark@gmail.com/
-  - Rebase off review-ilpo-fixes and drop merged patches 1-9.
-  - Switch back to charge_types based on feedback from Hans.
-  - Ensure force_load_psy_ext also makes is_writable and is_supported
-    checks for lwmi_psy_ext_prop* functions always return true.
-  - Add helper function for is_writable and is_supported to reduce
-    duplicated code.
-  - Move bugged attribute description to the correct paragraph in patch
-    4.
-v12: https://lore.kernel.org/platform-driver-x86/20260411162334.25682-1-derekjohn.clark@gmail.com/
-  - Break out force_load_psy_ext into its own patch.
-  - Drop fixes tags for formatting only prerequisite patches Cc'd to
-    stable.
-  - Fix formatting in various places.
-  - Use correct type when passing args in new functions. I will revisit
-    & fix older functions in a new series.
-v11: https://lore.kernel.org/platform-driver-x86/20260507180507.912966-1-derekjohn.clark@gmail.com/
-  - Reorganize patches in a way that cleans up the churn with
-    assignment of attribute IDs. This also allowed dropping the
-    patch that moved the LWMI_FAN_DIV patch as it is now effectively
-    moved when declaring the updated LWMI_ATTR_ID_FAN_DIV macro. As a
-    result, some formatting only patches were added to the Cc list for
-    stable since as they are now prerequisites to some of the fixes.
-  - Refactor charge control patch to use charge_behavior and
-    charge_control_end_threshold instead of charge_types to be in
-    accordance with the power supply class documentation.
-  - Minor additional formatting fixes.
-v10: https://lore.kernel.org/platform-driver-x86/20260411162334.25682-1-derekjohn.clark@gmail.com/
-  - Fix misnamed attribute in wmi-other.
-v9: https://lore.kernel.org/platform-driver-x86/20260411162334.25682-1-derekjohn.clark@gmail.com/
-  - Invert ida_alloc fail logic.
-  - Fix dropped mode arg in current_value_show.
-  - Fix misnamed attribute in documentation.
-v8: https://lore.kernel.org/platform-driver-x86/20260406201400.438221-1-derekjohn.clark@gmail.com/
-  - Clean up rebase mixup with re-assinment of wmi_method_args_32 in
-    patches 6 and 14 from {} to { 0x00, 0x00 } and back.
-  - Combine ret_obj declaration and assignment in patch 1.
-v7: https://lore.kernel.org/platform-driver-x86/20260402032424.678528-1-derekjohn.clark@gmail.com/
-  - Add 3 additional bug fix patches from Rong Zhang reported by
-    shashiko.dev
-  - Reorder patches so the fixes are upfront in patches 1-7.
-  - Fix various typos and rebase mixups from v6.
-v6: https://lore.kernel.org/platform-driver-x86/20260331181208.421552-1-derekjohn.clark@gmail.com/
-  - Incorporate Rong Zhang's debugfs and decoupling patches into the
-    series.
-  - Add a patch to clean up too many cross-references to wmi-gamezone.h
-  - Make lwmi_attr_id a static inline in wmi-capdata.h
-  - Added a patch  to fix a bug where ares.arg1 is uninitialized when it
-    is sent to the firmware.
-  - Add supported checks before adding battery extenstion, and ensure
-    both the new checks and the is_writable checks are not casting u32
-    to i32.
-  - Misc formating changes.
-v5: https://lore.kernel.org/platform-driver-x86/20260324221032.1333636-1-derekjohn.clark@gmail.com/
-  - Remove cv/cd_mode_id references that occured before patch 4.
-  - Move lwmi_attr_id to capdata.c with a namespace export.
-  - Fix mixing include.
-  - Make lwmi_attr_is_supported return bool.
-  - Use switch instead of if for setting/getting charge type state.
-  - Various formatting fixes.
-v4: https://lore.kernel.org/platform-driver-x86/20260312031032.3467565-1-derekjohn.clark@gmail.com/
-  - Use loop instead of back gotos for identifying the working attribute
-    ID.
-  - Use function instead of macro to assign attribute_id, preserving
-    types.
-  - Removed unused defines and enum values.
-  - Rename charging defines to clarify thier purpose.
-  - Fixed various formatting issues from v3.
-  - Added module param to skip ACPI check when loading the driver for
-    the power supply extension.
-  - Don't abort adding power supply extension if the ACPI handle from
-    ideapad is not present.
-  - Don't worry about symmetric cleanup when cleaning up attributes in
-    an error state.
-  - Reword Patch 8 commit message to be more concise.
-  - Fix wording in Patch 7 to match the changes.
-v3: https://lore.kernel.org/platform-driver-x86/20260224043200.2680384-1-derekjohn.clark@gmail.com/
-  - Re-add HWMON name const and just rename LWMI_OM_FW_ATTR_BASE_PATH
-  - Fix linker warnings by moving acpi/battery include to the end of the
-    list.
-  - Remove CPU/GPU OC features. These attributes are BOOL type and will
-    need a new constructor that I'll add later.
-v2: https://lore.kernel.org/platform-driver-x86/20260215061339.2842486-1-derekjohn.clark@gmail.com/
-  - Fix gpu_mode misisng from attributes list.
-  - Fix prototypes for power suppy patch.
-  - Reorganize CPU and GPU attributes alphabetically.
-  - Break out the patch consolidating the driver name cost.
-  - Move some of the refactoring of attribute_id back to into patch 1
-    where it belongs.
-  - Fix some additional typos in function prototypes.
-v1: https://lore.kernel.org/platform-driver-x86/20260213081243.794288-1-derekjohn.clark@gmail.com/
+v7:
+  - Fix typo in documentation.
+v4:
+  - Align type ID defines.
+  - Align CPU feature enum values.
+  - remove cpu_oc_stat from Documentation.
+v3:
+  - Remove cpu_oc_stat.
+---
+ .../wmi/devices/lenovo-wmi-other.rst          |  9 ++
+ drivers/platform/x86/lenovo/wmi-capdata.h     |  5 +-
+ drivers/platform/x86/lenovo/wmi-other.c       | 99 ++++++++++++++++++-
+ 3 files changed, 107 insertions(+), 6 deletions(-)
 
-Derek J. Clark (5):
-  platform/x86: lenovo-wmi-other: Add missing CPU tunable attributes
-  platform/x86: lenovo-wmi-other: Add GPU tunable attributes
-  platform/x86: lenovo-wmi-other: Rename LWMI_OM_FW_ATTR_BASE_PATH
-  platform/x86: lenovo-wmi-other: Add WMI battery charge limiting
-  platform/x86: lenovo-wmi-other: Add force_load_psy_ext module
-    parameter
-
-Rong Zhang (2):
-  platform/x86: lenovo-wmi-helpers: Add helper for creating per-device
-    debugfs dir
-  platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
-
- .../wmi/devices/lenovo-wmi-other.rst          |  19 +
- drivers/platform/x86/lenovo/Kconfig           |   2 +
- drivers/platform/x86/lenovo/wmi-capdata.c     | 120 ++++
- drivers/platform/x86/lenovo/wmi-capdata.h     |  14 +-
- drivers/platform/x86/lenovo/wmi-helpers.c     |  34 +
- drivers/platform/x86/lenovo/wmi-helpers.h     |   2 +
- drivers/platform/x86/lenovo/wmi-other.c       | 617 +++++++++++++++++-
- 7 files changed, 797 insertions(+), 11 deletions(-)
-
-
-base-commit: 2997606dd17729404cef9821ce66dd037b6019eb
+diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
+index 01d4711567380..189dd4d31926d 100644
+--- a/Documentation/wmi/devices/lenovo-wmi-other.rst
++++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+@@ -68,9 +68,18 @@ Each attribute has the following properties:
+  - type
+ 
+ The following firmware-attributes are implemented:
++ - cpu_temp: CPU Thermal Load Limit
++ - ppt_cpu_cl: CPU Cross Loading Power Limit
++ - ppt_pl1_apu_spl: Platform Profile Tracking APU Sustained Power Limit
+  - ppt_pl1_spl: Platform Profile Tracking Sustained Power Limit
++ - ppt_pl1_spl_cl: Platform Profile Tracking Cross Loading Sustained Power Limit
++ - ppt_pl1_tau: Exceed Duration for Platform Profile Tracking Sustained Power Limit
+  - ppt_pl2_sppt: Platform Profile Tracking Slow Package Power Tracking
++ - ppt_pl2_sppt_cl: Platform Profile Tracking Cross Loading Slow Package Tracking
+  - ppt_pl3_fppt: Platform Profile Tracking Fast Package Power Tracking
++ - ppt_pl3_fppt_cl: Platform Profile Tracking Cross Loading Fast Package Power Tracking
++ - ppt_pl4_ipl: Platform Profile Tracking Instantaneous Power Limit
++ - ppt_pl4_ipl_cl: Platform Profile Tracking Cross Loading Instantaneous Power Limit
+ 
+ LENOVO_FAN_TEST_DATA
+ -------------------------
+diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
+index c3e760b8c3c3d..c74a0e5294e78 100644
+--- a/drivers/platform/x86/lenovo/wmi-capdata.h
++++ b/drivers/platform/x86/lenovo/wmi-capdata.h
+@@ -18,7 +18,10 @@
+ #define LWMI_ATTR_MODE_ID_MASK	GENMASK(15, 8)
+ #define LWMI_ATTR_TYPE_ID_MASK	GENMASK(7, 0)
+ 
+-#define LWMI_DEVICE_ID_FAN	0x04
++enum lwmi_device_id {
++	LWMI_DEVICE_ID_CPU = 0x01,
++	LWMI_DEVICE_ID_FAN = 0x04,
++};
+ 
+ #define LWMI_TYPE_ID_NONE 0x00
+ 
+diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
+index d318ba432fdcc..fe4cd7da017eb 100644
+--- a/drivers/platform/x86/lenovo/wmi-other.c
++++ b/drivers/platform/x86/lenovo/wmi-other.c
+@@ -51,14 +51,21 @@
+ 
+ #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+ 
+-#define LWMI_DEVICE_ID_CPU 0x01
+-
+-#define LWMI_FEATURE_ID_CPU_SPPT 0x01
+-#define LWMI_FEATURE_ID_CPU_SPL 0x02
+-#define LWMI_FEATURE_ID_CPU_FPPT 0x03
++enum lwmi_feature_id_cpu {
++	LWMI_FEATURE_ID_CPU_SPPT =	0x01,
++	LWMI_FEATURE_ID_CPU_SPL =	0x02,
++	LWMI_FEATURE_ID_CPU_FPPT =	0x03,
++	LWMI_FEATURE_ID_CPU_TEMP =	0x04,
++	LWMI_FEATURE_ID_CPU_APU =	0x05,
++	LWMI_FEATURE_ID_CPU_CL =	0x06,
++	LWMI_FEATURE_ID_CPU_TAU =	0x07,
++	LWMI_FEATURE_ID_CPU_IPL =	0x09,
++};
+ 
+ #define LWMI_FEATURE_ID_FAN_RPM 0x03
+ 
++#define LWMI_TYPE_ID_CROSSLOAD	0x01
++
+ #define LWMI_FEATURE_VALUE_GET 17
+ #define LWMI_FEATURE_VALUE_SET 18
+ 
+@@ -566,18 +573,72 @@ static struct tunable_attr_01 ppt_pl1_spl = {
+ 	.type_id = LWMI_TYPE_ID_NONE,
+ };
+ 
++static struct tunable_attr_01 ppt_pl1_spl_cl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_SPL,
++	.type_id = LWMI_TYPE_ID_CROSSLOAD,
++};
++
+ static struct tunable_attr_01 ppt_pl2_sppt = {
+ 	.device_id = LWMI_DEVICE_ID_CPU,
+ 	.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
+ 	.type_id = LWMI_TYPE_ID_NONE,
+ };
+ 
++static struct tunable_attr_01 ppt_pl2_sppt_cl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_SPPT,
++	.type_id = LWMI_TYPE_ID_CROSSLOAD,
++};
++
+ static struct tunable_attr_01 ppt_pl3_fppt = {
+ 	.device_id = LWMI_DEVICE_ID_CPU,
+ 	.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
+ 	.type_id = LWMI_TYPE_ID_NONE,
+ };
+ 
++static struct tunable_attr_01 ppt_pl3_fppt_cl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_FPPT,
++	.type_id = LWMI_TYPE_ID_CROSSLOAD,
++};
++
++static struct tunable_attr_01 cpu_temp = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_TEMP,
++	.type_id = LWMI_TYPE_ID_NONE,
++};
++
++static struct tunable_attr_01 ppt_pl1_apu_spl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_APU,
++	.type_id = LWMI_TYPE_ID_NONE,
++};
++
++static struct tunable_attr_01 ppt_cpu_cl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_CL,
++	.type_id = LWMI_TYPE_ID_NONE,
++};
++
++static struct tunable_attr_01 ppt_pl1_tau = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_TAU,
++	.type_id = LWMI_TYPE_ID_NONE,
++};
++
++static struct tunable_attr_01 ppt_pl4_ipl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_IPL,
++	.type_id = LWMI_TYPE_ID_NONE,
++};
++
++static struct tunable_attr_01 ppt_pl4_ipl_cl = {
++	.device_id = LWMI_DEVICE_ID_CPU,
++	.feature_id = LWMI_FEATURE_ID_CPU_IPL,
++	.type_id = LWMI_TYPE_ID_CROSSLOAD,
++};
++
+ struct capdata01_attr_group {
+ 	const struct attribute_group *attr_group;
+ 	struct tunable_attr_01 *tunable_attr;
+@@ -913,17 +974,45 @@ static bool lwmi_attr_01_is_supported(struct tunable_attr_01 *tunable_attr)
+ 		.name = _fsname, .attrs = _attrname##_attrs               \
+ 	}
+ 
++LWMI_ATTR_GROUP_TUNABLE_CAP01(cpu_temp, "cpu_temp",
++			      "Set the CPU thermal load limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_cpu_cl, "ppt_cpu_cl",
++			      "Set the CPU cross loading power limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_apu_spl, "ppt_pl1_apu_spl",
++			      "Set the APU sustained power limit");
+ LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl, "ppt_pl1_spl",
+ 			      "Set the CPU sustained power limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_spl_cl, "ppt_pl1_spl_cl",
++			      "Set the CPU cross loading sustained power limit");
+ LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt, "ppt_pl2_sppt",
+ 			      "Set the CPU slow package power tracking limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl2_sppt_cl, "ppt_pl2_sppt_cl",
++			      "Set the CPU cross loading slow package power tracking limit");
+ LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt, "ppt_pl3_fppt",
+ 			      "Set the CPU fast package power tracking limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl3_fppt_cl, "ppt_pl3_fppt_cl",
++			      "Set the CPU cross loading fast package power tracking limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl1_tau, "ppt_pl1_tau",
++			      "Set the CPU sustained power limit exceed duration");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl, "ppt_pl4_ipl",
++			      "Set the CPU instantaneous power limit");
++LWMI_ATTR_GROUP_TUNABLE_CAP01(ppt_pl4_ipl_cl, "ppt_pl4_ipl_cl",
++			      "Set the CPU cross loading instantaneous power limit");
++
+ 
+ static struct capdata01_attr_group cd01_attr_groups[] = {
++	{ &cpu_temp_attr_group, &cpu_temp },
++	{ &ppt_cpu_cl_attr_group, &ppt_cpu_cl },
++	{ &ppt_pl1_apu_spl_attr_group, &ppt_pl1_apu_spl },
+ 	{ &ppt_pl1_spl_attr_group, &ppt_pl1_spl },
++	{ &ppt_pl1_spl_cl_attr_group, &ppt_pl1_spl_cl },
++	{ &ppt_pl1_tau_attr_group, &ppt_pl1_tau },
+ 	{ &ppt_pl2_sppt_attr_group, &ppt_pl2_sppt },
++	{ &ppt_pl2_sppt_cl_attr_group, &ppt_pl2_sppt_cl },
+ 	{ &ppt_pl3_fppt_attr_group, &ppt_pl3_fppt },
++	{ &ppt_pl3_fppt_cl_attr_group, &ppt_pl3_fppt_cl },
++	{ &ppt_pl4_ipl_attr_group, &ppt_pl4_ipl },
++	{ &ppt_pl4_ipl_cl_attr_group, &ppt_pl4_ipl_cl },
+ 	{},
+ };
+ 
 -- 
 2.53.0
 
