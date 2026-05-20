@@ -1,64 +1,64 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB3C37268B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 06:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72928371889
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 06:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779257273; cv=none; b=jEC4WXRbbuCm+WW6lWJNP2qVq9atGDudmZs1eO0FyF+nDV3GgmmSiMp1HdwcpnImU+eCaADnPBbqAIa47jf6u3dyBFCWiVMqWeo2lVC90VPnC7MVqZizH1Xe2Su8PWQMZbxXW1CacgOsdxDC7eCNwR5ZczQ81vqkuZZ+cvbN1oU=
+	t=1779257278; cv=none; b=gvngw/w9JPQHBhURLgoFIw/sk1oUi9BJEcy5tn8ycPPm37vNKwTJJtaNj4Zzc72kgVt2g8LhMuBekoj0Oe0156kHTjgUDSsjF7tFlo9CJgqXQI3XQ2ztCkeNiBdU5+f/6gF3tTkK7mZgQCYzj7AtgqwZmKmacGTw90dLXiAbHrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779257273; c=relaxed/simple;
-	bh=ix2cnLN05qDVBqL5Ivaluk5AD3bR6qaGo0PGT4BxaMo=;
+	s=arc-20240116; t=1779257278; c=relaxed/simple;
+	bh=GxCFq9AI+jwh0+r6j6wu66r8AXdJi64J9r/mRxaMYII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E3mTG9nfc6Us91wAUXwvJQjqoGK3yH/bFkpJgHGqNQpPRN+11iNKpOUCATUbDRaXSUKbfpSh3dYSywrhVQNIvQ8PmKL9KzT3xMi8/ApeVO6D/vDOPJZNmCvtGE/oIX06Xw7cZEpsQ776MHBA52xNgXMZC4U53JPDz2HwUy+Q1f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxYSRCoQ; arc=none smtp.client-ip=74.125.82.52
+	 MIME-Version; b=nHXxFsKGhx9hM2dg0XCxZamgLAjrRoCCtY6CCD/k47jn79gs6ZxukYEYlVPJRDPc8RO1DVhRjIO3VuRCcbiuyZBk8xd9H7u4aNkpUSU7F86hgDuXoBECWgiKMmcGPZljhVzHQg2+ZXWDkvBcbM8qBQuxrRW8ZBNdTEKeJ02W8oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AoFQ3VTu; arc=none smtp.client-ip=74.125.82.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxYSRCoQ"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-1329fc4bf77so1378165c88.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 23:07:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AoFQ3VTu"
+Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-1332772f6b3so5568385c88.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 23:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20251104; t=1779257270; x=1779862070; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SuX4siZvKFowva4pFQaHeUAjFbZPfs27UZMsgCXTI7Y=;
-        b=fxYSRCoQauABHXx7lDagQ88OUxLDvilxThsHgE8PYF2nh4++a4N3BFWrjRM6V/29z8
-         oCmbpxDEAOektH18tqXs0OFE5yfy1yzQDr/AmhN0eaFUMxU1pEsVQeHpmk0fZlseMG8A
-         bBOm2KACnqMCd9WC9p0xYZ2mddlUrSvnjPlUD+gQi5rs6mR0X5H2NMpETAlyfJT1p0Vl
-         H9t4rIu3Wz2/8tHxZ70Ic89oN+GaZcLDqg1L+hOuCHo6qlb1hZlHE+nnXeXfpW8fDGfs
-         hv6JZ3iulDUvPkaj4Yc0B/FfgLB4+5bzn9KGuSlDkeX9yKG4fqKODJr0Esz3efsHD+ro
-         ATXw==
+        bh=Y/FEk053G9MxEw/xHdJE9UEmMYwdRskL+c4zHyrhNvk=;
+        b=AoFQ3VTuJaB7ok0ehxhYsdyhpeHSJkVgHVToNMWE7ZTgqrcduNaF3juSrbSa4KKUlV
+         U4P+/Lx5NIb+o16K6o38/iqq/hOlYW54KqXZbTaCvUMBsKx65KUV8aPm8JLViaKy6Tr0
+         SJLXXva7ca1uSZECr3DODsmux/+5ngoar+DJWSDajEtN2cGX1MzH5dKtHozVF0tw03wG
+         D4wrSe6psB4QT+JBjvF2yX1fneYN0S7qN/TIPFqCSHcO9/dqM7L1SdnFTW4q7XZX+zXO
+         KevxfvAQmc84QyhBPMqVYVDoP+qhZCOpbsq7u91s9ZRa6KH823OmLYtZLT1sZZl4LjXS
+         VjPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20251104; t=1779257270; x=1779862070;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=SuX4siZvKFowva4pFQaHeUAjFbZPfs27UZMsgCXTI7Y=;
-        b=BtSu2W4SJK9e2HAzWx+7yAqJgn+18lVnehISLHAjpGRaPF9Gz6LGSlEPA3rwepsMMw
-         99tYyRnWfKOCvL+XqTasQn9y8oRFzMSNdM+ISTqgjJxZOujIOyM8KPMEwP4Rjok+di7l
-         Zq1p1S/dLmAfewKP8JXPD2kxhn0JgDb1ZGM+DiKLhHL5g3HOfYhVmsIvczUlA/DDqcDb
-         k9ItONXXKmPZMtNrHtCbtYxz8dwaNFz62UuesKJ5EULX4mCMpcFsTeLw4VBnynu9NsHH
-         HtXCEwhEP3uFhjwPsZcZ20h8NpBCfuG47dTyrg8KfEgnksI5eMPnXV60rzOtOCKKB22C
-         HQ7A==
-X-Forwarded-Encrypted: i=1; AFNElJ9mfUTsfcqWxfXBPfD3NF9uT17gMEVL1eybNGBSDUQrIofMHOABbt5EhV1XdheWTzXw1vO1/pqIgaw0p8OGD0qtieYl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG+akcxjsid+rmK8myAqaRCsEwzdDWfQV+F2uRHN9O/aFfWUVB
-	ORTTtBjZuu662jLiq4p19RJHzE5gRVxEAXHUDUFrZKBI5DFS4AYfzwzb
-X-Gm-Gg: Acq92OF4pUyGw6oaTof2yDAyjRxRxkEiI7UwHIdZ0ulkQHCsoQPkDaQTUQuIjO76V5q
-	zeIFleh95W6lg7y/2+f0RMvOazuQOhwhFSAbMpw5EeQzINr47OVYhXYxlvQp5f+2y6Hv9upjUyE
-	HMdT9vPAwiZEcLxCHYjUeDkWpgFpfpgQD3bOlNOuZvp8hALe6mBxqWz1uJE4dHzGo5J2lb4Ybf0
-	F4aaOMGcJSFEstGrB+QhYgdMedUFh+nwKAoKH/eT5pHrYiX8AqkVEIeVaqH59LsY2pxfrT7Mv9l
-	4d4jnNKfl4bnz1mNfycjPKbK373gRsYUEIdoBFdkT4Stz3nEkHVwMHXZBw9dUgxLXEqjRwvpDK6
-	6W3tK4mTwGr75qDjHc7ngUJCFloeksrCfXcfhc6NGKu8sgF9z4znL78QdvXHZj1TgHsvOdWEINI
-	zzNL79b3bQ5RZpuWZPTSM7m5EYjDIFNzdzCS3X8ubFOaYxTKjPt51Ytf/ipCP3gP0YlrYYUyguC
-	Ggf
-X-Received: by 2002:a05:7022:23a9:b0:12c:8f92:c6ba with SMTP id a92af1059eb24-1350494f249mr10303932c88.34.1779257269645;
-        Tue, 19 May 2026 23:07:49 -0700 (PDT)
+        bh=Y/FEk053G9MxEw/xHdJE9UEmMYwdRskL+c4zHyrhNvk=;
+        b=QK7pbXG1Z6MMpLVIeSw6D39UtDb8DGS1HE/E4QZkrI6j8kuX8zneCpoIq+QnS0RcFH
+         IxDaFz0NuMaiGcHga2zs6AEe+DML6J5zTbZGtmPwOWsdhf/VYF6k9ENSk3vhcRRSdREB
+         rKatJ1QXp0v4tTCCjOYKR9WAKbNEhwkMOT2KK6jSL7LoOSG9KtztNF2kue0PuaogCNq6
+         m83cU+gEByLg7Il6iHw0sDnCwQieV+izcijXtzUqiZyLMY20RH0eyVLzXV6roooM/BT4
+         AVKvApA9zgWW+kG/negwvQXLFvAR9BxoYHqiIyzwHtrsFR98jWUF84J37W6Pw2JTNcq7
+         kUsw==
+X-Forwarded-Encrypted: i=1; AFNElJ/CJEJsaGujNy82uSSqQqAZvNb9dVCOh4jQ3BlPG/hC2tzdGr1OEI+qfHZU0g32BizYkJgmn1xQOaPr1zee2jmVyfk2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9c/qyQ8GiInIvWiAQhgBqC7WtidrwMRJdgt0XZp4X6Yj2U7Cw
+	kmY+Aw6l7ci4RQHVKQlnvalOzn791JX+rnVBKWvrM0CU7WwIg+qCYtaH
+X-Gm-Gg: Acq92OH4Uch3ThWJzpuBRIiL6UjR8hHb/E7KfMyTJ2Dkb4B4sOT4293kNOxiJq6e8f3
+	qtyIcgBlj4a5xxokMd/RaM0c/QjpUWokF03ajr5xyZugDDPo9F+36CORkZrJr6N1YVHly+QP54v
+	KGIw36sMZ8CddbNypepFH5B7gq5M1KX3b3ngE3JjvAXKmmflV4872x531fN5XdDPBYawqJJ7vCX
+	sK4T/d2xpw59V/stPQLrG6dToqFT2HRZqBh1vYhVqu3FMFghSIENbraSzRWG+DJIxBrg0tAyI32
+	HhuuUO99YA8OpB0lDkoK/WVW7/YhoVmCor4xl8FvdROiHuiMhCcs/pdxJW/YHKGkcIwvMTqXjZX
+	u782HZ5V/0ON8G8W/SqyvwQov+BWQYKuznVHYpHT0xhxJhO7N98pYrY79vz+mnEyycaQj7qZTzb
+	ZFBYnmbAeJ+hIpFQJ4sDp8d0yWih85+U3245aM8QPlA3jYxWPNzpoGrWYqiWVty8YLRNPaEZRnc
+	TmI
+X-Received: by 2002:a05:7022:2523:b0:12a:6c4b:9d01 with SMTP id a92af1059eb24-1350430f349mr8673149c88.7.1779257270470;
+        Tue, 19 May 2026 23:07:50 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
         by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cc2351c3sm27906026c88.11.2026.05.19.23.07.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 23:07:49 -0700 (PDT)
+        Tue, 19 May 2026 23:07:50 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -74,9 +74,9 @@ Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	hyacinth@shzj.cc,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v14 5/7] platform/x86: lenovo-wmi-other: Add force_load_psy_ext module parameter
-Date: Wed, 20 May 2026 06:07:38 +0000
-Message-ID: <20260520060740.119554-6-derekjohn.clark@gmail.com>
+Subject: [PATCH v14 6/7] platform/x86: lenovo-wmi-helpers: Add helper for creating per-device debugfs dir
+Date: Wed, 20 May 2026 06:07:39 +0000
+Message-ID: <20260520060740.119554-7-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260520060740.119554-1-derekjohn.clark@gmail.com>
 References: <20260520060740.119554-1-derekjohn.clark@gmail.com>
@@ -88,86 +88,90 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some Lenovo BIOS have been shown to have incomplete and/or broken
-capability data and WMI attribute IDs. In some cases the capability data
-reports that a feature is not supported when the get/set methods are
-fully implemented. It is also possible that the ACPI methods from the
-ideapad_laptop driver we defer to could be bugged while the WMI method
-is fully working. To aid end users in submitting more complete bug
-reports in these situations, add an override to skip the ACPI and
-compatibility checks to force load the power supply extension as if it
-is fully supported and has no conflicts.
+From: Rong Zhang <i@rong.moe>
 
-Reviewed-by: Rong Zhang <i@rong.moe>
+We are about to add debugfs support for lenovo-wmi-capdata. Let's setup
+a debugfs directory called "lenovo_wmi" for tidiness, so that any
+lenovo-wmi-* device can put its subdirectory under the directory.
+Subdirectories will be named after the corresponding WMI devices.
+
+Signed-off-by: Rong Zhang <i@rong.moe>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
 v13:
-  - Ensure is_writable and is_supported always return true when
-    force_load_psy_ext is true.
-v12:
-  - Move the force_load_psy_ext into its own distinct patch.
+  - Fix alphabetical include order.
+v7:
+  - Use subsys_initcall() instead of module_init().
 ---
- drivers/platform/x86/lenovo/wmi-other.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ drivers/platform/x86/lenovo/wmi-helpers.c | 34 +++++++++++++++++++++++
+ drivers/platform/x86/lenovo/wmi-helpers.h |  2 ++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index 8331da864beba..fbb32bf404f24 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -185,6 +185,16 @@ MODULE_PARM_DESC(relax_fan_constraint,
- 	"Enabling this may results in HWMON attributes being out-of-sync, "
- 	"and setting a too low RPM stops the fan. Use with caution.");
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.c b/drivers/platform/x86/lenovo/wmi-helpers.c
+index 7a198259e3933..8f5766c391eb4 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.c
++++ b/drivers/platform/x86/lenovo/wmi-helpers.c
+@@ -18,6 +18,8 @@
  
-+/* Visibility of power supply extensions */
-+static bool force_load_psy_ext;
-+module_param(force_load_psy_ext, bool, 0444);
-+MODULE_PARM_DESC(force_load_psy_ext,
-+	"This option will skip checking if the ideapad_laptop driver will conflict "
-+	"with adding an extension to set the battery charge behavior and battery charge "
-+	"control end threshold. It will also skip checking if the BIOS reports that "
-+	"those features are fully supported. It is recommended to blacklist the ideapad "
-+	"driver before using this option.");
+ #include <linux/acpi.h>
+ #include <linux/cleanup.h>
++#include <linux/debugfs.h>
++#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ #include <linux/module.h>
+@@ -185,6 +187,38 @@ int lwmi_tm_notifier_call(enum thermal_mode *mode)
+ }
+ EXPORT_SYMBOL_NS_GPL(lwmi_tm_notifier_call, "LENOVO_WMI_HELPERS");
+ 
++static struct dentry *lwmi_debugfs_dir;
 +
- /* ======== HWMON (component: lenovo-wmi-capdata 00 & fan) ======== */
- 
- /**
-@@ -755,6 +765,9 @@ static bool lwmi_psy_prop_is_supported(struct lwmi_om_priv *priv, enum power_sup
- {
- 	int ret;
- 
-+	if (force_load_psy_ext)
-+		return true;
++/**
++ * lwmi_debugfs_create_dir() - Helper function for creating a debugfs directory
++ * for a device.
++ * @wdev: Pointer to the WMI device to be called.
++ *
++ * Caller must remove the directory with debugfs_remove_recursive() on device
++ * removal.
++ *
++ * Return: Pointer to the created directory.
++ */
++struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev)
++{
++	return debugfs_create_dir(dev_name(&wdev->dev), lwmi_debugfs_dir);
++}
++EXPORT_SYMBOL_NS_GPL(lwmi_debugfs_create_dir, "LENOVO_WMI_HELPERS");
 +
- 	ret = lwmi_psy_prop_get_supported(priv, prop);
- 	if (ret < 0)
- 		return false;
-@@ -781,6 +794,9 @@ static int lwmi_psy_prop_is_writeable(struct power_supply *ps,
- 	struct lwmi_om_priv *priv = ext_data;
- 	int ret;
- 
-+	if (force_load_psy_ext)
-+		return true;
++static int __init lwmi_helpers_init(void)
++{
++	lwmi_debugfs_dir = debugfs_create_dir("lenovo_wmi", NULL);
 +
- 	ret = lwmi_psy_prop_get_supported(priv, prop);
- 	if (ret < 0)
- 		return false;
-@@ -909,6 +925,8 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
- 		props |= LWMI_PSY_PROP_TYPES;
- 	if (!props)
- 		return;
-+	if (force_load_psy_ext)
-+		goto load_psy_ext;
++	return 0;
++}
++subsys_initcall(lwmi_helpers_init)
++
++static void __exit lwmi_helpers_exit(void)
++{
++	debugfs_remove_recursive(lwmi_debugfs_dir);
++}
++module_exit(lwmi_helpers_exit)
++
+ MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
+ MODULE_DESCRIPTION("Lenovo WMI Helpers Driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/lenovo/wmi-helpers.h b/drivers/platform/x86/lenovo/wmi-helpers.h
+index ed7db3ebba6cc..039fe61003ceb 100644
+--- a/drivers/platform/x86/lenovo/wmi-helpers.h
++++ b/drivers/platform/x86/lenovo/wmi-helpers.h
+@@ -16,6 +16,8 @@ struct wmi_method_args_32 {
+ 	u32 arg1;
+ };
  
- 	/* Deconflict ideapad_laptop driver */
- 	ret = acpi_get_devices(ideapad_hid, lwmi_acpi_match, &handle, NULL);
-@@ -920,6 +938,7 @@ static void lwmi_om_psy_ext_init(struct lwmi_om_priv *priv)
- 		return;
- 	}
- 
-+load_psy_ext:
- 	/* Add battery hooks */
- 	priv->battery_ext = lwmi_psy_exts[props];
- 	priv->battery_hook.add_battery = lwmi_add_battery;
++struct dentry *lwmi_debugfs_create_dir(struct wmi_device *wdev);
++
+ enum lwmi_event_type {
+ 	LWMI_GZ_GET_THERMAL_MODE = 0x01,
+ };
 -- 
 2.53.0
 
