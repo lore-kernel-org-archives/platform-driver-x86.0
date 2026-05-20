@@ -1,48 +1,47 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D502F34041E;
-	Wed, 20 May 2026 05:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAB23002DD;
+	Wed, 20 May 2026 05:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779255769; cv=none; b=e7qob1jX+M2tzlXWoU21neCSL3+jqAz0qdYax9KT5joizNyJcKU+7OqfRbbDp/ll+6c6rJsV16pbGUFQkG+QdrxMO03BXToOXqvy/x97xgaEMpkw82696yT/ReK0L7vPQ+8yzbyu9+Nm1M/hnef8+usc4frh24cxKdwC2d25fgs=
+	t=1779255794; cv=none; b=m4/nVT18qtij6BCAazgenG4xRmcAdvuDt1rqtCLBH8hV94LQ1OSwQborbOYrVHPbuTjxJKPuoJlWXafmFBXBlBOR/JHxtBCW8MxmfHNDua+TbA/aFTr5ezy9aBcAYp2rckUPf5NLJAk4bgawndMlnzDdh17jqUp+O0FqwK5gie8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779255769; c=relaxed/simple;
-	bh=rAwIxrIzvapYzGhKTh7yR5K4P6evEJUOirV7nbTxXYw=;
+	s=arc-20240116; t=1779255794; c=relaxed/simple;
+	bh=L9krmIzn0WTwO6HiID7UFmGZDr29LAn6FeMk+d8Wyx0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ntwg4SUG5bGFYELn1Mf9gpwWD3Ks7Kj/oU11t5uHTzfVCmTa2m8asKUXYDY9U8NVfX0kkXBV2Tw9jMlYOHzJUGS6rylWA7M4D/F31rQWrFnwW3l3LER6FztuzqZzbaLxa5qKPyY3wzhoQpCoWzmCG5klb94dR/AAQDuKvDYPX5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=n4p93Lud; arc=none smtp.client-ip=54.254.200.92
+	 MIME-Version; b=EBDyUloUtAp2kT6yYFO1QGMsYOBD2kWeHW2ZoVpbOIW2rDbzwPWLIdU/M1DtFVjycW8QLmu7J1Uv7e50qaM/4K86Pl9YpCLnn5IjtT1Har69U67TvpK4hL1wLpmBnHP4H5ljwRnPRc6rRAjzI9E0bU97pRr+OnB0xmUov1WVOnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=PX0Zngpo; arc=none smtp.client-ip=54.204.34.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="n4p93Lud"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="PX0Zngpo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1779255747;
-	bh=RdJ4Ye8htQ7W/kxA6uzcSK1PmdVGTESwG0T1+Tl3U2o=;
+	s=onoh2408; t=1779255776;
+	bh=9laOre5RlGQoYgGcXrnqBl3TMbqGWlgFEw5N+IhpOec=;
 	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=n4p93LudvC0Fk0pyN3Shc+UUdGpT01xjq6kb/lNpRU72P+66hg5Tiblr6f3MmMbux
-	 CXK3yGkDQIG5sxt2jMTTZ/R3xR+qoVLJFMS5SqKtTVn/XDTlUSuMJiHzHc47UAaaPZ
-	 IiYoJyeBLy9RW6ZXOCI2BmX1sMyC7Rvyatb62F9Y=
-X-QQ-mid: zesmtpsz3t1779255731tdc0c600d
-X-QQ-Originating-IP: 6qQhozOgPDRmah4gPO3FSR8M3uZjbyzUSEj/T/8/i2A=
+	b=PX0Zngpoj0AayO+f5i3F71UwGmtOedYPZI6PaF95KkDHnmvI6AsFoIfwgYBHPTWFY
+	 xoluXAFNXkkgTUxfHBIJjoMA73NDdxlu+qX50qEIG+mqQBkpzWRBnrwio8QmOpCnbU
+	 ee9ZK/45NPTyN4ys3NEiHgURxggqcH2GRMyBpYMU=
+X-QQ-mid: zesmtpsz3t1779255761t46ca397e
+X-QQ-Originating-IP: 14NkitC7CU2hxgdSYp44vz1UX0xr/SqXdX72lMB6MAE=
 Received: from localhost.localdomain ( [124.126.19.250])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 20 May 2026 13:41:53 +0800 (CST)
+	id ; Wed, 20 May 2026 13:42:13 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6721937287254691689
-EX-QQ-RecipientCnt: 7
+X-BIZMAIL-ID: 12850921483370201419
+EX-QQ-RecipientCnt: 6
 From: ZhaoJinming <zhaojinming@uniontech.com>
 To: ilpo.jarvinen@linux.intel.com,
 	srinivas.pandruvada@linux.intel.com
 Cc: hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	ZhaoJinming <zhaojinming@uniontech.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86/intel/tpmi: use cleanup helpers in mem_write()
-Date: Wed, 20 May 2026 13:41:21 +0800
-Message-Id: <20260520054122.1630021-2-zhaojinming@uniontech.com>
+	ZhaoJinming <zhaojinming@uniontech.com>
+Subject: [PATCH 2/2] platform/x86/intel/tpmi: convert mutex lock/unlock in mem_write() to guard
+Date: Wed, 20 May 2026 13:41:22 +0800
+Message-Id: <20260520054122.1630021-3-zhaojinming@uniontech.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20260520054122.1630021-1-zhaojinming@uniontech.com>
 References: <b1006ce4-f596-b2aa-421a-518fe3cfe1f0@linux.intel.com>
@@ -56,109 +55,64 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4b-0
-X-QQ-XMAILINFO: MAN6sKHDZ5xSlFgxiLlGgULDo447VmPlFOvN7p26qXP0JUQlWR1srVp8
-	5zIezwLGayn8U4Vouo70WvFmycw6PrTaoyZYkjwtcZyTNxf1xofObs5wZ07WiiC489H4Fx/
-	jvBiE2cBcD8iT0EDgoZ96MMv8XLbbNiKRY6D4dhGxoFc9MK+JL4nrvlK/dhbk0+ioGrwRH3
-	BmZneHqjqLGIbFzHEua5viz5o7JRcjkgpiRdXmEak8qg5XLMQ5+1YPjiSvhzOJT8OGAX5Hg
-	z4brx9IYIKrkimTmJ7B1ZuMBzT0Y50TvNRlzKK4ci5mdP6O2yE5Fu6T8Sbq9lTb9TsCr+ft
-	Jgq9zywXquJ/byQFSEMNZCnq/bIZs2aj/y56qyT3cn9aa3lYEB/CAvxKooUALQPgL+Xhg+v
-	OiXXbDknqSdSapQhVTiL35fcUoSw/y4RdIXGyNyRIk0K9zShwmSqhBUUNG7egQwkO0lMHld
-	E9BP33L8cpWU83bYbmsutBR+nf6CkaP05uv5PBjOR5BjkW3weM+5t2BJC2JCao1Xc/swkdD
-	sJp6J0oCrErZqXu11r9P8V5gOQA9c5k0PfIGjy1cuNx8hz276kS/D/qBNhxe1UGIBdeB0bM
-	W4QEqTzAcMFONKJ5YD+2LboZ+/QKh5aoHs38Fjl7Jo/X9giWN63Em5ageiRsHOBGz6LA8ZZ
-	XmkGy/VB2vOjSOZgjL0jeid8jSXurOWZxsnrN+QNehY35GfxUQFDpFIbDO/C2iSYVkCmdxp
-	Ei3PaFvT83SmPAmPgh7iCUTvx/6/BV9xWVDuz8fx611qYbRxu3CC04vefjieFTE3czJf7mr
-	fpLpMZgQkilaHS9tLYdalLTWiGpjEF1oNjJmoIwKRQnnk9KessMXPHEZbg3G5pLXbxlbWUR
-	3qeUeHnfxo+5JOWnzIRFBhlPPDAJUu+al8zEvk6C6IKvGM4JmgSEcN85VFVOqJBAzmC2eqQ
-	FRTydPgXrk2UYrR7uHYQmEmqcVKd8QA5Cpup+qm6KI3JuXsS0T9Aeu20v0X82Zx6f9IlYbM
-	ZlhkuM21tRyC54rrl6TL7zoMKRU5QwtVfcUD/xQ6coiA7sSK9Z
-X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
+X-QQ-XMAILINFO: NQ1SesBsQjVtmZwkZDva8cB0+pD1CECBntiCPWxxm3KFJI9svAB+zjd2
+	g0cSxqlwA+TNfGLTLOjVQx9pe53229x+cRjgcmFmXWHaF0pmB93EUgDDKvw6Wwh0mhmxqfB
+	ZYVk/oJztcKhq9WYvc4PN3aqZpP2OGphop+hJO/pJFvfIa+wLMZpQ0V1gS2YN4/Go8EhlxE
+	8NpGmuEHcLedIxS1PR6R1oq4l6dLHlPRF9IIT0b6GuZaWWoKP+DX90Z2WhrycaySbHNV/8C
+	uFoPFOL7kkZZ4lIIlYXTA5einsS55gW7qHodWct5DdiuzIHorhHXWKRKQ13pZRhVulDxSpo
+	Vyy9f3Y0DTGhNOU0XjaLimwHNcujqiatpSG/m8Ku7IXOYnIjxhSbMuVgidWjho2ZE8TwXXU
+	dAeoYaoQgEa5xzqKQagbCDJhRP8kik/Hg5Y1+bQb20pOldEEV0TkFiOEvEgxX3+a9oHlXBf
+	JkLvj5rroUMKHkjXfwbo4qZNdK3fdYterOA1D//93rHXXcNmnSB3s7T5/vpTbFiyBjb6JeR
+	5Il9MJECB/D4rSheIZFzWGtpGvAF4jZK4pIPglfngUFW0ySJeFb9RmNBmxhbVwYt0xaLP9r
+	u5bgxQdtMXzCh4a6qvShbOXWr1XhSvGp43FYVeZriE3FK1Yvv92KXkub8ZS+FbcZfx2F+u9
+	xlFrZIAjeihQsMmFnGHGJudd7VG5H8GGhMQ9fZPsXXjW5OxJ2inFtqFD379slflaFzBfdgK
+	675UNyrOfILm2JS/zJNZm+vK2bQtvKINPegRu3cW1ckB8GiSApFWk1eb2LakefvnFpr48E/
+	tUBw8+JV3sll12wqYvyXax/wCbH6qhPhYkATrIuLUfa+mWvFxJSPwvto8tyoSRNyod33eRg
+	W+cPFeA7ZlqdCo86RPs3gySk31eK8Zk8fXoFFexXuEIXPACiGazrTlzbCmrcMpOeycpetIa
+	QzppJrR6VVIUJvc4NONZ2hsDHJWptLHkOJHQ0LCOsWV3ll/sWj+74QY9tB5p5FlokMZSxwN
+	02+S7XsJfgPKHQ/d+DPClbTBXHOcfYxyuZ2tDwGnlqwV5MEday
+X-QQ-XMRINFO: NI4Ajvh11aEjEMj13RCX7UuhPEoou2bs1g==
 X-QQ-RECHKSPAM: 0
 
-In mem_write(), the temporary array returned by parse_int_array_user() must be released on all error paths. Convert the array variable to use cleanup.h scope-based cleanup so it is freed automatically on return.
+Convert the explicit mutex_lock/mutex_unlock pair in mem_write() into a cleanup.h guard(mutex)() scope-based lock acquisition. This removes the remaining goto-based cleanup path and keeps the lock held until the end of the mem_write() scope.
 
-This also moves the array declaration next to parse_int_array_user() as required by cleanup.h usage guidelines.
-
-Fixes: 8e0a2fc68ec3 ("platform/x86/intel/tpmi: Use 32 bit aligned address for debugfs mem write")
-Cc: stable@vger.kernel.org
 Signed-off-by: ZhaoJinming <zhaojinming@uniontech.com>
 ---
- drivers/platform/x86/intel/vsec_tpmi.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+ drivers/platform/x86/intel/vsec_tpmi.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/intel/vsec_tpmi.c
-index 16fd7aa41f20..e7bc3474c7aa 100644
+index e7bc3474c7aa..72b78b505e03 100644
 --- a/drivers/platform/x86/intel/vsec_tpmi.c
 +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-@@ -51,6 +51,7 @@
- #include <linux/bitfield.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-+#include <linux/cleanup.h>
- #include <linux/intel_tpmi.h>
- #include <linux/intel_vsec.h>
- #include <linux/io.h>
-@@ -473,7 +474,7 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
- 	struct seq_file *m = file->private_data;
- 	struct intel_tpmi_pm_feature *pfs = m->private;
- 	u32 addr, value, punit, size;
--	u32 num_elems, *array;
-+	u32 num_elems;
- 	void __iomem *mem;
- 	int ret;
- 
-@@ -481,15 +482,14 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
- 	if (!size)
- 		return -EIO;
- 
-+	u32 *array __free(kfree) = NULL;
- 	ret = parse_int_array_user(userbuf, len, (int **)&array);
- 	if (ret < 0)
- 		return ret;
- 
- 	num_elems = *array;
--	if (num_elems != 3) {
--		ret = -EINVAL;
--		goto exit_write;
--	}
-+	if (num_elems != 3)
-+		return -EINVAL;
- 
- 	punit = array[1];
- 	addr = array[2];
-@@ -498,15 +498,11 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
- 	if (!IS_ALIGNED(addr, sizeof(u32)))
+@@ -504,23 +504,17 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
+ 	if (addr >= size)
  		return -EINVAL;
  
--	if (punit >= pfs->pfs_header.num_entries) {
--		ret = -EINVAL;
--		goto exit_write;
+-	mutex_lock(&tpmi_dev_lock);
++	guard(mutex)(&tpmi_dev_lock);
+ 
+ 	mem = ioremap(pfs->vsec_offset + punit * size, size);
+-	if (!mem) {
+-		ret = -ENOMEM;
+-		goto unlock_mem_write;
 -	}
-+	if (punit >= pfs->pfs_header.num_entries)
-+		return -EINVAL;
++	if (!mem)
++		return -ENOMEM;
  
--	if (addr >= size) {
--		ret = -EINVAL;
--		goto exit_write;
--	}
-+	if (addr >= size)
-+		return -EINVAL;
+ 	writel(value, mem + addr);
  
- 	mutex_lock(&tpmi_dev_lock);
+ 	iounmap(mem);
  
-@@ -522,12 +518,8 @@ static ssize_t mem_write(struct file *file, const char __user *userbuf, size_t l
- 
- 	ret = len;
- 
--unlock_mem_write:
- 	mutex_unlock(&tpmi_dev_lock);
- 
--exit_write:
--	kfree(array);
+-	ret = len;
 -
- 	return ret;
+-	mutex_unlock(&tpmi_dev_lock);
+-
+-	return ret;
++	return len;
  }
  
+ static int mem_write_show(struct seq_file *s, void *unused)
 -- 
 2.20.1
 
