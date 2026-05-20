@@ -1,333 +1,183 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0690372662
-	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 06:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874233A256C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 08:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779257281; cv=none; b=YWfSfimON8Vy7jMRDSeLYpk0hJqiiL8HlGqLu1YARHf+GUgdWxNXI5r4lBlRZHHVtEuo4mp/3pq5cji3Fiz4iHz1VAboyZuVZ+lpMOImMxoJnZ0mYgzkS7ygeIoT6O3NPvXJSFOX4DTi4gw+tqe8TrZDzI01pODOANlwXS8VbCc=
+	t=1779264273; cv=none; b=ZBoUT9DCqZdbA7R50rVoiVW6EKnUMP7eK0jUBMrFar1nlGds2YqVFcQ8O5mnmLGXslPp0B3vVrGPTYrxuZLaZln8BN0/pFD9r1omhEzzZ18DtEil9JsKzsT6uepqYbVOc3Kgne3/d+Af9Zi+BhtqRe8dkfp3KPN+JZBBAjs83yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779257281; c=relaxed/simple;
-	bh=TjDUw7J3JP4g6lMvcIDMcm+5wDXorajT6a6RQD/bNpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dvVioA63aHs8uH+drUouMw4Dwcgv2Y55E2oFHi6BETf8fjgtNvnnqc0fqGkpZfqyaUIRCHmbyMH3kIKz/gWoM/XUfWGuGY8Ap439VDzyxV2UlaLSTecc+cuAZArqtr/XuM0HE6U+Y3bwON8RjuEVpFZ/PLuHY0BqUrQbsmU3Am4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzYTk+B/; arc=none smtp.client-ip=74.125.82.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779264273; c=relaxed/simple;
+	bh=4mBQzgtUilGm3j3LHtdoW6iuQxFcKuqX7R8vzQ1OZhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rg9hUndjmPMwprwlxaI0ildvoFptZDWEclokLrTBOwEWv5IgjtmGR264KSu0ZDu6Vo7bM4meniWiJtxBMGgrfTKKSRDV03pf/khnV5i2egt9g/0bsoQhZDsy8VB0T9T5O7OmU7SLvOysgIwK+mdNii75tFqs98LwFoSAF3tKTy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ptbK9yTl; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzYTk+B/"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12db2e415a7so2172400c88.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 May 2026 23:07:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ptbK9yTl"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-449d6c68ed8so1713411f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 May 2026 01:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779257272; x=1779862072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gZT7+mXTrvz3hi9/TnqJrENf7TqUCF1Jkqo9h+bHvKU=;
-        b=UzYTk+B/rXhAFnzNjoXKzYwiOpu5z9XbZ2GYiyloxfHtbcaYnLaI0XUkYkAyzlgXvQ
-         7HPEl7h6ZmXaw5lXSJ5Brxkl+mqNccDDiJ9OQfsdcsMvQ0bcbEWGlZszG5leXDOsZwoF
-         rDoSXZzSe1joWWDV7xSFQNNW1o7VNSmftWYwKjTNCmDnVv44lj2+c3/Nz9pKq8azRABh
-         9lsOTElVSFyx3HUE1BBDkTQS8Rca6ODBALtQPrZ8Fnd33FBcxslhaWaHY/7OTkwmZLk0
-         T9/hHj9AwE/3NKi7nxj8xyf8VDSgl4nmNJzbjoQCwVIZolHF82IGF/Yb1NivlY5GGnEo
-         gLSw==
+        d=linaro.org; s=google; t=1779264270; x=1779869070; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G0EryyNkSEn+Aox11/sMGRRYM7e36plfJffBsTvhT6Y=;
+        b=ptbK9yTlcnU4nVZvTRXXUOIjEJ59WqlXiAihJowg7SEFV4PwfBsr5M3ktBXR4CWIOB
+         XGgAxw9T6AfPCPw8tnx3GViQSbEBo41ThApiKaVoWr4Ge0VX5KG/SiN+zlnatwa8LlGa
+         kzIDePf++R5pyAVchALk0rHWV0TzHxx2GyICiD8dWZc0nMNDGc3WiBEUe2QOe03BfATp
+         SUu9eocjte+eXBAUL/yd3yFhvZIr+0IcY07l66Reb+IqRMcvqgAnWa8ckyQRCTWxM1At
+         Aa/mVN+dehqGeu2esocVNSvudBP9JpeKcdpw/EaxmGe+0tHJ8AkgK5K8DTY+Cc6FTinF
+         WIWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779257272; x=1779862072;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gZT7+mXTrvz3hi9/TnqJrENf7TqUCF1Jkqo9h+bHvKU=;
-        b=pQau3655Yf5d7WBufO0eoHZDzXHl9aaHV9bZhzkhm6nF80bhhvIxoD2VCN6l20kiAB
-         ZXJ6vSLUthukP99Ok6qQNpl4SGc61H5WQfkrYVFPGimSSzdI+xQdu4b7hCrBwGK/vkpV
-         YFjeIvYBUzbx2IrkTAyOcLEwuUuKOLlzIX5Go3vZi4ffx+bjunzeKEyvvzcYr05v1EBy
-         xTMk7mHJUJm4qqekFQAJr2urzUBeMy3IODQ7N0892lM7W+o/j3vqSxb5BG8jMJkGI6eZ
-         hA+NB/Hrkb/Pn8txZ9DAdriLOg9uo2iB++3oUxpGjIaWz6AeeNxo++k0tQ3d2r/fwMy5
-         +3JA==
-X-Forwarded-Encrypted: i=1; AFNElJ88ufhGdcI7ieCJpJt4tqa6XlH3MS3xSvJJO96ikrQGHB/K7TRIIFU3jGAY+8kEw1h4+LheOE1Ymy0Rpqz3FqkQ1k2K@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUIvL2SzSrxl9LlFkkYlFZnMCWpdztbVcA37Vv3mwdzGh00xGT
-	1jQLc5AnGv25knQWFYBAv/sPViQ2k9wjeAxmoDV65BerHKBXGSvjNKci
-X-Gm-Gg: Acq92OH773rjUE/6KLV22xHexhNEh6fbzAlxlcMvcGWOjESXNjNq2hiP474Vq1uK3CV
-	PII9SSBSiBv5OkzA+DRSiLkNGSGkzTJmVslFduu6lHGaWu6ME/qHgurpH9RNPghlfhKaC6Oh+Ru
-	ywb+0M2eSdBEiAsUqiBcnfvIGk4E0TdAUN6Y9PTJP+cU4D+8iAJBETXZ2QYOg/FDVtBe4l5rik7
-	Daagq7yaGNhjhLali8kWFTK5C6LMHOAACjNKKCkgHulJL0DrRgmYAe6uMMX9q204Av4xcZ/DLxs
-	Lk4OekRs1BZhknY0IFPV70GjhTSTdlIK5GAGpkZIWIWlluh4GZgeFGLfCF/g8Y1QEP5IkffoPAe
-	UWwvHyReuiqw19Q7J6zRZZxBCuQpuKOdFTzF+PydfseBa1Ba4FtnQ7K+gGpWghh4E1Dg2vPHmej
-	WDBCkLcXcrzP07LIad2hB4nQpHCo0XWdPVcgrs8tBSjTNniMbYMq/jivjkkqgEZ9QFTNNzv5ic6
-	l98
-X-Received: by 2002:a05:7022:6181:b0:127:366f:8bb7 with SMTP id a92af1059eb24-1350483cd93mr10912583c88.25.1779257271794;
-        Tue, 19 May 2026 23:07:51 -0700 (PDT)
-Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cc2351c3sm27906026c88.11.2026.05.19.23.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 May 2026 23:07:51 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Rong Zhang <i@rong.moe>,
-	Kurt Borja <kuurtb@gmail.com>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	marshall@shzj.cc,
-	hyacinth@shzj.cc,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v14 7/7] platform/x86: lenovo-wmi-capdata: Add debugfs file for dumping capdata
-Date: Wed, 20 May 2026 06:07:40 +0000
-Message-ID: <20260520060740.119554-8-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260520060740.119554-1-derekjohn.clark@gmail.com>
-References: <20260520060740.119554-1-derekjohn.clark@gmail.com>
+        d=1e100.net; s=20251104; t=1779264270; x=1779869070;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G0EryyNkSEn+Aox11/sMGRRYM7e36plfJffBsTvhT6Y=;
+        b=kpMm882Ro10nleLBecw9/iHgG3Jbs7aImj58OTXOkGSMamu1Fx6FvE1YbGKQ56GfRR
+         cgTrcFC6xQQ7tMasCY5GPCk+gkXE1xHykrYt6DeAL1rx8Z8ioC7AOkc9yBGXpclTwT4I
+         ugP/8vFJcn4xQ7XNoZxTCwEgpy/zv1Q06LKBWTb0IaMIWxgPq62FS/0uwBdd8tizzsJp
+         qxgO8kKR78/0RW694Z0M8miJg2LQ+H1D1MGdLTDDHlnIsoTuWyE/2VkrEFYFBc4XOANh
+         1XE5PF4UXG0903iFJH6bMpJGwXcpJ2Odp4Nn7QG3WAUzE5d2OtBkDkScwk1/1WdwCRbI
+         vZ9Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/8uzTu7j6CihEYLOFnL9hOwR0J8qjVW2EzzInBBBDDTqGmboqYXHrM3VTxxXzfW7RrPIqeIvvCnJTyMlpYIxRfkhr2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8RJRp6R82/mAnmdulSyQng3rCS8X348hE6tpmPDZzLfNyEfbZ
+	2/W7GGHaNhbqE1YPc6LYfiDjeMcO6essqYATTv6/n/3yk0/guOkzipLebvvQWV1MZao=
+X-Gm-Gg: Acq92OHfuUJJySoPWekXEZhzTe4w6u8Q2d3UKNyj3k4OLdQKOhs5Cjjysl+csrwvimU
+	8gArlFLHPNwI7eVmjddgDq8y+BJjqPUZppRgzgkoXepsVrek8usVp3hMk4aRyUJmhDyOee3tMEW
+	57ILmngWuQpSOE9PlOtayd/yW2+eNo/rt+NgxZsS47w9aGL1sJDDhyJjei88Ir5Z063FuUst6Nf
+	RCLXjz+rTRriw31TkccLg7ZbdfGBJTDdmKS8qbuQXU8ZeqmxkpLMOss52D2rwVNmt7EMJpkkXel
+	DzlLn5SEc6HyDuhNkay2Sc3WJPJCJUzdWMLaFX9i/2Abc8HA/iSOO5hIfvGzBLMNDHel8DbCQTZ
+	7hwHELcwSEgsYqWHRb1c8W7wYElzesbLLcDwBrA1QMLMeocnNYrXaUFYAo8F4fuK+qlO9s69np+
+	U6UBm4dS+/6WiNx5oUiDmEOwU2hUYFfMffHdU=
+X-Received: by 2002:a5d:64c6:0:b0:43d:71b:204b with SMTP id ffacd0b85a97d-45e5c5a518cmr35400637f8f.39.1779264269799;
+        Wed, 20 May 2026 01:04:29 -0700 (PDT)
+Received: from [192.168.0.35] ([109.76.255.129])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45da0fe0f72sm55299581f8f.25.2026.05.20.01.04.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 May 2026 01:04:29 -0700 (PDT)
+Message-ID: <2497c7dc-2325-476e-ace5-1fb2d9aa3aaa@linaro.org>
+Date: Wed, 20 May 2026 09:04:28 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] platform: arm64 Use named initializers for struct
+ i2c_device_id
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?=
+ <u.kleine-koenig@baylibre.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Pengyu Luo <mitltlatltl@gmail.com>, Sebastian Reichel <sre@kernel.org>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260519144341.1589034-2-u.kleine-koenig@baylibre.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20260519144341.1589034-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Rong Zhang <i@rong.moe>
+On 19/05/2026 15:43, Uwe Kleine-König (The Capable Hub) wrote:
+> While being less compact, using named initializers allows to more easily
+> see which members of the structs are assigned which value without having
+> to lookup the declaration of the struct. And it's also more robust
+> against changes to the struct definition.
+> 
+> This patch doesn't modify the compiled arrays, only their representation
+> in source form benefits. The former was confirmed with x86 and arm64
+> builds.
+> 
+> While touching all these arrays, unify usage of whitespace in the list
+> terminator.
+> 
+> Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+> ---
+> Hello,
+> 
+> this patch is part of a bigger quest to use named initializers for
+> mainly struct i2c_device_id::driver_data to be able to modify
+> i2c_device_id. See e.g.
+> https://lore.kernel.org/all/20260518111203.639603-2-u.kleine-koenig@baylibre.com/
+> for the details.
+> 
+> This patch here isn't critical for this quest, as no driver makes use of
+> .driver_data, so apart from the better readability this is only about
+> consistency with other subsystems.
+> 
+> Best regards
+> Uwe
+> ---
+>   drivers/platform/arm64/acer-aspire1-ec.c      | 2 +-
+>   drivers/platform/arm64/huawei-gaokun-ec.c     | 2 +-
+>   drivers/platform/arm64/lenovo-thinkpad-t14s.c | 4 ++--
+>   drivers/platform/arm64/lenovo-yoga-c630.c     | 4 ++--
+>   4 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/arm64/acer-aspire1-ec.c b/drivers/platform/arm64/acer-aspire1-ec.c
+> index 438532a047e6..08d0b155a197 100644
+> --- a/drivers/platform/arm64/acer-aspire1-ec.c
+> +++ b/drivers/platform/arm64/acer-aspire1-ec.c
+> @@ -532,7 +532,7 @@ static int aspire_ec_resume(struct device *dev)
+>   }
+>   
+>   static const struct i2c_device_id aspire_ec_id[] = {
+> -	{ "aspire1-ec", },
+> +	{ .name = "aspire1-ec" },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(i2c, aspire_ec_id);
+> diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform/arm64/huawei-gaokun-ec.c
+> index a83ddc20b5a3..80a8ba8b8dda 100644
+> --- a/drivers/platform/arm64/huawei-gaokun-ec.c
+> +++ b/drivers/platform/arm64/huawei-gaokun-ec.c
+> @@ -795,7 +795,7 @@ static int gaokun_ec_probe(struct i2c_client *client)
+>   }
+>   
+>   static const struct i2c_device_id gaokun_ec_id[] = {
+> -	{ "gaokun-ec", },
+> +	{ .name = "gaokun-ec" },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(i2c, gaokun_ec_id);
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> index 5590302a5694..e7acb66b77f2 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -637,8 +637,8 @@ static const struct of_device_id t14s_ec_of_match[] = {
+>   MODULE_DEVICE_TABLE(of, t14s_ec_of_match);
+>   
+>   static const struct i2c_device_id t14s_ec_i2c_id_table[] = {
+> -	{ "thinkpad-t14s-ec", },
+> -	{}
+> +	{ .name = "thinkpad-t14s-ec" },
+> +	{ }
+>   };
+>   MODULE_DEVICE_TABLE(i2c, t14s_ec_i2c_id_table);
+>   
+> diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform/arm64/lenovo-yoga-c630.c
+> index 75060c842b24..a8600a977fbc 100644
+> --- a/drivers/platform/arm64/lenovo-yoga-c630.c
+> +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
+> @@ -238,8 +238,8 @@ static const struct of_device_id yoga_c630_ec_of_match[] = {
+>   MODULE_DEVICE_TABLE(of, yoga_c630_ec_of_match);
+>   
+>   static const struct i2c_device_id yoga_c630_ec_i2c_id_table[] = {
+> -	{ "yoga-c630-ec", },
+> -	{}
+> +	{ .name = "yoga-c630-ec" },
+> +	{ }
+>   };
+>   MODULE_DEVICE_TABLE(i2c, yoga_c630_ec_i2c_id_table);
+>   
+> 
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 
-The Lenovo GameZone/Other interfaces have some delicate divergences
-among different devices. When making a bug report or adding support for
-new devices/interfaces, capdata is the most important information to
-cross-check with.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-Add a debugfs file (lenovo_wmi/<device_name>/capdata), so that users can
-dump capdata and include it in their reports.
-
-Since `struct capdata01' is just an extension to `struct capdata00',
-also convert the former to include the latter anonymously
-(-fms-extensions, since v6.19). This is declared as a union in the
-capdata01 struct, with both the anonymous declaration and as a named
-member to avoid type casting when passing just the capdata00 struct
-pointer.
-
-Tested-by: Kurt Borja <kuurtb@gmail.com>
-Signed-off-by: Rong Zhang <i@rong.moe>
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
-v12:
-  - Make capdata00 a union of an anonymous member and a named member of
-    capdata01 to avoid casting when capdata00 is accessed directly.
----
- drivers/platform/x86/lenovo/Kconfig       |   1 +
- drivers/platform/x86/lenovo/wmi-capdata.c | 120 ++++++++++++++++++++++
- drivers/platform/x86/lenovo/wmi-capdata.h |   7 +-
- 3 files changed, 125 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index b9a5d18caa1e3..4443f40ef8aa7 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -236,6 +236,7 @@ config YT2_1380
- config LENOVO_WMI_CAPDATA
- 	tristate
- 	depends on ACPI_WMI
-+	depends on LENOVO_WMI_HELPERS
- 
- config LENOVO_WMI_EVENTS
- 	tristate
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 714aa6fd6f1fc..d5e9615661364 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.c
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -31,6 +31,7 @@
- #include <linux/cleanup.h>
- #include <linux/component.h>
- #include <linux/container_of.h>
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/dev_printk.h>
- #include <linux/err.h>
-@@ -42,6 +43,7 @@
- #include <linux/mutex_types.h>
- #include <linux/notifier.h>
- #include <linux/overflow.h>
-+#include <linux/seq_file.h>
- #include <linux/stddef.h>
- #include <linux/types.h>
- #include <linux/wmi.h>
-@@ -87,6 +89,7 @@ struct lwmi_cd_priv {
- 	struct notifier_block acpi_nb; /* ACPI events */
- 	struct wmi_device *wdev;
- 	struct cd_list *list;
-+	struct dentry *debugfs_dir;
- 
- 	/*
- 	 * A capdata device may be a component master of another capdata device.
-@@ -117,6 +120,8 @@ struct cd_list {
- 
- static struct wmi_driver lwmi_cd_driver;
- 
-+/* ======== Device components ======== */
-+
- /**
-  * lwmi_cd_match() - Match rule for the master driver.
-  * @dev: Pointer to the capability data parent device.
-@@ -470,6 +475,116 @@ EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CAPDATA");
- DEF_LWMI_CDXX_GET_DATA(cd_fan, LENOVO_FAN_TEST_DATA, struct capdata_fan);
- EXPORT_SYMBOL_NS_GPL(lwmi_cd_fan_get_data, "LENOVO_WMI_CAPDATA");
- 
-+/* ======== debugfs ======== */
-+
-+/**
-+ * lwmi_cd00_show() - Dump capdata00
-+ * @s: Pointer to seq_file where the capdata00 is dumped.
-+ * @cd00: Pointer to a capdata00 struct to be dumped.
-+ */
-+static void lwmi_cd00_show(struct seq_file *s, struct capdata00 *cd00)
-+{
-+	u8 dev = FIELD_GET(LWMI_ATTR_DEV_ID_MASK, cd00->id);
-+	u8 feat = FIELD_GET(LWMI_ATTR_FEAT_ID_MASK, cd00->id);
-+	u8 mode = FIELD_GET(LWMI_ATTR_MODE_ID_MASK, cd00->id);
-+	u8 type = FIELD_GET(LWMI_ATTR_TYPE_ID_MASK, cd00->id);
-+	bool extra = cd00->supported & ~(LWMI_SUPP_GET | LWMI_SUPP_SET | LWMI_SUPP_VALID);
-+	bool get = cd00->supported & LWMI_SUPP_GET;
-+	bool set = cd00->supported & LWMI_SUPP_SET;
-+	bool valid = cd00->supported & LWMI_SUPP_VALID;
-+
-+	seq_printf(s, "  id:             0x%08x [dev: %2u, feat: %2u, mode: %2u, type: %2u]\n",
-+		   cd00->id, dev, feat, mode, type);
-+
-+	seq_printf(s, "  supported:      0x%08x [%c%c%c%c]\n", cd00->supported,
-+		   extra ? '+' : ' ',
-+		   get   ? 'R' : ' ',
-+		   set   ? 'W' : ' ',
-+		   valid ? 'V' : ' ');
-+
-+	seq_printf(s, "  default_value:  %u\n", cd00->default_value);
-+}
-+
-+/**
-+ * lwmi_cd01_show() - Dump capdata01
-+ * @s: Pointer to seq_file where the capdata01 is dumped.
-+ * @cd01: Pointer to a capdata01 struct to be dumped.
-+ */
-+static void lwmi_cd01_show(struct seq_file *s, struct capdata01 *cd01)
-+{
-+	/* capdata01 is an extension to capdata00. */
-+	lwmi_cd00_show(s, &cd01->cd00);
-+
-+	seq_printf(s, "  step:           %u\n", cd01->step);
-+	seq_printf(s, "  min_value:      %u\n", cd01->min_value);
-+	seq_printf(s, "  max_value:      %u\n", cd01->max_value);
-+}
-+
-+/**
-+ * lwmi_cd_fan_show() - Dump capdata_fan
-+ * @s: Pointer to seq_file where the capdata_fan is dumped.
-+ * @cd_fan: Pointer to a capdata_fan struct to be dumped.
-+ */
-+static void lwmi_cd_fan_show(struct seq_file *s, struct capdata_fan *cd_fan)
-+{
-+	seq_printf(s, "  id:             %u\n", cd_fan->id);
-+	seq_printf(s, "  min_rpm:        %u\n", cd_fan->min_rpm);
-+	seq_printf(s, "  max_rpm:        %u\n", cd_fan->max_rpm);
-+}
-+
-+/**
-+ * lwmi_cd_debugfs_show() - Dump capability data to debugfs
-+ * @s: Pointer to seq_file where the capability data is dumped.
-+ * @data: unused.
-+ *
-+ * Return: 0
-+ */
-+static int lwmi_cd_debugfs_show(struct seq_file *s, void *data)
-+{
-+	struct lwmi_cd_priv *priv = s->private;
-+	u8 idx;
-+
-+	guard(mutex)(&priv->list->list_mutex);
-+
-+	/* lwmi_cd_alloc() ensured priv->list->type must be a valid type. */
-+	for (idx = 0; idx < priv->list->count; idx++) {
-+		seq_printf(s, "%s[%u]:\n", lwmi_cd_table[priv->list->type].name, idx);
-+
-+		if (priv->list->type == LENOVO_CAPABILITY_DATA_00)
-+			lwmi_cd00_show(s, &priv->list->cd00[idx]);
-+		else if (priv->list->type == LENOVO_CAPABILITY_DATA_01)
-+			lwmi_cd01_show(s, &priv->list->cd01[idx]);
-+		else if (priv->list->type == LENOVO_FAN_TEST_DATA)
-+			lwmi_cd_fan_show(s, &priv->list->cd_fan[idx]);
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
-+
-+/**
-+ * lwmi_cd_debugfs_add() - Create debugfs directory and files for a device
-+ * @priv: lenovo-wmi-capdata driver data.
-+ */
-+static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
-+{
-+	priv->debugfs_dir = lwmi_debugfs_create_dir(priv->wdev);
-+
-+	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_cd_debugfs_fops);
-+}
-+
-+/**
-+ * lwmi_cd_debugfs_remove() - Remove debugfs directory for a device
-+ * @priv: lenovo-wmi-capdata driver data.
-+ */
-+static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
-+{
-+	debugfs_remove_recursive(priv->debugfs_dir);
-+	priv->debugfs_dir = NULL;
-+}
-+
-+/* ======== WMI interface ======== */
-+
- /**
-  * lwmi_cd_cache() - Cache all WMI data block information
-  * @priv: lenovo-wmi-capdata driver data.
-@@ -772,6 +887,8 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
- 		dev_err(&wdev->dev, "failed to register %s: %d\n",
- 			info->name, ret);
- 	} else {
-+		lwmi_cd_debugfs_add(priv);
-+
- 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
- 			info->name, priv->list->count);
- 	}
-@@ -782,6 +899,8 @@ static void lwmi_cd_remove(struct wmi_device *wdev)
- {
- 	struct lwmi_cd_priv *priv = dev_get_drvdata(&wdev->dev);
- 
-+	lwmi_cd_debugfs_remove(priv);
-+
- 	switch (priv->list->type) {
- 	case LENOVO_CAPABILITY_DATA_00:
- 		lwmi_cd_sub_master_del(priv);
-@@ -821,6 +940,7 @@ static struct wmi_driver lwmi_cd_driver = {
- 
- module_wmi_driver(lwmi_cd_driver);
- 
-+MODULE_IMPORT_NS("LENOVO_WMI_HELPERS");
- MODULE_DEVICE_TABLE(wmi, lwmi_cd_id_table);
- MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
- MODULE_AUTHOR("Rong Zhang <i@rong.moe>");
-diff --git a/drivers/platform/x86/lenovo/wmi-capdata.h b/drivers/platform/x86/lenovo/wmi-capdata.h
-index a49229cec2451..92098aeeee84a 100644
---- a/drivers/platform/x86/lenovo/wmi-capdata.h
-+++ b/drivers/platform/x86/lenovo/wmi-capdata.h
-@@ -38,9 +38,10 @@ struct capdata00 {
- };
- 
- struct capdata01 {
--	u32 id;
--	u32 supported;
--	u32 default_value;
-+	union {
-+		struct capdata00;
-+		struct capdata00 cd00;
-+	};
- 	u32 step;
- 	u32 min_value;
- 	u32 max_value;
--- 
-2.53.0
-
+bod
