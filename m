@@ -1,121 +1,129 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B9D3DB97A
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 13:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE57031E83D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 13:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779370458; cv=none; b=c7W2rVZsV+Yl+vn87uKLWcPsMMHdEGYCZwMrt1GpTs3SQODn7F9YMLLuVrk0u1i4SM9ax7kvQhKN/Aoe1WRo2ypDL/v8oTOfCx3+8UUtaAc7nJTI/fPMIsbG51lmsa8mm2KyJurQ/25u/o/wKQYmnvLBRW6tTK+SAvqSsnMEC8U=
+	t=1779370565; cv=none; b=QawklNURRIzPiQHko5rGrgJ6T8sxVpN21b101PULlw5WAFYd6zUglLhbOXuBTuWtDsL0RJWh9PLnT3Qej/aQs/yOYgui64Q+CctYSeVwWvOoOboRh8yirh8KNKscabg7TLBpmh4YB8k16bEojO0kBlMGiuco45qjs3YjLHpX+L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779370458; c=relaxed/simple;
-	bh=VOL1dZ+0liw4I0f1TvGE7W03xZEqkwnrbh4Kv0+Xnq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GPNe9t6RGpfZe7/GURa92/kLwBuaijy+ZM+CziNoSm6nGPPlh2FkQmm78drhLDTukq/WlU33QrM1Tu0gTeL9NNjpnm+3vYtR8lNf88Gbb/zgDolNXT2AB20TxAnrYmmB9sBZKB5T3xKZ8V7CtcTqlqqFQ2ic9aU78KsfoJzMYUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TZGh4+W3; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1779370565; c=relaxed/simple;
+	bh=DghJdUC5l6A7mqPywPmIh7dNttCNMgGGRxnPOa6o8Lc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ME4b1SXdVMd9lR3QIT92hGkTjsqgo6c8wVLZVAR6URVlw2fFdatslpvyxbWvtil/2gPNYYVsMVZnY7yxhovshKHeV1Y+yhqMRKBnn+pA3+KsV7FIVeap3goJpO77W4iNhPP0IHan/j3cKj/PMfxBguEuGVLIiVV78fmCYlhJ1Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I/2Oj9QM; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TZGh4+W3"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2b4583f0a1aso39884465ad.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 06:34:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I/2Oj9QM"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2ba17c8cfacso58434215ad.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 06:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779370457; x=1779975257; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PgzZmk7PrHR8G+H9VOVmVYi0JlqrD4zCuzYVpnJdAXI=;
-        b=TZGh4+W3VLSDEDeR0iORcHr7Z85LpkgI7bQxT8zUi/nAr45iiHKKnuVcPpPCEt2wl7
-         yK1xF0qd7HxIQJ9bt0sElw1pc4PPypb/N6MwZllZrRxZgpQz25Tgip4qB6eDSHTX4jpC
-         SmjYYeRnSPese2TaDEyED4730+nSwzaYiW0cXw/UI988zWnrnolQzF+W2ZR5WTYtWTRR
-         u+FK5U3YJu7e8kbLZwvit/yFYEorXnIROVb1VNkK8DJ1LYXEMlIuebGirthUVs8Sp4Uz
-         KL+EQyfBrabbsiUt9lkxxAHYjz6kb3cwGcEyPpU6JGtjmsOdUx4APcbBwNnP79Nal+PP
-         Lz5g==
+        d=gmail.com; s=20251104; t=1779370564; x=1779975364; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJOriypMluGCYSJ14jPw3gzZfeyQBCkgWX8iI2cvPiI=;
+        b=I/2Oj9QMrnoIxwl0qbhjsno+xhvdfOBHM16RClMrgyd6PzzABur5WgdVQaXvPSf6dd
+         Qq3ytiWD9GXbNRKGYi6AA8c1OoC6XrrOUOGdA823QrlEr5G7ohhDpHk89kOIbeWjUwqr
+         R+yrkru5sIp8modTMBbVRbNXzlpcOA/yybQLex4oZxdeOv8zD65P1r8UJ6D/r6GUn5A1
+         +suIe/cWsAbS9sE6D1AHbNCLEQvGBV0adOuDp8tgvCa7SHUi++l0vvCR4dPrDKJ9ZMld
+         afQcvmSG98piq2r18WiLxi+Wb9hy7KBeEshYKY3m57Wz3YAYqEd2oN78nUp9QhpgKFVO
+         SfCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779370457; x=1779975257;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PgzZmk7PrHR8G+H9VOVmVYi0JlqrD4zCuzYVpnJdAXI=;
-        b=L0RCcqKU7ow6ClXUOz9Zb6aNc/ju4ZoQjobmx8T5Ix0NJyz/d2LE0fc5q7QEwleV6F
-         IGAGGgwyaNFDTUdF1m/CqGz1niHkrSB1bRIZ/tPdpoVOn/bKJ6xnVKK+PeXOAcCqEmdN
-         5IyREBYNhuLjQ3qp9j4NAA64a8D5IJIjYFVVQM1NBlgirrXpHGg7KChB/Ole0DwJdmik
-         A4kEOJJBtidTgKmaEv+KF9dCaGtrdnxL5cUOhchDUfUiVN69MLHXVL4lQ1nNbPlOoDNe
-         f1nBFEAfW1s0e2LAuLjbmRVs5DpqFjz8HFE79JbIRKz3b87DwxLVwLaGbrbOueAeIc5n
-         IFFw==
-X-Gm-Message-State: AOJu0Yw6oVCBDDBsnY+9m3UiT/UhNlzUpQB3PeDc8pzuD0XDXyhXMlDB
-	gbenT07p1E5Ihw8z3IWqibToR11NjZjrTbuqeznUMYNQGBVmwexUSqz/6+f9qXAQ8zA=
-X-Gm-Gg: Acq92OFEu00gbp//PuUGPB0R4rb/t8BSqGJfAR2G4iKPoaEmYp5cqR0vkOimi/j75Op
-	XbxxNFCodyRLmmKL8Eb8LL1nMFq3/9fDhESyycRaFgVE/J6f3OdHH2M/uUzlMREaBSlBuGHlCLx
-	ndbqzR5nXJ0qS08HcZL1JmAiuWOLbA+F9eVsSdcQxmcbXb8gy70cAp64eUY155wTBwcINXOfkYr
-	RoGRPAZ6AeS/dbFEx5zfVg9iwTu3j3A7OIm8DDzM6jTAImghtPLiXKLtWiImHA2/jlpOPTkQxrf
-	iOeWcro/b9LVGtNBhp1KvQVrBmb1Y6TzefDpofHkqdCcOb9DDY/JJIzDfjcn1iIH4X5j/y6Dg+h
-	lKTLFsms5ibEYm3/qsqzlbSW91qImFrXckMqrfIyPzK5OJYlY3IjDeo5omJW3sppjGehDI+03m2
-	0zPsvKxRUG3Yi+ergtSkcdxuL0XD6qwCe6azMomCDNtIMHFwrMKAcrz+8=
-X-Received: by 2002:a17:902:cf43:b0:2b2:b117:1e1b with SMTP id d9443c01a7336-2bea31ccb31mr31367405ad.17.1779370456516;
-        Thu, 21 May 2026 06:34:16 -0700 (PDT)
-Received: from pico-cachyos ([2401:4900:1c39:4610:9413:be16:7d6:5a67])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bea929d774sm12284785ad.32.2026.05.21.06.34.14
+        d=1e100.net; s=20251104; t=1779370564; x=1779975364;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mJOriypMluGCYSJ14jPw3gzZfeyQBCkgWX8iI2cvPiI=;
+        b=KYgDH0fOX3z1lmoxJd+VPRS0YxTaAPZkhEmwIY5Q7PUcj6jUteuyPJ3dX446BK5kKe
+         /VkzQiWadPS2WkJOcudcunDf5N5gUbqugGGUAxjoFm4QszpfVUL8maB9tgv+EF3o8I9H
+         3ylLbT1d7qiYW3YiRP3oeQxcvvHG18DeOQPqiOpucf1ehHIecGohf6nH8t6CnSgkeVHS
+         2ojzz4GBRLiRXhZPins4Pn8WDC2YjH5+7cYs67lbLo6yXsjmFrhscdDCbit34xYaINmc
+         lbUMo898p9THHpRHdBrit5hOdJ0wDXyHRfzlM/wPZullBJY8Mu8BzTzUHeECq0fA0eCx
+         l9uA==
+X-Gm-Message-State: AOJu0YwczNBLwmGMqYbYcvUQs39j/KCAjKJiPKKfDvjxVvK5LXUPAADW
+	J/XDNl/gyvA34n8MaAz+iJsho1OzElnTklirLuarAFAM50oEvt00wbnvFWarZA==
+X-Gm-Gg: Acq92OG9VzGy9/Pd1WSWwHfNdCckAi5on0PLhqWQ3PM0D5WAAGD+vcFy+og+n6S1eEn
+	a7EpZhwgwraCJ/wNyODaucJBSSx3nT5s85rZb1UenwHoXJDhJfNdkhgsFqcYbehwgKZ9aFWcuxh
+	2mionR+GkWE8iPiXy8aQCMtiLZ1l8m9nIx0LU8DX5EfHJUEouXW6uARvJ+qfoeS1aQqXDnKxzzH
+	SM7DKgrcKzSPlprlzPg1BhvUaQCzrUXevG0ZXUSJD/oWzDHP20WJrrJcS0ZIEnPgiLkOu2Lwz8t
+	SX7BsjzIFRHxhwP4LllCUDM0DBFoBEKK7Dc+S5rFEpoJ+qfiwiMIoCoNQ7FDUH8PROMpq5zYHi9
+	ouhbJwBiovfRyVQdm06itTu9RTBlNB7mwUCaznx1Xrb73InysVzbbDVBKV6xWEOg45BGeQ4Jp3y
+	haKCdjQSCYfquKZj5hq8yRJlmW4NYQ93v8CcBPBXACtHU7F5pemX2UxFjP70HY5tR8db9uAH5D3
+	Iq6Oqm3HPn6k4xWVszx
+X-Received: by 2002:a17:903:240c:b0:2bd:907:2cf0 with SMTP id d9443c01a7336-2bea33a548dmr32375895ad.32.1779370563810;
+        Thu, 21 May 2026 06:36:03 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225f:72b8:b88f:97ce:a863])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bea98ecaffsm16260465ad.39.2026.05.21.06.36.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 06:34:16 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	krishna.chomal108@gmail.com
-Subject: [PATCH v6 4/4] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
-Date: Thu, 21 May 2026 19:03:51 +0530
-Message-ID: <20260521133351.1512718-5-radheykalra901@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260521133351.1512718-1-radheykalra901@gmail.com>
-References: <20260521133351.1512718-1-radheykalra901@gmail.com>
+        Thu, 21 May 2026 06:36:03 -0700 (PDT)
+Date: Thu, 21 May 2026 19:06:00 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Radhey Kalra <radheykalra901@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v5 0/2] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan
+ control
+Message-ID: <ag8FxNbcBroC5Wqh@archlinux>
+References: <20260520140800.130530-1-radheykalra901@gmail.com>
+ <ag3yZmFDRUqsoVAm@archlinux>
+ <CAJ5VyXL0nYQXb=R_5Nd=HZCLiPKFnrJ+ttXb=D1LTAN2j4M2vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAJ5VyXL0nYQXb=R_5Nd=HZCLiPKFnrJ+ttXb=D1LTAN2j4M2vw@mail.gmail.com>
 
-HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
-the existing Victus fan-speed WMI control path. Add it as a
-fan-control-only board so the hwmon PWM interface is enabled without
-forcing Victus S thermal-profile handling on this model.
+On Thu, May 21, 2026 at 06:19:48PM +0530, Radhey Kalra wrote:
+>Hi Krishna,
+>
+>I tested the current platform-profile behavior on 8A3D more carefully.
+>
+>The board already exposes the generic hp-wmi platform-profile choices:
+>
+>cool quiet balanced performance
+>
+>Writes to all choices succeed and read back correctly, and I do not
+>see hp_wmi errors in dmesg.
+>
+>However, under full CPU load I could not confirm that these profiles
+>change CPU power behavior. Across quiet/balanced/performance/cool, CPU
+>frequency stayed around 3.27 GHz and the reported PPT stayed around 33
+>W. Fan RPM rose somewhat later in the test, but the system was also
+>heating up, so I cannot separate that from normal firmware thermal fan
+>ramping.
 
-Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
-F.22. The fan table query succeeded and returned rows including
-cpu=23/gpu=0 followed by cpu=24/gpu=22. With 8A3D enabled in the
-fan-control path, pwm1 and pwm1_enable were exposed through hwmon.
+You are right. Because your board is not registered in any list, so it
+goes to a fallback route and registers quiet/balanced/performance/cool.
+Changes to platform profile are handled through this chain:
 
-Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+hp_wmi_platform_profile_set
+	-> thermal_profile_set
+		-> hp_wmi_perform_query(HPWMI_THERMAL_PROFILE_QUERY)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index dcfffe6..f463823 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -170,6 +170,10 @@ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
- 	.fan_profile		= &victus_s_fan_profile_params,
- };
- 
-+static const struct hp_wmi_board_params victus_8a3d_board_params = {
-+	.fan_profile		= &victus_s_fan_profile_params,
-+};
-+
- static const struct hp_wmi_board_params *active_board_params;
- 
- static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
-@@ -230,6 +234,10 @@ static const char * const victus_thermal_profile_boards[] = {
- 
- /* DMI board-specific feature data for Omen and Victus laptops. */
- static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
-+		.driver_data = (void *)&victus_8a3d_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
--- 
-2.54.0
+For my device, when I selected victus_8a3d_board_params quirk, the driver
+tried to use this query HPWMI_THERMAL_PROFILE_QUERY which failed and
+caused the driver to not load. In you case, it looks like the query does
+not return an error. However, not returning an error does not necessarily
+imply that it is working correctly, which can be further confirmed when
+you mention that changing power modes has no physical effect on the system.
 
+>So I should not claim that platform-profile policy is meaningfully
+>validated for 8A3D. What I have verified is that the Victus
+>fan-control path works.
+>
+>That is why I avoided a plain addition to
+>victus_s_thermal_profile_boards: it would move 8A3D from the existing
+>generic platform-profile path to the Victus S-specific
+>platform-profile path, which I have not verified on this board.
+>
+
+I think your board does need Victus-S-specific platform-profile path
+because the old/legacy queries did not have any effect on the system.
+
+>Thanks, Radhey
+>
+[...]
