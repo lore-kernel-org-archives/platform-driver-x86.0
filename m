@@ -1,146 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1787367283;
-	Thu, 21 May 2026 12:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779367409; cv=none; b=EeRMBB37yYJkn10840/Ep21TuAuOnrgYECk0hd+FJ4rlC9FER2PKg7KJzvXI/HlKJX6Pn+ir3jSFdai7Sdri9Qa1cmhHyEaOkZku6agBghE7Xk2o77WWyWBXG8aA+LtFkY4ytClx5rR6KkPSULRGN3Sck9sF4JBJzZK45Xrqmmk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779367409; c=relaxed/simple;
-	bh=6qGXnuBUztq2mFzcY8Yv6RaizNCIjxJo4qLhwBShajE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fgMudER189JWFCZr8XFqEa7Pp+mbewNuKvmA2PSvqebNqpGMXoQF10XdBqCqsXzxPDIrEo+W6IRI94q4FUueUnBuqk3Rg+iro6Z0vCM/x167omh9hVXuyXjrzYbomVo+QmSdSBMQ/XCSHo9TSlotcViqvZ+DfZKLBlReA76M4V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Okr7lM7p; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EE83CF05B
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 12:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779367804; cv=pass; b=YUdgRoPkaQFpfLb6odi9xvE3vb5K/7HFMZVKzBNpt0AuEWUYGucrK+gRYbK3BJrIsU3FcECmbowRqPC7XmATQdboHxSOOOi3Ue2o13uwPg0x6eSY807So58CqzoJ0SK6Sjf/vTi/PoXyni6cluO2a2qNC6bWURyalC3kq62bqCI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779367804; c=relaxed/simple;
+	bh=rK8SqOSyuXy40vTNKk9GwO+72sLQEb+qkKyfOyPTTZ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHxe4Uu87c4xTBMD+laNCkYOqwnzhNMH3sDG3J8zOQrXF5WO9wXs+aj5TWIVEwgNs9pRvlgCmLn6pDqCbAqK9PUjNVZF5EwOql7lwlJeLTr0BNvwLQnJZaUPjBmZGRhSabmrxp64YPoTbNAE0LOgdAumXciYSdIbB7fyixbnqFI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asOFjybJ; arc=pass smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Okr7lM7p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779367408; x=1810903408;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6qGXnuBUztq2mFzcY8Yv6RaizNCIjxJo4qLhwBShajE=;
-  b=Okr7lM7pl9blWFJIL6NorN2rv/p2QgBEqSMZE7Gkew8liYSMTkADEKVO
-   UB5vXK9BXUj72R7TAh8A4LqCAxb+Y+9ebj+B5w/dKJjfdoNHH/ph4ueAL
-   53BUk8jVumC0ATcrg+mrEQX0LGLv7FfoqtKlSCeRSImkWopVP92LQyUjF
-   O37p0Kq4CNDO3PEpRFEfR7CwzS5jabUQWRC3s4pjE0VYD5M4fcXj7OaFf
-   ulUXHXEN+WsapR6pEBLGQwIgGAlpNIYBQh5c553OubzqrGH1Ik7msjCyb
-   9nIKbfB83KJO6rdGMWMFccrDtt7rFDoYPin/fnZp/S/rHUxlYSqhW0pCH
-   Q==;
-X-CSE-ConnectionGUID: 6/WScsa9SqOK9ToU4ThqQw==
-X-CSE-MsgGUID: p9AGGgSZRBq1U+4lrDyCJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="83903512"
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="83903512"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 05:43:28 -0700
-X-CSE-ConnectionGUID: O31rDEfJTZ+Q7ICIfpLrAg==
-X-CSE-MsgGUID: AYJuUjMbTAaLPORQgzm5FA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="240543043"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.98])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 05:43:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 21 May 2026 15:43:21 +0300 (EEST)
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-cc: Ard Biesheuvel <ardb@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, linux-efi@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] platform/apple-gmux: use apple_brightness to save
- brightness to EFI
-In-Reply-To: <20260316153407.1781-3-atharvatiwarilinuxdev@gmail.com>
-Message-ID: <f5cb54b3-b30d-2e20-874a-824aab1c3eea@linux.intel.com>
-References: <20260316153407.1781-1-atharvatiwarilinuxdev@gmail.com> <20260316153407.1781-3-atharvatiwarilinuxdev@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asOFjybJ"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-67b8d9c26bbso13055050a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 05:50:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779367801; cv=none;
+        d=google.com; s=arc-20240605;
+        b=FnQ69SUvIkaFqPCfcgTkVDs5VdUcNVaFPftJMokt5NQzJnVhf+bvpyI6DMNAYwKrKf
+         4gItT/KbrwRhLDCgiGnIqgKpNT5p9C2u0g3dgZAq3FZbCdZlhLaHMFjDyc4479eUW9P3
+         yma0cQWfRH1q1KdHpTvAmW1vPyLgQabkEjh9xJFX23tz36uDp1pGHs0yrdBQwXmvF1Gc
+         ++Yf2qTOHbrE3VGPPo4eMN1cl06Tggr4cMvgkE0P1zOEKMBeulGLTP+gewmMyEpncyLn
+         hHWMgsxo7Rkb14Khz7wSRVXpJ7kvjRuvZo1fb3GjFkk1yZhrIlQLIWV0iTjzZjeCGL0X
+         yDGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=+QVahzrzmnVBYKabR7+8y85cgjXH1ygDSASSrfb0n5A=;
+        fh=Qsam3c9C+daHZxzzvB5yJJpsn/bbJ50FPGUnp06BkxU=;
+        b=A2RrX/qBm6dsAtA++fFjxzStGkzELCHWIrZnZUYTbvZHDb/WT+tEeaolFCqxK6C0Rn
+         KePKm48thbaxFC9o817YQ3qAYFeuMqJpbpS6vB8+IRxC/jdWYOeqtBzdJYWW5MLwXq9N
+         5cZ9hxNW2o41EqvpJMQoMzGNBs189sL9jh63aQ2LcqPQ2ilDSRJtTejhLldqUCYdDfx2
+         ukXR65d1p5ykJCGsA5M3Av23hvc2CRRVxNpg1AOORbfoX9ewx/skD+38WqndZAIs0Xxh
+         PnoIM+br00qraq86PTZHkJkBId3gVxnZP7POwEdffYumhOIBNrFEFZ9Fkrgcz22u5lCl
+         NV0Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779367801; x=1779972601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+QVahzrzmnVBYKabR7+8y85cgjXH1ygDSASSrfb0n5A=;
+        b=asOFjybJRYZHR+KChUS4yyy2ArpWOa/jIxW80xs15PSISPEaP0OKcxW016lf1/re2c
+         5EPW4Gh9kui2w+PH81B7L05p+Rm6aoMwqaT+kHSIgkJepLIo8R/kR39eHCja4mFFm5mF
+         pskGwRv39MTKscMye1w/0Lkxupdb+Rc7W+5hoDI0jvgmC5210AMo0h57lRxN1vTN4pgW
+         2zdlYcXsMDp26pCl7IQvKNYFSOPh03Y9ZMsUvDoDDZY02e8rTU4Cp7D/kBhIGThmKOKe
+         G6agB8APyUfpvTobXZ2iXW4K/54hrou+oft8mDNI4NA776naX2lPwXztUd8Ytb5VuOut
+         rPJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779367801; x=1779972601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+QVahzrzmnVBYKabR7+8y85cgjXH1ygDSASSrfb0n5A=;
+        b=kw5Na/GvpcTAoPL0+clWrXEoyfdLKTc5MFkkdYnOqmVhtwXznV8/AYQgR5zeKC9dMO
+         OOQMvl+NAJFzb3/iEWFjuZoAjJ5TmzRWA0QBYS4IIpBOmYDMqXgS4QPT/12XZKvG/LP6
+         2qpjkkfOu7bflVwsHLH5ciyIAblU++OdeqHrcqxawcjDBx6TaWRZAaYihNGKS/KDfA6f
+         Fft+5gyR9CvHYXxVwAn8ZhFMKHD3VGzDZGPm5gOqq0tGu9BYCdcDrJAys4JAqaRD+QER
+         2lho2bY/kQovY5HT8mjkcb77KUt9Sx88oemjQ3DMdQuK3Xj6RhkxBQcrvOPY97DiAIz4
+         2VwQ==
+X-Gm-Message-State: AOJu0Yx4FpfjKv0fVe/WIa5AaOHeqXFXLCg3iNcOmUpsOV3VFr4rY676
+	i22itVQvMaC9bKXyH+PbFjWn1iAhvoqfuV5qIqYLZt9t4b6zMbHitUL6BWep0o+gVepMK7pVXb9
+	CjV4R68wrm38jnOcvR51Qu+pOaYPAaCc=
+X-Gm-Gg: Acq92OEYZg5jlUZoQ5ORYihrpP92jk79Vlr76UIRyyelf/c5pLfR+r9GVg12w2VKhkI
+	SozkJ0buCIz8f4+PpWN1qLT8vXnukLBV4ZLa9a5Kfb5MEUj3f0c/Ef5tO5sHEUjRb3iPBcAOXMC
+	ZzGLYBiJF095zw6K5fujK3Dg4TdfAjOkf7rfPY648TUJs9Y2R5suSdQJh/aU2Z1Qhlw45bc8HzO
+	ESuT6XMOwC2Scb5891B8APZhXsjnK27Mp9aKpECAFqdGsS+hV0raOtHdeKj1j72mg+mruRt8Sen
+	pCWpjjwMetZH7bUOv1sIzMNYXIqKIIL6FVEYyfJbI7hk5hywriM=
+X-Received: by 2002:a05:6402:13cf:b0:672:a1df:9c6e with SMTP id
+ 4fb4d7f45d1cf-68836ecafdcmr1507409a12.25.1779367801093; Thu, 21 May 2026
+ 05:50:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20260520140800.130530-1-radheykalra901@gmail.com> <ag3yZmFDRUqsoVAm@archlinux>
+In-Reply-To: <ag3yZmFDRUqsoVAm@archlinux>
+From: Radhey Kalra <radheykalra901@gmail.com>
+Date: Thu, 21 May 2026 18:19:48 +0530
+X-Gm-Features: AVHnY4Lu0A6IYiAizgPqe5DM6ciRCOtvNxsqTgNF7e4GeVRQ-gMmBj6YZh0ooTk
+Message-ID: <CAJ5VyXL0nYQXb=R_5Nd=HZCLiPKFnrJ+ttXb=D1LTAN2j4M2vw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+To: Krishna Chomal <krishna.chomal108@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Mar 2026, Atharva Tiwari wrote:
+Hi Krishna,
 
-> use apple_brightness to save brightness to EFI.
+I tested the current platform-profile behavior on 8A3D more carefully.
 
-Please capitalize changelog text properly.
+The board already exposes the generic hp-wmi platform-profile choices:
 
-> 
-> (tested on iMac20,1)
-> 
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  drivers/platform/x86/apple-gmux.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-> index 1417e230edbd..cab3122c1a86 100644
-> --- a/drivers/platform/x86/apple-gmux.c
-> +++ b/drivers/platform/x86/apple-gmux.c
-> @@ -22,6 +22,7 @@
->  #include <linux/pci.h>
->  #include <linux/vga_switcheroo.h>
->  #include <linux/debugfs.h>
-> +#include <linux/platform_data/apple-brightness.h>
->  #include <acpi/video.h>
->  #include <asm/io.h>
->  
-> @@ -78,6 +79,8 @@ struct apple_gmux_data {
->  	/* debugfs data */
->  	u8 selected_port;
->  	struct dentry *debug_dentry;
-> +
-> +	bool save_efi;
->  };
->  
->  static struct apple_gmux_data *apple_gmux_data;
-> @@ -960,6 +963,13 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
->  	}
->  
->  	gmux_init_debugfs(gmux_data);
-> +	if (IS_ENABLED(CONFIG_APPLE_BRIGHTNESS)) {
-> +		ret = apple_brightness_probe(gmux_data->bdev, &gmux_get_brightness);
-> +		if (ret)
-> +			pr_warn("Unable to Enable EFI brightness save: %d\n", ret);
+cool quiet balanced performance
 
-Include for pr_warn() is missing from this file.
+Writes to all choices succeed and read back correctly, and I do not
+see hp_wmi errors in dmesg.
 
-> +		else
-> +			gmux_data->save_efi = true;
-> +	}
->  	return 0;
->  
->  err_register_handler:
-> @@ -1012,6 +1022,16 @@ static void gmux_remove(struct pnp_dev *pnp)
->  	kfree(gmux_data);
->  }
->  
-> +static void gmux_shutdown(struct pnp_dev *pnp)
-> +{
-> +	struct apple_gmux_data *gmux_data = pnp_get_drvdata(pnp);
-> +
-> +	if (IS_ENABLED(CONFIG_APPLE_BRIGHTNESS) && gmux_data->save_efi)
-> +		apple_brightness_shutdown();
-> +
-> +	gmux_remove(pnp);
-> +}
-> +
->  static const struct pnp_device_id gmux_device_ids[] = {
->  	{GMUX_ACPI_HID, 0},
->  	{"", 0}
-> @@ -1026,6 +1046,7 @@ static struct pnp_driver gmux_pnp_driver = {
->  	.name		= "apple-gmux",
->  	.probe		= gmux_probe,
->  	.remove		= gmux_remove,
-> +	.shutdown	= gmux_shutdown,
->  	.id_table	= gmux_device_ids,
->  	.driver		= {
->  			.pm = &gmux_dev_pm_ops,
-> 
+However, under full CPU load I could not confirm that these profiles
+change CPU power behavior. Across quiet/balanced/performance/cool, CPU
+frequency stayed around 3.27 GHz and the reported PPT stayed around 33
+W. Fan RPM rose somewhat later in the test, but the system was also
+heating up, so I cannot separate that from normal firmware thermal fan
+ramping.
 
--- 
- i.
+So I should not claim that platform-profile policy is meaningfully
+validated for 8A3D. What I have verified is that the Victus
+fan-control path works.
 
+That is why I avoided a plain addition to
+victus_s_thermal_profile_boards: it would move 8A3D from the existing
+generic platform-profile path to the Victus S-specific
+platform-profile path, which I have not verified on this board.
+
+Thanks, Radhey
+
+
+On Wed, May 20, 2026 at 11:20=E2=80=AFPM Krishna Chomal
+<krishna.chomal108@gmail.com> wrote:
+>
+> On Wed, May 20, 2026 at 07:37:46PM +0530, Radhey Kalra wrote:
+> >Hi,
+> >
+> >This is a smaller v5 split for the Victus 15-fb0xxx fan-control change.
+> >Patch 1 prepares the hp-wmi board data and hwmon fan-control selection
+> >so fan support can be described independently from Victus S thermal
+> >profiles. Patch 2 adds fan-control support for Victus 15-fb0xxx board
+> >8A3D.
+> >
+>
+> I am sure I must be missing something but I don't see why this isn't
+> just a DMI table addition?
+>
+> I understand that you want to refactor the structs to decouple fan contro=
+l
+> from platform profile so that you can just use fan control feature and
+> ignore platform profile, but I don't understand why that is done?
+>
+> If I use victus_8a3d_board_params quirk on my device (8C78), it effective=
+ly
+> removes platform profile support, why is this choice made?
+>
+> >Based on platform-drivers-x86/for-next commit:
+> >165e81354eefd5551358112773f24027aac59d5a
+> >
+> >Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
+> >F.22. With the series applied, pwm1 and pwm1_enable are exposed and
+> >the EC-layout warning is not emitted for 8A3D.
+> >
+> >Radhey Kalra (2):
+> >  platform/x86: hp-wmi: Prepare Victus fan control board data
+> >  platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+> >
+> > drivers/platform/x86/hp/hp-wmi.c | 212 ++++++++++++++++++++++---------
+> > 1 file changed, 153 insertions(+), 59 deletions(-)
+> >
+> >---
+> >Changes in v5:
+> >- Reduce the series to two patches: one preparatory board-data/hwmon
+> >  patch and one focused 8A3D enablement patch.
+> >- Drop the active_thermal_profile_params global and dereference the
+> >  thermal-profile data through active_board_params.
+> >- Wrap the setup comment added in the preparatory patch to stay under
+> >  80 columns.
+> >
+> >Changes in v4:
+> >- Split v3 into two no-functional-changes-intended refactors, one
+> >  fan-table parsing fix, and one 8A3D support patch.
+> >- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+> >- Move revision notes to the cover letter.
+> >
+> >Changes in v3:
+> >- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+> >- Keep the v2 board-data approach and 8A3D fan-control-only handling.
+> >
+> >Changes in v2:
+> >- Use real name in Signed-off-by.
+> >- Replace the ad-hoc fan-control DMI table with board data in
+> >  .driver_data.
+> >- Keep 8A3D fan-control-only instead of enabling Victus S thermal
+> >  profiles.
+> >- Use the fixed fan-table parser path and derive gpu_delta from the
+> >  first non-zero GPU row.
+> >
+> >--
+> >2.54.0
