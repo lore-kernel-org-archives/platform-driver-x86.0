@@ -1,155 +1,284 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012026.outbound.protection.outlook.com [52.101.48.26])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EFF363C6B;
-	Thu, 21 May 2026 04:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779338274; cv=fail; b=hd0PsErjlPmya0JfOnn13gjVh5BOU0dRILcyhjuHIWg91AnDcckxv85HMTBU5zNwLSrljpmG6gC3YGZgfz1FmBkXyKpK/yWGf3vA5UmQEQr94y5/+5hZ3w1WkYWiv980kazZEpyRDhqQYo3GNZoPjMdSdPHWu9zul0KyZff46VY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779338274; c=relaxed/simple;
-	bh=tI7QH4DFYaarys5Fjp42DkFCG6vXxhQ+I/o9FNxWbM4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IQGUPZ9yc2T245jq1O7fuyCS82CzUbTudXCNjavigBPmORqLRUTnLw76LjHZvSRpsvCnZWu7tAzXrdZalJ67wc7qeBifv/uxBVFqByyUlzEcSFt0uq8XZesdPGbAsRgJjWKMIYklYI8aKaK3yS6DNxKIexuTFr7f8Cug8j/Y8Kk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MuzH+7Q4; arc=fail smtp.client-ip=52.101.48.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5165834D3B0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 08:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779352631; cv=none; b=Ej435OCqGJUUD+XDJ4sX2mp7ZsdUTzwDaxRmrGhVy6wvcwHrm0qjIvTGP04+EFpyxdhQsif7iuTxmwtudDGITaWdakqLozmyuYNzUrLZJvvAuRu/4UBnRmVp8Klhc6U5ykrZdmtxgjnAodRpFwWdmFcSRZeX/FIBFjdIHNwDtSg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779352631; c=relaxed/simple;
+	bh=D3r2n74KWxEYfDl8rWFGKV6Wr7M1gfnVPwg1g1CrN84=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qibsM4sSYZbGUakqzPLir8vYo4vuhg+yHx5e5SXgc6iPdeT5bTgpTGyjn8NFHaey7776KZb3DhoW8zfmG6heot09YnJKH3W8EOGK3keI39swcmsFI/Cnjf6BiniKyJWNNFcn9otCDvWAcyL8jC49y2H9ojqNYoaOVowNHmCs4Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Trw38hpF; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=E22Sb3nb; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MuzH+7Q4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TlRqF10yNyUCNDqv+po1lZflmL/fIiYWmJ7cHrujXwezsC1FJ520L91pePIsFaqnxpsCbHQCKDuLZfUp6I4x7tDdL889+eQlTUB75PCAod31X5Xx0EKB7NicN3ET6ccKQFcQNKKDAXfbIV4aQ1vKK8qStlVqDys3YMyV4WveqoREwj8TktMtI02aRsYTAPfobRfOlV3/3Yy5JKZ0LuPPCMAWtl+LjhJt6nbVj7ZHNEZ6f7P0GO5+vM9WyvEx0fovZSaeQ1GJWprvVTDwpKakdad515EFuts/5j4zpJQ5IkAxv1PqK9UYH+z117E3O9yfMFIv33nIVO42YUORFAMUbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oGrxSfgx9jUgbI3xaJUQk9EKdeW4sTzz1Yi1wx/8OPQ=;
- b=mt5E1udPpf9r4b9+RnCFSrX3P3A56wInKVrUNyxyOZfvDR39ZtsVkj3k+si1VqZ6yZWKO6Q8+iwxLAnelTvCwHVoagAWdpmZxQgrG0h+L2VuOp+O9SpuMGNDD/qqX9H1KNB80xyJAiXLWd6ttyN4mJZL9ZVxwXnvL9h5zyKl8+hlc5AnnEWg755m1DcvH2TvxWHP0AnIT5yGjpeuvNef/S3lE383fr5/4veVicqSOp6CVkrEoHRwYbW9ln/OzZrK3l6GwIH7clcl5wa+Jgpv0NxDoe+yih81/D3Mi3QNV1jalAS+aGrT6bvxSyu+Qr2tpRFC6olaA54do8U2xnTlwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=bootlin.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oGrxSfgx9jUgbI3xaJUQk9EKdeW4sTzz1Yi1wx/8OPQ=;
- b=MuzH+7Q4iAGrQf0IGFfRlFufFd1QoqsLbcDFEmslC+mZwrSdJ1wp7Yj8mbTThysbuArzM6p4xSLc0o2L89vNykpILpTf1ydc+8Ke9p5D44FdVFCzyiiw+L8NvIoHZhmmZw7LRn1/FhXwC/CvnpirrEDH5PD5B+3s0NqtRWTYfPc=
-Received: from CH5P223CA0021.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:1f3::22)
- by DM6PR12MB4331.namprd12.prod.outlook.com (2603:10b6:5:21a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Thu, 21 May
- 2026 04:37:48 +0000
-Received: from CH2PEPF0000009E.namprd02.prod.outlook.com
- (2603:10b6:610:1f3:cafe::41) by CH5P223CA0021.outlook.office365.com
- (2603:10b6:610:1f3::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.17 via Frontend Transport; Thu, 21
- May 2026 04:37:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CH2PEPF0000009E.mail.protection.outlook.com (10.167.244.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.11 via Frontend Transport; Thu, 21 May 2026 04:37:48 +0000
-Received: from ausmlimonci-lx1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 20 May
- 2026 23:37:47 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Alexandre Belloni
-	<alexandre.belloni@bootlin.com>
-CC: Hans de Goede <hansg@kernel.org>, =?UTF-8?q?Ilpo=20J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>, Thomas Gleixner
-	<tglx@linutronix.de>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2 2/2] platform/x86: amd-pmc: Fix S0i3 wakeup with alarmtimer
-Date: Wed, 20 May 2026 23:37:14 -0500
-Message-ID: <20260521043714.1022930-3-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260521043714.1022930-1-mario.limonciello@amd.com>
-References: <20260521043714.1022930-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Trw38hpF";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="E22Sb3nb"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64L72Wc13049749
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 08:37:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=El4wNMt9BXL9CxxtRdtqTV
+	x+E6o7UHeoj7av7h+WfcI=; b=Trw38hpFc3Uxmsxjfu7cVuCmyXS6WZ39nWg0SE
+	akyGensBif0/ULxQcPPBG9D7sac9jKuydsTJ4IaHQocxwctnByVKYnVB4mI0toNE
+	SdpfJT9vOELGFzPNl9Az6o/kqZ08mXro8GaeDySwzyoNKFVZCLVkIYOnFsEo6KEF
+	bJmt1M7ivhKwT6Vb+fDulepmbjEGwXUo82NblLrvbrDD/5b0quMl/RUmd/yH53xR
+	P155WhEBw0FDk+ct73qt9Z1seTGTUP5Y4mlWPMO5mjtd4NasLjoDXfKeTfgsUzjo
+	9Obr2KNaswV3iLrbA/+wijZcq69LTkyX7fshpsA/vGZdUnnA==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4e9wahrc7b-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 08:37:08 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-8ca1295e3a9so87666516d6.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 01:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1779352627; x=1779957427; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=El4wNMt9BXL9CxxtRdtqTVx+E6o7UHeoj7av7h+WfcI=;
+        b=E22Sb3nb4aDLac31OyOASlTXBUf8mjO1coxt5+pTCdyR1scRp/lKA1XQCa8IzAR/1b
+         71CA0Vdmwrpxel9udOeCjvLzd15TXx3+Vs+OkwRqvg1VBn58jVur+y/qFE/zqv83Fs+6
+         uiW/evDa7/VJwHXXR0G8ebEgQRC3Z+5z3WQsKQEeOSdLlnfwvnt7xCQHKO6gtF5Au0nk
+         bF2hojYISxd4ZmO12W6ql11SwIVqUQ8poHWbFIU77m1jYSFK0a1Dg3LPOY/IaySxz0Q3
+         YmyrHql5Rgvag6MksUEscT5Sr+wrKJny/7s4JqD05KgtxjWAfiHASvRxgwXF+jQSG3CN
+         NeAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779352627; x=1779957427;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=El4wNMt9BXL9CxxtRdtqTVx+E6o7UHeoj7av7h+WfcI=;
+        b=YODM4z3GqDFaSGFOiicYJG0t6F2VF07gxD5lqRLYeVUa5wqRaB6haOq/GdoVKr5b59
+         xgYRh9Z5gnUMrf0+2T53ywUHBcHFpbtLhXrML4Fh85uYIAZCGNXnLh/kXbTzEuXJMn8d
+         l4wCIsijeqorXFCzcqxdu2AVVwGUtQYYB3P7P7lq2kCVvViGqp/CozOKs0Q4Me8xiql3
+         AChWumkiqyF916lexnOzJIWEQgrGaWrGxD0ixBAFVaUbBqw6DKC3CpCAht9i4TapybQq
+         hJIg3xqlmtioeIj3YozfR3vwtSwBC0pkUS9ETnghuG2A06I57jc2IzSZFKowGOrYryCq
+         E+Gg==
+X-Forwarded-Encrypted: i=1; AFNElJ+UxUP62sKtMBYZ1Mw8qpDJxj/Ck0aSIGs1+lT/clp+euFmaNSfWh60gOhi2n9Jm1nIfgKy0HJG7my6SjPiKp5Bcyt2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWir1DfaC4GlRcVpqYwKdgR1a2yO1eVOF+UhLpyfnlVnYqcof1
+	JUHt7a7RS6Y7KBKSG/vBnu7gT+WUUtNSNFkBfh3MOZDLoOIQ2i5yKg4mvC0gNmGHNj0CuJZLeKY
+	i86oq06jtVweUiu1HcYF+cDnnHz6KUtes2rjxIgMCH10V1vMJMCSZCNAtqzmB9IcL3NtqVvJy/k
+	tZ
+X-Gm-Gg: Acq92OEGO4ne7ZQ2+JOOUDPFbyJQPhJ5ZznC8ORDdQxMA+6su4X8/Xnv/TFGrtkUdyK
+	/ErGgQD1Gdxo0lAEnq8pjUlZigAwTtLdQpzeqtUvEUDBXwa70fIRclMiCUQt495eoGN52nzA+/U
+	zDpcjXMhI7alzJ4xZt1nfoi5SCtdAo2EQv0VD/KBB457WTnipZN/y9Ol9vaGpvVC9bZHXlWZe+c
+	Ai7e+0ubkZv732RGYBc4U9+G5Vcf8bJH1Fwe50FFAAArdhkG8Iy/k6J8qh4pVDEvuKNOyrRA2Sr
+	PE3XUaIyQZ90OzPJRnwO7Tuu4Eov/dhnHOzfCFqsq8pfLsf8iYbbxF79NDYS/vmhUu03cff8auS
+	tDoMtpi0oCbZZNQYmCogfkUj6NIZAxcbOrOx+u9MTRLTXFU8dkJvpxnmLIm82zg==
+X-Received: by 2002:a05:622a:514:b0:50d:900e:c1c1 with SMTP id d75a77b69052e-516c5484841mr24416231cf.7.1779352627540;
+        Thu, 21 May 2026 01:37:07 -0700 (PDT)
+X-Received: by 2002:a05:622a:514:b0:50d:900e:c1c1 with SMTP id d75a77b69052e-516c5484841mr24415481cf.7.1779352626922;
+        Thu, 21 May 2026 01:37:06 -0700 (PDT)
+Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:bb10:ae82:b7c3:d15a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4903caede9fsm10502405e9.14.2026.05.21.01.37.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 01:37:06 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH 00/23] driver core: count references of the platform
+ device's fwnode, not OF node
+Date: Thu, 21 May 2026 10:36:23 +0200
+Message-Id: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009E:EE_|DM6PR12MB4331:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9a68916-3d29-4444-1ebb-08deb6f2b635
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|13003099007|56012099003|22082099003|11063799006|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	BNeUVvPaO1OtsVSJMxxjT5K0RG97RwmXqg7PEagjkI+DIiPZeEnAy4SQUVDiZpL8e+QASzbmNg0U406LReEnQpB2RDmdpLjQK3UPw/RKULMI/sqkyZvaIYTMdzRsndHXWcRZhSJnVDPaTtZzuFStpM8yvmGNUSkqC+lZ0LELIqI7RED4SuDyi+sqU7vV9VMeiHcmxaVJINoV75bG6JpGy9raSICzhboRr+ROLVHQigq2MJ1/Cwmyrwl59838zcabgcIdr3NEXGfWlXZ3grYAJhbv5cwfQpRAzbk2hT+Y9WMt8zq43yybma3gAy1lM5QCELVHr3HlkSRJO3+Qw1HvfqWzq0yj4ekPxo+ySdom8XzVyCZqi0c6QaSbfs0SCCkiWwYnYReMSKF23cR+PdjhyT6pq5M+izdFQE6QZivqRjsiZ3twXNmVULT2GKHViqKQUO0Kd2eHJme1ZnHCXVQyEyBQrxL4GhyFu41P/2X/969xjJXcbIwHpQx6IFUyAldsxYOVUOa7exvKQuTT6vuZg6JUXG1TV7pBqvqqsktUeStaD3u+ACWFM3CWWXrepqwk/bU7USRIV5aFnG3+TcTxqqtTzGvE71XQxBOvyesjmsN4BCc4vMnRIEhO8fw0gVmCsnhJnylLWacsSIL3WED6170rE3cnYE43YutFjYHTMaLw/jriJN6Y6jiX+/uRlINC
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(13003099007)(56012099003)(22082099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	88ISQqgUGu03C9Fv3fQRzAal8bXV3AVZ4+W/nUUwi30gnMGoOU9LfwZA7Fo1GoqnMAdWYUq5G1/h5bsR6jqW/J71wtZfNnHNfghdUK4y9Zir1nZTdU4s5UdVVNhWQv7VHXF1aCsR2hSxQPblh/Ljkl8qWCTOdAwa6DRIxu71lZvdpLMyPPIdVKVYNI2iyj6H3POf7y6vTPO2xOFe0AoWT98fYLBLLFqkJTsN/FddJtfKhC7nuFgbtjPgscZLRzobq05XEYmOtpZ4IoaNVArg/C4bcZEoV8zLLnZ28rrfdTDID0kX8aB2L7XnZFH85eo8obvytdYe1jghfpuMOQvktQOzn+W1LvosqzvaprBPGMTKKG1mUBxyvlnre+P5tmJHH8SNYcRDYxwzuTiINfXAMV0/RvAfgjnTvd9grA0B02i8fJ7F2yrdk9sLH/Fmq5BY
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 04:37:48.7924
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9a68916-3d29-4444-1ebb-08deb6f2b635
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009E.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4331
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAfEDmoC/x2MQQqAIBAAvyJ7bkGNzPpKdKjcai8qChZEf086z
+ sDMA5kSU4ZRPJCocObgK6hGwHYu/iBkVxm01EZ2WmJ0VHC/fHCEiXZ01vS2NUOvaIVaxSr5/o/
+ T/L4fVuIfJWEAAAA=
+X-Change-ID: 20260520-pdev-fwnode-ref-d867836971eb
+To: Lee Jones <lee@kernel.org>,
+        Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Thierry Reding <thierry.reding@avionic-design.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Peter Chen <peter.chen@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hansg@kernel.org>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+        stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5107;
+ i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
+ bh=D3r2n74KWxEYfDl8rWFGKV6Wr7M1gfnVPwg1g1CrN84=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqDsQZF3+Wnnqse1OrX9tW8YslypJ8/2vlajEr3
+ JD2ATbv3b6JAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCag7EGQAKCRAFnS7L/zaE
+ w8EKD/9dgPJ3F9RbNULXnoMj4pWPfWo/PfTbl87hUlFmLRa5e+BZbCj7lym0G7cDSCBBxhP1m38
+ XDMPAP0b7y/NNBM5+VFFKiHSXL2ftnoZYhTiPCXqAg8yXpg2s9DUQx7N9NbBTjBZDPFloWIKRq+
+ KlrMHuxSs7HgG8kOBSK5eW4l+mXcdX07ZoH1zm3uq+BtSWd3lpPf2/lLKF+k5Cc1lpzbfNDEq7Z
+ Ykm7Kfr1bDflSUQG/fhL8ilD15sZF0ffqDCywGL+UWcM5riCnkN5/v/BOF94pxi6LYD1XBlKs9t
+ 9gnTDKdlCmzmuhXIMsvOdZbSYYaJdad0De3ClLQ1TJN9KZXrqkxtJmLL2WUv2kI+YgHoNhRxM/d
+ DoZ7lw/sbJRbjlusrb2aLa4FDl776mKWYhsIxGgIm/BEQk8ttADCJ+lCw5QMO0KC5BvtqRFoazO
+ pG82IvBTgo1DqWURzhU8JiJIsRJMdzSm/fNAHAdK3htZj4WBovzhar44MI2zYLwsIEOTWII1a/C
+ zWJCChwoCsQXVVI4H2ICRncw83pF/8yG5ToHIO30PdXPpkq36sYUdxvG/qk/pmu07MX2Gz3GGPd
+ 4HA7SKpoUAI1k/yCQzarBy1I3uysZITHV1i0mIHh5wtU/1mmf90cnXhXSuAnrIq3vTxq48wjVLg
+ wrYHri/y1wYzsQQ==
+X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTIxMDA4MyBTYWx0ZWRfX9OJowxFH2+xY
+ uq+eZ+LcWiR7Zqh9YWKEMClJANrKhhCU/rOcEURnQtg2UQtoW/suJPl9tcIUo2Vey/0pLf1qt9S
+ EahGyuOTkQEpBzXrjyeulA5uzMmuc0bI5BbW5+qyRIxGnxhktT8kOGgfN+sWV4XObdMV8Da1UOE
+ j6DrA+Uw6QOZfjzDlNJwTnaOCv+FV6eV9aFQjjEcJQvTPWkLYiriz0tV5G3I72cBDgkgrVTkYPF
+ jzk8Yfmn622msZuJ3UnRxZKm/AkDzYaddFPEMveqFzKY80wrk0zKxi4NrafTzjiBGKdDzYMNN31
+ V0BhmZFPHpPGM+H67xa2DJYMFVOv63B/WC126SrMlHXdS1BTu4sq0KNaF9Jxmm4OxLGEkdr20Kb
+ yAdNk9CTkHNSACYkTYMYwyKziaaVJTMZM/TANJgbByu3u8IlnJ+emfIV+eGsF2r6rhLcz/odjKj
+ tSBC6zwpQg7PxQplWHQ==
+X-Proofpoint-ORIG-GUID: gtvaCtJOQnGNXysH-TJStXrILBAIaOvY
+X-Proofpoint-GUID: gtvaCtJOQnGNXysH-TJStXrILBAIaOvY
+X-Authority-Analysis: v=2.4 cv=H8LrBeYi c=1 sm=1 tr=0 ts=6a0ec434 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=NGcC8JguVDcA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=EUspDBNiAAAA:8
+ a=x7ldU9BvHY0adF9BoRAA:9 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-21_01,2026-05-18_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 phishscore=0 adultscore=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605130000
+ definitions=main-2605210083
 
-It was reported that suspend-then-hibernate stopped working with modern
-systemd versions on AMD Cezanne systems. The reason for this breakage
-was because systemd switched to using alarmtimer instead of the wakealarm
-sysfs file.
+I'd like to first apologize for the long, treewide series and an
+extensive Cc list but I think it's important to show the big picture and
+the end result of this rework.
 
-On AMD Cezanne systems, amd_pmc_verify_czn_rtc() programs a secondary
-timer with the alarm time. This was introduced by
-commit 59348401ebed ("platform/x86: amd-pmc: Add special handling for
-timer based S0i3 wakeup"). However, this function uses rtc_read_alarm(),
-which only reads the aie_timer, not the next expiring timer from the
-timerqueue.
+Platform device core provides helper interfaces for dealing with
+dynamically created platform devices. Most users should use
+platform_device_register_full() which encapsulates most of the
+operations but some modules will want to use the split approach of
+calling platform_device_alloc() + platform_device_add() separately for
+various reasons.
 
-When both alarmtimer and wakealarm are active, the first expiring timer
-might be the alarmtimer, but amd_pmc_verify_czn_rtc() would only see
-the aie_timer, potentially missing the earlier alarm.
+With many platform devices now using dynamic software nodes as their
+primary firmware nodes and with the platform device interface being
+extended to also better cover the use-cases of secondary software nodes,
+I believe it makes sense to switch to counting the references of all
+kinds of firmware nodes.
 
-Switch to rtc_read_next_alarm() to read whichever timer will fire next.
-Also handle -ENOENT (no alarm pending) explicitly as a non-error case.
+To that end, I identified all users of platform_device_alloc() that also
+assign dev.of_node or dev.fwnode manually. I noticed five cases where
+the references are not increased as they should (patches 1-5 fix these
+users) and provided three new functions in platform_device.h that now
+become the preferred interfaces for assigning firmware nodes to dynamic
+platform devices (in line with platform_device_add_data(),
+platform_device_add_resources(), etc.). The bulk of the patches in this
+series are small driver conversions to port all users to going through
+the new functions that now encapsulate the refcount logic. With that
+done, the final patch seamlessly switches to counting the references of
+all firmware node types.
 
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3591
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+This effort is prerequisite of removing platform_device_release_full()
+and unifying the release path for dynamic platform devices using
+unmanaged software nodes.
+
+Merging strategy: First tree patches should go directly into individual
+maintainers' trees and land in v7.1 and stable as bug fixes. The
+remaining patches touch lots of drivers but the changes are minimal and
+unlikely to cause any conflicts. I believe they should be queued in the
+driver core tree for v7.2 (possibly on an immutable branch for others to
+merge into their trees). If the subsystem maintainers object, the
+alternative is to queue the three new helpers for platform devices via
+the driver core tree. After v7.2-rc1, I'd resend individual driver
+patches to appropriate maintainers and once they're upstream, we can
+apply the final platform device change. However this would take three
+cycles to complete so my preference is the former solution.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Bartosz Golaszewski (23):
+      mfd: tps6586x: fix OF node refcount
+      net: mv643xx: fix OF node refcount
+      slimbus: qcom-ngd-ctrl: fix OF node refcount
+      pmdomain: imx: fix OF node refcount
+      powerpc/powermac: fix OF node refcount
+      driver core: platform: provide platform_device_set_of_node()
+      driver core: platform: provide platform_device_set_fwnode()
+      driver core: platform: provide platform_device_set_of_node_from_dev()
+      of: platform: use platform_device_set_of_node()
+      powerpc/powermac: use platform_device_set_of_node()
+      i2c: pxa-pci: use platform_device_set_of_node()
+      iommu/fsl: use platform_device_set_of_node()
+      net: bcmgenet: use platform_device_set_of_node()
+      pmdomain: imx: use platform_device_set_of_node()
+      mfd: tps6586: use platform_device_set_of_node()
+      slimbus: qcom-ngd-ctrl: use platform_device_set_of_node()
+      net: mv643xx: use platform_device_set_of_node()
+      drm/xe/i2c: use platform_device_set_fwnode()
+      platform/surface: gpe: use platform_device_set_fwnode()
+      usb: chipidea: use platform_device_set_of_node_from_dev()
+      usb: musb: use platform_device_set_of_node_from_dev()
+      reset: rzg2l: use platform_device_set_of_node_from_dev()
+      driver core: platform: count references to all kinds of firmware nodes
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 50f5784f2aa2e..8cd2db0ccaacd 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -595,9 +595,12 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
- 	rtc_device = rtc_class_open("rtc0");
- 	if (!rtc_device)
- 		return 0;
--	rc = rtc_read_alarm(rtc_device, &alarm);
--	if (rc)
--		return rc;
-+	rc = rtc_read_next_alarm(rtc_device, &alarm);
-+	if (rc) {
-+		if (rc == -ENOENT)
-+			dev_dbg(pdev->dev, "no alarm pending\n");
-+		return rc == -ENOENT ? 0 : rc;
-+	}
- 	if (!alarm.enabled) {
- 		dev_dbg(pdev->dev, "alarm not enabled\n");
- 		return 0;
+ arch/powerpc/platforms/powermac/low_i2c.c    |  2 +-
+ drivers/base/platform.c                      | 56 ++++++++++++++++++++++++++--
+ drivers/gpu/drm/xe/xe_i2c.c                  |  2 +-
+ drivers/i2c/busses/i2c-pxa-pci.c             |  3 +-
+ drivers/iommu/fsl_pamu.c                     |  7 ++--
+ drivers/mfd/tps6586x.c                       |  2 +-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 10 +++--
+ drivers/net/ethernet/marvell/mv643xx_eth.c   |  2 +-
+ drivers/of/platform.c                        |  2 +-
+ drivers/platform/surface/surface_gpe.c       |  2 +-
+ drivers/pmdomain/imx/gpc.c                   |  3 +-
+ drivers/reset/reset-rzg2l-usbphy-ctrl.c      |  2 +-
+ drivers/slimbus/qcom-ngd-ctrl.c              |  2 +-
+ drivers/usb/chipidea/core.c                  |  2 +-
+ drivers/usb/musb/jz4740.c                    |  2 +-
+ include/linux/platform_device.h              |  8 ++++
+ 16 files changed, 84 insertions(+), 23 deletions(-)
+---
+base-commit: 687da68900cd1a46549f7d9430c7d40346cb86a0
+change-id: 20260520-pdev-fwnode-ref-d867836971eb
+
+Best regards,
 -- 
-2.43.0
+Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
