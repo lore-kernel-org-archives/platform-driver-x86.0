@@ -1,639 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4B13CDBDF
-	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 13:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE17242D7F
+	for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 13:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779369430; cv=none; b=UW/zngmuH9lz33HjuX5O+QKuPAj7oANLXvKSb8Pk2UgbRhSiSixVYLdSW3AGtpP0oDW08R6DUfsc9sf1C6axEvnXJSRD2DUr4Q7LWRi6KmQv08qpMeHV8rnZtBP4yHWe+D1yLnUMLZnSqlTRilpG1OSoEei/EDIoG5ZBUahpSIE=
+	t=1779370450; cv=none; b=HgQdvWxAIeg/G5musri3wNHulnSPseakChX/bXFq++po4Ny1Atj85I+tZmzjVeqGWfTEIomVIAMTj4wGvKzlWTk4661tfiAumsNnEPe7VUMKYkX6qvetbuknMK8dfdz2g/qoU+fyZv3kb3c4/CFN2sQqo+xSkv4PyN1DoLh2cLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779369430; c=relaxed/simple;
-	bh=jDA+GmpXeDYmTN6Q7UEDhzJfS0O0/46BE8ejbAdWWe0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lKfiNoE0T6ApQ+2StaXhMuLxARm2NJM3yL2NmoQmK8u5rEueW7pX5xw6FBTj7eT+o0fYRFaRzLTn6lXKbUgeRyuM37GD8W2jw1BEEkxDNnKjowcpCekjXQpfYXwNrCkt380zML8XFhge7AAbRzJtBzCoonyOQ1JFQKMwxd9csto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gO88AtwX; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779370450; c=relaxed/simple;
+	bh=kKLs40tY8cQpW2M0RTRkHToXREKA5JUN3xnzkWzTCs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PRsqrIIWL/t6/if08yAqRV4sQqqCF6otLp4HOgZmeTSzsa8QRInyZYHl710L4Siw8aCcz5oD3B7j8vPmE5DZuLNwht9sGjhq+b/4+AFFLAdbj3Wl8iusYbo7d2fv8Ik/aK94y2//ODF+sxAGGBJc3haqs1kjf/5YgUzTsxPYe/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NU8tCsn0; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gO88AtwX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779369429; x=1810905429;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jDA+GmpXeDYmTN6Q7UEDhzJfS0O0/46BE8ejbAdWWe0=;
-  b=gO88AtwXZNxtU7KMOAQSH7UiOy4jba/g5rdU/5WymX4ivEm/bQ1kZ/7H
-   rXhKDDKAaEC7V2vqwoeEBxzPXdE/UAUMWgQcPW4uoGeB+DK+1+isqXS5x
-   hoty7mmM+kEvZuSEJF96fFLmxbVgMQi8KaYejqS55VArNWsE5kerKc+HO
-   LVlAShB2fG6XfK3k4OLDANC8bn2pImzRNeKgbGi+7Gmvp6MwoIM87983r
-   3dd3gZsYEq2uXSzvHVHrjCr6hVfk/vsw4RGLbDphEqWOJxGjPExYJLUg6
-   XTIdTk+scXoS4WU9qUCLBUvU2xgVcsf0qRy045IhOc2JKN7bb4Y2Z5H28
-   A==;
-X-CSE-ConnectionGUID: dmiN8BBeQSiDBC0xyNOWKA==
-X-CSE-MsgGUID: cUjCmF3+S+CClB4kVwL1TQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="105747312"
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="105747312"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 06:17:08 -0700
-X-CSE-ConnectionGUID: B/GfSriXQQWZsAzJLSkdEg==
-X-CSE-MsgGUID: yIr5b8wpSdC8M21MMsGm5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,246,1770624000"; 
-   d="scan'208";a="236109825"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.98])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2026 06:17:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 21 May 2026 16:17:02 +0300 (EEST)
-To: Radhey Kalra <radheykalra901@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, krishna.chomal108@gmail.com
-Subject: Re: [PATCH v5 1/2] platform/x86: hp-wmi: Prepare Victus fan control
- board data
-In-Reply-To: <CAJ5VyXKpDK6ZPBvkLwTqsUryZBzQY6NnFZX51zmcXyAs9kzzDg@mail.gmail.com>
-Message-ID: <9187b87f-3842-c41d-b4ab-6c0968c884d7@linux.intel.com>
-References: <20260520140800.130530-1-radheykalra901@gmail.com> <20260520140800.130530-2-radheykalra901@gmail.com> <7c6770ca-b9db-9504-d0d2-11a136955dee@linux.intel.com> <CAJ5VyXKpDK6ZPBvkLwTqsUryZBzQY6NnFZX51zmcXyAs9kzzDg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NU8tCsn0"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c801d732058so2754749a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 21 May 2026 06:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779370447; x=1779975247; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xFCFIRvyeGpba4qrJe9Ya43603Kz6snIXtXCrMWffwc=;
+        b=NU8tCsn0u+djQy4Jc4LJ3tutgE6v2jfg8L06z+WEV6wdW892ufBVMxJIP3u5LRF9+a
+         CwyJAL6Et3T1mJ3Mkr5psWR6+nezYkxK67CjNbFOIrXFZV6X3kUtVC/YVgk0wJSjXCGr
+         vDq/QeeJbLi2ivC7p4rdoRoGfxEg4wxys/k+RM5m+TZvBRICoU2I6HRUJMI0FOPu65mH
+         ZstqzvaffwXmyq+3OQrZ9GEaQjL+/Q0n0HBy6/AVImuHGfOxT6a2ReUzL8uCD88LjaA2
+         KWHV7+vxEprP5EnXi3Q4/eWp0jQatgEXttED2NkW4zW5Og/+YY5T8hcjvDLcXm92APMc
+         QmXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779370447; x=1779975247;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xFCFIRvyeGpba4qrJe9Ya43603Kz6snIXtXCrMWffwc=;
+        b=gsUMjdmXDUFF0vjYNXbDuZqWREVKG1T4kWUX4lOTQLqShEr45DsRaxxxHG3SP3VBal
+         6F2Idt08ifBhg/oBU/ECa3gAhDylUeUiB5H7HAhkqARvB8vWcVSGLefcKWl42dDxPMSx
+         w47zRVlnvktTq8JmZNBhFYgHfbANTCgWugI12eRe1qZXtr97BYoRTKTqkuIMQ2QSd00q
+         z8TywSWu9yASiB4K0wvppeAAKc5laxgoA3cxOUvESb5UE7+VxPNG2zDoPEuJaSZ9qCb/
+         A893CGZkUjFokdwVI7x9qvqSWdUK2Y0NRACQ2eTPDb2gA2WCW2BWmA9PrgCahOZz48R3
+         kveg==
+X-Gm-Message-State: AOJu0YxgOx7fPQF1VPsmEvygv42MUMThyvcFG0j1d+7/sG2zxfHO5JvJ
+	4xhOiEZh/a+yYy4gyX6AfeKyYbQamw/OzPnd3K/tq66PvndYoSSgr/6R39hB4vG2u+8=
+X-Gm-Gg: Acq92OHDDyYyYiQ3YNeGSYo7mKVMX8eiF3e3rtPmjmCYvCQBKGHf4RdwEVf4g4COi8H
+	JG52OZEFWwsahDonXcZ6gdIjGvW6D/JLx4DzUdFxZAJBcMNz2Eg9PLjCNvBFLFt2YNLpAo9J7g/
+	ZFMShfZNxx3lS+0TFJLgqFe6Tfb1pP8KAooZVdG61Or9gGNmcr5dyuN/nqN/omSqhegf1KaSnCE
+	w5b3X9+GcMms3AhQaEfqoxtK5q6hgdbo/vrnbn1tlUurijrpU5BhtsMK6EJUTVF6AxKnAZ8TQhr
+	QaSTOs8AA1xNH8ImeYNGkII8tkSRI3npCa9ZJjCVHJjQQBc+47e49NcCK+5h8LcoSX0AcUiT9Wz
+	w53WE9El0JcExaRwLZO7BxX078cfBE9Zo564sU/B4WvO/TzJ9BP2LiAjv5XqqGGx9jvYCOWKSal
+	PhY/XLD9DM5wTAxVGV2TAGL909G8ayY/VT6g==
+X-Received: by 2002:a17:903:2286:b0:2bd:8c03:2efe with SMTP id d9443c01a7336-2bea23e21e8mr27805185ad.26.1779370447026;
+        Thu, 21 May 2026 06:34:07 -0700 (PDT)
+Received: from pico-cachyos ([2401:4900:1c39:4610:9413:be16:7d6:5a67])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bea929d774sm12284785ad.32.2026.05.21.06.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 06:34:06 -0700 (PDT)
+From: Radhey Kalra <radheykalra901@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	krishna.chomal108@gmail.com
+Subject: [PATCH v6 0/4] platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+Date: Thu, 21 May 2026 19:03:47 +0530
+Message-ID: <20260521133351.1512718-1-radheykalra901@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1133350261-1779369422=:1175"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1133350261-1779369422=:1175
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This is a split version of the Victus 15-fb0xxx fan-control change.
+Patches 1 and 2 are no-functional-changes-intended refactors which move
+the existing thermal-profile and fan-control decisions into
+board-specific .driver_data. Patch 3 fixes the fan-table GPU delta
+parsing issue found while testing this board. Patch 4 adds fan-control
+support for Victus 15-fb0xxx board 8A3D.
 
-On Thu, 21 May 2026, Radhey Kalra wrote:
+v6 splits the gpu_delta fan-table parsing fix back into its own patch.
+The previous 2-patch v5 folded that behavioral parser fix into the board
+data preparation patch, which was a mistake.
 
-> Hi Ilpo,
->=20
-> Agreed, that was a mistake. The gpu_delta parsing change does not
-> logically belong in the board-data refactor.
->=20
-> I folded it into the preparatory patch while trying to reduce the
-> series size, but that made the patch less focused.
+8A3D is kept fan-control-only because the verified behavior is the
+Victus fan-control path. The existing generic platform-profile sysfs path
+on 8A3D accepts writes/readbacks without hp_wmi errors, but CPU/GPU
+power-policy behavior was not meaningfully validated.
 
-If we're talking about < 25 patches, you should not even think of the=20
-series length. Many focused patches is almost always better from=20
-reviewer's perspective than a large chunk which mixes things up (it's=20
-also used if somebody looks these commits from git history later,=20
-smaller changes are just easier to check for correctness).
+Adding 8A3D to the Victus S thermal-profile table would move it to a
+different, Victus S-specific platform-profile path that has not been
+verified on this board.
 
---=20
- i.
+Based on platform-drivers-x86/for-next commit:
+165e81354eefd5551358112773f24027aac59d5a
 
-> I will split it
-> back out so the series is:
->=20
-> board-data / fan-control selection refactor
-> fan-table gpu_delta parsing fix
-> 8A3D board addition
->=20
-> Thanks, Radhey
->=20
->=20
-> On Thu, May 21, 2026 at 6:33=E2=80=AFPM Ilpo J=C3=A4rvinen
-> <ilpo.jarvinen@linux.intel.com> wrote:
-> >
-> > On Wed, 20 May 2026, Radhey Kalra wrote:
-> >
-> > > Move the Victus S thermal-profile DMI data behind hp_wmi_board_params=
- so
-> > > board-specific feature data can describe thermal-profile and fan-cont=
-rol
-> > > support together.
-> > >
-> > > Use the active board data for fan-control decisions instead of checki=
-ng
-> > > is_victus_s_thermal_profile() in the hwmon path.
-> >
-> > > Also derive gpu_delta
-> > > from the first non-zero GPU RPM row so fan tables whose first GPU RPM=
- is
-> > > zero still produce valid fan settings.
-> >
-> > Unfortunately, moving gpu_delta things from own patch to the refactor
-> > patch is a step backwards.
-> >
-> > Why would it logically belong to this patch??
-> >
-> > --
-> >  i.
-> >
-> > > No fan-control support changes intended for existing boards. Fan tabl=
-es
-> > > with an initial zero GPU RPM row now produce a valid GPU delta.
-> > >
-> > > Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
-> > > ---
-> > >  drivers/platform/x86/hp/hp-wmi.c | 204 ++++++++++++++++++++++-------=
---
-> > >  1 file changed, 145 insertions(+), 59 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/=
-hp/hp-wmi.c
-> > > index d1cc6e7..dcfffe6 100644
-> > > --- a/drivers/platform/x86/hp/hp-wmi.c
-> > > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> > > @@ -133,11 +133,52 @@ static const struct thermal_profile_params omen=
-_v1_no_ec_thermal_params =3D {
-> > >       .ec_tp_offset   =3D HP_NO_THERMAL_PROFILE_OFFSET,
-> > >  };
-> > >
-> > > -/*
-> > > - * A generic pointer for the currently-active board's thermal profil=
-e
-> > > - * parameters.
-> > > - */
-> > > -static struct thermal_profile_params *active_thermal_profile_params;
-> > > +struct hp_wmi_fan_profile_params {
-> > > +     int (*get_fan_speed)(int fan);
-> > > +     bool fan_table;
-> > > +};
-> > > +
-> > > +struct hp_wmi_board_params {
-> > > +     const struct thermal_profile_params *thermal_profile;
-> > > +     const struct hp_wmi_fan_profile_params *fan_profile;
-> > > +};
-> > > +
-> > > +static int hp_wmi_get_fan_speed_victus_s(int fan);
-> > > +
-> > > +static const struct hp_wmi_fan_profile_params victus_s_fan_profile_p=
-arams =3D {
-> > > +     .get_fan_speed  =3D hp_wmi_get_fan_speed_victus_s,
-> > > +     .fan_table      =3D true,
-> > > +};
-> > > +
-> > > +static const struct hp_wmi_board_params victus_s_board_params =3D {
-> > > +     .thermal_profile        =3D &victus_s_thermal_params,
-> > > +     .fan_profile            =3D &victus_s_fan_profile_params,
-> > > +};
-> > > +
-> > > +static const struct hp_wmi_board_params omen_v1_board_params =3D {
-> > > +     .thermal_profile        =3D &omen_v1_thermal_params,
-> > > +     .fan_profile            =3D &victus_s_fan_profile_params,
-> > > +};
-> > > +
-> > > +static const struct hp_wmi_board_params omen_v1_legacy_board_params =
-=3D {
-> > > +     .thermal_profile        =3D &omen_v1_legacy_thermal_params,
-> > > +     .fan_profile            =3D &victus_s_fan_profile_params,
-> > > +};
-> > > +
-> > > +static const struct hp_wmi_board_params omen_v1_no_ec_board_params =
-=3D {
-> > > +     .thermal_profile        =3D &omen_v1_no_ec_thermal_params,
-> > > +     .fan_profile            =3D &victus_s_fan_profile_params,
-> > > +};
-> > > +
-> > > +static const struct hp_wmi_board_params *active_board_params;
-> > > +
-> > > +static const struct thermal_profile_params *hp_wmi_thermal_profile(v=
-oid)
-> > > +{
-> > > +     if (!active_board_params)
-> > > +             return NULL;
-> > > +
-> > > +     return active_board_params->thermal_profile;
-> > > +}
-> > >
-> > >  /* DMI board names of devices that should use the omen specific path=
- for
-> > >   * thermal profiles.
-> > > @@ -187,67 +228,67 @@ static const char * const victus_thermal_profil=
-e_boards[] =3D {
-> > >       "8A25",
-> > >  };
-> > >
-> > > -/* DMI Board names of Victus 16-r and Victus 16-s laptops */
-> > > -static const struct dmi_system_id victus_s_thermal_profile_boards[] =
-__initconst =3D {
-> > > +/* DMI board-specific feature data for Omen and Victus laptops. */
-> > > +static const struct dmi_system_id hp_wmi_feature_boards[] __initcons=
-t =3D {
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
-> > > -             .driver_data =3D (void *)&omen_v1_legacy_thermal_params=
-,
-> > > +             .driver_data =3D (void *)&omen_v1_legacy_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
-> > > -             .driver_data =3D (void *)&omen_v1_legacy_thermal_params=
-,
-> > > +             .driver_data =3D (void *)&omen_v1_legacy_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BCA") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8BD5") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C76") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C77") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C78") },
-> > > -             .driver_data =3D (void *)&omen_v1_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C99") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
-> > > -             .driver_data =3D (void *)&victus_s_thermal_params,
-> > > +             .driver_data =3D (void *)&victus_s_board_params,
-> > >       },
-> > >       {
-> > >               .matches =3D { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
-> > > -             .driver_data =3D (void *)&omen_v1_no_ec_thermal_params,
-> > > +             .driver_data =3D (void *)&omen_v1_no_ec_board_params,
-> > >       },
-> > >       {},
-> > >  };
-> > > @@ -1769,6 +1810,38 @@ static bool is_victus_s_thermal_profile(void)
-> > >       return is_victus_s_board;
-> > >  }
-> > >
-> > > +static const struct hp_wmi_fan_profile_params *hp_wmi_fan_profile(vo=
-id)
-> > > +{
-> > > +     if (!active_board_params)
-> > > +             return NULL;
-> > > +
-> > > +     return active_board_params->fan_profile;
-> > > +}
-> > > +
-> > > +static bool hp_wmi_fan_control_supported(void)
-> > > +{
-> > > +     const struct hp_wmi_fan_profile_params *params =3D hp_wmi_fan_p=
-rofile();
-> > > +
-> > > +     return params && params->get_fan_speed;
-> > > +}
-> > > +
-> > > +static bool hp_wmi_fan_table_supported(void)
-> > > +{
-> > > +     const struct hp_wmi_fan_profile_params *params =3D hp_wmi_fan_p=
-rofile();
-> > > +
-> > > +     return params && params->fan_table;
-> > > +}
-> > > +
-> > > +static int hp_wmi_get_active_fan_speed(int fan)
-> > > +{
-> > > +     const struct hp_wmi_fan_profile_params *params =3D hp_wmi_fan_p=
-rofile();
-> > > +
-> > > +     if (!params || !params->get_fan_speed)
-> > > +             return -EOPNOTSUPP;
-> > > +
-> > > +     return params->get_fan_speed(fan);
-> > > +}
-> > > +
-> > >  static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
-> > >                                           bool *ppab_enable,
-> > >                                           u8 *dstate,
-> > > @@ -1854,7 +1927,10 @@ static int platform_profile_victus_s_get_ec(en=
-um platform_profile_option *profil
-> > >       u8 current_dstate, current_gpu_slowdown_temp, tp;
-> > >       const struct thermal_profile_params *params;
-> > >
-> > > -     params =3D active_thermal_profile_params;
-> > > +     params =3D hp_wmi_thermal_profile();
-> > > +     if (!params)
-> > > +             return -ENODEV;
-> > > +
-> > >       if (params->ec_tp_offset =3D=3D HP_EC_OFFSET_UNKNOWN ||
-> > >           params->ec_tp_offset =3D=3D HP_NO_THERMAL_PROFILE_OFFSET) {
-> > >               *profile =3D active_platform_profile;
-> > > @@ -1866,10 +1942,10 @@ static int platform_profile_victus_s_get_ec(e=
-num platform_profile_option *profil
-> > >               return ret;
-> > >
-> > >       /*
-> > > -      * We cannot use active_thermal_profile_params here, because bo=
-ards
-> > > -      * like 8C78 have tp =3D=3D 0x0 || tp =3D=3D 0x1 after cold boo=
-t, but logically
-> > > -      * it should have tp =3D=3D 0x30 || tp =3D=3D 0x31, as correcte=
-d by the Omen
-> > > -      * Gaming Hub on windows. Hence accept both of these values.
-> > > +      * Boards like 8C78 have tp =3D=3D 0x0 || tp =3D=3D 0x1 after c=
-old boot,
-> > > +      * but logically it should have tp =3D=3D 0x30 || tp =3D=3D 0x3=
-1, as
-> > > +      * corrected by the Omen Gaming Hub on windows. Hence accept bo=
-th
-> > > +      * of these values.
-> > >        */
-> > >       if (tp =3D=3D victus_s_thermal_params.performance ||
-> > >           tp =3D=3D omen_v1_thermal_params.performance) {
-> > > @@ -1904,12 +1980,12 @@ static int platform_profile_victus_s_get_ec(e=
-num platform_profile_option *profil
-> > >
-> > >  static int platform_profile_victus_s_set_ec(enum platform_profile_op=
-tion profile)
-> > >  {
-> > > -     struct thermal_profile_params *params;
-> > > +     const struct thermal_profile_params *params;
-> > >       bool gpu_ctgp_enable, gpu_ppab_enable;
-> > >       u8 gpu_dstate; /* Test shows 1 =3D 100%, 2 =3D 50%, 3 =3D 25%, =
-4 =3D 12.5% */
-> > >       int err, tp;
-> > >
-> > > -     params =3D active_thermal_profile_params;
-> > > +     params =3D hp_wmi_thermal_profile();
-> > >       if (!params)
-> > >               return -ENODEV;
-> > >
-> > > @@ -2175,6 +2251,7 @@ static const struct platform_profile_ops hp_wmi=
-_platform_profile_ops =3D {
-> > >  static int thermal_profile_setup(struct platform_device *device)
-> > >  {
-> > >       const struct platform_profile_ops *ops;
-> > > +     const struct thermal_profile_params *params;
-> > >       int err, tp;
-> > >
-> > >       if (is_omen_thermal_profile()) {
-> > > @@ -2206,13 +2283,17 @@ static int thermal_profile_setup(struct platf=
-orm_device *device)
-> > >
-> > >               ops =3D &platform_profile_victus_ops;
-> > >       } else if (is_victus_s_thermal_profile()) {
-> > > +             params =3D hp_wmi_thermal_profile();
-> > > +             if (!params)
-> > > +                     return -ENODEV;
-> > > +
-> > >               /*
-> > >                * For an unknown EC layout board, platform_profile_vic=
-tus_s_get_ec(),
-> > >                * behaves like a wrapper around active_platform_profil=
-e, to avoid using
-> > >                * uninitialized data, we default to PLATFORM_PROFILE_B=
-ALANCED.
-> > >                */
-> > > -             if (active_thermal_profile_params->ec_tp_offset =3D=3D =
-HP_EC_OFFSET_UNKNOWN ||
-> > > -                 active_thermal_profile_params->ec_tp_offset =3D=3D =
-HP_NO_THERMAL_PROFILE_OFFSET) {
-> > > +             if (params->ec_tp_offset =3D=3D HP_EC_OFFSET_UNKNOWN ||
-> > > +                 params->ec_tp_offset =3D=3D HP_NO_THERMAL_PROFILE_O=
-FFSET) {
-> > >                       active_platform_profile =3D PLATFORM_PROFILE_BA=
-LANCED;
-> > >               } else {
-> > >                       err =3D platform_profile_victus_s_get_ec(&activ=
-e_platform_profile);
-> > > @@ -2380,7 +2461,7 @@ static int hp_wmi_apply_fan_settings(struct hp_=
-wmi_hwmon_priv *priv)
-> > >
-> > >       switch (priv->mode) {
-> > >       case PWM_MODE_MAX:
-> > > -             if (is_victus_s_thermal_profile()) {
-> > > +             if (hp_wmi_fan_control_supported()) {
-> > >                       ret =3D hp_wmi_get_fan_count_userdefine_trigger=
-();
-> > >                       if (ret < 0)
-> > >                               return ret;
-> > > @@ -2392,7 +2473,7 @@ static int hp_wmi_apply_fan_settings(struct hp_=
-wmi_hwmon_priv *priv)
-> > >                                secs_to_jiffies(KEEP_ALIVE_DELAY_SECS)=
-);
-> > >               return 0;
-> > >       case PWM_MODE_MANUAL:
-> > > -             if (!is_victus_s_thermal_profile())
-> > > +             if (!hp_wmi_fan_control_supported())
-> > >                       return -EOPNOTSUPP;
-> > >               ret =3D hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm=
-, priv));
-> > >               if (ret < 0)
-> > > @@ -2401,7 +2482,7 @@ static int hp_wmi_apply_fan_settings(struct hp_=
-wmi_hwmon_priv *priv)
-> > >                                secs_to_jiffies(KEEP_ALIVE_DELAY_SECS)=
-);
-> > >               return 0;
-> > >       case PWM_MODE_AUTO:
-> > > -             if (is_victus_s_thermal_profile()) {
-> > > +             if (hp_wmi_fan_control_supported()) {
-> > >                       ret =3D hp_wmi_get_fan_count_userdefine_trigger=
-();
-> > >                       if (ret < 0)
-> > >                               return ret;
-> > > @@ -2425,12 +2506,12 @@ static umode_t hp_wmi_hwmon_is_visible(const =
-void *data,
-> > >  {
-> > >       switch (type) {
-> > >       case hwmon_pwm:
-> > > -             if (attr =3D=3D hwmon_pwm_input && !is_victus_s_thermal=
-_profile())
-> > > +             if (attr =3D=3D hwmon_pwm_input && !hp_wmi_fan_control_=
-supported())
-> > >                       return 0;
-> > >               return 0644;
-> > >       case hwmon_fan:
-> > > -             if (is_victus_s_thermal_profile()) {
-> > > -                     if (hp_wmi_get_fan_speed_victus_s(channel) >=3D=
- 0)
-> > > +             if (hp_wmi_fan_control_supported()) {
-> > > +                     if (hp_wmi_get_active_fan_speed(channel) >=3D 0=
-)
-> > >                               return 0444;
-> > >               } else {
-> > >                       if (hp_wmi_get_fan_speed(channel) >=3D 0)
-> > > @@ -2454,8 +2535,8 @@ static int hp_wmi_hwmon_read(struct device *dev=
-, enum hwmon_sensor_types type,
-> > >       priv =3D dev_get_drvdata(dev);
-> > >       switch (type) {
-> > >       case hwmon_fan:
-> > > -             if (is_victus_s_thermal_profile())
-> > > -                     ret =3D hp_wmi_get_fan_speed_victus_s(channel);
-> > > +             if (hp_wmi_fan_control_supported())
-> > > +                     ret =3D hp_wmi_get_active_fan_speed(channel);
-> > >               else
-> > >                       ret =3D hp_wmi_get_fan_speed(channel);
-> > >               if (ret < 0)
-> > > @@ -2464,10 +2545,10 @@ static int hp_wmi_hwmon_read(struct device *d=
-ev, enum hwmon_sensor_types type,
-> > >               return 0;
-> > >       case hwmon_pwm:
-> > >               if (attr =3D=3D hwmon_pwm_input) {
-> > > -                     if (!is_victus_s_thermal_profile())
-> > > +                     if (!hp_wmi_fan_control_supported())
-> > >                               return -EOPNOTSUPP;
-> > >
-> > > -                     rpm =3D hp_wmi_get_fan_speed_victus_s(channel);
-> > > +                     rpm =3D hp_wmi_get_active_fan_speed(channel);
-> > >                       if (rpm < 0)
-> > >                               return rpm;
-> > >                       *val =3D rpm_to_pwm(rpm / 100, priv);
-> > > @@ -2501,7 +2582,7 @@ static int hp_wmi_hwmon_write(struct device *de=
-v, enum hwmon_sensor_types type,
-> > >       switch (type) {
-> > >       case hwmon_pwm:
-> > >               if (attr =3D=3D hwmon_pwm_input) {
-> > > -                     if (!is_victus_s_thermal_profile())
-> > > +                     if (!hp_wmi_fan_control_supported())
-> > >                               return -EOPNOTSUPP;
-> > >                       /* PWM input is invalid when not in manual mode=
- */
-> > >                       if (priv->mode !=3D PWM_MODE_MANUAL)
-> > > @@ -2518,13 +2599,13 @@ static int hp_wmi_hwmon_write(struct device *=
-dev, enum hwmon_sensor_types type,
-> > >                       priv->mode =3D PWM_MODE_MAX;
-> > >                       return hp_wmi_apply_fan_settings(priv);
-> > >               case PWM_MODE_MANUAL:
-> > > -                     if (!is_victus_s_thermal_profile())
-> > > +                     if (!hp_wmi_fan_control_supported())
-> > >                               return -EOPNOTSUPP;
-> > >                       /*
-> > >                        * When switching to manual mode, set fan speed=
- to
-> > >                        * current RPM values to ensure a smooth transi=
-tion.
-> > >                        */
-> > > -                     rpm =3D hp_wmi_get_fan_speed_victus_s(channel);
-> > > +                     rpm =3D hp_wmi_get_active_fan_speed(channel);
-> > >                       if (rpm < 0)
-> > >                               return rpm;
-> > >                       priv->pwm =3D rpm_to_pwm(rpm / 100, priv);
-> > > @@ -2585,13 +2666,14 @@ static int hp_wmi_setup_fan_settings(struct h=
-p_wmi_hwmon_priv *priv)
-> > >       u8 min_rpm, max_rpm;
-> > >       u8 cpu_rpm, gpu_rpm, noise_db;
-> > >       int gpu_delta, i, num_entries, ret;
-> > > +     bool gpu_delta_found =3D false;
-> > >       size_t header_size, entry_size;
-> > >
-> > >       /* Default behaviour on hwmon init is automatic mode */
-> > >       priv->mode =3D PWM_MODE_AUTO;
-> > >
-> > > -     /* Bypass all non-Victus S devices */
-> > > -     if (!is_victus_s_thermal_profile())
-> > > +     /* Bypass devices without fan control support. */
-> > > +     if (!hp_wmi_fan_table_supported())
-> > >               return 0;
-> > >
-> > >       ret =3D hp_wmi_perform_query(HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY=
-,
-> > > @@ -2625,12 +2707,15 @@ static int hp_wmi_setup_fan_settings(struct h=
-p_wmi_hwmon_priv *priv)
-> > >                       min_rpm =3D cpu_rpm;
-> > >               if (cpu_rpm > max_rpm)
-> > >                       max_rpm =3D cpu_rpm;
-> > > +             if (!gpu_delta_found && gpu_rpm > 0) {
-> > > +                     gpu_delta =3D gpu_rpm - cpu_rpm;
-> > > +                     gpu_delta_found =3D true;
-> > > +             }
-> > >       }
-> > >
-> > > -     if (min_rpm =3D=3D U8_MAX || max_rpm =3D=3D 0)
-> > > +     if (min_rpm =3D=3D U8_MAX || max_rpm =3D=3D 0 || !gpu_delta_fou=
-nd)
-> > >               return -EINVAL;
-> > >
-> > > -     gpu_delta =3D fan_table->entries[0].gpu_rpm - fan_table->entrie=
-s[0].cpu_rpm;
-> > >       priv->min_rpm =3D min_rpm;
-> > >       priv->max_rpm =3D max_rpm;
-> > >       priv->gpu_delta =3D gpu_delta;
-> > > @@ -2673,24 +2758,25 @@ static int hp_wmi_hwmon_init(void)
-> > >       return 0;
-> > >  }
-> > >
-> > > -static void __init setup_active_thermal_profile_params(void)
-> > > +static void __init setup_active_board_params(void)
-> > >  {
-> > >       const struct dmi_system_id *id;
-> > > +     const struct thermal_profile_params *params;
-> > >
-> > > -     /*
-> > > -      * Currently only victus_s devices use the
-> > > -      * active_thermal_profile_params
-> > > -      */
-> > > -     id =3D dmi_first_match(victus_s_thermal_profile_boards);
-> > > +     id =3D dmi_first_match(hp_wmi_feature_boards);
-> > >       if (id) {
-> > > +             active_board_params =3D id->driver_data;
-> > > +             params =3D hp_wmi_thermal_profile();
-> > > +             if (!params)
-> > > +                     return;
-> > > +
-> > >               /*
-> > >                * Marking this boolean is required to ensure that
-> > >                * is_victus_s_thermal_profile() behaves like a valid
-> > >                * wrapper.
-> > >                */
-> > >               is_victus_s_board =3D true;
-> > > -             active_thermal_profile_params =3D id->driver_data;
-> > > -             if (active_thermal_profile_params->ec_tp_offset =3D=3D =
-HP_EC_OFFSET_UNKNOWN) {
-> > > +             if (params->ec_tp_offset =3D=3D HP_EC_OFFSET_UNKNOWN) {
-> > >                       pr_warn("Unknown EC layout for board %s. Therma=
-l profile readback will be disabled. Please report this to platform-driver-=
-x86@vger.kernel.org\n",
-> > >                               dmi_get_system_info(DMI_BOARD_NAME));
-> > >               }
-> > > @@ -2725,10 +2811,10 @@ static int __init hp_wmi_init(void)
-> > >               }
-> > >
-> > >               /*
-> > > -              * Setup active board's thermal profile parameters befo=
-re
-> > > -              * starting platform driver probe.
-> > > +              * Setup active board feature data before starting plat=
-form
-> > > +              * driver probe.
-> > >                */
-> > > -             setup_active_thermal_profile_params();
-> > > +             setup_active_board_params();
-> > >               err =3D platform_driver_probe(&hp_wmi_driver, hp_wmi_bi=
-os_setup);
-> > >               if (err)
-> > >                       goto err_unregister_device;
-> > >
->=20
---8323328-1133350261-1779369422=:1175--
+Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
+F.22. With the series applied, pwm1 and pwm1_enable are exposed and
+the EC-layout warning is not emitted for 8A3D.
+
+Radhey Kalra (4):
+  platform/x86: hp-wmi: Introduce board-specific feature data
+  platform/x86: hp-wmi: Drive fan control from board data
+  platform/x86: hp-wmi: Skip zero GPU RPM rows for fan speed delta
+  platform/x86: hp-wmi: Add Victus 15-fb0xxx fan control
+
+ drivers/platform/x86/hp/hp-wmi.c | 212 ++++++++++++++++++++++---------
+ 1 file changed, 153 insertions(+), 59 deletions(-)
+
+---
+Changes in v6:
+- Split the gpu_delta fan-table parser fix back out into its own patch.
+- Keep 8A3D fan-control-only and document why the Victus S
+  platform-profile path is not enabled for this board.
+
+Changes in v5:
+- Drop the active_thermal_profile_params global and dereference the
+  thermal-profile data through active_board_params.
+- Move the generic fan-only board handling into patch 1, keeping the
+  final 8A3D patch focused on adding the board data and DMI match.
+- Wrap the setup comment added in patch 1 to stay under 80 columns.
+
+Changes in v4:
+- Split v3 into two no-functional-changes-intended refactors, one
+  fan-table parsing fix, and one 8A3D support patch.
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Move revision notes to the cover letter.
+
+Changes in v3:
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Keep the v2 board-data approach and 8A3D fan-control-only handling.
+
+Changes in v2:
+- Use real name in Signed-off-by.
+- Replace the ad-hoc fan-control DMI table with board data in
+  .driver_data.
+- Keep 8A3D fan-control-only instead of enabling Victus S thermal
+  profiles.
+- Use the fixed fan-table parser path and derive gpu_delta from the
+  first non-zero GPU row.
+
+-- 
+2.54.0
