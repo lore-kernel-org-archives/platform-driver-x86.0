@@ -1,116 +1,153 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32169425CF0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 14:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAB522ACEB;
+	Fri, 22 May 2026 19:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779460120; cv=none; b=QmAIX2pgE2hb6nuxVTWWkyaty/JyboFhjtTso0rZGONgCxUlGqOkhE2aiJs7TO+eCFAsEByK9ozYSRiekzPXijKgrfjMRM3xIlBl9usbtuiqFyOZg1y5tmDDeKQif2zAD96EpXCItnH1lKFIQAYrbk+At19AKr092XpcyWyNSKk=
+	t=1779479385; cv=none; b=fO/RBDUYqO5DqMuI1qMNrSEPAh/MNRAMuCpFB8AwxRbRkM25ljCBUMzHezTBf9231uM92B/6gxmfyfdsWCl5Fkgqo3EE8x1ibbSmjTjiDEgAZ5YNH5/+6rLagniStW2DPgRp9LDG8WVT1rJmoNzmP+nqB7GKqR3fF4Teian/nTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779460120; c=relaxed/simple;
-	bh=AjC0ktyvPQeI4RDN4A8wnPvSsIFfz5/0WHjRx9dH3UQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=onrgYcrgXWG16CBD78pSmh9a2qXZAVfVR5gUyJ0e+i/2z2ACjJWnxPLdbYnLb+c3C/gOIgRRmaCqM47kSTvYnPYsLJFisUDbGk3uFUV8zTBLCxuTWtoDiOQpJIb5KjoMUYuVlbbFrzHGo4TJ495cd7gfpw+g6fuM0i+yJhlTO3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2VbmvsZ; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779479385; c=relaxed/simple;
+	bh=OpL570roRlQEKhylDjyRcEX2T2YxTpRwDgzgj+7WxQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExAHtA+yuldUqlgZTZfmJRupn7Ks1KNvz9M+XDRiY0QWo9wW1lq6LE+v/fRKaPwfE7bIqXU/9re5TPrfRYF2koqVt6qz1elIru1ZW2tZwMkoTmY/6uXAm0U4vdrWb0ghdN7l2ranqqreZt4/+KuhjYliyU43OnR+vuB0aIFFeuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQNr2yoK; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2VbmvsZ"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-82fbf5d4dc2so5211973b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 07:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779460115; x=1780064915; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=88YLIo6TgvNgnlSaPgI2NY6rAJ5rlzf0h+LiaxqanXY=;
-        b=g2VbmvsZ6kabadOQWv99uX2hnDW9lK8dxgJ8DYTnyqBqmMKusqcl8JrZ04nGTiA/xU
-         TB8wV4CLJOR8lkp0lSEA5yKnY9AgQAU3t4zN/2jxtW6ki+sUDT459Al1UocAuNHupgUO
-         4+zgfmlP6QZHkw5jpPI7ZBBpbN1kC4l604ZT96Jj+4zeUF5P/v6lU9qyV62tx22yvNrk
-         +QoCoRXiDhK9pWXU5QXy/M87dTgBAjqUIjXBvAA2fX2POuPbgYw8L0Y6ojE7GDy1qfwD
-         mKZYavXpCFeaERJi06XV1B9vIiMCoCbtYvYmoPq9FE68omnZiEriEJxodrbW+ZjpmQ+2
-         1vGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779460115; x=1780064915;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=88YLIo6TgvNgnlSaPgI2NY6rAJ5rlzf0h+LiaxqanXY=;
-        b=C9dPqIoyiPeHfbHVgol9Y8DYCoDGTadoT6a/DvTsgRPPGJvqkmz+2mj204qvmfuY8w
-         klNAlIR9TnEqi/GvV1YjIeZfGfDXqqtigGCZahKB0fV8y9JFuewmRGFAu9Xgd3dKZ1up
-         46apLgp7zCpoUYStkR9LL8/pbRN5vTN2r7JpveqdMk1g9czQJbt605Z1Plmj+gJ+mYIy
-         mC8cYgV9Egoj2ho4qPi2QOwvy/yC5o1B5Vq6gixg7OLER4FULo86S0FpoK5nWPUZ8hg0
-         BgtuXfqOzj9Vin17usWXaqjrKaOC5iFjfRd26ejeqRcPCdV+w7RsFItEmtAlnf/ZdjPr
-         nOKg==
-X-Gm-Message-State: AOJu0YwrDEK+5WuH8mMLlt3PFVEbZFIspu1yKDQ0hWWU/0cVH4WvbEYB
-	ebqVYNTEWRiqMJOYB8MTvg+pvzJ8OKGKgUGtqVXOlYzlQawHQzHvLyCdrfPrDnx+
-X-Gm-Gg: Acq92OHGtGl3krqBhNqvGr47lOWwPVka/+vnriHID9omnXojJgh+L3JMO9WBfUyG99S
-	UiqozO8z/wwLL2Ku5KJ/xYGyovoEyG4FrtZEO5nr0fMiGgggKulmPYuubN9gMzE9c3W4cDRQOQg
-	CclO9jLpmiXoIfmsPS9buXLEHfHJEkiHzDhm6ycXx7GsykdSliwpuWmy8W8rMFeEfshKVMXUYkz
-	EY/kcuLLKzE2Ry7nnGHFfgzVor9uqXYDIdA5dMw+xuNwv3ROtO1n0QUfEHmjSC5OTfpHQPBDeD/
-	KAOv48mAVibH86ZubR3PYK3SfjBsild4LG3668UAl5U4svCSV0ogM8Z+tkyK2TGkry3TlFF5C+R
-	ZpU75pdAVt+bNoE8Yj/lPBZqDKpS9jKayUrCFhv+ElCgKQw/u8UCVhZFzZw+XOk69ZFKDA5eQe6
-	y7EmQTxh3dQavAtK5DFbLijQT3NFuvTzrBLA==
-X-Received: by 2002:a05:6a00:8c04:b0:838:af72:fb2f with SMTP id d2e1a72fcca58-8415f3af2d2mr4572544b3a.6.1779460114793;
-        Fri, 22 May 2026 07:28:34 -0700 (PDT)
-Received: from pico-cachyos ([2401:4900:1c39:4610:9413:be16:7d6:5a67])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84164b0427bsm2585087b3a.22.2026.05.22.07.28.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 07:28:34 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	krishna.chomal108@gmail.com
-Subject: [PATCH v6 3/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-Date: Fri, 22 May 2026 19:58:08 +0530
-Message-ID: <20260522142808.235894-4-radheykalra901@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260522142808.235894-1-radheykalra901@gmail.com>
-References: <20260522142808.235894-1-radheykalra901@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQNr2yoK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779479385; x=1811015385;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=OpL570roRlQEKhylDjyRcEX2T2YxTpRwDgzgj+7WxQY=;
+  b=nQNr2yoKPQxwLQceIxvdFSsypZz0RsNZF9xwkgzAYf4BGTZX5Kml70+D
+   DxYT9/x6iz51qG1lNWtStRDoKhxIti+VYlLwANjotdYNgX8k+mx+02g8W
+   LKMpieXXQVdqnjAqSQjtEy4SPIZFxXOU65gL9ouUqgLXlKWEz+M9DYMUs
+   9LrenBHdMmjVgt9OrHsFT2NXCwFzm7M8zdNzkmiGQBUkcKucEOCwrwXF+
+   YRztI/EdQExy0bF2aSLFXIg3O/pc6JzpQ4QBTcI5sAF+KT+FcjgMTo6cZ
+   IonOyw9Wi3mxIxsPmmdEI8fL8CW3yuFlcDE5kyPQJNsumcYr7PHTzxaM8
+   Q==;
+X-CSE-ConnectionGUID: bIdWoMO1RoSDKbY+WeFFQw==
+X-CSE-MsgGUID: a0My34BaSPCd71TjoQjqYw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11794"; a="103090374"
+X-IronPort-AV: E=Sophos;i="6.24,163,1774335600"; 
+   d="scan'208";a="103090374"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 12:49:44 -0700
+X-CSE-ConnectionGUID: lPfwPXbkQJG2QNZYq6hKDA==
+X-CSE-MsgGUID: BfuSl0X/SgGJdz9vUAGcPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,163,1774335600"; 
+   d="scan'208";a="271342095"
+Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 12:49:43 -0700
+Date: Fri, 22 May 2026 12:49:43 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Xi Pardee <xi.pardee@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v5 10/16] platform/x86/intel/pmc/ssram: Use fixed-size
+ static pmc array
+Message-ID: <hxber63ytsxzif5qg4zdevspxszio6jopk5ojfw54w6orjh2uj@gkxighh6ueb7>
+References: <20260522022147.4137494-1-david.e.box@linux.intel.com>
+ <20260522022147.4137494-11-david.e.box@linux.intel.com>
+ <96195b96-23eb-da7c-1437-39ed9ca6a151@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <96195b96-23eb-da7c-1437-39ed9ca6a151@linux.intel.com>
 
-HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
-the existing Victus fan-speed WMI control path. Add board data for the
-Victus S thermal-profile path and fan-control support.
+On Fri, May 22, 2026 at 01:37:07PM +0300, Ilpo Järvinen wrote:
+> On Thu, 21 May 2026, David E. Box wrote:
+> 
+> > From: Xi Pardee <xi.pardee@linux.intel.com>
+> > 
+> > Switch pmc_ssram_telems from a devm-allocated pointer to a fixed-size
+> > static array, eliminating per-probe allocation overhead and simplifying
+> > lifetime management.
+> > 
+> > Correspondingly simplify pmc_ssram_telemetry_get_pmc_info() validation to
+> > check devid availability and tighten input bounds checking. Drop
+> > null-pointer checks now that the storage is static.
+> > 
+> > Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > ---
+> 
+> Sashiko has noted some corner case issues related probe/init paths and 
+> missing cleanup which may have some merit, especially if this series makes 
+> the issue worse (for patches 10-14 but all those seem to fundamendally 
+> relate to same reprobe corner case and leaks of stale setups through 
+> static vars).
+> 
+> It has some false positives too, such as not realizing smp_*mb() implies 
+> a compiler barrier so those READ/WRITE_ONCE() requests look bogus to me.
 
-Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Okay thanks. This will be the first time I try it myself.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 6fd99b6..a25b12c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -170,6 +170,11 @@ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
- 	.fan_profile		= &victus_s_fan_profile_params,
- };
- 
-+static const struct hp_wmi_board_params victus_8a3d_board_params = {
-+	.thermal_profile	= &victus_s_thermal_params,
-+	.fan_profile		= &victus_s_fan_profile_params,
-+};
-+
- static const struct hp_wmi_board_params *active_board_params;
- 
- static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
-@@ -230,6 +235,10 @@ static const char * const victus_thermal_profile_boards[] = {
- 
- /* DMI board-specific feature data for Omen and Victus laptops. */
- static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
-+		.driver_data = (void *)&victus_8a3d_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
--- 
-2.54.0
+David
+
+> 
+> -- 
+>  i.
+> 
+> > V5 - No changes
+> > 
+> > V4 - No changes
+> > 
+> > V3 - No changes
+> > 
+> > V2 changes:
+> >   - Replaced hardcoded array size [3] with MAX_NUM_PMC constant
+> > 
+> >  drivers/platform/x86/intel/pmc/ssram_telemetry.c | 10 ++--------
+> >  1 file changed, 2 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > index 1deb4d71da3f..4bfe60ee55ca 100644
+> > --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > @@ -24,7 +24,7 @@
+> >  
+> >  DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_T))
+> >  
+> > -static struct pmc_ssram_telemetry *pmc_ssram_telems;
+> > +static struct pmc_ssram_telemetry pmc_ssram_telems[MAX_NUM_PMC];
+> >  static bool device_probed;
+> >  
+> >  static int
+> > @@ -140,7 +140,7 @@ int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
+> >  	if (pmc_idx >= MAX_NUM_PMC)
+> >  		return -EINVAL;
+> >  
+> > -	if (!pmc_ssram_telems || !pmc_ssram_telems[pmc_idx].devid)
+> > +	if (!pmc_ssram_telems[pmc_idx].devid)
+> >  		return -ENODEV;
+> >  
+> >  	pmc_ssram_telemetry->devid = pmc_ssram_telems[pmc_idx].devid;
+> > @@ -153,12 +153,6 @@ static int pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct pci_de
+> >  {
+> >  	int ret;
+> >  
+> > -	pmc_ssram_telems = devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems) * MAX_NUM_PMC,
+> > -					GFP_KERNEL);
+> > -	if (!pmc_ssram_telems) {
+> > -		ret = -ENOMEM;
+> > -		goto probe_finish;
+> > -	}
+> >  
+> >  	ret = pcim_enable_device(pcidev);
+> >  	if (ret) {
+> > 
 
