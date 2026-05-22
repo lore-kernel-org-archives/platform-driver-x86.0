@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CBF33A6F2
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 21:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C8B306742
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 21:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779486631; cv=none; b=MgaPJnJxFpZlbmuXP/2G38MoUpBAqTirjnXkjSO4lhZTgifrlbAxzFMqDuZA4yFO+X/rh+OQgbJKnfWFwjva1RSictgN7Y0tKvfnKT1ptDZEguoC+URBbSQg3KT16nOVtLtt0p/hK2UYH3mN8ia5eiMbE4sHhRcmEx0jsUl/vsg=
+	t=1779487154; cv=none; b=B7tM5LOZRpZ++lCZkSpvKLKk9/2ZJVCS85lL1QzjckLJUpULdaRit0NQcgMinH/StXYBA/B+Ey9sgsRYEczTAjUj4WlQLv5JT5AcKn05ZKG7sB2ujBiFfgFQ5PXs5gnXPG3bJgdv7QsPOgjKAamXbvyPln5grUdV+zdnQudk0wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779486631; c=relaxed/simple;
-	bh=gwpQBx7vEAUVNmRaiM80ts0KeHtt+Lgw8+aMMGov2OQ=;
+	s=arc-20240116; t=1779487154; c=relaxed/simple;
+	bh=eDVoYcGqcWKNcVNrxEg6IbC/LpvRuF1zxHwIM+fDb8U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WBulqfjGGMFxP+Big94EtB/SJ4EQxTeFMkzvn+pHK2mhfGDgeUciNAxt0/g+zsJXN8F8qkehtxnDS606fLXKhXv/NYkFJxrPMP9OoHOMOExYV4Dx9hUSg/hZCMD4U5PQ3obGqcfbwvyGPWmEHE3ByjCllZ+m5x/yNAtahDVtozI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=oL97ykhL; arc=none smtp.client-ip=212.227.17.22
+	 In-Reply-To:Content-Type; b=QZHqutTDtDTukOjVz1iupl1cOVpKQlxR+SrlWgbPZZL458j1eBFV92oLo9AbGJRiBoYrCEhp28/FG5KDsI31htcGPQAV6scwr46h/dXOyybBjkwI6bDHpvVrXdQn/+pMv/lMK8qv5iUADx1BfiK4LV7Arzsmzj6bWwZhZzPZKbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=jcwdz/TO; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="oL97ykhL"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="jcwdz/TO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1779486620; x=1780091420; i=w_armin@gmx.de;
-	bh=gwpQBx7vEAUVNmRaiM80ts0KeHtt+Lgw8+aMMGov2OQ=;
+	s=s31663417; t=1779487150; x=1780091950; i=w_armin@gmx.de;
+	bh=a38zQdIE0grzwrtsNoZlH5RAuH7zG8iq/OV98YRGdcg=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=oL97ykhLw6JrZxOoZ1GRx/jBDOtEA//qC5or1Llq2Oe042Td8bww2iWLZW7DkVQj
-	 +SrUaMDP91TCmOmyyqS4atD5JUPf84/SaJaMHqr5rgEEezM/Goj8O1r8WxmV3ZQYE
-	 dHt20ngy+ENNegPg3b+spW+45jSo/M0NwG0ejjFn6OZWJvUnMcadm9wEoW0XVu0vt
-	 3iWWxIOKbbNk/qxBhdRQk8zswylc/0KAwwSR+vXCLwt4mWOJRbqcrSQQgFGHhsdFK
-	 YA7EMLaKsD5cgkVlGOMfNphX3xJKQW+R80o51dSQ1qerNJIVQSir7Lbr0pFy+mFr+
-	 6EHUXH8hcO/5Sl9XFg==
+	b=jcwdz/TOW5yEBYGgN2di22o/Q+mi5/dC5IC257+AhpKhP5TuP5w3iVmZln4Mmb9h
+	 TqeLaZOgYR6ebofBol+5WA7X2BemyH2Kxr52hLYkbiDd7WZXZlHctJ7BgM/9T2ESz
+	 QQgdG5tbKlNnKWWkR0qjDSq2tJ9ShhjR43SG162XgUzDXP+/UTCTpQGtZV7rvLKDN
+	 gqNJsEAm4RA+F9GsKgsS7S0v0GElDJloExtx0HSOYi+emsq54xh8aeUT+ysi+aVrZ
+	 szc0BRrfADgknIvGbyhRC4nLTA6LFlObSfi8BeTxVNfwO+0vmg3LL+l+TnAXTaHU4
+	 ZB/IjUeMDjkxtPz0TA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MZTqg-1woAWI2OH8-00Uicx; Fri, 22
- May 2026 23:50:20 +0200
-Message-ID: <965a9647-74d4-4c06-8eed-464cda7ef26f@gmx.de>
-Date: Fri, 22 May 2026 23:50:19 +0200
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MdNcG-1wzbbC17QW-00g8wZ; Fri, 22
+ May 2026 23:59:10 +0200
+Message-ID: <871f18d1-beb7-4d29-8e17-43b806ebcbda@gmx.de>
+Date: Fri, 22 May 2026 23:59:09 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,643 +43,508 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] platform/x86: add Acer battery control driver
-To: Jelle van der Waa <jelle@vdwaa.nl>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Frederik Harwath <frederik@harwath.name>
-References: <20260125182314.735668-1-jelle@vdwaa.nl>
- <20260125182314.735668-2-jelle@vdwaa.nl>
- <ca22f9d8-7609-4023-956e-85687a5d5df6@gmx.de>
- <8bc77786-2126-4b68-b52a-b2c75a683223@vdwaa.nl>
- <dd1b5be8-530b-4dfc-ad80-ea5f298d9230@gmx.de>
- <3b26055c-6148-4a5d-ae94-82647e4584a1@vdwaa.nl>
+Subject: Re: [PATCH v4] platform/x86/lenovo: Add Yoga Book 9 keyboard dock
+ detection driver
+To: Dave Carey <carvsdriver@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com
+References: <20260519000239.29446-1-carvsdriver@gmail.com>
+ <20260521144034.282419-1-carvsdriver@gmail.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <3b26055c-6148-4a5d-ae94-82647e4584a1@vdwaa.nl>
+In-Reply-To: <20260521144034.282419-1-carvsdriver@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AWN7omoJ48D6wqSsjxkKn0oZMEovDg4l8V/1q9q8TbCN/Q181Mv
- alW5gDWRitVE9pVr4Vs6doo7VqiaAEMLK6I/6+8QwGpd9AVsgQgAZ5onnB/FNhK8STfaZ9h
- c5mlDNDOfn8xl1dLPPlg2iYr0/7zlWOGF8Pn2sol3AAJtQO+lJF04HtH5x/eTmMBO4SgtJY
- +NtLBRgHnPArowhNyVKTA==
+X-Provags-ID: V03:K1:8cCNHI9VNkuDicu/1fWY0mMHmGe2Q4HaxlbvgozWC5ydnrezIIQ
+ b/uVAckyWn1wc+5MG3GPpSp7Vptie4KnJYwWBQwSGzPKU3l7GYL0aHT+e5v63Jc7QoTv+BN
+ DcFb8ettBOZjl6oTDv1kvrwCIWc+iNoTpUanijzV+saQlcxp0jbfS5BCuQY0WzMJtPMuPH1
+ 9qerq0Bncnw4JCZBxOX8A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:idt0TnCV8/s=;NZnQzXjCpkc/sPObkzM8RolzDLi
- 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
- uUgboJxaH6yPLdp3WBlgMr9Mwgb4Ls
+UI-OutboundReport: notjunk:1;M01:P0:gBQ6XlSSCnE=;zFcN5DBPX5j2xIZtlgm1TiTgwcd
+ 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
 
-Am 15.05.26 um 11:45 schrieb Jelle van der Waa:
+Am 21.05.26 um 16:40 schrieb Dave Carey:
 
-> On 5/13/26 11:19, Armin Wolf wrote:
->> Am 10.05.26 um 20:48 schrieb Jelle van der Waa:
->>> On 1/31/26 00:24, Armin Wolf wrote:
->>>> Am 25.01.26 um 19:23 schrieb Jelle van der Waa:
->>>>
->>>>> Some Acer laptops can configure battery related features through Ace=
-r
->>>>> Care Center on Windows. This driver uses the power supply=20
->>>>> extension to
->>>>> set a battery charge limit and exposes the battery
->>>>> temperature.
->>>>>
->>>>> This driver is based on the existing acer-wmi-battery project on=20
->>>>> GitHub
->>>>> and was tested on an Acer Aspire A315-510P.
->>>>>
->>>>> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
->>>>>
->>>>> ---
->>>>> v2:
->>>>> - Alphabetically sort linux headers
->>>>> - Include headers for types / _packed
->>>>> - Use cleanup.h instead of goto + label
->>>>> - Add missing prefix for set_battery_health_control
->>>>> - General code formatting fixes
->>>>> - Remove HWMON dependency in Kconfig
->>>>> - Use wmidev_evaluate_method()
->>>>> - Accept oversized ACPI buffers
->>>>> - Use DRIVER_NAME for battery extension name
->>>>> - Set no_singleton =3D true
->>>>> - Implement DMI matching to support laptops with only battery
->>>>> =C2=A0=C2=A0 temperature support.
->>>>> ---
->>>>> =C2=A0 drivers/platform/x86/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 11 +
->>>>> =C2=A0 drivers/platform/x86/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
->>>>> =C2=A0 drivers/platform/x86/acer-wmi-battery.c | 355=20
->>>>> ++++++++++++++++++++ ++++
->>>>> =C2=A0 3 files changed, 367 insertions(+)
->>>>> =C2=A0 create mode 100644 drivers/platform/x86/acer-wmi-battery.c
->>>>>
->>>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/=20
->>>>> Kconfig
->>>>> index 4cb7d97a9fcc..88c11a698fb9 100644
->>>>> --- a/drivers/platform/x86/Kconfig
->>>>> +++ b/drivers/platform/x86/Kconfig
->>>>> @@ -170,6 +170,17 @@ config ACER_WMI
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If you have an ACPI-WMI c=
-ompatible Acer/ Wistron laptop,=20
->>>>> say Y or M
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 here.
->>>>> +config ACER_WMI_BATTERY
->>>>> +=C2=A0=C2=A0=C2=A0 tristate "Acer WMI Battery"
->>>>> +=C2=A0=C2=A0=C2=A0 depends on ACPI_WMI
->>>>> +=C2=A0=C2=A0=C2=A0 depends on ACPI_BATTERY
->>>>
->>>> Please also depend on DMI so that dmi_check_system() will always be=
-=20
->>>> available
->>>> when building this driver.
->>>>
->>>>> +=C2=A0=C2=A0=C2=A0 help
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 This is a driver for Acer laptops wi=
-th battery health=20
->>>>> control. It
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 adds charge limit control and batter=
-y temperature reporting.
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 If you have an ACPI-WMI Battery comp=
-atible Acer laptop, say=20
->>>>> Y or M
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 here.
->>>>> +
->>>>> =C2=A0 source "drivers/platform/x86/amd/Kconfig"
->>>>> =C2=A0 config ADV_SWBUTTON
->>>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/=
-=20
->>>>> Makefile
->>>>> index d25762f7114f..9cf28baff3ae 100644
->>>>> --- a/drivers/platform/x86/Makefile
->>>>> +++ b/drivers/platform/x86/Makefile
->>>>> @@ -19,6 +19,7 @@ obj-$(CONFIG_GIGABYTE_WMI)=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 +=3D gigabyte-wmi.o
->>>>> =C2=A0 obj-$(CONFIG_ACERHDF)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 +=3D acerhdf.o
->>>>> =C2=A0 obj-$(CONFIG_ACER_WIRELESS)=C2=A0=C2=A0=C2=A0 +=3D acer-wirel=
-ess.o
->>>>> =C2=A0 obj-$(CONFIG_ACER_WMI)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 +=3D acer-wmi.o
->>>>> +obj-$(CONFIG_ACER_WMI_BATTERY)=C2=A0=C2=A0=C2=A0 +=3D acer-wmi-batt=
-ery.o
->>>>> =C2=A0 # AMD
->>>>> =C2=A0 obj-y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +=3D amd/
->>>>> diff --git a/drivers/platform/x86/acer-wmi-battery.c b/drivers/=20
->>>>> platform/x86/acer-wmi-battery.c
->>>>> new file mode 100644
->>>>> index 000000000000..abb45cfcc6fe
->>>>> --- /dev/null
->>>>> +++ b/drivers/platform/x86/acer-wmi-battery.c
->>>>> @@ -0,0 +1,355 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
->>>>> +/*
->>>>> + * acer-wmi-battery.c: Acer battery health control driver
->>>>> + *
->>>>> + * This is a driver for the WMI battery health control interface=20
->>>>> found
->>>>> + * on some Acer laptops.=C2=A0 This interface allows to enable/disa=
-ble a
->>>>> + * battery charge limit ("health mode") and exposes the battery=20
->>>>> temperature.
->>>>> + *
->>>>> + * Based on acer-wmi-battery https://github.com/frederik-h/acer-=20
->>>>> wmi- battery/
->>>>> + *
->>>>> + * Copyright (C) 2022-2025=C2=A0 Frederik Harwath <frederik@harwath=
-.name>
->>>>> + */
->>>>> +
->>>>> +#include <linux/acpi.h>
->>>>> +#include <linux/cleanup.h>
->>>>> +#include <linux/compiler_attributes.h>
->>>>> +#include <linux/dmi.h>
->>>>> +#include <linux/init.h>
->>>>> +#include <linux/kernel.h>
->>>>> +#include <linux/limits.h>
->>>>> +#include <linux/module.h>
->>>>> +#include <linux/power_supply.h>
->>>>> +#include <linux/types.h>
->>>>> +#include <linux/unaligned.h>
->>>>> +#include <linux/version.h>
->>>>> +#include <linux/wmi.h>
->>>>> +
->>>>> +#include <acpi/battery.h>
->>>>> +
->>>>> +#define DRIVER_NAME=C2=A0=C2=A0=C2=A0 "acer-wmi-battery"
->>>>> +
->>>>> +#define ACER_BATTERY_GUID "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
->>>>> +
->>>>> +/*
->>>>> + * The Acer OEM software seems to always use this battery index,
->>>>> + * so we emulate this behaviour to not confuse the underlying=20
->>>>> firmware.
->>>>> + *
->>>>> + * However this also means that we only fully support devices with =
-a
->>>>> + * single battery for now.
->>>>> + */
->>>>> +#define ACER_BATTERY_INDEX=C2=A0=C2=A0=C2=A0 0x1
->>>>> +
->>>>> +struct get_battery_health_control_status_input {
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uBatteryNo;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionQuery;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uReserved[2];
->>>>> +} __packed;
->>>>> +
->>>>> +struct get_battery_health_control_status_output {
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionList;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uReturn[2];
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionStatus[5];
->>>>> +} __packed;
->>>>> +
->>>>> +struct set_battery_health_control_input {
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uBatteryNo;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionMask;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uFunctionStatus;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uReservedIn[5];
->>>>> +} __packed;
->>>>> +
->>>>> +struct set_battery_health_control_output {
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uReturn;
->>>>> +=C2=A0=C2=A0=C2=A0 u8 uReservedOut;
->>>>> +} __packed;
->>>>> +
->>>>> +enum battery_mode {
->>>>> +=C2=A0=C2=A0=C2=A0 HEALTH_MODE =3D 1,
->>>>> +=C2=A0=C2=A0=C2=A0 CALIBRATION_MODE =3D 2,
->>>>> +};
->>>>> +
->>>>> +struct acer_wmi_battery_data {
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
->>>>> +=C2=A0=C2=A0=C2=A0 struct wmi_device *wdev;
->>>>> +=C2=A0=C2=A0=C2=A0 const struct power_supply_ext *battery_ext;
->>>>> +=C2=A0=C2=A0=C2=A0 struct {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool health_mode : 1;
->>>>> +=C2=A0=C2=A0=C2=A0 } features;
->>>>> +};
->>>>> +
->>>>> +static int acer_wmi_battery_get_information(struct=20
->>>>> acer_wmi_battery_data *data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u=
-32 index, u32 battery, u32 *result)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 u32 args[2] =3D { index, battery };
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BU=
-FFER, NULL };
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { sizeof(args), arg=
-s };
->>>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 19=
-, &input,=20
->>>>> &output);
->>>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj __free(kfree) =3D output.=
-pointer;
->>>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < sizeof(u32)) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&data->wdev->dev=
-, "WMI battery information call=20
->>>>> returned buffer of unexpected length %u\n",
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-obj->buffer.length);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 *result =3D get_unaligned_le32(obj->buffer.point=
-er);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return ret;
->>>>> +}
->>>>> +
->>>>> +static int acer_wmi_battery_get_health_control_status(struct=20
->>>>> acer_wmi_battery_data *data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool *health_mode)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 /*
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Acer Care Center seems to always call th=
-e WMI method
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * with fixed parameters. This yields infor=
-mation about
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * the availability and state of both healt=
-h and
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * calibration mode. The modes probably app=
-ly to
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * all batteries of the system.
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>> +=C2=A0=C2=A0=C2=A0 struct get_battery_health_control_status_input a=
-rgs =3D {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uBatteryNo =3D ACER_BAT=
-TERY_INDEX,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionQuery =3D 0x1,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uReserved =3D { 0x0, 0x=
-0 }
->>>>> +=C2=A0=C2=A0=C2=A0 };
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { (acpi_size) sizeo=
-f(args), &args };
->>>>> +=C2=A0=C2=A0=C2=A0 struct get_battery_health_control_status_output =
-*status_output;
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BU=
-FFER, NULL };
->>>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 20=
-, &input,=20
->>>>> &output);
->>>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj __free(kfree) =3D output.=
-pointer;
->>>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < 8) {
->>>>
->>>> Better use sizeof(*status_output) here.
->>>>
->>>>> + dev_err(&data->wdev->dev, "WMI battery status call returned a=20
->>>>> buffer of unexpected length %d\n",
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-obj->buffer.length);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 status_output =3D (struct=20
->>>>> get_battery_health_control_status_output *)obj->buffer.pointer;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (health_mode) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (status_output->uFunc=
-tionList & HEALTH_MODE)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-*health_mode =3D status_output->uFunctionStatus[0] > 0;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-ret =3D -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return ret;
->>>>> +}
->>>>> +
->>>>> +static int acer_wmi_battery_set_battery_health_control(struct=20
->>>>> acer_wmi_battery_data *data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8 function, bool function_stat=
-us)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct set_battery_health_control_input args =3D=
- {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uBatteryNo =3D ACER_BAT=
-TERY_INDEX,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionMask =3D funct=
-ion,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uFunctionStatus =3D fun=
-ction_status ? 1 : 0,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .uReservedIn =3D { 0x0, =
-0x0, 0x0, 0x0, 0x0 }
->>>>> +=C2=A0=C2=A0=C2=A0 };
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer input =3D { (acpi_size) sizeo=
-f(args), &args };
->>>>> +=C2=A0=C2=A0=C2=A0 struct acpi_buffer output =3D { ACPI_ALLOCATE_BU=
-FFER, NULL };
->>>>> +=C2=A0=C2=A0=C2=A0 union acpi_object *obj;
->>>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 ret =3D wmidev_evaluate_method(data->wdev, 0, 21=
-, &input,=20
->>>>> &output);
->>>>> +=C2=A0=C2=A0=C2=A0 if (ACPI_FAILURE(ret))
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 obj =3D output.pointer;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (!obj)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->type !=3D ACPI_TYPE_BUFFER)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EIO;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (obj->buffer.length < 4) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&data->wdev->dev=
-, "WMI battery status set=20
->>>>> operation returned a buffer of unexpected length %d\n",
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-obj->buffer.length);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return ret;
->>>>> +}
->>>>> +
->>>>> +static int acer_battery_ext_property_get(struct power_supply *psy,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct power_=
-supply_ext *ext,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *ext_data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum power_supply_p=
-roperty psp,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union power_supply_=
-propval *val)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct acer_wmi_battery_data *data =3D ext_data;
->>>>> +=C2=A0=C2=A0=C2=A0 bool health_mode;
->>>>> +=C2=A0=C2=A0=C2=A0 u32 value;
->>>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D acer_wmi_battery=
-_get_health_control_status(data,=20
->>>>> &health_mode);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-return ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D health_m=
-ode
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ? POWER_SUPPLY_CHARGE_TYPE_LONGLIFE
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : POWER_SUPPLY_CHARGE_TYPE_STANDARD;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_TEMP:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D acer_wmi_battery=
-_get_information(data, 0x8,=20
->>>>> ACER_BATTERY_INDEX, &value);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-return ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (value > U16_MAX)
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-return -ERANGE;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D value - =
-2731;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>>> +=C2=A0=C2=A0=C2=A0 default:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>>> +}
->>>>> +
->>>>> +static int acer_battery_ext_property_set(struct power_supply *psy,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct power_=
-supply_ext *ext,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *ext_data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum power_supply_p=
-roperty psp,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const union power_s=
-upply_propval *val)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct acer_wmi_battery_data *data =3D ext_data;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return acer_wmi_battery_=
-set_battery_health_control(data,=20
->>>>> HEALTH_MODE,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGL=
-IFE);
->>>>> +=C2=A0=C2=A0=C2=A0 default:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +}
->>>>> +
->>>>> +static int acer_battery_ext_property_is_writeable(struct=20
->>>>> power_supply *psy,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 const struct power_supply_ext *ext,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 void *ext_data,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 enum power_supply_property psp)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 switch (psp) {
->>>>> +=C2=A0=C2=A0=C2=A0 case POWER_SUPPLY_PROP_CHARGE_TYPES:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return true;
->>>>> +=C2=A0=C2=A0=C2=A0 default:
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +}
->>>>> +
->>>>> +static const struct dmi_system_id=20
->>>>> acer_wmi_battery_health_mode_table[] =3D {
->>>>> +=C2=A0=C2=A0=C2=A0 {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .matches =3D {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P")
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> +=C2=A0=C2=A0=C2=A0 },
->>>>> +=C2=A0=C2=A0=C2=A0 {}
->>>>> +};
->>>>
->>>> I suggest that you perform the DMI check during module=20
->>>> initialization. This way
->>>> the DMI table can be marked as __initconst and does not consume any=
-=20
->>>> memory after
->>>> anymore after module initialization is complete.
->>>>
->>>> The result of the DMI check could then be stored inside a global=20
->>>> variable.
->>>>
->>>> Other than that, the driver seems fine to me.
->>>
->>> Thanks for the review comments, due to some personal circumstances=20
->>> it has taken me while to spin up v3.
->>>
->>> I've been digging into the WMI dump data looking if I could figure=20
->>> out if there was a way to check if health checks are available but=20
->>> only stumbled on another battery related WMI method.
->>>
->>> Method 0x16: GetBatteryFunctionData
->>> - Input: uFunctionMask (uint8), uReservedIn (uint8 array)
->>> - Output: uReturnCode (uint8 array), uBACStartTime (uint8 array),=20
->>> uBACStopTime (uint8 array), uBACStatus (uint8), uReservedOut (uint8=20
->>> array)
->>> Method 0x17: SetBatteryFunctionData
->>> - Input: uFunctionMask (uint8), uBACSwitch (uint8), uReservedIn=20
->>> (uint8 array)
->>>
->>> But I was wondering why in probe or init, the driver couldn't call=20
->>> "acer_wmi_battery_get_health_control_status". Then we wouldn't need=20
->>> to add a WMI whitelist for every device that supports this.
->>>
->>> If I recall correctly you own an Acer laptop which supports the=20
->>> battery temperature but lacks health control? Seeing how many WMI=20
->>> methods are exposed on my device I suppose it is also exposed for=20
->>> you, but it should hopefully error out?
->>
->> Calling an non-existing WMI method is undefined behavior and could in=
-=20
->> the worst cast cause the ACPI firmware to crash. Because of this we=20
->> have to use a DMI whitelist for now :(
+> The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboar=
+d
+> that magnetically attaches to the bottom (secondary) screen in one of tw=
+o
+> positions.  The Embedded Controller tracks the attachment state in a 2-b=
+it
+> field called BKBD and signals changes via WMI event GUID
+> 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
+> device).
 >
-> Thanks for the answer, then I'll rework the driver to use the module=20
-> __init for DMI as you suggested.
->
-> I suppose it is fine to already add the other tested models by the=20
-> community? [1].
-> And should I add an module load option to force health mode so users=20
-> can test if their hardware is compatible?
+> The current BKBD state is read via WMI query GUID
+> E7F300FA-21CD-4003-ADAC-2696135982E6 (WQAF method), which returns an
+> 8-byte buffer: bytes [0..3] hold the LFID constant 0x00060000 and bytes
+> [4..7] hold the BKBD value.
 
-Sure.
+Hi,
+
+does the device contain embedded BMOF data? Take a look at Documentation/w=
+mi/driver-development-guide.rst
+to find out how to decode said BMOF data.
+
+>
+> BKBD encoding:
+>    0 =3D keyboard detached
+>    1 =3D keyboard docked on top half of bottom screen
+>    2 =3D keyboard docked on bottom half of bottom screen
+>    3 =3D reserved (not observed in practice)
+>
+> This driver:
+>    - Registers as a WMI driver on the event GUID.
+>    - Queries BKBD state on probe and on each WMI notification.
+>    - Reports SW_TABLET_MODE=3D1 when detached, SW_TABLET_MODE=3D0 when d=
+ocked
+>      in either position (a physical keyboard is present in both cases).
+>    - Exposes the raw BKBD value via a read-only sysfs attribute
+>      "keyboard_position" for use by userspace (e.g. to distinguish betwe=
+en
+>      the two docked positions for different UI layouts).
+>
+> Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 6.19.
+>
+> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
+> ---
+>   .../testing/sysfs-driver-lenovo-yb9-kbdock    |  21 ++
+>   MAINTAINERS                                   |   7 +
+>   drivers/platform/x86/lenovo/Kconfig           |  14 ++
+>   drivers/platform/x86/lenovo/Makefile          |   1 +
+>   drivers/platform/x86/lenovo/yb9-kbdock.c      | 216 ++++++++++++++++++
+>   5 files changed, 259 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-k=
+bdock
+>   create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
+>
+> diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/=
+Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> new file mode 100644
+> index 0000000..bb57690
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> @@ -0,0 +1,21 @@
+> +What:		/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_position
+> +Date:		April 2026
+> +KernelVersion:	6.10
+> +Contact:	Dave Carey <carvsdriver@gmail.com>
+> +Description:
+> +		Read-only attribute reporting the current keyboard dock position
+> +		as reported by the Embedded Controller on the Lenovo Yoga Book 9
+> +		14IAH10.
+> +
+> +		Possible values:
+> +
+> +		=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +		0   detached  =E2=80=94 keyboard is not docked to any screen
+> +		1   top-half  =E2=80=94 keyboard docked on the top half of the bottom=
+ screen
+> +		2   bottom-half =E2=80=94 keyboard docked on the bottom half of the b=
+ottom screen
+> +		=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +		The value is formatted as "<n> (<name>)\n", e.g. "1 (top-half)\n"
+
+IMHO a simple number would be much easier to parse.
+
+> +
+> +		SW_TABLET_MODE input events are also emitted: 0 when the keyboard
+> +		is docked (either position), 1 when detached.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d1cc0e1..00e8275 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14479,6 +14479,13 @@ L:	platform-driver-x86@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
+>  =20
+> +LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
+> +M:	Dave Carey <carvsdriver@gmail.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> +F:	drivers/platform/x86/lenovo/yb9-kbdock.c
+> +
+>   LETSKETCH HID TABLET DRIVER
+>   M:	Hans de Goede <hansg@kernel.org>
+>   L:	linux-input@vger.kernel.org
+> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/=
+lenovo/Kconfig
+> index 9c48487..938b361 100644
+> --- a/drivers/platform/x86/lenovo/Kconfig
+> +++ b/drivers/platform/x86/lenovo/Kconfig
+> @@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called lenovo-wmi-camera.
+>  =20
+> +config LENOVO_YB9_KBDOCK
+> +	tristate "Lenovo Yoga Book 9 keyboard dock detection"
+> +	depends on ACPI_WMI
+> +	depends on DMI
+> +	depends on INPUT
+> +	help
+> +	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book=
+ 9
+> +	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
+> +	  either screen; this driver reports SW_TABLET_MODE input events based
+> +	  on the attachment state and exposes the raw position in sysfs.
+> +
+> +	  To compile this driver as a module, choose M here: the module will b=
+e
+> +	  called lenovo-yb9-kbdock.
+> +
+>   config LENOVO_YMC
+>   	tristate "Lenovo Yoga Tablet Mode Control"
+>   	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86=
+/lenovo/Makefile
+> index 7b2128e..2842d7d 100644
+> --- a/drivers/platform/x86/lenovo/Makefile
+> +++ b/drivers/platform/x86/lenovo/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
+>   obj-$(CONFIG_THINKPAD_ACPI)	+=3D thinkpad_acpi.o
+>  =20
+>   lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+=3D wmi-hotkey-ut=
+ilities.o
+> +lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+=3D yb9-kbdock.o
+>   lenovo-target-$(CONFIG_LENOVO_YMC)	+=3D ymc.o
+>   lenovo-target-$(CONFIG_YOGABOOK)	+=3D yogabook.o
+>   lenovo-target-$(CONFIG_YT2_1380)	+=3D yoga-tab2-pro-1380-fastcharger.o
+> diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform=
+/x86/lenovo/yb9-kbdock.c
+> new file mode 100644
+> index 0000000..693e287
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo Yoga Book 9 keyboard-dock detection
+> + *
+> + * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magn=
+etically
+> + * attaches to the bottom screen in one of two positions.  The EC track=
+s
+> + * attachment state in a 2-bit field called BKBD and signals changes vi=
+a WMI
+> + * event 0xEB on the WM10 ACPI device.
+> + *
+> + * BKBD values:
+> + *   0 =3D keyboard detached
+> + *   1 =3D keyboard docked on the top half of the bottom screen
+> + *   2 =3D keyboard docked on the bottom half of the bottom screen
+> + *   3 =3D reserved / not observed
+> + *
+> + * This driver registers for the WMI event GUID, queries BKBD on probe =
+and on
+> + * each event, reports SW_TABLET_MODE=3D0 when the keyboard is docked (=
+either
+> + * position) and SW_TABLET_MODE=3D1 when detached, and exposes the raw =
+BKBD
+> + * value in sysfs as "keyboard_position".
+> + *
+> + * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +/*
+> + * WM10 ACPI device (_UID "GMZN"):
+> + *   Event GUID =E2=80=94 notify ID 0xEB fires on keyboard attachment c=
+hange.
+> + *   Query GUID =E2=80=94 object "AF", maps to WQAF(); returns 8-byte b=
+uffer
+> + *                {LFID=3D0x00060000, BKBD[31:0]}.
+> + */
+> +#define YB9_KBDOCK_EVENT_GUID	"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
+> +#define YB9_KBDOCK_QUERY_GUID	"E7F300FA-21CD-4003-ADAC-2696135982E6"
+> +
+> +#define YB9_KBDOCK_QUERY_INSTANCE	0
+> +
+> +/* BKBD encoding =E2=80=94 keyboard always docks on the bottom screen *=
+/
+> +#define BKBD_DETACHED		0
+> +#define BKBD_TOP_HALF		1	/* docked on top half of bottom screen */
+> +#define BKBD_BOTTOM_HALF	2	/* docked on bottom half of bottom screen */
+> +
+> +static const struct dmi_system_id yb9_kbdock_dmi_table[] =3D {
+> +	{
+> +		/* Lenovo Yoga Book 9 14IAH10 */
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+> +struct yb9_kbdock_priv {
+> +	struct input_dev *input_dev;
+> +	unsigned int bkbd;	/* last read BKBD value (0-3) */
+> +};
+> +
+> +/* Read current BKBD state via WQAF.  Returns 0-3 or -errno. */
+> +static int yb9_kbdock_query(struct wmi_device *wdev)
+> +{
+> +	struct acpi_buffer out =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +	acpi_status status;
+> +	u32 bkbd;
+> +
+> +	status =3D wmi_query_block(YB9_KBDOCK_QUERY_GUID,
+> +				 YB9_KBDOCK_QUERY_INSTANCE, &out);
+
+That method is deprecated, please use wmidev_query_block(); I suggest you =
+use a notifier
+to connect both the WMI event device and the WMI blockd device. Take a loo=
+k at drivers/platform/
+x86/uniwill/uniwill-wmi.c for example.
+
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_warn(&wdev->dev, "WQAF query failed: %s\n",
+> +			 acpi_format_exception(status));
+> +		return -EIO;
+> +	}
+> +
+> +	obj =3D out.pointer;
+> +	if (!obj) {
+> +		dev_warn(&wdev->dev, "WQAF returned NULL\n");
+> +		return -EIO;
+> +	}
+> +
+> +	/*
+> +	 * WQAF returns an 8-byte buffer: bytes [0..3] =3D LFID (0x00060000),
+> +	 * bytes [4..7] =3D BKBD value.  Guard against short buffers.
+> +	 */
+> +	if (obj->type =3D=3D ACPI_TYPE_BUFFER && obj->buffer.length >=3D 8) {
+> +		memcpy(&bkbd, obj->buffer.pointer + 4, sizeof(bkbd));
+> +		bkbd &=3D 0x3;
+> +	} else if (obj->type =3D=3D ACPI_TYPE_INTEGER) {
+> +		bkbd =3D obj->integer.value & 0x3;
+> +	} else {
+> +		dev_warn(&wdev->dev,
+> +			 "WQAF: unexpected result type %d len %u\n",
+> +			 obj->type,
+> +			 obj->type =3D=3D ACPI_TYPE_BUFFER
+> +				? obj->buffer.length : 0);
+> +		kfree(obj);
+> +		return -EIO;
+> +	}
+> +
+> +	kfree(obj);
+> +	return (int)bkbd;
+> +}
+> +
+> +static void yb9_kbdock_update(struct wmi_device *wdev)
+> +{
+> +	struct yb9_kbdock_priv *priv =3D dev_get_drvdata(&wdev->dev);
+> +	int bkbd;
+> +	int tablet_mode;
+> +
+> +	bkbd =3D yb9_kbdock_query(wdev);
+> +	if (bkbd < 0)
+> +		return;
+> +
+> +	priv->bkbd =3D bkbd;
+> +
+> +	/*
+> +	 * Report tablet mode only when the keyboard is fully detached.
+> +	 * Both docked positions (top-half and bottom-half of the bottom scree=
+n)
+> +	 * indicate a physical keyboard is present =E2=80=94 report laptop mod=
+e.
+> +	 */
+> +	tablet_mode =3D (bkbd =3D=3D BKBD_DETACHED) ? 1 : 0;
+> +
+> +	input_report_switch(priv->input_dev, SW_TABLET_MODE, tablet_mode);
+> +	input_sync(priv->input_dev);
+> +
+> +	dev_dbg(&wdev->dev, "BKBD=3D%u tablet_mode=3D%d\n", bkbd, tablet_mode)=
+;
+> +}
+> +
+> +static void yb9_kbdock_notify(struct wmi_device *wdev, union acpi_objec=
+t *data)
+> +{
+> +	yb9_kbdock_update(wdev);
+> +}
+> +
+> +/* sysfs: keyboard_position =E2=80=94 exposes raw BKBD value */
+> +static ssize_t keyboard_position_show(struct device *dev,
+> +				      struct device_attribute *attr, char *buf)
+> +{
+> +	struct yb9_kbdock_priv *priv =3D dev_get_drvdata(dev);
+> +	static const char * const names[] =3D {
+> +		"detached", "top-half", "bottom-half", "unknown"
+> +	};
+> +	unsigned int bkbd =3D priv->bkbd;
+> +
+> +	if (bkbd > 3)
+> +		bkbd =3D 3;
+
+I think you should protect bkbd with a spinlock. Or you could just read th=
+e current value
+from the hardware directly.
+
+> +	return sysfs_emit(buf, "%u (%s)\n", bkbd, names[bkbd]);
+> +}
+> +static DEVICE_ATTR_RO(keyboard_position);
+> +
+> +static struct attribute *yb9_kbdock_attrs[] =3D {
+> +	&dev_attr_keyboard_position.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(yb9_kbdock);
+> +
+> +static int yb9_kbdock_probe(struct wmi_device *wdev, const void *ctx)
+> +{
+> +	struct yb9_kbdock_priv *priv;
+> +	struct input_dev *input_dev;
+> +	int err;
+> +
+> +	if (!dmi_check_system(yb9_kbdock_dmi_table)) {
+> +		dev_dbg(&wdev->dev, "not a Yoga Book 9, skipping\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	input_dev =3D devm_input_allocate_device(&wdev->dev);
+> +	if (!input_dev)
+> +		return -ENOMEM;
+> +
+> +	input_dev->name =3D "Lenovo Yoga Book 9 keyboard dock switch";
+> +	input_dev->phys =3D YB9_KBDOCK_EVENT_GUID "/input0";
+> +	input_dev->id.bustype =3D BUS_HOST;
+> +	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
+> +
+> +	err =3D input_register_device(input_dev);
+> +	if (err) {
+> +		dev_err(&wdev->dev, "failed to register input device: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	priv->input_dev =3D input_dev;
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +
+> +	/* Report initial state */
+> +	yb9_kbdock_update(wdev);
+> +	return 0;
+> +}
+> +
+> +static const struct wmi_device_id yb9_kbdock_wmi_id_table[] =3D {
+> +	{ .guid_string =3D YB9_KBDOCK_EVENT_GUID },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(wmi, yb9_kbdock_wmi_id_table);
+> +
+> +static struct wmi_driver yb9_kbdock_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "lenovo-yb9-kbdock",
+> +		.dev_groups =3D yb9_kbdock_groups,
+> +	},
+> +	.id_table =3D yb9_kbdock_wmi_id_table,
+> +	.probe    =3D yb9_kbdock_probe,
+> +	.notify   =3D yb9_kbdock_notify,
+
+Please set .no_singleton =3D true. Also please update the docking state wh=
+en resuming from suspend or hibernation.
 
 Thanks,
 Armin Wolf
 
->
->> I am working on a in-kernel BMOF parser, but i am currently occupied=20
->> by other work.
-> No worries.
->
-> [1] https://github.com/frederik-h/acer-wmi-battery/blob/main/MODELS.md
->
+> +};
+> +module_wmi_driver(yb9_kbdock_driver);
+> +
+> +MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
+> +MODULE_LICENSE("GPL");
