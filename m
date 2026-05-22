@@ -1,100 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A1D2D595B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 13:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DFF45BD7A
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 14:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779458170; cv=none; b=YnWI5Ka9q4K2f23sNBEYSSPD0seXOMMthJwyxvPAMLRL14XOt+F2I+69dSlEBauWS5UtO9ro5Z+KUjeP1Oy8kf8zaaATyyMvXueSJRLjpq6pV1L1GP+wd5sGwP0lIZ54Z6GMFh4PoGMcdrj8bKVOFwxSndqQBMBo+/MzlBAewWE=
+	t=1779460113; cv=none; b=hQ1tDqxliFU2je2Hc0JXYAKdOb8NRKpqud9Xr2NH3vSmMUrihSqcXBphGqvMxTzyFUCiTJs9s22E63CHQVGw393QbJPCRes9AUatrs9RzQ2mpzMwy6+P4bc2x/STwQbOtXW7hflh5CGELUma98+x31eJfM7G4fUZZg7iczbnAdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779458170; c=relaxed/simple;
-	bh=LrQxt7ZP+4/FeafGzuGw2JjD0U+xQAWvzJHPHVGkMPY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lUXV/mxioq/9VlIK4Gv6e4qkx/Zs5/vR+QgV4R9jxLAmBJtfH/p1qeFJ8E9/7tGmEPmoFx/J24xO8BACgnrrWoDwKJNmSVznNsL2bl2CctUAiHIRv8TbGQcVyFDR2Idx1Jv4aNsIDZD4+CbAzLrFgJ3TpiXBXgSbkFlYv0sCwvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hk5Vbdf8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779460113; c=relaxed/simple;
+	bh=kaM/3Ji2Nhpe2NLwuPLLE/UHPthskiDnTS3lPiq0A4Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EAxhQb/B2COZe6EhSRsYBeiZdxWRItRMJ0YoFR3pKA0JcGiSmibT2PCXmmGXjzJY3NcPgCAXoCAsPqMQ8VzKwfolpza+ShMCEEyvX5Ok/VaWKX3DykJUbw+4T/pcqPPv8TOeVQRpPVzI2rTaDyzIhwd6A/obHY6FrZCHMjXOtiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EFkZEy4A; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hk5Vbdf8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779458169; x=1810994169;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LrQxt7ZP+4/FeafGzuGw2JjD0U+xQAWvzJHPHVGkMPY=;
-  b=hk5Vbdf8boZ7Mx4DT17PCPVerFsDgbcJ9BTyrWzZTTQLLUGGqo79XJb+
-   xohkiyEcNsAOyEzjscNGDgQyGrsSYp3p6dUrBHJ34r7l6GzYNzImziToi
-   GdFKsjEHLOJ7g6H8hHlj747dDO+hAVAAhkRRlq3cZGo8+EkFqVfr1/FDJ
-   Ecua/5pmhsUFDTv/bxhCXSdR/A30zWWJLBMh7IzOcb1HmxZjheMCosbQA
-   /Dipalrhlh/d3PpFPQXb9xJQflWDCvxQ60527EUl13nsSUzOV/CFDs6QW
-   cQBwVrFher1gAQBOsKdC7FMUtOXVPRzB83BMmAlgsrbQ2xawoAgjZa4bs
-   g==;
-X-CSE-ConnectionGUID: HVjx9E1RSui4d+n4wb7sRA==
-X-CSE-MsgGUID: W2PpEr/QRM6s9bfhNd7XSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11794"; a="97809540"
-X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
-   d="scan'208";a="97809540"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:56:08 -0700
-X-CSE-ConnectionGUID: v5qNQPxQQ8Wm1S39aDnhaA==
-X-CSE-MsgGUID: zTwDZ+E2QSSMphNxEzoeUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
-   d="scan'208";a="239886592"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:56:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 22 May 2026 16:56:02 +0300 (EEST)
-To: Krishna Chomal <krishna.chomal108@gmail.com>
-cc: Radhey Kalra <radheykalra901@gmail.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] platform/x86: hp-wmi: Skip zero GPU RPM rows for
- fan speed delta
-In-Reply-To: <ag8QsXGZziywo0SX@archlinux>
-Message-ID: <e977eab9-a578-9946-866d-f96e9da9cf7a@linux.intel.com>
-References: <20260521133351.1512718-1-radheykalra901@gmail.com> <20260521133351.1512718-4-radheykalra901@gmail.com> <ag8QsXGZziywo0SX@archlinux>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFkZEy4A"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-8379e010b01so3257468b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 07:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779460107; x=1780064907; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6iYd2LcjmApVKVCdVE1jH3oBaAUymPbzllWKH23cH9w=;
+        b=EFkZEy4A+n0YvtgdJRgpa/mELlMhVePL3FzlU3gtgu13EP2qavx7GHa0TJoPpYakmr
+         cKzHB3S5tRgim/8llcxK4E51Qv7b2da/OrO3k+FYFpxS889lJ6RBHaQwMc74UBL0Do4p
+         LoAJh0hLQ7oLb+JoQkY7ktEgd/oC57I/JeU2gcbw5aR684amoJfjlUZS2POSW46tjMUN
+         /Pcf2TzJkuIyJW2kH1LI1y8jytRxdCdeeguOQlL3f5F3h/D8Ul3D/Qf+Seq9YaEiiNRG
+         MEqIY1UuunykaX4pGOv6sxhBN1x/SIyjecLlXCCcwqkqVfE81eOv3QiJxG9StmBokvzo
+         72fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779460107; x=1780064907;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6iYd2LcjmApVKVCdVE1jH3oBaAUymPbzllWKH23cH9w=;
+        b=Nz7XRuDhwNUdPbwa8tkR5nN93j/aQWw4ZBkgnr19kPs0LYzUdalltObXHOQ07dtoIj
+         5GFOHrR3hkynNTF6NSjBZvxj8ro+0I5StDRHb13WBPjIhMLm8+n/7ROySt3fRmmTI+zT
+         h+gRaSEBIVOOd1qbl5+sTgx5mtd++2nVEbWzi3yuwB+Fuf8XEQhJiVsu2Uwg0drXJyZF
+         JloCDIPQNji9JKJDUHSdddl0q0mW4Y42cYvCeOevPpk9X9jH4qkBiDofDtLSPt8GJ1pF
+         KHX6Vpt+xSx8hMvVgAeaeOqNyYp93Nw09hHWfdSmI6ufkPGZPWGBrxlWhC7lwTzuhFIe
+         Athw==
+X-Gm-Message-State: AOJu0YyLXKEuobQgXB4anoLsISSlAnO3YiLUVgueps8ZcTLQELCdp0dD
+	FxjZy7gzCXtJy9yYqgCXO+YLg0rZs9LTJ6rE3RVU55wO9lL4YREH9/IloZKIeJIh
+X-Gm-Gg: Acq92OEal9eK3fVcOZk9DHnsG9UrEYNZxRc6jVBttFYz1oWOarV7gXZCqnuMlB5m2Ms
+	uRR5iRGibfGQ1j9PCreJPRanukGHcNgwCCGcClbVvpLm65lhmR0XrLwcUXLOfg1i2i8C0GAHaZb
+	tLRJVAJstoB2eHbBfB7w+dZwAW313athMkDz1SJDluQ4AWj+0xXtUwpjp7aUjgL+cwoAM1ZLf+7
+	p8QiO/yeo1oxM8mgDmFhhQvtBJSbsnQyunum/7wv+1kaCf+xWgLcIR38ENP46DkQc8h0X5h4G67
+	VwMCxhYEqxW8hJ/MYClCfPhFoXoMReEmKQjyjL3X8uzZbIh3ea/c8MQld1QW5wpYsAWKZNpvTJ6
+	A7sree4A+O1WyuyT2WMeqLc6FclKuWw/9s7o5p89JiZTSYDNKvys704+0eOGdckwLvlq5g85aLi
+	RLwcLsoCYpuX+Q78iOgkQf8H5XisNrIJIhN+jMq+taTWiG
+X-Received: by 2002:a05:6a00:2d25:b0:823:cbb:a484 with SMTP id d2e1a72fcca58-8415f5d1ca1mr4037981b3a.14.1779460107045;
+        Fri, 22 May 2026 07:28:27 -0700 (PDT)
+Received: from pico-cachyos ([2401:4900:1c39:4610:9413:be16:7d6:5a67])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84164b0427bsm2585087b3a.22.2026.05.22.07.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2026 07:28:25 -0700 (PDT)
+From: Radhey Kalra <radheykalra901@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	krishna.chomal108@gmail.com
+Subject: [PATCH v6 0/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
+Date: Fri, 22 May 2026 19:58:05 +0530
+Message-ID: <20260522142808.235894-1-radheykalra901@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Thu, 21 May 2026, Krishna Chomal wrote:
+Hi,
 
-> On Thu, May 21, 2026 at 07:03:50PM +0530, Radhey Kalra wrote:
-> > Some Victus fan tables start with a CPU RPM value while the GPU RPM
-> > field is zero. On board 8A3D the first row is cpu=23, gpu=0, noise=25,
-> > followed by cpu=24, gpu=22, noise=26.
-> > 
-> > Derive gpu_delta from the first row that contains a non-zero GPU RPM
-> > instead of unconditionally using row 0.
-> 
-> I agree, this is essential for fan-control to work sensibly. But I just
-> want to give Ilpo Jarvinen a quick heads-up because this would likely
-> cause conflict with foobisdweik's patch [1], as they would (probably)
-> remove gpu_delta in v2 [2]
-> 
-> [1]:
-> https://lore.kernel.org/platform-driver-x86/20260513193916.84673-3-dweikmferris@gmail.com
-> [2]: https://lore.kernel.org/platform-driver-x86/ag2DCOGyCt7MBUL6@archlinux
+This is a split version of the Victus 15-fb0xxx support change. Patches
+1 and 2 are no-functional-changes-intended refactors which move the
+existing thermal-profile and fan-control decisions into board-specific
+.driver_data. Patch 3 adds support for Victus 15-fb0xxx board 8A3D.
 
-Okay, so we can work on the other parts and postpone the gpu_delta part to 
-that other series. It would be nice if Radhey could test with that GPU fan 
-patch once the next version of it is posted.
+v6 drops the gpu_delta fan-table parsing patch for now. Ilpo suggested
+postponing that part to the other GPU fan series, so this version keeps
+only the board-data and 8A3D support pieces.
 
+v6 also rebases on current platform-drivers-x86/for-next, preserving the
+recent 8BC2 and 8D41 hp-wmi changes.
 
-FYI, sashiko seems to find a few potential corner case issues unrelated to 
-this series:
+8A3D is added with both the Victus S thermal-profile data and the Victus
+fan-control data. The existing generic platform-profile sysfs path on
+8A3D accepts writes/readbacks without hp_wmi errors, and the Victus fan
+table/control path exposes working PWM control.
 
-https://sashiko.dev/#/patchset/20260521133351.1512718-1-radheykalra901%40gmail.com
+Based on platform-drivers-x86/for-next commit:
+5fdac9983681f743cfaa89414ea154a2c5fd39c4
 
-(Mainly to make Krishna aware of them but I certainly wouldn't mind if
-somebody else has time to tackle them). But please don't take every 
-sashiko's (AI) claim as the perfect truth, it just isn't always right.
+Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
+F.22. With the series applied, the platform-profile choices are
+low-power, balanced, and performance. Writes to all three profiles
+succeeded and read back the selected value. In a CPU stress test with
+powerprofilesctl held at performance, low-power reduced CPU package
+power to about 30 W, while balanced and performance both ran at about
+47 W. In a light PRIME offload test, low-power also kept the NVIDIA GPU
+at lower clocks and power than the other profiles. pwm1 and pwm1_enable
+are exposed through hwmon.
 
+Radhey Kalra (3):
+  platform/x86: hp-wmi: Introduce board-specific feature data
+  platform/x86: hp-wmi: Drive fan control from board data
+  platform/x86: hp-wmi: Add Victus 15-fb0xxx support
+
+drivers/platform/x86/hp/hp-wmi.c | 207 ++++++++++++++++++++++---------
+ 1 file changed, 149 insertions(+), 58 deletions(-)
+
+---
+Changes in v6:
+- Drop the gpu_delta fan-table parser fix for now; it can be handled
+  with the other GPU fan series.
+- Rebase on platform-drivers-x86/for-next commit 5fdac9983681.
+- Preserve the recently added 8BC2 board entry.
+- Preserve the 8D41 switch to omen_v1_no_ec_thermal_params.
+- Add 8A3D with Victus S thermal-profile data and Victus fan-control
+  data.
+
+Changes in v5:
+- Drop the active_thermal_profile_params global and dereference the
+  thermal-profile data through active_board_params.
+- Move the generic fan-only board handling into patch 1, keeping the
+  final 8A3D patch focused on adding the board data and DMI match.
+- Wrap the setup comment added in patch 1 to stay under 80 columns.
+
+Changes in v4:
+- Split v3 into two no-functional-changes-intended refactors, one
+  fan-table parsing fix, and one 8A3D support patch.
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Move revision notes to the cover letter.
+
+Changes in v3:
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Keep the v2 board-data approach and 8A3D fan-control-only handling.
+
+Changes in v2:
+- Use real name in Signed-off-by.
+- Replace the ad-hoc fan-control DMI table with board data in
+  .driver_data.
+- Keep 8A3D fan-control-only instead of enabling Victus S thermal
+  profiles.
+- Use the fixed fan-table parser path and derive gpu_delta from the
+  first non-zero GPU row.
 
 -- 
- i.
-
+2.54.0
