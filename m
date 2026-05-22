@@ -1,320 +1,198 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DACB3C73D9
-	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 10:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D653C73D9;
+	Fri, 22 May 2026 10:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779444485; cv=none; b=bt5qiUCoraIp7BoQPj5+vCLpI1i4n9zgkfxWYzBpK64j/BGf2bocCGeOoxV5Oh/9iPRoT/YxTvc1zGajsgzeBjoVaN3+V1BJIMhihQl5Pq6Or1H6yULqr4e+ywkhhmyHTELvKZb/fdPOPPOsHfIOFc/jRC42O9cW+wTLHL4mEx4=
+	t=1779444532; cv=none; b=rzVEWJ0q8GMJV2vlkhNa0WeEQv+1ejo91aEruI15rFKwjE14omqufz7GcpPtY6KMDavbjfKFsolbYuoaCoxWnL1X9m5cguIL97UQCTIFdMlrYtASV7PDLwpx6MOpSh27zQYMD9ljYr5YhbINeoe8ln7sn/RQcL6m+wDNthUhXMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779444485; c=relaxed/simple;
-	bh=yrGRLJJNKjxQXYGvDm/9oHf3Fry/Fq7TaFKaqXZkIWs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oh6gkFKy9vPqv8blo5uTl9rlMJ43V68dLBysgVZRMMnn1Npe+X3vnVkt99J0nyFWv1etPxUSxjEVbk+dfXP3BFBM0yGSHAMJVnJcm2wNwSXeUzWNj5SWb2H8QuyVgG8U7or9kwXwfJ2vkw7ky+iwLmpZ0aNffVwR8gvtzc5NELc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pARdmw/6; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779444532; c=relaxed/simple;
+	bh=GU/rMFHsGkCx/BK/K5v3KWEUk8acw/9O5xUbdUFwPhM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EaZhM2d2Hi+ppGx110yrZW8XKbnRnkDLTi53MbrrGt+zLx3t7BIGa//6gjA2B7nTgDkrb+c1LZhzslkEQRYM3Xpm/xTo5xG/KksvKdNtC2ijgldNmEUeftJ7LroZzwHGoSxJ54PuEPGc9XR9j8D+zMuMI/WuOnyPzj3daaLaJmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nyPJ7Xwd; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pARdmw/6"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3664df32e91so7845908a91.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 03:08:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779444482; x=1780049282; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGKeV9SlBS4xw5Peq+K+JK8yryD65EG/aByyDDes+nM=;
-        b=pARdmw/6ERs+iDGgjwOLkLJa2B8rcVLZZVvQErDfitwKQv83s2Dc1hAaqpNzdqcOfl
-         BFwXuGj42s9eBfoy2AYGAXrpJAczQZVQYUiouuPc2XjvS/Efbr4cF1DMySkahtlZZMD/
-         /wjD452nZYrX4tRwn71WsiIr4fiVdcRrd5g9JTo4/H2V68XLplNKXj8M3lKtG0UwqIQ+
-         t6exGHQQ7THftWhJPY7rVpn5aZVCEY1JvNxJs2mydNHdqACw4PXtY9QWbzfyOZ9gcHkf
-         mP+DzO3eH+Vp3HbYb44gPIFWJ33EIaIqMfnHchICu0MdrTHA5GWfvIwvqboRqtYSaKfE
-         ZT+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779444482; x=1780049282;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yGKeV9SlBS4xw5Peq+K+JK8yryD65EG/aByyDDes+nM=;
-        b=gAHg/7uBI3XhSrfs/Jxus0upy7nS900qIkVDzI7tIKnZhz4U3K0kTrW7AlpbsBsbip
-         GTov3gdT2RVFhfQ9t5Sd77RDikEl9yvA2Ly1dr+aC99gO8Dpq4P9QK4cfW/wIa84DjUX
-         auRLUyT0UYLMTLyXzVa62g0YUMWMAUt9mwIu2fJmQ5UM4cj8h+WtvGmVL1llqzhxX6bg
-         oQ9iLRBjJVleBUq0TDyWujgb175AZPEdrz0vn8e0nzTZHbuEInKElZd8L4ySaqkydxPq
-         3IE0yMmQju+yE3p5jzV/tI3wINhax2zllz8aHjrrBxQl2eFvfUh/2Vfd3AlKql1yZcLP
-         7e4w==
-X-Forwarded-Encrypted: i=1; AFNElJ+PvbpvEruQnwSVwIxA6srT8MNieRbvj3NOWgA/jsjg3z5uXTg9DlmfjdOhy3cZoUF4MDpKjCXyFVR9qvon9+GPOUZH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgDWxc74EyQW/pLbRH/MePdVRXWjxlz/OBjju0lS973n2MKTuW
-	b3hNjs2dGTL1NjbuI3h01lvLSEtVrCCJzVnzqxqnFr6kM8OFpeVgKhaB
-X-Gm-Gg: Acq92OGtx5HlthrQOwqyx6Pp2qOWsC61r+htORlThTyC1CaOKmTWqB7jTATPX6LdMrw
-	CuA89xa6qygqc/I/KRZv4nPKYuOk/SJqQFwMPKtLIo2qmqFEKGo61AqoNvE7g8R0JDJoSC1/i4a
-	h+dw/M5Fgbwhkfgnqf6bv7YdMdBNtnOu/pVfOAoTJ+uu40/QxpdqfUYQzHjdEciEkhH8HWotJ9s
-	1zVa8vz631EWJS/XdSDpnxhiJpOblKeNn1R8bgviDv+/b68cjzU0k2U+4DbLLZzZtBKSWltcJZ1
-	U/aszkszv+E79Xm2R8rd18UvYsce6SwTqETlNqZ6UxEjudg/j/oy9uut5VupNtJih+r2pMbWHYP
-	SHmw2ivFgCGovw+Jwd1ITEA1EemcqZrbe6JvQk2j7KdiDq8LiRUVcRIYPoDxI5VHDtbZOFR6IDC
-	nXTpHVKzrvue0aQEoM6eccKAOc9GHsajqwr5gzi3+jW3uq5jQq+Q==
-X-Received: by 2002:a17:902:c94a:b0:2bd:9728:5e42 with SMTP id d9443c01a7336-2beb074b967mr32871895ad.31.1779444481668;
-        Fri, 22 May 2026 03:08:01 -0700 (PDT)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:25c3:6270:fc29:ed71])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58b3058sm12718925ad.39.2026.05.22.03.07.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 May 2026 03:08:01 -0700 (PDT)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: mpearson-lenovo@squebb.ca,
-	skhan@linuxfoundation.org,
-	hmh@hmh.eng.br,
-	hansg@kernel.org,
-	corbet@lwn.net,
-	derekjohn.clark@gmail.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	linux-doc@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
-Date: Fri, 22 May 2026 19:07:15 +0900
-Message-ID: <20260522100715.20036-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nyPJ7Xwd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779444532; x=1810980532;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GU/rMFHsGkCx/BK/K5v3KWEUk8acw/9O5xUbdUFwPhM=;
+  b=nyPJ7Xwd4AUHi3ZOzgZKd7tXbHf3SJf0lRgQCTfaHm3E9dmktnPQO+3W
+   uq7rWSj2eI3AjxMh4qA/lQIJPkTZpAB23my6owyZOh52RhYRpO1xa4vc0
+   ieBAcBhUomuYCJvEjE6T/MDpC7CGAU/Kk6z41+TDekZ7cvjSXSNt93OCS
+   ZSLOi0K3So/XB5Djg4y6NOJJk9p7J8qR49hRIU4w/O3DZtXKp7GVSa9Mn
+   TPYekR5CwXn2de9K1oo/YPZhRw7LcjVe8DTrUgZmazZUJ4s2JK2sJSt0D
+   qjLhfSj/o41ibG598B6A5YDn9FeUaag6U5HUVy/MoTnrwLweZVmNqrud5
+   g==;
+X-CSE-ConnectionGUID: w/ThnK0RQnOqdpkztkYLVg==
+X-CSE-MsgGUID: +fkS36SmTXa8hPGAP8QN+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11793"; a="80341863"
+X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
+   d="scan'208";a="80341863"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 03:08:51 -0700
+X-CSE-ConnectionGUID: TTkTyHn+QrS8P7cAIQCIbQ==
+X-CSE-MsgGUID: h3+jf1DRRQKb7rzK2u1phw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
+   d="scan'208";a="245935887"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 03:08:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 22 May 2026 13:08:45 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Xi Pardee <xi.pardee@linux.intel.com>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH v5 05/16] platform/x86/intel/pmt: Cache the telemetry
+ discovery header
+In-Reply-To: <20260522022147.4137494-6-david.e.box@linux.intel.com>
+Message-ID: <e4652b97-c527-a3b8-9190-5c67c83cbeb2@linux.intel.com>
+References: <20260522022147.4137494-1-david.e.box@linux.intel.com> <20260522022147.4137494-6-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
-When active, USB-C data connections are disabled while power delivery is
-preserved. This is useful for kiosk and physically-secured deployments.
+On Thu, 21 May 2026, David E. Box wrote:
 
-Hardware interface:
+> pmt_telem_header_decode() only needs the discovery header dwords, but it
+> currently decodes them by reading directly from entry->disc_table.
+> 
+> Cache the discovery header in intel_pmt_entry when the device is created
+> and have telemetry decode use the cached values instead of performing MMIO
+> reads at decode time.
+> 
+> The DVSEC discovery resource for a namespace is sized by its per-entry
+> entry_size (in dwords), which can be less than the 4-dword cache (e.g.
+> telemetry uses entry_size = 3, i.e. 12 bytes). Cap the memcpy_fromio()
+> to resource_size(disc_res) so the new cache does not read past the
+> mapped region. Any unread dwords stay zero from the zero-initialized
+> allocation of the containing struct.
 
-The HKEY device exposes a read-only ACPI method USCS():
+sashiko seems to not agree with it being always zero-initialized and 
+to me it looks there's some merit to that because of pmt_telem_probe() 
+code reusing entry:
 
-  Return value bit layout:
-    Bit 16 : Capability flag (1 = feature present on this SKU)
-    Bit  0 : Current state  (0 = security OFF, 1 = security ON)
+        for (i = 0; i < intel_vsec_dev->num_resources; i++) {
+                struct intel_pmt_entry *entry = &priv->entry[priv->num_entries];
 
-The sysfs attribute is read-only.
+                mutex_lock(&ep_lock);
+                ret = intel_pmt_dev_create(entry, &pmt_telem_ns, intel_vsec_dev, i);
+                mutex_unlock(&ep_lock);
+                if (ret < 0)
+                        goto abort_probe;
+                if (ret)
+                        continue;
 
-The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
-hardware state.
+                priv->num_entries++;
 
-Hotkey:
+With the subsequent change to u32 headers[PMT_DISC_HEADER_DWORDS];
+in the next patch, the array will not be in zero-initialized state at 
+all AFAICT.
 
-Fn+U followed by Fn+S generates HKEY event 0x131e.
+> This keeps the telemetry header decode path independent of how the
+> discovery data is backed and avoids baking a direct MMIO assumption into
+> the feature-specific decode logic.
+> 
+> Assisted-by: GitHub-Copilot:claude-opus-4.7
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+> V5 changes:
+>   - Cap memcpy_fromio() of the cached discovery header to
+>     resource_size(disc_res) so the newly introduced cache does not
+>     over-read namespaces whose DVSEC entry_size is smaller than the
+>     cache (e.g. telemetry has entry_size = 3, 12 bytes).
+> 
+> V4 - No changes
+> 
+> V3 changes:
+>   - New patch split out from PMT header-fetch rework to cache discovery
+>     header data before downstream decode/population.
+>   - Added to carry the post-v3 bug fix while preserving the original series
+>     ordering intent.
+> 
+>  drivers/platform/x86/intel/pmt/class.c     | 11 +++++++++++
+>  drivers/platform/x86/intel/pmt/class.h     |  1 +
+>  drivers/platform/x86/intel/pmt/telemetry.c | 12 ++++++------
+>  3 files changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
+> index 7da8279b54f8..246e11837800 100644
+> --- a/drivers/platform/x86/intel/pmt/class.c
+> +++ b/drivers/platform/x86/intel/pmt/class.c
+> @@ -383,6 +383,17 @@ int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_namespa
+>  	if (IS_ERR(entry->disc_table))
+>  		return PTR_ERR(entry->disc_table);
+>  
+> +	/*
+> +	 * The mapped discovery resource may be smaller than disc_header (its
+> +	 * size is the namespace's DVSEC entry_size in dwords, which can be
+> +	 * less than 4). Cap the copy to the actual resource size to avoid
+> +	 * reading past the mapped region; any unread dwords stay zero from
+> +	 * the zero-initialized allocation of the containing struct.
+> +	 */
+> +	memcpy_fromio(entry->disc_header, entry->disc_table,
+> +		      min_t(size_t, sizeof(entry->disc_header),
 
-sysfs interface:
+You forgot to add include for min_t(). Please add it before module.h (even 
+if the includes are not fully in alphabetical order atm).
 
-  /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
-  "enabled\n"  -- data connections are currently blocked
-  "disabled\n" -- data connections are currently allowed
+> +			    resource_size(disc_res)));
+> +
+>  	if (ns->pmt_pre_decode) {
+>  		ret = ns->pmt_pre_decode(intel_vsec_dev, entry);
+>  		if (ret)
+> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
+> index 8a0db0ef58c1..84202fc7920c 100644
+> --- a/drivers/platform/x86/intel/pmt/class.h
+> +++ b/drivers/platform/x86/intel/pmt/class.h
+> @@ -44,6 +44,7 @@ struct intel_pmt_entry {
+>  	struct telem_endpoint	*ep;
+>  	struct pci_dev		*pcidev;
+>  	struct intel_pmt_header	header;
+> +	u32			disc_header[4];
+>  	struct bin_attribute	pmt_bin_attr;
+>  	const struct attribute_group *attr_grp;
+>  	struct kobject		*kobj;
+> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
+> index d22f633638be..953f35b6daec 100644
+> --- a/drivers/platform/x86/intel/pmt/telemetry.c
+> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
+> @@ -72,16 +72,16 @@ static bool pmt_telem_region_overlaps(struct device *dev, u32 guid, u32 type)
+>  static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
+>  				   struct device *dev)
+>  {
+> -	void __iomem *disc_table = entry->disc_table;
+>  	struct intel_pmt_header *header = &entry->header;
+> +	u32 *disc_header = entry->disc_header;
+>  
+> -	header->access_type = TELEM_ACCESS(readl(disc_table));
+> -	header->guid = readl(disc_table + TELEM_GUID_OFFSET);
+> -	header->base_offset = readl(disc_table + TELEM_BASE_OFFSET);
+> +	header->access_type = TELEM_ACCESS(disc_header[0]);
+> +	header->guid = disc_header[1];
+> +	header->base_offset = disc_header[2];
+>  
+>  	/* Size is measured in DWORDS, but accessor returns bytes */
+> -	header->size = TELEM_SIZE(readl(disc_table));
+> -	header->telem_type = TELEM_TYPE(readl(entry->disc_table));
+> +	header->size = TELEM_SIZE(disc_header[0]);
+> +	header->telem_type = TELEM_TYPE(disc_header[0]);
+>  
+>  	return 0;
+>  }
+> 
 
-  The attribute is hidden on SKUs where the USCS capability bit (bit 16)
-  is not set, so there is no ABI impact on unsupported hardware.
-
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
- .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
- drivers/platform/x86/lenovo/thinkpad_acpi.c   | 115 ++++++++++++++++++
- 2 files changed, 139 insertions(+)
-
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index f874db31801d..db4588af0278 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1543,6 +1543,30 @@ Values:
- 
- 	This setting can also be toggled via the Fn+doubletap hotkey.
- 
-+USB-C Security
-+--------------
-+
-+sysfs: usb_c_security
-+
-+Reports the current state of the USB-C Security (Restricted Mode) feature
-+on supported ThinkPad systems. When enabled, USB-C data connections are
-+disabled while power delivery is preserved.
-+
-+The available command is::
-+
-+        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
-+
-+Values:
-+
-+	* ``enabled``  - USB-C data connections are currently blocked
-+	* ``disabled`` - USB-C data connections are currently allowed
-+
-+The attribute is read-only. The USB-C Security state can only be toggled
-+via the Fn+U followed by Fn+S hotkey chord.
-+
-+The sysfs attribute is not created on platforms that do not support this
-+feature.
-+
- Auxmac
- ------
- 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index e1cee42a1683..889db802185a 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -185,6 +185,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
- 	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
- 	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
-+	TP_HKEY_EV_USB_C_SECURITY	= 0x131e, /* Toggle USB C Security ON/OFF */
- 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
- 	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
- 
-@@ -373,6 +374,8 @@ static struct {
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
- 	u32 trackpoint_doubletap_enable:1;
-+	u32 usbc_security_supported:1;
-+	u32 usbc_security_enabled:1;
- 	struct quirk_entry *quirks;
- } tp_features;
- 
-@@ -11265,6 +11268,111 @@ static struct ibm_struct hwdd_driver_data = {
- 	.name = "hwdd",
- };
- 
-+/*************************************************************************
-+ * USB-C Security subdriver
-+ *
-+ * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
-+ * It always returns:
-+ *   bit 16 - USB-C security capability present on this SKU or not
-+ *   bit  0 - USB-C Security state (enable or disable)
-+ *
-+ * Hotkey
-+ * ------
-+ * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
-+ * The driver reads back the new state and notifies the sysfs attribute.
-+ *
-+ */
-+
-+/* USCS() return word bit layout */
-+#define USCS_CAP_BIT		BIT(16)	/* capability: feature present on SKU */
-+#define USCS_STATUS_BIT		BIT(0)	/* current security state */
-+
-+static DEFINE_MUTEX(usbc_security_mutex);
-+
-+/*
-+ * usbc_security_query - read current USB-C security state via USCS()
-+ * @enabled: out - true when security is ON (data connections blocked)
-+ *
-+ * Returns true if the feature is supported and query succeeded,
-+ * false otherwise (feature absent or ACPI call failed).
-+ */
-+static bool usbc_security_query(bool *enabled)
-+{
-+	int status;
-+
-+	mutex_lock(&usbc_security_mutex);
-+	if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0)) {
-+		mutex_unlock(&usbc_security_mutex);
-+		return false;
-+	}
-+	mutex_unlock(&usbc_security_mutex);
-+
-+	if (!(status & USCS_CAP_BIT)) {
-+		pr_debug("USCS cap bit absent (raw=0x%x)\n", status);
-+		return false;
-+	}
-+
-+	*enabled = !!(status & USCS_STATUS_BIT);
-+	return true;
-+}
-+
-+/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------- */
-+static ssize_t usb_c_security_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	return sysfs_emit(buf, "%s\n",
-+			  tp_features.usbc_security_enabled ? "enabled" : "disabled");
-+}
-+
-+static DEVICE_ATTR_RO(usb_c_security);
-+
-+static struct attribute *usbc_security_attributes[] = {
-+	&dev_attr_usb_c_security.attr,
-+	NULL,
-+};
-+
-+static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
-+					     struct attribute *attr, int n)
-+{
-+	return tp_features.usbc_security_supported ? attr->mode : 0;
-+}
-+
-+static const struct attribute_group usbc_security_attr_group = {
-+	.is_visible = usbc_security_attr_is_visible,
-+	.attrs = usbc_security_attributes,
-+};
-+
-+static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
-+{
-+	bool enabled;
-+
-+	tp_features.usbc_security_supported =
-+		usbc_security_query(&enabled);
-+	tp_features.usbc_security_enabled = enabled;
-+	return 0;
-+}
-+
-+/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
-+static bool tpacpi_usbc_security_hotkey(void)
-+{
-+	bool enabled;
-+
-+	if (!tp_features.usbc_security_supported)
-+		return false;
-+
-+	if (!usbc_security_query(&enabled))
-+		return false;
-+
-+	tp_features.usbc_security_enabled = enabled;
-+	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
-+	return true;
-+}
-+
-+static struct ibm_struct usbc_security_driver_data = {
-+	.name = "usbc_security",
-+};
-+
- /* --------------------------------------------------------------------- */
- 
- static struct attribute *tpacpi_driver_attributes[] = {
-@@ -11325,6 +11433,7 @@ static const struct attribute_group *tpacpi_groups[] = {
- 	&dprc_attr_group,
- 	&auxmac_attr_group,
- 	&hwdd_attr_group,
-+	&usbc_security_attr_group,
- 	NULL,
- };
- 
-@@ -11479,6 +11588,8 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
- 	case TP_HKEY_EV_PROFILE_TOGGLE2:
- 		platform_profile_cycle();
- 		return true;
-+	case TP_HKEY_EV_USB_C_SECURITY:
-+		return tpacpi_usbc_security_hotkey();
- 	}
- 
- 	return false;
-@@ -11930,6 +12041,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_hwdd_init,
- 		.data = &hwdd_driver_data,
- 	},
-+	{
-+		.init = tpacpi_usbc_security_init,
-+		.data = &usbc_security_driver_data,
-+	},
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-2.51.0
+ i.
 
