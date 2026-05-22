@@ -1,329 +1,325 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B663911CF;
-	Fri, 22 May 2026 13:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60173AE187
+	for <platform-driver-x86@vger.kernel.org>; Fri, 22 May 2026 13:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779454975; cv=none; b=MHEZcBfFBsZGUavkdRjKcIc0hGl8xoRIrBRTVb6UGeo80BAQokfIXC7ZDV9DkanoGWpkJH2tP2OWnc8BjXRvArVd0lQPAWuxbCRB7K+LORYYGUV3FVxIN+y/g2FywjeZsnuy+ztmY3exhSnwW+SImBjLCUaumQ9Y77KQvrLFgjY=
+	t=1779456126; cv=none; b=RBatUHj+qNoKLfU5+LAgmBCOKm5HPfr+ZvESMBGNIl1yYVEYNgBsT7LTyJTY3rsQfZFCYS24qfN5qHU03f5P1fDFnuOGOrzla6mwRvFrwYAKMu+oCX1AQIGnfMyrmbqgcMCoEIzS5k+vZYpXuNlmBkACpZaLihLxq+P1H5EPoE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779454975; c=relaxed/simple;
-	bh=if89QC5gMIIujDM2u1bPis0P+DQhObWLSTswf0E0O6I=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=E25v/C9rjFiDARhxuzs3iWEM5x5fldTrzJv6LuNTkQPYffapCzUIPrikEqLxbqKrvE5bnURWnpSRPqMDg7JgqseTf9ZcIL55PQ7Y1HEHULLjHingKhKUZz3xGInTT6xIT2vNG9lt3EfskseA0nSF9vF9ZmjSYi0tk0kXMfY8sU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YghKraUL; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1779456126; c=relaxed/simple;
+	bh=tMxusWvO1slxEuXBe65PgVH/upo3TTC+kWfW/PeZYOI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MG3glyj3gjTw0ax/IpND6xcOvaispaqzG9wVefIXMNxEzxeF8ZiE/OGKIpCmCkhQ0nwLs76o9sHHxkKBQKyfbBARKkNdwRXd8t3Cd7eDZAOo1PAAAgo1dr5cuT9A1alI7Q7X0XRbaLU9JQ4MCUmX87KyunKwcmG0Y5/T3DNdAt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jy/pXUB4; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YghKraUL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jy/pXUB4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779454974; x=1810990974;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=if89QC5gMIIujDM2u1bPis0P+DQhObWLSTswf0E0O6I=;
-  b=YghKraULwOQZ9vGjOeklpvk26c1Hr/JCaRPM2S9NT+ibLm8LgUnDIQPT
-   iwXLfzC20Hb7ib2Ff+0UH8lhVxTHF3sQgDsXuaZ8GYkaQP/ADI15N5tQq
-   Kdq43YHnG8uzNsUmnP0DzvxevRM7ivQQy0yyNlY/97TKorBnOaWVeth8I
-   QUx04zdc8wDMhHrt7UQh4qzPH5e/sOe/pDwwAlZhW54bbvELovWOGZNYB
-   kVioYtHicNwGroQWdwsWcZLOqiCc4KT/fouDxMDEauBsneI9iFcQ81k52
-   Ri9crjFmJtdMhScuqGvrjMZuZzdAKLyq4qbKVYaShR/6Q7jBKmAeX2i+k
-   Q==;
-X-CSE-ConnectionGUID: LNTqfBj9TLCCMHANyySLCA==
-X-CSE-MsgGUID: iHbIv7G1SM2N5r6ArbrP3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11794"; a="91851632"
+  t=1779456123; x=1810992123;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=tMxusWvO1slxEuXBe65PgVH/upo3TTC+kWfW/PeZYOI=;
+  b=jy/pXUB4TSMnw5sB+IBNN+BzQExILzq9r1fZ0wVcqj7MYT/SGgTr3r9q
+   vw+r98AAPE8XqIcOQ+O3X8e0khYr++ZTIZk6WH9tQfnCuXblQ65tY8Aa8
+   CGVkStEHQ1SG64D7Uwg+WE/WXSMAJRXJQnZ1jR+3nHgVWqscRE7JzA+GS
+   cv3IHBIqyVgCjt3jAeJKuN2x4mzJyUvX3QEvhEr9M7xkzR4RPGVe5ej0W
+   kuiCpY+RTKVRTV3lpjGb7sl47zC8SmUhMuYXOgUJ38hyF8hoYi2AyxE+u
+   ng7uquUq55rHhHY4yxFpp7tv1XsI2b8r06JY7nSoR4EXPqfcGPTsTnyGV
+   g==;
+X-CSE-ConnectionGUID: /P32IU9fQHy2/P8XaCUkjg==
+X-CSE-MsgGUID: RyfzwIlKSeekqCjsEGA3pg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11794"; a="97807048"
 X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
-   d="scan'208";a="91851632"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:02:53 -0700
-X-CSE-ConnectionGUID: /AevEVgyTCeBWRFGgCL3Pg==
-X-CSE-MsgGUID: +qxsZDdtTi+lQgCkdNe6/g==
+   d="scan'208";a="97807048"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:22:01 -0700
+X-CSE-ConnectionGUID: pp6aqz2aTG2ccsUDaNwrbg==
+X-CSE-MsgGUID: OvjnkOWmRRu1icypJSJN+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
-   d="scan'208";a="239881118"
+   d="scan'208";a="238313370"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:02:51 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 06:21:59 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Date: Fri, 22 May 2026 15:56:00 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v7.1-4
-Message-ID: <pdx86-pr-20260522155600-202866129@linux.intel.com>
+Date: Fri, 22 May 2026 16:21:55 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    mario.limonciello@amd.com, Sanket.Goswami@amd.com
+Subject: Re: [PATCH v5 1/8] platform/x86/amd/pmf: Add util layer and userspace
+ character device interface
+In-Reply-To: <20260520185424.770772-2-Shyam-sundar.S-k@amd.com>
+Message-ID: <2a1643c1-919b-00f9-2f4d-91bbed9c7151@linux.intel.com>
+References: <20260520185424.770772-1-Shyam-sundar.S-k@amd.com> <20260520185424.770772-2-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+
+On Thu, 21 May 2026, Shyam Sundar S K wrote:
+
+> Add a util layer to AMD PMF that exposes a minimal userspace interface
+> via a character device for metrics monitoring and feature discovery.
+> 
+> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
+> PMF metrics such as:
+> *  Power source and power slider position
+> *  Platform type, lid state, and user presence
+> *  Skin temperature and ambient light
+> *  BIOS input parameters (1-10)
+> *  Graphics workload metrics
+> *  CPU C-state residency (average and maximum)
+> *  Socket power consumption
+> 
+> The interface enables smoother integration with userspace tools such as
+> AMD SystemDeck [1], which is widely used for monitoring and controlling
+> power and thermal behavior on AMD platforms. These tools help designers
+> keep major components within thermal limits to ensure proper operation
+> and enhance overall system stability and reliability.
+> 
+> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
+> option, allowing it to be disabled if not needed. The implementation
+> uses existing PMF infrastructure to populate data from the TA (Trusted
+> Application) shared memory buffer.
+> 
+> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
+> 
+> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmf/Kconfig  | 10 ++++
+>  drivers/platform/x86/amd/pmf/Makefile |  2 +
+>  drivers/platform/x86/amd/pmf/core.c   |  5 ++
+>  drivers/platform/x86/amd/pmf/pmf.h    |  9 ++++
+>  drivers/platform/x86/amd/pmf/util.c   | 67 +++++++++++++++++++++++++++
+>  include/uapi/linux/amd-pmf.h          | 60 ++++++++++++++++++++++++
+>  6 files changed, 153 insertions(+)
+>  create mode 100644 drivers/platform/x86/amd/pmf/util.c
+>  create mode 100644 include/uapi/linux/amd-pmf.h
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index 25b8f7ae3abd..ad4faf18de47 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
+>  	 in the PMF config store.
+>  
+>  	 Say Y here to enable more debug logs and Say N here if you are not sure.
+> +
+> +config AMD_PMF_UTIL_SUPPORT
+> +	bool "AMD PMF Util layer support"
+> +	depends on AMD_PMF
+> +	help
+> +	  Enabling this option provides a character device for userspace to capture
+> +	  PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
+> +	  Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
+> +
+> +	  Say Y here to enable it and Say N here if you are not sure.
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index 5978464e0eb7..bf7aad80b9e9 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
+>  amd-pmf-y 			:= core.o acpi.o sps.o \
+>  				   auto-mode.o cnqf.o \
+>  				   tee-if.o spc.o
+> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
+> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index b9e5a2cf3aae..919d02f30aae 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  
+>  	pmf_device = dev->dev;
+>  
+> +	err = amd_pmf_cdev_register(dev);
+> +	if (err)
+> +		dev_warn(dev->dev, "failed to register util interface: %d\n", err);
+> +
+>  	dev_info(dev->dev, "registered PMF device successfully\n");
+>  
+>  	return 0;
+> @@ -646,6 +650,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>  	amd_pmf_deinit_features(dev);
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>  		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
+> +	amd_pmf_cdev_unregister();
+
+Why is this not done in reverse order as in probe?
+
+>  	apmf_acpi_deinit(dev);
+>  	amd_pmf_dbgfs_unregister(dev);
+>  }
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 69fef7448744..6f61076a9386 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
+>  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
+>  int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
+>  
+> +/* Util Layer */
+> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
+> +void amd_pmf_cdev_unregister(void);
+> +#else
+> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
+> +static inline void amd_pmf_cdev_unregister(void) {}
+> +#endif
+> +
+>  #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
+> new file mode 100644
+> index 000000000000..0052f0b6a7a5
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/pmf/util.c
+> @@ -0,0 +1,67 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD Platform Management Framework Util Layer
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
+> + */
+> +
+> +#include <linux/amd-pmf.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/mutex.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "pmf.h"
+> +
+> +static struct amd_pmf_dev *pmf_dev_handle;
+> +static DEFINE_MUTEX(pmf_util_lock);
+> +
+> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> +{
+> +	return -ENOTTY;
+> +}
+> +
+> +static int amd_pmf_open(struct inode *inode, struct file *filp)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	if (!pmf_dev_handle)
+> +		return -ENODEV;
+> +
+> +	filp->private_data = pmf_dev_handle;
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations pmf_if_ops = {
+> +	.owner          = THIS_MODULE,
+> +	.open           = amd_pmf_open,
+> +	.unlocked_ioctl = amd_pmf_set_ioctl,
+> +};
+> +
+> +static struct miscdevice amd_pmf_util_if = {
+> +	.minor		= MISC_DYNAMIC_MINOR,
+> +	.name		= "amdpmf_interface",
+> +	.fops		= &pmf_if_ops,
+> +};
+> +
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+> +{
+> +	int ret;
+> +
+> +	guard(mutex)(&pmf_util_lock);
+> +	pmf_dev_handle = dev;
+> +	ret = misc_register(&amd_pmf_util_if);
+> +	if (ret)
+> +		pmf_dev_handle = NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +void amd_pmf_cdev_unregister(void)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	misc_deregister(&amd_pmf_util_if);
+
+sashiko noted that if misc_register() fails, deregister is called 
+unconditionally.
+
+> +	pmf_dev_handle = NULL;
+> +}
+> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
+> new file mode 100644
+> index 000000000000..c7099e7f463f
+> --- /dev/null
+> +++ b/include/uapi/linux/amd-pmf.h
+> @@ -0,0 +1,60 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note */
+> +/*
+> + * AMD Platform Management Framework (PMF) UAPI Header
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * This file defines the user-space API for interacting with the AMD PMF
+> + * driver. It provides ioctl interfaces to query platform-specific metrics
+> + * such as power source, slider position, platform type, laptop placement,
+> + * and various BIOS input/output parameters.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_AMD_PMF_H
+> +#define _UAPI_LINUX_AMD_PMF_H
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
+> + *
+> + * This magic number uniquely identifies AMD PMF ioctl operations.
+> + */
+> +#define AMD_PMF_IOC_MAGIC	'p'
+> +
+> +/**
+> + * IOCTL_AMD_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics data
+> + *
+> + * This ioctl command is used to populate the amd_pmf_info structure
+> + * with the requested PMF metrics information.
+> + */
+> +#define IOCTL_AMD_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, struct amd_pmf_info)
+> +
+> +#define AMD_PMF_BIOS_PARAMS_MAX		10
+> +
+> +struct amd_pmf_info {
+> +	__u64 size;
+> +
+> +	/* Power and state info */
+> +	__u32 platform_type;
+> +	__u32 power_source;
+> +	__u32 laptop_placement;
+> +	__u32 lid_state;
+> +	__u32 user_presence;
+> +	__u32 slider_position;
+> +
+> +	/* Thermal and power metrics */
+> +	__s32 skin_temp;
+> +	__u32 gfx_busy;
+> +	__s32 ambient_light;
+> +	__u32 avg_c0_residency;
+> +	__u32 max_c0_residency;
+> +	__u32 socket_power;
+> +
+> +	/* BIOS parameters */
+> +	__u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+> +};
+> +
+> +#endif /* _UAPI_LINUX_AMD_PMF_H */
+> 
+
+-- 
+ i.
 
-Hi Linus,
-
-Here is a platform-drivers-x86 fixes PR for v7.1.
-
-Lots of device match override case fixes from Rafael, thus the shotgun
-shortlog.
-
-The commit timestamp of the latest commit is very recent because I fixed
-an issue in its commit message I noticed while preparing this PR (tools had
-taken --- below part into the commit message). The change has been sitting
-in the fixes branch for a few days even before that.
-
-Fixes and New HW Support
-
-- Add ACPI_HANDLE()/ACPI_COMPANION() NULL checks (many drivers) to
-  handle match overrides gracefully
-
-- asus-armoury:
-
-  - Fix mini-LED mode get/set
-
-  - Add support for FA401EA, FX607VU, G614FR, and GU605CP
-
-- bitland-mifs-wmi: Add CONFIG_LEDS_CLASS dependency
-
-- hp-wmi: Add thermal support for Omen 16-c0xxx (board 8902)
-
-- intel/vsec: Fix enable_cnt imbalance due to PCIe error recovery
-
-- surface/aggregator_registry: Remove battery & AC nodes on Surface
-			       Laptop 7 to avoid duplicated devices
-
-- uniwill-laptop:
-
-  - Handle uninitialized and invalid charging threshold values
-
-  - Accept charging threshold of 0 through power supply sysfs ABI and
-    clamp it to 1
-
-  - Make 'force' parameter to work also when device descriptor is found
-
-  - Do not enable charging limit despite the 'force' parameter to avoid
-    permanent damage to battery
-
-Regards, i.
-
-
-The following changes since commit 2997606dd17729404cef9821ce66dd037b6019eb:
-
-  platform/x86: asus-nb-wmi: add DMI quirk for ASUS Zenbook Duo UX8407AA (2026-05-11 17:15:16 +0300)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.1-4
-
-for you to fetch changes up to 654ddf855bebd8d45a6e707f5dc2344921f5e0cf:
-
-  platform/x86: bitland-mifs-wmi: add CONFIG_LEDS_CLASS dependency (2026-05-22 15:48:41 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v7.1-4
-
-Fixes and New HW Support
-
-- Add ACPI_HANDLE()/ACPI_COMPANION() NULL checks (many drivers) to
-  handle match overrides gracefully
-
-- asus-armoury:
-
-  - Fix mini-LED mode get/set
-
-  - Add support for FA401EA, FX607VU, G614FR, and GU605CP
-
-- bitland-mifs-wmi: Add CONFIG_LEDS_CLASS dependency
-
-- hp-wmi: Add thermal support for Omen 16-c0xxx (board 8902)
-
-- intel/vsec: Fix enable_cnt imbalance due to PCIe error recovery
-
-- surface/aggregator_registry: Remove battery & AC nodes on Surface
-			       Laptop 7 to avoid duplicated devices
-
-- uniwill-laptop:
-
-  - Handle uninitialized and invalid charging threshold values
-
-  - Accept charging threshold of 0 through power supply sysfs ABI and
-    clamp it to 1
-
-  - Make 'force' parameter to work also when device descriptor is found
-
-  - Do not enable charging limit despite the 'force' parameter to avoid
-    permanent damage to battery
-
-The following is an automated shortlog grouped by driver:
-
-acer-wireless:
- -  Check ACPI_COMPANION() against NULL
-
-adv_swbutton:
- -  Check ACPI_HANDLE() against NULL
-
-asus-armoury:
- -  add support for FA401EA
- -  add support for FX607VU
- -  add support for G614FR
- -  add support for GU605CP
- -  fix mini-LED mode get/set on MODE2 devices
-
-asus-laptop:
- -  Check ACPI_COMPANION() against NULL
-
-bitland-mifs-wmi:
- -  add CONFIG_LEDS_CLASS dependency
-
-dell/dell-rbtn:
- -  Check ACPI_COMPANION() against NULL
-
-eeepc-laptop:
- -  Check ACPI_COMPANION() against NULL
-
-fujitsu:
- -  Check ACPI_COMPANION() against NULL
-
-fujitsu-tablet:
- -  Check ACPI_COMPANION() against NULL
-
-hp_accel:
- -  Check ACPI_COMPANION() against NULL
-
-hp-wmi:
- -  fix support for thermal profile Omen 16-с0xxx laptops
-
-intel-hid:
- -  Check ACPI_HANDLE() against NULL
-
-intel/rst:
- -  Check ACPI_COMPANION() against NULL
-
-intel_sar:
- -  Check ACPI_HANDLE() against NULL
-
-intel/smartconnect:
- -  Check ACPI_HANDLE() against NULL
-
-intel-vbtn:
- -  Check ACPI_HANDLE() against NULL
-
-intel/vsec:
- -  Fix enable_cnt imbalance on PCIe error recovery
-
-lg-laptop:
- -  Check ACPI_COMPANION() against NULL
-
-panasonic-laptop:
- -  Check ACPI_COMPANION() against NULL
-
-sony-laptop:
- -  Check ACPI_COMPANION() against NULL
-
-surface: aggregator_registry:
- -  omit battery & AC nodes on Surface Laptop 7
-
-surface: surfacepro3_button:
- -  Check ACPI_COMPANION()
-
-system76:
- -  Check ACPI_COMPANION() against NULL
-
-toshiba_acpi:
- -  Check ACPI_COMPANION() against NULL
-
-toshiba_bluetooth:
- -  Check ACPI_COMPANION() against NULL
-
-toshiba_haps:
- -  Check ACPI_COMPANION() against NULL
-
-uniwill-laptop:
- -  Accept charging threshold of 0
- -  Do not enable the charging limit even when forced
- -  Fix behavior of "force" module param
- -  Properly initialize charging threshold
-
-wireless-hotkey:
- -  Check ACPI_COMPANION() against NULL
-
-----------------------------------------------------------------
-Ahmed Yaseen (1):
-      platform/x86: asus-armoury: fix mini-LED mode get/set on MODE2 devices
-
-Armin Wolf (4):
-      platform/x86: uniwill-laptop: Properly initialize charging threshold
-      platform/x86: uniwill-laptop: Accept charging threshold of 0
-      platform/x86: uniwill-laptop: Fix behavior of "force" module param
-      platform/x86: uniwill-laptop: Do not enable the charging limit even when forced
-
-Arnd Bergmann (1):
-      platform/x86: bitland-mifs-wmi: add CONFIG_LEDS_CLASS dependency
-
-Denis Benato (4):
-      platform/x86: asus-armoury: add support for FX607VU
-      platform/x86: asus-armoury: add support for G614FR
-      platform/x86: asus-armoury: add support for FA401EA
-      platform/x86: asus-armoury: add support for GU605CP
-
-Lukas Wunner (1):
-      platform/x86/intel/vsec: Fix enable_cnt imbalance on PCIe error recovery
-
-Oliver White (1):
-      platform/surface: aggregator_registry: omit battery & AC nodes on Surface Laptop 7
-
-Rafael J. Wysocki (22):
-      platform/x86: adv_swbutton: Check ACPI_HANDLE() against NULL
-      platform/x86: hp_accel: Check ACPI_COMPANION() against NULL
-      platform/x86: intel-hid: Check ACPI_HANDLE() against NULL
-      platform/x86: intel_sar: Check ACPI_HANDLE() against NULL
-      platform/x86: intel-vbtn: Check ACPI_HANDLE() against NULL
-      platform/surface: surfacepro3_button: Check ACPI_COMPANION()
-      platform/x86: acer-wireless: Check ACPI_COMPANION() against NULL
-      platform/x86: asus-laptop: Check ACPI_COMPANION() against NULL
-      platform/x86: dell/dell-rbtn: Check ACPI_COMPANION() against NULL
-      platform/x86: eeepc-laptop: Check ACPI_COMPANION() against NULL
-      platform/x86: fujitsu: Check ACPI_COMPANION() against NULL
-      platform/x86: fujitsu-tablet: Check ACPI_COMPANION() against NULL
-      platform/x86: intel/rst: Check ACPI_COMPANION() against NULL
-      platform/x86: intel/smartconnect: Check ACPI_HANDLE() against NULL
-      platform/x86: lg-laptop: Check ACPI_COMPANION() against NULL
-      platform/x86: panasonic-laptop: Check ACPI_COMPANION() against NULL
-      platform/x86: sony-laptop: Check ACPI_COMPANION() against NULL
-      platform/x86: system76: Check ACPI_COMPANION() against NULL
-      platform/x86: toshiba_acpi: Check ACPI_COMPANION() against NULL
-      platform/x86: toshiba_bluetooth: Check ACPI_COMPANION() against NULL
-      platform/x86: toshiba_haps: Check ACPI_COMPANION() against NULL
-      platform/x86: wireless-hotkey: Check ACPI_COMPANION() against NULL
-
-Коненко Андрей Викторович (1):
-      hp-wmi: fix support for thermal profile Omen 16-с0xxx laptops
-
- .../admin-guide/laptops/uniwill-laptop.rst         |  10 ++
- .../platform/surface/surface_aggregator_registry.c |   2 -
- drivers/platform/surface/surfacepro3_button.c      |  10 +-
- drivers/platform/x86/Kconfig                       |   1 +
- drivers/platform/x86/acer-wireless.c               |   8 +-
- drivers/platform/x86/adv_swbutton.c                |   6 +-
- drivers/platform/x86/asus-armoury.c                |  16 ++-
- drivers/platform/x86/asus-armoury.h                | 113 +++++++++++++++++++++
- drivers/platform/x86/asus-laptop.c                 |   6 +-
- drivers/platform/x86/dell/dell-rbtn.c              |   6 +-
- drivers/platform/x86/eeepc-laptop.c                |   6 +-
- drivers/platform/x86/fujitsu-laptop.c              |  12 ++-
- drivers/platform/x86/fujitsu-tablet.c              |   6 +-
- drivers/platform/x86/hp/hp-wmi.c                   |   4 +
- drivers/platform/x86/hp/hp_accel.c                 |   3 +
- drivers/platform/x86/intel/hid.c                   |   6 +-
- drivers/platform/x86/intel/int1092/intel_sar.c     |   7 +-
- drivers/platform/x86/intel/rst.c                   |   6 +-
- drivers/platform/x86/intel/smartconnect.c          |   6 +-
- drivers/platform/x86/intel/vbtn.c                  |   6 +-
- drivers/platform/x86/intel/vsec.c                  |  54 +++++-----
- drivers/platform/x86/lg-laptop.c                   |   9 +-
- drivers/platform/x86/panasonic-laptop.c            |   6 +-
- drivers/platform/x86/sony-laptop.c                 |  12 ++-
- drivers/platform/x86/system76_acpi.c               |   6 +-
- drivers/platform/x86/toshiba_acpi.c                |   6 +-
- drivers/platform/x86/toshiba_bluetooth.c           |   6 +-
- drivers/platform/x86/toshiba_haps.c                |   6 +-
- drivers/platform/x86/uniwill/uniwill-acpi.c        |  47 ++++++++-
- drivers/platform/x86/wireless-hotkey.c             |   9 +-
- 30 files changed, 338 insertions(+), 63 deletions(-)
