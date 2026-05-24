@@ -1,117 +1,218 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DB7282F13
-	for <platform-driver-x86@vger.kernel.org>; Sun, 24 May 2026 03:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6942E393DC1
+	for <platform-driver-x86@vger.kernel.org>; Sun, 24 May 2026 12:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779593693; cv=none; b=UPtyYZqofSos5lpinYlzpIC7h4gfZxKUUAVFtNEhZuTsa5R9+cqYOhEupfTUtKlyRg35Y6K2WcKTywp1Tr/9HsIXnFp8dK1+dd1QNQ7RMNIj1kyP5RehOoRDUAy7SrX+bj2PZwkjcK1V4hSMVApBhN03SuWN18eGCcxfjoXFQKU=
+	t=1779624923; cv=none; b=rOHcHYlpKgIwVw4ALnzfA81Dva9+07R1oz5dgMcXyF1DIFy4T+4vwuRUOXLOT5v/obN6IRGwqPFC9CyDlqfPwl94uyY7apEB4v+ANM7RQFtcP/+9CYLmefMMezJEzmr0be7P/VXnBeIOnKyy3qNH7BO0QpANsDOy2qS6QNzH06w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779593693; c=relaxed/simple;
-	bh=AjC0ktyvPQeI4RDN4A8wnPvSsIFfz5/0WHjRx9dH3UQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uuwnyYlkwv5Gb37rJNJWmrJMbTWkNEJPbf5Wn2qzoRtQvxq1nMpUIr7sl5RSZXSbWvvOA3KTkXrpIrAITYkPMcZJWXjxbD3uoDh4V+bg5aKUOVrQX7U7zZPGkeiMRhnvv/pTPty7ssr/kYPStJO4lnf/N6+VItzmdhb2nahpxbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pw76k4Sz; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1779624923; c=relaxed/simple;
+	bh=HPzWupM2ZjUXX0eNWgKt1EEEJD8LJ/Sp25bHL+GC/no=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PVprbkYFsrZJVCHtl5BV4ltCIUf3ZaUGk457sDp/lY7tlNNHIGmFnY/xigwzrR5VleW4SZFY82U7Ufm22rIF861neFsQq3CNTasYiBOyi3GuBnY+ZqTByCsh4IE39cFnKE4A2xMwqBYoDhGPy2K2VSWa6lpYlUCZhUMz9trTY9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sf1Skjm2; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pw76k4Sz"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2b9fcf7c91bso97434555ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 23 May 2026 20:34:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sf1Skjm2"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4905529b933so6096635e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 24 May 2026 05:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779593692; x=1780198492; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=88YLIo6TgvNgnlSaPgI2NY6rAJ5rlzf0h+LiaxqanXY=;
-        b=Pw76k4SzqiI3oWFXvAKGOowq0RAlB+jAPBkzueV1DgC87QEXFJ7GDAvglE2cOAxRSv
-         avJfhBkKh6m2KqeqeGpjPOYK8oPzMY4kl6oFubqAoh+dDQZW0m/5SbOh5Wvdr6bxIP3z
-         eioEhdSJyEDW9p2K4dIIs076MV/t0+GKjPA7Bd54fb7x5xKmzQI3ITSTpkgCyv4WEHRr
-         4bc9ZKCkR0x081YvdotENii10HAfbnAEwSJUi+75WXldPy4GA0MBxT7iq+n7BCi4bFmb
-         0Wj+LKV3Gx6Jm552V4FGTgXIPZRRNcn5RxLWAcrtoQWPVERYxhTh5tdo3RWZAPAkTc6I
-         TtOw==
+        d=gmail.com; s=20251104; t=1779624919; x=1780229719; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CYEgaMhlMyzTUpGDpHyjsYsCWMtgGcpQtucUOR4+Pkg=;
+        b=Sf1Skjm2aOsHmIsmbdU/t9HztzxdNhbb/0NKvSnpkfaUKCz1PylkTwCScJAGrtTWqV
+         NXOOl3paWPbUXFQAKYiXhEMFP8ULsx9G4NeYK7pG98EwOgK6ri568+HUABK3fy5n7TJF
+         9e1orDT6Svmb2RZoy37LOiEFc65QHZwSm4pv2ekGul7PaQQiIPIEy13LDmduvB3Ax5bx
+         8xUPnn1fr0y7n2P/5Qdw3Mvz5/xHoF+/LWTQnxNMqD0A2GkF+DzmEGwA0K6oGpJZJQzF
+         1TWrK9GXefA7pfQ6JgbmyoginxmJIrOs3WnWWl2xtwCgV/YN48K7bor2TMQuZaxKy349
+         qygQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779593692; x=1780198492;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=88YLIo6TgvNgnlSaPgI2NY6rAJ5rlzf0h+LiaxqanXY=;
-        b=TLxKuk6V62TkegwCzJUNyAYk9JbuIC9p7KRbAiuiNivuop9NkMGqXwKxiyuyoMoEPC
-         IcCUeIS06znSTQLAxqIhB6xgdcn+6IxYBJ4auaBKKs+ag/Unik6vMSXNJTq/4o1Vdh3e
-         XHNDYyj1TeaJUawPfgkFU8eoJ572DXNm8+b97WIPEykGIFeXDNs+og6CTveWjHcFw13C
-         OVKlHnaqFLWlc29AZvrKSU49ushGbfM595gdVekPFzcL5L3AgxeyIwVm/G8lBRittaRY
-         wmFsfoPGDSfY8lz2XAFHeajSRkusCsd2ziDintTeFxtfzt0CEVO43Xg7cV/2q9mNjBkw
-         6iOA==
-X-Gm-Message-State: AOJu0Yy/Bhb10spkaAhP4bzI8jZ/lDpUSa2ohdiLyV3ea7YDgZNFBdUW
-	YbMk7+czY20GIIcV185cN99WwIm9vKZpfpcWGxsSqXaW0Yiqi0KAWjXBopnZDxTH
-X-Gm-Gg: Acq92OHT8M76cYd/nEwPdCjLgxdp6FS6iMqv6RtYe0h8v8W5RdchrB0qgnu24UTlW/X
-	To9eA+EiDugoRdMXcyN3Y6QgVaep0sAIkyg/ZcwfqNdIpmdWmZGtqpQQQaLYCROj8hoLJigt8eG
-	eXYtKU8Gm/OYQN2OylZYXbMv3Q9RcrAUT8475l65eHeHHEovpDEuMKBS4p09LBrRdsH0VPM9W7G
-	AnKoBUx7CdJM1clvbQBU1UVl/AXQ1XICbAkmXxVuJHR0kNpsFgQY+5PPn1JehuRMyEzJ2fL+wK/
-	u6qTvQypR51/SLM1VtE9/7HXuW8h7Kw5qzJPamOxk08+76nNyDuqInnkmh5xHqaEdDVKxdq2OXr
-	hscDcceijRS8/M8HVLklgKuTO4GqqfEuO+WlCA6y1phvIHziQkaSiTM/H6rwmQKlSfOZk9QLzdo
-	IwX6HoAJEl+Pi+VCdm
-X-Received: by 2002:a17:903:390d:b0:2b0:ac1e:9720 with SMTP id d9443c01a7336-2beb065e81cmr111245755ad.23.1779593691806;
-        Sat, 23 May 2026 20:34:51 -0700 (PDT)
-Received: from pico-cachyos ([2a09:bac5:3e0b:7eb::ca:1aa])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2beb58c49b2sm55469805ad.60.2026.05.23.20.34.49
+        d=1e100.net; s=20251104; t=1779624919; x=1780229719;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYEgaMhlMyzTUpGDpHyjsYsCWMtgGcpQtucUOR4+Pkg=;
+        b=a12qKgrTmzOvvDptnWBUOh7AzRsqwitlWDlfP14W8YTtsGKmYlmDA9NJF+ORBUZAvx
+         qy2Ts398X+t9+Gtb0vvlqA1zemb+HXSeVbE69z0hq3gHW9Y3HmR8Dus5uUau6zA8hBoh
+         AF0lz8uCBsB/sNJLqFD/9WMiN6OmWjYvXVy3fOMeFSImZmPAulS9G2ozc4ShkD2QTAT+
+         ruRlnRUtKOEbreahHVT3yN6j7L4qwfq0hDSQCvuXRKmZmCP3oYPMU3VhHzlyZvEHtYcU
+         E/FU6lycdViPK3fagJ6tNwKlSqfGE9B6kdFco+s9qCoHSmPBgvi9X5KHTKKSV4Q6C2si
+         GWGw==
+X-Forwarded-Encrypted: i=1; AFNElJ9bGXJwdhVYNyvT4W+Wt0NJeGm/cAdvDDYMECKT5d5BGs3nNYAxSQ8Y22wlL2F/zwdQnnqiCQSzBYD4bHxibyqcNO0T@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJVimxpSZttojqZ9+U9ncE4xyIzi9kPAy1QFfr+GZnqXUEgsQU
+	dKVUJMuVauv52VTL0sqYA+Sg6EV+K0uEoNensQqbksiYJAJmOw/1WUct
+X-Gm-Gg: Acq92OG6ONC5Ou8CoWnMY2iGmq1vgIS4kXgJP+g3/K44eaLmZB5AKgkeP3Eq23T4DK0
+	LaI/AFX27uu7n6VZ3LvtvCisJEHwUFhINmURXYIar06K0Zcqf75ecJ+F92z2GwMS/8w1zzQMxOZ
+	6frAon4HchYc93o4JKC6FThRFYhaQQo/f6jDCAKwLB1UYV6m3x9xTE5d2vltBVvPTx8ZDu2XcPP
+	tbkvYP8RcM1iE6J1xE/bxNs19+86nV7jlinSmYx5Rem/M2LLYZT1JnWyX0weuyn4zt5ckbJocMl
+	dTbhX1i4lfYPx9oEHJldZ2aQHnv6n2mZidWh2OD9QNlGq96oujZRJTh6z4HrI0E5Z1CnQEYHVT8
+	Ip1ZZLnPx3gY4czPQG2UTGBUcXFaAaFNE6c8Tm+UyYpd+7YHiMyV6NZrPLSbraJYXGSeDNPE84u
+	5ag1etd5fMFQzXzUEI24vK4zLn0DEWe14lSSmOleoxVkyCTm6g4w==
+X-Received: by 2002:a05:600c:4510:b0:48a:53ea:140b with SMTP id 5b1f17b1804b1-490428ddf15mr159551045e9.28.1779624918271;
+        Sun, 24 May 2026 05:15:18 -0700 (PDT)
+Received: from localhost ([2a03:32c0:9005:2192:cf9:7a62:a7e9:23f0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4904526ca21sm172443025e9.3.2026.05.24.05.15.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2026 20:34:51 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
-To: platform-driver-x86@vger.kernel.org
+        Sun, 24 May 2026 05:15:17 -0700 (PDT)
+From: Shaposhnikov Daniil <2minesweeper2@gmail.com>
+To: hansg@kernel.org
 Cc: ilpo.jarvinen@linux.intel.com,
-	krishna.chomal108@gmail.com,
-	radheykalra901@gmail.com
-Subject: [PATCH v7 3/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-Date: Sun, 24 May 2026 09:04:24 +0530
-Message-ID: <20260524033424.61847-4-radheykalra901@gmail.com>
+	ayman.bagabas@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shaposhnikov Daniil <2minesweeper2@gmail.com>
+Subject: [PATCH] platform/x86: huawei-wmi: add ACPI fallback for Fn-lock on newer models
+Date: Sun, 24 May 2026 17:15:09 +0500
+Message-ID: <20260524121510.36961-1-2minesweeper2@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260524033424.61847-1-radheykalra901@gmail.com>
-References: <20260524033424.61847-1-radheykalra901@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
-the existing Victus fan-speed WMI control path. Add board data for the
-Victus S thermal-profile path and fan-control support.
+Newer Huawei laptops (e.g. FLMH-XX / MateBook 14 2024) no longer support
+the legacy WMI interface for Fn-lock control. Instead, they expose direct
+ACPI methods \GFRS and \SFRS (Get/Set Fn key Reversal Status) which
+communicate with the EC via registers 0x6B (read) and 0x6C (write).
 
-Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
+Add huawei_acpi_fn_lock_get() and huawei_acpi_fn_lock_set() helpers that
+use acpi_evaluate_object() to call these methods. Both
+huawei_wmi_fn_lock_get() and huawei_wmi_fn_lock_set() now probe for
+\GFRS/\SFRS via acpi_has_method() first and fall back to the legacy WMI
+path if not present.
+
+Tested on: HUAWEI FLMH-XX (MateBook 14 2024),
+CachyOS (kernel 7.0.9-1-cachyos).
+
+Signed-off-by: Shaposhnikov Daniil <2minesweeper2@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/huawei-wmi.c | 95 +++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 6fd99b6..a25b12c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -170,6 +170,11 @@ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
- 	.fan_profile		= &victus_s_fan_profile_params,
- };
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 93cca17fdf58..19cd8f1a8e33 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -527,11 +527,101 @@ static void huawei_wmi_battery_exit(struct device *dev)
  
-+static const struct hp_wmi_board_params victus_8a3d_board_params = {
-+	.thermal_profile	= &victus_s_thermal_params,
-+	.fan_profile		= &victus_s_fan_profile_params,
-+};
+ /* Fn lock */
+ 
++/*
++ * Newer Huawei models (e.g. HUAWEI FLMH-XX / MateBook 14 2024) use direct
++ * ACPI methods \GFRS / \SFRS (Get/Set Fn key Reversal Status) to control
++ * Fn-lock via EC registers 0x6B (read) and 0x6C (write).
++ *
++ * GFRS response buffer layout:
++ *   byte[0] = STAT (0 = success)
++ *   byte[1] = 0x01 (fn-lock off) or 0x02 (fn-lock on)
++ *
++ * SFRS argument layout (CreateByteField(Arg0, 0x02, FRSR)):
++ *   Value is read from byte[2] of the integer argument, so it must be
++ *   passed as (value << 16):
++ *   (1 << 16) = fn-lock off (writes 0x55 to EC 0x6C)
++ *   (2 << 16) = fn-lock on  (writes 0x5A to EC 0x6C)
++ */
 +
- static const struct hp_wmi_board_params *active_board_params;
++static int huawei_acpi_fn_lock_get(int *on)
++{
++	union acpi_object acpi_arg, *obj;
++	struct acpi_object_list arg_list = { .count = 1, .pointer = &acpi_arg };
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	acpi_status status;
++	u8 val;
++
++	acpi_arg.type = ACPI_TYPE_INTEGER;
++	acpi_arg.integer.value = 0;
++
++	status = acpi_evaluate_object(NULL, "\\GFRS", &arg_list, &output);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	obj = output.pointer;
++	if (!obj || obj->type != ACPI_TYPE_BUFFER || obj->buffer.length < 2) {
++		kfree(obj);
++		return -ENODATA;
++	}
++
++	/* byte[0] = STAT (0 = success), byte[1] = 1 (off) or 2 (on) */
++	if (obj->buffer.pointer[0] != 0) {
++		kfree(obj);
++		return -EIO;
++	}
++
++	val = obj->buffer.pointer[1];
++	if (val != 1 && val != 2) {
++		kfree(obj);
++		return -ENODATA;
++	}
++
++	if (on)
++		*on = val - 1; /* 1→0 (off), 2→1 (on) */
++
++	kfree(obj);
++	return 0;
++}
++
++static int huawei_acpi_fn_lock_set(int on)
++{
++	union acpi_object acpi_arg, *obj;
++	struct acpi_object_list arg_list = { .count = 1, .pointer = &acpi_arg };
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	acpi_status status;
++	int ret = 0;
++
++	/*
++	 * SFRS reads byte[2] of its argument via CreateByteField(Arg0, 0x02).
++	 * on=0 → FRSR=1 → EC gets 0x55 (fn-lock off)
++	 * on=1 → FRSR=2 → EC gets 0x5A (fn-lock on)
++	 */
++	acpi_arg.type = ACPI_TYPE_INTEGER;
++	acpi_arg.integer.value = (u64)(on + 1) << 16;
++
++	status = acpi_evaluate_object(NULL, "\\SFRS", &arg_list, &output);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
++	obj = output.pointer;
++	if (obj && obj->type == ACPI_TYPE_BUFFER &&
++	    obj->buffer.length >= 1 && obj->buffer.pointer[0] != 0)
++		ret = -EIO;
++
++	kfree(obj);
++	return ret;
++}
++
+ static int huawei_wmi_fn_lock_get(int *on)
+ {
+ 	u8 ret[0x100] = { 0 };
+ 	int err, i;
  
- static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
-@@ -230,6 +235,10 @@ static const char * const victus_thermal_profile_boards[] = {
++	/* Newer models: use direct ACPI \GFRS method */
++	if (acpi_has_method(NULL, "\\GFRS"))
++		return huawei_acpi_fn_lock_get(on);
++
++	/* Legacy WMI fallback */
+ 	err = huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
+ 	if (err)
+ 		return err;
+@@ -550,6 +640,11 @@ static int huawei_wmi_fn_lock_set(int on)
+ {
+ 	union hwmi_arg arg;
  
- /* DMI board-specific feature data for Omen and Victus laptops. */
- static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
-+		.driver_data = (void *)&victus_8a3d_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
++	/* Newer models: use direct ACPI \SFRS method */
++	if (acpi_has_method(NULL, "\\SFRS"))
++		return huawei_acpi_fn_lock_set(on);
++
++	/* Legacy WMI fallback */
+ 	arg.cmd = FN_LOCK_SET;
+ 	arg.args[2] = on + 1; // 0 undefined, 1 off, 2 on.
+ 
 -- 
 2.54.0
 
