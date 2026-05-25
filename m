@@ -1,109 +1,248 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0AA2F7EE7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 10:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BB9340260;
+	Mon, 25 May 2026 10:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779703315; cv=none; b=LuAN0akR5IYBtFr45qTSYm5weJGa/PU6trYuiOetvXn8AUfM780kTKLdqMNR2QoYqhkPWZYYUrIIIXPKMOsJAme9bGVEKsyW2WOoOrZ090mwLaKUC4Kh2NSMVp3QKbIXhC+gOwjZpEY4D2bF3i329sI842iAE+ZJhC9s6B07yWk=
+	t=1779704194; cv=none; b=lQH/axivZNt6TRkRE8r93ABEailMqNh0RK6fsUypUZK6GlQRlXTCszYLiaM9jA0w2QnOsblcX91wLcZdX6OyV75lf/EZ4pfqQEHG1JaP0cPhvvlqG8VAvbWJ4+fjHJhVSzjYgMpi+x6HheE5jvPPEaaja6XoXSNlBiU137ldcTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779703315; c=relaxed/simple;
-	bh=XaUik8r9RVpC2RC55aua4lGKMtDpbQOmquwbW6IqBx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUUIo9uSAtf11JKV4e8n+iRcK9Hf+Wjlfq68vJWOvKJWZsq84FM5KiWaHhNtl2XYac+xeUO9tUtIOeMOD1vsH3rRO2Eb5zgGSbdL0o4fRIKFiNoom1cCBtqXR/bgNXoqnGPRoGoUV4HRu27sZmBpdAIlwnJKT8uo+SpetsLsC1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhesMD9J; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779704194; c=relaxed/simple;
+	bh=kXQKyuNoR10/af3/KPUHoHNKiLu3BMVlmqGRhI/Hjsc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=X8GPI6FPbN1ZYcNQ8Xnu1vLbNnt7ipUegtluun7QtZTy7LW5twR8bjIh3t72sQUmPRudvAwsRI0ACV6pAjEGROOubQjAj9enxWGcyC8LE498+55/Fl9B36poAmr79N9DW375FinNEyTJWG1uz1jQOeqdKZ+0Zg/0tmFTRN6Civ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5yOj1pC; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhesMD9J"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5aa21fa024cso7015060e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 03:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779703312; x=1780308112; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IFlJyIGslUHXmHpxj2/6McIIq+IKd5/lpNvRUgEESi0=;
-        b=bhesMD9JRkdIc6B1IJrDAxmg8H4P4N7HQ71+cQ8hm5+PfV2iJhQToRXbppD16xDecC
-         aTk8tSHnSEM3d/jd29ZWjMgyo8/es9FopmYTp+GivRbKYYdNWCNASrlhAVg5JWSZvKG4
-         v/bmiP36sSXnpc/eIK0F3K2DoTpQfyL/VHux4JG1X18wd9k7M2h4ggz8RibVF/YaDEG8
-         2x/koURgidl0VROQzPTlVOXj2ShmFG0AyrL6QVioV/ZD1uLIhTNIMBeSjHOHdrjRpZMC
-         D8ESVu0HdI7kIm2PHgh1WjjSBNoBsH4yl3gcLj1yng0ijVlu2DaKRnDBdh8kauXVUhKs
-         fMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779703312; x=1780308112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IFlJyIGslUHXmHpxj2/6McIIq+IKd5/lpNvRUgEESi0=;
-        b=Ieu4OililqxwULJapJfFhzw70CAXpWzo/4Kg3OkkvPHf/uu+VbGp+O6DkKDZLt+OVA
-         fguCEtI6yrPjKlxO2OW68iks1+lSZr9CytcRdppaoIBS5sJak5wciIaVlsuV6KMoIMxe
-         MHezhp5YKmZS3tobY91UW+rwSuexUj/WgzZEoCpGf8EnQSc3uOxbAJALo+JqoAj8ewMp
-         E7e/41m3pmygZdu7oz52jwXBY54evMvzrUa343Kn7Ua+nWxqr200DKTU1k3pOjSphCHB
-         /JtQfczzol4k263i4oF4fBIcMf9QfiZysOxfgdRNtLi760Jj9NZqZntM6BGZmDqfORtp
-         DtQg==
-X-Gm-Message-State: AOJu0Yz6GSpZWHKdJE4S1FqkMng/HaCs7OHSA9k3OV8dItDZdhnqdorj
-	uNTEZD87kOjez6dNqSWiymdHh7ol24U0Q5sNp44bNaHkhq/cwfpKyIaSJ8lUEsgMB95T/A==
-X-Gm-Gg: Acq92OEeOVCzn8+Li/+PJUUzqQKaBrLT4LYAoZ2bBdni85mMh4Ba6eoABPlk8lWo8X4
-	qvv+V5Shwpv7SL5MzrfvOpKq8LoUfME5eGsb/q2KPsoAHkXW7g/gtlEwXGTepBhu2VHu2ZLWYB6
-	7lTf7j9vxa0L/HW8yReJJGi+ffE3T8SueWeBD8VLSDxN+4u9Fi/5P+BbPzhQZNIfycRQnxcuDtK
-	7bhP8qtEYDXrClAblMFMOubHjs3ZDJsVpEd5Z5+WkQweNqoaFG5oU7YCWQkoKe43VaL7iRryP+r
-	r8ETqvTXB38QLa7H9YNqbH9wXeQYndM0wqlfV5Lz/gwsaOOYATpLcufJiyEM9FbV9IApgoRng3x
-	fso5b/cTZMLf3g4a0a1Yu9+kISz9zZ0zicYbxXLh9O4TtTsos0GmupBtn2qXeQDii4SzigUoqzs
-	piBMv8zSRfflAkhft7I+ZqRsYVp4pM
-X-Received: by 2002:a05:6512:65dc:10b0:5a4:1902:3d17 with SMTP id 2adb3069b0e04-5aa3239b51emr3114043e87.12.1779703312148;
-        Mon, 25 May 2026 03:01:52 -0700 (PDT)
-Received: from Katana ([89.208.127.113])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-395dcc0a4eesm22287831fa.27.2026.05.25.03.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2026 03:01:51 -0700 (PDT)
-From: Gleb Sonichev <sonichev555@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Gleb Sonichev <sonichev555@gmail.com>
-Subject: [PATCH] platform/x86: dell-laptop: add Inspiron N5110 to touchpad LED quirk table
-Date: Mon, 25 May 2026 13:00:47 +0300
-Message-ID: <20260525100047.20046-1-sonichev555@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5yOj1pC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779704191; x=1811240191;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kXQKyuNoR10/af3/KPUHoHNKiLu3BMVlmqGRhI/Hjsc=;
+  b=M5yOj1pC6/FpZklptfe0EUsB8KK35ciYbUS8fVCEkiLE1zclADNQ76fx
+   55Zgg5c/B8Nv5Vza+I7LWnzzhBl9cghX4+qTecT/V/TfqBTa6Xl2NWGcG
+   OoWntTl0Lwj5qWnv4tGdDH5MDBhWxnUJUNyAGQlJ3iYUhAENp9wt0486T
+   Bj/DypnU0MWW7p/Yi/K9rHyE7rgMr0TSi5CQyrztXx7L+Ou+zbFta2zqu
+   ZLtk+X1zR3iaUkYRr5JzqMIyeJFIoeCDq2245wCkrvHEHSr/EiOFpSAoW
+   EcKTaIDvj3DIyj5ilB0jqMojItJItDO7KVlz8q307ynxwi1+2UyLG6DEJ
+   A==;
+X-CSE-ConnectionGUID: h5XLsypGS9mpfuH3eCLMRQ==
+X-CSE-MsgGUID: +8fA+HQ5T4eeqepmLODSnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="80641860"
+X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
+   d="scan'208";a="80641860"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 03:16:31 -0700
+X-CSE-ConnectionGUID: u1sULx+tQJO5PkOu6j4DPw==
+X-CSE-MsgGUID: 0n4KQEN1SYOlZli5eLZWlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
+   d="scan'208";a="238994076"
+Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 03:16:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 25 May 2026 13:16:25 +0300 (EEST)
+To: Shaposhnikov Daniil <2minesweeper2@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, ayman.bagabas@gmail.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: huawei-wmi: add ACPI fallback for Fn-lock
+ on newer models
+In-Reply-To: <20260524121510.36961-1-2minesweeper2@gmail.com>
+Message-ID: <22a07bfe-5c60-82be-9d4a-56ff2a29bdba@linux.intel.com>
+References: <20260524121510.36961-1-2minesweeper2@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1521604307-1779704185=:1159"
 
-The Inspiron N5110 needs the touchpad LED quirk (Vostro V130 quirk)
-to properly control the touchpad LED. Add its DMI identifier
-to the existing quirk table, next to the similar Inspiron M5110 entry.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Tested on Dell Inspiron N5110.
-The touchpad LED works correctly with this quirk enabled.
+--8323328-1521604307-1779704185=:1159
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Gleb Sonichev <sonichev555@gmail.com>
----
- drivers/platform/x86/dell/dell-laptop.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On Sun, 24 May 2026, Shaposhnikov Daniil wrote:
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 57748c3ea24f..7fc3bbb8c4a4 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -222,6 +222,15 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_dell_vostro_v130,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Dell Inspiron N5110",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron N5110"),
-+		},
-+		.driver_data = &quirk_dell_vostro_v130,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Dell Vostro 3360",
--- 
-2.54.0
+> Newer Huawei laptops (e.g. FLMH-XX / MateBook 14 2024) no longer support
+> the legacy WMI interface for Fn-lock control. Instead, they expose direct
+> ACPI methods \GFRS and \SFRS (Get/Set Fn key Reversal Status) which
+> communicate with the EC via registers 0x6B (read) and 0x6C (write).
+>=20
+> Add huawei_acpi_fn_lock_get() and huawei_acpi_fn_lock_set() helpers that
+> use acpi_evaluate_object() to call these methods. Both
+> huawei_wmi_fn_lock_get() and huawei_wmi_fn_lock_set() now probe for
+> \GFRS/\SFRS via acpi_has_method() first and fall back to the legacy WMI
+> path if not present.
+>=20
+> Tested on: HUAWEI FLMH-XX (MateBook 14 2024),
+> CachyOS (kernel 7.0.9-1-cachyos).
+>=20
+> Signed-off-by: Shaposhnikov Daniil <2minesweeper2@gmail.com>
+> ---
+>  drivers/platform/x86/huawei-wmi.c | 95 +++++++++++++++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/hua=
+wei-wmi.c
+> index 93cca17fdf58..19cd8f1a8e33 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -527,11 +527,101 @@ static void huawei_wmi_battery_exit(struct device =
+*dev)
+> =20
+>  /* Fn lock */
+> =20
+> +/*
+> + * Newer Huawei models (e.g. HUAWEI FLMH-XX / MateBook 14 2024) use dire=
+ct
+> + * ACPI methods \GFRS / \SFRS (Get/Set Fn key Reversal Status) to contro=
+l
+> + * Fn-lock via EC registers 0x6B (read) and 0x6C (write).
+> + *
+> + * GFRS response buffer layout:
+> + *   byte[0] =3D STAT (0 =3D success)
+> + *   byte[1] =3D 0x01 (fn-lock off) or 0x02 (fn-lock on)
+> + *
+> + * SFRS argument layout (CreateByteField(Arg0, 0x02, FRSR)):
+> + *   Value is read from byte[2] of the integer argument, so it must be
+> + *   passed as (value << 16):
+> + *   (1 << 16) =3D fn-lock off (writes 0x55 to EC 0x6C)
+> + *   (2 << 16) =3D fn-lock on  (writes 0x5A to EC 0x6C)
+> + */
+> +
+> +static int huawei_acpi_fn_lock_get(int *on)
+> +{
+> +=09union acpi_object acpi_arg, *obj;
+> +=09struct acpi_object_list arg_list =3D { .count =3D 1, .pointer =3D &ac=
+pi_arg };
+> +=09struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +=09acpi_status status;
+> +=09u8 val;
+> +
+> +=09acpi_arg.type =3D ACPI_TYPE_INTEGER;
+> +=09acpi_arg.integer.value =3D 0;
+> +
+> +=09status =3D acpi_evaluate_object(NULL, "\\GFRS", &arg_list, &output);
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return -EIO;
+> +
+> +=09obj =3D output.pointer;
 
+You must use __free() here to avoid duplicating kfree() (move the=20
+variable declaration mid-function).
+
+> +=09if (!obj || obj->type !=3D ACPI_TYPE_BUFFER || obj->buffer.length < 2=
+) {
+> +=09=09kfree(obj);
+> +=09=09return -ENODATA;
+> +=09}
+> +
+> +=09/* byte[0] =3D STAT (0 =3D success), byte[1] =3D 1 (off) or 2 (on) */
+> +=09if (obj->buffer.pointer[0] !=3D 0) {
+> +=09=09kfree(obj);
+> +=09=09return -EIO;
+> +=09}
+> +
+> +=09val =3D obj->buffer.pointer[1];
+> +=09if (val !=3D 1 && val !=3D 2) {
+
+These magic literals should be replaced with using named defines.
+
+> +=09=09kfree(obj);
+> +=09=09return -ENODATA;
+> +=09}
+> +
+> +=09if (on)
+> +=09=09*on =3D val - 1; /* 1=E2=86=920 (off), 2=E2=86=921 (on) */
+
+This too is unnecessarily cryptic (on a non-performance critical path).
+
+One option would be to convert these two if blocks into a single=20
+switch/case. You need to duplicate the if (on) to both case blocks but=20
+that doesn't look too bad.
+
+> +
+> +=09kfree(obj);
+> +=09return 0;
+> +}
+> +
+> +static int huawei_acpi_fn_lock_set(int on)
+> +{
+> +=09union acpi_object acpi_arg, *obj;
+> +=09struct acpi_object_list arg_list =3D { .count =3D 1, .pointer =3D &ac=
+pi_arg };
+> +=09struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
+> +=09acpi_status status;
+> +=09int ret =3D 0;
+> +
+> +=09/*
+> +=09 * SFRS reads byte[2] of its argument via CreateByteField(Arg0, 0x02)=
+=2E
+> +=09 * on=3D0 =E2=86=92 FRSR=3D1 =E2=86=92 EC gets 0x55 (fn-lock off)
+> +=09 * on=3D1 =E2=86=92 FRSR=3D2 =E2=86=92 EC gets 0x5A (fn-lock on)
+> +=09 */
+> +=09acpi_arg.type =3D ACPI_TYPE_INTEGER;
+> +=09acpi_arg.integer.value =3D (u64)(on + 1) << 16;
+
+Please make a named define instead.
+
+The cast looks unnecessary.
+
+> +
+> +=09status =3D acpi_evaluate_object(NULL, "\\SFRS", &arg_list, &output);
+> +=09if (ACPI_FAILURE(status))
+> +=09=09return -EIO;
+> +
+> +=09obj =3D output.pointer;
+
+As with above, please use __free()...
+
+> +=09if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER &&
+> +=09    obj->buffer.length >=3D 1 && obj->buffer.pointer[0] !=3D 0)
+> +=09=09ret =3D -EIO;
+
+=2E..This can then return immediately.
+
+> +
+> +=09kfree(obj);
+> +=09return ret;
+> +}
+> +
+>  static int huawei_wmi_fn_lock_get(int *on)
+>  {
+>  =09u8 ret[0x100] =3D { 0 };
+>  =09int err, i;
+> =20
+> +=09/* Newer models: use direct ACPI \GFRS method */
+> +=09if (acpi_has_method(NULL, "\\GFRS"))
+> +=09=09return huawei_acpi_fn_lock_get(on);
+> +
+> +=09/* Legacy WMI fallback */
+>  =09err =3D huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
+>  =09if (err)
+>  =09=09return err;
+> @@ -550,6 +640,11 @@ static int huawei_wmi_fn_lock_set(int on)
+>  {
+>  =09union hwmi_arg arg;
+> =20
+> +=09/* Newer models: use direct ACPI \SFRS method */
+> +=09if (acpi_has_method(NULL, "\\SFRS"))
+> +=09=09return huawei_acpi_fn_lock_set(on);
+> +
+> +=09/* Legacy WMI fallback */
+>  =09arg.cmd =3D FN_LOCK_SET;
+>  =09arg.args[2] =3D on + 1; // 0 undefined, 1 off, 2 on.
+> =20
+>=20
+
+--=20
+ i.
+
+--8323328-1521604307-1779704185=:1159--
