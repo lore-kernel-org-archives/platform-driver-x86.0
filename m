@@ -1,248 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BB9340260;
-	Mon, 25 May 2026 10:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28414346E72
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 10:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779704194; cv=none; b=lQH/axivZNt6TRkRE8r93ABEailMqNh0RK6fsUypUZK6GlQRlXTCszYLiaM9jA0w2QnOsblcX91wLcZdX6OyV75lf/EZ4pfqQEHG1JaP0cPhvvlqG8VAvbWJ4+fjHJhVSzjYgMpi+x6HheE5jvPPEaaja6XoXSNlBiU137ldcTM=
+	t=1779704554; cv=none; b=IfkKKABHWK88TsfpfmbyJD+YxqbwoI4ekWTR2kFVPhFxXK9AotR3hHOqfWrTb6vLr4xcFzQMqlKONhBf7afZ4/+txAQZ2PROlvglFhpLa4CnAeSMckKkSRNKTdz28IKyYdLJKTXDilyQALKIBYGnjQCQ8SE1Wp1KPPlLuRGE/8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779704194; c=relaxed/simple;
-	bh=kXQKyuNoR10/af3/KPUHoHNKiLu3BMVlmqGRhI/Hjsc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=X8GPI6FPbN1ZYcNQ8Xnu1vLbNnt7ipUegtluun7QtZTy7LW5twR8bjIh3t72sQUmPRudvAwsRI0ACV6pAjEGROOubQjAj9enxWGcyC8LE498+55/Fl9B36poAmr79N9DW375FinNEyTJWG1uz1jQOeqdKZ+0Zg/0tmFTRN6Civ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M5yOj1pC; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779704554; c=relaxed/simple;
+	bh=CgvjRepLEJgFdo3A5HB6K2CcEmpnfY/BjLP7aUl1kfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZpELKF2cLTF8KFjxv/grb+NoVdaX0+QzlZqnaqjSrA3PWOHw5pv5sjDYUvyH4i03m5EBJVsmOsoteSStsnk2UwLUP49DPyUKH85CklgOYy9sjqDYbOiLi1eIN/f0RkHCXFmdEex57QTLDIZ3Tbx/U40iCo32B63W+bY0o61Lv2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bF1MSqVq; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M5yOj1pC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779704191; x=1811240191;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kXQKyuNoR10/af3/KPUHoHNKiLu3BMVlmqGRhI/Hjsc=;
-  b=M5yOj1pC6/FpZklptfe0EUsB8KK35ciYbUS8fVCEkiLE1zclADNQ76fx
-   55Zgg5c/B8Nv5Vza+I7LWnzzhBl9cghX4+qTecT/V/TfqBTa6Xl2NWGcG
-   OoWntTl0Lwj5qWnv4tGdDH5MDBhWxnUJUNyAGQlJ3iYUhAENp9wt0486T
-   Bj/DypnU0MWW7p/Yi/K9rHyE7rgMr0TSi5CQyrztXx7L+Ou+zbFta2zqu
-   ZLtk+X1zR3iaUkYRr5JzqMIyeJFIoeCDq2245wCkrvHEHSr/EiOFpSAoW
-   EcKTaIDvj3DIyj5ilB0jqMojItJItDO7KVlz8q307ynxwi1+2UyLG6DEJ
-   A==;
-X-CSE-ConnectionGUID: h5XLsypGS9mpfuH3eCLMRQ==
-X-CSE-MsgGUID: +8fA+HQ5T4eeqepmLODSnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="80641860"
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="80641860"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 03:16:31 -0700
-X-CSE-ConnectionGUID: u1sULx+tQJO5PkOu6j4DPw==
-X-CSE-MsgGUID: 0n4KQEN1SYOlZli5eLZWlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="238994076"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 03:16:29 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 25 May 2026 13:16:25 +0300 (EEST)
-To: Shaposhnikov Daniil <2minesweeper2@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, ayman.bagabas@gmail.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: huawei-wmi: add ACPI fallback for Fn-lock
- on newer models
-In-Reply-To: <20260524121510.36961-1-2minesweeper2@gmail.com>
-Message-ID: <22a07bfe-5c60-82be-9d4a-56ff2a29bdba@linux.intel.com>
-References: <20260524121510.36961-1-2minesweeper2@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bF1MSqVq"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-841513664bbso2088875b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 03:22:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779704552; x=1780309352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WOdAlwMgVRhURs3aQ/KpZ+S0DgSBMZniTufqWqYUDhM=;
+        b=bF1MSqVq/wvrrvFbt84PfPaofzlLkdi9lS4FjuO5MVSOzrSeT65i0+2YNUHD4ZcFOT
+         bvFuxQ2RMo7ax6wyEsmquToSJfkr6gJjVBFmeEIHn5UAGndAheiqxxtwHsu6jYP8RkX2
+         jZsksVtq7kxvSHwe6zqvNztUxWhtkSYKUN5FZabavUEOXxZ0Tn1TCemFRgnlvc35W4KK
+         JDxXt6YCUyq7oBKuuf962LSv9b9VWdQ83ohovrGDKtn2NwHnUnvHEpvmmr5WhkzFSpjx
+         ahpcIbNZLLXitqGDe2eK9EY7Bak2suS1BY5iztr0Krx2ZEzIMeqTIlLmCKJA10KovHbq
+         B/+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779704552; x=1780309352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WOdAlwMgVRhURs3aQ/KpZ+S0DgSBMZniTufqWqYUDhM=;
+        b=rpr9iwAKjavRxy8uIka706gmiXRqLkx/mwk105e3pxCafw8AU/snLhoiixTv7ttSuX
+         74Xt85Vdc4FwriyJWgbPylPclRZKGzLJiBu+6DNroaxaDfO8BWv+4g1nkQU7SIwURSj0
+         Wp1ChkES4pDfC+vgQUb/WnhVrkbDLZC1CEQlqLqJO1N9FQusY8J+Ci+6SgkyxLbrOjh7
+         DiW5CExuaItCcdcZCCp6FAQFSjd7i7WHaYGSMIFTorLm6F9yv75F0GVNYq027ItQNpxo
+         IgL9rr4KzPdbF0WhuWLOayuDTvQJjjKdKJWTA0viI/2aJgb9IKUNA0WRXiwrTN1h31M6
+         BKiw==
+X-Gm-Message-State: AOJu0YzrqYWhk3sI6PdJP2Jj1jxVcnIFHkh/IiSi2v4/moF3rn317wxJ
+	LKGRhwj9/VrZN1JwFi7E7JbRS+JNQSR53cPoPDf3XLXGRQJUa8rZiG1z
+X-Gm-Gg: Acq92OG8QdCSV15NdgPl6N4QMjGQznujJ2YDC5fSlBg3+N9HaQFj1mpd/DrPxdaNeWM
+	OAazGyejzDx8IsnI2yZDYdW5PpR3Z0XCcnCrwGcYpfcTVFaISjrA4peb94OPj0GUVCo+1/BDNps
+	/6vKG1v3Xq1UBs5RktcgdMPdQNS2vN6MY6RzW+P9X6H+xvpXd1xhukHI0faR2kyY7WYNttLAawN
+	JZLnpfabCweh0OtUsxlenf2+vBw5tnlrdLMZvuSGnduZw1tT9rE3nEOQVDKWkzLKXW1GmyjRocx
+	kcpKyQH6Vj0ZUsMu36HxyLjnfIPzLvnSD5ejqJ4iYUDf9p05KaRoO2pcBaHI+zsss1AFiDqrmb8
+	jQaeCl1KxP1mKjki7Ex51eazSh569RNTfD+SWQSYDBwQcjSAwPipSZWH+WSRTroz5iHukOndpER
+	sw4+C+5LQaaQEVPPce5qY56dkF2PJPtYWR5/dcdsL0phzTd33LeNmymOedBOTJuNDY+BBB1ZVTL
+	LgwF0dl4Ob8RNSGjSql
+X-Received: by 2002:a05:6a00:2d9c:b0:82a:146d:36a3 with SMTP id d2e1a72fcca58-84161197e43mr10255565b3a.21.1779704552426;
+        Mon, 25 May 2026 03:22:32 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225f:36f2:f474:be1d:cad7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84164fbb66bsm8970812b3a.45.2026.05.25.03.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2026 03:22:32 -0700 (PDT)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>,
+	=?UTF-8?q?Alberto=20Esca=C3=B1o?= <alberto_e_88@yahoo.es>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: hp-wmi: Add support for Omen 16-ap0xxx (8D26)
+Date: Mon, 25 May 2026 15:52:26 +0530
+Message-ID: <20260525102226.56300-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1521604307-1779704185=:1159"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1521604307-1779704185=:1159
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
 
-On Sun, 24 May 2026, Shaposhnikov Daniil wrote:
+The HP Omen 16-ap0xxx (board ID: 8D26) has the same WMI interface as
+other Victus S boards, but requires quirks for correctly switching
+thermal profile.
 
-> Newer Huawei laptops (e.g. FLMH-XX / MateBook 14 2024) no longer support
-> the legacy WMI interface for Fn-lock control. Instead, they expose direct
-> ACPI methods \GFRS and \SFRS (Get/Set Fn key Reversal Status) which
-> communicate with the EC via registers 0x6B (read) and 0x6C (write).
->=20
-> Add huawei_acpi_fn_lock_get() and huawei_acpi_fn_lock_set() helpers that
-> use acpi_evaluate_object() to call these methods. Both
-> huawei_wmi_fn_lock_get() and huawei_wmi_fn_lock_set() now probe for
-> \GFRS/\SFRS via acpi_has_method() first and fall back to the legacy WMI
-> path if not present.
->=20
-> Tested on: HUAWEI FLMH-XX (MateBook 14 2024),
-> CachyOS (kernel 7.0.9-1-cachyos).
->=20
-> Signed-off-by: Shaposhnikov Daniil <2minesweeper2@gmail.com>
-> ---
->  drivers/platform/x86/huawei-wmi.c | 95 +++++++++++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/hua=
-wei-wmi.c
-> index 93cca17fdf58..19cd8f1a8e33 100644
-> --- a/drivers/platform/x86/huawei-wmi.c
-> +++ b/drivers/platform/x86/huawei-wmi.c
-> @@ -527,11 +527,101 @@ static void huawei_wmi_battery_exit(struct device =
-*dev)
-> =20
->  /* Fn lock */
-> =20
-> +/*
-> + * Newer Huawei models (e.g. HUAWEI FLMH-XX / MateBook 14 2024) use dire=
-ct
-> + * ACPI methods \GFRS / \SFRS (Get/Set Fn key Reversal Status) to contro=
-l
-> + * Fn-lock via EC registers 0x6B (read) and 0x6C (write).
-> + *
-> + * GFRS response buffer layout:
-> + *   byte[0] =3D STAT (0 =3D success)
-> + *   byte[1] =3D 0x01 (fn-lock off) or 0x02 (fn-lock on)
-> + *
-> + * SFRS argument layout (CreateByteField(Arg0, 0x02, FRSR)):
-> + *   Value is read from byte[2] of the integer argument, so it must be
-> + *   passed as (value << 16):
-> + *   (1 << 16) =3D fn-lock off (writes 0x55 to EC 0x6C)
-> + *   (2 << 16) =3D fn-lock on  (writes 0x5A to EC 0x6C)
-> + */
-> +
-> +static int huawei_acpi_fn_lock_get(int *on)
-> +{
-> +=09union acpi_object acpi_arg, *obj;
-> +=09struct acpi_object_list arg_list =3D { .count =3D 1, .pointer =3D &ac=
-pi_arg };
-> +=09struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> +=09acpi_status status;
-> +=09u8 val;
-> +
-> +=09acpi_arg.type =3D ACPI_TYPE_INTEGER;
-> +=09acpi_arg.integer.value =3D 0;
-> +
-> +=09status =3D acpi_evaluate_object(NULL, "\\GFRS", &arg_list, &output);
-> +=09if (ACPI_FAILURE(status))
-> +=09=09return -EIO;
-> +
-> +=09obj =3D output.pointer;
+Add the DMI board name to victus_s_thermal_profile_boards[] table and
+map it to omen_v1_legacy_thermal_params.
 
-You must use __free() here to avoid duplicating kfree() (move the=20
-variable declaration mid-function).
+Testing on board 8D26 confirmed that platform profile is registered
+successfully and fan RPMs are readable and controllable.
 
-> +=09if (!obj || obj->type !=3D ACPI_TYPE_BUFFER || obj->buffer.length < 2=
-) {
-> +=09=09kfree(obj);
-> +=09=09return -ENODATA;
-> +=09}
-> +
-> +=09/* byte[0] =3D STAT (0 =3D success), byte[1] =3D 1 (off) or 2 (on) */
-> +=09if (obj->buffer.pointer[0] !=3D 0) {
-> +=09=09kfree(obj);
-> +=09=09return -EIO;
-> +=09}
-> +
-> +=09val =3D obj->buffer.pointer[1];
-> +=09if (val !=3D 1 && val !=3D 2) {
+Tested-by: Alberto Escaño <alberto_e_88@yahoo.es>
+Reported-by: Alberto Escaño <alberto_e_88@yahoo.es>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221514
+Cc: <stable@vger.kernel.org> # v6.18+
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-These magic literals should be replaced with using named defines.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index d1cc6e7d176c..a2ec303f60b0 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -241,6 +241,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D26") },
++		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+ 		.driver_data = (void *)&victus_s_thermal_params,
+-- 
+2.54.0
 
-> +=09=09kfree(obj);
-> +=09=09return -ENODATA;
-> +=09}
-> +
-> +=09if (on)
-> +=09=09*on =3D val - 1; /* 1=E2=86=920 (off), 2=E2=86=921 (on) */
-
-This too is unnecessarily cryptic (on a non-performance critical path).
-
-One option would be to convert these two if blocks into a single=20
-switch/case. You need to duplicate the if (on) to both case blocks but=20
-that doesn't look too bad.
-
-> +
-> +=09kfree(obj);
-> +=09return 0;
-> +}
-> +
-> +static int huawei_acpi_fn_lock_set(int on)
-> +{
-> +=09union acpi_object acpi_arg, *obj;
-> +=09struct acpi_object_list arg_list =3D { .count =3D 1, .pointer =3D &ac=
-pi_arg };
-> +=09struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> +=09acpi_status status;
-> +=09int ret =3D 0;
-> +
-> +=09/*
-> +=09 * SFRS reads byte[2] of its argument via CreateByteField(Arg0, 0x02)=
-=2E
-> +=09 * on=3D0 =E2=86=92 FRSR=3D1 =E2=86=92 EC gets 0x55 (fn-lock off)
-> +=09 * on=3D1 =E2=86=92 FRSR=3D2 =E2=86=92 EC gets 0x5A (fn-lock on)
-> +=09 */
-> +=09acpi_arg.type =3D ACPI_TYPE_INTEGER;
-> +=09acpi_arg.integer.value =3D (u64)(on + 1) << 16;
-
-Please make a named define instead.
-
-The cast looks unnecessary.
-
-> +
-> +=09status =3D acpi_evaluate_object(NULL, "\\SFRS", &arg_list, &output);
-> +=09if (ACPI_FAILURE(status))
-> +=09=09return -EIO;
-> +
-> +=09obj =3D output.pointer;
-
-As with above, please use __free()...
-
-> +=09if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER &&
-> +=09    obj->buffer.length >=3D 1 && obj->buffer.pointer[0] !=3D 0)
-> +=09=09ret =3D -EIO;
-
-=2E..This can then return immediately.
-
-> +
-> +=09kfree(obj);
-> +=09return ret;
-> +}
-> +
->  static int huawei_wmi_fn_lock_get(int *on)
->  {
->  =09u8 ret[0x100] =3D { 0 };
->  =09int err, i;
-> =20
-> +=09/* Newer models: use direct ACPI \GFRS method */
-> +=09if (acpi_has_method(NULL, "\\GFRS"))
-> +=09=09return huawei_acpi_fn_lock_get(on);
-> +
-> +=09/* Legacy WMI fallback */
->  =09err =3D huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
->  =09if (err)
->  =09=09return err;
-> @@ -550,6 +640,11 @@ static int huawei_wmi_fn_lock_set(int on)
->  {
->  =09union hwmi_arg arg;
-> =20
-> +=09/* Newer models: use direct ACPI \SFRS method */
-> +=09if (acpi_has_method(NULL, "\\SFRS"))
-> +=09=09return huawei_acpi_fn_lock_set(on);
-> +
-> +=09/* Legacy WMI fallback */
->  =09arg.cmd =3D FN_LOCK_SET;
->  =09arg.args[2] =3D on + 1; // 0 undefined, 1 off, 2 on.
-> =20
->=20
-
---=20
- i.
-
---8323328-1521604307-1779704185=:1159--
