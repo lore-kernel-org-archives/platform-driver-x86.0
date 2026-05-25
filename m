@@ -1,138 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808303E8349;
-	Mon, 25 May 2026 09:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0AA2F7EE7
+	for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 10:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779703086; cv=none; b=SfHgDgWcfny9x/vT8WfCMUuJSWrivMU8OBYMnGwipK887afZFEcGHtObXerxgpE4Yl6sIgpS3ZRsyYYvj0YimZ1/cu+JkqfVAE6iFJL2f39AOM8oWcQN2qBtmnDw4nXwcOG07G8xCUq/kVR+7+7T+/iIo1g700TUfDDpSsQUPa4=
+	t=1779703315; cv=none; b=LuAN0akR5IYBtFr45qTSYm5weJGa/PU6trYuiOetvXn8AUfM780kTKLdqMNR2QoYqhkPWZYYUrIIIXPKMOsJAme9bGVEKsyW2WOoOrZ090mwLaKUC4Kh2NSMVp3QKbIXhC+gOwjZpEY4D2bF3i329sI842iAE+ZJhC9s6B07yWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779703086; c=relaxed/simple;
-	bh=f2ye225NC7tH6EjN8G4DCdmB7Srp40FqCsumzbUAupQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cLYuHZ7Dhpm4L3NFUX4Nr8GYTY1/cMJWh824wP6ZwPhdGE1WCE3TbLdDEsIOZd/IZQe+mLXBqE+oIebDlSnCJRv9H0O6jMwdQ/QcFlF4mjrpHSaScn3Zwf1Ujk9c3SXxAU3kBL3ojaJCDJraEKxwK+rzyFYpI9q4enxwo8I9zog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jFtnM/oi; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779703315; c=relaxed/simple;
+	bh=XaUik8r9RVpC2RC55aua4lGKMtDpbQOmquwbW6IqBx0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUUIo9uSAtf11JKV4e8n+iRcK9Hf+Wjlfq68vJWOvKJWZsq84FM5KiWaHhNtl2XYac+xeUO9tUtIOeMOD1vsH3rRO2Eb5zgGSbdL0o4fRIKFiNoom1cCBtqXR/bgNXoqnGPRoGoUV4HRu27sZmBpdAIlwnJKT8uo+SpetsLsC1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhesMD9J; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jFtnM/oi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779703084; x=1811239084;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=f2ye225NC7tH6EjN8G4DCdmB7Srp40FqCsumzbUAupQ=;
-  b=jFtnM/oi4dWsT7dMECQXQN5/tDcojGRc8MVcmXZH3yIuu0vtbcLSTQc7
-   1uzqtBO5ZVmyJ17tROgdVi69k+rWBE2Q/WU/W/z1o09x5fuv0hm6gM9Qj
-   Ce6BAjMWM2vXtYqnEDa1tBxpWNa4RDBC5JI+uxxgKIFzFhUZsV49EyjL8
-   X8UlinHK4HEQXkgkYoNqGBO8pwSO7lBVLqLM9EVMpWoGZ9ChYTf5u3aZv
-   29W4HNLj45c+FGotRsVnecdpmDaCorv/Aqdh9QNzwpqytOKzCX+0RZ5ET
-   D5WsplOTytAFudZCRBTl492OYI2h2eyD38jmGhWCWL1TKGR4JK5Bxn7tS
-   w==;
-X-CSE-ConnectionGUID: 5KlQQ1jnReiyN8lKaG1QWQ==
-X-CSE-MsgGUID: YrL0JGWXRxanTvQtQb1nAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="80640640"
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="80640640"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 02:58:04 -0700
-X-CSE-ConnectionGUID: +rVtBaluTIi4EFJAdXDjyQ==
-X-CSE-MsgGUID: TqvMqvUKT4SSyyJ6gN6O/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
-   d="scan'208";a="238988108"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.234])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 02:58:01 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 25 May 2026 12:55:07 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, wse@tuxedocomputers.com, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] platform/x86: uniwill-laptop: Charging-related
- improvements
-In-Reply-To: <ef98a5f8-d62c-465c-9f15-5958cd92c49e@gmx.de>
-Message-ID: <4b691f39-8591-660f-3b5e-271f339d8fcd@linux.intel.com>
-References: <20260512232145.329260-1-W_Armin@gmx.de> <177920193411.22546.9855747319755001624.b4-ty@linux.intel.com> <ef98a5f8-d62c-465c-9f15-5958cd92c49e@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhesMD9J"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5aa21fa024cso7015060e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 May 2026 03:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779703312; x=1780308112; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFlJyIGslUHXmHpxj2/6McIIq+IKd5/lpNvRUgEESi0=;
+        b=bhesMD9JRkdIc6B1IJrDAxmg8H4P4N7HQ71+cQ8hm5+PfV2iJhQToRXbppD16xDecC
+         aTk8tSHnSEM3d/jd29ZWjMgyo8/es9FopmYTp+GivRbKYYdNWCNASrlhAVg5JWSZvKG4
+         v/bmiP36sSXnpc/eIK0F3K2DoTpQfyL/VHux4JG1X18wd9k7M2h4ggz8RibVF/YaDEG8
+         2x/koURgidl0VROQzPTlVOXj2ShmFG0AyrL6QVioV/ZD1uLIhTNIMBeSjHOHdrjRpZMC
+         D8ESVu0HdI7kIm2PHgh1WjjSBNoBsH4yl3gcLj1yng0ijVlu2DaKRnDBdh8kauXVUhKs
+         fMdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779703312; x=1780308112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IFlJyIGslUHXmHpxj2/6McIIq+IKd5/lpNvRUgEESi0=;
+        b=Ieu4OililqxwULJapJfFhzw70CAXpWzo/4Kg3OkkvPHf/uu+VbGp+O6DkKDZLt+OVA
+         fguCEtI6yrPjKlxO2OW68iks1+lSZr9CytcRdppaoIBS5sJak5wciIaVlsuV6KMoIMxe
+         MHezhp5YKmZS3tobY91UW+rwSuexUj/WgzZEoCpGf8EnQSc3uOxbAJALo+JqoAj8ewMp
+         E7e/41m3pmygZdu7oz52jwXBY54evMvzrUa343Kn7Ua+nWxqr200DKTU1k3pOjSphCHB
+         /JtQfczzol4k263i4oF4fBIcMf9QfiZysOxfgdRNtLi760Jj9NZqZntM6BGZmDqfORtp
+         DtQg==
+X-Gm-Message-State: AOJu0Yz6GSpZWHKdJE4S1FqkMng/HaCs7OHSA9k3OV8dItDZdhnqdorj
+	uNTEZD87kOjez6dNqSWiymdHh7ol24U0Q5sNp44bNaHkhq/cwfpKyIaSJ8lUEsgMB95T/A==
+X-Gm-Gg: Acq92OEeOVCzn8+Li/+PJUUzqQKaBrLT4LYAoZ2bBdni85mMh4Ba6eoABPlk8lWo8X4
+	qvv+V5Shwpv7SL5MzrfvOpKq8LoUfME5eGsb/q2KPsoAHkXW7g/gtlEwXGTepBhu2VHu2ZLWYB6
+	7lTf7j9vxa0L/HW8yReJJGi+ffE3T8SueWeBD8VLSDxN+4u9Fi/5P+BbPzhQZNIfycRQnxcuDtK
+	7bhP8qtEYDXrClAblMFMOubHjs3ZDJsVpEd5Z5+WkQweNqoaFG5oU7YCWQkoKe43VaL7iRryP+r
+	r8ETqvTXB38QLa7H9YNqbH9wXeQYndM0wqlfV5Lz/gwsaOOYATpLcufJiyEM9FbV9IApgoRng3x
+	fso5b/cTZMLf3g4a0a1Yu9+kISz9zZ0zicYbxXLh9O4TtTsos0GmupBtn2qXeQDii4SzigUoqzs
+	piBMv8zSRfflAkhft7I+ZqRsYVp4pM
+X-Received: by 2002:a05:6512:65dc:10b0:5a4:1902:3d17 with SMTP id 2adb3069b0e04-5aa3239b51emr3114043e87.12.1779703312148;
+        Mon, 25 May 2026 03:01:52 -0700 (PDT)
+Received: from Katana ([89.208.127.113])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-395dcc0a4eesm22287831fa.27.2026.05.25.03.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 May 2026 03:01:51 -0700 (PDT)
+From: Gleb Sonichev <sonichev555@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Gleb Sonichev <sonichev555@gmail.com>
+Subject: [PATCH] platform/x86: dell-laptop: add Inspiron N5110 to touchpad LED quirk table
+Date: Mon, 25 May 2026 13:00:47 +0300
+Message-ID: <20260525100047.20046-1-sonichev555@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1269248311-1779702907=:1159"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The Inspiron N5110 needs the touchpad LED quirk (Vostro V130 quirk)
+to properly control the touchpad LED. Add its DMI identifier
+to the existing quirk table, next to the similar Inspiron M5110 entry.
 
---8323328-1269248311-1779702907=:1159
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Tested on Dell Inspiron N5110.
+The touchpad LED works correctly with this quirk enabled.
 
-On Sat, 23 May 2026, Armin Wolf wrote:
+Signed-off-by: Gleb Sonichev <sonichev555@gmail.com>
+---
+ drivers/platform/x86/dell/dell-laptop.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> Am 19.05.26 um 16:45 schrieb Ilpo J=C3=A4rvinen:
->=20
-> > On Wed, 13 May 2026 01:21:37 +0200, Armin Wolf wrote:
-> >=20
-> > > This patch series contains various charging-related improvements
-> > > for the uniwill-laptop driver. The first two patches fix some minor
-> > > issues inside the charging threshold code, while the third patch
-> > > fixes an issue inside the module initialization code. The next two
-> > > patches contain some preparations for the main patch. Said patch
-> > > introduces support for controlling the charging modes available
-> > > on many Uniwill-based devices not sold by Intel. The last patch
-> > > whitelists most Tuxedo devices for using the battery charge modes.
-> > >=20
-> > > [...]
-> >=20
-> > Thank you for your contribution, it has been applied to my local
-> > review-ilpo-fixes branch. Note it will show up in the public
-> > platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-> > local branch there, which might take a while.
->=20
-> Thank you :)
->=20
-> Is there a special reason why only the first four commits are actually
-> available
-> on the fixes branch?
+diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+index 57748c3ea24f..7fc3bbb8c4a4 100644
+--- a/drivers/platform/x86/dell/dell-laptop.c
++++ b/drivers/platform/x86/dell/dell-laptop.c
+@@ -222,6 +222,15 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_dell_vostro_v130,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Dell Inspiron N5110",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron N5110"),
++		},
++		.driver_data = &quirk_dell_vostro_v130,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Dell Vostro 3360",
+-- 
+2.54.0
 
-Yes, there is.
-
-I was planning on merging the rest through for-next as I didn't categorize=
-=20
-them as important fixes. I'll get to it some time this week.
-
---
- i.
-
-> Thanks,
-> Armin Wolf
->=20
-> >=20
-> > The list of commits applied:
-> > [1/8] platform/x86: uniwill-laptop: Properly initialize charging thresh=
-old
-> >        commit: c12cc42dadd85dea210d5699d4f21def827382eb
-> > [2/8] platform/x86: uniwill-laptop: Accept charging threshold of 0
-> >        commit: c16a4823cc60a32b891f7a148bb30c0f51d12cf4
-> > [3/8] platform/x86: uniwill-laptop: Fix behavior of "force" module para=
-m
-> >        commit: fb4b67c44557cb4cbb15900083d4e1af22320339
-> > [4/8] platform/x86: uniwill-laptop: Do not enable the charging limit ev=
-en
-> > when forced
-> >        commit: 26cbe119f99c86dcb4a0136d2bc73c0c716d80e4
-> > [5/8] platform/x86: uniwill-laptop: Rework FN lock/super key suspend
-> > handling
-> >        (no commit info)
-> > [6/8] platform/x86: uniwill-laptop: Mark EC_ADDR_OEM_4 as volatile
-> >        (no commit info)
-> > [7/8] platform/x86: uniwill-laptop: Add support for battery charge mode=
-s
-> >        (no commit info)
-> > [8/8] platform/x86: uniwill-laptop: Enable battery charge modes on supp=
-orted
-> > devices
-> >        (no commit info)
-
---8323328-1269248311-1779702907=:1159--
