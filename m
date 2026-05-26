@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B752DFA2F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3572E1C4E;
 	Tue, 26 May 2026 01:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779760084; cv=none; b=jB4HQsWS43FToL6IIoiSLk1Mb7aqpZs09pbkmSSqYpgBCzxB9kNCF3RAc88dIJH2vQlBMCzhw5QEL6cWwK1x+vxsNMotPCHw2uGwEkLX6OttF9uEYEnHjOhCl+DsgFkpxs2YAmb95iyxhVQGz1y6DB96Bmsb3AmW/J9e3mbVqGs=
+	t=1779760085; cv=none; b=VlXMld7c/6kwCIDvFfqhaRXf0E/MpScBqZgY+kPDmFLKOHnAuOLezAUXYMpuJfzIBJt382ms5FsR60CB0i5ON0wzjM4vKqdFX5ch2H42Ty3S1GzwmdDfT7o1W2psm82LNjhDH/Y+FJWcQcrdxniQnUjW3LEhLsMhXbCwscj98Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779760084; c=relaxed/simple;
-	bh=1ni8FEhJPwpKFLPtQAx84NWaBulJha/1W5JUZ2o/E9E=;
+	s=arc-20240116; t=1779760085; c=relaxed/simple;
+	bh=Eqx3sPQmimyntbQGnmoT+3j2cwvX6jZKzpDM0yzNmIs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=P+MgvZYZXeJongedpYRGznLUgrf6DY7rJLdFiKmDp1oBrzjj2ELAHfaxl9R/mbkCXusbbzZjnmbExDhpiOG5d137L0DgxOSnn7R57GIP5+bX/VkWZW1ZzaR1XlqtRil3VLWAQDS2+CZQj1HuesQ30EkG4eLtJCxMbarALUFh+Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1fc1hT0; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=N6+Lyq6GWZIq3F/zncz30XSA+2YXZp29CocqKHQ29awyjHo35XHs0S0xKGvr1cU9RlQ0fqUQhRhOl/WMEC8l2ls8NyV07da3nDBLfUEhkaw1rUAeeNhzVpenojP3i5xHXkT0pXBG6gDa6b51L3gn2KhePJ7udohARAOXc+jMe6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FCxr3he3; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1fc1hT0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FCxr3he3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1779760082; x=1811296082;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=1ni8FEhJPwpKFLPtQAx84NWaBulJha/1W5JUZ2o/E9E=;
-  b=b1fc1hT00dN9gEpUrq53Dl97srRv8CXpbplxkgoW7v0q0Z8t+BTFXqm0
-   LA9u7xP/iDBA2JE+krULs8RrDhUWYz2FCuBwcXIjYfxOavYMCU6HuTuQ9
-   syfqfS1yw0ywgx1szOZNUdU69pGw/fZ0Y2IVrduV8q5ZAVTorG3JXPjB/
-   IjNNwMvRIiNcOSlGRtAmbixZqbgVmVqozh4xyuHvfOEhcKFbjbauZOScG
-   QzpN0mUx2eDAKW+OSM953Y8V3KLUVOBRDFg0iuXkw2q/gnJx0Gp1xHcfZ
-   o53qXR60Z9A18CehqSDVqc85aFk7bT68Yr1QgXiNihEO5BRhbcdNubDPS
-   w==;
-X-CSE-ConnectionGUID: rlfLLN87QDuyiz/xECdNJQ==
-X-CSE-MsgGUID: INaw3wlpQ92I7c5dzg4Htg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80539899"
+  bh=Eqx3sPQmimyntbQGnmoT+3j2cwvX6jZKzpDM0yzNmIs=;
+  b=FCxr3he3nNxmSp2YtieTMRTuy5h0OQtxbIP2KrfMAlwv77bkV+h6x0P4
+   eO4T+EkIODSFX7HIEMi8XqG6j+R3Z3HAl89blcyErfgSUNpKzkuPfxDro
+   W9w9+IpOF2TAgJiyDaT/GfufSvjnF6+INjVKd/2YRjoBoeriyaWF4krKm
+   H87jfvs/t2g5s5N6fQdLAFnqOrahj/gzNF49P15of8l6eLNHVGbpg5SHx
+   3esnOD9LLRwSj8KP4WhaLnprspFWdpSK8rv9zRLMzvw/3++r6NvF+5C3u
+   xWk25k0oYbXFvWqlH3PcCFZoc/KIVV4j/3FEa5RDcXoAdVpDtMq6IqYzI
+   A==;
+X-CSE-ConnectionGUID: PU55RF5VSZq2vAl2Td37iA==
+X-CSE-MsgGUID: R1qHiojESBaLsB4i7CulhQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80539900"
 X-IronPort-AV: E=Sophos;i="6.24,168,1774335600"; 
-   d="scan'208";a="80539899"
+   d="scan'208";a="80539900"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 18:47:34 -0700
-X-CSE-ConnectionGUID: ncQFxe6eS8epGoxuwy7wLw==
-X-CSE-MsgGUID: e+vLXSWnQN6UUUrrFKS7Qg==
+X-CSE-ConnectionGUID: noPRNK9oRLKhKrqw/sAbOg==
+X-CSE-MsgGUID: Uf1P7pN2QtOOW0AlTdcvdw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,168,1774335600"; 
-   d="scan'208";a="272074982"
+   d="scan'208";a="272074983"
 Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2026 18:47:33 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -49,9 +49,9 @@ To: linux-kernel@vger.kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	andriy.shevchenko@linux.intel.com,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 14/17] tools/arch/x86/pmtctl: Add pmtctl 'stat' command
-Date: Mon, 25 May 2026 18:47:12 -0700
-Message-ID: <20260526014719.2248380-15-david.e.box@linux.intel.com>
+Subject: [PATCH 15/17] tools/arch/x86/pmtctl: Add pmtxml2json conversion tool
+Date: Mon, 25 May 2026 18:47:13 -0700
+Message-ID: <20260526014719.2248380-16-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260526014719.2248380-1-david.e.box@linux.intel.com>
 References: <20260526014719.2248380-1-david.e.box@linux.intel.com>
@@ -61,1475 +61,1319 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Register the 'stat' subcommand, giving pmtctl users a perf stat-like mode
-for repeatedly sampling Intel PMT telemetry metrics at a configurable
-interval and iteration count. Where the earlier 'list' command shows what
-the platform exposes, 'stat' read metrics over time.
+Add a Python converter that turns Intel PMT XML metric definitions into the
+pmtctl/perf-style JSON consumed by pmtctl and by the built-in metric
+definition generator.
 
-Metrics can be selected by name or sampled in 'raw' mode at fixes bit
-positions, the latter which doesn't require metric definitions. Output is
-available in human-readable tabular form.
+The converter supports two input modes:
 
-Assisted-by: GitHub-Copilot:claude-opus-4.7
+  Local path: point it at an existing Intel-PMT xml tree (--by-path
+              /path/to/Intel-PMT/xml) and convert in place.
+
+  Fetch:      --fetch-pmt-repo clones the upstream Intel-PMT repository
+              into a cache (default ~/.cache/pmtctl).
+
+              --refresh-pmt-repo updates the cache.
+
+Output JSON files are written under --output-dir, one file per metric
+group, suitable for direct use with pmtctl -J or as input to
+gen_builtin_defs.py for compiled-in definitions.
+
+The document pmtxml2json.md provages usage examples covering the
+different workflows.
+
+Assisted-by: GitHub-Copilot:claude-sonnet-4.6
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- tools/arch/x86/pmtctl/Makefile                |   3 +
- tools/arch/x86/pmtctl/include/cmd_stat.h      |  75 +++
- .../arch/x86/pmtctl/include/cmd_stat_format.h |  11 +
- tools/arch/x86/pmtctl/include/pmtctl_cli.h    |   2 +
- tools/arch/x86/pmtctl/src/cmd_stat.c          | 501 +++++++++++++++++
- tools/arch/x86/pmtctl/src/cmd_stat_format.c   | 205 +++++++
- tools/arch/x86/pmtctl/src/cmd_stat_run.c      | 528 ++++++++++++++++++
- tools/arch/x86/pmtctl/src/main.c              |   4 +
- 8 files changed, 1329 insertions(+)
- create mode 100644 tools/arch/x86/pmtctl/include/cmd_stat.h
- create mode 100644 tools/arch/x86/pmtctl/include/cmd_stat_format.h
- create mode 100644 tools/arch/x86/pmtctl/src/cmd_stat.c
- create mode 100644 tools/arch/x86/pmtctl/src/cmd_stat_format.c
- create mode 100644 tools/arch/x86/pmtctl/src/cmd_stat_run.c
+ tools/arch/x86/pmtctl/Makefile               |  96 +-
+ tools/arch/x86/pmtctl/scripts/pmtxml2json.md | 158 ++++
+ tools/arch/x86/pmtctl/scripts/pmtxml2json.py | 883 +++++++++++++++++++
+ 3 files changed, 1129 insertions(+), 8 deletions(-)
+ create mode 100644 tools/arch/x86/pmtctl/scripts/pmtxml2json.md
+ create mode 100755 tools/arch/x86/pmtctl/scripts/pmtxml2json.py
 
 diff --git a/tools/arch/x86/pmtctl/Makefile b/tools/arch/x86/pmtctl/Makefile
-index ee6633a6f435..52e50597b5c1 100644
+index 52e50597b5c1..d55819372f79 100644
 --- a/tools/arch/x86/pmtctl/Makefile
 +++ b/tools/arch/x86/pmtctl/Makefile
-@@ -42,6 +42,9 @@ SAMPLE_TARGET :=3D $(BUILDDIR)/samples/libpmtctl_sample
- SRC :=3D \
- 	$(SRCDIR)/main.c \
- 	$(SRCDIR)/cmd_list.c \
-+	$(SRCDIR)/cmd_stat.c \
-+	$(SRCDIR)/cmd_stat_format.c \
-+	$(SRCDIR)/cmd_stat_run.c \
- 	$(SRCDIR)/pager.c
+@@ -1,6 +1,27 @@
+ # SPDX-License-Identifier: GPL-2.0-only
 =20
++# Remove targets whose recipe exited non-zero so a failed codegen step
++# does not leave a truncated $@ behind that fools the next build.
++.DELETE_ON_ERROR:
++
+ CC      ?=3D gcc
++PYTHON  ?=3D python3
++
++# Directories for the XML -> JSON -> C codegen pipeline.
++DEFS_DIR        ?=3D defs
++GENERATED_DIR   ?=3D generated
++PMT_CACHE_DIR   ?=3D $(HOME)/.cache/pmtctl
++
++XML2JSON_SCRIPT :=3D scripts/pmtxml2json.py
++GEN_DEFS_SCRIPT :=3D scripts/gen_builtin_defs.py
++
++# JSON sources that define built-in metrics. pmtxml2json.py writes
++# one subdirectory per platform under $(DEFS_DIR)/, so recurse.
++DEFS_JSON       ?=3D $(shell find $(DEFS_DIR) -name '*.json' 2>/dev/null)
++
++# Stamp marks "the XML->JSON conversion has run". The exact set of
++# generated files is not known up front, so we depend on a single stamp.
++DEFS_JSON_STAMP :=3D $(DEFS_DIR)/.stamp
+=20
+ BUILD	?=3D release
+=20
+@@ -35,7 +56,6 @@ TARGET  :=3D pmtctl
+ LIBDIR  :=3D lib
+ LIBPMTCTL_CORE      :=3D $(BUILDDIR)/lib/libpmtctl_core.a
+ LIBPMTCTL_ARTIFACTS :=3D $(LIBPMTCTL_CORE)
+-LIBPMTCTL_STAMP :=3D $(BUILDDIR)/lib/.built
+ SAMPLE_SRC :=3D samples/libpmtctl_sample.c
+ SAMPLE_TARGET :=3D $(BUILDDIR)/samples/libpmtctl_sample
+=20
+@@ -50,13 +70,21 @@ SRC :=3D \
  OBJ :=3D $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRC))
-diff --git a/tools/arch/x86/pmtctl/include/cmd_stat.h b/tools/arch/x86/pmtc=
-tl/include/cmd_stat.h
-new file mode 100644
-index 000000000000..be4ddfe1e636
---- /dev/null
-+++ b/tools/arch/x86/pmtctl/include/cmd_stat.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef PMTCTL_CMD_STAT_H
-+#define PMTCTL_CMD_STAT_H
-+
-+#include <stdbool.h>
-+
-+#include "lib/device.h"
-+#include "lib/metrics_db.h"
-+#include "lib/pmtctl.h"
-+
-+enum pmtctl_fmt {
-+	PMTCTL_FMT_DEC,
-+	PMTCTL_FMT_HEX,
-+};
-+
-+struct stat_raw_spec {
-+	int sample_id;
-+	int lsb;
-+	int msb;
-+};
-+
-+struct stat_options {
-+	char                 **events;
-+	int                    nr_events;
-+	int                    events_cap;
-+
-+	char                  *device_selector;
-+
-+	enum pmtctl_fmt        fmt;
-+
-+	unsigned int           interval_ms;
-+	long                   count;
-+
-+	struct stat_raw_spec  *raw_specs;
-+	int                    nr_raw_specs;
-+	int                    raw_specs_cap;
-+	bool                   raw;
-+
-+	bool                   once;
-+	bool                   header;
-+	bool                   hex;
-+	bool                   vertical;
-+	bool                   show_help;
-+};
-+
-+/*
-+ * stat_item: internal sampling representation
-+ *
-+ *  - STAT_ITEM_METRIC:
-+ *      Uses def/bindings and metrics_db.
-+ *  - STAT_ITEM_RAW:
-+ *      Uses device + (sample_id, lsb, msb) only. No metrics_db.
-+ */
-+enum stat_item_kind {
-+	STAT_ITEM_METRIC,
-+	STAT_ITEM_RAW,
-+};
-+
-+struct stat_item {
-+	enum stat_item_kind    kind;
-+
-+	struct pmt_metric_desc desc;
-+
-+	/* Metric mode fields */
-+	int                    event_idx;     /* index into opts->events[] */
-+	struct pmt_device     *dev;
-+
-+	uint64_t               cur_raw;
-+	double                 cur_value;
-+	bool                   present;       /* false if metric not bound to thi=
-s device */
-+};
-+
-+int stat_run(const struct stat_options *opts);
-+
-+#endif
-diff --git a/tools/arch/x86/pmtctl/include/cmd_stat_format.h b/tools/arch/x=
-86/pmtctl/include/cmd_stat_format.h
-new file mode 100644
-index 000000000000..ad76c2b2bc0b
---- /dev/null
-+++ b/tools/arch/x86/pmtctl/include/cmd_stat_format.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef PMTCTL_CMD_STAT_FORMAT_H
-+#define PMTCTL_CMD_STAT_FORMAT_H
-+
-+struct stat_options;
-+struct stat_item;
-+
-+void stat_print_header(const struct stat_options *opts);
-+void stat_print_rows(const struct stat_options *opts, const struct stat_it=
-em *items, int nitems,
-+		     int num_devices, int sample_idx);
-+#endif
-diff --git a/tools/arch/x86/pmtctl/include/pmtctl_cli.h b/tools/arch/x86/pm=
-tctl/include/pmtctl_cli.h
-index eb5efb0b650f..76540c3340cb 100644
---- a/tools/arch/x86/pmtctl/include/pmtctl_cli.h
-+++ b/tools/arch/x86/pmtctl/include/pmtctl_cli.h
-@@ -11,4 +11,6 @@ void pmtctl_finish_pager(FILE *out);
+ CLEAN_BUILDS :=3D release debug
 =20
- int cmd_list(int argc, char **argv, const struct pmt_global_opts *gopts);
+-.PHONY: all clean libpmtctl_core sample FORCE
++.PHONY: all clean defs defs-json-fetch defs-json-pull defs-clean \
++        libpmtctl_core sample FORCE
 =20
-+int cmd_stat(int argc, char **argv, const struct pmt_global_opts *gopts);
-+
- #endif
-diff --git a/tools/arch/x86/pmtctl/src/cmd_stat.c b/tools/arch/x86/pmtctl/s=
-rc/cmd_stat.c
-new file mode 100644
-index 000000000000..7825d7c9a44e
---- /dev/null
-+++ b/tools/arch/x86/pmtctl/src/cmd_stat.c
-@@ -0,0 +1,501 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <errno.h>
-+#include <getopt.h>
-+#include <limits.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#define LOG_PREFIX "cmd_stat"
-+#include "lib/log.h"
-+
-+#include "lib/common.h"
-+#include "lib/pmtctl.h"
-+
-+#include "cmd_stat.h"
-+#include "pmtctl_cli.h"
-+
-+#define CMD_STAT_DEFAULT_INTERVAL_MS 1000
-+
-+static int stat_add_event(struct stat_options *opts, const char *spec)
-+{
-+	/* Grow the events array by doubling; start at 8 slots. */
-+	if (opts->nr_events =3D=3D opts->events_cap) {
-+		int new_cap =3D opts->events_cap ? opts->events_cap * 2 : 8;
-+		char **tmp =3D realloc(opts->events, new_cap * sizeof(char *));
-+
-+		if (!tmp)
-+			return log_ret(-ENOMEM, "could not allocate");
-+
-+		opts->events =3D tmp;
-+		opts->events_cap =3D new_cap;
-+	}
-+
-+	opts->events[opts->nr_events++] =3D xstrdup(spec);
-+
-+	return 0;
-+}
-+
-+static int stat_add_event_list(struct stat_options *opts, const char *arg)
-+{
-+	/* arg can be "a,b,c" */
-+	char *copy =3D xstrdup(arg);
-+	char *p =3D copy;
-+	char *saveptr =3D NULL;
-+	int ret =3D 0;
-+
-+	for (;;) {
-+		char *tok =3D strtok_r(p, ",", &saveptr);
-+
-+		if (!tok)
-+			break;
-+
-+		ret =3D stat_add_event(opts, tok);
-+		if (ret < 0)
-+			break;
-+
-+		p =3D NULL;
-+	}
-+
-+	free(copy);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Strict decimal-int parser used by stat_parse_raw_arg().
-+ *
-+ * Unlike `strtol(s, NULL, 10)`, this:
-+ *   - rejects NULL or empty input (e.g. "id=3D" with no value),
-+ *   - rejects partial conversions ("foo", "12x"),
-+ *   - accepts an optional leading '+' or '-'.
-+ * On success, *out receives the parsed value and 0 is returned.
-+ */
-+static int parse_decimal_int(const char *s, int *out)
-+{
-+	char *end;
-+	long v;
-+
-+	if (!s || *s =3D=3D '\0')
-+		return -1;
-+
-+	errno =3D 0;
-+	v =3D strtol(s, &end, 10);
-+	if (errno || end =3D=3D s || *end !=3D '\0')
-+		return -1;
-+	if (v < INT_MIN || v > INT_MAX)
-+		return -1;
-+
-+	*out =3D (int)v;
-+	return 0;
-+}
-+
-+/*
-+ * Parse one --raw argument of the form:
-+ *     id=3D<num>[,lsb=3D<num>][,msb=3D<num>]
-+ *
-+ * Duplicate keys are rejected.
-+ */
-+static int stat_parse_raw_arg(struct stat_options *opts, const char *arg)
-+{
-+	auto_free char *copy =3D xstrdup(arg);
-+	char *p =3D copy;
-+	char *tok, *saveptr =3D NULL;
-+	bool seen_id  =3D false;
-+	bool seen_lsb =3D false;
-+	bool seen_msb =3D false;
-+	int id  =3D -1;
-+	int lsb =3D -1;
-+	int msb =3D -1;
-+
-+	/*
-+	 * Reject empty input and structurally invalid lists *before*
-+	 * strtok_r(), which silently collapses consecutive and
-+	 * leading/trailing separators.
-+	 */
-+	if (*arg =3D=3D '\0' || *arg =3D=3D ',' || arg[strlen(arg) - 1] =3D=3D ',=
-' ||
-+	    strstr(arg, ",,") !=3D NULL) {
-+		return log_ret(PMTCTL_ERR_CMD_PARSE,
-+			       "invalid --raw argument '%s' (empty token)", arg);
-+	}
-+
-+	while ((tok =3D strtok_r(p, ",", &saveptr)) !=3D NULL) {
-+		char *eq;
-+
-+		p =3D NULL;
-+
-+		eq =3D strchr(tok, '=3D');
-+		if (!eq) {
-+			return log_ret(PMTCTL_ERR_CMD_PARSE,
-+				       "invalid --raw token '%s' (expected key=3Dvalue)", tok);
-+		}
-+
-+		*eq =3D '\0';
-+		const char *key =3D tok;
-+		const char *val =3D eq + 1;
-+
-+		if (!strcmp(key, "id")) {
-+			if (seen_id) {
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "duplicate key 'id' in --raw argument");
-+			}
-+
-+			seen_id =3D true;
-+
-+			if (parse_decimal_int(val, &id))
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "id must be a decimal integer, got '%s'", val);
-+			if (id < 0)
-+				return log_ret(PMTCTL_ERR_CMD_PARSE, "id must be >=3D 0");
-+
-+		} else if (!strcmp(key, "lsb")) {
-+			if (seen_lsb) {
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "duplicate key 'lsb' in --raw argument");
-+			}
-+
-+			seen_lsb =3D true;
-+
-+			if (parse_decimal_int(val, &lsb))
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "lsb must be a decimal integer, got '%s'", val);
-+			if (lsb < 0 || lsb >=3D 64)
-+				return log_ret(PMTCTL_ERR_CMD_PARSE, "lsb must be in [0,63]");
-+
-+		} else if (!strcmp(key, "msb")) {
-+			if (seen_msb) {
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "duplicate key 'msb' in --raw argument");
-+			}
-+
-+			seen_msb =3D true;
-+
-+			if (parse_decimal_int(val, &msb))
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "msb must be a decimal integer, got '%s'", val);
-+			if (msb < 0 || msb >=3D 64)
-+				return log_ret(PMTCTL_ERR_CMD_PARSE, "msb must be in [0,63]");
-+
-+		} else {
-+			return log_ret(PMTCTL_ERR_CMD_PARSE,
-+				       "unknown key '%s' in --raw argument", key);
-+		}
-+	}
-+
-+	/* Required: id */
-+	if (id < 0)
-+		return log_ret(PMTCTL_ERR_CMD_PARSE, "--raw requires at least 'id=3D<num=
->'");
-+
-+	/* Defaults */
-+	if (lsb < 0)
-+		lsb =3D 0;
-+	if (msb < 0)
-+		msb =3D 63;
-+
-+	if (lsb > msb) {
-+		return log_ret(PMTCTL_ERR_CMD_PARSE,
-+			       "lsb (%d) cannot be greater than msb (%d)", lsb, msb);
-+	}
-+
-+	/* Append new raw spec */
-+	if (opts->nr_raw_specs =3D=3D opts->raw_specs_cap) {
-+		int new_cap =3D opts->raw_specs_cap ? opts->raw_specs_cap * 2 : 8;
-+		struct stat_raw_spec *tmp =3D realloc(opts->raw_specs, new_cap * sizeof(=
-*tmp));
-+
-+		if (!tmp)
-+			return log_ret(-ENOMEM, "could not prepare raw collection");
-+
-+		opts->raw_specs =3D tmp;
-+		opts->raw_specs_cap =3D new_cap;
-+	}
-+
-+	opts->raw_specs[opts->nr_raw_specs].sample_id =3D id;
-+	opts->raw_specs[opts->nr_raw_specs].lsb =3D lsb;
-+	opts->raw_specs[opts->nr_raw_specs].msb =3D msb;
-+	opts->nr_raw_specs++;
-+
-+	return 0;
-+}
-+
-+static void stat_usage_full(FILE *out)
-+{
-+	fprintf(out,
-+		"Usage:\n"
-+		"    pmtctl stat [options] -e <metric>[,<metric>...] ...\n"
-+		"    pmtctl stat [options] --raw id=3D<n>[,lsb=3D<n>][,msb=3D<n>] ...\n"
-+		"\n"
-+		"Purpose:\n"
-+		"    Collect metric values over time (similar to 'perf stat').\n"
-+		"\n"
-+		"Options:\n"
-+		"    -h, --help\n"
-+		"        Show help.\n"
-+		"\n"
-+		"    -e, --event <spec>\n"
-+		"        Metric name or comma-separated list; may be repeated.\n"
-+		"        More than one metric requires --vertical.\n"
-+		"\n"
-+		"    Device selection:\n"
-+		"        -d, --device <selector>\n"
-+		"            Restrict to a device/endpoint. Can be supplied globally bef=
-ore\n"
-+		"            the command (recommended) or locally after the command as a=
-\n"
-+		"            fallback. Global value takes precedence when both are given=
-.\n"
-+		"            Selector forms: guid=3D<hex>, ep=3D<endpoint_name>\n"
-+		"\n"
-+		"    -i, --interval <ms>\n"
-+		"        Sampling interval (default 1000 ms).\n"
-+		"\n"
-+		"    -c, --count <N>\n"
-+		"        Number of samples (default infinite).\n"
-+		"\n"
-+		"    --once\n"
-+		"        Single snapshot, exit.\n"
-+		"\n"
-+		"    --raw id=3D<n>[,lsb=3D<n>][,msb=3D<n>]\n"
-+		"        Read raw sample values by sample id with optional bit slicing.\=
-n"
-+		"        May be specified multiple times.\n"
-+		"          id     : required, sample id (>=3D 0)\n"
-+		"          lsb    : optional, default 0 if omitted\n"
-+		"          msb    : optional, default 63 if omitted\n"
-+		"        Constraints:\n"
-+		"          0 <=3D lsb <=3D msb <=3D 63\n"
-+		"        -e/--event and --raw are mutually exclusive.\n"
-+		"\n"
-+		"    --header / --no-header\n"
-+		"        Control header printing.\n"
-+		"\n"
-+		"    --hex\n"
-+		"        Output values in hex.\n"
-+		"\n"
-+		"    --vertical\n"
-+		"        One line per metric per sample: time_ms metric value.\n"
-+		"\n"
-+		"On read failure, the value prints as NaN.\n"
-+		"\n"
-+		"Examples:\n"
-+		"    pmtctl stat -e temp_socket\n"
-+		"    pmtctl stat -e socket_power --interval 500\n"
-+		"    pmtctl stat -e fw_version_0 --once\n"
-+		"    pmtctl stat -e temp_core0 -d guid=3D27971628\n"
-+		"    pmtctl stat --raw id=3D2\n"
-+		"    pmtctl stat --raw id=3D2,lsb=3D16,msb=3D31\n"
-+		"    pmtctl stat --raw id=3D2,msb=3D7 --raw id=3D3,lsb=3D8,msb=3D15\n"
-+	);
-+}
-+
-+static void stat_usage_short(FILE *out)
-+{
-+	fprintf(out,
-+		"Usage:\n"
-+		"    pmtctl stat [options] -e <metric>[,<metric>...] ...\n"
-+		"    pmtctl stat [options] --raw id=3D<n>[,lsb=3D<n>][,msb=3D<n>] ...\n"
-+		"\n"
-+		"Run 'pmtctl stat --help' for full help.\n"
-+	);
-+}
-+
-+static int stat_parse_options(int argc, char **argv, struct stat_options *=
-opts)
-+{
-+	enum {
-+		OPT_ONCE =3D 1000,
-+		OPT_RAW,
-+		OPT_HEADER,
-+		OPT_NO_HEADER,
-+		OPT_HEX,
-+		OPT_VERTICAL,
-+	};
-+
-+	static const struct option long_opts[] =3D {
-+		{ "help",      no_argument,       NULL, 'h' },
-+		{ "event",     required_argument, NULL, 'e' },
-+		{ "device",    required_argument, NULL, 'd' },
-+		{ "interval",  required_argument, NULL, 'i' },
-+		{ "count",     required_argument, NULL, 'c' },
-+
-+		{ "once",      no_argument,       NULL, OPT_ONCE },
-+		{ "raw",       required_argument, NULL, OPT_RAW },
-+		{ "header",    no_argument,       NULL, OPT_HEADER },
-+		{ "no-header", no_argument,       NULL, OPT_NO_HEADER },
-+		{ "hex",       no_argument,       NULL, OPT_HEX },
-+		{ "vertical",  no_argument,       NULL, OPT_VERTICAL },
-+
-+		{ 0, 0, 0, 0 }
-+	};
-+
-+	int c;
-+	int ret;
-+
-+	optind =3D 1;
-+
-+	while ((c =3D getopt_long(argc, argv, "he:d:i:c:", long_opts, NULL)) !=3D=
- -1) {
-+		switch (c) {
-+		case 'h':
-+			opts->show_help =3D true;
-+			return 0;
-+
-+		case 'e':
-+			ret =3D stat_add_event_list(opts, optarg);
-+			if (ret < 0)
-+				return ret;
-+			break;
-+
-+		case 'd':
-+			if (opts->device_selector) {
-+				return log_ret(PMTCTL_ERR_CMD_PARSE,
-+					       "multiple --device options are not allowed");
-+			}
-+
-+			opts->device_selector =3D xstrdup(optarg);
-+			break;
-+
-+		case 'i': {
-+			long v =3D strtol(optarg, NULL, 10);
-+
-+			if (v <=3D 0)
-+				return log_ret(PMTCTL_ERR_CMD_PARSE, "interval must be > 0");
-+
-+			opts->interval_ms =3D (unsigned int)v;
-+			break;
-+		}
-+
-+		case 'c': {
-+			long v =3D strtol(optarg, NULL, 10);
-+
-+			if (v <=3D 0)
-+				return log_ret(PMTCTL_ERR_CMD_PARSE, "count must be > 0");
-+
-+			opts->count =3D v;
-+			break;
-+		}
-+
-+		case OPT_ONCE:
-+			opts->once =3D true;
-+			opts->count =3D 1;
-+			opts->interval_ms =3D 0; /* oneshot, no sleep */
-+			break;
-+
-+		case OPT_RAW:
-+			ret =3D stat_parse_raw_arg(opts, optarg);
-+			if (ret < 0)
-+				return ret;
-+			break;
-+
-+		case OPT_HEADER:
-+			opts->header =3D true;
-+			break;
-+
-+		case OPT_NO_HEADER:
-+			opts->header =3D false;
-+			break;
-+
-+		case OPT_HEX:
-+			opts->hex =3D true;
-+			break;
-+
-+		case OPT_VERTICAL:
-+			opts->vertical =3D true;
-+			break;
-+
-+		default:
-+			stat_usage_short(stderr);
-+			return PMTCTL_ERR_CMD_PARSE;
-+		}
-+	}
-+
-+	/* If the user explicitly requested hex output, set the format accordingl=
-y */
-+	if (opts->hex)
-+		opts->fmt =3D PMTCTL_FMT_HEX;
-+	else
-+		opts->fmt =3D PMTCTL_FMT_DEC;
-+
-+	if (opts->nr_events =3D=3D 0 && opts->nr_raw_specs =3D=3D 0) {
-+		log_err(PMTCTL_ERR_CMD_PARSE, "requires -e/--event or --raw");
-+		stat_usage_short(stderr);
-+		return PMTCTL_ERR_CMD_PARSE;
-+	}
-+
-+	if (optind < argc) {
-+		log_err(PMTCTL_ERR_CMD_PARSE, "unexpected extra arguments");
-+		stat_usage_short(stderr);
-+		return PMTCTL_ERR_CMD_PARSE;
-+	}
-+
-+	if (opts->nr_events > 0 && opts->nr_raw_specs > 0) {
-+		log_err(PMTCTL_ERR_CMD_PARSE, "-e/--event and --raw are mutually exclusi=
-ve");
-+		return PMTCTL_ERR_CMD_PARSE;
-+	}
-+
-+	/* Horizontal mode (default) supports only one metric */
-+	if (!opts->vertical && opts->nr_events > 1) {
-+		log_err(PMTCTL_ERR_CMD_PARSE,
-+			"horizontal mode supports only one metric at a time (use --vertical for=
- multiple metrics)");
-+		return PMTCTL_ERR_CMD_PARSE;
-+	}
-+
-+	return 0;
-+}
-+
-+static void stat_opts_init(struct stat_options *opts)
-+{
-+	memset(opts, 0, sizeof(*opts));
-+
-+	opts->interval_ms =3D CMD_STAT_DEFAULT_INTERVAL_MS;
-+	opts->count       =3D -1;    /* infinite */
-+	opts->header      =3D true;
-+	opts->fmt         =3D PMTCTL_FMT_DEC;
-+}
-+
-+static void stat_opts_finalize(struct stat_options *opts)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < opts->nr_events; i++)
-+		free(opts->events[i]);
-+
-+	free(opts->events);
-+	free(opts->device_selector);
-+	free(opts->raw_specs);
-+}
-+
-+int cmd_stat(int argc, char **argv, const struct pmt_global_opts *gopts)
-+{
-+	struct stat_options opts;
-+	int ret;
-+
-+	stat_opts_init(&opts);
-+
-+	ret =3D stat_parse_options(argc, argv, &opts);
-+	if (ret !=3D 0) {
-+		stat_opts_finalize(&opts);
-+		return ret;
-+	}
-+
-+	if (opts.show_help) {
-+		stat_usage_full(stdout);
-+		stat_opts_finalize(&opts);
-+		return 0;
-+	}
-+
-+	ret =3D pmtctl_init(gopts);
-+	if (ret)
-+		return ret;
-+
-+	if (opts.device_selector && gopts && gopts->device_selector) {
-+		log_err(PMTCTL_ERR_CMD_PARSE,
-+			"multiple --device options are not allowed (global and command-local)");
-+		stat_opts_finalize(&opts);
-+
-+		return PMTCTL_ERR_CMD_PARSE;
-+	}
-+
-+	/* If no command-local selector, inherit the global one (if any). */
-+	if (!opts.device_selector && gopts && gopts->device_selector)
-+		opts.device_selector =3D xstrdup(gopts->device_selector);
-+
-+	ret =3D stat_run(&opts);
-+
-+	stat_opts_finalize(&opts);
-+
-+	return ret;
-+}
-diff --git a/tools/arch/x86/pmtctl/src/cmd_stat_format.c b/tools/arch/x86/p=
-mtctl/src/cmd_stat_format.c
-new file mode 100644
-index 000000000000..4c0ca21c32c4
---- /dev/null
-+++ b/tools/arch/x86/pmtctl/src/cmd_stat_format.c
-@@ -0,0 +1,205 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Output format helpers for pmtctl stat.
-+ * Implements text output for the header and per-sample rows.
-+ */
-+
-+#include <inttypes.h>
-+#include <stdio.h>
-+#include <math.h>
-+
-+#include "cmd_stat.h"
-+#include "cmd_stat_format.h"
-+
-+/* Column widths (characters) shared by header and row formatters. */
-+#define STAT_COL_W_SAMPLE	6
-+#define STAT_COL_W_TIME		7
-+#define STAT_COL_W_DEV_H	18	/* horizontal-mode device column */
-+#define STAT_COL_W_DEV_V	20	/* vertical-mode device column */
-+#define STAT_COL_W_METRIC_V	20	/* vertical-mode metric column */
-+#define STAT_COL_W_VALUE_V	40	/* vertical-mode value column (header underl=
-ine) */
-+#define STAT_COL_W_EVENT	28	/* horizontal-mode per-event value column */
-+
-+/* 4-space gap between the device column and the per-event value columns. =
-*/
-+#define STAT_COL_GAP		"    "
-+
-+/* Long enough dash string to satisfy any column width above. */
-+#define STAT_DASHES \
-+	"----------------------------------------------------------------"
-+
-+/*
-+ * Buffer size for a stringified uint64 sample value.
-+ * Worst case: decimal 18446744073709551615 (20 chars) or "0x" + 16 hex di=
-gits;
-+ * 32 leaves headroom for a NUL and any future prefix/suffix.
-+ */
-+#define STAT_VALUE_BUF_SIZE	32
-+
-+static void print_u64_field(FILE *out, enum pmtctl_fmt fmt, const struct s=
-tat_item *it)
-+{
-+	if (!it->present || isnan(it->cur_value)) {
-+		fprintf(out, STAT_COL_GAP "%*s", STAT_COL_W_EVENT, "NaN");
-+		return;
-+	}
-+
-+	switch (fmt) {
-+	case PMTCTL_FMT_HEX: {
-+		char buf[STAT_VALUE_BUF_SIZE];
-+
-+		snprintf(buf, sizeof(buf), "0x%" PRIx64, it->cur_raw);
-+		fprintf(out, STAT_COL_GAP "%*s", STAT_COL_W_EVENT, buf);
-+		break;
-+	}
-+	case PMTCTL_FMT_DEC:
-+	default:
-+		fprintf(out, STAT_COL_GAP "%*" PRIu64, STAT_COL_W_EVENT, it->cur_raw);
-+		break;
-+	}
-+}
-+
-+void stat_print_header(const struct stat_options *opts)
-+{
-+	if (!opts->header)
-+		return;
-+
-+	if (opts->vertical) {
-+		fprintf(stdout, "%-*s  %-*s  %-*s  %-*s  %s\n",
-+			STAT_COL_W_SAMPLE,   "sample",
-+			STAT_COL_W_TIME,     "time_ms",
-+			STAT_COL_W_DEV_V,    "device",
-+			STAT_COL_W_METRIC_V, "metric",
-+			"value");
-+		fprintf(stdout, "%.*s  %.*s  %.*s  %.*s  %.*s\n",
-+			STAT_COL_W_SAMPLE,   STAT_DASHES,
-+			STAT_COL_W_TIME,     STAT_DASHES,
-+			STAT_COL_W_DEV_V,    STAT_DASHES,
-+			STAT_COL_W_METRIC_V, STAT_DASHES,
-+			STAT_COL_W_VALUE_V,  STAT_DASHES);
-+	} else {
-+		int nr_value_cols =3D opts->nr_raw_specs > 0
-+			? opts->nr_raw_specs : opts->nr_events;
-+
-+		fprintf(stdout, "%-*s  %-*s  %-*s",
-+			STAT_COL_W_SAMPLE, "sample",
-+			STAT_COL_W_TIME,   "time_ms",
-+			STAT_COL_W_DEV_H,  "device");
-+
-+		if (opts->nr_raw_specs > 0) {
-+			for (int r =3D 0; r < opts->nr_raw_specs; r++) {
-+				const struct stat_raw_spec *rs =3D &opts->raw_specs[r];
-+				char label[STAT_COL_W_EVENT + 1];
-+
-+				snprintf(label, sizeof(label),
-+					 "raw[id=3D%d,lsb=3D%d,msb=3D%d]",
-+					 rs->sample_id, rs->lsb, rs->msb);
-+				fprintf(stdout, STAT_COL_GAP "%*.*s",
-+					STAT_COL_W_EVENT, STAT_COL_W_EVENT, label);
-+			}
-+		} else {
-+			for (int e =3D 0; e < opts->nr_events; e++)
-+				fprintf(stdout, STAT_COL_GAP "%*.*s",
-+					STAT_COL_W_EVENT, STAT_COL_W_EVENT, opts->events[e]);
-+		}
-+
-+		fputc('\n', stdout);
-+
-+		fprintf(stdout, "%.*s  %.*s  %.*s",
-+			STAT_COL_W_SAMPLE, STAT_DASHES,
-+			STAT_COL_W_TIME,   STAT_DASHES,
-+			STAT_COL_W_DEV_H,  STAT_DASHES);
-+
-+		for (int c =3D 0; c < nr_value_cols; c++)
-+			fprintf(stdout, STAT_COL_GAP "%.*s", STAT_COL_W_EVENT, STAT_DASHES);
-+
-+		fputc('\n', stdout);
-+	}
-+}
-+
-+static const char *dev_name_or_unknown(const struct pmt_device *dev)
-+{
-+	return dev && dev->name ? dev->name : "(unknown)";
-+}
-+
-+static void stat_print_rows_vertical(const struct stat_options *opts,
-+				     const struct stat_item *items, int cols_per_dev,
-+				     int num_devices, int sample_idx, unsigned long time_ms)
-+{
-+	for (int d =3D 0; d < num_devices; d++) {
-+		const struct stat_item *row =3D &items[d * cols_per_dev];
-+		const char *dev_name =3D dev_name_or_unknown(row->dev);
-+
-+		for (int c =3D 0; c < cols_per_dev; c++) {
-+			const struct stat_item *it =3D &row[c];
-+			char metric_buf[64];
-+			char value_buf[STAT_VALUE_BUF_SIZE];
-+
-+			if (it->kind =3D=3D STAT_ITEM_RAW) {
-+				snprintf(metric_buf, sizeof(metric_buf),
-+					 "raw[id=3D%u,lsb=3D%u,msb=3D%u]",
-+					 it->desc.raw_sample_id,
-+					 it->desc.raw_lsb,
-+					 it->desc.raw_msb);
-+			} else {
-+				snprintf(metric_buf, sizeof(metric_buf), "%.*s",
-+					 STAT_COL_W_METRIC_V, opts->events[c]);
-+			}
-+
-+			if (!it->present || isnan(it->cur_value)) {
-+				snprintf(value_buf, sizeof(value_buf), "NaN");
-+			} else {
-+				switch (opts->fmt) {
-+				case PMTCTL_FMT_HEX:
-+					snprintf(value_buf, sizeof(value_buf),
-+						 "0x%" PRIx64, it->cur_raw);
-+					break;
-+				case PMTCTL_FMT_DEC:
-+				default:
-+					snprintf(value_buf, sizeof(value_buf),
-+						 "%" PRIu64, it->cur_raw);
-+					break;
-+				}
-+			}
-+
-+			fprintf(stdout, "%-*d  %-*lu  %-*s  %-*s  %s\n",
-+				STAT_COL_W_SAMPLE,   sample_idx,
-+				STAT_COL_W_TIME,     time_ms,
-+				STAT_COL_W_DEV_V,    dev_name,
-+				STAT_COL_W_METRIC_V, metric_buf,
-+				value_buf);
-+		}
-+	}
-+}
-+
-+static void stat_print_rows_horizontal(const struct stat_options *opts,
-+				       const struct stat_item *items, int cols_per_dev,
-+				       int num_devices, int sample_idx, unsigned long time_ms)
-+{
-+	for (int d =3D 0; d < num_devices; d++) {
-+		const struct stat_item *row =3D &items[d * cols_per_dev];
-+
-+		fprintf(stdout, "%-*d  %-*lu  %-*s",
-+			STAT_COL_W_SAMPLE, sample_idx,
-+			STAT_COL_W_TIME,   time_ms,
-+			STAT_COL_W_DEV_H,  dev_name_or_unknown(row->dev));
-+
-+		for (int c =3D 0; c < cols_per_dev; c++)
-+			print_u64_field(stdout, opts->fmt, &row[c]);
-+
-+		fputc('\n', stdout);
-+	}
-+}
-+
-+void stat_print_rows(const struct stat_options *opts, const struct stat_it=
-em *items, int nitems,
-+		     int num_devices, int sample_idx)
-+{
-+	unsigned long time_ms =3D (unsigned long)sample_idx * opts->interval_ms;
-+	int cols_per_dev =3D nitems / num_devices;
-+
-+	if (opts->vertical)
-+		stat_print_rows_vertical(opts, items, cols_per_dev, num_devices,
-+					 sample_idx, time_ms);
-+	else
-+		stat_print_rows_horizontal(opts, items, cols_per_dev, num_devices,
-+					   sample_idx, time_ms);
-+
-+	fflush(stdout);
-+}
-diff --git a/tools/arch/x86/pmtctl/src/cmd_stat_run.c b/tools/arch/x86/pmtc=
-tl/src/cmd_stat_run.c
-new file mode 100644
-index 000000000000..bd461f30cb68
---- /dev/null
-+++ b/tools/arch/x86/pmtctl/src/cmd_stat_run.c
-@@ -0,0 +1,528 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <math.h>
-+#include <signal.h>
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include <unistd.h>
-+
-+#define LOG_PREFIX "cmd_stat_run"
-+#include "lib/log.h"
-+
-+#include "lib/common.h"
-+#include "lib/device.h"
-+#include "lib/metrics_db.h"
-+#include "lib/pmtctl.h"
-+#include "lib/pmtctl_context.h"
-+
-+#include "cmd_stat.h"
-+#include "cmd_stat_format.h"
-+
-+static volatile sig_atomic_t stat_stop;
-+
-+static void stat_sigint(int sig)
-+{
-+	(void)sig;
-+	stat_stop =3D 1;
-+}
-+
-+/*
-+ * Build raw-mode items:
-+ *   - Devices: given by dev_indices[0..num_sel_devices-1]
-+ *   - Raw specs: opts->raw_specs[0..nr_raw_specs-1]
-+ *
-+ * One item per (device, raw_spec).
-+ */
-+static int stat_build_raw_items(const struct stat_options *opts, const str=
-uct pmtctl_context *ctx,
-+				const int *dev_indices, int num_sel_devices,
-+				struct stat_item **out_items, int *out_nitems)
-+{
-+	struct stat_item *items;
-+	int nitems;
-+	int d, r;
-+
-+	/* Initialize output parameters */
-+	*out_items =3D NULL;
-+	*out_nitems =3D 0;
-+
-+	nitems =3D num_sel_devices * opts->nr_raw_specs;
-+
-+	items =3D calloc(nitems, sizeof(*items));
-+	if (!items)
-+		return log_ret(-ENOMEM, "could not create item list");
-+
-+	/* Grid layout: device-major, raw-spec-minor */
-+	for (d =3D 0; d < num_sel_devices; d++) {
-+		int dev_idx =3D dev_indices[d];
-+		struct pmt_device *dev =3D &ctx->devices[dev_idx];
-+
-+		for (r =3D 0; r < opts->nr_raw_specs; r++) {
-+			const struct stat_raw_spec *rs =3D &opts->raw_specs[r];
-+			struct stat_item *it =3D &items[d * opts->nr_raw_specs + r];
-+
-+			it->kind      =3D STAT_ITEM_RAW;
-+			it->event_idx =3D -1;
-+			it->dev       =3D dev;
-+			it->present   =3D true; /* raw is device-only; no bindings */
-+
-+			it->desc.def           =3D NULL;
-+			it->desc.dev           =3D dev;
-+			it->desc.name          =3D NULL;      /* formatter can synthesize a lab=
-el */
-+			it->desc.guid_inst     =3D dev->guid_inst;
-+			it->desc.raw_sample_id =3D rs->sample_id;
-+			it->desc.raw_lsb       =3D rs->lsb;
-+			it->desc.raw_msb       =3D rs->msb;
-+		}
-+	}
-+
-+	*out_items  =3D items;
-+	*out_nitems =3D nitems;
-+
-+	return 0;
-+}
-+
-+static int build_present_guid_list(const struct pmtctl_context *ctx, const=
- int *dev_indices,
-+				   int num_sel_devices, uint32_t **out_guids, int *out_nr_guids)
-+{
-+	uint32_t *guids;
-+	int nguids =3D 0;
-+
-+	guids =3D calloc(num_sel_devices, sizeof(*guids));
-+	if (!guids)
-+		return log_ret(-ENOMEM, "could not create guid list");
-+
-+	for (int d =3D 0; d < num_sel_devices; d++) {
-+		int di =3D dev_indices[d];
-+		uint32_t g;
-+		bool seen =3D false;
-+
-+		if (di < 0 || di >=3D ctx->num_devices)
-+			continue;
-+
-+		g =3D ctx->devices[di].guid ? ctx->devices[di].guid->guid : 0;
-+
-+		for (int i =3D 0; i < nguids; i++) {
-+			if (guids[i] =3D=3D g) {
-+				seen =3D true;
-+				break;
-+			}
-+		}
-+		if (seen)
-+			continue;
-+
-+		guids[nguids++] =3D g;
-+	}
-+
-+	*out_guids =3D guids;
-+	*out_nr_guids =3D nguids;
-+
-+	return 0;
-+}
-+
-+static int find_metric_for_guid(const struct pmt_metrics_db *db, uint32_t =
-guid, const char *name)
-+{
-+	for (int i =3D 0; i < db->total; i++) {
-+		const struct pmt_metric_def *def =3D pmt_metrics_at(db, i);
-+
-+		if (!def || !def->event_name)
-+			continue;
-+
-+		if (!def->guid || def->guid->guid !=3D guid)
-+			continue;
-+
-+		if (strcmp(def->event_name, name) =3D=3D 0)
-+			return i;
-+	}
-+
-+	return -1;
-+}
-+
-+static int stat_build_metric_items(const struct stat_options *opts,
-+				   const struct pmtctl_context *ctx, const int *dev_indices,
-+				   int num_sel_devices, struct stat_item **out_items,
-+				   int *out_nitems)
-+{
-+	const struct pmt_metrics_db *db;
-+	struct stat_item *items =3D NULL;
-+	auto_free uint32_t *guids =3D NULL;
-+	auto_free int *metric_by_guid =3D NULL;
-+	int nguids =3D 0;
-+	int nitems;
-+	int ret;
-+
-+	/* Initialize output parameters */
-+	*out_items =3D NULL;
-+	*out_nitems =3D 0;
-+
-+	/* Build deduplicated list of GUIDs for the selected devices */
-+	ret =3D build_present_guid_list(ctx, dev_indices, num_sel_devices, &guids=
-, &nguids);
-+	if (ret)
-+		return ret;
-+
-+	if (nguids =3D=3D 0)
-+		return log_ret(PMTCTL_ERR_CMD_STAT, "no GUIDs found for selected devices=
-");
-+
-+	/*
-+	 * metric_by_guid[g * nr_events + e] gives the metric_idx for
-+	 * GUID guids[g] and event opts->events[e], or -1 if not present.
-+	 */
-+	metric_by_guid =3D malloc(sizeof(int) * nguids * opts->nr_events);
-+	if (!metric_by_guid)
-+		return log_ret(-ENOMEM, "could not create event list");
-+
-+	db =3D &ctx->metrics;
-+
-+	for (int g =3D 0; g < nguids; g++) {
-+		for (int e =3D 0; e < opts->nr_events; e++) {
-+			metric_by_guid[g * opts->nr_events + e] =3D
-+				find_metric_for_guid(db, guids[g], opts->events[e]);
-+		}
-+	}
-+
-+	/* Enforce: each requested event must be present on at least one GUID */
-+	for (int e =3D 0; e < opts->nr_events; e++) {
-+		bool found =3D false;
-+
-+		for (int g =3D 0; g < nguids; g++) {
-+			if (metric_by_guid[g * opts->nr_events + e] >=3D 0) {
-+				found =3D true;
-+				break;
-+			}
-+		}
-+
-+		if (!found)
-+			return log_ret(PMTCTL_ERR_BAD_ARG, "unknown event '%s'", opts->events[e=
-]);
-+	}
-+
-+	nitems =3D num_sel_devices * opts->nr_events;
-+	items =3D calloc(nitems, sizeof(*items));
-+	if (!items)
-+		return log_ret(-ENOMEM, "could not create item list");
-+
-+	/* Grid layout: selected-device-major, event-minor */
-+	for (int d =3D 0; d < num_sel_devices; d++) {
-+		int dev_idx =3D dev_indices[d];
-+		struct pmt_device *dev;
-+		uint32_t guid;
-+		int guid_idx =3D -1;
-+
-+		if (dev_idx < 0 || dev_idx >=3D ctx->num_devices)
-+			continue;
-+
-+		dev =3D &ctx->devices[dev_idx];
-+		guid =3D dev->guid ? dev->guid->guid : 0;
-+
-+		/* Find this device's GUID index */
-+		for (int g =3D 0; g < nguids; g++) {
-+			if (guids[g] =3D=3D guid) {
-+				guid_idx =3D g;
-+				break;
-+			}
-+		}
-+		if (guid_idx < 0)
-+			continue; /* should not happen if build_present_guid_list is correct */
-+
-+		for (int e =3D 0; e < opts->nr_events; e++) {
-+			int metric_idx =3D metric_by_guid[guid_idx * opts->nr_events + e];
-+			const struct pmt_metric_def *def;
-+			struct stat_item *it =3D &items[d * opts->nr_events + e];
-+
-+			it->kind      =3D STAT_ITEM_METRIC;
-+			it->event_idx =3D e;
-+			it->dev       =3D dev;
-+			it->present   =3D false; /* default */
-+
-+			if (metric_idx < 0)
-+				continue; /* metric not defined for this GUID */
-+
-+			def =3D pmt_metrics_at(db, metric_idx);
-+			if (!def)
-+				continue;
-+
-+			it->desc.def       =3D def;
-+			it->desc.dev       =3D dev;
-+			it->desc.name      =3D def->event_name;
-+			it->desc.guid_inst =3D dev->guid_inst;
-+			it->present        =3D true;
-+		}
-+	}
-+
-+	*out_items  =3D items;
-+	*out_nitems =3D nitems;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Drop devices that do not contain any of the requested events.
-+ * This keeps the output rows limited to devices where at least one metric
-+ * binding is present, avoiding rows of all-NaN values.
-+ */
-+static int filter_metric_items_present(const struct stat_options *opts, st=
-ruct stat_item **items,
-+				       int *nitems, int *num_devices)
-+{
-+	struct stat_item *old;
-+	struct stat_item *filtered;
-+	size_t row_bytes;
-+	int cols_per_dev;
-+	int keep =3D 0;
-+	int devs;
-+
-+	cols_per_dev =3D opts->nr_events;
-+	devs =3D *num_devices;
-+
-+	old =3D *items;
-+	row_bytes =3D (size_t)cols_per_dev * sizeof(*old);
-+
-+	/* First pass: count devices that have at least one present metric. */
-+	for (int d =3D 0; d < devs; d++) {
-+		struct stat_item *row =3D &old[d * cols_per_dev];
-+		bool any =3D false;
-+
-+		for (int c =3D 0; c < cols_per_dev; c++) {
-+			if (row[c].present) {
-+				any =3D true;
-+				break;
-+			}
-+		}
-+
-+		if (any)
-+			keep++;
-+	}
-+
-+	if (keep =3D=3D devs)
-+		return 0; /* nothing to filter */
-+
-+	if (keep =3D=3D 0)
-+		return log_ret(PMTCTL_ERR_CMD_STAT, "no devices contain requested event(=
-s)");
-+
-+	filtered =3D calloc((size_t)keep * cols_per_dev, sizeof(*filtered));
-+	if (!filtered)
-+		return log_ret(-ENOMEM, "could not filter device list");
-+
-+	/* Second pass: copy kept rows in order. */
-+	int out_idx =3D 0;
-+
-+	for (int d =3D 0; d < devs; d++) {
-+		struct stat_item *row =3D &old[d * cols_per_dev];
-+		bool any =3D false;
-+
-+		for (int c =3D 0; c < cols_per_dev; c++) {
-+			if (row[c].present) {
-+				any =3D true;
-+				break;
-+			}
-+		}
-+
-+		if (!any)
-+			continue;
-+
-+		memcpy(&filtered[out_idx * cols_per_dev], row, row_bytes);
-+		out_idx++;
-+	}
-+
-+	free(old);
-+	*items =3D filtered;
-+	*nitems =3D keep * cols_per_dev;
-+	*num_devices =3D keep;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Check if all devices needed for stat can be opened.
-+ * Returns 0 if all devices are readable, otherwise returns error code.
-+ */
-+static int stat_check_device_access(const struct stat_item *items, int nit=
-ems)
-+{
-+	/* Track which devices we've already checked to avoid redundant opens */
-+	const struct pmt_device *last_dev =3D NULL;
-+
-+	for (int i =3D 0; i < nitems; i++) {
-+		const struct stat_item *it =3D &items[i];
-+
-+		if (!it->dev || !it->present)
-+			continue;
-+
-+		/* Skip if we just checked this device */
-+		if (last_dev =3D=3D it->dev)
-+			continue;
-+
-+		last_dev =3D it->dev;
-+
-+		int fd;
-+
-+		if (!it->dev->data_path)
-+			return log_ret(-EINVAL, "missing data path for %s", it->dev->name);
-+
-+		fd =3D open(it->dev->data_path, O_RDONLY | O_CLOEXEC);
-+		if (fd =3D=3D -1) {
-+			if (errno =3D=3D EACCES || errno =3D=3D EPERM) {
-+				return log_ret(-EACCES,
-+					       "permission denied opening device %s (requires elevated privil=
-eges)",
-+					       it->dev->name);
-+			}
-+
-+			return log_ret(-errno, "cannot open device %s", it->dev->name);
-+		}
-+
-+		close(fd);
-+	}
-+
-+	return 0;
-+}
-+
-+static int stat_loop_metrics(const struct stat_options *opts, const struct=
- pmtctl_context *ctx,
-+			     struct stat_item *items, int nitems, int num_devices)
-+{
-+	long max_samples =3D opts->count;   /* -1 =3D infinite */
-+	struct sigaction sa;
-+	int sample_idx =3D 0;
-+	int last_read_err =3D 0;
-+	bool any_read_ok =3D false;
-+
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_handler =3D stat_sigint;
-+	sigaction(SIGINT, &sa, NULL);
-+
-+	stat_stop =3D 0;
-+
-+	stat_print_header(opts);
-+
-+	for (sample_idx =3D 0;
-+	     !stat_stop && (max_samples < 0 || sample_idx < max_samples);
-+	     sample_idx++) {
-+		/* Read all present items */
-+		for (int i =3D 0; i < nitems; i++) {
-+			struct stat_item *it =3D &items[i];
-+			uint64_t raw =3D 0;
-+			int rc;
-+
-+			if (!it->present) {
-+				it->cur_value =3D NAN;
-+				continue;
-+			}
-+
-+			rc =3D ctx->ops->read(&it->desc, &raw);
-+			if (rc < 0) {
-+				it->cur_value =3D NAN;
-+				last_read_err =3D rc;
-+				continue;
-+			}
-+
-+			any_read_ok =3D true;
-+			it->cur_raw =3D raw;
-+			it->cur_value =3D (double)raw;
-+		}
-+
-+		/* Print sample rows */
-+		stat_print_rows(opts, items, nitems, num_devices, sample_idx);
-+
-+		if (opts->once)
-+			break;
-+
-+		if (max_samples > 0 && sample_idx + 1 >=3D max_samples)
-+			break;
-+
-+		if (opts->interval_ms > 0) {
-+			struct timespec ts =3D {
-+				.tv_sec  =3D opts->interval_ms / 1000,
-+				.tv_nsec =3D (opts->interval_ms % 1000) * 1000000UL,
-+			};
-+			nanosleep(&ts, NULL);
-+		}
-+	}
-+
-+	/*
-+	 * If no item ever produced a valid sample, propagate the last
-+	 * read error so the CLI exits with PMTCTL_EXIT_SYSTEM rather
-+	 * than masking a hard I/O failure as success.  A stat run that
-+	 * had at least one good sample stays rc=3D0 (transient device
-+	 * misses surface as NaN in the printed output).
-+	 */
-+	if (!any_read_ok && last_read_err < 0)
-+		return last_read_err;
-+
-+	return 0;
-+}
-+
-+int stat_run(const struct stat_options *opts)
-+{
-+	const struct pmtctl_context *ctx;
-+	auto_free struct stat_item *items =3D NULL;
-+	auto_free int *dev_indices =3D NULL;
-+	int num_sel_devices =3D 0;
-+	int nitems =3D 0;
-+	int ret;
-+
-+	ctx =3D pmtctl_get_ctx();
-+	if (!ctx)
-+		return log_ret(PMTCTL_ERR_CMD_STAT, "context not initialized");
-+
-+	if (ctx->num_devices <=3D 0)
-+		return log_ret(PMTCTL_ERR_CMD_STAT, "no devices available");
-+
-+	dev_indices =3D calloc(ctx->num_devices, sizeof(*dev_indices));
-+	if (!dev_indices)
-+		return log_ret(-ENOMEM, "can't create device index");
-+
-+	/*
-+	 * Device selection:
-+	 *  - If a selector string is present, parse it and call pmt_select_devic=
-es()
-+	 *    to get the subset of device indices.
-+	 *  - Otherwise, use all devices.
-+	 */
-+	if (opts->device_selector) {
-+		struct pmt_ep_selector sel;
-+
-+		ret =3D pmtctl_parse_ep_selector(opts->device_selector, &sel);
-+		if (ret < 0)
-+			return ret;
-+
-+		num_sel_devices =3D pmt_select_devices(ctx, &sel, dev_indices, ctx->num_=
-devices);
-+		if (num_sel_devices < 0)
-+			return num_sel_devices;
-+
-+		if (num_sel_devices =3D=3D 0) {
-+			return log_ret(PMTCTL_ERR_CMD_STAT, "no devices match selector '%s'",
-+				       opts->device_selector);
-+		}
-+	} else {
-+		/* No selector: use all devices. */
-+		for (int i =3D 0; i < ctx->num_devices; i++)
-+			dev_indices[i] =3D i;
-+
-+		num_sel_devices =3D ctx->num_devices;
-+	}
-+
-+	/*
-+	 * Build items according to mode:
-+	 *   - metric mode: use events + bindings
-+	 *   - raw mode:    use raw_specs only
-+	 *
-+	 * stat_parse_options() already enforces mutual exclusion between them.
-+	 */
-+	if (opts->nr_raw_specs > 0) {
-+		ret =3D stat_build_raw_items(opts, ctx, dev_indices, num_sel_devices, &i=
-tems,
-+					   &nitems);
-+	} else {
-+		ret =3D stat_build_metric_items(opts, ctx, dev_indices, num_sel_devices,=
- &items,
-+					      &nitems);
-+		if (!ret)
-+			ret =3D filter_metric_items_present(opts, &items, &nitems, &num_sel_dev=
-ices);
-+	}
-+
-+	if (ret)
-+		return ret;
-+
-+	/* Check that we have permission to access the devices */
-+	ret =3D stat_check_device_access(items, nitems);
-+	if (ret)
-+		return ret;
-+
-+	return stat_loop_metrics(opts, ctx, items, nitems, num_sel_devices);
-+}
-diff --git a/tools/arch/x86/pmtctl/src/main.c b/tools/arch/x86/pmtctl/src/m=
-ain.c
-index d9666956c27b..81117456252c 100644
---- a/tools/arch/x86/pmtctl/src/main.c
-+++ b/tools/arch/x86/pmtctl/src/main.c
-@@ -45,6 +45,7 @@ static void print_usage(FILE *out)
- 		"\n"
- 		"Commands:\n"
- 		"  list      List available PMT devices and metrics\n"
-+		"  stat      Sample metrics over time (perf stat-like)\n"
- 		"\n"
- 		"Run 'pmtctl <command> --help' for command-specific options.\n"
- 	);
-@@ -116,6 +117,9 @@ static int cmd_dispatch(int argc, char **argv)
- 	if (!strcmp(cmd, "list"))
- 		return cmd_list(cmd_argc, cmd_argv, &gopts);
+ all: $(TARGET)
 =20
-+	if (!strcmp(cmd, "stat"))
-+		return cmd_stat(cmd_argc, cmd_argv, &gopts);
+ $(TARGET): $(OBJ) $(LIBPMTCTL_ARTIFACTS)
+ 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LIBPMTCTL_ARTIFACTS) $(LDLIBS)
+=20
++# If JSON definitions exist, ensure the generated built-in defs are up to
++# date before the lib sub-make runs. Without this, edits under defs/ would
++# not propagate into pmtctl until the user explicitly ran 'make defs'.
++ifneq ($(DEFS_JSON),)
++$(LIBPMTCTL_CORE): $(GENERATED_DIR)/builtin_defs.c
++endif
 +
- 	if (!strcmp(cmd, "--help") || !strcmp(cmd, "help")) {
- 		print_usage(stdout);
- 		return 0;
+ libpmtctl_core: $(LIBPMTCTL_CORE)
+=20
+ sample: $(SAMPLE_TARGET)
+@@ -69,15 +97,58 @@ $(SAMPLE_TARGET): $(SAMPLE_SRC) $(LIBPMTCTL_ARTIFACTS)
+ 	@mkdir -p $(dir $@)
+ 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(LIBPMTCTL_ARTIFACTS) $(LDLIBS)
+=20
+-$(LIBPMTCTL_ARTIFACTS): $(LIBPMTCTL_STAMP)
+-
+-$(LIBPMTCTL_STAMP): FORCE
++# Recurse into lib/ on every invocation. The sub-make is incremental and
++# does nothing when up to date. Because $(LIBPMTCTL_CORE) has its own
++# recipe here, GNU make re-stats it afterwards, so any mtime advance from
++# sub-make correctly propagates to $(TARGET) and triggers a relink.
++$(LIBPMTCTL_CORE): FORCE
+ 	$(MAKE) -C $(LIBDIR) BUILD=3D$(BUILD)
+-	@mkdir -p $(dir $@)
+-	@touch $@
+=20
+ FORCE:
+=20
++# --- XML -> JSON step (network-bound; opt-in) ---
++#
++# Fetches the Intel-PMT git repo (cached under $(PMT_CACHE_DIR)) and
++# converts every aggregator XML into perf-style JSON under $(DEFS_DIR)/.
++# Not wired into 'all' on purpose: avoid surprise git clones.
++defs-json-fetch: $(DEFS_JSON_STAMP)
++
++$(DEFS_JSON_STAMP): $(XML2JSON_SCRIPT)
++	@echo "defs-json-fetch: git cloning Intel-PMT into $(PMT_CACHE_DIR)"
++	@command -v $(PYTHON) >/dev/null 2>&1 || { \
++		echo "$(PYTHON) is required for $(XML2JSON_SCRIPT)" >&2; exit 1; }
++	@mkdir -p $(DEFS_DIR)
++	$(PYTHON) $(XML2JSON_SCRIPT) \
++		--fetch-pmt-repo \
++		--pmt-cache-dir $(PMT_CACHE_DIR) \
++		--output-dir $(DEFS_DIR)
++	@touch $@
++
++# Run 'git pull' on the cached Intel-PMT repo, then regenerate JSON.
++defs-json-pull: $(XML2JSON_SCRIPT)
++	@echo "defs-json-pull: running 'git pull' on $(PMT_CACHE_DIR)"
++	@mkdir -p $(DEFS_DIR)
++	$(PYTHON) $(XML2JSON_SCRIPT) \
++		--fetch-pmt-repo --refresh-pmt-repo \
++		--pmt-cache-dir $(PMT_CACHE_DIR) \
++		--output-dir $(DEFS_DIR)
++	@touch $(DEFS_JSON_STAMP)
++
++# --- JSON -> C step (does NOT build pmtctl) ---
++#
++# DEFS_JSON is expanded at parse time, so 'make defs-json-fetch' must be r=
+un
++# in a separate invocation before 'make defs' the first time.
++$(GENERATED_DIR)/builtin_defs.c: $(GEN_DEFS_SCRIPT) $(DEFS_JSON)
++	@mkdir -p $(GENERATED_DIR)
++	@if [ -z "$(DEFS_JSON)" ]; then \
++		echo "No JSON files under $(DEFS_DIR)/. Run 'make defs-json-fetch' first=
+," >&2; \
++		echo "then re-run 'make defs'." >&2; \
++		exit 1; \
++	fi
++	@command -v $(PYTHON) >/dev/null 2>&1 || { \
++		echo "$(PYTHON) is required for $(GEN_DEFS_SCRIPT)" >&2; exit 1; }
++	$(PYTHON) $(GEN_DEFS_SCRIPT) $(DEFS_JSON) > $@
++
+ # Install settings
+ PREFIX ?=3D /usr/local
+ DESTDIR ?=3D
+@@ -105,6 +176,15 @@ uninstall:
+ 	$(MAKE) -C $(LIBDIR) BUILD=3D$(BUILD) PREFIX=3D$(PREFIX) DESTDIR=3D$(DEST=
+DIR) uninstall-headers
+ 	$(MAKE) -C $(LIBDIR) BUILD=3D$(BUILD) PREFIX=3D$(PREFIX) DESTDIR=3D$(DEST=
+DIR) uninstall-pkgconfig
+ 	@echo "Removed $(DESTDIR)$(PREFIX)/bin/$(TARGET) (if present)"
++defs: $(GENERATED_DIR)/builtin_defs.c
++	@if [ -f $(GENERATED_DIR)/builtin_defs.c ]; then \
++		echo "Generated defs in $(GENERATED_DIR)/builtin_defs.c"; \
++	fi
++
++# Separate from 'clean' so a routine clean does not throw away the
++# (potentially slow) fetched/converted JSON tree.
++defs-clean:
++	rm -rf $(DEFS_DIR) $(GENERATED_DIR)/builtin_defs.c
+=20
+ $(BUILDDIR)/%.o: $(SRCDIR)/%.c
+ 	@mkdir -p $(BUILDDIR)
+@@ -115,4 +195,4 @@ clean:
+ 		$(MAKE) -C $(LIBDIR) BUILD=3D$$build_type clean; \
+ 		rm -rf build/$$build_type; \
+ 	done
+-	rm -rf $(BUILDDIR) $(TARGET)
++	rm -rf $(BUILDDIR) $(TARGET) $(GENERATED_DIR)/builtin_defs.c
+diff --git a/tools/arch/x86/pmtctl/scripts/pmtxml2json.md b/tools/arch/x86/=
+pmtctl/scripts/pmtxml2json.md
+new file mode 100644
+index 000000000000..67eb08a83c86
+--- /dev/null
++++ b/tools/arch/x86/pmtctl/scripts/pmtxml2json.md
+@@ -0,0 +1,158 @@
++# pmtxml2json: XML =E2=86=92 perf JSON conversion
++
++[`pmtxml2json.py`](pmtxml2json.py) converts Intel PMT (Platform Monitoring
++Technology) Aggregator XML files into perf-style JSON event definitions
++consumed by `pmtctl` (via `gen_builtin_defs.py` =E2=86=92 `generated/built=
+in_defs.c`).
++
++This document focuses on the **EventName naming convention** =E2=80=94 the=
+ rule used
++to derive a perf-style event name from each `<TELC:sample>` element.
++
++## Inputs
++
++For each sample, only two XML inputs participate in naming:
++
++| Input             | XML source                                | Example =
+value             |
++| ----------------- | ----------------------------------------- | --------=
+----------------- |
++| `name`            | `name=3D` attribute on `<TELC:sample>`      | `IA_SC=
+ALABILITY`          |
++| `sampleSubGroup`  | `<TELC:sampleSubGroup>` child text        | `IA_SCAL=
+ABILITY_CORE7`    |
++
++The aggregator's `<TELEM:uniqueid>` (GUID) is used for the output filename
++(`pmt_ep_<guid>.json`), **not** for naming.
++
++`sampleID`, `sampleGroupID`, `lsb`, `msb`, and `productid` are not used to
++build `EventName`. They describe bit layout, packaging, or platform
++identity rather than the metric's identity, and using them would either
++produce names that change when the XML is regenerated or names that
++duplicate information already conveyed by `PMU` / `ConfigCode`.
++
++## Pre-filter: reserved samples
++
++Before naming, samples are dropped if any of the following match the
++case-insensitive pattern `reserved|rsvd` (optionally with trailing digits,
++not embedded in larger tokens):
++
++- the `name` attribute,
++- the `<TELC:sampleSubGroup>` text, or
++- the sample/group `<TELC:description>` text.
++
++Reserved samples never receive an `EventName`.
++
++## Naming rule (lazy prefix)
++
++Within a single aggregator XML, let `N(name)` be the number of non-reserved
++samples sharing the same `name`. For each surviving sample:
++
++1. **Unique name** =E2=80=94 `N(name) =3D=3D 1`:
++   `EventName =3D sanitize(name)`
++2. **Name collides** and `sampleSubGroup` is non-empty and `sampleSubGroup=
+ !=3D name`:
++   `EventName =3D sanitize(sampleSubGroup) + "." + sanitize(name)`
++3. **Name collides** but `sampleSubGroup` is empty or equals `name`:
++   `EventName =3D sanitize(name)` (no disambiguation available)
++
++### Why lazy?
++
++`sampleSubGroup` plays two different roles in practice:
++
++- A **metric-instance index** =E2=80=94 e.g. `IA_SCALABILITY_CORE7` qualif=
+ies a
++  per-core copy of `IA_SCALABILITY`. Prefixing is meaningful and useful.
++- A **container alias** =E2=80=94 e.g. `INTEL_VERSION_2` is just an enclos=
+ing
++  container around an already-unique `RTL_VERSION`. Prefixing here would
++  produce a confusing label like `intel_version_2.rtl_version`.
++
++The lazy rule borrows `sampleSubGroup` **only when `name` actually collide=
+s**,
++yielding clean labels in the common case and disambiguated ones when neede=
+d.
++
++### `sanitize()`
++
++`_sanitize_token()` normalizes free-form text into a perf-friendly token:
++
++1. Strip leading/trailing whitespace.
++2. Replace any run of non-alphanumeric characters with a single `_`.
++3. Collapse repeated `_` and trim leading/trailing `_`.
++4. Lowercase.
++
++When concatenating subgroup and name, **each part is sanitized
++separately** and joined with a literal `.`, so the dot is preserved in the
++final `EventName` (e.g. `ia_scalability_core7.ia_scalability`).
++
++## Worked example
++
++Consider an aggregator XML containing three samples:
++
++```xml
++<TELC:sampleGroup sampleID=3D"0x0">
++  <TELC:sample name=3D"RTL_VERSION" ...>
++    <TELC:sampleSubGroup>INTEL_VERSION_2</TELC:sampleSubGroup>
++    <TELC:lsb>0</TELC:lsb><TELC:msb>15</TELC:msb>
++  </TELC:sample>
++</TELC:sampleGroup>
++
++<TELC:sampleGroup sampleID=3D"0x10">
++  <TELC:sample name=3D"IA_SCALABILITY" ...>
++    <TELC:sampleSubGroup>IA_SCALABILITY_CORE0</TELC:sampleSubGroup>
++    <TELC:lsb>0</TELC:lsb><TELC:msb>7</TELC:msb>
++  </TELC:sample>
++</TELC:sampleGroup>
++
++<TELC:sampleGroup sampleID=3D"0x11">
++  <TELC:sample name=3D"IA_SCALABILITY" ...>
++    <TELC:sampleSubGroup>IA_SCALABILITY_CORE7</TELC:sampleSubGroup>
++    <TELC:lsb>0</TELC:lsb><TELC:msb>7</TELC:msb>
++  </TELC:sample>
++</TELC:sampleGroup>
++```
++
++Per-aggregator name counts:
++
++| `name`           | count |
++| ---------------- | ----- |
++| `RTL_VERSION`    | 1     |
++| `IA_SCALABILITY` | 2     |
++
++Resulting `EventName`s:
++
++| Sample            | Rule branch                      | EventName        =
+                      |
++| ----------------- | -------------------------------- | -----------------=
+--------------------- |
++| `RTL_VERSION`     | (1) unique                       | `rtl_version`    =
+                      |
++| `IA_SCALABILITY` (CORE0) | (2) collision + distinct subgroup | `ia_scala=
+bility_core0.ia_scalability`  |
++| `IA_SCALABILITY` (CORE7) | (2) collision + distinct subgroup | `ia_scala=
+bility_core7.ia_scalability`  |
++
++Note that `RTL_VERSION` is **not** prefixed with its `INTEL_VERSION_2`
++container, even though `sampleSubGroup` is set =E2=80=94 because the name =
+is
++already unique within the aggregator.
++
++## Output shape
++
++For each emitted sample, the JSON object is:
++
++```json
++{
++  "PMU": "pmt_ep_<guid>",
++  "EventName": "<name per rule above>",
++  "BriefDescription": "<sample or group description>",
++  "MetricGroup": "pmt",
++  "ConfigCode": "0x<msb><lsb><sampleID>",
++  "PlatformGroup": "<optional, from --by-path>"
++}
++```
++
++`ConfigCode` packs the perf config bits as:
++
++```
++bits  0..15  sampleID
++bits 16..23  lsb
++bits 24..31  msb
++```
++
++## EventName uniqueness
++
++Within a single aggregator XML the three-rule scheme above resolves most
++collisions.  If two samples still share the same `EventName` after
++subgroup-prefix disambiguation (rule 2) =E2=80=94 for example because neit=
+her has a
++usable `sampleSubGroup` =E2=80=94 the converter applies a last-resort ordi=
+nal suffix
++`__0`, `__1`, =E2=80=A6 and emits a `WARN` line to stderr.  The double-und=
+erscore is
++chosen to be visually distinct from any XML field so it is not mistaken fo=
+r a
++meaningful part of the metric name.
++
++Across **different** GUIDs, names may repeat =E2=80=94 they live in distin=
+ct PMUs
++and are disambiguated by the `PMU` field.
+diff --git a/tools/arch/x86/pmtctl/scripts/pmtxml2json.py b/tools/arch/x86/=
+pmtctl/scripts/pmtxml2json.py
+new file mode 100755
+index 000000000000..31995f0fc72e
+--- /dev/null
++++ b/tools/arch/x86/pmtctl/scripts/pmtxml2json.py
+@@ -0,0 +1,883 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0-only
++"""Convert Intel PMT aggregator XML files into perf JSON events.
++
++Provides core XML-to-event conversion plus optional Intel-PMT repository
++fetch/cache support.
++"""
++
++import argparse
++import glob
++import json
++import os
++import re
++import shutil
++import subprocess
++import sys
++import traceback
++
++from dataclasses import dataclass
++from typing import Dict, List, Optional, Tuple
++
++from lxml import etree  # pylint: disable=3Dc-extension-no-member
++
++METRIC_GROUP =3D "pmt"
++INTEL_PMT_REPO_URL =3D "https://github.com/intel/Intel-PMT"
++
++
++def _expand_path(path: str) -> str:
++    """Return an absolute path with user home expansion applied."""
++    return os.path.abspath(os.path.expanduser(path))
++
++
++def _repo_dir_name_from_url(repo_url: str) -> str:
++    """Return a deterministic cache directory name for a git repository UR=
+L."""
++    cleaned =3D (repo_url or "").rstrip("/")
++    if cleaned.endswith(".git"):
++        cleaned =3D cleaned[: -len(".git")]
++
++    base =3D os.path.basename(cleaned) or "repo"
++    base =3D re.sub(r"[^0-9A-Za-z._-]+", "-", base).strip("-")
++    return base or "repo"
++
++
++def _fetch_intel_pmt_xml_root(
++    cache_dir: str,
++    refresh: bool =3D False,
++    debug: bool =3D False,
++    repo_url: str =3D INTEL_PMT_REPO_URL,
++) -> Optional[str]:
++    """Ensure Intel-PMT exists in cache and return its xml root path."""
++    cache_root =3D _expand_path(cache_dir)
++    repo_dir =3D os.path.join(cache_root, _repo_dir_name_from_url(repo_url=
+))
++
++    os.makedirs(cache_root, exist_ok=3DTrue)
++
++    try:
++        if not os.path.isdir(repo_dir):
++            if debug:
++                print(
++                    f"# fetch: cloning {repo_url} into {repo_dir}",
++                    file=3Dsys.stderr,
++                )
++            subprocess.run(
++                ["git", "clone", "--depth", "1", repo_url, repo_dir],
++                check=3DTrue,
++                stdout=3Dsubprocess.PIPE,
++                stderr=3Dsubprocess.PIPE,
++                text=3DTrue,
++                timeout=3D300,
++            )
++        elif refresh:
++            if debug:
++                print(f"# fetch: refreshing cached repo at {repo_dir}", fi=
+le=3Dsys.stderr)
++            subprocess.run(
++                ["git", "-C", repo_dir, "pull", "--ff-only"],
++                check=3DTrue,
++                stdout=3Dsubprocess.PIPE,
++                stderr=3Dsubprocess.PIPE,
++                text=3DTrue,
++                timeout=3D300,
++            )
++        elif debug:
++            print(f"# fetch: using cached repo at {repo_dir}", file=3Dsys.=
+stderr)
++    except FileNotFoundError:
++        print("ERROR: git is not installed or not found in PATH.", file=3D=
+sys.stderr)
++        return None
++    except subprocess.TimeoutExpired:
++        print("ERROR: fetching Intel-PMT timed out.", file=3Dsys.stderr)
++        return None
++    except subprocess.CalledProcessError as ex:
++        err =3D (ex.stderr or "").strip()
++        print("ERROR: failed to fetch Intel-PMT repository.", file=3Dsys.s=
+tderr)
++        if err:
++            print(f"       git stderr: {err}", file=3Dsys.stderr)
++        return None
++
++    xml_root =3D os.path.join(repo_dir, "xml")
++    if not os.path.isdir(xml_root):
++        print(
++            (
++                "ERROR: fetched repository does not contain expected xml "
++                f"directory: {xml_root}"
++            ),
++            file=3Dsys.stderr,
++        )
++        return None
++
++    return xml_root
++
++
++def _find_pmt_xml(
++    fetched_xml_root: Optional[str], by_path: Optional[str]
++) -> Optional[str]:
++    """Locate pmt.xml in the Intel-PMT xml/ folder.
++
++    Prefer the fetched repo's xml root. Otherwise, walk upward from --by-p=
+ath
++    looking for a pmt.xml sibling (xml/ folder root).
++    """
++    candidates: List[str] =3D []
++    if fetched_xml_root:
++        candidates.append(os.path.join(fetched_xml_root, "pmt.xml"))
++
++    if by_path:
++        start =3D by_path
++        if os.path.isfile(start):
++            start =3D os.path.dirname(start) or "."
++        start =3D os.path.abspath(start)
++        cur =3D start
++        while True:
++            candidates.append(os.path.join(cur, "pmt.xml"))
++            parent =3D os.path.dirname(cur)
++            if parent =3D=3D cur:
++                break
++            cur =3D parent
++
++    for c in candidates:
++        if os.path.isfile(c):
++            return c
++    return None
++
++
++# ---------- Reserved/RSVD skipping ----------
++# Name: match 'reserved' or 'rsvd' with optional digits, not embedded in l=
+arger tokens
++RESERVED_RX =3D re.compile(
++    r"(?<![a-z0-9])(reserved|rsvd)(?:\d+)?(?![a-z0-9])", re.IGNORECASE
++)
++# Description: exact 'reserved' or 'rsvd' with optional trailing digits/wh=
+itespace
++DESC_RESERVED_RX =3D re.compile(r"\s*(?:reserved|rsvd)(?:\s*\d+)?\s*$", re=
+.IGNORECASE)
++
++
++@dataclass(frozen=3DTrue)
++class SampleDef:  # pylint: disable=3Dtoo-many-instance-attributes
++    """Normalized representation of one PMT sample field definition."""
++
++    guid: int
++    group_name: str
++    sample_id: int
++    sample_name: str
++    lsb: int
++    msb: int
++    datatype_idref: Optional[str]
++    description: Optional[str]
++    sample_type: Optional[str]
++    sample_subgroup: Optional[str]
++
++
++@dataclass
++class Counters:
++    """Per-file conversion counters for summary diagnostics."""
++
++    total: int =3D 0
++    emitted: int =3D 0
++    skipped: int =3D 0
++
++
++def norm(tag: str) -> str:
++    """Return XML tag name without namespace prefix."""
++    return tag[tag.rfind("}") + 1 :] if "}" in tag else tag
++
++
++def parse_xml(xml_path: str):
++    """Parse and return the XML root element for the given file path."""
++    # pylint: disable-next=3Dc-extension-no-member
++    parser =3D etree.XMLParser(load_dtd=3DTrue, resolve_entities=3DTrue, n=
+o_network=3DFalse)
++    # pylint: disable-next=3Dc-extension-no-member
++    root =3D etree.parse(xml_path, parser).getroot()
++
++    return root
++
++
++def _basedir_to_name(basedir: str) -> str:
++    """Normalize pmt.xml <basedir> into the per-GUID short name.
++
++    Lowercases the string and replaces '/' with '_'. Other characters
++    (including existing hyphens like 'RMID-EE') are preserved.
++    """
++    if not basedir:
++        return ""
++    return basedir.strip().lower().replace("/", "_")
++
++
++def _parse_mapping_entry(
++    m,
++) -> Optional[Tuple[int, str, str]]:
++    """Extract (guid, name, description) from a <mapping> element.
++
++    Returns None if the mapping has no usable GUID.
++    """
++    guid_txt =3D m.attrib.get("guid")
++    if not guid_txt:
++        return None
++
++    try:
++        guid =3D int(guid_txt, 0)
++    except ValueError:
++        guid =3D int(guid_txt, 16)
++
++    description =3D ""
++    basedir =3D ""
++    for ch in m:
++        t =3D norm(ch.tag).lower()
++        if t =3D=3D "description":
++            description =3D (ch.text or "").strip()
++        elif t =3D=3D "xmlset":
++            for sub in ch:
++                if norm(sub.tag).lower() =3D=3D "basedir":
++                    basedir =3D (sub.text or "").strip()
++
++    return guid, _basedir_to_name(basedir), description
++
++
++def _merge_duplicate_mapping(existing: Dict[str, object], name: str) -> No=
+ne:
++    """Merge a duplicate-GUID mapping's alternate name into existing recor=
+d."""
++    if not name or name =3D=3D existing["name"]:
++        return
++    extra =3D f"(also: {name})"
++    if existing["description"]:
++        if extra not in existing["description"]:
++            existing["description"] =3D f"{existing['description']} {extra=
+}"
++    else:
++        existing["description"] =3D extra
++
++
++def _parse_pmt_xml_guids(pmt_xml_path: str) -> List[Dict[str, object]]:
++    """Parse pmt.xml and return one record per unique <mapping> GUID.
++
++    Each record has: {"guid": int, "name": str, "description": str}.
++    When the same GUID appears in multiple <mapping> entries (unrelated
++    platforms occasionally reuse early GUIDs), the first occurrence wins
++    and subsequent ones are merged into the description (best-effort, for
++    diagnostics).
++    """
++    root =3D parse_xml(pmt_xml_path)
++    entries: List[Dict[str, object]] =3D []
++    by_guid: Dict[int, Dict[str, object]] =3D {}
++
++    for m in root.iter():
++        if norm(m.tag).lower() !=3D "mapping":
++            continue
++
++        parsed =3D _parse_mapping_entry(m)
++        if parsed is None:
++            continue
++        guid, name, description =3D parsed
++
++        existing =3D by_guid.get(guid)
++        if existing is None:
++            rec =3D {"guid": guid, "name": name, "description": descriptio=
+n}
++            by_guid[guid] =3D rec
++            entries.append(rec)
++        else:
++            _merge_duplicate_mapping(existing, name)
++
++    entries.sort(key=3Dlambda e: e["guid"])
++    return entries
++
++
++def _write_pmt_guids_json(
++    pmt_xml_src: str, output_dir: str, debug: bool =3D False
++) -> None:
++    """Parse pmt.xml and write a sidecar pmt_guids.json into output_dir."""
++    entries =3D _parse_pmt_xml_guids(pmt_xml_src)
++    out_path =3D os.path.join(output_dir, "pmt_guids.json")
++    serial =3D [
++        {
++            "guid": f"0x{e['guid']:08x}",
++            "name": e["name"],
++            "description": e["description"],
++        }
++        for e in entries
++    ]
++    with open(out_path, "w", encoding=3D"utf-8") as f:
++        json.dump(serial, f, indent=3D2)
++        f.write("\n")
++    if debug:
++        print(f"# wrote {out_path} ({len(serial)} entries)", file=3Dsys.st=
+derr)
++
++
++def get_guid(root) -> int:
++    """Extract the telemetry GUID from <uniqueid>."""
++    for e in root.iter():
++        if norm(e.tag).lower() =3D=3D "uniqueid":
++            v =3D (e.text or "").strip()
++            if not v:
++                break
++
++            try:
++                # works for "0x1234" or "1234" if decimal was intended
++                return int(v, 0)
++            except ValueError:
++                # force hex for values without prefix
++                return int(v, 16)
++
++    raise ValueError("Missing <TELEM:uniqueid>")
++
++
++# pylint: disable=3Dtoo-many-locals,too-many-branches,too-many-statements
++def parse_samples(
++    root,
++) -> List[SampleDef]:
++    """Parse SampleGroup/Sample entries into filtered SampleDef records."""
++    guid =3D get_guid(root)
++    out: List[SampleDef] =3D []
++
++    for sg in root.iter():
++        if norm(sg.tag).lower() !=3D "samplegroup":
++            continue
++
++        sid_txt =3D sg.attrib.get("sampleID") or sg.attrib.get("sampleid")
++        if sid_txt is None:
++            raise ValueError("SampleGroup missing sampleID")
++
++        sample_id =3D int(sid_txt, 0)
++        group_name =3D (sg.attrib.get("name") or "").strip() or f"group_{s=
+ample_id}"
++        group_len =3D None
++        group_desc =3D None
++
++        for child in sg:
++            t =3D norm(child.tag).lower()
++            if t =3D=3D "length":
++                try:
++                    group_len =3D int((child.text or "").strip(), 0)
++                except (TypeError, ValueError):
++                    pass
++            elif t =3D=3D "description":
++                group_desc =3D (child.text or "").strip()
++
++        if group_len is not None and group_len !=3D 64:
++            raise ValueError(
++                f"{group_name} sampleID=3D{sample_id} length=3D{group_len}=
+ (expected 64)"
++            )
++
++        samples =3D [c for c in sg if norm(c.tag).lower() =3D=3D "sample"]
++        if not samples:
++            continue
++
++        for s in samples:
++            sname =3D (s.attrib.get("name") or f"sample_{sample_id}").stri=
+p()
++
++            lsb =3D None
++            msb =3D None
++            stype =3D None
++            sdesc =3D None
++            ssubgroup =3D None
++            dtype_ref =3D s.attrib.get("dataTypeIDREF") or s.attrib.get("d=
+atatypeIDREF")
++
++            for ch in s:
++                t =3D norm(ch.tag).lower()
++                if t =3D=3D "lsb":
++                    lsb =3D int((ch.text or "").strip(), 0)
++                elif t =3D=3D "msb":
++                    msb =3D int((ch.text or "").strip(), 0)
++                elif t =3D=3D "sampletype":
++                    stype =3D (ch.text or "").strip()
++                elif t =3D=3D "description":
++                    sdesc =3D (ch.text or "").strip()
++                elif t =3D=3D "samplesubgroup":
++                    ssubgroup =3D (ch.text or "").strip()
++                elif t =3D=3D "datatypeidref" and not dtype_ref:
++                    dtype_ref =3D (ch.text or "").strip()
++
++            if lsb is None or msb is None:
++                raise ValueError(f"{sname} (sampleID=3D{sample_id}): missi=
+ng lsb/msb")
++
++            if not 0 <=3D lsb <=3D msb < 64:
++                raise ValueError(
++                    f"{sname} (sampleID=3D{sample_id}): invalid bit range =
+{lsb}-{msb}"
++                )
++
++            desc_text =3D sdesc if sdesc else group_desc
++
++            # Skip reserved/rsvd samples by name, sampleSubGroup, or descr=
+iption
++            is_reserved_name =3D RESERVED_RX.search(sname)
++            is_reserved_sub =3D ssubgroup and RESERVED_RX.search(ssubgroup)
++            is_reserved_desc =3D desc_text and DESC_RESERVED_RX.fullmatch(=
+desc_text)
++            if is_reserved_name or is_reserved_sub or is_reserved_desc:
++                continue
++
++            out.append(
++                SampleDef(
++                    guid=3Dguid,
++                    group_name=3Dgroup_name,
++                    sample_id=3Dsample_id,
++                    sample_name=3Dsname,
++                    lsb=3Dlsb,
++                    msb=3Dmsb,
++                    datatype_idref=3Ddtype_ref,
++                    description=3Ddesc_text,
++                    sample_type=3Dstype,
++                    sample_subgroup=3Dssubgroup,
++                )
++            )
++
++    return out
++
++
++def pack_config(sample_id: int, lsb: int, msb: int) -> int:
++    """Pack sample_id/lsb/msb into perf ConfigCode bit layout."""
++    return (sample_id & 0xFFFF) | ((lsb & 0xFF) << 16) | ((msb & 0xFF) << =
+24)
++
++
++def _sanitize_token(s: str) -> str:
++    """Normalize free-form text into a lowercase underscore token."""
++    t =3D re.sub(r"[^0-9a-zA-Z]+", "_", s.strip()).lower()
++    t =3D re.sub(r"_+", "_", t).strip("_")
++
++    return t
++
++
++def brief_desc(s: SampleDef) -> str:
++    """Build a short description for perf JSON output."""
++    if s.description:
++        return re.sub(r"\s+", " ", s.description)[:240]
++
++    width =3D s.msb - s.lsb + 1
++
++    return f"{s.sample_name.replace('_', ' ').title()} ({width}b)"
++
++
++def make_event(
++    s: SampleDef,
++    pmu_name: str,
++    name_counts: Dict[str, int],
++    platform_group: Optional[str] =3D None,
++) -> Dict[str, str]:
++    """Create one perf event dictionary for a sample."""
++    cfg =3D pack_config(s.sample_id, s.lsb, s.msb)
++    # Lazy-prefix disambiguation: only borrow sampleSubGroup when the bare
++    # sample name collides with another non-reserved sample in this
++    # aggregator. sampleSubGroup is sometimes a metric-instance index
++    # (e.g. IA_SCALABILITY_CORE7) and sometimes a container alias
++    # (e.g. INTEL_VERSION_2); unconditional prefixing produces confusing
++    # labels in the latter case.
++    if name_counts.get(s.sample_name, 0) <=3D 1:
++        evname =3D _sanitize_token(s.sample_name)
++    elif s.sample_subgroup and s.sample_subgroup !=3D s.sample_name:
++        evname =3D (
++            f"{_sanitize_token(s.sample_subgroup)}.{_sanitize_token(s.samp=
+le_name)}"
++        )
++    else:
++        # No subgroup available for disambiguation; return the bare name.
++        # The caller is responsible for detecting and resolving any result=
+ing
++        # duplicate EventName via _resolve_duplicate_event_names().
++        evname =3D _sanitize_token(s.sample_name)
++
++    e =3D {
++        "PMU": pmu_name,
++        "EventName": evname,
++        "BriefDescription": brief_desc(s),
++        "MetricGroup": METRIC_GROUP,
++        "ConfigCode": f"0x{cfg:08x}",
++    }
++
++    if platform_group:
++        e["PlatformGroup"] =3D platform_group
++
++    return e
++
++
++def _resolve_duplicate_event_names(
++    out: List[Dict[str, str]], pmu_name: str, agg_xml: str
++) -> None:
++    """Detect duplicate EventNames and rename collisions as name__0, name_=
+_1, ...
++
++    The subgroup-prefix disambiguation in make_event covers the common cas=
+e.
++    This function is a last-resort safety net for names that could not be
++    disambiguated there (e.g. no usable sampleSubGroup).  The double-under=
+score
++    suffix is intentionally distinct from any XML field so it is not mista=
+ken
++    for a meaningful part of the metric name.
++    """
++    seen: Dict[str, List[int]] =3D {}
++    for i, e in enumerate(out):
++        name =3D e["EventName"]
++        seen.setdefault(name, []).append(i)
++
++    for name, indices in seen.items():
++        if len(indices) <=3D 1:
++            continue
++        print(
++            f"WARN: {agg_xml}: PMU=3D{pmu_name}: "
++            f"EventName '{name}' collision ({len(indices)} entries); "
++            f"renaming as {name}__0 .. {name}__{len(indices) - 1}",
++            file=3Dsys.stderr,
++        )
++        for ordinal, idx in enumerate(indices):
++            out[idx]["EventName"] =3D f"{name}__{ordinal}"
++
++
++# ------------------------------
++# main()
++# ------------------------------
++# pylint: disable=3Dtoo-many-locals,too-many-branches,too-many-statements
++def main(
++    argv: List[str],
++) -> int:
++    """CLI entry point: discover XML files, convert, and write JSON output=
+s."""
++    ap =3D argparse.ArgumentParser(
++        description=3D"Convert Intel PMT Aggregator XML to perf JSON (inte=
+l_pmt only)"
++    )
++    ap.add_argument(
++        "xml",
++        nargs=3D"?",
++        help=3D"Input PMT Aggregator XML file (optional when using --by-pa=
+th)",
++    )
++    ap.add_argument(
++        "--by-path",
++        default=3DNone,
++        help=3D(
++            "Directory to auto-discover PMT XMLs. When used without a "
++            "positional XML, processes all *_aggregator.xml recursively "
++            "and emits one output per directory."
++        ),
++    )
++    ap.add_argument(
++        "--output-dir",
++        default=3DNone,
++        help=3D(
++            "Directory where JSON output files will be placed. Used "
++            "verbatim (files are written flat by GUID). If omitted, "
++            "the deepest folder name from --by-path is used (lowercased)."
++        ),
++    )
++    ap.add_argument(
++        "--fetch-pmt-repo",
++        action=3D"store_true",
++        help=3D(
++            "Fetch Intel-PMT repository and use its xml folder when "
++            "local xml/by-path inputs are not provided."
++        ),
++    )
++    ap.add_argument(
++        "--pmt-cache-dir",
++        default=3D"~/.cache/pmtctl",
++        help=3D(
++            "Cache directory for Intel-PMT repository clone "
++            "(default: ~/.cache/pmtctl)."
++        ),
++    )
++    ap.add_argument(
++        "--refresh-pmt-repo",
++        action=3D"store_true",
++        help=3D(
++            "Refresh cached Intel-PMT repository before conversion "
++            "(used with --fetch-pmt-repo)."
++        ),
++    )
++    ap.add_argument(
++        "--pmt-repo-url",
++        default=3DINTEL_PMT_REPO_URL,
++        help=3Dargparse.SUPPRESS,
++    )
++    ap.add_argument("--debug", action=3D"store_true")
++    args =3D ap.parse_args(argv)
++
++    if args.refresh_pmt_repo and not args.fetch_pmt_repo:
++        print(
++            "ERROR: --refresh-pmt-repo requires --fetch-pmt-repo.",
++            file=3Dsys.stderr,
++        )
++        return 2
++
++    fetched_xml_root: Optional[str] =3D None
++    if args.fetch_pmt_repo:
++        fetched_xml_root =3D _fetch_intel_pmt_xml_root(
++            cache_dir=3Dargs.pmt_cache_dir,
++            refresh=3Dargs.refresh_pmt_repo,
++            debug=3Dargs.debug,
++            repo_url=3Dargs.pmt_repo_url,
++        )
++        if fetched_xml_root is None:
++            return 2
++        if args.debug:
++            print(f"# fetch: xml root=3D{fetched_xml_root}", file=3Dsys.st=
+derr)
++        if args.by_path is None and args.xml is None:
++            args.by_path =3D fetched_xml_root
++
++    # ------------------------------
++    # Auto-discovery helpers
++    # ------------------------------
++    def _pick_one(cands, label):
++        """Pick deterministically: shortest path first, then alphabetical.=
+"""
++        if not cands:
++            return None
++
++        cands =3D sorted(cands, key=3Dlambda p: (len(p), p))
++        if args.debug and len(cands) > 1:
++            print(
++                (
++                    f"# by-path: multiple {label} matches, choosing: {cand=
+s[0]} ; "
++                    f"others: {cands[1:]}"
++                ),
++                file=3Dsys.stderr,
++            )
++
++        return cands[0]
++
++    def _discover_xmls_by_path(p):
++        """Return (aggregator, common) or (None, None) if not found."""
++        if not p:
++            return (None, None)
++
++        base =3D p
++        if os.path.isfile(base):
++            base =3D os.path.dirname(base) or "."
++
++        # First, non-recursive search
++        agg =3D glob.glob(os.path.join(base, "*_aggregator.xml"))
++        com =3D glob.glob(os.path.join(base, "*_common.xml"))
++
++        # If any missing, try recursive
++        if not agg or not com:
++            agg =3D agg or glob.glob(
++                os.path.join(base, "**", "*_aggregator.xml"), recursive=3D=
+True
++            )
++            com =3D com or glob.glob(
++                os.path.join(base, "**", "*_common.xml"), recursive=3DTrue
++            )
++
++        return (
++            _pick_one(agg, "aggregator"),
++            _pick_one(com, "common"),
++        )
++
++    def _rel_parts_from_root(d: str, root: str) -> List[str]:
++        """Return sanitized relative path segments from root to d."""
++        try:
++            rel =3D os.path.relpath(os.path.normpath(d), os.path.normpath(=
+root))
++        except ValueError:
++            return []
++        if rel in (".", "") or rel.startswith(".."):
++            return []
++
++        def _seg(s: str) -> str:
++            s =3D (s or "").strip().lower()
++            s =3D re.sub(r"[^0-9a-z]+", "-", s)
++            return re.sub(r"-+", "-", s).strip("-")
++
++        out: List[str] =3D []
++        for seg in rel.split(os.sep):
++            if seg in (".", ".."):
++                continue
++            s =3D _seg(seg)
++            if s:
++                out.append(s)
++        return out
++
++    def _discover_all_xml_sets_by_path(
++        p: str,
++    ) -> List[Tuple[str, List[str]]]:
++        """Return a list of (aggregator, rel_parts) work items."""
++        if not p:
++            return []
++
++        base =3D p
++        if os.path.isfile(base):
++            base =3D os.path.dirname(base) or "."
++
++        # Find every directory that contains an *_aggregator.xml
++        agg_all =3D glob.glob(
++            os.path.join(base, "**", "*_aggregator.xml"), recursive=3DTrue
++        )
++        if not agg_all:
++            # allow the base directory itself
++            agg_all =3D glob.glob(os.path.join(base, "*_aggregator.xml"))
++
++        dir_to_aggs: Dict[str, List[str]] =3D {}
++        for a in agg_all:
++            d =3D os.path.dirname(a) or "."
++            dir_to_aggs.setdefault(d, []).append(a)
++
++        work: List[Tuple[str, List[str]]] =3D []
++        for d in sorted(dir_to_aggs.keys()):
++            agg =3D _pick_one(dir_to_aggs[d], "aggregator")
++            if not agg:
++                continue
++
++            rel_parts =3D _rel_parts_from_root(d, base)
++            work.append((agg, rel_parts))
++
++        return work
++
++    # Determine work items
++    work_items: List[Tuple[str, List[str]]] =3D []
++
++    if args.by_path and args.xml is None:
++        # Recursive multi-mode
++        work_items =3D _discover_all_xml_sets_by_path(args.by_path)
++        if args.debug:
++            print(
++                f"# by-path discovered {len(work_items)} aggregator direct=
+ory(ies)",
++                file=3Dsys.stderr,
++            )
++    else:
++        # Single-mode (backwards compatible): by-path can auto-fill missin=
+g files
++        if args.by_path:
++            a_auto, _ =3D _discover_xmls_by_path(args.by_path)
++            if args.xml is None:
++                args.xml =3D a_auto
++            if args.debug:
++                print(
++                    f"# by-path resolved: xml=3D{args.xml}",
++                    file=3Dsys.stderr,
++                )
++
++        if args.xml:
++            rel_parts: List[str] =3D []
++            if args.by_path:
++                rel_parts =3D _rel_parts_from_root(
++                    os.path.dirname(args.xml) or ".", args.by_path
++                )
++            work_items =3D [(args.xml, rel_parts)]
++
++    # Sanity check: we must have at least one aggregator XML to process
++    if not work_items:
++        print(
++            (
++                "ERROR: No aggregator XML specified or discovered. "
++                "Provide a file or use --by-path."
++            ),
++            file=3Dsys.stderr,
++        )
++        return 2
++
++    # Determine output directory.
++    #
++    # If --output-dir is given, use it verbatim; outputs are written flat
++    # by GUID (pmt_ep_<guid>.json). If omitted, fall back to a folder
++    # named after the deepest --by-path directory (lowercased).
++    output_dir: Optional[str] =3D None
++    if args.output_dir:
++        output_dir =3D args.output_dir
++    elif args.by_path:
++        by_path =3D args.by_path
++        if os.path.isfile(by_path):
++            by_path =3D os.path.dirname(by_path) or "."
++        deepest_folder =3D os.path.basename(os.path.normpath(by_path))
++        output_dir =3D (
++            "jsons" if deepest_folder.lower() =3D=3D "xml" else deepest_fo=
+lder.lower()
++        )
++
++    # Create output directory if specified
++    if output_dir:
++        os.makedirs(output_dir, exist_ok=3DTrue)
++        if args.debug:
++            print(f"# output directory: {output_dir}", file=3Dsys.stderr)
++
++    # Copy pmt.xml from the Intel-PMT xml/ folder into the output directory
++    if output_dir:
++        pmt_xml_src =3D _find_pmt_xml(fetched_xml_root, args.by_path)
++        if pmt_xml_src:
++            pmt_xml_dst =3D os.path.join(output_dir, "pmt.xml")
++            shutil.copyfile(pmt_xml_src, pmt_xml_dst)
++            if args.debug:
++                print(
++                    f"# copied {pmt_xml_src} -> {pmt_xml_dst}",
++                    file=3Dsys.stderr,
++                )
++            _write_pmt_guids_json(pmt_xml_src, output_dir, debug=3Dargs.de=
+bug)
++        elif args.debug:
++            print("# pmt.xml not found; skipping copy", file=3Dsys.stderr)
++
++    # Process each discovered set
++    any_failed =3D False
++    written_by_guid: Dict[int, str] =3D {}
++
++    for agg_xml, rel_parts in work_items:
++        try:
++            # Load the main aggregator XML
++            root =3D parse_xml(agg_xml)
++            guid =3D get_guid(root)
++
++            pmu_name =3D f"pmt_ep_{guid:08x}"
++            base_filename =3D f"{pmu_name}.json"
++            out_filename =3D (
++                os.path.join(output_dir, base_filename) if output_dir else=
+ base_filename
++            )
++
++            # GUIDs are globally unique to a telemetry layout; a duplicate
++            # across aggregators indicates a source-data bug, not something
++            # to silently paper over by namespacing the output.
++            prior =3D written_by_guid.get(guid)
++            if prior is not None:
++                raise ValueError(
++                    f"duplicate GUID 0x{guid:08x} from {agg_xml}; "
++                    f"previously emitted by {prior}"
++                )
++
++            samples =3D parse_samples(root)
++            ctr =3D Counters(total=3Dlen(samples))
++
++            # Per-aggregator platform group derived from its location under
++            # the discovery root (e.g. "alderlake-s"). Falls back to the
++            # by-path basename for the single-mode case.
++            platform_group: Optional[str] =3D None
++            if rel_parts:
++                platform_group =3D rel_parts[0].upper()
++            elif args.by_path:
++                by_path =3D args.by_path
++                if os.path.isfile(by_path):
++                    by_path =3D os.path.dirname(by_path) or "."
++                deepest_folder =3D os.path.basename(os.path.normpath(by_pa=
+th))
++                if deepest_folder and deepest_folder.lower() !=3D "xml":
++                    platform_group =3D deepest_folder.upper()
++
++            out =3D []
++
++            # Pre-pass: count bare sample-name occurrences within this
++            # aggregator so make_event can apply lazy-prefix disambiguatio=
+n.
++            name_counts: Dict[str, int] =3D {}
++            for s in samples:
++                name_counts[s.sample_name] =3D name_counts.get(s.sample_na=
+me, 0) + 1
++
++            for s in samples:
++                try:
++                    # Build event
++                    e =3D make_event(
++                        s,
++                        pmu_name,
++                        name_counts,
++                        platform_group=3Dplatform_group,
++                    )
++
++                    out.append(e)
++                    ctr.emitted +=3D 1
++                except Exception as ex:  # pylint: disable=3Dbroad-excepti=
+on-caught
++                    ctr.skipped +=3D 1
++                    print(
++                        (
++                            f"WARN: skipping {s.sample_name} "
++                            f"(sampleID=3D{s.sample_id}): {ex}"
++                        ),
++                        file=3Dsys.stderr,
++                    )
++                    traceback.print_exc()
++
++            # Last-resort: detect and rename any duplicate EventNames that
++            # subgroup-prefix disambiguation could not resolve.
++            _resolve_duplicate_event_names(out, pmu_name, agg_xml)
++
++            # Write events JSON
++            with open(out_filename, "w", encoding=3D"utf-8") as f:
++                json.dump(out, f, indent=3D2)
++                f.write("\n")
++
++            written_by_guid[guid] =3D agg_xml
++            print(f"# wrote {out_filename}", file=3Dsys.stderr)
++            print(
++                (
++                    f"# PMU=3D{pmu_name} total=3D{ctr.total} "
++                    f"emitted=3D{ctr.emitted} skipped=3D{ctr.skipped}"
++                ),
++                file=3Dsys.stderr,
++            )
++
++        except Exception:  # pylint: disable=3Dbroad-exception-caught
++            any_failed =3D True
++            print(f"ERROR: failed processing aggregator=3D{agg_xml}", file=
+=3Dsys.stderr)
++
++    return 1 if any_failed else 0
++
++
++if __name__ =3D=3D "__main__":
++    sys.exit(main(sys.argv[1:]))
 --=20
 2.43.0
 
