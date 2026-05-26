@@ -1,355 +1,417 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3AA27B340
-	for <platform-driver-x86@vger.kernel.org>; Tue, 26 May 2026 09:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779786601; cv=pass; b=ADBG+T+4TCaQuW4kcNHXjYSgR7mt3fNWs5rquMCXsIBBidot52Pxdy7R5IlQPrvZ4AOFlq7siFTXQMHwBjkcej7MR3ss22BbieOLm32K5ToIc7Sz5E1GYjFjjb8KzMBN189bbIhirdFzBWTFQSVym6MNSWZZTe5W204zKwQEGHA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779786601; c=relaxed/simple;
-	bh=X4gZt18YeVSVHTw+EFpn/T7V/oRMDmdgUoVdrEx1sas=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MBZEY7FVB34T1qPgUkQPz1i594BK8SigxrrMX1ClvlfZ6WtiHjiMQH0nUdZ+MFyubEpJzM9hovl6KfaoskGjFpOetbk6qe+2qcogj6v+rQN+aObEUx9fT+1vfQjyBpyikULrVtA4PmOnmhPVCPADQ8ZXR31XPkC8Qdb3BmxJFY8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kh0P7UpF; arc=pass smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FBB3537ED;
+	Tue, 26 May 2026 09:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779787017; cv=none; b=Lm2JWJ2On3DiOPt3m5jElWmfQoloueR6JdK7yXojrnVUG7Li5+8rBHvexLPkxW0vYYKsiWwDM4+1BrlWOoFqFu1++wxmo0D90Fwhiohcy5tMM53zbRdkw+XGvzw+G30wnuufY7InsSeiwB68zWuoBNwTKodrMonoPaCvXytcSzA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779787017; c=relaxed/simple;
+	bh=vpFx+abpjEIaV3lU1vKU4sqJFHneqDANLbMplRnno9o=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=o5o0KoFgKtN0j9TPSbV1O1mfrQL4M5DCk4VtS4tsUz4r37wZtCO2H7aZFEQeWC1R7CCu5fqcuN71OR49hB+w9vsDS1hFierbwbn07obpNLPnodRO4gyaG5ZqDJHRZZomK+y3mfL9aIOcCiijlJTXWP3xRYBLUrgG3UHZt5FjuyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTDa40Kb; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kh0P7UpF"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8c921396e37so106858226d6.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 May 2026 02:09:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779786594; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Xc2svS1Z/hxo5JXkITDRnrShCvAhIgGS4FQxsCqUZ5EPG/eKDGOhwfiq3QjC9iNuq+
-         obuIILfughkBmOqBRx4LAl9oqJLbeqa2gs9zux03SlbAS8iy9gp3A3ch840arn+ws4R8
-         pCyqxNcIu0SJy+/mGH1fSkRCm6r6BbUvj6n3DwqfMI4QP4fTvJMawwXtD1m9AuDJ0rvy
-         yFNDt1EdEk1IUg7EjJ7VpFgLQDhKigUkEpeHeD9S2m4R8YO6aCA6fU0dPIIdkKXJSAfx
-         RDljgOT5b/Y5g8mDgngdhF6Yi2MgGBS39hLbofyo2Hzvmy5tQ8FU3NW8Zxs6LGdLa124
-         wtlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=iMKWTbKY6Ip+PrNst3qsO5Ji04oV/zxnnXE7/OqaoHs=;
-        fh=UzkwNZgM2EVzAwAlu/S0CkQm56kdOoj1ij+UEDsKlTQ=;
-        b=BnDpsuXCAWJW3+isT/1mwHGrj4K22DwiZ66BJwPlilMjDkHbkxVhsMsfIlxeKSr/ZI
-         IvEh8LQ82Zcad38YNOY2rW2UgBaZ7wuNVU8OuZPePo/oMRUbR2ZWB8NdadQSogt8kYo8
-         e6Encd7iewIf/skjz73cxvVc4CDc+MSpt1e8yo6GV9GOMifEuvWAcXCAXEEZkkQQWR1x
-         3sgpvRX02MKTHaiRzdEcBhKb4ODSbNhfioUnk0MWKG2J3cFk5nARJShi0E7NwfLWyHs6
-         3t+Xq1MNZP9LR0ipwV4nXFI4DC8dBtqBiH74PAgLaOlkaXczHxC483pwTntQWxvGdLQd
-         InzQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779786594; x=1780391394; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iMKWTbKY6Ip+PrNst3qsO5Ji04oV/zxnnXE7/OqaoHs=;
-        b=Kh0P7UpF9LcCFPwuJR+JvlE+KmZLMKXFY03q52yhID9FDSuGUW7IhpwXP97oGtBSwv
-         2qHcqPcGbZ1D7rS9Ger/yBRYO4vG71bxjeYQLV/8sbu92PxqLiWK+zwz8I1gCgPSRZDK
-         vfmg0mRu9thqZMDm5MRqlURqxgm2EQBjAQMFwbYf3voPjXDBAPi8glBNmk0rqCQo0Oc0
-         a9ZN8K20TeS8E8QMUaQkacj6iNTrOeLQcG8OPS/OSrRJo2PDGCn5ieMuXPr9WU8yPiOM
-         TsXVh8l4TGW1GI6M7E5Ho0alt3TPr+2R+jx4zxvxBkr6iUQ9kbVcljZBw+hOZL5cxOF0
-         ovvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779786594; x=1780391394;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=iMKWTbKY6Ip+PrNst3qsO5Ji04oV/zxnnXE7/OqaoHs=;
-        b=XxVeg5rbIyqiu+NWVH52VQAQftQltEQPx0FkHotnprza7s4J9ssw2JK6rGmW/6g/kR
-         SX9uus8Nn1S6Yvt/1dECdc0NVLjLXZKUyCZi5kYy7PKgKgieLdwJ4DQAMO8D7/DRj4pN
-         XUgo4R10tTbqEg1cIQWGXWUljklz8nri5ZAFqg7+TQsEkl0Bw109FItpxloPyQaL23fT
-         pjKE0qvUOc4Yazmab7dw6+6/qTdQPg0P5GNUGC0ES5UdIkci27exd7kaChlQDL7mE+KG
-         ZHuSQ6pzJW/iAIMlUqaKfvzCwtdvoXR8gqjGsPCtlGnmcJAGVNCg9xpVOBAM2JzlT1+u
-         9AUw==
-X-Forwarded-Encrypted: i=1; AFNElJ/kPaR2+mv05u3SMQny2O/4JGFoDVT0l4Z9jkUp8QThuTTaYcxtE+nVZvxlIQ8XcH880Q5M2254PROr3MVzvJ1rf2Fz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCTFvnoJ9OyrBHrXL0I7B3654vqEyFseB8RZehbWlwLyWoVFL
-	xPXkNu2UQPqJk61obj/GoCBV1ApoMheF0rkBtWERBHS55LvFTQ/f10l3jSSz0EdyoHvstW1mpMH
-	Ds2UM0Qr2xMg024fxosGT0QFFDuejmFE=
-X-Gm-Gg: Acq92OExUq1fu1PtujiSIq5uGnMWpXQj783WpFW6j9Tqgr+lVBUFW66k0Qdg+5weVE0
-	zI03o1wYmIqLUaaayCi1veNWwXDsLhBjD1fMbpRmrc0u+lBp1+ln425QxBbN11XI8pNrBWfIf37
-	p8tMoOP98yZ/0OJlCE2gQQuMzg6mFZ2hsK2zPCgj1WVSdv+fxH7E5sWhG5/61iRaKJSlQAN7wuI
-	XJC0SEc8kSaj6ZHsKyxfcGUehw8eY07/VtUVk0eEn2fVV/IorCFaYoZFV9X3B6cgfL7hAtou15I
-	yK1Ph2z/tY7ToBzFKaRhXetzHfdH9wr+pqbGlIyc
-X-Received: by 2002:ad4:574d:0:b0:8cc:ccb:48d6 with SMTP id
- 6a1803df08f44-8cc7b5c497fmr299302146d6.32.1779786593576; Tue, 26 May 2026
- 02:09:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTDa40Kb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779787013; x=1811323013;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=vpFx+abpjEIaV3lU1vKU4sqJFHneqDANLbMplRnno9o=;
+  b=bTDa40Kb3bpSATAixvukH9Z60HhqfprnCfgTnic8k73CHRm3Ghr3Z9tA
+   EIgsbxVytpQ2T5Oyj15512JA7p/BYl6q/HJvqFdtwZJ+bji53m9d/ouub
+   K16/Ml9uQT4zFOdrts/FjghrdrN/RxjuftUiKPaFSZqx1TmHI+D8s8OXQ
+   JYR9RTOwEx2d2MlIwcHpbfgQbSlo8Q2SRczSKpfECUgR0/v4jRZ/ytX5F
+   wMfvP/q8O2ld3LjElyDAsfy57SqvPQiOn9BCcRGmSVJOo0/cuDx2ADltM
+   ckchGtoEYkb06khwhxaoGD65vQSxhRmhBtfXh1bShOsvI0pUWW5hl/Pf3
+   g==;
+X-CSE-ConnectionGUID: WQfIuAKBS22A7nOryn7lkg==
+X-CSE-MsgGUID: yFyYEhaGQ8iTJUp26I6m4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80628402"
+X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
+   d="scan'208";a="80628402"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 02:16:47 -0700
+X-CSE-ConnectionGUID: wd9nxugHRNqyXfCuH7/1/w==
+X-CSE-MsgGUID: bg9G/kjSRPW4WVAQmlFZjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
+   d="scan'208";a="265720988"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.137])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 02:16:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 26 May 2026 12:16:40 +0300 (EEST)
+To: Vishnu Sankar <vishnuocv@gmail.com>
+cc: Mark Pearson <mpearson-lenovo@squebb.ca>, skhan@linuxfoundation.org, 
+    hmh@hmh.eng.br, Hans de Goede <hansg@kernel.org>, corbet@lwn.net, 
+    derekjohn.clark@gmail.com, LKML <linux-kernel@vger.kernel.org>, 
+    ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
+    platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add USB-C Security (USCS)
+ support
+In-Reply-To: <CABxCQKuWt-iGENEaC_gNFMfWHrr80zJe_xnwEQz1Q-1yADcDOg@mail.gmail.com>
+Message-ID: <d9f33111-cd96-a37f-cf3f-23f6758c7e18@linux.intel.com>
+References: <20260522100715.20036-1-vishnuocv@gmail.com> <c4c0632b-0a24-8956-9557-69b927e451fb@linux.intel.com> <CABxCQKuWt-iGENEaC_gNFMfWHrr80zJe_xnwEQz1Q-1yADcDOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260524121510.36961-1-2minesweeper2@gmail.com>
- <CAB3uXr7aFrHfn-6m7Hg+_jfY2YmTtHRfMegzZYk6Vn1zsKDq1Q@mail.gmail.com>
- <CALOxGBVJzk4GX2xrG3N1Djy1UZhMXMdcYKeJQuBqcf289SO32w@mail.gmail.com> <9c59fb4a-542d-ec13-664e-903ef614a358@linux.intel.com>
-In-Reply-To: <9c59fb4a-542d-ec13-664e-903ef614a358@linux.intel.com>
-From: Superstes <2minesweeper2@gmail.com>
-Date: Tue, 26 May 2026 14:09:41 +0500
-X-Gm-Features: AVHnY4IL_ykrrD5Auo3J4xDiVkP9X2vtzhVcKNbxeSGye1R3HZFrAxLBPYca2ZQ
-Message-ID: <CALOxGBWEh=9kXGKwx0o-hRGAEhYF_vYZAxVxQvQSN3F-9MpJbw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: huawei-wmi: add ACPI fallback for Fn-lock
- on newer models
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ayman Bagabas <ayman.bagabas@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-956113078-1779787000=:1874"
 
->> Do you mean you'd want to serialize .probe()s of those devices?
-I don't really know how to fix this by now, I think serializing i2c
-devices initialization can help.
-It should be well tested(booting, waking from sleep\hibernation) to
-confirm that just serializing works, maybe other workarounds should be
-used.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-=D0=B2=D1=82, 26 =D0=BC=D0=B0=D1=8F 2026=E2=80=AF=D0=B3. =D0=B2 13:58, Ilpo=
- J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>:
+--8323328-956113078-1779787000=:1874
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 26 May 2026, Vishnu Sankar wrote:
+
+> Hi Ilpo,
+>=20
+> Thank you for the comments.
+>=20
+> On Tue, May 26, 2026 at 2:19=E2=80=AFAM Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > On Fri, 22 May 2026, Vishnu Sankar wrote:
+> >
+> > > Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feat=
+ure.
+> > > When active, USB-C data connections are disabled while power delivery=
+ is
+> > > preserved. This is useful for kiosk and physically-secured deployment=
+s.
+> > >
+> > > Hardware interface:
+> > >
+> > > The HKEY device exposes a read-only ACPI method USCS():
+> > >
+> > >   Return value bit layout:
+> > >     Bit 16 : Capability flag (1 =3D feature present on this SKU)
+> > >     Bit  0 : Current state  (0 =3D security OFF, 1 =3D security ON)
+> > >
+> > > The sysfs attribute is read-only.
+> > >
+> > > The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
+> > > hardware state.
+> > >
+> > > Hotkey:
+> > >
+> > > Fn+U followed by Fn+S generates HKEY event 0x131e.
+> > >
+> > > sysfs interface:
+> > >
+> > >   /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
+> > >   "enabled\n"  -- data connections are currently blocked
+> > >   "disabled\n" -- data connections are currently allowed
+> > >
+> > >   The attribute is hidden on SKUs where the USCS capability bit (bit =
+16)
+> > >   is not set, so there is no ABI impact on unsupported hardware.
+> > >
+> > > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> > > ---
+> > >  .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
+> > >  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 115 ++++++++++++++++=
+++
+> > >  2 files changed, 139 insertions(+)
+> > >
+> > > diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Do=
+cumentation/admin-guide/laptops/thinkpad-acpi.rst
+> > > index f874db31801d..db4588af0278 100644
+> > > --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> > > +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> > > @@ -1543,6 +1543,30 @@ Values:
+> > >
+> > >       This setting can also be toggled via the Fn+doubletap hotkey.
+> > >
+> > > +USB-C Security
+> > > +--------------
+> > > +
+> > > +sysfs: usb_c_security
+> > > +
+> > > +Reports the current state of the USB-C Security (Restricted Mode) fe=
+ature
+> > > +on supported ThinkPad systems. When enabled, USB-C data connections =
+are
+> > > +disabled while power delivery is preserved.
+> > > +
+> > > +The available command is::
+> > > +
+> > > +        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
+> > > +
+> > > +Values:
+> > > +
+> > > +     * ``enabled``  - USB-C data connections are currently blocked
+> > > +     * ``disabled`` - USB-C data connections are currently allowed
+> > > +
+> > > +The attribute is read-only. The USB-C Security state can only be tog=
+gled
+> > > +via the Fn+U followed by Fn+S hotkey chord.
+> > > +
+> > > +The sysfs attribute is not created on platforms that do not support =
+this
+> > > +feature.
+> > > +
+> > >  Auxmac
+> > >  ------
+> > >
+> > > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/pl=
+atform/x86/lenovo/thinkpad_acpi.c
+> > > index e1cee42a1683..889db802185a 100644
+> > > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > > @@ -185,6 +185,7 @@ enum tpacpi_hkey_event_t {
+> > >       TP_HKEY_EV_AMT_TOGGLE           =3D 0x131a, /* Toggle AMT on/of=
+f */
+> > >       TP_HKEY_EV_CAMERASHUTTER_TOGGLE =3D 0x131b, /* Toggle Camera Sh=
+utter */
+> > >       TP_HKEY_EV_DOUBLETAP_TOGGLE     =3D 0x131c, /* Toggle trackpoin=
+t doubletap on/off */
+> > > +     TP_HKEY_EV_USB_C_SECURITY       =3D 0x131e, /* Toggle USB C Sec=
+urity ON/OFF */
+> > >       TP_HKEY_EV_PROFILE_TOGGLE       =3D 0x131f, /* Toggle platform =
+profile in 2024 systems */
+> > >       TP_HKEY_EV_PROFILE_TOGGLE2      =3D 0x1401, /* Toggle platform =
+profile in 2025 + systems */
+> > >
+> > > @@ -373,6 +374,8 @@ static struct {
+> > >       u32 has_adaptive_kbd:1;
+> > >       u32 kbd_lang:1;
+> > >       u32 trackpoint_doubletap_enable:1;
+> > > +     u32 usbc_security_supported:1;
+> > > +     u32 usbc_security_enabled:1;
+> > >       struct quirk_entry *quirks;
+> > >  } tp_features;
+> > >
+> > > @@ -11265,6 +11268,111 @@ static struct ibm_struct hwdd_driver_data =
+=3D {
+> > >       .name =3D "hwdd",
+> > >  };
+> > >
+> > > +/*******************************************************************=
+******
+> > > + * USB-C Security subdriver
+> > > + *
+> > > + * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
+> > > + * It always returns:
+> > > + *   bit 16 - USB-C security capability present on this SKU or not
+> > > + *   bit  0 - USB-C Security state (enable or disable)
+> > > + *
+> > > + * Hotkey
+> > > + * ------
+> > > + * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the even=
+t.
+> > > + * The driver reads back the new state and notifies the sysfs attrib=
+ute.
+> > > + *
+> > > + */
+> > > +
+> > > +/* USCS() return word bit layout */
+> > > +#define USCS_CAP_BIT         BIT(16) /* capability: feature present =
+on SKU */
+> > > +#define USCS_STATUS_BIT              BIT(0)  /* current security sta=
+te */
+> > > +
+> > > +static DEFINE_MUTEX(usbc_security_mutex);
+> > > +
+> > > +/*
+> > > + * usbc_security_query - read current USB-C security state via USCS(=
+)
+> > > + * @enabled: out - true when security is ON (data connections blocke=
+d)
+> > > + *
+> > > + * Returns true if the feature is supported and query succeeded,
+> > > + * false otherwise (feature absent or ACPI call failed).
+> > > + */
+> > > +static bool usbc_security_query(bool *enabled)
+> > > +{
+> > > +     int status;
+> > > +
+> > > +     mutex_lock(&usbc_security_mutex);
+> > > +     if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0)) {
+> > > +             mutex_unlock(&usbc_security_mutex);
+> > > +             return false;
+> > > +     }
+> > > +     mutex_unlock(&usbc_security_mutex);
+> >
+> > Please use cleanup.h.
+> Will do.
+> Will replace the manual mutex_lock/unlock pattern with guard(mutex).
+> >
+> > > +
+> > > +     if (!(status & USCS_CAP_BIT)) {
+> > > +             pr_debug("USCS cap bit absent (raw=3D0x%x)\n", status);
+> > > +             return false;
+> > > +     }
+> > > +
+> > > +     *enabled =3D !!(status & USCS_STATUS_BIT);
+> >
+> > No need to do !! when assigning to bool.
+> Agreed, will remove the !!.
+> >
+> > > +     return true;
+> > > +}
+> > > +
+> > > +/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security -------=
+--- */
+> > > +static ssize_t usb_c_security_show(struct device *dev,
+> > > +                                struct device_attribute *attr,
+> > > +                                char *buf)
+> > > +{
+> > > +     return sysfs_emit(buf, "%s\n",
+> > > +                       tp_features.usbc_security_enabled ? "enabled"=
+ : "disabled");
+> >
+> > Please use string_choices.h.
+> Will use str_enabled_disabled() which is already used in
+> thinkpad_acpi.c for similar pattern.
+> >
+> > > +}
+> > > +
+> > > +static DEVICE_ATTR_RO(usb_c_security);
+> > > +
+> > > +static struct attribute *usbc_security_attributes[] =3D {
+> > > +     &dev_attr_usb_c_security.attr,
+> > > +     NULL,
+> > > +};
+> > > +
+> > > +static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
+> > > +                                          struct attribute *attr, in=
+t n)
+> > > +{
+> > > +     return tp_features.usbc_security_supported ? attr->mode : 0;
+> > > +}
+> > > +
+> > > +static const struct attribute_group usbc_security_attr_group =3D {
+> > > +     .is_visible =3D usbc_security_attr_is_visible,
+> > > +     .attrs =3D usbc_security_attributes,
+> > > +};
+> > > +
+> > > +static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
+> > > +{
+> > > +     bool enabled;
+> > > +
+> > > +     tp_features.usbc_security_supported =3D
+> > > +             usbc_security_query(&enabled);
+> >
+> > Fits to one line.
+> Acked.
+> >
+> > > +     tp_features.usbc_security_enabled =3D enabled;
+> >
+> > I'm not sure I follow the logic here as you always seem set it enabled
+> > disregarding even support or not?
+> >
+> > And that hotkey enabling seems deadcode with it already enabled here.
+> >
+> > I feel like I must blind to something obvious but cannot just find
+> > what that would be.
+> I'm sorry, this is a bug.
+> I will change to the following:
+>     tp_features.usbc_security_supported =3D usbc_security_query(&enabled)=
+;
+>     if (tp_features.usbc_security_supported)
+>         tp_features.usbc_security_enabled =3D enabled;
 >
-> On Tue, 26 May 2026, Superstes wrote:
->
-> > >> Thank you for working on this. Could you open an issue and/or send a=
- PR
-> > to https://github.com/aymanbagabas/Huawei-WMI ?
-> > Yes, I can send PR in the next two-three days.
-> > >> This is very specific to the FLMH-XX model. Can you confirm this is =
-the case for
-> > other newer models?No, it is the latest model in the Matebook 14 series=
-, I've just
-> > bought it recently and faced multiple issues, which I try to resolve. I=
- can't found
-> > any information about that issues from another users, but i think that =
-it can be
-> > related with other recent laptop based on Intel Core Ultra processors, =
-it will be
-> > good to have someone with following models:
-> > MateBook Fold (2025)
-> > MateBook X Pro (2024)
-> > MateBook GT 14 (2024)
-> > MateBook D 14 (2024)
-> > >> Wouldn't it be better to put this behavior behind a quirk instead of=
- enforcing it
-> > on the whole module?
-> > I haven't found a better place to make such changes. But you can sugges=
-t something.
-> > But I think that my workaround is safe because it calls very specific A=
-CPI objects
-> > and uses default fallbacks.
+> The hotkey path is not dead code =E2=80=94 it updates usbc_security_enabl=
+ed
+> when the user presses Fn+U Fn+S, since the EC firmware toggles the
+> state and fires the event. The init only captures the state at boot;
+> subsequent toggles come through the hotkey. Sorry for the confusion in
+> the init code.
+
+Oh, I see now what I was missing and it's just as obvious I was I=20
+thinking... I, for some reason, read these as:
+
+=09tp_features.usbc_security_enabled =3D true;
+
+=2E..but you had =3D enabled there. I'm sorry about my confusion.
+
+I find the the way usbc_security_query() is architected a bit confusing=20
+though, it returns supported/not supported in return value and another=20
+boolean through the bool pointer. And that looks broken, if=20
+usbc_security_query() returns early, it won't set *enabled which then=20
+remains uninitialized (contains pseudogarbage from stack so your testing=20
+might have been luck and had it always working the way you wanted).
+
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
+> > > +static bool tpacpi_usbc_security_hotkey(void)
+> > > +{
+> > > +     bool enabled;
+> > > +
+> > > +     if (!tp_features.usbc_security_supported)
+> > > +             return false;
+> > > +
+> > > +     if (!usbc_security_query(&enabled))
+> > > +             return false;
+> > > +
+> > > +     tp_features.usbc_security_enabled =3D enabled;
+> > > +     sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
+> > > +     return true;
+> > > +}
+> > > +
+> > > +static struct ibm_struct usbc_security_driver_data =3D {
+> > > +     .name =3D "usbc_security",
+> > > +};
+> > > +
+> > >  /* -----------------------------------------------------------------=
+---- */
+> > >
+> > >  static struct attribute *tpacpi_driver_attributes[] =3D {
+> > > @@ -11325,6 +11433,7 @@ static const struct attribute_group *tpacpi_g=
+roups[] =3D {
+> > >       &dprc_attr_group,
+> > >       &auxmac_attr_group,
+> > >       &hwdd_attr_group,
+> > > +     &usbc_security_attr_group,
+> > >       NULL,
+> > >  };
+> > >
+> > > @@ -11479,6 +11588,8 @@ static bool tpacpi_driver_event(const unsigne=
+d int hkey_event)
+> > >       case TP_HKEY_EV_PROFILE_TOGGLE2:
+> > >               platform_profile_cycle();
+> > >               return true;
+> > > +     case TP_HKEY_EV_USB_C_SECURITY:
+> > > +             return tpacpi_usbc_security_hotkey();
+> > >       }
+> > >
+> > >       return false;
+> > > @@ -11930,6 +12041,10 @@ static struct ibm_init_struct ibms_init[] __=
+initdata =3D {
+> > >               .init =3D tpacpi_hwdd_init,
+> > >               .data =3D &hwdd_driver_data,
+> > >       },
+> > > +     {
+> > > +             .init =3D tpacpi_usbc_security_init,
+> > > +             .data =3D &usbc_security_driver_data,
+> > > +     },
+> > >  };
+> > >
+> > >  static int __init set_ibm_param(const char *val, const struct kernel=
+_param *kp)
+> > >
 > >
-> > By the way, maybe You, or Ilpo knows a good place to implement board sp=
-ecific i2c
-> > acpi fixes? It Looks like there is a race condition situation which lea=
-ds to
-> > arbitration loss when kernel tries to initialize multiple devices on th=
-e i2c bus. To
-> > fix this I've disabled light sensor and made systemd service to remove =
-and enable
-> > the i2c_hid_acpi module, but I haven't found a place where to implement=
- a quirk that
-> > fixes that issue.
->
-> Do you mean you'd want to serialize .probe()s of those devices?
->
-> --
->  i.
->
-> > =D0=BF=D0=BD, 25 =D0=BC=D0=B0=D1=8F 2026=E2=80=AF=D0=B3. =D0=B2 23:38, =
-Ayman Bagabas <ayman.bagabas@gmail.com>:
-> >       >
-> >       > Newer Huawei laptops (e.g. FLMH-XX / MateBook 14 2024) no longe=
-r
-> >       support
-> >       > the legacy WMI interface for Fn-lock control. Instead, they exp=
-ose
-> >       direct
-> >       > ACPI methods \GFRS and \SFRS (Get/Set Fn key Reversal Status) w=
-hich
-> >       > communicate with the EC via registers 0x6B (read) and 0x6C (wri=
-te).
-> >       >
-> >       > Add huawei_acpi_fn_lock_get() and huawei_acpi_fn_lock_set() hel=
-pers
-> >       that
-> >       > use acpi_evaluate_object() to call these methods. Both
-> >       > huawei_wmi_fn_lock_get() and huawei_wmi_fn_lock_set() now probe=
- for
-> >       > \GFRS/\SFRS via acpi_has_method() first and fall back to the le=
-gacy WMI
-> >       > path if not present.
+> > --
+> >  i.
 > >
-> >       Thank you for working on this. Could you open an issue and/or sen=
-d a PR
-> >       to https://github.com/aymanbagabas/Huawei-WMI ?
-> >
-> >       >
-> >       > Tested on: HUAWEI FLMH-XX (MateBook 14 2024),
-> >       > CachyOS (kernel 7.0.9-1-cachyos).
-> >       >
-> >       > Signed-off-by: Shaposhnikov Daniil <2minesweeper2@gmail.com>
-> >       > ---
-> >       >  drivers/platform/x86/huawei-wmi.c | 95 +++++++++++++++++++++++=
-++++++++
-> >       >  1 file changed, 95 insertions(+)
-> >       >
-> >       > diff --git a/drivers/platform/x86/huawei-wmi.c
-> >       b/drivers/platform/x86/huawei-wmi.c
-> >       > index 93cca17fdf58..19cd8f1a8e33 100644
-> >       > --- a/drivers/platform/x86/huawei-wmi.c
-> >       > +++ b/drivers/platform/x86/huawei-wmi.c
-> >       > @@ -527,11 +527,101 @@ static void huawei_wmi_battery_exit(stru=
-ct
-> >       device *dev)
-> >       >
-> >       >  /* Fn lock */
-> >       >
-> >       > +/*
-> >       > + * Newer Huawei models (e.g. HUAWEI FLMH-XX / MateBook 14 2024=
-) use
-> >       direct
-> >       > + * ACPI methods \GFRS / \SFRS (Get/Set Fn key Reversal Status)=
- to
-> >       control
-> >       > + * Fn-lock via EC registers 0x6B (read) and 0x6C (write).
-> >       > + *
-> >       > + * GFRS response buffer layout:
-> >       > + *   byte[0] =3D STAT (0 =3D success)
-> >       > + *   byte[1] =3D 0x01 (fn-lock off) or 0x02 (fn-lock on)
-> >       > + *
-> >       > + * SFRS argument layout (CreateByteField(Arg0, 0x02, FRSR)):
-> >       > + *   Value is read from byte[2] of the integer argument, so it=
- must be
-> >       > + *   passed as (value << 16):
-> >       > + *   (1 << 16) =3D fn-lock off (writes 0x55 to EC 0x6C)
-> >       > + *   (2 << 16) =3D fn-lock on  (writes 0x5A to EC 0x6C)
-> >       > + */
-> >
-> >       This is very specific to the FLMH-XX model. Can you confirm this =
-is the
-> >       case for other newer models?
-> >
-> >       > +
-> >       > +static int huawei_acpi_fn_lock_get(int *on)
-> >       > +{
-> >       > +       union acpi_object acpi_arg, *obj;
-> >       > +       struct acpi_object_list arg_list =3D { .count =3D 1, .p=
-ointer =3D
-> >       &acpi_arg };
-> >       > +       struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, N=
-ULL };
-> >       > +       acpi_status status;
-> >       > +       u8 val;
-> >       > +
-> >       > +       acpi_arg.type =3D ACPI_TYPE_INTEGER;
-> >       > +       acpi_arg.integer.value =3D 0;
-> >       > +
-> >       > +       status =3D acpi_evaluate_object(NULL, "\\GFRS", &arg_li=
-st,
-> >       &output);
-> >       > +       if (ACPI_FAILURE(status))
-> >       > +               return -EIO;
-> >       > +
-> >       > +       obj =3D output.pointer;
-> >       > +       if (!obj || obj->type !=3D ACPI_TYPE_BUFFER || obj->buf=
-fer.length
-> >       < 2) {
-> >       > +               kfree(obj);
-> >       > +               return -ENODATA;
-> >       > +       }
-> >       > +
-> >       > +       /* byte[0] =3D STAT (0 =3D success), byte[1] =3D 1 (off=
-) or 2 (on) */
-> >       > +       if (obj->buffer.pointer[0] !=3D 0) {
-> >       > +               kfree(obj);
-> >       > +               return -EIO;
-> >       > +       }
-> >       > +
-> >       > +       val =3D obj->buffer.pointer[1];
-> >       > +       if (val !=3D 1 && val !=3D 2) {
-> >       > +               kfree(obj);
-> >       > +               return -ENODATA;
-> >       > +       }
-> >       > +
-> >       > +       if (on)
-> >       > +               *on =3D val - 1; /* 1=E2=86=920 (off), 2=E2=86=
-=921 (on) */
-> >       > +
-> >       > +       kfree(obj);
-> >       > +       return 0;
-> >       > +}
-> >       > +
-> >       > +static int huawei_acpi_fn_lock_set(int on)
-> >       > +{
-> >       > +       union acpi_object acpi_arg, *obj;
-> >       > +       struct acpi_object_list arg_list =3D { .count =3D 1, .p=
-ointer =3D
-> >       &acpi_arg };
-> >       > +       struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER, N=
-ULL };
-> >       > +       acpi_status status;
-> >       > +       int ret =3D 0;
-> >       > +
-> >       > +       /*
-> >       > +        * SFRS reads byte[2] of its argument via CreateByteFie=
-ld(Arg0,
-> >       0x02).
-> >       > +        * on=3D0 =E2=86=92 FRSR=3D1 =E2=86=92 EC gets 0x55 (fn=
--lock off)
-> >       > +        * on=3D1 =E2=86=92 FRSR=3D2 =E2=86=92 EC gets 0x5A (fn=
--lock on)
-> >       > +        */
-> >       > +       acpi_arg.type =3D ACPI_TYPE_INTEGER;
-> >       > +       acpi_arg.integer.value =3D (u64)(on + 1) << 16;
-> >       > +
-> >       > +       status =3D acpi_evaluate_object(NULL, "\\SFRS", &arg_li=
-st,
-> >       &output);
-> >       > +       if (ACPI_FAILURE(status))
-> >       > +               return -EIO;
-> >       > +
-> >       > +       obj =3D output.pointer;
-> >       > +       if (obj && obj->type =3D=3D ACPI_TYPE_BUFFER &&
-> >       > +           obj->buffer.length >=3D 1 && obj->buffer.pointer[0]=
- !=3D 0)
-> >       > +               ret =3D -EIO;
-> >       > +
-> >       > +       kfree(obj);
-> >       > +       return ret;
-> >       > +}
-> >       > +
-> >       >  static int huawei_wmi_fn_lock_get(int *on)
-> >       >  {
-> >       >         u8 ret[0x100] =3D { 0 };
-> >       >         int err, i;
-> >       >
-> >       > +       /* Newer models: use direct ACPI \GFRS method */
-> >       > +       if (acpi_has_method(NULL, "\\GFRS"))
-> >       > +               return huawei_acpi_fn_lock_get(on);
-> >
-> >       Wouldn't it be better to put this behavior behind a quirk instead
-> >       of enforcing it on the whole module? Keep in mind that this is
-> >       also used by Honor devices that have the same WMI method.
-> >
-> >       > +
-> >       > +       /* Legacy WMI fallback */
-> >       >         err =3D huawei_wmi_cmd(FN_LOCK_GET, ret, 0x100);
-> >       >         if (err)
-> >       >                 return err;
-> >       > @@ -550,6 +640,11 @@ static int huawei_wmi_fn_lock_set(int on)
-> >       >  {
-> >       >         union hwmi_arg arg;
-> >       >
-> >       > +       /* Newer models: use direct ACPI \SFRS method */
-> >       > +       if (acpi_has_method(NULL, "\\SFRS"))
-> >       > +               return huawei_acpi_fn_lock_set(on);
-> >       > +
-> >       > +       /* Legacy WMI fallback */
-> >       >         arg.cmd =3D FN_LOCK_SET;
-> >       >         arg.args[2] =3D on + 1; // 0 undefined, 1 off, 2 on.
-> >       >
-> >       > --
-> >       > 2.54.0
-> >       >
-> >
-> >
-> >
+>=20
+> I will update the v2 with all these changes soon, if no further comments.
+>=20
+
+--=20
+ i.
+
+--8323328-956113078-1779787000=:1874--
