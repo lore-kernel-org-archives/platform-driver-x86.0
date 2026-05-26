@@ -1,65 +1,65 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012019.outbound.protection.outlook.com [40.107.200.19])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011046.outbound.protection.outlook.com [40.93.194.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8602D7D59;
-	Tue, 26 May 2026 09:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4C61A285;
+	Tue, 26 May 2026 10:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.46
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779789580; cv=fail; b=B6LaEbWef33tb5EvkH8pRM0wUsVioCI33F3jmO+fVCHOL35WkfO1Cw2sVM3CozgyKTtM2dCKu/8aMEBk89I/WDPsYReobrrJRFVElkGdahfLIi9rzt/4ebCh+M2RDwVRxuCpzQCMXwQkmJQ9OwjKhzULTaatUL51jz+5+yOtWW0=
+	t=1779789751; cv=fail; b=uJK/+hHgStVVqz7FtG0jaWP3D+MuHsZInkaTVvAo/GbD+dMyJwbu7DpbZ6i6rXpKDMbO3jFAEnDtF8dM6OPoLPEafQk23hIGZQpAdPAHmeyF3wJVy6LSjqZ6Ocs6TVuRr2tYJe7PJNjjrIyADrHaSpqFcYs9ktZYmKpaTjnrl/w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779789580; c=relaxed/simple;
-	bh=THEFxaF67n4kSFpAcwxZmwQ107hI2i4CfljWfh+mvyc=;
+	s=arc-20240116; t=1779789751; c=relaxed/simple;
+	bh=FljTsdLr6kz5lRcwF0nmI8XnIx+4BJdRi1nuhlB+3Yk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EOKVoblyNHMDD+MIUOOZb7/Tbgjx8ujxLuJoTOt6FVock9ooyEb6Jdm5sp8VN3fTAl0ypy6wEqgVVZdPsNhSO0rdUvJ6SQcIFBa5xMBQa5QcPyXZBbjoEZnRUmNVDiSf1kn9eSn0Js+Mwx8xabRCNCvGUVWtg4QvqFyknxprzYQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LpOm7ggy; arc=fail smtp.client-ip=40.107.200.19
+	 Content-Type:MIME-Version; b=fBVwheeJCiKtrWtBg09EG5P7hzjISkyvmuaf2eRZQKC1VezfdYc322AbhZTMYSh57cfsYFx+SnsN/eqRlcEZU+EJ0f/0cYiPnO4UiqGWycH+zmjTCKjqxPNgI8KYjUwyXmEpirh9lzXeWsA81cGq8wveg205nXxdL0REr12dGTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=d9+WBTLl; arc=fail smtp.client-ip=40.93.194.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LpOm7ggy"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="d9+WBTLl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F+jWFzXdoAkWHOlPwqZztXDfAxJCPWUkxrbk/38Br5aCu7ItpHYWY2IAR8+IcZNiMgXOuwQ3sxubQPC6p9Un0mIp7o5k0AQIhnrayo9wWATz1fOHZyuvVb56BgDL9hiei6pFM9xG4qFCwavLL82QXsymloiuSmQGfAqnaMRvCBSXsGVCAraFHplBf54Y3SUrp+ayK89L32JLAivAXzL2cz8WEvAFjqWq5Th/9GDWhuegUCUrI1UNcOxDoBae4ek5sv17FXg6AdE6/2z43gZPjMyOZOypTS0HZahsxNBfxtSqQqZ5wIa7msJuYHgRfGLYFfu7a85zH65R2Zwh4igBqw==
+ b=YC3o2+dHUGyFPGSvswT/k0xJbD1Ogt/E3TQDgwhQBVBNcsMLdE0MIWMvahk5slfGYtuFMYORr9qFG9mP12GWxZMAeDV6t+NZnvkUv/oOvJcvMrpaNVwc+CWda/sVlOaGdh0baMZXLoYcPPfNY68rtf/d7VdUP+UnE22durmadoSHHpkPJcgd1FRT1Sr9FIhIxfOTFfTDDpyGeYDW/vURgwIc5Xf9I91fHEn2ORLrpzWhsNLRxdOgTDCTxLmjCjyaIVpAfpKYRfbhMNEJjZKZ0Ir/q6tMpjGtTN07aq4FL/6W0a8vRcovW3utmb/M2bOUpiKxqmBIrsZ4UwZnP7yTtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x7gfc5D2PM2CeaPFf9Pyy9X5BAu8tYaOItvdekUpZUU=;
- b=FXdWWE0PWR3yI4JobkMSXVvIa+Pi0GeSrZVdJjgunSxOvOQl2Y/FmKQlbs7LrUDG/G1ndI7NbzbBrtXMiGkklgVi5Cvc7JSjQliUPdk2oalCmIiu5U3ZrIgFM484q82QU+7o9lnVb54ddkII9Sg1Z9JJ6i9tvvQLdDRTQRleNJyejYywHD+LigLB2juZl0xNp648EoKIzStlheMRMUJUXXBlqNvgiPs2U2zz+PDSFspHWFe72j02DzyDwvauwpAn4Yj7UuQ8UfnpKa/H5ak7hqKGdzAHFaDEaNBWaxVhLzTD0CXimuDC31IUyi0fT/wekV4Eh/k4dOnjRoXPocZejw==
+ bh=Xt+gmb8HmW5sepOWU0GagZ7cq7F0vyMZlpYwHhwf6lY=;
+ b=UvcZt2uGe+E0Bq+G44459ERZSDRrxdxVSH4+PLcE5OSv7JYcEzffS18jPuIe+sigfcADFAZfR5mpn2Woh9qisSqMshZ4ivZD5j2bRIXH2Em1xgQSBoTxj7tejo6TQvVDdG6RCzy3Epu0OlZY+i1IsUF1nqaoXTbrk+u5Q5siuE5GIblPvxV6jyqfmB3pfngtHLF8d8wwHV2jv+acwgCdt6Qrfz1FPU6PY6z3+krycXzpUHxTXffMQppKBBlzN0UMmICjNMgwt0bUQ0c08BpC+8lt7/wBjWaq4hYCnzcHGStXTDPBUyLyrbNJvWowTU+HSitvkB+kEHGRfCrtISyjCQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x7gfc5D2PM2CeaPFf9Pyy9X5BAu8tYaOItvdekUpZUU=;
- b=LpOm7ggyS1KYPVU+nAY6ZGFJA8R4N4r1A6DecY2YYnVqZlXigQ8oj+KLb/DPTmBQiSiIO51AB18+KRBpq0GKW2rEyyAjXJvy9SmQoRdBTemkksIULg9qzZe+p4qy4m0ainn6xwvt/wHTmrJBiWr6t5763Ty96d0RXiVl5zrwqS0=
+ bh=Xt+gmb8HmW5sepOWU0GagZ7cq7F0vyMZlpYwHhwf6lY=;
+ b=d9+WBTLlM1KxFAtFAUoI1rJLkIdBvbO4/B4kMB6kUjdzEyK9IOU8tEWil9eTrRvCSQghdJrKneZ4gtvAcIX2Mu5SIF0hlqayFepqJ/jYrl7Qm1V5y2rxwaXshXk8W7kSlPA5UFw/DNNZ5++0J6HAz7dX3Nc/IEWz82q/ul/pKxQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
  by PH7PR12MB8179.namprd12.prod.outlook.com (2603:10b6:510:2b8::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.20; Tue, 26 May
- 2026 09:59:33 +0000
+ 2026 10:02:25 +0000
 Received: from PH8PR12MB7325.namprd12.prod.outlook.com
  ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
  ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.21.0048.019; Tue, 26 May 2026
- 09:59:33 +0000
-Message-ID: <23d24aff-a18b-4b77-8035-b875a186d981@amd.com>
-Date: Tue, 26 May 2026 15:29:26 +0530
+ 10:02:25 +0000
+Message-ID: <914879f5-c960-494e-bd17-6ad140c2bb8c@amd.com>
+Date: Tue, 26 May 2026 15:32:18 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/7] platform/x86/amd/hsmp: Drop ACPI sysfs metrics_bin
- in favour of the IOCTL
+Subject: Re: [PATCH v3 7/7] platform/x86/amd/hsmp: Make metric table read
+ locking use guard(mutex)
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
  Muralidhara M K <muralidhara.mk@amd.com>
 Cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
  Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 References: <20260517151211.415627-1-muralidhara.mk@amd.com>
- <20260517151211.415627-7-muralidhara.mk@amd.com>
- <a290bd3e-365f-8fd4-239c-846197a03853@linux.intel.com>
+ <20260517151211.415627-8-muralidhara.mk@amd.com>
+ <1af1f3b6-7554-4e15-8ca1-665e821bced9@linux.intel.com>
 Content-Language: en-US
 From: "M K, Muralidhara" <muralimk@amd.com>
-In-Reply-To: <a290bd3e-365f-8fd4-239c-846197a03853@linux.intel.com>
+In-Reply-To: <1af1f3b6-7554-4e15-8ca1-665e821bced9@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA5P287CA0183.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:1b6::13) To PH8PR12MB7325.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN4PR01CA0049.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:274::11) To PH8PR12MB7325.namprd12.prod.outlook.com
  (2603:10b6:510:217::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,216 +69,157 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH8PR12MB7325:EE_|PH7PR12MB8179:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2baa6845-6bc2-44ad-7c3b-08debb0d7c49
+X-MS-Office365-Filtering-Correlation-Id: db81f167-aa81-481f-7534-08debb0de328
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|6133799003|11063799006|3023799007|4143699003|5023799004|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|1800799024|366016|376014|22082099003|18002099003|56012099003|11063799006|6133799003|4143699003;
 X-Microsoft-Antispam-Message-Info:
-	+vK4mhj0F4LpYsz5c9oWS9gXpWCgEEZs965I+ZB8HmsbMylkluH4VHowCEsdTiCcI2khskZdgm2PmHuFM1QR24xpnIVdyxo9ZdGXVn6hft990JH7X5aRYNoq3JtGSimArzr1mgNZ0PSNPHBcuCmlQ1f5CigE8H2fSnevADW0mA4MQ3hgrGIg4dMjjPxWAR1tCZte12QgOvrrQZmCpbu2e4oUD3ocgDGgxadmsL0TMk4KfHwWMOTMEH1kDMZtv5Wg6Ik/ox06zfjm4PvTgjZ0wGzLjMvCVYMaaDyV+TPpva5SUTX3vTtnnBStEaAp+DSbQNYZuPGwNYR5nTw0FCdt2SUy4hfIGA/obpAVmUlQskUQa1ivnaUrPx5o+6a+4IE1pEsg0b7b6hXhSHYrr4vyaOnU7M1q99JEvKRRRlpXxN4eA1kNS2SNvikKOlrjd7bszjvCcwuQr6/7Ca8vKrd/QU0G6sRNLTjr34YoOtvHPimLXpegjZiI0wlXNFxV2PDPCmP7Y89voVDqie7XdqsYsuj3vFrO5A5sIW7L1yIeNLlH3D7N0PFaQOFaNXriGOKK5hfAsnDpRbNJQ5Geb4lFqkObgsUmP7thks9Y/Hzjvoqf5oHxTb9GHZnoQeJyzQGWMD8q8EnJmh4xXoV7nXzagKTS5GxomqDw2ixHsv3w4L1KwI2SSBhL+8foijp3AN5f
+	ZoQhikOfF59jgPEsdj45+37dlQzj4P3IRiLrImw/xtTXSNSWuOXnBOkQNAIwonDilTfE05kmNtQQRRVi8+LLoPQogU5RTNSf76LStkPChfyarMZqRKB1vtn4IAITX5bwNlJryLxiFxnbvtwxxPXtvcTsj8H6Bv8CwXKTZRdDFALoD5e8Qo7cpBGqpcxQEWoh5HeGpRgiG79rxYvoVMIbSwCdn1utXRBXmF0WjNYfMx6IRiW8pY6RlDpO3K+rh5d8RyBQMD3llFV+yaClUGOg5lsCiKmeaWFj8Y2cXfRDL1UAF8cOFE0YdoHeCaC2DA7zBiPP2tpYsoHmKVWQ6PaJfRyEyibwRZYwuZXZy6HMahbHBRNBjom0u1zViPN/0kQt6jeWC+hw4Jvd3HvLsuAa7OxBiNsGbdoAAwGEaOGFS58bPbWx1DwrgcLYfhQ1gFJGrkjsI4Qjnwk0lFnuiyOAmMfW2gj17p4ptKW+DUQQ4TPUR0fGZgZm0gVJGm54Xs6Kxlb2f+n+GLzfUKfmMBBaUhwn1QzxIg5vcLUJin+gC2tF8hIozNFMPEnaVHA0lh3soBc+okpo+t4B4CEyjUDl3LYxnnRYIenw5dhG+SWuiUbIfUEyRHHcSScY2iyfrhUuMKHU5pFlufVLMYaR9BZE9D91SIkC8VKw1uNJMED0G2weluM+1uPmFxzTFBnJAQtQ
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(6133799003)(11063799006)(3023799007)(4143699003)(5023799004)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(22082099003)(18002099003)(56012099003)(11063799006)(6133799003)(4143699003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dlJOTmRIK0xZaktseXIwSUEyNlZPQWRkUkQxNEhsclFGNHNNUTk1OVA5UWJ4?=
- =?utf-8?B?bnNhZmcxazNEQWxsWkVrSmI4ZjlyV09zVE1pN01CTEdkamh6QlFpVzhUUDhB?=
- =?utf-8?B?K3RqTmtvMEd1SVlqbDh6ODhPVm90TnhWVDJIWjZMU2dXUVV4eE5MTU41eDlR?=
- =?utf-8?B?VlBhMWUxTmJZZTh1U1cwNVZnYWUwZTRqRU94UDZPTno1VkhxNU03eVViQzVk?=
- =?utf-8?B?OTN6Z3pWUlFXbXdRRWt5cm9qb2hycU5GTHVuMVY2QSs0NG5VS05DMHB5Nnpo?=
- =?utf-8?B?WWtuVXYwRTRocFpOTVF1MW5SeUdFSE5uZ3FQK1pmelFIeXBwdndldk5vT1Ir?=
- =?utf-8?B?TUgycTQwRzZJV1d3dGlmeVJtYzloTThSTFdQNXJQeUIrVFZLQlNoUmo1WlVX?=
- =?utf-8?B?VTArbEY0ckx3NUEwU3k5d2ZKYy8yUGJ5YWZGNDBUUlI3UkZHL0p1WWtCZ1FL?=
- =?utf-8?B?OHFINThrTXF5bWtlVGZibkxxaW5ua2RCUHI2aDIrM1ZIUGFNa0pESlg4S3JB?=
- =?utf-8?B?Q1NCUVBDWWhyWlV6SjltOHBKWERxQ29NUU0yOWh5d3ZpY1VGZFVGckNKbDVK?=
- =?utf-8?B?YU14MzJCYndwRklTRWRIL1pFK2tLTytzaXFjNlI1aFZWMDc3UEQ5YmhZM1F5?=
- =?utf-8?B?WlJWU0VSYXlNTUIxU2h5L3k4NVVES2syb21qZ0pEMWhUSkNkR1RIUGNpUUpB?=
- =?utf-8?B?NkxueVhHZ1cyaVJvTXZsTzd2ZVZSR2lRWmJQWWRodXQxR2M3YmszOWVZWlN6?=
- =?utf-8?B?SXFOOUZlbGVyRGxDdWd0NUdYNHMyenQxcE5BcmdMS2Q4K0E5bWRLSkZQajlG?=
- =?utf-8?B?S2RKSnB3S3lUSENITVRQUU1XdFpIWlZaWGg4RHB5cWpzTVNQSFhlK3VPQyth?=
- =?utf-8?B?N2pJaG1TRTdxZTNyVWdYbUpYK05Icks0K2FHWUVaVVN1WHF0SVdaQnRsdEJ2?=
- =?utf-8?B?bU8yczh5bzlMODZ0Rk5jYVcvZW5BQ05YMkpHU01yOEFRcEZ0V2JRdEZBdEJn?=
- =?utf-8?B?aTJ4bEVRT3ZTMmd4cm9oZm1DMHNIQThDYzZQZ1ZZclRKa1RDWWJvNE40WWVH?=
- =?utf-8?B?UlZEbGo2eWx1Z0JCcCs0RDhqTzBqRHhDWGRYTEhwR2Rwd3krZmptTFk1Z0lY?=
- =?utf-8?B?aXQxTE9nRW93QVFBUWZxTHVJaFU2ajdDWXdDdXJHU3I3blIwRkNtV3Y5VVpN?=
- =?utf-8?B?TzBxd2djOFJZT3VwcjhGN1JhMVRZajhPdFFYLzN2dzFJVVM5ZGxnSXozMm1S?=
- =?utf-8?B?eWNOUlE4ZjN4VjVKMkFucmxLbk90ZHJvL05QSTlTa1UwdE9nVFAzb3NNeEtI?=
- =?utf-8?B?NVMwWjlPL0FnanI1U3hjNFU5eTR5Vms2eHhjRUkrNmNmZ2pkTDhhbWpVRkUz?=
- =?utf-8?B?VTVSQjlKMW5mTXM0RDJHeHNsMkF4WGlvNVlQSWlkUDdaS2dBQjNJaVVuNWdQ?=
- =?utf-8?B?VExHb0V0OTNBWDkvMlA3TUxDWktMTWVwaHBMU1VxdGM2V096KysrWHdvcVBn?=
- =?utf-8?B?djd6Y0FjOERjZXJRZ1R6OHJ6VWhKcy9xdzRSc3V3eWlDTkFDVFgyTkgrcS9U?=
- =?utf-8?B?UmtDVDRUdHQxVGRsekRDVUZ0eUtiRHJCNk1PVktZVkZxdVZtWGROWHZKQmow?=
- =?utf-8?B?cEVDbUZGNElxVXR1N1VabmNTVGk0VmRxcXlNY2xnb2Rka2U2VkFldGM2YVJD?=
- =?utf-8?B?VFUvQTE5bDVrTzVVZUZEVzlWUE1iMG1WU0Q4Ukp6d1QxYlE3R3pOdytLT05n?=
- =?utf-8?B?aGwweGx1b0dob0lPRithck9SYnEzSzk1Z0Z5MDNBMmFoRzVST1NkRkNaaldp?=
- =?utf-8?B?UnR4bS8xY1hOd0JkM3VjT0Y4SGZZd0pFZkNKT0o1VXVxUksvTUM1SjQ5dW1a?=
- =?utf-8?B?cC9uNFRINjNpQmlvWmlpK29jRk5ZSUZ0V29vTElXZFM2T0RsVys4aUV4Uzgv?=
- =?utf-8?B?ekhDanRBNUkwdTNDSmJJWkhTUmtLMzNENzViUmMrUk91RjFXNVFEb3V3SnZN?=
- =?utf-8?B?ZDhFcmxoMncrNkNwVmF1U2RiYU5yR3VyTU9UT2FrM2orSUlzOGhGdkNFMnBG?=
- =?utf-8?B?Q1FoY2tjT2lrNlBibXFBV0R2NHVUVzdqNEJtRG4rdDRsNUUvNWQ3OEZLb3o2?=
- =?utf-8?B?cUZ4b1Bmb0xyR0lnWGNGMy9VK3gxWjY1YUQ0NlpkUnl4R3ZaNGtpcEs4dkxW?=
- =?utf-8?B?SXpmTnB1S0hyWEJDOXovWjJDb3BpcmhwMDJXUUtaZDFkOWcvRUtVUkJlOXRB?=
- =?utf-8?B?blNiODMvb0laSmZQVWx6akFaYTlJUmFjTG9ScFhLVzFmWDQ3ZzgvSWJxUkZx?=
- =?utf-8?B?bjlMNzl3YTg2aWg0cG9DYWRmekovQzJLM1dCQ1YraCtSZ2RHbDhjdz09?=
+	=?utf-8?B?dFRBUVh1OGY0L21kYWdLV3pKUnVqeWhRVEVRL0hqaFVBZGNRUkw1aHh4T05i?=
+ =?utf-8?B?NHhnNE1GM0UraDdEN2QxQjdzUlNoY3FOQ2Vpcldwb3RvdjRNSVZmM3gxSjBD?=
+ =?utf-8?B?SENyZkZIREZRSFBSbDAxUWdPV1BaUWZGZkhneXFhVlozbnpsWER5N05vaGJW?=
+ =?utf-8?B?OWthQXlPbGZ5bnpISWZPT0orOW9DcEJlUWw1S2MwS2I5amdHRlgrQUlna2NR?=
+ =?utf-8?B?MXl3c0tvMTVJa2tzWHo5eFlyREhNNksya2o0MmJWRDZKWmtSeWRPQ3l2dlRF?=
+ =?utf-8?B?NFI0UlFJMjlJQTZjVnliMHlRQWYvMUMvSXhHRXQwRnRjMmkwd1VjUVB4SXFY?=
+ =?utf-8?B?TTcwQ1BCWlNNNzJndHIvTzdic0pxQmM1S3RwczJZUHdIamJQR3pBVU9GeFJm?=
+ =?utf-8?B?ZWd0UUJYaWh6TlRzQ3EzblFWRG1wUFl2Q0RmblJIRS9UdmRyZmRzT3JDaUNz?=
+ =?utf-8?B?VjBIODRQWU81akg2M3Z2Y1NWbzZEVk9oazdIRUdTSDU0MTlQK3RrK2JONm14?=
+ =?utf-8?B?NkhHc05TdlpWNHZJRXZiMGNURXpsZ3RqdDN5ejN4R2FFSExyNzFncjZSY3lG?=
+ =?utf-8?B?cUxjT3N5U1hmWFVwVFZCTDh0Mlh4ZlpDbk5kY3JXdGZZclBEdkhvN2lzS0lS?=
+ =?utf-8?B?QWFpSzBCcWppdWh4aVlWU2Y5VzAzWFNHcEd3ZVFzb2JkMllNSC9vL1Rqb0dq?=
+ =?utf-8?B?VHdKYVpwODR1K2dBNTBZbGJRaTgwWDF3QjlKT1g3TmlsMjdmMURjL1FlRG9s?=
+ =?utf-8?B?TGxoVjBKQzIyb3Npb2xyZ0gzZVJTZG9FZXcxU1M0SDhvazYwU3pwQVk0eTFV?=
+ =?utf-8?B?ZHd4MURvTDlpVm53YjhUVlBNcDFQVC9VdDZrOWVpVEpWNy9sb3hDNUFoOHpn?=
+ =?utf-8?B?ZytrdDlQOWJWTkJNTnBxWWFuZHFUWUZxak5Fa2ZtN210TnRvZHhaVFpwVDdq?=
+ =?utf-8?B?S3I3cG1qUWQvR01EV1dZMXFYUU1SODFsZWFGakJzRkxBVXZvYWtkbmdiM2Zx?=
+ =?utf-8?B?QVh5TWlhdk80R2R2YnhwemF0WnBob3gxUnlJNzYvVE8vTGVnOEFHNWpoUDhJ?=
+ =?utf-8?B?R0JZQ1J2SUlsdUZOV1h2dEZxM281RGpxUU10NWtWZExKNklxSUhLQ09qYTVZ?=
+ =?utf-8?B?blVIMHVxb3diSTV6RHV5M1l5SXVLZ0dPenVOM1pMK28vNG9ydDZyM1RqdVJO?=
+ =?utf-8?B?ZXdiQWdBWjAzRjZDS2ZxRXczSzBqcy8vUUtUVktFTnMwdkhtcGNpdWJmZlNL?=
+ =?utf-8?B?YXZhZnBnZG93WEFLRW5FQjNwOWI3WXM2MUhWREx0N3FZcWFIOU0zajNZNGI1?=
+ =?utf-8?B?RVpvVU9Rcmh2VU9KbkFKWUlEY0ZwWGhtNm9FRGhIdnBMRnZvMjcyMnorWWxi?=
+ =?utf-8?B?Y3kzdmVqMGF4OTc3NDlUbTRqazFReUtDa08rdVJKeHkrTVA2ZmNRZ296NjA4?=
+ =?utf-8?B?eXJQZXpWZHRBMVoydml5eXVIVXBJNklJVzRkc09xNGVXTHI4SVFnQWp1dGdw?=
+ =?utf-8?B?NEJIbUJ5OUVYbG1EZlVIUFRvT2JzZlAyR3hJdnRUdTJuQ2JNUHFKSEdUQlBG?=
+ =?utf-8?B?b2Q5czI1Zm00SmcvNUJyNS9paEVrVW9vYTJic0NOT04xVVFCRm1EcmJhSGFy?=
+ =?utf-8?B?eVk0NDRBTlpmQk91WWdiMHF0SXphQUxGMUNhYnh5aVNQOUxWWmFGeXNPVmhP?=
+ =?utf-8?B?MCs0YmI1a1pwMGlUaEM4VWVDdlFVNGJYQm1Kb2tPVU9pMGZtR2ZndW0xWEts?=
+ =?utf-8?B?K3lYbUVPOEYzK1Vabytsd3hTK3EwUnVPeEZhN2JhalNNY2xLNWJGZnFjdzJQ?=
+ =?utf-8?B?Z1E4VGE1Y3QvOWx3Zlk4U0VOZDRmZW5ydmtZWUlRcjV5ZWc2ck9URExPeFRU?=
+ =?utf-8?B?dC9JaXJiVDBNMHRHMXQyd0FsZ3k4OGV4TS9vQjM0NHBkZm5UWWxsWDNidHda?=
+ =?utf-8?B?eDEvTm5IeTVpWEFFZ1BZVzNvdnJieTVVZjEwLzVzM0NnUUEzbXFYNDRqdUFv?=
+ =?utf-8?B?UjRCWitWelNZcmU2RVZpT3UrbklsTlZnYWJKRW1YMVhrUGxraWJka3VwVWVB?=
+ =?utf-8?B?bG5CL21SVFFLdlNUWXYxVWpRTjEvNkR0bGdqNmhTN2ZwTTAzQXVCTEMyK0ls?=
+ =?utf-8?B?MmpGbDJ2U215OXl5Vi96Y2xqREJUdmRVc0lINjFEYk5LNUZMalorL0RuWUsv?=
+ =?utf-8?B?c0tQZWE2UmxxSklEak12bGdMS3ZGNVpwVnFZSCtlQ3JUQjZmbTBCVjcwdnFY?=
+ =?utf-8?B?WkthUXd3N0VabjRmVms4REQvT05iNG96N3B0TEs5M0svcnl3K3drL3YyQkg4?=
+ =?utf-8?B?Q0JtWGFvYlVUVURETVdkS0sxOXZrTUpxa2NINFRpRUZrRzZIRThFQT09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2baa6845-6bc2-44ad-7c3b-08debb0d7c49
+X-MS-Exchange-CrossTenant-Network-Message-Id: db81f167-aa81-481f-7534-08debb0de328
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2026 09:59:32.9121
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2026 10:02:25.5115
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: utk/M3fTgwfDkJ4TcOCZ87NjD6/HZye/xCpCSV6EbIVwEpowf2q4EwzIDERqFhiMivSjKKaXUApSXNerw+6hpw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: dKdntiSQ2szAgzH18HQm69yYp+lhqiOtmqW8iekslY9hR2cSWEDUPLlL7A3tEb9y2+M4tPK285zLZlOt+/AoBw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8179
 
 
 
-On 5/22/2026 5:14 PM, Ilpo Järvinen wrote:
+On 5/22/2026 4:25 PM, Ilpo Järvinen wrote:
 > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
 > 
 > 
 > On Sun, 17 May 2026, Muralidhara M K wrote:
 > 
->> The HSMP_IOCTL_GET_TELEMETRY_DATA character-device ioctl introduced in
->> the previous patch is now the canonical interface for reading the
->> metric table on the ACPI driver path.  Unlike the metrics_bin sysfs
->> binary attribute, the ioctl is not constrained by PAGE_SIZE, so it
->> works for the ~13 KB hsmp_metric_table_zen6 layout
-> 
-> This was only a secondary reason from moving away from sysfs files? The
-> main cause for moving to misc device according to my impression was that
-> you wanted to prevent partial reads which are always possible with files.
-> 
-Sure I will update the changelog to document the rationale for moving 
-away from sysfs files.
-
->> used on Family 1Ah
->> Model 50h-5Fh as well as for the existing hsmp_metric_table layout
->> used on protocol version 6.
-> 
-> 
-> 
->> Drop the metrics_bin bin_attribute from the ACPI hsmp_attr_grp.
-> 
->> Widen the remaining proto_ver gate in init_acpi() from
->> '== HSMP_PROTO_VER6' to '>= HSMP_PROTO_VER6' so
->> hsmp_get_tbl_dram_base() is invoked on protocol version 7
->> (Family 1Ah Model 50h-5Fh) and any future protocol version that
->> retains a compatible per-socket metric table.  This populates
->> sock->metric_tbl_addr and hsmp_pdev.hsmp_table_size, which the ioctl
->> handler requires.
-> 
-> These are two logically separate changes so they should not be in the same
-> patch (but you'll likely need to alter the drop patch anyway, see below).
-> 
-Ya Understood. I will make this change as a separate patch.
-
->> This is an ABI change for users of the ACPI driver:
->> /sys/bus/platform/devices/AMDI0097:*/metrics_bin no longer exists.
->> Userspace must read telemetry through the HSMP_IOCTL_GET_TELEMETRY_DATA
->> ioctl on /dev/hsmp instead, sizing its buffer using the matching UAPI
->> metric table struct.
-> 
-> I might not be entirely following what's the extent of removal here but it
-> looks too extensive to me. The number 1 rule is that we cannot take away
-> existing and working ABI without properly deprecating it first.
-> 
-> You don't have to make it work with version 7 and can return error in
-> that case as it has never worked. But with version 6, things shouls be
-> left as is until properly deprecated. You may consider adding a warning
-> print too to warn about the deprecation and point towards the new way.
-> 
-I will review and ensure that an appropriate error is returned if sysfs 
-is not supported for a particular version.
-
-> This interface probably never was documented in Documentation/ABI where
-> such deprecations are usually marked... oh well, maybe we need to add
-> a simple entry for this ABI there to follow the usual deprecation path.
-> 
-> --
->   i.
-> 
->> The non-ACPI plat.c path is intentionally left
->> unchanged: it covers Family 1Ah Model 0h-Fh hardware that is fixed at
->> protocol version 6, and its per-socket metrics_bin remains available
->> for existing userspace tooling on those systems.
+>> Add a per-socket mutex (metric_tbl_lock) to serialize concurrent reads
+>> on the metric table. Without serialization, two simultaneous
+>> readers could interleave the SMU refresh command and the
+>> memcpy_fromio(), producing a torn (mixed old/new) snapshot.
+>>
+>> Use scoped guard(mutex) in hsmp_metric_tbl_read() so the lock is
+>> automatically released on all return paths. Initialize the mutex with
+>> devm_mutex_init() in hsmp_get_tbl_dram_base() and return an error if
+>> initialization fails, avoiding manual mutex_destroy() cleanup paths.
 >>
 >> Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 >> Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 >> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 >> ---
 >> Changes:
->> v1->v3: Remove bin attributes
+>> v1->v2: Add lock
+>> v2->v3: Replace mutex_init to devm_mutex_init call
 >>
->>   drivers/platform/x86/amd/hsmp/acpi.c | 34 +---------------------------
->>   1 file changed, 1 insertion(+), 33 deletions(-)
+>>   drivers/platform/x86/amd/hsmp/hsmp.c | 8 ++++++++
+>>   drivers/platform/x86/amd/hsmp/hsmp.h | 3 +++
+>>   2 files changed, 11 insertions(+)
 >>
->> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
->> index 97ed71593bdf..49765fefe1fb 100644
->> --- a/drivers/platform/x86/amd/hsmp/acpi.c
->> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
->> @@ -231,25 +231,6 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->>        return hsmp_read_acpi_dsd(sock);
->>   }
+>> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+>> index 3a02d683dea0..2fec897a95be 100644
+>> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+>> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+>> @@ -447,6 +447,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
+>>        msg.msg_id      = HSMP_GET_METRIC_TABLE;
+>>        msg.sock_ind    = sock->sock_ind;
 >>
->> -static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj,
->> -                                      const struct bin_attribute *bin_attr, char *buf,
->> -                                      loff_t off, size_t count)
->> -{
->> -     struct device *dev = container_of(kobj, struct device, kobj);
->> -     struct hsmp_socket *sock = dev_get_drvdata(dev);
->> -
->> -     return hsmp_metric_tbl_read(sock, buf, count);
->> -}
->> -
->> -static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
->> -                                      const struct bin_attribute *battr, int id)
->> -{
->> -     if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6)
->> -             return battr->attr.mode;
->> -
->> -     return 0;
->> -}
->> -
->>   static umode_t hsmp_is_sock_dev_attr_visible(struct kobject *kobj,
->>                                             struct attribute *attr, int id)
->>   {
->> @@ -491,7 +472,7 @@ static int init_acpi(struct device *dev)
+>> +     guard(mutex)(&sock->metric_tbl_lock);
+>>        ret = hsmp_send_message(&msg);
+>>        if (ret)
 >>                return ret;
+>> @@ -492,6 +493,13 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+>>                dev_err(sock->dev, "Failed to ioremap metric table addr\n");
+>>                return -ENOMEM;
 >>        }
->>
->> -     if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
->> +     if (hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
->>                ret = hsmp_get_tbl_dram_base(sock_ind);
->>                if (ret)
->>                        dev_info(dev, "Failed to init metric table\n");
->> @@ -506,17 +487,6 @@ static int init_acpi(struct device *dev)
+>> +
+>> +     ret = devm_mutex_init(sock->dev, &sock->metric_tbl_lock);
+>> +     if (ret) {
+>> +             dev_err(sock->dev, "Failed to initialize metric table lock\n");
+>> +             return ret;
+>> +     }
+> 
+> Sashiko notes a potential problem with this failing and that not resulting
+> in a probe fail, which leaves the mutex uninitialized.
+> 
+> But the mutex could be initialized earlier to avoid the problem I think.
+> 
+In the v2 series, you suggested using devm_mutex_init(). However, I will 
+test it and initialize it earlier if required.
+
+>> +
 >>        return 0;
 >>   }
+>>   EXPORT_SYMBOL_NS_GPL(hsmp_get_tbl_dram_base, "AMD_HSMP");
+>> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+>> index e7f051475728..f7b1cbf19932 100644
+>> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+>> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+>> @@ -15,6 +15,7 @@
+>>   #include <linux/hwmon.h>
+>>   #include <linux/kconfig.h>
+>>   #include <linux/miscdevice.h>
+>> +#include <linux/mutex.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/semaphore.h>
+>>   #include <linux/sysfs.h>
+>> @@ -41,6 +42,8 @@ struct hsmp_socket {
+>>        struct bin_attribute hsmp_attr;
+>>        struct hsmp_mbaddr_info mbinfo;
+>>        void __iomem *metric_tbl_addr;
+>> +     /* Serializes concurrent metric table refreshes from the sysfs path */
+>> +     struct mutex metric_tbl_lock;
+>>        void __iomem *virt_base_addr;
+>>        struct semaphore hsmp_sem;
+>>        char name[HSMP_ATTR_GRP_NAME_SIZE];
 >>
->> -static const struct bin_attribute  hsmp_metric_tbl_attr = {
->> -     .attr = { .name = HSMP_METRICS_TABLE_NAME, .mode = 0444},
->> -     .read = hsmp_metric_tbl_acpi_read,
->> -     .size = sizeof(struct hsmp_metric_table),
->> -};
->> -
->> -static const struct bin_attribute *hsmp_attr_list[] = {
->> -     &hsmp_metric_tbl_attr,
->> -     NULL
->> -};
->> -
->>   #define HSMP_DEV_ATTR(_name, _msg_id, _show, _mode)  \
->>   static struct hsmp_sys_attr hattr_##_name = {                \
->>        .dattr = __ATTR(_name, _mode, _show, NULL),     \
->> @@ -559,9 +529,7 @@ static struct attribute *hsmp_dev_attr_list[] = {
->>   };
->>
->>   static const struct attribute_group hsmp_attr_grp = {
->> -     .bin_attrs = hsmp_attr_list,
->>        .attrs = hsmp_dev_attr_list,
->> -     .is_bin_visible = hsmp_is_sock_attr_visible,
->>        .is_visible = hsmp_is_sock_dev_attr_visible,
->>   };
->>
->>
+> 
+> --
+>   i.
+> 
 
