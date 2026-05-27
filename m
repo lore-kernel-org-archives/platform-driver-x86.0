@@ -1,107 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292623D1AB5;
-	Wed, 27 May 2026 15:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A035D3AB291
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 May 2026 19:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779896174; cv=none; b=j9XX/fvTI0gX1PzuGDBXPmh7aV0ahfxW0UB6Mmgl6NM+ksAqcrbY6xZA0lQ8hUt7V8BYnrRjJmXITegYBSbA8hCOdKYoPbLtSpbIDU0Qi4sQC3JV3TFyITH7K8ERl8ONDwgRhJo5xueMEW/C6/mVVKZTG9Qgfbuy9mgMgcGQbPw=
+	t=1779911248; cv=none; b=n9dPe31eFx3K3cBfrqjPorcmUNTpYzLbJjl2zHqBciwukbB7hbsdiI0OpfQU9DzE321563Wn0MqKVEp+YMso8v90mp/ZrYlC9lrJ4qinIjlR5qQHNLRp41FWpxv9jzNZyXIQdkXqXu4MqvQFounpfcKjH1cQ1oqXGMygkJLz9Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779896174; c=relaxed/simple;
-	bh=Ovp+K4FnIuO8i9CGXqYhA/YWXaEutFtXl4uEiD4jDVo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ue8iK9Zzh52GhsOl0J+eHlvIY2lY4jPck17H65GG6vVxTgNlwbFpLaYJV6GWjWvMT8lAelD99yPrz4XEQiv+ernDbcJeq4NWxxCZI1KUPoDF7gSdldJEOXlScvKPqsFZvCx8nWegkd61b+G7dqhkrm+01dvEqOGVEknnZneW878=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CO7NzX0a; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779911248; c=relaxed/simple;
+	bh=1iRM16fioHiUHoDdnsLlLfeRN7TXLfIMdCAeA4s8KxE=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=irzqMKceoAM8Q63/XW/Ns/HuLAUDmuLLr/zRX0SZkzNxc4lpDgJDdSCrzBex9Pxk9SXs6n5oVypqmsolMQadMxLYIiVO/yY5dSVteuHinV6LzDzkRyBCIfwlLbQ9JXkpPQaWmFH35poGLO+BfX88WpWXR+Q+gPaAJvmbGqPIj+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pLCfZgnD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CO7NzX0a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142B81F000E9;
-	Wed, 27 May 2026 15:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779896172;
-	bh=tyMTaumHRjBinJdhP3tD87rZtnu90BQDmn//aI/sKmo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=CO7NzX0aE0E+SHj+82S+F/U8cAQzuwA8hkUPUNhJLQ2phlY3RB4OcpfkpOC+dW4us
-	 qjbQuYT4T45deTaGv3FFA8SHPEUNFhx94kaWnwwyDuaie2bUyyAN0N5GPX9GmjjbT8
-	 yx2NyadlN03P0nR703Zi77z6eXdY9EVjHiC85zMb1twHn3rLnsS+bt/vbWFG2XZ5J/
-	 7fNu4YopxFJ1v2ZqzTS3CpuuX1QzQ6zn1hKuaz5vYmfBQaCyMiCiE685vOoS+B+oKi
-	 t8mW6mahwlddIi1E01MbB0ycvEVyQW350njEZzE+LYQZHRbCx9c6rKFsuimdasqz1e
-	 VM+dsl4Rrhleg==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, 
- Mark Brown <broonie@opensource.wolfsonmicro.com>, 
- Thierry Reding <thierry.reding@avionic-design.de>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Srinivas Kandagatla <srini@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
- Saravana Kannan <saravanak@kernel.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Andi Shyti <andi.shyti@kernel.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Matthew Brost <matthew.brost@intel.com>, 
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>, 
- Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
- driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
- iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
- linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- stable@vger.kernel.org
-In-Reply-To: <20260521-pdev-fwnode-ref-v1-1-88c324a1b8d2@oss.qualcomm.com>
-References: <20260521-pdev-fwnode-ref-v1-1-88c324a1b8d2@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH 01/23] mfd: tps6586x: fix OF node refcount
-Message-Id: <177989616081.737612.15563215651036638106.b4-ty@b4>
-Date: Wed, 27 May 2026 16:36:00 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pLCfZgnD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 361D5C2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 May 2026 19:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779911248;
+	bh=1iRM16fioHiUHoDdnsLlLfeRN7TXLfIMdCAeA4s8KxE=;
+	h=From:To:Subject:Date:From;
+	b=pLCfZgnD2iSaOTJeEBqzitN0KL16L+aG+1TtW3aM3VE/png9kSKu41dMy9X/BoIvm
+	 CKo/GN++9RnPAqr57YEaL7/ZHwNuzpnhxA5RqgtwO1S8u0BDKbE2OJRZkp0FDDE6UK
+	 HKUrlY8k2iVaeff++VkDP7hqCGdUkM9sJAW4g6be0IuR7mQiijFLCsVfYNZQjoKcXP
+	 jjeFfZBla4Lf4wzWmpLjS/nxdQyf2diHt0Ei8Bg/HzqU+yJdh3774MXambxP7P5i/F
+	 RNbkZdqV8tV5ODbVK0JM1cD60qWnt9U1Dxf6KNnDi2ISpwpE7Bby+78YI0GYQafkc0
+	 iCcmmZhb4847Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 1C8FDC433E1; Wed, 27 May 2026 19:47:28 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221583] New: Lenovo 82KU: keyboard backlight works via Fn+Space
+ but no kbd_backlight LED device exposed
+Date: Wed, 27 May 2026 19:47:27 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: george.stafilidis@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221583-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.16-dev-ad80c
 
-On Thu, 21 May 2026 10:36:24 +0200, Bartosz Golaszewski wrote:
-> Platform devices created with platform_device_alloc() call
-> platform_device_release() when the last reference to the device's
-> kobject is dropped. This function calls of_node_put() unconditionally.
-> This works fine for devices created with platform_device_register_full()
-> but users of the split approach (platform_device_alloc() +
-> platform_device_add()) must bump the reference of the of_node they
-> assign manually. Add the missing call to of_node_get().
-> 
-> [...]
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221583
 
-Applied, thanks!
+            Bug ID: 221583
+           Summary: Lenovo 82KU: keyboard backlight works via Fn+Space but
+                    no kbd_backlight LED device exposed
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: george.stafilidis@proton.me
+        Regression: No
 
-[01/23] mfd: tps6586x: fix OF node refcount
-        commit: 60a28e85ba5c0707b743857a3304107f2f9d0482
+Laptop: Lenovo 82KU
+Distribution: Fedora
+Kernel: (paste output of uname -r)
 
---
-Lee Jones [李琼斯]
+Problem:
+Keyboard backlight works correctly using Fn+Space
+(Off -> Low -> High), but Linux exposes no keyboard
+backlight LED interface.
 
+No device appears under:
+/sys/class/leds/
+
+Expected behavior:
+A standard LED interface such as:
+platform::kbd_backlight
+or
+ideapad::kbd_backlight
+
+Current result:
+GNOME cannot expose keyboard backlight controls because
+no LED device exists.
+
+Tested:
+
+* modprobe ideapad_laptop
+* reboot
+* latest Fedora updates
+
+Outputs:
+
+$ ls /sys/class/leds/
+input18::capslock
+input18::numlock
+input18::scrolllock
+input3::capslock
+input3::numlock
+input3::scrolllock
+platform::fnlock
+
+$ sudo dmidecode -s system-manufacturer
+LENOVO
+
+$ sudo dmidecode -s system-product-name
+82KU
+
+$ uname -r
+7.0.10-200.fc44.x86_64
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
