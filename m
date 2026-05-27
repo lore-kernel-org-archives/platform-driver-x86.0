@@ -1,75 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0844723BCF7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 May 2026 05:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29CB311C07
+	for <platform-driver-x86@vger.kernel.org>; Wed, 27 May 2026 06:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779859541; cv=none; b=O6ZggmqatfOnATKJ/ZQ0gMtKYRZa7Ac571hHcpYkjDsjN5uwEgheoJM7L7SGAN7H6RTrO2UePI3KgtcwU3fbH1iWwDDHxG7u4HcstJ2sXG5z92xhzVwHf1fgED/KNXmrj76OVwAQdHnfsBauj0AEi7Kl2vjGKjnBhXNUxgkR65I=
+	t=1779862514; cv=none; b=ZzwBiej/CYJlm1ckItZHgbTzGHUeQoj/lfp4ly98yiN0AqiI3N0yY3iwlUru81e/Ck1FXug3HMYY3LJnJJ+wBZfxY8es0VGn5CQqDzJssg1P2ULxPq+rtlRphBlBkfTV5cllNjAzRYg0Ieq4LJlZbX/8UGDsrl4/XuhKERG0pNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779859541; c=relaxed/simple;
-	bh=UWXLLv41fO9oV/Iaj15eMve9sibZfd59ZaLt5LMCELM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Rn1QZAjhvOPgd/mfiNm89BObagq6SD0lnwQ6JYv1m9XFiU+J754/MK3iFKgB75HWZ4tPibKxcKc8FkD7mjvUjpADZUIawOOXgFsexVmdzGQttKZzMT5NjcYT8ITNfBPDxKhrwDpb+4tZFuzyFcjfmH3FOQQLOERg+uL8BJDk5mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBk3GfT1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779862514; c=relaxed/simple;
+	bh=+1D3hVb+6Zt/jokGOSsQCDspQRx3xjk+nJ/y2DHFEIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OQ8f3dh8c3Rhtam3zkTQAsEKS2JL/t1tppauFtDSQYPUX83nlFRuNXPElUL5ZT2tV3YiFbrjhGcUFgLSsKcKHtWgY5IF50VQJEAoReauW9/QDBN8e6ptG7SSTyRmOZyKvPA9i5kZDs8lbnXYZhUD8V5RMc9kEJc0PQ0FvpMSlSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7Hsgw+j; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBk3GfT1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AD335C2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Wed, 27 May 2026 05:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779859540;
-	bh=UWXLLv41fO9oV/Iaj15eMve9sibZfd59ZaLt5LMCELM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=XBk3GfT1PjFrsuLiyntXpuJytY2UF8plYQs8Bk9J3UwvH0NZ+l+Fsmn+2Rg/KMch/
-	 jF/Cl0MV65WC6nCav71PiGpPsoF8w3/Jscfa+KqzK7ZluW2PF4jEnNjyvhyoruiaiQ
-	 ggrLz+Is54NFxBCi5XHqpvsR5xE5k9z15sD3orELkIYHENhT8paBOCHD1bUwhNNbu4
-	 ercbimMe6pjRwcu6X81NMH6V5mzqkCiKr30twinGJIYs3J9g1SleXqt8Qw0D7/xfCZ
-	 76P0YLyVPSQXgUr8BEVarEq92rO2YwRjvLpVRZxwmhRzX6RNdjhZOYMmjFgi9bPLbE
-	 hJh7Ol3jIV4tw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A275CC433E1; Wed, 27 May 2026 05:25:40 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
- 7.1-rc4 kerenel
-Date: Wed, 27 May 2026 05:25:40 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: regressions@leemhuis.info
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-FJeprTSJNQ@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
-References: <bug-221569-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7Hsgw+j"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-83f63abdd83so220942b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 26 May 2026 23:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779862512; x=1780467312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+1D3hVb+6Zt/jokGOSsQCDspQRx3xjk+nJ/y2DHFEIo=;
+        b=O7Hsgw+jGMS7SvQal6bo+TX38F2x6KWaZ6B4h0Mg9Pv4fO3ZxxLMb5BM/QCt+ol7NK
+         cksiRAIhijoGGtw4Gdt+OEQ9uBUWyCJWDbo77s8/bO5lUEIaqO7O0I7OKN039TwE/zcg
+         2mEqjBwN2w1j2+uhrw9Jw3KD3xQ2kxZLXGK7McpjyIPC1UL0JrbinxWyv7H65kDbD2Nb
+         +DtSOzaUEVkSJtSWCPo4rFlZRtJdMOHnEcgnQKl1Qmc7qGFvxgVZNYh4TdcxMjsH3Erj
+         W0SU/KATGs1drpkFf58Pp7qeegirEOoKfv+6jdaU1dolg7ZQRrIXbdp6KyoiWIELGfMA
+         aGqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779862512; x=1780467312;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+1D3hVb+6Zt/jokGOSsQCDspQRx3xjk+nJ/y2DHFEIo=;
+        b=CEC+2QgxpOcL/uxagZvk9i+LfnrT5EHyuCaIbymDbduANUvyuqEqCnqn08GL3KIgpl
+         TSh7s6ICpb7DBvh99kezuz20MBWrITEJ6tSPrm4ci11nnrm6xdYK4P2OdEstb8PXjtpY
+         90tKpUgvGtSUhdiYN5MUjZDtFgYo1La5q/H4icaFkcaFuI6zdF/UZp9FulAfhB/1VmWv
+         pKYbdhRtthJnxClhxU1jnaOCmiSgl06EUv8WY3hDx4glOoB8fVhiXRC67B3IaD/FaSKH
+         NbGkfJ9mapGZY+gYdJ7zPJ+LQY0YM3YtA+FulP0mOJaccKaap2nzQI6WD0tOZ6l6u6PY
+         HfAg==
+X-Forwarded-Encrypted: i=1; AFNElJ+oxAxh6VsBOojCa5mL8XNunFTHt1RypvgfdxhS9/2vK6zZ0bAC6QBc2NlCiicNKAGUyJ6ZLwxNy/PlUTwQOss4KJ+/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIW/53cMM+0F3O+6HyeXbBjS2IyFToe4AkR0xm77k93h4zkaeq
+	M8lG6XUXYQQUMHQaRILIArrzQFgScUq55IwAal4eGrtqjhGqWr6gdyct
+X-Gm-Gg: Acq92OEIvqUl0Xt9NllrcKchhNuJlEMdITJhIXR907jLKT346bfBxaJHgM+P7h+HBnb
+	PBFdJK73RMDHSjscSHtZemNE6j+Xkl6Jy2fDvUGjDN0lD922Yr7Vfb5/YiCCMUftu8aMHQiv6qM
+	2YKYGdmkNJZTd6v+LuGP4AkEVKJHd3gZT6nD/R8kPMqPpUZDO5j2PRzIO0INAfI3OQDWZ//53/V
+	5KZhSXJMM51ZAwOJgsEAfvVOqXodAz2gqrOH0otRXYOECxC75MpL5d870iOyWJZQgLVjXQxPNPy
+	AfW6poqTSdZ3bjm5nQbMWfFmwVRkyxtsZiFSzwCDpMBYsqhaG5Li9ICSiKqpdHwccs5D5lb5D2z
+	l+qKeQ1zlZna4t+n0HH04MvdHMiW3ApKtcH4aTnYmWiNBecnCj0xKjg57GTpqYtDT29A27XFIx5
+	dNAj0Eqjst5I0tZiI6AQ3saiVZ9AqqtrdtiFZidiUHTj74
+X-Received: by 2002:a05:6a00:a86:b0:82f:99c5:868d with SMTP id d2e1a72fcca58-8415f5f36d9mr10609174b3a.4.1779862511836;
+        Tue, 26 May 2026 23:15:11 -0700 (PDT)
+Received: from magniquick ([2409:40f3:1420:77e7:78d8:bb76:bcfb:498a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-841d70df178sm1339088b3a.42.2026.05.26.23.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2026 23:15:11 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] platform/x86: hp-wmi: Add charge behaviour support
+Date: Wed, 27 May 2026 11:45:01 +0530
+Message-ID: <20260527061501.10943-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260505200222.157144-1-navonjohnlukose@gmail.com>
+References: <20260505200222.157144-1-navonjohnlukose@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
+Hi,
 
---- Comment #4 from The Linux kernel's regression tracker (Thorsten Leemhui=
-s) (regressions@leemhuis.info) ---
-Can you maybe share the full dmesg from 7.0 and one from 7.1-rc, too?
+Gentle ping on this RFC.
 
---=20
-You may reply to this email to add a comment.
+Is this approach acceptable for hp-wmi, or would you prefer this to live
+elsewhere / use different gating before I prepare a non-RFC version?
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks,
+Navon
