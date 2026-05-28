@@ -1,46 +1,46 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011002.outbound.protection.outlook.com [52.101.52.2])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010036.outbound.protection.outlook.com [40.93.198.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F923AFD0A;
-	Thu, 28 May 2026 09:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161183AF66F;
+	Thu, 28 May 2026 09:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779961229; cv=fail; b=lOvTmMauTY4v0HxGqe5Xbzc30OdSUO03uOjJB8S3UIOZEXV/dUd4Xxvio6fAF767YariOPg+eEGWYJb6MUk9neZdlhky5x/w9r/qgEg201Wt5JejfhfCtY5g+WbwtYZkcOiipJh+PWT8z5ofHj43p/nMS4eM1SeBpwWvW5quLIs=
+	t=1779961230; cv=fail; b=nIXCkIBBYUKB+5I52sjphbuXB3jpGYBLoHCSzaZtlbsu5N9nmcFhVMlTwgs1/va0ygCDObTFmxw8TJr32chmspmrgmoNm5QYR30DcspC5EeIBeftitwwi0C/VPPxaPK7WUaITEi7BRswZF9IrinLkbcEzVPtaZJ3ibhF457Yj+I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779961229; c=relaxed/simple;
-	bh=EkM1/WsRLDcDUNeiKE/UWpjiKLuGO1nDztRsvuCjOqU=;
+	s=arc-20240116; t=1779961230; c=relaxed/simple;
+	bh=0f1eWmFvJNzqzXC92VolsCXHqSACPZq0Z1kqA1i2Zpo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZvnDz5vPXZliFvTEYZA2muTeruz5unaQns5H54Cgixrhh8xBs0AL0F5jZrBYghq/ZzoSMi8OSoafHOPB5ijPfxv9hkbn6JfZTnwTSQ3dQZqUoFmedQz2LnqQy/Nui64+6F+/KRu+K9+G6CD7RVG7KfaPm27EnRHcKwqUX2OgRIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4ifbG+NZ; arc=fail smtp.client-ip=52.101.52.2
+	 MIME-Version:Content-Type; b=kTXmF1CqfhFpgICi/nIldRwaChiWhLOFq1DNWt6TwZo0buWmzsfcS3fWYUayBI18mgGgBiJ1rjK9/JFCaiR7YBFDQA34IqoBlApVPfU7cX/jVqX9OX5xqQjAZTEJGHCc0R8jAtdu9R7zR8Q2fGRp6WBj7Mift17LWF6NoOFdals=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=H9ADyWWI; arc=fail smtp.client-ip=40.93.198.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4ifbG+NZ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H9ADyWWI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Mp4zjhx4PfqrZd/ghJvlWytaMrAHkJC/ikz0FHpm0UKqdIdWJ89n0ff0I6aHRKfR2lrBTJUDM4LGhH+A3wWSxbvb1PvuEieSBIwpbnLhhtsiGZRpAmHLIWYDBm2z0v1HoX/cqHWf28qwKQUvq9muGQifX4yZaL1eFfXAPRaDvQ4eu2LWn9QD8Z1sUvwwpIBcdzddoIztXYWxj6gx91qVYjX+5HBvwJfu6wzKKsDYNinNxQI32NZCfLjI6uW/e0iXW9J426jgaLvCR4fW+Z9Bki69lUS9XRkYvMqEn09KG7ZnCTdxdiSIeuvLc9wbslvlayz/8yIbEwoyPIpEzWoP5A==
+ b=oz0ZDS/uZqAYgTBaNajHJWvBKaMnqSjk/CCEobLxN/jYr865GZtE4n2qwQ+h1PHfIPqKs21gPFY8VSH1mMxZa8Jui3VtjuSbKH55I8gZU9inSpOUXQCtg+dgm0jpY4Oft9MG/CLMtOCu4PB0CAiV9hV5wJ5ZLMRpUMwMiyOsM9jG7ae5rdwAlsTPuHGbsPq6J2Qm1yuXo1duUaNsruUdhsvjVIUuYwKN1occ0iIBIOTmwSgOhSJtWclmumlcgftdZy2UrBMWrXfYr0y9CZgYZjwFrqo/yjLlKZKTjjpQoA0zo9wqjV2YczrPInG/Izp9REdpNBRvEenVDIDVjqahwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uh7lXLeIC/hMkgGP5ij4RghWFHbq/ACrn93GwB++Nzk=;
- b=WEHjugE7GZjo9DzWbdcfU6y/L3pjsMDQQlg+Hc/KFyMZOZ0+K+Mt4FQg/pWhuHn2bajtM2DmmsQNYHPYuZWP1vlAVqSKmIW6i8VQilQC15jSPbbFoFP5R5X0a+ipzZrZQvMUlVGkw6oMVC7abkZPJvX72vUmW/w5wojZZYgIpXaNeLdMBwIC6htNWNQclHl/wH7NKSE8vILGJAtXoYVC8Zw+BFMKsdZQyG+Zz+ZD/Dv6VXhsDUrIWS+s1XGhRRqxjMwFqrOP6FlrO7VyhTaE0ExnwGDZbSercUH2aiGuUlB3hdjyW0xFlS5vuH2yqvet+lmNnor8BEtSejOn6oiK8w==
+ bh=9sE2WV9tkhN2aiycQIkQAh9a9xrvgDAZIdVJzDJVM3M=;
+ b=wqNSRdrcHPZp9j/Qkd7g0x557aMdfAo3AiEO+1zdOOc8iEeHbHxKAJ+gg1oQAxMaEkesp/zgqSGgK7zIjE9YihYaudZOGwYRwprrzVilykA/TPtHvNBxWhGowTTLsBiDAidlh9gCqhjtf6lRsidYSfANBePBi96cyFv8/CPrJYpB5FGeiyM+WSdCnBc4+fantGfESWLgGjB6SmoT+xc+TrQVVsxgMXoKQMI0GGm7kYO8pKRIIEXqyQGhggBAVGNQ3he9c8Fl+tnJPEfM3+GBcWaL2zhH8vy/vyJIPENBZHFiThnaLfnUEWjMWPJ2hmvb7cSMiIj8D6G7Kqrd7ttb+g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uh7lXLeIC/hMkgGP5ij4RghWFHbq/ACrn93GwB++Nzk=;
- b=4ifbG+NZVUUhNOkJjAn7dN5eW/ZKfdOHq6ph4d+cNsjfY9ecXJgTOYgzVUeyS25xVDKNFknzzJWp885Z7HouCatckX7Q9/6GZ+kHWHJXZUbRo3Q7GJqghk73bOUQf+JJ5gRA38YmG2kRE9UIaA9bbci1IsjSbjxhSYfITBgWxSA=
-Received: from CY5PR22CA0078.namprd22.prod.outlook.com (2603:10b6:930:80::25)
- by CYYPR12MB8872.namprd12.prod.outlook.com (2603:10b6:930:c8::14) with
+ bh=9sE2WV9tkhN2aiycQIkQAh9a9xrvgDAZIdVJzDJVM3M=;
+ b=H9ADyWWIdKPNyhGRTDgRIsxm9/OrjyCqyhGXkT80Y7foIlxHtRdOnS3XoakU6eOYjAmatfwzVg3dA9JoUxLxITLgVVMa+Hh2eM1cJDr2M+PKkcWFzV3N3k8kMcRA22dYOe9y7seTLcB9hziFmTCqNWNk2kY9ge74n9BaoR3K+9M=
+Received: from CY5PR22CA0065.namprd22.prod.outlook.com (2603:10b6:930:80::10)
+ by BN5PR12MB9511.namprd12.prod.outlook.com (2603:10b6:408:2a9::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.11; Thu, 28 May
- 2026 09:40:23 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.12; Thu, 28 May
+ 2026 09:40:22 +0000
 Received: from CH1PEPF0000AD80.namprd04.prod.outlook.com
- (2603:10b6:930:80:cafe::30) by CY5PR22CA0078.outlook.office365.com
- (2603:10b6:930:80::25) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:930:80:cafe::9f) by CY5PR22CA0065.outlook.office365.com
+ (2603:10b6:930:80::10) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.13 via Frontend Transport; Thu, 28
- May 2026 09:40:23 +0000
+ May 2026 09:40:22 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,19 +50,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  CH1PEPF0000AD80.mail.protection.outlook.com (10.167.244.90) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:22 +0000
+ 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:21 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 28 May
- 2026 04:40:19 -0500
+ 2026 04:40:17 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	Muralidhara M K <muralidhara.mk@amd.com>, Suma Hegde <suma.hegde@amd.com>,
 	Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Subject: [PATCH v4 3/7] platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound check
-Date: Thu, 28 May 2026 15:09:50 +0530
-Message-ID: <20260528093954.2461272-4-muralidhara.mk@amd.com>
+Subject: [PATCH v4 2/7] platform/x86/amd/hsmp: Add UAPI structures for Family 1Ah Model 50h-5Fh metrics table
+Date: Thu, 28 May 2026 15:09:49 +0530
+Message-ID: <20260528093954.2461272-3-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260528093954.2461272-1-muralidhara.mk@amd.com>
 References: <20260528093954.2461272-1-muralidhara.mk@amd.com>
@@ -78,85 +78,160 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD80:EE_|CYYPR12MB8872:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b6ae609-b029-4961-92ef-08debc9d23d8
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD80:EE_|BN5PR12MB9511:EE_
+X-MS-Office365-Filtering-Correlation-Id: e16cb33c-e9c6-4578-88c5-08debc9d2332
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|22082099003|3023799007|18002099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|36860700016|82310400026|376014|1800799024|56012099006|3023799007|22082099003|11063799006|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	PPPyajCPK5RL9PMemCVTjcUZ2aBx37kbQNxRunJhetVhGn700rlF8qvjiksPo5vgI787L/sDB4b6dgUSmhaEyBUSCAFbz9wJha0j5UebAmZhSAflGpbWZ25zBS0fwjy3cSQfKFOKiQnv1PeH5xINlKGZJqVor/ERKDGNYEFYFqdzvoe5e1L5Rtk6t0Ni4Dmof6TynYiJR4epd4DsVk3nJcVu4Z9qbHp90y+yTjUILZF/+jA5kEvTxZ9pIvvF1YNftD2NVBmTOTf+25vsJKfWdheT1QakwyaHFZoIGTnQIvUleQIaX0adCJSqGqUGXsS3PiORE8YMhuhIayB9Ezw1Kw7RrTXZftaYgL5+HLPUHXPjXCicdP60kbBPjDIVz1hJevz2FD0tGcyN89d824OAE5iUNBaWaI3H9jOEJY9rukRWkLUEWXWFwIKxFaLAPyN16l3LSI1tLyEQT8DXFoqGVIMQLw6Q+aORrEwClxj4dX6KdER1vOeHllJfqku2NTIC0cmypOebf6h5RMYqepZtb0AzEi2231VHLVVbny5dnPdxH1wAF+iYS7kGiup19cWi6kTFYmkfuI3G69jr3m7YtV/jaibjjue4XmlNeya2+szG7Z0LWOADUGeyKQ8jjce6cf9w6/th6D5KP0/vtmFxk3UBFguPkLPdqRIYUK2K+kZGUVGLntwLBgRLW9JujuigfPGjMp/S/6vNhb0Z8wvuJlzEZ82Cy5fr/r8YlEEk0wY=
+	EwdNw70XuqFAOd48YjkAeFLcJRsgiLvqEdmRsORyg5m08f8PnwTlkdCNaAfJApC1wkNGcgAKELMMOKn5/8XGMOArgVVgm34E0mCGU1KwNbEQzdSNSVMgHDZjbypKPFhwwVigj9BWcvBHaHYNvetjtiW+tgKUjgdcgQPjIYgG7Fr4q0PCftq6AH3BpMThELn4jQhyuwUIXp5bR/UGUXeLan6t+y0bHo8IssuaUAk3siDf4BHXfiOQDdhHv59eHsFjdssmZyD7ZzWNBNKD/fzE0BJJhKvYrWWNoj4+x+s77KGSfPqKBvP3YniRoM7jOTB+6Av5iaRKxskptNHAPVWxoUKRVMED2CFtTCHYxuugc3VP1mbhlZE1qcJtNYDEp0EXqWPWHI7z2v84jjfPu1Zz//QGyFxWgiqhNCUZVgBPi71fMZqtbH5laM66g3SqZN7GMscf50o3vrByqQf0nnh6gHA/EMnF/uMMX5ah9GJNH0X+9aq38ZtA8c0W2xSo/eVcWaOWgPCCF6qyglKCnhvcoO4WuTXl0lQOZxKnZpwxviRMMyeCjvInpgLxE/y2CdpPRkLEdxPtEpJrSB/SkcFt/B5gd8gsvpjBrWRdIFyyXADyANTwrxT29dxFL3iyjo2eDUTGI7+6l33JDtZbs78t2XShjrrwqiUdUb8Oe/Cg3m0lo5IliwhmJXPtQo1TQDlJYPyQmiRssVozf/Al7l5N30WBYpxCzGjbe9cGwwbUBfM=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(22082099003)(3023799007)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(376014)(1800799024)(56012099006)(3023799007)(22082099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	eJTAPLjoWdWn/yzNDUgO7vPq/Mt0+b74+Ku9E66Y9SrmTd+Om/DGj8FtojWU2BaFhmeLZ8+i1Frr5JUxdwIgIEIpnDoTAjraCLKdnVKrUZW1f9wZ/vQH6/dfUKpTSBAXDAUd0GAdutf8sg2rbrlOOiyRtJlvCfVI1I0wD5aStn7D9UmQ+iITip028HsZCeXOAQptfvki1PL01upRkhthryBSIKXXZrBXqPQp0CysuysSH1mX0u/mZwhoe16o7p0EZGgkAwNKLl5vabSkuhzFhdmysoV3KtMWlvHR/7AyG5JwNfG/F2wNg+P4/w+0er41tfXTlE0b9yKrzXjTZB5Wr4QviMUYTusR/gfM0NyhTY8EXlDBQOAM+OFn+6oD/I0ZZjZsR/G5sNeNPWeGMmUWg2wrrE9i8ZICfUk08zSN1iNxwMOg6dLjFlxPV3+80BPA
+	IT6b3RLXYdUKEu5YJMsZoT6B+NLxyNHDIiqBvN+hS4n8CmTIaWZfp/0988/zKIL/vYedCnDtSeuGuSFidxu5c7vtw8k8P1k/B8/Zp/duLLO5X1fqj/w4A+DNRZmu/O4YjJGB1U7pnzSiMzYUAI7Isb3+E6OvIhoiGuxiEgcdqPqFtN/weHMJfmm/zI0dS09zVqQnnVWQKTz/mZmFunDCGosBG5+JKHxL2e70JEocnNwvD3gxeSfnxyAma73pRxnU9wimuct7KRs7+t/eCxUxXQC8jjRPi7GbGkLofdCzot4uRwUTsoNkcke2fWjNMMN29j9s71TFoi8L3h7VSDprY9XtIIHKcABpfVMJy9E6JQ0PYQKm4FUXlPZtyMYfvBhAL1EkTNz5+taMRAX5vJhnz1KsYiYRgqm/Q5ufJB/RG2bPKITkIrKui22mzbeBn8cJ
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:22.9924
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:21.9041
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b6ae609-b029-4961-92ef-08debc9d23d8
+X-MS-Exchange-CrossTenant-Network-Message-Id: e16cb33c-e9c6-4578-88c5-08debc9d2332
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CH1PEPF0000AD80.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8872
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9511
 
-As HSMP protocol versions evolve, existing message IDs sometimes
-gain additional response words on newer firmware. validate_message()
-currently enforces a strict equality (response_sz == table value)
-for HSMP_SET and HSMP_GET, so userspace compiled against an earlier
-descriptor table is rejected with -EINVAL when it asks for fewer
-response words than the in-kernel table now declares - even though
-that caller has no interest in the additional words. Only
-HSMP_SET_GET already used a relaxed upper-bound check.
+HSMP protocol version 7 on Family 1Ah Model 50h-5Fh delivers a new
+per-IOD/per-CCD metric-table layout that is not compatible with the
+existing hsmp_metric_table. Userspace tooling needs a stable UAPI
+description of this layout to interpret the firmware blob carried by
+the HSMP character device.
 
-Replace the per-type branching with a single upper-bound check for
-all message types. Userspace can now request fewer response words
-than hardware provides, while requests that exceed the descriptor
-table (and therefore the hardware capability) are still rejected.
+Add hsmp_metric_table_zen6_iod, hsmp_metric_table_zen6_ccd and the
+top-level hsmp_metric_table_zen6 that mirror the firmware-defined
+binary layout 1:1. The ccd[] array is sized to the hardware maximum
+(HSMP_F1A_M50_M5F_MAX_CCDS = 8) to keep that mirror exact; userspace
+iterates ccd[0 .. iod.num_active_ccds - 1] and ignores the rest.
+num_active_ccds lives in the IOD block because the IOD die is the
+aggregator that reports the CCD population, and keeping it there
+preserves the 1:1 mapping with the firmware layout.
+
+Driver enablement for protocol version 7 is added in a follow-up
+patch.
 
 Reviewed-by: Suma Hegde <suma.hegde@amd.com>
 Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 ---
- drivers/platform/x86/amd/hsmp/hsmp.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ arch/x86/include/uapi/asm/amd_hsmp.h | 93 ++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 631ffc0978d1..9bad58fef304 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -182,20 +182,15 @@ static int validate_message(struct hsmp_message *msg)
- 		return -EINVAL;
+diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+index 52e53ec5877f..fce271282348 100644
+--- a/arch/x86/include/uapi/asm/amd_hsmp.h
++++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+@@ -592,6 +592,99 @@ struct hsmp_metric_table {
+ 	__u32 gfxclk_frequency[8];
+ };
  
- 	/*
--	 * Some older HSMP SET messages are updated to add GET in the same message.
--	 * In these messages, GET returns the current value and SET also returns
--	 * the successfully set value. To support this GET and SET in same message
--	 * while maintaining backward compatibility for the HSMP users,
--	 * hsmp_msg_desc_table[] indicates only maximum allowed response_sz.
-+	 * As the HSMP protocol evolves, newer platforms may define more
-+	 * response arguments for existing messages.  Use an upper-bound
-+	 * check so that older userspace callers requesting fewer response
-+	 * words than what the current hsmp_msg_desc_table[] defines are
-+	 * still accepted, while rejecting requests that exceed the
-+	 * hardware capability.
- 	 */
--	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET) {
--		if (msg->response_sz > hsmp_msg_desc_table[msg->msg_id].response_sz)
--			return -EINVAL;
--	} else {
--		/* only HSMP_SET or HSMP_GET messages go through this strict check */
--		if (msg->response_sz != hsmp_msg_desc_table[msg->msg_id].response_sz)
--			return -EINVAL;
--	}
-+	if (msg->response_sz > hsmp_msg_desc_table[msg->msg_id].response_sz)
-+		return -EINVAL;
- 	return 0;
- }
++#define HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD	32
++#define HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE	4
++#define HSMP_F1A_M50_M5F_MAX_XGMI_LINKS	8
++#define HSMP_F1A_M50_M5F_MAX_PCIE_LINKS	8
++#define HSMP_F1A_M50_M5F_MAX_CCDS		8
++
++/* Metrics table (supported only with proto version 7) */
++struct hsmp_metric_table_zen6_iod {
++	__u32 num_active_ccds;	/* Number of valid entries in the sibling ccd[] array */
++	__u32 accumulation_counter;
++
++	/* TEMPERATURE */
++	__u64 max_socket_temperature_acc;
++
++	/* POWER */
++	__u32 socket_power_limit;
++	__u32 max_socket_power_limit;
++	__u64 socket_power_acc;
++	__u64 core_power_acc;
++	__u64 uncore_power_acc;
++
++	/* ENERGY */
++	__u64 timestamp;
++	__u64 socket_energy_acc;
++	__u64 core_energy_acc;
++	__u64 uncore_energy_acc;
++
++	/* FREQUENCY */
++	__u64 fclk_frequency_acc;
++	__u64 uclk_frequency_acc;
++	__u64 ddr_rate_acc;
++	__u64 lclk_frequency_acc[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
++
++	/* FREQUENCY RANGE */
++	__u32 fclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
++	__u32 uclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
++	__u32 ddr_rate_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
++	__u32 max_df_pstate_range;
++	__u32 min_df_pstate_range;
++	__u32 lclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
++	__u32 max_lclk_dpm_range;
++	__u32 min_lclk_dpm_range;
++
++	/* XGMI */
++	__u64 xgmi_bit_rate[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
++	__u64 xgmi_read_bandwidth[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
++	__u64 xgmi_write_bandwidth[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
++
++	/* ACTIVITY */
++	__u64 socket_c0_residency_acc;
++	__u64 socket_df_cstate_residency_acc;
++	__u64 dram_read_bandwidth_acc;
++	__u64 dram_write_bandwidth_acc;
++	__u32 max_dram_bandwidth;
++	__u64 pcie_bandwidth_acc[HSMP_F1A_M50_M5F_MAX_PCIE_LINKS];
++
++	/* THROTTLERS */
++	__u32 prochot_residency_acc;
++	__u32 ppt_residency_acc;
++	__u32 thm_residency_acc;
++	__u32 vrhot_residency_acc;
++	__u32 cpu_tdc_residency_acc;
++	__u32 soc_tdc_residency_acc;
++	__u32 io_mem_tdc_residency_acc;
++	__u32 fit_residency_acc;
++};
++
++struct hsmp_metric_table_zen6_ccd {
++	__u32 core_apicid_of_thread0[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_c0[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_cc1[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_cc6[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_frequency[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_frequency_effective[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++	__u64 core_power[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
++};
++
++/*
++ * Metrics table for Family 0x1A, Models 0x50 to 0x5F, table version 0x00700000.
++ *
++ * The layout mirrors the SMU's binary metric table verbatim: one IOD block
++ * followed by HSMP_F1A_M50_M5F_MAX_CCDS fixed-size CCD blocks. Only the first
++ * iod.num_active_ccds entries in ccd[] carry meaningful data; the remaining
++ * entries are firmware padding and must be ignored by userspace.
++ *
++ * Future processors within the same family and model may support a
++ * variable number of CCDs and cores.
++ */
++struct hsmp_metric_table_zen6 {
++	struct hsmp_metric_table_zen6_iod iod;
++	struct hsmp_metric_table_zen6_ccd ccd[HSMP_F1A_M50_M5F_MAX_CCDS];
++};
++
+ /* Reset to default packing */
+ #pragma pack()
  
 -- 
 2.34.1
