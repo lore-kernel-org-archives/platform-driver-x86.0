@@ -1,45 +1,46 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012031.outbound.protection.outlook.com [52.101.43.31])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011037.outbound.protection.outlook.com [52.101.52.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDB53AEF45;
-	Thu, 28 May 2026 09:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AC93AFCEF;
+	Thu, 28 May 2026 09:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779961222; cv=fail; b=F1Dmb3ORx8r348lk/NYPyuj/qbq9/vJjKJJ2aZIg5rsY+k3e+kI7ihUNR+lO/EO5hrsjYVf3aJyeilP4Mp5hKKmqZPvOcdn0N06OrO8TxGpHLHhcZPlgMPYUxfWMp8mEy9AfO28Zi4Tw2hB5VIdp6X0eBeHJKvgtFxWP3J+lEyI=
+	t=1779961228; cv=fail; b=bg3py+l590GCadAGU/0RfVOK5z6US7kVzUWiIo1ACUMNSX8UUXSBUPJTS350HXFXedvBj6LY/Gq+3owbSH++fBpSox1XjqBFFgVR/yCQJ4pqqzHCsAOzOi0CE0Z6o2X13NFZGYuMMmyvVgYGGckDa865Z7IG3PcEhHgiYTKO5Rw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779961222; c=relaxed/simple;
-	bh=xfbW1VgT7qCMG77Xkgr9kLeRfLjjcTOj/5DZ6Az3+Js=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ah2gCnvJmdcnrEPbTPsTWZZwe2rfHRVPLV10nfz153c1hORJPtuKsDM2xHy5H/2nh4C4EokAzEVHAqZaASMJPFX6lJdCeDU9Abjukf3U+tpcqP4n9ttWdUVl7zK7L2C4XTWv5Uo/2LVR7KvmLv4UaIkBbXpbHH94+SmtVsIDJdw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yc0T8swL; arc=fail smtp.client-ip=52.101.43.31
+	s=arc-20240116; t=1779961228; c=relaxed/simple;
+	bh=QLCoUOeoO4IOfsxpuppmcylEdQUn+rL1J5MIzFs1Irs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pX+2sYWI627dHHQc6cXQX2HF75e3QRNYLCu0PzXH3Z2/UxMtfRu/IQyfeo9ltk2scb/MrOD5GWJBYCTN5PTr8jXkZxCKTPU2qB2c0v+Xads4+zF6XsoV3qmd5CII46nBC1tDnUBY9eT74j3Ka8rkHj9LY53jGEdhV1ftvy9/9dU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QA1u1ysX; arc=fail smtp.client-ip=52.101.52.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yc0T8swL"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QA1u1ysX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TJnr8VzqmwjnckQQdij5r4Piq9d5GpguI6EIULGcsNju5FU+E/azezokulAnvhW/My46rPlBIyl1lPnHM0wvERAKKygTN1ur//SLnV0L7ldbqYLgUzml4jUQnD1vwmGc3/BldT8o2WWo4CL6SwctaRCQZKJEpOP9W9Lq/rm4do/RaFxSGmql4u+0/PebJPH9HK3qXEY74Z0+0rFsDvHar24jJ0ollbgRMFWY27vC1TCsr/EaL90KIp/vq19MhZmrFRyxwOH0Q9RITmPVw1nWZ5Tk0yTwNlW1pekj+LwUWCEZAW2ANxOgSbUllx9YwpfzRJjxyZDYXSZsO9PIodVQ8g==
+ b=MWdGL/pSnHuLN+i+osB06MhK37EXVitZ2PIROXY298Gq00HEqZjO2PydKVmwzuWC+//Os6ur1jPss9MCB332KNKijdWuB/BD9BVSCgZsd0ixhbgHlLForzT+SBBuRn7+vt9ut5Y/Qi8Ner9ThYIe1c3N9NmEPpE5B5VTQCmq0RRn0YtSGnT8RY+UhgAuQhNlclpD0PL1aOVYQyKxu/JzHL+gl2TZpzH0sVFFi6TFD2wb3SuH4Dwu1xHmz5Xzz9TP7iE2mNR7iLl/L77Ktwnaz98SXTeyKFzj2hKY/VlGIspv/thxJbgICIhanY4cMp8q7PunXTgssgJkfYJwhXXH/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2Nz97iudSHtGX8YxdsK4E/NIhZa4jOMbdVHxkA67fL4=;
- b=eNEbnxJ7X+TTKFD0nsUUPioezfGd4IBWj8UjRuWMAjgNOxi+TamCDS4THqMdbaD0pFzo7HFINTEY1kuTzQDUmhTt0aZHwroOJgDQ49mx/9J8pX2BydJiZT6fw5auVJ45kCt+GSpfQffEZ7J7/qWk/WxX66mlgizxySQqzJa1HciDK2SM22Ilr+kbkEndG1xVzidhTQ11OFOS61R5+aNMhJ3iRRgeHqBzh8PvacrdsTypkKwExTzKNOjKhodxEOVFAO8unB35vH3gBQ1cLO9Wn/Rl24x7sg5q2Rb486vnFN0jJkHqglbeivKppBJqFDZeMDiw540O1wGjzU2J16tyUg==
+ bh=onbJ7V2tHOpfrmP1pdceaQ1tKe3JtGbJuC2RTmRybG0=;
+ b=LttcJOieKRYb3/56XmvBMtV9Z5sDCsDnAKN/krZfBL0sGwlx1Nxc9bQKWkKYnVPBmRd3oNaxFJA6gC+HZ0D2XGQD4ZTX7iNjjmxDNV3SLAzQNVtg1gcVsBMnnHO0fVyObsCgcF3COi6jU/c8KI5RVy+dhnkE3NcwuzQmW6w7R+nrbyD+ukr90SLbN/7c8Kig6cKQiS3niQLj4SCz85PYRYHM5tnu4NIspzvMqpcHxM+gCof7wtSrBd9j65Fvm7tT/u/DrNyHAJ56F7ryEkOpoQ4sMQ31kW0K/RTWNLQLV7F/1hsXur6C2k2oIx5ZUz93wjMt8O8H0citEReBcHisYw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Nz97iudSHtGX8YxdsK4E/NIhZa4jOMbdVHxkA67fL4=;
- b=yc0T8swLX2tVudel8rO7fDxmvRcfQtyMIZCr9TTztv/r+Db+/bBCVQ6JQUMBN5TuVdBsco4FW0bMICg5qxL27jtFbW6FjTexU58k5yqzw3UpZtkcKFR0fN+0bws+CVPFBV2FbYdiTyZ8NyyXNDPSGm2beZ63Ebx5zYatg42E3xM=
-Received: from CH0PR03CA0290.namprd03.prod.outlook.com (2603:10b6:610:e6::25)
- by BY5PR12MB4212.namprd12.prod.outlook.com (2603:10b6:a03:202::8) with
+ bh=onbJ7V2tHOpfrmP1pdceaQ1tKe3JtGbJuC2RTmRybG0=;
+ b=QA1u1ysXum4ouiuq7PdaFFo1P8pQh+emY3FQSBMFfzjHitItX7EiDpNtsU6DPrZCNMw8TBCEc6svqGoPAmEisctLMdZy9juZA8Pw5FEbZwgPkaDhC1uH0juJOAqucYVbZC4Qt61kPaf0Bw0T9Ol6vVdoPsVCLuK2n4BaYBtyidw=
+Received: from CH0PR03CA0268.namprd03.prod.outlook.com (2603:10b6:610:e5::33)
+ by DM4PR12MB6253.namprd12.prod.outlook.com (2603:10b6:8:a6::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.14; Thu, 28 May
- 2026 09:40:16 +0000
-Received: from CH1PEPF0000AD7C.namprd04.prod.outlook.com
- (2603:10b6:610:e6:cafe::7e) by CH0PR03CA0290.outlook.office365.com
- (2603:10b6:610:e6::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.13; Thu, 28 May
+ 2026 09:40:18 +0000
+Received: from CH1PEPF0000AD83.namprd04.prod.outlook.com
+ (2603:10b6:610:e5:cafe::94) by CH0PR03CA0268.outlook.office365.com
+ (2603:10b6:610:e5::33) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.13 via Frontend Transport; Thu, 28
- May 2026 09:40:15 +0000
+ May 2026 09:40:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,21 +48,24 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- CH1PEPF0000AD7C.mail.protection.outlook.com (10.167.244.84) with Microsoft
+ CH1PEPF0000AD83.mail.protection.outlook.com (10.167.244.85) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:15 +0000
+ 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:17 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 28 May
- 2026 04:40:13 -0500
+ 2026 04:40:15 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH v4 0/7] platform/x86/amd/hsmp: Support Family 1Ah Model 50h-5Fh telemetry
-Date: Thu, 28 May 2026 15:09:47 +0530
-Message-ID: <20260528093954.2461272-1-muralidhara.mk@amd.com>
+	Suma Hegde <suma.hegde@amd.com>, Muthusamy Ramalingam
+	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v4 1/7] platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model 50h-5Fh
+Date: Thu, 28 May 2026 15:09:48 +0530
+Message-ID: <20260528093954.2461272-2-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260528093954.2461272-1-muralidhara.mk@amd.com>
+References: <20260528093954.2461272-1-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,182 +78,290 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7C:EE_|BY5PR12MB4212:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41a1d094-fc12-4c59-0d48-08debc9d1f1f
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD83:EE_|DM4PR12MB6253:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5312a634-3803-4e74-0bb9-08debc9d2086
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|1800799024|376014|82310400026|13003099007|18002099003|11063799006|6133799003|3023799007|56012099006;
+	BCL:0;ARA:13230040|376014|82310400026|36860700016|1800799024|22082099003|18002099003|6133799003|56012099006|3023799007|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	LFeYDlKjC9srTs7LqmwlVmgBPeLT/C0HMydiR5bujiA0I3XlD/aHhPPTvJo+0zvXZEoXcAFgP3PnlNTHlZ0DfBZnNgejXh6Dv1x9SS4xNolSI4jCF/ixzoum1MiKiaWKIIu7WSyOVpW6uVr5v3/qYsZzd2rwkK9rLPbfujc0zJ4E0n0T9F3zJmF+HDkxmS0v1UqjYk61sXcoE+ErYadJQGlprAcVFNIX4eEutNrZotaQygipt+W4+pmO7YBxfyRt2/CBMVID0NnuRy7M9ztEJvsue5GI3L1dPxPPEkBZbiiLSWEwuuvfv9tVH2shPXmEBmT0Um9sMnIJQ7ZJI4k7+zCyPeEnIeH/TWPH8EB2/YznEwshngU02B0bM7cZERjoyHvF3o7qLo+hATaTg+E8wmJSb/8T4U0ajCntPrb2hxk2ERNKcnO04XyC3hTz/8gnD2UF2h9abbMthyac1s1EF4em7ZDfyXRnU6nGf/K9qZHmFXZJmbaMhwg3/jE3ldNk303YOlTi7THQN+TVRqJgDw4ClmpLm6MwYmf+wPPjGBuVmAo94uryZ8xKzorf5hBPxkaISQtZFG8s8ZfL1buUatX7V+UyUyfHqhQK2KPuuJzdL9/pjpUWJnkFqJMo3wTYkWL3bsilwM1BN/O5rtq1BjAZZodtZqfq2WgexJ7Tj3sqFt4FeJDqqaSkPDgHBQaJJTTvptx1uvGUNvsYEMswu2krdy0ubx5eOsq8MQxItAE=
+	DOUDeFiUo/rA4qDcimJkDmAI0fOGsUQJIsB6/ISbeqO+Du7Yc1WulF6jzMAROHmfZdawhUSEdEGIay5Kp5vrO0Di1pquQ1NuIEQXNa6efeF/Ji0H9Vaa2wP6yJsVzu8uJ822URCYpQC/gYZA7nXr01f5IXfZ5HRZvXfHM+CA7ithVGDmjLRbMEUxkt32fo5MDZJOsyDSuIO3PZnO276ps3nMGzQdmg9kEp9ZYLN0uru6nfQavd9ShfQpzsOGJq38FwLbY5MpfRVvxs9/eVDQmLDhNLr9FfLPvQt+BPWqIFbIPW+HTbvgQ4iXweWyismR9HDzgeXqT7tkIOOGvYL2R5/FsYB0AaauYyB2ZRgdvTdQjjLvN1wZ/bzKoOroFfU8CW/idt7GFifimdPuz7Q2/JN9ud9Dn2qfOR9TOn+CJpearTSH4CO5iTvpRfGYb59nn3GGrmvRIc5OiiUsKY9oPPy0RY7lYd84Tv2KS0AHWSadxWIpmyMZVdsR2NRgwgW71KRvOTAWZyJhRdKFj/KFGEuLgivTqXrc0ewTpaUBJiHlPz2LCh3N6V0tOYpsrX+1gQ+fY0u60YOwnCABoKYGJP7QiYv+c1ux/w52vWZAh+SyeLZ3J+0x9qmL9ri2nZJsBXJZFoigBnLOOELcD3MZgnwkOMSkksPaF777cGqZzeEP6JLLpsYISLIaj4amNYg2KciA/Jr8welWm2kAOXk8A7FvgkZNtnwmY/a06ujUxqo=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(82310400026)(13003099007)(18002099003)(11063799006)(6133799003)(3023799007)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700016)(1800799024)(22082099003)(18002099003)(6133799003)(56012099006)(3023799007)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Xdlv3k8nAOvTyfOFpjouRf6iS8kQqItGJV4G44sBdzLdulN30xi/uK8uaVfyNcH25X0qq+VojiZbATEPpLda6yKl+FEc3ktky//mpf/0swezhrymoghRWTmjBs21PY/62isMktYVzc9DyuyUcYCxL0cnYB8IypC3ymo8q4y+zyrlRsRKNKLb7fvahcU+lXXCrrZsfKbSSVsivD3xS6xsFscVgy6Yk2D5tFmtTN8NWT46El90U/NCaZbzI41lgoWd94thL8WL7ogAplP1xc4PP+oCwORkeiSiP7KiztTquzhAUtqrQ+UXCfRU6l1O1pZdUtce0uYaV3glRrH1yE84djJ3IuT2dV06ZKy2c/4W4iatsHBvRYqJp1SY9xdTOGf/g+w8XdGQqJuLj8T80B4KJTXtjU03aDBl37fKqqt+Ttf6mpKDgwPu/cWnDaHSXEFX
+	gxaAXGGJtu856cxeFcWgk5Ug5aoSr3stSWl1eZy04mhGe6tOmxLkpHtbW4WCKE1zWguVANfTAP7bB/pun8AgNNj4999xWDsZpgGFHvJfuXYwTQcWDAvxO6d0I8eWds9U/6uAjetp0BOEszb9NfAVXTiHqSBVcoZv0Ed6NMTyCLqD0BkF+7ucRoPicuqqH4JSamwMOqVZt+u026kHExoT3GQ78Lmk6p4aUeW2cQNTVqerB7XA35mtNRNntm51o/POlJrSO6/OMye0E/sGnsDHaszqhsLtAFD2oWIYcEpVYhQ4DFDysZqz6pVMYQX9jg0GaVDqE51XHjt2o1yWcJIuen53RFjIei2e2ocw2HPCPkNr2nqNVaRv2rG21deE941C1kWTEa9WoLGT/663yrTQ5ql8JsX6ApqrjrEPaMUjuuqO7FFuOuRc0EB/k5hExHe1
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:15.0906
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:17.4401
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41a1d094-fc12-4c59-0d48-08debc9d1f1f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5312a634-3803-4e74-0bb9-08debc9d2086
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7C.namprd04.prod.outlook.com
+	CH1PEPF0000AD83.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4212
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6253
 
-Hi,
+From: Suma Hegde <suma.hegde@amd.com>
 
-This series adds HSMP protocol version 7 support to the AMD HSMP driver
-for Family 1Ah Model 50h-5Fh systems, and addresses a small set of
-related issues that surfaced while wiring up the new platform.
+Family 1Ah Model 50h-5Fh firmware exposes new HSMP messages
+(0x29-0x2A, 0x33-0x3A) for PC6/CC6 control, CCD power/thermal
+monitoring, DIMM sideband access, floor- and SDPS-limit control,
+and command-enable discovery. The driver currently marks those IDs
+as HSMP_RSVD and validate_message() rejects them with -ENOMSG, so
+userspace has no way to reach the new functionality.
 
-The bulk of the work is exposing the new firmware-defined metric table
-layout to userspace. HSMP_PROTO_VER7 firmware delivers a per-IOD /
-per-CCD blob (struct hsmp_metric_table_zen6, ~13 KB) that does not fit
-the existing per-socket struct hsmp_metric_table and does not fit the
-existing sysfs metrics_bin transport at all, since binary sysfs
-attributes are bounded by PAGE_SIZE. metrics_bin also has a long-
-standing tearing problem: userspace can read it in multiple chunks and
-observe an inconsistent snapshot if SMU refreshes the table between
-read() calls.
+The same firmware also extends three existing SET-only messages
+(HSMP_SET_XGMI_LINK_WIDTH 0x0C, HSMP_SET_DF_PSTATE 0x0D,
+HSMP_SET_PSTATE_MAX_MIN 0x22) with a read-back path selected by
+bit[31] of args[0] (0 = set, 1 = get). Without converting these
+entries to HSMP_SET_GET, userspace cannot query the currently
+programmed value even though firmware now supports it.
 
-To address both, the series:
+Add the new IDs, convert the three messages to HSMP_SET_GET, and
+bump the driver version to 2.6.
 
-  - Adds a stable UAPI description of the v7 metric-table layout
-    (struct hsmp_metric_table_zen6{,_iod,_ccd}) that mirrors the
-    firmware blob 1:1.
+Backward compatibility is preserved on prior platforms:
 
-  - Stops hard-coding the metric-table region size in the driver and
-    sources it from firmware (HSMP_GET_METRIC_TABLE_DRAM_ADDR args[2]),
-    falling back to the old size on v6 firmware that leaves the field
-    zero. The same size is used for ioremap() and for the ioctl
-    bounds check.
+- The new IDs previously occupied HSMP_RSVD slots and were rejected
+  with -ENOMSG, so no existing caller could have been issuing them.
 
-  - Adds a new HSMP_IOCTL_GET_TELEMETRY_DATA on the existing HSMP
-    character device that always copies the full firmware-reported
-    table in one shot, removing both the PAGE_SIZE cap and the
-    chunked-read tearing window. The trailing reserved field in the
-    request is rejected if non-zero so future kernels can repurpose
-    it without breaking deployed userspace, and user-supplied indices
-    (sock_ind, msg_id) are clamped with array_index_nospec() to
-    mitigate Spectre v1.
+- Existing userspace that leaves bit[31] = 0 continues to take a
+  pure SET path (is_get_msg() returns false); the lax upper-bound
+  validation already used for HSMP_SET_GET accepts the historical
+  response_sz = 0 callers unchanged.
 
-  - Wires the ACPI driver to populate the DRAM mapping for v7
-    (currently gated on '== HSMP_PROTO_VER6'), so the new ioctl path
-    is actually reachable on Family 1Ah Model 50h-5Fh hardware. The
-    legacy metrics_bin attribute is preserved and continues to work
-    on v6; on v7 it returns -EOPNOTSUPP pointing at the ioctl.
+- A new-userspace build that issues a GET against older firmware
+  fails cleanly with a firmware error, because that firmware rejects
+  the non-zero Reserved bit it now sees in bit[31].
 
-Around that, the series also:
+Reviewed-by: Suma Hegde <suma.hegde@amd.com>
+Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+---
+ arch/x86/include/uapi/asm/amd_hsmp.h | 153 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.h |   2 +-
+ 2 files changed, 140 insertions(+), 15 deletions(-)
 
-  - Adds the new HSMP message IDs (0x29-0x2A, 0x33-0x3A) introduced by
-    Family 1Ah Model 50h-5Fh firmware (PC6/CC6 control, CCD power /
-    thermal monitoring, DIMM sideband access, floor- and SDPS-limit
-    control, command-enable discovery) and converts three SET-only
-    messages (HSMP_SET_XGMI_LINK_WIDTH, HSMP_SET_DF_PSTATE,
-    HSMP_SET_PSTATE_MAX_MIN) to HSMP_SET_GET so userspace can read
-    back the currently programmed value via bit[31] of args[0].
-
-  - Relaxes validate_message() to an upper-bound check for every
-    message type (HSMP_SET_GET already did this). Existing userspace
-    that asks for fewer response words than firmware now provides is
-    no longer rejected with -EINVAL.
-
-  - Tightens metric-table read locking with a per-socket guard(mutex)
-    around the SMU-side refresh + memcpy_fromio() sequence, and
-    reorders devm_mutex_init() before devm_ioremap() so the
-    "metric_tbl_addr != NULL implies metric_tbl_lock is initialized"
-    invariant holds on every probe path.
-
-Documentation/arch/x86/amd_hsmp.rst is updated to describe the
-metrics_bin / IOCTL_GET_TELEMETRY_DATA split and the protocol-version
-gating.
-
-The series is bisect-safe: every commit was built individually and
-checkpatch.pl --strict is clean across the series.
-
-v3:
-https://lore.kernel.org/platform-driver-x86/20260517151211.415627-1-muralidhara.mk@amd.com/T/#t
-
-Changes since v3:
-
-  - 1/7 (new HSMP messages): Tightened the inline bitfield comments
-    on HSMP_SET_POWER_MODE / HSMP_PC6_ENABLE / HSMP_CC6_ENABLE /
-    HSMP_DIMM_SB_RD / HSMP_DIMM_SB_WR / HSMP_FLOOR_LIMIT /
-    HSMP_SDPS_LIMIT. Rewrote the commit log to spell out the
-    backward-compatibility analysis for bit[31] of args[0] on
-    the three SET->SET_GET conversions.
-
-  - 2/7 (UAPI structs): Added per-field comments explaining the
-    num_active_ccds placement (in the IOD block, matching the
-    firmware-side aggregator) and the ccd[] sizing
-    (HSMP_F1A_M50_M5F_MAX_CCDS = 8, hardware maximum, userspace
-    iterates [0 .. num_active_ccds - 1]).
-
-  - 3/7 (response_sz): Rewrote the commit log to motivate the change
-    in terms of forward compatibility of older userspace against
-    newer firmware/descriptor tables.
-
-  - 4/7 (firmware-reported table size): Rewrote the commit log to
-    document args[2] semantics and the 0-fallback path that keeps
-    behaviour identical on v6 firmware.
-
-  - 5/7 (HSMP_IOCTL_GET_TELEMETRY_DATA):
-      * Added array_index_nospec() on req.sock_ind and msg.msg_id to
-        mitigate Spectre v1 on the user-controlled ioctl indices.
-      * Rejected non-zero req.reserved with -EINVAL so the field
-        stays repurposable.
-      * Tightened the UAPI struct layout reasoning under the
-        surrounding #pragma pack(4) and the size-mismatch handling.
-      * Trimmed the long implementation-detail paragraphs from the
-        commit log.
-
-  - 6/7 (enable v7 on the ACPI driver):
-      * Restored the legacy sysfs metrics_bin attribute (it was
-        dropped in v3) and gated reads by protocol version so v6
-        userspace is unaffected and v7 userspace gets -EOPNOTSUPP
-        pointing at HSMP_IOCTL_GET_TELEMETRY_DATA.
-      * Removed the ABI-break paragraph from the commit log now that
-        metrics_bin is preserved.
-
-  - 7/7 (guard(mutex)):
-      * Reordered devm_mutex_init() before devm_ioremap() so that
-        sock->metric_tbl_addr is never published with an
-        uninitialized metric_tbl_lock on the non-fatal init_acpi() /
-        init_platform_device() error paths.
-      * Rewrote the commit log to document that ordering invariant.
-
-  - Documentation/arch/x86/amd_hsmp.rst: Documented the metrics_bin
-    PAGE_SIZE / protocol-version constraints and the new
-    HSMP_IOCTL_GET_TELEMETRY_DATA path, and cleaned up whitespace in
-    the embedded struct snippet.
-
-Thanks,
-Murali
-
-Muralidhara M K (7):
-  platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model
-    50h-5Fh
-  platform/x86/amd/hsmp: Add UAPI structures for Family 1Ah Model
-    50h-5Fh metrics table
-  platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound
-    check
-  platform/x86/amd/hsmp: Source metric-table size from firmware
-  platform/x86/amd/hsmp: Add IOCTL_GET_TELEMETRY_DATA for metric table
-    reads
-  platform/x86/amd/hsmp: Enable HSMP_PROTO_VER7 metric tables on the
-    ACPI driver via the IOCTL
-  platform/x86/amd/hsmp: Make metric table read locking use guard(mutex)
-
- Documentation/arch/x86/amd_hsmp.rst  |  30 ++-
- arch/x86/include/uapi/asm/amd_hsmp.h | 294 +++++++++++++++++++++++++--
- drivers/platform/x86/amd/hsmp/acpi.c |  23 ++-
- drivers/platform/x86/amd/hsmp/hsmp.c | 169 +++++++++++++--
- drivers/platform/x86/amd/hsmp/hsmp.h |   6 +-
- 5 files changed, 485 insertions(+), 37 deletions(-)
-
+diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
+index 92d8f256d096..52e53ec5877f 100644
+--- a/arch/x86/include/uapi/asm/amd_hsmp.h
++++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+@@ -53,9 +53,19 @@ enum hsmp_message_ids {
+ 	HSMP_SET_XGMI_PSTATE_RANGE,	/* 26h Set xGMI P-state range */
+ 	HSMP_CPU_RAIL_ISO_FREQ_POLICY,	/* 27h Get/Set Cpu Iso frequency policy */
+ 	HSMP_DFC_ENABLE_CTRL,		/* 28h Enable/Disable DF C-state */
++	HSMP_PC6_ENABLE,		/* 29h Get/Set PC6 enable/disable status */
++	HSMP_CC6_ENABLE,		/* 2Ah Get/Set CC6 enable/disable status */
+ 	HSMP_GET_RAPL_UNITS = 0x30,	/* 30h Get scaling factor for energy */
+ 	HSMP_GET_RAPL_CORE_COUNTER,	/* 31h Get core energy counter value */
+ 	HSMP_GET_RAPL_PACKAGE_COUNTER,	/* 32h Get package energy counter value */
++	HSMP_DIMM_SB_RD,		/* 33h Get DIMM sideband data */
++	HSMP_READ_CCD_POWER,		/* 34h Get average CCD power */
++	HSMP_READ_TDELTA,		/* 35h Get thermal behaviour */
++	HSMP_GET_SVI3_VR_CTRL_TEMP,	/* 36h Get SVI3 VR controller rail temp */
++	HSMP_GET_ENABLED_HSMP_CMDS,	/* 37h Get supported HSMP commands */
++	HSMP_SET_GET_FLOOR_LIMIT,	/* 38h Get/Set core floor frequency limit */
++	HSMP_DIMM_SB_WR,		/* 39h Set DIMM sideband data */
++	HSMP_SDPS_LIMIT,		/* 3Ah Get/Set SDPS limit */
+ 	HSMP_MSG_ID_MAX,
+ };
+ 
+@@ -170,16 +180,27 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{0, 1, HSMP_GET},
+ 
+ 	/*
+-	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0
+-	 * input: args[0] = min link width[15:8] + max link width[7:0]
++	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get XGMI Link width[31] (0 = set, 1 = get) +
++	 *                  min link width[15:8] + max link width[7:0]
++	 *        Link width encoding: 0 = x4, 1 = x8, 2 = x16.
++	 *        On SET, max must be >= min.  On GET, [15:0] are reserved.
++	 * output: args[0] = reserved[31:16] + min link width[15:8] +
++	 *                   max link width[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+-	 * HSMP_SET_DF_PSTATE, num_args = 1, response_sz = 0
+-	 * input: args[0] = df pstate[7:0]
++	 * HSMP_SET_DF_PSTATE (APBDisable), num_args = 1, response_sz = 0/1
++	 * input: args[0] = set APB_DISABLE / get APB state[31]
++	 *                  (0 = set & lock DF P-state, 1 = get) +
++	 *                  reserved[30:8] +
++	 *                  DF P-state[7:0] (0..2; reserved on GET)
++	 * output: args[0] = reserved[31:9] +
++	 *                   APB state[8] (1 = disabled, 0 = enabled) +
++	 *                   locked DF P-state[7:0] if [8] = 1, else reserved
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/* HSMP_SET_AUTO_DF_PSTATE, num_args = 0, response_sz = 0 */
+ 	{0, 0, HSMP_SET},
+@@ -305,16 +326,32 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{1, 1, HSMP_SET},
+ 
+ 	/*
+-	 * HSMP_SET_POWER_MODE, num_args = 1, response_sz = 0
+-	 * input: args[0] = power efficiency mode[2:0]
++	 * HSMP_SET_POWER_MODE (PwrEfficiencyModeSelection),
++	 *	num_args = 1, response_sz = 1
++	 * input: args[0] = set/get policy[31] (0 = set, 1 = get) +
++	 *                  high util point[30:24] +
++	 *                  low util point[23:17] +
++	 *                  PPT limit[16:5] +
++	 *                  reserved[4:3] + mode selection[2:0]
++	 *        [30:5] are valid only when [2:0] is a balanced core mode
++	 *        (4 or 5). [2:0] is reserved when getting (bit[31] = 1).
++	 * output: args[0] same layout, [31] reserved, [2:0] = arbitrated
++	 *         current efficiency mode.
+ 	 */
+ 	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+-	 * HSMP_SET_PSTATE_MAX_MIN, num_args = 1, response_sz = 0
+-	 * input: args[0] = min df pstate[15:8] + max df pstate[7:0]
++	 * HSMP_SET_PSTATE_MAX_MIN (DfPstateRange), num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get DF P-state range[31] (0 = set, 1 = get) +
++	 *                  reserved[30:16] +
++	 *                  min DF P-state[15:8] + max DF P-state[7:0]
++	 *        DF P-state encoding: 0 = DFP0 (high performance),
++	 *                             1 = DFP1, 2 = DFP2 (low performance).
++	 *        [15:0] are reserved when getting (args[0] bit[31] = 1).
++	 * output: args[0] = reserved[31:16] + min DF P-state[15:8] +
++	 *                   max DF P-state[7:0]
+ 	 */
+-	{1, 0, HSMP_SET},
++	{1, 1, HSMP_SET_GET},
+ 
+ 	/*
+ 	 * HSMP_GET_METRIC_TABLE_VER, num_args = 0, response_sz = 1
+@@ -355,9 +392,31 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	 */
+ 	{1, 1, HSMP_SET_GET},
+ 
+-	/* RESERVED(0x29-0x2f) */
+-	{0, 0, HSMP_RSVD},
+-	{0, 0, HSMP_RSVD},
++	/*
++	 * HSMP_PC6_ENABLE (Pc6Enable), num_args = 1, response_sz = 0/1
++	 * input: args[0] = set/get PC6 control[31] (0 = set, 1 = get) +
++	 *                  reserved[30:1] +
++	 *                  enable PC6[0] (0 = disable, 1 = enable;
++	 *                  reserved on GET)
++	 * output: args[0] = reserved[31:1] + current PC6 control[0]
++	 *                   (last value configured via HSMP or APML)
++	 */
++	{1, 1, HSMP_SET_GET},
++
++	/*
++	 * HSMP_CC6_ENABLE (CC6Enable), num_args = 1, response_sz = 0/1
++	 * Configures CC6 enable for all cores; changing the setting does
++	 * not by itself transition cores in or out of CC6.
++	 * input: args[0] = set/get CC6 control[31] (0 = set, 1 = get) +
++	 *                  reserved[30:1] +
++	 *                  enable CC6[0] (0 = disable, 1 = enable;
++	 *                  reserved on GET)
++	 * output: args[0] = reserved[31:1] + current CC6 control[0]
++	 *                   (last value configured via HSMP or APML)
++	 */
++	{1, 1, HSMP_SET_GET},
++
++	/* RESERVED(0x2B-0x2F) */
+ 	{0, 0, HSMP_RSVD},
+ 	{0, 0, HSMP_RSVD},
+ 	{0, 0, HSMP_RSVD},
+@@ -385,6 +444,72 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	 */
+ 	{0, 2, HSMP_GET},
+ 
++	/*
++	 * HSMP_DIMM_SB_RD, num_args = 1, response_sz = 1
++	 * input: args[0] = reg space[23] + reg offset[22:12] +
++	 *                  device LID[11:8] + DIMM address[7:0]
++	 * output: args[0] = read data byte[3:0]
++	 */
++	{1, 1, HSMP_GET},
++
++	/*
++	 * HSMP_READ_CCD_POWER, num_args = 1, response_sz = 1
++	 * input: args[0]  = apic id of core[15:0]
++	 * output: args[0] = CCD power(mWatts)[31:0]
++	 */
++	{1, 1, HSMP_GET},
++
++	/*
++	 * HSMP_READ_TDELTA, num_args = 0, response_sz = 1
++	 * output: args[0] = thermal behaviour[31:0]
++	 */
++	{0, 1, HSMP_GET},
++
++	/*
++	 * HSMP_GET_SVI3_VR_CTRL_TEMP, num_args = 1, response_sz = 1
++	 * input: args[0] = SVI3 rail index[3:1] + read temperature[0]
++	 * output: args[0] = SVI3 rail index[30:28] +
++	 *                   rail temperature in degree C[27:0]
++	 */
++	{1, 1, HSMP_GET},
++
++	/*
++	 * HSMP_GET_ENABLED_HSMP_CMDS, num_args = 1, response_sz = 3
++	 * input: args[0] = HSMP command mask[0]
++	 * output: status of HSMP command = args[0], args[1], args[2]
++	 */
++	{1, 3, HSMP_GET},
++
++	/*
++	 * HSMP_SET_GET_FLOOR_LIMIT, num_args = 1, response_sz = 1
++	 * input: args[0] = op[31:30] + reserved[29:28] +
++	 *                  apic id[27:16] + floor frequency MHz[15:0]
++	 *        op encoding: 00 = set per-core floor,
++	 *                     01 = set all-cores floor (apic id reserved),
++	 *                     10 = get per-core floor,
++	 *                     11 = get per-core effective floor.
++	 *        Floor frequency field is reserved on GET (bit[31] = 1).
++	 * output: args[0] = floor frequency MHz[15:0]
++	 *                   (effective for op 11, configured for op 10;
++	 *                   reserved on SET)
++	 */
++	{1, 1, HSMP_SET_GET},
++
++	/*
++	 * HSMP_DIMM_SB_WR, num_args = 1, response_sz = 0
++	 * input: args[0] = write data[31:24] + reg space[23] +
++	 *                  reg offset[22:12] + device LID[11:8] +
++	 *                  DIMM address[7:0]
++	 */
++	{1, 0, HSMP_SET},
++
++	/*
++	 * HSMP_SDPS_LIMIT, num_args = 1, response_sz = 1
++	 * input: args[0] = Set/Get[31] + SDPS Limit[30:0]
++	 * output: args[0] = SDPS Limit[30:0]
++	 */
++	{1, 1, HSMP_SET_GET},
++
+ };
+ 
+ /* Metrics table (supported only with proto version 6) */
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index 0509a442eaae..b153527e0a0d 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -27,7 +27,7 @@
+ #define HSMP_DEVNODE_NAME	"hsmp"
+ #define ACPI_HSMP_DEVICE_HID    "AMDI0097"
+ 
+-#define DRIVER_VERSION		"2.5"
++#define DRIVER_VERSION		"2.6"
+ 
+ struct hsmp_mbaddr_info {
+ 	u32 base_addr;
 -- 
 2.34.1
 
