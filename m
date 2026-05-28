@@ -1,145 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28583D3491;
-	Thu, 28 May 2026 11:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE0D3E5EF1;
+	Thu, 28 May 2026 12:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779967297; cv=none; b=CZ4nGyfyZ2NTyAMr1p/vAtyRgYMIRfGJzoQx/szoxpOzs4khnvEHUhb3gqaYIFn7zeO/HIEfCZnJODbrmaNjsoW1wl02+so3s/uWF/8X5EM/aWS3GgWxVBfHn8hLZd5VkKeuxntft+svktB6lNWj7447hsBD3GAcgQiUXW0IOww=
+	t=1779970254; cv=none; b=pPziiZ7H9QoYjvZt2wK99RC6GpMo3TdC8t8qsKXpWFvN5uWWcKHvJNJN489UYXRmSZxjrOBoMrHkG8V0VS9yk4Anl2tUmlac9q3iNKte77VC9HoGZF/Tr55Ixx0oWCUxVaR23sUwfKcUyhLA7l5kHuUcYcDEkF2uAIMFGakuiHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779967297; c=relaxed/simple;
-	bh=f/lIC4TgmEzyiBDPh2iBCW6oUeY6y5+TmWqzleJFfvY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bTpRNi9xWi6NAZ9hg0k+E60lA2+4Htrx5oLqKfFJkL0Twj/PB0sg+4xXfYuOEmoHbkcJkie44RshfQQQIQQ0BMlOWdsmbVFcS/WcdIDrcqJ7gdHOwwEKjiK50eD40H/1qf53cbw0kYcCsHBKqRF2xK7IM7S8De1GClnT2ZFE7D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jVJ+Ngzp; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1779970254; c=relaxed/simple;
+	bh=I1H3Jxdjasf4wrMV2p6e+cR+V3lkvdFdLQJpg+hbJIE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gU79fId/lGiftuDexuk5JWklat+TB2quJu7mbE2HuzuIZMek73oxMRe0S7y+CJwG7PESARxfRB4AcCR3dwjZrVELWXlJQRntWFM7bCybaoIDYyTzeXTPWK8c5870Kpdzb9n0lg37DSToH2TZuLmx/+pkVt4MRs4aQk5lo7gGVRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A0iG1Svq; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jVJ+Ngzp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A0iG1Svq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779967296; x=1811503296;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=f/lIC4TgmEzyiBDPh2iBCW6oUeY6y5+TmWqzleJFfvY=;
-  b=jVJ+NgzpXSONr+RHbU6qtCCrztJa5bqPUWbPogVG670ahHdbLpztMlD2
-   LcExizHgnYSr5uusg/B++Rlg6iY3ewekxdkYBUusP2p7rfcVFPo11YkpY
-   +VPfeJRP2cxwEuYP9iJLhpTG/sB5AoyHqXNf9jJf/vAIxkdRz21sV/edC
-   S4SvSeeFKau7+FmX0jBDqNtAI+YBLoD+aJwH00RMhKjG2olrfHw7UVCXw
-   /K0rmUWzZ/RA5FHPZMUUHeyW6fnweYNoVRYL4PkZQznYCNLx+/O2zcC+6
-   bnY4ieUaHTgOJfFSZDlxPvBgnxsB6LKEZq69H+JmWQLRMLwJYD/qQfdsk
-   A==;
-X-CSE-ConnectionGUID: 81EPxlcyToqpjP3cFLSHKw==
-X-CSE-MsgGUID: sRzTGLwxS6OY/9ZIJEHWLg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="103480346"
+  t=1779970252; x=1811506252;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=I1H3Jxdjasf4wrMV2p6e+cR+V3lkvdFdLQJpg+hbJIE=;
+  b=A0iG1SvqYuehrXvKz4lvrM4CA4tPuZ52r9aT9BbxSMiFvRe+JWD9nYZ2
+   w+lGH3ZiEDVQ8KFbl6cbD7AMhzK/JHoFekgf3bPhNaVIC/RIMkZwahEsg
+   vECqmrNMQpGHvYrQZFnO1JSovgvlsw14v+tiJdpBbSGwJjW8JRE8uZmRY
+   LR/VH4bVo9t7bl2jC1gwq2QGBt78sN0eQne6yP3Q6yaI8wFOPzd0CAyTO
+   YGK6SnSTYPTO37PeLzLBdbFwAHWILfJ0ntBrbKyB8C2dow2hxxENfjrGt
+   cfsLv9mhEUdXNVEctVtXUx+/jVmlXv6fgFB+h4o8N4WsF0FIvLe/dlLtk
+   Q==;
+X-CSE-ConnectionGUID: K96m/HYkTg6MNbOEkqSvDw==
+X-CSE-MsgGUID: ZDA/7CINQgK1pPKtz02FmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="84699084"
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="103480346"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 04:21:34 -0700
-X-CSE-ConnectionGUID: NhorkxbETOO3yaxAYXvTkQ==
-X-CSE-MsgGUID: vXFsgfpXQNSWfwq2pTGuRg==
+   d="scan'208";a="84699084"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:10:52 -0700
+X-CSE-ConnectionGUID: HKrjVmH8R8iglDw5mu3+FQ==
+X-CSE-MsgGUID: 0B/hCRubQUuEdn9SdJzZjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="238337774"
+   d="scan'208";a="266139212"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 04:21:15 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:10:49 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 28 May 2026 14:21:11 +0300 (EEST)
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-cc: Lee Jones <lee@kernel.org>, 
-    Mark Brown <broonie@opensource.wolfsonmicro.com>, 
-    Thierry Reding <thierry.reding@avionic-design.de>, 
-    Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
-    Andrew Lunn <andrew+netdev@lunn.ch>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, Srinivas Kandagatla <srini@kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
-    Saravana Kannan <saravanak@kernel.org>, 
-    Madhavan Srinivasan <maddy@linux.ibm.com>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-    "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-    Andi Shyti <andi.shyti@kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-    Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>, 
-    Florian Fainelli <florian.fainelli@broadcom.com>, 
-    Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-    Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-    Sascha Hauer <s.hauer@pengutronix.de>, 
-    Pengutronix Kernel Team <kernel@pengutronix.de>, 
-    Fabio Estevam <festevam@gmail.com>, 
-    Matthew Brost <matthew.brost@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>, 
-    Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, 
-    Philipp Zabel <p.zabel@pengutronix.de>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    Krzysztof Kozlowski <krzk@kernel.org>, 
-    Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-    linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
-    driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
-    linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
-    iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev, 
-    linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
-    linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 19/23] platform/surface: gpe: use
- platform_device_set_fwnode()
-In-Reply-To: <20260521-pdev-fwnode-ref-v1-19-88c324a1b8d2@oss.qualcomm.com>
-Message-ID: <bfdbc026-b3f9-971b-aaf0-0485434b8411@linux.intel.com>
-References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com> <20260521-pdev-fwnode-ref-v1-19-88c324a1b8d2@oss.qualcomm.com>
+To: hansg@kernel.org, Armin Wolf <W_Armin@gmx.de>
+Cc: wse@tuxedocomputers.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260512232145.329260-1-W_Armin@gmx.de>
+References: <20260512232145.329260-1-W_Armin@gmx.de>
+Subject: Re: [PATCH v3 0/8] platform/x86: uniwill-laptop: Charging-related
+ improvements
+Message-Id: <177997024494.9687.12139391667072558748.b4-ty@linux.intel.com>
+Date: Thu, 28 May 2026 15:10:44 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-947565217-1779967271=:1291"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, 13 May 2026 01:21:37 +0200, Armin Wolf wrote:
 
---8323328-947565217-1779967271=:1291
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> This patch series contains various charging-related improvements
+> for the uniwill-laptop driver. The first two patches fix some minor
+> issues inside the charging threshold code, while the third patch
+> fixes an issue inside the module initialization code. The next two
+> patches contain some preparations for the main patch. Said patch
+> introduces support for controlling the charging modes available
+> on many Uniwill-based devices not sold by Intel. The last patch
+> whitelists most Tuxedo devices for using the battery charge modes.
+> 
+> [...]
 
-On Thu, 21 May 2026, Bartosz Golaszewski wrote:
 
-> Ahead of reworking the reference counting logic for platform devices,
-> encapsulate the assignment of the firmware node for dynamically allocated
-> platform devices with the provided helper.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/platform/surface/surface_gpe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/su=
-rface/surface_gpe.c
-> index b359413903b13c4f8e8b284ef7ae6f6db3f47d72..40896a8544b0a4da4261ea881=
-b1eaed62d93b32b 100644
-> --- a/drivers/platform/surface/surface_gpe.c
-> +++ b/drivers/platform/surface/surface_gpe.c
-> @@ -317,7 +317,7 @@ static int __init surface_gpe_init(void)
->  =09=09goto err_alloc;
->  =09}
-> =20
-> -=09pdev->dev.fwnode =3D fwnode;
-> +=09platform_device_set_fwnode(pdev, fwnode);
-> =20
->  =09status =3D platform_device_add(pdev);
->  =09if (status)
->=20
->=20
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+The list of commits applied:
+[1/8] platform/x86: uniwill-laptop: Properly initialize charging threshold
+      (no commit info)
+[2/8] platform/x86: uniwill-laptop: Accept charging threshold of 0
+      (no commit info)
+[3/8] platform/x86: uniwill-laptop: Fix behavior of "force" module param
+      (no commit info)
+[4/8] platform/x86: uniwill-laptop: Do not enable the charging limit even when forced
+      (no commit info)
+[5/8] platform/x86: uniwill-laptop: Rework FN lock/super key suspend handling
+      commit: 4d86e384c164abeee17da09fe6cd24a37973e628
+[6/8] platform/x86: uniwill-laptop: Mark EC_ADDR_OEM_4 as volatile
+      commit: f7bcba269143230923e40cd88b9169ed27f178ae
+[7/8] platform/x86: uniwill-laptop: Add support for battery charge modes
+      commit: 73fa957a05e9fd43f204225497d4c98d7c0d0490
+[8/8] platform/x86: uniwill-laptop: Enable battery charge modes on supported devices
+      commit: 2c5d91f35d0d564c8b4c062b67526e0d2d27fae9
 
---=20
+--
  i.
 
---8323328-947565217-1779967271=:1291--
