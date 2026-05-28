@@ -1,267 +1,361 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C353DDDB5
-	for <platform-driver-x86@vger.kernel.org>; Thu, 28 May 2026 11:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E493E00B4;
+	Thu, 28 May 2026 11:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779966063; cv=none; b=MtzzuaAabh6ItJVKcyjBJVTaJX3aA+l90Mau4YHSEkXiq8weNthbWVjCHEywo9AXAdJmNT9JQ67iO2CJOvW0Lww2NzcbD7XY9FFpGGXemlDIwbYvA443T1ly22o7+Ff0cUtig2J8Mhtwh4dPpT2h9yX7/KO28At6WeSOczWmqMY=
+	t=1779966821; cv=none; b=sLNO56Px1nHCmZaCGqhL5JOjkZWbkBrdKklGS81meK/gz4Ofh1m2sqBKIV1p07a8lMUaNFOpmsq62SpeVJUFsHr1Aqd0uCtp4MqjpOqykWsgfBU3dzyH6+3WhETvnosQ7GRKBpQUfV3sUBViQHdKybov1nXyUp4vn3iZmmv3d10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779966063; c=relaxed/simple;
-	bh=axg3ur3jlPGKN9j/afJ30isp3QGjg7ElX9jWGVCDjnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FaHNwGdaQhc1gZHhIGJzmQlTKTdUd/XV14UvnRrgpPWsI92fCN+3sSl0McFGjgd5J83EudJ5WymCFYcAVCzH0ddedf+FPy45bQg0rnysrnK8HYo7iGRkwKy6YOb6qFpiwd8jycI55/oHEgTczcaVDmD9owpw8jFRqLwK5+gkq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H/xgtp8C; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779966821; c=relaxed/simple;
+	bh=9ac0MCcDom6eTsuRrcDteSXdpLKoki7qDGtOPYB5KW4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WTDNfX9lyvWZqaPm4Dq4iBtatwDowI1rjnIL6Dhp/Nw7k3QIzajwlmcByrP0yN2MM0h89nR7KRWFLkBOvGpCUJO/dXCbP0mQ15Axrutn288v/KGBGwyybEXNSrHB+3auZw0mKMqtAdpDA14lcNmfng25jIFSTsDiFo2kOAdD6uA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OiK9C5R6; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/xgtp8C"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-bd56d108454so2260986266b.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 28 May 2026 04:01:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779966060; x=1780570860; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n8Yyu46RSl4wBB4R+YuuITnZ8asfzOZZvm75cjR8xFA=;
-        b=H/xgtp8CJkXrgFI7hhA5Qpsbjf4+5FBWT/fqGu3WROOri5uaMpmO33MqtaOd2zXxSk
-         Kn78CUH2hjPg71UvEon6N27lQAS/p+LQke7XIzcmpVVi6/VpvaXyfx6YuIj0ixhbym85
-         /iNXPpPNNC2tNmJAdV6pc7DA7Kos5IX+DYsqXAYDCS5ycWW9T31BQXYivF4bKoBMPqtJ
-         ty9YNEk0R706RRJosP6yhgZtdPZONtzq6f60mVkpsxzSWVUhJ0/g7EhumaT3QPzLgz6E
-         G7CNsOWXLif1xgxM5EXJtz0EWEsC4iTBHvIsjSEPJdXnSTDbx7gzPHwqTAdqFhuHvGdV
-         ePkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779966060; x=1780570860;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n8Yyu46RSl4wBB4R+YuuITnZ8asfzOZZvm75cjR8xFA=;
-        b=Dcv/IVAv0NBrUzf/ewzd8ig0gxg0F4kY2narWQUJV0COylxz3Lm7a+Q74k9VDnyFlm
-         0kT0P51tkpRYKzR6xbl4L3v3ZZRgbgQ4iX0b/vzKIUmMMKz/HCYqOz9IVEQ9Rtp0+vRC
-         UJjNXAn18Zq9RQxKpZxLhRbaZP0IFLUTlZWv15titVkdHk2EdsfCGNFFJKs25IT6hxcm
-         OPSyBMNuRYefYMEYqubvguIveKpBvdopbvaAeMKt98O3IKKFtCcTSQQNZlL/DLlPuJza
-         5PUzGr3BOA2wRJW8JrtL+g3S0K59KADDeSP2WCWA1ntjozz1FTmGfRrjbub7O+PvGaza
-         zzYg==
-X-Gm-Message-State: AOJu0YwYr+mlDClPnxIVmmaMtH/QwGqIoD4owzrRoQlLrdJfueh/2w5+
-	moioQrcaEm/MwdNHNM70RLSiMUtq0I/8KXzTFmj+Rbrvgg+oWUNfiUuWpJX80Qaunrw=
-X-Gm-Gg: Acq92OFt04ZbBMioQEkFLl9ytqVg6twW9SYBB2npJ9OK7ej8h4qgD4ZzKg49inakvIp
-	v0lJnQAb3p58n/oapSlGiTpXPY31lYBDjymlf/wKcNDV3E6ce9kSR53032EXTcuVv2JEpFFXCUo
-	mi3ww+PTKbxgvMEt5ET35SzkURqlLWO5zJzfuoetJ1oaFRCHx3S0+eNibjoXPJwfCecjtOkC+cm
-	CKBONFxLXMGqLvD5dIYY7v/YlcqDR/YX2+J9bW+vPRvxfig8hq/I20ZoQ/9zGWNM4SBMdKExxe9
-	uwV65Bcd16nd0w4m6Y4vTBzymU7BawvXUq888lvIDfnVpftLLgSpnSStnTtkOjCqhigtWJO9TdB
-	Laj9/cFBoi23j586N/xb24Y/ZFe1rx878/gcEx/OBxJ6bPIwcnyWhpEnPH03J/nzc62E4LKTVib
-	45evHjWAf+gjz3Jw8q58WcJguALHYrjVZaWbsaPYyfyXTfk+sLy37XViEDr2WiRSUGHSSkqfMT2
-	adZfm4lZQ==
-X-Received: by 2002:a17:907:c081:b0:bd4:6c96:f87b with SMTP id a640c23a62f3a-bdd25ce8c1fmr1832052366b.28.1779966059575;
-        Thu, 28 May 2026 04:00:59 -0700 (PDT)
-Received: from [192.168.1.37] (79.191.45.28.ipv4.supernova.orange.pl. [79.191.45.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bddc264dea6sm714055166b.7.2026.05.28.04.00.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2026 04:00:59 -0700 (PDT)
-Message-ID: <d886ce08-fec2-4f9a-8c96-3e0a206a7362@gmail.com>
-Date: Thu, 28 May 2026 13:00:58 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OiK9C5R6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779966819; x=1811502819;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9ac0MCcDom6eTsuRrcDteSXdpLKoki7qDGtOPYB5KW4=;
+  b=OiK9C5R6h82NPedQrjvoo6KM0v0zz2RmepJKshxz7zRjwqVpLw87WGyN
+   jwjIXjQZHeM9YU9gNcrgXT780DHMODrDxeRTY7zOL1WstfFlySiA8g2Dd
+   6NBvLCWCEJsQiSOFVEThyzACzbSQGTjPRZvH3/aI/2ziDkzQz2YSbux26
+   ujMaE9Aw24PscDLPeE6RtjFFsYXu55F/HGuhdks8B7PgRK3Fyd0RLiP1r
+   ig/nNuHcGVmJyC9eRAooGH8e2Gc1agoEfrhO3jahd+vDN5bNQzjUHP+5t
+   EQz3p4SIm0/lTXQViDqV6+OoQhUCFm6XPDXRvjvW/66dehnSXyCg5K3r9
+   g==;
+X-CSE-ConnectionGUID: 2qCsuYHvToG0lvXE+R1zdA==
+X-CSE-MsgGUID: 1vV5ku1CQEyHz+doGscdjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="80866971"
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="80866971"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 04:13:38 -0700
+X-CSE-ConnectionGUID: l1hR/3qXTOeHV9Y1X7HEtQ==
+X-CSE-MsgGUID: 4eg4GTbBQVKRNvjElo9+tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
+   d="scan'208";a="238100943"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 04:13:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 28 May 2026 14:13:32 +0300 (EEST)
+To: Navon John Lukose <navonjohnlukose@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] platform/x86: hp-wmi: Add charge behaviour support
+In-Reply-To: <20260505200222.157144-1-navonjohnlukose@gmail.com>
+Message-ID: <21123447-fc86-230e-53f1-3167d8397167@linux.intel.com>
+References: <20260505200222.157144-1-navonjohnlukose@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: add keystone dongle support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com,
- luke@ljones.dev, Hans de Goede <hansg@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20260526214439.70142-1-dariuszfigzal@gmail.com>
- <c4256b75-6791-4ae8-a254-4a767e2a7af8@linux.dev>
- <ccd7ef85-c3a8-aefe-3071-d3ea61b58ca6@linux.intel.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Dariusz_Figza=C5=82?= <dariuszfigzal@gmail.com>
-In-Reply-To: <ccd7ef85-c3a8-aefe-3071-d3ea61b58ca6@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Wed, 6 May 2026, Navon John Lukose wrote:
 
-
-On 5/28/26 11:06 AM, Ilpo Järvinen wrote:
-> On Thu, 28 May 2026, Denis Benato wrote:
+> Some HP laptops expose battery charge mode control through the existing
+> HP BIOS WMI GUID. On HP board 85C6, command types 0x1f and 0x2b map to
+> the ACPI GBCC/GBCO and SBCC/SBCO methods through the WMI command
+> dispatcher.
 > 
->>
->> On 5/26/26 23:44, Dariusz Figzał wrote:
->>> The ASUS Keystone is a physical NFC-like dongle that slots into supported
->>> ASUS laptops. The EC fires WMI notify code 0xB4 on insert/remove events.
->>>
->>> Expose the current insert state via a sysfs attribute by querying WMI
->>> device ID 0x00120091 (DSTS). This devid does not follow the standard DSTS
->>> convention: PRESENCE_BIT (0x00010000) encodes the insert state rather than
->>> feature presence, and STATUS_BIT is never set. Presence of a keystone slot
->>> is detected by a successful DSTS call (any result other than -ENODEV).
->> Thanks for this!
->>
->> Ilpo might have some suggestions on how to make the code better,
->> As we discussed a fair bit about this I say LGTM.
->>
->> Reviewed-by: Denis Benato <denis.benato@linux.dev>
->>> Signed-off-by: Dariusz Figzał <dariuszfigzal@gmail.com>
->>> ---
->>>   drivers/platform/x86/asus-wmi.c            | 75 ++++++++++++++++++++++
->>>   include/linux/platform_data/x86/asus-wmi.h |  7 ++
->>>   2 files changed, 82 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>> index 80144c412b90..a3fa3921aef3 100644
->>> --- a/drivers/platform/x86/asus-wmi.c
->>> +++ b/drivers/platform/x86/asus-wmi.c
->>> @@ -70,6 +70,7 @@ module_param(fnlock_default, bool, 0444);
->>>   #define NOTIFY_KBD_TTP			0xae
->>>   #define NOTIFY_LID_FLIP			0xfa
->>>   #define NOTIFY_LID_FLIP_ROG		0xbd
->>> +#define NOTIFY_KEYSTONE			0xb4
->>>   
->>>   #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
->>>   
->>> @@ -279,6 +280,8 @@ struct asus_wmi {
->>>   	u32 tablet_switch_dev_id;
->>>   	bool tablet_switch_inverted;
->>>   
->>> +	bool keystone_detected;
->>> +
->>>   	enum fan_type fan_type;
->>>   	enum fan_type gpu_fan_type;
->>>   	enum fan_type mid_fan_type;
->>> @@ -646,6 +649,66 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
->>>   	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
->>>   }
->>>   
->>> +/* Keystone *******************************************************************/
->>> +
->>> +static ssize_t keystone_show(struct device *dev,
->>> +			     struct device_attribute *attr, char *buf)
->>> +{
->>> +	struct asus_wmi *asus = dev_get_drvdata(dev);
->>> +	u32 retval;
->>> +	int err;
->>> +
->>> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
->>> +	if (err)
->>> +		return err;
->>> +
->>> +	return sysfs_emit(buf, "%d\n", !!(retval & ASUS_WMI_DSTS_PRESENCE_BIT));
->>> +}
->>> +
->>> +static DEVICE_ATTR_RO(keystone);
->>> +
->>> +static void asus_wmi_keystone_notify(struct asus_wmi *asus)
->>> +{
->>> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "keystone");
->>> +}
->>> +
->>> +static int asus_wmi_keystone_init(struct asus_wmi *asus)
->>> +{
->>> +	u32 retval;
->>> +	int err;
->>> +
->>> +	/*
->>> +	 * Use a raw devstate call rather than asus_wmi_dev_is_present().
->>> +	 * For this devid, PRESENCE_BIT encodes current insert state, not
->>> +	 * feature presence, so asus_wmi_dev_is_present() would return false
->>> +	 * whenever the dongle is absent at boot, even on machines that have
->>> +	 * a keystone slot.
->>> +	 * -ENODEV means the firmware doesn't know this devid at all.
->>> +	 * retval is not examined here, only the return code matters.
->>> +	 */
->>> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
->>> +	if (err == -ENODEV)
->>> +		return 0;
->>> +	if (err)
->>> +		return err;
->>> +
->>> +	err = device_create_file(&asus->platform_device->dev, &dev_attr_keystone);
->>> +	if (err)
->>> +		return err;
->>> +
->>> +	asus->keystone_detected = true;
->>> +	return 0;
->>> +}
+> Expose the mode control through the standard power_supply
+> charge_behaviour property using a battery hook and power_supply
+> extension. The initial quirk is limited to board 85C6 and still
+> requires a successful charge mode read before registering the extension.
 > 
-> The visibility of this should be controlled using .is_visible and the
-> attribute should be placed into the normal attribute array.
->
-
-Thanks for the review. I'll fix this in v2.
-
->>> +static void asus_wmi_keystone_exit(struct asus_wmi *asus)
->>> +{
->>> +	if (!asus->keystone_detected)
->>> +		return;
->>> +
->>> +	device_remove_file(&asus->platform_device->dev, &dev_attr_keystone);
->>> +	asus->keystone_detected = false;
->>> +}
->>> +
->>>   /* Input **********************************************************************/
->>>   static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
->>>   {
->>> @@ -4575,6 +4638,12 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->>>   		return;
->>>   	}
->>>   
->>> +	if (code == NOTIFY_KEYSTONE) {
->>> +		if (asus->keystone_detected)
->>> +			asus_wmi_keystone_notify(asus);
->>> +		return;
->>> +	}
->>> +
->>>   	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
->>>   		if (asus->fan_boost_mode_available)
->>>   			fan_boost_mode_switch_next(asus);
->>> @@ -5085,6 +5154,10 @@ static int asus_wmi_add(struct platform_device *pdev)
->>>   	if (err)
->>>   		goto fail_sysfs;
->>>   
->>> +	err = asus_wmi_keystone_init(asus);
->>> +	if (err)
->>> +		dev_warn(&pdev->dev, "Keystone initialization failed: %d\n", err);
->>> +
->>>   	err = asus_wmi_input_init(asus);
->>>   	if (err)
->>>   		goto fail_input;
->>> @@ -5170,6 +5243,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->>>   fail_hwmon:
->>>   	asus_wmi_input_exit(asus);
->>>   fail_input:
->>> +	asus_wmi_keystone_exit(asus);
->>>   	asus_wmi_sysfs_exit(asus->platform_device);
->>>   fail_sysfs:
->>>   fail_custom_fan_curve:
->>> @@ -5191,6 +5265,7 @@ static void asus_wmi_remove(struct platform_device *device)
->>>   	asus_wmi_backlight_exit(asus);
->>>   	asus_screenpad_exit(asus);
->>>   	asus_wmi_input_exit(asus);
->>> +	asus_wmi_keystone_exit(asus);
->>>   	asus_wmi_led_exit(asus);
->>>   	asus_wmi_rfkill_exit(asus);
->>>   	asus_wmi_debugfs_exit(asus);
->>> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
->>> index 554f41b827e1..c29962d5baac 100644
->>> --- a/include/linux/platform_data/x86/asus-wmi.h
->>> +++ b/include/linux/platform_data/x86/asus-wmi.h
->>> @@ -147,6 +147,13 @@
->>>   #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
->>>   #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
->>>   
->>> +/* Keystone dongle insert/remove state.
->>> + * PRESENCE_BIT (0x00010000) encodes insert state:
->>> + * 0x00010000 = inserted, 0x00000000 = absent. STATUS_BIT is never set.
->>> + * 0xFFFFFFFE means no keystone slot on this machine.
->>> + */
->>> +#define ASUS_WMI_DEVID_KEYSTONE		0x00120091
->>> +
->>>   /* TUF laptop RGB modes/colours */
->>>   #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
->>>   #define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
->>
+> The firmware uses different commands for restoring auto mode and setting
+> explicit charge modes, so report the last successfully requested policy
+> after seeding it from firmware at probe time. The regular battery status
+> continues to report the live charging state.
 > 
+> Compile the battery hook support only when the ACPI battery driver is
+> reachable so non-battery hp-wmi configurations keep building.
+> 
+> Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 207 +++++++++++++++++++++++++++++++
+>  1 file changed, 207 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index d1cc6e7d176c..b3da64aee4f7 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -35,6 +35,9 @@
+>  #include <linux/string.h>
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+
+Add an empty line here.
+
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +#include <acpi/battery.h>
+> +#endif
+
+I don't think you need to put ifdeffery around an include.
+
+>  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>  MODULE_DESCRIPTION("HP laptop WMI driver");
+> @@ -309,7 +312,9 @@ enum hp_wmi_commandtype {
+>  	HPWMI_HOTKEY_QUERY		= 0x0c,
+>  	HPWMI_FEATURE2_QUERY		= 0x0d,
+>  	HPWMI_WIRELESS2_QUERY		= 0x1b,
+> +	HPWMI_BATTERY_CHARGE_CONTROL	= 0x1f,
+>  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
+> +	HPWMI_BATTERY_CHARGE_MODE	= 0x2b,
+>  	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+>  };
+> @@ -378,6 +383,22 @@ enum hp_wireless2_bits {
+>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+>  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +#define HPWMI_CHARGE_BEHAVIOURS \
+> +	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) | \
+> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE) | \
+> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE))
+> +
+> +#define HPWMI_CHARGE_MODE_AUTO			0x0000
+> +#define HPWMI_CHARGE_MODE_FORCE_DISCHARGE	0x0200
+> +#define HPWMI_CHARGE_MODE_INHIBIT		0x0500
+> +
+> +#define HPWMI_CHARGE_MODE_READ_AUTO		0x00
+> +#define HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE	0x02
+> +#define HPWMI_CHARGE_MODE_READ_INHIBIT		0x04
+> +#define HPWMI_CHARGE_MODE_READ_INHIBIT_EXT	0x06
+
+I tried to figure out if some of these would warrant using BIT() or 
+GENMASK()+FIELD_PREP() but was left unsure.
+
+> +#endif
+> +
+>  struct bios_rfkill2_device_state {
+>  	u8 radio_type;
+>  	u8 bus_type;
+> @@ -465,6 +486,18 @@ static const char * const tablet_chassis_types[] = {
+>  	"32"  /* Detachable */
+>  };
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +static const struct dmi_system_id hp_wmi_charge_control_quirks[] __initconst = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "85C6"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +#endif
+> +
+>  #define DEVICE_MODE_TABLET	0x06
+>  
+>  #define CPU_FAN 0
+> @@ -694,6 +727,176 @@ static int hp_wmi_read_int(int query)
+>  	return val;
+>  }
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +static DEFINE_MUTEX(hp_wmi_charge_lock);
+> +static enum power_supply_charge_behaviour hp_wmi_charge_behaviour =
+> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+> +
+> +static enum power_supply_charge_behaviour hp_wmi_charge_mode_to_behaviour(int mode)
+> +{
+> +	switch (mode) {
+> +	case HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE:
+> +		return POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
+> +	case HPWMI_CHARGE_MODE_READ_INHIBIT:
+> +	case HPWMI_CHARGE_MODE_READ_INHIBIT_EXT:
+> +		return POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
+> +	case HPWMI_CHARGE_MODE_READ_AUTO:
+> +	default:
+> +		return POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+> +	}
+> +}
+> +
+> +static int hp_wmi_charge_mode_read(void)
+> +{
+> +	int val = 0, ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_BATTERY_CHARGE_MODE, HPWMI_READ,
+> +				   &val, zero_if_sup(val), sizeof(val));
+> +	if (ret)
+> +		return ret < 0 ? ret : -EINVAL;
+
+These would be simpler to read if you split the if () to two.
+
+> +
+> +	return val & 0xff;
+> +}
+> +
+> +static int hp_wmi_charge_write(enum hp_wmi_commandtype query, u32 mode)
+> +{
+> +	int ret;
+> +
+> +	ret = hp_wmi_perform_query(query, HPWMI_WRITE, &mode, sizeof(mode), 0);
+> +	return ret <= 0 ? ret : -EINVAL;
+
+Here as well.
+
+> +}
+> +
+> +static int hp_wmi_charge_set_behaviour(enum power_supply_charge_behaviour behaviour)
+> +{
+> +	int ret;
+> +
+> +	guard(mutex)(&hp_wmi_charge_lock);
+> +
+> +	/*
+> +	 * HP firmware exposes normal charging through the GBCC/SBCC command
+> +	 * pair, while explicit charge modes use the GBCO/SBCO command pair.
+> +	 */
+> +	switch (behaviour) {
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_CONTROL,
+> +					  HPWMI_CHARGE_MODE_AUTO);
+> +		break;
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
+> +					  HPWMI_CHARGE_MODE_INHIBIT);
+> +		break;
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
+> +					  HPWMI_CHARGE_MODE_FORCE_DISCHARGE);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * charge_behaviour is the requested policy. The live charging state is
+> +	 * still reported by the regular battery status property.
+> +	 */
+> +	hp_wmi_charge_behaviour = behaviour;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_charge_get_property(struct power_supply *psy,
+> +				      const struct power_supply_ext *ext,
+> +				      void *data,
+> +				      enum power_supply_property psp,
+> +				      union power_supply_propval *val)
+> +{
+> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&hp_wmi_charge_lock);
+> +	val->intval = hp_wmi_charge_behaviour;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_charge_set_property(struct power_supply *psy,
+> +				      const struct power_supply_ext *ext,
+> +				      void *data,
+> +				      enum power_supply_property psp,
+> +				      const union power_supply_propval *val)
+> +{
+> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
+> +		return -EINVAL;
+> +
+> +	return hp_wmi_charge_set_behaviour(val->intval);
+> +}
+> +
+> +static int hp_wmi_charge_property_is_writeable(struct power_supply *psy,
+> +					       const struct power_supply_ext *ext,
+> +					       void *data,
+> +					       enum power_supply_property psp)
+> +{
+> +	return psp == POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR;
+> +}
+> +
+> +static const enum power_supply_property hp_wmi_charge_properties[] = {
+> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+> +};
+> +
+> +static const struct power_supply_ext hp_wmi_charge_extension = {
+> +	.name			= "hp-wmi-charge-control",
+> +	.properties		= hp_wmi_charge_properties,
+> +	.num_properties		= ARRAY_SIZE(hp_wmi_charge_properties),
+> +	.charge_behaviours	= HPWMI_CHARGE_BEHAVIOURS,
+> +	.get_property		= hp_wmi_charge_get_property,
+> +	.set_property		= hp_wmi_charge_set_property,
+> +	.property_is_writeable	= hp_wmi_charge_property_is_writeable,
+> +};
+> +
+> +static int hp_wmi_charge_add_battery(struct power_supply *battery,
+> +				     struct acpi_battery_hook *hook)
+> +{
+> +	return power_supply_register_extension(battery, &hp_wmi_charge_extension,
+> +					       &hp_wmi_platform_dev->dev, NULL);
+> +}
+> +
+> +static int hp_wmi_charge_remove_battery(struct power_supply *battery,
+> +					struct acpi_battery_hook *hook)
+> +{
+> +	power_supply_unregister_extension(battery, &hp_wmi_charge_extension);
+> +	return 0;
+> +}
+> +
+> +static struct acpi_battery_hook hp_wmi_charge_battery_hook = {
+> +	.name = "HP WMI charge control",
+> +	.add_battery = hp_wmi_charge_add_battery,
+> +	.remove_battery = hp_wmi_charge_remove_battery,
+> +};
+> +
+> +static int __init hp_wmi_charge_control_setup(struct device *dev)
+> +{
+> +	int ret;
+> +
+> +	if (!dmi_check_system(hp_wmi_charge_control_quirks))
+> +		return 0;
+> +
+> +	ret = hp_wmi_charge_mode_read();
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	scoped_guard(mutex, &hp_wmi_charge_lock)
+> +		hp_wmi_charge_behaviour = hp_wmi_charge_mode_to_behaviour(ret);
+> +
+> +	return devm_battery_hook_register(dev, &hp_wmi_charge_battery_hook);
+> +}
+> +#else
+> +static int __init hp_wmi_charge_control_setup(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int hp_wmi_get_dock_state(void)
+>  {
+>  	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+> @@ -2284,6 +2487,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  	if (err < 0)
+>  		return err;
+>  
+> +	err = hp_wmi_charge_control_setup(&device->dev);
+> +	if (err)
+> +		return err;
+> +
+>  	thermal_profile_setup(device);
+>  
+>  	return 0;
+> 
+
+-- 
+ i.
 
