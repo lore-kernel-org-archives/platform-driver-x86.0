@@ -1,166 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DE13E95A9;
-	Thu, 28 May 2026 12:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF3F3E833F;
+	Thu, 28 May 2026 12:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779971763; cv=none; b=rYmnBXoNxxiIyG2xQw00LW/CDl8Wnms0TdpfPRuOidmazBb4yy6iwpgHRu6vb5NnxvVgxbRSydSL+NvjLSvftibFL+LD5uBZ3O/N9G4wn2lkvhRs9QOf8JENMXoF0Rw797nDx88EdxRZK863OPoz5zPzTGj9cmOlqCt1gv70OSE=
+	t=1779972139; cv=none; b=cjEC8C3JgZUy+98D1TO3oeqL/PyKv3JGqAA8Km3/kr+4xUnEuHuv6NBFAzQgcB8coowuhu++cm6fWKurcQte0nkPHhm7hAauymKcKiq4v13sVWcgYEdth2pYLO1++U8sjkQHEbjB2sssJHTQ7RkGWk4UtWDkHF4UvBG8qSKVYWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779971763; c=relaxed/simple;
-	bh=6PcUgLeU2vyE9WWEOwaSUEMT559kJzVxpY6y7tUqVE8=;
+	s=arc-20240116; t=1779972139; c=relaxed/simple;
+	bh=KJ4bXx5Jhw4lK4DMTDthJ7vwOLfI0qyGPlE0N0k3tkE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=T6lzGwRqkZHV4FJIIr4WYocEBNIowMlvxfXUwEr/J03b3lttFA53GHqXy0jsepTs80X2h2e4+hT7rFWQnuWLU+Eepnt5HFTtzd7oVppq86xWCGc7/Ci70d/duQXO6vIT/SZ+3Jq4jW2/tUrdMZSAOOuQ2+7FzZQpuvg2iZSkn2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSMifrxf; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=Ov5BPTr5OruqaY+tJkcUhvn4s311X90n7RXyo66NGkmjKOzJY6tLaTH7HQDNvRA94//waZz6DxF7Cemfhu6Bc46tYvZvnPXp2j4WuKPlILC8qM5m6EaSsMNVs0/wUPKAiTVDFtpHvQCsk4ZCmie8qBFcpl3qgXH6q/kx67xlsMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nnusktYs; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSMifrxf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nnusktYs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779971762; x=1811507762;
+  t=1779972138; x=1811508138;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=6PcUgLeU2vyE9WWEOwaSUEMT559kJzVxpY6y7tUqVE8=;
-  b=GSMifrxf5sDB4UugckslrpRakc8VTVVcAxShD47SWSXw3Zo8tIJNX9+L
-   3gN+ANVMaonwfY1jW8aPDa+Wu5kO1NTIsdernRkubQ2RkkHpiJTVOFszp
-   bggKNX9J3kXVeNNpI8kscIB7eC0TYlJWzj30t6ysMakQs6aaQ89oMp3Pi
-   +yR0Sn19YwCOMzbuQkjPj1p//GSG6gveri+nBgPuRXsTbdVk5SszYXKNQ
-   xMGm0xxWetUwAkTF/ym3OSvi0Hq+BsitMhq4LAXDbN8BQ9BYueqinbhLJ
-   460w1SvepX/KjMjrFjWQOWvBv9CIvsKYDhyB0sikZ/1cxo8FCPjEIvEN5
-   g==;
-X-CSE-ConnectionGUID: nFR5CPjxQTyAdn6FBVPrKw==
-X-CSE-MsgGUID: LCSxOZFLRHi6PxhQeOeB0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="91921325"
+  bh=KJ4bXx5Jhw4lK4DMTDthJ7vwOLfI0qyGPlE0N0k3tkE=;
+  b=nnusktYshzMQ94YAo/WY9vYTMd1a8k73O/tWynnaZr80teMuvPzRd58g
+   Y0FWXio5DsattbKR3+6k0K5RAz7uTNvSFl/dnqOvAdN9t7jidR8r+VmnB
+   FFMqn/McRxIgmiCl9NH8ygWSfRgiROpCdB5Rhv3rGT+gSkvcRUL+GtzyE
+   lLXliu2qniesiJcpVjGg9rJhn3G2ulhs08cjR2tj1/G+tJKE+ZnsgnlrR
+   6aJoygkIH2vbdwAcQgaQTWd21pxddfL68QQWNUniNv+7BFm3mB1oRsRSD
+   tv6ccbycFvP1MzwIRqNn0oyUun0mXTvoQ74kpe/ZdlmuIoB7M0BG/whvS
+   Q==;
+X-CSE-ConnectionGUID: bE5lkuKcTpCYnxi4BdCaDw==
+X-CSE-MsgGUID: xyShKGAGTe+iVfYRdvflWQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11799"; a="79960828"
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="91921325"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:36:01 -0700
-X-CSE-ConnectionGUID: ESqugtG1Qty10h/t2FynUQ==
-X-CSE-MsgGUID: TIZRvGXhQMuXgvfVixJRUg==
+   d="scan'208";a="79960828"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:42:17 -0700
+X-CSE-ConnectionGUID: Zgvm9re8QNyOT84HzR7Xsg==
+X-CSE-MsgGUID: VOwf1bD0QlSg9PmMEtsr2w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="246821246"
+   d="scan'208";a="242634568"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.187])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:35:54 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 05:42:08 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 28 May 2026 15:35:50 +0300 (EEST)
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Danilo Krummrich <dakr@kernel.org>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-    Brendan Higgins <brendan.higgins@linux.dev>, 
-    David Gow <david@davidgow.net>, Rae Moar <raemoar63@gmail.com>, 
-    Andy Shevchenko <andy@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    Matthew Brost <matthew.brost@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, brgl@kernel.org, 
-    driver-core@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
-    linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-    platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v6 2/6] platform/surface: gpe: use
- platform_device_register_full()
-In-Reply-To: <20260513-swnode-remove-on-dev-unreg-v6-2-f9c58939df27@oss.qualcomm.com>
-Message-ID: <9a0d0e01-adf8-e111-49a0-580239265dbf@linux.intel.com>
-References: <20260513-swnode-remove-on-dev-unreg-v6-0-f9c58939df27@oss.qualcomm.com> <20260513-swnode-remove-on-dev-unreg-v6-2-f9c58939df27@oss.qualcomm.com>
+Date: Thu, 28 May 2026 15:42:04 +0300 (EEST)
+To: Harrison Vanderbyl <harrison.vanderbyl@gmail.com>
+cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+    krzk+dt@kernel.org, conor+dt@kernel.org, 
+    Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, 
+    neil.armstrong@linaro.org, maarten.lankhorst@linux.intel.com, 
+    mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+    simona@ffwll.ch, jikos@kernel.org, bentiss@kernel.org, 
+    luzmaximilian@gmail.com, Hans de Goede <hansg@kernel.org>, 
+    Douglas Anderson <dianders@chromium.org>, 
+    Jessica Zhang <jesszhan0024@gmail.com>, linux-arm-msm@vger.kernel.org, 
+    devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+    linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 3/7] platform/surface: SAM: Add support for Surface
+ Pro 12in
+In-Reply-To: <ab458aadea651396d9ea7629419a32dc7510c593.1778822464.git.harrison.vanderbyl@gmail.com>
+Message-ID: <6808166a-423c-c801-497a-ed95cccc8d0c@linux.intel.com>
+References: <cover.1778822464.git.harrison.vanderbyl@gmail.com> <ab458aadea651396d9ea7629419a32dc7510c593.1778822464.git.harrison.vanderbyl@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1514807276-1779971750=:1291"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 15 May 2026, Harrison Vanderbyl wrote:
 
---8323328-1514807276-1779971750=:1291
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 13 May 2026, Bartosz Golaszewski wrote:
-
-> Creating a software node for a given set of properties and adding it to
-> a platform device can be achieved with a single call to
-> platform_device_register_full(). There's nothing in this driver that
-> suggests using the more fine-grained interfaces was intentional so
-> switch to using the high-level helper.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Add a SAM client device node group and registry entry for the
+> Microsoft Surface Pro, 12-inch with Snapdragon.
+> 
+> This set enables the use of the following devices.
+> 1: cover keyboard
+> 2: cover touchpad
+> 3: pen stash events.
+> 
+> The battery info and charger info devices have been
+> purposefully omitted as they are also reported by
+> other drivers and cause conflicts.
+> 
+> Signed-off-by: Harrison Vanderbyl <harrison.vanderbyl@gmail.com>
 > ---
->  drivers/platform/surface/surface_gpe.c | 36 +++++++++++-----------------=
-------
->  1 file changed, 11 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/su=
-rface/surface_gpe.c
-> index b359413903b13c4f8e8b284ef7ae6f6db3f47d72..b8bb47b0d91f036ee5073d215=
-34f8f26a4d5ed15 100644
-> --- a/drivers/platform/surface/surface_gpe.c
-> +++ b/drivers/platform/surface/surface_gpe.c
-> @@ -290,9 +290,9 @@ static struct platform_device *surface_gpe_device;
-> =20
->  static int __init surface_gpe_init(void)
->  {
-> +=09struct platform_device_info pdevinfo;
->  =09const struct dmi_system_id *match;
->  =09struct platform_device *pdev;
-> -=09struct fwnode_handle *fwnode;
->  =09int status;
-> =20
->  =09match =3D dmi_first_match(dmi_lid_device_table);
-> @@ -305,34 +305,20 @@ static int __init surface_gpe_init(void)
->  =09if (status)
->  =09=09return status;
-> =20
-> -=09fwnode =3D fwnode_create_software_node(match->driver_data, NULL);
-> -=09if (IS_ERR(fwnode)) {
-> -=09=09status =3D PTR_ERR(fwnode);
-> -=09=09goto err_node;
-> -=09}
-> -
-> -=09pdev =3D platform_device_alloc("surface_gpe", PLATFORM_DEVID_NONE);
-> -=09if (!pdev) {
-> -=09=09status =3D -ENOMEM;
-> -=09=09goto err_alloc;
-> +=09pdevinfo =3D (struct platform_device_info){
-> +=09=09.name =3D "surface_gpe",
-> +=09=09.id =3D PLATFORM_DEVID_NONE,
-> +=09=09.properties =3D match->driver_data,
-> +=09};
-> +
-> +=09pdev =3D platform_device_register_full(&pdevinfo);
-> +=09if (IS_ERR(pdev)) {
-> +=09=09platform_driver_unregister(&surface_gpe_driver);
-> +=09=09return PTR_ERR(pdev);
->  =09}
-> =20
-> -=09pdev->dev.fwnode =3D fwnode;
-> -
-> -=09status =3D platform_device_add(pdev);
-> -=09if (status)
-> -=09=09goto err_add;
-> -
->  =09surface_gpe_device =3D pdev;
->  =09return 0;
-> -
-> -err_add:
-> -=09platform_device_put(pdev);
-> -err_alloc:
-> -=09fwnode_remove_software_node(fwnode);
-> -err_node:
-> -=09platform_driver_unregister(&surface_gpe_driver);
-> -=09return status;
->  }
->  module_init(surface_gpe_init);
+>  .../surface/surface_aggregator_registry.c         | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+> index 0599d5adf02e..884049961415 100644
+> --- a/drivers/platform/surface/surface_aggregator_registry.c
+> +++ b/drivers/platform/surface/surface_aggregator_registry.c
+> @@ -422,6 +422,19 @@ static const struct software_node *ssam_node_group_sp11[] = {
+>  	NULL,
+>  };
+>  
+> +/* Devices for Surface Pro 12" first edition (ARM/QCOM) */
+> +static const struct software_node *ssam_node_group_sp12in[] = {
+> +	&ssam_node_root,
+> +	&ssam_node_hub_kip,
+> +	&ssam_node_tmp_sensors,
+> +	&ssam_node_hid_kip_keyboard,
+> +	&ssam_node_hid_sam_penstash,
 
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Hi,
 
---=20
+Could you please confirm this penstash is correct (sam vs kip)?
+
+Sashiko suggested it might be wrong but take it's report with a grain of 
+salt, it's AI after all and sometimes seems to extrapolate about HW to a 
+sibling HW without any real knowledge:
+
+https://sashiko.dev/#/patchset/cover.1778822464.git.harrison.vanderbyl%40gmail.com
+
+-- 
  i.
 
---8323328-1514807276-1779971750=:1291--
+> +	&ssam_node_hid_kip_touchpad,
+> +	&ssam_node_hid_kip_fwupd,
+> +	&ssam_node_pos_tablet_switch,
+> +	NULL,
+> +};
+> +
+>  /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+>  
+>  static const struct acpi_device_id ssam_platform_hub_acpi_match[] = {
+> @@ -500,6 +513,8 @@ static const struct of_device_id ssam_platform_hub_of_match[] __maybe_unused = {
+>  	{ .compatible = "microsoft,arcata", (void *)ssam_node_group_sp9_5g },
+>  	/* Surface Pro 11 (ARM/QCOM) */
+>  	{ .compatible = "microsoft,denali", (void *)ssam_node_group_sp11 },
+> +	/* Surface Pro 12in First Edition (ARM/QCOM) */
+> +	{ .compatible = "microsoft,surface-pro-12in", (void *)ssam_node_group_sp12in },
+>  	/* Surface Laptop 7 */
+>  	{ .compatible = "microsoft,romulus13", (void *)ssam_node_group_sl7 },
+>  	{ .compatible = "microsoft,romulus15", (void *)ssam_node_group_sl7 },
+
+
