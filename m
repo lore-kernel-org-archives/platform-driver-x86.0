@@ -1,46 +1,46 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010036.outbound.protection.outlook.com [40.93.198.36])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013069.outbound.protection.outlook.com [40.93.201.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161183AF66F;
-	Thu, 28 May 2026 09:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF393B0AC6;
+	Thu, 28 May 2026 09:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779961230; cv=fail; b=nIXCkIBBYUKB+5I52sjphbuXB3jpGYBLoHCSzaZtlbsu5N9nmcFhVMlTwgs1/va0ygCDObTFmxw8TJr32chmspmrgmoNm5QYR30DcspC5EeIBeftitwwi0C/VPPxaPK7WUaITEi7BRswZF9IrinLkbcEzVPtaZJ3ibhF457Yj+I=
+	t=1779961231; cv=fail; b=VswGSq/Fc2KpQWzKD0AkgIXZ14ddz0chRRp8RvqVDOWV6nnf3n5ZVG4Y9EAHfW7H/+602A2fpaEHNmCtPw2O1vJTPydvX+01VFl9BUp8lKnhGRn6g7oFUIU+v2+BWOm+Inrh94iYVXpATERYNjaOg8/Wi/T/I7MrjH1prwdXjYg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779961230; c=relaxed/simple;
-	bh=0f1eWmFvJNzqzXC92VolsCXHqSACPZq0Z1kqA1i2Zpo=;
+	s=arc-20240116; t=1779961231; c=relaxed/simple;
+	bh=MLAjFuaM/SkxUEtH0R2VGYs6BHUwEZgU+i2EcQFjATs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kTXmF1CqfhFpgICi/nIldRwaChiWhLOFq1DNWt6TwZo0buWmzsfcS3fWYUayBI18mgGgBiJ1rjK9/JFCaiR7YBFDQA34IqoBlApVPfU7cX/jVqX9OX5xqQjAZTEJGHCc0R8jAtdu9R7zR8Q2fGRp6WBj7Mift17LWF6NoOFdals=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=H9ADyWWI; arc=fail smtp.client-ip=40.93.198.36
+	 MIME-Version:Content-Type; b=olNOYPsTkBXmzxHtuxZv+bx5H7f81UfoUGDeJEdFWMio+JMPz3GpldkCqAM14bPowU4mtDtJwobJfk3TFBPmnRQ7d2XBBvP4nFyjLechqkathpqtWPHyQcZzFPkpuR6e/DGoVBXc5Zs+7Nv82UO2C84NCHAyM7MMxChiR4HJScc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gSI6pL17; arc=fail smtp.client-ip=40.93.201.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="H9ADyWWI"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gSI6pL17"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oz0ZDS/uZqAYgTBaNajHJWvBKaMnqSjk/CCEobLxN/jYr865GZtE4n2qwQ+h1PHfIPqKs21gPFY8VSH1mMxZa8Jui3VtjuSbKH55I8gZU9inSpOUXQCtg+dgm0jpY4Oft9MG/CLMtOCu4PB0CAiV9hV5wJ5ZLMRpUMwMiyOsM9jG7ae5rdwAlsTPuHGbsPq6J2Qm1yuXo1duUaNsruUdhsvjVIUuYwKN1occ0iIBIOTmwSgOhSJtWclmumlcgftdZy2UrBMWrXfYr0y9CZgYZjwFrqo/yjLlKZKTjjpQoA0zo9wqjV2YczrPInG/Izp9REdpNBRvEenVDIDVjqahwQ==
+ b=vgXG0ZFGsgbQuDhscKzkzdznRWze9F0kvHI4SpGfTUHxwl4qNthWIJ08AXYviMeahqzs8lCvm9v06ryXm4BLzpsjIdnOfDq8FAmK6LxLbyKuiU2gbKTbYMqtVFXEIW44Nl1AWV2ofHtgYPel9b9+vo6RFUZVM8EtxTEa1YkMuAatxK4tCNf3xluqggk9ejBSJ7fHXKOi9mt2gBIkoAQKc568C2gdRyITaJ/o9tBYP62c1WwA0GOep+5uUIdyzLPp069yLDwJIPQ3x9h5xefIIG1dr3f4BEOKjc1NrvxDtk/o4u6tPGdBWkiw4zg/n95bR6ty400i42JMs3h7EgHkPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9sE2WV9tkhN2aiycQIkQAh9a9xrvgDAZIdVJzDJVM3M=;
- b=wqNSRdrcHPZp9j/Qkd7g0x557aMdfAo3AiEO+1zdOOc8iEeHbHxKAJ+gg1oQAxMaEkesp/zgqSGgK7zIjE9YihYaudZOGwYRwprrzVilykA/TPtHvNBxWhGowTTLsBiDAidlh9gCqhjtf6lRsidYSfANBePBi96cyFv8/CPrJYpB5FGeiyM+WSdCnBc4+fantGfESWLgGjB6SmoT+xc+TrQVVsxgMXoKQMI0GGm7kYO8pKRIIEXqyQGhggBAVGNQ3he9c8Fl+tnJPEfM3+GBcWaL2zhH8vy/vyJIPENBZHFiThnaLfnUEWjMWPJ2hmvb7cSMiIj8D6G7Kqrd7ttb+g==
+ bh=+udk7GCMxUlEQihZUamLzFS5wxkGB3A/fyJa/nwnrCw=;
+ b=T8TINP+llSzdan2e7vPz2WVifaFMWn0xlCgumwiQLNnhCYHgopRn1bRhAYeKSWWr6khxoqVE5KeT56R534fdOjK2ebH7y9ZkJiu9L99aM9uM5Jz/3SNPn3ZekdG7RWef9N+UWEY2Xj3EeG1ALhoZS6kw45cAVxlKIPytJGhqdJvy3cjmRMMEEwvhkmIgJYvtSrLBZrC5zdyzRdHNATbCd2YhYY+NNOh6BvLFQKtsH8e5Z0mCYgbAAAXXFJz2A6lmpCCOO8P1WqwiX+HHUY6kaiAZvFklyzBeohQqWplt/FQMmOlIxPzeW5wRlHuZ2TdKOoI6TctdzKrD89r7FC9chQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9sE2WV9tkhN2aiycQIkQAh9a9xrvgDAZIdVJzDJVM3M=;
- b=H9ADyWWIdKPNyhGRTDgRIsxm9/OrjyCqyhGXkT80Y7foIlxHtRdOnS3XoakU6eOYjAmatfwzVg3dA9JoUxLxITLgVVMa+Hh2eM1cJDr2M+PKkcWFzV3N3k8kMcRA22dYOe9y7seTLcB9hziFmTCqNWNk2kY9ge74n9BaoR3K+9M=
-Received: from CY5PR22CA0065.namprd22.prod.outlook.com (2603:10b6:930:80::10)
- by BN5PR12MB9511.namprd12.prod.outlook.com (2603:10b6:408:2a9::14) with
+ bh=+udk7GCMxUlEQihZUamLzFS5wxkGB3A/fyJa/nwnrCw=;
+ b=gSI6pL17OP1fVnMeEWNYuEtMHWSxXL+0z5UkZJbUCJ3EClZCfysEMOR0Vf2n6RDoScJvnV1YOQii6tf2U8ynX9eHZP3yOduXGm5beKIfg6lxGOvgXqZECeZMAJGKTOZu3DxjmBFZE3Rv3PWOFDlKN0Bp9wLfHzqYDjvbD7V45kY=
+Received: from CH0PR03CA0268.namprd03.prod.outlook.com (2603:10b6:610:e5::33)
+ by DS7PR12MB8347.namprd12.prod.outlook.com (2603:10b6:8:e5::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.12; Thu, 28 May
- 2026 09:40:22 +0000
-Received: from CH1PEPF0000AD80.namprd04.prod.outlook.com
- (2603:10b6:930:80:cafe::9f) by CY5PR22CA0065.outlook.office365.com
- (2603:10b6:930:80::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.13; Thu, 28 May
+ 2026 09:40:23 +0000
+Received: from CH1PEPF0000AD83.namprd04.prod.outlook.com
+ (2603:10b6:610:e5:cafe::a7) by CH0PR03CA0268.outlook.office365.com
+ (2603:10b6:610:e5::33) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.71.13 via Frontend Transport; Thu, 28
- May 2026 09:40:22 +0000
+ May 2026 09:40:23 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,21 +48,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- CH1PEPF0000AD80.mail.protection.outlook.com (10.167.244.90) with Microsoft
+ CH1PEPF0000AD83.mail.protection.outlook.com (10.167.244.85) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:21 +0000
+ 15.21.71.7 via Frontend Transport; Thu, 28 May 2026 09:40:23 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 28 May
- 2026 04:40:17 -0500
+ 2026 04:40:21 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>, Suma Hegde <suma.hegde@amd.com>,
-	Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Subject: [PATCH v4 2/7] platform/x86/amd/hsmp: Add UAPI structures for Family 1Ah Model 50h-5Fh metrics table
-Date: Thu, 28 May 2026 15:09:49 +0530
-Message-ID: <20260528093954.2461272-3-muralidhara.mk@amd.com>
+	Muralidhara M K <muralidhara.mk@amd.com>, Muthusamy Ramalingam
+	<muthusamy.ramalingam@amd.com>
+Subject: [PATCH v4 4/7] platform/x86/amd/hsmp: Source metric-table size from firmware
+Date: Thu, 28 May 2026 15:09:51 +0530
+Message-ID: <20260528093954.2461272-5-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260528093954.2461272-1-muralidhara.mk@amd.com>
 References: <20260528093954.2461272-1-muralidhara.mk@amd.com>
@@ -78,161 +78,128 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD80:EE_|BN5PR12MB9511:EE_
-X-MS-Office365-Filtering-Correlation-Id: e16cb33c-e9c6-4578-88c5-08debc9d2332
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD83:EE_|DS7PR12MB8347:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0040e223-c758-4e1d-b68f-08debc9d2436
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|376014|1800799024|56012099006|3023799007|22082099003|11063799006|18002099003;
+	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|3023799007|11063799006|6133799003|22082099003|56012099006|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	EwdNw70XuqFAOd48YjkAeFLcJRsgiLvqEdmRsORyg5m08f8PnwTlkdCNaAfJApC1wkNGcgAKELMMOKn5/8XGMOArgVVgm34E0mCGU1KwNbEQzdSNSVMgHDZjbypKPFhwwVigj9BWcvBHaHYNvetjtiW+tgKUjgdcgQPjIYgG7Fr4q0PCftq6AH3BpMThELn4jQhyuwUIXp5bR/UGUXeLan6t+y0bHo8IssuaUAk3siDf4BHXfiOQDdhHv59eHsFjdssmZyD7ZzWNBNKD/fzE0BJJhKvYrWWNoj4+x+s77KGSfPqKBvP3YniRoM7jOTB+6Av5iaRKxskptNHAPVWxoUKRVMED2CFtTCHYxuugc3VP1mbhlZE1qcJtNYDEp0EXqWPWHI7z2v84jjfPu1Zz//QGyFxWgiqhNCUZVgBPi71fMZqtbH5laM66g3SqZN7GMscf50o3vrByqQf0nnh6gHA/EMnF/uMMX5ah9GJNH0X+9aq38ZtA8c0W2xSo/eVcWaOWgPCCF6qyglKCnhvcoO4WuTXl0lQOZxKnZpwxviRMMyeCjvInpgLxE/y2CdpPRkLEdxPtEpJrSB/SkcFt/B5gd8gsvpjBrWRdIFyyXADyANTwrxT29dxFL3iyjo2eDUTGI7+6l33JDtZbs78t2XShjrrwqiUdUb8Oe/Cg3m0lo5IliwhmJXPtQo1TQDlJYPyQmiRssVozf/Al7l5N30WBYpxCzGjbe9cGwwbUBfM=
+	fklZnYRwe9VLNQEirQX99VS/RhWR8b4aFN6sBzbEFqOqC4GUpDS5zVAOb0Ji3PBe4S/nepksSup55ZI/GxqUlmV9QRTY7U7BCppKrjhAxOgEB4IeFJcSUlAOum8Ags1NWN5+YOynH2tqHdK7AGVTiBhBLb7dR/R/bueuJEKPpbtNTp3DwQWmxazPn4+bCPh/xRzrbchAh8aRI7hhlLCH54Qjdq1oHUHx3Dgv9aZtoHP6xMZEDplq9Un5bQVelfkqFGjvU9MRpaJLIC5+sd9aSc3sQ2Zmb/spJe+u/1zGQATF8o6ZOP2SGxMZ05jlYOfmEhzrXI0/bzrurPcFoJkoK43j0VPdW/6ZJrcqE00KZn8DgXaHHdYxBsAHSw3uzef93nvP63RRkuS01rxHSrDLgfENEDz19Qf7I3ZXKf3tzXqzdGYaWrCq4FPzK9BBGeMURwLhJCAeYMgUKZNjNRhCY0zoZDSFI+aLZ9sxqYH77HiajS1JuGaoYu8w+fX+qvVWO3O6fe2d8oG50al9d8eAtEyyd3x+PCBn+joCw4tI+vP2Lmi+bOnj8QlePpQvqho9p5PiTKDcE1RfEsEU4Nrh3y6AuyGpYRskHCDmb1pZ4svsSmpDT447XdeVZTUxNbv9J9w3Cshf2VI4l/J8puSuIaHjDmleLrvu1feYwJfpV9hvcUCxRz7goK7UJX31i7VxdtwjLlOhPkkAEEG5LPngCY1cqMM+CsyHudmc+BuBxts=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(376014)(1800799024)(56012099006)(3023799007)(22082099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(3023799007)(11063799006)(6133799003)(22082099003)(56012099006)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	IT6b3RLXYdUKEu5YJMsZoT6B+NLxyNHDIiqBvN+hS4n8CmTIaWZfp/0988/zKIL/vYedCnDtSeuGuSFidxu5c7vtw8k8P1k/B8/Zp/duLLO5X1fqj/w4A+DNRZmu/O4YjJGB1U7pnzSiMzYUAI7Isb3+E6OvIhoiGuxiEgcdqPqFtN/weHMJfmm/zI0dS09zVqQnnVWQKTz/mZmFunDCGosBG5+JKHxL2e70JEocnNwvD3gxeSfnxyAma73pRxnU9wimuct7KRs7+t/eCxUxXQC8jjRPi7GbGkLofdCzot4uRwUTsoNkcke2fWjNMMN29j9s71TFoi8L3h7VSDprY9XtIIHKcABpfVMJy9E6JQ0PYQKm4FUXlPZtyMYfvBhAL1EkTNz5+taMRAX5vJhnz1KsYiYRgqm/Q5ufJB/RG2bPKITkIrKui22mzbeBn8cJ
+	RGwxFgMP1MOnp1tf8mz7PelRRLdHFtrPcVtX5oB/nT/5PeW8nKFsnhP7IEPZKmuAJX0MyxV45VN0fu1P8TIl5JRlNgcfLHxuc1VnhrF2rbVZfdNIYW6E/1bMO1spn9XUgo0eIBHyQhUss5DVqeL8Qye35EiZyuCJ1L38oRhwn6jiC8PeEbvv07xdLsjWUAJqVTnv1P479mWLC9LPY4DjRzDFEJOsbxUkOXAmsAGnQWWfzc4nBO0XlFKT+aqB6y/rh3SB0dpzfyBwgyKj3hpWpwgEk5oWJQjgoA4fODDjLcTWhCV36hu9ryJGSqVTxS1AY2EUCDa7LEK9pJzaWOCj64qGfZ0Kb32ptr+/TyOtTxv6QTpYGn2a1LVAaInE8CmqGJBeBCWg4eRs21XcNyHWndmu2Y4viXB+ViuAQw73JuLaXYkJENrGVaq5h6nDBXdf
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:21.9041
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 09:40:23.6228
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e16cb33c-e9c6-4578-88c5-08debc9d2332
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0040e223-c758-4e1d-b68f-08debc9d2436
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD80.namprd04.prod.outlook.com
+	CH1PEPF0000AD83.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9511
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8347
 
-HSMP protocol version 7 on Family 1Ah Model 50h-5Fh delivers a new
-per-IOD/per-CCD metric-table layout that is not compatible with the
-existing hsmp_metric_table. Userspace tooling needs a stable UAPI
-description of this layout to interpret the firmware blob carried by
-the HSMP character device.
+The driver hard-codes the metric-table region size to
+sizeof(struct hsmp_metric_table). That is correct for HSMP protocol
+version 6 but mis-sizes the ioremap of the SMU DRAM region on newer
+platforms: Family 1Ah Model 50h-5Fh exposes a ~13 KB
+hsmp_metric_table_zen6, and the table is expected to keep growing
+on future firmware. The same hard-coded value also forces
+hsmp_metric_tbl_read() to reject any read that follows the actual
+firmware layout.
 
-Add hsmp_metric_table_zen6_iod, hsmp_metric_table_zen6_ccd and the
-top-level hsmp_metric_table_zen6 that mirror the firmware-defined
-binary layout 1:1. The ccd[] array is sized to the hardware maximum
-(HSMP_F1A_M50_M5F_MAX_CCDS = 8) to keep that mirror exact; userspace
-iterates ccd[0 .. iod.num_active_ccds - 1] and ignores the rest.
-num_active_ccds lives in the IOD block because the IOD die is the
-aggregator that reports the CCD population, and keeping it there
-preserves the 1:1 mapping with the firmware layout.
+Pick up the table size from firmware instead. SMU on Family 1Ah
+Model 50h and later populates HSMP_GET_METRIC_TABLE_DRAM_ADDR's
+args[2] with the DRAM region size in bytes; older firmware leaves
+it 0. Bump the descriptor's response_sz to 3 so the field is read,
+store the value in hsmp_pdev.hsmp_table_size at probe time, and
+fall back to sizeof(struct hsmp_metric_table) when firmware reports
+0. Use hsmp_table_size both for the devm_ioremap() of the region
+and as the upper bound for hsmp_metric_tbl_read().
 
-Driver enablement for protocol version 7 is added in a follow-up
-patch.
+Behaviour on existing protocol-version-6 hardware is unchanged:
+firmware returns 0, the fallback yields the same value as the
+previous hard-coded one, and both the ioremap and the size check
+produce the same result as before.
 
-Reviewed-by: Suma Hegde <suma.hegde@amd.com>
+The ioctl interface added later in this series uses the same
+hsmp_table_size to validate the userspace request and to copy out
+the full firmware-reported region.
+
 Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
 Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 ---
- arch/x86/include/uapi/asm/amd_hsmp.h | 93 ++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ arch/x86/include/uapi/asm/amd_hsmp.h |  5 +++--
+ drivers/platform/x86/amd/hsmp/hsmp.c | 11 ++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.h |  1 +
+ 3 files changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-index 52e53ec5877f..fce271282348 100644
+index fce271282348..438ac38d0dc8 100644
 --- a/arch/x86/include/uapi/asm/amd_hsmp.h
 +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-@@ -592,6 +592,99 @@ struct hsmp_metric_table {
- 	__u32 gfxclk_frequency[8];
+@@ -365,11 +365,12 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[]
+ 	{0, 0, HSMP_GET},
+ 
+ 	/*
+-	 * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args = 0, response_sz = 2
++	 * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args = 0, response_sz = 3
+ 	 * output: args[0] = lower 32 bits of the address
+ 	 * output: args[1] = upper 32 bits of the address
++	 * output: args[2] = DRAM region size in bytes
+ 	 */
+-	{0, 2, HSMP_GET},
++	{0, 3, HSMP_GET},
+ 
+ 	/*
+ 	 * HSMP_SET_XGMI_PSTATE_RANGE, num_args = 1, response_sz = 0
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 9bad58fef304..cf9392f99298 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -356,8 +356,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
+ 		return -ENOMEM;
+ 	}
+ 
+-	/* Do not support lseek(), also don't allow more than the size of metric table */
+-	if (size != sizeof(struct hsmp_metric_table)) {
++	if (size != hsmp_pdev.hsmp_table_size) {
+ 		dev_err(sock->dev, "Wrong buffer size\n");
+ 		return -EINVAL;
+ 	}
+@@ -398,8 +397,14 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+ 		dev_err(sock->dev, "Invalid DRAM address for metric table\n");
+ 		return -ENOMEM;
+ 	}
++	/* SMU returns table size from Family 1Ah Model 50h and forward */
++	if (msg.args[2])
++		hsmp_pdev.hsmp_table_size = msg.args[2];
++	else
++		hsmp_pdev.hsmp_table_size = sizeof(struct hsmp_metric_table);
++
+ 	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
+-					     sizeof(struct hsmp_metric_table));
++					     hsmp_pdev.hsmp_table_size);
+ 	if (!sock->metric_tbl_addr) {
+ 		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
+ 		return -ENOMEM;
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index b153527e0a0d..e7f051475728 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -55,6 +55,7 @@ struct hsmp_plat_device {
+ 	u32 proto_ver;
+ 	u16 num_sockets;
+ 	bool is_probed;
++	size_t hsmp_table_size;
  };
  
-+#define HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD	32
-+#define HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE	4
-+#define HSMP_F1A_M50_M5F_MAX_XGMI_LINKS	8
-+#define HSMP_F1A_M50_M5F_MAX_PCIE_LINKS	8
-+#define HSMP_F1A_M50_M5F_MAX_CCDS		8
-+
-+/* Metrics table (supported only with proto version 7) */
-+struct hsmp_metric_table_zen6_iod {
-+	__u32 num_active_ccds;	/* Number of valid entries in the sibling ccd[] array */
-+	__u32 accumulation_counter;
-+
-+	/* TEMPERATURE */
-+	__u64 max_socket_temperature_acc;
-+
-+	/* POWER */
-+	__u32 socket_power_limit;
-+	__u32 max_socket_power_limit;
-+	__u64 socket_power_acc;
-+	__u64 core_power_acc;
-+	__u64 uncore_power_acc;
-+
-+	/* ENERGY */
-+	__u64 timestamp;
-+	__u64 socket_energy_acc;
-+	__u64 core_energy_acc;
-+	__u64 uncore_energy_acc;
-+
-+	/* FREQUENCY */
-+	__u64 fclk_frequency_acc;
-+	__u64 uclk_frequency_acc;
-+	__u64 ddr_rate_acc;
-+	__u64 lclk_frequency_acc[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-+
-+	/* FREQUENCY RANGE */
-+	__u32 fclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-+	__u32 uclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-+	__u32 ddr_rate_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-+	__u32 max_df_pstate_range;
-+	__u32 min_df_pstate_range;
-+	__u32 lclk_frequency_table[HSMP_F1A_M50_M5F_MAX_FREQ_TABLE_SIZE];
-+	__u32 max_lclk_dpm_range;
-+	__u32 min_lclk_dpm_range;
-+
-+	/* XGMI */
-+	__u64 xgmi_bit_rate[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
-+	__u64 xgmi_read_bandwidth[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
-+	__u64 xgmi_write_bandwidth[HSMP_F1A_M50_M5F_MAX_XGMI_LINKS];
-+
-+	/* ACTIVITY */
-+	__u64 socket_c0_residency_acc;
-+	__u64 socket_df_cstate_residency_acc;
-+	__u64 dram_read_bandwidth_acc;
-+	__u64 dram_write_bandwidth_acc;
-+	__u32 max_dram_bandwidth;
-+	__u64 pcie_bandwidth_acc[HSMP_F1A_M50_M5F_MAX_PCIE_LINKS];
-+
-+	/* THROTTLERS */
-+	__u32 prochot_residency_acc;
-+	__u32 ppt_residency_acc;
-+	__u32 thm_residency_acc;
-+	__u32 vrhot_residency_acc;
-+	__u32 cpu_tdc_residency_acc;
-+	__u32 soc_tdc_residency_acc;
-+	__u32 io_mem_tdc_residency_acc;
-+	__u32 fit_residency_acc;
-+};
-+
-+struct hsmp_metric_table_zen6_ccd {
-+	__u32 core_apicid_of_thread0[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_c0[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_cc1[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_cc6[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_frequency[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_frequency_effective[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+	__u64 core_power[HSMP_F1A_M50_M5F_MAX_CORES_PER_CCD];
-+};
-+
-+/*
-+ * Metrics table for Family 0x1A, Models 0x50 to 0x5F, table version 0x00700000.
-+ *
-+ * The layout mirrors the SMU's binary metric table verbatim: one IOD block
-+ * followed by HSMP_F1A_M50_M5F_MAX_CCDS fixed-size CCD blocks. Only the first
-+ * iod.num_active_ccds entries in ccd[] carry meaningful data; the remaining
-+ * entries are firmware padding and must be ignored by userspace.
-+ *
-+ * Future processors within the same family and model may support a
-+ * variable number of CCDs and cores.
-+ */
-+struct hsmp_metric_table_zen6 {
-+	struct hsmp_metric_table_zen6_iod iod;
-+	struct hsmp_metric_table_zen6_ccd ccd[HSMP_F1A_M50_M5F_MAX_CCDS];
-+};
-+
- /* Reset to default packing */
- #pragma pack()
- 
+ int hsmp_cache_proto_ver(u16 sock_ind);
 -- 
 2.34.1
 
