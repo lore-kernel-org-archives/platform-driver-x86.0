@@ -1,325 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outbound.pv.icloud.com (pv-2003i-snip4-6.eps.apple.com [57.103.66.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885C0377575;
-	Sat, 30 May 2026 22:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2252DC79A
+	for <platform-driver-x86@vger.kernel.org>; Sat, 30 May 2026 23:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.66.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780181829; cv=none; b=bX8FLUMY09Eni6Q2I0K3hMi0uwyHlkYva7U7dCfAXCYGAFYFMh0SZJromkqTvitJ8buClTZqVf4r01MLvsWVo5FZnfLR8iRqWFU1MjOpwrRGH02C5hXmCZCoXi7TAKrU5KvlEzdQVc9aFogpDPre78rQiVRiHNOSfPL8+qeiw1A=
+	t=1780183798; cv=none; b=BhxeRqq1gXjVdvcdJRoFa/vUVvybnllx7ZGPTrlxD1twswvLzYi8WR/Q/02jgzBLuIiHOSDGcabPe65+5Eut7fydUI48HG52+2eGOXsXoHWdng5TlkWe9ViIuogcBP4tcfwfUvSZtYZY7PUWbVA3uRfrhQoNqR02jqFhIJgMpV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780181829; c=relaxed/simple;
-	bh=yTSBo+LGsTtt/6BEuTctYLQ8/lWTaVaRpL15DXNnvP4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Rc0jWpOWb0NdeCp38U13CYimv7V+Yd+4hhXjCNO5I7FiPSHFyIDMWT+ZEOliSOvDa6UfU9on/1BEHzCtpcZW+QO78tvZi7+E1gvaA0riKk4ifF0g5cun56CPAhG7NflD0r8G3CNm2bm615pDm7dIsV/kgfa6zih6wLfrbVtcNqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAoLtCpG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780183798; c=relaxed/simple;
+	bh=6f5FzbTS9YZ6QbqTidHvsgWea0WjxoXUYR85xviGWz8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZVoBM8uEaymvHm3Wxj7l3gcbKGy+zFJGVe3oGYhtFVSFCebJPGz0R2ZZ3w7kjwjd2Wh/XTpmjrjwQCm3b6ZAQUHn4TiUMFHYbpk6e1OlNGhFz9VKy3stHPM6nXHTBii1UJwjqalzPGxpjxzKgR1zLx8wUVjl2A+xmYCE9SpvF0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev; spf=pass smtp.mailfrom=kursatabayli.dev; dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b=l5GkEIlD; arc=none smtp.client-ip=57.103.66.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kursatabayli.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAoLtCpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C31CC19425;
-	Sat, 30 May 2026 22:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780181829;
-	bh=yTSBo+LGsTtt/6BEuTctYLQ8/lWTaVaRpL15DXNnvP4=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=MAoLtCpG3qeVxCmQxjaLqn2HqqSJVm3CK8Rj71XcHhk1fmq+eAQcjX4us4/Io0lCM
-	 7kjdwHCNIXTBfhMVALe0eeb7v/q1726jwjXQwc0ptrYXtm7Z3Cy2emMQUkFKnw5HtZ
-	 Kdf42yJxyXrEzmUJBJc0KLxTnnwr/80SUxBl/pA9DP4aDcWN/PhcOEH0cfFm/XFMPw
-	 ydthGzGRuNpWsJSL7sFK1VXpB8Z/Qq6JIiYYfhuG42mK/B2OCwKbLJkeuWul59aZTU
-	 KDMqrU5N2KtvwVqjMD/GHFxLUOSymAGY01nk3EP1Z/+A7w5WTdOmFvtXUS4vzgQwaU
-	 YDcEWRArC7lOQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E1DCD6E55;
-	Sat, 30 May 2026 22:57:08 +0000 (UTC)
-From: Markus Probst via B4 Relay <devnull+markus.probst.posteo.de@kernel.org>
-Subject: [PATCH v14 0/2] Introduce Synology Microp driver
-Date: Sun, 31 May 2026 00:57:02 +0200
-Message-Id: <20260531-synology_microp_initial-v14-0-1377d425b24b@posteo.de>
+	dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b="l5GkEIlD"
+Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-1a-10-percent-2 (Postfix) with ESMTPS id 55B7F1800182;
+	Sat, 30 May 2026 23:29:52 +0000 (UTC)
+X-ICL-Out-Info: HUtFAUMHWwJACUgBTUQeDx5WFlZNRAJCTQhBBkMGXAZeCEAFQwRfEhVdRVsIWwddMFINQR5WH1MSWAFfBBkPVwYZHldQXB5AA1gMUg9WEl4ZFxxWGxcZUU0BWFsIWwQPH0wMUQJCBVZeSQ4dBFQHXQVdVlACWktCBEtFaFwFXBxAF0gdX2pLVhQEE0YfRApGEVsZSgFeRVYVT1heBFNWDkIJSgVdAlgCQgpKClkHRQVCD0kGQAZGWhVVFFwtXB5AA1gMUg9WEl4ZFxxWGwlLRglJHQ4OQhhGH1QnVwJaClse
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kursatabayli.dev; s=sig1; t=1780183794; x=1782775794; bh=1b6lgdmxVs/t738/nKDjx7z8lXVZaOUuLTcLxXseHWo=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=l5GkEIlD3IxxLYWF1Neu0Vs8pqU+rh+Uz0pCkcduuM6xBulWXPoZ1ZQnsyLGu44BTNZ/GbN6uHYJK1Q8bImjgz08vtlpNoaysCDTxO83CsQc9QRAl0P13Yw53CxmMMk4fPrSLzY6CieUddhp46JJpEYTphLmAzSxh+Yp9VkjESc6hyipTWsJKprCeeqYWCQKladA3d99qz2LiFZQQeEZnsXU3gdOo0W5hnfJudWbCRwDFZ1bqMBdKuauAQoldln2SiUtaGpTxPFjV9c3xjud4hWjx+F/Re+pUzMwR+49o+BTTK2lBB2e5zLngnc5mbjvq70fk0cB3YrjPyG+XSG/dA==
+mail-alias-created-date: 1779124395950
+Received: from hp (unknown [17.56.9.36])
+	by p00-icloudmta-asmtp-us-west-1a-10-percent-2 (Postfix) with ESMTPSA id 2927F1800151;
+	Sat, 30 May 2026 23:29:48 +0000 (UTC)
+From: =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: krishna.chomal108@gmail.com,
+	emreleno@gmail.com,
+	edip@medip.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+Subject: [PATCH] platform/x86: hp-wmi: Add dual-channel PWM fan control for Victus S
+Date: Sun, 31 May 2026 02:29:40 +0300
+Message-ID: <20260530232940.72615-1-hello@kursatabayli.dev>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAD9rG2oC/43U246bMBAG4FeJuK6Rx+fJ1b5HVUXGHmfRJiELL
- Gq0yrvXEKmlsKS9Qrb0fzbjsT+LjtqaumK/+yxaGuqubi55AOrbrgiv/nIkVsc8UQguDJfcsO5
- 2aU7N8XY416Ftrof6Uve1PzGebPTBVlahKXL62lKqf0709x+PcUvvH3mF/jFZnKnr/LTAfjfxm
- mvQQnFeSswDNAxY9G/tyxu1FzqVTXsc5XVO6PxFASUIZdD9b0xykMJKU0qBTiv8Ove7DFNMgwD
- L2o+uP+TSRRoYkVYOCLnTYT8AfJUBUI/MiWLHPGpMNohkE+aEGxOV74iF5nyu+/1usCWwNuhiL
- Nxr3fVNe5uOaICpcv88jAEYZymkRJGMUi68XJuup6aMNJmDmDtu2xHZQekQjUwSgl46cuaA3HZ
- kdnw0PigjveCwdNTMEXzbUdnhSsgYKyeDV0tHzx3cdnR2hA2V41VMGlf7MX8cxfW2Y8b9uBRJW
- VWZgEvHzhyAbceOdfbSc1Rkc4mWjps5z+rjsmNRGY/5Kqj1f+HceXJemB3lnZYyOUvcLh3gc0g
- 9acRcH0ZOiyiSpMqvdgQwl+wTaexpDFBF7U224koSc+nJ4cPY1Yr7/MZIGYzgK2nW1vmVeCJNf
- e1FVWHQhtJf9+x+v/8Cw9cX1GAFAAA=
-X-Change-ID: 20260306-synology_microp_initial-0f7dac7b7496
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12249;
- i=markus.probst@posteo.de; h=from:subject:message-id;
- bh=yTSBo+LGsTtt/6BEuTctYLQ8/lWTaVaRpL15DXNnvP4=;
- b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBqG2tC0/F22r6SW6naID2gqoL45gHQ4Op/OjcJc
- Hi2pZr2csiJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCahtrQhsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9LzIQ/9Ew2xmmguoDhHWxEBYfmBe4ezSWowEwN
- k3zAi4npeohyCBvmQ0Xmq2yaWF2X+RktfKsAOKovUe2trrPxfqvN1iutK2/RJMyoS6FgWx0KQc7
- hgLcaffIFvIN7DB6x1gVV5U8yyel7nrryGei8xUQ7n+JUt2N8BlaPQqYf8OMHGvQB3+bASc5q4P
- zkbWY37a2qamUQY5IpZPyWuQlIfUhRFLWIvaMF6cZlP43eeakbG/V22OtT0YQgNDK4RO6UBY1OU
- D+k9FWiq0JY+YIaWnBmju2sqjuJPFhtI2yTtR0Mp7ldo1jxKx+1fUWGUluJdVxZnoeLaZHP0tyH
- z0URnWtO3azt0JVg8zVO0KIyaZtsEenfVZJUgLW1NvuWCFGuqe3UHDXIdrTmmwRFE5vxQPvOTNo
- KYr+yz8PRNrDqNWrfU18ySAdyfjwu6fgQnMJLKxQqbQJW4CZWvOG/TCJdxD2hZdhkL5etJU5rvY
- xnR/mCAHX3m5D+ieXu/+TzG5O8N/u9vb/fQlwmHEH89Xi3PEhA9aUu/e2TX2sTVsvIn/M5wDPNp
- W84fIknI3MuJWaYAiBZWpZ7hooY3r4zTlPWS7ZJfFOcgbtiAQA9XSqrITP0Eqb8n8dwAYsjO9wl
- XqFMbqpJFqaS800zfo/VsgvQYvcK3/gku0bqtJ9ScmhVu6u6eNZE=
-X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
- fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
-X-Endpoint-Received: by B4 Relay for markus.probst@posteo.de/default with
- auth_id=680
-X-Original-From: Markus Probst <markus.probst@posteo.de>
-Reply-To: markus.probst@posteo.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: ivJdZJdAwwgaHA9txM0ZyllqpADt-Xtn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTMwMDI1NCBTYWx0ZWRfX3Hlxlny4CQQa
+ 8SQ4TDUa08sW9u12wGhVLq9dz3G8qi7EQAAnBqgo/eLU2ovSfJ3UQq4Z6c5oFAt9sV47xinRM3+
+ w9H+5qq9kWsZYMvoBhtE7VqkfrF0GrAR+Kw82k4NwbxgyAbh2U1u9U63q3XSh1EZq4DUjMXGhsG
+ 6diYHyW1ksIrg36I3bk/bDq6IQi/3RLw4c/lLMS1a17Et16QRsoJdTPytqiMoAvFJ+mrzQaqKIW
+ XhcE9OchDM8WJ0UN6AH6mNFfjjCH83sUbNmWjyWhtuyagBC7B60enujaMT/Z6kKsmKWN5qAbTNE
+ 4dzSF57Kf1W3mt6Oe5Rl8O3DiILPhYKHVHWhZLNcS1usdlvh0XKTsrb06/Z95o=
+X-Authority-Info-Out: v=2.4 cv=E67AZKdl c=1 sm=1 tr=0 ts=6a1b72f1
+ cx=c_apl:c_pps:t_out a=azHRBMxVc17uSn+fyuI/eg==:117
+ a=azHRBMxVc17uSn+fyuI/eg==:17 a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10
+ a=M51BFTxLslgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=3dEfZ47CvuegikGRCnQA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: ivJdZJdAwwgaHA9txM0ZyllqpADt-Xtn
 
-Synology uses a microcontroller in their NAS devices connected to a
-serial port to control certain LEDs, fan speeds, a beeper, to handle
-proper shutdown and restart, buttons and fan failures.
+Currently, manual fan control on supported Victus S models uses a single
+PWM value for both CPU and GPU fans, linking their speeds via a hardcoded
+gpu_delta offset. This prevents userspace tools from managing the thermal
+profiles of the CPU and GPU independently.
 
-This patch series depends on the rust led abstraction [1] and the rust
-serdev abstraction [2].
+Refactor the hwmon implementation to support independent dual-channel
+PWM control:
+- Split the single 'pwm' state into 'cpu_pwm' and 'gpu_pwm'.
+- Expose a second PWM channel ('pwm2') to userspace via hwmon_channel_info.
+- Remove the gpu_delta mechanism entirely.
 
-This is only a initial version of the driver able to control LEDs.
-The following rust abstractions would be required, to implement the
-remaining features:
-- hwmon (include/linux/hwmon.h)
-- input (include/linux/input.h)
-- sysoff handler (include/linux/reboot.h)
+The 'pwm1_enable' mode remains shared, as the underlying hardware does
+not support per-fan modes. When switching to manual mode, both fans are
+smoothly initialized to their current RPMs. Additionally, ensure that
+the HP_FAN_SPEED_AUTOMATIC flag is isolated from rpm_to_pwm mathematical
+interpolations during mode resets to prevent unintended fan states.
 
-[1] https://lore.kernel.org/rust-for-linux/20260530-rust_leds-v17-0-c0698c4368e2@posteo.de/
-[2] https://lore.kernel.org/rust-for-linux/20260530-rust_serdev-v8-0-2a95f1da22a7@posteo.de/
+Tested on: HP Victus 16-s0xxx
 
-Signed-off-by: Markus Probst <markus.probst@posteo.de>
+Signed-off-by: Kürşat Abaylı <hello@kursatabayli.dev>
 ---
-Changes in v14:
-- adapt to led abstraction v18 and serdev abstraction v11
-- Link to v13: https://patch.msgid.link/20260530-synology_microp_initial-v13-0-aa2bb9c56efc@posteo.de
+ drivers/platform/x86/hp/hp-wmi.c | 50 +++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
 
-Changes in v13:
-- adapted to driver-lifetime v5 patch series.
-- set blink = false as initial power led state, as set_blink hasn't been
-  called yet (even though the led is blinking at startup)
-- Link to v12: https://patch.msgid.link/20260429-synology_microp_initial-v12-0-40a05033c620@posteo.de
-
-Changes in v12:
-- adapted to driver-lifetime patch series. The driver can't take
-  advantage of it, until class devices like led also make use of it.
-- Link to v11: https://patch.msgid.link/20260427-synology_microp_initial-v11-0-9c1bd5a6f3ed@posteo.de
-
-Changes in v11:
-- rebased on top of 7.1-rc1
-- add "synology" as devicename to led, like it is done in existing dts
-  files in the kernel
-- fix color for led being orange instead of amber. I personally can't
-  clearly tell them apart, but apparently its amber.
-- replaced MCU with EC in Kconfig help
-- Link to v10: https://patch.msgid.link/20260424-synology_microp_initial-v10-0-e852d2f3eba1@posteo.de
-
-Changes in v10:
-- resolved issues reported by Sashiko Bot:
-  - removed unneeded include from device tree
-  - fix typo in of device table
-  - fix blink not set to false, if delay_off or delay_on is 0
-- Link to v9: https://patch.msgid.link/20260423-synology_microp_initial-v9-0-4a8533f87e07@posteo.de
-
-Changes in v9:
-- separate fallback and front compatibles in dt schema
-- remove front compatibles from of id table, if all functionality is
-  by covered by the fallback
-- remove TODO file
-- add platform-driver-x86@vger.kernel.org to Maintainers file entry
-- use `Delta` type in `BLINK_DELAY` const
-- Link to v8: https://patch.msgid.link/20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de
-
-Changes in v8:
-- removed unnecessary Copy and Clone derive
-- added `BLINK_DELAY` constant
-- added compatible id fallbacks
-- moved dt schema patch before the driver
-- added ds411p
-- Link to v7: https://lore.kernel.org/r/20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de
-
-Changes in v7:
-- remove list of compatible ids from commit msg
-- explain what makes the different models not compatible in the commit msg
-- remove unnecessary examples
-- Link to v6: https://lore.kernel.org/r/20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de
-
-Changes in v6:
-- moved devicetree bindings patch at the end of the set
-- remove several patches
-- move of id table from model.rs to synology_microp.rs
-- remove the model! macro
-- use if blocks in devicetree schema to narrow down the
-  fan-failure-gpios property
-- add multiple devicetree examples to test if blocks
-- Link to v5: https://lore.kernel.org/r/20260329-synology_microp_initial-v5-0-27cb80bdf591@posteo.de
-
-Changes in v5:
-- add esata led support
-- use different compatible for each model
-- add visibility modifier to of_device_table macro
-- fix match data missing when using PRP0001
-- Link to v4: https://lore.kernel.org/r/20260320-synology_microp_initial-v4-0-0423ddb83ca4@posteo.de
-
-Changes in v4:
-- convert to monolithic driver and moved it into drivers/platform
-- removed mfd rust abstraction
-- moved dt-bindings to embedded-controller
-- Link to v3: https://lore.kernel.org/r/20260313-synology_microp_initial-v3-0-ad6ac463a201@posteo.de
-
-Changes in v3:
-- remove `default n` from Kconfig entry, as n is the default already.
-- select RUST_SERIAL_DEV_BUS_ABSTRACTIONS in Kconfig
-- add mfd rust abstraction
-- split core and led parts into their own driver. It should now be considered a
-  MFD device.
-- split led part of dt binding into its own file
-- Link to v2: https://lore.kernel.org/r/20260308-synology_microp_initial-v2-0-9389963f31c5@posteo.de
-
-Changes in v2:
-- fix missing tabs in MAINTAINERS file
-- remove word binding from patch subject
-- add missing signed-off-by
-- add missing help entry in Kconfig
-- add missing spdx license headers
-- remove no-check{,-cpu}-fan properties from the dt-bindings and replace
-  them with the check_fan module parameter
-- use patternProperties for leds in dt-bindings
-- license dt-binding as GPL-2.0-only OR BSD-2-Clause
-- move driver from staging tree into mfd tree and mark it as work in
-  progress inside Kconfig
-- only register alert and usb led if fwnode is present
-- Link to v1: https://lore.kernel.org/r/20260306-synology_microp_initial-v1-0-fcffede6448c@posteo.de
-
----
-Markus Probst (2):
-      dt-bindings: embedded-controller: Add synology microp devices
-      platform: Add initial synology microp driver
-
- .../synology,ds918p-microp.yaml                    | 100 +++++++
- MAINTAINERS                                        |   7 +
- drivers/platform/Kconfig                           |   2 +
- drivers/platform/Makefile                          |   1 +
- drivers/platform/synology_microp/Kconfig           |  13 +
- drivers/platform/synology_microp/Makefile          |   3 +
- drivers/platform/synology_microp/command.rs        |  54 ++++
- drivers/platform/synology_microp/led.rs            | 297 +++++++++++++++++++++
- drivers/platform/synology_microp/model.rs          |  49 ++++
- .../platform/synology_microp/synology_microp.rs    |  91 +++++++
- 10 files changed, 617 insertions(+)
----
-base-commit: 9e171fc1d7d7ab847a750c03571c87ac3c17bd84
-change-id: 20260306-synology_microp_initial-0f7dac7b7496
-prerequisite-message-id: 20260505152400.3905096-1-dakr@kernel.org
-prerequisite-patch-id: d2aebf69b153c039bbed1d0ed26906708fd22534
-prerequisite-patch-id: 84b28da2f5de20fc1785095c647b2ffc35d969a5
-prerequisite-patch-id: 67318671a5eed5fb4ad23a450f1cf0e442bf8ca2
-prerequisite-message-id: 20260525202921.124698-1-dakr@kernel.org
-prerequisite-patch-id: b84db329d4372a175cb8d49e4e88c3eecf7eb228
-prerequisite-patch-id: 2c30303f409cc8288cc87e241920219f5ddd8390
-prerequisite-patch-id: 4e4f0ad370d763ad00b0f75b91fa216f2cc95953
-prerequisite-patch-id: 5bcd6b37f3498feebda275dfef78136eba34004e
-prerequisite-patch-id: 872b0982f3e5e7d1698d9df3b325e4cd27b27789
-prerequisite-patch-id: 3a3c7749e017d9335f58497404d1350e96caf471
-prerequisite-patch-id: 3526c9154f581497a11465b936d83ef61a875454
-prerequisite-patch-id: 65d8c757b52475c2acc7d22ddc92cd3f0152b55d
-prerequisite-patch-id: 4bd31f1414d5248dc080884caadf5f21684a8427
-prerequisite-patch-id: 7beadbb0da3e589ed86d12f512d1c83427dd82b4
-prerequisite-patch-id: 12cd0f67ffd27347f90c065db491945908206b7f
-prerequisite-patch-id: 4642e31f66331f6c3b579377111ea733dbb3a11c
-prerequisite-patch-id: 52d67b40b4396c741e2222d6a5bc7927abcb77aa
-prerequisite-patch-id: 74ca82ff26cf9c7a993757c87db8be62006e820f
-prerequisite-patch-id: 466fb9fa7febbffd8ef51b311c7d9893c11fc0f0
-prerequisite-patch-id: e515cd98b06e26721cbbe6a4fbacd251d0073b63
-prerequisite-patch-id: 8dc8e75d9f6499a554ef7e474bbacdbf3660a9f2
-prerequisite-patch-id: 5fdb9f71dca2f44dd293760a60db125b770f1f55
-prerequisite-patch-id: c766a24c2d5064f5ec09daada0b8e8fba862d3aa
-prerequisite-patch-id: b768f6456d35fa7a80c015e34bbdba6082dbd593
-prerequisite-patch-id: 6a8b17234f12f7084e6e2ce843a7031b0a891ce4
-prerequisite-patch-id: 98b2deb9e60c1f28f90c5ee34fd608aaa9fd9420
-prerequisite-patch-id: 774b29be66e641ee50cedb4704cf49d8b9fabf50
-prerequisite-patch-id: cf95dc936cfc4b3a7a363435a51a48d9009645b3
-prerequisite-message-id: 20260530132736.3298549-1-dakr@kernel.org
-prerequisite-patch-id: 310c6bee038ca3909a8e5e58ec12b74f7189b869
-prerequisite-patch-id: 92812c3d42b29504838e6dc66c307ff5c035bb5e
-prerequisite-change-id: 20251217-rust_serdev-ee5481e9085c:v11
-prerequisite-patch-id: 45128665162dd9f51a0764deb3815a338948b291
-prerequisite-patch-id: b84db329d4372a175cb8d49e4e88c3eecf7eb228
-prerequisite-patch-id: 2c30303f409cc8288cc87e241920219f5ddd8390
-prerequisite-patch-id: 4e4f0ad370d763ad00b0f75b91fa216f2cc95953
-prerequisite-patch-id: 5bcd6b37f3498feebda275dfef78136eba34004e
-prerequisite-patch-id: 872b0982f3e5e7d1698d9df3b325e4cd27b27789
-prerequisite-patch-id: 3a3c7749e017d9335f58497404d1350e96caf471
-prerequisite-patch-id: 3526c9154f581497a11465b936d83ef61a875454
-prerequisite-patch-id: 65d8c757b52475c2acc7d22ddc92cd3f0152b55d
-prerequisite-patch-id: 4bd31f1414d5248dc080884caadf5f21684a8427
-prerequisite-patch-id: 7beadbb0da3e589ed86d12f512d1c83427dd82b4
-prerequisite-patch-id: 12cd0f67ffd27347f90c065db491945908206b7f
-prerequisite-patch-id: 4642e31f66331f6c3b579377111ea733dbb3a11c
-prerequisite-patch-id: 52d67b40b4396c741e2222d6a5bc7927abcb77aa
-prerequisite-patch-id: 74ca82ff26cf9c7a993757c87db8be62006e820f
-prerequisite-patch-id: 466fb9fa7febbffd8ef51b311c7d9893c11fc0f0
-prerequisite-patch-id: e515cd98b06e26721cbbe6a4fbacd251d0073b63
-prerequisite-patch-id: 8dc8e75d9f6499a554ef7e474bbacdbf3660a9f2
-prerequisite-patch-id: 5fdb9f71dca2f44dd293760a60db125b770f1f55
-prerequisite-patch-id: c766a24c2d5064f5ec09daada0b8e8fba862d3aa
-prerequisite-patch-id: b768f6456d35fa7a80c015e34bbdba6082dbd593
-prerequisite-patch-id: 6a8b17234f12f7084e6e2ce843a7031b0a891ce4
-prerequisite-patch-id: 98b2deb9e60c1f28f90c5ee34fd608aaa9fd9420
-prerequisite-patch-id: 774b29be66e641ee50cedb4704cf49d8b9fabf50
-prerequisite-patch-id: cf95dc936cfc4b3a7a363435a51a48d9009645b3
-prerequisite-patch-id: 310c6bee038ca3909a8e5e58ec12b74f7189b869
-prerequisite-patch-id: 92812c3d42b29504838e6dc66c307ff5c035bb5e
-prerequisite-patch-id: 26cf819caf22fa5bb25b70a855d9f3d852ffea32
-prerequisite-patch-id: 19eb53ce0c653c1406f8f192f6ad158fb4bd8d8f
-prerequisite-patch-id: 55d6a70baf3be7f4da36b82cf02a5a7d59457520
-prerequisite-change-id: 20251114-rust_leds-a959f7c2f7f9:v18
-prerequisite-patch-id: 45128665162dd9f51a0764deb3815a338948b291
-prerequisite-patch-id: b84db329d4372a175cb8d49e4e88c3eecf7eb228
-prerequisite-patch-id: 2c30303f409cc8288cc87e241920219f5ddd8390
-prerequisite-patch-id: 4e4f0ad370d763ad00b0f75b91fa216f2cc95953
-prerequisite-patch-id: 5bcd6b37f3498feebda275dfef78136eba34004e
-prerequisite-patch-id: 872b0982f3e5e7d1698d9df3b325e4cd27b27789
-prerequisite-patch-id: 3a3c7749e017d9335f58497404d1350e96caf471
-prerequisite-patch-id: 3526c9154f581497a11465b936d83ef61a875454
-prerequisite-patch-id: 65d8c757b52475c2acc7d22ddc92cd3f0152b55d
-prerequisite-patch-id: 4bd31f1414d5248dc080884caadf5f21684a8427
-prerequisite-patch-id: 7beadbb0da3e589ed86d12f512d1c83427dd82b4
-prerequisite-patch-id: 12cd0f67ffd27347f90c065db491945908206b7f
-prerequisite-patch-id: 4642e31f66331f6c3b579377111ea733dbb3a11c
-prerequisite-patch-id: 52d67b40b4396c741e2222d6a5bc7927abcb77aa
-prerequisite-patch-id: 74ca82ff26cf9c7a993757c87db8be62006e820f
-prerequisite-patch-id: 466fb9fa7febbffd8ef51b311c7d9893c11fc0f0
-prerequisite-patch-id: e515cd98b06e26721cbbe6a4fbacd251d0073b63
-prerequisite-patch-id: 8dc8e75d9f6499a554ef7e474bbacdbf3660a9f2
-prerequisite-patch-id: 5fdb9f71dca2f44dd293760a60db125b770f1f55
-prerequisite-patch-id: c766a24c2d5064f5ec09daada0b8e8fba862d3aa
-prerequisite-patch-id: b768f6456d35fa7a80c015e34bbdba6082dbd593
-prerequisite-patch-id: 6a8b17234f12f7084e6e2ce843a7031b0a891ce4
-prerequisite-patch-id: 98b2deb9e60c1f28f90c5ee34fd608aaa9fd9420
-prerequisite-patch-id: 774b29be66e641ee50cedb4704cf49d8b9fabf50
-prerequisite-patch-id: cf95dc936cfc4b3a7a363435a51a48d9009645b3
-prerequisite-patch-id: 4d3ac33ad5f5b6358ad5d72b57fb692a70ff03bf
-prerequisite-patch-id: 50bfe4b15f07d3733d4fc4b4520ce74cbac2cf4f
-prerequisite-patch-id: 19f2c7abf0b0ca888bff7097a2e039d3676eb1dc
-
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index f63bc00d9a9b..fdba21d883bd 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -488,9 +488,9 @@ struct hp_wmi_hwmon_priv {
+ 	struct mutex lock;	/* protects mode, pwm */
+ 	u8 min_rpm;
+ 	u8 max_rpm;
+-	int gpu_delta;
+ 	u8 mode;
+-	u8 pwm;
++	u8 cpu_pwm;
++	u8 gpu_pwm;
+ 	struct delayed_work keep_alive_dwork;
+ };
+ 
+@@ -817,24 +817,15 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+ 	return enabled;
+ }
+ 
+-static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed)
++static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv)
+ {
+ 	u8 fan_speed[2];
+-	int gpu_speed, ret;
+-
+-	fan_speed[CPU_FAN] = speed;
+-	fan_speed[GPU_FAN] = speed;
++	int ret;
+ 
+-	/*
+-	 * GPU fan speed is always a little higher than CPU fan speed, we fetch
+-	 * this delta value from the fan table during hwmon init.
+-	 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
+-	 * automatic mode.
+-	 */
+-	if (speed != HP_FAN_SPEED_AUTOMATIC) {
+-		gpu_speed = speed + priv->gpu_delta;
+-		fan_speed[GPU_FAN] = clamp_val(gpu_speed, 0, U8_MAX);
+-	}
++	fan_speed[CPU_FAN] = (priv->cpu_pwm == HP_FAN_SPEED_AUTOMATIC) ?
++	HP_FAN_SPEED_AUTOMATIC : pwm_to_rpm(priv->cpu_pwm, priv);
++	fan_speed[GPU_FAN] = (priv->gpu_pwm == HP_FAN_SPEED_AUTOMATIC) ?
++	HP_FAN_SPEED_AUTOMATIC : pwm_to_rpm(priv->gpu_pwm, priv);
+ 
+ 	ret = hp_wmi_get_fan_count_userdefine_trigger();
+ 	if (ret < 0)
+@@ -851,7 +842,9 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed)
+ 
+ static int hp_wmi_fan_speed_reset(struct hp_wmi_hwmon_priv *priv)
+ {
+-	return hp_wmi_fan_speed_set(priv, HP_FAN_SPEED_AUTOMATIC);
++	priv->cpu_pwm = HP_FAN_SPEED_AUTOMATIC;
++	priv->gpu_pwm = HP_FAN_SPEED_AUTOMATIC;
++	return hp_wmi_fan_speed_set(priv);
+ }
+ 
+ static int hp_wmi_fan_speed_max_reset(struct hp_wmi_hwmon_priv *priv)
+@@ -2402,7 +2395,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	case PWM_MODE_MANUAL:
+ 		if (!is_victus_s_thermal_profile())
+ 			return -EOPNOTSUPP;
+-		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
++		ret = hp_wmi_fan_speed_set(priv);
+ 		if (ret < 0)
+ 			return ret;
+ 		mod_delayed_work(system_wq, &priv->keep_alive_dwork,
+@@ -2518,7 +2511,10 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			/* ensure PWM input is within valid fan speeds */
+ 			rpm = pwm_to_rpm(val, priv);
+ 			rpm = clamp_val(rpm, priv->min_rpm, priv->max_rpm);
+-			priv->pwm = rpm_to_pwm(rpm, priv);
++			if (channel == 0)
++				priv->cpu_pwm = rpm_to_pwm(rpm, priv);
++			else
++				priv->gpu_pwm = rpm_to_pwm(rpm, priv);
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		}
+ 		switch (val) {
+@@ -2532,10 +2528,14 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 * When switching to manual mode, set fan speed to
+ 			 * current RPM values to ensure a smooth transition.
+ 			 */
+-			rpm = hp_wmi_get_fan_speed_victus_s(channel);
++			rpm = hp_wmi_get_fan_speed_victus_s(CPU_FAN);
++			if (rpm < 0)
++				return rpm;
++			priv->cpu_pwm = rpm_to_pwm(rpm / 100, priv);
++			rpm = hp_wmi_get_fan_speed_victus_s(GPU_FAN);
+ 			if (rpm < 0)
+ 				return rpm;
+-			priv->pwm = rpm_to_pwm(rpm / 100, priv);
++			priv->gpu_pwm = rpm_to_pwm(rpm / 100, priv);
+ 			priv->mode = PWM_MODE_MANUAL;
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		case PWM_MODE_AUTO:
+@@ -2551,7 +2551,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 
+ static const struct hwmon_channel_info * const info[] = {
+ 	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+-	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
++	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT, HWMON_PWM_INPUT),
+ 	NULL
+ };
+ 
+@@ -2592,7 +2592,7 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	struct victus_s_fan_table *fan_table;
+ 	u8 min_rpm, max_rpm;
+ 	u8 cpu_rpm, gpu_rpm, noise_db;
+-	int gpu_delta, i, num_entries, ret;
++	int i, num_entries, ret;
+ 	size_t header_size, entry_size;
+ 
+ 	/* Default behaviour on hwmon init is automatic mode */
+@@ -2638,10 +2638,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	if (min_rpm == U8_MAX || max_rpm == 0)
+ 		return -EINVAL;
+ 
+-	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
+ 	priv->min_rpm = min_rpm;
+ 	priv->max_rpm = max_rpm;
+-	priv->gpu_delta = gpu_delta;
+ 
+ 	return 0;
+ }
+-- 
+2.54.0
 
