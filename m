@@ -1,124 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5978410D32;
-	Fri, 29 May 2026 18:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C3C233934;
+	Sat, 30 May 2026 01:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780079525; cv=none; b=eSMSCOTuAP1hFgVdjfdA5kFDP464OgmzUjc3I2wyURHUqENvZFlt+FzmKM7uQfLFOX4K45j1VWgCCsm5bNPdTHQMYzFT8G0WKQzDMj/S55S5oeuz8urC8IPkvBkzOg4xjgiAIbL6wtyBR2/I2MwTlnGuC5EUNM1CA2dG/psYPVM=
+	t=1780103839; cv=none; b=SOiYujNe6bAW+gRVnV8yXi8nBfQvbVmHeA0WKclpBc7SohzNwuGrKmdTW0CLXZu+dF/AvcOKNrBvCcaJEqMoNxp52RKzSQNJgl4kbyPZq+MhhC6unhEVKzzE2XOjVdKqaN0afKDLxaqSLZeNSG/tL/uLhagSVPfxNxEOxUabSiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780079525; c=relaxed/simple;
-	bh=WMH6cPQ6DeXEzvVXzjWhAajSkmqe1HU5AyBylQfcpYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLCHgZh+u9gYyltXBRkjZK2k53YzQ/schU/cIGCpCSocd49WLBr/BUh1PuX974uAgQAYJaPJcG1rhmTia8y9ffg8tEPayZdyZEXyb0kPQTqknqiV/vuH2jERRRF4RskAM8Ad/4HqC/CP8ynSOH8HDzuSNl9XyupmGzGf8pue3rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nHDYm9Iv; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780103839; c=relaxed/simple;
+	bh=44NA6rUhVair067G7uXMUjokLii9afZLzuTWi8578y8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GKepqf0/nDnd3jK4N4Mx3qFdML1k22BKl/sA3oqYlckMuT2/o8oIRsGRNa9qgLhgb8iutl6QKgBbwEqxM1VCYnpVdUPH3eDJ3rflI8n+mhN5LGapYHeSzpYZ6al2H3uYSXkOw1H9biVk8kptErDLZj5o5XR4/lhTgdgvbiqFrAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVXZ8CXS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nHDYm9Iv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780079521; x=1811615521;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WMH6cPQ6DeXEzvVXzjWhAajSkmqe1HU5AyBylQfcpYM=;
-  b=nHDYm9IvMgZ5XDkfa+48XwxEx2QqHy+rDgReHd8NkdCkcwb81VOaH0xm
-   EBgn9gTDpqb/j5hMlU3BLHj6+UD/voSHhUA4WvllzzwNjIPYo7eXllB/T
-   SdTCllgCryp7VTf8Wnziagc+IAcmZouWuTr4jy6htvtkqLEyb6ti1F/K4
-   rGJiBfrXdigdaPyH6Mg0ecMNy5/x4z44bKgBvkX/NYr/hda1OP8dr2nel
-   bh3qdcMphpP73ekUjYebqv9bPqy0jJFm4I4HORCBFAF6YejslB5tTYS+2
-   Zyj2afmdWyFCY2jllJuf3nZ3PPBSflx2YEM0x0PncMMlZWYMyIpGN+CWn
-   g==;
-X-CSE-ConnectionGUID: sk2gjqGISR6YYNsKZosNqA==
-X-CSE-MsgGUID: D89y2ZlWSTmVMILAkCKuZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="92053462"
-X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="92053462"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:32:00 -0700
-X-CSE-ConnectionGUID: Eyw1OWoTSYWsUq3qENROKg==
-X-CSE-MsgGUID: oQPU5cy9Sw+0r/giwVh9xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="244754455"
-Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 11:31:59 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	michael.j.ruhl@intel.com,
-	david.e.box@linux.intel.com
-Cc: matthew.brost@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	intel-xe@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/vsec: Restore BAR fallback for header walk
-Date: Fri, 29 May 2026 11:31:49 -0700
-Message-ID: <20260529183150.129744-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVXZ8CXS"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0797C2BCB8;
+	Sat, 30 May 2026 01:17:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1780103838;
+	bh=44NA6rUhVair067G7uXMUjokLii9afZLzuTWi8578y8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iVXZ8CXS5fTQxYWC7V/U45CU/xdLNDBdWnA0wWh0z2V+QD1I3MyY2EjIePUhwWSR3
+	 oJPgZgkw4NuxCDgTFwibFLMQOCr2AgSPIahGSyZzisiksKcyUNIiRml4CX5Yv6rcxZ
+	 23eqAfTt97KcyjtvhVe4XbJPKQWeXEtBCq6rnQSdnbJW18nnxDdrNCIQIZCogv2ZOb
+	 7+yz2txHyO7Uq6uHJauhEPiTCn/PHCx7Y2KZuXtfHJbysnk/JFsTcPkXxLIKu+POCn
+	 hBjUc9qopus4FSHjc3PGU3EjG5le5xSlFSfXIkHpJgSD4gZLX5/VigNrcmYAeupz+1
+	 hX/Ahv+CoXfYQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D3CD6E52;
+	Sat, 30 May 2026 01:17:18 +0000 (UTC)
+From: Markus Probst via B4 Relay <devnull+markus.probst.posteo.de@kernel.org>
+Date: Sat, 30 May 2026 03:17:11 +0200
+Subject: [PATCH v13 1/2] dt-bindings: embedded-controller: Add synology
+ microp devices
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260530-synology_microp_initial-v13-1-aa2bb9c56efc@posteo.de>
+References: <20260530-synology_microp_initial-v13-0-aa2bb9c56efc@posteo.de>
+In-Reply-To: <20260530-synology_microp_initial-v13-0-aa2bb9c56efc@posteo.de>
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4079;
+ i=markus.probst@posteo.de; h=from:subject:message-id;
+ bh=alrwaULuLrijlaEQo59qC6IZr7fepf0GBhjIrFXTxGk=;
+ b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBqGjqcMpahqMRlzruQRKCgpppH4Tpux7t2xQMTC
+ W/1mEG5YTCJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCaho6nBsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9Kbqw/+Oy7iSMDQDR7bkSnQAlMWSvPU293oLmj
+ keubOVM1vygTA8V2Or3R5bCaucQRdQqITQ3nhC0V2WnbqSUbKNtLp+dY5Wo2AWYSU3hJz0udve7
+ F6q6LNZIXABYVxZAVZ5hx0clJ+DxriLgm0c2BnJ+fZAzL8W24HVfbjC0XaZu+g6Cdvl5aDVUAss
+ tWLsp2UEkcxThbEuYr992DuUHweSD0KHEGgudUSNOtENxAI78+Cj/2ZJqqx8dbgCPF5n/KL27Bh
+ 641q74lfoxF/E7AaZryg6naKmZXiTaWH7R+Vy3BZaZ2WfzhX+BRWjnRoWin4wMvfkV2AiaczFWa
+ jETZkK/1IRuo/QYeVObDKIOLc4v2+beqX3EA7CK7e8gXZ8wSvD7Row5Vg5OqHkVERQ2ofMSoJNR
+ AAUjRRtdrBPsWHD/QPqgW+ulGv6/c/4BFw/iFQcvM7iNkqJ4sQS1nhW0QlSlVcapY+VBuuy3942
+ JQaCNAKFgdSCKoqEgbT+6F1opJUfyKc4OdRAwb1+GcjS7bXLfhqLBw8jz6e01fvxTY/PWILIqf2
+ gf0EKLD2UC5ebogi7hdrpz6K57t987zTKekar2fbI/z1xTWctXJfruxdvJuTuVaTbvTtIdec8/Q
+ 2ABfrQIJ+mthN5TFmD9YzMyDb6M42TowxU7BXzGO6vcrFl0aelLA=
+X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
+ fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
+X-Endpoint-Received: by B4 Relay for markus.probst@posteo.de/default with
+ auth_id=680
+X-Original-From: Markus Probst <markus.probst@posteo.de>
+Reply-To: markus.probst@posteo.de
 
-The base_addr refactor changed intel_vsec_walk_header() to pass
-info->base_addr as the discovery-table base address. For the PCI VSEC
-driver this info comes from driver_data, but exported callers may provide
-their own static headers and leave base_addr unset.
+From: Markus Probst <markus.probst@posteo.de>
 
-For xe, this made the discovery-table base address zero instead of the BAR
-selected by header->tbir, preventing PMT endpoints from being created.
+Add the Synology Microp devicetree bindings. Those devices are
+microcontrollers found on Synology NAS devices. They are connected to a
+serial port on the host device.
 
-Restore the previous behavior for the header-walk path by falling back to
-pci_resource_start(pdev, header->tbir) when base_addr is not specified.
-Keep explicit base_addr override behavior unchanged.
+Those devices are used to control certain LEDs, fan speeds, a beeper, to
+handle buttons, fan failures and to properly shutdown and reboot the
+device.
 
-This preserves the refactor structure while fixing the functional
-regression in manual-header users.
+The device has a different feature set depending on the Synology NAS
+model, like having different number of fans, buttons and leds. Depending
+on the architecture of the model, they also need a different system
+shutdown behaviour.
 
-Fixes: 904b333fc51c ("platform/x86/intel/vsec: Refactor base_addr handling")
-Assisted-by: Claude:claude-sonnet-4-6
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Signed-off-by: Markus Probst <markus.probst@posteo.de>
 ---
- drivers/platform/x86/intel/vsec.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ .../synology,ds918p-microp.yaml                    | 100 +++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
-/vsec.c
-index 1657834fd275..3c6d8a1928c0 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -482,10 +482,25 @@ static int intel_vsec_walk_header(struct device *dev,
- 				  const struct intel_vsec_platform_info *info)
- {
- 	struct intel_vsec_header **header =3D info->headers;
-+	u64 base_addr;
- 	int ret;
-=20
- 	for ( ; *header; header++) {
--		ret =3D intel_vsec_register_device(dev, *header, info, info->base_addr);
-+		if (info->base_addr) {
-+			base_addr =3D info->base_addr;
-+		} else {
-+			struct pci_dev *pdev;
+diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
+new file mode 100644
+index 000000000000..eb1c9d3fac07
+--- /dev/null
++++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/embedded-controller/synology,ds918p-microp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+			if (!dev_is_pci(dev)) {
-+				dev_err(dev, "non-PCI device without a base address\n");
-+				return -EINVAL;
-+			}
++title: Synology NAS on-board Microcontroller
 +
-+			pdev =3D to_pci_dev(dev);
-+			base_addr =3D pci_resource_start(pdev, (*header)->tbir);
-+		}
++maintainers:
++  - Markus Probst <markus.probst@posteo.de>
 +
-+		ret =3D intel_vsec_register_device(dev, *header, info, base_addr);
- 		if (ret)
- 			return ret;
- 	}
++description: |
++  Synology Microp is a microcontroller found in Synology NAS devices.
++  It is connected to a serial port on the host device.
++
++  It is necessary to properly shutdown and reboot the NAS device and
++  provides additional functionality such as led control, fan speed control,
++  a beeper and buttons on the NAS device.
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - synology,ds1221rpp-microp
++              - synology,rs822p-microp
++              - synology,rs422p-microp
++          - const: synology,rs1221p-microp
++
++      - items:
++          - const: synology,ds1825p-microp
++          - const: synology,ds1823xsp-microp
++
++      - items:
++          - enum:
++              - synology,ds725p-microp
++              - synology,ds225p-microp
++              - synology,ds723p-microp
++              - synology,ds710p-microp
++          - const: synology,ds214play-microp
++
++      - items:
++          - enum:
++              - synology,ds425p-microp
++              - synology,ds1525p-microp
++              - synology,ds925p-microp
++              - synology,ds923p-microp
++              - synology,ds1522p-microp
++              - synology,ds1010p-microp
++              - synology,ds411p-microp
++          - const: synology,ds918p-microp
++
++      - items:
++          - enum:
++              - synology,ds124-microp
++              - synology,ds223j-microp
++              - synology,ds223-microp
++          - const: synology,ds118-microp
++
++      - enum:
++          - synology,ds118-microp
++          - synology,ds1823xsp-microp
++          - synology,rs1221p-microp
++          - synology,ds918p-microp
++          - synology,ds214play-microp
++
++  fan-failure-gpios:
++    description: GPIOs needed to determine which fans stopped working on a fan failure event.
++    minItems: 2
++    maxItems: 3
++
++required:
++  - compatible
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - synology,ds918p-microp
++              - synology,rs422p-microp
++    then:
++      required:
++        - fan-failure-gpios
++    else:
++      properties:
++        fan-failure-gpios: false
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    embedded-controller {
++      compatible = "synology,ds923p-microp", "synology,ds918p-microp";
++
++      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>, <&gpio 69 GPIO_ACTIVE_HIGH>;
++    };
 
-base-commit: a167ae8eace52dd6c80438b77d92450fe12cd4be
---=20
-2.43.0
+-- 
+2.53.0
+
 
