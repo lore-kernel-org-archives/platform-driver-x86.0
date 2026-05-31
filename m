@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B7233F5A4
-	for <platform-driver-x86@vger.kernel.org>; Sun, 31 May 2026 09:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C5F32B13C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 May 2026 09:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780218331; cv=none; b=urWLrMCklIsEpclHN6uYWD6CkLsf+pR2iX4lF/KsFxWLTsKF4f3CZpFkL69bN9wsIT0DLWc1d/D/pA74nAFo5BZdj4h+fAwysRYz0VQ+WfwiaZkTj4GiVf+YdYcIJE2MKz4FQgqcLYIs2v+phPSrfi9t3ou9fS18Lbz6TCOgKa0=
+	t=1780218406; cv=none; b=g7JyTFhskl892EKEBcByZA6KcOp0aa8u3HiS1UF70j6Q6/6JpdMSiesMa08PaoNZZm4CxF8atxdeHFmx6ZQqgm0kZWVpOyAM9jgGXO2c4sJbI6fvY5wcqQ2nrMXl15x5cv5dJXOksMefI4/rA9NSpmVCyx7KSNX0iinOX3ssVLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780218331; c=relaxed/simple;
-	bh=WUnBVnTf2A1GARGh2+5XoD3WIYWKvcx5GZwVJCmC/MU=;
+	s=arc-20240116; t=1780218406; c=relaxed/simple;
+	bh=qR4Bs1KxmzdSWnFk+UYAh1CCluMX0C8vIVBUbNSG9Nk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lCnr42hb8aWvBw2WD0zbDOYy+wHAxq03YauCoSTYqL7FIgT2pSB2AzYLkRRNRBN6mrZ9zloHDOdRh4c2XgH+fXydU6BMkIg37Zi5uDab65zZ0OGJEy9BumRSEj/TjW15k+GbXOPFCXZidQAQU1yjfJaQ6kv7N/kAh6Qb6ic9/b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bqv/Yc2O; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=l0ArZjqN6njfIUOSWPstz1H3nMhL6uXdzYQ4jD4mMzdYO3nB917NzaNr0BTq9cw1JMJtl8dapVlXDraCt6HY6Co7OXdlToJd6lk2/tz/hkudiOApUV8wF2XoFHHq9E7Eqg18+U+ziU+y2wkQTsAqwZnKQe8lIzcsn8j8mD7TEzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GC+mJCTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bqv/Yc2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CAA95C2BCC4
-	for <platform-driver-x86@vger.kernel.org>; Sun, 31 May 2026 09:05:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GC+mJCTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F55EC2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Sun, 31 May 2026 09:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780218330;
-	bh=WUnBVnTf2A1GARGh2+5XoD3WIYWKvcx5GZwVJCmC/MU=;
+	s=k20201202; t=1780218406;
+	bh=qR4Bs1KxmzdSWnFk+UYAh1CCluMX0C8vIVBUbNSG9Nk=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Bqv/Yc2OJLfDVQb06yv2P1dsAYCX2k4z3aD37b2ea1O3uf0x7QPXmY+RCqD9zPUwx
-	 ex+oGY0lrfexUodsC0MsCpeKroX6A157LwCncr4id7JExizXxCz5y95zbXWubMrW1T
-	 +Eu14r7cU1tPvR4sEWB6TCdVJ3n0365Ur3IIeFuIsngZkft298FG/j1vxwXeN925yH
-	 eF/YEpd8tN1ln9I5lzZIJsp0SksZkd7K+JmZWkfxwOfNhjCZOzbRPR+BZOhf9X0+sT
-	 b9RWO14i0osHTQBdStWkHr3ReGaZdKZ56rTlnihS6aLh6mz8duidndkG9jqD66m0UR
-	 Wqhot/YPLiNng==
+	b=GC+mJCTF+T0iCoxSA1sQwMRPlNdd+gMI4SRpBwGCJYHcW67TGZbWNo7h9otGmHdc4
+	 2efhjmaGNNet7BBLgAlOlP8oS3tmOQ6W6HX7d6qRdPhJ5bdmhn95TYr5Gc6KQovhqK
+	 yMWN2pm0vru6x87RRX6cZdocV7/c741Av3P/+1fxrZyMOWvHkFEy7F+Y0qwvznA+K1
+	 fnvyAJUmfKlwq7YWaXvuSadnpZeoGIq6VnIeuuAhe9Z1D6iS4xpNNDGktzjyi/Kcm9
+	 SJE87iqmymNuIh/5AciBhhFRTDq2SGmfTLnS8QyEYj51RAXFpIkuWJtpP2CCghji0e
+	 4eC3YLF2eXjjg==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id AFC7AC4160E; Sun, 31 May 2026 09:05:30 +0000 (UTC)
+	id 47018C41612; Sun, 31 May 2026 09:06:46 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
  7.1-rc4 kerenel
-Date: Sun, 31 May 2026 09:05:30 +0000
+Date: Sun, 31 May 2026 09:06:46 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-MlhYpt4NcO@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-221569-215701-3OTK9pc7Rs@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
 References: <bug-221569-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,8 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #5 from Milan Oravec (moravec@ukf.sk) ---
-Sorry for long response time :( I've a lot of work recently. :(
+--- Comment #6 from Milan Oravec (moravec@ukf.sk) ---
+Created attachment 310223
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310223&action=3Dedit
+syslog7.1-rc
+
+syslog7.1-rc
 
 --=20
 You may reply to this email to add a comment.
