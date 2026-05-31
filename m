@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6750832B136;
-	Sun, 31 May 2026 19:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE16A32B12B;
+	Sun, 31 May 2026 19:46:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780256807; cv=none; b=ND/rk2laACxOiY2YIgW0+vlLu2t530Rq1Vl3KXOHxsRTtPiyHW9nsQCER6nGxJtUJeHs6MnMxn4yz/Ss4V22B5mrMoQ762Gi0oomSo5B+hLE9TSA1ZdSdy+Qmxe2kC443QvGWhreSmvZRs874PoSi8yAnferndqpC13f1rZxRxs=
+	t=1780256808; cv=none; b=W6xA02HX30fuoaNezbIox/bX+lli47qcUhnjCWb3LNdbTLVDCLiGBSdgascXm/m/7rOQ7eMfFbv9E8a7Ij8uZ7uQTnN5FuoJzLwdXV1pQFcu42M4LchJ8B1YxAF2LnsQhM6Vr4BsOxrOdxo6468Go21rysrymz/0K7P7yya7Otw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780256807; c=relaxed/simple;
-	bh=OR4WrqOTElYd9mBdkRUEctZHYvo38ATpLo6sCT6uG3Q=;
+	s=arc-20240116; t=1780256808; c=relaxed/simple;
+	bh=h+IKv9U4o7YQoZ/EC/BUnhtw3+GNZbQz4pf0mZHWabo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gcHRttTmM3IRDS1Yc0HjToEx0+ritCDcwdLApEkDHZmSJsaBhzpVdP6qoljKBpNmPvSUGznm4WhYGafIQw1hUCw0yPSfo7jjlHDCNnc/37y3V+NDpT8hBbhA5Y4zMBGns18ZQa0lxKQvjiOp2Zhm54E7EcBOZ4q6e/sEJS8bxl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WQbSQ9/6; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=XBNqN8O7fM2rYttgzLNfXAm+xRcvqRZoh4740K6ZkE0qbW0sl6KfuMNk09Wu6tPC6T1IwpLmMBfjkZI/H3gsjYsSbHgdNKFQVGr6Sw0Kcdn+PmdXjjw2NkngcA9Kq8VlPouSq9uIE1HE3C8R6k5iCLTcdbywhRWiJCCv0dSYQP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbMVRZdh; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WQbSQ9/6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbMVRZdh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780256795; x=1811792795;
+  t=1780256807; x=1811792807;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=OR4WrqOTElYd9mBdkRUEctZHYvo38ATpLo6sCT6uG3Q=;
-  b=WQbSQ9/6YIzAVsTpbLmwqFJUyDbcfdwjkA7Kzpw2f3dkXpf2pj2r0kuV
-   KVGABHh2Mt7xuUaJJCT660tZ+eQfl+2FlLTSjhVv1nxmSjSwya1a8ISn1
-   GgsRt2igvZEicCMxueGUiflVHJqwSHG+SetwPTKykjtbD3h9ckqy0z1AA
-   zZreAewjMWF7Hivqxnj70n5uq0LASZtG+uwL+TzrERxYK9YeEiMeMU/BK
-   1xAn+bT3qpUNrdgaOxMgywCFboJ1zWiEJP90K3tOvUd2zd4dINHWGVMsp
-   zhMCGcPQEdDnBu/MDOgt6Y+oHHDhD5wdHyptDt+bWpy69Z/XyOQjhgPge
-   g==;
-X-CSE-ConnectionGUID: Hx8yWVJHQrGSTGEtweG0WQ==
-X-CSE-MsgGUID: 16+iCFjOSI6g0kTH1T2xKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="80751294"
+  bh=h+IKv9U4o7YQoZ/EC/BUnhtw3+GNZbQz4pf0mZHWabo=;
+  b=GbMVRZdhcCYGnPL8lTE7NlmkrOi7IVqDbVkGInKNPtvCaaEh1dUTCme9
+   bSI+RSTyUG8JG2TJTea8w5E7WDyJkuvtmZiL3iTzsFCjlMyWYIn+qoZiq
+   dnX8+XRdQoIK92GId5kzfnPeYQgIBzqcd70fyA+HxCFXPIuS0OaJaQXVV
+   XZZN7+VQCx9l8bogzJYFtrSTm8SscNKJ73XDssFi6OQh3jNImdGQA51uD
+   NuFiV9UabjMBnjmhKNjXh63JGmMU56DTpyQHUFjBAofTiDbS445kN46SN
+   GPN+KrmhkqvYJlNGX0IaNAUBxCNeU3P+jzR0oJOvqBvQAH5MeTNdV/MKE
+   Q==;
+X-CSE-ConnectionGUID: SyYw/SMARVqh9CFfntEzAw==
+X-CSE-MsgGUID: 74jZWFDhS8+ZCP4kOYKxdQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11803"; a="80751300"
 X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
-   d="scan'208";a="80751294"
+   d="scan'208";a="80751300"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
   by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 12:46:25 -0700
-X-CSE-ConnectionGUID: LHtBJAdcTh6oJu8LJvNADQ==
-X-CSE-MsgGUID: q2sepDRgT+26soL++wpOlA==
+X-CSE-ConnectionGUID: aQu2Hu40RBKpOI4GeVIShA==
+X-CSE-MsgGUID: Z+QH4sLYR5OjbtZZxt940A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,179,1774335600"; 
-   d="scan'208";a="247363898"
+   d="scan'208";a="247363900"
 Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
   by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2026 12:46:25 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -52,9 +52,9 @@ Cc: "David E. Box" <david.e.box@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	srinivas.pandruvada@linux.intel.com,
 	xi.pardee@linux.intel.com
-Subject: [PATCH v6 08/15] platform/x86/intel/pmc: Add ACPI PWRM telemetry driver for Nova Lake S
-Date: Sun, 31 May 2026 12:46:10 -0700
-Message-ID: <465ceee2988ee37b0f13de10e84aedb310e6ae56.1780248804.git.david.e.box@linux.intel.com>
+Subject: [PATCH v6 10/15] platform/x86/intel/pmc/ssram: Add PCI platform data
+Date: Sun, 31 May 2026 12:46:12 -0700
+Message-ID: <cc2c6bd3f4b72048022dc3fc4a9e64a1992fadf6.1780248804.git.david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1780248804.git.david.e.box@linux.intel.com>
 References: <cover.1780248804.git.david.e.box@linux.intel.com>
@@ -66,370 +66,171 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add an ACPI-based PMC PWRM telemetry driver for Nova Lake S. The driver
-locates PMT discovery data in _DSD under the Intel VSEC UUID, parses it,
-and registers telemetry regions with the PMT/VSEC framework so PMC
-telemetry is exposed via existing PMT interfaces.
+Add per-device platform data for SSRAM telemetry PCI IDs and route probe
+through a method selector driven by id->driver_data.
 
-Export pmc_parse_telem_dsd() and pmc_find_telem_guid() to support ACPI
-discovery in other PMC drivers (e.g., ssram_telemetry) without duplicating
-ACPI parsing logic. Also export acpi_disc_t typedef from core.h for callers
-to properly declare discovery table arrays.
+This is a preparatory refactor for follow-on discovery methods while
+preserving current behavior: all supported IDs continue to use the PCI
+initialization path.
 
-Selected by INTEL_PMC_CORE. Existing PCI functionality is preserved.
-
-Assisted-by: GitHub-Copilot:claude-opus-4.7
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
-V6 - No changes
+V6 changes:
+  - Reordered from v5 patch 12 to maintain logical flow before probe
+    state refactoring.
 
-V5 changes:
-  - Added #include <linux/limits.h> for U16_MAX (Ilpo).
-  - Split acpi_handle declaration from ACPI_HANDLE() assignment
-    and placed the assignment immediately before the !handle
-    check (Ilpo).
-  - Reordered local variables in pmc_pwrm_acpi_probe() in
-    reverse-xmas-tree order (Ilpo).
+V5 - No changes
 
-V4 changes:
-  - These changes were supposed to be in V3
-  - Updated pmc_parse_telem_dsd() in pwrm_telemetry.c to use acpi_disc_t
-    in the function return type for consistency with the exported typedef
-  - In pmc_parse_telem_dsd(), change acpi_disc declaration to happen at the
-    allocation site as specified by cleanup.h
-  - Style, readability and cleanup-path refinement based on review
-    feedback
+V4 - No changes
+
+V3 - No changes
 
 V2 changes:
-  - Added explicit <linux/uuid.h> include for guid_t type availability in
-    core.h
-  - Added explicit <linux/bits.h> include in pwrm_telemetry.c for GENMASK()
-  - Added <linux/cleanup.h> and converted goto based cleanup to __free()
-    attributes per Ilpo's feedback
-  - Combined u64 hdr0 and u64 hdr1 into single declaration
-  - Converted pmc_parse_telem_dsd() to return acpi_disc directly with
-    ERR_PTR() for failures
-  - Added braces around _DSD evaluation failure path
+  - Added missing <linux/device.h> include for dev_dbg() usage in probe
 
- drivers/platform/x86/intel/pmc/Kconfig        |  14 ++
- drivers/platform/x86/intel/pmc/Makefile       |   2 +
- drivers/platform/x86/intel/pmc/core.h         |  16 ++
- .../platform/x86/intel/pmc/pwrm_telemetry.c   | 216 ++++++++++++++++++
- 4 files changed, 248 insertions(+)
- create mode 100644 drivers/platform/x86/intel/pmc/pwrm_telemetry.c
+ .../platform/x86/intel/pmc/ssram_telemetry.c  | 71 +++++++++++++++----
+ 1 file changed, 57 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/=
-intel/pmc/Kconfig
-index e9012b703918..561d46634ab2 100644
---- a/drivers/platform/x86/intel/pmc/Kconfig
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -9,6 +9,7 @@ config INTEL_PMC_CORE
- 	depends on ACPI
- 	depends on INTEL_PMT_TELEMETRY
- 	select INTEL_PMC_SSRAM_TELEMETRY
-+	select INTEL_PMC_PWRM_TELEMETRY
- 	help
- 	  The Intel Platform Controller Hub for Intel Core SoCs provides access
- 	  to Power Management Controller registers via various interfaces. This
-@@ -39,3 +40,16 @@ config INTEL_PMC_SSRAM_TELEMETRY
- 	  (including sysfs).
+diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/pla=
+tform/x86/intel/pmc/ssram_telemetry.c
+index 1deb4d71da3f..3d1f5a17903b 100644
+--- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
++++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+@@ -6,6 +6,7 @@
+  */
 =20
- 	  This option is selected by INTEL_PMC_CORE.
+ #include <linux/cleanup.h>
++#include <linux/device.h>
+ #include <linux/intel_vsec.h>
+ #include <linux/pci.h>
+ #include <linux/types.h>
+@@ -24,6 +25,18 @@
+=20
+ DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_=
+T))
+=20
++enum resource_method {
++	RES_METHOD_PCI,
++};
 +
-+config INTEL_PMC_PWRM_TELEMETRY
-+	tristate
-+	help
-+	  This driver discovers PMC PWRM telemetry regions described in ACPI
-+	  _DSD and registers them with the Intel VSEC framework as Intel PMT
-+	  telemetry devices.
++struct ssram_type {
++	enum resource_method method;
++};
 +
-+	  It validates the ACPI discovery data and publishes the discovered
-+	  regions so they can be accessed through the Intel PMT telemetry
-+	  interfaces (including sysfs).
++static const struct ssram_type pci_main =3D {
++	.method =3D RES_METHOD_PCI,
++};
 +
-+	  This option is selected by INTEL_PMC_CORE.
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86=
-/intel/pmc/Makefile
-index 23853e867c91..5b595176f812 100644
---- a/drivers/platform/x86/intel/pmc/Makefile
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -13,3 +13,5 @@ obj-$(CONFIG_INTEL_PMC_CORE)		+=3D intel_pmc_core_pltdrv.o
- # Intel PMC SSRAM driver
- intel_pmc_ssram_telemetry-y		+=3D ssram_telemetry.o
- obj-$(CONFIG_INTEL_PMC_SSRAM_TELEMETRY)	+=3D intel_pmc_ssram_telemetry.o
-+intel_pmc_pwrm_telemetry-y		+=3D pwrm_telemetry.o
-+obj-$(CONFIG_INTEL_PMC_PWRM_TELEMETRY)	+=3D intel_pmc_pwrm_telemetry.o
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/i=
-ntel/pmc/core.h
-index 55cf567febe4..b4c7399f8369 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -14,10 +14,15 @@
+ static struct pmc_ssram_telemetry *pmc_ssram_telems;
+ static bool device_probed;
 =20
- #include <linux/acpi.h>
- #include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/intel_vsec.h>
- #include <linux/platform_device.h>
-+#include <linux/uuid.h>
-=20
- struct telem_endpoint;
-=20
-+DEFINE_FREE(pmc_acpi_free, void *, if (_T) ACPI_FREE(_T))
-+
- #define SLP_S0_RES_COUNTER_MASK			GENMASK(31, 0)
-=20
- #define PMC_BASE_ADDR_DEFAULT			0xFE000000
-@@ -622,6 +627,8 @@ int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev=
-, struct pmc *pmc,
- extern const struct file_operations pmc_core_substate_req_regs_fops;
- extern const struct file_operations pmc_core_substate_blk_req_fops;
-=20
-+extern const guid_t intel_vsec_guid;
-+
- #define pmc_for_each_mode(mode, pmc)						\
- 	for (unsigned int __i =3D 0, __cond;					\
- 	     __cond =3D __i < (pmc)->num_lpm_modes,				\
-@@ -643,4 +650,13 @@ static const struct file_operations __name ## _fops =
-=3D {			\
- 	.release	=3D single_release,				\
+@@ -69,7 +82,7 @@ static inline u64 get_base(void __iomem *addr, u32 offset)
  }
 =20
-+struct intel_vsec_header;
-+union acpi_object;
-+
-+/* Avoid checkpatch warning */
-+typedef u32 (*acpi_disc_t)[PMT_DISC_DWORDS];
-+
-+acpi_disc_t pmc_parse_telem_dsd(union acpi_object *obj,
-+				struct intel_vsec_header *header);
-+union acpi_object *pmc_find_telem_guid(union acpi_object *dsd);
- #endif /* PMC_CORE_H */
-diff --git a/drivers/platform/x86/intel/pmc/pwrm_telemetry.c b/drivers/plat=
-form/x86/intel/pmc/pwrm_telemetry.c
-new file mode 100644
-index 000000000000..70fdc79b48a2
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/pwrm_telemetry.c
-@@ -0,0 +1,216 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel PMC PWRM ACPI driver
-+ *
-+ * Copyright (C) 2025, Intel Corporation
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/bits.h>
-+#include <linux/bitfield.h>
-+#include <linux/cleanup.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/intel_vsec.h>
-+#include <linux/limits.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/uuid.h>
-+
-+#include "core.h"
-+
-+#define ENTRY_LEN		5
-+
-+/* DWORD2 */
-+#define DVSEC_ID_MASK		GENMASK(15, 0)
-+#define NUM_ENTRIES_MASK	GENMASK(23, 16)
-+#define ENTRY_SIZE_MASK		GENMASK(31, 24)
-+
-+/* DWORD3 */
-+#define TBIR_MASK		GENMASK(2, 0)
-+#define DISC_TBL_OFF_MASK	GENMASK(31, 3)
-+
-+const guid_t intel_vsec_guid =3D
-+	GUID_INIT(0x294903fb, 0x634d, 0x4fc7, 0xaf, 0x1f, 0x0f, 0xb9,
-+		  0x56, 0xb0, 0x4f, 0xc1);
-+
-+static bool is_valid_entry(union acpi_object *pkg)
+ static int
+-pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, unsigned int pmc_idx, =
+u32 offset)
++pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_i=
+dx, u32 offset)
+ {
+ 	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram =3D NULL;
+ 	void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram =3D NULL;
+@@ -109,6 +122,20 @@ pmc_ssram_telemetry_get_pmc(struct pci_dev *pcidev, un=
+signed int pmc_idx, u32 of
+ 	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
+ }
+=20
++static int pmc_ssram_telemetry_pci_init(struct pci_dev *pcidev)
 +{
-+	int i;
++	int ret;
 +
-+	if (!pkg || pkg->type !=3D ACPI_TYPE_PACKAGE || pkg->package.count !=3D E=
-NTRY_LEN)
-+		return false;
++	ret =3D pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_MAIN, 0);
++	if (ret)
++		return ret;
 +
-+	if (pkg->package.elements[0].type !=3D ACPI_TYPE_STRING)
-+		return false;
++	pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
++	pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
 +
-+	for (i =3D 1; i < ENTRY_LEN; i++)
-+		if (pkg->package.elements[i].type !=3D ACPI_TYPE_INTEGER)
-+			return false;
-+
-+	return true;
++	return ret;
 +}
 +
-+acpi_disc_t pmc_parse_telem_dsd(union acpi_object *obj,
-+			struct intel_vsec_header *header)
-+{
-+	union acpi_object *vsec_pkg;
-+	union acpi_object *disc_pkg;
-+	u64 hdr0, hdr1;
-+	int num_regions;
-+	int i;
-+
-+	if (!header)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (!obj || obj->type !=3D ACPI_TYPE_PACKAGE || obj->package.count !=3D 2)
-+		return ERR_PTR(-EINVAL);
-+
-+	/* First Package is DVSEC info */
-+	vsec_pkg =3D &obj->package.elements[0];
-+	if (!is_valid_entry(vsec_pkg))
-+		return ERR_PTR(-EINVAL);
-+
-+	hdr0 =3D vsec_pkg->package.elements[3].integer.value;
-+	hdr1 =3D vsec_pkg->package.elements[4].integer.value;
-+
-+	header->id          =3D FIELD_GET(DVSEC_ID_MASK, hdr0);
-+	header->num_entries =3D FIELD_GET(NUM_ENTRIES_MASK, hdr0);
-+	header->entry_size  =3D FIELD_GET(ENTRY_SIZE_MASK, hdr0);
-+	header->tbir        =3D FIELD_GET(TBIR_MASK, hdr1);
-+	header->offset      =3D FIELD_GET(DISC_TBL_OFF_MASK, hdr1);
-+
-+	/* Second Package contains the discovery tables */
-+	disc_pkg =3D &obj->package.elements[1];
-+	if (disc_pkg->type !=3D ACPI_TYPE_PACKAGE || disc_pkg->package.count < 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	num_regions =3D disc_pkg->package.count;
-+	if (header->num_entries !=3D num_regions)
-+		return ERR_PTR(-EINVAL);
-+
-+	acpi_disc_t disc __free(kfree) =3D kmalloc_array(num_regions, sizeof(*dis=
-c),
-+						      GFP_KERNEL);
-+	if (!disc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i =3D 0; i < num_regions; i++) {
-+		union acpi_object *pkg;
-+		u64 value;
-+		int j;
-+
-+		pkg =3D &disc_pkg->package.elements[i];
-+		if (!is_valid_entry(pkg))
-+			return ERR_PTR(-EINVAL);
-+
-+		/* Element 0 is a descriptive string; DWORD values start at index 1. */
-+		for (j =3D 1; j < ENTRY_LEN; j++) {
-+			value =3D pkg->package.elements[j].integer.value;
-+			if (value > U32_MAX)
-+				return ERR_PTR(-ERANGE);
-+
-+			disc[i][j - 1] =3D value;
-+		}
+ /**
+  * pmc_ssram_telemetry_get_pmc_info() - Get a PMC devid and base_addr info=
+rmation
+  * @pmc_idx:               Index of the PMC
+@@ -151,6 +178,8 @@ EXPORT_SYMBOL_GPL(pmc_ssram_telemetry_get_pmc_info);
+=20
+ static int pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct =
+pci_device_id *id)
+ {
++	const struct ssram_type *ssram_type;
++	enum resource_method method;
+ 	int ret;
+=20
+ 	pmc_ssram_telems =3D devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems)=
+ * MAX_NUM_PMC,
+@@ -160,18 +189,25 @@ static int pmc_ssram_telemetry_probe(struct pci_dev *=
+pcidev, const struct pci_de
+ 		goto probe_finish;
+ 	}
+=20
++	ssram_type =3D (const struct ssram_type *)id->driver_data;
++	if (!ssram_type) {
++		dev_dbg(&pcidev->dev, "missing driver data\n");
++		ret =3D -EINVAL;
++		goto probe_finish;
 +	}
 +
-+	return no_free_ptr(disc);
-+}
-+EXPORT_SYMBOL_NS_GPL(pmc_parse_telem_dsd, "INTEL_PMC_CORE");
++	method =3D ssram_type->method;
 +
-+union acpi_object *pmc_find_telem_guid(union acpi_object *dsd)
-+{
-+	int i;
-+
-+	if (!dsd || dsd->type !=3D ACPI_TYPE_PACKAGE)
-+		return NULL;
-+
-+	for (i =3D 0; i + 1 < dsd->package.count; i +=3D 2) {
-+		union acpi_object *uuid_obj, *data_obj;
-+		guid_t uuid;
-+
-+		uuid_obj =3D &dsd->package.elements[i];
-+		data_obj =3D &dsd->package.elements[i + 1];
-+
-+		if (uuid_obj->type !=3D ACPI_TYPE_BUFFER ||
-+		    uuid_obj->buffer.length !=3D 16)
-+			continue;
-+
-+		memcpy(&uuid, uuid_obj->buffer.pointer, 16);
-+		if (guid_equal(&uuid, &intel_vsec_guid))
-+			return data_obj;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_NS_GPL(pmc_find_telem_guid, "INTEL_PMC_CORE");
-+
-+static int pmc_pwrm_acpi_probe(struct platform_device *pdev)
-+{
-+	struct intel_vsec_header header;
-+	struct intel_vsec_header *headers[2] =3D { &header, NULL };
-+	struct acpi_buffer buf =3D { ACPI_ALLOCATE_BUFFER, NULL };
-+	struct intel_vsec_platform_info info =3D { };
-+	struct device *dev =3D &pdev->dev;
-+	union acpi_object *dsd;
-+	struct resource *res;
-+	acpi_handle handle;
-+	acpi_status status;
-+
-+	handle =3D ACPI_HANDLE(&pdev->dev);
-+	if (!handle)
-+		return -ENODEV;
-+
-+	status =3D acpi_evaluate_object(handle, "_DSD", NULL, &buf);
-+	if (ACPI_FAILURE(status)) {
-+		return dev_err_probe(dev, -ENODEV, "Could not evaluate _DSD: %s\n",
-+				     acpi_format_exception(status));
-+	}
-+
-+	void *dsd_buf __free(pmc_acpi_free) =3D buf.pointer;
-+
-+	dsd =3D pmc_find_telem_guid(dsd_buf);
-+	if (!dsd)
-+		return -ENODEV;
-+
-+	acpi_disc_t acpi_disc __free(kfree) =3D pmc_parse_telem_dsd(dsd, &header);
-+	if (IS_ERR(acpi_disc))
-+		return PTR_ERR(acpi_disc);
-+
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, header.tbir);
-+	if (!res)
-+		return -EINVAL;
-+
-+	info.headers =3D headers;
-+	info.caps =3D VSEC_CAP_TELEMETRY;
-+	info.acpi_disc =3D acpi_disc;
-+	info.src =3D INTEL_VSEC_DISC_ACPI;
-+	info.base_addr =3D res->start;
-+
-+	return intel_vsec_register(&pdev->dev, &info);
-+}
-+
-+static const struct acpi_device_id pmc_pwrm_acpi_ids[] =3D {
-+	{ "INTC1122", 0 }, /* Nova Lake */
-+	{ "INTC1129", 0 }, /* Nova Lake */
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, pmc_pwrm_acpi_ids);
-+
-+static struct platform_driver pmc_pwrm_acpi_driver =3D {
-+	.probe =3D pmc_pwrm_acpi_probe,
-+	.driver =3D {
-+		.name =3D "intel_pmc_pwrm_acpi",
-+		.acpi_match_table =3D ACPI_PTR(pmc_pwrm_acpi_ids),
-+	},
-+};
-+module_platform_driver(pmc_pwrm_acpi_driver);
-+
-+MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-+MODULE_DESCRIPTION("Intel PMC PWRM ACPI driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("INTEL_VSEC");
+ 	ret =3D pcim_enable_device(pcidev);
+ 	if (ret) {
+ 		dev_dbg(&pcidev->dev, "failed to enable PMC SSRAM device\n");
+ 		goto probe_finish;
+ 	}
+=20
+-	ret =3D pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_MAIN, 0);
+-	if (ret)
+-		goto probe_finish;
+-
+-	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
+-	pmc_ssram_telemetry_get_pmc(pcidev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
++	if (method =3D=3D RES_METHOD_PCI)
++		ret =3D pmc_ssram_telemetry_pci_init(pcidev);
++	else
++		ret =3D -EINVAL;
+=20
+ probe_finish:
+ 	/*
+@@ -184,13 +220,20 @@ static int pmc_ssram_telemetry_probe(struct pci_dev *=
+pcidev, const struct pci_de
+ }
+=20
+ static const struct pci_device_id pmc_ssram_telemetry_pci_ids[] =3D {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCS) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCM) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_LNL_SOCM) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_PTL_PCDH) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_PTL_PCDP) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_WCL_PCDN) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCS),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_ARL_SOCM),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_LNL_SOCM),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_PTL_PCDH),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_PTL_PCDP),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_WCL_PCDN),
++		.driver_data =3D (kernel_ulong_t)&pci_main },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pmc_ssram_telemetry_pci_ids);
 --=20
 2.43.0
 
