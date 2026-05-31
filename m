@@ -1,96 +1,107 @@
-Received: from comms.kousu.ca (comms.kousu.ca [46.23.90.174])
+Received: from scc-mailout-kit-01.scc.kit.edu (scc-mailout-kit-01.scc.kit.edu [141.52.71.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F43403EA;
-	Sun, 31 May 2026 20:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.23.90.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E81A34753F;
+	Sun, 31 May 2026 21:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.52.71.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780260951; cv=none; b=EbFvrk/gv7e88UzQKOKgT6Fr+AYlLt+yKTpoEP+iPsyNTwrG72isPlxF9BJwWlwVX3YNu69J7GIQS7MSaw6hUMwQmRslg72d0T4RufP9+8KCcLySaSXbeLyZYcKbg22/3L7MwighghIIlUMB1gUC89v29m643V/MnLuoZBrcdK4=
+	t=1780261646; cv=none; b=ESdM4w7Z5S3LZPMy5BM+hvH58QUIe9vADfNiCWJuMp1CUrWjuRwH03omUb029Lmty9+3B9J3eE9YRvsh+38wlIVTqRLMTBFsHTRN3fjD8osVzyRUJRz8/ILlQ/EQi1gJYV/R/Zpcr4VnabUPNQ3t0SppfD2UOcrwrJatPKdo7Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780260951; c=relaxed/simple;
-	bh=jbTNWhwRndBe/mVL+d70N8jfHasPnypOTPoQZy75zdA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=XBW3vCt3+N9BH6rGl9Vi6VHwTJ5unG2APGVcguokRzuan93g+pvHohvKNCwIEmWx82JoqJJWwrslUNSZr8rnpnL88mGWsLJ2Z211WeHLhiw9aoxR4i7EoBe1Pyj+nE/9ILqI0lhsChfn0e0RiPbWlWzOqJXUSaPjmFYHd/606Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca; spf=pass smtp.mailfrom=kousu.ca; dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=CpA7w6gB; dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=ONJ2JNJ2; arc=none smtp.client-ip=46.23.90.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kousu.ca
+	s=arc-20240116; t=1780261646; c=relaxed/simple;
+	bh=2p0zgcGslWtW869QMpj7Wr6LFHhDYFbv8oJdtGa+DNc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RZIO0Sz3RePoosx/oABn7U9pGkj9knijzQthNT9S0ZfYuSrgS2fLCWibT8ctfc7mb9NHkIjuAhhw3EiaL5KLiYGfWzzcsi5Ez2moaHwbvdicTKtCuHLSZeeFXOKOZ13k0WnQykDNlw7phr+SA7rGsRpIEWoYU6dQ9x4+XxbYyL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.kit.edu; spf=pass smtp.mailfrom=student.kit.edu; dkim=pass (2048-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b=A32M6h0L; dkim=permerror (0-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b=EnTrkDXh; arc=none smtp.client-ip=141.52.71.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.kit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=student.kit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="CpA7w6gB";
-	dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="ONJ2JNJ2"
-DKIM-Signature: v=1; a=ed25519-sha256; c=simple/simple; s=ed25519; bh=jbTNWhwR
-	ndBe/mVL+d70N8jfHasPnypOTPoQZy75zdA=; h=references:in-reply-to:
-	subject:cc:to:from:date; d=kousu.ca; b=CpA7w6gB2JlTc5jTyd+RffjydzAeIN1
-	dOseUah03OXLKGGdvaa8JaiN13/TLtcrh7qGuy1E8djTQQ5RKrJsMAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=rsa; bh=jbTNWhwRndBe/mVL
-	+d70N8jfHasPnypOTPoQZy75zdA=; h=references:in-reply-to:subject:cc:to:
-	from:date; d=kousu.ca; b=ONJ2JNJ28HFs2UWnALkXu9hXPsOd3JwCDmgSYe+FmxKRy
-	vKfk6j5os6PEkcezplTMJAUrrmDJ6G2FzY7WpdjFVclqCZFd8jA+amQhaTcL/2uPp1C/P9
-	rysnEtyhlys+3mwXQ+wsfQCBaJb+NTN0aqHBm2biDlQf9367TcBTTqP6PmhL+S0Y7ZABOE
-	Fkv5NpDc4OMNCIsmPmBAkN9yluOtii+WtY6N3QxApB7Cq8h57ddW0jwhd17hhWlqXFhoC/
-	NUuSOCmMGbwDmIEwP+i/2Mz2Vxe/QyFMKGhUB9l8EJmw0o8mZDAwNUMuRDPik79XsiuIjn
-	WPQsRFQg2tENmJcuw==
-Received: from comms.kousu.ca (localhost [127.0.0.1])
-	by comms.kousu.ca (OpenSMTPD) with ESMTP id 6e368829;
-	Sun, 31 May 2026 22:29:06 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b="A32M6h0L";
+	dkim=permerror (0-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b="EnTrkDXh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=student.kit.edu; s=kit2; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WK2S7lx0la0ElTp/3LNg1XYOP5hyF9BGGRTnPdTqhl4=; b=A32M6h0LGsRXohAYZz61hgaIFC
+	ChC1vrBrx2mUmV/AyPd1WCTmFd45ixn4Q27JNBYBDl+/MQSm/35TQaKBPf/vA2OcEohuwOJ6NxwdG
+	pAdGpwEE9ppwvZHHDt8BhGHzQcaGgAgEEeSGCgRiTgV8Cc9NSa6Au7/6xG4eJ4Vi2aNOs3vIAOxxx
+	BR+DWzfC6Vdu3nY4OD+9V/bzN5xBM384SnaAHtWNFGb/+fqNgeele2r/Nd4F0bcDZEHcywB5WR5n5
+	/xlLj4RbG8rD41YdN6J7EL0ZCQf39Gks5JVF3yLePN9hAFbVN4h3GjJ5WV8+35Xg09TM77rLEdrhq
+	bPRCCnMg==;
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=student.kit.edu; s=kit2ed25519; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WK2S7lx0la0ElTp/3LNg1XYOP5hyF9BGGRTnPdTqhl4=; b=EnTrkDXhFzPn0b6cJo2pOtfkj4
+	wXE3uQtZnEmkfh8pQKdCxPlXo+8NgqLHMtjVl6V+ufW+jsMCvXJwxj6KB8BQ==;
+Received: from kit-msx-49.kit.edu ([2a00:1398:9:f612::149])
+	by scc-mailout-kit-01.scc.kit.edu with esmtps (TLS1.2:ECDHE_SECP384R1__RSA_SHA256__AES_256_GCM:256)
+	(envelope-from <julian.haarmann@student.kit.edu>)
+	id 1wTn8p-00000008Ujk-22ob;
+	Sun, 31 May 2026 22:52:16 +0200
+Received: from toolbx.fritz.box (2001:16b8:cbe4:7600:5f06:f91c:71b9:390c) by
+ smtp.kit.edu (2a00:1398:9:f612::106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 31 May 2026 22:52:13 +0200
+From: Julian Haarmann <julian.haarmann@student.kit.edu>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J . Clark"
+	<derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Julian Haarmann <julian.haarmann@student.kit.edu>
+Subject: [PATCH] platform/x86: lenovo/ymc: Only match lower byte in WMI lid switch response
+Date: Sun, 31 May 2026 22:49:27 +0200
+Message-ID: <20260531204937.62049-1-julian.haarmann@student.kit.edu>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 31 May 2026 16:29:06 -0400
-From: Nick <nick@kousu.ca>
-To: linux-acpi@vger.kernel.org
-Cc: johannes.goede@oss.qualcomm.com, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- regressions@lists.linux.dev, John Veness <john-linux@pelago.org.uk>,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-In-Reply-To: <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk>
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca>
- <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
- <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk>
- <8503d297-68ca-4bfe-bbdf-537a85890d86@oss.qualcomm.com>
- <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk>
-Message-ID: <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
-X-Sender: nick@kousu.ca
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 2026-05-31 11:17, John Veness wrote:
-> On 30/05/2026 14:34, johannes.goede@oss.qualcomm.com wrote:
->> In case you've not seen it yet, Rafael send out the test patch
->> publicly later that day in another email in this thread:
->> 
->> https://lore.kernel.org/linux-acpi/12896447.O9o76ZdvQC@rafael.j.wysocki/
->> 
->> Regards,
->> 
->> Hans
-> 
-> Thanks for the pointer, and sorry for missing that! I had only been
-> looking in the archives of platform-driver-x86@vger.kernel.org which 
-> for
-> some reason didn't receive the patch.
-> 
-> John
+On newer Lenovo Yoga devices like the "Yoga 9 2-in-1 14IPH11 - Type 83SE",
+the hinge switch WMI query returns extra data in the upper bits
+(e.g. 0x50001 laptop mode, 0x50002 tablet mode, ect.).
 
-On 2026-05-31 11:25, John Veness wrote:
-> I'm not Nick, but I have tested the patch here on my old Toshiba Tecra 
-> Z50-A
-> and it seems to have worked - I now have Fn+keys working fine, after 
-> losing them
-> in a recent kernel update (apart from Fn+3 for volume down, and Fn+4 
-> for volume up,
-> which for some reason continued to work when the others didn't).
-> 
-> John
+The driver previously checked for exact matches (0x01 laptop, 0x02 tablet,
+ect.) causing newer switches to not work.
 
-Same here. All my Fn keys work except for Esc through F8. Glad Rafael's 
-patch worked for you too! There's a newer copy of it at 
-https://lore.kernel.org/linux-acpi/2046403.PYKUYFuaPT@rafael.j.wysocki/T/#t 
-by the way.
+Mask the WMI query result to only match the lower byte and ignore upper
+bits.
 
-- Nick
+Signed-off-by: Julian Haarmann <julian.haarmann@student.kit.edu>
+---
+
+Hi everyone,
+
+I just recieved this laptop and am trying to get it to work.
+FYI: To get tablet mode to work fully you might need to extract the
+Intel ISH firmware from the Windows driver.
+This is my first patch, so I hope the way I've solved this is up to
+standard.
+
+ drivers/platform/x86/lenovo/ymc.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/platform/x86/lenovo/ymc.c b/drivers/platform/x86/lenovo/ymc.c
+index 1b73a55f1b89..ffeca452b392 100644
+--- a/drivers/platform/x86/lenovo/ymc.c
++++ b/drivers/platform/x86/lenovo/ymc.c
+@@ -87,6 +87,9 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
+ 	}
+ 	code = obj->integer.value;
+ 
++	/* strip upper bits (e.g. 0x50000) on newer devices */
++	code &= 0xFF;
++
+ 	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
+ 		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
+ 
+-- 
+2.54.0
+
