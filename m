@@ -1,176 +1,388 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14608346A0B
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 07:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A803846F
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 07:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780299510; cv=none; b=Dt2zOFefCiWMIgPaHElwl1rYwH+bmUHLsta7ydBoaZx2C1NdHK4enasUGVssixfqFYPPheOy6NQx5KwzCjBoINaavYwvtJr+h12VUc7JWJMRtMWeiVNxhtPiGVYbwnVAD4mBoSoiUW7Q5n0QW8wym4RQ1KXR3jXf7qQ2y9XFp7U=
+	t=1780300451; cv=none; b=BQ9WhMFXaHHjx7Ws9chqFCj4zky4eCCLTkaErxLN3aQifXUVEJO50UxG2bh9T2hS+p6L13MnumGILlD7vnu+uza4EIzHheZTIGIqaH7uYqgWEg6tFBbLdk8DwRz1mrsTGa56V1Z8EmQV1ngRLxqkKlnFLI4fvh3vk1DyIPEPvZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780299510; c=relaxed/simple;
-	bh=HQtzW+AzPTHtktemBwgJ1/AqdLD9KikDHuB6vjDahhE=;
-	h=MIME-Version:From:To:Cc:Subject:Message-ID:Date:Content-Type; b=P+dk2e7/wUr2RPmXSizUCkMSzWN8DEmeNPEK971qhCFoRgsCmSj6aFj1ZS4BzUxSUwzWsbBaoa7g/z21fm2/1EMZeHqEkGzBlkLu+yhvJ67uHVjZ6IzMgSzFExaW1sDjBzCrnNxpEKx13GD+LdK/MdrVpl2GTMvFj0dWwyxSN3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tC4NdUGg; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780300451; c=relaxed/simple;
+	bh=9VEx8fTJLG44yFdPaz10DSlbk1qFnnFYpLtE1Md4+yc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BW9pDX90nvXaUX9XnsvmwfF7TFMbnNa+wqRlN1basDJXxP9NVnMZmogy0FsNoaZSoMRur1ii14kp6oLpCZzwqU7SssG+8Mz020SazAQINHvDfNd91+N1h0W+hOW6X0TfYoiERRTWq62xFoErm5qjY9IG/BAniLucPcPyfs/y70k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQD19T/s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tC4NdUGg"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2bf125989f2so23856835ad.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Jun 2026 00:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780299508; x=1780904308; darn=vger.kernel.org;
-        h=content-transfer-encoding:date:message-id:subject:cc:to:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Li7NM+/Fc50bd4rV+8seyueGkphlIKWlChj7iNY/Qss=;
-        b=tC4NdUGgN1r8l/jTCwambRe1lYG0KaKVrgIg4sqX5prwmN4wdvISm10mfNXLRGihz0
-         9XM2+ilICi59opwXEpasePihheWYyGiXb5hRexjp5Il0BJHCNvCcvjLxAyF8TBjP28We
-         rUmXDbJfnxsVp0Bphe+0HOqT4wzkBRlLYuxSvsFkbiTrFRNOgF4tR9svKaIPXxWOf6xF
-         8o6UTtbeQ/mhG+1TnxnAVtZY6NgqZn4lJ7FLiIvFl3gu+WF7Bf03yJS34CdiP+CU4BQZ
-         U0P2agrOlfx96s5BhizSF/B+FMSmfDZVinhLKXCuMrhZLdaxo2B7otegX3jBMVQX9k7B
-         qZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780299508; x=1780904308;
-        h=content-transfer-encoding:date:message-id:subject:cc:to:from
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Li7NM+/Fc50bd4rV+8seyueGkphlIKWlChj7iNY/Qss=;
-        b=FA3qqkePJ5wpfA62B/SWdPpzYhmOIPCkVXG31L/rqlBbjgCCYJO0UXwxBAXcdzxVlh
-         /dY+M8NpCecWVfSOj3Z7WUIGFgSsmaflGnywvKZRO/+NoxQBAYyaUuB0ZZPZzVzto9Re
-         +79UivxvP1HBCGiO9GFLwbiodfa5lUy6XNkt2gRd1UTVEE3YYPi92Q8hAE2I46ubBT2s
-         pax3fCvD5Z55006n71tJjWuOiySHbLX65KWjgAFY+KdjLUZTg47X1iM1v/0ELWChx4z/
-         JZ3nQP4ol7x+dwZmWJuP5OPY5Wtb/Z+GpqgAxqWu7Zy7vjb8CHQbxa5DhgGNhv3olD++
-         baZQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8hT4no0CVC30yxgtJgcvAqJY8/Gw5kCF/IMS+wwpsCjogt7MzdtUmi2PtBX+m4yeG/9VTzbfm3cX+zopjXVDFsIAlr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmJRl3vnV5dfOPsnmK4mEoK3MfdsOc1U5Td28PP24Ef82unD7M
-	8UhrfYnuJ2DSOFT/cKd6pokiryN9u8JwWf2Nbp/S1YknZbYHJbXezquC
-X-Gm-Gg: Acq92OGqEWxS5DT/b50XB4j053e3s1LC5Q0W4hrm5jjTZnXe9Rcfr53q9vHZoa7cd9H
-	SKrhBQ5c2SDU7UunfZG+cGNZlBmCWjI6AotiUcaZkYNH6KRzf9D5hEFaEY6L5dnskrUskaZHEyf
-	ydJg8atX6YSCp7R6oH8gyWCkhxhT1Z4Bfr4D3khvHIJJERT4nOWd4VfZCpEM3L55JFDhtdqwlrc
-	TVqQOJ/C4f/ZHSHyQYds4HVV4sSHQS425NmxCZVAuIEqnZ0NjUGlw0QK4WMj8V+rZLNYExA4/Wb
-	Ej1wj1n5wXUea7S2KhwIrfLQSksTjK8Qnj6g3FRNLU9k+acZc+0iM8/BsZPe27eDUxL4KmptgSn
-	+Rikh5L9SB66+/FeZGa3Z+ZJp7N6Ij4/yJAlGWP3Wm0YjYcCDjxujPp0Lrenq6lGbiSJuDArh3o
-	QZzWyzS0lRLATmW/iIpKbemwxXWNlPzocYV+QAzxRl1YzWmE4=
-X-Received: by 2002:a17:903:2441:b0:2bf:7b62:a038 with SMTP id d9443c01a7336-2bf7b62a302mr102041225ad.9.1780299508211;
-        Mon, 01 Jun 2026 00:38:28 -0700 (PDT)
-Received: from GordonMsi ([240e:39e:4b6:6d00:7d23:c974:a73d:af3c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23a21f0bsm90285415ad.34.2026.06.01.00.38.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2026 00:38:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQD19T/s"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 21448C2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 07:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1780300451;
+	bh=9VEx8fTJLG44yFdPaz10DSlbk1qFnnFYpLtE1Md4+yc=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=BQD19T/sc72DNn3s5bHXMZU75u3B6xJs8yiRk6voXl2Ztj+xu3NqXgliHtdwHoFPK
+	 Zd/MXHYox+MfxD+NmfLBNsUduk8NEYPjgtCpMScb4hSxqqxo7AWZRVb9WamkAWBW7A
+	 DIy7CrSk9EMXw5gq5vmCdA3gOEnPOvQhH/HeD+5U7LHQwQA/3n+63Z8ywmsLVYex17
+	 rxLgHv3w47DyP+qYg49Xmw65sOr6+pKPfdcQDTPIy6C3BrjMUsFa2DydkuLAwmtBpw
+	 K7eNQOcBgfDviGVPgH3cFY/YHlPLuM2bCqVe8nWijkih23acA4iWwuBS6S5LbLjA7E
+	 0c5sgymhs7WCQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 01883C3279F; Mon,  1 Jun 2026 07:54:10 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
+ 7.1-rc4 kerenel
+Date: Mon, 01 Jun 2026 07:54:10 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: moravec@ukf.sk
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221569-215701-CGGXhSnm8e@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
+References: <bug-221569-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Gordon Chen" <chengordon326@gmail.com>
-To: "Mario Limonciello" <mario.limonciello@amd.com>, 
-	"Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>, 
-	"Mathias Nyman" <mathias.nyman@intel.com>
-Cc: <linux-usb@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, 
-	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: USB-audio isochronous Missed Service Errors on AMD Zen5 client (Fire
-	 Range) -- Data Fabric idle C-state? No OS-level knob found
-Message-ID: <18b4e4f7089aa4f1.da8dbe994ae3bb77.445e21b98b0b205b@GordonMsi>
-Date: Mon, 1 Jun 2026 07:38:22 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-Hi Mario, Shyam, Mathias,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
-I'm reporting what looks like an interaction between AMD client SoC idle
-power management (Data Fabric / SOCCLK) and low-latency isochronous USB
-DMA, on a Ryzen 9 9955HX3D (Fire Range, Zen5) laptop. It reproduces on any
-AMD Zen4/5 client I or others have tried, with any USB audio interface;
-there is an open community bug with several different-vendor devices [1].
+--- Comment #9 from Milan Oravec (moravec@ukf.sk) ---
+Yes, you can. I've tried do switch Power mode to Powersave (via Gnome menu)=
+ to
+lower/disable FAN RPMs and got this error in dmsg:
 
-I have a strong differential pointing below the OS, but no way to read DF
-C-state residency on this platform to confirm -- hence this mail. Questions
-are at the end.
+j=C3=BAn 01 09:34:30 migo-HP kernel: platform_profile: Failed to get profil=
+e for
+handler hp-wmi
 
-Symptom
--------
-USB audio playback has frequent audible clicks, and after ~10-30 min of
-continuous playback an occasional full stall. Each click maps 1:1 (time-
-aligned) to a short isochronous OUT URB; at the packet level these are
-iso_frame_desc[i].status = -EXDEV (COMP_MISSED_SERVICE_ERROR) -- the xHCI
-controller missed servicing a 125 us microframe. urb->error_count stays 0
-and nothing reaches dmesg; you have to look at per-packet status or count
-short OUT URBs. The stall is the same fault at its extreme: on an implicit-
-feedback device, a whole errored capture URB starves the OUT ring until
-re-plug.
+but this is error is present in 7.0 too, so this is not new in 7.1 tree.
 
-What I tried (all ineffective except the last)
-----------------------------------------------
-  cpu_dma_latency = 0 (PM QoS, verified locked)        no change
-  cpuidle: all C-states disabled                       no change
-  cpufreq governor = performance                       no change
-  amdgpu power_dpm_force_performance_level = high       no change
-  stress-ng --cpu 16 (pure compute, little mem traffic) no change
-  stress-ng --stream  (sustained memory bandwidth)     misses -> 0
+load is low:
 
-So CPU residency/frequency is not the lever; sustained memory-controller
-traffic is. Reading SoC clock DPM (amdgpu pp_dpm_socclk / pp_dpm_mclk):
-idle and under --cpu it sits at socclk 400 MHz / mclk 1600 MHz; under
---stream it jumps to socclk 1200 / mclk 2800.
+migo@migo-HP:~$ w
+ 09:47:38 up  1:55,  1 user,  load average: 0,42, 0,39, 0,35
 
-This points away from clock frequency as the lever: a single --stream
-worker already pins socclk=1200 / mclk=2800, yet the misses persist; it
-takes several workers of continuous traffic before they drop to zero. So
-what tracks the fix is not the clock the SoC reaches, but the amount of
-sustained memory-controller traffic. My working hypothesis is that the
-Data Fabric idles into a low-power state between the sparse isochronous
-transactions, and that the wake/traversal latency on the next microframe
-can then exceed the 125 us deadline -- with only traffic dense enough to
-keep the fabric out of that state avoiding it. I cannot confirm that from
-the OS (I have no way to read DF C-state residency here), so I would
-welcome a sanity check on the mechanism; the measurements above are what
-I am confident of.
+sensors output:
 
-I could not reach this from the OS: profile_peak / force=high do not raise
-socclk (ignored for an otherwise-idle iGPU), and a manual pp_dpm_socclk /
-pp_dpm_mclk write is rejected with -EINVAL. The BIOS on this laptop exposes
-no "DF C-States" / "Power Supply Idle Control" option.
+hp-isa-0000
+Adapter: ISA adapter
+fan1:           0 RPM
+fan2:           0 RPM
+pwm1:             N/A
 
-Reproducer
-----------
-Any AMD Zen4/5 client + any USB audio interface, playing continuously:
+k10temp-pci-00c3
+Adapter: PCI adapter
+Tctl:         +40.0=C2=B0C=20=20
 
-  # count short OUT URBs (= missed-service events); nominal is the device's
-  # full OUT packet size (768 bytes for the Flow 8 at 48 kHz / 4 ch)
-  bpftrace -e 'kprobe:snd_complete_urb {
-    $u = (struct urb *)arg0;
-    if ((($u->pipe >> 7) & 1) == 0 && $u->actual_length < 768) { @miss++; }
-  }'
+ucsi_source_psy_USBC000:002-isa-0000
+Adapter: ISA adapter
+in0:           0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
+curr1:         0.00 A  (max =3D  +0.00 A)
 
-  # while watching: cat /sys/class/drm/cardN/device/pp_dpm_socclk
-  # baseline:           misses > 0,  socclk pinned at 400 MHz
-  # with stress-ng --stream 4 running:  misses 0,  socclk 1200 MHz
+nvme-pci-6000
+Adapter: PCI adapter
+Composite:    +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +81.8=C2=B0C)
+                       (crit =3D +84.8=C2=B0C)
+Sensor 1:     +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
+Sensor 2:     +38.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
 
-Questions
----------
- 1. Is this a known interaction between DF idle power state (DF C-states /
-    SOCCLK gating) and latency-sensitive isochronous DMA on client SoCs --
-    an erratum or documented behaviour?
+acpitz-acpi-0
+Adapter: ACPI interface
+temp1:        +39.0=C2=B0C=20=20
 
- 2. Is there a supported way to hold the Data Fabric out of its deep idle
-    state (or set a fabric-active floor) while a latency-sensitive iso USB
-    endpoint is streaming -- a kernel interface (amd_pmc / amd_node?), or a
-    firmware/PMFW setting -- short of burning memory bandwidth?
+mt7925_phy0-pci-6200
+Adapter: PCI adapter
+temp1:        +82.0=C2=B0C=20=20
 
- 3. If not, what telemetry would help characterize this (amd_pmc STB dump?
-    specific SMN / DF P-state or C-state registers? a debugfs)? I'm happy
-    to build an instrumented kernel and test patches.
+ucsi_source_psy_USBC000:001-isa-0000
+Adapter: ISA adapter
+in0:           5.00 V  (min =3D  +5.00 V, max =3D +15.00 V)
+curr1:         3.00 A  (max =3D  +5.00 A)
 
-Related: the extreme stall case (whole-URB error on the implicitly-fed OUT
-ring) is separately handled in snd-usb-audio by a Flow 8 quirk that emits
-silence instead of hanging (commit a23812004228). That only papers over the
-hang and does nothing about the clicks, which are the subject here.
+amdgpu-pci-6300
+Adapter: PCI adapter
+vddgfx:        0.00 V=20=20
+vddnb:         0.00 V=20=20
+edge:         +38.0=C2=B0C=20=20
+PPT:           3.09 W  (avg =3D   3.09 W)
+sclk:         682 MHz=20
 
-System: Ryzen 9 9955HX3D (Fire Range, Zen5, 16C/32T), AMD xHCI, iGPU
-smu_v13_0_0 (0x13c0); kernel 7.0.10 (CachyOS, close to mainline for
-usb / xhci / amd power-management).
+BAT0-acpi-0
+Adapter: ACPI interface
+in0:           8.27 V=20=20
+power1:        0.00 W=20=20
 
-Thanks,
-Gordon Chen
+acpi_fan-isa-0000
+Adapter: ISA adapter
+fan1:        2100 RPM
 
-[1] https://github.com/CachyOS/linux-cachyos/issues/665
+
+All temperatures are low BUT wifi module reports: temp1: +82.0=C2=B0C, I do=
+n't know
+if it is real temperature reading. May be caused by this?
+
+j=C3=BAn 01 08:00:38 migo-HP kernel:  slab kmalloc-8k start ffff8e49a878600=
+0 pointer
+offset 4176 size 8192
+j=C3=BAn 01 08:00:38 migo-HP kernel: ------------[ cut here ]------------
+j=C3=BAn 01 08:00:38 migo-HP kernel: list_add corruption. prev->next should=
+ be next
+(ffff8e485fd38918), but was ffff8e49a8787050. (prev=3Dffff8e49a8787050).
+j=C3=BAn 01 08:00:38 migo-HP kernel: WARNING: lib/list_debug.c:32 at
+__list_add_valid_or_report+0x71/0xc0, CPU#1: napi/phy0-0/632
+j=C3=BAn 01 08:00:38 migo-HP kernel: Modules linked in: tun ovpn ip6_udp_tu=
+nnel
+udp_tunnel nft_limit xt_limit xt_conntrack xt_pkttype br_netfilter xt_LOG
+nf_log_syslog xt_tcpudp nft_compat x_tables snd_seq_dummy snd_hrtimer snd_s=
+eq
+snd_seq_device nft_masq nft_ct nft_reject_ipv4 nf_reject_ipv4 nft_reject
+act_csum cls_u32 sch_htb nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc nls_utf8 cifs dns_resolver
+nls_ucs2_utils netfs cifs_md4 ccm snd_ctl_led nls_ascii vfat fat joydev mt7=
+925e
+mt7925_common mt792x_lib snd_acp_legacy_mach mt76_connac_lib snd_acp_mach
+snd_soc_nau8821 mt76 snd_acp3x_rn snd_acp70 snd_acp_i2s snd_acp_pdm
+snd_soc_dmic snd_acp_pcm snd_sof_amd_acp70 snd_sof_amd_acp63 mac80211
+snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_sof_amd_acp
+snd_sof_xtensa_dsp snd_sof_pci snd_sof snd_sof_utils snd_pci_ps
+snd_soc_acpi_amd_match snd_soc_acpi_amd_sdca_quirks snd_amd_sdw_acpi btusb
+soundwire_amd amd_atl soundwire_generic_allocation snd_hda_codec_alc269 btr=
+tl
+hp_bioscfg
+j=C3=BAn 01 08:00:38 migo-HP kernel:  soundwire_bus snd_hda_scodec_componen=
+t btintel
+snd_hda_codec_realtek_lib snd_hda_scodec_cs35l41_spi intel_rapl_msr regmap_=
+spi
+snd_hda_codec_generic snd_soc_sdca btbcm intel_rapl_common
+firmware_attributes_class snd_hda_intel btmtk cfg80211 uvcvideo snd_soc_core
+snd_hda_codec videobuf2_vmalloc bluetooth videobuf2_memops uvc snd_compress
+videobuf2_v4l2 snd_hwdep snd_acp_pci hid_multitouch snd_amd_acpi_mach
+snd_hda_core spd5118 videodev snd_acp_legacy_common ucsi_acpi snd_intel_dsp=
+cfg
+snd_hda_scodec_cs35l41_i2c snd_pci_acp6x kvm_amd typec_ucsi
+snd_hda_scodec_cs35l41 snd_pcm hp_wmi snd_soc_cs_amp_lib videobuf2_common
+snd_pci_acp5x typec snd_timer sparse_keymap sp5100_tco snd_soc_cs35l41_lib
+snd_rn_pci_acp3x kvm mc irqbypass pcspkr rapl wmi_bmof rfkill cs_dsp moused=
+ev
+k10temp libarc4 roles snd thunderbolt amdxdna regmap_i2c snd_acp_config
+i2c_hid_acpi i2c_piix4 ccp amd_pmc snd_soc_acpi i2c_hid amd_sfh
+serial_multi_instantiate soundcore i2c_smbus snd_pci_acp3x dm_mod sg
+crypto_user ext4 mbcache jbd2
+j=C3=BAn 01 08:00:38 migo-HP kernel:  hid_logitech_hidpp hid_logitech_dj am=
+dgpu
+hid_generic usbhid drm_buddy amdxcp i2c_algo_bit mfd_core drm_ttm_helper ttm
+drm_exec drm_panel_backlight_quirks gpu_sched atkbd drm_suballoc_helper nvme
+libps2 drm_display_helper vivaldi_fmap nvme_core i8042 video cec nvme_keyri=
+ng
+serio wmi nvme_auth crc16
+j=C3=BAn 01 08:00:38 migo-HP kernel: CPU: 1 UID: 0 PID: 632 Comm: napi/phy0=
+-0 Not
+tainted 7.1.0-rc6 #46 PREEMPT(full)  de9cf86dc25a047cfc902454a5917cc7702f3b=
+b2
+j=C3=BAn 01 08:00:38 migo-HP kernel: Hardware name: HP HP OmniBook X Flip L=
+aptop
+16-ar0xxx/8DA8, BIOS F.11 11/03/2025
+j=C3=BAn 01 08:00:38 migo-HP kernel: RIP: 0010:__list_add_valid_or_report+0=
+x7a/0xc0
+j=C3=BAn 01 08:00:38 migo-HP kernel: Code: 48 89 e9 48 89 de 67 48 0f b9 3a=
+ eb ba 48
+39 16 74 1f 48 89 f7 e8 a6 3e 43 00 48 8d 3d cf 99 49 02 48 8b 13 48 89 d9 =
+48
+89 ee <67> 48 0f b9 3a eb 96 48 39 fe 74 07 b0 01 48 39 fa 75 1d 48 8d 05
+j=C3=BAn 01 08:00:38 migo-HP kernel: RSP: 0018:ffffd4af0bfcfc80 EFLAGS: 000=
+10202
+j=C3=BAn 01 08:00:38 migo-HP kernel: RAX: 0000000000000001 RBX: ffff8e49a87=
+87050
+RCX: ffff8e49a8787050
+j=C3=BAn 01 08:00:38 migo-HP kernel: RDX: ffff8e49a8787050 RSI: ffff8e485fd=
+38918
+RDI: ffffffffabcd6880
+j=C3=BAn 01 08:00:38 migo-HP kernel: RBP: ffff8e485fd38918 R08: 00000000000=
+00000
+R09: ffffffffaba783a0
+j=C3=BAn 01 08:00:38 migo-HP kernel: R10: ffffd4af0bfcf9c8 R11: ffffd4af0bf=
+cf9c0
+R12: ffff8e4793caa840
+j=C3=BAn 01 08:00:38 migo-HP kernel: R13: ffff8e485fd32120 R14: ffff8e4793c=
+aa810
+R15: ffff8e485fd321a0
+j=C3=BAn 01 08:00:38 migo-HP kernel: FS:  0000000000000000(0000)
+GS:ffff8e4fd20be000(0000) knlGS:0000000000000000
+j=C3=BAn 01 08:00:38 migo-HP kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+j=C3=BAn 01 08:00:38 migo-HP kernel: CR2: 000055c4f118b300 CR3: 0000000156e=
+a2000
+CR4: 0000000000f50ef0
+j=C3=BAn 01 08:00:38 migo-HP kernel: PKRU: 55555554
+j=C3=BAn 01 08:00:38 migo-HP kernel: Call Trace:
+j=C3=BAn 01 08:00:38 migo-HP kernel:  <TASK>
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt76_wcid_add_poll.cold+0xc/0x15 [mt76
+7cf6658b74d841c34fe483c94ee6b25083fc57fc]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt7925_mac_add_txs.part.0+0x8c/0xa0
+[mt7925_common 1c2dd67f3597ac7800a7e155c7a2e0ae422e117e]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt7925_rx_check+0xba/0xf0 [mt7925_com=
+mon
+1c2dd67f3597ac7800a7e155c7a2e0ae422e117e]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt76_dma_rx_poll+0x53a/0x730 [mt76
+7cf6658b74d841c34fe483c94ee6b25083fc57fc]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt792x_poll_rx+0x52/0xe0 [mt792x_lib
+41a54850c296b2e02daa140b7c7bca773a3b828c]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  __napi_poll+0xd2/0x210
+j=C3=BAn 01 08:00:38 migo-HP kernel:  napi_threaded_poll_loop+0x131/0x200
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_napi_threaded_poll+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  napi_threaded_poll+0xe1/0x120
+j=C3=BAn 01 08:00:38 migo-HP kernel:  kthread+0xe1/0x120
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_kthread+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ret_from_fork+0x2a7/0x330
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_kthread+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ret_from_fork_asm+0x1a/0x30
+j=C3=BAn 01 08:00:38 migo-HP kernel:  </TASK>
+j=C3=BAn 01 08:00:38 migo-HP kernel: ---[ end trace 0000000000000000 ]---
+j=C3=BAn 01 08:00:38 migo-HP kernel:  slab kmalloc-8k start ffff8e49a878600=
+0 pointer
+offset 4176 size 8192
+j=C3=BAn 01 08:00:38 migo-HP kernel: ------------[ cut here ]------------
+j=C3=BAn 01 08:00:38 migo-HP kernel: list_add corruption. prev->next should=
+ be next
+(ffff8e485fd38918), but was ffff8e49a8787050. (prev=3Dffff8e49a8787050).
+j=C3=BAn 01 08:00:38 migo-HP kernel: WARNING: lib/list_debug.c:32 at
+__list_add_valid_or_report+0x71/0xc0, CPU#1: napi/phy0-0/632
+j=C3=BAn 01 08:00:38 migo-HP kernel: Modules linked in: tun ovpn ip6_udp_tu=
+nnel
+udp_tunnel nft_limit xt_limit xt_conntrack xt_pkttype br_netfilter xt_LOG
+nf_log_syslog xt_tcpudp nft_compat x_tables snd_seq_dummy snd_hrtimer snd_s=
+eq
+snd_seq_device nft_masq nft_ct nft_reject_ipv4 nf_reject_ipv4 nft_reject
+act_csum cls_u32 sch_htb nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6
+nf_defrag_ipv4 nf_tables nfnetlink bridge stp llc nls_utf8 cifs dns_resolver
+nls_ucs2_utils netfs cifs_md4 ccm snd_ctl_led nls_ascii vfat fat joydev mt7=
+925e
+mt7925_common mt792x_lib snd_acp_legacy_mach mt76_connac_lib snd_acp_mach
+snd_soc_nau8821 mt76 snd_acp3x_rn snd_acp70 snd_acp_i2s snd_acp_pdm
+snd_soc_dmic snd_acp_pcm snd_sof_amd_acp70 snd_sof_amd_acp63 mac80211
+snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_sof_amd_acp
+snd_sof_xtensa_dsp snd_sof_pci snd_sof snd_sof_utils snd_pci_ps
+snd_soc_acpi_amd_match snd_soc_acpi_amd_sdca_quirks snd_amd_sdw_acpi btusb
+soundwire_amd amd_atl soundwire_generic_allocation snd_hda_codec_alc269 btr=
+tl
+hp_bioscfg
+j=C3=BAn 01 08:00:38 migo-HP kernel:  soundwire_bus snd_hda_scodec_componen=
+t btintel
+snd_hda_codec_realtek_lib snd_hda_scodec_cs35l41_spi intel_rapl_msr regmap_=
+spi
+snd_hda_codec_generic snd_soc_sdca btbcm intel_rapl_common
+firmware_attributes_class snd_hda_intel btmtk cfg80211 uvcvideo snd_soc_core
+snd_hda_codec videobuf2_vmalloc bluetooth videobuf2_memops uvc snd_compress
+videobuf2_v4l2 snd_hwdep snd_acp_pci hid_multitouch snd_amd_acpi_mach
+snd_hda_core spd5118 videodev snd_acp_legacy_common ucsi_acpi snd_intel_dsp=
+cfg
+snd_hda_scodec_cs35l41_i2c snd_pci_acp6x kvm_amd typec_ucsi
+snd_hda_scodec_cs35l41 snd_pcm hp_wmi snd_soc_cs_amp_lib videobuf2_common
+snd_pci_acp5x typec snd_timer sparse_keymap sp5100_tco snd_soc_cs35l41_lib
+snd_rn_pci_acp3x kvm mc irqbypass pcspkr rapl wmi_bmof rfkill cs_dsp moused=
+ev
+k10temp libarc4 roles snd thunderbolt amdxdna regmap_i2c snd_acp_config
+i2c_hid_acpi i2c_piix4 ccp amd_pmc snd_soc_acpi i2c_hid amd_sfh
+serial_multi_instantiate soundcore i2c_smbus snd_pci_acp3x dm_mod sg
+crypto_user ext4 mbcache jbd2
+j=C3=BAn 01 08:00:38 migo-HP kernel:  hid_logitech_hidpp hid_logitech_dj am=
+dgpu
+hid_generic usbhid drm_buddy amdxcp i2c_algo_bit mfd_core drm_ttm_helper ttm
+drm_exec drm_panel_backlight_quirks gpu_sched atkbd drm_suballoc_helper nvme
+libps2 drm_display_helper vivaldi_fmap nvme_core i8042 video cec nvme_keyri=
+ng
+serio wmi nvme_auth crc16
+j=C3=BAn 01 08:00:38 migo-HP kernel: CPU: 1 UID: 0 PID: 632 Comm: napi/phy0=
+-0
+Tainted: G        W           7.1.0-rc6 #46 PREEMPT(full)=20
+de9cf86dc25a047cfc902454a5917cc7702f3bb2
+j=C3=BAn 01 08:00:38 migo-HP kernel: Tainted: [W]=3DWARN
+j=C3=BAn 01 08:00:38 migo-HP kernel: Hardware name: HP HP OmniBook X Flip L=
+aptop
+16-ar0xxx/8DA8, BIOS F.11 11/03/2025
+j=C3=BAn 01 08:00:38 migo-HP kernel: RIP: 0010:__list_add_valid_or_report+0=
+x7a/0xc0
+j=C3=BAn 01 08:00:38 migo-HP kernel: Code: 48 89 e9 48 89 de 67 48 0f b9 3a=
+ eb ba 48
+39 16 74 1f 48 89 f7 e8 a6 3e 43 00 48 8d 3d cf 99 49 02 48 8b 13 48 89 d9 =
+48
+89 ee <67> 48 0f b9 3a eb 96 48 39 fe 74 07 b0 01 48 39 fa 75 1d 48 8d 05
+j=C3=BAn 01 08:00:38 migo-HP kernel: RSP: 0018:ffffd4af0bfcfc38 EFLAGS: 000=
+10202
+j=C3=BAn 01 08:00:38 migo-HP kernel: RAX: 0000000000000001 RBX: ffff8e49a87=
+87050
+RCX: ffff8e49a8787050
+j=C3=BAn 01 08:00:38 migo-HP kernel: RDX: ffff8e49a8787050 RSI: ffff8e485fd=
+38918
+RDI: ffffffffabcd6880
+j=C3=BAn 01 08:00:38 migo-HP kernel: RBP: ffff8e485fd38918 R08: 00000000000=
+00000
+R09: ffffffffaba783a0
+j=C3=BAn 01 08:00:38 migo-HP kernel: R10: ffffd4af0bfcf980 R11: ffffd4af0bf=
+cf978
+R12: ffff8e49a8786ae8
+j=C3=BAn 01 08:00:38 migo-HP kernel: R13: ffff8e49a8786d40 R14: 00000000000=
+00000
+R15: ffff8e485fd32120
+j=C3=BAn 01 08:00:38 migo-HP kernel: FS:  0000000000000000(0000)
+GS:ffff8e4fd20be000(0000) knlGS:0000000000000000
+j=C3=BAn 01 08:00:38 migo-HP kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+0000000080050033
+j=C3=BAn 01 08:00:38 migo-HP kernel: CR2: 000055c4f118b300 CR3: 0000000156e=
+a2000
+CR4: 0000000000f50ef0
+j=C3=BAn 01 08:00:38 migo-HP kernel: PKRU: 55555554
+j=C3=BAn 01 08:00:38 migo-HP kernel: Call Trace:
+j=C3=BAn 01 08:00:38 migo-HP kernel:  <TASK>
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt76_wcid_add_poll.cold+0xc/0x15 [mt76
+7cf6658b74d841c34fe483c94ee6b25083fc57fc]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt7925_mac_tx_free+0x18a/0x350 [mt792=
+5_common
+1c2dd67f3597ac7800a7e155c7a2e0ae422e117e]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt7925_rx_check+0x63/0xf0 [mt7925_com=
+mon
+1c2dd67f3597ac7800a7e155c7a2e0ae422e117e]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? mt76_dma_rx_poll+0x18d/0x730 [mt76
+7cf6658b74d841c34fe483c94ee6b25083fc57fc]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt76_dma_rx_poll+0x53a/0x730 [mt76
+7cf6658b74d841c34fe483c94ee6b25083fc57fc]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  mt792x_poll_rx+0x52/0xe0 [mt792x_lib
+41a54850c296b2e02daa140b7c7bca773a3b828c]
+j=C3=BAn 01 08:00:38 migo-HP kernel:  __napi_poll+0xd2/0x210
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? skb_defer_free_flush+0x9f/0xc0
+j=C3=BAn 01 08:00:38 migo-HP kernel:  napi_threaded_poll_loop+0x131/0x200
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_napi_threaded_poll+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  napi_threaded_poll+0xe1/0x120
+j=C3=BAn 01 08:00:38 migo-HP kernel:  kthread+0xe1/0x120
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_kthread+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ret_from_fork+0x2a7/0x330
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ? __pfx_kthread+0x10/0x10
+j=C3=BAn 01 08:00:38 migo-HP kernel:  ret_from_fork_asm+0x1a/0x30
+j=C3=BAn 01 08:00:38 migo-HP kernel:  </TASK>
+j=C3=BAn 01 08:00:38 migo-HP kernel: ---[ end trace 0000000000000000 ]---
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
