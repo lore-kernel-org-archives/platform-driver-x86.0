@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8D334846A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD44364941
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780303434; cv=none; b=OQTG1QdwRMJuL0Q1Yo3l644130i5GnLsL4pJeT1Ebt6+FM33nq0tk1KUHSb7PUiE2PW0Xx/RR9TcfkKMVurjCPBGfVgcEBp1Cw0yMkQQgyZjrm4Go0+s3M/h+neaVi/K3Tu+cHQBNqUbO3g7TeV3aYddpoWa0H+qUKUmLR6km2o=
+	t=1780303712; cv=none; b=iYv+1UcooM04Pfgl+54USTgWPRX2XsHhNh/88AH5cD0CfyqkfdY9qzxyvH8D7Tqi0OPaUddG1WEqQqgjiO6YYsjvs7PvC9/nsVLLdPOsb8O5dSRJOHMcW67ToL+XAmWyrCf1CcP7NJYTSHZdfwq+uITItAkkta54nH90tbIwzRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780303434; c=relaxed/simple;
-	bh=JuoGHGDBDQ6UTD3up7mRMLM5o2/eoApMK3w4l35vlkY=;
+	s=arc-20240116; t=1780303712; c=relaxed/simple;
+	bh=mizTYkE8GGGlOx9dm7j0jx5cOnfXGLvYqPm4fhzwUYI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nfhPl7tX3BfQOgpvG+8ibf0ko5dJ2wDoeX8ktQcMpi/4XPWKxevsJITSR4s5Y0DeoTTn05vV/Omsw/tZR0yFvescBFT6OZga66c1F95d3UUVY6n7pKSVgm0NdSrAUY83NdSBclszFAOff0anoP/Fv0nFuon+m+tmu8M6ACFrfqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0i9eugF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=F8jEuxgyH6d4YyZNDkj68Vhx3cHpEljMmG8gKMZpuSHd//T4sVy+pfb3sJoOwJUbzB/5j+4xRn+cVo0VlZmVRpeBTYiTxk7O08cMkvJDYnCRD4eJh9D2WaC85Dm2RZT/K+2gXcf4k4YqW3ZQyrJolSc9Uei2VVWtzz+VVOb8Onw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E27z/Wox; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0i9eugF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29867C2BCC6
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:43:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E27z/Wox"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC491C2BCC6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:48:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780303434;
-	bh=JuoGHGDBDQ6UTD3up7mRMLM5o2/eoApMK3w4l35vlkY=;
+	s=k20201202; t=1780303711;
+	bh=mizTYkE8GGGlOx9dm7j0jx5cOnfXGLvYqPm4fhzwUYI=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=S0i9eugF8QtZP7L2JWk4nSPG07Z9xWIJbAOhRx+Lq7SmfyyO4f6kYxP5APwLx5hD8
-	 iJSeO80Mx5lsmsbydllfX20vTuPpWN3qoHysOBRVVvw+3VsUBGRO/KAy7WTZCJEbvQ
-	 Zw3NqM0fwju6uP3IX5EcXZdIVMuwUb600wLrtMurURrQ5PdG5lriKU1txNFE7H3Epg
-	 JfNqjw+lsKXfTqlMhIIH38cRH8R68xctqsmCcsbm1KXklVpX8/+19B6MkQWnEoo28S
-	 GfYEZI5qCkzTDzuvkP8SH352g6bPfd9GEWUOUs6kNDgg391ojt0YmpHNLUlHM/p8rt
-	 z6seS1vFC/X/Q==
+	b=E27z/Wox5Tk8jRO7/zNEP0ohO33WLKuZinFNQeU4tNCk0fImhLfv/RnCQQ+YdduMq
+	 0h2JzEfUc6bRHp1wXkDw2UsgYHm1h3Tz/zH6aENXBc6oCmbqNxkhJvWEs7T0zO87qd
+	 nQCXUAWpMKQd+Az7Na/T0n020TfenhDkQBbAyWtoQIdT0ms9Vnbz7MwhEIqc9+usnr
+	 6delLIhXolOvLU5nX+Mvqr7HlTNiDTu+GiZTYSvnlfKpRR+i9oerqixjjraaZ3gf60
+	 jNmmZFa4Fd/8lYyUh454RW5gM0B+JhsSUCTosts0PldmrgbY/HLjT+XYOkcEFgTRPA
+	 lW8zj2JiBHW5g==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 08BF3C3279F; Mon,  1 Jun 2026 08:43:54 +0000 (UTC)
+	id 8D4B4C3279F; Mon,  1 Jun 2026 08:48:31 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
  7.1-rc4 kerenel
-Date: Mon, 01 Jun 2026 08:43:53 +0000
+Date: Mon, 01 Jun 2026 08:48:31 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: moravec@ukf.sk
+X-Bugzilla-Who: regressions@leemhuis.info
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221569-215701-weDwB9qkx5@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221569-215701-6wjdqMkH4K@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
 References: <bug-221569-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #14 from Milan Oravec (moravec@ukf.sk) ---
-Created attachment 310228
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310228&action=3Dedit
-here is output of the Powerop.
+--- Comment #15 from The Linux kernel's regression tracker (Thorsten Leemhu=
+is) (regressions@leemhuis.info) ---
+Please really try once with blacklisting the wifi module. It seems this is
+reproducible easily for you, so maybe a few minutes without wifi should suf=
+fice
+to detect if that makes a difference.
 
 --=20
 You may reply to this email to add a comment.
