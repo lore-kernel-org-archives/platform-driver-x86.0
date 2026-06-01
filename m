@@ -1,134 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F96A3E274D
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 18:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F31C33F590;
+	Mon,  1 Jun 2026 23:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780338592; cv=none; b=kEQ5ZS/d6QYeT/vp+qqSaF2mQV+eIWpAlTzCWR3bWgYS/E2ceJP4fnyTl3tliC+bwxU/jX4GTKdwP0Js3fcwYMhwEDmnTmsRBCCT8Hm/VybuZlMa8IkEyIl12i5y3s+zapGyjlQCAwQxZDydbr7qAxA6X6aQZXz9vtuuGMWnP+c=
+	t=1780356951; cv=none; b=ZkvjnJeSxJPFANgsg4qd1alWkl94UWguwjfQfucig68WnQr2aJ5sSMPJCeaP+2z9LjX/HH3bonVkGYhh/YY5Ho4WawMR9yFSxNaDB/Bfp5LPMmyOr6FGQLpc3aSedoLjc4GW/ljlZsZ8glZRIsMcM53n1VzTSkiBfoaHkSp4zh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780338592; c=relaxed/simple;
-	bh=iUC22z3QQydjTAe06q0vvlZmBrF400B7P0nYO6djlcM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bb1TwR0pDIOZZUPNuzi8Q+uROO1OtElIHoBczOKpFtcI6DNH0aJOsFk23CAXF02PDidjTw7rR5or9zthXzw2ul0xcgPKOdhT3deXfWsOY+ZHmSrjpuzw5RmobBeRDwrBteWXSfRD82i1AUsf1wXLHYYx7Y1Yu6zYj84Usy1Eanc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwmMJ89h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780356951; c=relaxed/simple;
+	bh=mu+k5t+nIMpSdNoVyH2bpssgMm+HGMnEOEsZeveBT8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZ7+2Sy49W8OkBelKwRKgbivpVg6LIkE+Lk3X4mQwcCRghJyNGESIHbVWI3g84vHJPoGO633N/P4K8q/zKhBDtwDfgRvrtB+C6RQ2UZ0nzxBP1zfkOh4elUJPq6EWWIChIftFy1iR8Alxvp+Pd4WNi2UaNt093uHf7SWMhQQ+Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwFeM+dK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwmMJ89h"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D561AC2BCB8
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 18:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780338591;
-	bh=iUC22z3QQydjTAe06q0vvlZmBrF400B7P0nYO6djlcM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=KwmMJ89h9gXfppms5MmuF89bA3K5KYwBiGf7fQp7M45gKDeREQUqWZw2UaO0K7npy
-	 Zxf++UEkf0w6T0sEvMtNDXmU4sG6G4n9H1oW7kMdjoSa+YBn7Hyr/4WJ5u/jxbGdB2
-	 Z2krrEcRofTQH8Uw9uLDUawt97TLlNwFI/FmgVOo3sLlI1pguqtcSXfa+Q3u5ay5Di
-	 njBCb59X/mQr2SIX+8f7q7iaOzYOq8XFN+flN0Yx1/MXkiteYA5m8ZpXYY8NpgOqZQ
-	 xDk2n5IvLb5ul1b7CvhdqmCTdYGZMlWC6LxZq9OP9hwAAVQG7tNFyjWmC+oToFuhOf
-	 uUUTUQ3XGd2jw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id B8BA6C3279F; Mon,  1 Jun 2026 18:29:51 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
- 7.1-rc4 kerenel
-Date: Mon, 01 Jun 2026 18:29:51 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: moravec@ukf.sk
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-t9k1W0exg9@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
-References: <bug-221569-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwFeM+dK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5639F1F00893;
+	Mon,  1 Jun 2026 23:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780356949;
+	bh=BsNyXchE0cQ+WrTEzbPCgdBZhaTxYz8ZYh6ODfO6Thc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bwFeM+dKJids5MGHkWeT2lqLmOE+Z22fpYZVG8IarCaPIkYd1ClJLTF0P+KK4TZC1
+	 t1HfBIbIgLm2lF9d6SD2H1GRY5GUIy6SJwL9v8EZ3L20jIK/NaVXSt1XPTueO0oIGy
+	 y19iXABriAlFUODdDTo2f2+FK6UaosZlP/s7kW+eWFj9kPjNXvxZUpQLix9fiYAVMs
+	 qutOmIhrfL9fMTHLsw3ErfIZs150qZpCJg1stHoIzdshVCQp8iYW9sI4ko81gCNtbL
+	 eRcz3oBpBUe09WQM6FxiPQKCgb0o3dANEdBD5y5Egf4yKaQOgk8QwaFZYGWRDLloCl
+	 38TEpySFeTuzg==
+Date: Mon, 1 Jun 2026 18:35:48 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Lee Jones <lee@kernel.org>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Bin Liu <b-liu@ti.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Thierry Reding <thierry.reding@avionic-design.de>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, brgl@kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	David Airlie <airlied@gmail.com>, linux-arm-msm@vger.kernel.org,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+	Ulf Hansson <ulfh@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org,
+	"David S. Miller" <davem@davemloft.net>,
+	intel-xe@lists.freedesktop.org, Andi Shyti <andi.shyti@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>, netdev@vger.kernel.org,
+	linux-sound@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
+	linux-mips@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	driver-core@lists.linux.dev,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	imx@lists.linux.dev, Vinod Koul <vkoul@kernel.org>,
+	Peter Chen <peter.chen@kernel.org>, linux-usb@vger.kernel.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Paul Cercueil <paul@crapouillou.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Joerg Roedel <joro@8bytes.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Mark Brown <broonie@opensource.wolfsonmicro.com>,
+	Robin Murphy <robin.murphy@arm.com>, Frank Li <Frank.Li@nxp.com>,
+	devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	linuxppc-dev@lists.ozlabs.org,
+	Saravana Kannan <saravanak@kernel.org>,
+	Maximilian Luz <luzmaximilian@gmail.com>, linux-pm@vger.kernel.org,
+	Hans de Goede <hansg@kernel.org>, dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 09/23] of: platform: use platform_device_set_of_node()
+Message-ID: <178035694685.195552.1114165096275774254.robh@kernel.org>
+References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
+ <20260521-pdev-fwnode-ref-v1-9-88c324a1b8d2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521-pdev-fwnode-ref-v1-9-88c324a1b8d2@oss.qualcomm.com>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #20 from Milan Oravec (moravec@ukf.sk) ---
-I've tried with mt76 module blacklisted. Hard to compare, but FAN started to
-spin with cpu temp 41 deg.C and no load, only system booted and terminal
-opened.=20
+On Thu, 21 May 2026 10:36:32 +0200, Bartosz Golaszewski wrote:
+> Ahead of reworking the reference counting logic for platform devices,
+> encapsulate the assignment of the OF node for dynamically allocated
+> platform devices with the provided helper.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-root@migo-HP:/home/migo# sensors
-hp-isa-0000
-Adapter: ISA adapter
-fan1:           0 RPM
-fan2:           0 RPM
-pwm1:             N/A
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-k10temp-pci-00c3
-Adapter: PCI adapter
-Tctl:         +38.6=C2=B0C=20=20
-
-nvme-pci-6000
-Adapter: PCI adapter
-Composite:    +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +81.8=C2=B0C)
-                       (crit =3D +84.8=C2=B0C)
-Sensor 1:     +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
-Sensor 2:     +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
-
-acpitz-acpi-0
-Adapter: ACPI interface
-temp1:        +39.0=C2=B0C=20=20
-
-ucsi_source_psy_USBC000:002-isa-0000
-Adapter: ISA adapter
-in0:           0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
-curr1:         0.00 A  (max =3D  +0.00 A)
-
-ucsi_source_psy_USBC000:001-isa-0000
-Adapter: ISA adapter
-in0:           5.00 V  (min =3D  +5.00 V, max =3D +15.00 V)
-curr1:         3.00 A  (max =3D  +5.00 A)
-
-amdgpu-pci-6300
-Adapter: PCI adapter
-vddgfx:        0.00 V=20=20
-vddnb:         0.00 V=20=20
-edge:         +37.0=C2=B0C=20=20
-PPT:           2.05 W  (avg =3D   2.05 W)
-sclk:         717 MHz=20
-
-BAT0-acpi-0
-Adapter: ACPI interface
-in0:           8.27 V=20=20
-power1:        0.00 W=20=20
-
-acpi_fan-isa-0000
-Adapter: ISA adapter
-fan1:        2100 RPM
-
-root@migo-HP:/home/migo# w
- 20:18:27 up 12 min,  1 user,  load average: 0,06, 0,19, 0,14
-USER     TTY       LOGIN@   IDLE   JCPU   PCPU  WHAT
-migo     tty2      20:06   12:17   0.00s   ?=20=20=20
-/usr/lib/gnome-session-init-worker gnome
-root@migo-HP:/home/migo#
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
