@@ -1,74 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181D346E50
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 06:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14608346A0B
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 07:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780295206; cv=none; b=ieOyp0gqXS8asGewq0ghmDCj/VMYCWZD6kCkUjT5t5Eu+EOijG9U6BIz75nm/LEBSnjgbOyzxaXOSjgPg8Irw1Mqh6S0ZWX6vdqoB6IIrGTkhQfS+hhGpHJpSADT79TG8ioL4DE8LbYogZ0LMW777B0fnnXw0J/bzYITf/26ajQ=
+	t=1780299510; cv=none; b=Dt2zOFefCiWMIgPaHElwl1rYwH+bmUHLsta7ydBoaZx2C1NdHK4enasUGVssixfqFYPPheOy6NQx5KwzCjBoINaavYwvtJr+h12VUc7JWJMRtMWeiVNxhtPiGVYbwnVAD4mBoSoiUW7Q5n0QW8wym4RQ1KXR3jXf7qQ2y9XFp7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780295206; c=relaxed/simple;
-	bh=mWBxFibVhQHA3l0lhmnUAozzvm6KVqmLWhdlGzEzJNY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RN1gZWZX3hTQK+aaZ+Uch8Pf9OkYRG6PPTc1jDtRUiPmHL6vcvOluFyhHIj1djpGeuvHawAWofhjZPQ6ujFbCOZGittuujEaD6Q0qHnvm06QlFavtDVees/qkf4ujNQb7NHFlgZrGaMC1yzZ7Lf7TzEso1+pTIEUBAWub/IWs9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/JiPwMG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780299510; c=relaxed/simple;
+	bh=HQtzW+AzPTHtktemBwgJ1/AqdLD9KikDHuB6vjDahhE=;
+	h=MIME-Version:From:To:Cc:Subject:Message-ID:Date:Content-Type; b=P+dk2e7/wUr2RPmXSizUCkMSzWN8DEmeNPEK971qhCFoRgsCmSj6aFj1ZS4BzUxSUwzWsbBaoa7g/z21fm2/1EMZeHqEkGzBlkLu+yhvJ67uHVjZ6IzMgSzFExaW1sDjBzCrnNxpEKx13GD+LdK/MdrVpl2GTMvFj0dWwyxSN3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tC4NdUGg; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/JiPwMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9AFFFC2BCC9
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 06:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780295205;
-	bh=mWBxFibVhQHA3l0lhmnUAozzvm6KVqmLWhdlGzEzJNY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=T/JiPwMGtPkHZfe9KbzuK98g9N+sMSpRzdDH8kAqDVcnLEADDpn8exUsCQ6IiCTaY
-	 LDMG3wGBlH4OFI6bOWATlrr0nLqLoTHTloUs0g8EB+FzcNnLIMXlw5S3L1Hv4k+y9l
-	 GSEYyYoeUPlez4rW3T7wmk1WsdDUC92aErtLPrtSSWrk58baZU4KSV1pAH03B10tes
-	 pugSOEUW/rkBw1AtWJbTKxDX9TBqDU2QKOBgFAxiWtcx3hvQBtzWGhqqc7idKsOsst
-	 fcmy4gUIKrpvGwyF+ZeKYM0TQ7a8Ho3Qz/gjvpPAVgdT+pOHc55Dgk5i9PBrPH3gM1
-	 rElS7WSyElA+w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 7C74CC3279F; Mon,  1 Jun 2026 06:26:45 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221523] [BUG] hp-wmi: OMEN 16-ap0xxx (8E35) - fan control not
- available (no PWM)
-Date: Mon, 01 Jun 2026 06:26:45 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: krishna.chomal108@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221523-215701-gWJDFlvl1H@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221523-215701@https.bugzilla.kernel.org/>
-References: <bug-221523-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tC4NdUGg"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2bf125989f2so23856835ad.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Jun 2026 00:38:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780299508; x=1780904308; darn=vger.kernel.org;
+        h=content-transfer-encoding:date:message-id:subject:cc:to:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Li7NM+/Fc50bd4rV+8seyueGkphlIKWlChj7iNY/Qss=;
+        b=tC4NdUGgN1r8l/jTCwambRe1lYG0KaKVrgIg4sqX5prwmN4wdvISm10mfNXLRGihz0
+         9XM2+ilICi59opwXEpasePihheWYyGiXb5hRexjp5Il0BJHCNvCcvjLxAyF8TBjP28We
+         rUmXDbJfnxsVp0Bphe+0HOqT4wzkBRlLYuxSvsFkbiTrFRNOgF4tR9svKaIPXxWOf6xF
+         8o6UTtbeQ/mhG+1TnxnAVtZY6NgqZn4lJ7FLiIvFl3gu+WF7Bf03yJS34CdiP+CU4BQZ
+         U0P2agrOlfx96s5BhizSF/B+FMSmfDZVinhLKXCuMrhZLdaxo2B7otegX3jBMVQX9k7B
+         qZkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780299508; x=1780904308;
+        h=content-transfer-encoding:date:message-id:subject:cc:to:from
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Li7NM+/Fc50bd4rV+8seyueGkphlIKWlChj7iNY/Qss=;
+        b=FA3qqkePJ5wpfA62B/SWdPpzYhmOIPCkVXG31L/rqlBbjgCCYJO0UXwxBAXcdzxVlh
+         /dY+M8NpCecWVfSOj3Z7WUIGFgSsmaflGnywvKZRO/+NoxQBAYyaUuB0ZZPZzVzto9Re
+         +79UivxvP1HBCGiO9GFLwbiodfa5lUy6XNkt2gRd1UTVEE3YYPi92Q8hAE2I46ubBT2s
+         pax3fCvD5Z55006n71tJjWuOiySHbLX65KWjgAFY+KdjLUZTg47X1iM1v/0ELWChx4z/
+         JZ3nQP4ol7x+dwZmWJuP5OPY5Wtb/Z+GpqgAxqWu7Zy7vjb8CHQbxa5DhgGNhv3olD++
+         baZQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8hT4no0CVC30yxgtJgcvAqJY8/Gw5kCF/IMS+wwpsCjogt7MzdtUmi2PtBX+m4yeG/9VTzbfm3cX+zopjXVDFsIAlr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmJRl3vnV5dfOPsnmK4mEoK3MfdsOc1U5Td28PP24Ef82unD7M
+	8UhrfYnuJ2DSOFT/cKd6pokiryN9u8JwWf2Nbp/S1YknZbYHJbXezquC
+X-Gm-Gg: Acq92OGqEWxS5DT/b50XB4j053e3s1LC5Q0W4hrm5jjTZnXe9Rcfr53q9vHZoa7cd9H
+	SKrhBQ5c2SDU7UunfZG+cGNZlBmCWjI6AotiUcaZkYNH6KRzf9D5hEFaEY6L5dnskrUskaZHEyf
+	ydJg8atX6YSCp7R6oH8gyWCkhxhT1Z4Bfr4D3khvHIJJERT4nOWd4VfZCpEM3L55JFDhtdqwlrc
+	TVqQOJ/C4f/ZHSHyQYds4HVV4sSHQS425NmxCZVAuIEqnZ0NjUGlw0QK4WMj8V+rZLNYExA4/Wb
+	Ej1wj1n5wXUea7S2KhwIrfLQSksTjK8Qnj6g3FRNLU9k+acZc+0iM8/BsZPe27eDUxL4KmptgSn
+	+Rikh5L9SB66+/FeZGa3Z+ZJp7N6Ij4/yJAlGWP3Wm0YjYcCDjxujPp0Lrenq6lGbiSJuDArh3o
+	QZzWyzS0lRLATmW/iIpKbemwxXWNlPzocYV+QAzxRl1YzWmE4=
+X-Received: by 2002:a17:903:2441:b0:2bf:7b62:a038 with SMTP id d9443c01a7336-2bf7b62a302mr102041225ad.9.1780299508211;
+        Mon, 01 Jun 2026 00:38:28 -0700 (PDT)
+Received: from GordonMsi ([240e:39e:4b6:6d00:7d23:c974:a73d:af3c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bf23a21f0bsm90285415ad.34.2026.06.01.00.38.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 00:38:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: "Gordon Chen" <chengordon326@gmail.com>
+To: "Mario Limonciello" <mario.limonciello@amd.com>, 
+	"Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>, 
+	"Mathias Nyman" <mathias.nyman@intel.com>
+Cc: <linux-usb@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, 
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: USB-audio isochronous Missed Service Errors on AMD Zen5 client (Fire
+	 Range) -- Data Fabric idle C-state? No OS-level knob found
+Message-ID: <18b4e4f7089aa4f1.da8dbe994ae3bb77.445e21b98b0b205b@GordonMsi>
+Date: Mon, 1 Jun 2026 07:38:22 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221523
+Hi Mario, Shyam, Mathias,
 
---- Comment #13 from Krishna Chomal (krishna.chomal108@gmail.com) ---
-Alright, I will send the patch soon. Thanks for the help!
+I'm reporting what looks like an interaction between AMD client SoC idle
+power management (Data Fabric / SOCCLK) and low-latency isochronous USB
+DMA, on a Ryzen 9 9955HX3D (Fire Range, Zen5) laptop. It reproduces on any
+AMD Zen4/5 client I or others have tried, with any USB audio interface;
+there is an open community bug with several different-vendor devices [1].
 
---=20
-You may reply to this email to add a comment.
+I have a strong differential pointing below the OS, but no way to read DF
+C-state residency on this platform to confirm -- hence this mail. Questions
+are at the end.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Symptom
+-------
+USB audio playback has frequent audible clicks, and after ~10-30 min of
+continuous playback an occasional full stall. Each click maps 1:1 (time-
+aligned) to a short isochronous OUT URB; at the packet level these are
+iso_frame_desc[i].status = -EXDEV (COMP_MISSED_SERVICE_ERROR) -- the xHCI
+controller missed servicing a 125 us microframe. urb->error_count stays 0
+and nothing reaches dmesg; you have to look at per-packet status or count
+short OUT URBs. The stall is the same fault at its extreme: on an implicit-
+feedback device, a whole errored capture URB starves the OUT ring until
+re-plug.
+
+What I tried (all ineffective except the last)
+----------------------------------------------
+  cpu_dma_latency = 0 (PM QoS, verified locked)        no change
+  cpuidle: all C-states disabled                       no change
+  cpufreq governor = performance                       no change
+  amdgpu power_dpm_force_performance_level = high       no change
+  stress-ng --cpu 16 (pure compute, little mem traffic) no change
+  stress-ng --stream  (sustained memory bandwidth)     misses -> 0
+
+So CPU residency/frequency is not the lever; sustained memory-controller
+traffic is. Reading SoC clock DPM (amdgpu pp_dpm_socclk / pp_dpm_mclk):
+idle and under --cpu it sits at socclk 400 MHz / mclk 1600 MHz; under
+--stream it jumps to socclk 1200 / mclk 2800.
+
+This points away from clock frequency as the lever: a single --stream
+worker already pins socclk=1200 / mclk=2800, yet the misses persist; it
+takes several workers of continuous traffic before they drop to zero. So
+what tracks the fix is not the clock the SoC reaches, but the amount of
+sustained memory-controller traffic. My working hypothesis is that the
+Data Fabric idles into a low-power state between the sparse isochronous
+transactions, and that the wake/traversal latency on the next microframe
+can then exceed the 125 us deadline -- with only traffic dense enough to
+keep the fabric out of that state avoiding it. I cannot confirm that from
+the OS (I have no way to read DF C-state residency here), so I would
+welcome a sanity check on the mechanism; the measurements above are what
+I am confident of.
+
+I could not reach this from the OS: profile_peak / force=high do not raise
+socclk (ignored for an otherwise-idle iGPU), and a manual pp_dpm_socclk /
+pp_dpm_mclk write is rejected with -EINVAL. The BIOS on this laptop exposes
+no "DF C-States" / "Power Supply Idle Control" option.
+
+Reproducer
+----------
+Any AMD Zen4/5 client + any USB audio interface, playing continuously:
+
+  # count short OUT URBs (= missed-service events); nominal is the device's
+  # full OUT packet size (768 bytes for the Flow 8 at 48 kHz / 4 ch)
+  bpftrace -e 'kprobe:snd_complete_urb {
+    $u = (struct urb *)arg0;
+    if ((($u->pipe >> 7) & 1) == 0 && $u->actual_length < 768) { @miss++; }
+  }'
+
+  # while watching: cat /sys/class/drm/cardN/device/pp_dpm_socclk
+  # baseline:           misses > 0,  socclk pinned at 400 MHz
+  # with stress-ng --stream 4 running:  misses 0,  socclk 1200 MHz
+
+Questions
+---------
+ 1. Is this a known interaction between DF idle power state (DF C-states /
+    SOCCLK gating) and latency-sensitive isochronous DMA on client SoCs --
+    an erratum or documented behaviour?
+
+ 2. Is there a supported way to hold the Data Fabric out of its deep idle
+    state (or set a fabric-active floor) while a latency-sensitive iso USB
+    endpoint is streaming -- a kernel interface (amd_pmc / amd_node?), or a
+    firmware/PMFW setting -- short of burning memory bandwidth?
+
+ 3. If not, what telemetry would help characterize this (amd_pmc STB dump?
+    specific SMN / DF P-state or C-state registers? a debugfs)? I'm happy
+    to build an instrumented kernel and test patches.
+
+Related: the extreme stall case (whole-URB error on the implicitly-fed OUT
+ring) is separately handled in snd-usb-audio by a Flow 8 quirk that emits
+silence instead of hanging (commit a23812004228). That only papers over the
+hang and does nothing about the clicks, which are the subject here.
+
+System: Ryzen 9 9955HX3D (Fire Range, Zen5, 16C/32T), AMD xHCI, iGPU
+smu_v13_0_0 (0x13c0); kernel 7.0.10 (CachyOS, close to mainline for
+usb / xhci / amd power-management).
+
+Thanks,
+Gordon Chen
+
+[1] https://github.com/CachyOS/linux-cachyos/issues/665
