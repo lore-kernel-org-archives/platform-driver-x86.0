@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89701288C81
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4759334846A
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780302706; cv=none; b=NVYXeaFbAkWWCvFtX5B37v5vPTGx8Q7DSYYRPGfWAWSOqopeONLLiD7FVZX/AsMtIeLSLLyAjvsqhYNJr7KltKOEh01eguwUEwF/+AHWrTfkyQGvXiQbIYacqpM58CPq9Zb3a0lhjrGsWyV7Io+6yBoM2J3iKr8tmKxYIPfA5Qc=
+	t=1780303096; cv=none; b=LGapOOkkoeGepKbTMIWCLoYyxG1VqO2n5r56RRc2wngtrwS2Hoi3uqfAStekr9zChuMbv/QdywG1Rm3/9lftRBWcVAwmS2YBxwkL7xcknC/3Z30ScoD5ZSzrW+IEVuPMx7IRkQQcZhS/DCoo9uGJA9at+VFimJDjwNpqp1OEgTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780302706; c=relaxed/simple;
-	bh=3/WpgtGOSHYTEvet9vqKBr4bwU8gdQJD+zh0gJQlI3g=;
+	s=arc-20240116; t=1780303096; c=relaxed/simple;
+	bh=OscI7e7on1CUGZcrPgulcdn93zKNDy5uZgyu6lhZMmM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ImTKXgyjpL6Q/YUZ3SQUZ3ibNmcAxK3SwStVMzRp5wTKkLE1eCG4WQcA1uNKLGLk/0RNsdngz/5vthpk3v5KMJlxydnBzp6wT7b9qdJ44Mce4dKgHuVZO75diTG3M91rrQ05kiDZ0acMUHJWctFhkdoZ5QKTBT6hRa0EDR8NM54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQxV/Pa2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=jIsss3m075odp8kxAXZB566JCojcmIo3LVpblB2FkG2Er/eHIyA6Asrc2a0OVF/HIGnc7RS5tMzXEPBBWMoNanQf4k8tMg28i5A+X1/nMRjVQvsZJDjDx2RCGW1bI0fzRUOdBkJFL0St8Z+m/mCjJwRCX717zLczsYScrF5L75w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hstuGY4h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQxV/Pa2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1CE73C2BCC6
-	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:31:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hstuGY4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F77CC2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  1 Jun 2026 08:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780302706;
-	bh=3/WpgtGOSHYTEvet9vqKBr4bwU8gdQJD+zh0gJQlI3g=;
+	s=k20201202; t=1780303095;
+	bh=OscI7e7on1CUGZcrPgulcdn93zKNDy5uZgyu6lhZMmM=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=eQxV/Pa2WBsUUFblskNZZJmSAg8YteAiKhL/X7OkP8SmQ4jbDDEYYNLWCaaASLJXC
-	 anFtTJAlySAaCXHfeDqJI9SUA6yWhVDlo7Yu3h+l7V9b/AWpj1HPnVncwKi9ZvQev0
-	 +okHKs1BfYlIx0SDJ4HaX/ZX+n8S0twUE9O1hS+J56v8JBpYpvgfqn1yJPV0mX5rhG
-	 pQJYUXcn5FUpqo6mQ8Cc0tGvhG0pZbI1q+WwObI7/IWTRLqnzA4YRYoSWhmL2HlZhv
-	 y4KP4pIR88RuZNaq9tZI9XTuO66Kcjtpsdq2YoQNfBs1tnnwVEkQqgiyVVPebw43aP
-	 laaZKQRRYMWvA==
+	b=hstuGY4hFEVypqfdYKvfAzy4D+9WOZgFUb1x4Gke0n4HEvg6YYByC0BQo0AYX8xaE
+	 f9BdZ129Wl+wOC2H2LPwzf04QCvxMPPnFZxzDCfFu5kRqITkZ6n+DqseExhtW6WwYC
+	 MQjQneiIfXZFbW6kKyTnppV5qqIHhaT3WWlMb4Letz1rZsmM2t5SGCJFWLrkkiBwBQ
+	 JMOAle7f8rO86LDJr9LEXvJbfuDfKQOJRicQ/PjqRgm51rDIHIVoJxS0Qcgk9uW6/B
+	 NxBFJztNzuHnoLTedLsC4tmF7p+6MKBlYqCh+SD76j33IYja80Bzkesj7kOnV2dUc3
+	 PxOTm23TRvHIQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 00B96C3279F; Mon,  1 Jun 2026 08:31:45 +0000 (UTC)
+	id 6F5E9C3279F; Mon,  1 Jun 2026 08:38:15 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
  7.1-rc4 kerenel
-Date: Mon, 01 Jun 2026 08:31:45 +0000
+Date: Mon, 01 Jun 2026 08:38:15 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: moravec@ukf.sk
+X-Bugzilla-Who: regressions@leemhuis.info
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-h41v3sAQ9S@https.bugzilla.kernel.org/>
+Message-ID: <bug-221569-215701-9QmoFgSIju@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
 References: <bug-221569-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,23 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #11 from Milan Oravec (moravec@ukf.sk) ---
-I'll try with 7.0 tree after the work. I'm using wifi as only net connectio=
-n,
-so blacklisting is not a good idea here.
-
-Just now is reported wifi temp. OK:
-
-mt7925_phy0-pci-6200
-Adapter: PCI adapter
-temp1:        +47.0=C2=B0C=20
-
-But FAN is still 2100RPM :(=20
-
-load is low:
-
-migo@migo-HP:~$ w
- 10:29:37 up  2:37,  1 user,  load average: 0,19, 0,25, 0,25
+--- Comment #12 from The Linux kernel's regression tracker (Thorsten Leemhu=
+is) (regressions@leemhuis.info) ---
+Please also check if the CPU is using the sleep modes (powertop might be one
+tool for that) and running in the low frequencies when idle, just to be sur=
+e;
+afterwards I'll forward this to the hp-wmi maintainer
 
 --=20
 You may reply to this email to add a comment.
