@@ -1,70 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF2C39184C;
-	Tue,  2 Jun 2026 18:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432CA33D6D5
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 20:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780424504; cv=none; b=aTnoQu6t+zxRhsPMfiump0Z/IrR7rL1Qa3RvfatUL0GNVunA2mCQVhJ8fdZTlxDx1VskG3pvuiMvhEKnU4uilGdPa74bw8y64ohJzQ00ia81zVi+9znmFjPneeQooE+Y1TIIm2QJZhhcvk7Rweyob644hPZ0Rr8LF4MYco4hm6g=
+	t=1780432770; cv=none; b=Zc92rNcdBuLZ/NJfYUPKi3+bOTZ9xswbAOp58ET3SaZSimkSDXhks02BRS3USQJ1AEPvweKu9bqHp+0pXLpoj8ju4ZS5YwP9yoIE/yIQWzUDmpfSOQYgHZxUXJ6/It1/biOi13tAo6uBG0dDpsgYtHuLi/oLpZSzwjV/V9dZaYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780424504; c=relaxed/simple;
-	bh=8ytOHlLqGjw8D/71xahC8oDz2wv2y5Lsxg55xpfbd6w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sn1aVK2RyfrXRJ2RC1HGHF1tPYEKMP9ZndSOv0rtWEIZpELupztSOphc40dODR1yUE7dduGqzM39sP6NvjsyP/MFu4y0AKA5OCLigYuCb9sY4pzNEoi/Mwgbu4jPqgUAaqoeVccXxwIxb8Mlf+Sj4BQB4el8L4HhYDzzwCBlXBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MivB+XLK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780432770; c=relaxed/simple;
+	bh=107OotYueZVYoNNX48/b2QcIt1fJX/9PJyz/pkZBIjE=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DsJOmBtpi5+I0Kb+vh1Y4+6AsRKsMItb0yUbjHu05pA5ZtMsk8ohoT9Cy+wTpkW401+WwTKCSAGoaVlwGTgNb00gRdrVxHq+JsHQwa0JPfloaTzNpDV+cOdOXdhfw3DAMDH4rXPlZq9AbA/C84L+4DqelQCb7WQg7yV/eRkXU4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOxv+Wxh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MivB+XLK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30DD1F00899;
-	Tue,  2 Jun 2026 18:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780424502;
-	bh=b+ThjlcJjpLxxMSne/TmFnpLJdJaPgKpkVosByRLWi0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MivB+XLK5N4S55oTvZt5EaXMm2e2lVGBQFrevRgbEvHxpRHKSFNSZ1EdrD1tCxfnR
-	 Ih0YZ0VmdFC3gn6eJ2OdrAkJB5G/j54Ecw0QmhROAiAd2KQeVwSc/zwmAI0x+hX9Ta
-	 y5f+KocjaygiPBuwXRT58S+u1EsWR0P7QlCJ6Tm5CvgVHlL+dFOM7CVCalVVrNCSrB
-	 hYitwVNDbKAtQMvrEHZBB3jDd2j+IE5800akRhjjoVQoz2paI+HeEB2poZCLYeIDLb
-	 N0/IWiA7JzbOloauZSoc12CGcK3Iyl0K/BuVSFKsuWrW95CPakjdqVQx+ofcOyvsHI
-	 eInCIM7xwCkiw==
-From: Sasha Levin <sashal@kernel.org>
-To: Nick <nick@kousu.ca>,
-	John Veness <john-linux@pelago.org.uk>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	johannes.goede@oss.qualcomm.com,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-Date: Tue,  2 Jun 2026 14:21:20 -0400
-Message-ID: <20260602180900.acpi-toshiba-reply@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com> <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk> <8503d297-68ca-4bfe-bbdf-537a85890d86@oss.qualcomm.com> <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk> <eddc6acd74abcea6131f3cfc606bc596@kousu.ca> <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOxv+Wxh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C816FC2BCF4
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 20:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1780432769;
+	bh=107OotYueZVYoNNX48/b2QcIt1fJX/9PJyz/pkZBIjE=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=VOxv+WxhockSZ8dC4GyxXx02ESeOwSTdRtLjKj0D3FaOhE68ldoP/REHI1DLNqqZ1
+	 Yaa/OKbXT66nAooBnQ6m/lTnLLFG7Wv9boxEYgyMwQ6IfKnEuATcd8iS4Y4e9czp1G
+	 MKdqKx5elsc528f17Wc47pVSOrGWJh20jOhwsULpyO6Op0HSuSTuiXa9p8meAos6JQ
+	 cAYdrWnnG5q7IS/MVerQbJzZJxRCGsjfxqrxERIDjh+/U0tbSMrUDalBw3o8y5OnBH
+	 U7ArDuuL1sjcfZ52t1ofap4go1ViNQYfGZmsXNs7AyLl3f6K0bCnx9JQz/JnVD70uq
+	 SeEVUCXjA6SRw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id A2D68C41613; Tue,  2 Jun 2026 20:39:29 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221583] Lenovo 82KU: keyboard backlight works via Fn+Space but
+ no kbd_backlight LED device exposed
+Date: Tue, 02 Jun 2026 20:39:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: george.stafilidis@proton.me
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221583-215701-6EomSpTN0h@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221583-215701@https.bugzilla.kernel.org/>
+References: <bug-221583-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 01, 2026 at 02:12:50PM +0200, Rafael J. Wysocki wrote:
-> The patch is there in 7.1-rc6, so it should propagate to -stable kernels
-> over time.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221583
 
-I've queued the fix for 7.0.y now rather than waiting:
+--- Comment #4 from George (george.stafilidis@proton.me) ---
+Hi Rong,
 
-  a004b8f0d3bc5d ("ACPI: button: Enable wakeup GPEs for ACPI buttons at probe time")
+I repeated the test while checking the debug files after each keyboard
+backlight state transition:
 
-along with its prerequisite:
+* Off
+* Low
+* High
 
-  fe80251152fed5 ("ACPI: button: Fix ACPI GPE handler leak during removal")
+The contents of both `/sys/kernel/debug/ideapad/status` and
+`/sys/kernel/debug/ideapad/cfg` remained identical in all three states.
 
---
-Thanks,
-Sasha
+Relevant values remained unchanged:
+
+```text
+HALS: 0x0000ca40
+_CFG: 0xfe0d0018
+```
+
+No differences were observed when cycling the keyboard backlight with Fn+Sp=
+ace.
+
+Please let me know if there are additional ACPI methods, traces, or debug
+options that would be useful to collect.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
