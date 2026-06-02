@@ -1,189 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1762E1ADC83
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 04:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287433C2790
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 08:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780374858; cv=none; b=ZerulzfzkFQ+pl28DgguK3+r8OW9ohIGtTz58RnctlKv/sV1gUcuDC7OTSa1FqSsbU3eK3/jz6Uh7ibMdstDH9qXDe31SKng5wP1juHFGq8kOuls7HsIPVSKY4i5k1PTQ3Vgx9I+L/z15QU1+Jac9jxD03pOYraWhU4a6YyIW8k=
+	t=1780388774; cv=none; b=FmP65AB6y3ZyENZr3MSoi354ValtXEgPh2tIM9JgLuLLVIidTPf0YBL+uSw0H1Vp39uy4UdgfRh2JlOGxWH0Iy37uw9AKuKad886jeQ47SsZZIS2/1DZXP1YJ02SRx11gCG+Qzr7lxJhtGPYqK3xLFS2wEHgcejig0GcRt+kU30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780374858; c=relaxed/simple;
-	bh=F+0ImLhGbX6w7DwoovcXON14gshqp4K1OIczuw7iplc=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WjwqvARe3KOckuzCpEcvdgYmq91+9Kt/Bu6dCNiV9tZAjHQ6VNBYQun+QbGQ3kVaFk4kYuQ+SfoaXVJk9RzlXBjN2s3OxA5FKcPbOce/cP0RoFOxsAs/+aIMRfPoBlJv04EvMX7ek1+rQEFfNhNgzPcJL1S36XX2fVWz2yPMjJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2XecBFO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2XecBFO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B42D4C2BCC4
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 04:34:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780374857;
-	bh=F+0ImLhGbX6w7DwoovcXON14gshqp4K1OIczuw7iplc=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=W2XecBFONq+BrC+g/4rZkoAlnudSvw8w4GSd17ou17MIcPKrqTUUhe3Qh9pYG3x4Q
-	 8M1pJ1KCnS4ICjpSAeHoEzCtPAoxn/CyX4Giv/IIDiP3oNJAeLHSKQhoO+zyXfSAwl
-	 L6YdiTcjcdODCEY2Q8m5ehTOPzK7U4Pz2IvrYFTVGTmwTnv/XIuV+Rl8YddNPNmASJ
-	 kTg0ZyohtCDENincQ7lcgp28jPQ94KKg/VLhtkQNcrhKlDg1gXxOZdrUYK+y56pDY9
-	 OYBHyUA/bjRNFwVd+nwFwtAYvUX/Jy2/Y3jqLsPYtCdtZ3aOT6U8EBC55BDilXklDk
-	 PDlwpWBOcWhSQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 970DFC4160E; Tue,  2 Jun 2026 04:34:17 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Tue, 02 Jun 2026 04:34:17 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tacodog311@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-LoM1r8Z3RE@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
+	s=arc-20240116; t=1780388774; c=relaxed/simple;
+	bh=ZQkpBhdyPFX8K1AgwsbSqD6e4PBbKm/F+6uEvcBzPyk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RsjypQXCcJv9ebZJ+BYbN2jfGt5C3uO7jp5sU1yTB7t87jlqj1nDapTJ6Un4C+lVkggXU5cY/7iXlCZMQOBuZXpfyPRpWtyeKvXZcjubAkRNvur6wiGA9ltocYzC6ui36EduOtw1KPQ9F5L2tZYfqaljKK3TuaHZM6DN9cuUMQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wUKQZ-0001Gf-0T; Tue, 02 Jun 2026 10:24:47 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wUKQT-000iZa-13;
+	Tue, 02 Jun 2026 10:24:41 +0200
+Received: from pza by lupine with local (Exim 4.98.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1wUKQT-000000003ba-0TqR;
+	Tue, 02 Jun 2026 10:24:41 +0200
+Message-ID: <6af284545729f03a60d06479339862a2f08c6b7e.camel@pengutronix.de>
+Subject: Re: [PATCH 22/23] reset: rzg2l: use
+ platform_device_set_of_node_from_dev()
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Lee Jones	
+ <lee@kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Thierry
+ Reding <thierry.reding@avionic-design.de>, Sebastian Hesselbarth	
+ <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Srinivas Kandagatla <srini@kernel.org>, Greg
+ Kroah-Hartman	 <gregkh@linuxfoundation.org>, Vinod Koul <vkoul@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
+ <dakr@kernel.org>, Rob Herring <robh@kernel.org>,  Saravana Kannan
+ <saravanak@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman	 <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Andy Shevchenko	
+ <andriy.shevchenko@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Doug Berger
+ <opendmb@gmail.com>,  Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list	
+ <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
+ Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team	 <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Matthew Brost	 <matthew.brost@intel.com>, Thomas
+ =?ISO-8859-1?Q?Hellstr=F6m?=	 <thomas.hellstrom@linux.intel.com>, Rodrigo
+ Vivi <rodrigo.vivi@intel.com>,  David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>,  Paul
+ Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, Maximilian Luz
+ <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,  Krzysztof
+ Kozlowski	 <krzk@kernel.org>, Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>
+Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+ iommu@lists.linux.dev, 	linux-pm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
+	linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Date: Tue, 02 Jun 2026 10:24:41 +0200
+In-Reply-To: <20260521-pdev-fwnode-ref-v1-22-88c324a1b8d2@oss.qualcomm.com>
+References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
+	 <20260521-pdev-fwnode-ref-v1-22-88c324a1b8d2@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+User-Agent: Evolution 3.56.2-0+deb13u1 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+On Do, 2026-05-21 at 10:36 +0200, Bartosz Golaszewski wrote:
+> Ahead of reworking the reference counting logic for platform devices,
+> encapsulate the assignment of the OF node from another device for
+> dynamically allocated platform devices with the provided helper.
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+>  drivers/reset/reset-rzg2l-usbphy-ctrl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/reset/reset-rzg2l-usbphy-ctrl.c b/drivers/reset/rese=
+t-rzg2l-usbphy-ctrl.c
+> index fd75d9601a3bfde7b7e3f6db287ec8c5c45a20ab..f003b360629c90bb37ed0ade7=
+a675b5b0f28fa7e 100644
+> --- a/drivers/reset/reset-rzg2l-usbphy-ctrl.c
+> +++ b/drivers/reset/reset-rzg2l-usbphy-ctrl.c
+> @@ -249,7 +249,7 @@ static int rzg2l_usbphy_ctrl_probe(struct platform_de=
+vice *pdev)
+>  	vdev->dev.parent =3D dev;
+>  	priv->vdev =3D vdev;
+> =20
+> -	device_set_of_node_from_dev(&vdev->dev, dev);
+> +	platform_device_set_of_node_from_dev(vdev, dev);
+>  	error =3D platform_device_add(vdev);
+>  	if (error)
+>  		goto err_device_put;
 
---- Comment #62 from tacodog311@gmail.com ---
-I added the new driver, but Fn F6-F9 still don't have any effect.  Below is=
- the
-dmesg of each button press.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Fn F1:
-[  234.298681] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  235.717630] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  235.722288] LG Gram Laptop Support LGEX0820:00: Received event 130
-(252116994)
-[  235.964304] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F2:
-[  296.616380] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  297.040336] LG Gram Laptop Support LGEX0820:00: Received event 128 (0)
-[  297.251384] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  297.316138] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F3:
-[  325.225102] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  325.723084] LG Gram Laptop Support LGEX0820:00: Received event 128 (0)
-[  325.857201] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  326.075831] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F4:
-
-[  344.611414] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  345.024743] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  345.041044] LG Gram Laptop Support LGEX0820:00: Received event 128 (116)
-[  345.141209] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F5:
-[  371.095864] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  371.624840] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  371.737024] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F6:
-[  396.319396] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  396.833509] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  396.834992] LG Gram Laptop Support LGEX0820:00: Received event 128
-(268435456)
-[  396.988001] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F7:
-[  417.595014] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  417.936728] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371985)
-[  418.106754] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  418.217023] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F8:
-[  454.740476] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  455.211017] LG Gram Laptop Support LGEX0820:00: Received event 130
-(1073872897)
-[  455.264917] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  455.369903] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F9:
-[  470.879991] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  471.576893] LG Gram Laptop Support LGEX0820:00: Received event 130
-(1073872896)
-[  471.677192] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  471.681958] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F10:
-[  488.525493] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  489.053501] LG Gram Laptop Support LGEX0820:00: Received event 128 (120)
-[  489.149477] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  489.184508] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F11:
-[  503.160266] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  503.631288] LG Gram Laptop Support LGEX0820:00: Received event 128 (0)
-[  503.765229] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  503.920250] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
-Fn F12:
-[  520.136252] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371904)
-[  520.849363] LG Gram Laptop Support LGEX0820:00: Received event 128 (0)
-[  521.035001] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-[  521.160264] LG Gram Laptop Support LGEX0820:00: Received event 130
-(805371905)
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+regards
+Philipp
