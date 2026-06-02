@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCFD3E8359
-	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 13:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED3733C1B7
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 15:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780408719; cv=none; b=pmbgslNgJcvockuJw8+bRZkFt0igPQa58YgTRbT6VHt/p+FVzhlQBRhmlWxAkQ1YeQRoaZOC9lKvcAA29gtlYc/BFrJk8MqHzRLy2agZEO/TmaTgRG+d0Zaj3lH5kWsjdsKjMoBaEUPbNC0uE6PkcaqMuZvC08cdW52WNFtWkN8=
+	t=1780413218; cv=none; b=d/UAttBODsuPjzmXvzHxLxGs7wAIGnnNSuKbs5eBb9iwEX4tfIOdb49Bi3Y6pexQiII/V8Hjd/9nWI2aLeaNJGNvvY1HNZzCo1BDSaGT14iLNOh3T/Qy4pHKVqjGswA2aKIzE6QnIeHk4Qzn/+hZBOkzF7JwwEYa/HOASnsEdmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780408719; c=relaxed/simple;
-	bh=soWCS+JOoDeH8fw/GwO4z0TMpg41M6zlzj++i4OltEw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TMMplvm/fAu8AwLPG4eL4e3IbYwZt5BTZcL8drGZdDvYYRQlo0s/rhjB568R0VnkgamU71nSf1b+jDgAYLSw51+p6wBpr/ehyo/Oz0KJhW93qWUs1BENgDiFVQ662wvokBTnvooz3mn/v1AVeGLghWnmLNk7SAXY5OIp1HqpJKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpal4egp; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780413218; c=relaxed/simple;
+	bh=KAX9YQP5cGpxrtt3URBNcaKlaJp2vRWcwjDUMjceQ04=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=r31/0rh9XC+l5pxPHU0p8NN+ry/MJp0ShnoFQSHHZud60OlfHkPa2vNrw3W0yBNO7WqKDken4gz/9Ia6r2EbJ2+rQJtO38Que0fX7yjsJZZwcNV+O5x1ZV93owv0cqnxra1rFhiy639Ng7xDqc4wBhhZZQnLY9Ln4S9Tgo0Z6WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+J1MLd3; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpal4egp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15CAF1F00893;
-	Tue,  2 Jun 2026 13:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780408718;
-	bh=yOb7b+rhPHP396qSSk+zCTqJFdiiCntf1k3sng1htgc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=gpal4egpqVXzA/K18p+eXfvS+zoYmkuyABu7GeAKfON+7t6x1sPAZ+/5YfJkIc2Tu
-	 226zSSfiU5pc0bO00djD0J290FYbhEE5/LmaM0CcfZ7j/3mxivFLG9Gg1P3KGyCtiv
-	 22E5E2TzLcAEQD1wAsl0xhDa+bPAom33C14CezHDfvoo8xUgnrw/J9CV6JROS0QmwE
-	 0cAkTasjd0ZapySSLgToMh2qjcVaoy49eSdoBPSV7Jm+twsYUpx8WLbwaniNu6hgvg
-	 ACwDoOVBjfavQkFCl35Bubu2kCdsPKmGoQ45iDCNjjEMjMJt3Pyw5DE5HfI0FyzjUc
-	 V2aT80cM0+mmA==
-Message-ID: <ec389d15-79ef-4267-b7e1-72b04bbcf84d@kernel.org>
-Date: Tue, 2 Jun 2026 08:58:36 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+J1MLd3"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-8423f236418so1231309b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jun 2026 08:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780413216; x=1781018016; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Gm0KskA3rtBak3PjZ6QJxPkUshUw3fvUVnX0VQeFXO4=;
+        b=Q+J1MLd3mVoryhDW/rZZiqaqty0rQLBBtrpjS0GHU2L9QVjqGfgXDcs47e/GOKPeTw
+         V+RYNMlx6Wyl4dsOHl+f3ZCZ6kGV4x/r7zTsYnjO+2iwd3Kww5udE712Bg/5UT+Azg4s
+         aXKeFqvX55OI18L5TL2b8hUf/8smHJMBtSgV5RyPgFllSdqvrPXSGPyNGQcV2gPRjXDW
+         KjZGzZZ0FN5WJ1kNuPFALVv3zIjysK/ZlUkUGoFh1tJF227YMaVAtHwGIbN7Ag4YXpBi
+         xlW9G2bVloNcNS1n5toSyzV+pZAm04MTBRV5lfcKgAJfdL1CwjMnRva4SEAVXHttEykE
+         Dh2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780413216; x=1781018016;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gm0KskA3rtBak3PjZ6QJxPkUshUw3fvUVnX0VQeFXO4=;
+        b=VdZZkJFvMqvoe6OrXpiZhQbQWHdpmbheViBu7xu7Zkm6VGcDdFduqTOupBEYRTKAZQ
+         U9LvN6p4Is2+qVjtWBmMBsnBFzY2K1by+c3/W+hrMqt2tL2+v1MfXh7Yrbx8saknMkeY
+         7IFYAVMEFF3roQOXjlswPsHCWTIQyr54OcKwJPtaRdwZA6tVGYY6qaIv7X+evNErEyTK
+         WRW0+XPMvPTltf2/WOvreqU1p7MJg5WAUfdgMVNKMK7y0Ciz1otCzyA2KWb3vxHkfkRe
+         q1EEubcWs+bljciJl7GaCf+O56po74EMt5I1SMu0sbx8JvoTCyp8GqkeNGf39zPaMuZh
+         nsNQ==
+X-Gm-Message-State: AOJu0YyBkGfxYhTXPhHKA0PWaA+C/1YNiIsizrboX20uPeL2Ym3H0aPl
+	8ncYafbnywtPOQ+7Ocj5upfkY9E062mnvvUKg8oggiOqNHV+eP377pvMldnei7+F
+X-Gm-Gg: Acq92OHH4kfNjWAbo8hKXQk1it5kyOduW7xuIBcB9zG7hf7uFEJ3nN53TSJYc95Cyqc
+	Zw4xe9mhlwgXI9/CBnBly7e/DGaLrrEimSw/l+DboO0PsE3uffcIaqn9roSwi+bnLro7TE29Om/
+	E32ruiPqcampxJKJZ7zkMKCrOjK4G20vrMJcNfPVkmYckhCogtUFzagz2GWZkBOb4GfhSX/rhpb
+	sbOUooWqg1CpEuvFgVEe7jq0NfHGrsn9KP6vZV2kGLvoSbrp6JSmPYsmVqP2DVfMsL2/Z0yiPLB
+	ABdLzj3bNKNRGnIzQLpDQUsqxHC9S/cKyWt90TmnSoEY1eK2wwt+GX2PsuE1OlePmqjv7rNDHYG
+	K0FL5OqoGAWa+gB4MfPYIqOrVay2Zp0ntHC7yDV96dSwuQPGtBlJayxAVjP8MB3kVVceCMfHx5e
+	I+qN/LKf81hk9pe0m8aMdNVfCBh5hyUIvf8jFED7YjqcUinlJpfUuj4/FLnDPA4nMl70j41sXkQ
+	gCyoNVggczjLBSpMKFgRPYMOOEWmqWsjYvkATF+
+X-Received: by 2002:a05:6a00:12d6:b0:842:21f0:5114 with SMTP id d2e1a72fcca58-84282f93abfmr13157b3a.30.1780413216004;
+        Tue, 02 Jun 2026 08:13:36 -0700 (PDT)
+Received: from [192.168.1.41] (utm.nitt.edu. [203.129.195.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-842828821d0sm97645b3a.28.2026.06.02.08.13.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Jun 2026 08:13:35 -0700 (PDT)
+Message-ID: <49faacb7-3e01-4d01-80b1-4b939a904138@gmail.com>
+Date: Tue, 2 Jun 2026 20:43:26 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,61 +67,82 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] platform/x86/amd/pmc: Add support for AMD 1Ah
- Family 80h SoC
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, Sanket.Goswami@amd.com
-References: <20260601112103.1690951-1-Shyam-sundar.S-k@amd.com>
+Subject: Re: [BUG] ideapad_laptop: fans do not ramp up properly under CPU load
+ on Lenovo IdeaPad 3 15ALC6 Ub (82KU)
+From: Sourajyoti Basak <basak.sb2006@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca, Derek John Clark <derekjohn.clark@gmail.com>,
+ ikepanhc@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org
+References: <CAA7g7-S_nP+jPfi7pJKj0a0g-gKXMJ7+fMH_+v11JbRRm96b9g@mail.gmail.com>
 Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260601112103.1690951-1-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAA7g7-S_nP+jPfi7pJKj0a0g-gKXMJ7+fMH_+v11JbRRm96b9g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 6/1/26 06:21, Shyam Sundar S K wrote:
-> The series introduces the necessary device identification, refactors SMU
-> mailbox register handling for better maintainability, and configures the
-> SoC-specific register offsets required for SMU communication.
+On 09/05/26 9:00 pm, Sourajyoti Basak wrote:
+> Hello,
 > 
-> Patch 1 refactors the per-SoC configuration by introducing amd_pmc_cpu_info
-> struct that consolidates SMU register offsets, IP block table, and OS hint.
-> The individual smu_msg, num_ips, and ips_ptr fields in amd_pmc_dev are
-> replaced with a single cpu_info pointer. Per-SoC instances are embedded
-> directly as driver_data in the PCI ID table via PCI_DEVICE_DATA(),
-> eliminating the amd_pmc_get_ip_info() and amd_pmc_get_os_hint() switch
-> statements. The AMD_CPU_ID_* macros are renamed to
-> PCI_DEVICE_ID_AMD_CPU_ID_* with compatibility aliases retained.
+> I am using a Lenovo IdeaPad 3 15ALC6 Ub (82KU), and I am encountering an
+> issue where the laptop fans do not respond appropriately to increasing
+> CPU temperatures under Linux.
 > 
-> Patch 2 adds support for the AMD 1Ah Family 80h SoC by defining its
-> distinct SMU register offsets (msg: 0xA10, arg: 0xA18, rsp: 0xA14), adding
-> the amd_1ah_m80_cpu_info instance, and wiring it into the PCI ID table,
-> amd_pmc_set_cpu_info(), and amd_pmc_idlemask_read(). The corresponding
-> ACPI ID AMDI000C is also added.
+> System information:
+> Laptop: Lenovo IdeaPad 3 15ALC6 Ub
+> BIOS version:GLCN46WW
+> System performance mode in BIOS: Extreme Performance
+> Kernel: Linux 7.0.5-1-cachyos
+> Distribution: CachyOS
+> CPU: AMD Ryzen 5 5500U (12) @ 4.06 GHz
 > 
-> v2:
->   - Consolidate 5-patch series into 2 patches
->   - Use PCI_DEVICE_DATA() and maintain per SoC data.
->   - Address other remarks as per Ilpo comments in v1
+> Issue description:
+> Under sustained CPU load (for example using stress -c $(nproc)), CPU
+> temperatures rapidly increase to around 95-100°C. However, the fans do
+> not ramp to maximum speed as expected. Therefore, the system begins
+> thermal throttling after some time in this state.
 > 
-> Shyam Sundar S K (2):
->    platform/x86/amd/pmc: Use per-SoC cpu_info struct for SMU mailbox and
->      IP info
->    platform/x86/amd/pmc: Add PMC driver support for AMD 1Ah M80H SoC
+> As a result:
 > 
->   drivers/platform/x86/amd/pmc/pmc.c | 176 ++++++++++++++++++++---------
->   drivers/platform/x86/amd/pmc/pmc.h |  75 ++++++++----
->   2 files changed, 177 insertions(+), 74 deletions(-)
+> - The CPU reaches thermal throttling temperatures.
+> - CPU frequencies drop significantly once throttling begins.
+> - Fan RPM appears capped or insufficient despite high temperatures.
+> - The issue appears consistently reproducible on my laptop and another
+>   person's laptop.
 > 
+> Additional observations:
+> 
+> - The issue persists across multiple recent kernel versions.
+> - No hardware issues appear to be present. (Verified that the fans can
+> indeed
+>   ramp up to max speed by 
+> `echo 1 | sudo tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/
+> fan_mode`,
+> which makes the fan enter "dust cleaning mode," causing it to ramp up to
+> max speed
+> and then back down to 0 RPM about 10 times.)
+> 
+> Attachments:
+> - DSDT in `DSDT.gz`
+> - `dmidecode` in `dmidecode.txt`
+> 
+> Data Collected during `stress -c $(nproc)` until thermal throttling:
+> - EC information collected in a CSV file named `ec.csv`
+>   (using `sudo ec_probe monitor -i 0.5 -r ec.csv` from the NBFC project)
+> - `sensors` information in `sensors.log`
+> - CPU frequencies in `cpu-freq.log`
+> - `dmesg` in `dmesg-live.log`
+> 
+> Thank you for your time.
+> 
+> Best regards,
+> Sourajyoti Basak
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
 
-As a general statement though about patch 1:
+Hello everyone,
 
-If there ends up being too many "Special case" blocks in the future it 
-may be better to just switch to explicit CPU ID range matching later. 
-There are some other drivers that do this like k10temp:
+Just a gentle ping on this bug report. The thermal throttling issue is
+still present. Please let me know if there is any further ACPI/EC
+debugging information I can provide.
 
-https://github.com/torvalds/linux/blob/6f3ed7fec72fc8979b2a8c7219c0a9fcfc8d07b5/drivers/hwmon/k10temp.c#L490
+Best Regards,
+Sourajyoti Basak
