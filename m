@@ -1,109 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-1-115.ptr.blmpb.com (va-1-115.ptr.blmpb.com [209.127.230.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F31C33F590;
-	Mon,  1 Jun 2026 23:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C3B348C66
+	for <platform-driver-x86@vger.kernel.org>; Tue,  2 Jun 2026 02:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780356951; cv=none; b=ZkvjnJeSxJPFANgsg4qd1alWkl94UWguwjfQfucig68WnQr2aJ5sSMPJCeaP+2z9LjX/HH3bonVkGYhh/YY5Ho4WawMR9yFSxNaDB/Bfp5LPMmyOr6FGQLpc3aSedoLjc4GW/ljlZsZ8glZRIsMcM53n1VzTSkiBfoaHkSp4zh8=
+	t=1780366236; cv=none; b=LU0aOPKLidVwscRs74DWhGhQKk34pBXH56xTvba2NYmNGPp1jGO+8iKTUYqGnulT8YlqN8yHYRUWYrNRs+xKK8sFpZ2iAlfqZstx4LH6pUfkMEcCGcpMaZ1h3W1Nz78GgnyrSZh2VVBCvdBHl1Ylipfl068oGVcUx0tUOWkco+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780356951; c=relaxed/simple;
-	bh=mu+k5t+nIMpSdNoVyH2bpssgMm+HGMnEOEsZeveBT8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZ7+2Sy49W8OkBelKwRKgbivpVg6LIkE+Lk3X4mQwcCRghJyNGESIHbVWI3g84vHJPoGO633N/P4K8q/zKhBDtwDfgRvrtB+C6RQ2UZ0nzxBP1zfkOh4elUJPq6EWWIChIftFy1iR8Alxvp+Pd4WNi2UaNt093uHf7SWMhQQ+Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwFeM+dK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780366236; c=relaxed/simple;
+	bh=rQr4cgGt7UgoL3S4yiskjSogZfneK2pwoMz5gpD/drM=;
+	h=To:From:Cc:Subject:Date:Message-Id:Mime-Version:Content-Type; b=pwd44dYAaDv39JtFeccsheXGpzoXVFVLh8L5bwhwZefo8BNxkEZvS99KPl1oHixCEGcjoxmLmeVozTq/3TPuUWN/mBC5SmAfrjADB3vRReIVzKWHsdqH+zSPPydJBuzxjr71ACQOsUSZtxr8ckkC0Cotp5H4ZAg0Slf1FgrSBGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=W09QiX2N; arc=none smtp.client-ip=209.127.230.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwFeM+dK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5639F1F00893;
-	Mon,  1 Jun 2026 23:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780356949;
-	bh=BsNyXchE0cQ+WrTEzbPCgdBZhaTxYz8ZYh6ODfO6Thc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bwFeM+dKJids5MGHkWeT2lqLmOE+Z22fpYZVG8IarCaPIkYd1ClJLTF0P+KK4TZC1
-	 t1HfBIbIgLm2lF9d6SD2H1GRY5GUIy6SJwL9v8EZ3L20jIK/NaVXSt1XPTueO0oIGy
-	 y19iXABriAlFUODdDTo2f2+FK6UaosZlP/s7kW+eWFj9kPjNXvxZUpQLix9fiYAVMs
-	 qutOmIhrfL9fMTHLsw3ErfIZs150qZpCJg1stHoIzdshVCQp8iYW9sI4ko81gCNtbL
-	 eRcz3oBpBUe09WQM6FxiPQKCgb0o3dANEdBD5y5Egf4yKaQOgk8QwaFZYGWRDLloCl
-	 38TEpySFeTuzg==
-Date: Mon, 1 Jun 2026 18:35:48 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Lee Jones <lee@kernel.org>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Bin Liu <b-liu@ti.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, brgl@kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	David Airlie <airlied@gmail.com>, linux-arm-msm@vger.kernel.org,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
-	Ulf Hansson <ulfh@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-kernel@lists.infradead.org,
-	"David S. Miller" <davem@davemloft.net>,
-	intel-xe@lists.freedesktop.org, Andi Shyti <andi.shyti@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>, netdev@vger.kernel.org,
-	linux-sound@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
-	linux-mips@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	driver-core@lists.linux.dev,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	imx@lists.linux.dev, Vinod Koul <vkoul@kernel.org>,
-	Peter Chen <peter.chen@kernel.org>, linux-usb@vger.kernel.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Robin Murphy <robin.murphy@arm.com>, Frank Li <Frank.Li@nxp.com>,
-	devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	Saravana Kannan <saravanak@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>, linux-pm@vger.kernel.org,
-	Hans de Goede <hansg@kernel.org>, dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 09/23] of: platform: use platform_device_set_of_node()
-Message-ID: <178035694685.195552.1114165096275774254.robh@kernel.org>
-References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
- <20260521-pdev-fwnode-ref-v1-9-88c324a1b8d2@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="W09QiX2N"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=2212171451; d=bytedance.com; t=1780366216; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=Qvjk2VPn73XqElxLFraSfA68CbhnrneyArfCJ0SS8VY=;
+ b=W09QiX2NeMg5YUbe/nWHx0OqquYhjtiWp8WolqV4xAMelIEBGf9Lk7qLQZXAlXmvrYcrIO
+ 4aQ3KF5U30LzaKw9OusnKv2TE0i+YASUFjL+wuJlVHshoAwIIdtYnvPZa1JDeCejtdzatv
+ BkDmo5Kur/Q74kDc2/c4Lhmhl9hs2YEBbC6gMZqz2QTwZV2ux0VvJ4f6dbp/fyhST6bbsr
+ HnbdjLPayyu/BDXxgC/Inp095xPpfXZfub89dS7Y+vKgL2v9sXLieaxHWymu+9NRd8u+gQ
+ PQcvnUK+rtRPD6/U+8CpLXcLQFLYdw6THqJ9+tce5kOlXrclql1OSxxsXkqafw==
+To: <srinivas.pandruvada@linux.intel.com>, <hansg@kernel.org>, 
+	<ilpo.jarvinen@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
+From: "Guixiong Wei" <weiguixiong@bytedance.com>
+X-Mailer: git-send-email 2.50.1
+X-Original-From: Guixiong Wei <weiguixiong@bytedance.com>
+Cc: <linux-kernel@vger.kernel.org>, <weiguixiong@bytedance.com>, 
+	<stable@vger.kernel.org>
+Subject: [PATCH] platform/x86/intel-uncore-freq: Fix current_freq_khz after CPU hotplug
+Date: Tue,  2 Jun 2026 10:07:52 +0800
+X-Lms-Return-Path: <lba+26a1e3b86+0a70d5+vger.kernel.org+weiguixiong@bytedance.com>
+Message-Id: <20260602020752.3126-1-weiguixiong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260521-pdev-fwnode-ref-v1-9-88c324a1b8d2@oss.qualcomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 
+When the last CPU of a legacy uncore die goes offline,
+uncore_freq_remove_die_entry() clears control_cpu. During CPU hotplug
+re-add, uncore_freq_add_entry() still populates sysfs attributes before
+assigning the new control CPU. As a result, the current frequency read
+returns -ENXIO and current_freq_khz is omitted from the recreated sysfs
+group.
 
-On Thu, 21 May 2026 10:36:32 +0200, Bartosz Golaszewski wrote:
-> Ahead of reworking the reference counting logic for platform devices,
-> encapsulate the assignment of the OF node for dynamically allocated
-> platform devices with the provided helper.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/of/platform.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Assign control_cpu before the initial read paths and before
+create_attr_group() so sysfs recreation uses the new online CPU. If
+sysfs creation fails, restore control_cpu to -1 to keep the error path
+state consistent.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Fixes: 4d73c6772ab7 ("platform/x86: intel-uncore-freq: Conditionally create attribute for read frequency")
+Cc: stable@vger.kernel.org
+Signed-off-by: Guixiong Wei <weiguixiong@bytedance.com>
+---
+ .../x86/intel/uncore-frequency/uncore-frequency-common.c   | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
+index 7070c94324e0..f8137ee92e47 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-common.c
+@@ -275,15 +275,20 @@ int uncore_freq_add_entry(struct uncore_data *data, int cpu)
+ 			  data->package_id, data->die_id);
+ 	}
+ 
++	/*
++	 * Set the control CPU before any read path so entry recreation after CPU
++	 * hotplug can populate read-only attributes from the new online CPU.
++	 */
++	data->control_cpu = cpu;
+ 	uncore_read(data, &data->initial_min_freq_khz, UNCORE_INDEX_MIN_FREQ);
+ 	uncore_read(data, &data->initial_max_freq_khz, UNCORE_INDEX_MAX_FREQ);
+ 
+ 	ret = create_attr_group(data, data->name);
+ 	if (ret) {
++		data->control_cpu = -1;
+ 		if (data->domain_id != UNCORE_DOMAIN_ID_INVALID)
+ 			ida_free(&intel_uncore_ida, data->instance_id);
+ 	} else {
+-		data->control_cpu = cpu;
+ 		data->valid = true;
+ 	}
+ 
+-- 
+2.50.1 (Apple Git-155)
