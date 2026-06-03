@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899E439D6E5
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 10:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07063388887
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 10:38:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780482439; cv=none; b=N5jDStvJE/LPn70mBVPWFx+NMbVqTv3Zq2BRbJ5veQIqqWHO+nBzkNNONcU9gG52LkCjney6QdD2ZV0P2PmESjjY9NE2EuqcVgXhf2H2EVw73vN/HZsOi1zmEjceBDQ1lknvIBMUo22jjp+3aC7rAoMLgOP2JzseoM2nLGxoYK8=
+	t=1780483104; cv=none; b=adk+WHCzQ1rPHB6nMoMtEIUF2KTyvT39s9TZK8JCqw8N871/TTTQw1j7f99JVgVGy4ey1DjcmYug9X+06+VCZgwIij47V0wSp8iVEx4x7HY02MnMjkGqH+xB78P5+WMKMOlAx6KkgVB1Dmp+uL3P/AM4Wu11lKHO+TefZ3bP4ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780482439; c=relaxed/simple;
-	bh=C+RCeHVAbaMr0zm2y0NrYY+l5S60U+LhYxaTStZlKSY=;
+	s=arc-20240116; t=1780483104; c=relaxed/simple;
+	bh=l3968OJaRF4ouvL2NbPVbh0TeQQPGhF1fppPYZ7RHwM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OB/B/NfhL0y+GfzfF4PT1kU80ZXPvK878vICr/0iLJBos+JhWdUIg1sZ+Lak9M0S4iPayCbQ3xM113OCo7I2LMfqQTNBzaWE+czdWo0BEzNYgfinc03LxPugSFhtSoOvaH1vdBj6fvt8kO8b7lzwPPPm7vVggQ0RvG6I9veRrCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SfbeT/dL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=a5gl5skUwdjq/x8/Bj0pie5DHs2FkvRoH9KCGkW2hnHH0tge454licp1DaW4EjH2IRz+LlB9+FtXU00h2JmZGn0h7a61mdNrfZTh49d16hjlAOVRtH5pjmfH4iABnpt3t1OmyBcqgMlLFcejDOfBTOStZdkCerUNNTHHcqHtSr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqHTLzSH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SfbeT/dL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E3EDC2BCC6
-	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 10:27:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqHTLzSH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 94F19C2BCC6
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 10:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780482439;
-	bh=C+RCeHVAbaMr0zm2y0NrYY+l5S60U+LhYxaTStZlKSY=;
+	s=k20201202; t=1780483103;
+	bh=l3968OJaRF4ouvL2NbPVbh0TeQQPGhF1fppPYZ7RHwM=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=SfbeT/dLd3rIvB3Rc4Kgcox7Pk9GcGW1lniBlnx4OoeH2GnT28rzk/7UsyYxSa+N/
-	 4lPtQkA6i7G4fhFCI6sk0H8aupXs1d4Js5MRylQQrIGNLcRUQxzh4eDOjrMPjTU/tH
-	 WanrSl3+qq5W6bbFzJuMD3tTz60n1jEN1tdMPC9yOh49wWk0gSGV+FFFNm5BIG3xR/
-	 ZE9YnEFSD2F3JgN7Zc5pdpa/uWSDHmqcIACnTlFeGItFcpnBJOEwVxqwiYKna8fs8L
-	 bu9tryFSs7ceSxFfdwgX0JaT71MEOrqwh5ITcvomueYzPjcb9Fi5wwkvZkH6G0j0Om
-	 cF9R8+4nHDgTg==
+	b=tqHTLzSHNJl3RMDJgCbGx2GdP4KvAe41PNT7aYX54mUQEYaMHnnK2Thu/5cujoggl
+	 AtVqA5lG/2xwV95LJXc8ASlwrDB2t4xdVr6maGWOMs5abpKbCGDo2LWGFxbp1/qJXm
+	 slX7d7HLtSjk42kbJTTooTyWUujc2KufQvZaPOoMdzp8Q5RfCJPSZzoBmrR7EHhDFr
+	 pUMJHPCn686X9rqMKY8ToVZ0Wi6nDppil7lLs+TS7fqLlJuBNRCXbVV06jMGTz36Gx
+	 AA3auMhGB80n5Ziv2VT05UpBs/peqXR4jv3UtGzcTLuvhmx33wwUv5rc72nJ8M+YKq
+	 ZQEtIFzB39FUQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 32DDAC3279F; Wed,  3 Jun 2026 10:27:19 +0000 (UTC)
+	id 768EBC3279F; Wed,  3 Jun 2026 10:38:23 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
  models (16Z90S)
-Date: Wed, 03 Jun 2026 10:27:19 +0000
+Date: Wed, 03 Jun 2026 10:38:23 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-lpZIba2X7s@https.bugzilla.kernel.org/>
+Message-ID: <bug-218901-215701-BrloQkt1nJ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
 References: <bug-218901-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,19 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
---- Comment #68 from Armin Wolf (W_Armin@gmx.de) ---
-F1 -> KEY_CONFIG
-F2 -> Ignored
-F3 -> Ignored
-F4 -> KEY_F21
-F5 -> Ignored
-F6 -> KEY_F16 and notifying the LED class device
-F7 -> KEY_PERFORMANCE
-F8 -> KEY_MICMUTE
-F9 -> KEY_CAMERA_ACCESS_TOGGLE
-F10 -> Ignored
-F11 -> Ignored
-F12 -> Ignored
+--- Comment #69 from Armin Wolf (W_Armin@gmx.de) ---
+Please both check if the hotkeys now emit the aforementioned keycodes, you =
+can
+use evtest for that.
 
 --=20
 You may reply to this email to add a comment.
