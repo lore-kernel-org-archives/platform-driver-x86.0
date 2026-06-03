@@ -1,132 +1,295 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A453343886;
-	Tue,  2 Jun 2026 21:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51693330675
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 01:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780437190; cv=none; b=QM5DZ5mjOJ9FPi50MCAhbeMHVawp7ZHrVDt7B4jy+VwShO78eG0DJDQNgiC9CwAuaBu96KTdGW67vAiWQQYyfOi7+TTAXu/rfGmtQvNypKjFlGB+SzQmW4bBt+01+6gE5GjX4P7RFZ9yU09TMqDXv/x/UuAmx2R7JDZ7NCcKdW8=
+	t=1780449611; cv=none; b=JRjDtlRtnCSHyj8dvPoOz9CO/eEDO3ijmXXa0YnkHMOGSZL8xJqQxdhbDaWMQzhhU17V41K8FsrC2c8Y99MKnsuPfZEQcpoWgrcKASZzsSDsXaTzDBkiTUDeTSsH4tKedd4D0rDF5wbgDrQIBi7380BZUQwh+ZYRz+Y6DojQlg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780437190; c=relaxed/simple;
-	bh=U2Ci0y5zstQSqkf04hmNdjkbNsyqDpkboO1KnVKRMOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nISWfTEniBNSeBbD+lVkpc8BXuJW2TDuaacxIDmY25WGNiGxjctYr/O3JdZFERCHjx2TG/ChyZvXqlpjWhh+DH44/Ll7xfcCFAjCO3wBuHQMJwwf084YNjbaVerOL3qTQ/WMihWv9ZQK8W/KAt61t6nHz/vOP/UyNhz2e1oxrsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJ5oML5+; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780449611; c=relaxed/simple;
+	bh=X2dEVd080G3tFtSLGg0TPfgttDaglj7OY7qYN8LWK1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Za3dYzp1suf8Vj10iXgrRyKDv2R4qqQka15fEhyDQ4/RbY3BP45lgv6nr/tUl5EknHet+NailfRCoPKPsU26ccmFnWuQ8tgCSgqWFgXU4Q3sVYu1yMqC/FjgO9+TPI37n/OI8oM4MSrReG3GYuxRQm/UiJdZ3GChMan8IRpACd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LvXPIZMm; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJ5oML5+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780437190; x=1811973190;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U2Ci0y5zstQSqkf04hmNdjkbNsyqDpkboO1KnVKRMOs=;
-  b=GJ5oML5+Ctf884JcW1blm6+nWVqkMp6/FtaDmKyQ/ybFUyx0PKyeAtEE
-   ywaouyI5kVYEalzUFtMG8RsIFr+sdr2pbaJdQXKCNIYvMjqIwq+tOGPJM
-   7zSGvPCj5rlvtQIq+4wLFIlC77g2aDXxSs1KJKHZx5kOmMiBnLsnGXcft
-   4dXmPtDCR8aQtkb/5vbRellpC+6SL09v3fGXwrx6JUulu+leVpF5ikJjn
-   2IlgQN+HVDH/n3Iz+mVyzMVeRopsnZwciC8hkOecW/6iMnBl1JiFU2dWz
-   Ba0gfsl4gMkUfnYkVclcALbrIVfucMFAW/EcEwGxUMjFVWnKqbPsebAcG
-   g==;
-X-CSE-ConnectionGUID: HZtwcMcrQ4SDZe/sWmXtyw==
-X-CSE-MsgGUID: PypeyUUwRPOkMvKP6HDmpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81139230"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="81139230"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 14:53:09 -0700
-X-CSE-ConnectionGUID: YYc13f2oRhu39dVGUvMdoA==
-X-CSE-MsgGUID: IznHTBKXQ4W8nlCW1v1K1g==
-X-ExtLoop1: 1
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 14:52:54 -0700
-Date: Wed, 3 Jun 2026 00:52:52 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Peter Chen <peter.chen@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LvXPIZMm"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-36d98b68d68so2136148a91.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Jun 2026 18:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780449610; x=1781054410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iCMJDiCIgzAtqnt6dz74YTjqS3h40asLQNcG80V0akc=;
+        b=LvXPIZMmX0W+a7Rj6WAY7n68OHk+uuW8hnN6d68zRWOhCqybnAYOrzBEftRmDnlyKo
+         /J3bsfmQV5gK07f0ObzwT+Rzh0hR5d1yZU/L45bzYQ4keUACsEp6pfJRIj5XE3M0qPB7
+         1nCt2UtNa9dSo5JWR4jt7M4H1RGX+uGfDow+wECSIpCRkaFhZQa3YeE045nqwjvkdaCo
+         IfMNx/wk8RFGZdBRNoooftx+Szq7QzXrEUZhOScMpqG/ezZPRF2qevU9IzABLFKkYsGC
+         ZxYqu3/Nvy5uCVvnW7UB2FwjFyCuOiE7pa6yWlhu9N5VocO/SspoMUwfjVd1MqcGeK99
+         JDPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780449610; x=1781054410;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iCMJDiCIgzAtqnt6dz74YTjqS3h40asLQNcG80V0akc=;
+        b=I2WY8VHH+05lINvHhLOciJw5/VogB2cuSdDUu3602xZM/rPPFIVAomhJ4jwzuijrmE
+         sL4nCswisZBtbresyslho3saLLkSXPK8Fo4E+Sm95+WD+CJLs7JvbNcLk1EUVNw4yRpm
+         xfSyGkXmsrg8XF429I0G8k/DCoiiobXGbE4+pDXaUH49r0melMT2kGym5b/QDX17uTV6
+         pJk5b349yZrwc9Y2hnioW+FbRsrsYtVJIwoa51hw0pYO38U4q309KEqSmFScHZ5eXOZr
+         h+VYqdaQ9CZ6gD1ZnB7RmfsEdHUJZMOnHnJNXeoKEPRDR/qGDly1q5okVZRadvVlnbBp
+         vdUA==
+X-Gm-Message-State: AOJu0Yy96vR5ZvFmrLLJ3vI/E6VX4MdRM4XEv7cLkjWgc/c768DNWkSS
+	GbRvSoqxnjum5nK2ZdjK/SEUImKtoB5rWcBaH4y/Vz/6CZ/styFbIKeD73JfjBD+P2E=
+X-Gm-Gg: Acq92OE8YF6WDPlfOgYYYhdr9QypUIq8GF/cEWAMbGriA5mIr5oa18+85ke0RAEhrtd
+	p6zb9V8WOVZo0VkThir06Hh2zmiwb59iPeM14MkhW7j4MQklxI91zeKVz7R41cwX1V6LKYTSJg7
+	Aa87Jr0P50JwRtsL+yD5UcaiqeAkh5CKnSBL/73EA7VUhueiVaNTrgv4vguOy7Uz5CpzF5aTd5c
+	9Si94gzVDvYFaNzyEILcPbLxr5TvAijm5fC9Qs9S2wUMwlzP1hQ4gTFXzA8CIfnNahGG1TZywml
+	0lYrL+goT9IIayavp/0O4kNoXtxkTysKqZF2CvUR9xdt+MTYhi7ThJeNJqnnVG8DR4yzR7yjS56
+	CM6xigqAeVVMktzRMiQQdVImkwq4Jpgpu3pgn+YfZW25jjZZrHGb19PnjxTPEZm5QgblLmvvR7x
+	Y796Q2puXVi1/nCOun76bbbZNkAV1IzuxNFnXG27a9kPBTPy6BQVxInOnJKw0rEntE
+X-Received: by 2002:a17:90b:4b8b:b0:36d:bbe0:de7c with SMTP id 98e67ed59e1d1-36e30f0fb4cmr1119150a91.12.1780449609593;
+        Tue, 02 Jun 2026 18:20:09 -0700 (PDT)
+Received: from localhost ([175.176.17.146])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-c85df0341f6sm500364a12.7.2026.06.02.18.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2026 18:20:09 -0700 (PDT)
+From: Alex Yeo <alexyeo362@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: alexyeo362@gmail.com,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 22/23] reset: rzg2l: use
- platform_device_set_of_node_from_dev()
-Message-ID: <ah9QtExF2rUUTMNo@ashevche-desk.local>
-References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
- <20260521-pdev-fwnode-ref-v1-22-88c324a1b8d2@oss.qualcomm.com>
- <6af284545729f03a60d06479339862a2f08c6b7e.camel@pengutronix.de>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: panasonic-laptop: add fan speed mode for newer models
+Date: Wed,  3 Jun 2026 09:19:33 +0800
+Message-ID: <20260603011934.43467-1-alexyeo362@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6af284545729f03a60d06479339862a2f08c6b7e.camel@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 02, 2026 at 10:24:41AM +0200, Philipp Zabel wrote:
-> On Do, 2026-05-21 at 10:36 +0200, Bartosz Golaszewski wrote:
-> > Ahead of reworking the reference counting logic for platform devices,
-> > encapsulate the assignment of the OF node from another device for
-> > dynamically allocated platform devices with the provided helper.
+I have a CF-SR4 and Linux works out of the box. Compared to
+previous models, this one seems to have the fans running at high speed
+by default when the computer starts.
 
-...
+When Windows 11 is booted up, the high fan speeds persist just until the
+login screen. Once the login screen shows up, the fan spins down.
 
-> > -	device_set_of_node_from_dev(&vdev->dev, dev);
-> > +	platform_device_set_of_node_from_dev(vdev, dev);
+I had suspected that this might be the laptop ramping down the fans when
+the OS declares that it is Windows but this does not seem to be the
+case.
 
-Same Q here, why it uses inherited call? Cargo cult?
+After analyzing the DSDT and SSDT of the computer, I have found the
+following:
 
-'reused' flag is solely pin control (provider!) thingy as far as I remember.
+File ssdt10.dsl under \_SB.PC00.LPCB.EC0:
 
+Name (CEFM, Zero)
+Method (SEFM, 1, Serialized)
+{
+    CEFM = Arg0
+    REFM ()
+}
+
+Method (REFM, 0, Serialized)
+{
+    If ((\S0IX == 0x03))
+    {
+        Local0 = 0x05
+    }
+    ElseIf ((CEFM == Zero))
+    {
+        Local0 = Zero
+    }
+    Else
+    {
+        Local0 = 0x02
+    }
+
+    \_SB.PC00.LPCB.EC0.EC88 (0xB5, 0x79, Local0, Zero)
+}
+
+\_SB.PC00.LPCB.EC0.CEFM would seem be the current value
+for the fan profile. On startup, this is set to 0.
+
+Based on the code SEFM seems the be the method to set the fan
+profile and REFM is executed right after.
+
+I don't have access to information as to what the argument officially
+means but based on testing, any number above zero makes the fans spin
+down and behave like the older models where it stops or runs at low
+speed when its cool and ramps up when the processor gets hot.
+
+The only relevant values for CEFM seem to be just 0 and any number above
+that just gets treated the same. I personally use just 0 and 1.
+0 seems to be the high fan speed mode and 1 makes it behave like
+Windows.
+
+Giving 0 as an argument reverts the fan back to the way it was during
+startup where the lowest fan speed is quite high and when load is
+applied, it seems to ramp up to an even higher speed which I think would
+be its 100%.
+
+A value of 1 seems to have its max speed capped lower than 0.
+
+For both modes, fan management is still automatic.
+
+fan_mode only shows up in sysfs only if \_SB.PC00.LPCB.EC0.CEFM and
+\_SB.PC00.LPCB.EC0.SEFM are both present which should mean it should not
+show up on unsupported models. I have tried not hiding it and it just
+outputs a generic error when the value is read.
+
+I also saw that variables such as eco_mode are kept in memory, however
+for fan_mode I rely on getting and setting the value via ACPI.
+
+Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
+---
+ drivers/platform/x86/panasonic-laptop.c | 98 +++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index b83113c26f88..3a8bbd633fd1 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -507,6 +507,76 @@ static int set_optd_power_state(int new_state)
+ 	return result;
+ }
+ 
++/* on newer models (ex: CF-SR4), fan mode can be set */
++/* check if this is available */
++
++static acpi_status check_fan_mode_present(void)
++{
++	acpi_status status = AE_OK;
++	acpi_handle handle;
++
++	/* check if read and set are available */
++	/* read fan speed profile */
++	status = acpi_get_handle(NULL, "\\_SB.PC00.LPCB.EC0.CEFM", &handle);
++	if (ACPI_FAILURE(status))
++		goto out;
++	/* set fan speed profile */
++	status = acpi_get_handle(NULL, "\\_SB.PC00.LPCB.EC0.SEFM", &handle);
++	if (ACPI_FAILURE(status))
++		goto out;
++
++out:
++	return status;
++}
++
++/* get fan mode state */
++
++static int get_fan_mode_state(void)
++{
++	acpi_status status;
++	unsigned long long state;
++
++	/* bios default is zero which seems to be some sort of performance mode */
++	status = acpi_evaluate_integer(NULL, "\\_SB.PC00.LPCB.EC0.CEFM", NULL, &state);
++	if (ACPI_FAILURE(status)) {
++		pr_err("evaluation error _SB.PC00.LPCB.EC0.CEFM\n");
++		state = -EIO;
++	}
++	int result = (int)state;
++	return result;
++}
++
++/* set fan mode */
++
++static int set_fan_mode_state(int new_state)
++{
++	int result;
++	acpi_status status;
++
++	result = get_fan_mode_state();
++	if (result < 0)
++		goto out;
++	if (new_state == result)
++		goto out;
++
++	union acpi_object param[1];
++	struct acpi_object_list input;
++
++	param[0].type = ACPI_TYPE_INTEGER;
++	param[0].integer.value = new_state;
++	input.count = 1; /* takes one arg */
++	input.pointer = param;
++
++	status = acpi_evaluate_object(NULL, "\\_SB.PC00.LPCB.EC0.SEFM",
++			&input, NULL);
++	if (ACPI_FAILURE(status)) {
++		pr_err("_SB.PC00.LPCB.EC0.SEFM evaluation failed\n");
++		return -EINVAL;
++	}
++out:
++	return result;
++}
++
+ 
+ /* sysfs user interface functions */
+ 
+@@ -778,6 +848,29 @@ static ssize_t cdpower_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
++static ssize_t fan_mode_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	int state = get_fan_mode_state();
++
++	if (state < 0)
++		return state;
++
++	return sysfs_emit(buf, "%d\n", state);
++}
++
++static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	int err, val;
++
++	err = kstrtoint(buf, 10, &val);
++	if (err)
++		return err;
++	set_fan_mode_state(val);
++	return count;
++}
++
+ static DEVICE_ATTR_RO(numbatt);
+ static DEVICE_ATTR_RO(lcdtype);
+ static DEVICE_ATTR_RW(mute);
+@@ -787,6 +880,7 @@ static DEVICE_ATTR_RW(ac_brightness);
+ static DEVICE_ATTR_RW(dc_brightness);
+ static DEVICE_ATTR_RW(current_brightness);
+ static DEVICE_ATTR_RW(cdpower);
++static DEVICE_ATTR_RW(fan_mode);
+ 
+ static umode_t pcc_sysfs_is_visible(struct kobject *kobj, struct attribute *attr, int idx)
+ {
+@@ -803,6 +897,9 @@ static umode_t pcc_sysfs_is_visible(struct kobject *kobj, struct attribute *attr
+ 	if (attr == &dev_attr_current_brightness.attr)
+ 		return (pcc->num_sifr > SINF_CUR_BRIGHT) ? attr->mode : 0;
+ 
++	if (attr == &dev_attr_fan_mode.attr) /* mostly present on newer models */
++		return (ACPI_SUCCESS(check_fan_mode_present())) ? attr->mode : 0;
++
+ 	return attr->mode;
+ }
+ 
+@@ -816,6 +913,7 @@ static struct attribute *pcc_sysfs_entries[] = {
+ 	&dev_attr_dc_brightness.attr,
+ 	&dev_attr_current_brightness.attr,
+ 	&dev_attr_cdpower.attr,
++	&dev_attr_fan_mode.attr,
+ 	NULL,
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.54.0
 
