@@ -1,34 +1,35 @@
-Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
+Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08053DC878
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8602F3DD532
 	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 03:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780456291; cv=none; b=XVgkp6eTcQNl0TQlVjpAUyNUbUVNxBet0ZPThAV/b+NS7SXCKX0VU9lP+IexnQZH80+0utH2otObaN3QMpWyuvgTLTX0Swrqk7weTLb95NJEu3HSvAAVxXEQbC/7XU8GMnkjz9PdoG8H8y+VRfcMCcCaAQG0luX51sRKAAyuJ3M=
+	t=1780456291; cv=none; b=d2WDggI+V76yZHWhYNgYH+zLVdJ7f6xOyYBKdGT5vXP1X08wZZOA2J+rOqSen5zIRYOv6q/5rzO9XZJFiQUUnuZtNjZ6svSSeSV0wCV8j5lyFtctdoffvOpk851idYsaEnUhUs6DjOLvkIMVl1KT+uaH9VNDC9N5sRqinMBmeso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1780456291; c=relaxed/simple;
-	bh=dqmVPkuuCqEikPbWzr60t9r2f3WZ/48k53ecR65Iy7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oZD78Ji1ElEJ2No2N+T5PCa1cal8CCX13LxbYVSJsZrRB/2rnOzCY4fFGp2tCW92EFQaXPcJ/3trdv6fDqgaZeU7s5Ssjp7rQdc5P/GXSlETtW38DRRXPStON6VPEmDQmScjuosu5hnbv8ETZ8xUJjGR7gtObb6FmYKP3mt67ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=AUYdu/hd; arc=none smtp.client-ip=83.166.143.170
+	bh=isRXKxL0q1oc209W6uQUczP4eb2xyKf6+5fC3UTV5Hw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qIo/IfyiRBv6qDM23VhUNZ3GzREDKM7aSPqspoCgDmSBCOf/1+QtST3biwDGlecANw9EZqujhnTg+LZeuujCMxUzFvKh3A0jupD3viBuF6I3ajZlTkTw8nt4EIcXY9jaqXJTPrXZOzfwKn+0K1bLGBy+j4AdCHNDWRs4dFiyHT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=i3jLcF0i; arc=none smtp.client-ip=83.166.143.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="AUYdu/hd"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gVXlr5nmNzDkB
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="i3jLcF0i"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gVXlr6FWgzCxY
 	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 05:11:20 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
 	s=20260228; t=1780456280;
-	bh=yY9YP6fxjQ4c17/xuOJwKdv58eFitOLHWH3qovkKjWk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AUYdu/hdvtRQpxgdTHBZ3Gk24u+O/wSqFWbSk0zlxxuHwW1dqvZsuwPL0KDUDUPwv
-	 8zkUOAtOdn3SBhPWzuErhU+qXM4MJG65POBl4btkKtLVosW8ofvI75wcpAmhZnx+N/
-	 GnTSYrFTrTkNDu4GAlp3i+SBQ2FXenwySd682qgflrz0K8Uh981HeqzQabpS6FLZuS
-	 doX3IA/qldMYY9RaMdpvXymNzGKYYN6AF9dzLW/ChtiqkSnFM2I5txCo9XdOmw9iEq
-	 YL7PBHrWiaBOKssRmcC8Uv7nIHcxXHtdPs7IG/3HGJh7Tl2QWAwhGcl+jyfJelWDmN
-	 X9dGnrVOl5AbA==
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gVXlr2PkGzvYP
+	bh=s7u6TuEJ24aqktW/yoYHaCvxZsxRD1OEAJRsO0CmXcw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i3jLcF0iTH2a7P1TRmCOBTiw2kGSgsbrVAkw7JqH29jubGDBcsqLei1iITD1Z+VVn
+	 VvkNqSdtYNGqtW8DiMBBBPBPeoWSp58gQqr34GlrtkkQCaMi/uxFU16K5wgFmD72mU
+	 3lWm96U+rtGtPj8ujPMveCVo0+MJAfWjoJVpe71tFrbOFYMe4SfLLhm+94NOX8KzT/
+	 N/3kDX3u2yy/DxwDmqbIUcXn61GRWgXx2i6Yg8chHKo07yDiEPvJd3FRMsN4LQJdmw
+	 wZ2y9xIfweDH3jrIRZmx2YidA1UlJxk8AkKhfIzZI9GTh/vH1M6nvHwKWyO0GhVWm0
+	 SqtYJzAzVzxcQ==
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gVXlr2L31z1mM
 	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 05:11:20 +0200 (CEST)
 Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
 	Wed, 03 Jun 2026 05:11:19 +0200
@@ -39,99 +40,101 @@ To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Mario Limonciello <superm1@kernel.org>
-Cc: Daniel Gibson <daniel@gibson.sh>
-Subject: [PATCH v3 RESEND 0/5] amd_pmc: Delay s2idle suspend for some devices
-Date: Wed,  3 Jun 2026 05:11:05 +0200
-Message-ID: <20260603031110.345815-1-daniel@gibson.sh>
+Cc: Daniel Gibson <daniel@gibson.sh>,
+	stable@vger.kernel.org
+Subject: [PATCH v3 RESEND 3/5] platform/x86/amd/pmc: Add delay_suspend module parameter
+Date: Wed,  3 Jun 2026 05:11:08 +0200
+Message-ID: <20260603031110.345815-4-daniel@gibson.sh>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20260603031110.345815-1-daniel@gibson.sh>
+References: <20260603031110.345815-1-daniel@gibson.sh>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-On some AMD Zen3 and Zen3+-based Lenovo IdeaPad laptops the keyboard and
-the lid switch stop working after the first suspend, until rebooted.
+Enabling the new delay_suspend module parameter delays suspend for
+2.5 seconds which is known to help for some AMD-based Lenovo Laptops
+that otherwise failed to send/receive events for key presses or the
+lid switch after s2idle. Apparently the EC needs to do some things
+in the background before suspend or it gets into a bad state.
 
-More specifically, they stop sending events when pressing a key or
-closing the lid - it's still possible to toggle the capslock- and
-numlock-LEDs with an external keyboard or read the lid state at
-/proc/acpi/button/lid/LID/state.
+There are many reports of AMD-based laptops (mostly but not exclusively
+IdeaPads) about similar issues on the web; this parameter gives
+affected users an easy way to try out if their issues have the same
+root cause and to work around them until their specific device is added
+to the quirks list.
 
-See also https://bugzilla.kernel.org/show_bug.cgi?id=221383
+The parameter description has a note encouraging users to report
+their device so it can be added to the quirks list, inspired by a
+similar request in parameter descriptions of the ideapad-laptop module.
 
-It appears that suspending and/or resuming gets the EC into a broken
-state. This problem doesn't happen on Windows and Mario Limonciello
-mentioned that the Windows kernel gives hardware and software some time
-before actually suspending (before activating HW DRIPS), while Linux
-(or the amd_pmc module) does that immediately, so it may be worth trying
-if calling msleep() in amd_pmc_s2idle_check() helps.
+The module parameter can be set to "1" to explicitly enable it,
+"0" to disable it even on devices that are assumed to be affected,
+or -1 (the default) to enable it if the device is assumed to be affected
+(according to fwbug_list[])
 
-It turned out that sleeping for 2.5 seconds at that point indeed makes
-the problems mostly disappear. Sleeping for 1.5 seconds wasn't enough.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
+Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+Cc: stable@vger.kernel.org
+---
+ drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-"Mostly" because it turned out that they still occur (on some but not
-all devices needing this patch) when using a wakeup timer (wakealarm).
-
-I could build on an existing quirk[1] that also sleeps for 2.5 seconds
-under other circumstances; my first commit refactors that a bit so I
-can integrate my further changes in a cleaner way.
-
-I found several reports of these or similar issues on the web, for
-different devices, so in a second commit I added a parameter to the
-kernel module that allows enabling or disabling this, which will make
-it easy for people whose devices aren't matched yet to test this quirk.
-
-Thanks to Mario Limonciello for his support and to Sindre Henriksen
-for testing my patch and to Ilpo Järvinen for reviewing!
-
-[1] https://lore.kernel.org/platform-driver-x86/20250414162446.3853194-1-superm1@kernel.org/
-
-Changes in v3:
-- Rewrote commit messages of patch 1, 4 and 5 as requested in the review
-- Adjusted formatting of the other commit messages
-- Added another confirmed device (83MM) to the quirks list and mention
-  it in the commit message
-
-Changes in v2 (https://lore.kernel.org/platform-driver-x86/20260509013105.816339-1-daniel@gibson.sh/t/#u):
-- Documented this in Documentation/arch/x86/amd-debugging.rst
-- Added example for reset register kernel message in same file
-- In amd_pmc_quirk_need_suspend_delay(), avoid dereferencing a NULL
-  pointer of devices not detected for any quirk - oops!
-- Mention that timed resumes may still cause those keyboard/lid issues
-- Various code changes requested or suggested in reviews of v1:
-  - Some formatting changes (commas behind non-terminating entries)
-  - Moved check for existing quirk (that OVP thing) into its own function
-    amd_pmc_intermediate_wakeup_need_delay() in pmc.c, so the checks of
-    the different quirks are separated more clearly.
-  - Added function amd_pmc_want_suspend_delay() in pmc.c handling
-    amd_pmc_quirk_need_suspend_delay() together with disable_workarounds
-    and delay_suspend and also logging about the reason for the delay,
-    also for cleaner separation.
-  - If delay_suspend=1 is used to force-enable the fix on hardware that
-    is not automatically detected as needing this fix, log message
-    encouraging the user to report their device, including the most
-    relevant DMI values that could be used for matching
-
-v1: https://lore.kernel.org/platform-driver-x86/20260501032655.283789-1-daniel@gibson.sh/t/#u
-
-Daniel Gibson (5):
-  platform/x86/amd/pmc: Check for intermediate wakeup in function
-  platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops
-  platform/x86/amd/pmc: Add delay_suspend module parameter
-  Documentation/arch/x86/amd-debugging: Add example for reset register
-  Documentation/arch/x86/amd-debugging: Add section about delay_suspend
-
- Documentation/arch/x86/amd-debugging.rst  | 30 ++++++++++++
- drivers/platform/x86/amd/pmc/pmc-quirks.c | 39 +++++++++++++++
- drivers/platform/x86/amd/pmc/pmc.c        | 60 +++++++++++++++++++++--
- drivers/platform/x86/amd/pmc/pmc.h        |  1 +
- 4 files changed, 127 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index 6bafd8661d68..2d3d180c15d2 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -16,6 +16,7 @@
+ #include <linux/bits.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
++#include <linux/dmi.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/limits.h>
+@@ -89,6 +90,11 @@ static bool disable_workarounds;
+ module_param(disable_workarounds, bool, 0644);
+ MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
+ 
++static int delay_suspend = -1;
++module_param(delay_suspend, int, 0644);
++MODULE_PARM_DESC(delay_suspend,
++		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
++
+ static struct amd_pmc_dev pmc;
+ 
+ static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+@@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+ 	 *
+ 	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+ 	 */
+-	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+-		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
++	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
++		/*
++		 * delay_suspend=1 force-enables this, otherwise it can be
++		 * disabled with disable_workarounds or delay_suspend=0
++		 */
++		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
++			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
++			return true;
++		}
++		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
++	} else if (delay_suspend == 1) {
++		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
++			 dmi_get_system_info(DMI_SYS_VENDOR),
++			 dmi_get_system_info(DMI_PRODUCT_NAME),
++			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
++			 dmi_get_system_info(DMI_BOARD_VENDOR),
++			 dmi_get_system_info(DMI_BOARD_NAME));
+ 		return true;
+ 	}
+ 	return false;
 -- 
 2.48.1
 
