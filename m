@@ -1,166 +1,226 @@
-Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24507388885;
-	Wed,  3 Jun 2026 07:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780471900; cv=none; b=Mrh2dLlYhyFnKlGR64zQ+m7HCUUrS0iG+URRdW/VRio+qN8ZU6pXnQ8h8/r6Sg4ukHmRmpp5atS2yoVOqQ08IihB5BKJPElEb+uZ+WT/+Dta/GP/EU1nfGpQvK60tkaLvw07d3xPqIEWjdXIBye4YIiY4iE1cIUgMDmpK3vnXag=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780471900; c=relaxed/simple;
-	bh=xl/ZL+LeNQ/HTL6YIqdsWIM82xmbUsNRR2IZA2aRTHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=r1YIwy3E/oCfY0qE2cwNHSfAR8N9HXO7kMWTIlFRLrOhXnFxxuLbCD0v9I9HnUox3Vet9xxRS0Rb9+upYukn4Q+hVMhDSCJFsjBiKsvKiSEG5UwzymcsfYUzBlolOfN+vdr1ubdBxBEOnPXKY8Cwmmc1WbyjBi/1NrC0GDWQ4K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=VWI28U66; arc=none smtp.client-ip=49.13.27.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FD737B41E
+	for <platform-driver-x86@vger.kernel.org>; Wed,  3 Jun 2026 10:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=205.220.168.131
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780481737; cv=pass; b=pGVOu5GP0xRSc9B7kVPzq/2Dwk+/DIS1AIEnprDI1MQyFUPDYsILg3cbptLyGIofq72oj7BcAxcGpzyJvBUgK1TbpSCZXXiGQDOHou/tvZrW3fVc4jjeU70Cwhl/wJ1jGRsChd0SfW7dSyn7Vcy4GQ48z76aI9NlpVqNumjv6HI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780481737; c=relaxed/simple;
+	bh=ImyaRmLghxFwQsTJnShE9IsVAyUjBEQQdEnQ0b9Byos=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qnwk/S4S0xRdKL95l+n4VOams7kpY78N6b2atBVSkiLm706SXyRJ9OdGzRIn+5jy+7OYpYO9YLYxFqX4T5BWD3K6LJNYFPzpYapYKfF0J5/3Grbzp3R33Q2rqmqi3HeHVccKTDim7BYk24vCKZSoCmeeGRGhra8hN2YXLJQ56/A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RV/ZBQBW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=EatizQkV; arc=pass smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="VWI28U66"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
-	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=a4Wy9+o9dxmFYGHL+31TQ2z0lah9y8fKNCooOaR+Ews=; b=VWI28U66X4UW8Fo/AACRtUlDHz
-	mnJKSDMHWxO8mD8wp9PHL+uo1Pfd8lCojT2ngatNPc1VZ6IjPSSG4mL2+CD/S37ArGDtm6ImMePU1
-	GBFPbucOwN6eS13R8Tz18QqaTryu6rN6ehjI9Wa3zPTTdyf/Kx3EAa7b0JCUzvyiPlps=;
-Received: from mnencia by spark.kcore.it with local (Exim 4.96)
-	(envelope-from <mnencia@kcore.it>)
-	id 1wUfzo-000gP1-2Z;
-	Wed, 03 Jun 2026 09:26:36 +0200
-Date: Wed, 3 Jun 2026 09:26:36 +0200
-From: Marco Nenciarini <mnencia@kcore.it>
-To: Angioli Samuele <angioli.samuele@gmail.com>,
-	linux-media@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
- handshake-derived "dvdd" regulator registered but never linked to sensor,
- sensor probe fails with -EREMOTEIO
-Message-ID: <ah_XLEAkqjV9HkSE@spark.kcore.it>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RV/ZBQBW";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="EatizQkV"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6536RPj9873803
+	for <platform-driver-x86@vger.kernel.org>; Wed, 3 Jun 2026 10:15:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9n9AHlZU6kUO1j38Uc9X0HmM7AR04hZBNstxafGjgo4=; b=RV/ZBQBW1Gz7WB7g
+	C36gOhNhdL+lLAmqQlpap6noJbbxHcrt5EIxi83XQdvwRajDeMt1YFcY+H3mGLXT
+	9XatmhW6r/yTEhIszMkIGbMkNaO+fyhhVMzwIGL7bcpZ9ReeDX5jEpLuRbcstKSQ
+	YhnhXEg7Vp0lJ0rPhBLgdWq78t4NPOsw/LugKMhQPSnThw01mcIgA9my3R2A/CFD
+	SMxSsEToum0RhiBvscPxkFsFs1FxqjfwWOQrc5lvshnJbrHXt0WtI8psq0P5nZyX
+	LEs1LzosAOE89oi/Bezr5wGe+ccK2iGDRjqfsqOH5hQOImzaSe/nMOk3SRXe02I+
+	vbBXAg==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ej6a9jxg0-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 03 Jun 2026 10:15:35 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-8ccdfe1ff26so85824716d6.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Jun 2026 03:15:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780481735; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EGl5qywreiXsWEBeiJo6h/mVoO95KuytdTmRm/bppI1jRpOKtqat5Jv1cwQZVODAGT
+         6ZVTFJdLwzE7Zx30bdwDCFPq5m+f8W7NoZI/vh2b2OLO2V4Pl5oCgkGYXPtMXauyFVbl
+         geYML8dXpHYCyuxJE28mmnCeICwPC8MU7+VrKXV5tl8RSAHbNwtN7WiRQ/RF29nR8IkC
+         UnZXhnhjZaWmeyncQwNGYL0P+pfmI5jkcbzQYFc5hFOu7edoC2K+HnqDZCxQFWNPjnn/
+         NShvJYoqdMmbV+ZEhwyYIR96kBz3e5Wm1rDnWxgYCcb7sWKI0Cva6uD5yAcTObidrr2f
+         h2+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9n9AHlZU6kUO1j38Uc9X0HmM7AR04hZBNstxafGjgo4=;
+        fh=oLh3Eqi/g7f5HcyuIGNyLXXmWfsyXOYgtT8OzhXaGJM=;
+        b=UweViGA+kXSma8YjBqaeq9jLZphjlqbAg4eYw+6D5tyBCk7yy9LgpT7y8pJMv6PJ7O
+         /LLGE0buYZMC9JbGN2puyS6ACrqrb14BPBOdK5e0QXeTPseDsCu3wqXzqcajWWHWx+K8
+         WW9Gu8ZyvuEyw1bfpHz3BrChFELK0Jvv7z+LXo1RC2KKcJfQ4NMXaLTHH1dScjZyLsJQ
+         B32vsxmWfDPrkWOGpJqJvsxEGDlvy9ayzdjb3cHu7rrUobydTJ5EfnwSd7GpPEurj/V2
+         /bp8srvvMUM7vw7CKYJVKLAQ9YTyvZYry1CEQuxYLu5LqGvE21j2rCPkKoq9sg7scx+r
+         32Cg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1780481735; x=1781086535; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9n9AHlZU6kUO1j38Uc9X0HmM7AR04hZBNstxafGjgo4=;
+        b=EatizQkVu7YoBqs4qPwuLBDMEpEcTxnuqziYKDt0bPh9McXDPanapbct+i5amdkN3F
+         Jajg9ZgkfC1/+jaUiPBGfN6wi6ZRDxc28EKDs9Erk02sliQ3TkNYnj7U7vizOnqwEO/C
+         YL+eKxv0jnupOirDhq3mpKzt7RP7ts656r0cFVfxymb9MP41VbGf3AYdNhieLGJXf/ze
+         2xt13struA3s6xht/UE42oQzJerwyunWlc0ifNJ92XwPKl20aQ5CEi/YveJoz9H6LDTW
+         MuDA1GKISMtvP/l6g9fsxaGNmZ0xSQtsPgWMp1+c/FBoZyfq1TPeGfZiov1KEMegbzp0
+         3nlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780481735; x=1781086535;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9n9AHlZU6kUO1j38Uc9X0HmM7AR04hZBNstxafGjgo4=;
+        b=YWguRND+JO69gBoexhdRwJeZ61zLkqp/RgFYaCMMmFKLCw5XqStXwiQwlF07dgZ1No
+         WpwYHuDnSEhgtEBrdFCom4mXBSZvJbLgg003LzBG7y2nnsctz+y6SJK1UVJNmnjoIY+O
+         P6ZOv7M4TWIwJfjj+f6RfwX84ivy6R8aHsAzDXFN7UG8me1IMu4jCX4wVXtYsY/n0GJc
+         Vimn9rIoA5uEakK50UmDxr+k1CLgStsPNr51l2YVrlUz7boSE6uKB1SCjkIkZgs27Dpp
+         HBTX/znHiE5wnLFPUBaG0IGHJMRdIq7doWPpbufxkfIoVN366ZzFuxXQ2+YOTsJu7rJN
+         vwnQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/1MO8di5bNbkLa8+9Muw+/yTSgZE58pj36KrNAxThw1gmggzp6keYupV9ak88ZDWVzsNM1ngshNfcIo3bO/DPy66V/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL2x5hFV35tj65KTquiqMY5WsMSigjHCLsKDP01XJ5HnkmHKv9
+	gq5bUeuTFvr2e2R9zp260y92L/t9TMen0LCugioT2y8V/RUzn/Ir7cj6szKM7XbV1+dvUgZoVOu
+	TobUE9xHYyY5kRq2Y9wtDswy5pBDAJP6UPQnIwo1O2cU/5vhD2/Fbf9tn3XsWHOrsM3jahQScS8
+	+pX+LiYUlpPevUPN/kvSY9HVPc1+qugyGRI4E6OH/VEN0IKq74HXU=
+X-Gm-Gg: Acq92OFxmNkSLyRpGBOFDC2wsDqb9LG60X3X0tenl6E4dXn1gPXuLhdiT/M0gbqgcM4
+	VXLdftoIy+bgYhANrr3NBfqM33TnpQxwpZuoIprEoFL6X2HZl+kV8X+Ot/vEVZt21uQFAz+VJa/
+	/xHDkB0YxDLD+2AgE/cFWvJDGqXHEsWy7IyCEY83Lh4ALt2Ran2NF7DueMgkAyHcu/nWAnrIOCz
+	LVcwDANLCLP+vfu
+X-Received: by 2002:ad4:4984:0:b0:8cc:6c08:552f with SMTP id 6a1803df08f44-8cecdc03682mr27951746d6.9.1780481734740;
+        Wed, 03 Jun 2026 03:15:34 -0700 (PDT)
+X-Received: by 2002:ad4:4984:0:b0:8cc:6c08:552f with SMTP id
+ 6a1803df08f44-8cecdc03682mr27951226d6.9.1780481734358; Wed, 03 Jun 2026
+ 03:15:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
-References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
+References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com> <20260521-pdev-fwnode-ref-v1-4-88c324a1b8d2@oss.qualcomm.com>
+In-Reply-To: <20260521-pdev-fwnode-ref-v1-4-88c324a1b8d2@oss.qualcomm.com>
+From: Ulf Hansson <ulf.hansson@oss.qualcomm.com>
+Date: Wed, 3 Jun 2026 12:15:23 +0200
+X-Gm-Features: AVHnY4J4K5UzPNs1yW8q3X0LoIQq3c8UfPuD4kHDjf5PzjApCRf1PSF1rlsmtoU
+Message-ID: <CAPx+jO9iJBx6Yifap55NOhn5YZk8Bbwpnk+aeH+0PgYuMxke1Q@mail.gmail.com>
+Subject: Re: [PATCH 04/23] pmdomain: imx: fix OF node refcount
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Lee Jones <lee@kernel.org>,
+        Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Thierry Reding <thierry.reding@avionic-design.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Peter Chen <peter.chen@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: BzggaRZvtZ2VjLFHUcqZJ1iokVh_ZQAk
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAzMDA5NyBTYWx0ZWRfXz4fBPNyer/uN
+ OQWOmUzHdnTClFB/y0z7VWaccKuwsyDxtJl43JveTBFxFt44UD771Py29bH24VWrZv20RI3tzYW
+ Sl7qu+zJwjWxy7wffers48PEfVxZmhPvWCvv0ZFO2fBLZ3siK9hMr42ubFzxdyw07UT+Fz5SbFl
+ Yslv5lKjhwIl3PrYnTmcSzk/jKs46sLMvQloMh1zBHAWvuywWUK1QHYmmR/H8ey8PtrMlHsLKrW
+ FOzewXTXVw1RHAuRAxbjChp2k9n3WJAxnzd7i6BdxxEZPM4RuMhZH7s7xVWOsybJavxJW8CwyLV
+ zlN7Fq0fL2GWX7mDTxJkRKijcLeTHJ9t2kw2zq7nkNfNp4E9VtYnrJl1QtA8iZczpjhda4KWEpf
+ SlDS0UcMxgy3SULsgatGAI8F2dxPCsLusCv/zULUlGyqtEom2/0pHAIZTz+zOX3RunTAYqS34FX
+ 3xGzvcJCE6fNgKDqQoA==
+X-Authority-Analysis: v=2.4 cv=I/9Vgtgg c=1 sm=1 tr=0 ts=6a1ffec7 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=YMgV9FUhrdKAYTUUvYB2:22 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
+ a=RwuSGLWl7VkFDbmKPUAA:9 a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: BzggaRZvtZ2VjLFHUcqZJ1iokVh_ZQAk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-03_03,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0 suspectscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606030097
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On Thu, May 21, 2026 at 10:36=E2=80=AFAM Bartosz Golaszewski
+<bartosz.golaszewski@oss.qualcomm.com> wrote:
+>
+> for_each_child_of_node_scoped() decrements the reference count of the
+> nod after each iteration. Assigning it without incrementing the refcount
+> to a dynamically allocated platform device will result in a double put
+> in platform_device_release(). Add the missing call to of_node_get().
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 3e4d109ee8fc ("pmdomain: imx: gpc: Simplify with scoped for each O=
+F child loop")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Hi Samuele,
+Applied for fixes, thanks!
 
-Thanks for the thorough report, the dmesg and the detail you included
-made this easy to trace.
+Kind regards
+Uffe
 
-Both of your hypotheses turn out not to be the mechanism. The naming is
-fine and the fwnode path is not shadowing anything. The dummy dvdd in
-your log is real and is the key clue, but the interesting question is
-how the sensor reached a regulator_get for dvdd at all.
 
-> (a) fwnode/of-based supply matching in the regulator core now takes
-> precedence over the legacy dev_name-based supply_map lookups
-
-It does not shadow it. regulator_dev_lookup() tries the DT/fwnode path
-first, but regulator_dt_lookup() only does anything when
-dev_of_node(dev) is non-NULL. On ACPI there is no of_node, so it
-returns NULL and the function falls through to the legacy
-regulator_map_list walk. A software_node sensor with no regulator
-phandle is therefore fine, provided the map entry exists at lookup
-time.
-
-> (b) The sensor i2c_client created via ipu-bridge has a slightly
-> different dev_name
-
-It does not. int3472->sensor_name is built as "i2c-" +
-acpi_dev_name(sensor), i.e. "i2c-OVTI02C1:00", and that exact string
-is planted into supply_map[].dev_name in
-skl_int3472_register_regulator(). ACPI-enumerated i2c clients are named
-the same way (dev_set_name(&client->dev, "i2c-%s", acpi_dev_name(adev))),
-so the consumer dev_name is byte-identical. No mismatch.
-
-What the log actually tells us. The line
-
-  ov02c10 i2c-OVTI02C1:00: supply dvdd not found, using dummy regulator
-
-is emitted from a single site in _regulator_get_common(), on the
-have_full_constraints() == true, NORMAL_GET path, and only after the
-dummy_regulator_rdev existence check. So it means precisely this: at
-the instant ov02c10 called devm_regulator_bulk_get(), the lookup for
-"i2c-OVTI02C1:00"/dvdd returned -ENODEV, i.e. no INT3472:0c-dvdd
-consumer map entry existed yet. int3472 publishes that map while
-registering the regulator, during its own probe, and its whole probe
-defers (the ~30 retries in your log) until the USB-IO bridge gpiochip
-appears, because the dvdd HANDSHAKE GPIO lives on that chip. So
-ov02c10 took a dummy dvdd before int3472 had registered the real one.
-Under NORMAL_GET with full constraints that dummy is permanent, the
-no-op enable leaves the rail unpowered, and the 0x300a read fails
-with -EREMOTEIO, a hard error that is not placed on the deferred-probe
-list and so is never retried when the real regulator appears later. It
-is also consistent with regulator_summary showing INT3472:0c-dvdd with
-no children after the fact.
-
-(avdd and dovdd also fall back to dummies. If those rails are
-always-on in hardware that is probably benign. dvdd is the one
-INT3472:0c is meant to gate through the handshake pin, so that is the
-one that matters here.)
-
-Here is the part that needs your input, because it should not be
-possible. INT3472 is in acpi_honor_dep_ids, so a sensor whose _DEP
-references the INT3472 device is held out of enumeration entirely
-(acpi_dev_ready_for_enumeration() returns false, the i2c client is not
-even created) until int3472 clears the dependency. int3472-discrete
-clears it with acpi_dev_clear_dependencies() as the last step of its
-probe, after int3472_discrete_parse_crs() has registered every
-regulator including dvdd. So in the normal flow, by the time OVTI02C1
-can be enumerated at all, the dvdd map is already published and the
-sensor binds the real rail. The fact that you got a dummy means that
-gate did not serialize them on this board.
-
-The most likely explanation is that OVTI02C1's _DEP does not carry an
-honored dependency on the INT3472:0c instance that registers dvdd (or
-there is more than one INT3472 instance and the depended-on one is not
-the dvdd provider). To confirm, could you send:
-
-  - the OVTI02C1 _DEP (an acpidump or DSDT extract), so we can see
-    whether INT3472:0c is actually listed;
-  - a dmesg with timestamps showing the order of the int3472-discrete
-    bind, the i2c-OVTI02C1:00 device creation, and the dummy-regulator
-    warning;
-  - the INT3472:0c _CRS plus the _DSM result for the GPIO at
-    \_SB.PC00.XHCI.RHUB.HS09.VGPO pin 1, as you offered.
-
-Hans, Sakari, this is where I would like your read. If the _DEP on
-this board is indeed missing the INT3472:0c instance, is the right fix
-a board quirk, or is it worth giving the ACPI consumer path a "supply
-coming later" signal the way the DT path has one?
-of_regulator_dev_lookup() returns -EPROBE_DEFER when the phandle
-target is not registered yet; the legacy consumer_supplies/dev_name
-map has no equivalent, so once the _DEP gate is out of the picture
-there is nothing left to make the sensor wait.
-
-Thanks,
-Marco
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmof1vIACgkQWJ8D8Bul
-UDhKsxAAhvXDzdrZLmLC+7kV5ORVVl0oEZxv/ylThq8xzkiPdkkkdCYcf0cF/Xgp
-rH2LvTr/lqJjCL8P8S7ytzJ+8DCX7UpjnFy5AsyTJZGBa312eG9Ksrf9GMOJ5slL
-r4KqKu8feyuQNgkaYKsxO342OSlPas5aAKVUIQeEUB+1Q2eQ4ffe5MR+Rdub9a5q
-1SKIfmuAzs7DJc86gBYmA6wz7FEpmXNH3ugu3QLFLB7NlEQEHQIl8Jo3w5yt5GCi
-Gs+0JgmydKkTmNpUJ4c13tXk+G3G8Um2fg6sgwIX/pOhjbPrrzpgZgwVGI/eZdfM
-MKQ2qWYiMuDFsd3ZnXMyHrffIVMj2q/UB+ye2bAP3a9QsxubuvCaCGk+ksBRvtUk
-4GE1MQ+yFVakru93ADfTJ+ASuyaVI6fVG9H4zt46up5z04DzGYSYhXAJSOfBCz6A
-CRAkKBkTga8bHeqdt289kzgES+OIkX2XeE7eOl8JX+LoDIfQiLD7cbGynHNjR4mf
-fjfBVwTmwRES+KC5+KLbsgrdCfpX0RCb8iBmQto7jxTUImKI3xMgmHYf51PYyqmA
-/uSpYW1G4YwBGn8/9aI2P9FiQyQXdt6LTqBz+Ld9CxGiKUNvfj078lcZoa7Dq22n
-5S14yapsNfoJbEyYhIshu2exu9rcW30DGSnloS1gTuIvz+e72hc=
-=egB7
------END PGP SIGNATURE-----
+> ---
+>  drivers/pmdomain/imx/gpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pmdomain/imx/gpc.c b/drivers/pmdomain/imx/gpc.c
+> index de695f1944ab31de3d37ce8000d0c577579d64f9..42e50c9b4fb9ffb96a20a462d=
+4eb5168942a893c 100644
+> --- a/drivers/pmdomain/imx/gpc.c
+> +++ b/drivers/pmdomain/imx/gpc.c
+> @@ -487,7 +487,7 @@ static int imx_gpc_probe(struct platform_device *pdev=
+)
+>                         domain->ipg_rate_mhz =3D ipg_rate_mhz;
+>
+>                         pd_pdev->dev.parent =3D &pdev->dev;
+> -                       pd_pdev->dev.of_node =3D np;
+> +                       pd_pdev->dev.of_node =3D of_node_get(np);
+>                         pd_pdev->dev.fwnode =3D of_fwnode_handle(np);
+>
+>                         ret =3D platform_device_add(pd_pdev);
+>
+> --
+> 2.47.3
