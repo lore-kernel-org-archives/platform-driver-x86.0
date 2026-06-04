@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653C33CD8D7
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jun 2026 12:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5623C7E1E
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jun 2026 12:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780576352; cv=none; b=Agbo/cH8mWSNLOyEiADfD+Fj33k3eYbbvBNDfWwxNHAVfVvJfYA5o9QCVZ7K6z/hV+U3o6IZcXVvuuVVyHgyOJaGp+SO8Ucl+X2bnHz0krpSJo/3cWUFKqzbwbX4NN7ZadVEaSCf6yJ3k/lDmLMI9DhZnuNOl5ToX/UNOSerXno=
+	t=1780576460; cv=none; b=qZ7C2G5efpxIwAMLOjpAnhr+VNJTmqbePIW/qGk6H9L/SCECrXlvKmOe6rrna3nVYGYo4p+1RgTx1EDKNg9p51NrcEEATelkt0fGx77iKdL7humyi9d9sBUAunUUL9qN6Cyj8RxzMgZfAM/KEdIG4u0q3/4iKuG0ysC+My0UzfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780576352; c=relaxed/simple;
-	bh=LnrtZB0iEg1z1vGOmrpOOK3Cssie/DMPDNqDCPjTdS8=;
+	s=arc-20240116; t=1780576460; c=relaxed/simple;
+	bh=tRdKfjnRUz0aPl6PAEFjMNJL5WVJkUOwzH0txEdO+/Q=;
 	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YGXfIju3R1Xjss/E1LawLvJqBFJOmHQn38Be/3kGQ37G51w4PASYDifZqxynGAfkY/YAKuyg60QZBealzOwrSBJ6KbhvXUa3+J7HyPRUxbW7lrZKQM260X6uxrUJEIfcLsry4TmZplhcmqQcBG+wfPLfT6nGQ4jUxsy9Z6vwtmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cqf3MXV4; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=CSe+kSvvF38DJY1aMNxLkE5acNWIa4FqIdm2dEYZkEkp9Q3AO/YyswoOJyqDalVAcKSciZCi5MfnRt/uGwyK7bjXLFCcCrUeKVB3DCLSTdNBXjAAe8OLx6sNnpdh/9CrvuT/EYkAMBVuudLYTsXWlB4Iaea0u5YCUAI6ykrSGzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1ErmNFN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cqf3MXV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4FC71F008A6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jun 2026 12:32:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1ErmNFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625231F00A02
+	for <platform-driver-x86@vger.kernel.org>; Thu,  4 Jun 2026 12:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780576350;
-	bh=LnrtZB0iEg1z1vGOmrpOOK3Cssie/DMPDNqDCPjTdS8=;
+	s=k20260515; t=1780576459;
+	bh=kQ6M6FDKXPf9y7Y2G+ZlFRRaP5oLHz23vLbG+bNrvo8=;
 	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=Cqf3MXV4TD52LTrKp0CEYIe9g985jGUSnNRQCoaqoWqlQrEUsixL6taFahNCfDLy3
-	 +Z6as+OOsL9nqoix/FyXeZFm2nSqFAgKe0UdZ200LCLfCzZOsL9e5aeERkfHQuCGQt
-	 lbsQ7bKitUjPcn+bHj0GDLNxKoY1a2sN6xy3To0Q9KFC5vgDE0UO/KlEqKmvCmGo2q
-	 tQFH3C8Z7JCY1CQ0ki8z08Rb6/Be/+yEVtXg1G5zNpIwheU8ILhcBZYHgFoWppCuwE
-	 gB2HgfLQ286akIY4m3Bo3GCPaJEmZyP191eGzCBLL04xi+/lRCrQ3eZvv7giv/r8Wv
-	 S0m1gGv5CNe1w==
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39677c80386so6893301fa.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jun 2026 05:32:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+NBJ4YVq0qKPhBKwlYu7tF8NWywvmYZi4GL22B0R3jyTVXQBtWfaru2mabIyk5eVwtLr+scBJrlTdrYDH4zyK1d1sb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8XMmXn1Sf5eT5O/g0HFbCXluXTMfUJERAhHHlSZR4wSN9OMK7
-	9JHCyTyKd9oYesKRH2Nx5f4Y1VUa+BptA/dPRGj++fABAmZevTMMW5rBv4DpN4lS1fylkmRdhKz
-	0uwYaUDWGBeFMO+tIJn7LMSxO0sxnTuFcwVS+QqQUvA==
-X-Received: by 2002:a2e:bc24:0:b0:396:9cbb:673e with SMTP id
- 38308e7fff4ca-396af48a101mr25033101fa.24.1780576348691; Thu, 04 Jun 2026
- 05:32:28 -0700 (PDT)
+	b=e1ErmNFNc3B2GEwYqb/P6xaZrlvHojwGUKOx+yleFIv+SrequIqnOzpFPLS1QoJOu
+	 M6UveWB9G9jMFR2xQgcuoOfCqwtUFLxtREEtbjlRtcR8Oiz300JksvjDpoAiEHZWl5
+	 DK4tJNSy64M+EydtbLB3r3qwSx6AoeXlzSDvlHLB9/hX0rPhEzKIn8xc9Bfw8dWGhh
+	 8YQLs+n/OsaOYQD5t+KUjWzIRs9cKpu34ToF65wYvg8QcIy+50z8yHU8exS3cwA7GT
+	 lIqRVAp3Dz2GuvmZ2qOOkeo5ggbyFzMytBjaNxsOZHoXJpBb89z7x9cipR7tV9C/DW
+	 ReyLRDqG/Vt9Q==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3965f215817so5719121fa.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Jun 2026 05:34:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+fhhNnWwgBehDQp51uil/EK2gMpKon1Dfzzlrec7m72SjgM1yaZR+v2n4qcwHqIqc35jJJwoHdqY57M0OnGuop3Awx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWJFhScrYN4y1m412XBQLMDF+9ch1tAmnS8hDlKuzdLzcX+BiD
+	6Fg/7BU7TuLDIA/wHYOjgGJcafj95kV+i13h2Xr335+R1RiHyVwKMLsYy9FwRAksLlbML0eLarS
+	MTbn9xt6RLzaMhXu/g8VzzpuVGqWQ4XU07SegfKhZmw==
+X-Received: by 2002:a2e:bcc1:0:b0:396:8eb1:a4a4 with SMTP id
+ 38308e7fff4ca-396af436443mr25706941fa.14.1780576458112; Thu, 04 Jun 2026
+ 05:34:18 -0700 (PDT)
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 4 Jun 2026 05:32:27 -0700
+ HTTPREST; Thu, 4 Jun 2026 08:34:16 -0400
 Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 4 Jun 2026 05:32:27 -0700
+ HTTPREST; Thu, 4 Jun 2026 08:34:16 -0400
 From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <ah9OIVyrHEhcMHzN@ashevche-desk.local>
+In-Reply-To: <ah9P6Xt9SyKgc2oJ@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -48,12 +48,12 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
- <20260521-pdev-fwnode-ref-v1-7-88c324a1b8d2@oss.qualcomm.com> <ah9OIVyrHEhcMHzN@ashevche-desk.local>
-Date: Thu, 4 Jun 2026 05:32:27 -0700
-X-Gmail-Original-Message-ID: <CAMRc=McLN9Ovoqo3om-3uC=q+=rcKCoiWMctC=yvwiaHacU0PQ@mail.gmail.com>
-X-Gm-Features: AVHnY4LlXi8ln45MTUjJfpd_YWjp19dT0a-H21-M7Hc7IKBiGWRxgS3l-OaDEEQ
-Message-ID: <CAMRc=McLN9Ovoqo3om-3uC=q+=rcKCoiWMctC=yvwiaHacU0PQ@mail.gmail.com>
-Subject: Re: [PATCH 07/23] driver core: platform: provide platform_device_set_fwnode()
+ <20260521-pdev-fwnode-ref-v1-20-88c324a1b8d2@oss.qualcomm.com> <ah9P6Xt9SyKgc2oJ@ashevche-desk.local>
+Date: Thu, 4 Jun 2026 08:34:16 -0400
+X-Gmail-Original-Message-ID: <CAMRc=MdhjZhGL9tEx9WEjn2f95d=ObNM0AtBNpcevm6aHgpj+Q@mail.gmail.com>
+X-Gm-Features: AVHnY4IaL6Srer7kIaxoyyrYpvf7EUQjky2qCo2_J16coVWA1ajpEEsVM7UfQA8
+Message-ID: <CAMRc=MdhjZhGL9tEx9WEjn2f95d=ObNM0AtBNpcevm6aHgpj+Q@mail.gmail.com>
+Subject: Re: [PATCH 20/23] usb: chipidea: use platform_device_set_of_node_from_dev()
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, 
 	Thierry Reding <thierry.reding@avionic-design.de>, 
@@ -90,19 +90,23 @@ Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>
 	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2 Jun 2026 23:41:53 +0200, Andy Shevchenko
+On Tue, 2 Jun 2026 23:49:29 +0200, Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> said:
-> On Thu, May 21, 2026 at 10:36:30AM +0200, Bartosz Golaszewski wrote:
->> Provide a helper function encapsulating the logic of assigning firmware
->> nodes to platform devices created with platform_device_alloc(). Make the
->> kerneldoc state that this is the proper interface for assigning firmware
->> nodes to dynamically allocated platform devices. This will allow us to
->> switch to counting the references of the device's firmware nodes in the
->> future, not only the OF nodes.
+> On Thu, May 21, 2026 at 10:36:43AM +0200, Bartosz Golaszewski wrote:
+>> Ahead of reworking the reference counting logic for platform devices,
+>> encapsulate the assignment of the OF node from another device for
+>> dynamically allocated platform devices with the provided helper.
 >
-> But why different for of_node and fwnode to begin with?!
+> ...
+>
+>>  	pdev->dev.parent = dev;
+>> -	device_set_of_node_from_dev(&pdev->dev, dev);
+>> +	platform_device_set_of_node_from_dev(pdev, dev);
+>
+> Why do they even do that? Do they have a USB connected pin control?
 >
 
-I'm not following. What are you suggesting?
+I don't know. I can't test it so I don't want to break it. If they don't need
+it, the person who can test it, can remove it later.
 
-Bartosz
+Bart
