@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325BE3DE43D
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 01:40:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3550413A3ED
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 01:48:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780623615; cv=none; b=DVzXm8lCdjYD60ecl+5zZr6N/8GKbkyKrrRJud7CDuUxqaQInAn0Dylc94wlf+H26SibumEcdEs4hCI/it0gORulKh5KnBWiHVnQAtTVzE94qkHq3scu4Q+cwzmxzl0bjKHf4ceETeBj3OhrxLgmFxM6SYrahzq59iOsO/URaNc=
+	t=1780624135; cv=none; b=ZqJXhhtuNpQiWa1lxgOYearNqdrfjLt2npcKrshO6F7pVxWlVCLXV08aG39g2QojSAMtS5PMr3y5bPGB8obdxLeM7PEwlkQzCqmkRj23cLckzqv7k4971L4rjncYlZ2T4z75h1ye5Iw0UKpBkLpOEZO9Sgy+ciktIPyValpKm6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780623615; c=relaxed/simple;
-	bh=gJc2xW/j5b9vF882xxKUZM4u8TpEPqGtZfa6fy+5ZA4=;
+	s=arc-20240116; t=1780624135; c=relaxed/simple;
+	bh=rpfC/79zxyovixJeBjAl7TMgtMqFCkMYHu7uS6Y3FRg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oQBxBy6/2hdc4WO3uhtUJ9u8vdDaq6AKWFyhxumHgnmAtERRvvWV2R3mr3/Df99uDcINxRKy8s1eNz/LGNFveJyf1jM3cKjmd4tI7RYrdc0SRm6hlbpv5GzI7vXTLBTBwudU+LxrGOIC8iK5Qg3dxer6avFMQT8xrDu0PktrfLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kuX8MYWW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Gka2g5Eyl+1HL675EY9ucT6SXgqiAfhJG6XRoAK7atklEPqJr6RqJP2yY9qNOGCBS6EYLMLnKJe8zqlI/4Qrs5+tdISG7cvWD61CjrKGmLF/cj6Oza4ACZCjqPP/2DUq+zqFnk7E6aHbW7aWp+eMYGmpBKo0m/1jjpnBcZ6sIOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOuB83Wf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kuX8MYWW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3A97FC2BCB8
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 01:40:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOuB83Wf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8ECC1C2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 01:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780623614;
-	bh=gJc2xW/j5b9vF882xxKUZM4u8TpEPqGtZfa6fy+5ZA4=;
+	s=k20201202; t=1780624134;
+	bh=rpfC/79zxyovixJeBjAl7TMgtMqFCkMYHu7uS6Y3FRg=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=kuX8MYWWlJj5fu+hz4O0YNTSZsIbaJFWCulTcrUod8u+MI29zeP0aT+ykQscc9a38
-	 GfUaq5uj06dUro/pSpCeVeaKGXZjmJzZNNXjsKZVzv6gvdX0VqomofbQxapbdhFC0/
-	 WhjnSZgoSE8JbXiHdMrt6/SKcBZHcr2ToHtgJzihJ2X2Vn9h5TwhiOUXqA2aj6WM/e
-	 qvcoHk1g5z8igsQ1Y/9/AutYld6lXuUwZVGSYyyOOsIoV5crJICRa83v77TxD2c3Ct
-	 jKCIapeW90wmx5heFCQpTzFcWj8E+iJUKTmN1LpB2Wo4r9I3q1qx2UVLGJqHXCziww
-	 UywaWOoXDn+7A==
+	b=lOuB83WfxgaHdQ2gf87oEqs/07ilRxlCOOMKiz2CbqBDwES1+jwDNrXB9q0pjmuhl
+	 VpbNeMbXlSdELUAvjhAEoF9dySQa6mJH6u79oqoqdzZzeyQvUFqbl6OPMj+3MeNyT9
+	 MwNjKWF38T8EhikD/Q5His5SZyvYYMVSwKpwf7q1x07f5cAtqzpHdZMvgeHy8ZxdkA
+	 1mvWh4qaj7bg8lqX1Mtor0lqHqxV1YJxZxpxjIJV2e4KSjv7DfDXkg37nlxwq5+aQ9
+	 bZUHFKmJC93EDN8QkrHIxDPOq8F5Z2hcUo1YHq6xsBYuXGdVFAGDP/bAeeEHfGhg5I
+	 Co0YCjPn1Hg2A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 20495C41613; Fri,  5 Jun 2026 01:40:14 +0000 (UTC)
+	id 73D48C41614; Fri,  5 Jun 2026 01:48:54 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221583] Lenovo 82KU: keyboard backlight works via Fn+Space but
  no kbd_backlight LED device exposed
-Date: Fri, 05 Jun 2026 01:40:13 +0000
+Date: Fri, 05 Jun 2026 01:48:54 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221583-215701-bmJ12mHvOB@https.bugzilla.kernel.org/>
+Message-ID: <bug-221583-215701-DPTmEYP7oQ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221583-215701@https.bugzilla.kernel.org/>
 References: <bug-221583-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,9 +64,9 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221583
 
---- Comment #10 from Rong Zhang (i@rong.moe) ---
-IIUC, if you can only get Off and Low using my DSDT patch, you are probably
-using an old kernel.
+--- Comment #11 from Rong Zhang (i@rong.moe) ---
+Oh, you are using 7.0.x according to you first message. So that's not a
+problem. Could you attach the final DSDT patch you applied?
 
 --=20
 You may reply to this email to add a comment.
