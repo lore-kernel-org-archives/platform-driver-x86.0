@@ -1,123 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473E332E757
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 17:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9893806B6
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 17:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780681448; cv=none; b=Nvat4pFVyQOrU+O7ucfFrkfLzuucc6I5J5VcIzofHWYhT5SbqdD8P5a9DTCECcacXE236ny9QezNXDMItkq9eWzsCi4r3yh4kwXs6xHyYhuE53XFigp/ahG0CBAQtiankLqLHcjS4JY+VCYKdqlJk4a67N6CFqTPQIR8WxK2FG0=
+	t=1780681828; cv=none; b=XE4tvYgXhAjtV/4QoxcedQh5naWqhG+JJ3kQzdqpSDk+Adp+YOCOGvXr/tnsiR+LDZYJ+4tOzE0pShJb4XvMIQLE4jETCSDCuM9dYklt2TyivtC0l4UKjgAlGF5yQIi1k0vxV0QmzCcIX+FyLmLIlwN0kN/zBfusWGUO5ZIMYRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780681448; c=relaxed/simple;
-	bh=2DYivg1XTJG3UNhLkk5EvP/NDo5XzlIld+t4iq9cm5w=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IWTYZOmsyxBHJrQ7TvO3yhbR1D9JYOODyK9BKy9kiSmHn+5YsfG+zkQjt8Yyd3SFT7UFoeUvD4g5bTEPMKz9WC7b7k6fEP8h3dMIs9T81bBApQWN2/dJFSVlxlmgq2THCPXUFFf6gKZhVoSwGWXURngvoeTlA8XVvkotCeepgus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyC/ROFL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780681828; c=relaxed/simple;
+	bh=E9w6f0xrSSYtvlb3ya5JkD8VpRPp9n43dUx3ws1rFiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EnFj2+uOcnMWEx/M0WJUGLLkP743lCaAQstoNv3uWgWKXs4j/D3GjwujdvMfXZ6Pt4JD7Lc4zcleLEtxSGA480bS9pfY7YQXvItRecDFeon5xjXQpsseWP5Q+r86iJZZUsj9Y6wc346suD/npWvv3rw1VyXeMyVgQpF8l8BgGzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gLlVXV6c; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyC/ROFL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9B6EBC2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 17:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780681447;
-	bh=2DYivg1XTJG3UNhLkk5EvP/NDo5XzlIld+t4iq9cm5w=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=OyC/ROFLnmdWjlqbiAaCXNaJvZc9l1f4z1NJNDvQSc+JBfPTnqmV67Rg/yoF6f/w5
-	 j8ZColNJ9+JMUbcQtJ5GmMWZbSikK4cm84iyY6GeRM9VC8tJRVrZAazR6R/rr9DSJF
-	 1UyCSeIgJ9RjhLwFRRxSeNfFcAE4IhA7DTVN/uFyYCHIT1SdtwrkjcYdcu2llI4ngI
-	 bIhXY4kxao6Bn7LDlwOzgzSRdV+lqN7RxIqY77Ukppb6YV8BrW06rail76fKkXfqBJ
-	 cJGZUcAp7bLI78+aJibPgEfZMqjlIMECSNwBGthJ6qhRK/xPCNqdSaSs/0HMIpahl1
-	 4HPIuoElH/QLQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 76BAEC3279F; Fri,  5 Jun 2026 17:44:07 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221583] Lenovo 82KU: keyboard backlight works via Fn+Space but
- no kbd_backlight LED device exposed
-Date: Fri, 05 Jun 2026 17:44:07 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: i@rong.moe
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221583-215701-X4TZnKsakk@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221583-215701@https.bugzilla.kernel.org/>
-References: <bug-221583-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLlVXV6c"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c0bd02d97eso26025445ad.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jun 2026 10:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780681823; x=1781286623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RU4D9IDGoqS0yzp32EWwU+AQX5TFq61qrIjDkY+Qek4=;
+        b=gLlVXV6c95bOMrlsjbY7/5I3X4KkpLbBBz4n94WaZgTPXvQYjhWnrfmwFIa8ZRzTEI
+         GnPAzXNNuR5e9q7h78XH4dIQwE12iuh2bMBCuyreYAk+IZGyTQ5pES88KI37aKfFEQFV
+         BUDa8QMgqiSnoY7tcqWcNnWgbbCJxF5gYJFzmt0Um54WH3F7Pea96HfTDPlfAAJk0lra
+         6d6oHfKTlX8X3gVNRPzrtgLopK/1iW7jQuqP5VrnVn3c/xwlWvoswyPiG8Q4N6qyjA2c
+         OZDKJEtMRgUtcZxlHDq42QVbuua9/Rfe9NGxbWHJIZxX+UPOVmgC5FBhim56ZpyAY06A
+         Ngjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780681823; x=1781286623;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RU4D9IDGoqS0yzp32EWwU+AQX5TFq61qrIjDkY+Qek4=;
+        b=lM3Q0SpFNU8isTmrA3sixtVjMs0kJDuyd+XYM+6HUv5Lv4wiDP9IgIs9aOYT+yhvKg
+         7d/3JoLE+0TZWQ7QBy/IVJ2Xa6WHxbnFPI8vWkeX+yoWy4ODUuxza+RtG9Tf0aOlL3Jd
+         fSSSdbAkcvpXgWxiSQbGZk5L+FF1zegHV22gGcFWtG1oW1gBDmO3mAxJfJ8DIPa0L4Hv
+         02n5ur03tI5RFHJmRH953wIw+rvLibCISe2l3rMjwJj65xRi6GVGMgmlM6rp4w1V/LNl
+         nrTkZndD/CRyraDwlgQr2T97rIgC9Gayc4VYoTSgpB+wpdQ2I1/L/oL5LU3M7c7Ek4hB
+         DjlQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9ENcwSzemabIIAvRpCzNEmgI2buFoOwWucIiRwc0xMDFiQjdJ7lQ/BS9RbMrlxlWv797gWwrsfihfrt9wVnTCD4BTB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoLI48Tvm+x9mOyRuogHfQdlCVUZbGQzPamG1L+Q96E9I0fFGQ
+	U/Hl86qNooTun7sfEBT78+yfOvfsHhnUYZno/bTZk7NKi2C4rWZ0e7p6
+X-Gm-Gg: Acq92OF7ZrXjqitNo6JnsAmyRsemIr8cuUdnajTbfgZU8Mkg9+4BKrMdPVrM1qicyi/
+	+RoajjxC7qXmIDglFU0hohKiC1haNV9khThFjqJqzipwgqACxHz/SVsMuOr+Ph8HMzTiBG3vzbx
+	e5ZbV+NdkeHqfeASMG4cU8onBkDep2PEpdhx031MLG/mQAH2PvxDbR/DrYUBXLmX8WG4OaVZoBJ
+	8k3KFXxJ1LVgqxcn43f6c2iiQx9Fc1acxJSf1U1dNOcoyQmz97c9mcGzYe0sfecYt9g80G71EfU
+	kWgiJ10NVNVCl0fCVOC94c83palNhVfpDaHssW6swL/wYcdJksTbAluzDKn7vRohzm33ODcOf5w
+	vHpjtPVJOSz7GhlhT2mjaQnpStu9dkiL/wrfgN8HAyLmVwc7KnpiJcFJFDVOk5whrgLKC96tnav
+	ij23zorms45A3kS9H2JxEPuNqdDaQ0Jq1i8A2qsPFnBbWFhqxV1xHzSLJyHvbKlJvICH7BU+845
+	5TKhd2ynb9l/DpbeBi5metcCYc=
+X-Received: by 2002:a17:902:ef08:b0:2c1:5135:39f3 with SMTP id d9443c01a7336-2c1e810d9famr55650215ad.11.1780681822667;
+        Fri, 05 Jun 2026 10:50:22 -0700 (PDT)
+Received: from nugod-NUC15CRHU5.tail9f095a.ts.net ([218.237.104.87])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c16609e636sm97882435ad.51.2026.06.05.10.50.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2026 10:50:22 -0700 (PDT)
+From: HyeongJun An <sammiee5311@gmail.com>
+To: Alex Hung <alexhung@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	HyeongJun An <sammiee5311@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: intel-hid: Protect ACPI notify handler against recursion
+Date: Sat,  6 Jun 2026 02:49:05 +0900
+Message-ID: <20260605174905.131095-1-sammiee5311@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221583
+Since commit e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run on
+all CPUs") ACPI notify handlers like the intel-hid notify_handler() may
+run on multiple CPU cores racing with themselves.
 
---- Comment #17 from Rong Zhang (i@rong.moe) ---
-(In reply to George from comment #13)
-> I reinstalled Fedora on my laptop I somehow messed up what the power butt=
-on
-> does.
+On convertibles and detachables (matched by DMI chassis-type 31 and 32 in
+dmi_auto_add_switch[]) the SW_TABLET_MODE input device is registered
+lazily from notify_handler() on the first tablet-mode event, via
+intel_hid_switches_setup(). When two such events race on different CPUs
+both can pass the !priv->switches check and register the priv->switches
+input device twice, resulting in a duplicate sysfs entry and a subsequent
+NULL pointer dereference.
 
-If acpi_listen can still see events from the power button, it's probably ju=
-st a
-configuration issue in GNOME.
+This is the same class of bug fixed by commit e075c3b13a0a ("platform/x86:
+intel-vbtn: Protect ACPI notify handler against recursion") for the
+sibling intel-vbtn driver.
 
-(In reply to George from comment #15)
-> Sorry for my poor responses. English is not my first language, so there w=
-ere
-> some things I didn't fully understand. I also used AI to help me with
-> certain parts because of the language barrier
+Protect intel-hid notify_handler() from racing with itself with a mutex
+to fix this.
 
-Well, you can ask me for more detailed explanations.
+Fixes: e2ffcda16290 ("ACPI: OSL: Allow Notify () handlers to run on all CPUs")
+Cc: stable@vger.kernel.org
+Signed-off-by: HyeongJun An <sammiee5311@gmail.com>
+---
+ drivers/platform/x86/intel/hid.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-While AI is good at translating texts as is, things could go wrong when it
-starts to explain them. Also, Qwen is not very good at these obscure issues=
-, so
-try not to push it too far.
+diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
+index 085093506dda..6b4bac5f7051 100644
+--- a/drivers/platform/x86/intel/hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -7,11 +7,13 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include <linux/cleanup.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/string_choices.h>
+ #include <linux/suspend.h>
+@@ -230,6 +232,7 @@ static const struct dmi_system_id dmi_auto_add_switch[] = {
+ };
+ 
+ struct intel_hid_priv {
++	struct mutex mutex; /* Avoid notify_handler() racing with itself */
+ 	struct input_dev *input_dev;
+ 	struct input_dev *array;
+ 	struct input_dev *switches;
+@@ -565,6 +568,8 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct key_entry *ke;
+ 	int err;
+ 
++	guard(mutex)(&priv->mutex);
++
+ 	/*
+ 	 * Some convertible have unreliable VGBS return which could cause incorrect
+ 	 * SW_TABLET_MODE report, in these cases we enable support when receiving
+@@ -720,6 +725,10 @@ static int intel_hid_probe(struct platform_device *device)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&device->dev, priv);
+ 
++	err = devm_mutex_init(&device->dev, &priv->mutex);
++	if (err)
++		return err;
++
+ 	/* See dual_accel_detect.h for more info on the dual_accel check. */
+ 	if (enable_sw_tablet_mode == TABLET_SW_AUTO) {
+ 		if (dmi_check_system(dmi_vgbs_allow_list))
+-- 
+2.43.0
 
-> and because I haven't had much free time due to exams.
-
-When I check Bugzilla, I usually take that as a casual pastime. In other wo=
-rds,
-I'm not in a hurry to get your test results or feedback. You can take your
-time.=20
-
-(In reply to George from comment #16)
-> Also, regarding your question: when I manually wrote values to /dev/mem, I
-> remember the software state cycling correctly through 0 (Off), 1 (Low), a=
-nd
-> 2 (High). However, the keyboard's physical backlight did not change.
-
-Then the previous version of the DSDT code where "Off and Low worked physic=
-ally
-and the OSD appeared" (comment #12) is important. If possible, please attac=
-h it
-in a reply.
-
-> I'm going to start over from scratch and repeat the process more carefull=
-y,
-> this time taking notes as I go instead of experimenting late at night and
-> relying on memory.
-
-Thanks.
-
-Do experiments carefully, but keep a relaxed and casual attitude. You don't
-need to do them overnight.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
