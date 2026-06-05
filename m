@@ -1,121 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E56A2222AA;
-	Fri,  5 Jun 2026 12:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDBA3368A0
+	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 14:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780661933; cv=none; b=rK99J9dS14L7JlqOPma0QiJziLH890Hl7eggyrD+C9Ir0SO9pOkph4nZWuPK/ojc41X488PvsUX8wucY5sxAlfJOq1IAi6CzyiEsktL7IuQBCZkmktcupKzcorVfADvIJVLGRWLidtO/JqKODhom84kRckBsTfS7IOcV3HwdA6M=
+	t=1780670917; cv=none; b=MpId9AyjTTfZYQRFx1dV0OtWAxEpSPiGJtgMzVb8vC4DPKdXeGynXcC/AQDz4Xexwk6Jb5WvhkkunSU2gyLaUm/zzb63kZIMUNUEuyBCIiouvVZxGIVW8iU7wZA4RR+qjMw9+8Pm71W3vLybLsSXTThtCFk9kg1bVG5OvKjchmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780661933; c=relaxed/simple;
-	bh=qR4ybGa3cWCX0SLUgFfwlnKl4P+ZfVg5K+z1HlywdGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VHX1vFnbxZTUp1+txDk9PtUgDKKr/gC1G3Y1psFqgMZ5CzSLUD6dl5oxjjCWJbYAIb43F0/gKd/3sNATrYcMBe9e7bZtwdLQVnCfKByFt+bw/OyNzcMSwiSKa26uzLBm7Hd0an5jznUS7BHLVwZM3TBkjWRBNlC9jztni/Addyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6ZbiSx0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780670917; c=relaxed/simple;
+	bh=e5dPMhhFH2AfBllmXmaDlcMkzIqzpKi41QO0AFlgUus=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iU68Ns6/Nk7OJJHGzZgbKHmVXlvGINQ+foNyI31AQGuOtWF/SAeX4nn8BKr6qfoIWFhN8/FT+AGN2qLmGYu4ghkhtdeu20l/N7EpdX6+fngY8+tobA32QcPer3JmSVakQJ/asZ+kwX6EGzFfh0EDDe7w+Ho7cH2XYW7yIxW3hLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X3NBo46x; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6ZbiSx0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3680B1F00893;
-	Fri,  5 Jun 2026 12:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780661932;
-	bh=/HjuMOk3WVgtMcDzTwNBYPhsQV9U+DIpa82b0vn61Cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=B6ZbiSx05oBJ7chQvQ/ntllvANNBFEMa9EcOIiJSVjAP/OKFNkFGomFVwuLIbEh+S
-	 20kIDl7Ha3LYle9T/0PSzWzaCdc5fZcxNiJ+ZJmhkm8/XR0hsoDMz0IvlyzEPadr35
-	 B2APB6kQVq6vujpiHLQ9XGq4k/2xwAVP0hGJlMMDE7JgpUoN8S88GU32fCFiZ7KPhJ
-	 5aHdZm6VNXpv0qJRoypblDiKXMIeOyKzQoPRJIPp5ZLuwnSs6kmXI7+nhiCVs/dUo5
-	 dzZdsgrBxQRdtTMmm690hmi5h0XAzX6HCHrWvz8VYLGFbLK2G/Ky5ioKkoR2keR14J
-	 lAcFAh/v+L/ZA==
-Received: from johan by xi.lan with local (Exim 4.99.3)
-	(envelope-from <johan@kernel.org>)
-	id 1wVTVh-00000000DXZ-0P54;
-	Fri, 05 Jun 2026 14:18:49 +0200
-Date: Fri, 5 Jun 2026 14:18:49 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Peter Chen <peter.chen@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3NBo46x"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c8583b8fd89so1224067a12.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jun 2026 07:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780670916; x=1781275716; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GJdsROLKIGDzDBo8Nuz1gajVC6OddtcytC0v3fEOu7c=;
+        b=X3NBo46xEzjkTFl0tXcSB+f7S6IOkxpleiJfELHyGYNHfkmZTEr+AeEKCapOS9T3W2
+         B8ju1CpapHnqZqu9jVhN8cctCtY29XH7uVZZlUwU+Mlum50y3agvtvaT4gLVwW7ZPEOa
+         4++cnYTHU0e21Dzk9k5VXEaFMJv+oeTEgVj7/RGkOnRCwDwMTwI5o2uPUcdkJ+Fch13r
+         rarEKMaOcRFVsaavXRqmBY3rDymSOH1+iVKw6njhylyp7Qv6P6qAfj9ytuOx/Clo4P3v
+         GqMqG+1lXBeyntIvo5gzhHMS+03btAfvfMQ3meYkNj02U7EiJcsGLZFM/9Y6MPdeaylj
+         V12Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780670916; x=1781275716;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GJdsROLKIGDzDBo8Nuz1gajVC6OddtcytC0v3fEOu7c=;
+        b=jPXM0UveLywoUMOlSORfm6CT/XO+DcKls7jliXJtPfcB0FjHHQjwU2nUF8LQzZDXVB
+         Riq5KFZw4/OZzYbugHP4wrAf7mMfLTxP4v4nloMfHJvj5JyJgsTSOa0NUC1Rh23LkW1Y
+         7VYCaUCAGNkh1CIuSOfpBVQxyjXhSjvSaTvNuhTeCwruIZPK6QrXhN+vxO5mXdG63NY/
+         8biGj2Sus9zbGhpD8dwn/9aLc9TRMrzJBfpdSa8E8r8dTs6y4Cp+dsELwXmZjmciAICQ
+         Z6IR5mg1lZ7KSb2nrYIrJGZNnne5akMjJcLTD5Kn+xsUwiiqYusqAgE05CAuR870RFce
+         s/ww==
+X-Gm-Message-State: AOJu0Yz9OdX50m1Iy8okUUIlevC1IO5EWWyEQ0zRh4I89Bz+/h9kigKA
+	PmSFiXt3tln7Jd8fcvazTKdJjLC5dU5ZGvrCZeuAK+Zf5olHxh2kDL2g
+X-Gm-Gg: Acq92OFi/oQ1ZparhqeRW+fWzYdmtNRm6KlbTK4XLOencxo82NBtRdwK9JM9yIPh5hj
+	Z31YoiHptttHMi4DXTEqr58QIVGRUmHZEXPB3G1mToR2nF2P7ntzPAXnww9lQby3BgOfiFaxrqj
+	szGN5Jh9PCvVbmjp8vsT8G/HKSt6ik+ep4rTQDP3Kwwl7qVETHmGGIWVIM85lOnLXPECIGgyszW
+	QYXOQig1WAk+Krxw/4t3f9lJwhlcn10cvtuph0gndTptdmNmkcCvUuYFeF0L79aWgUOyd1Enm0a
+	9vF6GAK+0yUqcFnLEHKCAXlm0Ug0F9oAX7AUr3iQ0MrvF6hrYFgwybSt4YRowHo7Zk7gQY9cDSL
+	7yoxptYhsxZdnh4+BRcVMAiUzQpLhRGg5o8THi7K4d3ZHAxk2RbM/7nQJ3PCDtbRxywRYAyOjLT
+	IXU8PmVRLWlBuEBmKot3+Gq0oo9WhhilvU3pS3AMO0RdNTSCm+D7PB55ahze0tYWFRrbpUcS1nP
+	SXTW1pEXJsAIJJNZgmp8I2LL9s=
+X-Received: by 2002:a05:6a00:10c4:b0:842:4982:81c with SMTP id d2e1a72fcca58-842b0d5d2e7mr3869942b3a.20.1780670915851;
+        Fri, 05 Jun 2026 07:48:35 -0700 (PDT)
+Received: from nugod-NUC15CRHU5.tail9f095a.ts.net ([218.237.104.87])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8428706fa9asm8969685b3a.45.2026.06.05.07.48.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jun 2026 07:48:35 -0700 (PDT)
+From: HyeongJun An <sammiee5311@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <benato.denis96@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 22/23] reset: rzg2l: use
- platform_device_set_of_node_from_dev()
-Message-ID: <aiK-qZqpuC-OEigf@hovoldconsulting.com>
-References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
- <20260521-pdev-fwnode-ref-v1-22-88c324a1b8d2@oss.qualcomm.com>
- <6af284545729f03a60d06479339862a2f08c6b7e.camel@pengutronix.de>
- <ah9QtExF2rUUTMNo@ashevche-desk.local>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Armandas Kvietkus <armundunelis@gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Don't warn when fan curve method is unsupported
+Date: Fri,  5 Jun 2026 23:48:31 +0900
+Message-ID: <20260605144831.60839-1-sammiee5311@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260605045724.6907-1-sammiee5311@gmail.com>
+References: <20260605045724.6907-1-sammiee5311@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah9QtExF2rUUTMNo@ashevche-desk.local>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 03, 2026 at 12:52:52AM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 02, 2026 at 10:24:41AM +0200, Philipp Zabel wrote:
-> > On Do, 2026-05-21 at 10:36 +0200, Bartosz Golaszewski wrote:
-> > > Ahead of reworking the reference counting logic for platform devices,
-> > > encapsulate the assignment of the OF node from another device for
-> > > dynamically allocated platform devices with the provided helper.
-> 
-> ...
-> 
-> > > -	device_set_of_node_from_dev(&vdev->dev, dev);
-> > > +	platform_device_set_of_node_from_dev(vdev, dev);
-> 
-> Same Q here, why it uses inherited call? Cargo cult?
-> 
-> 'reused' flag is solely pin control (provider!) thingy as far as I remember.
+Hi,
 
-No, it's needed for pin control *consumers*, which can be any device,
-and potentially any other resource managed by driver core or bus code.
+This duplicates an earlier patch by Armandas Kvietkus:
 
-Johan
+  https://lore.kernel.org/all/20260503174752.26288-1-armundunelis@gmail.com/
+
+I missed it before sending, sorry for the noise. Ilpo already reviewed
+that patch and suggested using pr_debug() instead, so please disregard
+this patch.
+
+Thanks,
+HyeongJun
