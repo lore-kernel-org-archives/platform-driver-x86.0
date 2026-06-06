@@ -1,117 +1,76 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEF9224F3
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 08:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB453264C2
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 09:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780732952; cv=none; b=CFTA7Lr2IEukTn9NAvphYntmFE5qJQ2dEglcdZuatR8rkeDPyrOMxyPXWiUgItD3kkkp1al00rJ94RP8D+Zu5acr2uyw72j1EnONe9jU7UncQ0RrZvhgUmePLjfiSkBreLeH1wGH4If+fdJ1mvqeim2vrs6CZekN9o3OL7cfZTs=
+	t=1780738261; cv=none; b=fnOG6SYd897N5oXYmKe9sWa7k4M9S0Mpq9vWwZIDoaUfjWbFLApEbDlXSNUPOAd0A+cWOXV3HUH8lVbSYoAk5JE+a7GFCdnHS0JcUP9QyQfyEy3RItWAM2yxxXWeSM8/kNvq6rS3EuREAMaiyp6CATXnZffhNlVpIdF/7Q2e9+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780732952; c=relaxed/simple;
-	bh=iP22ZjPbeV8HlZLtAq4yS6Uc8nMYEMRUeoyeTnODlsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uHUXaWgf6KqGWlfqNsrYe78i5Ef2lv48R/5kD9bhxSSZ8S5thZc9lT6eHUQfxrZ1igf7nNO49J2dahDs5uDNMZJLeBDCYMV6qGEFiXt7Q6ZP+/FU1XeZlMxRxIVlrz4a8aPYeWxbP/gr34tlGIJqNzfn9CbGpJjQZPhx1j1yNog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2xJZNvF; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780738261; c=relaxed/simple;
+	bh=MaXJV4EQlXY7IFX2yRCZc0wgNSLTATvZv4Fc/JTIvIk=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=exJ3h+baCYFDSbZ33MP/dXEvKzHTkEA4lo0mVLNCtIiH4BTjArfkZ5Y0UYqsxr9Nu6+0TTuu6KDFryYCZD4DygtC/5gPJrAHOPxabJQcwjZQ3Ey62NVaPb1SfXgYkZ/diJVqmPOf8xaHMZ4NscnShwGcUVLzOcskUhc7eMvHfi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSq8UE5k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2xJZNvF"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2bf55c39e16so16291285ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 06 Jun 2026 01:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780732951; x=1781337751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YK0Jz87RxY8KthmB11KDDWIETMrPO+HjhUR1goGbjok=;
-        b=Q2xJZNvFU4Oejk0mqao6ZDQxbxikNft7g2+6hP4RWdL9maVBVsuO9aV1X2kS7Djgop
-         nO08eB42FkehLPLFuyAmL0vwzrnTjWQmk5g0dRgecdymF10zWAdmB2WM4A0nCoon/vrW
-         8VsjPAKEODERsN1em7VMkOyNx6Q/HHu1OU/xncmQqGRFTeBKeb+jrss1TyrCQZ7PQvL/
-         iMKcUrZ97yR2ZOySFcq/PYZajb+BIQPEtVrbC9nLrI8WlGrBvZ2mgD0ESQ/xJm7JOwLw
-         kRcYZKOpd7I6CIEN6QUCIyxwPo6EKwSjwJCTqcLLKd0ekhjEoh7l+w//7IHegcQZ3Bsf
-         /d7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780732951; x=1781337751;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YK0Jz87RxY8KthmB11KDDWIETMrPO+HjhUR1goGbjok=;
-        b=Vl3l+vyCToSxrNUgDR2gXd/+CCMc1qFZVmU6Sv8JVEXoHbejQ173koWl05q0nkmTDM
-         VQtwGTRsnktaBcGMMPwdSyieGbp5zUh83hEYIt3cIfME5Vf+232BUngYsmds3kuvwNeB
-         ccuBqqfGR/GqqZqwCjTsxVJVxf15PLTdwd3a5MPNZMrN6/+FH9eApvedAaaoj22ReJvy
-         5fHfPTzesT9wmm8ZmPgEdsalEW3nWu10+XWyYMVe5ejWAcf6v3RqR/dkqcR+4MLxEoiT
-         1BDeO5hOOLxYc5K1XXvvaVdn8d7CQZM9TIIrlGD58hnXtdVIEiZ7mrOomBSJhiUK6m3k
-         VHHg==
-X-Gm-Message-State: AOJu0YxMp0+vrm69fCkFVJrXnd176qfTbIe1Vdwxf48O74OHlXI7v+w8
-	orLF+1VHncUQgkAkL9PUZQWowZcrliu1g90b80dMvQCEZ3gZHywVo+gF5ngepVvZy7k=
-X-Gm-Gg: Acq92OEpMkrJ7fggf2faYzBXW7/46Bk5oIVh85gOFp+b97elrsURb62xZejQoZy83Gp
-	QB70afuG8Ffgl+e0MrRUifEF9JJ/tN0QJDyOWjF2X93ILiebxvWkZ5Muf9WOemvDbVMarx9H9vN
-	t4175k6yFP1B/3uWmkgBeLHJ6AkohC/QXI1gtbVBMpv3NnJsNAnrZYWf2wIYSVNE45kjrOB4uuq
-	xDj/s7uXScv6d0Z6osi+uCQBEODRQq2UJGm71xcNRFSJlmbyAA+6VVvDwkGhp/D6Ad3Y01rE4eM
-	8HlMqf4AvN+Oyrs/WVwRlYTtsWA2zhjzIlpPsc5f4efy4FwS02ijd89Pnp9vHVOqhjcRC3aCXw9
-	OhFawz/1I8HtwoqIMPTaE7lv23ryKFGU9gcDG/pAGkYrr1MzzMlmh8AR6jLDHuwqf+maod38o6p
-	9oaxTpdJ64kfpQgX0hOaT/wDxOGB7hJJPnlP30Ymdt8WNh7A==
-X-Received: by 2002:a17:902:e544:b0:2bf:2d0:8877 with SMTP id d9443c01a7336-2c1ec7fe13emr57590025ad.23.1780732950936;
-        Sat, 06 Jun 2026 01:02:30 -0700 (PDT)
-Received: from pico-cachyos ([2401:4900:1c39:eafa:a84d:d4c0:cda7:baa6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f8bc5asm120818145ad.27.2026.06.06.01.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Jun 2026 01:02:30 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSq8UE5k"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2EE9BC2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 09:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1780738261;
+	bh=MaXJV4EQlXY7IFX2yRCZc0wgNSLTATvZv4Fc/JTIvIk=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=dSq8UE5kf1y9vwC7mtPzMpKgncbeUnYFx6izuN3miq+35SSv/ma8cdiA5ppKy/Mf0
+	 E7ZQu5AU3cfW1ImXw8yDoE7kfSdEvnOoWozpjjDv8Wq0mUx2M80+85Tln1wek2qaoU
+	 bhdQZ8YPhwHxF7Oi8qXleTgrI6xZ/Ouy92xCdvkaReGt4JCjMVlOQobky8a2baHu3p
+	 C05VIyQH/KPGrY5u82QVz0Rj9oRed/Mc14R7EikPTq+cjx7Om1angJA2EDyHOwtAZE
+	 lULBBg4VB2oOiEbeuRhQ0xYfHdYASRskAPVRwpDKTInHN03QYPf56j8NHdzvMTRulr
+	 +25rYlvwU5ieA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 11064C41614; Sat,  6 Jun 2026 09:31:01 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	krishna.chomal108@gmail.com,
-	Radhey Kalra <radheykalra901@gmail.com>
-Subject: [PATCH v9 3/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-Date: Sat,  6 Jun 2026 13:31:56 +0530
-Message-ID: <20260606080204.724444-4-radheykalra901@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260606080204.724444-1-radheykalra901@gmail.com>
-References: <20260606080204.724444-1-radheykalra901@gmail.com>
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Sat, 06 Jun 2026 09:31:00 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218901-215701-gPxyibYvGL@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
-the existing Victus fan-speed WMI control path. Add board data for the
-Victus S thermal-profile path and fan-control support.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+--- Comment #83 from Armin Wolf (W_Armin@gmx.de) ---
+I think i found the reason for the keyboard backlight issue, but i need an
+older device to verify my findings. Do you have on older LG device or know
+someone who does?
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 91578e7..c124ad0 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -170,6 +170,11 @@ static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
- 	.fan_profile		= &victus_s_fan_profile_params,
- };
- 
-+static const struct hp_wmi_board_params victus_8a3d_board_params = {
-+	.thermal_profile	= &victus_s_thermal_params,
-+	.fan_profile		= &victus_s_fan_profile_params,
-+};
-+
- static const struct hp_wmi_board_params *active_board_params;
- 
- static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
-@@ -230,6 +235,10 @@ static const char * const victus_thermal_profile_boards[] = {
- 
- /* DMI board-specific feature data for Omen and Victus laptops. */
- static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
-+		.driver_data = (void *)&victus_8a3d_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8902") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
--- 
-2.54.0
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
