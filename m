@@ -1,145 +1,149 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1921630148C
-	for <platform-driver-x86@vger.kernel.org>; Fri,  5 Jun 2026 23:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954142DC77F
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 03:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780701557; cv=none; b=H3MPX/MRRYHKepNdxixYE5LexZG6H6jFg1vIEAiA2Mo+w5ayUbnL0Ty/ZVByvhbGq8VCuNoroLpHaJYqOONFa2gplGyS4TpBU/jzdR+b4abt4z92seoN8iXt7pPuINA+ShKuFld8bTY2KOgp+/4AdZJvziZ7fBYOGDMYGJfEW6c=
+	t=1780717496; cv=none; b=LMYRJ6Lzx0jkHLInlbwXw/trMiRwxWK2K5Yak/rYBSk3Tmh9oVyVDLgp5NGpH9jiuUL1iEuBtmBYNnwEZK6uKwq+DlPoKpZ0C0PgXaNGmSJ0/omD2Jj5sM2YB5gWQTr0l6Y3T1BYgWzA18MYN58EJGPHa8SCKrLqbFYARVGOQ3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780701557; c=relaxed/simple;
-	bh=fkFsuzlcMW31KHviKljL3GrnqaRn2DUKOPOYu/Z3/i4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BuRPhGKfMRF6Ecv/hJfiCVxEvTPOWYNQ0AzoDlHt5O0FJzKaH5WzDwEyzyr5VUKmvGejOJ/D4xZMRHqLvdIf/qdtAUg73BhVtW9r0lATIU3/6uVHO9IYYYj1zKcoQ+hfnepuytBIVMiMx1M5fckF1AFuOSAhEd0X79cDXsFdzV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBJt0ogC; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780717496; c=relaxed/simple;
+	bh=NlNVutzsag3ubNZVQxraoUiwWoRXwj6MhDg93P424gA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qX6Fn3INxTUYCSDIFyMNv69G2ZNduZFjOgBbspDZ7f4vwF7m2UoIqzOl/hT9R5kTrZk5ttyJerW3dUPjJh7HWosGOZcPXQfYSinhozril8vcUT3r4bS+3+syqUPiuJYeMVdS7zW/rBVA0nPeU1zbrSAvB9T6FHizq+GS5zSeKL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=JfGMWfm9; arc=none smtp.client-ip=83.166.143.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBJt0ogC"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-490b43e2b95so20023385e9.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Jun 2026 16:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780701554; x=1781306354; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pfCjHL7Z8sFsegg2MRdElxUNf+mctf7ZhTGeufyquJ0=;
-        b=CBJt0ogCGdqo/1mWq2t0nIIyo61OXaHEIGIlVXwlBZQ0BQTa88h5EJSpdZGAZI0ms3
-         GpxNgLDB20oMJuziKIsr16nGkHOLq65atqyArk77v5gHgkT2bj0zLgXvxtjCCPnXF8Ts
-         nTAniUW2JigoySiwleFjwHZMMGbrf4McdHog0ZmuCyjSdyijK0S4fTLZ6raESy8sxESR
-         pxzuz8Q7sjUghwcgJcZeQb8F6rSggTxDcpeSUxu80YD+yVPQobmlqRcAw4BqdlIRu2Wx
-         qwmEHVxezK2r7ER6l30MR8o190fsfZtISXzhjJAFKYyWRJ2dgeyIVNRWw+Z1pjI6IUOq
-         SUng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780701554; x=1781306354;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pfCjHL7Z8sFsegg2MRdElxUNf+mctf7ZhTGeufyquJ0=;
-        b=RjMQ+392xMDPYOnE9p8/+3kVRrib/4QFqZDY18OZZnMjZVLiEnB83gyYD5wpjHN7Lh
-         IVmEvsn41Gh4njZUgO3ft46bZo36xyqm9US+vKxVjQc7IlB4DjxvRQTDJ2A1hVecYWqJ
-         zyL35WFpda3d8EB791pTvzCoaXDEEAFK+QNsHXptUg/ibnjFzrJ9MRnYm56BjiSZllEV
-         qmiU+vxWv5LwSyUk/8gqx5NxrHXS+FBtYjvJP01ME0/sDoP5LbtuSQt9LOtmpJTFGhqN
-         /Cy0wXGe8v2923skwETckXE+vnPKeW7HRTlkN+2SHqNAuuFKhaizL4oafaIiIjA4JQ7V
-         QE7Q==
-X-Gm-Message-State: AOJu0YyAQXyBo+ezVX6V+z2bnnGFmmx3xhx6iYJiRuA7phrfGDg9OofT
-	6OJ+RvQjhmxcH/KucWyAhgByGt6Ln4USQSLxh5oFEJsfpT1w4YJ6Dv5NlKjpue/9BY5MDA==
-X-Gm-Gg: Acq92OH5wJ/vaGEny5mXBbb+Jo1FPZ7if80Pc0ejKGBDGFAuS9MdglUWNi2/jRsXe8+
-	advbIoJnFPT2QjG/jCbydwSMZSvQCEHQh10fjpIGkFasod9Q+r/vy4rHkZlSm/4k+tK8/ecCtCt
-	A93fH2yYSvF+rUMClviuJ4mB1W/vnQGjzqDnj/CntLLCQ9aR6p9v9wVxXMLSNvwDZ8aZHu4U6Ai
-	APemI+C/HHSlu6KS6KmowyB6j/zW6SakUiPrrRQjEnz/5YIm5WFRO00lLd4sQ0NOBjDF2p8cZ2a
-	rPp5JIHvYcPSo0q0ppIQGcZPX4XMXLU93outhyaTtbBL8UPQ/PDIhy1eMSxSv34+eqRlwNgr7j9
-	e2NCJyHzE6YEotam+Y7EvsD7m2Pqs0mbru4MRnZhLpdN4um/XKneU94DiGj2dzqVC/7HjIwztLk
-	QCmvB/PAS9rATXWT65sdqu46wroluhTGQl
-X-Received: by 2002:a05:600c:608e:b0:490:b355:9c8c with SMTP id 5b1f17b1804b1-490c25f3f00mr87597665e9.23.1780701554352;
-        Fri, 05 Jun 2026 16:19:14 -0700 (PDT)
-Received: from user ([104.28.165.221])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35eae5sm29455627f8f.33.2026.06.05.16.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 16:19:13 -0700 (PDT)
-From: yahia <yahia.a.abdrabou@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yahia <yahia.a.abdrabou@gmail.com>
-Subject: [PATCH] [PATCH] platform/x86: Add Battery Threshold support
-Date: Sat,  6 Jun 2026 02:19:09 +0300
-Message-ID: <20260605231909.17028-1-yahia.a.abdrabou@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="JfGMWfm9"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gXPM267dszPh5;
+	Sat,  6 Jun 2026 05:44:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
+	s=20260228; t=1780717486;
+	bh=t15ITGxDTBskwzWjb37Aaq12xEBm+R6pct9XAVwTDDo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JfGMWfm98tc3aExTWrv6QS3K+K2FigxzKy5d2BNGEg+kaJtzAOrAxjE+gmC6e3V/3
+	 wQL0DiPxn1mdsxBdpWVg8gH+MB/IGz+tQaoTTYE5rBKlS3ImJGQAEynFrv4I8/TEjs
+	 r+AzwS7eBLHgGymDlVlrwoNgSRXzEMerllXccoHgW9w2rjQFLuWif6sPbiMHx5K+tI
+	 rN4Pvs7F8AUPPnZICEPVehEEtCuA117x5fgmazxuYRfZixnf3Q4nKVFRj1+L0n6147
+	 u8moYHId6EQSkTI3PWCWRM1D9/Vqe209EdgAW6DJhGVeDvi4Ynak1RDyI0lZW9SvS1
+	 NWqgsm7BZDgRw==
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gXPM140Tcz952;
+	Sat,  6 Jun 2026 05:44:45 +0200 (CEST)
+Message-ID: <31cdaaa3-b430-4a34-b1d0-2021e722a775@gibson.sh>
+Date: Sat, 6 Jun 2026 05:44:44 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 RESEND 3/5] platform/x86/amd/pmc: Add delay_suspend
+ module parameter
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mario Limonciello <superm1@kernel.org>
+Cc: stable@vger.kernel.org
+References: <20260603031110.345815-1-daniel@gibson.sh>
+ <20260603031110.345815-4-daniel@gibson.sh>
+Content-Language: de-DE, en-GB
+From: Daniel Gibson <daniel@gibson.sh>
+In-Reply-To: <20260603031110.345815-4-daniel@gibson.sh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Infomaniak-Routing: alpha
 
-Hello,
-I aim in this patch to add support to
-Battery threshold via SBCT and GBCT
-acpi methods from the acpi table
+On 03.06.26 05:11, Daniel Gibson wrote:
+> Enabling the new delay_suspend module parameter delays suspend for
+> 2.5 seconds which is known to help for some AMD-based Lenovo Laptops
+> that otherwise failed to send/receive events for key presses or the
+> lid switch after s2idle. Apparently the EC needs to do some things
+> in the background before suspend or it gets into a bad state.
+> 
+> There are many reports of AMD-based laptops (mostly but not exclusively
+> IdeaPads) about similar issues on the web; this parameter gives
+> affected users an easy way to try out if their issues have the same
+> root cause and to work around them until their specific device is added
+> to the quirks list.
+> 
+> The parameter description has a note encouraging users to report
+> their device so it can be added to the quirks list, inspired by a
+> similar request in parameter descriptions of the ideapad-laptop module.
+> 
+> The module parameter can be set to "1" to explicitly enable it,
+> "0" to disable it even on devices that are assumed to be affected,
+> or -1 (the default) to enable it if the device is assumed to be affected
+> (according to fwbug_list[])
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
+> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index 6bafd8661d68..2d3d180c15d2 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/bits.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/dmi.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/limits.h>
+> @@ -89,6 +90,11 @@ static bool disable_workarounds;
+>  module_param(disable_workarounds, bool, 0644);
+>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
+>  
+> +static int delay_suspend = -1;
+> +module_param(delay_suspend, int, 0644);
+> +MODULE_PARM_DESC(delay_suspend,
+> +		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
+> +
+>  static struct amd_pmc_dev pmc;
+>  
+>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+> @@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+>  	 *
+>  	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>  	 */
+> -	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+> -		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+> +	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
+> +		/*
+> +		 * delay_suspend=1 force-enables this, otherwise it can be
+> +		 * disabled with disable_workarounds or delay_suspend=0
+> +		 */
+> +		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
+> +			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
 
-Signed-off-by: yahia <yahia.a.abdrabou@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+It turned out that these messages are logged *a lot* if this is an
+intermediate wakeup and the deepest sleep state isn't reached, which
+happens while these IdeaPads are charging.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index f63bc00d9a9b..3d035ad9f03d 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -59,6 +59,8 @@ enum hp_ec_offsets {
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
- 
-+#define HP_BATTERY_THRESHOLD_CAP 0x37
-+
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
- 
- enum hp_thermal_profile_omen_v0 {
-@@ -448,6 +450,7 @@ static struct notifier_block platform_power_source_nb;
- static enum platform_profile_option active_platform_profile;
- static bool platform_profile_support;
- static bool zero_insize_support;
-+static bool battery_threshold_support;
- 
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
-@@ -1130,6 +1133,22 @@ static struct attribute *hp_wmi_attrs[] = {
- };
- ATTRIBUTE_GROUPS(hp_wmi);
- 
-+static int hp_battery_threshold_check(void)
-+{
-+	u8 buffer[128] = {0};
-+	int ret;
-+	ret = hp_wmi_perform_query(HP_BATTERY_THRESHOLD_CAP, HPWMI_READ, buffer, 128, 128);
-+	if (ret != 0) {
-+		battery_threshold_support = false;
-+		return -1;
-+	}
-+	if (buffer[28] == 0xAA) {
-+		battery_threshold_support = true;
-+		return 0;
-+	}
-+	return false;
-+}
-+
- static void hp_wmi_notify(union acpi_object *obj, void *context)
- {
- 	u32 event_id, event_data;
-@@ -2287,6 +2306,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 			hp_wmi_rfkill2_setup(device);
- 	}
- 
-+	err = hp_battery_threshold_check();
-+
-+	if (err == 0) {
-+		pr_info("Battery Threshold is supported");
-+	}
-+
- 	err = hp_wmi_hwmon_init();
- 
- 	if (err < 0)
--- 
-2.54.0
+Sleeping is still necessary in that case, otherwise the machine resumes
+after a few seconds..
+
+I'll add a commit that makes this function less chatty soon.
+
+> +			return true;
+> +		}
+> +		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
+> +	} else if (delay_suspend == 1) {
+> +		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
+> +			 dmi_get_system_info(DMI_SYS_VENDOR),
+> +			 dmi_get_system_info(DMI_PRODUCT_NAME),
+> +			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
+> +			 dmi_get_system_info(DMI_BOARD_VENDOR),
+> +			 dmi_get_system_info(DMI_BOARD_NAME));
+>  		return true;
+>  	}
+>  	return false;
 
