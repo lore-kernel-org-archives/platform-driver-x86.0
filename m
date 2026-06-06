@@ -1,142 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F5E1A724C
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 04:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AF617BB21
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 04:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780718400; cv=none; b=lL4GfK4HPgglR8/8lW7XwsBIun0C7QRQ2B9oYKKht0x4LtLzvT/81VHXNP28JWSxqRVY5wtn5GMOrUuuRTkjL5BUXEP17Zt7hRBnZyV6BIZQRWJpgI97yTY5UTMJ95P32qnocABVvt+RkukzOx3gfWMU4Qbe4IkRPOftc7Cz48Y=
+	t=1780721288; cv=none; b=Bk69vvHWlYquZws/z+14zLqc1gc4ddb8ADqGGPOM8iZNXN0xA/Y5MRu6/W8F1UyT7aKeu7dtgchQCO/iP4Vy5kVSYlKrdjR0VgZKUq2cY3MyIT8dLM0wjQJuEKZT3pXIRIVr3gbxSTSth4dAL8HeQLkQj00459L5AmRU7JK8lEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780718400; c=relaxed/simple;
-	bh=KgHi2M/gsYZwJCuhf8eY/qkofzDMEal9ugCI7RcTzl8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WWiaE5VR+0MOt4mUTV9f/SV8qqKpRd91ujMf3Gl1lGzD8pUL/prx/mKisvfasIsF+QYtZjoW0kK2WeyrxGxVD1uONbp1Y1z7XMFpOiozUUyLKd9PO3GRSSI314gVjPs7QpN93NzCK7LC3rTVh+j4h3vk9H+Vf0+wqMrI2AO22D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJs3aj+d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780721288; c=relaxed/simple;
+	bh=2SNCamfvhP+2i4Ie0v1WhaX6rjVOSAs9/H7iHkMV1w4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bLKOjkLK3Z2pTJyt9rMGBblVlhbToV0mgLdL2ykgeCSSf1qjGFjww+vPsen2hHDI2zpPn2CRcJNnW3Gn7wfimGisPsCDqyoPbuASpy6Oagw/I8eeDm/GXIHR+LHkazmIorFhhzxgRweExxaSLDcCWn5t/C09QV9w9v4vewAKC1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=m2NJ+cVk; arc=none smtp.client-ip=83.166.143.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJs3aj+d"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5FE14C2BCC4
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 04:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780718400;
-	bh=KgHi2M/gsYZwJCuhf8eY/qkofzDMEal9ugCI7RcTzl8=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=oJs3aj+dTPcqz/3FK4BQYSiRFxmFPJyYRax2lXKKjytccXYTtC3zD2HSxCLRTeDgG
-	 tR8d7nVi4lTTrLKlfLrYY9GfpCRZi9BpzNO2YnbJdCMZ2yKGc6nEgk/2ll+dJm2ZfR
-	 Wnim6RbZ+aBh+kLeDzIsAp7kRMFrOzATUpQxNhAy9MULs7bXeVPmjGSPjznrefuMCf
-	 DaED5Y7fRc+kl9xzZeT9kaDiPoqCiu1Iucaed83WvTON//LdC6kz4Y/94xc/sNScA2
-	 /w20+VPwi6uUTQ8WwpCpzcZK4BxL7hglqzjw/WJKEw4bNHkqd4V6JLIoKH/JNkjiDI
-	 z+kfkPq3C040A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 3F002C41613; Sat,  6 Jun 2026 04:00:00 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Sat, 06 Jun 2026 04:00:00 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: tacodog311@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-Uu8v3HbBXg@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="m2NJ+cVk"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gXQm21jdJzXSN
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 06:48:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
+	s=20260228; t=1780721282;
+	bh=KNdtDsqwCb+GCsxtj8KWYkInOxcOU+ZYMoqIdTjRaQw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m2NJ+cVkUHMpZAnLJdinWY+pcercTwt3IquAZS+X5Vq4HXDYqYHXWP/YMzKwbJmU+
+	 +Yio6gQBV0CLo8hAk7Np+OyoEMia06GfnjGHeegmP6YV1kih3UmU5XjdNWiD3J9/YU
+	 T84dLnz+jPVqpStB2N0fegHm7UGxUTPxs9RoW0elkDQnpFznPejN/g4HUY1FNv6yhO
+	 zq8YOEfb9ciF9wz2n3QVMmsm12knpUIILwwvSVgqP8VGIi2VG6OgVJF2hM4TPu/5zo
+	 TYQkRH9fFB0nG+iJgKD+754HSxKZ9OaBwwyzBYnvR8LIjprezVnzUP142KsC+jIusA
+	 w4/Ds29rOeDRQ==
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gXQm15801zwvx
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 06:48:01 +0200 (CEST)
+Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
+	Sat, 06 Jun 2026 06:48:00 +0200
+From: Daniel Gibson <daniel@gibson.sh>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mario Limonciello <superm1@kernel.org>
+Cc: Daniel Gibson <daniel@gibson.sh>
+Subject: [PATCH v4 0/3] amd_pmc: Delay s2idle suspend for some devices
+Date: Sat,  6 Jun 2026 06:47:55 +0200
+Message-ID: <20260606044758.2213401-1-daniel@gibson.sh>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+On some AMD Zen3 and Zen3+-based Lenovo IdeaPad laptops the keyboard and
+the lid switch stop working after the first suspend, until rebooted.
 
---- Comment #82 from tacodog311@gmail.com ---
-Fn+F4 still double taps the touchpad toggle.  Both input3 and input9 are st=
-ill
-sending signals when it is pressed.
+More specifically, they stop sending events when pressing a key or
+closing the lid - it's still possible to toggle the capslock- and
+numlock-LEDs with an external keyboard or read the lid state at
+/proc/acpi/button/lid/LID/state.
 
-Fn+F6 does register as KET_F16 now, but the LED on the keyboard does not
-change.
-I don't know if the keyboard LED driver even works on Linux.  I've never be=
-en
-able to modify the brightness with any of these commands either.
-https://wiki.archlinux.org/title/Keyboard_backlight
+See also https://bugzilla.kernel.org/show_bug.cgi?id=221383
 
-Fn+esc registers as KEY_FN_ESC but it does not trigger the lock.
+It appears that suspending and/or resuming gets the EC into a broken
+state. This problem doesn't happen on Windows and Mario Limonciello
+mentioned that the Windows kernel gives hardware and software some time
+before actually suspending (before activating HW DRIPS), while Linux
+(or the amd_pmc module) does that immediately, so it may be worth trying
+if calling msleep() in amd_pmc_s2idle_check() helps.
 
-evtests are below for event3 and event9.
+It turned out that sleeping for 2.5 seconds at that point indeed makes
+the problems mostly disappear. Sleeping for 1.5 seconds wasn't enough.
 
-/dev/input/event3:      AT Translated Set 2 keyboard
+"Mostly" because it turned out that they still occur (on some but not
+all devices needing this patch) when using a wakeup timer (wakealarm).
 
-Fn+F4
-Event: time 1780716639.429911, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1d
-Event: time 1780716639.429911, type 1 (EV_KEY), code 29 (KEY_LEFTCTRL), val=
-ue 1
-Event: time 1780716639.429911, -------------- SYN_REPORT ------------
-Event: time 1780716639.434958, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
-Event: time 1780716639.434958, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
-lue
-1
-Event: time 1780716639.434958, -------------- SYN_REPORT ------------
-Event: time 1780716639.436972, type 4 (EV_MSC), code 4 (MSC_SCAN), value 76
-Event: time 1780716639.436972, type 1 (EV_KEY), code 194 (KEY_F24), value 1
-Event: time 1780716639.436972, -------------- SYN_REPORT ------------
-Event: time 1780716639.442046, type 4 (EV_MSC), code 4 (MSC_SCAN), value 76
-Event: time 1780716639.442046, type 1 (EV_KEY), code 194 (KEY_F24), value 0
-Event: time 1780716639.442046, -------------- SYN_REPORT ------------
-Event: time 1780716639.450140, type 4 (EV_MSC), code 4 (MSC_SCAN), value db
-Event: time 1780716639.450140, type 1 (EV_KEY), code 125 (KEY_LEFTMETA), va=
-lue
-0
-Event: time 1780716639.450140, -------------- SYN_REPORT ------------
-Event: time 1780716639.455183, type 4 (EV_MSC), code 4 (MSC_SCAN), value 1d
-Event: time 1780716639.455183, type 1 (EV_KEY), code 29 (KEY_LEFTCTRL), val=
-ue 0
-Event: time 1780716639.455183, -------------- SYN_REPORT ------------
+I could build on an existing quirk[1] that also sleeps for 2.5 seconds
+under other circumstances; my first commit refactors that a bit so I
+can integrate my further changes in a cleaner way.
 
-/dev/input/event9:      LG WMI hotkeys
+I found several reports of these or similar issues on the web, for
+different devices, so in a second commit I added a parameter to the
+kernel module that allows enabling or disabling this, which will make
+it easy for people whose devices aren't matched yet to test this quirk.
 
-Fn+F4
-Event: time 1780716864.009289, type 4 (EV_MSC), code 4 (MSC_SCAN), value 74
-Event: time 1780716864.009289, type 1 (EV_KEY), code 191 (KEY_F21), value 1
-Event: time 1780716864.009289, -------------- SYN_REPORT ------------
-Event: time 1780716864.009310, type 1 (EV_KEY), code 191 (KEY_F21), value 0
-Event: time 1780716864.009310, -------------- SYN_REPORT ------------
+Thanks to Mario Limonciello for his support and to Sindre Henriksen
+for testing my patch and to Ilpo Järvinen for reviewing!
 
-Fn+F6
-Event: time 1780716968.636981, type 4 (EV_MSC), code 4 (MSC_SCAN), value
-10000000
-Event: time 1780716968.636981, type 1 (EV_KEY), code 186 (KEY_F16), value 1
-Event: time 1780716968.636981, -------------- SYN_REPORT ------------
-Event: time 1780716968.637009, type 1 (EV_KEY), code 186 (KEY_F16), value 0
-Event: time 1780716968.637009, -------------- SYN_REPORT ------------
+[1] https://lore.kernel.org/platform-driver-x86/20250414162446.3853194-1-superm1@kernel.org/
 
-Fn+esc
-Event: time 1780716940.258373, type 4 (EV_MSC), code 4 (MSC_SCAN), value
-40030001
-Event: time 1780716940.258373, type 1 (EV_KEY), code 465 (KEY_FN_ESC), valu=
-e 1
-Event: time 1780716940.258373, -------------- SYN_REPORT ------------
-Event: time 1780716940.258384, type 1 (EV_KEY), code 465 (KEY_FN_ESC), valu=
-e 0
-Event: time 1780716940.258384, -------------- SYN_REPORT ------------
+Changes in v4:
+- Don't log during intermediate wakes, which happen a lot when charging
+  those IdeaPads while they're suspended, so dmesg isn't spammed
+- Removed the documentation commits to make merging this less painful
+  (one of them referred to commits added here, so the IDs would have to
+   be fixed up while merging). I'll submit them separately.
 
---=20
-You may reply to this email to add a comment.
+Changes in v3 (https://lore.kernel.org/platform-driver-x86/20260512202645.1549111-1-daniel@gibson.sh/T/#u
+    and https://lore.kernel.org/platform-driver-x86/20260603031110.345815-1-daniel@gibson.sh/T/#u):
+- Rewrote commit messages of patch 1, 4 and 5 as requested in the review
+- Adjusted formatting of the other commit messages
+- Added another confirmed device (83MM) to the quirks list and mention
+  it in the commit message
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Changes in v2 (https://lore.kernel.org/platform-driver-x86/20260509013105.816339-1-daniel@gibson.sh/t/#u):
+- Documented this in Documentation/arch/x86/amd-debugging.rst
+- Added example for reset register kernel message in same file
+- In amd_pmc_quirk_need_suspend_delay(), avoid dereferencing a NULL
+  pointer of devices not detected for any quirk - oops!
+- Mention that timed resumes may still cause those keyboard/lid issues
+- Various code changes requested or suggested in reviews of v1:
+  - Some formatting changes (commas behind non-terminating entries)
+  - Moved check for existing quirk (that OVP thing) into its own function
+    amd_pmc_intermediate_wakeup_need_delay() in pmc.c, so the checks of
+    the different quirks are separated more clearly.
+  - Added function amd_pmc_want_suspend_delay() in pmc.c handling
+    amd_pmc_quirk_need_suspend_delay() together with disable_workarounds
+    and delay_suspend and also logging about the reason for the delay,
+    also for cleaner separation.
+  - If delay_suspend=1 is used to force-enable the fix on hardware that
+    is not automatically detected as needing this fix, log message
+    encouraging the user to report their device, including the most
+    relevant DMI values that could be used for matching
+
+v1: https://lore.kernel.org/platform-driver-x86/20260501032655.283789-1-daniel@gibson.sh/t/#u
+
+Daniel Gibson (3):
+  platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops
+  platform/x86/amd/pmc: Add delay_suspend module parameter
+  platform/x86/amd/pmc: Don't log during intermediate wakeups
+
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 39 +++++++++++++
+ drivers/platform/x86/amd/pmc/pmc.c        | 68 ++++++++++++++++++++++-
+ drivers/platform/x86/amd/pmc/pmc.h        |  2 +
+ 3 files changed, 108 insertions(+), 1 deletion(-)
+
+-- 
+2.48.1
+
