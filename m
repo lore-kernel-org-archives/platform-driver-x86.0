@@ -1,53 +1,70 @@
-Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9B82F8EB6
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 04:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DDC224F3
+	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 08:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780721291; cv=none; b=WltGb9Kr8XfRmOLVPXCV/6+JW85CWOdBcnUOcXD9tfRHe+luhkt4IvXDtaLYvGEWcjPX9tel3rlfyD7s3pGeYFC9xp3LReUgLG5FACCP3pikcSsX4dtr5b8HWW9vW5laxGLfDvK/HtPKnQXz7kPhuI8lsgmjUSGBCZX3PgX+TyA=
+	t=1780732943; cv=none; b=KAGbAYrLBpBkFq1/h5QO+rT4LL9dQlJeJ0h9EjLp8JvuUudlAFeCVm/5Hsal09K4as+/MjkbHxN3ykiVpYHEfZ7aMxIq7Ym/JTEPQsotKFhY7MtdbAyoyRsNve8U1Y4zWxV6HuGSvqw1ripmBysYJt3wYDpS1Zhf1C6BVzI2/+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780721291; c=relaxed/simple;
-	bh=Najpki1ZcHOMyLm6nlLJYDdfo+4pegQmAATFZ1fPdJA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CCOwpA24G2Ssc/mzgyVWXvl9X1ioRLQY0qeqXOXt0BTg0e8eSojdSPj9lOYZblYhOdk0hKBlDHd4pk06vDy4ciU9iSDwGLCPEOaE5B50DOGTZqK3YF2UfbAe63DASX9xIEJGqAilv+R2+yE7utzvQeaX/8omF/NOTACcdc8NypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=JKCxGiU0; arc=none smtp.client-ip=83.166.143.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	s=arc-20240116; t=1780732943; c=relaxed/simple;
+	bh=rEHmQP0XbZlIZCljAOEM85hGkOGReZrr64Tk/WsUnxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k5tu3YMd5JZrAiffgKNS+WT1ZzpRmnJZEg2E7T0FrGDvRDSWByfREup5qfRVypaQCKNNJ+PN8vi071wWJ4ocJRj3OjC3/sycWCfWhBpaJx+j22V571nfDHZzQOS+peCIktHyAUzqyhT69Bu6THmBh9C9pj0b44NHQe5nPQ3ErI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvbfWH0u; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="JKCxGiU0"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gXQm21rybzWBW
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 06:48:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1780721282;
-	bh=4JgcUrF1sbZczkpfNhX8xMy73Iep2kkb6jW8W1MiLyM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JKCxGiU0N6YcnIIe8NOTvLKSAA6CikMhXCfnh3fDLtQT+GrMsBvzB95JGs4N9seHd
-	 cOncvZcb3WxOXAYvOzd8y4/pHEosuP5B5T2iEjMgXaFnvxPt1wavnZK5liWHyM9CED
-	 SvRjRgcsYH6i7+5+4bFgOTGtfxgEUDsDtVwBFBp36Jd5S9R1WjCkOazOKrJO7/DjWc
-	 yHwF6gBnoMuCdmXEZ+lLGxQGK8nUZRiyl4UHSt11yIKl86vMLFOiXtola2VAhXjmfl
-	 9g9OL4Us3PuctTdYy+6xGuVWaJBcEzAIgn+GrLXQPer4QKVpjoKN92LOczD0fm8Sc1
-	 ZQejknObqHx7g==
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gXQm154nSzDrL
-	for <platform-driver-x86@vger.kernel.org>; Sat,  6 Jun 2026 06:48:01 +0200 (CEST)
-Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
-	Sat, 06 Jun 2026 06:48:00 +0200
-From: Daniel Gibson <daniel@gibson.sh>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>
-Cc: Daniel Gibson <daniel@gibson.sh>,
-	stable@vger.kernel.org
-Subject: [PATCH v4 3/3] platform/x86/amd/pmc: Don't log during intermediate wakeups
-Date: Sat,  6 Jun 2026 06:47:58 +0200
-Message-ID: <20260606044758.2213401-4-daniel@gibson.sh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20260606044758.2213401-1-daniel@gibson.sh>
-References: <20260606044758.2213401-1-daniel@gibson.sh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvbfWH0u"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2c0bb4a94b8so22467365ad.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 06 Jun 2026 01:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780732941; x=1781337741; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sdP+lGUIwR80Na/F+gNsUU/s1f2M210QXj5yAnWw+es=;
+        b=YvbfWH0uUh+lRkFbQ/XDy9CunOG7YaNY464wLTsIiHB90slUe/2xpswCo6JXqmEItP
+         cTa0FOVF2FY+WMOJrgzyu5np/1MTY2CVQ9XHwXuPlpcfw+In0m1XSHGLzcaj6HZofFpM
+         2KK8MawDLua3rWF8WIydqNQz5v8QpfqrFaXwBQzhjISnsmchLhxUd2b3sa5+DmkTT4xu
+         2gpnxTvcCTLwOWKSsm+0qGl+CNI9E+JtIxBbYyi6MhIgcDxQaDZPksed/GTdWeUBMlzA
+         WpGoGveGdINatEAYScQx351oFJcezekdr0OI30HP/NnCm6mkV46k39ZzlonRToyT4x+b
+         Gmhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780732941; x=1781337741;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sdP+lGUIwR80Na/F+gNsUU/s1f2M210QXj5yAnWw+es=;
+        b=qqZSuqZ/YesXEIcT40dA4rPnXhv72aqTHaDSwQ8GZ9LVBuaT2a+b94vfEyXv50Qcap
+         CaMWs3Obmxs4UMchm9Gsnm0wD63bF0/cTznN9+dkgGjtRMRDGQcOTleFVp3Y+Io/tzFW
+         e8TC0b5rRPhwcOJmTKr9iB7GXPM0shGD+SXHiNLMh7xXAfMe0o850ozNFdYqsTf8tiRY
+         LZAR12uKjoZhIr26PE2wBhQklq/x7wrQatxKul7akcTnFC3vCoWLE3kZrWZ7hivXjtFG
+         KbhDozBkj2K60elJKRaMuB6vSmoY4istD5g2n8OTUxRZ86crbohV5jJtUOGRB7zoJiep
+         5i2g==
+X-Gm-Message-State: AOJu0YwHcXQSQKDzefUEQdZ+5QjGVbuKTwDpKCW14FWkmgxGkLVp/YCG
+	sAnmoHI41Qf44zRle88N2qjBKwPIvEznYrNlZgVwnF4glWpgI5gLxRmMjvRYR2NQEl8=
+X-Gm-Gg: Acq92OEsxkEDM6jrrJ4frM8VJ16Jk8cXYpTqYm0vAkqvTf8W1zxgJiN9W1vjrrGrqD5
+	Ro3p2DuAy8pomw0iLGKsZmM7Ipx94HI8wh1tEwDXG4oXffCe0I/BGgT9wuAHcUWb/8TLnrAcsGc
+	1yguKaFlTIz4D9kZFTQlMz0b5F3QDRj0og+/8gplJDtlEhyi+Vt6jxPvf4bi96hMtkQuMCLEbq1
+	xio21aYg1CjDv7Ntu5a2CxRj+3hyPEFkyzkCkdJ58v4q4HbDwUOFESlYU1JN8LhQXzhIV2Hxzkn
+	Mb6nbqb2FiPT+VMy/SaaEor98nR+EAc4Qu8OlBXm0p+WTWUTDKU0dJXI8GOrArUqQ1XwG0w8IJU
+	MQEIocYvKASuRcBn9R9vbxxVP6eFugoMvJF8F2XmiEPt8x9QMP+tP0reX44D7HXh4Jmz7CiA7oK
+	WDkT7b9kRiRSqahIudW8DVBIWPJnJwijLt2k7KWaboYonvNW+UhEneIJhi
+X-Received: by 2002:a17:903:2a8e:b0:2c1:20fe:9d5a with SMTP id d9443c01a7336-2c1e83502b0mr96983285ad.35.1780732941004;
+        Sat, 06 Jun 2026 01:02:21 -0700 (PDT)
+Received: from pico-cachyos ([2401:4900:1c39:eafa:a84d:d4c0:cda7:baa6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c164f8bc5asm120818145ad.27.2026.06.06.01.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Jun 2026 01:02:20 -0700 (PDT)
+From: Radhey Kalra <radheykalra901@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	krishna.chomal108@gmail.com,
+	Radhey Kalra <radheykalra901@gmail.com>
+Subject: [PATCH v9 0/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
+Date: Sat,  6 Jun 2026 13:31:53 +0530
+Message-ID: <20260606080204.724444-1-radheykalra901@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -55,113 +72,122 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 
-The ECs in the IdeaPads that need the delay_suspend quirk send lots
-of messages when charging, which not only causes intermediate wakeups
-when suspended, but also prevents the device from reaching the deepest
-suspend state.
+Hi,
 
-Because of this amd_pmc_intermediate_wakeup_need_delay() returns false
-during intermediate wakeups and amd_pmc_want_suspend_delay() is called.
-So far it always logged its "Delaying suspend by 2.5s ..." messages
-then, which spams dmesg. This commit makes sure that those messages are
-only logged once per suspend.
+This is a split version of the Victus 15-fb0xxx support change. Patches
+1 and 2 are no-functional-changes-intended refactors which move the
+existing thermal-profile and fan-control decisions into board-specific
+.driver_data. Patch 3 adds support for Victus 15-fb0xxx board 8A3D.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
-Signed-off-by: Daniel Gibson <daniel@gibson.sh>
-Cc: stable@vger.kernel.org
+v9 keeps the gpu_delta fan-table parsing fix out of this series. Ilpo
+suggested postponing that part to the other GPU fan series, so this
+version keeps only the board-data and 8A3D support pieces.
+
+The last public review discussion was on the earlier v6 0/4 thread. This
+series follows up on that by dropping the gpu_delta patch from this
+series, testing the Victus S thermal-profile path on 8A3D, and keeping
+8A3D on the Victus S thermal-profile and fan-control data.
+
+v9 is a resend after one week with no review comments. There are no code
+changes from v8 because platform-drivers-x86/review-ilpo-next and
+for-next have not moved since v8. v8 already rebased the v7 series from
+commit 5fdac9983681 to a167ae8eace5, preserving the newer 8902 board
+entry and the system_dfl_wq delayed-work change.
+
+I accidentally sent the corrected 3-patch version as v6 after an earlier
+v6 had already been sent. v7 fixed the version number for that
+corrected structure.
+
+v9 is based on platform-drivers-x86/review-ilpo-next commit
+a167ae8eace52dd6c80438b77d92450fe12cd4be, which is still current on
+review-ilpo-next and for-next. It preserves the newer 8902 hp-wmi board
+entry.
+
+8A3D is added with both the Victus S thermal-profile data and the Victus
+fan-control data. The existing generic platform-profile sysfs path on
+8A3D accepts writes/readbacks without hp_wmi errors, and the Victus fan
+table/control path exposes working PWM control.
+
+Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
+F.22. With the series applied, the platform-profile choices are
+low-power, balanced, and performance. Writes to all three profiles
+succeeded and read back the selected value. In a CPU stress test with
+powerprofilesctl held at performance, low-power reduced CPU package
+power to about 30 W, while balanced and performance both ran at about
+47 W. In a light PRIME offload test, low-power also kept the NVIDIA GPU
+at lower clocks and power than the other profiles. pwm1 and pwm1_enable
+are exposed through hwmon.
+
+Radhey Kalra (3):
+  platform/x86: hp-wmi: Introduce board-specific feature data
+  platform/x86: hp-wmi: Drive fan control from board data
+  platform/x86: hp-wmi: Add Victus 15-fb0xxx support
+
+ drivers/platform/x86/hp/hp-wmi.c | 209 ++++++++++++++++++++++---------
+ 1 file changed, 150 insertions(+), 59 deletions(-)
+
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 39 ++++++++++++++++++++++++------
- drivers/platform/x86/amd/pmc/pmc.h |  1 +
- 2 files changed, 32 insertions(+), 8 deletions(-)
+Changes in v9:
+- Resend after one week with no review comments.
+- Clarify that the series follows up on the earlier v6 0/4 review by
+  dropping the gpu_delta patch and using the tested Victus S path.
+- No code changes from v8 because the target platform-drivers-x86 branch
+  has not moved since v8.
+- Recheck that platform-drivers-x86/review-ilpo-next and for-next still
+  point at commit a167ae8eace5.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 2d3d180c15d2..7d772ccd17a6 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -619,6 +619,20 @@ static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
- 
- static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
- {
-+	/*
-+	 * intermediate_wakeup implies that the machine didn't get to deepest sleep
-+	 * state before - otherwise this function isn't called in amd_pmc_s2idle_check()
-+	 * because amd_pmc_intermediate_wakeup_need_delay() returns true first.
-+	 * On some IdeaPads that happens when charging, because the EC seems
-+	 * to send lots of messages then that wake the machine.
-+	 *
-+	 * But even in that case, the sleep here is necessary (on those IdeaPads),
-+	 * otherwise they wake up completely (resume) after a few seconds.
-+	 * So this variable is only used to avoid spamming dmesg on each
-+	 * intermediate wakeup.
-+	 */
-+	bool intermediate_wakeup = !pdev->is_first_check_after_suspend;
-+
- 	/*
- 	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
- 	 * me-time before sleeping or they get uncooperative after waking
-@@ -637,17 +651,20 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
- 		 * disabled with disable_workarounds or delay_suspend=0
- 		 */
- 		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
--			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
-+			if (!intermediate_wakeup)
-+				dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
- 			return true;
- 		}
--		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
-+		if (!intermediate_wakeup)
-+			dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
- 	} else if (delay_suspend == 1) {
--		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
--			 dmi_get_system_info(DMI_SYS_VENDOR),
--			 dmi_get_system_info(DMI_PRODUCT_NAME),
--			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
--			 dmi_get_system_info(DMI_BOARD_VENDOR),
--			 dmi_get_system_info(DMI_BOARD_NAME));
-+		if (!intermediate_wakeup)
-+			dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
-+				 dmi_get_system_info(DMI_SYS_VENDOR),
-+				 dmi_get_system_info(DMI_PRODUCT_NAME),
-+				 dmi_get_system_info(DMI_PRODUCT_FAMILY),
-+				 dmi_get_system_info(DMI_BOARD_VENDOR),
-+				 dmi_get_system_info(DMI_BOARD_NAME));
- 		return true;
- 	}
- 	return false;
-@@ -660,6 +677,9 @@ static void amd_pmc_s2idle_prepare(void)
- 	u8 msg;
- 	u32 arg = 1;
- 
-+	/* Reset this variable because this is a fresh suspend */
-+	pdev->is_first_check_after_suspend = true;
-+
- 	/* Reset and Start SMU logging - to monitor the s0i3 stats */
- 	amd_pmc_setup_smu_logging(pdev);
- 
-@@ -699,6 +719,9 @@ static void amd_pmc_s2idle_check(void)
- 	rc = amd_stb_write(pdev, AMD_PMC_STB_S2IDLE_CHECK);
- 	if (rc)
- 		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
-+
-+	/* remember that first check after suspend is done (until next prepare) */
-+	pdev->is_first_check_after_suspend = false;
- }
- 
- static int amd_pmc_dump_data(struct amd_pmc_dev *pdev)
-diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-index f5257e47b8c4..8aa7073ed09f 100644
---- a/drivers/platform/x86/amd/pmc/pmc.h
-+++ b/drivers/platform/x86/amd/pmc/pmc.h
-@@ -114,6 +114,7 @@ struct amd_pmc_dev {
- 	struct dentry *dbgfs_dir;
- 	struct quirk_entry *quirks;
- 	bool disable_8042_wakeup;
-+	bool is_first_check_after_suspend;
- 	struct amd_mp2_dev *mp2;
- 	struct stb_arg stb_arg;
- };
+Changes in v8:
+- Resend after one week with no review comments.
+- Rebase on platform-drivers-x86/review-ilpo-next commit
+  a167ae8eace5 to preserve the newer 8902 hp-wmi board entry.
+- Keep the gpu_delta fan-table parser fix out of this series; it can be
+  handled with the other GPU fan series.
+- Add Hans de Goede to Cc per MAINTAINERS for X86 PLATFORM DRIVERS.
+
+Changes in v7:
+- Bump the version because v6 was already sent.
+- Note that the corrected 3-patch version was accidentally sent as v6
+  after an earlier v6 had already been sent.
+- Keep the gpu_delta fan-table parser fix out of this series; it can be
+  handled with the other GPU fan series.
+- Keep 8A3D on the Victus S thermal-profile path after testing profile
+  writes/readbacks, CPU package power, and light PRIME offload behavior.
+
+Changes in v6:
+- Drop the gpu_delta fan-table parser fix for now; it can be handled
+  with the other GPU fan series.
+- Rebase on platform-drivers-x86/for-next commit 5fdac9983681.
+- Preserve the recently added 8BC2 board entry.
+- Preserve the 8D41 switch to omen_v1_no_ec_thermal_params.
+- Add 8A3D with Victus S thermal-profile data and Victus fan-control
+  data.
+
+Changes in v5:
+- Drop the active_thermal_profile_params global and dereference the
+  thermal-profile data through active_board_params.
+- Move the generic fan-only board handling into patch 1, keeping the
+  final 8A3D patch focused on adding the board data and DMI match.
+- Wrap the setup comment added in patch 1 to stay under 80 columns.
+
+Changes in v4:
+- Split v3 into two no-functional-changes-intended refactors, one
+  fan-table parsing fix, and one 8A3D support patch.
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Move revision notes to the cover letter.
+
+Changes in v3:
+- Rebase on platform-drivers-x86/for-next commit 165e81354eefd555.
+- Keep the v2 board-data approach and 8A3D fan-control-only handling.
+
+Changes in v2:
+- Use real name in Signed-off-by.
+- Replace the ad-hoc fan-control DMI table with board data in
+  .driver_data.
+- Keep 8A3D fan-control-only instead of enabling Victus S thermal
+  profiles.
+- Use the fixed fan-table parser path and derive gpu_delta from the
+  first non-zero GPU row.
+
 -- 
-2.48.1
-
+2.54.0
