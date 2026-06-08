@@ -1,72 +1,79 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E44367B81
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 18:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B6523E320
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 19:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780942057; cv=none; b=o8sRq7nzKfVBAUPqXQZN0W8jxT2otVxDQcqdj/b4kbPsH0SMnavZI1TETBexzA82Y8NTmTiiaL51XZd3GgaVppL431kCmT8fyhWHaZw3utG/pzPhRTvaTDHclwIGBC+qIfqC2T/ATW83sXKVEEUjv27eImsjwGU46b7mrrZ8dbw=
+	t=1780945516; cv=none; b=lU4mZyPqpYYcBuh1MKbapmxgHW50p1Jk5JHzhssBhAzECgce2iPltyd3zIBxoOdVZ8bLvRBEuQiKtWTPCzjVWSvwPg08NaDYuJ3genIRqNnC0U5hKSlyqk64rB8Zgt3rw3ZZdsHEnaMskqHp8fiaiGju4XlpMqfJrrmjm9h/9yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780942057; c=relaxed/simple;
-	bh=aT/K1XycEYUihno+/iWpp+Sa2KT2ztfRjBVZIVqzQnA=;
+	s=arc-20240116; t=1780945516; c=relaxed/simple;
+	bh=zEQw9EzLJfdU0N6hQoXrThJLRbefFVlSvhYTIjcEwWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YhPUN7Szb0kbIxoSQI4SdAcB/0lp6+0+aZAaTwBpc+EYsldSAYSugjs9ygTsqW8bQsxu8xffQFDRbWRe0pF7cTa6/IKzF+OPh/NbSSe/FN8u/hwU+GflFXUxP6yP4e1wzZnv7n1gstILymAFwxVhb6nPzOfR+ZrIMMq64r2yJ3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APIKqEkl; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=nEv0Vi8lsIeUsTlwpJtzNCor3VNSMLrws8CDdS1IOP+U9P3yq9jtde0Bris368QHrF7b49GuzmKA+yHiXdH53Qy4lVa8YYICfzivyj1MC1XZfYnkCSJ2tzDZ39s0cb7XIByQoUUvaJqZj6oEjC46ksPni/AWoQDYBJsFe1Y1Lzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GP2emADW; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APIKqEkl"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490b613a17bso45734135e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jun 2026 11:07:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GP2emADW"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-5176d4c14f5so39469031cf.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jun 2026 12:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780942054; x=1781546854; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1780945514; x=1781550314; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mPC7tIhUwdVZkpX4evzvmorP3YRKGZkMKJ6Jf5hJ9Dg=;
-        b=APIKqEklvn11WeV0s8CXFmxyLANOyXZMf+92KrXgqlZQ9+ANjdULmblywmR4lPPHz8
-         GUJpS84kfihvhiZIv3qJw5CuhuXEY/OXYTsCrIuQC1QeuO7HPbUpLf1QsyzFC2/KVOOm
-         bjyuPLAOn5N2HOiJ/Xt1q9zm6WHBTyhKcdX80EXubUr94dLwF/M72Ph260JYD/rrYtQ8
-         Ab86IC21Rt8TOfi6wKHG/S8ryUppwBXmkNx4KkHomPn3+hcrIwkpVWC2q3Zu56HwlQ/F
-         WPucsnhlLVE5m3c40LcvHTA2G8XXr9UC/zxBSOU2sJaZjeWro7ujtqAVnSDM9a3CE4fo
-         G/4w==
+        bh=MHfJg8I40AyrFWL2HTXVtd3AE1IeaVRWavtCFPKxV9Y=;
+        b=GP2emADWJmk4QH3D0vRVdwcxcfa2Z43DiMAKcSbzRPC3MIi7B2mStf7PoEgSvy0ZMD
+         hViY+anxcZ3cSz1yLR92jZ8utCmHGq4GC1Oz5hB9z61nCkISVntnTo0jpiZiww8kQPwz
+         eeuoOQ9wWUMx1ZyEzyRGSyv9i6efVYO83OA+O/bQXPZsfPw8NHnFKE0w9MY+F636XmfV
+         YMgFyam8ueJuu3GHD3HTCGglOZVoleAPXxOMhzlELKfpaJklwFvGmm65DWxa8KoWoGDg
+         QovHLlXiimJSN0/kn5J+F1WPWmfPzYZe/Ufzp1clAKtuBdSS8L/sGMoEMVjpEaSi4X0T
+         zQmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780942054; x=1781546854;
+        d=1e100.net; s=20251104; t=1780945514; x=1781550314;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=mPC7tIhUwdVZkpX4evzvmorP3YRKGZkMKJ6Jf5hJ9Dg=;
-        b=AyaWVoRYLUcxvyB9S5cMkfpCiPKLn43FNCuc1iD31bN2h1zoAdvwP2PB6OlCjGRY5I
-         dQ2uzU1UgTzdwMP54e5qHGCJrYHDLEW30l5n5p3C9oETH4yBq6lT2iJnyRyfHlo09A2a
-         qaTf16kkBtvEjP/DDa4cGc9MsgWUJ7nBnSVLb43JHPzfFzb0GvUajBar5AQwz2AmR2oQ
-         FknQX+aGeLFAJA+lTZ481b2KOZCzWmwAhUmQwDm4312y4M8yzaj6sdrv+wTf6bDDCUEE
-         QVCmhrgxkLI9nXNHgDdtMvWOKT59x/ae9j8R7FsSycqkzu/1u8Nzw/L+OTsdqZR20dtA
-         dr7A==
-X-Gm-Message-State: AOJu0YwPtLMAS/F1sRSbsYM6dRecZ0TgtWQpDjt938MknjGCO8gHPDls
-	mSzqKeEQ7+XPknIHTDp3sd4Xp+G+bMGDZdGvGVUUqRFRYmMm/tcoa1gt
-X-Gm-Gg: Acq92OG+Eivc97UiThOAqJbhnKg1d3uLDjSYUum05VXN0xO78pUjGV9XCw2xEzUQOlN
-	GUl5ax2509WNjgve2palecFaA2dM8IiIrWvkibEusTfq0ZvWx0ZIgARiOK3geED9uDWitrZRwfv
-	iO9lZsOuMzFervX3rjTl4R25+P7gLLwBMwL398ZxkIGS4TsDj5llmOp5wi1DUI/9WOp/0KYt8FM
-	W2yF+2WTI2xQUqkCigOn9VAW6auVBsQWfyIoWwAHX2el2jvCzrf0DHynMqy9hHEvRiIvFQBGaWu
-	GNu0BP2mX5KTijdXks5LSnvXadlm409cwk8+sM5dX/+QrQgIYNYIXgglrgITR2IyzFUr1GRt3dM
-	UIGngsjteI54MC91+X4YfW4Eoz9UbA/VaopjNtLTLJIC7TuN76B0adFkJnyrfwQ3KZqi67bTkK6
-	s2NFbuNOH6HStCMQTXXXqNSez9dJ94xV6v9ntmgtY7w9c=
-X-Received: by 2002:a05:600c:35c9:b0:490:b8c0:d471 with SMTP id 5b1f17b1804b1-490c261317amr269358725e9.23.1780942053728;
-        Mon, 08 Jun 2026 11:07:33 -0700 (PDT)
-Received: from user ([104.28.154.195])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3a87dasm398300745e9.7.2026.06.08.11.07.32
+        bh=MHfJg8I40AyrFWL2HTXVtd3AE1IeaVRWavtCFPKxV9Y=;
+        b=m1iSMYfZXrxcUdydMNh0Ok/ArQAk96ryTxSR8wxFh2dNUlGR4OUtoTmWYIvgosxEW9
+         kFnUhME4/CRZi+ER5KDBJVA7bZDwBKbdPlOgUiGdBssU43BfY1CZF7eRDpxtpf/dRMBD
+         Gvgj3eIzIw7qMPm2W8PMPbK42MQXObDqcjZzj96Uoc/QC4r3hlT70+D2ktU5mgtYnIAH
+         fGHXuLABsKbetiTj47Uh8yBsfIZpLAVuQ4H85LF7wCfGQ5lN1wBVJd2YBq3Ldq0iRrck
+         abvuLbaihvsDNoX/1lCRsrZffH0I5ubKHO4ZvULgFMRQmLh3b1RYx3VK0R1nlJPbEl+X
+         mv+w==
+X-Gm-Message-State: AOJu0YxtQj24dJIA/gGngn949U0yWcgwQYYbNLac/r9tl2Lv+9vXK0vd
+	jqwAKfnXdaV13YkIJKRGPOwZpNXq7BGit+DF2n1vlbVpfIxHsaljUVHl
+X-Gm-Gg: Acq92OEToPoECknq0ornPw941TabD6KwA4pcisBmrYDOiF+dT/lEma1SnzmUN9XZDlT
+	r66sqMXLUF1/cbvllNHm2u9HNtBmlluc7B8RYmS0r8EvWVa7CZwpzf2MUx4hxYqwGab0NsRd94E
+	5sUi/fcDPmyBBjSKFGlXgEuXZ7DAmoGFEQKBhGBPNT5V9WeJ4vt0PFPP8t/8EL/cKJXwfn9RnEz
+	R1u+RbecstpcGhomh8PLYvmYyKg6OIkYOlbI8eCnSDtvUJSSZV+SewQBKQ7JheQ7gComMQdITxZ
+	NHin09FHRWaCXbXktzBoPrCDm++msaLol78CRQX+WMxQMl2QqVUa79kxYFNjdpAa2oZFHZXGDF0
+	SWVyXmq9VWmcLZ3Fkxd47gN6Q8k6jpRNNjHS2aSHi50wX89ZBn5ehpLAGhh0FOXH567fRdk2nVj
+	DCmJCr4XiIQgiXNq0ZAI50PUIBY38zoV5rcxshT/FOXhnGck5paJXOmjzUY2BveFr4xo4hAtVkj
+	CITqlARwpb092l8gw==
+X-Received: by 2002:a05:622a:1187:b0:517:c65c:488b with SMTP id d75a77b69052e-517c65c771emr13993181cf.0.1780945514369;
+        Mon, 08 Jun 2026 12:05:14 -0700 (PDT)
+Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51775df4dd6sm160482541cf.27.2026.06.08.12.05.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 11:07:33 -0700 (PDT)
-From: yahia <yahia.a.abdrabou@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
+        Mon, 08 Jun 2026 12:05:13 -0700 (PDT)
+From: Dave Carey <carvsdriver@gmail.com>
+To: johannes.goede@oss.qualcomm.com
 Cc: platform-driver-x86@vger.kernel.org,
-	yahia ahmed <yahia.a.abdrabou@gmail.com>
-Subject: [PATCH v3] hp-wmi: add battery threshold support
-Date: Mon,  8 Jun 2026 21:07:28 +0300
-Message-ID: <20260608180728.27348-1-yahia.a.abdrabou@gmail.com>
+	pithenrich2d@googlemail.com,
+	mpearson-lenovo@squebb.ca,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	armin.wolf@outlook.de,
+	linux-kernel@vger.kernel.org,
+	Dave Carey <carvsdriver@gmail.com>
+Subject: Re: [PATCH v5] platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+Date: Mon,  8 Jun 2026 15:05:07 -0400
+Message-ID: <20260608190507.77836-1-carvsdriver@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <41309386-12fb-71bf-3ced-8377bf8aaa8b@linux.intel.com>
-References: <41309386-12fb-71bf-3ced-8377bf8aaa8b@linux.intel.com>
+In-Reply-To: <dda1efcd-f7f5-4ed5-9481-5047d43924cc@oss.qualcomm.com>
+References: <20260521144034.282419-1-carvsdriver@gmail.com> <20260527122701.242907-1-carvsdriver@gmail.com> <78833ba9-7ea0-4c7f-8d41-ac0fd64ba15c@oss.qualcomm.com> <20260608125211.11957-1-carvsdriver@gmail.com> <dda1efcd-f7f5-4ed5-9481-5047d43924cc@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,125 +82,33 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+Hi Hans,
 
-Implement battery threshold support using the SBCO and GBCO ACPI methods,
-Add battery_get to retrieve the current battery mode and provide a function
-to set the battery threshold.
+Confirmed: on the YB9, both lenovo-ymc and yb9-kbdock register input
+nodes with SW_TABLET_MODE in their capability bitmap (SW=2 in
+/proc/bus/input/devices). You are right that this is a problem
+regardless of which one fires events -- GNOME reads the capability at
+startup.
 
-Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
----
-v3:
-- Fix coding style errors and warning
-- Refine the changelogs for clarity
+The recommended fix would be: add a DMI blocklist to lenovo_ymc_probe()
+to return early on the Yoga Book 9, matching on:
 
-v2:
-- Simplify detection logic via battery_get
-- Add Battery Profiles enum table
-- Add functions to set the battery mode
----
- drivers/platform/x86/hp/hp-wmi.c | 37 ++++++++++++++++++++------------
- 1 file changed, 23 insertions(+), 14 deletions(-)
+    DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
+    DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index f2180b61b84e..c50fe78099d9 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -11,7 +11,6 @@
-  * Copyright (C) 2005 Dmitry Torokhov <dtor@mail.ru>
-  */
- 
--#include <asm-generic/errno.h>
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/acpi.h>
-@@ -297,15 +296,16 @@ enum hp_wmi_event_ids {
-  * Profiles for hp battery threshold profile 0x05 and 0x06 map to 4 and 5 respectively
-  */
- enum hp_battery_modes {
--	HP_BATTERY_MODE_NORMAL = 0x00,
-+	HP_BATTERY_MODE_NORMAL   = 0x00,
- 	HP_BATTERY_MODE_ADAPTIVE = 0x02,
--	HP_BATTERY_THRESHOLD_4 = 0x05,
--	HP_BATTERY_THRESHOLD_5 = 0x06,
-+	HP_BATTERY_THRESHOLD_4   = 0x05,
-+	HP_BATTERY_THRESHOLD_5   = 0x06,
- };
- 
--#define HPWMI_BATTERY_THRESHOLD_SBCO 0x2B // SBCO Command id
--#define HPWMI_AC_REQUIRED 0x35 // obscure edge case where the bios requires the user to be charged while setting a profile
--/*
-+#define HPWMI_BATTERY_THRESHOLD_SBCO 0x2B /* SBCO Command id */
-+#define HPWMI_AC_REQUIRED	     0x35
-+/* obscure edge case where the bios requires the user to be charging while setting a profile
-+ *
-  * struct bios_args buffer is dynamically allocated.  New WMI command types
-  * were introduced that exceeds 128-byte data size.  Changes to handle
-  * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
-@@ -1099,21 +1099,26 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
--static int battery_get(void) {
-+static int battery_get(void)
-+{
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	int mode = -1;
-+
- 	if (ACPI_SUCCESS(acpi_evaluate_object(NULL, "\\_SB.WMID.GBCO", NULL, &output))) {
- 		union acpi_object *obj = (union acpi_object *)output.pointer;
--		if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count >= 3) { // standard package sent by bios
--			mode = (int)obj->package.elements[2].buffer.pointer[0]; // bios returns the result in the third buffer 
-+
-+		if (obj && obj->type == ACPI_TYPE_PACKAGE  /* standard package sent by bios */
-+				&& obj->package.count >= 3) {
-+			 /* bios returns the result in the third buffer */
-+			mode = (int)obj->package.elements[2].buffer.pointer[0];
- 		}
- 		kfree(output.pointer);
--	} else 
-+	} else
- 		mode = -EIO;
- 	return mode;
- }
- 
--static int battery_set(int profile) 
-+static int battery_set(int profile)
- {
- 	if (!battery_threshold_support) {
- 		pr_err("Battery threshold is not supported");
-@@ -1122,18 +1127,21 @@ static int battery_set(int profile)
- 	union acpi_object args[4];
- 	acpi_status status;
- 	struct acpi_object_list arg_list = { .count = 4, .pointer = args };
-+
- 	memset(args, 0, sizeof(args));
- 	args[0].type = ACPI_TYPE_INTEGER;
- 	args[0].integer.value = 0;
- 	args[1].type = ACPI_TYPE_INTEGER;
- 	args[1].integer.value = profile;
--	args[2].type = ACPI_TYPE_INTEGER; // padding required by bios
-+	args[2].type = ACPI_TYPE_INTEGER; /* padding required by bios */
- 	args[2].integer.value = 0;
- 	args[3].type = ACPI_TYPE_INTEGER;
- 	args[3].integer.value = 0;
- 	status = acpi_evaluate_object(NULL, "\\_SB.WMID.SBCO", &arg_list, NULL);
-+
- 	if (unlikely(status == HPWMI_AC_REQUIRED)) {
--		pr_err("You have to be plugged in while setting a battery profile"); // random edge case in the bios
-+		 /* random edge case in the bios */
-+		pr_err("You have to be plugged in while setting a battery profile");
- 		return -EIO;
- 	}
- 	if (ACPI_FAILURE(status)) {
-@@ -2351,6 +2359,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 		return err;
- 
- 	int ret = battery_get();
-+
- 	if (ret >= 0)
- 		battery_threshold_support = true;
- 	thermal_profile_setup(device);
--- 
-2.54.0
+That leaves yb9-kbdock as the sole SW_TABLET_MODE source on this
+hardware.
 
+Two questions on how you'd like to proceed:
+
+1. Should the lenovo-ymc fix come as a standalone patch, or would you
+   prefer a v6 2-patch series with the ymc change as patch 1/2 and the
+   kbdock driver as patch 2/2?
+
+2. For the early return in probe(): you suggested "return 0" to avoid
+   WMI framework error messages. That requires a NULL guard in
+   lenovo_ymc_notify() since priv is never set in that path. Is that
+   the right approach, or would you prefer a different pattern?
+
+Thanks,
+Dave
