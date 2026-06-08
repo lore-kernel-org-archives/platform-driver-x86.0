@@ -1,157 +1,627 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711063947AE
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 08:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371833B27E8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 08:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780907045; cv=none; b=ZNp0j6laQ1jw3wRGsqJxScmwrwTHmCpOm4Ed0I7nw/SGA2RfEuH/PokUoXxz6BvyADw9Hf2S6zQkOq2AEFI9q+sMcNLDfeSD4KnRs29j5OLxEryj2h4ERofz1rJVdLzcZm/KrvIxVqqa9r+kMpYfARXRmTTmOC/p+nxQ0xdI1qI=
+	t=1780907817; cv=none; b=Ihh175FRk9Xx6jBJjPYkCEy1sqkTTt7VEL+zADv9J0M42lyHW5cteKXdVSa9spaGK6YR/v6fJTgxAoFONsdYWopBSW7DqVubDXwATTFjB8lGIk0iRDhaGtgYLk4+5hnK7ikKLSEHeYmba0WbpX/rFA6jI5DNZweiGY91WTDoxsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780907045; c=relaxed/simple;
-	bh=NeXDZ+l+JJOWjDiSzO/ouNpuHT816nQEkyTDUBw4+ZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rJLAu5snripnI3n0dYVM//xp2EWOqjcRAfD6pDmWFjqA7Fguit5nHJozi4wYOtqUGAJU6uXTpqUciUNKXfLgYLwo1VugdF1gQ/pYxOgH57n5ka5eZdYy7KBR+A/9Le9Zjj7hEFXRNkW4e1lclH1aEU03W6o8it19NX5xrIyne60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L5IYjcic; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cNlEh/aT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1780907817; c=relaxed/simple;
+	bh=+eFmC4yx2Bx5WIBE71AgsmKk5L1vOfdZAha8CntGGIA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=K3qYXGxW3kh/K5pEVJZtM3DLPFqvd1rDKAxOiXbQEpSXQgxGjX0yIlsbip+B0DHB+rilDDnvLMyMtsOxIDQoxnxF06jFuWC5QRxMSpBbuLIqPMe8/Qew/e6CNcXayi/YsV8gVm8Eu+BvglCy3U/NWLxr1D5P1AQiahYNLcfLITQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vpku6OMF; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L5IYjcic";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cNlEh/aT"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6586Omhp2317615
-	for <platform-driver-x86@vger.kernel.org>; Mon, 8 Jun 2026 08:24:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=+qPb7tQoDg6x3IwcPqytJEZquxNNbm3/xWq
-	C4VJA8Y4=; b=L5IYjcicDCToKBPKpddWxExvSaynrHV5RWrmVXPDeuXuvhTG8sh
-	l0dtG5S/6UYTNbF4FsVWcs4DkD3+pt3FC4sLct0D1JJdx2YrxQLQZvtK9QlawYi5
-	Jlk74Jnhq1cRW/quG0WWyom0OB/KfcC8Fy5TXX3CzZMGGW5WOi/eWjk+K2hPHwwg
-	PcMuSAXu/jVTfjl2rbR4feCkjOfZ5/H2esF+Zskqqemc7SgaKqt7vng/LKiaZlPc
-	/MY7QgkEBNlfIFWZ6ypmOLWbqpAloY5mxv4kITu4SpuxLQc3q/sr14jKSBlb3qjG
-	wlt3Gbv63XUmu9fBM1be6Ldu9RyojA5M4nw==
-Received: from mail-dy1-f200.google.com (mail-dy1-f200.google.com [74.125.82.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4emcadxhcr-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jun 2026 08:24:03 +0000 (GMT)
-Received: by mail-dy1-f200.google.com with SMTP id 5a478bee46e88-304d8613efbso3870005eec.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jun 2026 01:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1780907043; x=1781511843; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+qPb7tQoDg6x3IwcPqytJEZquxNNbm3/xWqC4VJA8Y4=;
-        b=cNlEh/aT9GrNPJcgcheX1HQxtkhKuyqVRF5n6ukQPtjFj9rtLkNx/kJHMIBSMKGDg5
-         hapKXogMNPEDsDXO6PjqHinoRUwT6rte9Fmml4nhs0LsPS49TEXG/ylsr1w+JEGjIhQc
-         nT4lmdcXKInwmToeiWdZIrJ3Se9xGN3k4bdJfGYQHf4OVeK3ZDklBw5mSbNSqBgrjw6n
-         juS7f3qjFOUUHcOb08GwpELQvcYDkifDOJxB7TJRbLsL/TRcdWMj9/Ri1FQjVrWHatAE
-         K736z0V8QrSzN4ItE0wYrjaLlj0T+QkhdRfQBfkubdHdjJDDOhGoE7oA8vVAGEY+J+bF
-         KMCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780907043; x=1781511843;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qPb7tQoDg6x3IwcPqytJEZquxNNbm3/xWqC4VJA8Y4=;
-        b=dmsag+JeaOW8BiGl/o8J/vU29FZD99I2VsGHCQ6JVbP7eKsYDJbuZbn6FzKZVbsw4n
-         z9APNolAOF1cWYRfDxE7IKwEI8CQEsB/8d6LErpYqT92lKFpdD5wQCZLYWPHbsu9bYyn
-         fJCWh7+OuielNXbsfjLWEWR0tUZkqyNsvGHWUjxOiPm09wh5SzyjQH9yImz7XfICzg0G
-         q8IBSrakPThE6cRMNRSj6/eVjB3Zr8vt36I2t+50HbLxGnqDRjMfQ5fFSzMPPiFwV3LS
-         3G5KfuasxHIoWIL8WGZLLy5sV6VJi52s3a49BWv1PBs18w93OyAWfINFCbH2rk1irgQX
-         Fm5A==
-X-Forwarded-Encrypted: i=1; AFNElJ+NtJ9JyrmChpj8w1anE3GnGcC4qFHKcLyhmAqiAGtrgiJZYbC4NzNJWp0GJTK7+bu8rCQRIIbkzkRTI3Br6MVehwxr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW+IqoErG0/dNGnleMLU1a6JAKFBlW5AP4u0Z1ezuxnCGt6uKM
-	YVNdbXGSoCx9ih9WdNkrVbDiVCx2EJ9ohiJFnNu6uPx5nB6IU0FKAPHYgVmvKEo5EAJL29YCGDW
-	PTkyy+X9/pjVR7NjvGcWO/7qLUO2+aIFdgORyDAxmWh5+F4RXrdPCRdRXD60D6rAh+ZzJbMQ1Nf
-	EM
-X-Gm-Gg: Acq92OHk3JQw/4qGlkOsPJo25n4NLUJmP9z1cC6dD81aO3mbdls4sV2vbRZLYfNDcbC
-	J86DbVP388MxgwhX6SeRSRDRR6SpEV6iY9Kteknv5+5WV3/KqGxQc09edLO7SY/Kv5vGw2ZNBZ8
-	8gx9ClDLiuOV20/pNq22nb3gjSZx+cCrCrbT7wshOD+GK9zRWGo+LeTRZmIgpAEHDA1sw+p7GLe
-	LaazUifGzuOLn35M23dN48iu9lEvJWuebgJHptHDTgoGaxI6VW1bOlCqNqrS6oqvYROu+uJiy3t
-	D4BZwjmz7HTP+QquWuzFo+WPuBIx3pdbW+j7BODcV5lOaRuN3sREZxiJyotiV224tu9+lRBHAUA
-	eY7B38dNNgBHOn66YQphMP5WX7Azw9Hf7Z5klQxilmS02tLyORpEpSwOTYHW6lh99DEScwg4d19
-	03e459UFl/Rg0eGS/w
-X-Received: by 2002:a05:7301:4187:b0:304:acc:f079 with SMTP id 5a478bee46e88-3077b7e2385mr6971279eec.27.1780907042653;
-        Mon, 08 Jun 2026 01:24:02 -0700 (PDT)
-X-Received: by 2002:a05:7301:4187:b0:304:acc:f079 with SMTP id 5a478bee46e88-3077b7e2385mr6971259eec.27.1780907042125;
-        Mon, 08 Jun 2026 01:24:02 -0700 (PDT)
-Received: from QCOM-aGQu4IUr3Y.qualcomm.com (i-global052.qualcomm.com. [199.106.103.52])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074db85e10sm15771014eec.7.2026.06.08.01.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2026 01:24:01 -0700 (PDT)
-From: Shawn Guo <shengchao.guo@oss.qualcomm.com>
-To: Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shawn Guo <shengchao.guo@oss.qualcomm.com>
-Subject: [PATCH] platform: arm64: qcom-hamoa-ec: Fix indentation in comment tables
-Date: Mon,  8 Jun 2026 16:23:48 +0800
-Message-ID: <20260608082348.92575-1-shengchao.guo@oss.qualcomm.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vpku6OMF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780907809; x=1812443809;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=+eFmC4yx2Bx5WIBE71AgsmKk5L1vOfdZAha8CntGGIA=;
+  b=Vpku6OMFShgBRNYgbV1rML/csvvysT+oegwPSaYOw3PVdZWziF+1mq4d
+   1gJryB00qz77Lr+lBIGQkTg/wngy7VlWMihuF7bxovyShwdCcMKfagciW
+   aM/Ad5DnvvmQ6HAxTcyKQJg+CCgQpJAb6K1sAVNnG5cNb2SbQF4d2S5j4
+   SFKfBV7/gTpVC8zB3u6IrB5Tzt8kykdMMmFl6IPZTyDr4tho1HTgEv22o
+   SGeC1c148IH4gGC8Ncr8sQHCGMu+1pZBDiYEtDDvku7ZxXMMq3QCUbuBn
+   K8XVsNh6SpC19D3tjXEPDWEHamXLDlJKgBSJ5becFAmZMcM/txaS3rBXt
+   A==;
+X-CSE-ConnectionGUID: +6ODajz+SLC9bki+7QSO2w==
+X-CSE-MsgGUID: CI1sI5EcTUObWaFRgPYn/w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="81683576"
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="81683576"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 01:36:48 -0700
+X-CSE-ConnectionGUID: BuIj5WQaRrmfx/cCaJybvQ==
+X-CSE-MsgGUID: JLIz1BZSQVqE7hSfn2a6Kw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="250401217"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 01:36:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jun 2026 11:36:42 +0300 (EEST)
+To: Jelle van der Waa <jelle@vdwaa.nl>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Frederik Harwath <frederik@harwath.name>
+Subject: Re: [PATCH v4 1/1] platform/x86: add Acer battery control driver
+In-Reply-To: <20260531090505.156394-2-jelle@vdwaa.nl>
+Message-ID: <c057a3cb-8af0-1209-e463-b073a754a01e@linux.intel.com>
+References: <20260531090505.156394-1-jelle@vdwaa.nl> <20260531090505.156394-2-jelle@vdwaa.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=DIa/JSNb c=1 sm=1 tr=0 ts=6a267c23 cx=c_pps
- a=PfFC4Oe2JQzmKTvty2cRDw==:117 a=b9+bayejhc3NMeqCNyeLQQ==:17
- a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=EUspDBNiAAAA:8
- a=JXefCyyux0SJYChmvAAA:9 a=6Ab_bkdmUrQuMsNx7PHu:22
-X-Proofpoint-GUID: YGhQbkxNyNUpisIzEp3N_nZqrbHeRnR8
-X-Proofpoint-ORIG-GUID: YGhQbkxNyNUpisIzEp3N_nZqrbHeRnR8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDA3NyBTYWx0ZWRfX24azgqryC5aA
- uvzRico8QmNDfZWKiGUvprqJ36eQA+G6AEG/rGbyDLj+rHZG4ng7eKuBGeYwiaa1ItKG8f0CeHz
- azLDw+vQpFyYxDsbz+vhdgTGV173ZlMQ5DYC/c/0Sl31MHRcxv+qlk6b+kiB7d57E/n8dZx75Lh
- vFqhfDz4XPPbIQJIf7PsJ0jxH8D6SpOTbsm7ejdiNRei2PirF5XBfocmANgF+YKa+dSEVXjTHQL
- gFXi4Q/4mwkczkbm0iBp7JrMF/2xNW3JS6r2/fKdBLg2kr1/wX0QV4m05ADMuukZRHkqsBwWJ8l
- 7kzDL+lJbJ8ZCXmbW6tMsmwi9iGmGFJBTtJCn6UTRY+rJur8HDUPfXeAK/fZxtlsGLN6i2V+uJy
- FvGKcpIuIw8UG9OHRs1ZttFPp/niohcACU6DaJJ2RPFAggmLy7h9HPQTDMpmltAvBXkuV/ng+Qu
- YliBAp4AFSxoYouMtqg==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-08_02,2026-06-05_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 clxscore=1011 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2605210000
- definitions=main-2606080077
+Content-Type: text/plain; charset=US-ASCII
 
-With tab=8 (Linux Kernel coding style), there are a couple of lines
-misaligned in the comment ASCII tables. Fix indentation for them.
+On Sun, 31 May 2026, Jelle van der Waa wrote:
 
-Signed-off-by: Shawn Guo <shengchao.guo@oss.qualcomm.com>
----
- drivers/platform/arm64/qcom-hamoa-ec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Some Acer laptops can configure battery related features through Acer
+> Care Center on Windows. This driver uses the power supply extension to
+> set a battery charge limit and exposes the battery
+> temperature.
+> 
+> This driver is based on the existing acer-wmi-battery project on GitHub
+> and was tested on an Acer Aspire A315-510P.
+> 
+> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
+> 
+> ---
+> v4:
+> - Add additional DMI ids from https://github.com/frederik-h/acer-wmi-battery/blob/main/MODELS.md
+>   cross checked with DMI ids found in https://github.com/linuxhw/DMI
+> - Move DMI matching to __init and make the DMI table __initconst
+> - Port to the new wmidev_invoke_* API
 
-diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
-index a018f7bf35d2..89374ab3e600 100644
---- a/drivers/platform/arm64/qcom-hamoa-ec.c
-+++ b/drivers/platform/arm64/qcom-hamoa-ec.c
-@@ -149,7 +149,7 @@ static int qcom_ec_read_fw_version(struct device *dev)
-  * | 0x00		| Byte count	| Number of bytes in response		|
-  * |			|		| (excluding byte count)		|
-  * ------------------------------------------------------------------------------
-- * | 0x02 (LSB)	| EC Thermal	| Bit 0-1: Number of fans		|
-+ * | 0x02 (LSB)		| EC Thermal	| Bit 0-1: Number of fans		|
-  * | 0x03		| Capabilities	| Bit 2-4: Type of fan			|
-  * |			|		| Bit 5-6: Reserved			|
-  * |			|		| Bit 7: Data Valid/Invalid		|
-@@ -273,7 +273,7 @@ static int qcom_ec_fan_get_cur_state(struct thermal_cooling_device *cdev, unsign
-  * |			|		| Bit 1: Fan On/Off (0 - Off, 1 - ON)		|
-  * |			|		| Bit 2: Debug Type (0 - RPM, 1 - PWM)		|
-  * --------------------------------------------------------------------------------------
-- * | 0x04 (LSB)	| Speed in RPM	| RPM value, if mode selected is RPM		|
-+ * | 0x04 (LSB)		| Speed in RPM	| RPM value, if mode selected is RPM		|
-  * | 0x05		|		|						|
-  * --------------------------------------------------------------------------------------
-  * | 0x06		| Speed in PWM	| PWM value, if mode selected is PWM (0 - 255)	|
+Thanks for the update. Some small things still noted below.
+
+> v3:
+> - Add depends on DMI
+> - Rename CamelCase struct member names
+> - Simplify returning errors
+> - Add comma to non-terminating entries
+> - Simplified acer_wmi_battery_set_battery_health_control to acer_wmi_set_battery_health_control
+> - Use sizeof for acpi_object buffer
+> - Drop POWER_SUPPLY_EXTENSION macro
+> v2:
+> - Alphabetically sort linux headers
+> - Include headers for types / _packed
+> - Use cleanup.h instead of goto + label
+> - Add missing prefix for set_battery_health_control
+> - General code formatting fixes
+> - Remove HWMON dependency in Kconfig
+> - Use wmidev_evaluate_method()
+> - Accept oversized ACPI buffers
+> - Use DRIVER_NAME for battery extension name
+> - Set no_singleton = true
+> - Implement DMI matching to support laptops with only battery
+>   temperature support.
+> ---
+>  drivers/platform/x86/Kconfig            |  12 +
+>  drivers/platform/x86/Makefile           |   1 +
+>  drivers/platform/x86/acer-wmi-battery.c | 445 ++++++++++++++++++++++++
+>  3 files changed, 458 insertions(+)
+>  create mode 100644 drivers/platform/x86/acer-wmi-battery.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7a4956088300..ad7474c35d8e 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -189,6 +189,18 @@ config ACER_WMI
+>  	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
+>  	  here.
+>  
+> +config ACER_WMI_BATTERY
+> +	tristate "Acer WMI Battery"
+> +	depends on ACPI_WMI
+> +	depends on ACPI_BATTERY
+> +	depends on DMI
+> +	help
+> +	  This is a driver for Acer laptops with battery health control. It
+> +	  adds charge limit control and battery temperature reporting.
+> +
+> +	  If you have an ACPI-WMI Battery compatible Acer laptop, say Y or M
+> +	  here.
+> +
+>  source "drivers/platform/x86/amd/Kconfig"
+>  
+>  config ADV_SWBUTTON
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 872ac3842391..a877acd937cd 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
+>  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+>  obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
+>  obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+> +obj-$(CONFIG_ACER_WMI_BATTERY)	+= acer-wmi-battery.o
+>  
+>  # AMD
+>  obj-y				+= amd/
+> diff --git a/drivers/platform/x86/acer-wmi-battery.c b/drivers/platform/x86/acer-wmi-battery.c
+> new file mode 100644
+> index 000000000000..903a6e762ebd
+> --- /dev/null
+> +++ b/drivers/platform/x86/acer-wmi-battery.c
+> @@ -0,0 +1,445 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * acer-wmi-battery.c: Acer battery health control driver
+> + *
+> + * This is a driver for the WMI battery health control interface found
+> + * on some Acer laptops.  This interface allows to enable/disable a
+> + * battery charge limit ("health mode") and exposes the battery temperature.
+> + *
+> + * Based on acer-wmi-battery https://github.com/frederik-h/acer-wmi-battery/
+> + *
+> + * Copyright (C) 2022-2025  Frederik Harwath <frederik@harwath.name>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/compiler_attributes.h>
+> +#include <linux/dmi.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/limits.h>
+> +#include <linux/module.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/types.h>
+> +#include <linux/unaligned.h>
+> +#include <linux/version.h>
+> +#include <linux/wmi.h>
+> +
+> +#include <acpi/battery.h>
+> +
+> +#define DRIVER_NAME	"acer-wmi-battery"
+> +
+> +#define ACER_BATTERY_GUID "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
+> +
+> +/*
+> + * The Acer OEM software seems to always use this battery index,
+> + * so we emulate this behaviour to not confuse the underlying firmware.
+> + *
+> + * However this also means that we only fully support devices with a
+> + * single battery for now.
+> + */
+> +#define ACER_BATTERY_INDEX	0x1
+> +
+> +struct get_battery_health_control_status_input {
+> +	u8 battery_no;
+> +	u8 function_query;
+> +	u8 reserved[2];
+> +} __packed;
+> +
+> +struct get_battery_health_control_status_output {
+> +	u8 function_list;
+> +	u8 ret[2];
+> +	u8 function_status[5];
+> +} __packed;
+> +
+> +struct set_battery_health_control_input {
+> +	u8 battery_no;
+> +	u8 function_mask;
+> +	u8 function_status;
+> +	u8 reserved_in[5];
+> +} __packed;
+> +
+> +struct set_battery_health_control_output {
+> +	u8 ret;
+> +	u8 reserved_out;
+> +} __packed;
+> +
+> +enum battery_mode {
+> +	HEALTH_MODE = 1,
+> +	CALIBRATION_MODE = 2,
+> +};
+> +
+> +struct acer_wmi_battery_data {
+> +	struct acpi_battery_hook hook;
+> +	struct wmi_device *wdev;
+> +	const struct power_supply_ext *battery_ext;
+> +};
+> +
+> +bool health_mode;
+> +
+> +static int acer_wmi_battery_get_information(struct acer_wmi_battery_data *data,
+> +					    u32 index, u32 battery, u32 *result)
+> +{
+> +	u32 args[2] = { index, battery };
+> +	struct wmi_buffer input = { .length = sizeof(args), .data = args };
+> +	struct wmi_buffer output = { 0 };
+
+= {} would be enough to initialize it but I see Armin noted this is 
+unnecesary so please follow his advice.
+
+> +	int ret;
+> +
+> +	ret = wmidev_invoke_method(data->wdev, 0, 19, &input, &output, sizeof(u32));
+> +	if (ret)
+> +		return ret;
+> +
+> +	*result = get_unaligned_le32(output.data);
+
+My impression was that the data is always aligned by wmi core:
+
+"Said data is guaranteed to be aligned on a 8-byte boundary."
+
+You probably don't need the related header afterwards either.
+
+> +	kfree(output.data);
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_get_health_control_status(struct acer_wmi_battery_data *data,
+> +						      bool *health_mode)
+> +{
+> +	/*
+> +	 * Acer Care Center seems to always call the WMI method
+> +	 * with fixed parameters. This yields information about
+> +	 * the availability and state of both health and
+> +	 * calibration mode. The modes probably apply to
+> +	 * all batteries of the system.
+> +	 */
+> +	struct get_battery_health_control_status_input args = {
+> +		.battery_no = ACER_BATTERY_INDEX,
+> +		.function_query = 0x1,
+> +		.reserved = { 0x0, 0x0 },
+> +	};
+> +	struct wmi_buffer input = { .length = sizeof(args), .data = &args };
+> +	struct wmi_buffer output = { 0 };
+
+Unnecessary init here as well.
+
+> +	int ret;
+> +
+> +	ret = wmidev_invoke_method(data->wdev, 0, 20, &input, &output,
+> +				   sizeof(struct get_battery_health_control_status_output));
+> +	if (ret)
+> +		return ret;
+> +
+> +	struct get_battery_health_control_status_output *status_output __free(kfree) = output.data;
+> +
+> +	if (health_mode) {
+> +		if (!(status_output->function_list & HEALTH_MODE))
+> +			return -EINVAL;
+> +
+> +		*health_mode = status_output->function_status[0] > 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_set_health_control(struct acer_wmi_battery_data *data,
+> +					       u8 function, bool function_status)
+> +{
+> +	struct set_battery_health_control_input args = {
+> +		.battery_no = ACER_BATTERY_INDEX,
+> +		.function_mask = function,
+> +		.function_status = function_status ? 1 : 0,
+> +		.reserved_in = { 0x0, 0x0, 0x0, 0x0, 0x0 },
+> +	};
+> +	struct wmi_buffer input = { .length = sizeof(args), .data = &args };
+> +	int ret;
+> +
+> +	ret = wmidev_invoke_procedure(data->wdev, 0, 21, &input);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_battery_ext_property_get(struct power_supply *psy,
+> +					 const struct power_supply_ext *ext,
+> +					 void *ext_data,
+> +					 enum power_supply_property psp,
+> +					 union power_supply_propval *val)
+> +{
+> +	struct acer_wmi_battery_data *data = ext_data;
+> +	bool health_mode;
+> +	u32 value;
+> +	int ret;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		ret = acer_wmi_battery_get_health_control_status(data, &health_mode);
+> +		if (ret)
+> +			return ret;
+> +
+> +		val->intval = health_mode ? POWER_SUPPLY_CHARGE_TYPE_LONGLIFE
+> +					  : POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+> +		break;
+> +	case POWER_SUPPLY_PROP_TEMP:
+> +		ret = acer_wmi_battery_get_information(data, 0x8, ACER_BATTERY_INDEX, &value);
+> +		if (ret)
+> +			return ret;
+> +		if (value > U16_MAX)
+> +			return -ERANGE;
+> +
+> +		val->intval = value - 2731;
+
+We can derive that literal from constant defs:
+
+ABSOLUTE_ZERO_MILLICELSIUS / MILLIDEGREE_PER_DECIDEGREE
+
+Whether you want to comment about losing the 50 millidegrees from 
+ABSOLUTE_ZERO_MILLICELSIUS or not, I leave up to you.
+
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_battery_ext_property_set(struct power_supply *psy,
+> +					 const struct power_supply_ext *ext,
+> +					 void *ext_data,
+> +					 enum power_supply_property psp,
+> +					 const union power_supply_propval *val)
+> +{
+> +	struct acer_wmi_battery_data *data = ext_data;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		return acer_wmi_battery_set_health_control(data, HEALTH_MODE,
+> +				val->intval == POWER_SUPPLY_CHARGE_TYPE_LONGLIFE);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int acer_battery_ext_property_is_writeable(struct power_supply *psy,
+> +						  const struct power_supply_ext *ext,
+> +						  void *ext_data,
+> +						  enum power_supply_property psp)
+> +{
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct dmi_system_id acer_wmi_battery_health_mode_table[] __initconst = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-24PT")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-44P")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A715-42G")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-57")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-58")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PHN16-71")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-34")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-43")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFE16-44")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFG16-72")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX14-71G")
+> +		}
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX16-61G")
+
+Pleaese add the trailing commas to any non-terminating entry.
+
+> +		}
+> +	},
+> +	{}
+> +};
+> +
+> +static const enum power_supply_property acer_battery_properties_v1[] = {
+> +	POWER_SUPPLY_PROP_TEMP,
+> +};
+> +
+> +static const enum power_supply_property acer_battery_properties_v2[] = {
+> +	POWER_SUPPLY_PROP_TEMP,
+> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
+> +};
+> +
+> +static const struct power_supply_ext acer_wmi_battery_extension_v1 = {
+> +	.name			= DRIVER_NAME,
+> +	.properties		= acer_battery_properties_v1,
+> +	.num_properties		= ARRAY_SIZE(acer_battery_properties_v1),
+> +	.get_property		= acer_battery_ext_property_get,
+> +	.set_property		= acer_battery_ext_property_set,
+> +	.property_is_writeable	= acer_battery_ext_property_is_writeable,
+> +};
+> +
+> +static const struct power_supply_ext acer_wmi_battery_extension_v2 = {
+> +	.name			= DRIVER_NAME,
+> +	.properties		= acer_battery_properties_v2,
+> +	.num_properties		= ARRAY_SIZE(acer_battery_properties_v2),
+> +	.charge_types           = BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +				  BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE),
+> +	.get_property		= acer_battery_ext_property_get,
+> +	.set_property		= acer_battery_ext_property_set,
+> +	.property_is_writeable	= acer_battery_ext_property_is_writeable,
+> +};
+> +
+> +static int acer_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+> +{
+> +	struct acer_wmi_battery_data *data = container_of(hook, struct acer_wmi_battery_data, hook);
+> +
+> +	return power_supply_register_extension(battery, data->battery_ext,
+> +					       &data->wdev->dev, data);
+> +}
+> +
+> +static int acer_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+> +{
+> +	struct acer_wmi_battery_data *data = container_of(hook, struct acer_wmi_battery_data, hook);
+> +
+> +	power_supply_unregister_extension(battery, data->battery_ext);
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct acer_wmi_battery_data *data;
+> +
+> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, data);
+> +	data->wdev = wdev;
+> +	data->battery_ext = health_mode ? &acer_wmi_battery_extension_v2
+> +					: &acer_wmi_battery_extension_v1;
+> +	data->hook.name = "Acer Battery Extension";
+> +	data->hook.add_battery = acer_battery_add;
+> +	data->hook.remove_battery = acer_battery_remove;
+> +
+> +	return devm_battery_hook_register(&data->wdev->dev, &data->hook);
+> +}
+> +
+> +static const struct wmi_device_id acer_wmi_battery_id_table[] = {
+> +	{ ACER_BATTERY_GUID, NULL },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(wmi, acer_wmi_battery_id_table);
+> +
+> +static struct wmi_driver acer_wmi_battery_driver = {
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table = acer_wmi_battery_id_table,
+> +	.probe = acer_wmi_battery_probe,
+> +	.no_singleton = true,
+> +};
+> +
+> +static int __init acer_wmi_battery_module_init(void)
+> +{
+> +	int r;
+> +
+> +	if (dmi_check_system(acer_wmi_battery_health_mode_table))
+> +		health_mode = true;
+> +	else
+> +		health_mode = false;
+> +
+> +	r = wmi_driver_register(&acer_wmi_battery_driver);
+> +	if (r)
+> +		return r;
+> +
+> +	return r;
+> +}
+> +
+> +static void __exit acer_wmi_battery_module_exit(void)
+> +{
+> +	wmi_driver_unregister(&acer_wmi_battery_driver);
+> +}
+> +
+> +module_init(acer_wmi_battery_module_init);
+> +module_exit(acer_wmi_battery_module_exit);
+> +
+> +MODULE_AUTHOR("Frederik Harwath <frederik@harwath.name>");
+> +MODULE_AUTHOR("Jelle van der Waa <jelle@vdwaa.nl>");
+> +MODULE_DESCRIPTION("Acer battery health control WMI driver");
+> +MODULE_LICENSE("GPL");
+> 
+
 -- 
-2.43.0
+ i.
 
