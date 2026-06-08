@@ -1,316 +1,337 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EAD1419A4
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 09:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA9631327D;
+	Mon,  8 Jun 2026 10:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780911364; cv=none; b=ByBzRPNnRH4+aDQuHBLHYNzhXyZypujwG4sFOSejL7uzmZNbOw+TeHTYEfBDOYG8lx78SWfhJLWzabsi3FaSotKA42Eqd4m/Xbzy+bwC8tbRqmZVQ1JRZxYXBVZx/8Q/+pfNeDh9UBnxhaxKikBEQSFYVMWPz9Q2IljgeauEz6c=
+	t=1780913351; cv=none; b=QOqf6xSvA5R2vyoae5RfGISVQZz2st5YTf3syKJoIT63TmHBEUM49KIhDR5pqL654whuG4X0n+OBycI4jzVnmao/UWOAGh9pI/e/ynPo22gBsfU/7N7vcavqWMcBSflTS/s7DVi6nUohSBgWw04rQkd2IH9F/TGljZySbZyWrSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780911364; c=relaxed/simple;
-	bh=IJoXPp5/clI1HPMmnvcxAVLX2Cwnixp857stfRKXuYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V8UPrzVzBTq9EtLobOzktbngX0s6oNEEtZPNiCdIm2GjMnflV2tuoBW6wEuTDlGGO/eMbRMWcYMD9U81xsIAPF0L5U6w8QVLWX3noVu3nXgGhNo5b/XEr5crNuYlpGQgaQ0oPuxj+0MBX0Wd62/pppNW8QUutSJEeDgfWLhC43A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZT1Q6fUG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780913351; c=relaxed/simple;
+	bh=wF6G3UXv5UTekA/2EGHDgj+IHxjQIedmwi8IbeYtWIY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZmWrrliPnXYz6d1q0ZLHU+OtNu5ItjWAn+EP63Lz8yZ01klaw61+Y6eu1PABtjZGDk4wn8HuUGRwV9+020l8bbT9v4j4IbS68EijpJFuP+9697lRM+oMA9/y9xAbXNAJuKSLHxwttZJyr1B4lTZJWUXkBckco4IRYmxVCAaWs7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bKrBjfpY; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZT1Q6fUG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E711F00893;
-	Mon,  8 Jun 2026 09:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780911362;
-	bh=XiZGK89RTmF1QPHAPF0nQmFGIMM1FZeOcNpSoXuf2VE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZT1Q6fUGFMDdDjXYsMkItOn12xwyLuh73uG9JhNf/OlOROpT+vKkEN7O/+ZUpkWS9
-	 fS0pMDqzB4BXwYjCD9bDV3cdvzi0OeTpcuf/DCDzt5i0E48TyY6nC7XMX2Y+htvCJg
-	 SqHreuUc304oYIjBugZHGm4wGnK9wGywbJEvxCVT+RBWFK+aTg7/vEyNNKBLCEZSjB
-	 jGTRDqHZBNoue8TQQSu1YyPJdRsPDaj4fBGRNs/AHkQ5nqadMqZD0fBxyNO0Z2Rgfc
-	 +XPK5+ZvXMVRwpVhLW3//1/OSL2abbWPWbPLjADH30Z9MXjr58KwLtjRFqcT3ZHT+L
-	 YGyEvDbzPVw3w==
-Message-ID: <3eb979e5-02ea-4af0-beb6-2b0fc7ae9eef@kernel.org>
-Date: Mon, 8 Jun 2026 11:36:00 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bKrBjfpY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780913349; x=1812449349;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wF6G3UXv5UTekA/2EGHDgj+IHxjQIedmwi8IbeYtWIY=;
+  b=bKrBjfpYhM/1Hxbs099aXZ83gNFft2EZrZS9eziIySHxYXwUqLCgsBqr
+   Uk1jMpAjFs7n8R2aa+iFwyxJ0eG0EzpfkeXt3SxklnBjS/eyDngC9tPov
+   vBobQm47OkUYMxHYuKoliuA+u69ztnTxAZzzeE/i8vYcEw4BX0JPJi9A+
+   cDkWXwC2EybLBxaSKrslsTFGAVcJKqlSES3lQcji12KHmxIu5jNLGIDq/
+   Yhaq7hg6AVq4Tv5WJSxhFz3AFKbzU/3lN7CuZk8nXtYl9DRuSx4fzXflq
+   cwSBX1PE13TNCCajtVYJVZoIzQxKX0rwmQQjS1Sj6Pz/SOtqi5O5Qd0Wv
+   g==;
+X-CSE-ConnectionGUID: 3/gqQIb/SmuirjI4fncjcQ==
+X-CSE-MsgGUID: FyUYLniqTYOxttlsD3rPyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="85498358"
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="85498358"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 03:09:09 -0700
+X-CSE-ConnectionGUID: WMlLxQWPRK6ESv/1FdX/dg==
+X-CSE-MsgGUID: diRbm/98SZG0BTvFaXNd3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="250422485"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 03:09:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jun 2026 13:09:02 +0300 (EEST)
+To: Lucy Wong <lucywong2778@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] platform/x86: add Xiaomi WMI key driver
+In-Reply-To: <20260601152703.94539-2-lucywong2778@gmail.com>
+Message-ID: <ddc819dc-4c5a-ba62-bced-3222e2e60bb7@linux.intel.com>
+References: <20260601152703.94539-1-lucywong2778@gmail.com> <20260601152703.94539-2-lucywong2778@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] platform/x86/amd/pmf: Add util layer and userspace
- character device interface
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com,
- Sanket.Goswami@amd.com
-References: <20260527140205.4073335-1-Shyam-sundar.S-k@amd.com>
- <20260527140205.4073335-2-Shyam-sundar.S-k@amd.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260527140205.4073335-2-Shyam-sundar.S-k@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Mon, 1 Jun 2026, Lucy Wong wrote:
 
-On 27-May-26 4:01 PM, Shyam Sundar S K wrote:
-> Add a util layer to AMD PMF that exposes a minimal userspace interface
-> via a character device for metrics monitoring and feature discovery.
+> Certain Xiaomi laptops expose extra function keys through a single WMI
+> event GUID (B74AF83F-8B2F-4069-ACAC-36D176F62FC0). Unlike the existing
+> xiaomi-wmi driver where each key has its own GUID, here all keys share
+> one GUID and the event buffer encodes both an event type and a keycode:
 > 
-> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
-> PMF metrics such as:
-> *  Power source and power slider position
-> *  Platform type, lid state, and user presence
-> *  Skin temperature and ambient light
-> *  BIOS input parameters (1-10)
-> *  Graphics workload metrics
-> *  CPU C-state residency (average and maximum)
-> *  Socket power consumption
+>   buffer[1] = event type
+>     0x02: press/release keys (5 keys with abstract icons)
+>     0x03: firmware-handled toggles (touchpad, Fn lock)
+>   buffer[2] = keycode within that type
 > 
-> The interface enables smoother integration with userspace tools such as
-> AMD SystemDeck [1], which is widely used for monitoring and controlling
-> power and thermal behavior on AMD platforms. These tools help designers
-> keep major components within thermal limits to ensure proper operation
-> and enhance overall system stability and reliability.
+> The keys with abstract icons are mapped to programmable macro keys for
+> userspace to bind. The touchpad and Fn lock keys are handled by the EC
+> and are reported for notification purposes only.
 > 
-> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
-> option, allowing it to be disabled if not needed. The implementation
-> uses existing PMF infrastructure to populate data from the TA (Trusted
-> Application) shared memory buffer.
-> 
-> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
-> 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Signed-off-by: Lucy Wong <lucywong2778@gmail.com>
 > ---
->  drivers/platform/x86/amd/pmf/Kconfig  | 10 ++++
->  drivers/platform/x86/amd/pmf/Makefile |  2 +
->  drivers/platform/x86/amd/pmf/core.c   |  5 ++
->  drivers/platform/x86/amd/pmf/pmf.h    |  9 ++++
->  drivers/platform/x86/amd/pmf/util.c   | 68 +++++++++++++++++++++++++++
->  include/uapi/linux/amd-pmf.h          | 60 +++++++++++++++++++++++
->  6 files changed, 154 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/pmf/util.c
->  create mode 100644 include/uapi/linux/amd-pmf.h
+>  MAINTAINERS                            |   6 ++
+>  drivers/platform/x86/Kconfig           |  11 ++
+>  drivers/platform/x86/Makefile          |   1 +
+>  drivers/platform/x86/xiaomi-wmi-keys.c | 139 +++++++++++++++++++++++++
+>  4 files changed, 157 insertions(+)
+>  create mode 100644 drivers/platform/x86/xiaomi-wmi-keys.c
 > 
-> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
-> index 25b8f7ae3abd..ad4faf18de47 100644
-> --- a/drivers/platform/x86/amd/pmf/Kconfig
-> +++ b/drivers/platform/x86/amd/pmf/Kconfig
-> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
->  	 in the PMF config store.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 839e39825455..7969b82c8315 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -29124,6 +29124,12 @@ F:	fs/xfs/
+>  F:	include/uapi/linux/dqblk_xfs.h
+>  F:	include/uapi/linux/fsmap.h
 >  
->  	 Say Y here to enable more debug logs and Say N here if you are not sure.
+> +XIAOMI WMI KEYS DRIVER
+> +M:	Lucy Wong <lucywong2778@gmail.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/xiaomi-wmi-keys.c
 > +
-> +config AMD_PMF_UTIL_SUPPORT
-> +	bool "AMD PMF Util layer support"
-> +	depends on AMD_PMF
+>  XILINX AMS DRIVER
+>  M:	Salih Erim <salih.erim@amd.com>
+>  M:	Conall O'Griofa <conall.ogriofa@amd.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b5212b204..541b0a255daa 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -90,6 +90,17 @@ config XIAOMI_WMI
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called xiaomi-wmi.
+>  
+> +config XIAOMI_WMI_KEYS
+> +	tristate "Xiaomi WMI key events driver"
+> +	depends on ACPI_WMI
+> +	depends on INPUT
 > +	help
-> +	  Enabling this option provides a character device for userspace to capture
-> +	  PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
-> +	  Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
+> +	  Say Y here if you want to support WMI-based hotkey events on certain
+> +	  Xiaomi laptops.
 > +
-> +	  Say Y here to enable it and Say N here if you are not sure.
-> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-> index 5978464e0eb7..bf7aad80b9e9 100644
-> --- a/drivers/platform/x86/amd/pmf/Makefile
-> +++ b/drivers/platform/x86/amd/pmf/Makefile
-> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
->  amd-pmf-y 			:= core.o acpi.o sps.o \
->  				   auto-mode.o cnqf.o \
->  				   tee-if.o spc.o
-> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
-> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
-> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-> index b9e5a2cf3aae..58d86b4c2828 100644
-> --- a/drivers/platform/x86/amd/pmf/core.c
-> +++ b/drivers/platform/x86/amd/pmf/core.c
-> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
->  
->  	pmf_device = dev->dev;
->  
-> +	err = amd_pmf_cdev_register(dev);
-> +	if (err)
-> +		dev_warn(dev->dev, "failed to register util interface: %d\n", err);
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called xiaomi-wmi-keys.
 > +
->  	dev_info(dev->dev, "registered PMF device successfully\n");
->  
->  	return 0;
-> @@ -643,6 +647,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
->  {
->  	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
->  
-> +	amd_pmf_cdev_unregister();
->  	amd_pmf_deinit_features(dev);
->  	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
->  		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
-> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 69fef7448744..6f61076a9386 100644
-> --- a/drivers/platform/x86/amd/pmf/pmf.h
-> +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
->  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
->  int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
->  
-> +/* Util Layer */
-> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
-> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
-> +void amd_pmf_cdev_unregister(void);
-> +#else
-> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
-> +static inline void amd_pmf_cdev_unregister(void) {}
-> +#endif
-> +
->  #endif /* PMF_H */
-> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
+>  config REDMI_WMI
+>  	tristate "Redmibook WMI key driver"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 872ac3842391..d852bb0bf61b 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+>  obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+> +obj-$(CONFIG_XIAOMI_WMI_KEYS)		+= xiaomi-wmi-keys.o
+>  obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
+>  obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>  obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
+> diff --git a/drivers/platform/x86/xiaomi-wmi-keys.c b/drivers/platform/x86/xiaomi-wmi-keys.c
 > new file mode 100644
-> index 000000000000..f8a283192ffe
+> index 000000000000..524ede0e64eb
 > --- /dev/null
-> +++ b/drivers/platform/x86/amd/pmf/util.c
-> @@ -0,0 +1,68 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +++ b/drivers/platform/x86/xiaomi-wmi-keys.c
+> @@ -0,0 +1,139 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * AMD Platform Management Framework Util Layer
+> + * Xiaomi laptop WMI hotkey driver
 > + *
-> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
+> + * Copyright (C) 2026 Lucy Wong <lucywong2778@gmail.com>
 > + */
 > +
-> +#include <linux/amd-pmf.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/mutex.h>
-> +#include <linux/uaccess.h>
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
 > +
-> +#include "pmf.h"
+> +#define XIAOMI_WMI_EVENT_GUID "B74AF83F-8B2F-4069-ACAC-36D176F62FC0"
 > +
-> +static struct amd_pmf_dev *pmf_dev_handle;
-> +static DEFINE_MUTEX(pmf_util_lock);
+> +#define XIAOMI_TYPE_BACKLIGHT 0x01 /* keyboard backlight level (EC handled) */
+> +#define XIAOMI_TYPE_KEY  0x02 /* press/release keys */
+> +#define XIAOMI_TYPE_TOGGLE 0x03 /* firmware toggle keys (notify only) */
+
+Please align values within a "group".
+
 > +
-> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-> +{
-> +	return -ENOTTY;
-> +}
+> +#define XIAOMI_KEY_PRESS_MIN 0x01
+> +#define XIAOMI_KEY_PRESS_MAX 0x05
+> +#define XIAOMI_KEY_RELEASE_OFF 0x05
+
+Ditto.
+
 > +
-> +static int amd_pmf_open(struct inode *inode, struct file *filp)
-> +{
-> +	guard(mutex)(&pmf_util_lock);
-> +	if (!pmf_dev_handle)
-> +		return -ENODEV;
+> +#define XIAOMI_TOGGLE_DEDUP_MS 50
 > +
-> +	filp->private_data = pmf_dev_handle;
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations pmf_if_ops = {
-> +	.owner          = THIS_MODULE,
-> +	.open           = amd_pmf_open,
-> +	.unlocked_ioctl = amd_pmf_set_ioctl,
+> +struct xiaomi_wmi {
+> +	struct input_dev *input_dev;
+> +	unsigned long last_toggle;
+> +	u8 last_toggle_code;
 > +};
 > +
-> +static struct miscdevice amd_pmf_util_if = {
-> +	.minor		= MISC_DYNAMIC_MINOR,
-> +	.name		= "amdpmf_interface",
-> +	.fops		= &pmf_if_ops,
+> +static const struct key_entry xiaomi_wmi_keymap[] = {
+> +	/* type 0x02: programmable keys with abstract icons */
+> +	{ KE_KEY, 0x0201, { KEY_MACRO1 } },
+> +	{ KE_KEY, 0x0202, { KEY_MACRO2 } },
+> +	{ KE_KEY, 0x0203, { KEY_MACRO3 } },
+> +	{ KE_KEY, 0x0204, { KEY_MACRO4 } },
+> +	{ KE_KEY, 0x0205, { KEY_MACRO5 } },
+> +	/* type 0x03: firmware-handled toggles, reported for OSD only */
+> +	{ KE_KEY, 0x0300, { KEY_F21 } }, /* touchpad toggle */
+
+There is KEY_TOUCHPAD_TOGGLE.
+
+> +	{ KE_KEY, 0x0301, { KEY_FN_ESC } }, /* Fn lock */
+
+I'm not sure if KEY_FN_ESC is right key for it.
+
+And if these are handled by FW, shouldn't you use KEY_IGNORE?
+
+Since you've space, align the upper comment to the one below for better 
+readability.
+
+> +	{ KE_END, 0 },
 > +};
 > +
-> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+> +static int xiaomi_wmi_probe(struct wmi_device *wdev, const void *context)
 > +{
+> +	struct xiaomi_wmi *data;
 > +	int ret;
 > +
-> +	guard(mutex)(&pmf_util_lock);
-> +	pmf_dev_handle = dev;
-> +	ret = misc_register(&amd_pmf_util_if);
+> +	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +	dev_set_drvdata(&wdev->dev, data);
+> +
+> +	data->input_dev = devm_input_allocate_device(&wdev->dev);
+> +	if (!data->input_dev)
+> +		return -ENOMEM;
+> +
+> +	data->input_dev->name = "Xiaomi WMI keys";
+> +	data->input_dev->phys = "wmi/input0";
+> +	data->input_dev->id.bustype = BUS_HOST;
+> +
+> +	ret = sparse_keymap_setup(data->input_dev, xiaomi_wmi_keymap, NULL);
+
+Please add select INPUT_SPARSEKMAP.
+
 > +	if (ret)
-> +		pmf_dev_handle = NULL;
+> +		return ret;
 > +
-> +	return ret;
+> +	return input_register_device(data->input_dev);
 > +}
 > +
-> +void amd_pmf_cdev_unregister(void)
+> +static void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
 > +{
-> +	guard(mutex)(&pmf_util_lock);
-> +	if (pmf_dev_handle)
-> +		misc_deregister(&amd_pmf_util_if);
-> +	pmf_dev_handle = NULL;
+> +	struct xiaomi_wmi *data = dev_get_drvdata(&wdev->dev);
+> +	u8 type, code;
+> +
+> +	if (obj->type != ACPI_TYPE_BUFFER || obj->buffer.length < 3)
+> +		return;
+> +
+> +	type = obj->buffer.pointer[1];
+> +	code = obj->buffer.pointer[2];
+> +
+> +	switch (type) {
+> +	case XIAOMI_TYPE_KEY:
+> +		if (code >= XIAOMI_KEY_PRESS_MIN &&
+> +		    code <= XIAOMI_KEY_PRESS_MAX) {
+> +			sparse_keymap_report_event(data->input_dev,
+> +						   0x0200 | code, 1, false);
+
+Please name literals.
+
+> +		} else if (code > XIAOMI_KEY_PRESS_MAX &&
+> +						code <= XIAOMI_KEY_PRESS_MAX +
+> +							XIAOMI_KEY_RELEASE_OFF) {
+
+Please align properly.
+
+I think the defines are not optional as you seem to have two blocks of 
+codes, both with n length, one doing press and the other release but your 
+defines are not based one the code blocks being of same length.
+
+> +			code -= XIAOMI_KEY_RELEASE_OFF;
+> +			sparse_keymap_report_event(data->input_dev,
+> +						   0x0200 | code, 0, false);
+> +		}
+> +		break;
+> +
+> +	case XIAOMI_TYPE_TOGGLE:
+> +		/* deduplicate: each press emits two identical events */
+> +		if (data->last_toggle_code == code &&
+> +		    time_before(jiffies, data->last_toggle +
+
+Is ->last_toggle initialized to a sensible value?
+(found by sashiko.dev)
+
+> +				msecs_to_jiffies(XIAOMI_TOGGLE_DEDUP_MS)))
+> +			return;
+> +		data->last_toggle_code = code;
+> +		data->last_toggle = jiffies;
+
+Locking needed?
+
+Is it guaranteed that the duplicates are always in-order, that is, not two 
+different toggles can get interleaved?
+
+> +		sparse_keymap_report_event(data->input_dev,
+> +					   0x0300 | code, 1, true);
+> +		break;
+> +
+> +	case XIAOMI_TYPE_BACKLIGHT:
+> +		/* keyboard backlight handled by EC, nothing to do */
+> +		break;
+> +
+> +	default:
+> +		dev_dbg(&wdev->dev, "unknown event type 0x%02x\n", type);
+
+Add include.
+
+> +		break;
+> +	}
 > +}
-> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
-> new file mode 100644
-> index 000000000000..c7099e7f463f
-> --- /dev/null
-> +++ b/include/uapi/linux/amd-pmf.h
-> @@ -0,0 +1,60 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note */
-> +/*
-> + * AMD Platform Management Framework (PMF) UAPI Header
-> + *
-> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
-> + * All Rights Reserved.
-> + *
-> + * This file defines the user-space API for interacting with the AMD PMF
-> + * driver. It provides ioctl interfaces to query platform-specific metrics
-> + * such as power source, slider position, platform type, laptop placement,
-> + * and various BIOS input/output parameters.
-> + */
 > +
-> +#ifndef _UAPI_LINUX_AMD_PMF_H
-> +#define _UAPI_LINUX_AMD_PMF_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
-> + *
-> + * This magic number uniquely identifies AMD PMF ioctl operations.
-> + */
-> +#define AMD_PMF_IOC_MAGIC	'p'
-> +
-> +/**
-> + * IOCTL_AMD_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics data
-> + *
-> + * This ioctl command is used to populate the amd_pmf_info structure
-> + * with the requested PMF metrics information.
-> + */
-> +#define IOCTL_AMD_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, struct amd_pmf_info)
-
-Since the IOCTL is designed to allow extending the struct I would not code the size
-into the IOCTL cmd value. I'm not sure if there is a macro without the size argument,
-otherwise just pass __u64 for the size if the size-member which is effectively
-the min size?
-
-Regards,
-
-Hans
-
-
-
-
-> +
-> +#define AMD_PMF_BIOS_PARAMS_MAX		10
-> +
-> +struct amd_pmf_info {
-> +	__u64 size;
-> +
-> +	/* Power and state info */
-> +	__u32 platform_type;
-> +	__u32 power_source;
-> +	__u32 laptop_placement;
-> +	__u32 lid_state;
-> +	__u32 user_presence;
-> +	__u32 slider_position;
-> +
-> +	/* Thermal and power metrics */
-> +	__s32 skin_temp;
-> +	__u32 gfx_busy;
-> +	__s32 ambient_light;
-> +	__u32 avg_c0_residency;
-> +	__u32 max_c0_residency;
-> +	__u32 socket_power;
-> +
-> +	/* BIOS parameters */
-> +	__u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+> +static const struct wmi_device_id xiaomi_wmi_id_table[] = {
+> +	{ .guid_string = XIAOMI_WMI_EVENT_GUID },
+> +	{ }
 > +};
+> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
 > +
-> +#endif /* _UAPI_LINUX_AMD_PMF_H */
+> +static struct wmi_driver xiaomi_wmi_driver = {
+> +	.driver = {
+> +		.name = "xiaomi-wmi-keys",
+> +	},
+> +	.id_table = xiaomi_wmi_id_table,
+> +	.probe = xiaomi_wmi_probe,
+> +	.notify = xiaomi_wmi_notify,
+
+We're transitioning wmi core, so please convert to .notify_new.
+
+You may also consider using .min_event_size.
+
+> +	.no_singleton = true,
+> +};
+> +module_wmi_driver(xiaomi_wmi_driver);
+> +
+> +MODULE_AUTHOR("Lucy Wong <lucywong2778@gmail.com>");
+> +MODULE_DESCRIPTION("Xiaomi laptop WMI hotkey driver");
+> +MODULE_LICENSE("GPL");
+> 
+
+-- 
+ i.
 
