@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C076C2EEE61
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 09:32:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EAD1419A4
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 09:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780911157; cv=none; b=Brw8a//em3XoB6ms3Ls1mRwQg6H7SQ5J5wBKNiPxPQjf8f8wZitAvPunh8/Vw2dJ36iHoMP5ORva30ns8R+oZN5tA5tiI3duzRUdA3pNXvhC34MMjU+uq/gJwrX5npIMHDB6/Ipgcq59aT2OduQl/hatCAKM4GBuIiiz+2/m9d4=
+	t=1780911364; cv=none; b=ByBzRPNnRH4+aDQuHBLHYNzhXyZypujwG4sFOSejL7uzmZNbOw+TeHTYEfBDOYG8lx78SWfhJLWzabsi3FaSotKA42Eqd4m/Xbzy+bwC8tbRqmZVQ1JRZxYXBVZx/8Q/+pfNeDh9UBnxhaxKikBEQSFYVMWPz9Q2IljgeauEz6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780911157; c=relaxed/simple;
-	bh=jFExqGeGlE4qcpJxdJsGZbzHP4/E8FNZYIwa2KfJVfA=;
+	s=arc-20240116; t=1780911364; c=relaxed/simple;
+	bh=IJoXPp5/clI1HPMmnvcxAVLX2Cwnixp857stfRKXuYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NxeiP/RkI20ZlRgQ1ZCzXFUoHPANMMuVM4cOTVP5jKU1Mci/9xt5TGlW1ymofUw/LFOxd7X0c/RGX2ZCbQ5k+NcvNPktxfKHVQRoWn7NLsecgN9WQnqc7f5dly86F1pePxcK+fRgTQG75jo2hXJsBcu3rWbG68zCk6cffJy39g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPmLJ4TE; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=V8UPrzVzBTq9EtLobOzktbngX0s6oNEEtZPNiCdIm2GjMnflV2tuoBW6wEuTDlGGO/eMbRMWcYMD9U81xsIAPF0L5U6w8QVLWX3noVu3nXgGhNo5b/XEr5crNuYlpGQgaQ0oPuxj+0MBX0Wd62/pppNW8QUutSJEeDgfWLhC43A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZT1Q6fUG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPmLJ4TE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742CF1F00893;
-	Mon,  8 Jun 2026 09:32:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZT1Q6fUG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2E711F00893;
+	Mon,  8 Jun 2026 09:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780911156;
-	bh=YEWUi0MzGwTEIf6IFT/x8eC9N5/hfmicJJ172f0A+WE=;
+	s=k20260515; t=1780911362;
+	bh=XiZGK89RTmF1QPHAPF0nQmFGIMM1FZeOcNpSoXuf2VE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=jPmLJ4TEDMyL4hdQTJKeu1gs1b4IwWNUmCVHataD0r23mmd8QSyMuuV4recXyQYmL
-	 Er23vj/2JeTeUAowXwuYbp4xyOrBW75UcMFXKExGwfQRfWJWHonO0l3SgMAQB707e9
-	 x5Qzb422t5ZnIlYisCr0QTuBzMn6076HRsXHQ3b2EaOSPzIYOKEXzp/QuYEYLvUwkh
-	 WpffupZT0poGdWDI+kbsuCBN0DNmH7X2nwbo6ioaTmdi7CeXM3Z3W8m4K32mQhXqJo
-	 deXBG3GJ2L3RwqE9tFaMvlw9dM32rVJAiyqjusKsMVem+f1wJcJqRVeJvktwOKcHvV
-	 K9vw4yMQuIcwg==
-Message-ID: <7134f3bf-1e44-47aa-9419-b716ec4bb17a@kernel.org>
-Date: Mon, 8 Jun 2026 11:32:33 +0200
+	b=ZT1Q6fUGFMDdDjXYsMkItOn12xwyLuh73uG9JhNf/OlOROpT+vKkEN7O/+ZUpkWS9
+	 fS0pMDqzB4BXwYjCD9bDV3cdvzi0OeTpcuf/DCDzt5i0E48TyY6nC7XMX2Y+htvCJg
+	 SqHreuUc304oYIjBugZHGm4wGnK9wGywbJEvxCVT+RBWFK+aTg7/vEyNNKBLCEZSjB
+	 jGTRDqHZBNoue8TQQSu1YyPJdRsPDaj4fBGRNs/AHkQ5nqadMqZD0fBxyNO0Z2Rgfc
+	 +XPK5+ZvXMVRwpVhLW3//1/OSL2abbWPWbPLjADH30Z9MXjr58KwLtjRFqcT3ZHT+L
+	 YGyEvDbzPVw3w==
+Message-ID: <3eb979e5-02ea-4af0-beb6-2b0fc7ae9eef@kernel.org>
+Date: Mon, 8 Jun 2026 11:36:00 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,214 +35,249 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/8] platform/x86/amd/pmf: Implement util layer ioctl
- handler
+Subject: Re: [PATCH v6 1/8] platform/x86/amd/pmf: Add util layer and userspace
+ character device interface
 To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com,
  Sanket.Goswami@amd.com
 References: <20260527140205.4073335-1-Shyam-sundar.S-k@amd.com>
- <20260527140205.4073335-7-Shyam-sundar.S-k@amd.com>
+ <20260527140205.4073335-2-Shyam-sundar.S-k@amd.com>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260527140205.4073335-7-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20260527140205.4073335-2-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi,
 
-On 27-May-26 4:02 PM, Shyam Sundar S K wrote:
-> Implement the ioctl handler for the util layer character device. This
-> support adds the actual functionality to populate PMF metrics from the
-> TA shared memory buffer and return them to userspace.
+On 27-May-26 4:01 PM, Shyam Sundar S K wrote:
+> Add a util layer to AMD PMF that exposes a minimal userspace interface
+> via a character device for metrics monitoring and feature discovery.
 > 
-> The implementation includes:
-> - amd_pmf_populate_data() to extract metrics from TA shared memory
-> - amd_pmf_set_ioctl() to handle userspace ioctl requests
-> - Size negotiation for forward/backward compatibility
-> - Feature-based population of struct fields
-> - Export amd_pmf_get_ta_custom_bios_inputs()
+> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
+> PMF metrics such as:
+> *  Power source and power slider position
+> *  Platform type, lid state, and user presence
+> *  Skin temperature and ambient light
+> *  BIOS input parameters (1-10)
+> *  Graphics workload metrics
+> *  CPU C-state residency (average and maximum)
+> *  Socket power consumption
+> 
+> The interface enables smoother integration with userspace tools such as
+> AMD SystemDeck [1], which is widely used for monitoring and controlling
+> power and thermal behavior on AMD platforms. These tools help designers
+> keep major components within thermal limits to ensure proper operation
+> and enhance overall system stability and reliability.
+> 
+> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
+> option, allowing it to be disabled if not needed. The implementation
+> uses existing PMF infrastructure to populate data from the TA (Trusted
+> Application) shared memory buffer.
+> 
+> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
 > 
 > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/amd/pmf/pmf.h  |   1 +
->  drivers/platform/x86/amd/pmf/spc.c  |   3 +-
->  drivers/platform/x86/amd/pmf/util.c | 105 +++++++++++++++++++++++++++-
->  3 files changed, 107 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/amd/pmf/Kconfig  | 10 ++++
+>  drivers/platform/x86/amd/pmf/Makefile |  2 +
+>  drivers/platform/x86/amd/pmf/core.c   |  5 ++
+>  drivers/platform/x86/amd/pmf/pmf.h    |  9 ++++
+>  drivers/platform/x86/amd/pmf/util.c   | 68 +++++++++++++++++++++++++++
+>  include/uapi/linux/amd-pmf.h          | 60 +++++++++++++++++++++++
+>  6 files changed, 154 insertions(+)
+>  create mode 100644 drivers/platform/x86/amd/pmf/util.c
+>  create mode 100644 include/uapi/linux/amd-pmf.h
 > 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index 25b8f7ae3abd..ad4faf18de47 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
+>  	 in the PMF config store.
+>  
+>  	 Say Y here to enable more debug logs and Say N here if you are not sure.
+> +
+> +config AMD_PMF_UTIL_SUPPORT
+> +	bool "AMD PMF Util layer support"
+> +	depends on AMD_PMF
+> +	help
+> +	  Enabling this option provides a character device for userspace to capture
+> +	  PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
+> +	  Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
+> +
+> +	  Say Y here to enable it and Say N here if you are not sure.
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index 5978464e0eb7..bf7aad80b9e9 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
+>  amd-pmf-y 			:= core.o acpi.o sps.o \
+>  				   auto-mode.o cnqf.o \
+>  				   tee-if.o spc.o
+> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
+> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index b9e5a2cf3aae..58d86b4c2828 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>  
+>  	pmf_device = dev->dev;
+>  
+> +	err = amd_pmf_cdev_register(dev);
+> +	if (err)
+> +		dev_warn(dev->dev, "failed to register util interface: %d\n", err);
+> +
+>  	dev_info(dev->dev, "registered PMF device successfully\n");
+>  
+>  	return 0;
+> @@ -643,6 +647,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>  {
+>  	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+>  
+> +	amd_pmf_cdev_unregister();
+>  	amd_pmf_deinit_features(dev);
+>  	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>  		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
 > diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> index 269c0a4b1cae..752fa5dd2267 100644
+> index 69fef7448744..6f61076a9386 100644
 > --- a/drivers/platform/x86/amd/pmf/pmf.h
 > +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> @@ -903,6 +903,7 @@ int amd_pmf_smartpc_apply_bios_output(struct amd_pmf_dev *dev, u32 val, u32 preq
->  void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
->  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
->  int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev);
-> +u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index);
->  
->  int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
+> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
 >  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
-> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-> index 6e33824ccadc..94355b435a66 100644
-> --- a/drivers/platform/x86/amd/pmf/spc.c
-> +++ b/drivers/platform/x86/amd/pmf/spc.c
-> @@ -18,7 +18,7 @@
->  #include "pmf.h"
+>  int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
 >  
->  #ifdef CONFIG_AMD_PMF_DEBUG
-> -static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
-> +u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
->  {
->  	switch (index) {
->  	case 0 ... 1:
-> @@ -29,6 +29,7 @@ static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int
->  		return 0;
->  	}
->  }
-> +EXPORT_SYMBOL(amd_pmf_get_ta_custom_bios_inputs);
->  
->  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
->  {
+> +/* Util Layer */
+> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
+> +void amd_pmf_cdev_unregister(void);
+> +#else
+> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
+> +static inline void amd_pmf_cdev_unregister(void) {}
+> +#endif
+> +
+>  #endif /* PMF_H */
 > diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
-> index f8a283192ffe..30fb5c250362 100644
-> --- a/drivers/platform/x86/amd/pmf/util.c
+> new file mode 100644
+> index 000000000000..f8a283192ffe
+> --- /dev/null
 > +++ b/drivers/platform/x86/amd/pmf/util.c
-> @@ -9,6 +9,7 @@
->   *	    Sanket Goswami <Sanket.Goswami@amd.com>
->   */
->  
-> +#include <linux/align.h>
->  #include <linux/amd-pmf.h>
->  #include <linux/miscdevice.h>
->  #include <linux/mutex.h>
-> @@ -19,9 +20,111 @@
->  static struct amd_pmf_dev *pmf_dev_handle;
->  static DEFINE_MUTEX(pmf_util_lock);
->  
-> +static int amd_pmf_populate_data(struct amd_pmf_dev *pdev, struct amd_pmf_info *info)
+> @@ -0,0 +1,68 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD Platform Management Framework Util Layer
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
+> + */
+> +
+> +#include <linux/amd-pmf.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/mutex.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "pmf.h"
+> +
+> +static struct amd_pmf_dev *pmf_dev_handle;
+> +static DEFINE_MUTEX(pmf_util_lock);
+> +
+> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 > +{
-> +	struct ta_pmf_shared_memory *ta_sm = NULL;
-> +	struct ta_pmf_enact_table *in = NULL;
-> +	int idx;
+> +	return -ENOTTY;
+> +}
 > +
-> +	if (!pdev || !info)
-> +		return -EINVAL;
+> +static int amd_pmf_open(struct inode *inode, struct file *filp)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	if (!pmf_dev_handle)
+> +		return -ENODEV;
 > +
-> +	if (!pdev->shbuf)
-> +		return -EINVAL;
-> +
-> +	ta_sm = pdev->shbuf;
-> +	in = &ta_sm->pmf_input.enact_table;
-> +
-> +	/* Set size */
-> +	info->size = sizeof(*info);
-> +
-> +	/* PMF Feature support flags */
-> +	if (is_apmf_func_supported(pdev, APMF_FUNC_AUTO_MODE))
-> +		info->features_supported |= AMD_PMF_FEAT_AUTO_MODE;
-> +	if (is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
-> +		info->features_supported |= AMD_PMF_FEAT_STATIC_POWER_SLIDER;
-> +	if (pdev->smart_pc_enabled)
-> +		info->features_supported |= AMD_PMF_FEAT_POLICY_BUILDER;
-> +	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_AC))
-> +		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC;
-> +	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_DC))
-> +		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC;
-> +
-> +	/* Device States */
-> +	info->platform_type = in->ev_info.platform_type;
-> +	info->laptop_placement = in->ev_info.device_state;
-> +	info->lid_state = in->ev_info.lid_state;
-> +	info->user_presence = in->ev_info.user_present;
-> +	info->slider_position = in->ev_info.power_slider;
-> +
-> +	/* Thermal and Power Metrics */
-> +	info->power_source = in->ev_info.power_source;
-> +	info->skin_temp = in->ev_info.skin_temperature;
-> +	info->gfx_busy = in->ev_info.gfx_busy;
-> +	info->ambient_light = in->ev_info.ambient_light;
-> +	info->avg_c0_residency = in->ev_info.avg_c0residency;
-> +	info->max_c0_residency = in->ev_info.max_c0residency;
-> +	info->socket_power = in->ev_info.socket_power;
-> +
-> +	/* Custom BIOS input parameters */
-> +	for (idx = 0; idx < AMD_PMF_BIOS_PARAMS_MAX; idx++)
-> +		info->bios_input[idx] = amd_pmf_get_ta_custom_bios_inputs(in, idx);
-> +
-> +	/* BIOS output parameters */
-> +	for (idx = 0; idx < AMD_PMF_BIOS_PARAMS_MAX; idx++)
-> +		info->bios_output[idx] = pdev->bios_output[idx];
-> +
+> +	filp->private_data = pmf_dev_handle;
 > +	return 0;
 > +}
 > +
->  static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
-> -	return -ENOTTY;
-> +	struct amd_pmf_dev *pdev = filp->private_data;
-> +	void __user *argp = (void __user *)arg;
-> +	struct amd_pmf_info info = {};
-> +	size_t copy_size;
-> +	__u64 user_size;
+> +static const struct file_operations pmf_if_ops = {
+> +	.owner          = THIS_MODULE,
+> +	.open           = amd_pmf_open,
+> +	.unlocked_ioctl = amd_pmf_set_ioctl,
+> +};
+> +
+> +static struct miscdevice amd_pmf_util_if = {
+> +	.minor		= MISC_DYNAMIC_MINOR,
+> +	.name		= "amdpmf_interface",
+> +	.fops		= &pmf_if_ops,
+> +};
+> +
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+> +{
 > +	int ret;
 > +
-> +	if (cmd != IOCTL_AMD_PMF_POPULATE_DATA)
-> +		return -ENOTTY;
-> +
-> +	/* First read just the size field from userspace */
-> +	if (copy_from_user(&user_size, argp, sizeof(user_size)))
-> +		return -EFAULT;
-> +
-> +	if (user_size > sizeof(info))
-> +		return -EINVAL;
-
-Why? If the struct ever gets extended and a newer userspace runs on
-an older kernel this will now trigger. Instead just clamp to
-sizeof(info) .
-
-> +
-> +	if (!IS_ALIGNED(user_size, sizeof(__u64)))
-> +		return -EINVAL;
-
-Why ?  I guess on x86_64 this will always be true, but what about
-i386 ?   More specifically this simply seems unnecessary and I believe this
-entire check can be dropped.
-
-> +
-> +	if (user_size > sizeof(__u64)) {
-
-This should be:
-
-if (user_size >= (offsetof(struct amd_pmf_info, features_supported) + sizeof(features_from_user))) {
-
-> +		__u32 features_from_user = 0;
-> +
-> +		if (copy_from_user(&features_from_user, argp + offsetof(struct
-> +		    amd_pmf_info, features_supported), sizeof(features_from_user)))
-> +			return -EFAULT;
-> +
-> +		/* Reject non-zero values now */
-> +		if (features_from_user != 0)
-> +			return -EINVAL;
-
-Looking at amd_pmf_populate_data() features_supported is purely a kernel -> user thing,
-so why read this from userspace at all ?  And why must it be non 0 ?
-
-I believe this entire block can be dropped (instead of fixing the if condition).
-
-
-> +	}
-> +
 > +	guard(mutex)(&pmf_util_lock);
-> +	ret = amd_pmf_populate_data(pdev, &info);
+> +	pmf_dev_handle = dev;
+> +	ret = misc_register(&amd_pmf_util_if);
 > +	if (ret)
-> +		return ret;
+> +		pmf_dev_handle = NULL;
 > +
-> +	copy_size = min_t(size_t, user_size, sizeof(info));
+> +	return ret;
+> +}
+> +
+> +void amd_pmf_cdev_unregister(void)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	if (pmf_dev_handle)
+> +		misc_deregister(&amd_pmf_util_if);
+> +	pmf_dev_handle = NULL;
+> +}
+> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
+> new file mode 100644
+> index 000000000000..c7099e7f463f
+> --- /dev/null
+> +++ b/include/uapi/linux/amd-pmf.h
+> @@ -0,0 +1,60 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note */
+> +/*
+> + * AMD Platform Management Framework (PMF) UAPI Header
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * This file defines the user-space API for interacting with the AMD PMF
+> + * driver. It provides ioctl interfaces to query platform-specific metrics
+> + * such as power source, slider position, platform type, laptop placement,
+> + * and various BIOS input/output parameters.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_AMD_PMF_H
+> +#define _UAPI_LINUX_AMD_PMF_H
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
+> + *
+> + * This magic number uniquely identifies AMD PMF ioctl operations.
+> + */
+> +#define AMD_PMF_IOC_MAGIC	'p'
+> +
+> +/**
+> + * IOCTL_AMD_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics data
+> + *
+> + * This ioctl command is used to populate the amd_pmf_info structure
+> + * with the requested PMF metrics information.
+> + */
+> +#define IOCTL_AMD_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, struct amd_pmf_info)
 
-So here you're clamping which means the earlier user_size > sizeof(info) above
-can just be dropped.
+Since the IOCTL is designed to allow extending the struct I would not code the size
+into the IOCTL cmd value. I'm not sure if there is a macro without the size argument,
+otherwise just pass __u64 for the size if the size-member which is effectively
+the min size?
 
 Regards,
 
@@ -250,15 +285,32 @@ Hans
 
 
 
+
 > +
-> +	/* Set actual size being copied */
-> +	info.size = copy_size;
+> +#define AMD_PMF_BIOS_PARAMS_MAX		10
 > +
-> +	if (copy_to_user(argp, &info, copy_size))
-> +		return -EFAULT;
+> +struct amd_pmf_info {
+> +	__u64 size;
 > +
-> +	return 0;
->  }
->  
->  static int amd_pmf_open(struct inode *inode, struct file *filp)
+> +	/* Power and state info */
+> +	__u32 platform_type;
+> +	__u32 power_source;
+> +	__u32 laptop_placement;
+> +	__u32 lid_state;
+> +	__u32 user_presence;
+> +	__u32 slider_position;
+> +
+> +	/* Thermal and power metrics */
+> +	__s32 skin_temp;
+> +	__u32 gfx_busy;
+> +	__s32 ambient_light;
+> +	__u32 avg_c0_residency;
+> +	__u32 max_c0_residency;
+> +	__u32 socket_power;
+> +
+> +	/* BIOS parameters */
+> +	__u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+> +};
+> +
+> +#endif /* _UAPI_LINUX_AMD_PMF_H */
 
