@@ -1,77 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489E836680F
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 11:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A7A36F918;
+	Mon,  8 Jun 2026 11:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780918309; cv=none; b=rxwNUrnl8U5Rlek8BEV5shqZP5Xc1q8fyGCFWPqwo24KHD5WyG8EEZf1tDUhpxSKDfAUSnEj1EqgpXBX+/sTl5oH2JQ4Xb8mHkr8sX1dVCk/jbr4mkC0GRyyLuys7+AB+Du0uclTCQ/+dwnAro4w0AppTkmOy0PUXr09w7f7RYk=
+	t=1780919558; cv=none; b=sQVOKaLSoRJYy9cOxClTLUgBP1gsH93NlLeuP8V6N8EWhOPqm4bKmdtQsIHftt2AbIcij1pjv+H6CN/SKeTYrH+Vm+mnlowIsYhSdV7/aqI9fsvPbK2Wmr6phBASlt/p8tLZFNtTFwa35fCM1+NnM/ZG6ETc9omtnfWb7u1r/jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780918309; c=relaxed/simple;
-	bh=2SV4lh4cPCVDYGmnmBsUoHXL9ee6sv0zViEx09CKHjE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OZp8Tg6gJiL6Mp97CHtD+xepARW4C8VZTvWnGgkNR2WyjK0RMkpzTfaBKi2t/F+/NGcIWa/86A+VDJZzU71RfDpap2BYoLWml2+z8hKyO7M5Efi4hPg8OXqRP354JStjIqSU9ANhH/iNw1sKZohZBVGRBTh+x3UpuVtB2KvOFrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjQpKDFH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1780919558; c=relaxed/simple;
+	bh=MRO9QKNq/mjoG+V7gIOcZLh1xd3xr2wHAIdbFI4CA/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SOxwxQqWmN/CGnbW+L7Nv8pYVTc2n/sMact0upndF/TGAjoOCsD3Lrn1iqCFC40CzekhqPXM1+ZvDeIbbEoKn/8lXus5py4jfgJlj211xVIVS6RyIuCNrnDyES/k4lYsIuHNIyFOZmTnSeyBpAsrdqNNln/K7inyUitj9foQEdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=og8d/day; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjQpKDFH"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 98F64C2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 11:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1780918308;
-	bh=2SV4lh4cPCVDYGmnmBsUoHXL9ee6sv0zViEx09CKHjE=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=mjQpKDFH7yekHOGjEUnLx4/HfMHCAt2Y3saRFkHAlJfCy7c8eGU1CT4QJlWAGWjLd
-	 HBhxszVh9hS4RRs4N6XsDSp+iiDa5rRLdkXz3uwGt3OTbEz2CWctbM7+fpGYMobQYA
-	 actz5CQtxLsFBjm9TSEZFZZEklPcpEbznQIji6KFibZr3MV8b/+6fuOw8rk5e20kKN
-	 J4XxMkqqP7E5oRePxkbDN9agouDZEbRctOyl06oX2nIA5gQQBzKO6ZwflijcP/O9Qs
-	 SdMjhbV26Ibboc2NPIU7nqLZuiyTxnKjqemIgeD+EBMVLGIeMzVRlPdWdXBfRxzu61
-	 nnzt6ZJQa+sQg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 78F6DC41613; Mon,  8 Jun 2026 11:31:48 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221430] nvidia_wmi_ec_backlight: brightness writes silently
- dropped on HP OMEN 16 (2025)
-Date: Mon, 08 Jun 2026 11:31:48 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: hansg@kernel.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221430-215701-eaxB0Pkzb7@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221430-215701@https.bugzilla.kernel.org/>
-References: <bug-221430-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="og8d/day"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6531F00893;
+	Mon,  8 Jun 2026 11:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780919557;
+	bh=OUlTt1Dp84aHbBLcIdpUD4GSuRwl9Z61rP1pIPa0VeI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=og8d/dayMao9GKOndROs9F70XA+QYUf9p+dxyehPdpQHt5gD9KzfuT6ABlWoZHfpF
+	 AEZ9LsnuKhrhXYl0YHRxFb+nOHsunoI9il5+oDnzaKF8d2NNssZ4cJhi3FwLT6Wnb2
+	 fhsLCo448e3iMQIbVqf3AGmcBzDSsnnsc/ROO5/aKrFSyrRUxomSuka4+sFi13Bga+
+	 WtaCy9sG9zB1ETYU7SMMsHTyEXol6cZRE919lpGlt16boK6kdGt10XL2SHCK2ewKMT
+	 kqSIoT6U4Z7XbIOwPw9TF0f5Zb7WE4vzlQwIeVZiZjWicjcgzuDyIzyRNTAIlwmBfs
+	 OuAVLFg8cxJJA==
+Message-ID: <7d2daeec-fc33-4fb3-aded-bd709fccb8f5@kernel.org>
+Date: Mon, 8 Jun 2026 13:52:34 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] platform/x86/amd/pmc: Add delay_suspend module
+ parameter
+To: Daniel Gibson <daniel@gibson.sh>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mario Limonciello <superm1@kernel.org>
+Cc: stable@vger.kernel.org
+References: <20260606044758.2213401-1-daniel@gibson.sh>
+ <20260606044758.2213401-3-daniel@gibson.sh>
+ <5aaf8759-048b-4550-becb-e8686137d3da@kernel.org>
+ <731fc18e-818b-4986-94fa-ff14e4db7892@gibson.sh>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <731fc18e-818b-4986-94fa-ff14e4db7892@gibson.sh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221430
+Hi,
 
---- Comment #13 from Hans de Goede (hansg@kernel.org) ---
-I'm afraid I've no idea how to debug this further. You could try contacting
-Daniel Dadap <ddadap@nvidia.com> who is listed as the "NVIDIA WMI EC BACKLI=
-GHT
-DRIVER" maintainer in the kernel's MAINTAINERS file.
+On 8-Jun-26 1:41 PM, Daniel Gibson wrote:
+> Hi,
+> 
+> On 08.06.26 13:22, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 6-Jun-26 6:47 AM, Daniel Gibson wrote:
+>>> Enabling the new delay_suspend module parameter delays suspend for
+>>> 2.5 seconds which is known to help for some AMD-based Lenovo Laptops
+>>> that otherwise failed to send/receive events for key presses or the
+>>> lid switch after s2idle. Apparently the EC needs to do some things
+>>> in the background before suspend or it gets into a bad state.
+>>>
+>>> There are many reports of AMD-based laptops (mostly but not exclusively
+>>> IdeaPads) about similar issues on the web; this parameter gives
+>>> affected users an easy way to try out if their issues have the same
+>>> root cause and to work around them until their specific device is added
+>>> to the quirks list.
+>>>
+>>> The parameter description has a note encouraging users to report
+>>> their device so it can be added to the quirks list, inspired by a
+>>> similar request in parameter descriptions of the ideapad-laptop module.
+>>>
+>>> The module parameter can be set to "1" to explicitly enable it,
+>>> "0" to disable it even on devices that are assumed to be affected,
+>>> or -1 (the default) to enable it if the device is assumed to be affected
+>>> (according to fwbug_list[])
+>>>
+>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>>> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>>  drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
+>>>  1 file changed, 23 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+>>> index 6bafd8661d68..2d3d180c15d2 100644
+>>> --- a/drivers/platform/x86/amd/pmc/pmc.c
+>>> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+>>> @@ -16,6 +16,7 @@
+>>>  #include <linux/bits.h>
+>>>  #include <linux/debugfs.h>
+>>>  #include <linux/delay.h>
+>>> +#include <linux/dmi.h>
+>>>  #include <linux/io.h>
+>>>  #include <linux/iopoll.h>
+>>>  #include <linux/limits.h>
+>>
+>> This addition of including dmi.h seems unnecessary.
+>>
+> 
+> It's for that dev_info() call in the case that someone has enforced the option, see below
 
---=20
-You may reply to this email to add a comment.
+Ah right, that makes sense. Never mind then :)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Regards,
+
+Hans
+
+
+
+
+> 
+>>> @@ -89,6 +90,11 @@ static bool disable_workarounds;
+>>>  module_param(disable_workarounds, bool, 0644);
+>>>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
+>>>  
+>>> +static int delay_suspend = -1;
+>>> +module_param(delay_suspend, int, 0644);
+>>> +MODULE_PARM_DESC(delay_suspend,
+>>> +		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
+>>> +
+>>>  static struct amd_pmc_dev pmc;
+>>>  
+>>>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
+>>> @@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+>>>  	 *
+>>>  	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
+>>>  	 */
+>>> -	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
+>>> -		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+>>> +	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
+>>> +		/*
+>>> +		 * delay_suspend=1 force-enables this, otherwise it can be
+>>> +		 * disabled with disable_workarounds or delay_suspend=0
+>>> +		 */
+>>> +		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
+>>> +			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
+>>> +			return true;
+>>> +		}
+>>> +		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
+>>> +	} else if (delay_suspend == 1) {
+>>> +		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
+>>> +			 dmi_get_system_info(DMI_SYS_VENDOR),
+>>> +			 dmi_get_system_info(DMI_PRODUCT_NAME),
+>>> +			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
+>>> +			 dmi_get_system_info(DMI_BOARD_VENDOR),
+>>> +			 dmi_get_system_info(DMI_BOARD_NAME));
+> 
+> this one
+> 
+>>>  		return true;
+>>>  	}
+>>>  	return false;
+>>
+>> Otherwise this looks good to me:
+>>
+>> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> 
+> Thank you very much for the reviews!
+> 
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> 
+> Cheers,
+> Daniel
+> 
+
