@@ -1,267 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBAF3B7757
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 14:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7788D1DFF0
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 15:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780929210; cv=none; b=dMu5fA1EvooAk1QFhNttWFt9FYhBu1Dol1+ghVeWYlsDUuOlVfEDBbouR+pLQCnqtIUBwAzYrJwWmjuWi5HCgLtorNDhNxFFwpmJEXNKJxALXybAJQYWvWrg2ZqyR1j57KHhGQCY2/5GhjhkqHR7sgFORcfjtj4QaOgXyLdYZpY=
+	t=1780932984; cv=none; b=Lg61jZSgVU9M7ygRFDJkhiRYTSy08jDuiD9Ja5f6B3bQlMvVh34CIJZQyMDpbT+50n2yJ17xX64NwUCPT1IexeWgEIlvifPZJ7fjKNFOullw9fGqDNxm7oLHhW3eaQN+wTVjOJBMMuxA8zVKFpe+N/KGGVKZQPeJz/ftXPpN1Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780929210; c=relaxed/simple;
-	bh=w1kxU/VwJDODVF5Pc5jKaZeeJom/gY/GaGlI1R+hkTQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KJRIWqgm6iIZTQrQWu5YsrCRtydxQVg39t4nl6rhJGqFFI+7TVZTmM889C8vwun1Jz0pBmhoVxIAdrDMiEyknNGuZGtzC7NVB3Lm6SKWbTJ/j4Oo8yUdUCnWfFj4BzB83twq6J7iCU0v9I2/W/BQhNoOJlL5WPihFoGm84/msCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AihS+HY/; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780932984; c=relaxed/simple;
+	bh=nTG9ojLV3hroHm4CA6x/kqeDk8oC24KhyKRb3VnH8G0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LLd7odljJEaT7hLZJp6SI0r7gv8OTXK6AJr39WDq27gvRIxGCBz6h9nkjr+lBkG1tSoFB3Rnpr2HaKF67Ja0OqdVt0PqmegddxqN8xW0T1AU+qdswBqHfGNiWW5N6qkSaTxsiMolMKr11uKgZBPckEo0EbJoKzt0P+vgtNkB+iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mzz8KsAg; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AihS+HY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780929208; x=1812465208;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=w1kxU/VwJDODVF5Pc5jKaZeeJom/gY/GaGlI1R+hkTQ=;
-  b=AihS+HY/6SfllVqWxOCD7b9OCy34aLR+5p6kweuHL12eZyeinqlLsbnu
-   JMKxnwFoh0VpseR6oG0JiV85SwrrK+HkdW6No2iQMjbKgk5Nql6XfxtWS
-   oavRkGBfLfs7ffo2VH+UkkWv/ULMnVgfgXGTwCyuPvg9S0qAG09eLk+RW
-   IhWDdTNY1MroVw6HwPP+9Yf2BYelJ4+6YhToOzm2IN9vxaWR77eH5gqGs
-   luqv/6QEhWDOuODw3QodxZzalM1oAlnfmKMvLA00zjKe8ocgjIzRxs30P
-   cDz4IOAcekZHEuWmBZf+Anoe93vzEwYLS1a/xV8zlR1Ze0N9IAvp7FUQ7
-   Q==;
-X-CSE-ConnectionGUID: 8ZdDNxnrRYeq7W5SbFWiHQ==
-X-CSE-MsgGUID: 8bPqrI1BRGm9GJXypKWuDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="104325097"
-X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
-   d="scan'208";a="104325097"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 07:33:28 -0700
-X-CSE-ConnectionGUID: EyLdDoF7SluQZu9f47Z+3g==
-X-CSE-MsgGUID: wAyqLM7CTae6UVVg5b4vAA==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 07:33:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Jun 2026 17:33:22 +0300 (EEST)
-To: Hans de Goede <hansg@kernel.org>
-cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com, 
-    Sanket.Goswami@amd.com
-Subject: Re: [PATCH v6 6/8] platform/x86/amd/pmf: Implement util layer ioctl
- handler
-In-Reply-To: <7134f3bf-1e44-47aa-9419-b716ec4bb17a@kernel.org>
-Message-ID: <577687a7-7d77-660e-e0a5-cbd89217fb55@linux.intel.com>
-References: <20260527140205.4073335-1-Shyam-sundar.S-k@amd.com> <20260527140205.4073335-7-Shyam-sundar.S-k@amd.com> <7134f3bf-1e44-47aa-9419-b716ec4bb17a@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mzz8KsAg"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-45eea68dd6fso2292058f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Jun 2026 08:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780932981; x=1781537781; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rRNK1bYlC52bZpon17vtUhQqmZH3ElbF2pGLYTn/j+Q=;
+        b=Mzz8KsAgAdjeRb47plYHmwQXHr1QUmuGIWvYwH7UTOd3nxv8UQx91SJ3N9Uxsma2Yc
+         xVY6VYragNNNA9tNKjboF4IKh7APe9L7eUfngMrz/meYSfkqgQIGFuPwSpHK4hwgvmiY
+         gBr448pym5rhYmTeYkWHu2eyprYjcy1UDC61Sm4jFui7B54t/vY4rrt05FroEk1h8QA5
+         iFQhuEZW375jImRmUrwXS1IrXrp4E+4WZM/u9Ein4+mz3Ygqu+XoYhCelaoxqjyhzUAU
+         EI6qjh2GJA1ly1DbiGZjmZtg3Fx7uHfHJFL4DoigdwCjg/onxipQWnLMH4sLzIA+RfMW
+         j/KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780932981; x=1781537781;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rRNK1bYlC52bZpon17vtUhQqmZH3ElbF2pGLYTn/j+Q=;
+        b=nazJd68eXglOLLlPJGn10gr1+MYQHGpWW7xEcHH+4FXxO+iSk1PQGy6uV/kxQVbtqK
+         yOqfNo7zG4jYh9FohwBfBQnJkjzYr5go8reYCLqujp3hZJLDYkQaoO2GPevVoYZixWKL
+         f6K63BWnu1M6qnxsFv58Y1JHhjtqzn1bFkdbF71A/ufvHNWUT5mbebDw1msDe9nFzhCH
+         pUygeEW7MiXKESteBPlugpx3u/mFc/bCeqtcPeU6zEIEn2EbSp3nNWVFCVpTbVWp32qN
+         gZm1xRa/zz35dkoaD7UeZqPDtrswPD/ui6DPrmJtfFC0na82wkNN1iidO7EbqxFrNvZI
+         3pzw==
+X-Gm-Message-State: AOJu0Yy53cXyEpmNIesjD6nuI9y5pMGgblX5r/nF6Nqmcya4fWyEt5dc
+	rTNPoWcRdC5BInwxPkKLO2xJfeIIRbtQXp8xKTt/KV0Y32tiC8Sfashc
+X-Gm-Gg: Acq92OFHetOTNEYtWdvc+s9Tdp/nC1i6VlG+k9WZeB8o/ksYAe4QbElFJyC9GNRTZX0
+	m3fhEjAKCbMnHxaxucu6cps+7dTB5kP9Pc+Yh5rNmtpGouq5YGtZ30JKpXsk0tZRxM4qpb/2JwC
+	wdmBwIt5jv34Zy/28JgtK+ITdclfKpmAqR3xAmp+65QYjasawAiIeE1Kv6MdqXyZzG1w4HqtlVe
+	mFjJYqtkkWJzA/V4HqKLw5ZxI6sFVsRE5nVfpU0uqE5pEw0PeLgRvYFYPyX2D2tuHi0jXNfNZ/p
+	2cK4o0Fm4N1lZYcnyNKmx7uQX76X55xlpveYnASrjkPjujjISHGUsxlf6mscZPC3eIwdeS21iWe
+	QxvIOx9hVcr8U96iXjqZ2sbY4CgvdiA69lad+Vdele9Oj0Seo+kehhYpNr0dDsPz35OR21Eokq0
+	nfawJH/vYt3Gb60LA/AiRVDKjFCO5lzfnu
+X-Received: by 2002:a05:6000:41d5:b0:460:3210:b6e9 with SMTP id ffacd0b85a97d-4603210b750mr25657652f8f.41.1780932980614;
+        Mon, 08 Jun 2026 08:36:20 -0700 (PDT)
+Received: from user ([104.28.162.134])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2e4b18sm41079640f8f.10.2026.06.08.08.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jun 2026 08:36:20 -0700 (PDT)
+From: yahia <yahia.a.abdrabou@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	yahia <yahia.a.abdrabou@gmail.com>
+Subject: [PATCH v2] hp-wmi: add battery threshold support
+Date: Mon,  8 Jun 2026 18:36:13 +0300
+Message-ID: <20260608153613.38780-1-yahia.a.abdrabou@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <0d81219b-7a0b-fe57-aa28-f36967e414c4@linux.intel.com>
+References: <0d81219b-7a0b-fe57-aa28-f36967e414c4@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 8 Jun 2026, Hans de Goede wrote:
-> On 27-May-26 4:02 PM, Shyam Sundar S K wrote:
-> > Implement the ioctl handler for the util layer character device. This
-> > support adds the actual functionality to populate PMF metrics from the
-> > TA shared memory buffer and return them to userspace.
-> > 
-> > The implementation includes:
-> > - amd_pmf_populate_data() to extract metrics from TA shared memory
-> > - amd_pmf_set_ioctl() to handle userspace ioctl requests
-> > - Size negotiation for forward/backward compatibility
-> > - Feature-based population of struct fields
-> > - Export amd_pmf_get_ta_custom_bios_inputs()
-> > 
-> > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> > ---
-> >  drivers/platform/x86/amd/pmf/pmf.h  |   1 +
-> >  drivers/platform/x86/amd/pmf/spc.c  |   3 +-
-> >  drivers/platform/x86/amd/pmf/util.c | 105 +++++++++++++++++++++++++++-
-> >  3 files changed, 107 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-> > index 269c0a4b1cae..752fa5dd2267 100644
-> > --- a/drivers/platform/x86/amd/pmf/pmf.h
-> > +++ b/drivers/platform/x86/amd/pmf/pmf.h
-> > @@ -903,6 +903,7 @@ int amd_pmf_smartpc_apply_bios_output(struct amd_pmf_dev *dev, u32 val, u32 preq
-> >  void amd_pmf_populate_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
-> >  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in);
-> >  int amd_pmf_invoke_cmd_enact(struct amd_pmf_dev *dev);
-> > +u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index);
-> >  
-> >  int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
-> >  void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
-> > diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-> > index 6e33824ccadc..94355b435a66 100644
-> > --- a/drivers/platform/x86/amd/pmf/spc.c
-> > +++ b/drivers/platform/x86/amd/pmf/spc.c
-> > @@ -18,7 +18,7 @@
-> >  #include "pmf.h"
-> >  
-> >  #ifdef CONFIG_AMD_PMF_DEBUG
-> > -static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
-> > +u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int index)
-> >  {
-> >  	switch (index) {
-> >  	case 0 ... 1:
-> > @@ -29,6 +29,7 @@ static u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int
-> >  		return 0;
-> >  	}
-> >  }
-> > +EXPORT_SYMBOL(amd_pmf_get_ta_custom_bios_inputs);
-> >  
-> >  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact_table *in)
-> >  {
-> > diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
-> > index f8a283192ffe..30fb5c250362 100644
-> > --- a/drivers/platform/x86/amd/pmf/util.c
-> > +++ b/drivers/platform/x86/amd/pmf/util.c
-> > @@ -9,6 +9,7 @@
-> >   *	    Sanket Goswami <Sanket.Goswami@amd.com>
-> >   */
-> >  
-> > +#include <linux/align.h>
-> >  #include <linux/amd-pmf.h>
-> >  #include <linux/miscdevice.h>
-> >  #include <linux/mutex.h>
-> > @@ -19,9 +20,111 @@
-> >  static struct amd_pmf_dev *pmf_dev_handle;
-> >  static DEFINE_MUTEX(pmf_util_lock);
-> >  
-> > +static int amd_pmf_populate_data(struct amd_pmf_dev *pdev, struct amd_pmf_info *info)
-> > +{
-> > +	struct ta_pmf_shared_memory *ta_sm = NULL;
-> > +	struct ta_pmf_enact_table *in = NULL;
-> > +	int idx;
-> > +
-> > +	if (!pdev || !info)
-> > +		return -EINVAL;
-> > +
-> > +	if (!pdev->shbuf)
-> > +		return -EINVAL;
-> > +
-> > +	ta_sm = pdev->shbuf;
-> > +	in = &ta_sm->pmf_input.enact_table;
-> > +
-> > +	/* Set size */
-> > +	info->size = sizeof(*info);
-> > +
-> > +	/* PMF Feature support flags */
-> > +	if (is_apmf_func_supported(pdev, APMF_FUNC_AUTO_MODE))
-> > +		info->features_supported |= AMD_PMF_FEAT_AUTO_MODE;
-> > +	if (is_apmf_func_supported(pdev, APMF_FUNC_STATIC_SLIDER_GRANULAR))
-> > +		info->features_supported |= AMD_PMF_FEAT_STATIC_POWER_SLIDER;
-> > +	if (pdev->smart_pc_enabled)
-> > +		info->features_supported |= AMD_PMF_FEAT_POLICY_BUILDER;
-> > +	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_AC))
-> > +		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC;
-> > +	if (is_apmf_func_supported(pdev, APMF_FUNC_DYN_SLIDER_DC))
-> > +		info->features_supported |= AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC;
-> > +
-> > +	/* Device States */
-> > +	info->platform_type = in->ev_info.platform_type;
-> > +	info->laptop_placement = in->ev_info.device_state;
-> > +	info->lid_state = in->ev_info.lid_state;
-> > +	info->user_presence = in->ev_info.user_present;
-> > +	info->slider_position = in->ev_info.power_slider;
-> > +
-> > +	/* Thermal and Power Metrics */
-> > +	info->power_source = in->ev_info.power_source;
-> > +	info->skin_temp = in->ev_info.skin_temperature;
-> > +	info->gfx_busy = in->ev_info.gfx_busy;
-> > +	info->ambient_light = in->ev_info.ambient_light;
-> > +	info->avg_c0_residency = in->ev_info.avg_c0residency;
-> > +	info->max_c0_residency = in->ev_info.max_c0residency;
-> > +	info->socket_power = in->ev_info.socket_power;
-> > +
-> > +	/* Custom BIOS input parameters */
-> > +	for (idx = 0; idx < AMD_PMF_BIOS_PARAMS_MAX; idx++)
-> > +		info->bios_input[idx] = amd_pmf_get_ta_custom_bios_inputs(in, idx);
-> > +
-> > +	/* BIOS output parameters */
-> > +	for (idx = 0; idx < AMD_PMF_BIOS_PARAMS_MAX; idx++)
-> > +		info->bios_output[idx] = pdev->bios_output[idx];
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-> >  {
-> > -	return -ENOTTY;
-> > +	struct amd_pmf_dev *pdev = filp->private_data;
-> > +	void __user *argp = (void __user *)arg;
-> > +	struct amd_pmf_info info = {};
-> > +	size_t copy_size;
-> > +	__u64 user_size;
-> > +	int ret;
-> > +
-> > +	if (cmd != IOCTL_AMD_PMF_POPULATE_DATA)
-> > +		return -ENOTTY;
-> > +
-> > +	/* First read just the size field from userspace */
-> > +	if (copy_from_user(&user_size, argp, sizeof(user_size)))
-> > +		return -EFAULT;
-> > +
-> > +	if (user_size > sizeof(info))
-> > +		return -EINVAL;
-> 
-> Why? If the struct ever gets extended and a newer userspace runs on
-> an older kernel this will now trigger. Instead just clamp to
-> sizeof(info) .
+Hello, Ilpo
+Thanks for your review,
+This V2 patch implements Battery threshold support via ACPI methods
+SBCO and GBCO,This Implementation adds battery_get function to retrieve
+the current battery threshold mode and use it to identify capabilities
+to simplify code instead of another function specifically for detection
 
-If this is not here, some of the content userspace wanted will not be 
-there so part of the struct member will not be filled. Userspace needs to 
-be extremely careful which fields it can access in such a case.
+Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 61 ++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-> > +	if (!IS_ALIGNED(user_size, sizeof(__u64)))
-> > +		return -EINVAL;
-> 
-> Why ?  I guess on x86_64 this will always be true, but what about
-> i386 ?
-
-user_size comes from userspace so it could be anything userspace put 
-there and is unrelated to the arch. It just doesn't look useful to copy 
-partial fields if userspace gives a strange user_size. Of course it never 
-happens if userspace uses sizeof() to fill the size in.
-
-> More specifically this simply seems unnecessary and I believe this
-> entire check can be dropped.
->
-> > +	if (user_size > sizeof(__u64)) {
-> 
-> This should be:
-> 
-> if (user_size >= (offsetof(struct amd_pmf_info, features_supported) + sizeof(features_from_user))) {
-> 
-> > +		__u32 features_from_user = 0;
-> > +
-> > +		if (copy_from_user(&features_from_user, argp + offsetof(struct
-> > +		    amd_pmf_info, features_supported), sizeof(features_from_user)))
-> > +			return -EFAULT;
-> > +
-> > +		/* Reject non-zero values now */
-> > +		if (features_from_user != 0)
-> > +			return -EINVAL;
-> 
-> Looking at amd_pmf_populate_data() features_supported is purely a kernel -> user thing,
-> so why read this from userspace at all ?  And why must it be non 0 ?
->
-> I believe this entire block can be dropped (instead of fixing the if condition).
-
-Okay. Perhaps you're right and this should not be added.
-
-My thinking when suggesting this was that they'll eventually come up 
-something that is every expensive to get and then want to indicate it's 
-not required to get it every time. By checking the feature flags right 
-from the start like this, such an extension would be easy to add later.
-
-And as per the code says, the non-zero feature values lead to -EINVAL, not 
-the other way around.
-
-
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index f63bc00d9a9b..f2180b61b84e 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -11,6 +11,7 @@
+  * Copyright (C) 2005 Dmitry Torokhov <dtor@mail.ru>
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
+@@ -292,6 +293,18 @@ enum hp_wmi_event_ids {
+ 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
+ };
+ 
++/*
++ * Profiles for hp battery threshold profile 0x05 and 0x06 map to 4 and 5 respectively
++ */
++enum hp_battery_modes {
++	HP_BATTERY_MODE_NORMAL = 0x00,
++	HP_BATTERY_MODE_ADAPTIVE = 0x02,
++	HP_BATTERY_THRESHOLD_4 = 0x05,
++	HP_BATTERY_THRESHOLD_5 = 0x06,
++};
++
++#define HPWMI_BATTERY_THRESHOLD_SBCO 0x2B // SBCO Command id
++#define HPWMI_AC_REQUIRED 0x35 // obscure edge case where the bios requires the user to be charged while setting a profile
+ /*
+  * struct bios_args buffer is dynamically allocated.  New WMI command types
+  * were introduced that exceeds 128-byte data size.  Changes to handle
+@@ -448,6 +461,7 @@ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+ static bool platform_profile_support;
+ static bool zero_insize_support;
++static bool battery_threshold_support;
+ 
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+@@ -1085,6 +1099,50 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
++static int battery_get(void) {
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	int mode = -1;
++	if (ACPI_SUCCESS(acpi_evaluate_object(NULL, "\\_SB.WMID.GBCO", NULL, &output))) {
++		union acpi_object *obj = (union acpi_object *)output.pointer;
++		if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count >= 3) { // standard package sent by bios
++			mode = (int)obj->package.elements[2].buffer.pointer[0]; // bios returns the result in the third buffer 
++		}
++		kfree(output.pointer);
++	} else 
++		mode = -EIO;
++	return mode;
++}
++
++static int battery_set(int profile) 
++{
++	if (!battery_threshold_support) {
++		pr_err("Battery threshold is not supported");
++		return -EOPNOTSUPP;
++	}
++	union acpi_object args[4];
++	acpi_status status;
++	struct acpi_object_list arg_list = { .count = 4, .pointer = args };
++	memset(args, 0, sizeof(args));
++	args[0].type = ACPI_TYPE_INTEGER;
++	args[0].integer.value = 0;
++	args[1].type = ACPI_TYPE_INTEGER;
++	args[1].integer.value = profile;
++	args[2].type = ACPI_TYPE_INTEGER; // padding required by bios
++	args[2].integer.value = 0;
++	args[3].type = ACPI_TYPE_INTEGER;
++	args[3].integer.value = 0;
++	status = acpi_evaluate_object(NULL, "\\_SB.WMID.SBCO", &arg_list, NULL);
++	if (unlikely(status == HPWMI_AC_REQUIRED)) {
++		pr_err("You have to be plugged in while setting a battery profile"); // random edge case in the bios
++		return -EIO;
++	}
++	if (ACPI_FAILURE(status)) {
++		pr_info("Write failed with Error code 0x%08x\n", status);
++		return -EIO;
++	}
++	return status;
++}
++
+ static int camera_shutter_input_setup(void)
+ {
+ 	int err;
+@@ -2292,6 +2350,9 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	if (err < 0)
+ 		return err;
+ 
++	int ret = battery_get();
++	if (ret >= 0)
++		battery_threshold_support = true;
+ 	thermal_profile_setup(device);
+ 
+ 	return 0;
 -- 
- i.
+2.54.0
 
