@@ -1,175 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFC23B4423
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 09:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3359C3B47C9
+	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 09:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780910328; cv=none; b=g8wG9NCDbIokI8V1SHkF36Y9I4Mduho1dHfNpNHNTdysr3Kr90GKuDcGXay9fVAcQ6chE7On7Xma8Hfh3YZ1DawD+1TxFNbisXOp9BKNhB5wAebQtPfXkndG+GRWkRar3e7ynR163AHYG/vFTJYuZEMNFzqA3hUhS8K0kXWjLc0=
+	t=1780910654; cv=none; b=YC8oE9cZQt4ae7WLAnB6KCEN1AQLUjhkoZfHicCIry80hZTKjWG3VR5+OVVNOQrFenISgun23cZilnT5XfaDOH25rZNWAc+uVIn2mSbZkVXqPeBXOYINQEpINGpEoaSNU4DN6hGDZ7Crm4OZQgL+ndZ4Db0dpwJ0grj6ZlB8xhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780910328; c=relaxed/simple;
-	bh=2lDYG5PZr5hihykDa79LUT7Yu6wH98cLFcdyTNrHWU0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CM2Hn2RU9soM/WUQ31enkDXaw4CCXxLn5Zlgp0bEb8Xmq0EIFRFf0Gqqzo5+2j6oxLL7bxa+9Q3u6p3gQMBDZIVMadyvt9EdhvxLlTebQ31Fqk1ponCqM1mPmkuMpzCKOSojollqO/VUKDX3wfuzC2dl8bnTEig3dvaIHzrlMVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BmGZzyAI; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780910654; c=relaxed/simple;
+	bh=x/uC1VBdzJgwKtz5ZhwokGfgELBUtr+rvaQWJTqwyCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XNDFQTZJS1pJxPC1Rkj8mL/5avt7Ad1AYxaBGHMsr9WcY1KbBVAGVrUIMAad+xSZCr3xE90QVYaS3HY/n8NzRH2edc/u06Tqrwc7DHDyNLV8eUIZdPnWGH1MBftD7sCoY0xDvcIUu5ZG8a5v2POjhLvTQa43T9/hNDvtS28qQUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GB5JcgwL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BmGZzyAI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780910327; x=1812446327;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2lDYG5PZr5hihykDa79LUT7Yu6wH98cLFcdyTNrHWU0=;
-  b=BmGZzyAIJbTfBav0T7j/++8S8g58vjq/KdtPbjODuyvNOEOxR/HvIMfC
-   emObngLNbXpBxFGMGkYTVYOjJwUN8/CiVu8X0PnjgPDsSS8p6nschu7qf
-   mhUdccdvLV6gZnsUppLh+VWf+zs7mF3PuZIDEFoFj8ejoPlOenX/8DRlp
-   W0zTjIMwMQvd4CZel9ZRixf86MotWsjGkldg7cBSFc5hLwDA40yR0DDho
-   Hlfrn1+ReOMgR+N1W403qj9L7o9vKTOmHsr8z0iSPT3i5cYT8k/dGnrLO
-   WJPHmb6+Bz+PAwIZ+xeSpvq2HX/evf0+7M6uEq1OG42sK4hjOgGx66bLl
-   Q==;
-X-CSE-ConnectionGUID: a5wRy4p+TVe1K6h99VPE6g==
-X-CSE-MsgGUID: H9OWlJgHQvSe4jlCCsRRdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="107081900"
-X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
-   d="scan'208";a="107081900"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 02:18:47 -0700
-X-CSE-ConnectionGUID: yqbXB29sQVmXBJOwAzbegw==
-X-CSE-MsgGUID: XkQsdjnwQumLP+KsyKW2WA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
-   d="scan'208";a="275693406"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 02:18:44 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 8 Jun 2026 12:18:40 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    mario.limonciello@amd.com, Sanket.Goswami@amd.com
-Subject: Re: [PATCH v2 2/2] platform/x86/amd/pmc: Add PMC driver support for
- AMD 1Ah M80H SoC
-In-Reply-To: <20260601112103.1690951-3-Shyam-sundar.S-k@amd.com>
-Message-ID: <13db00fa-ec6b-4de7-d5ec-c9d9895af7d4@linux.intel.com>
-References: <20260601112103.1690951-1-Shyam-sundar.S-k@amd.com> <20260601112103.1690951-3-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GB5JcgwL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70EE1F00893;
+	Mon,  8 Jun 2026 09:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780910652;
+	bh=mwtTiAAk6W65uYsOiCD0cyabw1gJhL0aM7kZYmfBEf8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=GB5JcgwLbnbS9bDv5nU6SO7L5E/DDwg/QrLjyvYk7qpeXDcYEXE3mHpD576WbabwV
+	 I/bz+DGzkbzjBgpvKcYZgYsQAVL49xNBvwH/gtVZBpnnOKfcWnnrXhIeD2APy4NTB7
+	 d6S117mkS4qqCYlhqhdfZLcitZwUetStuonb4SQFr4yDwGOWN62FIaOlj5DQyq4GgQ
+	 kUx+m2FTQz6VRxAOeg3ryI0YTi5Di033NyPTSUmBPnzMevXSyrGR+NPq5ImTQifsOx
+	 sAWpmjim8EWW+IQl1NBvqB1mi7szjj3E8FEyN37mQw7nVOfVUb5ecbGB+LNm8l3OAD
+	 uj4OFfZ3OyPhw==
+Message-ID: <90038882-254f-4507-ae85-867fafe295d2@kernel.org>
+Date: Mon, 8 Jun 2026 11:24:10 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/8] platform/x86/amd/pmf: Add feature discovery
+ support to util interface
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com,
+ Sanket.Goswami@amd.com
+References: <20260527140205.4073335-1-Shyam-sundar.S-k@amd.com>
+ <20260527140205.4073335-4-Shyam-sundar.S-k@amd.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260527140205.4073335-4-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 1 Jun 2026, Shyam Sundar S K wrote:
+Hi,
 
-> The 1Ah M80H SoC uses a different set of SMU mailbox register offsets
-> compared to the existing 1Ah variants: message at 0xA10, argument at
-> 0xA18, and response at 0xA14.
+On 27-May-26 4:02 PM, Shyam Sundar S K wrote:
+> Add feature discovery capability to the util layer interface, allowing
+> userspace tools to query which PMF features are supported and enabled
+> on the current platform.
 > 
-> Add amd_1ah_m80_cpu_info with these offsets, wire it into the PCI ID
-> table via PCI_DEVICE_DATA(), handle it in amd_pmc_set_cpu_info() and
-> amd_pmc_idlemask_read(), and add the corresponding ACPI ID AMDI000C.
+> The following features can now be queried through the
+> /dev/amdpmf_interface ioctl:
+> *  Auto Mode: Automatic power profile switching based on system activity
+> *  Static Power Slider: User-selectable power profiles
+> *  Policy Builder (Smart PC): Action based policy management
+> *  Dynamic Power Slider AC: Adaptive power profiles when on AC power
+> *  Dynamic Power Slider DC: Adaptive power profiles when on battery
 > 
 > Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 > ---
->  drivers/platform/x86/amd/pmc/pmc.c | 15 +++++++++++++++
->  drivers/platform/x86/amd/pmc/pmc.h |  6 ++++++
->  2 files changed, 21 insertions(+)
+>  include/uapi/linux/amd-pmf.h | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index 6c7fa80c7f09..8da988016661 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -131,6 +131,15 @@ static const struct amd_pmc_cpu_info amd_1ah_m70_cpu_info = {
->  	.os_hint	= MSG_OS_HINT_RN,
->  };
+> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
+> index d29a4abe1145..9de054cfeee7 100644
+> --- a/include/uapi/linux/amd-pmf.h
+> +++ b/include/uapi/linux/amd-pmf.h
+> @@ -14,6 +14,7 @@
+>  #ifndef _UAPI_LINUX_AMD_PMF_H
+>  #define _UAPI_LINUX_AMD_PMF_H
 >  
-> +static const struct amd_pmc_cpu_info amd_1ah_m80_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_80H,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARG_1AH_80H,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RSP_1AH_80H,
-> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk),
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
+> +#include <linux/bits.h>
+>  #include <linux/ioctl.h>
+>  #include <linux/types.h>
+>  
+> @@ -34,9 +35,19 @@
+>  
+>  #define AMD_PMF_BIOS_PARAMS_MAX		10
+>  
+> +/* AMD PMF feature flags - bitmask indicating supported features */
+> +#define AMD_PMF_FEAT_AUTO_MODE			BIT(0)
+> +#define AMD_PMF_FEAT_STATIC_POWER_SLIDER	BIT(1)
+> +#define AMD_PMF_FEAT_POLICY_BUILDER		BIT(2)
+> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC	BIT(3)
+> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC	BIT(4)
 > +
->  static bool disable_workarounds;
->  module_param(disable_workarounds, bool, 0644);
->  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
-> @@ -172,6 +181,9 @@ static void amd_pmc_set_cpu_info(struct amd_pmc_dev *dev)
->  		else
->  			info = &amd_1ah_cpu_info;
->  		break;
-> +	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
-> +		info = &amd_1ah_m80_cpu_info;
-
-This shouldn't be necessary if you get it directly from the match.
-
-> +		break;
->  	default:
->  		dev_err(dev->dev, "Unknown CPU ID: 0x%x\n", dev->cpu_id);
->  		return;
-> @@ -415,6 +427,7 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->  		break;
->  	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->  	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> +	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
->  		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_1AH);
-
-I guess the scratch register too could come from the info, you just 
-need to handle the AMD_CPU_ID_CZN version check prior to that.
-
-
-I really like how clean adding new platforms becomes with the info 
-infrastructure in place. Thanks.
-
->  		break;
->  	default:
-> @@ -763,6 +776,7 @@ static const struct pci_device_id pmc_pci_ids[] = {
->  	{ PCI_DEVICE_DATA(AMD, CPU_ID_SHP, NULL) },
->  	{ PCI_DEVICE_DATA(AMD, 1AH_M20H_ROOT, NULL) },
->  	{ PCI_DEVICE_DATA(AMD, 1AH_M60H_ROOT, NULL) },
-> +	{ PCI_DEVICE_DATA(AMD, 1AH_M80H_ROOT, &amd_1ah_m80_cpu_info) },
->  	{ }
->  };
+>  struct amd_pmf_info {
+>  	__u64 size;
 >  
-> @@ -882,6 +896,7 @@ static const struct acpi_device_id amd_pmc_acpi_ids[] = {
->  	{"AMDI0009", 0},
->  	{"AMDI000A", 0},
->  	{"AMDI000B", 0},
-> +	{"AMDI000C", 0},
->  	{"AMD0004", 0},
->  	{"AMD0005", 0},
->  	{ }
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-> index 0fd0ced21831..0a3b81944920 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.h
-> +++ b/drivers/platform/x86/amd/pmc/pmc.h
-> @@ -22,6 +22,11 @@
->  /* SMU communication registers for 1Ah 20h SoC */
->  #define AMD_PMC_REGISTER_MSG_1AH_20H	0x938
->  
-> +/* SMU communication registers for 1Ah 80h SoC */
-> +#define AMD_PMC_REGISTER_MSG_1AH_80H	0xA10
-> +#define AMD_PMC_REGISTER_ARG_1AH_80H	0xA18
-> +#define AMD_PMC_REGISTER_RSP_1AH_80H	0xA14
+> +	/* Feature info */
+> +	__u32 features_supported;
 > +
->  /* PMC Scratch Registers */
->  #define AMD_PMC_SCRATCH_REG_CZN		0x94
->  #define AMD_PMC_SCRATCH_REG_YC		0xD14
-> @@ -189,6 +194,7 @@ void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
->  
->  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
->  #define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT		0x1122
-> +#define PCI_DEVICE_ID_AMD_1AH_M80H_ROOT		0x115b
->  #define PCI_DEVICE_ID_AMD_MP2_STB		0x172c
->  
->  int amd_stb_s2d_init(struct amd_pmc_dev *dev);
-> 
+>  	/* Power and state info */
+>  	__u32 platform_type;
+>  	__u32 power_source;
 
--- 
- i.
+You are now changing the userspace ABI between patch 1 and
+this patch. Please just squash this patch into patch 1.
+
+Regards,
+
+Hans
+
 
