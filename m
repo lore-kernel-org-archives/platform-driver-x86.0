@@ -1,169 +1,190 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E597436C59A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  8 Jun 2026 11:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2173134CFC2;
+	Mon,  8 Jun 2026 12:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780919935; cv=none; b=Bk/PvQqmEfpl8erURC2lgZzRFQLrNkqUbZPnKZStdGb1rCJck50qkpUN1ew0eYGxL30DueGCATo8BQHIqpnVlddcHN51qCoaKZ6hjT/dl9TA2IkJroTrGkk/LQa6onGBs64iYGxfyY9VEbK7muX5sWxrW20+77fJ3odAq1uW5BU=
+	t=1780922115; cv=none; b=kcn3nCY/+KvBRUi6EWokKmfGZ9Q+Of8T+OcvkDlbTGCbQs63Augcn6M2Vj9tKhQRklOD7tqn06Su2Ed4d+uIvDFyx0fS8ueFvKq+orK9TaCrVyvqrK0kOPF91KbiVvrU1VIUEN2gwXxQhb0x9OORmNYYqNU71DbCILUWTNt3EEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780919935; c=relaxed/simple;
-	bh=nJaWS+s3pel1qn4mtCdVHn1Ukc8d8WDevzlFivMIF7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A8CoId0mG0CdpXOKNu80EA1OZudQW9d5bTkLnzte2isr/IpCF1SbF0mEdUBEBXr96diOM0ZRflV4PKbsYobmjobBhlrNGMInqfNrcNWzcwPF35QXu6+5V5O7yusnBXaEMGzF1TGAlusvW8P6Lvq8QnbF/YqpsjmgFGGGceJKGKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=WtO05nKX; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	s=arc-20240116; t=1780922115; c=relaxed/simple;
+	bh=ZrUg/jfH0ZGjipwbsHdd84iLyMVd3en/n067GFN5t9E=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=YdeZGgONKjSNrKJ9ZWtoq7XQmQabCcz1y6W8YPPp71wjvY3vkiIJR+vckpbDJn3k2VOQvlN14N0Ojn9SnPYE+CxZXV9Hy1suDj00245bvof9JtK9eHF+uEedFKTC+kvT7iQ1lNApwaPpraLMBsoQmgYhg6X2n9WK2enbr45RrvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jW12ffCy; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="WtO05nKX"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gYqr80yV3zQZP;
-	Mon,  8 Jun 2026 13:41:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1780918887;
-	bh=64ROTkWQ+G3FUbeK128OxqOXVOFcP3gTOBXCofcfJEE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WtO05nKXVZFoYPgj1Zphbgf3iPJx3G2Gdu4QFQRDZMF7bj+JA4Izi9oq2kFNGTzfO
-	 I7wG3uXi5B1iV6xmQMl/uHg+JgsXfZvQPj9yHPzsiUG53JyCFDIWhrylgPn7Mfmw5n
-	 sZcrR+jukAEIcm1xKMieSbdxdRV2av8QJGzP7cZqzNLELQxXYkki7do5FaH3POVT9a
-	 pi2PjOOjGcKPJvXh57oScVTe47sCpfyQZvXNGXM8mPm2Oxy9aK+Mr9JiFUspU2vZ86
-	 roeTlWIDFiOyxahw3rvaLDneqJawzidEOFZW1FhmaE11QZcQGZ8rOBavf2GAlwrlM4
-	 rC4mOwtL5T6dg==
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gYqr64zZ1znR;
-	Mon,  8 Jun 2026 13:41:26 +0200 (CEST)
-Message-ID: <731fc18e-818b-4986-94fa-ff14e4db7892@gibson.sh>
-Date: Mon, 8 Jun 2026 13:41:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jW12ffCy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780922113; x=1812458113;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZrUg/jfH0ZGjipwbsHdd84iLyMVd3en/n067GFN5t9E=;
+  b=jW12ffCyBGg9t/HVGLfQ7VCCsuV6nSD69UGR1a2xDd39wqI7jIo0OSPX
+   ScuKiA3YAvml1dGhNqw/6CaE/IdZlJRA27ntkaE/tI+QhAMgQ6YWL9M+Z
+   32B6Wvw7BsX8lIDCOEJimIPlYUCWznYxJQ4ASE51WJNCKys+FlGRhs2/8
+   p4ITMWLLQGbFg8FE5lMdd99wXXUVB74cxws0AxaRgQs9JjOCSPIhg+NAu
+   KstJZVp3MCv0tuhCtCsKqiJh0egZRmk/HAIUdOrYFd4pPooYBETnjNm9R
+   7N2pCJZsKujjw7b6GBBX1bPkN20Zgkzofz6Mr2etWD6xgBRObR4EWmbvr
+   A==;
+X-CSE-ConnectionGUID: BsxSVUw4RyyyL7GAbGpfKQ==
+X-CSE-MsgGUID: Cjb01gXPQ9SVGZqpMw1hog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11810"; a="84227808"
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="84227808"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 05:35:12 -0700
+X-CSE-ConnectionGUID: s3/hKZjsTseLy34neU5tzg==
+X-CSE-MsgGUID: Ca8+247hTWS3Q5Dg/MxnTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,194,1774335600"; 
+   d="scan'208";a="241092202"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.182])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2026 05:35:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Jun 2026 15:35:07 +0300 (EEST)
+To: yahia <yahia.a.abdrabou@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] [PATCH] platform/x86: Add Battery Threshold support
+In-Reply-To: <20260605231909.17028-1-yahia.a.abdrabou@gmail.com>
+Message-ID: <0d81219b-7a0b-fe57-aa28-f36967e414c4@linux.intel.com>
+References: <20260605231909.17028-1-yahia.a.abdrabou@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] platform/x86/amd/pmc: Add delay_suspend module
- parameter
-To: Hans de Goede <hansg@kernel.org>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mario Limonciello <superm1@kernel.org>
-Cc: stable@vger.kernel.org
-References: <20260606044758.2213401-1-daniel@gibson.sh>
- <20260606044758.2213401-3-daniel@gibson.sh>
- <5aaf8759-048b-4550-becb-e8686137d3da@kernel.org>
-Content-Language: de-DE, en-GB
-From: Daniel Gibson <daniel@gibson.sh>
-In-Reply-To: <5aaf8759-048b-4550-becb-e8686137d3da@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Sat, 6 Jun 2026, yahia wrote:
 
-On 08.06.26 13:22, Hans de Goede wrote:
-> Hi,
-> 
-> On 6-Jun-26 6:47 AM, Daniel Gibson wrote:
->> Enabling the new delay_suspend module parameter delays suspend for
->> 2.5 seconds which is known to help for some AMD-based Lenovo Laptops
->> that otherwise failed to send/receive events for key presses or the
->> lid switch after s2idle. Apparently the EC needs to do some things
->> in the background before suspend or it gets into a bad state.
->>
->> There are many reports of AMD-based laptops (mostly but not exclusively
->> IdeaPads) about similar issues on the web; this parameter gives
->> affected users an easy way to try out if their issues have the same
->> root cause and to work around them until their specific device is added
->> to the quirks list.
->>
->> The parameter description has a note encouraging users to report
->> their device so it can be added to the quirks list, inspired by a
->> similar request in parameter descriptions of the ideapad-laptop module.
->>
->> The module parameter can be set to "1" to explicitly enable it,
->> "0" to disable it even on devices that are assumed to be affected,
->> or -1 (the default) to enable it if the device is assumed to be affected
->> (according to fwbug_list[])
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
->> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
->> Cc: stable@vger.kernel.org
->> ---
->>  drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
->>  1 file changed, 23 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
->> index 6bafd8661d68..2d3d180c15d2 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->> @@ -16,6 +16,7 @@
->>  #include <linux/bits.h>
->>  #include <linux/debugfs.h>
->>  #include <linux/delay.h>
->> +#include <linux/dmi.h>
->>  #include <linux/io.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/limits.h>
-> 
-> This addition of including dmi.h seems unnecessary.
-> 
+Thanks for the patch.
 
-It's for that dev_info() call in the case that someone has enforced the option, see below
+One PATCH is enough on the subject lines. :-)
 
->> @@ -89,6 +90,11 @@ static bool disable_workarounds;
->>  module_param(disable_workarounds, bool, 0644);
->>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
->>  
->> +static int delay_suspend = -1;
->> +module_param(delay_suspend, int, 0644);
->> +MODULE_PARM_DESC(delay_suspend,
->> +		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
->> +
->>  static struct amd_pmc_dev pmc;
->>  
->>  static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
->> @@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
->>  	 *
->>  	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
->>  	 */
->> -	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
->> -		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
->> +	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
->> +		/*
->> +		 * delay_suspend=1 force-enables this, otherwise it can be
->> +		 * disabled with disable_workarounds or delay_suspend=0
->> +		 */
->> +		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
->> +			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
->> +			return true;
->> +		}
->> +		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
->> +	} else if (delay_suspend == 1) {
->> +		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
->> +			 dmi_get_system_info(DMI_SYS_VENDOR),
->> +			 dmi_get_system_info(DMI_PRODUCT_NAME),
->> +			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
->> +			 dmi_get_system_info(DMI_BOARD_VENDOR),
->> +			 dmi_get_system_info(DMI_BOARD_NAME));
+> Hello,
+> I aim in this patch to add support to
+> Battery threshold via SBCT and GBCT
+> acpi methods from the acpi table
 
-this one
+acpi -> ACPI
 
->>  		return true;
->>  	}
->>  	return false;
-> 
-> Otherwise this looks good to me:
-> 
-> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Please write a proper changelog using imperative tone and real English 
+sentences.
 
-Thank you very much for the reviews!
+Don't use "I" (or "we") nor "this patch" but start with the verb:
+
+Add support ...
 
 > 
-> Regards,
+> Signed-off-by: yahia <yahia.a.abdrabou@gmail.com>
+
+Please add also your surname before the email address.
+
+For more information, please see 
+Documentation/process/submitting-patches.rst
+
+> ---
+>  drivers/platform/x86/hp/hp-wmi.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> Hans
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index f63bc00d9a9b..3d035ad9f03d 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -59,6 +59,8 @@ enum hp_ec_offsets {
+>  #define HP_POWER_LIMIT_DEFAULT	 0x00
+>  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+>  
+> +#define HP_BATTERY_THRESHOLD_CAP 0x37
+> +
+>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+>  
+>  enum hp_thermal_profile_omen_v0 {
+> @@ -448,6 +450,7 @@ static struct notifier_block platform_power_source_nb;
+>  static enum platform_profile_option active_platform_profile;
+>  static bool platform_profile_support;
+>  static bool zero_insize_support;
+> +static bool battery_threshold_support;
+>  
+>  static struct rfkill *wifi_rfkill;
+>  static struct rfkill *bluetooth_rfkill;
+> @@ -1130,6 +1133,22 @@ static struct attribute *hp_wmi_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(hp_wmi);
+>  
+> +static int hp_battery_threshold_check(void)
+> +{
+> +	u8 buffer[128] = {0};
+
+= {}; is enough to initialize it.
+
+> +	int ret;
+
+Add an empty line after local vars.
+
+> +	ret = hp_wmi_perform_query(HP_BATTERY_THRESHOLD_CAP, HPWMI_READ, buffer, 128, 128);
+
+sizeof(buffer)
+
+> +	if (ret != 0) {
+> +		battery_threshold_support = false;
+
+battery_threshold_support is initialized to false so do you need this?
+
+> +		return -1;
+
+You should generally pass the error code onwards. Though the positive 
+returns you should handle too so it would be better to split it into two 
+if()s.
+
+> +	}
+> +	if (buffer[28] == 0xAA) {
+
+Please name 0xaa with a define.
+
+Maybe 28 as well should be named with a define.
+
+> +		battery_threshold_support = true;
+> +		return 0;
+> +	}
+> +	return false;
+
+Returning false from int function???
+
+> +}
+> +
+>  static void hp_wmi_notify(union acpi_object *obj, void *context)
+>  {
+>  	u32 event_id, event_data;
+> @@ -2287,6 +2306,12 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  			hp_wmi_rfkill2_setup(device);
+>  	}
+>  
+> +	err = hp_battery_threshold_check();
+> +
+> +	if (err == 0) {
+
+Please don't leave empty lines in between call and it's error handling 
+(but see the next comment below).
+
+> +		pr_info("Battery Threshold is supported");
+
+Success path should be silent.
+
+After correcting these issues, please send v2.
+
+> +	}
+> +
+>  	err = hp_wmi_hwmon_init();
+>  
+>  	if (err < 0)
 > 
 
-Cheers,
-Daniel
+-- 
+ i.
 
