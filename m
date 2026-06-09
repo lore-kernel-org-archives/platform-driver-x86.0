@@ -1,558 +1,292 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573BC2D8796
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 08:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE723DB302;
+	Tue,  9 Jun 2026 08:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780993777; cv=none; b=fa0kVYrYOKesEuVwhZWFC2YgGopD5L2GwxT2RBIAREDl6VHpv2rtT8LMAiQaGafrd9JubBUHGadEwzSboCcD8s+Pqp5Uw1QTne8910aenoau5rCLtiwwrJCDafmCaWPFUmPd0T6pSV/pIjqjSlzoSvhFDjXnHBLCIBLS65KP+AM=
+	t=1780994954; cv=none; b=iPiZOAYNt3hvgmEZVCBDKYNCnLhdKGE/H7fjbT2W4AWrJJF/4Ocp/JmU7zrlExRDH2TUv+GODHp+ssKOfeUY2WFH/eZuYzhV8qFChT/AQqunHkRgao598asyxnDo8YA7xvSeCb8Ks0SPYjdpDsXsNUNEBQdPNxzlrkEQqcovVSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780993777; c=relaxed/simple;
-	bh=1V65nasJhgszTT24pv6sFqC7LiZqjO/LnrjHua/H9L0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=T+oGqpMEciK3IKPfJf1bTMzb7AvFKbUZCShCEO7qqnOikOh8VJiAVG2S7IRYRLdCXuzyPyYngC85ubY0+ROs0ZLrTW8uCJ+ro/V+YcdYa61AIRzry3AwhsvG9wW2FFzoBjpSqsZtXC/O7wr30uqsOfZsegBwJOE9ezKO0AEz0FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=boBpQDqC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1780994954; c=relaxed/simple;
+	bh=cN3ofdglNZDsNQ3ZROafUMGWAoDoWQeL2gbWa4ZmYZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T1BVi9lRJoxyDvSlUSAfku4sL/mBiA4xRqkejmP6n2XEvhHfFdW0CL1qY1IzXLfotZu4cbdU5hQd/RpL6QJy7OSvhjFCCrRCsIkLodfIAQHGL0LmzZ1o6ItOqyUx2/JwuFGM+wrrRWy/maIA7NHfiY8nXRjZlzA/tobPKk8DdFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l/fHj81r; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="boBpQDqC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780993774; x=1812529774;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=1V65nasJhgszTT24pv6sFqC7LiZqjO/LnrjHua/H9L0=;
-  b=boBpQDqCi8XWkcf1zkHIZekWVh4aqfdN2JuKUAfz85L5wlwyFCvGSKu+
-   N7e52mDPsafFOjcYbCdk0L+Hc41ohkYFs/Ri3Xt1dGsShYeD2kefXh8bx
-   r7eV49bMuPHf9SaxQJMR4Vi1Qp6+FlMOF9jl9NlamQbLOAeO6Y5VBsHi/
-   4KQpNDl0ADXwgXZEryEbo8d+eJIeBZ+mRhqHYsjPKtQdOXlXpsok9n93v
-   YH1oyH1xQN78KCFJpjtrRx7cf/ZarB4w7T47hAceaDBDbKibhdQT5jKEb
-   tvzplUdr+BVHjuERdjBPxU9YNXhi++zgnSco9mdecntDGpfRK7asB5QLD
-   w==;
-X-CSE-ConnectionGUID: wgqlan7cS5mvY8vzT7mhjA==
-X-CSE-MsgGUID: vtvGQiZ7Rymw6XKkieGxXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="93234630"
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="93234630"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 01:29:33 -0700
-X-CSE-ConnectionGUID: EOefjhHFSG+Zd0cml1h2Tw==
-X-CSE-MsgGUID: h8FvLxLWSO2IdIEEcUgJrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="245648669"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.81])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 01:29:30 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 9 Jun 2026 11:29:26 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    mario.limonciello@amd.com, Sanket.Goswami@amd.com
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmc: Use per-SoC cpu_info struct
- for SMU mailbox and IP info
-In-Reply-To: <20260609073543.2388987-2-Shyam-sundar.S-k@amd.com>
-Message-ID: <4c372b4d-c694-6a9a-3a60-99b079be0f91@linux.intel.com>
-References: <20260609073543.2388987-1-Shyam-sundar.S-k@amd.com> <20260609073543.2388987-2-Shyam-sundar.S-k@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l/fHj81r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4491F00893;
+	Tue,  9 Jun 2026 08:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780994953;
+	bh=w7aqdPe4Yps5aIYcq2q/Vt/NpjbBhhkYSQqEWrIdDvc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=l/fHj81raT28aByM1nwQcp4+yW78fIpFOjrSfL0XcFnvYZuYPyUsHVEZLisQHrfr4
+	 ERUr2brGjZiAng7+GDS3ScCAL+aToJHrN1w6amASfEuFHvmTzrow+3BkNmHFMyaCGh
+	 CFcD4anewGg1zAkV3wCn7hfrgwhh9Uk4td7s9W6LGjl7qNVBHpjjlIIw0OY1v2xDOz
+	 pN5alIsBBgy9czSpzJyEEgiyHPM9Frh+EhiYrbJYM+/iXR/49VIlJ3kpDx5MuLWalF
+	 n/EawPKMTX5Hxl5c3Ae5zvdPy8Qz2zGvL5nT5H9F2l0AxjM+HFh1qRZ47MH5bX27xP
+	 j862l39Z+5Wqg==
+Message-ID: <57dd1c8a-5699-4ab7-8818-f27e04a841b1@kernel.org>
+Date: Tue, 9 Jun 2026 10:49:09 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform/x86: thinkpad-acpi: Add X1 Fold keyboard
+ attachment detection
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+ Pit Henrich <pithenrich2d@googlemail.com>,
+ Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, pithenrich2d@gmail.com
+References: <20260419102724.91451-1-pithenrich2d@gmail.com>
+ <1fc62844-2cc9-49b8-8ee0-081d2c4a984f@app.fastmail.com>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <1fc62844-2cc9-49b8-8ee0-081d2c4a984f@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 9 Jun 2026, Shyam Sundar S K wrote:
+Hi,
 
-> Replace the scattered per-field assignments in amd_pmc_get_ip_info() with
-> a single amd_pmc_cpu_info struct capturing all SoC-specific parameters
-> such as SMU offsets, IP block table, and OS hint.
+On 9-Jun-26 03:19, Mark Pearson wrote:
+> Hi Pit,
 > 
-> Define static const instances per SoC variant and embed them as driver_data
-> in the PCI ID table via PCI_DEVICE_DATA(). Consolidate pci_match_id() into
-> amd_pmc_set_cpu_info(), which assigns driver_data directly to cpu_info,
-> the switch falls through only for 1Ah M20H/M60H variants requiring
-> boot_cpu_data.x86_model detection to distinguish the M70 sub-variant.
+> On Sun, Apr 19, 2026, at 6:27 AM, Pit Henrich wrote:
+>> ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
+>> attached (on the screen), but thinkpad-acpi does not expose this to userspace.
+>> The state can be obtained via ACPI methods: GDST (get device state).
+>>
+>> Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
+>> a DMI match. The state is read directly from the EC.
+>>
+>> Cache the state and emit a sysfs notification on
+>> TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
+>> hotkey setup and refresh it before the resume notification to keep the state
+>> consistent across suspend and resume.
+>>
+>> Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
+>> ---
+>> This replaced the v1 patch in:
+>> https://lore.kernel.org/all/20260314142236.74514-1-pithenrich2d@gmail.com/
+>>
+>> Changes v1 -> v2:
+>>  * Use ACPI method instead of using the EC directly (thanks Mark).
+>>
+>> ---
+>>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 85 ++++++++++++++++++++-
+>>  1 file changed, 83 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+>> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> index 8982d92dfd97..b57ae7eb5548 100644
+>> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+>> @@ -218,8 +218,9 @@ enum tpacpi_hkey_event_t {
+>>  	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
+>>  	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
+>>  	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
+>> -	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
+>> -						   * enter/leave tablet mode
+>> +	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* posture change event:
+>> +						   * X1 Yoga (2016): enter/leave tablet mode
+>> +						   * X1 Fold 16 Gen 1: keyboard attachment state changed
+>>  						   */
+>>  	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
+>>  	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
+>> @@ -375,6 +376,7 @@ static struct {
+>>  	u32 has_adaptive_kbd:1;
+>>  	u32 kbd_lang:1;
+>>  	u32 trackpoint_doubletap:1;
+>> +	u32 has_keyboard_attached_on_screen:1;
+>>  	struct quirk_entry *quirks;
+>>  } tp_features;
+>>
+>> @@ -2928,6 +2930,63 @@ static void hotkey_tablet_mode_notify_change(void)
+>>  			     "hotkey_tablet_mode");
+>>  }
+>>
+>> +static bool keyboard_attached_on_screen;
+>> +static bool keyboard_attached_on_screen_initialized;
+>> +
+>> +static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
+>> +{
+>> +	int state;
+>> +
+>> +	if (!tp_features.has_keyboard_attached_on_screen)
+>> +		return -ENODEV;
+>> +
+>> +	if (!acpi_evalf(NULL, &state, "\\_SB.DEVD.GDST", "d"))
+>> +		return -EIO;
 > 
-> Add scratch_reg to amd_pmc_cpu_info and populate it for each SoC
-> variant, allowing amd_pmc_idlemask_read() to drop its cpu_id switch
-> in favour of a single cpu_info->scratch_reg lookup.
+> I wondered if this should be adding a devd_handle in the same way as hkey_handle etc? (up at the top of the file using define TPACPI_HANDLE
 > 
-> Remove amd_pmc_get_os_hint() and use cpu_info->os_hint directly at call
-> sites and rename AMD_CPU_ID_* to PCI_DEVICE_ID_AMD_CPU_ID_* with backward
-> compatibility aliases.
+> Then you would have
+>     if (!acpi_evalf(devd_handle, &state, "GDST", "d"))
 > 
-> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
->  drivers/platform/x86/amd/pmc/pmc.c | 216 ++++++++++++++++-------------
->  drivers/platform/x86/amd/pmc/pmc.h |  70 +++++++---
->  2 files changed, 171 insertions(+), 115 deletions(-)
+> Not sure if this is needed or not - hopefully one of the experts on the mailing list knows.
+
+
+I don't think using a cached ACPI handle for the parent node
+of the method is necessary in this case.
+
+Using the cached handles is mostly an optimization for
+handles which are used a lot.
+
+Regards,
+
+Hans
+
+
+
+
 > 
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index cae3fcafd4d7..3ba50ebcc431 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -85,6 +85,83 @@ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
->  	{"VPE",		BIT(21)},
->  };
->  
-> +/* CPU info structures for different SoC variants */
-> +static const struct amd_pmc_cpu_info amd_pco_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= 12,
-> +	.scratch_reg	= 0,
-
-There's no need to 0 init, it's the default value.
-
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_PCO,
-> +};
-> +
-> +static const struct amd_pmc_cpu_info amd_czn_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= 12,
-> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_CZN,
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
-> +
-> +static const struct amd_pmc_cpu_info amd_rn_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= 12,
-> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_YC,
-
-Previously, there was no case AMD_CPU_ID_RN: in amd_pmc_idlemask_read() 
-but since the PCI IDs are overloaded, it used CZN's scratch reg.
-
-(sashiko found this inconsistency in the change, but assuming this new 
-scratch_reg value is correct, the current code is using a wrong value.)
-
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
-> +
-> +static const struct amd_pmc_cpu_info amd_ps_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= 21,
-> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_YC,
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
-> +
-> +static const struct amd_pmc_cpu_info amd_1ah_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_20H,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk),
-> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
-> +	.ips_ptr	= soc15_ip_blk,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
-> +
-> +static const struct amd_pmc_cpu_info amd_1ah_m70_cpu_info = {
-> +	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_20H,
-> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
-> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
-> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk_v2),
-> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
-> +	.ips_ptr	= soc15_ip_blk_v2,
-> +	.os_hint	= MSG_OS_HINT_RN,
-> +};
-> +
-> +static const struct pci_device_id pmc_pci_ids[] = {
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_PCO, &amd_pco_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_RV, &amd_pco_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_RN, &amd_rn_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_CZN, &amd_czn_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_VG, &amd_rn_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_YC, &amd_rn_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_CB, &amd_rn_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_PS, &amd_ps_cpu_info) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_SP, NULL) },
-> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_SHP, NULL) },
-> +	{ PCI_DEVICE_DATA(AMD, 1AH_M20H_ROOT, NULL) },
-> +	{ PCI_DEVICE_DATA(AMD, 1AH_M60H_ROOT, NULL) },
-> +	{ }
-> +};
-> +
->  static bool disable_workarounds;
->  module_param(disable_workarounds, bool, 0644);
->  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
-> @@ -101,35 +178,34 @@ static inline void amd_pmc_reg_write(struct amd_pmc_dev *dev, int reg_offset, u3
->  	iowrite32(val, dev->regbase + reg_offset);
->  }
->  
-> -static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
-> +static int amd_pmc_set_cpu_info(struct amd_pmc_dev *dev, struct pci_dev *rdev)
->  {
-> +	const struct pci_device_id *id;
-> +
-> +	id = pci_match_id(pmc_pci_ids, rdev);
-> +	if (!id)
-> +		return -ENODEV;
-> +
-> +	if (id->driver_data) {
-> +		dev->cpu_info = (const struct amd_pmc_cpu_info *)id->driver_data;
-> +		return 0;
-> +	}
-> +
-> +	/* Special case: 1Ah M20H/M60H needs x86_model detection */
->  	switch (dev->cpu_id) {
-
-After the reorganization, this looks not yet initialized at this point.
-
-I guess ->cpu_id could be initialized inside this function.
-
-> -	case AMD_CPU_ID_PCO:
-> -	case AMD_CPU_ID_RN:
-> -	case AMD_CPU_ID_VG:
-> -	case AMD_CPU_ID_YC:
-> -	case AMD_CPU_ID_CB:
-> -		dev->num_ips = 12;
-> -		dev->ips_ptr = soc15_ip_blk;
-> -		dev->smu_msg = 0x538;
-> -		break;
-> -	case AMD_CPU_ID_PS:
-> -		dev->num_ips = 21;
-> -		dev->ips_ptr = soc15_ip_blk;
-> -		dev->smu_msg = 0x538;
-> -		break;
->  	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->  	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> -		if (boot_cpu_data.x86_model == 0x70) {
-> -			dev->num_ips = ARRAY_SIZE(soc15_ip_blk_v2);
-> -			dev->ips_ptr = soc15_ip_blk_v2;
-> -		} else {
-> -			dev->num_ips = ARRAY_SIZE(soc15_ip_blk);
-> -			dev->ips_ptr = soc15_ip_blk;
-> -		}
-> -		dev->smu_msg = 0x938;
-> +		if (boot_cpu_data.x86_model == 0x70)
-> +			dev->cpu_info = &amd_1ah_m70_cpu_info;
-> +		else
-> +			dev->cpu_info = &amd_1ah_cpu_info;
->  		break;
-> +	default:
-> +		dev_err(dev->dev, "Unknown CPU ID: 0x%x\n", dev->cpu_id);
-
-Won't CPU_ID_SP and CPU_ID_SHP end up here now as the driver_data is NULL?
-
-> +		return -ENODEV;
->  	}
-> +
-> +	return 0;
->  }
->  
->  static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
-> @@ -296,9 +372,9 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
->  		   table.timeto_resume_to_os_lastcapture);
->  
->  	seq_puts(s, "\n=== Active time (in us) ===\n");
-> -	for (idx = 0 ; idx < dev->num_ips ; idx++) {
-> -		if (dev->ips_ptr[idx].bit_mask & dev->active_ips)
-> -			seq_printf(s, "%-8s : %lld\n", dev->ips_ptr[idx].name,
-> +	for (idx = 0 ; idx < dev->cpu_info->num_ips ; idx++) {
-> +		if (dev->cpu_info->ips_ptr[idx].bit_mask & dev->active_ips)
-> +			seq_printf(s, "%-8s : %lld\n", dev->cpu_info->ips_ptr[idx].name,
->  				   table.timecondition_notmet_lastcapture[idx]);
->  	}
->  
-> @@ -347,32 +423,22 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->  	u32 val;
->  	int rc;
->  
-> -	switch (pdev->cpu_id) {
-> -	case AMD_CPU_ID_CZN:
-> -		/* we haven't yet read SMU version */
-> +	/* we haven't yet read SMU version */
-> +	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
->  		if (!pdev->major) {
->  			rc = amd_pmc_get_smu_version(pdev);
->  			if (rc)
->  				return rc;
->  		}
-> -		if (pdev->major > 56 || (pdev->major >= 55 && pdev->minor >= 37))
-> -			val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
-> -		else
-> +		if (!(pdev->major > 56 || (pdev->major >= 55 && pdev->minor >= 37)))
->  			return -EINVAL;
-> -		break;
-> -	case AMD_CPU_ID_YC:
-> -	case AMD_CPU_ID_CB:
-> -	case AMD_CPU_ID_PS:
-> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
-> -		break;
-> -	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> -	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_1AH);
-> -		break;
-> -	default:
-> -		return -EINVAL;
->  	}
->  
-> +	if (!pdev->cpu_info->scratch_reg)
-> +		return -EINVAL;
-> +
-> +	val = amd_pmc_reg_read(pdev, pdev->cpu_info->scratch_reg);
-> +
->  	if (dev)
->  		pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
->  
-> @@ -425,9 +491,9 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
->  		argument = dev->stb_arg.arg;
->  		response = dev->stb_arg.resp;
->  	} else {
-> -		message = dev->smu_msg;
-> -		argument = AMD_PMC_REGISTER_ARGUMENT;
-> -		response = AMD_PMC_REGISTER_RESPONSE;
-> +		message = dev->cpu_info->smu_msg;
-> +		argument = dev->cpu_info->smu_arg;
-> +		response = dev->cpu_info->smu_rsp;
->  	}
->  
->  	value = amd_pmc_reg_read(dev, response);
-> @@ -452,9 +518,9 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
->  		argument = dev->stb_arg.arg;
->  		response = dev->stb_arg.resp;
->  	} else {
-> -		message = dev->smu_msg;
-> -		argument = AMD_PMC_REGISTER_ARGUMENT;
-> -		response = AMD_PMC_REGISTER_RESPONSE;
-> +		message = dev->cpu_info->smu_msg;
-> +		argument = dev->cpu_info->smu_arg;
-> +		response = dev->cpu_info->smu_rsp;
->  	}
->  
->  	/* Wait until we get a valid response */
-> @@ -512,23 +578,6 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
->  	return rc;
->  }
->  
-> -static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
-> -{
-> -	switch (dev->cpu_id) {
-> -	case AMD_CPU_ID_PCO:
-> -		return MSG_OS_HINT_PCO;
-> -	case AMD_CPU_ID_RN:
-> -	case AMD_CPU_ID_VG:
-> -	case AMD_CPU_ID_YC:
-> -	case AMD_CPU_ID_CB:
-> -	case AMD_CPU_ID_PS:
-> -	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-> -	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-> -		return MSG_OS_HINT_RN;
-> -	}
-> -	return -EINVAL;
-> -}
-> -
->  static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
->  {
->  	struct device *d;
-> @@ -602,7 +651,6 @@ static void amd_pmc_s2idle_prepare(void)
->  {
->  	struct amd_pmc_dev *pdev = &pmc;
->  	int rc;
-> -	u8 msg;
->  	u32 arg = 1;
->  
->  	/* Reset and Start SMU logging - to monitor the s0i3 stats */
-> @@ -617,8 +665,7 @@ static void amd_pmc_s2idle_prepare(void)
->  		}
->  	}
->  
-> -	msg = amd_pmc_get_os_hint(pdev);
-> -	rc = amd_pmc_send_cmd(pdev, arg, NULL, msg, false);
-> +	rc = amd_pmc_send_cmd(pdev, arg, NULL, pdev->cpu_info->os_hint, false);
->  	if (rc) {
->  		dev_err(pdev->dev, "suspend failed: %d\n", rc);
->  		return;
-> @@ -659,10 +706,8 @@ static void amd_pmc_s2idle_restore(void)
->  {
->  	struct amd_pmc_dev *pdev = &pmc;
->  	int rc;
-> -	u8 msg;
->  
-> -	msg = amd_pmc_get_os_hint(pdev);
-> -	rc = amd_pmc_send_cmd(pdev, 0, NULL, msg, false);
-> +	rc = amd_pmc_send_cmd(pdev, 0, NULL, pdev->cpu_info->os_hint, false);
->  	if (rc)
->  		dev_err(pdev->dev, "resume failed: %d\n", rc);
->  
-> @@ -709,22 +754,6 @@ static const struct dev_pm_ops amd_pmc_pm = {
->  	.suspend = amd_pmc_suspend_handler,
->  };
->  
-> -static const struct pci_device_id pmc_pci_ids[] = {
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CB) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SHP) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
-> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
-> -	{ }
-> -};
-> -
->  static int amd_pmc_probe(struct platform_device *pdev)
->  {
->  	struct amd_pmc_dev *dev = &pmc;
-> @@ -736,11 +765,15 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  
->  	dev->dev = &pdev->dev;
->  	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
-> -	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
-> +	if (!rdev) {
->  		err = -ENODEV;
->  		goto err_pci_dev_put;
->  	}
->  
-> +	err = amd_pmc_set_cpu_info(dev, rdev);
-> +	if (err)
-> +		goto err_pci_dev_put;
-> +
->  	dev->cpu_id = rdev->device;
->  	if (dev->cpu_id == AMD_CPU_ID_SP || dev->cpu_id == AMD_CPU_ID_SHP) {
->  		dev_warn_once(dev->dev, "S0i3 is not supported on this hardware\n");
-> @@ -778,9 +811,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->  	if (err)
->  		goto err_pci_dev_put;
->  
-> -	/* Get num of IP blocks within the SoC */
-> -	amd_pmc_get_ip_info(dev);
-> -
->  	platform_set_drvdata(pdev, dev);
->  	if (IS_ENABLED(CONFIG_SUSPEND)) {
->  		err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
-> index fe3f53eb5955..4c3a4410790e 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.h
-> +++ b/drivers/platform/x86/amd/pmc/pmc.h
-> @@ -17,6 +17,10 @@
->  /* SMU communication registers */
->  #define AMD_PMC_REGISTER_RESPONSE	0x980
->  #define AMD_PMC_REGISTER_ARGUMENT	0x9BC
-> +#define AMD_PMC_REGISTER_MESSAGE	0x538
-> +
-> +/* SMU communication registers for 1Ah 20h SoC */
-> +#define AMD_PMC_REGISTER_MSG_1AH_20H	0x938
->  
->  /* PMC Scratch Registers */
->  #define AMD_PMC_SCRATCH_REG_CZN		0x94
-> @@ -90,6 +94,22 @@ struct stb_arg {
->  	u32 resp;
->  };
->  
-> +struct amd_pmc_bit_map {
-> +	const char *name;
-> +	u32 bit_mask;
-> +};
-> +
-> +/* SoC-specific information */
-> +struct amd_pmc_cpu_info {
-> +	u32 smu_msg;
-> +	u32 smu_arg;
-> +	u32 smu_rsp;
-> +	u32 num_ips;
-> +	u32 scratch_reg;
-> +	const struct amd_pmc_bit_map *ips_ptr;
-> +	u8 os_hint;
-> +};
-> +
->  struct amd_pmc_dev {
->  	void __iomem *regbase;
->  	void __iomem *smu_virt_addr;
-> @@ -99,9 +119,6 @@ struct amd_pmc_dev {
->  	u32 cpu_id;
->  	u32 dram_size;
->  	u32 active_ips;
-> -	const struct amd_pmc_bit_map *ips_ptr;
-> -	u32 num_ips;
-> -	u32 smu_msg;
->  /* SMU version information */
->  	u8 smu_program;
->  	u8 major;
-> @@ -116,11 +133,7 @@ struct amd_pmc_dev {
->  	bool disable_8042_wakeup;
->  	struct amd_mp2_dev *mp2;
->  	struct stb_arg stb_arg;
-> -};
-> -
-> -struct amd_pmc_bit_map {
-> -	const char *name;
-> -	u32 bit_mask;
-> +	const struct amd_pmc_cpu_info *cpu_info;
->  };
->  
->  struct smu_metrics {
-> @@ -151,20 +164,33 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
->  void amd_mp2_stb_init(struct amd_pmc_dev *dev);
->  void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
->  
-> -/* List of supported CPU ids */
-> -#define AMD_CPU_ID_RV			0x15D0
-> -#define AMD_CPU_ID_RN			0x1630
-> -#define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
-> -#define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
-> -#define AMD_CPU_ID_VG			0x1645
-> -#define AMD_CPU_ID_YC			0x14B5
-> -#define AMD_CPU_ID_CB			0x14D8
-> -#define AMD_CPU_ID_PS			0x14E8
-> -#define AMD_CPU_ID_SP			0x14A4
-> -#define AMD_CPU_ID_SHP			0x153A
-> -#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
-> -#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
-> -#define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
-> +/* List of supported CPU/device IDs */
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_RV	0x15D0
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_RN	0x1630
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_PCO	PCI_DEVICE_ID_AMD_CPU_ID_RV
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_CZN	PCI_DEVICE_ID_AMD_CPU_ID_RN
-
-sashiko found an interesting issue related to these (it seems 
-pre-existing)...
-
-If the PCI ID is same, the match can never return the second entry.
-
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_VG	0x1645
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_YC	0x14B5
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_CB	0x14D8
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_PS	0x14E8
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_SP	0x14A4
-> +#define PCI_DEVICE_ID_AMD_CPU_ID_SHP	0x153A
-> +
-> +/* Backward compatibility aliases */
-> +#define AMD_CPU_ID_RV		PCI_DEVICE_ID_AMD_CPU_ID_RV
-> +#define AMD_CPU_ID_RN		PCI_DEVICE_ID_AMD_CPU_ID_RN
-> +#define AMD_CPU_ID_PCO		PCI_DEVICE_ID_AMD_CPU_ID_PCO
-> +#define AMD_CPU_ID_CZN		PCI_DEVICE_ID_AMD_CPU_ID_CZN
-> +#define AMD_CPU_ID_VG		PCI_DEVICE_ID_AMD_CPU_ID_VG
-> +#define AMD_CPU_ID_YC		PCI_DEVICE_ID_AMD_CPU_ID_YC
-> +#define AMD_CPU_ID_CB		PCI_DEVICE_ID_AMD_CPU_ID_CB
-> +#define AMD_CPU_ID_PS		PCI_DEVICE_ID_AMD_CPU_ID_PS
-> +#define AMD_CPU_ID_SP		PCI_DEVICE_ID_AMD_CPU_ID_SP
-> +#define AMD_CPU_ID_SHP		PCI_DEVICE_ID_AMD_CPU_ID_SHP
-> +
-> +#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
-> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT		0x1122
-> +#define PCI_DEVICE_ID_AMD_MP2_STB		0x172c
->  
->  int amd_stb_s2d_init(struct amd_pmc_dev *dev);
->  int amd_stb_read(struct amd_pmc_dev *dev, u32 *buf);
+>> +
+>> +	*attached = state != 0;
+>> +	return 0;
+>> +}
+>> +
+>> +static ssize_t keyboard_attached_on_screen_show(struct device *dev,
+>> +						struct device_attribute *attr,
+>> +						char *buf)
+>> +{
+>> +	bool attached;
+>> +	int res;
+>> +
+>> +	res = x1_fold_keyboard_attached_on_screen_get(&attached);
+>> +	if (res)
+>> +		return res;
+>> +
+>> +	return sysfs_emit(buf, "%d\n", attached);
+>> +}
+>> +
+>> +static DEVICE_ATTR_RO(keyboard_attached_on_screen);
+>> +
+>> +static void keyboard_attached_on_screen_notify_change(void)
+>> +{
+>> +	if (tp_features.has_keyboard_attached_on_screen)
+>> +		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
+>> +			     "keyboard_attached_on_screen");
+>> +}
+>> +
+>> +static bool keyboard_attached_on_screen_update(void)
+>> +{
+>> +	bool attached;
+>> +
+>> +	if (x1_fold_keyboard_attached_on_screen_get(&attached))
+>> +		return false;
+>> +
+>> +	if (keyboard_attached_on_screen_initialized &&
+>> +	    keyboard_attached_on_screen == attached)
+>> +		return false;
+>> +
+>> +	keyboard_attached_on_screen = attached;
+>> +	keyboard_attached_on_screen_initialized = true;
+>> +
+>> +	return true;
+>> +}
+>> +
+>>  /* sysfs wakeup reason (pollable) 
+>> -------------------------------------- */
+>>  static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+>>  			   struct device_attribute *attr,
+>> @@ -3032,6 +3091,7 @@ static struct attribute *hotkey_attributes[] = {
+>>  	&dev_attr_hotkey_adaptive_all_mask.attr,
+>>  	&dev_attr_hotkey_recommended_mask.attr,
+>>  	&dev_attr_hotkey_tablet_mode.attr,
+>> +	&dev_attr_keyboard_attached_on_screen.attr,
+>>  	&dev_attr_hotkey_radio_sw.attr,
+>>  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+>>  	&dev_attr_hotkey_source_mask.attr,
+>> @@ -3046,6 +3106,9 @@ static umode_t hotkey_attr_is_visible(struct 
+>> kobject *kobj,
+>>  	if (attr == &dev_attr_hotkey_tablet_mode.attr) {
+>>  		if (!tp_features.hotkey_tablet)
+>>  			return 0;
+>> +	} else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
+>> +		if (!tp_features.has_keyboard_attached_on_screen)
+>> +			return 0;
+>>  	} else if (attr == &dev_attr_hotkey_radio_sw.attr) {
+>>  		if (!tp_features.hotkey_wlsw)
+>>  			return 0;
+>> @@ -3462,6 +3525,7 @@ static int __init hotkey_init(struct 
+>> ibm_init_struct *iibm)
+>>  	}
+>>
+>>  	tabletsw_state = hotkey_init_tablet_mode();
+>> +	keyboard_attached_on_screen_update();
+>>
+>>  	/* Set up key map */
+>>  	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+>> @@ -3842,6 +3906,8 @@ static bool hotkey_notify_6xxx(const u32 hkey, 
+>> bool *send_acpi_ev)
+>>  	case TP_HKEY_EV_TABLET_CHANGED:
+>>  		tpacpi_input_send_tabletsw();
+>>  		hotkey_tablet_mode_notify_change();
+>> +		if (keyboard_attached_on_screen_update())
+>> +			keyboard_attached_on_screen_notify_change();
+>>  		*send_acpi_ev = false;
+>>  		return true;
+>>
+>> @@ -3998,6 +4064,8 @@ static void hotkey_resume(void)
+>>  	tpacpi_send_radiosw_update();
+>>  	tpacpi_input_send_tabletsw();
+>>  	hotkey_tablet_mode_notify_change();
+>> +	keyboard_attached_on_screen_update();
+>> +	keyboard_attached_on_screen_notify_change();
+>>  	hotkey_wakeup_reason_notify_change();
+>>  	hotkey_wakeup_hotunplug_complete_notify_change();
+>>  	hotkey_poll_setup_safe(false);
+>> @@ -4296,6 +4364,17 @@ static const struct dmi_system_id fwbug_list[] 
+>> __initconst = {
+>>  	{}
+>>  };
+>>
+>> +static const struct dmi_system_id keyboard_attached_on_screen_list[] 
+>> __initconst = {
+>> +	{
+>> +		.ident = "ThinkPad X1 Fold 16 Gen 1",
+>> +		.matches = {
+>> +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
+>> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
+>> +		},
 > 
+> Should there also be a matches for the X1 Fold Gen 1 (13" model)?
+> 
+> I think doing the DMI match on the product family is OK, but just a note that everywhere else uses the board ID. e.g: DMI_MATCH(DMI_BOARD_NAME, "21ES")
+> I think this way works too, but it's different and I haven't had confirmation from the FW team if it could be different across different SKUs (I'll see if I can find out).
+> 
+> If you do want to use board names:
+>  - X1 Fold 16 G1 has "21ES' and "21ET"
+>  - X1 Fold G1 has "20RK" and "20RL"
+> 
+>> +	},
+>> +	{}
+>> +};
+>> +
+>>  static const struct pci_device_id fwbug_cards_ids[] __initconst = {
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
+>>  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
+>> @@ -12230,6 +12309,8 @@ static int __init 
+>> thinkpad_acpi_module_init(void)
+>>  	dmi_id = dmi_first_match(fwbug_list);
+>>  	if (dmi_id)
+>>  		tp_features.quirks = dmi_id->driver_data;
+>> +	tp_features.has_keyboard_attached_on_screen =
+>> +		dmi_check_system(keyboard_attached_on_screen_list);
+>>
+>>  	/* Device initialization */
+>>  	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, 
+>> PLATFORM_DEVID_NONE,
+>> -- 
+>> 2.43.0
+> 
+> Thanks
+> Mark
 
---
- i.
