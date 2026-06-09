@@ -1,139 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4525749253D;
-	Tue,  9 Jun 2026 15:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EF44A2E2D;
+	Tue,  9 Jun 2026 16:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781020071; cv=none; b=NjkZzbDEWnVppYeZ0VQeD6r3EvZLgwlj6c8Tkp4+aJqXk63hACT9OSOjOu7PwrP1VHCxwvX/evvZUH9hEFscUe2lyS6DxGv44ujCpTz/CmtX3xEYzQH54M4RMnlC1Tbz6cXZ+7pNIj7YrpixbYCGrxgYd081UNM4XlROMYdnqME=
+	t=1781022711; cv=none; b=EfEBJ72S7PKSYcHssavs9U7Xj7Xj+Wa8rlYIKWqT4yhvqtrYSJ16xPWds8L6U9kvldDjcf6xEEiyEDRvKp4mGjXB9U80rIW2l1t/GYOWMY8mQJ+cwXIqaqKOfHP/VtCBOHq4MjuJ9V1ywcP0JTzPiE/2KRvi59tJe/+xHy6aIxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781020071; c=relaxed/simple;
-	bh=cbrRB3iun2jPOI1G8tDpe8tvqFPshRG9kYKbGP74bHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lR8edtQzA5n4h5t9myTUOnilMyB6jgUY80r1b/digVtkUjX5r8h+thQQ82Nr9IGeLLZlOjEuAFv4LonbrsAop9+MoL5JPMxS9OlEWNHDcrlucuKptAnSXaSke2Zx8jMwp9XpQZD9gxXufCNXNAVXM0005H+PysLtGTqy6gbNp3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWHM2HMx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781022711; c=relaxed/simple;
+	bh=Woy5p/USeYnenzxrwhERrUS8TS0ZAkZQl80gY6NrKsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kn8n/JxEPxUBQF/Y0Cm9Xd7H2d3nfw0QQs/oUhKILyN1W+4UNnjtsprd0dBMYN7m9FlK/D5HJL8HA7LKcOL0OWUpXPUwxZGtlfGKPVWeW9sKiyqPyQOAPTWqT5xWiYjsnXBs98m1hTQ4q4P6Ns37OxMghCPw/fDHjcc75ZdUYss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i1l1tuJT; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWHM2HMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAD71F0089A;
-	Tue,  9 Jun 2026 15:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781020070;
-	bh=lmuCWFZUHbzVjGlqSt71AgiXRxPyfL3cM+3WUJCq7Oc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=RWHM2HMxAq4nu06OJYqGwgtnq2OWCJIsqamgeAEiOrlo/UYkkmKOQG+/zGsEeI7mB
-	 lcNxHuXApUzRbKwmVxrEeMeMWK+Q3CM3/hhsUdedLvu7mjLIhTcMe0Z2NqlgXUeTPD
-	 ffkZnlAbwDK2L3q+v/K/j3tITM8Xhb7NacxuqEUcwNXTRevX4qf8HY4ZvtrtwLKPvf
-	 mQHyJ1V1fzL+NvyhtQ+L/7MXOHyUppiPrEuwrIpktxvN/hIwuu4RaLHN1cTFmYeywW
-	 kC1v6bKcyikIF0fYfQ8bdrtDIk4HoYlr/tp7TVIej2zsCquRMLeT5JJnM6G56sbKxo
-	 t1WbdmwKipZlQ==
-Message-ID: <91af1da1-e2d0-40c1-87b0-452b48f4a2b6@kernel.org>
-Date: Tue, 9 Jun 2026 10:47:48 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i1l1tuJT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781022708; x=1812558708;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Woy5p/USeYnenzxrwhERrUS8TS0ZAkZQl80gY6NrKsA=;
+  b=i1l1tuJTlQ8R/Pj9vhFICRniXY5ZWhmNrAJTounIjFD5Te7dZ9JtPRaH
+   CQaDODkEPNIlY3wDD6snxIW60w57nNAI1smf0sakA5/BeLeQPXzozf7jb
+   AgS+N6qDBo2H10hE8plSL0Q8bgieCTTGoFeLmVKwhwmktYtGYT4+SjIH3
+   AanS3auds6Vo9P6yVsSgHCB7EvQ5zHJdOvGyOaCV+CZobvBA5I3Td8jQU
+   ZaBB4NzHGDuHQThQkk/z1gEsuppk9xMU+8mn0+xO4knA+sQmJa5FIjOb9
+   9lfQ80Fe33CyjqeYYxbS74Ii4c7SMYCG0aRmH/vbi7WU6NuBzWqfHqkRy
+   w==;
+X-CSE-ConnectionGUID: h4LYaP1GSDy9hUjS4WJ5sQ==
+X-CSE-MsgGUID: PGNoD5zERI60bqG9Wt6tiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81979649"
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="81979649"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 09:31:47 -0700
+X-CSE-ConnectionGUID: 6HWOHSkwTimC5JAxu+2CEg==
+X-CSE-MsgGUID: lrW7V2XnQxemd6uZ0myIBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="245940495"
+Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 09:31:47 -0700
+Date: Tue, 9 Jun 2026 09:31:46 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	"Brost, Matthew" <matthew.brost@intel.com>, 
+	"thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, 
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86/intel/vsec: Restore BAR fallback for header
+ walk
+Message-ID: <lc7yhxkgmraaqyafgwinveazmsu2sy2g6374gfkx34e2ra4uzk@yeenjzaw3oi2>
+References: <20260529183150.129744-1-david.e.box@linux.intel.com>
+ <IA1PR11MB64184FD919A96888F580730CC1132@IA1PR11MB6418.namprd11.prod.outlook.com>
+ <mvyzq3kislmjd2hd2nhdyphvnpz7ap5tu76sujaxprxp5rhnhx@34qt4rgvhe6n>
+ <IA1PR11MB64182D9946206FC3E4A430C4C11C2@IA1PR11MB6418.namprd11.prod.outlook.com>
+ <93ccf8d4-3091-2339-ab1e-7689776d893b@linux.intel.com>
+ <IA1PR11MB64182001D7718AC31D5421D4C11D2@IA1PR11MB6418.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] platform/x86/amd/pmc: Delay suspend for some
- Lenovo Laptops
-Content-Language: en-US
-To: Daniel Gibson <daniel@gibson.sh>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Sindre Henriksen <sindrehenriksen93@gmail.com>,
- Hans de Goede <johannes.goede@oss.qualcomm.com>, stable@vger.kernel.org
-References: <20260609105756.2813669-1-daniel@gibson.sh>
- <20260609105756.2813669-3-daniel@gibson.sh>
- <2fbb4d9d-7ad5-d4e7-b510-d7c75f399d97@linux.intel.com>
- <6b6ce9ce-5bda-4924-b2d2-933736cfad9c@gibson.sh>
- <cecea384-7af9-4fc6-b315-84d4ac8fb31d@kernel.org>
- <3b49ba16-d318-4905-bfe0-ebcc7ef374c5@gibson.sh>
- <5b684d9c-2477-488d-a89b-323ca3e51207@gibson.sh>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <5b684d9c-2477-488d-a89b-323ca3e51207@gibson.sh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <IA1PR11MB64182001D7718AC31D5421D4C11D2@IA1PR11MB6418.namprd11.prod.outlook.com>
 
-On 6/9/26 10:36, Daniel Gibson wrote:
-> On 09.06.26 17:06, Daniel Gibson wrote:
->> On 09.06.26 16:40, Mario Limonciello wrote:
->>> On 6/9/26 07:07, Daniel Gibson wrote:
->>>> On 09.06.26 13:46, Ilpo Järvinen wrote:
->>>>> On Tue, 9 Jun 2026, Daniel Gibson wrote:
->>>>>>        },
->>>>>> +    /* https://bugzilla.kernel.org/show_bug.cgi?id=221383 */
->>>>>> +    {
->>>>>> +        .ident = "Zen3-based IdeaPad Slim and similar",
->>>>>> +        .driver_data = &quirk_s2idle_need_suspend_delay,
->>>>>
->>>>> Hi,
->>>>>
->>>>> One more question.
->>>>>
->>>>> Sashiko noted, that amd_pmc_quirks_init() can overwrite
->>>>> disable_8042_wakeup from the AMD_CPU_ID_CZN check when .driver_data
->>>>> provides quirks. Is it okay in this case to not have .spurious_8042?
->>>>>
->>>>
->>>> Good question.
->>>> So far I haven't had complaints that sounded like they'd be related to
->>>> this quirk not being active.
->>>>
->>>> (The only report about things not working as expected on detected
->>>> devices was something about "ACPI event storms" after resume:
->>>> https://github.com/DanielGibson/amd_pmc-ideapad/issues/3 - but no one
->>>> else with similar devices could reproduce that, so no idea what's going
->>>> on there, and it doesn't sound like that IRQ1 issue)
->>>>
->>>> I can test if explicitly enabling .spurious_8042 in
->>>> quirk_s2idle_need_suspend_delay breaks anything on my device, if you
->>>> think that enabling it by default makes more sense?
->>>
->>> Famous last words - but we haven't had a need for spurious 8042 on
->>> recent hardware so I think this is unlikely to be a big problem.
->>
->> FWIW enabling .spurious_8042 didn't break anything on my machine, but
->> didn't improve anything either - only visible difference is that when
->> resuming by pressing a key without that quirk both IRQ1 and IRQ7 are
->> reported as having triggered the resume, and with the quirk only IRQ7 is
->> reported. But it didn't seem like IRQ1 triggers a resume when it shouldn't.
->>
->> OTOH I have a the latest BIOS (from this year), so it's likely fixed
->> there - maybe people with older BIOS versions still need the
->> .spurious_8042 quirk?
->>
->> As these devices are relatively recent and still sold I hope that
->> everyone affected can get a new BIOS (which they should do either way).
+On Tue, Jun 09, 2026 at 12:43:15PM +0000, Ruhl, Michael J wrote:
+> >-----Original Message-----
+> >From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> >Sent: Tuesday, June 9, 2026 6:20 AM
+> >To: Ruhl, Michael J <michael.j.ruhl@intel.com>; David Box
+> ><david.e.box@linux.intel.com>
+> >Cc: Brost, Matthew <matthew.brost@intel.com>;
+> >thomas.hellstrom@linux.intel.com; intel-xe@lists.freedesktop.org; linux-
+> >kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+> >Subject: RE: [PATCH] platform/x86/intel/vsec: Restore BAR fallback for header
+> >walk
+> >
+> >On Mon, 8 Jun 2026, Ruhl, Michael J wrote:
+> >
+> >> >-----Original Message-----
+> >> >From: David Box <david.e.box@linux.intel.com>
+> >> >Sent: Sunday, June 7, 2026 3:39 PM
+> >> >To: Ruhl, Michael J <michael.j.ruhl@intel.com>
+> >> >Cc: ilpo.jarvinen@linux.intel.com; Brost, Matthew
+> >> ><matthew.brost@intel.com>; thomas.hellstrom@linux.intel.com; intel-
+> >> >xe@lists.freedesktop.org; linux-kernel@vger.kernel.org; platform-driver-
+> >> >x86@vger.kernel.org
+> >> >Subject: Re: [PATCH] platform/x86/intel/vsec: Restore BAR fallback for
+> >header
+> >> >walk
+> >> >
+> >> >On Wed, Jun 03, 2026 at 06:32:32PM +0000, Ruhl, Michael J wrote:
+> >> >> >-----Original Message-----
+> >> >> >From: David E. Box <david.e.box@linux.intel.com>
+> >> >> >Sent: Friday, May 29, 2026 2:32 PM
+> >> >> >To: ilpo.jarvinen@linux.intel.com; Ruhl, Michael J
+> >> ><michael.j.ruhl@intel.com>;
+> >> >> >david.e.box@linux.intel.com
+> >> >> >Cc: Brost, Matthew <matthew.brost@intel.com>;
+> >> >> >thomas.hellstrom@linux.intel.com; intel-xe@lists.freedesktop.org; linux-
+> >> >> >kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+> >> >> >Subject: [PATCH] platform/x86/intel/vsec: Restore BAR fallback for header
+> >> >walk
+> >> >> >
+> >> >> >The base_addr refactor changed intel_vsec_walk_header() to pass
+> >> >> >info->base_addr as the discovery-table base address. For the PCI VSEC
+> >> >> >driver this info comes from driver_data, but exported callers may provide
+> >> >> >their own static headers and leave base_addr unset.
+> >> >> >
+> >> >> >For xe, this made the discovery-table base address zero instead of the
+> >BAR
+> >> >> >selected by header->tbir, preventing PMT endpoints from being created.
+> >> >> >
+> >> >> >Restore the previous behavior for the header-walk path by falling back to
+> >> >> >pci_resource_start(pdev, header->tbir) when base_addr is not specified.
+> >> >> >Keep explicit base_addr override behavior unchanged.
+> >> >> >
+> >> >> >This preserves the refactor structure while fixing the functional
+> >> >> >regression in manual-header users.
+> >> >> >
+> >> >> >Fixes: 904b333fc51c ("platform/x86/intel/vsec: Refactor base_addr
+> >> >handling")
+> >> >> >Assisted-by: Claude:claude-sonnet-4-6
+> >> >> >Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> >> >> >---
+> >> >> > drivers/platform/x86/intel/vsec.c | 17 ++++++++++++++++-
+> >> >> > 1 file changed, 16 insertions(+), 1 deletion(-)
+> >> >> >
+> >> >> >diff --git a/drivers/platform/x86/intel/vsec.c
+> >> >> >b/drivers/platform/x86/intel/vsec.c
+> >> >> >index 1657834fd275..3c6d8a1928c0 100644
+> >> >> >--- a/drivers/platform/x86/intel/vsec.c
+> >> >> >+++ b/drivers/platform/x86/intel/vsec.c
+> >> >> >@@ -482,10 +482,25 @@ static int intel_vsec_walk_header(struct device
+> >> >> >*dev,
+> >> >> > 				  const struct intel_vsec_platform_info *info)
+> >> >> > {
+> >> >> > 	struct intel_vsec_header **header = info->headers;
+> >> >> >+	u64 base_addr;
+> >> >> > 	int ret;
+> >> >> >
+> >> >> > 	for ( ; *header; header++) {
+> >> >> >-		ret = intel_vsec_register_device(dev, *header, info, info-
+> >> >>base_addr);
+> >> >> >+		if (info->base_addr) {
+> >> >> >+			base_addr = info->base_addr;
+> >> >> >+		} else {
+> >> >> >+			struct pci_dev *pdev;
+> >> >> >+
+> >> >> >+			if (!dev_is_pci(dev)) {
+> >> >> >+				dev_err(dev, "non-PCI device without a base
+> >> >address\n");
+> >> >> >+				return -EINVAL;
+> >> >> >+			}
+> >> >> >+
+> >> >> >+			pdev = to_pci_dev(dev);
+> >> >> >+			base_addr = pci_resource_start(pdev, (*header)->tbir);
+> >> >>
+> >> >> Alternate:
+> >> >>
+> >> >> if (!info->base_addr) {
+> >> >> 	struct pci_dev *pdev;
+> >> >>
+> >> >> 	if (!dev_is_pci(dev)) {
+> >> >> 		dev_err(dev, "non-PCI device without a base address\n");
+> >> >> 		return -EINVAL;
+> >> >> 	}
+> >> >>
+> >> >> 	pdev = to_pci_dev(dev);
+> >> >> 	info->base_addr = pci_resource_start(pdev, (*header)->tbir);}
+> >> >> }
+> >> >
+> >> >Thanks. I'll do this in the next patch.
+> >>
+> >> Looking at one of your follow-on patches, I see that you are setting the info to
+> >const...
+> >>
+> >> So setting the base_addr here, might not be "correct"?
+> >>
+> >> M
+> >>
+> >> >>
+> >> >> Would it make sense to require the caller to fill this in?
+> >> >>
+> >> >> i.e. if (!info->base_addr) return EINVAL?
+> >> >>
+> >> >> Change of behavior, but forcing the caller to provide the right info seems
+> >> >reasonable.
+> >> >
+> >> >Agreed. But that would be separate from this fixup patch.
+> >> >
+> >> >>
+> >> >> Either way, this looks reasonable to me.
+> >> >>
+> >> >> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> >
+> >Hi David,
+> >
+> >Could you please enlighten me if I should expect an update to this patch
+> >or not?
+> >
+> >While understanding it doesn't look critical for this patch, I'm unsure
+> >what follow-up patches you folks are talking about?
 > 
-> Anyway, overall I'd say that the patches can be merged as they are - the
-> affected devices are known to have serious (-ly annoying) suspend
-> issues, so it's unlikely that a currently matched devices has working
-> suspend that breaks with them, so things at least shouldn't get any
-> worse for their users?
+> Hi Ilpo and David,
 > 
-> The patches have gotten some testing already on different devices (from
-> my out-of-tree patched amd_pmc module on Github) and so far it looks
-> like the spurious_8042 quirk isn't needed.
-> If reports of needing both quirks turn up after all, that can still be
-> easily added in a few lines of code (maybe even just one).
+> I was referring to:
 > 
-> Cheers,
-> Daniel
+> commit 9577c74c96f88d807d1ba005adbf5952e7127e55
+> Author: David E. Box <david.e.box@linux.intel.com>
+> Date:   Thu Mar 12 18:51:41 2026 -0700
+> 
+>     platform/x86/intel/vsec: Make driver_data info const
+> 
+> This was part of the patch set that had introduced this issue (broken base_addr).
+> The *info struct is set as const, so my suggestion above is not correct.
+> 
+> Sorry for the confusion.
+> 
+> M
 
-Even with all that testing; it's only on hardware with problems.
-We don't want to have issues exposed by these patches for people that 
-didn't need the patches.
+Right. I had forgotten that it was recently made const as well. So this
+patch should go as is. Thanks.
 
-So my 2c:
-* It's "too risky" to pick up for 7.1 final
-* It's a "bit late" in the cycle for 7.2-rc1 (usually new content stops 
-being added around rc6).
-* This isn't "risky enough" to wait until 7.3 (basically after 7.2-rc1 
-merge window is done)
-
-But this has been on the list for a while now, so I would say this makes 
-sense to put in for 7.2-rc1 and we should all make sure we test well 
-once the RCs are posted.
+> 
+> >--
+> > i.
+> 
