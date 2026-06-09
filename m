@@ -1,192 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013066.outbound.protection.outlook.com [40.107.201.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A31C3E2765
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 07:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780991734; cv=none; b=jNCD7uxhN5f8eQmkErXpAS1lPFJlfQxAt4a4M6lsneDZQ7p0wZhkwGUpO+i5CsrhCS7getxyElyV9RIGINeKyNmeefZhIuAiMNA7nfGqNKDwscsgibZrh9pxAvCYlOlgagvs5LPm07H+cj95HZb/sCC2BbRmo8iwM9zi/SJIf1U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780991734; c=relaxed/simple;
-	bh=2Kroqj/jL4WnIBxF1YU7KO4SaEpFtvVGddNk8ILzihA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Cfr9TfhnQLKpsW3AslpjsS5FuwJP1E1PphyFaYFvietnpi0yDWkXYdNc9RnZEowdQrEPkVUf+o51acWR4EmU3qJ4aIpw8TueBBn+y1rIS2nzTMExrjFLLL+rDZFxqo5qHVoRN63lLrMFYMjt6GqvICPZyFPbA3mtNf6xUIkCM+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nSVsCBvv; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376552DB798
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 08:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780992707; cv=fail; b=G3S4Yge/1SVGFp+rrK5hBtwI0eLPnap5aFBVCnmR+EdCvsj0nNNzBzpoySJWtwClO/MBEKGlCPsMxhGI0pIfkuVnNcIikcSLgBIyLM7rAIVrNekJdOj/Lp+rt0UWeTODEwhdgBonRJCm5Egib4CjDDQMH0KjQ8HrD3ybcTkTfo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780992707; c=relaxed/simple;
+	bh=wVqruEPlOV5O2IJbx8JV1b77noXaIO3q9h1v2DcR6EQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aG1qs4NnnMSB8uqGKIxv+Qjam2tJ2crnV8vqAucar4yDnXr41AcOryH8HFr7ywDC/2j9lJm4dUuZk3osFb99viPRA27NkLKVBLqZ0uti4bfqx6LglYsxY1n4Ebqd3ymJITgBcqQUKaTONmiBmJVGl/WgnwkYoFbtGt40JjVmu98=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xfi+g163; arc=fail smtp.client-ip=40.107.201.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nSVsCBvv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780991733; x=1812527733;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=2Kroqj/jL4WnIBxF1YU7KO4SaEpFtvVGddNk8ILzihA=;
-  b=nSVsCBvvODEaQM4xeylSg+zlcK8A7VdIUL9deHxUGrDeGo4/wawnJy1j
-   fUddRdk08bRvZsYK2C2o9IkKJAIrkDD/X3+Ksy6kQenTNNEXQjK9XJo+p
-   40FAE5obXq29tnLL0uqnNsQgdYiHJhHer/kMImwaji7Zt/7DjhgC25CCb
-   Z5LvNCS+eNRftwjarLlHN6ZvPcQYiVjBDP46yDLSJhEj+5TJuR8WNQHQk
-   /53iL9JD8O+Enx7FZRwn67RRBJKpq6hySJ1aqdTIUfhhttpUpT7DgSMTc
-   Ix6+PngaY1j9upFTgoeROjuFELvn3D38nB/g7tamRsn0nXxVxmYcfhFS2
-   A==;
-X-CSE-ConnectionGUID: Uq15cxMLS2WmA4f6OMXGYg==
-X-CSE-MsgGUID: TyFCsSObShS/t3vYus8pDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="92308594"
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="92308594"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 00:55:33 -0700
-X-CSE-ConnectionGUID: Mve6NhJmTAyU2H1MEcrZow==
-X-CSE-MsgGUID: sA0nFxulRKCuKzRlMJcXtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,195,1774335600"; 
-   d="scan'208";a="283870421"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.81])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 00:55:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 9 Jun 2026 10:55:27 +0300 (EEST)
-To: yahia <yahia.a.abdrabou@gmail.com>
-cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3] hp-wmi: add battery threshold support
-In-Reply-To: <20260608180728.27348-1-yahia.a.abdrabou@gmail.com>
-Message-ID: <5459a3d7-976a-dbb7-0ca9-540efafe93bd@linux.intel.com>
-References: <41309386-12fb-71bf-3ced-8377bf8aaa8b@linux.intel.com> <20260608180728.27348-1-yahia.a.abdrabou@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xfi+g163"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PQZ9RxQTIRXJ+ETVcHnezg3TKT5KJ7r8PxYZRqkd29EKMMoHDvGGWiguXBHMlzCMN+axPuti4lPHuSYCHy6kIL4Z4sl5c+qu8454gznenw6VORecAfQNhnjZKZebFTn81uzh5+hRHdz6NlnrP0zN6RRGxkQ3+roZxCYelcX+99gYqtxStDX5pymRvi/0NViKKdpU00cO+zFZZ5fTfxW6MBWf16rNV4LcpXkNg0Y0UJFljUIdKBxDJ2AA5hxJ7C+GJH7dxKP+F4g3laA+5cKASiwnumYGwOTeV6KtuYkw9WU+tMZXRvKNcEseIbF3BQh3ReZWlL2GBWTv4JjWbfGpIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LjDIXTX3yQMybySd8wBIAUjFULEP8CDFApbzcTP2Ib0=;
+ b=dpNw/y47fVsu7S/WwOHnnyH563gGtD1YoTQfqAzA8938ki1l+iUXES4sSmH1L1wbLwtgUIswdWSn6UwvA5/n/c1MYZj1JF9SfXDZou8puR44zYpobQz/+41GUat0hZxWcIVpKFT7HtRrORjyHsG3sCbZBgdcaWqzcU70VH1KDqc+rIh69JYNi5eHVqMEHO5Pw6J1c6HYa3Zu2frNyXfTptIPR4VZDzoKzX7WlINQWaAz3pumKlkUUfeI5tODjRBljDo8TDaj+bpqXGfayY45PwDjmOQ87RgC/6zmQKYHKImIDlUUHezPbOjLSDD0zoUpdhIz11xdxoZHiPDl0K5Phw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LjDIXTX3yQMybySd8wBIAUjFULEP8CDFApbzcTP2Ib0=;
+ b=Xfi+g163PR/A/VyGp603gRID814a4P+af9TEraJa+nDfjOp2kki+CGSqOSsArDQgHW5vV8oTfwjNMb/dOi35R3CzJ8jfcuvUNjqFw4f1Zkczc2aKAE5gOyi5HItyk4NutQMtaqKoMBny+yhOmtgl12MbCBDs+sfSXjt6KNmumE0=
+Received: from BL1PR13CA0106.namprd13.prod.outlook.com (2603:10b6:208:2b9::21)
+ by IA1PR12MB8517.namprd12.prod.outlook.com (2603:10b6:208:449::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Tue, 9 Jun 2026
+ 08:11:42 +0000
+Received: from BN2PEPF000055DD.namprd21.prod.outlook.com
+ (2603:10b6:208:2b9:cafe::ad) by BL1PR13CA0106.outlook.office365.com
+ (2603:10b6:208:2b9::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.10 via Frontend Transport; Tue, 9
+ Jun 2026 08:11:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN2PEPF000055DD.mail.protection.outlook.com (10.167.245.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.139.1 via Frontend Transport; Tue, 9 Jun 2026 08:11:42 +0000
+Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 9 Jun
+ 2026 03:11:39 -0500
+From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>,
+	<Sanket.Goswami@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v7 0/7] platform/x86/amd/pmf: Introduce PMF util layer with userspace interface
+Date: Tue, 9 Jun 2026 13:40:37 +0530
+Message-ID: <20260609081044.2416731-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000055DD:EE_|IA1PR12MB8517:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e261ddf-4e9c-4c39-31e3-08dec5febd45
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|13003099007|18002099003|6133799003|11063799006|5023799004|56012099006|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	M7tb10pDjBy11rFlJTRTiWBkYJYs8nVXer26B59b3eoTXQHybLgRzTNnpBCsCqiUtoTT9iEUjQ25by0qd6+upK/PXs0D1sAVS0hUAZNG43ANXOJN4X8PNHoHsbjlvSEhQrm33HLRWCngCoAKTGtXmEFIX/+qTW4kmMfF75rX4ok2WRmljlHC/fIxrveb0RSlVeSnjy2JHDQzCHtLoT4v0nQbfq8H213lhPumVL6tUPh9D6gh3Ynq5gKiquzIdyWFCMhF6kDQH6Mq8iWL0AInygsqlPkLX/Mbsg8HUnfhrKsfN47ILfs9ZtNlTkwS+XAmuqtcTi5J7ia536M/R+zpL82uuvkNXZxzwyEbidH6EqDDegDhskmkhOVbSKfrhSjCldd4Z2UXxguVShiREBAWXGeBFnOxjbLDNWXYaVGD062y0Gi/9AJY/oW0ehYgoLu4K4j5D4gJa4XP1D2L8hcwKesVYmvLF6vqmxgio+uhyEt9dz7JtAuhl2D5TsMO+sMkhorSeGZX4Rp7nzHd9SJaA8PzyTy9J5l4D09JBv9aLalAHj3I1AomrKTtRu4Xs72RZl72lxppyT2lFamyC0/8ZlJeE745Eh03Uxb/BKcBYbiklejF98fpYK3CqO/OQxNLluVTUUNekJgulASlgCe5RH60pbg2tkZN0Z8q51UH1ck4Wqg5CA49z0sIGBE91910OLWnOctDJH4x5SLbG+DSa4C3UBjEZbWeh3hzB6vzZ9c=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(13003099007)(18002099003)(6133799003)(11063799006)(5023799004)(56012099006)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	pRUZskXesZqLWW2jpC3KFXT7ugk8FEFxz0BiPdZe9TZFjURCp/tZux/mMK+lWmtNEzFCIp/vi9MYj8P4kMjlVRM1gDc+cXOunUvbZ7md3rm3khzGLev8SQqCn9E0EubxgVypaRWaUhAqZ9ZDFonIfQV8BNGJM3TNM4aeJ8BCq+OVfFJaxqJTPpuc6YhIc9wzLazpuJAMy7YSHDoMxU3/h+qyjkOViSSGkA6gycZLxcWjqZFCP8/dyan3fwEfoyldSjK8NOsybv7SIXLP01hl5RcO3KMIZRJB+ysCZGDZPQZfkyJPcp8HMlk/SK3ikQxC4GEWYBCI1Rehq1hc5L86MpVZdUKfNVaQ8IUfx2jUSQlF3rEGoL26uD0VSol2+GYMlm3b5FioXSpZJw+7Aq2YTUv5JMTvcDsB8FwpdEpPgWvedz/W3Fzp2zMJWlfyvq0+
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 08:11:42.0501
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e261ddf-4e9c-4c39-31e3-08dec5febd45
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000055DD.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8517
 
-On Mon, 8 Jun 2026, yahia wrote:
+This patch series introduces a new util layer for the AMD Platform
+Management Framework (PMF) driver that exposes a minimal userspace
+interface for metrics monitoring and feature discovery.
 
-> From: yahia ahmed <yahia.a.abdrabou@gmail.com>
-> 
-> Implement battery threshold support using the SBCO and GBCO ACPI methods,
-> Add battery_get to retrieve the current battery mode and provide a function
-> to set the battery threshold.
-> 
-> Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
-> ---
-> v3:
-> - Fix coding style errors and warning
-> - Refine the changelogs for clarity
-> 
-> v2:
-> - Simplify detection logic via battery_get
-> - Add Battery Profiles enum table
-> - Add functions to set the battery mode
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 37 ++++++++++++++++++++------------
->  1 file changed, 23 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index f2180b61b84e..c50fe78099d9 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -11,7 +11,6 @@
->   * Copyright (C) 2005 Dmitry Torokhov <dtor@mail.ru>
->   */
->  
-> -#include <asm-generic/errno.h>
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/acpi.h>
-> @@ -297,15 +296,16 @@ enum hp_wmi_event_ids {
->   * Profiles for hp battery threshold profile 0x05 and 0x06 map to 4 and 5 respectively
->   */
->  enum hp_battery_modes {
-> -	HP_BATTERY_MODE_NORMAL = 0x00,
-> +	HP_BATTERY_MODE_NORMAL   = 0x00,
->  	HP_BATTERY_MODE_ADAPTIVE = 0x02,
-> -	HP_BATTERY_THRESHOLD_4 = 0x05,
-> -	HP_BATTERY_THRESHOLD_5 = 0x06,
-> +	HP_BATTERY_THRESHOLD_4   = 0x05,
-> +	HP_BATTERY_THRESHOLD_5   = 0x06,
->  };
->  
-> -#define HPWMI_BATTERY_THRESHOLD_SBCO 0x2B // SBCO Command id
-> -#define HPWMI_AC_REQUIRED 0x35 // obscure edge case where the bios requires the user to be charged while setting a profile
-> -/*
-> +#define HPWMI_BATTERY_THRESHOLD_SBCO 0x2B /* SBCO Command id */
-> +#define HPWMI_AC_REQUIRED	     0x35
-> +/* obscure edge case where the bios requires the user to be charging while setting a profile
-> + *
->   * struct bios_args buffer is dynamically allocated.  New WMI command types
->   * were introduced that exceeds 128-byte data size.  Changes to handle
->   * the data size allocation scheme were kept in hp_wmi_perform_qurey function.
-> @@ -1099,21 +1099,26 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
->  	return count;
->  }
->  
-> -static int battery_get(void) {
-> +static int battery_get(void)
-> +{
->  	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
->  	int mode = -1;
-> +
->  	if (ACPI_SUCCESS(acpi_evaluate_object(NULL, "\\_SB.WMID.GBCO", NULL, &output))) {
->  		union acpi_object *obj = (union acpi_object *)output.pointer;
-> -		if (obj && obj->type == ACPI_TYPE_PACKAGE && obj->package.count >= 3) { // standard package sent by bios
-> -			mode = (int)obj->package.elements[2].buffer.pointer[0]; // bios returns the result in the third buffer 
-> +
-> +		if (obj && obj->type == ACPI_TYPE_PACKAGE  /* standard package sent by bios */
-> +				&& obj->package.count >= 3) {
-> +			 /* bios returns the result in the third buffer */
-> +			mode = (int)obj->package.elements[2].buffer.pointer[0];
->  		}
->  		kfree(output.pointer);
-> -	} else 
-> +	} else
->  		mode = -EIO;
->  	return mode;
->  }
->  
-> -static int battery_set(int profile) 
-> +static int battery_set(int profile)
->  {
->  	if (!battery_threshold_support) {
->  		pr_err("Battery threshold is not supported");
-> @@ -1122,18 +1127,21 @@ static int battery_set(int profile)
->  	union acpi_object args[4];
->  	acpi_status status;
->  	struct acpi_object_list arg_list = { .count = 4, .pointer = args };
-> +
->  	memset(args, 0, sizeof(args));
->  	args[0].type = ACPI_TYPE_INTEGER;
->  	args[0].integer.value = 0;
->  	args[1].type = ACPI_TYPE_INTEGER;
->  	args[1].integer.value = profile;
-> -	args[2].type = ACPI_TYPE_INTEGER; // padding required by bios
-> +	args[2].type = ACPI_TYPE_INTEGER; /* padding required by bios */
->  	args[2].integer.value = 0;
->  	args[3].type = ACPI_TYPE_INTEGER;
->  	args[3].integer.value = 0;
->  	status = acpi_evaluate_object(NULL, "\\_SB.WMID.SBCO", &arg_list, NULL);
-> +
->  	if (unlikely(status == HPWMI_AC_REQUIRED)) {
-> -		pr_err("You have to be plugged in while setting a battery profile"); // random edge case in the bios
-> +		 /* random edge case in the bios */
-> +		pr_err("You have to be plugged in while setting a battery profile");
->  		return -EIO;
->  	}
->  	if (ACPI_FAILURE(status)) {
-> @@ -2351,6 +2359,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  		return err;
->  
->  	int ret = battery_get();
-> +
->  	if (ret >= 0)
->  		battery_threshold_support = true;
->  	thermal_profile_setup(device);
+AMD PMF currently manages power and thermal policies internally through
+Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
+Sliders. However, system designers and OEMs need visibility into PMF
+metrics and feature status for validation, debugging, and integration
+with monitoring tools.
 
-This patch wouldn't even apply.
+This series addresses that need by adding a character device interface
+that allows controlled access to PMF metrics data while maintaining
+the driver's existing automated policy management.
 
-Also, I'm very skeptical you reviewed it yourself before sending it as 
-some of the changes are direct opposite of my earlier review comments 
-(irrespective of whether the patch would apply or not).
+The primary use case is integration with userspace tools like AMD
+SystemDeck, which are widely used by system designers to:
+- Monitor real-time power and thermal behavior
+- Validate PMF feature operation during platform bring-up
+- Debug thermal issues by tracking skin temperature, C-state residency,
+  and socket power metrics
+- Verify BIOS input/output policy values during Smart PC operation
+
+The util layer reads from the existing Trusted Application (TA) shared
+memory buffer and cached BIOS output values, adding no new communication
+overhead with the TA.
+
+v7:
+ - Merge patch 3/8 into patch 1/8
+ - Use _IOWR(..., __u64) to keep ioctl number stable across extensions
+ - Clamp copy size with min_t() instead of -EINVAL for forward compatible
+ - Drop IS_ALIGNED() check and features_from_user read-back block
+
+v6:
+ - Guard misc_deregister() with pmf_dev_handle NULL check
+ - Move amd_pmf_cdev_unregister() to top of amd_pmf_remove()
+ - Fix bios_idx type from u32 to int and add negative-value bounds check
+ - Add missing #include <linux/bits.h> to uapi/linux/amd-pmf.h
+ - Rename amd_pmf_get_pt/lp/sp() to descriptive full names
+ - Add missing enum entries in platform_type and slider_position helpers
+ - Export amd_pmf_get_ta_custom_bios_inputs() for util layer use
+ - Fix stale/incorrect entries in Documentation/ABI
+
+v5:
+ - Add actual ioctl implementation after all struct fields are defined
+ - Move features_supported field just after size for early discovery
+ - Add 8-byte alignment check for user_size to prevent odd-byte copies
+ - Add AMD_PMF prefix to all UAPI enum names to avoid namespace collisions
+ - Use size_t for loop variable instead of int with cast
+ - Use ternary operator for checkbox output
+ - Add empty line before Linux kernel headers
+ - Refactor banner to const char * for cleaner formatting
+
+v4:
+ - Implement single amd_pmf_info structure which can cover all members.
+ - Add amd_pmf prefix for enums/functions within the UAPI header.
+ - Keep test-pmf tool outside of selftests directory.
+ - Include necessary header files.
+ - Address review comments received from Ilpo on v3.
+
+v3:
+ - Stop exporting battery information via util layer.
+ - Optimize the core logic for fetching BIOS outputs.
+ - Update the documentation patch to reflect the current util layer design.
+ - Consolidate amd-pmf-io.h changes into common UAPI header.
+ - Define a single unified uAPI structure and IOCTL.
+ - Address other v2 review remarks [1]
+
+v2:
+ - address remarks from v1
+ - add a new tool that exercises the IOCTLs from PMF interface
+
+[1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-
+    Shyam-sundar.S-k@amd.com/
+
+Shyam Sundar S K (7):
+  platform/x86/amd/pmf: Add util layer and userspace character device
+    interface
+  platform/x86/amd/pmf: store BIOS output values for user-space metrics
+    via util IOCTL
+  platform/x86/amd/pmf: Store commonly used enums in the header file
+  platform/x86/amd/pmf: Move debug helper functions to UAPI header
+  platform/x86/amd/pmf: Implement util layer ioctl handler
+  platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
+    metrics and features
+  Documentation/ABI: add testing entry for AMD PMF character device
+    interface
+
+ Documentation/ABI/testing/amdpmf-interface    |  73 +++++++
+ MAINTAINERS                                   |   1 +
+ .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |  13 +-
+ drivers/platform/x86/amd/pmf/Kconfig          |  10 +
+ drivers/platform/x86/amd/pmf/Makefile         |   2 +
+ drivers/platform/x86/amd/pmf/core.c           |   5 +
+ drivers/platform/x86/amd/pmf/pmf.h            |  34 ++-
+ drivers/platform/x86/amd/pmf/spc.c            |  72 +------
+ drivers/platform/x86/amd/pmf/tee-if.c         |  13 +-
+ drivers/platform/x86/amd/pmf/util.c           | 152 +++++++++++++
+ include/linux/amd-pmf-io.h                    |   9 -
+ include/uapi/linux/amd-pmf.h                  | 204 ++++++++++++++++++
+ tools/platform/x86/amd/Makefile               |  60 ++++++
+ tools/platform/x86/amd/test-pmf.c             | 142 ++++++++++++
+ 14 files changed, 690 insertions(+), 100 deletions(-)
+ create mode 100644 Documentation/ABI/testing/amdpmf-interface
+ create mode 100644 drivers/platform/x86/amd/pmf/util.c
+ create mode 100644 include/uapi/linux/amd-pmf.h
+ create mode 100644 tools/platform/x86/amd/Makefile
+ create mode 100644 tools/platform/x86/amd/test-pmf.c
 
 -- 
- i.
+2.34.1
 
