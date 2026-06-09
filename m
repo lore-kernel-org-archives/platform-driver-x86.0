@@ -1,72 +1,72 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69AD17557E;
-	Tue,  9 Jun 2026 01:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 257EF258CE7;
+	Tue,  9 Jun 2026 01:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780968019; cv=none; b=eEqkXjsC4649oiApfu0D9POZN1J4VVE01imry59HzLh5Zp3tTH/4IATDWlbT8B0h5rlGMCbVQ/USyqPSc5PVE1u5YlxJLaZbAjJnp6VmOVqvGtjfYElObkyFhIttO8T6zsm/FAoimbSNki/9u4jeMNmQX95dWhwq/1uxupyltU0=
+	t=1780968566; cv=none; b=ojQ9QuOabLnADblzxY9pbZTk5StU4FDYNKb9DoibFc6ipUeUe/+utUGyuI9nu9msvU1r36PpPxpoIDOKhHh4P87PtNgGaEq/IkKHlhzw4nUFdYJ0z8PIW2okDZ/hdvMTC7V84kYKkwWPs8fg4if4Wp+JLBTKrFN+HE8hVALAzh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780968019; c=relaxed/simple;
-	bh=GS72MBcR3AYAdiDF53SCAv81WI1XkRlBbf9iWhFMw6M=;
+	s=arc-20240116; t=1780968566; c=relaxed/simple;
+	bh=6PJgnRScXtOe1h+qkXDxc73ATuniWSkY5mzWbu9Cexo=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mjmfW4jD+WATs14DRV4nu5U8Tp+gbVzOKwDlTlGNXtZSTiXM2WBR+CRm+A+YlUAnYY4cl8rY/aSv2qOnTgSbhckJPQkQJ/b3GksVkEx2QidnorBgjoJUcaVtDs8J8sDX3bZGDjvk+M1WP5ne53OmuI7VsMVMfByElTrBKoKhLx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=lfZHMqh3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ofh9m9ap; arc=none smtp.client-ip=103.168.172.146
+	 Subject:Content-Type; b=t4Xu3pLghzRArh1GNVN/7OH9AY2NjKEd4tldH21MqmhMnaogmQGrfn63rxksEV5uQJ5gM+sOJk1+74raADe60dCKyiiVFImxVtfufXTzrNRWG+d11fQc1yD6vciJ8+gmL3KTO7x1qMNynB3Dg4PGXG7/WTw4NB/rUtCxbgoysh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=uvr9C1nt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CNE7h3rJ; arc=none smtp.client-ip=103.168.172.159
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="lfZHMqh3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ofh9m9ap"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="uvr9C1nt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CNE7h3rJ"
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id E50A8EC0107;
-	Mon,  8 Jun 2026 21:20:16 -0400 (EDT)
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 49A2814000AF;
+	Mon,  8 Jun 2026 21:29:24 -0400 (EDT)
 Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Mon, 08 Jun 2026 21:20:16 -0400
+  by phl-compute-02.internal (MEProxy); Mon, 08 Jun 2026 21:29:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1780968016;
-	 x=1781054416; bh=DBespgZVH3ZBSAyCq4eoPkLWvSWf9d1UZZCYSCFAxS4=; b=
-	lfZHMqh3bua5tBplpdTeVkyMbMVmc4GYMfYU9XBlXfWkTLjLUIV8r92UiYFrkemL
-	pmVljecTTLlti/P6GNXfY+DcOxnrFqwJ3MygbiyznTw72FyLX6wgUhDW1LiMaMIA
-	+cVUUNzBIqc+y0RP3FBZf9ilRgmtYx1IFzcO7je+ei/Qw3+Vvzz55b1+nVWNCWdd
-	6Kon6/YE469BW/Qqu+eKNp8okrPUuGN8BkZxiy7Eo6KtSMQHP1hzNKsc8LjbU5n7
-	gMXeMH0nhrlmpIoLabrKtOIE38NBykM1ytgfSc0e+TOKMx4bhwewqWEMgyaibIna
-	lrBD0mHm0QTlDyiqVIMWew==
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1780968564;
+	 x=1781054964; bh=oV/MVDJ+HSAEa7N3DZxWLzIlbdKxtChGGwIa1fUiCIY=; b=
+	uvr9C1ntnP+4zOwPfhGyt1Gkz+ykhEahA9ra4hh+j2OftgDRNbTqDvUjkNPyUSiu
+	uC4TgPVZzoT4PAkQrVuW5KudMVH8nbPMb2/BIso9uUGNm/AGOZtefoYKT6Qv2PGW
+	5u5+3WFEz480oYExu02ANdktL12IqIh7EZbLoYg9ALfkB/boMaU9/jEfXHSgzNtL
+	12lblZF/gPYU40oUWTgdhVUVFjwwFXFRmaM8tgSGHeeZDK9CYkUkLH75bUsVVxdy
+	rehn8Vc+iw7KkjJd+c/eD8bsllMCeGn3nUTfE6VgjdwnvvE2F+HhHJhOqFDUlzk1
+	DZIj7umdbM3rDrtzyoy6ZQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780968016; x=
-	1781054416; bh=DBespgZVH3ZBSAyCq4eoPkLWvSWf9d1UZZCYSCFAxS4=; b=O
-	fh9m9ap2QJTqbflpISaUnQYlLmStmYZz7mQryyiCsyNRcEma3kNIDYwV9PoeGCsy
-	TIggqNHnYEGtQdD4TFU/ozsGz1qKY+56eWHRWiujrBAxY8CeDQjWG4GIFMYHUYUz
-	YphxYAu1f0ngWl+CBmJuuLutTrXULT7fk94sBlqu11n/ZumNeYBrthZu0po/0fQ9
-	q9izmVwvyApSBox7IvjEom+dHlsEYQhvq0S/OzXF6pySDMkUoHCFeEbwu2UAS/vJ
-	r1lOpWWWb5o+KjlXSJuM/1WxPUjgMI08a1UtiOtsBsYCLbcotBSn6smXUnBLvbdR
-	/zYqPB77+utVS8ntkwX+Q==
-X-ME-Sender: <xms:UGonaol82C83nBQbJQBegkOoF6weJC3fEV4PutjLkPBvo_d4JdDc3A>
-    <xme:UGonairw6lZc-9ajRglFG34TFOvnY3DNLZCyIMFt_mdWB30HwW0fLvCataT_lK_60
-    TPM_5kk8I3bDIvRCtZ0A5QTgjaN_dtpGRiqoHdUIrIGIBA2KX_lg-H2>
-X-ME-Proxy-Cause: dmFkZTE453eypNeIQ7i5QPeHHcXX6ixQeJKcsGQFbNeAi0PW2fblQSgURTmQ8mJNdAWtfe
-    I3PoB/7jDkduNcTALEXc9KYJ9TN1h6hAG0oB+q6CR+twmDbLo4vtsucotV2JPzFxYjaMUm
-    Cebc/watc/dKQsLxJbjCKW8L/ijbMYu//Bkty1VCv0uUw31kWpTazUxdvHGMgmV8C/JHy6
-    ua4HAefINBf4NGabbnv+k6sTX/oUUb4NmQn36F9v+430rOUBLDl9MZmXvY9vhBVH7kcHWi
-    MKAbdvH61ADn9zLCfF12vmaRJK9MrAtqXGmszi9Mi3Kq1k0KW7XfJSevtUaevsXY61SxZN
-    0TQEB2fUYaVRZGTrNhRArpvlArGNcWA2bi35cnWMd1cFRSM1XD+69x21beMvGKvLRHnyxq
-    SUQWVkpeTD2PbzGyG/mlaQIsD+gOSUl5v1G4/tDjxSZIQBjFBzyaFv1ISstMxoaPI+WRND
-    D5t/vyv7UGKGdyVKS+7OZ6wNqL13weiOU2k+Xt3S4U6wUjlGVebG5ZgxSvI17jn8n7gy3K
-    oqKjwJX0MX5pvaUNA3N2K8jPQo+51HqIvthErTZ9ceC5azpDNgmOfduVbKTYonMHA9w9RD
-    EW3jTAIITA5Nw/MaMBWoKvMJl73ptT1MzfkZ1sT9J1sOC/BOSTeolU9iZ9Kg
-X-ME-Proxy: <xmx:UGonaoy-0zu_cXhaTmfxBtQLYuwzb1kKpszEjaye9Xgs3ok64sEOuw>
-    <xmx:UGonaiRhbKA2XK2VMRU-2JBnvEJRGF-l7tHc0e3ehCeKKBBtXcNrgQ>
-    <xmx:UGonalIdXAavg6RATXwhC4RHaDFlSl7FmEFKKAsr_Z4yTuwByAsr-A>
-    <xmx:UGonapU4ml1o9bAmv6G8bq9lzOLSKARAyNWdEftz6dQdKg_z4v5jGw>
-    <xmx:UGonanMkasoBxMQLbbQYiEyMxOXjdqrMJGwBl6UIFn4Uidc3bcxikfbp>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780968564; x=
+	1781054964; bh=oV/MVDJ+HSAEa7N3DZxWLzIlbdKxtChGGwIa1fUiCIY=; b=C
+	NE7h3rJ0hX3m4LQ9WP8zNmqgkQG34HVbwPV9qW6BU3Ka0aEMPD+Y6M4E+DvTQZKh
+	k2Z3auilZkHLOOZe9FX7LaRDy2B85AjWwk8J1vuJ8EC+k7wPIWH7stVvdBPIKsVW
+	UOW9byn9ZWWUOxKIFExvcaZ44ZMVlwsF/9odMt6ytYUamVmviYDkadcRJww3I5sb
+	oo9Y2r7JzO1zstN/7gKYgt6ZMp47nQK2MXEhYi3y2zTNal2GakT3I9OlUsjNiRG5
+	D6fSD9Cjtir5d5ZBVccRjwkeLsV00STCEtJ+Eu3QMrosLMzeaQf49M8ikS7w3lYC
+	QMj6aQcBesuAROdOsZCeQ==
+X-ME-Sender: <xms:dGwnamav9Bx54OSYOejiB_Tf4j_0hg2ITSVEm-EnMj-j1vCiWg8iFg>
+    <xme:dGwnakMmWyvS32fZqodZAbqAv2LMPkB7GdKbFinb1qQY3_e8p8QfRwPdyI1Ys-ekF
+    uqRhVgk0Yd8ZKVrgd_WzMs_KXk9EQ7OHY7Qty1SmU-Th-MIGBEp1M8>
+X-ME-Proxy-Cause: dmFkZTE+mW69szZbeabE0AV35vCLhE/Rp5OivCTy9FU70aSy0Wu9jJ+p8JaW3yGqkUUeXu
+    T90xpbz8Jtfixg7u7tH8K6qCBic0hj3X3MLAhwfmtnHnYC6q+P0st23+bQb3uWC5yCIpdj
+    gCaqGjSM/NPANcuWpiN+771YBVmhF7QHKepMmJnQNO5yCsw+oJ0c34Tm+PIQM/LA2h4hPx
+    Jk0zZJMBdUjdW0pegUi0oStwjTLxiD8gjXftjANqaXEA5yQhzikUXgORGsfc7N6euXl+Z3
+    UjcQxyJV2K7R7iDobUlTWh+xb3pTyxNMo0F2yvyqcrqbzqQrtFV5AqR/OwwtEqlJH5k0Pw
+    l/p04yKkhiT8ztoLhz6kumVjAL9OxCuCCZCjXBoF9Mi8LOPXKjsQJui+nKffDBRNYMOGIW
+    mQfCKEEMyBNAG32v+HWzQCO7csPNI2rzpq1Fzew7xIweYC8FIvsKRByaGnYxzsMUn0TGnF
+    sWEKh01N3p5uR3giXmschR7lsBeqjMu1QS5x0pEfqZ/j9rrhQEXSeKXpLE/rXLEyIe3Iaj
+    7lFgk7TxHvKKsWww+N6saiEpskLzhtUqmZ4TOf+8wXfc5HD+oKuyC+k8/wifeXCM/CWlV/
+    PskLFHTSYr0qwDV+ZdfNA6rycRwEB2x1BxAIlG2gx0uVkzMpzlOvlPCt3HhA
+X-ME-Proxy: <xmx:dGwnaoTCoCVg9DFP1AMWUZtPePe0Dsn2ZN47jVGKlJoTkz4qjYsRaw>
+    <xmx:dGwnamfYlMyW4jqm9yihSMCz93TmGfRPF8a0LcPfvWi1nlJFGp0yVQ>
+    <xmx:dGwnakCCde6Yr2DUj-dwBrYjaUbrGidqeBAy2_ofUvYEXzpBHQY8sQ>
+    <xmx:dGwnaglVWwCKsigV8QsrOxTPddyLVtf84YSlxMr-N_MLP4L_HwAOgA>
+    <xmx:dGwnamK9bHabXPzrEKzJvUoieCdtrjqBEyIkp0UxXEL-C-GUA9_nSWH3>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2B63A2CE1D5B; Mon,  8 Jun 2026 21:20:16 -0400 (EDT)
+	id 10D772CE1D5E; Mon,  8 Jun 2026 21:29:24 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -74,240 +74,94 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AAQWCgp0QglJ
-Date: Mon, 08 Jun 2026 21:19:55 -0400
+X-ThreadId: Av2xLY-ZXd6J
+Date: Mon, 08 Jun 2026 21:29:02 -0400
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Pit Henrich" <pithenrich2d@googlemail.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>
-Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
+To: "Dave Carey" <carvsdriver@gmail.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "Hans de Goede" <johannes.goede@oss.qualcomm.com>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, pithenrich2d@gmail.com
-Message-Id: <1fc62844-2cc9-49b8-8ee0-081d2c4a984f@app.fastmail.com>
-In-Reply-To: <20260419102724.91451-1-pithenrich2d@gmail.com>
-References: <20260419102724.91451-1-pithenrich2d@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad-acpi: Add X1 Fold keyboard attachment
- detection
+ armin.wolf@outlook.de, linux-kernel@vger.kernel.org
+Message-Id: <bacf91a6-b5b9-4597-a0de-b1435c1eb235@app.fastmail.com>
+In-Reply-To: <20260608215205.678182-2-carvsdriver@gmail.com>
+References: <73c27728-2f07-41c1-82c7-fd6f46c89f3c@oss.qualcomm.com>
+ <20260608215205.678182-1-carvsdriver@gmail.com>
+ <20260608215205.678182-2-carvsdriver@gmail.com>
+Subject: Re: [PATCH v6 1/2] platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga
+ Book 9 14IAH10
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Hi Pit,
+Hi Dave
 
-On Sun, Apr 19, 2026, at 6:27 AM, Pit Henrich wrote:
-> ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
-> attached (on the screen), but thinkpad-acpi does not expose this to userspace.
-> The state can be obtained via ACPI methods: GDST (get device state).
+On Mon, Jun 8, 2026, at 5:52 PM, Dave Carey wrote:
+> The Yoga Book 9 14IAH10 (DMI product name "83KJ") has a dedicated
+> yb9-kbdock WMI driver that registers an input device reporting
+> SW_TABLET_MODE to track the detachable Bluetooth keyboard.
 >
-> Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
-> a DMI match. The state is read directly from the EC.
+> lenovo-ymc also loads on this machine and creates an input node with the
+> SW_TABLET_MODE capability bit set.  For input switches, the presence of
+> the capability bit has semantic meaning: userspace (e.g. GNOME) reads
+> the switch state at startup from every node advertising the capability
+> and does not expect more than one such node.
 >
-> Cache the state and emit a sysfs notification on
-> TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
-> hotkey setup and refresh it before the resume notification to keep the state
-> consistent across suspend and resume.
+> Add a DMI match for the Yoga Book 9 14IAH10 to probe() so that
+> lenovo-ymc returns -ENODEV on this hardware, leaving yb9-kbdock as the
+> sole SW_TABLET_MODE source.  The ymc_ec_trigger EC write, the only
+> other action taken in response to a YMC event, is guarded by a separate
+> DMI table that excludes this machine; no other functionality is affected.
 >
-> Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
+> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
 > ---
-> This replaced the v1 patch in:
-> https://lore.kernel.org/all/20260314142236.74514-1-pithenrich2d@gmail.com/
+>  drivers/platform/x86/lenovo/ymc.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 >
-> Changes v1 -> v2:
->  * Use ACPI method instead of using the EC directly (thanks Mark).
+> diff --git a/drivers/platform/x86/lenovo/ymc.c 
+> b/drivers/platform/x86/lenovo/ymc.c
+> --- a/drivers/platform/x86/lenovo/ymc.c
+> +++ b/drivers/platform/x86/lenovo/ymc.c
+> @@ -23,7 +23,23 @@ module_param(force, bool, 0444);
+>  static bool force;
+>  module_param(force, bool, 0444);
+>  MODULE_PARM_DESC(force, "Force loading on boards without a convertible 
+> DMI chassis-type");
 >
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 85 ++++++++++++++++++++-
->  1 file changed, 83 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 8982d92dfd97..b57ae7eb5548 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -218,8 +218,9 @@ enum tpacpi_hkey_event_t {
->  	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
->  	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
->  	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
-> -	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
-> -						   * enter/leave tablet mode
-> +	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* posture change event:
-> +						   * X1 Yoga (2016): enter/leave tablet mode
-> +						   * X1 Fold 16 Gen 1: keyboard attachment state changed
->  						   */
->  	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
->  	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
-> @@ -375,6 +376,7 @@ static struct {
->  	u32 has_adaptive_kbd:1;
->  	u32 kbd_lang:1;
->  	u32 trackpoint_doubletap:1;
-> +	u32 has_keyboard_attached_on_screen:1;
->  	struct quirk_entry *quirks;
->  } tp_features;
-> 
-> @@ -2928,6 +2930,63 @@ static void hotkey_tablet_mode_notify_change(void)
->  			     "hotkey_tablet_mode");
->  }
-> 
-> +static bool keyboard_attached_on_screen;
-> +static bool keyboard_attached_on_screen_initialized;
-> +
-> +static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
-> +{
-> +	int state;
-> +
-> +	if (!tp_features.has_keyboard_attached_on_screen)
-> +		return -ENODEV;
-> +
-> +	if (!acpi_evalf(NULL, &state, "\\_SB.DEVD.GDST", "d"))
-> +		return -EIO;
-
-I wondered if this should be adding a devd_handle in the same way as hkey_handle etc? (up at the top of the file using define TPACPI_HANDLE
-
-Then you would have
-    if (!acpi_evalf(devd_handle, &state, "GDST", "d"))
-
-Not sure if this is needed or not - hopefully one of the experts on the mailing list knows.
-
-> +
-> +	*attached = state != 0;
-> +	return 0;
-> +}
-> +
-> +static ssize_t keyboard_attached_on_screen_show(struct device *dev,
-> +						struct device_attribute *attr,
-> +						char *buf)
-> +{
-> +	bool attached;
-> +	int res;
-> +
-> +	res = x1_fold_keyboard_attached_on_screen_get(&attached);
-> +	if (res)
-> +		return res;
-> +
-> +	return sysfs_emit(buf, "%d\n", attached);
-> +}
-> +
-> +static DEVICE_ATTR_RO(keyboard_attached_on_screen);
-> +
-> +static void keyboard_attached_on_screen_notify_change(void)
-> +{
-> +	if (tp_features.has_keyboard_attached_on_screen)
-> +		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
-> +			     "keyboard_attached_on_screen");
-> +}
-> +
-> +static bool keyboard_attached_on_screen_update(void)
-> +{
-> +	bool attached;
-> +
-> +	if (x1_fold_keyboard_attached_on_screen_get(&attached))
-> +		return false;
-> +
-> +	if (keyboard_attached_on_screen_initialized &&
-> +	    keyboard_attached_on_screen == attached)
-> +		return false;
-> +
-> +	keyboard_attached_on_screen = attached;
-> +	keyboard_attached_on_screen_initialized = true;
-> +
-> +	return true;
-> +}
-> +
->  /* sysfs wakeup reason (pollable) 
-> -------------------------------------- */
->  static ssize_t hotkey_wakeup_reason_show(struct device *dev,
->  			   struct device_attribute *attr,
-> @@ -3032,6 +3091,7 @@ static struct attribute *hotkey_attributes[] = {
->  	&dev_attr_hotkey_adaptive_all_mask.attr,
->  	&dev_attr_hotkey_recommended_mask.attr,
->  	&dev_attr_hotkey_tablet_mode.attr,
-> +	&dev_attr_keyboard_attached_on_screen.attr,
->  	&dev_attr_hotkey_radio_sw.attr,
->  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
->  	&dev_attr_hotkey_source_mask.attr,
-> @@ -3046,6 +3106,9 @@ static umode_t hotkey_attr_is_visible(struct 
-> kobject *kobj,
->  	if (attr == &dev_attr_hotkey_tablet_mode.attr) {
->  		if (!tp_features.hotkey_tablet)
->  			return 0;
-> +	} else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
-> +		if (!tp_features.has_keyboard_attached_on_screen)
-> +			return 0;
->  	} else if (attr == &dev_attr_hotkey_radio_sw.attr) {
->  		if (!tp_features.hotkey_wlsw)
->  			return 0;
-> @@ -3462,6 +3525,7 @@ static int __init hotkey_init(struct 
-> ibm_init_struct *iibm)
->  	}
-> 
->  	tabletsw_state = hotkey_init_tablet_mode();
-> +	keyboard_attached_on_screen_update();
-> 
->  	/* Set up key map */
->  	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
-> @@ -3842,6 +3906,8 @@ static bool hotkey_notify_6xxx(const u32 hkey, 
-> bool *send_acpi_ev)
->  	case TP_HKEY_EV_TABLET_CHANGED:
->  		tpacpi_input_send_tabletsw();
->  		hotkey_tablet_mode_notify_change();
-> +		if (keyboard_attached_on_screen_update())
-> +			keyboard_attached_on_screen_notify_change();
->  		*send_acpi_ev = false;
->  		return true;
-> 
-> @@ -3998,6 +4064,8 @@ static void hotkey_resume(void)
->  	tpacpi_send_radiosw_update();
->  	tpacpi_input_send_tabletsw();
->  	hotkey_tablet_mode_notify_change();
-> +	keyboard_attached_on_screen_update();
-> +	keyboard_attached_on_screen_notify_change();
->  	hotkey_wakeup_reason_notify_change();
->  	hotkey_wakeup_hotunplug_complete_notify_change();
->  	hotkey_poll_setup_safe(false);
-> @@ -4296,6 +4364,17 @@ static const struct dmi_system_id fwbug_list[] 
-> __initconst = {
->  	{}
->  };
-> 
-> +static const struct dmi_system_id keyboard_attached_on_screen_list[] 
-> __initconst = {
+> +static const struct dmi_system_id lenovo_ymc_nosupport_dmi_table[] = {
 > +	{
-> +		.ident = "ThinkPad X1 Fold 16 Gen 1",
+> +		/*
+> +		 * Yoga Book 9 14IAH10: SW_TABLET_MODE is reported by the
+> +		 * yb9-kbdock driver.  Suppress lenovo-ymc on this machine to
+> +		 * avoid userspace seeing two input nodes that both advertise
+> +		 * the SW_TABLET_MODE capability.
+> +		 */
 > +		.matches = {
 > +			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-> +			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
 > +		},
-
-Should there also be a matches for the X1 Fold Gen 1 (13" model)?
-
-I think doing the DMI match on the product family is OK, but just a note that everywhere else uses the board ID. e.g: DMI_MATCH(DMI_BOARD_NAME, "21ES")
-I think this way works too, but it's different and I haven't had confirmation from the FW team if it could be different across different SKUs (I'll see if I can find out).
-
-If you do want to use board names:
- - X1 Fold 16 G1 has "21ES' and "21ET"
- - X1 Fold G1 has "20RK" and "20RL"
-
 > +	},
-> +	{}
+> +	{ }
 > +};
 > +
->  static const struct pci_device_id fwbug_cards_ids[] __initconst = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
-> @@ -12230,6 +12309,8 @@ static int __init 
-> thinkpad_acpi_module_init(void)
->  	dmi_id = dmi_first_match(fwbug_list);
->  	if (dmi_id)
->  		tp_features.quirks = dmi_id->driver_data;
-> +	tp_features.has_keyboard_attached_on_screen =
-> +		dmi_check_system(keyboard_attached_on_screen_list);
-> 
->  	/* Device initialization */
->  	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, 
-> PLATFORM_DEVID_NONE,
-> -- 
-> 2.43.0
+>  static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
+>  	{
+>  		.matches = {
+> @@ -100,7 +116,10 @@ static int lenovo_ymc_probe(struct wmi_device 
+> *wdev, const void *ctx)
+>  	struct lenovo_ymc_private *priv;
+>  	struct input_dev *input_dev;
+>  	int err;
+>
+> +	if (dmi_check_system(lenovo_ymc_nosupport_dmi_table))
+> +		return -ENODEV;
+> +
+>  	if (!dmi_check_system(allowed_chasis_types_dmi_table)) {
+>  		if (force)
+>  			dev_info(&wdev->dev, "Force loading Lenovo YMC support\n");
+> --
+> 2.54.0
 
-Thanks
+I'm sure I'm missing the obvious - but where is the yb9-kbdock driver? I can't find it...
+
+I was curious as to whether a separate driver was really needed for this platform, or if it should have been integrated in the ymc driver in the first place?
+
 Mark
