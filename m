@@ -1,35 +1,46 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDCB31F991;
-	Tue,  9 Jun 2026 08:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401F431F991;
+	Tue,  9 Jun 2026 08:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780992872; cv=none; b=AVk5CPxkliH9GXT5bay1ZJ/CcD4HAESdn5l2uFzebTJatio9Qsi1tqpdTdBFOsIl8ZO+eR7KbH3ruBkvqoeFN3BRzul2RGErZbMEc+TOhvDD6cvqncwwDsBjWxq3Rud0qhBKWl+hS3BSWH4itHeokdDRxnkvBUB5rppmCB/COq8=
+	t=1780992902; cv=none; b=MZSyS3FsUgc2i8ohG/FZ8V6Pa/o3l4POairGFrjcl7RY3VLjXQ0xccnEM5jd9KdA3PIfIlPn4BJlI598ZZJVYNv1xuSlvVo3qNftJMzeTFM0HGxAgjy42WISE9+gIda0V1VXyzsfeFF8fjx63Qoh5x9Lq919n0zwTUH19QoXgK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780992872; c=relaxed/simple;
-	bh=m7wCEuFIxYSUjsVJgkGPLyoSjEZIWTcXBnthvF22tEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ptI092X2xwitjf1PDeAjSMUL4OKAj4h/i+MYQA6tznHv6ekZG7PQTseu1mtl//rJwdyY94hn4evI3o74/yWOk2bgH2Di7lhhgRa2cWXD92RQi7ZyjM7DQGLIvPuU1N8K8PeHrSn9YJLaR1cMjHzATRoqTQ0/lyuP+XNyXv84bvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn; spf=pass smtp.mailfrom=isrc.iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isrc.iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isrc.iscas.ac.cn
-Received: from localhost.localdomain (unknown [36.112.3.223])
-	by APP-03 (Coremail) with SMTP id rQCowADX4Mddyydqr5IgFA--.8275S2;
-	Tue, 09 Jun 2026 16:14:22 +0800 (CST)
-From: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-To: mjg59@srcf.ucam.org,
-	pali@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	dvhart@infradead.org
-Cc: platform-driver-x86@vger.kernel.org,
+	s=arc-20240116; t=1780992902; c=relaxed/simple;
+	bh=8UK/SGrr8uG9bpv4dQkRGLKO3jW+kt8fGyo3MZT4h9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hxKxlNj7AQeKebSrWFca5mIIcrGB75dUTAuQxlyfBtne3+RZo7gQgZRI7UZHFqX84TtoL7M8Ug1xxi6RxXE7FTU6fGCEeKrJQIXhlMWGpvqP6rHLoYSbPi0JglENHhHtdrl38c5A+s8svaIcGYXCrHxL1f8RVZYEBDpNngumuxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cAIvv4yO; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cAIvv4yO"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1780992898; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=IVo0i5ZUai13wVCArcavwD9iJE2Dt8ygQ/fpHZWRb+I=;
+	b=cAIvv4yOmghdlnULORGUyNqG816HYSJ2/EsfT3C9Tg4lYKjnbYgGJedCDy8Up7M8lFBja9O2UMI9RIPPpjf8jyraTlNCaAmPJSdJYNcXQRSs23hlDBxY4bjyljnGFKMSWlaeCRvLBAKC/9mYUWUr3VsnN5V75l8Irkez96AqrT4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=qinyuntan@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X4Ve0YS_1780992896;
+Received: from banye.tbsite.net(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0X4Ve0YS_1780992896 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 09 Jun 2026 16:14:57 +0800
+From: Qinyun Tan <qinyuntan@linux.alibaba.com>
+To: Muralidhara M K <muralidhara.mk@amd.com>
+Cc: Suma Hegde <suma.hegde@amd.com>,
+	Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] platform/x86: dell-laptop: fix missing cleanups in init error path
-Date: Tue,  9 Jun 2026 16:14:19 +0800
-Message-Id: <20260609081419.1995169-1-lihaoxiang@isrc.iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	Qinyun Tan <qinyuntan@linux.alibaba.com>
+Subject: Re: [RFC PATCH 1/8] platform/x86/amd/hsmp: Add new HSMP messages for Family 1Ah, Model 50h-5Fh
+Date: Tue,  9 Jun 2026 16:14:56 +0800
+Message-ID: <20260609081456.1152820-1-qinyuntan@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
+In-Reply-To: <20260528093954.2461272-2-muralidhara.mk@amd.com>
+References: <20260528093954.2461272-1-muralidhara.mk@amd.com> <20260528093954.2461272-2-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -37,65 +48,36 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADX4Mddyydqr5IgFA--.8275S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWUuF4Duw47ur1xXrW8WFg_yoW8Ww1kp3
-	yUW395Kr43G3yDKa1DCF4I9FyrA34rC3yfJrWak3srZwn8Jr17Jry8ta43WF17JrWxC3W5
-	tw4kXan0yF48XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	tVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUU
-	UU=
-X-CM-SenderInfo: 5olkt0x0ld0ww6lv2u4olvutnvoduhdfq/1tbiCQ8NE2onp3SUcwAAsh
 
-dell_init() initializes several resources after dell_setup_rfkill(),
-including the optional touchpad LED, keyboard backlight LED, battery
-hook, debugfs directory and dell-laptop notifier.
+On Mon, 19 Jan 2026, Muralidhara M K wrote:
+> The same firmware also extends three existing SET-only messages
+> (HSMP_SET_XGMI_LINK_WIDTH 0x0C, HSMP_SET_DF_PSTATE 0x0D,
+> HSMP_SET_PSTATE_MAX_MIN 0x22) with a read-back path selected by
+> bit[31] of args[0] (0 = set, 1 = get). Without converting these
+> entries to HSMP_SET_GET, userspace cannot query the currently
+> programmed value even though firmware now supports it.
 
-If a later LED or backlight registration fails, the error path only
-tears down the battery hook and rfkill resources. This leaves the
-notifier, debugfs directory, keyboard backlight LED and optional
-touchpad LED registered after dell_init() returns an error.
+I noticed that HSMP_SET_XGMI_PSTATE_RANGE (0x26) is not converted
+here. The esmi_ib_library already implements a GET path for it in
+esmi_xgmi_pstate_range_get() using the same bit[31] convention:
 
-Add the missing cleanup calls before tearing down rfkill.
+  msg.msg_id    = HSMP_SET_XGMI_PSTATE_RANGE;
+  msg.args[0]   = BIT(31);
+  ret = hsmp_xfer(&msg, O_RDONLY);
 
-Fixes: 9c656b07997f ("platform/x86: dell-*: Call new led hw_changed API on kbd brightness change")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
----
-Changes in v2:
- - Fix all missing cleanups in dell_init()'s error path.
- - Add Fixes tags.
- - Modify the commit title and message.
----
- drivers/platform/x86/dell/dell-laptop.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Since the kernel descriptor is still {1, 0, HSMP_SET}, hsmp_ioctl()
+would reject the O_RDONLY open with -EPERM because is_get_msg() only
+recognises HSMP_GET and HSMP_SET_GET types.
 
-diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-index 57748c3ea24f..053f40572bf6 100644
---- a/drivers/platform/x86/dell/dell-laptop.c
-+++ b/drivers/platform/x86/dell/dell-laptop.c
-@@ -2551,7 +2551,12 @@ static int __init dell_init(void)
- 	if (mute_led_registered)
- 		led_classdev_unregister(&mute_led_cdev);
- fail_led:
-+	dell_laptop_unregister_notifier(&dell_laptop_notifier);
-+	debugfs_remove_recursive(dell_laptop_dir);
- 	dell_battery_exit();
-+	kbd_led_exit();
-+	if (quirks && quirks->touchpad_led)
-+		touchpad_led_exit();
- 	dell_cleanup_rfkill();
- fail_rfkill:
- 	platform_device_del(platform_device);
--- 
-2.25.1
+>  	/*
+> -	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0
+> +	 * HSMP_SET_XGMI_LINK_WIDTH, num_args = 1, response_sz = 0/1
+> +	 * input: args[0] = set/get XGMI Link width[31] (0 = set, 1 = get) +
+[...]
+> -	{1, 0, HSMP_SET},
+> +	{1, 1, HSMP_SET_GET},
 
+Does HSMP_SET_XGMI_PSTATE_RANGE also need the same conversion?
+
+Thanks,
+Qinyun
