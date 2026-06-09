@@ -1,64 +1,64 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013005.outbound.protection.outlook.com [40.107.201.5])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013006.outbound.protection.outlook.com [40.107.201.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7C043D4E2
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 14:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E569D36923F
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 14:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.6
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781016055; cv=fail; b=XephcCULANTt3WbINVWjO0x/4+jswdLRSTbiMCe+SfElqqwKl6DQfD6QM3v9q8urZlSHNW5Bh6Q9DPnGAaNJdsneb2Wm/lBLN2AZ/4XoqD8diec1LcXSffdOsJHr3zz6CaxSM9sg0SX6/L6nbKmfAmi3MnOUtYA03EKLP8kTq+8=
+	t=1781016225; cv=fail; b=RO660bQyJPFfNCCU08znmuKV0g9Z9crzMkQwJ75yl5JaqRJqskXIH6I0EHrCxK1RfHar9lQSu0riQaFp1o3RrgADc7G00UkxLX383M354UBFMTD/ZjEEcq7BsXqbtORo7HHse8YP7Wry5YQ6gMA9MecU6GL55IKrPblmjqAS1+I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781016055; c=relaxed/simple;
-	bh=RQLd5nCMGTNxxQd1RLCDzvUgiKI8NjUg393M1ek4F4Y=;
+	s=arc-20240116; t=1781016225; c=relaxed/simple;
+	bh=gIv6YNqMHsO1rd2X3n6Y0X3pYvXH/TP7zb8ttbz7jEk=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Cd6l+U2KaKnX4hrv1EQToeREfveD6lB2HYRiH6PQKaPhTjUmG44vB9qzy6rI+sidGAyraAFBLbV5yujvPjabFJO8vXAIfzlLBMV2mj+Q448IhkkBx9HiptpbtmQ5eQcMP236co+LxqiiXXQWuTuSTySYS2ww8IANm89NF8FkVJU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C3OWskD9; arc=fail smtp.client-ip=40.107.201.5
+	 Content-Type:MIME-Version; b=ilkZmiItlJeRa3dY02omfOqDwWDZ8MtgHgoZzOvjtZ6Basp6zf8fhbC2TCRbiWeJB3gb4kTwVEsPgRWSnn98aqGyCDhiZtou1qc7JCFpKZxoSwxbflMR60qBPqMSIfd5yUkDEuuxDh8dSt8RX2kS1rAqYObHLqr4I0+XVngvis8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jeM0lqXA; arc=fail smtp.client-ip=40.107.201.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C3OWskD9"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jeM0lqXA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=onF3UFuDBB3itQtVMhGcDYFtkzVThnhwTjvK3/HkW5QQ2ZxHc/ztJOrAzqkcqYz8tTQaaWWd1Fo4KYrpwjcH4szfAOpnA44sEhfK4/GAUyBD595KvEMspqepHg368XsCaVA1IbUn/R4F+WRodr3pH+OHkGIjbo4pwMpYsM6FPybvkeuondPKnybZjJdxELIPEShp+NLHv3PnGEn6A+q60q27+bymELjhWmIai4tHFHMAtiE9b6vRBVWhHQKhWAGI+2COSe9DMfIEVzwAsjOpVgnsa6bojaQdcnIYAVQv6KCfS0lxbA6Pfzhn17JDN/yIDHrolYSUKOJLNh15A+w0Bw==
+ b=cYhq6tqy2OaE0/dIsHNzC5JfrbkJI5x7z+WsbbFYlXknxfXRY+hZOKL4/0rGAn8QFm8xXbqbgMUKPuxFsA0Pc7wH986Y7OJbJ9YpyZ59C9xdvXvGh9DOLCV5tmnGa4p29g9TEvXbGI/k+eopm9FzQyeeXCci6KwHuAZhbDZewsDv7JXW96ResXvFw0CtzCz5pRDJ48e8MIHJVJR+SeZAROIeT0DYc0pglWhicELmc+kbv9uChPlW/7vvbWQn8SOQerByfr7/S11PBhljn0dHqpXqBpbfAn4q65NnGSvyDlsuxkKD3+lWNKJlbPZ/8/ynmygapVkMSMnjJ0+T9xIOdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MbsX2w0UYy7JNymU7EKi4Y4I9BVyW4L3Nkfxb9CBdrg=;
- b=pdUMmK8fNkTp9D0EHEMu1DIhExga2Q85llnnSYMB+9bj7z7vBhEjd1uLFl98ho7HqX7jWyzPTYDh4KdSt/UUOaktgFRjigM0RV/vpBvdFL0eorPysYb1Bg9fwIBydpBjbHunHLvxTykyXjs1MwZhqDmWH9TxK5EZBhScfaOTFMqcohFFTOV1LlX3j3BqFuwKjZXWErEVjyHvy32uauUJzlCEaHpwJNj04178uTmfBmEcsyFqdWQAuLzqhagUcSX/G6BhHlvWYvQuPpCz7V+D/6OlzziJOKJ8Z1j95Aek65Nd1RJzROizZhg/OugX+Vurunqz3RYH11MkUyWn9xtk7g==
+ bh=qrUClwnQ1ANinj2k6CUdX8EdqWQYltB638BkdmsWgbM=;
+ b=ZZMGxj3tMK85qpZ6QZ42aiKlbrnvexN35US2P3Md21qL1eSMo4TgmkxfSWvmwYfYsVoTTe4+TMi2ZBQ8fCYHnFB/CHCbDmq5dLqfJQ2HLBJPNbQzua9pMx0GILcTZAJO4/eP9X2pB5SRL+xDeh+E1KIOIZnoxcptw5WBVmLoteIFqrVIGRDp44r15kLdJxvYt2NhBTsXmWkhzWLKkj+p9v5GBzKNM/yYSnlJe4gC+X/k2F7lwmRnYjklF1QpFpA5hfCvhp6s5BtLvPpeU5R5P1jUxgu+ie8ytcL5TV/ufJxyJZnUKtqUXgBf5uxF270+lwonmouLiq5sa+jpRNEjTQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MbsX2w0UYy7JNymU7EKi4Y4I9BVyW4L3Nkfxb9CBdrg=;
- b=C3OWskD9q1IDbeTd7IR2n43pvzkHZMdYZUYu3eETwqTd9BkvNrOBY8eEwhHqXNVo/VENT9q8QAcUljiMPl7TTc7rQsD+1iT9Wno2AHD2/5I6HE6TlbRtkrx+C2BxcoqIgbuythi5KHEPU1YjBfEe9fx7tw7tUN34kDViL8/lAlE=
+ bh=qrUClwnQ1ANinj2k6CUdX8EdqWQYltB638BkdmsWgbM=;
+ b=jeM0lqXAhEiAzZM4vwzemQSbpUxuLinjsuDEguxI9zNmUPDjORfqnsbyQL4LhLyLGSeUpHftdZOKtJwhA5lBL4P0skyfOzot+O2TUYYsK0F9/D20aJ61PnOS5jS+HYHkS3j1l+XIopxHmCor3B+RSyIBw33FopKKlkYdOpjgFOk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from BL1PR12MB5176.namprd12.prod.outlook.com (2603:10b6:208:311::19)
- by CY8PR12MB7434.namprd12.prod.outlook.com (2603:10b6:930:52::20) with
+ by CH2PR12MB4264.namprd12.prod.outlook.com (2603:10b6:610:a4::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Tue, 9 Jun 2026
- 14:40:47 +0000
+ 14:43:37 +0000
 Received: from BL1PR12MB5176.namprd12.prod.outlook.com
  ([fe80::91cb:8f10:c6d2:d683]) by BL1PR12MB5176.namprd12.prod.outlook.com
  ([fe80::91cb:8f10:c6d2:d683%4]) with mapi id 15.21.0092.011; Tue, 9 Jun 2026
- 14:40:47 +0000
-Message-ID: <b2d511e3-cc90-4bac-a4be-a8f1a14da1ad@amd.com>
-Date: Tue, 9 Jun 2026 20:10:39 +0530
+ 14:43:37 +0000
+Message-ID: <3978ac55-74e1-41dd-a673-92bad4e88f78@amd.com>
+Date: Tue, 9 Jun 2026 20:13:32 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86/amd/pmc: Use per-SoC cpu_info struct
- for SMU mailbox and IP info
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- mario.limonciello@amd.com, Sanket.Goswami@amd.com
-References: <20260609073543.2388987-1-Shyam-sundar.S-k@amd.com>
- <20260609073543.2388987-2-Shyam-sundar.S-k@amd.com>
- <4c372b4d-c694-6a9a-3a60-99b079be0f91@linux.intel.com>
+Subject: Re: [PATCH v7 1/7] platform/x86/amd/pmf: Add util layer and userspace
+ character device interface
+To: Mario Limonciello <mario.limonciello@amd.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, Sanket.Goswami@amd.com
+References: <20260609081044.2416731-1-Shyam-sundar.S-k@amd.com>
+ <20260609081044.2416731-2-Shyam-sundar.S-k@amd.com>
+ <c5466ac1-642a-4af1-be2f-d342979d5d0e@amd.com>
 Content-Language: en-US
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-In-Reply-To: <4c372b4d-c694-6a9a-3a60-99b079be0f91@linux.intel.com>
+In-Reply-To: <c5466ac1-642a-4af1-be2f-d342979d5d0e@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0231.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:eb::7) To BL1PR12MB5176.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN3PR01CA0090.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9a::9) To BL1PR12MB5176.namprd12.prod.outlook.com
  (2603:10b6:208:311::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,571 +67,371 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CY8PR12MB7434:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9358a6e1-f260-4bf6-9a7b-08dec6351695
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5176:EE_|CH2PR12MB4264:EE_
+X-MS-Office365-Filtering-Correlation-Id: ada3b7ed-7fb5-4774-6736-08dec6357d2d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|22082099003|18002099003|11063799006|6133799003|4143699003|56012099006|3023799007;
+	BCL:0;ARA:13230040|366016|1800799024|376014|18002099003|22082099003|6133799003|3023799007|56012099006|4143699003|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	JTnrrHlf8o1IQJuuOfmITsltGydOrZC7JKYfe2ZkZxT8VZo/LY7CQocmAJwUsb253W2TByYymsZsgVm/0XDZdIf8q/DNQuBtoqguVhxK/Q+30r1ut/hpViczdmGA5ftFmeM1ko7g6HVfZdgHrTxTG7mZ25+Gy3zf1LRj42kqZhkpYiIbLimsqRHYsMD4kNOC5EnCSwH3l1TqekM1wiATW949pi7gYUrnfLltZf7eNpckTmX8610EyN+N1NmdcAbN9vW/NnU4zjvnTIWmdVnVioQrKOo2IRpGu6oq+puUeA01dwZ5COJcQWa7b/ZNwELnb+I5yvfuetIboVsarzj2cZeQZOQsTVVY7tK3+jrw2d7lD+T+TY4LVFJMe0aCIbGGgB72pXirH0TGFjl6BKF/EGrctC0Yo9AzCxKq1ZnuQAOVaEY8v086FBBiBy4Ej+kNBT07R6IinVHJkNHEAWbc3odrzUJ8s/HVrfMjgbsee2V5ycbm5Szlfn6OG4J9rqJPqqd4CwWE3WMrmT/Gi8B1TIqIeGuvNyYB+VrXz85rXS66UFbEWFWhFnR0FK6S+oGRUXssROFRKhkTOrjZ6BwYyPJFTrocZ0reV91EtBH5oHqWCL7abO2dFb5ssbuFXInqpWkf3tRa9Ye/XagUR9Rmtv+/KvHZUhdTPklQfZo247BwEAnj13XCHrd3LuCf0SYb
+	+Z225/BchYWISV/h0nz7fjObbBo3N8WYY/Zt2cwphw3YebXEA/zA2a/1qccBpHDgLGx8xKwX15gohT1DUgYREWftwO0RTLTAVCTAgiHYfpJ57rQLR36OLsHGXYESGgqKKuihmUmliB0Lz9F3MTg9nBZ4VFwQv9acfd9ZrUFAVYzc6sQvE07ypqslBTlpmhfKmXdZ27OS9wN5sZ6DOJo6nNTxTXiTwNnI59ph9wYWZdmtDKDX+RqtAeUa7Jld51PVjkbH5MYglvLF2qzVdMJpuZi//2IAMPGOGx6hM+G49ehMLz87ErLJfXq07BB65t+iNUr3WgZNh8s9WvH88vw1wI26x0o32hpBJrrfp9/eLv67LXum3J1Vq6HjpuTrEIuH+DJW6dRLno7xKyj+P6T3KKGplXPNtGINRFsUUxqY5C5IsnQs/eUgLWA6KW09IP85BBfgUyJCoohgDOLl7LZOC7RKbd0l3ZALzZqPz/Vjc6WaTXTDTmChX3hABxksiltsU9ragcvh0MvEyPT/NWzDKrM/Bwt6B93FpJ0YEgISw5mamxBGuXlXGUCq2UJZ5qAHUXeuVf60KyOTfNktgnC/3zQYlNtexA8hoLRxX+rbVsFPPLQZoiL4AlyG2df2QRgrv6TapYgvRkHXehBALTts5lOs5wgnOdUtbD1wFZuaY45CC7z/6hCumjw5Bihf8xf+1jfsCY9cvzMq41SFMBsYZg==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(22082099003)(18002099003)(11063799006)(6133799003)(4143699003)(56012099006)(3023799007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(18002099003)(22082099003)(6133799003)(3023799007)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NWxMWld5V3QzcVMzQ01uYlJxTisxZHcxNE5BZ2lIdWJ5UlJuYXNJRWNYcGg3?=
- =?utf-8?B?bnZSYjEvMExLYzh6VElDcXF2VExqV1dVclBtOW5rcTlFOFFvZjJDRGtaMFJP?=
- =?utf-8?B?RFNKR2Zjc1RTeUg0ekd3b01xdUNVRlQvSlk0dnhkNFVHNFl6c2tkcnQ0dFI2?=
- =?utf-8?B?eW5jUXR1dWlZcnRORVJ2cFpZeXMzZ3RaR205N2F4eHdGOUJoZnMwRGFCOGwx?=
- =?utf-8?B?RDRveEZ1UXM1VG1yOWRUSURxM1IxQW9TSTYyd3BuVEt4RjVKazZSb2FmRC9C?=
- =?utf-8?B?US9aaWQ2dlpKYU1iSjBRb3RxQURXTWpwallaMm13a3ZKTHdBT3Zmd2tEanFi?=
- =?utf-8?B?dzNHMjVLREN1ZVhMZTUzU0l1MFQ4UTdjV1BIbG15QlF0QTdTNUtwL3J1U1BT?=
- =?utf-8?B?cUlnTk5JdFVVaWFNY1pHU3QyeXNmWDF2RjZEN2FYek5URDl4cnVHeHgwcmhF?=
- =?utf-8?B?VEZJYW5zNHI5Zi9odDQyWDc0SGJxclpIcDFFaTV4eHY3WXhkcnU2V0VTalUr?=
- =?utf-8?B?dHdlN0xIQUdYY0xkdDJ2N2dGOU4xTzFpY05LRHdMSVFma0VMdCt1QTVRUC9q?=
- =?utf-8?B?a2ZpeFhkTmU5YjI2ZlRlVGZuNXUxY3BoRDNWOS80bk1HTUNLMmpFMlp0bWtu?=
- =?utf-8?B?bnA2bkZJVmpuaUJhSHdHL1VublNlVTFoWGxnWG9na1FOZEtYc1FieDBoMkxx?=
- =?utf-8?B?OGNkWW5PN21vejNOQXJyVmZkc0g1dFRGVnJTVFB4cmJ4R1pMWnBRL1Nsak8w?=
- =?utf-8?B?TEpmeHhvMkxuR2tQdnpOSjVIVmk0Zy9laWVSTmM2dElGdUNEOHRLTU5rVFRW?=
- =?utf-8?B?OWFCSEhYb3I1WjRBZTFrdTAzeXR5RFAzeFRFZ01lWlRuVWIyUVN5OXpuYWFG?=
- =?utf-8?B?dE5naEtIdEttVUFFMGcvY01TeUZPNzBSaVcrSmlzcU9QalZxcmtkYkFqdzNi?=
- =?utf-8?B?LzZwRUZvZlJ3ai8xZ3JaQ0prWkVDbkdhMzV4NlFHOG82d3EwdHdPcG5uQ3RU?=
- =?utf-8?B?SndPNURlemc3RHRETzQzNVovWUNFaEd5dk5jZCttcDU1UHVUTk5taTl6TU1K?=
- =?utf-8?B?RWJIQng4SWNRNzVrNEUxR0FxTmdra3N3SEVyWjE3cUFVZzhjLzNKUi9MT0E4?=
- =?utf-8?B?UHF5bDBNbDgrb0gzSzl1ZFg1L1JpWWxJVS9MVkFILyt3WEUrMDBueitkVHNx?=
- =?utf-8?B?UHlTZFBuaWRHYkgyRTJ2MnY2WWhiNUhzTFJTMTg0STVYckt3dDltVUlRME14?=
- =?utf-8?B?THhPZ0pLQkhZbEYrQS9MeXhkVjBRSVo2QTFnMEhwWk00ZTRCMlB1NjNoNEwz?=
- =?utf-8?B?bE43V1dyRzhxazFYL2l6eStWNWJvRGpJbEVjWDQzQXRiMjN3dnVoSno0dHU3?=
- =?utf-8?B?RFFHcWRoRlJMYnFZOUp0TVZUVUkzWVZqWVhRZDZsMmtrQ2NHVFNDSjZ3ZkRm?=
- =?utf-8?B?TWVRQjJ4T2R1ZmdQUWJaN0o3YzNldWo5R3pJcHduNEtobFdIa1kxM3hkZi9R?=
- =?utf-8?B?OHcyMk5EeEVRR3lIc0ZKWGx1bzlzWkNsSWpEc3p4OSszSTZUVzJER2xTd1R0?=
- =?utf-8?B?ZGhIaGdDRkZPUUU2ZzQ0L0dyR3I0bU9JWFExakhxKzVMdStRMGVDNEJKYmpV?=
- =?utf-8?B?RVlibFk5djBGRndEb1poaDZKaklSdlJsS0cyQmw5aG0rdW9CZUxxNjJXSEVw?=
- =?utf-8?B?MTF6MkxtVWhhS2N4N3dNN21VTWZKRkl6V0c0MVNsV0lPcUR5bGNqdkdYQ3B0?=
- =?utf-8?B?MHI5QUxxSGVzdGJoQnBqMngzWDEyS0ZPQ0dZOGlrZWVPU2s3U1AxV29OY3Fp?=
- =?utf-8?B?RWtqTDJuRERrMDlsWnIvMTg0NjE1dUplYm9yQ2ZqWEFTcWtZS1lOL1NTcXgy?=
- =?utf-8?B?UWg3VmN4Zm5Rc1hTM3d2OGYwTEdtN1NHZTlCQXFXTTdHYk1UTERqNENyNm5m?=
- =?utf-8?B?cWVoZ1hCd1F1aGF3bnp1NGtoa29DZUtnMklIRUJOS2hLYVczZGJKYVRLU3BD?=
- =?utf-8?B?TmE3ang0SW9IbnVLRWFVUHNwVWhFV2tMK1ZEdnltVzBjSzB5WjlmcWRmSmQ2?=
- =?utf-8?B?ZjlpeU1hZGtFd0VtcXZOVDZCSTJsZFN2NExLaGNVTTBTd1hrdVdyS0h0OEZl?=
- =?utf-8?B?STRtWW5JVkJiUUVmYXppdFJYRXZpZ1BtVk0yMjZuY2l2NE1rZjZvbDU1MnVy?=
- =?utf-8?B?RFZEOFZFeGRrNS9NTHZvTjBEM2FrK3FybEtIeWdUZXZ2cXJxZ2hmWklnbjZ4?=
- =?utf-8?B?bUJ3SThOU0xPY1lHZ1pLWTRScStyUEsxRFJOQ3h0QXBtK1NPRkNiNlltSEhJ?=
- =?utf-8?B?elFCcHhXL29zVDduL1d3dHdTNmYyeSsySHYvSUJvNXFjWVVHa1VBUT09?=
+	=?utf-8?B?KytDL0MrZUtpUHJJeUVPZlBEMDBWNzJBWWNXVDlPTEZKcGp6c1VLNDE0azgy?=
+ =?utf-8?B?ckZsbGxsc0ZLRjRRM2dBT0U0RFJXTEtza05ObWxjcXdBb1dPR1dkMURrYXJ4?=
+ =?utf-8?B?ajF5WGVMRFI1d0hoNTgyWXlKUFNzVU1EUHR4YTMwTk5wUFVpRXFyd2NOc21p?=
+ =?utf-8?B?VUV0QjVZamtTOGZ4S3hFNHFxd2xpSHE3cGE4aElWdE9jQWlLcDBnSHBlK3lB?=
+ =?utf-8?B?TEJHQVF0ZUZPV3ZHNHVlb1FCM2ZhUk1HeXA1SU80bTFPazY0d2F2aVA0d3pX?=
+ =?utf-8?B?eWwxY243cXdlQXlDY2Y3V0NOM0tFbU5HV0VXN29hOFQwcjZGTWQ0dm5Zc3l2?=
+ =?utf-8?B?RTB3NXhTdlBmSlM0c1FOYmxFbUtSWGlBVllmNE5pcmZZWVZtdXQ1MTFaRFRx?=
+ =?utf-8?B?MXVvdGExUHp3U1BNcm83MWszVmJlZmc5S0wva0dKcE9ZU0hNd2wxZEQ5VnBO?=
+ =?utf-8?B?bU5ldUdJWis0aThwMytBN25RT3lzUnhrNE9KR2JsWWMrbXhPT09GK0VjbjIr?=
+ =?utf-8?B?TXorTkd5eWVFU2ZmbU9SY2VRMDJhSnNnVWFCMmFWYjQ3cmNPcHJ4QmxGQnpP?=
+ =?utf-8?B?K01kemF3T0RnKyt1NU9TNDBNcVVJOFNuU1c5MEtmeHFURWFQRlJqREV3TGxZ?=
+ =?utf-8?B?TmQ0OHRlVWZrdE0vVlBmZ0VXQlFRU2tDd1dwaEgzcnpsT1RsYUczY1BSTXVp?=
+ =?utf-8?B?MG5iZmdxakZRNTc4SWJndjAycDRnbVZ1d0JaOVRIV2djUS82a29NVENBMHU0?=
+ =?utf-8?B?bTFjdTcxMjJrMkxNVjJlRzRTeTh0bXh3RkJ0SFljekFJTDhFWXlhc2pWUXFo?=
+ =?utf-8?B?cjdhR1lYbTFHMXhhUTB0b2N4N0dydjZVRXY1TkpzM2FkODBzVTZsK3RkeDF0?=
+ =?utf-8?B?T2V2aFVxVVRva0RnLzZ0dDh2WGNldm5EZ0FtWXRmdENBVmZjTnhMZDl5SGpr?=
+ =?utf-8?B?MmlaTHAzUXhxZHlYOHFOT285TjdaRXpTejAzUWRMMTZVRHdaVFRSMzdWSTh0?=
+ =?utf-8?B?NDRPb2psUzdvQ1hFRnRJdnd3elBXYnNFTDdZcXB6WVFvM2V4UU85dmZLNWZP?=
+ =?utf-8?B?bTl3MmtnU3ZHQm8vcXhBV3F4dDZ0SHF0RkJhald2TUM0TXlrOXFKcmJvQVZF?=
+ =?utf-8?B?N01Jd2RvcGE5cU8wN0FncjMzTmZETmY1eEVhOU1pR3Y0b2dacitQbU9VRENl?=
+ =?utf-8?B?NWhGWHg4V3c5c3JPRFdtQVBHVERybmtVeGFUdlY2TVdvYlNPWHkvTVI5ZU82?=
+ =?utf-8?B?L2g2NjJxNWd2ZXltRUpMTllJTGFnblpYcVZNeXdBUXBBa0tva3hCSlZGODMw?=
+ =?utf-8?B?N0dwVjI3MjNjUWU4M0xpN0VKeGlVUDQ2b3VIdXJCTkhmWVo3Rkp1RFVtV3hY?=
+ =?utf-8?B?S2o3Qk1oUUNnN05yWTM0aGlhdnd4WXlWb21RQWRMV3lidVQvRHM4U2d0N3RL?=
+ =?utf-8?B?REd1KzVTZzcxK1JKSDJwYUNLbVFoemRxek5HVlFmenlkZGw2SXhyOFppeTls?=
+ =?utf-8?B?bWtpNjFGd05DeUdzSTNBT2RrdGs5Z0FaR0haWlZNR3A0OWRGVzdTRSt1K2xh?=
+ =?utf-8?B?NW8vMHRZckFudFFPejJ3dk43Q2t2VjlaSENoK0VzSlB2YzFSQkZMZTVzSGtz?=
+ =?utf-8?B?RkI4eWZOVXlFblRzSmdmYWtCbTBBeHhpNWErSHlyOU5UV2ZKVW5kQkVBQzJl?=
+ =?utf-8?B?a2lnT1MzZ2lSRi9GNmdCZ3FtZHFORXRYQll5KzlvM0NqZS9zZFVYcStZM1J6?=
+ =?utf-8?B?Mm5vN3VXcmxhV3NjZ0MrNjFMcFdyM09wNXRnM3ozcmhtZi94TGlSNVc2VS9D?=
+ =?utf-8?B?NkUxcEROeGwzLzZrMTVlVWtaa3ZmVjJrVGtHT01yV2xiUkhqSDNHcFFraTdn?=
+ =?utf-8?B?d2p5eFQ3YlBPUnhaVkdkRDZkSzZJYTdtSU12cElZandhT05Pc0NXY2tZazdu?=
+ =?utf-8?B?ZEZXSXFqN0ljOUdPQ0JMcis1cFRRdlJOUzA4MldteFZ1L2taVkVwOHdLTXlx?=
+ =?utf-8?B?dXZKK1h6Rk52eTJaVXhqOXBWMlF2eENiR0lOaDFrMkkvRUloMmR5aFdoM3Zh?=
+ =?utf-8?B?dTBvK1Q4WDgrYXpUc25JTHYyS1RaVHdoMUxSemZpbkcya2Q2UG9MWjJWKzVs?=
+ =?utf-8?B?WGwybndlaDZSekcxY0xTYUYydHo4TWZnNjJQaHprK1dReDl4SFVSZ1pDOGwz?=
+ =?utf-8?B?Mi84dWk1ZVZxcm5YRkJTdG1TRkJycUpVelNyQURUZFpFWGFmS3VMTjNGUDhE?=
+ =?utf-8?B?VzVGMWRvSmhTcnlIbXltaFhVZFl4WDJaVWdzampEdkx5eUU2MlZJallPcEhv?=
+ =?utf-8?B?ek4xUHBuVkk1c2NXaW1yRnFxS1RCZ3h4ZDlRMmltOVVjNFRqYjh3dz09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9358a6e1-f260-4bf6-9a7b-08dec6351695
+X-MS-Exchange-CrossTenant-Network-Message-Id: ada3b7ed-7fb5-4774-6736-08dec6357d2d
 X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5176.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 14:40:47.5507
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 14:43:37.1391
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dShRRodMvQK4c5X4+J1g47mXM2QQMtN4zItGa9s0CXBAd77fMMOhIMKfkwq0Trf52NhVB+tWkFzRYshpDv7S9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7434
+X-MS-Exchange-CrossTenant-UserPrincipalName: SlX3PW4ULlk02gdPVJOtLDhufRcY03s3QaCPeigxirWTNhzY1ILUt4S6JjQrDEymL7anEbXhJRcja733Gm8zLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4264
 
 
 
-On 6/9/2026 13:59, Ilpo Järvinen wrote:
-> On Tue, 9 Jun 2026, Shyam Sundar S K wrote:
+On 6/9/2026 18:54, Mario Limonciello wrote:
 > 
->> Replace the scattered per-field assignments in amd_pmc_get_ip_info() with
->> a single amd_pmc_cpu_info struct capturing all SoC-specific parameters
->> such as SMU offsets, IP block table, and OS hint.
+> 
+> On 6/9/26 03:10, Shyam Sundar S K wrote:
+>> Add a util layer to AMD PMF that exposes a minimal userspace interface
+>> via a character device for metrics monitoring and feature discovery.
 >>
->> Define static const instances per SoC variant and embed them as driver_data
->> in the PCI ID table via PCI_DEVICE_DATA(). Consolidate pci_match_id() into
->> amd_pmc_set_cpu_info(), which assigns driver_data directly to cpu_info,
->> the switch falls through only for 1Ah M20H/M60H variants requiring
->> boot_cpu_data.x86_model detection to distinguish the M70 sub-variant.
+>> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
+>> PMF metrics such as:
+>> *  Power source and power slider position
+>> *  Platform type, lid state, and user presence
+>> *  Skin temperature and ambient light
+>> *  BIOS input parameters (1-10)
+>> *  Graphics workload metrics
+>> *  CPU C-state residency (average and maximum)
+>> *  Socket power consumption
+>> *  Auto Mode: Automatic power profile switching based on system
+>> activity
+>> *  Static Power Slider: User-selectable power profiles
+>> *  Policy Builder (Smart PC): Action based policy management
+>> *  Dynamic Power Slider AC: Adaptive power profiles when on AC power
+>> *  Dynamic Power Slider DC: Adaptive power profiles when on battery
 >>
->> Add scratch_reg to amd_pmc_cpu_info and populate it for each SoC
->> variant, allowing amd_pmc_idlemask_read() to drop its cpu_id switch
->> in favour of a single cpu_info->scratch_reg lookup.
+>> The interface enables smoother integration with userspace tools such as
+>> AMD SystemDeck [1], which is widely used for monitoring and controlling
+>> power and thermal behavior on AMD platforms. These tools help designers
+>> keep major components within thermal limits to ensure proper operation
+>> and enhance overall system stability and reliability.
 >>
->> Remove amd_pmc_get_os_hint() and use cpu_info->os_hint directly at call
->> sites and rename AMD_CPU_ID_* to PCI_DEVICE_ID_AMD_CPU_ID_* with backward
->> compatibility aliases.
+>> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
+>> option, allowing it to be disabled if not needed. The implementation
+>> uses existing PMF infrastructure to populate data from the TA (Trusted
+>> Application) shared memory buffer.
+>>
+>> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
 >>
 >> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
 >> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
 >> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 >> ---
->>  drivers/platform/x86/amd/pmc/pmc.c | 216 ++++++++++++++++-------------
->>  drivers/platform/x86/amd/pmc/pmc.h |  70 +++++++---
->>  2 files changed, 171 insertions(+), 115 deletions(-)
+>>   drivers/platform/x86/amd/pmf/Kconfig  | 10 ++++
+>>   drivers/platform/x86/amd/pmf/Makefile |  2 +
+>>   drivers/platform/x86/amd/pmf/core.c   |  5 ++
+>>   drivers/platform/x86/amd/pmf/pmf.h    |  9 ++++
+>>   drivers/platform/x86/amd/pmf/util.c   | 68 +++++++++++++++++++++++++
+>>   include/uapi/linux/amd-pmf.h          | 71 +++++++++++++++++++++++
+>> ++++
+>>   6 files changed, 165 insertions(+)
+>>   create mode 100644 drivers/platform/x86/amd/pmf/util.c
+>>   create mode 100644 include/uapi/linux/amd-pmf.h
 >>
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
->> index cae3fcafd4d7..3ba50ebcc431 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->> @@ -85,6 +85,83 @@ static const struct amd_pmc_bit_map soc15_ip_blk[] = {
->>  	{"VPE",		BIT(21)},
->>  };
->>  
->> +/* CPU info structures for different SoC variants */
->> +static const struct amd_pmc_cpu_info amd_pco_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= 12,
->> +	.scratch_reg	= 0,
+>> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/
+>> platform/x86/amd/pmf/Kconfig
+>> index 25b8f7ae3abd..ad4faf18de47 100644
+>> --- a/drivers/platform/x86/amd/pmf/Kconfig
+>> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+>> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
+>>        in the PMF config store.
+>>          Say Y here to enable more debug logs and Say N here if you
+>> are not sure.
+>> +
+>> +config AMD_PMF_UTIL_SUPPORT
+>> +    bool "AMD PMF Util layer support"
+>> +    depends on AMD_PMF
 > 
-> There's no need to 0 init, it's the default value.
+> To help with distros getting this right, how would you feel about
+> making this include a "default true"?
 > 
->> +	.ips_ptr	= soc15_ip_blk,
->> +	.os_hint	= MSG_OS_HINT_PCO,
->> +};
->> +
->> +static const struct amd_pmc_cpu_info amd_czn_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= 12,
->> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_CZN,
->> +	.ips_ptr	= soc15_ip_blk,
->> +	.os_hint	= MSG_OS_HINT_RN,
->> +};
->> +
->> +static const struct amd_pmc_cpu_info amd_rn_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= 12,
->> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_YC,
-> 
-> Previously, there was no case AMD_CPU_ID_RN: in amd_pmc_idlemask_read() 
-> but since the PCI IDs are overloaded, it used CZN's scratch reg.
-> 
-> (sashiko found this inconsistency in the change, but assuming this new 
-> scratch_reg value is correct, the current code is using a wrong value.)
-> 
->> +	.ips_ptr	= soc15_ip_blk,
->> +	.os_hint	= MSG_OS_HINT_RN,
->> +};
->> +
->> +static const struct amd_pmc_cpu_info amd_ps_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MESSAGE,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= 21,
->> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_YC,
->> +	.ips_ptr	= soc15_ip_blk,
->> +	.os_hint	= MSG_OS_HINT_RN,
->> +};
->> +
->> +static const struct amd_pmc_cpu_info amd_1ah_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_20H,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk),
->> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
->> +	.ips_ptr	= soc15_ip_blk,
->> +	.os_hint	= MSG_OS_HINT_RN,
->> +};
->> +
->> +static const struct amd_pmc_cpu_info amd_1ah_m70_cpu_info = {
->> +	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_20H,
->> +	.smu_arg	= AMD_PMC_REGISTER_ARGUMENT,
->> +	.smu_rsp	= AMD_PMC_REGISTER_RESPONSE,
->> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk_v2),
->> +	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
->> +	.ips_ptr	= soc15_ip_blk_v2,
->> +	.os_hint	= MSG_OS_HINT_RN,
->> +};
->> +
->> +static const struct pci_device_id pmc_pci_ids[] = {
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_PCO, &amd_pco_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_RV, &amd_pco_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_RN, &amd_rn_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_CZN, &amd_czn_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_VG, &amd_rn_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_YC, &amd_rn_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_CB, &amd_rn_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_PS, &amd_ps_cpu_info) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_SP, NULL) },
->> +	{ PCI_DEVICE_DATA(AMD, CPU_ID_SHP, NULL) },
->> +	{ PCI_DEVICE_DATA(AMD, 1AH_M20H_ROOT, NULL) },
->> +	{ PCI_DEVICE_DATA(AMD, 1AH_M60H_ROOT, NULL) },
->> +	{ }
->> +};
->> +
->>  static bool disable_workarounds;
->>  module_param(disable_workarounds, bool, 0644);
->>  MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
->> @@ -101,35 +178,34 @@ static inline void amd_pmc_reg_write(struct amd_pmc_dev *dev, int reg_offset, u3
->>  	iowrite32(val, dev->regbase + reg_offset);
->>  }
->>  
->> -static void amd_pmc_get_ip_info(struct amd_pmc_dev *dev)
->> +static int amd_pmc_set_cpu_info(struct amd_pmc_dev *dev, struct pci_dev *rdev)
->>  {
->> +	const struct pci_device_id *id;
->> +
->> +	id = pci_match_id(pmc_pci_ids, rdev);
->> +	if (!id)
->> +		return -ENODEV;
->> +
->> +	if (id->driver_data) {
->> +		dev->cpu_info = (const struct amd_pmc_cpu_info *)id->driver_data;
->> +		return 0;
->> +	}
->> +
->> +	/* Special case: 1Ah M20H/M60H needs x86_model detection */
->>  	switch (dev->cpu_id) {
-> 
-> After the reorganization, this looks not yet initialized at this point.
-> 
-> I guess ->cpu_id could be initialized inside this function.
-> 
->> -	case AMD_CPU_ID_PCO:
->> -	case AMD_CPU_ID_RN:
->> -	case AMD_CPU_ID_VG:
->> -	case AMD_CPU_ID_YC:
->> -	case AMD_CPU_ID_CB:
->> -		dev->num_ips = 12;
->> -		dev->ips_ptr = soc15_ip_blk;
->> -		dev->smu_msg = 0x538;
->> -		break;
->> -	case AMD_CPU_ID_PS:
->> -		dev->num_ips = 21;
->> -		dev->ips_ptr = soc15_ip_blk;
->> -		dev->smu_msg = 0x538;
->> -		break;
->>  	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->>  	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> -		if (boot_cpu_data.x86_model == 0x70) {
->> -			dev->num_ips = ARRAY_SIZE(soc15_ip_blk_v2);
->> -			dev->ips_ptr = soc15_ip_blk_v2;
->> -		} else {
->> -			dev->num_ips = ARRAY_SIZE(soc15_ip_blk);
->> -			dev->ips_ptr = soc15_ip_blk;
->> -		}
->> -		dev->smu_msg = 0x938;
->> +		if (boot_cpu_data.x86_model == 0x70)
->> +			dev->cpu_info = &amd_1ah_m70_cpu_info;
->> +		else
->> +			dev->cpu_info = &amd_1ah_cpu_info;
->>  		break;
->> +	default:
->> +		dev_err(dev->dev, "Unknown CPU ID: 0x%x\n", dev->cpu_id);
-> 
-> Won't CPU_ID_SP and CPU_ID_SHP end up here now as the driver_data is NULL?
-> 
->> +		return -ENODEV;
->>  	}
->> +
->> +	return 0;
->>  }
->>  
->>  static int amd_pmc_setup_smu_logging(struct amd_pmc_dev *dev)
->> @@ -296,9 +372,9 @@ static int smu_fw_info_show(struct seq_file *s, void *unused)
->>  		   table.timeto_resume_to_os_lastcapture);
->>  
->>  	seq_puts(s, "\n=== Active time (in us) ===\n");
->> -	for (idx = 0 ; idx < dev->num_ips ; idx++) {
->> -		if (dev->ips_ptr[idx].bit_mask & dev->active_ips)
->> -			seq_printf(s, "%-8s : %lld\n", dev->ips_ptr[idx].name,
->> +	for (idx = 0 ; idx < dev->cpu_info->num_ips ; idx++) {
->> +		if (dev->cpu_info->ips_ptr[idx].bit_mask & dev->active_ips)
->> +			seq_printf(s, "%-8s : %lld\n", dev->cpu_info->ips_ptr[idx].name,
->>  				   table.timecondition_notmet_lastcapture[idx]);
->>  	}
->>  
->> @@ -347,32 +423,22 @@ static int amd_pmc_idlemask_read(struct amd_pmc_dev *pdev, struct device *dev,
->>  	u32 val;
->>  	int rc;
->>  
->> -	switch (pdev->cpu_id) {
->> -	case AMD_CPU_ID_CZN:
->> -		/* we haven't yet read SMU version */
->> +	/* we haven't yet read SMU version */
->> +	if (pdev->cpu_id == AMD_CPU_ID_CZN) {
->>  		if (!pdev->major) {
->>  			rc = amd_pmc_get_smu_version(pdev);
->>  			if (rc)
->>  				return rc;
->>  		}
->> -		if (pdev->major > 56 || (pdev->major >= 55 && pdev->minor >= 37))
->> -			val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_CZN);
->> -		else
->> +		if (!(pdev->major > 56 || (pdev->major >= 55 && pdev->minor >= 37)))
->>  			return -EINVAL;
->> -		break;
->> -	case AMD_CPU_ID_YC:
->> -	case AMD_CPU_ID_CB:
->> -	case AMD_CPU_ID_PS:
->> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_YC);
->> -		break;
->> -	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->> -	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> -		val = amd_pmc_reg_read(pdev, AMD_PMC_SCRATCH_REG_1AH);
->> -		break;
->> -	default:
->> -		return -EINVAL;
->>  	}
->>  
->> +	if (!pdev->cpu_info->scratch_reg)
->> +		return -EINVAL;
->> +
->> +	val = amd_pmc_reg_read(pdev, pdev->cpu_info->scratch_reg);
->> +
->>  	if (dev)
->>  		pm_pr_dbg("SMU idlemask s0i3: 0x%x\n", val);
->>  
->> @@ -425,9 +491,9 @@ static void amd_pmc_dump_registers(struct amd_pmc_dev *dev)
->>  		argument = dev->stb_arg.arg;
->>  		response = dev->stb_arg.resp;
->>  	} else {
->> -		message = dev->smu_msg;
->> -		argument = AMD_PMC_REGISTER_ARGUMENT;
->> -		response = AMD_PMC_REGISTER_RESPONSE;
->> +		message = dev->cpu_info->smu_msg;
->> +		argument = dev->cpu_info->smu_arg;
->> +		response = dev->cpu_info->smu_rsp;
->>  	}
->>  
->>  	value = amd_pmc_reg_read(dev, response);
->> @@ -452,9 +518,9 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
->>  		argument = dev->stb_arg.arg;
->>  		response = dev->stb_arg.resp;
->>  	} else {
->> -		message = dev->smu_msg;
->> -		argument = AMD_PMC_REGISTER_ARGUMENT;
->> -		response = AMD_PMC_REGISTER_RESPONSE;
->> +		message = dev->cpu_info->smu_msg;
->> +		argument = dev->cpu_info->smu_arg;
->> +		response = dev->cpu_info->smu_rsp;
->>  	}
->>  
->>  	/* Wait until we get a valid response */
->> @@ -512,23 +578,6 @@ int amd_pmc_send_cmd(struct amd_pmc_dev *dev, u32 arg, u32 *data, u8 msg, bool r
->>  	return rc;
->>  }
->>  
->> -static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
->> -{
->> -	switch (dev->cpu_id) {
->> -	case AMD_CPU_ID_PCO:
->> -		return MSG_OS_HINT_PCO;
->> -	case AMD_CPU_ID_RN:
->> -	case AMD_CPU_ID_VG:
->> -	case AMD_CPU_ID_YC:
->> -	case AMD_CPU_ID_CB:
->> -	case AMD_CPU_ID_PS:
->> -	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
->> -	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
->> -		return MSG_OS_HINT_RN;
->> -	}
->> -	return -EINVAL;
->> -}
->> -
->>  static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
->>  {
->>  	struct device *d;
->> @@ -602,7 +651,6 @@ static void amd_pmc_s2idle_prepare(void)
->>  {
->>  	struct amd_pmc_dev *pdev = &pmc;
->>  	int rc;
->> -	u8 msg;
->>  	u32 arg = 1;
->>  
->>  	/* Reset and Start SMU logging - to monitor the s0i3 stats */
->> @@ -617,8 +665,7 @@ static void amd_pmc_s2idle_prepare(void)
->>  		}
->>  	}
->>  
->> -	msg = amd_pmc_get_os_hint(pdev);
->> -	rc = amd_pmc_send_cmd(pdev, arg, NULL, msg, false);
->> +	rc = amd_pmc_send_cmd(pdev, arg, NULL, pdev->cpu_info->os_hint, false);
->>  	if (rc) {
->>  		dev_err(pdev->dev, "suspend failed: %d\n", rc);
->>  		return;
->> @@ -659,10 +706,8 @@ static void amd_pmc_s2idle_restore(void)
->>  {
->>  	struct amd_pmc_dev *pdev = &pmc;
->>  	int rc;
->> -	u8 msg;
->>  
->> -	msg = amd_pmc_get_os_hint(pdev);
->> -	rc = amd_pmc_send_cmd(pdev, 0, NULL, msg, false);
->> +	rc = amd_pmc_send_cmd(pdev, 0, NULL, pdev->cpu_info->os_hint, false);
->>  	if (rc)
->>  		dev_err(pdev->dev, "resume failed: %d\n", rc);
->>  
->> @@ -709,22 +754,6 @@ static const struct dev_pm_ops amd_pmc_pm = {
->>  	.suspend = amd_pmc_suspend_handler,
->>  };
->>  
->> -static const struct pci_device_id pmc_pci_ids[] = {
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CB) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RV) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SP) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_SHP) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_VG) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
->> -	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
->> -	{ }
->> -};
->> -
->>  static int amd_pmc_probe(struct platform_device *pdev)
->>  {
->>  	struct amd_pmc_dev *dev = &pmc;
->> @@ -736,11 +765,15 @@ static int amd_pmc_probe(struct platform_device *pdev)
->>  
->>  	dev->dev = &pdev->dev;
->>  	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
->> -	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
->> +	if (!rdev) {
->>  		err = -ENODEV;
->>  		goto err_pci_dev_put;
->>  	}
->>  
->> +	err = amd_pmc_set_cpu_info(dev, rdev);
->> +	if (err)
->> +		goto err_pci_dev_put;
->> +
->>  	dev->cpu_id = rdev->device;
->>  	if (dev->cpu_id == AMD_CPU_ID_SP || dev->cpu_id == AMD_CPU_ID_SHP) {
->>  		dev_warn_once(dev->dev, "S0i3 is not supported on this hardware\n");
->> @@ -778,9 +811,6 @@ static int amd_pmc_probe(struct platform_device *pdev)
->>  	if (err)
->>  		goto err_pci_dev_put;
->>  
->> -	/* Get num of IP blocks within the SoC */
->> -	amd_pmc_get_ip_info(dev);
->> -
->>  	platform_set_drvdata(pdev, dev);
->>  	if (IS_ENABLED(CONFIG_SUSPEND)) {
->>  		err = acpi_register_lps0_dev(&amd_pmc_s2idle_dev_ops);
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
->> index fe3f53eb5955..4c3a4410790e 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.h
->> +++ b/drivers/platform/x86/amd/pmc/pmc.h
->> @@ -17,6 +17,10 @@
->>  /* SMU communication registers */
->>  #define AMD_PMC_REGISTER_RESPONSE	0x980
->>  #define AMD_PMC_REGISTER_ARGUMENT	0x9BC
->> +#define AMD_PMC_REGISTER_MESSAGE	0x538
->> +
->> +/* SMU communication registers for 1Ah 20h SoC */
->> +#define AMD_PMC_REGISTER_MSG_1AH_20H	0x938
->>  
->>  /* PMC Scratch Registers */
->>  #define AMD_PMC_SCRATCH_REG_CZN		0x94
->> @@ -90,6 +94,22 @@ struct stb_arg {
->>  	u32 resp;
->>  };
->>  
->> +struct amd_pmc_bit_map {
->> +	const char *name;
->> +	u32 bit_mask;
->> +};
->> +
->> +/* SoC-specific information */
->> +struct amd_pmc_cpu_info {
->> +	u32 smu_msg;
->> +	u32 smu_arg;
->> +	u32 smu_rsp;
->> +	u32 num_ips;
->> +	u32 scratch_reg;
->> +	const struct amd_pmc_bit_map *ips_ptr;
->> +	u8 os_hint;
->> +};
->> +
->>  struct amd_pmc_dev {
->>  	void __iomem *regbase;
->>  	void __iomem *smu_virt_addr;
->> @@ -99,9 +119,6 @@ struct amd_pmc_dev {
->>  	u32 cpu_id;
->>  	u32 dram_size;
->>  	u32 active_ips;
->> -	const struct amd_pmc_bit_map *ips_ptr;
->> -	u32 num_ips;
->> -	u32 smu_msg;
->>  /* SMU version information */
->>  	u8 smu_program;
->>  	u8 major;
->> @@ -116,11 +133,7 @@ struct amd_pmc_dev {
->>  	bool disable_8042_wakeup;
->>  	struct amd_mp2_dev *mp2;
->>  	struct stb_arg stb_arg;
->> -};
->> -
->> -struct amd_pmc_bit_map {
->> -	const char *name;
->> -	u32 bit_mask;
->> +	const struct amd_pmc_cpu_info *cpu_info;
->>  };
->>  
->>  struct smu_metrics {
->> @@ -151,20 +164,33 @@ void amd_pmc_quirks_init(struct amd_pmc_dev *dev);
->>  void amd_mp2_stb_init(struct amd_pmc_dev *dev);
->>  void amd_mp2_stb_deinit(struct amd_pmc_dev *dev);
->>  
->> -/* List of supported CPU ids */
->> -#define AMD_CPU_ID_RV			0x15D0
->> -#define AMD_CPU_ID_RN			0x1630
->> -#define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
->> -#define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
->> -#define AMD_CPU_ID_VG			0x1645
->> -#define AMD_CPU_ID_YC			0x14B5
->> -#define AMD_CPU_ID_CB			0x14D8
->> -#define AMD_CPU_ID_PS			0x14E8
->> -#define AMD_CPU_ID_SP			0x14A4
->> -#define AMD_CPU_ID_SHP			0x153A
->> -#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
->> -#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
->> -#define PCI_DEVICE_ID_AMD_MP2_STB	0x172c
->> +/* List of supported CPU/device IDs */
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_RV	0x15D0
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_RN	0x1630
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_PCO	PCI_DEVICE_ID_AMD_CPU_ID_RV
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_CZN	PCI_DEVICE_ID_AMD_CPU_ID_RN
-> 
-> sashiko found an interesting issue related to these (it seems 
-> pre-existing)...
-> 
-> If the PCI ID is same, the match can never return the second entry.
+> This isn't worth spinning the series over if it's the only comment (it
+> can be a follow up).
 
-Ack. I ran sashiko on v4 now and it does not have further complaints.
+Sure. Will take this into account in the follow on if there are no
+further comments on this.
 
 Thanks,
 Shyam
 
 > 
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_VG	0x1645
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_YC	0x14B5
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_CB	0x14D8
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_PS	0x14E8
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_SP	0x14A4
->> +#define PCI_DEVICE_ID_AMD_CPU_ID_SHP	0x153A
+>> +    help
+>> +      Enabling this option provides a character device for
+>> userspace to capture
+>> +      PMF features (Smart PC Builder, Auto Mode, Static Power
+>> Slider, Dynamic
+>> +      Power Slider AC/DC) along with PMF metrics from the AMD PMF
+>> driver.
 >> +
->> +/* Backward compatibility aliases */
->> +#define AMD_CPU_ID_RV		PCI_DEVICE_ID_AMD_CPU_ID_RV
->> +#define AMD_CPU_ID_RN		PCI_DEVICE_ID_AMD_CPU_ID_RN
->> +#define AMD_CPU_ID_PCO		PCI_DEVICE_ID_AMD_CPU_ID_PCO
->> +#define AMD_CPU_ID_CZN		PCI_DEVICE_ID_AMD_CPU_ID_CZN
->> +#define AMD_CPU_ID_VG		PCI_DEVICE_ID_AMD_CPU_ID_VG
->> +#define AMD_CPU_ID_YC		PCI_DEVICE_ID_AMD_CPU_ID_YC
->> +#define AMD_CPU_ID_CB		PCI_DEVICE_ID_AMD_CPU_ID_CB
->> +#define AMD_CPU_ID_PS		PCI_DEVICE_ID_AMD_CPU_ID_PS
->> +#define AMD_CPU_ID_SP		PCI_DEVICE_ID_AMD_CPU_ID_SP
->> +#define AMD_CPU_ID_SHP		PCI_DEVICE_ID_AMD_CPU_ID_SHP
+>> +      Say Y here to enable it and Say N here if you are not sure.
+>> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/
+>> platform/x86/amd/pmf/Makefile
+>> index 5978464e0eb7..bf7aad80b9e9 100644
+>> --- a/drivers/platform/x86/amd/pmf/Makefile
+>> +++ b/drivers/platform/x86/amd/pmf/Makefile
+>> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)        += amd-pmf.o
+>>   amd-pmf-y             := core.o acpi.o sps.o \
+>>                      auto-mode.o cnqf.o \
+>>                      tee-if.o spc.o
+>> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
+>> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
+>> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/
+>> x86/amd/pmf/core.c
+>> index b9e5a2cf3aae..58d86b4c2828 100644
+>> --- a/drivers/platform/x86/amd/pmf/core.c
+>> +++ b/drivers/platform/x86/amd/pmf/core.c
+>> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device
+>> *pdev)
+>>         pmf_device = dev->dev;
+>>   +    err = amd_pmf_cdev_register(dev);
+>> +    if (err)
+>> +        dev_warn(dev->dev, "failed to register util interface:
+>> %d\n", err);
 >> +
->> +#define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT		0x1507
->> +#define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT		0x1122
->> +#define PCI_DEVICE_ID_AMD_MP2_STB		0x172c
->>  
->>  int amd_stb_s2d_init(struct amd_pmc_dev *dev);
->>  int amd_stb_read(struct amd_pmc_dev *dev, u32 *buf);
->>
+>>       dev_info(dev->dev, "registered PMF device successfully\n");
+>>         return 0;
+>> @@ -643,6 +647,7 @@ static void amd_pmf_remove(struct
+>> platform_device *pdev)
+>>   {
+>>       struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+>>   +    amd_pmf_cdev_unregister();
+>>       amd_pmf_deinit_features(dev);
+>>       if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>>           amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
+>> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/
+>> x86/amd/pmf/pmf.h
+>> index 69fef7448744..6f61076a9386 100644
+>> --- a/drivers/platform/x86/amd/pmf/pmf.h
+>> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+>> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev,
+>> const uuid_t *uuid);
+>>   void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
+>>   int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
+>>   +/* Util Layer */
+>> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
+>> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
+>> +void amd_pmf_cdev_unregister(void);
+>> +#else
+>> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+>> { return 0; }
+>> +static inline void amd_pmf_cdev_unregister(void) {}
+>> +#endif
+>> +
+>>   #endif /* PMF_H */
+>> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/
+>> x86/amd/pmf/util.c
+>> new file mode 100644
+>> index 000000000000..f8a283192ffe
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/pmf/util.c
+>> @@ -0,0 +1,68 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * AMD Platform Management Framework Util Layer
+>> + *
+>> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> + *        Sanket Goswami <Sanket.Goswami@amd.com>
+>> + */
+>> +
+>> +#include <linux/amd-pmf.h>
+>> +#include <linux/miscdevice.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/uaccess.h>
+>> +
+>> +#include "pmf.h"
+>> +
+>> +static struct amd_pmf_dev *pmf_dev_handle;
+>> +static DEFINE_MUTEX(pmf_util_lock);
+>> +
+>> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd,
+>> unsigned long arg)
+>> +{
+>> +    return -ENOTTY;
+>> +}
+>> +
+>> +static int amd_pmf_open(struct inode *inode, struct file *filp)
+>> +{
+>> +    guard(mutex)(&pmf_util_lock);
+>> +    if (!pmf_dev_handle)
+>> +        return -ENODEV;
+>> +
+>> +    filp->private_data = pmf_dev_handle;
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct file_operations pmf_if_ops = {
+>> +    .owner          = THIS_MODULE,
+>> +    .open           = amd_pmf_open,
+>> +    .unlocked_ioctl = amd_pmf_set_ioctl,
+>> +};
+>> +
+>> +static struct miscdevice amd_pmf_util_if = {
+>> +    .minor        = MISC_DYNAMIC_MINOR,
+>> +    .name        = "amdpmf_interface",
+>> +    .fops        = &pmf_if_ops,
+>> +};
+>> +
+>> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+>> +{
+>> +    int ret;
+>> +
+>> +    guard(mutex)(&pmf_util_lock);
+>> +    pmf_dev_handle = dev;
+>> +    ret = misc_register(&amd_pmf_util_if);
+>> +    if (ret)
+>> +        pmf_dev_handle = NULL;
+>> +
+>> +    return ret;
+>> +}
+>> +
+>> +void amd_pmf_cdev_unregister(void)
+>> +{
+>> +    guard(mutex)(&pmf_util_lock);
+>> +    if (pmf_dev_handle)
+>> +        misc_deregister(&amd_pmf_util_if);
+>> +    pmf_dev_handle = NULL;
+>> +}
+>> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-
+>> pmf.h
+>> new file mode 100644
+>> index 000000000000..bbbd39b2ce15
+>> --- /dev/null
+>> +++ b/include/uapi/linux/amd-pmf.h
+>> @@ -0,0 +1,71 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-
+>> note */
+>> +/*
+>> + * AMD Platform Management Framework (PMF) UAPI Header
+>> + *
+>> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+>> + * All Rights Reserved.
+>> + *
+>> + * This file defines the user-space API for interacting with the
+>> AMD PMF
+>> + * driver. It provides ioctl interfaces to query platform-specific
+>> metrics
+>> + * such as power source, slider position, platform type, laptop
+>> placement,
+>> + * and various BIOS input/output parameters.
+>> + */
+>> +
+>> +#ifndef _UAPI_LINUX_AMD_PMF_H
+>> +#define _UAPI_LINUX_AMD_PMF_H
+>> +
+>> +#include <linux/bits.h>
+>> +#include <linux/ioctl.h>
+>> +#include <linux/types.h>
+>> +
+>> +/**
+>> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
+>> + *
+>> + * This magic number uniquely identifies AMD PMF ioctl operations.
+>> + */
+>> +#define AMD_PMF_IOC_MAGIC    'p'
+>> +
+>> +/**
+>> + * IOCTL_AMD_PMF_POPULATE_DATA - ioctl command to retrieve PMF
+>> metrics data
+>> + *
+>> + * This ioctl command is used to populate the amd_pmf_info structure
+>> + * with the requested PMF metrics information.
+>> + */
+>> +#define IOCTL_AMD_PMF_POPULATE_DATA        _IOWR(AMD_PMF_IOC_MAGIC,
+>> 0x00, __u64)
+>> +
+>> +#define AMD_PMF_BIOS_PARAMS_MAX        10
+>> +
+>> +/* AMD PMF feature flags - bitmask indicating supported features */
+>> +#define AMD_PMF_FEAT_AUTO_MODE            BIT(0)
+>> +#define AMD_PMF_FEAT_STATIC_POWER_SLIDER    BIT(1)
+>> +#define AMD_PMF_FEAT_POLICY_BUILDER        BIT(2)
+>> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC    BIT(3)
+>> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC    BIT(4)
+>> +
+>> +struct amd_pmf_info {
+>> +    __u64 size;
+>> +
+>> +    /* Feature info */
+>> +    __u32 features_supported;
+>> +
+>> +    /* Power and state info */
+>> +    __u32 platform_type;
+>> +    __u32 power_source;
+>> +    __u32 laptop_placement;
+>> +    __u32 lid_state;
+>> +    __u32 user_presence;
+>> +    __u32 slider_position;
+>> +
+>> +    /* Thermal and power metrics */
+>> +    __s32 skin_temp;
+>> +    __u32 gfx_busy;
+>> +    __s32 ambient_light;
+>> +    __u32 avg_c0_residency;
+>> +    __u32 max_c0_residency;
+>> +    __u32 socket_power;
+>> +
+>> +    /* BIOS parameters */
+>> +    __u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+>> +};
+>> +
+>> +#endif /* _UAPI_LINUX_AMD_PMF_H */
 > 
-> --
->  i.
 
