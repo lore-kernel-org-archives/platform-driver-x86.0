@@ -1,211 +1,194 @@
-Received: from smtp-42aa.mail.infomaniak.ch (smtp-42aa.mail.infomaniak.ch [84.16.66.170])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011023.outbound.protection.outlook.com [40.107.208.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD9E3E51F8;
-	Tue,  9 Jun 2026 10:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781000582; cv=none; b=Om1n5LjOJtNCJ/2aZ/9py4pUxy11In5T2IGxIkgGpS0TmaGBrLxD6ULyz6gUmC424ZC0Kz0m9EZwNGZCtCO5cgeG+bBUq3NsOjUNdjzD5Li8NV7cELAw1y5iToloo87krajyzs/93FgQEU1mm8B97n5YZRtpwEDt3OtYCbV1Xuo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781000582; c=relaxed/simple;
-	bh=Ajh6vSMFe9OosdTju7MhzYoCTfhEnggFFu5Iyu+JvaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iY2ARndaJI3hEr1zCU26ioAnv/LfOwrkgkyegPqKkMwBOv/GGvF23OuFDkP7SD0j1k0QqS0WhKe4VDKsvnqFHEzTBexq4LFuO/D/Wgrfl9JdM0TnoKcwbiJFSPQDXG5bIDz1jnjOsDMV/U/AJcnP2V/9fkPtJnLsAfrIfSJpW6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=YVl+t1Lq; arc=none smtp.client-ip=84.16.66.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8B23FADFA;
+	Tue,  9 Jun 2026 10:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781002415; cv=fail; b=Qtp+0DGTVHmFhNyioaPZrILQKjJfYZEnH0J/Y1nbpopZGpOz4gr3KTbr0cn+wE4VbAso4ZU/Tkt7z1+ZR5xxY5Glgf8RNJH9CyDqQYtiB+f01pz5U4iEjRICRi77hnJxoT3kWN15Rm17qvwIF7VVqAPvesjs1lb8o/OUJB7lFE4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781002415; c=relaxed/simple;
+	bh=lKtu2QaOeSOlUVDyt/2by+jQrfWq3ppXeCu8t0pLXZA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TBfzV/NngJlvZUoeGQmDC2RdGgweGKWAtLcl4+LgPKZB73PvPxFZJBDD0hONtkagKVsuzXUj0zB5uMqalQzCLV8SSrlSxTIKUSmQ6Lv7freu51wZ1TfrUxMMBEiZPPtaR796xRqfG9+ANP8e1zggJe8nwmqVWk1shVUoGb8BlD0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ec73LiHy; arc=fail smtp.client-ip=40.107.208.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="YVl+t1Lq"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gZQ2z46l9z6x0;
-	Tue,  9 Jun 2026 12:22:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1781000571;
-	bh=yeMqVriOtLVHk3LxXpmJn2YqXFvAY9KPxJFyY7Fl80g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YVl+t1Lq/q3EJ4veMsT0eCjtnW1rOPGK+IL7uL/e9IBtgV832OlQViPQv3sD0S7Ys
-	 mDdeWkmM6nWOotfqspiLCT09n5BQGRJl97EACf2D2d0XmPBBUqnLiWHxzsM0gW3ciy
-	 rBq0ZhST1N9NY03vBRUV3A4c2u4tVUXuVUi6mlEtyIDoPopnUVRhluZQSEdvM5u5V4
-	 ojZFe2Qwl1Ipnff6H119qM/ZKaWO2VjO3HzkoyVrJwclNwDPK1Ka/uJOZy5f/4rc5n
-	 2lnqKHK17IKAC/TbPmGM11GVPi9jQnxHczrBuM/gwW/2XAPTx1SvXgl6I6qluYMDVp
-	 WR7O/Oyibnfrg==
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gZQ2y0p7rzy2j;
-	Tue,  9 Jun 2026 12:22:49 +0200 (CEST)
-Message-ID: <f0ab78e8-7117-4ac1-bc31-ef9502a8ee42@gibson.sh>
-Date: Tue, 9 Jun 2026 12:22:49 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ec73LiHy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y96ewjOe2J6yqfyBL5YIk5qIBoNLAHMOBd3HdEAEyakr3GaNm72ldmk2y9s1V0rwbMdhcxr5kmXORM+F0NjFDAKVPX4FOOEYUlM1UEcNBKen1WM3Q7HVagZs6kCyZJF4XyxsEWj5Zv0rgKqHzhEnxExh5HYsMyxE8rRSerQqP0FCYCEjJyqJqMAzjhCRIFChDE4u+2baH+fb0CUbtrvAUUPPKGwJ4qc8IUPijtKqSVIUYDynbi0lpewDkrGJSJMYsmEHj/M7HIm29U5GZdFHY14aRkDiTiZIeidWnC8c+XZwmEF+Cxmoq+LQIrBGCzd2UltrAMsVwfXzT5lJMP2b6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dr+i2fxQxf5fGBHvyEkak5IKxmrh09ciVMZ7jV6bCMM=;
+ b=JQXRriFxS6VqjcCaQjzobRkCF9A6B4fx6UF215j3dz1jk+PZtUfUXVRSUylAegNNAmt6e+LgnbBWkx7q2C7+gVsFXDri+LOmfU5XIj1q1KBnpTY9tz44vYMhM0QR2eFqrz+JCOl0pTZ4ryqXgGNqiu2VjDJXWqAVpe2IqSp4wRCFo4wAuf7ypHje+9x9TMo5JOSxofwzbvjqDg3KUhx2j8MrNZg15xf3MbSQv9ETmVLtFfI12Br7Oyh2GiB3JCfU87KvMMrb/FAkCAJHAZx6Hk+oc8e5O62SwoIaw7haDAOlFkDWP/AeXaDXbEF++w58jGF5XfuSh8J7/9fUJ+IO6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 198.47.23.195) smtp.rcpttodomain=hp.com smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dr+i2fxQxf5fGBHvyEkak5IKxmrh09ciVMZ7jV6bCMM=;
+ b=ec73LiHyGbTm8llaRd5q5sTZqNqry+vezlDFBslnUOuyVXJQTQJJPq8fH7vcskwu36wJVGeB3t514VyPfor6rfoUcy8L5Qbr2cjVTbvdh4L9EMO0xjeeM/8454Ur8DeV35dfGfOv2s72bSANI8dPu8APemvFODx6bNTZVNx326U=
+Received: from BL1P221CA0008.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:2c5::28)
+ by SA3PR10MB6999.namprd10.prod.outlook.com (2603:10b6:806:318::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.14; Tue, 9 Jun 2026
+ 10:53:30 +0000
+Received: from BN3PEPF0000B077.namprd04.prod.outlook.com
+ (2603:10b6:208:2c5:cafe::48) by BL1P221CA0008.outlook.office365.com
+ (2603:10b6:208:2c5::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.11 via Frontend Transport; Tue, 9
+ Jun 2026 10:53:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
+Received: from lewvzet201.ext.ti.com (198.47.23.195) by
+ BN3PEPF0000B077.mail.protection.outlook.com (10.167.243.122) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.113.7 via Frontend Transport; Tue, 9 Jun 2026 10:53:30 +0000
+Received: from DLEE213.ent.ti.com (157.170.170.116) by lewvzet201.ext.ti.com
+ (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 9 Jun
+ 2026 05:53:25 -0500
+Received: from DLEE215.ent.ti.com (157.170.170.118) by DLEE213.ent.ti.com
+ (157.170.170.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 9 Jun
+ 2026 05:53:25 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE215.ent.ti.com
+ (157.170.170.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
+ Transport; Tue, 9 Jun 2026 05:53:25 -0500
+Received: from lelvem-mr05.itg.ti.com ([10.250.165.105])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 659ArJGA1492810;
+	Tue, 9 Jun 2026 05:53:20 -0500
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>, <hansg@kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>, <shenghao-ding@ti.com>,
+	<13916275206@139.com>, <platform-driver-x86@vger.kernel.org>,
+	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<baojun.xu@ti.com>, <letitia.tsai@hp.com>, <bill.yu@canonical.com>,
+	<pin-hao.huang@hp.com>
+Subject: [PATCH v1] ALSA: hda/tas2781: Fix device-0 reset issue and handle -EXDEV in block data processing
+Date: Tue, 9 Jun 2026 18:52:53 +0800
+Message-ID: <20260609105253.19510-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.43.0.windows.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/3] platform/x86/amd/pmc: Delay suspend for some
- Lenovo Laptops
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Mario Limonciello <superm1@kernel.org>,
- Sindre Henriksen <sindrehenriksen93@gmail.com>, stable@vger.kernel.org
-References: <20260606044758.2213401-1-daniel@gibson.sh>
- <20260606044758.2213401-2-daniel@gibson.sh>
- <5f0dcb89-0e76-d6eb-a6b0-201a0ed1cd22@linux.intel.com>
-Content-Language: de-DE, en-GB
-From: Daniel Gibson <daniel@gibson.sh>
-In-Reply-To: <5f0dcb89-0e76-d6eb-a6b0-201a0ed1cd22@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B077:EE_|SA3PR10MB6999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90438710-cdeb-4e8c-3c00-08dec61557c2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|7416014|18002099003|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	Ucef/OjuzA1mbctWhPAI1rtyPI78CluBRAmb+mRcVvlMLcs1ic2JCgUb9ZgqBeXY6PkMH+wuNkbUJtgrylKebaz7+zV3xjkN6ZK61GeZ0gmuoDNIi7lchgOHQ+tA4n4lGonnZqUE9kf4/qRsQNoGSp/9WwaWvcUGQ6zPyG/JV2ZoinR7hU9gnAmlx4NRWdz74EyiZ72x6ceRJC7Sqt8jZpiRollfLRA05S1inblZEdI4VKdimowlqeNzyf8NpF1gHZuBTz1qg9i+/QhQQVRFBY2hjZ/WpaiopIOqP7zRQr+tSmAHUbab5HSHZ3DeI9zIN166/5VDX++HsZ5wxUjL2pyTLg/vBAwKejLc0AJq2kTRqna7cR78Nd7TVpjyEr7nX3dIawXVey9S5xy4u4vI3+vIgGRTSCAVPcPBwE9LZ+yTj+LJZZU3wanqdDyxYhtaKk9AhvGSRUimn2MxMsXlKg45+Rvc3ptwsGo3QKbdGx6yrWLiL7bXGJLB60x4E/XYa9ZOrKeFR3+Ws7RtKOM+zfJmMC46tnB3/qBI3i829N8tshKeKEgfSpmX8EXqGpNT8R4kBGYanh2f2U1MqXH0O/vgV21nsD7rAy1vvLZg3QzMLHXuvjvCqZ3hCE8cqxFlrpQbC2eyKdz8cQgE64gXE7PAOTur5BEYHicJno6ipXJ6dsgmZZHAoVdf46Lhvzt6XFB6KE0ixDkyRgnTH+9Xt78BC66FWuJvZyYFRBh6EAU=
+X-Forefront-Antispam-Report:
+	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(7416014)(18002099003)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	RsBwETNLcWX5BvDKP4isWUXyMOKwLci7mmEwrZx/V+gwHAxqlmEHCyG//Pu8EpZ25uZ5UCMxzMDBxI79ncZ/JYy+DkHkFZkt5COvRii9VjdjqutYoC8OmsbggKaTgkYQT7iTrqS7KNoT0fh5/OfltvE5wRnL0MJOoMih/rzNgzouL636aokGbbb21CK6dubn1G217zod1j8zUbaHGHqCOltJUj+m2eC2G4494gK88kwYTA0lN1OM4JokzDb/5omG+VofBBsmCITeIe+9e+BgHbIa+Bm7LbTRmp70WE4enBrJuHy4WHwEa4nf2ZmR21IQQDTssT81H7u35pwC8nqjnair1BiUXJ/neGnLI7GxtUy1e7//8kChyWWvzAYg0eDrLqpc8Kl+C5GuzBIXtV10swj4ktATdA6g9pCZZVDjSrLC8JH05UCc/2G3mPlvpNle
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 10:53:30.0978
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90438710-cdeb-4e8c-3c00-08dec61557c2
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B077.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR10MB6999
 
-On 09.06.26 12:07, Ilpo Järvinen wrote:
-> On Sat, 6 Jun 2026, Daniel Gibson wrote:
-> 
->> Some IdeaPad Slim 3 devices and similar with AMD CPUs have a
->> nonfunctional keyboard and lid switch after s2idle.
->>
->> It helps to delay suspend by 2.5 seconds so the EC has some time
->> to do whatever it needs to get done before suspend - unfortunately
->> at least on my 16ABR8 waking it with a timer (wakealarm) still
->> triggers the issue, but at least normal resume via keypress or
->> lid works fine. On the 14ARP10 wakealarm has been reported to also
->> work fine with this patch.
->>
->> This issue has been reported for many different devices, this patch
->> has been tested with the Zen3-based IdeaPad Slim 3 16ABR8 (82XR)
->> and the Zen3+-based IdeaPad Slim 3 14ARP10 (83K6) and IdeaPad Slim 3
->> 15ARP10 (83MM).
->>
->> Reported-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221383
->> Tested-by: Sindre Henriksen <sindrehenriksen93@gmail.com>
->> Suggested-by: Mario Limonciello (AMD) <superm1@kernel.org>
->> Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
->> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
->> Cc: stable@vger.kernel.org
->> ---
->>  drivers/platform/x86/amd/pmc/pmc-quirks.c | 39 +++++++++++++++++++++++
->>  drivers/platform/x86/amd/pmc/pmc.c        | 24 +++++++++++++-
->>  drivers/platform/x86/amd/pmc/pmc.h        |  1 +
->>  3 files changed, 63 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
->> index 24506e342943..74ddf1d8289a 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
->> @@ -18,6 +18,7 @@
->>  struct quirk_entry {
->>  	u32 s2idle_bug_mmio;
->>  	bool spurious_8042;
->> +	bool need_suspend_delay;
->>  };
->>  
->>  static struct quirk_entry quirk_s2idle_bug = {
->> @@ -33,6 +34,10 @@ static struct quirk_entry quirk_s2idle_spurious_8042 = {
->>  	.spurious_8042 = true,
->>  };
->>  
->> +static struct quirk_entry quirk_s2idle_need_suspend_delay = {
->> +	.need_suspend_delay = true,
->> +};
->> +
->>  static const struct dmi_system_id fwbug_list[] = {
->>  	{
->>  		.ident = "L14 Gen2 AMD",
->> @@ -203,6 +208,35 @@ static const struct dmi_system_id fwbug_list[] = {
->>  			DMI_MATCH(DMI_PRODUCT_NAME, "82XQ"),
->>  		}
->>  	},
->> +	/* https://bugzilla.kernel.org/show_bug.cgi?id=221383 */
->> +	{
->> +		.ident = "Zen3-based IdeaPad Slim and similar",
->> +		.driver_data = &quirk_s2idle_need_suspend_delay,
->> +		.matches = {
->> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
->> +			/*
->> +			 * Note: there are also some Zen2-based 82X* devices that
->> +			 * need different quirks, they're already handled above
->> +			 */
->> +			DMI_MATCH(DMI_PRODUCT_NAME, "82X"),
->> +		}
->> +	},
->> +	{
->> +		.ident = "Zen3+-based IdeaPad Slim and similar",
->> +		.driver_data = &quirk_s2idle_need_suspend_delay,
->> +		.matches = {
->> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
->> +			DMI_MATCH(DMI_PRODUCT_NAME, "83K"),
->> +		}
->> +	},
->> +	{
->> +		.ident = "IdeaPad Slim 3 15ARP10 (83MM)",
->> +		.driver_data = &quirk_s2idle_need_suspend_delay,
->> +		.matches = {
->> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
->> +			DMI_MATCH(DMI_PRODUCT_NAME, "83MM"),
->> +		}
->> +	},
->>  	/* https://bugzilla.kernel.org/show_bug.cgi?id=221273 */
->>  	{
->>  		.ident = "Thinkpad L14 Gen3",
->> @@ -356,6 +390,11 @@ void amd_pmc_process_restore_quirks(struct amd_pmc_dev *dev)
->>  		amd_pmc_skip_nvme_smi_handler(dev->quirks->s2idle_bug_mmio);
->>  }
->>  
->> +bool amd_pmc_quirk_need_suspend_delay(struct amd_pmc_dev *dev)
->> +{
->> +	return dev->quirks && dev->quirks->need_suspend_delay;
->> +}
->> +
->>  void amd_pmc_quirks_init(struct amd_pmc_dev *dev)
->>  {
->>  	const struct dmi_system_id *dmi_id;
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
->> index 2b9e5730170a..6bafd8661d68 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->> @@ -611,6 +611,27 @@ static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
->>  	return get_metrics_table(pdev, &table) == 0 && table.s0i3_last_entry_status;
->>  }
->>  
->> +static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
->> +{
->> +	/*
->> +	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
->> +	 * me-time before sleeping or they get uncooperative after waking
->> +	 * up and don't send events for keyboard and lid switch anymore.
->> +	 *
->> +	 * Unfortunately this doesn't entirely fix the problem: It can still
->> +	 * happen when resuming with a timer (wakealarm), but at least the
->> +	 * more common usecases (wakeup by opening lid or pressing a key)
->> +	 * work fine with this workaround.
->> +	 *
->> +	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
->> +	 */
->> +	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
->> +		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
->> +		return true;
->> +	}
->> +	return false;
->> +}
->> +
->>  static void amd_pmc_s2idle_prepare(void)
->>  {
->>  	struct amd_pmc_dev *pdev = &pmc;
->> @@ -647,7 +668,8 @@ static void amd_pmc_s2idle_check(void)
->>  	struct amd_pmc_dev *pdev = &pmc;
->>  	int rc;
->>  
->> -	if (amd_pmc_intermediate_wakeup_need_delay(pdev))
->> +	if (amd_pmc_intermediate_wakeup_need_delay(pdev) ||
->> +	    amd_pmc_want_suspend_delay(pdev))
-> 
-> This doesn't seem to apply to the review-ilpo-next branch. You might have 
-> left the first patch of the series out from this v4?
-> 
-> Please send v5 to correct the problem.
-> 
+Fix reset for device-0:‌ In older projects (e.g., Merino), the hardware
+reset pin for the first SPI device (device-0) is ineffective, causing
+initialization failures. Added a software reset sequence for device-0
+to ensure proper initialization.
 
-Damn, how did this happen..
-You're right of course, sorry for this, will send v5!
+‌Handle -EXDEV correctly:‌ When processing block data, if the data does
+not belong to the current SPI device, the driver returned -EXDEV.
+This error code is now ignored to allow the driver to continue iterating
+through the block data and correctly calculate the total block size.
+
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
+---
+ sound/hda/codecs/side-codecs/tas2781_hda_spi.c | 16 ++++++++--------
+ sound/soc/codecs/tas2781-fmwlib.c              |  7 ++++---
+ 2 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
+index 0efc476abe8e..3978d58ad020 100644
+--- a/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
++++ b/sound/hda/codecs/side-codecs/tas2781_hda_spi.c
+@@ -190,15 +190,15 @@ static void tas2781_spi_reset(struct tasdevice_priv *tas_dev)
+ 		gpiod_set_value_cansleep(tas_dev->reset, 0);
+ 		fsleep(800);
+ 		gpiod_set_value_cansleep(tas_dev->reset, 1);
+-	} else {
+-		ret = tasdevice_dev_write(tas_dev, tas_dev->index,
+-			TASDEVICE_REG_SWRESET, TASDEVICE_REG_SWRESET_RESET);
+-		if (ret < 0) {
+-			dev_err(tas_dev->dev, "dev sw-reset fail, %d\n", ret);
+-			return;
+-		}
+-		fsleep(1000);
+ 	}
++
++	ret = tasdevice_dev_write(tas_dev, tas_dev->index,
++		TASDEVICE_REG_SWRESET, TASDEVICE_REG_SWRESET_RESET);
++	if (ret < 0) {
++		dev_err(tas_dev->dev, "dev sw-reset fail, %d\n", ret);
++		return;
++	}
++	fsleep(1000);
+ }
+ 
+ static int tascodec_spi_init(struct tasdevice_priv *tas_priv,
+diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+index 885e0b6fed00..bd16d5326a23 100644
+--- a/sound/soc/codecs/tas2781-fmwlib.c
++++ b/sound/soc/codecs/tas2781-fmwlib.c
+@@ -921,7 +921,8 @@ static int tasdevice_process_block(void *context, unsigned char *data,
+ 						data[subblk_offset + 1],
+ 						data[subblk_offset + 2]),
+ 					data[subblk_offset + 3]);
+-				if (rc < 0) {
++				if (rc < 0 &&
++				    !(tas_priv->isspi && rc == -EXDEV)) {
+ 					is_err = true;
+ 					dev_err(tas_priv->dev,
+ 					"process_block: single write error\n");
+@@ -953,7 +954,7 @@ static int tasdevice_process_block(void *context, unsigned char *data,
+ 				data[subblk_offset + 1],
+ 				data[subblk_offset + 2]),
+ 				&(data[subblk_offset + 4]), len);
+-			if (rc < 0) {
++			if (rc < 0 && !(tas_priv->isspi && rc == -EXDEV)) {
+ 				is_err = true;
+ 				dev_err(tas_priv->dev,
+ 					"%s: bulk_write error = %d\n",
+@@ -991,7 +992,7 @@ static int tasdevice_process_block(void *context, unsigned char *data,
+ 				data[subblk_offset + 4]),
+ 				data[subblk_offset + 1],
+ 				data[subblk_offset + 5]);
+-			if (rc < 0) {
++			if (rc < 0 && !(tas_priv->isspi && rc == -EXDEV)) {
+ 				is_err = true;
+ 				dev_err(tas_priv->dev,
+ 					"%s: update_bits error = %d\n",
+-- 
+2.25.1
 
