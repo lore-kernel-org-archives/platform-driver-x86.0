@@ -1,142 +1,243 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC343FBEC6
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 10:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5884B2E7BD3;
+	Tue,  9 Jun 2026 10:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781002705; cv=none; b=CmUel0GlY/obx1IdrGMhaS1j3JtgR7A8W8XSEfHrQZRsWjy36I79iIk6J/tlpH2VS+tCot9yjWGFSI18tyrEWeCZwTo4y2pcXIkTFM53MlO3oCCNCmwOwMY803cBXpI1Eup+KhuR9YS62iYdsd3yq+wIniLWFW7P+XePq4FpsWM=
+	t=1781002708; cv=none; b=AgA1MzFztJKjZZCECssnMen7mfScV0ADmwDIIl8qNkLfPKb2euvpWp2saNDfbN8HjueJTImH5Bz9+76HyXdbVik6HxVPaRNJ+dLAF4xa9Q7jVt8L65nA8+rGU/9tV+X3FB5C7VL19kPiqlEWX1culoW7Vh7/JVeC40bnSRLFKwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781002705; c=relaxed/simple;
-	bh=M1A9gD7X6gXB0dTWu3h448vP0Rf9oI6FOiiPR6yq9qs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yd7aHnQtjvgZwAwNIcnG0F3OMmV1tb0hW6bqv5aAa+1Gml3CMzcRd3Rg5D71sBl+2zzeqIgvMxvSLvOuv08iG8Y9px7ak6oj9mObs8M1F7tz6Wa8TgBB1Hl4y6Q//PPdqX/Jl8lIrLa/GPHTvqA6qvZa9y0sZQ8qKB5eej7DmTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=BEPiZbLa; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	s=arc-20240116; t=1781002708; c=relaxed/simple;
+	bh=++4+KxcMjGGzEoSnNSLStRQBkWqUUWOHqXXD7awHZig=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MkhcVSCStl1NjN6/zdVNd8xfWf+eAE+S3RA5Rf8TpQdlZLze/kF6zWDiaO0EWeZMz+ArkNDnw+HPAheuaas/hzEs8dvjl3L/yZsUFxi9ib6TOQMQA+V/bBhHD7Mg7MFkOlHaOw1ZpM3AHSqyZcB9wyUgrXGN4g+f5H6vWB32BH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n5GFleue; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="BEPiZbLa"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gZQqr2HrvzVk4
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 12:58:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1781002696;
-	bh=xL9Wmfy6tcQwSBF4u677x1KJpU5voV9UhHVpCbQJgHw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BEPiZbLaFoBlMZfmIkbyFoG2xEMmT0U7a7QCzN30M2AcgQTwUCG/eOOuNlzNaz/gE
-	 e4xsOJN+/kpEDYewSW+zDtVM+vi2TLqdGmRMDm52nS6BiaDklFyMHB+uX3nXijCARA
-	 QeZyAYofAZ7s3l7DF0ze5ShIcFspYdeBUypnD5y5Xt7PkAEncT5Mp+tznThwBaPZA+
-	 eSPO2pZQApdr7iNbElGoSriP5WmKZgI8aDRjhCfIlJYr3P/rM9feYL902dkWyh1Uyp
-	 9/95qENrVXD9dWR3qZlMACVrXn052d01U36pbCNy3qznK/JJUi4xewd5TJWfJqsErt
-	 gOgrbsMTlnXOw==
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4gZQqq5HtfzWdN
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 12:58:15 +0200 (CEST)
-Received: from unknown by spiderdemon.horst.lan (DragonFly Mail Agent v0.13);
-	Tue, 09 Jun 2026 12:58:15 +0200
-From: Daniel Gibson <daniel@gibson.sh>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>
-Cc: Daniel Gibson <daniel@gibson.sh>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v5 3/4] platform/x86/amd/pmc: Add delay_suspend module parameter
-Date: Tue,  9 Jun 2026 12:57:55 +0200
-Message-ID: <20260609105756.2813669-4-daniel@gibson.sh>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20260609105756.2813669-1-daniel@gibson.sh>
-References: <20260609105756.2813669-1-daniel@gibson.sh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n5GFleue"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781002707; x=1812538707;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=++4+KxcMjGGzEoSnNSLStRQBkWqUUWOHqXXD7awHZig=;
+  b=n5GFleue4FljzExPDP276su9t2YCvmUjNSNOP2H270nbNahEaum9/dbW
+   g/x9dDkFStVTzE6pXuS4W1eXSOTc0sPsQEqC7QdUtGM3PzU7LQbXWjHGz
+   WKDFHQdaln5oChmS4MSHuJirUsH6gRX/M58P0qVOIERnW7FWHU6NM0HxW
+   rzHTg5CIupY6w6JVyoUxxMOKto7PrCP+eAD1p53b92mfv6K8A3CwPFEcm
+   tnd4Ov70PJAvbieXzVta18WJ87NB5+K98SfZJGC7sq1Zf+RJGx71YZ3qE
+   18Oy+K13O0i596sqLrobEOLOO2qHeYkn5O0wh8Lq8G9x3iWFxRquByKIS
+   g==;
+X-CSE-ConnectionGUID: 3d9footaSz+LbcsFwh0wTw==
+X-CSE-MsgGUID: yjyzcG4oS/Ka3hoPJlwXcg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11811"; a="85382182"
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="85382182"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 03:58:26 -0700
+X-CSE-ConnectionGUID: 93QqFGlQT3CFncaGgCTKyQ==
+X-CSE-MsgGUID: /cX+F6J0QjCuVh8xtpwmQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="269849655"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.81])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 03:58:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 9 Jun 2026 13:58:14 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: Dell.Client.Kernel@dell.com, pali@kernel.org, mjg59@srcf.ucam.org, 
+    soyer@irl.hu, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux@roeck-us.net, linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v5 1/9] platform/x86: dell-descriptor: Use new buffer-based
+ WMI API
+In-Reply-To: <20260605205937.530897-2-W_Armin@gmx.de>
+Message-ID: <c87a0403-6339-7ac3-9a90-3b5bca87bb7d@linux.intel.com>
+References: <20260605205937.530897-1-W_Armin@gmx.de> <20260605205937.530897-2-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
 
-Enabling the new delay_suspend module parameter delays suspend for
-2.5 seconds which is known to help for some AMD-based Lenovo Laptops
-that otherwise failed to send/receive events for key presses or the
-lid switch after s2idle. Apparently the EC needs to do some things
-in the background before suspend or it gets into a bad state.
+On Fri, 5 Jun 2026, Armin Wolf wrote:
 
-There are many reports of AMD-based laptops (mostly but not exclusively
-IdeaPads) about similar issues on the web; this parameter gives
-affected users an easy way to try out if their issues have the same
-root cause and to work around them until their specific device is added
-to the quirks list.
+> Use the new buffer-based WMI API to also support ACPI firmware
+> implementations that do not use ACPI buffers for the descriptor.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  .../platform/x86/dell/dell-wmi-descriptor.c   | 108 ++++++++----------
+>  1 file changed, 48 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.c b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> index c2a180202719..5f5e9f38988e 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+> @@ -7,14 +7,34 @@
+>  
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+> -#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/compiler_attributes.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> +#include <linux/types.h>
+>  #include <linux/wmi.h>
+>  #include "dell-wmi-descriptor.h"
+>  
+>  #define DELL_WMI_DESCRIPTOR_GUID "8D9DDCBC-A997-11DA-B012-B622A1EF5492"
+>  
+> +/*
+> + * Descriptor buffer is 128 byte long and contains:
+> + *
+> + *       Name             Offset  Length  Value
+> + * Vendor Signature          0       4    "DELL"
+> + * Object Signature          4       4    " WMI"
+> + * WMI Interface Version     8       4    <version>
+> + * WMI buffer length        12       4    <length>
+> + * WMI hotfix number        16       4    <hotfix>
+> + */
+> +struct descriptor {
+> +	char vendor_signature[4];
+> +	char object_signature[4];
 
-The parameter description has a note encouraging users to report
-their device so it can be added to the quirks list, inspired by a
-similar request in parameter descriptions of the ideapad-laptop module.
+I suggest adding comment that these are not NUL terminated strings, it's 
+a bit trappy.
 
-The module parameter can be set to "1" to explicitly enable it,
-"0" to disable it even on devices that are assumed to be affected,
-or -1 (the default) to enable it if the device is assumed to be affected
-(according to fwbug_list[])
+> +	__le32 interface_version;
+> +	__le32 buffer_length;
+> +	__le32 hotfix_number;
+> +} __packed;
+> +
+>  struct descriptor_priv {
+>  	struct list_head list;
+>  	u32 interface_version;
+> @@ -88,77 +108,47 @@ bool dell_wmi_get_hotfix(u32 *hotfix)
+>  }
+>  EXPORT_SYMBOL_GPL(dell_wmi_get_hotfix);
+>  
+> -/*
+> - * Descriptor buffer is 128 byte long and contains:
+> - *
+> - *       Name             Offset  Length  Value
+> - * Vendor Signature          0       4    "DELL"
+> - * Object Signature          4       4    " WMI"
+> - * WMI Interface Version     8       4    <version>
+> - * WMI buffer length        12       4    <length>
+> - * WMI hotfix number        16       4    <hotfix>
+> - */
+> -static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
+> -				     const void *context)
+> +static int dell_wmi_descriptor_probe(struct wmi_device *wdev, const void *context)
+>  {
+> -	union acpi_object *obj = NULL;
+> +	struct descriptor *desc __free(kfree) = NULL;
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
-Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Signed-off-by: Daniel Gibson <daniel@gibson.sh>
-Cc: stable@vger.kernel.org
----
- drivers/platform/x86/amd/pmc/pmc.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+This should not be here but down where the real assignment is. I'm pretty 
+sure the placement of __free() was discussed earlier in the context of the 
+wmi refactor patches.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 6bafd8661d68..2d3d180c15d2 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -16,6 +16,7 @@
- #include <linux/bits.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-+#include <linux/dmi.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/limits.h>
-@@ -89,6 +90,11 @@ static bool disable_workarounds;
- module_param(disable_workarounds, bool, 0644);
- MODULE_PARM_DESC(disable_workarounds, "Disable workarounds for platform bugs");
- 
-+static int delay_suspend = -1;
-+module_param(delay_suspend, int, 0644);
-+MODULE_PARM_DESC(delay_suspend,
-+		 "Delays s2idle by 2.5 seconds to work around buggy ECs, often causing keyboard issues after suspend. 0: don't delay, 1: do delay, -1 (default): let amd_pmc decide. If you need this please report this to: platform-driver-x86@vger.kernel.org");
-+
- static struct amd_pmc_dev pmc;
- 
- static inline u32 amd_pmc_reg_read(struct amd_pmc_dev *dev, int reg_offset)
-@@ -625,8 +631,23 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
- 	 *
- 	 * See https://bugzilla.kernel.org/show_bug.cgi?id=221383
- 	 */
--	if (!disable_workarounds && amd_pmc_quirk_need_suspend_delay(pdev)) {
--		dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
-+	if (amd_pmc_quirk_need_suspend_delay(pdev)) {
-+		/*
-+		 * delay_suspend=1 force-enables this, otherwise it can be
-+		 * disabled with disable_workarounds or delay_suspend=0
-+		 */
-+		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
-+			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
-+			return true;
-+		}
-+		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
-+	} else if (delay_suspend == 1) {
-+		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
-+			 dmi_get_system_info(DMI_SYS_VENDOR),
-+			 dmi_get_system_info(DMI_PRODUCT_NAME),
-+			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
-+			 dmi_get_system_info(DMI_BOARD_VENDOR),
-+			 dmi_get_system_info(DMI_BOARD_NAME));
- 		return true;
- 	}
- 	return false;
 -- 
-2.48.1
+ i.
 
+
+>  	struct descriptor_priv *priv;
+> -	u32 *buffer;
+> +	struct wmi_buffer buffer;
+>  	int ret;
+>  
+> -	obj = wmidev_block_query(wdev, 0);
+> -	if (!obj) {
+> -		dev_err(&wdev->dev, "failed to read Dell WMI descriptor\n");
+> -		ret = -EIO;
+> -		goto out;
+> -	}
+> -
+> -	if (obj->type != ACPI_TYPE_BUFFER) {
+> -		dev_err(&wdev->dev, "Dell descriptor has wrong type\n");
+> -		ret = -EINVAL;
+> +	ret = wmidev_query_block(wdev, 0, &buffer, sizeof(*desc));
+> +	if (ret < 0) {
+>  		descriptor_valid = ret;
+> -		goto out;
+> +		return ret;
+>  	}
+>  
+> -	/* Although it's not technically a failure, this would lead to
+> -	 * unexpected behavior
+> -	 */
+> -	if (obj->buffer.length != 128) {
+> -		dev_err(&wdev->dev,
+> -			"Dell descriptor buffer has unexpected length (%d)\n",
+> -			obj->buffer.length);
+> -		ret = -EINVAL;
+> -		descriptor_valid = ret;
+> -		goto out;
+> -	}
+> +	desc = buffer.data;
+>  
+> -	buffer = (u32 *)obj->buffer.pointer;
+> +	if (strncmp(desc->vendor_signature, "DELL", sizeof(desc->vendor_signature))) {
+> +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid vendor signature (%4ph)\n",
+> +			desc->vendor_signature);
+> +		descriptor_valid = -ENOMSG;
+> +		return -ENOMSG;
+> +	}
+>  
+> -	if (strncmp(obj->string.pointer, "DELL WMI", 8) != 0) {
+> -		dev_err(&wdev->dev, "Dell descriptor buffer has invalid signature (%8ph)\n",
+> -			buffer);
+> -		ret = -EINVAL;
+> -		descriptor_valid = ret;
+> -		goto out;
+> +	if (strncmp(desc->object_signature, " WMI", sizeof(desc->object_signature))) {
+> +		dev_err(&wdev->dev, "Dell descriptor buffer has invalid object signature (%4ph)\n",
+> +			desc->object_signature);
+> +		descriptor_valid = -ENOMSG;
+> +		return -ENOMSG;
+>  	}
+>  	descriptor_valid = 0;
+>  
+> -	if (buffer[2] != 0 && buffer[2] != 1)
+> -		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%lu)\n",
+> -			(unsigned long) buffer[2]);
+> -
+> -	priv = devm_kzalloc(&wdev->dev, sizeof(struct descriptor_priv),
+> -	GFP_KERNEL);
+> +	if (le32_to_cpu(desc->interface_version) > 1)
+> +		dev_warn(&wdev->dev, "Dell descriptor buffer has unknown version (%u)\n",
+> +			 le32_to_cpu(desc->interface_version));
+>  
+> -	if (!priv) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+>  
+> -	priv->interface_version = buffer[2];
+> -	priv->size = buffer[3];
+> -	priv->hotfix = buffer[4];
+> -	ret = 0;
+> +	priv->interface_version = le32_to_cpu(desc->interface_version);
+> +	priv->size = le32_to_cpu(desc->buffer_length);
+> +	priv->hotfix = le32_to_cpu(desc->hotfix_number);
+>  	dev_set_drvdata(&wdev->dev, priv);
+>  	mutex_lock(&list_mutex);
+>  	list_add_tail(&priv->list, &wmi_list);
+> @@ -169,8 +159,6 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
+>  		(unsigned long) priv->size,
+>  		(unsigned long) priv->hotfix);
+>  
+> -out:
+> -	kfree(obj);
+>  	return ret;
+>  }
+>  
+> 
