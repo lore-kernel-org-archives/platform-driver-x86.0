@@ -1,453 +1,407 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010014.outbound.protection.outlook.com [52.101.85.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E23541B360
-	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 13:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B86423A64
+	for <platform-driver-x86@vger.kernel.org>; Tue,  9 Jun 2026 13:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.14
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781010261; cv=pass; b=pUtK2gXihIYvb3M+9O+Hyf0O10jvUUzucdlVKXeGh1VpInykP/y8CZPswm5ahDvAikoWkyc4hl9phkwSiRwZUsDG/SD+OCausWYp79s0TGB9Od1N7HH42CYcCWZ5zOsOTBimLbRDsSiqzkPIEp4IdphcMOdpGwuPgGw4sbhUI04=
+	t=1781011494; cv=fail; b=ZVxOQwzvExP6iK8ORkXf1nR2s97shHq023jztvMY4QkzLUWo5ArP74CEFamR121YO5mtVslb6e2l9lzLVKp5WKNdJ00fuD+rbavGhl7jh8OqTkfInn1W6djw/OX1VNtOazOrhnhnIkQG4sX17ZLlSqajkpVfVQbTI4aOyUJnSL8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781010261; c=relaxed/simple;
-	bh=3KlrU7cwaP7x6A4tdVFBc4zUB/4Q18UgJdhKj7pbTuo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HHHRz3nTUe9BBGvA5JeuC5rIbUVknUVzaaVPEuVDwsCAi6qDGLhWIo1ab0HBGNjT03jgRgyoRPvba5d3VAjNh5rr0AS0UBuczrQj22Xqhyi5MEEFN14SBnDcLBb0ZnHqmsre+XIzS5YyW2kB1Du11/wyrbTkhqKIsh6Mu86gtaA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rHr5r76/; arc=pass smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781011494; c=relaxed/simple;
+	bh=5seX3rhY021ZoQ7YHRvF223i79uLAkoQSzq8HZ6tX4Y=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WNB2E+148dV3gTPVlZ3OWaKs2oDsCYCviNX+seUozTCyCUhnfAqM5bdDiut2iBB/phHYfFP3olaO6mdeYxhrFgwplQQneuiDvYVOTQTWD9PcLfijBkUXyrBqWwAnWDfrNVG2gyhdpKD+xGs3nZ68Je40Og4JUcdXvwJSdPeLkPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=X5CCLcI2; arc=fail smtp.client-ip=52.101.85.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHr5r76/"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aa7a7ad4d3so4516406e87.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 09 Jun 2026 06:04:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781010257; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UseIFDFIr51wGaSS8ywnCW2P9+BBsfei5XnCYTudOMfoihRO9pXg7zVScE6xE6yKPL
-         3ZrCrAHOLuT0n573hN5UIampTEu0gG+DTZNQZIXaKZ5/RPJAgzq8eW+lh2IeIghMXLRx
-         xGH1q/uDtE09SPzRVu8QHDC9hJVSc1Hsv66BrMswarz+wo7CULADf7aDxfe1bJ6CltvM
-         qziQLdqRE9eq6bEWFcFcsB7oeu7JzWMDIrIZFFWrG+6Jk381/3JKQA4lKLorze248FXw
-         mGSxvDNVzSm/adDi6HgN7EGC+S4674lOJDQY/74oKgK6H2B/9i0bJhp8dmuORgcVHBIB
-         OCcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2p3OhpzH6yuasFWOZEdSUtDEeDVvlp6cWry0eF6q3aw=;
-        fh=iRzVTyZup6NORQ/AQYgKQ5RadCxpQMPShP2Q8MNRbRU=;
-        b=QGRDu9rrvTWUem593nd/01VKSF17uNN4hsh2imJRmMbANc5eK+BdVvesIit4LMamEc
-         hNvB74xoi9hfiK3lv23F/Jg3NXd/K7g+3Elknup3MgX2/jXy1ANhnHVWZzQ4kpsBcBEQ
-         uGDRVzAwqPWs5u/PBqgqmbxj2Yy8pHdcfr+lLpj7sIfSQVdEvvRVjCNqSbw+bzAQ/Wex
-         qmmyVzZqJyvRStGC2zaf7VfTD5VYwi54Kl47RyzDl8e2mjlwRRw2xrPKOrEy1yLm3ty1
-         TQOu9y8wVstCQeSFud0n0u+nwnmd4ZWkcivKter6Y6V2fOu7f4ypbWecRvaQDmwcQpbC
-         1Mig==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781010257; x=1781615057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2p3OhpzH6yuasFWOZEdSUtDEeDVvlp6cWry0eF6q3aw=;
-        b=rHr5r76/WyMDyd9YmChMhtusjoxyuYbKMWvuQHHk2Rmf+cxmqTUBOkvEuf4KE8fPHq
-         LyBXeplWWa+1LEqRF85HIcprY+bHBD0P6GcbSzv9QfavH8ejEG4ry99isaqh9fOsD1p3
-         vpFTlpQKwg9RiUutKEf0sLchy8MAq1pUHjATtGkcddaUldV0zjeXLJNYDRVxHP3v1QH9
-         LT60baOzLXmrp1RZSG39cTvcQnS0oDKUDMBMFXGGlPGGQZ2M66fSJ4kBC0CtpRraGm9m
-         9BbmFGYeyTTkocHAhGk4Pc2qG8nukalXDxMpUk4H9UB/9kjWTCvy61PiOnOUulM5Uype
-         KA+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781010257; x=1781615057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2p3OhpzH6yuasFWOZEdSUtDEeDVvlp6cWry0eF6q3aw=;
-        b=ZVjJWTXg4Zc/NN0MeF/rYXRAMR6c0TJk53WNZ1+bqEBF967EcaZVdqsaazmTU9J17v
-         dEcmLVsOXksqCsHx2pqhIOocQ3X/Dk9RhI/5bbJ00MI9oO+fVPnZEbknAgsW3IWGgSNt
-         UEQFjHIIUh4e93JcDT5M9I3VVVdY91RGGuG6oiL6BieFdZuU1pdb3LX1CkIAOUdDgHk9
-         oE9NWlRVQG/XbkhT52ZMf65NbxcgzdhdZb/LxCPrerrla3knnQYzbvHeZrJbVHi8/5Sc
-         by3n05xBLoURG8zj7ioEouTNCleYB2dhVb+m0Qc3ERClQAzXUZQE7h5DKp0Bk7KPrZ6Q
-         wC2g==
-X-Forwarded-Encrypted: i=1; AFNElJ8haooaY5dBG8ApLCzcnMIz+tK4B412NiJM4ECa82gY9qeN/LIjWCvXtoAOhYeuTIcLD/hJL8wsMIpndbqQ16pqNr7j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyof12yVLuU5WlmKuwGFA6xGKvoW54YSPgBZoMJe4wGmy+L3bxv
-	6qCTNfvsMKPyv6SJKl55rGzedKVIqSZALrIdmWfQSaqw0cU3u7KvU0YFJq6psv+4MZrVYeK7Y7v
-	H7NOH+d2eqTjaU34duEN6zMTahNgTtKI=
-X-Gm-Gg: Acq92OEczYLvag2YK+bQFww9mH//pBN+5u62ea2Ec5f4lHDhThhdJz9IGpkArwjzoA8
-	WdXrrlvJbUa4dzdu07mw9a+SODyJmmn1cTwagUFxaJ76bKjTHLmp+QkRen2uws1mC8eHli0IaLM
-	TPnjs30ONswF/k/LK5tMhURcf2YFcmby1opTv/qQE/kVIKs3Q65LJlFWrpwtqQu7H0En9rVivqZ
-	dBCmstsB6BfRN+eDzX0qmT3Jy8IRZPDhqJU3dxTh2/BScukr8Hzfwh9rszmBTASuCcRVN2RyA1S
-	1gcwTdXp+jQxn7LuOcSvdv7EjEbpmLOFhEhAh3NcLDK0Fy+QJaI=
-X-Received: by 2002:a05:6512:130e:b0:5a8:6d58:b29 with SMTP id
- 2adb3069b0e04-5aa87b80b16mr6446931e87.22.1781010256842; Tue, 09 Jun 2026
- 06:04:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="X5CCLcI2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DZnKhS8iFCmIS6RCPf9ofC03aD7FBFsJAZeP8N1U4smOckNl6SkFuo69PPIj7Q5qA8RXUhiNdj4qaFAvFng7GO0HlxLAd9aggZ74tMs6R7Lzd6HpWPeg+kCHjyiFzUrutd1XandybGCDmvBKnz+5y2EYSUxAV+0qicoQnfILvPVA15rNlBSw8x9zPSETSQdcTMrj+mWclK/bElgRuegwevMHajBp7CNJzTx6MfQweCr921L8YVQRhtYoyvej06oCr2IGlOiZms00j+rJS8xoaQEIRZY86txELqugtZ6Zh/Z6nAj1bT/RwuzohvSo7x6sKnUL/W1H7Laogc4GDkLVkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P79VGmSjl4HpKzTSuBTAHjBJ5MosUfYEk1YTExu/97E=;
+ b=rafueOZ88DQ4CIcGhNpMYQlom+itgiLCGmjkk0PG+nINoFYzrypm/BWvwTeEHpfvemCB+q43LgHwC5gGchVHxUJQLFi/S/x/5Yq3zCOBYHJdhBFMDAPtv3Pcy8BdCtDZ89zFPUXfWX6jHxImS2A3kfw/1yY8fNZ5iobzXcFiC+4r3d8/KYTSYv/NSPmnN6M5fMsnIKlNSeIT/0eOfjHEnIw2gN3WVNV0JyR09N69kFYghdVK9Eq/7wwc6tIiICkWmBiJYGLw8/Yzjmc3mc+Ld/6mh7FAzelAdQOIcBszdY5kVQZJbe+L6DqA63rOEE/Xc1bjEd3U+CR13ZENKOznPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P79VGmSjl4HpKzTSuBTAHjBJ5MosUfYEk1YTExu/97E=;
+ b=X5CCLcI2d+vv3vVX7JBF3tO5Z6Cml+JruOqVWRGYlMzkXM3T/9f4ijzPTtRlNgev5eZaVQSVsLUjknhjRfmeovCbwwfYoYY00iw7A1OyRHeTRifxDgfIVMwgWBJhd4jG5lXNYHmkzntYzIGTVzF/ozWvN4hILYhmwPMCYDEw9k0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by DS7PR12MB5840.namprd12.prod.outlook.com (2603:10b6:8:7b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Tue, 9 Jun 2026
+ 13:24:50 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0092.011; Tue, 9 Jun 2026
+ 13:24:50 +0000
+Message-ID: <c5466ac1-642a-4af1-be2f-d342979d5d0e@amd.com>
+Date: Tue, 9 Jun 2026 08:24:48 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/7] platform/x86/amd/pmf: Add util layer and userspace
+ character device interface
+Content-Language: en-US
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, Sanket.Goswami@amd.com
+References: <20260609081044.2416731-1-Shyam-sundar.S-k@amd.com>
+ <20260609081044.2416731-2-Shyam-sundar.S-k@amd.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20260609081044.2416731-2-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR2101CA0030.namprd21.prod.outlook.com
+ (2603:10b6:805:106::40) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260609041402.328509-1-vishnuocv@gmail.com> <b6a08dcf-c7ce-d85a-5c18-18371f6a7cbf@linux.intel.com>
-In-Reply-To: <b6a08dcf-c7ce-d85a-5c18-18371f6a7cbf@linux.intel.com>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Tue, 9 Jun 2026 22:03:40 +0900
-X-Gm-Features: AVVi8CdlF7fRNeg44AOibO7n_LysBgYibp9kFBRpeQawyObbwIkEWQeSwgFzLrQ
-Message-ID: <CABxCQKvQDKkQrjtHuoS7ij=5_ZBWkxWRn5qdVd3dXoxRoQpcmA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, hmh@hmh.eng.br, 
-	Hans de Goede <hansg@kernel.org>, corbet@lwn.net, derekjohn.clark@gmail.com, 
-	skhan@linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>, 
-	ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|DS7PR12MB5840:EE_
+X-MS-Office365-Filtering-Correlation-Id: 169fc3a5-c85d-47ba-4568-08dec62a7bb3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|6133799003|18002099003|22082099003|3023799007|56012099006|11063799006|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	amvMhFaeZP7kqU51J90z4FrzUyR/xqv445gJVdpjP17+qba8bv5YKYIpAXczm1P3bzpouThz2aKCu85F0n0KW8dRC1luv8qWUL4p7ie0se3S0ES4s+mX9YnuBopwszpckzoD1FljOE7g3dfz27yL2fE/x9Eq41rMPnN7flXt9KEZVv1JEvu3gSsCgwKZuzPbb5iEWTY2Fl+ykvcYcg4qTithI30cWBcNQNcKzrM/rVsSVjt6LAg6IcJa1S5Omsi91mvDu5CJSpPHNkploPbniSyqygVo70GR/EYVuQTf5dFGDBEcIa1cgvh+ygJxN5t1iK94X4jTGi+Q/Cxr6m2fkHdDDT5ZuXq6+AuttXcHcpH/cKM5UCcEVaRhml/7EbJgDHg79SOpKXMvAlvsgsF/ZEM7iDthg3tSfpOEtBT1Ricco0uLeGc5V7NfG0lEwMfMjxPXt9wnGngYOCzeF7aFrHoE/2YcxNfjHhWdtJJn+4PFl6l9MfjkfQ4xXn5VYrlayqqHbU5uH4M1/86lL5LtNI4IwB3lhpz0YL/UR4LyEgKnyHuY7BUvRTopzRJAcYr/o1dcFxWufviYnbUJwmQGqv9VGSLVRoiz/BvC8R3lMWbYIP+chU1xcV0tyyWc8M02xBGalX/Y+VmKBzsR93ci2aSk+Ja3zeKsG3Ckv0ou2h4Sqf5KmgXwEMReENUSk0YGw09tLdYDfMPOVXN/z7DlzA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(6133799003)(18002099003)(22082099003)(3023799007)(56012099006)(11063799006)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Tm83WmVyNDBCbkQ4M2s4Mm42RWFxTTBYdFY2NGJDaDlaYy9yNjNWSk5EVmlU?=
+ =?utf-8?B?NUVVdE5nTGU4bk1KV3dBVUlQWE1pT1U1VGNRcFhOVCtvZHdQMnl0QzdUdUc1?=
+ =?utf-8?B?cHRGbEk1eHgzWk0rWVFHTWZjeEMxbkhkYjhsRXVwd2IrVXdQVmdraEs3U1cv?=
+ =?utf-8?B?VnNqNSt6aURBalYrMmh6VEErTGpDTW9JWW5XZllvcGFuL1JxTlQzaS9QTFYy?=
+ =?utf-8?B?SlZUc0R1YnNkSHJ4Qk5ubkFpRFM2ZEJWM2pDMkZpYkdWNktwLzdzUnE5alV2?=
+ =?utf-8?B?K3hjQ1o3bTJjalVVcDZJa25yZVFWUHZ4amZ2WnM2WHNsdldZV0Nid2lCUUtR?=
+ =?utf-8?B?Ym1yQmwwekJPWDlycEM0bEpReVZkZzZqNWtxaCtFQk10M3Q4M2k1WlR2N0hm?=
+ =?utf-8?B?TEI5bGtHWEhkNWxlOUpQdkk5SzdBTG9JTHdUMWkyQmpRRU1SN2Z4aDBpck5q?=
+ =?utf-8?B?MTRPY2l0R2o5bEw1MTFDaWVla0hoUFc4eHZ1VHVNS2hPeXJ2YjdaWHNpWHF4?=
+ =?utf-8?B?UVBkRTduZlphdDhFZ1ozYlloZVpVbHVmakJTaG1WNXQ4VFNSNzFGWVBzR2Ey?=
+ =?utf-8?B?ZUhIUEk5SDcyUXdEV2NUWXMzMGdVakc5UUt1Y0RQYVdZUHpsNHlwQXlkUFQ4?=
+ =?utf-8?B?RHViZ0N5Vk40R0Z0QW9wSHVpNnFST3l1OWxpQ0VWSHRqNUpianNZUHlZSmF5?=
+ =?utf-8?B?bHptZEx6Z3dlS1g4c1FXUlZwUkZDYkJ5TCtzUzRDMm51SnNVak1YSEY3VXVY?=
+ =?utf-8?B?QUVJeVlBb0lDYkpqblZDak90NXM4eEZPT1AxanFTZnJ5bHc2ZzRZZTlCa1Bv?=
+ =?utf-8?B?aUxyS0xFQTlhUG5JOG9ITUQwYlNNRERNbCs2bkc3QU53QUk2c3RpZlY3d3Bt?=
+ =?utf-8?B?RjUvMW02SVQxelRiS01zQkR4SnB4blBOWFRjbGhiSVVNdG5YM1pLRGJCcmFC?=
+ =?utf-8?B?RHQyVU9pTlpSTDMrdjlOYzNCYjMyL3dlSXk4eHJwRlp3S1VjTG9LWTdtaWdX?=
+ =?utf-8?B?dFZSOVh5K2ttOWJsYWcrUDBzTFlmMTgwQ3JFcHhzaU5CeFhHazkzcy92amdZ?=
+ =?utf-8?B?RDFkbm4wODlWRTdEa1VCb3dIWkxLNWs1TkZFQTZiYXVDbXB3bGxMaXdINjg2?=
+ =?utf-8?B?bEpLN0x6NHF4cDhLYzRLQVlZekxVOHRKMkFnNi9uWHREOTAvbTEzeXF5b3Zw?=
+ =?utf-8?B?TmthV0NWaTJpUGlHV3pidmtCeG9rS005MmF3a0VhOVNyTkViMzhXNWFUN1ZY?=
+ =?utf-8?B?L1FRWk5xb1MzU1EvUFczb2RWQzNvcU1DZ3J5R0FKckpWS1ZJUkU3QjlYcERI?=
+ =?utf-8?B?dnJWMlkxYnRleEsybUcyV0JIK3Fmc25XdGYzbHZ6a1QyTTZQbzA3QzJpTHhu?=
+ =?utf-8?B?NkQxL0RJNlY1QXlWZEpiZGEyNnRxWTdXaG4rV0lzMXhnWUNwdVB3VWQrZUsx?=
+ =?utf-8?B?UHFqVEc5aTNpZXhtdUltSERweFR2Z1JqcTMwSExYdWZ5ZFNoNjB1QTZFdXc4?=
+ =?utf-8?B?WnZ2OTB3clkvRG1ZclVJN2hFbVdoaWRBL2JFb2tHbWM0TTNMRXJYdGUrTHB3?=
+ =?utf-8?B?RlNqNGdNY1ZKY0JNTVRYTVB4YnFZakhBc3hvWFJnU1dIL1ZTWE5zK3RtRU1o?=
+ =?utf-8?B?M2RTWFlVQzFVZngwaFkwakJXbjdkd0VJbFRDaG5vYUFBWkVFZng0VzFMVFRX?=
+ =?utf-8?B?M0gvVGx1MkJXdGVGMGwvR2poN3FwQVg1VlRvVjVHcmU0QzJRL2tXVGFvR0RD?=
+ =?utf-8?B?ZnVxczdHRlRYQ1NJejZkcnZEY0dIWnNQangwZlhjZW5jQ09hZnJlYzRkVm5Q?=
+ =?utf-8?B?V1BZd01CcEphcTVXMUUyR3NhNkx6YmFQNnd4RmVsV3RZM29Qa3ptVGYxWHNE?=
+ =?utf-8?B?emYyVmN5bTgydjlGd1NqZ3lTQXNac2dFUk83ZTBSSWFub01KWHBiNFk3RlB1?=
+ =?utf-8?B?U3BEQW1oMUZLN3RDUTByemttclhuS2tCVDNHLzFMREFHbm9DQ2VEa0o0VWg5?=
+ =?utf-8?B?TGVWN3lOa2pERis2MzY2SWg3bmdmL3VXdGZqeUl4dk9aeERVaVFwZGZKdUsw?=
+ =?utf-8?B?ZVRJWGRHNldPY2ExR3ZZQlZ2ZmJIU1VEeG11MGRVNlg1em1RaEZjTGFNZlFl?=
+ =?utf-8?B?Q2RWL0ZENzhzRTBZQXQrV2ppTVd4dUVqRmtNWFNnS2FHRTNVeUMyeklLMjM5?=
+ =?utf-8?B?b3NTTXNLelR0aVorMWwzY3dqTm5jSVE5RERKTmtUNmhnK0t6ZERpN0Y3eDFQ?=
+ =?utf-8?B?d1VYZzBpeEIyYkdxZElrMjd2eTkwVSswTEdVbytjM3NkRXlMQ0lheFJ2dThY?=
+ =?utf-8?Q?JNFqOgFUsFKC5wghiZ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 169fc3a5-c85d-47ba-4568-08dec62a7bb3
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 13:24:50.1092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z4iDgZe8EQuDFdTPQtgD0VByJntrmM4zmcMvuuyQtaiMYYoVoVEovvqsi79r4Ok5xSir2fEO5SuoieVpyHdE3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5840
 
-Hi Ilpo,
 
-Thanks a lot for the review comments.
 
-On Tue, Jun 9, 2026 at 6:12=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Tue, 9 Jun 2026, Vishnu Sankar wrote:
->
-> > Newer ThinkPad systems expose a USB-C Security (Restricted Mode) featur=
-e.
-> > When active, USB-C data connections are disabled while power delivery i=
-s
-> > preserved. This is useful for kiosk and physically-secured deployments.
-> >
-> > Hardware interface:
-> >
-> > The HKEY device exposes a read-only ACPI method USCS():
-> >
-> >   Return value bit layout:
-> >     Bit 16 : Capability flag (1 =3D feature present on this SKU)
-> >     Bit  0 : Current state  (0 =3D security OFF, 1 =3D security ON)
-> >
-> > The sysfs attribute is read-only.
-> >
-> > The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
-> > hardware state.
-> >
-> > Hotkey:
-> >
-> > Fn+U followed by Fn+S generates HKEY event 0x131e.
-> >
-> > sysfs interface:
-> >
-> >   /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
-> >   "enabled\n"  -- data connections are currently blocked
-> >   "disabled\n" -- data connections are currently allowed
-> >
-> >   The attribute is hidden on SKUs where the USCS capability bit (bit 16=
-)
-> >   is not set, so there is no ABI impact on unsupported hardware.
-> >
-> > Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> > Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
-> > ---
-> > Changes since v1:
-> > - Use guard(mutex) from cleanup.h instead of manual mutex_lock/unlock
-> > - Revert usbc_security_query() to return int (-EIO/-ENODEV/0) instead
-> >   of bool to avoid uninitialized *enabled bug on unsupported platforms
-> > - Remove !! when assigning to bool in usbc_security_query()
-> > - Remove dead tp_features.usbc_security_supported check in show()
-> >   since is_visible() already gates the attribute on unsupported SKUs
-> > - Use str_enabled_disabled() from string_choices.h in show()
-> > - Fix uninitialized *enabled bug in tpacpi_usbc_security_init() by
-> >   only assigning usbc_security_enabled after a successful query
-> > ---
-> >  .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
-> >  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 118 ++++++++++++++++++
-> >  2 files changed, 142 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Docu=
-mentation/admin-guide/laptops/thinkpad-acpi.rst
-> > index f874db31801d..db4588af0278 100644
-> > --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> > +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> > @@ -1543,6 +1543,30 @@ Values:
-> >
-> >       This setting can also be toggled via the Fn+doubletap hotkey.
-> >
-> > +USB-C Security
-> > +--------------
-> > +
-> > +sysfs: usb_c_security
-> > +
-> > +Reports the current state of the USB-C Security (Restricted Mode) feat=
-ure
-> > +on supported ThinkPad systems. When enabled, USB-C data connections ar=
-e
-> > +disabled while power delivery is preserved.
-> > +
-> > +The available command is::
-> > +
-> > +        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
-> > +
-> > +Values:
-> > +
-> > +     * ``enabled``  - USB-C data connections are currently blocked
-> > +     * ``disabled`` - USB-C data connections are currently allowed
-> > +
-> > +The attribute is read-only. The USB-C Security state can only be toggl=
-ed
-> > +via the Fn+U followed by Fn+S hotkey chord.
-> > +
-> > +The sysfs attribute is not created on platforms that do not support th=
-is
-> > +feature.
-> > +
-> >  Auxmac
-> >  ------
-> >
-> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/plat=
-form/x86/lenovo/thinkpad_acpi.c
-> > index e1cee42a1683..379769b62c80 100644
-> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/backlight.h>
-> >  #include <linux/bitfield.h>
-> >  #include <linux/bitops.h>
-> > +#include <linux/cleanup.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/dmi.h>
-> >  #include <linux/freezer.h>
-> > @@ -66,6 +67,7 @@
-> >  #include <linux/seq_file.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/string.h>
-> > +#include <linux/string_choices.h>
-> >  #include <linux/string_helpers.h>
-> >  #include <linux/sysfs.h>
-> >  #include <linux/types.h>
-> > @@ -185,6 +187,7 @@ enum tpacpi_hkey_event_t {
-> >       TP_HKEY_EV_AMT_TOGGLE           =3D 0x131a, /* Toggle AMT on/off =
-*/
-> >       TP_HKEY_EV_CAMERASHUTTER_TOGGLE =3D 0x131b, /* Toggle Camera Shut=
-ter */
-> >       TP_HKEY_EV_DOUBLETAP_TOGGLE     =3D 0x131c, /* Toggle trackpoint =
-doubletap on/off */
-> > +     TP_HKEY_EV_USB_C_SECURITY       =3D 0x131e, /* Toggle USB C Secur=
-ity ON/OFF */
-> >       TP_HKEY_EV_PROFILE_TOGGLE       =3D 0x131f, /* Toggle platform pr=
-ofile in 2024 systems */
-> >       TP_HKEY_EV_PROFILE_TOGGLE2      =3D 0x1401, /* Toggle platform pr=
-ofile in 2025 + systems */
-> >
-> > @@ -373,6 +376,8 @@ static struct {
-> >       u32 has_adaptive_kbd:1;
-> >       u32 kbd_lang:1;
-> >       u32 trackpoint_doubletap_enable:1;
-> > +     u32 usbc_security_supported:1;
-> > +     u32 usbc_security_enabled:1;
->
-> Sashiko (sashiko.dev) warned that there may be concurrent, unprotected
-> updates to these bitfields (changing bitfields require unsafe RMW). It
-> looks pre-existing problem at least for trackpoint_doubletap_enable (mayb=
-e
-> others).
->
-> To avoid adding to the problems, usbc_security_enabled should be added
-> outside the bitfield to avoid need to do locking for this bitfield.
->
-> And trackpoint_doubletap_enable (and possibly others) which are touched i=
-n
-> the notify context or in sysfs write should be fixed in a separate patch
-> (can be done after this series as it's pre-existing problem for them).
->
-> Anything that is only written during init is fine inside the bitfield.
-Agreed.
-usbc_security_enabled will be moved outside tp_features as a
-static bool since it is written from both init and the hotkey notify
-context. usbc_security_supported remains inside the bitfield as it is
-only written during init.
+On 6/9/26 03:10, Shyam Sundar S K wrote:
+> Add a util layer to AMD PMF that exposes a minimal userspace interface
+> via a character device for metrics monitoring and feature discovery.
+> 
+> This creates /dev/amdpmf_interface with basic ioctl support to retrieve
+> PMF metrics such as:
+> *  Power source and power slider position
+> *  Platform type, lid state, and user presence
+> *  Skin temperature and ambient light
+> *  BIOS input parameters (1-10)
+> *  Graphics workload metrics
+> *  CPU C-state residency (average and maximum)
+> *  Socket power consumption
+> *  Auto Mode: Automatic power profile switching based on system activity
+> *  Static Power Slider: User-selectable power profiles
+> *  Policy Builder (Smart PC): Action based policy management
+> *  Dynamic Power Slider AC: Adaptive power profiles when on AC power
+> *  Dynamic Power Slider DC: Adaptive power profiles when on battery
+> 
+> The interface enables smoother integration with userspace tools such as
+> AMD SystemDeck [1], which is widely used for monitoring and controlling
+> power and thermal behavior on AMD platforms. These tools help designers
+> keep major components within thermal limits to ensure proper operation
+> and enhance overall system stability and reliability.
+> 
+> The feature is gated behind the CONFIG_AMD_PMF_UTIL_SUPPORT Kconfig
+> option, allowing it to be disabled if not needed. The implementation
+> uses existing PMF infrastructure to populate data from the TA (Trusted
+> Application) shared memory buffer.
+> 
+> Link: https://docs.amd.com/v/u/en-US/68773_0.50 [1]
+> 
+> Co-developed-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Sanket Goswami <Sanket.Goswami@amd.com>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>   drivers/platform/x86/amd/pmf/Kconfig  | 10 ++++
+>   drivers/platform/x86/amd/pmf/Makefile |  2 +
+>   drivers/platform/x86/amd/pmf/core.c   |  5 ++
+>   drivers/platform/x86/amd/pmf/pmf.h    |  9 ++++
+>   drivers/platform/x86/amd/pmf/util.c   | 68 +++++++++++++++++++++++++
+>   include/uapi/linux/amd-pmf.h          | 71 +++++++++++++++++++++++++++
+>   6 files changed, 165 insertions(+)
+>   create mode 100644 drivers/platform/x86/amd/pmf/util.c
+>   create mode 100644 include/uapi/linux/amd-pmf.h
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/Kconfig b/drivers/platform/x86/amd/pmf/Kconfig
+> index 25b8f7ae3abd..ad4faf18de47 100644
+> --- a/drivers/platform/x86/amd/pmf/Kconfig
+> +++ b/drivers/platform/x86/amd/pmf/Kconfig
+> @@ -30,3 +30,13 @@ config AMD_PMF_DEBUG
+>   	 in the PMF config store.
+>   
+>   	 Say Y here to enable more debug logs and Say N here if you are not sure.
+> +
+> +config AMD_PMF_UTIL_SUPPORT
+> +	bool "AMD PMF Util layer support"
+> +	depends on AMD_PMF
 
-I note that trackpoint_doubletap_enable and possibly others have the
-same pre-existing issue and will address those in a separate patch as
-you suggested.
->
-> >       struct quirk_entry *quirks;
-> >  } tp_features;
-> >
-> > @@ -11265,6 +11270,112 @@ static struct ibm_struct hwdd_driver_data =3D=
- {
-> >       .name =3D "hwdd",
-> >  };
-> >
-> > +/*********************************************************************=
-****
-> > + * USB-C Security subdriver
-> > + *
-> > + * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
-> > + * It always returns:
-> > + *   bit 16 - USB-C security capability present on this SKU or not
-> > + *   bit  0 - USB-C Security state (enable or disable)
-> > + *
-> > + * Hotkey
-> > + * ------
-> > + * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
-> > + * The driver reads back the new state and notifies the sysfs attribut=
-e.
-> > + *
->
-> Remove the extra line.
-Acked
->
-> > + */
-> > +
-> > +/* USCS() return word bit layout */
-> > +#define USCS_CAP_BIT         BIT(16) /* capability: feature present on=
- SKU */
-> > +#define USCS_STATUS_BIT              BIT(0)  /* current security state=
- */
-> > +
-> > +static DEFINE_MUTEX(usbc_security_mutex);
-> > +
-> > +/*
-> > + * usbc_security_query - read current USB-C security state via USCS()
-> > + * @enabled: out - true when security is ON (data connections blocked)
-> > + *
-> > + * Returns true if the feature is supported and query succeeded,
->
-> Kerneldoc doc compatible syntax is:
->
-> Returns:
->
-Acked
-> > + * false otherwise (feature absent or ACPI call failed).
->
-> Please rewrite this as this function no longer returns true/false. :-)
->
-Acked
-> > + */
-> > +static int usbc_security_query(bool *enabled)
-> > +{
-> > +     int status;
-> > +
-> > +     guard(mutex)(&usbc_security_mutex);
-> > +     if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0))
-> > +             return -EIO;
-> > +
-> > +     if (!(status & USCS_CAP_BIT)) {
-> > +             pr_debug("USCS cap bit absent (raw=3D0x%x)\n", status);
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     *enabled =3D status & USCS_STATUS_BIT;
-> > +     return 0;
-> > +}
-> > +
-> > +/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------=
-- */
-> > +static ssize_t usb_c_security_show(struct device *dev,
-> > +                                struct device_attribute *attr,
-> > +                                char *buf)
-> > +{
-> > +     return sysfs_emit(buf, "%s\n",
-> > +                       str_enabled_disabled(tp_features.usbc_security_=
-enabled));
-> > +}
-> > +
-> > +static DEVICE_ATTR_RO(usb_c_security);
-> > +
-> > +static struct attribute *usbc_security_attributes[] =3D {
-> > +     &dev_attr_usb_c_security.attr,
-> > +     NULL,
-> > +};
-> > +
-> > +static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
-> > +                                          struct attribute *attr, int =
-n)
-> > +{
-> > +     return tp_features.usbc_security_supported ? attr->mode : 0;
-> > +}
-> > +
-> > +static const struct attribute_group usbc_security_attr_group =3D {
-> > +     .is_visible =3D usbc_security_attr_is_visible,
-> > +     .attrs =3D usbc_security_attributes,
-> > +};
-> > +
-> > +static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
-> > +{
-> > +     bool enabled;
-> > +     int err;
-> > +
-> > +     err =3D usbc_security_query(&enabled);
-> > +     if (err)
-> > +             return err =3D=3D -ENODEV ? 0 : err;
->
-> Just split this to two if () + returns for clarity.
->
-Acked.
-> > +
-> > +     tp_features.usbc_security_supported =3D true;
-> > +     tp_features.usbc_security_enabled =3D enabled;
-> > +     return 0;
-> > +}
-> > +
-> > +/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
-> > +static bool tpacpi_usbc_security_hotkey(void)
-> > +{
-> > +     bool enabled;
-> > +
-> > +     if (!tp_features.usbc_security_supported)
-> > +             return false;
-> > +
-> > +     if (usbc_security_query(&enabled))
-> > +             return false;
-> > +
-> > +     tp_features.usbc_security_enabled =3D enabled;
-> > +     sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
-> > +     return true;
-> > +}
-> > +
-> > +static struct ibm_struct usbc_security_driver_data =3D {
-> > +     .name =3D "usbc_security",
-> > +};
-> > +
-> >  /* -------------------------------------------------------------------=
--- */
-> >
-> >  static struct attribute *tpacpi_driver_attributes[] =3D {
-> > @@ -11325,6 +11436,7 @@ static const struct attribute_group *tpacpi_gro=
-ups[] =3D {
-> >       &dprc_attr_group,
-> >       &auxmac_attr_group,
-> >       &hwdd_attr_group,
-> > +     &usbc_security_attr_group,
-> >       NULL,
-> >  };
-> >
-> > @@ -11479,6 +11591,8 @@ static bool tpacpi_driver_event(const unsigned =
-int hkey_event)
-> >       case TP_HKEY_EV_PROFILE_TOGGLE2:
-> >               platform_profile_cycle();
-> >               return true;
-> > +     case TP_HKEY_EV_USB_C_SECURITY:
-> > +             return tpacpi_usbc_security_hotkey();
-> >       }
-> >
-> >       return false;
-> > @@ -11930,6 +12044,10 @@ static struct ibm_init_struct ibms_init[] __in=
-itdata =3D {
-> >               .init =3D tpacpi_hwdd_init,
-> >               .data =3D &hwdd_driver_data,
-> >       },
-> > +     {
-> > +             .init =3D tpacpi_usbc_security_init,
-> > +             .data =3D &usbc_security_driver_data,
-> > +     },
-> >  };
-> >
-> >  static int __init set_ibm_param(const char *val, const struct kernel_p=
-aram *kp)
-> >
->
-> --
->  i.
->
-Thank you!
+To help with distros getting this right, how would you feel about making 
+this include a "default true"?
 
---=20
+This isn't worth spinning the series over if it's the only comment (it 
+can be a follow up).
 
-Regards,
+> +	help
+> +	  Enabling this option provides a character device for userspace to capture
+> +	  PMF features (Smart PC Builder, Auto Mode, Static Power Slider, Dynamic
+> +	  Power Slider AC/DC) along with PMF metrics from the AMD PMF driver.
+> +
+> +	  Say Y here to enable it and Say N here if you are not sure.
+> diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
+> index 5978464e0eb7..bf7aad80b9e9 100644
+> --- a/drivers/platform/x86/amd/pmf/Makefile
+> +++ b/drivers/platform/x86/amd/pmf/Makefile
+> @@ -8,3 +8,5 @@ obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
+>   amd-pmf-y 			:= core.o acpi.o sps.o \
+>   				   auto-mode.o cnqf.o \
+>   				   tee-if.o spc.o
+> +# Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
+> +amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
+> diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
+> index b9e5a2cf3aae..58d86b4c2828 100644
+> --- a/drivers/platform/x86/amd/pmf/core.c
+> +++ b/drivers/platform/x86/amd/pmf/core.c
+> @@ -634,6 +634,10 @@ static int amd_pmf_probe(struct platform_device *pdev)
+>   
+>   	pmf_device = dev->dev;
+>   
+> +	err = amd_pmf_cdev_register(dev);
+> +	if (err)
+> +		dev_warn(dev->dev, "failed to register util interface: %d\n", err);
+> +
+>   	dev_info(dev->dev, "registered PMF device successfully\n");
+>   
+>   	return 0;
+> @@ -643,6 +647,7 @@ static void amd_pmf_remove(struct platform_device *pdev)
+>   {
+>   	struct amd_pmf_dev *dev = platform_get_drvdata(pdev);
+>   
+> +	amd_pmf_cdev_unregister();
+>   	amd_pmf_deinit_features(dev);
+>   	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
+>   		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_UNLOAD);
+> diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
+> index 69fef7448744..6f61076a9386 100644
+> --- a/drivers/platform/x86/amd/pmf/pmf.h
+> +++ b/drivers/platform/x86/amd/pmf/pmf.h
+> @@ -928,4 +928,13 @@ int amd_pmf_tee_init(struct amd_pmf_dev *dev, const uuid_t *uuid);
+>   void amd_pmf_tee_deinit(struct amd_pmf_dev *dev);
+>   int amd_pmf_start_policy_engine(struct amd_pmf_dev *dev);
+>   
+> +/* Util Layer */
+> +#if IS_ENABLED(CONFIG_AMD_PMF_UTIL_SUPPORT)
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev);
+> +void amd_pmf_cdev_unregister(void);
+> +#else
+> +static inline int amd_pmf_cdev_register(struct amd_pmf_dev *dev) { return 0; }
+> +static inline void amd_pmf_cdev_unregister(void) {}
+> +#endif
+> +
+>   #endif /* PMF_H */
+> diff --git a/drivers/platform/x86/amd/pmf/util.c b/drivers/platform/x86/amd/pmf/util.c
+> new file mode 100644
+> index 000000000000..f8a283192ffe
+> --- /dev/null
+> +++ b/drivers/platform/x86/amd/pmf/util.c
+> @@ -0,0 +1,68 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * AMD Platform Management Framework Util Layer
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> + *	    Sanket Goswami <Sanket.Goswami@amd.com>
+> + */
+> +
+> +#include <linux/amd-pmf.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/mutex.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "pmf.h"
+> +
+> +static struct amd_pmf_dev *pmf_dev_handle;
+> +static DEFINE_MUTEX(pmf_util_lock);
+> +
+> +static long amd_pmf_set_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> +{
+> +	return -ENOTTY;
+> +}
+> +
+> +static int amd_pmf_open(struct inode *inode, struct file *filp)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	if (!pmf_dev_handle)
+> +		return -ENODEV;
+> +
+> +	filp->private_data = pmf_dev_handle;
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations pmf_if_ops = {
+> +	.owner          = THIS_MODULE,
+> +	.open           = amd_pmf_open,
+> +	.unlocked_ioctl = amd_pmf_set_ioctl,
+> +};
+> +
+> +static struct miscdevice amd_pmf_util_if = {
+> +	.minor		= MISC_DYNAMIC_MINOR,
+> +	.name		= "amdpmf_interface",
+> +	.fops		= &pmf_if_ops,
+> +};
+> +
+> +int amd_pmf_cdev_register(struct amd_pmf_dev *dev)
+> +{
+> +	int ret;
+> +
+> +	guard(mutex)(&pmf_util_lock);
+> +	pmf_dev_handle = dev;
+> +	ret = misc_register(&amd_pmf_util_if);
+> +	if (ret)
+> +		pmf_dev_handle = NULL;
+> +
+> +	return ret;
+> +}
+> +
+> +void amd_pmf_cdev_unregister(void)
+> +{
+> +	guard(mutex)(&pmf_util_lock);
+> +	if (pmf_dev_handle)
+> +		misc_deregister(&amd_pmf_util_if);
+> +	pmf_dev_handle = NULL;
+> +}
+> diff --git a/include/uapi/linux/amd-pmf.h b/include/uapi/linux/amd-pmf.h
+> new file mode 100644
+> index 000000000000..bbbd39b2ce15
+> --- /dev/null
+> +++ b/include/uapi/linux/amd-pmf.h
+> @@ -0,0 +1,71 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later WITH Linux-syscall-note */
+> +/*
+> + * AMD Platform Management Framework (PMF) UAPI Header
+> + *
+> + * Copyright (c) 2026, Advanced Micro Devices, Inc.
+> + * All Rights Reserved.
+> + *
+> + * This file defines the user-space API for interacting with the AMD PMF
+> + * driver. It provides ioctl interfaces to query platform-specific metrics
+> + * such as power source, slider position, platform type, laptop placement,
+> + * and various BIOS input/output parameters.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_AMD_PMF_H
+> +#define _UAPI_LINUX_AMD_PMF_H
+> +
+> +#include <linux/bits.h>
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +/**
+> + * AMD_PMF_IOC_MAGIC - Magic number for AMD PMF ioctl commands
+> + *
+> + * This magic number uniquely identifies AMD PMF ioctl operations.
+> + */
+> +#define AMD_PMF_IOC_MAGIC	'p'
+> +
+> +/**
+> + * IOCTL_AMD_PMF_POPULATE_DATA - ioctl command to retrieve PMF metrics data
+> + *
+> + * This ioctl command is used to populate the amd_pmf_info structure
+> + * with the requested PMF metrics information.
+> + */
+> +#define IOCTL_AMD_PMF_POPULATE_DATA		_IOWR(AMD_PMF_IOC_MAGIC, 0x00, __u64)
+> +
+> +#define AMD_PMF_BIOS_PARAMS_MAX		10
+> +
+> +/* AMD PMF feature flags - bitmask indicating supported features */
+> +#define AMD_PMF_FEAT_AUTO_MODE			BIT(0)
+> +#define AMD_PMF_FEAT_STATIC_POWER_SLIDER	BIT(1)
+> +#define AMD_PMF_FEAT_POLICY_BUILDER		BIT(2)
+> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_AC	BIT(3)
+> +#define AMD_PMF_FEAT_DYNAMIC_POWER_SLIDER_DC	BIT(4)
+> +
+> +struct amd_pmf_info {
+> +	__u64 size;
+> +
+> +	/* Feature info */
+> +	__u32 features_supported;
+> +
+> +	/* Power and state info */
+> +	__u32 platform_type;
+> +	__u32 power_source;
+> +	__u32 laptop_placement;
+> +	__u32 lid_state;
+> +	__u32 user_presence;
+> +	__u32 slider_position;
+> +
+> +	/* Thermal and power metrics */
+> +	__s32 skin_temp;
+> +	__u32 gfx_busy;
+> +	__s32 ambient_light;
+> +	__u32 avg_c0_residency;
+> +	__u32 max_c0_residency;
+> +	__u32 socket_power;
+> +
+> +	/* BIOS parameters */
+> +	__u32 bios_input[AMD_PMF_BIOS_PARAMS_MAX];
+> +};
+> +
+> +#endif /* _UAPI_LINUX_AMD_PMF_H */
 
-      Vishnu Sankar
