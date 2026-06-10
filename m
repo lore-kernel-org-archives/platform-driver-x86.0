@@ -1,186 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DD525B0AF;
-	Wed, 10 Jun 2026 16:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836275477E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 16:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781109912; cv=none; b=bZ1REEULpzjk6QrBzzqCpO6BL12nmDgZ/J9hZ8N3QGNmPDrxkEetiOJzE05Uq8glLpVrEwA8eXl8nlucF4bASOD3ksKKUe/1r+KKh0F1KJK5i0IefF1gcI7btA4VDWfZ+vEIZhNqHtv3xXu1mdGOqLmvdH7pmLNXavmIG0Ff5pc=
+	t=1781110189; cv=none; b=fZ8S7nlxfqtLMVNkn5YxDAJ6NOCasgBo0QncchaDloqagMDvDIYocSQMJYqOgpg6QGRYnUgDUG0X9jXafsGdt2nStrK/JFf/FAoMwyJHcSHcwtSNNQHIKhLpuxWWua7x0UD3YFUk2vHyvfXyycWyHHJuiC7TG27v7NqWnRkF350=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781109912; c=relaxed/simple;
-	bh=+ZB6Da2HWvZYv1vmMvNe9eSUtjNUaw1y1O1JZQiS8vQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=niFV1otHXYl6oVPFLwu1wC25jg8ZH+jEIJORoIUHjJWvpRJlkRLuMj47RBEteOK7nxywr11O5/BS0Q1sMEAibdd2h5r6bvNfpDx9qg7BaTUre0iyXJx5glFnp+imaIflFS8gKnKAkJT/ZvHvIAbRHAjezdJ7FelUXWM87MVOL2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLXPA9rO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781110189; c=relaxed/simple;
+	bh=I+SUe0goqJpNsl5qVR6bEQJ6+tkuts0BtbgHdPfXf9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hZhi9MDBrh22IkFS5KVSm7illTMbTU2m+oNGecZsXLYZv1rhA3bn/GLcKQMG86imF/atRMu6hlicy/6FOJrdgyz1A2Dw2KCBgPjrZOmg7aylWZjQySZPN9botJ5lDcWJhwxHQ1qeacjgdhqsEFBXp7MjchepuSp4GjszIWAVmlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrQaeKaG; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLXPA9rO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204C41F00893;
-	Wed, 10 Jun 2026 16:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781109911;
-	bh=6gdHQGQUI+RdS7ZUuS8+/hjC20f5GnX3T6BFhRH2P2Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bLXPA9rO+CKusqWUFkWKhbKrp6tW2aIKa+NIauigC5cJwmRCgLxstOPB94tmjJNG6
-	 eSnRtD5GsbKwFlWL5YfD4r6riqyBJS0zRIXYfgtix9QQ5OIAMJIqC8n0BRyI3J/JmL
-	 svlTyYKRiyt41Q4fftHHNx0DPaJYPSPUe3SWNQxLQo3L5sgfS68KeKuIJ5tJ0AjK9L
-	 c2TTpOSfgiT6dbuYT0X2Yrx1WT510CcZ/YPY/8EJKTYuyBW3s1YIkCA8KTGPOx3kud
-	 Sa3cexcbI+BiXiN/bp7/XfOTHDdH5dZ8THH4ZSUZjQuzf+XfW5NyIW+XpTnB38sPEs
-	 js2pkyRxv2Ifg==
-Date: Wed, 10 Jun 2026 18:44:59 +0200
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Rob Herring <robh@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, Greg KH <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-pm@vger.kernel.org, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH v6 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
- soldered down connector
-Message-ID: <eftahohsx3bbvmgxuciofjjcrybnsm2qc752hwyt65rb2uwaon@h32nh5fcpo7p>
-References: <to2mrizprc3hjufqbiplpqyek7f4uutqtn4hx4gkmdgv2rykbc@ybwwjhdec4nm>
- <CAL_JsqJXrHCJt770bJkMmAUhirSF3kHjYwSzkG7cXp7-eys8Rg@mail.gmail.com>
- <6aef3xxjjd4nbgrfx6jc6jt6rpqmttoui6hil5zqgdpas2j6gj@ie6j72orenou>
- <fsvmmgoe5wslmxebhrrwmdg2ldcmhzvj53gjkdfnfg2m2rz2lw@dcfboaakz7ae>
- <bguhzabwryayyqkv4ilzwr3ixwv6bzxncblo3ircz2wm3fs52k@66zvcrfcb4oe>
- <blhm4csjyw6r667cleljgzd6rpwagttjo5rau7wjrlnjakq2qm@ekyhc4jvwmwf>
- <m44mupdmg7kgco62n4evcviagqo7wwgyt3gybugbxwesd4ekjz@o24r6v4tpezc>
- <3faffec9-dc9d-4eec-a652-a84d30d85c96@app.fastmail.com>
- <cvqdbqnzjmzoowxkvz2lyv4avropu5jw7h2r6zng3ecf245hgg@fsysjqflqd35>
- <acv2f1qbqu4PlSL1@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrQaeKaG"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso81177945e9.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 09:49:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781110186; x=1781714986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5FkXmnCzF3e6ZXKR1eFQBaZLZRi1UB66/X/ti0NbFPk=;
+        b=SrQaeKaGjCRId8/fCiG4Y3dROwRna4mNXDcKop+5zvRByXc5S540zN6vFCZUCKEfd1
+         KzZJi0NbzyIk3Xo5cBB74UYT4BXa6sFkkp/a6kbEuZVpoRtwpVbdhBq6H0WzQ8Z7emp1
+         pfI/1fhse3nqsxBK9MDXN2rjuK/tWS7pQZHkSwPi59mt/piRpybbo8qRgQF6TjWC9rEV
+         P73YXmhOdGOFwVX1RFHNX+Jlobp6uDDmUiMncPPzdPn85w6siVfIqNRGo4a1VDpMXYwN
+         ekearm1jvQ0K8qpU43KPyASMOUn6dS6kYBQBEOQEKns2VFnQFP+HTQKZ1Ys2QVaH1Ick
+         OPRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781110186; x=1781714986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5FkXmnCzF3e6ZXKR1eFQBaZLZRi1UB66/X/ti0NbFPk=;
+        b=VKkgY2lz7wZNyCnQLesEq4wpPggbV36+ZVnrxT569MRvqY27LY9YC4SNib1h3O95Tw
+         yrxGBsAO+x2FSStX5h1KlkeaBqPMfb5BaPcnjTgsnZ1ldd8jYth/zRXYNTJJytLplZWL
+         /8dGAcH6UVBreFg5BPJnYpM35Kfh60NnDn9dGnDM5l1fD532jQITkx0txEvixzrC3bE1
+         yKOkBiEgfOfRwq6jiBXfyHZzoFg94wqKttYQf9cWXPzgBT7xCRhtOlhb3xxBdEuBwI7B
+         /1sB1q3QCxmDYXNpBq89Eb29TzbLpd4jgsCuKTxtoGDKIssZ3fXK/jCmthFATlCnqsV7
+         qAGw==
+X-Gm-Message-State: AOJu0Yx8XgUdL6vhh7L5h+3E0AI6NcrV9I1GQ6Ib5LTEF+zu+dZAX+M7
+	EZAgyW9QAbt1QIrahqokERTHJtES+Oo6u/me9LSwOJUIL3XdA9c3SMWZH/0tYpSD
+X-Gm-Gg: Acq92OF53TZzNRQT8mKLo4pcxMswNtmdW89Jv7VXEtVHdJoLkbVoshY4Ygmj3JwVZtV
+	XVq5gZpO72+ErjhZIS+L9i3yJ+dbt3pvazW2gNfv/ctlDv+M2UnzCGfnMM0nzHQ+Z7T79CKMAQX
+	SldwoVvdAtP6jYpGSXXTBfouMECn1at8hgIi+XYokGBGBFL/LwbXyBdv7FDrW1+IduivE4KkAHA
+	3Hdjz88iOqY4AxEbtGqKtcHqQyzdcLFJSJmGtic5EC2dftdxUhs4HJUxDFPnHgdKTl9OjNg/zAl
+	8kJdKqkcpcFsD+8oc2oSdX8mzjsZH+wWF++Wlfu6/qhtQQgAMpTD3GTRrHXSADxeQpPz/OWmy6z
+	JItzXp/xAaG88GHVIf+CrG0SkLEKfhRpA5VqYo7FrwKJgwT7pUi2dxkFmGLHv4ubA3MqN/8Y8HG
+	ucOlEDZ90cKijiU2JtnosR0pWBMpMtNTBuJqcRkfWOUnOExMYeU/D3TVpdqlQcaDUT
+X-Received: by 2002:a05:600c:81c9:b0:490:5057:f5f7 with SMTP id 5b1f17b1804b1-490c259f5c9mr374036645e9.11.1781110185786;
+        Wed, 10 Jun 2026 09:49:45 -0700 (PDT)
+Received: from shiro (83.6.47.15.ipv4.supernova.orange.pl. [83.6.47.15])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dc577sm74673553f8f.3.2026.06.10.09.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 09:49:45 -0700 (PDT)
+From: =?UTF-8?q?Dariusz=20Figza=C5=82?= <dariuszfigzal@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Dariusz=20Figza=C5=82?= <dariuszfigzal@gmail.com>
+Subject: [PATCH v3] platform/x86: asus-wmi: add keystone dongle support
+Date: Wed, 10 Jun 2026 18:49:42 +0200
+Message-ID: <20260610164942.74956-1-dariuszfigzal@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <acv2f1qbqu4PlSL1@linaro.org>
 
-On Tue, Mar 31, 2026 at 06:29:51PM +0200, Stephan Gerhold wrote:
-> On Wed, Mar 25, 2026 at 05:36:08PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Mar 23, 2026 at 01:23:07PM -0400, Mark Pearson wrote:
-> > > On Mon, Mar 23, 2026, at 12:52 PM, Manivannan Sadhasivam wrote:
-> > > > On Mon, Mar 23, 2026 at 06:45:15PM +0200, Dmitry Baryshkov wrote:
-> > > >> On Mon, Mar 23, 2026 at 09:26:04PM +0530, Manivannan Sadhasivam wrote:
-> > > >> > On Mon, Mar 23, 2026 at 05:14:30PM +0200, Dmitry Baryshkov wrote:
-> > > >> > > On Mon, Mar 23, 2026 at 07:14:25PM +0530, Manivannan Sadhasivam wrote:
-> > > >> > > > On Mon, Mar 23, 2026 at 08:39:55AM -0500, Rob Herring wrote:
-> > > >> > > > > On Mon, Mar 23, 2026 at 7:16 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> > > >> > > > > >
-> > > >> > > > > > On Sun, Mar 22, 2026 at 06:37:13PM -0500, Rob Herring wrote:
-> > > >> > > > > > > On Tue, Mar 17, 2026 at 09:59:56AM +0530, Manivannan Sadhasivam wrote:
-> > > >> > > > > > > > Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
-> > > >> > > > > > > > LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
-> > > >> > > > > > > > spec, it looks very similar to the M.2 Key E connector. So add the
-> > > >> > > > > > > > "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
-> > > >> > > > > > > > to reuse the Key E binding.
-> > > >> > > > > > >
-> > > >> > > > > > > What is LGA?
-> > > >> > > > > > >
-> > > >> > > > > >
-> > > >> > > > > > Land Grid Array
-> > > >> > > > > >
-> > > >> > > > > > > If not in the spec, is it really something generic?
-> > > >> > > > > > >
-> > > >> > > > > >
-> > > >> > > > > > Good question. Yes and No! LGA is not something that Lenovo only uses. Other
-> > > >> > > > > > vendors may also use this form factor. PCIe connectors are full of innovation as
-> > > >> > > > > > the spec gives room for hardware designers to be as innovative as possible to
-> > > >> > > > > > save the BOM cost.
-> > > >> > > > > 
-> > > >> > > > > innovation == incompatible changes
-> > > >> > > > > 
-> > > >> > > > 
-> > > >> > > > Yes, I was trying to sound nice :)
-> > > >> > > > 
-> > > >> > > > > > This is why I do not want to make it Lenovo specific. But if you prefer that, I
-> > > >> > > > > > can name it as "lenovo,pcie-m2-1620-lga-connector".
-> > > >> > > > > 
-> > > >> > > > > Depends if you think that s/w needs to know the differences. Hard to
-> > > >> > > > > say with a sample size of 1.
-> > > >> > > > > 
-> > > >> > > > 
-> > > >> > > > Sure. Will add the 'lenovo' prefix then.
-> > > >> > > 
-> > > >> > > Is it really Lenovo? Or is it some other module vendor, whose LGAs are
-> > > >> > > being used by Lenovo?
-> > > >> > > 
-> > > >> > > I remember that DB820c also used some kind of a module for the WiFi card
-> > > >> > > (which might be M.2 compatible or might not, I can't find exact docs at
-> > > >> > > this point).
-> > > >> > > 
-> > > >> > 
-> > > >> > I don't know. These kind of designs might be reused by several vendors. But
-> > > >> > considering that we should not make it generic, I'd go with Lenovo as that's
-> > > >> > the only vendor we know as of now.
-> > > >> 
-> > > >> ... and later we learn that other vendors use the same idea /pinout,
-> > > >> then nothing stops us from still telling that it's a
-> > > >> "lenovo,pcie-m2-something-lga". 
-> > > >> 
-> > > >
-> > > > How do you possibly know whether a single vendor has introduced this form factor
-> > > > or reused by multiple ones? Atleast, I don't have access to such a source to
-> > > > confirm.
-> > > >
-> > > I've not really been following this thread/patchset in detail; but want me to try and check with the T14s platform team if this device is specifically made for us (Lenovo) or not?
-> > > I doubt it is - we just don't do that usually, but I can go and ask the question if it will help resolve this (with the caveat that it could hold up the review for a bit and I may not be able to get a straight answer)
-> > > 
-> > 
-> > I can drop this specific patch in the meantime.
-> > 
-> > > My vote (for what little it's worth) would be to make it non-Lenovo specific. Then when the same part causes issues on another vendors platform I won't get asked questions about why Lenovo is breaking <other vendor> :)
-> > > 
-> > 
-> > Even if Lenovo prefix is used, it won't break other vendors. Just that we will
-> > end up adding more compatibles.
-> > 
-> > Anyhow, I'll wait for your reply and drop this patch for next revision.
-> > 
-> 
-> If you need a vendor prefix, I think "qcom," would be more appropriate
-> than Lenovo. This form factor is used by most vendors for recent
-> soldered Qualcomm-based wireless cards, not just Lenovo:
-> 
->  - Dell XPS 13 9345 has exactly the same soldered M.2 card, I assume
->    there are several other vendors as well.
-> 
->  - https://www.sparklan.com/product/wnsq-290be/ is a third-party
->    (Qualcomm-based) M.2 LGA 1620 card, in the block diagram the
->    pinout is called "QM.2 1620 LGA 168pin".
-> 
->  - If you press F9 while booting the ThinkPad T14s, you should get to a
->    screen with "Regulatory Information". For the T14s, this screen says
->    "Contains FCC ID: J9C-QCNCM825". This is the WiFi/BT module in the
->    soldered form factor. If you look that up on the FCC website, the
->    applicant for this module is "Qualcomm Technologies, Inc.". This
->    seems to be some kind of "modular certification" that vendors can
->    reuse/adapt without going through the whole process again.
-> 
-> Perhaps you should ask around inside Qualcomm? :-)
-> 
+The ASUS Keystone is a physical NFC-like dongle that slots into supported
+ASUS laptops. The EC fires WMI notify code 0xB4 on insert/remove events.
 
-Sorry for getting back after this long. I did ask around, but our HW folks are
-saying that Qcom is not the first one to use LGA M.2 modules. They claim that
-other vendors also do that.
+Expose the current insert state via a sysfs attribute by querying WMI
+device ID 0x00120091 (DSTS). This devid does not follow the standard DSTS
+convention: PRESENCE_BIT (0x00010000) encodes the insert state rather than
+feature presence, and STATUS_BIT is never set. Presence of a keystone slot
+is detected by a successful DSTS call.
 
-But for this specific card, it should be fine to use the 'qcom' prefix as
-apparently the module was supplied by Qcom.
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+Signed-off-by: Dariusz Figzał <dariuszfigzal@gmail.com>
+---
 
-I'll submit the bindings patch together with DTS change for T14s.
+Changes in v2:
+- Use .is_visible and platform_attributes[] instead of
+  device_create_file/device_remove_file (Ilpo Järvinen)
 
-- Mani
+Changes in v3:
+- Add interface documentation (Ilpo Järvinen)
 
+ .../ABI/testing/sysfs-platform-asus-wmi       |  9 +++
+ drivers/platform/x86/asus-wmi.c               | 65 +++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h    |  7 ++
+ 3 files changed, 81 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 89acb6638df8..f9825c6150b5 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -58,6 +58,15 @@ Description:
+ 			* 1 - overboost,
+ 			* 2 - silent
+ 
++What:		/sys/devices/platform/<platform>/keystone
++Date:		Jun 2026
++KernelVersion:	7.2
++Contact:	"Dariusz Figzał" <dariuszfigzal@gmail.com>
++Description:
++		Reports the Keystone dongle insert state (read-only):
++			* 0 - not inserted
++			* 1 - inserted
++
+ What:		/sys/devices/platform/<platform>/gpu_mux_mode
+ Date:		Aug 2022
+ KernelVersion:	6.1
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 80144c412b90..3c9ef826551d 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -70,6 +70,7 @@ module_param(fnlock_default, bool, 0444);
+ #define NOTIFY_KBD_TTP			0xae
+ #define NOTIFY_LID_FLIP			0xfa
+ #define NOTIFY_LID_FLIP_ROG		0xbd
++#define NOTIFY_KEYSTONE			0xb4
+ 
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+ 
+@@ -279,6 +280,8 @@ struct asus_wmi {
+ 	u32 tablet_switch_dev_id;
+ 	bool tablet_switch_inverted;
+ 
++	bool keystone_available;
++
+ 	enum fan_type fan_type;
+ 	enum fan_type gpu_fan_type;
+ 	enum fan_type mid_fan_type;
+@@ -646,6 +649,55 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
+ 	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
+ }
+ 
++/* Keystone *******************************************************************/
++
++static int keystone_check_present(struct asus_wmi *asus)
++{
++	u32 retval;
++	int err;
++
++	asus->keystone_available = false;
++
++	/*
++	 * Use a raw devstate call rather than asus_wmi_dev_is_present().
++	 * For this devid, PRESENCE_BIT encodes current insert state, not
++	 * feature presence, so asus_wmi_dev_is_present() would return false
++	 * whenever the dongle is absent at boot, even on machines that have
++	 * a keystone slot.
++	 * -ENODEV means the firmware doesn't know this devid at all.
++	 * retval is not examined here, only the return code matters.
++	 */
++	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
++	if (err == -ENODEV)
++		return 0;
++	if (err)
++		return err;
++
++	asus->keystone_available = true;
++	return 0;
++}
++
++static ssize_t keystone_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++	u32 retval;
++	int err;
++
++	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
++	if (err)
++		return err;
++
++	return sysfs_emit(buf, "%d\n", !!(retval & ASUS_WMI_DSTS_PRESENCE_BIT));
++}
++
++static DEVICE_ATTR_RO(keystone);
++
++static void asus_wmi_keystone_notify(struct asus_wmi *asus)
++{
++	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "keystone");
++}
++
+ /* Input **********************************************************************/
+ static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
+ {
+@@ -4575,6 +4627,12 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 		return;
+ 	}
+ 
++	if (code == NOTIFY_KEYSTONE) {
++		if (asus->keystone_available)
++			asus_wmi_keystone_notify(asus);
++		return;
++	}
++
+ 	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
+ 		if (asus->fan_boost_mode_available)
+ 			fan_boost_mode_switch_next(asus);
+@@ -4698,6 +4756,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_lid_resume.attr,
+ 	&dev_attr_als_enable.attr,
+ 	&dev_attr_fan_boost_mode.attr,
++	&dev_attr_keystone.attr,
+ #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 		&dev_attr_charge_mode.attr,
+ 		&dev_attr_egpu_enable.attr,
+@@ -4741,6 +4800,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
+ 	else if (attr == &dev_attr_fan_boost_mode.attr)
+ 		ok = asus->fan_boost_mode_available;
++	else if (attr == &dev_attr_keystone.attr)
++		ok = asus->keystone_available;
+ 
+ #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+ 	if (attr == &dev_attr_charge_mode.attr)
+@@ -5081,6 +5142,10 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	if (err)
+ 		goto fail_platform_profile_setup;
+ 
++	err = keystone_check_present(asus);
++	if (err)
++		dev_warn(&pdev->dev, "Failed to check Keystone presence: %d\n", err);
++
+ 	err = asus_wmi_sysfs_init(asus->platform_device);
+ 	if (err)
+ 		goto fail_sysfs;
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 554f41b827e1..c29962d5baac 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -147,6 +147,13 @@
+ #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
+ #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
+ 
++/* Keystone dongle insert/remove state.
++ * PRESENCE_BIT (0x00010000) encodes insert state:
++ * 0x00010000 = inserted, 0x00000000 = absent. STATUS_BIT is never set.
++ * 0xFFFFFFFE means no keystone slot on this machine.
++ */
++#define ASUS_WMI_DEVID_KEYSTONE		0x00120091
++
+ /* TUF laptop RGB modes/colours */
+ #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
+ #define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
 -- 
-மணிவண்ணன் சதாசிவம்
+2.54.0
+
