@@ -1,80 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B966D3921E9
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 20:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50E337DEB5;
+	Wed, 10 Jun 2026 21:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781124010; cv=none; b=LGXxkbHgjBysWVbHuTi8six0quNL5a9SaOkCnPW0NXmfRg684Qjwj7kK6PntRxru3rMS9XcPrENDVJZjImYgapH4J2NLtbJqWBa1/HrW1sOuQh5A8BRzlUka/NIuQChU2ir0Lc34Wh0XSrEmxSvP4ctRplChQAP9jBeMdJg15uw=
+	t=1781125508; cv=none; b=oY2ce3N92hv958RoLMho8iOMKVlWEowMvNlU1IGqxuonf/pgK8ZYzfz3B/U3SHnzQWo4WIp5EEefOAwgSxpwqLHsLbEL+tQ8PQjP36eLV687Zp4gcPOYSPhGK5Dcgw5X37Im/mSGLk2k3Q6NLznQhe+qP31VQmV3k+iA0BNH3A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781124010; c=relaxed/simple;
-	bh=tnP47p/qiwHfkbM9ECvmHNKVY5atzbbmzxiZuZyqplM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=arp7NkOWvgDNYqeW+A5Xp2IXmm7n/T/zSkmCB/ax1aB80S8VSNEvm2DzRB9RP0dex4aSiJHGACpqloJFh6/G6/PKbD8hFIvv2f9CYtMtkuCJFXSxzYGPdziAoC8XA5CC3srJT0zCdfpVdYKrTsgjVHwwaD3AucdPB4XMz94do6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoQZRJWZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1781125508; c=relaxed/simple;
+	bh=e1XyesHhSSdOepF9XMl7M84a2qn+asoqmkCv4+T0A88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E4CgGBURIYZScMYfkI171qoW1vMg+qqJH+N6y84bvzSrfhhGbYDnZiekYZ4/SY74nTfcyXeRryFN6R/wGJP8OzRolc9Fqk55F1P52Wvn8mMZflBwJuRSjYqc+gvNLr2IswtD0nMCl2+kkWNLatVGGTx1SbePiUJhpBDfNK9rzmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRulwjSJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoQZRJWZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 424FEC19425
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 20:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781124010;
-	bh=tnP47p/qiwHfkbM9ECvmHNKVY5atzbbmzxiZuZyqplM=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=qoQZRJWZCCbIkJdNaxPI8xusQO6lV021kXPGM4eK4mJS1VG/TlbbA/sk6wzeLjyES
-	 FEB2vVpUxacaObn7g8eRLorlR0zdNdClwwLsD8/y5InuKQR72c1WMKokiNpmJ1RBXc
-	 x8ul+dYF98FR97dKccJjqFAvgyv1ZGhNYKGkTmkWHtelU+tY7kS4l/K9arSgtPgXkf
-	 untrhrOdwXVhAQh/kQCEMgeyoPbUsA3Ua33MgCghuPGI9k/xt0DvltwmHFuDHrzOXP
-	 YasCqlPHsQ4/Utw0Axde1GZQwc9u2ZH5dMl6THybR/0CZNtgj3lcgctJmvy+54HuYq
-	 b/IRUN2PZSCoA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 238E6C41612; Wed, 10 Jun 2026 20:40:10 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Wed, 10 Jun 2026 20:40:09 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-jNu9w48kaw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRulwjSJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435101F00893;
+	Wed, 10 Jun 2026 21:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781125507;
+	bh=ttBln2PDL/uIcc1HpCs5xCPbYiV9X8m2KmOBCOPnBp8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RRulwjSJEkhkhmLvhk2iBUtFjWQGBozMUdwRAblhO3E7Te37OTAc66S/Ta6piTLAT
+	 PjEoVEdGz9g9ggiVpfka9YOOn4o7MET3YvhTbOE/zDTbsopB2Z3iJetACVlWnG77s5
+	 GRQlGy/tGbiRyQMoQpZvcSPdnKhStgnimw12kNlos4rXKm9jpjv1fAKxwTswV/kHJa
+	 Kx3LV7RijpSK0mPbRdDSnNubMFB05UEddNkhLeZfDyDdWQ8ppX1hiqSXJx/rDlD23y
+	 zBV77nbuAHOuymBWriyMzZryBiJ0M+gvybRGj5fcqdIhA8PBvpSsUT9bflty69IeAv
+	 b/j8zsRzVu5LQ==
+Received: by pali.im (Postfix)
+	id CF9195E0; Wed, 10 Jun 2026 23:05:03 +0200 (CEST)
+Date: Wed, 10 Jun 2026 23:05:03 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Dell.Client.Kernel@dell.com, mjg59@srcf.ucam.org, soyer@irl.hu,
+	hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+	mario.limonciello@amd.com
+Subject: Re: [PATCH v6 9/9] modpost: Handle malformed WMI GUID strings
+Message-ID: <20260610210503.u2fcxq5qnrdtcdxf@pali>
+References: <20260610203453.816254-1-W_Armin@gmx.de>
+ <20260610203453.816254-10-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260610203453.816254-10-W_Armin@gmx.de>
+User-Agent: NeoMutt/20180716
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+On Wednesday 10 June 2026 22:34:53 Armin Wolf wrote:
+> Some WMI GUIDs found inside binary MOF files contain both
+> uppercase and lowercase characters. Blindly copying such
+> GUIDs will prevent the associated WMI driver from loading
+> automatically because the WMI GUID found inside WMI device ids
+> always contains uppercase characters.
+> 
+> Avoid this issue by always converting WMI GUID strings to
+> uppercase. Also verify that the WMI GUID string actually looks
+> like a valid GUID.
 
---- Comment #84 from Armin Wolf (W_Armin@gmx.de) ---
-Sadly i was unable to find anyone with a LG device, so i cannot fix the
-keyboard backlight and fn lock toggle issue just yet.
+Hello! Maybe different idea: Would not it be better to check in
+do_wmi_entry() if all letters are really upper case?
 
-However i can send the necessary patches to enable event support for your
-device. Are you OK with that? Just remember that you will need to disable t=
-he
-touchpad toggle scancode of your keyboard using udev.
+Mixing lowercase and uppercase is a mess. And if somebody blindly copy
+lowercase from MOF files to some kernel wmi driver, we can check for
+this mistake in file2alias.c and throw an error.
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  .../wmi/driver-development-guide.rst          |  2 +-
+>  scripts/mod/file2alias.c                      | 28 ++++++++++++++++++-
+>  2 files changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/wmi/driver-development-guide.rst b/Documentation/wmi/driver-development-guide.rst
+> index 387f508d57ad..6290c448f5e7 100644
+> --- a/Documentation/wmi/driver-development-guide.rst
+> +++ b/Documentation/wmi/driver-development-guide.rst
+> @@ -54,7 +54,7 @@ to matching WMI devices using a struct wmi_device_id table:
+>  ::
+>  
+>    static const struct wmi_device_id foo_id_table[] = {
+> -         /* Only use uppercase letters! */
+> +         /* Using only uppercase letters is recommended */
+>           { "936DA01F-9ABD-4D9D-80C7-02AF85C822A8", NULL },
+>           { }
+>    };
+> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+> index 4e99393a35f1..20e542a888c4 100644
+> --- a/scripts/mod/file2alias.c
+> +++ b/scripts/mod/file2alias.c
+> @@ -1253,6 +1253,8 @@ static void do_tee_entry(struct module *mod, void *symval)
+>  static void do_wmi_entry(struct module *mod, void *symval)
+>  {
+>  	DEF_FIELD_ADDR(symval, wmi_device_id, guid_string);
+> +	char result[sizeof(*guid_string)];
+> +	int i;
+>  
+>  	if (strlen(*guid_string) != UUID_STRING_LEN) {
+>  		warn("Invalid WMI device id 'wmi:%s' in '%s'\n",
+> @@ -1260,7 +1262,31 @@ static void do_wmi_entry(struct module *mod, void *symval)
+>  		return;
+>  	}
+>  
+> -	module_alias_printf(mod, false, WMI_MODULE_PREFIX "%s", *guid_string);
+> +	for (i = 0; i < UUID_STRING_LEN; i++) {
+> +		char value = (*guid_string)[i];
+> +		bool valid = false;
+> +
+> +		if (i == 8 || i == 13 || i == 18 || i == 23) {
+> +			if (value == '-')
+> +				valid = true;
+> +		} else {
+> +			if (isxdigit(value))
+> +				valid = true;
+> +		}
+> +
+> +		if (!valid) {
+> +			warn("Invalid character %c inside WMI GUID string '%s' in '%s'\n",
+> +			     value, *guid_string, mod->name);
+> +			return;
+> +		}
+> +
+> +		/* Some GUIDs from BMOF definitions contain lowercase characters */
+> +		result[i] = toupper(value);
+> +	}
+> +
+> +	result[i] = '\0';
+> +
+> +	module_alias_printf(mod, false, WMI_MODULE_PREFIX "%s", result);
+>  }
+>  
+>  /* Looks like: mhi:S */
+> -- 
+> 2.39.5
+> 
