@@ -1,119 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CD93E450E;
-	Wed, 10 Jun 2026 10:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDFF39C657
+	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 10:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781088624; cv=none; b=C5pOgn6/A3psW8vV9Pyn93iT13+Bq2kATGYqOm8oPPuSnKMpBkMjjNpEnpf0LESNgzPX582jMSF5m2QykPQsaWpauGaC1e3/joFyaeLM/kPse+YwY9g+P69qBFGozXECT8Febjy6z7saox6xs7TmtbjCI2d70tdRYCIuM/IwSeU=
+	t=1781088717; cv=none; b=NfdPGUCIP4srX4r2IZeXdxQ/gIxXHPWJrECajUcHQYKL8NWDKv8VZ0UKNIZh55xvSfvbbE90uk8bNge0YcUyr+KjOUir9CA25n7CGd2FzpC+L4MiNhA0K5SXoAoorlZeG9zX4SBrLaL3MKPfb7Ls7YWEzqYQszv9v4Zs0GZSK8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781088624; c=relaxed/simple;
-	bh=RWcoO4XeX4VNqJvMo2VyCgTs7V7Dg0MyBNvS5Mm+a3g=;
+	s=arc-20240116; t=1781088717; c=relaxed/simple;
+	bh=wxqd7mruE8hJcC8pDWaNObPDI+BJiyAUXhG0jZDx9RY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t8c7PsZgQ2oh+R9Krsv5jwLl0UVzbUkLs7ZXQUdFqdvpiLiICdA+Snzuh7QVFqBwfSdD+F+J6IW5L353iXURemYrF/q5JFbzpMvzeSFarmwxeikEhqy1RCbfBxa6xts1aJhMTkCwZ8Guafs+NSxTUh6w4sR3JIpAksYuTXEzsv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HcBpXCPc; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=RUndcgfyeAR1bCE+7ltWa+bPM6fk2PvSfQhNtcdim+eUjHrfxS1jQhMcoS1RMN5vqaFEvafGr25e8AxNUXNdZIOy3NHFANtmFq3YPj24WzsiW/oFfExkSdZH9G8yVgm1+MpYea9Asfs8rr9Ru1yoUcMK9a535EoIEK4OgFZt4fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fj6I0VwX; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HcBpXCPc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fj6I0VwX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781088623; x=1812624623;
+  t=1781088716; x=1812624716;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=RWcoO4XeX4VNqJvMo2VyCgTs7V7Dg0MyBNvS5Mm+a3g=;
-  b=HcBpXCPcWsXyrXPl/DH5gjbLY9mSyrhz76t2aLnrkDhi4PeCyK91etEG
-   4bKLH2IgAIzRbkaxhWVLGWNj9RvXOE39Byy0Gy0eH4Schu38k+2AjBLn/
-   DJ0Bp8ulnQ+u9nKvt3uBvtiG5YQxc8f9P+q2BD7qHcE3ug3/gUln8+H+f
-   kg8ThTzYS3Ofs9YhPiq8JqyMka9U11gwVHkNHFYN31RrZNrF3Rh6tVu+F
-   S1JAJdIE0EwKlB4RaEpt9hGSkEjYuaNo8BLz/J7ZKBqaNon+h8oLQWdgW
-   NG0IV+0Xly0FLNsKkrKaHFuC9pfjlgsyAZU6BsfvIP9rPxngggQNpgG0W
-   Q==;
-X-CSE-ConnectionGUID: DrzkaCCWQ9SJy00aAUBokw==
-X-CSE-MsgGUID: kGj0wjkaTW6PbGBfYtCW5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81726680"
+  bh=wxqd7mruE8hJcC8pDWaNObPDI+BJiyAUXhG0jZDx9RY=;
+  b=Fj6I0VwXByPRpSwHVCymWztuN4EIssfI+Y8exe6CWuMamEfc6KxG9+j4
+   7M0lGtMhnGQng6JluO80/rqEELxfB8Z+Cpb9RSTy3VnngeoWdqd6WQp93
+   oFnN5UIVfF/kh12/VfK7urWZbeBwWYUp0sq8CnBpx4NfDZIYGgkvwcdQs
+   I5mAaAx5Pq9boibm6SI5eoQ3YO/nyKyN++LSSuV+Q/JaOnP9NCpUPAd6t
+   MY6P9EJsCz8vfWCsqvth63slqlCApaDDbmVAOEjWJN02SMfaByVU1cJLq
+   SjVUG+dL+JmCP1QAAYTP70GzdzxMfqUCqtjgF1RiT2Bo3fpqmCu/dqV6K
+   w==;
+X-CSE-ConnectionGUID: kxpVjPfWToui6RWJ1tGy4A==
+X-CSE-MsgGUID: MZbuvtatQoyZkh4j0BxfOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="84447103"
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="81726680"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 03:50:22 -0700
-X-CSE-ConnectionGUID: gqRPGTR/SPqxqZKmSp70Rg==
-X-CSE-MsgGUID: C7+58cWaQKuLPP1ByLd2xQ==
+   d="scan'208";a="84447103"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 03:51:56 -0700
+X-CSE-ConnectionGUID: lOQLDlOWTHO0QzR8hGM5Zg==
+X-CSE-MsgGUID: u7jm+ZZoT0y3hQQBKKzG4A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="248003099"
+   d="scan'208";a="246168149"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 03:50:19 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 03:51:53 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Jun 2026 13:50:16 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, wse@tuxedocomputers.com
-Subject: Re: [PATCH 0/7] platform/x86: uniwill-laptop: Support additional
- features
-In-Reply-To: <20260530170813.10166-1-W_Armin@gmx.de>
-Message-ID: <9c74fdcc-20c2-0722-7932-8fa09872d80b@linux.intel.com>
-References: <20260530170813.10166-1-W_Armin@gmx.de>
+Date: Wed, 10 Jun 2026 13:51:50 +0300 (EEST)
+To: "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+cc: "hansg@kernel.org" <hansg@kernel.org>, 
+    "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 7.2-rc1
+In-Reply-To: <d155101fd07aacec65d0168f50df8327f3bc3f34.camel@intel.com>
+Message-ID: <a9153763-32e1-f6e8-8d19-2cd1afba37ca@linux.intel.com>
+References: <d155101fd07aacec65d0168f50df8327f3bc3f34.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1620085302-1781088616=:1359"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 2 Jun 2026, Pandruvada, Srinivas wrote:
 
---8323328-1620085302-1781088616=:1359
-Content-Type: text/plain; charset=ISO-8859-7
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> This pull request is based on
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> for-next
+> 
+> as of today
+> 
+> The following changes since commit
+> a167ae8eace52dd6c80438b77d92450fe12cd4be:
+> 
+>   platform/surface: SAM: Add support for Surface Pro 12in (2026-05-28
+> 16:40:39 +0300)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/spandruvada/linux-kernel.git intel-sst
+> 
+> for you to fetch changes up to
+> 607af438e6430893a822964c841a1994b33acccc:
+> 
+>   tools/power/x86/intel-speed-select: Harden daemon pidfile open (2026-
+> 06-02 10:39:45 -0700)
+> 
+> ----------------------------------------------------------------
+> Ali Ahmet MEMIS (1):
+>       tools/power/x86/intel-speed-select: Harden daemon pidfile open
+> 
+>  tools/power/x86/intel-speed-select/isst-daemon.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 
-On Sat, 30 May 2026, Armin Wolf wrote:
+Pulled to the review-ilpo-next branch. Thank you.
 
-> This patch series adds support for various new features to the
-> uniwill-laptop driver. The first patch adds support for the keyboard
-> backlight available on some models, while the next three patches
-> add support for additional WMI events, USB powershare and AC auto
-> boot. The last four patches finally add support for additional devices.
->=20
-> The patch series depends on commit b1a9b7a904af ("leds: Introduce the mul=
-ti_max_intensity sysfs attribute")
-> currently sitting inside the for-leds-next branch of the LED subsystem
-> tree. Without said commit the first patch will apply but not build.
->=20
-> All patches have been tested on my Tuxedo InfinityBook Pro 15 Gen 10
-> AMD and most work flawlessly, only the AC auto boot feature seems to
-> be broken on my device. I decided to still include the patch because
-> it works on other devices.
->=20
-> Armin Wolf (7):
->   platform/x86: uniwill-laptop: Add keyboard backlight support
->   platform/x86: uniwill-laptop: Handle screen-related events
->   platform/x86: uniwill-laptop: Add AC auto boot support
->   platform/x86: uniwill-laptop: Add support for USB powershare
->   platform/x86: uniwill-laptop: Add support for the MACHENIKE L16 Pro
->   platform/x86: uniwill-laptop: Add support for the AiStone X4SP4NAL
->   platform/x86: uniwill-laptop: Add lightbar support for LAPQC71A/B
->=20
->  .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
->  .../admin-guide/laptops/uniwill-laptop.rst    |  27 +
->  drivers/platform/x86/uniwill/uniwill-acpi.c   | 609 +++++++++++++++++-
->  drivers/platform/x86/uniwill/uniwill-wmi.h    |   2 +
->  4 files changed, 650 insertions(+), 13 deletions(-)
-
-Unfortunately, I got this error after applying this series on top of=20
-review-ilpo-next:
-
-drivers/platform/x86/uniwill/uniwill-acpi.c: In function =A1uniwill_kbd_led=
-_init=A2:
-drivers/platform/x86/uniwill/uniwill-acpi.c:1827:49: error: =A1struct mc_su=
-bled=A2 has no member named =A1max_intensity=A2; did you mean =A1intensity=
-=A2?
- 1827 |                 data->kbd_led_mc_subled_info[i].max_intensity =3D K=
-BD_LED_MAX_INTENSITY;
-
-
---=20
+-- 
  i.
 
---8323328-1620085302-1781088616=:1359--
