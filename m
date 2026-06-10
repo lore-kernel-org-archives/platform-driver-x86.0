@@ -1,226 +1,253 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E43404BD0;
-	Wed, 10 Jun 2026 12:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FA63DCD85;
+	Wed, 10 Jun 2026 12:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781093931; cv=none; b=RHfttx5uXP/XosCVq0yKrktqAkIznelLWBdZUE1SVreTFCd8Cog2c3Ue09i3tbcPtrscQznbWAAZDRU67e7CN44cTqX8+qoYjbedISpPbtNOVWx6SYeAK9itzRCs/ZJwuK0ymNrj9EtiaDPMOxva/jKsd8DvLgzHwIWDt4yReJ0=
+	t=1781094321; cv=none; b=EN4aPQ6N+NKa1kn5x0lhurWN6mD9MSpJU8wjo9X1JPVfwi7lk1GLPldrKKbKBTuxVrcXHntY8zAdVKcFEqCPZpgrdY6WfB7pfjKo5OOOfECklecmwukovvCKzXB00+uKGhbyB/nZooTU1hk6opxJ/BovjXZFxW0VRfuTFvShkoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781093931; c=relaxed/simple;
-	bh=QgfhxDPnVNW1Vi5ZYP2jgDZ2QxhcbxcIpoyz7fIvvnc=;
+	s=arc-20240116; t=1781094321; c=relaxed/simple;
+	bh=zOuO+58MSImvkUy1uDvTrIY6tNOn0bXs3rhBYdVvypE=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lKvaZM3GIoEwgGDa3dvzrqKDJ14Jni5CEDffkXCr8dD0Tg5arNis1n6S+Y0zN+HVePvfC1RzzdwfP4Z7Ya7N+PPTvbUiW37gRhRkNxteyTesC8EWMZtD2NLZQU38HPftPksPdX5AWrVK3Nr7tmAevPWfKZThDXBO/E6n5xO2x/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ing1jHyA; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=q/YrF/qPH0t6cFlVt98CMF0Xc9ODUCxFAQJIqypuJC4mwwYCBgSlxLTNJspy3fUyzRnAh+Krm/CV/+JJbcIROF3JLDB7NOTCbVabZwdneUc8z2feO/JSMcGHq05OQPDnC9p5m1lOrrA3volwfGBAkODU7CkLEzkSsQKU0nhu7ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g0vAKBYj; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ing1jHyA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g0vAKBYj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781093928; x=1812629928;
+  t=1781094320; x=1812630320;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=QgfhxDPnVNW1Vi5ZYP2jgDZ2QxhcbxcIpoyz7fIvvnc=;
-  b=ing1jHyAK7Mh8FPCxu311f+6PkJoZy/ZYhF20LhMb5rPC44KpKdMfg+Y
-   kDh8kABTX0Q+61ij0FGEl9exMccUqn+yAysN5YXhgqxIPiaLj1qLZB8N4
-   a9ld7jlwPIz1Kb0HGZfcNlF8ehcF1oDWmaZPqNv9NXdEaBHkVzHI+qsvT
-   CqrDYuXRKXF0cJeG2ZQrqx4T+HNAmUAZDlYcwU6HyVmBwIIYgUuWw16JH
-   Bja6iz00Bi01wrV4g6v9Bw4369h9m+xzBsFLt7kTnf/o9NOC6yGS/3b9s
-   NojTyLbw3bCmKqWbwN9qWMLNOaGVw5t7fa+5w6qxUj9ERIsyA6TqxltqU
-   A==;
-X-CSE-ConnectionGUID: fV+xBkUtRRKN51M9ucupNA==
-X-CSE-MsgGUID: /NF1kPsXR+q07BMzRL7zrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80899417"
+  bh=zOuO+58MSImvkUy1uDvTrIY6tNOn0bXs3rhBYdVvypE=;
+  b=g0vAKBYjmEfR50W0uwke71z5ciVUP5nF3/aESGkR9tZJd8TYtzPoaYjg
+   x5E2Q+UuJJIU1qHTMeJ/jpL7jWHLhtqLUWc6m8NQbsu/LcPjO9WcLxQc9
+   tJoE4iEKYdTRSrMwe1Dj9jF2x68ZED12N4Pf5IsW1jxaFOqbKu0hrVi8R
+   fIAnrJav/zdfGi2PP4y1Ep1BhbkXm+0r54nhpMIv7pokDxeIT1dnijdHl
+   thEQHQCldCtyGIKpPk4oWjYyImvEd8G1F0IspBq/TMMcj+S76WLX/XX1D
+   BtiC7ufJoihkYdl2rxPwHIm0WBe8bk+YOqUy5lopamg2CKuub6spnMiDl
+   g==;
+X-CSE-ConnectionGUID: 0UJTIbIjRiG+RnqBW+NCWg==
+X-CSE-MsgGUID: q1B3z0IJRgCrr9j6Vux2mQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="69425407"
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="80899417"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:18:46 -0700
-X-CSE-ConnectionGUID: Y5ADGJCJTe2NLoc1XHqr3A==
-X-CSE-MsgGUID: HN4omWSRT9mGzID5BfCsMg==
+   d="scan'208";a="69425407"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:25:19 -0700
+X-CSE-ConnectionGUID: 2ZAhPR73QrC7oDe+l74JFA==
+X-CSE-MsgGUID: 7ob79xzGQQOn0XQg9a7Ewg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="246248038"
+   d="scan'208";a="241737664"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:18:44 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:25:16 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Jun 2026 15:18:39 +0300 (EEST)
-To: =?KOI8-R?B?68/Oxc7LzyDhzsTSxcog98nL1M/Sz9fJ3g==?= <admin@aquinas.su>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v8] platform/x86: hp-wmi: Add multicolor LED support for
- HP keyboard backlight
-In-Reply-To: <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
-Message-ID: <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
-References: <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su> <Yum2UkOKSk-F7vHbhPXMxA@aquinas.su> <e1bce5de-34e8-4351-96ae-7edf4379b99b@kernel.org> <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
+Date: Wed, 10 Jun 2026 15:25:12 +0300 (EEST)
+To: =?ISO-8859-2?Q?Dariusz_Figza=B3?= <dariuszfigzal@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, corentin.chary@gmail.com, 
+    luke@ljones.dev, denis.benato@linux.dev, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: asus-wmi: add keystone dongle support
+In-Reply-To: <20260528185752.81563-1-dariuszfigzal@gmail.com>
+Message-ID: <df1a778f-5b43-9ec7-2c38-99b44d7eab61@linux.intel.com>
+References: <20260528185752.81563-1-dariuszfigzal@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-88954322-1781093919=:1359"
+Content-Type: multipart/mixed; boundary="8323328-768591789-1781094312=:1359"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-88954322-1781093919=:1359
-Content-Type: text/plain; charset=utf-8
+--8323328-768591789-1781094312=:1359
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Mon, 18 May 2026, =D0=9A=D0=BE=D0=BD=D0=B5=D0=BD=D0=BA=D0=BE =D0=90=D0=
-=BD=D0=B4=D1=80=D0=B5=D0=B9 =D0=92=D0=B8=D0=BA=D1=82=D0=BE=D1=80=D0=BE=D0=
-=B2=D0=B8=D1=87 wrote:
+On Thu, 28 May 2026, Dariusz Figza=C5=82 wrote:
 
-> >=20
-> > I'm afraid the names are still wrong. Your patch results in e.g. :
-> >=20
-> > hp::kbd_backlight_zone-right
-> >=20
-> > where as per:
-> >=20
-> > https://lore.kernel.org/linux-leds/20260504145434.12746-1-johannes.goed=
-e@oss
-> > .qualcomm.com/
-> >=20
-> > this should be:
-> >=20
-> > hp::kbd_zoned_backlight-right
-> >=20
-> > Regards,
-> >=20
-> > Hans
-> >=20
+> The ASUS Keystone is a physical NFC-like dongle that slots into supported
+> ASUS laptops. The EC fires WMI notify code 0xB4 on insert/remove events.
 >=20
-> I would like to sincerely apologize for the mistake in understanding the=
-=20
-> documentation. I received feedback pointing out my error, corrected it=20
-> accordingly, but unfortunately, there was still an oversight. After being=
-=20
-> notified of the second error, I have now thoroughly reviewed everything a=
-gain=20
-> and made all necessary corrections.
+> Expose the current insert state via a sysfs attribute by querying WMI
+> device ID 0x00120091 (DSTS). This devid does not follow the standard DSTS
+> convention: PRESENCE_BIT (0x00010000) encodes the insert state rather tha=
+n
+> feature presence, and STATUS_BIT is never set. Presence of a keystone slo=
+t
+> is detected by a successful DSTS call.
 >=20
-> I truly appreciate your patience and guidance throughout this process. Yo=
-ur=20
-> feedback has been extremely helpful in helping me reach the correct=20
-> understanding. I am committed to ensuring that all future submissions are=
-=20
-> fully compliant with the documentation requirements.
->=20
-> Thank you for your time and understanding.
->=20
+> Signed-off-by: Dariusz Figza=C5=82 <dariuszfigzal@gmail.com>
 > ---
 >=20
-> From: Edip Hazuri <edip@medip.dev>
+> Changes in v2:
+> - Use .is_visible and platform_attributes[] instead of
+>   device_create_file/device_remove_file (Ilpo J=C3=A4rvinen)
 >=20
-> Add support for the HP keyboard RGB backlight found on HP OMEN and
-> HP Victus laptops. These keyboards expose per-zone RGB control through
-> WMI commands.
->=20
-> Register multicolor LED class devices for each keyboard zone (up to 4
-> zones, depending on the keyboard type). Each zone exposes individual
-> red, green, and blue channels via the multicolor LED subsystem.
->=20
-> Also hardware-initiated brightness changes (e.g. via the keyboard
-> backlight hotkey, mostly fn+f4) are reported.
->=20
-> The color data is stored in a 128-byte color table managed by the
-> firmware, with RGB values starting at offset 25, packed sequentially
-> per zone.
->=20
-> Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
->=20
-> ---
->=20
-> Changes since v7:
->  - The LED class device names changed to be consistent with the documenta=
-tion.
->=20
-> Changes since v6:
->  - The LED class device names have been made more consistent with the=20
-> documentation, in accordance with patch https://lore.kernel.org/linux-led=
-s/
-> 20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
-> underscores have been replaced with dashes where indicated.
->=20
-> Changes since v5:
->  - LED class device names changed from a number to using a descriptive na=
-me=20
-> for each zone.
->=20
-> v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
->=20
-> Changes since v4:
->  - Fix circular dependencies
->=20
-> Changes since v3:
->  - Merge the changes into a single commit
->=20
-> Changes since v1:
->  - Fix mentioned style errors
->  - Add Kconfig dependencies
->=20
-> ---
->=20
->  drivers/platform/x86/hp/Kconfig  |   2 +
->  drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
->  2 files changed, 285 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kc=
-onfig
-> index dd51491b9bcd..2a1841cbec76 100644
-> --- a/drivers/platform/x86/hp/Kconfig
-> +++ b/drivers/platform/x86/hp/Kconfig
-> @@ -45,6 +45,8 @@ config HP_WMI
->  =09select INPUT_SPARSEKMAP
->  =09select ACPI_PLATFORM_PROFILE
->  =09select HWMON
-> +=09select LEDS_CLASS
-> +=09select LEDS_CLASS_MULTICOLOR
->  =09help
->  =09  Say Y here if you want to support WMI-based hotkeys on HP laptops=
-=20
-> and
->  =09  to read data from WMI such as docking or ambient light sensor=20
-> state.
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
-p-
-> wmi.c
-> index d1cc6e7d176c..19da18f68337 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -14,6 +14,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> =20
->  #include <linux/acpi.h>
-> +#include <linux/array_size.h>
->  #include <linux/cleanup.h>
->  #include <linux/compiler_attributes.h>
->  #include <linux/dmi.h>
-> @@ -23,6 +24,8 @@
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/kernel.h>
-> +#include <linux/led-class-multicolor.h>
-> +#include <linux/leds.h>
->  #include <linux/limits.h>
->  #include <linux/minmax.h>
->  #include <linux/module.h>
-> @@ -57,6 +60,7 @@ enum hp_ec_offsets {
-> =20
->  #define HP_FAN_SPEED_AUTOMATIC=09 0x00
->  #define HP_POWER_LIMIT_DEFAULT=09 0x00
-> +#define HP_COLOR_TABLE_PADDING=09 25
->  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-> =20
->  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when=
- zero=20
-> insize is required
+>  drivers/platform/x86/asus-wmi.c            | 65 ++++++++++++++++++++++
+>  include/linux/platform_data/x86/asus-wmi.h |  7 +++
 
-Long lines in this patch seem corrupted.
+Please document the interface in
+Documentation/ABI/testing/sysfs-platform-asus-wmi
 
---=20
+--
  i.
 
---8323328-88954322-1781093919=:1359--
+>  2 files changed, 72 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
+wmi.c
+> index 80144c412b90..3c9ef826551d 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -70,6 +70,7 @@ module_param(fnlock_default, bool, 0444);
+>  #define NOTIFY_KBD_TTP=09=09=090xae
+>  #define NOTIFY_LID_FLIP=09=09=090xfa
+>  #define NOTIFY_LID_FLIP_ROG=09=090xbd
+> +#define NOTIFY_KEYSTONE=09=09=090xb4
+> =20
+>  #define ASUS_WMI_FNLOCK_BIOS_DISABLED=09BIT(0)
+> =20
+> @@ -279,6 +280,8 @@ struct asus_wmi {
+>  =09u32 tablet_switch_dev_id;
+>  =09bool tablet_switch_inverted;
+> =20
+> +=09bool keystone_available;
+> +
+>  =09enum fan_type fan_type;
+>  =09enum fan_type gpu_fan_type;
+>  =09enum fan_type mid_fan_type;
+> @@ -646,6 +649,55 @@ static bool asus_wmi_dev_is_present(struct asus_wmi =
+*asus, u32 dev_id)
+>  =09return status =3D=3D 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
+>  }
+> =20
+> +/* Keystone ************************************************************=
+*******/
+> +
+> +static int keystone_check_present(struct asus_wmi *asus)
+> +{
+> +=09u32 retval;
+> +=09int err;
+> +
+> +=09asus->keystone_available =3D false;
+> +
+> +=09/*
+> +=09 * Use a raw devstate call rather than asus_wmi_dev_is_present().
+> +=09 * For this devid, PRESENCE_BIT encodes current insert state, not
+> +=09 * feature presence, so asus_wmi_dev_is_present() would return false
+> +=09 * whenever the dongle is absent at boot, even on machines that have
+> +=09 * a keystone slot.
+> +=09 * -ENODEV means the firmware doesn't know this devid at all.
+> +=09 * retval is not examined here, only the return code matters.
+> +=09 */
+> +=09err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval)=
+;
+> +=09if (err =3D=3D -ENODEV)
+> +=09=09return 0;
+> +=09if (err)
+> +=09=09return err;
+> +
+> +=09asus->keystone_available =3D true;
+> +=09return 0;
+> +}
+> +
+> +static ssize_t keystone_show(struct device *dev,
+> +=09=09=09     struct device_attribute *attr, char *buf)
+> +{
+> +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
+> +=09u32 retval;
+> +=09int err;
+> +
+> +=09err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval)=
+;
+> +=09if (err)
+> +=09=09return err;
+> +
+> +=09return sysfs_emit(buf, "%d\n", !!(retval & ASUS_WMI_DSTS_PRESENCE_BIT=
+));
+> +}
+> +
+> +static DEVICE_ATTR_RO(keystone);
+> +
+> +static void asus_wmi_keystone_notify(struct asus_wmi *asus)
+> +{
+> +=09sysfs_notify(&asus->platform_device->dev.kobj, NULL, "keystone");
+> +}
+> +
+>  /* Input ***************************************************************=
+*******/
+>  static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
+>  {
+> @@ -4575,6 +4627,12 @@ static void asus_wmi_handle_event_code(int code, s=
+truct asus_wmi *asus)
+>  =09=09return;
+>  =09}
+> =20
+> +=09if (code =3D=3D NOTIFY_KEYSTONE) {
+> +=09=09if (asus->keystone_available)
+> +=09=09=09asus_wmi_keystone_notify(asus);
+> +=09=09return;
+> +=09}
+> +
+>  =09if (code =3D=3D NOTIFY_KBD_FBM || code =3D=3D NOTIFY_KBD_TTP) {
+>  =09=09if (asus->fan_boost_mode_available)
+>  =09=09=09fan_boost_mode_switch_next(asus);
+> @@ -4698,6 +4756,7 @@ static struct attribute *platform_attributes[] =3D =
+{
+>  =09&dev_attr_lid_resume.attr,
+>  =09&dev_attr_als_enable.attr,
+>  =09&dev_attr_fan_boost_mode.attr,
+> +=09&dev_attr_keystone.attr,
+>  #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  =09=09&dev_attr_charge_mode.attr,
+>  =09=09&dev_attr_egpu_enable.attr,
+> @@ -4741,6 +4800,8 @@ static umode_t asus_sysfs_is_visible(struct kobject=
+ *kobj,
+>  =09=09devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
+>  =09else if (attr =3D=3D &dev_attr_fan_boost_mode.attr)
+>  =09=09ok =3D asus->fan_boost_mode_available;
+> +=09else if (attr =3D=3D &dev_attr_keystone.attr)
+> +=09=09ok =3D asus->keystone_available;
+> =20
+>  #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
+>  =09if (attr =3D=3D &dev_attr_charge_mode.attr)
+> @@ -5081,6 +5142,10 @@ static int asus_wmi_add(struct platform_device *pd=
+ev)
+>  =09if (err)
+>  =09=09goto fail_platform_profile_setup;
+> =20
+> +=09err =3D keystone_check_present(asus);
+> +=09if (err)
+> +=09=09dev_warn(&pdev->dev, "Failed to check Keystone presence: %d\n", er=
+r);
+> +
+>  =09err =3D asus_wmi_sysfs_init(asus->platform_device);
+>  =09if (err)
+>  =09=09goto fail_sysfs;
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
+latform_data/x86/asus-wmi.h
+> index 554f41b827e1..c29962d5baac 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -147,6 +147,13 @@
+>  #define ASUS_WMI_DEVID_GPU_MUX=09=090x00090016
+>  #define ASUS_WMI_DEVID_GPU_MUX_VIVO=090x00090026
+> =20
+> +/* Keystone dongle insert/remove state.
+> + * PRESENCE_BIT (0x00010000) encodes insert state:
+> + * 0x00010000 =3D inserted, 0x00000000 =3D absent. STATUS_BIT is never s=
+et.
+> + * 0xFFFFFFFE means no keystone slot on this machine.
+> + */
+> +#define ASUS_WMI_DEVID_KEYSTONE=09=090x00120091
+> +
+>  /* TUF laptop RGB modes/colours */
+>  #define ASUS_WMI_DEVID_TUF_RGB_MODE=090x00100056
+>  #define ASUS_WMI_DEVID_TUF_RGB_MODE2=090x0010005A
+>=20
+--8323328-768591789-1781094312=:1359--
