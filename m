@@ -1,120 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CB93D7D69;
-	Wed, 10 Jun 2026 11:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E43404BD0;
+	Wed, 10 Jun 2026 12:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781091684; cv=none; b=CxwXwmqv0w82N4Bu/dUuzUd6ACLQWaLplUidyKJtjsB7F+D7Qc6zBhUZVmZb2o0/zOmu6taAesxaApxrAe6DW1uy3epItngZ6dR5GiqodKhFvq7Pkg2v2ju2DcyEiAVqqvAp2RMnBVt+KahP0t6q1yfnJE1pzZk0w4nk9Z16XtE=
+	t=1781093931; cv=none; b=RHfttx5uXP/XosCVq0yKrktqAkIznelLWBdZUE1SVreTFCd8Cog2c3Ue09i3tbcPtrscQznbWAAZDRU67e7CN44cTqX8+qoYjbedISpPbtNOVWx6SYeAK9itzRCs/ZJwuK0ymNrj9EtiaDPMOxva/jKsd8DvLgzHwIWDt4yReJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781091684; c=relaxed/simple;
-	bh=YUZnH9iXq0Pl87kTiU9IWLwmwffmNGTynFm+HmKTlRY=;
+	s=arc-20240116; t=1781093931; c=relaxed/simple;
+	bh=QgfhxDPnVNW1Vi5ZYP2jgDZ2QxhcbxcIpoyz7fIvvnc=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ewYu4nzZ8OrnQ4Middet11vhuaUCtzOuqO/FGi4e9j4gu/ce/y6vKqSDWhKSGn1EedKfKBytXl+QI7afMGXTCT09sBb80cpYo8H116mU7jSETns/uQx6RgBj1XgrONEBTuOOVoXkOvz+dvnteZEgbOyDcJbKE6mMyX61pdLjRr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ClyjEuJp; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version:Content-Type; b=lKvaZM3GIoEwgGDa3dvzrqKDJ14Jni5CEDffkXCr8dD0Tg5arNis1n6S+Y0zN+HVePvfC1RzzdwfP4Z7Ya7N+PPTvbUiW37gRhRkNxteyTesC8EWMZtD2NLZQU38HPftPksPdX5AWrVK3Nr7tmAevPWfKZThDXBO/E6n5xO2x/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ing1jHyA; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ClyjEuJp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ing1jHyA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781091682; x=1812627682;
+  t=1781093928; x=1812629928;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=YUZnH9iXq0Pl87kTiU9IWLwmwffmNGTynFm+HmKTlRY=;
-  b=ClyjEuJp/Ev0Re15EII0IUVgl0zxiMjsB0mis/1eLZaYAW7v9FHxGCPB
-   hgsI/xHB1WyaWwTsdoPTps21tXD9XK4ngTF+NcGqjtIGzZz5yOTnNhvE6
-   ROVJ+eOQKhWi+AxwQCXIFMfW4AlTNCTvEdVRC9SxPugsFY6CuBT+OsKBE
-   FLVK4Q7mlJcFv5zG4Zv1rVs4FhoasX0Vbp/U8IbM7cwUhUMA3+8RDKDRl
-   sYiPHfpBtbufBee69HSCu8SLkyHemi02Nb1SIU4/7g8W+IhHHmqAJoVhu
-   2pktP3zF5Y5nWLKIS6kr52OpxV7Ze5VdTrCCj10jfHNaqv6mQgcwIXj2c
+  bh=QgfhxDPnVNW1Vi5ZYP2jgDZ2QxhcbxcIpoyz7fIvvnc=;
+  b=ing1jHyAK7Mh8FPCxu311f+6PkJoZy/ZYhF20LhMb5rPC44KpKdMfg+Y
+   kDh8kABTX0Q+61ij0FGEl9exMccUqn+yAysN5YXhgqxIPiaLj1qLZB8N4
+   a9ld7jlwPIz1Kb0HGZfcNlF8ehcF1oDWmaZPqNv9NXdEaBHkVzHI+qsvT
+   CqrDYuXRKXF0cJeG2ZQrqx4T+HNAmUAZDlYcwU6HyVmBwIIYgUuWw16JH
+   Bja6iz00Bi01wrV4g6v9Bw4369h9m+xzBsFLt7kTnf/o9NOC6yGS/3b9s
+   NojTyLbw3bCmKqWbwN9qWMLNOaGVw5t7fa+5w6qxUj9ERIsyA6TqxltqU
    A==;
-X-CSE-ConnectionGUID: 8OqtE/hRRU6oWSUk1nkYVw==
-X-CSE-MsgGUID: 1Zz2fNHYT2+nhPdcb+4AZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81924275"
+X-CSE-ConnectionGUID: fV+xBkUtRRKN51M9ucupNA==
+X-CSE-MsgGUID: /NF1kPsXR+q07BMzRL7zrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80899417"
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="81924275"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 04:41:21 -0700
-X-CSE-ConnectionGUID: tFJiYj0STv+g0NQhxFUyQQ==
-X-CSE-MsgGUID: 3omx3dyUTwGLa0smXA1bPg==
+   d="scan'208";a="80899417"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:18:46 -0700
+X-CSE-ConnectionGUID: Y5ADGJCJTe2NLoc1XHqr3A==
+X-CSE-MsgGUID: HN4omWSRT9mGzID5BfCsMg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="243685061"
+   d="scan'208";a="246248038"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.18])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 04:41:18 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 05:18:44 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 10 Jun 2026 14:41:14 +0300 (EEST)
-To: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-cc: mjg59@srcf.ucam.org, pali@kernel.org, Hans de Goede <hansg@kernel.org>, 
-    dvhart@infradead.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: dell-laptop: fix missing cleanups in
- init error path
-In-Reply-To: <20260609081419.1995169-1-lihaoxiang@isrc.iscas.ac.cn>
-Message-ID: <adce8429-e437-48a1-6520-2b95973411eb@linux.intel.com>
-References: <20260609081419.1995169-1-lihaoxiang@isrc.iscas.ac.cn>
+Date: Wed, 10 Jun 2026 15:18:39 +0300 (EEST)
+To: =?KOI8-R?B?68/Oxc7LzyDhzsTSxcog98nL1M/Sz9fJ3g==?= <admin@aquinas.su>
+cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH v8] platform/x86: hp-wmi: Add multicolor LED support for
+ HP keyboard backlight
+In-Reply-To: <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
+Message-ID: <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
+References: <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su> <Yum2UkOKSk-F7vHbhPXMxA@aquinas.su> <e1bce5de-34e8-4351-96ae-7edf4379b99b@kernel.org> <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-88954322-1781093919=:1359"
 
-On Tue, 9 Jun 2026, Haoxiang Li wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> dell_init() initializes several resources after dell_setup_rfkill(),
-> including the optional touchpad LED, keyboard backlight LED, battery
-> hook, debugfs directory and dell-laptop notifier.
-> 
-> If a later LED or backlight registration fails, the error path only
-> tears down the battery hook and rfkill resources. This leaves the
-> notifier, debugfs directory, keyboard backlight LED and optional
-> touchpad LED registered after dell_init() returns an error.
-> 
-> Add the missing cleanup calls before tearing down rfkill.
-> 
-> Fixes: 9c656b07997f ("platform/x86: dell-*: Call new led hw_changed API on kbd brightness change")
+--8323328-88954322-1781093919=:1359
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-I've included also these:
+On Mon, 18 May 2026, =D0=9A=D0=BE=D0=BD=D0=B5=D0=BD=D0=BA=D0=BE =D0=90=D0=
+=BD=D0=B4=D1=80=D0=B5=D0=B9 =D0=92=D0=B8=D0=BA=D1=82=D0=BE=D1=80=D0=BE=D0=
+=B2=D0=B8=D1=87 wrote:
 
-Fixes: 037accfa14b2 ("dell-laptop: Add debugfs support")
-Fixes: 2d8b90be4f1c ("dell-laptop: support Synaptics/Alps touchpad led")
-Fixes: 6cff8d60aa0a ("platform: x86: dell-laptop: Add support for keyboard backlight")
+> >=20
+> > I'm afraid the names are still wrong. Your patch results in e.g. :
+> >=20
+> > hp::kbd_backlight_zone-right
+> >=20
+> > where as per:
+> >=20
+> > https://lore.kernel.org/linux-leds/20260504145434.12746-1-johannes.goed=
+e@oss
+> > .qualcomm.com/
+> >=20
+> > this should be:
+> >=20
+> > hp::kbd_zoned_backlight-right
+> >=20
+> > Regards,
+> >=20
+> > Hans
+> >=20
+>=20
+> I would like to sincerely apologize for the mistake in understanding the=
+=20
+> documentation. I received feedback pointing out my error, corrected it=20
+> accordingly, but unfortunately, there was still an oversight. After being=
+=20
+> notified of the second error, I have now thoroughly reviewed everything a=
+gain=20
+> and made all necessary corrections.
+>=20
+> I truly appreciate your patience and guidance throughout this process. Yo=
+ur=20
+> feedback has been extremely helpful in helping me reach the correct=20
+> understanding. I am committed to ensuring that all future submissions are=
+=20
+> fully compliant with the documentation requirements.
+>=20
+> Thank you for your time and understanding.
+>=20
+> ---
+>=20
+> From: Edip Hazuri <edip@medip.dev>
+>=20
+> Add support for the HP keyboard RGB backlight found on HP OMEN and
+> HP Victus laptops. These keyboards expose per-zone RGB control through
+> WMI commands.
+>=20
+> Register multicolor LED class devices for each keyboard zone (up to 4
+> zones, depending on the keyboard type). Each zone exposes individual
+> red, green, and blue channels via the multicolor LED subsystem.
+>=20
+> Also hardware-initiated brightness changes (e.g. via the keyboard
+> backlight hotkey, mostly fn+f4) are reported.
+>=20
+> The color data is stored in a 128-byte color table managed by the
+> firmware, with RGB values starting at offset 25, packed sequentially
+> per zone.
+>=20
+> Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
+>=20
+> ---
+>=20
+> Changes since v7:
+>  - The LED class device names changed to be consistent with the documenta=
+tion.
+>=20
+> Changes since v6:
+>  - The LED class device names have been made more consistent with the=20
+> documentation, in accordance with patch https://lore.kernel.org/linux-led=
+s/
+> 20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
+> underscores have been replaced with dashes where indicated.
+>=20
+> Changes since v5:
+>  - LED class device names changed from a number to using a descriptive na=
+me=20
+> for each zone.
+>=20
+> v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
+>=20
+> Changes since v4:
+>  - Fix circular dependencies
+>=20
+> Changes since v3:
+>  - Merge the changes into a single commit
+>=20
+> Changes since v1:
+>  - Fix mentioned style errors
+>  - Add Kconfig dependencies
+>=20
+> ---
+>=20
+>  drivers/platform/x86/hp/Kconfig  |   2 +
+>  drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
+>  2 files changed, 285 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kc=
+onfig
+> index dd51491b9bcd..2a1841cbec76 100644
+> --- a/drivers/platform/x86/hp/Kconfig
+> +++ b/drivers/platform/x86/hp/Kconfig
+> @@ -45,6 +45,8 @@ config HP_WMI
+>  =09select INPUT_SPARSEKMAP
+>  =09select ACPI_PLATFORM_PROFILE
+>  =09select HWMON
+> +=09select LEDS_CLASS
+> +=09select LEDS_CLASS_MULTICOLOR
+>  =09help
+>  =09  Say Y here if you want to support WMI-based hotkeys on HP laptops=
+=20
+> and
+>  =09  to read data from WMI such as docking or ambient light sensor=20
+> state.
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
+p-
+> wmi.c
+> index d1cc6e7d176c..19da18f68337 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -14,6 +14,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> =20
+>  #include <linux/acpi.h>
+> +#include <linux/array_size.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/compiler_attributes.h>
+>  #include <linux/dmi.h>
+> @@ -23,6 +24,8 @@
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/kernel.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/leds.h>
+>  #include <linux/limits.h>
+>  #include <linux/minmax.h>
+>  #include <linux/module.h>
+> @@ -57,6 +60,7 @@ enum hp_ec_offsets {
+> =20
+>  #define HP_FAN_SPEED_AUTOMATIC=09 0x00
+>  #define HP_POWER_LIMIT_DEFAULT=09 0x00
+> +#define HP_COLOR_TABLE_PADDING=09 25
+>  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+> =20
+>  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when=
+ zero=20
+> insize is required
 
-Applied this change to my local the review-ilpo-next branch (it will 
-eventually appear in the public one if there are no problems).
+Long lines in this patch seem corrupted.
 
---
+--=20
  i.
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <lihaoxiang@isrc.iscas.ac.cn>
-> ---
-> Changes in v2:
->  - Fix all missing cleanups in dell_init()'s error path.
->  - Add Fixes tags.
->  - Modify the commit title and message.
-> ---
->  drivers/platform/x86/dell/dell-laptop.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
-> index 57748c3ea24f..053f40572bf6 100644
-> --- a/drivers/platform/x86/dell/dell-laptop.c
-> +++ b/drivers/platform/x86/dell/dell-laptop.c
-> @@ -2551,7 +2551,12 @@ static int __init dell_init(void)
->  	if (mute_led_registered)
->  		led_classdev_unregister(&mute_led_cdev);
->  fail_led:
-> +	dell_laptop_unregister_notifier(&dell_laptop_notifier);
-> +	debugfs_remove_recursive(dell_laptop_dir);
->  	dell_battery_exit();
-> +	kbd_led_exit();
-> +	if (quirks && quirks->touchpad_led)
-> +		touchpad_led_exit();
->  	dell_cleanup_rfkill();
->  fail_rfkill:
->  	platform_device_del(platform_device);
-> 
+--8323328-88954322-1781093919=:1359--
