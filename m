@@ -1,263 +1,432 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836275477E
-	for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 16:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066E533F38A;
+	Wed, 10 Jun 2026 17:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781110189; cv=none; b=fZ8S7nlxfqtLMVNkn5YxDAJ6NOCasgBo0QncchaDloqagMDvDIYocSQMJYqOgpg6QGRYnUgDUG0X9jXafsGdt2nStrK/JFf/FAoMwyJHcSHcwtSNNQHIKhLpuxWWua7x0UD3YFUk2vHyvfXyycWyHHJuiC7TG27v7NqWnRkF350=
+	t=1781113240; cv=none; b=EphWk1M7KbcQ3EPP9nFT/avIhz3vk4ZQWXCiEybxDKFtIFZ0jV15s2uGnfG5SaxyR5HqvMIAoymfEhqmWlasACaypSSnHJtFKbctXdzT6pVDL9+WBvG87xDfwmN+jk8YvIJlb4/OKOsz56EO9NkOhTB6TL0fZ076IjStEwXzbII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781110189; c=relaxed/simple;
-	bh=I+SUe0goqJpNsl5qVR6bEQJ6+tkuts0BtbgHdPfXf9w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hZhi9MDBrh22IkFS5KVSm7illTMbTU2m+oNGecZsXLYZv1rhA3bn/GLcKQMG86imF/atRMu6hlicy/6FOJrdgyz1A2Dw2KCBgPjrZOmg7aylWZjQySZPN9botJ5lDcWJhwxHQ1qeacjgdhqsEFBXp7MjchepuSp4GjszIWAVmlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrQaeKaG; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781113240; c=relaxed/simple;
+	bh=HG+QERkvcXsU+VFy6O+EHstBKhHA6aBBGxXuUGurV3U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GSOua8O/bMizgUPSw0tMW1d8NGa9cpTDeUC7Dlu9unMCEESJPp0ZYBomypJGN+MDD6jD2TFSme3qvbpaKGoKzAtchbVHtZJgXBTJ1AOLCxDIbYt2riWMFQKe+xVwIl9i8fy9gTmliLGhO813brHEubQApKU3Wta3lfsEbVgHCzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Eg8fqPfg; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrQaeKaG"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso81177945e9.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Jun 2026 09:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781110186; x=1781714986; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FkXmnCzF3e6ZXKR1eFQBaZLZRi1UB66/X/ti0NbFPk=;
-        b=SrQaeKaGjCRId8/fCiG4Y3dROwRna4mNXDcKop+5zvRByXc5S540zN6vFCZUCKEfd1
-         KzZJi0NbzyIk3Xo5cBB74UYT4BXa6sFkkp/a6kbEuZVpoRtwpVbdhBq6H0WzQ8Z7emp1
-         pfI/1fhse3nqsxBK9MDXN2rjuK/tWS7pQZHkSwPi59mt/piRpybbo8qRgQF6TjWC9rEV
-         P73YXmhOdGOFwVX1RFHNX+Jlobp6uDDmUiMncPPzdPn85w6siVfIqNRGo4a1VDpMXYwN
-         ekearm1jvQ0K8qpU43KPyASMOUn6dS6kYBQBEOQEKns2VFnQFP+HTQKZ1Ys2QVaH1Ick
-         OPRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781110186; x=1781714986;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5FkXmnCzF3e6ZXKR1eFQBaZLZRi1UB66/X/ti0NbFPk=;
-        b=VKkgY2lz7wZNyCnQLesEq4wpPggbV36+ZVnrxT569MRvqY27LY9YC4SNib1h3O95Tw
-         yrxGBsAO+x2FSStX5h1KlkeaBqPMfb5BaPcnjTgsnZ1ldd8jYth/zRXYNTJJytLplZWL
-         /8dGAcH6UVBreFg5BPJnYpM35Kfh60NnDn9dGnDM5l1fD532jQITkx0txEvixzrC3bE1
-         yKOkBiEgfOfRwq6jiBXfyHZzoFg94wqKttYQf9cWXPzgBT7xCRhtOlhb3xxBdEuBwI7B
-         /1sB1q3QCxmDYXNpBq89Eb29TzbLpd4jgsCuKTxtoGDKIssZ3fXK/jCmthFATlCnqsV7
-         qAGw==
-X-Gm-Message-State: AOJu0Yx8XgUdL6vhh7L5h+3E0AI6NcrV9I1GQ6Ib5LTEF+zu+dZAX+M7
-	EZAgyW9QAbt1QIrahqokERTHJtES+Oo6u/me9LSwOJUIL3XdA9c3SMWZH/0tYpSD
-X-Gm-Gg: Acq92OF53TZzNRQT8mKLo4pcxMswNtmdW89Jv7VXEtVHdJoLkbVoshY4Ygmj3JwVZtV
-	XVq5gZpO72+ErjhZIS+L9i3yJ+dbt3pvazW2gNfv/ctlDv+M2UnzCGfnMM0nzHQ+Z7T79CKMAQX
-	SldwoVvdAtP6jYpGSXXTBfouMECn1at8hgIi+XYokGBGBFL/LwbXyBdv7FDrW1+IduivE4KkAHA
-	3Hdjz88iOqY4AxEbtGqKtcHqQyzdcLFJSJmGtic5EC2dftdxUhs4HJUxDFPnHgdKTl9OjNg/zAl
-	8kJdKqkcpcFsD+8oc2oSdX8mzjsZH+wWF++Wlfu6/qhtQQgAMpTD3GTRrHXSADxeQpPz/OWmy6z
-	JItzXp/xAaG88GHVIf+CrG0SkLEKfhRpA5VqYo7FrwKJgwT7pUi2dxkFmGLHv4ubA3MqN/8Y8HG
-	ucOlEDZ90cKijiU2JtnosR0pWBMpMtNTBuJqcRkfWOUnOExMYeU/D3TVpdqlQcaDUT
-X-Received: by 2002:a05:600c:81c9:b0:490:5057:f5f7 with SMTP id 5b1f17b1804b1-490c259f5c9mr374036645e9.11.1781110185786;
-        Wed, 10 Jun 2026 09:49:45 -0700 (PDT)
-Received: from shiro (83.6.47.15.ipv4.supernova.orange.pl. [83.6.47.15])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f2dc577sm74673553f8f.3.2026.06.10.09.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 09:49:45 -0700 (PDT)
-From: =?UTF-8?q?Dariusz=20Figza=C5=82?= <dariuszfigzal@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: corentin.chary@gmail.com,
-	luke@ljones.dev,
-	denis.benato@linux.dev,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Dariusz=20Figza=C5=82?= <dariuszfigzal@gmail.com>
-Subject: [PATCH v3] platform/x86: asus-wmi: add keystone dongle support
-Date: Wed, 10 Jun 2026 18:49:42 +0200
-Message-ID: <20260610164942.74956-1-dariuszfigzal@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Eg8fqPfg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1781113228; x=1781718028; i=w_armin@gmx.de;
+	bh=Rln3/vNuhP+42Mm5sGVZBwL6UyD4Wn+fEZZw+TOXhZE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Eg8fqPfgW0/O0/ReM548yqFaot5sjMZoRb6UPnnxWFbE2sUGpATYST2AdsgD5h/v
+	 HJxukworAXQzaDBLN+b7/LhUukl8NGpQhfOxkoeOYXgl2DhHyqDvNzHOcboZmQgFN
+	 A47CirbxrvymI2zOtBZpJjo8wl3NuYzLd1hHqhbGI2dlSaQUCOL5z6+L2JaYsrgu5
+	 ziGIQfrQPpezEGoJfpTg5UXV9ToLXGQGvKQLxzidcqrD0XbejwjK3QMl1yHa9d2Z+
+	 +dAr9QppaPwS6N+kQ0pScJ5izub0BeHNwzzzgET4rroOXyTSWx7lE+Frf2o8aUHqS
+	 DZG4MvYc9d8Jo9gKug==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MTzay-1wgkrm0Fk2-00UQXp; Wed, 10
+ Jun 2026 19:40:28 +0200
+Message-ID: <67d80b21-f71b-4014-a594-f491687615c4@gmx.de>
+Date: Wed, 10 Jun 2026 19:40:26 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] platform/x86: add Xiaomi WMI key driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lucy Wong <lucywong2778@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260601152703.94539-1-lucywong2778@gmail.com>
+ <20260601152703.94539-2-lucywong2778@gmail.com>
+ <ddc819dc-4c5a-ba62-bced-3222e2e60bb7@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <ddc819dc-4c5a-ba62-bced-3222e2e60bb7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:N04t70skxNfCTdwn+0VgYzIbZt4Qu0SeTMq9vA3IunSHDgngZsG
+ HkzKG9jEx8tDcr2SFGEimwMFO4QWVyEb0hsuQNR41+rUIy93hUitxMe76As4VIONn+B6xLs
+ 2lqriejP6uCQFo2DKqAvJd0GsMiUCARj2CAqTwqRpGfWCanglRowjN/QU/xIa4iZpq/anBI
+ 3gBOfbbQoQH78MQYJFJ5w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:TttsJOFajtE=;4BlXO7ryoHNNp5VEYYy6vQnsLIh
+ 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
 
-The ASUS Keystone is a physical NFC-like dongle that slots into supported
-ASUS laptops. The EC fires WMI notify code 0xB4 on insert/remove events.
+Am 08.06.26 um 12:09 schrieb Ilpo J=C3=A4rvinen:
 
-Expose the current insert state via a sysfs attribute by querying WMI
-device ID 0x00120091 (DSTS). This devid does not follow the standard DSTS
-convention: PRESENCE_BIT (0x00010000) encodes the insert state rather than
-feature presence, and STATUS_BIT is never set. Presence of a keystone slot
-is detected by a successful DSTS call.
+> On Mon, 1 Jun 2026, Lucy Wong wrote:
+>
+>> Certain Xiaomi laptops expose extra function keys through a single WMI
+>> event GUID (B74AF83F-8B2F-4069-ACAC-36D176F62FC0). Unlike the existing
+>> xiaomi-wmi driver where each key has its own GUID, here all keys share
+>> one GUID and the event buffer encodes both an event type and a keycode:
+>>
+>>    buffer[1] =3D event type
+>>      0x02: press/release keys (5 keys with abstract icons)
+>>      0x03: firmware-handled toggles (touchpad, Fn lock)
+>>    buffer[2] =3D keycode within that type
+>>
+>> The keys with abstract icons are mapped to programmable macro keys for
+>> userspace to bind. The touchpad and Fn lock keys are handled by the EC
+>> and are reported for notification purposes only.
+>>
+>> Signed-off-by: Lucy Wong <lucywong2778@gmail.com>
+>> ---
+>>   MAINTAINERS                            |   6 ++
+>>   drivers/platform/x86/Kconfig           |  11 ++
+>>   drivers/platform/x86/Makefile          |   1 +
+>>   drivers/platform/x86/xiaomi-wmi-keys.c | 139 ++++++++++++++++++++++++=
++
+>>   4 files changed, 157 insertions(+)
+>>   create mode 100644 drivers/platform/x86/xiaomi-wmi-keys.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 839e39825455..7969b82c8315 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -29124,6 +29124,12 @@ F:	fs/xfs/
+>>   F:	include/uapi/linux/dqblk_xfs.h
+>>   F:	include/uapi/linux/fsmap.h
+>>  =20
+>> +XIAOMI WMI KEYS DRIVER
+>> +M:	Lucy Wong <lucywong2778@gmail.com>
+>> +L:	platform-driver-x86@vger.kernel.org
+>> +S:	Maintained
+>> +F:	drivers/platform/x86/xiaomi-wmi-keys.c
+>> +
+>>   XILINX AMS DRIVER
+>>   M:	Salih Erim <salih.erim@amd.com>
+>>   M:	Conall O'Griofa <conall.ogriofa@amd.com>
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfi=
+g
+>> index b54b5212b204..541b0a255daa 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -90,6 +90,17 @@ config XIAOMI_WMI
+>>   	  To compile this driver as a module, choose M here: the module will
+>>   	  be called xiaomi-wmi.
+>>  =20
+>> +config XIAOMI_WMI_KEYS
+>> +	tristate "Xiaomi WMI key events driver"
+>> +	depends on ACPI_WMI
+>> +	depends on INPUT
+>> +	help
+>> +	  Say Y here if you want to support WMI-based hotkey events on certai=
+n
+>> +	  Xiaomi laptops.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will
+>> +	  be called xiaomi-wmi-keys.
+>> +
+>>   config REDMI_WMI
+>>   	tristate "Redmibook WMI key driver"
+>>   	depends on ACPI_WMI
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
+ile
+>> index 872ac3842391..d852bb0bf61b 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -12,6 +12,7 @@ obj-$(CONFIG_HUAWEI_WMI)		+=3D huawei-wmi.o
+>>   obj-$(CONFIG_MXM_WMI)			+=3D mxm-wmi.o
+>>   obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+=3D nvidia-wmi-ec-backlight.o
+>>   obj-$(CONFIG_XIAOMI_WMI)		+=3D xiaomi-wmi.o
+>> +obj-$(CONFIG_XIAOMI_WMI_KEYS)		+=3D xiaomi-wmi-keys.o
+>>   obj-$(CONFIG_REDMI_WMI)			+=3D redmi-wmi.o
+>>   obj-$(CONFIG_GIGABYTE_WMI)		+=3D gigabyte-wmi.o
+>>   obj-$(CONFIG_BITLAND_MIFS_WMI)		+=3D bitland-mifs-wmi.o
+>> diff --git a/drivers/platform/x86/xiaomi-wmi-keys.c b/drivers/platform/=
+x86/xiaomi-wmi-keys.c
+>> new file mode 100644
+>> index 000000000000..524ede0e64eb
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/xiaomi-wmi-keys.c
+>> @@ -0,0 +1,139 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Xiaomi laptop WMI hotkey driver
+>> + *
+>> + * Copyright (C) 2026 Lucy Wong <lucywong2778@gmail.com>
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/device.h>
+>> +#include <linux/input.h>
+>> +#include <linux/input/sparse-keymap.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/module.h>
+>> +#include <linux/wmi.h>
+>> +
+>> +#define XIAOMI_WMI_EVENT_GUID "B74AF83F-8B2F-4069-ACAC-36D176F62FC0"
+>> +
+>> +#define XIAOMI_TYPE_BACKLIGHT 0x01 /* keyboard backlight level (EC han=
+dled) */
+>> +#define XIAOMI_TYPE_KEY  0x02 /* press/release keys */
+>> +#define XIAOMI_TYPE_TOGGLE 0x03 /* firmware toggle keys (notify only) =
+*/
+> Please align values within a "group".
+>
+>> +
+>> +#define XIAOMI_KEY_PRESS_MIN 0x01
+>> +#define XIAOMI_KEY_PRESS_MAX 0x05
+>> +#define XIAOMI_KEY_RELEASE_OFF 0x05
+> Ditto.
+>
+>> +
+>> +#define XIAOMI_TOGGLE_DEDUP_MS 50
+>> +
+>> +struct xiaomi_wmi {
+>> +	struct input_dev *input_dev;
+>> +	unsigned long last_toggle;
+>> +	u8 last_toggle_code;
+>> +};
+>> +
+>> +static const struct key_entry xiaomi_wmi_keymap[] =3D {
+>> +	/* type 0x02: programmable keys with abstract icons */
+>> +	{ KE_KEY, 0x0201, { KEY_MACRO1 } },
+>> +	{ KE_KEY, 0x0202, { KEY_MACRO2 } },
+>> +	{ KE_KEY, 0x0203, { KEY_MACRO3 } },
+>> +	{ KE_KEY, 0x0204, { KEY_MACRO4 } },
+>> +	{ KE_KEY, 0x0205, { KEY_MACRO5 } },
+>> +	/* type 0x03: firmware-handled toggles, reported for OSD only */
+>> +	{ KE_KEY, 0x0300, { KEY_F21 } }, /* touchpad toggle */
+> There is KEY_TOUCHPAD_TOGGLE.
 
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
-Signed-off-by: Dariusz Figzał <dariuszfigzal@gmail.com>
----
+If the touchpad is already being toggled by the firmware itself, when neit=
+her
+key code should be send to userspace. In this case the event should simply=
+ be ignored.
 
-Changes in v2:
-- Use .is_visible and platform_attributes[] instead of
-  device_create_file/device_remove_file (Ilpo Järvinen)
+Thanks,
+Armin Wolf
 
-Changes in v3:
-- Add interface documentation (Ilpo Järvinen)
+>
+>> +	{ KE_KEY, 0x0301, { KEY_FN_ESC } }, /* Fn lock */
+> I'm not sure if KEY_FN_ESC is right key for it.
+>
+> And if these are handled by FW, shouldn't you use KEY_IGNORE?
+>
+> Since you've space, align the upper comment to the one below for better
+> readability.
+>
+>> +	{ KE_END, 0 },
+>> +};
+>> +
+>> +static int xiaomi_wmi_probe(struct wmi_device *wdev, const void *conte=
+xt)
+>> +{
+>> +	struct xiaomi_wmi *data;
+>> +	int ret;
+>> +
+>> +	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +	dev_set_drvdata(&wdev->dev, data);
+>> +
+>> +	data->input_dev =3D devm_input_allocate_device(&wdev->dev);
+>> +	if (!data->input_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	data->input_dev->name =3D "Xiaomi WMI keys";
+>> +	data->input_dev->phys =3D "wmi/input0";
+>> +	data->input_dev->id.bustype =3D BUS_HOST;
+>> +
+>> +	ret =3D sparse_keymap_setup(data->input_dev, xiaomi_wmi_keymap, NULL)=
+;
+> Please add select INPUT_SPARSEKMAP.
+>
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return input_register_device(data->input_dev);
+>> +}
+>> +
+>> +static void xiaomi_wmi_notify(struct wmi_device *wdev, union acpi_obje=
+ct *obj)
+>> +{
+>> +	struct xiaomi_wmi *data =3D dev_get_drvdata(&wdev->dev);
+>> +	u8 type, code;
+>> +
+>> +	if (obj->type !=3D ACPI_TYPE_BUFFER || obj->buffer.length < 3)
+>> +		return;
+>> +
+>> +	type =3D obj->buffer.pointer[1];
+>> +	code =3D obj->buffer.pointer[2];
+>> +
+>> +	switch (type) {
+>> +	case XIAOMI_TYPE_KEY:
+>> +		if (code >=3D XIAOMI_KEY_PRESS_MIN &&
+>> +		    code <=3D XIAOMI_KEY_PRESS_MAX) {
+>> +			sparse_keymap_report_event(data->input_dev,
+>> +						   0x0200 | code, 1, false);
+> Please name literals.
+>
+>> +		} else if (code > XIAOMI_KEY_PRESS_MAX &&
+>> +						code <=3D XIAOMI_KEY_PRESS_MAX +
+>> +							XIAOMI_KEY_RELEASE_OFF) {
+> Please align properly.
+>
+> I think the defines are not optional as you seem to have two blocks of
+> codes, both with n length, one doing press and the other release but you=
+r
+> defines are not based one the code blocks being of same length.
+>
+>> +			code -=3D XIAOMI_KEY_RELEASE_OFF;
+>> +			sparse_keymap_report_event(data->input_dev,
+>> +						   0x0200 | code, 0, false);
+>> +		}
+>> +		break;
+>> +
+>> +	case XIAOMI_TYPE_TOGGLE:
+>> +		/* deduplicate: each press emits two identical events */
+>> +		if (data->last_toggle_code =3D=3D code &&
+>> +		    time_before(jiffies, data->last_toggle +
+> Is ->last_toggle initialized to a sensible value?
+> (found by sashiko.dev)
+>
+>> +				msecs_to_jiffies(XIAOMI_TOGGLE_DEDUP_MS)))
+>> +			return;
+>> +		data->last_toggle_code =3D code;
+>> +		data->last_toggle =3D jiffies;
+> Locking needed?
+>
+> Is it guaranteed that the duplicates are always in-order, that is, not t=
+wo
+> different toggles can get interleaved?
+>
+>> +		sparse_keymap_report_event(data->input_dev,
+>> +					   0x0300 | code, 1, true);
+>> +		break;
+>> +
+>> +	case XIAOMI_TYPE_BACKLIGHT:
+>> +		/* keyboard backlight handled by EC, nothing to do */
+>> +		break;
+>> +
+>> +	default:
+>> +		dev_dbg(&wdev->dev, "unknown event type 0x%02x\n", type);
+> Add include.
+>
+>> +		break;
+>> +	}
+>> +}
+>> +
+>> +static const struct wmi_device_id xiaomi_wmi_id_table[] =3D {
+>> +	{ .guid_string =3D XIAOMI_WMI_EVENT_GUID },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(wmi, xiaomi_wmi_id_table);
+>> +
+>> +static struct wmi_driver xiaomi_wmi_driver =3D {
+>> +	.driver =3D {
+>> +		.name =3D "xiaomi-wmi-keys",
+>> +	},
+>> +	.id_table =3D xiaomi_wmi_id_table,
+>> +	.probe =3D xiaomi_wmi_probe,
+>> +	.notify =3D xiaomi_wmi_notify,
+> We're transitioning wmi core, so please convert to .notify_new.
+>
+> You may also consider using .min_event_size.
 
- .../ABI/testing/sysfs-platform-asus-wmi       |  9 +++
- drivers/platform/x86/asus-wmi.c               | 65 +++++++++++++++++++
- include/linux/platform_data/x86/asus-wmi.h    |  7 ++
- 3 files changed, 81 insertions(+)
+Correct, take a look at Documentation/wmi/driver-development-guide.rst for=
+ details.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-index 89acb6638df8..f9825c6150b5 100644
---- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-+++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-@@ -58,6 +58,15 @@ Description:
- 			* 1 - overboost,
- 			* 2 - silent
- 
-+What:		/sys/devices/platform/<platform>/keystone
-+Date:		Jun 2026
-+KernelVersion:	7.2
-+Contact:	"Dariusz Figzał" <dariuszfigzal@gmail.com>
-+Description:
-+		Reports the Keystone dongle insert state (read-only):
-+			* 0 - not inserted
-+			* 1 - inserted
-+
- What:		/sys/devices/platform/<platform>/gpu_mux_mode
- Date:		Aug 2022
- KernelVersion:	6.1
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 80144c412b90..3c9ef826551d 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -70,6 +70,7 @@ module_param(fnlock_default, bool, 0444);
- #define NOTIFY_KBD_TTP			0xae
- #define NOTIFY_LID_FLIP			0xfa
- #define NOTIFY_LID_FLIP_ROG		0xbd
-+#define NOTIFY_KEYSTONE			0xb4
- 
- #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
- 
-@@ -279,6 +280,8 @@ struct asus_wmi {
- 	u32 tablet_switch_dev_id;
- 	bool tablet_switch_inverted;
- 
-+	bool keystone_available;
-+
- 	enum fan_type fan_type;
- 	enum fan_type gpu_fan_type;
- 	enum fan_type mid_fan_type;
-@@ -646,6 +649,55 @@ static bool asus_wmi_dev_is_present(struct asus_wmi *asus, u32 dev_id)
- 	return status == 0 && (retval & ASUS_WMI_DSTS_PRESENCE_BIT);
- }
- 
-+/* Keystone *******************************************************************/
-+
-+static int keystone_check_present(struct asus_wmi *asus)
-+{
-+	u32 retval;
-+	int err;
-+
-+	asus->keystone_available = false;
-+
-+	/*
-+	 * Use a raw devstate call rather than asus_wmi_dev_is_present().
-+	 * For this devid, PRESENCE_BIT encodes current insert state, not
-+	 * feature presence, so asus_wmi_dev_is_present() would return false
-+	 * whenever the dongle is absent at boot, even on machines that have
-+	 * a keystone slot.
-+	 * -ENODEV means the firmware doesn't know this devid at all.
-+	 * retval is not examined here, only the return code matters.
-+	 */
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
-+	if (err == -ENODEV)
-+		return 0;
-+	if (err)
-+		return err;
-+
-+	asus->keystone_available = true;
-+	return 0;
-+}
-+
-+static ssize_t keystone_show(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct asus_wmi *asus = dev_get_drvdata(dev);
-+	u32 retval;
-+	int err;
-+
-+	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_KEYSTONE, &retval);
-+	if (err)
-+		return err;
-+
-+	return sysfs_emit(buf, "%d\n", !!(retval & ASUS_WMI_DSTS_PRESENCE_BIT));
-+}
-+
-+static DEVICE_ATTR_RO(keystone);
-+
-+static void asus_wmi_keystone_notify(struct asus_wmi *asus)
-+{
-+	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "keystone");
-+}
-+
- /* Input **********************************************************************/
- static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
- {
-@@ -4575,6 +4627,12 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
-+	if (code == NOTIFY_KEYSTONE) {
-+		if (asus->keystone_available)
-+			asus_wmi_keystone_notify(asus);
-+		return;
-+	}
-+
- 	if (code == NOTIFY_KBD_FBM || code == NOTIFY_KBD_TTP) {
- 		if (asus->fan_boost_mode_available)
- 			fan_boost_mode_switch_next(asus);
-@@ -4698,6 +4756,7 @@ static struct attribute *platform_attributes[] = {
- 	&dev_attr_lid_resume.attr,
- 	&dev_attr_als_enable.attr,
- 	&dev_attr_fan_boost_mode.attr,
-+	&dev_attr_keystone.attr,
- #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- 		&dev_attr_charge_mode.attr,
- 		&dev_attr_egpu_enable.attr,
-@@ -4741,6 +4800,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
- 	else if (attr == &dev_attr_fan_boost_mode.attr)
- 		ok = asus->fan_boost_mode_available;
-+	else if (attr == &dev_attr_keystone.attr)
-+		ok = asus->keystone_available;
- 
- #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- 	if (attr == &dev_attr_charge_mode.attr)
-@@ -5081,6 +5142,10 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	if (err)
- 		goto fail_platform_profile_setup;
- 
-+	err = keystone_check_present(asus);
-+	if (err)
-+		dev_warn(&pdev->dev, "Failed to check Keystone presence: %d\n", err);
-+
- 	err = asus_wmi_sysfs_init(asus->platform_device);
- 	if (err)
- 		goto fail_sysfs;
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index 554f41b827e1..c29962d5baac 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -147,6 +147,13 @@
- #define ASUS_WMI_DEVID_GPU_MUX		0x00090016
- #define ASUS_WMI_DEVID_GPU_MUX_VIVO	0x00090026
- 
-+/* Keystone dongle insert/remove state.
-+ * PRESENCE_BIT (0x00010000) encodes insert state:
-+ * 0x00010000 = inserted, 0x00000000 = absent. STATUS_BIT is never set.
-+ * 0xFFFFFFFE means no keystone slot on this machine.
-+ */
-+#define ASUS_WMI_DEVID_KEYSTONE		0x00120091
-+
- /* TUF laptop RGB modes/colours */
- #define ASUS_WMI_DEVID_TUF_RGB_MODE	0x00100056
- #define ASUS_WMI_DEVID_TUF_RGB_MODE2	0x0010005A
--- 
-2.54.0
+Thanks,
+Armin Wolf
 
+>
+>> +	.no_singleton =3D true,
+>> +};
+>> +module_wmi_driver(xiaomi_wmi_driver);
+>> +
+>> +MODULE_AUTHOR("Lucy Wong <lucywong2778@gmail.com>");
+>> +MODULE_DESCRIPTION("Xiaomi laptop WMI hotkey driver");
+>> +MODULE_LICENSE("GPL");
+>>
