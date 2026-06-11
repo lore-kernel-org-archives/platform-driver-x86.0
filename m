@@ -1,197 +1,208 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011034.outbound.protection.outlook.com [52.101.52.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B448532C94A;
-	Thu, 11 Jun 2026 05:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781155805; cv=fail; b=Y2imu1vkhgdYK102T2Rt8Byh353nUJg4/4lnnIG8mNZjRzynaABIoAL+pw1J6Pcuow6pFnBLk9r9qr4JvmPEbTPVE9HLoiwr2+846crN5LfzzeC8QAPFFS6T7kXhbOhNry8m/hA3DbBBGAo2fp7cCH9bChl4MGSY5x0vOyI1oko=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781155805; c=relaxed/simple;
-	bh=8j0rDyn9miuqupyDjUmK1/HnOxxLtkNQVZfKme5Gbxw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Etd4MNtQsiJLFvxEOcz5uLlXUBMxZSq9eDoN9982HSa76AeUXVq0kMfFhfqHe8kq+LjAj6WTDSGj38I1vUWia9FoIFNhHcRfF3ZmI9hODcsUKDd3f8G4lXsUFr06gCzd3Q61OAZj5SSNX0lu4dofrtPQ7ZtxcBjaZBgDcmyiukE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qOgSfDJy; arc=fail smtp.client-ip=52.101.52.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BBF377561;
+	Thu, 11 Jun 2026 08:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781166025; cv=none; b=Z/MWW+BQBECQ7ELc3Vw7JM/LAnEn0MM/sFl0UiwK6zHBe2Ol5RO72M6I+gExdYFsToKhIbRZ9c8Uw2IeTM5ARO+ACPsEbmDLHzNHVTFx4uNUQd+7GimBKFcyuKOMOpawXCiPLwS0CTZOzu233p8/TtW24fjtm8P+PdZY+MyJ4e0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781166025; c=relaxed/simple;
+	bh=EyiyWj7q9eI6RfcdGwHrun5NpY3X9CuO5XfoAt0Inno=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iovd7fWt32fi/pbjmBRgUN6q3huDKCbnlFd5ONwUCEtZsD5UYY47FuJAbNpbocy9+oVYxWImQgJlBr9hq5/6+nzRGpmMCdiAMIO94vyVFf6giiyog5+nOnj0az8rPDiuxLSWTZNxJTY1a9WQW+bsSBQ/tym5vY1cNtAbgACNlqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mOWFSY95; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qOgSfDJy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VHFd0OcaOZgWl0zMEwHeOoKwTw0dlR/otoe9NMYZyfnrINtTIIH5yo+AcXE3c+VlHpDZ00K3hkIwx7n5mQdakvURxgZoE1frdVpTy/jgNzqy2u76g9yfm7l0ARodxDxMkroWy1n+owSrPA92cQRpauOmdZ85rbzt7jIR6jYOoo+8TPLhMUFL0Aqib/ayoBBRxt2q3xRTEmcME6maDHkPzxuoPb1Vs1Jn+nKgzhfzGlkhERTJT+k92HR6D/+YHUYfIu3tF4Z3+izU/iLMNIjlEAev/tTo+Kaj87z0JAbGODOqpd3eK8o1DK2y1FCTJlkP4phoWvBmjYemfmf8IthPsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8ilU4FAJhWhcud2wqN5cYS+IrlNzMq7rjOebwRi9/Yw=;
- b=vxNLXnRiWHYL8/eNRNXblsehl01miK9ga+anPrf/fdwFccTi3DRzX4298E4dsQCVMJS8Pe+1ZmIF5d6PG5q6vhLgkt2t5xZxxiByAsI7vT3ovNVWP+p80gop6luv7QYTFPDtnGPI+sjciIeeos4aCb6fiPzFtxr2pWnOnD0Ytsh7uKLEprdKi871GWFS6VKxS7C/dqkfi5idds/l7YoncyRny8RZ+zIC7muo7gYcFvsIv1mPB79cQIXzI43MD1yGFYzU0TqQIk9FScm1PmROcZdWEeNeN6u/u7b8fdJGfNGwXvp+yayleQly9xy6FWYsPL442ZcrEW1CWv+VuLkUAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ilU4FAJhWhcud2wqN5cYS+IrlNzMq7rjOebwRi9/Yw=;
- b=qOgSfDJyenRJ0GDYMHcdtALyZfXDFlQNPcUZCkmE8DORiINcMdDXbbKU1C1L+vz/G4sQFEL8UXrqBSYlcLdmXYHb8d+hW+D969Uw3GM7cfeqvyDGWyBmhXY9mLK5k6imJB/a0oZAEeAsHLRxVvv9ipxNJ6Xfw7UtnEM3dizpeTQ=
-Received: from CYXPR02CA0072.namprd02.prod.outlook.com (2603:10b6:930:cd::13)
- by MN2PR12MB4470.namprd12.prod.outlook.com (2603:10b6:208:260::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.12; Thu, 11 Jun
- 2026 05:29:55 +0000
-Received: from CH1PEPF0000AD76.namprd04.prod.outlook.com
- (2603:10b6:930:cd:cafe::6c) by CYXPR02CA0072.outlook.office365.com
- (2603:10b6:930:cd::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.13 via Frontend Transport; Thu,
- 11 Jun 2026 05:29:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CH1PEPF0000AD76.mail.protection.outlook.com (10.167.244.53) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.113.7 via Frontend Transport; Thu, 11 Jun 2026 05:29:54 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 11 Jun
- 2026 00:29:52 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>, Muthusamy Ramalingam
-	<muthusamy.ramalingam@amd.com>
-Subject: [PATCH v5 8/8] platform/x86/amd/hsmp: Make metric table read locking use guard(mutex)
-Date: Thu, 11 Jun 2026 10:59:19 +0530
-Message-ID: <20260611052919.1095549-9-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260611052919.1095549-1-muralidhara.mk@amd.com>
-References: <20260611052919.1095549-1-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mOWFSY95"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781166023; x=1812702023;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=EyiyWj7q9eI6RfcdGwHrun5NpY3X9CuO5XfoAt0Inno=;
+  b=mOWFSY95E9XCUb5f/9Prl79r2Cj6waJAy0H4rkb/0O/YQQePZhoyoET5
+   Zcx3vnIAr/GCXowaTock09TBgsbTEhuw+RILci+P8d/cVL16E+Um9Ut4U
+   eyokz7Q6I93pXwZ6Na2kTsQEvBhmHGLHqvmf8sHNsttIa9w/rLKWNEDeQ
+   BlWreLcfUvJXDJRR7iwJc2WUa4g7IfJw3JJ+5j3JknZtPQxl8giGtdwop
+   QCysjDpzki4QmMbp3o9YXsaAzvWAhx0IooF5lEyf/7pwsW7zkyxODLDmH
+   K0a3YtYT47zUyjMqxtST5vUF16JAAA2+XaF9ZGKRc/bhoOJmpKKxm34Ts
+   g==;
+X-CSE-ConnectionGUID: b/r7DfJrSAK7/H4OMTfbnw==
+X-CSE-MsgGUID: ooYjdG6DTQKsDTNMY/sFAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="107411881"
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="107411881"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 01:20:22 -0700
+X-CSE-ConnectionGUID: oBRXLGaoTailaLGihuuWgA==
+X-CSE-MsgGUID: EhiUEK5UTkmidhBJPygVIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="243470627"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 01:20:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 11 Jun 2026 11:20:14 +0300 (EEST)
+To: "M K, Muralidhara" <muralimk@amd.com>
+cc: Muralidhara M K <muralidhara.mk@amd.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+Subject: Re: [PATCH v4 4/7] platform/x86/amd/hsmp: Source metric-table size
+ from firmware
+In-Reply-To: <7d496898-ecc1-42d7-bbcd-1251038f332e@amd.com>
+Message-ID: <210d3a07-bf77-b525-b03f-02fea5e4e833@linux.intel.com>
+References: <20260528093954.2461272-1-muralidhara.mk@amd.com> <20260528093954.2461272-5-muralidhara.mk@amd.com> <3ccdf8eb-861a-970a-5c05-96c1ec54b473@linux.intel.com> <7d496898-ecc1-42d7-bbcd-1251038f332e@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD76:EE_|MN2PR12MB4470:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a727644-7cd1-4df2-a99f-08dec77a7817
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|1800799024|23010399003|376014|18002099003|22082099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	Nck5yqy2Rgxo1lEqqJeiWM5BP3WgDccLDS8dgJNQFd3sbNZPNBHx/qx+GnqKy1DSMeiDjP/vU8AYybPg2iVDr2l2mrP6rf5W34Fx398cshZPG8L8pZToIq86L+AlJdh/vwddqaSRt9axO11/XD0VIpQGAlKnKoArKpxqHCuzQFiDkrMJBG8t3qyHlEocvqS3jv+htZMC1HGCoXcESc3s/OtQ1ZBVM+d4zHoeWMLli/+AV7t7vq2vXvjajAZlTiegHXz5eE/icRVzwoYAn4jrhxnklYXtBakwUxv6Ml9HwA4UoWfFttFxieapAk0IomOi1u6y0iN2R5DBtZgDxuNMaPDkwqYteqf5Pf+AygDcV6DWoLoP4ApKgkhrWbLioUSgXaNRlawg8o38lwgzoM1Mv4vK5+ERlahuU0UyIIqVq0qVzzTYwWn309glChtiBdQiPVASxuSyt/mNWJ00aPS7tmhwBmo6E6L5IbwFvb4PrihzTtYVuALtKI3IfpkqlLbCQcE/4mdyFQSoOuIaohCKD2jL0ZqQaQyAJoPuFervEimoRbp7yukTK6VDd6djgrCU2I+XsnD4nCsubC5qqeu+whGQcEmD0g2dhV9KcyFiDrL/6zESLpnFbF8I+OMb5sqML64r5qwev3cmKFXkEYYfC6vRjrxMGiBv+YtIrGLnRV/hTJF36VKdf2M73gg6hyMQx+ZxqKLZg78Mejn2+Bx4GB6jBhYXLw3/VGzlphSAY+I=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(1800799024)(23010399003)(376014)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	juGSDKORnSdoEbraKXJGMxBGQmTTQeS5VFR9uwhSvWA8vAJ/QR+dEEuK91VGpCT9Qtwt33ie4a5mfhoN8Zw5/4an5xSx75yXIdKfg6P1pWjRAscTzZKwAGq4Adq7Rj4Yiv5z2K0UUetrgXR91Gim/7pnUns+t9pmPW7PCqhbUaYfns34JLnEHNM9EU5SrMO/E5gTBBDkEOeCRR2RQMxvppzsE+oKCyvWPTzbTNMcBqniiMCCAmkvIbHBzAwuTLREK7Mh+iW0WC9IlrmqBJc+gQgf5bEbJOpkEwOagABaJf0fm+Ve+d5LNM0ETvTH3kdC2KCf6BXS6932dd2MX/JiP8vbqxiTOtgINAB1lF4su6OI2l1NqDVFOFstmqsB8UNMauR8BBJJVzBsLLOUu1hvQyjrNKC3bXEc/gmuJwAnfQbrMVd5uxKHXydWaUPs8JWt
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2026 05:29:54.7236
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a727644-7cd1-4df2-a99f-08dec77a7817
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD76.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4470
+Content-Type: multipart/mixed; boundary="8323328-2117879531-1781166014=:1126"
 
-hsmp_metric_tbl_read() refreshes the SMU-side metric table and then
-memcpy_fromio()'s the result. Without serialization, two parallel
-readers can interleave the refresh and the copy and the caller
-observes a torn (mixed old/new) snapshot. Add a per-socket
-metric_tbl_lock so the refresh-and-copy sequence is atomic from
-userspace's point of view.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Use scoped guard(mutex) so the lock is released on every return
-path without hand-written goto chains, and initialize the mutex
-with devm_mutex_init() so no explicit mutex_destroy() cleanup is
-required.
+--8323328-2117879531-1781166014=:1126
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Initialize the mutex before devm_ioremap() so the invariant
-"sock->metric_tbl_addr != NULL implies metric_tbl_lock is usable"
-holds on every error exit. Both callers of hsmp_get_tbl_dram_base()
-(init_acpi() and init_platform_device()) intentionally only log a
-failure and continue probing, so initializing the mutex after a
-successful ioremap would leave sock->metric_tbl_addr populated with
-an uninitialized lock, and the next hsmp_metric_tbl_read() would
-take guard(mutex)() on garbage memory. With the order swapped, a
-devm_mutex_init() failure returns early before metric_tbl_addr is
-ever set, and the existing NULL check in hsmp_metric_tbl_read()
-keeps rejecting the read with -ENOMEM as before.
+On Thu, 11 Jun 2026, M K, Muralidhara wrote:
+> On 6/10/2026 4:35 PM, Ilpo J=C3=A4rvinen wrote:
+> > Caution: This message originated from an External Source. Use proper ca=
+ution
+> > when opening attachments, clicking links, or responding.
+> >=20
+> >=20
+> > On Thu, 28 May 2026, Muralidhara M K wrote:
+> >=20
+> > > The driver hard-codes the metric-table region size to
+> > > sizeof(struct hsmp_metric_table). That is correct for HSMP protocol
+> > > version 6 but mis-sizes the ioremap of the SMU DRAM region on newer
+> > > platforms: Family 1Ah Model 50h-5Fh exposes a ~13 KB
+> > > hsmp_metric_table_zen6, and the table is expected to keep growing
+> > > on future firmware. The same hard-coded value also forces
+> > > hsmp_metric_tbl_read() to reject any read that follows the actual
+> > > firmware layout.
+> > >=20
+> > > Pick up the table size from firmware instead. SMU on Family 1Ah
+> > > Model 50h and later populates HSMP_GET_METRIC_TABLE_DRAM_ADDR's
+> > > args[2] with the DRAM region size in bytes; older firmware leaves
+> > > it 0. Bump the descriptor's response_sz to 3 so the field is read,
+> > > store the value in hsmp_pdev.hsmp_table_size at probe time, and
+> > > fall back to sizeof(struct hsmp_metric_table) when firmware reports
+> > > 0. Use hsmp_table_size both for the devm_ioremap() of the region
+> > > and as the upper bound for hsmp_metric_tbl_read().
+> > >=20
+> > > Behaviour on existing protocol-version-6 hardware is unchanged:
+> > > firmware returns 0, the fallback yields the same value as the
+> > > previous hard-coded one, and both the ioremap and the size check
+> > > produce the same result as before.
+> > >=20
+> > > The ioctl interface added later in this series uses the same
+> > > hsmp_table_size to validate the userspace request and to copy out
+> > > the full firmware-reported region.
+> > >=20
+> > > Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+> > > Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
+> > > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> > > ---
+> > >   arch/x86/include/uapi/asm/amd_hsmp.h |  5 +++--
+> > >   drivers/platform/x86/amd/hsmp/hsmp.c | 11 ++++++++---
+> > >   drivers/platform/x86/amd/hsmp/hsmp.h |  1 +
+> > >   3 files changed, 12 insertions(+), 5 deletions(-)
+> > >=20
+> > > diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > b/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > index fce271282348..438ac38d0dc8 100644
+> > > --- a/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
+> > > @@ -365,11 +365,12 @@ static const struct hsmp_msg_desc
+> > > hsmp_msg_desc_table[]
+> > >        {0, 0, HSMP_GET},
+> > >=20
+> > >        /*
+> > > -      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
+ =3D 2
+> > > +      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
+ =3D 3
+> > >         * output: args[0] =3D lower 32 bits of the address
+> > >         * output: args[1] =3D upper 32 bits of the address
+> > > +      * output: args[2] =3D DRAM region size in bytes
+> > >         */
+> > > -     {0, 2, HSMP_GET},
+> > > +     {0, 3, HSMP_GET},
+> > >=20
+> > >        /*
+> > >         * HSMP_SET_XGMI_PSTATE_RANGE, num_args =3D 1, response_sz =3D=
+ 0
+> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > b/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > index 9bad58fef304..cf9392f99298 100644
+> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+> > > @@ -356,8 +356,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *=
+sock,
+> > > char *buf, size_t size)
+> > >                return -ENOMEM;
+> > >        }
+> > >=20
+> > > -     /* Do not support lseek(), also don't allow more than the size =
+of
+> > > metric table */
+> > > -     if (size !=3D sizeof(struct hsmp_metric_table)) {
+> > > +     if (size !=3D hsmp_pdev.hsmp_table_size) {
+> > >                dev_err(sock->dev, "Wrong buffer size\n");
+> > >                return -EINVAL;
+> > >        }
+> > > @@ -398,8 +397,14 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+> > >                dev_err(sock->dev, "Invalid DRAM address for metric
+> > > table\n");
+> > >                return -ENOMEM;
+> > >        }
+> > > +     /* SMU returns table size from Family 1Ah Model 50h and forward=
+ */
+> > > +     if (msg.args[2])
+> > > +             hsmp_pdev.hsmp_table_size =3D msg.args[2];
+> > > +     else
+> > > +             hsmp_pdev.hsmp_table_size =3D sizeof(struct
+> > > hsmp_metric_table);
+> > > +
+> > >        sock->metric_tbl_addr =3D devm_ioremap(sock->dev, dram_addr,
+> > > -                                          sizeof(struct
+> > > hsmp_metric_table));
+> > > +                                          hsmp_pdev.hsmp_table_size)=
+;
+> > >        if (!sock->metric_tbl_addr) {
+> > >                dev_err(sock->dev, "Failed to ioremap metric table
+> > > addr\n");
+> > >                return -ENOMEM;
+> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h
+> > > b/drivers/platform/x86/amd/hsmp/hsmp.h
+> > > index b153527e0a0d..e7f051475728 100644
+> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+> > > @@ -55,6 +55,7 @@ struct hsmp_plat_device {
+> > >        u32 proto_ver;
+> > >        u16 num_sockets;
+> > >        bool is_probed;
+> > > +     size_t hsmp_table_size;
+> >=20
+> > Please add types.h include.
+> >=20
+> In hsmp.h, size_t becomes visible without adding anything new, because th=
+e
+> file already includes linux/device.h, and that pulls in linux/types.h
 
-Reviewed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
----
- drivers/platform/x86/amd/hsmp/hsmp.c | 19 +++++++++++++++++++
- drivers/platform/x86/amd/hsmp/hsmp.h |  3 +++
- 2 files changed, 22 insertions(+)
+Please don't rely on indirect include paths. The rule for includes is=20
+Include What You Use.
 
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index a9dca97568b8..46e8dc7cfb60 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -479,6 +479,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
- 	msg.msg_id	= HSMP_GET_METRIC_TABLE;
- 	msg.sock_ind	= sock->sock_ind;
- 
-+	guard(mutex)(&sock->metric_tbl_lock);
- 	ret = hsmp_send_message(&msg);
- 	if (ret)
- 		return ret;
-@@ -495,6 +496,24 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
- 	phys_addr_t dram_addr;
- 	int ret;
- 
-+	/*
-+	 * Initialize the per-socket lock before anything that can set
-+	 * sock->metric_tbl_addr to a non-NULL value.  hsmp_metric_tbl_read()
-+	 * gates on sock->metric_tbl_addr being non-NULL and then takes
-+	 * metric_tbl_lock unconditionally; both callers of this function
-+	 * (init_acpi() and init_platform_device()) intentionally only log
-+	 * a failure here and continue probing, so an init order that left
-+	 * metric_tbl_addr populated while devm_mutex_init() failed would
-+	 * leave the read path locking an uninitialized mutex.  Doing the
-+	 * mutex init first preserves the invariant "metric_tbl_addr !=
-+	 * NULL implies the lock is usable" on every error exit.
-+	 */
-+	ret = devm_mutex_init(sock->dev, &sock->metric_tbl_lock);
-+	if (ret) {
-+		dev_err(sock->dev, "Failed to initialize metric table lock\n");
-+		return ret;
-+	}
-+
- 	msg.sock_ind	= sock_ind;
- 	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
- 	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index e7f051475728..f7b1cbf19932 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -15,6 +15,7 @@
- #include <linux/hwmon.h>
- #include <linux/kconfig.h>
- #include <linux/miscdevice.h>
-+#include <linux/mutex.h>
- #include <linux/pci.h>
- #include <linux/semaphore.h>
- #include <linux/sysfs.h>
-@@ -41,6 +42,8 @@ struct hsmp_socket {
- 	struct bin_attribute hsmp_attr;
- 	struct hsmp_mbaddr_info mbinfo;
- 	void __iomem *metric_tbl_addr;
-+	/* Serializes concurrent metric table refreshes from the sysfs path */
-+	struct mutex metric_tbl_lock;
- 	void __iomem *virt_base_addr;
- 	struct semaphore hsmp_sem;
- 	char name[HSMP_ATTR_GRP_NAME_SIZE];
--- 
-2.34.1
+There are some exceptions to the general rule such as linux/xx.h=20
+including asm/xx.h, in such case you only need to add linux/xx.h.
 
+--=20
+ i.
+
+--8323328-2117879531-1781166014=:1126--
