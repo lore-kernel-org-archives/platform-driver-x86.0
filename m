@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D947AFBE1;
-	Thu, 11 Jun 2026 15:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E69FBE1;
+	Thu, 11 Jun 2026 15:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781190161; cv=none; b=fO4iWxr4kSto3di3IzbWvIjSpanafLJg3I1aEiNzolhUNtNcZRd/uj7EaOaDU85+Tagd+hMrN7YEdelf0CcfZuBOcCQBSkARZTImcYj9HlQNGSm4I5GSk+VBDxPS50D/+zSnAiHhQW/81tTLRGdtAU+cqnnK1NMUI8f0dxgV+Cs=
+	t=1781190183; cv=none; b=SqR/hqauPitaHnk6SQf+cn0mqfSF3EGwAB1gqSKFOldz/HcitJdXhPjWtySCCNPHuFJbAZrN9eyC48mEmmxEnZeX1OPwSCZnr9cSZ+WHXnisqlMy+SzYC53dqSB0hrCldtcJRm1hkaNyPWEAWCnF4ITqstaUaLTcIjvL/RkXq9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781190161; c=relaxed/simple;
-	bh=xNfdlF3578XafGWiRUsb0VNavJZd87MOvnHDy2lKuAY=;
+	s=arc-20240116; t=1781190183; c=relaxed/simple;
+	bh=SaJfpUFwy5duD9c1Bl0DeXmXHGdV9btGaZAxfqCLtx0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=FfvG52n6kD6q2BrVPCt8Hh0/vXl+21aLZnC/UPHI0VDI04RlvTWe0cQIq6YtRhjALaFTogkGfbvAM2CSIr6nSKZE1MRpH8oVydk2sDaUc+NW5QIrVMv6RBZndltV5dde0wAscueJX/YkzlmDeadQvosggEGqkIms+lX9tYy1RWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V9A01Dr0; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=mcDPBUam6eCqQNPqqTGir4mEDeziwigWJFbbq6Hwp7jkNwGCE2uuqlWdVjR6CNJEqvL1P7utt3DTZvp6nDDJLEtH1OABLb0WPErSpB/ZOlsZNt4K/PO4wrq0/XtHfiHyhfNXZsx7IjkH/hZ8/Ggg0ccF87mXt0DhjK2jWpRRcJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHEEUUXh; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V9A01Dr0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHEEUUXh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781190160; x=1812726160;
+  t=1781190182; x=1812726182;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=xNfdlF3578XafGWiRUsb0VNavJZd87MOvnHDy2lKuAY=;
-  b=V9A01Dr0ex9u6tF8NNLiD6ElNRQVSiisOKqXSIixlPgUIfqgPpOB5lL7
-   UlZLLuT9+wtGzYoIa4Ml8dIZU8/mtcjdLulPHQM22xa+MADN3HCSbXcQ/
-   Pwt166MChoSCMby2gbX8DspRKKsxTAG5dq2byo8K8RK11BheCWz1DITOA
-   qLZSofmKtYvH2Q7GmQ4b5Joeo2DHOVuc/QsSAFy1VB5fn9CrYTMBUEWEO
-   /jAXz+6PXDLvrwLGJUGKWOGximRAMIGB+h8uW9oV2WgKIbxleF+LPOSCv
-   FiH3iJuag/JIr6cbnTWhb0unnJvFV2s767f63knwGtOheF8EVkUC2hCYI
-   Q==;
-X-CSE-ConnectionGUID: qYfPvg8oQc662UROLwu4pg==
-X-CSE-MsgGUID: UUpSyAAQS72a62oCELuzQg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="92326335"
+  bh=SaJfpUFwy5duD9c1Bl0DeXmXHGdV9btGaZAxfqCLtx0=;
+  b=NHEEUUXh1VF2OTppfxyn0y5PHKMfEAMfWD8JuJ5JzNeJchfIIIU/dqCR
+   IEzAbyHaphsHgblHvN247ADzLeRVkcrKx7kPtzdQ+r3yEHgUNksaKQd/w
+   V7mVvk5lr6+ASWPObaqN55w/IBOH30zHuLiCXS/0oofHILdiYSjRz0df0
+   34VW7w/joGmAHAxkCRoxsgb5Pt0bHb/AZ+gEzirTlTCaQhdta63qsPHLq
+   NZmf1ZV0t1PEgrbaOh6kEfeMmnm6NDbUy27ODAm/oaXc5Z7y+hkl5sUPX
+   YBbFZ5bW2dqPS3QP3XRz6zL05VjHw2snggcDHJAgNuPp7pMViRsg/PLoY
+   w==;
+X-CSE-ConnectionGUID: 4FfDYOeUQkuUZReg4meNTw==
+X-CSE-MsgGUID: FZv69H1PSbCKJ1/MFLuHuw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="69550330"
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="92326335"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:02:40 -0700
-X-CSE-ConnectionGUID: K9Mk++A7TX2LNZhkFsZTzQ==
-X-CSE-MsgGUID: mt7qUMpVRcKcB9SGESYPtA==
+   d="scan'208";a="69550330"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:02:55 -0700
+X-CSE-ConnectionGUID: e04dKFzCTSO7eu8vuHYRLQ==
+X-CSE-MsgGUID: 1pGuUw1eSf6qrLAmkN5fyQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="242106603"
+   d="scan'208";a="284588900"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:02:37 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:02:52 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, 
- =?utf-8?q?Dariusz_Figza=C5=82?= <dariuszfigzal@gmail.com>
-Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
- hansg@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260610164942.74956-1-dariuszfigzal@gmail.com>
-References: <20260610164942.74956-1-dariuszfigzal@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: asus-wmi: add keystone dongle support
-Message-Id: <178119015200.12014.18234165694233274800.b4-ty@b4>
-Date: Thu, 11 Jun 2026 18:02:32 +0300
+To: "Luke D . Jones" <luke@ljones.dev>, 
+ Denis Benato <denis.benato@linux.dev>, 
+ Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ Marco Scardovi <scardracs@disroot.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260610152130.25892-1-scardracs@disroot.org>
+References: <20260610152130.25892-1-scardracs@disroot.org>
+Subject: Re: [PATCH] platform/x86: asus-armoury: add support for G614PR
+Message-Id: <178119015973.12014.6231948241278781864.b4-ty@b4>
+Date: Thu, 11 Jun 2026 18:02:39 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,19 +61,19 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 10 Jun 2026 18:49:42 +0200, Dariusz Figzał wrote:
+On Wed, 10 Jun 2026 17:21:30 +0200, Marco Scardovi wrote:
 
-> The ASUS Keystone is a physical NFC-like dongle that slots into supported
-> ASUS laptops. The EC fires WMI notify code 0xB4 on insert/remove events.
+> Add TDP power limits and fan curve requirements for the ASUS ROG Strix
+> G16 G614PR laptop model.
 > 
-> Expose the current insert state via a sysfs attribute by querying WMI
-> device ID 0x00120091 (DSTS). This devid does not follow the standard DSTS
-> convention: PRESENCE_BIT (0x00010000) encodes the insert state rather than
-> feature presence, and STATUS_BIT is never set. Presence of a keystone slot
-> is detected by a successful DSTS call.
+> The ASUS ROG Strix G16 G614PR requires specific AC/DC power limits
+> (PPT PL1/PL2/PL3, dynamic boost, and NV TGP targets) to function
+> correctly under various power profiles. Without these limits, the Asus
+> Armoury driver cannot configure the correct power envelopes or enable custom
+> fan curves, leading to suboptimal performance or noise management.
 > 
 > [...]
 
@@ -83,8 +84,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: asus-wmi: add keystone dongle support
-      commit: 711104ab5ed500f155e4a53c56571b9b24a9a9b9
+[1/1] platform/x86: asus-armoury: add support for G614PR
+      commit: 6b3bbe770f4ca0439710b7c42f88b9f6eeebabd0
 
 --
  i.
