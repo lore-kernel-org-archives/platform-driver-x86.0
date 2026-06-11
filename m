@@ -1,139 +1,447 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07FF406298;
-	Thu, 11 Jun 2026 13:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C4F3CAE7F;
+	Thu, 11 Jun 2026 13:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781184095; cv=none; b=Ez4kKNIdUIQQM4IEN1tvXRCg6DxQPqveNORdUnW1wR+v6sU99SmDwX78GvXp0BqlbyEO0M9RrsnlQwoK8F+bMayn0ovBxMYjfa5tNkA6jU5g+OTTCRsgU6/aF7sgqJr2RvQVwiG6Xtq63YC1cwmtV2LD/dmzRrwLnaDu9VNdhYw=
+	t=1781185207; cv=none; b=enArTeCv29HGuFa6y+EdkLUQhEU4CApwnwSEO3iLWDjSbioHre9oTEq5ELkuvqAI+k96946yertyApYPYLEDSug2aeGIwVlKlgQTW5QFbHCAiGtT1hHZ6inhLEDru6hOd6iIBISZdyUF9YGALSKaZ5ygcFGi9dFEa08NRpRgabA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781184095; c=relaxed/simple;
-	bh=cFxYd0s1au9W7ZLiIlUtyNUbbVWzYL3Ai82Y04G4b40=;
+	s=arc-20240116; t=1781185207; c=relaxed/simple;
+	bh=EDfZjUwLPtHk9Da/3k5nYUO3YVcfcP5vkTLxj+jtvXY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gOThw3J4IENc7fKurZA+3IowfMV8YSjRBaGmpD+QUPrmb4aBKeTEf77Uyf1ovXi/hagtim5MqiBitEC4ydpsumJhG41uaHUCB5iXfUhg80XvPCPMLNHrNtVDy38/PN3PQpuvBwwfckoBlkbrYsLnax5Ym+yEX6j7XOFOrwpJtwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJz7Os2C; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=T5mOP2Bvc8ajILnJf7JSjDurlZgQ+oSmLKn0BkBgO1kluzbx+mttaSzzKox5UJjZASnPFXW/xyTf8fckVLRknHFI5YCLLDMd0JuW07DmF11j8hYxFBESZV0NGr1f5YpuVopItd/HMS0BqI2an4+jwMWzVa7a+AnSyqN8WCVlXJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eg/ElI+h; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJz7Os2C"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eg/ElI+h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781184089; x=1812720089;
+  t=1781185205; x=1812721205;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=cFxYd0s1au9W7ZLiIlUtyNUbbVWzYL3Ai82Y04G4b40=;
-  b=FJz7Os2CxGiCF4eiIQ873xle6HHVfQh/h7SSpD5beNGutnak/eq7NEfQ
-   ug/Aqsu6qXDJ0HjSMRv8MeTapBxivY1nB16ZgI3/U25PPPRKD1pq1Di+0
-   UzJPXX7HLKBpmkxKICG1K9p+R1/ep4p08XTNIyTYzapOE3p80goLZfYcp
-   0U+RZBdrW/x5+N3EdO5g2VWU9WzT8Cw31oaWCNQsQXwRWg9wCfxG9OH8j
-   woJRy+Zr+TlZbrSy7oONHthzboQ84+zOu41QmvY01QP4uu2lQYmCsOo7g
-   cGV2AMVLw55OzkT3NJPB66A0E+XUsT8Omjtw8Wb7ArVZgr5H6vyxbif2X
+  bh=EDfZjUwLPtHk9Da/3k5nYUO3YVcfcP5vkTLxj+jtvXY=;
+  b=eg/ElI+hkB1YiawwA6GGV76M/fsRAyNe2iMOVRkMHCCP+1hCkmb97UGo
+   3OkNc/ijQEPlC8mZD3pffPLpXiX/vg+Cb4kCuVKR9Q9drPpy0L4NUfXEW
+   4bVUarC0SU3XYAWZ3KNvIeE2Gi0sMBAdY9DeV+nFy2q/3kgQhtAXpbmfK
+   /EpwZS8O3bZNJa+2glagNU0BzIBw6erNBxueGtghrNhBY3T5XmQyY02Bt
+   s++3skgmxtPHMpss6p6ZoP88uLRVK2vS7MmNyXWJoOEITf7ryBv4q3j1w
+   x0etEnW+ZsoSHVeDb7CNKxG+xyW9LItmq9Z87wmOBOhN2lYlQ+8zRU5LC
    w==;
-X-CSE-ConnectionGUID: BdV3JVILRfOGvsf1RoBShQ==
-X-CSE-MsgGUID: S5iN0nAVQyee1BJuxIxV/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="93386040"
+X-CSE-ConnectionGUID: 3ChDG76OTI624ilJl0sxyA==
+X-CSE-MsgGUID: MyprM9cyQR6/8ro2N7XRyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="82003504"
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="93386040"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 06:21:27 -0700
-X-CSE-ConnectionGUID: xFJMPteaRYmGu5HRR7vsmQ==
-X-CSE-MsgGUID: paQI5NdwSS2s7SP7lDRoHg==
+   d="scan'208";a="82003504"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 06:40:04 -0700
+X-CSE-ConnectionGUID: rTH5eBMWSv6lafjMxun2yA==
+X-CSE-MsgGUID: z3ZfaMEnQdmhMa2iqT7dWQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
-   d="scan'208";a="250763265"
+   d="scan'208";a="251569494"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 06:21:25 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 06:39:59 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jun 2026 16:21:21 +0300 (EEST)
+Date: Thu, 11 Jun 2026 16:39:55 +0300 (EEST)
 To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, wse@tuxedocomputers.com
-Subject: Re: [PATCH 0/7] platform/x86: uniwill-laptop: Support additional
- features
-In-Reply-To: <84441528-5f33-4795-a650-8b6fccdaed5e@gmx.de>
-Message-ID: <8395fcb7-4de7-85ff-d2ae-a7eefd2dc87c@linux.intel.com>
-References: <20260530170813.10166-1-W_Armin@gmx.de> <9c74fdcc-20c2-0722-7932-8fa09872d80b@linux.intel.com> <84441528-5f33-4795-a650-8b6fccdaed5e@gmx.de>
+cc: Dell.Client.Kernel@dell.com, pali@kernel.org, mjg59@srcf.ucam.org, 
+    soyer@irl.hu, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux@roeck-us.net, linux-hwmon@vger.kernel.org, mario.limonciello@amd.com
+Subject: Re: [PATCH v6 5/9] platform/x86: dell-ddv: Use new buffer-based WMI
+ API
+In-Reply-To: <20260610203453.816254-6-W_Armin@gmx.de>
+Message-ID: <a283a0a2-f897-ae2e-7588-819583edc1d3@linux.intel.com>
+References: <20260610203453.816254-1-W_Armin@gmx.de> <20260610203453.816254-6-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1965774204-1781184081=:1126"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1965774204-1781184081=:1126
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=US-ASCII
 
 On Wed, 10 Jun 2026, Armin Wolf wrote:
 
-> Am 10.06.26 um 12:50 schrieb Ilpo J=C3=A4rvinen:
-> > On Sat, 30 May 2026, Armin Wolf wrote:
-> >=20
-> > > This patch series adds support for various new features to the
-> > > uniwill-laptop driver. The first patch adds support for the keyboard
-> > > backlight available on some models, while the next three patches
-> > > add support for additional WMI events, USB powershare and AC auto
-> > > boot. The last four patches finally add support for additional device=
-s.
-> > >=20
-> > > The patch series depends on commit b1a9b7a904af ("leds: Introduce the
-> > > multi_max_intensity sysfs attribute")
-> > > currently sitting inside the for-leds-next branch of the LED subsyste=
-m
-> > > tree. Without said commit the first patch will apply but not build.
-> > >=20
-> > > All patches have been tested on my Tuxedo InfinityBook Pro 15 Gen 10
-> > > AMD and most work flawlessly, only the AC auto boot feature seems to
-> > > be broken on my device. I decided to still include the patch because
-> > > it works on other devices.
-> > >=20
-> > > Armin Wolf (7):
-> > >    platform/x86: uniwill-laptop: Add keyboard backlight support
-> > >    platform/x86: uniwill-laptop: Handle screen-related events
-> > >    platform/x86: uniwill-laptop: Add AC auto boot support
-> > >    platform/x86: uniwill-laptop: Add support for USB powershare
-> > >    platform/x86: uniwill-laptop: Add support for the MACHENIKE L16 Pr=
-o
-> > >    platform/x86: uniwill-laptop: Add support for the AiStone X4SP4NAL
-> > >    platform/x86: uniwill-laptop: Add lightbar support for LAPQC71A/B
-> > >=20
-> > >   .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
-> > >   .../admin-guide/laptops/uniwill-laptop.rst    |  27 +
-> > >   drivers/platform/x86/uniwill/uniwill-acpi.c   | 609 +++++++++++++++=
-++-
-> > >   drivers/platform/x86/uniwill/uniwill-wmi.h    |   2 +
-> > >   4 files changed, 650 insertions(+), 13 deletions(-)
-> >=20
-> > Unfortunately, I got this error after applying this series on top of
-> > review-ilpo-next:
-> >=20
-> > drivers/platform/x86/uniwill/uniwill-acpi.c: In function
-> > =E2=80=98uniwill_kbd_led_init=E2=80=99:
-> > drivers/platform/x86/uniwill/uniwill-acpi.c:1827:49: error: =E2=80=98st=
-ruct
-> > mc_subled=E2=80=99 has no member named =E2=80=98max_intensity=E2=80=99;=
- did you mean =E2=80=98intensity=E2=80=99?
-> >   1827 |                 data->kbd_led_mc_subled_info[i].max_intensity =
-=3D
-> > KBD_LED_MAX_INTENSITY;
-> >=20
-> >=20
-> The patch series depends on commit b1a9b7a904af ("leds: Introduce the
-> multi_max_intensity sysfs attribute")
-> currently sitting inside the for-leds-next branch of the LED subsystem
-> tree.
+> Use the new buffer-based WMI API to also support ACPI firmware
+> implementations that do not use ACPI intergers/strings/packages
+> for exchanging data.
+> 
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/dell/dell-wmi-ddv.c | 179 +++++++++++------------
+>  1 file changed, 85 insertions(+), 94 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> index 62e3d060f038..736d9b1fdcfb 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-ddv.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+> @@ -7,8 +7,9 @@
+>  
+>  #define pr_format(fmt) KBUILD_MODNAME ": " fmt
+>  
+> -#include <linux/acpi.h>
+>  #include <linux/bitfield.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/compiler_attributes.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/device/driver.h>
+> @@ -99,6 +100,11 @@ enum dell_ddv_method {
+>  	DELL_DDV_THERMAL_SENSOR_INFORMATION	= 0x22,
+>  };
+>  
+> +struct dell_wmi_buffer {
+> +	__le32 raw_size;
+> +	u8 raw_data[];
+> +} __packed;
+> +
+>  struct fan_sensor_entry {
+>  	u8 type;
+>  	__le16 rpm;
+> @@ -126,7 +132,7 @@ struct dell_wmi_ddv_sensors {
+>  	bool active;
+>  	struct mutex lock;	/* protect caching */
+>  	unsigned long timestamp;
+> -	union acpi_object *obj;
+> +	struct dell_wmi_buffer *buffer;
+>  	u64 entries;
+>  };
+>  
+> @@ -158,105 +164,96 @@ static const char * const fan_dock_labels[] = {
+>  	"Docking Chipset Fan",
+>  };
+>  
+> -static int dell_wmi_ddv_query_type(struct wmi_device *wdev, enum dell_ddv_method method, u32 arg,
+> -				   union acpi_object **result, acpi_object_type type)
+> +static int dell_wmi_ddv_query(struct wmi_device *wdev, enum dell_ddv_method method, u32 arg,
+> +			      struct wmi_buffer *output, size_t min_size)
+>  {
+> -	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+> -	const struct acpi_buffer in = {
+> -		.length = sizeof(arg),
+> -		.pointer = &arg,
+> +	__le32 arg2 = cpu_to_le32(arg);
+> +	const struct wmi_buffer input = {
+> +		.length = sizeof(arg2),
+> +		.data = &arg2,
+>  	};
+> -	union acpi_object *obj;
+> -	acpi_status ret;
+> -
+> -	ret = wmidev_evaluate_method(wdev, 0x0, method, &in, &out);
+> -	if (ACPI_FAILURE(ret))
+> -		return -EIO;
+> -
+> -	obj = out.pointer;
+> -	if (!obj)
+> -		return -ENODATA;
+> -
+> -	if (obj->type != type) {
+> -		kfree(obj);
+> -		return -ENOMSG;
+> -	}
+> -
+> -	*result = obj;
+>  
+> -	return 0;
+> +	return wmidev_invoke_method(wdev, 0x0, method, &input, output, min_size);
+>  }
+>  
+>  static int dell_wmi_ddv_query_integer(struct wmi_device *wdev, enum dell_ddv_method method,
+>  				      u32 arg, u32 *res)
+>  {
+> -	union acpi_object *obj;
+> +	struct wmi_buffer output;
+>  	int ret;
+>  
+> -	ret = dell_wmi_ddv_query_type(wdev, method, arg, &obj, ACPI_TYPE_INTEGER);
+> +	ret = dell_wmi_ddv_query(wdev, method, arg, &output, sizeof(__le32));
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	if (obj->integer.value <= U32_MAX)
+> -		*res = (u32)obj->integer.value;
+> -	else
+> -		ret = -ERANGE;
+> +	__le32 *argr __free(kfree) = output.data;
+>  
+> -	kfree(obj);
+> +	*res = le32_to_cpu(*argr);
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int dell_wmi_ddv_query_buffer(struct wmi_device *wdev, enum dell_ddv_method method,
+> -				     u32 arg, union acpi_object **result)
+> +				     u32 arg, struct dell_wmi_buffer **result)
+>  {
+> -	union acpi_object *obj;
+> -	u64 buffer_size;
+> +	struct dell_wmi_buffer *buffer;
+> +	struct wmi_buffer output;
+> +	size_t buffer_size;
+>  	int ret;
+>  
+> -	ret = dell_wmi_ddv_query_type(wdev, method, arg, &obj, ACPI_TYPE_PACKAGE);
+> +	ret = dell_wmi_ddv_query(wdev, method, arg, &output, sizeof(*buffer));
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	if (obj->package.count != 2 ||
+> -	    obj->package.elements[0].type != ACPI_TYPE_INTEGER ||
+> -	    obj->package.elements[1].type != ACPI_TYPE_BUFFER) {
+> -		ret = -ENOMSG;
+> -
+> -		goto err_free;
+> -	}
+> -
+> -	buffer_size = obj->package.elements[0].integer.value;
+> -
+> -	if (!buffer_size) {
+> +	buffer = output.data;
+> +	if (!le32_to_cpu(buffer->raw_size)) {
+>  		ret = -ENODATA;
+>  
+>  		goto err_free;
+>  	}
+>  
+> -	if (buffer_size > obj->package.elements[1].buffer.length) {
+> +	buffer_size = struct_size(buffer, raw_data, le32_to_cpu(buffer->raw_size));
+> +	if (buffer_size > output.length) {
+>  		dev_warn(&wdev->dev,
+> -			 FW_WARN "WMI buffer size (%llu) exceeds ACPI buffer size (%d)\n",
+> -			 buffer_size, obj->package.elements[1].buffer.length);
+> +			 FW_WARN "Dell WMI buffer size (%zu) exceeds WMI buffer size (%zu)\n",
+> +			 buffer_size, output.length);
+>  		ret = -EMSGSIZE;
+>  
+>  		goto err_free;
+>  	}
+>  
+> -	*result = obj;
+> +	*result = buffer;
 
-Ah, I missed that note.
+This could use __free() and no_free_ptr() to simplify the code flow.
 
-This will have to wait to the next version then. I've summoned the series=
-=20
-back to patchwork queue so I won't forget it.
+>  
+>  	return 0;
+>  
+>  err_free:
+> -	kfree(obj);
+> +	kfree(output.data);
+>  
+>  	return ret;
+>  }
+>  
+> -static int dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_method method,
+> -				     u32 arg, union acpi_object **result)
+> +static ssize_t dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_method method,
+> +					 u32 arg, char *buf, size_t length)
+>  {
+> -	return dell_wmi_ddv_query_type(wdev, method, arg, result, ACPI_TYPE_STRING);
+> +	struct wmi_buffer output;
+> +	size_t str_size;
+> +	int ret;
+> +
+> +	ret = dell_wmi_ddv_query(wdev, method, arg, &output, sizeof(struct wmi_string));
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	struct wmi_string *str __free(kfree) = output.data;
+> +
+> +	str_size = sizeof(*str) + le16_to_cpu(str->length);
+> +	if (str_size > output.length) {
+> +		dev_warn(&wdev->dev,
+> +			 FW_WARN "WMI string size (%zu) exceeds WMI buffer size (%zu)\n",
+> +			 str_size, output.length);
+> +		return -EMSGSIZE;
+> +	}
+> +
+> +	return wmi_string_to_utf8s(str, buf, length);
+>  }
+>  
+>  /*
+> @@ -265,28 +262,26 @@ static int dell_wmi_ddv_query_string(struct wmi_device *wdev, enum dell_ddv_meth
+>  static int dell_wmi_ddv_update_sensors(struct wmi_device *wdev, enum dell_ddv_method method,
+>  				       struct dell_wmi_ddv_sensors *sensors, size_t entry_size)
+>  {
+> +	struct dell_wmi_buffer *buffer;
+>  	u64 buffer_size, rem, entries;
+> -	union acpi_object *obj;
+> -	u8 *buffer;
+>  	int ret;
+>  
+> -	if (sensors->obj) {
+> +	if (sensors->buffer) {
+>  		if (time_before(jiffies, sensors->timestamp + HZ))
+>  			return 0;
+>  
+> -		kfree(sensors->obj);
+> -		sensors->obj = NULL;
+> +		kfree(sensors->buffer);
+> +		sensors->buffer = NULL;
+>  	}
+>  
+> -	ret = dell_wmi_ddv_query_buffer(wdev, method, 0, &obj);
+> +	ret = dell_wmi_ddv_query_buffer(wdev, method, 0, &buffer);
+>  	if (ret < 0)
+>  		return ret;
+>  
+>  	/* buffer format sanity check */
+> -	buffer_size = obj->package.elements[0].integer.value;
+> -	buffer = obj->package.elements[1].buffer.pointer;
+> +	buffer_size = le32_to_cpu(buffer->raw_size);
+>  	entries = div64_u64_rem(buffer_size, entry_size, &rem);
+> -	if (rem != 1 || buffer[buffer_size - 1] != 0xff) {
+> +	if (rem != 1 || buffer->raw_data[buffer_size - 1] != 0xff) {
+>  		ret = -ENOMSG;
+>  		goto err_free;
+>  	}
+> @@ -296,14 +291,14 @@ static int dell_wmi_ddv_update_sensors(struct wmi_device *wdev, enum dell_ddv_me
+>  		goto err_free;
+>  	}
+>  
+> -	sensors->obj = obj;
+> +	sensors->buffer = buffer;
+>  	sensors->entries = entries;
+>  	sensors->timestamp = jiffies;
+>  
+>  	return 0;
+>  
+>  err_free:
+> -	kfree(obj);
+> +	kfree(buffer);
+>  
+>  	return ret;
+>  }
+> @@ -328,7 +323,7 @@ static int dell_wmi_ddv_fan_read_channel(struct dell_wmi_ddv_data *data, u32 att
+>  	if (channel >= data->fans.entries)
+>  		return -ENXIO;
+>  
+> -	entry = (struct fan_sensor_entry *)data->fans.obj->package.elements[1].buffer.pointer;
+> +	entry = (struct fan_sensor_entry *)data->fans.buffer->raw_data;
+>  	switch (attr) {
+>  	case hwmon_fan_input:
+>  		*val = get_unaligned_le16(&entry[channel].rpm);
+> @@ -354,7 +349,7 @@ static int dell_wmi_ddv_temp_read_channel(struct dell_wmi_ddv_data *data, u32 at
+>  	if (channel >= data->temps.entries)
+>  		return -ENXIO;
+>  
+> -	entry = (struct thermal_sensor_entry *)data->temps.obj->package.elements[1].buffer.pointer;
+> +	entry = (struct thermal_sensor_entry *)data->temps.buffer->raw_data;
+>  	switch (attr) {
+>  	case hwmon_temp_input:
+>  		*val = entry[channel].now * 1000;
+> @@ -411,7 +406,7 @@ static int dell_wmi_ddv_fan_read_string(struct dell_wmi_ddv_data *data, int chan
+>  	if (channel >= data->fans.entries)
+>  		return -ENXIO;
+>  
+> -	entry = (struct fan_sensor_entry *)data->fans.obj->package.elements[1].buffer.pointer;
+> +	entry = (struct fan_sensor_entry *)data->fans.buffer->raw_data;
+>  	type = entry[channel].type;
+>  	switch (type) {
+>  	case 0x00 ... 0x07:
+> @@ -442,7 +437,7 @@ static int dell_wmi_ddv_temp_read_string(struct dell_wmi_ddv_data *data, int cha
+>  	if (channel >= data->temps.entries)
+>  		return -ENXIO;
+>  
+> -	entry = (struct thermal_sensor_entry *)data->temps.obj->package.elements[1].buffer.pointer;
+> +	entry = (struct thermal_sensor_entry *)data->temps.buffer->raw_data;
+>  	switch (entry[channel].type) {
+>  	case 0x00:
+>  		*str = "CPU";
+> @@ -553,8 +548,8 @@ static void dell_wmi_ddv_hwmon_cache_invalidate(struct dell_wmi_ddv_sensors *sen
+>  		return;
+>  
+>  	mutex_lock(&sensors->lock);
+> -	kfree(sensors->obj);
+> -	sensors->obj = NULL;
+> +	kfree(sensors->buffer);
+> +	sensors->buffer = NULL;
+>  	mutex_unlock(&sensors->lock);
+>  }
+>  
+> @@ -564,7 +559,7 @@ static void dell_wmi_ddv_hwmon_cache_destroy(void *data)
+>  
+>  	sensors->active = false;
+>  	mutex_destroy(&sensors->lock);
+> -	kfree(sensors->obj);
+> +	kfree(sensors->buffer);
+>  }
+>  
+>  static struct hwmon_channel_info *dell_wmi_ddv_channel_init(struct wmi_device *wdev,
+> @@ -750,7 +745,7 @@ static void dell_wmi_battery_invalidate(struct dell_wmi_ddv_data *data,
+>  static ssize_t eppid_show(struct device *dev, struct device_attribute *attr, char *buf)
+>  {
+>  	struct dell_wmi_ddv_data *data = container_of(attr, struct dell_wmi_ddv_data, eppid_attr);
+> -	union acpi_object *obj;
+> +	ssize_t count;
+>  	u32 index;
+>  	int ret;
+>  
+> @@ -758,19 +753,19 @@ static ssize_t eppid_show(struct device *dev, struct device_attribute *attr, cha
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = dell_wmi_ddv_query_string(data->wdev, DELL_DDV_BATTERY_EPPID, index, &obj);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	if (obj->string.length != DELL_EPPID_LENGTH && obj->string.length != DELL_EPPID_EXT_LENGTH)
+> -		dev_info_once(&data->wdev->dev, FW_INFO "Suspicious ePPID length (%d)\n",
+> -			      obj->string.length);
+> +	count = dell_wmi_ddv_query_string(data->wdev, DELL_DDV_BATTERY_EPPID, index, buf,
+> +					  PAGE_SIZE);
+> +	if (count < 0)
+> +		return count;
+>  
+> -	ret = sysfs_emit(buf, "%s\n", obj->string.pointer);
+> +	if (count != DELL_EPPID_LENGTH && count != DELL_EPPID_EXT_LENGTH)
+> +		dev_info_once(&data->wdev->dev, FW_INFO "Suspicious ePPID length (%zd)\n", count);
+>  
+> -	kfree(obj);
+> +	ret = sysfs_emit_at(buf, count, "\n");
 
---=20
+What's going on with this change? I see it printing nothing but a newline 
+character anymore?
+
+--
  i.
 
---8323328-1965774204-1781184081=:1126--
+> +	if (ret < 0)
+> +		return ret;
+>  
+> -	return ret;
+> +	return count + ret;
+>  }
+>  
+>  static int dell_wmi_ddv_get_health(struct dell_wmi_ddv_data *data, u32 index,
+> @@ -994,19 +989,15 @@ static int dell_wmi_ddv_buffer_read(struct seq_file *seq, enum dell_ddv_method m
+>  {
+>  	struct device *dev = seq->private;
+>  	struct dell_wmi_ddv_data *data = dev_get_drvdata(dev);
+> -	union acpi_object *obj;
+> -	u64 size;
+> -	u8 *buf;
+> +	struct dell_wmi_buffer *buffer;
+>  	int ret;
+>  
+> -	ret = dell_wmi_ddv_query_buffer(data->wdev, method, 0, &obj);
+> +	ret = dell_wmi_ddv_query_buffer(data->wdev, method, 0, &buffer);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	size = obj->package.elements[0].integer.value;
+> -	buf = obj->package.elements[1].buffer.pointer;
+> -	ret = seq_write(seq, buf, size);
+> -	kfree(obj);
+> +	ret = seq_write(seq, buffer->raw_data, le32_to_cpu(buffer->raw_size));
+> +	kfree(buffer);
+>  
+>  	return ret;
+>  }
+> 
