@@ -1,208 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BBF377561;
-	Thu, 11 Jun 2026 08:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542B7377EB2
+	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2026 08:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781166025; cv=none; b=Z/MWW+BQBECQ7ELc3Vw7JM/LAnEn0MM/sFl0UiwK6zHBe2Ol5RO72M6I+gExdYFsToKhIbRZ9c8Uw2IeTM5ARO+ACPsEbmDLHzNHVTFx4uNUQd+7GimBKFcyuKOMOpawXCiPLwS0CTZOzu233p8/TtW24fjtm8P+PdZY+MyJ4e0=
+	t=1781166091; cv=none; b=o8W8P4RFDE2XW3CXzWwvKK8JajxC+U/4ObjY7HTVnBHbVNN6eRFD/WqRZywmqn0E5JT+gNpuambnH9mDRp2+ZC0oh18Wfy3C/IGLxBn8P0Tl842FC+pWABU665kG5Ki/UdN/mtSvYBAD92H6dx4CvuViv2Jna1OoFjboxwrT4yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781166025; c=relaxed/simple;
-	bh=EyiyWj7q9eI6RfcdGwHrun5NpY3X9CuO5XfoAt0Inno=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iovd7fWt32fi/pbjmBRgUN6q3huDKCbnlFd5ONwUCEtZsD5UYY47FuJAbNpbocy9+oVYxWImQgJlBr9hq5/6+nzRGpmMCdiAMIO94vyVFf6giiyog5+nOnj0az8rPDiuxLSWTZNxJTY1a9WQW+bsSBQ/tym5vY1cNtAbgACNlqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mOWFSY95; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781166091; c=relaxed/simple;
+	bh=bjl8McncNFi+sDXnTjOotH9LYzPT+PrNYRr/t/sDLs8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZ4cqUgFJ9Zy3+/V+h6wcyp37l8XEQHP/CbzXcXhmsy9yGtSFWNQXsV/tA+e7048C1HuzWqPinICR1DlmvZwT3s22eLTY3k6ebFbDe+bhezzcuzvC1EH9QrzeMuvAXI+o3fs2wwsId6JMHOWvR7UpxHR2YrOGBVbiWmFqA6z9dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lH8Vs5kD; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mOWFSY95"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781166023; x=1812702023;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EyiyWj7q9eI6RfcdGwHrun5NpY3X9CuO5XfoAt0Inno=;
-  b=mOWFSY95E9XCUb5f/9Prl79r2Cj6waJAy0H4rkb/0O/YQQePZhoyoET5
-   Zcx3vnIAr/GCXowaTock09TBgsbTEhuw+RILci+P8d/cVL16E+Um9Ut4U
-   eyokz7Q6I93pXwZ6Na2kTsQEvBhmHGLHqvmf8sHNsttIa9w/rLKWNEDeQ
-   BlWreLcfUvJXDJRR7iwJc2WUa4g7IfJw3JJ+5j3JknZtPQxl8giGtdwop
-   QCysjDpzki4QmMbp3o9YXsaAzvWAhx0IooF5lEyf/7pwsW7zkyxODLDmH
-   K0a3YtYT47zUyjMqxtST5vUF16JAAA2+XaF9ZGKRc/bhoOJmpKKxm34Ts
-   g==;
-X-CSE-ConnectionGUID: b/r7DfJrSAK7/H4OMTfbnw==
-X-CSE-MsgGUID: ooYjdG6DTQKsDTNMY/sFAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="107411881"
-X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
-   d="scan'208";a="107411881"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 01:20:22 -0700
-X-CSE-ConnectionGUID: oBRXLGaoTailaLGihuuWgA==
-X-CSE-MsgGUID: EhiUEK5UTkmidhBJPygVIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
-   d="scan'208";a="243470627"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 01:20:18 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 11 Jun 2026 11:20:14 +0300 (EEST)
-To: "M K, Muralidhara" <muralimk@amd.com>
-cc: Muralidhara M K <muralidhara.mk@amd.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Subject: Re: [PATCH v4 4/7] platform/x86/amd/hsmp: Source metric-table size
- from firmware
-In-Reply-To: <7d496898-ecc1-42d7-bbcd-1251038f332e@amd.com>
-Message-ID: <210d3a07-bf77-b525-b03f-02fea5e4e833@linux.intel.com>
-References: <20260528093954.2461272-1-muralidhara.mk@amd.com> <20260528093954.2461272-5-muralidhara.mk@amd.com> <3ccdf8eb-861a-970a-5c05-96c1ec54b473@linux.intel.com> <7d496898-ecc1-42d7-bbcd-1251038f332e@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lH8Vs5kD"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-36bb3551f6eso6733292a91.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2026 01:21:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781166090; x=1781770890; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bjl8McncNFi+sDXnTjOotH9LYzPT+PrNYRr/t/sDLs8=;
+        b=lH8Vs5kDw3WsBPrmeSYzAu1C6Li62bTKd3kN1gWzFcGFN7rLTUdqaGNqiAjrSY1oye
+         G6rt3y3bgWsc/jEDP8TI66mAUjmDSd5Jr5kAb2s10x7QA8c0+H2gt6iAv5fxaqAZ3Pyt
+         wN0zrbzUPOWxEg/gNEj/I6+avSQxk3BJigL0WmIlCXb7y8ljFsPJGWC8QO9Lpb0GfpLc
+         G0s65CiZNbNm0+oTIxSEwOnwAjsUxnBqgEMGneSSpXFduYOjiAzVWuVH9LV66GUz+vn8
+         8KJ6+GXuhkIzjWYMZmEtnJGDPE2U1GUsizG4llBW9i6ptfW69ZltcufCO5AIqW7qcjWk
+         Th9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781166090; x=1781770890;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bjl8McncNFi+sDXnTjOotH9LYzPT+PrNYRr/t/sDLs8=;
+        b=PM9VzYWsXd7s93RgS566v8WQ9U7oPqqqUW2lp8jZ7IDNxOQw9dRNWg9Gs38HyuR+S3
+         EXsRy1LoiDTo4F6dEl8S1QSDhB3O+cV6XLnLNN/GnvPBNpiJeA0oZxRkOAqyCgOEw2P4
+         Cwa9L+IcdJKB+BhTVMbOTL+4MXjI5p6XwsLO1wwkwhxQ8goLhC+kPBhkwev95Egn/CLG
+         qZ2bM08nojil4r1a6jEAI1vdEW3x3qf2SpUCZOBV7yKWCgCfY5CzlwYSjd4FB2vfN0CT
+         FtrWsup7SHCBWULw5BctDWUdwauf5ZqTwM9jW4vVkMI3w/8DvxSlpLreNnKPtxbTuo0h
+         jLvw==
+X-Forwarded-Encrypted: i=1; AFNElJ9oJ6MTB1jdcj46p73tWfuvuaf0YTwr5wlf9+Pu1+++fm1ZAbUGzWr2kE7TqFik3cEwMVh7SROs7bMVzJXbEKf91MDn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEZWO4YUJWWNhHRez/tw+Ol3Wbwr93AvLmA1WXzjQVNpo53N9J
+	ZJZbgdRTk3DtKjpvPdlhdSPeMO2uN2GH0ZgnMB+Sbz0U2YobjVD0cOUP
+X-Gm-Gg: Acq92OHoYX2f9texlX38Rh4icZYQq13pLs3YSVqYQe5M/ar6AUnIiZ3y5GBlBG/qn09
+	uF60AMBve5CkfYxFBwheNDsAHSWqaeNDWnb9rCQiI2Gd8rhrX6eF3mdou1BVPhTHlFAXH5xIgEF
+	oQNVSIl58tq5JP5kUJQi0+U/YsGj1wat0MxQm3Ma8EirJ1ohZA+E4uw6T83YdFoVBWxaTDAwhOa
+	WO2ajtC8+zbNpQi8zCnJwKaF6KhXnrNIRqNb+uefw1VgMAOtL8/wnl6RBkq9eCf9v7KETRXyjJv
+	CRBvg+JL9nHfRYTBPgTE9mwGaeHYXwgN3hOdoTho4GQa1WlQnvrDhroWgaci1qoEA1p9j5yj3BB
+	UsxL03+FgN11f8GPAD3Trr3I8ORlCQe4kZ+L2355qsT2fyLdd34xM2NWjHEpZZ8qOwlEtT9AIt9
+	1CZ8sW2v0WLRoN7SG/FxCH/IEIm48cKPOljXBRBWUZIFWNrHZ5ISWFOUkGFKZTqWf3+2wtur+Aa
+	Kn7Bdb4W7S9QpsTgXdbhWohA1MdhoK0frgQgnaUqg==
+X-Received: by 2002:a17:90b:498c:b0:36a:a16b:5f6d with SMTP id 98e67ed59e1d1-377a03ba95emr2271060a91.7.1781166089532;
+        Thu, 11 Jun 2026 01:21:29 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:225f:36f2:f474:be1d:cad7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-377540fb80csm2052639a91.16.2026.06.11.01.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2026 01:21:29 -0700 (PDT)
+Date: Thu, 11 Jun 2026 13:51:24 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Linux kernel regressions list <regressions@lists.linux.dev>, 
+	LKML <linux-kernel@vger.kernel.org>, moravec@ukf.sk, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [regression] Laptop fan too loud (spinning nearly always) hp-wmi
+ 7.1-rc4 kernel
+Message-ID: <aiprVEqP_VdmMfGJ@archlinux>
+References: <4fb7bbf1-466e-438c-a301-e118e7e2a225@leemhuis.info>
+ <b00ba475-fc58-4be3-82f8-5fdfdfe70303@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2117879531-1781166014=:1126"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b00ba475-fc58-4be3-82f8-5fdfdfe70303@leemhuis.info>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, Jun 02, 2026 at 10:36:29AM +0200, Thorsten Leemhuis wrote:
+>Resending below mail to the platform maintainers & list, maybe someone
+>here might have an idea (I had miss-read MAINTAINERS file earlier and
+>sent the mail to the HP WMI Sensor maintainer -- uuphs, sorry!), Ciao,
+>Thorsten
+>
+>On 6/1/26 17:58, Thorsten Leemhuis wrote:
+>> Hi James! I noticed a regression report that might or might not be
+>> related to hp-wmi; to quote
+>> https://bugzilla.kernel.org/show_bug.cgi?id=221569 :
+>>
+>> """
+>>> Hello, I'm testing 7.1 kernel tree end seeing much louder fan on my laptop even when system is idling. CPU fan is spinning nearly all the time even CPU reported temperatures are low. Currently:
+>>>
+>>> migo@migo-HP:~$ uname -a
+>>> Linux migo-HP 7.1.0-rc4-00685-g4cbfe4502e3d #45 SMP PREEMPT_DYNAMIC Sun May 24 12:47:18 CEST 2026 x86_64 GNU/Linux
+>>>
+>>>
+>>> In 7.0 kernel tree is my laptop much quieter, fan spins only sometimes and with lower RPM.
+>>>
+>>> Machine is: HP OmniBook X Flip Laptop 16-ar0xx, with Arch Linux installed.
+>>>
+>>> Is there any way I can make more exact/useful report or debug this issue?
+>> """
+>>
+>> See the ticket for details and kernel logs, I asked a few questions to
+>> hopefully make things a bit easier for you.
+>>
+>> Maybe you might have an idea what's wrong here; if not, I guess Milan,
+>> the reporter (CCed), must bisect this to find the change that causes the
+>> problem.
 
---8323328-2117879531-1781166014=:1126
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Hi all,
 
-On Thu, 11 Jun 2026, M K, Muralidhara wrote:
-> On 6/10/2026 4:35 PM, Ilpo J=C3=A4rvinen wrote:
-> > Caution: This message originated from an External Source. Use proper ca=
-ution
-> > when opening attachments, clicking links, or responding.
-> >=20
-> >=20
-> > On Thu, 28 May 2026, Muralidhara M K wrote:
-> >=20
-> > > The driver hard-codes the metric-table region size to
-> > > sizeof(struct hsmp_metric_table). That is correct for HSMP protocol
-> > > version 6 but mis-sizes the ioremap of the SMU DRAM region on newer
-> > > platforms: Family 1Ah Model 50h-5Fh exposes a ~13 KB
-> > > hsmp_metric_table_zen6, and the table is expected to keep growing
-> > > on future firmware. The same hard-coded value also forces
-> > > hsmp_metric_tbl_read() to reject any read that follows the actual
-> > > firmware layout.
-> > >=20
-> > > Pick up the table size from firmware instead. SMU on Family 1Ah
-> > > Model 50h and later populates HSMP_GET_METRIC_TABLE_DRAM_ADDR's
-> > > args[2] with the DRAM region size in bytes; older firmware leaves
-> > > it 0. Bump the descriptor's response_sz to 3 so the field is read,
-> > > store the value in hsmp_pdev.hsmp_table_size at probe time, and
-> > > fall back to sizeof(struct hsmp_metric_table) when firmware reports
-> > > 0. Use hsmp_table_size both for the devm_ioremap() of the region
-> > > and as the upper bound for hsmp_metric_tbl_read().
-> > >=20
-> > > Behaviour on existing protocol-version-6 hardware is unchanged:
-> > > firmware returns 0, the fallback yields the same value as the
-> > > previous hard-coded one, and both the ioremap and the size check
-> > > produce the same result as before.
-> > >=20
-> > > The ioctl interface added later in this series uses the same
-> > > hsmp_table_size to validate the userspace request and to copy out
-> > > the full firmware-reported region.
-> > >=20
-> > > Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-> > > Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-> > > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-> > > ---
-> > >   arch/x86/include/uapi/asm/amd_hsmp.h |  5 +++--
-> > >   drivers/platform/x86/amd/hsmp/hsmp.c | 11 ++++++++---
-> > >   drivers/platform/x86/amd/hsmp/hsmp.h |  1 +
-> > >   3 files changed, 12 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h
-> > > b/arch/x86/include/uapi/asm/amd_hsmp.h
-> > > index fce271282348..438ac38d0dc8 100644
-> > > --- a/arch/x86/include/uapi/asm/amd_hsmp.h
-> > > +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-> > > @@ -365,11 +365,12 @@ static const struct hsmp_msg_desc
-> > > hsmp_msg_desc_table[]
-> > >        {0, 0, HSMP_GET},
-> > >=20
-> > >        /*
-> > > -      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
- =3D 2
-> > > +      * HSMP_GET_METRIC_TABLE_DRAM_ADDR, num_args =3D 0, response_sz=
- =3D 3
-> > >         * output: args[0] =3D lower 32 bits of the address
-> > >         * output: args[1] =3D upper 32 bits of the address
-> > > +      * output: args[2] =3D DRAM region size in bytes
-> > >         */
-> > > -     {0, 2, HSMP_GET},
-> > > +     {0, 3, HSMP_GET},
-> > >=20
-> > >        /*
-> > >         * HSMP_SET_XGMI_PSTATE_RANGE, num_args =3D 1, response_sz =3D=
- 0
-> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > b/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > index 9bad58fef304..cf9392f99298 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> > > @@ -356,8 +356,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *=
-sock,
-> > > char *buf, size_t size)
-> > >                return -ENOMEM;
-> > >        }
-> > >=20
-> > > -     /* Do not support lseek(), also don't allow more than the size =
-of
-> > > metric table */
-> > > -     if (size !=3D sizeof(struct hsmp_metric_table)) {
-> > > +     if (size !=3D hsmp_pdev.hsmp_table_size) {
-> > >                dev_err(sock->dev, "Wrong buffer size\n");
-> > >                return -EINVAL;
-> > >        }
-> > > @@ -398,8 +397,14 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
-> > >                dev_err(sock->dev, "Invalid DRAM address for metric
-> > > table\n");
-> > >                return -ENOMEM;
-> > >        }
-> > > +     /* SMU returns table size from Family 1Ah Model 50h and forward=
- */
-> > > +     if (msg.args[2])
-> > > +             hsmp_pdev.hsmp_table_size =3D msg.args[2];
-> > > +     else
-> > > +             hsmp_pdev.hsmp_table_size =3D sizeof(struct
-> > > hsmp_metric_table);
-> > > +
-> > >        sock->metric_tbl_addr =3D devm_ioremap(sock->dev, dram_addr,
-> > > -                                          sizeof(struct
-> > > hsmp_metric_table));
-> > > +                                          hsmp_pdev.hsmp_table_size)=
-;
-> > >        if (!sock->metric_tbl_addr) {
-> > >                dev_err(sock->dev, "Failed to ioremap metric table
-> > > addr\n");
-> > >                return -ENOMEM;
-> > > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > b/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > index b153527e0a0d..e7f051475728 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> > > @@ -55,6 +55,7 @@ struct hsmp_plat_device {
-> > >        u32 proto_ver;
-> > >        u16 num_sockets;
-> > >        bool is_probed;
-> > > +     size_t hsmp_table_size;
-> >=20
-> > Please add types.h include.
-> >=20
-> In hsmp.h, size_t becomes visible without adding anything new, because th=
-e
-> file already includes linux/device.h, and that pulls in linux/types.h
+I tried to look into this but unfortunately I can't think of what might
+be going wrong here. Based on your dmesg logs in the ticket, I believe
+its best if Milan could bisect between v7.0.8 and v7.1-rc4 tags (there
+would be roughly 13 steps).
 
-Please don't rely on indirect include paths. The rule for includes is=20
-Include What You Use.
+If you believe it is because of hp-wmi then you can limit to just these
+16 commits:
 
-There are some exceptions to the general rule such as linux/xx.h=20
-including asm/xx.h, in such case you only need to add linux/xx.h.
+$ git log --oneline v7.0.8..v7.1-rc4 -- drivers/platform/x86/hp/hp-wmi.c
+a59e45221df8 platform/x86: hp-wmi: Add support for Victus 16-r0xxx (8BC2)
+c2d4b76458c9 platform/x86: hp-wmi: silence unknown board warning for 8D41
+da6b5aae84be Merge tag 'platform-drivers-x86-v7.1-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+344bf523d441 platform/x86: hp-wmi: Add support for Omen 16-wf1xxx (8C77)
+899225257e78 platform/x86: hp-wmi: Add support for Omen 16-n0xxx (8A44)
+5badf5ebcd14 platform/x86: hp-wmi: Add support for OMEN MAX 16-ak0xxx (8D87)
+9d317a54e46d platform/x86: hp-wmi: fix fan table parsing
+92c36b634b45 platform/x86: hp-wmi: add Omen 14-fb0xxx (board 8C58) support
+2fb9ec386fa1 Merge branch 'acpi-driver'
+e8c597368b85 platform/x86: hp-wmi: Ignore backlight and FnLock events
+5969c55e2145 platform/x86: hp-wmi: add locking for concurrent hwmon access
+cb4daa450f05 platform/x86: hp-wmi: fix u8 underflow in gpu_delta calculation
+6297443beb0c platform/x86: hp-wmi: use mod_delayed_work to reset keep-alive timer
+249ddba9c0ba platform/x86: hp-wmi: avoid cancel_delayed_work_sync from work handler
+7265b57fbc32 platform/x86: hp-wmi: fix ignored return values in fan settings
+236ad358166c ACPI: AC: Define ACPI_AC_CLASS in one place
 
---=20
- i.
+However, I personally don't believe hp-wmi is the issue, since most of
+these commits are hardware support addition and fixes for old bugs.
+Moreover, your board (8DA8) isn't officially supported in hp-wmi in
+either of the trees, which means the fan and thermal control falls back
+to the default firmware behaviour, so it should have been consistent,
+unless another module is somehow interfering with it.
 
---8323328-2117879531-1781166014=:1126--
+That being said, I don't want to be biased, let's bisect and see the
+results.
+
+Thanks
+
+>>
+>> Ciao, Thorsten
+>>
+>
