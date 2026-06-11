@@ -1,38 +1,41 @@
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D783E405C50
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2026 14:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A0A13AF2;
+	Thu, 11 Jun 2026 15:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781187623; cv=none; b=ucWGYBxAK4zmMUnHiShcYfKNXMoOm9RCrHooihICvRZxCBwz+w/s4vJcAE0dRyKx7QR6d5a4PefWwbZh32sgrZSAiTggSrKoohqhIQG+wuNI3OPNDd2gzYpep8cXCqXxdxaMtX3sxx6f0zhgadp6CnhUKSQZD+rhe2Vyzdn96zk=
+	t=1781190059; cv=none; b=V8yQoSOv1mnmLw0dlx0qr7JjwPEGob4qekVQCXHm2/Zc4Ft3Bsnf2GHWoIfgS2hc55QUpNsaP75cwKOv0IPz1bpF+8rfxthFas5ehEFCiYx1YEiLsGJ1sb4WV+Qh/d5pEhZYJG0vwmKtHsxIc8nufGEhrBCUvdeNrTFauGf3YuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781187623; c=relaxed/simple;
-	bh=brkNIuGpLgiXdVlMrRBDOd1Hl5+Wk3ZdSGY2cHZbQQU=;
+	s=arc-20240116; t=1781190059; c=relaxed/simple;
+	bh=llb778+RllVcTBZj/dI2QtVo+w1jPQSZHBltSUc+Ylw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rf+4hzjoWmfCvzyaKSvvZ3tIhUbidneFScrCLY0HWualHKKNifNx7/NomKZBcs8SAjjzDqb97oDduWkVVSX8SzEEWjHJfERQATrdtPjCijOPM+hu31F9eBr+S03ZNVI5jlbj7yYDU0FinWuMhMe8mNsbvouY5qC14Dggj1uLCyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh; spf=pass smtp.mailfrom=gibson.sh; dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b=OUhWreUH; arc=none smtp.client-ip=185.125.25.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gibson.sh
+	 In-Reply-To:Content-Type; b=JrKpqThcGz22ARgepaHsAh3ObnwxXI5xaf49NIQ0OV+IkjRQOIMdvXMDxJzzv2Mc9rTLBiwMd1k/r0tmReMpdNlxHaUhbnD3Pmw4cZmuDzoHXjO6lBoXqN/8G8Yp3lafdUlZNl93XwwY0P2Mt5fbzKAbfNfUEgV6kxdzsNKthA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bG1MNtuy; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.sh header.i=@gibson.sh header.b="OUhWreUH"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4gblCw3g3YzDnN;
-	Thu, 11 Jun 2026 16:20:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gibson.sh;
-	s=20260228; t=1781187612;
-	bh=tPxdcxLEy6pAalTNE6zjKloyxL4UuKa+Sj/8bGNM4Z0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OUhWreUH2gZ7J00ndoMDmbTXNUrKFKb0W6I2KU/gVQtVnc75o6r2EWSe+YbYek4y2
-	 sEeuElYGpyidp/qEiYwoz1Kp+XUb3S0h0PjSpN4/siqC7L1z9L+g4ASy8aCAaRIxxT
-	 yjsNnU7ejMbz2pD+W8sGUvMDRkCDDAMqSQJRwd7rs7jU9tNiFs1dRCqZ6eoGIQjSP6
-	 4GQYjSupTlQXvfzmADED4cb6wvX+/UwqZqiIKl2rVZcU23YfwM34ao4YBA25kKpyGq
-	 muag9VOXEdHduKepyksjKEOvjByUz4z2pbSljL+XsNiICHQSwB5ZTTfBds+7vVJSZg
-	 9KPyJ9WqoG3yg==
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4gblCv3Mtmz7fZ;
-	Thu, 11 Jun 2026 16:20:11 +0200 (CEST)
-Message-ID: <d522d2c1-5058-421b-97b9-bb106b7efd06@gibson.sh>
-Date: Thu, 11 Jun 2026 16:20:10 +0200
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bG1MNtuy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1781190056; x=1781794856; i=w_armin@gmx.de;
+	bh=qRb062T7Au4tz9PTAtMIrNPFgF3ky5PIqqj5Si3L1+w=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=bG1MNtuyCJojBkR5jutYWHYb3uMag/JKzHk7I35efkr4BoZN//Gvwebvi3CPvcZV
+	 qBgmSTrI7EWL5/G9r/Hqf7rp15zG3Uog6tGHGhgrzFGXsXbWVoJdEm8X9mRdmvmyI
+	 E5VLc3useL5YTyaqEjOivgco+SsuSLbxow6i6VjWoXavjtdDfEywkjkwy/zUI0Xoy
+	 y0C1djoOs8k8MAzN/6kj9FvsE8vhdGYplu3GtXAu2lRMG8BcLA1s5dn75PQxhZ/i9
+	 jsUx4TcGFxtKSCYJnqpXRcaEKNk46adA4A1pTZw9GKrCHu3PelZeqLGmzkrvKrzfl
+	 VrHMC+mgjlTxPSlGig==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MYNJg-1wkKEH3w6k-00Yq8D; Thu, 11
+ Jun 2026 17:00:55 +0200
+Message-ID: <5e7fd549-eb73-45d2-a40e-4c8b21bb28bb@gmx.de>
+Date: Thu, 11 Jun 2026 17:00:54 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -40,158 +43,177 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] platform/x86/amd/pmc: Don't log during
- intermediate wakeups
+Subject: Re: [PATCH 0/7] platform/x86: uniwill-laptop: Support additional
+ features
 To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Mario Limonciello <superm1@kernel.org>,
- Hans de Goede <johannes.goede@oss.qualcomm.com>, stable@vger.kernel.org
-References: <20260609105756.2813669-1-daniel@gibson.sh>
- <20260609105756.2813669-5-daniel@gibson.sh>
- <4bc20ca2-8544-e36e-70af-a19364e59eba@linux.intel.com>
-Content-Language: de-DE, en-GB
-From: Daniel Gibson <daniel@gibson.sh>
-In-Reply-To: <4bc20ca2-8544-e36e-70af-a19364e59eba@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, wse@tuxedocomputers.com
+References: <20260530170813.10166-1-W_Armin@gmx.de>
+ <9c74fdcc-20c2-0722-7932-8fa09872d80b@linux.intel.com>
+ <84441528-5f33-4795-a650-8b6fccdaed5e@gmx.de>
+ <8395fcb7-4de7-85ff-d2ae-a7eefd2dc87c@linux.intel.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <8395fcb7-4de7-85ff-d2ae-a7eefd2dc87c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:i8/40RtmcNtkhLve4uKBWDkHnMIQb7YngKtd2apWMkRpcqaNBMv
+ X8loDR9qGI1JQv6EUVXkgEdbqAqxhEQtQzSf/Re2TEPWL+PcAd3940xF9bWYRlqZUPN92oo
+ uzBrwH1AjxnCw4RIUPdlwYaAqHJOi/LcqnfjyQSG61ArrgUV2Ym9wob+gvKqClImtul16X/
+ nv9RXxT5YLLPrXAnQscCQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VbXpkS18vfg=;3//quUoYHrmNON9NUG8BtYaecnP
+ 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
+ Hnf0MkpHecDFjWjzkw=
 
-On 11.06.26 16:02, Ilpo Järvinen wrote:
-> On Tue, 9 Jun 2026, Daniel Gibson wrote:
-> 
->> The ECs in the IdeaPads that need the delay_suspend quirk send lots
->> of messages when charging, which not only causes intermediate wakeups
->> when suspended, but also prevents the device from reaching the deepest
->> suspend state.
->>
->> Because of this amd_pmc_intermediate_wakeup_need_delay() returns false
->> during intermediate wakeups and amd_pmc_want_suspend_delay() is called.
->> So far it always logged its "Delaying suspend by 2.5s ..." messages
->> then, which spams dmesg. This commit makes sure that those messages are
->> only logged once per suspend.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221383
->> Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
->> Signed-off-by: Daniel Gibson <daniel@gibson.sh>
->> Cc: stable@vger.kernel.org
->> ---
->>  drivers/platform/x86/amd/pmc/pmc.c | 39 ++++++++++++++++++++++++------
->>  drivers/platform/x86/amd/pmc/pmc.h |  1 +
->>  2 files changed, 32 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
->> index 2d3d180c15d2..7d772ccd17a6 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.c
->> +++ b/drivers/platform/x86/amd/pmc/pmc.c
->> @@ -619,6 +619,20 @@ static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
->>  
->>  static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
->>  {
->> +	/*
->> +	 * intermediate_wakeup implies that the machine didn't get to deepest sleep
->> +	 * state before - otherwise this function isn't called in amd_pmc_s2idle_check()
->> +	 * because amd_pmc_intermediate_wakeup_need_delay() returns true first.
->> +	 * On some IdeaPads that happens when charging, because the EC seems
->> +	 * to send lots of messages then that wake the machine.
->> +	 *
->> +	 * But even in that case, the sleep here is necessary (on those IdeaPads),
->> +	 * otherwise they wake up completely (resume) after a few seconds.
->> +	 * So this variable is only used to avoid spamming dmesg on each
->> +	 * intermediate wakeup.
->> +	 */
->> +	bool intermediate_wakeup = !pdev->is_first_check_after_suspend;
->> +
->>  	/*
->>  	 * Some Lenovo Laptops (like different IdeaPad 3 Slims) need some
->>  	 * me-time before sleeping or they get uncooperative after waking
->> @@ -637,17 +651,20 @@ static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
->>  		 * disabled with disable_workarounds or delay_suspend=0
->>  		 */
->>  		if (delay_suspend == 1 || (delay_suspend == -1 && !disable_workarounds)) {
->> -			dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
->> +			if (!intermediate_wakeup)
->> +				dev_info(pdev->dev, "Delaying suspend by 2.5s to avoid platform bug\n");
->>  			return true;
->>  		}
->> -		dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
->> +		if (!intermediate_wakeup)
->> +			dev_info(pdev->dev, "Not delaying suspend because of module parameter, even though your device is assumed to need it!\n");
->>  	} else if (delay_suspend == 1) {
->> -		dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
->> -			 dmi_get_system_info(DMI_SYS_VENDOR),
->> -			 dmi_get_system_info(DMI_PRODUCT_NAME),
->> -			 dmi_get_system_info(DMI_PRODUCT_FAMILY),
->> -			 dmi_get_system_info(DMI_BOARD_VENDOR),
->> -			 dmi_get_system_info(DMI_BOARD_NAME));
->> +		if (!intermediate_wakeup)
->> +			dev_info(pdev->dev, "Delaying suspend by 2.5s because delay_suspend=1. If this solves problems on your machine, please report this whole line to: platform-driver-x86@vger.kernel.org so it can be automatically detected as affected in the future. System Vendor: \"%s\" Product Name: \"%s\" Product Family: \"%s\" Board Vendor: \"%s\" Board Name: \"%s\"\n",
->> +				 dmi_get_system_info(DMI_SYS_VENDOR),
->> +				 dmi_get_system_info(DMI_PRODUCT_NAME),
->> +				 dmi_get_system_info(DMI_PRODUCT_FAMILY),
->> +				 dmi_get_system_info(DMI_BOARD_VENDOR),
->> +				 dmi_get_system_info(DMI_BOARD_NAME));
->>  		return true;
->>  	}
->>  	return false;
->> @@ -660,6 +677,9 @@ static void amd_pmc_s2idle_prepare(void)
->>  	u8 msg;
->>  	u32 arg = 1;
->>  
->> +	/* Reset this variable because this is a fresh suspend */
->> +	pdev->is_first_check_after_suspend = true;
->> +
->>  	/* Reset and Start SMU logging - to monitor the s0i3 stats */
->>  	amd_pmc_setup_smu_logging(pdev);
->>  
->> @@ -699,6 +719,9 @@ static void amd_pmc_s2idle_check(void)
->>  	rc = amd_stb_write(pdev, AMD_PMC_STB_S2IDLE_CHECK);
->>  	if (rc)
->>  		dev_err(pdev->dev, "error writing to STB: %d\n", rc);
->> +
->> +	/* remember that first check after suspend is done (until next prepare) */
->> +	pdev->is_first_check_after_suspend = false;
->>  }
->>  
->>  static int amd_pmc_dump_data(struct amd_pmc_dev *pdev)
->> diff --git a/drivers/platform/x86/amd/pmc/pmc.h b/drivers/platform/x86/amd/pmc/pmc.h
->> index f5257e47b8c4..8aa7073ed09f 100644
->> --- a/drivers/platform/x86/amd/pmc/pmc.h
->> +++ b/drivers/platform/x86/amd/pmc/pmc.h
->> @@ -114,6 +114,7 @@ struct amd_pmc_dev {
->>  	struct dentry *dbgfs_dir;
->>  	struct quirk_entry *quirks;
->>  	bool disable_8042_wakeup;
->> +	bool is_first_check_after_suspend;
->>  	struct amd_mp2_dev *mp2;
->>  	struct stb_arg stb_arg;
->>  };
->>
-> 
-> Hi,
-> 
-> This fails to apply to the review-ilpo-next branch and I don't want to 
-> spend time at this point to figure it out so please send v6 which is 
-> based on the for-next or review-ilpo-next branch:
-> 
-> Applying: platform/x86/amd/pmc: Check for intermediate wakeup in function
-> Applying: platform/x86/amd/pmc: Delay suspend for some Lenovo Laptops
-> Applying: platform/x86/amd/pmc: Add delay_suspend module parameter
-> Applying: platform/x86/amd/pmc: Don't log during intermediate wakeups
-> error: patch failed: drivers/platform/x86/amd/pmc/pmc.c:660
-> error: drivers/platform/x86/amd/pmc/pmc.c: patch does not apply
-> error: patch failed: drivers/platform/x86/amd/pmc/pmc.h:114
-> error: drivers/platform/x86/amd/pmc/pmc.h: patch does not apply
-> Patch failed at 0004 platform/x86/amd/pmc: Don't log during intermediate wakeups
-> 
-> 
+Am 11.06.26 um 15:21 schrieb Ilpo J=C3=A4rvinen:
+> On Wed, 10 Jun 2026, Armin Wolf wrote:
+>=20
+>> Am 10.06.26 um 12:50 schrieb Ilpo J=C3=A4rvinen:
+>>> On Sat, 30 May 2026, Armin Wolf wrote:
+>>>
+>>>> This patch series adds support for various new features to the
+>>>> uniwill-laptop driver. The first patch adds support for the keyboard
+>>>> backlight available on some models, while the next three patches
+>>>> add support for additional WMI events, USB powershare and AC auto
+>>>> boot. The last four patches finally add support for additional device=
+s.
+>>>>
+>>>> The patch series depends on commit b1a9b7a904af ("leds: Introduce the
+>>>> multi_max_intensity sysfs attribute")
+>>>> currently sitting inside the for-leds-next branch of the LED subsyste=
+m
+>>>> tree. Without said commit the first patch will apply but not build.
+>>>>
+>>>> All patches have been tested on my Tuxedo InfinityBook Pro 15 Gen 10
+>>>> AMD and most work flawlessly, only the AC auto boot feature seems to
+>>>> be broken on my device. I decided to still include the patch because
+>>>> it works on other devices.
+>>>>
+>>>> Armin Wolf (7):
+>>>>     platform/x86: uniwill-laptop: Add keyboard backlight support
+>>>>     platform/x86: uniwill-laptop: Handle screen-related events
+>>>>     platform/x86: uniwill-laptop: Add AC auto boot support
+>>>>     platform/x86: uniwill-laptop: Add support for USB powershare
+>>>>     platform/x86: uniwill-laptop: Add support for the MACHENIKE L16 P=
+ro
+>>>>     platform/x86: uniwill-laptop: Add support for the AiStone X4SP4NA=
+L
+>>>>     platform/x86: uniwill-laptop: Add lightbar support for LAPQC71A/B
+>>>>
+>>>>    .../ABI/testing/sysfs-driver-uniwill-laptop   |  25 +
+>>>>    .../admin-guide/laptops/uniwill-laptop.rst    |  27 +
+>>>>    drivers/platform/x86/uniwill/uniwill-acpi.c   | 609 ++++++++++++++=
++++-
+>>>>    drivers/platform/x86/uniwill/uniwill-wmi.h    |   2 +
+>>>>    4 files changed, 650 insertions(+), 13 deletions(-)
+>>>
+>>> Unfortunately, I got this error after applying this series on top of
+>>> review-ilpo-next:
+>>>
+>>> drivers/platform/x86/uniwill/uniwill-acpi.c: In function
+>>> =E2=80=98uniwill_kbd_led_init=E2=80=99:
+>>> drivers/platform/x86/uniwill/uniwill-acpi.c:1827:49: error: =E2=80=98s=
+truct
+>>> mc_subled=E2=80=99 has no member named =E2=80=98max_intensity=E2=80=99=
+; did you mean =E2=80=98intensity=E2=80=99?
+>>>    1827 |                 data->kbd_led_mc_subled_info[i].max_intensit=
+y =3D
+>>> KBD_LED_MAX_INTENSITY;
+>>>
+>>>
+>> The patch series depends on commit b1a9b7a904af ("leds: Introduce the
+>> multi_max_intensity sysfs attribute")
+>> currently sitting inside the for-leds-next branch of the LED subsystem
+>> tree.
+>=20
+> Ah, I missed that note.
+>=20
+> This will have to wait to the next version then. I've summoned the serie=
+s
+> back to patchwork queue so I won't forget it.
+>=20
 
-Hi,
+That is totally fine. Since you are ready to merge this series as-is, i=20
+will start developing patches based on this series that will be send=20
+after the development for 7.2 has started.
 
-is the review-ilpo-next branch on
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/?h=review-ilpo-next
-up-to-date?
-I checked it out and cherry-picked my patches from my original branch
-and all applied without conflicts, so I wonder if I'm missing commits
-introducing conflicts.
-
+Thanks,
+Armin Wolf
