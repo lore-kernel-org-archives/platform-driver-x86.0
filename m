@@ -1,423 +1,287 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012053.outbound.protection.outlook.com [52.101.43.53])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996CB397E88;
-	Fri, 12 Jun 2026 04:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781238414; cv=fail; b=T9SAp5QU7GOYwDr7YUOt/0Jv7Kd72XQD8OjNvp0rCLNmJtC+8TiK7pBfhB25eOLr2uxejSkn5nnguyJT4zMzNoJzts+7+vaG+0Ny4uyAETVh56XmTPkthD7qOdgZ6c5z/Zb5aioDxGDl2Le/hZg326zg+Tymbi3sIxdWt/MYoUo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781238414; c=relaxed/simple;
-	bh=zhxwADPJ1c/SUwaUjvNbsjTYtEW64mYcIdEwLMQ10oo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lewan/DvQXufeLLvfj+eSETuXCDj8GjXTKYZQKs7RB6Y0e8mxdhUbqBBUG1DdTEhTVVixVpZR5k439aLr2TOU5nkGJi5Pfi+HjuBtNsI9adS2mclwPMCKy8A/lOPnS333qnJ03ohX+1mjQsvWZIt/CWZ74E9utf6K0QE22VxJAg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eZE2NKxS; arc=fail smtp.client-ip=52.101.43.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3693E1716
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 07:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781250655; cv=none; b=g0NPWp8NPTFY8RrOGmzb5HyNUDYZ+ERJzIcRM3DPdIOdUmnDAgiOdV1dfGNGttaKu/BkUZLEH4UbA8bEvIXu25Wi3bGyQ19oBN0vZOCV2B3JF0VSIOTSjRMAkIs0SSrbLkmaL+JAJODKQVz9pgTcZrS6wppMasgaHDkzMjQ5s7g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781250655; c=relaxed/simple;
+	bh=XtBD7I/wcbfYFMlmpNh0CZUl/vymWdbw1dvgjEpRpE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgwGWVUCLnLMKAMKxybHQm7rlxzeWU6avgR8jOanoqbDDiECwMqh1gfJIlAg2MwBS2bsLSEjMXpCg2Huui4pTn1V5J3f4yce+SLAB7d4WtElmU/oaDBvas4VA9oq4COrcvm0O5FT9MFKv6ePQrc2P777UnlviUZvtwjMRG0kxGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I5SEIU8T; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=b/fD+se7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eZE2NKxS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FbZD140RXT6YwSK2t9p7k/figqmBBU8+8wMTwb4egrc9wJpmayot5Z9Bf0UMFYrHKOMsZa/mgsJuuS5Lxy0bdxt/5haYAMNHf3dQf7Idbw+ENOyri/D0Yu1MN09l/OfnmdccRm7IuPkIaRz2108dpdW3ahAYB/likqk2ex7BNTgMsRyynHZ6hEvVgMyuNLsoEDe8xDKDajOdPHN4Q2vMmLwvqyt+bRIXfhaxGSndBGi1Rs6u3ipmMaH0qzjQNt7mBKUXmLR9PcL/PcikQI41ntHsfoN/E6aW+WNyBPSeIqGgVZdsp9+4v2KBPWMqX9jTvtL2NbjpNgNJjamgEgHLdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NHk9MIkGGWryyQaszyKwnuFWljo6WsIj3wIZfv4cwkM=;
- b=p9v+TObHLBBOdBr4aafrOZFDbxTJu9gDud7TscYyV0Cqo/Fm19F1Pt/HRopGf4rsaeqMdwqV5OBMGUFE4TU674pg7SK3FecRxK9Xo08SSB6ksLVz20wteS/W+ztu8LkYt5E6crOIAlnqmHNImkRyUAPHWmv7VXmyFaozAUhMqLfJeERdAFTFOgTsqL8a3vd/6GeXdSdrFgGAsKXpoIpFuJvVPQBs6od5kTq8+GWej0wScb8Ktc2t2ocKV5TanwVykLxTNCl+15lw8AYTsqyeb6u+1yiB8tle4pErfw+2mMAENi9/MuRj7GglUGazqTEp4yI4Zy/UpA4oKujQsdOnrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NHk9MIkGGWryyQaszyKwnuFWljo6WsIj3wIZfv4cwkM=;
- b=eZE2NKxSTbUsVpS2ITuJhYxvyuzsPfkVIFViZjBHNxz4c3LS/60CC3ncyQ981l+zyKXBcDghuNcUdkQChgXZWOrH/Wvjwl5NJhmYTjPnxXco+rlEYpOpFzZIreDhYGnKSqTXyTQrgcfpS/QFCxxVTHwrYwITMMJ+PUOF7Q08y3g=
-Received: from SJ0PR03CA0222.namprd03.prod.outlook.com (2603:10b6:a03:39f::17)
- by DM6PR12MB4467.namprd12.prod.outlook.com (2603:10b6:5:2a8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.17; Fri, 12 Jun
- 2026 04:26:48 +0000
-Received: from SJ1PEPF00001CE7.namprd03.prod.outlook.com
- (2603:10b6:a03:39f:cafe::43) by SJ0PR03CA0222.outlook.office365.com
- (2603:10b6:a03:39f::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.14 via Frontend Transport; Fri,
- 12 Jun 2026 04:26:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00001CE7.mail.protection.outlook.com (10.167.242.23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.113.7 via Frontend Transport; Fri, 12 Jun 2026 04:26:47 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 11 Jun
- 2026 23:26:45 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>, Muthusamy Ramalingam
-	<muthusamy.ramalingam@amd.com>
-Subject: [PATCH v6 8/8] platform/x86/amd/hsmp: Serialize metric table access and ACPI HSMP teardown
-Date: Fri, 12 Jun 2026 09:56:10 +0530
-Message-ID: <20260612042610.1629037-9-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260612042610.1629037-1-muralidhara.mk@amd.com>
-References: <20260612042610.1629037-1-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I5SEIU8T";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="b/fD+se7"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65C3ASSj2477796
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 07:50:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zFFhwvPhE9ToJAkALCoRS5tzqSMrukK5siAZ9HiB+88=; b=I5SEIU8T6owUNrWo
+	7lurTImZJii/gc5Mf0jzvxW7UqhsFA5cVrnBaqFBPSjaY06gqzKZTB+4SdfruYUC
+	kMYRJEE3l52lRmxqI+W3GSv5/WouxM3m1tAt5AM+nxQXr5i0zBRHk3Jtkp2v9RYV
+	Yscf3ql3ztSfnVNMFMLjEtU/wfTrGL2L7DZstLvXHQdNyMbzbvEYHyU09ZBiit8C
+	B8HIjZjsKXjLkJN82bcUSfA2Ebu32GssC2VGL3oepHtcMH70SmyWRs5VJbLr4/WQ
+	BoayNG+aQYgmnPJlmquSgnd7HWQ/vzksBMqZcUaqZw5vYpv0TIKZ7laa0ne5UkSY
+	GiEFuw==
+Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com [209.85.217.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4er2r5t4qt-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 07:50:50 +0000 (GMT)
+Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-6c77c80d967so632168137.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 00:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1781250649; x=1781855449; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zFFhwvPhE9ToJAkALCoRS5tzqSMrukK5siAZ9HiB+88=;
+        b=b/fD+se7Furt1IGKi47J9FXtXkcYT1hzxe+1xtiODsTad9jB+6NZCeTer2UT9CRjdV
+         ymWcbuFwpih/OyywB1SX22PSM+IJozgNO43zEjPT+NwV/5eIB0EW+z4WtpUcldrxfyFN
+         mNyvsDeo4ua0uCOTqgSFM2dXlU71flYbdoMBT1vFSAVLp4LCCGqMWu0uS5oOugJW2yd6
+         RuLrSWqI/cQk2QDeX/0llUkP4OC65grntKgR5kkHPzZHXvWQ/WXgH91y2a3UOT0qYQuW
+         xa5u67gGOBAOs1JwgQaLGvy6/E5EgoPx8D7UioESfylwF84ytmcO+YFaOhAvJP2mVWnN
+         Q1rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781250649; x=1781855449;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zFFhwvPhE9ToJAkALCoRS5tzqSMrukK5siAZ9HiB+88=;
+        b=FricCWJnKgSTZeYfE/NohYX/6DwSuXFl61gtfDzbU+e5ZQmwV1uOqbr8tvS18uKCgV
+         znQ2z5F+lyc7fvkR8nSNkmB5xx7nMtcaIizGfpSk8artfkjDl/XDYwhEsCuLnqGiEm0T
+         vLm71/XvJrILmTHWyONAiUfvuOpuxLnePpkwcwjoovtLHGSeCrcCFzvTbmdOxbNdBiiw
+         iEmFSELWyiF492RsWrjMnoZWtAZ9fTUmPIY/xXVXbjBniJyxitm+Kblxj/XGtEoLiAOb
+         qa4GE/nLbTji5VFuqGEj4cUkR8LcgKt7NsYjE5pmdvPOLR99RlkBCO/x0sY6dht+TUMh
+         /S2A==
+X-Forwarded-Encrypted: i=1; AFNElJ9mkR4fySE2FS6v4uYpm+acN7Z/YPgClG5V5GA38jcUvIS24Ws19/HmkFwT/PS0Vqk6mKaFHztEJC//lO2MRV+LPdDv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjyrzMlLsGVBEIt7kQvZJOmwQumDDITW08AB5EHckNtiIvy55A
+	21EAGbbWYmjSvuqudnSKcC4CBFoFi0w47S5gcEnQwZzCfKOCoTNTkoJ9hxWmvyMzjaYzyklLy9s
+	sHQJ3GEZi/0/371izDM4sWChR9dxsuiTurkJrmZtVpbjIChcIC65V/jcIXi7hjHMRZNUkiXUQTW
+	RX
+X-Gm-Gg: Acq92OGPUNRYKltRtp9sRf7C5gTeu7wSWsmvhFG+v+mqmlRGtPPqki/skpghHva2hsY
+	qjNxzSl4LpgWXRepwnU7ioY3/IwBY+9i7mL//yl9A2uMBYKRtpzGZjRCuQIaTbSvk920jFODXBW
+	RL6765GTimgKTISAkRNeBlFNOOE3LUdkLLMTEJNuqrn6qZkL3UC0Rzt8MGWVRU0LqPdgSvEa94S
+	xUJc6B+tV9yTr/oX1jRnwdXrKzkEdBXb+QIlJX37paWUfx5aen5z+6gG0s6Gm35cM/Lpieu+6CQ
+	kHJ163e0/exGVgU3DtInmYCSvk8WMZSJfkhCxbd8jvmWHWwd3SJQezsb0ZatuFym+KoMoZUv2vR
+	Dlq9dqm2iJ90IW5bww6Xeu9Km8KH2kilTK5M2NqH6lf2lwlVBY9+sZ7vY6AjYgWe5OGBKa39X5l
+	K/Jr1NFAcHztDSpM3oUReQ4s0HF2qfkWloogo=
+X-Received: by 2002:a05:6102:5e88:b0:631:4580:6a46 with SMTP id ada2fe7eead31-71e88c4f8c1mr731839137.17.1781250648990;
+        Fri, 12 Jun 2026 00:50:48 -0700 (PDT)
+X-Received: by 2002:a05:6102:5e88:b0:631:4580:6a46 with SMTP id ada2fe7eead31-71e88c4f8c1mr731821137.17.1781250648555;
+        Fri, 12 Jun 2026 00:50:48 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-39929c6c9f7sm3928361fa.18.2026.06.12.00.50.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2026 00:50:47 -0700 (PDT)
+Date: Fri, 12 Jun 2026 10:50:44 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        Rob Herring <robh@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas.schier@linux.dev>,
+        Hans de Goede <hansg@kernel.org>,
+        Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+        "Derek J . Clark" <derekjohn.clark@gmail.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH v6 6/9] dt-bindings: connector: m2: Add M.2 1620 LGA
+ soldered down connector
+Message-ID: <ttik5qwtbdqgtuu2hsnqsuok75ofs5itlnkzevawazw7lckuem@l5ogmc4b4u42>
+References: <CAL_JsqJXrHCJt770bJkMmAUhirSF3kHjYwSzkG7cXp7-eys8Rg@mail.gmail.com>
+ <6aef3xxjjd4nbgrfx6jc6jt6rpqmttoui6hil5zqgdpas2j6gj@ie6j72orenou>
+ <fsvmmgoe5wslmxebhrrwmdg2ldcmhzvj53gjkdfnfg2m2rz2lw@dcfboaakz7ae>
+ <bguhzabwryayyqkv4ilzwr3ixwv6bzxncblo3ircz2wm3fs52k@66zvcrfcb4oe>
+ <blhm4csjyw6r667cleljgzd6rpwagttjo5rau7wjrlnjakq2qm@ekyhc4jvwmwf>
+ <m44mupdmg7kgco62n4evcviagqo7wwgyt3gybugbxwesd4ekjz@o24r6v4tpezc>
+ <3faffec9-dc9d-4eec-a652-a84d30d85c96@app.fastmail.com>
+ <cvqdbqnzjmzoowxkvz2lyv4avropu5jw7h2r6zng3ecf245hgg@fsysjqflqd35>
+ <acv2f1qbqu4PlSL1@linaro.org>
+ <eftahohsx3bbvmgxuciofjjcrybnsm2qc752hwyt65rb2uwaon@h32nh5fcpo7p>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE7:EE_|DM6PR12MB4467:EE_
-X-MS-Office365-Filtering-Correlation-Id: afd39419-3dd3-4f34-d779-08dec83ad167
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|1800799024|82310400026|376014|23010399003|22082099003|18002099003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	2of/dW2T7U1xJOWb9WGdnMpfc//qwuhpwormIpNKaEMHO2S/fjQNaiPYEhw095BgBsXnmXJmcnzLWgOGyWADzS6OrQ1mwdIcDitMZRX27DsiPQLWiqWUQUW7F5RRVcdPnMxrMRzwpmY84zSjKWHZ7xGcleHgFxtYMrg2y2DKxG8qXOzqbgpKdNr/gy7tIN9vosqGOFqAdzDkSE1ccnK8kL4IpaCIovYZiDpuAeWz3N2BZABFo0dcmfuZUoN2RL1/mYxnmpx0cGsoKDyqq/oHdh0KIJCLNDjBhE2kJFDsExZQrMalyJxiFVUFl7/GSSGe32KJkHPb0fkutYHfnz8WkT/crCViMCY1Zv4C7Y+8VeohTLeNse4DSqE7ZB4NZAIzUxkjPaxjD7/S8LRRu13qA3XlQN1K51eU9Fj+L8+Ix/F3gxtfcFOdJPYPchvqRk4dkceeVoNEVlSZT6scslpEkKtstj2u8/rmEl4M770SO0k847pStgDFJwClkX1GpUUSlg90oWMG0x2kEeQQHyPRTZzw/vkF9dKTORIrCczV8CQPElTwGK8l33e9Pn2V2PBqtnuwir/fKE/S0dOuzRIMb9A20SjG8bD7P4a/nc5SLkWxqQs6kgNLfFlok9gwNOU0SNR7RhXYIEvJTt+5mK3z9Ou2F+LL215LxKZVyIyPp4fUI9gqo+75+F3CndsFeEnqYszKosc5tt+kOowsG3G/xI+O9RXJFiB7KQYCTv4qoIE=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(82310400026)(376014)(23010399003)(22082099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	03dprxezsE5xvAJ/1OTDUEBB9doZHc78uguwreWxKZUQOYV5H3ePS4v4Ai9mpiDWYl8jr6JfgZ0MClpzHdtA6ThZ0xIAcz97h0MQDoeE7AO+BdgWl/6L1KkRj9E4AHdLyI6OzVjsboyM8+vZkODcO5sMaIg76sg2ezNOci3sAHrm0rK8ORMiVWoNncCE44ZRSLTwOET5VoY0iRH0JWGkTAe+3B4bNWj0q5sIMFZvPuih+BlOhUznIIyQNW3ivrYgF3A5ROgcImlN+rZI+zlVlZ5OKFv74rFnmWyrdA7pxfpsAPu96NAe7PHE64SgDxIFcZzZbJNw7MpW19R/cL7EZDb+g9Vwf+rlFsGsdG32Zsl7N+loL7I48rvVPHJ4N8pIuT8s/yNmG3P/FTkA0jM4W8DxZthNwJ27kqaosd+kpL9yDe1Ds1c2/SN2Ok8kxuYm
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2026 04:26:47.9227
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afd39419-3dd3-4f34-d779-08dec83ad167
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE7.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4467
+In-Reply-To: <eftahohsx3bbvmgxuciofjjcrybnsm2qc752hwyt65rb2uwaon@h32nh5fcpo7p>
+X-Proofpoint-ORIG-GUID: oAmEJT5Aw6MbDCPpdUAbPZXYO3QwDJxs
+X-Proofpoint-GUID: oAmEJT5Aw6MbDCPpdUAbPZXYO3QwDJxs
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjEyMDA2OSBTYWx0ZWRfX5swAa4Ju0YP1
+ SlrKmIxjGZLE4oMcf4si7R2717CZ4gadbW8xwva8iTE/+AmLF4unKjJ9R2qKpNX7TjD1EmvpUF2
+ lRQCYCw+QWDOYcjFt4GOXnEuzLGYyV8=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjEyMDA2OSBTYWx0ZWRfX3wsLGGO2Fm4G
+ +Z6OMumjVOZraYrXnHyF3ar4jRvMG0zB60T/Q4ZvZdJC3sWTgl31R8UoO0d2rHbDmwBDWQYAjRC
+ eprU0pLefijJEaG5qVc2Dn/3KwmlLxXbyKFvZT7YEvrwO0PoWTmggj0DlU940jOzfuSxLS7mFkV
+ xD1HJ2ROAaXuC63G22NkT2KkylwQRQG4Kk6ztyzPWKc1s/BAJGUFUekpOk3z3ROHvK0U35hhxkw
+ Pnr6YHFCOj5yj4QypAleCTOrF1b5fWLP32iL65RYDR7secMVYNLGuo+S//Ger4iScD7zqN6QAdR
+ Dsm6ObtYH3j7M/WYoDzZPR6QUp9ENdDWYwbPGEwfHpYhdaN+Y91FOCrSG+CyhaVaj/gjW/CygIF
+ RnyOf0jv+EB3swCJw4uQ4GWBdHi29ZFmojJFq9A2br1hTI6woeOBXtd4nUGl1ujIfcCzPzItNRl
+ QbTFgF+sDmw/ZnVHfEQ==
+X-Authority-Analysis: v=2.4 cv=M6p97Sws c=1 sm=1 tr=0 ts=6a2bba5a cx=c_pps
+ a=5HAIKLe1ejAbszaTRHs9Ug==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22 a=GUbesZiWAAAA:8
+ a=VwQbUJbxAAAA:8 a=XDz2VUyccH_bepKxGScA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=gYDTvv6II1OnSo0itH1n:22 a=-cUrBSrepuC47jtK_ZRV:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-12_01,2026-06-11_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0
+ phishscore=0 clxscore=1015 malwarescore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606120069
 
-Each ACPI HSMP socket bumps acpi_sock_refcnt after a successful probe;
-the last socket to remove runs refcount_dec_and_test() and tears down
-shared state once. If init_acpi() or misc_register() fails before
-refcount_inc(), call hsmp_acpi_free_sock_alloc_if_idle() to free
-hsmp_pdev->sock so a concurrent probe cannot follow a dangling pointer.
+On Wed, Jun 10, 2026 at 06:44:59PM +0200, Manivannan Sadhasivam wrote:
+> On Tue, Mar 31, 2026 at 06:29:51PM +0200, Stephan Gerhold wrote:
+> > On Wed, Mar 25, 2026 at 05:36:08PM +0530, Manivannan Sadhasivam wrote:
+> > > On Mon, Mar 23, 2026 at 01:23:07PM -0400, Mark Pearson wrote:
+> > > > On Mon, Mar 23, 2026, at 12:52 PM, Manivannan Sadhasivam wrote:
+> > > > > On Mon, Mar 23, 2026 at 06:45:15PM +0200, Dmitry Baryshkov wrote:
+> > > > >> On Mon, Mar 23, 2026 at 09:26:04PM +0530, Manivannan Sadhasivam wrote:
+> > > > >> > On Mon, Mar 23, 2026 at 05:14:30PM +0200, Dmitry Baryshkov wrote:
+> > > > >> > > On Mon, Mar 23, 2026 at 07:14:25PM +0530, Manivannan Sadhasivam wrote:
+> > > > >> > > > On Mon, Mar 23, 2026 at 08:39:55AM -0500, Rob Herring wrote:
+> > > > >> > > > > On Mon, Mar 23, 2026 at 7:16 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> > > > >> > > > > >
+> > > > >> > > > > > On Sun, Mar 22, 2026 at 06:37:13PM -0500, Rob Herring wrote:
+> > > > >> > > > > > > On Tue, Mar 17, 2026 at 09:59:56AM +0530, Manivannan Sadhasivam wrote:
+> > > > >> > > > > > > > Lenovo Thinkpad T14s is found to have a soldered down version of M.2 1620
+> > > > >> > > > > > > > LGA connector. Though, there is no 1620 LGA form factor defined in the M.2
+> > > > >> > > > > > > > spec, it looks very similar to the M.2 Key E connector. So add the
+> > > > >> > > > > > > > "pcie-m2-1620-lga-connector" compatible with "pcie-m2-e-connector" fallback
+> > > > >> > > > > > > > to reuse the Key E binding.
+> > > > >> > > > > > >
+> > > > >> > > > > > > What is LGA?
+> > > > >> > > > > > >
+> > > > >> > > > > >
+> > > > >> > > > > > Land Grid Array
+> > > > >> > > > > >
+> > > > >> > > > > > > If not in the spec, is it really something generic?
+> > > > >> > > > > > >
+> > > > >> > > > > >
+> > > > >> > > > > > Good question. Yes and No! LGA is not something that Lenovo only uses. Other
+> > > > >> > > > > > vendors may also use this form factor. PCIe connectors are full of innovation as
+> > > > >> > > > > > the spec gives room for hardware designers to be as innovative as possible to
+> > > > >> > > > > > save the BOM cost.
+> > > > >> > > > > 
+> > > > >> > > > > innovation == incompatible changes
+> > > > >> > > > > 
+> > > > >> > > > 
+> > > > >> > > > Yes, I was trying to sound nice :)
+> > > > >> > > > 
+> > > > >> > > > > > This is why I do not want to make it Lenovo specific. But if you prefer that, I
+> > > > >> > > > > > can name it as "lenovo,pcie-m2-1620-lga-connector".
+> > > > >> > > > > 
+> > > > >> > > > > Depends if you think that s/w needs to know the differences. Hard to
+> > > > >> > > > > say with a sample size of 1.
+> > > > >> > > > > 
+> > > > >> > > > 
+> > > > >> > > > Sure. Will add the 'lenovo' prefix then.
+> > > > >> > > 
+> > > > >> > > Is it really Lenovo? Or is it some other module vendor, whose LGAs are
+> > > > >> > > being used by Lenovo?
+> > > > >> > > 
+> > > > >> > > I remember that DB820c also used some kind of a module for the WiFi card
+> > > > >> > > (which might be M.2 compatible or might not, I can't find exact docs at
+> > > > >> > > this point).
+> > > > >> > > 
+> > > > >> > 
+> > > > >> > I don't know. These kind of designs might be reused by several vendors. But
+> > > > >> > considering that we should not make it generic, I'd go with Lenovo as that's
+> > > > >> > the only vendor we know as of now.
+> > > > >> 
+> > > > >> ... and later we learn that other vendors use the same idea /pinout,
+> > > > >> then nothing stops us from still telling that it's a
+> > > > >> "lenovo,pcie-m2-something-lga". 
+> > > > >> 
+> > > > >
+> > > > > How do you possibly know whether a single vendor has introduced this form factor
+> > > > > or reused by multiple ones? Atleast, I don't have access to such a source to
+> > > > > confirm.
+> > > > >
+> > > > I've not really been following this thread/patchset in detail; but want me to try and check with the T14s platform team if this device is specifically made for us (Lenovo) or not?
+> > > > I doubt it is - we just don't do that usually, but I can go and ask the question if it will help resolve this (with the caveat that it could hold up the review for a bit and I may not be able to get a straight answer)
+> > > > 
+> > > 
+> > > I can drop this specific patch in the meantime.
+> > > 
+> > > > My vote (for what little it's worth) would be to make it non-Lenovo specific. Then when the same part causes issues on another vendors platform I won't get asked questions about why Lenovo is breaking <other vendor> :)
+> > > > 
+> > > 
+> > > Even if Lenovo prefix is used, it won't break other vendors. Just that we will
+> > > end up adding more compatibles.
+> > > 
+> > > Anyhow, I'll wait for your reply and drop this patch for next revision.
+> > > 
+> > 
+> > If you need a vendor prefix, I think "qcom," would be more appropriate
+> > than Lenovo. This form factor is used by most vendors for recent
+> > soldered Qualcomm-based wireless cards, not just Lenovo:
+> > 
+> >  - Dell XPS 13 9345 has exactly the same soldered M.2 card, I assume
+> >    there are several other vendors as well.
+> > 
+> >  - https://www.sparklan.com/product/wnsq-290be/ is a third-party
+> >    (Qualcomm-based) M.2 LGA 1620 card, in the block diagram the
+> >    pinout is called "QM.2 1620 LGA 168pin".
+> > 
+> >  - If you press F9 while booting the ThinkPad T14s, you should get to a
+> >    screen with "Regulatory Information". For the T14s, this screen says
+> >    "Contains FCC ID: J9C-QCNCM825". This is the WiFi/BT module in the
+> >    soldered form factor. If you look that up on the FCC website, the
+> >    applicant for this module is "Qualcomm Technologies, Inc.". This
+> >    seems to be some kind of "modular certification" that vendors can
+> >    reuse/adapt without going through the whole process again.
+> > 
+> > Perhaps you should ask around inside Qualcomm? :-)
+> > 
+> 
+> Sorry for getting back after this long. I did ask around, but our HW folks are
+> saying that Qcom is not the first one to use LGA M.2 modules. They claim that
+> other vendors also do that.
 
-1) Metric table sysfs reads ask the SMU to refresh the table, then
-   memcpy_fromio() from the mmio mapping.  Concurrent readers could
-   interleave those steps and return inconsistent data.  Serialize with
-   per-socket metric_tbl_lock and guard(mutex) around
-   hsmp_send_message() and memcpy_fromio() so each read() observes one
-   coherent snapshot.
-2) Every ACPI AMDI0097 device shares hsmp_pdev->sock[].  The driver used
-   devm_kcalloc() from whichever device probed first, an unlocked probe
-   flag, and misc_register() from the first successful path.  Parallel
-   probes could race, and devm tied the array lifetime to one device
-   while others (and devm hwmon paths) still called hsmp_send_message(),
-   which could use-after-free the array on remove.
-3) Metric DRAM used devm_ioremap() and devm_mutex_init() per ACPI device
-   while the socket table is global, so devm teardown order did not
-   match shared storage.  Switch to ioremap(), one-time mutex_init()
-   (metric_lock_inited), and hsmp_metric_tbl_unmap_all() on the last
-   ACPI remove together with the rest of global teardown.
-4) After kcalloc(sock) but before refcount_inc(), one failing probe
-   could kfree() the array while another probe still ran init_acpi() on
-   the same pointer.  Hold hsmp_acpi_probe_mutex across init_acpi(),
-   misc_register(), and refcount_inc() so setup does not overlap
-   teardown or a concurrent probe.
-5) On the legacy platform driver, call hsmp_misc_deregister() before
-   hsmp_metric_tbl_unmap_all() so /dev/hsmp is gone before metric mmio
-   is unmapped, matching the ACPI remove path.
+I think, the idea was that there is no single standard for LGA modules
+(please correct me if I'm wrong, I haven't checked the latest PCIe
+standards).
 
-Tested-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
----
- drivers/platform/x86/amd/hsmp/acpi.c | 58 +++++++++++++++++++++-------
- drivers/platform/x86/amd/hsmp/hsmp.c | 56 +++++++++++++++++++++++++--
- drivers/platform/x86/amd/hsmp/hsmp.h |  9 ++++-
- drivers/platform/x86/amd/hsmp/plat.c |  1 +
- 4 files changed, 106 insertions(+), 18 deletions(-)
+> 
+> But for this specific card, it should be fine to use the 'qcom' prefix as
+> apparently the module was supplied by Qcom.
+> 
+> I'll submit the bindings patch together with DTS change for T14s.
+> 
+> - Mani
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 8dc6b4a8bd27..e526e2cea3e2 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -20,7 +20,10 @@
- #include <linux/ioport.h>
- #include <linux/kstrtox.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/refcount.h>
-+#include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/topology.h>
- #include <linux/uuid.h>
-@@ -595,6 +598,19 @@ static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
- 
-+static DEFINE_MUTEX(hsmp_acpi_probe_mutex);
-+
-+/* Caller holds hsmp_acpi_probe_mutex. */
-+static void hsmp_acpi_free_sock_alloc_if_idle(void)
-+{
-+	if (refcount_read(&hsmp_pdev->acpi_sock_refcnt) == 0 &&
-+	    !hsmp_pdev->acpi_misc_registered && hsmp_pdev->sock) {
-+		kfree(hsmp_pdev->sock);
-+		hsmp_pdev->sock = NULL;
-+		hsmp_pdev->num_sockets = 0;
-+	}
-+}
-+
- static int hsmp_acpi_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -603,49 +619,63 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 	if (!hsmp_pdev)
- 		return -ENOMEM;
- 
--	if (!hsmp_pdev->is_probed) {
-+	mutex_lock(&hsmp_acpi_probe_mutex);
-+	if (!hsmp_pdev->sock) {
- 		hsmp_pdev->num_sockets = topology_max_packages();
- 		if (!hsmp_pdev->num_sockets) {
- 			dev_err(&pdev->dev, "No CPU sockets detected\n");
-+			mutex_unlock(&hsmp_acpi_probe_mutex);
- 			return -ENODEV;
- 		}
- 
--		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
--					       sizeof(*hsmp_pdev->sock),
--					       GFP_KERNEL);
--		if (!hsmp_pdev->sock)
-+		hsmp_pdev->sock = kcalloc(hsmp_pdev->num_sockets,
-+					  sizeof(*hsmp_pdev->sock),
-+					  GFP_KERNEL);
-+		if (!hsmp_pdev->sock) {
-+			mutex_unlock(&hsmp_acpi_probe_mutex);
- 			return -ENOMEM;
-+		}
- 	}
- 
- 	ret = init_acpi(&pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to initialize HSMP interface.\n");
-+		hsmp_acpi_free_sock_alloc_if_idle();
-+		mutex_unlock(&hsmp_acpi_probe_mutex);
- 		return ret;
- 	}
- 
--	if (!hsmp_pdev->is_probed) {
-+	if (!hsmp_pdev->acpi_misc_registered) {
- 		ret = hsmp_misc_register(&pdev->dev);
- 		if (ret) {
- 			dev_err(&pdev->dev, "Failed to register misc device\n");
-+			hsmp_acpi_free_sock_alloc_if_idle();
-+			mutex_unlock(&hsmp_acpi_probe_mutex);
- 			return ret;
- 		}
--		hsmp_pdev->is_probed = true;
--		dev_dbg(&pdev->dev, "AMD HSMP ACPI is probed successfully\n");
-+		hsmp_pdev->acpi_misc_registered = true;
-+		dev_dbg(&pdev->dev, "AMD HSMP ACPI misc device registered\n");
- 	}
-+	refcount_inc(&hsmp_pdev->acpi_sock_refcnt);
-+	mutex_unlock(&hsmp_acpi_probe_mutex);
- 
- 	return 0;
- }
- 
- static void hsmp_acpi_remove(struct platform_device *pdev)
- {
--	/*
--	 * We register only one misc_device even on multi-socket system.
--	 * So, deregister should happen only once.
--	 */
--	if (hsmp_pdev->is_probed) {
-+	mutex_lock(&hsmp_acpi_probe_mutex);
-+	if (refcount_dec_and_test(&hsmp_pdev->acpi_sock_refcnt)) {
- 		hsmp_misc_deregister();
--		hsmp_pdev->is_probed = false;
-+		hsmp_pdev->acpi_misc_registered = false;
-+		hsmp_metric_tbl_unmap_all(hsmp_pdev, hsmp_pdev->num_sockets);
-+		kfree(hsmp_pdev->sock);
-+		hsmp_pdev->sock = NULL;
-+		hsmp_pdev->num_sockets = 0;
-+		hsmp_pdev->proto_ver = 0;
-+		hsmp_pdev->hsmp_table_size = 0;
- 	}
-+	mutex_unlock(&hsmp_acpi_probe_mutex);
- }
- 
- static struct platform_driver amd_hsmp_driver = {
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 9f7a5fb67728..4dc3826a0d57 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -12,6 +12,7 @@
- #include <linux/acpi.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/io.h>
- #include <linux/nospec.h>
- #include <linux/semaphore.h>
- #include <linux/slab.h>
-@@ -41,7 +42,9 @@
-  */
- #define CHECK_GET_BIT		BIT(31)
- 
--static struct hsmp_plat_device hsmp_pdev;
-+static struct hsmp_plat_device hsmp_pdev = {
-+	.acpi_sock_refcnt = REFCOUNT_INIT(0),
-+};
- 
- /*
-  * Send a message to the HSMP port via PCI-e config space registers
-@@ -488,6 +491,7 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
- 	msg.msg_id	= HSMP_GET_METRIC_TABLE;
- 	msg.sock_ind	= sock->sock_ind;
- 
-+	guard(mutex)(&sock->metric_tbl_lock);
- 	ret = hsmp_send_message(&msg);
- 	if (ret)
- 		return ret;
-@@ -497,6 +501,28 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
- }
- EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
- 
-+void hsmp_metric_tbl_unmap_all(struct hsmp_plat_device *pdev, u16 num_sockets)
-+{
-+	u16 i;
-+
-+	if (!pdev->sock || !num_sockets)
-+		return;
-+
-+	for (i = 0; i < num_sockets; i++) {
-+		struct hsmp_socket *s = &pdev->sock[i];
-+
-+		if (s->metric_tbl_addr) {
-+			iounmap(s->metric_tbl_addr);
-+			s->metric_tbl_addr = NULL;
-+		}
-+		if (s->metric_lock_inited) {
-+			mutex_destroy(&s->metric_tbl_lock);
-+			s->metric_lock_inited = false;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_unmap_all, "AMD_HSMP");
-+
- int hsmp_get_tbl_dram_base(u16 sock_ind)
- {
- 	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
-@@ -504,6 +530,31 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
- 	phys_addr_t dram_addr;
- 	int ret;
- 
-+	if (sock->metric_tbl_addr)
-+		return 0;
-+
-+	/*
-+	 * Initialize the per-socket lock before anything that can set
-+	 * sock->metric_tbl_addr to a non-NULL value.  hsmp_metric_tbl_read()
-+	 * gates on sock->metric_tbl_addr being non-NULL and then takes
-+	 * metric_tbl_lock unconditionally; both callers of this function
-+	 * (init_acpi() and init_platform_device()) intentionally only log
-+	 * a failure here and continue probing, so an init order that left
-+	 * metric_tbl_addr populated while mutex_init failed would leave the
-+	 * read path locking an uninitialized mutex.  Doing the mutex init
-+	 * first preserves the invariant "metric_tbl_addr != NULL implies the
-+	 * lock is usable" on every error exit.
-+	 *
-+	 * Use non-devm mutex + ioremap so the shared sock[] array (ACPI
-+	 * allocates once for all sockets) can be torn down from a single
-+	 * refcounted release path without devm lifetime being tied to the
-+	 * wrong struct device.
-+	 */
-+	if (!sock->metric_lock_inited) {
-+		mutex_init(&sock->metric_tbl_lock);
-+		sock->metric_lock_inited = true;
-+	}
-+
- 	msg.sock_ind	= sock_ind;
- 	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
- 	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
-@@ -527,8 +578,7 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
- 	else
- 		hsmp_pdev.hsmp_table_size = sizeof(struct hsmp_metric_table);
- 
--	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
--					     hsmp_pdev.hsmp_table_size);
-+	sock->metric_tbl_addr = ioremap(dram_addr, hsmp_pdev.hsmp_table_size);
- 	if (!sock->metric_tbl_addr) {
- 		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
- 		return -ENOMEM;
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index 7343f8a1681f..5f5ad2885c22 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -15,7 +15,9 @@
- #include <linux/hwmon.h>
- #include <linux/kconfig.h>
- #include <linux/miscdevice.h>
-+#include <linux/mutex.h>
- #include <linux/pci.h>
-+#include <linux/refcount.h>
- #include <linux/semaphore.h>
- #include <linux/sysfs.h>
- #include <linux/types.h>
-@@ -42,11 +44,14 @@ struct hsmp_socket {
- 	struct bin_attribute hsmp_attr;
- 	struct hsmp_mbaddr_info mbinfo;
- 	void __iomem *metric_tbl_addr;
-+	/* Serializes concurrent metric table refreshes from the sysfs path */
-+	struct mutex metric_tbl_lock;
- 	void __iomem *virt_base_addr;
- 	struct semaphore hsmp_sem;
- 	char name[HSMP_ATTR_GRP_NAME_SIZE];
- 	struct device *dev;
- 	u16 sock_ind;
-+	bool metric_lock_inited;
- 	int (*amd_hsmp_rdwr)(struct hsmp_socket *sock, u32 off, u32 *val, bool rw);
- };
- 
-@@ -55,7 +60,8 @@ struct hsmp_plat_device {
- 	struct hsmp_socket *sock;
- 	u32 proto_ver;
- 	u16 num_sockets;
--	bool is_probed;
-+	refcount_t acpi_sock_refcnt;
-+	bool acpi_misc_registered;
- 	size_t hsmp_table_size;
- };
- 
-@@ -66,6 +72,7 @@ void hsmp_misc_deregister(void);
- int hsmp_misc_register(struct device *dev);
- int hsmp_get_tbl_dram_base(u16 sock_ind);
- ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
-+void hsmp_metric_tbl_unmap_all(struct hsmp_plat_device *pdev, u16 num_sockets);
- struct hsmp_plat_device *get_hsmp_pdev(void);
- #if IS_ENABLED(CONFIG_HWMON)
- int hsmp_create_sensor(struct device *dev, u16 sock_ind);
-diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-index e07f68575055..2ef2102d0af3 100644
---- a/drivers/platform/x86/amd/hsmp/plat.c
-+++ b/drivers/platform/x86/amd/hsmp/plat.c
-@@ -230,6 +230,7 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
- static void hsmp_pltdrv_remove(struct platform_device *pdev)
- {
- 	hsmp_misc_deregister();
-+	hsmp_metric_tbl_unmap_all(hsmp_pdev, hsmp_pdev->num_sockets);
- }
- 
- static struct platform_driver amd_hsmp_driver = {
 -- 
-2.34.1
-
+With best wishes
+Dmitry
