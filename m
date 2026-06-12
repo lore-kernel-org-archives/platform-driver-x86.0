@@ -1,46 +1,46 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5463E403EBC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEABD405C4F;
 	Fri, 12 Jun 2026 17:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781285706; cv=none; b=Q6fB2+zjeiUzQrltGnFP4cw56jPK4ODj6TKOim9b8gWgJQuerulDeGwUtsM3DGWI7KMU7sn3K5kHJXGFvIthNHQ4KNi4ZfYBe1UGHyFASzd1ruHiaraDgu70EkRGxirg1VQo2PPKNFVaFIVs74jsiJobScqFsPf+FLutoYn3DwM=
+	t=1781285706; cv=none; b=kMikL9CGsaubSBNOyNeXxnT1i61J0EPVJewhTOTDzGnJAI7dW5uUZRHDBJK9m6K289r8QRvcNkRRhtC+CGtUTRPbT6wmY7+tD+AEEDDJG5ov+ldJnJ5OTEDYSCA/WlFKiosaB0EcShal4QKT2SWAQD6dyr6gu2AJCYL/jEQbMd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781285706; c=relaxed/simple;
-	bh=TttEb9JwhZjQT/oOyoKeQyiisWuP6iixccimpKZm1WY=;
+	bh=uqwzykMYBhpdPXjp9AWgXPgat01DRGebMDgGs3tNb+E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LWmR6gWoy5Eh/S3K90YjOYPk9Kdb1R39yyBZ5D/UbtVmAFLMUUp+m+JmGm4fwNbv4rFStZ4UGswUeNK0tC5N22dT75Wn0J/oXeiZjYu+rxvQWRyR9cFevAZDBdD6qpnyNLmFOq9TNpsJMpF56abW2eGz3Q0hSMyMxkGfHwb7rJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ndXb2Fpo; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version:Content-Type; b=TsgmP/g48ewPxyC3CZ3iTO6vuEbZf6D3ehDR5RrM6hz3kIf/GClgwE7xBIMuCKAKZLdYiu1oSiR1NibIDBhYjZ2s7IL143muz4CwO1iZeKuxesmo7c4hdTpJqA2TJwGdMoQh6q2ORSIYHh5CSNjtrGhJRwjBEcUEUMe1wIKVLfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=niC4M8LG; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ndXb2Fpo"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="niC4M8LG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1781285696; x=1781890496; i=w_armin@gmx.de;
-	bh=pY7z3Lwdo09hb9WZLvkS5Tey9P1PQ/b5loc8U8j+tZw=;
+	s=s31663417; t=1781285697; x=1781890497; i=w_armin@gmx.de;
+	bh=SZ9rNZaBe+K2dCQwH350D1snJlYgchwMk0nQmWxDvao=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=ndXb2Fpogz0encypG1cRefSPBLWO6vUlIJxI7qKHvt3901jym8zjoK/Hd54az7hE
-	 jF0glZ8WIDlax5bL5W8WDiC6XwubLVbI9J0A7Hdsgs1lZFQjCpdyM9z8WV6XMX2eV
-	 zFzpFWwyv0ON8HRQ3I/KqHBenffryJxc6wYGGAJMJ5HZJDTy0OJQI99AdstHy1Q1m
-	 1gQZFf9shMKZqK01sGoQG2GpocELBnHx/+Ih4iTIV6+/JqS7J0RGy6WX20EwlrNo4
-	 RPP5u6w4tzyE8MdQhtLDLQkbkm7Ub7SPkG/H94i+fYCIglQDT+cVz5PVGFLUCNLLc
-	 ngSQtwGZMAJX4sys5g==
+	b=niC4M8LGLDmjz/v/qkAC6YZU6mRFOSpbJUjidBimiHQUqbVlogS8IcHVAA43fNwB
+	 IHXnM5B9Qxu9rtMm+qaIIqqpzZ4BHkRorrFJOUyPLO0ePJrETrWz4KArKKOMCRCTx
+	 8irmdWTQN1UOioK/S039YLOxMbUi8Eyh4qTA4rp2NnG7Daw3vSR7pQz5yOftMiD+M
+	 et2TWBvFJQQfh5xJ5wIXBWwfhlhKQgUWkg+db2ElU4dlHw+88l1dXLL4wJl5E6AOK
+	 gLE0e/gl2nM/Ax97L2cb1yArKPshcMT81P5vzZqfyA6bO86F1he+Siohnhh9rZNCl
+	 UrcBU6GKYYZqQEq/+Q==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MK3Vu-1wmsq13ypS-00RgUF; Fri, 12
- Jun 2026 19:34:56 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MC34X-1wMJYK1S7J-004MTe; Fri, 12
+ Jun 2026 19:34:57 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: ilpo.jarvinen@linux.intel.com,
 	hansg@kernel.org
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] platform/x86: dell-wmi-base: Fix resource leak on module load failure
-Date: Fri, 12 Jun 2026 19:34:49 +0200
-Message-Id: <20260612173451.467629-3-W_Armin@gmx.de>
+Subject: [PATCH 4/4] platform/x86: dell-ddv: Use no_free_ptr() to simplify error handling
+Date: Fri, 12 Jun 2026 19:34:51 +0200
+Message-Id: <20260612173451.467629-5-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260612173451.467629-1-W_Armin@gmx.de>
 References: <20260612173451.467629-1-W_Armin@gmx.de>
@@ -50,133 +50,159 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:d41mcJ6GCpthchP7Qn1XXYGY4WI2SjsK1Pf81IkqmcSS7Ryqlr+
- txXWqErqepAIkJNlXPuCVpm2sqgntKLHhrfbcZiVzpB1z3bS3D2bQebtP1gnnYXyIO4mkLa
- JjJd7OTPnZiuNEFyBFqe4quhqovlAvXBWyjssEeg7Y7d/23UTYVXSoDFdRzaUCHTOFrk5bD
- sXDhOqCzX5eqUFu2Xs21g==
+X-Provags-ID: V03:K1:zRJJppz7CQwpBbr8R25W1FYVNYKBQgwIJx7KQjJtUDv4W3rpG+d
+ UpuM22TOy3nDNaZO9dcGwOJClgbAnNDoNBopoeWlTdtyNRPoZVMJ0WXT++VU8q+0OhAT5Q+
+ GwGQ3fL8ZaAHnR43Bd0iwf+Nhtbg2Dba49SNo3inEZt39ww/kpaeAsDthqAIdn0/eTmKrzO
+ f+jTp8mR9paW9D5pEEBTw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3Qs80gidSdI=;21QcMPDY8Ujj49KMQZ2HrhMBHsl
- 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
- hBdtXViuk0E2iv/M4k=
+UI-OutboundReport: notjunk:1;M01:P0:7Isf036UZsU=;PY996fCRVOYP/ubGQCITETJ1Wt8
+ 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
 
-We need to properly clean up the SMBIOS request and the privacy driver
-when the module load fails.
+Use no_free_ptr() inside dell_wmi_ddv_query_buffer() in order to
+be able to use __free() with the result of the WMI call.
 
-Fixes: 8af9fa37b8a3 ("platform/x86: dell-privacy: Add support for Dell har=
-dware privacy")
+Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/dell/dell-wmi-base.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/platform/x86/dell/dell-wmi-ddv.c | 22 ++++++----------------
+ 1 file changed, 6 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-base.c b/drivers/platform/=
-x86/dell/dell-wmi-base.c
-index 997383ba1846..fd6a508cd902 100644
-=2D-- a/drivers/platform/x86/dell/dell-wmi-base.c
-+++ b/drivers/platform/x86/dell/dell-wmi-base.c
-@@ -843,9 +843,22 @@ static int __init dell_wmi_init(void)
+diff --git a/drivers/platform/x86/dell/dell-wmi-ddv.c b/drivers/platform/x=
+86/dell/dell-wmi-ddv.c
+index 736d9b1fdcfb..f8903ced461b 100644
+=2D-- a/drivers/platform/x86/dell/dell-wmi-ddv.c
++++ b/drivers/platform/x86/dell/dell-wmi-ddv.c
+@@ -196,40 +196,30 @@ static int dell_wmi_ddv_query_integer(struct wmi_dev=
+ice *wdev, enum dell_ddv_met
+ static int dell_wmi_ddv_query_buffer(struct wmi_device *wdev, enum dell_d=
+dv_method method,
+ 				     u32 arg, struct dell_wmi_buffer **result)
+ {
+-	struct dell_wmi_buffer *buffer;
+ 	struct wmi_buffer output;
+ 	size_t buffer_size;
+ 	int ret;
 =20
- 	err =3D dell_privacy_register_driver();
- 	if (err)
--		return err;
-+		goto out_smbios;
+-	ret =3D dell_wmi_ddv_query(wdev, method, arg, &output, sizeof(*buffer));
++	ret =3D dell_wmi_ddv_query(wdev, method, arg, &output, sizeof(struct del=
+l_wmi_buffer));
+ 	if (ret < 0)
+ 		return ret;
 =20
--	return wmi_driver_register(&dell_wmi_driver);
-+	err =3D wmi_driver_register(&dell_wmi_driver);
-+	if (err)
-+		goto out_privacy;
-+
-+	return 0;
-+
-+out_privacy:
-+	dell_privacy_unregister_driver();
-+
-+out_smbios:
-+	if (wmi_requires_smbios_request)
-+		dell_wmi_events_set_enabled(false);
-+
-+	return err;
+-	buffer =3D output.data;
+-	if (!le32_to_cpu(buffer->raw_size)) {
+-		ret =3D -ENODATA;
++	struct dell_wmi_buffer *buffer __free(kfree) =3D output.data;
+=20
+-		goto err_free;
+-	}
++	if (!le32_to_cpu(buffer->raw_size))
++		return -ENODATA;
+=20
+ 	buffer_size =3D struct_size(buffer, raw_data, le32_to_cpu(buffer->raw_si=
+ze));
+ 	if (buffer_size > output.length) {
+ 		dev_warn(&wdev->dev,
+ 			 FW_WARN "Dell WMI buffer size (%zu) exceeds WMI buffer size (%zu)\n",
+ 			 buffer_size, output.length);
+-		ret =3D -EMSGSIZE;
+-
+-		goto err_free;
++		return -EMSGSIZE;
+ 	}
+=20
+-	*result =3D buffer;
++	*result =3D no_free_ptr(buffer);
+=20
+ 	return 0;
+-
+-err_free:
+-	kfree(output.data);
+-
+-	return ret;
  }
- late_initcall(dell_wmi_init);
 =20
+ static ssize_t dell_wmi_ddv_query_string(struct wmi_device *wdev, enum de=
+ll_ddv_method method,
 =2D-=20
 2.39.5
 
