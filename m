@@ -1,251 +1,494 @@
-Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A54330F7F2;
-	Fri, 12 Jun 2026 18:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD352FD68B;
+	Fri, 12 Jun 2026 21:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781289471; cv=none; b=uyS0PGNdi7hQR3iDVFVID+B3MvJEaS+xLSwRg0X6U1mTKEULxqX/tZRsJjKIwyWNcPPb54iXLTLJg53EuE6d5lbqEhyZmCHWw6fuS/pgYq2pq4pfz7TNWEpJ8N4y4NlXq5f6DgIdOK+69Ndzxu3ZnLP5qhqiYUYJoA9lVTbEXFc=
+	t=1781298069; cv=none; b=dukj2U+qEumtC12fOPKivyEy3CEXPfgWqIxevmUFGZT1CdjOHWwHC+IyMAg9ofXpHEp58l5itutPgxoN1pMyhBh3TtckEcdbbNy5OMzymfXgpis67okPjHcsBIkKM3F8GxdYUrLP0kGzjziWfog1aF/xtLvbw7an8r+5GX52+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781289471; c=relaxed/simple;
-	bh=SI8udEv2mXom7kWLaKTmNHMqwm79zF+UJgYqkFzzBbM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwvQwU9NLlOWRPkHRewe9GpEi0nT1sHZrgylqc9ujVGwdhyBMLLkAve2itntdzgxjZJccIoU19vpyJAAa/ikbZirrj2SJdvLbQ7u0Y0V+71njf9wMjw0lKx1ZhWj11xPoTFU/PJf75+p9WNHca5NiseeaEjwCLiMsCD01qtSAes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=by0jQCFR; arc=none smtp.client-ip=193.87.12.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
+	s=arc-20240116; t=1781298069; c=relaxed/simple;
+	bh=qpJg56lkr62X+MNSnZ4lheL90KpIl/FZZ16ZDR0eJzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZH1X8QsTdb5qR6BwRtzn8Okn+lE7dK2P8h6bMC2TepbVg9OfwGyaLt6U/lirKi2gX8WRrQcmzYqs1K3x1CJoZj3+V72L7Vn9jdubhqqys3MwwSHp8/6/1LtzDR5NHiBKrD4x0GTvl4SlHwdExL8XlzSI6EN1nflJeVPIekEEGmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PMin8XPG; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="by0jQCFR"
-Received: from localhost (localhost [127.0.0.1])
-	by posta.ukf.sk (Postfix) with ESMTP id CC5D04231E3;
-	Fri, 12 Jun 2026 20:31:02 +0200 (CEST)
-Received: from posta.ukf.sk ([127.0.0.1])
-	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id tmc6xVnPQser; Fri, 12 Jun 2026 20:31:02 +0200 (CEST)
-Received: from [10.8.1.254] (unknown [10.8.1.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by posta.ukf.sk (Postfix) with ESMTPSA id 78B35423159;
-	Fri, 12 Jun 2026 20:31:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
-	t=1781289062; bh=SI8udEv2mXom7kWLaKTmNHMqwm79zF+UJgYqkFzzBbM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=by0jQCFRdmwfz+zCPUoU6VGlvo7MEhUgxw0eyK05fTaZ6vn3dSFhq4c/5xHsZb80G
-	 QfPHmXmFFYTpmwa7gMPCBlMVV0JuYa1A0DuCGQri/4sEYunrjS0toEEbxWrcPErKCP
-	 cp1OWsNYrFJRPsQV+1DiW4iGawGRgs/kWnusLmnE=
-Message-ID: <a3b137df-1b21-4460-b003-58c5ca2d59d4@ukf.sk>
-Date: Fri, 12 Jun 2026 20:30:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PMin8XPG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781298067; x=1812834067;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=qpJg56lkr62X+MNSnZ4lheL90KpIl/FZZ16ZDR0eJzY=;
+  b=PMin8XPGfPLvDLywVjNYOUPch1hcx2xgRn4UNypApaib4B3JG7I2pYjr
+   Ee8d+7EAnZorWOMrWvAoc15F4/PM2bfcz/UmENHSnj7SWtwr/M9vAOP4P
+   Nln/8myEikmm0pnAbRXWBhPyQbN5dqjtzZ2rU1tFJt2LPl+rT48Et4Yko
+   R+QyB6fRDDv+zi1fdpActmW29fSf7L2oVvr/gOJsOKRgMKPZ7NaMHdAqQ
+   u8AqkhRgQaM2r9OmDgABjVT6eIDTdYfUdg8cqvs+qU6Rts7tsqjAY/5nK
+   wfdcZ1U7C5OBX+Gjj/Jf/vm6WL1E53PuTGnMfMHEedx5JliCqRS2G9X3X
+   A==;
+X-CSE-ConnectionGUID: oHPb17cUT36THjZtWltBWA==
+X-CSE-MsgGUID: cNUhG/mlStWQ+UZ9mFucbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="81881165"
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="81881165"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:01:06 -0700
+X-CSE-ConnectionGUID: oj34BhKfRzuTGLzan6cohA==
+X-CSE-MsgGUID: 72egyhI4S8ign/93hpQC9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
+   d="scan'208";a="251855130"
+Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:01:07 -0700
+Date: Fri, 12 Jun 2026 14:01:06 -0700
+From: David Box <david.e.box@linux.intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, irenic.rajneesh@gmail.com, 
+	Xi Pardee <xi.pardee@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+	platform-driver-x86@vger.kernel.org, srinivas.pandruvada@linux.intel.com
+Subject: Re: [PATCH v7 12/15] platform/x86/intel/pmc/ssram: Switch to static
+ array with per-index probe state
+Message-ID: <idh3l5672ztge7a6v55jokb3lboswatgg27hlhx5ytn6ddlztn@4knk5fvzlq5y>
+References: <cover.1781146840.git.david.e.box@linux.intel.com>
+ <566f9b6fb5fa2e8514b650df983362eb89adf45f.1781146840.git.david.e.box@linux.intel.com>
+ <fc711b92-bd19-e87d-7a09-54c4392564e9@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [regression] Laptop fan too loud (spinning nearly always) hp-wmi
- 7.1-rc4 kernel
-To: Krishna Chomal <krishna.chomal108@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <4fb7bbf1-466e-438c-a301-e118e7e2a225@leemhuis.info>
- <b00ba475-fc58-4be3-82f8-5fdfdfe70303@leemhuis.info>
- <aiprVEqP_VdmMfGJ@archlinux>
-Content-Language: en-US
-From: Milan Oravec <moravec@ukf.sk>
-Organization: CIKT UKF Nitra
-In-Reply-To: <aiprVEqP_VdmMfGJ@archlinux>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms080805000407080603060709"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fc711b92-bd19-e87d-7a09-54c4392564e9@linux.intel.com>
 
-This is a cryptographically signed message in MIME format.
+On Thu, Jun 11, 2026 at 08:24:30PM +0300, Ilpo Järvinen wrote:
+> On Wed, 10 Jun 2026, David E. Box wrote:
+> 
+> > From: Xi Pardee <xi.pardee@linux.intel.com>
+> > 
+> > Replace devm-allocated pmc_ssram_telems pointer with a fixed-size static
+> > array and introduce per-index probe state tracking.
+> > 
+> > This prepares the driver for later per-device probe handling where tying
+> > the PMC tracking storage to one probed PCI device is no longer suitable.
+> > 
+> > The previous single global device_probed flag cannot describe the state of
+> > individual PMC indices when multiple devices can be probed independently.
+> > Replace it with per-index state (UNPROBED, PROBING, PRESENT, ABSENT) and a
+> > staging cache that publishes discovered values only after probe completes.
+> > This avoids races between probe/unbind and concurrent readers.
+> > 
+> > Use marked state accesses with release/acquire ordering to prevent compiler
+> > and CPU reordering issues across concurrent probe/unbind cycles.
+> > 
+> > Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> 
+> Hi,
+> 
+> I started to wonder is this anymore Xi's handiwork? This patch as been 
+> rewritten so totally from the earlier that I cannot really see much from 
+> the earlier remaining, so is Xi still the right author for it? (It might 
+> be correct, I just don't know who did the actual work here).
 
---------------ms080805000407080603060709
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+It has significantlly changed. I removed Xi's authorship and signoff but
+added attribution for v1 in the commit message for v8.
 
-T24gNi8xMS8yNiAxMDoyMSwgS3Jpc2huYSBDaG9tYWwgd3JvdGU6DQo+IE9uIFR1ZSwgSnVu
-IDAyLCAyMDI2IGF0IDEwOjM2OjI5QU0gKzAyMDAsIFRob3JzdGVuIExlZW1odWlzIHdyb3Rl
-Og0KPj4gUmVzZW5kaW5nIGJlbG93IG1haWwgdG8gdGhlIHBsYXRmb3JtIG1haW50YWluZXJz
-ICYgbGlzdCwgbWF5YmUgc29tZW9uZQ0KPj4gaGVyZSBtaWdodCBoYXZlIGFuIGlkZWEgKEkg
-aGFkIG1pc3MtcmVhZCBNQUlOVEFJTkVSUyBmaWxlIGVhcmxpZXIgYW5kDQo+PiBzZW50IHRo
-ZSBtYWlsIHRvIHRoZSBIUCBXTUkgU2Vuc29yIG1haW50YWluZXIgLS0gdXVwaHMsIHNvcnJ5
-ISksIENpYW8sDQo+PiBUaG9yc3Rlbg0KPj4NCj4+IE9uIDYvMS8yNiAxNzo1OCwgVGhvcnN0
-ZW4gTGVlbWh1aXMgd3JvdGU6DQo+Pj4gSGkgSmFtZXMhIEkgbm90aWNlZCBhIHJlZ3Jlc3Np
-b24gcmVwb3J0IHRoYXQgbWlnaHQgb3IgbWlnaHQgbm90IGJlDQo+Pj4gcmVsYXRlZCB0byBo
-cC13bWk7IHRvIHF1b3RlDQo+Pj4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3df
-YnVnLmNnaT9pZD0yMjE1NjkgOg0KPj4+DQo+Pj4gIiIiDQo+Pj4+IEhlbGxvLCBJJ20gdGVz
-dGluZyA3LjEga2VybmVsIHRyZWUgZW5kIHNlZWluZyBtdWNoIGxvdWRlciBmYW4gb24gbXkg
-DQo+Pj4+IGxhcHRvcCBldmVuIHdoZW4gc3lzdGVtIGlzIGlkbGluZy4gQ1BVIGZhbiBpcyBz
-cGlubmluZyBuZWFybHkgYWxsIA0KPj4+PiB0aGUgdGltZSBldmVuIENQVSByZXBvcnRlZCB0
-ZW1wZXJhdHVyZXMgYXJlIGxvdy4gQ3VycmVudGx5Og0KPj4+Pg0KPj4+PiBtaWdvQG1pZ28t
-SFA6fiQgdW5hbWUgLWENCj4+Pj4gTGludXggbWlnby1IUCA3LjEuMC1yYzQtMDA2ODUtZzRj
-YmZlNDUwMmUzZCAjNDUgU01QIFBSRUVNUFRfRFlOQU1JQyANCj4+Pj4gU3VuIE1heSAyNCAx
-Mjo0NzoxOCBDRVNUIDIwMjYgeDg2XzY0IEdOVS9MaW51eA0KPj4+Pg0KPj4+Pg0KPj4+PiBJ
-biA3LjAga2VybmVsIHRyZWUgaXMgbXkgbGFwdG9wIG11Y2ggcXVpZXRlciwgZmFuIHNwaW5z
-IG9ubHkgDQo+Pj4+IHNvbWV0aW1lcyBhbmQgd2l0aCBsb3dlciBSUE0uDQo+Pj4+DQo+Pj4+
-IE1hY2hpbmUgaXM6IEhQIE9tbmlCb29rIFggRmxpcCBMYXB0b3AgMTYtYXIweHgsIHdpdGgg
-QXJjaCBMaW51eCANCj4+Pj4gaW5zdGFsbGVkLg0KPj4+Pg0KPj4+PiBJcyB0aGVyZSBhbnkg
-d2F5IEkgY2FuIG1ha2UgbW9yZSBleGFjdC91c2VmdWwgcmVwb3J0IG9yIGRlYnVnIHRoaXMg
-DQo+Pj4+IGlzc3VlPw0KPj4+ICIiIg0KPj4+DQo+Pj4gU2VlIHRoZSB0aWNrZXQgZm9yIGRl
-dGFpbHMgYW5kIGtlcm5lbCBsb2dzLCBJIGFza2VkIGEgZmV3IHF1ZXN0aW9ucyB0bw0KPj4+
-IGhvcGVmdWxseSBtYWtlIHRoaW5ncyBhIGJpdCBlYXNpZXIgZm9yIHlvdS4NCj4+Pg0KPj4+
-IE1heWJlIHlvdSBtaWdodCBoYXZlIGFuIGlkZWEgd2hhdCdzIHdyb25nIGhlcmU7IGlmIG5v
-dCwgSSBndWVzcyBNaWxhbiwNCj4+PiB0aGUgcmVwb3J0ZXIgKENDZWQpLCBtdXN0IGJpc2Vj
-dCB0aGlzIHRvIGZpbmQgdGhlIGNoYW5nZSB0aGF0IGNhdXNlcyANCj4+PiB0aGUNCj4+PiBw
-cm9ibGVtLg0KPg0KPiBIaSBhbGwsDQo+DQo+IEkgdHJpZWQgdG8gbG9vayBpbnRvIHRoaXMg
-YnV0IHVuZm9ydHVuYXRlbHkgSSBjYW4ndCB0aGluayBvZiB3aGF0IG1pZ2h0DQo+IGJlIGdv
-aW5nIHdyb25nIGhlcmUuIEJhc2VkIG9uIHlvdXIgZG1lc2cgbG9ncyBpbiB0aGUgdGlja2V0
-LCBJIGJlbGlldmUNCj4gaXRzIGJlc3QgaWYgTWlsYW4gY291bGQgYmlzZWN0IGJldHdlZW4g
-djcuMC44IGFuZCB2Ny4xLXJjNCB0YWdzICh0aGVyZQ0KPiB3b3VsZCBiZSByb3VnaGx5IDEz
-IHN0ZXBzKS4NCj4NCj4gSWYgeW91IGJlbGlldmUgaXQgaXMgYmVjYXVzZSBvZiBocC13bWkg
-dGhlbiB5b3UgY2FuIGxpbWl0IHRvIGp1c3QgdGhlc2UNCj4gMTYgY29tbWl0czoNCj4NCj4g
-JCBnaXQgbG9nIC0tb25lbGluZSB2Ny4wLjguLnY3LjEtcmM0IC0tIGRyaXZlcnMvcGxhdGZv
-cm0veDg2L2hwL2hwLXdtaS5jDQo+IGE1OWU0NTIyMWRmOCBwbGF0Zm9ybS94ODY6IGhwLXdt
-aTogQWRkIHN1cHBvcnQgZm9yIFZpY3R1cyAxNi1yMHh4eCAoOEJDMikNCj4gYzJkNGI3NjQ1
-OGM5IHBsYXRmb3JtL3g4NjogaHAtd21pOiBzaWxlbmNlIHVua25vd24gYm9hcmQgd2Fybmlu
-ZyBmb3IgOEQ0MQ0KPiBkYTZiNWFhZTg0YmUgTWVyZ2UgdGFnICdwbGF0Zm9ybS1kcml2ZXJz
-LXg4Ni12Ny4xLTEnIG9mIA0KPiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvcGR4ODYvcGxhdGZvcm0tZHJpdmVycy14ODYNCj4gMzQ0YmY1MjNkNDQx
-IHBsYXRmb3JtL3g4NjogaHAtd21pOiBBZGQgc3VwcG9ydCBmb3IgT21lbiAxNi13ZjF4eHgg
-KDhDNzcpDQo+IDg5OTIyNTI1N2U3OCBwbGF0Zm9ybS94ODY6IGhwLXdtaTogQWRkIHN1cHBv
-cnQgZm9yIE9tZW4gMTYtbjB4eHggKDhBNDQpDQo+IDViYWRmNWViY2QxNCBwbGF0Zm9ybS94
-ODY6IGhwLXdtaTogQWRkIHN1cHBvcnQgZm9yIE9NRU4gTUFYIDE2LWFrMHh4eCANCj4gKDhE
-ODcpDQo+IDlkMzE3YTU0ZTQ2ZCBwbGF0Zm9ybS94ODY6IGhwLXdtaTogZml4IGZhbiB0YWJs
-ZSBwYXJzaW5nDQo+IDkyYzM2YjYzNGI0NSBwbGF0Zm9ybS94ODY6IGhwLXdtaTogYWRkIE9t
-ZW4gMTQtZmIweHh4IChib2FyZCA4QzU4KSANCj4gc3VwcG9ydA0KPiAyZmI5ZWMzODZmYTEg
-TWVyZ2UgYnJhbmNoICdhY3BpLWRyaXZlcicNCj4gZThjNTk3MzY4Yjg1IHBsYXRmb3JtL3g4
-NjogaHAtd21pOiBJZ25vcmUgYmFja2xpZ2h0IGFuZCBGbkxvY2sgZXZlbnRzDQo+IDU5Njlj
-NTVlMjE0NSBwbGF0Zm9ybS94ODY6IGhwLXdtaTogYWRkIGxvY2tpbmcgZm9yIGNvbmN1cnJl
-bnQgaHdtb24gDQo+IGFjY2Vzcw0KPiBjYjRkYWE0NTBmMDUgcGxhdGZvcm0veDg2OiBocC13
-bWk6IGZpeCB1OCB1bmRlcmZsb3cgaW4gZ3B1X2RlbHRhIA0KPiBjYWxjdWxhdGlvbg0KPiA2
-Mjk3NDQzYmViMGMgcGxhdGZvcm0veDg2OiBocC13bWk6IHVzZSBtb2RfZGVsYXllZF93b3Jr
-IHRvIHJlc2V0IA0KPiBrZWVwLWFsaXZlIHRpbWVyDQo+IDI0OWRkYmE5YzBiYSBwbGF0Zm9y
-bS94ODY6IGhwLXdtaTogYXZvaWQgY2FuY2VsX2RlbGF5ZWRfd29ya19zeW5jIGZyb20gDQo+
-IHdvcmsgaGFuZGxlcg0KPiA3MjY1YjU3ZmJjMzIgcGxhdGZvcm0veDg2OiBocC13bWk6IGZp
-eCBpZ25vcmVkIHJldHVybiB2YWx1ZXMgaW4gZmFuIA0KPiBzZXR0aW5ncw0KPiAyMzZhZDM1
-ODE2NmMgQUNQSTogQUM6IERlZmluZSBBQ1BJX0FDX0NMQVNTIGluIG9uZSBwbGFjZQ0KPg0K
-PiBIb3dldmVyLCBJIHBlcnNvbmFsbHkgZG9uJ3QgYmVsaWV2ZSBocC13bWkgaXMgdGhlIGlz
-c3VlLCBzaW5jZSBtb3N0IG9mDQo+IHRoZXNlIGNvbW1pdHMgYXJlIGhhcmR3YXJlIHN1cHBv
-cnQgYWRkaXRpb24gYW5kIGZpeGVzIGZvciBvbGQgYnVncy4NCj4gTW9yZW92ZXIsIHlvdXIg
-Ym9hcmQgKDhEQTgpIGlzbid0IG9mZmljaWFsbHkgc3VwcG9ydGVkIGluIGhwLXdtaSBpbg0K
-PiBlaXRoZXIgb2YgdGhlIHRyZWVzLCB3aGljaCBtZWFucyB0aGUgZmFuIGFuZCB0aGVybWFs
-IGNvbnRyb2wgZmFsbHMgYmFjaw0KPiB0byB0aGUgZGVmYXVsdCBmaXJtd2FyZSBiZWhhdmlv
-dXIsIHNvIGl0IHNob3VsZCBoYXZlIGJlZW4gY29uc2lzdGVudCwNCj4gdW5sZXNzIGFub3Ro
-ZXIgbW9kdWxlIGlzIHNvbWVob3cgaW50ZXJmZXJpbmcgd2l0aCBpdC4NCj4NCj4gVGhhdCBi
-ZWluZyBzYWlkLCBJIGRvbid0IHdhbnQgdG8gYmUgYmlhc2VkLCBsZXQncyBiaXNlY3QgYW5k
-IHNlZSB0aGUNCj4gcmVzdWx0cy4NCj4NCj4gVGhhbmtzDQoNCkhpIGFsbCwgdGhhbmsgeW91
-IGxvb2tpbmcgaW50byBpdC4gSSB0aGluayB5b3UgYXJlIHJpZ2h0LCBub3cgd2l0aCByYzcg
-DQppcyBmYW4gYmVoYXZpb3IgbW9yZSBjb25zaXN0ZW50LCBpdCBtYXkgYmUgY2F1c2VkIGJ5
-IEFNRCBwbGF0Zm9ybSANCnBhdGNoZXMgb3IgYW1kLXBzdGF0ZSBkcml2ZXIuIEkgZG9uJ3Qg
-a25vdyB3aGVyZSBmaXJtd2FyZSBjaGVja3MgDQp0ZW1wZXJhdHVyZSB0byB0cmlnZ2VyIGZh
-biBvbiBzbyBoYXJkIHRvIGNoZWNrIGlmIHRlbXAgaXMgb2suDQoNClRoaXMgbWVzc2FnZSBp
-biBkbWVzZyBhcHBlYXJzIGJlY2F1c2UgbXkgbGFwdG9wIGlzIG5vdCBzdXBwb3J0ZWQgYnkg
-dGhlIA0KaHAtd21pIGRyaXZlcj8NCg0KasO6biAxMiAyMDoyODozOCBtaWdvLUhQIGtlcm5l
-bDogcGxhdGZvcm1fcHJvZmlsZTogRmFpbGVkIHRvIGdldCBwcm9maWxlIA0KZm9yIGhhbmRs
-ZXIgaHAtd21pDQoNCkl0IGlzIGFsd2F5cyB0aGVyZSB3aGVuIHN3aXRjaGluZyBwb3dlciBw
-cm9maWxlcy4NCg0KVGhhbmsgeW91LA0KDQpNaWxhbg0KDQo+DQo+Pj4NCj4+PiBDaWFvLCBU
-aG9yc3Rlbg0KPj4+DQo+Pg0K
+> 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Assisted-by: Claude:claude-sonnet-4-5
+> > ---
+> > V7 changes:
+> >   - Made PMC_SSRAM_UNPROBED explicitly = 0 for clarity.
+> >   - Replace the explicit smp_wmb() / smp_rmb() pairing with
+> >     smp_store_release() / smp_load_acquire() when publishing and consuming
+> >     the per-index SSRAM state.
+> > 
+> > V6 changes:
+> >   - Squashed patch combining v5 patches 10 ("Use fixed-size static pmc
+> >     array") and 13 ("Refactor memory barrier for reentrant probe"). Both
+> >     patches addressed per-index probe state tracking and reentrant probe
+> >     protection, so they were combined for better logical cohesion.
+> >   - Added per-index probe state enum (UNPROBED, PROBING, PRESENT, ABSENT)
+> >     to replace devid overload where devid was used as both payload and
+> >     probe state indicator. This fixes stale data issues on reprobe,
+> >     distinguishes between -EAGAIN (probe in progress) and -ENODEV (probe
+> >     failed) error semantics, and prevents stale values from being visible
+> >     after failed reprobe (Ilpo/Sashiko/Claude).
+> >   - Added staging cache that publishes devid and base_addr only after probe
+> >     completes successfully to avoid races between probe/unbind and
+> >     concurrent readers.
+> >   - Added .remove callback to handle proper state cleanup on driver unbind.
+> >   - Used READ_ONCE/WRITE_ONCE for pmc_ssram_state[] accesses to prevent
+> >     compiler optimizations from causing issues across concurrent probe/
+> >     unbind cycles.
+> > 
+> > V5 - No changes (for both original patches)
+> > 
+> > V4 - No changes (for both original patches)
+> > 
+> > V3 - No changes (for both original patches)
+> > 
+> > V2 changes (from original patch 10 "Use fixed-size static pmc array"):
+> >   - Replaced hardcoded array size [3] with MAX_NUM_PMC constant
+> > 
+> > V2 changes (from original patch 13 "Refactor memory barrier"):
+> >   - Expanded commit message to explain synchronization rationale
+> >   - Remove unused probe_finish label associated with the old global flag
+> > 
+> >  .../platform/x86/intel/pmc/ssram_telemetry.c  | 202 ++++++++++++++----
+> >  1 file changed, 160 insertions(+), 42 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > index 211d842df449..110ea2dfa542 100644
+> > --- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > +++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
+> > @@ -5,6 +5,7 @@
+> >   * Copyright (c) 2023, Intel Corporation.
+> >   */
+> >  
+> > +#include <linux/bitmap.h>
+> >  #include <linux/bits.h>
+> >  #include <linux/cleanup.h>
+> >  #include <linux/device.h>
+> > @@ -24,6 +25,7 @@
+> >  #define SSRAM_IOE_OFFSET	0x68
+> >  #define SSRAM_DEVID_OFFSET	0x70
+> >  #define SSRAM_BASE_ADDR_MASK	GENMASK_ULL(63, 3)
+> > +#define SSRAM_PCI_PMC_MASK	(BIT(PMC_IDX_MAIN) | BIT(PMC_IDX_IOE) | BIT(PMC_IDX_PCH))
+> >  
+> >  DEFINE_FREE(pmc_ssram_telemetry_iounmap, void __iomem *, if (_T) iounmap(_T))
+> >  
+> > @@ -39,15 +41,33 @@ static const struct ssram_type pci_main = {
+> >  	.method = RES_METHOD_PCI,
+> >  };
+> >  
+> > -static struct pmc_ssram_telemetry *pmc_ssram_telems;
+> > -static bool device_probed;
+> > +enum pmc_ssram_state {
+> > +	PMC_SSRAM_UNPROBED = 0,
+> > +	PMC_SSRAM_PROBING,
+> > +	PMC_SSRAM_PRESENT,
+> > +	PMC_SSRAM_ABSENT,
+> > +};
+> > +
+> > +static enum pmc_ssram_state pmc_ssram_state[MAX_NUM_PMC];
+> > +static struct pmc_ssram_telemetry pmc_ssram_telems[MAX_NUM_PMC];
+> > +
+> > +struct pmc_ssram_probe_cache {
+> > +	struct pmc_ssram_telemetry telems[MAX_NUM_PMC];
+> > +	unsigned long owned_mask;
+> > +	unsigned long valid_mask;
+> 
+> I went through this change again and as far as I could understand it, it 
+> looks okay to me.
+> 
+> But, could you please suggest some descriptive comments to these (or 
+> kerneldoc for the entire struct). I think it would be helpful for 
+> understanding the state tracking algorithm to have the intent for 
+> each of these stated upfront (rather than code reader having to 
+> decipher it from the code like I had to do).
+> 
+> I can try to put the comment(s) in while applying (unless you want to 
+> send an updated version of the entire series yourself which would be fine 
+> as well and save me little bit of editing effort).
 
---------------ms080805000407080603060709
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+I'll send a v8. Thanks Ilpo.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
-AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
-bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
-MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
-MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
-OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
-xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
-UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
-clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
-WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
-jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
-QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
-tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
-yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
-HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
-AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
-Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
-Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
-AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
-BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
-bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
-qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
-4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
-L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
-oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
-8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
-jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
-olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
-gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
-xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
-3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
-SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMjYwNjEyMTgzMDU3WjBPBgkqhkiG9w0BCQQxQgRAaZF4Dvf6xtrFLfa5/lSN
-7FWd+TiO9wQeiJisnhM7SG9zaRWmomYUvdwgVcuSKT0hGynAX+Lp6Gso2WkBR48AAjBpBgkr
-BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
-MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
-SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
-ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
-CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
-YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
-SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
-CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
-BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAEDTbqOmVqfDDq2I3aWBCXzi
-d0b5cv7oNnl58IWQo70gAum2qBynS7gO6j7MnUIhHUB4Q6hZwILo+PzOW4exwTIpzRW9QMKB
-xh2+cyzqy+Op4WRvw3N/BaCKgwELtj1xDC7YftREZnaxu84iwmT8KCUduK4szlTU7Sj8+HW9
-JblkwTOPQuzy89YcnY0iWgrOTxRC0w5uQ77bgUW9NX4OY3KdedEoFJg0FJ7LNtfNC+8pPHrc
-pLNVOLCsKeYi5se1VJ9cQ0FotUnLgwDWaI+t7NTs1ZvF/Ei2oqAde9MggNM8mbppp5F/Mj/L
-CBx/SKm3/duiJzvTgxMaqoJhqm7JCy9lZEeSuZ7gk4Y24zpbNOwg/m9VdzTfVz6VLwQcf3Hi
-pIqjmZQUCx3eIRKXzVt6qBPIewhgSvR4rk3VmKfdPMBgw1XZyhAbTQQVyVPhhw4yaUb2Clvt
-sca0GbNBsucHutwC4YXgLw2YS9ZILCawzKQApr3cPmxrSUqge0M80hcmVs7gkTWnhphiNZeV
-gFMtC4u0sa+G+ETR6fPFzxjFI3/ulPggQh2WUYLTvKw1ySpPasT0uymjvkq5xD3UvCpNhxDU
-MJ7k0rJbSendU4VL9e04YHA9EUMrVpOs4/qrbIpgZRIO2fWFM6MLU/gDjiWLDm5McSQ4TxFK
-9L8WWryBJngjAAAAAAAA
---------------ms080805000407080603060709--
+David
+
+> 
+> -- 
+>  i.
+> 
+> > +};
+> > +
+> > +struct pmc_ssram_drvdata {
+> > +	unsigned long owned_mask;
+> > +};
+> >  
+> >  static inline u64 get_base(void __iomem *addr, u32 offset)
+> >  {
+> >  	return lo_hi_readq(addr + offset) & SSRAM_BASE_ADDR_MASK;
+> >  }
+> >  
+> > -static void pmc_ssram_get_devid_pwrmbase(void __iomem *ssram, unsigned int pmc_idx)
+> > +static void pmc_ssram_get_devid_pwrmbase(struct pmc_ssram_probe_cache *probe_cache,
+> > +					 void __iomem *ssram, unsigned int pmc_idx)
+> >  {
+> >  	u64 pwrm_base;
+> >  	u16 devid;
+> > @@ -55,8 +75,45 @@ static void pmc_ssram_get_devid_pwrmbase(void __iomem *ssram, unsigned int pmc_i
+> >  	pwrm_base = get_base(ssram, SSRAM_PWRM_OFFSET);
+> >  	devid = readw(ssram + SSRAM_DEVID_OFFSET);
+> >  
+> > -	pmc_ssram_telems[pmc_idx].devid = devid;
+> > -	pmc_ssram_telems[pmc_idx].base_addr = pwrm_base;
+> > +	probe_cache->telems[pmc_idx].base_addr = pwrm_base;
+> > +	probe_cache->telems[pmc_idx].devid = devid;
+> > +}
+> > +
+> > +static void pmc_ssram_publish_absent(unsigned int pmc_idx)
+> > +{
+> > +	/*
+> > +	 * Publish only the state without modifying base_addr and devid. This
+> > +	 * lets a reader that already observed PRESENT finish copying the
+> > +	 * previous values even if unbind concurrently publishes ABSENT. Readers
+> > +	 * that observe ABSENT return -ENODEV without accessing data.
+> > +	 */
+> > +	smp_store_release(&pmc_ssram_state[pmc_idx], PMC_SSRAM_ABSENT);
+> > +}
+> > +
+> > +static void pmc_ssram_publish_present(struct pmc_ssram_probe_cache *probe_cache,
+> > +				      unsigned int pmc_idx)
+> > +{
+> > +	/*
+> > +	 * The devid and base_addr fields are read from hardware MMIO registers
+> > +	 * whose values are stable for a given PMC index. A reader that observed
+> > +	 * PRESENT from an earlier probe can safely copy them while a concurrent
+> > +	 * rebind republishes those fields because both probes read the same
+> > +	 * hardware values.
+> > +	 */
+> > +	pmc_ssram_telems[pmc_idx] = probe_cache->telems[pmc_idx];
+> > +	/*
+> > +	 * Publish base_addr and devid before publishing PRESENT. Pairs with the
+> > +	 * acquire load in the reader that consumes them after observing PRESENT.
+> > +	 */
+> > +	smp_store_release(&pmc_ssram_state[pmc_idx], PMC_SSRAM_PRESENT);
+> > +}
+> > +
+> > +static void pmc_ssram_mark_probing(unsigned long mask)
+> > +{
+> > +	unsigned long bit;
+> > +
+> > +	for_each_set_bit(bit, &mask, MAX_NUM_PMC)
+> > +		WRITE_ONCE(pmc_ssram_state[bit], PMC_SSRAM_PROBING);
+> >  }
+> >  
+> >  static int
+> > @@ -96,11 +153,14 @@ pmc_ssram_telemetry_add_pmt(struct pci_dev *pcidev, u64 ssram_base, void __iomem
+> >  }
+> >  
+> >  static int
+> > -pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u32 offset)
+> > +pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev,
+> > +				struct pmc_ssram_probe_cache *probe_cache,
+> > +				unsigned int pmc_idx, u32 offset)
+> >  {
+> >  	void __iomem __free(pmc_ssram_telemetry_iounmap) *tmp_ssram = NULL;
+> >  	void __iomem __free(pmc_ssram_telemetry_iounmap) *ssram = NULL;
+> >  	u64 ssram_base;
+> > +	int ret;
+> >  
+> >  	ssram_base = pci_resource_start(pcidev, 0);
+> >  	tmp_ssram = ioremap(ssram_base, SSRAM_HDR_SIZE);
+> > @@ -125,22 +185,38 @@ pmc_ssram_telemetry_get_pmc_pci(struct pci_dev *pcidev, unsigned int pmc_idx, u3
+> >  		ssram = no_free_ptr(tmp_ssram);
+> >  	}
+> >  
+> > -	pmc_ssram_get_devid_pwrmbase(ssram, pmc_idx);
+> > +	pmc_ssram_get_devid_pwrmbase(probe_cache, ssram, pmc_idx);
+> >  
+> >  	/* Find and register and PMC telemetry entries */
+> > -	return pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
+> > +	ret = pmc_ssram_telemetry_add_pmt(pcidev, ssram_base, ssram);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	probe_cache->valid_mask |= BIT(pmc_idx);
+> > +
+> > +	return 0;
+> >  }
+> >  
+> > -static int pmc_ssram_telemetry_pci_init(struct pci_dev *pcidev)
+> > +static int pmc_ssram_telemetry_pci_init(struct pci_dev *pcidev,
+> > +					struct pmc_ssram_probe_cache *probe_cache)
+> >  {
+> >  	int ret;
+> >  
+> > -	ret = pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_MAIN, 0);
+> > +	ret = pmc_ssram_telemetry_get_pmc_pci(pcidev, probe_cache, PMC_IDX_MAIN, 0);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_IOE, SSRAM_IOE_OFFSET);
+> > -	pmc_ssram_telemetry_get_pmc_pci(pcidev, PMC_IDX_PCH, SSRAM_PCH_OFFSET);
+> > +	/*
+> > +	 * If MAIN PMC enumeration is successful but either IOE or PCH fail,
+> > +	 * don't fail probe as the MAIN PMC is still useful as it provides the
+> > +	 * global reset and slp_s0 counter access. Failed or missing secondary
+> > +	 * PMCs are left out of valid_mask and published as absent.
+> > +	 */
+> > +	pmc_ssram_telemetry_get_pmc_pci(pcidev, probe_cache, PMC_IDX_IOE,
+> > +					SSRAM_IOE_OFFSET);
+> > +
+> > +	pmc_ssram_telemetry_get_pmc_pci(pcidev, probe_cache, PMC_IDX_PCH,
+> > +					SSRAM_PCH_OFFSET);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -154,58 +230,90 @@ static int pmc_ssram_telemetry_pci_init(struct pci_dev *pcidev)
+> >   * * 0           - Success
+> >   * * -EAGAIN     - Probe function has not finished yet. Try again.
+> >   * * -EINVAL     - Invalid pmc_idx
+> > - * * -ENODEV     - PMC device is not available
+> > + * * -ENODEV     - PMC device is not available (hardware absent or driver failed to initialize)
+> >   */
+> >  int pmc_ssram_telemetry_get_pmc_info(unsigned int pmc_idx,
+> >  				     struct pmc_ssram_telemetry *pmc_ssram_telemetry)
+> >  {
+> > +	enum pmc_ssram_state state;
+> > +
+> > +	if (pmc_idx >= MAX_NUM_PMC)
+> > +		return -EINVAL;
+> > +
+> >  	/*
+> >  	 * PMCs are discovered in probe function. If this function is called before
+> > -	 * probe function complete, the result would be invalid. Use device_probed
+> > -	 * variable to avoid this case. Return -EAGAIN to inform the consumer to call
+> > -	 * again later.
+> > +	 * probe function complete, the result would be invalid. Use per-PMC state
+> > +	 * to inform the consumer to call again later.
+> >  	 */
+> > -	if (!device_probed)
+> > +	state = smp_load_acquire(&pmc_ssram_state[pmc_idx]);
+> > +	if (state == PMC_SSRAM_UNPROBED || state == PMC_SSRAM_PROBING)
+> >  		return -EAGAIN;
+> >  
+> > -	/*
+> > -	 * Memory barrier is used to ensure the correct read order between
+> > -	 * device_probed variable and PMC info.
+> > -	 */
+> > -	smp_rmb();
+> > -	if (pmc_idx >= MAX_NUM_PMC)
+> > -		return -EINVAL;
+> > -
+> > -	if (!pmc_ssram_telems || !pmc_ssram_telems[pmc_idx].devid)
+> > +	if (state == PMC_SSRAM_ABSENT)
+> >  		return -ENODEV;
+> >  
+> > +	/*
+> > +	 * Acquire semantics order reads of devid and base_addr after observing
+> > +	 * PRESENT and pair with the writer's release-store.
+> > +	 */
+> >  	pmc_ssram_telemetry->devid = pmc_ssram_telems[pmc_idx].devid;
+> >  	pmc_ssram_telemetry->base_addr = pmc_ssram_telems[pmc_idx].base_addr;
+> >  	return 0;
+> >  }
+> >  EXPORT_SYMBOL_GPL(pmc_ssram_telemetry_get_pmc_info);
+> >  
+> > +static void pmc_ssram_publish_absent_mask(unsigned long mask)
+> > +{
+> > +	unsigned long bit;
+> > +
+> > +	for_each_set_bit(bit, &mask, MAX_NUM_PMC)
+> > +		pmc_ssram_publish_absent(bit);
+> > +}
+> > +
+> > +static void pmc_ssram_publish_telems(struct pmc_ssram_probe_cache *probe_cache, int ret)
+> > +{
+> > +	unsigned long bit;
+> > +
+> > +	if (ret) {
+> > +		pmc_ssram_publish_absent_mask(probe_cache->owned_mask);
+> > +		return;
+> > +	}
+> > +
+> > +	for_each_set_bit(bit, &probe_cache->owned_mask, MAX_NUM_PMC) {
+> > +		if (probe_cache->valid_mask & BIT(bit))
+> > +			pmc_ssram_publish_present(probe_cache, bit);
+> > +		else
+> > +			pmc_ssram_publish_absent(bit);
+> > +	}
+> > +}
+> > +
+> >  static int pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
+> >  {
+> > +	struct pmc_ssram_probe_cache probe_cache = {};
+> > +	struct pmc_ssram_drvdata *drvdata;
+> >  	const struct ssram_type *ssram_type;
+> >  	enum resource_method method;
+> >  	int ret;
+> >  
+> > -	pmc_ssram_telems = devm_kzalloc(&pcidev->dev, sizeof(*pmc_ssram_telems) * MAX_NUM_PMC,
+> > -					GFP_KERNEL);
+> > -	if (!pmc_ssram_telems) {
+> > -		ret = -ENOMEM;
+> > -		goto probe_finish;
+> > -	}
+> > -
+> >  	ssram_type = (const struct ssram_type *)id->driver_data;
+> >  	if (!ssram_type) {
+> >  		dev_dbg(&pcidev->dev, "missing driver data\n");
+> > -		ret = -EINVAL;
+> > -		goto probe_finish;
+> > +		return -EINVAL;
+> >  	}
+> >  
+> >  	method = ssram_type->method;
+> > +	if (method == RES_METHOD_PCI)
+> > +		probe_cache.owned_mask = SSRAM_PCI_PMC_MASK;
+> > +	else
+> > +		return -EINVAL;
+> > +
+> > +	pmc_ssram_mark_probing(probe_cache.owned_mask);
+> > +
+> > +	drvdata = devm_kzalloc(&pcidev->dev, sizeof(*drvdata), GFP_KERNEL);
+> > +	if (!drvdata) {
+> > +		ret = -ENOMEM;
+> > +		goto probe_finish;
+> > +	}
+> >  
+> >  	ret = pcim_enable_device(pcidev);
+> >  	if (ret) {
+> > @@ -214,20 +322,29 @@ static int pmc_ssram_telemetry_probe(struct pci_dev *pcidev, const struct pci_de
+> >  	}
+> >  
+> >  	if (method == RES_METHOD_PCI)
+> > -		ret = pmc_ssram_telemetry_pci_init(pcidev);
+> > +		ret = pmc_ssram_telemetry_pci_init(pcidev, &probe_cache);
+> >  	else
+> >  		ret = -EINVAL;
+> >  
+> > +	if (!ret) {
+> > +		drvdata->owned_mask = probe_cache.owned_mask;
+> > +		pci_set_drvdata(pcidev, drvdata);
+> > +	}
+> > +
+> >  probe_finish:
+> > -	/*
+> > -	 * Memory barrier is used to ensure the correct write order between PMC info
+> > -	 * and device_probed variable.
+> > -	 */
+> > -	smp_wmb();
+> > -	device_probed = true;
+> > +	pmc_ssram_publish_telems(&probe_cache, ret);
+> > +
+> >  	return ret;
+> >  }
+> >  
+> > +static void pmc_ssram_telemetry_remove(struct pci_dev *pcidev)
+> > +{
+> > +	struct pmc_ssram_drvdata *drvdata = pci_get_drvdata(pcidev);
+> > +
+> > +	if (drvdata)
+> > +		pmc_ssram_publish_absent_mask(drvdata->owned_mask);
+> > +}
+> > +
+> >  static const struct pci_device_id pmc_ssram_telemetry_pci_ids[] = {
+> >  	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_MTL_SOCM),
+> >  		.driver_data = (kernel_ulong_t)&pci_main },
+> > @@ -251,6 +368,7 @@ static struct pci_driver pmc_ssram_telemetry_driver = {
+> >  	.name = "intel_pmc_ssram_telemetry",
+> >  	.id_table = pmc_ssram_telemetry_pci_ids,
+> >  	.probe = pmc_ssram_telemetry_probe,
+> > +	.remove = pmc_ssram_telemetry_remove,
+> >  };
+> >  module_pci_driver(pmc_ssram_telemetry_driver);
+> >  
+> > 
+> 
