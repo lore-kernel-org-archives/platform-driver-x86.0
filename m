@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C78D379EE7;
-	Fri, 12 Jun 2026 21:02:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044F537CD41;
+	Fri, 12 Jun 2026 21:02:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781298138; cv=none; b=ENyJuiJ9IL9GxucOrzq4sdbcn1TxyGU932Or4uWb8c53l7fUWsvgUKQfB3iyYzXgfGkTWY63h4piV/RegIyvZyZ4w6hD6x8U+OlbEN+AMJ8xuAW1DXzH8m8jOPXXNjgrRkjiQvxFxN25V2Ipi1urxokBYLbURIeJblkHQxuNqsM=
+	t=1781298138; cv=none; b=mN1RKq8synNXev7c547LfrluruBjtZx28y+YW+mGG8Gxnef2QFZmP1fUU5pRW6ynoq9ilYmO7j51MO8WxD1ugwTduykL3h8q0CCtQd8Eanorh5qz6aDGAlIi/T84fmqRVopqiBvekR2xXK4TT5O1vvk1hL9R6Prt8Yu61+fXZr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781298138; c=relaxed/simple;
-	bh=XNI0SkJJ6eCjT5GX7mYLQUj26/t30384rS51ZW4SKVw=;
+	bh=gCGq2m2rNffR04xAjs4JT6Z+nzMKn81SMaR9yM/ABMw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TUlk054bzNVjzoc/RKogE609Q7IWprIimOrzOkINede7SYN/oKNC+C7LysNoFadfDFFiyM8KclF5D3mRLdkvHW2ksTWwYMjKPCP2HNvSe1WWgNUsMw6GPhFjNHZ0PiNRCVv1rT5d/VE/QMlr5vLxOYXjVVGexQ3DO6ryHmDnPk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EvHvSFId; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=JxZeUphwqeWVzOSEjrjAoDvHzJkqIGQvNNhG2+eBnIr95HbpehGNahtqKEz3sZ0OLUpOYYqlCZ1ZNGDXCJ1W2BbiXB10lHVXbDLL0JN7ECuybP/Sfu3zeYRwgbkFsm4Zl4lUdFad9EUuQ8Q3CuluZSEmW51c1c1tn+6Ly6FD7ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HP3X0kCz; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EvHvSFId"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HP3X0kCz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781298137; x=1812834137;
+  t=1781298138; x=1812834138;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=XNI0SkJJ6eCjT5GX7mYLQUj26/t30384rS51ZW4SKVw=;
-  b=EvHvSFIdSD1pGa2dQ6xa/3QjtfcHWJ/de3VDAiySKfa/SgClnycTcOUR
-   iCl/DkWFPgi1Wy76QjH1MTS1bB7TwwuBTqkL3qub4E3CHfBEwbukp6PZH
-   QILzS0yiaXpnvIATlA1Ycegt2b7aHD0ygRoKVC8OaHibdI5BYRQq1uR2Q
-   iM9H5hTofUbs7WLq/OpVtBnajoXtvA2Yuq1a4/nSvuVIxw+HMVcrRwocX
-   svdaojntmCdXT5sJyicO0Pwgkfn17SzvIKeXm9mSpesfOhPMPleGb6ylC
-   mD3SUfQtPuH68Jqr2gPFY9CFDnF/Sdm48c1bNlLnc17/FfuGOZrPiQQft
-   A==;
-X-CSE-ConnectionGUID: T4ktNcOySUC6IuWkAJfy8g==
-X-CSE-MsgGUID: pb1PYcLVTHmuWDegk6hnaw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="86037986"
+  bh=gCGq2m2rNffR04xAjs4JT6Z+nzMKn81SMaR9yM/ABMw=;
+  b=HP3X0kCzlNAB4w329oIKhg+5HP2xn7r5SqJwbFJTR+XeknbSrjos+KoE
+   K76RKig/nVYaomAa9YgNlco/zfbRV6oaAEHVpejewUMwucpMqS0gjXI5v
+   Aaf23gQBghReDyQ6EFquy2QUBm3cEgN9rs+/UGRjV9g4q5ps2moKyggrO
+   tBhUkeX/xajudm/W8slNq5Xxf4xuX74YeS7tEVayEUu2qBi/JirqkT+zv
+   f4yL7SgQouqezJVtyWsCmRxhfuSvciCn1u29yoo9vVO8qEB68yglAWDpc
+   Gm1Cf60L9M/FU1vrIX/C4HaukqY9zRRu7Mylg0y7Vp07aq6JoiYRUM+gO
+   Q==;
+X-CSE-ConnectionGUID: x4QEklBzTFOOukZ+e1It+w==
+X-CSE-MsgGUID: QE7hVB8ISFaHfDwe3Dp8jg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="86037989"
 X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="86037986"
+   d="scan'208";a="86037989"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:02:12 -0700
-X-CSE-ConnectionGUID: eIk0xP8xTDi43W1a8efm+Q==
-X-CSE-MsgGUID: lS7pQ9qnSZ2IZTb98Jzs5w==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:02:13 -0700
+X-CSE-ConnectionGUID: +HHSI1F8TpSWoQUnyR1Mwg==
+X-CSE-MsgGUID: +AKaD6HeRHKR3pmuVUMCrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="250832864"
+   d="scan'208";a="250832865"
 Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
   by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:02:11 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -52,9 +52,9 @@ Cc: "David E. Box" <david.e.box@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	srinivas.pandruvada@linux.intel.com,
 	xi.pardee@linux.intel.com
-Subject: [PATCH v8 06/15] platform/x86/intel/pmt: Unify header fetch and add ACPI source
-Date: Fri, 12 Jun 2026 14:01:47 -0700
-Message-ID: <4b33b04ffaf0943b67d330f48b5d1dfcb6d1be5d.1781294741.git.david.e.box@linux.intel.com>
+Subject: [PATCH v8 07/15] platform/x86/intel/pmc: Add PMC SSRAM Kconfig description
+Date: Fri, 12 Jun 2026 14:01:48 -0700
+Message-ID: <bd7ba2f98450751af1de054dac0469acc1138513.1781294741.git.david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1781294741.git.david.e.box@linux.intel.com>
 References: <cover.1781294741.git.david.e.box@linux.intel.com>
@@ -64,291 +64,51 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Allow the PMT class to read discovery headers from either PCI MMIO or
-ACPI-provided entries, depending on the discovery source. The new
-source-aware fetch helper caches the canonical discovery header for both
-paths, capping PCI MMIO reads to the mapped resource size, while keeping
-the mapped PCI discovery table available for users such as crashlog.
+Add a proper description for the intel_pmc_ssram driver.
 
-Split intel_pmt_populate_entry() into source-specific resolvers:
-  - pmt_resolve_access_pci(): handles both ACCESS_LOCAL and ACCESS_BARID
-    for PCI-backed devices and sets entry->pcidev. Same existing
-    functionality.
-  - pmt_resolve_access_acpi(): handles only ACCESS_BARID for ACPI-backed
-    devices, rejecting ACCESS_LOCAL which has no valid semantics without
-    a physical discovery resource.
-
-This maintains existing PCI behavior and makes no functional changes
-for PCI devices.
-
-Assisted-by: GitHub-Copilot:claude-opus-4.7
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 ---
 V8 - No changes
 
-V7 changes:
-  - Updated header copy size handling to use min() for size_t operands and
-    aligned local style per review feedback (Ilpo).
+V7 - No changes
 
-V6 changes:
-  - Removed unneeded headers parameter from pmt_get_headers() (Ilpo).
-  - Added memset() to zero-initialize disc_header before copying to avoid
-    uninitialized data in entry reuse scenarios (Ilpo/Sashiko).
+V6 - No changes
 
-V5 changes:
-  - Bounded memcpy_fromio() to resource_size() of the mapped DVSEC entry
-    to avoid over-reading namespaces with smaller entry_size.
-  - Documented that entry->disc_table =3D NULL in the ACPI branch is
-    intentional and that consumers must only be wired to
-    INTEL_VSEC_DISC_PCI namespaces if they dereference disc_table.
+V5 - No changes
 
-V4 - Replaced local raw ACPI discovery pointer type u32 (*)[4] with
-     acpi_disc_t for consistency with exported PMC helper types.
+V4 - No changes
 
 V3 - No changes
 
-V2 changes:
-  - Replaced intermediate header-decode helper with inline ACPI path
-  - Removed separate disc_acpi resource
-  - Moved ACPI fetch directly into intel_pmt_dev_create
+V2 - No changes
 
- drivers/platform/x86/intel/pmt/class.c | 151 +++++++++++++++++++++----
- drivers/platform/x86/intel/pmt/class.h |   2 +-
- include/linux/intel_vsec.h             |   5 +-
- 3 files changed, 136 insertions(+), 22 deletions(-)
+ drivers/platform/x86/intel/pmc/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/=
-intel/pmt/class.c
-index 8d27f59d5bff..d0ab8e33c62a 100644
---- a/drivers/platform/x86/intel/pmt/class.c
-+++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -205,9 +205,9 @@ struct class intel_pmt_class =3D {
- };
- EXPORT_SYMBOL_GPL(intel_pmt_class);
+diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/=
+intel/pmc/Kconfig
+index c6ef0bcf76af..e9012b703918 100644
+--- a/drivers/platform/x86/intel/pmc/Kconfig
++++ b/drivers/platform/x86/intel/pmc/Kconfig
+@@ -28,3 +28,14 @@ config INTEL_PMC_CORE
 =20
--static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
--				    struct intel_vsec_device *ivdev,
--				    int idx)
-+static int pmt_resolve_access_pci(struct intel_pmt_entry *entry,
-+				  struct intel_vsec_device *ivdev,
-+				  int idx)
- {
- 	struct pci_dev *pci_dev =3D to_pci_dev(ivdev->dev);
- 	struct device *dev =3D &ivdev->auxdev.dev;
-@@ -287,6 +287,81 @@ static int intel_pmt_populate_entry(struct intel_pmt_e=
-ntry *entry,
- 	}
-=20
- 	entry->pcidev =3D pci_dev;
+ config INTEL_PMC_SSRAM_TELEMETRY
+ 	tristate
++	help
++	  This driver discovers PMC SSRAM telemetry regions through the PMC's
++	  MMIO interface (PCI) or ACPI _DSD properties and registers them with
++	  the Intel VSEC framework as Intel PMT telemetry devices.
 +
-+	return 0;
-+}
++	  It probes the PMC SSRAM device, extracts DVSEC information from MMIO,
++	  reads device IDs and base addresses for multiple PMCs (main, IOE, PCH),
++	  and exposes the discovered telemetry through Intel PMT interfaces
++	  (including sysfs).
 +
-+static int pmt_resolve_access_acpi(struct intel_pmt_entry *entry,
-+				   struct intel_vsec_device *ivdev)
-+{
-+	struct pci_dev *pci_dev =3D NULL;
-+	struct device *dev =3D &ivdev->auxdev.dev;
-+	struct intel_pmt_header *header =3D &entry->header;
-+	u8 bir;
-+
-+	if (dev_is_pci(ivdev->dev))
-+		pci_dev =3D to_pci_dev(ivdev->dev);
-+
-+	/*
-+	 * The base offset should always be 8 byte aligned.
-+	 *
-+	 * For non-local access types the lower 3 bits of base offset
-+	 * contains the index of the base address register where the
-+	 * telemetry can be found.
-+	 */
-+	bir =3D GET_BIR(header->base_offset);
-+
-+	switch (header->access_type) {
-+	case ACCESS_BARID:
-+		/* ACPI platform drivers use base_addr */
-+		if (ivdev->base_addr) {
-+			entry->base_addr =3D ivdev->base_addr +
-+					   GET_ADDRESS(header->base_offset);
-+			break;
-+		}
-+
-+		/* If base_addr is not provided, then this is an ACPI companion device */
-+		if (!pci_dev) {
-+			dev_err(dev, "ACCESS_BARID requires PCI BAR resources or base_addr\n");
-+			return -EINVAL;
-+		}
-+
-+		entry->base_addr =3D pci_resource_start(pci_dev, bir) +
-+				   GET_ADDRESS(header->base_offset);
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported access type %d for ACPI based PMT\n",
-+			header->access_type);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
-+				    struct intel_vsec_device *ivdev,
-+				    int idx)
-+{
-+	struct intel_pmt_header *header =3D &entry->header;
-+	struct device *dev =3D &ivdev->auxdev.dev;
-+	int ret;
-+
-+	switch (ivdev->src) {
-+	case INTEL_VSEC_DISC_PCI:
-+		ret =3D pmt_resolve_access_pci(entry, ivdev, idx);
-+		if (ret)
-+			return ret;
-+		break;
-+	case INTEL_VSEC_DISC_ACPI:
-+		ret =3D pmt_resolve_access_acpi(entry, ivdev);
-+		if (ret)
-+			return ret;
-+		break;
-+	default:
-+		dev_err(dev, "Unknown discovery source: %d\n", ivdev->src);
-+		return -EINVAL;
-+	}
-+
- 	entry->guid =3D header->guid;
- 	entry->size =3D header->size;
- 	entry->cb =3D ivdev->priv_data;
-@@ -371,28 +446,66 @@ static int intel_pmt_dev_register(struct intel_pmt_en=
-try *entry,
- 	return ret;
- }
-=20
-+static int pmt_get_headers(struct intel_vsec_device *ivdev, int idx,
-+			   struct intel_pmt_entry *entry)
-+{
-+	struct device *dev =3D &ivdev->auxdev.dev;
-+	size_t header_bytes =3D sizeof(entry->disc_header);
-+
-+	switch (ivdev->src) {
-+	case INTEL_VSEC_DISC_PCI: {
-+		struct resource *disc_res =3D &ivdev->resource[idx];
-+		void __iomem *disc_table;
-+
-+		disc_table =3D devm_ioremap_resource(dev, disc_res);
-+		if (IS_ERR(disc_table))
-+			return PTR_ERR(disc_table);
-+
-+		/*
-+		 * The mapped resource is sized by the namespace's DVSEC
-+		 * entry_size (in dwords), which can be less than the default
-+		 * size (e.g. telemetry uses entry_size =3D 3, 12 bytes). Cap the
-+		 * copy to resource_size() to avoid reading past the mapped
-+		 * region.
-+		 */
-+		memset(entry->disc_header, 0, header_bytes);
-+		memcpy_fromio(entry->disc_header, disc_table,
-+			      min(header_bytes, resource_size(disc_res)));
-+
-+		/* Used by crashlog driver */
-+		entry->disc_table =3D disc_table;
-+
-+		return 0;
-+	}
-+	case INTEL_VSEC_DISC_ACPI: {
-+		memcpy(entry->disc_header, &ivdev->acpi_disc[idx][0], header_bytes);
-+		/*
-+		 * No MMIO mapping exists on the ACPI source path; the cached
-+		 * headers are the only view of the discovery record. Consumers
-+		 * that dereference disc_table (e.g. crashlog) must therefore
-+		 * only be wired to namespaces backed by INTEL_VSEC_DISC_PCI.
-+		 */
-+		entry->disc_table =3D NULL;
-+
-+		return 0;
-+	}
-+	default:
-+		dev_err(dev, "Unknown discovery source type: %d\n", ivdev->src);
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- int intel_pmt_dev_create(struct intel_pmt_entry *entry, struct intel_pmt_n=
-amespace *ns,
- 			 struct intel_vsec_device *intel_vsec_dev, int idx)
- {
- 	struct device *dev =3D &intel_vsec_dev->auxdev.dev;
--	struct resource	*disc_res;
- 	int ret;
-=20
--	disc_res =3D &intel_vsec_dev->resource[idx];
--
--	entry->disc_table =3D devm_ioremap_resource(dev, disc_res);
--	if (IS_ERR(entry->disc_table))
--		return PTR_ERR(entry->disc_table);
--
--	/*
--	 * The mapped discovery resource may be smaller than disc_header (its
--	 * size is the namespace's DVSEC entry_size in dwords, which can be
--	 * less than 4). Cap the copy to the actual resource size to avoid
--	 * reading past the mapped region; any unread dwords stay zero from
--	 * the zero-initialized allocation of the containing struct.
--	 */
--	memcpy_fromio(entry->disc_header, entry->disc_table,
--		      min(sizeof(entry->disc_header), resource_size(disc_res)));
-+	ret =3D pmt_get_headers(intel_vsec_dev, idx, entry);
-+	if (ret)
-+		return ret;
-=20
- 	if (ns->pmt_pre_decode) {
- 		ret =3D ns->pmt_pre_decode(intel_vsec_dev, entry);
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/=
-intel/pmt/class.h
-index 84202fc7920c..a0ece4fc3837 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -44,7 +44,7 @@ struct intel_pmt_entry {
- 	struct telem_endpoint	*ep;
- 	struct pci_dev		*pcidev;
- 	struct intel_pmt_header	header;
--	u32			disc_header[4];
-+	u32			disc_header[PMT_DISC_DWORDS];
- 	struct bin_attribute	pmt_bin_attr;
- 	const struct attribute_group *attr_grp;
- 	struct kobject		*kobj;
-diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-index 07ea563f524e..843cda8f8644 100644
---- a/include/linux/intel_vsec.h
-+++ b/include/linux/intel_vsec.h
-@@ -28,6 +28,7 @@
- #define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
- #define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
- #define TABLE_OFFSET_SHIFT		3
-+#define PMT_DISC_DWORDS		4
-=20
- struct device;
- struct pci_dev;
-@@ -122,7 +123,7 @@ struct intel_vsec_platform_info {
- 	struct device *parent;
- 	struct intel_vsec_header **headers;
- 	const struct vsec_feature_dependency *deps;
--	u32 (*acpi_disc)[4];
-+	u32 (*acpi_disc)[PMT_DISC_DWORDS];
- 	enum intel_vsec_disc_source src;
- 	void *priv_data;
- 	unsigned long caps;
-@@ -153,7 +154,7 @@ struct intel_vsec_platform_info {
- struct intel_vsec_device {
- 	struct auxiliary_device auxdev;
- 	struct device *dev;
--	u32 (*acpi_disc)[4];
-+	u32 (*acpi_disc)[PMT_DISC_DWORDS];
- 	enum intel_vsec_disc_source src;
- 	struct ida *ida;
- 	int num_resources;
++	  This option is selected by INTEL_PMC_CORE.
 --=20
 2.43.0
 
