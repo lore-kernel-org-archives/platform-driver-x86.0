@@ -1,130 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDCF3D5C3C;
-	Fri, 12 Jun 2026 21:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3CD38D3F6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 21:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781298143; cv=none; b=b2vwKj7MDhEPkfvKWG7kq0qmbWIBYHXxsIyAVHKRtLg1aGbpaiz/IpjzArLGmVogtTONhV4/z+obcQTPJ6uu+ey3Enkx0HzxAhhede8vSaa/ZUsKbsL22De4v6koS3ijsD8gbZGfBAsWVXysCAuLHnDczN88eCKTPThIROqltfI=
+	t=1781299646; cv=none; b=PpmEyII0hHqX2iHR8knGkhttQ3H1OaYX8YCtTy8so21TvVw5pEJfQPvUzcfeiidQwoNh5lk45je9C4/BkOTyN3IrplvB8BxV4LhJ3UNB3z4b6VtqEzhGY6DkxOaRSs5bN2ScpALl3ekguZ7jtkoajLFZ+SZRwRWHPpiV5ugq4EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781298143; c=relaxed/simple;
-	bh=G1wrUpghchBD3EDcxxUZFLMd8LelWaadof/b4g6/DlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rzqko2paibeL6WmOGp2E17/lXqWOuaE5MUN7SeSeoxT/f/DzamSIIylWtyAzcAJLjs98YHdn9Cl65MDUFOfbv6XTto5d6i8cOrkgVXKpaoDv6O72PVjrqNpPTn546HY7zAuYmC7bgM4MGX2nU0zKTs4s3kTq5zj55pT7ka5JcR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AxsFjHH4; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781299646; c=relaxed/simple;
+	bh=sZNI585OrlXEVEW9Ghm4jZ/69+/p1OmlgD6PbnJg0xY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X2ma3qBPoSm3EHU9kuMNlzaAxbTfITyz0kKT9AmNea9VwkhNDSU6Zu+/SwsJXigrs2PAyWhDTWJ9/hiwVuo2cbXFRzcMsi8gRKhXGfYJgf6yl5wbFM6Yy+Kt0tJdsM8+UuE2Vf3wPeFGLt2a5koxc3W7ymFdTKNvY2cVjf+yFwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nN1OtOMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AxsFjHH4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781298142; x=1812834142;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=G1wrUpghchBD3EDcxxUZFLMd8LelWaadof/b4g6/DlQ=;
-  b=AxsFjHH4OWDf88MuOXzG5sAYJWu9KzpxC7Sk+HrJZ0Yus7Csgdb0Wd8Y
-   o67K980MTuOAlj1mvakfetfKqbLTnbGt5XatIchSIiVASZ+yKtn/KY+QR
-   dIt8GehgxggGSnpMA5l1+A83h9kpBYWI+BWQH8fEsq1XIbTDdhR4HVkeo
-   s8wqpEZkjxmELlQ4bz4A3FKvlJybC06L6BM++KSabrUVIC3FDr0oyr0v2
-   SHfCnEwYY6k0r+ri0RvjF8iZe+8kEsmVv6pZlcCmC1iLFhDsQcgoiInek
-   wbDVDX5McRiZXhE4ilcF+QHq1kzmLt25R8T+dA1OeoMhGMkoiiVqsQRAH
-   A==;
-X-CSE-ConnectionGUID: kuwVahGqTLq0v7RhV0qUeg==
-X-CSE-MsgGUID: bLVTqCJaTOaeMl0gvlnoJA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="86038015"
-X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="86038015"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:02:13 -0700
-X-CSE-ConnectionGUID: W6t+v9mQTFO2fq7rb6UfJQ==
-X-CSE-MsgGUID: tCKceSaVR4q6ZYIBLv6F3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,201,1774335600"; 
-   d="scan'208";a="250832874"
-Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 14:02:12 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	irenic.rajneesh@gmail.com
-Cc: "David E. Box" <david.e.box@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	srinivas.pandruvada@linux.intel.com,
-	xi.pardee@linux.intel.com
-Subject: [PATCH v8 15/15] platform/x86/intel/pmc: Add NVL PCI IDs for SSRAM telemetry discovery
-Date: Fri, 12 Jun 2026 14:01:56 -0700
-Message-ID: <fc0e8bb00e2765fb7d145fef2ed1b0236b935c08.1781294741.git.david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1781294741.git.david.e.box@linux.intel.com>
-References: <cover.1781294741.git.david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nN1OtOMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6760BC2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 21:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1781299646;
+	bh=sZNI585OrlXEVEW9Ghm4jZ/69+/p1OmlgD6PbnJg0xY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=nN1OtOMJxouiQUh3l9KNbHxwJQrUFja0UbrSkefY8AfcI+sTaEJ8o9XiT89K1Rn93
+	 3DROsndi+IyoVcrlHkgdx39Pemw0dolDTjG2RdTHsv2lYGvrnp4l2HCpiIcrpMquok
+	 2bGESXW0wW8Mff5VUxqAxdZhPCTJ+JoBIxlb2vGuLQdOfCZgD8k6bgoyW/Bz3gwp6I
+	 zQmS3JXWmvl2slKkPKM9QLZv3+gtzJsha8xWea2T8yaO6oDlQp8GSKOnjQvib6QGk3
+	 zEehMzdFgD+l4Wa9TssZ363WcG3uNMO4z1pp413I/gC//gKnGQja5BmLtZJsaNPizK
+	 quaXGz7TeyOdQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 49282C433E1; Fri, 12 Jun 2026 21:27:26 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Fri, 12 Jun 2026 21:27:26 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.isobsolete attachments.created
+Message-ID: <bug-218901-215701-SZeWHcrtjJ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 
-Add Nova Lake S PMC device IDs to enable binding of the SSRAM telemetry
-driver on NVL platforms, and map them to the ACPI-based discovery policy.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-V8 - No changes
+Armin Wolf (W_Armin@gmx.de) changed:
 
-V7 - No changes
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #310276|0                           |1
+        is obsolete|                            |
 
-V6 - Dropped NVL product defines in core.h as they we already included in
-     a prior patch from Xi.
+--- Comment #95 from Armin Wolf (W_Armin@gmx.de) ---
+Created attachment 310315
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310315&action=3Dedit
+Prototype driver with improved hotkey and keyboard backlight handling.
 
-V5 - No changes
-
-V4 - No changes
-
-V3 - No changes
-
-V2 - No changes
-
- drivers/platform/x86/intel/pmc/ssram_telemetry.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/ssram_telemetry.c b/drivers/pla=
-tform/x86/intel/pmc/ssram_telemetry.c
-index 9a8922045ab7..8e280ec525a6 100644
---- a/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-+++ b/drivers/platform/x86/intel/pmc/ssram_telemetry.c
-@@ -45,6 +45,16 @@ static const struct ssram_type pci_main =3D {
- 	.p_index =3D PMC_IDX_MAIN,
- };
-=20
-+static const struct ssram_type acpi_main =3D {
-+	.method =3D RES_METHOD_ACPI,
-+	.p_index =3D PMC_IDX_MAIN,
-+};
-+
-+static const struct ssram_type acpi_pch =3D {
-+	.method =3D RES_METHOD_ACPI,
-+	.p_index =3D PMC_IDX_PCH,
-+};
-+
- enum pmc_ssram_state {
- 	PMC_SSRAM_UNPROBED =3D 0,
- 	PMC_SSRAM_PROBING,
-@@ -453,6 +463,12 @@ static const struct pci_device_id pmc_ssram_telemetry_=
-pci_ids[] =3D {
- 		.driver_data =3D (kernel_ulong_t)&pci_main },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_WCL_PCDN),
- 		.driver_data =3D (kernel_ulong_t)&pci_main },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_NVL_PCDH),
-+		.driver_data =3D (kernel_ulong_t)&acpi_main },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_NVL_PCDS),
-+		.driver_data =3D (kernel_ulong_t)&acpi_main },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PMC_DEVID_NVL_PCHS),
-+		.driver_data =3D (kernel_ulong_t)&acpi_pch },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pmc_ssram_telemetry_pci_ids);
 --=20
-2.43.0
+You may reply to this email to add a comment.
 
+You are receiving this mail because:
+You are watching the assignee of the bug.=
