@@ -1,85 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7A1375F82
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 18:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A54330F7F2;
+	Fri, 12 Jun 2026 18:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781289417; cv=none; b=Pp4IcomezyzujMhu49QQi6Kh3Q6i9iLPuOvuhSox9hVlFB8cYyNElREBLMqSVx4J+OsEA2ibEA9zw53gDHoJTPJkRDlXbKB3gUA06Xv4cMX3I5XAPiv32aTDnx5MEdOrHfF36kV8u6okTEQc6tSr2TP0KSQPye7Dfh0xaq9MjKc=
+	t=1781289471; cv=none; b=uyS0PGNdi7hQR3iDVFVID+B3MvJEaS+xLSwRg0X6U1mTKEULxqX/tZRsJjKIwyWNcPPb54iXLTLJg53EuE6d5lbqEhyZmCHWw6fuS/pgYq2pq4pfz7TNWEpJ8N4y4NlXq5f6DgIdOK+69Ndzxu3ZnLP5qhqiYUYJoA9lVTbEXFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781289417; c=relaxed/simple;
-	bh=cADcCS4u6vzuOqNCq1LY/1Ghf9LH0XBsu5qDGeroBbs=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r7M0/aJsIhrnVBd9E3tcSEeV2g5XKhcMqqe3bkR0l4wGa9x9LuVOrIgKkHtRcEM1lQQBuGuwFTZsOQhQLVpvPaOE8P0Ui/2zRAywZlL4S3Cs8aA9UrNvruF4dA/oJno7J0PfH2p3IWTRRbL0zuL2J9mdCAxPRXzTw7KucxykFbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t/vTQnrW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1781289471; c=relaxed/simple;
+	bh=SI8udEv2mXom7kWLaKTmNHMqwm79zF+UJgYqkFzzBbM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nwvQwU9NLlOWRPkHRewe9GpEi0nT1sHZrgylqc9ujVGwdhyBMLLkAve2itntdzgxjZJccIoU19vpyJAAa/ikbZirrj2SJdvLbQ7u0Y0V+71njf9wMjw0lKx1ZhWj11xPoTFU/PJf75+p9WNHca5NiseeaEjwCLiMsCD01qtSAes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=by0jQCFR; arc=none smtp.client-ip=193.87.12.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t/vTQnrW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3EC7AC2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 18:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781289417;
-	bh=cADcCS4u6vzuOqNCq1LY/1Ghf9LH0XBsu5qDGeroBbs=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=t/vTQnrWsyJoLowcmT9lYelCj1BFGakw0Y+iWi3x3quA2C9fAfcouSjoMNl2nkL3g
-	 NJMqmtKEPdiInnJn+JAMeUKMu2p7CXO5IDGpgyzwrlHsBF8thlmKH8reVnqfc3IRng
-	 5tKpRNpU742L0pqungqumzq6fGCAGiQfMpZHrsMKBJX1X7WqgvFETXsbsvNKEmcbp1
-	 +Db+AuXuWRaHeCiK9llEgtDH1fqbEOF6X//9b5WY0y3Me8SAdNbDuCuZsQ4X/ZIE9C
-	 z6KZzUjzNuzGs197oeMhMjZey3tFYZdhXIkXoBUA/km9fQj6lj1ofQm2r1zy0fXev6
-	 L0pC11esylO7Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 21CE4C41613; Fri, 12 Jun 2026 18:36:57 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
- 7.1-rc4 kerenel
-Date: Fri, 12 Jun 2026 18:36:56 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: moravec@ukf.sk
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: UNREPRODUCIBLE
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-221569-215701-Z22BMdiJ0k@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
-References: <bug-221569-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="by0jQCFR"
+Received: from localhost (localhost [127.0.0.1])
+	by posta.ukf.sk (Postfix) with ESMTP id CC5D04231E3;
+	Fri, 12 Jun 2026 20:31:02 +0200 (CEST)
+Received: from posta.ukf.sk ([127.0.0.1])
+	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id tmc6xVnPQser; Fri, 12 Jun 2026 20:31:02 +0200 (CEST)
+Received: from [10.8.1.254] (unknown [10.8.1.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by posta.ukf.sk (Postfix) with ESMTPSA id 78B35423159;
+	Fri, 12 Jun 2026 20:31:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
+	t=1781289062; bh=SI8udEv2mXom7kWLaKTmNHMqwm79zF+UJgYqkFzzBbM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=by0jQCFRdmwfz+zCPUoU6VGlvo7MEhUgxw0eyK05fTaZ6vn3dSFhq4c/5xHsZb80G
+	 QfPHmXmFFYTpmwa7gMPCBlMVV0JuYa1A0DuCGQri/4sEYunrjS0toEEbxWrcPErKCP
+	 cp1OWsNYrFJRPsQV+1DiW4iGawGRgs/kWnusLmnE=
+Message-ID: <a3b137df-1b21-4460-b003-58c5ca2d59d4@ukf.sk>
+Date: Fri, 12 Jun 2026 20:30:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] Laptop fan too loud (spinning nearly always) hp-wmi
+ 7.1-rc4 kernel
+To: Krishna Chomal <krishna.chomal108@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <4fb7bbf1-466e-438c-a301-e118e7e2a225@leemhuis.info>
+ <b00ba475-fc58-4be3-82f8-5fdfdfe70303@leemhuis.info>
+ <aiprVEqP_VdmMfGJ@archlinux>
+Content-Language: en-US
+From: Milan Oravec <moravec@ukf.sk>
+Organization: CIKT UKF Nitra
+In-Reply-To: <aiprVEqP_VdmMfGJ@archlinux>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms080805000407080603060709"
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
+This is a cryptographically signed message in MIME format.
 
-Milan Oravec (moravec@ukf.sk) changed:
+--------------ms080805000407080603060709
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |UNREPRODUCIBLE
+T24gNi8xMS8yNiAxMDoyMSwgS3Jpc2huYSBDaG9tYWwgd3JvdGU6DQo+IE9uIFR1ZSwgSnVu
+IDAyLCAyMDI2IGF0IDEwOjM2OjI5QU0gKzAyMDAsIFRob3JzdGVuIExlZW1odWlzIHdyb3Rl
+Og0KPj4gUmVzZW5kaW5nIGJlbG93IG1haWwgdG8gdGhlIHBsYXRmb3JtIG1haW50YWluZXJz
+ICYgbGlzdCwgbWF5YmUgc29tZW9uZQ0KPj4gaGVyZSBtaWdodCBoYXZlIGFuIGlkZWEgKEkg
+aGFkIG1pc3MtcmVhZCBNQUlOVEFJTkVSUyBmaWxlIGVhcmxpZXIgYW5kDQo+PiBzZW50IHRo
+ZSBtYWlsIHRvIHRoZSBIUCBXTUkgU2Vuc29yIG1haW50YWluZXIgLS0gdXVwaHMsIHNvcnJ5
+ISksIENpYW8sDQo+PiBUaG9yc3Rlbg0KPj4NCj4+IE9uIDYvMS8yNiAxNzo1OCwgVGhvcnN0
+ZW4gTGVlbWh1aXMgd3JvdGU6DQo+Pj4gSGkgSmFtZXMhIEkgbm90aWNlZCBhIHJlZ3Jlc3Np
+b24gcmVwb3J0IHRoYXQgbWlnaHQgb3IgbWlnaHQgbm90IGJlDQo+Pj4gcmVsYXRlZCB0byBo
+cC13bWk7IHRvIHF1b3RlDQo+Pj4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3df
+YnVnLmNnaT9pZD0yMjE1NjkgOg0KPj4+DQo+Pj4gIiIiDQo+Pj4+IEhlbGxvLCBJJ20gdGVz
+dGluZyA3LjEga2VybmVsIHRyZWUgZW5kIHNlZWluZyBtdWNoIGxvdWRlciBmYW4gb24gbXkg
+DQo+Pj4+IGxhcHRvcCBldmVuIHdoZW4gc3lzdGVtIGlzIGlkbGluZy4gQ1BVIGZhbiBpcyBz
+cGlubmluZyBuZWFybHkgYWxsIA0KPj4+PiB0aGUgdGltZSBldmVuIENQVSByZXBvcnRlZCB0
+ZW1wZXJhdHVyZXMgYXJlIGxvdy4gQ3VycmVudGx5Og0KPj4+Pg0KPj4+PiBtaWdvQG1pZ28t
+SFA6fiQgdW5hbWUgLWENCj4+Pj4gTGludXggbWlnby1IUCA3LjEuMC1yYzQtMDA2ODUtZzRj
+YmZlNDUwMmUzZCAjNDUgU01QIFBSRUVNUFRfRFlOQU1JQyANCj4+Pj4gU3VuIE1heSAyNCAx
+Mjo0NzoxOCBDRVNUIDIwMjYgeDg2XzY0IEdOVS9MaW51eA0KPj4+Pg0KPj4+Pg0KPj4+PiBJ
+biA3LjAga2VybmVsIHRyZWUgaXMgbXkgbGFwdG9wIG11Y2ggcXVpZXRlciwgZmFuIHNwaW5z
+IG9ubHkgDQo+Pj4+IHNvbWV0aW1lcyBhbmQgd2l0aCBsb3dlciBSUE0uDQo+Pj4+DQo+Pj4+
+IE1hY2hpbmUgaXM6IEhQIE9tbmlCb29rIFggRmxpcCBMYXB0b3AgMTYtYXIweHgsIHdpdGgg
+QXJjaCBMaW51eCANCj4+Pj4gaW5zdGFsbGVkLg0KPj4+Pg0KPj4+PiBJcyB0aGVyZSBhbnkg
+d2F5IEkgY2FuIG1ha2UgbW9yZSBleGFjdC91c2VmdWwgcmVwb3J0IG9yIGRlYnVnIHRoaXMg
+DQo+Pj4+IGlzc3VlPw0KPj4+ICIiIg0KPj4+DQo+Pj4gU2VlIHRoZSB0aWNrZXQgZm9yIGRl
+dGFpbHMgYW5kIGtlcm5lbCBsb2dzLCBJIGFza2VkIGEgZmV3IHF1ZXN0aW9ucyB0bw0KPj4+
+IGhvcGVmdWxseSBtYWtlIHRoaW5ncyBhIGJpdCBlYXNpZXIgZm9yIHlvdS4NCj4+Pg0KPj4+
+IE1heWJlIHlvdSBtaWdodCBoYXZlIGFuIGlkZWEgd2hhdCdzIHdyb25nIGhlcmU7IGlmIG5v
+dCwgSSBndWVzcyBNaWxhbiwNCj4+PiB0aGUgcmVwb3J0ZXIgKENDZWQpLCBtdXN0IGJpc2Vj
+dCB0aGlzIHRvIGZpbmQgdGhlIGNoYW5nZSB0aGF0IGNhdXNlcyANCj4+PiB0aGUNCj4+PiBw
+cm9ibGVtLg0KPg0KPiBIaSBhbGwsDQo+DQo+IEkgdHJpZWQgdG8gbG9vayBpbnRvIHRoaXMg
+YnV0IHVuZm9ydHVuYXRlbHkgSSBjYW4ndCB0aGluayBvZiB3aGF0IG1pZ2h0DQo+IGJlIGdv
+aW5nIHdyb25nIGhlcmUuIEJhc2VkIG9uIHlvdXIgZG1lc2cgbG9ncyBpbiB0aGUgdGlja2V0
+LCBJIGJlbGlldmUNCj4gaXRzIGJlc3QgaWYgTWlsYW4gY291bGQgYmlzZWN0IGJldHdlZW4g
+djcuMC44IGFuZCB2Ny4xLXJjNCB0YWdzICh0aGVyZQ0KPiB3b3VsZCBiZSByb3VnaGx5IDEz
+IHN0ZXBzKS4NCj4NCj4gSWYgeW91IGJlbGlldmUgaXQgaXMgYmVjYXVzZSBvZiBocC13bWkg
+dGhlbiB5b3UgY2FuIGxpbWl0IHRvIGp1c3QgdGhlc2UNCj4gMTYgY29tbWl0czoNCj4NCj4g
+JCBnaXQgbG9nIC0tb25lbGluZSB2Ny4wLjguLnY3LjEtcmM0IC0tIGRyaXZlcnMvcGxhdGZv
+cm0veDg2L2hwL2hwLXdtaS5jDQo+IGE1OWU0NTIyMWRmOCBwbGF0Zm9ybS94ODY6IGhwLXdt
+aTogQWRkIHN1cHBvcnQgZm9yIFZpY3R1cyAxNi1yMHh4eCAoOEJDMikNCj4gYzJkNGI3NjQ1
+OGM5IHBsYXRmb3JtL3g4NjogaHAtd21pOiBzaWxlbmNlIHVua25vd24gYm9hcmQgd2Fybmlu
+ZyBmb3IgOEQ0MQ0KPiBkYTZiNWFhZTg0YmUgTWVyZ2UgdGFnICdwbGF0Zm9ybS1kcml2ZXJz
+LXg4Ni12Ny4xLTEnIG9mIA0KPiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvcGR4ODYvcGxhdGZvcm0tZHJpdmVycy14ODYNCj4gMzQ0YmY1MjNkNDQx
+IHBsYXRmb3JtL3g4NjogaHAtd21pOiBBZGQgc3VwcG9ydCBmb3IgT21lbiAxNi13ZjF4eHgg
+KDhDNzcpDQo+IDg5OTIyNTI1N2U3OCBwbGF0Zm9ybS94ODY6IGhwLXdtaTogQWRkIHN1cHBv
+cnQgZm9yIE9tZW4gMTYtbjB4eHggKDhBNDQpDQo+IDViYWRmNWViY2QxNCBwbGF0Zm9ybS94
+ODY6IGhwLXdtaTogQWRkIHN1cHBvcnQgZm9yIE9NRU4gTUFYIDE2LWFrMHh4eCANCj4gKDhE
+ODcpDQo+IDlkMzE3YTU0ZTQ2ZCBwbGF0Zm9ybS94ODY6IGhwLXdtaTogZml4IGZhbiB0YWJs
+ZSBwYXJzaW5nDQo+IDkyYzM2YjYzNGI0NSBwbGF0Zm9ybS94ODY6IGhwLXdtaTogYWRkIE9t
+ZW4gMTQtZmIweHh4IChib2FyZCA4QzU4KSANCj4gc3VwcG9ydA0KPiAyZmI5ZWMzODZmYTEg
+TWVyZ2UgYnJhbmNoICdhY3BpLWRyaXZlcicNCj4gZThjNTk3MzY4Yjg1IHBsYXRmb3JtL3g4
+NjogaHAtd21pOiBJZ25vcmUgYmFja2xpZ2h0IGFuZCBGbkxvY2sgZXZlbnRzDQo+IDU5Njlj
+NTVlMjE0NSBwbGF0Zm9ybS94ODY6IGhwLXdtaTogYWRkIGxvY2tpbmcgZm9yIGNvbmN1cnJl
+bnQgaHdtb24gDQo+IGFjY2Vzcw0KPiBjYjRkYWE0NTBmMDUgcGxhdGZvcm0veDg2OiBocC13
+bWk6IGZpeCB1OCB1bmRlcmZsb3cgaW4gZ3B1X2RlbHRhIA0KPiBjYWxjdWxhdGlvbg0KPiA2
+Mjk3NDQzYmViMGMgcGxhdGZvcm0veDg2OiBocC13bWk6IHVzZSBtb2RfZGVsYXllZF93b3Jr
+IHRvIHJlc2V0IA0KPiBrZWVwLWFsaXZlIHRpbWVyDQo+IDI0OWRkYmE5YzBiYSBwbGF0Zm9y
+bS94ODY6IGhwLXdtaTogYXZvaWQgY2FuY2VsX2RlbGF5ZWRfd29ya19zeW5jIGZyb20gDQo+
+IHdvcmsgaGFuZGxlcg0KPiA3MjY1YjU3ZmJjMzIgcGxhdGZvcm0veDg2OiBocC13bWk6IGZp
+eCBpZ25vcmVkIHJldHVybiB2YWx1ZXMgaW4gZmFuIA0KPiBzZXR0aW5ncw0KPiAyMzZhZDM1
+ODE2NmMgQUNQSTogQUM6IERlZmluZSBBQ1BJX0FDX0NMQVNTIGluIG9uZSBwbGFjZQ0KPg0K
+PiBIb3dldmVyLCBJIHBlcnNvbmFsbHkgZG9uJ3QgYmVsaWV2ZSBocC13bWkgaXMgdGhlIGlz
+c3VlLCBzaW5jZSBtb3N0IG9mDQo+IHRoZXNlIGNvbW1pdHMgYXJlIGhhcmR3YXJlIHN1cHBv
+cnQgYWRkaXRpb24gYW5kIGZpeGVzIGZvciBvbGQgYnVncy4NCj4gTW9yZW92ZXIsIHlvdXIg
+Ym9hcmQgKDhEQTgpIGlzbid0IG9mZmljaWFsbHkgc3VwcG9ydGVkIGluIGhwLXdtaSBpbg0K
+PiBlaXRoZXIgb2YgdGhlIHRyZWVzLCB3aGljaCBtZWFucyB0aGUgZmFuIGFuZCB0aGVybWFs
+IGNvbnRyb2wgZmFsbHMgYmFjaw0KPiB0byB0aGUgZGVmYXVsdCBmaXJtd2FyZSBiZWhhdmlv
+dXIsIHNvIGl0IHNob3VsZCBoYXZlIGJlZW4gY29uc2lzdGVudCwNCj4gdW5sZXNzIGFub3Ro
+ZXIgbW9kdWxlIGlzIHNvbWVob3cgaW50ZXJmZXJpbmcgd2l0aCBpdC4NCj4NCj4gVGhhdCBi
+ZWluZyBzYWlkLCBJIGRvbid0IHdhbnQgdG8gYmUgYmlhc2VkLCBsZXQncyBiaXNlY3QgYW5k
+IHNlZSB0aGUNCj4gcmVzdWx0cy4NCj4NCj4gVGhhbmtzDQoNCkhpIGFsbCwgdGhhbmsgeW91
+IGxvb2tpbmcgaW50byBpdC4gSSB0aGluayB5b3UgYXJlIHJpZ2h0LCBub3cgd2l0aCByYzcg
+DQppcyBmYW4gYmVoYXZpb3IgbW9yZSBjb25zaXN0ZW50LCBpdCBtYXkgYmUgY2F1c2VkIGJ5
+IEFNRCBwbGF0Zm9ybSANCnBhdGNoZXMgb3IgYW1kLXBzdGF0ZSBkcml2ZXIuIEkgZG9uJ3Qg
+a25vdyB3aGVyZSBmaXJtd2FyZSBjaGVja3MgDQp0ZW1wZXJhdHVyZSB0byB0cmlnZ2VyIGZh
+biBvbiBzbyBoYXJkIHRvIGNoZWNrIGlmIHRlbXAgaXMgb2suDQoNClRoaXMgbWVzc2FnZSBp
+biBkbWVzZyBhcHBlYXJzIGJlY2F1c2UgbXkgbGFwdG9wIGlzIG5vdCBzdXBwb3J0ZWQgYnkg
+dGhlIA0KaHAtd21pIGRyaXZlcj8NCg0KasO6biAxMiAyMDoyODozOCBtaWdvLUhQIGtlcm5l
+bDogcGxhdGZvcm1fcHJvZmlsZTogRmFpbGVkIHRvIGdldCBwcm9maWxlIA0KZm9yIGhhbmRs
+ZXIgaHAtd21pDQoNCkl0IGlzIGFsd2F5cyB0aGVyZSB3aGVuIHN3aXRjaGluZyBwb3dlciBw
+cm9maWxlcy4NCg0KVGhhbmsgeW91LA0KDQpNaWxhbg0KDQo+DQo+Pj4NCj4+PiBDaWFvLCBU
+aG9yc3Rlbg0KPj4+DQo+Pg0K
 
---- Comment #21 from Milan Oravec (moravec@ukf.sk) ---
-Seems to be solved into the road to rc7 so closing this report. Maybe cause=
-d by
-AMD patches for this platform.
+--------------ms080805000407080603060709
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Thank you!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
+DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
+HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
+QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
+NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
+ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
+7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
+yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
+QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
+5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
+S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
+LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
+wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
+Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
+yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
+v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
+HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
+KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
+dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
+bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
+MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
+ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
+BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
+lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
+gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
+KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
+otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
+KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
+G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
+XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
+lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
+3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
+AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
+FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
+MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
+bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
+MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
+MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
+OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
+xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
+UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
+clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
+WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
+jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
+QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
+tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
+yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
+occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
+HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
+AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
+Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
+Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
+AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
+BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
+bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
+qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
+4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
+L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
+oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
+8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
+jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
+olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
+gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
+xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
+3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
+SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
+9w0BCQUxDxcNMjYwNjEyMTgzMDU3WjBPBgkqhkiG9w0BCQQxQgRAaZF4Dvf6xtrFLfa5/lSN
+7FWd+TiO9wQeiJisnhM7SG9zaRWmomYUvdwgVcuSKT0hGynAX+Lp6Gso2WkBR48AAjBpBgkr
+BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
+MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
+SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
+ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
+CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
+AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
+AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
+YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
+SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
+CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
+BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAEDTbqOmVqfDDq2I3aWBCXzi
+d0b5cv7oNnl58IWQo70gAum2qBynS7gO6j7MnUIhHUB4Q6hZwILo+PzOW4exwTIpzRW9QMKB
+xh2+cyzqy+Op4WRvw3N/BaCKgwELtj1xDC7YftREZnaxu84iwmT8KCUduK4szlTU7Sj8+HW9
+JblkwTOPQuzy89YcnY0iWgrOTxRC0w5uQ77bgUW9NX4OY3KdedEoFJg0FJ7LNtfNC+8pPHrc
+pLNVOLCsKeYi5se1VJ9cQ0FotUnLgwDWaI+t7NTs1ZvF/Ei2oqAde9MggNM8mbppp5F/Mj/L
+CBx/SKm3/duiJzvTgxMaqoJhqm7JCy9lZEeSuZ7gk4Y24zpbNOwg/m9VdzTfVz6VLwQcf3Hi
+pIqjmZQUCx3eIRKXzVt6qBPIewhgSvR4rk3VmKfdPMBgw1XZyhAbTQQVyVPhhw4yaUb2Clvt
+sca0GbNBsucHutwC4YXgLw2YS9ZILCawzKQApr3cPmxrSUqge0M80hcmVs7gkTWnhphiNZeV
+gFMtC4u0sa+G+ETR6fPFzxjFI3/ulPggQh2WUYLTvKw1ySpPasT0uymjvkq5xD3UvCpNhxDU
+MJ7k0rJbSendU4VL9e04YHA9EUMrVpOs4/qrbIpgZRIO2fWFM6MLU/gDjiWLDm5McSQ4TxFK
+9L8WWryBJngjAAAAAAAA
+--------------ms080805000407080603060709--
