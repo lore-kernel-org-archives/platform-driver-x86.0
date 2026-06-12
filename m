@@ -1,103 +1,129 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30B73BB122
-	for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2026 22:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99F12264A7;
+	Fri, 12 Jun 2026 03:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781217570; cv=none; b=INOGiyxrLIjWj9SdQDjaxIWF4qx2ERfvB1zb2zUVU8EXhTLVzsENpWgvKv5xt68uBglSg57XkaEc9e6GhfZotyw/R20Cc0vHpTmzn0lrSmGpNPC353pXVyhQDevbe923UBt6tr7oBw9o35rtAkFjU5Jl6oWK4FwSIgjDBWC2B+k=
+	t=1781235488; cv=none; b=Vhesz0u5NVkKQNXNdS9BwdaSprU8NuB6OwfumQ6bNN69TaKb+vz6oOdW/R++aqjvMg5WdJ0sdwW8Whh1rbUbx4xe9is0IEM1PmMKdE6WjvTPLe+mkl16zWMzQd/pnXzYV7Z36uMMW3IV0OLJ1DwAVmKUf5LqCnI33s8cbKRNsLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781217570; c=relaxed/simple;
-	bh=bnx9nxq66efrk34Iy8/61uOzy7WpWyxJKioobTu4+Z0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MUdsTRDYtNlFv/Pjz7EnY5I+j3WR1ceRseXv14ceAUA2DtuOOihHIu3THa7J7LNkWHE7y4hg7JJJ9cGiQ/w9iXq3wSwE4ZC5LRhaeyqitAGAvk4u7d6c07DR0TsxBRQy9xHEPsnart50gUlsZlwb6QiOmAXreTqX8PlEhZzpDSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LEQ3PwiB; arc=none smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781235488; c=relaxed/simple;
+	bh=rvHL5oQtOTvznYnSGUf/8SeXFDFQRVwiB9ztX0IM0Gk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqrxbrABLuxTCAwD/Tlo4Z6NyDIy3FwxT+unFPmXE+OoGq4H1a/llda7N/Xr370lSLYoYlBnPmz0gWTn7Hu07ziHbRJNgDHka6lu+TqsKDwoUMFklD+7GpTH+LsXbf5/8AMZJSc6/QWECcVodUJKGC3Wgt7W8rddavcfCPvAbt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dliJPAGe; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LEQ3PwiB"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-138129a622dso657298c88.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Jun 2026 15:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781217564; x=1781822364; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=71FrFQoxdX77O7zERQz215QQ+ueTBKRpp2bUMPUHqkg=;
-        b=LEQ3PwiBAOd1ywU+DnUrrbaqAgYjNzBDk2rq+smvXmjx/kiVGgjfaQcx+1Zzl9ruRJ
-         ufJ1NRLR0C+9CIwbKKyS6X0w0W7fFP91/61nb3ExQTBBa+1L5TS47HoQ9FlfKzPlw+vn
-         EhW6Mgld1w19vKUt8NBKXiIkKuD8nrJzJl/kMoCyAXLQiWflpezIl4dS50XTtG7DjzFn
-         7z/Dd9YckzYkz3/+RTFdgFUMSBCah6MMBduF0fiNFCC7aUHoqY1kX4xaass/EQntv/BL
-         HUiklmOrd3/wI/nUsDQgjll14VtRrfpJJpYuQgG5WwtbaLSLeM8aschjrAuzJA94nMQm
-         6L7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781217564; x=1781822364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=71FrFQoxdX77O7zERQz215QQ+ueTBKRpp2bUMPUHqkg=;
-        b=p6a6vcN2OMzSHVYCOuxk4doK85lzttc//5ITflZytImKrJVPSzgIPNk12E7yx2Fujf
-         D4qOTJeZM1lYv+IC7SleKjh8LE49hocOYlx+nrM95NR6GRHjmIkQ49lBuc88HRmUooTz
-         gpF1UJsDM7QjbAAd1EFAmQTHDtmodTcpCmTqEyb8/Sv1XYmX01S68R0vI6n4qMZAUUqo
-         LjnT1cDlbtKKVw3YxXQW5klWKNAMqhp/tvD/PQ9r4NtmUYiABodGnzPh0TZB3WFKgrof
-         u669SQBBwr+2TOL0HGIcj0hPGzZX2hapYeniKnuz3Kbhn78BPe28/n1C4yPtasrHe3Ly
-         cX5Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8wtZtbsVsi6JM2urYQSvtPeM1g2NQ7w/uQyd2kRBk8uGraXbEgPoLjX8FHtB0j3rxIEYELBm61V/Cl04oF1/52ZZFB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSs+WNKv57+1tUvgQnAYRL7SFUs7N5sC5zV3ULZutt+9Ng2t15
-	fLiCREFVM8RhjSInzrMsLMr/PRSf5dMtzWPpWFPWP7jYnQo63vkYIKhG
-X-Gm-Gg: Acq92OGXyryfGpofL7Twkub2ZAK8J/STd7vUOfpFEjR4kEADtkxtJWm4TIm55scqDFF
-	r5Z7pWpfTzP+iEJEYPz+mvinpdNYmq7ogHho+uyQ4DDo3VFx/zRSRGIZaCMsIlYrgbSrUy8+B9e
-	42YNwaWg0Ti2Cd+YLU4+g26BEfnK1y3uCW/3l3csiH8ChiCt910J48QkJ36rHLU4GBde4pl87t8
-	whCXyKVjuFbCiITAfpiLuS5Rn+QKFNkdEtIKPXwJnu86hUoFxgMVHztbEa9ePKDFMdQ+i0kFOhw
-	tUDLMZ7ONNjjwI8CO8hZLaJDNqPqMnralehz8nJFUx+Rn80dcNvTSf9T55qUtqlYjKC+qVtkZvl
-	qctJpYSL1twPZwuktfpHpfyaGZDD++puSrWhUaFmnXTtPCzONu2E4PEVUuSDYCuwvcvZ8NM0MBX
-	vQyHklipMbD1DR2pZ7WqA3kMqKc5f38CI3gRpRa45xGV+TDEFrdeKOMqlmsUziy9HvikivCEGYB
-	s2K
-X-Received: by 2002:a05:701a:c94e:b0:12d:c730:c7f with SMTP id a92af1059eb24-1384bbda719mr135519c88.33.1781217563937;
-        Thu, 11 Jun 2026 15:39:23 -0700 (PDT)
-Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1384b975e55sm241273c88.13.2026.06.11.15.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 15:39:23 -0700 (PDT)
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] platform/x86: msi-wmi: Fix unknown wmi event messages on MSI Claw models
-Date: Thu, 11 Jun 2026 22:39:18 +0000
-Message-ID: <20260611223920.1679438-1-derekjohn.clark@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dliJPAGe"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 82FEE40E0217;
+	Fri, 12 Jun 2026 03:38:03 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id RjVTGBa9Ysfm; Fri, 12 Jun 2026 03:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1781235471; bh=TGq/VELUMGXRkcex9AR4XQIsNuWXHsFOeGODvs7zUJY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dliJPAGeiKCwn/IX6auuYN7bx/nYjZdg1TnHPhVsSxKsW4AITdKHEG4nBBe+bob8m
+	 Yu43BchSuFSn4rojg+X9dSNHqNHNEvJsS4eSWyr8WzOoTG+nJX8uXeser1QgPMjAmW
+	 QGn4DqJ48+Ih02ydz6BzHQhThDhVt2+z1Z9UeKHmlhVwPShuW5NSMpDxdxMY6uBzss
+	 v/uK2Tcsbb5OxOVw6qoFZPj5aSmdLYnAZH0pbVvulVRX7eJxQaSN1s5vmvh31gZMCW
+	 if2aDZOn1ka9QZrwyr2dY5OhqRzentFS+Jt0pBs874+8Ey3FBIc2uzcuPuq5EiQILH
+	 Sn7EU+8k/O7vzcvsrYVPuTU3Bfku2sb6AKeyOBl3TO0neqxDNOE2Dx3fn3yPmQ7boe
+	 +AEsrobRvP238BYgJqMSXbGV9ViVJpZYVOM80qb3VwP58O6Rn9wasr8Iu/on9XJIwP
+	 2HtA56Ulwr7JqNWiOIdtSWYbS/ZT2QnQ8ztkyjU68iPA/AMauca3KygggiuZE2x7os
+	 x7zVXBpOCPpURB7XxnPaHikQRM1aawkNP4vxg0a4GZOIpStVFKs2YTbsamOhqpJeN8
+	 kRBonRpUtd9jaa+ncAfaahvSHL9tiAQgNViYaSkOo2mlzm1CHk3viO+BePA5eXLjQt
+	 u/HqWZ+bnLrCdCxBzHEp/V1Y=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 52E3740E0215;
+	Fri, 12 Jun 2026 03:37:43 +0000 (UTC)
+Date: Thu, 11 Jun 2026 20:37:39 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: bugzilla-daemon@kernel.org
+Cc: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Bug 221437] New: asus-wmi: gpu_fan RPM reads 0 on M6500XV when
+ dGPU has no driver (fan physically spinning)
+Message-ID: <20260612033739.GFait_A1Re69ddPzzJ@fat_crate.local>
+References: <bug-221437-6385@https.bugzilla.kernel.org/>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bug-221437-6385@https.bugzilla.kernel.org/>
 
-MSI Claw devices produce WMI events through the MSI WMI hotkeys GUID for
-some of their buttons. When pressed, these cause spam in the kernel. The
-Claws use a GUID already supported by msi-wmi, but use an
-ACPI_TYPE_BUFFER instead of an ACPI_TYPE_INTEGER.
+Forwarding to mail...
 
-Patch 1 reformats msi_wmi_notify() to reduce nesting by using early
-returns and a switch case in preparation for handling this new data
-type.
-
-Patch 2 adds known MSI Claw event keycodes to the keymap and support for
-ACPI_TYPE_BUFFER.
-
-Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-
-Derek J. Clark (2):
-  platform/x86: msi-wmi: Reformat msi_wmi_notify()
-  platform/x86: msi-wmi: Add MSI Claw M-Center keys
-
- drivers/platform/x86/msi-wmi.c | 92 ++++++++++++++++++++++------------
- 1 file changed, 60 insertions(+), 32 deletions(-)
+On Thu, Apr 30, 2026 at 01:39:35AM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=221437
+> 
+>             Bug ID: 221437
+>            Summary: asus-wmi: gpu_fan RPM reads 0 on M6500XV when dGPU has
+>                     no driver (fan physically spinning)
+>            Product: Platform Specific/Hardware
+>            Version: 2.5
+>           Hardware: All
+>                 OS: Linux
+>             Status: NEW
+>           Severity: normal
+>           Priority: P3
+>          Component: x86-64
+>           Assignee: platform_x86_64@kernel-bugs.osdl.org
+>           Reporter: nix.sasl@gmail.com
+>         Regression: No
+> 
+> Summary of the issue:
+> On ASUS Vivobook M6500XV with dGPU (RTX 4060) running without a driver
+> (D3cold), the GPU fan physically spins under load but fan2_input always reads 0
+> RPM. Writing to pwm2_enable fails with EIO.
+> 
+> Hardware:
+> Product: Vivobook_ASUSLaptop M6500XV_M6500XV
+> Board:   M6500XV
+> BIOS:    M6500XV.309
+> Kernel:  7.0.2-arch1-1
+> linux-firmware-git: 20260429.56a13f98-1
+> Relevant dmesg:
+> asus_wmi: BIOS WMI version: 9.4
+> asus_wmi: SFUN value: 0x21
+> asus_wmi: fan_curve_get_factory_default (0x00110024) failed: -19
+> asus_wmi: fan_curve_get_factory_default (0x00110025) failed: -19
+> asus_wmi: fan_curve_get_factory_default (0x00110032) failed: -19
+> 
+> Findings:
+> 
+> fan2_input always 0 even when fan is physically spinning
+> pwm2_enable node exists in sysfs but writes fail with EIO
+> asus-ec-sensors rejects hardware with ENODEV
+> ec_sys accessible but dump returns all zeros (interrupt-driven EC mode)
+> dev_id reads 0x00000000
+> 
+> Expected behavior: fan2_input should report actual GPU fan RPM.
+> 
+> -- 
+> You may reply to this email to add a comment.
+> 
+> You are receiving this mail because:
+> You are watching the assignee of the bug.
 
 -- 
-2.54.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
