@@ -1,70 +1,79 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010038.outbound.protection.outlook.com [52.101.56.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BEF30ACE6;
-	Sat, 13 Jun 2026 19:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781378311; cv=fail; b=ILKhQ5Fk5U4rPf1KF5+NsyQliel43fkrztzN3XNnfINOZI5ixd58ms8aURlhH+oySslMaS42KNJPnyLaSacxKL+C+Lmx23Vfi7tRMeCQVcRo2cXOaK+y74usy3BFTilp+ejAV9KvSAnjTwjt9hc8+Wt9NThN3kiPQuiuxFMqrHo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781378311; c=relaxed/simple;
-	bh=zjAZH6uHnRNYqUAlFG8EKypizmxIj2X2GXSGVPzZZ6k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fV7ycbMj27V/0ZaXHOm1IXhibJqq3Gh714Qgx5XBaLdWPTebmLX+i/l58J3I8dysx0lheRb9ClJa3VPY6OnrpliIMjFd3ye+TVbzOR//F0uCXGOzfaoorT8q3dd3QK6i81GF5zmM5NXJ0fa49zI2wYvhsC1oH+1FP7R6u9mHsp0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ks7JUu1i; arc=fail smtp.client-ip=52.101.56.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614F03A963C
+	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Jun 2026 22:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781391522; cv=none; b=lMrDxRVZXvgJT1kgjOf6qG65BSVxyqY5Kr1HdbJc0g2d9wtimDMPAOs6T9tm/0oa46s/yxy1KLH1fLxWf+7iLQn0+LiHR2J3mILhxlAp2o/2h5G6dSSi9P7havacN4ahv9heJ3pbJhnEczYeEVYTOzIbehvlESvwDbHC7D0vSrI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781391522; c=relaxed/simple;
+	bh=/A741uDlGFD2WkGc46FuBg1F/gZV5dKz7KCPBbu/JpE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ttp/Wg7fs6i1FAb0HLzbj0Z4YcpDU72R4xtKOJJoDDwqiWckNt6QL3rB4PuCCpCTCOvnhvDUQzaTBdjrUZPKv709eWEMUpcLyfv141S7NNnH8WEn9A4vluW5CDKmwfjHRyBDHtFQMHUAw3eJUW/gHrlUT5rkvL8gTE6XDDt4K5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CbEiqYM5; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ks7JUu1i"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KKiL2Gvnnb+vsaJMdaymZPBRIkZ25rFA+u87x15JukZUMU0qXAcon8+cUWfWHsEbw4NJHyVE1MlINfza+Iym3+yTieVNj3fDfOyDki2tgFFNvZFXZDL5LB7hS9R4GKoyFtVD1ZrWtXFq+SYPxV9lAlE1/cFGTvkkEfI1pt50Dm+1GtlpsEWDgEmpv4ZpkS57NpxInBwsfj8cZ573jlzIEbuTRmI/2QGfQLERgY3J+11MqRFim5GzO7XDQziq67qeP3ZGwE9IerYiRhZTTkcL9vxIcnEnRvIOlliMlZpKUZ2JBkMMO4dIQ4WpBIkrDLCE+ECIITo51EA1sHUSXzC56Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zmalMuZhO5qeCkSjAK6khsb45LWiP3jhwg5cCyFS1Hc=;
- b=wqMvuj/5m9Y6tcutM6NHdP5IK8ybEINaFCMYbMiKOYJqhAAPUDHTuRLr1A8xAjXjuhhHiL9pabhSys/Y2U7WJ+j6RU0K3PScTyZdxiAXppcdwDT2x+rl4oeXy9JPzks5k1YCMh7sQaIAl+StjN+J2ToRkEulvovp2yzdXVIvqjif8z4EHT2zwFLZQsrDU6aAv+PhNdNqeNpxW+ZRqg+67pa1bGJQaZnO72XphtcKCIw/gtGNK729GLwRfabPkmYE/5jc2czqyOXfwf/YqKlmMTdVIMW6efvxe3I78JDltB2hMkFssAoEnwRTSTucV+iSRO02kh1o8DByqQdxUk8C+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zmalMuZhO5qeCkSjAK6khsb45LWiP3jhwg5cCyFS1Hc=;
- b=Ks7JUu1i2o1a6NR/9XF/dCj+LWB0A0QhqfBE63osyN9amnAhQMRn+AJM670TFoJ++CSAbaY9hA5YeiPmEgg0OkKgm7DElb+O/ZJo3lOrRtN73Phsek/05WfGmtNc/cydMm+7ZWCrGW4Znc5IahzKfHHSILYM3cjXnSsPrZY0WxQ=
-Received: from BY1P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:59d::9)
- by SJ0PR12MB5663.namprd12.prod.outlook.com (2603:10b6:a03:42a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.11; Sat, 13 Jun
- 2026 19:18:25 +0000
-Received: from MWH0EPF000C6188.namprd02.prod.outlook.com
- (2603:10b6:a03:59d:cafe::76) by BY1P220CA0014.outlook.office365.com
- (2603:10b6:a03:59d::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.16 via Frontend Transport; Sat,
- 13 Jun 2026 19:18:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MWH0EPF000C6188.mail.protection.outlook.com (10.167.249.120) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.139.8 via Frontend Transport; Sat, 13 Jun 2026 19:18:25 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sat, 13 Jun
- 2026 14:18:17 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH 3/3] platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated release
-Date: Sun, 14 Jun 2026 00:47:55 +0530
-Message-ID: <20260613191755.2358969-4-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260613191755.2358969-1-muralidhara.mk@amd.com>
-References: <20260613191755.2358969-1-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbEiqYM5"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-36d98c9b596so1350685a91.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 13 Jun 2026 15:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781391519; x=1781996319; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IjIDujvFdMaBCuNW6n4kM+LVX7mOvVximLwIuH8gZ8c=;
+        b=CbEiqYM560wT7hzkPQ6lE4lKFlksPUtrDyuHVLMz9EBbS3Xtpe87RimXaj6xVM9tbg
+         RTqOZ2pYwSqjUVI+x3VsrsLMS9g6qR3WLmms4CACaG2GetXrW5gFQ2bf0Me3UIlXrBOF
+         6LgmZgOzH9+nAKe6u2ijszJqFhvMK4GK8cBUyUBjsOdZfTT4T4WLxYFf20bxDZgEQoeY
+         O1VZD/7ezuF/nVwG/IZ8BEdiEQsbIauA/R53h+A+R7eD5E3Kcl7lm0zDkh9F3oYkKk/a
+         TwtKCJv4GYzNrZyTTRRPZH35/EaFZfGuzItFfI81ayC54ob5VLhnWe0QUs7DPZ4jMNpd
+         k9pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781391519; x=1781996319;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IjIDujvFdMaBCuNW6n4kM+LVX7mOvVximLwIuH8gZ8c=;
+        b=qseGzjrBAoBTiJpx1oYd+SF915MIydcFtwy+JB8Ehi5VmXV02tL0aKS3BeutbjAA0Q
+         iVOG+l97o+4H0prmQT5hgpW/WfII4paF0N7C2OSzh7XlNMvMQDsjFnkrGxMeQk+XQB2w
+         R39tatHsmhl6gaQAN17uLKIygtpm8hkBmZ+tlnKk9uDadYMi8DspdqeKeLs3dLXsFr/e
+         D+1k7W/qoiuIMfUSCB+3WzRF/c7+KQUHEoYthpI+tUo5lRJg7++TwlbaFo6a6lHvO2g7
+         UckPm8ZEI9Sb+sGaV0DBO+d9c5WhBJSNVZ9dnTuabMAWJ6tGnqBchutNU6PKv7iZpV9A
+         w7TQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9oTqUPYy+H1ntccNyoTawMWIRr1VUiY+Ra7cLxr6ie8OqOD6v1E69yVeb2+YGigyOcXNExnC4jTzfmPOsQ+PnRCgJp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxhzb+rDIppQ1WMILYWqhv9c8s8G/HoRADvryl+IoJhSs2xUZV7
+	deu8CfQve4C0QkgYYlXLsHB5Q3ut1tuvj6fsR9NB9+D987EYXgUMmh4+
+X-Gm-Gg: Acq92OFcygCVuCRCL88kHXDY6bNh8mgazWVuY1R0L9GR7Bl8VWskYOxD8D7o/2e4tU4
+	LGSFz5BIleMi0kSNz8d6ov5eNYO8105vsqDT10ckiPjLWOhRJFi3AiYrA1q3sFFhRYsJuSJIec8
+	LvPGb9a/8pQG7j2uHRsIR1a0Vk+3IDFHeVoLGja+/ChgRjXhxjAkhaOIkCosiMyYTMQgF1Pwl7z
+	7lAHmcrf6JfbNb49pMNpoUEC+GQjfDfqZc434vr4YILOBjKp/EXgQ+q/K0920YskM/yUY9HHS9s
+	D4yWoCF2Il+6tlSHtRHjdtF6KnVWiRpq1eadfqAsnKM8Q2wVwIeCqGqhNHHPsL1H28T8relxWc0
+	Ut+MnyzQFLy/8RyGRCk4sgvpTpsJZ3hlctn1o+R53GLB+qWpgCZIvCj/XraFGzB0OhY+bTG2RPm
+	xCPnLSIjtKEEfs6ujt6Bi77Z4RgEOTgWE7uGoFXk9YOCM2/nZA
+X-Received: by 2002:a17:90b:56c4:b0:368:147f:bd2b with SMTP id 98e67ed59e1d1-37a03bd1880mr8650897a91.23.1781391518445;
+        Sat, 13 Jun 2026 15:58:38 -0700 (PDT)
+Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:f4db:34e:97b1:ad63])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-37a212ab0dcsm6252292a91.15.2026.06.13.15.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jun 2026 15:58:37 -0700 (PDT)
+From: Vishnu Sankar <vishnuocv@gmail.com>
+To: mpearson-lenovo@squebb.ca,
+	skhan@linuxfoundation.org,
+	corbet@lwn.net,
+	hmh@hmh.eng.br,
+	hansg@kernel.org,
+	derekjohn.clark@gmail.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-doc@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	vsankar@lenovo.com,
+	Vishnu Sankar <vishnuocv@gmail.com>
+Subject: [PATCH v3] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+Date: Sun, 14 Jun 2026 07:57:36 +0900
+Message-ID: <20260613225736.30906-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,199 +81,278 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C6188:EE_|SJ0PR12MB5663:EE_
-X-MS-Office365-Filtering-Correlation-Id: 779d034e-6cfd-488a-d9a3-08dec9808a8f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|23010399003|376014|82310400026|1800799024|56012099006|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	q0dWR1g7e1roHcDbwYUxKeSIEPv7xSaM2zFSXJP4wTYVswnahMrRNc6sAC4NvRAXyOk8XKucW7O9oHIVZkRHMSSdbtFujPby9F9ueGz8QSTXjUtDRn2R6gTXB5fXASQ5tZKiOyipYFCC6iE6oQoLRknaWk3nzMInc7NKPEkcxjC3L1lS7t83UPAiSIyan1NpAVwGTdePKWQInGZjXKyApzX5kVTj67lviZ5g75nkfwnpXPNwPey1sg8+Sz1HPXsowS+Dv+X53LaF7h1/a2d43ZUrMC+HcM8kPvd8VwqA0Sb6ShEUBHV/0AZdUaFnJv20vU6MtrBHnPopnUB5m05LVaXD+/D3DaGtp7Wh0dMmHSzzMbtwZfZtuBlO/alFe/teHHdGfET1jNUzdS000DGTDfCSEjTZt+hO5ZYbGr7YaK6sB59TT5XY+8txSYqwpj2DSwNdUssywUn5U583JFtcf8e1s1DVgvU6JYcGtQjIo95y7oorpzM4ayYgEKCXMQrRM/73nuL2w+xn2SwxWloLBCP5gcKFJOnvWecrdOWVOUsHYl6G0YomdUhAb43YaSeHqOQPcZQlDVVE0ZU6Aiiw1c8xHm9oooot93Eewm24S3qMGVTANhABYLPHCKQ7nCPrNN1iHM34qTb745jugzuAoe65G9x/0P1cq1w5FNWhwXDLlDsChXOc1ALvukdR6eksalbezc/o2WxAhIxgulPz21DQWF8f0qevUTpDcZbgkmo=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(376014)(82310400026)(1800799024)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	F9v+jKF208K3WKvZ1O5ir8Rkf5QDW0dleblknzHUy39P+wHExjPY5hWTV/COw988Jh1rh5tMi7LMa2ReqrJ0cmOHqgD79pdqb8brlqxbQictI9P8xhmnOpMPDN4LOKyAhVRgow8io41WdPzyLUK6JCqo1TS9NypIhcctlOwoEAFWQEnvLLA49WpHtYfJqZawUGa1fzeP2XeRbDOZy8KtCYlJzQXQg8ew6OZuDrJOeYPZf7XudCWpsYFBQfXwFBkL7PD8DvK2eglwNiwgpgtAqtuJa7L/NESrQfk8v4TRYWtAkE4542EMvT0c9CqYo54Sw9F1WTlUB5CF3s4vQe+MKmPEEfXTPJu4NYq47WkmMKa0jV/u5Ql9BOcSK0hn0U+b0YV1wgDe5XcbdGL8JcnLK9MV42XfklaAAHkqFFpGSnKUx9zsU8o5feWTjbpvd8/d
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jun 2026 19:18:25.0081
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 779d034e-6cfd-488a-d9a3-08dec9808a8f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000C6188.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5663
 
-Replace the global is_probed flag with miscdevice.this_device for misc
-registration state, count ACPI socket platform devices with struct kref,
-and run hsmp_acpi_sock_release() on the final put to deregister /dev/hsmp
-when needed, unmap metric DRAM, and free the socket array.
+Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
+When active, USB-C data connections are disabled while power delivery is
+preserved. This is useful for kiosk and physically-secured deployments.
 
-Extend struct hsmp_plat_device with acpi_sock_kref and
-acpi_sock_kref_started in this change so ACPI teardown can coordinate
-with the refcount.
+Hardware interface:
 
-Switch ACPI socket storage to kcalloc(), initialize per-socket metric
-mutexes once the array exists, and free the allocation on early probe
-failures before any kref reference is handed out.
+The HKEY device exposes a read-only ACPI method USCS():
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+  Return value bit layout:
+    Bit 16 : Capability flag (1 = feature present on this SKU)
+    Bit  0 : Current state  (0 = security OFF, 1 = security ON)
+
+The sysfs attribute is read-only.
+
+The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
+hardware state.
+
+Hotkey:
+
+Fn+U followed by Fn+S generates HKEY event 0x131e.
+
+sysfs interface:
+
+  /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
+  "enabled\n"  -- data connections are currently blocked
+  "disabled\n" -- data connections are currently allowed
+
+  The attribute is hidden on SKUs where the USCS capability bit (bit 16)
+  is not set, so there is no ABI impact on unsupported hardware.
+
+Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
 ---
- drivers/platform/x86/amd/hsmp/acpi.c | 76 +++++++++++++++++++++-------
- drivers/platform/x86/amd/hsmp/hsmp.h |  4 +-
- 2 files changed, 62 insertions(+), 18 deletions(-)
+Changes since v2:
+- Move usbc_security_enabled out of tp_features bitfield to a bool
+  member of tp_features to avoid unsafe concurrent bitfield RMW;
+  usbc_security_supported remains a bitfield as it is init-only.
+- Pass &tp_features.usbc_security_enabled directly to
+  usbc_security_query() removing the local bool intermediary
+  in both init and hotkey paths.
+- Remove extra blank line before */ in block comment.
+- Fix kerneldoc Returns: syntax and rewrite return value description
+  to match the int return type.
+- Split ternary return into two separate if statements for clarity
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 696884a91c22..c6840f6e15b7 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -587,6 +587,47 @@ static const struct acpi_device_id amd_hsmp_acpi_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, amd_hsmp_acpi_ids);
+Changes since v1:
+- Use guard(mutex) from cleanup.h instead of manual mutex_lock/unlock
+- Revert usbc_security_query() to return int (-EIO/-ENODEV/0) instead
+  of bool to avoid uninitialized *enabled bug on unsupported platforms
+- Remove !! when assigning to bool in usbc_security_query()
+- Remove dead tp_features.usbc_security_supported check in show()
+  since is_visible() already gates the attribute on unsupported SKUs
+- Use str_enabled_disabled() from string_choices.h in show()
+- Fix uninitialized *enabled bug in tpacpi_usbc_security_init() by
+  only assigning usbc_security_enabled after a successful query
+---
+ .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
+ drivers/platform/x86/lenovo/thinkpad_acpi.c   | 116 ++++++++++++++++++
+ 2 files changed, 140 insertions(+)
+
+diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+index f874db31801d..db4588af0278 100644
+--- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
++++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+@@ -1543,6 +1543,30 @@ Values:
  
-+static void hsmp_acpi_sock_release(struct kref *kref)
-+{
-+	struct hsmp_plat_device *pdev = container_of(kref, struct hsmp_plat_device,
-+						     acpi_sock_kref);
+ 	This setting can also be toggled via the Fn+doubletap hotkey.
+ 
++USB-C Security
++--------------
 +
-+	mutex_lock(&hsmp_acpi_probe_mutex);
-+	if (pdev->mdev.this_device)
-+		hsmp_misc_deregister();
-+	hsmp_destroy_metric_read_locks(pdev, pdev->num_sockets);
-+	kfree(pdev->sock);
-+	pdev->sock = NULL;
-+	pdev->num_sockets = 0;
-+	pdev->proto_ver = 0;
-+	pdev->acpi_sock_kref_started = false;
-+	mutex_unlock(&hsmp_acpi_probe_mutex);
-+}
++sysfs: usb_c_security
++
++Reports the current state of the USB-C Security (Restricted Mode) feature
++on supported ThinkPad systems. When enabled, USB-C data connections are
++disabled while power delivery is preserved.
++
++The available command is::
++
++        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
++
++Values:
++
++	* ``enabled``  - USB-C data connections are currently blocked
++	* ``disabled`` - USB-C data connections are currently allowed
++
++The attribute is read-only. The USB-C Security state can only be toggled
++via the Fn+U followed by Fn+S hotkey chord.
++
++The sysfs attribute is not created on platforms that do not support this
++feature.
++
+ Auxmac
+ ------
+ 
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index e1cee42a1683..59b485a57ffe 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -38,6 +38,7 @@
+ #include <linux/backlight.h>
+ #include <linux/bitfield.h>
+ #include <linux/bitops.h>
++#include <linux/cleanup.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/freezer.h>
+@@ -66,6 +67,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/string_choices.h>
+ #include <linux/string_helpers.h>
+ #include <linux/sysfs.h>
+ #include <linux/types.h>
+@@ -185,6 +187,7 @@ enum tpacpi_hkey_event_t {
+ 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
+ 	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
+ 	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
++	TP_HKEY_EV_USB_C_SECURITY	= 0x131e, /* USB C Security (Fn+U, Fn+S) */
+ 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
+ 	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
+ 
+@@ -373,6 +376,8 @@ static struct {
+ 	u32 has_adaptive_kbd:1;
+ 	u32 kbd_lang:1;
+ 	u32 trackpoint_doubletap_enable:1;
++	u32 usbc_security_supported:1;
++	bool usbc_security_enabled;
+ 	struct quirk_entry *quirks;
+ } tp_features;
+ 
+@@ -11265,6 +11270,110 @@ static struct ibm_struct hwdd_driver_data = {
+ 	.name = "hwdd",
+ };
+ 
++/*************************************************************************
++ * USB-C Security subdriver
++ *
++ * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
++ * It always returns:
++ *   bit 16 - USB-C security capability present on this SKU or not
++ *   bit  0 - USB-C Security state (enable or disable)
++ *
++ * Hotkey
++ * ------
++ * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
++ * The driver reads back the new state and notifies the sysfs attribute.
++ */
++
++/* USCS() return word bit layout */
++#define USCS_CAP_BIT		BIT(16)	/* capability: feature present on SKU */
++#define USCS_STATUS_BIT		BIT(0)	/* current security state */
++
++static DEFINE_MUTEX(usbc_security_mutex);
 +
 +/**
-+ * hsmp_acpi_free_sock_array_early() - Drop the global socket array on early probe failure.
++ * usbc_security_query - read current USB-C security state via USCS()
++ * @enabled: out - true when security is ON (data connections blocked)
 + *
-+ * When init_acpi() or misc_register() fails before any ACPI socket reference
-+ * is handed out via kref, free the array and destroy per-socket mutexes.
++ * Returns:
++ *   0        success, @enabled contains the current state
++ *  -EIO      ACPI evaluation failed
++ *  -ENODEV   capability bit absent; feature not present on this SKU*
 + */
-+static void hsmp_acpi_free_sock_array_early(void)
++static int usbc_security_query(bool *enabled)
 +{
-+	u16 i;
++	int status;
 +
-+	lockdep_assert_held(&hsmp_acpi_probe_mutex);
++	guard(mutex)(&usbc_security_mutex);
++	if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0))
++		return -EIO;
 +
-+	if (hsmp_pdev->acpi_sock_kref_started)
-+		return;
-+	if (!hsmp_pdev->sock)
-+		return;
-+
-+	for (i = 0; i < hsmp_pdev->num_sockets; i++)
-+		mutex_destroy(&hsmp_pdev->sock[i].metric_read_lock);
-+	kfree(hsmp_pdev->sock);
-+	hsmp_pdev->sock = NULL;
-+	hsmp_pdev->num_sockets = 0;
-+}
-+
- static int hsmp_acpi_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -597,34 +638,44 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 
- 	guard(mutex)(&hsmp_acpi_probe_mutex);
- 
--	if (!hsmp_pdev->is_probed) {
-+	if (!hsmp_pdev->sock) {
- 		hsmp_pdev->num_sockets = topology_max_packages();
- 		if (!hsmp_pdev->num_sockets) {
- 			dev_err(&pdev->dev, "No CPU sockets detected\n");
- 			return -ENODEV;
- 		}
- 
--		hsmp_pdev->sock = devm_kcalloc(&pdev->dev, hsmp_pdev->num_sockets,
--					       sizeof(*hsmp_pdev->sock),
--					       GFP_KERNEL);
-+		hsmp_pdev->sock = kcalloc(hsmp_pdev->num_sockets,
-+					  sizeof(*hsmp_pdev->sock),
-+					  GFP_KERNEL);
- 		if (!hsmp_pdev->sock)
- 			return -ENOMEM;
-+
-+		hsmp_init_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
- 	}
- 
- 	ret = init_acpi(&pdev->dev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to initialize HSMP interface.\n");
-+		hsmp_acpi_free_sock_array_early();
- 		return ret;
- 	}
- 
--	if (!hsmp_pdev->is_probed) {
-+	if (!hsmp_pdev->mdev.this_device) {
- 		ret = hsmp_misc_register(&pdev->dev);
- 		if (ret) {
- 			dev_err(&pdev->dev, "Failed to register misc device\n");
-+			hsmp_acpi_free_sock_array_early();
- 			return ret;
- 		}
--		hsmp_pdev->is_probed = true;
--		dev_dbg(&pdev->dev, "AMD HSMP ACPI is probed successfully\n");
-+		dev_dbg(&pdev->dev, "AMD HSMP ACPI misc device registered\n");
++	if (!(status & USCS_CAP_BIT)) {
++		pr_debug("USCS cap bit absent (raw=0x%x)\n", status);
++		return -ENODEV;
 +	}
 +
-+	if (!hsmp_pdev->acpi_sock_kref_started) {
-+		kref_init(&hsmp_pdev->acpi_sock_kref);
-+		hsmp_pdev->acpi_sock_kref_started = true;
-+	} else {
-+		kref_get(&hsmp_pdev->acpi_sock_kref);
- 	}
++	*enabled = status & USCS_STATUS_BIT;
++	return 0;
++}
++
++/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------- */
++static ssize_t usb_c_security_show(struct device *dev,
++				   struct device_attribute *attr,
++				   char *buf)
++{
++	return sysfs_emit(buf, "%s\n",
++			  str_enabled_disabled(tp_features.usbc_security_enabled));
++}
++
++static DEVICE_ATTR_RO(usb_c_security);
++
++static struct attribute *usbc_security_attributes[] = {
++	&dev_attr_usb_c_security.attr,
++	NULL,
++};
++
++static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
++					     struct attribute *attr, int n)
++{
++	return tp_features.usbc_security_supported ? attr->mode : 0;
++}
++
++static const struct attribute_group usbc_security_attr_group = {
++	.is_visible = usbc_security_attr_is_visible,
++	.attrs = usbc_security_attributes,
++};
++
++static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
++{
++	int err;
++
++	err = usbc_security_query(&tp_features.usbc_security_enabled);
++	if (err == -ENODEV)
++		return 0;
++	if (err)
++		return err;
++
++	tp_features.usbc_security_supported = true;
++	return 0;
++}
++
++/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
++static bool tpacpi_usbc_security_hotkey(void)
++{
++	if (!tp_features.usbc_security_supported)
++		return false;
++
++	if (usbc_security_query(&tp_features.usbc_security_enabled))
++		return false;
++
++	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
++	return true;
++}
++
++static struct ibm_struct usbc_security_driver_data = {
++	.name = "usbc_security",
++};
++
+ /* --------------------------------------------------------------------- */
  
- 	return 0;
-@@ -632,16 +683,7 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 
- static void hsmp_acpi_remove(struct platform_device *pdev)
- {
--	mutex_lock(&hsmp_acpi_probe_mutex);
--	/*
--	 * We register only one misc_device even on multi-socket system.
--	 * So, deregister should happen only once.
--	 */
--	if (hsmp_pdev->is_probed) {
--		hsmp_misc_deregister();
--		hsmp_pdev->is_probed = false;
--	}
--	mutex_unlock(&hsmp_acpi_probe_mutex);
-+	kref_put(&hsmp_pdev->acpi_sock_kref, hsmp_acpi_sock_release);
- }
- 
- static struct platform_driver amd_hsmp_driver = {
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index 91bc21232646..5fcc7400cacc 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.h
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -14,6 +14,7 @@
- #include <linux/device.h>
- #include <linux/hwmon.h>
- #include <linux/kconfig.h>
-+#include <linux/kref.h>
- #include <linux/miscdevice.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-@@ -57,7 +58,8 @@ struct hsmp_plat_device {
- 	struct hsmp_socket *sock;
- 	u32 proto_ver;
- 	u16 num_sockets;
--	bool is_probed;
-+	struct kref acpi_sock_kref;
-+	bool acpi_sock_kref_started;
+ static struct attribute *tpacpi_driver_attributes[] = {
+@@ -11325,6 +11434,7 @@ static const struct attribute_group *tpacpi_groups[] = {
+ 	&dprc_attr_group,
+ 	&auxmac_attr_group,
+ 	&hwdd_attr_group,
++	&usbc_security_attr_group,
+ 	NULL,
  };
  
- int hsmp_cache_proto_ver(u16 sock_ind);
+@@ -11479,6 +11589,8 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
+ 	case TP_HKEY_EV_PROFILE_TOGGLE2:
+ 		platform_profile_cycle();
+ 		return true;
++	case TP_HKEY_EV_USB_C_SECURITY:
++		return tpacpi_usbc_security_hotkey();
+ 	}
+ 
+ 	return false;
+@@ -11930,6 +12042,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+ 		.init = tpacpi_hwdd_init,
+ 		.data = &hwdd_driver_data,
+ 	},
++	{
++		.init = tpacpi_usbc_security_init,
++		.data = &usbc_security_driver_data,
++	},
+ };
+ 
+ static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-2.34.1
+2.51.0
 
