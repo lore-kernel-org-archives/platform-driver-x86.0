@@ -1,180 +1,146 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CC311592
-	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Jun 2026 14:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC7836EA8E;
+	Sat, 13 Jun 2026 17:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781360489; cv=none; b=QG4iWqirCN4dk8nx5Eu/RWQ9G1ERavdwfldLXbCNxnbIsMf0atStWEntlYIXiAMl+QPPIoO08/6nGpeDqJCu5E0OEXH5UhbkgqMgQhz5YPOOx/isa2X1/OzLzTQtpblW7Cq7wAg+/ejTP4vvVyrgmkbcrwMKS017TqyxdleVNX8=
+	t=1781370305; cv=none; b=cURcNRoY3nOGphCpXYTQZeOqMbjFs8YCZh1B7lXlMfoBouyDF5uAV+fv359zvmQFSGAW9TwBU6DLO/K9p8aoPc3km5U7PO8S0ctaA9+n8MZ7WoaJH8hBj8la/KHZ9ekZb03exj9sVomVziH3o3A4Y9poozKZ7KFEAahTarQy4VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781360489; c=relaxed/simple;
-	bh=pNWsFF7SA1mU6kTyygY0fQJ0RiWUdK+DsgA4Y+Sn2D0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NZ2JFKLpxiXT8ziCGDyTh+YNHkMp87Eshe7q2dFUmjDcMKy0x1uQSKqaxn2m3KRS00cBznKnUxbDKl8KxSyRibN6OaMb+TB1BAKBjnvuw9Ey/6+/bVn0ZuT5bcF3AoJTKdrvhl5IMTmdNCfYeP1ElzQS/8ZauzlC9srPXdC2x/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JpfyqPYX; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1781370305; c=relaxed/simple;
+	bh=NMEbEB2WYAzIuxBAlXfWzlKjaH6UKvvZM3UU1nx3WmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=mG+QMdf58zEJQVaSSfEI0/YWKZYoj03D6YNwcxZIRlpWgWyXp04QK4dVi2Thh17zJ2Lmn3nfilbBmwKirUzKz37T3ixsKbwzDmFzokEB0MbpjL8JXdIvetRzCkGSyvmulzNOtPcgq5Cz7uoQ3dsLjmYhyNa8abMCPj46j6fe9wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=ySCshCFD; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JpfyqPYX"
-Message-ID: <e259fe6a-9bcd-4664-b45d-3491629bd291@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1781360473;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9C63ir8Ui+aiFVcIrsUCZpgfAjBlDyxKNobklykXWlk=;
-	b=JpfyqPYXY2chI9ClD0ZXfFH57HZ9eXjhMOZUGEKQt4trWV54mWZz0VfqlSNfl7dsuQokxf
-	XryiwQAbVINTGOOqtvrmWVZPvSb9VPci5X3oz0oWsrhPgN16KjEqBi0jhl1kt8u0OXBWvB
-	oXO76KWn3Pzy2/rV7s7Ft+TjG6Pv9hY=
-Date: Sat, 13 Jun 2026 16:21:03 +0200
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="ySCshCFD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date;
+	bh=9BlTDcRtXsQuHx/sdddpqbglks88zcI582fnI/HcjnU=; b=ySCshCFDi0gsh12KKQzGXNZHiP
+	u+UhOLG9jm1Bfsivxa57TbC/Y1RPirUGwqRQtE02/GSpZm/0GMecD2tWsrVVKQ9JWrpNxGs0N33bU
+	4sFsdD6OoH6eAnEqQQF6vMCVz3kDd/6r+s2ONqwpngRSLiyAozBpOLCgyovOJ7cfJlWE=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.99.3)
+	(envelope-from <mnencia@kcore.it>)
+	id 1wYRk1-000000008VC-1qTe;
+	Sat, 13 Jun 2026 19:01:53 +0200
+Date: Sat, 13 Jun 2026 19:01:53 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: Angioli Samuele <angioli.samuele@gmail.com>,
+	linux-media@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
+ handshake-derived "dvdd" regulator registered but never linked to sensor,
+ sensor probe fails with -EREMOTEIO
+Message-ID: <ai2NAS5EnLaLoN2W@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/1] platform/x86: asus-armoury: gate PPT writes behind
- active fan curve
-To: Ahmed Yaseen <yaseen@ghoul.dev>, Corentin Chary
- <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mario Limonciello <superm1@kernel.org>
-References: <20260519181155.46044-1-yaseen@ghoul.dev>
- <20260519181155.46044-2-yaseen@ghoul.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260519181155.46044-2-yaseen@ghoul.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
+References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
+ <ah_XLEAkqjV9HkSE@spark.kcore.it>
+ <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-On 5/19/26 20:12, Ahmed Yaseen wrote:
-> On models flagged with requires_fan_curve in the DMI power_data table
-> (30 entries), the BIOS ACPI method SPLX only writes PPT values to the
-> EC when the fan mode is set to Manual (FANM=4). FANM is set to 4 by
-> the DEFC method when a custom fan curve is written. Without an active
-> custom fan curve, the WMI DEVS call returns success but the firmware
-> silently ignores the PPT value, so userspace observes no effect from
-> its write.
->
-> Gate writes to ASUS_WMI_DEVID_PPT_{PL1_SPL,PL2_SPPT,PL3_FPPT,APU_SPPT,
-> PLAT_SPPT} on a check of asus_wmi_custom_fan_curve_is_enabled(), and
-> return -EBUSY with a pr_warn_once() when no fan curve is active on an
-> affected model. Export the helper from asus-wmi so asus-armoury can
-> call it across module boundaries.
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
-> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
-> ---
->  drivers/platform/x86/asus-armoury.c        | 20 ++++++++++++++++++
->  drivers/platform/x86/asus-wmi.c            | 24 ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  5 +++++
->  3 files changed, 49 insertions(+)
->
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 5b0987ccc270..f094b70fa1f0 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -93,6 +93,8 @@ struct asus_armoury_priv {
->  
->  	u32 mini_led_dev_id;
->  	u32 gpu_mux_dev_id;
-> +
-> +	bool requires_fan_curve;
->  };
->  
->  static struct asus_armoury_priv asus_armoury = {
-> @@ -216,6 +218,22 @@ static int armoury_set_devstate(struct kobj_attribute *attr,
->  	u32 result;
->  	int err;
->  
-> +	/* On some models, PPT changes require an active fan curve */
-> +	if (asus_armoury.requires_fan_curve) {
-> +		switch (dev_id) {
-> +		case ASUS_WMI_DEVID_PPT_PL1_SPL:
-> +		case ASUS_WMI_DEVID_PPT_PL2_SPPT:
-> +		case ASUS_WMI_DEVID_PPT_PL3_FPPT:
-> +		case ASUS_WMI_DEVID_PPT_APU_SPPT:
-> +		case ASUS_WMI_DEVID_PPT_PLAT_SPPT:
-> +			if (!asus_wmi_custom_fan_curve_is_enabled()) {
-> +				pr_warn_once("PPT change requires an active fan curve on this model. Enable a custom fan curve first.\n");
-> +				return -EBUSY;
-> +			}
-> +			break;
-> +		}
-> +	}
-> +
->  	/*
->  	 * Prevent developers from bricking devices or issuing dangerous
->  	 * commands that can be difficult or impossible to recover from.
-> @@ -1002,6 +1020,8 @@ static void init_rog_tunables(void)
->  		return;
->  	}
->  
-> +	asus_armoury.requires_fan_curve = power_data->requires_fan_curve;
-> +
->  	/* Initialize AC power tunables */
->  	ac_limits = power_data->ac_data;
->  	if (ac_limits) {
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 80144c412b90..e4c1716d9b30 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -4001,6 +4001,30 @@ static int asus_wmi_custom_fan_curve_init(struct asus_wmi *asus)
->  	return 0;
->  }
->  
-> +/*
-> + * Returns true if at least one custom fan curve is active
-> + *
-> + * Used by asus-armoury to check if PPT writes will be accepted by the BIOS
-> + * on models that require an active fan curve for TDP changes.
-> + */
-> +bool asus_wmi_custom_fan_curve_is_enabled(void)
-> +{
-> +	struct fan_curve_data *curves;
-> +	struct asus_wmi *asus;
-> +
-> +	guard(spinlock_irqsave)(&asus_ref.lock);
-> +	asus = asus_ref.asus;
-> +	if (!asus)
-> +		return false;
-> +
-> +	curves = asus->custom_fan_curves;
-> +
-> +	return (asus->cpu_fan_curve_available && curves[FAN_CURVE_DEV_CPU].enabled) ||
-> +	       (asus->gpu_fan_curve_available && curves[FAN_CURVE_DEV_GPU].enabled) ||
-> +	       (asus->mid_fan_curve_available && curves[FAN_CURVE_DEV_MID].enabled);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(asus_wmi_custom_fan_curve_is_enabled, "ASUS_WMI");
-> +
->  /* Throttle thermal policy ****************************************************/
->  static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  {
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 554f41b827e1..5d57293ced6c 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -196,6 +196,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
->  int asus_hid_register_listener(struct asus_hid_listener *cdev);
->  void asus_hid_unregister_listener(struct asus_hid_listener *cdev);
->  int asus_hid_event(enum asus_hid_event event);
-> +bool asus_wmi_custom_fan_curve_is_enabled(void);
->  #else
->  static inline void set_ally_mcu_hack(enum asus_ally_mcu_hack status)
->  {
-> @@ -227,6 +228,10 @@ static inline int asus_hid_event(enum asus_hid_event event)
->  {
->  	return -ENODEV;
->  }
-> +static inline bool asus_wmi_custom_fan_curve_is_enabled(void)
-> +{
-> +	return false;
-> +}
->  #endif
->  
->  #endif	/* __PLATFORM_DATA_X86_ASUS_WMI_H */
+Hi Samuele,
+
+No problem on the timing, and thanks. The regulator_summary plus the
+_DEP decode settle it, and they confirm the multi-instance hypothesis
+from my last mail rather than the missing-map one.
+
+One correction on the code side first, because it matters for the fix.
+The handshake path is not missing the consumer-map step. HANDSHAKE
+(type 0x12) and POWER_ENABLE (0x0b) fall through to the same call site
+in skl_int3472_handle_gpio_resources(), so both go through
+skl_int3472_register_regulator(), which plants supply_map[] (dev_name +
+supply, lower- and upper-case) the same way for either type. That has
+been the case since v6.16 (c5d039327204, "int3472: Add handshake pin
+support"), so your 7.0.10 kernel has it. The dvdd map does get created.
+The problem is the dev_name it is keyed on.
+
+That dev_name is int3472->sensor_name, and sensor_name is
+"i2c-" + acpi_dev_name(acpi_dev_get_next_consumer_dev(adev)), i.e. the
+first device that lists the registering INT3472 instance in its _DEP.
+Here that instance is INT3472:0c = DSC0 (the regulator name in your
+summary, "INT3472:0c-dvdd", is built from acpi_dev_name(adev), so the
+provider is unambiguously DSC0). But your _DEP decode shows the sensor
+(LNK1) depends on DSC1, never on DSC0: ARLP -> {CVSS, HS09.VIC1},
+non-ARLP -> {DSC1, HS09.VIC1}. So DSC0's reverse-_DEP walk does not
+return OVTI02C1. It returns whatever else declares a _DEP on DSC0
+(plausibly the IR-flood side, given func 3 sits on the same device),
+the dvdd map is keyed to that name, and the sensor's
+regulator_get("dvdd") for "i2c-OVTI02C1:00" never matches. -ENODEV,
+permanent dummy under full constraints (the legacy ACPI dev_name path
+has no "coming later" signal, so it is a dummy, not -EPROBE_DEFER),
+rail stays down, 0x300a reads -EREMOTEIO, no retry. That is exactly the
+regulator_summary you captured: INT3472:0c-dvdd registered, use=0.
+
+Note this is specific to dvdd. DSC0's _DSM only exposes the dvdd
+handshake (func 2) and the IR-flood strobe (func 3); it does not
+provide avdd or dovdd. The sensor correctly _DEPs on DSC1 and is served
+by DSC1 for the rails and resets DSC1 owns, which is why it gets far
+enough to attempt the chip-ID read at all. dvdd is the one rail
+stranded on an instance the sensor does not depend on. (avdd and dovdd
+landing on dummies is most likely the always-on-rail case I mentioned
+before, benign, unless you can see a gating GPIO for them on either
+instance.)
+
+Timing is not the mechanism either way. Your own timestamps already
+show the sensor's get at 6.468 well after DSC0 bound at 6.135, and even
+a perfectly ordered probe would still miss, because the map is keyed to
+the wrong device, not registered late.
+
+So this is a firmware _DEP-topology issue: dvdd is gated by DSC0, but
+the sensor is pointed at DSC1, and nothing connects the two. Could you
+confirm the two halves of that, so we are not inferring DSC0's consumer:
+
+  - with int3472 dynamic debug on
+    (dyndbg="module intel_skl_int3472_discrete +p"), the "Sensor name
+    %s" line from DSC0's probe shows which device its consumer walk
+    actually resolved to. If that is not OVTI02C1:00, it nails the
+    keying;
+  - the reverse _DEP, i.e. which device(s) list \_SB.PC00.DSC0 in their
+    own _DEP (a grep of the DSDT _DEP packages). DSC0 bound rather than
+    failing with "INT3472 seems to have no dependents", so something
+    does depend on it; identifying it tells us where dvdd actually went.
+
+Hans, Sakari, once that "Sensor name" line confirms DSC0 is keying its
+dvdd to a non-sensor consumer, the open int3472 question becomes whether
+this is a firmware defect to push back on or something we work around
+in-tree (and if in-tree, a per-board quirk vs. generic cross-instance
+keying). Worth noting the EPROBE_DEFER idea from last time does not
+apply: the map is keyed to the wrong device, not merely registered late.
+Let's nail the topology first.
+
+Thanks,
+Marco
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmotjMwRHG1uZW5jaWFA
+a2NvcmUuaXQACgkQWJ8D8BulUDhOWhAAm0dWTRnXeg419gpHSz3/fWxNgS/rHgy9
+oJmYV4/6kftjSbR3i5zORj1eUAOKhdh4lYmjYN0+7OPu45MAlFHTEB943OCSBx5M
+HZQGvIWlKfYiLewUnzYBpuMCk1tHJpjmSvkiU5KIrto47yM1uGW8hff+dmo+QIKI
+ir6LaIIAsEhjLfjlK4mQa7EoImMmLfT9tmMpZeJjnsulXAsRgz8GGaLSca+J8/wR
+pESrwvcDpQocFdVlBCIBSP6vnrJmGEOzivtb7uDWp3X8yXlPzwtCEE+WEyXghtXN
+TSAtIAbezj1LaBSQ24uh6deOZkhVsqZ4t8ms1BWl8/E+XTw4GERMcTxLJJaRxO2T
+Btzl95AEnGmxieWcZirrHlWIPTYRdJ8zlMhvKEuzjxbt/kFq8hm1mtvbcSdxOA7L
+0Q2cvaTtlFlWRG8QCJTMNhFXKbaioaVLc/wkGiQ4vhrAT1mLX1voiTvaXnfRlk/s
+eun0k5XN2+90DVqni0vx3vcZlF5/nnb5OmMJefv7qK89LwrA70ugbbNn2UL9Gxnf
+IZqlPs50oyeBe7g7K5gglYgZfu2awMTx9eFcftiv8itH0yUVKXPawVgCXe1gSfrp
+Eh4Q7oZEk1UYNk3bCz2RmspfbfwWy1z7Kn5/mWpSWUy/8PCFl1otui/C4snRNgIs
+42ajMSg0om4=
+=0BwD
+-----END PGP SIGNATURE-----
