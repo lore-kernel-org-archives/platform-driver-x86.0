@@ -1,64 +1,64 @@
-Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5212021CA03
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD182459DC
 	for <platform-driver-x86@vger.kernel.org>; Sat, 13 Jun 2026 02:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781317020; cv=none; b=p7bX/dNEU7PGSlOd2uaamEDT6Db55GQmdlJrW/l2udQIpwysQP0UiC2pZn5JLxfR6aavgNTt/Kaz7XGn/w+mFl6osa+Tzl/FRsTDNfEKJAnOO15Q6N/OBzakquQzunbjIUjAHLuXhSJLbZc4FqYsGp5wfx2PfWTWl7OamwDzLL0=
+	t=1781317020; cv=none; b=IRbiFLnmOVffMxQum6KCNlJW6zgRkH/b3Ydgc6EqgEOiuRNqtJJxe8NJqvyWq9Rth/LeZMa6RH6PSaUgVT63L42I8JfR6nUEuYT5SUukiZqDm9rtsNxNp8aRyWPHjxMZUB3d1TiBzTO21dVTfXmsQRI9nyw36AyD8M4m/rDV3+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781317020; c=relaxed/simple;
-	bh=i6MFtNvxolieN4lk5VN/96A2bl1Y4HNUU5VxSOuv454=;
+	bh=zVMwEyWWCc8jfTHooJjUSOaj9CWNTteTj5bXrbCRFa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=awt9AP2bGMPfAbgHL5JBWHSLKR4uzSUwO4hIIWJ1Pfo8rvy5qU/kiTaY2Pphqrlv9jsfKdHABDN6pZGk62wQJ6bp4wG5/oE9lgSoy0uPMJcjCdbBzbB5t1j6VIUkBlebuG0pt661oIO8PR82SFCLe0CqV/EMmOVlNHjligbvaLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n1dNcbAx; arc=none smtp.client-ip=74.125.82.52
+	 MIME-Version; b=P30OOhVr76yUDHI2g9N9TO+HOlQuvibjvhDjqZti8AqtywTQ7sSMjD8+vRql3lZ8hlqTUlzJ7c34NAZQjAiPIAAhAoiDI8Byi23zgaQeYp2N+EOm9lPx8NS9123q2bA0usLul8sr+JFnEu7DMgv1ForhdDqiAArRPmtrHaDjFp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cX/dMhFM; arc=none smtp.client-ip=74.125.82.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1dNcbAx"
-Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-137d464c47eso1544680c88.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cX/dMhFM"
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-304d0ac5e3cso3411209eec.0
         for <platform-driver-x86@vger.kernel.org>; Fri, 12 Jun 2026 19:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781317018; x=1781921818; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781317019; x=1781921819; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pIOz3zm+RSFHd4HOq3rk3uZ1Gb4SoU/OadQL7cr2so8=;
-        b=n1dNcbAxOTGCK5BS7DrX0ilbhgk9toysyVBAn7IPuyrXuApv7GlfIG+T0nPeP8fcu8
-         65XOlVHhEzCh055rGF24diOOAE1gJF6ufNVaeU4q8WBN5xZ06nERK+B8nF83kV+Jhf08
-         caT3sbI6QK/ZB1jusCaiVc4H5m7Vv+nNPxkBE5KMx2zSY1YLFrCwhx6GOWF8RQWMMuBZ
-         zxfOKvuuI25IiyXm3IRmjsBeRhUHiAhk10O2p7U7KvMj9mLzOl2xrMDpZ0OGCtIzTcHT
-         ny3ivPerlbebaSdTmX8IHnljS4d7AUYAl5y9DTLVmrUmAbjT+VmDVvrc7jh18bZoiR42
-         jshg==
+        bh=dWft2f1Im9NncRU+LFQf7xWUs7WelaDhR+JrHlWf3PE=;
+        b=cX/dMhFMUO3GO+30vz/Wq8BemUsdmpxhtRNd5g/7h3X4hUADEO7UoKB5r72iOmJcyB
+         0Zal99CR1LyWAL6SfyqRN7RbKa/YR9Cjpj7Uwnsk5bAbohmQ8SzLoVFsQOh+YgKfETJh
+         EIGuUnQUaFnGiq80fpDXvZR9RimaVro20G191X96AkSIdTCgpLtxTOakA+uLRfIr+uJ/
+         1fzUnXS5bwGqru/+4oRY9sre9cIK8ecnN4awT4L3xkSnm/e+M7tZX9tUz+JVfDHrHxjq
+         8fq2kurVRRhCGTAqtIA5NgXuAJrK0T2zkmUZLiQHEpywJYaexmsFceTW4q63jcCj4ePp
+         RH5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781317018; x=1781921818;
+        d=1e100.net; s=20251104; t=1781317019; x=1781921819;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=pIOz3zm+RSFHd4HOq3rk3uZ1Gb4SoU/OadQL7cr2so8=;
-        b=jMRZP9vOwCtrdPg4LbBs1Jo1P3Kq0qK/l+DYu43TbSOprGdryKyAPIt5QtFM8umjRs
-         RqviGojxSeP/BqzBzubD5YvqpCHDribjaaDCl8C5sstFdFg0cpyYPGY7DXl5yVLph5ec
-         FuvyxzXd8V5DQRPgGkShk3hW3WBKKuo5E/+nF5UQwBNzlE+Sc1JNFlARx/aNFd15AnLN
-         Wmk8OajWfjB4uJl0DSe1hRA9AHR3irtjOMkY3BeU4A1du+01mC0DZb17mR+JwT/gKtj4
-         mQZH9Ks34sUyG+Tu6J4wVJz8+6XRX35ma/fK9+msQgKf8/e7NlSqc6zBMbhFuncNO4Ye
-         JgDg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Tl1IFdJPpEBMGKyzhIPXymqmvqZFVpJVrw93CJRBT8KVYPmmmPGQ9suuZdjbtJ1EoWfPLjq636AY43O7P/usxnPIH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ8vxWIpLvDJJzimtxhe1Zw6Gu5PJ4sBvurhDUWkHoSZxlQP2P
-	x9fQFYC+FN8fje4xHH381Io8gxm6r9RnHfNrV7Jqo7zKvf2a32j0mRBh
-X-Gm-Gg: Acq92OFDsk6lk0KhhBI5zMrg+pkRbpRrTP4+c/YXLM/LG2xdE+Abeuo7cK/LIXrm0Ul
-	OYiRmjf0SB86LPNRHEAhPgknKoE1xLXQAAgEq3496yqY2Me62RjCM3ErVa3TA8SZeZGVywhCcjL
-	0E3een36jz5S7rRzkbX5EbHiZhbX09gk8Ucwo+bDQQ9LUU8rqBlBdJ1YkJpGrQlpMxUyXBlLatd
-	YwGMu1YRRol8EKUqm9w9O3fRJbeBNLbGn6blcJKHpl8H99IM66nQup8S432NK1WpDv0+ykt20fs
-	A0OWqtnuODE3qEEL1EKwlEXcRLu2JLdLBLnLpVCEjIlB8xgzEwaA9WtZcQSQVOUsbWLVBTOv8nr
-	LPZLgIOJLsODvPKo0/jkl+OlkKg09I0FA3csHouuOe7nu8bwIwx8eJdQcvkA69YwADefqSS7R7D
-	afl1OVAR5qlWLwuWmeAtEDQ+MaKqZfQNTXYFLMUqmyHvISN3Gd4CfPHGc44c9FeH48v2DzI6bRE
-	AWkl8QR9pLs3Pg=
-X-Received: by 2002:a05:7022:6727:b0:137:24c9:fb7a with SMTP id a92af1059eb24-1384b39a6f1mr2777016c88.2.1781317018208;
+        bh=dWft2f1Im9NncRU+LFQf7xWUs7WelaDhR+JrHlWf3PE=;
+        b=HrJWkk7MHTZGT7Vraq2aF+z6nN6V+UBzhCbC9/hNMip+icADzYHDRizqQSlRM0Bqy9
+         WKYKvOYnmP9qVYK4peUQ2t/AF8hyvqHrB565nThO4fQJB7MX3skaTxeNKS36NoVYMxPZ
+         ScPGtHcUNGHc0j5yYaCjtv1TTyJ/IIU9ueKFS8/lZ0EW89RfvnG+ceTbnykBYj0zFdw9
+         wd57OEz7yrghSNp8Jk8ATvD3PbevJfR0qMCXXcFH4QQ2zgocEg4AKXmFLT92qNa8p+Is
+         lheC+AdPl4ul5M4R93FhMOp/TmD8s2/3fd7nLNEg79FcXWLhXY+W/7eK0sShx55IY4fH
+         ny3g==
+X-Forwarded-Encrypted: i=1; AFNElJ8aOBPxJBvuSIdiypvWiNurhBGtjnwFcRPjN+d7CcrcEVdTnzejKWmjG5NDq5NPT4DUUvbxOvyIs4WfusOKuOnU4PTO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyXFUnflALaU8ApMx3RM+llKCIq82iBh4CBmzZ7xQ/OuDSRrRc
+	CKhRvrLI8gTisDsQf5cTTNJGD53OACJBnvkkp5ytdbDfnqB0ypB0xHk6
+X-Gm-Gg: Acq92OF4ojHW8FSXh6XqZ0b/7UWhcoFcvQhsSKCwxn2bNBm4Q8fxHFfRSPmGYo+Dn29
+	Z3Zh992G7+atE/CXUySwGlwL8g+8WpZiCs9F0I8q+AeA60Tu+cGP0ukKodnHvY0lZwhXU9r6NRW
+	l7q6pE7F1E9UJ8hJCvD7HtQT1O37sIuhZusMSqDCc7SY+nF99PKo83KFw+LosVhFmQ0Hlzx+22l
+	VaLcNqR+WdlGXKw9/JJ7FDKrwpuNb4GReSXsAF4l+Xb+ifnPqZfIN6M1kqna62xbw0oSgGTzwIb
+	5FewlZhN34VOqnKGKw10yMeg9F9Qj2s14LimMNBG8R4KBnMkrC5edJY1znBIRAu+Vj5oA9eoc1F
+	rroTA6Z3RkOtoGYP3wjz3yHK3fkY371Napx915otOebDEj5ZimVU8X0ofp+KYqAqyNFMIHRhMyp
+	H/S3r7fMN2CzP+LckDNRcKB5HwnM8N3ET+Du0puEFt5eYIDe5+HKy0Eqkhhoqw43IIs2/xY/xUg
+	s5N
+X-Received: by 2002:a05:7300:6916:b0:307:3a6c:e708 with SMTP id 5a478bee46e88-3081ff57263mr3376737eec.5.1781317018931;
         Fri, 12 Jun 2026 19:16:58 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3081e48e412sm6417828eec.4.2026.06.12.19.16.57
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3081e48e412sm6417828eec.4.2026.06.12.19.16.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 19:16:57 -0700 (PDT)
+        Fri, 12 Jun 2026 19:16:58 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -68,9 +68,9 @@ Cc: Armin Wolf <W_Armin@gmx.de>,
 	Thomas Renninger <trenn@suse.de>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] platform/x86: msi-wmi: Reformat msi_wmi_notify()
-Date: Fri, 12 Jun 2026 19:16:53 -0700
-Message-ID: <20260613021654.933618-2-derekjohn.clark@gmail.com>
+Subject: [PATCH v2 2/2] platform/x86: msi-wmi: Add MSI Claw M-Center keys
+Date: Fri, 12 Jun 2026 19:16:54 -0700
+Message-ID: <20260613021654.933618-3-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260613021654.933618-1-derekjohn.clark@gmail.com>
 References: <20260613021654.933618-1-derekjohn.clark@gmail.com>
@@ -82,102 +82,77 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reformats msi_wmi_notify() to use a switch statement that reduces nesting
-and prepares the function to support additional ACPI types.
+MSI Claw devices produce WMI events through the MSI WMI hotkeys GUID for
+some of their buttons. When pressed, these cause spam in the kernel. For
+the majority of devices these events can be safely ignored as they are
+duplicated by the AT Translated Set 2 Keyboard device exposed as an
+evdev. For the MSI Claw A8 BZ2EM model's M-Center Menu button (left of
+the screen) there is no associated keyboard event, so this event must be
+exposed. Map this button to the same scancode produced by the AT
+Keyboard device on other models. This does cause double F15 events on
+the A1M, 7 AI+ A2VM, and 8 AI+ A2VM, but it appears to be harmless in my
+testing.
 
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/platform/x86/msi-wmi.c | 71 +++++++++++++++++++---------------
- 1 file changed, 39 insertions(+), 32 deletions(-)
+v2:
+  - Add comments explaining buffer fields & length.
+  - Test that we have at lease u8[2] before assignment of key ID
+---
+ drivers/platform/x86/msi-wmi.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
 diff --git a/drivers/platform/x86/msi-wmi.c b/drivers/platform/x86/msi-wmi.c
-index 4a7ac85c4db4..d00ced756581 100644
+index d00ced756581..c9db750fe5ae 100644
 --- a/drivers/platform/x86/msi-wmi.c
 +++ b/drivers/platform/x86/msi-wmi.c
-@@ -172,44 +172,51 @@ static const struct backlight_ops msi_backlight_ops = {
+@@ -46,6 +46,12 @@ enum msi_scancodes {
+ 	WIND_KEY_WLAN		= 0x5f,	/* Fn+F11 Wi-Fi toggle */
+ 	WIND_KEY_TURBO,			/* Fn+F10 turbo mode toggle */
+ 	WIND_KEY_ECO		= 0x69,	/* Fn+F10 ECO mode toggle */
++	/* MSI Claw keys */
++	CLAW_KEY_VOLUMEDOWN	= 0x21,
++	CLAW_KEY_CENTER		= 0x29,	/* MSI M-Center main menu */
++	CLAW_KEY_QUICK_LONG	= 0x2a,	/* MSI M-Center quick access long hold */
++	CLAW_KEY_VOLUMEUP	= 0x32,
++	CLAW_KEY_QUICK_SHORT	= 0x58,	/* MSI M-Center quick access short press */
+ };
+ static struct key_entry msi_wmi_keymap[] = {
+ 	{ KE_KEY, MSI_KEY_BRIGHTNESSUP,		{KEY_BRIGHTNESSUP} },
+@@ -69,6 +75,15 @@ static struct key_entry msi_wmi_keymap[] = {
+ 	{ KE_KEY, WIND_KEY_TURBO,		{KEY_PROG1} },
+ 	{ KE_KEY, WIND_KEY_ECO,			{KEY_PROG2} },
  
- static void msi_wmi_notify(union acpi_object *obj, void *context)
- {
--	struct key_entry *key;
-+	struct key_entry *key = NULL;
-+	int eventcode = 0;
- 
--	if (obj && obj->type == ACPI_TYPE_INTEGER) {
--		int eventcode = obj->integer.value;
-+	if (!obj)
-+		return;
++	/* These are MSI Claw keys, used for MSI M-Center in Windows */
++	{ KE_KEY, CLAW_KEY_CENTER,		{KEY_F15} },
 +
-+	switch (obj->type) {
-+	case ACPI_TYPE_INTEGER:
-+		eventcode = obj->integer.value;
++	/* These MSI Claw keys work without WMI. Ignore them to avoid double keycodes */
++	{ KE_IGNORE, CLAW_KEY_QUICK_SHORT },
++	{ KE_IGNORE, CLAW_KEY_QUICK_LONG },
++	{ KE_IGNORE, CLAW_KEY_VOLUMEUP },
++	{ KE_IGNORE, CLAW_KEY_VOLUMEDOWN },
++
+ 	{ KE_END, 0 }
+ };
+ 
+@@ -183,6 +198,17 @@ static void msi_wmi_notify(union acpi_object *obj, void *context)
+ 		eventcode = obj->integer.value;
  		pr_debug("Eventcode: 0x%x\n", eventcode);
--		key = sparse_keymap_entry_from_scancode(msi_wmi_input_dev,
--				eventcode);
--		if (!key) {
--			pr_info("Unknown key pressed - %x\n", eventcode);
-+		break;
-+	default:
-+		pr_info("Unknown event received\n");
-+		return;
-+	}
+ 		break;
++	case ACPI_TYPE_BUFFER:
++		/* Field returns u8[2] here, but is u32 by spec. Allow "oversized" buffers. */
++		if (obj->buffer.length < 2)
++			return;
 +
-+	key = sparse_keymap_entry_from_scancode(msi_wmi_input_dev, eventcode);
-+
-+	if (!key) {
-+		pr_info("Unknown key pressed - 0x%x\n", eventcode);
-+		return;
-+	}
-+
-+	if (event_wmi->quirk_last_pressed) {
-+		ktime_t cur = ktime_get_real();
-+		ktime_t diff = ktime_sub(cur, last_pressed);
-+		/* Ignore event if any event happened in a 50 ms
-+		 * timeframe -> Key press may result in 10-20 GPEs
++		/* pointer[0] is key ID, pointer[1] is active state. We don't get release
++		 * events, so ignore the active state and treat as autorelease.
 +		 */
-+		if (ktime_to_us(diff) < 1000 * 50) {
-+			pr_debug("Suppressed key event 0x%X - Last press was %lld us ago\n",
-+				 key->code, ktime_to_us(diff));
- 			return;
- 		}
-+		last_pressed = cur;
-+	}
- 
--		if (event_wmi->quirk_last_pressed) {
--			ktime_t cur = ktime_get_real();
--			ktime_t diff = ktime_sub(cur, last_pressed);
--			/* Ignore event if any event happened in a 50 ms
--			   timeframe -> Key press may result in 10-20 GPEs */
--			if (ktime_to_us(diff) < 1000 * 50) {
--				pr_debug("Suppressed key event 0x%X - "
--					 "Last press was %lld us ago\n",
--					 key->code, ktime_to_us(diff));
--				return;
--			}
--			last_pressed = cur;
--		}
-+	/* Brightness is served via acpi video driver */
-+	if (key->type == KE_KEY &&
-+	    (backlight || (key->code == MSI_KEY_BRIGHTNESSUP ||
-+			   key->code == MSI_KEY_BRIGHTNESSDOWN)))
-+		return;
- 
--		if (key->type == KE_KEY &&
--		/* Brightness is served via acpi video driver */
--		(backlight ||
--		(key->code != MSI_KEY_BRIGHTNESSUP &&
--		key->code != MSI_KEY_BRIGHTNESSDOWN))) {
--			pr_debug("Send key: 0x%X - Input layer keycode: %d\n",
--				 key->code, key->keycode);
--			sparse_keymap_report_entry(msi_wmi_input_dev, key, 1,
--						   true);
--		}
--	} else
--		pr_info("Unknown event received\n");
-+	pr_debug("Send key: 0x%X - Input layer keycode: %d\n", key->code, key->keycode);
-+	sparse_keymap_report_entry(msi_wmi_input_dev, key, 1, true);
- }
- 
- static int __init msi_wmi_backlight_setup(void)
++		eventcode = obj->buffer.pointer[0];
++		pr_debug("Eventcode: 0x%x\n", eventcode);
++		break;
+ 	default:
+ 		pr_info("Unknown event received\n");
+ 		return;
 -- 
 2.54.0
 
