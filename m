@@ -1,705 +1,203 @@
-Received: from hope.aquinas.su (hope.aquinas.su [82.148.24.172])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A68832C8B;
-	Sun, 14 Jun 2026 14:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.148.24.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C30838E113
+	for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jun 2026 14:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781445839; cv=none; b=oedOswU54Wec3kXQRkjrL0If7aObx9X3mnfG6rLMAYE9jcjEFFIFxIqerkqH4QCza3tFNTMxpnQTVW/wyxrGxgoOjXPnIsu1Gv9S/dSz7QRz6C1yk20uKmtvtsZJBkE8oHel/6tmxbCCexDkifmAYd8VIYKWaL6sd9VtgAPUxfw=
+	t=1781447354; cv=none; b=NsV4g6VWef6lq/jyMKjgU9OZjTmr6ieJDillQysxUlaifR/Y7ICbavny/cQo8aHsOgVvMWZhPiLtw6Z7y626S2nNQqRnjWXFLnE+istE3yt+ZkzTCA8HDY94hTgHoySk5uu86jVy4YHNScuEMzynN2NOv/JT1w/kqwqO8yHidNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781445839; c=relaxed/simple;
-	bh=oVsRmjo1oVIBOiOSNe89vWaxp4kiMY/x+ZYoGAclor0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AiA7fIHqebwnlhAkhiMY5h49zTd+smAI81hQ7jIebHxPRhmLBegtqJk1FrdJp0BNy0mp1lAjLhKxkvD+m418u03cNMDFUXU6IWm5LqBchCCaaIeIo+uvdRR+eoTN66BCubdrt4k4CBA/JXM9GVcLCkIXlEB9/jcycSnHu1TwjwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su; spf=pass smtp.mailfrom=aquinas.su; dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b=lfSrng7j; arc=none smtp.client-ip=82.148.24.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aquinas.su
+	s=arc-20240116; t=1781447354; c=relaxed/simple;
+	bh=tEVx64nm/3zi6kSwBnsD3arA30V9yGMYCcBOwi8wblQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mhvZ1bnix3nhGscON0CpME1PFOEGC2seLT5RCEuKvSxCrjuTBwhKoOzcldFqR1lAUXoDvl6Zy3v+VAcRjvguR7m2NIlB6NVlYBjp5xoK5S0uMdq7eXpPTBkNKYdoL2YHwMTsnAFPLnFzo+rdUclK4DXEyDLbvOpxvawvIT60hE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FmCDtxWy; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b="lfSrng7j"
-Received: from woolf.localdomain (unknown [158.46.243.40])
-	(Authenticated sender: admin@aquinas.su)
-	by hope.aquinas.su (Postfix) with ESMTPSA id 570C66DC04;
-	Sun, 14 Jun 2026 17:03:53 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aquinas.su; s=default;
-	t=1781445835;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/cLSKcK3fBg6I0ddqMzOflGKITLD3GRptiZZiwHG8I=;
-	b=lfSrng7jjADCIwj0h/Ovp0ogLuiJOHrBDphfFyHG8REMkpqXQBEPdm30xeSAzt4qSJbC3P
-	5DYZLjDNJSibug9pKds03mDJkzE0aUx/2xbAh8KG7Jh1GJSAS+EydRDTcGS8JwE6xySxgQ
-	D02LqHE818/Op+ROqJesYn2e4EL2JtXkOiqB7HD9/iCV45qohEBGpQ1aNccVQVNhHysFVF
-	7O/Z4lCtn+ujQkjep/XAC+ASjh62AsQBZ9V5ZtsflDeFqbVVBHkwYuy3wxAuVgj14FEV+Z
-	85lMtDFZD8xVh4luA1HAfKHLmCh5XNR8wzW85jIaUCVtLhp5W95Ii5odCNYQQA==
-Authentication-Results: hope.aquinas.su;
-	auth=pass smtp.auth=admin@aquinas.su smtp.mailfrom=admin@aquinas.su
-From:
- =?UTF-8?B?0JrQvtC90LXQvdC60L4g0JDQvdC00YDQtdC5INCS0LjQutGC0L7RgNC+0LLQuNGH?=
- <admin@aquinas.su>
-To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>
-Subject:
- [PATCH v10] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard
- backlight
-Date: Sun, 14 Jun 2026 21:03:53 +0700
-Message-ID: <B3i0fyryR3yLLMsNVCrg3Q@aquinas.su>
-In-Reply-To: <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
-References:
- <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su> <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
- <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmCDtxWy"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-490be03d47bso25132365e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 14 Jun 2026 07:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781447352; x=1782052152; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7HKdt1hpN3kONaCMNUBJ8wbaTh7eDMk+qZFrnfVPrZQ=;
+        b=FmCDtxWyaoDSi/iGptV0B6M6NUMirLrpmbdz8BGfmnKkTNECKVnqDGm8SQvXZkC4hK
+         8PRD4n7Sr/fDTCoaSZq3sWRVizejcRumy3BLXYHSU2dfbh4e76+Dn3rQVVmLDmWXI7bk
+         tgpKojYAWi1PgVXTblEnnO4lEHIMtKFYG0oxfP57HwnCLEiwBhxcXLmOA/9UznoAmdQm
+         ACQ6GTpCsqaZWQe06Y8sslrra6Sx/aolPoL8BbJwSU9tNkyehiKiIIQDJ1bRXNI78XK4
+         pbnu5Ey6kYilsjxiyXT+h5kpRr8f695sCzx4h4OpzmOh8+4hH/WwLOBjNAjzzKqdjI1Z
+         OTBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781447352; x=1782052152;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7HKdt1hpN3kONaCMNUBJ8wbaTh7eDMk+qZFrnfVPrZQ=;
+        b=TU9j/ajdhoyptqL9Pr3nzdm1Wkfo6g/UO12dfkNrDxGNPLB8m+wTjhNefP2FPGgXpv
+         wcnR0czZTholobfVxfcxbUHWsw1Qx2emn0+oyLCB1c8/yfmTgdGeG/1VtlEbWjy8dCJR
+         GOY08on553X431tudwVyVR36NduGnaVGBy0c9XIw+wOyQyxvRqATFRtsRN4vhkVxkSPg
+         iQVrnir7xoh6Jp4Sxff4TG3P51/4QfBBWei73H9nOO8oIyVZOWWuRJyKrSI2EIty8LKH
+         yp42aabEhsEv2pgx3bMDNAZjju/LExuB5uUUfnNtGqfLVhrxToJ6a1flhgrJ72vpJ6iF
+         gb2Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/5dd3+45+I9O8YtGIFUtdniWkKImRE3/cP7XJe2cNwHucNCi4GT0lX/srGxN8wHxOyFwG8MEnYWvE4uEA9jdG7WDeM@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrkzfBvg2lUrKQAstDrQraQxEuqk5k7kcaFO7bxcMv39spMDrR
+	fDZWUUsXqOm6u/6LMs2JMPOBvpJTvl7AGht25V+p8pFpDw68TlKEBeqs
+X-Gm-Gg: Acq92OHq8k2e0ouSVBTReCRtm0JJrIRh0UJPUcuVU7JCRw1P3GBMOaOEj2tG3r1PO2s
+	ujwesnxIL7Ut+K1wLmpImnLaUOrXK4GzTS1BXvxg9KIx+T9870Igts/VyqLbTy2APwJ6F0/fBkh
+	JcLOHTmxjQAPzIo+/oQojhr75bYkp3VW/noyYGnq5Ehk4o2/Y17TwbqysudWZ8fuQcJfWaceAF5
+	omAMU+pIEyiTE/zVqlhn2docbRFHvCT4ky5qOsRyDatZpMrBBU2ZM5mcRU5s0365nojLhZ2aQqt
+	KK///b/mPmBwwl20Ihfop75SfAozPwqSuhiGEEh0iq4kAvFNTJA19ZJtoEBGKw/XmxijPwm+Fx8
+	dhCW4HWED/UMtuvx1H0difzKjiyhgXCMagDlvLhRljWvL8S9Bpw5htHRNoGXN+5ydCYHQdT0K3/
+	+wycoGDZfXHi8WmYra5agumCz7mARyAzDkagI=
+X-Received: by 2002:a05:600d:8489:20b0:490:b724:507d with SMTP id 5b1f17b1804b1-490ec4cec11mr96194135e9.11.1781447351472;
+        Sun, 14 Jun 2026 07:29:11 -0700 (PDT)
+Received: from [192.168.7.105] ([83.136.105.81])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922033dd3esm160728655e9.8.2026.06.14.07.29.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 14 Jun 2026 07:29:10 -0700 (PDT)
+Message-ID: <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
+Date: Sun, 14 Jun 2026 16:29:09 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
+ handshake-derived "dvdd" regulator registered but never linked to sensor,
+ sensor probe fails with -EREMOTEIO
+To: Marco Nenciarini <mnencia@kcore.it>, linux-media@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Israel Cepeda <israel.a.cepeda.lopez@intel.com>,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
+ <ah_XLEAkqjV9HkSE@spark.kcore.it>
+ <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
+ <ai2NAS5EnLaLoN2W@spark.kcore.it>
+Content-Language: it
+From: "Angioli Samuele (gmail)" <angioli.samuele@gmail.com>
+In-Reply-To: <ai2NAS5EnLaLoN2W@spark.kcore.it>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=46rom: Edip Hazuri <edip@medip.dev>
+Hi Marco,
 
-Add support for the HP keyboard RGB backlight found on HP OMEN and
-HP Victus laptops. These keyboards expose per-zone RGB control through
-WMI commands.
+Topology confirmed, and it's the "firmware mismatch" case. In short:
 
-Register multicolor LED class devices for each keyboard zone (up to 4
-zones, depending on the keyboard type). Each zone exposes individual
-red, green, and blue channels via the multicolor LED subsystem.
+- The sensor (OVTI02C1:00) sits at \_SB.PC00.LNK1 and depends on DSC1,
+   exactly as the _DEP decode showed. DSC0 is instead the link-0 PMIC,
+   whose sensor is the Himax HM1092 IR camera (HIMX1092:00, Windows
+   Hello).
 
-Also hardware-initiated brightness changes (e.g. via the keyboard
-backlight hotkey, mostly fn+f4) are reported.
+- DSC0 = INT3472:0c, DSC1 = INT3472:01.
 
-The color data is stored in a 128-byte color table managed by the
-firmware, with RGB values starting at offset 25, packed sequentially
-per zone.
+- The clincher is the regulator_summary: the only dvdd on the whole
+   platform is INT3472:0c-dvdd (DSC0), and it's orphaned (use=0). DSC1,
+   which the RGB sensor actually depends on, exposes no dvdd at all --
+   only avdd/dovdd/reset.
 
-Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
+regulator_summary (the only two top-level regulators; all
+regulator-dummy children are SoundWire audio rails, elided for brevity):
 
-=2D--
-Changes since v9:
- - Fixed corrupted long lines
- - Fixed changelog
+    regulator                 use open bypass  opmode voltage ...
+   ------------------------------------------------------------------
+    regulator-dummy            19   27      0  unknown    0mV  ...
+       [ ~30 sdw:* / cs42l43 / spi0.0 audio rails -- elided ]
+    INT3472:0c-dvdd             0    0      0  unknown    0mV  ...
 
-Changes since v8:
- - No changes (It was mistake to resend email without any fix)
+   No INT3472:01-* (DSC1) entry: DSC1 registers no dvdd.
 
-Changes since v7:
- - The LED class device names changed to be consistent with the documentati=
-on.
+Direct kernel confirmation, the "Sensor name" line from DSC0's probe:
 
-Changes since v6:
- - The LED class device names have been made more consistent with the=20
-documentation, in accordance with patch https://lore.kernel.org/linux-leds/
-20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
-underscores have been replaced with dashes where indicated.
+   [    6.301445] int3472-discrete INT3472:0c: Sensor name HIMX1092:00
 
-Changes since v5:
- - LED class device names changed from a number to using a descriptive name=
-=20
-for each zone.
-
-v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
-
-Changes since v4:
- - Fix circular dependencies
-
-Changes since v3:
- - Merge the changes into a single commit
-
-Changes since v1:
- - Fix mentioned style errors
- - Add Kconfig dependencies
-
-
-=2D--
-
-diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kcon=
-fig
-index dd51491b9bcd..2a1841cbec76 100644
-=2D-- a/drivers/platform/x86/hp/Kconfig
-+++ b/drivers/platform/x86/hp/Kconfig
-@@ -45,6 +45,8 @@ config HP_WMI
-        select INPUT_SPARSEKMAP
-        select ACPI_PLATFORM_PROFILE
-        select HWMON
-+       select LEDS_CLASS
-+       select LEDS_CLASS_MULTICOLOR
-        help
-          Say Y here if you want to support WMI-based hotkeys on HP laptops=
- and
-          to read data from WMI such as docking or ambient light sensor sta=
-te.
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-=
-wmi.c
-index d1cc6e7d176c..19da18f68337 100644
-=2D-- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-=20
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
- #include <linux/cleanup.h>
- #include <linux/compiler_attributes.h>
- #include <linux/dmi.h>
-@@ -23,6 +24,8 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/kernel.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/leds.h>
- #include <linux/limits.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-@@ -57,6 +60,7 @@ enum hp_ec_offsets {
-=20
- #define HP_FAN_SPEED_AUTOMATIC  0x00
- #define HP_POWER_LIMIT_DEFAULT  0x00
-+#define HP_COLOR_TABLE_PADDING  25
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-=20
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when z=
-ero insize is required
-@@ -97,6 +101,14 @@ enum hp_thermal_profile {
-        HP_THERMAL_PROFILE_QUIET                        =3D 0x03,
- };
-=20
-+enum hp_keyboard_type {
-+       HP_KEYBOARD_TYPE_NOBACKLIGHT                =3D 0x0,
-+       HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       =3D 0x1,
-+       HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    =3D 0x2,
-+       HP_KEYBOARD_TYPE_RGB_PER_KEY                =3D 0x3,
-+       HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     =3D 0x4,
-+       HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  =3D 0x5,
-+};
-=20
- struct thermal_profile_params {
-        u8 performance;
-@@ -338,16 +350,27 @@ enum hp_wmi_gm_commandtype {
-        HPWMI_GET_GPU_THERMAL_MODES_QUERY       =3D 0x21,
-        HPWMI_SET_GPU_THERMAL_MODES_QUERY       =3D 0x22,
-        HPWMI_SET_POWER_LIMITS_QUERY            =3D 0x29,
-+       HPWMI_GET_KEYBOARD_TYPE_QUERY           =3D 0x2b,
-        HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY      =3D 0x2D,
-        HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY      =3D 0x2E,
-        HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY      =3D 0x2F,
- };
-=20
-+enum hp_wmi_backlight_commandtype {
-+       HPWMI_BACKLIGHT_COLOR_GET_QUERY         =3D 0x02,
-+       HPWMI_BACKLIGHT_COLOR_SET_QUERY         =3D 0x03,
-+       HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    =3D 0x04,
-+       HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    =3D 0x05,
-+       HPWMI_BACKLIGHT_SET_OFF_QUERY           =3D 0x64,
-+       HPWMI_BACKLIGHT_SET_ON_QUERY            =3D 0xE4,
-+};
-+
- enum hp_wmi_command {
-        HPWMI_READ      =3D 0x01,
-        HPWMI_WRITE     =3D 0x02,
-        HPWMI_ODM       =3D 0x03,
-        HPWMI_GM        =3D 0x20008,
-+       HPWMI_BACKLIGHT =3D 0x20009,
- };
-=20
- enum hp_wmi_hardware_mask {
-@@ -355,6 +378,24 @@ enum hp_wmi_hardware_mask {
-        HPWMI_TABLET_MASK       =3D 0x04,
- };
-=20
-+struct hp_kbd_led_priv {
-+       int zone;               /* Zone index (0-3) */
-+       enum led_brightness last_brightness;  /* Brightness before turning =
-off */
-+};
-+
-+struct hp_mc_leds {
-+       struct led_classdev_mc devices[4];
-+       struct hp_kbd_led_priv priv[4];
-+};
-+
-+/* zone naming for 4-zone keyboards (HP Omen) */
-+static const char *const hp_zone_names_4[] =3D {
-+       [0] =3D "zoned_backlight-right",
-+       [1] =3D "zoned_backlight-center",
-+       [2] =3D "zoned_backlight-left",
-+       [3] =3D "zoned_backlight-wasd",
-+};
-+
- struct bios_return {
-        u32 sigpass;
-        u32 return_code;
-@@ -435,6 +476,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
- static struct input_dev *hp_wmi_input_dev;
- static struct input_dev *camera_shutter_input_dev;
- static struct platform_device *hp_wmi_platform_dev;
-+static struct hp_mc_leds hp_multicolor_leds;
- static struct device *platform_profile_device;
- static struct notifier_block platform_power_source_nb;
- static enum platform_profile_option active_platform_profile;
-@@ -1122,6 +1164,8 @@ static struct attribute *hp_wmi_attrs[] =3D {
- };
- ATTRIBUTE_GROUPS(hp_wmi);
-=20
-+static void hp_kbd_brightness_set_by_hwd(u32 event_data);
-+
- static void hp_wmi_notify(union acpi_object *obj, void *context)
- {
-        u32 event_id, event_data;
-@@ -1222,6 +1266,7 @@ static void hp_wmi_notify(union acpi_object *obj, voi=
-d *context)
-        case HPWMI_PROXIMITY_SENSOR:
-                break;
-        case HPWMI_BACKLIT_KB_BRIGHTNESS:
-+               hp_kbd_brightness_set_by_hwd(event_data);
-                break;
-        case HPWMI_PEAKSHIFT_PERIOD:
-                break;
-@@ -1484,6 +1529,241 @@ static int __init hp_wmi_rfkill2_setup(struct platf=
-orm_device *device)
-        return err;
- }
-=20
-+static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cd=
-ev)
-+{
-+       struct led_classdev_mc *mc_cdev =3D lcdev_to_mccdev(led_cdev);
-+       int zone =3D mc_cdev - hp_multicolor_leds.devices;
-+
-+       return &hp_multicolor_leds.priv[zone];
-+}
-+
-+static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, in=
-t blue)
-+{
-+       u8 color_table[128];
-+       int ret;
-+
-+       /*
-+        * Get the current color table and then change only the relevant pa=
-rts.
-+        */
-+       ret =3D hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
-+                                  HPWMI_BACKLIGHT, color_table,
-+                                  zero_if_sup(color_table),
-+                                  sizeof(color_table));
-+       if (ret)
-+               return ret;
-+
-+       /*
-+        * RGB color data starts at offset 25 +3 per zone (r g b)
-+        * e.g. if zone 1 starts in 25 zone 2 starts in 28
-+        */
-+       color_table[HP_COLOR_TABLE_PADDING + zone * 3]     =3D red;
-+       color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] =3D green;
-+       color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] =3D blue;
-+
-+       ret =3D hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, HPWMI=
-_BACKLIGHT,
-+                                  color_table, sizeof(color_table), sizeof=
-(color_table));
-+       if (ret < 0)
-+               return ret;
-+       if (ret)
-+               return -EINVAL;
-+
-+       return 0;
-+}
-+
-+static bool hp_kbd_backlight_is_on(void)
-+{
-+       u8 data;
-+       int ret;
-+
-+       ret =3D hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, =
-HPWMI_BACKLIGHT, &data,
-+                               sizeof(data), sizeof(data));
-+       if (ret)
-+               return false;
-+
-+       return data =3D=3D HPWMI_BACKLIGHT_SET_ON_QUERY;
-+}
-+
-+static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
-+                                       enum led_brightness brightness)
-+{
-+       struct hp_kbd_led_priv *priv =3D hp_led_get_priv(led_cdev);
-+       struct led_classdev_mc *mc_cdev;
-+       struct led_classdev_mc *device;
-+       int red, green, blue;
-+       int ret;
-+
-+       if (!hp_kbd_backlight_is_on()) {
-+               u8 data =3D HPWMI_BACKLIGHT_SET_ON_QUERY;
-+
-+               ret =3D hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET=
-_QUERY,
-+                                          HPWMI_BACKLIGHT, &data,
-+                                          sizeof(data), sizeof(data));
-+               if (ret)
-+                       return ret;
-+
-+               /*
-+                * Turning the backlight on via WMI turns all zones,
-+                * so we need to restore the other zones' off state.
-+                */
-+               for (int i =3D 0; i < ARRAY_SIZE(hp_multicolor_leds.devices=
-); i++) {
-+                       if (i =3D=3D priv->zone)
-+                               continue;
-+
-+                       device =3D &hp_multicolor_leds.devices[i];
-+                       if (!device->led_cdev.name)
-+                               continue;
-+                       hp_kbd_backlight_set_rgb_color(i,
-+                               device->subled_info[0].brightness,
-+                               device->subled_info[1].brightness,
-+                               device->subled_info[2].brightness);
-+               }
-+       }
-+
-+       led_cdev->brightness =3D brightness;
-+
-+       mc_cdev =3D lcdev_to_mccdev(led_cdev);
-+       led_mc_calc_color_components(mc_cdev, brightness);
-+
-+       red =3D mc_cdev->subled_info[0].brightness;
-+       green =3D mc_cdev->subled_info[1].brightness;
-+       blue =3D mc_cdev->subled_info[2].brightness;
-+
-+       return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
-+}
-+
-+static void hp_kbd_brightness_set_by_hwd(u32 event_data)
-+{
-+       struct device *dev =3D &hp_wmi_platform_dev->dev;
-+       struct led_classdev *led_cdev;
-+       struct hp_kbd_led_priv *priv;
-+       u8 brightness;
-+
-+       for (int zone =3D 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices);=
- zone++) {
-+               if (!hp_multicolor_leds.devices[zone].led_cdev.name)
-+                       continue;
-+
-+               led_cdev =3D &hp_multicolor_leds.devices[zone].led_cdev;
-+               if (!led_cdev->dev)
-+                       continue;
-+
-+               priv =3D hp_led_get_priv(led_cdev);
-+
-+               if (event_data =3D=3D 0x2) {
-+                       brightness =3D priv->last_brightness ? : LED_FULL;
-+               } else if (event_data =3D=3D 0x0) {
-+                       priv->last_brightness =3D led_cdev->brightness;
-+                       brightness =3D LED_OFF;
-+               } else {
-+                       dev_warn(dev, "Unknown keyboard backlight event - 0=
-x%x\n",
-+                                event_data);
-+                       return;
-+               }
-+
-+               led_cdev->brightness =3D brightness;
-+               led_classdev_notify_brightness_hw_changed(led_cdev, brightn=
-ess);
-+       }
-+}
-+
-+static int __init hp_mc_leds_register(int num_zones)
-+{
-+       u8 color_table[128];
-+       int ret;
-+
-+       ret =3D hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, HPWMI=
-_BACKLIGHT,
-+                                  color_table, zero_if_sup(color_table),
-+                                  sizeof(color_table));
-+       if (ret)
-+               return ret;
-+
-+       for (int zone =3D 0; zone < num_zones; zone++) {
-+               struct led_classdev_mc *multicolor_led_dev;
-+               struct led_classdev *led_cdev;
-+               struct mc_subled *mc_subled_info;
-+               struct hp_kbd_led_priv *priv;
-+               struct device *dev;
-+
-+               dev =3D &hp_wmi_platform_dev->dev;
-+               multicolor_led_dev =3D &hp_multicolor_leds.devices[zone];
-+               led_cdev =3D &multicolor_led_dev->led_cdev;
-+               priv =3D &hp_multicolor_leds.priv[zone];
-+
-+               if (num_zones =3D=3D 1)
-+                       led_cdev->name =3D devm_kasprintf(dev, GFP_KERNEL,
-+                                                       "hp::kbd_backlight"=
-);
-+               else if (num_zones =3D=3D 4 && zone < ARRAY_SIZE(hp_zone_na=
-mes_4))
-+                       led_cdev->name =3D devm_kasprintf(dev, GFP_KERNEL,
-+                                                       "hp::kbd_%s",
-+                                                       hp_zone_names_4[zon=
-e]);
-+               else if (num_zones > 1)
-+                       led_cdev->name =3D devm_kasprintf(dev, GFP_KERNEL,
-+                                                       "hp::kbd_zoned_back=
-light-%d",
-+                                                       zone);
-+
-+               if (!led_cdev->name)
-+                       return -ENOMEM;
-+               led_cdev->brightness =3D hp_kbd_backlight_is_on() ?
-+                                      LED_FULL : LED_OFF;
-+               led_cdev->max_brightness =3D LED_FULL;
-+               led_cdev->brightness_set_blocking =3D hp_kbd_set_brightness;
-+               led_cdev->flags =3D LED_CORE_SUSPENDRESUME |
-+                                 LED_RETAIN_AT_SHUTDOWN |
-+                                 LED_BRIGHT_HW_CHANGED;
-+
-+               mc_subled_info =3D devm_kzalloc(dev, sizeof(*mc_subled_info=
-) * 3,
-+                                             GFP_KERNEL);
-+               if (!mc_subled_info)
-+                       return -ENOMEM;
-+
-+               mc_subled_info[0].color_index =3D LED_COLOR_ID_RED;
-+               mc_subled_info[1].color_index =3D LED_COLOR_ID_GREEN;
-+               mc_subled_info[2].color_index =3D LED_COLOR_ID_BLUE;
-+
-+               for (int i =3D 0; i < 3; i++) {
-+                       int off =3D HP_COLOR_TABLE_PADDING + zone * 3 + i;
-+
-+                       mc_subled_info[i].channel =3D zone * 3 + i;
-+                       mc_subled_info[i].intensity =3D color_table[off];
-+                       mc_subled_info[i].brightness =3D LED_FULL;
-+               }
-+
-+               multicolor_led_dev->subled_info =3D mc_subled_info;
-+               multicolor_led_dev->num_colors =3D 3;
-+
-+               ret =3D devm_led_classdev_multicolor_register(dev, multicol=
-or_led_dev);
-+               if (ret) {
-+                       dev_err(dev, "Failed to register multicolor RGB bac=
-klight\n");
-+                       return ret;
-+               }
-+
-+               /* Initialize private data */
-+               priv->zone =3D zone;
-+               priv->last_brightness =3D LED_FULL;
-+       }
-+       return 0;
-+}
-+
-+static int __init hp_kbd_rgb_setup(void)
-+{
-+       u8 keyboard_type;
-+       int ret;
-+
-+       ret =3D hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_G=
-M, &keyboard_type,
-+                                  sizeof(keyboard_type), sizeof(keyboard_t=
-ype));
-+       if (ret)
-+               return ret;
-+
-+       switch (keyboard_type) {
-+       case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
-+       case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
-+               return hp_mc_leds_register(4);
-+       case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
-+       case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
-+               return hp_mc_leds_register(1);
-+       default:
-+               return 0;
-+       }
-+}
-+
- static int platform_profile_omen_get_ec(enum platform_profile_option *prof=
-ile)
- {
-        int tp;
-@@ -2285,7 +2565,9 @@ static int __init hp_wmi_bios_setup(struct platform_d=
-evice *device)
-                return err;
-=20
-        thermal_profile_setup(device);
-=2D
-+       err =3D hp_kbd_rgb_setup();
-+       if (err)
-+               dev_err(&device->dev, "Failed to initialize keyboard RGB\n"=
-);
-        return 0;
- }
-=20
-=2D-=20
-2.54.0
+i.e. DSC0 keys its dvdd to the link-0 IR camera (HIMX1092:00), not to
+the OV02C10. So there is exactly one dvdd handshake and it's on the
+wrong side: it lives on DSC0/link-0, while the RGB sensor is on
+link-1/DSC1, and nothing connects the two. DSC0's reverse-_DEP resolves
+to HIMX1092:00, the dvdd supply_map is keyed there, and i2c-OVTI02C1:00
+never matches -> dummy -> rail down -> 0x300a -EREMOTEIO.
 
 
+Thanks,
+Samuele
 
-=D0=92 =D0=BF=D0=B8=D1=81=D1=8C=D0=BC=D0=B5 =D0=BE=D1=82 =D1=81=D1=80=D0=B5=
-=D0=B4=D0=B0, 10 =D0=B8=D1=8E=D0=BD=D1=8F 2026=E2=80=AF=D0=B3. 19:18:39 =D0=
-=9A=D1=80=D0=B0=D1=81=D0=BD=D0=BE=D1=8F=D1=80=D1=81=D0=BA, =D1=81=D1=82=D0=
-=B0=D0=BD=D0=B4=D0=B0=D1=80=D1=82=D0=BD=D0=BE=D0=B5 =D0=B2=D1=80=D0=B5=D0=
-=BC=D1=8F =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=
-=BB=D1=8C Ilpo J=C3=A4rvinen =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
-> On Mon, 18 May 2026, =D0=9A=D0=BE=D0=BD=D0=B5=D0=BD=D0=BA=D0=BE =D0=90=D0=
-=BD=D0=B4=D1=80=D0=B5=D0=B9 =D0=92=D0=B8=D0=BA=D1=82=D0=BE=D1=80=D0=BE=D0=
-=B2=D0=B8=D1=87 wrote:
->=20
-> > >=20
-> > > I'm afraid the names are still wrong. Your patch results in e.g. :
-> > >=20
-> > > hp::kbd_backlight_zone-right
-> > >=20
-> > > where as per:
-> > >=20
-> > > https://lore.kernel.org/linux-leds/20260504145434.12746-1-johannes.go=
-ede@oss
-> > > .qualcomm.com/
-> > >=20
-> > > this should be:
-> > >=20
-> > > hp::kbd_zoned_backlight-right
-> > >=20
-> > > Regards,
-> > >=20
-> > > Hans
-> > >=20
-> >=20
-> > I would like to sincerely apologize for the mistake in understanding th=
-e=20
-> > documentation. I received feedback pointing out my error, corrected it=
-=20
-> > accordingly, but unfortunately, there was still an oversight. After bei=
-ng=20
-> > notified of the second error, I have now thoroughly reviewed everything=
- again=20
-> > and made all necessary corrections.
-> >=20
-> > I truly appreciate your patience and guidance throughout this process. =
-Your=20
-> > feedback has been extremely helpful in helping me reach the correct=20
-> > understanding. I am committed to ensuring that all future submissions a=
-re=20
-> > fully compliant with the documentation requirements.
-> >=20
-> > Thank you for your time and understanding.
-> >=20
-> > ---
-> >=20
-> > From: Edip Hazuri <edip@medip.dev>
-> >=20
-> > Add support for the HP keyboard RGB backlight found on HP OMEN and
-> > HP Victus laptops. These keyboards expose per-zone RGB control through
-> > WMI commands.
-> >=20
-> > Register multicolor LED class devices for each keyboard zone (up to 4
-> > zones, depending on the keyboard type). Each zone exposes individual
-> > red, green, and blue channels via the multicolor LED subsystem.
-> >=20
-> > Also hardware-initiated brightness changes (e.g. via the keyboard
-> > backlight hotkey, mostly fn+f4) are reported.
-> >=20
-> > The color data is stored in a 128-byte color table managed by the
-> > firmware, with RGB values starting at offset 25, packed sequentially
-> > per zone.
-> >=20
-> > Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
-> >=20
-> > ---
-> >=20
-> > Changes since v7:
-> >  - The LED class device names changed to be consistent with the documen=
-tation.
-> >=20
-> > Changes since v6:
-> >  - The LED class device names have been made more consistent with the=20
-> > documentation, in accordance with patch https://lore.kernel.org/linux-l=
-eds/
-> > 20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
-> > underscores have been replaced with dashes where indicated.
-> >=20
-> > Changes since v5:
-> >  - LED class device names changed from a number to using a descriptive =
-name=20
-> > for each zone.
-> >=20
-> > v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
-> >=20
-> > Changes since v4:
-> >  - Fix circular dependencies
-> >=20
-> > Changes since v3:
-> >  - Merge the changes into a single commit
-> >=20
-> > Changes since v1:
-> >  - Fix mentioned style errors
-> >  - Add Kconfig dependencies
-> >=20
-> > ---
-> >=20
-> >  drivers/platform/x86/hp/Kconfig  |   2 +
-> >  drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
-> >  2 files changed, 285 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/=
-Kconfig
-> > index dd51491b9bcd..2a1841cbec76 100644
-> > --- a/drivers/platform/x86/hp/Kconfig
-> > +++ b/drivers/platform/x86/hp/Kconfig
-> > @@ -45,6 +45,8 @@ config HP_WMI
-> >  	select INPUT_SPARSEKMAP
-> >  	select ACPI_PLATFORM_PROFILE
-> >  	select HWMON
-> > +	select LEDS_CLASS
-> > +	select LEDS_CLASS_MULTICOLOR
-> >  	help
-> >  	  Say Y here if you want to support WMI-based hotkeys on HP laptops=20
-> > and
-> >  	  to read data from WMI such as docking or ambient light sensor=20
-> > state.
-> > diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp=
-/hp-
-> > wmi.c
-> > index d1cc6e7d176c..19da18f68337 100644
-> > --- a/drivers/platform/x86/hp/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> > @@ -14,6 +14,7 @@
-> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > =20
-> >  #include <linux/acpi.h>
-> > +#include <linux/array_size.h>
-> >  #include <linux/cleanup.h>
-> >  #include <linux/compiler_attributes.h>
-> >  #include <linux/dmi.h>
-> > @@ -23,6 +24,8 @@
-> >  #include <linux/input.h>
-> >  #include <linux/input/sparse-keymap.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/led-class-multicolor.h>
-> > +#include <linux/leds.h>
-> >  #include <linux/limits.h>
-> >  #include <linux/minmax.h>
-> >  #include <linux/module.h>
-> > @@ -57,6 +60,7 @@ enum hp_ec_offsets {
-> > =20
-> >  #define HP_FAN_SPEED_AUTOMATIC	 0x00
-> >  #define HP_POWER_LIMIT_DEFAULT	 0x00
-> > +#define HP_COLOR_TABLE_PADDING	 25
-> >  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-> > =20
-> >  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use wh=
-en zero=20
-> > insize is required
->=20
-> Long lines in this patch seem corrupted.
->=20
->=20
-
-
-
-
+Il 13/06/26 19:01, Marco Nenciarini ha scritto:
+> Hi Samuele,
+> 
+> No problem on the timing, and thanks. The regulator_summary plus the
+> _DEP decode settle it, and they confirm the multi-instance hypothesis
+> from my last mail rather than the missing-map one.
+> 
+> One correction on the code side first, because it matters for the fix.
+> The handshake path is not missing the consumer-map step. HANDSHAKE
+> (type 0x12) and POWER_ENABLE (0x0b) fall through to the same call site
+> in skl_int3472_handle_gpio_resources(), so both go through
+> skl_int3472_register_regulator(), which plants supply_map[] (dev_name +
+> supply, lower- and upper-case) the same way for either type. That has
+> been the case since v6.16 (c5d039327204, "int3472: Add handshake pin
+> support"), so your 7.0.10 kernel has it. The dvdd map does get created.
+> The problem is the dev_name it is keyed on.
+> 
+> That dev_name is int3472->sensor_name, and sensor_name is
+> "i2c-" + acpi_dev_name(acpi_dev_get_next_consumer_dev(adev)), i.e. the
+> first device that lists the registering INT3472 instance in its _DEP.
+> Here that instance is INT3472:0c = DSC0 (the regulator name in your
+> summary, "INT3472:0c-dvdd", is built from acpi_dev_name(adev), so the
+> provider is unambiguously DSC0). But your _DEP decode shows the sensor
+> (LNK1) depends on DSC1, never on DSC0: ARLP -> {CVSS, HS09.VIC1},
+> non-ARLP -> {DSC1, HS09.VIC1}. So DSC0's reverse-_DEP walk does not
+> return OVTI02C1. It returns whatever else declares a _DEP on DSC0
+> (plausibly the IR-flood side, given func 3 sits on the same device),
+> the dvdd map is keyed to that name, and the sensor's
+> regulator_get("dvdd") for "i2c-OVTI02C1:00" never matches. -ENODEV,
+> permanent dummy under full constraints (the legacy ACPI dev_name path
+> has no "coming later" signal, so it is a dummy, not -EPROBE_DEFER),
+> rail stays down, 0x300a reads -EREMOTEIO, no retry. That is exactly the
+> regulator_summary you captured: INT3472:0c-dvdd registered, use=0.
+> 
+> Note this is specific to dvdd. DSC0's _DSM only exposes the dvdd
+> handshake (func 2) and the IR-flood strobe (func 3); it does not
+> provide avdd or dovdd. The sensor correctly _DEPs on DSC1 and is served
+> by DSC1 for the rails and resets DSC1 owns, which is why it gets far
+> enough to attempt the chip-ID read at all. dvdd is the one rail
+> stranded on an instance the sensor does not depend on. (avdd and dovdd
+> landing on dummies is most likely the always-on-rail case I mentioned
+> before, benign, unless you can see a gating GPIO for them on either
+> instance.)
+> 
+> Timing is not the mechanism either way. Your own timestamps already
+> show the sensor's get at 6.468 well after DSC0 bound at 6.135, and even
+> a perfectly ordered probe would still miss, because the map is keyed to
+> the wrong device, not registered late.
+> 
+> So this is a firmware _DEP-topology issue: dvdd is gated by DSC0, but
+> the sensor is pointed at DSC1, and nothing connects the two. Could you
+> confirm the two halves of that, so we are not inferring DSC0's consumer:
+> 
+>    - with int3472 dynamic debug on
+>      (dyndbg="module intel_skl_int3472_discrete +p"), the "Sensor name
+>      %s" line from DSC0's probe shows which device its consumer walk
+>      actually resolved to. If that is not OVTI02C1:00, it nails the
+>      keying;
+>    - the reverse _DEP, i.e. which device(s) list \_SB.PC00.DSC0 in their
+>      own _DEP (a grep of the DSDT _DEP packages). DSC0 bound rather than
+>      failing with "INT3472 seems to have no dependents", so something
+>      does depend on it; identifying it tells us where dvdd actually went.
+> 
+> Hans, Sakari, once that "Sensor name" line confirms DSC0 is keying its
+> dvdd to a non-sensor consumer, the open int3472 question becomes whether
+> this is a firmware defect to push back on or something we work around
+> in-tree (and if in-tree, a per-board quirk vs. generic cross-instance
+> keying). Worth noting the EPROBE_DEFER idea from last time does not
+> apply: the map is keyed to the wrong device, not merely registered late.
+> Let's nail the topology first.
+> 
+> Thanks,
+> Marco
