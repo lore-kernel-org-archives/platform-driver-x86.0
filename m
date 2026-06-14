@@ -1,205 +1,541 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazolkn19013084.outbound.protection.outlook.com [52.103.74.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from hope.aquinas.su (hope.aquinas.su [82.148.24.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FF33B813D;
-	Sun, 14 Jun 2026 13:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.74.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781443875; cv=fail; b=trBBzXP0Ver21W+1fe6r3Y04hdC+XhALXvre+DYTKbsxFXE51Me76iszShSZWwhQJmqQhKg7yGJdZzjScO5eFmbg9PeudKr9ucc1d6mzM+hxAsri8eWMfwhvsZdj69/cKyFZdEhH3NpH+jXzy9NoxSsd1Z5a5IjeP1utQn+Bxes=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781443875; c=relaxed/simple;
-	bh=aCko1h35Keyyq4uIjueTpdGgm6JSbj8fsw3Yj5IwTC0=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=rx79F0D8zaDS0GuGPmgG05Si1yuaN9dWDniXpEA2RQ2e7LOsm/Wv8XxBKJTelnfrMGr/oRh1jyCMspjqYr5BlF3yrSA/z7g8gpFqKCg+W7ZOOEVvsSerAHAW9x6GsuNX0lX4CtViJnFhedOTZi/hKSiTYEmeTyGsagmAvYo5sPc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Ps8iCyYK; arc=fail smtp.client-ip=52.103.74.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3F736C9F4;
+	Sun, 14 Jun 2026 13:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.148.24.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781444771; cv=none; b=OgNLuGqnLLgyU2jxvn92eIGgt4CYxoPOdh4oZn5t5pJ9IvvVFArmzQCjNZZ/JuApQhXBwPluA+SqvSSrftDOc2IFhujzS5E+z6qUnie3T08M6AiCmJjUCtVGZzftfxSjsDZOdgHfVwEhxLU79v1j5hsfFrKOMHTEig4MsAM3EPM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781444771; c=relaxed/simple;
+	bh=nlultG61UbhjfSmunXsKedsIOzluMSPdV0wvclL5PrU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZZS0lg5alssCiJGZ0GdYMRUY2lOxgBd7gfWFis1gpWQ1oq5wegnXQDGFENZSsrsu8HafbgCU9Qq1NmKLO5yDfA48Eh3hB6pp0Df/+eJY2bcAowgUbb/C5pDNe0OhvpbN7txQevmHYpeK8hd3AuLqIVFhOBpi5SIc7xRm8u94nbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su; spf=pass smtp.mailfrom=aquinas.su; dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b=n0i4s/uc; arc=none smtp.client-ip=82.148.24.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=aquinas.su
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aquinas.su
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Ps8iCyYK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uKU12Qka8I23KOYUrMSbJ/O7fzHwj3wIihCmcbMq/1OhRxB9tZYjyz6ZAGcx1uw+TY88bk8zVz3tk0XIkK7damU9ZPj5sqh2MT7zIKeZeb1AOd65G2saaNUaGHLQjz5oyikkwlWu1yd1Oq7KWDsAaTl7Y/D3oOKoSLFGM6AaY3dNZ6J5RZuOEt9eyNM/k/BEQSdepSu9xw3TK+9kF+kqpqs3tpC/zkHNyZ5BcaYnAVvpWHwdr0gMDpOri4TA2wtRSWEXIob4QqmljHGypxH2FbcbsaEDXRYgjmhxvR/CJXGQg9m87lsIwdVwDFbjJhrusysrBd0OIbByhe9Ph1c6zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aCko1h35Keyyq4uIjueTpdGgm6JSbj8fsw3Yj5IwTC0=;
- b=etx/aYQQtegxgnQN2xISc6+2T1mCgOdHr5sTPMFavXy9shLAPmV88sHjJBg3yU0VLrpwedWXaOX+ICFcGA9rf2Et30FerXNCUSbTbTxAZA4DTEmufSoOR0u5Wl2RBNexoIFxQKW0EPmrl7OUMXZgjlf5sOl+V6Ir4xG9dtf8/s2k8AEl2Y59UlxyIzx6xsJsP8ogmypBrWuk9VxGnz5n7dnnStyVbfUk9GNeo+1K9Wrle21+Xry+LdbKIA4Z/IxWGmvP4VHRlLpTQtAR97OWzL85QdE3a+nE84ULRxlP86BNS5rE5j/tid1TaRGQZGtUTZW8PNi37CM170BWceUrcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aCko1h35Keyyq4uIjueTpdGgm6JSbj8fsw3Yj5IwTC0=;
- b=Ps8iCyYK+51+jefTW2j+eIHejOwD40fZ83sQg1/VxNeJ1Bw5CCBu30+eyMVDrw9LggpFQpwLf3gb4crJlQoTHd9vead+TI3KiJ8LLMe7Rsbv8VF2kzSd3wxTh5R65avi7yNn6IwbyI0cqiHyGIfUUZsj9uWAltbGQ23E7U/md0DKglg1R3Gjrqw2s2DfJXDm1AdkF131u24v7HYvIHjMhYFKP9wSQcIe1Qzu617983CirY8S3Xau5Bph3WibBHwSQLW5skWo/66sjKMSN3ZsRHJ4FkCIK2+I30XtUmuzRkNvf8wLt5gIaK5jBrw9cgbyeqBKSMq6CK/Ch5+1FHKW0w==
-Received: from TYSPR03MB8631.apcprd03.prod.outlook.com (2603:1096:405:89::7)
- by SEYPR03MB7191.apcprd03.prod.outlook.com (2603:1096:101:d4::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.6; Sun, 14 Jun
- 2026 13:31:08 +0000
-Received: from TYSPR03MB8631.apcprd03.prod.outlook.com
- ([fe80::b2b7:73c7:c186:a920]) by TYSPR03MB8631.apcprd03.prod.outlook.com
- ([fe80::b2b7:73c7:c186:a920%4]) with mapi id 15.21.0139.009; Sun, 14 Jun 2026
- 13:31:08 +0000
-From: M K <mk01022025@outlook.com>
-To: Ike Panhc <ikepanhc@gmail.com>
-CC: M K <mk01022025@outlook.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Hans de Goede
-	<hansg@kernel.org>, =?utf-8?B?SWxwbyBKw6RydmluZW4=?=
-	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: [RFC] platform/x86: ideapad-laptop: Question about exposing DYTC
- GK/aggressive fan mode on Lenovo 83LR
-Thread-Topic: [RFC] platform/x86: ideapad-laptop: Question about exposing DYTC
- GK/aggressive fan mode on Lenovo 83LR
-Thread-Index: AQHc/AIOvWpHjdv+ZUK8u2GxgFeaUg==
-Date: Sun, 14 Jun 2026 13:31:08 +0000
-Message-ID: <20260614133101.107893-1-mk01022025@outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYSPR03MB8631:EE_|SEYPR03MB7191:EE_
-x-ms-office365-filtering-correlation-id: 7d606d37-2bcf-4630-cf09-08deca193137
-x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|15080799012|39105399006|22141099003|37011999003|38102599003|19110799012|8060799015|8062599012|19101099003|31061999003|12121999013|440099028|3412199025|40105399003|26104999009|102099032|1710799026;
-x-microsoft-antispam-message-info:
- =?utf-8?B?V2J4S3dTaFdhK25uYTJvTWttMzR6YWs4NGJpK2puZXdFZU1wLzV5VjlKQjVU?=
- =?utf-8?B?MWM2TC9rUElpdFJjNDd0UlBmeDgzWUJOSzhBbmpVcTFlY0lsSEY1enpHNmVF?=
- =?utf-8?B?WUFyTDZ0SW1kQ0RBblRyR0dYSVZFdmtSN3R6bzVkUm1NZlVSRDAvWGlDeG81?=
- =?utf-8?B?cDB1cnVaakc2azBUOUErTHhibE1BY25BelpVQXI1clZLcWViRmkxeWw3WmhF?=
- =?utf-8?B?dDA0UnptWFlKR0Y5Y0haVVZhWU8weWVCVTJqNEJKc3BRMWVyMUV2cW9lQVJC?=
- =?utf-8?B?VHZ0N0JhTzllUEdYS2dyVnEwNDB3QmFTcjlDZ0dkZ09tYXlFM1ZVUVdPOG5W?=
- =?utf-8?B?RFNDam8vS0lzK2FnelFEYXloZ2Q3QTU3MlkzblNPSVJPVFk5UEt6d2E0WCtt?=
- =?utf-8?B?WW01OWVLQXo4eWZVUG1WUUtCNnRTWHlOVHFMc2lyNTRjMTJqY0xYK0NHek9K?=
- =?utf-8?B?bDY4aU9lNzQzK3hjZU8xMEZNbmRRUUlrQXhLMC9lbUlQVk83WS9MbnJRVy9X?=
- =?utf-8?B?L1NYc2lUMTdYS3QyZWtLMWEwcW1uajdaVHVocjFZM1hKWFRCTXZLb3VObjNM?=
- =?utf-8?B?clVSZ2NFekkzVUhWa0ZKYU1LcmhHQUxRVHhFb0d1S2c4U042RiswTkhFRWc1?=
- =?utf-8?B?SXd4ZmkzQmtIY0FrSEJWYlQyU3QyaWFrYzlIR1pVeStHK0JyV0Y2U3Y4aEJs?=
- =?utf-8?B?UStSQzVmL2lqY2pzRzlGeHk4bjE2S0QxbG54Qm5xWWtUaFBJRUVLTkNmNXZB?=
- =?utf-8?B?Vkd5VVh5c2FmK2tSU1NJRXdybTZDR1F0RnBoTTduQ1pWSWtVMFNJcWJiU1dm?=
- =?utf-8?B?MkZBWlpXanlhQmhXSWFMVkJSV2cwZU9GRkh3WU5wZDk2dUxaOFhjdEFGeW1Y?=
- =?utf-8?B?RWhCVmdXT0N1K3ZwdXA4VGFvUUU5bWJRb3VrMUgxL0RFYjJuVTdUZDYzMm0v?=
- =?utf-8?B?ek5mVUxkcWNCWHEzL1JycWdLMWZ0M3RwT1dUU0p2TEN1V2NsZ3huOG9YRVlk?=
- =?utf-8?B?NnhqSEwvTk11eDRSaEwwQTg0Qk1POS9zM1F1UEFsL2JXMGtIN281U1BEZkIv?=
- =?utf-8?B?U0p5L3NSbDUraUthVURGWU5DLzZ3a24wcEpUOVNyK25iRzZuUGRycWNKNnRR?=
- =?utf-8?B?TmZKN3hXNGxzU2hGS3JBUlNOaDQrKzVvbEp1WE0xNjhRY29rWFluVEIzd0VZ?=
- =?utf-8?B?eUNiWENHK2NEbWUxNytWVE1HcHBhekNoS2VYcDVmLzhJMTNob0VXZXhrRSsz?=
- =?utf-8?B?eWNJdjIvOG9PWkI0RkxScnczVUJzajN6WGZKbGFuNmVkTlJIR2RNKzNzS2dD?=
- =?utf-8?B?aTRzdTRIVmdYVDU4MmdFR3dVaGY0Um96QXdqc0xuRTNLQ1RxSDY3NWZzejN1?=
- =?utf-8?B?Uzd2eWFqbW9GOHI2czFhT1RXTkU4a1dza0U1bkluWDZQZjZnRFppaWRkZXNp?=
- =?utf-8?B?clBlNC9sTjJhZzNjZ0xELzF5cHNFSmJwZVByMzVVMjVqNDZibkdxREZrd2RO?=
- =?utf-8?Q?REjYdZn56zSR+bmQ4kepeke6mSW?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WURMNGJpa3dPOWNwTmhJdldLamYwY0t5MWlFNXdObVp1VUppQ0NLNXNibEVz?=
- =?utf-8?B?MDNWWnhqREVGSlVORzF4K1hQQk5WdnpkUjhOcGExMyt6d1ZvUlFpYjBNNjlG?=
- =?utf-8?B?b05NQjF0eXduYklCNHZ0b3k2MzFDbWxiWkI5SmdsWWRYd09PVFowYktiSFpE?=
- =?utf-8?B?M2UrQXVoeEoyYTN0OC9lcVRvTEtRSU5YbHA2WjQ4VGpTSURoT2JXNEM0UWQy?=
- =?utf-8?B?VXQ2QThabTBrRllYQk12dmdLYWZYTmNHTnBjcUx1dFhqSzNpL2x1YkhCYS84?=
- =?utf-8?B?bUlJeVVNaDRKL2ZRU1NvMDdYQWJrOWVlS0ZFUE9SS2E1ei82WU1xT0ZUMkhQ?=
- =?utf-8?B?c2JramdRSFJPOXFKM3kvTzJNaXpOL29Pam9KUXkwWDJ0cFFKcGRING56aHRt?=
- =?utf-8?B?eEpHU1k1azVwcXNBblJpWDdOT1BkUDZ0NHYvR3pyckdTVmxJTUpiV2FYS0gr?=
- =?utf-8?B?MnRmekp6QVRlb3plRlpjRkIvS2pvT0xSNklERWRpVi9UNmNPWHhHV3VpTTc1?=
- =?utf-8?B?TDdueTNHRExEWlN5MEJmbVFjVXpmbW9heW9DK0VmNXdEN3kyLzJnMUxWNVpZ?=
- =?utf-8?B?TXlxVCtwTFoyUTNIZ0FHOTN0NGRIRGhOR2VjOVNDSUo0WjFqK1hWdzByU2o2?=
- =?utf-8?B?S3IxNlFVcVJkY1lLSis3WjNWWmlQNFRnRWhZYWQyOUJtZlRpY1lNeWYxQnF3?=
- =?utf-8?B?TkZVbXltY3Vnd2YrYmhEbDhVK0JTdlNYMFUzOGR0ckxJenFrdU53VWVrUzdo?=
- =?utf-8?B?S1NGVGs4Q0hVUE8xMjhMVXk3R1Rtck8xRENnUkY4YXkrbFFFRGg1YUgvdXVB?=
- =?utf-8?B?c29qR0VyT1hiaGtUVldkQ3EyTXlJM1lZMGZIcjY3SE1LdVRkRUVnNStvY2p6?=
- =?utf-8?B?b3NUZUgySm1kaXFSR1hVMkwxZUhpd2xpSFhmZEg4bzdWZlN1VmYyV2tqVlZ2?=
- =?utf-8?B?N2Z3NkZWbDJhbUFUckN3dWdFMXZLcGthK1hMNUdKN0tmUzY0VVQ1KzAxaU5W?=
- =?utf-8?B?czFWbXFrczFkdGlsMG5naDlEWTJ5UTc0U1FNUWRnbTlxcnRZZXp4TG5TSzh3?=
- =?utf-8?B?bm9QMml5L3hsMkJWdHd0THBxVTRTZ2VNNEVjVFNXZFhJeU5Vci9ocHhidkdZ?=
- =?utf-8?B?Z1VIYUo5ZEpqM1NlcFIxY0I2QVZOY0s3czN4KzVDUFpaZThwZHdDc2NYcy8w?=
- =?utf-8?B?THZqNEdpakZEamt5ZjF2V3ZweWxUT01qc3VwTjFWQjBrR2xnOHVuSFZJYVhJ?=
- =?utf-8?B?Zk85YkNDTWExVEROWTlSdHQyQ1hoeUVKODFiRUNhWncxU2dXS2czeEJFTHFH?=
- =?utf-8?B?NkdPeUE2T1pEZGhya0tlN0N1bmxYWXlkdVFGR3Bwcmo2cDRzYzR4a2pjMzVj?=
- =?utf-8?B?NHdZQzA4Y0ZPSXIzVUNYdlpYcDdVOHhhb0MvZ2tKSHgzNmJmaXlCMmQyVEdp?=
- =?utf-8?B?dGNjV3dQQU9uR3NyaFRWenZiZHpyanlFNjJPOTE4c0Z0SGo0eW9MeGkyY2Ns?=
- =?utf-8?B?bzJ0S1A5cjl4M1ZPNTVQbUljR0JtZzlhM0p0SmdvUnNQenFjN2JnbUo5Q3Yx?=
- =?utf-8?B?eTNPUmUzcGtrSndNNGFzZWUxcHZsdUdBcVI0M01mbE1aNnZnQ0RqYWFQV0U1?=
- =?utf-8?B?WVNHQndhc1RtdzROVzJiNWZ1N25IbkltNG5nSnRXNTMzMFRRamR5MDJ1V0My?=
- =?utf-8?B?Q1VrWE9qc2RGMTUyZ0piSlJiUEE3VHIxeXlaTlRDMVNjdnkwUi9SMHNkR2g4?=
- =?utf-8?B?dHZhd1M3MGFkTFlyejJscGRldDNIKzVKWTdlUk9mUWlyblpCdUtpUEl1RUo3?=
- =?utf-8?B?TGFKQzhjdEhJaXVQaGJ2bExmeEFtSWZHdU51dzh0aEFIK1JHYmxIazR6K0R2?=
- =?utf-8?Q?GDfe7xv7yetgM?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D8D3ECB73F394B4F9B280B0725A2315E@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=aquinas.su header.i=@aquinas.su header.b="n0i4s/uc"
+Received: from woolf.localdomain (unknown [158.46.243.40])
+	(Authenticated sender: admin@aquinas.su)
+	by hope.aquinas.su (Postfix) with ESMTPSA id EFB366DB83;
+	Sun, 14 Jun 2026 16:36:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aquinas.su; s=default;
+	t=1781444207;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5OIvVkx3j3vuI4h82POu0q6pnANVao7rso1ySx7aGNs=;
+	b=n0i4s/uco5k2W/o+N/QJEI5/KIq6bqm7iafTpEv0IB/4/plRofBMw1gx6JdtReAeiyyDtE
+	cZxEqN9tcmr9SwjvXvTfNxJSY5S9Wqa1cQPDWETknmbGqvqkbc8RzwX22ObeHuNDbyQgns
+	jhdazOQPMVjqIpDb+wdCkRTqytnZSSl/6IAA9GB2W4F+076iZvQCiN2H71nEPjfBIiafcu
+	YMnM1l/BOquO+9l4DnkjxtP45KFRt0QdnhddwrOTYJfuVxBXqNLH4QyIQBEwOZ9MQ8zeps
+	m2f0E8+kjlNaXFYDS6i0L5XjzMzLi2fio2CpOLWb99JhWxBptWlNflFL7+pjJg==
+Authentication-Results: hope.aquinas.su;
+	auth=pass smtp.auth=admin@aquinas.su smtp.mailfrom=admin@aquinas.su
+From:
+ =?UTF-8?B?0JrQvtC90LXQvdC60L4g0JDQvdC00YDQtdC5INCS0LjQutGC0L7RgNC+0LLQuNGH?=
+ <admin@aquinas.su>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>
+Subject:
+ [PATCH v9] platform/x86: hp-wmi: Add multicolor LED support for HP keyboard
+ backlight
+Date: Sun, 14 Jun 2026 20:36:45 +0700
+Message-ID: <vb8CAo4ZQEe6qU5Y1OdxQQ@aquinas.su>
+In-Reply-To: <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
+References:
+ <9VMMQwZjRUOGJGZr-0_YbA@aquinas.su> <Jhl3t35KQoOh1UjBI9iDGA@aquinas.su>
+ <1f323c53-4328-dd15-2f8d-04b041cc0e6b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYSPR03MB8631.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d606d37-2bcf-4630-cf09-08deca193137
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2026 13:31:08.1466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7191
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-SGksCgpJIGFtIGludmVzdGlnYXRpbmcgdGhlIExlbm92byBYaWFvWGluIFBybyAxNCBBU1AxMCAv
-IElkZWFQYWQgUHJvIDUgMTRBU1AxMAooRE1JIHByb2R1Y3QgbmFtZSA4M0xSLCBCSU9TIFFLQ04y
-OVdXKSBvbiBMaW51eCwgYW5kIEkgd291bGQgbGlrZSB0byBhc2sKZm9yIGd1aWRhbmNlIGJlZm9y
-ZSBwcmVwYXJpbmcgYSBwYXRjaC4KClRoaXMgbWFjaGluZSBleHBvc2VzIHRoZSBzdGFuZGFyZCBJ
-ZGVhUGFkIERZVEMgcGxhdGZvcm0gcHJvZmlsZXMgdGhyb3VnaApkcml2ZXJzL3BsYXRmb3JtL3g4
-Ni9sZW5vdm8vaWRlYXBhZC1sYXB0b3AuYywgYW5kIExpbnV4IGN1cnJlbnRseSBtYXBzIHRoZW0K
-dG86CgogIGxvdy1wb3dlcgogIGJhbGFuY2VkCiAgcGVyZm9ybWFuY2UKCkhvd2V2ZXIsIHRoaXMg
-bWFjaGluZSBhbHNvIGhhcyBhbiBhZGRpdGlvbmFsIERZVEMtY29udHJvbGxlZCBtb2RlIHRoYXQg
-aXMKbm90IGN1cnJlbnRseSBleHBvc2VkIGJ5IGlkZWFwYWQtbGFwdG9wLiBUaGlzIG1heSBub3Qg
-YmUgc3BlY2lmaWMgdG8gdGhpcwpzaW5nbGUgODNMUiBtYWNoaW5lOyBzaW1pbGFyIFhpYW9YaW4g
-LyBJZGVhUGFkIG1vZGVscyBtYXkgZXhwb3NlIGNvbXBhcmFibGUKdmVuZG9yIG1vZGVzIHRocm91
-Z2ggRFlUQy4KCldoYXQgSSBoYXZlIHZlcmlmaWVkIG9uIGhhcmR3YXJlOgoKICAtIFRoZSBMZW5v
-dm8gV01JIEdhbWVab25lIHBhdGggaXMgbm90IHVzYWJsZSBvbiB0aGlzIG1hY2hpbmUuCiAgICBU
-aGUgR2FtZVpvbmUgR1VJRCBpcyBwcmVzZW50LCBidXQgbGVub3ZvX3dtaV9nYW1lem9uZSBzdGls
-bCBmYWlscyB0bwogICAgcHJvYmUuIE9uIHRoaXMgbWFjaGluZSwgdGhlIHJlbGF0ZWQgV01BQSBt
-ZXRob2RzIDQzLzQ0LzQ1IGFsbCByZXR1cm4KICAgIDB4MC4KCiAgLSBUaGUgdXNhYmxlIGNvbnRy
-b2wgcGF0aCBpcyBEWVRDLgoKICAtIEV2YWx1YXRpbmcgdGhlIERZVEMgQUNQSSBtZXRob2QgKHNw
-ZWNpZmljYWxseSBcX1NCLlBDSTAuTFBDMC5FQzAuVlBDMC5EWVRDKQogICAgd2l0aCAweDExMTAw
-YiBlbmFibGVzIGFuIGFkZGl0aW9uYWwgbW9kZS4gSW4gdGhlIEFDUEkgU1NEVCB0YWJsZXMsIHRo
-aXMKICAgIGNvbW1hbmQgdHJpZ2dlcnMgdGhlIFRDQU0oMHgxRSkgYnJhbmNoLCB3aGljaCBjYWxs
-cyBEVUdLKCkuIFRoaXMgYXBwZWFycwogICAgdG8gYmUgdGhlIHZlbmRvcidzIEdlZWsgKCJHSyIp
-IG1vZGUsIHdoaWNoIGlzIGFuIGFnZ3Jlc3NpdmUgZmFuIG1vZGUuCgogIC0gRXZhbHVhdGluZyBE
-WVRDIHdpdGggMHgxMDBiLCBmb2xsb3dlZCBieSAweDFmZiwgZXhpdHMgdGhpcyBHZWVrIG1vZGUg
-YW5kCiAgICByZXR1cm5zIHRoZSBtYWNoaW5lIHRvIHRoZSBvcmRpbmFyeSBwZXJmb3JtYW5jZSBw
-cm9maWxlLgoKICAtIFVuZGVyIHN1c3RhaW5lZCBleHRlcm5hbCBsb2FkLCBvcmRpbmFyeSBwZXJm
-b3JtYW5jZSBtb2RlIHN0YWJpbGl6ZXMgYXQ6CiAgICAgIERZVEMgZ2V0ID0gMHg4MDEyYjAxCiAg
-ICAgIGZhbjEvZmFuNCA9IDUyMDAgLyA0OTAwIFJQTQogICAgICBwYWNrYWdlIHBvd2VyIGFib3V0
-IDU1LjNXIC0gNjUuMFcKCiAgLSBVbmRlciB0aGUgYWRkaXRpb25hbCBHZWVrL0dLIG1vZGU6CiAg
-ICAgIERZVEMgZ2V0ID0gMHg4MDFmMDAxCiAgICAgIGZhbjEvZmFuNCA9IDYyMDAgLyA1OTAwIFJQ
-TQogICAgICBwYWNrYWdlIHBvd2VyIGFib3V0IDU1LjhXIC0gNjMuMlcKCkluIHRoZSBTU0RUIHRh
-YmxlcywgRFVHSygpIHByb2dyYW1zIG1vcmUgYWdncmVzc2l2ZSBDU1BML0NQUEwgdmFsdWVzIHRo
-YW4KRFVQRigpIHVzZWQgYnkgdGhlIHN0YW5kYXJkIHBlcmZvcm1hbmNlIG1vZGUuIEZvciBleGFt
-cGxlLCB0aGUgQk9MMD09MQpwYXRocyB1c2UgQ1NQTD0weDRCLzB4NDggYW5kIENQUEw9MHg1NSBp
-biBEVUdLKCksIHZlcnN1cyBDU1BMPTB4NDEgYW5kCkNQUEw9MHg0MSBpbiBEVVBGKCkuIEhvd2V2
-ZXIsIHVuZGVyIHN1c3RhaW5lZCBsb2FkIGluIExpbnV4LCB0aGUgbWVhc3VyZWQKcGFja2FnZSBw
-b3dlciBsaW1pdHMgZG8gbm90IGV4Y2VlZCA2My02NVcgaW4gZWl0aGVyIG1vZGUsIGxpa2VseSBk
-dWUgdG8KQVBNRiBvciBwbGF0Zm9ybSB0aGVybWFsIHRocm90dGxpbmcuIFRodXMsIHRoZSBtYWlu
-IG9ic2VydmFibGUgZWZmZWN0IG9mCnRoaXMgbW9kZSB1bmRlciBMaW51eCBpcyBhIG11Y2ggbW9y
-ZSBhZ2dyZXNzaXZlIGZhbiBjdXJ2ZS4KClRoZSBvcGVuIGRlc2lnbiBxdWVzdGlvbiBpcyBob3cg
-dGhpcyBzaG91bGQgYmUgcmVwcmVzZW50ZWQgaW4gTGludXguClRoZSBvcHRpb25zIEkgY2FuIHNl
-ZSBhcmU6CgogIDEuIEV4cG9zZSBpdCB2aWEgcGxhdGZvcm1fcHJvZmlsZSwgZm9yIGV4YW1wbGUg
-YXMgIm1heC1wb3dlciIgb3IgImN1c3RvbSIKICAgICBvbiBhZmZlY3RlZCBETUktbWF0Y2hlZCBz
-eXN0ZW1zLiBOb3RlIHRoYXQgbWFwcGluZyBpdCBiYWNrIGZyb20gRFlUQwogICAgIHN0YXR1cyBp
-cyBzbGlnaHRseSB0cmlja3kgYmVjYXVzZSB0aGUgRFlUQyBnZXQgcmV0dXJuIHZhbHVlICgweDgw
-MWYwMDEpCiAgICAgaGFzIGl0cyBtb2RlIGJpdHMgc2V0IHRvIDB4RiAoc2FtZSBhcyBiYWxhbmNl
-ZCksIG1lYW5pbmcgaXQgbXVzdCBiZQogICAgIGRpc3Rpbmd1aXNoZWQgYnkgYSByYXcgdmFsdWUg
-Y2hlY2sgb3IgZHJpdmVyIHN0YXRlIHRyYWNraW5nLgoKICAyLiBFeHBvc2UgaXQgdmlhIGEgTGVu
-b3ZvLXNwZWNpZmljIHN5c2ZzIC8gZmlybXdhcmUgYXR0cmlidXRlLCBzaW5jZSBpdAogICAgIGJl
-aGF2ZXMgbW9yZSBsaWtlIGEgdmVuZG9yLXNwZWNpZmljIGFnZ3Jlc3NpdmUgZmFuIG1vZGUgdGhh
-biBhIGdlbmVyaWMKICAgICBwZXJmb3JtYW5jZSBwcm9maWxlIHVuZGVyIExpbnV4LgoKICAzLiBT
-dGFydCB3aXRoIGEgc21hbGxlciBwYXRjaCB0aGF0IG9ubHkgZGV0ZWN0cyBhbmQgcmVwb3J0cyB0
-aGlzIG1vZGUsCiAgICAgd2l0aG91dCBhZGRpbmcgYSBuZXcgd3JpdGFibGUgdXNlcnNwYWNlIGlu
-dGVyZmFjZSB5ZXQuCgpEb2VzIG9uZSBvZiB0aGVzZSBkaXJlY3Rpb25zIHNvdW5kIGFjY2VwdGFi
-bGUgZm9yIHBsYXRmb3JtLWRyaXZlcnMteDg2PwpJIGFtIGhhcHB5IHRvIHByZXBhcmUgYW5kIHRl
-c3QgYSBwYXRjaCBvbmNlIHRoZSBwcmVmZXJyZWQgZGlyZWN0aW9uIGlzCmNsZWFyLgoKSWYgaGVs
-cGZ1bCwgSSBjYW4gYWxzbyBzZW5kOgoKICAtIGZ1bGwgRE1JIGluZm9ybWF0aW9uCiAgLSB0aGUg
-bWVhc3VyZWQgRFlUQyBzdGF0ZSB0cmFuc2l0aW9ucwogIC0gdGhlIGNvbnRyb2xsZWQgUlBNIC8g
-cG93ZXIgY29tcGFyaXNvbiBsb2dzCiAgLSB0aGUgV01JL0dhbWVab25lIGZhaWx1cmUgZGV0YWls
-cwoKVGhhbmtzLApta2Fyb3MK
+From: Edip Hazuri <edip@medip.dev>
+
+Add support for the HP keyboard RGB backlight found on HP OMEN and
+HP Victus laptops. These keyboards expose per-zone RGB control through
+WMI commands.
+
+Register multicolor LED class devices for each keyboard zone (up to 4
+zones, depending on the keyboard type). Each zone exposes individual
+red, green, and blue channels via the multicolor LED subsystem.
+
+Also hardware-initiated brightness changes (e.g. via the keyboard
+backlight hotkey, mostly fn+f4) are reported.
+
+The color data is stored in a 128-byte color table managed by the
+firmware, with RGB values starting at offset 25, packed sequentially
+per zone.
+
+Signed-off-by: Konenko Andrey Viktorovich <admin@aquinas.su>
+
+---
+Changes since v8:
+ - fixed corrupted long lines
+
+Changes since v7:
+ - The LED class device names changed to be consistent with the documentation.
+
+Changes since v6:
+ - The LED class device names have been made more consistent with the 
+documentation, in accordance with patch https://lore.kernel.org/linux-leds/
+20260504145434.12746-1-johannes.goede@oss.qualcomm.com/
+underscores have been replaced with dashes where indicated.
+
+Changes since v5:
+ - LED class device names changed from a number to using a descriptive name 
+for each zone.
+
+v4: https://lore.kernel.org/all/20260303084022.7223-3-edip@medip.dev/
+
+Changes since v4:
+ - Fix circular dependencies
+
+Changes since v3:
+ - Merge the changes into a single commit
+
+Changes since v1:
+ - Fix mentioned style errors
+ - Add Kconfig dependencies
+
+---
+
+drivers/platform/x86/hp/Kconfig  |   2 +
+ drivers/platform/x86/hp/hp-wmi.c | 284 ++++++++++++++++++++++++++++++-
+ 2 files changed, 285 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/Kconfig b/drivers/platform/x86/hp/Kconfig
+index dd51491b9bcd..2a1841cbec76 100644
+--- a/drivers/platform/x86/hp/Kconfig
++++ b/drivers/platform/x86/hp/Kconfig
+@@ -45,6 +45,8 @@ config HP_WMI
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
+ 	select HWMON
++	select LEDS_CLASS
++	select LEDS_CLASS_MULTICOLOR
+ 	help
+ 	  Say Y here if you want to support WMI-based hotkeys on HP laptops 
+and
+ 	  to read data from WMI such as docking or ambient light sensor 
+state.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-
+wmi.c
+index d1cc6e7d176c..19da18f68337 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -14,6 +14,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
+ #include <linux/cleanup.h>
+ #include <linux/compiler_attributes.h>
+ #include <linux/dmi.h>
+@@ -23,6 +24,8 @@
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/leds.h>
+ #include <linux/limits.h>
+ #include <linux/minmax.h>
+ #include <linux/module.h>
+@@ -57,6 +60,7 @@ enum hp_ec_offsets {
+ 
+ #define HP_FAN_SPEED_AUTOMATIC	 0x00
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
++#define HP_COLOR_TABLE_PADDING	 25
+ #define HP_POWER_LIMIT_NO_CHANGE 0xFF
+ 
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero 
+insize is required
+@@ -97,6 +101,14 @@ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_QUIET			= 0x03,
+ };
+ 
++enum hp_keyboard_type {
++	HP_KEYBOARD_TYPE_NOBACKLIGHT                = 0x0,
++	HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD       = 0x1,
++	HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD    = 0x2,
++	HP_KEYBOARD_TYPE_RGB_PER_KEY                = 0x3,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD     = 0x4,
++	HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD  = 0x5,
++};
+ 
+ struct thermal_profile_params {
+ 	u8 performance;
+@@ -338,16 +350,27 @@ enum hp_wmi_gm_commandtype {
+ 	HPWMI_GET_GPU_THERMAL_MODES_QUERY	= 0x21,
+ 	HPWMI_SET_GPU_THERMAL_MODES_QUERY	= 0x22,
+ 	HPWMI_SET_POWER_LIMITS_QUERY		= 0x29,
++	HPWMI_GET_KEYBOARD_TYPE_QUERY		= 0x2b,
+ 	HPWMI_VICTUS_S_FAN_SPEED_GET_QUERY	= 0x2D,
+ 	HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY	= 0x2E,
+ 	HPWMI_VICTUS_S_GET_FAN_TABLE_QUERY	= 0x2F,
+ };
+ 
++enum hp_wmi_backlight_commandtype {
++	HPWMI_BACKLIGHT_COLOR_GET_QUERY         = 0x02,
++	HPWMI_BACKLIGHT_COLOR_SET_QUERY         = 0x03,
++	HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY    = 0x04,
++	HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY    = 0x05,
++	HPWMI_BACKLIGHT_SET_OFF_QUERY           = 0x64,
++	HPWMI_BACKLIGHT_SET_ON_QUERY            = 0xE4,
++};
++
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
+ 	HPWMI_GM	= 0x20008,
++	HPWMI_BACKLIGHT = 0x20009,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -355,6 +378,24 @@ enum hp_wmi_hardware_mask {
+ 	HPWMI_TABLET_MASK	= 0x04,
+ };
+ 
++struct hp_kbd_led_priv {
++	int zone;               /* Zone index (0-3) */
++	enum led_brightness last_brightness;  /* Brightness before turning 
+off */
++};
++
++struct hp_mc_leds {
++	struct led_classdev_mc devices[4];
++	struct hp_kbd_led_priv priv[4];
++};
++
++/* zone naming for 4-zone keyboards (HP Omen) */
++static const char *const hp_zone_names_4[] = {
++	[0] = "zoned_backlight-right",
++	[1] = "zoned_backlight-center",
++	[2] = "zoned_backlight-left",
++	[3] = "zoned_backlight-wasd",
++};
++
+ struct bios_return {
+ 	u32 sigpass;
+ 	u32 return_code;
+@@ -435,6 +476,7 @@ static DEFINE_MUTEX(active_platform_profile_lock);
+ static struct input_dev *hp_wmi_input_dev;
+ static struct input_dev *camera_shutter_input_dev;
+ static struct platform_device *hp_wmi_platform_dev;
++static struct hp_mc_leds hp_multicolor_leds;
+ static struct device *platform_profile_device;
+ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+@@ -1122,6 +1164,8 @@ static struct attribute *hp_wmi_attrs[] = {
+ };
+ ATTRIBUTE_GROUPS(hp_wmi);
+ 
++static void hp_kbd_brightness_set_by_hwd(u32 event_data);
++
+ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ {
+ 	u32 event_id, event_data;
+@@ -1222,6 +1266,7 @@ static void hp_wmi_notify(union acpi_object *obj, void 
+*context)
+ 	case HPWMI_PROXIMITY_SENSOR:
+ 		break;
+ 	case HPWMI_BACKLIT_KB_BRIGHTNESS:
++		hp_kbd_brightness_set_by_hwd(event_data);
+ 		break;
+ 	case HPWMI_PEAKSHIFT_PERIOD:
+ 		break;
+@@ -1484,6 +1529,241 @@ static int __init hp_wmi_rfkill2_setup(struct 
+platform_device *device)
+ 	return err;
+ }
+ 
++static struct hp_kbd_led_priv *hp_led_get_priv(struct led_classdev *led_cdev)
++{
++	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(led_cdev);
++	int zone = mc_cdev - hp_multicolor_leds.devices;
++
++	return &hp_multicolor_leds.priv[zone];
++}
++
++static int hp_kbd_backlight_set_rgb_color(int zone, int red, int green, int 
+blue)
++{
++	u8 color_table[128];
++	int ret;
++
++	/*
++	 * Get the current color table and then change only the relevant 
+parts.
++	 */
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY,
++				   HPWMI_BACKLIGHT, color_table,
++				   zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	/*
++	 * RGB color data starts at offset 25 +3 per zone (r g b)
++	 * e.g. if zone 1 starts in 25 zone 2 starts in 28
++	 */
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3]     = red;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 1] = green;
++	color_table[HP_COLOR_TABLE_PADDING + zone * 3 + 2] = blue;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_SET_QUERY, 
+HPWMI_BACKLIGHT,
++				   color_table, sizeof(color_table), 
+sizeof(color_table));
++	if (ret < 0)
++		return ret;
++	if (ret)
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool hp_kbd_backlight_is_on(void)
++{
++	u8 data;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_GET_QUERY, 
+HPWMI_BACKLIGHT, &data,
++				sizeof(data), sizeof(data));
++	if (ret)
++		return false;
++
++	return data == HPWMI_BACKLIGHT_SET_ON_QUERY;
++}
++
++static int hp_kbd_set_brightness(struct led_classdev *led_cdev,
++					enum led_brightness 
+brightness)
++{
++	struct hp_kbd_led_priv *priv = hp_led_get_priv(led_cdev);
++	struct led_classdev_mc *mc_cdev;
++	struct led_classdev_mc *device;
++	int red, green, blue;
++	int ret;
++
++	if (!hp_kbd_backlight_is_on()) {
++		u8 data = HPWMI_BACKLIGHT_SET_ON_QUERY;
++
++		ret = 
+hp_wmi_perform_query(HPWMI_BACKLIGHT_BRIGHTNESS_SET_QUERY,
++					   HPWMI_BACKLIGHT, &data,
++					   sizeof(data), 
+sizeof(data));
++		if (ret)
++			return ret;
++
++		/*
++		 * Turning the backlight on via WMI turns all zones,
++		 * so we need to restore the other zones' off state.
++		 */
++		for (int i = 0; i < 
+ARRAY_SIZE(hp_multicolor_leds.devices); i++) {
++			if (i == priv->zone)
++				continue;
++
++			device = &hp_multicolor_leds.devices[i];
++			if (!device->led_cdev.name)
++				continue;
++			hp_kbd_backlight_set_rgb_color(i,
++				device->subled_info[0].brightness,
++				device->subled_info[1].brightness,
++				device->subled_info[2].brightness);
++		}
++	}
++
++	led_cdev->brightness = brightness;
++
++	mc_cdev = lcdev_to_mccdev(led_cdev);
++	led_mc_calc_color_components(mc_cdev, brightness);
++
++	red = mc_cdev->subled_info[0].brightness;
++	green = mc_cdev->subled_info[1].brightness;
++	blue = mc_cdev->subled_info[2].brightness;
++
++	return hp_kbd_backlight_set_rgb_color(priv->zone, red, green, blue);
++}
++
++static void hp_kbd_brightness_set_by_hwd(u32 event_data)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct led_classdev *led_cdev;
++	struct hp_kbd_led_priv *priv;
++	u8 brightness;
++
++	for (int zone = 0; zone < ARRAY_SIZE(hp_multicolor_leds.devices); 
+zone++) {
++		if (!hp_multicolor_leds.devices[zone].led_cdev.name)
++			continue;
++
++		led_cdev = &hp_multicolor_leds.devices[zone].led_cdev;
++		if (!led_cdev->dev)
++			continue;
++
++		priv = hp_led_get_priv(led_cdev);
++
++		if (event_data == 0x2) {
++			brightness = priv->last_brightness ? : LED_FULL;
++		} else if (event_data == 0x0) {
++			priv->last_brightness = led_cdev->brightness;
++			brightness = LED_OFF;
++		} else {
++			dev_warn(dev, "Unknown keyboard backlight event 
+- 0x%x\n",
++				 event_data);
++			return;
++		}
++
++		led_cdev->brightness = brightness;
++		led_classdev_notify_brightness_hw_changed(led_cdev, 
+brightness);
++	}
++}
++
++static int __init hp_mc_leds_register(int num_zones)
++{
++	u8 color_table[128];
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_BACKLIGHT_COLOR_GET_QUERY, 
+HPWMI_BACKLIGHT,
++				   color_table, 
+zero_if_sup(color_table),
++				   sizeof(color_table));
++	if (ret)
++		return ret;
++
++	for (int zone = 0; zone < num_zones; zone++) {
++		struct led_classdev_mc *multicolor_led_dev;
++		struct led_classdev *led_cdev;
++		struct mc_subled *mc_subled_info;
++		struct hp_kbd_led_priv *priv;
++		struct device *dev;
++
++		dev = &hp_wmi_platform_dev->dev;
++		multicolor_led_dev = &hp_multicolor_leds.devices[zone];
++		led_cdev = &multicolor_led_dev->led_cdev;
++		priv = &hp_multicolor_leds.priv[zone];
++
++		if (num_zones == 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_backlight");
++		else if (num_zones == 4 && zone < 
+ARRAY_SIZE(hp_zone_names_4))
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_%s",
++							
+hp_zone_names_4[zone]);
++		else if (num_zones > 1)
++			led_cdev->name = devm_kasprintf(dev, GFP_KERNEL,
++							
+"hp::kbd_zoned_backlight-%d",
++							zone);
++
++		if (!led_cdev->name)
++			return -ENOMEM;
++		led_cdev->brightness = hp_kbd_backlight_is_on() ?
++				       LED_FULL : LED_OFF;
++		led_cdev->max_brightness = LED_FULL;
++		led_cdev->brightness_set_blocking = hp_kbd_set_brightness;
++		led_cdev->flags = LED_CORE_SUSPENDRESUME |
++				  LED_RETAIN_AT_SHUTDOWN |
++				  LED_BRIGHT_HW_CHANGED;
++
++		mc_subled_info = devm_kzalloc(dev, sizeof(*mc_subled_info) 
+* 3,
++					      GFP_KERNEL);
++		if (!mc_subled_info)
++			return -ENOMEM;
++
++		mc_subled_info[0].color_index = LED_COLOR_ID_RED;
++		mc_subled_info[1].color_index = LED_COLOR_ID_GREEN;
++		mc_subled_info[2].color_index = LED_COLOR_ID_BLUE;
++
++		for (int i = 0; i < 3; i++) {
++			int off = HP_COLOR_TABLE_PADDING + zone * 3 + i;
++
++			mc_subled_info[i].channel = zone * 3 + i;
++			mc_subled_info[i].intensity = color_table[off];
++			mc_subled_info[i].brightness = LED_FULL;
++		}
++
++		multicolor_led_dev->subled_info = mc_subled_info;
++		multicolor_led_dev->num_colors = 3;
++
++		ret = devm_led_classdev_multicolor_register(dev, 
+multicolor_led_dev);
++		if (ret) {
++			dev_err(dev, "Failed to register multicolor RGB 
+backlight\n");
++			return ret;
++		}
++
++		/* Initialize private data */
++		priv->zone = zone;
++		priv->last_brightness = LED_FULL;
++	}
++	return 0;
++}
++
++static int __init hp_kbd_rgb_setup(void)
++{
++	u8 keyboard_type;
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_GET_KEYBOARD_TYPE_QUERY, HPWMI_GM, 
+&keyboard_type,
++				   sizeof(keyboard_type), 
+sizeof(keyboard_type));
++	if (ret)
++		return ret;
++
++	switch (keyboard_type) {
++	case HP_KEYBOARD_TYPE_FOURZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_FOURZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(4);
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITH_NUMPAD:
++	case HP_KEYBOARD_TYPE_SINGLEZONE_WITHOUT_NUMPAD:
++		return hp_mc_leds_register(1);
++	default:
++		return 0;
++	}
++}
++
+ static int platform_profile_omen_get_ec(enum platform_profile_option 
+*profile)
+ {
+ 	int tp;
+@@ -2285,7 +2565,9 @@ static int __init hp_wmi_bios_setup(struct 
+platform_device *device)
+ 		return err;
+ 
+ 	thermal_profile_setup(device);
+-
++	err = hp_kbd_rgb_setup();
++	if (err)
++		dev_err(&device->dev, "Failed to initialize keyboard 
+RGB\n");
+ 	return 0;
+ }
+ 
+-- 
+2.54.0
+
+
+
