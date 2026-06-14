@@ -1,242 +1,120 @@
-Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
+Received: from scc-mailout-kit-02.scc.kit.edu (scc-mailout-kit-02.scc.kit.edu [129.13.231.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC412EB10;
-	Sun, 14 Jun 2026 20:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6122494D8;
+	Sun, 14 Jun 2026 20:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.13.231.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781468622; cv=none; b=TofpnENBcWIwItO12PBsP//HnE1Xy7IpsPBcwKl848fTN1QRT2TIc7ZC8NDhwjRZ9a+HP0O8X/ThHQX+5+8y4ph+9/jCtQ7kAYLvKig71Inmw0L6ngKg2GHwTzxaIwLFoJgQb9W4JtVwox4+O6AObY+pSwgPNDNOC05h7m6v4Is=
+	t=1781469996; cv=none; b=KRiU4UteByKiZArR/tNGy55U25vnl+7lakiPgAuLQDAYvY9j0yqLhVVKUOm5bBwI1O5ZvcXEUUjjZ4UQjastRucgauqDYyqpxR7TIZWoZysKGQoJhRqup6eCyV1fuwca2IKkp4Bcja0vGFuPPzmQeLmCjDkGb5k8/YWqF8asOEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781468622; c=relaxed/simple;
-	bh=25uKeH7Fkecda/5XIoD51LBNn5t/N1LZJRe8WfR3Rf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=RtHaCEdrnlYv57sLrvhBlbbdaWWMKU9ssInWgxLfrmVAZcVdJF6AhEcjexmZPXvMJwaa81ml4olwnAq+l4zzHhugy1DyLG9toev6ggJRa7Pylkn2cuDwmzYScQGEDf5rwp8vfdLpLLtLUFAOFnanPcSVYthZ6CNzWg9Go2UwvR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=cI/RAvbQ; arc=none smtp.client-ip=49.13.27.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
+	s=arc-20240116; t=1781469996; c=relaxed/simple;
+	bh=11+6m9zepG8NeImjnMigDwCY4Ow8GaCwqG7hc+D93lY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cDqknklR17tqi6AN7VEgdfnvx2kMYP39ruqFZc4rfFklpMgaqQEENGQdzigxL/8uKfgxy4JBl6zVu1lbAya/zzIHSfAW5hMk4JCgYDfsCJhVqR27k9mwoA1rlpUS92jDJ1SgwqOdAspWVTe5a+1hal0qlHDV3KWrgk+BSfsHmMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.kit.edu; spf=pass smtp.mailfrom=student.kit.edu; dkim=pass (2048-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b=YeFK7DJR; dkim=permerror (0-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b=JMvJ50tx; arc=none smtp.client-ip=129.13.231.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=student.kit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=student.kit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="cI/RAvbQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
-	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date;
-	bh=RCXBJFk+xLJcVhsvIX35+b0OywAN5DYAzp6zkG4q6uQ=; b=cI/RAvbQUaeKLOsOAGUKXd9MUY
-	dEOuHYiQcBcd4eEiNl43elYgjSpb8TiHggw7Cac/yk9OvLgBdw0uojsmrfeFJhX9+be7xP0+pUJeY
-	dvAXaKcQszYAMdk6atPP4AW2Ta15n7wjfX0EJIJGXK/IGFjVFKArMdy4oXvqhFaq3nEs=;
-Received: from mnencia by spark.kcore.it with local (Exim 4.99.4)
-	(envelope-from <mnencia@kcore.it>)
-	id 1wYrMh-00000000CW6-0ClE;
-	Sun, 14 Jun 2026 22:23:31 +0200
-Date: Sun, 14 Jun 2026 22:23:31 +0200
-From: Marco Nenciarini <mnencia@kcore.it>
-To: Angioli Samuele <angioli.samuele@gmail.com>,
-	linux-media@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
- handshake-derived "dvdd" regulator registered but never linked to sensor,
- sensor probe fails with -EREMOTEIO
-Message-ID: <ai8NwzoU08AvD7Ve@spark.kcore.it>
+	dkim=pass (2048-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b="YeFK7DJR";
+	dkim=permerror (0-bit key) header.d=student.kit.edu header.i=@student.kit.edu header.b="JMvJ50tx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=student.kit.edu; s=kit2; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=20/RSuiWfquUy1acdGcykqbXfJS9kVuFLuoBIM4tl1I=; b=YeFK7DJR1Uh7F4RsIwPHWccelG
+	etMMetPwWv/lEiJ3CX8kX76+kKvdnbFgXcpiOl8Z9jhNZAQrYxGleIyt7e//jzeUtqHHCxY96KbrP
+	vjIliPP0HAHuyXaW0wMd32+roUZioi1xIdCnanmZ3UVUv6wMYZsVy888NCtUB4tG0jQOR1bpyuuJS
+	+Xd31dtZqNRQKgtU/Z6q12wDovtSe1NxS8cEadH4FRr3OqgT296JPNDyB8r4aHYwIRvOaSTUI5fSF
+	znEb89qOff1V7O9sPE1eghTiWwfC8tXSA+iEMBFqBnHbehOn2NVAcxlyM/X8+MvjsbHCLUAYQbeK1
+	8P/WEy2g==;
+DKIM-Signature: v=1; a=ed25519-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=student.kit.edu; s=kit2ed25519; h=Content-Type:Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=20/RSuiWfquUy1acdGcykqbXfJS9kVuFLuoBIM4tl1I=; b=JMvJ50txx+ZRAk4OOJYAEO5gs/
+	HrkrCHegGETFTSBTdk8Eso14Zc+/XPr981W4i8tejV0sWZE5FmgFl0eJl7Ag==;
+Received: from kit-msx-52.kit.edu ([2a00:1398:9:f612::152])
+	by scc-mailout-kit-02.scc.kit.edu with esmtps (TLS1.2:ECDHE_SECP384R1__RSA_SHA256__AES_256_GCM:256)
+	(envelope-from <julian.haarmann@student.kit.edu>)
+	id 1wYrWu-00000002hgd-1hG4;
+	Sun, 14 Jun 2026 22:34:04 +0200
+Received: from fedora.fritz.box (2001:16b8:cbe3:bd00:f6a2:257a:ebc1:2a01) by
+ smtp.kit.edu (2a00:1398:9:f612::106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 14 Jun 2026 22:34:01 +0200
+From: Julian Haarmann <julian.haarmann@student.kit.edu>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J . Clark"
+	<derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Julian Haarmann <julian.haarmann@student.kit.edu>
+Subject: [PATCH v2] platform/x86: lenovo/ymc: Only match lower byte in WMI lid switch query response
+Date: Sun, 14 Jun 2026 22:30:26 +0200
+Message-ID: <20260614203235.235724-1-julian.haarmann@student.kit.edu>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
-References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
- <ah_XLEAkqjV9HkSE@spark.kcore.it>
- <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
- <ai2NAS5EnLaLoN2W@spark.kcore.it>
- <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On newer Lenovo Yoga devices like the "Yoga 9 2-in-1 14IPH11 - Type 83SE",
+the hinge switch WMI query returns extra data in the upper bits
+(e.g. 0x50001 laptop mode, 0x50002 tablet mode, ect.).
 
-Hans, Sakari,
+The driver previously checked for exact matches (0x01 laptop, 0x02 tablet,
+ect.) causing newer switches to not work.
 
-Samuele's data is in and it confirms both halves of the wrong-instance
-keying.
+Mask the WMI query result to only match the lower byte and ignore upper
+bits.
 
-DSC0 = INT3472:0c, DSC1 = INT3472:01. The decisive line from DSC0's
-probe, with int3472 dyndbg on:
+Signed-off-by: Julian Haarmann <julian.haarmann@student.kit.edu>
+---
+Changes in v2:
+- Replaced raw bit mask with GENMASK() and FIELD_GET().
 
-  int3472-discrete INT3472:0c: Sensor name HIMX1092:00
+ drivers/platform/x86/lenovo/ymc.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-So DSC0's reverse-_DEP walk resolves to the first consumer that _DEPs
-it, the Himax IR camera (HIMX1092:00, Windows Hello), and that is the
-dev_name DSC0's dvdd supply_map is keyed on. The OV02C10 (OVTI02C1:00)
-never appears in it. regulator_summary corroborates from the other
-side: the only dvdd on
-the whole platform is INT3472:0c-dvdd (DSC0), orphaned at use=0, and
-DSC1 (which the RGB sensor actually _DEPs) exposes no dvdd at all, only
-avdd/dovdd/reset.
+diff --git a/drivers/platform/x86/lenovo/ymc.c b/drivers/platform/x86/lenovo/ymc.c
+index 1b73a55f1b89..015e046b0fce 100644
+--- a/drivers/platform/x86/lenovo/ymc.c
++++ b/drivers/platform/x86/lenovo/ymc.c
+@@ -8,6 +8,8 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+@@ -20,6 +22,8 @@
+ #define LENOVO_YMC_QUERY_INSTANCE 0
+ #define LENOVO_YMC_QUERY_METHOD 0x01
+ 
++#define LENOVO_YMC_STATE_MASK GENMASK(7, 0)
++
+ static bool force;
+ module_param(force, bool, 0444);
+ MODULE_PARM_DESC(force, "Force loading on boards without a convertible DMI chassis-type");
+@@ -85,7 +89,9 @@ static void lenovo_ymc_notify(struct wmi_device *wdev, union acpi_object *data)
+ 			"WMI event data is not an integer\n");
+ 		goto free_obj;
+ 	}
+-	code = obj->integer.value;
++
++	/* strip upper bits (e.g. 0x50000) on newer devices */
++	code = FIELD_GET(LENOVO_YMC_STATE_MASK, obj->integer.value);
+ 
+ 	if (!sparse_keymap_report_event(priv->input_dev, code, 1, true))
+ 		dev_warn(&wdev->dev, "Unknown key %d pressed\n", code);
+-- 
+2.54.0
 
-So the topology is settled: there is exactly one dvdd handshake on the
-platform, gated by DSC0, keyed to the IR sensor DSC0 serves, while the
-RGB sensor that appears to want it _DEPs DSC1 instead, and nothing
-connects the two. The remaining inference is the rail-to-failure link
-itself: dvdd falls to a dummy under full constraints, and the chip-ID
-read at 0x300a returns -EREMOTEIO with no retry. That chain is
-consistent with the data but I have not proven dvdd is the cause as
-opposed to a coincident orphan (see the test ask to Samuele below),
-so I would not call the failure mechanism closed yet, only the keying.
-
-On whose defect this is: either the firmware under-specifies the
-dependency (the OV02C10's dvdd is physically gated by DSC0 but its _DEP
-points only at DSC1), or the kernel's reverse-_DEP consumer model
-cannot express a rail that lives on a sibling INT3472 instance. Either
-way this is shipping DA16250 firmware that will not change, so the
-camera needs an in-tree path regardless of where we assign blame.
-
-That makes this the same class of problem int3472 already handles with
-the second_sensor quirk. avdd_second_sensor (the Lenovo Miix 510 entry
-in discrete_quirks.c) already plants a second supply_map entry, keyed
-to a hardcoded device name in addition to the reverse-_DEP sensor_name,
-and skl_int3472_register_regulator() takes second_sensor for exactly
-that. The DA16250 is the same shape, just on dvdd/HANDSHAKE rather than
-avdd/POWER_ENABLE, and the HANDSHAKE branch currently always passes
-second_sensor = NULL. So the contained fix is: extend second_sensor to
-cover the dvdd/HANDSHAKE arm too. The struct has a single second_sensor
-field today (avdd_second_sensor), so generalising that one field reads
-cleaner to me than adding a per-con_id dvdd_second_sensor, but either
-works; then add a DA16250 DMI entry pointing dvdd's second consumer at
-i2c-OVTI02C1:00. This adds OVTI02C1 as a second consumer of DSC0's
-dvdd, it does not move the rail off HIMX1092:00, so the IR camera's own
-supply is untouched.
-
-The alternative is to make that second-consumer resolution automatic
-rather than DMI-gated, i.e. teach int3472 to discover that a sensor may
-draw a rail from an instance it does not _DEP on. More correct in
-principle, but ACPI gives no signal to key it on here (that is the
-firmware gap), so it would need a heuristic and I would not want it
-silently re-homing rails on boards where the current keying is right.
-
-My instinct is the DMI quirk, extending the mechanism you already use
-for avdd. DMI is the right key rather than the int3472_gpio_map[] HID
-table, because the OV02C10 part is not the problem, the DA16250 _DEP
-topology is. I would leave the fully-automatic resolution open in case
-more ARL boards turn up the same split. Tell me which way you want it
-and I will prototype the quirk against the DA16250.
-
-Samuele, here is a concrete test that closes the last gap. It is the
-proposed fix in miniature, so a positive result validates both at once.
-Two ways to run it, pick whichever suits your setup. In both, the
-signal is the same: does the 0x300a chip-ID read in dmesg succeed, or
-still return -EREMOTEIO?
-
-Option A, the patch (preferred, it exercises the real consumer path).
-In skl_int3472_handle_gpio_resources(), in
-drivers/platform/x86/intel/int3472/discrete.c, add the two marked lines
-to the regulator arm of the switch:
-
-	case INT3472_GPIO_TYPE_POWER_ENABLE:
-		second_sensor = int3472->quirks.avdd_second_sensor;
-		fallthrough;
-	case INT3472_GPIO_TYPE_DOVDD:
-	case INT3472_GPIO_TYPE_HANDSHAKE:
-+		if (type == INT3472_GPIO_TYPE_HANDSHAKE)
-+			second_sensor = "i2c-OVTI02C1:00";	/* test */
-		ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
-						     con_id, second_sensor);
-
-This adds OVTI02C1:00 as a second consumer of DSC0's dvdd alongside the
-existing HIMX1092:00 mapping; it does not move the rail off the IR
-camera. The hardcoded string makes this test-only (it would mis-key on
-any other handshake board); the shipped form is the DMI-gated quirk
-above. The hunk applies to a recent mainline discrete.c, where the
-HANDSHAKE case shares the register_regulator call via the POWER_ENABLE
-fallthrough, so build from a source tree matching your running kernel.
-First confirm int3472 is a module, not built in:
-
-	modinfo intel_skl_int3472_discrete
-	# or check CONFIG_INTEL_SKL_INT3472 in your kernel config
-
-If it is =y you need a full kernel build instead. If =m, build and
-install just this module, then reboot for a clean re-probe:
-
-	make -C /lib/modules/$(uname -r)/build \
-	     M=$PWD/drivers/platform/x86/intel/int3472 modules
-	sudo make -C /lib/modules/$(uname -r)/build \
-	     M=$PWD/drivers/platform/x86/intel/int3472 modules_install
-	sudo depmod -a
-	sudo reboot
-
-(Build against the configured source for your running kernel, or the
-new .ko may refuse to load on a modversions/CRC mismatch.) After
-reboot, in /sys/kernel/debug/regulator/regulator_summary the
-INT3472:0c-dvdd line should now list the i2c-OVTI02C1:00 device as a
-consumer (use count > 0), and dmesg shows whether 0x300a now succeeds.
-
-Option B, no rebuild, force the rail on by hand. On this board DSC0's
-_DSM exposes only func 2 (the dvdd handshake) and func 3 (the IR-flood
-strobe), so unbinding it drops exactly those two and nothing the
-OV02C10 needs. dvdd is a GPIO-gated regulator, so as root:
-
-	# 1. BEFORE unbinding, capture the dvdd enable line: int3472
-	#    requests it with consumer label "dvdd", so in gpioinfo find
-	#    the line whose consumer is "dvdd" and note its gpiochip (the
-	#    block header) and offset. The label disappears once you
-	#    unbind, so record chip+offset now. Your int3472 dyndbg log
-	#    cross-checks it:
-	#      "INT3472:0c: dvdd <acpi-gpio-path> pin <N> active-<high|low>"
-	#    (that line gives the ACPI controller path and pin, not the
-	#    gpiochip number, so map it through gpioinfo). Note the
-	#    active- sense too, you need it in step 3:
-	gpioinfo
-
-	# 2. release the line by unbinding the PMIC (drops only DSC0's
-	#    dvdd regulator and IR strobe, not the sensor, which _DEPs
-	#    DSC1):
-	echo INT3472:0c > /sys/bus/platform/drivers/int3472-discrete/unbind
-
-	# 3. drive the line to its ON level and HOLD it (own shell, leave
-	#    running). ON is =1 if step 1 showed active-high, =0 if
-	#    active-low. Using the gpiochip and offset from step 1:
-	#    libgpiod v1:  gpioset --mode=signal gpiochipN <offset>=<on>
-	#    libgpiod v2:  gpioset -c gpiochipN <offset>=<on>  (holds until Ctrl-C)
-	gpioset --mode=signal gpiochipN <offset>=<on>
-
-	# 4. in another shell, re-probe the sensor and read the log:
-	echo i2c-OVTI02C1:00 > /sys/bus/i2c/drivers/ov02c10/bind
-	dmesg | tail
-
-	# 5. when done, Ctrl-C the gpioset and reboot to restore normal
-	#    driver state.
-
-(If step 4 says the device is already bound, unbind it first via the
-same path, then bind.) regulator_get("dvdd") lands on a dummy here,
-since there is no provider once DSC0 is unbound, but that is a no-op
-enable and the rail is physically on because you are holding the GPIO
-at its ON level, so the chip-ID read is still the signal.
-
-Either way: if 0x300a succeeds, that pins powering dvdd as what
-unblocks the chip-ID read, and the fix is exactly Option A folded into
-a DA16250 DMI quirk. If it still fails, dvdd is not the (only) problem
-and the -EREMOTEIO is coming from reset, clock, or the NX33 bridge, and
-we look there instead. Option A is the better single test, since it
-keeps DSC0 bound and exercises the real enable path with the right
-polarity and timing; Option B trades that for no rebuild, so if the two
-disagree, trust A.
-
-Thanks,
-Marco
------BEGIN PGP SIGNATURE-----
-
-iQIyBAEBCAAdFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmovDcIACgkQWJ8D8Bul
-UDjAng/48+VJljU31kWvg6tTrofMNHBwjXYlCAepNnQqVr8FyKxeM+fgzucIjqU/
-dq2OJP2TgDej13gGFLSrsduel4FNrcTqc3KYM+uYSnRCGX4Pqi7r4uT5M4tvY2Pt
-mrDGBvi4ZK6RgYfrCMQus1mNtVaJcBw/mKPdxdQK84KmI6ohKh9yFsDgizVF2WHP
-LFvJ2YQWEHf1jeisa5h+y1c4+RRPUIzmz8qW12jFLr7Dba7U+pNP+OaZZwZin6Dh
-uPNa8rrkv+WFWKR7kJfK6woaJpR0VVHWIg0s/4AOID/3I5LIBBd1ruTZwJNnBMkz
-TApKmqU9hXANXxZ+oGLfCW7OoqLvNfcuo0kE35dqzKLxrpkGYHgFnX7N7mD4+Rgp
-B57rUUSIBrOs1dn2qgSussZoEr0dNp24r6K+YH1r/thMw4kdQxgovD4se8momCij
-tGPP0hi/8hB2uXBSRJSH/wI03qrU/JVOqVgmc8W19tPemZdQuNxvSrwnEgUaAFx/
-9uZZJoMBX3HM373eVd1/M4Bv3j4fGesjKI8JeYkGkzQioZOATV0PIfTv+K04Ytyb
-QGCwanp3I0FFUVBqMpiwuRIm/xOxl1NEtrpLU/AtbfBF6D17RobMidTvPy3URFRg
-fkSASULsYSvlKZLZpZoNquUZmcoqBwcLawewWza8T9DeJMlkfw==
-=8fhX
------END PGP SIGNATURE-----
