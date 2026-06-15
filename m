@@ -1,126 +1,198 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B05403EBE;
-	Mon, 15 Jun 2026 15:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0296C404BEB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 15:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781537332; cv=none; b=b0xXbm/xON1FMP4v/tMqptQ/d1OTbq1mShGSO/25W2zxGkqWMUI8ppXgbjv9GWKGOQAkapldEAnP+zA1lQAEyRtPmI7aWIeV2agfru+KEw6P1sFDp6u/v4Cr2bJcIxevW7bfh2VRtUY2ZiV8w1rCbmEmPAE4qxIdgmBSQvsC1uI=
+	t=1781537875; cv=none; b=iKU0eyVBhO7Tq68EqarKEOvxgYJmbwBYfUU5stDiCyyfcJu7JDNpDnfuNgVSw5VgdorsDkuLap/itInpFLMz/ZRvTzsaCm0hwd4/jeBlBxhzAgVl2xCwC7uBAYzi39P+acugAXlCnLB0vR4DeE9kmYmKXwxxOxZ5Mx2QegI+8Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781537332; c=relaxed/simple;
-	bh=nRGZ8zRGFC4P+Dcf74jdC9byS6caxuDegu6vCw/eFTg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=FCf4PF3zy6Fd/FQCaIlAMFkw+/Dyh9WjcAcFmv6PDNj/Dkt3vazwjNYM8RbYZZ0pb0OsIoMCkV4J1mkxe1OHByyjYYfQ2Bs1ikEunD6kvHrep9TM2VvWU9TEBmVbKy1+7t8vS4ODnVZfzvipUHFwLx0aeJyF9EbJJoPqsz/fW8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TK22iPSB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cC86WWRs; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1781537875; c=relaxed/simple;
+	bh=Wa6xlxkl4JJ09AklQhD4tMfDw1OwppgkXjvn5A4AoQI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nx454HKCJNu74CTHP3mriTqgbOHfLVLSFr9pzwC5YlrIyBXmSJsUsq7utgheVGl/OaV3ExCVErGihT1bgbaRf73PS/D6gaJELlO/SQls9kRLKIuMNRhwzJTT2bTRqLOTmMlSC4gMGqWqQsaelUh8jddwTNidJjU+x2JPbh75Xjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8Y/pfeC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TK22iPSB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cC86WWRs"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id AEC2B1400034;
-	Mon, 15 Jun 2026 11:28:49 -0400 (EDT)
-Received: from phl-imap-05 ([10.202.2.95])
-  by phl-compute-04.internal (MEProxy); Mon, 15 Jun 2026 11:28:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1781537329;
-	 x=1781623729; bh=BaulR5MoKcRJXvKC0DEUDF0Ruc0c+G4aHDV2lmOYuPk=; b=
-	TK22iPSBl+8FkCktgVBRC2rzxiqSyEKe9CvTm1TQvYBNfeE1N7zZWnJAmjrVWnIM
-	tYbeQ2j1UzsiRoljr4ZfShPR2mSjU1SZLdgmojQmI9fytpXtR+u5EoF38Tf+63hS
-	gQyZpafSmxhMUU4qyN22ShhYwNbfzhJDdTT/c3jZSyyH2Ly/EPZI5pnN0hLMV7Zu
-	nDl3+AiytLsh4EgfTZyIoAY7Kxo/82Z2xFGfXN3NhOIAXOyqEuObj4qzx44B4VSu
-	EfONz8Pa1D8WKQZNFWQHCILu/0KUnNx+1/qL4gnWoSV3JNAkR8R3YbMm5sI+3eGf
-	jqE/4qcwsFOS8r6xBSruUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1781537329; x=
-	1781623729; bh=BaulR5MoKcRJXvKC0DEUDF0Ruc0c+G4aHDV2lmOYuPk=; b=c
-	C86WWRs5Zvg+IthMER36d3Nii+MLIWOPWsaRXfll52sKj41tetTA+FRAeMk6QNJ3
-	9+18fFl8KzqXr+r7ScTA8UThZefWOv3ApcIP8x7I2gkPaQxeWEff7FCJkv6KMHkR
-	KjlM0o2wy7u9T++AqCcDKqkfM5gtLuCFK4WULcbvVu1Ph/WAsUFTl/n4ngCbHqt1
-	paYeEaUOLE23vU2Acafu15X0p62rN8TPYBHbzcvobpFizlFb2m1pv8x9kHf8NB4b
-	kGVGagn9cErrraxyUaqZgQCkRu9ZKBz8aO3LhznaIA8l8nIE+qwedezGKH/bIb0l
-	Gc2XO4+YWVF5+GeCgFj1Q==
-X-ME-Sender: <xms:MRowavZAJNhhH0wIC4EMPz8EEYfIiXXUV_OdZlYzPW1hyNym0ROPaQ>
-    <xme:MRowapOAI6wD-48UyEsCtWc0K-D6T3ZJRvNbg40w6hBt51e3J42f56-5dQOSv6XwK
-    RGKNNy6khiCEQn-lRvFwC1wPI_e3iBqDpfMGOP703wMmHXPsnzS3xo>
-X-ME-Proxy-Cause: dmFkZTEylX8mPu8vlpBm+r8jm+E+2bXRFgRqMV70qaPhPC4rLx+lGegg3mIYJOZ8J9uX7u
-    7XQ+fJojdO0CfpTifSXpttrQLa3ee5ibnbtuBi9Wfrh8hLbIUykbTcfDNYsSnXVn4x2OqJ
-    KDopE3QO/CdgT8fREwn9+hYrEObA+dHPaeKZSxx/8D+0b/h5E4ar+SFTXhkwQK1d7mX5Tb
-    AzEoukuicxjGdva4lzwven68Nyic2qRao6a/iFNuguKTGyfonZJEWK863jGa2A4FKYyfGx
-    IzOpzkaDu275qw4lu2lXjPRwwqcM7BggcpdxBGYtrfy+O5jlKz+IH8Bm3jCkELkc+jNdV1
-    nrxf33dfXoSlf25hi/dJ0p+7UdWZWbljHe5omiCrcw7AHqR18SNdXff3UpZRSDAbXvoqlb
-    NV3D8p0A23exa+rW8ypCMslPad7wDgNg6Rvd8jnvNhwDopotmfk5v4UesEpJlQFjoCMCya
-    x4/NUOTbs2LzdcsammX0MMmio0nU+UVgrI/+8L6k7fvH60r8Br2kr87nKsrhr7QFm7rDvf
-    V+q4TxvwEsD3czW36T4rPe8uJCS+2ueibNiuLZk+K8P578oSJGC8/sr9RSSMgX8uvfmh82
-    Bz/aDzsPOQdnjfwYKzANuvdGIdX16DFtmH8qwzZWDa6eWnulSxcLHBiMWWyw
-X-ME-Proxy: <xmx:MRowauLuRCVCDbGXAMRXlwPtAN4DKxoJ_DrlmT4EJ2VtIHgHCzkmZA>
-    <xmx:MRowaouiBDSH7DsuvuLcPbndLS9b6BVdA-hdGKq6erElUF9xgvX8xw>
-    <xmx:MRowaiXsQzl-_gvWqZR29vmvaGchl3a8_Hy1NW5EcOrY57jjV-nbLg>
-    <xmx:MRowajh_vT31XOVSURWq8w6PFI3NVdGoOyUELR6ry8uIBTKn6UzO6g>
-    <xmx:MRowaq_wsSVhWTDsk3HQ1Sq5K0rtsndNw-R2FembNkrfgMOGPjo3Tisq>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 11457182007E; Mon, 15 Jun 2026 11:28:49 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8Y/pfeC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C4320C2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 15:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1781537874;
+	bh=Wa6xlxkl4JJ09AklQhD4tMfDw1OwppgkXjvn5A4AoQI=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=m8Y/pfeC1+OMOfEOuPd6ghWlGaU3/BJna1seVYQn0Wl+ZplYK/v7wkeRFjhuFJBd2
+	 roUEqNnKx1JUNr9mNnsGb1i34pGaZIkmesA64UotvJPWD94yQ7uYVOFzdxwNfdnQzD
+	 EuNODAYB+/hdp6pTLjF1o2w0LfmQmA13Q0KH8+8CiVfWr0qghC3dTx8BsisNhbAZW+
+	 BFYxMvH/BZpKWFqtmjiKCOkhUHa0Xw4ffdxAZBTHkc2xJmJ/KH30/qU9+tEM4Ws/uh
+	 kCwuHEHvd9YGC11I1al40reoAeh0/Hvt9u4/6IbLCCyQvOHj25KmauTdY8srE39wxV
+	 j6CvNfjpQEyVw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id B4BE0C3279F; Mon, 15 Jun 2026 15:37:54 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Mon, 15 Jun 2026 15:37:54 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: chgenn.x@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218901-215701-MpfEYI9DMi@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AiNCL5RzVN0N
-Date: Mon, 15 Jun 2026 17:28:27 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Armin Wolf" <W_Armin@gmx.de>
-Cc: "Shuangpeng Bai" <shuangpeng.kernel@gmail.com>,
- "Hans de Goede" <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <c42ebb27-18c4-4211-96d5-3bc5d3239cb7@app.fastmail.com>
-In-Reply-To: <2026061525-dayroom-backspace-4273@gregkh>
-References: <178144969601.60470.13396800403157907003@gmail.com>
- <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
- <2026061525-dayroom-backspace-4273@gregkh>
-Subject: Re: [BUG] KASAN: slab-use-after-free in _copy_to_user from
- platform/x86/dell-smbios-wmi
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 15, 2026, at 15:30, gregkh@linuxfoundation.org wrote:
-> On Mon, Jun 15, 2026 at 02:19:16PM +0200, Armin Wolf wrote:
->> Am 14.06.26 um 21:15 schrieb Shuangpeng Bai:
->> 
->> > Hi Kernel Maintainers,
->> > 
->> > I hit the following report while testing current upstream kernel:
->> > 
->> > KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-wmi
->> > 
->> > on commit: e8c2f9fdadee7cbc75134dc463c1e0d856d6e5c7 (May 25 2026)
->> > 
->> > The reproducer and .config files are here.
->> > https://gist.github.com/shuangpengbai/f5b15c099e80897486b4238ddb91df79
->> > 
->> > I'm happy to test debug patches or provide additional information.
->> 
->> It seems that unbinding the dell-smbios-wmi driver races with any outstanding
->> file operations on the misc device, causing them to access memory already freed
->> by the unbound driver.
->
-> How can that happen if the module reference count is properly
-> incremented when the file is open?  Perhaps the driver isn't doing that
-> correctly?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-It's not, and I think in addition, the probe function needs to
-take a reference on the wmi_device do that does not go away while
-the misc device exists.
+--- Comment #104 from Evgeny Ch (chgenn.x@gmail.com) ---
+I've checked new driver version on LG gram 16 2022. I've tried all Fn+F
+combinations. They mostly work. "Reader mode" combo Fn+F9 doesn't have any
+effect for me, Ubuntu 26.04 Gnome shell. "Fn+F7" External display toggle
+doesn't make any difference to me too.
+Also, I've checked `fan_mode` default value & changing it:
+$ sudo cat /sys/devices/platform/lg-laptop/fan_mode
+0
+$ echo 1 | sudo tee /sys/devices/platform/lg-laptop/fan_mode # should disab=
+le
+LG fan silent mode? Is it correct, by the way?
+1
+$ sudo cat /sys/devices/platform/lg-laptop/fan_mode
+1
 
-      Arnd
+
+Loading driver + keys testing dmesg logs:
+```
+[ 7437.824922] ACPI Error: No handler for Region [XIN1] (000000006c907335)
+[UserDefinedRegion] (20251212/evregion-131)
+[ 7437.824931] ACPI Error: Region UserDefinedRegion (ID=3D143) has no handl=
+er
+(20251212/exfldio-261)
+
+[ 7437.824935]=20
+               Initialized Local Variables for Method [_TMP]:
+[ 7437.824936]   Local0: 0000000056306aad <Obj>           Integer
+0000000000000024
+
+[ 7437.824940] No Arguments are initialized for method [_TMP]
+
+[ 7437.824942] ACPI Error: Aborting method \_SB.PC00.LPCB.LGEC.SEN2._TMP du=
+e to
+previous error (AE_NOT_EXIST) (20251212/psparse-529)
+[ 7441.231104] lg_laptop: loading out-of-tree module taints kernel.
+[ 7441.231110] lg_laptop: module verification failed: signature and/or requ=
+ired
+key missing - tainting kernel
+[ 7441.232304] lg_laptop: product: 16Z90Q-R.APB9U1  year: 2022
+[ 7441.247021] input: LG WMI hotkeys as
+/devices/platform/LGEX0820:00/input/input19
+[ 7441.247202] ACPI: battery: new hook: LG Battery Extension
+[ 7552.050047] audit: type=3D1400 audit(1781536857.026:390): apparmor=3D"AU=
+DIT"
+operation=3D"userns_create" class=3D"namespace" info=3D"Userns create - tra=
+nsitioning
+profile" profile=3D"unconfined" pid=3D11371 comm=3D"(ubuntu-insigh)"
+requested=3D"userns_create" target=3D"unprivileged_userns"
+execpath=3D"/usr/lib/systemd/systemd-executor"
+[ 7552.050484] audit: type=3D1400 audit(1781536857.026:391): apparmor=3D"DE=
+NIED"
+operation=3D"capable" class=3D"cap" profile=3D"unprivileged_userns" pid=3D1=
+1371
+comm=3D"(ubuntu-insigh)" capability=3D21  capname=3D"sys_admin"
+[ 7552.077511] audit: type=3D1400 audit(1781536857.053:392): apparmor=3D"DE=
+NIED"
+operation=3D"getattr" class=3D"file" info=3D"Failed name lookup - disconnec=
+ted path"
+error=3D-13 profile=3D"unprivileged_userns" name=3D"" pid=3D11379
+comm=3D"systemd-detect-" requested_mask=3D"r" denied_mask=3D"r" fsuid=3D100=
+0 ouid=3D0
+[ 7615.499008] LG Gram Laptop Support LGEX0820:00: Received event 130
+(252116994)
+[ 7625.038464] LG Gram Laptop Support LGEX0820:00: Received event 130
+(271581201)
+[ 7625.160481] usb 3-2: USB disconnect, device number 2
+[ 7625.996620] LG Gram Laptop Support LGEX0820:00: Received event 130
+(271581218)
+[ 7626.256223] usb 3-2: new high-speed USB device number 4 using xhci_hcd
+[ 7626.410086] usb 3-2: New USB device found, idVendor=3D04f2, idProduct=3D=
+b772,
+bcdDevice=3D52.02
+[ 7626.410115] usb 3-2: New USB device strings: Mfr=3D1, Product=3D2,
+SerialNumber=3D3
+[ 7626.410116] usb 3-2: Product: LGE FHD Camera
+[ 7626.410117] usb 3-2: Manufacturer: SunplusIT Inc
+[ 7626.410119] usb 3-2: SerialNumber: 01.00.00
+[ 7626.422862] uvcvideo 3-2:1.0: Found UVC 1.50 device LGE FHD Camera
+(04f2:b772)
+[ 7626.469259] uvcvideo 3-2:1.2: Found UVC 1.50 device LGE FHD Camera
+(04f2:b772)
+[ 7628.254894] LG Gram Laptop Support LGEX0820:00: Received event 128 (116)
+[ 7629.540205] LG Gram Laptop Support LGEX0820:00: Received event 128 (116)
+[ 7634.692770] wlp0s20f3: deauthenticating from 9c:56:36:1b:71:08 by local
+choice (Reason: 3=3DDEAUTH_LEAVING)
+[ 7639.416293] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x20
+[ 7639.416354] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+[ 7639.416362] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+[ 7639.416371] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+[ 7639.417925] iwlwifi 0000:00:14.3: RFIm is deactivated, reason =3D 5
+[ 7642.781646] wlp0s20f3: authenticate with 9c:56:36:1b:71:08 (local
+address=3D7c:b5:66:d8:c2:af)
+[ 7642.782479] wlp0s20f3: send auth to 9c:56:36:1b:71:08 (try 1/3)
+[ 7642.827880] wlp0s20f3: authenticated
+[ 7642.829123] wlp0s20f3: associate with 9c:56:36:1b:71:08 (try 1/3)
+[ 7642.832173] wlp0s20f3: RX AssocResp from 9c:56:36:1b:71:08 (capab=3D0x15=
+31
+status=3D0 aid=3D7)
+[ 7642.843398] wlp0s20f3: associated
+[ 7650.896203] LG Gram Laptop Support LGEX0820:00: Received event 130
+(268435456)
+[ 7651.875882] LG Gram Laptop Support LGEX0820:00: Received event 130
+(268435456)
+[ 7652.724018] LG Gram Laptop Support LGEX0820:00: Received event 130
+(268435456)
+[ 7655.360898] LG Gram Laptop Support LGEX0820:00: Received event 130
+(251789312)
+[ 7658.047661] LG Gram Laptop Support LGEX0820:00: Received event 130
+(251789312)
+[ 7660.768967] LG Gram Laptop Support LGEX0820:00: Received event 130
+(251789312)
+[ 7663.182967] LG Gram Laptop Support LGEX0820:00: Received event 130
+(251789312)
+[ 7696.705618] audit: type=3D1400 audit(1781537001.681:393): apparmor=3D"AU=
+DIT"
+operation=3D"userns_create" class=3D"namespace" info=3D"Userns create - tra=
+nsitioning
+profile" profile=3D"unconfined" pid=3D12474 comm=3D"(ubuntu-insigh)"
+requested=3D"userns_create" target=3D"unprivileged_userns"
+execpath=3D"/usr/lib/systemd/systemd-executor"
+[ 7696.706172] audit: type=3D1400 audit(1781537001.682:394): apparmor=3D"DE=
+NIED"
+operation=3D"capable" class=3D"cap" profile=3D"unprivileged_userns" pid=3D1=
+2474
+comm=3D"(ubuntu-insigh)" capability=3D21  capname=3D"sys_admin"
+```
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
