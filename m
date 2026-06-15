@@ -1,113 +1,153 @@
-Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA7F79CD;
-	Mon, 15 Jun 2026 10:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1260F3E4C98
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 11:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781519129; cv=none; b=n/jsFSc2FlcyOugNS8BOCqrD5ECwqk8xSLmbeNGoJLLkS4ugEW2mGTN0lSpKBeH2Zrsb/CQkBY/fQ4ef6N8NCyKYZuE0oNWnh93QY8uxkWNK0BwyY0vjMA+q8xjMGFHJJxjdiiha4t3Jr4EpUHj9uae3I1K/DWDOB2rNDHvA4wI=
+	t=1781522959; cv=none; b=tzk1U2n2PGCFMU/k1okQpooCu9BwSeaFy3+etIV5Qr6HCiG1w/vcj4RHgXnXSGUhj29/zhpN4twPKqcGFKq9lV/vtXDR2R7YXbchdM9W5khCS5s7xH4hwVbKLRI7m7gfH3RhEAsrKIMTNj9HVg8dc+hsPVedo43zXvi7YNe/pW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781519129; c=relaxed/simple;
-	bh=y6lEzR+MHF2IeVkWkuFPQb/r3xBY1JzX0TKhEUrHMvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=ZYqJ9qba7rJ+vYfHEwt1IY4WJ7lfli9ikGgj+zSCfdSjF19qwtrwwa40GK8izgZucVk76ZXG0OwthGWkTSOBkerXm+PeSgGtBuASStBJ2HV3nJqva8TOt94EntanOEPh1lWCwMLydmc9J29HBJf1QarxKtZzfsHY4SKzk/f3wW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=i3qf1Aal; arc=none smtp.client-ip=49.13.27.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
+	s=arc-20240116; t=1781522959; c=relaxed/simple;
+	bh=UQ4RJkysZsp/NjQ1wjjl8LOlU5lkcrrCrCgj1cHkdi0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rhfgPuUdR4yvhtlreIEDvZEaJE5OhXTPcER7VRgrP/aETagj79JiiQHUykpdf+eElIBYufw5lJWKb5QhWNeaVNvaW4IhkK7V8QLvBxJO9/b7HyyCX/PyicCeP6oxHTH5Mje0XSWkJd9QOYt7SJdB8ZbSK1U1pVsoGu6MGDDfAr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=R0D6gZ2U; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="i3qf1Aal"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
-	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date;
-	bh=aYLDC+pjKn+nDxAEnWpp1SMsFMGxmgZP1gqYcOK/vGM=; b=i3qf1Aaly9e/eV6e0gaQRKV4j4
-	n3qmG8mCa0Hcq2wWmk/g4qim+wYVITJbG7nCf0pOpIMVr3s8lCOsEigjgTgY/3Sx60t+ZEmYx7PZh
-	FYnY8pwwEQBXpuI0IhUDMz5IByD6AKuoDvrgptB/1Lsgf4V4sY/caj04IO5h8MOF5Q9E=;
-Received: from mnencia by spark.kcore.it with local (Exim 4.99.4)
-	(envelope-from <mnencia@kcore.it>)
-	id 1wZ4VO-00000000EdW-3wNr;
-	Mon, 15 Jun 2026 12:25:22 +0200
-Date: Mon, 15 Jun 2026 12:25:22 +0200
-From: Marco Nenciarini <mnencia@kcore.it>
-To: Angioli Samuele <angioli.samuele@gmail.com>,
-	linux-media@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
- handshake-derived "dvdd" regulator registered but never linked to sensor,
- sensor probe fails with -EREMOTEIO
-Message-ID: <ai_TEj-_ije1XgYF@spark.kcore.it>
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="R0D6gZ2U"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-45eedcdaeaaso2214823f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 04:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1781522956; x=1782127756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MLeV5hMlWOnRvm55nac+sxk9yFFb2SBgsfN3o+xrZD0=;
+        b=R0D6gZ2UBq5I0AuiCjDAxSOxejCxspAqcB2YzCFg9fxmVwe+sY9+xg9ch5NvcRB97c
+         qC0svgAgdtcRplag7v1iBTgrznKBNzN4jTqaR5EQMM3RzesoykfR3YKSh0c6i8kIx3bX
+         e63HXXz5soieDLI7rT9g/EC1jtJjF8U0y5yIhnbyfcnRlX1V4YBkqp+hySVDZlKr1V0x
+         0ZhLr/2aBHaP98dHm2Pi4nxAgXz7Rqiogbbw9kj5y1zE1269HRJOAXB56NfVJfntONep
+         +xZT1Wp784Vcp0qKx144MuidmmagbxPuSo0XdgATTfWZvlAfxNSm8vbqlce+9qXc1V6B
+         obzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781522956; x=1782127756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MLeV5hMlWOnRvm55nac+sxk9yFFb2SBgsfN3o+xrZD0=;
+        b=LfP18EWBLp1CVHasPZPgGGV0bIj80sNNfeO03wXe6MmFJdIb8YUyjMvzbbfQGrgsmu
+         UeUhQiG/0GC2EzWXXPK6O4c6SSILvVIQJ8VlOjJksxK1wEAH14FdepAREs4jtUfLda52
+         byD4VesRsH61iWUpyEv9LDZ5u243XhF6OXvE3KzSDfDy9Lg43rhieUMFa7FhJWjD5M8r
+         RtHzgQJzCQMnrg5/1sPbwRF/4jHfO6+vMJeyhI4SFUFbW8bYFiWJq6I1Pk4lYCeFEDSw
+         Rm7uUDlshAXl3/bpcJ3ln+eaZ3NnV+jufY1e+fxp3eX3JKiocdviE4Ym/ToVNFqWJeBh
+         2mbw==
+X-Gm-Message-State: AOJu0YxPFQeHGCDUIzp7d8FarfOmx6+HUgFZHFNRRrXElcFydUuagviV
+	sGu5YEN+vCcVztX8V1zc7fAHBRVz/5kT9hJW7Sjg7JdloQ2bsnjbcKyJiivdC6p1ENU=
+X-Gm-Gg: Acq92OGenXabWT57UdfqxWkDAbE/qUmjXNPtq+Ezth+zkFgYnDR1bcqahlJS5nco9qT
+	NptfU9gWwwZWInfYXRq+6UcC677lwHlmBEntl5bw+c7jO+SGKIikmkglE6E8m4ZSIuE9dsK0VP7
+	+HuPJT1lXZo6BkrMzMdZKqQvE2/+WygHXt8lO5JXLOSmP9BGCMiA6z/fR1HvOAtD8I16eyQ6bYv
+	IDTBTfMTHQwkNdZfOA6i4W6LwR8dDbvMElXzUb71KVCiDKto+fyUfVykcBhAJ8xMz7o/AXZXAeH
+	DxKa4CbwpzyJD9vE7q4jXM1ZNkXP7QSdYSkREKBsDttCyPEaiJkE92cNVbOhMCRegMu9cMF46z5
+	Ox5ZkRQuuuwLZbmYx/8cWFO/PpFCEEWlXfDnW2IyvPHC0uWKW62LE0AWrBvYGIqv0Gjv+Wqp58r
+	PHlofECZrI051bpJAFJLgl/iOooiN0
+X-Received: by 2002:adf:e006:0:10b0:45f:f142:d55d with SMTP id ffacd0b85a97d-4606dbad0dfmr12749816f8f.39.1781522956163;
+        Mon, 15 Jun 2026 04:29:16 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-4606f2c473bsm37828794f8f.28.2026.06.15.04.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 04:29:15 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] platform/surface: aggregator: Consistently define ssam_device_ids using named initializers
+Date: Mon, 15 Jun 2026 13:28:59 +0200
+Message-ID:  <4421c8c959452d8a717ebc7cc905ad9c2912680c.1781522576.git.u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <396e4b0d-7a2c-4ba4-9569-0428ccd63267@gmail.com>
-References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
- <ah_XLEAkqjV9HkSE@spark.kcore.it>
- <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
- <ai2NAS5EnLaLoN2W@spark.kcore.it>
- <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
- <ai8NwzoU08AvD7Ve@spark.kcore.it>
- <396e4b0d-7a2c-4ba4-9569-0428ccd63267@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3097; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=UQ4RJkysZsp/NjQ1wjjl8LOlU5lkcrrCrCgj1cHkdi0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqL+IA0qZJErvmplKKSqM/31QGeT3Oh2pBLeDHx 1WnY5Qvq3WJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCai/iAAAKCRCPgPtYfRL+ Tv4IB/9Hyk8wJzgqpo1Niy53w39l+SB4DWZzxHciZndlMyl/liEOves2tL9aZRFvw0ul5R8oAG5 M0iz80LVW2O0kWd/UfViaebTGTJicT7ufrsY5D5Mlhs2CFZbEDngjJYgSSfpQWyK8g+6dCEV2on GDPuZjwNP4Tr2PZ9TwASuZiavmwjUxxt1LONke1SF6LUYpqFSOdxiRIs4lKib7d0vD7y4mBWD5i SRPix2g6607I32g1k8q5pVGL/xnPoljk5gI48Zt43EgqwXAhOG9dCu0W4N2+OmIKTrIMv6cQWxa 9hEsws8mrEm5KLoELUpQWcG+p0m8MXJ44f2hZPQ+kYkJ6bQX
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+The .driver_data member of the the two struct ssam_device_id arrays were
+initialized by list expressions. This isn't easily readable if you don't
+work with the Surface System Aggregator core regularily. Using named
+initializers is more explicit and thus easier to parse and also more
+robust to changes of the struct definition. This robustness is relevant
+for a planned change to struct ssam_device_id replacing .driver_data
+by an anonymous union.
 
-Samuele,
+This change doesn't introduce changes to the compiled ssam_device_id
+arrays.
 
-Thanks. The dvdd re-key worked (post-patch ov02c10 only logs "not
-found" for dovdd/avdd, not dvdd, so it did attach to DSC0's dvdd), but
-as you found it can't bring the sensor up: the rails it still needs
-(avdd, dovdd, its reset GPIO and clock) would have come from DSC1, and
-DSC1 is _STA=0, so nothing live provides them.
+Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-So before any kernel change is worth considering, the question is
-whether DSC1 is off by firmware design. _STA=0 is what you get from a
-device that is BIOS-disabled, OS-gated, or simply not fitted on this
-SKU, and the asymmetry fits: DSC0 (the IR camera) is live, only DSC1
-(the RGB sensor) is dead. If DSC1 is meant to be off here, there is
-nothing for int3472 to fix and no quirk worth writing, so I'd rather
-confirm that than build around it.
+the mentioned change to ssam_device_id is similar to
+https://lore.kernel.org/all/cover.1779878004.git.u.kleine-koenig@baylibre.com/.
 
-The way to tell is to read DSC1's _STA from the firmware tables.
-acpidump's multi-table dump won't feed iasl -d directly, so read the
-raw tables from sysfs:
+That allows to get rid of the casts in these two drivers and thus
+benefits a bit more of the (admittedly weak) type safety of C.
 
-    cp /sys/firmware/acpi/tables/DSDT dsdt.dat
-    cp /sys/firmware/acpi/tables/SSDT* .
-    iasl -d dsdt.dat SSDT*
+But IMHO the improved readability alone also justifies this change.
 
-then grep the *.dsl for DSC1 (the DSC blocks often live in an SSDT, not
-the DSDT) and read its _STA. If it returns a flat zero, or gates on
-_OSI("Windows ..."), or reads a manufacturing/setup variable, the
-sensor is disabled by firmware and that is the end of the kernel angle.
-If instead it depends on something a live instance could satisfy, then
-there's a kernel path worth pursuing and we look again.
+Best regards
+uwe
 
-If you still have the factory Windows install, whether the RGB camera
-works there is a useful cross-check (works in Windows means gated, not
-absent), but the _STA read is the real signal.
+ drivers/platform/surface/surface_aggregator_hub.c      | 9 +++++++--
+ drivers/platform/surface/surface_aggregator_tabletsw.c | 9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-Thanks,
-Marco
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/platform/surface/surface_aggregator_hub.c b/drivers/platform/surface/surface_aggregator_hub.c
+index 8b8b80228c14..541e9180f976 100644
+--- a/drivers/platform/surface/surface_aggregator_hub.c
++++ b/drivers/platform/surface/surface_aggregator_hub.c
+@@ -348,8 +348,13 @@ static const struct ssam_hub_desc kip_hub = {
+ /* -- Driver registration. -------------------------------------------------- */
+ 
+ static const struct ssam_device_id ssam_hub_match[] = {
+-	{ SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_KIP, 0x00), (unsigned long)&kip_hub  },
+-	{ SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_BAS, 0x00), (unsigned long)&base_hub },
++	{
++		SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_KIP, 0x00),
++		.driver_data = (unsigned long)&kip_hub,
++	}, {
++		SSAM_VDEV(HUB, SAM, SSAM_SSH_TC_BAS, 0x00),
++		.driver_data = (unsigned long)&base_hub,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(ssam, ssam_hub_match);
+diff --git a/drivers/platform/surface/surface_aggregator_tabletsw.c b/drivers/platform/surface/surface_aggregator_tabletsw.c
+index ffa36ed92897..13031c329553 100644
+--- a/drivers/platform/surface/surface_aggregator_tabletsw.c
++++ b/drivers/platform/surface/surface_aggregator_tabletsw.c
+@@ -622,8 +622,13 @@ static const struct ssam_tablet_sw_desc ssam_pos_sw_desc = {
+ /* -- Driver registration. -------------------------------------------------- */
+ 
+ static const struct ssam_device_id ssam_tablet_sw_match[] = {
+-	{ SSAM_SDEV(KIP, SAM, 0x00, 0x01), (unsigned long)&ssam_kip_sw_desc },
+-	{ SSAM_SDEV(POS, SAM, 0x00, 0x01), (unsigned long)&ssam_pos_sw_desc },
++	{
++		SSAM_SDEV(KIP, SAM, 0x00, 0x01),
++		.driver_data = (unsigned long)&ssam_kip_sw_desc,
++	}, {
++		SSAM_SDEV(POS, SAM, 0x00, 0x01),
++		.driver_data = (unsigned long)&ssam_pos_sw_desc,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(ssam, ssam_tablet_sw_match);
 
-iQIzBAEBCAAdFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmov0xIACgkQWJ8D8Bul
-UDjY4g/+Peo5MtFvrRKiqQiEMOoojYE3vty9L2dt9dJNGnkbQxAmOVO1QDHSUWMB
-cY2mbbxN8XEdAshYT0zwJPqOddbmb1Z7UZ6P+bQGr4L7CO4qnB7Sf8M2XiHWT649
-UnFiTqPjW8oj07gGR43LgnpCadbU3OuRXkc50P6ivyoijcYI1XmXwzj8/DWb4r99
-VBaU0ZPgT1DwYfb2l4QBtBN/VOivEzChDdNC/YknM+UVc7YqmgItMErV5AMbwO4e
-wnBVPlabtQ3HEOtEKWUw/KithA2k+Tg/i9nCIY/7tRdModXE3VzrkZuxGL9C2Max
-qvwFCmxJF+k0wOY67Ud0m0gq3S2++VNsCRD86ZhtAM6pSwoK/RX6VUuwg4wZGkyT
-6sVH5mRQoNrUIvA38AK7wQp0KoTDG353mtyODLSU2900AoxVtAhvUncQjCi41fTf
-lurYql64UQUcPc9P9fOUezC38biaSsjklRwyzrVV0+mkruSNdEhn/OQP73UUbC39
-RDycGnpBV7BpUtJ/4WulcqNpMPIuT/bfyzxIaeHDcHw3Ujx3xEW2ZfYDGstQ6f7t
-MC8YVGg+1gH8Ds1v/TCXIhOGqLVWM1FXBjAuGNeBWju6c4JyvYYFf6TGSOpppbIP
-H18oJWKm236l6ZS9fL205zJ8n+Q8oMz65VcBuAl6nDdXRjM5jKA=
-=50Kd
------END PGP SIGNATURE-----
+base-commit: c425609d6ac4012c8bbf01ec2e10e801b1923a7b
+-- 
+2.47.3
+
