@@ -1,106 +1,113 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from spark.kcore.it (spark.kcore.it [49.13.27.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AB03D45D4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 09:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA7F79CD;
+	Mon, 15 Jun 2026 10:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.13.27.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781514659; cv=none; b=AUEOI8x+EkGgS46ATyGC2RrjxGN0Mun90g/FcPapRb9joazFDpjpIcXgOROQQmluUQFxP3G8mxoO4lYz1syXSgBo3UAuWAqrFfy8R3e9YaCW/vlSBDIS2GqZVLJB+DSKT74nXH3+CdVWQ12DSd95PKzOi9c7BcKZ8MfBg9BR6MQ=
+	t=1781519129; cv=none; b=n/jsFSc2FlcyOugNS8BOCqrD5ECwqk8xSLmbeNGoJLLkS4ugEW2mGTN0lSpKBeH2Zrsb/CQkBY/fQ4ef6N8NCyKYZuE0oNWnh93QY8uxkWNK0BwyY0vjMA+q8xjMGFHJJxjdiiha4t3Jr4EpUHj9uae3I1K/DWDOB2rNDHvA4wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781514659; c=relaxed/simple;
-	bh=KBdIJX6CsxhgZXPDXOxipAlb53aPZ4MD+Wb+Il+I/l8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RBTOa3A9YblRzK3hZVh+OY8yCCLAX/G0ORpdtLB6TIfcu4W9ht6JzfwgnAtQ+Wdxy8NyrbDJYJzpFdHZ0YlM+AI5GQottnwF2Hbz+zU4RJXtrUyQPiWTsuHT67yV9nusNbE3iFEzuMBYJQsZfTrcwObbj8RI+gZvlekuloqzQOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=szGZOObE; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781519129; c=relaxed/simple;
+	bh=y6lEzR+MHF2IeVkWkuFPQb/r3xBY1JzX0TKhEUrHMvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=ZYqJ9qba7rJ+vYfHEwt1IY4WJ7lfli9ikGgj+zSCfdSjF19qwtrwwa40GK8izgZucVk76ZXG0OwthGWkTSOBkerXm+PeSgGtBuASStBJ2HV3nJqva8TOt94EntanOEPh1lWCwMLydmc9J29HBJf1QarxKtZzfsHY4SKzk/f3wW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it; spf=pass smtp.mailfrom=kcore.it; dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b=i3qf1Aal; arc=none smtp.client-ip=49.13.27.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcore.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcore.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szGZOObE"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8422a92b6d6so1498961b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 02:10:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781514657; x=1782119457; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hAMSs4k+8FM9Ue/Dq7rGjRYuTh3u8CNPNHnVp1Lxz6o=;
-        b=szGZOObE+IoO2qp9U+gN1FGKKsJ3KI6FyjNSlmM8WlGxPy/QUyHGONtG+JeNYX68vo
-         7tXCSFogjt6QYuL5Pnwqzs5NLzu3qmkqfqFTsVavu/fA3l9XnrpQvPb2OeJMpeqJbAKr
-         OxazDZVRNIFzEl31Sof7sIt/YkvW7X7045XVXYGcW5J8nOmc1f5A/st592iJxA/RnQbz
-         /Gd7fx/9rcwA71GZLmJlEOOV7Rys0dMceZ2UUuziDvckyTuYu9QlUFksJ+7JPewREiEO
-         lQ7X2/rPvV6dWi/2AZY3XnvKt+HZL4oljJhpK98OK5JiRc4ZCqQDxE4doz6Vy8ynlozM
-         XYXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781514657; x=1782119457;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hAMSs4k+8FM9Ue/Dq7rGjRYuTh3u8CNPNHnVp1Lxz6o=;
-        b=Rit0ATNPuZUCsTTNpwpv+ZUi2myP6i700n3GCmNoGO+nV/JyjeedKTkxNfUgV7cdd0
-         gauHvCwXYT0/c3/OrpxS5unHkzKFpqwEa9ArTtEnLqTODJgD9r3zuU3191XWlMq8xnAe
-         +XTf6uA26aX9Kohpxk6C4002+sUTwq07W+ZaH8YbwAevDSK2SEoTtL3A9sjVgmSVMYRB
-         nbF5XJEya9gH27vbQZr8V57MkfI1aKEcBEM+VP1c0WjQt8wfBJUEJsOmPI/NPk6PmZ7+
-         DGQ7ktEV/KqvlbKIGs6apLhH25CMC3NRGKNfYe8svgWmwUihhE4/0XJtZTXeXLhgNmgd
-         fE1A==
-X-Gm-Message-State: AOJu0YwvTGuhbnEWskdg0Oheqr7kDeT9rGo+FtOM5CwO3/yvjkTKqYCy
-	ShV9UwMZPcnqFPdZbwkejDqK11mt8iyzimOfBAsuHmlsVLksVQhYqTHas5GpqVei
-X-Gm-Gg: Acq92OH0RSCMN3eltH5eSHOH/be6TGY7hSVydsnN02tM/9aMZg4CH4aizpf81sG5myV
-	8GlVKeIp4TqZQY5ZZhfEV8UjXPMt0b0e9EonUfl/glH14Nh792T6b/gMQk5AEKhk3Vyou78jO3g
-	yYfcRkaLpMtAap94Xdb4Dnr2lBi0cEWzICKdoue28Fk0+xx0qWAAUKMFAV8ynH/xvxzcuQuMY6d
-	Ubc5XBsXHHqlClqkINmef+pSeEG5U2XzzNRw7rwdvauNwebdSiC5WPpg0J1byng1UO1MZ/0iz/M
-	RhWw2nb3dQFUhwXfdnGoEwUb1NpWS2HcepHvG3VxDYEmtRpu+OiTG2PtwhgF3IYKiOIqWM+rNQo
-	qrbZAihc7iUavvOt4i39S1VmrGRUuzkebRpg3EO1z1Y+E4a185PANlz3eItPM86/tklJjG6ZT/5
-	CdUC83rQe5jdSBpwFP48YxC23zTTZ/kYA46+k=
-X-Received: by 2002:a05:6a00:1148:b0:82c:1cd0:2f7e with SMTP id d2e1a72fcca58-8434d0d088fmr10210628b3a.20.1781514657493;
-        Mon, 15 Jun 2026 02:10:57 -0700 (PDT)
-Received: from pico-cachyos ([2401:4900:1c39:172b:de82:f342:993b:860a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434b00d4c7sm9392459b3a.40.2026.06.15.02.10.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 02:10:56 -0700 (PDT)
-From: Radhey Kalra <radheykalra901@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	krishna.chomal108@gmail.com
-Subject: [PATCH v10 3/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-Date: Mon, 15 Jun 2026 14:40:34 +0530
-Message-ID: <20260615091034.987029-4-radheykalra901@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260615091034.987029-1-radheykalra901@gmail.com>
-References: <20260615091034.987029-1-radheykalra901@gmail.com>
+	dkim=pass (1024-bit key) header.d=kcore.it header.i=@kcore.it header.b="i3qf1Aal"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kcore.it;
+	s=spark; h=References:In-Reply-To:Content-Type:MIME-Version:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date;
+	bh=aYLDC+pjKn+nDxAEnWpp1SMsFMGxmgZP1gqYcOK/vGM=; b=i3qf1Aaly9e/eV6e0gaQRKV4j4
+	n3qmG8mCa0Hcq2wWmk/g4qim+wYVITJbG7nCf0pOpIMVr3s8lCOsEigjgTgY/3Sx60t+ZEmYx7PZh
+	FYnY8pwwEQBXpuI0IhUDMz5IByD6AKuoDvrgptB/1Lsgf4V4sY/caj04IO5h8MOF5Q9E=;
+Received: from mnencia by spark.kcore.it with local (Exim 4.99.4)
+	(envelope-from <mnencia@kcore.it>)
+	id 1wZ4VO-00000000EdW-3wNr;
+	Mon, 15 Jun 2026 12:25:22 +0200
+Date: Mon, 15 Jun 2026 12:25:22 +0200
+From: Marco Nenciarini <mnencia@kcore.it>
+To: Angioli Samuele <angioli.samuele@gmail.com>,
+	linux-media@vger.kernel.org
+Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
+ handshake-derived "dvdd" regulator registered but never linked to sensor,
+ sensor probe fails with -EREMOTEIO
+Message-ID: <ai_TEj-_ije1XgYF@spark.kcore.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <396e4b0d-7a2c-4ba4-9569-0428ccd63267@gmail.com>
+References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
+ <ah_XLEAkqjV9HkSE@spark.kcore.it>
+ <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
+ <ai2NAS5EnLaLoN2W@spark.kcore.it>
+ <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
+ <ai8NwzoU08AvD7Ve@spark.kcore.it>
+ <396e4b0d-7a2c-4ba4-9569-0428ccd63267@gmail.com>
 
-HP Victus 15-fb0xxx board 8A3D exposes the Victus fan table and accepts
-the existing Victus fan-speed WMI control path. Add a DMI match using the
-Victus S thermal-profile and fan-control data.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Samuele,
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 11de5c70c..0dcf29012 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -234,6 +234,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8902") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A3D") },
-+		.driver_data = (void *)&victus_s_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
--- 
-2.54.0
+Thanks. The dvdd re-key worked (post-patch ov02c10 only logs "not
+found" for dovdd/avdd, not dvdd, so it did attach to DSC0's dvdd), but
+as you found it can't bring the sensor up: the rails it still needs
+(avdd, dovdd, its reset GPIO and clock) would have come from DSC1, and
+DSC1 is _STA=0, so nothing live provides them.
 
+So before any kernel change is worth considering, the question is
+whether DSC1 is off by firmware design. _STA=0 is what you get from a
+device that is BIOS-disabled, OS-gated, or simply not fitted on this
+SKU, and the asymmetry fits: DSC0 (the IR camera) is live, only DSC1
+(the RGB sensor) is dead. If DSC1 is meant to be off here, there is
+nothing for int3472 to fix and no quirk worth writing, so I'd rather
+confirm that than build around it.
+
+The way to tell is to read DSC1's _STA from the firmware tables.
+acpidump's multi-table dump won't feed iasl -d directly, so read the
+raw tables from sysfs:
+
+    cp /sys/firmware/acpi/tables/DSDT dsdt.dat
+    cp /sys/firmware/acpi/tables/SSDT* .
+    iasl -d dsdt.dat SSDT*
+
+then grep the *.dsl for DSC1 (the DSC blocks often live in an SSDT, not
+the DSDT) and read its _STA. If it returns a flat zero, or gates on
+_OSI("Windows ..."), or reads a manufacturing/setup variable, the
+sensor is disabled by firmware and that is the end of the kernel angle.
+If instead it depends on something a live instance could satisfy, then
+there's a kernel path worth pursuing and we look again.
+
+If you still have the factory Windows install, whether the RGB camera
+works there is a useful cross-check (works in Windows means gated, not
+absent), but the _STA read is the real signal.
+
+Thanks,
+Marco
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEfCO4BD5l0pgKIbbiWJ8D8BulUDgFAmov0xIACgkQWJ8D8Bul
+UDjY4g/+Peo5MtFvrRKiqQiEMOoojYE3vty9L2dt9dJNGnkbQxAmOVO1QDHSUWMB
+cY2mbbxN8XEdAshYT0zwJPqOddbmb1Z7UZ6P+bQGr4L7CO4qnB7Sf8M2XiHWT649
+UnFiTqPjW8oj07gGR43LgnpCadbU3OuRXkc50P6ivyoijcYI1XmXwzj8/DWb4r99
+VBaU0ZPgT1DwYfb2l4QBtBN/VOivEzChDdNC/YknM+UVc7YqmgItMErV5AMbwO4e
+wnBVPlabtQ3HEOtEKWUw/KithA2k+Tg/i9nCIY/7tRdModXE3VzrkZuxGL9C2Max
+qvwFCmxJF+k0wOY67Ud0m0gq3S2++VNsCRD86ZhtAM6pSwoK/RX6VUuwg4wZGkyT
+6sVH5mRQoNrUIvA38AK7wQp0KoTDG353mtyODLSU2900AoxVtAhvUncQjCi41fTf
+lurYql64UQUcPc9P9fOUezC38biaSsjklRwyzrVV0+mkruSNdEhn/OQP73UUbC39
+RDycGnpBV7BpUtJ/4WulcqNpMPIuT/bfyzxIaeHDcHw3Ujx3xEW2ZfYDGstQ6f7t
+MC8YVGg+1gH8Ds1v/TCXIhOGqLVWM1FXBjAuGNeBWju6c4JyvYYFf6TGSOpppbIP
+H18oJWKm236l6ZS9fL205zJ8n+Q8oMz65VcBuAl6nDdXRjM5jKA=
+=50Kd
+-----END PGP SIGNATURE-----
