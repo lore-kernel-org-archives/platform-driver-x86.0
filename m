@@ -1,70 +1,74 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A984309F00
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 09:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3049A3D25B4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 09:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781514650; cv=none; b=UIcF9/7pqI2yuY5Hz0pH41OilnnSsv/224GYZNWmt501tg2bB1ORq7JBlDLi0MqlLN4uHEUIllJU9Z74W4di7m22pFuZzeHz9UtBcDOI4XXR0e9ygATQRS0+UTxibazpm1W17T2qZ9PIUn34P6VhVdJ5NhGFIlVZCiO03evcikQ=
+	t=1781514653; cv=none; b=pEys1O3bGWvVNVpyjcHrCJgHOmAqOQ5jQA3WvQP0SltqqUSNnohwRMTeaabhglyzZdaDVJSD39B4BcU+3TIo8jD17MCZJI9+KXcvK3uZffGyGnnS0cWL4gZW95yvFlBsHmTwWYXJUtQHWMJ8TVTrzTA9H04C+xyMK04V66gyrPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781514650; c=relaxed/simple;
-	bh=PUO5VGljKV6lgXHGFPyuJBQh8VBwQ7JTz0YQdgPQMgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=REWu38BjS+zct8d252IzUN5NDh0CK2+fpBvifHho0lo5vgv8USHJ7DKCNnBL486+buOqyxuP9+MmgWNcX30epX32Iqic5kAzK8RZqze031vJt8XlaWY1kybXvYMyeN1F8TXVqmj21xIUaAtsPVAXsCJ1uRSLBqGquadvBKakDm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AsISV6pl; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1781514653; c=relaxed/simple;
+	bh=YtaTafERoZ393agvJP2JUqd0DuE89RJB2gTdNJTr0d8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=idpw+em3MICK17GZsQAj599k7uysTJBN3+G4gvs2PK8cHPMgSC3ocFsKBjI5EAnKNFTUQA+XmsmmXfpMfCDY5dW3dzaXydXdpXlFdVD0aFLILYrBJHvk3nDkEr6MoTz2S/b07NHhBOFdipgfvdORT6H0EmqGS6oXkd+qNRREWTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QeLjEPGM; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsISV6pl"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8434840cea8so1782072b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 02:10:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeLjEPGM"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-c859878eb48so1134234a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 02:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781514648; x=1782119448; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+8dZe3bf97l46QPmdvU+g27Ve4/VmT28lCcUHvGZ3g=;
-        b=AsISV6plqrwuK0jR11h3k1x+5wi8VuNp7LZqsSf/6LQGRMKx2lkjzeRDzULSKlEJH9
-         wk7RdqPGVQMuXv87PYuJjFfKMz/ox6LhA88k/nkqcIU2lGwyhstisKTtjj5rwl2uP7Sh
-         htaJijLE9sw0pwuZbDH0PNVNjWj4f/QLZXGgytrqW4KGqJSgVIT9pTVPEQ6+RjesEqfJ
-         JJhwGHpbAwvMUwBMx5TPlk9wswSkvVfM7s012cxjh/W/j0+DLTpgY9395BwfTLp/61i7
-         G31xwXj8FiLyzJbIpEr+e7gZ0SzywBIH5IHYFbpVkzHUhKaJt7ZRYlHwyQmBdA49hd4W
-         3Cjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781514648; x=1782119448;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1781514651; x=1782119451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9+8dZe3bf97l46QPmdvU+g27Ve4/VmT28lCcUHvGZ3g=;
-        b=C51ck4T3wfXI2NBxpXs6uQ0psQM2Cyi4CKq0EouhSM8x8MyF+bBSXyiUi5sIg5mbGf
-         Dup+8PcJwuxbfHH/HhIcOwgos9ATNHasWyMpoEYqQ5Fb8nEBCjhKHlExW+rScNBYCg/c
-         mMZPWGou4Y9X/uvtkBqTMNd4rlsDgRWuIljlzeAhGe5arkxuB3ckJhtYIbl+FLp8GMoX
-         uVTB2Mi6YX/QqdnNKMtBPVAjgVlhTLtKweDMMV1qsHaevmnpSbDmAlPFLokt+TV3F6YS
-         8FkBGm/fe2bo6Me7b6DmbmNcA7xW5s8sP/4EAe0f5/qZCsFpt/885AZAg6g+96X3WIPG
-         JoPg==
-X-Gm-Message-State: AOJu0YxUuLq/1oBcow2XcRF2gFvwI+E7F6xnXzJt4F29oSOPynuoNm+x
-	7YeUOx0xZIHtNdDupVKuiFGz1Rv9DdjZxZYWH9XaQ13+yqvOgKS82w4Ld4pnKAvH
-X-Gm-Gg: Acq92OHjtkm9C29B1SC1lgCe8k3K82abqU7SWy+XttMHXVm2ew2pZJ7bI4RCXSZo97j
-	xkWrgHJfQJ5/sADHnETwrP+8Wzwi5OBVeioEcuBl9Pt3fr6sB7i/jA4Y/aqkcB+SLAbnxBTS19a
-	pFokegLSgoxy+HYIQ2F0A03Qrkm3XCibbe1axeyVO+pwdthIYpyFqJQomQFmhfyAI8WNL6RaXay
-	jGYyHHqq4jj8wKvy8SZ96shXjyRD0MHXn030hVRyXeJFMtKPyv7GZOTtLHKJDTeElRSnnYXwgVS
-	A5i6KFfB0y8S8/LeDjSqQFg02yvgkO4jxcHDYiN9mJgzWAL53WbBrUDZAiAQe5HLdfw/vLFmqa+
-	PCPIDcMUb4Nbtt8g1OGWF+2zq6sduoPHCvjy8jKGLS5nF9Ighz50AzRbD2xZzjT7uzUVe7rVYDw
-	y7YJIKSedZE/QUoaOqKQaGhuo2I9GG7sFXN2UHv0m9AkRxeA==
-X-Received: by 2002:a05:6a00:2354:b0:835:3f51:730e with SMTP id d2e1a72fcca58-8434cd24381mr12977337b3a.13.1781514648408;
-        Mon, 15 Jun 2026 02:10:48 -0700 (PDT)
+        bh=wntXL2H04y14YDskKhHbpHYOinbl18Fb88XrGhCya90=;
+        b=QeLjEPGMOAOa5xztypD3di4jS4GSfb/jCDjCrEYr/GE0XOQxch586UGUXxFk5cw2//
+         VML1wZvfYY7ABO75v3OhdLBj4WDdCysHYuTjJVuvFd8m/nE2fXe/xTKnA8EBTNNjNAFQ
+         HcdmEWuH+k+p0iNTZG+pS9ajCxg6VefvokpAONnKMQSoluuFGKkqIrcW7pMXt2T5VnQR
+         mykeu5kNGw1pyHrtKHuUDFPBBomVKFvtvNKVD5mJzcvJUEjvKuCKzufGdGGKAsXd4B2c
+         4S2YmKHZb9FcD5JAt550AZ1WezDeP7sJylWwPfaKjaZOam0fedVldH61lx+nysHWli1b
+         EozA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781514651; x=1782119451;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wntXL2H04y14YDskKhHbpHYOinbl18Fb88XrGhCya90=;
+        b=oo0ovshgGYg46PCanMYXebMiwZ4gA2DC4nzx6bL2QJstD6iC44fblidndQ8stnsrlo
+         KMdsE5fCoLkyJNOph4gxVTerylolwSHIb03rc9GquF9OOBgGqGbbd352zZTCOxyxfL0L
+         kFJLAoe+1OxCXQSavBZjw/R/lUSwVdU13IJGX+VBa7s66AJe2toiBuo3ATu/+56vIp97
+         gp87QI/1MRglXk1o+ggB1IsMR+1CClrC053LkvBrO2Rxi2EPziDYRvYKu9GpzpgYUxXv
+         zi8zMQtlSbdhxjktGO8CDCyrrM88kPAj1O9E4VbvWvfvjDmP120rJOoWQLlwAVMjdPR7
+         CGUA==
+X-Gm-Message-State: AOJu0YzsBtBM56w6mW/NL5YCG0VXROs/qS5pTRO8xMatOWqQy3N4T9MW
+	SDkWJQp2cIuDXqxao7N3JYAuuo0wlaKe4Dzh26QlrlC0Cf6FjnBCLbcrwOiGw8s8
+X-Gm-Gg: Acq92OGuitLgiNtyRMTtXHUsjKWy5h56xmPrPttj09OJiUOXlW0It1pgJk+7PR/DR9e
+	Fq5YtON/EknaGQedMLmfLfjQMBcNIGfBvz2+t2iRu77WSYLLjFsK3q5EnEXgxQFxvHPMsjace4F
+	LWdSHZW/8I7lYjvbishycbTC5u4pnm774Mxf8zmI7H8UKwPb/VPFaztW3J9lxeo3ZF18ZIwq3cI
+	nir7WXoimhnXhRMWQ5ddX6osGPZ0Qwf9pOXZ6OU5jDziswkPdi3tAifo9i/+po/a3QR5kE/Qr9Q
+	lpivvRB2bNP0QJmEBYVlHwYb+p7IXTjl3OP4sYA/AN0ze2SISIPl9vD74xU8AiljygIqVZq7VXi
+	+LerURf+SInqT5dnnIRjHclaNji13A3gA3OqQIDYtfLUpor4lYILU424lNm+ayCXrOE0TAsjzq9
+	0gk+F/7OqGIJawHx75NNQr1LXLGXdInO4YeUA=
+X-Received: by 2002:a05:6a20:3d91:b0:398:9e47:f5ff with SMTP id adf61e73a8af0-3b7961fb1f4mr11303668637.2.1781514651336;
+        Mon, 15 Jun 2026 02:10:51 -0700 (PDT)
 Received: from pico-cachyos ([2401:4900:1c39:172b:de82:f342:993b:860a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434b00d4c7sm9392459b3a.40.2026.06.15.02.10.45
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434b00d4c7sm9392459b3a.40.2026.06.15.02.10.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Jun 2026 02:10:47 -0700 (PDT)
+        Mon, 15 Jun 2026 02:10:50 -0700 (PDT)
 From: Radhey Kalra <radheykalra901@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	krishna.chomal108@gmail.com
-Subject: [PATCH v10 0/3] platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-Date: Mon, 15 Jun 2026 14:40:31 +0530
-Message-ID: <20260615091034.987029-1-radheykalra901@gmail.com>
+Subject: [PATCH v10 1/3] platform/x86: hp-wmi: Introduce board-specific feature data
+Date: Mon, 15 Jun 2026 14:40:32 +0530
+Message-ID: <20260615091034.987029-2-radheykalra901@gmail.com>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260615091034.987029-1-radheykalra901@gmail.com>
+References: <20260615091034.987029-1-radheykalra901@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,87 +77,290 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The hp_wmi DMI table is about to carry more than thermal-profile data.
+Replace the direct thermal_profile_params .driver_data pointers with
+hp_wmi_board_params and rename the table/setup helper accordingly.
 
-This is a split version of the Victus 15-fb0xxx support change. Patches
-1 and 2 are no-functional-changes-intended refactors which move the
-existing thermal-profile and fan-control decisions into board-specific
-.driver_data. Patch 3 adds support for Victus 15-fb0xxx board 8A3D.
+No functional changes intended.
 
-v10 rebases the series on platform-drivers-x86/for-next as requested,
-now that the recent hp-wmi DMI ID additions are in that branch. It
-preserves the newer 8B2F, 8D26, and 8E35 board entries while converting
-the table to board-specific feature data.
+Signed-off-by: Radhey Kalra <radheykalra901@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 127 +++++++++++++++++++------------
+ 1 file changed, 80 insertions(+), 47 deletions(-)
 
-The gpu_delta fan-table parsing fix remains out of this series. Ilpo
-suggested postponing that part to the other GPU fan series, so this
-version keeps only the board-data and 8A3D support pieces.
-
-8A3D is added with both the Victus S thermal-profile data and the Victus
-fan-control data. The existing generic platform-profile sysfs path on
-8A3D accepts writes/readbacks without hp_wmi errors, and the Victus fan
-table/control path exposes working PWM control.
-
-Tested on a Victus by HP Gaming Laptop 15-fb0xxx, board 8A3D, BIOS
-F.22. With the series applied, the platform-profile choices are
-low-power, balanced, and performance. Writes to all three profiles
-succeeded and read back the selected value. In a CPU stress test with
-powerprofilesctl held at performance, low-power reduced CPU package
-power to about 30 W, while balanced and performance both ran at about
-47 W. In a light PRIME offload test, low-power also kept the NVIDIA GPU
-at lower clocks and power than the other profiles. pwm1 and pwm1_enable
-are exposed through hwmon.
-
-Radhey Kalra (3):
-  platform/x86: hp-wmi: Introduce board-specific feature data
-  platform/x86: hp-wmi: Drive fan control from board data
-  platform/x86: hp-wmi: Add Victus 15-fb0xxx support
-
- drivers/platform/x86/hp/hp-wmi.c | 210 ++++++++++++++++++++++---------
- 1 file changed, 148 insertions(+), 62 deletions(-)
-
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8ba286ed8..ee8375d28 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -133,11 +133,35 @@ static const struct thermal_profile_params omen_v1_no_ec_thermal_params = {
+ 	.ec_tp_offset	= HP_NO_THERMAL_PROFILE_OFFSET,
+ };
+ 
+-/*
+- * A generic pointer for the currently-active board's thermal profile
+- * parameters.
+- */
+-static struct thermal_profile_params *active_thermal_profile_params;
++struct hp_wmi_board_params {
++	const struct thermal_profile_params *thermal_profile;
++};
++
++static const struct hp_wmi_board_params victus_s_board_params = {
++	.thermal_profile	= &victus_s_thermal_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_board_params = {
++	.thermal_profile	= &omen_v1_thermal_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_legacy_board_params = {
++	.thermal_profile	= &omen_v1_legacy_thermal_params,
++};
++
++static const struct hp_wmi_board_params omen_v1_no_ec_board_params = {
++	.thermal_profile	= &omen_v1_no_ec_thermal_params,
++};
++
++static const struct hp_wmi_board_params *active_board_params;
++
++static const struct thermal_profile_params *hp_wmi_thermal_profile(void)
++{
++	if (!active_board_params)
++		return NULL;
++
++	return active_board_params->thermal_profile;
++}
+ 
+ /* DMI board names of devices that should use the omen specific path for
+  * thermal profiles.
+@@ -187,87 +211,87 @@ static const char * const victus_thermal_profile_boards[] = {
+ 	"8A25",
+ };
+ 
+-/* DMI Board names of Victus 16-r and Victus 16-s laptops */
+-static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst = {
++/* DMI board-specific feature data for Omen and Victus laptops. */
++static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8902") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A44") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8B2F") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BBE") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BC2") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCA") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BCD") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD4") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BD5") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C76") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C77") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C78") },
+-		.driver_data = (void *)&omen_v1_thermal_params,
++		.driver_data = (void *)&omen_v1_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C99") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8C9C") },
+-		.driver_data = (void *)&victus_s_thermal_params,
++		.driver_data = (void *)&victus_s_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D26") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+-		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
++		.driver_data = (void *)&omen_v1_no_ec_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
+-		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
++		.driver_data = (void *)&omen_v1_no_ec_board_params,
+ 	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
+-		.driver_data = (void *)&omen_v1_legacy_thermal_params,
++		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
+ 	{},
+ };
+@@ -1874,7 +1898,10 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 	u8 current_dstate, current_gpu_slowdown_temp, tp;
+ 	const struct thermal_profile_params *params;
+ 
+-	params = active_thermal_profile_params;
++	params = hp_wmi_thermal_profile();
++	if (!params)
++		return -ENODEV;
++
+ 	if (params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN ||
+ 	    params->ec_tp_offset == HP_NO_THERMAL_PROFILE_OFFSET) {
+ 		*profile = active_platform_profile;
+@@ -1886,10 +1913,10 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 		return ret;
+ 
+ 	/*
+-	 * We cannot use active_thermal_profile_params here, because boards
+-	 * like 8C78 have tp == 0x0 || tp == 0x1 after cold boot, but logically
+-	 * it should have tp == 0x30 || tp == 0x31, as corrected by the Omen
+-	 * Gaming Hub on windows. Hence accept both of these values.
++	 * Boards like 8C78 have tp == 0x0 || tp == 0x1 after cold boot,
++	 * but logically it should have tp == 0x30 || tp == 0x31, as
++	 * corrected by the Omen Gaming Hub on windows. Hence accept both
++	 * of these values.
+ 	 */
+ 	if (tp == victus_s_thermal_params.performance ||
+ 	    tp == omen_v1_thermal_params.performance) {
+@@ -1924,12 +1951,12 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 
+ static int platform_profile_victus_s_set_ec(enum platform_profile_option profile)
+ {
+-	struct thermal_profile_params *params;
++	const struct thermal_profile_params *params;
+ 	bool gpu_ctgp_enable, gpu_ppab_enable;
+ 	u8 gpu_dstate; /* Test shows 1 = 100%, 2 = 50%, 3 = 25%, 4 = 12.5% */
+ 	int err, tp;
+ 
+-	params = active_thermal_profile_params;
++	params = hp_wmi_thermal_profile();
+ 	if (!params)
+ 		return -ENODEV;
+ 
+@@ -2195,6 +2222,7 @@ static const struct platform_profile_ops hp_wmi_platform_profile_ops = {
+ static int thermal_profile_setup(struct platform_device *device)
+ {
+ 	const struct platform_profile_ops *ops;
++	const struct thermal_profile_params *params;
+ 	int err, tp;
+ 
+ 	if (is_omen_thermal_profile()) {
+@@ -2226,13 +2254,17 @@ static int thermal_profile_setup(struct platform_device *device)
+ 
+ 		ops = &platform_profile_victus_ops;
+ 	} else if (is_victus_s_thermal_profile()) {
++		params = hp_wmi_thermal_profile();
++		if (!params)
++			return -ENODEV;
++
+ 		/*
+ 		 * For an unknown EC layout board, platform_profile_victus_s_get_ec(),
+ 		 * behaves like a wrapper around active_platform_profile, to avoid using
+ 		 * uninitialized data, we default to PLATFORM_PROFILE_BALANCED.
+ 		 */
+-		if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN ||
+-		    active_thermal_profile_params->ec_tp_offset == HP_NO_THERMAL_PROFILE_OFFSET) {
++		if (params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN ||
++		    params->ec_tp_offset == HP_NO_THERMAL_PROFILE_OFFSET) {
+ 			active_platform_profile = PLATFORM_PROFILE_BALANCED;
+ 		} else {
+ 			err = platform_profile_victus_s_get_ec(&active_platform_profile);
+@@ -2693,24 +2725,25 @@ static int hp_wmi_hwmon_init(void)
+ 	return 0;
+ }
+ 
+-static void __init setup_active_thermal_profile_params(void)
++static void __init setup_active_board_params(void)
+ {
+ 	const struct dmi_system_id *id;
++	const struct thermal_profile_params *params;
+ 
+-	/*
+-	 * Currently only victus_s devices use the
+-	 * active_thermal_profile_params
+-	 */
+-	id = dmi_first_match(victus_s_thermal_profile_boards);
++	id = dmi_first_match(hp_wmi_feature_boards);
+ 	if (id) {
++		active_board_params = id->driver_data;
++		params = hp_wmi_thermal_profile();
++		if (!params)
++			return;
++
+ 		/*
+ 		 * Marking this boolean is required to ensure that
+ 		 * is_victus_s_thermal_profile() behaves like a valid
+ 		 * wrapper.
+ 		 */
+ 		is_victus_s_board = true;
+-		active_thermal_profile_params = id->driver_data;
+-		if (active_thermal_profile_params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
++		if (params->ec_tp_offset == HP_EC_OFFSET_UNKNOWN) {
+ 			pr_warn("Unknown EC layout for board %s. Thermal profile readback will be disabled. Please report this to platform-driver-x86@vger.kernel.org\n",
+ 				dmi_get_system_info(DMI_BOARD_NAME));
+ 		}
+@@ -2745,10 +2778,10 @@ static int __init hp_wmi_init(void)
+ 		}
+ 
+ 		/*
+-		 * Setup active board's thermal profile parameters before
+-		 * starting platform driver probe.
++		 * Setup active board feature data before starting platform
++		 * driver probe.
+ 		 */
+-		setup_active_thermal_profile_params();
++		setup_active_board_params();
+ 		err = platform_driver_probe(&hp_wmi_driver, hp_wmi_bios_setup);
+ 		if (err)
+ 			goto err_unregister_device;
 -- 
-Changes in v10:
-- Rebase on platform-drivers-x86/for-next commit 3429ae7b2f02, per
-  Ilpo's request.
-- Preserve hp-wmi board entries added since v9: 8B2F, 8D26, and 8E35.
-- Reuse victus_s_board_params for 8A3D instead of adding an identical
-  victus_8a3d_board_params struct.
-- Keep the 8A3D DMI match sorted with the existing board IDs.
-
-Changes in v9:
-- Resend after one week with no review comments.
-- Clarify that the series follows up on the earlier v6 0/4 review by
-  dropping the gpu_delta patch and using the tested Victus S path.
-- No code changes from v8 because the target platform-drivers-x86 branch
-  had not moved since v8.
-- Recheck that platform-drivers-x86/review-ilpo-next and for-next still
-  pointed at commit a167ae8eace5.
-
-Changes in v8:
-- Resend after one week with no review comments.
-- Rebase on platform-drivers-x86/review-ilpo-next commit
-  a167ae8eace5 to preserve the newer 8902 hp-wmi board entry.
-- Keep the gpu_delta fan-table parser fix out of this series; it can be
-  handled with the other GPU fan series.
-- Add Hans de Goede to Cc per MAINTAINERS for X86 PLATFORM DRIVERS.
-
-Changes in v7:
-- Bump the version because v6 was already sent.
-- Note that the corrected 3-patch version was accidentally sent as v6
-  after an earlier v6 had already been sent.
-- Keep the gpu_delta fan-table parser fix out of this series; it can be
-  handled with the other GPU fan series.
-- Keep 8A3D on the Victus S thermal-profile path after testing profile
-  writes/readbacks, CPU package power, and light PRIME offload behavior.
-
-Changes in v6:
-- Drop the gpu_delta fan-table parser fix for now; it can be handled
-  with the other GPU fan series.
-- Rebase on platform-drivers-x86/for-next commit 5fdac9983681.
-- Preserve the recently added 8BC2 board entry.
-- Preserve the 8D41 switch to omen_v1_no_ec_thermal_params.
-- Add 8A3D with Victus S thermal-profile data and Victus fan-control
-  data.
-
 2.54.0
+
