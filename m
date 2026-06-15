@@ -1,83 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC1C30F55F;
-	Mon, 15 Jun 2026 13:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F53FFFBD;
+	Mon, 15 Jun 2026 15:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781530276; cv=none; b=F3l1j/sWoywNwE7s3z9jiDUTKXswrdMgGAzrRjhTixdGq8bmIsJsr+3eJmS5VbQRlnFmEldfxo9RctQFxcnXEnaTFW0mDSA5nu/Zq1cibGlUVmzSxfuCvVbSDWkOW5altkev+1Jsug9GUuKQ+wx8QnHaPmZ3BAQds2PvHaiMApk=
+	t=1781536078; cv=none; b=tF68Ku7jmtD2jjFf5pJbTmTXZKioDx1kpSVvFH6SxIYc9dyLs0snrQYxOkOR0sA0ZmTaMXgjIdtVG9yUVSyUNEQaFwYTjVD8jr4b164wfJup5sO0bgyOhnqf9sxNywvvENHuw219GtoaktS/wq1rnKBMi4ADn0dEkwnGDCe51dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781530276; c=relaxed/simple;
-	bh=IXF7vNL1vTW9uGP8oOHAFFUC0Kra85o0HclEKF6qSYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQMcWzvwL+mfk6hqwKdq1RH3/SSzS5MFC2riPco8rGYn4mBmUuJ0DlmfLEAtuT+dlV20I6GCLrTXyhMOJnrcaB3qTkRAxUcFmXxFNh0Uh07gU4OoOaI6QGWrg/R2nqlH4ZIEU+/u2+FhrR1GDCjc//g505jQh6DdNPFH8H8eryE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rO1HhVwG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781536078; c=relaxed/simple;
+	bh=8g51DkdbIlcLFuWAEiK2QImWQp6WldGA2X6Ux9YuKTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a+jaU2rmggdKyDDq6M18i7dd/utA6+awrVD98kV875XnDUY3M4keq+PgqFuy7Qdv7J+iXh0Hpj+ydMGmZpOowNUk1sb4jYhZ+EP/nw6uXoytyziYcF0j164ze2cmnXjhe4p8xV2bSJxqXR8v9B55j5q3CEu1izk1WKqA72cBsN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=U3h9MAS9; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rO1HhVwG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3881F000E9;
-	Mon, 15 Jun 2026 13:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1781530274;
-	bh=t1bKA+p85D9RUyb7920Bu7AtW1RZIwvgycs8/1ZNa8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=rO1HhVwG3BXUHYjLr/5/NajRsPjWfXlmVsGGhi19pYlPFbCwCPT0e6acosnjr74LU
-	 HwMG7g1aGzuOYxVw5V3FRkUnq8RYEl1XqeLhRFXuWwv6JpBCtGAInhxqov799OSrqC
-	 7kbA8AcVsFqn45b3WkPbWGBLRbwskmiNSOg/e4pw=
-Date: Mon, 15 Jun 2026 15:30:07 +0200
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Shuangpeng Bai <shuangpeng.kernel@gmail.com>, hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com, Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [BUG] KASAN: slab-use-after-free in _copy_to_user from
- platform/x86/dell-smbios-wmi
-Message-ID: <2026061525-dayroom-backspace-4273@gregkh>
-References: <178144969601.60470.13396800403157907003@gmail.com>
- <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="U3h9MAS9"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id C59E126FEA;
+	Mon, 15 Jun 2026 17:07:46 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id SVe284lhc7d0; Mon, 15 Jun 2026 17:07:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1781536066; bh=8g51DkdbIlcLFuWAEiK2QImWQp6WldGA2X6Ux9YuKTc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=U3h9MAS933aXf7nQ9P7QSZK4XOaNS8rN+bKJvxKeEbt9D8S/H8D4+FDzUay0h9Tyy
+	 zb80IFIA5GYTblnkxWAW+ygkY3FRIHGq6g9d6C5UQf5PQMQJ+3vKCRWa/m2GDBTW43
+	 fIRACII+eOBIPn8+Q/QyJxdfn7cMoShOW3ISrLRJUO5PUNJf3mzd3weCXxYBfvIs9O
+	 X/ng33WT6tH9V2xW2eXTwCmt7HKaAIxIHKbbBZQHPEmH8+JxClSORCVoQQwa+P+NLR
+	 wZ+iaAq8QJQ5Zt/N9efgxzfM6+h4UwfmZsbguaHe8+m/J0XRvfzlk/xgq3H6aEfTMg
+	 ANSKgfonGH19A==
+From: Marco Scardovi <scardracs@disroot.org>
+To: ilpo.jarvinen@linux.intel.com, Denis Benato <denis.benato@linux.dev>
+Cc: corentin.chary@gmail.com, hansg@kernel.org, linux-kernel@vger.kernel.org,
+ luke@ljones.dev, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: asus-armoury: add support for G614PR
+Date: Mon, 15 Jun 2026 17:07:30 +0200
+Message-ID: <wwPQu_JvTXK897kIBeAj8A@disroot.org>
+In-Reply-To: <524bc16a-6a66-4b2f-8aa6-6a4b0bc31f09@linux.dev>
+References:
+ <178119015973.12014.6231948241278781864.b4-ty@b4>
+ <20260614084423.50723-2-scardracs@disroot.org>
+ <524bc16a-6a66-4b2f-8aa6-6a4b0bc31f09@linux.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Jun 15, 2026 at 02:19:16PM +0200, Armin Wolf wrote:
-> Am 14.06.26 um 21:15 schrieb Shuangpeng Bai:
 > 
-> > Hi Kernel Maintainers,
-> > 
-> > I hit the following report while testing current upstream kernel:
-> > 
-> > KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-wmi
-> > 
-> > on commit: e8c2f9fdadee7cbc75134dc463c1e0d856d6e5c7 (May 25 2026)
-> > 
-> > The reproducer and .config files are here.
-> > https://gist.github.com/shuangpengbai/f5b15c099e80897486b4238ddb91df79
-> > 
-> > I'm happy to test debug patches or provide additional information.
+> In general all these data have been posted in the ppt data collection thread
+> in form of screenshots (and I'd like to have yours too for future
+> reference).
 > 
-> It seems that unbinding the dell-smbios-wmi driver races with any outstanding
-> file operations on the misc device, causing them to access memory already freed
-> by the unbound driver.
+> Your model isn't posted there, so I assumed these values were what is
+> available to you on the official windows app, if so the previous one has to
+> be kept unless you find an explanation of why what is see is different from
+> what you expect to see.
+> 
+Hi Denis,
 
-How can that happen if the module reference count is properly
-incremented when the file is open?  Perhaps the driver isn't doing that
-correctly?
+as I wrote you in private it was my bad in the end: I made gemini extrapolate
+them from the ThrottleGear_G614PR.xml, which was encrypted, and didn't
+triple check them.
 
-> I do not know if the misc device synchronizes file operations against removal,
-> but i do not think that this is the case. I added the maintains of the char drivers
-> to the discussion, maybe they know this.
+As I told you I wrote down a python script [1], completely free from the ASUS 
+code, that can handle these xml files, decrypt them and even create the quirks 
+necessary to post in asus-armoury.h. I tried it with my G614PR.xml: it works 
+without problems and the values are correct.
 
-Wait, is this a module unload, or a manual "unbind" operation from
-sysfs?  Either way, this something that only root does, and is not part
-of any normal operation that a user can trigger, or should ever be
-doing, so it's kind of "best effort" if it works at all :)
+[1] https://gitlab.com/scardracs/throttlegear
 
-thanks,
 
-greg k-h
