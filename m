@@ -1,97 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CE03EFD15
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC1C30F55F;
+	Mon, 15 Jun 2026 13:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781529032; cv=none; b=n07HhyfMO0oDRb/EfScpVyBMI9YOj51pNIttf6C8+USlm2ELd6Og489vvQZu5dRbtnSd64ilrSVooZYqsIoNTZydVzk39M/c7m4/gU9DmfKV8ceOvlcSxIhYRnmQIHC/NMhzhYz+8GlmLoqYszJry0OVjK7W8JX5pBiQrGZ9FVI=
+	t=1781530276; cv=none; b=F3l1j/sWoywNwE7s3z9jiDUTKXswrdMgGAzrRjhTixdGq8bmIsJsr+3eJmS5VbQRlnFmEldfxo9RctQFxcnXEnaTFW0mDSA5nu/Zq1cibGlUVmzSxfuCvVbSDWkOW5altkev+1Jsug9GUuKQ+wx8QnHaPmZ3BAQds2PvHaiMApk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781529032; c=relaxed/simple;
-	bh=dzYqlV8/rHOrOL4f8/gkdZv7E07gDB83WHMDhjhtIMw=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BReS3omMEsPSgznRSRxuPCHhh1ex4h6KXN9J++VRmjGaU77liJDkajNxBworkwGrhr8F/Yq9JEbMlhCStcBScLc4f9IVF1j4e7+Guiqi8eGZJX0hiUOxVFXu+0Wwo4mNHVNcxTYAKnk15LgkHqn2MaAinakWmXk9+8Rj4diuebA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ8KlseV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1781530276; c=relaxed/simple;
+	bh=IXF7vNL1vTW9uGP8oOHAFFUC0Kra85o0HclEKF6qSYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZQMcWzvwL+mfk6hqwKdq1RH3/SSzS5MFC2riPco8rGYn4mBmUuJ0DlmfLEAtuT+dlV20I6GCLrTXyhMOJnrcaB3qTkRAxUcFmXxFNh0Uh07gU4OoOaI6QGWrg/R2nqlH4ZIEU+/u2+FhrR1GDCjc//g505jQh6DdNPFH8H8eryE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rO1HhVwG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ8KlseV"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE934C2BCB4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781529031;
-	bh=dzYqlV8/rHOrOL4f8/gkdZv7E07gDB83WHMDhjhtIMw=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=MZ8KlseVYpTsFruKgGaSN9CvnvvwbPh+rHItV+9HlfzVfdLwTAEmCnOtLBFR1Qcap
-	 j834Jcx0esYzyLTOPHsXTQ3DowHx8s0b/buAL/sgYwWbucShngaKBWDswYfDvuil2x
-	 asiUdb3pqDaKUyTKkpxrMP6ECdMxTfsDYgLxOBKm4AZEV5a05ue8FH8xKssPR3XeDt
-	 ZHZzxxp7y++a09tGH1pF7xyo1Tg+uI9l4o5Nju0pajxudx/1jkIYaUPlR0/sqpBBBf
-	 FzFBJU5FD6vHshVGZ8FALeZaMFVNoy5tXn7Y6nme4umfINbJsiXCc6CS2OGG6KEAme
-	 qEvKW5ZBduLOw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A124EC3279F; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Mon, 15 Jun 2026 13:10:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: 4966508hayk@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-Ap91PwZjRV@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rO1HhVwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3881F000E9;
+	Mon, 15 Jun 2026 13:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1781530274;
+	bh=t1bKA+p85D9RUyb7920Bu7AtW1RZIwvgycs8/1ZNa8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=rO1HhVwG3BXUHYjLr/5/NajRsPjWfXlmVsGGhi19pYlPFbCwCPT0e6acosnjr74LU
+	 HwMG7g1aGzuOYxVw5V3FRkUnq8RYEl1XqeLhRFXuWwv6JpBCtGAInhxqov799OSrqC
+	 7kbA8AcVsFqn45b3WkPbWGBLRbwskmiNSOg/e4pw=
+Date: Mon, 15 Jun 2026 15:30:07 +0200
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Shuangpeng Bai <shuangpeng.kernel@gmail.com>, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, Dell.Client.Kernel@dell.com,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [BUG] KASAN: slab-use-after-free in _copy_to_user from
+ platform/x86/dell-smbios-wmi
+Message-ID: <2026061525-dayroom-backspace-4273@gregkh>
+References: <178144969601.60470.13396800403157907003@gmail.com>
+ <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+On Mon, Jun 15, 2026 at 02:19:16PM +0200, Armin Wolf wrote:
+> Am 14.06.26 um 21:15 schrieb Shuangpeng Bai:
+> 
+> > Hi Kernel Maintainers,
+> > 
+> > I hit the following report while testing current upstream kernel:
+> > 
+> > KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-wmi
+> > 
+> > on commit: e8c2f9fdadee7cbc75134dc463c1e0d856d6e5c7 (May 25 2026)
+> > 
+> > The reproducer and .config files are here.
+> > https://gist.github.com/shuangpengbai/f5b15c099e80897486b4238ddb91df79
+> > 
+> > I'm happy to test debug patches or provide additional information.
+> 
+> It seems that unbinding the dell-smbios-wmi driver races with any outstanding
+> file operations on the misc device, causing them to access memory already freed
+> by the unbound driver.
 
---- Comment #103 from Quaternion (4966508hayk@gmail.com) ---
-The hotkey functioning of the new driver for me is the same as for tacodog3=
-11.
+How can that happen if the module reference count is properly
+incremented when the file is open?  Perhaps the driver isn't doing that
+correctly?
 
-All the sysfs function normally (reading/writing) and produce the desired
-results (including kbd_backlight, which at last makes possible to turn on t=
-he
-keyboard backlight in Linux), except for reader_mode, for which I don't
-understand what it's supposed to control if there is no hotkey for that and
-night light is available in Linux anyway. Further regarding the lg-laptop e=
-xtra
-features document update, I believe the sysfs which need to be updated are =
-the
-following:
+> I do not know if the misc device synchronizes file operations against removal,
+> but i do not think that this is the case. I added the maintains of the char drivers
+> to the discussion, maybe they know this.
 
-Battery care limit: the original=20
-/sys/class/power_supply/CMB0/charge_control_end_threshold=20
-doesn't exist,=20
-/sys/class/power_supply/BAT0/charge_control_end_threshold
-works with or without the new driver.
-Keyboard backlight: the original=20
-/sys/devices/platform/lg-laptop/leds/kbd_backlight/brightness=20
-doesn't allow modifying, the new driver adds the option=20
-/sys/devices/platform/LGEX0820:00/leds/kbd_backlight/brightness
-which works.
+Wait, is this a module unload, or a manual "unbind" operation from
+sysfs?  Either way, this something that only root does, and is not part
+of any normal operation that a user can trigger, or should ever be
+doing, so it's kind of "best effort" if it works at all :)
 
---=20
-You may reply to this email to add a comment.
+thanks,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+greg k-h
