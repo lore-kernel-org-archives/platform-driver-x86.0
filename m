@@ -1,181 +1,97 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BBB3F23A4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 13:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CE03EFD15
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781528444; cv=none; b=tzJvdeZscIeGGUrXTwqifWZ0IO6pQWS22INOpHSigNjUyQR/KsGQisCHCs/Tt6ZpjjNeg0p3WGl3eAuaQgJMdui8WInyjp8G9NDYK2aT7YFHaS9szxYGxCK97fDfl6w4ksxj0EXCI2B237dyVORsEe02fPge/58z2PjNfhDjUsI=
+	t=1781529032; cv=none; b=n07HhyfMO0oDRb/EfScpVyBMI9YOj51pNIttf6C8+USlm2ELd6Og489vvQZu5dRbtnSd64ilrSVooZYqsIoNTZydVzk39M/c7m4/gU9DmfKV8ceOvlcSxIhYRnmQIHC/NMhzhYz+8GlmLoqYszJry0OVjK7W8JX5pBiQrGZ9FVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781528444; c=relaxed/simple;
-	bh=qs5C18/+H9AyHtb/11GGHII5EWG39bujftbaDo2RJy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S1ypHFSBbR+ELxSM4TuqHA6C7iYUZKZ+Yw8+yLMJaZ7qrrfCzX7MXjU4XbIxkU/6OMs1Ni1EcbgeW6tdq5Y+hqfvcmUNO3eJWTq9KBddVfWQrUO9OKgs4ll7r/3flK/io++26kmD1ob9yua0iNdd6dgMnn+3eKFSSU6uakaF6xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g9fkk10N; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781529032; c=relaxed/simple;
+	bh=dzYqlV8/rHOrOL4f8/gkdZv7E07gDB83WHMDhjhtIMw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BReS3omMEsPSgznRSRxuPCHhh1ex4h6KXN9J++VRmjGaU77liJDkajNxBworkwGrhr8F/Yq9JEbMlhCStcBScLc4f9IVF1j4e7+Guiqi8eGZJX0hiUOxVFXu+0Wwo4mNHVNcxTYAKnk15LgkHqn2MaAinakWmXk9+8Rj4diuebA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZ8KlseV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9fkk10N"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-68c3421b009so6635790a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 06:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781528441; x=1782133241; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gv18xf2jcQ1AQAQKKfrWvkQrEUmUuEzoWqcmaBrax9A=;
-        b=g9fkk10NkzZmWNlxcwpA+gB+mfxWAYAaYawpzpunmqb2qrN3HZ59HKFrQE3j0mW/IM
-         4u7T6koeLnqi32YpQyAjKhHcedIRqW86Tumj1ivBMWaRQ+ofnzfJpWW3Kesuw08Cjuh1
-         nSvGStgfgshJC2hprjELrggLWdGkBAdsn8sqT10Zi5XdfUvt5AoB9snlSt+Xf3b6/18D
-         2rkTpX9cVys3E9r1hOmmDRpVYvcBoiidR0K0P+1fmfAfsvT4oTV96u0Tvvivm4IHvSoc
-         gV5x5YAu2CWreF/V9o8l0QuY/QRTyzIjj7U+0ft7TB6HHSdkUA16efDTHYF6qk083Nog
-         zLAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781528441; x=1782133241;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gv18xf2jcQ1AQAQKKfrWvkQrEUmUuEzoWqcmaBrax9A=;
-        b=iWD6/Nti/cKpLOksTsd/iW1u38CNiOw7u8lmEE9VFS9tFc8j7aF0y/ztmjNQL41HsV
-         r70ejOSjW/UIpFG4h2RUAIC4sNRCgc2la6/ECO7FaQ/wXjPRe2jKmxV6RtfL++5XPwsO
-         JRekdD5Z727LUqhpAVDQgOJmpiXKK6gWCDlTo9qPdjNZ5N9/WqlOAxVdPd25om9bF8Ri
-         2fGSzlcq25iaUqayX1UHEoAW5zPdX2zxX+/pWjdGXWHhKrVz96gG63wldQCCZZcoql2K
-         fZxIoHUr4qqQYl671PurSVjVYkwxXPEu5dsBUOqVghhzpfsrN47sep2H9pfjNDA9sH49
-         WIfQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9ordzx5j+U7oDfgY5m0wptdpzgzHwj19gADDDjvwitIPqUBwZrTGyz/0Kw6Svux1Uu7cbIp5nd0c/JubuuT6JkY3vy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaT2YcA/XEQHl5RTCe0DqdCcTKLwC+hZQtr0gBbr9OiByG2L3F
-	7m7wayhy6ZXbH/Ik8+6MMirn3UOjMZsl3fw70Jg8ydWqCf5DlJ5Q8N6l
-X-Gm-Gg: Acq92OH/HzXgwOme/at1eIj5nXkdADpMBPu7kiZCjXW/58uhDVUtQAB1ZvfDP0DSep+
-	lZpYs7k8ycNeZB9PWOzuvw7gH7CVoCg1gSjSmzrB9Q3/w5/ypqZqQ+83kgvFhamikdR5SPNvTf9
-	rOQd0vdngeGufV41EPpNa/ecsglOCAvMtws7mFgsBej0E44TouMuNibLeZiCJIEX5zhSMfmXPWi
-	VZB7dhMfJCfDrDvlIvtg+5c37obEFHKJhVuZ9Wd36JkdSgBl4Dqj3mbBI823r2lHuw0RPzU6Ebm
-	zdadBYD0mqDw1tQaZqom4SJVm8dSUlrOE0MfwHCx6lwSWQwjfuCBkf7SJMl1YFW5Gw9ovs0zaiG
-	aN9YvnE1TjTJMAf2hDDGi3T8TzZtgZ89hrMPlsm7RAwuXfEHWnRFHUOuAElYpSF5i0VAfEV5Sk2
-	HCk2qfNx1rYNbfe7l1hpQRCdEcXkbErCiFeg==
-X-Received: by 2002:a17:907:e101:b0:bfe:f92a:cb3c with SMTP id a640c23a62f3a-bfef92ad4camr310572866b.14.1781528440825;
-        Mon, 15 Jun 2026 06:00:40 -0700 (PDT)
-Received: from [192.168.8.19] ([83.136.105.81])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bfdb9113103sm473479466b.63.2026.06.15.06.00.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2026 06:00:40 -0700 (PDT)
-Message-ID: <dee36707-3fc9-486e-b18b-d6a246edb67c@gmail.com>
-Date: Mon, 15 Jun 2026 15:00:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZ8KlseV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BE934C2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1781529031;
+	bh=dzYqlV8/rHOrOL4f8/gkdZv7E07gDB83WHMDhjhtIMw=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=MZ8KlseVYpTsFruKgGaSN9CvnvvwbPh+rHItV+9HlfzVfdLwTAEmCnOtLBFR1Qcap
+	 j834Jcx0esYzyLTOPHsXTQ3DowHx8s0b/buAL/sgYwWbucShngaKBWDswYfDvuil2x
+	 asiUdb3pqDaKUyTKkpxrMP6ECdMxTfsDYgLxOBKm4AZEV5a05ue8FH8xKssPR3XeDt
+	 ZHZzxxp7y++a09tGH1pF7xyo1Tg+uI9l4o5Nju0pajxudx/1jkIYaUPlR0/sqpBBBf
+	 FzFBJU5FD6vHshVGZ8FALeZaMFVNoy5tXn7Y6nme4umfINbJsiXCc6CS2OGG6KEAme
+	 qEvKW5ZBduLOw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id A124EC3279F; Mon, 15 Jun 2026 13:10:31 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Mon, 15 Jun 2026 13:10:31 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: 4966508hayk@gmail.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218901-215701-Ap91PwZjRV@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] OV02C10 on Dell 16 Premium DA16250 (ARL): INT3472
- handshake-derived "dvdd" regulator registered but never linked to sensor,
- sensor probe fails with -EREMOTEIO
-To: Marco Nenciarini <mnencia@kcore.it>, linux-media@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <abeb9142-16a7-417b-be0f-b929234de6db@gmail.com>
- <ah_XLEAkqjV9HkSE@spark.kcore.it>
- <ceadef8a-7b9e-4137-b219-732b30bbf62e@gmail.com>
- <ai2NAS5EnLaLoN2W@spark.kcore.it>
- <dc00c5d0-124d-45c8-97d2-7f8fafca9795@gmail.com>
- <ai8NwzoU08AvD7Ve@spark.kcore.it>
- <396e4b0d-7a2c-4ba4-9569-0428ccd63267@gmail.com>
- <ai_TEj-_ije1XgYF@spark.kcore.it>
-Content-Language: it
-From: "Angioli Samuele (gmail)" <angioli.samuele@gmail.com>
-In-Reply-To: <ai_TEj-_ije1XgYF@spark.kcore.it>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Marco,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-The _STA read settles it, and not in our favour. Full int3472 _STA dump:
+--- Comment #103 from Quaternion (4966508hayk@gmail.com) ---
+The hotkey functioning of the new driver for me is the same as for tacodog3=
+11.
 
-   INT3472:0c  \_SB.PC00.DSC0   status=15
-   everything else (DSC1-5, LTH0-5, CLP0-5, and INT3472:00 = the I2C2
-   TPS68470) status=0
+All the sysfs function normally (reading/writing) and produce the desired
+results (including kbd_backlight, which at last makes possible to turn on t=
+he
+keyboard backlight in Linux), except for reader_mode, for which I don't
+understand what it's supposed to control if there is no hotkey for that and
+night light is available in Linux anyway. Further regarding the lg-laptop e=
+xtra
+features document update, I believe the sysfs which need to be updated are =
+the
+following:
 
-So DSC0 is the only live INT3472 on the platform. DSC1's _STA is
+Battery care limit: the original=20
+/sys/class/power_supply/CMB0/charge_control_end_threshold=20
+doesn't exist,=20
+/sys/class/power_supply/BAT0/charge_control_end_threshold
+works with or without the new driver.
+Keyboard backlight: the original=20
+/sys/devices/platform/lg-laptop/leds/kbd_backlight/brightness=20
+doesn't allow modifying, the new driver adds the option=20
+/sys/devices/platform/LGEX0820:00/leds/kbd_backlight/brightness
+which works.
 
-   Method (_STA) { If (CL01) { If (C1TP == 1) Return(0x0F) }  Return(0) }
+--=20
+You may reply to this email to add a comment.
 
-identical in shape to DSC0's (CL00 / C0TP==1, which is why DSC0 is 
-live).CL01 and C1TP are NVS OperationRegion fields (8-bit, defined in 
-the DSDT NVS block) that are only ever *read* in the ASL -- never 
-assigned, and not inside any _OSI branch. The only _OSI use in the 
-tables is the standard OS-version detection; it does not feed the camera 
-gating. So this is a BIOS/NVS camera-config gate, not OS-gated: acpi_osi 
-spoofing can't flip it.
-
-C1TP is also the field CDEP keys on (==1 -> DSCn, ==5 -> LTHn, >1 -> 
-CLPn), and with DSC1/LTH1/CLP1 all _STA=0, camera 1 (the OV02C10) has no 
-live PMIC instance at all. And even if DSC1 were on, its _DSM only 
-exposes func 0x12 (dvdd handshake) + func 0x0D (privacy LED) -- no 
-avdd/dovdd/reset/clock.
-DSC0's is the same shape (dvdd + 0x02 strobe). So none of the discrete
-instances ever carried the sensor's avdd/dovdd/reset/clock; those come 
-from a path that is entirely _STA=0 here.
-
-The factory Windows install runs the RGB camera fine, so the hardware is
-present -- Windows just powers it through its IPU6/PMIC stack, 
-independent of these _STA-gated INT3472 devices. Linux's int3472/ov02c10 
-path depends on them, and the DA16250 firmware leaves the whole RGB-side 
-PMIC topology _STA=0 in NVS.
-
-Conclusion: the second_sensor dvdd quirk is correct and worth landing 
-for boards where the relevant DSC is enabled, but it cannot bring this 
-camera up. The OV02C10's avdd/dovdd/reset/clock have no live provider to 
-re-key to, and the disable is a firmware NVS config, not something the 
-kernel can satisfy. Short of Dell enabling the RGB PMIC instances in 
-firmware, the only in-tree path would be a full DA16250-specific quirk 
-that hardcodes fixed regulators for avdd/dovdd and sources reset/clock 
-directly -- which needs the board schematic and only works if those 
-rails are actually software-controllable. I suspect that's not worth it 
-for one SKU; this looks like a Dell firmware bug to report upstream to them.
-
-Thanks for walking through it -- happy to file the dvdd second_sensor
-quirk on its own if you still want it in for the general case.
-
-Thanks,
-Samuele
-
-Il 15/06/26 12:25, Marco Nenciarini ha scritto:
-> Samuele,
-> 
-> Thanks. The dvdd re-key worked (post-patch ov02c10 only logs "not
-> found" for dovdd/avdd, not dvdd, so it did attach to DSC0's dvdd), but
-> as you found it can't bring the sensor up: the rails it still needs
-> (avdd, dovdd, its reset GPIO and clock) would have come from DSC1, and
-> DSC1 is _STA=0, so nothing live provides them.
-> 
-> So before any kernel change is worth considering, the question is
-> whether DSC1 is off by firmware design. _STA=0 is what you get from a
-> device that is BIOS-disabled, OS-gated, or simply not fitted on this
-> SKU, and the asymmetry fits: DSC0 (the IR camera) is live, only DSC1
-> (the RGB sensor) is dead. If DSC1 is meant to be off here, there is
-> nothing for int3472 to fix and no quirk worth writing, so I'd rather
-> confirm that than build around it.
-> 
-> The way to tell is to read DSC1's _STA from the firmware tables.
-> acpidump's multi-table dump won't feed iasl -d directly, so read the
-> raw tables from sysfs:
-> 
->      cp /sys/firmware/acpi/tables/DSDT dsdt.dat
->      cp /sys/firmware/acpi/tables/SSDT* .
->      iasl -d dsdt.dat SSDT*
-> 
-> then grep the *.dsl for DSC1 (the DSC blocks often live in an SSDT, not
-> the DSDT) and read its _STA. If it returns a flat zero, or gates on
-> _OSI("Windows ..."), or reads a manufacturing/setup variable, the
-> sensor is disabled by firmware and that is the end of the kernel angle.
-> If instead it depends on something a live instance could satisfy, then
-> there's a kernel path worth pursuing and we look again.
-> 
-> If you still have the factory Windows install, whether the RGB camera
-> works there is a useful cross-check (works in Windows means gated, not
-> absent), but the _STA read is the real signal.
-> 
-> Thanks,
-> Marco
+You are receiving this mail because:
+You are watching the assignee of the bug.=
