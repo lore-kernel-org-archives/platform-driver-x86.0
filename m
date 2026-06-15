@@ -1,88 +1,41 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8EC33065D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 11:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362423E716F;
+	Mon, 15 Jun 2026 12:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781524202; cv=none; b=Dxa5GI+75WPV60z9lBvAem7eeSMdrJBL6+rSM9kjVIqVCfRR/dHPbxx0JPFv0X8x/RCClsAHhW1Z1JEKKweXMsD9UcrHDmRTi+QEPfAywMxg64gGuMVkZEuQn//0b03IOZF/6KWa1S0RlC6wJiCaALkTARpRPWG8YdE/54vK2c0=
+	t=1781525962; cv=none; b=I1UgL9x3+rAzQ6xfDiUXl8FId3i3vnPohIT3uqpvhYrAPkinIgufarvC79Ipju7i/oMSM84dO5E4m7MIuu5a2MjM/lrwUlwMv7cq61r3+jCQ1a8uV2KnX5TwjK0y5muaAOOglWXX7/sWwvyZJU12myLrSMNWx5yql6yQYoLgj5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781524202; c=relaxed/simple;
-	bh=bEEsZLV7PPSJuZMZ0TUDCqsG8lEzuoLvm6l1FqNwz3s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ch5oWnW+LL41epu2G/cV8RfzUS0/Dpwv+Hq+8Np6MRnv1VLMxnDFp4pahywHUWagDJ1HKwMHYig6zHrAwf4hf4fuRka+w/xRdYJoJeBwrHh4XyFqqTXZA5zX9C86mgBkixtTB36yCp+SWl+UxKiaN7vIIyei1QRdLGyOiExgWgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bVUNxNtz; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=eIFRlPiN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1781525962; c=relaxed/simple;
+	bh=b065dUNDkdhipyyvDXLoG8bZ+0HCjcbXXIhE40RLc+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZEOckTgvHd+GF1XyWe+cb27exZsjjf0a7x0JCUo0fULMkGBuPMhEoRS+pUhEM1zgshG5pGyLme8zR9ogV91cx4BzVzGMHBBJgR3EsJQ/X0h8JlbLpdAbYv4CEz8eKIP8bOZ7NIkJpo+w/RpC0CoeHC3RHE2i48safrwBZZsf28c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=t9DiSAZ8; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bVUNxNtz";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="eIFRlPiN"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65FAoQPu2481259
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 11:50:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DUvYTTUsOLo7RNmxiDZ33LF9UzPszjwFsJuntJrwpcI=; b=bVUNxNtzgRyilwCr
-	gVvbautuEcty47KsC7E0VuGc3NH2PSjsqN6KUN0RcOltnEvywtQxHKGyYvTZgIEW
-	sDC2gI1bfHZy3+emTe7dfklVzyUxov2DTfmlYbXalZgiUNr+fg1NdY7f5L6Z+6Np
-	ECkPiPQTxiSBQLvoF7Y5dHfL37le5jpCIqEYlMv3uuvyXhdhG/YlI7w6SQttGmyw
-	ElES+hViBXDmBEwSJhYDl7WUvKGjkd+mi82lsB1iFZm+tZh4BZzYzpe5d/+QXxrv
-	cJoJEzC86s5yXmGun9EydrZNb/Ln5DhSKIrzpfgvBmwatYqkKOf8hJGrkXWlt7Oo
-	VmmpQQ==
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4ete980nw4-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 11:50:00 +0000 (GMT)
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-842208d5b0eso2644069b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Jun 2026 04:50:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1781524200; x=1782129000; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DUvYTTUsOLo7RNmxiDZ33LF9UzPszjwFsJuntJrwpcI=;
-        b=eIFRlPiNe9VQx1YWVmylC/5OAPM+bhMxPVh2Iqdkkgw8+i/rsgPP35YBmTIOwDqa5+
-         gi1j2M/Hm1bH6YPNuHYhje7ssY1xJTLJO+nQkPMBkTs6L58NEY4yL8cyF1hWxOhJIQSN
-         W5ySbLPYTYyhmpNbbQByBhx6xuleJ13Bs7VEaYAG2jpn5vXeSlv6lkO/wL0rPtzrNMYU
-         7+8JsadFdgkMdbnaReIBS4DV6cty7EwIOzBMaGPZO9nqJhHFuLlohMea+KtBvj4k28uz
-         NCB3LiyqTDUN54JhGYNinRBkh76rZvh0nYtP8RdjeUtOzYmqrJJyfUtXJUCREcUvvsQh
-         I/4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781524200; x=1782129000;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DUvYTTUsOLo7RNmxiDZ33LF9UzPszjwFsJuntJrwpcI=;
-        b=kIb3JJxiHgJurRVKK7g6lZzhlXdPR4BTcI/o/mRwGjQq2BN/7YihfdjxO+4jwxHkG7
-         ZtaG4m4HeP0cF0ZqrDZKtqViRCVERSpHfFDf8wzDdK3O/qaM3wB9AQbEIgpjxBMQWZNB
-         MqKSo6YaPcSxgY8UEFHN9sB3fAholDCXtErYPd4AjRaLMSo2H/d97/3zxlIFI/B5w3QA
-         EQfUVQrrISJNXW0kWpCxJRvoY5CippEP2FQ0X+RVmONSZMP32f4c1fAS+c3saxRgCP+H
-         DePE4CydjBw3bx+kT683gFcun6F2OJKsG/N9VSZ91ELQeCWxAxlO0g0BxMNR832uYKAR
-         8kcg==
-X-Forwarded-Encrypted: i=1; AFNElJ9uxyX6XF3qgfXZuv+Lw58eZl4jmftpBhH6N2ipHlHF76NajxE/mYJ5p7EHAoZVJPZV4T1VwyonKF73yLfoMdLBZufW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaOj/aeLHf/8fLkTelK2C2OzLE9dp5XZivdutnedYQ9BTzEHbc
-	Hdj1yQ4K09pKJ9dDpmzoYsUSP0QwkEqWkLgSBXAYEcA5AgGOBwNunxiQRFgAmObtYv0Wbs59KYj
-	iQN1PGlUgN+6Qfxz24C6pmNyizJIvYBOVwJuB/xU6tuVYW/BK+9sv72qtLVfBX2ZXGf/r5op4Uz
-	CI
-X-Gm-Gg: Acq92OF6t62BhHocnF+xZyZPRrhc2Ur9Srb8FUNO8yIRCWJel18Nb4bQ/d+26zT4una
-	Tu6+JFJUgW9wrOsLlIMDA3Gx4VXrtHTsht7xjNcvV7/TqYmeWaQi40zBZ7Yh6yl6UeYf7EaqvUK
-	95X+piM9/P6sqQYzJ0TPvi0A70xWw+w9qWSLh/qC82BS3Ksoujcd/Bg0JGuYA3MlY+SCpFReTy9
-	3dU2JyiuNWKAa2dXycbnY7d0cQT47ZbX2BqsZ9hbNcrlR6wDWpnhbuhy9vg2evi7OwlYIfxZHnz
-	Ec4Zgf02bc5UuDQdqakSH3o4CQPmJEY3igYRsaRYa7efHv1TlB+CSWtYFB8j/kIQeThT7qAP69Z
-	BWxHEmDplsxU/lgOiVTP/MdK0bKKtXfHglzDRZwIFZSOVf9iUd07NijHfmepZVd5cN0UyMOuF0L
-	uvkXAPFiqQDrpVxGVrPQAFo7W5rLavlNncqw==
-X-Received: by 2002:a05:6a00:2191:b0:842:2f28:4e36 with SMTP id d2e1a72fcca58-8434cd4ae2amr14954086b3a.17.1781524200175;
-        Mon, 15 Jun 2026 04:50:00 -0700 (PDT)
-X-Received: by 2002:a05:6a00:2191:b0:842:2f28:4e36 with SMTP id d2e1a72fcca58-8434cd4ae2amr14954051b3a.17.1781524199763;
-        Mon, 15 Jun 2026 04:49:59 -0700 (PDT)
-Received: from [10.79.198.165] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8434afc8a5bsm10309617b3a.33.2026.06.15.04.49.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jun 2026 04:49:59 -0700 (PDT)
-Message-ID: <3f97dd62-1446-41c9-b16c-fce36076d345@oss.qualcomm.com>
-Date: Mon, 15 Jun 2026 17:19:53 +0530
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="t9DiSAZ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1781525958; x=1782130758; i=w_armin@gmx.de;
+	bh=kXj7WfZcqO7QS9gXq5kRvhwCvS7NPg+iUV/UGqmX+Pc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=t9DiSAZ8deA2SlGIgtaxp6gWt3m4Y9TJEcNTvS/wxps3+Ard2bAtgEPdDKaSxJVy
+	 xyAg+EyGslkoxT7jb62sPLqiRpRWpRVWxNik43ldHUfa/yOFsDt+S4ZZ2o+a8RIOe
+	 Ph8Y4sUoyxCa1m4OHlBg3uB1VSMjeWpkKmw9lK6w6o9jDZi2c+2uXyGJ6ffOlB+co
+	 gCzEpkbV+BDHMizrXlotEnsfVYZiOhyNGHh6jp3DOLlGK6b1M/lOptN7EC+Anlvdt
+	 g/O16HcjJdvQcLG2bnsik327jxjvabnEPGp3pa3u7+/FWT+7zKuOIhdHPdQ1788U3
+	 svhZ+hGGDX/JZ2x8qw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mzhj9-1xTpZf1V9l-00yYbJ; Mon, 15
+ Jun 2026 14:19:18 +0200
+Message-ID: <543e7c0f-ae4b-49e4-8bdf-6bf7d0dc4775@gmx.de>
+Date: Mon, 15 Jun 2026 14:19:16 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -90,70 +43,170 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/6] dt-bindings: embedded-controller: Add Qualcomm
- reference device EC description
-To: Rob Herring <robh@kernel.org>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Randy Dunlap
- <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-References: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com>
- <20260511-add-driver-for-ec-v9-1-e5437c39b7f8@oss.qualcomm.com>
- <20260612222259.GA1960900-robh@kernel.org>
+Subject: Re: [BUG] KASAN: slab-use-after-free in _copy_to_user from
+ platform/x86/dell-smbios-wmi
+To: Shuangpeng Bai <shuangpeng.kernel@gmail.com>, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, Dell.Client.Kernel@dell.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Arnd Bergmann <arnd@arndb.de>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+References: <178144969601.60470.13396800403157907003@gmail.com>
 Content-Language: en-US
-From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-In-Reply-To: <20260612222259.GA1960900-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <178144969601.60470.13396800403157907003@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=V5tNF+ni c=1 sm=1 tr=0 ts=6a2fe6e8 cx=c_pps
- a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22
- a=KKCGUzlOdHAmEzU82osA:9 a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
-X-Proofpoint-GUID: mOZdtYs-yEg8jvA6azUzSrgz6oG1xMwu
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjE1MDEyNSBTYWx0ZWRfX2JX//4oFywol
- g+VGdHFHuieqbOYGplJWw+0zJjTn3y9lQ8jpzUzAPT3PB7IWln1LaT3H01U1RTXT7rUMrbaBgUy
- 53ew6vdzW955s32fnnUiCdCjhbrhoj4=
-X-Proofpoint-ORIG-GUID: mOZdtYs-yEg8jvA6azUzSrgz6oG1xMwu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjE1MDEyNSBTYWx0ZWRfX+UoHogVf4gDq
- wn/Gr7jXTCs5Kjb5fniAES+TnTAZlKjocTX8aXjf9HEzJbGkz4iHjevTuq/mb/U9vFFveaeXQ1M
- Ru6FA4tzrOpYhNpGVgo2/uOUAQaSG6lYJROSL1IRf2X6SvDTIakRASnlmnkdmj3fDGlF3rYh1f1
- b1e4T3sMn/2gbxn2QHOqX0RI5hjhe3Hhu9Zf4mNMuEophzwiGVx5rvgmMLq1ueSAlqMEmfcUGTd
- h4qqbYLARL9ZPLNSoAK/DhsV2EeqshbHKFkRave1yFZ5ZPqmtWdfNgJEl/P+fRNA6AstC2tWbHd
- EYmse4LXLS2+HshF0YcAmBr7M8n0Lk+/0gxYMLrQuTaVO5jLrWp6xOT29u2UIx6uOM01rSyvb5w
- 0FUuWf4llgKT+TqGuNvTWt/iggHmpr5PJEydoGjRWeJNuRNlLu//GSqtgv4IZkJwo3qPhHqryv3
- 2ndduMTxWK7srMtebcQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-15_03,2026-06-15_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 impostorscore=0 phishscore=0 malwarescore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606040000 definitions=main-2606150125
+X-Provags-ID: V03:K1:kVJkq5/Sz6L7/pSGEG9lxiX8GWuMKcZhEPnTCggKFAgTcuzMv1X
+ gSZjqB6Uz/iBQrS6KvDzfHMPzt4oyWkVJDZajpq93IjqgjUd62oDDsIpvzcLIUmCzqxKH30
+ ha9HrlIQ2yA72/VwFU2SnQTFe+YrvdYi6I2OBYZMv1/2Udb9CumVo/C17W6zffWPfGBfh0l
+ oYMOLSJT7bjH11x3hEdRQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Cio/VNAyNo4=;E//scZKRnUzTxojv8dQUHyAf+QX
+ +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
+ uXhv+8Quo=
 
+Am 14.06.26 um 21:15 schrieb Shuangpeng Bai:
 
+> Hi Kernel Maintainers,
+>
+> I hit the following report while testing current upstream kernel:
+>
+> KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-wmi
+>
+> on commit: e8c2f9fdadee7cbc75134dc463c1e0d856d6e5c7 (May 25 2026)
+>
+> The reproducer and .config files are here.
+> https://gist.github.com/shuangpengbai/f5b15c099e80897486b4238ddb91df79
+>
+> I'm happy to test debug patches or provide additional information.
 
-On 6/13/2026 3:52 AM, Rob Herring wrote:
-> Looks like this was missed, so I applied it. Please make sure your 
-> patches are applied. This should have been applied with the driver or 
-> .dts files.
-> 
-> Rob
+It seems that unbinding the dell-smbios-wmi driver races with any outstanding
+file operations on the misc device, causing them to access memory already freed
+by the unbound driver.
 
-Thanks Rob for picking this up.
+I do not know if the misc device synchronizes file operations against removal,
+but i do not think that this is the case. I added the maintains of the char drivers
+to the discussion, maybe they know this.
 
--- 
-Best Regards,
-Anvesh
+Thanks,
+Armin Wolf
 
+>
+> Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
+>
+> [   92.502430][ T8394] BUG: KASAN: slab-use-after-free in _copy_to_user (include/linux/instrumented.h:129 include/linux/uaccess.h:205 lib/usercopy.c:26)
+> [   92.504528][ T8394] Read of size 8 at addr ffff888126eec360 by task dell_smbios_wmi/8394
+> [   92.506899][ T8394] Hardware name: QEMU Ubuntu 24.04 PC v2 (i440FX + PIIX, arch_caps fix, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   92.506905][ T8394] Call Trace:
+> [   92.506914][ T8394]  <TASK>
+> [   92.506919][ T8394]  dump_stack_lvl (lib/dump_stack.c:94 lib/dump_stack.c:120)
+> [   92.506931][ T8394]  print_report (mm/kasan/report.c:378 mm/kasan/report.c:482)
+> [   92.506956][ T8394]  kasan_report (mm/kasan/report.c:595)
+> [   92.506972][ T8394]  kasan_check_range (mm/kasan/generic.c:? mm/kasan/generic.c:200)
+> [   92.506979][ T8394]  _copy_to_user (include/linux/instrumented.h:129 include/linux/uaccess.h:205 lib/usercopy.c:26)
+> [   92.506986][ T8394]  simple_read_from_buffer (include/linux/uaccess.h:236 fs/libfs.c:1155)
+> [   92.506998][ T8394]  vfs_read (fs/read_write.c:572)
+> [   92.507049][ T8394]  ksys_read (fs/read_write.c:717)
+> [   92.507072][ T8394]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
+> [   92.507095][ T8394]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+> [   92.507163][ T8394]  </TASK>
+> [   92.530149][ T8394] Freed by task 8394 on cpu 0 at 92.299564s:
+> [   92.530733][ T8394]  kasan_save_track (mm/kasan/common.c:57 mm/kasan/common.c:78)
+> [   92.531183][ T8394]  kasan_save_free_info (mm/kasan/generic.c:584)
+> [   92.531673][ T8394]  __kasan_slab_free (mm/kasan/common.c:253 mm/kasan/common.c:285)
+> [   92.532133][ T8394]  kfree (include/linux/kasan.h:235 mm/slub.c:2689 mm/slub.c:6251 mm/slub.c:6566)
+> [   92.532509][ T8394]  devres_release_all (drivers/base/devres.c:50 drivers/base/devres.c:547 drivers/base/devres.c:576)
+> [   92.533000][ T8394]  device_release_driver_internal (drivers/base/dd.c:598 drivers/base/dd.c:1357 drivers/base/dd.c:1375)
+> [   92.533574][ T8394]  unbind_store (drivers/base/bus.c:244)
+> [   92.534021][ T8394]  kernfs_fop_write_iter (fs/kernfs/file.c:352)
+> [   92.534531][ T8394]  vfs_write (fs/read_write.c:595 fs/read_write.c:688)
+> [   92.534950][ T8394]  ksys_write (fs/read_write.c:740)
+> [   92.535364][ T8394]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
+> [   92.535811][ T8394]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
+> [   92.536610][ T8394] The buggy address belongs to the object at ffff888126eec300
+> [   92.536610][ T8394]  which belongs to the cache kmalloc-192 of size 192
+> [   92.537941][ T8394] The buggy address is located 96 bytes inside of
+> [   92.537941][ T8394]  freed 192-byte region [ffff888126eec300, ffff888126eec3c0)
+>
+>
+> Best,
+> Shuangpeng
+>
