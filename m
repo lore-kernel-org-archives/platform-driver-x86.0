@@ -1,127 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54AF3168EE;
-	Tue, 16 Jun 2026 12:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E24A364024
+	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781612349; cv=none; b=aew7UL7CU8dE/xDaSbHEE+KoU1+4LV0PL0+1Lf+gQj/z8gnI4eGN9o1m7KArDwpioRSCfXDjK1cXkCcoL00RGspqUKa6Ms7rPT/3QNS1+Gm1VUxdkpaVywTM1WXo2Th/q4u1/BEKdqeK0rSBzfonBdgjIIz+3csLWr1Dw4uKXGI=
+	t=1781620517; cv=none; b=QrrL9+pKmt869ZzsflXpAKkzvPJ97yBmicyh/9gc/QuktxDSzkYkpPu5lY3ligJ0Vkv1r8ttZwRxRleKNQF39MdAKjqcg5P5Gn3tz4gB0Moh4UyTz/m/G4XrAc5OFE63/iuPsdYoBGajiWZesgNHea2d7GO49bAbNlx8RyKCms8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781612349; c=relaxed/simple;
-	bh=BvMGllJkf+OOnbTILPdOgL3Aj4GRyHHnOqZ/2uY7aTo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Jncqzc+k+dkOFL7Wg+RLuIpqKv35Fx9Kp5AN06zlNuboA5iC0d9ME2qGfLw8bBJBsgqKRg1Dax/L0SPAkrtkD8H3qBjKPfwTO7AMllt/OdnAPwadtEB9Dohyo7bb+Tg4TY1VmoR5qTBj3aLf8ERi/3BfLHkiHlsohPdI+99LZ3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hK7nWVIr; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1781620517; c=relaxed/simple;
+	bh=qIKNnZDo8EUGzXo7wgRqCdxxihauVPtsMOheJpNoXq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=crGreIsh7mtrhfReLeRi0Jk1sg+Vm20ecnL9VZXwK0Fk6m9X4MPyu+sbzcFCl44VVQc2UGx1fpoRVLAZ8KqNZn2NFVLRxiFAPrxIhaqgHAKC55Hy3+UcIQ4Ro/fodC/xN7TtMZwLcoU1zuVBVHHXh0MuCbsEYDz0VbKttR3kTFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaS2v88r; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hK7nWVIr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781612348; x=1813148348;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=BvMGllJkf+OOnbTILPdOgL3Aj4GRyHHnOqZ/2uY7aTo=;
-  b=hK7nWVIrrK3UcZxQSh6KcXjP0ISspzOc2pA/5I0l5TBaDIpuwwVdVknB
-   CiYyMw6F5e++RvHYB9vjit0kpa8VzWy6gposrLtXhCVqGB3TdibwG75qr
-   vEv3TdpaoqerIM648rZUszxnt4gPo967IqujSFwDDDAoKmxP42Qr6X9bJ
-   spx7QcYZNn7oN2Fw87815FZ/M/AF0ZJ3p3gaJKL6uDNFbN8aiw4QFqXdS
-   tpot2SYdBSckIZmmI/s8IR/FdCK1uYyH9ItnVYp+sIxnfLUc6+mVkLDc2
-   pzJACOmyeJ2YQe+W9sXGjjU1uHrG8R61D09ZTpZq2Km5gOXCBF4F792is
-   Q==;
-X-CSE-ConnectionGUID: /V89sdw0T0e4Hx83WHBIlg==
-X-CSE-MsgGUID: oJm06DfASgell/TRnfzgNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93862581"
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="93862581"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 05:19:07 -0700
-X-CSE-ConnectionGUID: ObQzzPfHRquLf+hQUdxyNA==
-X-CSE-MsgGUID: FlIxF7UkQ5y3ogJ6hDp8tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
-   d="scan'208";a="247820463"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.171])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 05:19:06 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 16 Jun 2026 15:19:01 +0300 (EEST)
-To: "M K, Muralidhara" <muralimk@amd.com>
-cc: Muralidhara M K <muralidhara.mk@amd.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] platform/x86/amd/hsmp: Harden ACPI probe, metric
- DRAM, and socket teardown
-In-Reply-To: <8b8ab5dd-3f9c-4f1e-b853-97c381c885da@amd.com>
-Message-ID: <eb609912-1c42-6354-22e6-5ffd1f097e9f@linux.intel.com>
-References: <20260613191755.2358969-1-muralidhara.mk@amd.com> <8b8ab5dd-3f9c-4f1e-b853-97c381c885da@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaS2v88r"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-8ce9df49c5fso71713256d6.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 07:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781620515; x=1782225315; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mmq/QimsdhEtIpRxf4UbhGsrfIFEnRT43zk1gpvst3Y=;
+        b=iaS2v88r4gLEWzd5RJUb1AjkGL0b91Z5L7Q1Fb2OrvoUeT3zCXSXAjDPQBWWpDSCYX
+         LzPRB5+r8ii7PZf7VrOkIdEndOvYwy2aAY3jc/NaIF7dS0dywV8cpd0Z05kNLv5lC1Ij
+         9WHBVz/oUi0f1cjtPCe0EmLIQ0OXDhvAGhiPKRKz3AYyVKoZZS1GtXzMmjH6BJzeoMW3
+         51Wce8h1MBvhIuFDGHlpevZlQ2IGejaPE+QnUfEnlUABInu0wzKeOj0MTtzah0MyCSww
+         +fROgMkKq/sUg98U/z0do7sVWyX3AGC+8Mkor4VkezlyXcPtPZYBuJS29IE44WapakKP
+         qWIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781620515; x=1782225315;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mmq/QimsdhEtIpRxf4UbhGsrfIFEnRT43zk1gpvst3Y=;
+        b=PNKPQlVik1J910R0ArAXeWf7WgVPlHQHmeRvI3T+w/g8qzYK8w3bCA5ZQdAf6BwvuH
+         mB4LiKVCrhdya1TsqwsytlYrFyseqIspdprnV+nSY5n+zRvT5ecZL8tLjPrzdscsXoOM
+         VuNWfmzM6fB0qCmseIv84G7yq29mmWNzU9zoTIgtUSbPfXLpG57XUssf0Fiib0kYHkRm
+         K9Hs9bb86bzdaJYlaOV6LnL7EjvcawFJftTVlUXhWUPrvJ1o3iSfMi277nOIGj/XNHXU
+         pIpBpX/Pv5enI5V/frLt56VTBszA0E7AkGiT7L9WgUqvbI0VHEes0C39oxtZUEBz4f34
+         8s+Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8Cfib2+xabbT+tHcqahxkOBgE2d6mdvjx8Y3g/O31e+glB6BOjunvgr9AxQn5sgQ2Jt+iF+7pgs4e3wC0LMmKl2rAX@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHg2iYdspchzxC+L+OwYTIiUKPpbXs0Gyjx3mt/SqPIDvpkzle
+	DWsL92NpzqmQvjHri6cl++yVEFLiyKnKwBfY3RUglN2w+sJXblH9R3bpS8fzT7SD
+X-Gm-Gg: Acq92OFq5/0J2pzD5nUzMOjj7gTAs/p2ZnrZkEpt2F5StPQ5lUSTodSA2dIJO8ZfVlG
+	eofslt+Q1CI4etqyFucMkfb4sg5H3k1koZ4RRCVb/aPJD4FuUNx859czm6+qj4fIUlBC1Ng5iBO
+	32Uka/7ZvxFa2di+kzRDZ9EvKBmFbyaY10RmCoYG4iIi+AGMyv7sAUAoZYKGK7D8Rj7rOrGHc2F
+	8GzWmrjy8s+gQwuQwKnsaAQZ8vaW8a+491SIwK68RaMjkuvj3CucfGsGOGIwdG0F3jHXiP/eva2
+	+ZYRfNrC6nKSPdoZxA6NoCbCf6CanO+36HcmHevozzM/3fMwPyYmclt4yoh0V6ik/gRiol59sIK
+	I+GfiKyefbYB0pSE70GR/uo7sLe6VvaWaMESko4ymbKriEWLiBcWe01W/yEhuEev+f7X+DTiYTL
+	aksl01uNLVB8kmZLaZOhfaaIou1S2H/VXrgNC1JqvlVyJ4E8IJorCn+tT2RDBvbC76iY5W
+X-Received: by 2002:ac8:5916:0:b0:50e:635b:5579 with SMTP id d75a77b69052e-5195351925dmr222413111cf.19.1781620514735;
+        Tue, 16 Jun 2026 07:35:14 -0700 (PDT)
+Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7a3c4asm141855521cf.14.2026.06.16.07.35.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2026 07:35:14 -0700 (PDT)
+From: Dave Carey <carvsdriver@gmail.com>
+To: W_Armin@gmx.de,
+	platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	Dave Carey <carvsdriver@gmail.com>
+Subject: [PATCH v9 0/2] platform/x86/lenovo: Yoga Book 9 keyboard dock detection
+Date: Tue, 16 Jun 2026 10:35:06 -0400
+Message-ID: <20260616143508.124122-1-carvsdriver@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260610155340.342949-1-carvsdriver@gmail.com>
+References: <20260610155340.342949-1-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Tue, 16 Jun 2026, M K, Muralidhara wrote:
+Hi Armin,
 
-> Hi Ilpo,
-> Could you please check and review.
+Thank you for the v8 review.  All nine items are addressed in v9:
 
-Hi,
+  - Added struct lenovo_feature_status { __le32 id; __le32 status; } __packed;
+    and used it for size calculations and field access via le32_to_cpu().
+  - Added ID verification: return -EIO if le32_to_cpu(fs->id) != 0x00060000.
+  - Dropped the error message from yb9_kbdock_query(); returning the error
+    code is sufficient.
+  - Replaced the global struct + mutex with a BLOCKING_NOTIFIER_HEAD at
+    module scope.  The event driver fires the chain from .notify_new(); the
+    block driver registers a notifier_block and owns the input_dev in its
+    per-device private struct.  No global state, no mutex.
+  - Switched from .notify() to .notify_new() to receive a pre-parsed
+    wmi_buffer directly.
+  - Marked yb9_kbdock_attrs[] and the attribute pointer as const.
+  - Moved dmi_check_system() to yb9_kbdock_init(); DMI table is now
+    __initconst.
+  - Used le32_to_cpu(fs->status) directly (BKBD is zero-extended to 32 bits
+    by ACPI); removed BKBD_FIELD masking and the BKBD_TOP_HALF /
+    BKBD_BOTTOM_HALF constants (not needed by driver logic).
+  - Dropped #include <linux/bitfield.h>, <linux/bits.h>, and <linux/mutex.h>
+    (no longer needed); added #include <linux/notifier.h>.
 
-Please wait at least 2 weeks before inquiring about any series. And in 
-any case, if the series is still listed in the platform drivers patchwork 
-queue I'll eventually get to it (it won't be forgotten as long as it
-appears in the patchwork).
+Patch 1/2 (lenovo-ymc) is unchanged from v8, with Hans de Goede's
+Reviewed-by tag added.
 
-In the meantime, you may want to check if sashiko.dev has found something 
-that should be corrected. As sashiko is AI, it isn't always right so keep 
-that in mind while reading it's findings. You don't need to address 
-"pre-existing issue" reports sashiko gives nor defend against any of its 
-findings unless a seasoned reviewer agrees with sashiko.
+Tested on Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
 
--- 
- i.
+Dave Carey (2):
+  platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
+  platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
 
-> On 6/14/2026 12:47 AM, Muralidhara M K wrote:
-> > This series tightens concurrency and lifetime management in the ACPI-backed
-> > AMD HSMP platform path so probe/remove races cannot corrupt global probe
-> > state,
-> > leak metric-table DRAM mappings, or tear down shared resources while readers
-> > might still be active.
-> > 
-> > Patch 1 introduces a dedicated probe mutex around ACPI probe, remove, and
-> > init_acpi(), replacing ad-hoc synchronization on the global is_probed
-> > handshake.
-> > lockdep_assert_held() documents the locking contract for init_acpi().
-> > 
-> > Patch 2 switches metric table DRAM from devm_ioremap() to ioremap() with
-> > explicit init/teardown helpers, and embeds a per-socket mutex for metric
-> > reads.
-> > The legacy platform driver wires the same helpers so non-ACPI builds stay
-> > consistent.
-> > 
-> > Patch 3 replaces the global is_probed flag with miscdevice registration
-> > state,
-> > refcounts ACPI socket platform devices with kref, and runs coordinated
-> > release
-> > on the final put: misc deregistration when appropriate, metric unmap, and
-> > socket
-> > array free. Socket storage uses kcalloc() with careful failure cleanup
-> > before
-> > any kref is published.
-> > 
-> > Muralidhara M K (3):
-> >    platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
-> >      mutex
-> >    platform/x86/amd/hsmp: Add explicit metric DRAM mapping and per-socket
-> >      mutexes
-> >    platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
-> >      release
-> > 
-> >   drivers/platform/x86/amd/hsmp/acpi.c | 87 +++++++++++++++++++++++-----
-> >   drivers/platform/x86/amd/hsmp/hsmp.c | 38 +++++++++++-
-> >   drivers/platform/x86/amd/hsmp/hsmp.h |  9 ++-
-> >   drivers/platform/x86/amd/hsmp/plat.c |  3 +
-> >   4 files changed, 119 insertions(+), 18 deletions(-)
-> > 
-> 
+ Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock |  19 ++
+ MAINTAINERS                                                |   7 +
+ drivers/platform/x86/lenovo/Kconfig                       |  14 +
+ drivers/platform/x86/lenovo/Makefile                      |   1 +
+ drivers/platform/x86/lenovo/yb9-kbdock.c                  | 310 ++++++++++++++++++
+ drivers/platform/x86/lenovo/ymc.c                         |  19 ++
+ 6 files changed, 370 insertions(+)
+
+--
+2.54.0
