@@ -1,128 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3360C421890
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 09:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54AF3168EE;
+	Tue, 16 Jun 2026 12:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781603508; cv=none; b=TPYhre0VmTLVSarD+6q30UeSI+KpWz4SIB0NMchzYLfuzsAUifU3CeVn1UNisLsTfOIcYEmgeuU0wwbM8fH1rI98t40QN3c9Rrl3nUJrN5tcKwvs0MPagj8bIpqirimfpCIK8zFEEXmaDzkKujLWJfgUaPG3A7fzA2Gv/VOhJ+Q=
+	t=1781612349; cv=none; b=aew7UL7CU8dE/xDaSbHEE+KoU1+4LV0PL0+1Lf+gQj/z8gnI4eGN9o1m7KArDwpioRSCfXDjK1cXkCcoL00RGspqUKa6Ms7rPT/3QNS1+Gm1VUxdkpaVywTM1WXo2Th/q4u1/BEKdqeK0rSBzfonBdgjIIz+3csLWr1Dw4uKXGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781603508; c=relaxed/simple;
-	bh=rKN6Dquf9JjEmoiOojbev5G9ca2XqPvpxKtiKVWHsuA=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R6en2O841/EaQFFjIIbhjvIj88+9q+oTgXrS6mNXEWOatR8BOXNmM+6P6EIfiGnNEkIXig/t2GpXqh65hSf7KCG0xshZ19d+t2cIvmu01ivtDu5fSu9ps3GlZzBSQfmKR6DH1lLW16V19AgdHjnWUN9viyglchBtbu6o93oOT2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F88UFqux; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781612349; c=relaxed/simple;
+	bh=BvMGllJkf+OOnbTILPdOgL3Aj4GRyHHnOqZ/2uY7aTo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Jncqzc+k+dkOFL7Wg+RLuIpqKv35Fx9Kp5AN06zlNuboA5iC0d9ME2qGfLw8bBJBsgqKRg1Dax/L0SPAkrtkD8H3qBjKPfwTO7AMllt/OdnAPwadtEB9Dohyo7bb+Tg4TY1VmoR5qTBj3aLf8ERi/3BfLHkiHlsohPdI+99LZ3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hK7nWVIr; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F88UFqux"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3DD1F00AC4
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 09:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781603507;
-	bh=rKN6Dquf9JjEmoiOojbev5G9ca2XqPvpxKtiKVWHsuA=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=F88UFquxP6GLTDnZndksxQH93yb7LMcZiAKfOmWMrZWnPbMsihpEeRj3B3ypIx14N
-	 epvt/Fduq7ggo+VV9WejL+g7Sr8uUgpEwhUghrJOHV2dDu2cJpMGZAwcafnTN6Kwbp
-	 a15VxT0oN1UFkqIjBTBPuz+ANyeGrSPc9cwc/Ba8wgMItVhAx1/RhWdSYi9MNN5EZL
-	 /pngyeY6RoI0nwh7Z3R16ElAujbM26xlreosWrdgb2Uz0O09Yj8qqnp6vFlSetlLKF
-	 BXjILI+uuZq84yMv33tltQiFi5KpHo5Cw4g55Nz/0ylLV1OUjYGEAN3Ht6BNupLR3T
-	 h4rEOtybtCu8w==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5aa68cf03bfso5070073e87.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 02:51:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8vyxoWPIktY79lziBNZiqeAN0zcDiPei6FsyHh1dw3wwBW0PmseaDBbXINWxqXBCW8J3LQY2/u8Sj7e50mHTQH4Re4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWxziu77nxob8eSSnlhH+xOog5CRfXNKvexSGT0VjerLBmCgUZ
-	DdgGmKMxgtNnKYTt9kWK6NDZTJuVxh6bF/LWUEGomDFkovbb3j4/1EHcbG/2x6V09mf19PW422q
-	znvMNujtNkgOOm5VUohSXoJ0B7l/6b6v0nqeNRJ280g==
-X-Received: by 2002:ac2:5597:0:b0:5aa:6aac:3f7f with SMTP id
- 2adb3069b0e04-5ad4277bed7mr670959e87.22.1781603505619; Tue, 16 Jun 2026
- 02:51:45 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 05:51:44 -0400
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 16 Jun 2026 05:51:43 -0400
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <ajEcDq0S067wMFaK@black.igk.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hK7nWVIr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781612348; x=1813148348;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=BvMGllJkf+OOnbTILPdOgL3Aj4GRyHHnOqZ/2uY7aTo=;
+  b=hK7nWVIrrK3UcZxQSh6KcXjP0ISspzOc2pA/5I0l5TBaDIpuwwVdVknB
+   CiYyMw6F5e++RvHYB9vjit0kpa8VzWy6gposrLtXhCVqGB3TdibwG75qr
+   vEv3TdpaoqerIM648rZUszxnt4gPo967IqujSFwDDDAoKmxP42Qr6X9bJ
+   spx7QcYZNn7oN2Fw87815FZ/M/AF0ZJ3p3gaJKL6uDNFbN8aiw4QFqXdS
+   tpot2SYdBSckIZmmI/s8IR/FdCK1uYyH9ItnVYp+sIxnfLUc6+mVkLDc2
+   pzJACOmyeJ2YQe+W9sXGjjU1uHrG8R61D09ZTpZq2Km5gOXCBF4F792is
+   Q==;
+X-CSE-ConnectionGUID: /V89sdw0T0e4Hx83WHBIlg==
+X-CSE-MsgGUID: oJm06DfASgell/TRnfzgNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11818"; a="93862581"
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="93862581"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 05:19:07 -0700
+X-CSE-ConnectionGUID: ObQzzPfHRquLf+hQUdxyNA==
+X-CSE-MsgGUID: FlIxF7UkQ5y3ogJ6hDp8tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="247820463"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.171])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 05:19:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 16 Jun 2026 15:19:01 +0300 (EEST)
+To: "M K, Muralidhara" <muralimk@amd.com>
+cc: Muralidhara M K <muralidhara.mk@amd.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] platform/x86/amd/hsmp: Harden ACPI probe, metric
+ DRAM, and socket teardown
+In-Reply-To: <8b8ab5dd-3f9c-4f1e-b853-97c381c885da@amd.com>
+Message-ID: <eb609912-1c42-6354-22e6-5ffd1f097e9f@linux.intel.com>
+References: <20260613191755.2358969-1-muralidhara.mk@amd.com> <8b8ab5dd-3f9c-4f1e-b853-97c381c885da@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260521-pdev-fwnode-ref-v1-0-88c324a1b8d2@oss.qualcomm.com>
- <20260521-pdev-fwnode-ref-v1-7-88c324a1b8d2@oss.qualcomm.com>
- <ah9OIVyrHEhcMHzN@ashevche-desk.local> <CAMRc=McLN9Ovoqo3om-3uC=q+=rcKCoiWMctC=yvwiaHacU0PQ@mail.gmail.com>
- <ajEcDq0S067wMFaK@black.igk.intel.com>
-Date: Tue, 16 Jun 2026 05:51:43 -0400
-X-Gmail-Original-Message-ID: <CAMRc=MfY3k4a9KdPE-4pmMUEH4KADYaO8ZY+Md9sMzgFr0-s9A@mail.gmail.com>
-X-Gm-Features: AVVi8Ccfi9fNZx5anc5Hh9w27iqbKs4Mv-ef0kQk9lnbNaF9SR74KH4RoJVGW8U
-Message-ID: <CAMRc=MfY3k4a9KdPE-4pmMUEH4KADYaO8ZY+Md9sMzgFr0-s9A@mail.gmail.com>
-Subject: Re: [PATCH 07/23] driver core: platform: provide platform_device_set_fwnode()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, 
-	Thierry Reding <thierry.reding@avionic-design.de>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Srinivas Kandagatla <srini@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
-	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>, 
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-sound@vger.kernel.org, driver-core@lists.linux.dev, 
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-i2c@vger.kernel.org, iommu@lists.linux.dev, linux-pm@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Bartosz Golaszewski <brgl@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 16 Jun 2026 11:49:02 +0200, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> said:
-> On Thu, Jun 04, 2026 at 05:32:27AM -0700, Bartosz Golaszewski wrote:
->> On Tue, 2 Jun 2026 23:41:53 +0200, Andy Shevchenko
->> <andriy.shevchenko@linux.intel.com> said:
->> > On Thu, May 21, 2026 at 10:36:30AM +0200, Bartosz Golaszewski wrote:
->> >> Provide a helper function encapsulating the logic of assigning firmware
->> >> nodes to platform devices created with platform_device_alloc(). Make the
->> >> kerneldoc state that this is the proper interface for assigning firmware
->> >> nodes to dynamically allocated platform devices. This will allow us to
->> >> switch to counting the references of the device's firmware nodes in the
->> >> future, not only the OF nodes.
->> >
->> > But why different for of_node and fwnode to begin with?!
->>
->> I'm not following. What are you suggesting?
->
-> After re-reading of this thread, I think I'm suggesting the same what you have
-> in plans to do in the future as you put it as "This will allow us to switch to
-> counting the references of the device's firmware nodes in the future, not only
-> the OF nodes."
->
-> // Offtopic
-> I haven't heard from you for more than a month on this:
-> https://lore.kernel.org/r/af18zdP5HF3_P9Vo@black.igk.intel.com
-> Anything should I do? Please, answer to that thread.
->
+On Tue, 16 Jun 2026, M K, Muralidhara wrote:
 
-Eek, sorry, must have flown under the radar.
+> Hi Ilpo,
+> Could you please check and review.
 
-I'll pull it now, I will do a second PR for this merge window anyway.
+Hi,
 
-Bart
+Please wait at least 2 weeks before inquiring about any series. And in 
+any case, if the series is still listed in the platform drivers patchwork 
+queue I'll eventually get to it (it won't be forgotten as long as it
+appears in the patchwork).
+
+In the meantime, you may want to check if sashiko.dev has found something 
+that should be corrected. As sashiko is AI, it isn't always right so keep 
+that in mind while reading it's findings. You don't need to address 
+"pre-existing issue" reports sashiko gives nor defend against any of its 
+findings unless a seasoned reviewer agrees with sashiko.
+
+-- 
+ i.
+
+> On 6/14/2026 12:47 AM, Muralidhara M K wrote:
+> > This series tightens concurrency and lifetime management in the ACPI-backed
+> > AMD HSMP platform path so probe/remove races cannot corrupt global probe
+> > state,
+> > leak metric-table DRAM mappings, or tear down shared resources while readers
+> > might still be active.
+> > 
+> > Patch 1 introduces a dedicated probe mutex around ACPI probe, remove, and
+> > init_acpi(), replacing ad-hoc synchronization on the global is_probed
+> > handshake.
+> > lockdep_assert_held() documents the locking contract for init_acpi().
+> > 
+> > Patch 2 switches metric table DRAM from devm_ioremap() to ioremap() with
+> > explicit init/teardown helpers, and embeds a per-socket mutex for metric
+> > reads.
+> > The legacy platform driver wires the same helpers so non-ACPI builds stay
+> > consistent.
+> > 
+> > Patch 3 replaces the global is_probed flag with miscdevice registration
+> > state,
+> > refcounts ACPI socket platform devices with kref, and runs coordinated
+> > release
+> > on the final put: misc deregistration when appropriate, metric unmap, and
+> > socket
+> > array free. Socket storage uses kcalloc() with careful failure cleanup
+> > before
+> > any kref is published.
+> > 
+> > Muralidhara M K (3):
+> >    platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
+> >      mutex
+> >    platform/x86/amd/hsmp: Add explicit metric DRAM mapping and per-socket
+> >      mutexes
+> >    platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+> >      release
+> > 
+> >   drivers/platform/x86/amd/hsmp/acpi.c | 87 +++++++++++++++++++++++-----
+> >   drivers/platform/x86/amd/hsmp/hsmp.c | 38 +++++++++++-
+> >   drivers/platform/x86/amd/hsmp/hsmp.h |  9 ++-
+> >   drivers/platform/x86/amd/hsmp/plat.c |  3 +
+> >   4 files changed, 119 insertions(+), 18 deletions(-)
+> > 
+> 
