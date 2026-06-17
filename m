@@ -1,120 +1,108 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2273C13E2;
-	Wed, 17 Jun 2026 11:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8ED4BC008;
+	Wed, 17 Jun 2026 15:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781695462; cv=none; b=AtqGp9eLE+uAgE6D6VrLjgqWsZIE1SqDKhpwdOazCsA28HQI8wk9HRKdIQ1rJ5RGgw1/X60voeD7GduSAaqI2FpDxb7c33Awr6XxxWXPnQ99IflN4WG+R1kqSXojRxiiO0sdAbZEpOJaHMxrKGWeoxPjMPKJHlBfWpRSCiSMXdk=
+	t=1781711499; cv=none; b=KeLM22TAijnvh8UW2SJ1HWjRzDykGUiDIw6MAc4bZHD65gpoEarhzJ92MOJlJ+JvZfHF+LJWVfWufuUwrsxo31Cg9t/sJxibbQ0KtM0G+y1kQBn6Q3nWXdyBAff5miCnnW0HqIulIG7C/CPXY40YiyaxceaartcDzm5mAhSft1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781695462; c=relaxed/simple;
-	bh=kJznhAsAIoUPplZeSBc53gfszz7QFOud6uyzz8FYHLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXawt3AcSZ4XnIpbCLxzk2j8S3k46IrDWOCKbX1sHstCe9ZnnzSy+KrjfjwiWHo2B/aqhunjxPpl0YjLCHLzZ4a3yhsozRs0jPlPYMaIsXBzjBWAcrXKjCcIyQdHGPTDIcg18N3NTIbiKEbaupfXmDGwKz3+MGJV4QISV2VI+N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=QQDlkgfj; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1781711499; c=relaxed/simple;
+	bh=PlssXmDM3WJDuWNa0MZRKxNi42W1bvTJ8Sp12KrZi+k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/1FvK/XW6/94H7SviSxr5p2P/BI0C0T24G2OwXFQkuB5vw395Y4wOox3+0eS9o9QTor/WQz3dgYrZyghRB9FBaXkt8HEQLcZkuTCWG1f7xg07OIpL5lXcFoxHffxW/3BuOjFFbMW27zlcWTdr3Vij735HMT0tkDWYIveXmxdC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VGNBYl9O; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="QQDlkgfj"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ggM1s2l5qz9t1H;
-	Wed, 17 Jun 2026 13:24:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1781695441;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0DwUTq2rLnB3z9n23jFo4+tRKz4woW730QVRFw/7ngQ=;
-	b=QQDlkgfjLuq0b23L76DrNNnzMr69RuAuxPzpbnSehHzZeyKIdHSwGjC8Jq5LXW7Bl8qjyX
-	eGOi2xt0cvGZV/POpBy36oSF4VvLqZ3x8VjBzdis5MTl1x9byFuMNhEIFiP383JV2VsMsv
-	o8J4J5z90+L/ZX9PA35MZmKSpcO8UzoiZrWlaQm2dQRoa5dRblqL4X1E6wJitWxuaqWXoK
-	ZLYcoWAU3exZQs+OgrctL7jf1Gh3ffJ+u6VxnFF2d2l9WdGx8A15gXjPS7uTJ61n22BcXM
-	mHRU/KcigXMjs4HOPOOuKEqqQqlJL6BXdwK4iYG7WfTutrX95OF/k8zzr1pEQg==
-Date: Wed, 17 Jun 2026 13:23:54 +0200
-From: Anthony Ruhier <aruhier@mailbox.org>
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Maya Matuszczyk <maccraft123mc@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Akhil P Oommen <akhilpo@oss.qualcomm.com>, Abel Vesa <abel.vesa@oss.qualcomm.com>, 
-	Gaurav Kohli <gaurav.kohli@oss.qualcomm.com>, Pankaj Patil <pankaj.patil@oss.qualcomm.com>
-Subject: Re: [PATCH v9 0/6] Add driver for EC found on Qualcomm reference
- devices
-Message-ID: <ajKCupui1WILXnxh@tour-anthony.aruhier.fr>
-References: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VGNBYl9O"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 710A7270A5;
+	Wed, 17 Jun 2026 17:51:21 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id Y1bjSKgW-E-h; Wed, 17 Jun 2026 17:51:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1781711480; bh=PlssXmDM3WJDuWNa0MZRKxNi42W1bvTJ8Sp12KrZi+k=;
+	h=From:To:Cc:Subject:Date;
+	b=VGNBYl9OZBdLRgt+GAXuErC075eWjQ+zA4LfSaGuNFkIPHjn0AVEOoQtv1gOwKEhU
+	 Znzn67kKOYbBhG9E/QwJRkqzYX637EAZCnIX3zH7njYGAI6K8GesZqwU7H2D6fH2Ie
+	 X28+yZ/gCl+O6kJyytntKE3CO5jZStNuR6rO6lPjI+c84K6vqHwkJ/e76VS82/15wk
+	 aiduqjBDlAZ+WbfDc97+Sm7O3x3F+aRrSaJytZzXOwBOSU5vhLak6GWZCwtCUfsu+X
+	 vPAUBgaZkU8RPUKyCZJEATya9QGAfxQk2weGSfjukYh39pEZ/9y/hCj1UaiWdPhQ68
+	 yxzLU+OXZiA3w==
+From: Marco Scardovi <scardracs@disroot.org>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: [PATCH] platform/x86: asus-wmi: fix resource leaks on probe failure
+Date: Wed, 17 Jun 2026 17:51:04 +0200
+Message-ID: <20260617155104.10111-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260511-add-driver-for-ec-v9-0-e5437c39b7f8@oss.qualcomm.com>
-X-MBO-RS-ID: b8d4d4c08c8a9ab286f
-X-MBO-RS-META: 8wmtbtcc1pxi9rewx5nkkk1reg86sbyu
+Content-Transfer-Encoding: 8bit
 
-Tested-by: Anthony Ruhier <aruhier@mailbox.org>
+During driver initialization in asus_wmi_add(), various subsystems are
+registered sequentially. However, the error path labels are out of order
+relative to the registration sequence.
 
-Thanks, I tested it on the slim 7x (2024) on which I was previously using the
-first patches from Maya, it works great!
+Specifically:
+1. If asus_wmi_custom_fan_curve_init() fails, the driver jumps to
+   fail_custom_fan_curve. Because this label is placed below fail_sysfs,
+   it bypasses the cleanup calls for the input device and sysfs groups,
+   which were successfully registered before, leaking those resources.
+2. If asus_screenpad_init() fails, the driver jumps to fail_screenpad.
+   Because fail_screenpad is placed below fail_backlight, it bypasses the
+   cleanup calls for backlight and rfkill, leaking those resources.
 
-I confirm that the following works: keyboard backlight shutdowns when
-suspended, led blinks when suspended, keyboard fn shortcuts.
+Fix these resource leaks by reordering the error path labels in
+asus_wmi_add() to match the exact reverse order of the resource
+allocations.
 
-For the Slim 7x, I needed to add the following in the DTS:
-
+Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan curves")
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
 ---
+ drivers/platform/x86/asus-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-index b5247fb91299..423bf7340b83 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-@@ -1070,6 +1070,21 @@ retimer_ss0_con_sbu_out: endpoint {
-        };
- };
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 3c9ef826551d..764caa7e7fba 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -5224,20 +5224,20 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	return 0;
+ 
+ fail_wmi_handler:
++	asus_screenpad_exit(asus);
++fail_screenpad:
+ 	asus_wmi_backlight_exit(asus);
+ fail_backlight:
+ 	asus_wmi_rfkill_exit(asus);
+-fail_screenpad:
+-	asus_screenpad_exit(asus);
+ fail_rfkill:
+ 	asus_wmi_led_exit(asus);
+ fail_leds:
++fail_custom_fan_curve:
+ fail_hwmon:
+ 	asus_wmi_input_exit(asus);
+ fail_input:
+ 	asus_wmi_sysfs_exit(asus->platform_device);
+ fail_sysfs:
+-fail_custom_fan_curve:
+ fail_platform_profile_setup:
+ fail_fan_boost_mode:
+ fail_platform:
+-- 
+2.54.0
 
-+&i2c5 {
-+       clock-frequency = <400000>;
-+       status = "okay";
-+
-+       embedded-controller@76 {
-+               compatible = "qcom,hamoa-crd-ec";
-+               reg = <0x76>;
-+
-+               interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
-+
-+               pinctrl-0 = <&ec_int_n_default>;
-+               pinctrl-names = "default";
-+       };
-+};
-+
- &i2c7 {
-        clock-frequency = <400000>;
-
-@@ -1487,6 +1502,12 @@ reset-n-pins {
-                };
-        };
-
-+       ec_int_n_default: ec-int-n-state {
-+               pins = "gpio66";
-+               function = "gpio";
-+               bias-disable;
-+       };
-+
-        edp_reg_en: edp-reg-en-state {
-                pins = "gpio70";
-                function = "gpio";
-
-
---
-Anthony Ruhier
