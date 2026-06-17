@@ -1,108 +1,216 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8ED4BC008;
-	Wed, 17 Jun 2026 15:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781711499; cv=none; b=KeLM22TAijnvh8UW2SJ1HWjRzDykGUiDIw6MAc4bZHD65gpoEarhzJ92MOJlJ+JvZfHF+LJWVfWufuUwrsxo31Cg9t/sJxibbQ0KtM0G+y1kQBn6Q3nWXdyBAff5miCnnW0HqIulIG7C/CPXY40YiyaxceaartcDzm5mAhSft1E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781711499; c=relaxed/simple;
-	bh=PlssXmDM3WJDuWNa0MZRKxNi42W1bvTJ8Sp12KrZi+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R/1FvK/XW6/94H7SviSxr5p2P/BI0C0T24G2OwXFQkuB5vw395Y4wOox3+0eS9o9QTor/WQz3dgYrZyghRB9FBaXkt8HEQLcZkuTCWG1f7xg07OIpL5lXcFoxHffxW/3BuOjFFbMW27zlcWTdr3Vij735HMT0tkDWYIveXmxdC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=VGNBYl9O; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86B634D90D;
+	Wed, 17 Jun 2026 16:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781714967; cv=pass; b=BmWk78WnYuqp1ttTahQSifGR1vW6469+X+dAKQ2sNCIRJOxJGcyOrhtrHjSHdmguWiqgirHBbOOgzsXYrpe1UaEWn8mZ8yzFBf1y5motrljOUaYIRVo2NumkF64Y4nKddOVm48HYylFzHEQKae4hGC6WdgEeOj5GXcPsISgg9LQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781714967; c=relaxed/simple;
+	bh=wJrT2V58uZc/Aq0rUPLxgR2p99HVHJubA4DSp/4Qw60=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cV2xIMz8EeG3LeWqm2DbUQSRqN+m+7wh8UfKlkeMRRfabOOiTcgpiEmpgCtq7qqkgxOWoxRAJ8TcYC7P2xnzp7izvZK0m/3HLO4E6KziIgN2ulN77rs0e8pL3puyLAKd1QvA07pE6HFc6BC7mcVQ/2OqGWVOzxQiTD/3SST9QQY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=dWKVMjer; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="VGNBYl9O"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 710A7270A5;
-	Wed, 17 Jun 2026 17:51:21 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Y1bjSKgW-E-h; Wed, 17 Jun 2026 17:51:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1781711480; bh=PlssXmDM3WJDuWNa0MZRKxNi42W1bvTJ8Sp12KrZi+k=;
-	h=From:To:Cc:Subject:Date;
-	b=VGNBYl9OZBdLRgt+GAXuErC075eWjQ+zA4LfSaGuNFkIPHjn0AVEOoQtv1gOwKEhU
-	 Znzn67kKOYbBhG9E/QwJRkqzYX637EAZCnIX3zH7njYGAI6K8GesZqwU7H2D6fH2Ie
-	 X28+yZ/gCl+O6kJyytntKE3CO5jZStNuR6rO6lPjI+c84K6vqHwkJ/e76VS82/15wk
-	 aiduqjBDlAZ+WbfDc97+Sm7O3x3F+aRrSaJytZzXOwBOSU5vhLak6GWZCwtCUfsu+X
-	 vPAUBgaZkU8RPUKyCZJEATya9QGAfxQk2weGSfjukYh39pEZ/9y/hCj1UaiWdPhQ68
-	 yxzLU+OXZiA3w==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Marco Scardovi <scardracs@disroot.org>
-Subject: [PATCH] platform/x86: asus-wmi: fix resource leaks on probe failure
-Date: Wed, 17 Jun 2026 17:51:04 +0200
-Message-ID: <20260617155104.10111-1-scardracs@disroot.org>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="dWKVMjer"
+ARC-Seal: i=1; a=rsa-sha256; t=1781714937; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=P8mOydwEyh0KywaCILy0NUtbTEcZ+U+BNMWIgjUWhvxjhWO60j4jP3NdnZX4v2dC+b4YyJbAOnaAHl5s3Vv69Wa0ZmtfAI9rmIrW9dbU007svs/uLbviw+J5YqJJJ4GqR1wTb9hhYwLY/G7pDxs0UN/+NAaRLEkJ9TwugqHgsoM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781714937; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fwzmpldWEM/LsuBOnvQ7xaNSY/XR8WPxTWKCWtjOcPY=; 
+	b=FHQJpJ3bGv34dQ6rPfNntw/w85BodiGMxzMJf11/MsGdc6mrz3mgM7PdPH/QPdKoL8ZnyxRSKU69wKemoFyaQo7s0kEAIHznQ4Xrs31AFA6dYx3e+AWN4ypdH8dMHeXiccWbjSIuVmzB3mA/iuub2waydwUMAErntWtoc5He680=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781714937;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=fwzmpldWEM/LsuBOnvQ7xaNSY/XR8WPxTWKCWtjOcPY=;
+	b=dWKVMjerMlkbfBCVT5/OfNwvSNC6KPlhpvVHEFONGsT0X/RqdJ9150q1tZzrWU/u
+	QqsJ2+mt/swHEH958DQDWwArlRyLOu974T8pRfPh7xPv7DHsWkV/PxCZEZ3jbRsFGQl
+	2VpJWqgg1NeNi0ub40iHw00UvcWxAnRtBoSJwYvBXkz+cw0hK6X2l5Y9/5n5VsIgrtP
+	S6Pi3C2Z2SPqQdm5zL4BttauwBCRkhGVkQtbUpuUVMzGzNA6dSkkz1a28oWRv6ZDYdu
+	KN8CO/Lvh39mwiWO7AJZutwwDixF5ZSS8MiIU181jAECPB99t5jCX874Yg3HcGO08nS
+	V+fOQELCuQ==
+Received: by mx.zohomail.com with SMTPS id 1781714935760514.8858727678053;
+	Wed, 17 Jun 2026 09:48:55 -0700 (PDT)
+From: Rong Zhang <i@rong.moe>
+Subject: [PATCH RFC v2 0/9] leds: Add support for hardware-initiated
+ hardware control trigger transition
+Date: Thu, 18 Jun 2026 00:47:54 +0800
+Message-Id: <20260618-leds-trigger-hw-changed-v2-0-c28c44053cf3@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALrPMmoC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDIzMDUwMz3ZzUlGLdkqLM9PTUIt2Mcl2IqhRdS7NEMyNDC4vkpJQ0JaDugqL
+ UtMwKsMnRSkFuzkqxEMHi0qSs1OQSkJlKtbUA3gfi84AAAAA=
+X-Change-ID: 20260506-leds-trigger-hw-changed-96a62188cbdf
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
+ =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Ike Panhc <ikepanhc@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, 
+ Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, 
+ linux-leds@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ chrome-platform@lists.linux.dev, platform-driver-x86@vger.kernel.org, 
+ Rong Zhang <i@rong.moe>
+X-Mailer: b4 0.16-dev-d5d98
+X-ZohoMailClient: External
 
-During driver initialization in asus_wmi_add(), various subsystems are
-registered sequentially. However, the error path labels are out of order
-relative to the registration sequence.
+Some laptops can tune their keyboard backlight according to ambient
+light sensors (auto mode). This capability is essentially a hardware
+control trigger. Meanwhile, such laptops also offer a shrotcut for
+cycling through brightness levels and auto mode. For example, on
+ThinkBook, pressing Fn+Space cycles keyboard backlight levels in the
+following sequence:
 
-Specifically:
-1. If asus_wmi_custom_fan_curve_init() fails, the driver jumps to
-   fail_custom_fan_curve. Because this label is placed below fail_sysfs,
-   it bypasses the cleanup calls for the input device and sysfs groups,
-   which were successfully registered before, leaking those resources.
-2. If asus_screenpad_init() fails, the driver jumps to fail_screenpad.
-   Because fail_screenpad is placed below fail_backlight, it bypasses the
-   cleanup calls for backlight and rfkill, leaking those resources.
+  1 => 2 => 0 => auto => 1 ...
 
-Fix these resource leaks by reordering the error path labels in
-asus_wmi_add() to match the exact reverse order of the resource
-allocations.
+Recent ThinkPad models should have similar sequence too.
 
-Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan curves")
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+However, there are some issues preventing us from using a private
+hardware control trigger:
+
+1. We want a mechanism to tell userspace which trigger is the hardware
+   control one, so that userspace can determine if auto mode is on/off,
+   as well as turing it on/off programmatically without obtaining the
+   trigger's name via other channels
+2. Turing on/off auto mode via the shortcut cannot activate/deactivate
+   the corresponding hardware control trigger, making the software state
+   out of sync
+3. Even with #1 resolved, deactivating the hardware control trigger has
+   a side effect of emitting LED_OFF, breaking the shortcut cycle, where
+   "auto => 1" requires the driver to deactivate the trigger
+
+This RFC series tries to demonstrate a path on solving these issues:
+
+- Introduce an attribute "trigger_may_offload", so that userspace can
+  determine:
+  - if the LED device supports hardware control (supported => visible)
+  - which trigger is the hardware control trigger selected by the LED
+    device
+  - if the trigger is selected ("<foo_trigger>")
+  - if the trigger is offloaded ("[foo_trigger]")
+    - A callback offloaded() is added so that LED triggers can report
+      their hardware control state
+- Add led_trigger_notify_hw_control_changed() interface, so that LED
+  drivers can notify the LED core about hardware-initiated hardware
+  control transitions. The LED core will then determine if the
+  transition is allowed and switching between "none" (i.e., no trigger)
+  and the device's private trigger accordingly
+  - This capability is restricted to the device's private trigger. If
+    the current trigger is neither the private trigger nor "none", no
+    transition will be made
+  - This interface is gated behind Kconfig LEDS_TRIGGERS_HW_CHANGED and
+    LED device flag LED_TRIG_HW_CHANGED
+- Tune the logic of trigger deactivation so that it won't emit LED_OFF
+  when the deactivation is triggered by hardware
+
+The last three patches are included in the RFC series to demonstrate how
+to these interfaces are supposed to be utilized, so that ideapad-laptop
+can expose the auto mode of ThinkBook's keyboard backlight. They can be
+submitted separately once the dust settles, if preferred.
+
+[ Summary of other approaches ]
+
+< custom attribute >
+
+Pros:
+- simplicity, KISS
+- no need to touch the LED core
+- extensible as long as it has a sensor-neutral name
+  - a sensor-related name could potentially lead to a mess if a future
+    device implements auto mode based on multiple different sensors
+
+Cons:
+- must have zero influence on brightness_set[_blocking] callbacks
+  in order not to break triggers
+  - potential interference with triggers and the brightness attribute
+- weird semantic (an attribute other than "brightness" and "trigger"
+  changes the brightness)
+
+< private hardware control trigger (this series) >
+
+Pros:
+- mutually exclusive with other triggers (hence less chaos)
+- semantic correctness
+- acts as an aggregate switch to turn on/off auto mode even a future
+  device implements auto mode based on multiple different sensors
+  - extensibility (through trigger attributes)
+
+Cons:
+- complexity
+
+[ Previous discussion threads ]
+
+https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastmail.com
+https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@rong.moe
+
+Signed-off-by: Rong Zhang <i@rong.moe>
 ---
- drivers/platform/x86/asus-wmi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v2:
+- Restrict the led_trigger_notify_hw_control_changed() interface to
+  private triggers only
+  - Drop PATCH v1 1/9 ("leds: Load trigger modules on-demand if used as
+    hw control trigger"), not relavant any more
+- Gate the led_trigger_notify_hw_control_changed() interface behind
+  Kconfig LEDS_TRIGGERS_HW_CHANGED and LED device flag
+  LED_TRIG_HW_CHANGED
+- Fix lock ordering inversion
+- ideapad-laptop:
+  - Only call led_trigger_notify_hw_control_changed() when needed
+  - Serialize keyboard backlight notifications
+- Reword commit messages and documentations
+- Link to v1: https://patch.msgid.link/20260227190617.271388-1-i@rong.moe
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 3c9ef826551d..764caa7e7fba 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -5224,20 +5224,20 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	return 0;
- 
- fail_wmi_handler:
-+	asus_screenpad_exit(asus);
-+fail_screenpad:
- 	asus_wmi_backlight_exit(asus);
- fail_backlight:
- 	asus_wmi_rfkill_exit(asus);
--fail_screenpad:
--	asus_screenpad_exit(asus);
- fail_rfkill:
- 	asus_wmi_led_exit(asus);
- fail_leds:
-+fail_custom_fan_curve:
- fail_hwmon:
- 	asus_wmi_input_exit(asus);
- fail_input:
- 	asus_wmi_sysfs_exit(asus->platform_device);
- fail_sysfs:
--fail_custom_fan_curve:
- fail_platform_profile_setup:
- fail_fan_boost_mode:
- fail_platform:
--- 
-2.54.0
+---
+Rong Zhang (9):
+      leds: Add callback offloaded() to query the state of hardware control trigger
+      leds: cros_ec: Implement offloaded() callback for trigger
+      leds: turris-omnia: Implement offloaded() callback for trigger
+      leds: trigger: netdev: Implement offloaded() callback
+      leds: Add trigger_may_offload attribute
+      leds: trigger: Add led_trigger_notify_hw_control_changed() interface
+      platform/x86: ideapad-laptop: Decouple hardware & classdev brightness for keyboard backlight
+      platform/x86: ideapad-laptop: Serialize keyboard backlight notifications
+      platform/x86: ideapad-laptop: Fully support auto keyboard backlight
+
+ .../ABI/obsolete/sysfs-class-led-trigger-netdev    |  16 ++
+ Documentation/ABI/testing/sysfs-class-led          |  22 +++
+ .../ABI/testing/sysfs-class-led-trigger-netdev     |  13 --
+ Documentation/leds/leds-class.rst                  |  74 +++++++
+ drivers/leds/led-class.c                           |  23 +++
+ drivers/leds/led-triggers.c                        | 131 +++++++++++-
+ drivers/leds/leds-cros_ec.c                        |   6 +
+ drivers/leds/leds-turris-omnia.c                   |   7 +
+ drivers/leds/leds.h                                |   2 +
+ drivers/leds/trigger/Kconfig                       |   9 +
+ drivers/leds/trigger/ledtrig-netdev.c              |  10 +
+ drivers/platform/x86/lenovo/Kconfig                |   1 +
+ drivers/platform/x86/lenovo/ideapad-laptop.c       | 219 ++++++++++++++++-----
+ include/linux/leds.h                               |   9 +
+ 14 files changed, 481 insertions(+), 61 deletions(-)
+---
+base-commit: 66affa37cfac0aec061cc4bcf4a065b0c52f7e19
+change-id: 20260506-leds-trigger-hw-changed-96a62188cbdf
+
+Thanks,
+Rong
 
