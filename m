@@ -1,543 +1,175 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC603624B3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 14:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18F839D3F1;
+	Wed, 17 Jun 2026 09:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781620519; cv=none; b=HP+N6i4/ej3EGxSAr6o3/lwrESde1r/P3Oa35/5EOFY8SPnxjLCBEFHV2cAw2vLkaz2YcraZHIzUoS3EReihKgJMMvwdH/OLG/XdieryMa6oxbwN4f4NkJRYXy8Olp9JrGSkyshWLhxLJ2ic+m9yVSxUee8qxeZJGP16dhNz86Q=
+	t=1781687227; cv=none; b=lHJudC9E0MhvnwWnb01y8V0fQ6HnPfTZmTMyWHoI4kyu/FdMCrOLs6aH7N5l1JNbAjTrCAzzX2NuIR9xxbCT0/jw3gk1bixLVzmiNeV1fZdrepRx9saziDGN8clr4dIjqb+YUty3YKGi3LNIjwqnaNPhpR1P7+QtI05jLjTXjUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781620519; c=relaxed/simple;
-	bh=6C3ANMP+mzDQjvI3eSuDFsG2lP4XZd+jqj4p7irPccA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m+ZwPgZfkVtwajyfu+F/N3obvUKOUWFtrdM0BLNb0cmkOShRd2y3FxM+zZUkWjpwRZ1V8xlx1Yilzk3F9EK/E/Ki0ki+DIKsWChsbe6k2h9PvUbt18h04tCtyYSI5F1BT4kuFWuIja7y9V3b5nC5BwmaoP1op9ZP5AjnZOGybyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXBhTd7i; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781687227; c=relaxed/simple;
+	bh=zGPKYIwbCEQwW8h8an7tlnoCrxZzg4+8UQlWu+a4cAg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=vDZmlcBlYItUsomiB+mSqZdJYlUVrGwG63glJjcrprwdt8kAC4v8sO7KqOqg/x/OurbyDdIiiC95tQXNZq5jhbMdAxs1olAHh1YYjF5yq9Vt96iUfmEulf31khLge3vh98rw0W4Vy3QtkXges6++FN5rCaL3XUhR0uQ0Nvo1ygw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=fETtJl5S; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXBhTd7i"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-5176a2fd597so42735611cf.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Jun 2026 07:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781620517; x=1782225317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xm9j2vZyCtUCCHe6kd4kvUsAYrvf/1Hy2l5em8F5zK8=;
-        b=MXBhTd7iwMdOSWG54ijzio2CjOIZPCe67uXzm7phdH/qheoJ1F/crADW4zHNtmbFjB
-         rRLgSeiPQHY2uQjS9p2Ny/PI9L7AgwDHxoEhOz1xtVpGDc2dpZaWXJGcig33gNT9sgT0
-         KNLti0uRCLMoQsOM2XLKZV1f1/eJMD8LLsRgyOz3/q+X+Rh6ev6cibgntbGJCQMiyUAN
-         UbVAdEcZ8YQqtagbYHAaKlp/AO6IFIRPJ9+MNiEDeT7So8PLYbAQ2xB/gSPYDPCjq3S1
-         /HPCoYbHwlXd0Uc4rtkNu/+tkncNDO7gyBJmvdoD3HoYqYnJWO2eQaQCTeK83aMAboSG
-         N8jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781620517; x=1782225317;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Xm9j2vZyCtUCCHe6kd4kvUsAYrvf/1Hy2l5em8F5zK8=;
-        b=TsNpDit14Eni6sYfZpwwitucan9e5vxR+07RVkBFXGt2lE2dFusWKaOzX83/IpTvLe
-         5ETwpcwPW6lyqQQESrS20p9kWZ/kd533QbbIuHbEpt57XbejXJz2pcF97SU/pZlUfpz0
-         LVRhdG50kcKF17Wh/lcD8GgDg69q9CJ9OjRuKeDQ1LxRX8hi0rKiNlofUmu8XMR59fBm
-         sMuUSMBM41z7HkZaY6QbYXqmNyouWb3PLCk5zq2oO+jojKYmXZLfCF3dwBYIYfQCIstN
-         g/CUhenVT/+tz/cV+Y6tcQxyyEkCfPbbdC3Cqv84ZJ/pPtFGrr/lt7KEOh/oFZeJS6Ar
-         4G7A==
-X-Forwarded-Encrypted: i=1; AFNElJ/Z0gtaWiY9uny9EJvUl+AfqFRdArtAe4wgIMFlX7y1r7f4CENBObxKT2iLqZo6kiadvsokifkitWroSp/qRK7A3YTx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZihusXW2VFkCAWoR7VwqE2pLMZmc1qRDj1N6k2i59nGwELmGs
-	WcqbKbYfVcrtGKjt6FY+GcU80w4/eB6GNC3EboNt3+naLNOK/ex2Ppke
-X-Gm-Gg: Acq92OEpi+bylNUJNG6eHthIusPQN2LTjMuFqD7pmQkENCB6E85uNbBF6pWb2OrUqYS
-	FB+Mf6fAuH4u2nFfa3g3udFWd8z558a8/Or0iTuC3VnVFrPcJX7GjfYztBPOyvro8W9HYUBueST
-	VFn9OWO1Jciaj7ybpIAmsixiyQRG2nOU0/09qC7txggRFCW1ZB1OILsw4ErKMYCwFJQRQVEEUSX
-	hOJe0CeiarzOAJJ4RwF6IE/Jm48L16mW1WWHZHRNuAIcGuf9tjR74E0g3d9T0sx86IzcFHbfBtW
-	gMB7DpT1QregWjx1Kup0ODm7QL410zukwUsZxJGulTne8NFbx5wB7GTZ//noHzn5bwuGvERaKKp
-	emYqiy6GUS2j//IvJTwmj8Q1ImtCJouFAYhKUKdsFZVzq86OSElzwSUKRG40WjkAqGu0w05rORv
-	3FHp4/TpozvvDKvzYYOben2lBvZ0Ub89p5/6rmdIba/ZBLgBtlmokPXZ8ZcL3r/7fP/Lbm
-X-Received: by 2002:a05:622a:4a13:b0:516:d60f:6438 with SMTP id d75a77b69052e-517fdcedb78mr279949951cf.0.1781620516476;
-        Tue, 16 Jun 2026 07:35:16 -0700 (PDT)
-Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7a3c4asm141855521cf.14.2026.06.16.07.35.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 07:35:16 -0700 (PDT)
-From: Dave Carey <carvsdriver@gmail.com>
-To: W_Armin@gmx.de,
-	platform-driver-x86@vger.kernel.org
-Cc: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	Dave Carey <carvsdriver@gmail.com>,
-	Hans de Goede <johannes.goede@oss.qualcomm.com>
-Subject: [PATCH v9 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
-Date: Tue, 16 Jun 2026 10:35:08 -0400
-Message-ID: <20260616143508.124122-3-carvsdriver@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260616143508.124122-1-carvsdriver@gmail.com>
-References: <20260610155340.342949-1-carvsdriver@gmail.com>
- <20260616143508.124122-1-carvsdriver@gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="fETtJl5S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1781687214; x=1782292014; i=markus.elfring@web.de;
+	bh=tU5APMX14nCfW5voKT2IcbS1bVgk77UiUdVZmnM3qSg=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=fETtJl5Synj/pAq8USM+srns3EcGr7mKHtqK/A3Tlbn58jOXXMaGu7xvOoGufpeL
+	 ZzdW5+OJsEtkP2Tr7tvf5g/6BUS6hZ0MaYvq0+4E3GIe3ibFNT9xGbrUGgMcp23jj
+	 bT+Vp2+USsWi1SUj1vUzC+lMGReoxY8jahHg/PiBOlLwpTT1UdXrCHI4CHm5X3eq7
+	 RuLJ3zX6+mPaGZOd7mZkk/SaF1CJofWG3Pgi9StBrrXklUtHiE5JdpC0h4NL3awT6
+	 DgcloL5c6I/k+zEpyVfvkkiL31Au0pVzR6kFFgT7m/x+xujxzW70RPTpesT/KdCnk
+	 QnnufSS7uEds9SwbWg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N01di-1xMoO02s8U-00uAkb; Wed, 17
+ Jun 2026 11:06:54 +0200
+Message-ID: <fa7a5865-6dda-4305-ab48-e0c9310520c8@web.de>
+Date: Wed, 17 Jun 2026 11:06:52 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: platform-driver-x86@vger.kernel.org, Azael Avalos
+ <coproscefalo@gmail.com>, Darren Hart <dvhart@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Language: en-GB, de-DE
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] platform/x86: toshiba_bluetooth: Use more common error
+ handling code in toshiba_bt_rfkill_probe()
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8b+szA5fVJ9+tFNMDpGY/Ptnw6YASQqR96380A2B6CsmIKYUvzQ
+ UqzUqvuy9Wl4SSKnnFwJ2GbQ+nqi6/ECQ0hnv6rGy0kc6be8rfEc5l15lc3nc5BSRDhwPib
+ 3HrYIf7INPouk4UAVKiReqhBmB8CTw9Wp7BcgQlJhPMJt95tBMN5pjiaKUP5yL/9ky9VAZ2
+ JKtVIgcskc4hN4osvsD7Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Y+XH9etJaBc=;R8iE7/Yiu41Op8DtRHFiJl+zSbp
+ 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
 
-The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
-that magnetically attaches to the bottom (secondary) screen in one of two
-positions.  The Embedded Controller tracks the attachment state in a 2-bit
-field called BKBD and signals changes via WMI event GUID
-806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
-device, _UID "GMZN").
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 17 Jun 2026 10:50:15 +0200
 
-The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
-both WMI interfaces used by this driver:
+Use an existing label once more so that a bit of exception handling can be
+better reused at the end of this function implementation.
 
-  LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
-  The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
-  so the notify callback receives BKBD without a separate query.
+This issue was detected by using the Coccinelle software.
 
-  LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
-  8-byte buffer {uint32 IDs=0x00060000, uint32 Status=BKBD}.
-  Used for the initial state read on probe and after resume.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/platform/x86/toshiba_bluetooth.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-BKBD encoding:
-  0 = keyboard detached
-  1 = keyboard docked on top half of bottom screen
-  2 = keyboard docked on bottom half of bottom screen
-  3 = reserved (not observed in practice)
-
-This driver registers two WMI drivers sharing a module-level
-BLOCKING_NOTIFIER_HEAD:
-
-  - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
-    a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
-    value extracted from the buffer.
-
-  - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
-    its per-device private struct.  At probe time it registers a
-    notifier_block on the chain and reads the initial BKBD state via
-    wmidev_query_block().  The WMI buffer is parsed as
-    struct lenovo_feature_status { __le32 id; __le32 status; }, and the
-    ID field is verified before the status is used.
-
-  - SW_TABLET_MODE=1 is reported when the keyboard is detached;
-    SW_TABLET_MODE=0 when docked in either position (keyboard present).
-
-  - The raw BKBD value is exposed via read-only sysfs attribute
-    "keyboard_position".
-
-  - BKBD state is re-read via wmidev_query_block() on resume from
-    suspend or hibernation.
-
-Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
-
-Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-Signed-off-by: Dave Carey <carvsdriver@gmail.com>
----
- .../testing/sysfs-driver-lenovo-yb9-kbdock    |  19 ++
- MAINTAINERS                                   |   7 +
- drivers/platform/x86/lenovo/Kconfig           |  14 +
- drivers/platform/x86/lenovo/Makefile          |   1 +
- drivers/platform/x86/lenovo/yb9-kbdock.c      | 310 ++++++++++++++++++
- 5 files changed, 351 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
- create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
-
-diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-new file mode 100644
-index 0000000..04e5293
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-@@ -0,0 +1,19 @@
-+What:		/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_position
-+Date:		April 2026
-+KernelVersion:	6.10
-+Contact:	Dave Carey <carvsdriver@gmail.com>
-+Description:
-+		Read-only attribute reporting the current keyboard dock position
-+		as reported by the Embedded Controller on the Lenovo Yoga Book 9
-+		14IAH10.
-+
-+		Possible values:
-+
-+		==  =============================================================
-+		0   keyboard is not docked to any screen (detached)
-+		1   keyboard docked on the top half of the bottom screen
-+		2   keyboard docked on the bottom half of the bottom screen
-+		==  =============================================================
-+
-+		SW_TABLET_MODE input events are also emitted: 0 when the keyboard
-+		is docked (either position), 1 when detached.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d1cc0e1..00e8275 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14479,6 +14479,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
- 
-+LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
-+M:	Dave Carey <carvsdriver@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-+F:	drivers/platform/x86/lenovo/yb9-kbdock.c
-+
- LETSKETCH HID TABLET DRIVER
- M:	Hans de Goede <hansg@kernel.org>
- L:	linux-input@vger.kernel.org
-diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
-index 9c48487..938b361 100644
---- a/drivers/platform/x86/lenovo/Kconfig
-+++ b/drivers/platform/x86/lenovo/Kconfig
-@@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called lenovo-wmi-camera.
- 
-+config LENOVO_YB9_KBDOCK
-+	tristate "Lenovo Yoga Book 9 keyboard dock detection"
-+	depends on ACPI_WMI
-+	depends on DMI
-+	depends on INPUT
-+	help
-+	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book 9
-+	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
-+	  either screen; this driver reports SW_TABLET_MODE input events based
-+	  on the attachment state and exposes the raw position in sysfs.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called lenovo-yb9-kbdock.
-+
- config LENOVO_YMC
- 	tristate "Lenovo Yoga Tablet Mode Control"
- 	depends on ACPI_WMI
-diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
-index 7b2128e..2842d7d 100644
---- a/drivers/platform/x86/lenovo/Makefile
-+++ b/drivers/platform/x86/lenovo/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
- 
- lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= wmi-hotkey-utilities.o
-+lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+= yb9-kbdock.o
- lenovo-target-$(CONFIG_LENOVO_YMC)	+= ymc.o
- lenovo-target-$(CONFIG_YOGABOOK)	+= yogabook.o
- lenovo-target-$(CONFIG_YT2_1380)	+= yoga-tab2-pro-1380-fastcharger.o
-diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/x86/lenovo/yb9-kbdock.c
-new file mode 100644
-index 0000000..dbf7ff4
---- /dev/null
-+++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
-@@ -0,0 +1,310 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Lenovo Yoga Book 9 keyboard-dock detection
-+ *
-+ * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magnetically
-+ * attaches to the bottom screen in one of two positions.  The EC tracks
-+ * attachment state in a 2-bit field called BKBD and signals changes via WMI
-+ * event 0xEB on the WM10 ACPI device (_UID "GMZN").
-+ *
-+ * BKBD values:
-+ *   0 = keyboard detached
-+ *   1 = keyboard docked on the top half of the bottom screen
-+ *   2 = keyboard docked on the bottom half of the bottom screen
-+ *   3 = reserved / not observed
-+ *
-+ * Two WMI interfaces are used (documented in embedded BMOF, WQDD, 20705 bytes):
-+ *
-+ *   LENOVO_BTKBD_EVENT (event GUID, 806BD2A2-...)
-+ *     WmiDataId(1) uint32 Status — _WED(0xEB) returns EC.BKBD directly.
-+ *     The notify callback receives BKBD as an integer; no separate query needed.
-+ *
-+ *   LENOVO_FEATURE_STATUS_DATA (block GUID, E7F300FA-...)
-+ *     WmiDataId(1) uint32 IDs   = 0x00060000 (feature selector)
-+ *     WmiDataId(2) uint32 Status = BKBD value
-+ *     Used on probe and resume to read initial state.
-+ *
-+ * The event driver (LENOVO_BTKBD_EVENT) fires a notifier chain on each WMI
-+ * event.  The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev
-+ * and registers a notifier_block to receive those events, eliminating the
-+ * need for shared global state or a mutex.
-+ *
-+ * SW_TABLET_MODE=1 is reported when the keyboard is detached;
-+ * SW_TABLET_MODE=0 when docked in either position (keyboard present).
-+ * The raw BKBD value is exposed via the sysfs attribute "keyboard_position".
-+ *
-+ * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/cleanup.h>
-+#include <linux/dev_printk.h>
-+#include <linux/dmi.h>
-+#include <linux/input.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/pm.h>
-+#include <linux/slab.h>
-+#include <linux/wmi.h>
-+
-+#define YB9_KBDOCK_EVENT_GUID	"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
-+#define YB9_KBDOCK_QUERY_GUID	"E7F300FA-21CD-4003-ADAC-2696135982E6"
-+
-+/* BKBD encoding */
-+#define BKBD_DETACHED		0
-+
-+/* LENOVO_FEATURE_STATUS_DATA feature selector */
-+#define YB9_FEATURE_STATUS_ID	0x00060000u
-+
-+/*
-+ * LENOVO_FEATURE_STATUS_DATA: 8-byte buffer {uint32 IDs, uint32 Status}.
-+ * IDs is always 0x00060000; Status holds the BKBD value (0–3).
-+ */
-+struct lenovo_feature_status {
-+	__le32 id;
-+	__le32 status;
-+} __packed;
-+
-+/* ------------------------------------------------------------------
-+ * Notifier chain — event driver fires it, block driver listens
-+ * ------------------------------------------------------------------ */
-+
-+static BLOCKING_NOTIFIER_HEAD(yb9_kbdock_chain_head);
-+
-+static void devm_yb9_kbdock_unregister_notifier(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	blocking_notifier_chain_unregister(&yb9_kbdock_chain_head, nb);
-+}
-+
-+static int devm_yb9_kbdock_register_notifier(struct device *dev,
-+					      struct notifier_block *nb)
-+{
-+	int ret;
-+
-+	ret = blocking_notifier_chain_register(&yb9_kbdock_chain_head, nb);
-+	if (ret < 0)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev, devm_yb9_kbdock_unregister_notifier, nb);
-+}
-+
-+/* ------------------------------------------------------------------
-+ * Block WMI driver — LENOVO_FEATURE_STATUS_DATA
-+ * (owns input_dev, sysfs, PM resume)
-+ * ------------------------------------------------------------------ */
-+
-+struct yb9_kbdock_data {
-+	struct wmi_device	*wdev;
-+	struct input_dev	*input_dev;
-+	struct notifier_block	 nb;
-+};
-+
-+static int yb9_kbdock_query(struct yb9_kbdock_data *d)
-+{
-+	struct wmi_buffer out = {};
-+	int ret;
-+
-+	ret = wmidev_query_block(d->wdev, 0, &out,
-+				 sizeof(struct lenovo_feature_status));
-+	if (ret)
-+		return ret;
-+
-+	struct lenovo_feature_status *fs __free(kfree) = out.data;
-+
-+	if (le32_to_cpu(fs->id) != YB9_FEATURE_STATUS_ID)
-+		return -EIO;
-+
-+	return le32_to_cpu(fs->status);
-+}
-+
-+static void yb9_kbdock_report(struct yb9_kbdock_data *d, u32 bkbd)
-+{
-+	int tablet = (bkbd == BKBD_DETACHED) ? 1 : 0;
-+
-+	input_report_switch(d->input_dev, SW_TABLET_MODE, tablet);
-+	input_sync(d->input_dev);
-+	dev_dbg(&d->wdev->dev, "BKBD=%u SW_TABLET_MODE=%d\n", bkbd, tablet);
-+}
-+
-+static void yb9_kbdock_sync(struct yb9_kbdock_data *d)
-+{
-+	int bkbd = yb9_kbdock_query(d);
-+
-+	if (bkbd >= 0)
-+		yb9_kbdock_report(d, bkbd);
-+}
-+
-+static int yb9_kbdock_nb_call(struct notifier_block *nb,
-+			       unsigned long bkbd, void *unused)
-+{
-+	struct yb9_kbdock_data *d =
-+		container_of(nb, struct yb9_kbdock_data, nb);
-+
-+	yb9_kbdock_report(d, bkbd);
-+	return NOTIFY_DONE;
-+}
-+
-+static ssize_t keyboard_position_show(struct device *dev,
-+				       struct device_attribute *attr,
-+				       char *buf)
-+{
-+	struct yb9_kbdock_data *d = dev_get_drvdata(dev);
-+	int bkbd = yb9_kbdock_query(d);
-+
-+	if (bkbd < 0)
-+		return bkbd;
-+	return sysfs_emit(buf, "%d\n", bkbd);
-+}
-+static DEVICE_ATTR_RO(keyboard_position);
-+
-+static const struct attribute * const yb9_kbdock_attrs[] = {
-+	&dev_attr_keyboard_position.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(yb9_kbdock);
-+
-+static int yb9_kbdock_resume(struct device *dev)
-+{
-+	struct yb9_kbdock_data *d = dev_get_drvdata(dev);
-+
-+	yb9_kbdock_sync(d);
-+	return 0;
-+}
-+static DEFINE_SIMPLE_DEV_PM_OPS(yb9_kbdock_pm_ops, NULL, yb9_kbdock_resume);
-+
-+static int yb9_kbdock_block_probe(struct wmi_device *wdev, const void *ctx)
-+{
-+	struct yb9_kbdock_data *d;
-+	struct input_dev *input_dev;
-+	int ret;
-+
-+	d = devm_kzalloc(&wdev->dev, sizeof(*d), GFP_KERNEL);
-+	if (!d)
-+		return -ENOMEM;
-+
-+	d->wdev = wdev;
-+
-+	input_dev = devm_input_allocate_device(&wdev->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name		= "Lenovo Yoga Book 9 keyboard dock switch";
-+	input_dev->phys		= YB9_KBDOCK_QUERY_GUID "/input0";
-+	input_dev->id.bustype	= BUS_HOST;
-+	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
-+
-+	ret = input_register_device(input_dev);
-+	if (ret)
-+		return ret;
-+
-+	d->input_dev		= input_dev;
-+	d->nb.notifier_call	= yb9_kbdock_nb_call;
-+
-+	ret = devm_yb9_kbdock_register_notifier(&wdev->dev, &d->nb);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&wdev->dev, d);
-+	yb9_kbdock_sync(d);
-+	return 0;
-+}
-+
-+static const struct wmi_device_id yb9_kbdock_block_id_table[] = {
-+	{ .guid_string = YB9_KBDOCK_QUERY_GUID },
-+	{ }
-+};
-+
-+static struct wmi_driver yb9_kbdock_block_driver = {
-+	.driver = {
-+		.name		= "lenovo-yb9-kbdock",
-+		.dev_groups	= yb9_kbdock_groups,
-+		.pm		= pm_sleep_ptr(&yb9_kbdock_pm_ops),
-+	},
-+	.id_table	= yb9_kbdock_block_id_table,
-+	.no_singleton	= true,
-+	.probe		= yb9_kbdock_block_probe,
-+};
-+
-+/* ------------------------------------------------------------------
-+ * Event WMI driver — LENOVO_BTKBD_EVENT
-+ * (fires the notifier chain on each WMI event)
-+ * ------------------------------------------------------------------ */
-+
-+static void yb9_kbdock_notify_new(struct wmi_device *wdev,
-+				  const struct wmi_buffer *data)
-+{
-+	/*
-+	 * _WED(0xEB) returns EC.BKBD directly as a 32-bit integer
-+	 * (LENOVO_BTKBD_EVENT WmiDataId(1) uint32 Status).
-+	 */
-+	if (!data || data->length < sizeof(__le32))
-+		return;
-+
-+	u32 bkbd = le32_to_cpu(*(const __le32 *)data->data);
-+
-+	blocking_notifier_call_chain(&yb9_kbdock_chain_head, bkbd, NULL);
-+}
-+
-+static const struct wmi_device_id yb9_kbdock_event_id_table[] = {
-+	{ .guid_string = YB9_KBDOCK_EVENT_GUID },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, yb9_kbdock_event_id_table);
-+
-+static struct wmi_driver yb9_kbdock_event_driver = {
-+	.driver = {
-+		.name = "lenovo-yb9-kbdock-event",
-+	},
-+	.id_table	= yb9_kbdock_event_id_table,
-+	.no_singleton	= true,
-+	.notify_new	= yb9_kbdock_notify_new,
-+};
-+
-+/* ------------------------------------------------------------------
-+ * Module init / exit
-+ * ------------------------------------------------------------------ */
-+
-+static const struct dmi_system_id yb9_kbdock_dmi_table[] __initconst = {
-+	{
-+		/* Lenovo Yoga Book 9 14IAH10 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
-+		},
-+	},
-+	{ }
-+};
-+
-+static int __init yb9_kbdock_init(void)
-+{
-+	int ret;
-+
-+	if (!dmi_check_system(yb9_kbdock_dmi_table))
-+		return -ENODEV;
-+
-+	ret = wmi_driver_register(&yb9_kbdock_event_driver);
-+	if (ret)
-+		return ret;
-+
-+	ret = wmi_driver_register(&yb9_kbdock_block_driver);
-+	if (ret) {
-+		wmi_driver_unregister(&yb9_kbdock_event_driver);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+module_init(yb9_kbdock_init);
-+
-+static void __exit yb9_kbdock_exit(void)
-+{
-+	wmi_driver_unregister(&yb9_kbdock_block_driver);
-+	wmi_driver_unregister(&yb9_kbdock_event_driver);
-+}
-+module_exit(yb9_kbdock_exit);
-+
-+MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
-+MODULE_LICENSE("GPL");
--- 
+diff --git a/drivers/platform/x86/toshiba_bluetooth.c b/drivers/platform/x=
+86/toshiba_bluetooth.c
+index e00abba58c7c..bf199fba4999 100644
+=2D-- a/drivers/platform/x86/toshiba_bluetooth.c
++++ b/drivers/platform/x86/toshiba_bluetooth.c
+@@ -252,10 +252,8 @@ static int toshiba_bt_rfkill_probe(struct platform_de=
+vice *pdev)
+ 	platform_set_drvdata(pdev, bt_dev);
+=20
+ 	result =3D toshiba_bluetooth_sync_status(bt_dev);
+-	if (result) {
+-		kfree(bt_dev);
+-		return result;
+-	}
++	if (result)
++		goto err_free_bt_dev;
+=20
+ 	bt_dev->rfk =3D rfkill_alloc("Toshiba Bluetooth",
+ 				   &pdev->dev,
+=2D-=20
 2.54.0
 
