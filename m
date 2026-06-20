@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909BD298CB2
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A856CA6F
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781949016; cv=none; b=fvS1AHPGF4ftSkAlxPlct/h2d1lIlrpchYg2+uyAh2d3Gz6BYzGvPBCGUSNPmRHSf0VFqPlLPFKvlOJOkPM8Q0AQoe0qeJdX183hU+s/yAHKRLbEk92ZJFyziSqlFpdUdrCgK4S39tSD+O58tPvEY78q0JQ/frWnxeiLLj2SIBY=
+	t=1781949349; cv=none; b=dHUfl9l8sWgVylw0/uXy+IHLZYTZwXgaSL4V3/+pnq/uaU3e4DuFkQDv0/sU8VJ8Pk2cxHg8YiFPtDgGgNqdgCJ8wsl7ymD9qR4DlaxNUJDjyrCPa0Pd3eHrpzpfh7oOYt8r95b27YvhUfvCecJ3UBxNqYTOGIaUwvoFofJ7xSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781949016; c=relaxed/simple;
-	bh=aK0PURjuFvVrb8Y5JBsxniQp3Q1VaP2/PJQRWy9wzxo=;
+	s=arc-20240116; t=1781949349; c=relaxed/simple;
+	bh=XTLp0H9CHuJ6e1/RUT4z2tNFPezXZbt/S3Zmj54cwc8=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=imtZh9BLMoiEbAKsRNX/34r3EmUEwsNZVKTpMg98idkX+BW+Hd+3iZm0diSOxeD0TV/UOUCLj3LoGmN1FjYLzROoCV9ZZrwJEGqWDnnrBwg9MQAnwdPXWkXdPtay/qKT7SPkT0d35vTDSHg4O4XC5ZNHZMYk3qt1dpGk5y9y6gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0PN1KrN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=MaAN9cjZbdhhTTR5I76L18Smh3rirp0MS/yvQu99GyRxs3zSJEbkhqdedXRzv5vNFVc2IdbU93hwpVWMKhWq+RoXVlj6jw6AbzI5uSWKKM67XTVdLOScv6LFTeYLVo5yyk0xub+GhOkpUgS6GqXYy8ZMshUYmIrqfY9XaSYbFgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3Pq+wQF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0PN1KrN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 27CD8C2BCB0
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:50:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3Pq+wQF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BF24C2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781949016;
-	bh=aK0PURjuFvVrb8Y5JBsxniQp3Q1VaP2/PJQRWy9wzxo=;
+	s=k20201202; t=1781949349;
+	bh=XTLp0H9CHuJ6e1/RUT4z2tNFPezXZbt/S3Zmj54cwc8=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=t0PN1KrNocwBdYdbJehlpPTTYMBDvdNjq4DXcQ7tCzWvvnx0Fm60KAbWwDOFtlEg+
-	 ypsYf6gETFJzwKSS0IHSEvDLMTglvrUWrBrIgr74zbSGdNR89KntCeJkD6hikHHst7
-	 hWQzCE01ZY7//Zp7PjrkiCywmd996vyYck+UDrHXC26see0cLBTg93Zl6WRevSWmjW
-	 WKD9l1QEfy5Gf0zphhvynkuxA4x670G7NTrvztNfQMlqtF6Sl3/b7Rq1NqTtip6HCJ
-	 wCD0SUrQnsxSUZ8iHRYnq4RzIZOBqnO0xHPxarZxGzC68K534KQWE6SweO+LMiOL56
-	 CiYW4iRAhmXlQ==
+	b=V3Pq+wQFQ7bYCDwMOLO+OqMHp9R7V0ykjpQKT37BScdnHVzepzpdxSGC7kXx8G5uO
+	 t6nFT9ulpTrs6Q3Xf/Zt52afC/uK7C5lkWprrd6gI7XAUZSlO48cL3kqUbFEkCHoQN
+	 dLbNjw7BFo8vimCkRKRWtyEg2FICY4HxhIxwAkQSzMOc/fValE+1jvYKLISzyriI0I
+	 TEEpHbvmgXPluSQKb3cmTIVxXUVA3V19MXmV8TW3IVHOfEXiaX/Sr4aQPWFXea7cKT
+	 DYOwjsJQN3PKSzOhIgWicVglceJq6siauamLm85G4yKKdl27QuN1R7Yd1MO41wXuyf
+	 00sox9hazIx+g==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 0BE38C4160E; Sat, 20 Jun 2026 09:50:16 +0000 (UTC)
+	id 0C020C41612; Sat, 20 Jun 2026 09:55:49 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
  7.1-rc4 kerenel
-Date: Sat, 20 Jun 2026 09:50:15 +0000
+Date: Sat, 20 Jun 2026 09:55:48 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: scardracs@disroot.org
+X-Bugzilla-Who: moravec@ukf.sk
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: UNREPRODUCIBLE
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-bMWFP5jO6D@https.bugzilla.kernel.org/>
+Message-ID: <bug-221569-215701-Y9W5wkGFWe@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
 References: <bug-221569-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,32 +64,104 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #34 from Marco Scardovi (scardracs@disroot.org) ---
-The output shows that you have a single ACPI thermal zone (acpitz) running =
-at
-38=C2=B0C (38000).
+--- Comment #35 from Milan Oravec (moravec@ukf.sk) ---
+Thank you, here is output with Balanced profile:
 
-The reason the fan is still spinning at 2100 RPM is that the BIOS has
-configured a very low active cooling thresholds (trip points). For example,=
- the
-threshold to turn on the fan at its lowest speed might be set to 30=C2=B0C =
-or 35=C2=B0C.
-Since 38=C2=B0C is above that threshold, the fan stays on.
+migo@migo-HP:~$ cat /sys/class/thermal/thermal_zone0/trip_point_*_temp
+125000
+108000
+105000
+migo@migo-HP:~$ cat /sys/class/thermal/thermal_zone0/trip_point_*_type
+critical
+hot
+passive
+migo@migo-HP:~$=20
 
-To confirm this, you can check your ACPI trip point temperatures by running:
+and here when Powersave is enabled:
 
-> cat /sys/class/thermal/thermal_zone0/trip_point_*_temp
-> cat /sys/class/thermal/thermal_zone0/trip_point_*_type
+migo@migo-HP:~$ powerprofilesctl set power-saver
+migo@migo-HP:~$ cat /sys/class/thermal/thermal_zone0/trip_point_*_temp
+125000
+108000
+105000
+migo@migo-HP:~$ cat /sys/class/thermal/thermal_zone0/trip_point_*_type
+critical
+hot
+passive
 
-Since you now have 'power-saver', 'balanced', and 'performance' profiles
-working, try switching to the power saver profile:
+migo@migo-HP:~$ powerprofilesctl=20
+  performance:
+    CpuDriver:  amd_pstate
+    PlatformDriver:     platform_profile
+    Degraded:   no
 
-> powerprofilesctl set power-saver
+  balanced:
+    CpuDriver:  amd_pstate
+    PlatformDriver:     platform_profile
 
-Under the power-saver profile, the BIOS/EC should increase the temperature
-thresholds (e.g. from 35=C2=B0C to 45=C2=B0C or 50=C2=B0C), which should al=
-low the fan to turn
-off completely when the system is idling at 38=C2=B0C.
+* power-saver:
+    CpuDriver:  amd_pstate
+    PlatformDriver:     platform_profile
+
+no change in temp. trip points and FAN still 2100RPM with 37 deg.C CPU temp.
+
+migo@migo-HP:~$ sudo sensors
+[sudo] password for migo:=20
+hp-isa-0000
+Adapter: ISA adapter
+fan1:           0 RPM
+fan2:           0 RPM
+pwm1:             N/A
+
+k10temp-pci-00c3
+Adapter: PCI adapter
+Tctl:         +37.9=C2=B0C=20=20
+
+mt7925_phy0-pci-6200
+Adapter: PCI adapter
+temp1:        +79.0=C2=B0C=20=20
+
+nvme-pci-6000
+Adapter: PCI adapter
+Composite:    +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +81.8=C2=B0C)
+                       (crit =3D +84.8=C2=B0C)
+Sensor 1:     +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
+Sensor 2:     +37.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
+
+acpitz-acpi-0
+Adapter: ACPI interface
+temp1:        +37.0=C2=B0C=20=20
+
+ucsi_source_psy_USBC000:001-isa-0000
+Adapter: ISA adapter
+in0:           5.00 V  (min =3D  +5.00 V, max =3D +15.00 V)
+curr1:         3.00 A  (max =3D  +5.00 A)
+
+ucsi_source_psy_USBC000:002-isa-0000
+Adapter: ISA adapter
+in0:           0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
+curr1:         0.00 A  (max =3D  +0.00 A)
+
+amdgpu-pci-6300
+Adapter: PCI adapter
+vddgfx:        0.00 V=20=20
+vddnb:         0.00 V=20=20
+edge:         +36.0=C2=B0C=20=20
+PPT:           4.00 W  (avg =3D   4.00 W)
+sclk:         812 MHz=20
+
+BAT0-acpi-0
+Adapter: ACPI interface
+in0:           8.27 V=20=20
+power1:        0.00 W=20=20
+
+acpi_fan-isa-0000
+Adapter: ISA adapter
+fan1:        2100 RPM
+
+migo@migo-HP:~$
 
 --=20
 You may reply to this email to add a comment.
