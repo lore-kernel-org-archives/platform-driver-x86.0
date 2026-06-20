@@ -1,268 +1,101 @@
-Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C0D330641;
-	Sat, 20 Jun 2026 09:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6B42B9BA
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781948209; cv=none; b=V8znZiR5vg54/MxAX4gsgByIBhMTZrKeGpEUxceIy4jzs7v6rbSXtGtjt9kM+yKVjCPgak542ImuMLoKbCvj/ZCx5bwrE1PkcXU7n58pFaIBaAbcN5o/xkorDjxM1jwrnw6AW9bZO44TSDH602SWxe3/bphu73BfVNiQWMtM940=
+	t=1781948311; cv=none; b=UBfZBU9eq/n2uiFTt84HLeK4aTulN4EfLpCmLmtaMs97TxfNdg/fFy/5h/NEIwzhBUujmm2bvRoY0+i4ogy2gahZjhNo70AQRbhLjGBvv3Vt+1MtLlc/h6Ub7K0UkZxaEQf+TZfvp9N/OYRcNmAOt6I63ALuuAYbM+irFO0hPHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781948209; c=relaxed/simple;
-	bh=yh66hLlNKeytPzyr89bmCczj+ADk826actvT05b5aC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HwpH/fYxns4/CJA2hFSUveKutxVXSvkXdWCphBaAg+d28Ji0hDzk0G7UHa0/HuetYh3GPIhgyctVfbnZAx+D7HLwWHdiBtvtOt7WMTVU+xCmAGeuOxWqxY5LRHqN5HBSATD3GeLDtM/focb5HyShQ7pVr2VhRsKjDkbFOunWSkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=sK7SFD8h; arc=none smtp.client-ip=193.87.12.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
+	s=arc-20240116; t=1781948311; c=relaxed/simple;
+	bh=XAzAFXzl9Jjj8JBRCqRwSwSzlJM4aiu3zBerVW/FIzc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WDxzNfZtdJTHhzP652eTsSMiVP1NTpex8EV1o93mXTcnMrTtnKwemRM+qNO2figNMbhRVwTRTmWpNApuUeokrMDjTwDeqrAivESYXEXIppfkPznE8MYyscDtxahU7kycuOvrMK6HhCl/ueHYqD/BnrBRegpxQaRIN7gIqDZNuds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOD/0r6B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="sK7SFD8h"
-Received: from localhost (localhost [127.0.0.1])
-	by posta.ukf.sk (Postfix) with ESMTP id 79D7142317D;
-	Sat, 20 Jun 2026 11:36:48 +0200 (CEST)
-Received: from posta.ukf.sk ([127.0.0.1])
-	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id wBghTZbz7z6B; Sat, 20 Jun 2026 11:36:47 +0200 (CEST)
-Received: from [10.8.1.254] (unknown [10.8.1.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by posta.ukf.sk (Postfix) with ESMTPSA id 4BF9B423159;
-	Sat, 20 Jun 2026 11:36:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
-	t=1781948207; bh=yh66hLlNKeytPzyr89bmCczj+ADk826actvT05b5aC4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sK7SFD8hcQGcTtFCBv21LhQf7gTCY+m4woiGr02vTDfJmTqCOT9z/l8mW5TBjgOkt
-	 75PfmQ3+hZBM2zZNRSs0gn2EJqCzGBmd8g6d5ICD93iSAuDyO5R39JJ7i8qAt66Q6e
-	 ppP9o6dVStzOvFye9vYnqFrIb5T2nsdkERtY9GxQ=
-Message-ID: <48577106-7829-4d31-9d81-3dc3161c07b6@ukf.sk>
-Date: Sat, 20 Jun 2026 11:36:43 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOD/0r6B"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 336B7C2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 09:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1781948311;
+	bh=XAzAFXzl9Jjj8JBRCqRwSwSzlJM4aiu3zBerVW/FIzc=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=lOD/0r6BzO6a7Zb6EH+tbE+7eofx+mP7yaUQwODzz1FZdXqj+XHThowv0Di2SwD+p
+	 LMsu9TyD/hu2bA5g6AMRDYlzNXProPeiOJQljMfoT/8C6VBX6NzXTO7tyvkM0orE5Y
+	 Fra5uDfUGj9J3VqrpTPqE5IvSpsBY7KFLxhsjz+khjmROzg/yAkzIRU0PJzKCfzcm3
+	 5v97ZBm3WaEjpfp5Xtx+lrlVCFeoDJc/pINMiSiLmWt0tr5iZqN+GHiNN8+WCqaxyO
+	 fioPUDNrONLBQ3YG8a72GUwdB50Ffc9CKdJkV6h0bx1xZnVH2yHdnExFD2nvLODZeP
+	 +jWAYgs09CEHQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 16FE1C41612; Sat, 20 Jun 2026 09:38:31 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
+ 7.1-rc4 kerenel
+Date: Sat, 20 Jun 2026 09:38:30 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: scardracs@disroot.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: UNREPRODUCIBLE
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221569-215701-ay07rZaK2L@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
+References: <bug-221569-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] platform/x86: hp-wmi: fix platform profile issues on
- generic HP laptops
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- krishna.chomal108@gmail.com, eliadevito@gmail.com, emreleno@gmail.com,
- rafael@kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, regressions@leemhuis.info,
- regressions@lists.linux.dev
-References: <20260619220911.7542-1-scardracs@disroot.org>
- <20260619220911.7542-2-scardracs@disroot.org>
-Content-Language: sk-SK-Ascii, en-US
-From: Milan Oravec <moravec@ukf.sk>
-Organization: CIKT UKF Nitra
-In-Reply-To: <20260619220911.7542-2-scardracs@disroot.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms050708000108020507020600"
 
-This is a cryptographically signed message in MIME format.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---------------ms050708000108020507020600
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+--- Comment #32 from Marco Scardovi (scardracs@disroot.org) ---
+Regarding the custom FAN curve or trigger temperatures:
 
-SGVsbG8sIHRoYW5rIHlvdSBmb3Igd29yayEgVGhpcyBwYXRjaCByZXNvbHZlcyBrZXJuZWwg
-DQplcnJvcnPCoChwbGF0Zm9ybV9wcm9maWxlOiBGYWlsZWQgdG8gZ2V0IHByb2ZpbGUgZm9y
-IGhhbmRsZXIgaHAtd21pKcKgaW4gDQp0aGUgZG1lc2cgbG9nIG9uIG15IHN5c3RlbSAoSFAg
-T21uaUJvb2sgWCBGbGlwKSBkdXJpbmcgcG93ZXIgcHJvZmlsZSANCnN3aXRjaGluZy4NCg0K
-QmVzdCByZWdhcmRzLA0KDQoNCk1pbGFuIE9yYXZlYw0KDQpDSUtUIFVLRiBOaXRyYQ0KTW9i
-aWwvU2lnbmFsOiArNDIxOTA3NjcwMjcwDQplbWFpbDogbW9yYXZlY0B1a2Yuc2sNCg0KLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0NCg0KVHV0byBzcHJhdnUgbmVwcmV2ZXJpbCB6aWFkbnkgYW50aXZpcnVz
-IC0gbmVib2xvIHRyZWJhLi4uDQoNCk9uIDYvMjAvMjYgMDA6MDksIE1hcmNvIFNjYXJkb3Zp
-IHdyb3RlOg0KPiBPbiBnZW5lcmljIChub24tT21lbi9ub24tVmljdHVzKSBIUCBsYXB0b3Bz
-IHN1cHBvcnRlZCBieSB0aGUNCj4gaHAtd21pIGRyaXZlciwgdGhlIHBsYXRmb3JtX3Byb2Zp
-bGUgc3lzZnMgb3BlcmF0aW9ucyBjb3VsZCBmYWlsLA0KPiBsZWFkaW5nIHRvICdwbGF0Zm9y
-bV9wcm9maWxlOiBGYWlsZWQgdG8gZ2V0IHByb2ZpbGUgZm9yIGhhbmRsZXIgaHAtd21pJw0K
-PiBlcnJvcnMgYW5kIHByZXZlbnRpbmcgdXNlcnNwYWNlIHBvd2VyIHByb2ZpbGUgbWFuYWdl
-bWVudCBmcm9tIHdvcmtpbmcNCj4gY29ycmVjdGx5Lg0KPg0KPiBUaGUgZHJpdmVyIHdhcyBi
-bGluZGx5IHJlZ2lzdGVyaW5nIGFsbCA0IHByb2ZpbGVzIChxdWlldCwgY29vbCwNCj4gYmFs
-YW5jZWQsIHBlcmZvcm1hbmNlKSB3aXRob3V0IGNoZWNraW5nIHdoaWNoIG9uZXMgd2VyZSBh
-Y3R1YWxseQ0KPiBzdXBwb3J0ZWQgYnkgdGhlIEJJT1MuIEZ1cnRoZXJtb3JlLCB3aGVuIHVz
-ZXJzcGFjZSBzd2l0Y2hlZCBwcm9maWxlcywNCj4gaHBfd21pX3BsYXRmb3JtX3Byb2ZpbGVf
-Z2V0KCkgd2FzIGNhbGxlZCwgd2hpY2ggcXVlcmllZCB0aGUgQklPUw0KPiB1c2luZyB0aGVy
-bWFsX3Byb2ZpbGVfZ2V0KCkuIElmIHRoZSBCSU9TIHF1ZXJ5IHJldHVybmVkIGFuIGVycm9y
-IG9yDQo+IHJldHVybmVkIGEgdmFsdWUgbm90IGluIHRoZSByZWNvZ25pemVkIGNhc2VzLCB0
-aGUgZ2V0IGNhbGwgZmFpbGVkLA0KPiB0aHJvd2luZyBhbiBlcnJvci4NCj4NCj4gRml4IHRo
-aXMgYnk6DQo+IDEuIER5bmFtaWNhbGx5IHByb2Jpbmcgd2hpY2ggdGhlcm1hbCBwcm9maWxl
-cyBhcmUgc3VwcG9ydGVkIGJ5IHRoZSBCSU9TDQo+ICAgICBkdXJpbmcgZHJpdmVyIHJlZ2lz
-dHJhdGlvbiBieSB0ZW1wb3JhcmlseSBzZXR0aW5nIGVhY2ggcHJvZmlsZSBhbmQNCj4gICAg
-IGNoZWNraW5nIHRoZSByZXR1cm4gY29kZSwgdGhlbiByZXN0b3JpbmcgdGhlIG9yaWdpbmFs
-IHByb2ZpbGUuDQo+IDIuIEluaXRpYWxpemluZyBhbmQgdXBkYXRpbmcgYWN0aXZlX3BsYXRm
-b3JtX3Byb2ZpbGUgdG8gY2FjaGUgdGhlDQo+ICAgICBsYXN0IHNldC9ib290IHByb2ZpbGUu
-DQo+IDMuIEZhbGxpbmcgYmFjayB0byB0aGUgY2FjaGVkIGFjdGl2ZV9wbGF0Zm9ybV9wcm9m
-aWxlIGluDQo+ICAgICBocF93bWlfcGxhdGZvcm1fcHJvZmlsZV9nZXQoKSBpZiB0aGUgQklP
-UyBxdWVyeSBmYWlscyBvciByZXR1cm5zDQo+ICAgICBhbiBpbnZhbGlkL3VubWFwcGVkIHZh
-bHVlLCByYXRoZXIgdGhhbiByZXR1cm5pbmcgYW4gZXJyb3IuDQo+DQo+IENsb3NlczogaHR0
-cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0yMjAwMDgNCj4gQ2xv
-c2VzOiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIyMTU2
-OQ0KPiBDbG9zZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BsYXRmb3JtLWRyaXZlci14
-ODYvYTNiMTM3ZGYtMWIyMS00NDYwLWIwMDMtNThjNWNhMmQ1OWQ0QHVrZi5zay8NCj4gRml4
-ZXM6IDQyOTZmNjc5Y2E1MCAoInBsYXRmb3JtL3g4NjogaHAtd21pOiBhZGQgcGxhdGZvcm0g
-cHJvZmlsZSBzdXBwb3J0IikNCj4gQXNzaXN0ZWQtYnk6IEFudGlncmF2aXR5OmdlbWluaS0z
-LjUtZmxhc2gNCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gU2NhcmRvdmkgPHNjYXJkcmFjc0Bk
-aXNyb290Lm9yZz4NCj4gLS0tDQo+ICAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtd21p
-LmMgfCA1MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgIDEgZmlsZSBj
-aGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtd21pLmMgYi9kcml2ZXJzL3BsYXRm
-b3JtL3g4Ni9ocC9ocC13bWkuYw0KPiBpbmRleCA4YmEyODZlZDg3MjEuLjkzZGYyNjk0NDVl
-YiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtd21pLmMNCj4g
-KysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvaHAvaHAtd21pLmMNCj4gQEAgLTE2NjIsOCAr
-MTY2MiwxMSBAQCBzdGF0aWMgaW50IGhwX3dtaV9wbGF0Zm9ybV9wcm9maWxlX2dldChzdHJ1
-Y3QgZGV2aWNlICpkZXYsDQo+ICAgCWludCB0cDsNCj4gICANCj4gICAJdHAgPSB0aGVybWFs
-X3Byb2ZpbGVfZ2V0KCk7DQo+IC0JaWYgKHRwIDwgMCkNCj4gLQkJcmV0dXJuIHRwOw0KPiAr
-CWlmICh0cCA8IDApIHsNCj4gKwkJZ3VhcmQobXV0ZXgpKCZhY3RpdmVfcGxhdGZvcm1fcHJv
-ZmlsZV9sb2NrKTsNCj4gKwkJKnByb2ZpbGUgPSBhY3RpdmVfcGxhdGZvcm1fcHJvZmlsZTsN
-Cj4gKwkJcmV0dXJuIDA7DQo+ICsJfQ0KPiAgIA0KPiAgIAlzd2l0Y2ggKHRwKSB7DQo+ICAg
-CWNhc2UgSFBfVEhFUk1BTF9QUk9GSUxFX1BFUkZPUk1BTkNFOg0KPiBAQCAtMTY3OSw3ICsx
-NjgyLDkgQEAgc3RhdGljIGludCBocF93bWlfcGxhdGZvcm1fcHJvZmlsZV9nZXQoc3RydWN0
-IGRldmljZSAqZGV2LA0KPiAgIAkJKnByb2ZpbGUgPSBQTEFURk9STV9QUk9GSUxFX1FVSUVU
-Ow0KPiAgIAkJYnJlYWs7DQo+ICAgCWRlZmF1bHQ6DQo+IC0JCXJldHVybiAtRUlOVkFMOw0K
-PiArCQlndWFyZChtdXRleCkoJmFjdGl2ZV9wbGF0Zm9ybV9wcm9maWxlX2xvY2spOw0KPiAr
-CQkqcHJvZmlsZSA9IGFjdGl2ZV9wbGF0Zm9ybV9wcm9maWxlOw0KPiArCQlicmVhazsNCj4g
-ICAJfQ0KPiAgIA0KPiAgIAlyZXR1cm4gMDsNCj4gQEAgLTE3MDcsMTAgKzE3MTIsMTQgQEAg
-c3RhdGljIGludCBocF93bWlfcGxhdGZvcm1fcHJvZmlsZV9zZXQoc3RydWN0IGRldmljZSAq
-ZGV2LA0KPiAgIAkJcmV0dXJuIC1FT1BOT1RTVVBQOw0KPiAgIAl9DQo+ICAgDQo+ICsJZ3Vh
-cmQobXV0ZXgpKCZhY3RpdmVfcGxhdGZvcm1fcHJvZmlsZV9sb2NrKTsNCj4gKw0KPiAgIAll
-cnIgPSB0aGVybWFsX3Byb2ZpbGVfc2V0KHRwKTsNCj4gICAJaWYgKGVycikNCj4gICAJCXJl
-dHVybiBlcnI7DQo+ICAgDQo+ICsJYWN0aXZlX3BsYXRmb3JtX3Byb2ZpbGUgPSBwcm9maWxl
-Ow0KPiArDQo+ICAgCXJldHVybiAwOw0KPiAgIH0NCj4gICANCj4gQEAgLTIwMTcsOCArMjAy
-NiwyMyBAQCBzdGF0aWMgaW50IGhwX3dtaV9wbGF0Zm9ybV9wcm9maWxlX3Byb2JlKHZvaWQg
-KmRydmRhdGEsIHVuc2lnbmVkIGxvbmcgKmNob2ljZXMpDQo+ICAgCQkvKiBBZGRpbmcgYW4g
-ZXF1aXZhbGVudCB0byBIUCBPbWVuIHNvZnR3YXJlIEVDTyBtb2RlOiAqLw0KPiAgIAkJc2V0
-X2JpdChQTEFURk9STV9QUk9GSUxFX0xPV19QT1dFUiwgY2hvaWNlcyk7DQo+ICAgCX0gZWxz
-ZSB7DQo+IC0JCXNldF9iaXQoUExBVEZPUk1fUFJPRklMRV9RVUlFVCwgY2hvaWNlcyk7DQo+
-IC0JCXNldF9iaXQoUExBVEZPUk1fUFJPRklMRV9DT09MLCBjaG9pY2VzKTsNCj4gKwkJaW50
-IGN1cnJlbnRfdHAgPSB0aGVybWFsX3Byb2ZpbGVfZ2V0KCk7DQo+ICsNCj4gKwkJaWYgKGN1
-cnJlbnRfdHAgPCAwKQ0KPiArCQkJcmV0dXJuIGN1cnJlbnRfdHA7DQo+ICsNCj4gKwkJaWYg
-KHRoZXJtYWxfcHJvZmlsZV9zZXQoSFBfVEhFUk1BTF9QUk9GSUxFX1FVSUVUKSA9PSAwKQ0K
-PiArCQkJc2V0X2JpdChQTEFURk9STV9QUk9GSUxFX1FVSUVULCBjaG9pY2VzKTsNCj4gKwkJ
-aWYgKHRoZXJtYWxfcHJvZmlsZV9zZXQoSFBfVEhFUk1BTF9QUk9GSUxFX0NPT0wpID09IDAp
-DQo+ICsJCQlzZXRfYml0KFBMQVRGT1JNX1BST0ZJTEVfQ09PTCwgY2hvaWNlcyk7DQo+ICsJ
-CWlmICh0aGVybWFsX3Byb2ZpbGVfc2V0KEhQX1RIRVJNQUxfUFJPRklMRV9ERUZBVUxUKSA9
-PSAwKQ0KPiArCQkJc2V0X2JpdChQTEFURk9STV9QUk9GSUxFX0JBTEFOQ0VELCBjaG9pY2Vz
-KTsNCj4gKwkJaWYgKHRoZXJtYWxfcHJvZmlsZV9zZXQoSFBfVEhFUk1BTF9QUk9GSUxFX1BF
-UkZPUk1BTkNFKSA9PSAwKQ0KPiArCQkJc2V0X2JpdChQTEFURk9STV9QUk9GSUxFX1BFUkZP
-Uk1BTkNFLCBjaG9pY2VzKTsNCj4gKw0KPiArCQkvKiBSZXN0b3JlIHRoZSBvcmlnaW5hbCB0
-aGVybWFsIHByb2ZpbGUgKi8NCj4gKwkJdGhlcm1hbF9wcm9maWxlX3NldChjdXJyZW50X3Rw
-KTsNCj4gKwkJcmV0dXJuIDA7DQo+ICAgCX0NCj4gICANCj4gICAJc2V0X2JpdChQTEFURk9S
-TV9QUk9GSUxFX0JBTEFOQ0VELCBjaG9pY2VzKTsNCj4gQEAgLTIyNjMsNiArMjI4NywyNSBA
-QCBzdGF0aWMgaW50IHRoZXJtYWxfcHJvZmlsZV9zZXR1cChzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpkZXZpY2UpDQo+ICAgCQlpZiAoZXJyKQ0KPiAgIAkJCXJldHVybiBlcnI7DQo+ICAg
-DQo+ICsJCS8qIEluaXRpYWxpemUgYWN0aXZlX3BsYXRmb3JtX3Byb2ZpbGUgKi8NCj4gKwkJ
-c3dpdGNoICh0cCkgew0KPiArCQljYXNlIEhQX1RIRVJNQUxfUFJPRklMRV9QRVJGT1JNQU5D
-RToNCj4gKwkJCWFjdGl2ZV9wbGF0Zm9ybV9wcm9maWxlID0gUExBVEZPUk1fUFJPRklMRV9Q
-RVJGT1JNQU5DRTsNCj4gKwkJCWJyZWFrOw0KPiArCQljYXNlIEhQX1RIRVJNQUxfUFJPRklM
-RV9ERUZBVUxUOg0KPiArCQkJYWN0aXZlX3BsYXRmb3JtX3Byb2ZpbGUgPSBQTEFURk9STV9Q
-Uk9GSUxFX0JBTEFOQ0VEOw0KPiArCQkJYnJlYWs7DQo+ICsJCWNhc2UgSFBfVEhFUk1BTF9Q
-Uk9GSUxFX0NPT0w6DQo+ICsJCQlhY3RpdmVfcGxhdGZvcm1fcHJvZmlsZSA9IFBMQVRGT1JN
-X1BST0ZJTEVfQ09PTDsNCj4gKwkJCWJyZWFrOw0KPiArCQljYXNlIEhQX1RIRVJNQUxfUFJP
-RklMRV9RVUlFVDoNCj4gKwkJCWFjdGl2ZV9wbGF0Zm9ybV9wcm9maWxlID0gUExBVEZPUk1f
-UFJPRklMRV9RVUlFVDsNCj4gKwkJCWJyZWFrOw0KPiArCQlkZWZhdWx0Og0KPiArCQkJYWN0
-aXZlX3BsYXRmb3JtX3Byb2ZpbGUgPSBQTEFURk9STV9QUk9GSUxFX0JBTEFOQ0VEOw0KPiAr
-CQkJYnJlYWs7DQo+ICsJCX0NCj4gKw0KPiAgIAkJb3BzID0gJmhwX3dtaV9wbGF0Zm9ybV9w
-cm9maWxlX29wczsNCj4gICAJfQ0KPiAgIA0K
+On your laptop, the fan speed is controlled by the ACPI thermal subsystem
+directly (acpi_fan-isa-0000 is reporting the 2100 RPM), while hp-wmi
+(hp-isa-0000) reports 0 RPM because manual fan control interface is not exp=
+osed
+by HP firmware on generic non-gaming (non-Omen/Victus) models.
 
---------------ms050708000108020507020600
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Looking at your sensors output, the MediaTek WiFi card (mt7925) is reportin=
+g a
+temperature of +86.0=C2=B0C. Modern thin-and-light laptop firmware (Embedded
+Controller) often monitors multiple sensors (CPU, NVMe, WiFi, and skin
+sensors). If the WiFi card or NVMe SSD is hot, the BIOS/EC will keep the fan
+spinning at a low RPM (like 2100 RPM) to cool the chassis, even if the CPU =
+is
+idling at 39=C2=B0C.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
-AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
-bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
-MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
-MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
-OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
-xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
-UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
-clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
-WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
-jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
-QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
-tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
-yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
-HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
-AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
-Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
-Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
-AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
-BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
-bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
-qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
-4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
-L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
-oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
-8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
-jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
-olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
-gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
-xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
-3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
-SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMjYwNjIwMDkzNjQzWjBPBgkqhkiG9w0BCQQxQgRA/p8sV5NIAprjpQGxdQBp
-WnnMupJRQqotA4nUSr89R+8WaWWbjkqqF5pOHWiYrvtalVgzWBVveuzAMtFkIjgFnzBpBgkr
-BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
-MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
-SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
-ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
-CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
-YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
-SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
-CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
-BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAB7vOqwZrcTyYPc6rs4r2uqS
-xhl+0uiJ9ZT4soNDjUdKmwR+ExUshWCnw/YsAAid92lRBk4nGanJXVuRxMCaIfiRFIyEnJ4Y
-MSEZu6yE2LDC80E1tP+5owf8qpKaYcyjxaW+t/Iu0MSB873aAp0jEUNQ1ajAC0/q9cJ9BCd+
-UE6fea5ZGl6E5xYxhxdJSICWl4b5evi3N1MZ01fCGDv40P52ha5veNVIWDBrArnPgpUeVUbd
-7i6AHd6nseapyTeUASvB7cFwx8G3XJ1b4h9hmFIOVMbcH1z+IuJpcthUFyNzMEkaCgaPHydc
-Xj6I8ZZgdkzNjsKjL8yhMdwwnFUEBCIKoTcq2pkLeAMWqHcWuA+wOM0WyBQfOCiBvEY/QjBs
-v3HEA/osTu2Ec3/QFuTsi3cb23iqPkV+EEZcHBfifP1umUTNE9/6+qU9eWx2IeHOY5b7YkJR
-DJCEtF3VuzFMNsIkxh+1Axjz9uL9kGJ+fqMi/Q278PvJVMINWXKPKowoTKyAmcMR9w0gb/TH
-DPweHraZ23llyov+2Z+TBgX9NW+FoGn0YjNnxLhZNNusmwbDCjgh8s6Lz3+Ojb2wex67rv+J
-JX5oucrsepqLJ0o/AhncoQP8egyJ/Pq0CAzJEMNshSmWZ38rWlnpogLEal8wXHocHxTZQG9M
-xRmbb10QAw9WAAAAAAAA
---------------ms050708000108020507020600--
+You can inspect which ACPI thermal zone is triggering the active cooling by
+running:
+
+> tail /sys/class/thermal/thermal_zone*/type
+> tail /sys/class/thermal/thermal_zone*/temp
+
+Since the platform profile driver is now working correctly, you should try
+switching it to quiet or low-power (if available on your model) using
+powerprofilesctl set quiet. This is the official way to tell the EC/BIOS to=
+ use
+a quieter fan curve and adjust the trip point thresholds.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
