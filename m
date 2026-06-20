@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031682DC32C
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 11:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CA1345CC9
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 11:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781955730; cv=none; b=MOgI1g3TV03iXwphUIAoGcpNjiPL/hRV1Vf3Z/3ydMt0L0iEOKYQCka+yWXP7wAyfEt2RD+fTF0kzRjyXRaRUT9KTsr20dzn1la552lT/WqdAuv30PYtMaLoj3Svz7NX5Pmmi/FLLL1dYPdgoFa2GQuF6NTDLVsBmEVEWu/pdgs=
+	t=1781956112; cv=none; b=DnsOqvvMlo0NTxY6RW/s63pTgrVjMnFEUmtSM56Jc4J/R3GsEybG1yRMQMLwFFx6v0zdwZbVR/muUVugEEb4Uyx9t+dTsXWBzf0vOLhPMhykG9VsYBgidAaT5Gegc55KK3I7FjiBRA+5GABiU+g05/9W8sWc6M4IldPO3exK8gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781955730; c=relaxed/simple;
-	bh=pw28nBB814+UTgHscmRcgZrVyZzwVr8YL9cCdoea9qM=;
+	s=arc-20240116; t=1781956112; c=relaxed/simple;
+	bh=PNT9Mvm3TsmbboPvelNaMUeldCAI9+CskauhsTzO3tw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qrc0aj4L+7hu73qjZHRTTplPZAVi8HVX7Tqic0JmkLT5cMpu0Ii7dkYUYQFCEHaAzsLPN8qLLQYf7Vdl/GCs6Vdl0rx5C2QjJ1lItyRCP1zy3dtLh95GjTJFu6hloBGiAP2MMyU1ZGqxUVmKeV0GNiDTwG4It0VOdJJ8RKbC6Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJLi22i6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=P48NpXQ0Lph1fp/V0mxj6uAO10C8MHlkwNMSxLeyN2t0mb0PLBRCSHfkXyINobV7ZLqxK6Vogc7tPeBzqLdu9V9N0E8ftgs+oonx5UWcZqksPzPwHU7kxKHc8FUZxd+VpQAXV4DQmvdF8hqvkLa8NfIT0XjbE4+ed/UjMPxZxKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+GRKSHu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJLi22i6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8A556C2BCB0
-	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 11:42:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+GRKSHu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 47B9FC2BCB0
+	for <platform-driver-x86@vger.kernel.org>; Sat, 20 Jun 2026 11:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1781955729;
-	bh=pw28nBB814+UTgHscmRcgZrVyZzwVr8YL9cCdoea9qM=;
+	s=k20201202; t=1781956112;
+	bh=PNT9Mvm3TsmbboPvelNaMUeldCAI9+CskauhsTzO3tw=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=BJLi22i6CdZSs/sesetJlxfjFF/KXsEozwalBBAvp68q39wQWQW/gNsyMsaYg1L/z
-	 7R+UmiX/SdZrYpmoaPDnq9ivhu+uiFeyHkWHA8LbOE3Qf6CI2rW8zwlaxvjiKtNtf7
-	 HJN/YeypGfPi98Z9KJf9+qT6m7h7rhZXHoyhuSB1+bkW0FoeFV3w2f62EYAEOqy8ec
-	 jIMZNNCNBaOHcu41JQZ5U+Tp5XUkqWaj6U60Ol5ZUBc9ORKpfmcQxp4vO4PZZ7MheS
-	 I7BKA/Nr11x9GU8KS4Nei74ndxnF504Ayhy26x8x+Bvn7oevYUWrEeGXCz2pdCmZ+2
-	 pidHUcCDpegTw==
+	b=o+GRKSHusq3aN8ZPYoI6lDT5W1b1+V6z1xNqYqfsghBtFBgfYVwayydq3oHPa5zHi
+	 1iDI8jp0qtXeA7MVfa/PlNQgK0ROtr3QQ+xTOhpmUOgJXiwcF//kK67P41un+u8uTw
+	 Is1DRRJA+pxt6kTv/nB62kwc5qOxgwjFDpk/M4FXIT5kTFlj7tIWUDyja/mXmhbrZI
+	 a/20R7Yv+JUCe2bFHunK9UGZhK69YIW7NCQWHrRNKhrI6GROujz9uQHCSYZhuelb1b
+	 k6Lgk3qeRKK9elyuXcY1aHvndWZ/Og3GhQ92/idXLvrvSZj8TYwIabVao0DQLxvr2A
+	 O4zkHwEesY84Q==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 70E48C4160E; Sat, 20 Jun 2026 11:42:09 +0000 (UTC)
+	id 268F5C41612; Sat, 20 Jun 2026 11:48:32 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
  7.1-rc4 kerenel
-Date: Sat, 20 Jun 2026 11:42:09 +0000
+Date: Sat, 20 Jun 2026 11:48:31 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,14 +41,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: moravec@ukf.sk
+X-Bugzilla-Who: scardracs@disroot.org
 X-Bugzilla-Status: RESOLVED
 X-Bugzilla-Resolution: UNREPRODUCIBLE
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221569-215701-sdU7ymBxx2@https.bugzilla.kernel.org/>
+Message-ID: <bug-221569-215701-t4k0taFprH@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
 References: <bug-221569-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,122 +64,18 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
---- Comment #37 from Milan Oravec (moravec@ukf.sk) ---
-Thank you, laptop is 5 month old, and it is clean. That high temps. are
-strange. There is not always that high temp. on that device, net connection=
- is
-not heavily used, only some web pages and some ssh sessions to remote hosts.
-Why is that temp so high? :(
+--- Comment #38 from Marco Scardovi (scardracs@disroot.org) ---
+Please check if ALPM is enabled or disabled under LnkCtl
 
-Will try without WIFI, but that is the only one net connection on this devi=
-ce,
-so not really useful without net connection. :)
+> sudo lspci -vv -s 62:00.0 | grep -i aspm
 
-Here is output of suggested /sys fs:
+Note: 62:00.0 is the PCI address of your mt7925 card.
 
-migo@migo-HP:~$ tail /sys/class/thermal/cooling_device*/cur_state
-=3D=3D> /sys/class/thermal/cooling_device0/cur_state <=3D=3D
-1
-
-=3D=3D> /sys/class/thermal/cooling_device10/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device11/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device12/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device13/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device14/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device15/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device16/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device1/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device2/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device3/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device4/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device5/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device6/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device7/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device8/cur_state <=3D=3D
-0
-
-=3D=3D> /sys/class/thermal/cooling_device9/cur_state <=3D=3D
-0
-migo@migo-HP:~$ tail /sys/class/thermal/cooling_device*/type
-=3D=3D> /sys/class/thermal/cooling_device0/type <=3D=3D
-Fan
-
-=3D=3D> /sys/class/thermal/cooling_device10/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device11/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device12/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device13/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device14/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device15/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device16/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device1/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device2/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device3/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device4/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device5/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device6/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device7/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device8/type <=3D=3D
-Processor
-
-=3D=3D> /sys/class/thermal/cooling_device9/type <=3D=3D
-Processor
-migo@migo-HP:~$
+BTW disabling the WiFi with rfkill is only meant as a temporary 5-minute te=
+st
+just to verify this theory. If the temperature drops to <50=C2=B0C and the =
+fan turns
+off after blocking it, we know for sure where the problem lies.
 
 --=20
 You may reply to this email to add a comment.
