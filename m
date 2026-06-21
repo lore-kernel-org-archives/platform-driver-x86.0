@@ -1,78 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2084F5E0
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 11:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BBD1E0DD8;
+	Sun, 21 Jun 2026 12:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782041016; cv=none; b=twfEO+Xo8RRXAJ+jLKmSWjscye2q5BB1ZsVR1yjI/gJwtWnAklNmcaGRv6hT7lf5PnVA4rInE58mmLFTIpKFuTafV3fXCJdbb0MRzkL4jrO3F/VriFBOq9VnoFZiprKHk3fuWIvAy+HWE3j9z0rrRn+FJurpKRpVtOlIqMClY1o=
+	t=1782045076; cv=none; b=jzkm1VGYZhKmGGxu4+YX/aEWlJ4TLwYtlsrMHSjagDh/QRDCeZ0MEvt8lQv56vKdp+puLX60ZkkJH7qo7/G3Z49tg4vajvjhVsJGHf6JdMBIma3XGQxi6880y8xpAwyL/4xVta0RDdwsgufn3EdK4tBBPlBFOrg/2MiZ+0zuk00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782041016; c=relaxed/simple;
-	bh=QtQgwB4H+JWDydIRwjg7MKhFvDPcAZdPFwwH3RQckOA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GupMTZ+RzfDh81vnzPLdaoFGQuigwYUrNz6SMmx1pLktxFiuPfL2KkaoCN6JfSHK7wmq9voV4ezWnMDF/pehaTftIlzo53S8DgoVkQF7zqSbpwD5XXPRXKYoKJt/gNsXcZsVu4TZLhmhb4+3LgLFB7tRvfgip//M4zG2nYLW1U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTQogrJC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1782045076; c=relaxed/simple;
+	bh=i+090HnrgdvbJPHhomsrxRmwyoBqPpx3dWvNP3uA2N0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fuHwaX/2oL1//8jgoFBN3wGjDFYo5b/7SxEihouBGNWCmBURmbiyq4A+CfehbJ06QqzlvmNP+r+j4G3scqhRPAtLDwuV35UtuOIiOPfph0N4rrzBc1Q78IrDEbrXADXr8qxUwof/Cw6SX8334j25ar55CGDYrjCXYct7OGDbAN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=U/MnU2cm; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTQogrJC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A04FC2BCF6
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 11:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1782041016;
-	bh=QtQgwB4H+JWDydIRwjg7MKhFvDPcAZdPFwwH3RQckOA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=dTQogrJCKQq3Time+RT6KCy87yGHt4ZgYM69Df4zeFvFBKWScfduQ0a6thj4SjBlI
-	 0dDCLoWwy7+/ByEbPGuVYOEwqsIcYE0qp5WNLaWz/9GykPhk3cOMakiN8UzeLbspdw
-	 WmNsgZ5RntR/FAZLQSgLECcz2sfgBqjyiUPuVhKr/EZdclr5IcLi6525K7sHciyoyM
-	 F0W5WttWo5YE2K3PCsFthMS435iUymG1y7BSy1prUBb8irCbwWxNmxn0jU+FJrVCXy
-	 oqAgMKKMjDwA/8k47u4W4syqJRFtgz4mZP0RBlwKBl82AoIt83eKZOkZuMWSlLb78h
-	 UkRkJ3qUxY06w==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 5B098C53BC5; Sun, 21 Jun 2026 11:23:36 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Sun, 21 Jun 2026 11:23:35 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: marciosr10@gmail.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-fJPBo8ZmUy@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="U/MnU2cm"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A89E327027;
+	Sun, 21 Jun 2026 14:31:11 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5o9oBgG-6V8P; Sun, 21 Jun 2026 14:31:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1782045071; bh=i+090HnrgdvbJPHhomsrxRmwyoBqPpx3dWvNP3uA2N0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=U/MnU2cmBvclZYOgABfq0IkSJV3uAAshjAUOk7iHQO0i656TC1YY4t0+hz5KfhMj3
+	 lb2K6SEh/jcgqbbHyZVj7aWgCL2kR+F7umLg98Jlot54wLHb3ftBo+C27HMnNmGHFn
+	 1114vMdaS/V+v6O1y4Rj6LHxNeRjuDQTGHp7ofMbFKF+8+ktDs2vuV9fOuuRzBZMqS
+	 nsKdZoAOnFfwF5exCj+++nmG69yY+FdtAtQZ+mW0/VawLpceCRDDYiWRMZramR3Fuk
+	 p+qs6gxEJ4X0Nzr1/1HNtlCiU76b3qmhz3Wq5Q+0HAUaIrYb1GH5aJLLQ48TkmXzGr
+	 I/XpXPEjU9iOw==
+From: Marco Scardovi <scardracs@disroot.org>
+To: scardracs@disroot.org
+Cc: denis.benato@linux.dev,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	luke@ljones.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 1/1] platform/x86: asus-armoury: Add power limits quirk for FA401KM
+Date: Sun, 21 Jun 2026 14:28:59 +0200
+Message-ID: <20260621123055.5465-2-scardracs@disroot.org>
+In-Reply-To: <20260621123055.5465-1-scardracs@disroot.org>
+References: <20260621090230.41249-2-scardracs@disroot.org>
+ <20260621123055.5465-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Add power limits quirk entry for ASUS ROG FA401KM laptop.
+The limits are extracted from the device's ThrottleGear XML configuration
+file for the 'Ryzen' profile.
 
---- Comment #151 from M=C3=A1rcio (marciosr10@gmail.com) ---
-Maybe it's time to submit the quirk for the next kernel release, unless the=
-re
-are further tests to be done. Here, even with the updated kernel and firmwa=
-re,
-the issue persists.
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
+ drivers/platform/x86/asus-armoury.h | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -371,6 +371,38 @@
+ 	},
+ 	{
+ 		.matches = {
++			DMI_MATCH(DMI_BOARD_NAME, "FA401KM"),
++		},
++		.driver_data = &(struct power_data) {
++			.ac_data = &(struct power_limits) {
++				.nv_dynamic_boost_max = 15,
++				.nv_dynamic_boost_min = 5,
++				.nv_temp_target_max = 87,
++				.nv_temp_target_min = 75,
++				.nv_tgp_max = 95,
++				.nv_tgp_min = 55,
++				.ppt_pl1_spl_max = 80,
++				.ppt_pl1_spl_min = 15,
++				.ppt_pl2_sppt_max = 80,
++				.ppt_pl2_sppt_min = 35,
++				.ppt_pl3_fppt_max = 80,
++				.ppt_pl3_fppt_min = 35,
++			},
++			.dc_data = &(struct power_limits) {
++				.nv_temp_target_max = 87,
++				.nv_temp_target_min = 75,
++				.ppt_pl1_spl_max = 35,
++				.ppt_pl1_spl_min = 25,
++				.ppt_pl2_sppt_max = 44,
++				.ppt_pl2_sppt_min = 31,
++				.ppt_pl3_fppt_max = 65,
++				.ppt_pl3_fppt_min = 45,
++			},
++			.requires_fan_curve = true,
++		},
++	},
++	{
++		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "FA401UM"),
+ 		},
+ 		.driver_data = &(struct power_data) {
+-- 
+2.54.0
