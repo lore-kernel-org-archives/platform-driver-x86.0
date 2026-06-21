@@ -1,76 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AC31A6836
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 08:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545781607A4;
+	Sun, 21 Jun 2026 09:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782030225; cv=none; b=SwzcpHU+yVLxzDhX43mR8t0uJMi0E/1K09wodCy5HXy0TKYywCcJNjaICPF2zyBz9HXOfLemHvkehu6tprKS5BmEUaOyNa6928FtaxlNtGS0pjJFRLMstO1nn8FpyrlLGEypJidyz+fEiwVjJQkXUsG6ZG+7shcsM7WqJZ8X10k=
+	t=1782032576; cv=none; b=WtVuIbkBopIl/knN3wDPs7WbGdEnHZ+tnnf+sYD+TKMtHSXlt36t++8bemr4LoQzJqnvNlfoiZo/kGnvjRu52RbKjRz9aQHWPrt1sd3YI7xNETSAS10WX0+A/PW6uQ9EHfb2OH3A0vJwFeUPr5sloU5kuI0loqaRwoXd2OZPYi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782030225; c=relaxed/simple;
-	bh=3+DDLM6mA3psAqD5sP3g4E+as0iR9spzLyoum2x0MnY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uKHuaTwMTZOXhvPY3HYxUzuJJK4M1n+4A2xtVZTZz9iSFTX34e2Qrn4IXucvRBU4X5Szo/ecjLOETvxBroH/XMxVx1OcgdJ1D5EfyM3SnD4NDmylGp2lxyy3F/rYm8QGsu4BjtkzolCHZpMBwPAz1A8LoEt5BbTq3w0YnCWvIvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POQquq/G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1782032576; c=relaxed/simple;
+	bh=fWQgAZ9Zg8T47roOV1QkiMp/QucRwEhYiTrujUAC/5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PYdmFR0lu65vV2vkGjNEpAoTQRJJUabFAZ+XLCO6V1iQNRlrQeaIzp71QoQdG3QrjeKRA7izt9waE5m8XvZzQJ2t9Sf9wLFPa3z8k4O/U4UKoBp0z57i6kmQC21AjjIfCTOaKXq5NrTJnKjPct1PCy7kJcTrFujEZDNthWvDykM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=O3XOLH1h; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POQquq/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 408BAC2BCC6
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 08:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1782030225;
-	bh=3+DDLM6mA3psAqD5sP3g4E+as0iR9spzLyoum2x0MnY=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=POQquq/GptfY8FpAqZpi/2bxdn4p9yyMGFt+japffUza7kvV7Oiok6QnqSte/1GRc
-	 VXbm3n0NKimG+MFJDcsBA+dV6FzD51NlxJzBWL5lAEE+Vr0VPQuwAPged0MRaV9fjt
-	 pt/Dgd3AtskzYonGhKBVs3UVJ3pMEKkcnCaDo0bbHL4bxBgnmAYeaWh7SdZibB+B7k
-	 05tQ9k1JAdLVQRTibFZPnBURxiPRtEj2Uz9X2JFYmS8FvToLc0VKdfANjacv+P4lx+
-	 mM5qx0jSVf9kNTsOqZx9FS8pE8o6AibCeUqmAEASzF/gEw3iiBoKjyhQJaNgZYnrhf
-	 6vP8hb0KsJhWQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2271DC3279F; Sun, 21 Jun 2026 08:23:45 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
- models (16Z90S)
-Date: Sun, 21 Jun 2026 08:23:44 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: chgenn.x@gmail.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218901-215701-5TjsVPrVIG@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
-References: <bug-218901-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="O3XOLH1h"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 86FFB26950;
+	Sun, 21 Jun 2026 11:02:46 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id zVDmsJtlownu; Sun, 21 Jun 2026 11:02:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1782032565; bh=fWQgAZ9Zg8T47roOV1QkiMp/QucRwEhYiTrujUAC/5Q=;
+	h=From:To:Cc:Subject:Date;
+	b=O3XOLH1h26sT67pyKyhN4yMqXzxDvz5/DEvCB0/8kB+IQouGA+4ThZSrrzATfcjGe
+	 MWIIKMiUwk5uEFA8KfRFHMIrc10q9tXD1pepEseSNScY34Bi7cnw1BvU+hIrJH4V8c
+	 pPwJGQfZETDtGb6rIxBEz1riZENukOTuvvIjQgGC3fBhasFuO+hndr/cSXXo87LN42
+	 fTCTyjOWBLXbHguNU7L+adUX393g6a9RTjuCaTuHurLSCweDzN9MjbBMnBWcoQ3708
+	 mnQ1Q6hBu7/Z+PDPg6RRtZVvmvttRrSPOzYFOL+eUD+zMuXoJ+RL/O3Ehiu3SWFJUQ
+	 DRxm83olnjUNw==
+From: Marco Scardovi <scardracs@disroot.org>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: denis.benato@linux.dev,
+	luke@ljones.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Marco Scardovi <scardracs@disroot.org>
+Subject: [PATCH 0/1] platform/x86: asus-armoury: Add power limits for FA401KM
+Date: Sun, 21 Jun 2026 11:02:29 +0200
+Message-ID: <20260621090230.41249-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
+Hi everyone,
 
---- Comment #107 from Evgeny Ch (chgenn.x@gmail.com) ---
-Yes, the same commands from previous message work for keyboard backlight fo=
-r LG
-gram 16 2022 with new driver.
+This patch adds the power limits quirk entry for the ASUS ROG FA401KM laptop.
+The limits are extracted from the device's ThrottleGear XML configuration
+file using my ThrottleGear program https://github.com/mscardovi/throttlegear.
 
---=20
-You may reply to this email to add a comment.
+Marco Scardovi (1):
+  platform/x86: asus-armoury: Add power limits quirk for FA401KM
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ drivers/platform/x86/asus-armoury.h | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+-- 
+2.34.1
