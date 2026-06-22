@@ -1,47 +1,47 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D9C34B1AD;
-	Mon, 22 Jun 2026 19:39:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231B5349CCD;
+	Mon, 22 Jun 2026 19:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782157182; cv=none; b=QA/R27UtD6EGmw4Hvq9hiXVRCBfg8gYGJSqusxCHnjmTYbDp5RNKxUg/TIRFR+R8Hl8lk9+tQLHJGJUfJ68dWBvauvMiCYLWOmrTNas3E4CZtIdEg2Zc6cPaCspm76yqmtykkUpAXmGzPjiiDM6XdPRsOh3SFfRQrlePaVyYbSA=
+	t=1782157182; cv=none; b=cmclwjA8tzYeioKbpJks3OJIAkmZMj58ABNKXM6MXn4xTgT76oiYrxF5ng2oE3MqOOg0RUI8O96T21uCaND+uM3SshqgEUO8KJpe3oiHuC7EQFXW6H1VVRloFmIn4C6KZeliJfnJrZgmJeTbD2gbZDmZViUkcYY2gNfoOSZK11A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782157182; c=relaxed/simple;
-	bh=m2NZgs3FExq2fvnAlf8Ig4YTCWr0KPc5HbNTgVfpnuI=;
+	bh=kxz3SoQEu6LcDLnx+MH3uwFq8UKeqx87xID/rcK1Gt4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mfKWpoBY9FTEM/6QbJYkVNTgTzb9EUw38dtzsrBQuy3SGCM6gESfcnHb4epaoYGkMCZDsqEzudcmtJhfceJwQ637UN1uVYuOIwxsyaE/cp4XkGoCFOTru653LTUl+q6ZYiZozKf/6838XIHdwx6SgHO52A7lc2un5M2aw9lTB0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=QSyXDK10; arc=none smtp.client-ip=212.227.15.19
+	 MIME-Version; b=TBhxfH1U8QyWl7zuDCB2ZQIo1H/GAlvlOiAbDYuFpASBwKusrCZjpEdKH6Qp+p3GOw+mIZOLo5JsMkjatNn7L2TvKvDYNaNzV5mK5IAoVka1N8Q16eLTtMeaYGki4bFLLbeyRuYGZa7eCXV9Ceu2lWydcRQmPJolS5O/uUHJ/v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=H9BWcId/; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="QSyXDK10"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="H9BWcId/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1782157170; x=1782761970; i=w_armin@gmx.de;
-	bh=W886lSX+L1r8B/kBJzPTzKoMRC33WwSp/1BkODijG1s=;
+	s=s31663417; t=1782157172; x=1782761972; i=w_armin@gmx.de;
+	bh=68iUw82lr5OM5MxoSD8kNfA1i19Fzbgb1whlpSfittM=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=QSyXDK10wTVDfz4pXfywYw+qMFGu4top+hkeKBEwBWapNWknUkFD75Ke+eaPibhx
-	 7fspyfTr+JJ5trTVrIpVI6VtJKJYO+bWDmLjgUN3xj0JQiU89v2U9T/Vajd9iTiZA
-	 Yeh2q5OsSqpsFf+3smX80jzDHb7rZr1+iF9DMxTrk5N6zFgZxtOv6L9t9tyjNRbhw
-	 kHQ150qN/PM9U4esgVBRmgnHAJcC9gn7RLMI7fLBL+zW5ErySX3+8EMGemVWFF9Li
-	 0CIQf7AKD4OagIz9WR0UmLdV2c3T/RjsreCM3zGo4hsY91Bl8Cs0Iw9oE4IqRXUw2
-	 JworrUz5L49gmhliIQ==
+	b=H9BWcId/jofB1r1aH3at+Kwyh3hJo8ol0XNeBSSDltNdDpi1/i6/O/y+0bT4aYZD
+	 m0pGsJznQfSq2GIu/CdJgXaDNdF6BR3HLBOqvMF5NSzObfX3qCsieifMcGVsBPyww
+	 JvB1rdL457g40ljQ0p+CjvyfF4I/eURCykQR697WWelWUrHMidu7I57SjIvQfwrIU
+	 GyYTh6StkeSMBbaZ5NpKIoY22ZTLXiOGTDFKSZBYg/UKHG8+lcQSk7DDdhomxCWZA
+	 /NYFSHsTESQFJUxzypnYM+uWAmcvdxTPsPpehiASN4Ts4dvxZo/wTirObnlSNeEKh
+	 ABLlw4/6zmCMVquyxQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1McH9i-1x9hGg2Jki-00ZYqz; Mon, 22
- Jun 2026 21:39:30 +0200
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mof5H-1wvB3i3bPl-00najo; Mon, 22
+ Jun 2026 21:39:31 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: matan@svgalib.org
 Cc: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] platform/x86: lg-laptop: Add support for native ACPI events
-Date: Mon, 22 Jun 2026 21:39:11 +0200
-Message-Id: <20260622193914.116999-3-W_Armin@gmx.de>
+Subject: [PATCH 4/5] platform/x86: lg-laptop: Improve WMAB control method support
+Date: Mon, 22 Jun 2026 21:39:13 +0200
+Message-Id: <20260622193914.116999-5-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260622193914.116999-1-W_Armin@gmx.de>
 References: <20260622193914.116999-1-W_Armin@gmx.de>
@@ -52,513 +52,550 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:r2V7l8Tc4H4SpoZLZZo/r9u+t///PzynvUT9tn5zFAGx0mj4oVr
- tcv5OXd8OjicZ4o5LoO8NgEm8lt6q3nyz8XPQ9sA8nHqU9LN+n6buknLry8itxRoFNsGEZ7
- 7xlpyR+flXQ7eCw50aLYoNgc7eqhrl5SVHLtDf+v3mamJkvL/FcRMu+Upa5YRDYkNEQd70L
- HvYgBUDBmaKy/wwuwkERw==
+X-Provags-ID: V03:K1:MeAfmFWZ321/rYW66e5wkLNtl8wj6mSrr/4WLcRhy82IqDDquUz
+ Jkt3deh9+7neheXbY1RIP4aeYNHO45e6ioXhlogkfdAHNc5iMrFszp3F9YwajfhefQN6QGX
+ QPp8il2ZWoH/cYxx+DvaARUBwfb5CCmj90PZUbsBraV/1HzPRpte2KyXebUYOSoV9w05a3v
+ c4F/6EmLLUb7kqgLXKHNg==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:urs6Ms2waUk=;1v3HWxsmh/fdCyRHtykB/QSql6/
- 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
- 7fZyqgIKQ=
+UI-OutboundReport: notjunk:1;M01:P0:I4UNc0UzsrE=;zWqkzcTcjY904fr5TNMKrKjPg3n
+ 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
 
-LG devices support two interfaces for receiving events:
-- the WMI-based interface currently being used by the driver
-- a ACPI-based interface similar to the WMI-based interface
+The WMAB ACPI control method can return two kinds of results:
 
-Older devices use the WMI-based interface by default and need
-to be manually switched into ACPI mode. Newer devices however
-only support the ACPI-based interface, preventing the current
-driver from receiving events on them.
+1. A ACPI integer containing the result.
+2. A ACPI buffer containing the result and an error code.
 
-Fix this by always using the native ACPI-based interface for
-receiving events.
+Devices implement one of those mechanisms, but not both. Extend
+lg_wmab() to abstract away the differences between both mechanisms
+to fix keyboard backlight support on newer devices.
 
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/Kconfig     |   1 -
- drivers/platform/x86/lg-laptop.c | 301 ++++++++++++++++++++-----------
- 2 files changed, 199 insertions(+), 103 deletions(-)
+ drivers/platform/x86/lg-laptop.c | 267 +++++++++++++++++--------------
+ 1 file changed, 149 insertions(+), 118 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b54b5212b204..957034f39e4e 100644
-=2D-- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -802,7 +802,6 @@ config LG_LAPTOP
- 	tristate "LG Laptop Extras"
- 	depends on ACPI
- 	depends on ACPI_BATTERY
--	depends on ACPI_WMI
- 	depends on INPUT
- 	select INPUT_SPARSEKMAP
- 	select NEW_LEDS
 diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-la=
 ptop.c
-index a2db9657027e..ead0c3cc74a8 100644
+index c8e45e8b9d74..d1b33a6b5206 100644
 =2D-- a/drivers/platform/x86/lg-laptop.c
 +++ b/drivers/platform/x86/lg-laptop.c
-@@ -57,13 +57,18 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmwar=
-e debug messages");
- #define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR	0x3E8
- #define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR	0x5E8
+@@ -10,6 +10,8 @@
+ #include <linux/acpi.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
++#include <linux/compiler_attributes.h>
++#include <linux/cleanup.h>
+ #include <linux/device.h>
+ #include <linux/dev_printk.h>
+ #include <linux/dmi.h>
+@@ -21,6 +23,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/string_choices.h>
+ #include <linux/types.h>
++#include <linux/unaligned.h>
 =20
--#define WMI_EVENT_GUID0	"E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
--#define WMI_EVENT_GUID1	"023B133E-49D1-4E10-B313-698220140DC2"
--#define WMI_EVENT_GUID2	"37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
--#define WMI_EVENT_GUID3	"911BAD44-7DF8-4FBB-9319-BABA1C4B293B"
--#define WMI_METHOD_WMAB "C3A72B38-D3EF-42D3-8CBB-D5A57049F66D"
--#define WMI_METHOD_WMBB "2B4F501A-BD3C-4394-8DCF-00A7D2BC8210"
--#define WMI_EVENT_GUID  WMI_EVENT_GUID0
-+#define LG_NOTIFY_TABLET_MODE_OFF	0x50
-+#define LG_NOTIFY_TABLET_MODE_ON	0x51
-+#define LG_NOTIFY_HOTKEY		0x80
-+#define LG_NOTIFY_THERMAL		0x81
-+#define LG_NOTIFY_MISC			0x82
-+
-+#define LG_OREP_READ_EC			0
-+#define LG_OREP_WRITE_EC		1
-+#define LG_OREP_DEBUG			2
-+#define LG_OREP_UPDATE_SYSTEM_STATE	3
-+#define LG_OREP_INTERCEPT_WMI_EVENTS	4
-+#define LG_OREP_WAKE_ON_LAN		6
+ #include <acpi/battery.h>
 =20
- #define SB_GGOV_METHOD  "\\_SB.GGOV"
- #define GOV_TLED        0x2020008
-@@ -83,21 +88,7 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware=
+@@ -88,6 +91,11 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware=
  debug messages");
 =20
  #define PLATFORM_NAME   "lg-laptop"
 =20
--MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
--MODULE_ALIAS("wmi:" WMI_EVENT_GUID1);
--MODULE_ALIAS("wmi:" WMI_EVENT_GUID2);
--MODULE_ALIAS("wmi:" WMI_EVENT_GUID3);
--MODULE_ALIAS("wmi:" WMI_METHOD_WMAB);
--MODULE_ALIAS("wmi:" WMI_METHOD_WMBB);
--
++struct lg_wmab_buffer_result {
++	__le32 value;
++	__le32 status;
++} __packed;
++
  static struct platform_device *pf_device;
--static struct input_dev *wmi_input_dev;
--
--static u32 inited;
--#define INIT_INPUT_WMI_0        0x01
--#define INIT_INPUT_WMI_2        0x02
--#define INIT_INPUT_ACPI         0x04
--#define INIT_SPARSE_KEYMAP      0x80
 =20
  static int battery_limit_use_wmbb;
- static bool kbd_backlight_available;
-@@ -115,6 +106,36 @@ static const struct key_entry wmi_keymap[] =3D {
- 	{KE_END, 0}
- };
+@@ -195,30 +203,97 @@ static int ggov(u32 arg0)
+ 	return res;
+ }
 =20
-+static int lg_laptop_execute_orep(acpi_handle handle, u64 command, u64 va=
-lue,
-+				  unsigned long long *result)
-+{
-+	union acpi_object objs[] =3D {
+-static union acpi_object *lg_wmab(struct device *dev, u32 method, u32 arg=
+1, u32 arg2)
++static int lg_wmab_get(struct device *dev, u32 method, u32 *result)
+ {
+-	union acpi_object args[3];
+-	acpi_status status;
+-	struct acpi_object_list arg;
+ 	struct acpi_buffer buffer =3D { ACPI_ALLOCATE_BUFFER, NULL };
++	union acpi_object in[] =3D {
 +		{
 +			.integer =3D {
 +				.type =3D ACPI_TYPE_INTEGER,
-+				.value =3D command,
++				.value =3D method,
 +			},
 +		},
 +		{
 +			.integer =3D {
 +				.type =3D ACPI_TYPE_INTEGER,
-+				.value =3D value,
++				.value =3D WM_GET,
 +			},
-+		}
-+	};
-+	struct acpi_object_list args =3D {
-+		.count =3D ARRAY_SIZE(objs),
-+		.pointer =3D objs,
-+	};
-+	acpi_status status;
-+
-+	status =3D acpi_evaluate_integer(handle, "OREP", &args, result);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
- static int ggov(u32 arg0)
- {
- 	union acpi_object args[1];
-@@ -212,70 +233,6 @@ static union acpi_object *lg_wmbb(struct device *dev,=
- u32 method_id, u32 arg1, u
- 	return (union acpi_object *)buffer.pointer;
- }
-=20
--static void wmi_notify(union acpi_object *obj, void *context)
--{
--	long data =3D (long)context;
--	unsigned int brightness;
--
--	pr_debug("event guid %li\n", data);
--	if (!obj)
--		return;
--
--	if (obj->type =3D=3D ACPI_TYPE_INTEGER) {
--		int eventcode =3D obj->integer.value;
--		struct key_entry *key;
--
--		if (eventcode =3D=3D 0x10000000) {
--			if (kbd_backlight_available) {
--				brightness =3D get_kbd_backlight_level(kbd_backlight.dev->parent);
--				led_classdev_notify_brightness_hw_changed(&kbd_backlight,
--									  brightness);
--			}
--		} else {
--			key =3D sparse_keymap_entry_from_scancode(
--				wmi_input_dev, eventcode);
--			if (key && key->type =3D=3D KE_KEY)
--				sparse_keymap_report_entry(wmi_input_dev,
--							   key, 1, true);
--		}
--	}
--
--	pr_debug("Type: %i    Eventcode: 0x%llx\n", obj->type,
--		 obj->integer.value);
--}
--
--static void wmi_input_setup(void)
--{
--	acpi_status status;
--
--	wmi_input_dev =3D input_allocate_device();
--	if (wmi_input_dev) {
--		wmi_input_dev->name =3D "LG WMI hotkeys";
--		wmi_input_dev->phys =3D "wmi/input0";
--		wmi_input_dev->id.bustype =3D BUS_HOST;
--
--		if (sparse_keymap_setup(wmi_input_dev, wmi_keymap, NULL) ||
--		    input_register_device(wmi_input_dev)) {
--			pr_info("Cannot initialize input device");
--			input_free_device(wmi_input_dev);
--			return;
--		}
--
--		inited |=3D INIT_SPARSE_KEYMAP;
--		status =3D wmi_install_notify_handler(WMI_EVENT_GUID0, wmi_notify,
--						    (void *)0);
--		if (ACPI_SUCCESS(status))
--			inited |=3D INIT_INPUT_WMI_0;
--
--		status =3D wmi_install_notify_handler(WMI_EVENT_GUID2, wmi_notify,
--						    (void *)2);
--		if (ACPI_SUCCESS(status))
--			inited |=3D INIT_INPUT_WMI_2;
--	} else {
--		pr_info("Cannot allocate input device");
--	}
--}
--
- static ssize_t fan_mode_store(struct device *dev,
- 			      struct device_attribute *attr,
- 			      const char *buffer, size_t count)
-@@ -634,26 +591,164 @@ static enum led_brightness kbd_backlight_get(struct=
- led_classdev *cdev)
-=20
- static LED_DEVICE(kbd_backlight, 255, LED_BRIGHT_HW_CHANGED);
-=20
--static void wmi_input_destroy(void)
-+static struct platform_driver pf_driver =3D {
-+	.driver =3D {
-+		   .name =3D PLATFORM_NAME,
-+	}
-+};
-+
-+static int lg_laptop_get_event_data(acpi_handle handle, u32 value, u32 *d=
-ata)
- {
--	if (inited & INIT_INPUT_WMI_2)
--		wmi_remove_notify_handler(WMI_EVENT_GUID2);
-+	union acpi_object objs[] =3D {
++		},
 +		{
 +			.integer =3D {
 +				.type =3D ACPI_TYPE_INTEGER,
-+				.value =3D value,
++				.value =3D 0,
 +			},
-+		}
++		},
 +	};
-+	struct acpi_object_list args =3D {
-+		.count =3D ARRAY_SIZE(objs),
-+		.pointer =3D objs,
++	struct lg_wmab_buffer_result *buffer_result;
++	struct acpi_object_list input =3D {
++		.count =3D ARRAY_SIZE(in),
++		.pointer =3D in,
 +	};
-+	unsigned long long result;
 +	acpi_status status;
-+
-+	status =3D acpi_evaluate_integer(handle, "_WED", &args, &result);
+=20
+-	args[0].type =3D ACPI_TYPE_INTEGER;
+-	args[0].integer.value =3D method;
+-	args[1].type =3D ACPI_TYPE_INTEGER;
+-	args[1].integer.value =3D arg1;
+-	args[2].type =3D ACPI_TYPE_INTEGER;
+-	args[2].integer.value =3D arg2;
++	status =3D acpi_evaluate_object(ACPI_HANDLE(dev), "WMAB", &input, &buffe=
+r);
 +	if (ACPI_FAILURE(status))
 +		return -EIO;
 =20
--	if (inited & INIT_INPUT_WMI_0)
--		wmi_remove_notify_handler(WMI_EVENT_GUID0);
-+	if (result > U32_MAX)
+-	arg.count =3D 3;
+-	arg.pointer =3D args;
++	union acpi_object *obj __free(kfree) =3D buffer.pointer;
+=20
+-	status =3D acpi_evaluate_object(ACPI_HANDLE(dev), "WMAB", &arg, &buffer)=
+;
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(dev, "WMAB: call failed.\n");
+-		return NULL;
++	if (!obj)
++		return -ENODATA;
++
++	switch (obj->type) {
++	case ACPI_TYPE_INTEGER:
++		*result =3D obj->integer.value;
++		return 0;
++	case ACPI_TYPE_BUFFER:
++		if (obj->buffer.length !=3D sizeof(*buffer_result))
++			return -EPROTO;
++
++		buffer_result =3D (struct lg_wmab_buffer_result *)obj->buffer.pointer;
++		if (get_unaligned_le32(&buffer_result->status))
++			return -EIO;
++
++		*result =3D get_unaligned_le32(&buffer_result->value);
++		return 0;
++	default:
 +		return -EPROTO;
+ 	}
++}
 =20
--	if (inited & INIT_SPARSE_KEYMAP)
--		input_unregister_device(wmi_input_dev);
-+	*data =3D result;
-=20
--	inited &=3D ~(INIT_INPUT_WMI_0 | INIT_INPUT_WMI_2 | INIT_SPARSE_KEYMAP);
+-	return buffer.pointer;
++static int lg_wmab_set(struct device *dev, u32 method, u32 arg)
++{
++	union acpi_object in[] =3D {
++		{
++			.integer =3D {
++				.type =3D ACPI_TYPE_INTEGER,
++				.value =3D method,
++			},
++		},
++		{
++			.integer =3D {
++				.type =3D ACPI_TYPE_INTEGER,
++				.value =3D WM_SET,
++			},
++		},
++		{
++			.integer =3D {
++				.type =3D ACPI_TYPE_INTEGER,
++				.value =3D arg,
++			},
++		},
++	};
++	struct acpi_object_list input =3D {
++		.count =3D ARRAY_SIZE(in),
++		.pointer =3D in,
++	};
++	acpi_status status;
++
++	status =3D acpi_evaluate_object(ACPI_HANDLE(dev), "WMAB", &input, NULL);
++	if (ACPI_FAILURE(status))
++		return -EIO;
++
 +	return 0;
  }
 =20
--static struct platform_driver pf_driver =3D {
--	.driver =3D {
--		   .name =3D PLATFORM_NAME,
-+static void lg_laptop_handle_input_event(struct input_dev *input_dev, u32=
- value, u32 data)
-+{
-+	unsigned int kbd_brightness;
-+
-+	switch (value) {
-+	case LG_NOTIFY_HOTKEY:
-+		sparse_keymap_report_event(input_dev, data, 1, true);
-+		break;
-+	case LG_NOTIFY_THERMAL:
-+		/* Currently not supported */
-+		break;
-+	case LG_NOTIFY_MISC:
-+		switch (data) {
-+		case 0x10000000:
-+			if (!kbd_backlight_available)
-+				break;
-+
-+			kbd_brightness =3D get_kbd_backlight_level(kbd_backlight.dev->parent);
-+			led_classdev_notify_brightness_hw_changed(&kbd_backlight, kbd_brightne=
-ss);
-+			break;
-+		default:
-+			sparse_keymap_report_event(input_dev, data, 1, true);
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static void lg_laptop_notify_handler(acpi_handle handle, u32 value, void =
-*context)
-+{
-+	struct input_dev *input_dev =3D context;
-+	u32 data;
-+	int ret;
-+
-+	switch (value) {
-+	case LG_NOTIFY_TABLET_MODE_OFF:
-+	case LG_NOTIFY_TABLET_MODE_ON:
-+		/* Already handled by intel-hid */
-+		return;
-+	case LG_NOTIFY_HOTKEY:
-+	case LG_NOTIFY_THERMAL:
-+	case LG_NOTIFY_MISC:
-+		ret =3D lg_laptop_get_event_data(handle, value, &data);
-+		if (ret < 0) {
-+			dev_notice(input_dev->dev.parent, "Failed to get event data: %d\n", re=
-t);
-+			return;
-+		}
-+
-+		dev_dbg(input_dev->dev.parent, "Received event %u (%u)\n", value, data)=
-;
-+
-+		lg_laptop_handle_input_event(input_dev, value, data);
-+		return;
-+	default:
-+		dev_notice(input_dev->dev.parent, "Received unknown event %u\n", value)=
-;
- 	}
- };
-=20
-+static void lg_laptop_remove_notify_handler(void *context)
-+{
-+	acpi_handle handle =3D context;
-+
-+	acpi_remove_notify_handler(handle, ACPI_ALL_NOTIFY, lg_laptop_notify_han=
-dler);
-+}
-+
-+static void lg_laptop_reenable_wmi_events(void *context)
-+{
-+	acpi_handle handle =3D context;
-+	unsigned long long dummy;
-+
-+	lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 0, &dummy);
-+}
-+
-+static int lg_laptop_input_init(struct device *dev, acpi_handle handle)
-+{
-+	struct input_dev *input_dev;
-+	unsigned long long result;
-+	acpi_status status;
-+	int ret;
-+
-+	if (!acpi_has_method(handle, "_WED"))
-+		return 0;
-+
-+	input_dev =3D devm_input_allocate_device(dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name =3D "LG WMI hotkeys";
-+	input_dev->phys =3D "wmi/input0";
-+	input_dev->id.bustype =3D BUS_HOST;
-+	ret =3D sparse_keymap_setup(input_dev, wmi_keymap, NULL);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret =3D input_register_device(input_dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	status =3D acpi_install_notify_handler(handle, ACPI_ALL_NOTIFY, lg_lapto=
-p_notify_handler,
-+					     input_dev);
-+	if (ACPI_FAILURE(status))
-+		return -EIO;
-+
-+	ret =3D devm_add_action_or_reset(dev, lg_laptop_remove_notify_handler, h=
-andle);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (acpi_has_method(handle, "OREP")) {
-+		ret =3D lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 1,=
- &result);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (result)
-+			return -EIO;
-+
-+		ret =3D devm_add_action_or_reset(dev, lg_laptop_reenable_wmi_events, ha=
-ndle);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static acpi_status lg_laptop_address_space_write(struct device *dev, acpi=
-_physical_address address,
- 						 size_t size, u64 value)
+ static union acpi_object *lg_wmbb(struct device *dev, u32 method_id, u32 =
+arg1, u32 arg2)
+@@ -257,7 +332,6 @@ static ssize_t fan_mode_store(struct device *dev,
+ 			      const char *buffer, size_t count)
  {
-@@ -865,10 +960,6 @@ static int acpi_probe(struct platform_device *pdev)
- 	if (year >=3D 2019)
- 		battery_limit_use_wmbb =3D 1;
+ 	unsigned long value;
+-	union acpi_object *r;
+ 	int ret;
 =20
--	ret =3D sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
--	if (ret)
--		goto out_platform_device;
--
- 	/* LEDs are optional */
- 	ret =3D devm_led_classdev_register(&pdev->dev, &kbd_backlight);
- 	if (ret < 0)
-@@ -878,7 +969,14 @@ static int acpi_probe(struct platform_device *pdev)
+ 	ret =3D kstrtoul(buffer, 10, &value);
+@@ -266,10 +340,10 @@ static ssize_t fan_mode_store(struct device *dev,
+ 	if (value >=3D 3)
+ 		return -EINVAL;
 =20
- 	devm_led_classdev_register(&pdev->dev, &tpad_led);
-=20
--	wmi_input_setup();
-+	ret =3D lg_laptop_input_init(&pdev->dev, device->handle);
+-	r =3D lg_wmab(dev, WM_FAN_MODE, WM_SET,
+-		FIELD_PREP(FAN_MODE_LOWER, value) |
+-		FIELD_PREP(FAN_MODE_UPPER, value));
+-	kfree(r);
++	ret =3D lg_wmab_set(dev, WM_FAN_MODE, FIELD_PREP(FAN_MODE_LOWER, value) =
+|
++			  FIELD_PREP(FAN_MODE_UPPER, value));
 +	if (ret < 0)
-+		goto out_platform_device;
-+
-+	ret =3D sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
-+	if (ret)
-+		goto out_platform_device;
-+
- 	battery_hook_register(&battery_hook);
++		return ret;
 =20
- 	return 0;
-@@ -895,7 +993,6 @@ static void acpi_remove(struct platform_device *pdev)
- 	sysfs_remove_group(&pf_device->dev.kobj, &dev_attribute_group);
+ 	return count;
+ }
+@@ -277,22 +351,14 @@ static ssize_t fan_mode_store(struct device *dev,
+ static ssize_t fan_mode_show(struct device *dev,
+ 			     struct device_attribute *attr, char *buffer)
+ {
+-	unsigned int mode;
+-	union acpi_object *r;
+-
+-	r =3D lg_wmab(dev, WM_FAN_MODE, WM_GET, 0);
+-	if (!r)
+-		return -EIO;
+-
+-	if (r->type !=3D ACPI_TYPE_INTEGER) {
+-		kfree(r);
+-		return -EIO;
+-	}
++	u32 mode;
++	int ret;
 =20
- 	battery_hook_unregister(&battery_hook);
--	wmi_input_destroy();
- 	platform_device_unregister(pf_device);
- 	pf_device =3D NULL;
- 	platform_driver_unregister(&pf_driver);
+-	mode =3D FIELD_GET(FAN_MODE_LOWER, r->integer.value);
+-	kfree(r);
++	ret =3D lg_wmab_get(dev, WM_FAN_MODE, &mode);
++	if (ret < 0)
++		return ret;
+=20
+-	return sysfs_emit(buffer, "%d\n", mode);
++	return sysfs_emit(buffer, "%lu\n", FIELD_GET(FAN_MODE_LOWER, mode));
+ }
+=20
+ static ssize_t usb_charge_store(struct device *dev,
+@@ -342,41 +408,30 @@ static ssize_t reader_mode_store(struct device *dev,
+ 				 const char *buffer, size_t count)
+ {
+ 	bool value;
+-	union acpi_object *r;
+ 	int ret;
+=20
+ 	ret =3D kstrtobool(buffer, &value);
+ 	if (ret)
+ 		return ret;
+=20
+-	r =3D lg_wmab(dev, WM_READER_MODE, WM_SET, value);
+-	if (!r)
+-		return -EIO;
++	ret =3D lg_wmab_set(dev, WM_READER_MODE, value);
++	if (ret < 0)
++		return ret;
+=20
+-	kfree(r);
+ 	return count;
+ }
+=20
+ static ssize_t reader_mode_show(struct device *dev,
+ 				struct device_attribute *attr, char *buffer)
+ {
+-	unsigned int status;
+-	union acpi_object *r;
+-
+-	r =3D lg_wmab(dev, WM_READER_MODE, WM_GET, 0);
+-	if (!r)
+-		return -EIO;
+-
+-	if (r->type !=3D ACPI_TYPE_INTEGER) {
+-		kfree(r);
+-		return -EIO;
+-	}
+-
+-	status =3D !!r->integer.value;
++	u32 status;
++	int ret;
+=20
+-	kfree(r);
++	ret =3D lg_wmab_get(dev, WM_READER_MODE, &status);
++	if (ret < 0)
++		return ret;
+=20
+-	return sysfs_emit(buffer, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", !!status);
+ }
+=20
+ static ssize_t fn_lock_store(struct device *dev,
+@@ -384,40 +439,30 @@ static ssize_t fn_lock_store(struct device *dev,
+ 			     const char *buffer, size_t count)
+ {
+ 	bool value;
+-	union acpi_object *r;
+ 	int ret;
+=20
+ 	ret =3D kstrtobool(buffer, &value);
+ 	if (ret)
+ 		return ret;
+=20
+-	r =3D lg_wmab(dev, WM_FN_LOCK, WM_SET, value);
+-	if (!r)
+-		return -EIO;
++	ret =3D lg_wmab_set(dev, WM_FN_LOCK, value);
++	if (ret < 0)
++		return ret;
+=20
+-	kfree(r);
+ 	return count;
+ }
+=20
+ static ssize_t fn_lock_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buffer)
+ {
+-	unsigned int status;
+-	union acpi_object *r;
+-
+-	r =3D lg_wmab(dev, WM_FN_LOCK, WM_GET, 0);
+-	if (!r)
+-		return -EIO;
+-
+-	if (r->type !=3D ACPI_TYPE_BUFFER) {
+-		kfree(r);
+-		return -EIO;
+-	}
++	u32 status;
++	int ret;
+=20
+-	status =3D !!r->buffer.pointer[0];
+-	kfree(r);
++	ret =3D lg_wmab_get(dev, WM_FN_LOCK, &status);
++	if (ret < 0)
++		return ret;
+=20
+-	return sysfs_emit(buffer, "%d\n", status);
++	return sysfs_emit(buffer, "%d\n", !!status);
+ }
+=20
+ static ssize_t charge_control_end_threshold_store(struct device *dev,
+@@ -434,14 +479,18 @@ static ssize_t charge_control_end_threshold_store(st=
+ruct device *dev,
+ 	if (value =3D=3D 100 || value =3D=3D 80) {
+ 		union acpi_object *r;
+=20
+-		if (battery_limit_use_wmbb)
++		if (battery_limit_use_wmbb) {
+ 			r =3D lg_wmbb(&pf_device->dev, WMBB_BATT_LIMIT, WM_SET, value);
+-		else
+-			r =3D lg_wmab(&pf_device->dev, WM_BATT_LIMIT, WM_SET, value);
+-		if (!r)
+-			return -EIO;
++			if (!r)
++				return -EIO;
++
++			kfree(r);
++		} else {
++			ret =3D lg_wmab_set(&pf_device->dev, WM_BATT_LIMIT, value);
++			if (ret < 0)
++				return ret;
++		}
+=20
+-		kfree(r);
+ 		return count;
+ 	}
+=20
+@@ -452,8 +501,9 @@ static ssize_t charge_control_end_threshold_show(struc=
+t device *device,
+ 						 struct device_attribute *attr,
+ 						 char *buf)
+ {
+-	unsigned int status;
+ 	union acpi_object *r;
++	u32 status;
++	int ret;
+=20
+ 	if (battery_limit_use_wmbb) {
+ 		r =3D lg_wmbb(&pf_device->dev, WMBB_BATT_LIMIT, WM_GET, 0);
+@@ -466,19 +516,13 @@ static ssize_t charge_control_end_threshold_show(str=
+uct device *device,
+ 		}
+=20
+ 		status =3D r->buffer.pointer[0x10];
++		kfree(r);
+ 	} else {
+-		r =3D lg_wmab(&pf_device->dev, WM_BATT_LIMIT, WM_GET, 0);
+-		if (!r)
+-			return -EIO;
+-
+-		if (r->type !=3D ACPI_TYPE_INTEGER) {
+-			kfree(r);
+-			return -EIO;
+-		}
+-
+-		status =3D r->integer.value;
++		ret =3D lg_wmab_get(&pf_device->dev, WM_BATT_LIMIT, &status);
++		if (ret < 0)
++			return ret;
+ 	}
+-	kfree(r);
++
+ 	if (status !=3D 80 && status !=3D 100)
+ 		status =3D 0;
+=20
+@@ -544,10 +588,7 @@ static const struct attribute_group dev_attribute_gro=
+up =3D {
+ static void tpad_led_set(struct led_classdev *cdev,
+ 			 enum led_brightness brightness)
+ {
+-	union acpi_object *r;
+-
+-	r =3D lg_wmab(cdev->dev->parent, WM_TLED, WM_SET, brightness > LED_OFF);
+-	kfree(r);
++	lg_wmab_set(cdev->dev->parent, WM_TLED, brightness > LED_OFF);
+ }
+=20
+ static enum led_brightness tpad_led_get(struct led_classdev *cdev)
+@@ -561,46 +602,36 @@ static void kbd_backlight_set(struct led_classdev *c=
+dev,
+ 			      enum led_brightness brightness)
+ {
+ 	u32 val;
+-	union acpi_object *r;
+=20
+ 	val =3D 0x22;
+ 	if (brightness <=3D LED_OFF)
+ 		val =3D 0;
+ 	if (brightness >=3D LED_FULL)
+ 		val =3D 0x24;
+-	r =3D lg_wmab(cdev->dev->parent, WM_KEY_LIGHT, WM_SET, val);
+-	kfree(r);
++
++	lg_wmab_set(cdev->dev->parent, WM_KEY_LIGHT, val);
+ }
+=20
+ static enum led_brightness get_kbd_backlight_level(struct device *dev)
+ {
+-	union acpi_object *r;
+-	int val;
+-
+-	r =3D lg_wmab(dev, WM_KEY_LIGHT, WM_GET, 0);
++	u32 value;
++	int ret;
+=20
+-	if (!r)
++	ret =3D lg_wmab_get(dev, WM_KEY_LIGHT, &value);
++	if (ret < 0)
+ 		return LED_OFF;
+=20
+-	if (r->type !=3D ACPI_TYPE_BUFFER || r->buffer.pointer[1] !=3D 0x05) {
+-		kfree(r);
++	if ((value & 0xFF00) !=3D 0x0500)
+ 		return LED_OFF;
+-	}
+=20
+-	switch (r->buffer.pointer[0] & 0x27) {
++	switch (value & 0x27) {
+ 	case 0x24:
+-		val =3D LED_FULL;
+-		break;
++		return LED_FULL;
+ 	case 0x22:
+-		val =3D LED_HALF;
+-		break;
++		return LED_HALF;
+ 	default:
+-		val =3D LED_OFF;
++		return LED_OFF;
+ 	}
+-
+-	kfree(r);
+-
+-	return val;
+ }
+=20
+ static enum led_brightness kbd_backlight_get(struct led_classdev *cdev)
 =2D-=20
 2.39.5
 
