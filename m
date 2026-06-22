@@ -1,67 +1,110 @@
-Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720DC366066
-	for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 14:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A1CA45
+	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jun 2026 00:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782050972; cv=none; b=G7/BtRk36Vz56BIXOJmkywc+DyVqDIQiGUqvyUPUpR4kgLZhC9uYL9nu4ViuOXm1rjmPy9lMtXiCDWzOZxFsc7G+rdYQPcxoYfeMplDZRdgp5jHKf0AlDPk61ULfi8rX7X2QD7VVqpGIXygfjNUYHGgaHnLwASGIIdu5fLQVJwk=
+	t=1782086581; cv=none; b=laBT4irTfaFXVKR48umc64Yjo+5F6InFPlCcFXcdRu7N9Ydj+LKWSgY8A+xcQK2njw9vIZNx5CRmxyuD186IRDLpL2V5XyhnaioOF+7ORnWnDPPtki0b5yJz7uKbUhFDd3rL7UgyiBHcgQGXn96lwH52pq/ytcBs9JjW7XbWYWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782050972; c=relaxed/simple;
-	bh=3S2IOh0spc4J55Qlia0WT80phT71Zbx0TpEfvwBLUTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sA2a2lxbtZEd0OZRYpIOb8CuqW+VPVDXfM9ZSMROOVS0GXEIiL9bPkI8hKTPIsBvL0Y8ZMNK3Kwb9dUCfpZFDCbSATAncMCaugDodTo9KQH61E3kPAnuVAvR99oqAWm7b7guSUibydWoR228GtDt42QG7J8z/irJlJqQKWStiXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nikableh.moe; spf=pass smtp.mailfrom=nikableh.moe; dkim=pass (2048-bit key) header.d=nikableh.moe header.i=@nikableh.moe header.b=kOoONE6M; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=chRZTM5D; arc=none smtp.client-ip=34.202.193.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nikableh.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nikableh.moe
+	s=arc-20240116; t=1782086581; c=relaxed/simple;
+	bh=vpifS3qEEvwq2pMRImRPNb2WaiLOsD7Qfy8ZnKJWyQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FGb1KVZGnW+8Dwy59i64Dr/C580SLk8e918LoQdg/kMX24sv2qDJohypuRPzGXlJbcGzg+NNDdhZuNCdS7uyLHoiBRXVNwjVbF3umdi2r/zW4OWVOEcDhc01iSmqFu6h8JSeu2jmgE2jUG/OVLlinXtIQPuj3Kf+M0rmX+lZLAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evpVm+jF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikableh.moe header.i=@nikableh.moe header.b="kOoONE6M";
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="chRZTM5D"
-Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=kOoONE6M7A+PI0iqoCDGwqxAIbpabUV+oKkJqXEuH4/hGG7xCekXxSSRz6xEOTW6fkGmL/k67rQF/pqy47qF3BLCcT2Ll5NE5Zzq0ebtzA6vVElH6r9ozTdu+qhFaPO0LbCda4qJCYJqp0QsOS4AhuP6hindSV+MCk+NSWSk4Dt3iGmZHSZNA6hfIfzRrEgUIyF1DfQDHcfiGkqzfFQWTZ9OwtMIxRQucKAL+sqoUT8t7msb0UfzVVfqX/UwsA754wk2YtPaByBJXvEo6PRKwC4c/1ALvgpfiQE7erd98PNArMBzuTET/2g3l4d4LJnNURRF93nj6gDzD8ploYL3JA==; s=purelymail1; d=nikableh.moe; v=1; bh=3S2IOh0spc4J55Qlia0WT80phT71Zbx0TpEfvwBLUTY=; h=Received:From:To:Subject:Date;
-DKIM-Signature: a=rsa-sha256; b=chRZTM5DEYg5T8bTdtEzKb049emDMx+D/8jqbBZR5WR/0y8XQG7pNP9de3KzvKtimpwy28tYUvyPHoCK/GrxKvxjGF4P1e/1hEUMfsWWTQW2aN9NiQAjK/S4jxREecbIZ2KfKVsJNPxyHfSDZhmo/zEEMe3xa7iG2UuulaQ//i2h7nm+zow/+VJ+N1OLzdm2/cLfBFpJChHjXSpJ5H9MqSNu3PJ9xi9FiLGCT3j8eRUoudgj2yixhVg7EH/m3LIkUfdIh8QR06USEdpux40MZoJeEiE49nCfptB7FWjs0iCqyNHiPG5zMCOrkU90Yq3Yf/ar+krG4PVuE4NvvtOHKA==; s=purelymail1; d=purelymail.com; v=1; bh=3S2IOh0spc4J55Qlia0WT80phT71Zbx0TpEfvwBLUTY=; h=Feedback-ID:Received:From:To:Subject:Date;
-Feedback-ID: 209604:18551:null:purelymail
-X-Pm-Original-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -515468910;
-          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Sun, 21 Jun 2026 14:09:20 +0000 (UTC)
-From: Nika Krasnova <nika@nikableh.moe>
-To: Ilya Gladyshev <foxido@foxido.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evpVm+jF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4629d80fa08so3665362f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 17:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782086578; x=1782691378; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=idLGngy4EJ9FPBvOW6cDJ7qwnwSjyLk7Zjw6tlhJ00s=;
+        b=evpVm+jFb/eFzS2mOrmuNXhlCdsRuFsO1JZPnxrFu7s1z64xOHE6Na4W+pDqiFsXyu
+         GVw/MjpsNu0PSrewwJcWdkOqRAQHXcv5QYwTQCNV+PbO5ZX6b94/RmzYPE1O/SSdL9KO
+         u5TLyz62VvcS/fgeBklw/iS+ZWxsnj8+nNTmd2HgPAo3ZNBaFc9S75Ep7D6E4rJL16jJ
+         Ztxrk7n70Yy3hkcc+7J/1lBcnAEHJDP/ze0OIv9TZYY+7rbmUcHm5fa2In2ba4UK0cA6
+         yw5HIMVAw+UtmoTnvPO/WED9RA86pVFn2lzpfgj0WMQK40g20PHtXQzUrLJVLsDy+bZp
+         tn9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782086578; x=1782691378;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=idLGngy4EJ9FPBvOW6cDJ7qwnwSjyLk7Zjw6tlhJ00s=;
+        b=F5zh3eo+jigkLfyVBVLfPyg9wUu9doVwCXWbUuZRIjHEvGJGukSewj/nttWJ4TROxI
+         E/Dv+dmyLmc6umqGTj/wk1zj7ORCUO9Iwi7uo4vSeqiw3yhDq8iJKgrC1++Iw9Vb98aq
+         +cR8m5COTxsHegwR8c7S7wdGpGijJfnagypwc6+VNUHmqiriS+Y754aRtkeBA8LiWUJP
+         zZZOHs/AIIdxfTIdlCAEOIa/eK5/robPPnCSynH4iV4p1cxRtQM5jMR8yxDiVEMLOyFh
+         tp/berweC5LWwMBOyW5RA5k5m3abWGx/QJfSpr9nHzv8znjn1Nco+wJeuLSSqko1B4zP
+         gIuw==
+X-Gm-Message-State: AOJu0YyUdzLGUHjVJdNxVZzI6HmkL2Dr9YpvUghc9YOw4BfDxSTUmBYN
+	TkTlOiNNC9hoqcjWKACQx0phTOF6G4DaDfFQXeGHdK5fRG9by7yPPITU5eflut68tYs=
+X-Gm-Gg: AfdE7cnqDO7v6MrUHorCg3mKkbJv6Q0EWMXY7wh232p9qoJ8bBHHdVaRTUjseD01v7y
+	cw/QTaMdqCbCn1B87ri2ACn7DeK9Ua9icg3KBE9wxVlYofOxOfyDpSCZesYhHV7uYvha7jkQb5M
+	cU4lKnIAbHYPjupEIVRjojVLvmZCxDMrD6UpN3GBcFsPNWKB5VdB77dg6j3BKS9sPJZiq7xR5tx
+	+OLmwWWWfb+RWi9JIjiVCU61tURFQhjYrpZAEv6PeOCG+9bAzJqCvoaQXTcbO3coLuhadID7Xzd
+	0GtWwvYYix1y7K25F32r2Kq9LTiuhZmHNyjJhktKi9AUwQfhCxf+7ax3fgScTv6Y9fOqcOx9b72
+	Uzy0OnMTf/h4ur5wnISrtwCNNjNNbkiC9X3ZxQm1IgMQreoFIft9QFKl5sLRjGz03tNkvysec1a
+	aNwh7+2NLHDN28KojC0qrr8A==
+X-Received: by 2002:adf:e44c:0:b0:45e:d3d4:c230 with SMTP id ffacd0b85a97d-465090c5701mr15498971f8f.38.1782086578196;
+        Sun, 21 Jun 2026 17:02:58 -0700 (PDT)
+Received: from user ([104.28.155.143])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-466648c5ddbsm22090260f8f.12.2026.06.21.17.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2026 17:02:57 -0700 (PDT)
+From: yahia <yahia.a.abdrabou@gmail.com>
+To: W_Armin@gmx.de
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Mingyou Chen <qby140326@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Nika Krasnova <nika@nikableh.moe>
-Subject: Re: [PATCH] platform/x86: redmi-wmi: Add mic-mute key mapping
-Date: Sun, 21 Jun 2026 16:09:09 +0200
-Message-ID: <20260621140914.2387872-1-nika@nikableh.moe>
-X-Mailer: git-send-email 2.51.2
-In-Reply-To: <707ac777-0a4b-4a54-8066-317b09792a3a@foxido.dev>
-References: <20260620145928.2156909-1-nika@nikableh.moe> <8a08f701-71eb-4b0d-9794-86bc820f119b@foxido.dev> <20260621004719.2328773-1-nika@nikableh.moe>
+	yahia ahmed <yahia.a.abdrabou@gmail.com>
+Subject: [PATCH] wmi/core Fix use-after-free in parse_wdg()
+Date: Mon, 22 Jun 2026 03:02:53 +0300
+Message-ID: <20260622000253.210491-1-yahia.a.abdrabou@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-MIME-Autoconverted: from 8bit to quoted-printable by Purelymail
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2026-06-21 10:33, Ilya Gladyshev wrote:
-> Yeah, if the key itself does nothing then desync isn't scary. Thanks for =
-clarifying and
->=20
-> Reviewed-by: Gladyshev Ilya <foxido@foxido.dev>
->=20
-> (I am aware that lore.kernel.org will filter out this email. I will fix t=
-his issue ASAP [thanks for letting me know]
+From: yahia ahmed <yahia.a.abdrabou@gmail.com>
 
-Thanks for the review! Relaying your tag here so it's archived:
+Fix use-after-free in parse_wdg() function by
+setting wblock to null to prevent referencing 
+freed memory, if wblock is freed in the if 
+(retval) path and address a minor typo.
 
-Reviewed-by: Gladyshev Ilya <foxido@foxido.dev>
+Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+---
+ drivers/platform/wmi/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---=20
-Nika Krasnova
+diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+index 5a2ffcbab6af..9b5bd9ef5ba2 100644
+--- a/drivers/platform/wmi/core.c
++++ b/drivers/platform/wmi/core.c
+@@ -1328,6 +1328,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
+ 		retval = wmi_create_device(wmi_bus_dev, wblock, device);
+ 		if (retval) {
+ 			kfree(wblock);
++			wblock = NULL; /* Set wblock to NULL to prevent a use after free */
+ 			continue;
+ 		}
+ 
+@@ -1418,7 +1419,7 @@ static int wmi_notify_device(struct device *dev, void *data)
+ 		return 0;
+ 
+ 	/* The ACPI WMI specification says that _WED should be
+-	 * evaluated every time an notification is received, even
++	 * evaluated every time a notification is received, even
+ 	 * if no consumers are present.
+ 	 *
+ 	 * Some firmware implementations actually depend on this
+-- 
+2.54.0
+
