@@ -1,69 +1,44 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A1CA45
-	for <platform-driver-x86@vger.kernel.org>; Mon, 22 Jun 2026 00:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67D1233943;
+	Mon, 22 Jun 2026 07:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782086581; cv=none; b=laBT4irTfaFXVKR48umc64Yjo+5F6InFPlCcFXcdRu7N9Ydj+LKWSgY8A+xcQK2njw9vIZNx5CRmxyuD186IRDLpL2V5XyhnaioOF+7ORnWnDPPtki0b5yJz7uKbUhFDd3rL7UgyiBHcgQGXn96lwH52pq/ytcBs9JjW7XbWYWI=
+	t=1782111890; cv=none; b=CyUiUFzpZtuqWbbCmXOHIeaNwKFHOPhpFzrk8KN6TGIHLSPWdemnDDQ6a4CyVmMaieLJ86RGQMHCE9BRFvIR7C8rwLik5oATD+WGk5nMtmY6pkDIXNHw9AxwO880RSt+3qlCLweQuDrS2VAlytCVKDYLFUh4RLOevWBMpg0XGgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782086581; c=relaxed/simple;
-	bh=vpifS3qEEvwq2pMRImRPNb2WaiLOsD7Qfy8ZnKJWyQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FGb1KVZGnW+8Dwy59i64Dr/C580SLk8e918LoQdg/kMX24sv2qDJohypuRPzGXlJbcGzg+NNDdhZuNCdS7uyLHoiBRXVNwjVbF3umdi2r/zW4OWVOEcDhc01iSmqFu6h8JSeu2jmgE2jUG/OVLlinXtIQPuj3Kf+M0rmX+lZLAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=evpVm+jF; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782111890; c=relaxed/simple;
+	bh=94ffQZN5smXw4dtist2N6Ff1+673ITZAbyoknLT5Ab0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZiSmab7i1pW2KEaApMnjm1RIMZT5zrs4auwfK+oDvEFXZeosiK5fwPQcdDF4SFe4s0JEoeabMphtVSBoKMOQhMPiUDLkiuaygoWeIKQAGcS2o1hq1EZ4wB52LLyNezr+dVMsvsrkFjG7ZPizca8m9f9IRIN4/vmjqjvZxkfxsqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d32aRLLb; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evpVm+jF"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4629d80fa08so3665362f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Jun 2026 17:02:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782086578; x=1782691378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=idLGngy4EJ9FPBvOW6cDJ7qwnwSjyLk7Zjw6tlhJ00s=;
-        b=evpVm+jFb/eFzS2mOrmuNXhlCdsRuFsO1JZPnxrFu7s1z64xOHE6Na4W+pDqiFsXyu
-         GVw/MjpsNu0PSrewwJcWdkOqRAQHXcv5QYwTQCNV+PbO5ZX6b94/RmzYPE1O/SSdL9KO
-         u5TLyz62VvcS/fgeBklw/iS+ZWxsnj8+nNTmd2HgPAo3ZNBaFc9S75Ep7D6E4rJL16jJ
-         Ztxrk7n70Yy3hkcc+7J/1lBcnAEHJDP/ze0OIv9TZYY+7rbmUcHm5fa2In2ba4UK0cA6
-         yw5HIMVAw+UtmoTnvPO/WED9RA86pVFn2lzpfgj0WMQK40g20PHtXQzUrLJVLsDy+bZp
-         tn9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782086578; x=1782691378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=idLGngy4EJ9FPBvOW6cDJ7qwnwSjyLk7Zjw6tlhJ00s=;
-        b=F5zh3eo+jigkLfyVBVLfPyg9wUu9doVwCXWbUuZRIjHEvGJGukSewj/nttWJ4TROxI
-         E/Dv+dmyLmc6umqGTj/wk1zj7ORCUO9Iwi7uo4vSeqiw3yhDq8iJKgrC1++Iw9Vb98aq
-         +cR8m5COTxsHegwR8c7S7wdGpGijJfnagypwc6+VNUHmqiriS+Y754aRtkeBA8LiWUJP
-         zZZOHs/AIIdxfTIdlCAEOIa/eK5/robPPnCSynH4iV4p1cxRtQM5jMR8yxDiVEMLOyFh
-         tp/berweC5LWwMBOyW5RA5k5m3abWGx/QJfSpr9nHzv8znjn1Nco+wJeuLSSqko1B4zP
-         gIuw==
-X-Gm-Message-State: AOJu0YyUdzLGUHjVJdNxVZzI6HmkL2Dr9YpvUghc9YOw4BfDxSTUmBYN
-	TkTlOiNNC9hoqcjWKACQx0phTOF6G4DaDfFQXeGHdK5fRG9by7yPPITU5eflut68tYs=
-X-Gm-Gg: AfdE7cnqDO7v6MrUHorCg3mKkbJv6Q0EWMXY7wh232p9qoJ8bBHHdVaRTUjseD01v7y
-	cw/QTaMdqCbCn1B87ri2ACn7DeK9Ua9icg3KBE9wxVlYofOxOfyDpSCZesYhHV7uYvha7jkQb5M
-	cU4lKnIAbHYPjupEIVRjojVLvmZCxDMrD6UpN3GBcFsPNWKB5VdB77dg6j3BKS9sPJZiq7xR5tx
-	+OLmwWWWfb+RWi9JIjiVCU61tURFQhjYrpZAEv6PeOCG+9bAzJqCvoaQXTcbO3coLuhadID7Xzd
-	0GtWwvYYix1y7K25F32r2Kq9LTiuhZmHNyjJhktKi9AUwQfhCxf+7ax3fgScTv6Y9fOqcOx9b72
-	Uzy0OnMTf/h4ur5wnISrtwCNNjNNbkiC9X3ZxQm1IgMQreoFIft9QFKl5sLRjGz03tNkvysec1a
-	aNwh7+2NLHDN28KojC0qrr8A==
-X-Received: by 2002:adf:e44c:0:b0:45e:d3d4:c230 with SMTP id ffacd0b85a97d-465090c5701mr15498971f8f.38.1782086578196;
-        Sun, 21 Jun 2026 17:02:58 -0700 (PDT)
-Received: from user ([104.28.155.143])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-466648c5ddbsm22090260f8f.12.2026.06.21.17.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jun 2026 17:02:57 -0700 (PDT)
-From: yahia <yahia.a.abdrabou@gmail.com>
-To: W_Armin@gmx.de
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d32aRLLb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=LC
+	l1kE52dxJs4SrnZw4dUUD9eSLe2/W5walU+U+dJtc=; b=d32aRLLbJF+QRdZWKO
+	rRwSLOhr3AQjf7Qp5mgqmRJBAYFGgO5KRQzuvOWyJoTR/TCjTAs7CzkquZy9VJ2H
+	aWtdrP65U92WVHHvNdiQPe4jrryBx7/Yhcd4+LmwIjDpwLiHnUrnR8Xqa3IitBc/
+	LH3wSP+rcRHVp4BPRraerMxe8=
+Received: from ubuntu.. (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDHAhdZ3jhqsX6EEg--.791S4;
+	Mon, 22 Jun 2026 15:04:01 +0800 (CST)
+From: Ma Ke <make_ruc2021@163.com>
+To: srinivas.pandruvada@linux.intel.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	sumesh.k.naduvalath@intel.com,
+	mgross@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	yahia ahmed <yahia.a.abdrabou@gmail.com>
-Subject: [PATCH] wmi/core Fix use-after-free in parse_wdg()
-Date: Mon, 22 Jun 2026 03:02:53 +0300
-Message-ID: <20260622000253.210491-1-yahia.a.abdrabou@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	akpm@linux-foundation.org,
+	Ma Ke <make_ruc2021@163.com>,
+	stable@vger.kernel.org
+Subject: [RESEND PATCH] platform/x86: ishtp_eclite: fix ACPI device reference leak in probe error path
+Date: Mon, 22 Jun 2026 15:03:52 +0800
+Message-ID: <20260622070352.689982-1-make_ruc2021@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -71,40 +46,53 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHAhdZ3jhqsX6EEg--.791S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CryxZrWUuFW8WrW7Jr1rXrb_yoW8XFyDpF
+	W7KFWrKrW5GrWfK348Xa18Z3Wruw1jv3y8GrWkCw4Uur45uF9aqayIka4YkF1kurWkJa45
+	ZFn7trW8AF1UZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piJGYdUUUUU=
+X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/xtbC1AF4g2o43mHegwAA3e
 
-From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+ecl_ishtp_cl_probe() acquires a reference to an ACPI device via
+acpi_find_eclite_device() but fails to release it in the error path
+when acpi_opregion_init() fails. This results in a reference count
+leak, preventing proper cleanup of the ACPI device.
 
-Fix use-after-free in parse_wdg() function by
-setting wblock to null to prevent referencing 
-freed memory, if wblock is freed in the if 
-(retval) path and address a minor typo.
+Calling path: acpi_find_eclite_device() ->
+acpi_dev_get_first_match_dev() -> acpi_dev_get_next_match_dev() ->
+bus_find_device() -> get_device().
 
-Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+Found by code review.
+
+Signed-off-by: Ma Ke <make_ruc2021@163.com>
+Cc: stable@vger.kernel.org
+Fixes: 7b6bf51de974 ("platform/x86: Add Intel ishtp eclite driver")
 ---
- drivers/platform/wmi/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel/ishtp_eclite.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
-index 5a2ffcbab6af..9b5bd9ef5ba2 100644
---- a/drivers/platform/wmi/core.c
-+++ b/drivers/platform/wmi/core.c
-@@ -1328,6 +1328,7 @@ static int parse_wdg(struct device *wmi_bus_dev, struct platform_device *pdev)
- 		retval = wmi_create_device(wmi_bus_dev, wblock, device);
- 		if (retval) {
- 			kfree(wblock);
-+			wblock = NULL; /* Set wblock to NULL to prevent a use after free */
- 			continue;
- 		}
+diff --git a/drivers/platform/x86/intel/ishtp_eclite.c b/drivers/platform/x86/intel/ishtp_eclite.c
+index 93ac8b2dbf38..bca7e217878b 100644
+--- a/drivers/platform/x86/intel/ishtp_eclite.c
++++ b/drivers/platform/x86/intel/ishtp_eclite.c
+@@ -600,13 +600,16 @@ static int ecl_ishtp_cl_probe(struct ishtp_cl_device *cl_device)
+ 	rv = acpi_opregion_init(opr_dev);
+ 	if (rv) {
+ 		dev_err(cl_data_to_dev(opr_dev), "ACPI opregion init failed\n");
+-		goto err_exit;
++		goto err_put;
+ 	}
  
-@@ -1418,7 +1419,7 @@ static int wmi_notify_device(struct device *dev, void *data)
- 		return 0;
+ 	/* Reprobe devices depending on ECLite - battery, fan, etc. */
+ 	acpi_dev_clear_dependencies(opr_dev->adev);
  
- 	/* The ACPI WMI specification says that _WED should be
--	 * evaluated every time an notification is received, even
-+	 * evaluated every time a notification is received, even
- 	 * if no consumers are present.
- 	 *
- 	 * Some firmware implementations actually depend on this
+ 	return 0;
++
++err_put:
++	acpi_dev_put(opr_dev->adev);
+ err_exit:
+ 	ishtp_set_connection_state(ecl_ishtp_cl, ISHTP_CL_DISCONNECTING);
+ 	ishtp_cl_disconnect(ecl_ishtp_cl);
 -- 
-2.54.0
+2.43.0
 
