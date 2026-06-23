@@ -1,141 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12D1376A1C;
-	Tue, 23 Jun 2026 01:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3AB24DD15
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 12:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782177798; cv=none; b=njwBtnGTN2B3inEeiLqu8xBEJYwLCM0+P47ORKxL0KZr2nvdzxOuKWmh7nAQesGz37f0EKf3W+AgMJinwCVKenzIg9hfeQVxk+6WZvM+ZHPs/n7HZZT+Vr8DwpZKdRP7fKWuMpcPhxP3eAoO4F1sKlo6hXHHm/PHuFsCDK4C6Ks=
+	t=1782219565; cv=none; b=AQyIzBwAZrNJn1b8Y2Zc0PVTVk8P9xOeIynwJoww7C8Jo0lxk2yKDYKkulmMOncrD9WFENlBIanOEYqwrSjG56qewT4/sqYtaNIrgW24n31ET6VK00+NuJS4/PhZkkGOK2lREbYMI+KpF8l/rnXwNKbEmC8ghzHKE+6/YXVqwY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782177798; c=relaxed/simple;
-	bh=oVkYBhX4ckMADZ3BY2MLMBmfbpRJYIkPG2KM5nCiBJo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oj9do+y2e/TXQEzJZ8iy6MEWybI1qPC31XlPlC+BMAa2uL8iikiTscmVxyMEHuKb1pDRAgPPawkilqAJag+/c5QeNEh2ZfgyBGGNZyLMJLB0kgh2rDJANj7vq7JcXSzl2Uqncbv70MPSqdCJj8L1xAbUncaldGy+YJWaYdWM47w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Loy16NaQ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782219565; c=relaxed/simple;
+	bh=RvbJ8GxBh7mrEwaLUU17jkbUEqxMkpz6qv5/oRXYrpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SyXQDP1PHYNxQuGylCgkrTKei2luWS2YWdAkMDxNon+A+uSSsigxHDt+wFbId9/k+pfRhU2XzugMxO8o4GWky8UjxaLd8xSHFlqAKyebaMXeyuWkx/szKe+iWJ0w51+AZwS6qgSGYNJceB1Sns74P5NI3yXunTZRv931PUx75Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pHv+ozQb; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Loy16NaQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782177797; x=1813713797;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=oVkYBhX4ckMADZ3BY2MLMBmfbpRJYIkPG2KM5nCiBJo=;
-  b=Loy16NaQziyN+r3ydQxUnRjNEZ/nr5zTjBwig97VZbET27LP4xGnq/tM
-   9n5McKLo2UZLAxAnEo2ekfUST72rHfacgMrBnDW4HtQ46H4qyWnXJnuf5
-   5HE+G98Hwj8Os9e9YXehCYzGdYpSrVj541ZQCUswHZjQxjmG87vKQVjDM
-   Xz8IX/k6RDPdBOW4wJ+7WEFkrwRG7nJapFbQol43/ML7Cy+4eQURvZUEB
-   tgLB4dzp12llw/IlZuXySMUwSe0psWbp+GKK7SRvMWqBgxyADfWFPvCZT
-   +T/Uqc2aJcIDmC0DPgiOOWA730ObDpUwJ7Tl5c9kztsO7JU+8Jo9FHiai
-   w==;
-X-CSE-ConnectionGUID: nmL3BiC4TzOlQobXCRNeLw==
-X-CSE-MsgGUID: B0r7XL/OTD6hD4U03OVnKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="94303208"
-X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
-   d="scan'208";a="94303208"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 18:23:16 -0700
-X-CSE-ConnectionGUID: QiZhHHMER5erNt3qq39K2g==
-X-CSE-MsgGUID: 5HwxqJ1yTL6Lpu0EaOu/Pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
-   d="scan'208";a="249505213"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.124.223.41])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 18:23:16 -0700
-Message-ID: <ec8074628da9ec3e628f4c40fda7ffb3cb8fe001.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86: ishtp_eclite: Fix ACPI device
- reference leak in probe error path
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Ma Ke <make_ruc2021@163.com>, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, sumesh.k.naduvalath@intel.com, 
-	mgross@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, stable@vger.kernel.org
-Date: Mon, 22 Jun 2026 18:23:08 -0700
-In-Reply-To: <20260623010539.2367634-1-make_ruc2021@163.com>
-References: <20260623010539.2367634-1-make_ruc2021@163.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHv+ozQb"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-8dc09919aa2so91948406d6.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 05:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782219563; x=1782824363; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Al39rJAepQWQFF6sNpFtMXISMc+stI8B2tRAUYPUJk=;
+        b=pHv+ozQbDpZt4XdMfsGEGKqh6Q/8sYvrk28ZIBHoc1zkw4Xs3ey7Wq7lkD2Jw3gvKF
+         tNobbDR09IiE4ijgf3KBbzepfrJYPuCevNpQrNbULKoiPP6l1TzkItenmlzGijSDOW+G
+         2Uue8pSGELh9ylLkTwTKbg/wI/VPBuU0TcIqwH0utpG/uel5fYa36kK9YXaGN4pK6UGf
+         wnVPNZNi/qXf5rKZ5w0AdywMoROstnyc8dToRiVBlar1mQ6lWtD5reShr4obnmeRqypS
+         L/IywPauvng9uojvJqJGXSqRYcjr/XPedvoBgT7i5T3R+UCZeQfQHLbpLPNlUXLfn1zr
+         Eb3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782219563; x=1782824363;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5Al39rJAepQWQFF6sNpFtMXISMc+stI8B2tRAUYPUJk=;
+        b=nBvsBKjafkNdQDHzTXa2W0CzwIqOOiVSVhPZznd5sljcIwb1rnG/JFvff3wcovXSnJ
+         6DNzM2qWrOey6nU9nr81KL65/gY5UJ8uxi+1hPaem8atNrTv9boZVXt2mC3059YafAav
+         paikzN9QFgZacg2IQvS3xzGJjrOWH6VrCq7cUasa365o6Bm8GdwRpLS69sK2S3kw3JtE
+         +PKhcVeDve0Z1XKzvYgDjGMUIJUSJbMPkYJ/6FUXAap3zN3DMmrkVyAlkkXxAr9DJ4Ys
+         1W4/1hpxPeNmJPsWv2qUtetATw5DTAmyuw07iUOApUQp43z2mIrwoheOoTasVzSXGFKz
+         vAUA==
+X-Gm-Message-State: AOJu0YwmHDDUG3cL1ngHKK8j7E/476UKpN88QeIJu+repmcWDDW1JvEO
+	tSV2n121NO02zhgacMWrAu6tAhtF7LUgJQqdxzC5MaF4ZpMwjP3+Z/HwtDPw7jV9
+X-Gm-Gg: AfdE7cn8q0jxkW8eQhp0XU4RsRlMCGYtd2R3p36WIaf84iSgnFs+w2PmzI61uX7S+ob
+	HbAwR413EHdW14RjJbv/WXtJW7C706F12LH/zLzX9K9qx41LGni56wricvMZX66GMcspu8afssU
+	G8KyW1IfC70SDARVd38v+OXE60ZsW/Aj/b6TN3Fj7Zi09H/p3WohhGWtLxizWPspcHDW9SFAXYG
+	3ibCZBDbWIxnxtFCuN56w0xgyGBNKQulg9SLrlpLv/X7KrVDREL7jj/obbjYrrhFmFA+JapsZ5t
+	+iSFtc8pMsXrzfexoFLKdjVS5rlSmQV1CeXKRl0VVy32c+Rnz6u2r3uOU8KSLnx7/VxwU7AoySh
+	msIwo8r1A3q2SiMJ9qO3AjLlIHv0VcsTU8BYmk70toInNqHvVP4b0aLIIZUcn1HxCRsw5EGwtKB
+	89u8JK0D0uoDkDIK9coJxzhMWGBbGxsNERha/TnzJHA81VztCGpfVmc0+3Rg==
+X-Received: by 2002:ad4:5c4d:0:b0:8c9:c38a:20e1 with SMTP id 6a1803df08f44-8e433dce1b7mr35117306d6.10.1782219562933;
+        Tue, 23 Jun 2026 05:59:22 -0700 (PDT)
+Received: from fedora (pool-100-11-178-145.phlapa.fios.verizon.net. [100.11.178.145])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8df7f01855bsm141447576d6.9.2026.06.23.05.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 05:59:22 -0700 (PDT)
+From: Dave Carey <carvsdriver@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	johannes.goede@oss.qualcomm.com,
+	Dave Carey <carvsdriver@gmail.com>
+Subject: [PATCH v11 0/2] platform/x86/lenovo: Yoga Book 9 keyboard dock detection
+Date: Tue, 23 Jun 2026 08:59:12 -0400
+Message-ID: <20260623125914.833063-1-carvsdriver@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <8f84ca57-b856-4da0-8d90-e2be414f8997@gmx.de>
+References: <8f84ca57-b856-4da0-8d90-e2be414f8997@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2026-06-23 at 09:05 +0800, Ma Ke wrote:
-> ecl_ishtp_cl_probe() acquires a reference to an ACPI device via
-> acpi_find_eclite_device() but fails to release it in the error path
-> when acpi_opregion_init() fails. This results in a reference count
-> leak, preventing proper cleanup of the ACPI device.
->=20
-> Calling path: acpi_find_eclite_device() ->
-> acpi_dev_get_first_match_dev() -> acpi_dev_get_next_match_dev() ->
-> bus_find_device() -> get_device().
->=20
-> Found by code review.
->=20
-> Signed-off-by: Ma Ke <make_ruc2021@163.com>
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 7b6bf51de974 ("platform/x86: Add Intel ishtp eclite driver")
-> ---
-Whenever you post a new version, you should add change log here,
-showing what is the new in this version.
+Hi Armin,
 
-But here I think you only capitalized the first letter for "Fix".
+Thanks for the v10 review.  One-line fix in v11:
 
-Thanks,
-Srinivas
+  - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3";
+    these fields should reflect when the ABI lands in the kernel, not
+    the submission date (Armin Wolf).
 
+Armin's Reviewed-by tag has been added to patch 2/2.
 
-> =C2=A0drivers/platform/x86/intel/ishtp_eclite.c | 5 ++++-
-> =C2=A01 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/intel/ishtp_eclite.c
-> b/drivers/platform/x86/intel/ishtp_eclite.c
-> index 93ac8b2dbf38..bca7e217878b 100644
-> --- a/drivers/platform/x86/intel/ishtp_eclite.c
-> +++ b/drivers/platform/x86/intel/ishtp_eclite.c
-> @@ -600,13 +600,16 @@ static int ecl_ishtp_cl_probe(struct
-> ishtp_cl_device *cl_device)
-> =C2=A0	rv =3D acpi_opregion_init(opr_dev);
-> =C2=A0	if (rv) {
-> =C2=A0		dev_err(cl_data_to_dev(opr_dev), "ACPI opregion init
-> failed\n");
-> -		goto err_exit;
-> +		goto err_put;
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	/* Reprobe devices depending on ECLite - battery, fan, etc.
-> */
-> =C2=A0	acpi_dev_clear_dependencies(opr_dev->adev);
-> =C2=A0
-> =C2=A0	return 0;
-> +
-> +err_put:
-> +	acpi_dev_put(opr_dev->adev);
-> =C2=A0err_exit:
-> =C2=A0	ishtp_set_connection_state(ecl_ishtp_cl,
-> ISHTP_CL_DISCONNECTING);
-> =C2=A0	ishtp_cl_disconnect(ecl_ishtp_cl);
+Patch 1/2 (lenovo-ymc) is unchanged from v10.
+
+Tested on Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
+
+Dave Carey (2):
+  platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
+  platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+
+ Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock |  19 ++
+ MAINTAINERS                                                |   7 +
+ drivers/platform/x86/lenovo/Kconfig                       |  14 +
+ drivers/platform/x86/lenovo/Makefile                      |   1 +
+ drivers/platform/x86/lenovo/yb9-kbdock.c                  | 310 ++++++++++++++++++
+ drivers/platform/x86/lenovo/ymc.c                         |  19 ++
+ 6 files changed, 370 insertions(+)
+
+--
+2.54.0
