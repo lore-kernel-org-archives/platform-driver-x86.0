@@ -1,152 +1,118 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6431A7E2;
-	Tue, 23 Jun 2026 16:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFF531F9B4
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 16:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782233184; cv=none; b=d6VqOb8P8GdaWAO9HZ8KLXUapPcmwyq425gsPqtxviL872sbGyglU3vP05ynQs6iO1VmMN0p3CjhCxlmoaCODx1vf9RAxJKNO2TuTC+dDdf1S+b6/CudUmUf500gic7gGCfBj84eVpMD4FqomziKXmQKewTxWyVvNRrGVUudiD8=
+	t=1782233625; cv=none; b=GeD1dKlA3gMdWSh0uGS2DYGkINvRTDNbQ7nRTgG4YjQXJt2xH6LDhrizsdTMQCSxtYWgrF9qKwxU/OOFGhXOyeDqjQgLHgdQ3AcMFrzzwOhESRHbWf3bPqjtAz27kitLZ5DpTyy16p84Xp6DvO8q+1KHmyDDKVCtHakp4UcJr4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782233184; c=relaxed/simple;
-	bh=yUdHl/JboTR6ZbJhbGoIId6ab8bZsG5CV3qxBDCuW3s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ABUG2t/azBSK2O2bqfeRFm+Ka9ZYOKIajO25SdSQsWja8dICqc9xFnNduuc8yZQMPnjNTw3ZW9ArrivrkufrECeIxnl3tOJ5T8cnbI44/rviCMB52BvU7qGemMviki8bEin7J6qeXIpcbPFpbumLUETBSF8puwlrGGVBP2Bn1XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=SheQLij0; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1782233625; c=relaxed/simple;
+	bh=TxIbMd62RiplrQ94biGz9L2YHqAqWJezo2wIsYZ/WzE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pni76Ep/Sd+wKN2nMGJBOxPKos620milwgqkl+GGfWE8XdZhV6zXikybIFoIqlQ9O84jsjCN/hPComu4XkE98KgrVdq9GVgd+pyvoaGFv8kG8i5G9m094QtgKzNYoi2We5d5qAp91dKwTrThqKMJWXci6KvfBFMcgvTHbaHievQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYEUb2Bl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="SheQLij0"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9DB3026ED3;
-	Tue, 23 Jun 2026 18:46:19 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id LUybOFi2rWns; Tue, 23 Jun 2026 18:46:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1782233178; bh=yUdHl/JboTR6ZbJhbGoIId6ab8bZsG5CV3qxBDCuW3s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SheQLij0Wg8So3ht7Rz5Tztxbkz++8abCwMt51E7GjdsIx3ovO47fgnd7ULfRjDDc
-	 6ltIpvuB+CS8KFiw2O5rdhQF+KX+Z9vuUunowC50O37fd53ght/q4bw4pAaWwW3UCN
-	 2TQYiBWeREMbnLCXYHqjpYEHWpc/8MFsFolSTHtX8wSQ9GCQvdUhD9dGHxxtkrco23
-	 86ZVntrO27xMwDoA7MUJ4FRSDGNo7HqHR4O3/C0cHGg9t7AYVm6T+MGUoQ9BSyiZaG
-	 oUJfkEAU5ATaoS0nmTKDFGo3DAHk8Vy6f1juuqGlxwmTI7Neuj1wTEwvU4focHtOq0
-	 iqNEK3MdwGElg==
-From: Marco Scardovi <scardracs@disroot.org>
-To: krishna.chomal108@gmail.com
-Cc: eliadevito@gmail.com,
-	emreleno@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	moravec@ukf.sk,
-	platform-driver-x86@vger.kernel.org,
-	rafael@kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux,
-	Marco Scardovi <scardracs@disroot.org>
-Subject: [PATCH v2 1/1] platform/x86: hp-wmi: fix platform profile issues on generic HP laptops
-Date: Tue, 23 Jun 2026 18:45:18 +0200
-Message-ID: <20260623164603.10322-2-scardracs@disroot.org>
-In-Reply-To: <20260623164603.10322-1-scardracs@disroot.org>
-References: <ajqgkq_elUlMC0Ep@archlinux>
- <20260623164603.10322-1-scardracs@disroot.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYEUb2Bl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ED7C1F00A3E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 16:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782233624;
+	bh=++aUa1syNMN1VBJTvoIJe2eHMcmeURvrTiSz9H2w2hs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=JYEUb2BlyH63yjZjKdhqCHrtamnRyDnVOOqIALhbF3ZHpiV/rt5zWjI4uLPO0C8dV
+	 fyEL1VJf26r0Tx8XilF9k2V940QUOhRYxWA9XvY1aGFLl255GguCz+InUSLIbXZ/O+
+	 RBauntY81VwA3UoBbh7Gk1JmrwnWcn8bX9MA+Xi7GYcdB3jopqKq9OqISjTOFNwFJm
+	 D+thGDLkM5o1rXYWSy/UrB35qgGA6SMp/YilnmrZEgdQwvCazSJ4APZ8loUK1Ux61g
+	 JRiQCayRYN8Pa7uByxdWNdKDC9WJReZVJAEIm7Zig2SQO0Nlzs0ByxrOjeqhpj56T1
+	 HzaibVUnsIr/g==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5ad4f39064bso39415e87.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 09:53:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ9U85TAp3LJUIJBFAEZEWtxdJOZ/y9h6BH/ASsJvUm8jziEH+09ZN5zBeXIq92hvOAc4xb/R7QEuZ2IJz2n1kvAeeK6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUNTN+QrWvtin3CRun9O8uGY6c1dt4RqC9DxfhwlQMSzjR4mnz
+	t6M+7gODyxIAxODWFJhkppG21/JcL/oTGvx7/5HJljypRP/BqC1LR9Odu7moo3K9QBgrlKrqFM1
+	ch4FuhQQXKaw2AXfRD9dV/iCSUUrZhX8=
+X-Received: by 2002:a05:6512:64ad:b0:5ad:67bf:f6e8 with SMTP id
+ 2adb3069b0e04-5ad67bff8b7mr2438813e87.39.1782233622535; Tue, 23 Jun 2026
+ 09:53:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <pdx86-pr-20260622211510-2801419545@linux.intel.com> <CAHk-=wi=29jSstqyF8EqRFccWnA=1TfXW_jcURhSd4rJgkSxgQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wi=29jSstqyF8EqRFccWnA=1TfXW_jcURhSd4rJgkSxgQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 23 Jun 2026 18:53:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g8GUJxy3TPfXa=Hjwk2puYKUpAZzdbo35houPEBLs6cA@mail.gmail.com>
+X-Gm-Features: AVVi8CddEEoDNkuuLL5qk4SSBjAfMpIkzmsFUpZJebaM20KjRqstWPa8CavwpjU
+Message-ID: <CAJZ5v0g8GUJxy3TPfXa=Hjwk2puYKUpAZzdbo35houPEBLs6cA@mail.gmail.com>
+Subject: Re: [GIT PULL] platform-drivers-x86 for v7.2-1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Daniel Lezcano <daniel.lezcano@kernel.org>, 
+	Rafael Wysocki <rafael@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On generic (non-Omen/non-Victus) HP laptops supported by the
-hp-wmi driver, the platform_profile sysfs operations could fail,
-leading to 'platform_profile: Failed to get profile for handler hp-wmi'
-errors and preventing userspace power profile management from working
-correctly.
+On Tue, Jun 23, 2026 at 5:37=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Mon, 22 Jun 2026 at 11:42, Ilpo J=C3=A4rvinen
+> <ilpo.jarvinen@linux.intel.com> wrote:
+> >
+> > There is going to be a conflict with the commit 3570cb58e317 ("thermal/=
+of:
+> > Pass cdev_id and introduce devm registration helper") and a few other
+> > commits that came from thermal tree effectively resulting in a change i=
+n
+> > devm_thermal_of_cooling_device_register() signature. It needs to be
+> > addressed in the merge commit or the build will fail.
+> >
+> > Mark's linux-next discovery about the build failure:
+> >
+> >   https://lore.kernel.org/all/aibZy5rrdX3ltGpr@sirena.org.uk/
+>
+> That resolution makes absolutely no sense.
+>
+> Now that qcom_ec_probe() goes through all the work to create a name for t=
+he fan:
+>
+>                 char name[EC_FAN_NAME_SIZE];
+>
+>                 scnprintf(name, sizeof(name), "qcom_ec_fan_%u", i);
+>
+> but then the name is actually never *used* after the change.
+>
+> The *logical* resolution would be to make it use
+>
+>    devm_thermal_of_child_cooling_device_register()
+>
+> instead, which that function was renamed to in commit 8e1529e79385
+> ("thermal/of: Rename the devm_thermal_of_cooling_device_register()
+> function")
+>
+> I have done that resolution that at least makes sense.
+>
+> But honestly, this is all a complete mess.
+>
+> Why the hell was that function renamed, and then a new function
+> created with the old name - when that new function then has exactly
+> ZERO users?
+>
+> Renaming a function, and then re-using the old name immediately for
+> something else is a BAD IDEA. It causes exactly this kind of horrible
+> confusion. It's an even worse idea when there are exactly zero new
+> users that make that confusion worthwhile.
+>
+> Thermal people - you effed up. Stop doing this kind of crap. This is insa=
+nity.
 
-The driver was blindly registering all 4 profiles (quiet, cool,
-balanced, performance) without checking which ones were actually
-supported by the BIOS. Furthermore, when userspace switched profiles,
-hp_wmi_platform_profile_get() was called, which queried the BIOS
-using thermal_profile_get(). If the BIOS query returned an error or
-returned a value not in the recognized cases, the get call failed,
-throwing an error.
+Right, the new function should have been given a different name.
 
-Fix this by dynamically probing which thermal profiles are supported
-by the BIOS during driver registration. This is done by temporarily
-setting each profile and checking the return code, then restoring the
-original profile. Restructure the probe function to explicitly populate
-choices for each laptop type, avoiding confusing fall-through behavior.
+Sorry for letting this slip in.
 
-There are no expected negative side effects, as the active profile is
-restored to its original state during probe time, and only validated
-profiles are exposed.
-
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220008
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221569
-Closes: https://lore.kernel.org/platform-driver-x86/a3b137df-1b21-4460-b003-58c5ca2d59d4@ukf.sk/
-Fixes: 4296f679ca50 ("platform/x86: hp-wmi: add platform profile support")
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
----
- drivers/platform/x86/hp/hp-wmi.c | 37 ++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..82fdfaa169ec 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -2011,19 +2011,42 @@ static int hp_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
- {
- 	if (is_omen_thermal_profile()) {
- 		set_bit(PLATFORM_PROFILE_COOL, choices);
--	} else if (is_victus_thermal_profile()) {
-+		set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+		return 0;
-+	}
-+
-+	if (is_victus_thermal_profile()) {
- 		set_bit(PLATFORM_PROFILE_QUIET, choices);
--	} else if (is_victus_s_thermal_profile()) {
-+		set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+		return 0;
-+	}
-+
-+	if (is_victus_s_thermal_profile()) {
- 		/* Adding an equivalent to HP Omen software ECO mode: */
- 		set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
--	} else {
--		set_bit(PLATFORM_PROFILE_QUIET, choices);
--		set_bit(PLATFORM_PROFILE_COOL, choices);
-+		set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+		return 0;
- 	}
- 
--	set_bit(PLATFORM_PROFILE_BALANCED, choices);
--	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	/* Generic HP laptops supported by hp-wmi: probe dynamically */
-+	int current_tp = thermal_profile_get();
-+	if (current_tp < 0)
-+		return current_tp;
-+
-+	if (thermal_profile_set(HP_THERMAL_PROFILE_QUIET) == 0)
-+		set_bit(PLATFORM_PROFILE_QUIET, choices);
-+	if (thermal_profile_set(HP_THERMAL_PROFILE_COOL) == 0)
-+		set_bit(PLATFORM_PROFILE_COOL, choices);
-+	if (thermal_profile_set(HP_THERMAL_PROFILE_DEFAULT) == 0)
-+		set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	if (thermal_profile_set(HP_THERMAL_PROFILE_PERFORMANCE) == 0)
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 
-+	/* Restore original thermal profile */
-+	thermal_profile_set(current_tp);
- 	return 0;
- }
- 
--- 
-2.54.0
-
+Rafael
