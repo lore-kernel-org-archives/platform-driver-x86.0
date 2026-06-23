@@ -1,119 +1,138 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E343438BD
-	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 14:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DB82D739C
+	for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 15:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782224004; cv=none; b=XWnhWKXU+EBIsSMoagRkoA1bfXDOSVy7a1JdcxRQ5X7Uz2nvTRghRe7yw82lPApr00p/nz/onYbfqhkFhq0dA3ueeqyVMOCkniHFRMrKBV+EFY9H43Y8GDzFhZdoCN7Rzohqq482hLHTNCh/J/d5FVCahNZ8YA4AA5arCFah1cY=
+	t=1782229046; cv=none; b=LY5ZyLNiFZJqaat8H4ry56Bvm/WAUzsAgzzVWNQM2+hV0d0ThIchl1ut/d98m6v9mKDYv97gFkPEn0JuHYB7k206ciEIgujEvhOjzaikjPyaCn6NeNjeSoNKaWDuy2OUFhF6Z4cM46u5zRncH/gXtBTw12mapyZAybB6vKz/+44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782224004; c=relaxed/simple;
-	bh=eisQEfeJ/HvnvTVrOBqfBqNdFBq6+q8S0tv4cbashcY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WiLTiN/PI7MiUili1xIKdX6B0GRuEEj52z/cWCMoXL/hxnd4r4yURZn53qfkAz2nivVv8PTrhi0vmGHBwoe6QXib5mxZhAXo9AkRIhVGVr71iAeYo5+31tdY+HTWdpYQem/I6MYFrqSi8DYxZURRictV5xQidh+Gv5k7pwx6EW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBT9DX3E; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782229046; c=relaxed/simple;
+	bh=hJIff6NaLI+3bG95oGNpqk3LfprvXx2YuNVMx/aFlnY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dS6fmLpg+GC7bmuvIMEIE4RVyy3l/ZPvDr4DyaD5eq9eP+mhD4QDtsZPllJR8vTo5O88JmNP1rFwL8b5twzedKpgIbN71sDrZi026yIViTK120vqrmyy9u7LUM976pptWrNEo5PMplDlf8CDUS1JuIpQxgvOgE3Kiu3MMCfuW9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hwFvCFWR; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBT9DX3E"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-8454160043aso4499828b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 07:13:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hwFvCFWR"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c6be9cd7afso25150025ad.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 08:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782224003; x=1782828803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f5n9YuoKYEGmeCkNQpgVyz/eUHDik0ZRvpSPE9Gq8/4=;
-        b=SBT9DX3E8nFknL5se4Y/OYnfoLiDJCpeGlgGmSxaph4iH5SpViD+x1inHH4ALu+qq9
-         V22XZWBdrDoKfAOFDOuMDJ7H10QUNXk0u3MNrMHs5jxvUuxY5n6zyxGfA9ZgGoOd1oFw
-         h1yNjSRctgwaeU6El1My1od94J8ZyjV2gkChYGGgrItQUE1qXlW2RET8sLiFq+pw+Fxl
-         EzaB0PDDejHCnfvoLokSW+ezpq/xfmEPTXhvsAGlVFA++ijQ6S2TFhR6l5jOY5+n+sRN
-         PV6N0z6FJcaxvRuHZNn6AsqWFE90EslTbxk92JvFKgY3X3bB38GvT/7C9EnmujkrRRl2
-         MbTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782224003; x=1782828803;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=linux-foundation.org; s=google; t=1782229044; x=1782833844; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f5n9YuoKYEGmeCkNQpgVyz/eUHDik0ZRvpSPE9Gq8/4=;
-        b=BlrMPlmm5D7qy9yAgUWplMz7RxI/Ec9PLHaUxOclqL/fyi4E34FcY9Kmsnrpd9s/wM
-         XiResY7L4AJgu+NBq5NAiBZKVT1iekri4UAiEUqhVTcognbAjGIymoFQkasp37oec3kY
-         Yy4N6nTu/E1SR7kLN7+9zTJwuAhKYXzmfdKuM6KiCUdK7ia5bViOxUPDwetjgPaCrSBt
-         WmoLBPzN0b2mtUA96VeFNJ43wRNDk6nk4C7zX5RHgC8/Pai/c4cklJ6Zm5AfXi0QScYb
-         zWi0D9XjnVcjNjGB+4VW0vEKzSSRhYFWDsac+tjeYw7zrHrUSWJd4yPoZp36Xg2q3Pfl
-         EtrQ==
-X-Gm-Message-State: AOJu0YyMXE2my0pnLIq3+dx4BRSw7uFW1XvD14OmPTsEl/MCHaY4iViB
-	dZvarIUs6R6U/Gw9hE/OFGDYOgRDsbWN9vBSDZveHJ3hwLjn5wBofXLU
-X-Gm-Gg: AfdE7ckZm/9iQBT88h9/CXUIoUoA8AbQ6KRQb+gJHKVUWjZL1jM69t4dpyg7ISfzhrP
-	HcGFvlXRCJ3TdZ/KmoyXJrSdc5Pf9aClhEgvrt5hK0vzVhqZuHKTYwQdhTwitzgvmOcqoJ0g6C9
-	l8tqSRVMxpHhvtu9qh8EjcaombsynBlrKHeYvekEC0M8eJDWN/1kyFGlebz//RA3XKZaJb1Ir4N
-	6kRppflMleGe62LTesrAqn0PO13/+dFyv9GuCWX0/MgnFKK6u7NKIb0CrbuJ6y/sZLW3eiYsZWL
-	2xmytfPBYQH4iE9BZjMHeLIkhL9Dt3Z48WoCKpChdxo1zXwH3HN6M4Il/vNbO/CY71Nk6Q38FBZ
-	A9OJ7nZEsooYlvS4nBP+57u0VGA9eSE6ULbB2opeKk0tkZsbOOnBt1oiLk6n2Ij4dIpnS+tofJE
-	GSXlmzzcjxXrSRg3nyT9phJqoWVJ0FZSOF3Kq3quaS6xLkXvxb62Iih1cup/NkL7PXq7jTJhIVU
-	Nuj1CiHcdxW/o3BbQ4mRfV2IFIUxw1ZWzrYRiyQzEOm
-X-Received: by 2002:a05:6a00:3cc4:b0:842:46a6:e2db with SMTP id d2e1a72fcca58-84597044cf1mr3420277b3a.19.1782224002884;
-        Tue, 23 Jun 2026 07:13:22 -0700 (PDT)
-Received: from archlinux.tailec59cb.ts.net ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564ea146asm10704480b3a.43.2026.06.23.07.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2026 07:13:21 -0700 (PDT)
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krishna Chomal <krishna.chomal108@gmail.com>,
-	Yahia Ahmed <yahmedd043@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-wmi: Add support for OMEN MAX 16-ak0xxx (8DD6)
-Date: Tue, 23 Jun 2026 19:43:14 +0530
-Message-ID: <20260623141314.33947-1-krishna.chomal108@gmail.com>
-X-Mailer: git-send-email 2.54.0
+        bh=lKOiGMB/GqJqkbRXgajXU2pXMmFlymIxGfwrG7XeYaw=;
+        b=hwFvCFWR6ercPigrnUp9S5lU4Tek4NO8N3kdnTnckh5J88gzpb+wrVhZVypiAuTx+x
+         zr4cjnn4YHA0LtHMb0sCCIOEfE0PS2tTAvfgcu0UyOd+LVXA51YPTGLXKfKsSseKmdWB
+         DkSdW07tVh9jLb0lKyBbcrsxQWPU/3MSKUqpE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782229044; x=1782833844;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lKOiGMB/GqJqkbRXgajXU2pXMmFlymIxGfwrG7XeYaw=;
+        b=mS2rpzrO/ZEHmSkkfVc5qT0FAIIhzBwlayWTYPXtMVEZyJddoe8aSIN11/hOTZaeNu
+         Thk9pBz0NJ0CRM+bVBkg562vKpLBue1zQS57SFAZ97yE4w2SybHyE3YPLfvCS5p907ai
+         la7CXiNB6JntscXtN+r/UwPmYTKST/b2001T1fMzZ6KqoHQUfkkLLuFlCu9KbK/OwvTm
+         w+B8lIl0YjiUIE5yVt86Dwrl7RqpaJj2vUy7/hCU0NrZzeVgp+jkp+oJp25oFPVCOIrl
+         NRX5L6gS5lq7J3oMUqFjBhmk2lCklRu4M1I1e+fvHAxoljzwnus7wWEDfFvqMurlTE5p
+         ZjeQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoCKULXN4YsN684CH3TA4RxvrGgKVMQ0cs2byQhzq2bfdmxXoXE9VYZP+ddXZB2u2jqIiFj7djGA2C/OPEejPk4qIax@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWuYuTRlQmH0zNZuDNzIMTQ6hL35Bvc7Ba/oiv+aGXGWTlED+5
+	We8NcucWPz6dLeY+9Z/AvyZkD0dpCpuzV56YRh8ATjSZqDN4a/VzAVBanVEPeHtWlehMSPPTjAa
+	E7QRlZX4=
+X-Gm-Gg: AfdE7cknvSmfEPd/8UXQzhik2x+Zndzwfe3A7o4RRw43PaHz9VF/HC6/gGThRBfvafK
+	Ombm4B9b1YQsDcoG3vefqGGBueLaAZ2ERYzD+ytQGV7+JQw+WcZ7Oceb4bJEwPqcP2DoUg6wegf
+	GuIMj5IZFHB5KJfW/vkLI8e9JF54Rfd3JZYovhpKQQF85UsaxZFYaGYTtJ9D/unXn9NUpbDu6KQ
+	okGvQ4zFGjj6J6F6hyE7sl6I2R3MhU2cYQgcWy4O3qVvOjXwiVPJCfDvmpomRw2tJ8gH4Vx8VS8
+	4aIGRu0pezzU8SUniWVDRzgmQ5qWSaxn3dfeYQj1LTfBEw5PlRweP1NI22haJXiRQx4oFk6EjLD
+	AK2B90OxU69rR6DfoqUaCVIllZ9Bv91iJZJq3rePviWojcazMHt3HytnYW4NeSXpbDPDwWSXDJI
+	Gef0B77QEAzJJ+skH63KgP3h02bmqz/bQLjCuTOms93o+BYVyccmU6UOTfe+u9p5GMlA==
+X-Received: by 2002:a17:902:f601:b0:2bf:1e59:d99 with SMTP id d9443c01a7336-2c7c9908f33mr34251325ad.8.1782229043592;
+        Tue, 23 Jun 2026 08:37:23 -0700 (PDT)
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com. [209.85.214.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7439f8e81sm111989865ad.52.2026.06.23.08.37.22
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2026 08:37:22 -0700 (PDT)
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2c6a97e1d1bso43641285ad.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Jun 2026 08:37:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RobJVnPAF0jhvBxAd62EpoZc93W4TYasnZCKxDwneApJR1YIhCSCLY4xgApyxZAkUOuqA3VHqFtOt90De0LIGnHLybC@vger.kernel.org
+X-Received: by 2002:a17:903:2281:b0:2c2:7e17:39f6 with SMTP id
+ d9443c01a7336-2c7c9a9c706mr30871045ad.36.1782229042087; Tue, 23 Jun 2026
+ 08:37:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <pdx86-pr-20260622211510-2801419545@linux.intel.com>
+In-Reply-To: <pdx86-pr-20260622211510-2801419545@linux.intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 23 Jun 2026 08:37:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi=29jSstqyF8EqRFccWnA=1TfXW_jcURhSd4rJgkSxgQ@mail.gmail.com>
+X-Gm-Features: AVVi8CeOD16m-ki64Kbucf0piw9pm_ldAY688oZlMK-mRYWldBOZNc6x7Z_L-Qc
+Message-ID: <CAHk-=wi=29jSstqyF8EqRFccWnA=1TfXW_jcURhSd4rJgkSxgQ@mail.gmail.com>
+Subject: Re: [GIT PULL] platform-drivers-x86 for v7.2-1
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Rafael Wysocki <rafael@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The HP OMEN MAX 16-ak0xxx (board ID: 8DD6) has the same WMI interface
-as other Victus S boards, but requires quirks for correctly switching
-thermal profile.
+On Mon, 22 Jun 2026 at 11:42, Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> There is going to be a conflict with the commit 3570cb58e317 ("thermal/of=
+:
+> Pass cdev_id and introduce devm registration helper") and a few other
+> commits that came from thermal tree effectively resulting in a change in
+> devm_thermal_of_cooling_device_register() signature. It needs to be
+> addressed in the merge commit or the build will fail.
+>
+> Mark's linux-next discovery about the build failure:
+>
+>   https://lore.kernel.org/all/aibZy5rrdX3ltGpr@sirena.org.uk/
 
-After testing we know that (similar to another HP Omen Max 16 device,
-board ID 8D87), the embedded controller on this board does not expose
-thermal profile which means we have to intentionally disable EC readback.
+That resolution makes absolutely no sense.
 
-Add the DMI board name to victus_s_thermal_profile_boards[] table and
-map it to omen_v1_no_ec_thermal_params.
+Now that qcom_ec_probe() goes through all the work to create a name for the=
+ fan:
 
-Testing on board 8DD6 confirmed that platform profile is registered
-successfully and fan RPMs are readable and controllable.
+                char name[EC_FAN_NAME_SIZE];
 
-Tested-by: Yahia Ahmed <yahmedd043@gmail.com>
-Cc: stable@vger.kernel.org # v6.18+
-Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
----
-Based on review-ilpo-next branch.
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+                scnprintf(name, sizeof(name), "qcom_ec_fan_%u", i);
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..94147102cca4 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -265,6 +265,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
- 		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8DD6") },
-+		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
- 		.driver_data = (void *)&omen_v1_legacy_thermal_params,
--- 
-2.54.0
+but then the name is actually never *used* after the change.
 
+The *logical* resolution would be to make it use
+
+   devm_thermal_of_child_cooling_device_register()
+
+instead, which that function was renamed to in commit 8e1529e79385
+("thermal/of: Rename the devm_thermal_of_cooling_device_register()
+function")
+
+I have done that resolution that at least makes sense.
+
+But honestly, this is all a complete mess.
+
+Why the hell was that function renamed, and then a new function
+created with the old name - when that new function then has exactly
+ZERO users?
+
+Renaming a function, and then re-using the old name immediately for
+something else is a BAD IDEA. It causes exactly this kind of horrible
+confusion. It's an even worse idea when there are exactly zero new
+users that make that confusion worthwhile.
+
+Thermal people - you effed up. Stop doing this kind of crap. This is insani=
+ty.
+
+                  Linus
