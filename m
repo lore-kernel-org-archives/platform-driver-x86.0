@@ -1,80 +1,165 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010043.outbound.protection.outlook.com [52.101.201.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48593C769F;
-	Wed, 24 Jun 2026 21:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782335762; cv=none; b=En5OofWztk5hvpvWex5QwmlmxH9hFNjcPX4yl0dwOOUt0wxgG/m/Q9XXs/zZEEpPrEl9OgbbdVB8FkSS8JOtPEB24fguF+D0gb9kD1uLewogctpPd2sIeBoSL3YpJ7Pdo+MYC+cAzsKLXSBkh7mt7JAbAFr3GjJuikF5QF7vKGA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782335762; c=relaxed/simple;
-	bh=6uJA7oAXYWb9sq8UylywV/3PqzIrlvufTZPG6wQ3CCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KdiBIKKWH5yfBQAmp34MM545taN14xVPPlZy6tRYJv60kaLwW9H7o/EuIE+43qTaZtgKez2yFvn59DwOOTjSUO5T9zZQ8gelvWj7DD9euxao6CcL1IRu91FajcKeAnikBaUEpcJTh+3BztSkykYlIz1WzpYMDpMHwhIeeZ4g9pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UxzzLGJf; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B30C3B14CF;
+	Wed, 24 Jun 2026 23:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782343852; cv=fail; b=c65y0OohMupdRsfq8tJ0YVyvp7JlE+YKYt76ue6GRzk3pz/jO14anp+EMTkVn1e8XfR8aGpPgrOKt9u+6kyVirelbPycHXRpceQqhqp6rLhL5PFJD6GIJ1EeOAGoOthc9lHaAN+jkP3qutYk2LCjYkgcKqF/7pOJpTbnnMwqAJs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782343852; c=relaxed/simple;
+	bh=SnXb/zojKCY4I5mcd+uV6Z5727ZbctmALrHrGOPFiyA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FCMLdK4HRbH5HgcTFhDAI+3lKe2C+U9AHPtIrU7ldSsekWXSr6Al3c6LgT5v9QcAMActovKeeFn6PM7iq6EcIbsBRSkjM1ILLSklEGdB/LsifGwO1VQ7HWfqKbOn4Bn3Vy4anJeKeBZPBLnwUQYedTT4HPw5YXFMn5Q9oBIQe3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dSUQPfe3; arc=fail smtp.client-ip=52.101.201.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UxzzLGJf"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 7CE5FC6B3B9;
-	Wed, 24 Jun 2026 21:16:08 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 634CF601C5;
-	Wed, 24 Jun 2026 21:16:00 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 751C0106C8468;
-	Wed, 24 Jun 2026 23:15:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1782335759; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=jX/spYia6vgkjEvWJUg4hDpgZ/ho2W2OEzTDqRzUy3U=;
-	b=UxzzLGJfHM37sB2R4rJxXjo+Maa+D1dX7nJL40PayVyGD1jbgLmRF0igTRbc5CiayCghoX
-	zw0YF0bsnD0NLeEWdQvAPUy8bORCupPPAgMC7J1+5dA1RmZH6ydN5LZTkvpVdHTHyzsRGI
-	AKZhDu0qDRfUWyKCGBEpb2qOF0Eo6W7roQK98ADN+frzYJ2jSlTZD6JgVZtcbIxM7RemmS
-	j5+wq5TYePlNsecNvgNOibed2AO+FL1viUQOWHfsn+HClCOnIEKqZ2gE9cgBsoVhhsQA35
-	65emRJEBWcwsfyGYkPeId3++BWQUtwlzpj7JclBZqZpchvHcXq1lnhALfqqYsA==
-Date: Wed, 24 Jun 2026 23:15:58 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dSUQPfe3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a8TGS1EgFeV8SAS3Pj76obi/AKq0IhRz3APvniMinqRb2KbKaZy/RNjx1rbWWcXuduzmYWc73bBcxnGBKgk21zqFoEyqVSMmMNsVzJxe+QqtaH3lFsg6cOnW1uv+/DYVUvdn/KVjFOameXEkp/8G/YKI7tkTVaxgvH6eyokd3osFLdjSvx3pRMh7+8wFM5qU2yReTz2Ham+68NWTGBwfHoxUsX6x1Q1bY90z3LqYdjlLQI7TTcGkaKjP5sNF6rWJNnBLhuKg2JLGxnGaTDacaLE6Z8bcrrozrU/agGFetHLHuxM8h+EMfk04JxmNVnY1/RDarcazmRdzbvJSUsaiQg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+76DoXBbuYpF86fSuDZ/BykiX0ZNwiKDgbqp7s4o31g=;
+ b=dhEi45yHh8l29BjLzDkjyjMHjuMEdOx4iWNU3z4lygBt26o8AV6Ult6ulqOPUi7yMOb1MfKBZCC53AXQeahrf/RvIUyhnsSptkxdyNjrk3OIIVAnsVDepS8T/r7L1+i3RYuq8tEf+QTMdnar4+yGVeg6tCsfUHJ7NfOOjyuuGna7mXEZZ6atIVmMtBDt2WS+MsPm+fhyytXM0Lawg70pRCTqW8+jkUkuC0zk6wps8PovVq8HUR7SxH+M4CgvcDg+Yk0XTQPn1TCV8AMXr4jcmV50bxuUAVKSiRK8xNdOmNrtklSKS/90i+cXs6qTvXPvTs+dzdt27Z5kk8hfLLb3Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+76DoXBbuYpF86fSuDZ/BykiX0ZNwiKDgbqp7s4o31g=;
+ b=dSUQPfe33x7tZ2aadEiTYnifeNQlrNtoWm2o221PqwCo9XZTXiDoeUboMJVZSY2W7LYNzq+OSAguNL9PbjJFtiwgih7zCEYJBSBb8oRsdhke31witFkGzI2QWsaqhI69oyI+vU3VaXmKFCwDPwbbahYuZNGzKg6B16guqK3p24E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by CY8PR12MB8337.namprd12.prod.outlook.com (2603:10b6:930:7d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.13; Wed, 24 Jun
+ 2026 23:30:42 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0159.012; Wed, 24 Jun 2026
+ 23:30:42 +0000
+Message-ID: <9415b405-ec6c-425b-8abb-42964f5a2b3a@amd.com>
+Date: Wed, 24 Jun 2026 16:30:41 -0700
+User-Agent: Mozilla Thunderbird
 Subject: Re: (subset) [PATCH v2 1/2] rtc: Add rtc_read_next_alarm() to read
  next expiring timer
-Message-ID: <178233558814.1517260.7453046865036017375.b4-ty@b4>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+ Thomas Gleixner <tglx@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
 References: <20260521043714.1022930-2-mario.limonciello@amd.com>
+ <178233558814.1517260.7453046865036017375.b4-ty@b4>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <178233558814.1517260.7453046865036017375.b4-ty@b4>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0109.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::24) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260521043714.1022930-2-mario.limonciello@amd.com>
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CY8PR12MB8337:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9aea15fa-4e20-43e4-4e21-08ded2489bbd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|22082099003|18002099003|4143699003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	+gwKitvjZLFwS6yVLXuQDmc+5CRtmNN2DSQIORMqKM1LW9L0QFbBd20tgFUbj4BwYejTqOEh8aSsR+FZiYqJmf+XWT3s1SzpcQRMSzW5pJwcuUZjKVXcnLEHwNFVKk64fvCviVzced564h5T5O17Yur+KddBqCKamCeuiy30oL24nG5GVG1GYuFZgSgXfWGXyVovMZCeMncrxfx3b9VHDdxtUGM+I4CZ+6rgS20ZGym10UaKFMMpQzDpmtfJzVv1hE5b6v6z9BW2rLriJMbyxDdePUHBXGNugGxS6yDiaW6au4AE5arWrW5MMOIn/pXhC/L/voFfdK2m1CW3OQwaK+rPsnIqFdv8DSERTXQNqMBEUujL8z5EkOl03MEzs9IH2r1hU2y760OlccNhfrYtQYgW1AcNxtj5c1EapuIehA5Yu16qPSnshgailGFqpUQO2ZbxWaPfGZuEOe3anGN1lojI1QAoGCJUW8sJN8uBFBi8LByukU5SUdjQQz4ojPuGDb15hVJcMbvZn4WFwdlTvM0NnDt+dAwpw2jvfXA+Vs1BnJo70c/jXSTxTZuH9evxmKKRrLKxY5NlgFKAppEJMnU+AR0QIYZEkNOuxUWYQLpb1Q5gNN7Dr4AeeY+XVnt16/0HvLAQnb7gPa19mrVae7hopKJDjvmLqR8XuwpJJk8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(22082099003)(18002099003)(4143699003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NFMxSkhhU0xOVHBxRmdOWVdvc1pwVE5SNDRiSndSSEhyYWVTSUhZTFVPUFQv?=
+ =?utf-8?B?aTQ0QzFOemFpSU1Ta2pzMlFxZFdjQXVvRCtNZGg5cDZsM2RIMGRqOXFXZG1K?=
+ =?utf-8?B?QUZxN3dKclJTVllxMWUxSHBWMnk2eHBldVNGckdyUWJWZWpyZTRvWHJzSERB?=
+ =?utf-8?B?TmJDbkxSMkVYVjZyb0FIWHQ4UGR0MHN1c2dFdHVTTWk0UXpqK09XMlk0VVpZ?=
+ =?utf-8?B?SG1lN2w1YzVvcHhKN2plYU5UU3g1WlRucElUR1BUUHB4VzBqVFBTZTFEcWpm?=
+ =?utf-8?B?ZC94OE5QNE02SEsvTi9YcjJIWHBJdW9Lbit5cUhkYWlLY1U4TTdHK2N5YXpO?=
+ =?utf-8?B?S2dLY3lTbmVNbTVxYmpNdjRORjB6dEwwMGVSR0o3THZKMTBWTjc3RWFYT1U4?=
+ =?utf-8?B?WUdwYmwxNGdXYlhSOGpKdzZ3M1VmcjZ3QTZ4ZkFJRGlQZXNIY05ieEFoZHRZ?=
+ =?utf-8?B?dHYrRGFVZlB5eUdVZm9ha0xnaVFPTE5McUloZVVBZjFSdERUbktKc0RoSlJw?=
+ =?utf-8?B?T2RZSGJTbm13cjNYbEVGRGFKQlhYWGhTKzlRMDNMbDNCUWJ2bmovNFpsL3hF?=
+ =?utf-8?B?OUtCQzRFNm95ZGJCb2JQQ0tjL1BuOGRFZW5MTFdORHI5R2ZyTkRMWnFRMWlh?=
+ =?utf-8?B?bDcvK2laM0NaVzlCWFZtK282eGZLcVhRbzFRK2JxQW03VDZ0MUIxenpiUVFz?=
+ =?utf-8?B?WS91Z1lDUzZuWWtwYi9nWWdPLzFnL29IUFRhdWwxN2U3YXBjOWpWZ0ZqaTNo?=
+ =?utf-8?B?a3BXKzhSUzZaa3BjTVU2QWVEN2tpSmo0eWdPdjExaCsxbzJib3pLSjQxUTAw?=
+ =?utf-8?B?WWQxOStGSXNkRDUwSUxMRjBxZklnMk0vYkRpcmtzaDFnanY2QjBxRDRCWSts?=
+ =?utf-8?B?QW5mM0MyYjRVOG5VejliL0prL2FvY1lyK0RtLzNyOWZIcG1GSzQvU25iSDlB?=
+ =?utf-8?B?MUFLWkkwaHh4dnZ3dHQ5VEZBUmd3OXlDYjRaK1dxTlRZcm91cUNTTzBBaENR?=
+ =?utf-8?B?ZU1wTXZBWjFjbG1EOTJtSkV3NlJHRmdacFRyU3hxT3BwOVVTWTNySVd6OStK?=
+ =?utf-8?B?T280WEc3N0c5QjROVnFmMUwzeHhIOGxSengxWU1zd1VwTTh5eDFOSEpsTDlG?=
+ =?utf-8?B?R2lpWDhwTTRjMmFxM1R6VWVGVS9HaGExTDR2dDA5TDhPN2NuT3RLODNxK1c2?=
+ =?utf-8?B?RUlUQU9FeStQeHZhaDl5eHRzWktsTDk4NVlaeURoeEd5blRIOVVidTNZMndx?=
+ =?utf-8?B?bnRibkRmNm5GdlkzVlpWTW94OUtsaTllTEt5eHpCVGcvUUdINFJZN2t2RnM1?=
+ =?utf-8?B?N2E5d0FldEU0aVVwajFUeER2a3JLYzc0c0JwZHU2dVBETGRYNXRRekNKOFBS?=
+ =?utf-8?B?cExleVNRUDFVVjNySjZtdTJqNldRaGdENU9ONFR3RnAydng4dFZBeUhoMG9y?=
+ =?utf-8?B?UENpTG5rUTF3RG9zdFZ1VG04QUl6QWlyeUNmRmUrTGJqVFlldnJEYVlIWCtT?=
+ =?utf-8?B?TVZ4aUQ1MktOTk5FM3d0Ui9ISk84ZW80V01CZCtpdlZrclFUUnFidktkWGQy?=
+ =?utf-8?B?VC9GMG1meVIyeGJ6RDZUMmFUb2lLSUQ4amdTQ0JSRjdiN2pOR1FqK2tEN29H?=
+ =?utf-8?B?bmhjWjQ2SmdPVjBqM3RDdUpEcEplaEdrSFJkd0NJOG9kTnhTQWxGSnBqdU8r?=
+ =?utf-8?B?NGs1TWY5U2pDb0RVSHdPclY4WW9BUGZHUnZLa3l1OGw2c05YTFNqVmRLTTVy?=
+ =?utf-8?B?M3FWbXZuL0RLRDBVdXdGV245LzNiZWVFdi9jb25kSW80M1cyT2Jtc0xNMkY2?=
+ =?utf-8?B?Q1d6dVpLMk9YL0pKWmpRSHhqTmlCakQ1QkQ5SUIvSnV6dWluOEFRbEc4ODBN?=
+ =?utf-8?B?dDNUVk4zUWN2bW5VRUpQbHlieGUxRUltK3dDaHFYRENKZlJ1dkE5WTdYaU4v?=
+ =?utf-8?B?MmVRSmtwWlZZdjhCMU15TXZ1QmdkQnJwcmN6UW1ieUsxekRMNFNFV290cGtS?=
+ =?utf-8?B?MGZMejk2dXRid2pNSDFKT0pDOUpVbE9QL0t1QWJ5SXlYbTNIbHRUZTMzcndT?=
+ =?utf-8?B?U2E0SFYxOVpmQzVrbnZwbFF1OUdDVnlXMy9YdGxLWEZVM3A1Qm1YWWprWlEv?=
+ =?utf-8?B?dXlSUEVBY2k5a0tPMUR3WTlweDFsdlVBVnJTSWQzVzIvTWhXcDB5aE1MS054?=
+ =?utf-8?B?S3JRYnJacEpnaUJlSWwvbHc3ZC81TE10MjF3cFArbXFFV3FLU1h4VWxEVjln?=
+ =?utf-8?B?YlhPeXpONTFYem9QRUt4YUJzUDVvaDRiUWt5SkNTanJwUHFldVVUM2tNYnl6?=
+ =?utf-8?Q?ePC8MPSE4vKsoApaEt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9aea15fa-4e20-43e4-4e21-08ded2489bbd
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2026 23:30:42.7075
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y2Zvxi2ksVplbKbre4I4wap0dFsM+aJbz3Y7WWELvYeJ8izLrg4yjgnvTPHhd5oKRckpngYuJeiqgTFYkRp9bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8337
 
-On Wed, 20 May 2026 23:37:13 -0500, Mario Limonciello wrote:
-> Add a new function rtc_read_next_alarm() that reads the next expiring
-> alarm from the RTC timerqueue. This is different from rtc_read_alarm(),
-> which only reads the aie_timer.
+
+
+On 6/24/26 14:15, Alexandre Belloni wrote:
+> On Wed, 20 May 2026 23:37:13 -0500, Mario Limonciello wrote:
+>> Add a new function rtc_read_next_alarm() that reads the next expiring
+>> alarm from the RTC timerqueue. This is different from rtc_read_alarm(),
+>> which only reads the aie_timer.
+>>
+>> The wakealarm sysfs file programs the rtc->aie_timer, whereas the
+>> alarmtimer suspend routine programs its own timer into the RTC timerqueue.
+>> Both timers end up in the RTC's timerqueue, and the first expiring timer
+>> is what gets armed in the hardware.
+>>
+>> [...]
 > 
-> The wakealarm sysfs file programs the rtc->aie_timer, whereas the
-> alarmtimer suspend routine programs its own timer into the RTC timerqueue.
-> Both timers end up in the RTC's timerqueue, and the first expiring timer
-> is what gets armed in the hardware.
+> Applied, thanks!
 > 
-> [...]
+> [1/2] rtc: Add rtc_read_next_alarm() to read next expiring timer
+>        https://git.kernel.org/abelloni/c/947d7ea6f60b
+> 
+> Best regards,
+> 
 
-Applied, thanks!
+Thanks!
 
-[1/2] rtc: Add rtc_read_next_alarm() to read next expiring timer
-      https://git.kernel.org/abelloni/c/947d7ea6f60b
+Ilpo, Shyam,
 
-Best regards,
+How do you want to handle patch 2/2?  Immutable branch and come through 
+pdx86?  Or would you rather it go through Alexandre's tree?
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
