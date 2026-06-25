@@ -1,101 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE6C3C2BA4;
-	Thu, 25 Jun 2026 10:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEC43CC7F1
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jun 2026 10:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782382129; cv=none; b=cNRcyrZsQx0ooQ2lvRA8NZ3m+AXhnKlrOB0APadmWef1OUCXFfoXFQB3eBqsWR1llGHdrgqfNMRTQhwSAML0lSObWED1u/LY/SpNoyuU1Dlh7kBNBR9MctXNBCjXI1etvPPa3kVqex3Is+B4XL1UcsNlrQMoMU3b4jA9FX9zQJM=
+	t=1782382505; cv=none; b=LuelVLWe3RHX6T1996rE+L4RZGCgffrE1dWb65xroDnehZNaID27f9JSdJAKy75WNEeRCfIPCeIwJOr1LDHcEAw6U6hgFqrcEJ5UeoFv4HVTfz0RMKxOAEkGiVNeNmo70/CekACAtpvjt9YhmLdjbaOuv8UbCblCQ9dBsAEeosc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782382129; c=relaxed/simple;
-	bh=SQBp1/yV1ekWdS6nTZnnRLDYKd2I+3byYL5QANtkNHg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mVrgEbcu1WYGt3JHhdGCWJc3xf6F5usHTSImuBxfYjoA2KBMWSkbXWOK4sxkP5IFi4Gd3o+sSpvsNA1pZl9yenttilUBTcRc6dSOQimK2iSJNq8HjH2TfUYJAWmPDmgBFFHBQelAKiZYejeeU6ntKFT9Iojj2QyX0ejlGJ8iYvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMQtoI1a; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782382505; c=relaxed/simple;
+	bh=KW0aAhwybXVTM+leeAWjHVTucoafYycsjRprPSGeljo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WV1l70Zi3odai3ZQK+EYNR/8TxVUdWUQIl263gzuAHcR9e1ckF6ctLcirUNjnkQlnAv/v8cA89V/VuWHC5mxd9o/+pEfuKtRF8YgrE7ZtvryyB3ss3Vv5zfs7qMBYny6OiPUionls6dfKnwcW7WSnGKzbPZy1wbRPI0wHi7Z19I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GV/73cOu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMQtoI1a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782382129; x=1813918129;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=SQBp1/yV1ekWdS6nTZnnRLDYKd2I+3byYL5QANtkNHg=;
-  b=VMQtoI1auc2e+1fxiIZzteqHkV2INnjmnFQiBKpB56E0qJo9Fb0mP70z
-   wUmOFgOuN1oLxHFWktMctmPmv5Pyl2yyo+yWDYC5Fw0hN2Qiwt8Th5UAX
-   5Ql2Cw6DW0pjb2QMWIFxgA9EmIjHFiOkSD3hpE1O6R6lfmhv8cwiqguqx
-   1a2cCXWsix56HxoUQanAa42SiZ9ZKjXaZDzOSokhH1iNKBe4NJijPWtxD
-   9UvOUzbOcMiVJlL8L7nQsPZpXLNL1Nn3HgZHhWOoffguNVnXlMMRPnpRw
-   T3rH4HE2JbflHXH/ScumrlAwBhiWMx8tPzfFnn4g1HELl5wO77e2S75e3
-   g==;
-X-CSE-ConnectionGUID: v1Y4xKOhSP+0jC1Prj9+Mg==
-X-CSE-MsgGUID: +/FkZLilTr2TOjrnDN7IbA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11827"; a="82276680"
-X-IronPort-AV: E=Sophos;i="6.24,224,1774335600"; 
-   d="scan'208";a="82276680"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 03:08:48 -0700
-X-CSE-ConnectionGUID: XWgTOkmjTHSllxAY9JmTuA==
-X-CSE-MsgGUID: MbtkjO3uQXGUFTFe6b4glQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,224,1774335600"; 
-   d="scan'208";a="250697879"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.153])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 03:08:45 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 25 Jun 2026 13:08:42 +0300 (EEST)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org, 
-    Thomas Gleixner <tglx@kernel.org>, 
-    Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: (subset) [PATCH v2 1/2] rtc: Add rtc_read_next_alarm() to read
- next expiring timer
-In-Reply-To: <9415b405-ec6c-425b-8abb-42964f5a2b3a@amd.com>
-Message-ID: <f9a3520d-fdf1-25c8-66d1-d5b06d9f73b8@linux.intel.com>
-References: <20260521043714.1022930-2-mario.limonciello@amd.com> <178233558814.1517260.7453046865036017375.b4-ty@b4> <9415b405-ec6c-425b-8abb-42964f5a2b3a@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GV/73cOu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 04D1CC2BCB4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jun 2026 10:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1782382505;
+	bh=KW0aAhwybXVTM+leeAWjHVTucoafYycsjRprPSGeljo=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=GV/73cOuvX4z3CNn2L+H9LSzrhI6lPbNDHka2Ikl1cMUUyGRKIalm9GomPbUVxWIA
+	 Cyl8gSiRvERMieFshnNuYY0DK1n0rt1CbMhOMZhtU9OPaKqAHNpNKU0LI/xi2hsxNq
+	 HgY/9CUCl+WU46VFrPmUm4qfIayNeendt/1B4kedoNxeWNGgregfFXKF4CHrrAleCr
+	 IGyYQT5rZf2bf3hr7UFwdjh1u30kZz+tw+vhLHwjb8CeuBYq+qyowINx9r1q7KOS2w
+	 K5puf+gN5R7kX9f+xiONC6Z+9bk1eHxBG3keBZ0pU6fm0t+jE5BJ0yiHajZrxSlgLU
+	 68bnW2dtck8HQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id DA88BC3279F; Thu, 25 Jun 2026 10:15:04 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221569] Laptop fan too loud (spinning nearly always) hp-wmi
+ 7.1-rc4 kerenel
+Date: Thu, 25 Jun 2026 10:15:04 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: moravec@ukf.sk
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: UNREPRODUCIBLE
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221569-215701-d4gDhSfNnt@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221569-215701@https.bugzilla.kernel.org/>
+References: <bug-221569-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 24 Jun 2026, Mario Limonciello wrote:
-> On 6/24/26 14:15, Alexandre Belloni wrote:
-> > On Wed, 20 May 2026 23:37:13 -0500, Mario Limonciello wrote:
-> > > Add a new function rtc_read_next_alarm() that reads the next expiring
-> > > alarm from the RTC timerqueue. This is different from rtc_read_alarm(),
-> > > which only reads the aie_timer.
-> > > 
-> > > The wakealarm sysfs file programs the rtc->aie_timer, whereas the
-> > > alarmtimer suspend routine programs its own timer into the RTC timerqueue.
-> > > Both timers end up in the RTC's timerqueue, and the first expiring timer
-> > > is what gets armed in the hardware.
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/2] rtc: Add rtc_read_next_alarm() to read next expiring timer
-> >        https://git.kernel.org/abelloni/c/947d7ea6f60b
-> > 
-> > Best regards,
-> > 
-> 
-> Thanks!
-> 
-> Ilpo, Shyam,
-> 
-> How do you want to handle patch 2/2?  Immutable branch and come through pdx86?
-> Or would you rather it go through Alexandre's tree?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221569
 
-It would be easier if it too goes through Alexandre's tree and I don't 
-expect conflicts on that area. I've replied with my Ack to 2/2.
+--- Comment #56 from Milan Oravec (moravec@ukf.sk) ---
+acpitz-acpi-0 temp is stuck at 109=C2=B0C and not changing at all. ;(
 
--- 
- i.
+migo@migo-HP:~$ sudo sensors
+hp-isa-0000
+Adapter: ISA adapter
+fan1:           0 RPM
+fan2:           0 RPM
+pwm1:             N/A
 
+k10temp-pci-00c3
+Adapter: PCI adapter
+Tctl:         +39.5=C2=B0C=20=20
+
+mt7925_phy0-pci-6200
+Adapter: PCI adapter
+temp1:        +72.0=C2=B0C=20=20
+
+nvme-pci-6000
+Adapter: PCI adapter
+Composite:    +38.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +81.8=C2=B0C)
+                       (crit =3D +84.8=C2=B0C)
+Sensor 1:     +38.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
+Sensor 2:     +38.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
+=B0C)
+
+acpitz-acpi-0
+Adapter: ACPI interface
+temp1:       +109.0=C2=B0C=20=20
+
+ucsi_source_psy_USBC000:001-isa-0000
+Adapter: ISA adapter
+in0:           5.00 V  (min =3D  +5.00 V, max =3D +15.00 V)
+curr1:         3.00 A  (max =3D  +5.00 A)
+
+ucsi_source_psy_USBC000:002-isa-0000
+Adapter: ISA adapter
+in0:           0.00 V  (min =3D  +5.00 V, max =3D +15.00 V)
+curr1:         0.00 A  (max =3D  +0.00 A)
+
+amdgpu-pci-6300
+Adapter: PCI adapter
+vddgfx:        0.00 V=20=20
+vddnb:         0.00 V=20=20
+edge:         +38.0=C2=B0C=20=20
+PPT:           4.00 W  (avg =3D   4.00 W)
+sclk:         875 MHz=20
+
+BAT0-acpi-0
+Adapter: ACPI interface
+in0:           8.26 V=20=20
+power1:        0.00 W=20=20
+
+acpi_fan-isa-0000
+Adapter: ISA adapter
+fan1:        2100 RPM
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
