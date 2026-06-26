@@ -1,62 +1,62 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493903C1F
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 03:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E75F3BD642
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 05:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782444350; cv=none; b=jk1XwnaFhu5Y/HkA+7hGLq7x3PIRaXqnsQr1T1K1EeyTQmxw5ZOX2fHazafxOR+JRy++s8ZYWA5ids8RscNdt2EUezOLj3cz9cvW88b5f1hk/ttsX6QzQDFMMjwQmHSkFHWf/je8l0CLto36JugL8COJeQF8x9zNCLltl6sYx4E=
+	t=1782451983; cv=none; b=B2bMYNH5BQGFDgX7GEGmyoY8aNN5B647bRdCUrvf67YIhN0HQmGTU+HYy5kXrCsX0KfFVSrIhlkdwOuxT4P7q4jw2d6+qjTrwhkPz3Uv+61VCnH8BjZO+ZRU3JCS/FqBKHrOh+PqpEUnGpasRFX1GpjwPFarzG9Kwb/1BcZw6KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782444350; c=relaxed/simple;
-	bh=FFwSEsg1+CCsqSARMkFz1McRZ9Xy1ZsuLpCviISDXdQ=;
+	s=arc-20240116; t=1782451983; c=relaxed/simple;
+	bh=OPWuOCpXs1K8yRJy7u9hxDxd1C4Hc5b9oLvrIQH3GrE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GbinlUpz3EZrNjVOafcnwmmCkhDPZm/4UxMCovPOBVwk6x7CEGKiXv7PwvqwNV37XSA9kKRBRShmmSLBpw/lYCgHvhozfSTMb2bYFi6A5btm97Z4eWcS6POWqCSaAErqyvKyiklBXUGDcz3Ueaq4NhZkJddi/P46u1QAzYDcFxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYB4QS9c; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=jbYjWzcMtN71cxyHkSLnqWVP8mB75K8J1LWNdtDfKlL6GAu0YjimCLGhzTbLLyGnSi6yk8VpCdHLUqOQdrf7WcVAL1nJgPbGCJkmn/mL1kJBVy2OQyWFQMQJG68Kja0fz0N3rU6mSLkf5UiyoWkceZuyt7poDwvHUZhvpHazYnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJE1Xzwa; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYB4QS9c"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2c7f3148705so4631815ad.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jun 2026 20:25:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJE1Xzwa"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-84538597e1fso261807b3a.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jun 2026 22:32:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782444347; x=1783049147; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782451971; x=1783056771; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gO8MSVlPG8+pMXhx/skRfiq74zAUENzqQIndUcYWMHo=;
-        b=DYB4QS9cfHKqOTD0miVacv1SxsqTteH3wcXaM3abJevNSLO6W7DBTBBB5wu7lMBVHO
-         2T0GsIjOY7iL9j1EFJie+a3CcUp6L/Ay1UzahOWbo5oH/2kKrFBKq1mXn82MV6baJt3z
-         xozN1tKU0qpjTFTpWTBCJYR5uhsJsa5RoNRzmU4Lcu5j60MYkyApB2NOhM1ZGWZQsEbW
-         R8CRZAfJagIc/wR/DiHFXuVl4SUGroYsOb9DG/KAfQSp3Y/ub2AFeVwUpPgMyGDZmC7a
-         WGBrXsW52oqErT0KankAxgi3uCiUOT62LuinLm6Qf259EEqTUIFY+Pwt4jbE0w5pfTiD
-         fJZA==
+        bh=iM4cyhjW4R4Ra9vRlJsZ72WbAFF0W3+HNGOAnnwAmB8=;
+        b=WJE1XzwaAFXBkRjppz63zYiMAT1qguz2EHPoKEh2ZizpdcA3vCr4RpGS8LnhlGNJZB
+         M6Bfm7kHf+MZk5gR8q82Q5dslGSmqj+C3AZbTaBKa5cIjkdapxSxW8o90Z/vbnMbEgLS
+         +3CgeGFe0Xw7NzbvMPw0fcOR3FnbkP35KGNnRl0o2gTyG+0xrISTGbnjgXADonTB2INB
+         M9mtynperWVFUY//sBogpC7PoHugk9SP+wM4K6vuPoWHD6MieyVrwCRMtdKy/qvZHFYp
+         qSj/S4XDh0qQ+vIOmyVQVHIJxOrSPPMAbnNlTC4dNlMhCPsbVKCYMpXOKPCAlFc329Oz
+         A0bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782444347; x=1783049147;
+        d=1e100.net; s=20251104; t=1782451971; x=1783056771;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gO8MSVlPG8+pMXhx/skRfiq74zAUENzqQIndUcYWMHo=;
-        b=LMIE1mKjprDSHc1k0TCeT1f4CdoNngSvive5MFljK99sfJevY+7ymgCYRbmqMwvhiB
-         wEnpTfNX7oASA4YBuUukcCMHVpQyMk8gZA1TThVXjevk0q3VEmYTSPCn/qKwHQvc93d1
-         p4FCcyJjYoQz4QDOLZkFouTE6OdRtcXhXyQo3pAvqiAYyqKDzwGN75kNpNTWllis23lf
-         7UzNf1/u4dWRBHNA+JkUpUTcnc23t7WuA0+dAx3KSCmklsDYuNWt4vw21k4EzcyJtXr+
-         McicT4qUMIKJTWLz6I/IAOn5wieXuaZEFXWuZm689d/PKOhRJaC9kTT6I4fHzzqj51jw
-         SpLg==
-X-Gm-Message-State: AOJu0YzH8iSHvYXojv1ufnERArI8fOUGCWP6hjfKU67fSCJT44doAwAW
-	R4CJmYKDkRVafXlzXohUAMnN52k+uDMB6mwbrG+LfcLosCYQ3gEQN7Fqj/DO6Ya+s62UFg==
-X-Gm-Gg: AfdE7cnFlLHmcSy435WnW5207hf/mHgXPwpx19HoaqOv3kLDPkFPnfk88JCXV6Ar9We
-	D7Hz4bKtn7DPPki4C6fTYM1iYAVXdlO/Q/OPWRXSq8wMZrPjvfWD0xX7XyNoMBKGbvfcBVRtMSb
-	dTluTH4SphtotiIqt876rwQrOQrhH5OaNby1+rgEzdNQDeXM2y3VCdPmaPNrOWFPv00Yo9PgAOl
-	uas1RF+Z3LdVtDZzsjs/VUhNoLc7n4iViAamcBCkLH5YBvt8Yl4BCAcen22302qL5YLBTi0z1d7
-	ysmuFQGfi0pNqjHzytGFAddtDs08yVYSiiJK8nha4qBwMINpe1cMDBKmmlzDTNv/umElARNc5II
-	D41/QhQBPcRugioOzbyTTsUCMhq61AyaeWnXyuOsSeW9HjnxqJALy7ocGceE1olnRNLqpcdHdA0
-	eydxIphtftNhkMW5SfNdnR59BoA4az9/MKLoNk0pq5RB48
-X-Received: by 2002:a17:902:e806:b0:2c0:c262:b91f with SMTP id d9443c01a7336-2c7fc9bfc63mr55345955ad.8.1782444347293;
-        Thu, 25 Jun 2026 20:25:47 -0700 (PDT)
+        bh=iM4cyhjW4R4Ra9vRlJsZ72WbAFF0W3+HNGOAnnwAmB8=;
+        b=pAAtBSIUAMHs4Z/+U+LdhqVk484La8avHzT8lTKCZH6UZ18cJNL8NoH1pwxZ3KPd0H
+         trpYxYqTimmeFkBP059QLhYSguKhld1ksHQpkglazqzn7mj9KFgKSCBolV9hKdjocL1+
+         3J5++8CmgKELUDtzO/pI1NviAgi4/Aa93/KavMHrKU86AuWqb7Vnh0+72YXdP/obJAcm
+         UOQd5HLjNdJL+BrH2ML3ngFJb6T+hHPiMIrySQ6lIvC1HfatyqiSx8IwGSIoEMqb53T/
+         ZTxMdJHOPNM11gw5szNldZ3WDsqBl2OgOuduDNNnrsPNCDbsqCDjtXnLlFSfEkyLuemF
+         xdxg==
+X-Gm-Message-State: AOJu0YymHeKTtj5bbi5MGtCXRn8xLt+SRonwDmO1NrAAreTJwKBMXDSC
+	kdcOo8+TkIetWdf7nMgdsUTHfQXUEBQXEwjhTwLh6bfRgqIsH6JmEYYAn5MiwpBoduy/5A==
+X-Gm-Gg: AfdE7cnZS3hpFbMsDEaTpbmeqCN0c9/VzsXfb0UVjJxstg8BdPDutjEpmlCKTkOIqSi
+	lu53TDV8ihhv71uVUVkHyfnjrdKTCK30blfyfoBcLWdElLnRWPKEOcVKYlnSutKd9wKl+Tsiv7d
+	lj1TT0cIPHh1j8MtQ9UYfa8rdqzsfCk8/dGAisgKzorfKPtTtfqjGB9KGXI4k8scSsVTgPcYB9C
+	mZbfmR5kSd7o9Mknm690Ix2snuqs1PG7CguQRQ1kg6AN73erDjoOcyzK3RgiAlRST9euOIexBn2
+	GO+8KPiopzqI2l0rbrodnf3CmSbZ/O5wCLhC0aoWnSHz7PBotPAF9wakfoHJiPVj8mOpq/2S1yD
+	6z0gNo74/dL4No6nZE0Yl4hProRspD2Xob46fJBbN0NHAPv6UBApiY1WD04/MDL0MEzm82FsvAv
+	gQmPAxhnbLPA6AK7a4SfBq3GEIHf+tpugstyB/Kpfx0KvP
+X-Received: by 2002:a05:6a00:94f2:b0:845:bcf0:118 with SMTP id d2e1a72fcca58-845bcf00accmr4334840b3a.41.1782451971037;
+        Thu, 25 Jun 2026 22:32:51 -0700 (PDT)
 Received: from localhost ([112.204.126.243])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-c92bc1df042sm2468510a12.18.2026.06.25.20.25.43
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-845a3fec0f7sm5946152b3a.22.2026.06.25.22.32.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 20:25:46 -0700 (PDT)
+        Thu, 25 Jun 2026 22:32:49 -0700 (PDT)
 From: Alex Yeo <alexyeo362@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: alexyeo362@gmail.com,
@@ -66,12 +66,12 @@ Cc: alexyeo362@gmail.com,
 	Guenter Roeck <linux@roeck-us.net>,
 	linux-kernel@vger.kernel.org,
 	linux-hwmon@vger.kernel.org
-Subject: [RFC PATCH v4] platform/x86: panasonic-laptop: add fan speed mode for newer models
-Date: Fri, 26 Jun 2026 11:25:22 +0800
-Message-ID: <20260626032524.22530-1-alexyeo362@gmail.com>
+Subject: [RFC PATCH v5] platform/x86: panasonic-laptop: add fan speed mode for newer models
+Date: Fri, 26 Jun 2026 13:32:33 +0800
+Message-ID: <20260626053235.25834-1-alexyeo362@gmail.com>
 X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260625120432.BB3D21F000E9@smtp.kernel.org>
-References: <20260625120432.BB3D21F000E9@smtp.kernel.org>
+In-Reply-To: <20260626033411.4C2C61F000E9@smtp.kernel.org>
+References: <20260626033411.4C2C61F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -156,278 +156,300 @@ for fan_mode I rely on getting and setting the value via ACPI.
 
 Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
 ---
-> - [High] Unconditional NULL pointer dereference on hardware without DMI quirks.
-> - [High] Resource leak and potential Use-After-Free due to direct return on probe error.
-> - [High] Race condition between hwmon sysfs and thermal cooling device operations.
-> - [Medium] Violation of hwmon ABI for 'pwm_enable' attribute.
-> - [Low] Compilation error due to missing 'quirks' field in 'struct pcc_acpi'.
-> - [Low] Always-false boundary check due to unsigned comparison.
-> - [Low] Idiomatically incorrect header inclusion for errno.
+This addresses the following concerns:
+> - [High] The returned hwmon device pointer from `hwmon_device_register_with_info` is never assigned to `pcc->pwm_fan_hwmon` on success.
+> - [Medium] Missing control flow abort after an error in `pcc_pwm_fan_hwmon_read` allows the evaluation of an uninitialized stack variable.
+> - [Medium] Mixing POSIX error codes with `acpi_status` types causes continuous kernel log spam when reading the hwmon PWM attribute in AUTO mode.
+> - [Medium] Writing 'auto' mode via the hwmon sysfs interface erroneously passes a hwmon constant to the hardware ACPI function, forcing the hardware into 'manual' mode instead.
 
-I have made changes to the code based on the feedback from sashiko-bot.
-
-> > diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-> > index b83113c26f885..7774620b27635 100644
-> > --- a/drivers/platform/x86/panasonic-laptop.c
-> > +++ b/drivers/platform/x86/panasonic-laptop.c
-> > @@ -136,6 +139,12 @@
-> >  #include <linux/types.h>
-> >  #include <linux/uaccess.h>
-> >  #include <acpi/video.h>
-> > +#include <linux/sysfs.h>
-> > +#include <linux/hwmon.h>
-> > +#include <linux/hwmon-sysfs.h>
-> > +#include <linux/thermal.h>
-> > +#include <linux/dmi.h>
-> > +#include <asm-generic/errno.h>
+> > @@ -507,6 +560,179 @@ static int set_optd_power_state(int new_state)
+> >       return result;
+> >  }
+> > 
+> > +/* get OSPM fan mode */
+> > +
+> > +static int pcc_pwm_fan_mode_read(int *pwm_mode)
+> > +{
+> [ ... ]
+> > +/* read PWM fan speed */
+> > +
+> > +static int pcc_pwm_fan_speed_read(int *pwm_speed)
+> > +{
+> [ ... ]
+> > +     if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
+> > +             result = -ENODATA; /* Indeterminate value */
+> > +             goto out;
+> > +     }
 > 
-> [Severity: Low]
-> Should this include <linux/errno.h> instead? It is usually preferred for
-> device drivers to use the generic linux header rather than the
-> architecture-specific one to ensure cross-architecture compatibility.
-
-The following change has been made:
-
-> +#include <linux/errno.h>
-
-> > diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-> > index b83113c26f885..7774620b27635 100644
-> > --- a/drivers/platform/x86/panasonic-laptop.c
-> > +++ b/drivers/platform/x86/panasonic-laptop.c
-> > @@ -136,6 +139,12 @@
-> >  #include <linux/types.h>
-> >  #include <linux/uaccess.h>
-> >  #include <acpi/video.h>
-> > +#include <linux/sysfs.h>
-> > +#include <linux/hwmon.h>
-> > +#include <linux/hwmon-sysfs.h>
-> > +#include <linux/thermal.h>
-> > +#include <linux/dmi.h>
-> > +#include <asm-generic/errno.h>
+> This successfully returns the POSIX error -ENODATA when the fan is in automatic
+> mode. I will reference this below.
 > 
-> [Severity: Low]
-> Should this include <linux/errno.h> instead? It is usually preferred for
-> device drivers to use the generic linux header rather than the
-> architecture-specific one to ensure cross-architecture compatibility.
-
-For this one, this has been corrected by adding the missing variable
-and has been tested to compile and install.
-
-> +	struct quirk_entry		*quirks;
-
+> [ ... ]
+> > +/* set PWM fan speed */
+> > +
 > > +static int pcc_pwm_fan_speed_set(int set_pwm_speed)
 > > +{
-> > +     struct acpi_object_list input;
-> > +     union acpi_object param[1];
-> > +     acpi_status status;
-> > +     int pwm_mode;
-> > +     int result;
-> > +
-> > +     /* Get fan status. set to manual if not set */
-> > +     status = pcc_pwm_fan_mode_read(&pwm_mode);
 > [ ... ]
 > > +     if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
 > > +             status = pcc_pwm_fan_mode_set(HWMON_PCC_FAN_PWM_MANUAL);
-> [ ... ]
-> > +     status = acpi_evaluate_object(NULL, "\\_SB.PC00.LPCB.EC0.TFN1._FSL",
-> > +                                   &input, NULL);
 > 
-> [Severity: High]
-> Could this sequence race with other operations? This multi-step process
-> of reading the mode, changing it, and setting the speed isn't protected
-> by a lock. Since the thermal subsystem might poll this while userspace
-> writes to hwmon sysfs concurrently, could this interleave and corrupt the
-> hardware state?
+> [Severity: Medium]
+> Are we passing the wrong constant here? HWMON_PCC_FAN_PWM_MANUAL is defined
+> for the hwmon sysfs interface. Does pcc_pwm_fan_mode_set() expect the hardware
+> constant ACPI_PCC_FAN_PWM_MANUAL instead?
 
-For this one I have implemented a mutex to make sure hwmon and thermal
-don't conflict with each other.
+This is a mistake that has now been corrected. This is also a problem
+that is mentioned below and the specifics including the code snippet
+will be explained in detail below.
 
-> +	struct thermal_cooling_device	*pwm_fan_cdev;
-> +	struct device			*pwm_fan_hwmon;
-> +	struct mutex			pwm_fan_lock;
-
-To ensure the hwmon device is unregistered before the mutex is
-destroyed, it has been re-written to use hwmon_device_register_with_info
-instead of devm_hwmon_device_register_with_info:
-
-> @@ -1124,6 +1631,13 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
->  	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
->  	struct pcc_acpi *pcc = acpi_driver_data(device);
->  
-> +	if (pcc->pwm_fan_hwmon)
-> +		hwmon_device_unregister(pcc->pwm_fan_hwmon);
-> +	if (pcc->pwm_fan_cdev)
-> +		thermal_cooling_device_unregister(pcc->pwm_fan_cdev);
-> +	if (pcc->pwm_fan_hwmon || pcc->pwm_fan_cdev)
-> +		mutex_destroy(&pcc->pwm_fan_lock);
-
-The mutex is only initialized if either hwmon or thermal device
-registration succeeds.
-
-> +			/* cleanup: destroy mutex if both hwmon and thermal failed */
-> +			if (!pcc->pwm_fan_hwmon && !pcc->pwm_fan_cdev)
-> +				mutex_destroy(&pcc->pwm_fan_lock);
-
-So there is no unnecessary mutex in memory if both fail, this was added to
-the probe function. This should ensure it is present if at least one of
-the devices are registered (hwmon or thermal) but destroyed if both
-fail.
-
+> [ ... ]
+> > @@ -825,6 +1052,240 @@ static const struct attribute_group pcc_attr_group = {
+> >       .is_visible     = pcc_sysfs_is_visible,
+> >  };
+> > 
+> > +/* hwmon */
+> [ ... ]
 > > +static int pcc_pwm_fan_hwmon_read(struct device *dev,
 > > +                               enum hwmon_sensor_types type, u32 attr,
 > > +                               int channel, long *val)
 > > +{
 > [ ... ]
-> > +     case hwmon_pwm_enable:
-> > +             status = pcc_pwm_fan_mode_read(&pwm_mode);
-> [ ... ]
-> > +             if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
-> > +                     *val = HWMON_PCC_FAN_PWM_AUTO;
-> > +             } else if (pwm_mode == HWMON_PCC_FAN_PWM_MANUAL) {
+> > +     switch (attr) {
+> > +     case hwmon_pwm_input:
+> > +             mutex_lock(&pcc->pwm_fan_lock);
+> > +
+> > +             status = pcc_pwm_fan_speed_read(&pwm_speed);
+> > +             if (ACPI_FAILURE(status)) {
+> > +                     pr_err("%s: failed to get fan pwm speed\n", __func__);
+> > +                     result = -ENODATA;
+> > +             } else {
 > 
 > [Severity: Medium]
-> Is this returning the correct hwmon ABI value for automatic mode?
-> HWMON_PCC_FAN_PWM_AUTO is defined as 0, but the standard hwmon ABI expects
-> 2 for automatic mode (and 1 for manual). This might confuse standard
-> userspace tools like fancontrol. This same ABI mismatch appears in
-> pcc_pwm_fan_hwmon_write() as well.
-
-I have made the following changes:
-
-> +/* Define fan PWM modes */
-> +#define ACPI_PCC_FAN_PWM_AUTO	0x00
-> +#define ACPI_PCC_FAN_PWM_MANUAL	0x01
-> +#define HWMON_PCC_FAN_PWM_AUTO	0x02
-> +#define HWMON_PCC_FAN_PWM_MANUAL	0x01
-
-so for hwmon, EC control maps to 2 and manual control is 1.
-Thus,
-
-$ echo 2 | sudo tee /sys/class/hwmon/hwmon6/pwm1_enable # EC mode
-$ echo 1 | sudo tee /sys/class/hwmon/hwmon6/pwm1_enable # manual mode
-
-would now be the case to enable/disable manual control.
-
-> > +static int pcc_pwm_fan_thermal_set_fan_pwm(struct thermal_cooling_device *cdev,
-> > +                                        unsigned long state)
-> > +{
-> > +     acpi_status status;
-> > +     int set_pwm;
-> > +
-> > +     if (state > 100 || state < 0)
-> > +             return -EINVAL;
+> Will this cause continuous kernel log spam when the fan is in auto mode?
 > 
-> [Severity: Low]
-> Can 'state < 0' ever evaluate to true here? Since 'state' is an unsigned
-> long, it cannot be negative, making this check mathematically impossible.
+> As noted above, pcc_pwm_fan_speed_read() returns the POSIX error -ENODATA when
+> in automatic mode. Here, the caller receives this negative integer into an
+> acpi_status variable.
+> 
+> Since -ENODATA is non-zero, ACPI_FAILURE() evaluates to true, which triggers
+> the error log. This could flood dmesg if userspace tools periodically read the
+> hwmon attribute while the fan is in auto mode.
 
-This was removed. This is now:
+To address both of these concerns, I have made the following code
+change:
 
-> +static int pcc_pwm_fan_thermal_set_fan_pwm(struct thermal_cooling_device *cdev,
-> +					   unsigned long state)
-> +{
-> +	struct pcc_acpi *pcc;
-> +	acpi_status status;
-> +	int set_pwm;
-> +	int result;
+> +	case hwmon_pwm_input:
+> +		mutex_lock(&pcc->pwm_fan_lock);
 > +
-> +	pcc = cdev->devdata;
+> +		status = pcc_pwm_fan_speed_read(&pwm_speed);
+> +		if (ACPI_FAILURE(status)) {
+> +			result = status;
+> +		} else {
+
+Instead of generating an error message via pr_err and returning
+-ENODATA, it relies on pcc_pwm_fan_speed_read instead.
+
+> +	/* Get fan status first */
+> +	/* If fan is not in manual mode, it will return a bogus value */
+> +	status = pcc_pwm_fan_mode_read(&pwm_mode);
+> +	if (ACPI_FAILURE(status)) {
+> +		pr_err("%s: failed to get fan status\n", __func__);
+> +		result = -EIO;
+> +		goto out;
+> +	}
 > +
-> +	mutex_lock(&pcc->pwm_fan_lock);
+> +	if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
+> +		result = -ENODATA; /* Indeterminate value */
+> +		goto out;
+> +	}
 > +
-> +	if (state > 100) {
+> +	/* get pwm speed */
+> +	status = acpi_evaluate_object(NULL, "\\_SB.PC00.LPCB.EC0.TFN1._FST",
+> +				      NULL, &buffer);
+> +	if (ACPI_FAILURE(status)) {
+> +		pr_err("%s: failed to get pwm speed\n", __func__);
+> +		result = -EIO;
+> +		goto out;
+> +	}
+> +
+> +	obj = buffer.pointer;
+> +
+> +	/* the structure should have 3 values */
+> +	if (!obj || obj->type != ACPI_TYPE_PACKAGE || obj->package.count < 2) {
+> +		pr_err("Invalid _FST package structure (expected 3)\n");
 > +		result = -EINVAL;
 > +		goto out;
 > +	}
+> +
+> +	/* the second element should be the pwm speed as an int */
+> +	if (obj->package.elements[1].type != ACPI_TYPE_INTEGER) {
+> +		pr_err("_FST element at index 1 is not an integer\n");
+> +		result = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	*pwm_speed = obj->package.elements[1].integer.value;
+> +	result = AE_OK;
 
+The function already returns its own set of error codes and error
+messages. Here, the fan being on auto is normal so -ENODATA is returned
+with no error message generated.
 
-> > @@ -981,8 +1377,10 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
-> > 
-> >  static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
-> >  {
-> [ ... ]
-> > +     /*
-> > +      * Perform quirk detection
-> > +      */
-> > +     dmi_id = dmi_first_match(pcc_quirks);
-> > +     if (dmi_id) {
-> > +             pcc->quirks = dmi_id->driver_data;
-> > +             pr_info("Quirk detect: Enabled quirks for %s\n", dmi_id->ident);
-> > +     } else {
-> > +             pcc->quirks = NULL;
-> > +     }
-> 
-> [ ... ]
-> 
-> > +     /* has_ospm_pwm_fan - add hwmon and thermal if present */
-> > +     if (pcc->quirks->has_ospm_pwm_fan) {
-> 
-> [Severity: High]
-> Will this dereference a NULL pointer on unsupported models? If the DMI
-> match fails, pcc->quirks is explicitly set to NULL above. Checking
-> pcc->quirks->has_ospm_pwm_fan right after will cause a kernel panic
-> during the device probe on those unquirked devices.
+Just passing the output of this function should fix both the issue.
 
-This was fixed by checking if the quirk structure is null first before
-probing for specific quirks:
-
-> > @@ -1097,6 +1571,39 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
-> >  	}
-> >  
-> >  	i8042_install_filter(panasonic_i8042_filter, NULL);
+> > +     case hwmon_pwm_enable:
+> > +             mutex_lock(&pcc->pwm_fan_lock);
 > > +
-> > +	/* check quirks */
-> > +	if (pcc->quirks) {
-> > +		/* has_ospm_pwm_fan - add hwmon and thermal if present */
-> > +		if (pcc->quirks->has_ospm_pwm_fan) {
-> > +			mutex_init(&pcc->pwm_fan_lock);
-> 
-> > +             pr_info("has_ospm_pwm_fan quirk: adding hwmon for %s\n", dmi_id->ident);
-> > +             hwmon_dev = devm_hwmon_device_register_with_info(
-> > +                     &pdev->dev, "panasonic_pwm_fan", NULL,
-> > +                     &pcc_pwm_fan_hwmon_chip_info, NULL);
-> > +             if (IS_ERR(hwmon_dev)) {
-> > +                     pr_err("has_ospm_pwm_fan: Failed to register hwmon device\n");
-> > +                     return PTR_ERR(hwmon_dev);
+> > +             status = pcc_pwm_fan_mode_read(&pwm_mode);
+> > +             if (ACPI_FAILURE(status)) {
+> > +                     pr_err("%s: failed to get fan pwm mode\n", __func__);
+> > +                     result = -ENODATA;
 > > +             }
+> > +             if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
 > 
-> [Severity: High]
-> Does this direct return bypass the error cleanup sequence? Standard failure
-> paths in this function use 'goto out_notify_handler;' (and other labels) to
-> clean up resources. Returning directly leaks memory and leaves the ACPI
-> notify handler and input devices registered. If the module is later
-> unloaded, could this trigger a use-after-free when ACPI events fire?
+> [Severity: Medium]
+> If pcc_pwm_fan_mode_read() fails, we log an error and set result = -ENODATA,
+> but execution continues to the next line. Does this mean we might evaluate the
+> uninitialized stack variable pwm_mode? Should there be a break or goto
+> statement in the error path?
 
-For this one, while the other failure methods call for the driver being
-unloaded entirely, I treat adding of the OSPM PWM fan as an optional
-thing. The errors are handled in code, however an error in hwmon or
-thermal will not cause the driver to fail.
+This mistake has been corrected by adding an else statement:
 
+> +	case hwmon_pwm_input:
+> +		mutex_lock(&pcc->pwm_fan_lock);
+> +
+> +		status = pcc_pwm_fan_speed_read(&pwm_speed);
+> +		if (ACPI_FAILURE(status)) {
+> +			result = status;
+> +		} else {
+> +			*val = (pwm_speed * 255) / 100;
+> +			result = 0;
+> +		}
+> +
+> +		mutex_unlock(&pcc->pwm_fan_lock);
+> +		return result;
+
+This should now go straight to mutex_unlock then return.
+
+> > +static int pcc_pwm_fan_hwmon_write(struct device *dev,
+> > +                                enum hwmon_sensor_types type, u32 attr,
+> > +                                int channel, long val)
+> > +{
+> [ ... ]
+> > +     switch (attr) {
+> > +     case hwmon_pwm_enable:
+> > +             if (val == HWMON_PCC_FAN_PWM_AUTO) {
+> > +                     mutex_lock(&pcc->pwm_fan_lock);
+> > +                     status = pcc_pwm_fan_mode_set(HWMON_PCC_FAN_PWM_AUTO);
+> 
+> [Severity: Medium]
+> Is the wrong constant being passed to pcc_pwm_fan_mode_set() here?
+> 
+> val == HWMON_PCC_FAN_PWM_AUTO matches the hwmon constant (2). However,
+> passing HWMON_PCC_FAN_PWM_AUTO to pcc_pwm_fan_mode_set() means we are sending
+> 2 to the ACPI firmware instead of the expected hardware constant
+> ACPI_PCC_FAN_PWM_AUTO (0).
+> 
+> Since the firmware treats any value >0 as manual mode, does writing 'auto'
+> (2) to the sysfs attribute inadvertently force the hardware into manual mode?
+
+The wrong constants were passed to pcc_pwm_fan_mode_set as it expects
+the actual hardware level equivalent int.
+
+This has now all been corrected to use ACPI values and not HWMON:
+
+> +		status = pcc_pwm_fan_mode_set(ACPI_PCC_FAN_PWM_MANUAL);
+
+> [ ... ]
+> > @@ -1097,6 +1571,39 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+> >       }
+> > 
+> >       i8042_install_filter(panasonic_i8042_filter, NULL);
 > > +
-> > +             pr_info("has_ospm_pwm_fan quirk: adding thermal for %s\n", dmi_id->ident);
-> > +             pcc->pwm_fan_cdev = thermal_cooling_device_register(
-> > +                     "Panasonic_PWM_Fan", NULL, &pcc_pwm_fan_cdev_ops);
+> > +     /* check quirks */
+> > +     if (pcc->quirks) {
+> > +             /* has_ospm_pwm_fan - add hwmon and thermal if present */
+> > +             if (pcc->quirks->has_ospm_pwm_fan) {
+> > +                     mutex_init(&pcc->pwm_fan_lock);
+> > +
+> > +                     pr_info("has_ospm_pwm_fan quirk: adding hwmon for %s\n", dmi_id->ident);
+> > +
+> > +                     hwmon_dev = hwmon_device_register_with_info(
+> > +                             &pdev->dev, "panasonic_pwm_fan", pcc,
+> > +                             &pcc_pwm_fan_hwmon_chip_info, NULL);
+> > +                     if (IS_ERR(hwmon_dev)) {
+> > +                             pr_err("has_ospm_pwm_fan: Failed to register hwmon device\n");
+> > +                             /* not a critical error. just skip if error */
+> > +                             pcc->pwm_fan_hwmon = NULL;
+> > +                     }
 > 
 > [Severity: High]
-> Does registering the thermal cooling device directly bypass the hwmon core
-> serialization? The subsystem guidelines indicate that thermal and sysfs
-> operations are serialized by the hwmon core if attributes are registered
-> via the 'info' parameter. Registering this manually out-of-band seems to
-> leave the thermal polling operations unprotected, exposing the race
-> condition in pcc_pwm_fan_speed_set() mentioned earlier.
+> If hwmon_device_register_with_info() succeeds, we never assign hwmon_dev to
+> pcc->pwm_fan_hwmon.
+> 
+> Because pcc->pwm_fan_hwmon remains NULL, the success path behaves as if the
+> registration failed when checking for cleanup.
+> 
+> > +
+> > +                     /* proceed with thermal */
+> > +                     pr_info("has_ospm_pwm_fan quirk: adding thermal for %s\n", dmi_id->ident);
+> > +                     pcc->pwm_fan_cdev = thermal_cooling_device_register(
+> > +                             "Panasonic_PWM_Fan", pcc, &pcc_pwm_fan_cdev_ops);
+> > +                     if (IS_ERR(pcc->pwm_fan_cdev)) {
+> > +                             pr_warn("has_ospm_pwm_fan: Failed to register thermal cdev\n");
+> > +                             pcc->pwm_fan_cdev = NULL;
+> > +                     }
+> > +
+> > +                     /* cleanup: destroy mutex if both hwmon and thermal failed */
+> > +                     if (!pcc->pwm_fan_hwmon && !pcc->pwm_fan_cdev)
+> > +                             mutex_destroy(&pcc->pwm_fan_lock);
+> 
+> Since pcc->pwm_fan_hwmon is still NULL upon successful hwmon registration, if
+> thermal registration fails here, won't we prematurely destroy the mutex while
+> the hwmon device is still active and potentially using it?
+> 
+> [ ... ]
+> > @@ -1124,6 +1631,13 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+> >       struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+> >       struct pcc_acpi *pcc = acpi_driver_data(device);
+> > 
+> > +     if (pcc->pwm_fan_hwmon)
+> > +             hwmon_device_unregister(pcc->pwm_fan_hwmon);
+> 
+> Because pcc->pwm_fan_hwmon was never assigned, this unregistration is bypassed
+> on module unload. This will leak the hwmon device and leave its sysfs attributes
+> active. Accessing them after the module is unloaded would dereference freed
+> memory.
 
-While this needs review,
-1. I do think the mutex locks added should prevent hwmon and thermal from
-stepping over each other.
-2. I have put the hwmon and thermal struct pointers on the main struct
-of the driver (pcc_acpi). This is so the devices can be manually unregistered
-in order before the mutex is destroyed.
+This is now fixed:
 
- drivers/platform/x86/panasonic-laptop.c | 542 +++++++++++++++++++++++-
- 1 file changed, 528 insertions(+), 14 deletions(-)
+> +			pcc->pwm_fan_hwmon = hwmon_device_register_with_info(
+> +				&pdev->dev, "panasonic_pwm_fan", pcc,
+> +				&pcc_pwm_fan_hwmon_chip_info, NULL);
+> +			if (IS_ERR(pcc->pwm_fan_hwmon)) {
+> +				pr_err("has_ospm_pwm_fan: Failed to register hwmon device\n");
+> +				/* not a critical error. just skip if error */
+> +				pcc->pwm_fan_hwmon = NULL;
+> +			}
+
+I had missed this edge case when I tested my code on a CF-SR4 as this
+only applies to a case where both hwmon and thermal failed (have not
+encountered such a case so far). When unloading the driver via rmmod, it
+did not return an error as the if statement checks first if the pointer 
+is null before calling the unregister function.
+
+After making all the changes, I have recompiled the code and tested it
+on a CF-SR4 and loading and unloading the module works as expected.
+
+I have also tested on an older model (CF-QV9) where this patch does not
+apply to. I did not observe anything abnormal on dmesg. Loading and
+unloading the module did not result in any error.
+
+ drivers/platform/x86/panasonic-laptop.c | 541 +++++++++++++++++++++++-
+ 1 file changed, 527 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index b83113c26f88..1a360272060c 100644
+index b83113c26f88..a1837106ff6b 100644
 --- a/drivers/platform/x86/panasonic-laptop.c
 +++ b/drivers/platform/x86/panasonic-laptop.c
 @@ -119,6 +119,9 @@
@@ -459,7 +481,7 @@ index b83113c26f88..1a360272060c 100644
  
 +/* Define fan PWM modes */
 +#define ACPI_PCC_FAN_PWM_AUTO		0x00
-+#define ACPI_PCC_FAN_PWM_MANUAL	0x01
++#define ACPI_PCC_FAN_PWM_MANUAL		0x01
 +#define HWMON_PCC_FAN_PWM_AUTO		0x02
 +#define HWMON_PCC_FAN_PWM_MANUAL	0x01
 +
@@ -690,7 +712,7 @@ index b83113c26f88..1a360272060c 100644
 +	}
 +
 +	if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
-+		status = pcc_pwm_fan_mode_set(HWMON_PCC_FAN_PWM_MANUAL);
++		status = pcc_pwm_fan_mode_set(ACPI_PCC_FAN_PWM_MANUAL);
 +		if (ACPI_FAILURE(status)) {
 +			pr_err("%s: set fan PWM to manual failed\n", __func__);
 +			result = -EIO;
@@ -765,8 +787,7 @@ index b83113c26f88..1a360272060c 100644
 +
 +		status = pcc_pwm_fan_speed_read(&pwm_speed);
 +		if (ACPI_FAILURE(status)) {
-+			pr_err("%s: failed to get fan pwm speed\n", __func__);
-+			result = -ENODATA;
++			result = status;
 +		} else {
 +			*val = (pwm_speed * 255) / 100;
 +			result = 0;
@@ -781,15 +802,16 @@ index b83113c26f88..1a360272060c 100644
 +		if (ACPI_FAILURE(status)) {
 +			pr_err("%s: failed to get fan pwm mode\n", __func__);
 +			result = -ENODATA;
-+		}
-+		if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
-+			*val = HWMON_PCC_FAN_PWM_AUTO;
-+			result = 0;
-+		} else if (pwm_mode == HWMON_PCC_FAN_PWM_MANUAL) {
-+			*val = HWMON_PCC_FAN_PWM_MANUAL;
-+			result = 0;
-+		} else { /* Invalid value */
-+			result = -EIO;
++		} else {
++			if (pwm_mode == HWMON_PCC_FAN_PWM_AUTO) {
++				*val = HWMON_PCC_FAN_PWM_AUTO;
++				result = 0;
++			} else if (pwm_mode == HWMON_PCC_FAN_PWM_MANUAL) {
++				*val = HWMON_PCC_FAN_PWM_MANUAL;
++				result = 0;
++			} else { /* Invalid value */
++				result = -EIO;
++			}
 +		}
 +
 +		mutex_unlock(&pcc->pwm_fan_lock);
@@ -817,7 +839,7 @@ index b83113c26f88..1a360272060c 100644
 +	case hwmon_pwm_enable:
 +		if (val == HWMON_PCC_FAN_PWM_AUTO) {
 +			mutex_lock(&pcc->pwm_fan_lock);
-+			status = pcc_pwm_fan_mode_set(HWMON_PCC_FAN_PWM_AUTO);
++			status = pcc_pwm_fan_mode_set(ACPI_PCC_FAN_PWM_AUTO);
 +			if (ACPI_FAILURE(status)) {
 +				pr_err("%s: failed to set fan to auto mode\n", __func__);
 +				result = -EIO;
@@ -828,7 +850,7 @@ index b83113c26f88..1a360272060c 100644
 +			return result;
 +		} else if (val == HWMON_PCC_FAN_PWM_MANUAL) {
 +			mutex_lock(&pcc->pwm_fan_lock);
-+			status = pcc_pwm_fan_mode_set(HWMON_PCC_FAN_PWM_MANUAL);
++			status = pcc_pwm_fan_mode_set(ACPI_PCC_FAN_PWM_MANUAL);
 +			if (ACPI_FAILURE(status)) {
 +				pr_err("%s: failed to set fan to manual mode\n", __func__);
 +				result = -EIO;
@@ -975,18 +997,15 @@ index b83113c26f88..1a360272060c 100644
  
  /* hotkey input device driver */
  
-@@ -981,8 +1442,10 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
+@@ -981,6 +1442,7 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
  
  static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
  {
 +	const struct dmi_system_id *dmi_id;
  	struct backlight_properties props;
  	struct acpi_device *device;
-+	struct device *hwmon_dev;
  	struct pcc_acpi *pcc;
- 	int num_sifr, result;
- 
-@@ -1026,6 +1489,17 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+@@ -1026,6 +1488,17 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
  	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
  	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
  
@@ -1004,7 +1023,7 @@ index b83113c26f88..1a360272060c 100644
  	result = acpi_pcc_init_input(pcc);
  	if (result) {
  		pr_err("Error installing keyinput handler\n");
-@@ -1097,6 +1571,39 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+@@ -1097,6 +1570,39 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
  	}
  
  	i8042_install_filter(panasonic_i8042_filter, NULL);
@@ -1017,10 +1036,10 @@ index b83113c26f88..1a360272060c 100644
 +
 +			pr_info("has_ospm_pwm_fan quirk: adding hwmon for %s\n", dmi_id->ident);
 +
-+			hwmon_dev = hwmon_device_register_with_info(
++			pcc->pwm_fan_hwmon = hwmon_device_register_with_info(
 +				&pdev->dev, "panasonic_pwm_fan", pcc,
 +				&pcc_pwm_fan_hwmon_chip_info, NULL);
-+			if (IS_ERR(hwmon_dev)) {
++			if (IS_ERR(pcc->pwm_fan_hwmon)) {
 +				pr_err("has_ospm_pwm_fan: Failed to register hwmon device\n");
 +				/* not a critical error. just skip if error */
 +				pcc->pwm_fan_hwmon = NULL;
@@ -1044,7 +1063,7 @@ index b83113c26f88..1a360272060c 100644
  	return 0;
  
  out_platform:
-@@ -1124,6 +1631,13 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+@@ -1124,6 +1630,13 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
  	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
  	struct pcc_acpi *pcc = acpi_driver_data(device);
  
