@@ -1,64 +1,63 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8857B3BF682
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 20:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57733BED61
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 20:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782506997; cv=none; b=u2J0FTjJZ1GshmLcUewTh+gxbnOi31VJp66dKdw+4O7gJl9BSydyKmDCVzRs1wxnZgy6HyfyobYcvbMALb1Y6LigsGxKMY9vjltfJ0gYRr2v2ofVn4UJwfjimhi3S5LV7E+/5IRaOk++HcbdZCAOGSfM2ByN8JQtGnIL67T7Nio=
+	t=1782507001; cv=none; b=EucK7WUNn0eV3yQY6q3QmebV+PiMtb4Qc8fuPAncwJoTayib2EssxvykUaHi4dFbd4qakAMpi/80D5x+LdhkKjkYAVZQU6Pu0lwh2D+c1g+UQ8yqd4gAt92NKR34a4k0xeaDQiKG8jpSbggtglFUCkoMgmwac/QO+by4b3EKxvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782506997; c=relaxed/simple;
-	bh=0sIDfSgUxXO2vmSLA31+EiQLz3GAhPSQpy3CjWo81L0=;
+	s=arc-20240116; t=1782507001; c=relaxed/simple;
+	bh=lqmOcWqI0FMeiKH4DVNZK8U1G2Kv6utppj1Q/a7Qx/Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMUdeygsL/iDAXRieS3g89GnFNQbKlnaIx/1U9o13+/yQ4VaJz56awDfY5QUB8+hyNho4cmy8acLdCwZUI+U6TpPZvL3Di0lMwFLzo3sNvzs40LFSUliYhbttt9qh41BrldEPDVs3aPourpl8LfjQ193kf6ihuW4BqWpt3qiS+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J9TcolpH; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=UJMlPIMEhVaXVVYpwM63HmFHnyQYGLEDCRbe1k+oxJM7WuXsAbeG4xGwi2mzE/O1Cjs1WVgjoHZT/rvaCMNsCaADEP97P/dOPN7RbDg+8KB081d2SN+tbumWycx+sGnmMP6pyMeOP+z9wCcSpRcJY78EdNYtUBYi/fVM5dj7XEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emGv4cKn; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9TcolpH"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c0e12cb1d90so154758166b.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 13:49:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emGv4cKn"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bebb72b845aso232195866b.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 13:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782506995; x=1783111795; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782506998; x=1783111798; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZqKhdXPzlMwgJiJAHOYQTFAjHWL44qDb+NmBtEip5cQ=;
-        b=J9TcolpHIkspMIWwMDyDFrXHUeOqse0tBXcUfAGA5XCxqSSrnS5E4kAQH0LX+z7+rS
-         tCkPmZRiogCNtIpsC1VHYLaiq2D9zvOl4h+f/lUmT0piA7u+rIVJf4u+7WYfjc101oUj
-         dm/xOWOjb7J9Fe+/pmnbOLDvvbx8rDe2hBgZIO0HeoIxkpKQqCIcq3xQB8bS9oCQhaNK
-         edhG9YnFqCmRYqpX1Z59D/+pFw9oznI5f23EnzBb09HRltQZlXbiymY3a/qU22Ol9aW0
-         hyiMtVdS1SjexAuSYfo0jyr5wcXhbG6mT2zHYMTm2WsP0pU7+nwqncP2dVFBSdU63ruF
-         3TJw==
+        bh=pJ5pE+48i146L2Ym2Up31rAyIZfjYbmUnquanO7bZu4=;
+        b=emGv4cKnofN7c9rO4jfnUS2rmyJq4OOfs32xeBq7aHaR6dVcpkF1I+6BoFllMpmLDZ
+         rN4sWkgnu2WZWtHS2ohhDg/MvOIaZhcCVYMOaTYkC/IduwTKUubIbg3wlp43tEiC2SJe
+         cosIoTC42Sin2Wd0b+epqISh3AyJBZGeSoFCStDQwEwUCTiRPnskiOU73s1El0niTCaF
+         wIBHdsnUBEQEZUwMFi2w/RM55rrCACa5CSZbbD9G2UbC+7iQDRVi45UQC5/qkA1wtV+D
+         fHk/iiQmFEerJtemQjhntMR0meHv7d/74KBcihw2GvMPnwOlK7knxy8/wOd0UoXu7Ncf
+         35Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782506995; x=1783111795;
+        d=1e100.net; s=20251104; t=1782506998; x=1783111798;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=ZqKhdXPzlMwgJiJAHOYQTFAjHWL44qDb+NmBtEip5cQ=;
-        b=jS0gyAVziPF0W530r7aI2/UzaS9qYTkEEUgTLKUUvyD4lTvJNzEzxH9VEs8TLoP8Wq
-         XDf0KC12DKghBBOeX4SJ6JU56p8rgVoCZfrO+0M3GdfXMz3mpfIqluMFWl0Vj6/YOGA7
-         XouVg5r4LDy8E4cCYjXYiy7rdchfxeMF4gEhGypvIOcP+ZQxRIwMu4KvoaaZv7avuhzp
-         K+gXQbi5FgDl7RaeWesuVumjul3+yTBA8YuiuuXsdNLIOy0d1ha6Pqsup8K15p3nAp5S
-         TRjXb0ot7kqb9ZuYXUiozL7OsDfjVbe5uw5XgEuiRDPjtJmFrtUvdo1Drqa1YmuERxiV
-         BROQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqPyD8u1mdEFVbWJ5upwbB7yET9YeB612R7cZLNDEjgSrg+26zHwZHvzadlYjfKb8q2xQOOOYoOBizED3ulcJhQ0WhW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5m/WC/NgQOmgZAifLHSQlCd4BFt9QvffpaBigQFWngif9/wYn
-	KytCPcQ2L62t07ff6or8kt12Rcnh5XiMklMW8eEbYGa9l+s4YK6tuTJHTYCx4erYpvXLjQ==
-X-Gm-Gg: AfdE7cnsputRmjuW/y79TyilgoI9RK7UZwof6s2EorD24ysaXn5ROI7390Zw9A91YEx
-	Smy4ZYTwBK2u94zjVxhTGjOUsOFZflI3lhY2gWZaZvrBvb1GdpkUk/pki2lAD1dT8+hDzhgLfSn
-	4UttXLj00Dd7b/OonO9wkO7pPlzTJM4x/fJ2XqrkZ8cE39H3Xl3XUCtenV/z+KQmdO4Y32KFKyt
-	8O5uMHPdqjr6w+2AHLYSIY7lawMHv8rYt+Gz4NEgKqmymSbY6DuTe7TLrjuvgXJOtcRS0l0LmDN
-	suKc9WVYt3vjzKsyV/U/8BWnXSvd0Z6lZn/0cZEgyzKl2CbIXqncXAHVm9onke8B1N/YT7fExRV
-	EYYXJrXoe58aoedMS1IrIwIg6si12AjHajcnAP/26cUQIrHBnPCYyziMjJq3pdOvldiC6iN6VOP
-	MQhIVmc2578Q67QIzFGI9FjHwq6jaTqmnbiIDK9efsVo1YHVvlHGgRy0NISFnbEFitq1sA+vjO1
-	g==
-X-Received: by 2002:a17:906:c109:b0:c0f:4efc:e63d with SMTP id a640c23a62f3a-c1205f66c65mr520260466b.29.1782506994772;
-        Fri, 26 Jun 2026 13:49:54 -0700 (PDT)
+        bh=pJ5pE+48i146L2Ym2Up31rAyIZfjYbmUnquanO7bZu4=;
+        b=fDr7fIULLLaE3eSKW21h7YJiPv/yVLYldiK+r/7p42RL7L0YVcDB+wBX5+0Zdvcoqu
+         5ffZ5HoAaQKBFi8bCiVaLd0lUkmVPgP5x2kimKPyTFg44fyU28ZkgZogEZeVUT2h1Izf
+         6JjzXKyfQGVN9Ng3Er8w4ri81mMEZFboYiNKoO6Nz9+hAgxz3nqTzEuNjKlQgtDGGKBs
+         sWRhqpmSqMgr32z+zdM5Gdi3f8fBSQQfuMG/EKCLAG3inyMNxoQdDThf7eFxbrzH75Tv
+         8S2O8gz4PsOuylZbgiWYXANiEy680ID3U2/qGnxywyvcMCr/NlUkIDDn+7FIiOrS/ddA
+         Wveg==
+X-Forwarded-Encrypted: i=1; AHgh+RpTl6gCKhKeL/oW4PvmTgD81I+aeAtAxN9LKGwxP0Ze15XLLBRqggp4CRYzVEJjJQl3dpX7wSooNwe6EbHC0Xx8F7sd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu+nIisP7XuR9Ppk6EDUGdtoTlJmHwWqGwaCIfg2alc15vnke7
+	0LXar7uuP03yL2n8niIlc23m1CWfhTa5ztL/Ro6kKjiVPByacGGkD76e
+X-Gm-Gg: AfdE7clZP+G6gf87EdtopUkLgojl6focSgFVic5zPXtem9VmeuDt14eSCxQblisao80
+	KX4HTVLaPkphf1XWt0mPZ0jAWbcg5suMBMUMRDSislnwM+RejZ2+su26m8xd8LehPum85ixcpvS
+	3FUhviVXevxBmp0ADLgnhVHyoB+4XQXlJFwQXhzfbo8/9SOrMDFB7zFndNRFLs11/QBZ13sj+Ju
+	5Lm0DW/kIcnQ+AdwvU9BfR04YkvGNKyU9Zx+Hp0my87Fjqf6/cKD517bs1Ii9B7DbBDxbY61cay
+	hDmT+F+Gx9Ngfns1XbUXKuZs+V+0QYAYLUvYPI/f3/FE+J8rQKzHVdE+GMQOjnFH9lOUqKJ6+4T
+	yg6NKBz6h1wuWDyX37aBOvoBVKqzZsgH2Q1ota+IN8myvK240mmR0sX1D5rArYGzGpDe5Le4sem
+	oLmRQLs43w9Ea+Eib2LtU1xomZNinw/blMv60W9e3C9dKrDVEvZMxDEyyzxX8BS1A=
+X-Received: by 2002:a17:907:c0d:b0:c12:3597:2cd3 with SMTP id a640c23a62f3a-c1235973654mr75629366b.29.1782506998009;
+        Fri, 26 Jun 2026 13:49:58 -0700 (PDT)
 Received: from node ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c11fbbe8118sm387907866b.24.2026.06.26.13.49.51
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c11fbbe8118sm387907866b.24.2026.06.26.13.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 13:49:54 -0700 (PDT)
+        Fri, 26 Jun 2026 13:49:57 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -68,9 +67,9 @@ Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
 	Muhammad Bilal <meatuni001@gmail.com>
-Subject: [PATCH 1/2] platform/x86: hp-bioscfg: accept reduced ACPI packages from older HP BIOS
-Date: Sat, 27 Jun 2026 01:49:44 +0500
-Message-ID: <20260626204945.18868-2-meatuni001@gmail.com>
+Subject: [PATCH 2/2] platform/x86: hp-bioscfg: warn on element type mismatch instead of failing
+Date: Sat, 27 Jun 2026 01:49:45 +0500
+Message-ID: <20260626204945.18868-3-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260626204945.18868-1-meatuni001@gmail.com>
 References: <20260626204945.18868-1-meatuni001@gmail.com>
@@ -82,79 +81,53 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-hp_init_bios_package_attribute() hard-fails when a WMI ACPI package
-contains fewer elements than the type-specific expected count (e.g. 11
-elements instead of 13 for INTEGER or ENUMERATION attributes). This
-causes the entire hp_bioscfg driver to skip attribute enumeration on
-older HP hardware whose BIOS returns shortened packages when optional
-fields like prerequisites or possible values are absent.
+hp_populate_enumeration_elements_from_package() returns -EIO and aborts
+enumeration of the entire attribute when any single element has an
+unexpected ACPI type. This is observed on HP EliteBook 840 G2 when the
+BIOS returns malformed ACPI data following a failed WMI query:
 
-Observed on HP EliteBook 840 G2 (BIOS M71 Ver. 01.31):
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Index (0x000000032)
+    is beyond end of object (length 0x32)
+  ACPI Error: Aborting method \_SB.WMID.WQBE due to previous error
+  Error expected type 2 for elem 13, but got type 1 instead
+  hp_bioscfg: Returned error 0x3, "Invalid command value/Feature not supported"
 
-  hp_bioscfg: ACPI-package does not have enough elements: 11 < 13
+A type mismatch on one element does not necessarily corrupt the attribute
+being built, especially for non-critical type-specific elements such as
+possible values or bounds. Failing fatally here discards attributes that
+could otherwise be partially useful.
 
-The element layout has two tiers:
-  - Elements 0-9 (SECURITY_LEVEL+1 = 10): common to all attribute types
-  - Elements 10-N: type-specific (bounds, values, encodings, ...)
-
-The per-type populate functions (hp_populate_*_elements_from_package)
-already handle sparse packages correctly via their own elem < count
-loop guards and inner-loop bounds checks. The only unsafe case is when
-we lack even the common elements needed to register the attribute.
-
-Fix by introducing COMMON_ELEM_CNT to mark the hard minimum (10), and
-splitting the check into two tiers:
-  - Fewer than COMMON_ELEM_CNT elements: hard fail, can't proceed.
-  - Fewer than expected type-specific elements: warn, but let the
-    populate function parse what is available.
+Change the type mismatch handling from a fatal pr_err + return -EIO to
+a pr_warn + continue, freeing the accumulated string value and skipping
+the affected element. The attribute is still registered with whatever
+valid elements the BIOS did supply.
 
 Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
 Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 11 ++++++++---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.h |  3 +++
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 27fd6cd215290..dd531191e88e2 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -661,12 +661,17 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
- 	int ret = 0;
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+index af4d1920d4880..78729354c04f2 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+@@ -163,10 +163,11 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
  
- 	/* Take action appropriate to each ACPI TYPE */
--	if (obj->package.count < min_elements) {
--		pr_err("ACPI-package does not have enough elements: %d < %d\n",
--		       obj->package.count, min_elements);
-+	if (obj->package.count < COMMON_ELEM_CNT) {
-+		pr_err("ACPI-package is missing common elements: %d < %d\n",
-+		       obj->package.count, COMMON_ELEM_CNT);
- 		goto pack_attr_exit;
- 	}
+ 		/* Check that both expected and read object type match */
+ 		if (expected_enum_types[eloc] != enum_obj[elem].type) {
+-			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
+-			       expected_enum_types[eloc], elem, enum_obj[elem].type);
++			pr_warn("Unexpected element type at elem %d: expected %d, got %d, skipping\n",
++				elem, expected_enum_types[eloc], enum_obj[elem].type);
+ 			kfree(str_value);
+-			return -EIO;
++			str_value = NULL;
++			continue;
+ 		}
  
-+	if (obj->package.count < min_elements) {
-+		pr_warn("ACPI-package has fewer elements than expected: %d < %d, parsing available elements\n",
-+			obj->package.count, min_elements);
-+	}
-+
- 	elements = obj->package.elements;
- 
- 	/* sanity checking */
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-index f1eec0e4ba075..f4a375c5669e4 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-@@ -279,6 +279,9 @@ enum hp_wmi_data_elements {
- 	PSWD_ENCODINGS = 13,
- 	PSWD_IS_SET = 14,
- 	PSWD_ELEM_CNT = 15,
-+
-+	/* Minimum elements shared by all attribute types (NAME..SECURITY_LEVEL) */
-+	COMMON_ELEM_CNT = SECURITY_LEVEL + 1,
- };
- 
- #define GET_INSTANCE_ID(type)						\
+ 		/* Assign appropriate element value to corresponding field */
 -- 
 2.54.0
 
