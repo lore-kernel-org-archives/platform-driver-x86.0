@@ -1,88 +1,159 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E533BB66C;
-	Fri, 26 Jun 2026 09:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E456618B0F;
+	Fri, 26 Jun 2026 10:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782467809; cv=none; b=LxeS7WnxAdK+zT8DgpyAXsdji+4KSUKUB5EYT2CrKCJVfn82JE3yB7r6qTGlKvzR8jZrBvBLOMixqrc8pIGtX1BGphkZWg8XjsY4gSfbRrNuAxuI87w8tFh04ftOnNob9eNuo1DQpZvhTfP5WiT5RYWjkp2e/13mkJgXdtdaGlo=
+	t=1782468234; cv=none; b=dBvww7HQuwuO016GziALF4R2Vg9HEEhbKVZdRtVbVdYzG2aIaXfxGxKKIFv4A+/YPASusB+RMS2TgDA3yOpbwF24DRvl0ENBqsiDwQLR0hjO15y6CLTNtB7dF0cGbo9HCTT8zrulktXQfXeh/RG7ktRhOFC86B5Yo4N3ITtXDs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782467809; c=relaxed/simple;
-	bh=RE0qhOfkQ7ruenyzlEj7Bxrp/hmm+5LmZjxXe8hCEhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kpMRKAgAM/ylzHvkmQ3f+h7yztj2Me8J71HG3ZqWuFwG48F8Dp9QcpTKCUiFA3oFRXpb9VFk8CJ2yVM75shG9K150obigW/zjsA5V9ar4IlY0PoWCyUgvyFKeOqBS39Al7raReUuL1i+xgtDVuFbe+gnZ7wswo2j2st8pKiZMWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=YTvn0uMW; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
+	s=arc-20240116; t=1782468234; c=relaxed/simple;
+	bh=9FM4bRXjIF7irO+6y3KKqbfe4HZ0qRseRLRKmXczIj4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UvpKWGiIqzCcd6ooIjlWsoDodyF8QrXDjSAai3seBSlnQuGhLOwdKmJafsbsDJx4wEuQgv4LV4B+TqA+YcxUTY2C7euI6ByoQUs+elVMwkcpCJIrxkTd9yVEg6Am+bW9qqjO9gJJBMeHmPd1uGRVFsigiwjrXt67jgBpG4CPVS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qk4p51Jb; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="YTvn0uMW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=PRjTLPlPgo4RP++aNKoyqSFzF5p07vlm/FWH4+ncEtw=; b=YTvn0uMWt750zGg234gGUAVN7X
-	LWkp3LeykRqkJumToA5aojtkKJSYnrjisD72fARWxKnZaPAJo6g3mnuO1DveLBo7hiNmf/KK7GYSb
-	dj+3REQZHHnhx3RzLlznr8PdcGeYv3Bl0nET1BrUnoFNLUu3Xqz4rQLGfsZXNWrJIMZA4sYF03/AZ
-	VuY2wx6XtWua6K/LoSD/iz4eG6xMLIVACguZDf0wU4ram5A739/cZKMcEN7axoOt/6oqgBDNATGwa
-	D3pCB318HoLQwcmGabF4HWG4WvIKIxLmD9DuLX4Ujt2CLKI4T7W3C7wJs9yi8kXsRBshtRu/Jd0YP
-	IPgzfzjg==;
-Received: from authenticated-user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.96)
-	(envelope-from <leitao@debian.org>)
-	id 1wd3Ie-003t3h-3C;
-	Fri, 26 Jun 2026 09:56:41 +0000
-Date: Fri, 26 Jun 2026 02:56:34 -0700
-From: Breno Leitao <leitao@debian.org>
-To: linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com, linux-mm@kvack.org
-Cc: Breno Leitao <leitao@debian.org>, kerneljasonxing@gmail.com, 
-	iipeace5@gmail.com, gavinguo@igalia.com, linux@jordanrome.com, amscanne@meta.com, 
-	sj@kernel.org, gpiccoli@igalia.com, Daniel Gomez <da.gomez@kernel.org>, 
-	mfo@igalia.com, platform-driver-x86@vger.kernel.org, 
-	acpica-devel@lists.linux.dev
-Subject: [ANNOUNCEMENT] LPC 2026: System Monitoring and Observability
- Microconference
-Message-ID: <aj5KJEIsTl6IK0nX@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qk4p51Jb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782468233; x=1814004233;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=9FM4bRXjIF7irO+6y3KKqbfe4HZ0qRseRLRKmXczIj4=;
+  b=Qk4p51JbisJInYjgYMpU2MzsFAfhjdfvwB3ECJqb7iw8W9uZvJS+mYNH
+   uOU0Z2xEuNKD56/qJriFDdMMKI0rP+73TULFYqTfxfZhjcYxOkvnuoMQI
+   aeMxkb3AtzGGu0UBeTPRILzKnANwVKePAnwUUXb2kJwjnG88oqC5YEmbN
+   L3GLrY79UZJXNKDr2TNxEaUZrUr0iKbsdT2vS7K+y8fUziG8DrtcSzoE4
+   EIc6WB7BmrhSGPV+28oqVPnLcAA1DdSzpaV+JwP0yA8CohWBdcpyFs2ML
+   9/pgtyGovJGT0fzd9fhxLdNSqQiCdFeT1GMzjdENdf41CNggLovBb82hq
+   g==;
+X-CSE-ConnectionGUID: 7EBytJJxQfene5tfkQzw5w==
+X-CSE-MsgGUID: EDT3oAQ8TP2hqNTBmelJXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="93613336"
+X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
+   d="scan'208";a="93613336"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 03:03:53 -0700
+X-CSE-ConnectionGUID: ife29fQJTmymFk6QLl1TdA==
+X-CSE-MsgGUID: O6t3lF0HR9qEczOi62iPLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
+   d="scan'208";a="250220480"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.71])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 03:03:50 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 26 Jun 2026 13:03:47 +0300 (EEST)
+To: Muralidhara M K <muralidhara.mk@amd.com>
+cc: muthusamy.ramalingam@amd.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] platform/x86/amd/hsmp: Validate ACPI UID and _DSD
+ mailbox package
+In-Reply-To: <20260625123337.886435-3-muralidhara.mk@amd.com>
+Message-ID: <b723da76-6309-0cd4-59e0-5931231f585d@linux.intel.com>
+References: <20260625123337.886435-1-muralidhara.mk@amd.com> <20260625123337.886435-3-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Debian-User: leitao
+Content-Type: multipart/mixed; boundary="8323328-1503347312-1782468227=:1085"
 
-We are pleased to announce the Call for Proposals (CFP) for another
-edition of  System Monitoring and Observability Microconference, this
-time at the 2026 Linux Plumbers Conference (LPC), taking place in
-Prague, Czechia, from Oct 5-7, 2026.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-  https://lpc.events/event/20/sessions/262/
+--8323328-1503347312-1782468227=:1085
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-This microconference provides a valuable forum for key engineering areas
-such as:
+On Thu, 25 Jun 2026, Muralidhara M K wrote:
 
-   - Kernel Health and Runtime Monitoring
-   - Hardware Integration and Error Detection
-   - Correlation of Issues (crashes, stalls, bugs)
-   - Virtualization Stack Monitoring
-   - Memory Management Monitoring and Observability
-   - Anomaly Detection Algorithms for System Behavior
-   - Automated Analysis, Remediation and post mortem analyzes
+> Harden the ACPI table parsing against malformed firmware:
+>=20
+> hsmp_get_uid() passed the device UID directly to kstrtou16(uid + 2)
+> without checking it.  A NULL UID or one shorter than three characters
+> would dereference a NULL pointer or read past the end of the string.
+> Reject such UIDs with -EINVAL before stripping the "ID" prefix.
+>=20
+> hsmp_read_acpi_dsd() dereferenced elements[0] and elements[1] of each
+> mailbox sub-package before confirming the package actually held two
+> elements, allowing an out-of-bounds read on a malformed _DSD.  Verify
+> package.count >=3D 2 first, then fetch the string and integer objects.
 
-The purpose of each talk is to share challenges and discuss potential
-improvements. Sessions will last 20 to 30 minutes and aim to encourage
-brainstorming and open dialogue about ongoing issues rather than
-delivering immediate solutions.
+These look two paragraphs describe what looks totally independent changes=
+=20
+so they should be split to two patches, also their diffs don't overlap.=20
+Once the split is done,
 
-The conference acts as both a knowledge-sharing platform and a strategic
-venue for guiding the future of kernel technologies to better meet the
-demands of large-scale infrastructure.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-We invite you to submit your proposals here:
-	https://lpc.events/event/20/abstracts/
+I see you went beyond just concurrency fixes, thanks. :-)
 
-Please select track "Linux System Monitoring and Observability MC"
+I'll try to look at the locking changes later (that is, there's no point=20
+in resubmitting the next version yet simply because of the patch split=20
+if you don't have any other changes to make; I haven't checked sashiko's=20
+analysis yet).
+
+The locking changes are considerable harder to review so it will take some=
+=20
+time for me to go through them.
+
+--
+ i.
+
+> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> ---
+>  drivers/platform/x86/amd/hsmp/acpi.c | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/=
+amd/hsmp/acpi.c
+> index 696884a91c22..24296747df47 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/string.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/topology.h>
+>  #include <linux/uuid.h>
+> @@ -82,6 +83,8 @@ static inline int hsmp_get_uid(struct device *dev, u16 =
+*sock_ind)
+>  =09 * bytes to integer.
+>  =09 */
+>  =09uid =3D acpi_device_uid(ACPI_COMPANION(dev));
+> +=09if (!uid || strlen(uid) < 3)
+> +=09=09return -EINVAL;
+> =20
+>  =09return kstrtou16(uid + 2, 10, sock_ind);
+>  }
+> @@ -153,12 +156,18 @@ static int hsmp_read_acpi_dsd(struct hsmp_socket *s=
+ock)
+>  =09=09union acpi_object *msgobj, *msgstr, *msgint;
+> =20
+>  =09=09msgobj=09=3D &mailbox_package->package.elements[j];
+> -=09=09msgstr=09=3D &msgobj->package.elements[0];
+> -=09=09msgint=09=3D &msgobj->package.elements[1];
+> =20
+>  =09=09/* package should have 1 string and 1 integer object */
+>  =09=09if (msgobj->type !=3D ACPI_TYPE_PACKAGE ||
+> -=09=09    msgstr->type !=3D ACPI_TYPE_STRING ||
+> +=09=09    msgobj->package.count < 2) {
+> +=09=09=09ret =3D -EINVAL;
+> +=09=09=09goto free_buf;
+> +=09=09}
+> +
+> +=09=09msgstr=09=3D &msgobj->package.elements[0];
+> +=09=09msgint=09=3D &msgobj->package.elements[1];
+> +
+> +=09=09if (msgstr->type !=3D ACPI_TYPE_STRING ||
+>  =09=09    msgint->type !=3D ACPI_TYPE_INTEGER) {
+>  =09=09=09ret =3D -EINVAL;
+>  =09=09=09goto free_buf;
+>=20
+
+--8323328-1503347312-1782468227=:1085--
