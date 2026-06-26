@@ -1,186 +1,411 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB5C37267A;
-	Thu, 25 Jun 2026 20:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782420489; cv=none; b=UqMUKMF7JL9UpY0G9yP+/KlItNYp52VVZBXTfxURhpoiRhjtODOZb/oPwDbKUpJKHfzS66fjBKYkwxuHJE9knNYoLf+0TEhxv6e7oe13ffgFREz7ERJerIeR5BvSLE/Lou8puCfmj3UfIbTkNtzjhKv7CQWaI7To7Gw0Rto0CmA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782420489; c=relaxed/simple;
-	bh=W5cwB5VuK6ZUPVros4aaXIMycAXDpY9OT9u88OjXCjQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=BS//mZWxCtmxh/dXxDfvd+xNa9pS6ckWdrAoTvOT+TDuo3wpRXwxMi63zKhvAKgooCIixVk3zcDpBSvJ/+kPDoLUtreC0iS0q3O2LBfshsD4wujAfeZ/i7aERj5gS9lMuEoRxSsQiS1inuzU/W3snmOKGebsIlwmVFgHjOLl9Mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=ingo.haenlein@gmx.de header.b=Ipbo+7F3; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543F02D780E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 01:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782437372; cv=pass; b=gxIopi5BexhTCccG6woOL6Y9Fwd/CMehldkivqkHk1XretkHtEHASb6Q/ev8xsu+yyn6o+kbUfEDygpol/29VWRuwboTOzfudeiZIwPckIBW5dJlaGeBU6uTryjUr/atYR/fziv0MX+S6XaUoK2rVjcgqMMhLjzTIWXEzcf60sM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782437372; c=relaxed/simple;
+	bh=dPA+cAv6wJfVglp6kTL2Q9WqiYIczZLZkh7uBv/P7mQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CP6UHYyC+HG3a4jKSwunyHdinnotPgxyo1+h5aS3UZxYTxk80q9jXOFpCd/+Xul/Hi8zCFn0r2wfe2KMocrtmLu/LRNAq0I5kbTjCOQ4hxLPrN62S9FL7KC1paNgWuEzGNMpRvwc0IKJ0dxkLBk5ZBSFMLGN2jfAsKFlOtpmLT4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M7tXOodX; arc=pass smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=ingo.haenlein@gmx.de header.b="Ipbo+7F3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1782420477; x=1783025277; i=ingo.haenlein@gmx.de;
-	bh=W5cwB5VuK6ZUPVros4aaXIMycAXDpY9OT9u88OjXCjQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Ipbo+7F3jaUWAQHR5eyyrSy+S9xq3362ioX1IAmBP0nXX+POr+MKMgmfOrTXSVwj
-	 IHemDBnD3ndcIdwkGeX7ZAcnYmgGJbc7OkU2U7Nm3X/h8ISmDCRhyTcmDS4iCcEbz
-	 ziY4iO5nCXK9pMDRHTEs33eh3QuL1qBXJvY5qHHwU1tF4rVUceDay9FQ2gfcyCdQr
-	 sZoIAbqc4735GrFwRAyLS/geJ6hEGmvhIuaX4VAUEqxhR1R7hjp+P5i6zmzCEQ3C4
-	 M5MONokmJ8Kr1C3QJeP8nYYlg0bHuQBTaRCcexRT77gxwQsBDTWdN7B54HazjG5uv
-	 bCMNqcdWC26fYZScFA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1waO0q1l1N-003aex; Thu, 25
- Jun 2026 22:47:57 +0200
-Message-ID: <56a48231-5f1b-4697-a732-bdbddd38a96b@gmx.de>
-Date: Thu, 25 Jun 2026 22:47:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7tXOodX"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-396771119c4so3970141fa.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Jun 2026 18:29:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782437369; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mh0f2acy/wmN4nd36cPv0qEFKYWwjCq+w9rthK3sFHybCd4GLnCN8gzhnJW3tqMzv3
+         AcN026KaNPEoVSm/fjPzH8jU5dJhd3yk93A2NhgrLZDCqckdLCZLIWhODAay4e+cB7ev
+         FAT3pqIchMU5MPgnERds843kEIZzD3hzEHBvRunTmJaPmIx8xUgg7GKAMdLH7t/YDnlz
+         QSXMCkTcgUlkcUSaKYW/RXJ91zyrue2RNKRzJRTlzfm7vJjCjNZSFY4L+7WJ+oX727Ho
+         o8ScnV8ZJ3FDYyW8zcI8RL9JKLBKK5CLuIJ5b/QcVNS7b+gDaXwAxt5ttk6n9F2Trswr
+         EnFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=a+Tk6Ua+Aq2vYOoByA/2G2JLk2u44/cP19OthE82/HM=;
+        fh=91/XXRvFBPSuCX2hDyNPySInS3cjZ6Q17r4PdnezEwM=;
+        b=ZPMRxlVw3mwnRne83xRw/ZoKpgmBfsRAPFQ+/4Km+pD7fv/NaBcCzeAs3q5A20N1Kz
+         +3H+a3S64f7isgVb5j3Yg4vQEuaf/aRCRozuTqVtd3etQ1Tm1cqwaCUo9u1AfyMkiAXb
+         bzTqXwf8a3MAE3aQ+g/RwiXInBS7enXSLrxTyKi+27rvo1GIsoklw6o90rgl13IJLpS3
+         NdMO826C7S5wZkXi8xPtrgRKYtufarkir8mziCgPX8TWVr1XK4+SF5AopVyHQ9iIqk3Z
+         nqy36x/1PdtxFx8xmqW3PniUllasablL1joQfjldZC8cqiNlweU2BG2BNWuGSEQl9Jp6
+         UI8A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782437369; x=1783042169; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a+Tk6Ua+Aq2vYOoByA/2G2JLk2u44/cP19OthE82/HM=;
+        b=M7tXOodX8lxk2VPKz/9cvxGgmuG7Gn/xtYi4AgBbmKbz4d5gc4WoeV2JXJ8uWEqlwA
+         Ve/YvRINo9viq5j3zKaX3qdM14/f82l1cW9quNsueaRUhJhZ1M1V/sEpJwl8pqyRrBBi
+         NZWYStcXCgdopweEbubAgAb461sYI1hoyTbLFL0KsGqktIH1QxT52vzeJ7AzF9MpiWnP
+         8Ienoaf3mjxguDE2cIStsE4gt96IqGkgOzucjvAw1Tquojqq9pBG7hdLX/6rE0Ph+6A1
+         0o598ZS68jS2rrTXgLSE8iLA0Xa23PV+3vtZ8ORCMoVtVG97LsJV1jQM3uTlsF/5NWO8
+         tx9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782437369; x=1783042169;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=a+Tk6Ua+Aq2vYOoByA/2G2JLk2u44/cP19OthE82/HM=;
+        b=og0r9jiav/Lu1pNbqB/+iwnbvst7zhhDeMF9JNyFI5QvmEQvFpFUJ146PkLUAYEPJo
+         EB2QDjPy23Za2HTton01VvLnaugAZ+KueHmG2RCECpNTzCM99BPnZmnDAwGz5FMCoYk1
+         G6kHLELadgwDXqP/FkACQyohiUbei9TRTymYemORNxLnv1cMHaFROfwIFSCkNTZwQ9Dz
+         HSE53GF4UaJD2kOkC3wM2QB/HM68PrXsWJMKvSXW+bDrIlgFZTdY+Cr0nyQpTrRkDtYi
+         RjNwHma+Um4HKsturRhH+CTHQt2eZJ9aTjwPPPvi9NHDKoMJpQmgZibDakNF7X43zWlz
+         3vrw==
+X-Forwarded-Encrypted: i=1; AHgh+Rq71E0cyHjeWjdaxdzqbhUqM4ScjHRmsczunzskslNim8FbUJLabDATrH5inTaAYhyRUhOEfNnGaCMXTypNMirS7dGf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVscx5Mh/HfjgzZZAfOLG+qDpcf/MTPT/EI6n9VzVLyRU597y3
+	MSDB9eMYySTFcd35dRzCi0dxZD2zT9l++AZh9dC9xeuvTcL6hStyAwSB1CMYidtJ8GVk+JdKpIU
+	I0ba+6HYI81jHDuWfxHQkPzls9q5Ups4=
+X-Gm-Gg: AfdE7cm/wU60x7MAwpsuG06jEiqFYjovJ/O0a8dbweYpLBc8R3jAfXKZAsHzPPPCLtk
+	XsYzlkW4LDkaNRNmKlMnVO6mVD5MrzhOOl4+zYFjOMSRp8A58cA2vfFTTe/4WVyd1nJIiIh9RXB
+	fxwNcPm3wmY5bABY07oQfE1fUfAZZn7iQuIho1S50cIOsYPgqiMdVrpt89+9+6/jBP3h4WJ9YCf
+	OH6Xwc/Mlc7hIWuSR2/gbD5ozOcnJkWNRNK3l3dKR71E4Cb4ZbhTJNFC0E4SyjZNGvB2Q==
+X-Received: by 2002:a05:6512:33d1:b0:5aa:8822:f280 with SMTP id
+ 2adb3069b0e04-5aea2062e82mr1547603e87.48.1782437368257; Thu, 25 Jun 2026
+ 18:29:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: chengordon326@gmail.com
-Cc: Shyam-sundar.S-k@amd.com, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
- mario.limonciello@amd.com, mathias.nyman@intel.com,
- platform-driver-x86@vger.kernel.org
-References: <18b4e4f7089aa4f1.da8dbe994ae3bb77.445e21b98b0b205b@GordonMsi>
-Subject: Re: USB-audio isochronous Missed Service Errors on AMD Zen5 client
- (Fire Range) -- Data Fabric idle C-state? No OS-level knob found
-Content-Language: en-US
-From: Ingo Haenlein <ingo.haenlein@gmx.de>
-In-Reply-To: <18b4e4f7089aa4f1.da8dbe994ae3bb77.445e21b98b0b205b@GordonMsi>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:llMqjXq8i+FGfcD1Tfr1fqg5oUgExy6buB+dRO59J4HOPhs02ak
- yHST+Kvei0e+ny57uqaUbD4RKQXM75PQLcg+WneOo5XUYnSypJBTAzWF0hTIQJ+KVnzzghq
- 1JKkgzxKa3SBb6DnW/L7tT+ry9XxTYDyS7GmJJoG6vHaYiiLH3zcmRrKqpZ1PX8VOmS1mWO
- 5dIqx4qo7zRUqy0qo3inQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+N/n5Qm1Ry0=;r2siSBnbrAzjBspX5/swwt+Pe+p
- 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
+References: <20260613225736.30906-1-vishnuocv@gmail.com>
+In-Reply-To: <20260613225736.30906-1-vishnuocv@gmail.com>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Fri, 26 Jun 2026 10:28:50 +0900
+X-Gm-Features: AVVi8CdEtyxqGp0i_zQpmnd_l8jmZZX0pNSswwOB0QQQELKXZLJLGvLmiTLb9F0
+Message-ID: <CABxCQKsvK+SmmhyEWfJwoQ9z9-03iFi6eZ3Aa_LrxaKredGvWA@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+To: mpearson-lenovo@squebb.ca, skhan@linuxfoundation.org, corbet@lwn.net, 
+	hmh@hmh.eng.br, hansg@kernel.org, derekjohn.clark@gmail.com, 
+	ilpo.jarvinen@linux.intel.com
+Cc: linux-kernel@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	vsankar@lenovo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Gordon,
+Hi,
 
-I am reporting a related data point from an AMD Strix Halo system
-(HP ZBook Ultra G1a, Ryzen AI MAX+ PRO 395, xHCI [1022:158b] on Bus 007).
+Just a gentle ping on the v3 patch below. Just wanted to check if
+there are any further review comments or if anything is needed from my
+side.
 
-Michal Pecio pointed me to your thread from my linux-usb report:
-https://lore.kernel.org/linux-usb/48aadb68-b4d1-4dd6-82ca-76d0846b4ae1@gmx.de/
+Thanks,
+Vishnu
 
-Same error class: COMP_MISSED_SERVICE_ERROR / -EXDEV on isochronous USB
-audio endpoints, sporadic bursts during continuous full-duplex streaming,
-no DMA error. Same LTC/LTR constellation: HCCPARAMS1 = 0x0118ffc5
-(LTC=1), but DevCap2: LTR- on both the xHCI function (c5:00.4) and the
-upstream internal GPP bridge (00:08.3).
+On Sun, Jun 14, 2026 at 7:58=E2=80=AFAM Vishnu Sankar <vishnuocv@gmail.com>=
+ wrote:
+>
+> Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
+> When active, USB-C data connections are disabled while power delivery is
+> preserved. This is useful for kiosk and physically-secured deployments.
+>
+> Hardware interface:
+>
+> The HKEY device exposes a read-only ACPI method USCS():
+>
+>   Return value bit layout:
+>     Bit 16 : Capability flag (1 =3D feature present on this SKU)
+>     Bit  0 : Current state  (0 =3D security OFF, 1 =3D security ON)
+>
+> The sysfs attribute is read-only.
+>
+> The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
+> hardware state.
+>
+> Hotkey:
+>
+> Fn+U followed by Fn+S generates HKEY event 0x131e.
+>
+> sysfs interface:
+>
+>   /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
+>   "enabled\n"  -- data connections are currently blocked
+>   "disabled\n" -- data connections are currently allowed
+>
+>   The attribute is hidden on SKUs where the USCS capability bit (bit 16)
+>   is not set, so there is no ABI impact on unsupported hardware.
+>
+> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+> ---
+> Changes since v2:
+> - Move usbc_security_enabled out of tp_features bitfield to a bool
+>   member of tp_features to avoid unsafe concurrent bitfield RMW;
+>   usbc_security_supported remains a bitfield as it is init-only.
+> - Pass &tp_features.usbc_security_enabled directly to
+>   usbc_security_query() removing the local bool intermediary
+>   in both init and hotkey paths.
+> - Remove extra blank line before */ in block comment.
+> - Fix kerneldoc Returns: syntax and rewrite return value description
+>   to match the int return type.
+> - Split ternary return into two separate if statements for clarity
+>
+> Changes since v1:
+> - Use guard(mutex) from cleanup.h instead of manual mutex_lock/unlock
+> - Revert usbc_security_query() to return int (-EIO/-ENODEV/0) instead
+>   of bool to avoid uninitialized *enabled bug on unsupported platforms
+> - Remove !! when assigning to bool in usbc_security_query()
+> - Remove dead tp_features.usbc_security_supported check in show()
+>   since is_visible() already gates the attribute on unsupported SKUs
+> - Use str_enabled_disabled() from string_choices.h in show()
+> - Fix uninitialized *enabled bug in tpacpi_usbc_security_init() by
+>   only assigning usbc_security_enabled after a successful query
+> ---
+>  .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 116 ++++++++++++++++++
+>  2 files changed, 140 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Docume=
+ntation/admin-guide/laptops/thinkpad-acpi.rst
+> index f874db31801d..db4588af0278 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -1543,6 +1543,30 @@ Values:
+>
+>         This setting can also be toggled via the Fn+doubletap hotkey.
+>
+> +USB-C Security
+> +--------------
+> +
+> +sysfs: usb_c_security
+> +
+> +Reports the current state of the USB-C Security (Restricted Mode) featur=
+e
+> +on supported ThinkPad systems. When enabled, USB-C data connections are
+> +disabled while power delivery is preserved.
+> +
+> +The available command is::
+> +
+> +        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
+> +
+> +Values:
+> +
+> +       * ``enabled``  - USB-C data connections are currently blocked
+> +       * ``disabled`` - USB-C data connections are currently allowed
+> +
+> +The attribute is read-only. The USB-C Security state can only be toggled
+> +via the Fn+U followed by Fn+S hotkey chord.
+> +
+> +The sysfs attribute is not created on platforms that do not support this
+> +feature.
+> +
+>  Auxmac
+>  ------
+>
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
+rm/x86/lenovo/thinkpad_acpi.c
+> index e1cee42a1683..59b485a57ffe 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/backlight.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmi.h>
+>  #include <linux/freezer.h>
+> @@ -66,6 +67,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+> +#include <linux/string_choices.h>
+>  #include <linux/string_helpers.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/types.h>
+> @@ -185,6 +187,7 @@ enum tpacpi_hkey_event_t {
+>         TP_HKEY_EV_AMT_TOGGLE           =3D 0x131a, /* Toggle AMT on/off =
+*/
+>         TP_HKEY_EV_CAMERASHUTTER_TOGGLE =3D 0x131b, /* Toggle Camera Shut=
+ter */
+>         TP_HKEY_EV_DOUBLETAP_TOGGLE     =3D 0x131c, /* Toggle trackpoint =
+doubletap on/off */
+> +       TP_HKEY_EV_USB_C_SECURITY       =3D 0x131e, /* USB C Security (Fn=
++U, Fn+S) */
+>         TP_HKEY_EV_PROFILE_TOGGLE       =3D 0x131f, /* Toggle platform pr=
+ofile in 2024 systems */
+>         TP_HKEY_EV_PROFILE_TOGGLE2      =3D 0x1401, /* Toggle platform pr=
+ofile in 2025 + systems */
+>
+> @@ -373,6 +376,8 @@ static struct {
+>         u32 has_adaptive_kbd:1;
+>         u32 kbd_lang:1;
+>         u32 trackpoint_doubletap_enable:1;
+> +       u32 usbc_security_supported:1;
+> +       bool usbc_security_enabled;
+>         struct quirk_entry *quirks;
+>  } tp_features;
+>
+> @@ -11265,6 +11270,110 @@ static struct ibm_struct hwdd_driver_data =3D {
+>         .name =3D "hwdd",
+>  };
+>
+> +/***********************************************************************=
+**
+> + * USB-C Security subdriver
+> + *
+> + * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
+> + * It always returns:
+> + *   bit 16 - USB-C security capability present on this SKU or not
+> + *   bit  0 - USB-C Security state (enable or disable)
+> + *
+> + * Hotkey
+> + * ------
+> + * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
+> + * The driver reads back the new state and notifies the sysfs attribute.
+> + */
+> +
+> +/* USCS() return word bit layout */
+> +#define USCS_CAP_BIT           BIT(16) /* capability: feature present on=
+ SKU */
+> +#define USCS_STATUS_BIT                BIT(0)  /* current security state=
+ */
+> +
+> +static DEFINE_MUTEX(usbc_security_mutex);
+> +
+> +/**
+> + * usbc_security_query - read current USB-C security state via USCS()
+> + * @enabled: out - true when security is ON (data connections blocked)
+> + *
+> + * Returns:
+> + *   0        success, @enabled contains the current state
+> + *  -EIO      ACPI evaluation failed
+> + *  -ENODEV   capability bit absent; feature not present on this SKU*
+> + */
+> +static int usbc_security_query(bool *enabled)
+> +{
+> +       int status;
+> +
+> +       guard(mutex)(&usbc_security_mutex);
+> +       if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0))
+> +               return -EIO;
+> +
+> +       if (!(status & USCS_CAP_BIT)) {
+> +               pr_debug("USCS cap bit absent (raw=3D0x%x)\n", status);
+> +               return -ENODEV;
+> +       }
+> +
+> +       *enabled =3D status & USCS_STATUS_BIT;
+> +       return 0;
+> +}
+> +
+> +/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------- =
+*/
+> +static ssize_t usb_c_security_show(struct device *dev,
+> +                                  struct device_attribute *attr,
+> +                                  char *buf)
+> +{
+> +       return sysfs_emit(buf, "%s\n",
+> +                         str_enabled_disabled(tp_features.usbc_security_=
+enabled));
+> +}
+> +
+> +static DEVICE_ATTR_RO(usb_c_security);
+> +
+> +static struct attribute *usbc_security_attributes[] =3D {
+> +       &dev_attr_usb_c_security.attr,
+> +       NULL,
+> +};
+> +
+> +static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
+> +                                            struct attribute *attr, int =
+n)
+> +{
+> +       return tp_features.usbc_security_supported ? attr->mode : 0;
+> +}
+> +
+> +static const struct attribute_group usbc_security_attr_group =3D {
+> +       .is_visible =3D usbc_security_attr_is_visible,
+> +       .attrs =3D usbc_security_attributes,
+> +};
+> +
+> +static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
+> +{
+> +       int err;
+> +
+> +       err =3D usbc_security_query(&tp_features.usbc_security_enabled);
+> +       if (err =3D=3D -ENODEV)
+> +               return 0;
+> +       if (err)
+> +               return err;
+> +
+> +       tp_features.usbc_security_supported =3D true;
+> +       return 0;
+> +}
+> +
+> +/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
+> +static bool tpacpi_usbc_security_hotkey(void)
+> +{
+> +       if (!tp_features.usbc_security_supported)
+> +               return false;
+> +
+> +       if (usbc_security_query(&tp_features.usbc_security_enabled))
+> +               return false;
+> +
+> +       sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
+> +       return true;
+> +}
+> +
+> +static struct ibm_struct usbc_security_driver_data =3D {
+> +       .name =3D "usbc_security",
+> +};
+> +
+>  /* ---------------------------------------------------------------------=
+ */
+>
+>  static struct attribute *tpacpi_driver_attributes[] =3D {
+> @@ -11325,6 +11434,7 @@ static const struct attribute_group *tpacpi_group=
+s[] =3D {
+>         &dprc_attr_group,
+>         &auxmac_attr_group,
+>         &hwdd_attr_group,
+> +       &usbc_security_attr_group,
+>         NULL,
+>  };
+>
+> @@ -11479,6 +11589,8 @@ static bool tpacpi_driver_event(const unsigned in=
+t hkey_event)
+>         case TP_HKEY_EV_PROFILE_TOGGLE2:
+>                 platform_profile_cycle();
+>                 return true;
+> +       case TP_HKEY_EV_USB_C_SECURITY:
+> +               return tpacpi_usbc_security_hotkey();
+>         }
+>
+>         return false;
+> @@ -11930,6 +12042,10 @@ static struct ibm_init_struct ibms_init[] __init=
+data =3D {
+>                 .init =3D tpacpi_hwdd_init,
+>                 .data =3D &hwdd_driver_data,
+>         },
+> +       {
+> +               .init =3D tpacpi_usbc_security_init,
+> +               .data =3D &usbc_security_driver_data,
+> +       },
+>  };
+>
+>  static int __init set_ibm_param(const char *val, const struct kernel_par=
+am *kp)
+> --
+> 2.51.0
+>
 
-One divergence from your Fire Range result:
 
-stress-ng --stream does not suppress the issue on Strix Halo, neither
-with 1 nor with 32 workers. Under full --stream load, amdgpu_top shows
-GFX_MCLK staying at 1000 MHz -- which is the hardware ceiling on this
-platform (LPDDR5 400-1000 MHz, per amdgpu_top header). Fire Range
-reaches 2800 MHz under --stream, which appears to be what keeps the DF
-out of the problematic idle state. On Strix Halo that lever does not
-exist: --stream cannot push MCLK beyond 1000 MHz, so the DF can
-apparently still reach the idle state that causes ISO ring loss.
-
-SOCCLK on Strix Halo shows only an average (~650-666 MHz) via
-amdgpu_top; Cur. reads N/A MHz -- no current-state visibility from the
-OS, unlike what you can read on Fire Range.
-
-So on Strix Halo: same error class, same LTC/LTR contradiction, but
-the --stream workaround is structurally ineffective due to the lower
-MCLK ceiling. Your questions to AMD (DF idle / ISO DMA interaction,
-OS-accessible knob) apply here as well.
-
-Do you have any update from AMD on the questions you raised -- in
-particular whether Set LTV reaches the DF via sideband, and whether
-there is an OS-accessible knob to hold the fabric active during ISO
-streaming?
+--=20
 
 Regards,
-Ingo
 
+      Vishnu Sankar
