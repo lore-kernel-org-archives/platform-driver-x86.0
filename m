@@ -1,79 +1,74 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A18F3B6C1C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 18:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8F53B1ED0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 20:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782496906; cv=none; b=azyVE19daW3qIHEEMIPJKMPJS1OJjLg4ZOAm9x3GxasKUXZ3f1HUnQ1gk+wz5lKOql3klLAgwtQJF1WMMbYqUcT3dD3xFwwe/IANYNrCSkUDJCkRbWgSY7qyVrdStP9KtU1i0r2lJYyePxO1HGlfD0sur0jtoM1Z0XpP2NTfblM=
+	t=1782506996; cv=none; b=ohBaG36B4tzvJW0smYWuquHydlnRyJ1X0RlnB7bW3FkOwwRPwAr2K6O4P2K6aAcAeL7eoiBj/OxeUYGQocMSe1zjucQam4+6HwZdiF7rUDjl3hcEUQro8mUM8NJJQeEid15LrHx15cS9f7KEiutqkA9knZY5+jIfIqmNR1WoKp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782496906; c=relaxed/simple;
-	bh=SJP2pP59+qEX/d/6wwjWT+lx2vnJvHF2ua3dDmxMLlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EotCBpA3zTsKRSpRG2k1xOJltwiqYrXJcnFm5OhHQ2HJcmEk6SzwMin8Zxxhbif9dXhihBx6LOU3Pfi8CvrsdywsWa8QrGTGz2MkQkcFY98Ed5bZBtvN/vgTD+OpQwUEJMLVp7zq77mVRWhTUISlIwaNPSjPaDktPD3eG7wdVlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=M5FrJ8fc; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1782506996; c=relaxed/simple;
+	bh=/by/3emQITal9Kugr50sDPX9bYLyrZB8f/kpJDD8TKo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cv6hx4PWdboum1w9/32Folyob+YFiHeJS1qi59pNWNeK5HsMR4lipjYkHPbBjfXfjCk6O/7nXxzUQ3nqGZb6gTdz+E81abMHJv8ihqaQzCKnf85bAMWzMb0UcGMnMFSRS2C2EkkHb6nQV/ZVGT4jwS6yjvRDRnNSFV2Zoupv/Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PfFer9NB; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="M5FrJ8fc"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4926f8e02e8so4331675e9.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 11:01:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PfFer9NB"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-c122b25cffaso102383066b.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 26 Jun 2026 13:49:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782496903; x=1783101703; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XVK9K+DUm1jk4GYOzpkGzIi+/L4/kLe+iyyhyftE2ac=;
-        b=M5FrJ8fc7zNuYE4x8/39GDJOdwNxHbnifTGOJSP04bQpi3DFJBqlNcBJjlfLUDZvJq
-         BJ6hY4H2k60vuACoFRLwLNsZfidXE+XNGc81B3UwxOpFVAhI8xMvyarKFoePcyjcAp6Z
-         AremP8vfzEPQaHZqksY/6hZEv8Mbdx9kfj7TJ/PKGwyQoVIIaM/2myjemnia6ORB/c/N
-         kg1xgSE1j/H0SYnzzkfLjfj1iZ3Bt/7HB/QaCSpohHUhtGAQFxvBQerGJo6GxfCwR+ng
-         3RJQe2KMsY+mnsL6yg1nU/qsQMTjXHJRTvOf7LpcJLl4GLE36izasXGlNvdF364VGCyx
-         lShw==
+        d=gmail.com; s=20251104; t=1782506992; x=1783111792; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=thuY1JcilTL2WkrIhTO71nKlX6gsdJPpD5eyTDT70VI=;
+        b=PfFer9NBrtYnOtalqrHLmrGoefOQA8qxajAOs+tdxYL0gq/4hjGL5fn48WtTpF2aEo
+         45yVZtSFkZW4wez1quo0NYygZ+fmQ9/HytD28mdAdh2roRKvG7035E5j08nXdWJuXiAp
+         HPawvbANcdmdYkADekaEPQzfusYzdUyEhc+r4Q2C71xbnaJcrZVhzgi9K9nSsuxH4s21
+         nOfqjQ9uXHJSEKFU2vHcZisrd2EspVmc4aqm43YsWGqaw/VstnaMhKGLejlHh2WsVTAW
+         JIOvyb2j8izIKc+QylaeUECqsgI1b7mWZSLxeAlI+M/ibgoT21zjmfGURyeWIiPl3C5N
+         aiZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782496903; x=1783101703;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XVK9K+DUm1jk4GYOzpkGzIi+/L4/kLe+iyyhyftE2ac=;
-        b=aw4jBDm1jMcG60bbBcNjUfjoV/hXc5muAI+6MXyb/oKVsuWQH01F0Kv2+kR8sqDV8J
-         m5nnjKDGHsxiHB7kSecfnLPG7B2xGpqMhFGkW1dAAAPLiSLaB8JxHPCiPXZoSFVzLpdd
-         b8MnBPRXuBM1LC8uY5yap5zTyKiB64ebrlgsD3v+0jK5Uv4l0nQ62BwLHCgMu7wXSO19
-         pqFa4izmV2rsvd079S7PhLBHRJtiz2tIBKJusbaodAvdMnYhdb4p21mJ75WFd1I3yzqq
-         l88A1M8NmXr9lW6ck5KXSUWUyRDAwr2jk+fn8dv0nO3I6l6ex8193wyMnXhV7NGdxRx1
-         XJOg==
-X-Forwarded-Encrypted: i=1; AFNElJ/N1O6r6FT6HVDOepzzNTgfgDMHLL5V5H+96F3vv14YGCGHZ8q1+v0tr2Wroh/hbVeuZZgd8wRr5Cg7xc6w+Gt0iW1H@vger.kernel.org
-X-Gm-Message-State: AOJu0YxknPSYsFmIpWVtdzeWQXDCIcNvkVw0EWmbkb2h/uDD3OgBvgwJ
-	Rj3jJSazJsc5WiQktS/XeUGwomERAyLu6T1mnXZneO1xR4/81GuhAi220l7Z2FSyQBE=
-X-Gm-Gg: AfdE7cl/bn0BNGlzhbgjLCjR643eV7bNM9JKGxcp+rndbGwlWwYOUPCLTWP3N8NpEL+
-	zWqZX2obKaJcjSDGDfAP7McLQ0epRfxO74+M+8n6LRL4DNB6YBb7XZ6JSa6uY7umCNNWSOGOUoU
-	1PCr7TvDV9ECFJ9aKzE5Z8wjVG28kkHUSUjXuFDgT6sM27l6oqmjwymd3KOiQ/r/3gdbKg+IED+
-	ThC3dnUKcmB+2HIx3n8osgl3DLcvIqxW99wgbDDBAMFRm1DsmTUw6SanET1K+Ff49R0VKdfwtTu
-	E6mBp5J2gmUDxPi1p+9zpiq/MVzcFfk7hqNqZ0YiF4uX80XWGS1fHeuHcOqrw3+CSshbw9NDzGB
-	3tyU7YPwX/CIC42ZY7F1anEGSDbFaTTuEedYK8IXK1c6R/FU/8Az6WAwaZ0SXgyJT6eHBQlZBRR
-	1qIeL1nDBdIf0cdQq3KH1Ug817kiQMdozJSvI5dIqVKCZOxkS3BoIh1Zbq0IIaN+D3aTUNoE6HC
-	Rg8v7d4Ul3pSU0=
-X-Received: by 2002:a05:600c:4e0b:b0:490:b0e0:3de2 with SMTP id 5b1f17b1804b1-492668933d8mr119989965e9.33.1782496902976;
-        Fri, 26 Jun 2026 11:01:42 -0700 (PDT)
-Received: from localhost (p200300f65f47db04b3606a871f5f1c38.dip0.t-ipconnect.de. [2003:f6:5f47:db04:b360:6a87:1f5f:1c38])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-49269071d05sm99409545e9.11.2026.06.26.11.01.42
+        d=1e100.net; s=20251104; t=1782506992; x=1783111792;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=thuY1JcilTL2WkrIhTO71nKlX6gsdJPpD5eyTDT70VI=;
+        b=csg0ikL0CdvxeiyDYld6dAouwJwKU4ZYYhGNYVv5cO2rSdOe1Ig1j1BK2ANy8FBpxE
+         kGJ1pANlw+O7e1jWSTYQSZtV7BocIuWZqCW7UQXNvdjMtw+hp43Ah43Gkcf2ZfHjD9d8
+         NnxCks9TR9pWnP8bk864r8wkdAisx+PLai+UG1ZNNBpRQukcYJcyRJuNBzgNKP3BV6/+
+         S/yP0Th46kmTka2FSKRkk8t+r18fju9n/E91noOu1B8Xb/z7ADRaQ8S4YoC0uAhPlw36
+         DFqT9TOapMBGNnLjAYXhqfFj2wNdkqmSDQ8lduc4lGDgrGao/7q9wGsCLNAwhat1LToK
+         JJKA==
+X-Forwarded-Encrypted: i=1; AHgh+RpOzmaTJLJT2wy5AgvuuibEXVrZP6DypIL0Pqnx9gkorUciS5oI6YgZmxdD4lwr0PfjFFacsgSsX0BghXKJlaHf4YRi@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVIIjJA4lz2Lkql4ZPtV8ZwlIQ+frtmLQj/qVEFXR5MFA7vZtr
+	hUjlW+sGMUvy+219nzy8AkAiUGVoRvmsOk+5Z3+YesskXpC4BZcUhAid
+X-Gm-Gg: AfdE7cmnG9wvZuEFmYeu6h0OseMEhAZWYlUpzAoIhKS6XvEGViGp6axstYVZl/pOr6M
+	Zc6CbDuRZ6PxQMU1H4ER1wFFEGgBQ9xEWNgk1BrMz7uFQLdzx+JR3D59I8xNu+ivh/KZzE4YIL7
+	MvkXd9hjqJS+058/IsUenzdSCJ20OcaZirsLC1UK/gQaalYugwBQZ0BpuDxJVKlV4WaTsSyK18Z
+	phgskBwiOv/WqzkmtOpqQCtYPpoRk+wGBS8AfoMixUbQ1aCkl/FTP/9O+oVLkAZNTGc1Rw2Jvae
+	qeq8INOkO1MPnzr5r6+nlnb61BdsOVsNcjvcjI4nTYUVhgoyur+g3e5N1fpU5yYz6CqGA3VWTgQ
+	Fi3OLEpsF1blzOiDtkIDg8kV9Dhxob5dG4nNYC67JY83uPWhfRu/vWekmxRkjaU+nik3BRP5nsV
+	nBqnKDXP35rxjtAgkSi3XSykLxYC7Pa0u4oWVX5rThh6cQr+pVxR05ZN2aQJFlofo=
+X-Received: by 2002:a17:907:701:b0:c12:15c4:6df2 with SMTP id a640c23a62f3a-c1215c46fcemr421727366b.43.1782506991641;
+        Fri, 26 Jun 2026 13:49:51 -0700 (PDT)
+Received: from node ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c11fbbe8118sm387907866b.24.2026.06.26.13.49.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 11:01:42 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Fri, 26 Jun 2026 13:49:50 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
 	Hans de Goede <hansg@kernel.org>,
-	=?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/17] platform/x86: int3472: Add include defining struct dmi_system_id
-Date: Fri, 26 Jun 2026 20:00:30 +0200
-Message-ID:  <a19ec23082072792e126e9bf9bc51dae803710a6.1782490566.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1782490566.git.u.kleine-koenig@baylibre.com>
-References: <cover.1782490566.git.u.kleine-koenig@baylibre.com>
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH 0/2] platform/x86: hp-bioscfg: fix attribute enumeration on older HP BIOS
+Date: Sat, 27 Jun 2026 01:49:43 +0500
+Message-ID: <20260626204945.18868-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,46 +76,60 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1269; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=SJP2pP59+qEX/d/6wwjWT+lx2vnJvHF2ua3dDmxMLlU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqPr5Rzo/IR2KboduOnfgZoMlC+PFDR+aBaKIgj HduG6SqeP6JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaj6+UQAKCRCPgPtYfRL+ TkscB/9oMmQmnaitpVy9+vCw16rMwGBGxYb42pnBwJuVpfwWMoDLWIk4VVGU8MFyEXlsmwiUgel 10pbqhLF64C5yLyE9J9HGn4quyMCXnLMPp7sZwdvV4HxlvjQpQDHLGNICNoCTmbcblUrXR8awUf yYhE3g5hd4GAT24Knkmdm82pzXHPjoTe35+NHon0V6ErsrBVw1X+ILji7oEcyXcSjoyFqaDIRxs oQpQTPzAhmkub1r8rrQYUpbDWbKBw51bS0/cH2ssy/Ocj4BGfEPq0QcoA3l6qvRfWq4rN+a+/fD io5txC9Cc5n+Sc8Bp5ult/dNmJkjrhnv1+HAH5iI5G6kwoxG
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Currently <linux/mod_devicetable.h> is included transitively in
-int3472.h via
+The hp_bioscfg driver silently fails to enumerate BIOS attributes on
+HP EliteBook 840 G2 (and potentially other older HP models) because:
 
-	<linux/clk-provider.h> ->
-	<linux/of.h> ->
-	<linux/mod_devicetable.h>
+  1. hp_init_bios_package_attribute() hard-fails when a WMI ACPI package
+     contains fewer elements than the per-type expected count (11 < 13),
+     even though only the first 10 common elements are required to
+     register an attribute.
 
-However these includes will be tightend such that only the bits relevant
-for of will be provided by <linux/of.h>. To ensure that dmi_system_id
-stays around, include the respective header explicitly.
+  2. hp_populate_enumeration_elements_from_package() returns -EIO and
+     discards the entire attribute when any single element has an
+     unexpected ACPI object type — typically after a BIOS AML error
+     returns malformed data.
 
-Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
----
- include/linux/platform_data/x86/int3472.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hardware affected:
+  HP EliteBook 840 G2 (DMI: Hewlett-Packard HP EliteBook 840 G2/2216)
+  BIOS: M71 Ver. 01.31 (02/24/2020)
 
-diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-index 93f1e1fe09b4..f570e3266a2a 100644
---- a/include/linux/platform_data/x86/int3472.h
-+++ b/include/linux/platform_data/x86/int3472.h
-@@ -13,6 +13,7 @@
- #include <linux/leds.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/mod_device_id/dmi.h>
- #include <linux/types.h>
- 
- /* FIXME drop this once the I2C_DEV_NAME_FORMAT macro has been added to include/linux/i2c.h */
-@@ -72,7 +73,6 @@
- 	container_of(clk, struct int3472_discrete_device, clock)
- 
- struct acpi_device;
--struct dmi_system_id;
- struct i2c_client;
- struct platform_device;
- 
+How to reproduce:
+  1. Boot a kernel with CONFIG_HP_BIOSCFG=m on an HP EliteBook 840 G2
+  2. modprobe hp_bioscfg
+  3. Observe dmesg:
+       hp_bioscfg: ACPI-package does not have enough elements: 11 < 13
+       Error expected type 2 for elem 13, but got type 1 instead
+
+Testing notes:
+  Tested on HP EliteBook 840 G2 running Arch Linux kernel 7.0.13-arch1-1.
+  After patches, hp_bioscfg loads successfully and enumerates available
+  BIOS attributes. Attributes with shortened packages are partially
+  populated and accessible via sysfs. No regressions on systems that
+  return full 13-element packages (checked via code inspection —
+  pr_warn path is only reached when count < min_elements).
+
+Relevant dmesg (before fix):
+  [   11.xxx] hp_bioscfg: ACPI-package does not have enough elements:
+              11 < 13
+  [   11.xxx] ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT,
+              Index (0x000000032) is beyond end of object (length 0x32)
+  [   11.xxx] ACPI Error: Aborting method \_SB.WMID.WQBE
+  [   11.xxx] Error expected type 2 for elem 13, got type 1
+  [   11.xxx] hp_bioscfg: Returned error 0x3
+
+Muhammad Bilal (2):
+  platform/x86: hp-bioscfg: accept reduced ACPI packages from older HP
+    BIOS
+  platform/x86: hp-bioscfg: warn on element type mismatch instead of
+    failing
+
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c         | 11 ++++++++---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h         |  3 +++
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c |  7 ++++---
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
 -- 
-2.47.3
+2.54.0
 
