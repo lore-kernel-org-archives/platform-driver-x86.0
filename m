@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9588F38F930
-	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jun 2026 08:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D0CE555
+	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jun 2026 08:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782550416; cv=none; b=iOaJTGbgFjaV7L0sp5+nVnt8WyFEGTr13+zrNE6URReetMnKPXiO4h5WgcgFqzIMRrAp+2lPw+0Ab7ayFopddrwS592VDoP6AMXkO8b1YrP/vh5xN4pIC1Rjz73Ai5It5JJsIVF6zSl/WHL0pJolhH3RQd9g2FVAM/DADSJOPrY=
+	t=1782550650; cv=none; b=KR1axk+f7cH7CoMqTNXYGDvNTccAztna/Ei6DHO371WcagJUgkUQCTsSmbW5v4OXgZ+TvKJl1+FtjxeG/AXMsOMjrZguCRuTwnzRwG1cRLnw2DCVJEI7fr2fJn1Zn8hIk6KJbv493AJW92sLLWLWdr9xT5mmQwhmhB1+ECsoALU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782550416; c=relaxed/simple;
-	bh=szgWyB0YyXpTWQuSpXZykEEquEPheePI6vJnXd9a7b0=;
+	s=arc-20240116; t=1782550650; c=relaxed/simple;
+	bh=l3M546NF+YvWHL/c7WUmf17G+QRkW9dE/6K7hyrLH8o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rUHcmBm1k4mx+oom90Lsz9O/XwhyBgxu1Q3FAJfMzIEgRRoiu+XJKjQ8WS6qP8Fm2i49e1/gBZTgUy0XyKcMSRQwjZXw/Von+vbVdOh9GcpzWruYgk9ip4+OZtFan+bnh2q6g+CL37YiO4gZS27vAQpZhbIwgTyJHZ2U711/bJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LyzTcnul; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=NMeXrrHWJQ4QMaPVXX8szfRqz3vy8pi8GcdIKr+UQ3jF5OU1BJzSer2jMo9RkrWHaCnH56d9eZBXgkRaW2Z8QUbtAci8GvXjXH+ZEmomAEm5VAWZWI5/Ko3PdxIn+6ucWBC5gifO6JwXIrJhNaPIJRPsnRnXdIBh77VNS3QMgeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqWSUwJv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LyzTcnul"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 49552C2BCB3
-	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jun 2026 08:53:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqWSUwJv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2576DC2BCB3
+	for <platform-driver-x86@vger.kernel.org>; Sat, 27 Jun 2026 08:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1782550416;
-	bh=szgWyB0YyXpTWQuSpXZykEEquEPheePI6vJnXd9a7b0=;
+	s=k20201202; t=1782550650;
+	bh=l3M546NF+YvWHL/c7WUmf17G+QRkW9dE/6K7hyrLH8o=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=LyzTcnulgGWgE13Dcg5T4WKOXtTbadA9Be3+c5WPzkn/pUef80RYQBc4fAg9eceKQ
-	 8a+Xd9EJLKvVwn53p42O4LzMsb6g5GVeQ50m7yFcLSdKgcywJfz5PLnQZXb0cmLMSQ
-	 L4KBNYAb6seNdZXUuzSZBDfMPlmbTx3l56mBNheohsF3h3QpZP2zBvSqZbiemEDXRf
-	 pmalrU7HC9v2NNi2tdcrD3W7W42ZWkETbtO+8ticeL7dPmiQlUyFMT3HWw2ClS85pm
-	 PtKkrzJXaUQt1aLXhL09Vx5jayA9dGwYawZeSE7gjtB+amQHEJQMjEVxOyMTCtsTW3
-	 Db6YSG1LCetWA==
+	b=KqWSUwJvrM3utz5EpFy70sG89btLWhNoKtAdUqf95l9geqL6u2uAn7+kuvEuQc5Te
+	 IeGCKZ1Qr0KwcmMA3PlvLHiXkVppbrBk+Sof36u8jY0rMSwKKaDZGkfnhjx1bguC+0
+	 IwGC+s3Jb7Lfay5QpyHv/A7ezE3aUzeGQCN3ZmNEJNPLg51bmp0J4ROnvLeTn2CifZ
+	 k/HtRcMrTI40A88K3kW47bOVcoGQ65Fq2dolMUxJN4keZ4BJc7RBjhKmSY3Q4Wy30/
+	 J0si/P13ZcGa4MDBG56Gfe+F7hvbOSz8t3XPe5KJM5zs+CcggrFhoEfhu/oBxrK8UN
+	 +eg8EMajE20ow==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2B85DC3279F; Sat, 27 Jun 2026 08:53:36 +0000 (UTC)
+	id 03B78C3279F; Sat, 27 Jun 2026 08:57:29 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221694] [regression v7.0->v7.1] AMD Strix Point (Ryzen AI 9 HX
  370) intermittently hangs on resume from s2idle
-Date: Sat, 27 Jun 2026 08:53:36 +0000
+Date: Sat, 27 Jun 2026 08:57:29 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221694-215701-MlbEeMmwfr@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-221694-215701-EsZfGKAOhU@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221694-215701@https.bugzilla.kernel.org/>
 References: <bug-221694-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,48 +64,12 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221694
 
---- Comment #1 from Hongri Cui (hongri.cui@gmail.com) ---
-Follow-up on 7.1.1 with amd_pmc.dyndbg=3D+p enabled.
-
-1) amd_pmc SMU mailbox trace (good cycles) =E2=80=94 attached: amd_pmc-dynd=
-bg-7.1.1.txt
-A clean suspend/resume shows the PMC<->SMU mailbox completing on every mess=
-age:
-  suspend: AMD_PMC_REGISTER_MESSAGE 7/6/3  -> each AMD_PMC_REGISTER_RESPONS=
-E:1
-(OK)
-           amd_pmc: SMU idlemask s0i3: 0x7fff1afd
-  resume:  AMD_PMC_REGISTER_MESSAGE 3/8    -> each AMD_PMC_REGISTER_RESPONS=
-E:1
-(OK)
-On every cycle that resumes, all PMC->SMU messages get RESPONSE:1. A wedged
-cycle leaves no
-trace (journald frozen at suspend entry; box never resumes).
-
-2) amd_pmc unbind test (cf. bug 221664)
-  echo AMDI000A:00 > /sys/bus/platform/drivers/amd_pmc/unbind
-  # then 30x: rtcwake -m mem -s 30
-Result: STILL wedges (cycle 14/30, same silent signature). amd_pmc was
-confirmed out of the
-path -- zero AMD_PMC_REGISTER_*/SMU traffic after the unbind. So, unlike bug
-221664 (where the
-same unbind made suspend succeed), this wedge is NOT gated by amd_pmc.
-Caveat: with amd_pmc unbound, /sys/power/suspend_stats/last_hw_sleep stopped
-updating (stale) --
-the platform was no longer entering deep s0i3 (shallow s2idle) -- and it st=
-ill
-wedged. That points
-away from the s0i3 firmware handshake and toward the generic suspend/resume
-path.
-
-Next: I'll run git bisect v7.0..v7.1 (clean A/B anchors: 7.0.13 is 30/30; 7=
-.1.0
-and 7.1.1 both
-wedge ~10-40%/cycle). Happy to add no_console_suspend + netconsole to captu=
-re
-the exact hang point
-first if that's more useful. Advice on which welcome.
-Attach /var/log/amd_pmc-dyndbg-7.1.1.txt to the comment.
+--- Comment #2 from Hongri Cui (hongri.cui@gmail.com) ---
+Created attachment 310381
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310381&action=3Dedit
+amd_pmc.dyndbg=3D+p trace on 7.1.1 =E2=80=94 PMC<->SMU mailbox, 5 clean cyc=
+les (all
+RESPONSE:1)
 
 --=20
 You may reply to this email to add a comment.
