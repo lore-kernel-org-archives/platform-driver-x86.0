@@ -1,275 +1,323 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D47C1B3925
-	for <platform-driver-x86@vger.kernel.org>; Sun, 28 Jun 2026 13:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC5E3A7F66;
+	Sun, 28 Jun 2026 13:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782653625; cv=none; b=m86Ih9ZTjzcSp+BEIYqSvg7XpCdZtFijA9eK59oX1Ua0p6s3/F2w5spWe/9mxUoZOJEile9OHtxJZCJGwOKtj0NPKAVuv3BgbZ77i4nDIThZPx36EN1S3cIUElIroChregOnKMMVbHtbUDYwGHGAIB8fpJd4hq3TxC9zDrMKVKQ=
+	t=1782654642; cv=none; b=lsMjVrQ8CXUhQahK9gLq0hmFS6KJDPaBlnoXmUJO0k1sf2HKe5ahAVLdQx79c9rSyhP/FNWkbkWZvciS4d/FfhkvActwxe1C9hWReEl63bQo0E5Qjd7EDrJBsYsPAq1MjlFQ2ExkISNgFWfXbULiFJGV0jH3uU7fDnngVlTia5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782653625; c=relaxed/simple;
-	bh=9nuzGLVWguEC2DamBNsR3nCzs9MaFwWFW59It73HJfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2Pbmd8C6fDEZuOuG3aqCdU+33XYx/op9EEMdqyluImCU4KGNMfSDMNKBHt8Yy4bXMxNwM/gIaVsTa2dPSCQI0BG5V2E7wcGEaHhldZVixoqrzRxGq0C/HDeOXQw08HVRNz83ljLGAfM2FEUbbJgute2Ayn579Vx5S9+s3DnzDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=czyUNaVK; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1782654642; c=relaxed/simple;
+	bh=24czFDNexFqMTV9H7FJ9X6RRb8NwHRNjErZxoVFkYyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoiPJM+PnYdPpODkFkNDoFGcVfEmkCbmms3oMsOMVGNIp5UgwtdCHetd+JpsIPlWhS4LaAKD20ynxGqYD+cyWadNdX4Wfr/+QHmMbDrECox+8sHjmCEq0UG7Rc5Baz+rmciIWMiMbvuuiOgdLWaj0Dgkg6jKP9z+5tmHLPjVjKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WnItMHFJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="czyUNaVK"
-Message-ID: <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782653620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nuzGLVWguEC2DamBNsR3nCzs9MaFwWFW59It73HJfk=;
-	b=czyUNaVKm1qRZWHPws6kbxX65ScPl2Qe7j2fh7G+YwL7HIXH9s4VYvUKS2NkG4LUlo0Nxp
-	wAaZ+XGfsq4MkSC6iA2p2xrU46OZWKQdo7KS7jvgX6d+8wKTM3MA6nuDf/WZxNiNcolQLy
-	XyPX9b521z1j7FCqsrOysN2cxmymqC4=
-Date: Sun, 28 Jun 2026 15:33:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WnItMHFJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FCC1F000E9;
+	Sun, 28 Jun 2026 13:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782654638;
+	bh=xlQc4S5S+9+7oM3k3C085Mj7tgc995soVZru600tbR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=WnItMHFJAHtjmWZhO48zXDsStZ3cBBFzCsGUaN+Y1rhBt+sz8K3qpjo1+gn45q29p
+	 Bra7CK/JyNtor0zhjodF9pEofqvJz7gEoixlGZCMrYFpbKnKHOOoO+Hr/HaM2XqcNU
+	 yyP5Jq4LMO0gHKSeTlu/NLN1NjXhQlX55NzL/7vp/DphM+gJ1lKIOLP+ulE4khTmvE
+	 /0Dqt6ciI0bzixdTsiBHOJ0fL1Mf6qXOV2+v5KeEEL0cVKF7zn5nJ7nohhYRxtJfrb
+	 V38GDp2vSbrO32TA3ktx5A711z2uSxPnNaPJ+UvrlBnoU1aisf3Jswuax9xey1HCFT
+	 y4RGKp13Dq67Q==
+Received: by venus (Postfix, from userid 1000)
+	id 79AFD1806EB; Sun, 28 Jun 2026 15:50:36 +0200 (CEST)
+Date: Sun, 28 Jun 2026 15:50:36 +0200
+From: Sebastian Reichel <sre@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux@roeck-us.net, 
+	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] drivers/platform: lenovo-t14s-ec: Add hwmon
+ support for temperatures and fan speed
+Message-ID: <akEj6XEByCOkuJaY@venus>
+References: <20260624210825.264454-1-daniel.lezcano@oss.qualcomm.com>
+ <20260624210825.264454-2-daniel.lezcano@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] platform/x86: asus-wmi: charge_control_end_threshold
- returns -ENODATA at boot, breaking UPower/GNOME detection
-To: Travers Biddle <traversbiddle@gmail.com>, corentin.chary@gmail.com,
- luke@ljones.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eicngpqne546liam"
+Content-Disposition: inline
+In-Reply-To: <20260624210825.264454-2-daniel.lezcano@oss.qualcomm.com>
 
 
-On 6/28/26 08:03, Travers Biddle wrote:
-> Hello,
->
-> I am seeing a regression on an ASUS V16 laptop where the GNOME Settings
-> "Preserve Battery Health" UI disappears after booting Linux v7.1. I reproduced
-> this with a kernel built from torvalds/linux tag v7.1.
->
-> I first noticed this after CachyOS updated linux-cachyos from
-> 7.0.12-1 to 7.1.1-2. The same machine still works as expected with
-> linux-cachyos-lts 6.18.36-1, where UPower reports charge threshold
-> support and GNOME shows the Battery Charging section.
->
-> The change that appears to expose this is:
->
->   186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery charge threshold")
->
-> #regzbot introduced: 186bf9031666602d61b40832181b6b6fdc3ba4dc
->
-> Hardware:
->
->   DMI product: ASUS V16 V3607VH_V3607VH
->   Board:       V3607VH
->   BIOS:        V3607VH.303
->   Battery:     /sys/class/power_supply/BAT0
->   Battery model_name: X350052
->
-> Userspace:
->
->   Distro: CachyOS / Arch Linux
->   UPower: 1.91.2
->   systemd/udev: 261
->   Desktop: GNOME Settings power panel
->
-> The machine only exposes an end threshold:
->
->   /sys/class/power_supply/BAT0/charge_control_end_threshold
->
-> There is no charge_control_start_threshold node on this system.
->
-> On an unmodified build from torvalds/linux tag v7.1:
->
->   $ uname -r
->   7.1.0-asus-test-1
->
->   $ cat /proc/sys/kernel/tainted
->   0
->
->   $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
->   cat: /sys/class/power_supply/BAT0/charge_control_end_threshold: No data available
->
-> `udevadm test /sys/class/power_supply/BAT0` does not import CHARGE_LIMIT.
-> The relevant end of the properties list is:
->
->   Properties:
->     ACTION=add
->     DEVPATH=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP0C0A:03/power_supply/BAT0
->     DEVTYPE=power_supply
->     POWER_SUPPLY_CAPACITY=81
->     POWER_SUPPLY_CAPACITY_LEVEL=Normal
->     POWER_SUPPLY_CYCLE_COUNT=26
->     POWER_SUPPLY_ENERGY_FULL=60512000
->     POWER_SUPPLY_ENERGY_FULL_DESIGN=63041000
->     POWER_SUPPLY_ENERGY_NOW=49102000
->     POWER_SUPPLY_MANUFACTURER=OEM
->     POWER_SUPPLY_MODEL_NAME=X350052
->     POWER_SUPPLY_NAME=BAT0
->     POWER_SUPPLY_POWER_NOW=25216000
->     POWER_SUPPLY_PRESENT=1
->     POWER_SUPPLY_SERIAL_NUMBER=123456789
->     POWER_SUPPLY_STATUS=Charging
->     POWER_SUPPLY_TECHNOLOGY=Unknown
->     POWER_SUPPLY_TYPE=Battery
->     POWER_SUPPLY_VOLTAGE_MIN_DESIGN=11985000
->     POWER_SUPPLY_VOLTAGE_NOW=13118000
->     SUBSYSTEM=power_supply
->
-> UPower then does not expose the threshold values or threshold support:
->
->   $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
->     native-path:          BAT0
->     vendor:               OEM
->     model:                X350052
->     serial:               123456789
->     power supply:         yes
->     battery
->       present:             yes
->       rechargeable:        yes
->       state:               charging
->       percentage:          81%
->       capacity:            95.9883%
->       charge-threshold-enabled:      yes
->       icon-name:          'battery-full-charging-symbolic'
->
-> In this state, GNOME Settings hides the Battery Charging section entirely.
->
-> I then tested a local demonstration change which does not reintroduce the
-> hardware write that 186bf9031666 removed. It only keeps the cached sysfs value
-> readable by initializing charge_end_threshold to 100 instead of -1.
->
-> With that demonstration change applied:
->
->   $ uname -r
->   7.1.0-asus-test-2-00001-g76935ee241bc
->
->   $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
->   80
->
-> `udevadm test /sys/class/power_supply/BAT0` imports the UPower hwdb limit:
->
->   BAT0: /usr/lib/udev/rules.d/60-upower-battery.rules:7 IMPORT{builtin}="hwdb 'battery:$kernel:$attr{model_name}:$attr{[dmi/id]modalias}'": Importing properties from results of builtin command "hwdb 'battery:BAT0:X350052:dmi:bvnAmericanMegatrendsInternational,LLC.:bvrV3607VH.303:bd04/29/2025:br5.27:efr3.16:svnASUSTeKCOMPUTERINC.:pnASUSV16V3607VH_V3607VH:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnV3607VH:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:pfaASUSV16:'".
->
->   Properties:
->     ACTION=add
->     CHARGE_LIMIT=75,80
->     DEVPATH=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP0C0A:03/power_supply/BAT0
->     DEVTYPE=power_supply
->     POWER_SUPPLY_CAPACITY=97
->     POWER_SUPPLY_CAPACITY_LEVEL=Normal
->     POWER_SUPPLY_CYCLE_COUNT=26
->     POWER_SUPPLY_ENERGY_FULL=60512000
->     POWER_SUPPLY_ENERGY_FULL_DESIGN=63041000
->     POWER_SUPPLY_ENERGY_NOW=58414000
->     POWER_SUPPLY_MANUFACTURER=OEM
->     POWER_SUPPLY_MODEL_NAME=X350052
->     POWER_SUPPLY_NAME=BAT0
->     POWER_SUPPLY_POWER_NOW=0
->     POWER_SUPPLY_PRESENT=1
->     POWER_SUPPLY_SERIAL_NUMBER=123456789
->     POWER_SUPPLY_STATUS=Not charging
->     POWER_SUPPLY_TECHNOLOGY=Unknown
->     POWER_SUPPLY_TYPE=Battery
->     POWER_SUPPLY_VOLTAGE_MIN_DESIGN=11985000
->     POWER_SUPPLY_VOLTAGE_NOW=13026000
->     SUBSYSTEM=power_supply
->
-> UPower then exposes threshold support again:
->
->   $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
->     native-path:          BAT0
->     vendor:               OEM
->     model:                X350052
->     serial:               123456789
->     power supply:         yes
->     battery
->       present:             yes
->       rechargeable:        yes
->       state:               fully-charged
->       percentage:          97%
->       capacity:            95.9883%
->       charge-start-threshold:        75%
->       charge-end-threshold:          80%
->       charge-threshold-enabled:      yes
->       charge-threshold-supported:    yes
->       icon-name:          'battery-full-charged-symbolic'
->
-> GNOME Settings also shows the Battery Charging section again.
->
-> I am not asking for a plain revert. The part of 186bf9031666 that avoids
-> writing 100 to the hardware at boot seems important, since that write can
-> overwrite a charge limit retained by the firmware/platform.
->
-> I am mainly reporting this so you are aware of the userspace-visible
-> effect of returning -ENODATA here. On this end-threshold-only machine,
-> that makes the only threshold node unreadable during UPower's discovery,
-> so UPower and GNOME treat charge limiting as unsupported even though the
-> kernel write path still works.
->
-> It may be that UPower should handle this case differently; I have also
-> filed a UPower-side issue at:
-> https://gitlab.freedesktop.org/upower/upower/-/work_items/347
->
-> For completeness, here is a local diff applied to v7.1 that restored
-> functionality. I don't intend for it to be a final fix; only a demonstration
-> that keeping the cached sysfs value readable, while still avoiding the boot-time
-> hardware write, restores UPower/GNOME feature discovery on this machine.
->
+--eicngpqne546liam
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 1/3] drivers/platform: lenovo-t14s-ec: Add hwmon
+ support for temperatures and fan speed
+MIME-Version: 1.0
+
+Hi,
+
+On Wed, Jun 24, 2026 at 11:08:23PM +0200, Daniel Lezcano wrote:
+> Expose the Lenovo ThinkPad T14s EC environmental sensors through
+> the hwmon subsystem.
+>=20
+> The driver now registers a hwmon device providing access to six EC
+> temperature sensors corresponding to the SoC, keyboard area, base
+> cover, PMIC/charging circuitry, QTM module and SSD. Sensor labels
+> are exported to allow user space to identify each measurement.
+>=20
+> Additionally, expose the system fan speed by reading the fan RPM
+> registers from the embedded controller.
+>=20
+> This allows standard monitoring tools such as lm-sensors to report
+> platform temperatures and fan speed.
+>=20
+> Signed-off-by: Daniel Lezcano daniel.lezcano@oss.qualcomm.com
 > ---
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 80144c412b90..d376358b590c 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1582,11 +1582,11 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
->   return -ENODEV;
->  
->   /* The charge threshold is only reset when the system is power cycled,
-> - * and we can't read the current threshold, however the majority of
-> - * platforms retains it, therefore signal the threshold as unknown
-> - * until user explicitly sets it to a new value.
-> + * and we can't read the current threshold. Do not write a value to
-> + * hardware here, but keep the sysfs attribute readable so userspace
-> + * can discover charge threshold support and explicitly set a value.
->   */
-> - charge_end_threshold = -1;
-> + charge_end_threshold = 100;
->  
->   return 0;
->  }
-> ---
->
-> I have attached the dmesg from the reproducing v7.1 boot and the .config used
-> for the build.
->
-> Thanks,
-> Travers
->
-Hi Travers,
 
-If you search that patch in the lkml you will see that I actually tested GNOME when I did this and I remember that I was able to change the threshold.
+I gave this a try and for me the fan data is always 65535 (i.e. -1):
 
-Moreover I also opened a discussion on Upower for this specifically (you can find in closed merge requests) https://gitlab.freedesktop.org/upower/upower/-/merge_requests but sadly right now the merge request of freedesktop is whining about undisclosed errors.
+$ cat /sys/class/hwmon/hwmon66/{name,fan1_input}
+t14s_ec
+65535
 
-Anyway I think that either upower forgot to ship the updated rule or there is a regression in upower.
+This is with the fan running:
 
-Given that setting battery to 100% would mean charging the laptop while it boots and certain people don't want this (and it's not a good practice to do that) I am not happy having to revert this change, albeit if upower doesn't solve this issue I'll probably need to.
+$ cat /sys/class/hwmon/hwmon57/{name,fan1_input}
+fan-controller
+2564
 
-Moreover if I remember correctly another possible workaround to have upower work is to define a fixed start_charge_threshold.
+The thermal data looks good.
 
-While it's possible to add it would be useless and not mapped to the hardware in any way thus simply being an hack.
+Greetings,
 
-Ilpo, what do we do in these cases? What's the usual procedure for these?
+-- Sebastian
 
-Regards,
-Denis
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 147 ++++++++++++++++++
+>  1 file changed, 147 insertions(+)
+>=20
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/plat=
+form/arm64/lenovo-thinkpad-t14s.c
+> index 5590302a5694..142464623f0e 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/dev_printk.h>
+>  #include <linux/err.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/i2c.h>
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+> @@ -67,6 +68,16 @@
+>  #define T14S_EC_EVT_KEY_FN_F11			0x7a
+>  #define T14S_EC_EVT_KEY_FN_G			0x7e
+> =20
+> +#define T14S_EC_SYS_THERM0 0x78 /* SoC (CPU+GPU)  */
+> +#define T14S_EC_SYS_THERM1 0x79 /* Keyboard       */
+> +#define T14S_EC_SYS_THERM2 0x7a /* Back cover     */
+> +#define T14S_EC_SYS_THERM3 0x7b /* Charger / PMIC */
+> +#define T14S_EC_SYS_THERM6 0x7c /* QTM West       */
+> +#define T14S_EC_SYS_THERM7 0x7d /* SSD            */
+> +
+> +#define T14S_EC_FAN_RPM_LSB 0x84
+> +#define T14S_EC_FAN_RPM_MSB 0x85
+> +
+>  /* Hardware LED blink rate is 1 Hz (500ms off, 500ms on) */
+>  #define T14S_EC_BLINK_RATE_ON_OFF_MS		500
+> =20
+> @@ -93,9 +104,19 @@ struct t14s_ec_led_classdev {
+>  	struct t14s_ec *ec;
+>  };
+> =20
+> +struct t14s_ec_hwmon_sys_thermx {
+> +	const char *label;
+> +	int reg;
+> +};
+> +
+> +struct t14s_ec_hwmon {
+> +	struct t14s_ec_hwmon_sys_thermx *sys_thermx;
+> +};
+> +
+>  struct t14s_ec {
+>  	struct regmap *regmap;
+>  	struct device *dev;
+> +	struct t14s_ec_hwmon ec_hwmon;
+>  	struct t14s_ec_led_classdev led_pwr_btn;
+>  	struct t14s_ec_led_classdev led_chrg_orange;
+>  	struct t14s_ec_led_classdev led_chrg_white;
+> @@ -555,6 +576,128 @@ static irqreturn_t t14s_ec_irq_handler(int irq, voi=
+d *data)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> +static umode_t t14s_ec_hwmon_is_visible(const void *drvdata,
+> +					enum hwmon_sensor_types type,
+> +					u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		return 0444;
+> +	case hwmon_fan:
+> +		return 0444;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int t14s_ec_hwmon_read_string(struct device *dev, enum hwmon_sens=
+or_types type,
+> +				     u32 attr, int channel, const char **str)
+> +{
+> +	struct t14s_ec *ec =3D dev_get_drvdata(dev);
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (attr =3D=3D hwmon_temp_label) {
+> +			*str =3D ec->ec_hwmon.sys_thermx[channel].label;
+> +			return 0;
+> +		}
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int t14s_ec_hwmon_read(struct device *dev, enum hwmon_sensor_type=
+s type,
+> +			      u32 attr, int channel, long *val)
+> +{
+> +	struct t14s_ec *ec =3D dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (attr =3D=3D hwmon_temp_input) {
+> +			ret =3D t14s_ec_read(ec, ec->ec_hwmon.sys_thermx[channel].reg, &value=
+);
+> +			if (ret)
+> +				return ret;
+> +			*val =3D value * 1000;
+> +
+> +			return 0;
+> +		}
+> +		break;
+> +
+> +	case hwmon_fan:
+> +		if (attr =3D=3D hwmon_fan_input) {
+> +			int lsb, msb;
+> +			ret =3D t14s_ec_read(ec, T14S_EC_FAN_RPM_LSB, &lsb);
+> +			if (ret)
+> +				return ret;
+> +
+> +			ret =3D t14s_ec_read(ec, T14S_EC_FAN_RPM_MSB, &msb);
+> +			if (ret)
+> +				return ret;
+> +
+> +			*val =3D 0;
+> +			*val =3D lsb + (msb << 8);
+> +
+> +			return 0;
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static const struct hwmon_ops t14s_ec_hwmon_ops =3D {
+> +	.is_visible =3D t14s_ec_hwmon_is_visible,
+> +	.read =3D t14s_ec_hwmon_read,
+> +	.read_string =3D t14s_ec_hwmon_read_string,
+> +};
+> +
+> +static const struct hwmon_channel_info *t14s_ec_hwmon_info[] =3D {
+> +	HWMON_CHANNEL_INFO(temp,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL),
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info t14s_ec_chip_info =3D {
+> +	.ops =3D &t14s_ec_hwmon_ops,
+> +	.info =3D t14s_ec_hwmon_info,
+> +};
+> +
+> +static int t14s_ec_hwmon_probe(struct t14s_ec *ec)
+> +{
+> +	struct device *dev;
+> +	struct t14s_ec_hwmon_sys_thermx sys_thermx[] =3D {
+> +		{ T14S_EC_SYS_THERM0, "soc" },
+> +		{ T14S_EC_SYS_THERM1, "keyboard" },
+> +		{ T14S_EC_SYS_THERM2, "base" },
+> +		{ T14S_EC_SYS_THERM3, "pmbm" },
+> +		{ T14S_EC_SYS_THERM6, "qtm" },
+> +		{ T14S_EC_SYS_THERM7, "ssd" },
+> +	};
+> +
+> +	ec->ec_hwmon.sys_thermx =3D devm_kmemdup_array(ec->dev, sys_thermx,
+> +						     ARRAY_SIZE(sys_thermx),
+> +						     sizeof(sys_thermx[0]), GFP_KERNEL);
+> +	if (!ec->ec_hwmon.sys_thermx)
+> +		return -ENOMEM;
+> +
+> +	dev =3D devm_hwmon_device_register_with_info(ec->dev, "t14s_ec", ec,
+> +						   &t14s_ec_chip_info, NULL);
+> +
+> +	return PTR_ERR_OR_ZERO(dev);
+> +}
+> +
+>  static int t14s_ec_probe(struct i2c_client *client)
+>  {
+>  	struct device *dev =3D &client->dev;
+> @@ -590,6 +733,10 @@ static int t14s_ec_probe(struct i2c_client *client)
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> +	ret =3D t14s_ec_hwmon_probe(ec);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret =3D devm_request_threaded_irq(dev, client->irq, NULL,
+>  					t14s_ec_irq_handler,
+>  					IRQF_ONESHOT, dev_name(dev), ec);
+> --=20
+> 2.53.0
+>=20
+
+--eicngpqne546liam
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmpBJqUACgkQ2O7X88g7
++ppHLw/+KxjxxxXrhvZJHN8tV3E92FRDa4fXs+Rvpp5uHpbmxHLBIZ0Pc2PuX1JD
+2DHnkJstJl0kfKJdZ+A6Vel/GDni1sJgWSLl7XnZOzF/RBznz2wUZL9DwJBnyeNl
+RzgOOrPPB7NPDeMH6tiTt09SNOfI2971nxMLItx4RKozkbJM41yVt8H13mnSIRgY
+F8xpa1Zcv6DZ6u7q8DkHT4+238QsH2iToNxf16qI6QsbzAyMVfE8RSNDgLrCwe3M
+ez+lm1uJl4nOHMUlUsyBGJEnwOGJt6S7e6A3UlWJaWWVyOnXGm1Cf862GT0VyNgd
+BAMnABwn1VLzoMjWhzbQ/ZPGNkMoAYxERy0QLqRsaa/cvO1enWKySm7HQii5Z063
+djpjU7YJ9sjojdingAML7dbeARuqPH7a4Oa6JiugsAUf3l3o7w+HllfnlAdOOrR3
+Wh+vXB24ZlSvoqIeSuzCotOGrTfnmcD84CyIfXFSLnckoEJ48wv6I6vmFlgyQ2SS
+Y4bSiQh8+y8XQnX/jDtO8YbXW1oQ2B4J0L2v7okQFYkMfKZH/vP2T4qOVSYLstdw
+YBDpCjWSYr+nWEqSg1fvHOThTGlDmWFadtpa4OTOW4ScXAnU6Qfl2MXiDsrwu4xt
+k4NeTt3t7ESVQc/Wp9RO3HSUqGu1WCpMvvzXwvWFV7sdZ4R3lt0=
+=gklp
+-----END PGP SIGNATURE-----
+
+--eicngpqne546liam--
