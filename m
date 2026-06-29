@@ -1,70 +1,64 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013013.outbound.protection.outlook.com [40.107.201.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E90834E779;
-	Mon, 29 Jun 2026 07:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782718798; cv=fail; b=tKLfgxcP1WxzXRcaOSkcpLYMjjJOw4kP2ScX/why5ucamWgMsLsJAJuLZp2W032b0lfsgAYMAd9Ue09lS5z22F+1wFhAjTykl9oAgxYn3TZJpj1KSEt90BbKyTX9BhZm7C26hLGPrCa2SbF1ixIp5e3Eh8V7YsvWeCk9M8Zf2BY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782718798; c=relaxed/simple;
-	bh=JhR4jfYflq0AmA0pmRuyWnC5iiybPxMCSCPbXbr1z2c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aRUo/MzReUGEcZSt1DUq3WHjOChu64kW2zxLiYebyBd3/3tLNz/oQkSNmTX6OSY+huazLY5kokuIKd6ilPPo06euE7/CN1s2FBvrJ35hJrda0ZGz7TUIlLfrNwoGulj4XtXzBVfOfhPOHlWk9L48qsPPjlfd/9R4z0flD5XRuNY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TJRVUv6p; arc=fail smtp.client-ip=40.107.201.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3B93DA7C3
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 07:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782718864; cv=none; b=rDOaJ1Q38+2wlyIg1+Xst+Qcu5kGYAxpp1idznntuel2mitpQBKJzhqlGaXSvA+wRr1Ina//FaWiV+St2hLFnp2DtBwFE9n6Kcw+lHIMtGW/5P+leNb8LKUsR9YyGQmWJHjJsS4nHbDJj/FbXEAY5qG6oIIhRenexOiz1xgW37Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782718864; c=relaxed/simple;
+	bh=FyDFSzplXeB6PDHS/Nomdon6/tNG/wd2fOLuPUfZ7oM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cB2WUjLkqY74MSuwZQmKc2Q3W2PADNaXva6bY0o0d7nDaMJ5kPD9aPvMlKJUa6ousDV3IaiqjKCKsgF8qW2dYpytpdUm4z4e2uNHSyUp9b/xXf/kMrnrnhPKtS3z3VKKuSBmOMugNcOXYrIBMLubRoB3q1VsA4E3KZzyMQ3ExA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dSs673cD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TJRVUv6p"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u6vUsoV9wbCoAHzwT7RM5J7vbbHsYYbY0T7+rZcovNnvyw3dXoZWN5oIRgVTtVX5BfLQRdXeyGhRlzOKDo4fI8QvJUtjyCe1GfjrdahbmMxFCFq/YP7/ErSdsN3m26m3GBVo/ZxyopNtMJBhNAMFJXow6jPV58betMUWs3FSGDsf9acvH5KyX/hhTSgAKJKN/s3s8wA20uMycInNImuRevS0bFhvD5L3bgKw8cud8FqFAPYrmD5LTtSt8jbxmO0DK+2A/lhBFZicDSBLWHpZVg18NupG5cTFmMFlgg6ilwCaSq0FMZAbA5vUgVnTVf9n7LJsoAW17gGj29z3SziARA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kwP8ysTOWetQAVogGahC7dE/GTus/S2LGf/4K+RGAkM=;
- b=o+mr+64pYMSvubmMgFUqtbRCwa6Wjwn3g/rgZaskdj850ysiGBsWC7EHb34M/NuwTyh2FZ66TWG0hCNo+bMAtC6PP5CYCM9s5XSp3irKCf5sYxcAipIHeHNVLrsA5BTYCStJIxSy6Z3ILkoXN08hSZQtZDuVX8p1H4Ha3sl9JvhyrwlBoHRj8rT0CEyQq02NzAmLXGFAr7Gf9skYf9NpcYcXmgPJm9sX2MvvejwgH2yTSHmJr2EUi9Z+06OATbUp7qcrG9IDLd3ttiomAAjfKkgsym5LILuYAjEP214FKLF6GE/mQKyiQnlEat1HSQRB1SiMjnso4DV9t3FNHpSL2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kwP8ysTOWetQAVogGahC7dE/GTus/S2LGf/4K+RGAkM=;
- b=TJRVUv6plKi2ZZzLl3B9j2BRvuGVLinnktps/r+pnzU21Y0Kf9iPWoaSP9vIVf0WDeXEEZzZ27CqMQ0qTC/eDMDuAeIL6Phj0PQujAy7ND+9RINEfnYsFTk5IJzg04jFXotooOH9Qb3aiIDi4Ex1Sf2UX2q8p9nccoq98yi8EmI=
-Received: from BN1PR13CA0018.namprd13.prod.outlook.com (2603:10b6:408:e2::23)
- by MW6PR12MB8867.namprd12.prod.outlook.com (2603:10b6:303:249::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
- 2026 07:39:45 +0000
-Received: from BN1PEPF0000468D.namprd05.prod.outlook.com
- (2603:10b6:408:e2:cafe::a7) by BN1PR13CA0018.outlook.office365.com
- (2603:10b6:408:e2::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.8 via Frontend Transport; Mon, 29
- Jun 2026 07:39:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN1PEPF0000468D.mail.protection.outlook.com (10.167.243.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Mon, 29 Jun 2026 07:39:45 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 29 Jun
- 2026 02:39:43 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH 4/4] platform/x86/amd/hsmp: Gate the data plane on a fully initialized socket
-Date: Mon, 29 Jun 2026 13:09:23 +0530
-Message-ID: <20260629073923.1595696-5-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260629073923.1595696-1-muralidhara.mk@amd.com>
-References: <20260629073923.1595696-1-muralidhara.mk@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dSs673cD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782718860;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8tyLqLSgpIeLAGIOfYwqq95HC8B2awaWZSPTU2Wc9uE=;
+	b=dSs673cDMkTe/yHCUkunNFYpUNkuqKBB7XyBlaKExCD0z8N2PPWV83N5/PNC1twcZKnvTm
+	X6y3PIbGs2VHHFTxqFvbimXnUHi4z+nOEguZihL742Ogc2zROq8EBj8S6JQcFtD7PXoGSe
+	HDeb/KPYgyFkT2OM6PcVSOlC45h5yoI=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-7-XdU0cYhHPSGuqGG03ci0fw-1; Mon,
+ 29 Jun 2026 03:40:56 -0400
+X-MC-Unique: XdU0cYhHPSGuqGG03ci0fw-1
+X-Mimecast-MFC-AGG-ID: XdU0cYhHPSGuqGG03ci0fw_1782718854
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A8471956051;
+	Mon, 29 Jun 2026 07:40:54 +0000 (UTC)
+Received: from hpa-thinkpadx1carbongen12.taipei.com (unknown [10.67.32.110])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A7E8B1956041;
+	Mon, 29 Jun 2026 07:40:45 +0000 (UTC)
+From: Kate Hsuan <hpa@redhat.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Serin Yeh <serin.yeh@intel.com>,
+	Tarang Raval <tarang.raval@siliconsignals.io>,
+	Damjan Georgievski <gdamjan@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: computman <anis@talbi.fr>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v6 0/4] Add Sony IMX471 camera sensor driver
+Date: Mon, 29 Jun 2026 03:40:22 -0400
+Message-ID: <20260629074026.35490-1-hpa@redhat.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,114 +66,99 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000468D:EE_|MW6PR12MB8867:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c37dc05-51e4-4ca8-fbb2-08ded5b19700
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|23010399003|376014|1800799024|82310400026|13003099007|6133799003|56012099006|11063799006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	LUogMWXstoV6vo4rQkdRLSIykLpUt3so6vHsTV7N2BJLj9l/DJx1FRlQ84ieRmZGSmr1fGFWfeNrPILTaI3knapKnmtYn8vnLBG65BuYh1uFo2XAxvAh/C+RcqTWEb3M0Vji5Vl2DUCNYjgqMNyn8i615EkCi9oUP+3XBzrA84smnYqnLgUta1qd4RPlPpeG0Ib80tlmRnPhnRE08i02J4t7cEFEfnmOyGniT9sULDaVAJwfh0pRnh3IyAoFsJxQLxzfnY88TnbNZAWbZGlOTXL8cARGqH951AdIn/bFOO0hO/FQjiJKi4V89JdD9zkj1qKIhSm6ecjw0URBWsxfm/WOcYL0OUWxK/nprpuYvKosKrd+T8P6hmAykG+yIkwxoBxHmRB7Zz5PbI70S1Z8O1IvrCmWF8wt9egPtlNuJziOgTs9c3d6m6DevKUeq+ecXBkU/Gucf+H+ZQt3uZ7SZTn45vkiWbRr+YbReBeoe1/xn93xEFEDpivvC7KB7WiuY+z4MW5HY45ZXFI+RnqPQXiVdN4Q5xvBmK8U4BrPT/yF1aLcRxRGnzS2QI5h9x7UZXLVXcJ9caI866VikBNw5fMQqkt0IcxqCQcSne2811qmzeaZGciaV9nQ2jRzwiI0BdFA8Aq6RjByPswL83WSHwdA3z9qJ3PMnutBZMOPYI+s0VyNJ1/hh5rLurgJvI/IsZ76HhOoy5I1+hDR/hvXag==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(376014)(1800799024)(82310400026)(13003099007)(6133799003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	571t2NeF6sH86F7o5pONUd6FzAqqOGNvU8YZnBBIAmyOO6DSrSYgQzUlJwyzOJ1sBc1H80KkkDWxm+prpKJOn9SC9LKJp1l4GZajyqMGi/EQkhDrR5v9lLxXN1G1rTavrqCOBgEmnQc4BJm9EunFu57Ea+w6+HBJp3MGWWPxXJc5auQBoBOEU2PVIyxZE/2/GgGfUrzCBxpsinUEzHdYgh+Wv46Cnmsnex2bhOXj3mfztU6DTsbdqI2uSkkyI/OVQecv9w20fTc0xq6JNzPKIEjjGTMco6kdvhNBHeb6UpAhy6YDvNCxWsqo7S2cce+rOHFJ0G03BKApeh7kAbXnew1AymlMkICxANeWDTP6BQ7GmomYTqxWqgfeKr2SU0GxDsXK8q+5m65we0fvtZqd5DkQQoCsP4d343QWQXfA7BZpVNhDxFoXHK9z6NrLGaBN
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 07:39:45.2146
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c37dc05-51e4-4ca8-fbb2-08ded5b19700
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000468D.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8867
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-hsmp_parse_acpi_table() published sock->dev before hsmp_read_acpi_crs()
-had mapped virt_base_addr.  sock->dev is the readiness gate for the
-lock-free data plane, so on a multi-socket system - where socket 0
-exposes /dev/hsmp before later sockets finish probing - an ioctl aimed
-at a socket still in bring-up could pass the gate and dereference a NULL
-virt_base_addr.
+This patchset adds the Sony IMX471 camera sensor driver to the Linux
+kernel and resolves the IPU7 camera can't work issueon Lenovo X9
+laptops [1].
 
-Publish sock->dev last with smp_store_release() once virt_base_addr, the
-mailbox offsets and the semaphore are initialized, and read it with
-smp_load_acquire() in hsmp_send_message() so a non-NULL dev guarantees
-the rest of the socket state is visible.
+The patchset contains two patches:
+1. Add DMI information of Lenovo X9 to the image upside-down list
+2. Add Sony IMX471 image sensor driver
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-Link: https://lore.kernel.org/platform-driver-x86/20260625123337.886435-5-muralidhara.mk@amd.com/T/#u [1]
----
- drivers/platform/x86/amd/hsmp/acpi.c | 18 ++++++++++++++++--
- drivers/platform/x86/amd/hsmp/hsmp.c | 12 ++++++++++++
- 2 files changed, 28 insertions(+), 2 deletions(-)
+The IMX471 driver can be found in the Intel ipu6-drivers repository [2].
+To comply with the sensor driver implementation, the clean-up work
+includes:
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index f7fbba4c6b66..5aec3bded712 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -224,7 +224,6 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
- 	int ret;
- 
- 	sock->sock_ind		= sock_ind;
--	sock->dev		= dev;
- 	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
- 
- 	sema_init(&sock->hsmp_sem, 1);
-@@ -237,7 +236,22 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
- 		return ret;
- 
- 	/* Read mailbox offsets from DSD table */
--	return hsmp_read_acpi_dsd(sock, dev);
-+	ret = hsmp_read_acpi_dsd(sock, dev);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Publish sock->dev last.  hsmp_send_message() uses it (via
-+	 * smp_load_acquire()) as the readiness gate for the lock-free data
-+	 * plane, so it must become visible only after virt_base_addr, the
-+	 * mailbox offsets and the semaphore are fully initialized.  On a
-+	 * multi-socket system socket 0 exposes /dev/hsmp before later sockets
-+	 * finish probing, so without this an ioctl aimed at a socket still in
-+	 * bring-up could pass the gate and dereference a NULL virt_base_addr.
-+	 */
-+	smp_store_release(&sock->dev, dev);
-+
-+	return 0;
- }
- 
- static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj,
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 6a26937fc2b5..0cd4f691db49 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -223,6 +223,18 @@ int hsmp_send_message(struct hsmp_message *msg)
- 	sock_ind = array_index_nospec(msg->sock_ind, hsmp_pdev.num_sockets);
- 	sock = &hsmp_pdev.sock[sock_ind];
- 
-+	/*
-+	 * A slot exists for every possible socket, but it is only usable once
-+	 * that socket has actually been probed.  Reject messages aimed at a
-+	 * socket that was never brought up or is still in bring-up, so we never
-+	 * operate on a zero-initialized semaphore or an unmapped mailbox.  A
-+	 * non-NULL dev also guarantees virt_base_addr, the mailbox offsets and
-+	 * the semaphore are visible.
-+	 */
-+	/* Pairs with smp_store_release(&sock->dev) in hsmp_parse_acpi_table(). */
-+	if (!smp_load_acquire(&sock->dev))
-+		return -ENODEV;
-+
- 	ret = down_interruptible(&sock->hsmp_sem);
- 	if (ret < 0)
- 		return ret;
+1. Use CCI register helpers.
+
+2. Enable and disable streams using enable_streams and disable_streams
+   functions in struct v4l2_subdev_pad_ops. Invoke
+   v4l2_subdev_s_stream_helper() to manage the streaming state.
+
+3. Get rotation information from fwnode properties using
+   v4l2_fwnode_device_parse().
+
+4. Finalizes the initialization of the subdev, including allocation of
+   the active state using v4l2_subdev_init_finalize().
+
+5. Add the IMX471 driver to the Makefile and Kconfig file.
+
+6. The mutex lock is managed by the V4l2 core.
+
+7. Replace the supported link frequency with v4l2_link_freq_to_bitmap().
+
+8. Drop unused codes.
+
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=2454119
+[2] https://github.com/intel/ipu6-drivers/commits/master/drivers/media/i2c/imx471.c
+
+Changes in v6:
+1. Add the con_id "vana" for the power enable to the int3472_gpio_map table.
+2. Drop unnecessary macros.
+3. Name the registers.
+
+Changes in v5:
+1. Add a description for the DMI_BOARD_NAME in the ipu-bridge driver.
+2. Check the numbers of MIPI lanes. The driver only support 4 lanes mode.
+3. Fix many rumetime PM issues.
+4. Drop pixel_rate control variable.
+5. Drop unnecessary comments.
+6. Name the registers.
+7. Fix a leak in imx471_init_controls().
+
+Changes in v4:
+1. Add TBE20A0 (found on Lenovo X1 Carbon G14) to the supported sensors list.
+2. Revert the sensor upside-down list to v1.
+3. Decrease the max analog gain to 800 to mitigate the image flickering problem.
+4. Return the error value when __v4l2_ctrl_modify_range() fails.
+5. Fix indentation issue in Kconfig.
+6. Fix the cci error value issue.
+7. Drop unnecessary comments.
+8. Drop unused link_freq control variable.
+
+Changes in v3:
+1. Naming the register addresses and set up the value with the correct value length.
+2. Implement the .get_selection().
+3. Drop "identified" field from struct imx471.
+4. Drop "streaming" field from struct imx471 and use the __v4l2_ctrl_grab() instead.
+5. Moreover, The naming for the register can be found in a seperated patch. If we
+   agree with the patch, I will squash it into one patch.
+
+Changes in v2:
+1. Change the Bayer format setting according to the vertical and horizontal flip settings.
+2. Replace the self-owned mutex with the v4l2 subdev state.
+3. Rework the flip control.
+4. Manage the regulators using devm_regulator_bulk_get|disable|enbale API
+5. Invoke devm_v4l2_sensor_clk_get to get clock-frequency
+
+Kate Hsuan (4):
+  media: ipu-bridge: Add DMI information of Lenovo X9 to the image
+    upside-down list
+  media: ipu-bridge: Add Sony IMX471 for Lenovo X1 Carbon G14
+  platform: int3472: discrete: con_id vana for Sony IMX471 as power
+    enable
+  media: i2c: imx471: Add Sony IMX471 image sensor driver
+
+ MAINTAINERS                                   |   6 +
+ drivers/media/i2c/Kconfig                     |  10 +
+ drivers/media/i2c/Makefile                    |   1 +
+ drivers/media/i2c/imx471.c                    | 957 ++++++++++++++++++
+ drivers/media/pci/intel/ipu-bridge.c          |  41 +
+ drivers/platform/x86/intel/int3472/discrete.c |  18 +
+ 6 files changed, 1033 insertions(+)
+ create mode 100644 drivers/media/i2c/imx471.c
+
 -- 
-2.43.0
+2.54.0
 
