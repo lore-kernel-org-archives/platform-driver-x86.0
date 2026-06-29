@@ -1,231 +1,272 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from outbound.st.icloud.com (p-east2-cluster6-host5-snip4-10.eps.apple.com [57.103.76.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594D837BE6C;
-	Mon, 29 Jun 2026 14:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0892E06E4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 14:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.76.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782744755; cv=none; b=UDhkB7+yn7Ms67Aqwsx8/SkWKRI4oILHU50qT5dtJrUXHef3fEACdI4UuplNarzLN8ihsGzF+aYOLnIqH4lAvjmXlXWXmqF6E6wJR8Rl9lGABbtp5UqOYCJMjF2qyujabn4lWQofY/JOhWc45ZZodZM2B6brzNVIwtB9TelOuDc=
+	t=1782744967; cv=none; b=n8DDNr7++bw7QDu+HFyiz+QSHdwOy5oIjaGVL+z4MrAKtOkyawHPCxWlA+rLXvIL/ky9mZW6JKBaIVX5Gql8VOedyi00lO8FbvuAcuBOgmGSgZK8VoJwgcEdMGkcMcFGkkfiZYe+xR0Ln0AbnteR9z4yq8nTYYzKU8EmjYXp/hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782744755; c=relaxed/simple;
-	bh=IrAIRcK0ULaDnANt7bXx7W6LMfkqQkl8wWjGlZ2g9Rw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KghSd350xOhxmQphKraMWbpoAxIDtM3RHFUrEig1jmmdwU4C28x8Ubs67tyPFxctC9lAdyw4pqESIU0fg3DqYxVbvs48+d81IITWUkYnFmT4LrI8dca7ZZDyhMOnhgtCunehQOVyQDXDOZdBWfQ3nbuUh0pSUIwYBYENX3A6iVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDkpGKMX; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782744967; c=relaxed/simple;
+	bh=kuUuGGEYjyC2XLjIlmcN5EHqcU3inWmrAkTPQ3nBjfs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c73kBcqGdoClrJwbmXAefNHipRCGA39f4C2vT5Vw85X9LePAl/2g7nDjJQzQ4MFBAd/NYAITRYrvjrbrURhUmAiC1Z/LTQD3dBGfiurjUJaX3xP6o8GaPhlTg/AY1Sd23Bv0wIQfQnm4B8fJGHlOzdpkCjG245BUx9IwwllR4Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev; spf=pass smtp.mailfrom=kursatabayli.dev; dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b=oiFu+7H5; arc=none smtp.client-ip=57.103.76.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kursatabayli.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDkpGKMX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782744755; x=1814280755;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IrAIRcK0ULaDnANt7bXx7W6LMfkqQkl8wWjGlZ2g9Rw=;
-  b=QDkpGKMX8qpLcTxhcrn1TylG9E58PVMOG0hwgE569o27AuN8QpUJOPF0
-   A4UM5YmoUMdgAELk313FJyk83BjFAAJzbMh3UGL/9s0eE7mExc8jyUQe2
-   kAPv5RCXHqH7kz9xnLTm3c9wwTaIifyvauBmfvOQ4i7sEzwcm+9ZCw/p+
-   RLFtqMO1C7rsT4XtzntdxrbnoHPYUNlPny55JBNKpMi7VJ/e2+gsM6eub
-   qjbTrcQAgZDsqGF5BQ5MVF0dwO0Na9ETkfLboPYcz3XenPES1FT/7Lh0c
-   q+rnVywvl3UkcGVKrnN4fkUs3iw2ZoJOVxtuq4DaQoJVua5eOOZ4WWjeO
-   w==;
-X-CSE-ConnectionGUID: OMDIVQAERUmv+K5NzapznQ==
-X-CSE-MsgGUID: XJA2nF2aSvWRgDR9g3Yyeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="87343193"
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="87343193"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 07:52:34 -0700
-X-CSE-ConnectionGUID: UF/w0xl/Rway8vHfnwwC3w==
-X-CSE-MsgGUID: kaWvKmO/TLCS4SEXnXc+DQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="249351458"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.42])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 07:52:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jun 2026 17:52:28 +0300 (EEST)
-To: "M K, Muralidhara" <muralimk@amd.com>
-cc: Muralidhara M K <muralidhara.mk@amd.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] platform/x86/amd/hsmp: Pass struct device explicitly
- to ACPI mailbox parsers
-In-Reply-To: <fa120fd2-3ebd-4ef9-9882-773123ab2505@amd.com>
-Message-ID: <368950aa-c12f-5dfe-93cc-dc8d4854e340@linux.intel.com>
-References: <20260629073923.1595696-1-muralidhara.mk@amd.com> <20260629073923.1595696-4-muralidhara.mk@amd.com> <74e6fd67-4c10-8efa-7565-dab0dd008b5d@linux.intel.com> <fa120fd2-3ebd-4ef9-9882-773123ab2505@amd.com>
+	dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b="oiFu+7H5"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-11 (Postfix) with ESMTPS id 55078180458F;
+	Mon, 29 Jun 2026 14:56:02 +0000 (UTC)
+X-ICL-RepId: 019f13e1-548c-7b86-8935-ae04b75edce1
+X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhBBkMGXAZeCEAGQwJbEhVdRVsIWwddMFINQR5WH1MSWAFfBBkPVwYZHldQXB5AA1gMUg9WEl4ZFxxWGxcZUU0MWFsIWwQPH0wMUQJCBVZeSgwdBFQHXQVdVlACWktCBEtFaFwFXBxAF0gdX2pLVhQEE0YfRApGEVsZSgFeRVYVT1heBFNWDkIJSgVdAVkLQQ1NBl8CRQNACE4LQAZGWhVVFFwtXB5AA1gMUg9WEl4ZFxxWGwlLRglJHQ4OQhhGH1QnVwJaClse
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kursatabayli.dev; s=sig1; t=1782744965; x=1785336965; bh=zuVP25zdYgKW1bi8uTrRjw1LGZXcNEgYz8C9CmRxV+k=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=oiFu+7H5JuLYkECpH9ylxnfyuwg2y1Ew+WtwqYznVXBAhm7anKI5BgGZbSJFxyiGLaGgKOUVttu2Y1G9ymrvOE1KkEYVg8U7pUaE8JerQxpa+V2extlI7HFsuXb7ODobpoIh3b9tWwd6WTcl3ZD1vCAdWRdwCjOHLWXHPfLr0Xua4zL54AAixps7oh2+HZoUvQagBayMKDeHI+zkvuuqCDx3zvwO0EXTS7qCxSsA1n90zbbCBKo3bXH2cyTLnhD/krHjGKm8zsv9kaeXOaxuGtnj4MgrLbFEZECZjdftMNagSp6qaEXgki5T8knXkRfoAIkSpRQQXZRLy7z7IGBT+g==
+mail-alias-created-date: 1779124395950
+Received: from hp (unknown [17.42.251.67])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-11 (Postfix) with ESMTPSA id 4B62D18045BF;
+	Mon, 29 Jun 2026 14:56:00 +0000 (UTC)
+From: =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+Subject: [PATCH v2] platform/x86: hp-wmi: Add GPU MUX switch support
+Date: Mon, 29 Jun 2026 17:55:25 +0300
+Message-ID: <20260629145525.10168-1-hello@kursatabayli.dev>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-265294142-1782744748=:1167"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-265294142-1782744748=:1167
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI5MDEyNCBTYWx0ZWRfX10JWq8QeNZex
+ g9jNmVxEu1Oc+0ZpBFMXYYzOqyELHxPnIApEHsduWQ0Tvj2s05a54EP2cLmMXhh6U8aYOBLs6jp
+ qNQQ+ENGbatRSynfOj0bdl7+FVL7pSGzlZf7WliwAMA9Gj2NSJcyNkrNGVVufVqpTZDy5kMB5FI
+ JnTfMjlbQUmuvRiaw9gzyHfIwHtJUyJD55JsRu+bLda2+QpoPr9zft9qvSqE64iNile5VPoDXEV
+ bykXb/4Leb5YAPuvHlCikUYTn+FUhL/sdlPXBzBn5KwKellb/7i54QqSrhARg/yZ0cdqVPgBMcv
+ o3xIlBBhg7oJ+BIHBuv
+X-Proofpoint-ORIG-GUID: xNyNvvODoLu_0G8NyQZDWYRnVp_FK9IK
+X-Proofpoint-GUID: xNyNvvODoLu_0G8NyQZDWYRnVp_FK9IK
 
-On Mon, 29 Jun 2026, M K, Muralidhara wrote:
-> On 6/29/2026 6:16 PM, Ilpo J=C3=A4rvinen wrote:
-> > Caution: This message originated from an External Source. Use proper ca=
-ution
-> > when opening attachments, clicking links, or responding.
-> >=20
-> >=20
-> > On Mon, 29 Jun 2026, Muralidhara M K wrote:
-> >=20
-> > > hsmp_read_acpi_crs() and hsmp_read_acpi_dsd() read the ACPI handle an=
-d
-> > > emit error messages via sock->dev.  Pass the struct device explicitly=
- to
-> > > both helpers instead of reading it back from sock->dev.
-> > >=20
-> > > This is a pure refactor with no functional change; it prepares for
-> > > publishing sock->dev as the data-plane readiness gate only after the
-> > > socket has been fully initialized, so the parsers must not depend on
-> > > sock->dev already being set.
-> > >=20
-> > > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-> > > Link:
-> > > https://lore.kernel.org/platform-driver-x86/20260625123337.886435-5-m=
-uralidhara.mk@amd.com/T/#u
-> > > [1]
-> > > ---
-> > >   drivers/platform/x86/amd/hsmp/acpi.c | 22 +++++++++++-----------
-> > >   1 file changed, 11 insertions(+), 11 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/amd/hsmp/acpi.c
-> > > b/drivers/platform/x86/amd/hsmp/acpi.c
-> > > index 8c3185ae6395..f7fbba4c6b66 100644
-> > > --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> > > +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> > > @@ -107,7 +107,7 @@ static acpi_status hsmp_resource(struct acpi_reso=
-urce
-> > > *res, void *data)
-> > >        return AE_OK;
-> > >   }
-> > >=20
-> > > -static int hsmp_read_acpi_dsd(struct hsmp_socket *sock)
-> > > +static int hsmp_read_acpi_dsd(struct hsmp_socket *sock, struct devic=
-e
-> > > *dev)
-> > >   {
-> > >        struct acpi_buffer buf =3D { ACPI_ALLOCATE_BUFFER, NULL };
-> > >        union acpi_object *guid, *mailbox_package;
-> > > @@ -116,10 +116,10 @@ static int hsmp_read_acpi_dsd(struct hsmp_socke=
-t
-> > > *sock)
-> > >        int ret =3D 0;
-> > >        int j;
-> > >=20
-> > > -     status =3D acpi_evaluate_object_typed(ACPI_HANDLE(sock->dev), "=
-_DSD",
-> > > NULL,
-> > > +     status =3D acpi_evaluate_object_typed(ACPI_HANDLE(dev), "_DSD",=
- NULL,
-> > >                                            &buf, ACPI_TYPE_PACKAGE);
-> > >        if (ACPI_FAILURE(status)) {
-> > > -             dev_err(sock->dev, "Failed to read mailbox reg offsets =
-from
-> > > DSD table, err: %s\n",
-> > > +             dev_err(dev, "Failed to read mailbox reg offsets from D=
-SD
-> > > table, err: %s\n",
-> > >                        acpi_format_exception(status));
-> > >                return -ENODEV;
-> > >        }
-> > > @@ -142,7 +142,7 @@ static int hsmp_read_acpi_dsd(struct hsmp_socket
-> > > *sock)
-> > >        guid =3D &dsd->package.elements[0];
-> > >        mailbox_package =3D &dsd->package.elements[1];
-> > >        if (!is_acpi_hsmp_uuid(guid) || mailbox_package->type !=3D
-> > > ACPI_TYPE_PACKAGE) {
-> > > -             dev_err(sock->dev, "Invalid hsmp _DSD table data\n");
-> > > +             dev_err(dev, "Invalid hsmp _DSD table data\n");
-> > >                ret =3D -EINVAL;
-> > >                goto free_buf;
-> > >        }
-> > > @@ -192,14 +192,14 @@ static int hsmp_read_acpi_dsd(struct hsmp_socke=
-t
-> > > *sock)
-> > >        return ret;
-> > >   }
-> > >=20
-> > > -static int hsmp_read_acpi_crs(struct hsmp_socket *sock)
-> > > +static int hsmp_read_acpi_crs(struct hsmp_socket *sock, struct devic=
-e
-> > > *dev)
-> > >   {
-> > >        acpi_status status;
-> > >=20
-> > > -     status =3D acpi_walk_resources(ACPI_HANDLE(sock->dev),
-> > > METHOD_NAME__CRS,
-> > > +     status =3D acpi_walk_resources(ACPI_HANDLE(dev), METHOD_NAME__C=
-RS,
-> > >                                     hsmp_resource, sock);
-> > >        if (ACPI_FAILURE(status)) {
-> > > -             dev_err(sock->dev, "Failed to look up MP1 base address =
-from
-> > > CRS method, err: %s\n",
-> > > +             dev_err(dev, "Failed to look up MP1 base address from C=
-RS
-> > > method, err: %s\n",
-> > >                        acpi_format_exception(status));
-> > >                return -EINVAL;
-> > >        }
-> > > @@ -207,10 +207,10 @@ static int hsmp_read_acpi_crs(struct hsmp_socke=
-t
-> > > *sock)
-> > >                return -EINVAL;
-> > >=20
-> > >        /* The mapped region should be un-cached */
-> > > -     sock->virt_base_addr =3D devm_ioremap_uc(sock->dev,
-> > > sock->mbinfo.base_addr,
-> > > +     sock->virt_base_addr =3D devm_ioremap_uc(dev, sock->mbinfo.base=
-_addr,
-> > >                                               sock->mbinfo.size);
-> > >        if (!sock->virt_base_addr) {
-> > > -             dev_err(sock->dev, "Failed to ioremap MP1 base address\=
-n");
-> > > +             dev_err(dev, "Failed to ioremap MP1 base address\n");
-> > >                return -ENOMEM;
-> > >        }
-> > >=20
-> > > @@ -232,12 +232,12 @@ static int hsmp_parse_acpi_table(struct device =
-*dev,
-> > > u16 sock_ind)
-> > >        dev_set_drvdata(dev, sock);
-> > >=20
-> > >        /* Read MP1 base address from CRS method */
-> > > -     ret =3D hsmp_read_acpi_crs(sock);
-> > > +     ret =3D hsmp_read_acpi_crs(sock, dev);
-> > >        if (ret)
-> > >                return ret;
-> > >=20
-> > >        /* Read mailbox offsets from DSD table */
-> > > -     return hsmp_read_acpi_dsd(sock);
-> > > +     return hsmp_read_acpi_dsd(sock, dev);
-> >=20
-> > It would probably make more sense to have the arguments other way aroun=
-d
-> > (dev, sock) in both of these calls as dev is "complete" and we're still
-> > filling sock at this point.
-> >=20
-> Thanks I will fix this.
->=20
-> Ilpo, could you please confirm whether patches 0001 and 0002 have already=
- been
-> accepted in the maintainer branch, or if I should resubmit them as v2 alo=
-ng
-> with patches 0003 and 0004 ?
+Add support for querying and switching the graphics MUX mode on HP
+systems via WMI. This introduces the 'gpu_mux_mode' sysfs attribute
+under the hp-wmi platform device, allowing userspace tools to check
+and safely switch between available graphics modes (e.g., UMA, Hybrid,
+Discrete).
 
-I've not applied any patches yet in this cycle so please resubmit the=20
-whole series.
+The hardware capabilities mask is primarily read using the modern
+128-byte System Design Data query. However, to ensure backward
+compatibility with older models, a fallback mechanism is implemented.
+By mirroring the behavior of the Windows Omen Gaming Hub software, if
+the modern query fails but the MUX WMI endpoint (0x52) responds
+successfully to a read request, the driver defaults to a standard
+Hybrid + Discrete support mask (0x06).
 
---=20
- i.
+Signed-off-by: Kürşat Abaylı <hello@kursatabayli.dev>
+---
+Changes in v2:
+ - Replaced hardcoded bitmask with GENMASK(6, 0).
+ - Added specific defines for MUX modes instead of using raw BIT() macros.
+ - Initialized arrays with {} instead of { 0 }.
+ - Fixed reverse xmas-tree ordering for local variable declarations.
+ - Removed empty lines between function calls and their return value checks.
+ - Split ternary operators into standard if-statements for better readability.
+ - Added missing <linux/array_size.h> include.
+ - Removed unnecessary cast in hp_wmi_set_mux_mode.
+---
+ drivers/platform/x86/hp/hp-wmi.c | 138 +++++++++++++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
 
---8323328-265294142-1782744748=:1167--
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8ba286ed8721..d8e42cc9936b 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -14,6 +14,8 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/array_size.h>
++#include <linux/bits.h>
+ #include <linux/cleanup.h>
+ #include <linux/compiler_attributes.h>
+ #include <linux/dmi.h>
+@@ -55,9 +57,16 @@ enum hp_ec_offsets {
+ 	HP_OMEN_EC_THERMAL_PROFILE_OFFSET		= 0x95,
+ };
+ 
++#define HPWMI_MUX_MODE_UMA		BIT(0)
++#define HPWMI_MUX_MODE_HYBRID		BIT(1)
++#define HPWMI_MUX_MODE_DISCRETE		BIT(2)
++#define HPWMI_MUX_MODE_OPTIMUS		BIT(3)
++
+ #define HP_FAN_SPEED_AUTOMATIC	 0x00
+ #define HP_POWER_LIMIT_DEFAULT	 0x00
+ #define HP_POWER_LIMIT_NO_CHANGE 0xFF
++#define HPWMI_MUX_MODE_MASK		GENMASK(6, 0)
++#define HPWMI_MUX_LEGACY_MASK		(HPWMI_MUX_MODE_HYBRID | HPWMI_MUX_MODE_DISCRETE)
+ 
+ #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
+ 
+@@ -332,6 +341,7 @@ enum hp_wmi_commandtype {
+ 	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
+ 	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
+ 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
++	HPWMI_GRAPHICS_MUX_QUERY	= 0x52,
+ };
+ 
+ struct victus_power_limits {
+@@ -1124,12 +1134,139 @@ static int camera_shutter_input_setup(void)
+ 	return err;
+ }
+ 
++static const u8 mux_bitmask_map[] = {
++	[0] = HPWMI_MUX_MODE_HYBRID,
++	[1] = HPWMI_MUX_MODE_DISCRETE,
++	[2] = HPWMI_MUX_MODE_OPTIMUS,
++	[3] = HPWMI_MUX_MODE_UMA,
++};
++
++static int hp_wmi_get_mux_supported_modes(u8 *supported)
++{
++	u8 legacy_buffer[4] = {};
++	u8 buffer[128] = {};
++	u32 req_packet = 0;
++	int ret;
++
++	if (!supported)
++		return -EINVAL;
++
++	/* Try modern BIOS design data query (128-byte buffer) */
++	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
++				   buffer, zero_if_sup(req_packet), sizeof(buffer));
++	if (ret == 0) {
++		*supported = buffer[7];
++		return 0;
++	}
++
++	/*
++	 * (Fallback): Legacy BIOS behavior based on Omen Gaming Hub.
++	 * If the modern query is not supported, check if the MUX query endpoint
++	 * responds to a read request. If it succeeds, the hardware has MUX
++	 * capability but lacks the mode map, defaulting to Hybrid + Discrete.
++	 */
++	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
++				   legacy_buffer, sizeof(legacy_buffer), 0);
++	if (ret == 0) {
++		*supported = HPWMI_MUX_LEGACY_MASK;
++		return 0;
++	}
++
++	if (ret < 0)
++		return ret;
++	return -EINVAL;
++}
++
++static int hp_wmi_get_mux_mode(u8 *mode)
++{
++	u8 buffer[4] = {};
++	int ret;
++
++	if (!mode)
++		return -EINVAL;
++
++	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
++				   buffer, sizeof(buffer), sizeof(buffer));
++
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		return -EINVAL;
++
++	/* Mask the highest bit, which might be used as a BIOS status flag */
++	*mode = buffer[0] & HPWMI_MUX_MODE_MASK;
++
++	return 0;
++}
++
++static int hp_wmi_set_mux_mode(u8 mode)
++{
++	u8 buffer[4] = { mode, 0x00, 0x00, 0x00 };
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_WRITE,
++				   buffer, sizeof(buffer), sizeof(buffer));
++
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		return -EINVAL;
++
++	return 0;
++}
++
++static ssize_t gpu_mux_mode_show(struct device *dev,
++				 struct device_attribute *attr,
++				 char *buf)
++{
++	u8 mode;
++	int ret;
++
++	ret = hp_wmi_get_mux_mode(&mode);
++	if (ret)
++		return ret;
++
++	return sysfs_emit(buf, "%u\n", mode);
++}
++
++static ssize_t gpu_mux_mode_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf,
++				  size_t count)
++{
++	u32 requested;
++	u8 supported;
++	int ret;
++
++	ret = kstrtou32(buf, 0, &requested);
++	if (ret)
++		return ret;
++
++	if (requested >= ARRAY_SIZE(mux_bitmask_map))
++		return -EINVAL;
++
++	ret = hp_wmi_get_mux_supported_modes(&supported);
++	if (ret)
++		return ret;
++
++	/* Verify if the requested mode is allowed by the hardware mask */
++	if (!(supported & mux_bitmask_map[requested]))
++		return -EOPNOTSUPP;
++
++	ret = hp_wmi_set_mux_mode(requested);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
+ static DEVICE_ATTR_RO(display);
+ static DEVICE_ATTR_RO(hddtemp);
+ static DEVICE_ATTR_RW(als);
+ static DEVICE_ATTR_RO(dock);
+ static DEVICE_ATTR_RO(tablet);
+ static DEVICE_ATTR_RW(postcode);
++static DEVICE_ATTR_RW(gpu_mux_mode);
+ 
+ static struct attribute *hp_wmi_attrs[] = {
+ 	&dev_attr_display.attr,
+@@ -1138,6 +1275,7 @@ static struct attribute *hp_wmi_attrs[] = {
+ 	&dev_attr_dock.attr,
+ 	&dev_attr_tablet.attr,
+ 	&dev_attr_postcode.attr,
++	&dev_attr_gpu_mux_mode.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(hp_wmi);
+-- 
+2.54.0
+
