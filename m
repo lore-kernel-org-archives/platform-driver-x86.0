@@ -1,222 +1,294 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011055.outbound.protection.outlook.com [52.101.70.55])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2913737475B;
-	Mon, 29 Jun 2026 14:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782742133; cv=fail; b=nJ67RrbCe/p/MvPe0mST9S3vMgAGGCXJorSgiko0VEEFqgHvjc/GLYIvhRVbR+QfQ7SsxfDXpdf9IA+qAZYxFX5Uk7SH4VRjrF2j3yb0BsB/cqqcbILHSUpFQgWmYvXCBQm2sNbt1lEhJv2AFwpzqyehsLo8NInw06OtTbzTBtY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782742133; c=relaxed/simple;
-	bh=S0AZqMpzvVsp/FNTSEmwe6U12QNpPK6HmOfKhVoAQiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sI7o0tCcb8voUduMm/ULFLE2NWAvwEBttTKHlolzqB0m6gJ77rRDsKuuXfnBzl5wd0s5d5EuK/A3DmzQjWhZQCJLU++JBPZL6RgQfirzO5UQ4sp51bd2uhFKCu9Wg7dpI1lmds0/GF/siE1qeFAmMgiGpVT6yh7RYtKYhJs6BoA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=e84TYlzk; arc=fail smtp.client-ip=52.101.70.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456F840960C
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 14:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782742904; cv=none; b=CQkfVBVWtvHxTRwKiITgihQJifJ0Ha/WqdwTJPqccdYM4JFuuvSmRQiyeLO/9SW2PdJoeKTdd8mq/QaYR9M6JxmYWLSSL/ywnnzZp4DLO99yyk2gfEVD6559PwQJfmvSDEAR3Ux2NKE3n7a1q28752aq86yR94/x4WHU29IESgI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782742904; c=relaxed/simple;
+	bh=qLlH50DsPBHxPs+lphtz4ADgANwwLqfu3+0Z85rFfgc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dLz782qkVBrZnjfXuYE/bZrd471PT+pNvk1MaUHzPG/3lJmz3AMtTojheY2ntWy6bDIWsWjeX46h//b5moDgHDdvlQA1akTNi9KiG3pXWbkUBj1k/qbVuIqedQJTP12Iu8KWL8vDlrMWLt1yWCpQxD+WAc+AQFG7ADiTLBZzMQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=aTAeiVxG; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="e84TYlzk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HEnBdvWsh0XR+FbiWFsCNDST5EdwRkh/QzPdzpTQpYEq1ZKtcoVHO7Xne9skudoSBOo+QuaPgXwMXM0blISBMaIuoIYXqih1b91OuRVnkJ85e+QYHrRvsLA0jDffMUVjHvPMz13+iFhooWjFc7C3iuUfu7uej0lYIW2Oqh1hAukh+heA7uio8kFTYnpQckO7pcPx5u1U7D0YzoY2UnR+vE7e+MbtKBZjFK+/F1FULcgKUIGJWPLEwT3XIQZM3GdMlSJsOtVVvHmOmoIKriWeYDXn5n1GkQFtn+uN5UZXI6Jp22qvrTw6vaATgw8jSJr3437jt1vUfjx7Aur8Gba5Lg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oGkHZmi7vUG5yrrKmcJyWTBhTM1/o8UcugETmhubcKw=;
- b=IEPCQc7eBQU/8SRJYnVF3usUBU8ujmvH7dfreyVq1pT2gWzAJkDkQoue4ERSJgcQa3Vb+xmvjZ1UX0wD8RpVHOByKu+6DYBV9hookunNtpJ/ON0uV9h53YFBz/UKaPdniPRf3VOOu+0SX7oGxIlRa2K0nzWmq1R9tLw+l/zoRX1VulzBGfTzR2hXsV2Vefz5+v0V7yOjCS5J65C7B3Cqjj3DXQuHGb1cmHuvdMDJvITKB6A8B8eaubC+hJR5yosrRyu60RfkFlYb41saDcuPvsqZAXuTVR4cJ64rRXtEbpfy0D62j0ahmMgtnH9/l+fjI6inMFp/VFpPIcXMvNFEzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oGkHZmi7vUG5yrrKmcJyWTBhTM1/o8UcugETmhubcKw=;
- b=e84TYlzkgshWjRCyYLNKpCb4DcSsGA13xMCUPcmLRKi1mWBAoJHUuV9WsbAaaPqIY+BbRIqRmMq7svq+QZJNAzsno8SikVkcFd3tgBDSCFr9uAUdmJ5g08UckjYeCbx9KhuAVzRVHOcTlD97o5/dMzqLvKcZBNaGjyFMKLfQ68IAtBu8ggUqZ0cbeHxU7PDNeQ5f2IMaKADs7M7CpuIAdLvOa9EsWEDgAXOE5kNfIIWfpglvSrbsawGbWaAnkckc1RePuFxlbQ+10WxJEwvaZ50vt7u9T2JlZf8HQljgsh7XWOWn6wlZMba7l92opbdpUx/WwBl/3yIW/mj9AzIXjw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by AS4PR04MB9265.eurprd04.prod.outlook.com (2603:10a6:20b:4e0::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
- 2026 14:08:46 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Mon, 29 Jun 2026
- 14:08:46 +0000
-Date: Mon, 29 Jun 2026 09:08:24 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Peter Chen <peter.chen@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 08/19] iommu/fsl: use platform_device_set_of_node()
-Message-ID: <akJ8WOFadekww2Ye@SMW015318>
-References: <20260629-pdev-fwnode-ref-v2-0-8abe2513f96e@oss.qualcomm.com>
- <20260629-pdev-fwnode-ref-v2-8-8abe2513f96e@oss.qualcomm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260629-pdev-fwnode-ref-v2-8-8abe2513f96e@oss.qualcomm.com>
-X-ClientProxiedBy: PH8P221CA0035.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:346::28) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="aTAeiVxG"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id BDBCC24002A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 16:21:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1782742895; bh=gIcbkjb2wutZUnDm3LaOG+Uc5Hy+tJ2frk8lfaReGAY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:To:Cc:Autocrypt:OpenPGP:From;
+	b=aTAeiVxGY7KC0pNmtMd8sxaFQ6WDjwo85pQTxSC0mleII2xyfcZNHJHhfl22LnNxL
+	 OJdZQhRDn3SZWOpKVZZzTLCeRtnqTyNuptCD4PqbPGVLidUyqXIJJOqLaQt/y+ry3T
+	 SEP9kyAEAwwZz7PSX9YupQlHYGpr+p1ulMhgFD42jqcOeI5puvUPvQ00kD+6LRIZEb
+	 A1q6aj/pPOKOo/YDwUo+303rj+LPCGr+igf0wW+nhYaF0FrpT+JFEWsofX6dx1yLhP
+	 R4hbfHTokMoX5v2BbwGjdHXmPwoxPWTR+KqvDB8raEQVjk5UXnyPyVG0zRRgy4SSXK
+	 vyKAPMYDg2sLw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4gppP76nzzz9rxd;
+	Mon, 29 Jun 2026 16:21:31 +0200 (CEST)
+From: Markus Probst <markus.probst@posteo.de>
+Subject: [PATCH v15 0/2] Introduce Synology Microp driver
+Date: Mon, 29 Jun 2026 14:21:34 +0000
+Message-Id: <20260629-synology_microp_initial-v15-0-4b3d7367c7cf@posteo.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|AS4PR04MB9265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a2af774-7afd-492e-d760-08ded5e7eefc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|19092799006|7416014|376014|1800799024|23010399003|3023799007|18002099003|22082099003|4143699003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	UYy4i62EHwPpsDxL3M03C7pPoR+CUIzJ+QZPNqwbxczlPyOzQO3s+pDcSo5yo4OrGxTyfMrHpsZiu5BGeB+/B3LaTMGdKfFFcDFDHJwwo22cbArwaJcaWUTVGySahS1zUGSLc6M/iIB7US/dqr9YT+/Ub7BBl38oSie7iPkkGYdbMAjiPO+2wcBRgQlmoPIwyvemAfyqGjE+EJ9Q8BwxHCraX12T9rw9GNZ7Dg+L635+MeFrflaWkJF500rTOqJ3dYRgq8zkcC/OqMewfaj52LllyZOF8CUaGMIGJuEea0Acqsp1CVQi3WHci94D5UniHGKbWl+hpjz8dYm0sEqyAK/G9EcEj3t7WZSbNHGMbzB5Z+seRJubGkv/H7TuTmoG2N/H+uE1CtKPeASlJ4IwL5v6UeuDD3Yo2E9UhN/AB/+s+jcEkn+RbjHvCtpyiNuwMfrPuG3vVD4vSrXoQgHhMSPU2NkwnT8O/VLkyVhYz0mB9lWf6tLmR0GR6EdI7yf6XWeHQkjQlk6OaFEnPv0r7qMpKih+eflteG9sCoUWc38wBpnknF9yUTsGv/jMFSJD4ohu17gBtDr0nR4e/E+iGZ5m7O1UzMJj76jYe79s1z11zvro0gE2okoWaGIzWnsIBtiyFoCIMPxaVccM1lyWYekZTCCnH8wfVCPYtTrn48Q=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(19092799006)(7416014)(376014)(1800799024)(23010399003)(3023799007)(18002099003)(22082099003)(4143699003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kDTBGJOmwuuu5VuvAWiMwRC1BM/7B24x1Ve0ujInuqGmplnllUqug0qQy+qh?=
- =?us-ascii?Q?NJs9gQ5QsneTyl2KgRz4J4tFSLqSROqxYX3HedM4H5AghUcHaGyIOOwUjIU+?=
- =?us-ascii?Q?yoixwRZu/ogZqybhdJ5KJEnhHOEkp36lII1wvNGAN8DCSqueXBwnFvcX8EuD?=
- =?us-ascii?Q?3gLY+jrmCeFZDH9RvW0FaDJzbjLbJzeKTV9x5shtP5tLN3urxWc4hpLFcXVa?=
- =?us-ascii?Q?3smy6ZRs7mmq9z2Gbv43BL41+4cl5l0oQOJNViasw6RfhLcIvMQOPoSOYKq9?=
- =?us-ascii?Q?W1e39RgRxAb5Ck0ZR7m2xnCfVZ3F835MpCJdSx4Gpk5zcuDgXW4WnJ3UEw29?=
- =?us-ascii?Q?aii7Tlh/Ocm6i0BSpdkwoC//EXC0J3CXDlhP0XyTETyhy4aC3FcY7XqSAFyQ?=
- =?us-ascii?Q?1wemrkhuUpWI86H3fJEG5l/8dZ84R7mVz3QRNwY1lUIpwH0H+rq8RtKAlZ0u?=
- =?us-ascii?Q?GlVEkq1YEJXemTBhV06kMrS/0yVwg6H/9jII92/1ixJxQKOpJHV+yID3p/2o?=
- =?us-ascii?Q?0fSTkHv6uRiE0d3saxtqrdGIYEDJYCyUWHSQsAXCOFiBuisQEvA9v2ODcS8K?=
- =?us-ascii?Q?ezKwC7oZMOEbW037b/5CEYU0JhSnolScmwHExgvV8BfySy102i7kQNc2jh+a?=
- =?us-ascii?Q?r+KR+YH6jH/KiRtVWj2hgIuc1shbAJWaLc9dUeV+8N8js9rl+rK94g8WAhwU?=
- =?us-ascii?Q?JGQ39xUdwYNKmWWQUndgbkXJB3ue6/pZ/qRQQn0Do3ZQV+N+ObzYN5sUs4ED?=
- =?us-ascii?Q?wRM1ZEOSm4yTrH16mOq2Eo9XCawuhXh31ykU+4ICPH9c97riVBVHxTltnDyH?=
- =?us-ascii?Q?HQ86EPwa2LQJSmS1yYkzSTAgQZKBLdDxI17qSuckfj9RlUHMfdoldHJwysQ5?=
- =?us-ascii?Q?0k1gDGver1FcCyPyW3h/h0jXj3hTsmwhBhXiAluhQNbMFt42Oy0KmUsq5Qse?=
- =?us-ascii?Q?QuWaEsjjS3uEYdOLESQJ3vUTuk46PR1m719uzPlWMAiLqWGrdBGHwtTBlh8I?=
- =?us-ascii?Q?XgcJSz4CeJ+nZECC3nrFT5nDRwGFHi90zYDPt/9qTOhepZh88ZpYQo58StNx?=
- =?us-ascii?Q?X/LR9fcm9kHbJYx5JabbQjkgCLHLI24IvVPN+R95sQa/HBdRo67yoIFt0rhf?=
- =?us-ascii?Q?89Fo8eevYQFe/olIzalr4HHyiJLVSbhl68EY90q88d0XOC0qThGIiA35EkVl?=
- =?us-ascii?Q?YUHFQ/FihDTalXUhjODDiNCMj4i8VhKZBpgOzKBQGKWFb7F7fc0LmyR2hLMQ?=
- =?us-ascii?Q?BNyUuLdewKXOqhJo5O/h2uTql+NJMoW9EZU1tUheEUUQPN6Y0VHKlXC9nW8x?=
- =?us-ascii?Q?Uly2brppEBGNJfkdB9hU/eJn6y95sbXy6iUTLpxLlr8Uf4hz+6S0Sk+/kuFt?=
- =?us-ascii?Q?o6rz3UBiKaj9PX697t0mmfHy5Gpm+p3M0YrV4HwXS3AipV8Mhq6QucjJP/3X?=
- =?us-ascii?Q?ux6dBaxAmm6WjeMA/BCHLhhUq3nk6zKX/cLlrfotS2mpamWQJZ7URTfBV0a8?=
- =?us-ascii?Q?Npz+ePbQn1amP+6ybAjNkhGFbCTbL1SFZKfqkreLoZNhPS4Qse9B0XoZlaDw?=
- =?us-ascii?Q?3/ovmE9+ZbehjnLZ3rjkNF/k+TxwnsW6B51Yyd75pdECc04q2Bl4vJjt7DUe?=
- =?us-ascii?Q?/nTqC2o3BwkILtj7lN9MnG8NmRmx8YvdjHgOCI4MfTh3VbuvyhU2cEBkxNI+?=
- =?us-ascii?Q?ritBogCWKAuui/i8Zby0HHPH3/5lYRUKzv01Pzw33wvPR0s12BFC0FOOebAd?=
- =?us-ascii?Q?Z3gJ4CXUJOxTMHzz8AF8Pkjo94w6iQ3tPLBHESzf7nUiZXk7UvU9?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a2af774-7afd-492e-d760-08ded5e7eefc
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 14:08:46.0964
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CbEzC5shI94/h5UvHFft/MVfEwJZZsbh+AI6yEocLaBpBPPrKkGnLbMH4mccbXmyyirPzjH/RKwFnr9kTec1LKA8gN+zPU698NL5EzUZh8LWMcHB7e4XtI4rdqpIUD4k
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9265
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/4XUzY7bIBAH8FeJfC4RA8NXTvseVRVhGLLWJnHW9
+ lqNVnn3YudQZDfuEaT5MQx/+7vqqWuorw6776qjsemb9poXoH7sqvDurydiTcwbleBCc8k16+/
+ X9tye7sdLE7r2dmyuzdD4M+PJRB9MbdDpKlffOkrN75n++eu57ujzK58wPDerC/W9nw847GZeS
+ Q5SGKn3Ujir0DFg0X90bx/UXem8b7tTVfY1lykQYFj31Q/HfJdIIyNSaIEctyocRhD/qgHAZ82
+ ZYs+8Uy6ZIJJJ7jAKmCpq3xML7eXSDIfdaPaCdQGq6SbvTT+03X2e2QjzVf47nREYZymkRJE0o
+ g1vt7YfqN1Hms1RlI597YjsOGmd0zJJCGrpyMIB+dqR2fFR+4BaesFh6WDhCP7awexwFDLG2sr
+ gcemo0nGvHZUdYUJteR2Tcqt+9F8HuXrt6KkfmyKhwVoHt3RM4QC8dsw0Zy89d0gmj2jp2MLZm
+ o/NjnGovQOBuL6XK52N93LZQW+VlMka4mbpAC8h3Ahing8jq0QUSVLtVx0BlJLZkKZMuwB1VF5
+ nK64kUUobjw9TqpF7rriUQQu+kopY57/EhjTn2ou6dkFpSqvvDLCUNgIAU7JBGhNRqFpgXUqPx
+ +MPPrdR7TsFAAA=
+X-Change-ID: 20260306-synology_microp_initial-0f7dac7b7496
+To: Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@kernel.org>, 
+ Alexandre Courbot <acourbot@nvidia.com>, 
+ =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7339;
+ i=markus.probst@posteo.de; h=from:subject:message-id;
+ bh=qLlH50DsPBHxPs+lphtz4ADgANwwLqfu3+0Z85rFfgc=;
+ b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBqQn9rFD5nLSotFcztOv7cxwwIgYms95PMdR6oY
+ N6RdFQx/o+JAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCakJ/axsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9LZ4Q//RxgIeDL9ri01R9A7yR/CFR37QpP3IvS
+ T4ADmI3k8kQ73Jsp/saM1KxeOHaqeh3kgWCQUL6x2Ukxal8Do/neFLhXW/iDV4hHY8vjVm1ZGNC
+ nkq0cnxC4T628bEOsrbWv8CKmeP0I43ruGSdrh7T1+v94lOeZdhdOHPm0HklKpx/ZVVis4ttBEn
+ dmy88qs1DfcrJCdsePK7Od1H7tpcj7bVU7dc7QVjwh2hoqqXS2halUyBGwk6QcjVqOLGT+Z4qDZ
+ 3Zc9J/uoef1GDWmgnSbKtPRc3r3ObDwJY/lMFkPCFgceA9Yk7oGTyLE7j1Tm/iCBVCB1pR5scLb
+ 0135SLI262VuYzL8KjS0RaIShn73LO1KipecXGoTwBXPN/nqBpOejr+KvJqfATzNkOyeTeuYqOY
+ dt5b6Qm4W/rypzKvoLP0V0tC2BLyPVa/wB81zc9x3Vzuh3LQy9D2Fd8V9UvRcX59iC38xX9BBZr
+ iS+MwfYoE6LEcnHtWiZc0AkzeexPzG9FrI64nV+hIBHAnQXIekC0jg9iu9H8JlxuvOjVxVN0z5V
+ PtyURMCMGoKpj9QIpQ2W2ed952vAKavkD07icEx+UanXlPH1rZgNiXFKxmd7vI2xSpNI5/rO5RF
+ B2LpHbGpO2YkL0PHBRp0PAmwrWsJeYt3bImj+aiPH/X73RtM7Ft0=
+X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
+ fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+  keydata=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
+  aBeNN4ijKZchBXHPgVx+YtWRHfcm4l8=
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-On Mon, Jun 29, 2026 at 11:12:31AM +0200, Bartosz Golaszewski wrote:
-> [You don't often get email from bartosz.golaszewski@oss.qualcomm.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->
-> Ahead of reworking the reference counting logic for platform devices,
-> encapsulate the assignment of the OF node for dynamically allocated
-> platform devices with the provided helper.
->
-> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/iommu/fsl_pamu.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
-> index 25aa477a95a95cb4fa4e132727cde0a936750ee2..012839fa0d8a27cafc6a441373f4f6da794388c1 100644
-> --- a/drivers/iommu/fsl_pamu.c
-> +++ b/drivers/iommu/fsl_pamu.c
-> @@ -973,7 +973,8 @@ static __init int fsl_pamu_init(void)
->                 ret = -ENOMEM;
->                 goto error_device_alloc;
->         }
-> -       pdev->dev.of_node = of_node_get(np);
-> +
-> +       platform_device_set_of_node(pdev, np);
->
->         ret = pamu_domain_init();
->         if (ret)
-> @@ -985,12 +986,10 @@ static __init int fsl_pamu_init(void)
->                 goto error_device_add;
->         }
->
-> +       of_node_put(np);
+Synology uses a microcontroller in their NAS devices connected to a
+serial port to control certain LEDs, fan speeds, a beeper, to handle
+proper shutdown and restart, buttons and fan failures.
 
-there are other place miss of_node_put() at error pass.
+This patch series depends on the rust led abstraction [1] and the rust
+serdev abstraction [2].
 
-Can you use auto cleanup
+This is only a initial version of the driver able to control LEDs.
+The following rust abstractions would be required, to implement the
+remaining features:
+- hwmon (include/linux/hwmon.h)
+- input (include/linux/input.h)
+- sysoff handler (include/linux/reboot.h)
 
-struct device_node *np __free(device_node) = of_find_compatible_node().
+[1] https://lore.kernel.org/rust-for-linux/20260629-rust_leds-v21-0-4f0f19579db5@posteo.de/
+[2] https://lore.kernel.org/rust-for-linux/20260603-rust_serdev-v12-0-3400ffb88b12@posteo.de/
 
-Frank
->         return 0;
->
->  error_device_add:
-> -       of_node_put(pdev->dev.of_node);
-> -       pdev->dev.of_node = NULL;
-> -
->         platform_device_put(pdev);
->
->  error_device_alloc:
->
-> --
-> 2.47.3
->
->
+Signed-off-by: Markus Probst <markus.probst@posteo.de>
+---
+Changes in v15:
+- adapted to rust led abstractiopn v21
+- Link to v14: https://patch.msgid.link/20260531-synology_microp_initial-v14-0-1377d425b24b@posteo.de
+
+Changes in v14:
+- adapt to led abstraction v18 and serdev abstraction v11
+- Link to v13: https://patch.msgid.link/20260530-synology_microp_initial-v13-0-aa2bb9c56efc@posteo.de
+
+Changes in v13:
+- adapted to driver-lifetime v5 patch series.
+- set blink = false as initial power led state, as set_blink hasn't been
+  called yet (even though the led is blinking at startup)
+- Link to v12: https://patch.msgid.link/20260429-synology_microp_initial-v12-0-40a05033c620@posteo.de
+
+Changes in v12:
+- adapted to driver-lifetime patch series. The driver can't take
+  advantage of it, until class devices like led also make use of it.
+- Link to v11: https://patch.msgid.link/20260427-synology_microp_initial-v11-0-9c1bd5a6f3ed@posteo.de
+
+Changes in v11:
+- rebased on top of 7.1-rc1
+- add "synology" as devicename to led, like it is done in existing dts
+  files in the kernel
+- fix color for led being orange instead of amber. I personally can't
+  clearly tell them apart, but apparently its amber.
+- replaced MCU with EC in Kconfig help
+- Link to v10: https://patch.msgid.link/20260424-synology_microp_initial-v10-0-e852d2f3eba1@posteo.de
+
+Changes in v10:
+- resolved issues reported by Sashiko Bot:
+  - removed unneeded include from device tree
+  - fix typo in of device table
+  - fix blink not set to false, if delay_off or delay_on is 0
+- Link to v9: https://patch.msgid.link/20260423-synology_microp_initial-v9-0-4a8533f87e07@posteo.de
+
+Changes in v9:
+- separate fallback and front compatibles in dt schema
+- remove front compatibles from of id table, if all functionality is
+  by covered by the fallback
+- remove TODO file
+- add platform-driver-x86@vger.kernel.org to Maintainers file entry
+- use `Delta` type in `BLINK_DELAY` const
+- Link to v8: https://patch.msgid.link/20260420-synology_microp_initial-v8-0-7946a9124491@posteo.de
+
+Changes in v8:
+- removed unnecessary Copy and Clone derive
+- added `BLINK_DELAY` constant
+- added compatible id fallbacks
+- moved dt schema patch before the driver
+- added ds411p
+- Link to v7: https://lore.kernel.org/r/20260411-synology_microp_initial-v7-0-9a3a094e763a@posteo.de
+
+Changes in v7:
+- remove list of compatible ids from commit msg
+- explain what makes the different models not compatible in the commit msg
+- remove unnecessary examples
+- Link to v6: https://lore.kernel.org/r/20260405-synology_microp_initial-v6-0-08fde474b6c9@posteo.de
+
+Changes in v6:
+- moved devicetree bindings patch at the end of the set
+- remove several patches
+- move of id table from model.rs to synology_microp.rs
+- remove the model! macro
+- use if blocks in devicetree schema to narrow down the
+  fan-failure-gpios property
+- add multiple devicetree examples to test if blocks
+- Link to v5: https://lore.kernel.org/r/20260329-synology_microp_initial-v5-0-27cb80bdf591@posteo.de
+
+Changes in v5:
+- add esata led support
+- use different compatible for each model
+- add visibility modifier to of_device_table macro
+- fix match data missing when using PRP0001
+- Link to v4: https://lore.kernel.org/r/20260320-synology_microp_initial-v4-0-0423ddb83ca4@posteo.de
+
+Changes in v4:
+- convert to monolithic driver and moved it into drivers/platform
+- removed mfd rust abstraction
+- moved dt-bindings to embedded-controller
+- Link to v3: https://lore.kernel.org/r/20260313-synology_microp_initial-v3-0-ad6ac463a201@posteo.de
+
+Changes in v3:
+- remove `default n` from Kconfig entry, as n is the default already.
+- select RUST_SERIAL_DEV_BUS_ABSTRACTIONS in Kconfig
+- add mfd rust abstraction
+- split core and led parts into their own driver. It should now be considered a
+  MFD device.
+- split led part of dt binding into its own file
+- Link to v2: https://lore.kernel.org/r/20260308-synology_microp_initial-v2-0-9389963f31c5@posteo.de
+
+Changes in v2:
+- fix missing tabs in MAINTAINERS file
+- remove word binding from patch subject
+- add missing signed-off-by
+- add missing help entry in Kconfig
+- add missing spdx license headers
+- remove no-check{,-cpu}-fan properties from the dt-bindings and replace
+  them with the check_fan module parameter
+- use patternProperties for leds in dt-bindings
+- license dt-binding as GPL-2.0-only OR BSD-2-Clause
+- move driver from staging tree into mfd tree and mark it as work in
+  progress inside Kconfig
+- only register alert and usb led if fwnode is present
+- Link to v1: https://lore.kernel.org/r/20260306-synology_microp_initial-v1-0-fcffede6448c@posteo.de
+
+---
+Markus Probst (2):
+      dt-bindings: embedded-controller: Add synology microp devices
+      platform: Add initial synology microp driver
+
+ .../synology,ds918p-microp.yaml                    | 100 +++++++
+ MAINTAINERS                                        |   7 +
+ drivers/platform/Kconfig                           |   2 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/synology_microp/Kconfig           |  13 +
+ drivers/platform/synology_microp/Makefile          |   3 +
+ drivers/platform/synology_microp/command.rs        |  54 ++++
+ drivers/platform/synology_microp/led.rs            | 297 +++++++++++++++++++++
+ drivers/platform/synology_microp/model.rs          |  49 ++++
+ .../platform/synology_microp/synology_microp.rs    |  91 +++++++
+ 10 files changed, 617 insertions(+)
+---
+base-commit: 728e68a889bcf257b1e67298b12c360e5c3a13e0
+change-id: 20260306-synology_microp_initial-0f7dac7b7496
+prerequisite-message-id: 20260530132736.3298549-1-dakr@kernel.org
+prerequisite-patch-id: 310c6bee038ca3909a8e5e58ec12b74f7189b869
+prerequisite-patch-id: 92812c3d42b29504838e6dc66c307ff5c035bb5e
+prerequisite-change-id: 20251217-rust_serdev-ee5481e9085c:v12
+prerequisite-patch-id: 059e43aa20628647ba98a0e5582444a5a7b68ec4
+prerequisite-patch-id: 310c6bee038ca3909a8e5e58ec12b74f7189b869
+prerequisite-patch-id: 92812c3d42b29504838e6dc66c307ff5c035bb5e
+prerequisite-patch-id: a75cb3f900db0e765351b773cbfffaeb9a01a107
+prerequisite-patch-id: 19eb53ce0c653c1406f8f192f6ad158fb4bd8d8f
+prerequisite-patch-id: 55d6a70baf3be7f4da36b82cf02a5a7d59457520
+prerequisite-change-id: 20251114-rust_leds-a959f7c2f7f9:v21
+prerequisite-patch-id: d6a2bb314f215e3c6bd3a3ac87b991a33e3d6256
+prerequisite-patch-id: 50bfe4b15f07d3733d4fc4b4520ce74cbac2cf4f
+prerequisite-patch-id: ec48c2616ea8f0bd8f71cec858f1d5d0fdb2bac0
+
