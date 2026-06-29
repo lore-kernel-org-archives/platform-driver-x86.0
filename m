@@ -1,86 +1,76 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459892FD69E;
-	Mon, 29 Jun 2026 19:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B055360ED4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 21:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782760439; cv=none; b=q74VoYx0mVDicOMnYD6L79zn6SuovIx63wPnF7Nu4g8Z52heRMon0OXXN5RlXx2mNvrKn9sxiJz8LAxvGB9MKmJ642yhqFDPhhymtDexolhLq4al++Huo11SeXp6sK0l4Zh5H8PqcYerxRg2aRkCqpOOa4Un9iRw6TU0RmSo5nM=
+	t=1782767240; cv=none; b=ijqqQtZ7VBHelKBucGVWrd5T1hFkGbmTuPTUJRSUiNJUqE7vPfAGxRzMtHpiO9nYyDhJwS7sLhkNqmNu05PchwgWDoBHWLWnmXNIcB7Pvk43LCD+p7jGNTnYU5HfPLRQI7/W4Pfg/THNSY33B4RSeHFtK8EiXDWamvHHqlzMC30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782760439; c=relaxed/simple;
-	bh=ZhbsruenRIkBh3y1/wAoZmOEP3soV5ZsuqSibbDVuyE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nc4korYd859FdI96B1rVc3NnlQTgHAdm4GrK8+OItJYfvGbpoRGBadN2YCfWkcj18oGnK7iWAgXrpw1TZoAXXkfB2hcfWYUOW9iuaY1BONwmC47I6XTVTsGAMNQSPfe23AY0heeLWenY8ZaIef/dv+vHfSVt+5y5mN3RKdwDCyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=LLk/N6M4; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1782767240; c=relaxed/simple;
+	bh=GSlF5PGmk3QvyB0kKPCIFgY0EZoZnB5hwT1yPIBA34g=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bZHKvNE8rKp+4Y1SngMDOu5+mDW2O4VNOQXGOU5e/x0pBd8SyXfntvwO13LRg14WRbc1PxuCqxskIqthkSWQXVwUzloZGm2fU+0TEr1XVaJmCIANjBFFktBqcpCk3q0K5/XFvQWbx7rUyFOhQCw7O65Xed5MeCL4LpPdRTafNYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pA4mysYN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="LLk/N6M4"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 5BDD026F02;
-	Mon, 29 Jun 2026 21:13:55 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id fww6oHSy-hHH; Mon, 29 Jun 2026 21:13:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1782760434; bh=ZhbsruenRIkBh3y1/wAoZmOEP3soV5ZsuqSibbDVuyE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LLk/N6M4sUgi4vvIHKYEgLz9luuLSJI2CpnTQkZuVHZh00lhmDX7rbkA/V6NOHJlm
-	 azPEcmjRwgwRLKXywM9Ij6HXhsKApKL5UFPMhlddMzj09NXMeKYd0vGFmjyhn3jYji
-	 Fgv7s9jmjptopVyJCpaJ0RKz5WD2WLPqqbBDAADLJQ2UJe6W0rRNY+SGRNFkhdCymX
-	 AmkgibruWW/QZIJ7khRJfBhHNwlqtsvremdz4GKu3+ZFCpnzRY1YDMyi2++jtPfJ4Y
-	 oKRzvJOZUw/45MCZE04KHlP9MiUUcshedcQCR1eD7tPBVRz1hVyZTVSfer/oFffOUN
-	 56Mi9zJ4qLY7A==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: corentin.chary@gmail.com, denis.benato@linux.dev,
- Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- luke@ljones.dev, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: asus-armoury: add support for G614PR
-Date: Mon, 29 Jun 2026 13:27:56 +0200
-Message-ID: <w5lQn2_tRS-_d31lk_IeWw@disroot.org>
-In-Reply-To: <e7d71740-8e69-0433-aa49-d5023bd59a98@linux.intel.com>
-References:
- <BGkkBwKuSFuGPnRJO3Lg1g@disroot.org>
- <e7d71740-8e69-0433-aa49-d5023bd59a98@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pA4mysYN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 03C76C2BCC6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 21:07:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1782767240;
+	bh=GSlF5PGmk3QvyB0kKPCIFgY0EZoZnB5hwT1yPIBA34g=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=pA4mysYNUkdgBQL1dG3/tIX73gOMWLFRhJ21dhD5OymqOGbO4gHfGtyhdZn60F4Jt
+	 1BEx2fmZ8mSLy3wmk+uF8+3dmKANWRX5t2JDlN7XseqVKvrnRsjgOaWgCnDchGEcLJ
+	 Eg58taTXz0jW+Qjl1z7t69nCLp3YCQPoGF+tWo59UhEGadMO1rgNAjdXxalmYoLpIy
+	 y/Dsdn5A/YoxwVnnB9U8gaEHZcCK9xH5TsvJcNlMrke06cLX6jpk+icdCuqvgf69Qx
+	 hYu8WNQ5d1vrKuwqxbym6H/bWfrtDML7HrXTVW6xrwutQYr36Um5XRkDo6nsSzqq3w
+	 B4HMSuJhMGbng==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id BEE3EC3279F; Mon, 29 Jun 2026 21:07:19 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221694] [regression v7.0->v7.1] AMD Strix Point (Ryzen AI 9 HX
+ 370) intermittently hangs on resume from s2idle
+Date: Mon, 29 Jun 2026 21:07:19 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: mario.limonciello@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-221694-215701-23zDByT7Ux@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221694-215701@https.bugzilla.kernel.org/>
+References: <bug-221694-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Hi Ilpo,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221694
 
-In data luned=C3=AC 29 giugno 2026 13:04:51 Ora legale dell=E2=80=99Europa =
-centrale, Ilpo J=C3=A4rvinen ha scritto:
-> On Sat, 27 Jun 2026, Marco Scardovi wrote:
->=20
-> > you around? I'd need this to be fixed to set the correct values.
->=20
-> I'm not sure what the context here is, whether you're just asking for the=
-=20
-> patch to be applied (which is entirely unnecessary, as long as the patch=
-=20
-> appears in the patchwork's queue, I've not lost it), or if you're saying=
-=20
-> there's a problem in v2 patch?
->
-There was a problem with the v1 patch, where I wrote 4 values wrongly,
-so I posted the v2 with the correct values.
->=20
-> Usually, the merge window is quiet time anyway when it comes to applying=
-=20
-> patches so don't expect much to happen for them until clearly after rc1=20
-> (=3D not right after rc1 has been published, because the piled up patch=20
-> queue will take some time to drain and there are other things to do aroun=
-d=20
-> that timeframe as well).
->=20
-I see, sorry for bothering. I'm new to the kernel patching workflow and
-still learning how it works.
+--- Comment #3 from Mario Limonciello (AMD) (mario.limonciello@amd.com) ---
+I bet it's this.
 
+https://lore.kernel.org/stable/20260628140148.59923-1-admin@ptr1337.dev/
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
