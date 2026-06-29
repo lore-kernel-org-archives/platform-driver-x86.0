@@ -1,371 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011000.outbound.protection.outlook.com [52.101.57.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6313BB12D;
-	Mon, 29 Jun 2026 15:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782745803; cv=none; b=rCXnXd23rwpvvjUnZnXexfvascATdPRe24qcq9M87xk+Dehht5T7M7Q34WNAn4FhhUCSuv3X9qqx4vEOUxjngxslOh4nZWGdH6/TkPHyZSy0WcyMZVgMfjSnfXhla+ckgb7qZ1UddRGTMSr8NK/hGxSiDRenUuq8g6MLS1mXwDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782745803; c=relaxed/simple;
-	bh=klVUrquG5HzETXVQiLH2GUi0E7kCMnUpe7oJc0jZzkg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Phq7lGS9tRBeSpgYqCQZg54X8GeK/ivn0qInLn7ddzT3xecDdSxouucPpgierx99Sw+S4y2XyWpx0T6daHqBbpjkuXTRTSd+q/N3urOFbaPJMW2epI8dlq9XS97yAK1LcTbdckfC7e+KGfvKm/X1NcoI8FJkd7NNC29oIpteIeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bDhM2b+M; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73802771B;
+	Mon, 29 Jun 2026 15:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782748620; cv=fail; b=aiDiwjQ/RqZZKnMviPHzM+XyXTaD9TP34BPPH7p0UBwLEP+oBiIoASc7uz8zHJAZqMgcNXnnB+bkg+6U5Jc3ZmnvTCX7klw9Aau326/SysDRYvO7Gdc5e1vgBHIlw3hIjlv5yFQk6CT0FFA22X48n4BXJKZXLRftet78y+YDnsc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782748620; c=relaxed/simple;
+	bh=EuJ9JDAgPZZ96JWb41Ogl1bMutK3xLRZOAwOYOrrKcg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ajMS5e6qH8egJOFHaWexCiEK+odqo4aGPTjuQKdWqxjZSq4z022OZ10BMhnKp31iasrZEzhpJCah1ch+nHF6pgH1pVlk+QaKjjpg0jeHzVlIAitDn9bu5lXydvOfUUVW4grg+hffZw+QON6LzvZi2mNmqDvHRTEJccuOSw39hgk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Qzwawr29; arc=fail smtp.client-ip=52.101.57.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bDhM2b+M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782745801; x=1814281801;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=klVUrquG5HzETXVQiLH2GUi0E7kCMnUpe7oJc0jZzkg=;
-  b=bDhM2b+MkMj3k5bB9eCEWlF5e1hW66tIW8fTYlOoIbv/r4xyoHjMk167
-   Wy8lCCDGoK8/L79P8hjJ58n5kGlNPy1/16Cfg/toKv11ac9A7I+45dj1W
-   MbfhI0wlJ+CmzPYR9Ci2mIQSDAyqbTwb4KO9qviLrgRp6t1bYSGMl+jME
-   3LKIGMfhbIRiwWHv4mY1PMvN6/EEBNk9GwNNEPSY2V2quQ2dlV4OxReTH
-   jzmPjNmdhDyjUTt44Ijz6xSLbon9i1M0x9IQaiOXO2ZzbtrJJ7VM00iDk
-   JIsOBQn7N88C5B8/Q/Jmf9BOVmRncZEcwRqxnwnnLf2Nm+5mp0ywJQGlw
-   Q==;
-X-CSE-ConnectionGUID: r+LR5QuwRVeuirEr3WLROQ==
-X-CSE-MsgGUID: FafORNA8Qkuh+efQbYiUJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="93789497"
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="93789497"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:10:00 -0700
-X-CSE-ConnectionGUID: 66V/L2wgQQ6puCwgc0CtMw==
-X-CSE-MsgGUID: utwKVrqmTnuevh8eUW10cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="290105331"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.42])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:09:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 29 Jun 2026 18:09:53 +0300 (EEST)
-To: Denis Benato <denis.benato@linux.dev>
-cc: Travers Biddle <traversbiddle@gmail.com>, corentin.chary@gmail.com, 
-    luke@ljones.dev, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    regressions@lists.linux.dev
-Subject: Re: [REGRESSION] platform/x86: asus-wmi: charge_control_end_threshold
- returns -ENODATA at boot, breaking UPower/GNOME detection
-In-Reply-To: <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
-Message-ID: <bc6a3bb4-6e5e-1d91-b1bd-3d5508aa28b0@linux.intel.com>
-References: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com> <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Qzwawr29"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MFu26lh35m6D0Xzj0brO8ppjtgn1g7xMgzxAtECRiK6XMk1DeaqrmA8azam/KV/HjcuoDyVwCwc3gkDR3M/YTQC2nBOUAZao4EONmGolFPuuvoHOfk179Fzg4AqKi5lYy14QnunwLbQHYibt+ljkzzKyT4AO2TyPSv5wvoy6U5QimarifVgqNBBULSBp920aV1KqDu33FU/mge8hGiY3PaczNIwuXFhhCu1StlDuv1pSu6uYjKhWQh8XEtnWoXKYSqCQX28nGv+rgqKbFbJr6FqnyKgHm8buBzGXQ9KGaoRwXl6kmbjdNFyN56GwTjwsoxfPheSPcNMyFYCCRnn2/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ou0vZXzKzIIY8xseqkZSt7dfnkPAnFhvkZfgxU3SiCw=;
+ b=jg3MMlpsUXKKzUCE+5O671mzVtZKIwA0lauuwo5jJwzZ0aJp682WoS/qN1D3QKKrsMWv/4wX3mhZJLbF2Hdm1/NNa+Tomlrha11BrVXopEYKS/NdlrV+47yjDLDneFn51xfv+ZBrdejOsDtkYqOjdmzEwhM+cn9FiqimDs6DRIO7IsoYnPN0noJTY5JV+ykrJmmgZPo7EFEEOpoBhJMvX3EWVNaFY3Ji7Ky9C9DnnIiIbfwKdoG4dfEk4TN9PBxCI067lFPGTUnCtJcwIDGDQfskMD61Ry6ILHgDdK/aUdqD1wuJO6lTlCn7vOYNRcTJw6fRhvUmnStM03qvg/5xyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ou0vZXzKzIIY8xseqkZSt7dfnkPAnFhvkZfgxU3SiCw=;
+ b=Qzwawr296Kmu23j1a7aD9bS/oS3fmAbmmMyuXcFH6ojN7mZ+qmW4RDUpGyV2xlRtD6NO+kTMgozChI1uA4NFEg+TmK8VXQKoQfyddzF1cL6JX85+iafccKqcDDVp1iUR7T+ca3oIkGP20tc8JsWlv2N5/04qEX4ADmty98zqqF8=
+Received: from BN0PR04CA0051.namprd04.prod.outlook.com (2603:10b6:408:e8::26)
+ by CY8PR12MB7314.namprd12.prod.outlook.com (2603:10b6:930:52::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
+ 2026 15:56:53 +0000
+Received: from BN3PEPF0000B373.namprd21.prod.outlook.com
+ (2603:10b6:408:e8:cafe::2c) by BN0PR04CA0051.outlook.office365.com
+ (2603:10b6:408:e8::26) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.159.19 via Frontend Transport; Mon,
+ 29 Jun 2026 15:56:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BN3PEPF0000B373.mail.protection.outlook.com (10.167.243.170) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.0 via Frontend Transport; Mon, 29 Jun 2026 15:56:52 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 29 Jun
+ 2026 10:56:50 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v2 0/4] platform/x86/amd/hsmp: ACPI input hardening and data-plane readiness gating
+Date: Mon, 29 Jun 2026 21:26:30 +0530
+Message-ID: <20260629155634.1807598-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1706428708-1782745793=:1167"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B373:EE_|CY8PR12MB7314:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2aefa1fd-dda0-4617-8727-08ded5f70950
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|23010399003|376014|36860700016|6133799003|11063799006|56012099006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	pF8Ml3Q8g/e+GdlfOFMHJDymAtqDVYweYkxFC+oNDNa7Rl/DAIKk2oNbHS6zgmAGWsbwD2ryYPmk6vIJ7FCg9O6BMCcIvrXbbOwyIVZbSbAHeEwXrewRLy48WIjbpHY5CXunicSsVFSDNDfddC7gJ5RmHm9ysqxLqYJE4KT6usyr8Y2leTpd0R3RA37b5V3ALuonjoYTEJrGl0YF0cJPi3MTHnNG0FwIRyXrlZAtTZMwvp+RatOLQPSRLiLm8ItogWYXnwdGWffAJyV1Vo0KwQ/Yqpd5PuxSEcYZOQ++qZna5bYYwMpiBdsGWqzRIZLT+Z+Ah4sXbvvGZUpJd380I9nLy1tq4z+Xtddgyn61BM6OmoIyN4czLCTTdnxzOFuRHsFDFXhg0156Wf8jQVaz6N/Yoom9YvfmH1Pp8ooQNIFteygfsCUB87ghtYqGrcnSl1lgH4VPkt8RGQpsDAvbWSpx+ZKcOvvDA4d8iBMmM6lbiab/zV0ctSWLbhT2LgaK2eRw8CbNKe2Z/99BcvQ+mjsHh9oIpSIPBezxGen6XC42PKyaLg0wlF0R7JyjGaB7KRgxP28aNSa9e/QSILnEXtbKYTaJhkGOof7GxmePVCMRLJWFG17oqiN8yi22qn5bAlWpNFYEkPuVwaYvOEXQRRofIb+88588nzCmPbVrKTj50s4vTNVSvnWYdCjd0tTXc6dK+evshui3pAsT1qGnEw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(23010399003)(376014)(36860700016)(6133799003)(11063799006)(56012099006)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	JNfIzOkvJKdj2ZVrTJczco3AGsk0uDZadEtyVlFsMSD0JuxCpT7WOf4Oyc54IcecxEnWOcC3oOn1Z39kWP0R9hYy94cIlBIybZObqgoXUkvtj0OgTPbnIhhJNjgaQwwfOnxfQNe9mh8i454xXoT00Ka+Ba3Bl8JGpp+WnVeRvTd11Dj+nKF/8Vc04rxLQ8rDPXultxKjGmDYrA0hqqmvOsRlJImBqe9gGUR0xv2pkAJv5sDBR7fuGx9ltFd4kj6kgcdm9Lj2jHwo3BbNUIiT4a6bG7nswFHS/U75Dcb3XwJjyTXbLZNZM3dZWz3+qA2xv9Ynl6QmyETgNYv1OwVYJjiPuc0sCJaV7kbKoz7+6GeFmsmKSugrFbOqxBXfV0zsrk6WprAfBgBh50dWq20GJ7y6mukBqu5z8oCyhABs0ac4Il3pzP8h6EVZMOT8kmtY
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 15:56:52.2663
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2aefa1fd-dda0-4617-8727-08ded5f70950
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B373.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7314
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This series hardens the AMD HSMP ACPI driver against malformed firmware
+and fixes a data-plane readiness race on multi-socket systems.  It is
+split out and reworked from the larger HSMP concurrency series.
 
---8323328-1706428708-1782745793=:1167
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Patches 1-2 validate ACPI input before it is used:
 
-On Sun, 28 Jun 2026, Denis Benato wrote:
-> On 6/28/26 08:03, Travers Biddle wrote:
-> > Hello,
-> >
-> > I am seeing a regression on an ASUS V16 laptop where the GNOME Settings
-> > "Preserve Battery Health" UI disappears after booting Linux v7.1. I rep=
-roduced
-> > this with a kernel built from torvalds/linux tag v7.1.
-> >
-> > I first noticed this after CachyOS updated linux-cachyos from
-> > 7.0.12-1 to 7.1.1-2. The same machine still works as expected with
-> > linux-cachyos-lts 6.18.36-1, where UPower reports charge threshold
-> > support and GNOME shows the Battery Charging section.
-> >
-> > The change that appears to expose this is:
-> >
-> > =C2=A0 186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery =
-charge threshold")
-> >
-> > #regzbot introduced: 186bf9031666602d61b40832181b6b6fdc3ba4dc
-> >
-> > Hardware:
-> >
-> > =C2=A0 DMI product: ASUS V16 V3607VH_V3607VH
-> > =C2=A0 Board: =C2=A0 =C2=A0 =C2=A0 V3607VH
-> > =C2=A0 BIOS: =C2=A0 =C2=A0 =C2=A0 =C2=A0V3607VH.303
-> > =C2=A0 Battery: =C2=A0 =C2=A0 /sys/class/power_supply/BAT0
-> > =C2=A0 Battery model_name: X350052
-> >
-> > Userspace:
-> >
-> > =C2=A0 Distro: CachyOS / Arch Linux
-> > =C2=A0 UPower: 1.91.2
-> > =C2=A0 systemd/udev: 261
-> > =C2=A0 Desktop: GNOME Settings power panel
-> >
-> > The machine only exposes an end threshold:
-> >
-> > =C2=A0 /sys/class/power_supply/BAT0/charge_control_end_threshold
-> >
-> > There is no charge_control_start_threshold node on this system.
-> >
-> > On an unmodified build from torvalds/linux tag v7.1:
-> >
-> > =C2=A0 $ uname -r
-> > =C2=A0 7.1.0-asus-test-1
-> >
-> > =C2=A0 $ cat /proc/sys/kernel/tainted
-> > =C2=A0 0
-> >
-> > =C2=A0 $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
-> > =C2=A0 cat: /sys/class/power_supply/BAT0/charge_control_end_threshold: =
-No data available
-> >
-> > `udevadm test /sys/class/power_supply/BAT0` does not import CHARGE_LIMI=
-T.
-> > The relevant end of the properties list is:
-> >
-> > =C2=A0 Properties:
-> > =C2=A0 =C2=A0 ACTION=3Dadd
-> > =C2=A0 =C2=A0 DEVPATH=3D/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP=
-0C0A:03/power_supply/BAT0
-> > =C2=A0 =C2=A0 DEVTYPE=3Dpower_supply
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY=3D81
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CYCLE_COUNT=3D26
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL=3D60512000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL_DESIGN=3D63041000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_NOW=3D49102000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_MANUFACTURER=3DOEM
-> > =C2=A0 =C2=A0 POWER_SUPPLY_MODEL_NAME=3DX350052
-> > =C2=A0 =C2=A0 POWER_SUPPLY_NAME=3DBAT0
-> > =C2=A0 =C2=A0 POWER_SUPPLY_POWER_NOW=3D25216000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_PRESENT=3D1
-> > =C2=A0 =C2=A0 POWER_SUPPLY_SERIAL_NUMBER=3D123456789
-> > =C2=A0 =C2=A0 POWER_SUPPLY_STATUS=3DCharging
-> > =C2=A0 =C2=A0 POWER_SUPPLY_TECHNOLOGY=3DUnknown
-> > =C2=A0 =C2=A0 POWER_SUPPLY_TYPE=3DBattery
-> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D11985000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_NOW=3D13118000
-> > =C2=A0 =C2=A0 SUBSYSTEM=3Dpower_supply
-> >
-> > UPower then does not expose the threshold values or threshold support:
-> >
-> > =C2=A0 $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
-> > =C2=A0 =C2=A0 native-path: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BAT0
-> > =C2=A0 =C2=A0 vendor: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-OEM
-> > =C2=A0 =C2=A0 model: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0X350052
-> > =C2=A0 =C2=A0 serial: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-123456789
-> > =C2=A0 =C2=A0 power supply: =C2=A0 =C2=A0 =C2=A0 =C2=A0 yes
-> > =C2=A0 =C2=A0 battery
-> > =C2=A0 =C2=A0 =C2=A0 present: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- yes
-> > =C2=A0 =C2=A0 =C2=A0 rechargeable: =C2=A0 =C2=A0 =C2=A0 =C2=A0yes
-> > =C2=A0 =C2=A0 =C2=A0 state: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 charging
-> > =C2=A0 =C2=A0 =C2=A0 percentage: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A081%
-> > =C2=A0 =C2=A0 =C2=A0 capacity: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A095.9883%
-> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-enabled: =C2=A0 =C2=A0 =C2=A0yes
-> > =C2=A0 =C2=A0 =C2=A0 icon-name: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0'batt=
-ery-full-charging-symbolic'
-> >
-> > In this state, GNOME Settings hides the Battery Charging section entire=
-ly.
-> >
-> > I then tested a local demonstration change which does not reintroduce t=
-he
-> > hardware write that 186bf9031666 removed. It only keeps the cached sysf=
-s value
-> > readable by initializing charge_end_threshold to 100 instead of -1.
-> >
-> > With that demonstration change applied:
-> >
-> > =C2=A0 $ uname -r
-> > =C2=A0 7.1.0-asus-test-2-00001-g76935ee241bc
-> >
-> > =C2=A0 $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
-> > =C2=A0 80
-> >
-> > `udevadm test /sys/class/power_supply/BAT0` imports the UPower hwdb lim=
-it:
-> >
-> > =C2=A0 BAT0: /usr/lib/udev/rules.d/60-upower-battery.rules:7 IMPORT{bui=
-ltin}=3D"hwdb 'battery:$kernel:$attr{model_name}:$attr{[dmi/id]modalias}'":=
- Importing properties from results of builtin command "hwdb 'battery:BAT0:X=
-350052:dmi:bvnAmericanMegatrendsInternational,LLC.:bvrV3607VH.303:bd04/29/2=
-025:br5.27:efr3.16:svnASUSTeKCOMPUTERINC.:pnASUSV16V3607VH_V3607VH:pvr1.0:r=
-vnASUSTeKCOMPUTERINC.:rnV3607VH:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:s=
-ku:pfaASUSV16:'".
-> >
-> > =C2=A0 Properties:
-> > =C2=A0 =C2=A0 ACTION=3Dadd
-> > =C2=A0 =C2=A0 CHARGE_LIMIT=3D75,80
-> > =C2=A0 =C2=A0 DEVPATH=3D/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP=
-0C0A:03/power_supply/BAT0
-> > =C2=A0 =C2=A0 DEVTYPE=3Dpower_supply
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY=3D97
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> > =C2=A0 =C2=A0 POWER_SUPPLY_CYCLE_COUNT=3D26
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL=3D60512000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL_DESIGN=3D63041000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_NOW=3D58414000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_MANUFACTURER=3DOEM
-> > =C2=A0 =C2=A0 POWER_SUPPLY_MODEL_NAME=3DX350052
-> > =C2=A0 =C2=A0 POWER_SUPPLY_NAME=3DBAT0
-> > =C2=A0 =C2=A0 POWER_SUPPLY_POWER_NOW=3D0
-> > =C2=A0 =C2=A0 POWER_SUPPLY_PRESENT=3D1
-> > =C2=A0 =C2=A0 POWER_SUPPLY_SERIAL_NUMBER=3D123456789
-> > =C2=A0 =C2=A0 POWER_SUPPLY_STATUS=3DNot charging
-> > =C2=A0 =C2=A0 POWER_SUPPLY_TECHNOLOGY=3DUnknown
-> > =C2=A0 =C2=A0 POWER_SUPPLY_TYPE=3DBattery
-> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D11985000
-> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_NOW=3D13026000
-> > =C2=A0 =C2=A0 SUBSYSTEM=3Dpower_supply
-> >
-> > UPower then exposes threshold support again:
-> >
-> > =C2=A0 $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
-> > =C2=A0 =C2=A0 native-path: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BAT0
-> > =C2=A0 =C2=A0 vendor: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-OEM
-> > =C2=A0 =C2=A0 model: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0X350052
-> > =C2=A0 =C2=A0 serial: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-123456789
-> > =C2=A0 =C2=A0 power supply: =C2=A0 =C2=A0 =C2=A0 =C2=A0 yes
-> > =C2=A0 =C2=A0 battery
-> > =C2=A0 =C2=A0 =C2=A0 present: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- yes
-> > =C2=A0 =C2=A0 =C2=A0 rechargeable: =C2=A0 =C2=A0 =C2=A0 =C2=A0yes
-> > =C2=A0 =C2=A0 =C2=A0 state: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 fully-charged
-> > =C2=A0 =C2=A0 =C2=A0 percentage: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A097%
-> > =C2=A0 =C2=A0 =C2=A0 capacity: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A095.9883%
-> > =C2=A0 =C2=A0 =C2=A0 charge-start-threshold: =C2=A0 =C2=A0 =C2=A0 =C2=
-=A075%
-> > =C2=A0 =C2=A0 =C2=A0 charge-end-threshold: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A080%
-> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-enabled: =C2=A0 =C2=A0 =C2=A0yes
-> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-supported: =C2=A0 =C2=A0yes
-> > =C2=A0 =C2=A0 =C2=A0 icon-name: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0'batt=
-ery-full-charged-symbolic'
-> >
-> > GNOME Settings also shows the Battery Charging section again.
-> >
-> > I am not asking for a plain revert. The part of 186bf9031666 that avoid=
-s
-> > writing 100 to the hardware at boot seems important, since that write c=
-an
-> > overwrite a charge limit retained by the firmware/platform.
-> >
-> > I am mainly reporting this so you are aware of the userspace-visible
-> > effect of returning -ENODATA here. On this end-threshold-only machine,
-> > that makes the only threshold node unreadable during UPower's discovery=
-,
-> > so UPower and GNOME treat charge limiting as unsupported even though th=
-e
-> > kernel write path still works.
-> >
-> > It may be that UPower should handle this case differently; I have also
-> > filed a UPower-side issue at:
-> > https://gitlab.freedesktop.org/upower/upower/-/work_items/347
-> >
-> > For completeness, here is a local diff applied to v7.1 that restored
-> > functionality. I don't intend for it to be a final fix; only a demonstr=
-ation
-> > that keeping the cached sysfs value readable, while still avoiding the =
-boot-time
-> > hardware write, restores UPower/GNOME feature discovery on this machine=
-=2E
-> >
-> > ---
-> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asu=
-s-wmi.c
-> > index 80144c412b90..d376358b590c 100644
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -1582,11 +1582,11 @@ static int asus_wmi_battery_add(struct power_su=
-pply *battery, struct acpi_batter
-> > =C2=A0 return -ENODEV;
-> > =C2=A0
-> > =C2=A0 /* The charge threshold is only reset when the system is power c=
-ycled,
-> > - * and we can't read the current threshold, however the majority of
-> > - * platforms retains it, therefore signal the threshold as unknown
-> > - * until user explicitly sets it to a new value.
-> > + * and we can't read the current threshold. Do not write a value to
-> > + * hardware here, but keep the sysfs attribute readable so userspace
-> > + * can discover charge threshold support and explicitly set a value.
-> > =C2=A0 */
-> > - charge_end_threshold =3D -1;
-> > + charge_end_threshold =3D 100;
-> > =C2=A0
-> > =C2=A0 return 0;
-> > =C2=A0}
-> > ---
-> >
-> > I have attached the dmesg from the reproducing v7.1 boot and the .confi=
-g used
-> > for the build.
-> >
-> > Thanks,
-> > Travers
-> >
-> Hi Travers,
->=20
-> If you search that patch in the lkml you will see that I actually tested=
-=20
-> GNOME when I did this and I remember that I was able to change the=20
-> threshold.
->=20
-> Moreover I also opened a discussion on Upower for this specifically (you=
-=20
-> can find in closed merge requests)=20
-> https://gitlab.freedesktop.org/upower/upower/-/merge_requests but sadly=
-=20
-> right now the merge request of freedesktop is whining about undisclosed=
-=20
-> errors.
->=20
-> Anyway I think that either upower forgot to ship the updated rule or=20
-> there is a regression in upower.
->=20
-> Given that setting battery to 100% would mean charging the laptop while=
-=20
-> it boots and certain people don't want this (and it's not a good=20
-> practice to do that) I am not happy having to revert this change, albeit=
-=20
-> if upower doesn't solve this issue I'll probably need to.
->=20
-> Moreover if I remember correctly another possible workaround to have=20
-> upower work is to define a fixed start_charge_threshold.
->=20
-> While it's possible to add it would be useless and not mapped to the=20
-> hardware in any way thus simply being an hack.
->=20
-> Ilpo, what do we do in these cases? What's the usual procedure for these?
+  - hsmp_get_uid() passed the device UID straight to kstrtou16(uid + 2)
+    without checking it; a NULL or too-short UID could dereference NULL
+    or read past the end of the string.
 
-Hi,
+  - hsmp_read_acpi_dsd() dereferenced elements[0] and elements[1] of each
+    mailbox sub-package before confirming the package held two elements,
+    allowing an out-of-bounds read on a malformed _DSD.
 
-As you probably know, the usual procedure is to not cause user-space=20
-visible regressions. But this is complicated by the fact that nobody
-(I assume) really wants the old behavior either.
+These two are based on the review discussion at [1].
 
-It would always be possible to take a timeout and revert it for now, and=20
-apply the change again later once the upower situation is (hopefully)=20
-sorted out. That's what is sometimes done for troublesome changes to give=
-=20
-time to sort out the problems properly without constant time pressure.
+Patches 3-4 close a startup race on the lock-free data plane.  On a
+multi-socket system socket 0 exposes /dev/hsmp before later sockets
+finish probing, so a message aimed at a socket still in bring-up could
+pass the sock->dev readiness gate and dereference a NULL virt_base_addr:
 
---=20
- i.
+  - Patch 3 is a pure refactor that threads struct device explicitly
+    through the ACPI mailbox parsers so they no longer depend on sock->dev
+    being set early.
 
---8323328-1706428708-1782745793=:1167--
+  - Patch 4 publishes sock->dev last with smp_store_release() once the
+    mailbox and semaphore are initialized, and consumes it with
+    smp_load_acquire() in hsmp_send_message().
+
+These two are based on the earlier submission at [2].
+
+Each patch was built individually with W=1 (no new warnings) and passes
+checkpatch.pl --strict and codespell.
+
+Changes in v2:
+  - Split the ACPI validation into two focused patches (UID and _DSD).
+  - Split the readiness gating into a pure refactor (struct device
+    threading) followed by the smp_store_release()/smp_load_acquire()
+    gate.
+  - Order the parser arguments as (dev, sock): dev is fully formed while
+    sock is still being filled in.
+
+Muralidhara M K (4):
+  platform/x86/amd/hsmp: Validate ACPI UID before parsing socket index
+  platform/x86/amd/hsmp: Validate _DSD mailbox sub-package element count
+  platform/x86/amd/hsmp: Pass struct device explicitly to ACPI mailbox
+    parsers
+  platform/x86/amd/hsmp: Gate the data plane on a fully initialized
+    socket
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 53 ++++++++++++++++++++--------
+ drivers/platform/x86/amd/hsmp/hsmp.c | 13 +++++++
+ 2 files changed, 51 insertions(+), 15 deletions(-)
+
+-- 
+2.43.0
+
