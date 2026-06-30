@@ -1,201 +1,215 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7A535AC27
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ABB291C10
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 06:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782797449; cv=none; b=Ok/9RwpyAmDs9E6pPQyBcmeKn0KPsADPd5my/x11YVvSt59wreVyuXqPtF7Fe/xfOuPdLGN3YG+vpx1kQUcwqa0zxHBXCnaXKtLNRknPhV7fcYXMEQaMWlcwGKFDYT9DXYy4Xk/+UzZY4ZrppraNGWegoGciFiD5m1l0SdlAIME=
+	t=1782799473; cv=none; b=SQwgKMhZPwbmJZpn4CKBVL+0wdmnhBsb/0XrcEQcu6L/1H6pxxWlTKqmC96eEXkm9H3bnSbtg4d6hpsw1mUL7I5i3PmrUaX6bsXSwcuH77dbiwF/CCAYUAiUXIOebPJ6IV9fw/Et/BHdlC7lJwq9+nZjy3rUasblAFqs5csZcKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782797449; c=relaxed/simple;
-	bh=AMbCfl1TqOeipjOiTdE0+IqDoXL9fNroA+PH+fRuGzw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cR3O4MEUl3JH0F3UW+kN4cMyf37uKnE9Tqb04gYXEnVILRq2asHVHrK+3kkpEbL1DmrVtNZwsOigiuNyuyPVaNx1KLCAnAmhfr6LDGp5ZFEJlazMx6uNe32vMWjfvUC6zjYpEvra+Htc/gJSrAd0Vog1+YP8YBen+dOZe+3E2Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cZl9E8Ps; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=A34YschW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1782799473; c=relaxed/simple;
+	bh=q9HQDf6uU3KOpf7X+h0FkXT0BRmTsT0Ka85jPZxYGjU=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EdVv6UHRl6U5ILuZDiO7Tn8I64cgSH6N9oUsy33eIEKBkbcqOVfG7kBo9RKoB0VPo0T9i73TqPcbPev/Z7dR9C9TRSBGqfhae0JPzNBwLqBmi/mUL5S4pJUZNadnkV7YQ+VWzp/c8F70elcy0Jmz+LyqyS56QXje4ypvNmjaWww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ktwxb7CX; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cZl9E8Ps";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="A34YschW"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65U1IjE5357780
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=; b=cZl9E8PsrXl9QgCL
-	jh31zWrJCAL8BAjCgp6BFt9K0QiFrtIWvjI9E6Lo18MFhpybP+cfEla8/C09rRPF
-	5dbqoZ1DlXwbkOflsm8YA994DYvVNq95aYnGDx9ywP3WryxDrGzaG1aKv0h+Y8dR
-	j3NP9NpWHUIL4V6OSwULCyUKQGGMboNHYrXT4MDScqy1yTTEkiMvdecm2wdMWx3w
-	l+WAYl7Ao4vJezHEv0DiR/xLkbv5C8hUASKS/l8wtqYc5hp+vUSYOm3dbY2tBCpW
-	ikzbjklRP5NT81SVHd2/d8XES/ASALckAB8rN3FHOez4syhh/aKynuO4vHK+X944
-	f9xjNA==
-Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3y9j1nmg-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:47 +0000 (GMT)
-Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30ecfc5dea0so1763144eec.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 22:30:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="ktwxb7CX"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-493b786d6c0so3590975e9.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 23:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782797447; x=1783402247; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=;
-        b=A34YschWm9+uuk7NcgJnjH3l0Vma46ShVH33wlhvTsxkFCaGEZR/GrmRUwvMUi71Sz
-         ibUCJ8oLcZzRfU2rkMmqn12fjYLrWeW1m7f/QhyfoWax80GvAJB16SGhZ1nZASFFVzDq
-         IvFbXJwP/ZxSJ6SRKwNFU9MO1Fd6zkZwLU+R7QkA2H217YCczGlLvYghdv0hca4iD8O9
-         Mv8ubyWUDF759YwGR07+flIEP55y+OSYlk/7uAnuY2XBLOX4lvMPIykJUz6PD7dpR7NC
-         4DtXxlfmLxCbiTtOOZwqkA9KvYr5iZMOSbLQcGsOVyiZD+Lve+BuJsFIE/WvGJNXxIB/
-         3cCw==
+        d=baylibre.com; s=google; t=1782799469; x=1783404269; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
+        b=ktwxb7CXt+trnAajnkzA9h9gdeaP+NWWqiQtMnj/0fmN71drYBEJJVqA/zdDPOHA+j
+         tx53cU1g/94nmCKnfAZI3uM4N20ZfXbOrGesn2v8kLV408YjA0rqDDhX/rgJwy6yAMAx
+         RHuc5qOE1EEd+PNOB/7AVM6ZKg1kPXmDutlUdICaEZh79ksn91a3posF345m56bEi96d
+         N3fxZ84jT3pXm8b8Vnk4HkRUvEcpZIrhYwKHSeZAEHqu8PzndfN05M6wyGGRylM8ZzM2
+         GlE2jFRlS3Dsmd36Hh6dzBH61f9OpFXTs900Z0kPYXTJM4l+T3BlB2wf6TAGsYHsX3mL
+         IlpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782797447; x=1783402247;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=;
-        b=ZDMaDLfzgs1PoZZiu+eMP9pNHTajUjgvnrGPpLTCE1/jDYNjcUrO5GqVWL7ZPtXCPY
-         Xgy2JNdFu6mXmjmPru+OPKxwg38Jyd5frrHllafWqEmBWvYYOk6HAhVQTZYYRsvpOCv2
-         NIpIi5Y1vlJ8dzY78PtikXOI2v+xqNM6M9gyUv+yNJWHQ/GyPpVmNYtG3RHbytpAfHRj
-         l7fu/3JxQ3hvM76maIllbCx/5TSTTL6NHvx6ZPkyXpCsX/OCsoYR59F6gqJ0sAb/wvrF
-         hKtavk0UNQuSdryYCnfedh5NbJ3m2BeV/KTcKh4Gkp/4Gbk+FSegmgbR8d2Av9m8duCl
-         kvxQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrcGqfIT1nmQuBDKbFqZyb8mGcAynETtcCkpLiqUZbkWbmQunU7CeomZ4tzzoL3EC9eyN2uNDa5E49jSjZ4uKTC4Szo@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPmxpu89/8xOi0VOohdI9Y+fSGxC/r2E3Fzq3+LFweJg0Kb+I9
-	VC6xS+2dJpdXVpm32LinxtWBCtyCAu///rZahGSecg4ip5OU/kK/mI8lm0LeEkjdx361DP7DlWQ
-	XGiR64ivePSgU3HEoc17sUR53J5W2mSlIafrbdClyYNDag/MeVOAMOnSKS4AEL+tYnu8nD7Zn/Q
-	NA
-X-Gm-Gg: AfdE7ck0NChWs+68rEDc2lmsP+GURXNnYyK8xzqCQFEXrxWMIWHC65c2TbC0lergHu8
-	TPs+x+fvZ8lGoYna61Qxv0W5sp8P5NdPI17Bdi4VhXvGMB9ICObMWPI0LH90Pdsm/TSdN5onfp/
-	Da97+KNhz9e2Sb+jAUB1k0eUhNoPdqCSF2wrGmpeYpk630bKxbZPG/K+g2vwGeEgAyK461IJAhW
-	bkFT2Jdeo6lpr4i+u9KGLyPE9pNWflQS/HHIsewzp7ZOK2F5IYONi9HtNM6PHk9G+W2QPwFfR4X
-	i5O6VS1MnuCIQ+CWziMppZ8KP5wxed9r1pkhh8WQ7/OApB+HN5jSBm/ewo7zFGm2zPAVk4ZOWzb
-	w7NeBzZlp3myP23pduqmY7Y90jPXTaKOPaXgNGoSokFmEsn+emtaCL/Wynpax/hFhSvTPOKYhO7
-	fKnOYgrqPaHMiVXCjoU183DLj6//c=
-X-Received: by 2002:a05:693c:3b09:b0:30b:bda8:a70b with SMTP id 5a478bee46e88-30ee12bf278mr1453051eec.4.1782797446906;
-        Mon, 29 Jun 2026 22:30:46 -0700 (PDT)
-X-Received: by 2002:a05:693c:3b09:b0:30b:bda8:a70b with SMTP id 5a478bee46e88-30ee12bf278mr1453031eec.4.1782797446349;
-        Mon, 29 Jun 2026 22:30:46 -0700 (PDT)
-Received: from [10.242.229.199] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.19.19])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee2cd21bcsm6404411eec.0.2026.06.29.22.30.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2026 22:30:45 -0700 (PDT)
-Message-ID: <5dae2ab9-76ef-4516-b21d-80729bf7ed79@oss.qualcomm.com>
-Date: Tue, 30 Jun 2026 11:00:41 +0530
+        d=1e100.net; s=20251104; t=1782799469; x=1783404269;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
+        b=h8FeORgJaF8o4Zf2e4fLGUj4IYZvNxsdmEoy0zx6lOESkXGzFHyG5IccqszbAJbUiJ
+         8WhL+1FaQyFkvZAO38vCwK7DXl+3u5om95lnEM6Pomc+patm1FlSsTM+M/RNnfg6CEq1
+         /EwDUolshbjoiZW4ovH1eH8KavPpFYzjKZHHakqeFv4gX2mxsBwMow08ij5b1hxVvrKe
+         CJxWVGzDXubTgjj5/f/2k6197ygrptcv+f6vBY/NSO+LvkO4sMfkpwoodzgeARHTkHFy
+         7/5Wkdy/8kGGXyMWmJ43akNuKgBwCfs+NefFWjK2Fe3Bb2Gs4mZ5dcoC/d2MWOnSi+nU
+         B+bA==
+X-Forwarded-Encrypted: i=1; AFNElJ+4YmMJl2Tl8y3CxUDZt6EC5CHSu2ynbYNnM226XzbIg1P4gJ2CKi2KSde9E6hc8Be25T4bc/gNbXr76i3FBSjjAqqA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yycbmo6+G9wEOgIbigaWtAW9nATprbrWD5G802N4ZAoQJ3w1lwj
+	zvmDwVtJiNKXvkOPcjjoW/BZmEu5JMFqXec4Jw2DE+BnvKhYNZiTdAnLlVhZGbD2UtQ=
+X-Gm-Gg: AfdE7ck9kMa0b5ils6Gm6bL7CpWv7mOhpzwScuabhxun6Y9+mKjI4SpYfwWdB0w6YVN
+	gf3ff+ESCvcNyNZIpMOt5pintLyROeCp7Sl6vfb+KGzKD41XJ/XD1xk9VtM6hERjcJxt6HjcP3g
+	TxpFQ2O/O9WHpR772FN9ka4ak02UDSPwh3BSaa8O4aUzKwLxviJlll9XqfsrPLZeI1WUCx/YT8k
+	0s2qZswbuJC0fLC9+OH5NKq69Lk4gL2CWzImd8mrINlFqhHiON+dNzHwEoAXXV+H2068hGqppUp
+	CPi9mrpf60mFTNwc50eEh5UN72TW6BV0Z/2E2iGLeWxUMuWgHfoSk8Oktv/cmvxYrQMFdhwVkRF
+	86JoY+X86insHoiw4o9p2aZeh2R1Y0JnT+pZ2YVIJUhSCUW1DZhm/9kLhAfj1qyE7XFWgkwOfRk
+	qEtZdRKm75l/SZMgBfhA==
+X-Received: by 2002:a05:600c:8285:b0:493:bacb:1341 with SMTP id 5b1f17b1804b1-493bacb176dmr13964925e9.4.1782799468463;
+        Mon, 29 Jun 2026 23:04:28 -0700 (PDT)
+Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493b8cd3018sm45429405e9.5.2026.06.29.23.04.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 23:04:27 -0700 (PDT)
+Date: Tue, 30 Jun 2026 08:04:26 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Mark Brown <broonie@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Raag Jadav <raag.jadav@intel.com>, 
+	Sohil Mehta <sohil.mehta@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, 
+	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-media@vger.kernel.org, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, 
+	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Pei Xiao <xiaopei01@kylinos.cn>, 
+	Shashank Balaji <shashank.mahadasyam@sony.com>, Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>, 
+	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
+ headers
+Message-ID: <akNYUdAS3sbEdRqC@monoceros>
+References: <cover.1782682124.git.ukleinek@kernel.org>
+ <20260629235804.GA414914@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform: arm64: qcom-hamoa-ec: Register cooling devices
- with their name
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Hans de Goede <hansg@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20260629-fix_cooling_device_register-v1-1-c6e518b0bbd4@oss.qualcomm.com>
- <48334852-b131-d6a0-469f-09e15d6765d5@linux.intel.com>
-Content-Language: en-US
-From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-In-Reply-To: <48334852-b131-d6a0-469f-09e15d6765d5@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: RHorkO1UHZ73ZSYdo9NrTPeL-2-PWbhy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDA0MiBTYWx0ZWRfX6QSWB/4cxqoG
- 1DcH0zkPdL9224bAaSiFEPf5tmEmZWiM2+4nenYviVT5LpGgQyVXvuAAQAQApWXcSnEgF2po9KL
- WCrfB7o5MLSv/KLaVE5JyHBwExneo7JXso+O/QDDBCwq69Wph9OSsxGgb44OTy9MbYAE8/+AsHi
- 0ourlNvdt3yBbqGPd9fSfI5NMk5tu+xJMq0CzqOr+KBLZx3319ZSUPa2dE0k8uQc+HAfzuK2t1T
- MQ4sD9kSha99UQvykSvB5p8Q0gamZbwbwsYePiQR1pxKND9UesQcARi6UwAO9xNuH1g41ASq/7R
- 66qd0IwkNXmboUf4TDMPQukPjqd12sdyl+kgDAEtxramEJQKv83J1dno96gXSqET0/DTrvSZKIZ
- SLNFcx+lA2jtZ8PzsAO+HOWJ0DR2VoLch8SSTrTXXjBWI+DAIIsE4kODdIW1PYF8t0Jt3aoeV2e
- z6EIbU8gpJuWV7QuNAg==
-X-Proofpoint-GUID: RHorkO1UHZ73ZSYdo9NrTPeL-2-PWbhy
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDA0MiBTYWx0ZWRfX69oCCLbKviyQ
- Ej2HxMWgEc8j0EPwVASOwkgMZdJP7WpMTbmbltJsVWUIHavibdnbKlaDdH4mG9joRzbMe70lMBS
- X55g5D4wk6gs6l58BqearZ0TUXGmhqg=
-X-Authority-Analysis: v=2.4 cv=SINykuvH c=1 sm=1 tr=0 ts=6a435487 cx=c_pps
- a=wEP8DlPgTf/vqF+yE6f9lg==:117 a=3ivmCuETaj/XXnlAhr/wyw==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
- a=EUspDBNiAAAA:8 a=sTVR4Ors8kAh6zT4N6oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=bBxd6f-gb0O0v-kibOvt:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-30_01,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0
- clxscore=1015 bulkscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300042
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bjsp2vxvxtx3lqot"
+Content-Disposition: inline
+In-Reply-To: <20260629235804.GA414914@sakamocchi.jp>
 
 
+--bjsp2vxvxtx3lqot
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
+ headers
+MIME-Version: 1.0
 
-On 6/29/2026 6:03 PM, Ilpo Järvinen wrote:
-> On Mon, 29 Jun 2026, Anvesh Jain P wrote:
-> 
->> Each fan is registered as a thermal cooling device using
->> devm_thermal_of_cooling_device_register(). When the thermal core gained
->> cooling device ID support, the helper's prototype changed: its second
->> argument became a 'u32 cdev_id' and its third a 'const char *type',
->> replacing the previous 'struct device_node *np'.
->>
->> The resulting semantic conflict between the EC driver and the reworked
->> thermal helper was resolved while merging the drivers-x86 tree into
->> linux-next by passing NULL as the 'type' argument, dropping the per-fan
->> 'name' string. As a result every fan is registered as a cooling device
->> with an empty name.
->>
->> Pass 'name' as the 'type' argument so the cooling devices are registered
->> with their intended "qcom_ec_fan_<n>" names.
->>
->> Fixes: 5c44f48e91de ("platform: arm64: Add driver for EC found on Qualcomm reference devices")
->> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
->> ---
->>  drivers/platform/arm64/qcom-hamoa-ec.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
->> index 45829f2786b7..12196d56b60e 100644
->> --- a/drivers/platform/arm64/qcom-hamoa-ec.c
->> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
->> @@ -391,7 +391,7 @@ static int qcom_ec_probe(struct i2c_client *client)
->>  		ec_cdev->fan_id = i + 1;
->>  		ec_cdev->parent_dev = dev;
->>  
->> -		ec_cdev->cdev = devm_thermal_of_cooling_device_register(dev, 0, NULL, ec_cdev,
->> +		ec_cdev->cdev = devm_thermal_of_cooling_device_register(dev, 0, name, ec_cdev,
->>  									&qcom_ec_thermal_ops);
->>  		if (IS_ERR(ec_cdev->cdev)) {
->>  			return dev_err_probe(dev, PTR_ERR(ec_cdev->cdev),
->>
->> ---
->> base-commit: 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
-> 
-> $ git log 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
-> fatal: bad object 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
-> 
-> Please don't base your submissions on some random commits. There has never 
-> been code with (dev, 0, NULL, ...) in platforms drivers tree (and neither 
-> in Linus' tree).
-> 
+Hello Takashi,
 
-You're right. I based this on a linux-next snapshot; the (dev, 0, NULL,
-...) form only existed transiently as a merge-conflict fixup there and
-never in the platform-drivers or Linus' tree. Current linux-next already
-registers the fans with 'name' via
-devm_thermal_of_child_cooling_device_register(), so the issue is gone.
+On Tue, Jun 30, 2026 at 08:58:04AM +0900, Takashi Sakamoto wrote:
+> On Sun, Jun 28, 2026 at 11:58:35PM +0200, Uwe Kleine-K=F6nig (The Capable=
+ Hub) wrote:
+> >  ...
+> >  drivers/firewire/core-device.c                |    1 -
+> >  drivers/firewire/net.c                        |    1 -
+> >  drivers/firewire/sbp2.c                       |    1 -
+> >  ...
+> >  drivers/media/firewire/firedtv-fw.c           |    1 -
+> >  ...
+> >  include/linux/firewire.h                      |    3 +-
+> >  ...
+> >  sound/firewire/isight.c                       |    1 -
+> >  ...
+> >  1649 files changed, 1575 insertions(+), 2544 deletions(-)
+> >  ...
+> >  create mode 100644 include/linux/device-id/ieee1394.h
+>=20
+> I have no objection to the above changes relevant to firewire subsystem.
+>=20
+> Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-I'll drop this patch.
+Thanks! Added to my tree.
 
--- 
-Best Regards,
-Anvesh
+> Consequently, unit drivers just include include/linux/firewire.h to refer=
+=20
+> to 'struct ieee1394_device_id'. After merging the changes, I'll post more
+> patches to modify the following unit drivers, since they are left from the
+> patchset.
+>=20
+> * drivers/media/firewire/firedtv.h
+> * sound/firewire/bebob/bebob.h
+> * sound/firewire/dice/dice.h
+> * sound/firewire/digi00x/digi00x.h
+> * sound/firewire/fireface/ff.h
+> * sound/firewire/fireworks/fireworks.h
+> * sound/firewire/motu/motu.h
+> * sound/firewire/oxfw/oxfw.h
+> * sound/firewire/tascam/tascam.h
+>=20
+> By the way, the changes touch so many files. If it takes more time to
+> apply, I think it better to make steps to modify across several kernel
+> generation.
 
+Touching so many files is the motivation to do all the high-impact
+changes in a single go. As of v7.2-rc1 <linux/mod_devicetable.h> is
+included (transitively) in ~18000 of 21500 .o files below drivers/ for a
+x86_64 allmodconfig[1]. So touching that file requires a near complete
+rebuild. If we spread the changes over several trees/kernel releases the
+need to recompile the whole tree repeats more often than necessary. Note
+this bites not only during the merge window when building the
+development tree, but also during bisection.
+
+> For example, getting rid of direct reference of
+> mod_devicetable.h from drivers at first (in the case of firewire
+> subsystem, for 'Replace <linux/mod_devicetable.h> by more specific
+> <linux/device-id/*.h> (headers))', then adding these per-subsystem
+> headers and applying relevant changes.
+
+The impact of these firewire changes is limited to the firewire
+subsystem. So doing these later is a smaller issue. I plan to tackle
+these when this series is in. (But if you want to care about the
+firewire bits, that's fine, too.)
+=20
+> Of course, I don't mind to apply the v3 patchset as is in upstream.
+
+There are a few changes that I collected (Added SPDX markers, a few less
+#includes added as my script evolved, a new patch to fix a hppa
+fallout), so I will send a v4 later today.
+
+Best regards
+Uwe
+
+[1] I did in my build tree (with the series applied)
+
+	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | xargs grep -l /dev=
+ice-id/ | wc -l
+	19221
+	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | wc -l
+	21597
+
+That's a bit wrong as my series changes the numbers, but the ballpark
+should be right. In
+https://lore.kernel.org/all/20260622210733.1743063-2-u.kleine-koenig@baylib=
+re.com/
+I found similar numbers for 7.1 (17038/21330).
+
+--bjsp2vxvxtx3lqot
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpDXGcACgkQj4D7WH0S
+/k6p0wf8C/fqLWElPKeEJ6VYZOMbHAVQFFSaiocKgLhyatujJO/xABylQtIrG2bm
+oNQHPUayrcWacObHGF3fEjQy4hRJLu10iu9WrGW/FvZUPjhCWUzPdhuXpmSnE4fH
+zd/NVmkNUTbomy4rUfxcWTKfXtWxqi+pwwPvcbEeQBUCqK/R3MK9MTJPeo+fuS0w
+N7J2Vv4yLihgZU1OW8Y9uT+TbrHb5Kn77XyKCF3bvRyrDK82GHBAEy0UIojDpJnT
+sIhHykaiFL1/5jUZb/iCqMx0+2OUeNz8HOywoSete10zzE2qFPFgI683oSrO6gcY
+cBQF6NX+zboS6GmYI42xlkzJTj7ODw==
+=GSrp
+-----END PGP SIGNATURE-----
+
+--bjsp2vxvxtx3lqot--
