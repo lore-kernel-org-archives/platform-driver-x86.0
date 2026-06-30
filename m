@@ -1,72 +1,72 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D205B3CBE75
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 10:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE8F405860
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 10:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782816703; cv=none; b=aUweBGXYactZl3I7ZmW0NFV/lU7pQc7vcQxX5O9Ge3apCuibKAW7gbo06wBvt8LGg4SXbcpm86rdc5z6iTWFQtLKLeIZJUvlkFShmru7Sd3rz5G1sb3QW4AE1JttsPG5ubjhtBaLpwyGF96qQFsRqdgyL6E0DOaGRNU2NvnSUJ4=
+	t=1782816778; cv=none; b=Eknv60bvZ5o2EKj2pLQf93caykxht/MEHBGGxag3T2h0lGsHKxNxI7xCV2NfaOgquiWH2JgrplS4obZEd6YPSF+FRp8kaYZsWpbWJ9QSJMUV71L+TPKaLdOsdHRs5oLskLD4ziXuxbqoH7Iu0BV1ym46h1Sj0cszJezimGoSd2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782816703; c=relaxed/simple;
-	bh=q90dxw/dbkV/k1InCHOuJoxK2SJbBbHUmIOByU4fj/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FaA4LKy2lBhirxCnGuf35neaOcf9gvEjJu5xwqkffJfHxYEe5s5InruFeqsx6ourBdAewudct0ixfU2dbnoHbObfRhgzqcXp5t5FQ46Plp5L/6AdHInOX0C0KYmb376OlMlWkGGCELBF8LHV16zsjoBliSw+W7t+z4bspvCO1qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D9oouj3/; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1782816778; c=relaxed/simple;
+	bh=ZGzt5IG+INAc0Z7HeVhKM5dtyeIxmckzQq/YLXhj7HA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E/VuXqf/4rEgrWHKkv5VOfvtA2Dyf8zagUcI6zvRdICzbBaC89T6XxYCB+OdN0cuRdIg7SNCoiOuyTn9h6Ax+s6EeWU2b+TjR61CPwXG4nh0TKWha58T39zxtMC47y4uydlfKBuWEqDUJmYQ4BvSLOrPogP6SGlyIxRHlVtzVcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EyI0Bpk4; arc=none smtp.client-ip=74.125.224.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9oouj3/"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-4758b2a9e2aso355978f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 03:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyI0Bpk4"
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-664de4f80d3so1947301d50.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 03:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782816692; x=1783421492; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782816767; x=1783421567; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nve1AfoRdTJRd2oQeHAkX5JoPoZFuE9ZSydXb9N9gBA=;
-        b=D9oouj3/ylyQT66jliZN+D1ybFFcU4qIJAAuRyS7RsYb0vJ7zxBl4VCdsl2ug6TwEo
-         Y9YcxVvY+6+cP4BjSvhKlKacG16HrfUDubI0h4GBiVlEbSEEkwOkmlaf0OHMPPYJAWN5
-         Ze8BPoQ71CsyoWNNjI+WK7FGfOYd+s0sUetbXsNKlFrkNHlpd9oREbTIO0v8taFF3uWN
-         GG98pSBrSxCeQjI701UAF/sC2FtvnwapeaC8qEhS1I8gYJv6e8QA9YQvCYZewgc0NFud
-         u0K1d8HM/KmhiYcCHlpu61UcFMowv4JaiDmcWsUMXmHz/6Q3MDnlOCORXSJn8y7GwJ45
-         SBRw==
+        bh=BfF+iXeJWMxuPhgk04zCk6fGh3gRO2aBc22OA8kCBN4=;
+        b=EyI0Bpk4mY7MrXdF/3pVKos2TndkWIlxS63pSWMOx/AbcRikvnstFJRGrPUSu7vRhW
+         fFpTVtI9vsT1wZakZayymFCmyjoNvg76edEBfCiEOjL4xiwCi4WvVj+ktXFOk6eQu1Ma
+         2LXGUdDQVn1pkbq9CU3oV5U3XQo7ZQYb76dd8B2OkcfkSr/6y1YEr2g50nVxHv1WOKmP
+         zBuCF8Ksnaze0WaAaa90nN2McLAaTJXAvPMh9SfA/duRLq0q3eX4QFiNfLPRuTmbvtEM
+         jNdOLBKg/UOXMo5phy30Yqedp3n4oyHEYGTdqZzGUcO+NYv40gzF4wgX6OrQ3cWNu65X
+         oSFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782816692; x=1783421492;
+        d=1e100.net; s=20251104; t=1782816767; x=1783421567;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nve1AfoRdTJRd2oQeHAkX5JoPoZFuE9ZSydXb9N9gBA=;
-        b=phutAbITr9Km2FyezftKSKEzH43YO70svsazJJJMERFqAcR/BJcnUuvikgk2c3HHGO
-         sMqLOAc0miXyaPHZl3Z0V2eUFZ0Ap/Mh3gziYuhZ5579aAGIAqxkiPk83SdFU6QgXSYm
-         OHOW3pM1c8gVm1JOauhV2/z1kRiK3pG0AOssNDlhj8LS6LTOC4Zna09HmULel5mua4Tg
-         sYdoEfEZ0yK3OBKVtj7Vzc5l5iYCXnjJIbnJ4eCU+dFUAoOAos4IKBmIoCW9f7/O0iNE
-         6ppaZUWTymXD/wURg4+scBUEn0UUo/Ebz5Zr8fR0CjdJZWyAjRuwhapcqNcMuSHvuUmU
-         oRvA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrha7Mf3GJDq1CCUovrjWWMu0+EtiGWyqQ+C+NiqM7KCO2GqUqRyJU3APd68Y7i/PAjIhFRz9LYSIa6SHRYXUcXjmWH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtdxvvlwMeJe+ydYFhyIBkJcqMGK6tDzJ5GupM1L3DMUADh086
-	3fLohJkBdBszHHD/9Ass7sJDJUtkdUqrLwrBl4QfX28U/tzQF+5RwsqE
-X-Gm-Gg: AfdE7ckh7TLTUhrVKJt+/gKuILACtpIe86ArZX29rxK7JEFsmpoTj9LCHtAA6V4d7pn
-	gKHpfOVgDvyG5a5ROloAU4CpdO9C3/TxEsBo+q4+h7lvhdv8PtEfPdSzJEMlpmj4vRt7denqQXO
-	8ifVpf7gfUjz8xiPOrlgvYDiMSFMgd9PXoYFhZH76ESDNUSQ0X9qXxhzWtonE5qyMwJjx/hvexw
-	civJi9O06AqUu88u1RNX8hzB+NIxWCvvyu/4vmrDNVwutjh8Q2Yx78F5lfbsFqqX2TvBfLls4KR
-	yFfmVaOafQeuiEcaS4WAX7XC+xaLas77bUMzP5n3q6H2vM7QA9eJgGROg0Jir4hufpwv11T/8XW
-	lKfcnD75wN22iL+N29xBccPgIClU2RfA3DCvJz8KGggrdGo+TjwOKXejtufjsLeWtiGa9igcizP
-	vr/IwuxyCPb68Ihl3AZEHHe2DceA==
-X-Received: by 2002:a05:6000:2006:b0:475:f0c2:5b01 with SMTP id ffacd0b85a97d-475f0c25bebmr1741739f8f.55.1782816692186;
-        Tue, 30 Jun 2026 03:51:32 -0700 (PDT)
+        bh=BfF+iXeJWMxuPhgk04zCk6fGh3gRO2aBc22OA8kCBN4=;
+        b=HIAvHSRR5zUiILoXP88LyTp81zxv0aLiey385eFnvBD4mBjN6ndsrSfX/gR4sEhRbB
+         r5YgpfKcpECj40C5DP2SIzESx3JUSCr3sxkEf5EZpxmsQU4zMgVHB3HToMH/Y1p/cLtJ
+         qmnOvWOnvchgFowN1DKCHR7ETUHGSQ1DAxBaFaxqy7GNoHjqF9sOMJPNdfN2GcPKpBov
+         N/NYQW9nBNrw8r9OPoUvUtkyLQzFsncoDEsYx549OhU6L9CuRXpAHPs6pUWjwwNulLdP
+         GFyOLiUdeZROn0zjTNte2EnMJLuBDp/uJnjQ40v1T9WDtgBAbZkFFwtIPKS9qewspjAU
+         CE3w==
+X-Forwarded-Encrypted: i=1; AHgh+Rre9ZDNydetxfVvuK6pd9vMmlw8+CEqj/wgFocGJuJJ8VD4vnsg+dnWcvlAyDbhZMm4MdUGuoHr7c+0iqbdKgXWKesu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+pC9MicEOfaDVXmVIs7FFlrjl5fdRK9LeqF99L7TeDZ9vvd+H
+	Ny/WIIe27vT1w6s3qT2WxWo/3IJhHpUiKUQq8qVlGCEtGGL1wsPc1To/
+X-Gm-Gg: AfdE7clhxYfwkU7j366i47i56pBQi/dCsP3kEQ0rcJduCFJF6Wm6xGSYoCcOQ02BPdr
+	1daXry7LbH0ktpZ4TVtyPQa4bRb/4huCWn2CV7WB9xPZhHMFI0EeFdaK7ss55fet3atar5tDy8V
+	4JzoxuOh5dYTelwLvcI+X4QDkDNXZH4/2uPgVhxpwD6hMMNgX0ey7FY/Uy/vsTChZgPrOszHdK+
+	lZFtxl4VlcomwFnDlVBQbAxPaNcnUhUz3BXAM+pgEBoqpAUy4oT4h/XkESEqKvnPdXrt0X8TCu1
+	Roo6zJnrzN+wSGKVlE1qbm6TRd7NoJF/MelVGbA6jerzWBdeIhHJHsF4aS6dasCL7eVFJZjleCT
+	xo2JF4YpCxZNiq8In1FXVYXMq+o8dj4l25WXSgeJYNhzlnf1w1t4+EZD67AerAKEyq0pPli1wrr
+	7c4kvylkz3XeeamLCIe4EJq8hloSmGh1mjqtVx
+X-Received: by 2002:a05:690e:140a:b0:664:aa09:a29b with SMTP id 956f58d0204a3-664f96e482dmr2719441d50.18.1782816767360;
+        Tue, 30 Jun 2026 03:52:47 -0700 (PDT)
 Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4756636ce7esm7033280f8f.23.2026.06.30.03.51.30
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-665016d577asm693402d50.21.2026.06.30.03.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 03:51:31 -0700 (PDT)
+        Tue, 30 Jun 2026 03:52:47 -0700 (PDT)
 From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	"David E . Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yousef Alhouseen <alhouseenyousef@gmail.com>
-Subject: [PATCH] platform/x86/intel/pmc: validate LPM mode without stale index
-Date: Tue, 30 Jun 2026 12:51:25 +0200
-Message-ID: <20260630105125.54053-1-alhouseenyousef@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: handle positive BIOS error codes
+Date: Tue, 30 Jun 2026 12:52:34 +0200
+Message-ID: <20260630105234.54638-1-alhouseenyousef@gmail.com>
 X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -76,51 +76,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pmc_lpm_mode_write() compares the requested mode with the loop variable
-after pmc_for_each_mode().  If no low-power modes are enabled,
-the loop never assigns that variable and the comparison reads an
-uninitialized value.
+hp_wmi_perform_query() returns firmware BIOS error codes as positive
+values.  The Victus-S profile callers only reject negative errors, then
+consume output fields that are not filled for a positive firmware error.
 
-Track a successful match explicitly, including the empty-mode case.
+Treat every nonzero result from victus_s_gpu_thermal_profile_get()
+as a failed query before using its outputs.
 
 Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
 ---
- drivers/platform/x86/intel/pmc/core.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 9f77c0716e59..9833df172d4e 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1147,6 +1147,7 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	struct pmc_dev *pmcdev = s->private;
- 	struct pmc *pmc = pmcdev->pmcs[PMC_IDX_MAIN];
- 	bool clear = false, c10 = false;
-+	bool mode_enabled = false;
- 	unsigned char buf[8];
- 	int mode;
- 	u32 reg;
-@@ -1167,11 +1168,16 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	mode = sysfs_match_string(pmc_lpm_modes, buf);
- 
- 	/* Check string matches enabled mode */
--	pmc_for_each_mode(m, pmc)
--		if (mode == m)
--			break;
-+	if (mode >= 0) {
-+		pmc_for_each_mode(m, pmc) {
-+			if (mode == m) {
-+				mode_enabled = true;
-+				break;
-+			}
-+		}
-+	}
- 
--	if (mode != m || mode < 0) {
-+	if (!mode_enabled) {
- 		if (sysfs_streq(buf, "clear"))
- 			clear = true;
- 		else if (sysfs_streq(buf, "c10"))
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8ba286ed8721..50c5a1e152dd 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1825,7 +1825,7 @@ static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
+ 					       &current_ppab_state,
+ 					       &current_dstate,
+ 					       &current_gpu_slowdown_temp);
+-	if (ret < 0) {
++	if (ret) {
+ 		pr_warn("GPU modes not updated, unable to get slowdown temp\n");
+ 		return ret;
+ 	}
+@@ -1907,7 +1907,7 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
+ 						       &current_ppab_state,
+ 						       &current_dstate,
+ 						       &current_gpu_slowdown_temp);
+-		if (ret < 0)
++		if (ret)
+ 			return ret;
+ 		if (current_ctgp_state == 0 && current_ppab_state == 0)
+ 			*profile = PLATFORM_PROFILE_LOW_POWER;
 -- 
 2.54.0
 
