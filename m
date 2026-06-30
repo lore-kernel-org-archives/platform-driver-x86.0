@@ -1,232 +1,244 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD963DDDDE
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 17:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EBB3DF018;
+	Tue, 30 Jun 2026 18:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782840652; cv=none; b=ZdbHlnXoxXiL0S/Z4GozUJMTX81lLx52Yj8K9RWoCSVwIO84BrZXfaYOMi2+MMY/dJ+XmaRAVToP5poyqFuGww0E6rC29glAgifyrWCiJHMeM+Zl5K6klkuLmMzmbAIEgeLkuonOViMW28Zgx8MIohcVHsPhpweFiMOKAG4ldrM=
+	t=1782842837; cv=none; b=UA8jWXrqhlApMQ/tcGCluCmCxdd/JRzZQQuHMPLFGfVZ9gpT5c3Z11YBrBQ5PvS4g4SIOJmGVbpWvPqc5KkYoHht1B3Vvg2dTLYTG4dEYr6hCIhq8rQNXUnksqHgyjvMYmeBPTUZwUpFQnReY2X6eKfJN4LsM26FcWrNufavv/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782840652; c=relaxed/simple;
-	bh=v8oucDYPdBj+yU5bLDJLs8q3W92I/N/TC7xzlrh8mlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSO7lrtFEWgMfrxC+0OZiHff9xkDylI8cXpMnn3KetuHaLFSSMhLGM/ucPClR4txYz+fT2BLAYlR18yIRpXxvzXJS8eJTyHFp1vJplTpYNPWqpSmiadYBR16XUjfWe7y7CyTUchJ1b1Ep273RD1SwMb+UTqGSxHYn53lk5mGAt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=TrHTOHqU; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1782842837; c=relaxed/simple;
+	bh=Wnll7AfVDxjKrVe/Xq2HSwvWhvd98a6ymrAlNUFpL4w=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cYEsiGvidvVihX7vAQvI5nDyO+JRhWdvyf1FZTyPoIR2ASpOFvYwz9v6tJVqyExm0mXfLALMLJ+UTmv20FIweZ47k5acbTB2izJ8jrYXr0aBnabAfaJ4PaVcgiFlfS/P6rJVy5yXwgWRuptWgXxbQIBlYqRsmi28XJzbbXHuxss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBckP+nX; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="TrHTOHqU"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4924593f45dso60542495e9.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 10:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782840648; x=1783445448; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BpXaNQ2LxDF0tw6kNWrqSrR3FCmC7pJGI8n/xYi1WH8=;
-        b=TrHTOHqUnFfFbUQxjnzWAxGGeJBWHP0cKZ2TuMRBlzZ5Jm+Yoy5uSjaWnpOPk4ncgl
-         xNC50nEkwXewoYk9xeaKampLfmaMNdHnztRWe7x77G6EpVAlQ2pa94r5Mpk+jH/4TJ/m
-         UOH/whXuSzeu2bJvCJ6k33tvWyzQ8a49CI6bhNBqI42nJFJG0OdkKv1Xxp/f7D5ib6wF
-         +T+oQbxq+0WEktsF3XdWzpR+cNaM4jSyCv6reGvwB0kkbE97AlloUR0/YfJoXtUklX7Y
-         ocXGlyfkDL4dFvjlqftc4lDsxt2j5dhShJwNWYlst9PlvZEckDotuAf8faHzHlyYPVPs
-         fgvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782840648; x=1783445448;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BpXaNQ2LxDF0tw6kNWrqSrR3FCmC7pJGI8n/xYi1WH8=;
-        b=DUAznke7/3ebMXLG+RbjqTK+kl4xAlSMYSMZNCWqEy5/1fxHjClDy5xI+543NIg72Z
-         7dM9Cq7FxsfJ6qzl78ZAu9Bea++aor6gG25hD/Equf//Ba8VIbBzKPs6o413RTz8f/o+
-         +RyqiDsU0kFv+GKKweEwzuJRF9bJbtDaDz5NfoVZ+Wd17XzDxbqQYZG0To2mIVhnGo9Y
-         C/ufAVNZyTJWGYIl61ojTB2nZfd2d0sy0KeaoL2aoB4MBV2iC6pN349y4AlXCif6OeHX
-         Vfves+Ir0Bm7f/Bivt0HmF86Ey0rBDP1KPrZiWB4qsVSwNEEglwPnRdkEVJcIAF4LHqD
-         4Wig==
-X-Forwarded-Encrypted: i=1; AFNElJ/iofA7nDeuKV/xrZJB/ZUlUmNq7XRmhgdhtEbzjhEYrUQQw7aiTWxSyXUFcih7JoM1Wbg3giGoA87wB+58oQ4HPxOA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVvIKbXUYdaqOiM7/CsjYOED0IRek/56y192d3SdfFUiiYWcJU
-	rfyQ+eqKnxbZ4wennVrsuvqlIGYcilHMwNOyz60XXrhSIVPF7Xqkq3ObzBRjdWg0trs=
-X-Gm-Gg: AfdE7cm1blRc5if2dNd+9FNb6Wj2fgtaJQMy8eaXe8ISkCMxL14ED8UHJmEcYqnM76Z
-	uGHqIzuGBVScyL85VtKOFyikuoTo7oPz8+LRk/T2Tq2Ap7iRXme9BliWRMjID94htO4e2JU86zW
-	TwdwLSdGoUDvxbq8fjykY0izdAu4sJZZC28qCAwwoGI4t2Mejf9xx8NV1d3XBCxLK/3w+9TAcOn
-	cUTx9dK+RvlA//Oitn+AUAq9Kws1vyeh4mMeHCkK+uA/aoF0yoXwB7jIPYoUNHaAZUXngLeqQMk
-	e8a6rTxDIX5sZxECqUnDdvSiDMPrOXICdSAywLr0W8gLMjwc2yULVgCtwJAOwnfq96CBSKvAo7n
-	nVyt0lj7QWs0L558JHf82tyvMngEo7/XPLOccJr25SwMWzIhGqRU7m94a/SyP8nwL5XOXpHI9Zy
-	0JSX1V0BI93c42/QNwK1oFrgRU1GXaGkCH0wClBHTQwgV/gSqsolNzmqMvM2cCNVVNIRPcpoJOi
-	W+M
-X-Received: by 2002:a05:600c:870b:b0:485:9a50:3370 with SMTP id 5b1f17b1804b1-493bda382ebmr26685055e9.8.1782840648077;
-        Tue, 30 Jun 2026 10:30:48 -0700 (PDT)
-Received: from localhost (p200300f65f47db042a9b551def0a6b94.dip0.t-ipconnect.de. [2003:f6:5f47:db04:2a9b:551d:ef0a:6b94])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493be81fca5sm11964125e9.14.2026.06.30.10.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 10:30:47 -0700 (PDT)
-Date: Tue, 30 Jun 2026 19:30:46 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBckP+nX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782842835; x=1814378835;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Wnll7AfVDxjKrVe/Xq2HSwvWhvd98a6ymrAlNUFpL4w=;
+  b=hBckP+nXCu1bFEfP/2iPb+g/WtzwGP3359xeoqGHa9U92PAwhmCicC1d
+   f1BaIf8Sw+Do+Y/pehxYS0bbcia8l3TVFJoh2pmLSqtXFl3n5nIAlLfYu
+   lViKgr1nwYQyppoxoHAyOlFSMCNccYRchtiASeb0VmYKteN3wC7lNmG+x
+   CDvfJR99NkvUelXVpbPscnG859LOIWhJM19e7TBjk4Tvm6wTWs1zpR30a
+   Eni5Agl9gWiA2EJrGuy23vCLp2KrHeA/dckaRItS8bHzpe0zfnNT1FKB2
+   1jAKNh13FX1U8qSEts/80v1kSJHVlpNRme6ecBXWzsV3/xv5iAFQab9qM
+   w==;
+X-CSE-ConnectionGUID: GPOQoumIRpKXz9l0ZK9Myw==
+X-CSE-MsgGUID: /OoeibstQEuidA4uInrHTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="87401855"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="87401855"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 11:07:14 -0700
+X-CSE-ConnectionGUID: plzT4jtIRyq/MfGNvnUeAw==
+X-CSE-MsgGUID: nPay4jx0TQqo3a4XeXcCLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="276628740"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.230])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 11:07:12 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Jun 2026 21:07:08 +0300 (EEST)
+To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Danilo Krummrich <dakr@kernel.org>
 Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
  defining struct dmi_system_id
-Message-ID: <akP5FKsnsdzx8pMk@monoceros>
-References: <cover.1782682124.git.ukleinek@kernel.org>
- <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org>
- <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com>
- <akJzYlHHcvPCl0HW@monoceros>
- <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
+In-Reply-To: <akP5FKsnsdzx8pMk@monoceros>
+Message-ID: <2548547c-bbdd-3aed-7550-fecdba4180ac@linux.intel.com>
+References: <cover.1782682124.git.ukleinek@kernel.org> <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org> <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com> <akJzYlHHcvPCl0HW@monoceros> <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
+ <akP5FKsnsdzx8pMk@monoceros>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wbjchwfvl6dsna4z"
-Content-Disposition: inline
-In-Reply-To: <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
+Content-Type: multipart/mixed; boundary="8323328-1225316032-1782842828=:1167"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---wbjchwfvl6dsna4z
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
- defining struct dmi_system_id
-MIME-Version: 1.0
+--8323328-1225316032-1782842828=:1167
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hello Ilpo,
-
-On Tue, Jun 30, 2026 at 05:58:54PM +0300, Ilpo J=E4rvinen wrote:
-> On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> > On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
-> > > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> > >=20
-> > > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> transiti=
-vely
-> > > > which ensures that struct dmi_system_id is defined in
-> > > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.h. How=
-ever
-> > > > this include in <linux/i2c.h> will be replaced by one for i2c_devic=
-e_id
-> > > > only. To ensure that dmi_system_id is available add the include for=
- that
-> > > > explicitly.
+On Tue, 30 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> On Tue, Jun 30, 2026 at 05:58:54PM +0300, Ilpo J=E4rvinen wrote:
+> > On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> > > On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
+> > > > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
 > > > >=20
-> > > > Acked-by: Danilo Krummrich <dakr@kernel.org>
-> > > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koeni=
-g@baylibre.com>
-> > > > ---
-> > > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets.h | 1=
- +
-> > > >  1 file changed, 1 insertion(+)
+> > > > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> transi=
+tively
+> > > > > which ensures that struct dmi_system_id is defined in
+> > > > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.h. H=
+owever
+> > > > > this include in <linux/i2c.h> will be replaced by one for i2c_dev=
+ice_id
+> > > > > only. To ensure that dmi_system_id is available add the include f=
+or that
+> > > > > explicitly.
+> > > > >=20
+> > > > > Acked-by: Danilo Krummrich <dakr@kernel.org>
+> > > > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koe=
+nig@baylibre.com>
+> > > > > ---
+> > > > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets.h |=
+ 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >=20
+> > > > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-android=
+-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > > > index 2498390958ad..c756961ae5fd 100644
+> > > > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablet=
+s.h
+> > > > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablet=
+s.h
+> > > > > @@ -13,6 +13,7 @@
+> > > > >  #include <linux/gpio/consumer.h>
+> > > > >  #include <linux/i2c.h>
+> > > > >  #include <linux/irqdomain_defs.h>
+> > > > > +#include <linux/device-id/dmi.h>
+> > > > >  #include <linux/spi/spi.h>
+> > > > > =20
+> > > > >  struct gpio_desc;
 > > > >=20
-> > > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-t=
-ablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > > index 2498390958ad..c756961ae5fd 100644
-> > > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > > @@ -13,6 +13,7 @@
-> > > >  #include <linux/gpio/consumer.h>
-> > > >  #include <linux/i2c.h>
-> > > >  #include <linux/irqdomain_defs.h>
-> > > > +#include <linux/device-id/dmi.h>
-> > > >  #include <linux/spi/spi.h>
-> > > > =20
-> > > >  struct gpio_desc;
+> > > > Indirect include patchs are never a good idea as it always makes he=
+ader=20
+> > > > reorganizations minefield. So for this change,
+> > > >=20
+> > > > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > >=20
+> > > >=20
+> > > > When it comes to the series, I certainly like the direction it goes=
+ very=20
+> > > > much (never have been fan of mod_devicetable.h) but I'd have prefer=
+red=20
+> > > > stepwise approach over trying to introduce it to some mid-rc.
 > > >=20
-> > > Indirect include patchs are never a good idea as it always makes head=
-er=20
-> > > reorganizations minefield. So for this change,
-> > >=20
-> > > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > >=20
-> > >=20
-> > > When it comes to the series, I certainly like the direction it goes v=
-ery=20
-> > > much (never have been fan of mod_devicetable.h) but I'd have preferre=
-d=20
-> > > stepwise approach over trying to introduce it to some mid-rc.
+> > > The hurdle here is that at least the header part isn't easily
+> > > automateable.
 > >=20
-> > The hurdle here is that at least the header part isn't easily
-> > automateable.
+> > Patch 1?
 >=20
-> Patch 1?
+> No, patch 15.
+>
+> > > (Well it is, but the script that I have now to check all
+> > > .c files already takes longer than an hour to run. I guess it's not a=
+s
+> > > optimal as it could, but still.) And so getting this ready for inclus=
+ion
+> > > in next and keeping it up to date until the merge window opens is a
+> > > tough job.
 
-No, patch 15.
+It looks to me more a problem with the chosen approach where you wanted=20
+to get it all quickly done in a single all-reaching series (which IMO=20
+would have been fine right after -rc1 but mid-rc cycle, I'm not so=20
+positive about it).
 
-> > (Well it is, but the script that I have now to check all
-> > .c files already takes longer than an hour to run. I guess it's not as
-> > optimal as it could, but still.) And so getting this ready for inclusion
-> > in next and keeping it up to date until the merge window opens is a
-> > tough job.
+> > > The further downside is that each modification to one of the highly u=
+sed
+> > > headers is expensive (in rebuild time) when these are merged one afte=
+r
+> > > another (or when bisecting). So getting these changes in in one batch=
+ is
+> > > beneficial.
+> > >=20
+> > > So while I agree with your preference, I don't think it's feasible.
 > >=20
-> > The further downside is that each modification to one of the highly used
-> > headers is expensive (in rebuild time) when these are merged one after
-> > another (or when bisecting). So getting these changes in in one batch is
-> > beneficial.
-> >=20
-> > So while I agree with your preference, I don't think it's feasible.
+> > While I understand keeping it up-to-date must be a pain, I'm not entire=
+ly=20
+> > convinced by the rebuild time argument as it has been the status quo so=
+=20
+> > far too for anything touching mod_devicetable.h.
 >=20
-> While I understand keeping it up-to-date must be a pain, I'm not entirely=
+> Yes. I don't know about others, but big rebuilds annoy me regularily.
+> And with another quest that involves touching most struct *_device_id
+> this really gets a pain. And just because "we" endured something in the
+> past, doesn't mean we shouldn't improve.
+>=20
+> > If one commit would move all linux/device-id/* AND ADD them all into=20
+> > mod_devicetable.h as includes, that's just one rebuild more (and one=20
+> > rebuild will occur anyway whichever way you architect this).
+>=20
+> Yes, one rebuild isn't possible to prevent. You're talking about patch
+> #1, right?
+>=20
+> > Only if includes would be then removed one-by-one from mod_devicetable.=
+h=20
+> > (e.g. per subsystem basis), I can see it causing n rebuilds (+conflicts=
+),=20
+> > but they could be removed in bulk as well.
+>=20
+> Removing those from mod_devicetable.h isn't part of the plan.
+
+It isn't because you're not doing this in steps so you didn't put them in=
 =20
-> convinced by the rebuild time argument as it has been the status quo so=
+there at all (which would have been fine at any time and only enforces=20
+one rebuild comparable to any other linux/mod_devicetable.h edit).
+
+> But
+> replacing `#include <linux/mod_devicetable.h>` by `#include
+> <linux/device-id/of.h>` in <linux/of.h> triggers again many rebuilds
+> when done separately.
+
+But this is not because you touch linux/mod_devicetable.h but linux/of.h.
+It certainly should cause rebuild of all the code depending on linux/of.h=
 =20
-> far too for anything touching mod_devicetable.h.
+but I assume that is much less than what linux/mod_devicetable.h causes.
 
-Yes. I don't know about others, but big rebuilds annoy me regularily.
-And with another quest that involves touching most struct *_device_id
-this really gets a pain. And just because "we" endured something in the
-past, doesn't mean we shouldn't improve.
+> And then for <linux/pci.h> and again for <linux/platform_driver.h> and
+> .... That's why those are included here, too, to at least use the "one
+> rebuild needed" window for the high-impact follow up changes, and
+> trigger a rebuild only once (unless you happen to hit an inbetween
+> commit while bisecting).
 
-> If one commit would move all linux/device-id/* AND ADD them all into=20
-> mod_devicetable.h as includes, that's just one rebuild more (and one=20
-> rebuild will occur anyway whichever way you architect this).
+I disagree, it's a different set of files for each. But there could, of=20
+course, be some overlap. Maybe the overlaps is so significant it's=20
+nearly as same as linux/mod_devicetable.h, I don't know but is that what=20
+you're trying to imply?
 
-Yes, one rebuild isn't possible to prevent. You're talking about patch
-#1, right?
-
-> Only if includes would be then removed one-by-one from mod_devicetable.h=
+> > What you can achieve is preventing those "normal" mod_devicetable.h=20
+> > changes enforcing rebuilds right after this has been applied, but that =
+is=20
+> > just the rebuilds as status quo would have without this series and no=
 =20
-> (e.g. per subsystem basis), I can see it causing n rebuilds (+conflicts),=
+> > more.
+>=20
+> This is exactly the goal. I don't get the "just" part of your argument.
+> The point is that a modification to struct i2c_device_id should only
+> trigger a rebuild of i2c drivers, but not of pci, platform, spi and all
+> the others, too.
+
+With "just" I meant it's no worse than status quo. If that prolongs one or=
 =20
-> but they could be removed in bulk as well.
+two kernel versions more to avoid mid-rc cycle merge it doesn't really=20
+seem so high cost.
 
-Removing those from mod_devicetable.h isn't part of the plan. But
-replacing `#include <linux/mod_devicetable.h>` by `#include
-<linux/device-id/of.h>` in <linux/of.h> triggers again many rebuilds
-when done separately.
-And then for <linux/pci.h> and again for <linux/platform_driver.h> and
-=2E... That's why those are included here, too, to at least use the "one
-rebuild needed" window for the high-impact follow up changes, and
-trigger a rebuild only once (unless you happen to hit an inbetween
-commit while bisecting).
+And I understand where you want to end up, and you could end up there=20
+using steps as well:
 
-> What you can achieve is preventing those "normal" mod_devicetable.h=20
-> changes enforcing rebuilds right after this has been applied, but that is=
+1. add linux/device-id/* + include them from mod_devicetable.h
+2. convert stuff to use linux/device-id/* without removing includes from=20
+mod_devicetable.h
+3. bulk remove linux/device-id/* includes from mod_devicetable.h
+
+2 & 3 are chunkable/iteratable so they don't need to occur for all at once=
 =20
-> just the rebuilds as status quo would have without this series and no=20
-> more.
+as long as 3 is not split per one linux/device-id/* its rebuild cost isn't=
+=20
+that huge compared with the status quo.
 
-This is exactly the goal. I don't get the "just" part of your argument.
-The point is that a modification to struct i2c_device_id should only
-trigger a rebuild of i2c drivers, but not of pci, platform, spi and all
-the others, too.
+--=20
+ i.
 
-Best regards
-Uwe
-
---wbjchwfvl6dsna4z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpD/UMACgkQj4D7WH0S
-/k7EuAf/c8ODR+vs/8I+Md9COBD5E41jvh/kBoEwBnM+lb4ibQWdRmhjECkmay57
-P+3+aTYph+O67WUz6zeDAndaECzZokxmM8okhJ0yaETUOo3wIdl/CzK3bQa/4Irb
-k1WkhbtCq5mUrH/xToRedm9enaL8kZasTFMv0aRmf5P+jLsMPbzk8iUrLZmH+OR0
-Ky7Fm2Ggw9GIt+IFFcpoh7gwYrJ6ioWeFWfaHPWA/pv4xE3ibf9bMNJOVZjmwINh
-k8XzSZZok2jPWVcnbYj5IMqzMzaQ3VQtrizcBk3sWWmXI9lvX3SsoQELuYORmn9Z
-QhJK6Ob9w754RDTOqAqLxo5nsjs8JQ==
-=G13s
------END PGP SIGNATURE-----
-
---wbjchwfvl6dsna4z--
+--8323328-1225316032-1782842828=:1167--
