@@ -1,255 +1,164 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EAC43DA23
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 14:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE1943C078;
+	Tue, 30 Jun 2026 14:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782831220; cv=none; b=Tza2clSaX2Rp8Y+WNwnKr2KVnw7dqOJEnP6Bp7Hy+EklzIHPNr1yJyNrwz0zvGl0LAcLU6hw3A1mVj8PC5wJE1R8ucD8IHPQrQCGyOMYeZ7dGpkpIOtOAoREouBn/Jsx67I/uTLhhmgOcBKcDQ7KmhGoxnBbO/8LajV647iDFH0=
+	t=1782831543; cv=none; b=Kd2nm3rv5AThkuMUHsoqwtkqs6g4IhO8/yGQVQi22uk/NwUj2123060rTgINZK1r9kXfF5zyNUbFLkwRapQl8k51uZFrtWmLj3SZupecrJIx/nTTivGu5Zd0iQd+wzMzvyTwAQR1qWzcwmw0bcgV0cqqE3buCfhxrUOr+S2Ag+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782831220; c=relaxed/simple;
-	bh=C8blcHMIMkUn8SxjVlVqBB/iskindoTdj+2JO6WJc0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hUvggpw5L7VZzYOrPJktR0Rb5Df+Z4UWDFU+mAKyfTFkHMtK/pntGMJVoJb7pqTm69K9z9oSHecAG5Wh8usvzIrP63Sul39g1s4zT+fX3QcA1ROJA4BlMOqsxhJHEoSukhPkooGPfcfJYGdYwH1PuIxwTJyDCCYhaxPeKQo/6Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ndNCcwjH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=WrKZVce5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1782831543; c=relaxed/simple;
+	bh=3l/hhBb6LhPWn4Lh+5fI44R5Z6REzRuxh/G5MzQ7Ooo=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lxm4pgx8Jjz2tOFg/NiZs9oOZ8m6yhDFDg/0VFI6n6rBmaLIGetX8Iyu2vysA166eCh9h0d9dz5H4t9Q+IJMPDtIJRwVyfkXztaWYI253qBYEBvO/SeeW9GJqj4rvvJk+BXcPCkhKSop2XNR0SkPyxz77A8W3imNVkNO4FULKdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9SZGxUU; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ndNCcwjH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="WrKZVce5"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65UEDL9s2224523
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 14:53:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=kPPkjSCNo09
-	SDo/Pz7px6sAVk8X5RZ6B8/0fd1li7qE=; b=ndNCcwjHg7Teba2kMIrd7YLPjER
-	SLcRRQAhlHXRxXlm+8+/ClO00MCeGLopp26Mpn9ApnMH0jpgwU2lD/x+SWVLgBFE
-	kYnaT2PBdDOC684WY9zpj5NUSu4CbcAlf5ws7T/p/Fh6sI+0CRjLHJBO2u7NuRsN
-	u0ZNfDj2ximNGT9aCRN1+83dVZ1XncY47IHjCOECCT8epqO2lNQaq8/5UNQ6nZRx
-	iHpsBL6123UFk3k0shETgMTFhh/a0fFoplz4jfaUq0OqxD3ipi/BGG4fMHoQb+8z
-	25YwrVJxBq85F378lhdmNdnRsSU3sPE2CdODnNvkqijQmFf+YXbI8Bm0SQw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3x1cvffp-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 14:53:34 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-915c364ae3bso773724185a.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 07:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1782831213; x=1783436013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kPPkjSCNo09SDo/Pz7px6sAVk8X5RZ6B8/0fd1li7qE=;
-        b=WrKZVce5erS8+zUyI8F2VTRvVarJdBNpHG9uVXdm8K2QrRDVc9wjnWdC1dKACGXYkM
-         CtKa3CWihpoHQlrlMkHDFNNNIuYCGseDTorLrPojSrSrbVMma5ki3tZw4T9ZtYtGg5Oz
-         3ZK8iEerFrdQgFgc1ALa5rzpBvSmEQSiBo7HijlaFc2JaH3Au0d9rD2nLk9j7yPWYOps
-         Q5fSctSlOGxiAU352J8C0UD5MQb7dBPwkSqiTCYbOpkBDujdlMqzdBKMbOXfRIKtLPIh
-         sNiz1MdZagBeRJ6KF17ZtZJsS3+ZOZAwDoLIOg36hN3FWcW+zeePOnkn3sPM6lpxU/4J
-         xp+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782831213; x=1783436013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kPPkjSCNo09SDo/Pz7px6sAVk8X5RZ6B8/0fd1li7qE=;
-        b=KWRDOW5zO6XMnn/Y5olK7xReIuXQfSyLaCiKdPrdEO1iM/7fW1LrKj32NUNl2tjkLA
-         XPEY9KXxcJyPGPSzOok89z3dPTSJl7K914LFfIGVy1+6MtLtiz8RlInQNN56NZtSypJr
-         Hx6Px6Zr9f1hZmVQRNYG8pb5oSv8yVQz9ARi4BhwEB2ACXYJh7IL604CYM0D0ruDa8NX
-         nUdC5w71liHxYDma9TBsEczOUtIjMmHvBXfhUC9lb1GOGIaz3hes6fW7DzCUVUwKEDEF
-         yN94/7gjcJaydwjO7JEIJ6IIdpcs79HRbTNacPYllrUZmCNGPL+bptDutAl0VkvI0maK
-         tBYQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+DTdwJiEI9KVakI61Xq4M8bkhPDGNCQFkWE1Q3rzQU8HR145Z3PcG8aII//t56x+nnkxOwHGI1fShfpYgnjBeeRN9n@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzSpX6Cr/wAgmyVTrn1uFiSNYt0iPHT688JOwOTZJVlrl6llES
-	WNICGKibqeWhymDmg+IWAjUjSiahJCa1GeRndzpYowFMzcoxpa5pEuQhl7YECeD41qJzE6amhnx
-	ql2grdVHAbjZXHHoMypK40E/FVz05czMNVj4g5ljhONqT37f4zl2dtHyT7iNC7+xkaYdlV5jmfC
-	82
-X-Gm-Gg: AfdE7cl7JNRQ06FRfR8h42xJRXw9Ao/G4SzUGquGWtp5EStCophhVwvgrlsDCeMRwtR
-	zE+0zQYpKuopEZsj9IP0Y+dtOm5mJS6R5MtKbKvFbNZ6HRbQD5VFfvhz1TKjPxsM/ibMKWzuB9X
-	LtuekvZ9K3aDKfWFMDEUfAYBOnx8yUj5pIH9MHXpd1+G3BbMqAFN/vX8l6dDjWnBx8TR/DipVma
-	tuhsWD4Wf074liR7dM62KFLuIvrMo8Tc9iO3FI5ZYaTeipH/iykDKSD0aspry8MJoxch2AEyawr
-	WQ7pXiA31PWfYZPRuEQ5pUhyrAIoyzpbcCqNV+bICBApmAsx5ZOdaEJUVqGStajZZz3e3dOAqvJ
-	GQ4b517RnlkVvHVJMg9v4AzKt54NDZdob/DfwaL26ilpgFw==
-X-Received: by 2002:a05:620a:489b:b0:92b:8a7c:f72a with SMTP id af79cd13be357-92e6279dfa2mr679863185a.47.1782831213401;
-        Tue, 30 Jun 2026 07:53:33 -0700 (PDT)
-X-Received: by 2002:a05:620a:489b:b0:92b:8a7c:f72a with SMTP id af79cd13be357-92e6279dfa2mr679857685a.47.1782831212865;
-        Tue, 30 Jun 2026 07:53:32 -0700 (PDT)
-Received: from juillet.box.freepro.com ([2a05:6e02:1041:c10:5c75:21f9:a642:c358])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be4d15ddsm720295e9.6.2026.06.30.07.53.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 07:53:31 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-To: sre@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-        linux@roeck-us.net, andersson@kernel.org, konradybcio@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: qcom: x1e78100-t14s: Add thermal zones for keyboard skin and charging sensors
-Date: Tue, 30 Jun 2026 16:53:07 +0200
-Message-ID: <20260630145307.10745-4-daniel.lezcano@oss.qualcomm.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260630145307.10745-1-daniel.lezcano@oss.qualcomm.com>
-References: <20260630145307.10745-1-daniel.lezcano@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9SZGxUU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782831542; x=1814367542;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3l/hhBb6LhPWn4Lh+5fI44R5Z6REzRuxh/G5MzQ7Ooo=;
+  b=n9SZGxUUvSoFvWILiPMssZ8nTgQPB44e7ZLdDuRSATWCsW0MjY46rlWN
+   bGg8qBm3vdnxKMJchZwK6YnWtPEwZiooZ/tGJyvVlOWr9wyWI+bF63UZv
+   YY1JR7sxRDFKmyJnNKX9/m7IPq9y9HHiNU2DzfZOqVD6fWdTg7ev3LpvV
+   iW3IvfIuf9PD65/isgtn/Nu/6HbYf8LdmHm5KsnxAcYONi28ZPyBBwLEp
+   68sOo8Kvk/IwlNIDCQWu1xJ3t+ZMMOy+u/Z2tf2Aegs1kDgYtl49KhpC0
+   SJsQI5RiSPenw4hFh02b2SwRbhxo3JDy5RZRNc5RX2j9A41k8xag49q35
+   w==;
+X-CSE-ConnectionGUID: 6dDITls5TiSNEUET49fK9A==
+X-CSE-MsgGUID: iUNKvgI6R0qY6Gy2+LRtDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83683181"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="83683181"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:59:01 -0700
+X-CSE-ConnectionGUID: 7MJfsAzlTECMnfhamocb3g==
+X-CSE-MsgGUID: oje/+03bRcWRotEWY2G1uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="290410512"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.230])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:58:58 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Jun 2026 17:58:54 +0300 (EEST)
+To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
+ defining struct dmi_system_id
+In-Reply-To: <akJzYlHHcvPCl0HW@monoceros>
+Message-ID: <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
+References: <cover.1782682124.git.ukleinek@kernel.org> <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org> <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com> <akJzYlHHcvPCl0HW@monoceros>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDE0MCBTYWx0ZWRfX+6tnLETxmpMs
- W4Z4xStuPkz1ZQZKSuhnBdKgeXtcyDXcF7JXVr8uFnu3y0koyaPpN9NB+vl+jLvbTr0IOtdcJAt
- ct8B2/NiUdqghm1Stp3mXxQELl2M+dFSdngO9xzQ1Ru2DwAqr6PpjDP05nC+MyXO6Ry5Be4FU4i
- SVsc7h4CTQlj7rYNxrOg59RUuZZfkfp7oT8gtkrj2V4Xp2PMp1IQkBkmytTUPvr3r9BboYxgc/o
- DsNKd3OB2B+C81n3RAeou5NaN3NlfACBmi0WbsEQyrEPelNXES4fFM3ElSJadD5eaNQHh/RJTBO
- Zgl6whhcrvLtwZA5JNgxajZUcvkoBfX6Q/qHhU2NB+yEhUVqkzeJkgKzEtr5mPhGO6vGHhTW52y
- BZtjFXujKzLAfv6lo8957/seI+dm2jeGHhWiHf5UxyHTq5biqQJtIpzhhRQVZWs6H8Fcjx5uvAt
- qaBMq7OA2yFXYjUAj9Q==
-X-Proofpoint-ORIG-GUID: TPNWxpkdzV-k5jrioxW1rfmyuz9Uxh4c
-X-Proofpoint-GUID: TPNWxpkdzV-k5jrioxW1rfmyuz9Uxh4c
-X-Authority-Analysis: v=2.4 cv=ftfsol4f c=1 sm=1 tr=0 ts=6a43d86e cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=FelO9ux0wxsA:10
- a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
- a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8 a=8S540zSUgs8tgqG0LUMA:9
- a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDE0MCBTYWx0ZWRfXw+2ACKHxwxQh
- 8h6kQBEeWEVsxp7eeUbQp4EtRgDytwFLsx2bxStvdb8KBmJRLx0JmWuy5xg1uktUuLWuM4pKomu
- JEg+SmA36g3wkwqk3yBhDKmP7PIWj8I=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-30_04,2026-06-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 adultscore=0 spamscore=0 clxscore=1015 malwarescore=0
- phishscore=0 impostorscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300140
+Content-Type: multipart/mixed; boundary="8323328-1061725234-1782831534=:1167"
 
-The Lenovo ThinkPad T14s embedded controller exposes several platform
-temperature sensors that are already used by the firmware for thermal
-management.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Expose the EC as a thermal sensor provider and describe the keyboard
-skin and charging circuitry sensors as thermal zones in the device
-tree.
+--8323328-1061725234-1782831534=:1167
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The keyboard thermal zone defines passive and hot trip points, while
-the charging thermal zone also associates a cooling map with the CPU
-clusters, allowing the generic thermal framework to apply CPU
-throttling when the charging circuitry temperature exceeds the passive
-threshold.
+On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
+> > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> >=20
+> > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> transitive=
+ly
+> > > which ensures that struct dmi_system_id is defined in
+> > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.h. Howev=
+er
+> > > this include in <linux/i2c.h> will be replaced by one for i2c_device_=
+id
+> > > only. To ensure that dmi_system_id is available add the include for t=
+hat
+> > > explicitly.
+> > >=20
+> > > Acked-by: Danilo Krummrich <dakr@kernel.org>
+> > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koenig@=
+baylibre.com>
+> > > ---
+> > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets.h | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >=20
+> > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tab=
+lets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > index 2498390958ad..c756961ae5fd 100644
+> > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > @@ -13,6 +13,7 @@
+> > >  #include <linux/gpio/consumer.h>
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/irqdomain_defs.h>
+> > > +#include <linux/device-id/dmi.h>
+> > >  #include <linux/spi/spi.h>
+> > > =20
+> > >  struct gpio_desc;
+> >=20
+> > Indirect include patchs are never a good idea as it always makes header=
+=20
+> > reorganizations minefield. So for this change,
+> >=20
+> > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> >=20
+> >=20
+> > When it comes to the series, I certainly like the direction it goes ver=
+y=20
+> > much (never have been fan of mod_devicetable.h) but I'd have preferred=
+=20
+> > stepwise approach over trying to introduce it to some mid-rc.
+>=20
+> The hurdle here is that at least the header part isn't easily
+> automateable.
 
-This integrates the EC temperature sensors with the Linux thermal
-framework and enables platform thermal management using standard
-thermal zone definitions.
+Patch 1?
 
-The EC protocol currently does not provide a mechanism to program trip
-points from Linux. Consequently, the thermal zones rely on periodic
-polling to detect threshold crossings.
+> (Well it is, but the script that I have now to check all
+> .c files already takes longer than an hour to run. I guess it's not as
+> optimal as it could, but still.) And so getting this ready for inclusion
+> in next and keeping it up to date until the merge window opens is a
+> tough job.
+>=20
+> The further downside is that each modification to one of the highly used
+> headers is expensive (in rebuild time) when these are merged one after
+> another (or when bisecting). So getting these changes in in one batch is
+> beneficial.
+>=20
+> So while I agree with your preference, I don't think it's feasible.
 
-Using the charging circuitry temperature for thermal mitigation provides
-a conservative approximation of the platform thermal state and prevents
-the platform from reaching critical temperatures under sustained heavy
-CPU load.
+While I understand keeping it up-to-date must be a pain, I'm not entirely=
+=20
+convinced by the rebuild time argument as it has been the status quo so=20
+far too for anything touching mod_devicetable.h.
 
-Without this change the platform reaches a critical thermal condition
-and resets under heavy load.
+If one commit would move all linux/device-id/* AND ADD them all into=20
+mod_devicetable.h as includes, that's just one rebuild more (and one=20
+rebuild will occur anyway whichever way you architect this).
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
----
- .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   | 68 ++++++++++++++++++-
- 1 file changed, 67 insertions(+), 1 deletion(-)
+Only if includes would be then removed one-by-one from mod_devicetable.h=20
+(e.g. per subsystem basis), I can see it causing n rebuilds (+conflicts),=
+=20
+but they could be removed in bulk as well.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-index 5d49df41be02..a19a363da9ed 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtsi
-@@ -979,7 +979,7 @@ &i2c6 {
- 
- 	status = "okay";
- 
--	embedded-controller@28 {
-+	ec: embedded-controller@28 {
- 		compatible = "lenovo,thinkpad-t14s-ec";
- 		reg = <0x28>;
- 
-@@ -988,6 +988,8 @@ embedded-controller@28 {
- 		pinctrl-0 = <&ec_int_n_default>;
- 		pinctrl-names = "default";
- 
-+		#thermal-sensor-cells = <1>;
-+
- 		wakeup-source;
- 	};
- };
-@@ -1729,3 +1731,67 @@ &usb_mp_qmpphy1 {
- 
- 	status = "okay";
- };
-+
-+&thermal_zones {
-+	ec-keyboard-thermal {
-+		polling-delay = <5000>;
-+		polling-delay-passive = <1000>;
-+
-+		thermal-sensors = <&ec 1>;
-+
-+		trips {
-+			trip-point0 {
-+				temperature = <55000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
-+			trip-point1 {
-+				temperature = <62000>;
-+				hysteresis = <0>;
-+				type = "hot";
-+			};
-+		};
-+	};
-+
-+	ec-charging-thermal {
-+		/* EC trip points cannot yet be programmed. */
-+		polling-delay = <5000>;
-+		polling-delay-passive = <2000>;
-+
-+		thermal-sensors = <&ec 3>;
-+
-+		trips {
-+			ec_charging_psv0: trip-point0 {
-+				temperature = <55000>;
-+				hysteresis = <0>;
-+				type = "passive";
-+			};
-+
-+			ec_charging_alrt0: trip-point1 {
-+				temperature = <63000>;
-+				hysteresis = <0>;
-+				type = "hot";
-+			};
-+		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&ec_charging_psv0>;
-+				cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu8 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu9 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu10 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+						 <&cpu11 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
-+
-+	};
-+};
--- 
-2.53.0
+What you can achieve is preventing those "normal" mod_devicetable.h=20
+changes enforcing rebuilds right after this has been applied, but that is=
+=20
+just the rebuilds as status quo would have without this series and no=20
+more.
 
+
+--=20
+ i.
+
+--8323328-1061725234-1782831534=:1167--
