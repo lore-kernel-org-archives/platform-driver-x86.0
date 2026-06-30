@@ -1,115 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C8E41C313
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 13:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7FF157A5A;
+	Tue, 30 Jun 2026 13:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782825743; cv=none; b=A1VPLWQE4N5xjr6bscAb5wp+xxwcFexR2WmsFAOSsr2Qo5D4aZovXZ4kBgxJ07rXvzW99n86iCh0shJlbD523eieUVql7Yk9rS0f6aNYDXYsKz9MNEfa7yqHT8jXoLcokgjZXmEHiiMoAK6wRUD04PPbeWv6lbCo0CIx79wAsVs=
+	t=1782826405; cv=none; b=M6Rn8C+BVeklVncDjZOQ4Nm8ZIrpQXZFhI95319w44vL6btec7gcpOjvJbwxiqIelvA0U7CqehuRj0uCZlTZdiPaR4Bei8TIXP0PuxvQ6MCI2f9VLhUdXqHJ8iW6Hoxc8G368dodX7VLxhf8tKQJ82iNe5DR5WXG6sXpvsPzFjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782825743; c=relaxed/simple;
-	bh=Yu5mqQ8nw8gfVDomx+A+E2dr0aoWMwEfUHHcXE5j1Sc=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQyTJDW3Wptnz7oJyKMmULUnS8zNcBHtMZCN/Sjwkx1kPHDg8/0pmM6MR8S6HJ6RS/42mWXGTY9xIvIKvVJ8PtswZKoh23/oL5pq1WFYYtQ4RX1ULz3txgMJwdDcxO+2LqAjhX4GrSpa0AcqlAvwO1t4o4wr2iHVEkICQi1lnhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3iwES12; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782826405; c=relaxed/simple;
+	bh=nvP9pPOsEbcV0ygovhaC8WOiCqL57Sj2AlsTc6bMVqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fyhq6Jil++q/rILCpEZ54Ce/GbUbwnuGkEAo87GOfXWJGna7L8qMO2Im4ZVRrWCX30clEKf961K8b+amWscZq1LJeb0hM1y2/yH+bu2+Ok/kFVyP3hHhwG59I9IR1GDktLFDkNOh8On3kuMOo9LAQd86Qv4Esl+rOMUmeV2jqPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPL6nsKa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3iwES12"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 033AE1F00ADB
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 13:22:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPL6nsKa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DE71F000E9;
+	Tue, 30 Jun 2026 13:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782825740;
-	bh=siJF0S+CSX6SKMbF6lhMt/C1v2E/StqLW87OFuT5mug=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=F3iwES12zER0i81/2NMtABU7zrTqL4TKx2cZUTm/v2TeQRy1CfP7kHBRH6cHz49Wl
-	 RJ1JW9A2Skgmb9dTIcCCyQh6C1DNwFDhrXfchvkmp4GrC8LQ++VkFJnqhDMYCbtUtl
-	 4Vg0G3QFf25X7xnQRhstpZa0iIC7smC2iN2KaRpHAUXmkcVwsqV81tOBtFhSFXPIex
-	 esSaiw8hPZjYzdrETojWRvoLheQXFZfgcawxD5XCycu6ixqXf/vTCuVrYXIMYfWHHK
-	 h8JLEFO/R0lpZffXy0p0WwgFlYuPMNX5XRlG/oUhaROQuxTwADcIS8mJtHKiIKEwhR
-	 8feBVjbj4d7cQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5aeb2bc82ccso2986557e87.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 06:22:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoZ1DPWwvsQx/f/drEFACYfXJPbWWitOM6gR9tTgVb616SYorgwF69sjATkOgzQxYilzRVnjVXbn4hPZoC2XCwL/9y2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwriYhWx/oirl6XKYCFjDAsKpj7Xj8LtQGtft8jB7m3WuW1ZPG5
-	G5EZb7uWqgMVUt7liOUDaIlUpVEiFVLPJmVgstceRQpRjvIEuiWPiv0iXp/JwmhgWnE/4BytncJ
-	qFuXdqzjr4///LtG/uZNe7di2qw2NEd2+VHTyGWsN1g==
-X-Received: by 2002:a05:6512:8041:b0:5ad:4f1c:8e50 with SMTP id
- 2adb3069b0e04-5aebdba2f7fmr745427e87.37.1782825738263; Tue, 30 Jun 2026
- 06:22:18 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 30 Jun 2026 09:22:16 -0400
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 30 Jun 2026 09:22:16 -0400
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <263f58b418a27a2339fc2478f93234e0208b0ad9.camel@mailbox.org>
+	s=k20260515; t=1782826404;
+	bh=4GBM6+2OYGVsKPN+pctdr1rHEL2ufgXo9pPyh0m9Wz8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ZPL6nsKal+vHibFnbtd3rmEB42nIfD8me//GAveLd6VEv8RUB+jCcoHo9HXCvMEUw
+	 BMLV37PaJGcDCGU8B8IEuKDUrFzQC+uB4CLwzZKTbxcJR8UafFS0wmnFL1KZI6/JJr
+	 Ps6PRSrATohnZ4xz5xOWZTAvWzPWjIdmGyKeIIN/+nprc87xDwV5eVpqIug//rDyoX
+	 ys2IVq1L0Z0Pbn7CCmFeAEGqfBb1tC8GtjvnmXXMIF+Vvz7zJzGPT6/bRdEengXty3
+	 n2ABQLciSC2PQXFlqCMaLn7LGHA/xQZZDLLsHzifh8SFJgErEmb9zApYFyS4oCGOKM
+	 HeLL35xZU5/KA==
+Message-ID: <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org>
+Date: Tue, 30 Jun 2026 15:33:19 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260629-pdev-fwnode-ref-v2-0-8abe2513f96e@oss.qualcomm.com>
-	 <20260629-pdev-fwnode-ref-v2-2-8abe2513f96e@oss.qualcomm.com> <263f58b418a27a2339fc2478f93234e0208b0ad9.camel@mailbox.org>
-Date: Tue, 30 Jun 2026 09:22:16 -0400
-X-Gmail-Original-Message-ID: <CAMRc=MdQURjypSn+QjSDJfEiOMC8bbEZmZLgjpt=EquAM1Q1pw@mail.gmail.com>
-X-Gm-Features: AVVi8CeQXBZd5M2B6MhLUb095jshYyZGAJu3z11iktq0q6r491Qj_z_hr6U3W70
-Message-ID: <CAMRc=MdQURjypSn+QjSDJfEiOMC8bbEZmZLgjpt=EquAM1Q1pw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/19] driver core: platform: provide platform_device_set_of_node()
-To: Manuel Ebner <manuelebner@mailbox.org>
-Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
-	linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Lee Jones <lee@kernel.org>, 
-	Thierry Reding <thierry.reding@avionic-design.de>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Srinivas Kandagatla <srini@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	Doug Berger <opendmb@gmail.com>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
-	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>, 
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
+ IMX471 as power enable
+To: Tarang Raval <tarang.raval@siliconsignals.io>, Kate Hsuan
+ <hpa@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil <hverkuil+cisco@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Serin Yeh
+ <serin.yeh@intel.com>, Damjan Georgievski <gdamjan@gmail.com>,
+ Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: computman <anis@talbi.fr>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Daniel Scally <dan.scally@ideasonboard.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+References: <20260629074026.35490-1-hpa@redhat.com>
+ <20260629074026.35490-4-hpa@redhat.com>
+ <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 30 Jun 2026 13:37:54 +0200, Manuel Ebner <manuelebner@mailbox.org> said:
-> On Mon, 2026-06-29 at 11:12 +0200, Bartosz Golaszewski wrote:
->> [...]
+Hi All,
+
+On 30-Jun-26 09:32, Tarang Raval wrote:
+> Hi Kate,
+> 
+>> Update the con_id for the Sony IMX471 sensor to "vana" to serve as the
+>> power enable. Additionally, the HID values SONY471A and TBE20A0, both
+>> associated with the IMX471 image sensor, have been identified on Lenovo
+>> laptops.
 >>
->> +/**
->> + * platform_device_set_of_node - assign an OF node to device
->> + * @pdev: platform device to add the node for
->> + * @np: new device node
->> + *
->> + * Assign an OF node to this platform device. Internally keep track of the
->> + * reference count. Devices created with platform_device_alloc() must use this
->> + * function instead of assigning the node manually.
->
-> Doesn't it make sense to add a remark to the kernel doc of platform_device_alloc()?
->
-> Thanks
->  Manuel
->
->>  [...]
->
+>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> 
+> Thanks, looks good.
+> 
+> Reviewed-by: Tarang Raval <tarang.raval@siliconsignals.io>
 
-Sure, will do in the next iteration.
+Hmm, the imx471 driver is still pending upstream:
 
-Bart
+https://lore.kernel.org/linux-media/20260629074026.35490-5-hpa@redhat.com/
+
+As part of this series.
+
+Please just use the standardized "avdd" in that driver instead
+of "vana" (which also seems to refer to the analog supply vdd,
+which is what avdd stands for).
+
+Then this whole patch is unnecessary and can be dropped from
+this series.
+
+Regards,
+
+Hans
+
+
+
+
+>> ---
+>>  drivers/platform/x86/intel/int3472/discrete.c | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+>> index 115bb37577a1..adff564bf3fd 100644
+>> --- a/drivers/platform/x86/intel/int3472/discrete.c
+>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+>> @@ -164,6 +164,24 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+>>                 .con_id = "dvdd",
+>>                 .enable_time_us = 45 * USEC_PER_MSEC,
+>>         },
+>> +       {       /* imx471 expects "vana" as con_id for power enable */
+>> +               .hid = "SONY471A",
+>> +               .type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+>> +               .type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>> +               .con_id = "vana",
+>> +               .enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+>> +       },
+>> +       {
+>> +               /*
+>> +                * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as con_id
+>> +                * for power enable
+>> +                */
+>> +               .hid = "TBE20A0",
+>> +               .type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+>> +               .type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>> +               .con_id = "vana",
+>> +               .enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+>> +       },
+>>  };
+>>
+>>  static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
+>> --
+>> 2.54.0
+
