@@ -1,269 +1,201 @@
-Received: from flow-a8-smtp.messagingengine.com (flow-a8-smtp.messagingengine.com [103.168.172.143])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1836518871F;
-	Mon, 29 Jun 2026 23:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.143
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7A535AC27
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782777504; cv=none; b=emT2c/1XRTQA4nYwBB210PbZwDn4Zr7TsPCfpx/aZBXIcg/qV3jS1qjOP488mlerCzjU/TQFGePENg6TdB/tVN7oHIdgHotoaekishfnxjd82RGoz0iu47uR4cRVBNmjOiCuSBemRWyRBdX/H5h/1SK3wIfaOz+NWWiRjiKKmI8=
+	t=1782797449; cv=none; b=Ok/9RwpyAmDs9E6pPQyBcmeKn0KPsADPd5my/x11YVvSt59wreVyuXqPtF7Fe/xfOuPdLGN3YG+vpx1kQUcwqa0zxHBXCnaXKtLNRknPhV7fcYXMEQaMWlcwGKFDYT9DXYy4Xk/+UzZY4ZrppraNGWegoGciFiD5m1l0SdlAIME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782777504; c=relaxed/simple;
-	bh=qx9osW3wKKlKpE0YvFkVp52jSRf+weom0e3+8EbHzJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PSNUouzR0lUnJ8+TdOrAqv5ol1qwFlX5yRnbW3xPodh/UECFd+A5m0XM8xFtxyFUEkk8gV2X9DBUU0hAZuwsvDBEvGE9c4/S+Hj2qQ5LsnPPFDgE9r1BEZhJ7hxLUL7sHYe4lYDyU/3ds19k9mkG1RqNK8bPanZd9nZdl8h8q7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=v8s/eY4L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RMKRqs/f; arc=none smtp.client-ip=103.168.172.143
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1782797449; c=relaxed/simple;
+	bh=AMbCfl1TqOeipjOiTdE0+IqDoXL9fNroA+PH+fRuGzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cR3O4MEUl3JH0F3UW+kN4cMyf37uKnE9Tqb04gYXEnVILRq2asHVHrK+3kkpEbL1DmrVtNZwsOigiuNyuyPVaNx1KLCAnAmhfr6LDGp5ZFEJlazMx6uNe32vMWjfvUC6zjYpEvra+Htc/gJSrAd0Vog1+YP8YBen+dOZe+3E2Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cZl9E8Ps; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=A34YschW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="v8s/eY4L";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RMKRqs/f"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.phl.internal (Postfix) with ESMTP id 0BA48138039B;
-	Mon, 29 Jun 2026 19:58:21 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 29 Jun 2026 19:58:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1782777501; x=1782784701; bh=ntoVNrERxl6CnLB0Obl/d+Xz+xme4tJI
-	lufgMOjhiwA=; b=v8s/eY4L5HFOcjqnQZ823UAS/LHyaUEm85qu0XmCc71uXnG2
-	cvkOxCYPzFLBCTTDnPAcBSYZzJ2+yE6N4fPa6sEGIBJIYZcOAN8qpj2nfzQLi9F5
-	jV1vvPyEhEYVlWNvh8/BzDIhVuyYzX2LsFle0pATeuiAfDmcO3X28y0E1iNUPJEo
-	v25JyyyfCNSgY9W7bLDK2Py5B4SD2vS47HoLtwLlZyt9XfpB5i8DFFy195aCWoC2
-	x+AKL61GGQIyWrIINs+YyoIPvM9+DgmiU0kab1MThff7LoEH0Es/Wytho4Ztqxwh
-	iCSNYBGhKHSWeVvvsd1OdF/pOZcK2ttl+46V3A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782777501; x=
-	1782784701; bh=ntoVNrERxl6CnLB0Obl/d+Xz+xme4tJIlufgMOjhiwA=; b=R
-	MKRqs/flHUni4dlOeHuhwjnnYx/qu2zwQCJtPfIIEPz3gE6dP2SS+kO/SxtUM2p+
-	fXsMgk2rDlTf/sTkRba30Ghras5RPXULAH1/GPHEEhmblWPHjyqELBYhA/qibNmQ
-	ECYEK6oVYBifehsJjj32qWlobcGKFSrZa0HHgz9Iqwgpdu9YvkzR7VNNHw/jTwz+
-	bqoNgLB8cMrHpQ6+9NaoaPyDNO4HCQS72/HZv8UteAS8Rigl8p00Y6G1kFdS+1jK
-	6qPb3zwn5qYMTokX9EPzqE5AEbRmeo/zQ0VssHNfuoJG0EVsyiXKgURmOHD0sUV1
-	H0rRl8dpjOEVmRoTwUZ1Q==
-X-ME-Sender: <xms:mQZDaluSBeKP6-3dxlZW1Qy-wiZuV30hOCgoY0KTdW_FR9USmttnIA>
-    <xme:mQZDaqsTDIOLYRFhhc3J9nrb24WnM6JX0P1jalpuT12eGcDRrsNO7C0AiHmIdhI6S
-    wZZ_GAF_hVaMLpQHvr5u3l1DmczGXIt02C9zTRQlweayP0y6j60MtE>
-X-ME-Received: <xmr:mQZDaiaKXC3v0RK_n7k7uRKLanjcoEkW0Ynaj3uQGwXdvyRJ9nlk3vd6xHlSeNwReywIoC38Dirstc3cHFJimVEGnsusng>
-X-ME-Proxy-Cause: dmFkZTE1nPznX32V2kRYPd7dlOJ1rQMxQ97lS3kACD5+oEF3K9KIS5kEvZ60kMOO9SW4/K
-    QPw1fJ0Uyhmt7TDZBpmrns6QqSMdNA56CqP8WoSfum8fnJ6ROXsuIW1V0IRazJ9YoofPdA
-    sTTZjseo2amkBTK2yB8676gAjYCnTj4WiXvzDEoqMGHljUjgOtAHWVMwabts+S3qWRtyzK
-    4E9/EeTGdZ7uavjZ/gsD8IHy6BDQ3FsBKJrzbjVNgjW3Z/maBbDFLwVIvKVTB+FB58t2Nf
-    6IC6zRUoalXGvpiS7NeraM3cciwz14beoWbfR17QqVpm8xj9z6j1i325oVQMRhakNlULd5
-    LZDHjkZMhVaJOCK5sNu7C567TC6G74BcKbIUFX8Y7L5R/J5HFqJpTz5QFRAfF6pNDZXMRw
-    NNT721SX2qmWOzpsbLjvz7baHpP6tE5XnMymltgojO/d+aMQ8ZSVKdM2OoEzaoH016syXZ
-    LXR91cDsgFgly6bjeAUpymfC5EHpfadwr1qHn8fxadSgempnoWd6aBNScmoRMpmKbMNqfw
-    SOO/eYhVEtRjJvkDcQZ5ZyEDYkQzi3vZqOB51rSkn6prTNuNuxVGEjwdaA6cQo5MEz4nhz
-    PKvXIWkmhe258dVI/0CMIo7RXUSN9DEF8/fLk8wWAe6GpwU+34F0ICv2ylcg
-X-ME-Proxy: <xmx:mQZDasgnrDakzWEqB7_AjeS2c_t5Xc3WBZuoKa0aZ4s3n7SEHjJv-Q>
-    <xmx:mQZDavUcRf_YCMSZCbYUJMoSGXurxjrs99xK4QubABtZxnkbGNT_Mg>
-    <xmx:mQZDauVcra2E5kWpNBgjezjqhXIgqwPYvcnnMt7uQ1KIYOQ6F3GKDw>
-    <xmx:mQZDajhAFNO6LVldX5NJt5ll8F8-azSI6SjWkRx169oeJqn6IZVlXA>
-    <xmx:nQZDaqvpp383SrPNL_mk4gMnSCyGdO9-6LDFSBkbgsdwZ1j1U-4qLPWs>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 Jun 2026 19:58:06 -0400 (EDT)
-Date: Tue, 30 Jun 2026 08:58:04 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
-	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
- driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Pei Xiao <xiaopei01@kylinos.cn>,
-	Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Minas Harutyunyan <hminas@synopsys.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org,	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-Message-ID: <20260629235804.GA414914@sakamocchi.jp>
-Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig_=28The_Capable_Hub=29?=
- <u.kleine-koenig@baylibre.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,	Justin Stitt <justinstitt@google.com>,
-	Raag Jadav <raag.jadav@intel.com>,	Sohil Mehta <sohil.mehta@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,	Len Brown <lenb@kernel.org>,
- Andi Shyti <andi.shyti@kernel.org>,	linux-kernel@vger.kernel.org,
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,	linux-media@vger.kernel.org,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,	Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,	Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	Danilo Krummrich <dakr@kernel.org>,
- driver-core@lists.linux.dev,	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
-	Pei Xiao <xiaopei01@kylinos.cn>,
-	Shashank Balaji <shashank.mahadasyam@sony.com>,
-	Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,	Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Minas Harutyunyan <hminas@synopsys.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,	Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>,	WANG Xuerui <kernel@xen0n.name>,
- kvm@vger.kernel.org,	loongarch@lists.linux.dev
-References: <cover.1782682124.git.ukleinek@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cZl9E8Ps";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="A34YschW"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65U1IjE5357780
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=; b=cZl9E8PsrXl9QgCL
+	jh31zWrJCAL8BAjCgp6BFt9K0QiFrtIWvjI9E6Lo18MFhpybP+cfEla8/C09rRPF
+	5dbqoZ1DlXwbkOflsm8YA994DYvVNq95aYnGDx9ywP3WryxDrGzaG1aKv0h+Y8dR
+	j3NP9NpWHUIL4V6OSwULCyUKQGGMboNHYrXT4MDScqy1yTTEkiMvdecm2wdMWx3w
+	l+WAYl7Ao4vJezHEv0DiR/xLkbv5C8hUASKS/l8wtqYc5hp+vUSYOm3dbY2tBCpW
+	ikzbjklRP5NT81SVHd2/d8XES/ASALckAB8rN3FHOez4syhh/aKynuO4vHK+X944
+	f9xjNA==
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com [74.125.82.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f3y9j1nmg-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 05:30:47 +0000 (GMT)
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30ecfc5dea0so1763144eec.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 22:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1782797447; x=1783402247; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=;
+        b=A34YschWm9+uuk7NcgJnjH3l0Vma46ShVH33wlhvTsxkFCaGEZR/GrmRUwvMUi71Sz
+         ibUCJ8oLcZzRfU2rkMmqn12fjYLrWeW1m7f/QhyfoWax80GvAJB16SGhZ1nZASFFVzDq
+         IvFbXJwP/ZxSJ6SRKwNFU9MO1Fd6zkZwLU+R7QkA2H217YCczGlLvYghdv0hca4iD8O9
+         Mv8ubyWUDF759YwGR07+flIEP55y+OSYlk/7uAnuY2XBLOX4lvMPIykJUz6PD7dpR7NC
+         4DtXxlfmLxCbiTtOOZwqkA9KvYr5iZMOSbLQcGsOVyiZD+Lve+BuJsFIE/WvGJNXxIB/
+         3cCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782797447; x=1783402247;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WhiYGokexxUvHxryATmlhdYY6XJnEz/snuGmeXg93hw=;
+        b=ZDMaDLfzgs1PoZZiu+eMP9pNHTajUjgvnrGPpLTCE1/jDYNjcUrO5GqVWL7ZPtXCPY
+         Xgy2JNdFu6mXmjmPru+OPKxwg38Jyd5frrHllafWqEmBWvYYOk6HAhVQTZYYRsvpOCv2
+         NIpIi5Y1vlJ8dzY78PtikXOI2v+xqNM6M9gyUv+yNJWHQ/GyPpVmNYtG3RHbytpAfHRj
+         l7fu/3JxQ3hvM76maIllbCx/5TSTTL6NHvx6ZPkyXpCsX/OCsoYR59F6gqJ0sAb/wvrF
+         hKtavk0UNQuSdryYCnfedh5NbJ3m2BeV/KTcKh4Gkp/4Gbk+FSegmgbR8d2Av9m8duCl
+         kvxQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrcGqfIT1nmQuBDKbFqZyb8mGcAynETtcCkpLiqUZbkWbmQunU7CeomZ4tzzoL3EC9eyN2uNDa5E49jSjZ4uKTC4Szo@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPmxpu89/8xOi0VOohdI9Y+fSGxC/r2E3Fzq3+LFweJg0Kb+I9
+	VC6xS+2dJpdXVpm32LinxtWBCtyCAu///rZahGSecg4ip5OU/kK/mI8lm0LeEkjdx361DP7DlWQ
+	XGiR64ivePSgU3HEoc17sUR53J5W2mSlIafrbdClyYNDag/MeVOAMOnSKS4AEL+tYnu8nD7Zn/Q
+	NA
+X-Gm-Gg: AfdE7ck0NChWs+68rEDc2lmsP+GURXNnYyK8xzqCQFEXrxWMIWHC65c2TbC0lergHu8
+	TPs+x+fvZ8lGoYna61Qxv0W5sp8P5NdPI17Bdi4VhXvGMB9ICObMWPI0LH90Pdsm/TSdN5onfp/
+	Da97+KNhz9e2Sb+jAUB1k0eUhNoPdqCSF2wrGmpeYpk630bKxbZPG/K+g2vwGeEgAyK461IJAhW
+	bkFT2Jdeo6lpr4i+u9KGLyPE9pNWflQS/HHIsewzp7ZOK2F5IYONi9HtNM6PHk9G+W2QPwFfR4X
+	i5O6VS1MnuCIQ+CWziMppZ8KP5wxed9r1pkhh8WQ7/OApB+HN5jSBm/ewo7zFGm2zPAVk4ZOWzb
+	w7NeBzZlp3myP23pduqmY7Y90jPXTaKOPaXgNGoSokFmEsn+emtaCL/Wynpax/hFhSvTPOKYhO7
+	fKnOYgrqPaHMiVXCjoU183DLj6//c=
+X-Received: by 2002:a05:693c:3b09:b0:30b:bda8:a70b with SMTP id 5a478bee46e88-30ee12bf278mr1453051eec.4.1782797446906;
+        Mon, 29 Jun 2026 22:30:46 -0700 (PDT)
+X-Received: by 2002:a05:693c:3b09:b0:30b:bda8:a70b with SMTP id 5a478bee46e88-30ee12bf278mr1453031eec.4.1782797446349;
+        Mon, 29 Jun 2026 22:30:46 -0700 (PDT)
+Received: from [10.242.229.199] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.19.19])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee2cd21bcsm6404411eec.0.2026.06.29.22.30.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2026 22:30:45 -0700 (PDT)
+Message-ID: <5dae2ab9-76ef-4516-b21d-80729bf7ed79@oss.qualcomm.com>
+Date: Tue, 30 Jun 2026 11:00:41 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform: arm64: qcom-hamoa-ec: Register cooling devices
+ with their name
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
+        Hans de Goede <hansg@kernel.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Maya Matuszczyk <maccraft123mc@gmail.com>,
+        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20260629-fix_cooling_device_register-v1-1-c6e518b0bbd4@oss.qualcomm.com>
+ <48334852-b131-d6a0-469f-09e15d6765d5@linux.intel.com>
+Content-Language: en-US
+From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+In-Reply-To: <48334852-b131-d6a0-469f-09e15d6765d5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1782682124.git.ukleinek@kernel.org>
-
-Hi,
-
-On Sun, Jun 28, 2026 at 11:58:35PM +0200, Uwe Kleine-König (The Capable Hub) wrote:
-> Hello,
-> 
-> v2 is available at
-> https://lore.kernel.org/lkml/cover.1782490566.git.u.kleine-koenig@baylibre.com
-> .
-> 
-> Changes since then:
-> 
->  - rebased to v7.2-rc1
->  - rename the directory containing the new per device-id headers from
->    "mod_device_id" to "device-id".
->  - Adding Acks received
->  - ASoC patch (formerly patch #3) dropped as it was already merged as
->    commit 83d53eca7e55 ("ASoC: rockchip: rockchip_sai: #include
->    <linux/platform_device.h> explicitly") in v7.2-rc1.
-> 
-> This series survived an allmodconfig build on alpha, arc, arm64,
-> loongarch, m68k, mips, powerpc, riscv, s390, sh, sparc, and x86_64.
-> (Well, some failures, but I see these also on vanilla v7.2-rc1.)
-> 
-> There are a few headers left that include <linux/mod_devicetable.h>, but
-> these can be addressed in the next dev cycle without much impact as all
-> the much included headers are covered here.
-> 
-> I will apply this series to
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git device-id-rework
-> 
-> which is included in next to expose it to the build bots and testers (in
-> the hope that there won't occur much merge conflict with v7.3 material).
-> I will add review tags and address (the hopefully very few) build issues
-> that might pop up. My plan is to let Linus merge it end of the week for
-> -rc2.
-> 
-> Best regards
-> Uwe
-> 
-> Uwe Kleine-König (The Capable Hub) (16):
->   mod_devicetable.h: Split into per subsystem headers
->   media: ti: vpe: #include <linux/platform_device.h> explicitly
->   driver: core: Include headers for acpi_device_id and of_device_id for
->     struct device_driver
->   driver core: platform: Include header for struct platform_device_id
->   usb: serial: Include <linux/usb.h> in <linux/usb/serial.h>
->   platform/x86: msi-ec: Ensure dmi_system_id is defined
->   of: Explicitly include <linux/types.h> and <linux/err.h>
->   i2c: Let i2c-core.h include <linux/i2c.h>
->   platform/x86: x86-android-tablets: Add include defining struct
->     dmi_system_id
->   platform/x86: int3472: Add include defining struct dmi_system_id
->   usb: dwc2: Add include defining struct pci_device_id
->   ALSA: hda/core: Add include defining struct hda_device_id
->   LoongArch: KVM: Add include defining struct cpu_feature
->   media: em28xx: Add include for struct usb_device_id
->   Replace <linux/mod_devicetable.h> by more specific
->     <linux/device-id/*.h> (headers)
->   Replace <linux/mod_devicetable.h> by more specific
->     <linux/device-id/*.h> (c files)
-> 
->  ...
->  drivers/firewire/core-device.c                |    1 -
->  drivers/firewire/net.c                        |    1 -
->  drivers/firewire/sbp2.c                       |    1 -
->  ...
->  drivers/media/firewire/firedtv-fw.c           |    1 -
->  ...
->  include/linux/firewire.h                      |    3 +-
->  ...
->  sound/firewire/isight.c                       |    1 -
->  ...
->  1649 files changed, 1575 insertions(+), 2544 deletions(-)
->  ...
->  create mode 100644 include/linux/device-id/ieee1394.h
-
-I have no objection to the above changes relevant to firewire subsystem.
-
-Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-
-Consequently, unit drivers just include include/linux/firewire.h to refer 
-to 'struct ieee1394_device_id'. After merging the changes, I'll post more
-patches to modify the following unit drivers, since they are left from the
-patchset.
-
-* drivers/media/firewire/firedtv.h
-* sound/firewire/bebob/bebob.h
-* sound/firewire/dice/dice.h
-* sound/firewire/digi00x/digi00x.h
-* sound/firewire/fireface/ff.h
-* sound/firewire/fireworks/fireworks.h
-* sound/firewire/motu/motu.h
-* sound/firewire/oxfw/oxfw.h
-* sound/firewire/tascam/tascam.h
-
-By the way, the changes touch so many files. If it takes more time to
-apply, I think it better to make steps to modify across several kernel
-generation. For example, getting rid of direct reference of
-mod_devicetable.h from drivers at first (in the case of firewire
-subsystem, for 'Replace <linux/mod_devicetable.h> by more specific
-<linux/device-id/*.h> (headers))', then adding these per-subsystem
-headers and applying relevant changes.
-
-Of course, I don't mind to apply the v3 patchset as is in upstream.
+X-Proofpoint-ORIG-GUID: RHorkO1UHZ73ZSYdo9NrTPeL-2-PWbhy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjMwMDA0MiBTYWx0ZWRfX6QSWB/4cxqoG
+ 1DcH0zkPdL9224bAaSiFEPf5tmEmZWiM2+4nenYviVT5LpGgQyVXvuAAQAQApWXcSnEgF2po9KL
+ WCrfB7o5MLSv/KLaVE5JyHBwExneo7JXso+O/QDDBCwq69Wph9OSsxGgb44OTy9MbYAE8/+AsHi
+ 0ourlNvdt3yBbqGPd9fSfI5NMk5tu+xJMq0CzqOr+KBLZx3319ZSUPa2dE0k8uQc+HAfzuK2t1T
+ MQ4sD9kSha99UQvykSvB5p8Q0gamZbwbwsYePiQR1pxKND9UesQcARi6UwAO9xNuH1g41ASq/7R
+ 66qd0IwkNXmboUf4TDMPQukPjqd12sdyl+kgDAEtxramEJQKv83J1dno96gXSqET0/DTrvSZKIZ
+ SLNFcx+lA2jtZ8PzsAO+HOWJ0DR2VoLch8SSTrTXXjBWI+DAIIsE4kODdIW1PYF8t0Jt3aoeV2e
+ z6EIbU8gpJuWV7QuNAg==
+X-Proofpoint-GUID: RHorkO1UHZ73ZSYdo9NrTPeL-2-PWbhy
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjMwMDA0MiBTYWx0ZWRfX69oCCLbKviyQ
+ Ej2HxMWgEc8j0EPwVASOwkgMZdJP7WpMTbmbltJsVWUIHavibdnbKlaDdH4mG9joRzbMe70lMBS
+ X55g5D4wk6gs6l58BqearZ0TUXGmhqg=
+X-Authority-Analysis: v=2.4 cv=SINykuvH c=1 sm=1 tr=0 ts=6a435487 cx=c_pps
+ a=wEP8DlPgTf/vqF+yE6f9lg==:117 a=3ivmCuETaj/XXnlAhr/wyw==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=EUspDBNiAAAA:8 a=sTVR4Ors8kAh6zT4N6oA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bBxd6f-gb0O0v-kibOvt:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-30_01,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0
+ clxscore=1015 bulkscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2606300042
 
 
-Thanks
 
-Takashi Sakamoto
+On 6/29/2026 6:03 PM, Ilpo JÃ¤rvinen wrote:
+> On Mon, 29 Jun 2026, Anvesh Jain P wrote:
+> 
+>> Each fan is registered as a thermal cooling device using
+>> devm_thermal_of_cooling_device_register(). When the thermal core gained
+>> cooling device ID support, the helper's prototype changed: its second
+>> argument became a 'u32 cdev_id' and its third a 'const char *type',
+>> replacing the previous 'struct device_node *np'.
+>>
+>> The resulting semantic conflict between the EC driver and the reworked
+>> thermal helper was resolved while merging the drivers-x86 tree into
+>> linux-next by passing NULL as the 'type' argument, dropping the per-fan
+>> 'name' string. As a result every fan is registered as a cooling device
+>> with an empty name.
+>>
+>> Pass 'name' as the 'type' argument so the cooling devices are registered
+>> with their intended "qcom_ec_fan_<n>" names.
+>>
+>> Fixes: 5c44f48e91de ("platform: arm64: Add driver for EC found on Qualcomm reference devices")
+>> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+>> ---
+>>  drivers/platform/arm64/qcom-hamoa-ec.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
+>> index 45829f2786b7..12196d56b60e 100644
+>> --- a/drivers/platform/arm64/qcom-hamoa-ec.c
+>> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
+>> @@ -391,7 +391,7 @@ static int qcom_ec_probe(struct i2c_client *client)
+>>  		ec_cdev->fan_id = i + 1;
+>>  		ec_cdev->parent_dev = dev;
+>>  
+>> -		ec_cdev->cdev = devm_thermal_of_cooling_device_register(dev, 0, NULL, ec_cdev,
+>> +		ec_cdev->cdev = devm_thermal_of_cooling_device_register(dev, 0, name, ec_cdev,
+>>  									&qcom_ec_thermal_ops);
+>>  		if (IS_ERR(ec_cdev->cdev)) {
+>>  			return dev_err_probe(dev, PTR_ERR(ec_cdev->cdev),
+>>
+>> ---
+>> base-commit: 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
+> 
+> $ git log 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
+> fatal: bad object 948efecf22e49aa4bf55bb73ec79a0ddcfd38571
+> 
+> Please don't base your submissions on some random commits. There has never 
+> been code with (dev, 0, NULL, ...) in platforms drivers tree (and neither 
+> in Linus' tree).
+> 
+
+You're right. I based this on a linux-next snapshot; the (dev, 0, NULL,
+...) form only existed transiently as a merge-conflict fixup there and
+never in the platform-drivers or Linus' tree. Current linux-next already
+registers the fans with 'name' via
+devm_thermal_of_child_cooling_device_register(), so the issue is gone.
+
+I'll drop this patch.
+
+-- 
+Best Regards,
+Anvesh
+
