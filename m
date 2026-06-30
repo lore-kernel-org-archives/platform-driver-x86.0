@@ -1,132 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7FF157A5A;
-	Tue, 30 Jun 2026 13:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4F342315B;
+	Tue, 30 Jun 2026 14:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782826405; cv=none; b=M6Rn8C+BVeklVncDjZOQ4Nm8ZIrpQXZFhI95319w44vL6btec7gcpOjvJbwxiqIelvA0U7CqehuRj0uCZlTZdiPaR4Bei8TIXP0PuxvQ6MCI2f9VLhUdXqHJ8iW6Hoxc8G368dodX7VLxhf8tKQJ82iNe5DR5WXG6sXpvsPzFjk=
+	t=1782829112; cv=none; b=rfQ5CtuL/N35m3nb5eflvdUs1EJOqcPpwFqrckyyMNRH+JdDBQRRTp6/dlEoHEsLOqb8gZ+1THu/zbu/QWBJybpnaavSe1kaABmVEnUNuxw7S/0KZfXWRxYMbStB6Qf6EpNvgO154X2lZ8p/MF5UD7DJdcBvw/oUSWCryPwoBqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782826405; c=relaxed/simple;
-	bh=nvP9pPOsEbcV0ygovhaC8WOiCqL57Sj2AlsTc6bMVqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fyhq6Jil++q/rILCpEZ54Ce/GbUbwnuGkEAo87GOfXWJGna7L8qMO2Im4ZVRrWCX30clEKf961K8b+amWscZq1LJeb0hM1y2/yH+bu2+Ok/kFVyP3hHhwG59I9IR1GDktLFDkNOh8On3kuMOo9LAQd86Qv4Esl+rOMUmeV2jqPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPL6nsKa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782829112; c=relaxed/simple;
+	bh=rC+zJfwwlwN/v5yn89fXgM2gDNVZerPLvelMiuOFku4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VsNqc2g3CzdfpYADRUFA9Q3JJW47ILO2rIizj2xN+JqGiVZ6xx2YLDcjB7+Gs3Q73y6ZOthHxx5azCl9VMu7MILIyQ2O10/e0S2Ywe6Zmt3c55zLrKW2VtVGtFMrhssfzyLI42bnBbFpVgJFY8X3BRQzHmFbgKmTjJRHe+JnK94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SVRxbErg; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPL6nsKa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DE71F000E9;
-	Tue, 30 Jun 2026 13:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782826404;
-	bh=4GBM6+2OYGVsKPN+pctdr1rHEL2ufgXo9pPyh0m9Wz8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ZPL6nsKal+vHibFnbtd3rmEB42nIfD8me//GAveLd6VEv8RUB+jCcoHo9HXCvMEUw
-	 BMLV37PaJGcDCGU8B8IEuKDUrFzQC+uB4CLwzZKTbxcJR8UafFS0wmnFL1KZI6/JJr
-	 Ps6PRSrATohnZ4xz5xOWZTAvWzPWjIdmGyKeIIN/+nprc87xDwV5eVpqIug//rDyoX
-	 ys2IVq1L0Z0Pbn7CCmFeAEGqfBb1tC8GtjvnmXXMIF+Vvz7zJzGPT6/bRdEengXty3
-	 n2ABQLciSC2PQXFlqCMaLn7LGHA/xQZZDLLsHzifh8SFJgErEmb9zApYFyS4oCGOKM
-	 HeLL35xZU5/KA==
-Message-ID: <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org>
-Date: Tue, 30 Jun 2026 15:33:19 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SVRxbErg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782829110; x=1814365110;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rC+zJfwwlwN/v5yn89fXgM2gDNVZerPLvelMiuOFku4=;
+  b=SVRxbErg/hvGYGWfxhM4Fov6onZ3rScGVjCCk4OihOAjyZxZ8onI9Z1G
+   3ii1ZqNQvPHVBb0WLd80IdggMYlCQzRiUoHombOS4lwlCDBekZ8gviau1
+   1XiLNXW4dQSvdTzgaivoFQaWkUHmVr8BRJxz5N4CE16V5iJhylMHiIN59
+   dHHJQKs8Xj3UiLlEdg2ccmKNKFe2HXntBbbGr7Vqkh6LIHNY1LvPz0Ltf
+   RHqVU4Ne1Tt1qMCFUrIYQ9elqqg32enQsxtad/usN5mvyK6m7tEYb4RoB
+   cY2EiKAGdAFVJYTm2OYlrOf8pWtyET024zhbnP8NJQK1T4f68bLvdUnFD
+   A==;
+X-CSE-ConnectionGUID: sFXx7YUJTHyUqTDboBaCtw==
+X-CSE-MsgGUID: 2hrUOiLJRd2LKVKdJ1fTnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="106335170"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="106335170"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:18:25 -0700
+X-CSE-ConnectionGUID: WZ1AMNOSQbaseK2aW7sT/Q==
+X-CSE-MsgGUID: x+2t747xTWSPJTymSKa+hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="250578900"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.230])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:18:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 30 Jun 2026 17:18:14 +0300 (EEST)
+To: Marco Scardovi <scardracs@disroot.org>
+cc: corentin.chary@gmail.com, denis.benato@linux.dev, 
+    Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+    luke@ljones.dev, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86: asus-armoury: add support for G614PR
+In-Reply-To: <w5lQn2_tRS-_d31lk_IeWw@disroot.org>
+Message-ID: <886fad99-08de-3c74-bf07-a65777191d08@linux.intel.com>
+References: <BGkkBwKuSFuGPnRJO3Lg1g@disroot.org> <e7d71740-8e69-0433-aa49-d5023bd59a98@linux.intel.com> <w5lQn2_tRS-_d31lk_IeWw@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
- IMX471 as power enable
-To: Tarang Raval <tarang.raval@siliconsignals.io>, Kate Hsuan
- <hpa@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil+cisco@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Serin Yeh
- <serin.yeh@intel.com>, Damjan Georgievski <gdamjan@gmail.com>,
- Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: computman <anis@talbi.fr>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Daniel Scally <dan.scally@ideasonboard.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-References: <20260629074026.35490-1-hpa@redhat.com>
- <20260629074026.35490-4-hpa@redhat.com>
- <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+Content-Type: multipart/mixed; boundary="8323328-811330811-1782829094=:1167"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-811330811-1782829094=:1167
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi All,
+On Mon, 29 Jun 2026, Marco Scardovi wrote:
 
-On 30-Jun-26 09:32, Tarang Raval wrote:
-> Hi Kate,
-> 
->> Update the con_id for the Sony IMX471 sensor to "vana" to serve as the
->> power enable. Additionally, the HID values SONY471A and TBE20A0, both
->> associated with the IMX471 image sensor, have been identified on Lenovo
->> laptops.
->>
->> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> 
-> Thanks, looks good.
-> 
-> Reviewed-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> Hi Ilpo,
+>=20
+> In data luned=C3=AC 29 giugno 2026 13:04:51 Ora legale dell=E2=80=99Europ=
+a centrale, Ilpo J=C3=A4rvinen ha scritto:
+> > On Sat, 27 Jun 2026, Marco Scardovi wrote:
+> >=20
+> > > you around? I'd need this to be fixed to set the correct values.
+> >=20
+> > I'm not sure what the context here is, whether you're just asking for t=
+he=20
+> > patch to be applied (which is entirely unnecessary, as long as the patc=
+h=20
+> > appears in the patchwork's queue, I've not lost it), or if you're sayin=
+g=20
+> > there's a problem in v2 patch?
+> >
+> There was a problem with the v1 patch, where I wrote 4 values wrongly,
+> so I posted the v2 with the correct values.
 
-Hmm, the imx471 driver is still pending upstream:
+Hi,
 
-https://lore.kernel.org/linux-media/20260629074026.35490-5-hpa@redhat.com/
+I did take v1 patch and it has in the meantime been merged into Linus'=20
+tree, making the original change immutable.
 
-As part of this series.
+Thus, please post a delta patch with a justification instead. Use a Fixes=
+=20
+tag pointing to the original commit.
 
-Please just use the standardized "avdd" in that driver instead
-of "vana" (which also seems to refer to the analog supply vdd,
-which is what avdd stands for).
+For simple patches, placing the patch changelog (patch history) in that=20
+patch itself under --- line e.g. as bullet points is more effective and=20
+easy to spot that from the coverletter.
 
-Then this whole patch is unnecessary and can be dropped from
-this series.
+Preferrably post new versions as own thread because sometimes tools may=20
+get confused when more than one version appears within the same thread.
 
-Regards,
+> > Usually, the merge window is quiet time anyway when it comes to applyin=
+g=20
+> > patches so don't expect much to happen for them until clearly after rc1=
+=20
+> > (=3D not right after rc1 has been published, because the piled up patch=
+=20
+> > queue will take some time to drain and there are other things to do aro=
+und=20
+> > that timeframe as well).
+> >=20
+> I see, sorry for bothering. I'm new to the kernel patching workflow and
+> still learning how it works.
 
-Hans
+It's no problem, no need to be sorry at all, we value also patches from=20
+newcomers. I just wrote this to explain how the kernel development cycle=20
+works.=20
 
+Some subsystems accept no new submissions during merge window, in pdx86=20
+we've no such rule but things are still quieter also here (I usually won't=
+=20
+apply anything than very very critical fixes during that 2 weeks window of=
+=20
+time, it's "normal").
 
+--=20
+ i.
 
-
->> ---
->>  drivers/platform/x86/intel/int3472/discrete.c | 18 ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index 115bb37577a1..adff564bf3fd 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -164,6 +164,24 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
->>                 .con_id = "dvdd",
->>                 .enable_time_us = 45 * USEC_PER_MSEC,
->>         },
->> +       {       /* imx471 expects "vana" as con_id for power enable */
->> +               .hid = "SONY471A",
->> +               .type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
->> +               .type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
->> +               .con_id = "vana",
->> +               .enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
->> +       },
->> +       {
->> +               /*
->> +                * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as con_id
->> +                * for power enable
->> +                */
->> +               .hid = "TBE20A0",
->> +               .type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
->> +               .type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
->> +               .con_id = "vana",
->> +               .enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
->> +       },
->>  };
->>
->>  static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
->> --
->> 2.54.0
-
+--8323328-811330811-1782829094=:1167--
