@@ -1,164 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE1943C078;
-	Tue, 30 Jun 2026 14:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E45127467F;
+	Tue, 30 Jun 2026 15:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782831543; cv=none; b=Kd2nm3rv5AThkuMUHsoqwtkqs6g4IhO8/yGQVQi22uk/NwUj2123060rTgINZK1r9kXfF5zyNUbFLkwRapQl8k51uZFrtWmLj3SZupecrJIx/nTTivGu5Zd0iQd+wzMzvyTwAQR1qWzcwmw0bcgV0cqqE3buCfhxrUOr+S2Ag+s=
+	t=1782831847; cv=none; b=s/uZur13Emg+Du3/s0KzMYb+25rMCz6w8Cj4QWw/P5GfUkfqY/e2GOfYfBZcISxp152b7yuVHF3VewbihCvSdetDlxSDhEmlBTL2ExqpRIlYElVL2hAQYLfasv8ro0ijhK00mum2JDcjLoEpD45ZtW9HRD5KWrYUF57BXPaZNSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782831543; c=relaxed/simple;
-	bh=3l/hhBb6LhPWn4Lh+5fI44R5Z6REzRuxh/G5MzQ7Ooo=;
+	s=arc-20240116; t=1782831847; c=relaxed/simple;
+	bh=q2gs8fhSbQ7M94DtEUMGpwzbFqPH/whWIV1lYtJESg8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lxm4pgx8Jjz2tOFg/NiZs9oOZ8m6yhDFDg/0VFI6n6rBmaLIGetX8Iyu2vysA166eCh9h0d9dz5H4t9Q+IJMPDtIJRwVyfkXztaWYI253qBYEBvO/SeeW9GJqj4rvvJk+BXcPCkhKSop2XNR0SkPyxz77A8W3imNVkNO4FULKdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n9SZGxUU; arc=none smtp.client-ip=192.198.163.15
+	 MIME-Version:Content-Type; b=C+7O5fhFxVPSyyMrcwYg6q8vXFoSBs8GMeEeVMrMAmE/k67FEfXRV0Fh7CeL3WCw7FBPajh8yzF9a84rMxUpX6XRnQ8BZIawcP9dI+IV4WJWEBA87faURWPqq5ONMzPeN1dewCeddrGJR8RTZFY5sXFwZYeN7T7gFFX9zD5Iklc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S55tXRCS; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n9SZGxUU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S55tXRCS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782831542; x=1814367542;
+  t=1782831846; x=1814367846;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=3l/hhBb6LhPWn4Lh+5fI44R5Z6REzRuxh/G5MzQ7Ooo=;
-  b=n9SZGxUUvSoFvWILiPMssZ8nTgQPB44e7ZLdDuRSATWCsW0MjY46rlWN
-   bGg8qBm3vdnxKMJchZwK6YnWtPEwZiooZ/tGJyvVlOWr9wyWI+bF63UZv
-   YY1JR7sxRDFKmyJnNKX9/m7IPq9y9HHiNU2DzfZOqVD6fWdTg7ev3LpvV
-   iW3IvfIuf9PD65/isgtn/Nu/6HbYf8LdmHm5KsnxAcYONi28ZPyBBwLEp
-   68sOo8Kvk/IwlNIDCQWu1xJ3t+ZMMOy+u/Z2tf2Aegs1kDgYtl49KhpC0
-   SJsQI5RiSPenw4hFh02b2SwRbhxo3JDy5RZRNc5RX2j9A41k8xag49q35
-   w==;
-X-CSE-ConnectionGUID: 6dDITls5TiSNEUET49fK9A==
-X-CSE-MsgGUID: iUNKvgI6R0qY6Gy2+LRtDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83683181"
+  bh=q2gs8fhSbQ7M94DtEUMGpwzbFqPH/whWIV1lYtJESg8=;
+  b=S55tXRCSCQ6yKQYU+gWGag5XQqzrRIKCLXvLHuNW/iJMUdG9OXfAmBON
+   xX4uELWs3au89gzKpxwY9quTkFAiuzT8NbGWERKmAT6x22KUAC7Z6l15z
+   7SKrZpo84dOybPsdHwiNNIjfLBNCcU6dYdsfMzBYb61NtqZL/IFGIDI8c
+   qV2fyX9qKdio83ZkZBl1QyeI/UB6edVFb2Gr1RTzsDMCc+cwiAziSbVQN
+   X9WlkQkfp6ExX3Mtrkt7fmyCeVOtYuIW5OfKKRHvuH6xpS3bLmyzcAGSW
+   t06d55Bxvr1lsRdJ91J2kNdf6G4vM7Ogo8FB5Ym92/2FFomVTJOvgG4xO
+   A==;
+X-CSE-ConnectionGUID: 9uQ8wxpDQOamPtBOlvYf+Q==
+X-CSE-MsgGUID: hu+jnbtmRzOOn5uOGUaNtg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83421380"
 X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
-   d="scan'208";a="83683181"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:59:01 -0700
-X-CSE-ConnectionGUID: 7MJfsAzlTECMnfhamocb3g==
-X-CSE-MsgGUID: oje/+03bRcWRotEWY2G1uQ==
+   d="scan'208";a="83421380"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:04:05 -0700
+X-CSE-ConnectionGUID: lRP7Ps9aR/m8IaDp6e0p/A==
+X-CSE-MsgGUID: ycS9TBMIQTy3VuTw8STAow==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
-   d="scan'208";a="290410512"
+   d="scan'208";a="248301948"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.230])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 07:58:58 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:04:01 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Jun 2026 17:58:54 +0300 (EEST)
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
- defining struct dmi_system_id
-In-Reply-To: <akJzYlHHcvPCl0HW@monoceros>
-Message-ID: <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
-References: <cover.1782682124.git.ukleinek@kernel.org> <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org> <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com> <akJzYlHHcvPCl0HW@monoceros>
+Date: Tue, 30 Jun 2026 18:03:58 +0300 (EEST)
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+cc: sre@kernel.org, Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
+    andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
+    krzk+dt@kernel.org, conor+dt@kernel.org, bryan.odonoghue@linaro.org, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+    devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] platform: arm64: lenovo-thinkpad-t14s: Wire EC
+ thermal events to hwmon
+In-Reply-To: <20260630145307.10745-3-daniel.lezcano@oss.qualcomm.com>
+Message-ID: <ea082fea-3ab8-fa65-aa07-ce82567450f0@linux.intel.com>
+References: <20260630145307.10745-1-daniel.lezcano@oss.qualcomm.com> <20260630145307.10745-3-daniel.lezcano@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1061725234-1782831534=:1167"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 30 Jun 2026, Daniel Lezcano wrote:
 
---8323328-1061725234-1782831534=:1167
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The EC generates thermal zone status change notifications for a subset
+> of the exposed temperature sensors. Wire these EC events to the hwmon
+> notification framework so userspace can be informed when a thermal alarm
+> state changes.
+> 
+> Associate each hwmon temperature channel with its corresponding EC
+> thermal event and emit hwmon_temp_alarm notifications through
+> hwmon_notify_event() when the EC reports a thermal zone status change.
+> 
+> Also register thermal zones in the hwmon chip capabilities and keep a
+> reference to the hwmon device to allow event propagation from the IRQ
+> handler.
+> 
+> This allows userspace monitoring tools to receive thermal alarm
+> updates without polling the sensors and gives the opportuniy to the
 
-On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
-> > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> >=20
-> > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> transitive=
-ly
-> > > which ensures that struct dmi_system_id is defined in
-> > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.h. Howev=
-er
-> > > this include in <linux/i2c.h> will be replaced by one for i2c_device_=
-id
-> > > only. To ensure that dmi_system_id is available add the include for t=
-hat
-> > > explicitly.
-> > >=20
-> > > Acked-by: Danilo Krummrich <dakr@kernel.org>
-> > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koenig@=
-baylibre.com>
-> > > ---
-> > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets.h | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >=20
-> > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-tab=
-lets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > index 2498390958ad..c756961ae5fd 100644
-> > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
-> > > @@ -13,6 +13,7 @@
-> > >  #include <linux/gpio/consumer.h>
-> > >  #include <linux/i2c.h>
-> > >  #include <linux/irqdomain_defs.h>
-> > > +#include <linux/device-id/dmi.h>
-> > >  #include <linux/spi/spi.h>
-> > > =20
-> > >  struct gpio_desc;
-> >=20
-> > Indirect include patchs are never a good idea as it always makes header=
-=20
-> > reorganizations minefield. So for this change,
-> >=20
-> > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> >=20
-> >=20
-> > When it comes to the series, I certainly like the direction it goes ver=
-y=20
-> > much (never have been fan of mod_devicetable.h) but I'd have preferred=
-=20
-> > stepwise approach over trying to introduce it to some mid-rc.
->=20
-> The hurdle here is that at least the header part isn't easily
-> automateable.
+opportuniy -> opportunity 
 
-Patch 1?
+> kernel to cool them down.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+> ---
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 78 ++++++++++++++-----
+>  1 file changed, 57 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> index 35a6f8b0cb6b..5fafb01a2b33 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -104,10 +104,13 @@ struct t14s_ec_led_classdev {
+>  struct t14s_ec_hwmon_sys_thermx {
+>  	const char *label;
+>  	int reg;
+> +	u8 event;
+>  };
+>  
+>  struct t14s_ec_hwmon {
+> +	struct device *dev;
+>  	struct t14s_ec_hwmon_sys_thermx *sys_thermx;
+> +	size_t num_sys_thermx;
+>  };
+>  
+>  struct t14s_ec {
+> @@ -490,6 +493,20 @@ static int t14s_input_probe(struct t14s_ec *ec)
+>  	return input_register_device(ec->inputdev);
+>  }
+>  
+> +static void t14s_ec_hwmon_notify_event(struct t14s_ec *ec, u8 event)
+> +{
+> +	for (int i = 0; i < ec->ec_hwmon.num_sys_thermx; i++) {
+> +		if (ec->ec_hwmon.sys_thermx[i].event != event)
+> +			continue;
+> +
+> +		hwmon_notify_event(ec->ec_hwmon.dev, hwmon_temp,
+> +				   hwmon_temp_alarm, i);
+> +
+> +		dev_dbg(ec->dev, "Thermal Zone (%s) Status Change Event\n",
+> +			ec->ec_hwmon.sys_thermx[i].label);
+> +	}
+> +}
+> +
+>  static irqreturn_t t14s_ec_irq_handler(int irq, void *data)
+>  {
+>  	struct t14s_ec *ec = data;
+> @@ -539,13 +556,9 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void *data)
+>  		dev_dbg(ec->dev, "LID closed\n");
+>  		break;
+>  	case T14S_EC_EVT_THERMAL_TZ40:
+> -		dev_dbg(ec->dev, "Thermal Zone 40 Status Change Event (CPU/GPU)\n");
+> -		break;
+>  	case T14S_EC_EVT_THERMAL_TZ42:
+> -		dev_dbg(ec->dev, "Thermal Zone 42 Status Change Event (Battery)\n");
+> -		break;
+>  	case T14S_EC_EVT_THERMAL_TZ39:
+> -		dev_dbg(ec->dev, "Thermal Zone 39 Status Change Event (CPU/GPU)\n");
+> +		t14s_ec_hwmon_notify_event(ec, val);
+>  		break;
+>  	case T14S_EC_EVT_KEY_FN_G:
+>  		dev_dbg(ec->dev, "FN + G - toggle double-tapping\n");
+> @@ -640,13 +653,14 @@ static const struct hwmon_ops t14s_ec_hwmon_ops = {
+>  };
+>  
+>  static const struct hwmon_channel_info *t14s_ec_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+>  	HWMON_CHANNEL_INFO(temp,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL,
+> -			   HWMON_T_INPUT | HWMON_T_LABEL),
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM,
+> +			   HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_ALARM),
+>  	NULL
+>  };
+>  
+> @@ -657,14 +671,34 @@ static const struct hwmon_chip_info t14s_ec_chip_info = {
+>  
+>  static int t14s_ec_hwmon_probe(struct t14s_ec *ec)
+>  {
+> -	struct device *dev;
+>  	struct t14s_ec_hwmon_sys_thermx sys_thermx[] = {
+> -		{ .label = "soc",	.reg = T14S_EC_SYS_THERM0 },
+> -		{ .label = "keyboard",	.reg = T14S_EC_SYS_THERM1 },
+> -		{ .label = "base",	.reg = T14S_EC_SYS_THERM2 },
+> -		{ .label = "charging",	.reg = T14S_EC_SYS_THERM3 },
+> -		{ .label = "qtm",	.reg = T14S_EC_SYS_THERM6 },
+> -		{ .label = "ssd",	.reg = T14S_EC_SYS_THERM7 },
+> +		{
+> +			.label = "soc",
+> +			.reg = T14S_EC_SYS_THERM0,
+> +			.event = T14S_EC_EVT_THERMAL_TZ39
+> +		},
+> +		{
+> +			.label = "keyboard",
+> +			.reg = T14S_EC_SYS_THERM1,
+> +			.event = T14S_EC_EVT_THERMAL_TZ40
+> +		},
+> +		{
+> +			.label = "base",
+> +			.reg = T14S_EC_SYS_THERM2,
+> +		},
+> +		{
+> +			.label = "charging",
+> +			.reg = T14S_EC_SYS_THERM3,
+> +			.event = T14S_EC_EVT_THERMAL_TZ42
+> +		},
+> +		{
+> +			.label = "qtm",
+> +			.reg = T14S_EC_SYS_THERM6
+> +		},
+> +		{
+> +			.label = "ssd",
+> +			.reg = T14S_EC_SYS_THERM7
+> +		},
+>  	};
+>  
+>  	ec->ec_hwmon.sys_thermx = devm_kmemdup_array(ec->dev, sys_thermx,
+> @@ -673,10 +707,12 @@ static int t14s_ec_hwmon_probe(struct t14s_ec *ec)
+>  	if (!ec->ec_hwmon.sys_thermx)
+>  		return -ENOMEM;
+>  
+> -	dev = devm_hwmon_device_register_with_info(ec->dev, "t14s_ec", ec,
+> -						   &t14s_ec_chip_info, NULL);
+> +	ec->ec_hwmon.num_sys_thermx = ARRAY_SIZE(sys_thermx);
 
-> (Well it is, but the script that I have now to check all
-> .c files already takes longer than an hour to run. I guess it's not as
-> optimal as it could, but still.) And so getting this ready for inclusion
-> in next and keeping it up to date until the merge window opens is a
-> tough job.
->=20
-> The further downside is that each modification to one of the highly used
-> headers is expensive (in rebuild time) when these are merged one after
-> another (or when bisecting). So getting these changes in in one batch is
-> beneficial.
->=20
-> So while I agree with your preference, I don't think it's feasible.
+Please add include.
 
-While I understand keeping it up-to-date must be a pain, I'm not entirely=
-=20
-convinced by the rebuild time argument as it has been the status quo so=20
-far too for anything touching mod_devicetable.h.
+> +
+> +	ec->ec_hwmon.dev = devm_hwmon_device_register_with_info(ec->dev, "t14s_ec", ec,
+> +								&t14s_ec_chip_info, NULL);
+>  
+> -	return PTR_ERR_OR_ZERO(dev);
+> +	return PTR_ERR_OR_ZERO(ec->ec_hwmon.dev);
+>  }
+>  
+>  static int t14s_ec_probe(struct i2c_client *client)
+> 
 
-If one commit would move all linux/device-id/* AND ADD them all into=20
-mod_devicetable.h as includes, that's just one rebuild more (and one=20
-rebuild will occur anyway whichever way you architect this).
-
-Only if includes would be then removed one-by-one from mod_devicetable.h=20
-(e.g. per subsystem basis), I can see it causing n rebuilds (+conflicts),=
-=20
-but they could be removed in bulk as well.
-
-What you can achieve is preventing those "normal" mod_devicetable.h=20
-changes enforcing rebuilds right after this has been applied, but that is=
-=20
-just the rebuilds as status quo would have without this series and no=20
-more.
-
-
---=20
+-- 
  i.
 
---8323328-1061725234-1782831534=:1167--
