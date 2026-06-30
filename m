@@ -1,115 +1,113 @@
-Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE8F405860
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 10:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9952D7812;
+	Tue, 30 Jun 2026 11:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782816778; cv=none; b=Eknv60bvZ5o2EKj2pLQf93caykxht/MEHBGGxag3T2h0lGsHKxNxI7xCV2NfaOgquiWH2JgrplS4obZEd6YPSF+FRp8kaYZsWpbWJ9QSJMUV71L+TPKaLdOsdHRs5oLskLD4ziXuxbqoH7Iu0BV1ym46h1Sj0cszJezimGoSd2Q=
+	t=1782819506; cv=none; b=mabeNsZdqPyO2695u5ae3tz4uiiLFE6avKVMaS5XeAe7jOz87EQx1T2MJ8oNWLRbXElg7bcvpjlpCPkA3qCsReieyLlo8l98quYzDk9Z9bTDE4/OMSKg2qsPulIY1exetDitzSdYXd8kbZjPxfj77GEjy9AzeXhsLtXdPAM1OMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782816778; c=relaxed/simple;
-	bh=ZGzt5IG+INAc0Z7HeVhKM5dtyeIxmckzQq/YLXhj7HA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E/VuXqf/4rEgrWHKkv5VOfvtA2Dyf8zagUcI6zvRdICzbBaC89T6XxYCB+OdN0cuRdIg7SNCoiOuyTn9h6Ax+s6EeWU2b+TjR61CPwXG4nh0TKWha58T39zxtMC47y4uydlfKBuWEqDUJmYQ4BvSLOrPogP6SGlyIxRHlVtzVcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EyI0Bpk4; arc=none smtp.client-ip=74.125.224.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782819506; c=relaxed/simple;
+	bh=oTCNM/AOyFpPb5rIncF1bOxUq0WXQpL6pQN30H0AnWg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Gf3lqbRp7V4zRu3RZYdMQlEvMVqvKSohj6aC98JW5DC4uvf5CLeql+JNEuU96clnctIDD05iBVCT2WHz0aKvmoGIGqzFI1Lf5c0AJsdBCgpnsgj2n0fZLY8iNLUiY/vvh9774FC0CWpFu7UpFTpgxTl+d4/w2ZYsQGj+7reSstI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=YCB6Twpa; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyI0Bpk4"
-Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-664de4f80d3so1947301d50.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 03:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782816767; x=1783421567; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfF+iXeJWMxuPhgk04zCk6fGh3gRO2aBc22OA8kCBN4=;
-        b=EyI0Bpk4mY7MrXdF/3pVKos2TndkWIlxS63pSWMOx/AbcRikvnstFJRGrPUSu7vRhW
-         fFpTVtI9vsT1wZakZayymFCmyjoNvg76edEBfCiEOjL4xiwCi4WvVj+ktXFOk6eQu1Ma
-         2LXGUdDQVn1pkbq9CU3oV5U3XQo7ZQYb76dd8B2OkcfkSr/6y1YEr2g50nVxHv1WOKmP
-         zBuCF8Ksnaze0WaAaa90nN2McLAaTJXAvPMh9SfA/duRLq0q3eX4QFiNfLPRuTmbvtEM
-         jNdOLBKg/UOXMo5phy30Yqedp3n4oyHEYGTdqZzGUcO+NYv40gzF4wgX6OrQ3cWNu65X
-         oSFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782816767; x=1783421567;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BfF+iXeJWMxuPhgk04zCk6fGh3gRO2aBc22OA8kCBN4=;
-        b=HIAvHSRR5zUiILoXP88LyTp81zxv0aLiey385eFnvBD4mBjN6ndsrSfX/gR4sEhRbB
-         r5YgpfKcpECj40C5DP2SIzESx3JUSCr3sxkEf5EZpxmsQU4zMgVHB3HToMH/Y1p/cLtJ
-         qmnOvWOnvchgFowN1DKCHR7ETUHGSQ1DAxBaFaxqy7GNoHjqF9sOMJPNdfN2GcPKpBov
-         N/NYQW9nBNrw8r9OPoUvUtkyLQzFsncoDEsYx549OhU6L9CuRXpAHPs6pUWjwwNulLdP
-         GFyOLiUdeZROn0zjTNte2EnMJLuBDp/uJnjQ40v1T9WDtgBAbZkFFwtIPKS9qewspjAU
-         CE3w==
-X-Forwarded-Encrypted: i=1; AHgh+Rre9ZDNydetxfVvuK6pd9vMmlw8+CEqj/wgFocGJuJJ8VD4vnsg+dnWcvlAyDbhZMm4MdUGuoHr7c+0iqbdKgXWKesu@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+pC9MicEOfaDVXmVIs7FFlrjl5fdRK9LeqF99L7TeDZ9vvd+H
-	Ny/WIIe27vT1w6s3qT2WxWo/3IJhHpUiKUQq8qVlGCEtGGL1wsPc1To/
-X-Gm-Gg: AfdE7clhxYfwkU7j366i47i56pBQi/dCsP3kEQ0rcJduCFJF6Wm6xGSYoCcOQ02BPdr
-	1daXry7LbH0ktpZ4TVtyPQa4bRb/4huCWn2CV7WB9xPZhHMFI0EeFdaK7ss55fet3atar5tDy8V
-	4JzoxuOh5dYTelwLvcI+X4QDkDNXZH4/2uPgVhxpwD6hMMNgX0ey7FY/Uy/vsTChZgPrOszHdK+
-	lZFtxl4VlcomwFnDlVBQbAxPaNcnUhUz3BXAM+pgEBoqpAUy4oT4h/XkESEqKvnPdXrt0X8TCu1
-	Roo6zJnrzN+wSGKVlE1qbm6TRd7NoJF/MelVGbA6jerzWBdeIhHJHsF4aS6dasCL7eVFJZjleCT
-	xo2JF4YpCxZNiq8In1FXVYXMq+o8dj4l25WXSgeJYNhzlnf1w1t4+EZD67AerAKEyq0pPli1wrr
-	7c4kvylkz3XeeamLCIe4EJq8hloSmGh1mjqtVx
-X-Received: by 2002:a05:690e:140a:b0:664:aa09:a29b with SMTP id 956f58d0204a3-664f96e482dmr2719441d50.18.1782816767360;
-        Tue, 30 Jun 2026 03:52:47 -0700 (PDT)
-Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-665016d577asm693402d50.21.2026.06.30.03.52.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2026 03:52:47 -0700 (PDT)
-From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-To: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Krishna Chomal <krishna.chomal108@gmail.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yousef Alhouseen <alhouseenyousef@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: handle positive BIOS error codes
-Date: Tue, 30 Jun 2026 12:52:34 +0200
-Message-ID: <20260630105234.54638-1-alhouseenyousef@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="YCB6Twpa"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gqLkP1C9Kz9v1p;
+	Tue, 30 Jun 2026 13:38:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1782819501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xShlwrKyTIF4qAdBox24ShRYzAy+zv7+bJMeZEybzao=;
+	b=YCB6TwpaO927QjEdXrlIiJBt3S2TMj/lUoTQyC5iej5UxCRKDn/XljRoPJbwW7XxlugG6N
+	xBgQ8xLD8khNkgkWh+g0ulj34prUa724A/+poOtOInojCqpSRpE4vb6OBmRtDmIJAxSA4f
+	q+iHkCtSckNXJ49ELVp3wKYekx4Hu3LHe2ZUyT3N5n18Mwi4lpbcu585fLX8dl6Sm1920r
+	w0LYy0isS0hDcqp6fFRitgGmFoMYdelUtHSbx9Tm6NOH0N4ee+iItLHiYZcykaDEt9MsqF
+	xFH0uK67m+VTeUGiD6g7C/77X5TkshLws6H+4ToFw4GPgFvrVvyldWMMbrXUAQ==
+Message-ID: <263f58b418a27a2339fc2478f93234e0208b0ad9.camel@mailbox.org>
+Subject: Re: [PATCH v2 02/19] driver core: platform: provide
+ platform_device_set_of_node()
+From: Manuel Ebner <manuelebner@mailbox.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Lee Jones	
+ <lee@kernel.org>, Thierry Reding <thierry.reding@avionic-design.de>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller"	 <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Srinivas Kandagatla	 <srini@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Vinod Koul	 <vkoul@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich	
+ <dakr@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan	
+ <saravanak@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)"	 <chleroy@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Andy Shevchenko	
+ <andriy.shevchenko@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Doug Berger
+ <opendmb@gmail.com>,  Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list	
+ <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
+ Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team	 <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Matthew Brost	 <matthew.brost@intel.com>, Thomas
+ =?ISO-8859-1?Q?Hellstr=F6m?=	 <thomas.hellstrom@linux.intel.com>, Rodrigo
+ Vivi <rodrigo.vivi@intel.com>,  David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>,  Paul
+ Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>,  Maximilian Luz <luzmaximilian@gmail.com>, Hans
+ de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+ iommu@lists.linux.dev, 	linux-pm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
+	linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Date: Tue, 30 Jun 2026 13:37:54 +0200
+In-Reply-To: <20260629-pdev-fwnode-ref-v2-2-8abe2513f96e@oss.qualcomm.com>
+References: <20260629-pdev-fwnode-ref-v2-0-8abe2513f96e@oss.qualcomm.com>
+	 <20260629-pdev-fwnode-ref-v2-2-8abe2513f96e@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: 160dda9997288de2bec
+X-MBO-RS-META: xtee85ryzhfy8x8szdsj4cwckgtw999y
 
-hp_wmi_perform_query() returns firmware BIOS error codes as positive
-values.  The Victus-S profile callers only reject negative errors, then
-consume output fields that are not filled for a positive firmware error.
+On Mon, 2026-06-29 at 11:12 +0200, Bartosz Golaszewski wrote:
+> [...]
+> =C2=A0
+> +/**
+> + * platform_device_set_of_node - assign an OF node to device
+> + * @pdev: platform device to add the node for
+> + * @np: new device node
+> + *
+> + * Assign an OF node to this platform device. Internally keep track of t=
+he
+> + * reference count. Devices created with platform_device_alloc() must us=
+e this
+> + * function instead of assigning the node manually.
 
-Treat every nonzero result from victus_s_gpu_thermal_profile_get()
-as a failed query before using its outputs.
+Doesn't it make sense to add a remark to the kernel doc of platform_device_=
+alloc()?
 
-Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks
+ Manuel
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..50c5a1e152dd 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -1825,7 +1825,7 @@ static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
- 					       &current_ppab_state,
- 					       &current_dstate,
- 					       &current_gpu_slowdown_temp);
--	if (ret < 0) {
-+	if (ret) {
- 		pr_warn("GPU modes not updated, unable to get slowdown temp\n");
- 		return ret;
- 	}
-@@ -1907,7 +1907,7 @@ static int platform_profile_victus_s_get_ec(enum platform_profile_option *profil
- 						       &current_ppab_state,
- 						       &current_dstate,
- 						       &current_gpu_slowdown_temp);
--		if (ret < 0)
-+		if (ret)
- 			return ret;
- 		if (current_ctgp_state == 0 && current_ppab_state == 0)
- 			*profile = PLATFORM_PROFILE_LOW_POWER;
--- 
-2.54.0
-
+>  [...]
