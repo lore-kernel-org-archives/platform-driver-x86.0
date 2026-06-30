@@ -1,201 +1,232 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010053.outbound.protection.outlook.com [52.101.84.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B2438F230;
-	Tue, 30 Jun 2026 15:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782833274; cv=fail; b=OFLUyvbuZPtABCruVy/OvzNf1IXut1bpXBWZLwc2sx2HMslY3tosIyd+OWYGmFZApgxKT9Sk9CUtY2l+kIHCYciuivAfnfGolfa4+Dd2UtqwTqKU2Q82oJAydchXv64OGKqszS5T23f1l6OgvWGJMqZXr0j0FnFoJ0MUyfq9L6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782833274; c=relaxed/simple;
-	bh=ly4Ar5DHkayVbCc8OieXkeiofBQ0N/JIv/KnHqqSN00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QN+XFXu/1wHE8eCgTev/F+uMjk11aH0NWtZXmAaevfY0iGsMra7CXko4M+kClacVPxKN0D6/OVXX3q4jaAWY+iJQoIwMFtf3hzQPZ0gO9FBUbB2sRjrEC21+4m/qv6nUYdorQGRkn1Wj2J1geW27MtFvsTzmqrAgglM46e5YJ9I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=JqXe71vX; arc=fail smtp.client-ip=52.101.84.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD963DDDDE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 17:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782840652; cv=none; b=ZdbHlnXoxXiL0S/Z4GozUJMTX81lLx52Yj8K9RWoCSVwIO84BrZXfaYOMi2+MMY/dJ+XmaRAVToP5poyqFuGww0E6rC29glAgifyrWCiJHMeM+Zl5K6klkuLmMzmbAIEgeLkuonOViMW28Zgx8MIohcVHsPhpweFiMOKAG4ldrM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782840652; c=relaxed/simple;
+	bh=v8oucDYPdBj+yU5bLDJLs8q3W92I/N/TC7xzlrh8mlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BSO7lrtFEWgMfrxC+0OZiHff9xkDylI8cXpMnn3KetuHaLFSSMhLGM/ucPClR4txYz+fT2BLAYlR18yIRpXxvzXJS8eJTyHFp1vJplTpYNPWqpSmiadYBR16XUjfWe7y7CyTUchJ1b1Ep273RD1SwMb+UTqGSxHYn53lk5mGAt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=TrHTOHqU; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JqXe71vX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rn51hq9geuKraU+I86oibSMCAJQFFRwEYZOP4G0j/xPfMMt+yY1zPFVToRfCTA6NKZYf2fNKseQYt7O5tIr+PczKrL3N/gYwwFIr/2trOtDG3Z6SLl5ipBewyiWcP8u+og+eJhjhcJ/cKQADSY/wdkoUkgaPC/Id0JiQSiQ1xPRonRtpa/g52fIebpK9eJHNvO9mj6P4K5ZCBDzL7GdlLTmo1KwaUH0MT6OluJ0rNq2SGEQXCu6w0GoTSIV/evywCv9MFhyvgbXRA8qvkrf/0R4nwHWolmvfZ317eypJshgDRYctO93Uv90FLhaJ08o8HZIm0P1ljUABdiNeveqc0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lOXjvUf4kNy7tPPtj0KZlEKz8m59k9a5tIZUbCybscA=;
- b=Qsd8oy+nSMSbHiNSJ6O3irF/ZlqPczIfEA/agLHOeRIl/B5PoyDR+c8W8kyLNl0WdAwd01ee55UIRMGsGOql+IYLN9CfGAXnmZn1wMbRsZuNuYvd9vsSIP33dxUJ0Hgig8kTZMCtdEbHjTRigIoJ8VxkO6+FTHS2UvygJ/2xOMDmdm5mYvyzLXPMbLLLYKBjeGrP3hGjpUhwcHkMmI8fLRJbz+tVPIf2PCBdYe25Rr3/IQ5iGvvc5hx8ysoVERQPzYXKi/b5MmjQ6BeYpwVT1/5ILX4jXNaW+5qy2IG+oTVpRP3vF5hc2by1lqEoqJQwv5/5KN+0T+WeawVJR3e91w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lOXjvUf4kNy7tPPtj0KZlEKz8m59k9a5tIZUbCybscA=;
- b=JqXe71vXdJlRa36uQnUGGB7XcVom4mIl/i4763DhGzl74+lCErLtVZBXlVkgj90py77DoesRWnpHi1+2x/a8NiqHXVUzQAoNjwHiXVtZ7hM5MF4X5F8PT4IlLRUyGWnimx5J/m8bGoYDM5j0lixhpjYG0xjblTMacUN7gV0XcC2JFF14NBXtHBt+1dMWetmFEFRhTp7ZF95WR4PD25IRCtrfwQxAfGUn9tjwQ8qkZHAoiQ7u3dFwEMrC/DOVAJRE21APMG+LS8gByb9zOEanpNmAelgofFxixE/VOxXnYZALzvvKiS3biKxnV1Qp8BS3/slKFAqjQmuyhlL7ESpRlg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
- by PA6PR04MB11948.eurprd04.prod.outlook.com (2603:10a6:102:51b::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.18; Tue, 30 Jun
- 2026 15:27:43 +0000
-Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
- ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Tue, 30 Jun 2026
- 15:27:43 +0000
-Date: Tue, 30 Jun 2026 10:27:24 -0500
-From: Frank Li <Frank.li@oss.nxp.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Peter Chen <peter.chen@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 10/19] pmdomain: imx: use platform_device_set_of_node()
-Message-ID: <akPgXPUGHswfBuQB@SMW015318>
-References: <20260629-pdev-fwnode-ref-v2-0-8abe2513f96e@oss.qualcomm.com>
- <20260629-pdev-fwnode-ref-v2-10-8abe2513f96e@oss.qualcomm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260629-pdev-fwnode-ref-v2-10-8abe2513f96e@oss.qualcomm.com>
-X-ClientProxiedBy: PH7P220CA0167.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:33b::9) To GV2PR04MB11799.eurprd04.prod.outlook.com
- (2603:10a6:150:2cf::9)
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="TrHTOHqU"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4924593f45dso60542495e9.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 10:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1782840648; x=1783445448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BpXaNQ2LxDF0tw6kNWrqSrR3FCmC7pJGI8n/xYi1WH8=;
+        b=TrHTOHqUnFfFbUQxjnzWAxGGeJBWHP0cKZ2TuMRBlzZ5Jm+Yoy5uSjaWnpOPk4ncgl
+         xNC50nEkwXewoYk9xeaKampLfmaMNdHnztRWe7x77G6EpVAlQ2pa94r5Mpk+jH/4TJ/m
+         UOH/whXuSzeu2bJvCJ6k33tvWyzQ8a49CI6bhNBqI42nJFJG0OdkKv1Xxp/f7D5ib6wF
+         +T+oQbxq+0WEktsF3XdWzpR+cNaM4jSyCv6reGvwB0kkbE97AlloUR0/YfJoXtUklX7Y
+         ocXGlyfkDL4dFvjlqftc4lDsxt2j5dhShJwNWYlst9PlvZEckDotuAf8faHzHlyYPVPs
+         fgvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782840648; x=1783445448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BpXaNQ2LxDF0tw6kNWrqSrR3FCmC7pJGI8n/xYi1WH8=;
+        b=DUAznke7/3ebMXLG+RbjqTK+kl4xAlSMYSMZNCWqEy5/1fxHjClDy5xI+543NIg72Z
+         7dM9Cq7FxsfJ6qzl78ZAu9Bea++aor6gG25hD/Equf//Ba8VIbBzKPs6o413RTz8f/o+
+         +RyqiDsU0kFv+GKKweEwzuJRF9bJbtDaDz5NfoVZ+Wd17XzDxbqQYZG0To2mIVhnGo9Y
+         C/ufAVNZyTJWGYIl61ojTB2nZfd2d0sy0KeaoL2aoB4MBV2iC6pN349y4AlXCif6OeHX
+         Vfves+Ir0Bm7f/Bivt0HmF86Ey0rBDP1KPrZiWB4qsVSwNEEglwPnRdkEVJcIAF4LHqD
+         4Wig==
+X-Forwarded-Encrypted: i=1; AFNElJ/iofA7nDeuKV/xrZJB/ZUlUmNq7XRmhgdhtEbzjhEYrUQQw7aiTWxSyXUFcih7JoM1Wbg3giGoA87wB+58oQ4HPxOA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVvIKbXUYdaqOiM7/CsjYOED0IRek/56y192d3SdfFUiiYWcJU
+	rfyQ+eqKnxbZ4wennVrsuvqlIGYcilHMwNOyz60XXrhSIVPF7Xqkq3ObzBRjdWg0trs=
+X-Gm-Gg: AfdE7cm1blRc5if2dNd+9FNb6Wj2fgtaJQMy8eaXe8ISkCMxL14ED8UHJmEcYqnM76Z
+	uGHqIzuGBVScyL85VtKOFyikuoTo7oPz8+LRk/T2Tq2Ap7iRXme9BliWRMjID94htO4e2JU86zW
+	TwdwLSdGoUDvxbq8fjykY0izdAu4sJZZC28qCAwwoGI4t2Mejf9xx8NV1d3XBCxLK/3w+9TAcOn
+	cUTx9dK+RvlA//Oitn+AUAq9Kws1vyeh4mMeHCkK+uA/aoF0yoXwB7jIPYoUNHaAZUXngLeqQMk
+	e8a6rTxDIX5sZxECqUnDdvSiDMPrOXICdSAywLr0W8gLMjwc2yULVgCtwJAOwnfq96CBSKvAo7n
+	nVyt0lj7QWs0L558JHf82tyvMngEo7/XPLOccJr25SwMWzIhGqRU7m94a/SyP8nwL5XOXpHI9Zy
+	0JSX1V0BI93c42/QNwK1oFrgRU1GXaGkCH0wClBHTQwgV/gSqsolNzmqMvM2cCNVVNIRPcpoJOi
+	W+M
+X-Received: by 2002:a05:600c:870b:b0:485:9a50:3370 with SMTP id 5b1f17b1804b1-493bda382ebmr26685055e9.8.1782840648077;
+        Tue, 30 Jun 2026 10:30:48 -0700 (PDT)
+Received: from localhost (p200300f65f47db042a9b551def0a6b94.dip0.t-ipconnect.de. [2003:f6:5f47:db04:2a9b:551d:ef0a:6b94])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493be81fca5sm11964125e9.14.2026.06.30.10.30.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 10:30:47 -0700 (PDT)
+Date: Tue, 30 Jun 2026 19:30:46 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
+ defining struct dmi_system_id
+Message-ID: <akP5FKsnsdzx8pMk@monoceros>
+References: <cover.1782682124.git.ukleinek@kernel.org>
+ <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org>
+ <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com>
+ <akJzYlHHcvPCl0HW@monoceros>
+ <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PA6PR04MB11948:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f666dd4-e8c7-4cb8-0501-08ded6bc2177
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|19092799006|366016|7416014|376014|23010399003|1800799024|22082099003|18002099003|11063799006|56012099006|4143699003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	zcoIJeBB8Dhzo3+7ngTfxflWB4imqVdzpBagtZZnQ//13nnWQCRNNT+3RDJ1WQbEFLsV5udYDZLYXDH/ujfOWiKNYZvZWTTuhz5qsQfncUc6QAZ+F5mF2kpl+DLwG8F1AFJ39TaiGr4HyKtfIVwzCqlnOfbsZU4XxdDydagI+rK3xLbxTFKhXydkvubdfPL2D/hEDhUWEBq1ilAUl8Lw/N/+/emmyMhk+yUK0ReMCmLJJR+2+ahh1/+SOtAC43xcZ6u/rtfWHXgW6OYvDxp4bmGe8niNu5sOslgh+KxG0O7M8pQj9a2qIKpmzRCxiZDUCx5mALMwWvBXM5q4UQ8mc3MBxzdw26c/V5ZkXQasdIvUXb4o12rGVbVYb0TMyE9gK3xutnvLDgxpXM3UBHAyEm2riXnXRHx2cYdqMZiM+UtCLdUu66xcEQcPDlqXzplstOqd37HUZJBcmq4Cpzztcp7oNA5N73pKHB+UCZQMbcPYhZZHq1baKBwfHKLAMiRW78Qh1wxbgr7uWqghQKbw6EZ0NHt0Ol8WlV6VH3Y7j1h1pC3nN892PyLS15n3637z4VymmgyiePBAqnYy8Xpp1PAuADDdc14FLQZZQVLUtL2uKVqpNJ47fyWPkZb0jOnN7tBIHdUj5KKqMhgWa7svQ7869n86Gn7UMAYpyxH5tos=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(7416014)(376014)(23010399003)(1800799024)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KuVKHHhHl/yqNJ87pIy0XvpH//kNGYZW3bSZDO7uPBx3d3Dw1x2yLOhKnyH1?=
- =?us-ascii?Q?kTD5DpMyy93XVxSt640gZu78KqvcQh39bwLGBCNQdMsmkpHY2FnNOgwIY6kR?=
- =?us-ascii?Q?QtC/341/UAlxg3w8tkJruLlZAKRkO/T5nxGiTeqSAQqRsXN7rxud4eJN/lDb?=
- =?us-ascii?Q?IoNys46fUcnKbxiE91ZFEUw+aGXMVXqULu4nW6JMJ7BA6wK91fnWjP+3Dsda?=
- =?us-ascii?Q?qa0wurCu8twTaYVd2YtmA6qhavUaAO7ARa/YX0vl6Da6D+xdK1ujP3MsH/Zq?=
- =?us-ascii?Q?pvI8hAy8KFsn5hpJlFVmC6fOGiacgUpumkukAFLfN8lfwxdJw2qmoWqUSuYX?=
- =?us-ascii?Q?QHvWMC1VgJksamDlYgXJHH52gUW8/XcoOJ0FP6sSYKhXNfYZ1QgeyFvVd0me?=
- =?us-ascii?Q?+5brY99cKx4snTXEmuGDevZy017VoV975HtRFCBsinvFu2sVQF67eP7YSADb?=
- =?us-ascii?Q?FKzpwd+Tmr209RgpM5F8nYFf/ED7E0kG/MVI9PIS6uRN5cF9Jp1075Xt4Yh/?=
- =?us-ascii?Q?B2yMOFSB6GTdZggDsNH10WAvy5x1GdA+fWC+BTgxtRL6ndOkNd9x2g1c9IId?=
- =?us-ascii?Q?Kr7yscb3julLatPEckrZLD1uw425ibGiGm7Ecf8FdmvLXM856A35hY0YLsnE?=
- =?us-ascii?Q?fG4zaWRDD1sURvBBUf4ccCLk13P5Y8wB04WTWMY6oBZG35fLPVEJSVlpujJj?=
- =?us-ascii?Q?t4GoVU2ngPzhebOfSOLHHIsS+/6FVIV+HNNtl5fcYS19L9CH7Nb8hBFfMbRQ?=
- =?us-ascii?Q?SoHD6Y7VjUyWBP+yLbbhuSAQ70YhJCtVEXWgXOVdMabp63u6wlwZ3MN4UyWi?=
- =?us-ascii?Q?HR1jM4Emp+ef+tedxO4jyrxiFklGEuJ5guc3CbyTlFOUcT2mAbV+QZoq/ULH?=
- =?us-ascii?Q?Fa0lEE8pr6B3xg3sg0zyf7h1IMKAZhDhgk+CPZ2T9LBqa+lqInUgSFsZv0rh?=
- =?us-ascii?Q?xlKWZrmnlBrvTwaCyWHZZ0dAGbLbPZTLRgqem7SL2WAzRBnWulbG6AhWu0sP?=
- =?us-ascii?Q?L2CTeXGbHy0JdyEHdqtZVF4gwISemZ2/+mXH5c7yUn8Fl93zx3pVPsXX2zek?=
- =?us-ascii?Q?pc3sPiSu0G3G9ADfv7g7EsYZqU6nID0eoVYafAa426enO4UAnqLayVDQNlBi?=
- =?us-ascii?Q?ZPAEFUiSe/yN1Ie70MlKhFjvFrqqgh2l1WcadgH6Uz5YJKU2MMba9qEXONZQ?=
- =?us-ascii?Q?S36ODP48GF7rBcTI/gGmNrDMRuTtooIcMLNVNZi3UavooD2kNvqYZe/inOpp?=
- =?us-ascii?Q?tGaRWwu4kZajI1TGA78EuOn4j8sJR+VsyhEiZ4UAtCpP2pbwtdJXjiDsNgrj?=
- =?us-ascii?Q?YG+zdETEkqyGkE3WVbLC/s7TGkUbnJOTGpCj9PI82wBqv1gk0kY6LS68vO8Q?=
- =?us-ascii?Q?fr0F6XXRP28YqvvWvoEUj0HGG5uBV147+mFnw7nYPULGOzP0u0Juz0Nlgo6K?=
- =?us-ascii?Q?mcZ8EcVWbYojyWlcHZYKpldL/qrAaBPkYW7YkfdYJHdj/l2ahJiz84MXnMt8?=
- =?us-ascii?Q?VWQaaqjA1j4EeHR3NdJThjPchtdMTAi/cKEahj1wdgW37FqnRzYuWdCVI9qN?=
- =?us-ascii?Q?2pLjhmCqmLeoNg5zf6verEEbBIW2o4HzrDFNVaWqVqv7j0pxnaKuncufHEAw?=
- =?us-ascii?Q?ZBqFjs+ZEVh6nOpKEwF4EV0N18j532x5Mrz4t0+2spkwzNMeeEnJCUUpuDSx?=
- =?us-ascii?Q?qkuhr/d+2Yg1YnKfCK9mheLDDnMlEG4mM5IpLHr1Qj20ervcKSPA09uXz8wP?=
- =?us-ascii?Q?0qA+hqdNM0An919GIDeu8+PoDfq1aMcq1h9Z/TIUXbuwkAP4rRan?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f666dd4-e8c7-4cb8-0501-08ded6bc2177
-X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 15:27:43.8551
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oPyq+y7mPxcWhJ5Yw36OeM+SolpWz/RojNIpf4lCDOLkI3ULHQbSZIaIuSuYHTlM9E2wx0uuHKXKyqdzRoE0hC4OhI1SJlE+BWUIH9TfHy5EBw35tf9L4bTTCk8Ill57
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR04MB11948
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wbjchwfvl6dsna4z"
+Content-Disposition: inline
+In-Reply-To: <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
 
-On Mon, Jun 29, 2026 at 11:12:33AM +0200, Bartosz Golaszewski wrote:
->
-> Ahead of reworking the reference counting logic for platform devices,
-> encapsulate the assignment of the OF node for dynamically allocated
-> platform devices with the provided helper.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+--wbjchwfvl6dsna4z
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
+ defining struct dmi_system_id
+MIME-Version: 1.0
 
->  drivers/pmdomain/imx/gpc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/pmdomain/imx/gpc.c b/drivers/pmdomain/imx/gpc.c
-> index 42e50c9b4fb9ffb96a20a462d4eb5168942a893c..abca5f449a226fbae4213926e1395c413160c950 100644
-> --- a/drivers/pmdomain/imx/gpc.c
-> +++ b/drivers/pmdomain/imx/gpc.c
-> @@ -487,8 +487,7 @@ static int imx_gpc_probe(struct platform_device *pdev)
->                         domain->ipg_rate_mhz = ipg_rate_mhz;
->
->                         pd_pdev->dev.parent = &pdev->dev;
-> -                       pd_pdev->dev.of_node = of_node_get(np);
-> -                       pd_pdev->dev.fwnode = of_fwnode_handle(np);
-> +                       platform_device_set_of_node(pd_pdev, np);
->
->                         ret = platform_device_add(pd_pdev);
->                         if (ret) {
->
-> --
-> 2.47.3
->
->
+Hello Ilpo,
+
+On Tue, Jun 30, 2026 at 05:58:54PM +0300, Ilpo J=E4rvinen wrote:
+> On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> > On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
+> > > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
+> > >=20
+> > > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> transiti=
+vely
+> > > > which ensures that struct dmi_system_id is defined in
+> > > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.h. How=
+ever
+> > > > this include in <linux/i2c.h> will be replaced by one for i2c_devic=
+e_id
+> > > > only. To ensure that dmi_system_id is available add the include for=
+ that
+> > > > explicitly.
+> > > >=20
+> > > > Acked-by: Danilo Krummrich <dakr@kernel.org>
+> > > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koeni=
+g@baylibre.com>
+> > > > ---
+> > > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets.h | 1=
+ +
+> > > >  1 file changed, 1 insertion(+)
+> > > >=20
+> > > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-android-t=
+ablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > > index 2498390958ad..c756961ae5fd 100644
+> > > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-tablets.h
+> > > > @@ -13,6 +13,7 @@
+> > > >  #include <linux/gpio/consumer.h>
+> > > >  #include <linux/i2c.h>
+> > > >  #include <linux/irqdomain_defs.h>
+> > > > +#include <linux/device-id/dmi.h>
+> > > >  #include <linux/spi/spi.h>
+> > > > =20
+> > > >  struct gpio_desc;
+> > >=20
+> > > Indirect include patchs are never a good idea as it always makes head=
+er=20
+> > > reorganizations minefield. So for this change,
+> > >=20
+> > > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> > >=20
+> > >=20
+> > > When it comes to the series, I certainly like the direction it goes v=
+ery=20
+> > > much (never have been fan of mod_devicetable.h) but I'd have preferre=
+d=20
+> > > stepwise approach over trying to introduce it to some mid-rc.
+> >=20
+> > The hurdle here is that at least the header part isn't easily
+> > automateable.
+>=20
+> Patch 1?
+
+No, patch 15.
+
+> > (Well it is, but the script that I have now to check all
+> > .c files already takes longer than an hour to run. I guess it's not as
+> > optimal as it could, but still.) And so getting this ready for inclusion
+> > in next and keeping it up to date until the merge window opens is a
+> > tough job.
+> >=20
+> > The further downside is that each modification to one of the highly used
+> > headers is expensive (in rebuild time) when these are merged one after
+> > another (or when bisecting). So getting these changes in in one batch is
+> > beneficial.
+> >=20
+> > So while I agree with your preference, I don't think it's feasible.
+>=20
+> While I understand keeping it up-to-date must be a pain, I'm not entirely=
+=20
+> convinced by the rebuild time argument as it has been the status quo so=
+=20
+> far too for anything touching mod_devicetable.h.
+
+Yes. I don't know about others, but big rebuilds annoy me regularily.
+And with another quest that involves touching most struct *_device_id
+this really gets a pain. And just because "we" endured something in the
+past, doesn't mean we shouldn't improve.
+
+> If one commit would move all linux/device-id/* AND ADD them all into=20
+> mod_devicetable.h as includes, that's just one rebuild more (and one=20
+> rebuild will occur anyway whichever way you architect this).
+
+Yes, one rebuild isn't possible to prevent. You're talking about patch
+#1, right?
+
+> Only if includes would be then removed one-by-one from mod_devicetable.h=
+=20
+> (e.g. per subsystem basis), I can see it causing n rebuilds (+conflicts),=
+=20
+> but they could be removed in bulk as well.
+
+Removing those from mod_devicetable.h isn't part of the plan. But
+replacing `#include <linux/mod_devicetable.h>` by `#include
+<linux/device-id/of.h>` in <linux/of.h> triggers again many rebuilds
+when done separately.
+And then for <linux/pci.h> and again for <linux/platform_driver.h> and
+=2E... That's why those are included here, too, to at least use the "one
+rebuild needed" window for the high-impact follow up changes, and
+trigger a rebuild only once (unless you happen to hit an inbetween
+commit while bisecting).
+
+> What you can achieve is preventing those "normal" mod_devicetable.h=20
+> changes enforcing rebuilds right after this has been applied, but that is=
+=20
+> just the rebuilds as status quo would have without this series and no=20
+> more.
+
+This is exactly the goal. I don't get the "just" part of your argument.
+The point is that a modification to struct i2c_device_id should only
+trigger a rebuild of i2c drivers, but not of pci, platform, spi and all
+the others, too.
+
+Best regards
+Uwe
+
+--wbjchwfvl6dsna4z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpD/UMACgkQj4D7WH0S
+/k7EuAf/c8ODR+vs/8I+Md9COBD5E41jvh/kBoEwBnM+lb4ibQWdRmhjECkmay57
+P+3+aTYph+O67WUz6zeDAndaECzZokxmM8okhJ0yaETUOo3wIdl/CzK3bQa/4Irb
+k1WkhbtCq5mUrH/xToRedm9enaL8kZasTFMv0aRmf5P+jLsMPbzk8iUrLZmH+OR0
+Ky7Fm2Ggw9GIt+IFFcpoh7gwYrJ6ioWeFWfaHPWA/pv4xE3ibf9bMNJOVZjmwINh
+k8XzSZZok2jPWVcnbYj5IMqzMzaQ3VQtrizcBk3sWWmXI9lvX3SsoQELuYORmn9Z
+QhJK6Ob9w754RDTOqAqLxo5nsjs8JQ==
+=G13s
+-----END PGP SIGNATURE-----
+
+--wbjchwfvl6dsna4z--
