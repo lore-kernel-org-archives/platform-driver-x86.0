@@ -1,267 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010053.outbound.protection.outlook.com [52.101.84.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C562FD69D;
-	Tue, 30 Jun 2026 15:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782832091; cv=none; b=DaXM1x072t8VWOcxE7ORN5zBVuIUbt8r/A560FtH1XsQKhyuQaQmlsX5rkEmRP+hDLqvNBV48YIDWpuoTp1Mgxp3qHFOF6lPrQJSqbGupwYOB003YVMNl3x1K5HYLsgQh1+nH/VncT3e/SQKh+vTW0gdFNAGwXSNQkDjhkW/OMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782832091; c=relaxed/simple;
-	bh=OGcPkWc1soeFEVmkBELYbLiMfikDO3ttg2XJuX788J4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mS4x+XiLgIZqTGDlnvOsvtm7Halx+LQiaNrM7AMD553ifq2w+vzpzMSbmUIaS1qsh/wdtU0Egcb8KkFu92K0+WmVCFyuwaZH9sODhuVmVbOx6GDTBitb4xmGk+mw0d9SAYoSvpzPnA/Xi4jUp9OCJIdAHQXWyOszo9to6nbWJ4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZnLQpM+n; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B2438F230;
+	Tue, 30 Jun 2026 15:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782833274; cv=fail; b=OFLUyvbuZPtABCruVy/OvzNf1IXut1bpXBWZLwc2sx2HMslY3tosIyd+OWYGmFZApgxKT9Sk9CUtY2l+kIHCYciuivAfnfGolfa4+Dd2UtqwTqKU2Q82oJAydchXv64OGKqszS5T23f1l6OgvWGJMqZXr0j0FnFoJ0MUyfq9L6k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782833274; c=relaxed/simple;
+	bh=ly4Ar5DHkayVbCc8OieXkeiofBQ0N/JIv/KnHqqSN00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=QN+XFXu/1wHE8eCgTev/F+uMjk11aH0NWtZXmAaevfY0iGsMra7CXko4M+kClacVPxKN0D6/OVXX3q4jaAWY+iJQoIwMFtf3hzQPZ0gO9FBUbB2sRjrEC21+4m/qv6nUYdorQGRkn1Wj2J1geW27MtFvsTzmqrAgglM46e5YJ9I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=JqXe71vX; arc=fail smtp.client-ip=52.101.84.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZnLQpM+n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782832090; x=1814368090;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OGcPkWc1soeFEVmkBELYbLiMfikDO3ttg2XJuX788J4=;
-  b=ZnLQpM+ncwbmU3JBGo2rY4FBxtlkNlAoTxoYXSiDmj6tr6Xo5HDEXBBI
-   oXIV/3fYiGjnxSw8sZvsBitF98j6V5K1AQSH/xBv3yFNh/tiPL5ceT8J8
-   qNXOpQJIqffw4sw6FHrGMkE8j83Kd3hmhTmkK+h0kF60Uxdhw2SRL5fnt
-   wYuiCQmomIJQ110EERy0B3fxRBdvimgg8UHNYnt1RHkxP0h2kmthDuUxu
-   I/kYfF8BinF/Kd3UMLr1KDf5EnmRJjkK/YzBfNdDyaAlHdvBCKWPXRSkF
-   5hRQFVAc8HP5ZCoaVi5HtW0889yYOpSxMs5n5xM3x/bTuGLW4T5G7HFBU
-   w==;
-X-CSE-ConnectionGUID: MEsZDjIFT/uAqQ4agJS8ig==
-X-CSE-MsgGUID: KmYrzhAUSiCvYmfg2SvS3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="100974941"
-X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
-   d="scan'208";a="100974941"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:08:10 -0700
-X-CSE-ConnectionGUID: PqXOsuj2TOCe2wZCvOHsNA==
-X-CSE-MsgGUID: ndHBnCxmSVOjXhihV/cE+Q==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.230])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:08:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 30 Jun 2026 18:08:01 +0300 (EEST)
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-cc: sre@kernel.org, Hans de Goede <hansg@kernel.org>, linux@roeck-us.net, 
-    andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-    krzk+dt@kernel.org, conor+dt@kernel.org, bryan.odonoghue@linaro.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    linux-hwmon@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-    devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] platform: arm64:: lenovo-thinkpad-t14s-ec: Add
- hwmon support for temperatures
-In-Reply-To: <20260630145307.10745-2-daniel.lezcano@oss.qualcomm.com>
-Message-ID: <e39ed593-09fb-4332-e038-4966be0f59e0@linux.intel.com>
-References: <20260630145307.10745-1-daniel.lezcano@oss.qualcomm.com> <20260630145307.10745-2-daniel.lezcano@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JqXe71vX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rn51hq9geuKraU+I86oibSMCAJQFFRwEYZOP4G0j/xPfMMt+yY1zPFVToRfCTA6NKZYf2fNKseQYt7O5tIr+PczKrL3N/gYwwFIr/2trOtDG3Z6SLl5ipBewyiWcP8u+og+eJhjhcJ/cKQADSY/wdkoUkgaPC/Id0JiQSiQ1xPRonRtpa/g52fIebpK9eJHNvO9mj6P4K5ZCBDzL7GdlLTmo1KwaUH0MT6OluJ0rNq2SGEQXCu6w0GoTSIV/evywCv9MFhyvgbXRA8qvkrf/0R4nwHWolmvfZ317eypJshgDRYctO93Uv90FLhaJ08o8HZIm0P1ljUABdiNeveqc0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lOXjvUf4kNy7tPPtj0KZlEKz8m59k9a5tIZUbCybscA=;
+ b=Qsd8oy+nSMSbHiNSJ6O3irF/ZlqPczIfEA/agLHOeRIl/B5PoyDR+c8W8kyLNl0WdAwd01ee55UIRMGsGOql+IYLN9CfGAXnmZn1wMbRsZuNuYvd9vsSIP33dxUJ0Hgig8kTZMCtdEbHjTRigIoJ8VxkO6+FTHS2UvygJ/2xOMDmdm5mYvyzLXPMbLLLYKBjeGrP3hGjpUhwcHkMmI8fLRJbz+tVPIf2PCBdYe25Rr3/IQ5iGvvc5hx8ysoVERQPzYXKi/b5MmjQ6BeYpwVT1/5ILX4jXNaW+5qy2IG+oTVpRP3vF5hc2by1lqEoqJQwv5/5KN+0T+WeawVJR3e91w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lOXjvUf4kNy7tPPtj0KZlEKz8m59k9a5tIZUbCybscA=;
+ b=JqXe71vXdJlRa36uQnUGGB7XcVom4mIl/i4763DhGzl74+lCErLtVZBXlVkgj90py77DoesRWnpHi1+2x/a8NiqHXVUzQAoNjwHiXVtZ7hM5MF4X5F8PT4IlLRUyGWnimx5J/m8bGoYDM5j0lixhpjYG0xjblTMacUN7gV0XcC2JFF14NBXtHBt+1dMWetmFEFRhTp7ZF95WR4PD25IRCtrfwQxAfGUn9tjwQ8qkZHAoiQ7u3dFwEMrC/DOVAJRE21APMG+LS8gByb9zOEanpNmAelgofFxixE/VOxXnYZALzvvKiS3biKxnV1Qp8BS3/slKFAqjQmuyhlL7ESpRlg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com (2603:10a6:150:2cf::9)
+ by PA6PR04MB11948.eurprd04.prod.outlook.com (2603:10a6:102:51b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.18; Tue, 30 Jun
+ 2026 15:27:43 +0000
+Received: from GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c]) by GV2PR04MB11799.eurprd04.prod.outlook.com
+ ([fe80::2146:83a2:5329:b7c%6]) with mapi id 15.21.0159.007; Tue, 30 Jun 2026
+ 15:27:43 +0000
+Date: Tue, 30 Jun 2026 10:27:24 -0500
+From: Frank Li <Frank.li@oss.nxp.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@opensource.wolfsonmicro.com>,
+	Thierry Reding <thierry.reding@avionic-design.de>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Peter Chen <peter.chen@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 10/19] pmdomain: imx: use platform_device_set_of_node()
+Message-ID: <akPgXPUGHswfBuQB@SMW015318>
+References: <20260629-pdev-fwnode-ref-v2-0-8abe2513f96e@oss.qualcomm.com>
+ <20260629-pdev-fwnode-ref-v2-10-8abe2513f96e@oss.qualcomm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260629-pdev-fwnode-ref-v2-10-8abe2513f96e@oss.qualcomm.com>
+X-ClientProxiedBy: PH7P220CA0167.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::9) To GV2PR04MB11799.eurprd04.prod.outlook.com
+ (2603:10a6:150:2cf::9)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV2PR04MB11799:EE_|PA6PR04MB11948:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f666dd4-e8c7-4cb8-0501-08ded6bc2177
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|366016|7416014|376014|23010399003|1800799024|22082099003|18002099003|11063799006|56012099006|4143699003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	zcoIJeBB8Dhzo3+7ngTfxflWB4imqVdzpBagtZZnQ//13nnWQCRNNT+3RDJ1WQbEFLsV5udYDZLYXDH/ujfOWiKNYZvZWTTuhz5qsQfncUc6QAZ+F5mF2kpl+DLwG8F1AFJ39TaiGr4HyKtfIVwzCqlnOfbsZU4XxdDydagI+rK3xLbxTFKhXydkvubdfPL2D/hEDhUWEBq1ilAUl8Lw/N/+/emmyMhk+yUK0ReMCmLJJR+2+ahh1/+SOtAC43xcZ6u/rtfWHXgW6OYvDxp4bmGe8niNu5sOslgh+KxG0O7M8pQj9a2qIKpmzRCxiZDUCx5mALMwWvBXM5q4UQ8mc3MBxzdw26c/V5ZkXQasdIvUXb4o12rGVbVYb0TMyE9gK3xutnvLDgxpXM3UBHAyEm2riXnXRHx2cYdqMZiM+UtCLdUu66xcEQcPDlqXzplstOqd37HUZJBcmq4Cpzztcp7oNA5N73pKHB+UCZQMbcPYhZZHq1baKBwfHKLAMiRW78Qh1wxbgr7uWqghQKbw6EZ0NHt0Ol8WlV6VH3Y7j1h1pC3nN892PyLS15n3637z4VymmgyiePBAqnYy8Xpp1PAuADDdc14FLQZZQVLUtL2uKVqpNJ47fyWPkZb0jOnN7tBIHdUj5KKqMhgWa7svQ7869n86Gn7UMAYpyxH5tos=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV2PR04MB11799.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(366016)(7416014)(376014)(23010399003)(1800799024)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KuVKHHhHl/yqNJ87pIy0XvpH//kNGYZW3bSZDO7uPBx3d3Dw1x2yLOhKnyH1?=
+ =?us-ascii?Q?kTD5DpMyy93XVxSt640gZu78KqvcQh39bwLGBCNQdMsmkpHY2FnNOgwIY6kR?=
+ =?us-ascii?Q?QtC/341/UAlxg3w8tkJruLlZAKRkO/T5nxGiTeqSAQqRsXN7rxud4eJN/lDb?=
+ =?us-ascii?Q?IoNys46fUcnKbxiE91ZFEUw+aGXMVXqULu4nW6JMJ7BA6wK91fnWjP+3Dsda?=
+ =?us-ascii?Q?qa0wurCu8twTaYVd2YtmA6qhavUaAO7ARa/YX0vl6Da6D+xdK1ujP3MsH/Zq?=
+ =?us-ascii?Q?pvI8hAy8KFsn5hpJlFVmC6fOGiacgUpumkukAFLfN8lfwxdJw2qmoWqUSuYX?=
+ =?us-ascii?Q?QHvWMC1VgJksamDlYgXJHH52gUW8/XcoOJ0FP6sSYKhXNfYZ1QgeyFvVd0me?=
+ =?us-ascii?Q?+5brY99cKx4snTXEmuGDevZy017VoV975HtRFCBsinvFu2sVQF67eP7YSADb?=
+ =?us-ascii?Q?FKzpwd+Tmr209RgpM5F8nYFf/ED7E0kG/MVI9PIS6uRN5cF9Jp1075Xt4Yh/?=
+ =?us-ascii?Q?B2yMOFSB6GTdZggDsNH10WAvy5x1GdA+fWC+BTgxtRL6ndOkNd9x2g1c9IId?=
+ =?us-ascii?Q?Kr7yscb3julLatPEckrZLD1uw425ibGiGm7Ecf8FdmvLXM856A35hY0YLsnE?=
+ =?us-ascii?Q?fG4zaWRDD1sURvBBUf4ccCLk13P5Y8wB04WTWMY6oBZG35fLPVEJSVlpujJj?=
+ =?us-ascii?Q?t4GoVU2ngPzhebOfSOLHHIsS+/6FVIV+HNNtl5fcYS19L9CH7Nb8hBFfMbRQ?=
+ =?us-ascii?Q?SoHD6Y7VjUyWBP+yLbbhuSAQ70YhJCtVEXWgXOVdMabp63u6wlwZ3MN4UyWi?=
+ =?us-ascii?Q?HR1jM4Emp+ef+tedxO4jyrxiFklGEuJ5guc3CbyTlFOUcT2mAbV+QZoq/ULH?=
+ =?us-ascii?Q?Fa0lEE8pr6B3xg3sg0zyf7h1IMKAZhDhgk+CPZ2T9LBqa+lqInUgSFsZv0rh?=
+ =?us-ascii?Q?xlKWZrmnlBrvTwaCyWHZZ0dAGbLbPZTLRgqem7SL2WAzRBnWulbG6AhWu0sP?=
+ =?us-ascii?Q?L2CTeXGbHy0JdyEHdqtZVF4gwISemZ2/+mXH5c7yUn8Fl93zx3pVPsXX2zek?=
+ =?us-ascii?Q?pc3sPiSu0G3G9ADfv7g7EsYZqU6nID0eoVYafAa426enO4UAnqLayVDQNlBi?=
+ =?us-ascii?Q?ZPAEFUiSe/yN1Ie70MlKhFjvFrqqgh2l1WcadgH6Uz5YJKU2MMba9qEXONZQ?=
+ =?us-ascii?Q?S36ODP48GF7rBcTI/gGmNrDMRuTtooIcMLNVNZi3UavooD2kNvqYZe/inOpp?=
+ =?us-ascii?Q?tGaRWwu4kZajI1TGA78EuOn4j8sJR+VsyhEiZ4UAtCpP2pbwtdJXjiDsNgrj?=
+ =?us-ascii?Q?YG+zdETEkqyGkE3WVbLC/s7TGkUbnJOTGpCj9PI82wBqv1gk0kY6LS68vO8Q?=
+ =?us-ascii?Q?fr0F6XXRP28YqvvWvoEUj0HGG5uBV147+mFnw7nYPULGOzP0u0Juz0Nlgo6K?=
+ =?us-ascii?Q?mcZ8EcVWbYojyWlcHZYKpldL/qrAaBPkYW7YkfdYJHdj/l2ahJiz84MXnMt8?=
+ =?us-ascii?Q?VWQaaqjA1j4EeHR3NdJThjPchtdMTAi/cKEahj1wdgW37FqnRzYuWdCVI9qN?=
+ =?us-ascii?Q?2pLjhmCqmLeoNg5zf6verEEbBIW2o4HzrDFNVaWqVqv7j0pxnaKuncufHEAw?=
+ =?us-ascii?Q?ZBqFjs+ZEVh6nOpKEwF4EV0N18j532x5Mrz4t0+2spkwzNMeeEnJCUUpuDSx?=
+ =?us-ascii?Q?qkuhr/d+2Yg1YnKfCK9mheLDDnMlEG4mM5IpLHr1Qj20ervcKSPA09uXz8wP?=
+ =?us-ascii?Q?0qA+hqdNM0An919GIDeu8+PoDfq1aMcq1h9Z/TIUXbuwkAP4rRan?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f666dd4-e8c7-4cb8-0501-08ded6bc2177
+X-MS-Exchange-CrossTenant-AuthSource: GV2PR04MB11799.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 15:27:43.8551
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oPyq+y7mPxcWhJ5Yw36OeM+SolpWz/RojNIpf4lCDOLkI3ULHQbSZIaIuSuYHTlM9E2wx0uuHKXKyqdzRoE0hC4OhI1SJlE+BWUIH9TfHy5EBw35tf9L4bTTCk8Ill57
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR04MB11948
 
-On Tue, 30 Jun 2026, Daniel Lezcano wrote:
-
-> Expose the Lenovo ThinkPad T14s EC environmental sensors through
-> the hwmon subsystem.
-> 
-> The driver now registers a hwmon device providing access to six EC
-> temperature sensors corresponding to the SoC, keyboard area, base
-> cover, PMIC/charging circuitry, QTM module and SSD. Sensor labels
-> are exported to allow user space to identify each measurement.
-> 
-> This allows standard monitoring tools such as lm-sensors to report
-> platform temperatures.
-> 
-> Signed-off-by: Daniel Lezcano daniel.lezcano@oss.qualcomm.com
+On Mon, Jun 29, 2026 at 11:12:33AM +0200, Bartosz Golaszewski wrote:
+>
+> Ahead of reworking the reference counting logic for platform devices,
+> encapsulate the assignment of the OF node for dynamically allocated
+> platform devices with the provided helper.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > ---
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 128 ++++++++++++++++++
->  1 file changed, 128 insertions(+)
-> 
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> index 5590302a5694..35a6f8b0cb6b 100644
-> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -11,6 +11,7 @@
->  #include <linux/delay.h>
->  #include <linux/dev_printk.h>
->  #include <linux/err.h>
-> +#include <linux/hwmon.h>
->  #include <linux/i2c.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
-> @@ -67,6 +68,13 @@
->  #define T14S_EC_EVT_KEY_FN_F11			0x7a
->  #define T14S_EC_EVT_KEY_FN_G			0x7e
->  
-> +#define T14S_EC_SYS_THERM0 0x78 /* SoC (CPU+GPU)  */
-> +#define T14S_EC_SYS_THERM1 0x79 /* Keyboard       */
-> +#define T14S_EC_SYS_THERM2 0x7a /* Back cover     */
-> +#define T14S_EC_SYS_THERM3 0x7b /* Charger / PMIC */
-> +#define T14S_EC_SYS_THERM6 0x7c /* QTM West       */
-> +#define T14S_EC_SYS_THERM7 0x7d /* SSD            */
-> +
->  /* Hardware LED blink rate is 1 Hz (500ms off, 500ms on) */
->  #define T14S_EC_BLINK_RATE_ON_OFF_MS		500
->  
-> @@ -93,9 +101,19 @@ struct t14s_ec_led_classdev {
->  	struct t14s_ec *ec;
->  };
->  
-> +struct t14s_ec_hwmon_sys_thermx {
-> +	const char *label;
-> +	int reg;
-> +};
-> +
-> +struct t14s_ec_hwmon {
-> +	struct t14s_ec_hwmon_sys_thermx *sys_thermx;
-> +};
-> +
->  struct t14s_ec {
->  	struct regmap *regmap;
->  	struct device *dev;
-> +	struct t14s_ec_hwmon ec_hwmon;
->  	struct t14s_ec_led_classdev led_pwr_btn;
->  	struct t14s_ec_led_classdev led_chrg_orange;
->  	struct t14s_ec_led_classdev led_chrg_white;
-> @@ -555,6 +573,112 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void *data)
->  	return IRQ_HANDLED;
->  }
->  
-> +static umode_t t14s_ec_hwmon_is_visible(const void *drvdata,
-> +					enum hwmon_sensor_types type,
-> +					u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (attr == hwmon_temp_input ||
-> +		    attr == hwmon_temp_label)
-> +			return 0444;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int t14s_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-> +				     u32 attr, int channel, const char **str)
-> +{
-> +	struct t14s_ec *ec = dev_get_drvdata(dev);
 
-Add an empty line.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (attr == hwmon_temp_label) {
-> +			*str = ec->ec_hwmon.sys_thermx[channel].label;
-> +			return 0;
-> +		}
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int t14s_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			      u32 attr, int channel, long *val)
-> +{
-> +	struct t14s_ec *ec = dev_get_drvdata(dev);
-> +	unsigned int value;
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (attr == hwmon_temp_input) {
-> +			ret = t14s_ec_read(ec, ec->ec_hwmon.sys_thermx[channel].reg, &value);
-> +			if (ret)
-> +				return ret;
-> +			*val = value * 1000;
-
-Does this literal relate to something from units.h?
-
-> +
-> +			return 0;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-
-Nit, style is inconsistent with the one above.
-
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static const struct hwmon_ops t14s_ec_hwmon_ops = {
-> +	.is_visible = t14s_ec_hwmon_is_visible,
-> +	.read = t14s_ec_hwmon_read,
-> +	.read_string = t14s_ec_hwmon_read_string,
-> +};
-> +
-> +static const struct hwmon_channel_info *t14s_ec_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL,
-> +			   HWMON_T_INPUT | HWMON_T_LABEL),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info t14s_ec_chip_info = {
-> +	.ops = &t14s_ec_hwmon_ops,
-> +	.info = t14s_ec_hwmon_info,
-> +};
-> +
-> +static int t14s_ec_hwmon_probe(struct t14s_ec *ec)
-> +{
-> +	struct device *dev;
-> +	struct t14s_ec_hwmon_sys_thermx sys_thermx[] = {
-> +		{ .label = "soc",	.reg = T14S_EC_SYS_THERM0 },
-> +		{ .label = "keyboard",	.reg = T14S_EC_SYS_THERM1 },
-> +		{ .label = "base",	.reg = T14S_EC_SYS_THERM2 },
-> +		{ .label = "charging",	.reg = T14S_EC_SYS_THERM3 },
-> +		{ .label = "qtm",	.reg = T14S_EC_SYS_THERM6 },
-> +		{ .label = "ssd",	.reg = T14S_EC_SYS_THERM7 },
-> +	};
-> +
-> +	ec->ec_hwmon.sys_thermx = devm_kmemdup_array(ec->dev, sys_thermx,
-> +						     ARRAY_SIZE(sys_thermx),
-> +						     sizeof(sys_thermx[0]), GFP_KERNEL);
-> +	if (!ec->ec_hwmon.sys_thermx)
-> +		return -ENOMEM;
-> +
-> +	dev = devm_hwmon_device_register_with_info(ec->dev, "t14s_ec", ec,
-> +						   &t14s_ec_chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(dev);
-> +}
-> +
->  static int t14s_ec_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
-> @@ -590,6 +714,10 @@ static int t14s_ec_probe(struct i2c_client *client)
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = t14s_ec_hwmon_probe(ec);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	ret = devm_request_threaded_irq(dev, client->irq, NULL,
->  					t14s_ec_irq_handler,
->  					IRQF_ONESHOT, dev_name(dev), ec);
-> 
-
--- 
- i.
-
+>  drivers/pmdomain/imx/gpc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/pmdomain/imx/gpc.c b/drivers/pmdomain/imx/gpc.c
+> index 42e50c9b4fb9ffb96a20a462d4eb5168942a893c..abca5f449a226fbae4213926e1395c413160c950 100644
+> --- a/drivers/pmdomain/imx/gpc.c
+> +++ b/drivers/pmdomain/imx/gpc.c
+> @@ -487,8 +487,7 @@ static int imx_gpc_probe(struct platform_device *pdev)
+>                         domain->ipg_rate_mhz = ipg_rate_mhz;
+>
+>                         pd_pdev->dev.parent = &pdev->dev;
+> -                       pd_pdev->dev.of_node = of_node_get(np);
+> -                       pd_pdev->dev.fwnode = of_fwnode_handle(np);
+> +                       platform_device_set_of_node(pd_pdev, np);
+>
+>                         ret = platform_device_add(pd_pdev);
+>                         if (ret) {
+>
+> --
+> 2.47.3
+>
+>
