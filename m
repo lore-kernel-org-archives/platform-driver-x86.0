@@ -1,215 +1,191 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazon11020109.outbound.protection.outlook.com [52.101.227.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84ABB291C10
-	for <platform-driver-x86@vger.kernel.org>; Tue, 30 Jun 2026 06:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782799473; cv=none; b=SQwgKMhZPwbmJZpn4CKBVL+0wdmnhBsb/0XrcEQcu6L/1H6pxxWlTKqmC96eEXkm9H3bnSbtg4d6hpsw1mUL7I5i3PmrUaX6bsXSwcuH77dbiwF/CCAYUAiUXIOebPJ6IV9fw/Et/BHdlC7lJwq9+nZjy3rUasblAFqs5csZcKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782799473; c=relaxed/simple;
-	bh=q9HQDf6uU3KOpf7X+h0FkXT0BRmTsT0Ka85jPZxYGjU=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EdVv6UHRl6U5ILuZDiO7Tn8I64cgSH6N9oUsy33eIEKBkbcqOVfG7kBo9RKoB0VPo0T9i73TqPcbPev/Z7dR9C9TRSBGqfhae0JPzNBwLqBmi/mUL5S4pJUZNadnkV7YQ+VWzp/c8F70elcy0Jmz+LyqyS56QXje4ypvNmjaWww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ktwxb7CX; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F1C2E06ED;
+	Tue, 30 Jun 2026 07:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.227.109
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782804761; cv=fail; b=taow1Eifk8+ByxbDZVUKnt2H+PwSkYFn9sudkf7a9hhwR46Cn4mOUhwIgzCPbO1jRX1gRZaK43oKIxHrpxjarU36AN9iF0LNt1k8HSzxBbS1zPvCVae1ZAribTlhHMu2Uad3fD7OjsuKMsv1wO7AQ5dVJ34DHQXwMsaSE35YIn4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782804761; c=relaxed/simple;
+	bh=F4jr1t/5eqHYagWQBSyqEARGbIYRRkQ0ebRE5fpM+sM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gU9aJqeI5avIFZZR6gG3h9tcwsZThNhI9QAVQ9sBP8LjC/De9ZfwKyU3UbvFNnTDQPXEs/9RhAqu0tQlDxwijAkYu9MP50sNo3/nuwbuVs8USHIqgyPGmE0FJtO/As4eI26jXuQznh4VstA65qv/IlUST/+BNCb3f2SqH6KJqf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; dkim=fail (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b=mSoBi4y5 reason="key not found in DNS"; arc=fail smtp.client-ip=52.101.227.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="ktwxb7CX"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-493b786d6c0so3590975e9.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Jun 2026 23:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1782799469; x=1783404269; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
-        b=ktwxb7CXt+trnAajnkzA9h9gdeaP+NWWqiQtMnj/0fmN71drYBEJJVqA/zdDPOHA+j
-         tx53cU1g/94nmCKnfAZI3uM4N20ZfXbOrGesn2v8kLV408YjA0rqDDhX/rgJwy6yAMAx
-         RHuc5qOE1EEd+PNOB/7AVM6ZKg1kPXmDutlUdICaEZh79ksn91a3posF345m56bEi96d
-         N3fxZ84jT3pXm8b8Vnk4HkRUvEcpZIrhYwKHSeZAEHqu8PzndfN05M6wyGGRylM8ZzM2
-         GlE2jFRlS3Dsmd36Hh6dzBH61f9OpFXTs900Z0kPYXTJM4l+T3BlB2wf6TAGsYHsX3mL
-         IlpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782799469; x=1783404269;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b5BBnItCnxunKMbKk5r5XGq35MhHqmNERXs298mNYZQ=;
-        b=h8FeORgJaF8o4Zf2e4fLGUj4IYZvNxsdmEoy0zx6lOESkXGzFHyG5IccqszbAJbUiJ
-         8WhL+1FaQyFkvZAO38vCwK7DXl+3u5om95lnEM6Pomc+patm1FlSsTM+M/RNnfg6CEq1
-         /EwDUolshbjoiZW4ovH1eH8KavPpFYzjKZHHakqeFv4gX2mxsBwMow08ij5b1hxVvrKe
-         CJxWVGzDXubTgjj5/f/2k6197ygrptcv+f6vBY/NSO+LvkO4sMfkpwoodzgeARHTkHFy
-         7/5Wkdy/8kGGXyMWmJ43akNuKgBwCfs+NefFWjK2Fe3Bb2Gs4mZ5dcoC/d2MWOnSi+nU
-         B+bA==
-X-Forwarded-Encrypted: i=1; AFNElJ+4YmMJl2Tl8y3CxUDZt6EC5CHSu2ynbYNnM226XzbIg1P4gJ2CKi2KSde9E6hc8Be25T4bc/gNbXr76i3FBSjjAqqA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yycbmo6+G9wEOgIbigaWtAW9nATprbrWD5G802N4ZAoQJ3w1lwj
-	zvmDwVtJiNKXvkOPcjjoW/BZmEu5JMFqXec4Jw2DE+BnvKhYNZiTdAnLlVhZGbD2UtQ=
-X-Gm-Gg: AfdE7ck9kMa0b5ils6Gm6bL7CpWv7mOhpzwScuabhxun6Y9+mKjI4SpYfwWdB0w6YVN
-	gf3ff+ESCvcNyNZIpMOt5pintLyROeCp7Sl6vfb+KGzKD41XJ/XD1xk9VtM6hERjcJxt6HjcP3g
-	TxpFQ2O/O9WHpR772FN9ka4ak02UDSPwh3BSaa8O4aUzKwLxviJlll9XqfsrPLZeI1WUCx/YT8k
-	0s2qZswbuJC0fLC9+OH5NKq69Lk4gL2CWzImd8mrINlFqhHiON+dNzHwEoAXXV+H2068hGqppUp
-	CPi9mrpf60mFTNwc50eEh5UN72TW6BV0Z/2E2iGLeWxUMuWgHfoSk8Oktv/cmvxYrQMFdhwVkRF
-	86JoY+X86insHoiw4o9p2aZeh2R1Y0JnT+pZ2YVIJUhSCUW1DZhm/9kLhAfj1qyE7XFWgkwOfRk
-	qEtZdRKm75l/SZMgBfhA==
-X-Received: by 2002:a05:600c:8285:b0:493:bacb:1341 with SMTP id 5b1f17b1804b1-493bacb176dmr13964925e9.4.1782799468463;
-        Mon, 29 Jun 2026 23:04:28 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493b8cd3018sm45429405e9.5.2026.06.29.23.04.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 23:04:27 -0700 (PDT)
-Date: Tue, 30 Jun 2026 08:04:26 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mark Brown <broonie@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Raag Jadav <raag.jadav@intel.com>, 
-	Sohil Mehta <sohil.mehta@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org, 
-	Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-sound@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, 
-	Jonathan Cameron <jic23@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Pei Xiao <xiaopei01@kylinos.cn>, 
-	Shashank Balaji <shashank.mahadasyam@sony.com>, Ben Horgan <ben.horgan@arm.com>, Johan Hovold <johan@kernel.org>, 
-	linux-usb@vger.kernel.org, Nikita Kravets <teackot@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, kvm@vger.kernel.org, 
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-Message-ID: <akNYUdAS3sbEdRqC@monoceros>
-References: <cover.1782682124.git.ukleinek@kernel.org>
- <20260629235804.GA414914@sakamocchi.jp>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b="mSoBi4y5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TZouYNQAISIFipgBBLE0GKwBcKQthDO7X82/gC08Oo2DCJinRD4ceVzSVkrJCbUqVqa9g4gapvQdBU7oiL13EXJFQERiAg6X3cWuqjuXtXbZFmLnOLxLtd8FNizIX0+XHHYGGQaQlenpD+uiTSUYAE0GqW8CkuTmqpRT63+twzpa9cz/i6WStqvpqXZeaHy/aENTNdUXb3S1RUQZo/Rxj+fGk+Ny3gSudN+CZLBY40BnL2JzZg5ZZfjftg5A9vsmWfEJ5Np/HEDyXKoJ9UGHtQ92DMuG553IRDu1fdMzaPXkR0XutnVHX4WknTlU3jCOQUlq84Ux5w4+QtWN1Qt7oA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VKTmcZh6KzECeI0Le/PyHUJMnMNfMune20hd/AulR4s=;
+ b=iuxFwvEXfrzgYoR8bcZJRRE8L/X/Rdsbxpr44Xh0ppYfqu77Ldar62Bngdi0msSnISgB1GLFVd1u+bbF9Osc39syk4AN0zpyHAPaScq/qW6ku/zG1RbeiLDwJmlMee1lqfdFY7Bvm2WGbY/kxmMHtcq1oNSc9wVPrcZvf5KLwa5ODCIavpyna6z6VUgjW1OIJXj+Ua+ICViRp93svB1ztuwgyZsAgK418uwREH1nzY5dBR2CGivzZCgvxaioRVK+GLA2EtVj4mNHtLFuWatdkTyoIhrVcKd4sFn9wcMzckWTbjoKZWXI/60W+gJtNS6veOWpwUbVNEbNHUDWqe0nKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siliconsignals.io;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VKTmcZh6KzECeI0Le/PyHUJMnMNfMune20hd/AulR4s=;
+ b=mSoBi4y51/Et+fDLQyeHDRQshJhfaGdXE/TUBEBkBjafqNv1Q3h9ae3mQAR5SvYFmWc6HAIetmkhQk22enlEzfpk7aKIRplauWUN6WXi78deylBcbk1HVNrX05n6AI8npVsJvOhzRHVt3lwkYju7zrQG3Hw3cbaJDO17kTEYJ/nqfgqNPWXfi1uauM0uOy6c+f1BHuyRmvcfiIWH47PmWRCybNjYaHiu+QanHCJ7PgaLsJKmBvSqQfYjFD3o2t8AUUqa+8cSDV6O37UV3nXFz+RmdrWVgsY1Z/vEMk2Mw605HRkzI4SusWCnBvTQTDev3HEA9fIja1AaGLjEJJRn+A==
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by PN0P287MB0476.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:121::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Tue, 30 Jun
+ 2026 07:32:35 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b%6]) with mapi id 15.21.0181.008; Tue, 30 Jun 2026
+ 07:32:35 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: Kate Hsuan <hpa@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hansg@kernel.org>, Hans Verkuil <hverkuil+cisco@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Serin Yeh <serin.yeh@intel.com>,
+	Damjan Georgievski <gdamjan@gmail.com>, Kieran Bingham
+	<kieran.bingham@ideasonboard.com>
+CC: computman <anis@talbi.fr>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>,
+	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
+ IMX471 as power enable
+Thread-Topic: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
+ IMX471 as power enable
+Thread-Index: AQHdB5q8NQpQtUcMokeHZdb/BmiJ5bZWs7/N
+Date: Tue, 30 Jun 2026 07:32:35 +0000
+Message-ID:
+ <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20260629074026.35490-1-hpa@redhat.com>
+ <20260629074026.35490-4-hpa@redhat.com>
+In-Reply-To: <20260629074026.35490-4-hpa@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1829:EE_|PN0P287MB0476:EE_
+x-ms-office365-filtering-correlation-id: 7e26955e-54ed-470c-1fe1-08ded679c158
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|366016|376014|1800799024|23010399003|22082099003|38070700021|4143699003|56012099006|18002099003;
+x-microsoft-antispam-message-info:
+ TR8gLAYYgWD5WRyrVa3QE2PKtMhPhoymVwhW8oX+ldTvyhZMntIM1bjLNSGfnP6+vPyAXBMgwrEqzUtICNmaQfVMnyWOt22sWJKomFR1mjeafqkdkY2BPQ29XnNRY5ecw5ceG2/qymbHmeTf4HhXJ5rUfW1N4wz5hk0uA19gidlT09NGEx55oruJmcaQY8vnUmlbHWnktYKCDh7yMn+L7ajM2j0IGugpenCFv7+fZlsjAf5oMx5nKh26lR/VpFeXeQzXj6wKCWMV4FKhGJxuImtz3BvP/53Lh4Itw/p/0QRxMCxr9lt9zwPM0fsh9c42dwVA4FAa4vptJl8BvkrRhZsgdZUVcyaZzDVv2n3evzfaDfXZhkvcpQhG4IC2Invbdxds78bynz5zorvRs6Hj3OSZQeundyhmznLSy/scj6JEmMxmJB6Xk63GmpoKWyImarNmJznslgN71yV2D+QXwgpuYUb5BnqmMGQ4KW242wI0ToFinj04bD03J0UVYV4i+uDDqrlsYP78j7AjJ8uS+dORFcuDu6euW9wVgvA4KiFbiep+sRoNV2e3JsO4dyJo86Z27bCLh5MnAXnzqNQ+XkezFZNCk0ExUU2BKSBJqmvq3LkMFRUD4qsIaQsMrSRC6RfAU/PNpOIWJUF4GimAHWFc1PYAUu34iBzqA9MSEWhFory5jfqHMe1q6OrZcWBy31XTAAYr4rx6y0L3w5L12uHNisGFS7Ijqoq9uEs6fQ8=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(23010399003)(22082099003)(38070700021)(4143699003)(56012099006)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?LjiWilqYm8mpCfkaM8ZAJ6t+KGW/n6qrPNlOG5+VgF/k25vPRvca+QsFVi?=
+ =?iso-8859-1?Q?E4eOUwtrIrkiS0+YOMSsrVPhp6vOjThXU3wGgw+LCliYUMmq7Op+orVGcN?=
+ =?iso-8859-1?Q?DZ+w3kYVPs0vMRZhqQWQbmODRwwHQI5ApxKah7Oj/ocnl+cKtEf5NwkDQH?=
+ =?iso-8859-1?Q?vND3PRbiNq6j7/3xwamWWMHuxMejT9OgbZDBAapWK53fL52H1d5H56/7id?=
+ =?iso-8859-1?Q?9p71eW7htcKnM3mom4aMZKGXSzMoNn+W9EfQAnxR8ZuIYF7CWwQ+msrKDa?=
+ =?iso-8859-1?Q?pvj5AGLLbZ7edtEpNN0YMA6N8h3jaCHJEFXtra7bHWZ/k8MszaPcRutUnP?=
+ =?iso-8859-1?Q?MozL7Rx5iu5GlLeOJoHt+CS8XY7C59LXIFe7nMZgE3oNS3oU3kx9XBo+Z/?=
+ =?iso-8859-1?Q?QE6seF84fS4q4J7YpTtW9kMRQ6MfFPhkMEgLJFWoJ6K25F4GS8v8UlZeRw?=
+ =?iso-8859-1?Q?xyOmEfIQ+Sjvomaj3jup4S6XaTlZ+6yKobbUko66/cdcuFXZ7+zxk/hN8y?=
+ =?iso-8859-1?Q?XrEaggDZXn9q2JujIMsmm5aR9uL4GeH92n9Gm2VcY5eBcgW9N0tdBz9Dwd?=
+ =?iso-8859-1?Q?JwrXV24OYlXZ/Zxkg+oxFyCQb0yo6+AbMxsAejCb6pJU5gD5IKLwAmfJ8c?=
+ =?iso-8859-1?Q?8VEMC9p64yPX9iOa3x/2bWRCQYzMfnlj9odcv82Q+dj6unv4DJctE4WtSj?=
+ =?iso-8859-1?Q?YqBkDj3lpxlG6fW11A34l8TV4BdyGZftUWol1ioQSaVmu+hsWidoQq0RyB?=
+ =?iso-8859-1?Q?R1iS3PBK+Lk2D2Z88Qz7lb1/iG3SrNNi08HyI242sJBsyOaWfVKoQIIgRo?=
+ =?iso-8859-1?Q?q7EPK2pRRoerUcuE5NcwlFUX5CWNanNq5du8jsPKxQJz18MRjyQFDenw0e?=
+ =?iso-8859-1?Q?H7B7+xDZkoK3DXIT0/Lw8JsZUzJ2UXpCF8N5UIkED1IZuwFLXbWcc1+jfx?=
+ =?iso-8859-1?Q?o7r2btDPuXsgludSm+wYnjoHAjFHFo4FksUWv+e4yGRcCgC0Jul3I20UlL?=
+ =?iso-8859-1?Q?+2Wv1rF+U66/xgDQpoQw6evnZPbhL0rMXNXEnbO8ONDAfcLatj3PT9g9+u?=
+ =?iso-8859-1?Q?s/2CyZfMGW4WyTMgBav8gjw782qakWxYZWhydg8p9r5ZFWr3rjLhkfGi2e?=
+ =?iso-8859-1?Q?3ky0BfFBK2llsjqHtjHVn3kKbvq2DJDaaSvR6HmcuPr3ynYeAAnBh0QPpf?=
+ =?iso-8859-1?Q?/U1buGJvv3PYA89Lgp5qpHXINXQHvt7Xv3agxKMEymzSa5NrYlsGi5kQyy?=
+ =?iso-8859-1?Q?JojY9CbpV+fUO6s07063xwTZfMNdqa7HgamcUp//726uXoJXniyxAKxfnU?=
+ =?iso-8859-1?Q?ygVnE7CGVR4+tAm1uFt1TlKadIC9hYU2tcyyb9nCCqO87Nebjhy3f+ANZo?=
+ =?iso-8859-1?Q?+CpuUfcdVmFtJzkFGTqYiR4Pst1M+L5nNmJWsFKqpio02OHB+UhJUuSVM3?=
+ =?iso-8859-1?Q?OT0amCVkh8ounGBgI42tkLY7FvEs9zgpxtQO54SCvaEvz87GAFYRpHDX3J?=
+ =?iso-8859-1?Q?HnR7+f95qRSYYRVu8/S25c+gOKVFAWg5yKzm9r+3sf6TO0M5UVI9wNwLSb?=
+ =?iso-8859-1?Q?aV9HyAfP6xZyodgGv6T4VrcOaXbf0iyGSExAaJYeBaufvg67VkEgbIWP0e?=
+ =?iso-8859-1?Q?TdsEcZ1+Y16iTBWJRcNzx4k5dEBDN0KvOG8zQzSvXu4RBeRyz0oXQhZ6Ol?=
+ =?iso-8859-1?Q?dNE1AcogN3d/TbUGMlhJkmdSuRIWtxpwfT4LAOGVUPmdswXIxgRmebrYJL?=
+ =?iso-8859-1?Q?xwwfMnTcvC6WMg2afSbp/WXFFynVfInU2uj6x0O+s2wWBNjuVDBN+ghbgW?=
+ =?iso-8859-1?Q?uh7vPX6ACA=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bjsp2vxvxtx3lqot"
-Content-Disposition: inline
-In-Reply-To: <20260629235804.GA414914@sakamocchi.jp>
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e26955e-54ed-470c-1fe1-08ded679c158
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2026 07:32:35.5903
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0MCnHOfHfnc6ZH2HTyGcad1MeDMEojeYXPhumC9ydLTIyHmH+hBSRgt9bhS+QiuQPF/8MYYY7osHkQF8XU25N6fWspGupZL5qcA8pPRh0sk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0476
 
-
---bjsp2vxvxtx3lqot
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 00/16] mod_devicetable.h: Split into per subsystem
- headers
-MIME-Version: 1.0
-
-Hello Takashi,
-
-On Tue, Jun 30, 2026 at 08:58:04AM +0900, Takashi Sakamoto wrote:
-> On Sun, Jun 28, 2026 at 11:58:35PM +0200, Uwe Kleine-K=F6nig (The Capable=
- Hub) wrote:
-> >  ...
-> >  drivers/firewire/core-device.c                |    1 -
-> >  drivers/firewire/net.c                        |    1 -
-> >  drivers/firewire/sbp2.c                       |    1 -
-> >  ...
-> >  drivers/media/firewire/firedtv-fw.c           |    1 -
-> >  ...
-> >  include/linux/firewire.h                      |    3 +-
-> >  ...
-> >  sound/firewire/isight.c                       |    1 -
-> >  ...
-> >  1649 files changed, 1575 insertions(+), 2544 deletions(-)
-> >  ...
-> >  create mode 100644 include/linux/device-id/ieee1394.h
->=20
-> I have no objection to the above changes relevant to firewire subsystem.
->=20
-> Acked-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-
-Thanks! Added to my tree.
-
-> Consequently, unit drivers just include include/linux/firewire.h to refer=
-=20
-> to 'struct ieee1394_device_id'. After merging the changes, I'll post more
-> patches to modify the following unit drivers, since they are left from the
-> patchset.
->=20
-> * drivers/media/firewire/firedtv.h
-> * sound/firewire/bebob/bebob.h
-> * sound/firewire/dice/dice.h
-> * sound/firewire/digi00x/digi00x.h
-> * sound/firewire/fireface/ff.h
-> * sound/firewire/fireworks/fireworks.h
-> * sound/firewire/motu/motu.h
-> * sound/firewire/oxfw/oxfw.h
-> * sound/firewire/tascam/tascam.h
->=20
-> By the way, the changes touch so many files. If it takes more time to
-> apply, I think it better to make steps to modify across several kernel
-> generation.
-
-Touching so many files is the motivation to do all the high-impact
-changes in a single go. As of v7.2-rc1 <linux/mod_devicetable.h> is
-included (transitively) in ~18000 of 21500 .o files below drivers/ for a
-x86_64 allmodconfig[1]. So touching that file requires a near complete
-rebuild. If we spread the changes over several trees/kernel releases the
-need to recompile the whole tree repeats more often than necessary. Note
-this bites not only during the merge window when building the
-development tree, but also during bisection.
-
-> For example, getting rid of direct reference of
-> mod_devicetable.h from drivers at first (in the case of firewire
-> subsystem, for 'Replace <linux/mod_devicetable.h> by more specific
-> <linux/device-id/*.h> (headers))', then adding these per-subsystem
-> headers and applying relevant changes.
-
-The impact of these firewire changes is limited to the firewire
-subsystem. So doing these later is a smaller issue. I plan to tackle
-these when this series is in. (But if you want to care about the
-firewire bits, that's fine, too.)
-=20
-> Of course, I don't mind to apply the v3 patchset as is in upstream.
-
-There are a few changes that I collected (Added SPDX markers, a few less
-#includes added as my script evolved, a new patch to fix a hppa
-fallout), so I will send a v4 later today.
-
-Best regards
-Uwe
-
-[1] I did in my build tree (with the series applied)
-
-	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | xargs grep -l /dev=
-ice-id/ | wc -l
-	19221
-	$ find drivers -name \*.o.cmd -not -name \*.mod.o.cmd | wc -l
-	21597
-
-That's a bit wrong as my series changes the numbers, but the ballpark
-should be right. In
-https://lore.kernel.org/all/20260622210733.1743063-2-u.kleine-koenig@baylib=
-re.com/
-I found similar numbers for 7.1 (17038/21330).
-
---bjsp2vxvxtx3lqot
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpDXGcACgkQj4D7WH0S
-/k6p0wf8C/fqLWElPKeEJ6VYZOMbHAVQFFSaiocKgLhyatujJO/xABylQtIrG2bm
-oNQHPUayrcWacObHGF3fEjQy4hRJLu10iu9WrGW/FvZUPjhCWUzPdhuXpmSnE4fH
-zd/NVmkNUTbomy4rUfxcWTKfXtWxqi+pwwPvcbEeQBUCqK/R3MK9MTJPeo+fuS0w
-N7J2Vv4yLihgZU1OW8Y9uT+TbrHb5Kn77XyKCF3bvRyrDK82GHBAEy0UIojDpJnT
-sIhHykaiFL1/5jUZb/iCqMx0+2OUeNz8HOywoSete10zzE2qFPFgI683oSrO6gcY
-cBQF6NX+zboS6GmYI42xlkzJTj7ODw==
-=GSrp
------END PGP SIGNATURE-----
-
---bjsp2vxvxtx3lqot--
+Hi Kate,=0A=
+=0A=
+> Update the con_id for the Sony IMX471 sensor to "vana" to serve as the=0A=
+> power enable. Additionally, the HID values SONY471A and TBE20A0, both=0A=
+> associated with the IMX471 image sensor, have been identified on Lenovo=
+=0A=
+> laptops.=0A=
+>=0A=
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>=0A=
+=0A=
+Thanks, looks good.=0A=
+=0A=
+Reviewed-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
+=0A=
+Best Regards,=0A=
+Tarang=0A=
+=0A=
+> ---=0A=
+>  drivers/platform/x86/intel/int3472/discrete.c | 18 ++++++++++++++++++=0A=
+>  1 file changed, 18 insertions(+)=0A=
+>=0A=
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/plat=
+form/x86/intel/int3472/discrete.c=0A=
+> index 115bb37577a1..adff564bf3fd 100644=0A=
+> --- a/drivers/platform/x86/intel/int3472/discrete.c=0A=
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c=0A=
+> @@ -164,6 +164,24 @@ static const struct int3472_gpio_map int3472_gpio_ma=
+p[] =3D {=0A=
+>                 .con_id =3D "dvdd",=0A=
+>                 .enable_time_us =3D 45 * USEC_PER_MSEC,=0A=
+>         },=0A=
+> +       {       /* imx471 expects "vana" as con_id for power enable */=0A=
+> +               .hid =3D "SONY471A",=0A=
+> +               .type_from =3D INT3472_GPIO_TYPE_POWER_ENABLE,=0A=
+> +               .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,=0A=
+> +               .con_id =3D "vana",=0A=
+> +               .enable_time_us =3D GPIO_REGULATOR_ENABLE_TIME,=0A=
+> +       },=0A=
+> +       {=0A=
+> +               /*=0A=
+> +                * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as =
+con_id=0A=
+> +                * for power enable=0A=
+> +                */=0A=
+> +               .hid =3D "TBE20A0",=0A=
+> +               .type_from =3D INT3472_GPIO_TYPE_POWER_ENABLE,=0A=
+> +               .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,=0A=
+> +               .con_id =3D "vana",=0A=
+> +               .enable_time_us =3D GPIO_REGULATOR_ENABLE_TIME,=0A=
+> +       },=0A=
+>  };=0A=
+>=0A=
+>  static void int3472_get_con_id_and_polarity(struct int3472_discrete_devi=
+ce *int3472, u8 *type,=0A=
+> --=0A=
+> 2.54.0=
