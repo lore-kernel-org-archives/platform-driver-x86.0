@@ -1,172 +1,217 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazon11020078.outbound.protection.outlook.com [52.101.227.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB15339021E;
-	Wed,  1 Jul 2026 04:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782879550; cv=none; b=jGUOJN8BDQgvXweAgBV9QV4Zkidi/Mung63s6ZGB+9gVHdLhMQwACtEw85C8pPQ5fvyMI2yEU041LSFPv2Fh85+49urx9sJJ/lcldlVIae7s4djry5IVNGnsE9phyGCZAsbKs0bNz8x8/87RZzY7aLR3YOzxKZkF28dUXMt+Iqc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782879550; c=relaxed/simple;
-	bh=efM623KN0BdjFWm8tXa1S9mlCAaAJTkYR5QBKtse4+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NnNBqrm4O6SzsUGjMO7ldPL3Xsc6UHuJ+sjzq2YPfzkMYSzqaAF/nTXU7t/UhGgQY8fYpBG4KOf1DLAeXCPtwhhTe/SQneGf9NCxhH2koDt1zEIo49curXdyr9S5SAHetZMXO82IXqgXIaz0xD1VM0ufAFteaOeR55Ncy2+3J4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=DHo5WIgj; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2690D224AF2;
+	Wed,  1 Jul 2026 06:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.227.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782886773; cv=fail; b=X0ZQFK96CuHBilsNxL9cV+8fFMX/Aij5cooTldjXS6fWI4JT6CEZLO7AWY9Hm0OME2qQL6MfYTxhfX/r6JPWhvd6GEGp5b965fiqeBXJXat/e8I9YsbzbxCpcfpWyVJCNUEg0wrqvuai1jVV/jp1KuVeeYbh48PARNWt4Slxh4o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782886773; c=relaxed/simple;
+	bh=FTH5LbOO5M1Iuu+Z4kY3BbWF4UOFZFtSqTD7MkSLKfw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sZLp66HiIWVJF1jD46M3l0XIRIVyRQXCRpZo44v5NtnYVqQhZy1dgatXZnRHgpf0mAucInjEyWmnpryGMO4FmfTIlPJlch1yN299Vgihe10+M3zjSZWL5J1twHIHG9dhrQZ2jRgn9O1XriclelsE2QopHDttiIMyPco/d3qA4xA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; dkim=fail (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b=XafdcHIF reason="key not found in DNS"; arc=fail smtp.client-ip=52.101.227.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="DHo5WIgj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1782879543; x=1783484343; i=w_armin@gmx.de;
-	bh=efM623KN0BdjFWm8tXa1S9mlCAaAJTkYR5QBKtse4+k=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=DHo5WIgj3JdrkDYtg/NggBMA8+tpZFxg5eHCcSEiOv0n/E4kTWvdVZA8jdmBn++B
-	 r2b8mTPqwD2+ziVsQsUlcKUF3/Hme8PEFKw01vmvYMU7kxNdwOOFK9qXvcW+4C0dE
-	 pv4lw9CFjO19jBHZa8T6Q5ijdcRat9qHjn0Q6dLUrFF6T6ZxE659Hb7NzQ+SJ5mjQ
-	 0x7CkG/si8GrE+rSndxJAswn/dBE6vGRsEfdEQhsx4Wr22H6tll9hK2qcWFGJZgRq
-	 yENC5FOA0r1UCc0nBqIShuMvEW5Vsno+fUBLYsNY+wRLCcVDd5RxKDOdSeyGDqwvN
-	 Fz12mpRSlihK1VoHnA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MEm27-1wv1x61wHz-00Dj5r; Wed, 01
- Jul 2026 06:19:03 +0200
-Message-ID: <1584d299-20e6-4270-b033-ab3296e7b624@gmx.de>
-Date: Wed, 1 Jul 2026 06:19:03 +0200
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b="XafdcHIF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y4us50u9uoH8OMv44nk1L3s8JVZ/9LRyXw+DhgwKEi4iHAbtZ40drKyI+85NExLY2Ep3JHLE2D9mKwxVaA/ntF3/3qktSAUEyGlaOY1sxN6gNtjdHBy9eNPo52B5e6DbHu5DqyOLa/LZHpPbhR3pL9nCLAnWyJ2W9/vl4yAZfc0pqKximDHCIm4AEdp1apu/lTmEbR+DhnNgXJyTZ+FcGKWaCqiuYe7PnTxQJnI+E+0CvzADcu1WCb5FFImZBOf0LyfATsM4kaSwYFU7iC2uErHCdKfx3HVv+cx7oh3q1v9m3hq/XH0S8Mct2+uYPx5P5DdWBwpaQpwoA+tR4ohjuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hiYN1Cn7d1Pq6EPy4ouby34N2prEoQ9jV/pLxBCtQL4=;
+ b=ucx6DRMuvlG5m8mGRRqZyIoDzkZJnczH2b+1U5T3Iyef7nLYG/ZuR7ga9I1UrIJL9GPOId9UnMU3RCdSeLuACjj7ru3FuqdjFwPxtAEmd4BWEfHeC19cIuFZY/wQX15Np1MUpWaMfUT8QfWzxbpCjElmDZ7L+7xlv6Yx0uMW1zOQiYueGmTkMTwp6GmANuxvHERBlLMqjnc1f9OtsE4mGvAZeV0aThRYEXuZiMrhRaZvSSJaEVpBTYk1kdxcFFV86g1asVo+OJIXoqRrPSrcVodJJ/wV0lwGg3aynFe5bg9xpxCr/GqYOiymv14/gyko71BMBY7PcTQEaai6HhnKog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siliconsignals.io;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hiYN1Cn7d1Pq6EPy4ouby34N2prEoQ9jV/pLxBCtQL4=;
+ b=XafdcHIFht/77slXeZemWzJGgr+XkBIFKygM7wBVWMN/SgQBqogl5yYBhfW1Z9vqz09YXlwTb6KpElmKO65Fnozu5LdtfmZkECQywpg6CVwwNlu2sy7jpZa+W6zFbHXL2LocmVvttGXweRu9rnQS5t/U7feEQS4F7/HSw+UuI/8fud8l4RT+ZtQ/aEgC6tUfIt7MX+whPWIA4IeXiSDqrZgVIG5IRE+AmDVIEDVmMaesogNMFbJmwxDUT6HgXk861RTry1tdQUpghfC8Ins/zP+bNtMunUqX17d+4Dc1F5jorNzVDlSrbA/1xWqkkacFj9gSn9vM6K8oW3bPJX++PA==
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by MAYP287MB3915.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:14f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
+ 06:19:27 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b%6]) with mapi id 15.21.0181.008; Wed, 1 Jul 2026
+ 06:19:27 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: Hans de Goede <hansg@kernel.org>, Kate Hsuan <hpa@redhat.com>, Mauro
+ Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+	<hverkuil+cisco@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Serin Yeh <serin.yeh@intel.com>, Damjan Georgievski <gdamjan@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC: computman <anis@talbi.fr>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>,
+	=?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
+ IMX471 as power enable
+Thread-Topic: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
+ IMX471 as power enable
+Thread-Index: AQHdB5q8NQpQtUcMokeHZdb/BmiJ5bZWs7/NgABnEoCAARLcyw==
+Date: Wed, 1 Jul 2026 06:19:27 +0000
+Message-ID:
+ <PN3P287MB182945B5747452110940BEA08BF62@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+References: <20260629074026.35490-1-hpa@redhat.com>
+ <20260629074026.35490-4-hpa@redhat.com>
+ <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+ <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org>
+In-Reply-To: <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1829:EE_|MAYP287MB3915:EE_
+x-ms-office365-filtering-correlation-id: af1b305d-2db3-4eaf-0c03-08ded738b469
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|38070700021|4143699003|56012099006|22082099003|18002099003;
+x-microsoft-antispam-message-info:
+ NSU1upJvg0Ebw4C54IIMYS6y/Nm4gTsJejSIiHpHh/AWLfEFh99+y3GAcPg0aDp4xx6CvoD1VbjBeLj16OkkJPWgh8iE6INvRWES8x2RxQKhAS26YUbnFdjuVvqKZ0GMMp843ueo7W+WRE3Z4Veb+CXUaekCtsaJ2QLKyWUyaP8Ujg8KvvKPj+JQ707F+/sM6IOONntXaC1drgcjXsga6wJSOSYBs6cQZzAtaq97uo3JdkGwr9jniaclLh5pyucBLQBFA/DmM87G++nL0bzdByCDCWygcCOQZWbTiEl2a9mRk75uePrfoABU+3NpGwES41KkTcpnpLI1lAdIYdBW6khdKLt9yS1uoMkmxstAZFhAUTuNfiuXj8265ORY5mYlVQ2iF38Af+27fkL1p8mmmGQxDHH5jXTHVVTNAu5N6NzBzdNvgpFywM4C5SWQ4bGPp391fn8e1GGlLpFeT0G3F2b2OTpF319/i0B5lkC/v8k7Mf8Tasi+8f9vRgiTVBjpTOJAZZ++zAqXiRuyQhLscoCvEjytghPAY0aAg0SJHOaYFa7gAnw/GKvr7/dzgesC4ohu7TSs+mwvXXw8KAhGecSQTnm/ohsGMRSfSwJMUaymDrEReRPOcHl53/IttoqDLVA+HAKO0rSNauGwT1oYRmqm+E9KBTb2TvurCfId7vQTIEppiimJ+y1SWx7fJEEKXvYSZNKRVqUSLAXAWGOp8hK8hFzZ2m3y/xWUeOevmsE=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(38070700021)(4143699003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?u4IEhimZBfeC9x6YzuIo+GrZXW1wU1Eef8miDdb693/2pO606ZM53uvw6W?=
+ =?iso-8859-1?Q?HWJHoUCkEJ2JHhSuFmN7V3zJ04W4xQaJxka5UcZOCfA+OdD0mlGJ6HJMmO?=
+ =?iso-8859-1?Q?v3zF2aXH9zJ3ayQ21mRAsNXtzrqLIo8ePc7YOrhcXlcjjeobfYsmG9kilZ?=
+ =?iso-8859-1?Q?qfLqr+l3C2hSwsExic8hYHWVbaKb4+rEfWvR6SG/s2O+tPN2gNC2MWin9c?=
+ =?iso-8859-1?Q?ZYsiuaDBu01j5w1wK48L1PrURGQBphlbGrtampw97GA1yGeejDya47CIiD?=
+ =?iso-8859-1?Q?jEGG6g4XwKS81MR2zJlj1AXH8HJJmISYtylc4XadeUkszkfKVooqkBvUVK?=
+ =?iso-8859-1?Q?R3pVcphVg4DvXn9hO5sblka/xRjqAf7xaPXACVNuwd2A2RzzM+FC+mdc3f?=
+ =?iso-8859-1?Q?ooMVwtg3+7axBM6fNThGbbW///Pi1ONnWPlej676Dm3CANxj1iLrLEOEFR?=
+ =?iso-8859-1?Q?/vonRE0MlGZlbsP7v4Ctj5vbzYtg86BV+4fpS5R3pL08YzbriOCumjZmXZ?=
+ =?iso-8859-1?Q?FM93QCqYec597EG056e38C+7GOD25xgj6TQR09/E2UxATS2kf0YJLIr4Wd?=
+ =?iso-8859-1?Q?9FyznGQnQNzQXzGGq8lcFJssiVa9rcSLJBeHmKtME3AArdzMxpgsIc84tb?=
+ =?iso-8859-1?Q?dIo/TJCuKQcL5lpToNfxL8WIXQahW4QBvmhl9Sq94ofV+oWbMa51DKjcLn?=
+ =?iso-8859-1?Q?quK+FVVJz87gQi0YELgGXW9jOc09tl7scrM465aJ0FolOx0dAFqkIvOe+Q?=
+ =?iso-8859-1?Q?bAz39MBAHYxWnK6BktcOXB/WBK+qGA/SAJL0uCjODHRkq3Bko9vFfcX9tj?=
+ =?iso-8859-1?Q?eL4l3Gv1c+Vr4ToYxTAcI4lqJGOL7r9T8TXcwmliCMZdeE1AMKa7pg1XoY?=
+ =?iso-8859-1?Q?vDNujAb8H9Xyfbt7o0NiWzbXir3PimJvWlsecFX+zoV1nHlGl3nULhKGvf?=
+ =?iso-8859-1?Q?cyDpY9Qhc7kSZP/ozmnCZQfCk/YAI7W5yan8OQbwBrttF4Vu1Rx8VErnoP?=
+ =?iso-8859-1?Q?fV8a+UcaV0eyn3V7fiUfyn86vZO280foUwwjPSS3Qh31CI9lbQZwckytM4?=
+ =?iso-8859-1?Q?e7ZI+brcnOlWDWBGV8hJK/FHijSt0w5H+P9FEYT8LqH50lnkI280NGy5fz?=
+ =?iso-8859-1?Q?rK7Z7TUj5Zl/lZOudLAkMjeaYgZ3LnbiSJ2PddD6uu2DUzUX6wongr71ow?=
+ =?iso-8859-1?Q?5sRds+R8X0IhSr8JsxWdsrn9YhrbJkUOdzSHF9zdLyJun/+BFBKgNM32T1?=
+ =?iso-8859-1?Q?m2K0xeqVZwZ54xdfuVTP1OC2NN/dzpG+4tm0mJPocNRRlIyLAZ+gZq6WKS?=
+ =?iso-8859-1?Q?V+zlNNrtQdZCniBBHkQYhvDlaVQan44Ecml7GITqIy6STwVS5OKxgAFh7x?=
+ =?iso-8859-1?Q?9yO6OTJlgmp3p8jZRJIQ2z46J1dc1A7qgLGnfTVygBkkUxlHHx2hVJ5jS2?=
+ =?iso-8859-1?Q?u0vLdjROc6u/1cBmqRyOep9S/E+aDL8JMDDd8+TiD6iI0a1HLaiJQMXkp2?=
+ =?iso-8859-1?Q?q90Jj6skrX4vLLzAjTJVflLhkZk4brk/OETUXj9y50OFJFkkBCBba1tmPv?=
+ =?iso-8859-1?Q?FnFyACogtpVwGgzx9XMKedqp/rdUX2EB0EtCDYPSkQKh57nvI6GbZSIkxO?=
+ =?iso-8859-1?Q?H36gyH4/iAGB4D6RH1/k3ZE6GZysxomqfkJByaUI1lMD4Gx1WSRdYeQPyJ?=
+ =?iso-8859-1?Q?zSn1dhhX8aadegdNHner5iG1lU3ofmo1l7rRMxky90FACpuwoaEWMTf9co?=
+ =?iso-8859-1?Q?FjFFdyfxXacSG7HP5X6caRYyouTuQx+wpDi9jJdlAjV+/ahKxmT1g/2ZtJ?=
+ =?iso-8859-1?Q?lZN527Targ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re [PATCH v3] wmi/core: fix use-after-free in wmi_add_device()
-To: yahia <yahia.a.abdrabou@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <412e1b09-a442-4156-bf21-216ad8177096@gmx.de>
- <20260623001224.7838-1-yahia.a.abdrabou@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260623001224.7838-1-yahia.a.abdrabou@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Wspg49yXGjnNiQX2w9RZv/iozU/pRU9kvzloMLOMIxn9znweMw/
- Lx6hBokBtLfx1oSRj7x/ZzeQMDB/GvlQPW03eXZtdORwsG4LLoGiYH9prfLyjH/rclPsQRO
- aed0z11sLFpcN6E2Nbp1sV0m5BaLyU96TwjKZ8woqpvcOFxFLnCzIYB1Lk5IqjaFAH2auLF
- yZQ5TSXl1y7MeVmS8E5JQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HobRBvQlJ7I=;RtHhUxGmvJA7RFsKdf2uehvNQhN
- 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
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: af1b305d-2db3-4eaf-0c03-08ded738b469
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2026 06:19:27.7552
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6HuN8LJAT7RpeUsX4xKdhb9gohBsSOQgtjvabPWbAFrwDmW3C5VT1JXEPKL25sPbQph2wjg7t9bYMnM/zXX9N+gQyNRcB4kGK5lxiY4ab14=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAYP287MB3915
 
-Am 23.06.26 um 02:12 schrieb yahia:
-
-> Hi Armin,
->
-> I compiled the kernel while dropping
-> HL_FLAG_AUTOREMOVE_SUPPLIER and the kernel
-> functioned normally, all my hotkeys worked
-> and i couldn't find any memory leak or issue
-> with KASAN, so in my testing it seems safe to
-> drop HL_FLAG_AUTOREMOVE_SUPPLIER.
->
-> Best regards,
-> yahia
->
-Thanks for testing this. I did a similar test where i also removed the DL_FLAG_AUTOREMOVE_SUPPLIER
-flag. However i also modified wmi_add_device() to always fail with -EINVAL.
-
-This resulted in the following error when the WMI driver was unbound and later rebound to the same
-PNP0C14 device:
-
-kobject: kobject_add_internal failed for platform:PNP0C14:00--wmi:C3021213-D0BC-41A2-BA17-816CD5ED7744-0 with -EEXIST, don't try to register things with the same name in the same directory.
-
-It seems that without DL_FLAG_AUTOREMOVE_SUPPLIER, all device links will remain even after the WMI core driver
-has been unbound from a given device. This causes a name clash when said driver is bound again to the same
-device.
-
-Because of this i do not think that we should remove this flag. It seems that the driver core does not remove the link
-automatically if the consumer device was not successfully added using device_add().
-
-Thanks,
-Armin Wolf
-
+Hi Hans,                                                                   =
+    =0A=
+                                                                           =
+    =0A=
+> On 30-Jun-26 09:32, Tarang Raval wrote:                                  =
+    =0A=
+> > Hi Kate,                                                               =
+    =0A=
+> >                                                                        =
+    =0A=
+> >> Update the con_id for the Sony IMX471 sensor to "vana" to serve as the=
+    =0A=
+> >> power enable. Additionally, the HID values SONY471A and TBE20A0, both =
+    =0A=
+> >> associated with the IMX471 image sensor, have been identified on Lenov=
+o   =0A=
+> >> laptops.                                                              =
+    =0A=
+> >>                                                                       =
+    =0A=
+> >> Signed-off-by: Kate Hsuan <hpa@redhat.com>                            =
+    =0A=
+> >                                                                        =
+    =0A=
+> > Thanks, looks good.                                                    =
+    =0A=
+> >                                                                        =
+    =0A=
+> > Reviewed-by: Tarang Raval <tarang.raval@siliconsignals.io>             =
+    =0A=
+>                                                                          =
+    =0A=
+> Hmm, the imx471 driver is still pending upstream:                        =
+    =0A=
+>                                                                          =
+    =0A=
+> https://lore.kernel.org/linux-media/20260629074026.35490-5-hpa@redhat.com=
+/   =0A=
+>                                                                          =
+    =0A=
+> As part of this series.                                                  =
+    =0A=
+>                                                                          =
+    =0A=
+> Please just use the standardized "avdd" in that driver instead           =
+    =0A=
+> of "vana" (which also seems to refer to the analog supply vdd,           =
+    =0A=
+> which is what avdd stands for).                                          =
+    =0A=
+>                                                                          =
+    =0A=
+> Then this whole patch is unnecessary and can be dropped from             =
+    =0A=
+> this series.                                                             =
+    =0A=
+                                                                           =
+    =0A=
+The regulator name "vana" comes directly from the Sony IMX471 sensor       =
+    =0A=
+datasheet, which typically refers to the analog supply voltage. Using the  =
+    =0A=
+datasheet name helps keep the driver consistent with the hardware          =
+    =0A=
+documentation and makes it easier to cross-reference.                      =
+    =0A=
+                                                                           =
+    =0A=
+as per my understanding, the more standardized way is to use the regulator =
+    =0A=
+name as per the sensor datasheet. Therefore, I respectfully disagree with =
+=0A=
+your suggestion.                                                           =
+=0A=
+                                                                           =
+    =0A=
+Best Regards,                                                              =
+    =0A=
+Tarang                                                                     =
+    =
