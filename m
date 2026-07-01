@@ -1,60 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF4547DF88;
-	Wed,  1 Jul 2026 11:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82C047D933;
+	Wed,  1 Jul 2026 11:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782905462; cv=none; b=Vmvsa1xOzQMAb1RMyjF9CjPIcG2NXreWe+9HUuE9pnKjjpU7jHNVXxl9so8lcNUZ+6T+R/8Ia4Bq1qfHI7BBdT0EziRKg5USA9rwwi9tTfsSqKA7bYBXSKO1KafgWLNIShEDsX+Hw2OoHOQFFrXAr9S2GWYdbUUcUsfKTd0UIPw=
+	t=1782905466; cv=none; b=GHDWXP4lmZzwsYaOaxk/wgHXQYY9Y+SsTOIjOcsUxXWBaxce/FsVipUJTJrZQLtbf6HNt2ehY2tkUXhDtmSTUhl82eJ+pXfHvBHHm87cp6TiOV4bxwGYr4JM5qX5PJY9NJxnb3S0dpQHhWLDALHt1nNHGo1lPgbBfpHmm9abPno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782905462; c=relaxed/simple;
-	bh=c4NydMCrejmqA3Zao1YFpwLWee1fdw1zOF37HHbt864=;
+	s=arc-20240116; t=1782905466; c=relaxed/simple;
+	bh=n3U/JKxIldXswCDYEFKm//QA+bbG73EakfmSHVKLGao=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=WqE24QastSAoy7AP4KL/qNLJXSy8F3hzjIVRwfQL+Pn4U744nmfnTnm5V+oUdXFbWCqb2u9xtcZ0XlptVewFN030j7/HYW4lprW/eOgVWzHc8w4Z/tKQjcp+kFQu7x16G3bc/ir4EIMyXxHKUu1xYH291TJsRAJo5QYBKxIAn6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lMKq31z+; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version:Content-Type; b=GgosuL5pVgIrqZl4HSObxeYUnFwNiuJCo3bdVKLsxOvQaLJz3w3R8X/jrlDhTXTQdfqyfowOBx+NgiH8V/XeP77nw69QZ5LC/AIHmyuUvW5AWsP6SmovgB11DsS9mEWFrxPeeBKJhJfLfe4H7H3sUEGNv1f9tCmrYaBLQSK1M08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOvNQZba; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lMKq31z+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOvNQZba"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782905462; x=1814441462;
+  t=1782905455; x=1814441455;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=c4NydMCrejmqA3Zao1YFpwLWee1fdw1zOF37HHbt864=;
-  b=lMKq31z+EjG2BRsPcnc6owrnaqsuaxtxqYcgE0xpVjLW4vwF8DLkJk7V
-   0Klrz9b7AWGZH8J/MWCMuQLosldo5msNSTg6YmGi/miDXn+ApijBYA7Ia
-   wZXUpafDRq9YNnnU0nsryCul/ooK6Cw/pqxhiGuKez8zVSH94TxW3AerY
-   mGmeZ3zGJEYNbfRPo5yeCRj/UDjR5LgYYYsHQAwdxtI9Bn/UbuNaTjyRB
-   CC+dWu2H/+WWPB1qEnYSac7oP3oQz8NSXSQQzM6SVFz0Jrzym8PitRx0T
-   Vlgwx4kNQgd3yZW1sXlNrxHE/IwutPza0XKdoROilZ/QqNcgrqZfaGegj
-   g==;
-X-CSE-ConnectionGUID: ZrYz86toQkSrTDRyO0alwA==
-X-CSE-MsgGUID: c6+5Nny1Q4yfgvcMrHXvuw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="83509553"
+  bh=n3U/JKxIldXswCDYEFKm//QA+bbG73EakfmSHVKLGao=;
+  b=aOvNQZbac5IAVZUXsIoKsOUjS8fU2WUYHk8/FammQR7F///TyofUaU5B
+   Fz7IZ236Emadt9Wrg8uff7tJ4ukqVe7OHtPnsy1k2sG3L1MDhsJOq4Bk1
+   CLePKdeFlLugAUr2ebjeYci43Mla+TZ0xI3PI0i4nhKaEFlV8G0kuqMac
+   CdVa5mARUl4OF1j9tZJMR9rpPOAiHYWvushc/mPta6rHVA6xw2iGyROt9
+   qWLQaLsplgZaQaWxvFsiRaxvI8te7LbDJbiltFvLrbLyDcOhDsvIY6RUJ
+   07fMomYWhFbE/oswIGwDz1r3KZ2WcDxcWE07pQ6AcrT+lNM3N+SR3rA+H
+   Q==;
+X-CSE-ConnectionGUID: jKyfxPHJQ9O92lXZ3jAuNA==
+X-CSE-MsgGUID: QsyGsXnYRgSSKlIh89pmrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="94790895"
 X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
-   d="scan'208";a="83509553"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:31:02 -0700
-X-CSE-ConnectionGUID: C3rsrXm/S12irhfqmMlO6A==
-X-CSE-MsgGUID: q3FtWFGgQQ2RWYW3R7+fgA==
+   d="scan'208";a="94790895"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:30:54 -0700
+X-CSE-ConnectionGUID: 7FiqlKuYT9GRNmaLww/nKw==
+X-CSE-MsgGUID: g2qiDsfgR2ijDBmUBXdMlw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
-   d="scan'208";a="275761512"
+   d="scan'208";a="256463408"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:30:59 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 04:30:52 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J . Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- Julian Haarmann <julian.haarmann@student.kit.edu>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260614203235.235724-1-julian.haarmann@student.kit.edu>
-References: <20260614203235.235724-1-julian.haarmann@student.kit.edu>
-Subject: Re: [PATCH v2] platform/x86: lenovo/ymc: Only match lower byte in
- WMI lid switch query response
-Message-Id: <178290545459.22449.4751997923150004234.b4-ty@b4>
-Date: Wed, 01 Jul 2026 14:30:54 +0300
+To: Prasanth Ksr <prasanth.ksr@dell.com>, Hans de Goede <hansg@kernel.org>, 
+ HyeongJun An <sammiee5311@gmail.com>
+Cc: Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20260614045353.143500-1-sammiee5311@gmail.com>
+References: <20260614045353.143500-1-sammiee5311@gmail.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Don't hex dump
+ attribute security buffer
+Message-Id: <178290544609.22449.14194327862270091885.b4-ty@b4>
+Date: Wed, 01 Jul 2026 14:30:46 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,14 +64,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 14 Jun 2026 22:30:26 +0200, Julian Haarmann wrote:
+On Sun, 14 Jun 2026 13:53:53 +0900, HyeongJun An wrote:
 
-> On newer Lenovo Yoga devices like the "Yoga 9 2-in-1 14IPH11 - Type 83SE",
-> the hinge switch WMI query returns extra data in the upper bits
-> (e.g. 0x50001 laptop mode, 0x50002 tablet mode, ect.).
+> set_attribute() populates the security area of the BIOS attribute request
+> buffer with the current admin password via populate_security_buffer(), then
+> dumps the whole request buffer with print_hex_dump_bytes(). This can expose
+> the plaintext admin password in the kernel log.
 > 
-> The driver previously checked for exact matches (0x01 laptop, 0x02 tablet,
-> ect.) causing newer switches to not work.
+> The same issue was fixed for the password attribute path by
+> commit d1a196e0a6dc ("platform/x86: dell-wmi-sysman: Don't hex dump
+> plaintext password data"). Remove the remaining dump from the BIOS
+> attribute path.
 > 
 > [...]
 
@@ -86,8 +88,8 @@ fixes are mostly routed through for-next unless the fix is for a
 commit introduced in the most recent or clearly a regression fix.
 
 The list of commits applied:
-[1/1] platform/x86: lenovo/ymc: Only match lower byte in WMI lid switch query response
-      commit: ace16d4d3f38c74d5934b7f7fb31c601ab32cd87
+[1/1] platform/x86: dell-wmi-sysman: Don't hex dump attribute security buffer
+      commit: 0df706e5e724418283233cd02fff2e7afc682776
 
 --
  i.
