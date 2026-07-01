@@ -1,277 +1,429 @@
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazon11021142.outbound.protection.outlook.com [40.107.57.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85137481FA2;
-	Wed,  1 Jul 2026 12:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.57.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCAF48B36C
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jul 2026 12:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782909199; cv=fail; b=QnfRtiB62TWNtX0OvjDDH81cmq0cDRiMFSJq0UKU8ChDlZYzrb/oUig7Uu9b3V+N1P++6+3ogGSL/EByTaKhx1G1ux+kUiKDJ9ZOa3JcPSuEuynKym+ocL19fJTHoDNouWKS8QsRtGzgagNxHuSldVNuRArvVhxPgjZ/SKldMJQ=
+	t=1782909466; cv=pass; b=MVqz8EdX9b4bzBwCxmJsn0s98IqdGQ/TUutCK4uQ4gMciunqiKZqq8+S5L1XS5Z7VA2EHF9KVokxUAQw6tE1DUoTpnC5jB1uWz47RgA+yGGlbIzm5EdIgYRapNKG9DxmfE/BdwVd/aFLsTOpbqHybMwLo8GYNrVOurOSYjfNGro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782909199; c=relaxed/simple;
-	bh=Z+jmY+XoTJzth9FtC80L8wex/lZQbJQflzzXv3ZnT+4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pfPU5AAv5fWRhY7enM7WFswthcRb5tB0d5v8wBHHjR38UP3NFxAs5corL64+OIHf+NqwDf6QLLDyWG8rnwfADobnbQdilrJEdXqTHcv/j+2OVXxzYnup8Xx6SgaxBQvJdjxDZBCmDq0nC+LJCmMXHUpMAwocOPCWtcZPW1hZPzM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; dkim=fail (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b=Lk1+3R1G reason="key not found in DNS"; arc=fail smtp.client-ip=40.107.57.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+	s=arc-20240116; t=1782909466; c=relaxed/simple;
+	bh=vMWdSNMfAz8KdU9zjzaOPU9zGKQwGd63iq3RFl/GOzI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RgreUA/jwfGfkT3IwSmrlUZR0AcDoDAeMHoRNYHL3dAjVCQJO+35WQoVWP5uiPSeqjd9I7U01NZOpLvRYUXIkxADwuWjLU+pec3yA5wC5QIWdhSRooFZbaRQ4hOkdEEr8tBv7DoF+++mryqJ119m1vWxrDfVzKyjXP8lCFV49XI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aqdwm27v; arc=pass smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b="Lk1+3R1G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HNE3j/NHmS2IZcqiohzNMNQn8wO0V6d/kdCELZuRilZfKkWv65fF0OuiF75XaF0MO5mt//sAu5UPC7SoIlYfuQ15z0hbeeomTO4RwokpbOR+XmjMwpxbxVm9voxZ2mD73LM2R3KWa9myCuO6WTFZPUf+L2E3MtH4kNtviiarw8TIBfGtTbnlCJdjNyiyqcmxSVpFVYAiIUCOgvipNLEPxSSaGlpQuOphLsgJK2WbVUe63ZZquSFR0BL/o7eZuhRIFeXCIJN7gIWfqFiqDRrvF2j64cUeS/dZSVFVkDDGvnE81fAmivVVqACoR4T6V8K/AKi7RsXiqDNOP2OID94dzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gPyTITHP9mYweH8AjamCleghNI25Gkp+v7AJHahoZvE=;
- b=kS5OgFZwYP5WZ7obMsK5LvA987qbuOv0ms+9wXZLEKXHs9i0HvH6ipbHTRAkkzITJ5WVQ+8HQc3d4R/a+JT+YOr94QfjmR0iq9DP5135vLvKy9EK8xF47YjOYkHzxvpwsOTmQTDLJ2e1lZgygjjMGGUJLEmiYS9cVHL35QNuYYBMRhc2rN3e4J/5zx4QlANkFtviCOwY+TjSQCRqjtKuAMRXHzwi2vJmdGFVgKcmxP7PRImermYZ+slHtqqv7LLElVHqDaS8WOyYvqMJoQE8so/O8xpGYa0vq0EcmkL0uzvwZn1V7M6oSQGNhsCjNFNUhfLoleUCMjRpvFcRum0r0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
- header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siliconsignals.io;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gPyTITHP9mYweH8AjamCleghNI25Gkp+v7AJHahoZvE=;
- b=Lk1+3R1Guc7GFbrJWLaZDKInLCw1mMa8Oc4b3CcwqkpCAUecxi+jGebZ3tLK76AbuVgykD3chYfJ0Z2rxh+ilwTzs3yJy2T8T1xwFnuPmrSOhIxp+v6hSKc6JENmy+zm/RK1vKOhej66gjD7+ZmcGC5rO9seZ4Zd4jMTEDRIa4yE5u2MXRiDfOXvO4lzBLYibDBqn/LUw8u9xR4dg1LIdg3cWneRJCidF5WjnLrKrLg9c7qO09i7zdxkDlrn513/yKz3P4VaFK+MvyRi6FihLmQtGtaosLIY9O3FsW4KFg7qp1qVClRARG4MQ9A5lquBSnyQXEU6TsxzyQH8g+lmtw==
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
- by PN2P287MB1550.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1b4::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
- 12:33:13 +0000
-Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::ce63:5749:b390:508b]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
- ([fe80::ce63:5749:b390:508b%6]) with mapi id 15.21.0181.008; Wed, 1 Jul 2026
- 12:33:13 +0000
-From: Tarang Raval <tarang.raval@siliconsignals.io>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans de Goede
-	<hansg@kernel.org>
-CC: Kate Hsuan <hpa@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil+cisco@kernel.org>, Serin Yeh <serin.yeh@intel.com>,
-	Damjan Georgievski <gdamjan@gmail.com>, Kieran Bingham
-	<kieran.bingham@ideasonboard.com>, computman <anis@talbi.fr>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Scally
-	<dan.scally@ideasonboard.com>, =?iso-8859-1?Q?Ilpo_J=E4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>, "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
- IMX471 as power enable
-Thread-Topic: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
- IMX471 as power enable
-Thread-Index:
- AQHdB5q8NQpQtUcMokeHZdb/BmiJ5bZWs7/NgABnEoCAARLcy4AAVS8AgAAC2ICAAAgvPg==
-Date: Wed, 1 Jul 2026 12:33:12 +0000
-Message-ID:
- <PN3P287MB18296E80E1786B05F5ACF37E8BF62@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-References: <20260629074026.35490-1-hpa@redhat.com>
- <20260629074026.35490-4-hpa@redhat.com>
- <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org>
- <PN3P287MB182945B5747452110940BEA08BF62@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <c7634571-4682-41d5-aa9d-8b965d641d51@kernel.org>
- <akT2CSCbaR0a3BMA@kekkonen.localdomain>
-In-Reply-To: <akT2CSCbaR0a3BMA@kekkonen.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siliconsignals.io;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN3P287MB1829:EE_|PN2P287MB1550:EE_
-x-ms-office365-filtering-correlation-id: f5de0ed6-af65-4814-8e04-08ded76ceade
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|38070700021|5023799004|4143699003|56012099006|18002099003|22082099003;
-x-microsoft-antispam-message-info:
- XtJQzMtkZHny3AxZrMgQbmX9VjYDy7e0aNBzzaZAuhErfSQklksmSWMwC8VDISIvP1OJHrFdlcYtL7zeWCLnydcZ8LUSLcjmYPaOLfz1SPxpsJi0lQSZvz2cG6XYkNi1ItCedwMj3TVZs6J+k59L/smrS/M+Z2+cJyWtBiGfnG+c76mbEOcblyNTlgNji9SRvFKBsxZehP3lNoOYQZLrwxBwL5ut/MJ5C5b1Furgb30BUftjcJIB1t3WqO9oGyDtlBDLlXiS1YSEMALSWLNSrGygQxeAWekccXD6+GsZvDX1SqJUdH6cYN3V/9JO1YZ117D3KDukix1msfrFcQugLMcF1qBAqae1reSf+bpYXgqNMfGCjX2WLiMZijnkmyP3JTCGqjdJiXlW7rZRK4E8dKIBCzwAbve6Zep/uQuYCjIZoU6XCscsIY0PAXdZ+AiyzkSBIFg69AGdqDPZrkjDhNbvUAxKlcbjOOGYrqpvkjob4jqwaJVgRHvoFYproGl7+ZiOR1d6bVMl9yieoGqu8eFLboBFLzu9IBZbedIbzFc57tmIsRs7ClU/WsNRE5NHS/5ggIcd0tuO+3JnsYR9Kl6gDglivf0b1tXhpCKnDUtKcIdXgngf6Zx/QBY3F11kPGaLMO8KblqmyjrtPHWGSMlmOD7HXytdR4M9+TEh3mOuEbwPeerxWOoxUGt8omRTfXLm1y+T+7Si0CHg6LpCrUQChzSIypYrNZawama7nDA=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(38070700021)(5023799004)(4143699003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?xP/3gOs2lnnSmRBsXZgduzBGR33ZEhGppxg8oh04pTNUP3+uYEKq7fWOuW?=
- =?iso-8859-1?Q?du+8GzsPPHggzLRs9oebjqwXyVeapLbd424bOkiNmPrlUSAWC+z/JmI1c/?=
- =?iso-8859-1?Q?EY9nJBIriFOcIw2w3QkYSFJrmldm2S5uV4sRNefztL/ec3PA7T3wvSU1f+?=
- =?iso-8859-1?Q?111CeuaAh0iH3UL6BcyUEKe1Vr899TP/zFLrmqVeHCBt599R8vs6CPcTot?=
- =?iso-8859-1?Q?vB3vP2ePNpIbjSaTn9M7JN4kHG+ICZI50mkV27WV23B4dB8KUqQ/+pqDUR?=
- =?iso-8859-1?Q?bBbNPsfeom6LZLntE1P91Qg5EZvyQuy0PAe6DkevVksNP/EHeAFUlYZe+1?=
- =?iso-8859-1?Q?ufCvv9pyAtW8C/MMk6FNibCdQOiqAHXUh3ggUVud20IpO7zS1p+7bTRXuh?=
- =?iso-8859-1?Q?7x29uRhRdyUEDxJFaF/6oZj9/Y+8ARMVnr2SO7tBG/5K7uFKxUbeP/+Uo9?=
- =?iso-8859-1?Q?1WEVaW+gpo0Wnkreb18pnlbYVjHDw97Gm4/q98LWdyWCrBqfP7JM3LiWkW?=
- =?iso-8859-1?Q?WCAM8afRuHxyRrUa1InGyMyxc+Gwjk8sAkUmHtkpt0TUvadM+ZyW/gjZFZ?=
- =?iso-8859-1?Q?dsWjph1QGMhnZNO5NWQGRwpHDB2NJEeaBh/DaYl9vwsUAIYxiKIarncKt1?=
- =?iso-8859-1?Q?fvfB+eHxb9UBtMCf4EscBec/Lrpm72LtyxzJ/r0VGNQFBUmgHRDScUK2kl?=
- =?iso-8859-1?Q?WvBSXdpjN4eHhG4dj9qZfp4vYLGLQcFGpm991QriR1Q8Hd8OWFCD45lXfD?=
- =?iso-8859-1?Q?kjVAT5f3afHy6KPEo+YR8ZjPIhiXhCkpKAAR7uh7rQ7BvH2BisaWeYfgol?=
- =?iso-8859-1?Q?U07nA/bXUpAsCDxL3H+Epoy2oftIjRyn+VNai1m60/J61XlnILe0YXJ74e?=
- =?iso-8859-1?Q?8tvhMfEO8E0697mJ5xO/2uyYSeW/HVsKNkuUPt7wIJ9Z3c9/9GYQwD3pag?=
- =?iso-8859-1?Q?hvzOTt7qnvTQ6gejBQtT+C1vwA8vsjysOkyb5WLCsxMjjv+KHL0VGT3M/8?=
- =?iso-8859-1?Q?5Pr7tGWYQfO7andTqANkXf1czWboIXgwRiih3xhVtEwPPa1lqaQ6OFnebt?=
- =?iso-8859-1?Q?pGdJCgvT1+uz22COrlzq2Qt2OurIZuPMK4+OEJ5Dbe7hFFSy8alyIFb4nk?=
- =?iso-8859-1?Q?PAnMC8NMwDliye/QaBSmjLqkgcrQ3XxplINVsf2GtQbXOjR/ABToWd5LLg?=
- =?iso-8859-1?Q?WiUAnnrotk3MuzaK6ZAOquhi4U9KWhdeW6uBUFPbQID73qBcY5BK4uivS3?=
- =?iso-8859-1?Q?gEQzsASqcZ4954trZYw8A2zHH/wTKSVOiGOX7uo/rS06VL7hj7vRyThrO1?=
- =?iso-8859-1?Q?jk6TLDtYY6u4M2jNfIz3SumftvQaxMjJqrXIpBsYptEFenD3JuOGmpP2ym?=
- =?iso-8859-1?Q?xjofkhUAvED9+f67hH3cSkelXK6sn5XMv3ntqClF/eMDr01beH7Q7508bi?=
- =?iso-8859-1?Q?BpwfceX8yauFsz+8lDyoB2knFf6cbexZhP+BnROs7025WrDMT9k3dyJXnK?=
- =?iso-8859-1?Q?/qoOrS+oqTCe5sTMnqXq9VneWSW+pPmnIJCOANqi4jScWgRxFfIc85u3be?=
- =?iso-8859-1?Q?4ZtgqFjzaMBWgh3MOy2aa5T0JQyT8KgUx4YZU+9crFQBUP4dOrJK5qVC4w?=
- =?iso-8859-1?Q?3luTsMGqfrqTW2shypYSyx9oBVjjeJ41hVRoZ1bqRK4yugEQI/mvGoelpZ?=
- =?iso-8859-1?Q?pKj1XTAc+e0S1IMEq/Y3FUHbWmwsWtLsdQx/TGE6Teu2DSJsnlaIgPxu9o?=
- =?iso-8859-1?Q?9oeJh+i44fazyPIv39tqe2v7+P91OYRMKb6t3aPIN9vFcjVhxVEaJLneBM?=
- =?iso-8859-1?Q?ZgIsVi0ccA=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aqdwm27v"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c1297f37073so76200366b.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Jul 2026 05:37:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782909462; cv=none;
+        d=google.com; s=arc-20260327;
+        b=edE3eNqkccFVuKrHamdusdcT0tXl1n+cOYp7MNvOikqEQrHnDWYzjaASE9kWiqYrDP
+         OV7G9QTfiLkkaN6rBF2ezalJuWCCJZiTh+ss0kDRuLN28Q44ZozZ9/Udh7P6QY0yeP6Q
+         TCwSsEXvMcNr4xEj/ni2+wwZA0T85OJ/3cX4jd0M2fkYwCXKm0I/HX0IJhqbCCCbyiVX
+         xn74cKSnDlvoKK7Jpp8xpN3ELgqesTzFZ/s6IsaZov6gSB+fzbGSyV/ZqhTQPbjtjlsX
+         80f9ca9xqRmNlis0ykGuWG2jy8ZYiuCnUiVM2x7lvlEHTtPsuH5rjJelepOboZs1CZcc
+         ljTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=8oiXllMV6QlUmfTaIgLkcKpgeZLcalpMnowy+iCJnE4=;
+        fh=qxrkK8+Ps0lx5zgYvJzJE1W4udUPNNWfOlLofPa+MR8=;
+        b=ZjPrUTcyGlb4+A/i6fN/ZfVjLb01XuNgWVC9ylKbabGGi1mNTz/pBrfVZoijezWBBO
+         GEVhEkSv39e53Su3AIAgzbWZBb5rNeX+xfIjMf5SigkV/Upc9vuyQK0foYmFENU3MzsQ
+         jwaYS6HFEQBGTSxuEozznUKfZD90ki8E7/eI8v/ClQlZU7gt2aUCNO4LfkTudoqRD1Yu
+         OEshWB0iE+s7yFJNUj2elIbWq73eIjgPCHNZqpHfDJZlJSVmeBNDg/lJ0pR22xP8Edfq
+         oPZFfYJhs7IMrSCJuqjDUHdqaiL0SlfpEsLXNVyBSkBxgYdiXArPylgasCOZWNrqdAgM
+         kdTQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782909462; x=1783514262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8oiXllMV6QlUmfTaIgLkcKpgeZLcalpMnowy+iCJnE4=;
+        b=Aqdwm27vd0wfX6oSE5OD5LIeN1A4A3cUAf1SvNUPDAOHebw1ctEBg4hTSuCeSDa3WB
+         01vMX1+7mI1POAMGVzghQFLlIm6OTcBgKO9Kiw5hyyut60fssCDAKHtXkMgh5A2I2mKH
+         U/d4lVLq4LELdfIPW6rQQDdOXZOL5Y632qS3ntrTi60AUE16G+1SxvIJeWeW5Wow4bXs
+         NBYiskweZX1tvixZHhtt6KJhS/PIUU17RNYCjfIpn9SJc7u4xHRr9IiS53wq7gPDXshw
+         x3FJyPd+qTZCaYJaahrzZOKabB3aNwDP1YJcqh0Us6O2e9G/vhMyGJv7reqApACjZq8d
+         eWcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782909462; x=1783514262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8oiXllMV6QlUmfTaIgLkcKpgeZLcalpMnowy+iCJnE4=;
+        b=gzlPGqtPB3wa1EyvZtN/GlqBvbITNgrOW+qzCH6zRNQsQtG4+tCpCNb3rAXFx86dkg
+         oK4D30FBZFa4wV8/1Cu40dykH++AExTSW/dfCZZLH1QixfhqtaOHR0SMedc++Ju4q4VT
+         PkS+Cra5Hhq+FZrIML618Ls7DthfDomkEnkEn/Slf7BihLFdnIrmvRfBVxetsjDxLLDj
+         21Zf6VnKhH3SuKlxITWxqqR8NBZyHbj9WUVmFi11BQBUqx2FUjfNbp/CpxFAw7+rkxCl
+         jYOE9QgZHdJqMinoh6eC8Lg9yQOl/ff/J4hISbXDcgQUgI5z0ry1AsfzQQitfYZoFzGp
+         YTlg==
+X-Forwarded-Encrypted: i=1; AHgh+RrbVdDo0/A9HhL/lPmUwot6NfJ6ksThOlpvJbWwSSNk3RYxPVoa5l+hTaN9z8lmaQBLHI7buiK2AabmqMEDEkyWneBV@vger.kernel.org
+X-Gm-Message-State: AOJu0YykXPQzA6qGO6OinoYz9PkfhiEozTiB4CSta1kRn3oa99/l2rMe
+	pBsF3j31kAwvHwSYQW5uth8AXTWN49+/wXiYBTpMVBN81hi2iaSKFbG19Lq4kdxcTGH/V+WwCeA
+	29pnfCF2D6gvOBvr64P6a/a+Qg5EAJWc=
+X-Gm-Gg: AfdE7cnQrxdD4ABU+4LF5P4b1aQdegdqAzfsePyOn4h+ERc9acaikw78/60fHTeOQkG
+	rnYA2xIYnEHqb9LUXUri1QtWLodi6AITbEsI3IFa5gSg7AHa7847Qsf9sIQvsq24KkQnBd9gctQ
+	9v7N35niToF80Zf04pUBT1lW6IEkmqNTInza55u071fKAnkOIKNvq1qvz/vM2eR2nRwuYBZO7GD
+	DO3OSjlkEz+EeEQqJvfK2i1v3gRpHTFfnVvjtxC1kkDeKPRymWePyTf1Jm/DwWzcXJPkadSaEhU
+	R+icAQxGA9XDhjrwZYW8RK6OOd/sQLM=
+X-Received: by 2002:a17:907:c244:b0:bf5:2395:8d5b with SMTP id
+ a640c23a62f3a-c12aa336677mr67663366b.47.1782909462140; Wed, 01 Jul 2026
+ 05:37:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: siliconsignals.io
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5de0ed6-af65-4814-8e04-08ded76ceade
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jul 2026 12:33:12.9744
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g+DGRmM4EqAPzNMXfR+F1t7GauI5ARQz5gCqU6GrCuhpcm2RhxnG2xdM8ZXHRUChCePL20rFuLAF/Hd6cEzBb6WlBS0SanZ2hFLAiIE5kkw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2P287MB1550
+References: <20260531182825.389490-1-hello@kursatabayli.dev>
+ <10e67336-7de7-db89-66f7-8d56e4ff4562@linux.intel.com> <CAJ5VyXK_3wGmJtEwLLAtNFhKb0Ymf8TTSaO6cfozfN1GnComZw@mail.gmail.com>
+ <537bf20d-15e1-b3bf-f02a-09b96405c398@linux.intel.com>
+In-Reply-To: <537bf20d-15e1-b3bf-f02a-09b96405c398@linux.intel.com>
+From: Radhey Kalra <radheykalra901@gmail.com>
+Date: Wed, 1 Jul 2026 18:07:30 +0530
+X-Gm-Features: AVVi8CcT47QUgfCac3ckIxdyBNijQ7mU3Xfe_tMOH7eTTOMz21PY1ll6dUGPg0U
+Message-ID: <CAJ5VyXLdU8XJEw3On7b6fKYww=woJvf1wENwr0a0MEq-Z3OV1Q@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: hp-wmi: Add dual-channel PWM fan control
+ for Victus S
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: =?UTF-8?B?S8O8csWfYXQgQWJheWzEsQ==?= <hello@kursatabayli.dev>, 
+	krishna.chomal108@gmail.com, Hans de Goede <hansg@kernel.org>, emreleno@gmail.com, 
+	edip@medip.dev, platform-driver-x86@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans, Sakari=0A=
-=0A=
-> On Wed, Jul 01, 2026 at 01:01:58PM +0200, Hans de Goede wrote:=0A=
-> > Hi,=0A=
-> >=0A=
-> > On 1-Jul-26 08:19, Tarang Raval wrote:=0A=
-> > > Hi Hans,=0A=
-> > >=0A=
-> > >> On 30-Jun-26 09:32, Tarang Raval wrote:=0A=
-> > >>> Hi Kate,=0A=
-> > >>>=0A=
-> > >>>> Update the con_id for the Sony IMX471 sensor to "vana" to serve as=
- the=0A=
-> > >>>> power enable. Additionally, the HID values SONY471A and TBE20A0, b=
-oth=0A=
-> > >>>> associated with the IMX471 image sensor, have been identified on L=
-enovo=0A=
-> > >>>> laptops.=0A=
-> > >>>>=0A=
-> > >>>> Signed-off-by: Kate Hsuan <hpa@redhat.com>=0A=
-> > >>>=0A=
-> > >>> Thanks, looks good.=0A=
-> > >>>=0A=
-> > >>> Reviewed-by: Tarang Raval <tarang.raval@siliconsignals.io>=0A=
-> > >>=0A=
-> > >> Hmm, the imx471 driver is still pending upstream:=0A=
-> > >>=0A=
-> > >> https://lore.kernel.org/linux-media/20260629074026.35490-5-hpa@redha=
-t.com/=0A=
-> > >>=0A=
-> > >> As part of this series.=0A=
-> > >>=0A=
-> > >> Please just use the standardized "avdd" in that driver instead=0A=
-> > >> of "vana" (which also seems to refer to the analog supply vdd,=0A=
-> > >> which is what avdd stands for).=0A=
-> > >>=0A=
-> > >> Then this whole patch is unnecessary and can be dropped from=0A=
-> > >> this series.=0A=
-> > >=0A=
-> > > The regulator name "vana" comes directly from the Sony IMX471 sensor=
-=0A=
-> > > datasheet, which typically refers to the analog supply voltage. Using=
- the=0A=
-> > > datasheet name helps keep the driver consistent with the hardware=0A=
-> > > documentation and makes it easier to cross-reference.=0A=
-> > >=0A=
-> > > as per my understanding, the more standardized way is to use the regu=
-lator=0A=
-> > > name as per the sensor datasheet. Therefore, I respectfully disagree =
-with=0A=
-> > > your suggestion.=0A=
-> >=0A=
-> > As shown by the need for this patch on x86 at least because there=0A=
-> > is no devicetree it greatly helps if all Linux sensor drivers use=0A=
-> > standardized names for their regulators rather then using the exact nam=
-e=0A=
-> > from the datasheet which often is not very consistent.=0A=
-> >=0A=
-> > And "avdd" is the name we've standardized on for this, so lets use that=
-:=0A=
-> >=0A=
-> > hans@shalem:~/projects/linux$ grep -l '"vana"' drivers/media/i2c/*.c | =
-wc -l=0A=
-> > 4=0A=
-> > hans@shalem:~/projects/linux$ grep -l '"avdd"' drivers/media/i2c/*.c | =
-wc -l=0A=
-> > 36=0A=
-> >=0A=
-> > The alternative is needing to add more and more quirks as different=0A=
-> > sensors are used, which is not great.=0A=
->=0A=
-> I do agree that having a constant name for the regulators would be=0A=
-> beneficial for the int3472 driver. Still, if, and presumably, when that=
-=0A=
-> sensor gets DT support, the bindings will use the regulator name from the=
-=0A=
-> datasheet.=0A=
->=0A=
-> Let's just use the datasheet name now and add the few lines needed to the=
-=0A=
-> int3472 driver and avoid the churn in the future. There's a limited numbe=
-r=0A=
-> of sensor drivers that need this after all.=0A=
->=0A=
-> I'd be more concerned of what's going on in tps68470_board_data.c for=0A=
-> instance.=0A=
-=0A=
-I went through the INT3472 driver and would like to propose a generic     =
-=0A=
-approach that satisfies both sides without per-HID quirks or sensor driver=
-=0A=
-changes.                                                                  =
-=0A=
-                                                                          =
-=0A=
-The problem is:                                                      =0A=
- - INT3472 standardizes on "avdd" internally                             =
-=0A=
- - Sony IMX sensor drivers use "vana" per datasheet, and all existing    =
-=0A=
-   Sony DT bindings (imx219, imx290, imx415) already use vana-supply     =
-=0A=
- - Changing imx471 to "avdd" now will create inconsistency with those    =
-=0A=
-   bindings, or require a rename later                                   =
-=0A=
-                                                                          =
-=0A=
-Instead of fixing this per-sensor (either by changing the driver or adding=
-=0A=
-a per-HID entry to int3472_gpio_map), we can add a small vendor alias     =
-=0A=
-table inside skl_int3472_register_regulator().                            =
-=0A=
-                                                                          =
-=0A=
-Currently that function registers two consumer supply entries per sensor: =
-=0A=
-lowercase ("avdd") and uppercase ("AVDD"). We can extend it to also       =
-=0A=
-register vendor datasheet aliases from a static table, e.g.:              =
-=0A=
-                                                                          =
-=0A=
-  avdd -> vana   (Sony IMX series: imx219, imx290, imx415, imx471, ...)   =
-=0A=
-                                                                          =
-=0A=
-This way, when a sensor driver requests "vana", the regulator framework   =
-=0A=
-finds it in the supply map without any extra quirks.                      =
-=0A=
-=0A=
-Best Regards,=0A=
-Tarang=
+Yes, please!
+
+On Wed, Jul 1, 2026 at 4:10=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Thu, 11 Jun 2026, Radhey Kalra wrote:
+>
+> > Hi Ilpo,
+> >
+> > I tested K=C3=BCr=C5=9Fat's v3 patch on my 8A3D machine:
+> >
+> >   board_name: 8A3D
+> >   product_name: Victus by HP Gaming Laptop 15-fb0xxx
+> >   kernel: 7.0.11-1-cachyos-bore-lto
+> >
+> > For the test I used current platform-drivers-x86/for-next plus the v3 f=
+an
+> > patch, with a temporary 8A3D DMI match added locally because 8A3D is no=
+t in
+> > for-next yet.
+> >
+> > The patched module exposed the expected interface:
+> >
+> >   fan1_input=3D3800
+> >   fan2_input=3D3000
+> >   pwm1_enable=3D2
+> >   pwm1=3D158
+> >   pwm2=3D123
+> >
+> > Manual mode also worked:
+> >
+> >   write pwm1_enable=3D1
+> >   fan1_input=3D3300
+> >   fan2_input=3D2500
+> >   pwm1_enable=3D1
+> >   pwm1=3D145
+> >   pwm2=3D109
+> >
+> > Writing pwm1 and pwm2 separately affected the two fans independently:
+> >
+> >   write pwm1=3D140
+> >   fan1_input=3D3000
+> >   fan2_input=3D2500
+> >   pwm1=3D131
+> >   pwm2=3D109
+> >
+> >   write pwm2=3D160
+> >   fan1_input=3D3000
+> >   fan2_input=3D3500
+> >   pwm1=3D131
+> >   pwm2=3D153
+> >
+> > Brief max mode and return to auto also worked:
+> >
+> >   write pwm1_enable=3D0
+> >   fan1_input=3D3900
+> >   fan2_input=3D4500
+> >   pwm1_enable=3D0
+> >
+> >   write pwm1_enable=3D2
+> >   fan1_input=3D3300
+> >   fan2_input=3D3700
+> >   pwm1_enable=3D2
+> >
+> > I did not see a fan-control failure during the test.
+>
+> Thanks for testing. Do you want to give your Tested-by tag to be credited
+> for you testing efforts?
+>
+> (Up to you, not mandatory, of course. The tag will become permanent publi=
+c
+> record in the commit.)
+>
+> --
+>  i.
+>
+> > Thanks,
+> > Radhey
+> >
+> > On Wed, Jun 10, 2026 at 3:00=E2=80=AFPM Ilpo J=C3=A4rvinen
+> > <ilpo.jarvinen@linux.intel.com> wrote:
+> > >
+> > > + Radhey
+> > >
+> > > On Sun, 31 May 2026, K=C3=BCr=C5=9Fat Abayl=C4=B1 wrote:
+> > >
+> > > > Currently, manual fan control on supported Victus S models uses a s=
+ingle
+> > > > PWM value for both CPU and GPU fans, linking their speeds via a har=
+dcoded
+> > > > gpu_delta offset. This prevents userspace tools from managing the t=
+hermal
+> > > > profiles of the CPU and GPU independently.
+> > > >
+> > > > Refactor the hwmon implementation to support independent dual-chann=
+el
+> > > > PWM control:
+> > > > - Split the single 'pwm' state into 'cpu_pwm' and 'gpu_pwm'.
+> > > > - Expose a second PWM channel ('pwm2') to userspace via hwmon_chann=
+el_info.
+> > > > - Remove the gpu_delta mechanism entirely.
+> > > >
+> > > > The 'pwm1_enable' mode remains shared, as the underlying hardware d=
+oes
+> > > > not support per-fan modes. When switching to manual mode, both fans=
+ are
+> > > > smoothly initialized to their current RPMs. Additionally, ensure th=
+at
+> > > > the HP_FAN_SPEED_AUTOMATIC flag is isolated from rpm_to_pwm mathema=
+tical
+> > > > interpolations during mode resets to prevent unintended fan states.
+> > > >
+> > > > Tested on: HP Victus 16-s0xxx
+> > > >
+> > > > Signed-off-by: K=C3=BCr=C5=9Fat Abayl=C4=B1 <hello@kursatabayli.dev=
+>
+> > >
+> > > Has Radhey perhaps had an opportunity to test this patch?
+> > >
+> > > Radhey's series initially had the gpu delta init patch which was drop=
+ped
+> > > because this change was anticipated. It would be nice to confirm if t=
+his
+> > > patch successfully avoids the gpu delta init problem without introduc=
+ing
+> > > some other problems?
+> > >
+> > > --
+> > >  i.
+> > >
+> > > > ---
+> > > > Changes in v3:
+> > > > - Addressed review feedback from Krishna Chomal:
+> > > >   - Expanded ternary operators in hp_wmi_fan_speed_set to standard =
+if-else blocks.
+> > > >   - Replaced hardcoded channel numbers with CPU_FAN and GPU_FAN mac=
+ros.
+> > > >
+> > > > Changes in v2:
+> > > > - Made RPM readings atomic during the transition to manual mode.
+> > > > - Fixed a variable scoping issue in the pwm_input block.
+> > > > ---
+> > > > ---
+> > > >  drivers/platform/x86/hp/hp-wmi.c | 60 +++++++++++++++++-----------=
+----
+> > > >  1 file changed, 32 insertions(+), 28 deletions(-)
+> > > >
+> > > > diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x8=
+6/hp/hp-wmi.c
+> > > > index f63bc00d9a9b..cef0c4436bd0 100644
+> > > > --- a/drivers/platform/x86/hp/hp-wmi.c
+> > > > +++ b/drivers/platform/x86/hp/hp-wmi.c
+> > > > @@ -488,9 +488,9 @@ struct hp_wmi_hwmon_priv {
+> > > >       struct mutex lock;      /* protects mode, pwm */
+> > > >       u8 min_rpm;
+> > > >       u8 max_rpm;
+> > > > -     int gpu_delta;
+> > > >       u8 mode;
+> > > > -     u8 pwm;
+> > > > +     u8 cpu_pwm;
+> > > > +     u8 gpu_pwm;
+> > > >       struct delayed_work keep_alive_dwork;
+> > > >  };
+> > > >
+> > > > @@ -817,24 +817,20 @@ static int hp_wmi_fan_speed_max_set(int enabl=
+ed)
+> > > >       return enabled;
+> > > >  }
+> > > >
+> > > > -static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8=
+ speed)
+> > > > +static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv)
+> > > >  {
+> > > >       u8 fan_speed[2];
+> > > > -     int gpu_speed, ret;
+> > > > +     int ret;
+> > > >
+> > > > -     fan_speed[CPU_FAN] =3D speed;
+> > > > -     fan_speed[GPU_FAN] =3D speed;
+> > > > +     if (priv->cpu_pwm =3D=3D HP_FAN_SPEED_AUTOMATIC)
+> > > > +             fan_speed[CPU_FAN] =3D HP_FAN_SPEED_AUTOMATIC;
+> > > > +     else
+> > > > +             fan_speed[CPU_FAN] =3D pwm_to_rpm(priv->cpu_pwm, priv=
+);
+> > > >
+> > > > -     /*
+> > > > -      * GPU fan speed is always a little higher than CPU fan speed=
+, we fetch
+> > > > -      * this delta value from the fan table during hwmon init.
+> > > > -      * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to reve=
+rt to
+> > > > -      * automatic mode.
+> > > > -      */
+> > > > -     if (speed !=3D HP_FAN_SPEED_AUTOMATIC) {
+> > > > -             gpu_speed =3D speed + priv->gpu_delta;
+> > > > -             fan_speed[GPU_FAN] =3D clamp_val(gpu_speed, 0, U8_MAX=
+);
+> > > > -     }
+> > > > +     if (priv->gpu_pwm =3D=3D HP_FAN_SPEED_AUTOMATIC)
+> > > > +             fan_speed[GPU_FAN] =3D HP_FAN_SPEED_AUTOMATIC;
+> > > > +     else
+> > > > +             fan_speed[GPU_FAN] =3D pwm_to_rpm(priv->gpu_pwm, priv=
+);
+> > > >
+> > > >       ret =3D hp_wmi_get_fan_count_userdefine_trigger();
+> > > >       if (ret < 0)
+> > > > @@ -851,7 +847,9 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_h=
+wmon_priv *priv, u8 speed)
+> > > >
+> > > >  static int hp_wmi_fan_speed_reset(struct hp_wmi_hwmon_priv *priv)
+> > > >  {
+> > > > -     return hp_wmi_fan_speed_set(priv, HP_FAN_SPEED_AUTOMATIC);
+> > > > +     priv->cpu_pwm =3D HP_FAN_SPEED_AUTOMATIC;
+> > > > +     priv->gpu_pwm =3D HP_FAN_SPEED_AUTOMATIC;
+> > > > +     return hp_wmi_fan_speed_set(priv);
+> > > >  }
+> > > >
+> > > >  static int hp_wmi_fan_speed_max_reset(struct hp_wmi_hwmon_priv *pr=
+iv)
+> > > > @@ -2402,7 +2400,7 @@ static int hp_wmi_apply_fan_settings(struct h=
+p_wmi_hwmon_priv *priv)
+> > > >       case PWM_MODE_MANUAL:
+> > > >               if (!is_victus_s_thermal_profile())
+> > > >                       return -EOPNOTSUPP;
+> > > > -             ret =3D hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->p=
+wm, priv));
+> > > > +             ret =3D hp_wmi_fan_speed_set(priv);
+> > > >               if (ret < 0)
+> > > >                       return ret;
+> > > >               mod_delayed_work(system_wq, &priv->keep_alive_dwork,
+> > > > @@ -2502,13 +2500,14 @@ static int hp_wmi_hwmon_write(struct device=
+ *dev, enum hwmon_sensor_types type,
+> > > >                             u32 attr, int channel, long val)
+> > > >  {
+> > > >       struct hp_wmi_hwmon_priv *priv;
+> > > > -     int rpm;
+> > > > +     int cpu_rpm, gpu_rpm;
+> > > >
+> > > >       priv =3D dev_get_drvdata(dev);
+> > > >       guard(mutex)(&priv->lock);
+> > > >       switch (type) {
+> > > >       case hwmon_pwm:
+> > > >               if (attr =3D=3D hwmon_pwm_input) {
+> > > > +                     int rpm;
+> > > >                       if (!is_victus_s_thermal_profile())
+> > > >                               return -EOPNOTSUPP;
+> > > >                       /* PWM input is invalid when not in manual mo=
+de */
+> > > > @@ -2518,7 +2517,10 @@ static int hp_wmi_hwmon_write(struct device =
+*dev, enum hwmon_sensor_types type,
+> > > >                       /* ensure PWM input is within valid fan speed=
+s */
+> > > >                       rpm =3D pwm_to_rpm(val, priv);
+> > > >                       rpm =3D clamp_val(rpm, priv->min_rpm, priv->m=
+ax_rpm);
+> > > > -                     priv->pwm =3D rpm_to_pwm(rpm, priv);
+> > > > +                     if (channel =3D=3D CPU_FAN)
+> > > > +                             priv->cpu_pwm =3D rpm_to_pwm(rpm, pri=
+v);
+> > > > +                     else if (channel =3D=3D GPU_FAN)
+> > > > +                             priv->gpu_pwm =3D rpm_to_pwm(rpm, pri=
+v);
+> > > >                       return hp_wmi_apply_fan_settings(priv);
+> > > >               }
+> > > >               switch (val) {
+> > > > @@ -2532,10 +2534,14 @@ static int hp_wmi_hwmon_write(struct device=
+ *dev, enum hwmon_sensor_types type,
+> > > >                        * When switching to manual mode, set fan spe=
+ed to
+> > > >                        * current RPM values to ensure a smooth tran=
+sition.
+> > > >                        */
+> > > > -                     rpm =3D hp_wmi_get_fan_speed_victus_s(channel=
+);
+> > > > -                     if (rpm < 0)
+> > > > -                             return rpm;
+> > > > -                     priv->pwm =3D rpm_to_pwm(rpm / 100, priv);
+> > > > +                     cpu_rpm =3D hp_wmi_get_fan_speed_victus_s(CPU=
+_FAN);
+> > > > +                     if (cpu_rpm < 0)
+> > > > +                             return cpu_rpm;
+> > > > +                     gpu_rpm =3D hp_wmi_get_fan_speed_victus_s(GPU=
+_FAN);
+> > > > +                     if (gpu_rpm < 0)
+> > > > +                             return gpu_rpm;
+> > > > +                     priv->cpu_pwm =3D rpm_to_pwm(cpu_rpm / 100, p=
+riv);
+> > > > +                     priv->gpu_pwm =3D rpm_to_pwm(gpu_rpm / 100, p=
+riv);
+> > > >                       priv->mode =3D PWM_MODE_MANUAL;
+> > > >                       return hp_wmi_apply_fan_settings(priv);
+> > > >               case PWM_MODE_AUTO:
+> > > > @@ -2551,7 +2557,7 @@ static int hp_wmi_hwmon_write(struct device *=
+dev, enum hwmon_sensor_types type,
+> > > >
+> > > >  static const struct hwmon_channel_info * const info[] =3D {
+> > > >       HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+> > > > -     HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
+> > > > +     HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT, H=
+WMON_PWM_INPUT),
+> > > >       NULL
+> > > >  };
+> > > >
+> > > > @@ -2592,7 +2598,7 @@ static int hp_wmi_setup_fan_settings(struct h=
+p_wmi_hwmon_priv *priv)
+> > > >       struct victus_s_fan_table *fan_table;
+> > > >       u8 min_rpm, max_rpm;
+> > > >       u8 cpu_rpm, gpu_rpm, noise_db;
+> > > > -     int gpu_delta, i, num_entries, ret;
+> > > > +     int i, num_entries, ret;
+> > > >       size_t header_size, entry_size;
+> > > >
+> > > >       /* Default behaviour on hwmon init is automatic mode */
+> > > > @@ -2638,10 +2644,8 @@ static int hp_wmi_setup_fan_settings(struct =
+hp_wmi_hwmon_priv *priv)
+> > > >       if (min_rpm =3D=3D U8_MAX || max_rpm =3D=3D 0)
+> > > >               return -EINVAL;
+> > > >
+> > > > -     gpu_delta =3D fan_table->entries[0].gpu_rpm - fan_table->entr=
+ies[0].cpu_rpm;
+> > > >       priv->min_rpm =3D min_rpm;
+> > > >       priv->max_rpm =3D max_rpm;
+> > > > -     priv->gpu_delta =3D gpu_delta;
+> > > >
+> > > >       return 0;
+> > > >  }
+> > > >
+> >
