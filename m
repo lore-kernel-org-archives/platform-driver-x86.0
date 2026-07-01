@@ -1,389 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5E33F8EA6;
-	Wed,  1 Jul 2026 10:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8419E41C30F
+	for <platform-driver-x86@vger.kernel.org>; Wed,  1 Jul 2026 10:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782900964; cv=none; b=cY318wrwMezivILdf0wYaFokjiDrorh1qODDuNb+LSA3uzpov0ozlyyU1pEGXquxpEcY32WKJniA4lxRNWt9Z1UfD4M0ApdAmHeikQrhaakS7DpRNigZ0DIHI7H+goOhwNsQhfZGVGfp58LUbfkdkN2ZcT8XdX1+Qr0Iq0e4KSI=
+	t=1782902244; cv=none; b=bNyXVi6WLn3sQncPpbS6khrE9o4G4GJt2TaGt0sAEw8iaDID+u/eHRY/dZbV6CtR/9KnmklbBDydJ2KxRMXgTJDZRHz+Q0HZcqr3e1UKePph44S8xW5mR8KQVEiy5922eIPIAZXwmNZm1DCLtM/TzHMukVtefigxMys5n/uC1OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782900964; c=relaxed/simple;
-	bh=dNTN+reSvwxlogOBOn7W70nPQ8/30hZtNyz2Yf6Kyl0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bHOiXmNN7HRoiZpHTj33ghpra8C4pwW68cdgdZkNevkNt53nqJKRAEDfUSEr1nbk/yY6ku/ReYdpfEWm4XQDabDDCAEYJhaMMkNvTCwrxjK48lfuh8+LKJiy1RF5JpUhTuiCYHVmQywml7966AQOUfsvehrzADcyDfOTb+siUMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2EUon7z; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1782902244; c=relaxed/simple;
+	bh=3eTtRbYeYc2Ucl4oM9OL99IuKEACdQbDk9OneYUz3hM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tJ688+hb3tfK2TgZXJuhwSu1HlGOAP5P+1fNnKCDHPWNhrovAvDXAm2YhNef+7EsGOJwx2a92e4rjibc9iz6KsrzVi2sbc07WWR1bw0lmcW4JSDWR4qGCqDW/JSfIvym+O/KDnRSoI8kHPJch1oEWdk2khndrDr/8A5Ct+fp2tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AzAmDLpl; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=cX5ugZ+5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2EUon7z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782900961; x=1814436961;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dNTN+reSvwxlogOBOn7W70nPQ8/30hZtNyz2Yf6Kyl0=;
-  b=g2EUon7zbqVjhkRZmA16aogRDPNZJHAOKzRItQGl6wDd1eTJbggV/W14
-   phKTo1niIW+sX+ukhLzAiSQYmgER5nogwYtB5sDsAt6JOYSoNQWMSqX3I
-   TeT78elZCdrZB37QGbtf5BorKa6JY9Eq8HYEq6D+1pJUAI9bRCV3ppm5Q
-   ohWbeU9LdXhwrJEPWALT7yO3uc8X8ux0xaIoUgoWOTsflFmw+PG22rTxv
-   Vqbi4vC8n9pmTBm60mjw7ioIUPga5msedhQyMaQcwh67OLFYLgv0K7WW5
-   D2mbtx01nV+zsuS3KzoukYPrtSg5VNNTj+McPePByg396warVtJg74bgy
-   A==;
-X-CSE-ConnectionGUID: qE+xuU90TnuBjcPoMsl5WA==
-X-CSE-MsgGUID: 2nSwni9IQWW6f8LLWBC0ww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="94281244"
-X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
-   d="scan'208";a="94281244"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 03:16:00 -0700
-X-CSE-ConnectionGUID: fyQzc0clR3qTjp7mzlswAQ==
-X-CSE-MsgGUID: SLlN2GTLQWakZ+mMt9jw9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
-   d="scan'208";a="254443426"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 03:15:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 1 Jul 2026 13:15:52 +0300 (EEST)
-To: =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v3 09/16] platform/x86: x86-android-tablets: Add include
- defining struct dmi_system_id
-In-Reply-To: <akSw3IDE-V7WDpah@monoceros>
-Message-ID: <54f3a614-625b-5c1b-bb52-722ac5b999ef@linux.intel.com>
-References: <cover.1782682124.git.ukleinek@kernel.org> <ad0c801eb9c5814bd2430f1e8c370fee82742897.1782682124.git.ukleinek@kernel.org> <3bcb32f8-00d2-905c-3dc1-e8730611fb6a@linux.intel.com> <akJzYlHHcvPCl0HW@monoceros> <32255bd6-4015-e945-2ee2-4bc3ca0c3a9c@linux.intel.com>
- <akP5FKsnsdzx8pMk@monoceros> <2548547c-bbdd-3aed-7550-fecdba4180ac@linux.intel.com> <akSw3IDE-V7WDpah@monoceros>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AzAmDLpl";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="cX5ugZ+5"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 661A8wrD753593
+	for <platform-driver-x86@vger.kernel.org>; Wed, 1 Jul 2026 10:37:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=HBLQidyajdO9oG1GsqnmdD
+	1EP+Zn0eFu7AAq13az6os=; b=AzAmDLplePkHG2aHzBiQkXwaXpsA4fHSoEcQyt
+	Xcp8NdJew09OhYrjHM1Fk1dtn23RKC7B1e9ZHerhq6+Qcm0wtfceEGHnN8Fel8ec
+	tILh15t2g1n+vMBrtNyQtrbzyubyS9UvY2zW2/3I72Z3pwPls227p3sd8qt/62zz
+	XQtzjnK2PgREh3+o8e5PNj/0F01wt0sjIuEUB0YK1w7jSu4kbx47fqbI+Mkl+AwW
+	KxDEErpIDDCQI7qucaBRX+FaUSBthQUHjs8022Scpo/vKXceN5AK85otNYR/C7eL
+	CkBz0MiPDUVhrIo/UQfoTtxUXgI/5sdvzmB9Sh/Hy8RyAf1w==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f4rsy27md-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 01 Jul 2026 10:37:18 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-92b4b575561so63655985a.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 01 Jul 2026 03:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1782902238; x=1783507038; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBLQidyajdO9oG1GsqnmdD1EP+Zn0eFu7AAq13az6os=;
+        b=cX5ugZ+5ZqJBZzADFzlO415Snhe44xSZvtLNYweoDDQjrQxbP6GmuWvijZ2n48d8nD
+         MIBAyByyo+g3ppLhiVm9HxRstDF80FfL8G0sIFpXm41nBmYUa50kQPkelYvZ/MLxXZMn
+         uy49e4RSOJqAYpmYzYy5x1/3ZuLEfVrbviiU0KR/UfDqhf8axFCHVZAGq1Y8wCZf7M/s
+         uzb+0m4FQOG938dXgHBsuhDtv3nWGCO4HXTKsc+htDvDkGSO4VGFNgcHAogowflTIzxC
+         3JV0wfPmsEpHSRL2fJ0if/glvDaqlLVnVpolyli5BxHiyi+OafcDX5/GQW5CF8zEyXkk
+         nZhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782902238; x=1783507038;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HBLQidyajdO9oG1GsqnmdD1EP+Zn0eFu7AAq13az6os=;
+        b=XzOATsmDZ8mdZLSJLwAAT1+xUxG5SjZdckBoJKFcpTbSIjP1xdZW7xLzr5bGWITI34
+         pSivQ9sfFlq7xpVCBH+Rx06ILk++loQV0Telhn/iOjWImuvT2fbM9ZVuZD0jKMblUxtq
+         0IklpJ5PMv9UfChE5A8moemynr0lJfIDkp2wN3/FeXLJlEra15pmrQ+m+DqeFB5WeSqm
+         kzHC0sGV/elzyTU9+ZTeT9C9c88BgX7OfMAmIfguwAOvy6hLhUFvaSlTteinntvsQqNP
+         tPMz+8bl0q7ZzdjyW5ymt0UmZJsE9Wb/RCj4t7mjAt3muliJCZ7sTDqrcSR87bc5GbBm
+         Puww==
+X-Forwarded-Encrypted: i=1; AFNElJ9znIYJihYJlbpZ4z2Z2bz15E8xeEg0/l5SZLmOR3Tsy8Y6Qmu35yrpXlI1pisS5i/ZCIGm5iBb57CL1TGugc3uxk34@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw92TO5o96udtT3C6eMgsi0dTXn/w6lPfOZ2sH/yxS5NqF4zXkE
+	LPDjwbiVdYRwbr8fQnh8fyd5l/kXY/NMJnb7eEPbz0Srs58OHTB8I4MSyh3e/FmM+nn4Kujoz9z
+	vqk7LW0V6uHbrpKIic9RYDmJ9/DVdZuGBlQnrlA2JuRkoC2pfpXtM6bDE4lASH/H6/TBAI4iNQ4
+	OhiZo/CakJZ/4=
+X-Gm-Gg: AfdE7cnzNqrH827A+gofEoPwkNC1ur3ybGxaMRBOwTDwiOAGe1imHXCQt+iWMpS5FlX
+	rLi83Vjl28orPd61tF/D96f3xeGJlVXKUh7pheXOPyez1h4y4PGB9L/DCDtQmxeE6wLZ17HOk3A
+	/MDs/GcwnVI//eW+elWgU2TwwFUVZpxwV11ggBae6kolE9DePQ7F/+9leYctjOex4FHvzij6rIa
+	KdL6mAcOJDGglU16kRnFVP3ObRZf7zP3uF90wzC2AXxeg1ED4DiWw5FXQ3hp4B5cnogXc8VwXMo
+	f5hAWucS88s6WdpObFNwembs9STVZhRwXdmgILPF40Rjr7laxZ9Ip9jqd7okNgnESS2s+yoUzma
+	dp7yWb4aw+PJtBvwe+UcXfs5n3HdygVEuJcGM7QNQr9Y=
+X-Received: by 2002:a05:620a:390a:b0:92e:68f1:db9b with SMTP id af79cd13be357-92e696e9173mr787223485a.16.1782902237880;
+        Wed, 01 Jul 2026 03:37:17 -0700 (PDT)
+X-Received: by 2002:a05:620a:390a:b0:92e:68f1:db9b with SMTP id af79cd13be357-92e696e9173mr787221185a.16.1782902237505;
+        Wed, 01 Jul 2026 03:37:17 -0700 (PDT)
+Received: from juillet.box.freepro.com ([2a05:6e02:1041:c10:cab:bdb4:a76b:614])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be4d2bc5sm69130655e9.5.2026.07.01.03.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 03:37:16 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+To: sre@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+        linux@roeck-us.net, andersson@kernel.org, konradybcio@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v3 0/2] Lenovo ThinkPad T14s EC thermal monitoring and thermal zone integration
+Date: Wed,  1 Jul 2026 12:37:09 +0200
+Message-ID: <20260701103714.22583-1-daniel.lezcano@oss.qualcomm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-406803983-1782900952=:7215"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: DwMmPJSCk-yLi-fdMuONLgOscFw8hQ3P
+X-Authority-Analysis: v=2.4 cv=fLgJG5ae c=1 sm=1 tr=0 ts=6a44edde cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=Jz99LMs1rTwwAPREzXgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzAxMDExMCBTYWx0ZWRfXwfFUErdEhm9b
+ gh/BIdd62ixMNpcr8a2Z/QN+MxSdlB7aKCfo/ayiI5etkIAAayACS0D+CarsaUqxW9ziX09oB85
+ uXKAZanGUIIT/s/hYtePBSq26ektwu/ibLycgJedGPVbdNROqv7EKfx7XXNS13YMnCO+ZIjp3WG
+ BjdHoxGabh84bxZ5vHgbbeJimGpDUIqkrkVxIA9QmgHEauaqVGnnW1WLu71sQjW5n3mGwWxo+WN
+ RLrxo0+B4AReOuyoH9Gaqcs4Jq5bHgItiEeafgWB/5Wsu36gGMAyhhg0b5K6lcg+oeljSHL45la
+ EbTGLghTTJC9W47pZdCVD5rju4xtrpMsn8fBZ0vtJ1vDqdwlEEixDowhqRvzR7VDoQRjDBAGAnt
+ MJ92gkjyRVKabLtgifWwqyGRZMnqN5+Vu86OJ8gT3JbKyICb3y/Kcq6hRNDFVF/w5ppNIBjGgCQ
+ /C+Lr36ijwsGHncMV3g==
+X-Proofpoint-ORIG-GUID: DwMmPJSCk-yLi-fdMuONLgOscFw8hQ3P
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzAxMDExMCBTYWx0ZWRfXxKAf185UTP//
+ gzZYTmJ+3foLUPRpDO8tT4YXDU3XZH9VtTS1Js9KoErYxjOXDi/bL8MHktHrBRl+4UhFqxBx7Qh
+ /StINpEMXO8vxPjzbQo4rTOHRI0vFdg=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-07-01_03,2026-06-26_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
+ bulkscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607010110
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-406803983-1782900952=:7215
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+This series extends the Lenovo ThinkPad T14s embedded controller driver
+with environmental monitoring capabilities and integrates the exposed
+sensors into the Linux thermal framework.
 
-On Wed, 1 Jul 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> On Tue, Jun 30, 2026 at 09:07:08PM +0300, Ilpo J=E4rvinen wrote:
-> > On Tue, 30 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> > > On Tue, Jun 30, 2026 at 05:58:54PM +0300, Ilpo J=E4rvinen wrote:
-> > > > On Mon, 29 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote:
-> > > > > On Mon, Jun 29, 2026 at 02:38:35PM +0300, Ilpo J=E4rvinen wrote:
-> > > > > > On Sun, 28 Jun 2026, Uwe Kleine-K=F6nig (The Capable Hub) wrote=
-:
-> > > > > >=20
-> > > > > > > Currently <linux/i2c.h> includes <linux/mod_devicetable.h> tr=
-ansitively
-> > > > > > > which ensures that struct dmi_system_id is defined in
-> > > > > > > drivers/platform/x86/x86-android-tablets/x86-android-tablets.=
-h. However
-> > > > > > > this include in <linux/i2c.h> will be replaced by one for i2c=
-_device_id
-> > > > > > > only. To ensure that dmi_system_id is available add the inclu=
-de for that
-> > > > > > > explicitly.
-> > > > > > >=20
-> > > > > > > Acked-by: Danilo Krummrich <dakr@kernel.org>
-> > > > > > > Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine=
--koenig@baylibre.com>
-> > > > > > > ---
-> > > > > > >  drivers/platform/x86/x86-android-tablets/x86-android-tablets=
-=2Eh | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > >=20
-> > > > > > > diff --git a/drivers/platform/x86/x86-android-tablets/x86-and=
-roid-tablets.h b/drivers/platform/x86/x86-android-tablets/x86-android-table=
-ts.h
-> > > > > > > index 2498390958ad..c756961ae5fd 100644
-> > > > > > > --- a/drivers/platform/x86/x86-android-tablets/x86-android-ta=
-blets.h
-> > > > > > > +++ b/drivers/platform/x86/x86-android-tablets/x86-android-ta=
-blets.h
-> > > > > > > @@ -13,6 +13,7 @@
-> > > > > > >  #include <linux/gpio/consumer.h>
-> > > > > > >  #include <linux/i2c.h>
-> > > > > > >  #include <linux/irqdomain_defs.h>
-> > > > > > > +#include <linux/device-id/dmi.h>
-> > > > > > >  #include <linux/spi/spi.h>
-> > > > > > > =20
-> > > > > > >  struct gpio_desc;
-> > > > > >=20
-> > > > > > Indirect include patchs are never a good idea as it always make=
-s header=20
-> > > > > > reorganizations minefield. So for this change,
-> > > > > >=20
-> > > > > > Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > > > > >=20
-> > > > > >=20
-> > > > > > When it comes to the series, I certainly like the direction it =
-goes very=20
-> > > > > > much (never have been fan of mod_devicetable.h) but I'd have pr=
-eferred=20
-> > > > > > stepwise approach over trying to introduce it to some mid-rc.
-> > > > >=20
-> > > > > The hurdle here is that at least the header part isn't easily
-> > > > > automateable.
-> > > >=20
-> > > > Patch 1?
-> > >=20
-> > > No, patch 15.
-> > >
-> > > > > (Well it is, but the script that I have now to check all
-> > > > > .c files already takes longer than an hour to run. I guess it's n=
-ot as
-> > > > > optimal as it could, but still.) And so getting this ready for in=
-clusion
-> > > > > in next and keeping it up to date until the merge window opens is=
- a
-> > > > > tough job.
-> >=20
-> > It looks to me more a problem with the chosen approach where you wanted=
-=20
-> > to get it all quickly done in a single all-reaching series (which IMO=
-=20
-> > would have been fine right after -rc1 but mid-rc cycle, I'm not so=20
-> > positive about it).
->=20
-> In my book we're still in the "right after -rc1" window. The patch set
-> was mostly ready at -rc1 (it just grew a patch to fix a build failure on
-> parisc and I added review tags) and assuming Linus doesn't oppose to my
-> timing it should go in before -rc2.
->
-> And yes, I admit to want it done, but that's not part of my
-> justification to get it in after -rc1.
->=20
-> > > > > The further downside is that each modification to one of the high=
-ly used
-> > > > > headers is expensive (in rebuild time) when these are merged one =
-after
-> > > > > another (or when bisecting). So getting these changes in in one b=
-atch is
-> > > > > beneficial.
-> > > > >=20
-> > > > > So while I agree with your preference, I don't think it's feasibl=
-e.
-> > > >=20
-> > > > While I understand keeping it up-to-date must be a pain, I'm not en=
-tirely=20
-> > > > convinced by the rebuild time argument as it has been the status qu=
-o so=20
-> > > > far too for anything touching mod_devicetable.h.
-> > >=20
-> > > Yes. I don't know about others, but big rebuilds annoy me regularily.
-> > > And with another quest that involves touching most struct *_device_id
-> > > this really gets a pain. And just because "we" endured something in t=
-he
-> > > past, doesn't mean we shouldn't improve.
-> > >=20
-> > > > If one commit would move all linux/device-id/* AND ADD them all int=
-o=20
-> > > > mod_devicetable.h as includes, that's just one rebuild more (and on=
-e=20
-> > > > rebuild will occur anyway whichever way you architect this).
-> > >=20
-> > > Yes, one rebuild isn't possible to prevent. You're talking about patc=
-h
-> > > #1, right?
-> > >=20
-> > > > Only if includes would be then removed one-by-one from mod_deviceta=
-ble.h=20
-> > > > (e.g. per subsystem basis), I can see it causing n rebuilds (+confl=
-icts),=20
-> > > > but they could be removed in bulk as well.
-> > >=20
-> > > Removing those from mod_devicetable.h isn't part of the plan.
-> >=20
-> > It isn't because you're not doing this in steps so you didn't put them =
-in=20
-> > there at all (which would have been fine at any time and only enforces=
-=20
-> > one rebuild comparable to any other linux/mod_devicetable.h edit).
->=20
-> <linux/mod_devicetable.h> only consists of #includes of the new files
-> (well, plus struct cpu_feature). That's patch #1 and it enforces a
-> rebuild. So either "you didn't put them in there at all" is wrong or I
-> misunderstand you.
+The EC provides access to several platform temperature sensors
+covering the SoC, keyboard area, bottom cover, charging circuitry, QTM
+module and SSD. These sensors are currently used by the firmware for
+thermal management but are not exposed to Linux.
 
-Yes, I was wrong, sorry about that.
+The first patch adds hwmon support for the EC temperature sensors.
 
-I looked at patch 1's diffstat and thought it cannot be adding those=20
-headers with only two +, totally disregarding the scale. And they were=20
-so much down in the in diff I didn't see them there either because I=20
-didn't look that far.
+The second patch exposes the EC as a thermal sensor provider in the
+device tree and defines thermal zones for the keyboard skin
+temperature and the charging circuitry temperature. This allows the
+generic thermal framework to react to EC-reported temperatures and
+apply standard Linux thermal mitigation policies.
 
-Most of my worry was related to that misunderstanding because it would=20
-meant trouble for subsystem maintainer if adding linux/mod_devicetable.h=20
-would have been problems during merges.
+As the EC protocol is not fully decoded, the passive trip points
+get/set actions are missing, so it is not possible to program a
+threshold and receive an interrupt when crossed the way up or
+down. Consequently, the thermal zone related to the charging circuitry
+is polled every two seconds until we can set the trip points in the
+EC.
 
-I suppose it doesn't matter much then to me if it's done mid-cycle.
+This series fixes critical thermal issues happening on this platform
+where a kernel compilation, or heavy workloads, lead to a system
+reboot.
 
---=20
- i.
+Tested on a Lenovo ThinkPad T14s Gen 6 (Snapdragon X Elite).
 
-> > > But
-> > > replacing `#include <linux/mod_devicetable.h>` by `#include
-> > > <linux/device-id/of.h>` in <linux/of.h> triggers again many rebuilds
-> > > when done separately.
-> >=20
-> > But this is not because you touch linux/mod_devicetable.h but linux/of.=
-h.
-> > It certainly should cause rebuild of all the code depending on linux/of=
-=2Eh=20
-> > but I assume that is much less than what linux/mod_devicetable.h causes=
-=2E
->=20
-> It's a subset, yes. In an ARCH=3Darm64 allmodconfig build of -rc1 + this
-> patch series I have:
->=20
-> =09# number of object files:
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | wc -l
-> =0928590
->=20
-> =09# these are the old users of <linux/mod_devicetable.h>:
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l /device-i=
-d/ | wc -l
-> =0923583
->=20
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l linux/of.=
-h | wc -l
-> =0912302
->=20
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l linux/pla=
-tform_device.h | wc -l
-> =099255
->=20
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l linux/pci=
-=2Eh | wc -l
-> =097747
->=20
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l linux/acp=
-i.h | wc -l
-> =097233
->=20
-> =09$ find -name \*.o.cmd -not -name \*mod.o.cmd | xargs grep -l linux/i2c=
-=2Eh | wc -l
-> =095373
->=20
-> so it's a considerable subset. For x86_64 the numbers are similar:
->=20
-> =0929655
-> =09/device-id/: 24800
-> =09linux/of.h: 12602
-> =09linux/platform_device.h: 9344
-> =09linux/pci.h: 8605
-> =09linux/acpi.h: 7875
-> =09linux/i2c.h: 5758
->=20
-> .
->=20
-> > > And then for <linux/pci.h> and again for <linux/platform_driver.h> an=
-d
-> > > .... That's why those are included here, too, to at least use the "on=
-e
-> > > rebuild needed" window for the high-impact follow up changes, and
-> > > trigger a rebuild only once (unless you happen to hit an inbetween
-> > > commit while bisecting).
-> >=20
-> > I disagree, it's a different set of files for each. But there could, of=
-=20
-> > course, be some overlap. Maybe the overlaps is so significant it's=20
-> > nearly as same as linux/mod_devicetable.h, I don't know but is that wha=
-t=20
-> > you're trying to imply?
->=20
-> Yes, these are all headers with many users. So modifying them in bulk
-> triggers less rebuilds than doing the modifications in separate series
-> that go in via separate trees.
->=20
-> > > > What you can achieve is preventing those "normal" mod_devicetable.h=
-=20
-> > > > changes enforcing rebuilds right after this has been applied, but t=
-hat is=20
-> > > > just the rebuilds as status quo would have without this series and =
-no=20
-> > > > more.
-> > >=20
-> > > This is exactly the goal. I don't get the "just" part of your argumen=
-t.
-> > > The point is that a modification to struct i2c_device_id should only
-> > > trigger a rebuild of i2c drivers, but not of pci, platform, spi and a=
-ll
-> > > the others, too.
-> >=20
-> > With "just" I meant it's no worse than status quo. If that prolongs one=
- or=20
-> > two kernel versions more to avoid mid-rc cycle merge it doesn't really=
-=20
-> > seem so high cost.
-> >=20
-> > And I understand where you want to end up, and you could end up there=
-=20
-> > using steps as well:
-> >=20
-> > 1. add linux/device-id/* + include them from mod_devicetable.h
->=20
-> Done, that's patch #1.
->
-> > 2. convert stuff to use linux/device-id/* without removing includes fro=
-m=20
-> > mod_devicetable.h
->=20
-> patch #15 and #16 are in that category, it's not complete yet, but I
-> catched the high-impact usages. Again on -rc1 + this patch set there are
-> 1921 .o files left that make use of linux/mod_devicetable.h. Roughly
-> half of them via <linux/mdio.h>:
->=20
->     ...
->      49   drivers/net/wireless/intel/iwlwifi/iwl-config.h
->     179   include/linux/mmc/card.h
->     188   include/sound/soc-acpi.h
->     231   include/linux/hid.h
->     925   include/linux/mdio.h
->=20
-> In retrospect it would have been great to tackle <linux/mdio.h> as part
-> of this series, too, but I won't modify it for that any more now. I'll
-> address that for the next merge window.
->=20
-> > 3. bulk remove linux/device-id/* includes from mod_devicetable.h
->=20
-> This isn't done yet, in the end I want to remove that header, but that
-> is somehow "bulk remove linux/device-id/*". And that indeed is planned
-> to be done later. Each patch of type 2 reduces the impact of that
-> change, so postponing doesn't hurt a lot.
->=20
-> > 2 & 3 are chunkable/iteratable so they don't need to occur for all at o=
-nce=20
-> > as long as 3 is not split per one linux/device-id/* its rebuild cost is=
-n't=20
-> > that huge compared with the status quo.
->=20
-> Each patch of type 2 is potentially expensive. Less than modifying
-> <linux/mod_devicetable.h> directly, and depending on which stuff it
-> touched the impact is high or not. For a .c file it's low, for the above
-> mentioned headers it's high.
->=20
-> So the justification to get the whole series in in one go is for the
-> high impact headers that they should be near (in git history) to patch
-> #1 to reduce rebuilds and for .c files that the automation that created
-> the changes is reliable and only breaks in corner cases (like a driver
-> using `of ## _device_id` which my script won't identify as a usage of
-> `of_device_id`). And if you say the justification for the .c files (i.e.
-> patch #16) is weak, I agree and we can postpone that. But please let's
-> keep #1 and #15 (and thus also #2 - #14) together.
->=20
-> Maybe the relevant difference between us, that makes us judge the
-> circumstances differently, is that I often do build tests on my laptop
-> and at Intel you might have a beefy server to do that?!
->=20
-> Best regards
-> Uwe
->=20
---8323328-406803983-1782900952=:7215--
+Thanks,
+
+Daniel
+
+---
+ Changelog:
+	v3:
+	 - Removed event based because trip point are not yet well supported
+	 - Added an empty line after variable declaration (Ilpo Järvinen)
+	 - Used MILLIDEGREE_PER_DEGREE from units.h (Ilpo Järvinen)
+	 - Made switch consistent (Ilpo Järvinen)
+	v2:
+	 - Fixed patch 1 subject prefix
+	 - Removed the fan information part
+	 - Added HWMON_T_ALARM
+	 - Fixed DT change description to reflect what it does really
+
+Daniel Lezcano (2):
+  platform: arm64: lenovo-thinkpad-t14s-ec: Add hwmon support for
+    temperatures
+  arm64: dts: qcom: x1e78100-t14s: Add thermal zones for keyboard skin
+    and charging sensors
+
+ .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   |  68 ++++++++-
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c | 130 ++++++++++++++++++
+ 2 files changed, 197 insertions(+), 1 deletion(-)
+
+-- 
+2.53.0
+
