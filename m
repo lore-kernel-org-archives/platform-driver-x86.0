@@ -1,148 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C2144E021;
-	Thu,  2 Jul 2026 10:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D973431F8
+	for <platform-driver-x86@vger.kernel.org>; Thu,  2 Jul 2026 10:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782986860; cv=none; b=daVpg8CL1XxXODi/4vMGftI8ify2qUM571jjSdXjsJj6ndLonLH2+iJpseZSMjdF85vnzqb7vznL+6UswhvKl0xALF/YSkedZHBWwbaiQrXg/Xch/BNEH6vp6XeY912XhLLSoa4RsSelp/1dQLZaJ07qnUXhFyCEJnNAFq6J26Q=
+	t=1782987246; cv=none; b=c53kzSnA9eokwClOeeZkCQsuxRwF+q+beHk/DidErkNd6+XUhYt0rZHyoOnhsfmnicgcW2dYoTKnqlGQFQBb6u3MY1mjxcCPB+fircmFGO+fCZqTA2Z9qe/mPKlY5v5K24M3FTTu/s3slxenRLuIEinNZtVvkX0MYlNxq2nF7tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782986860; c=relaxed/simple;
-	bh=/9b8XhRdxlUi0LGnAzYPhCpgKuVEuoSHdRJkABgQExM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=df6LXzJyfKFvKbWr7Ymf3QY1RMbco/cbQLybValhkhK/AxQx3BsiUtMHBtyER0khJAkC3Amm/9706r4+CKNxctCewBX7+TpXk9t+gCYwyreuflgMpnt8u70Hl6JY7/OqFn0s8dyIo7nKtp4U0FXn1+97RUNyOFAKN74kr7tTu10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUJ2SDXv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782987246; c=relaxed/simple;
+	bh=kREVzh/VkCX94Vs2sqfDEQKvzgMVt2hTyXNqRRxwBug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i7KZ3bqtNZ8LXitb6eQAczTNr9DcKwIb0+La2yYRiR57Ty92mpezlk67Af/swNIhG4hhCTOmgJfT98YfpbreDiUijtgstDneSNcLvW3Z3B/3lbRBv3l1XzkmW0ul0VYqjZI8xDwKnot8RJ5ZzhWn+pMun2OJESaE0Q5KBi0Ze3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jq587EgF; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUJ2SDXv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D4E71F000E9;
-	Thu,  2 Jul 2026 10:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782986859;
-	bh=rYlxsT3EfvvJVMSpiElkKSMRxs3TOqthCAywxBW0128=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AUJ2SDXvs0VEdi5h/Kivbi3brTHkQLZzOc+/NAV87+f7C+JbSJugMOeorpgT3tHNL
-	 p58+v4CbXSREtEJG3hLwTa5n8p6G+p8Uf6kuVPNIUtEb3lILgd1rLCgiUeDjzt2+mZ
-	 zGpUePOrV+YiczwnsZiA+nTEa+dq7dVC2Ri5VUVSthC4z19IRHYTorV302BUc8jnc8
-	 lzbpbbTR/gUCNSPcKQ4CL0UIE7YEz9VRE1nLkcyV3m++qYsnaX7iOq8PztYSNv6FrO
-	 w1VeEKbpH/fT7kvqY9QrCvgHPHHPFXTLBTuAr9eAkNY5WqMk3S9O4fQkBovR+Lq+yS
-	 W5zmwAV0MlSzg==
-Date: Thu, 2 Jul 2026 12:07:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Juergen Gross <jgross@suse.com>,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	x86@kernel.org, linux-acpi@vger.kernel.org, kvm@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-pci@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	linux-hyperv@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-mtd@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	"lukasz.luba@arm.com" <lukasz.luba@arm.com>,
-	Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>, Len Brown <lenb@kernel.org>,
-	Pavel Machek <pavel@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	"Kirill A. Shutemov" <kas@kernel.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Pu Wen <puwen@hygon.cn>, Bjorn Helgaas <bhelgaas@google.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, Dave Airlie <airlied@redhat.com>,
-	Helge Deller <deller@gmx.de>, linux-geode@lists.infradead.org,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Linus Walleij <linusw@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>, Guenter Roeck <linux@roeck-us.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-	Artem Bityutskiy <dedekind1@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Ashok Raj <ashok.raj.linux@gmail.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jq587EgF"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2c7ab2b9dceso3033925ad.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 02 Jul 2026 03:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782987243; x=1783592043; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vOtxSUhRtXEnyoWPlJ8ZKra2o7XCs4p8LV9SbEd7+y8=;
+        b=jq587EgFlmnuxaxVdSDHwd/waoxwdioEXxNmMT9w6wLuP1fbL2ihffhvDHk8VsAKPX
+         daHDYdG65rFkE2HpNTQjkZbJPWXp0uFDsawJNXJpUyKWKxbhGA/thPSZM41upT3gJqW+
+         /ThqYXni8kGAom5cTs3s+8NM5kSXxPP5T1wLhM6BLrKlzojfoA1UMiNCv007kFUkHpVA
+         CCtqE8W2NwKVBilQ/7QFohO937Rxrw9JKQIDcfqwBfyM8h9n8wpipj7LiEkTzbvHRvy/
+         gug47/gbwXMnUkayAW+kBz13hP7+Aj3UFotEwAK84t0dlSKALf9RH00bZuiuc0CYJRcB
+         KyAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782987243; x=1783592043;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vOtxSUhRtXEnyoWPlJ8ZKra2o7XCs4p8LV9SbEd7+y8=;
+        b=GmFSGF4QdMXhzid5ZWlICf36U3bG/iYy5LsVXOijUzl3J+voJxocYi5X8xboTPZTUT
+         HrK2Q8Ovhn17a+hlRAVTHAb+WOL8stFlFhCVpQXkrTR8tepl2s39P9KHjrWOeoUEkfhv
+         f7HxB6N+987xwR8Dmy+O2tY6mxm7mMQkKx1jjqeSzBacHsHSE6pZ8xfdzlB04qhWJJje
+         8pcHfr1iSXkpBvu/MRKVdIMIWZKHOvD4mi30TNMtaZbZe2D4cM+H+0DeNTNkc23Tjiz1
+         M8ifrapZvRccDgzmINYu+DHjsXHdGUE6qfO+ix58JG1tSZ2CBfMj9tog8l60hj9K0gkU
+         S80Q==
+X-Gm-Message-State: AOJu0YxBm+t2e+D72YqW+fqPFXT6tLOW0E5qUUYfIwVxyF4nDlCdjKFt
+	yig4Y9ILbgy7EFABgEHIbN2Ng1oeDE/mi57zPqwMqjlq49d0UbBKO5I8
+X-Gm-Gg: AfdE7cmIII9Z19nM43WBaxxeIriYGR4jKFZiQTio5gl7XtSCNo5GeTI5zKib3mn/0rr
+	ybRouAloyOcdtTWU1DArOqP1vfvKhKcx+v2s8vsQErUqbA9urXsIlQ8yVbjlEx2UtMgB+ybcVXq
+	wA8o+czZXUNNHM/yIlb3CKOaF0iGNc92oLYAz4Wc1umHX+pdvqQAiOFoPvbpuFJb4Abued6iAG5
+	cGF+H4e1zlvhG6p7nhmjbFfoUbqhFZ74LeicsErbAdZiPkfLnDZwtyXBIS417bOGEHaIID2TGY0
+	peYqOgYR0zX0jCVjOvLW8ShWUePjLr5rGOJDCUL6sNuCRUGhTYpxOLvQqemn4VDJ72kRw1/dnhc
+	8UiXZTMBXA6Ii1ZGz5qxXP8JBSXtDqOBtSD8PtoLQnutyaXvApLRvTAbzIikUlpzyBLAKXgDxBM
+	x990Yx6JwoEA+xX00sJ6mF8XMC29svI4nF03bcbPFNRZnN1B4lpNi7oM1gK3Q5q/P3a6U7MKutY
+	PtKnqQPA/BXvp4sOjc2JTPQJ2rr1tWRbus7ZtWY8cYVMZV+44VSM9jBXmvgfXR303d9hrY74PDF
+	+vzc1858Vfaq/Iu3E9i9lQGVXNbxb2GQUpYRrw==
+X-Received: by 2002:a17:903:41c7:b0:2c9:c5bf:2873 with SMTP id d9443c01a7336-2ca7e677577mr36096625ad.2.1782987243219;
+        Thu, 02 Jul 2026 03:14:03 -0700 (PDT)
+Received: from midnightair ([2401:4900:1c94:62e8:bc10:77d0:2fda:415d])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13b3c88659bsm9567615c88.15.2026.07.02.03.13.59
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 02 Jul 2026 03:14:02 -0700 (PDT)
+From: Anas Khan <anxkhn28@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
 	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>, xen-devel@lists.xenproject.org
-Subject: Re: [PATCH 00/32] x86/msr: Drop 32-bit MSR interfaces
-Message-ID: <akY4U0jUZm4HOGZ_@gmail.com>
-References: <20260629060526.3638272-1-jgross@suse.com>
- <d7c1db52-529a-43cc-ac7d-38b52627e8bc@app.fastmail.com>
- <c1608c48-13c2-4290-826b-28b5ca51eaf7@suse.com>
- <7332feff-2649-496c-8e49-b0a19eb54a32@app.fastmail.com>
- <akJUz0kYkEBdLSZ3@gmail.com>
- <akQR9YMtMHReJTfB@google.com>
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Anas Khan <anxkhn28@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: update stale thinkwiki.org URLs
+Date: Thu,  2 Jul 2026 15:43:56 +0530
+Message-ID: <20260702101356.62694-1-anxkhn28@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <akQR9YMtMHReJTfB@google.com>
+Content-Transfer-Encoding: 8bit
 
+The three thinkwiki.org references in thinkpad_acpi.c redirect to the
+canonical www.thinkwiki.org host. Update them to the current URLs.
 
-* Sean Christopherson <seanjc@google.com> wrote:
+Signed-off-by: Anas Khan <anxkhn28@gmail.com>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> > Note that the individual patches are IMO significantly easier to review
-> > through the actual 32-bit => 64-bit variable assignment changes done
-> > in isolation (which sometimes include minor cleanups), while
-> > the Coccinelle semantic patch:
-> > 
-> >    { a(b,c) => c = a(b) }
-> > 
-> > which changes both the function signature and the order of terms as
-> > well, is just a single add-on treewide patch.
-> 
-> Is the plan for subsystem maintainers to pick up the relevant patches,
-> and then do the treewide change one release cycle later?
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 445e1403308e..c57f46cfbcbe 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -7826,7 +7826,7 @@ static struct ibm_struct volume_driver_data = {
+  *	does so, its initial value is meaningless (0x07).
+  *
+  *	For firmware bugs, refer to:
+- *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
++ *	https://www.thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
+  *
+  * 	----
+  *
+@@ -7851,7 +7851,7 @@ static struct ibm_struct volume_driver_data = {
+  *	mode.
+  *
+  *	For firmware bugs, refer to:
+- *	https://thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
++ *	https://www.thinkwiki.org/wiki/Embedded_Controller_Firmware#Firmware_Issues
+  *
+  *	----
+  *
+@@ -11754,7 +11754,7 @@ static int __must_check __init get_thinkpad_model_data(
+ 	 * X32 or newer, all Z series;  Some models must have an
+ 	 * up-to-date BIOS or they will not be detected.
+ 	 *
+-	 * See https://thinkwiki.org/wiki/List_of_DMI_IDs
++	 * See https://www.thinkwiki.org/wiki/List_of_DMI_IDs
+ 	 */
+ 	while ((dev = dmi_find_device(DMI_DEV_TYPE_OEM_STRING, NULL, dev))) {
+ 		if (sscanf(dev->name,
+@@ -12289,8 +12289,8 @@ MODULE_DEVICE_TABLE(acpi, ibm_htk_device_ids);
+ /*
+  * DMI matching for module autoloading
+  *
+- * See https://thinkwiki.org/wiki/List_of_DMI_IDs
+- * See https://thinkwiki.org/wiki/BIOS_Upgrade_Downloads
++ * See https://www.thinkwiki.org/wiki/List_of_DMI_IDs
++ * See https://www.thinkwiki.org/wiki/BIOS_Upgrade_Downloads
+  *
+  * Only models listed in thinkwiki will be supported, so add yours
+  * if it is not there yet.
+-- 
+2.54.0
 
-I'll try to keep the patches in a single tree (tip:x86/msr)
-in the hope of not prolonging the pain two cycles - but it's
-of course fine for maintainers to pick up the patches too
-(most of them are standalone), we'll sort it all out in the end.
-
-Thanks,
-
-	Ingo
