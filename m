@@ -1,116 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970EE343D86;
-	Fri,  3 Jul 2026 12:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2E93D5666;
+	Fri,  3 Jul 2026 12:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783082479; cv=none; b=D+BhF9+UUmGhX/mGxP2CWUx9zuIm60IqnwqlPAH37nSV0G+m4DAfr2WoDAgYDxQcGdzvXhl4ndj+dncCUMgZDFarZIqTlGYYVztC/VgRR/gmfVyek2sVG7ozsZYiAgMsRa12i6OUMIDAQOl53eRJ8LSh1cOzKYBZdulRTbhud2U=
+	t=1783082516; cv=none; b=RungEiDU1t2/0qnVVtNfrt67fzNgwkeVw+tas30bs90D084bsvF40Z5UvL/vG2GJkS8RvnKjcgClZpu7THRk8hnmOA91/7zx+pH02JD9HikQI7ICBDm/KKdV8EaylF+t39kt99erXJGLVLGN/DMs2ly5r5ApVbgnBpY+Mw8YJWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783082479; c=relaxed/simple;
-	bh=vNMzwf9dPe7I1tkJrMBwHz8pFr/0LHuzb/nNfCepUZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ugR2P/l7OuO861ZQFzaFPUNcZn9LPk1cif4BHLCSNXjQdsHZw9wjc9Clz0ybZrBhzOWJaJ70QLhaB6bq0FE/+RedjvQqpNFnkgezUqaLG5KxS9c+DGcTb7jKPYgaYs0PCG4O8SakPjtTIcioH/4dufZFueb/ht5cLh99DAg86g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fSDV9JfK; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783082516; c=relaxed/simple;
+	bh=t1IfXPN8n97yjog3+j/xh0SADq/YuC9VBvHUYEJDR50=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OxPanbz3cIFXyxnvEvnw5jc6BFPAA1tUbt3Jt4PGpjSY+yyzz51iB/RXLzXaFCNyBMGxRWGgqr/777LZQuY1W0oRdsy1VL3tpQT/i2eDwx/p+dCp6d3vNfdx8pD8rrNkWMNTXEsFNig3TlKcF9KpM8q2FjGNTqOprc/AJbzExPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYcnxHDO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fSDV9JfK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783082479; x=1814618479;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=vNMzwf9dPe7I1tkJrMBwHz8pFr/0LHuzb/nNfCepUZ4=;
-  b=fSDV9JfKyOl3QXZeit3ccRWsjP3IEFrkkfuKKcr7GftoAr9VVQlJMC1Z
-   XWnVHSVKk8wRknm6i4NtUgeLfToN8eM9E9ZpM9AG6g5g1oNd9iIrfUSPJ
-   gL2bBdiVf/IJZy63EpVLoYuFglhMkR7OgdVNUwNNkI67SPlJ1OQkIJZ8J
-   FCw8VUQgvHWf0MGb2QNgzTs4a+5WueCMETzQrJt3mprqbK0yBKzcvH4ZF
-   ZV2FgHcbFVFdaduERSiQ6yo9GT8JillblhDMOBiM2KxBbc6gfgz6eDp2P
-   PmKZkeUJt0LWWO1AuQ+cG/aWd8kxuitARx86bae8LIOW4Ji6nsJHfJMEX
-   Q==;
-X-CSE-ConnectionGUID: ZO37Ork+Q5GvK2bUVABIHg==
-X-CSE-MsgGUID: 5TpBF7HoRIiXq05B/JqlCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="95212848"
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="95212848"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:41:18 -0700
-X-CSE-ConnectionGUID: f4Et5qj7QxmrL4pHrClMQw==
-X-CSE-MsgGUID: vEWbYVHSRPeRsWynU5DHFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="253764180"
-Received: from carterle-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.80])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:41:13 -0700
-Date: Fri, 3 Jul 2026 15:41:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>,
-	Jonathan Woithe <jwoithe@just42.net>, Robert Gerlach <khnz@gmx.de>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Kenneth Chan <kenneth.t.chan@gmail.com>,
-	Mattia Dongili <malattia@linux.it>,
-	Azael Avalos <coproscefalo@gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: Stop using
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYcnxHDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 379941F000E9;
+	Fri,  3 Jul 2026 12:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783082514;
+	bh=K4CGwtNMhh4ePAGdQw4XUhro7qNtNoMljhdGSIEm7tM=;
+	h=From:To:Cc:Subject:Date;
+	b=kYcnxHDOLorEdwphGQcdvrM3z3j6t0OrKS9r2PNc5Xf3VkspazrumJXph6Idy1MpY
+	 z+p1XaiNrOAPSElwsTvu2XCUvUahzlIf/8obEOJDKvVhzBtyECCsE2xPdVU+kMlJZF
+	 4UrIjOByYUzNPlX/brHutB0koJbmw7RZeluVCRN76Sci5V1FzKqwJj0FU06HK7kpR6
+	 u3/7nKzIRu6UCzZFDNkXyplONpBaq5GbmcdjIu+uG3Gmv6g2OlsChoEDX8xeik/VCf
+	 7i9vgC+xQZx/gWXal5kQ3c8IEh7zmX8sq3pKm6tOj4Nbn0st/BrJ7asJQQdmawX5R+
+	 K5Ly2rPWlIf3A==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Herton Ronaldo Krzesinski <herton@canonical.com>
+Subject:
+ [PATCH v1] platform/x86: topstar-laptop: Stop setting
  acpi_device_name/class()
-Message-ID: <aket5xHht1sMRIEz@ashevche-desk.local>
-References: <5135166.31r3eYUQgx@rafael.j.wysocki>
- <akemrOqzWtcDVqey@ashevche-desk.local>
- <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com>
+Date: Fri, 03 Jul 2026 14:41:51 +0200
+Message-ID: <12951216.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development - Intel
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 03, 2026 at 02:15:13PM +0200, Rafael J. Wysocki (Intel) wrote:
-> On Fri, Jul 3, 2026 at 2:10 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Jul 03, 2026 at 01:15:01PM +0200, Rafael J. Wysocki wrote:
-> > >
-> > > There are two fields in struct acpi_device_pnp, device_name and device_class,
-> > > that were supposed to be populated and used by device drivers, but they have
-> > > never been used consistently and some drivers just populate them and don't
-> > > access them later, and some drivers use them uninitialized.
-> > >
-> > > All of that is confusing and messy, so the drivers for core ACPI devices
-> > > have been updated to stop using those fields which are now slated for
-> > > removal, but they are still accessed in some places.
-> > >
-> > > This series updates platform x86 drivers accessing those fields to stop
-> > > doing that.
-> >
-> > In most of the patches you have double space in your name in From.
-> 
-> Do you mean the From header in the patch body or the From header in
-> the SMTP headers?
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-At least SMTP. TBH, I haven't paid attention to the From lines in the bodies.
+The driver sets acpi_device_name() and acpi_device_class() which are
+never read afterward, so make it stop doing that.
 
-> > Can we have some consistency here? Or is it deliberate (in which case I'm
-> > wondering why)?
-> 
-> Not deliberate, probably an e-mail client mess-up.
+No intentional functional impact.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This should have been included in
+
+https://lore.kernel.org/linux-acpi/5135166.31r3eYUQgx@rafael.j.wysocki/
+
+but it was missed.
+
+That doesn't matter though too much because it does not depend on
+any patches in that series, so it may as well go alone.
+
+---
+ drivers/platform/x86/topstar-laptop.c |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/drivers/platform/x86/topstar-laptop.c
++++ b/drivers/platform/x86/topstar-laptop.c
+@@ -299,8 +299,6 @@ static int topstar_acpi_probe(struct pla
+ 
+ 	platform_set_drvdata(pdev, topstar);
+ 
+-	strscpy(acpi_device_name(device), "Topstar TPSACPI");
+-	strscpy(acpi_device_class(device), TOPSTAR_LAPTOP_CLASS);
+ 	topstar->device = device;
+ 
+ 	err = topstar_acpi_init(topstar);
+
 
 
