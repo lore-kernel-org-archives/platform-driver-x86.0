@@ -1,184 +1,115 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4773D954E;
-	Fri,  3 Jul 2026 10:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2D63B4432;
+	Fri,  3 Jul 2026 11:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783074762; cv=none; b=DjDJc8/iskOqrjRaEUKYoPm2ndU2bbwwNcbyAjAYV9tbEsxrzEs7rV+1hI9nSWVBg07gO0qkvJNJdpTA4hIYOcjHpLSLDH+aVcvJ6ett/Dt36bRZODVMdpm9NT1ZDjXXWEwN9Eg/FyCmOnNT3QJ5QfQcZ0it36H6yF5DHEzBmjY=
+	t=1783078712; cv=none; b=r2JZN71CpRHkIFT04N86hUgZGfT1E4iCFg6ffHnn7vD+2eYJOtQs0N/jUIsuzR5Hck/twee7ydwYN+2sO+8PPHpJmstgoybjf4y74ekmgkGqlC2FLG4vO7j/mPqOFypMF3Xcvvktq7YEEUZx21WuWOdAATdEpLKQM7fCCKE0mHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783074762; c=relaxed/simple;
-	bh=Ma8MyWfjT1GyNI3mlwfFq/SmMusyHFMPZi58Qkpwqsw=;
+	s=arc-20240116; t=1783078712; c=relaxed/simple;
+	bh=sskW3GxG3TYqv1SxlRbNJJRAaPQ/QmKvCB4a18vMiho=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ljklsQb1kbF9pc2e9u15Au6Qle4IlHp00X5HCGfiPkzxyamAviJCMJtTvTQ3u3pPH8DwDgVUCqjujvDQc/AaPzTQpzabLlxvYiZ+83qkqkjZ4Lqy1lqC1mVdFSSLfdOtobZSUkAal9BiAFKhcNXTceKCpqnAQ/cgbOem6ry131o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=M5xE6dHS; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	 MIME-Version:Content-Type; b=j7d35Vp96GKiFAbbo6nzsR2JRVOGmXvP66DoAIuYLIhl7jTNlUMURY3SoYjr7G5SI/KsAXCyQDg52bpwVr+UK41trUhpAHK049H4JLXbNsuxKGN4XhRoQ3btNASityHhV2bhNR2Tx0iECnsjERc0k3XJGPVskfOXWBggFGd8vgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7ivX7h+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="M5xE6dHS"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id E8129840B7;
-	Fri, 03 Jul 2026 12:32:31 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id p4oouYHTGxzZ; Fri,  3 Jul 2026 12:32:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1783074751; bh=Ma8MyWfjT1GyNI3mlwfFq/SmMusyHFMPZi58Qkpwqsw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7ivX7h+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363C21F000E9;
+	Fri,  3 Jul 2026 11:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783078709;
+	bh=mkiVFcgZvUd4BDFRVF8wOGpqr8F8scW3yxPiFEmfJS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=M5xE6dHSZ8ayO9/2j3YBKMXomcf71jmqo5C0YNph5YwU50NRbkrcQVNOQ+lrlxPBT
-	 PrASzgMrmQQ1A4hRF+uAT2mMqgOGt8D489+8F/1+aA7ztjGfk2s0haVf79vGkmsx6E
-	 eaa7gA0UdOCAEQmD608VvNLNpQLSQQP5DHyuEIYb+3OWaypXEwHLtLcAxx8jKNHLgP
-	 wFtXGIzZUU0kG2ANthh/ioi8D66LpYB2bGkXXLVQMRe9eKk2rCm35y9xF5gPCZYDLo
-	 3gRVSlX3ASenKU/a+sOx+o0aofKHWKlN89AK5eKDKGeGlZ78G3bVMHWz8hMwbFrMiN
-	 /v7w1uDpgsQVg==
-From: Marco Scardovi <scardracs@disroot.org>
-To: ilpo.jarvinen@linux.intel.com
-Cc: corentin.chary@gmail.com,
-	denis.benato@linux.dev,
-	hansg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	luke@ljones.dev,
-	platform-driver-x86@vger.kernel.org,
-	Marco Scardovi <scardracs@disroot.org>
-Subject: [PATCH v3 1/2] platform/x86: asus-armoury: fix Use-After-Free and memory leak in driver init
-Date: Fri,  3 Jul 2026 12:31:58 +0200
-Message-ID: <20260703103212.7406-2-scardracs@disroot.org>
-In-Reply-To: <20260703103212.7406-1-scardracs@disroot.org>
-References: <20260703103212.7406-1-scardracs@disroot.org>
+	b=T7ivX7h+7G49nwBsJhChQutXBYJc5lAdsRUQY3L8NzO0spnj9CEMnxcjvPkVhVjmn
+	 vk7bJII4/a81aS754NNLQxjPny/kIBedPwFo8eYoBSjSFxFgnShoN1fIveH08wMmfJ
+	 Z2n8iXbUP1g7rsp157szpm6ImGnr09nT1zqUmHWZ+tS1Td0GBlatAVsXRbAgNI6WVA
+	 gbEi9XyF+Qtyz8KrLo2Rrh5iflMlU9043LUWHYDTtZinTe1kkQxC5LZqLjljhtE2Su
+	 WxkQdyHd3pY+LOsjFIjw019Uojk7RUulwKRi3YCr3M2yOoEM5wTyzGM8V7ebZmb7Cr
+	 t3BUlQEITLMYA==
+From: "Rafael J.  Wysocki" <rafael@kernel.org>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>,
+ Denis Benato <denis.benato@linux.dev>, Jonathan Woithe <jwoithe@just42.net>,
+ Robert Gerlach <khnz@gmx.de>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Kenneth Chan <kenneth.t.chan@gmail.com>, Mattia Dongili <malattia@linux.it>,
+ Azael Avalos <coproscefalo@gmail.com>
+Subject:
+ [PATCH v1 10/10] platform/x86: xo15-ebook: Stop setting
+ acpi_device_name/class()
+Date: Fri, 03 Jul 2026 13:37:57 +0200
+Message-ID: <2731795.Lt9SDvczpP@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <5135166.31r3eYUQgx@rafael.j.wysocki>
+References: <5135166.31r3eYUQgx@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-In init_rog_tunables(), if dc_limits are defined and allocating
-dc_rog_tunables fails, the already allocated ac_rog_tunables gets
-freed but the pointer stored in
-asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] is not cleared. Since
-init_rog_tunables() returns void, the driver initialization continues,
-which can lead to a Use-After-Free (UAF) when asus_fw_attr_add()
-accesses the freed AC tunables pointer.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Additionally, if init_rog_tunables() succeeds but asus_fw_attr_add()
-fails, the allocated tunables are not freed, resulting in a memory leak.
+The driver sets acpi_device_class() which is never read afterward, so
+make it stop doing that and drop the two symbols defined specifically
+for this purpose.
 
-Fix these issues by making init_rog_tunables() return an error code and
-propagating it in asus_fw_init(). Defer setting the global pointers in
-asus_armoury.rog_tunables until both tunables have been successfully
-allocated. If asus_fw_attr_add() fails, release the allocated resources
-using a standard goto rollback block in asus_fw_init().
+Likewise, acpi_device_name() set by the driver is only used for input
+class device name initialization and the "EBook Switch" string literal
+may as well be used directly for that, so make the driver do so and
+stop setting acpi_device_name(), which allows the symbol defined
+specifically for this purpose to be dropped.
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+No intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/platform/x86/asus-armoury.c | 38 ++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ drivers/platform/x86/xo15-ebook.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 495dc1e31d40..ea53a005bb25 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -989,7 +989,7 @@ static int asus_fw_attr_add(void)
- /* Init / exit ****************************************************************/
+diff --git a/drivers/platform/x86/xo15-ebook.c b/drivers/platform/x86/xo15-ebook.c
+index e40e385c52bd..4c3185e2ceec 100644
+--- a/drivers/platform/x86/xo15-ebook.c
++++ b/drivers/platform/x86/xo15-ebook.c
+@@ -19,13 +19,10 @@
  
- /* Set up the min/max and defaults for ROG tunables */
--static void init_rog_tunables(void)
-+static int init_rog_tunables(void)
- {
- 	const struct power_limits *ac_limits, *dc_limits;
- 	struct rog_tunables *ac_rog_tunables = NULL, *dc_rog_tunables = NULL;
-@@ -1000,24 +1000,23 @@ static void init_rog_tunables(void)
- 	dmi_id = dmi_first_match(power_limits);
- 	if (!dmi_id) {
- 		pr_warn("No matching power limits found for this system\n");
--		return;
-+		return 0;
- 	}
+ #define MODULE_NAME "xo15-ebook"
  
- 	/* Get the power data for this system */
- 	power_data = dmi_id->driver_data;
- 	if (!power_data) {
- 		pr_info("No power data available for this system\n");
--		return;
-+		return 0;
- 	}
+-#define XO15_EBOOK_CLASS		MODULE_NAME
+ #define XO15_EBOOK_TYPE_UNKNOWN	0x00
+ #define XO15_EBOOK_NOTIFY_STATUS	0x80
  
- 	/* Initialize AC power tunables */
- 	ac_limits = power_data->ac_data;
- 	if (ac_limits) {
--		ac_rog_tunables = kzalloc_obj(*asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]);
-+		ac_rog_tunables = kzalloc_obj(*ac_rog_tunables);
- 		if (!ac_rog_tunables)
--			goto err_nomem;
-+			return -ENOMEM;
+-#define XO15_EBOOK_SUBCLASS		"ebook"
+ #define XO15_EBOOK_HID			"XO15EBK"
+-#define XO15_EBOOK_DEVICE_NAME		"EBook Switch"
  
--		asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] = ac_rog_tunables;
- 		ac_rog_tunables->power_limits = ac_limits;
+ MODULE_DESCRIPTION("OLPC XO-1.5 ebook switch driver");
+ MODULE_LICENSE("GPL");
+@@ -105,12 +102,9 @@ static int ebook_switch_probe(struct platform_device *pdev)
+ 	if (!id)
+ 		return dev_err_probe(dev, -ENODEV, "Unsupported hid\n");
  
- 		/* Set initial AC values */
-@@ -1060,13 +1059,12 @@ static void init_rog_tunables(void)
- 	/* Initialize DC power tunables */
- 	dc_limits = power_data->dc_data;
- 	if (dc_limits) {
--		dc_rog_tunables = kzalloc_obj(*asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC]);
-+		dc_rog_tunables = kzalloc_obj(*dc_rog_tunables);
- 		if (!dc_rog_tunables) {
- 			kfree(ac_rog_tunables);
--			goto err_nomem;
-+			return -ENOMEM;
- 		}
+-	strscpy(acpi_device_name(device), XO15_EBOOK_DEVICE_NAME);
+-	strscpy(acpi_device_class(device), XO15_EBOOK_CLASS "/" XO15_EBOOK_SUBCLASS);
+-
+ 	snprintf(button->phys, sizeof(button->phys), "%s/button/input0", id->id);
  
--		asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC] = dc_rog_tunables;
- 		dc_rog_tunables->power_limits = dc_limits;
+-	input->name = acpi_device_name(device);
++	input->name = "EBook Switch";
+ 	input->phys = button->phys;
+ 	input->id.bustype = BUS_HOST;
  
- 		/* Set initial DC values */
-@@ -1106,15 +1104,16 @@ static void init_rog_tunables(void)
- 		pr_debug("No DC PPT limits defined\n");
- 	}
- 
--	return;
-+	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] = ac_rog_tunables;
-+	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC] = dc_rog_tunables;
- 
--err_nomem:
--	pr_err("Failed to allocate memory for tunables\n");
-+	return 0;
- }
- 
- static int __init asus_fw_init(void)
- {
- 	char *wmi_uid;
-+	int err;
- 
- 	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
- 	if (!wmi_uid)
-@@ -1127,10 +1126,21 @@ static int __init asus_fw_init(void)
- 	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
- 		return -ENODEV;
- 
--	init_rog_tunables();
-+	err = init_rog_tunables();
-+	if (err)
-+		return err;
- 
- 	/* Must always be last step to ensure data is available */
--	return asus_fw_attr_add();
-+	err = asus_fw_attr_add();
-+	if (err)
-+		goto err_free_tunables;
-+
-+	return 0;
-+
-+err_free_tunables:
-+	kfree(asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC]);
-+	kfree(asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC]);
-+	return err;
- }
- 
- static void __exit asus_fw_exit(void)
 -- 
-2.55.0
+2.51.0
+
+
+
 
