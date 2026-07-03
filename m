@@ -1,100 +1,483 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763573C1994;
-	Fri,  3 Jul 2026 12:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2FC1DF748;
+	Fri,  3 Jul 2026 13:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783083524; cv=none; b=a3pasIio5WU9SR48HK7NruiUTejeDyj3xZCudAwUZotvQtPaW5OL3e801kujKrbzAYJ94tnX70wyNB0pWLeEAfxuYS4+4DOqDXPZqvcHrwpFI1ZoHg3c0C1KSZiMwCfz8b+tqiCrTHliOyTs4nYcteAI9iPiJYWsujGsfhQuqk0=
+	t=1783084506; cv=none; b=aBgNP2IqE/P94kkkQMsULZGqap2MgMEIhSQaLjPa11onZ08/qWIAJuMbIXMEo+78drE16tMWPRXqJsc9mcugYg79UTa574AV3HQYKjPxfW4twt81vetqUIQ25josam20kaKaPEdTtp8jqyF0O1oEjaWySG46D2VuisL/Zox3q1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783083524; c=relaxed/simple;
-	bh=DtEyGXKlFNP5BWMxJvTMcrJFtCXJTu/ND80FvswJwDA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SYR4L7kzRL9dlw5uxEtwUITlwMWqX5r6lGuSPbYQYCpc0junqwCjHZCyhZIbbsNMKZoI1PkhwJ1D9cswn39yrySy6E0daN1agBJb3fm0XP6bk4AtIkzb/TYuJqtTBRafFF1R0f6wJsBteHBitxTG7Qle8uEkUXhQ5XiFH26Gg+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G2MLRJSO; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1783084506; c=relaxed/simple;
+	bh=dMo285CmJk4gWcr1GS4161y1ChODQFVR85WSJIo9z4s=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sieE8w4OchA9lKAtJwIjrO+Xg7tfCnivUKL3I5jQ08d1qSIjGDDwLhcyONcyjWH3RTOBDVMrE2Qmyuz20NvhoVAcOwdlHh8laqg+L5kTiWro15EFCHRivbOv8KFTHNT0NJvg+wELCpDQeyi63n8V0Exic730DCH70rAoAhR8c/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hV/ZyfkL; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G2MLRJSO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hV/ZyfkL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783083524; x=1814619524;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=DtEyGXKlFNP5BWMxJvTMcrJFtCXJTu/ND80FvswJwDA=;
-  b=G2MLRJSO9KXRpoOplFoBnIgPzZOg882Ph/fv9lyO4kd5pXCJvIO8w/B2
-   LjFyLJ1YLWaUwENO0alTcpQWtSWJmnvuBRvC6Mk2Y3IjS1a6mSpWx4vPl
-   6bII3LVpgdIxp01GdFytudWMkrhOWUkrNTp72anhV90E5rVolleILmxcV
-   MX9IfvgO4wnb3px3gcWwayzSuKKUMgwrDPkgF9MHA0sF588aCa8ZadBrg
-   fRqIy4R0AkgvZSr0d4Iz65fU+Wn/nsIBNguRNDA1UKmBVwXq0rhdKRQ2X
-   V3p9JXEn6uRDd9MJXe2Td9Gb95BPMnQykpjIx2c4VISCdqNvvXEGa/ufK
-   A==;
-X-CSE-ConnectionGUID: +/Rn2XRcRZywSGAvCds5kg==
-X-CSE-MsgGUID: o5WN8CDFTo6cjmFUSwcSiQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="83701833"
+  t=1783084505; x=1814620505;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=dMo285CmJk4gWcr1GS4161y1ChODQFVR85WSJIo9z4s=;
+  b=hV/ZyfkLGJBLmVcZO8m2qnPHaSE7iWD5L56OwVGCzBQqjzf439yelCb+
+   YQyBnznj3IMAgSR0Xxzp7fhwODvFkcHmB16DeQp8qnjC9jKq6zlCuSWED
+   B05xuOvGuWBewxvQc0kNk0ZOI7uSO373lU8kIelT2fvQntVtpUBzTxywL
+   uRgSDwmFGl/ylXu2HhniK1M+HH8xvFy3aeO6TrxB8flj3SUB7pf7ww69j
+   5g2Hpl2cxZDghOyk0u24Bdalm6jlnpZaXHAGZoiXyb60hvLc4rJjhIJMW
+   SPUbCEPPMv/ViOD6DAJTfrZDMbstTUKTe/eDTU0lUwxLv0Hj0HsSBuzor
+   Q==;
+X-CSE-ConnectionGUID: mpwQN+SkQbSIhAla7PaEBg==
+X-CSE-MsgGUID: M+AETQaESSKMjh4QV6jm4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="71360782"
 X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="83701833"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:58:44 -0700
-X-CSE-ConnectionGUID: OhxHznAvQF23MnBnvU+TSw==
-X-CSE-MsgGUID: +Li3Nsk9SJ6FT48oCmtybQ==
+   d="scan'208";a="71360782"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:15:04 -0700
+X-CSE-ConnectionGUID: rmVbyTztSQ27QyehFbx+6Q==
+X-CSE-MsgGUID: 4GLmOtoDThyTLAAJC4K7SQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="283197828"
+   d="scan'208";a="253771225"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.152])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:58:41 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:15:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Muralidhara M K <muralidhara.mk@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260629155634.1807598-1-muralidhara.mk@amd.com>
-References: <20260629155634.1807598-1-muralidhara.mk@amd.com>
-Subject: Re: [PATCH v2 0/4] platform/x86/amd/hsmp: ACPI input hardening and
- data-plane readiness gating
-Message-Id: <178308351675.10297.1477222544091828879.b4-ty@b4>
-Date: Fri, 03 Jul 2026 15:58:36 +0300
+Date: Fri, 3 Jul 2026 16:14:57 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: matan@svgalib.org, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] platform/x86: lg-laptop: Add support for native ACPI
+ events
+In-Reply-To: <20260622193914.116999-3-W_Armin@gmx.de>
+Message-ID: <4a2d4268-f771-0286-81d2-d38a708b7025@linux.intel.com>
+References: <20260622193914.116999-1-W_Armin@gmx.de> <20260622193914.116999-3-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, 29 Jun 2026 21:26:30 +0530, Muralidhara M K wrote:
+On Mon, 22 Jun 2026, Armin Wolf wrote:
 
-> This series hardens the AMD HSMP ACPI driver against malformed firmware
-> and fixes a data-plane readiness race on multi-socket systems.  It is
-> split out and reworked from the larger HSMP concurrency series.
+> LG devices support two interfaces for receiving events:
+> - the WMI-based interface currently being used by the driver
+> - a ACPI-based interface similar to the WMI-based interface
 > 
-> Patches 1-2 validate ACPI input before it is used:
+> Older devices use the WMI-based interface by default and need
+> to be manually switched into ACPI mode. Newer devices however
+> only support the ACPI-based interface, preventing the current
+> driver from receiving events on them.
 > 
->   - hsmp_get_uid() passed the device UID straight to kstrtou16(uid + 2)
->     without checking it; a NULL or too-short UID could dereference NULL
->     or read past the end of the string.
+> Fix this by always using the native ACPI-based interface for
+> receiving events.
 > 
-> [...]
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/platform/x86/Kconfig     |   1 -
+>  drivers/platform/x86/lg-laptop.c | 301 ++++++++++++++++++++-----------
+>  2 files changed, 199 insertions(+), 103 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b5212b204..957034f39e4e 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -802,7 +802,6 @@ config LG_LAPTOP
+>  	tristate "LG Laptop Extras"
+>  	depends on ACPI
+>  	depends on ACPI_BATTERY
+> -	depends on ACPI_WMI
+>  	depends on INPUT
+>  	select INPUT_SPARSEKMAP
+>  	select NEW_LEDS
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index a2db9657027e..ead0c3cc74a8 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -57,13 +57,18 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+>  #define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR	0x3E8
+>  #define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR	0x5E8
+>  
+> -#define WMI_EVENT_GUID0	"E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
+> -#define WMI_EVENT_GUID1	"023B133E-49D1-4E10-B313-698220140DC2"
+> -#define WMI_EVENT_GUID2	"37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
+> -#define WMI_EVENT_GUID3	"911BAD44-7DF8-4FBB-9319-BABA1C4B293B"
+> -#define WMI_METHOD_WMAB "C3A72B38-D3EF-42D3-8CBB-D5A57049F66D"
+> -#define WMI_METHOD_WMBB "2B4F501A-BD3C-4394-8DCF-00A7D2BC8210"
+> -#define WMI_EVENT_GUID  WMI_EVENT_GUID0
+> +#define LG_NOTIFY_TABLET_MODE_OFF	0x50
+> +#define LG_NOTIFY_TABLET_MODE_ON	0x51
+> +#define LG_NOTIFY_HOTKEY		0x80
+> +#define LG_NOTIFY_THERMAL		0x81
+> +#define LG_NOTIFY_MISC			0x82
+> +
+> +#define LG_OREP_READ_EC			0
+> +#define LG_OREP_WRITE_EC		1
+> +#define LG_OREP_DEBUG			2
+> +#define LG_OREP_UPDATE_SYSTEM_STATE	3
+> +#define LG_OREP_INTERCEPT_WMI_EVENTS	4
+> +#define LG_OREP_WAKE_ON_LAN		6
+>  
+>  #define SB_GGOV_METHOD  "\\_SB.GGOV"
+>  #define GOV_TLED        0x2020008
+> @@ -83,21 +88,7 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+>  
+>  #define PLATFORM_NAME   "lg-laptop"
+>  
+> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
+> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID1);
+> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID2);
+> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID3);
+> -MODULE_ALIAS("wmi:" WMI_METHOD_WMAB);
+> -MODULE_ALIAS("wmi:" WMI_METHOD_WMBB);
+> -
+>  static struct platform_device *pf_device;
+> -static struct input_dev *wmi_input_dev;
+> -
+> -static u32 inited;
+> -#define INIT_INPUT_WMI_0        0x01
+> -#define INIT_INPUT_WMI_2        0x02
+> -#define INIT_INPUT_ACPI         0x04
+> -#define INIT_SPARSE_KEYMAP      0x80
+>  
+>  static int battery_limit_use_wmbb;
+>  static bool kbd_backlight_available;
+> @@ -115,6 +106,36 @@ static const struct key_entry wmi_keymap[] = {
+>  	{KE_END, 0}
+>  };
+>  
+> +static int lg_laptop_execute_orep(acpi_handle handle, u64 command, u64 value,
+> +				  unsigned long long *result)
+> +{
+> +	union acpi_object objs[] = {
+> +		{
+> +			.integer = {
+> +				.type = ACPI_TYPE_INTEGER,
+> +				.value = command,
+> +			},
+> +		},
+> +		{
+> +			.integer = {
+> +				.type = ACPI_TYPE_INTEGER,
+> +				.value = value,
+> +			},
+> +		}
+> +	};
+> +	struct acpi_object_list args = {
+> +		.count = ARRAY_SIZE(objs),
+> +		.pointer = objs,
+> +	};
+> +	acpi_status status;
+> +
+> +	status = acpi_evaluate_integer(handle, "OREP", &args, result);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+>  static int ggov(u32 arg0)
+>  {
+>  	union acpi_object args[1];
+> @@ -212,70 +233,6 @@ static union acpi_object *lg_wmbb(struct device *dev, u32 method_id, u32 arg1, u
+>  	return (union acpi_object *)buffer.pointer;
+>  }
+>  
+> -static void wmi_notify(union acpi_object *obj, void *context)
+> -{
+> -	long data = (long)context;
+> -	unsigned int brightness;
+> -
+> -	pr_debug("event guid %li\n", data);
+> -	if (!obj)
+> -		return;
+> -
+> -	if (obj->type == ACPI_TYPE_INTEGER) {
+> -		int eventcode = obj->integer.value;
+> -		struct key_entry *key;
+> -
+> -		if (eventcode == 0x10000000) {
+> -			if (kbd_backlight_available) {
+> -				brightness = get_kbd_backlight_level(kbd_backlight.dev->parent);
+> -				led_classdev_notify_brightness_hw_changed(&kbd_backlight,
+> -									  brightness);
+> -			}
+> -		} else {
+> -			key = sparse_keymap_entry_from_scancode(
+> -				wmi_input_dev, eventcode);
+> -			if (key && key->type == KE_KEY)
+> -				sparse_keymap_report_entry(wmi_input_dev,
+> -							   key, 1, true);
+> -		}
+> -	}
+> -
+> -	pr_debug("Type: %i    Eventcode: 0x%llx\n", obj->type,
+> -		 obj->integer.value);
+> -}
+> -
+> -static void wmi_input_setup(void)
+> -{
+> -	acpi_status status;
+> -
+> -	wmi_input_dev = input_allocate_device();
+> -	if (wmi_input_dev) {
+> -		wmi_input_dev->name = "LG WMI hotkeys";
+> -		wmi_input_dev->phys = "wmi/input0";
+> -		wmi_input_dev->id.bustype = BUS_HOST;
+> -
+> -		if (sparse_keymap_setup(wmi_input_dev, wmi_keymap, NULL) ||
+> -		    input_register_device(wmi_input_dev)) {
+> -			pr_info("Cannot initialize input device");
+> -			input_free_device(wmi_input_dev);
+> -			return;
+> -		}
+> -
+> -		inited |= INIT_SPARSE_KEYMAP;
+> -		status = wmi_install_notify_handler(WMI_EVENT_GUID0, wmi_notify,
+> -						    (void *)0);
+> -		if (ACPI_SUCCESS(status))
+> -			inited |= INIT_INPUT_WMI_0;
+> -
+> -		status = wmi_install_notify_handler(WMI_EVENT_GUID2, wmi_notify,
+> -						    (void *)2);
+> -		if (ACPI_SUCCESS(status))
+> -			inited |= INIT_INPUT_WMI_2;
+> -	} else {
+> -		pr_info("Cannot allocate input device");
+> -	}
+> -}
+> -
+>  static ssize_t fan_mode_store(struct device *dev,
+>  			      struct device_attribute *attr,
+>  			      const char *buffer, size_t count)
+> @@ -634,26 +591,164 @@ static enum led_brightness kbd_backlight_get(struct led_classdev *cdev)
+>  
+>  static LED_DEVICE(kbd_backlight, 255, LED_BRIGHT_HW_CHANGED);
+>  
+> -static void wmi_input_destroy(void)
+> +static struct platform_driver pf_driver = {
+> +	.driver = {
+> +		   .name = PLATFORM_NAME,
+> +	}
+> +};
+> +
+> +static int lg_laptop_get_event_data(acpi_handle handle, u32 value, u32 *data)
+>  {
+> -	if (inited & INIT_INPUT_WMI_2)
+> -		wmi_remove_notify_handler(WMI_EVENT_GUID2);
+> +	union acpi_object objs[] = {
+> +		{
+> +			.integer = {
+> +				.type = ACPI_TYPE_INTEGER,
+> +				.value = value,
+> +			},
+> +		}
+> +	};
+> +	struct acpi_object_list args = {
+> +		.count = ARRAY_SIZE(objs),
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Add the include.
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent or clearly a regression fix.
+> +		.pointer = objs,
+> +	};
+> +	unsigned long long result;
+> +	acpi_status status;
+> +
+> +	status = acpi_evaluate_integer(handle, "_WED", &args, &result);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+>  
+> -	if (inited & INIT_INPUT_WMI_0)
+> -		wmi_remove_notify_handler(WMI_EVENT_GUID0);
+> +	if (result > U32_MAX)
 
-The list of commits applied:
-[1/4] platform/x86/amd/hsmp: Validate ACPI UID before parsing socket index
-      commit: f820f61f079ad50869cee6541bbb6423f88536b7
-[2/4] platform/x86/amd/hsmp: Validate _DSD mailbox sub-package element count
-      commit: 1cacf5e8693dd1053d9044b6e6e4986bbbd355a1
-[3/4] platform/x86/amd/hsmp: Pass struct device explicitly to ACPI mailbox parsers
-      commit: 0c963c5b4d68922f6fa2c120fde7a4fecc0ab46d
-[4/4] platform/x86/amd/hsmp: Gate the data plane on a fully initialized socket
-      commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
+Add include.
 
---
+> +		return -EPROTO;
+>  
+> -	if (inited & INIT_SPARSE_KEYMAP)
+> -		input_unregister_device(wmi_input_dev);
+> +	*data = result;
+>  
+> -	inited &= ~(INIT_INPUT_WMI_0 | INIT_INPUT_WMI_2 | INIT_SPARSE_KEYMAP);
+> +	return 0;
+>  }
+>  
+> -static struct platform_driver pf_driver = {
+> -	.driver = {
+> -		   .name = PLATFORM_NAME,
+> +static void lg_laptop_handle_input_event(struct input_dev *input_dev, u32 value, u32 data)
+> +{
+> +	unsigned int kbd_brightness;
+> +
+> +	switch (value) {
+> +	case LG_NOTIFY_HOTKEY:
+> +		sparse_keymap_report_event(input_dev, data, 1, true);
+> +		break;
+> +	case LG_NOTIFY_THERMAL:
+> +		/* Currently not supported */
+> +		break;
+> +	case LG_NOTIFY_MISC:
+> +		switch (data) {
+> +		case 0x10000000:
+> +			if (!kbd_backlight_available)
+> +				break;
+> +
+> +			kbd_brightness = get_kbd_backlight_level(kbd_backlight.dev->parent);
+> +			led_classdev_notify_brightness_hw_changed(&kbd_backlight, kbd_brightness);
+> +			break;
+> +		default:
+> +			sparse_keymap_report_event(input_dev, data, 1, true);
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+> +static void lg_laptop_notify_handler(acpi_handle handle, u32 value, void *context)
+> +{
+> +	struct input_dev *input_dev = context;
+> +	u32 data;
+> +	int ret;
+> +
+> +	switch (value) {
+> +	case LG_NOTIFY_TABLET_MODE_OFF:
+> +	case LG_NOTIFY_TABLET_MODE_ON:
+> +		/* Already handled by intel-hid */
+> +		return;
+> +	case LG_NOTIFY_HOTKEY:
+> +	case LG_NOTIFY_THERMAL:
+> +	case LG_NOTIFY_MISC:
+> +		ret = lg_laptop_get_event_data(handle, value, &data);
+> +		if (ret < 0) {
+> +			dev_notice(input_dev->dev.parent, "Failed to get event data: %d\n", ret);
+> +			return;
+> +		}
+> +
+> +		dev_dbg(input_dev->dev.parent, "Received event %u (%u)\n", value, data);
+> +
+> +		lg_laptop_handle_input_event(input_dev, value, data);
+> +		return;
+> +	default:
+> +		dev_notice(input_dev->dev.parent, "Received unknown event %u\n", value);
+>  	}
+>  };
+>  
+> +static void lg_laptop_remove_notify_handler(void *context)
+> +{
+> +	acpi_handle handle = context;
+> +
+> +	acpi_remove_notify_handler(handle, ACPI_ALL_NOTIFY, lg_laptop_notify_handler);
+> +}
+> +
+> +static void lg_laptop_reenable_wmi_events(void *context)
+> +{
+> +	acpi_handle handle = context;
+> +	unsigned long long dummy;
+> +
+> +	lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 0, &dummy);
+> +}
+> +
+> +static int lg_laptop_input_init(struct device *dev, acpi_handle handle)
+> +{
+> +	struct input_dev *input_dev;
+> +	unsigned long long result;
+> +	acpi_status status;
+> +	int ret;
+> +
+> +	if (!acpi_has_method(handle, "_WED"))
+> +		return 0;
+> +
+> +	input_dev = devm_input_allocate_device(dev);
+> +	if (!input_dev)
+> +		return -ENOMEM;
+> +
+> +	input_dev->name = "LG WMI hotkeys";
+> +	input_dev->phys = "wmi/input0";
+> +	input_dev->id.bustype = BUS_HOST;
+> +	ret = sparse_keymap_setup(input_dev, wmi_keymap, NULL);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = input_register_device(input_dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	status = acpi_install_notify_handler(handle, ACPI_ALL_NOTIFY, lg_laptop_notify_handler,
+> +					     input_dev);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	ret = devm_add_action_or_reset(dev, lg_laptop_remove_notify_handler, handle);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (acpi_has_method(handle, "OREP")) {
+> +		ret = lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 1, &result);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (result)
+
+This still looks to be part of the error handling so please remove the 
+blank line before it.
+
+> +			return -EIO;
+> +
+> +		ret = devm_add_action_or_reset(dev, lg_laptop_reenable_wmi_events, handle);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static acpi_status lg_laptop_address_space_write(struct device *dev, acpi_physical_address address,
+>  						 size_t size, u64 value)
+>  {
+> @@ -865,10 +960,6 @@ static int acpi_probe(struct platform_device *pdev)
+>  	if (year >= 2019)
+>  		battery_limit_use_wmbb = 1;
+>  
+> -	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
+> -	if (ret)
+> -		goto out_platform_device;
+> -
+>  	/* LEDs are optional */
+>  	ret = devm_led_classdev_register(&pdev->dev, &kbd_backlight);
+>  	if (ret < 0)
+> @@ -878,7 +969,14 @@ static int acpi_probe(struct platform_device *pdev)
+>  
+>  	devm_led_classdev_register(&pdev->dev, &tpad_led);
+>  
+> -	wmi_input_setup();
+> +	ret = lg_laptop_input_init(&pdev->dev, device->handle);
+> +	if (ret < 0)
+> +		goto out_platform_device;
+> +
+> +	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
+> +	if (ret)
+> +		goto out_platform_device;
+
+Not directly related to the patch, but can't .dev_groups be used?
+
+>  	battery_hook_register(&battery_hook);
+>  
+>  	return 0;
+> @@ -895,7 +993,6 @@ static void acpi_remove(struct platform_device *pdev)
+>  	sysfs_remove_group(&pf_device->dev.kobj, &dev_attribute_group);
+>  
+>  	battery_hook_unregister(&battery_hook);
+> -	wmi_input_destroy();
+>  	platform_device_unregister(pf_device);
+>  	pf_device = NULL;
+>  	platform_driver_unregister(&pf_driver);
+> 
+
+-- 
  i.
 
