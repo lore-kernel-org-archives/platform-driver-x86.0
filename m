@@ -1,94 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F762353A68
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AC83D090E;
+	Fri,  3 Jul 2026 12:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783080928; cv=none; b=nmQ9XgSMGnAWiZmFuuCfueZIIdq3kZCxkQ6gp2NyvCtetYeHrYRDIRYKZxyPqZ3/AKc0+giGKKXX4eAq2ZV+IIqxCkCFOt4in1QE53uYdoECYFOcsPw6OeLDC6rHziHiwLhugpWSgPlW5V6Qg7/OptC+FGH0XbF9BBVMUOOCfbE=
+	t=1783081088; cv=none; b=oOmBvf3DmAZJ0R/AyvhgH571VjmTyKD5sFEXbmqV7+zCsNqMvIeBQbswMjA1+gZHhF+zYit0vNhyNm+BjSfCZ16duqIAzRpIQwQDNSKPrS4y2vSTSxGu67Y/RpueT2KYXqOxTjEeVjzr+FYCB2jYtzQEbU7we8y6hQbaBgfSsmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783080928; c=relaxed/simple;
-	bh=esVxq2/OWGQEO5v/or2bpMCVebSBPE0Jx5cUfcfX+QA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S/Bk0+cmLf/wUwVwJOnJ4Q82gpMI60N6WN/vDV49DOWqv1VldNVDMqEX+PEJdjl9oCPIbtW/E89jl6eZngO34JDOufqUeg9hKG/NdYLSNQ05wRafTnNT05g9MgCEdoHgJ8jO3+UNR+e+O6A3ruj+jvSGJbGVSWS+rD0PgT/kElA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNG22d/h; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783081088; c=relaxed/simple;
+	bh=LwzD/6EokWbPSyLrFDefUh9dggweTVmw9HAHQLw9pls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GapxxM3DfFoDf9KwxOkAwVTwP1pSo4LFtmGd8u3IDwWrB8WN+sAeNpAxpjCchOQtJwLRM4sL96FxgxFgC8yBweRkaS04Sxkk+h9nPW/oUYT1Fjrb9A5IW+fvRlE/4p9Xo1VLXybSGlPJztJbExX+u7V5RqcdjQX0GUoQO1ffctE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QdTagyFE; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNG22d/h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 158571F00A3E
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783080927;
-	bh=esVxq2/OWGQEO5v/or2bpMCVebSBPE0Jx5cUfcfX+QA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=CNG22d/h7hJqhCM3iXYnMZVt/aUK0YaAZl8qrtB74WHSZMIeDc/xhrgcHiJc8HCwG
-	 csQ7yTHluapAg35IcpfcsCEewH7q0H+ZQCbd+Ve+SmQ433UfE+OlyRM41Sb2eZPwQB
-	 E6b0w3/U0fd7uAYtDQBUJkyfm3sqrb3Ppqc0ewKTYM3pfc5ZaskMC58l81LtbHtO0d
-	 23BT1L3HeKt3KPWOcIwMHwpzHZD1ZYEZUFYPGzcv/+gPACNE1IQ3fExeDLqw22PER/
-	 BMi9wAzBUWbn1Oiub+YJCRUl0oLwv+hNv554cz9S3OyEmY3uhvsuVan/b9wkGGCZyp
-	 MStbOe2yz1DHg==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5aeb2bc82ccso576517e87.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2026 05:15:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rop9mkjp0aJpcMEC1hIQ8oH1tJcYr56DQuCb8uuvPcovGsjepLpXjkXNwjpDr6mz3bDxPI7bLiqzoeRYbH36n6taNTC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoLrRK1IdXxf5S451nxADXk7Os9qwx3tKw3EZxu4SAKfvbJqYx
-	KU4IwZ13/wMSQOEFAB8sSczME8KEwZbJmHczijQ9rccmHmupQxkmEi4lETMGaofbelTW/55HHEl
-	IhItk9Huc2lZXoxx//6Ox1HeH0guE0IE=
-X-Received: by 2002:a05:6512:154a:b0:5ae:b730:5235 with SMTP id
- 2adb3069b0e04-5aec8025dd1mr1953613e87.18.1783080925532; Fri, 03 Jul 2026
- 05:15:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QdTagyFE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783081087; x=1814617087;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LwzD/6EokWbPSyLrFDefUh9dggweTVmw9HAHQLw9pls=;
+  b=QdTagyFE21/xleUdyhAVn6BQ5LTlpVHUsgXkOAxBEUlqec9tYH9RR9d3
+   3970BbQqW30x4FKRf0JM9NegMBEsSrvkJ81oxdOG+lYqcFMaxehp+2tUG
+   w0QQml3666io4QUJw5pgHHTtdoxsOcrxsCNozrb898vsSOOavqciS7r7F
+   mmF+8wv5kU1t4GyEAKvuTMYr7SAKkd6eJfFkjUGvBDQkfQ1We3nDB1q9N
+   e9fMZNiTS3z5adpx0vu1uOETriXGTfieMlCREnz6QWAW7/vlMhrt8+C72
+   etby2VvcOaydJEXdOf3ilYy+NxBc7F0bm4W5FbKiXpAw7eCu583ogiFVW
+   Q==;
+X-CSE-ConnectionGUID: 4Vie/kIdTNSWFQpJ8Gd9Cw==
+X-CSE-MsgGUID: L/F5H5mHRz+fTHkrwtPrZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="87748072"
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="87748072"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:18:07 -0700
+X-CSE-ConnectionGUID: 2/l/i94QTCWZv9+ZMVbcKw==
+X-CSE-MsgGUID: 27jc+NuJTOCTYVPRFxgVzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="253247087"
+Received: from carterle-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.80])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:18:04 -0700
+Date: Fri, 3 Jul 2026 15:18:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J.  Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Jonathan Woithe <jwoithe@just42.net>, Robert Gerlach <khnz@gmx.de>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Mattia Dongili <malattia@linux.it>,
+	Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v1 05/10] platform/x86: thinkpad_acpi: Stop setting
+ acpi_device_class()
+Message-ID: <akeoeAzCjTlGc_lz@ashevche-desk.local>
+References: <5135166.31r3eYUQgx@rafael.j.wysocki>
+ <23182921.EfDdHjke4D@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5135166.31r3eYUQgx@rafael.j.wysocki> <akemrOqzWtcDVqey@ashevche-desk.local>
-In-Reply-To: <akemrOqzWtcDVqey@ashevche-desk.local>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Fri, 3 Jul 2026 14:15:13 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com>
-X-Gm-Features: AVVi8CcCyhZbaTM8aEfP_CDJwOvx85hepSQO51lwkon72qAjQwO3MM1G7tZy8pE
-Message-ID: <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: Stop using acpi_device_name/class()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Jonathan Woithe <jwoithe@just42.net>, 
-	Robert Gerlach <khnz@gmx.de>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Kenneth Chan <kenneth.t.chan@gmail.com>, 
-	Mattia Dongili <malattia@linux.it>, Azael Avalos <coproscefalo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23182921.EfDdHjke4D@rafael.j.wysocki>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jul 3, 2026 at 2:10=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jul 03, 2026 at 01:15:01PM +0200, Rafael J. Wysocki wrote:
-> > Hi All,
-> >
-> > There are two fields in struct acpi_device_pnp, device_name and device_=
-class,
-> > that were supposed to be populated and used by device drivers, but they=
- have
-> > never been used consistently and some drivers just populate them and do=
-n't
-> > access them later, and some drivers use them uninitialized.
-> >
-> > All of that is confusing and messy, so the drivers for core ACPI device=
-s
-> > have been updated to stop using those fields which are now slated for
-> > removal, but they are still accessed in some places.
-> >
-> > This series updates platform x86 drivers accessing those fields to stop
-> > doing that.
->
-> In most of the patches you have double space in your name in From.
+On Fri, Jul 03, 2026 at 01:30:00PM +0200, Rafael J.  Wysocki wrote:
 
-Do you mean the From header in the patch body or the From header in
-the SMTP headers?
+> To facilitate the removal of device_class from struct acpi_device_pnp
+> in the future, make the driver store the device class string used for
+> generating ACPI netlink events in a new device_class field in struct
+> ibm_struct.
+> 
+> No intentional functional impact.
 
-> Can we have some consistency here? Or is it deliberate (in which case I'm=
- wondering why)?
+...
 
-Not deliberate, probably an e-mail client mess-up.
+>  		acpi_bus_generate_netlink_event(
+> -					ibm->acpi->device->pnp.device_class,
+> +					ibm->device_class,
+>  					dev_name(&ibm->acpi->device->dev),
+>  					event, 0);
+
+In other cases you condensed the code a bit, not sure if you want to do the
+similar here
+
+		acpi_bus_generate_netlink_event(ibm->device_class,
+						dev_name(&ibm->acpi->device->dev),
+						event, 0);
+
+>  		return;
+
+...
+
+>  		if (send_acpi_ev) {
+>  			acpi_bus_generate_netlink_event(
+> -					ibm->acpi->device->pnp.device_class,
+> +					ibm->device_class,
+>  					dev_name(&ibm->acpi->device->dev),
+>  					event, hkey);
+>  		}
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
