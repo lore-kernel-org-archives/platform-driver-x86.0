@@ -1,483 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2FC1DF748;
-	Fri,  3 Jul 2026 13:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670D3D091D;
+	Fri,  3 Jul 2026 13:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.101.241.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783084506; cv=none; b=aBgNP2IqE/P94kkkQMsULZGqap2MgMEIhSQaLjPa11onZ08/qWIAJuMbIXMEo+78drE16tMWPRXqJsc9mcugYg79UTa574AV3HQYKjPxfW4twt81vetqUIQ25josam20kaKaPEdTtp8jqyF0O1oEjaWySG46D2VuisL/Zox3q1E=
+	t=1783084935; cv=none; b=P+xkXUUuuYprd2aLgUVKVpr8ZpEnKsdzYyz1YTAnqTwO2zKnLVU7sx7D0oEx6LzG5uJSVOetP7QRJ2RCo/L5XgBpr292lkgMcX/GQF8NynYp9M4ZNspp69kMoop3CGYbClEpa178uqu8j+V2qzw56W2laXfyJJe9w1dnlRQyTXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783084506; c=relaxed/simple;
-	bh=dMo285CmJk4gWcr1GS4161y1ChODQFVR85WSJIo9z4s=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sieE8w4OchA9lKAtJwIjrO+Xg7tfCnivUKL3I5jQ08d1qSIjGDDwLhcyONcyjWH3RTOBDVMrE2Qmyuz20NvhoVAcOwdlHh8laqg+L5kTiWro15EFCHRivbOv8KFTHNT0NJvg+wELCpDQeyi63n8V0Exic730DCH70rAoAhR8c/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hV/ZyfkL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hV/ZyfkL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783084505; x=1814620505;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dMo285CmJk4gWcr1GS4161y1ChODQFVR85WSJIo9z4s=;
-  b=hV/ZyfkLGJBLmVcZO8m2qnPHaSE7iWD5L56OwVGCzBQqjzf439yelCb+
-   YQyBnznj3IMAgSR0Xxzp7fhwODvFkcHmB16DeQp8qnjC9jKq6zlCuSWED
-   B05xuOvGuWBewxvQc0kNk0ZOI7uSO373lU8kIelT2fvQntVtpUBzTxywL
-   uRgSDwmFGl/ylXu2HhniK1M+HH8xvFy3aeO6TrxB8flj3SUB7pf7ww69j
-   5g2Hpl2cxZDghOyk0u24Bdalm6jlnpZaXHAGZoiXyb60hvLc4rJjhIJMW
-   SPUbCEPPMv/ViOD6DAJTfrZDMbstTUKTe/eDTU0lUwxLv0Hj0HsSBuzor
-   Q==;
-X-CSE-ConnectionGUID: mpwQN+SkQbSIhAla7PaEBg==
-X-CSE-MsgGUID: M+AETQaESSKMjh4QV6jm4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="71360782"
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="71360782"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:15:04 -0700
-X-CSE-ConnectionGUID: rmVbyTztSQ27QyehFbx+6Q==
-X-CSE-MsgGUID: 4GLmOtoDThyTLAAJC4K7SQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="253771225"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.152])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:15:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 3 Jul 2026 16:14:57 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: matan@svgalib.org, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] platform/x86: lg-laptop: Add support for native ACPI
- events
-In-Reply-To: <20260622193914.116999-3-W_Armin@gmx.de>
-Message-ID: <4a2d4268-f771-0286-81d2-d38a708b7025@linux.intel.com>
-References: <20260622193914.116999-1-W_Armin@gmx.de> <20260622193914.116999-3-W_Armin@gmx.de>
+	s=arc-20240116; t=1783084935; c=relaxed/simple;
+	bh=C9nNNNWEecneKAhgPEE/LVOIeRzDwZEtYSWUsvgwpJU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBT9z0HchTBjRgD4TmznFY/RJYRzRExaS3+yZnX2cdEfBqZIWD2PCtA1r1Y2IuHoK8FJb3gmFifBWWcMJR+9RDk4j9/AmltvkOutyGOCubNPPm05EgFc3bgKyIMhFaogIJAwLzPA7ZGvrBp83ZLv1h578N1RLYXE6BCJlRiGg10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net; spf=pass smtp.mailfrom=just42.net; arc=none smtp.client-ip=150.101.241.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=just42.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=just42.net
+Received: from marvin.atrad.com.au (marvin.atrad.com.au [192.168.0.2])
+	by server.atrad.com.au (8.18.1/8.18.1) with ESMTPS id 663D8nYn003882
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Fri, 3 Jul 2026 22:38:50 +0930
+Date: Fri, 3 Jul 2026 22:38:49 +0930
+From: Jonathan Woithe <jwoithe@just42.net>
+To: "Rafael J.  Wysocki" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Hans de Goede <hansg@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        "Luke D. Jones" <luke@ljones.dev>,
+        Denis Benato <denis.benato@linux.dev>, Robert Gerlach <khnz@gmx.de>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+        Mark Pearson <mpearson-lenovo@squebb.ca>,
+        "Derek J. Clark" <derekjohn.clark@gmail.com>,
+        Kenneth Chan <kenneth.t.chan@gmail.com>,
+        Mattia Dongili <malattia@linux.it>,
+        Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v1 03/10] platform/x86: fujitsu-laptop: Stop setting
+ acpi_device_name/class()
+Message-ID: <ake0YZM6W0f/Jqn3@marvin.atrad.com.au>
+References: <5135166.31r3eYUQgx@rafael.j.wysocki>
+ <3441919.aeNJFYEL58@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3441919.aeNJFYEL58@rafael.j.wysocki>
+X-MIMEDefang-action: accept
+X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
 
-On Mon, 22 Jun 2026, Armin Wolf wrote:
+On Fri, Jul 03, 2026 at 01:23:31PM +0200, Rafael J.  Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> 
+> The driver sets acpi_device_name() that are only used for printing
+> messages and initializing input class device names.  Since
+> ACPI_FUJITSU_BL_DEVICE_NAME and ACPI_FUJITSU_LAPTOP_DEVICE_NAME can
+> be used directly in all of those cases, make the driver do so and
+> stop setting acpi_device_name() in it.
+> 
+> Likewise, acpi_device_class() set by the driver are never read
+> afterward, so make the driver stop setting it and drop the symbol
+> defined specifically for this purpose.
+> 
+> No intentional functional impact.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> LG devices support two interfaces for receiving events:
-> - the WMI-based interface currently being used by the driver
-> - a ACPI-based interface similar to the WMI-based interface
-> 
-> Older devices use the WMI-based interface by default and need
-> to be manually switched into ACPI mode. Newer devices however
-> only support the ACPI-based interface, preventing the current
-> driver from receiving events on them.
-> 
-> Fix this by always using the native ACPI-based interface for
-> receiving events.
-> 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Looks good to me for fujitsu-laptop.
+
+Acked-by: Jonathan Woithe <jwoithe@just42.net>
+
+
 > ---
->  drivers/platform/x86/Kconfig     |   1 -
->  drivers/platform/x86/lg-laptop.c | 301 ++++++++++++++++++++-----------
->  2 files changed, 199 insertions(+), 103 deletions(-)
+>  drivers/platform/x86/fujitsu-laptop.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index b54b5212b204..957034f39e4e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -802,7 +802,6 @@ config LG_LAPTOP
->  	tristate "LG Laptop Extras"
->  	depends on ACPI
->  	depends on ACPI_BATTERY
-> -	depends on ACPI_WMI
->  	depends on INPUT
->  	select INPUT_SPARSEKMAP
->  	select NEW_LEDS
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index a2db9657027e..ead0c3cc74a8 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -57,13 +57,18 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
->  #define LG_ADDRESS_SPACE_DEBUG_MSG_START_ADR	0x3E8
->  #define LG_ADDRESS_SPACE_DEBUG_MSG_END_ADR	0x5E8
+> diff --git a/drivers/platform/x86/fujitsu-laptop.c b/drivers/platform/x86/fujitsu-laptop.c
+> index 54d0b9cec4d3..ea543deef68f 100644
+> --- a/drivers/platform/x86/fujitsu-laptop.c
+> +++ b/drivers/platform/x86/fujitsu-laptop.c
+> @@ -56,7 +56,6 @@
 >  
-> -#define WMI_EVENT_GUID0	"E4FB94F9-7F2B-4173-AD1A-CD1D95086248"
-> -#define WMI_EVENT_GUID1	"023B133E-49D1-4E10-B313-698220140DC2"
-> -#define WMI_EVENT_GUID2	"37BE1AC0-C3F2-4B1F-BFBE-8FDEAF2814D6"
-> -#define WMI_EVENT_GUID3	"911BAD44-7DF8-4FBB-9319-BABA1C4B293B"
-> -#define WMI_METHOD_WMAB "C3A72B38-D3EF-42D3-8CBB-D5A57049F66D"
-> -#define WMI_METHOD_WMBB "2B4F501A-BD3C-4394-8DCF-00A7D2BC8210"
-> -#define WMI_EVENT_GUID  WMI_EVENT_GUID0
-> +#define LG_NOTIFY_TABLET_MODE_OFF	0x50
-> +#define LG_NOTIFY_TABLET_MODE_ON	0x51
-> +#define LG_NOTIFY_HOTKEY		0x80
-> +#define LG_NOTIFY_THERMAL		0x81
-> +#define LG_NOTIFY_MISC			0x82
-> +
-> +#define LG_OREP_READ_EC			0
-> +#define LG_OREP_WRITE_EC		1
-> +#define LG_OREP_DEBUG			2
-> +#define LG_OREP_UPDATE_SYSTEM_STATE	3
-> +#define LG_OREP_INTERCEPT_WMI_EVENTS	4
-> +#define LG_OREP_WAKE_ON_LAN		6
+>  #define FUJITSU_LCD_N_LEVELS		8
 >  
->  #define SB_GGOV_METHOD  "\\_SB.GGOV"
->  #define GOV_TLED        0x2020008
-> @@ -83,21 +88,7 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmware debug messages");
+> -#define ACPI_FUJITSU_CLASS		"fujitsu"
+>  #define ACPI_FUJITSU_BL_HID		"FUJ02B1"
+>  #define ACPI_FUJITSU_BL_DRIVER_NAME	"Fujitsu laptop FUJ02B1 ACPI brightness driver"
+>  #define ACPI_FUJITSU_BL_DEVICE_NAME	"Fujitsu FUJ02B1"
+> @@ -466,7 +465,7 @@ static int acpi_fujitsu_bl_input_setup(struct device *dev)
+>  	snprintf(priv->phys, sizeof(priv->phys), "%s/video/input0",
+>  		 acpi_device_hid(device));
 >  
->  #define PLATFORM_NAME   "lg-laptop"
+> -	priv->input->name = acpi_device_name(device);
+> +	priv->input->name = ACPI_FUJITSU_BL_DEVICE_NAME;
+>  	priv->input->phys = priv->phys;
+>  	priv->input->id.bustype = BUS_HOST;
+>  	priv->input->id.product = 0x06;
+> @@ -546,13 +545,11 @@ static int acpi_fujitsu_bl_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
 >  
-> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID0);
-> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID1);
-> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID2);
-> -MODULE_ALIAS("wmi:" WMI_EVENT_GUID3);
-> -MODULE_ALIAS("wmi:" WMI_METHOD_WMAB);
-> -MODULE_ALIAS("wmi:" WMI_METHOD_WMBB);
+>  	fujitsu_bl = priv;
+> -	strscpy(acpi_device_name(device), ACPI_FUJITSU_BL_DEVICE_NAME);
+> -	strscpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
+>  
+>  	platform_set_drvdata(pdev, priv);
+>  
+> -	pr_info("ACPI: %s [%s]\n",
+> -		acpi_device_name(device), acpi_device_bid(device));
+> +	pr_info("ACPI: %s [%s]\n", ACPI_FUJITSU_BL_DEVICE_NAME,
+> +		acpi_device_bid(device));
+>  
+>  	if (get_max_brightness(&pdev->dev) <= 0)
+>  		priv->max_brightness = FUJITSU_LCD_N_LEVELS;
+> @@ -681,7 +678,7 @@ static int acpi_fujitsu_laptop_input_setup(struct device *dev)
+>  	snprintf(priv->phys, sizeof(priv->phys), "%s/input0",
+>  		 acpi_device_hid(device));
+>  
+> -	priv->input->name = acpi_device_name(device);
+> +	priv->input->name = ACPI_FUJITSU_LAPTOP_DEVICE_NAME;
+>  	priv->input->phys = priv->phys;
+>  	priv->input->id.bustype = BUS_HOST;
+>  
+> @@ -1012,9 +1009,6 @@ static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+>  	WARN_ONCE(fext, "More than one FUJ02E3 ACPI device was found.  Driver may not work as intended.");
+>  	fext = &pdev->dev;
+>  
+> -	strscpy(acpi_device_name(device), ACPI_FUJITSU_LAPTOP_DEVICE_NAME);
+> -	strscpy(acpi_device_class(device), ACPI_FUJITSU_CLASS);
 > -
->  static struct platform_device *pf_device;
-> -static struct input_dev *wmi_input_dev;
-> -
-> -static u32 inited;
-> -#define INIT_INPUT_WMI_0        0x01
-> -#define INIT_INPUT_WMI_2        0x02
-> -#define INIT_INPUT_ACPI         0x04
-> -#define INIT_SPARSE_KEYMAP      0x80
+>  	platform_set_drvdata(pdev, priv);
 >  
->  static int battery_limit_use_wmbb;
->  static bool kbd_backlight_available;
-> @@ -115,6 +106,36 @@ static const struct key_entry wmi_keymap[] = {
->  	{KE_END, 0}
->  };
+>  	/* kfifo */
+> @@ -1024,8 +1018,8 @@ static int acpi_fujitsu_laptop_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
 >  
-> +static int lg_laptop_execute_orep(acpi_handle handle, u64 command, u64 value,
-> +				  unsigned long long *result)
-> +{
-> +	union acpi_object objs[] = {
-> +		{
-> +			.integer = {
-> +				.type = ACPI_TYPE_INTEGER,
-> +				.value = command,
-> +			},
-> +		},
-> +		{
-> +			.integer = {
-> +				.type = ACPI_TYPE_INTEGER,
-> +				.value = value,
-> +			},
-> +		}
-> +	};
-> +	struct acpi_object_list args = {
-> +		.count = ARRAY_SIZE(objs),
-> +		.pointer = objs,
-> +	};
-> +	acpi_status status;
-> +
-> +	status = acpi_evaluate_integer(handle, "OREP", &args, result);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
->  static int ggov(u32 arg0)
->  {
->  	union acpi_object args[1];
-> @@ -212,70 +233,6 @@ static union acpi_object *lg_wmbb(struct device *dev, u32 method_id, u32 arg1, u
->  	return (union acpi_object *)buffer.pointer;
->  }
+> -	pr_info("ACPI: %s [%s]\n",
+> -		acpi_device_name(device), acpi_device_bid(device));
+> +	pr_info("ACPI: %s [%s]\n", ACPI_FUJITSU_LAPTOP_DEVICE_NAME,
+> +		acpi_device_bid(device));
 >  
-> -static void wmi_notify(union acpi_object *obj, void *context)
-> -{
-> -	long data = (long)context;
-> -	unsigned int brightness;
-> -
-> -	pr_debug("event guid %li\n", data);
-> -	if (!obj)
-> -		return;
-> -
-> -	if (obj->type == ACPI_TYPE_INTEGER) {
-> -		int eventcode = obj->integer.value;
-> -		struct key_entry *key;
-> -
-> -		if (eventcode == 0x10000000) {
-> -			if (kbd_backlight_available) {
-> -				brightness = get_kbd_backlight_level(kbd_backlight.dev->parent);
-> -				led_classdev_notify_brightness_hw_changed(&kbd_backlight,
-> -									  brightness);
-> -			}
-> -		} else {
-> -			key = sparse_keymap_entry_from_scancode(
-> -				wmi_input_dev, eventcode);
-> -			if (key && key->type == KE_KEY)
-> -				sparse_keymap_report_entry(wmi_input_dev,
-> -							   key, 1, true);
-> -		}
-> -	}
-> -
-> -	pr_debug("Type: %i    Eventcode: 0x%llx\n", obj->type,
-> -		 obj->integer.value);
-> -}
-> -
-> -static void wmi_input_setup(void)
-> -{
-> -	acpi_status status;
-> -
-> -	wmi_input_dev = input_allocate_device();
-> -	if (wmi_input_dev) {
-> -		wmi_input_dev->name = "LG WMI hotkeys";
-> -		wmi_input_dev->phys = "wmi/input0";
-> -		wmi_input_dev->id.bustype = BUS_HOST;
-> -
-> -		if (sparse_keymap_setup(wmi_input_dev, wmi_keymap, NULL) ||
-> -		    input_register_device(wmi_input_dev)) {
-> -			pr_info("Cannot initialize input device");
-> -			input_free_device(wmi_input_dev);
-> -			return;
-> -		}
-> -
-> -		inited |= INIT_SPARSE_KEYMAP;
-> -		status = wmi_install_notify_handler(WMI_EVENT_GUID0, wmi_notify,
-> -						    (void *)0);
-> -		if (ACPI_SUCCESS(status))
-> -			inited |= INIT_INPUT_WMI_0;
-> -
-> -		status = wmi_install_notify_handler(WMI_EVENT_GUID2, wmi_notify,
-> -						    (void *)2);
-> -		if (ACPI_SUCCESS(status))
-> -			inited |= INIT_INPUT_WMI_2;
-> -	} else {
-> -		pr_info("Cannot allocate input device");
-> -	}
-> -}
-> -
->  static ssize_t fan_mode_store(struct device *dev,
->  			      struct device_attribute *attr,
->  			      const char *buffer, size_t count)
-> @@ -634,26 +591,164 @@ static enum led_brightness kbd_backlight_get(struct led_classdev *cdev)
->  
->  static LED_DEVICE(kbd_backlight, 255, LED_BRIGHT_HW_CHANGED);
->  
-> -static void wmi_input_destroy(void)
-> +static struct platform_driver pf_driver = {
-> +	.driver = {
-> +		   .name = PLATFORM_NAME,
-> +	}
-> +};
-> +
-> +static int lg_laptop_get_event_data(acpi_handle handle, u32 value, u32 *data)
->  {
-> -	if (inited & INIT_INPUT_WMI_2)
-> -		wmi_remove_notify_handler(WMI_EVENT_GUID2);
-> +	union acpi_object objs[] = {
-> +		{
-> +			.integer = {
-> +				.type = ACPI_TYPE_INTEGER,
-> +				.value = value,
-> +			},
-> +		}
-> +	};
-> +	struct acpi_object_list args = {
-> +		.count = ARRAY_SIZE(objs),
-
-Add the include.
-
-> +		.pointer = objs,
-> +	};
-> +	unsigned long long result;
-> +	acpi_status status;
-> +
-> +	status = acpi_evaluate_integer(handle, "_WED", &args, &result);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
->  
-> -	if (inited & INIT_INPUT_WMI_0)
-> -		wmi_remove_notify_handler(WMI_EVENT_GUID0);
-> +	if (result > U32_MAX)
-
-Add include.
-
-> +		return -EPROTO;
->  
-> -	if (inited & INIT_SPARSE_KEYMAP)
-> -		input_unregister_device(wmi_input_dev);
-> +	*data = result;
->  
-> -	inited &= ~(INIT_INPUT_WMI_0 | INIT_INPUT_WMI_2 | INIT_SPARSE_KEYMAP);
-> +	return 0;
->  }
->  
-> -static struct platform_driver pf_driver = {
-> -	.driver = {
-> -		   .name = PLATFORM_NAME,
-> +static void lg_laptop_handle_input_event(struct input_dev *input_dev, u32 value, u32 data)
-> +{
-> +	unsigned int kbd_brightness;
-> +
-> +	switch (value) {
-> +	case LG_NOTIFY_HOTKEY:
-> +		sparse_keymap_report_event(input_dev, data, 1, true);
-> +		break;
-> +	case LG_NOTIFY_THERMAL:
-> +		/* Currently not supported */
-> +		break;
-> +	case LG_NOTIFY_MISC:
-> +		switch (data) {
-> +		case 0x10000000:
-> +			if (!kbd_backlight_available)
-> +				break;
-> +
-> +			kbd_brightness = get_kbd_backlight_level(kbd_backlight.dev->parent);
-> +			led_classdev_notify_brightness_hw_changed(&kbd_backlight, kbd_brightness);
-> +			break;
-> +		default:
-> +			sparse_keymap_report_event(input_dev, data, 1, true);
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +static void lg_laptop_notify_handler(acpi_handle handle, u32 value, void *context)
-> +{
-> +	struct input_dev *input_dev = context;
-> +	u32 data;
-> +	int ret;
-> +
-> +	switch (value) {
-> +	case LG_NOTIFY_TABLET_MODE_OFF:
-> +	case LG_NOTIFY_TABLET_MODE_ON:
-> +		/* Already handled by intel-hid */
-> +		return;
-> +	case LG_NOTIFY_HOTKEY:
-> +	case LG_NOTIFY_THERMAL:
-> +	case LG_NOTIFY_MISC:
-> +		ret = lg_laptop_get_event_data(handle, value, &data);
-> +		if (ret < 0) {
-> +			dev_notice(input_dev->dev.parent, "Failed to get event data: %d\n", ret);
-> +			return;
-> +		}
-> +
-> +		dev_dbg(input_dev->dev.parent, "Received event %u (%u)\n", value, data);
-> +
-> +		lg_laptop_handle_input_event(input_dev, value, data);
-> +		return;
-> +	default:
-> +		dev_notice(input_dev->dev.parent, "Received unknown event %u\n", value);
->  	}
->  };
->  
-> +static void lg_laptop_remove_notify_handler(void *context)
-> +{
-> +	acpi_handle handle = context;
-> +
-> +	acpi_remove_notify_handler(handle, ACPI_ALL_NOTIFY, lg_laptop_notify_handler);
-> +}
-> +
-> +static void lg_laptop_reenable_wmi_events(void *context)
-> +{
-> +	acpi_handle handle = context;
-> +	unsigned long long dummy;
-> +
-> +	lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 0, &dummy);
-> +}
-> +
-> +static int lg_laptop_input_init(struct device *dev, acpi_handle handle)
-> +{
-> +	struct input_dev *input_dev;
-> +	unsigned long long result;
-> +	acpi_status status;
-> +	int ret;
-> +
-> +	if (!acpi_has_method(handle, "_WED"))
-> +		return 0;
-> +
-> +	input_dev = devm_input_allocate_device(dev);
-> +	if (!input_dev)
-> +		return -ENOMEM;
-> +
-> +	input_dev->name = "LG WMI hotkeys";
-> +	input_dev->phys = "wmi/input0";
-> +	input_dev->id.bustype = BUS_HOST;
-> +	ret = sparse_keymap_setup(input_dev, wmi_keymap, NULL);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = input_register_device(input_dev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	status = acpi_install_notify_handler(handle, ACPI_ALL_NOTIFY, lg_laptop_notify_handler,
-> +					     input_dev);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	ret = devm_add_action_or_reset(dev, lg_laptop_remove_notify_handler, handle);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (acpi_has_method(handle, "OREP")) {
-> +		ret = lg_laptop_execute_orep(handle, LG_OREP_INTERCEPT_WMI_EVENTS, 1, &result);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (result)
-
-This still looks to be part of the error handling so please remove the 
-blank line before it.
-
-> +			return -EIO;
-> +
-> +		ret = devm_add_action_or_reset(dev, lg_laptop_reenable_wmi_events, handle);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static acpi_status lg_laptop_address_space_write(struct device *dev, acpi_physical_address address,
->  						 size_t size, u64 value)
->  {
-> @@ -865,10 +960,6 @@ static int acpi_probe(struct platform_device *pdev)
->  	if (year >= 2019)
->  		battery_limit_use_wmbb = 1;
->  
-> -	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
-> -	if (ret)
-> -		goto out_platform_device;
-> -
->  	/* LEDs are optional */
->  	ret = devm_led_classdev_register(&pdev->dev, &kbd_backlight);
->  	if (ret < 0)
-> @@ -878,7 +969,14 @@ static int acpi_probe(struct platform_device *pdev)
->  
->  	devm_led_classdev_register(&pdev->dev, &tpad_led);
->  
-> -	wmi_input_setup();
-> +	ret = lg_laptop_input_init(&pdev->dev, device->handle);
-> +	if (ret < 0)
-> +		goto out_platform_device;
-> +
-> +	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
-> +	if (ret)
-> +		goto out_platform_device;
-
-Not directly related to the patch, but can't .dev_groups be used?
-
->  	battery_hook_register(&battery_hook);
->  
->  	return 0;
-> @@ -895,7 +993,6 @@ static void acpi_remove(struct platform_device *pdev)
->  	sysfs_remove_group(&pf_device->dev.kobj, &dev_attribute_group);
->  
->  	battery_hook_unregister(&battery_hook);
-> -	wmi_input_destroy();
->  	platform_device_unregister(pf_device);
->  	pf_device = NULL;
->  	platform_driver_unregister(&pf_driver);
+>  	while (call_fext_func(fext, FUNC_BUTTONS, 0x1, 0x0, 0x0) != 0 &&
+>  	       i++ < MAX_HOTKEY_RINGBUFFER_SIZE)
+> -- 
+> 2.51.0
+> 
+> 
 > 
 
 -- 
- i.
-
