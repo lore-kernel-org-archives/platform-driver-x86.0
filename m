@@ -1,105 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2162E3C4540
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DC83CAA57;
+	Fri,  3 Jul 2026 12:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783081482; cv=none; b=B99Eek30+DlMkQWgzyae4I2jIo6cWrB4FhI8Wj7D9Yd4tHOZ7tn+i0NEScl2bJy+NwMrit2JKwGgAkSJaGtmh/V08exmyJflDrMG34L73f++1Z4lyaA7tEhUbfZ5FHwyNgI2f++0w+f6x6uzlfnq+o12GpLX3tqD5FVSxiV5/p4=
+	t=1783081720; cv=none; b=a6ggsG1jHlNo/hdEm+x/pqOlj50Mc0lNW3zR9hY/qaaBtz4oSx7VSwkZ/3o/U6f5hcRv9RCIF6BRrubibn8mSaBeuc50Dj/Y1SyXLoF9JieQu06dHc/IdNcMfHJ0RyPERdlGlY0y0r3UYhNMYpZxrx0t+UKwAAOSVrGhCSu3978=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783081482; c=relaxed/simple;
-	bh=11ddIWVSTTVnM2cM9G+vdAOaYF2hlWJNuDgVSRrIWAE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nmabphVlDJ4sGNtGtAA1jiqGR3lrBfTC8PXic/MlfNuCYccetU4kcNMFX6dTfH6emjhaxwf87sTlorA9OpQTfowy0FBTs24giCC9zaes0OvtbnCmYI/yWte68XcBEzrecAv6pdugRwDvgOzeGec51YLbpfrpeLyIblG4jthAJRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XSsXr/Qy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783081720; c=relaxed/simple;
+	bh=hoc7AW4AkJEYkJ7cSx1mYrev1SDmcb10P0QMdRiFY1A=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Vd1Y4cRrQqPSzRyK0BBDyJ3B8k0KqA4Sp36NpZULBD5U/DmXf4vPWz/TlevRUR56Uz2NVa7MMBdDkjNPFfxc4I1ycNbM7Q+/J2p9SwXBIUU9s5N9bGFPzZ1pV2E1bdZAmYm3/zFJXPP49Ns+lEV9XbEXoDHsRwOOb/tdsp8Iu54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AYl5zNoc; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XSsXr/Qy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7B341F00ACF
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783081480;
-	bh=11ddIWVSTTVnM2cM9G+vdAOaYF2hlWJNuDgVSRrIWAE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=XSsXr/Qy14o5yxDXbrK1+6cYkK8wleAtPF7ayQ9Ks8av8+CYBIAlUI4hMq3Dz7B/J
-	 4L/DdhR7JW7+gTaGtPTJn2gcFQd2SKyojsttKWjh23iHNY8qifgKRAl+YvynahwUUL
-	 1Z11gmVuqEHBYp0J4XxJPz58g1T0Ummbfux/+pBQkhZv76y3B3dcvbZqoGpJSuLGMG
-	 auSCDRox5yZsvtSvcqPG+dSuH6bR2aZWRF1AxLf9M+S6uH2/YX0v7qvLVitRwEBWgA
-	 lxrS0PuIzzmzFvGy6ZGZfqJcGgwaGkhuJLQtjpLbAdtLIj82UDDReE3jZhr96Rn/wy
-	 zE+kWOLi0KIPA==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-39b1eab2f29so15080571fa.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2026 05:24:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrTdO2iEqaUqpUkNJtO3yEwvo4cEJxrV66o3CF45qQ9+xINJ/EpGVwD+HXHBWEU8CuN9K58vwfzrllVHZ0W7ETLNr0y@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLbZM2yhGqCyhUp4JOnRVooYlpWQSzrvlAcfCQTj6vvdiSYGeB
-	1/A+7Fn+1waWqynFSApguHhCqMH5L4SnYEhQADKcWzkgOvQIDp4TX5xphmwY8nffGxlt82+8hTj
-	md7GZ5RsQL3PZ87JzE6fVBBxdBQMl+pw=
-X-Received: by 2002:a05:6512:8345:b0:5ae:b4bc:9109 with SMTP id
- 2adb3069b0e04-5aecf4bf6aemr692157e87.10.1783081479252; Fri, 03 Jul 2026
- 05:24:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AYl5zNoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783081719; x=1814617719;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=hoc7AW4AkJEYkJ7cSx1mYrev1SDmcb10P0QMdRiFY1A=;
+  b=AYl5zNoc3kkrPWOeLonB0Dkp8cRMPznioeW1htKFR6pBYrSoayvrEIOL
+   2+qBrQdhK4oF7gZOgBErNiqT55CrgXLo/VzBKie4FPpADI9rVbsWuir30
+   87BpeE86JDznfLTJsH7ZU6+kHd/F8Rbo2oYZUY/QnZ7hrZkphsA140fEa
+   G5AXHEQACjryV5xeh6zFeWh7WmAQalIW69Pfs1ZtCrcv2qXyS9YiKPCvh
+   8wVDwMOTynWC2WmfaLpZVLi+Ea1DP0KpyVa1IJ6OiEmMviP+Gc0cGtOFS
+   kBwGmaY1YeOib9+RdtN1LsfF42407FoF4anZPbTx5HiCs6XAAiqf47Nev
+   g==;
+X-CSE-ConnectionGUID: hGKtdfOiQLqGDM17v+Doqg==
+X-CSE-MsgGUID: ySg7ADpWSqSjJxc3XACkQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="86384149"
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="86384149"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:28:38 -0700
+X-CSE-ConnectionGUID: X/JtPLzLR4iKmCHjfEfO7g==
+X-CSE-MsgGUID: +ofYWM/9ThCJeICJh9HRIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="257428993"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.152])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:28:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 3 Jul 2026 15:28:31 +0300 (EEST)
+To: yahia <yahia.a.abdrabou@gmail.com>
+cc: W_Armin@gmx.de, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] wmi/core: fix use-after-free in wmi_add_device()
+In-Reply-To: <20260622191838.23187-1-yahia.a.abdrabou@gmail.com>
+Message-ID: <2df479ed-7a3d-7f89-9f2c-77d5a8270837@linux.intel.com>
+References: <20260622190409.17268-1-yahia.a.abdrabou@gmail.com> <20260622191838.23187-1-yahia.a.abdrabou@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5135166.31r3eYUQgx@rafael.j.wysocki> <akemrOqzWtcDVqey@ashevche-desk.local>
- <akeo1CfX1ayQPPew@ashevche-desk.local>
-In-Reply-To: <akeo1CfX1ayQPPew@ashevche-desk.local>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Fri, 3 Jul 2026 14:24:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0it+WWyuHeHdk5-Jww3h+H34Tbd5-6sEwHnMvtmya=s-Q@mail.gmail.com>
-X-Gm-Features: AVVi8CeK3zBZREeS0k_UGGfmzL_7OdoW8MOyxhYMuPu7iyTAiNjbS9VZIDtLjnc
-Message-ID: <CAJZ5v0it+WWyuHeHdk5-Jww3h+H34Tbd5-6sEwHnMvtmya=s-Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: Stop using acpi_device_name/class()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Jonathan Woithe <jwoithe@just42.net>, 
-	Robert Gerlach <khnz@gmx.de>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Kenneth Chan <kenneth.t.chan@gmail.com>, 
-	Mattia Dongili <malattia@linux.it>, Azael Avalos <coproscefalo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Jul 3, 2026 at 2:19=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jul 03, 2026 at 03:10:26PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jul 03, 2026 at 01:15:01PM +0200, Rafael J. Wysocki wrote:
-> > > Hi All,
-> > >
-> > > There are two fields in struct acpi_device_pnp, device_name and devic=
-e_class,
-> > > that were supposed to be populated and used by device drivers, but th=
-ey have
-> > > never been used consistently and some drivers just populate them and =
-don't
-> > > access them later, and some drivers use them uninitialized.
-> > >
-> > > All of that is confusing and messy, so the drivers for core ACPI devi=
-ces
-> > > have been updated to stop using those fields which are now slated for
-> > > removal, but they are still accessed in some places.
-> > >
-> > > This series updates platform x86 drivers accessing those fields to st=
-op
-> > > doing that.
-> >
-> > In most of the patches you have double space in your name in From. Can =
-we have
-> > some consistency here? Or is it deliberate (in which case I'm wondering=
- why)?
->
-> I looked into all patches and I see them good.
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Mon, 22 Jun 2026, yahia wrote:
 
-Thanks!
+> From: yahia ahmed <yahia.a.abdrabou@gmail.com>
 
-> (with preferably used same From field across the patches).
+So do I get it right that the conclusion of the discussion was that this 
+still required?
 
-What goes into commits is the one in the patch body (which overrides
-the one in the SMTP headers), so it is the same.
+If that's the case, here's things that need to be fixed:
 
-The one in the SMTP headers has indeed been messed up by the email
-client, but it doesn't really matter.
+> Fix a use-after-free error in wmi_add_device()
+> where if a device_add() fails, it will forward
+> the error code to the caller function parse_wdg(),
+> which then frees wblock, but doesn't remove it From
+> pdev's list, thus if pdev were to call it, it will
+> call freed memory and result in a use-after-free
+
+Please add the final stop (.)
+
+The lines are too short, please reflow the paragraph to 72 characters.
+
+> 
+> Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+
+A Fixes tag?
+
+> ---
+> v3:
+>   - Fix corruption in v2
+> v2:
+>   -  Fix use-after-free in wmi_add_device() by using device_link_del()
+>  drivers/platform/wmi/core.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/wmi/core.c b/drivers/platform/wmi/core.c
+> index 529825dcfbfe..1afc4d12bdfb 100644
+> --- a/drivers/platform/wmi/core.c
+> +++ b/drivers/platform/wmi/core.c
+> @@ -1268,6 +1268,7 @@ static int wmi_create_device(struct device *wmi_bus_dev,
+>  static int wmi_add_device(struct platform_device *pdev, struct wmi_device *wdev)
+>  {
+>  	struct device_link *link;
+> +	int ret;
+>  
+>  	/*
+>  	 * Many aggregate WMI drivers do not use -EPROBE_DEFER when they
+> @@ -1282,7 +1283,11 @@ static int wmi_add_device(struct platform_device *pdev, struct wmi_device *wdev)
+>  	if (!link)
+>  		return -EINVAL;
+>  
+> -	return device_add(&wdev->dev);
+> +	ret = device_add(&wdev->dev);
+> +
+> +	if (ret)
+
+Please don't leave empty line between call and its error handling.
+
+> +		device_link_del(link);
+> +	return ret;
+>  }
+>  
+>  /*
+> 
+
+-- 
+ i.
+
