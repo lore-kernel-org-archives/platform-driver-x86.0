@@ -1,99 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536C93C4B86;
-	Fri,  3 Jul 2026 13:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83DC39E9DD
+	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 14:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783086173; cv=none; b=PMdMIqufEgEaksKVE0Wy+PPfXzidy6YlrnQmdkLvUNq7lwLp37+05rHlVs81zKfeBkPhShdMo0nDmRxYHzVG4q4u+lnU0V2+cqu8t3QLaDsEw+21KVyNjhsiIUMk0Xala0wdCVrzkOIMZsDYT6kQUPu5kXbLCtN+NaSPeXeQsfs=
+	t=1783087760; cv=none; b=pavfIGNvpKuG2eEWPbLJkMWKA/zfLrvo+vD+1npv/sKzxTLqhocQ8WP9dyTMlaW3yScuIukZ03S+FLHE8BRJY2sib9+RGL3hTVt+5baK6wY6Pi5JC1AEinrYBRbjJXYjrKhaaa/HLiU2+oSaoU8j6O8SMFHSnUfuLpY68Bboa00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783086173; c=relaxed/simple;
-	bh=evRLyz7iM4pNE2Cx8YY3+xoV9xt94igoFpB1/rZqVn4=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jTpkM/l3FUnnB7zI24CRwIdAwzttTPhOBe4LpBagANMisDTFWn8uVVxOvfMkQ6YwIQdfJ69NKD384lJniOnVRwdJFAsOHtCq7b7wS4DqB5/tcBVeUe+2EgW+1H1iQpWa5K9iyXnKMy+s3FzGi3JFkLEmKjzZVwAxr0KOChznIfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N8IyTulo; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783087760; c=relaxed/simple;
+	bh=d+OXytV2ebkUyD2yp+ya6NCaRMIez7CYGr9oi6b7Unc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TcRTqIusS5mmWZ0HnBlRADawlMdQA2opf3CQ8mjkHcIgqhgvv1p9D3E9IBunAQ6t4qcDcNHYPK0m73Tefc5M5VdCmjico8flsgYAZ71fNBH5fY5/EJsvho+s3GyB2Mkjw94ZG3qOFLQLvywzpjNPrDv5/sYLge4z3oUKr2VioMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C6brIbdR; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N8IyTulo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783086172; x=1814622172;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=evRLyz7iM4pNE2Cx8YY3+xoV9xt94igoFpB1/rZqVn4=;
-  b=N8IyTulo9bHQLr2UXcrDCainJTMTtye0+7H7Hwoh2QC5nJGv/bteUmkQ
-   GklNjaBaiSyOYqksHeCgJ4Dwdc+b+8JZWcafNnOR8+boZdaZ5Z/koNxwP
-   xmrwTLvCumLQ7aSGfLPEEArgC4l7thiFTWQ00Fc0AgTe+y4KeWsBcskvo
-   HrItK0b+zmZpNFqq9Ot+MEu65W9iMY6UM/s4LZDu9ltLovGBWERBfBw6W
-   8+SqrYtXFYzS8eHx5pcuj5wXMMJh5lDXDL0qt/vfrgjbB4c53qQJc30Gf
-   lPZLDai4EwdzlZphqIN5TjGkxXxbVlVjt8DY6rqt7Ie8iRf35rFDLErhK
-   w==;
-X-CSE-ConnectionGUID: LEz6arAvQlCQhXKvwc6jqA==
-X-CSE-MsgGUID: ThpoxFE1TvqOn8uRxJi8Qw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="71362783"
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="71362783"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:42:51 -0700
-X-CSE-ConnectionGUID: EGx3ay1RS/6Sfymx3B2XRw==
-X-CSE-MsgGUID: HZizQhZXT96GFcfNcyZwSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
-   d="scan'208";a="276329760"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.152])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 06:42:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <20260701120140.430659-1-qby140326@gmail.com>
-References: <20260701120140.430659-1-qby140326@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: bitland-mifs-wmi: Fix NULL pointer
- dereference during suspend/resume
-Message-Id: <178308616472.25771.4774910234895366411.b4-ty@b4>
-Date: Fri, 03 Jul 2026 16:42:44 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C6brIbdR"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4921eed3fa2so4393085e9.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2026 07:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1783087756; x=1783692556; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:reply-to:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lfO1X26POMkNONMKCAH4khlnd1ko4GHBpFbhLRAY8BA=;
+        b=C6brIbdR7AaVCl3n4ymNz7qiHFQms2ygBgyAqoD0Qj+NQ56i2dZqz/1EbqsEe9rhxV
+         FqXke+oQ0Hr28SM4pZDf9nXXU+/JAQzjCXpvNqtejxgpfAu5DxIW9hYNcyoyynGGT69Q
+         JJrWWeIMw4NZAKcdGbM4nybU1pW3d0lcaFM6eXKNodNcCNz4vCZbNaDTEeaKzOfO2ZDH
+         kWTU3k29ZJCjU8aq21o4hpGi1OtHmVppVH8AnL48nrdscASHN+Fl54FFe0OkUZfHs3f2
+         /r7W7RKjnMQURaG38Ot/XZJpT59uDGMvsnuiCMSXqbvGBQ0Bhl6UvXK3bbhZEdImRXPF
+         jcDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783087756; x=1783692556;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:reply-to:user-agent
+         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lfO1X26POMkNONMKCAH4khlnd1ko4GHBpFbhLRAY8BA=;
+        b=c8lwVPdfbY6Ice9Ykkd9fn6DH6Fdgh3+m6FnRb/+jmPab3ZA9cVYDlCfMrN7PyYRme
+         63uVWwoV6zPXPX8GPma8VDEuVPl0CmDNyqW7DNdies1KTBMTo4ySA4YAJw4gDuAczs7G
+         P5jyeFI30R14GPKqTxaG/+vvetblTYFjZJlQiRKUiaAKhBY76oqVNxMKsez7kaRW59sO
+         5W+qnufcFwrHTfJgT2a+LcciIxVJMBDj1Nrl2fxSQRvSsfIxdT+rGU0BIfCj2dbDDiqG
+         npQg9oZZOz4k2+VXn76qfGlraL7fJn5/NCaEYgrAv6eINOucMTa6j27l99Lp5f9TAFrG
+         j4Eg==
+X-Forwarded-Encrypted: i=1; AFNElJ+LyW4BhTrk4pqxYZBCJG+B0F0pxplVI98QOhUfJyK0CRLptW1sk0Qfj/YTkye4AbaDiuFE1E1jnsjHg6wIkUkGHFCG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmr6im1YGyPR6VDVfqnPFQByo+D3SMlcMyyDUoJ7lwumFh58wi
+	ORtVmF0lscAcMfG1oChHBO9vdBIWYqlEHfylm2PVGIBl1cNcQxkNvQzBqZj9Uh4nZks=
+X-Gm-Gg: AfdE7clwnS3uXkiNbF6EmOT4qEW2MwiZ4JUQro5hboyBA7CfG9BR88ohSPjZ3ryuP/7
+	njCWNdIcmRFmMs8PjcyeQHa6Rw7hZ2fQAZMqArT7c08Jy+uSOu8+Qzx0EVoKCyjhKjU5ZdZdH6k
+	qrn/P1NNvlQQkYOrrcv2b+twF4Xx+H6OKvDYD2oVAzeCDOO2lQV4qczOPHld4cE4UA8QPBco3mZ
+	BIrX58eb/ESMdU7Y8VbWxWrNbh11Nfy9g9oA4S40TgJ0eiuH78GCQmhpjZGlfWV73wP3wEuU17h
+	XsBCigH6wmWTJH7/RvQoVHrE7MMNp6FvqoBFYK7ZqoY6IoWzX5dZ1wL/Vynkvsz8TEtcuVzo22z
+	f5X9ehff7uuxTHDgLyW3Mz6jU3XAlegREQaxNcW+F4Y2EdSCenl9c8AYYKQa0OHx+0dyHOTSr59
+	Ic/fspubGj3rYHs1LgpKOYBuTM6P8dhrwLacVOb7bFpyETIRFEPQr9+ZAQsWa8XI83uDUw
+X-Received: by 2002:a05:600c:c3c1:20b0:492:4363:e7eb with SMTP id 5b1f17b1804b1-493d0f3ca40mr3345e9.32.1783087755967;
+        Fri, 03 Jul 2026 07:09:15 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:106d:1080:9b13:921f:4f13:6cbb? ([2a01:e0a:106d:1080:9b13:921f:4f13:6cbb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-477ddf0fb15sm16668205f8f.29.2026.07.03.07.09.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2026 07:09:15 -0700 (PDT)
+Message-ID: <45736af3-cdd4-4398-8509-a3593af989e1@linaro.org>
+Date: Fri, 3 Jul 2026 16:09:13 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+User-Agent: Mozilla Thunderbird
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 0/2] Lenovo ThinkPad T14s EC thermal monitoring and
+ thermal zone integration
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>, sre@kernel.org,
+ hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux@roeck-us.net,
+ andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20260701103714.22583-1-daniel.lezcano@oss.qualcomm.com>
+ <5edfa760-b5b1-4f0e-8a14-2a39d2b99090@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <5edfa760-b5b1-4f0e-8a14-2a39d2b99090@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 01 Jul 2026 20:01:39 +0800, Mingyou Chen wrote:
-
-> The driver registers two distinct WMI devices: a control device
-> (BITLAND_WMI_CONTROL) and an event device (BITLAND_WMI_EVENT). During
-> the probe phase, the event device handling path returns early before
-> initializing the platform profile device (data->pp_dev), leaving it
-> NULL.
+On 7/3/26 12:32, Neil Armstrong wrote:
+> On 7/1/26 12:37, Daniel Lezcano wrote:
+>> Hi,
+>>
+>> This series extends the Lenovo ThinkPad T14s embedded controller driver
+>> with environmental monitoring capabilities and integrates the exposed
+>> sensors into the Linux thermal framework.
+>>
+>> The EC provides access to several platform temperature sensors
+>> covering the SoC, keyboard area, bottom cover, charging circuitry, QTM
+>> module and SSD. These sensors are currently used by the firmware for
+>> thermal management but are not exposed to Linux.
+>>
+>> The first patch adds hwmon support for the EC temperature sensors.
+>>
+>> The second patch exposes the EC as a thermal sensor provider in the
+>> device tree and defines thermal zones for the keyboard skin
+>> temperature and the charging circuitry temperature. This allows the
+>> generic thermal framework to react to EC-reported temperatures and
+>> apply standard Linux thermal mitigation policies.
+>>
+>> As the EC protocol is not fully decoded, the passive trip points
+>> get/set actions are missing, so it is not possible to program a
+>> threshold and receive an interrupt when crossed the way up or
+>> down. Consequently, the thermal zone related to the charging circuitry
+>> is polled every two seconds until we can set the trip points in the
+>> EC.
+>>
+>> This series fixes critical thermal issues happening on this platform
+>> where a kernel compilation, or heavy workloads, lead to a system
+>> reboot.
+>>
+>> Tested on a Lenovo ThinkPad T14s Gen 6 (Snapdragon X Elite).
+>>
+>> Thanks,
+>>
+>> Daniel
+>>
+>> ---
+>>   Changelog:
+>>     v3:
+>>      - Removed event based because trip point are not yet well supported
+>>      - Added an empty line after variable declaration (Ilpo Järvinen)
+>>      - Used MILLIDEGREE_PER_DEGREE from units.h (Ilpo Järvinen)
+>>      - Made switch consistent (Ilpo Järvinen)
+>>     v2:
+>>      - Fixed patch 1 subject prefix
+>>      - Removed the fan information part
+>>      - Added HWMON_T_ALARM
+>>      - Fixed DT change description to reflect what it does really
+>>
+>> Daniel Lezcano (2):
+>>    platform: arm64: lenovo-thinkpad-t14s-ec: Add hwmon support for
+>>      temperatures
+>>    arm64: dts: qcom: x1e78100-t14s: Add thermal zones for keyboard skin
+>>      and charging sensors
+>>
+>>   .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   |  68 ++++++++-
+>>   drivers/platform/arm64/lenovo-thinkpad-t14s.c | 130 ++++++++++++++++++
+>>   2 files changed, 197 insertions(+), 1 deletion(-)
+>>
 > 
-> However, the PM sleep operations are registered globally for the WMI
-> driver
-> and are triggered for both devices. When entering suspend, the event
-> device
-> invokes bitland_mifs_wmi_suspend(), which passes the uninitialized
-> data->pp_dev (NULL) into laptop_profile_get(). This leads to a NULL
-> pointer
-> dereference inside dev_get_drvdata(), causing a kernel Oops and halting
-> the
-> suspend sequence.
-> 
-> [...]
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on T14s OLED
 
+The charging sensor can go very high aswell and when cpu load is high the charging
+is throttled down, so perhaps it would be nice to also have a thermal zone for the
+charging sensors.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+On my setup when charging the battery at 60W the charging sensor reports ~63C but
+goes up to 80C when building a kernel, but stays around ~70C if the charger is not
+connected.
 
-The list of commits applied:
-[1/1] platform/x86: bitland-mifs-wmi: Fix NULL pointer dereference during suspend/resume
-      commit: d3666875c75eb1bc8090343fa0d6fc8fb7924356
-
---
- i.
-
+Neil
