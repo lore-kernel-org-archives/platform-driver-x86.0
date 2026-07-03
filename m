@@ -1,102 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C523D3CF6
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714FB221F2F;
+	Fri,  3 Jul 2026 12:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783082694; cv=none; b=txhTjIkvk90c0WjHte7NbuvH8+FV1UuJeZsquDS3KMslj7XtqebXWJUVD/yBqLE9aAKO26ggOKCctyfpxPg+RxBuPLemAdwm9/UqeYUmLmAtqgr7xcpEc0/tl/fjkHYLu6H472cgoMcqCyyBEzmhZH00AH2H2XopRjf+OHN5zr4=
+	t=1783082880; cv=none; b=ftZK0rppzdWhmumN89ZHgtFqKlcCj/rBXPMfSWLDseMeDvu/bc9kamzL46Q0M0kO8ejoGwxxYvqHo0c94/YZLoS00s6ZLEd4CCdbx8nlgxOBMvxxz8K+PRIJJTHu3+FC0XmoFXt2I/0mxTdzwn4QmZpUqLPvTGaAi+yaZ5pH2Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783082694; c=relaxed/simple;
-	bh=RIigBZLdXVKJmfhMgPGx8pT9Xn+bY/rlKKJbg52AXKg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eEOsHsaU/HFITAkPqxaw61YwTZzTmbi2xyvJINiVcHyHkSyGbdifImB6os5qwZb3Zkg8hJxjgtY8kAS5z83aPgocsuWS8xuskVBZvyl5PMLqzb+X/3RbYPaTroWZodOak8VeML0hAl0SBj1DGGSoy8zp2AEYLiqlc5grjnY54Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBNrkhNd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783082880; c=relaxed/simple;
+	bh=XZMYoFMBXZfe7Xh/FpyFp38Jc9nibPqr/2Y1YlyJyxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gOIHvZavISdUwQ0zr6JNQQUAHc2+ileQi/+h/ruwObD+8VLAlt3KlJ69tgAvFx7O+HEhv9lTbkDy1mBNTsSpC1Sny32Dfur4TZ0BSt1dHQXdzmcGM9VhnIF291U5PvSS9fXNU6QfrcYfgjlLAZPIntVvFbY9fpp8aPrncEOhVMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GyEHLvgj; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBNrkhNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D4981F00ACF
-	for <platform-driver-x86@vger.kernel.org>; Fri,  3 Jul 2026 12:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783082693;
-	bh=RIigBZLdXVKJmfhMgPGx8pT9Xn+bY/rlKKJbg52AXKg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=jBNrkhNd2XTinTTGCUtE0Fb5eLCw6CVSQnqkk4ztNmDYE/F9GONrX/ftA6yYAx+IQ
-	 MMC9a2DojufW70Y5sUhpG61Teaq2lQmreeGJVTSDg0bXbhA9fy+LW028NyyVwGayQo
-	 gBVGPsB2YwT24+Xlysgsd/Bjd18+nlDQq70hMtXYvK22DIRywySXHnA91fElKKKFJK
-	 3PsFSW0tGoinkoIajmnEIdzKFom47CZxrr50zQTd6S9aksPcNuvqik4MsgyUrhDGgY
-	 5hePvaLDeXj/0iKNfukT7jj+TrmUjKApLiMexkACUs8v5CmRESFNMgZ1HVMLbEwy9Q
-	 qC+yIfcP4lutA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aeb18fe7ceso327197e87.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 03 Jul 2026 05:44:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqOKMgZ/ppjfH2fTBSHwcqLXaLMO9g9VbtGsPOjzk3FAnSpZ7RLYnscNoUTdaKc4RbedthSfgubh6Nk/ZW1GNzoIsD1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYWJBFWyiQiUSRIVBXLjUMTEr4ox1KxiIy4/GiIgwxt9waAM6z
-	2csl5ljTKs7Yf2m40RD1kfObWETY2h5Jf85mvtg3YCaWigRue6hPuyp6MW+8HeH5FgWo2po0NuG
-	5HA6xM3HoD+uQh0MJqiRLFz5Yg2qfdJM=
-X-Received: by 2002:ac2:51cd:0:b0:5ae:c926:fc11 with SMTP id
- 2adb3069b0e04-5aec926fd83mr1755249e87.30.1783082691569; Fri, 03 Jul 2026
- 05:44:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GyEHLvgj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783082880; x=1814618880;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XZMYoFMBXZfe7Xh/FpyFp38Jc9nibPqr/2Y1YlyJyxE=;
+  b=GyEHLvgjrIDH1lZ8Qr7sunbVlzP+zwrOKzUMzEiOzgEumjdz9xbFRFJG
+   +XWpVWF932XPLx01VHSLV5f5RXiWTd6GnATuVAv1lFoYyV8ATE+r5YLwC
+   eoiZDBykPXErtTfuLGDvxnQ8qcnxtOoyP5QzeL37wGwi7vv1XEsIpAT66
+   oJqpWC6oaVK1ftmjEZwUifHJgstZlJubz3NZzyZMu+ZTso7Ijfr5bzRU2
+   wpBxF4XnRkXg0ECLQagbijMmIZCuRrwjiGNQRW8vPzf86fkrcZckojwFY
+   skbp+y+XUiMrJdiJ6eoKf/Kl0R1RiMTDxrYQLFPdPkJxnSqVW8Og8ueqt
+   w==;
+X-CSE-ConnectionGUID: cGPPPWf4TIe0Ohc5AOQB8A==
+X-CSE-MsgGUID: hNAUW0VwS/SesEPa9hFiSg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11835"; a="95213230"
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="95213230"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:47:59 -0700
+X-CSE-ConnectionGUID: 7waguLJXRMy6XobnXiK0iQ==
+X-CSE-MsgGUID: 8G21oWEPQB25sH6A1lxLCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,145,1779174000"; 
+   d="scan'208";a="253765341"
+Received: from carterle-desk.ger.corp.intel.com (HELO localhost) ([10.245.245.80])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2026 05:47:54 -0700
+Date: Fri, 3 Jul 2026 15:47:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Jonathan Woithe <jwoithe@just42.net>, Robert Gerlach <khnz@gmx.de>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Kenneth Chan <kenneth.t.chan@gmail.com>,
+	Mattia Dongili <malattia@linux.it>,
+	Azael Avalos <coproscefalo@gmail.com>
+Subject: Re: [PATCH v1 00/10] platform/x86: Stop using
+ acpi_device_name/class()
+Message-ID: <akeveOMZZqEM0dxj@ashevche-desk.local>
+References: <5135166.31r3eYUQgx@rafael.j.wysocki>
+ <akemrOqzWtcDVqey@ashevche-desk.local>
+ <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com>
+ <aket5xHht1sMRIEz@ashevche-desk.local>
+ <CAJZ5v0gMabGfAMSQ5UjLqvy-5uKFrdYCLwXdUi0Y3Oa7wum7EQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5135166.31r3eYUQgx@rafael.j.wysocki> <akemrOqzWtcDVqey@ashevche-desk.local>
- <CAJZ5v0isEvOx_UWCb9bpV0FQac+Dg7rmrjEtoYUH9hLyBgSP_A@mail.gmail.com> <aket5xHht1sMRIEz@ashevche-desk.local>
-In-Reply-To: <aket5xHht1sMRIEz@ashevche-desk.local>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Fri, 3 Jul 2026 14:44:38 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gMabGfAMSQ5UjLqvy-5uKFrdYCLwXdUi0Y3Oa7wum7EQ@mail.gmail.com>
-X-Gm-Features: AVVi8CdTuku-Yl4Is8DW8X38c3ESvLQhmp-GGvRW1SWi9bLlAWb1Ay3N_xGf53o
-Message-ID: <CAJZ5v0gMabGfAMSQ5UjLqvy-5uKFrdYCLwXdUi0Y3Oa7wum7EQ@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: Stop using acpi_device_name/class()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	Linux ACPI <linux-acpi@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, 
-	Denis Benato <denis.benato@linux.dev>, Jonathan Woithe <jwoithe@just42.net>, 
-	Robert Gerlach <khnz@gmx.de>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Mark Pearson <mpearson-lenovo@squebb.ca>, 
-	"Derek J. Clark" <derekjohn.clark@gmail.com>, Kenneth Chan <kenneth.t.chan@gmail.com>, 
-	Mattia Dongili <malattia@linux.it>, Azael Avalos <coproscefalo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gMabGfAMSQ5UjLqvy-5uKFrdYCLwXdUi0Y3Oa7wum7EQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jul 3, 2026 at 2:41=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jul 03, 2026 at 02:15:13PM +0200, Rafael J. Wysocki (Intel) wrote=
-:
-> > On Fri, Jul 3, 2026 at 2:10=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Fri, Jul 03, 2026 at 01:15:01PM +0200, Rafael J. Wysocki wrote:
-> > > >
-> > > > There are two fields in struct acpi_device_pnp, device_name and dev=
-ice_class,
-> > > > that were supposed to be populated and used by device drivers, but =
-they have
-> > > > never been used consistently and some drivers just populate them an=
-d don't
-> > > > access them later, and some drivers use them uninitialized.
-> > > >
-> > > > All of that is confusing and messy, so the drivers for core ACPI de=
-vices
-> > > > have been updated to stop using those fields which are now slated f=
-or
-> > > > removal, but they are still accessed in some places.
-> > > >
-> > > > This series updates platform x86 drivers accessing those fields to =
-stop
-> > > > doing that.
+On Fri, Jul 03, 2026 at 02:44:38PM +0200, Rafael J. Wysocki (Intel) wrote:
+> On Fri, Jul 3, 2026 at 2:41 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Jul 03, 2026 at 02:15:13PM +0200, Rafael J. Wysocki (Intel) wrote:
+> > > On Fri, Jul 3, 2026 at 2:10 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Jul 03, 2026 at 01:15:01PM +0200, Rafael J. Wysocki wrote:
+
+...
+
+> > > > In most of the patches you have double space in your name in From.
 > > >
-> > > In most of the patches you have double space in your name in From.
+> > > Do you mean the From header in the patch body or the From header in
+> > > the SMTP headers?
 > >
-> > Do you mean the From header in the patch body or the From header in
-> > the SMTP headers?
->
-> At least SMTP. TBH, I haven't paid attention to the From lines in the bod=
-ies.
+> > At least SMTP. TBH, I haven't paid attention to the From lines in the bodies.
+> 
+> Well, those are the ones that matter though because git will use them
+> to override the SMTP From header (and so they need to match the S-o-b,
+> not the SMTP From).
 
-Well, those are the ones that matter though because git will use them
-to override the SMTP From header (and so they need to match the S-o-b,
-not the SMTP From).
+Yeah, right. So the issue is minor after all (and I gave my tag already).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
