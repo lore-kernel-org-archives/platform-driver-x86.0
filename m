@@ -1,254 +1,174 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3602F693B;
-	Fri,  3 Jul 2026 18:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF2B345722
+	for <platform-driver-x86@vger.kernel.org>; Sat,  4 Jul 2026 16:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783101911; cv=none; b=p2g8PcnNBk9wJ+SE758cgqenmUDZaGxLY5q6D7gtxjOYyHPUPjnE86iwZEAcQn0lHzbfDEHbqVChk3TgDqn/mBBMKKP+p2hJbYL9vXY4tFJGYKwuChFYyjDM3zasJESfKPqcKaYt6eJJpa/1JqE+8Ny79WfyuAiGI3bPIvMT0KQ=
+	t=1783181314; cv=none; b=iZ5b1eoGn8CFjNeZ1pjAEVgcWtJ7dxJhMTFiMu7NWfDB0VFQBdIXFmLpoZguNXZmgrmrNFgdRx6Tu5bR8HdDABAuy9NMtSb0kFPegc5dEqGwY3BoEi4jl/UZ3PM9XmGEFtLsX7RGiP8d2s3YlgMunWdjs7yr7mBGSPfkGcTUSCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783101911; c=relaxed/simple;
-	bh=881Fp+PKxINFqKB0XdKTNIkFSshd1mM/iJgHKdc+JNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CoGW0VMDTV4j2H4WdezEDODERmLo66QwyMjdNg9BuLCq8ZtfoQyt0wfIrvJZAMePqMGpvrKKOxhvzWr6REpgmZK19adryAOHUTrgY/SlxhlswMB3aEdq3hO1HgLyYHlv6fbUPI9A+e6L22RaZpqMT3/bDQHahXJw7cljA87W3rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=pBubMqjA; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1783181314; c=relaxed/simple;
+	bh=XufG0eQZ8fmWPRjC8fo6ZVGZ05g2/hQ5aQ3eg6xYeK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FPgwWBjo0ZMFoe6BXPWB1qhHYBdWixxicrPJWKenYNcX534IPEqHuKG/ofwrUfBrK9UX6/AfOVMdXH4cfyCLopFpjLW/Qyh3RP/xKxCnBsRLFiwZLsysWmQJR7Mm5Xs5rDhEk+m3xZ1U3yB78z9d+y59ffIH9ib2G1NDJTR06Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGG3+Nm5; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="pBubMqjA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1783101900; x=1783706700; i=w_armin@gmx.de;
-	bh=aDZouihMkUtvoLLyI2zuE9+WFKWc1TGURfLM+PccBGI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=pBubMqjA/ZZNxmZLDXtlspSSblkTyGxO2LLxTh0xAO2+kbNoka91MoL6rQ6jXy4o
-	 sJZV2Sycmo5hwYIPI3Ar/uKqT20wXI4ZpfA1+n/Pzgfw4a5fcxX3WwyvR1ofBEd22
-	 5KjebHCEjD7W6VSZfbq9sz6WXrhRGXIQQjAFmwQxO2FivZbVFkMcgX2OKLrq/aovY
-	 ODdiHPSPlzCxGU4nl2DcMOFuac4ccWAr0nXN5uEEWXiNUH/zmZVAv8ztkrvn0WIgh
-	 21Hp0t1vH4UQFgAx5biL9sdBs4zepANGCOuBXmxS7jKcau8UPxBDv1pDXEs89KNku
-	 6PbZvghFg1i2JGRCxA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MDywo-1wnNlo378m-002E0o; Fri, 03
- Jul 2026 20:05:00 +0200
-Message-ID: <168cf7a0-7668-4f58-994a-d7d61bd3d414@gmx.de>
-Date: Fri, 3 Jul 2026 20:05:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGG3+Nm5"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-698c0ff45b5so3362993a12.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 04 Jul 2026 09:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783181310; x=1783786110; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Qrg4okzbbX4Q+s6vcJ64+r7iRqbYqBLV4VypMj2S+k=;
+        b=WGG3+Nm5FqLYAlHuC/azIEw2ULaf2Ao7nnSHTcCdwhsJ5gDw1QETjA0P3oHbkVevwe
+         LIvBx4oxPxaghPMYVC5IXtsJ7t+s5338YZ2LDeiKU3g+snEl1xE/E0ZbsQy0zlaaPjVN
+         mLeW6i8z9dDYSPbEcWr/uuB4DxhjaIFutqzV8KDcyBtnOM9syTwfNZMWuXbTGFIgTSHx
+         xfb7/LJ+Nn4HFxw3mVyPCSNMr7tvso8IQcgeCfLxGb0uBiEawDO5qdVsdGDcA9YiC/l/
+         9U7V3y2g98ki+VqqOfZvBJaT77RsklnJbjmo7iBhh81LaA2rOQCzaQy3GouUFSLaDF5q
+         y//g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783181310; x=1783786110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Qrg4okzbbX4Q+s6vcJ64+r7iRqbYqBLV4VypMj2S+k=;
+        b=LKbMXxswEZxqhIvOEGF8hw3b4JdRitZH5HecyyE9YkEUY+B6GTserRIOFIj85Q71Il
+         /KjEdS5yrokrxLoPh4Eohqskm9FwYrSfk2736Rws9ZH0CeV6YdcrR8ordWfLM+EDfGMd
+         YaryHlH/ukxXN4cdQBqE4yadnBkn0poex7ldOxxgAHrEoSHrd94LzYKZcp6rpn7Nqjl8
+         Vyn9yORUjQ5B/dgVEn0O2iq3OZ/qluXfTQgPHo0a6gvEONwJroetNoG9eL3SsBMIwrKx
+         Wot8wyWi99eoWEceTh3qGgcCyTj8B8lQE77iQpIFOUJgRzsEAJshjiI/jZD9ufqq6YLr
+         lQyg==
+X-Forwarded-Encrypted: i=1; AHgh+RqkI+e7VeuJNb1kIX8WOSW0S85Bl3czDaBzBEFdiZlUTaoVLKKe1jUK5H8a1ZVQZbWhVX0dYoVcU1/bGViX8gjd+r0/@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb/udId8FofD1h3gYFAxLICcm9OuUI674ByC67GuxVBoO5Cyo+
+	Mi+GFaRHDUfi2k1yE4gZcj0+KDyaiMmsyESr1Je6hkaDdt5bzfm7g0WZ
+X-Gm-Gg: AfdE7cmhUWCZLOxzOTdbo7F8QfQ9mzIpR2hbMRd9FSurpOpW+GeLfSF0kGYzK8uFUou
+	zHY7yTc1mOCTmlXgZXkkpEuY2p+46EydkpzXkQNrLOiP6Zyh7w5On2jfJ21SdUb6v+Asls/ZOHf
+	F3QM1WkUlxT26VHoajLfMIoU7sTblskPFngPEgQAi7W06JjJ04+bfFX9jOZkWlHmQCN246/JBhK
+	lHOcKd37DhCPdsFAW2XJHUw0RFta5tZHFo5Xd3hpwXVvJ3MFkdDIl6+X+aRJ2MdfOw4+xenPq9c
+	65sr7ESyC1qxKpHAzXqwuA9+y6g0F+r9eZkU+2w7sSebexxclynDSaVuweNPk5GV8+sPXY+X3qG
+	9XCnQqYFj05Ev6vjwgtNC7BUgBxNoTwEZZ1ZMFYlwkEdhtxckZChNdBY5Aq6By37ggvCCO6Gj1j
+	Gfjo9ubJaDomSknP6AAIY+O1vw5XIT6a7Tmidu9ViEnGXanV4L0U1VT82j8P+SYRc=
+X-Received: by 2002:a17:907:c518:b0:c12:b0b7:def with SMTP id a640c23a62f3a-c12c9d6bae4mr379868066b.14.1783181309628;
+        Sat, 04 Jul 2026 09:08:29 -0700 (PDT)
+Received: from node ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c12b60575c4sm438586266b.9.2026.07.04.09.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Jul 2026 09:08:29 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	jorge.lopez2@hp.com,
+	Thomas.Weissschuh@linutronix.de,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Mario Limonciello <superm1@kernel.org>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v2 0/3] hp-bioscfg: fix attribute enumeration on older HP BIOS
+Date: Sat,  4 Jul 2026 21:07:56 +0500
+Message-ID: <20260704160759.236249-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] platform/x86: lg-laptop: Fix keyboard backlight
- support on LG Gram 16T90SP
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: matan@svgalib.org, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20260622193914.116999-1-W_Armin@gmx.de>
- <20260622193914.116999-6-W_Armin@gmx.de>
- <6d134940-9dba-cc0d-dfb0-a375c4071310@linux.intel.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <6d134940-9dba-cc0d-dfb0-a375c4071310@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:qjzO9wzUeBHk5dfY4N4srU4dsW/i+aQ/cvhnQHX6KWGkHsxzeRN
- LB8Oz68H/9gQ4N2oNxtKVTUBaB+mL/RfUlo950Di8pC8/PvzeDsboGk16MTv919j5x35pja
- 6e03NSZohS+kyPLUNHbvhMmHwnJwf14IFb2sI7Kur9bGrwQZYLtwuwqIZt3z1U5EqM9g6w7
- qUI5mV5Kj8OjytdgPR7vQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Tkw6TDVi728=;REGNgQM8MkUaOYU+0+hPF85eJzi
- YPo/TJpve8Ekv3xwgRTAF4WWcW/IJWY6BJMcgZRKbFJfdRZp37UtzN4QAur1oA9OWoqIE5kWv
- mXfO/tiqtWLzIqNUrdBaFecmC6eLLvW8dhxogccPS1c84qFIBOQY7zYreZTcMZPJ3vZKmEy0S
- /3VT+BBXdm7ic7kCeZT7gZkOuNhu5p/eBoYjkk0NcVw/L2UBsH0ee2hp8/+vYMoRV5ERLPJGX
- qT4nJQmfiDy8ugHrYD/rn6sCSVmejg+snAJKx0jPGG5ddAC1FV3T3WCo+5uWVtDapYsvrbwXJ
- QG0jN/kZAAG1HY/BT8u6IwFFeAvGSq3bBMZPNvx0ZXKtVO3EzaN6KAxJimUeZoeijVHonRiwt
- IQkFvhCmUxenaxM84bY0qn/aKHjYKSukG6EOeP8HZIe1qj/UcMFOyrCsIl9dzw0MVFlte/zNa
- DiZSgONwWns7yBEyzGSm1S3g4xy4/DS29gR8sJZaItz1SV1vxH1f9S6KcDgmLOkQT0i5PFYFD
- uKhqNILwfeBpBHdIhbMpEH/0BjOmwqvucHRMf+D+HxxKnFxu7p7LzwdglQQCkrSYTVmwVqviQ
- VPw0SAoUcsGJPFXSB10WDKa2Qe+E/KyLZ7+beiDR0wItiZWVQAdkAhoaZNOyjALhCVJgloufX
- 7oFrrsllZLcfeKf83ZdDRC4b2NTOKp4VlRelgixjtKQgQM+l9QVTrytZ85eCHL6Qn3GKswhkG
- 7lZFIlhN8zck/Y6LvIcc8ppunFJs4GxgRjSAasaxRBW8Ea5z0gz5lrbRHTT6Jythl5KakH0Pq
- YI9YPSdC3IC9IiBL6lusWZXpWdfcYgLvtD48tuUsG9vodxaBYPwMjs9fJKnt1LMLY5/5zmZr3
- lNh3RCC4mOOUv6q4go9WiATL1YfxNhuYNYFamd3rWQ1SjX9wX7dv+CXxfiItQqElKHyMEWl2h
- LdI4SqBpH33/ZwatzX3NhY2zd09HpuUfYes3RQ9re9vzwe8SOgn09JKbuwJPoiEjlB9XzCXeM
- CoXp+4HQM77ZSWHW0pYVmh5aSXr62hNww1CjnXET8nMFN3X2f98pzuDOpJo7oUQIIY91GZFYF
- vOakzlFHsZTp7xhGph6y0aW5cgFg0h0b3WA+I7SIMaYaiDRVCXh7LX/T5Bxp6hRW23JOoLDAJ
- l5aIZi3pC3CpaxdEXgJNBiEQWhWMubXPVaJBs3ImSlU7abcWijxBAiQebYxkP2jnc1XV4nN7V
- TjuK9ALvYAhplpuzfSFSTeXtnVtEiuU/DrQqnUJKEw6bB47LIpD+ujQy8Pf+ZnmYOtkGcS3Uk
- FjFoHCWovXnfFg42LBVjBd6DA8ItlRyTfscHMSq6KMHaN01jvCsxI02l5hGYJJXplI7UmbXki
- siWJVY3m2SIsISBIkoo+Aifph12adv0FOiPJL9ThWpaWT8yGzhtyoI+xapNIZVqD6Edx4U3ZH
- /zhaGWPnp88Y+SaJUUA2u725Vp65RO15DJAayiLTGrNYO+5dayo9jHaCsXpUsHJRYeEu9j/2X
- MktHqYZQGQ/YjidFEGpuiwV8A64XalrmVfr3zw+p0pJO5qbu81r1uaMI6L+w+hlsbxNKe/Cyp
- kpPnwIgBYwULtS6oxiXzPNPB2K5EzUMY9R+zPxxa5jaMKkn77vdMH4DYuBA132I6/Cb1twSbS
- hOdtB5oX7KPrhH9JUYF8o0eH1rKKtQz0ahIvbeft9UmLTQpti40/s+HIQ1fbTfC+sSyW6tDkB
- 1dAglBo8IvjMgMhiTam6hqLAIybs1sOzSVSNH720W0qCDFGiv6ZGJYRfb+9f0RzEE0uTJGbsY
- GZgdA628upevayNZ0IRDTMiw4OfQHjSd+nQUjyu8HSIlQ++tp9Jfufj7QghOjZgyhTGH/4vDS
- 7j5eb3Rgm4cQMDgw7OizDyCswmzio9IiRdyGtjyhYPC+2Dr2XMzUDvT7TyaGvYwnNUlP3wCjf
- GeMXJYNyVNS2lvEZRPPFghu76u+otlBfnfhnLtYBSEc/Oj/aspdFbKeZ7uQqrbUMpNA6u+uDi
- 8i5/ZENREWbxvZ+f54aC9ZcWmpwifWHro7+EZqNAJSc+RF2/ZbzpS+BCEh8SfTo8CrIuukgIu
- ZHIFTAmx01wqN6qaR5aN3DK5QrLrKpts3pu0gU9wDHZoRCq/7icKiN09rWQYWhWJZsVTYWN7C
- WMYSF7P9T9KLVRAFa1RP7W8z/HtJpr7vVY4BhMAYj6S8XJcUL1Vewrco/0KrZf2ZL2cRioPl0
- CkjA2z7S5AL2Q0OMdw7/ZW+vNWt/nmNvRVebTzFS1BL2Vd6uyd69F6KF0xJJEMKE2++N5ZXMU
- 3Q6DLMnwSo6szccCvQJASZrzsXdGQaNqmWyvjr/EaCX0tG5HLAVNeX1X9ABy5VOPDb7YMfFz/
- 2QIAjtk15+bdan2NH8IkUZfYILfblbdprGdPwHk5QFkxv8OjGRSHrbLL/V9/a4qc87zrMsfUd
- LBhLhSZu6yqftaFkLOCUzqAYTtZRbp44JEYFocdkI7zV5lcqFt699IK3PHaIG2f6Htkt/P11g
- mNkzc2au3Iji8HdGo8hjlNgoE+EYfNR6hKR0glItc7Mlu7Ixpao/Fij7nG3uovq9U2n7bAQRf
- vILw20zMp7VL60u6yhYlTAP61jl9zJGDzrTIrQlTS/dKCbCh2KFo7A0wC+OOmKb92Wa7lvh4l
- x2WdLcHOQdQ8A3XKaeo1NK2DZuFc482eMcLw5afw93Mgp8rQeVb0ZnZPKDE5ov4OmWx1IfSTH
- WusDta/YzsL0FPiTaGeMMkTnCkbQQRdBhxcovvOO9qnS6yuZxk6PJ/a+TPz6bfTPlIzhsQG0H
- OTszXKBap8NNXk39bFqOcux6HQqxKi9Mf+hNSsNOe9UM6j6A9nzXfNFjtGoIheET45DFBjzzD
- 3ovm0Kte7cAisUUxu9+hppBX64iNXWkQRHlDh80w3YF9LSNPOkLzaunwmRlq5Q7Sj7ZEM1hbm
- 81nE2Aw75C12UDbZuPp6OCWKUynEqpijrgn262BWApQrcRcxaU0CPUZ/bvc72qSM3q7h++4/b
- 9cQNbHZRFw2IoqqYHcf+pRT68OseCM/tCitr23VPv/5+CQxaLslxwgnbGnXp0LKfo1kNys/aq
- 2wu7CpqB+nuPJrwqEXYLcUrg41BtzcRN8j2YiohutDxonzpoT5vNMsS5SlN98N6rshYtyGv/a
- AtAZDZ4ULoOVj8U+YReX75xQRfP/fxXHirCQYqB+Q62erXq3vGL0Dzhea51B1Sdct9WwqE+Wc
- FFFNlwKGWoUJPRZOu/SLTOlvQwMzeSOzQGyHn/6tC30DgQwUPyCqOPPnRBxhSqkMlBzZmSheJ
- REGZIoAp/BWTOrmRkwLj1re4fqnwdf6AQn15L5HW3xMUKWuFIR2MXgJvVxytDIcUDuxuDyB9E
- TcRWsXNRGnMVdgN5pPso6Vmo+2G4xtVAOPel7mHjh7fKyotPynWF+VcqeK6fobmxMCLMpl/GZ
- xgZSlBFnKRXN8+vzZDgXUHOpyUQO9n31d/WHEmEQT2XD8Cwcc3V3aF1RDc+ICVWWOSoaV/iWr
- EqOLOT2WnkMpSD6r2bPMaA59Sww0ZpabwEnKe1/s75Qvs28tCJk1Jdl0pMkyIjTd6f1Jb2FfE
- B7F2Y6mi5WwR5MFlqcpgSNsXeqyQ8Jt1UGDHFi9eaRpb0euz+Jme6q6oqF5WYrXkfHG/dTV9k
- p0CJ4X/cTWtbMsVyIYoJJN9TQDLGIm0XL7jq0Q0IIHEFEdBBqoC75FgXeUw+yiHUqFUQAfGxn
- dZL5enPVMgbN6Lp4u++9tIQOUbdc1CI8U9Hv3JefflcFnExYlbDBPJQVvnw0niXtJ9N6PHVnk
- immvCYJPTPFMCjmrdUFOvqoVNFlUYNVbuVu5y62zcpBRJ7JLBJqnYaOcjKZ1y8fVID2efrb40
- Z3RLiIDJ2uzq1h4McapgRKPWiirv81JnyNplbw+h5SftNQDVyBUTqnRUCMjHWV7OQIqhau9NU
- 3279sCIt8R4aZrfmw1CqYc1/c/BZouTRl/cHg52NOkKLsWL8CudZ5nJTchzoV7bZmYavUBFM3
- r4iC0Lamfvtx+2UcrkreNpNl5b88tb9NkjjluQjVj5h8xK3C3L9sU9prCE4MMJJnLzRtTGCBq
- VP4qv9ox/z4hgFiMMr9sgj1ZLZ9mi8wGC/SkiCdcCcxzuZgch/WI6kEHAbeu0fl52TKIF2tJr
- Tk7TPzHPAqU/Oeekh2xGuctTeciXimVX/2TBovw81vphZHR8tqlhO/u59EP5fuKpl670610+n
- 5BYACkzoI9C0EvwgXRoeJLgRplXu8Gw3xpUzF7Hq7Z6qcw5wJCrMy9MeXPAqHjw/E9QXP6JdV
- ud+wsLBFOhyviOxovseDlmQq157dSqxaM67BHDCKu395FUh3h97Iu92dR/8+f1MxtTjnaXOw/
- hUG74vJGoonIkldhrAdgA/YhqSg2zchvRbluzfJTRpqfKUgBC1IsixJja1mg9Co/2dO2gT7vU
- SfnsIcxhmKWpm1pFbSZIp7QYzGDXDxsld4veu8fqf19dg6PlQO6NpKuBRgGIUc8azYx1lx90/
- +2K6Y5luWhRBLDhd2TMCv3Ggppwnqvh4/oCdu2hNs9LOquVJwfhj4QauxHiYAq1YPUIuY/YNl
- yG+RDAzinT1BnWRj80nMU1hjCYS/aICZM8jtNnSfV1s21AX0ktu7a5M4wRL1mfJ4rVtvCEY6v
- bMggvmkJBhSSHmXqLIb6xmNBKGZKnKUVTB348mGj4J07oUYaWjFtTOTHWLnOfDuywe29EjrqG
- 7zNDkVMQA0ENvtQbLCn7skLGmFBPT2jWOOhQHmp/0cMnXYn7gHPda4SFDfkV3iHjQmy/oWp2U
- m4tAW+1Gxus3jvrg+0ezFdAyXWS8EDbKAxe/BBHOvaEQlG4AWlCprcQYsJfTE2kS9AgQAP6vl
- qw4NXwPWuQTlj1j5OGBgXRfwhUwiikbsGhrItTkG4IyPt23vlwjNdkIQ3opfIJNZdcgeMv/yo
- ykGTLzirKPe/IyUed5STJKPioJR6dSckk0smhxyVy1CT3rPZusvgcaeBLnSrs9MTAUGDRTnD1
- +T2T+oReW7Pg0nlhh5evfbCkv/a7AttoS1cOx1JfSokGsPJlQofkLr73bYQjwTtuDIfBjh6h+
- hknklM9t/jzDYXji9c1vTY1dquhyetZMEoksOsyqFky+DZI3LO2H+/WXSAm6r34Z/x7ceA0bu
- 5YVh5QLF3+1XhqoFPY5Tp3zVxQy/0dRJ7TEJg74iRedtQuISLm0geZM9/uadynAg7PDFQWwXQ
- 8RjwYqiceuESUSWFuKxAGg7s/A028pASL1uCT5KZ0zHVz8IYNLivnVpPAZGbF4YlW2YXbpkYB
- aFy7uqTgItPegAqvPNAgW1dsKCTOpYaKGjVFAhuB1Hx0XVruSKIYoYm5jgQL0QCUz52qVFRB/
- vTrZoF2KgQHVmt+9CJ4Yq99AFw9ACjZpBOd0amsddkhBWXiZTS6ybYQyFPEFIsp6IxdkWNjfM
- NTgZSMCvXe5uob6DlMMHQsYhTwk26qO1h9iyLLl7b8hMwUu4ZUYc2Wz/6BceK4p0sdMcfb7A2
- jvFaRmPi7808W+m6HJCcx+l2E5HuA/cXsPhH1tuKYxFo2G3nb9A/MCXw5OctQllvGq+M1zM5q
- /Osn0c9qGbtEuh2wpk=
+Content-Transfer-Encoding: 8bit
 
-Am 03.07.26 um 15:22 schrieb Ilpo J=C3=A4rvinen:
+The hp_bioscfg driver fails to enumerate BIOS attributes on
+HP EliteBook 840 G2 (and potentially other older HP models) because:
 
-> On Mon, 22 Jun 2026, Armin Wolf wrote:
->
->> On the LG Gram 16T90SP, the ACPI firmware will only accept the values
->> 0x80, 0xA2 and 0xA4 when setting the keyboard backlight. After a bit
->> of research using ACPI tables from older models it seems that bit 8
->> is supposed to be always written as 1.
->>
->> Fix the keyboard backlight support on this model by always setting
->> bit 8 inside the argument passed to the WMAB ACPI control method.
->>
->> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> ---
->>   drivers/platform/x86/lg-laptop.c | 47 ++++++++++++++++++++++++-------=
--
->>   1 file changed, 36 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg=
--laptop.c
->> index d1b33a6b5206..22f8a6368f7c 100644
->> --- a/drivers/platform/x86/lg-laptop.c
->> +++ b/drivers/platform/x86/lg-laptop.c
->> @@ -86,6 +86,18 @@ MODULE_PARM_DESC(fw_debug, "Enable printing of firmw=
-are debug messages");
->>   #define WMBB_USB_CHARGE 0x10B
->>   #define WMBB_BATT_LIMIT 0x10C
->>  =20
->> +#define KBD_LED_BRIGHTNESS_MASK GENMASK(4, 0)
->> +#define KBD_LED_BRIGHTNESS_OFF	0x0
->> +#define KBD_LED_BRIGHTNESS_HALF 0x2
->> +#define KBD_LED_BRIGHTNESS_FULL 0x4
->> +#define KBD_LED_MODE_MASK	GENMASK(6, 5)
-> bits.h needed.
+  1. hp_init_bios_package_attribute() hard-fails when a WMI ACPI package
+     contains fewer elements than the per-type expected count (11 < 13),
+     even though only the first 10 common elements are required to
+     register an attribute.
 
-Already exists.
+  2. hp_populate_enumeration_elements_from_package() returns -EIO and
+     discards the entire attribute when any single element has an
+     unexpected ACPI object type - typically after a BIOS AML error
+     returns malformed data.
 
->> +#define KBD_LED_MODE_OFF	0x0
->> +#define KBD_LED_MODE_ON		0x1
->> +#define KBD_LED_STATUS		BIT(7)
->> +#define KBD_LED_MAGIC_MASK	GENMASK(15, 8)
->> +/* Exact purpose is unknown, maybe some sort of brightness limit? */
->> +#define KBD_LED_MAGIC		0x05
->> +
->>   #define FAN_MODE_LOWER GENMASK(1, 0)
->>   #define FAN_MODE_UPPER GENMASK(5, 4)
->>  =20
->> @@ -601,15 +613,25 @@ static LED_DEVICE(tpad_led, 1, 0);
->>   static void kbd_backlight_set(struct led_classdev *cdev,
->>   			      enum led_brightness brightness)
->>   {
->> -	u32 val;
->> +	/* Must always be written */
->> +	u32 value =3D KBD_LED_STATUS;
->> +	u32 mode, bright;
->> +
->> +	if (brightness <=3D LED_OFF) {
->> +		mode =3D KBD_LED_MODE_OFF;
->> +		bright =3D KBD_LED_BRIGHTNESS_OFF;
->> +	} else {
->> +		mode =3D KBD_LED_MODE_ON;
->> +		if (brightness >=3D LED_FULL)
->> +			bright =3D KBD_LED_BRIGHTNESS_FULL;
->> +		else
->> +			bright =3D KBD_LED_BRIGHTNESS_HALF;
->> +	}
->>  =20
->> -	val =3D 0x22;
->> -	if (brightness <=3D LED_OFF)
->> -		val =3D 0;
->> -	if (brightness >=3D LED_FULL)
->> -		val =3D 0x24;
->> +	value |=3D FIELD_PREP(KBD_LED_BRIGHTNESS_MASK, bright);
->> +	value |=3D FIELD_PREP(KBD_LED_MODE_MASK, mode);
->>  =20
->> -	lg_wmab_set(cdev->dev->parent, WM_KEY_LIGHT, val);
->> +	lg_wmab_set(cdev->dev->parent, WM_KEY_LIGHT, value);
->>   }
->>  =20
->>   static enum led_brightness get_kbd_backlight_level(struct device *dev=
-)
->> @@ -621,13 +643,16 @@ static enum led_brightness get_kbd_backlight_leve=
-l(struct device *dev)
->>   	if (ret < 0)
->>   		return LED_OFF;
->>  =20
->> -	if ((value & 0xFF00) !=3D 0x0500)
->> +	if (FIELD_GET(KBD_LED_MAGIC_MASK, value) !=3D KBD_LED_MAGIC)
->> +		return LED_OFF;
->> +
->> +	if (FIELD_GET(KBD_LED_MODE_MASK, value) =3D=3D KBD_LED_MODE_OFF)
->>   		return LED_OFF;
->>  =20
->> -	switch (value & 0x27) {
->> -	case 0x24:
->> +	switch (FIELD_GET(KBD_LED_BRIGHTNESS_MASK, value)) {
->> +	case KBD_LED_BRIGHTNESS_FULL:
->>   		return LED_FULL;
->> -	case 0x22:
->> +	case KBD_LED_BRIGHTNESS_HALF:
->>   		return LED_HALF;
->>   	default:
->>   		return LED_OFF;
-> Superb, I was already wanting to see this in patch 4 but had enough
-> patience to look the subsequent patch first. Thanks for naming them!
+Hardware affected:
+  HP EliteBook 840 G2 (DMI: Hewlett-Packard HP EliteBook 840 G2/2216)
+  BIOS: M71 Ver. 01.31 (02/24/2020)
 
-Thanks :)
+How to reproduce:
+  1. Boot a kernel with CONFIG_HP_BIOSCFG=m on an HP EliteBook 840 G2
+  2. modprobe hp_bioscfg
+  3. Observe dmesg:
+       hp_bioscfg: ACPI-package does not have enough elements: 11 < 13
+       Error expected type 2 for elem 13, but got type 1 instead
 
-Armin Wolf
+Changes since v1:
+  Patch 1/3 is new. Relaxing the element-count gate in patch 2/3 (v1's
+  patch 1/2) lets packages shorter than the per-type ELEM_CNT constant
+  reach hp_populate_*_elements_from_package(). Those loops don't bound
+  themselves against the real package size - each one re-derives a
+  "count" by reading ->package.count off elements[0], which is always
+  a string (NAME) object, so it's actually reading ->string.length
+  through the union. That was harmless while the old hard min_elements
+  gate guaranteed a full ELEM_CNT-sized package on every call, but once
+  patch 2/3 allows a shorter package through, the fixed ELEM_CNT loop
+  bound walks past the end of the real elements[] array - a heap
+  out-of-bounds read, on the exact EliteBook 840 G2 hardware this
+  series targets.
+
+  Patch 1/3 fixes this by threading the real, already-validated
+  obj->package.count down into every hp_populate_*_package_data()
+  wrapper instead of letting each one guess at it, and bounds
+  hp_populate_ordered_list_elements_from_package()'s main loop (which
+  previously ignored the count entirely) the same way. It's a no-op
+  for any package that already meets today's ELEM_CNT minimums, and
+  patch 2/3 is only safe to apply on top of it.
+
+  Patches 2/3 and 3/3 are otherwise unchanged from v1.
+
+  Thanks to Mario for the v1 Reviewed-by, carried forward on 2/3 and
+  3/3 since those are unmodified. Armin's point about migrating to the
+  buffer-based WMI API for correct marshaling is well taken as the
+  longer-term fix; this series is meant as a minimal, backportable fix
+  for the immediate enumeration failure and the OOB read it would
+  otherwise reintroduce, not a replacement for that migration.
+
+Testing notes:
+  Tested on HP EliteBook 840 G2 running Arch Linux kernel 7.0.13-arch1-1.
+  After patches, hp_bioscfg loads successfully and enumerates available
+  BIOS attributes. Attributes with shortened packages are partially
+  populated and accessible via sysfs. No regressions on systems that
+  return full ELEM_CNT-element packages (patch 1/3 only changes
+  behavior once patch 2/3's relaxed gate can hand it a shorter one).
+
+Relevant dmesg (before fix):
+  [   11.xxx] hp_bioscfg: ACPI-package does not have enough elements:
+              11 < 13
+  [   11.xxx] ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT,
+              Index (0x000000032) is beyond end of object (length 0x32)
+  [   11.xxx] ACPI Error: Aborting method \_SB.WMID.WQBE
+  [   11.xxx] Error expected type 2 for elem 13, got type 1
+  [   11.xxx] hp_bioscfg: Returned error 0x3
+
+
+Muhammad Bilal (3):
+  platform/x86: hp-bioscfg: pass validated element count to package
+    parsers
+  platform/x86: hp-bioscfg: accept reduced ACPI packages from older HP
+    BIOS
+  platform/x86: hp-bioscfg: warn on element type mismatch instead of
+    failing
+
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c     | 16 +++++++++++++---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h     |  8 ++++++++
+ .../platform/x86/hp/hp-bioscfg/enum-attributes.c | 10 ++++++----
+ .../platform/x86/hp/hp-bioscfg/int-attributes.c  |  3 ++-
+ .../x86/hp/hp-bioscfg/order-list-attributes.c    |  7 ++++---
+ .../x86/hp/hp-bioscfg/passwdobj-attributes.c     |  5 +++--
+ .../x86/hp/hp-bioscfg/string-attributes.c        |  3 ++-
+ 7 files changed, 38 insertions(+), 14 deletions(-)
+
+-- 
+2.55.0
 
