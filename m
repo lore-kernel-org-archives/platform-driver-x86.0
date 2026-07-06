@@ -1,187 +1,209 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012024.outbound.protection.outlook.com [40.107.209.24])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010054.outbound.protection.outlook.com [52.101.61.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D064A379C2F;
-	Mon,  6 Jul 2026 14:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF48379C32;
+	Mon,  6 Jul 2026 14:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783347702; cv=fail; b=R29TwbWoaVkTZmt64IQRI5dAvrTPjom1FYG8tFbi3u+TaVThTtzsJ3XQwgMKeSqZBkt9D4MIOQLcF6/FqY+AHt1eIvzZ+sX532f1EV324VJuIC1nWA7wk6cthdDb9fUTQWER4WS1vtTugXlfyUTgcm7WpRugbHuEV3kOE8nwP3s=
+	t=1783347997; cv=fail; b=KZdvXi7JkfnRVBRyDdhwawcjGNokkcRKJRAYkfGWbzVZXPPOiMO90cegFWTEmZrZpqggGnTnr5D7DfF7SpBgx8o0ERg8C/ZXne886SXyzFikS81jPt9Ixvtpo3KqigZJ+gb0/5iaLN0CRfScM6evFWYL0EZ0o733cjDGqKC2/NA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783347702; c=relaxed/simple;
-	bh=cz7QTXhoRFJGJhjBtIozmE12PLtcEZOulkz14xyqRus=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BvnIjPkgGja87jilQ9WbxHu2l/ilA6S/+mHuTDpOwuBtLld2I9WfVm1jouUSlsBHLBHMeQTuVlgnYvGyqLYWEsf+ZbOfzmKKR/GbXwCmuhy1LS8gAA6brF1XmzK59QW8P+gdhyeJChnyYsgePqe7KzEPgIHFpC1aQxm/o7Cfdgg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3baWX0xH; arc=fail smtp.client-ip=40.107.209.24
+	s=arc-20240116; t=1783347997; c=relaxed/simple;
+	bh=dgFKm+94HwWzf8Ojlx3bZOaqVpR3xVLOsfJ3/ZrDVo0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iWIj52D4I647OBNx8iNSL6nXONU8iG1iMsDNpvDykXMG1ZRxGH2vT7aIr1rEz19Ss+zqodYTPnS21pFdabQJz39SV1YRy4i8sC9HGWN75G1pBd/VKe/H8eUufOMgw0e9M1qkhQhPUCXR/kzkM/7+cnxQDkQzHgNOA5w4aQm7dR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ye9AAWrl; arc=fail smtp.client-ip=52.101.61.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3baWX0xH"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ye9AAWrl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iTPzj+QmZ8g1sMXyD7YqMvdqBOi+VC0NWT+THe2E04BpvUKLGNyygJy6ij/R0bs19WpbjnoxX1dtGu6kuRwdGoW4xqqoNQxuHe+VB7mHpYwZdFWMmOlxfK6F4l8ZEEdczvu1PskRSNNlkVi4WoJ4TjZhB/9Rk5cYTvnjikZN8SIZzamq9GVIjBDltsIYgTjP5GBy2t4k9ze39WAM1GeKaLibClHp4LUsb7UNTFS7JBXwJsbPCzZSxYWjmjPhHAWEyyEswveoYfYQfBLr8iLVomuPHr05DAYgU5Oen3XhTeCya8RUHS4P3rp45h63Bv3ovT9bCGX3TsRfZjBlIilZOQ==
+ b=Msx4vTMb2jy6RJ4urpm3QyDI+I/JVngaFuVxsUl40EqiyJlmrdfZJA6qWvYDF4gzmZFOTUVHMfqbnvGE9aGZ9WJq3I1NwwFbiX2FYFQk34jwjTX5YX0h4up0RtYYc+EDfU+pdOsI7sJIuQ/XI0bYGlEdLOK/qjEuWzmxZJhCQyEAatuEVUFUTWkh40/lYmipiFpql2Z/s5Hw6luKSF/Jx7RJdiU/jVqqaxsI6NnlU/MqzSmvTW/5c1QjN/QJHvoCbYFfNPb3oj6D6bo6At0rMrL+HX9kreIVYRF/cqqkcSfNyboB+Z4UPXoY7f6AfJR4cgQXfl2+MHTaKcgSafRh+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iQwIFs9A0zHn8MKQCqqY8leADIsBITGGbxFgF/bRVgU=;
- b=YvGRMGB1HLYVGrfJoE6A9AEcQRgXuJbgeZrce3YzzmgE81YL0rsyHv87w3m6Ne+r6AVIGUsZmfSycvYhxVUpvZ1hm15Oxc5rluyQmFLK+KfYz6xnGAQoxYQKWNC1BP5ZNPHR+aZvK62kiOqL/PUhZXi6CUYI76PRebDMO2Wrm7S24EEFy3m936xEnpoLWdmQ+hktdgLP8CnacR0+TceATNRzkAvmxLP5tH71fHAYObnfOw86xQujUCDjKPVqIkzDZoeZiJtWlqbndKirwLu/9HPGhYBMEB4PVC4CNY5F22XjkUq/mYX+PVXxuxLsCcE+bFaS4ZQhJkHy9lHTzE+wiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
+ bh=GKfSs69j0rLnsWbA/euv8uaqXNcOzBva+tN2ZQP1QZA=;
+ b=YXOjWCEETh6kGM4z5qSJaSxHdGGKNyUoLBMFA1ZUgRD5nE9hr87DuHHFTCelYB4MWMYlFepNZvSqT4QLRncwzpPk2NXXb0gMTvK+vitcecJ83NikuOGMEK/iuGFWSGnuVDMpGKSyxW/N/myoMJ8w3E54bJud30wpQ+kPd+x/ovcluAjMg8A6hi3u/PT8fevoQ9VbgzBNHGKfKZuWhy+u2PjvFFlwJjvxK7h/L+jX4CR5pNf7W0noEzC2MG/BN6l22XLs8TbceEVAgl3XCoQh/VuJiABYAK4joYXAzprD3iYnvBBFiH0p1VwEz8JMNMVql3Auu4b1enuCxVbELx68Zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iQwIFs9A0zHn8MKQCqqY8leADIsBITGGbxFgF/bRVgU=;
- b=3baWX0xHQwa0ggqEtyxsx7h2Ug1MTuLH61JAJ6do98+9V1baaCbXkTVv359iqkdQL7J+Z4qogiYYxtiF1Q/1WRBVpLFQfwrrSjV9fLY4RD08j7Gcz98CyD8wo11H6MAlxb8JdZQF57XdDUZb95uQMZiVy/eCo2FDSWd5XXcReLk=
-Received: from SJ0PR05CA0139.namprd05.prod.outlook.com (2603:10b6:a03:33d::24)
- by IA1PR12MB6628.namprd12.prod.outlook.com (2603:10b6:208:3a0::17) with
+ bh=GKfSs69j0rLnsWbA/euv8uaqXNcOzBva+tN2ZQP1QZA=;
+ b=ye9AAWrl86A0ifTJvQXBP64zd1Ms9TW0cyz+xOItPmZcIEOLuhSKKOFa7BG/09rxCP5ZZ9VsuK62SzZxx1MN2XDLmXwvyc9vbGdctsnOQ5t0JzObbXnWUkGpfKOsWO4JltAltyiHOX14Y5qbsfEhdJa991NTGCU+8/6m+89bDo4=
+Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
+ by MW4PR12MB7165.namprd12.prod.outlook.com (2603:10b6:303:21b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.15; Mon, 6 Jul
- 2026 14:21:34 +0000
-Received: from SJ5PEPF000001F6.namprd05.prod.outlook.com
- (2603:10b6:a03:33d:cafe::84) by SJ0PR05CA0139.outlook.office365.com
- (2603:10b6:a03:33d::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.7 via Frontend Transport; Mon, 6
- Jul 2026 14:21:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF000001F6.mail.protection.outlook.com (10.167.242.74) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Mon, 6 Jul 2026 14:21:34 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 6 Jul
- 2026 09:21:31 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH v3 1/5] platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe mutex
-Date: Mon, 6 Jul 2026 19:51:10 +0530
-Message-ID: <20260706142114.3202259-2-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260706142114.3202259-1-muralidhara.mk@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Mon, 6 Jul 2026
+ 14:26:25 +0000
+Received: from PH8PR12MB7325.namprd12.prod.outlook.com
+ ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
+ ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.21.0181.009; Mon, 6 Jul 2026
+ 14:26:22 +0000
+From: "M K, Muralidhara" <Muralidhara.MK@amd.com>
+To: "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP
+ concurrency and lifecycle hardening
+Thread-Topic: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP
+ concurrency and lifecycle hardening
+Thread-Index: AQHdDVLB4ezCzn58Y0WwEz4NXkI837Zgi8xw
+Date: Mon, 6 Jul 2026 14:26:22 +0000
+Message-ID:
+ <PH8PR12MB7325DA925A4C5551F7E3F8ED85F12@PH8PR12MB7325.namprd12.prod.outlook.com>
 References: <20260706142114.3202259-1-muralidhara.mk@amd.com>
+In-Reply-To: <20260706142114.3202259-1-muralidhara.mk@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Enabled=True;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SetDate=2026-07-06T14:24:58.0000000Z;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Name=AMD
+ General
+ v26;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_ContentBits=3;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH8PR12MB7325:EE_|MW4PR12MB7165:EE_
+x-ms-office365-filtering-correlation-id: c66a1b3d-33a7-413e-1d66-08dedb6a8dc8
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|38070700021|11063799006|22082099003|18002099003|56012099006;
+x-microsoft-antispam-message-info:
+ yxZCy9Z6VYo+vkE0u08ttawAAiedVlwqbAt2Kq7JIlBAd2YOHH2tpLwFVU2l4JUbHOVsXv3RpuTpgPPpD287pc+9y4ZaRAL/QhRMwjYkwPJQo/5KKPTURXJWe135qIcnfCKify32o6pB7G2MkY5jjP1zJNldYM4VwqtksKVsHyQ5+43/PCsHKPEfGjTBXwMpONWxvhvgK+8qtTu+WRUj/rd66HQcGsRcpsAAayW7E7JAPmEZauV24AYV9TvlDjQIO02aFYCeTVt9pg7pfKzZQpPMRGl6Kp+wTOoecPdZ+Zgoq/IgOGSfWAfUhza2vInwfSxCgBWd0CyLtGaBKjYIxTWV3BBc7gNxvpLf3B/UU0uL5FSPb0k0QgMpCe7143pUyELawjkhT76ANXaoPXNXFScj3sFTQp7oib+a7TIZprkvWE/3cD2rgFEdChAuJfI1n8ufoBreGnup0E9HfG838OS9xy1B0oY3tJXLou5aBnMUR8Z/lMqnUowkmSTmiVSD9KqCoHd9OfRRc7gx6NsKD+MdfT/tsq+3TWC4OOA1xSxqchKEwas/i5cJCiXC3kKMwI3yvNXeGzdnrloWjL6Tf0MOIpb5bEGttbdagCx7DDyf1+Zte47ezwxMXuFnmGHggoArmMP0gRY9F3+SN3AyDfEeLlGFmPMZldDzJ/hYo9g=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(38070700021)(11063799006)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?VNPSK0rxwFYbgeLVXVutHOG4WaggVorb/DPZoxxYeuLBEaA7opHfI/wa2qEB?=
+ =?us-ascii?Q?DHHVHQaBkO9zVtFzHqq2WCSHB5+Y3+Rz+77zKgzX4aIpEOuyF9xFBFUNmaMu?=
+ =?us-ascii?Q?bBi0R0I4WnrLkm8N1vJladKLOBVhJCjykF5Ga3QnDuBrhMHl3cNy7cp4KkvU?=
+ =?us-ascii?Q?5NEs9Z9N1AYSfBAlTvrmbzmmLuTN8McnwUjwvQz/sPxVIaGv2es0dOaZs6Tj?=
+ =?us-ascii?Q?3pcqDMAZZQ4d1qv4/ma2q6Nx3twl2Rz/7l9ypZIYhXpkEsj4lQs9QR9k0kcQ?=
+ =?us-ascii?Q?hG+o2Z8RQI57TvEubF0CbWwvRc4+I773OwDBRpcKuHSb2rrn6Ctmpoje6B/l?=
+ =?us-ascii?Q?FQNdxt5MQRu5QP1w4UHvEgbL5Rs3f9goaS/HWx7A7lawxX7LX2Ndyb5zCv26?=
+ =?us-ascii?Q?baSrmkXwg1zDgoiQyjOfF1rcYhq6n4/xcRvy/cb/7phdbuVzoT7pegNkxBZS?=
+ =?us-ascii?Q?T2v64MYOJ4JiaDZJAN1jCg0zYzY00/8ojRr2fkR7ehIiE0XQA2Ilt7G41uGl?=
+ =?us-ascii?Q?aIEfi/vDxFHPbzJae+4dpUh+89oGp1Ta5RTp0IAeiNMvivWomMp82Dt0MR7W?=
+ =?us-ascii?Q?fJo/OAp284l+rEafGF178+JoAGQlZX4ZHtiLBJbyo/ZcohVMaOIIeGHiDqtS?=
+ =?us-ascii?Q?iILhgmn7o4jDG/pYcmpJVvmRc21YSQCioLf3f6ry47Urf/1QB4j1I5Rw1iDK?=
+ =?us-ascii?Q?l37FTc/DFNssyMG5WWZXiCoS8zaeXU6iTfO015CVk+rZ4m/Mv8uL4NXOWl7H?=
+ =?us-ascii?Q?WHEVggNqEzgvmb61UMDq/XxvsgypQmGqSMZ0FM1eVha27Xjn++GmVHiHd9bp?=
+ =?us-ascii?Q?HXL+mpDW1WP5ZJJ8qBZQ7Vw34vcW6/ZrjgNM4DVdZ3rQU8uVU5bnhWyhrgar?=
+ =?us-ascii?Q?Y1UG1Cn+dQZ04VhDfkVepTVG4SN+k4WUaweJCamspBzPB6uljsE52sJnErmC?=
+ =?us-ascii?Q?UVUOhCV4BPWMSMl1i/nIi72CKK5S6VvejWMjWGKdXhMCfvu9YHcSBZd8yETb?=
+ =?us-ascii?Q?24/0o8qQNDlGcm55Q+4cTUmDMqtRP23TyNHzy4Sy9HRr8KbjUC/xHr3UQEu+?=
+ =?us-ascii?Q?BR7mX4SZD87IYlXyBYw4XGCpfNMJVH9LXTJXJ4yNVRJO2V1XnnghKb5uEPBC?=
+ =?us-ascii?Q?+KT1dW2iBk6f/GoB47U1Z6jOpLojQIaFgkKZNt98e8/oNpZZY4ekKoynXXAu?=
+ =?us-ascii?Q?cVXfg0Rri8xxdAiZusjlMj3h+ipfTj92kqLRndimscOsc8DQxBzqG+wMahQZ?=
+ =?us-ascii?Q?adcj/mWS4YwAyCAzHROly9JJkGujxN6k4DdtED/8jSea18MJoTtlY0m5kX2R?=
+ =?us-ascii?Q?SqY7LIi95uA7iUabRXKPvMpeRtCpB+hnYS3J1ueQylPJ3WG1HjonEsetwGoF?=
+ =?us-ascii?Q?1crb/9gNDe0Nl7zJrMLm/SRnexwuD4Tz7vrVO8vq4lzxtuVIVVv/r04gqtAK?=
+ =?us-ascii?Q?fyNvw9Qtfcg6v0a2bZJqwKsQuOndLaadpGxGcAzFWnd1WrFWytdAhomsQmGj?=
+ =?us-ascii?Q?V7sLmIXMUfcekq+hl8ic+QAO1DYQfFrqILBS9MKcwylOMM9+ambhkPhUKaIl?=
+ =?us-ascii?Q?GvWiGsL6WVjrCJHLStdgeOk45DkHVNALBGpdXNsANhMxSmhATscuCOXjUHES?=
+ =?us-ascii?Q?o8WFhENyUA8R8/5f+HYFJF1MR+vadm/fUbV8kGfvvO+eDBJtolfpP4qzx8g3?=
+ =?us-ascii?Q?+RzR+rQsZrV0IUNPf9pAyH5xSjhiM+OaHBl95Spm21nRqbG2?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F6:EE_|IA1PR12MB6628:EE_
-X-MS-Office365-Filtering-Correlation-Id: 563a0013-6ad9-400e-0e0e-08dedb69e20d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|23010399003|11063799006|18002099003|56012099006|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	OSfoqkJa5Mf/8haBzJRr0fcEs7AOx9AAHKeyHg/FVKFdOv3jPlDPTt2dZqHLANAQYbodi2VVngrOIAf+iaYWr1z2D7speJ5OSmTXFqBTeqXbVIKJXAMbUNwNpIJXwGckhlc0CflHpvodpPK6pn1v61gbZMSfLkrKpWZV+6bSdDg2i9rpZc+5hfu16zCyGq3EmNEqK5nx2nPo6MtSV4ZvTlfPifmc9WqmJKuVYxmq3NamHl8ad6nE19DitA4c5S4FDH3R+Ye5hjWVcwFGp0lhS5mjmSZUqfDBPYJ6xRhp1kytN9ZsmZ1AJYg7N7gNX6+lAoaydlzf9JEnmnkFrWxx7XeuBhITAF6O/KX8/nAG2A3lBjthY4O5q0SkDCmglqdqWXJRST2WMSpWb9CZUSDUGcH3w6dXRzKdZobjiGlVmvMd1uk5uON9RuvkcxTVDxqGo6RiNL371ySDzfSgAGOuakL9Z/VXwk35rPWSB6AO49kxG0VguyYyF+pT6/2ic6p3iAzcWg95kWF8m00IQzejxImRRIzUpd7q7JjdelRgtouwYwc4onsfw3gfQpqrqMnMEmdBc0KF81ZcyfA15UeCvdOHJ1VkUQ2p3U4ccjzZDt86ZHV7Eb8RtoLuO5Dxdyul0Gj6KJd5esaKKuHliideGjuoTq/gINiT9CPmIOg0ZqmeS2jo/nVxVKwKbkBtZCQkqN1U1m2uMbot4BD8TAzBjg==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(23010399003)(11063799006)(18002099003)(56012099006)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	vYq1JEbi+9rPaAMjZpNuTeTWUf9GNlsNEOr5vG7yWhKk2VTqJfnANXihL608D0028iJdEyGFKtrHxxF4NtDo2i3uXItg2l7AYAy+tx1CE4f0iRaEVeerG69FvlgsfomaldzNw12JoL4G2/D75KpLysSaNNz0TIoZ4TpElfy8VMPacrPoI4DBoGxHYfwFUS/dRmvynLRlZhU80SSaYchLnzII8kNXnn5CyMxll1fev56tTqfmIV8NW0ZuGCbzpKl90YA5hFFRXuM5ZujZ+6j7tiBCmwEFk4rR3IDG6d5v3iFk2f+FhYL8bgXqdrZbILS/sweCJ0SAV3DBU1TGT0VpqeSa60cIEqlMwIgGeRk+bi899kzUkBaj6wzfdvGlUuUP0glOpHCQRK1DqqDJPnefTKi57KZHz8pJ98YGaqpSjn7Ul46HaotBk7z8GjhXTJeU
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 14:21:34.2467
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c66a1b3d-33a7-413e-1d66-08dedb6a8dc8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2026 14:26:22.4357
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 563a0013-6ad9-400e-0e0e-08dedb69e20d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001F6.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6628
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xaSWzx361RP47/IjhUmROqHnKLX67lt4tUE7eZEOZBOtEqzSEXHRD8nzb7Jq1CCJWNeN+ILHVdxWb1+0lySnXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7165
 
-Add hsmp_acpi_probe_mutex and hold it across ACPI probe, remove, and
-init_acpi() so concurrent platform probes cannot race the global is_probed
-handshake or the one-time socket allocation.  Use lockdep_assert_held() in
-init_acpi() to catch incorrect locking under lockdep.
+AMD General
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
----
- drivers/platform/x86/amd/hsmp/acpi.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hi Ilpo,
+While sending the patches observed git-send-email issue. Please Ignore this=
+ series, I will resend again.
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 72f68cef1297..206eb7897b61 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -18,8 +18,11 @@
- #include <linux/device.h>
- #include <linux/dev_printk.h>
- #include <linux/ioport.h>
-+#include <linux/cleanup.h>
-+#include <linux/lockdep.h>
- #include <linux/kstrtox.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
-@@ -39,6 +42,8 @@
- 
- static struct hsmp_plat_device *hsmp_pdev;
- 
-+static DEFINE_MUTEX(hsmp_acpi_probe_mutex);
-+
- struct hsmp_sys_attr {
- 	struct device_attribute dattr;
- 	u32 msg_id;
-@@ -482,11 +487,17 @@ static ssize_t hsmp_freq_limit_source_show(struct device *dev, struct device_att
- 	return len;
- }
- 
-+/**
-+ * init_acpi() - Parse ACPI mailbox resources for one socket and validate HSMP.
-+ * @dev: ACPI companion device for this socket.
-+ */
- static int init_acpi(struct device *dev)
- {
- 	u16 sock_ind;
- 	int ret;
- 
-+	lockdep_assert_held(&hsmp_acpi_probe_mutex);
-+
- 	ret = hsmp_get_uid(dev, &sock_ind);
- 	if (ret)
- 		return ret;
-@@ -607,6 +618,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 	if (!hsmp_pdev)
- 		return -ENOMEM;
- 
-+	guard(mutex)(&hsmp_acpi_probe_mutex);
-+
- 	if (!hsmp_pdev->is_probed) {
- 		hsmp_pdev->num_sockets = topology_max_packages();
- 		if (!hsmp_pdev->num_sockets) {
-@@ -642,6 +655,7 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 
- static void hsmp_acpi_remove(struct platform_device *pdev)
- {
-+	mutex_lock(&hsmp_acpi_probe_mutex);
- 	/*
- 	 * We register only one misc_device even on multi-socket system.
- 	 * So, deregister should happen only once.
-@@ -650,6 +664,7 @@ static void hsmp_acpi_remove(struct platform_device *pdev)
- 		hsmp_misc_deregister();
- 		hsmp_pdev->is_probed = false;
- 	}
-+	mutex_unlock(&hsmp_acpi_probe_mutex);
- }
- 
- static struct platform_driver amd_hsmp_driver = {
+-----Original Message-----
+From: M K, Muralidhara <Muralidhara.MK@amd.com>
+Sent: Monday, July 6, 2026 7:51 PM
+To: ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; M K,=
+ Muralidhara <Muralidhara.MK@amd.com>
+Subject: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP concurren=
+cy and lifecycle hardening
+
+This series hardens the AMD HSMP ACPI and platform drivers against probe/re=
+move concurrency, use-after-free of the per-socket state, and resource leak=
+s across unbind/rebind cycles.
+
+On multi-socket systems several ACPI platform devices are probed and remove=
+d independently while a single /dev/hsmp (and the hwmon sysfs
+attributes) drive a lock-free data plane.  The existing code raced the glob=
+al is_probed handshake and the one-time socket allocation, freed the socket=
+ array from under in-flight hsmp_send_message() callers, and leaked metric-=
+table mappings on rebind.
+
+The patches, in order:
+
+  1. Serialize ACPI probe/remove/init_acpi() with a dedicated mutex so
+     the is_probed handshake and the one-time socket allocation cannot
+     race across per-socket platform devices.
+  2. Map the metric-table DRAM explicitly and add per-socket mutexes.
+  3. Add hsmp_sock_rwsem so the lock-free data plane is drained and kept
+     out while a socket is torn down; wire the non-ACPI platform path
+     into it.
+  4. Refcount the ACPI socket platform devices with struct kref and run a
+     coordinated release on the final put (deregister /dev/hsmp, unmap
+     metric DRAM, free the socket array); clear the per-socket dev under
+     the teardown write lock on both remove and probe failure.
+  5. Drop any stale metric-table mapping before remapping on rebind.
+
+Testing:
+  - Each patch builds individually (W=3D1) with no new warnings; the series
+    is bisectable.
+  - checkpatch.pl --strict is clean on every patch.
+
+Changes since v2:
+  - This revision covers only the five ACPI/platform probe, teardown, and
+    lifecycle patches.  The ACPI UID / _DSD mailbox validation and the
+    sock->dev readiness-gate changes from v2 are accepted in maintainer bra=
+nch.
+  - Reworded the teardown rwsem comments in "Serialize the data plane
+    against socket teardown" so they describe the drain contract in terms
+    of a generic teardown path (a teardown path takes the write side)
+    rather than attributing it to the ACPI path, which is wired into the
+    drain in the following patch.
+
+v2: https://patch.msgid.link/20260625123337.886435-1-muralidhara.mk@amd.com
+
+Muralidhara M K (5):
+  platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
+    mutex
+  platform/x86/amd/hsmp: Add explicit metric DRAM mapping and per-socket
+    mutexes
+  platform/x86/amd/hsmp: Serialize the data plane against socket
+    teardown
+  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+    release
+  platform/x86/amd/hsmp: Drop stale metric table mapping on rebind
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 147 ++++++++++++++++++++++++---  dr=
+ivers/platform/x86/amd/hsmp/hsmp.c | 112 ++++++++++++++++++--  drivers/plat=
+form/x86/amd/hsmp/hsmp.h |  11 +-  drivers/platform/x86/amd/hsmp/plat.c |  =
+39 ++++++-
+ 4 files changed, 285 insertions(+), 24 deletions(-)
+
 
 base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
--- 
+--
 2.34.1
 
