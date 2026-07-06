@@ -1,91 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744A93AEF4C;
-	Mon,  6 Jul 2026 17:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905F03AA4E7;
+	Mon,  6 Jul 2026 17:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783358438; cv=none; b=W4iaakIp/eaAwdhRcvGoebceHJYi4R7S8FeRJ6NUsKmtk1oQvOqBish2Y53mG7WKdcxegFZPBH/GJ1wQWf0Ewx+skjUspF/k/NGxZKiDnR9CgJ3iKtyr4GI7lByog8f2X9HaJ+M3FRoqxM+SiEhA9BwrCm9lDdPemO+7J1tAeYM=
+	t=1783358805; cv=none; b=Lkfg0e9cfwdYTczR+onuEotRl/oeq2oKiR/bzAIU2C3uEJfs19tCBBUVvZwJ/z6xHmOY4Z9b8vCtq79Y9Fng84yda0pcwOzD1qfD917/bY3a8RF3oMfp4jGQ19ILY7Ud9RZ3RYz8wSpZfmeJHxY7C/JVh4MeRIa7wC8RbYIBABY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783358438; c=relaxed/simple;
-	bh=Ek1yVlpnRtMZQ01GaaVsBa/IfbXo3uWvec3K6qaBKIM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O1FGFEpboLqazuz5yH5zMerAo1pBNMJc+XwBkeymE46qG3PYmYjQjRtn8jM4efwnnCvapPrgaXuLoyudPvKlf2PtmKeYTnRYlhNA2IG5vq1GC73zgDjeqJNsnUioSSj4V4uPUwpb9bexiAwpQCkuEzgXlsui7+mgSSr+z1Of9Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgCg+3xV; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783358805; c=relaxed/simple;
+	bh=7IM4zAo6wp30fIKOD7ytq7OyqjlyWEMupcdMTPpFk2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dgVPf43xcAN5wHmAYmQGcLYzttDmEYxOQwX55SFSZwIYNZaesgjZo8WJf/U4wKrPyQaFZeNRap/jzwDmAyy5UpSUhc1u9Cr9R5UYR6B7IwRklz2IOUhuW00j9swVhTlqSlL9daBjrlhJArvLxmC+0KMzoGLc0eJt1MTZNVB4RYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCLYqWUv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgCg+3xV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783358437; x=1814894437;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Ek1yVlpnRtMZQ01GaaVsBa/IfbXo3uWvec3K6qaBKIM=;
-  b=hgCg+3xVxSy5GZf1mThWxy5UnzvI0qsjNoLIcpWcV2xAySWJVNZ2P4yB
-   TqzNpMjd8ab9M6Wtcb7NaOYEyQobEoJE7Daannyf2Fasz8yNugYgCNm6K
-   djH6N6CPcQshO+G+3wBedPZBdqwuLkVqZd+wwQQppqip1Y8eRTjq80J4N
-   /HL4FUL7znN8TUVm1rds4KSzqMPlBe8mube3Ko5zJvL8S5skTQjKB0lqc
-   6avuHgkJgtYxqZ8Aw+5U9mCTEsVBn79VRgVr4wHW72vZP8E+GL4AffuNh
-   iGfQBImhj+XRr1eSDwDMvGz1utkDldN9qlUVkld/uRDL2doVbX+Q7YX3K
-   A==;
-X-CSE-ConnectionGUID: Tayofp9wRhqqklKbYZaWxw==
-X-CSE-MsgGUID: sNwDrhvYT9q+upiP7C37xg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83861440"
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="83861440"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:20:37 -0700
-X-CSE-ConnectionGUID: NkmvB3z/QVeeTU4Zm/NQIA==
-X-CSE-MsgGUID: KLmfRn9nTTyWcy21otZZOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="257635312"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.95])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:20:34 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: platform-driver-x86@vger.kernel.org, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, 
- Herton Ronaldo Krzesinski <herton@canonical.com>
-In-Reply-To: <12951216.O9o76ZdvQC@rafael.j.wysocki>
-References: <12951216.O9o76ZdvQC@rafael.j.wysocki>
-Subject: Re: [PATCH v1] platform/x86: topstar-laptop: Stop setting
- acpi_device_name/class()
-Message-Id: <178335842957.11967.18387795490232062068.b4-ty@b4>
-Date: Mon, 06 Jul 2026 20:20:29 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCLYqWUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 160F11F000E9;
+	Mon,  6 Jul 2026 17:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783358804;
+	bh=6Q0tvr2GvB7IdKSisCRev74pEI09lUCKAJRHUpFa0u0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=nCLYqWUvGJM2k6XDnnND9naY7BS0FeW4Fu5CyITqesk4/FYtYFs2v+CdsAT/O073Y
+	 GtZ8t7rZu7alxOIECS486DbL4kafAvJYppDKfefXQcxPJWSm50Z5xEB87XflCdnqI0
+	 dI9I5Vp+VbNytWapWIsBYtTNmQpIQ3PSkrb5u0vxywEuxj1U2BwNjyu/B89xGJdNtD
+	 G/Odw4daeVaAAUZb5GsfrnhN7yZ/7dsR9qtpRXxY65g9kYlYkQBfw49iWquOtCkMjk
+	 tJfNZXyAVgeg0oDBCZxb/20tfctRWrUO672g92oAd9zuNBOetu0kFzrqAf+966bE2y
+	 VRCYCAEaqRrlQ==
+Date: Mon, 6 Jul 2026 18:26:30 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Manuel Ebner <manuelebner@mailbox.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Lee Jones <lee@kernel.org>,
+	Thierry Reding <thierry.reding@avionic-design.de>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Peter Chen <peter.chen@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, mfd@lists.linux.dev
+Subject: Re: [PATCH v3 02/20] driver core: platform: provide
+ platform_device_set_of_node()
+Message-ID: <e40d0bd0-0e3d-4c01-bffc-8e0075213c45@sirena.org.uk>
+References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+ <20260706-pdev-fwnode-ref-v3-2-1ff028e33779@oss.qualcomm.com>
+ <fbc50f89e0c3bb148656a3b8d96974f591576dec.camel@mailbox.org>
+ <akvOo2EeERLYPh72@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FWksib/oYWGW6VVm"
+Content-Disposition: inline
+In-Reply-To: <akvOo2EeERLYPh72@ashevche-desk.local>
+X-Cookie: Did I do an INCORRECT THING??
 
-On Fri, 03 Jul 2026 14:41:51 +0200, Rafael J. Wysocki wrote:
 
-> The driver sets acpi_device_name() and acpi_device_class() which are
-> never read afterward, so make it stop doing that.
-> 
-> No intentional functional impact.
+--FWksib/oYWGW6VVm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+On Mon, Jul 06, 2026 at 06:49:55PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 06, 2026 at 04:39:00PM +0200, Manuel Ebner wrote:
+> > On Mon, 2026-07-06 at 14:44 +0200, Bartosz Golaszewski wrote:
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent or clearly a regression fix.
+> > I removed Mark Brown <broonie@opensource.wolfsonmicro.com> from recipie=
+nts because:
+> > =E2=80=9CRCPT TO <broonie@opensource.wolfsonmicro.com> failed:
+> > <broonie@opensource.wolfsonmicro.com>: Recipient address rejected: Doma=
+in not found=E2=80=9D.
 
-The list of commits applied:
-[1/1] platform/x86: topstar-laptop: Stop setting acpi_device_name/class()
-      commit: 51a153f2747fad5dc566f94238b08da07d6a6fb6
+> Perhaps he needs to send a patch to update .mailmap?
+> Cc'ed to Mark.
 
---
- i.
+If it's for something that old I can't imagine I actually care.  If it's
+important enough I'm sure someone can work out how to get hold of me.
 
+--FWksib/oYWGW6VVm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmpL5UUACgkQJNaLcl1U
+h9D67gf9GIugTh4PUXTgcv4IEO00hqfPt914zzGolWrW61nvCfBK/txok59PvoKw
+vaWiJIxtHNcqLXDHoH9/3oPWkqxrKq0RGWEX19nr124zN/T2SihiMa5RjzAr4UAG
+G9JAS2GOF29xF1Ml9KH8x5l5WduP6RUHVJqKK9vuJFpCloREcnnpMQVxJVgKEKpI
+TrKQpiKRZtTm5InBsTccxeXVDL2+bhnLHZaD4LbIziWok/tCyYnCw9VEJ/iUb7PJ
+bFLwu3JxUS7p7Kr/hStWapPyxi5fyw+V/ZQ8u+J5GE8g493f9A3rBarS4fJCZi8e
+cIRN6GhgNtdUL6L3p77EqAzlsDTheA==
+=WSwF
+-----END PGP SIGNATURE-----
+
+--FWksib/oYWGW6VVm--
