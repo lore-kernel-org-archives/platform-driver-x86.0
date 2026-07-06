@@ -1,237 +1,196 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998AD42B313
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 14:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465A13FE369;
+	Mon,  6 Jul 2026 14:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783348742; cv=none; b=rvGHoU/tQoAjfYV31EjD/EA2P7l2gyxFBXKOZepATpS5y04wVNlXa85gH8JJZp3scMxnV48/gk5SWRWzl4aduwsmvSkCQutHD99Sntz8ZF8PWLp4ASec/8HseoOZnD2SfeOztwlLldpyL+NUqKYvS6VTVhaOG0YbyMm7wdPIA60=
+	t=1783348776; cv=none; b=noxbZI1nrFuG780WPjI43f+AOHxt2wabmGYDWis5JA6mWxvGtO8yX3OhJTV6bMR7k09CE9x7SFTIAt1lhWScjG/9WLKlstD6aQdYxD1sQqoU5cH1Z6I90H6XZs9tx4qiSztflSoys0sdxp31S7yLpLsIBnAKAb5vbOuybcZ80Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783348742; c=relaxed/simple;
-	bh=W5XMfwMSwoRfoxyd+BvGhH65S6q07rqPKTjQ5dZbpQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GCLVy8C8HH+zrsGysR+FBpEtShBsKkTJ5KFoNfRYJNxxMS7Bg4+63385dH2GlJGrvxhleuON/qKOiGuFplvnd2t9Mfn4hYWc75hcekd9wENJXaoyQc7OTv7vVVV4OUjbMVQcg9OkA4fzzlIeSZCHru8vumfKEN1o3wqTk3DvTYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RFITE47F; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783348776; c=relaxed/simple;
+	bh=XtbXxotRn4eonCuXI7S2La3x2DD6roUS8w7lR6Aocns=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lMdJJ2Iu67n4dpWr9NIE68p82Jgj5lM61GKlchI1pRPAfNOLddcgdu6ZN+qnXc2JSMwfEaPfcMxDaHaYNtd+k5CQ8ld4AaHZgA3gQoi/5A6SRzK3EGVObmBEw3zHyYppObiewBwo9QwOiAdyE2Vo00MMvXAuihGfLhZ38iO3PaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=j5hgDtth; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFITE47F"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4759b4f0897so1323251f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 07:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783348739; x=1783953539; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=TsAtMy+jYflG5RxLXIL3sSMXV67j/iz+79CE0LBfVyk=;
-        b=RFITE47FBFKRqizFzoQBh9yO24tUWkyQXXGw+22cddW4wpiMJbMi8/5gVOe9mYO332
-         p/sJk5PH//qBoCt9D3iNj9uvvvJfTnoUzBPCiJKDr/TPpEIvt2KhOw4e4oT4UYMr10uS
-         6j98mZcSNtVjrp+6JBGepLGrIWJXj/w08i+DzBzDEYEGa/dQW94daIC72/woLSPQczLB
-         44k6EHJO/JlOR/ZFeQOMkP/2rlko+qodbbKoRqzSO0d1BhkzJgJpee6wxUpj2pTHoVuR
-         YcUbvzfzZIsFqMSVMGoZtNeZymYWOnPqV//M1uX10GPPakB2RLNlWTxQhcGqQPEyB3Y+
-         FAWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783348739; x=1783953539;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TsAtMy+jYflG5RxLXIL3sSMXV67j/iz+79CE0LBfVyk=;
-        b=BwFvlR9RjBVfPgl5uUQVe0rgbXPuXLEDMlda++fSuzkJMD351ynqEcby9TPZeB9gzb
-         ivXdbIvQScBkqserwClzFaXYBEJQ5lqqYHM7+LBd1m02923gFFdeHjqwLmEelKcJLi52
-         JcsSwH1oCF1OWobtyFYK6QetN1skjcEp8kxaDuhQ1dVHmG/Fgw5x4/0HWO7RFlZhV45l
-         0zAC6QajEDMMWCxvw62sBJiAS6mJNS7osLuHy4yof1QFHpDdufKG98jhZxvB+OO23FK/
-         vH7lZY1H9UgjfJZyoMeFVQjSk9Z8oVwpmMsw9GztGR2HP9BIfn7DLptZ6RWzCqrxmtR3
-         8ztQ==
-X-Gm-Message-State: AOJu0Yw+AV9xgMJNHJ5Nkl/0951HarQ3ukpWmymNDZB4voJM8kPvrrmX
-	UZVIaAWExemyiDs4Ru9Arxk0+wcZneHIxLPJKLCUY7vK8qlg85/++Fj0uRVkujWxyUU=
-X-Gm-Gg: AfdE7cn7BAcKIwifoiFdDf4fzkLbRpKzdzkv2hzm9JYfBs1pDopMYUsg8o6cdmcKh43
-	U/wxE7NNlHJixnmfFZ+k8amRWqGd1g3uKbbPhSCgRwyIrbS65dwG0JuTiE4GAocQ3nrBrAvCCox
-	LL1bt3kdwXK4H8tc1kDawZDngKGqbM4OuP8UOcY5WZ3r2dVcd3CyFjrLxn/gE9NgdW+cE9IZcmS
-	1oK7lm6xJ4IZddWNE2G5pyNDivJv2FEbcaWlTxOsgxCe4VwXHHOQT1OzVkEBzIIPI6RRdurglNh
-	0iWz/r6MquavGXp5Nccjgwj4ZHXkzLtlp5874P+xl7mfs8OQSmLCWSCL8O1bAWwuwCEzEHd7s2N
-	OF710ZQpEPxcEZR9ge/9Yzv5MXOAGy4qUJ1VsQiykNlCaS/LaoiESozEsxijC8Xb7G9Eji3vt5m
-	Fz9dZUkN5cMGo=
-X-Received: by 2002:a5d:4946:0:b0:46d:d693:88cb with SMTP id ffacd0b85a97d-47de670da13mr399374f8f.46.1783348738727;
-        Mon, 06 Jul 2026 07:38:58 -0700 (PDT)
-Received: from user ([104.28.162.233])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47ad69519c2sm26504604f8f.37.2026.07.06.07.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 07:38:58 -0700 (PDT)
-From: yahia <yahia.a.abdrabou@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	yahia ahmed <yahia.a.abdrabou@gmail.com>
-Subject: [PATCH v6] hp-wmi: add battery threshold support
-Date: Mon,  6 Jul 2026 17:38:55 +0300
-Message-ID: <20260706143855.35002-1-yahia.a.abdrabou@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <4792e5f8-8af3-f227-2291-ccd10e1be868@linux.intel.com>
-References: <4792e5f8-8af3-f227-2291-ccd10e1be868@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="j5hgDtth"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4gv6Sc3JlwzKrrB;
+	Mon, 06 Jul 2026 16:39:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1783348768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PTWGfLdwlWAV/LMkx8q6n+16+BLtwX+Uw6eFuSY1pwE=;
+	b=j5hgDtthz8XCNdelXgr2Njc2HaTruqIkCO//JWKxiT4W2gEybWyIlcK2aQ1bxIe+BwUJVp
+	sosZFgtgjTYiKegpajhDS7wAQRa5vbGhsdYsOBErEWcCcj6imJ3WhTyng3CLWaw/u/6S/u
+	Ia++ekOByRWNtL6C0p1KPkAMQ78opS9K6p4731SNIh3G/Gtr0smcjJ5LSbWseUhYMLmi5g
+	bSnkIEWLW+D0H8udCi/rtV6GiUxmmd3h/zBT1zxIEz9pUZOsZhePq4tVuE6vy2STKylPsN
+	pNYuSZntPPijS4W0+CuI8ZBjLVluSsSHTtbS9e6dlXfCM6eF2pFoZi1CDk9EnQ==
+Message-ID: <fbc50f89e0c3bb148656a3b8d96974f591576dec.camel@mailbox.org>
+Subject: Re: [PATCH v3 02/20] driver core: platform: provide
+ platform_device_set_of_node()
+From: Manuel Ebner <manuelebner@mailbox.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, Lee Jones	
+ <lee@kernel.org>, Thierry Reding <thierry.reding@avionic-design.de>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller"	 <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski	 <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Srinivas Kandagatla	 <srini@kernel.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Vinod Koul	 <vkoul@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich	
+ <dakr@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan	
+ <saravanak@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
+ Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)"	 <chleroy@kernel.org>, Andi Shyti
+ <andi.shyti@kernel.org>, Andy Shevchenko	
+ <andriy.shevchenko@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Doug Berger
+ <opendmb@gmail.com>,  Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list	
+ <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
+ Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team	 <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Matthew Brost	 <matthew.brost@intel.com>, Thomas
+ =?ISO-8859-1?Q?Hellstr=F6m?=	 <thomas.hellstrom@linux.intel.com>, Rodrigo
+ Vivi <rodrigo.vivi@intel.com>,  David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>,  Paul
+ Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, Philipp Zabel
+ <p.zabel@pengutronix.de>,  Maximilian Luz <luzmaximilian@gmail.com>, Hans
+ de Goede <hansg@kernel.org>, Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
+ <ilpo.jarvinen@linux.intel.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+ iommu@lists.linux.dev, 	linux-pm@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
+	linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	mfd@lists.linux.dev
+Date: Mon, 06 Jul 2026 16:39:00 +0200
+In-Reply-To: <20260706-pdev-fwnode-ref-v3-2-1ff028e33779@oss.qualcomm.com>
+References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+	 <20260706-pdev-fwnode-ref-v3-2-1ff028e33779@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MBO-RS-ID: ca569d00ad7df478929
+X-MBO-RS-META: 1q71yutefcf1nyjzwoom4gu47fi8rss3
 
-From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+Hi Bartosz,
 
-Introduce battery threshold support via SBCO and GBCO WMI methods, add
-battery_get() function to retrieve the current battery mode and to test
-compatibility, add battery_set() function to set a battery mode with any
-value between 0 and 5, Expose this feature to userspace via sysfs.
+On Mon, 2026-07-06 at 14:44 +0200, Bartosz Golaszewski wrote:
+> Encapsulate the reference counting logic for OF nodes assigned to
+> platform devices created with platform_device_alloc() in a helper
+> function. Make the kerneldoc state that this is the proper interface for
+> assigning OF nodes to dynamically allocated platform devices. This will
+> allow us to switch to counting the references of the device's firmware
+> nodes, not only the OF nodes.
+>=20
+> Reviewed-by: Manuel Ebner <manuelebner@mailbox.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> ---
+> =C2=A0drivers/base/platform.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 18 ++++++++++++++++++
+> =C2=A0include/linux/platform_device.h |=C2=A0 4 ++++
+> =C2=A02 files changed, 22 insertions(+)
+>=20
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index fb9120b0bcfe0e7dd9dfc0d29b91e0ad40a01440..3188d5aba5f90622f821c6950=
+49cacda030204fb
+> 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -693,6 +693,24 @@ int platform_device_add_data(struct platform_device =
+*pdev, const
+> void *data,
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(platform_device_add_data);
+> =C2=A0
+> +/**
+> + * platform_device_set_of_node - assign an OF node to device
+> + * @pdev: platform device to add the node for
+> + * @np: new device node
+> + *
+> + * Assign an OF node to this platform device. Internally keep track of t=
+he
+> + * reference count. Devices created with platform_device_alloc() must us=
+e this
+> + * function instead of assigning the node manually.
 
-Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+I did some more pondering about this patch and concluded the right place
+for a warning would be the lines been read right before or after assigning
+a node manually.=20
+I think this would be in platform_device_alloc() (as I suggested in v2).
+
+BUT my knowledge in C isn't sound. So if it's good as is keep it. If it isn=
+'t
+add or move the remark.
+
+Either way Thanks and
+ Reviewed-by Manuel Ebner.
+
 ---
-Note on behaviour:
-The mode wont persist past shutdown if not
-plugged because the EC clears its registers
-to save power, mode 2 is adaptive, meaning
-that the EC will set its desired percentage
-between 80 and 95% mode 5 is roughly around
-78 to 80% and if a mode was set and the current
-battery percentage is higher the EC will drain
-the battery.
-v6:
-- Add sysfs interface
-- Remove redundant enums
-- Add safety checks
-- Fix style errors
-v5:
-- Use hp_wmi_perform_query for battery_set
-- Remove mode 6 as it requires AC power to boot
-- Fix styling errors and remove redundant comments
-v4:
-- Remove redundant definitions
-- Rebase the code
-v3:
-- Fix coding style errors and warning
-- Refine the changelogs for clarity
-v2:
-- Simplify detection logic via battery_get
-- Add Battery Profiles enum table
-- Add functions to set the battery mode
----
- drivers/platform/x86/hp/hp-wmi.c | 75 +++++++++++++++++++++++++++++++-
- 1 file changed, 74 insertions(+), 1 deletion(-)
+Note:
+I removed Mark Brown <broonie@opensource.wolfsonmicro.com> from recipients =
+because:
+=E2=80=9CRCPT TO <broonie@opensource.wolfsonmicro.com> failed:
+<broonie@opensource.wolfsonmicro.com>: Recipient address rejected: Domain n=
+ot found=E2=80=9D.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..bbe279499062 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -302,8 +302,10 @@ enum hp_wmi_event_ids {
- 	HPWMI_FN_P_HOTKEY		= 0x1B,
- 	HPWMI_OMEN_KEY			= 0x1D,
- 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
-+	HPWMI_BATTERY_CONTROL		= 0x2b,
- };
- 
-+#define HPWMI_AC_REQUIRED 0x35
- /*
-  * struct bios_args buffer is dynamically allocated.  New WMI command types
-  * were introduced that exceeds 128-byte data size.  Changes to handle
-@@ -460,6 +462,7 @@ static struct notifier_block platform_power_source_nb;
- static enum platform_profile_option active_platform_profile;
- static bool platform_profile_support;
- static bool zero_insize_support;
-+static bool battery_threshold_support;
- 
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
-@@ -1097,6 +1100,67 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
- 	return count;
- }
- 
-+static int battery_get(void)
-+{
-+	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-+	int mode;
-+
-+	if (ACPI_FAILURE(acpi_evaluate_object(NULL, "\\_SB.WMID.GBCO", NULL, &output)))
-+		return -EIO;
-+
-+	union acpi_object *obj __free(kfree) = (union acpi_object *)output.pointer;
-+
-+	if (!obj || obj->type != ACPI_TYPE_PACKAGE || obj->package.count < 3
-+			|| obj->package.elements[2].type != ACPI_TYPE_BUFFER)
-+		return -EIO;
-+	mode = (int)obj->package.elements[2].buffer.pointer[0];
-+	return mode;
-+}
-+
-+static int battery_set(u8 profile)
-+{
-+	u8 data[4];
-+	int status;
-+	if (!battery_threshold_support)
-+		return -EOPNOTSUPP;
-+	if (profile > 5)
-+		return -EINVAL;
-+	memset(&data, 0, sizeof(data));
-+	data[1] = profile;
-+	status = hp_wmi_perform_query(HPWMI_BATTERY_CONTROL, HPWMI_WRITE, &data, sizeof(data), 0);
-+	if (status < 0)
-+		return -EIO;
-+	if (status == HPWMI_AC_REQUIRED) {
-+		pr_err("You have to be plugged in to set a profile\n");
-+		return -EIO;
-+	}
-+	return 0;
-+}
-+
-+static ssize_t battery_threshold_show(struct device *dev, struct device_attribute *attr,
-+			     char *buf)
-+{
-+	int mode = battery_get();
-+	if (mode < 0)
-+		return -EINVAL;
-+	return sysfs_emit(buf, "%d\n", mode);
-+}
-+
-+static ssize_t battery_threshold_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	int ret;
-+	u8 profile;
-+	ret = kstrtou8(buf, 10, &profile);
-+	if (ret)
-+		return ret;
-+	ret = battery_set(profile);
-+	if (ret < 0)
-+		return ret;
-+	return count;
-+}
-+static DEVICE_ATTR_RW(battery_threshold);
-+
- static int camera_shutter_input_setup(void)
- {
- 	int err;
-@@ -2303,7 +2367,14 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 
- 	if (err < 0)
- 		return err;
--
-+	err = battery_get();
-+	if (err >= 0) {
-+		err = device_create_file(&device->dev, &dev_attr_battery_threshold);
-+		if (err)
-+			device_remove_file(&device->dev, &dev_attr_battery_threshold);
-+		else
-+			battery_threshold_support = true;
-+	}
- 	thermal_profile_setup(device);
- 
- 	return 0;
-@@ -2335,6 +2406,8 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
- 	priv = platform_get_drvdata(device);
- 	if (priv)
- 		cancel_delayed_work_sync(&priv->keep_alive_dwork);
-+	if (battery_threshold_support)
-+		device_remove_file(&device->dev, &dev_attr_battery_threshold);
- }
- 
- static int hp_wmi_resume_handler(struct device *device)
--- 
-2.55.0
 
+> + */
+> +void platform_device_set_of_node(struct platform_device *pdev,
+> +				 struct device_node *np)
+> +{
+> +	of_node_put(pdev->dev.of_node);
+> +	pdev->dev.of_node =3D of_node_get(np);
+> +	pdev->dev.fwnode =3D of_fwnode_handle(np);
+> +}
+> +EXPORT_SYMBOL_GPL(platform_device_set_of_node);
+> +
+> =C2=A0/**
+> =C2=A0 * platform_device_add - add a platform device to device hierarchy
+> =C2=A0 * @pdev: platform device we're adding
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_dev=
+ice.h
+> index 8c566f09d04efe420d85ffa046f92c44c6d08526..e9f7baceeb4c8269dbc0143c4=
+d8fc9d73ba024ca
+> 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -19,6 +19,8 @@
+> =C2=A0struct irq_affinity;
+> =C2=A0struct mfd_cell;
+> =C2=A0struct property_entry;
+> +struct platform_device_id;
+> +struct device_node;
+> =C2=A0
+> =C2=A0struct platform_device {
+> =C2=A0	const char	*name;
+> @@ -262,6 +264,8 @@ extern int platform_device_add_resources(struct platf=
+orm_device
+> *pdev,
+> =C2=A0					 unsigned int num);
+> =C2=A0extern int platform_device_add_data(struct platform_device *pdev,
+> =C2=A0				=C2=A0=C2=A0=C2=A0 const void *data, size_t size);
+> +void platform_device_set_of_node(struct platform_device *pdev,
+> +				 struct device_node *np);
+> =C2=A0extern int platform_device_add(struct platform_device *pdev);
+> =C2=A0extern void platform_device_del(struct platform_device *pdev);
+> =C2=A0extern void platform_device_put(struct platform_device *pdev);
