@@ -1,219 +1,166 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010048.outbound.protection.outlook.com [52.101.61.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C653F23B7
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 13:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783343701; cv=none; b=XkMfNXszoav8otLKsIuVrb8EJ+zh0JXfSJykR/AH7bM5MrYPT9bE2fF155G3CTLSYte0xz4QznZpjwnOOVpIQV1rTxu/8xx9Xz6Y0qbfEbv8c4CjAg94CriIejefYXq+aZnkw3UhxMFANdnYrJBEUDGNklcQnAIRL4zRJJRe8AE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783343701; c=relaxed/simple;
-	bh=HEn5owEzeJIUYkdvn4DQSoUKQdn9M8eLHqPgfVbyGMo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZQu7/lQY7JO0PbjMNif1mihEeRxPqGtGDBPNcdSgMSUwHhGR+AJGDoFE/8GylWDoPY0nAeugffMfftSdcVcMoRcrgEKVceXFflHsWoK0BhBuSvH7gQ9J0z3kI1BLq+cYgHe37mjg7rJ8WnUihVrUDHpBUqHdpAH0T8jmZICll4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JFClRWJO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=fj4seuqC; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945C6258EDA;
+	Mon,  6 Jul 2026 14:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783347702; cv=fail; b=W9Ys8swjXUKYRvL2LVNeJQ6WSyPySPDwfyzm+CAm7pODm5ckxyhzLhFYj2DEa1cxlKKv/jpTDu37bZHDD92xYO+SJ+n/ZWguWaLDpRz60ji9dcrTZG8ZsDkcYUPPkDGBcT7o1Mzo1fiOtbXE3nkps15EizJ5964IN9waJLCUKuk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783347702; c=relaxed/simple;
+	bh=/s7u8oERo71iLksWf3lVkFD5R1lJU4lo1Y/NpLuMIY0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YrNETT57USMjJcUTuZSUEK7xNjmKShGpTsozZjkqZjRuQKOaxeKs+eTvkimqOz4eWI8+6BegpLjIkx1ltjTCeRWo3XgA86KcsjoGRz58lPC1m17KhS6CEo5nK4nobXnr3b2DvuL4fDZhryOlPoqd46OSnySHjesiD5IjR3GPz20=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TAfijvFB; arc=fail smtp.client-ip=52.101.61.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JFClRWJO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="fj4seuqC"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666AxOIi245771
-	for <platform-driver-x86@vger.kernel.org>; Mon, 6 Jul 2026 12:45:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yNrkEZw0kMBOjM8rF7wKaiZMIgE91+zaRIL+Y+aqlVA=; b=JFClRWJO/YlvKXxt
-	EPTan7Bb2wCcvP3ljtvtZjzTtxn9X/oJo2TEJ/HAmb+pQSKwSEV/Z0gNUsAg+HGp
-	w6HgyrZUxnRD3q+7IWfDH5X62RGexHSNLTGzOUeq2dL2LoPSNk6QlXIjpQSF+Md5
-	flrFBt6s2fKpQdszOkYGsCYuJQ5ovRF9aZdMY9Ly4KS9iJsfekBq0woUOh8k3cMV
-	/RkmkqR4WcSAqZVtsYNjEqAk0a4iS4q0boV4t8SF1Q5kKlnTaNhLXh+6stEhQhqA
-	eEHt6s2fdNhYEpAikHChcGddJF0Bgf8WoJVvm1/XIKUhDGVcw0Vt2kksgIYSgQFG
-	fOJZIQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f8a98gjqu-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 12:45:48 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-92e63df032bso328975885a.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 05:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783341948; x=1783946748; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yNrkEZw0kMBOjM8rF7wKaiZMIgE91+zaRIL+Y+aqlVA=;
-        b=fj4seuqC9Whszr1a1fXgwkaNf9JdZF2tvZeiOfWvS4JnE/t4kqtMo83ifD/kH01yqT
-         x9QozejAvHigxSv0mqW/pChAg4m02encxUg68gci4k2yQ0SWkg8PS3a4dqXxRFurCqEK
-         tXNgNjBKPIL+v0vjSB+LuCH+FW91USe43RpoeLahAOz9pHTb2s9zGMu6HjOHVKxhqlbd
-         CPNN0vSO3y9qThtDDLAefAV7mUky0hVNQmmfSVR27eUVuyI0uPHCzNIkrQZxiDI0Htde
-         +wPZrfH+r3e5mW+koN3F8NfYDB3rH9UZZgF7hHgr9PwzOVocIf9TCQikfc0nM/onCEeU
-         G8dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783341948; x=1783946748;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yNrkEZw0kMBOjM8rF7wKaiZMIgE91+zaRIL+Y+aqlVA=;
-        b=VB2GTmx0mJpz5s8BhKxHKjnifZeywo57wTnPn+tAIGbuQnXrSdJoH4fHWLalsdZwsa
-         00zibevBaeHtYndWCPhNAc1dvT3KL7jNaNyVAvTsxgnscDIwJcL9Xv5d/U85QWJw1r4f
-         i+ZWrdIn4d745bYeOeXiccvVQQZPhN6TLR/b5NkL9nm4mjJZLfYc/QmKEsF3DwDUDF7d
-         qZCpalSLBeqUZeMZ9SoqKooc9u5zr4eHPS9Zy/lTn9VVmInI6sNSjD3SnkBssspTPf5A
-         JPJybxCX1hsZvqqd4U5/Rd/t/G2gYz0vHHd6TUz3XNiqrB7E4vv/m8JjchHl0gnqot0y
-         edTw==
-X-Forwarded-Encrypted: i=1; AHgh+RqHXLVJtCTTQ3Zle/XoC3p7EqdqvPJQ79gc/V15C106Of17jOtBln+cplF0P2oCJAzckEEn2Dj5BZsj/ht/bJXwxabH@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdqyh72srLR3KagTZ5AzYKwEq6g8dX0AjJm2cTaiT84gJ+eSYC
-	cQxVdxTiS2H3B4grabGC1+nVcMZdk7Pqs3njV5hXW6CsaVS8eL9wJrFQefr6MLV2bpjrkgsh7EY
-	nJe+OtK+gxX8RUOzHGXvzW9y1NmzjoAIligLJ1UlhNiYBosE6/5+ur0qw2rPWcEzy5oPBixIgQK
-	ac
-X-Gm-Gg: AfdE7ckciS5kLj1O5ywJVVCZ8q5XwuH0BDBYfMOFBLcemtglq6jNuK5W7GGJmiOuG83
-	oHXbtP7ovvcJJt0unhTRycHdH7iDmQr5p294s06Y5mDkMuSxWHIiZZ0IdVg7oeG5zp59NU45qM+
-	I+Px3Zn0tkQhmHH+QLtsbavyPcat92j0v6KbPlg2CUyoQBPQAMeGuBcSeG2d4lVOz3iJPo/Wh3a
-	dy9CMXpT5Mg3BToQS0yogUvY8CGaI4ynweBZznnAZSf/4TR9wzJfuP8CUBM1M6rraUkDUxqNf9E
-	mGO8VIk8+VMVrMRtGJ3jOc49juSvCnD2hEcwtGTCUJvwHU8F0rIijC9hsftZUnGSQjd6T3U2Jhd
-	q2QIGPcplrCf89064DnhACwTR5pAhT+/GOGnV8hwQ
-X-Received: by 2002:a05:620a:4554:b0:92a:f74f:904 with SMTP id af79cd13be357-92e8b25f4aemr1773305385a.1.1783341947857;
-        Mon, 06 Jul 2026 05:45:47 -0700 (PDT)
-X-Received: by 2002:a05:620a:4554:b0:92a:f74f:904 with SMTP id af79cd13be357-92e8b25f4aemr1773301685a.1.1783341947497;
-        Mon, 06 Jul 2026 05:45:47 -0700 (PDT)
-Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:86f0:c42b:ef4c:d3bb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa0a55be4sm22126539f8f.31.2026.07.06.05.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 05:45:46 -0700 (PDT)
-From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Date: Mon, 06 Jul 2026 14:44:31 +0200
-Subject: [PATCH v3 19/20] reset: rzg2l: use
- platform_device_set_of_node_from_dev()
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TAfijvFB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nMS1b6vfXRRrrT0WHHxGw+Guz6Zq96qgdl0qoeSp7JCkPUhmvq8QAFoNyfg9fOXag7eYJP3w/eLq8Kd+1ENbvcX4x0KMSe0s5Ia8MfyJVfKlsPh/v9D0z526TfH8h5geN7MXJCr5rwZSHBBGR1Jl8DMNof2Z+ZvdkxKN5b3ccj1iquy1TY6tGalFmvaTQyrG1bcKhVI+TOJ6iW3QUt6bD+XO9f6Uhx6P6BgASftBrYGarRhkeXB1oBfUmLw0GjL2Mztr0aegSTUql/QVSPgBcHTR78dcTIjEvQUB7H1IBWJJgVF2GCBb8C7Od6cW5ywtnwwSonKNJ0zpVEANQOQarg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7hoXzjLvoYKIWrm0YFUqKxl24VDM+FwVHsQVosRxRds=;
+ b=KljAcVjfdoqoj01oNAORRRz11Z/5FVpPh5NwnkYSTogVrudFQUZs8+2zMDxEl5o0MQICBVOzxjEzSkk0Bfb8ahjvU9+3gxcwqGwMtbCwmCyc3PQxov4PvU/AgDiwrc68tZ13hI9sH7hUmwneVvWWZ0VXSLcrTJ3TbQDNZsLwunMlLISttU28v67Gjazs5CoIjubHKwkLpfleak+WaEpP/zoTjSH9h2/pqQ0fq+tnTrqi0Mla0s6wzKD6v41huk6tBqfbxHi1dVyKGmJsdV4J2ljA/JxB7GCOpI/GXxWqPT6Vk8p9yGqpPiI6yJqqS7IrVIgXu2KzY+j06SB3fItIjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7hoXzjLvoYKIWrm0YFUqKxl24VDM+FwVHsQVosRxRds=;
+ b=TAfijvFB4rw5Z+McylGgd+LfB51uru+Y47JK2csSJ/3nlMRXWsn6IW8mx/pLmSr7Hp8uq9XvnbD1oBKmikaMFjcpLFpjRsgikksXC5tHazMtidcvy5v94xJSjqntczwake4+FQi4nqZJslQmUQHDI7LMr4ZIG2jsLr057dJgEWY=
+Received: from SJ0PR05CA0134.namprd05.prod.outlook.com (2603:10b6:a03:33d::19)
+ by LV9PR12MB9758.namprd12.prod.outlook.com (2603:10b6:408:2bd::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
+ 2026 14:21:33 +0000
+Received: from SJ5PEPF000001F6.namprd05.prod.outlook.com
+ (2603:10b6:a03:33d:cafe::1e) by SJ0PR05CA0134.outlook.office365.com
+ (2603:10b6:a03:33d::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.6 via Frontend Transport; Mon, 6
+ Jul 2026 14:21:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001F6.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Mon, 6 Jul 2026 14:21:32 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 6 Jul
+ 2026 09:21:29 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP concurrency and lifecycle hardening
+Date: Mon, 6 Jul 2026 19:51:09 +0530
+Message-ID: <20260706142114.3202259-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260706-pdev-fwnode-ref-v3-19-1ff028e33779@oss.qualcomm.com>
-References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
-In-Reply-To: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
-To: Lee Jones <lee@kernel.org>,
-        Mark Brown <broonie@opensource.wolfsonmicro.com>,
-        Thierry Reding <thierry.reding@avionic-design.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-        Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Peter Chen <peter.chen@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hansg@kernel.org>,
-        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-        driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-        iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
-        linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        mfd@lists.linux.dev,
-        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1119;
- i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
- bh=HEn5owEzeJIUYkdvn4DQSoUKQdn9M8eLHqPgfVbyGMo=;
- b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqS6M9kHSk63/qP+xgNz2Y9PQyDSmFph3tQ8AC4
- 5AtD4YK+kuJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCakujPQAKCRAFnS7L/zaE
- w8S6D/wMyo30+5v8CLZilNJ79Z7wMDPBUG9sj14/UZP5eZoRp91qLsVzwolPCsq5U/qTKR3y/WF
- pZFakCrbpsJGqVqsKttIhxt2XpF4S1KfN1qC8pASBve+FNz8ZyKWhKOa9yoA01qpm32vrU5UPS/
- 6u2lJxL4o4/rLQx8CT4xqgdtrSqHYMAonkNf5DACLGhTdz4ZNLZuCIo8GsF2zwWIH+cAxzjYd3E
- qqZHOI8wr8R2KnXC7H+MD0fJGcu5uQ+1j45nmYvg5cX3ElUN9riw6pLBLgO57aJVoCo/ucH6xOK
- GI4rJ/08Hr3PNBYdbcQEJMNE9yYMkjxiudHvOq8R4g0BwEVtdO1A8jbTcho0IUz53pA59iFnjyM
- ttMlMjXQhKSGu1dFNK6/elGJLMXC6E4nbUKvbby/LEHyHwLU0algPpHe9UPUYh3l/DrQAUt0udl
- +zNN2SMUOdAze/pIW2+l5sftft9+laItqGcD5M5bJTp7tPjVFcDskDf/PioUl0vtokzCPuP1F3s
- zP1G38H9ILdgjRhYpMdqqolRWhSDfehH//GwZSZfc6zSynuMNLzcAlJbgXUXpTthmlBlksAjYqr
- pTM9O9ZbxdBxzavLzPTTt8/695EpXxnwsMZ87oi6uApZGTqb0upieRcXVikiyju4bpSHudD6VYO
- /G0MaTqKJntCfNg==
-X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
-X-Authority-Analysis: v=2.4 cv=SpigLvO0 c=1 sm=1 tr=0 ts=6a4ba37c cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=QyXUC8HyAAAA:8
- a=EUspDBNiAAAA:8 a=kq0kPlqncbyAjjsh9XUA:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDEyOSBTYWx0ZWRfX4zGmpWoVfhR3
- d6+UXIWeaYfDYfyYNx9zI4QprmO+bg5TXT6wAAiBhpA6iYaVRVWerF4lNb2SN7tcaUm82fs6Ewz
- vXwJVe26HienY6ModieiW1p8p8KOLjlLHHAVe9X0D4GahNyTRFSvZBW7THyaGjt6ZB1vMYjQNgZ
- TE2g6pnwq0awkkcq/UFTam6F6Q0tIIi03xMYQzY/v9X7mnYUeEwwRePzKM1i8T/gdJYg/y/0Wy2
- X0zy5rttXFt7BcbD40nWaaC2Gs2vJtCYAx2tq9d5Q26kdaectCvBKgqWu4uWuDfwWcR0ObQpoWa
- 2ijjgAhD/0UUgWkY+lu3KNbKIpszpTEWgd131pEYERKXN8KC3QNaDB/apt3HNa53f+H/XK3Q6p1
- ATV9I1PtA1pIxA7njg6nWGfZ4wsDicUWRJqC8NDHLxJxtr+8FcCfY4xT8IcxtYLg2WVbQfe6loR
- 1kI2LJIGhGn9xVX0Kbg==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDEyOSBTYWx0ZWRfX5uOFXHFnQHvI
- Fjp1akczVbN5qz2RCKtkBnu6mcjxIkCDPUlslwW0MpsClC/XskEN/SGvROB3HFWgxpAHA0mR8j3
- ILqinkW86+MO4ERR5YBhjEwVUx0RGP4=
-X-Proofpoint-GUID: bsvmYUlDR7iBZRWHVYVOrjxKlKl2zUtt
-X-Proofpoint-ORIG-GUID: bsvmYUlDR7iBZRWHVYVOrjxKlKl2zUtt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-06_01,2026-07-06_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060129
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F6:EE_|LV9PR12MB9758:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88d0cc5c-2ead-4a07-39a0-08dedb69e12b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700016|1800799024|82310400026|23010399003|11063799006|18002099003|56012099006|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	crrLnJC60B102TBsDYgzlK0/7sfZ1bnJM+GCENBOPjgFzkOM6wsWC0QN/RcW/HRdgF/uQNsHbefwXAoL2jSkoIjbmcXcveppYuUuNsCCtW0CSAVB045LWUHp1jpI/5kD1C54NheNrLYQ6wCwRPYE/oCSt4nBm0DHnLOY7jOQPam6KPzSq8f+60PY5kYC7v6pt/CUd8D7etelhFK9YIRgK23nU5yryx+Q3lGyXpR6HdFVYa/7Qq2l/wv7vn9Nm6RrbUdsCzQKIlnyAUjavJhDAp2nVOqS/xzxxF5aaAY14HreQ37/HP3DnyW8/xpjcJSzi8bEmCUPevRaWFWdBIxIvlsINiloA9dgAJq1Cc8iK9b35j3+bzkwbDd3ZsvEex8X73mtcXJ3LkHyYaXFi9yWvQJGHWkoLc8V8eC9VuUM93GmbehT6hyozoMKKtojbsD+wN8lVWYDYl9wfl7SIr5VuvzrAh3YKZTqPCoe0R1TnDAKBXAX0919WZXIO2KobrHOyVbYtw25bkhDI0G/HpnIui6EZrdi4ZCx9m0sgHL7jesEr/Ux2nVkRJm3occ/KtuACfWOVxKj3yw5EJ2AiJDOvpMs5gaYY/vO/w3dK/I//WwJYSUD09LMl+6RKOtlPQ7CitMyhXMp6gdMROqHGA2B7+xLQdhV70Ew0CLQ+OVZzfc=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(1800799024)(82310400026)(23010399003)(11063799006)(18002099003)(56012099006)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	7bFuJX0Ckbbdw/hGUauByzcLjGDQNEhGgvMB+W6klHi0vSA+rky1dNalrguj1ntD1uKsddT407M3gHGhuLTZjOtcDLg2ghJtYE5YsGig6thy6SNLVAuUBZCwEVc45uCK1cfBgdRTFm67pIJM28sRRvI8z8i/ZFiyDLkaHZsig1dkSDFLcGnF3eOTEwYW2gc1Q3YAvyAq+jAmtoXBRXzBHYVJ1YSkV5cgjO6HkC3slFyiq6OGAONPmKSNvd/D5c/J23zx/n6vEAeYZKFcSiV7QZbrZyBQi3u6/ka3SJDaNxYsbNCIVnHNWFKJkz1k8ZUW16ksQPF1ADK4CmHBW4Qcprr/BD1b6UsqPBFeR9wxHDN//G3s3rEd9PCBTYLpgSnxesEfPUv1VKwD9jfWjnvir9pLt+6Ig1++JhadbXUYEShyfxDES/oU4udD4+t9Mbfy
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 14:21:32.7690
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88d0cc5c-2ead-4a07-39a0-08dedb69e12b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F6.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR12MB9758
 
-Ahead of reworking the reference counting logic for platform devices,
-encapsulate the assignment of the OF node from another device for
-dynamically allocated platform devices with the provided helper.
+This series hardens the AMD HSMP ACPI and platform drivers against
+probe/remove concurrency, use-after-free of the per-socket state, and
+resource leaks across unbind/rebind cycles.
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
----
- drivers/reset/reset-rzg2l-usbphy-ctrl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On multi-socket systems several ACPI platform devices are probed and
+removed independently while a single /dev/hsmp (and the hwmon sysfs
+attributes) drive a lock-free data plane.  The existing code raced the
+global is_probed handshake and the one-time socket allocation, freed the
+socket array from under in-flight hsmp_send_message() callers, and leaked
+metric-table mappings on rebind.
 
-diff --git a/drivers/reset/reset-rzg2l-usbphy-ctrl.c b/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-index fd75d9601a3bfde7b7e3f6db287ec8c5c45a20ab..f003b360629c90bb37ed0ade7a675b5b0f28fa7e 100644
---- a/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-+++ b/drivers/reset/reset-rzg2l-usbphy-ctrl.c
-@@ -249,7 +249,7 @@ static int rzg2l_usbphy_ctrl_probe(struct platform_device *pdev)
- 	vdev->dev.parent = dev;
- 	priv->vdev = vdev;
- 
--	device_set_of_node_from_dev(&vdev->dev, dev);
-+	platform_device_set_of_node_from_dev(vdev, dev);
- 	error = platform_device_add(vdev);
- 	if (error)
- 		goto err_device_put;
+The patches, in order:
 
+  1. Serialize ACPI probe/remove/init_acpi() with a dedicated mutex so
+     the is_probed handshake and the one-time socket allocation cannot
+     race across per-socket platform devices.
+  2. Map the metric-table DRAM explicitly and add per-socket mutexes.
+  3. Add hsmp_sock_rwsem so the lock-free data plane is drained and kept
+     out while a socket is torn down; wire the non-ACPI platform path
+     into it.
+  4. Refcount the ACPI socket platform devices with struct kref and run a
+     coordinated release on the final put (deregister /dev/hsmp, unmap
+     metric DRAM, free the socket array); clear the per-socket dev under
+     the teardown write lock on both remove and probe failure.
+  5. Drop any stale metric-table mapping before remapping on rebind.
+
+Testing:
+  - Each patch builds individually (W=1) with no new warnings; the series
+    is bisectable.
+  - checkpatch.pl --strict is clean on every patch.
+
+Changes since v2:
+  - This revision covers only the five ACPI/platform probe, teardown, and
+    lifecycle patches.  The ACPI UID / _DSD mailbox validation and the
+    sock->dev readiness-gate changes from v2 are accepted in maintainer branch.
+  - Reworded the teardown rwsem comments in "Serialize the data plane
+    against socket teardown" so they describe the drain contract in terms
+    of a generic teardown path (a teardown path takes the write side)
+    rather than attributing it to the ACPI path, which is wired into the
+    drain in the following patch.
+
+v2: https://patch.msgid.link/20260625123337.886435-1-muralidhara.mk@amd.com
+
+Muralidhara M K (5):
+  platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
+    mutex
+  platform/x86/amd/hsmp: Add explicit metric DRAM mapping and per-socket
+    mutexes
+  platform/x86/amd/hsmp: Serialize the data plane against socket
+    teardown
+  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+    release
+  platform/x86/amd/hsmp: Drop stale metric table mapping on rebind
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 147 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 112 ++++++++++++++++++--
+ drivers/platform/x86/amd/hsmp/hsmp.h |  11 +-
+ drivers/platform/x86/amd/hsmp/plat.c |  39 ++++++-
+ 4 files changed, 285 insertions(+), 24 deletions(-)
+
+
+base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
 -- 
-2.47.3
+2.34.1
 
