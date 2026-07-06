@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039E541D4E6;
-	Mon,  6 Jul 2026 11:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FFD3F4852;
+	Mon,  6 Jul 2026 11:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783338071; cv=none; b=QtYWoqk4epSZLDJP0JlypAx08VvZxss04ju6VD4Go6j9ijL20IPm0k08CvAUkkbwDpctcBUQprqYfvcenNId3niK2JCpptro02yCf+ToBw1N4zKceT7l3OocxxE4KlLgVcH29iG2OL7Zj5X0rEvgJnoP5bM0gpYSWXM+jVKY0i8=
+	t=1783338679; cv=none; b=W3/mzkRzC451Pk3VRdo62lgI6pfdp7Ac3ZflA2aO/P0bvLXMQyO2BSLk3WdgObtsG2zo+y+6nOERXuYbOY+dFOU9dfhodAqHbyOzNWDwgrQi2sqw4VNJdcmaB8AaZXGX1wm2Hkjcnj/g6M0yEuNcOsW8JhVAT7g9iKxOUPRefIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783338071; c=relaxed/simple;
-	bh=nSlQP4XFpXMopXT/GVqAQB3dDMBfqKkJpkEqEhFWpyg=;
+	s=arc-20240116; t=1783338679; c=relaxed/simple;
+	bh=szsn/dWlGwKLGbDcBuNq1olOidjOEOPFItqfP2D66Ug=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=blhZptebpEymhBpzbVgzXyKOOlBQ7m7yW2CuQQ6WYsUtIaUn+ZezIDS0nYx04nobHHheYaZPu65HTk20dzzYWUIC2XumzUcqr9eoA9naDxnPBvxr/KpauAsw4b2mEaZdbSaX+oJE3M50S44aQ/nWpd8VSwj7XXm3VTf5RZ9+G6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FYshEyB9; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version:Content-Type; b=ET77EgneTBpQpQ8+Pdq9iSZwoEFZQEMLGAHfqANHxnT7MYVDWmMLlhnVqpdbxFLcSjh2bnv1SH7VrJtXUw4WddCqNSxAyxn2yrW8tKT6v7mN/IIHaL7oqCZprsSK4RgEnmuPCovYqA4e5GG8BYt2FZ2r9y9q5TiMD5vc/w+lREs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NwYEwv4J; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FYshEyB9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NwYEwv4J"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783338069; x=1814874069;
+  t=1783338677; x=1814874677;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=nSlQP4XFpXMopXT/GVqAQB3dDMBfqKkJpkEqEhFWpyg=;
-  b=FYshEyB9MLR8blV/PwSohqmWFovIS4C7cZnvCyiKzkZEDOA/fVrRt6pD
-   cIvVoQm3HGYFQ9bRNHt++vhMPNoVZhvCD/GGFaZBprKNzIzPnRr5Uo5SQ
-   3E6PaO3jCehBrW5cojJU1mhTnBphPGI5Xb/U8SH5l+NFvzo9lFuQ4QlHQ
-   EJmWUKWRjSqwGGexVR27bzYW+jUz0iS70v+6dTfwMvlh3Xg8/0uQd9tLE
-   xsVDu0rJIF8auCq0KXyonaWffSNWJKMsRbJPwil37qf3+xxrBnlB0z5FB
-   ZztS83lDabvnbKk9E17aTntQb0cUlsES++7al76mtOR6/D2nqLPVzUia/
-   g==;
-X-CSE-ConnectionGUID: dv/CkJebRg2epYa6qn7aFA==
-X-CSE-MsgGUID: N2AO1qzaRuy5dpKlKr+r4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="82948937"
+  bh=szsn/dWlGwKLGbDcBuNq1olOidjOEOPFItqfP2D66Ug=;
+  b=NwYEwv4J4Vo77et20HRy55fKp2xzZbjAw4R2LPbsp/j6BtHdeNx4RZaH
+   tmDKAPYPqpj7hH05OhEidedPhip+KutWodRYsqbGyOb9Nkzz4VTVwEQ2J
+   ow0+N0y2PHDDsPJXVSs+93y9DkzFgqft5HfQUw5T7Rviu7QISQkXdxI47
+   E8hEbFzUZxGq54aBFiaqHKmjE39vamfLykshp8b0ZpAS0wjyGbo4Areaa
+   bKvHprb1Ei4dl8camRYZmIzgBJSXMNIqdtxSkB2sXXO7VOKHD7+RRJsNH
+   l9bap/m8N4SY0908h+p1KFEJXANwWy7u9gfGl13NQhdBL7IMlxCfnfd7w
+   A==;
+X-CSE-ConnectionGUID: 6+QKhTL4R5yXyqq0zi2liQ==
+X-CSE-MsgGUID: 4sZZuZNfSlmLd9ZF/+UbnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="109514102"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="82948937"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:41:08 -0700
-X-CSE-ConnectionGUID: OfUVklBUR5yUv4SZ6IE5Ng==
-X-CSE-MsgGUID: lTl39yMsQ8qhfAnJm6FKrA==
+   d="scan'208";a="109514102"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:51:15 -0700
+X-CSE-ConnectionGUID: JgXIHjGGRsOl6wrd8Iet5A==
+X-CSE-MsgGUID: XRSY+wDKQb6N3ZrSGoOlNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="258595411"
+   d="scan'208";a="278047396"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.95])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:41:06 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:51:13 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 6 Jul 2026 14:41:03 +0300 (EEST)
+Date: Mon, 6 Jul 2026 14:51:10 +0300 (EEST)
 To: Muralidhara M K <muralidhara.mk@amd.com>
 cc: muthusamy.ramalingam@amd.com, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/7] platform/x86/amd/hsmp: Serialize the data plane
- against socket teardown
-In-Reply-To: <20260625123337.886435-6-muralidhara.mk@amd.com>
-Message-ID: <0c56c0bc-a14d-dc75-9897-b70127c8e991@linux.intel.com>
-References: <20260625123337.886435-1-muralidhara.mk@amd.com> <20260625123337.886435-6-muralidhara.mk@amd.com>
+Subject: Re: [PATCH v2 3/7] platform/x86/amd/hsmp: Add explicit metric DRAM
+ mapping and per-socket mutexes
+In-Reply-To: <20260625123337.886435-4-muralidhara.mk@amd.com>
+Message-ID: <75bbac3d-a43d-2092-2f34-48d4795a0e87@linux.intel.com>
+References: <20260625123337.886435-1-muralidhara.mk@amd.com> <20260625123337.886435-4-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,205 +63,174 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 25 Jun 2026, Muralidhara M K wrote:
 
-> The HSMP data plane is lock-free: open /dev/hsmp fds and hwmon sysfs
-> reads call hsmp_send_message() without any coordination with driver
-> teardown.  misc_deregister() does not drain already-open fds, so an
-> in-flight message can race a concurrent unbind and touch a freed socket
-> array or an unmapped mailbox.
+> Add hsmp_destroy_metric_read_locks(), hsmp_init_metric_read_locks(), and
+> switch metric table DRAM from devm_ioremap() to ioremap() so ACPI can
+> coordinate teardown.  Embed struct mutex metric_read_lock in each
+> hsmp_socket for later serialization of metric table reads.
 > 
-> Add hsmp_sock_rwsem.  hsmp_send_message() now holds it for read across
-> the whole bounds-check + MMIO access, and hsmp_sock_teardown_lock()/
-> hsmp_sock_teardown_unlock() let a teardown path hold it for write to
-> drain any in-flight message and keep new ones out while it tears the
-> socket down.
-> 
-> Wire the non-ACPI platform path into the drain: hsmp_pltdrv_remove()
-> and the probe-failure cleanup take the write lock and drop the global
-> socket pointer before devres frees the devm_kcalloc() array.  num_sockets
-> is left intact so a later rebind can re-create the array.
+> Call the new helpers from the platform driver probe and remove paths
+> so non-ACPI builds initialize and tear down metric_read_lock consistently
+> with the ACPI driver.
 > 
 > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 > ---
->  drivers/platform/x86/amd/hsmp/hsmp.c | 55 +++++++++++++++++++++++++---
->  drivers/platform/x86/amd/hsmp/hsmp.h |  2 +
->  drivers/platform/x86/amd/hsmp/plat.c | 23 ++++++++++++
->  3 files changed, 74 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/amd/hsmp/hsmp.c | 38 ++++++++++++++++++++++++++--
+>  drivers/platform/x86/amd/hsmp/hsmp.h |  5 ++++
+>  drivers/platform/x86/amd/hsmp/plat.c | 16 ++++++++++--
+>  3 files changed, 55 insertions(+), 4 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index c3939908d95f..c15acba241c4 100644
+> index 91be0cdb6af1..a96c59fcba0a 100644
 > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -15,6 +15,7 @@
->  #include <linux/io.h>
->  #include <linux/mutex.h>
->  #include <linux/nospec.h>
-> +#include <linux/rwsem.h>
+> @@ -12,7 +12,11 @@
+>  #include <linux/acpi.h>
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/mutex.h>
+> +#include <linux/nospec.h>
 >  #include <linux/semaphore.h>
->  #include <linux/slab.h>
+> +#include <linux/slab.h>
 >  #include <linux/sysfs.h>
-> @@ -44,6 +45,16 @@
 >  
->  static struct hsmp_plat_device hsmp_pdev;
->  
-> +/*
-> + * Serializes the lock-free data plane (hsmp_send_message() and the per-socket
-> + * MMIO access it performs) against socket teardown.  Callers of the data plane
-> + * hold it for read so multiple sockets can be driven concurrently; ACPI
-> + * removal holds it for write while it clears sock->dev,
-
-I don't see acpi change in this patch (just hsmp_send_message and plat 
-changes)???
-
-> frees the socket array
-> + * and unmaps the mailbox, so a reader can never observe a half-torn-down or
-> + * freed socket.
-> + */
-> +static DECLARE_RWSEM(hsmp_sock_rwsem);
-> +
->  /*
->   * Send a message to the HSMP port via PCI-e config space registers
->   * or by writing to MMIO space.
-> @@ -215,8 +226,19 @@ int hsmp_send_message(struct hsmp_message *msg)
->  	if (ret)
->  		return ret;
->  
-> -	if (!hsmp_pdev.sock || msg->sock_ind >= hsmp_pdev.num_sockets)
-> -		return -ENODEV;
-> +	/*
-> +	 * Hold the teardown rwsem for read across the whole MMIO access.  ACPI
-> +	 * removal takes it for write before clearing sock->dev, freeing the
-> +	 * socket array and unmapping the mailbox, so the lock-free data plane
-> +	 * (open /dev/hsmp fds and hwmon sysfs reads) can never dereference a
-> +	 * freed socket or touch an unmapped mailbox.
-> +	 */
-> +	down_read(&hsmp_sock_rwsem);
-> +
-> +	if (!hsmp_pdev.sock || msg->sock_ind >= hsmp_pdev.num_sockets) {
-> +		ret = -ENODEV;
-> +		goto out_unlock;
-> +	}
->  
->  	/*
->  	 * Sanitize sock_ind after the bounds check.  A mispredicted branch can
-> @@ -235,18 +257,22 @@ int hsmp_send_message(struct hsmp_message *msg)
->  	 * semaphore or an unmapped mailbox.  A non-NULL dev also guarantees
->  	 * virt_base_addr, the mailbox offsets and the semaphore are visible.
->  	 */
-> -	/* Pairs with smp_store_release(&sock->dev) in hsmp_parse_acpi_table(). */
-> -	if (!smp_load_acquire(&sock->dev))
-> -		return -ENODEV;
-> +	/* Held under hsmp_sock_rwsem; pairs with smp_store_release(&sock->dev). */
-> +	if (!smp_load_acquire(&sock->dev)) {
-> +		ret = -ENODEV;
-> +		goto out_unlock;
-> +	}
->  
->  	ret = down_interruptible(&sock->hsmp_sem);
->  	if (ret < 0)
-> -		return ret;
-> +		goto out_unlock;
->  
->  	ret = __hsmp_send_message(sock, msg);
->  
->  	up(&sock->hsmp_sem);
->  
-> +out_unlock:
-> +	up_read(&hsmp_sock_rwsem);
-
-Don't add unlock labels at the end but please use cleanup.h. It will 
-simplify the patch too as you don't need to alter those direct returns.
-
->  	return ret;
+>  #include "hsmp.h"
+> @@ -410,6 +414,37 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
 >  }
->  EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
-> @@ -529,6 +555,23 @@ struct hsmp_plat_device *get_hsmp_pdev(void)
->  }
->  EXPORT_SYMBOL_NS_GPL(get_hsmp_pdev, "AMD_HSMP");
+>  EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
 >  
-> +/*
-> + * Take the write side of the data-plane rwsem.  A caller tearing a socket down
-> + * uses this to drain any in-flight hsmp_send_message() and to keep new ones out
-> + * while it clears sock->dev, frees the socket array or unmaps the mailbox.
-> + */
-> +void hsmp_sock_teardown_lock(void)
+> +void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets)
 > +{
-> +	down_write(&hsmp_sock_rwsem);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_teardown_lock, "AMD_HSMP");
+> +	u16 i;
 > +
-> +void hsmp_sock_teardown_unlock(void)
-> +{
-> +	up_write(&hsmp_sock_rwsem);
+> +	if (!pdev->sock || !num_sockets)
+> +		return;
+> +
+> +	for (i = 0; i < num_sockets; i++)
+> +		mutex_init(&pdev->sock[i].metric_read_lock);
 > +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_teardown_unlock, "AMD_HSMP");
-
-Just export the lock to be taken directly in plat/acpi. It's much easier 
-to follow who locks what when you don't add wrappers like this.
-
-I don't understand why acpi doesn't use write side of this lock though 
-but has it's own lock (hsmp_acpi_probe_mutex)?
-
->  MODULE_DESCRIPTION("AMD HSMP Common driver");
->  MODULE_VERSION(DRIVER_VERSION);
->  MODULE_LICENSE("GPL");
+> +EXPORT_SYMBOL_NS_GPL(hsmp_init_metric_read_locks, "AMD_HSMP");
+> +
+> +void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets)
+> +{
+> +	u16 i;
+> +
+> +	if (!pdev->sock || !num_sockets)
+> +		return;
+> +
+> +	for (i = 0; i < num_sockets; i++) {
+> +		struct hsmp_socket *s = &pdev->sock[i];
+> +
+> +		if (s->metric_tbl_addr) {
+> +			iounmap(s->metric_tbl_addr);
+> +			s->metric_tbl_addr = NULL;
+> +		}
+> +		mutex_destroy(&s->metric_read_lock);
+> +	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(hsmp_destroy_metric_read_locks, "AMD_HSMP");
+> +
+>  int hsmp_get_tbl_dram_base(u16 sock_ind)
+>  {
+>  	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
+> @@ -434,8 +469,7 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+>  		dev_err(sock->dev, "Invalid DRAM address for metric table\n");
+>  		return -ENOMEM;
+>  	}
+> -	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
+> -					     sizeof(struct hsmp_metric_table));
+> +	sock->metric_tbl_addr = ioremap(dram_addr, sizeof(struct hsmp_metric_table));
+>  	if (!sock->metric_tbl_addr) {
+>  		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
+>  		return -ENOMEM;
 > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 91bc21232646..5d0a6d819865 100644
+> index 0509a442eaae..91bc21232646 100644
 > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
 > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -70,6 +70,8 @@ void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets)
+> @@ -15,6 +15,7 @@
+>  #include <linux/hwmon.h>
+>  #include <linux/kconfig.h>
+>  #include <linux/miscdevice.h>
+> +#include <linux/mutex.h>
+>  #include <linux/pci.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/sysfs.h>
+> @@ -41,6 +42,8 @@ struct hsmp_socket {
+>  	struct bin_attribute hsmp_attr;
+>  	struct hsmp_mbaddr_info mbinfo;
+>  	void __iomem *metric_tbl_addr;
+> +	/* Protects metric table snapshot reads for this socket */
+> +	struct mutex metric_read_lock;
+
+After applying all the patches in your series (in this series only), I 
+only see this:
+
+~/linux/platform/drivers/platform/x86/amd/hsmp$ git grep -w metric_read_lock
+hsmp.c:         mutex_init(&pdev->sock[i].metric_read_lock);
+hsmp.c:         mutex_destroy(&s->metric_read_lock);
+hsmp.h: struct mutex metric_read_lock;
+
+Is this lock ever even taken???
+
+--
+ i.
+
+>  	void __iomem *virt_base_addr;
+>  	struct semaphore hsmp_sem;
+>  	char name[HSMP_ATTR_GRP_NAME_SIZE];
+> @@ -63,7 +66,9 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg);
+>  void hsmp_misc_deregister(void);
+>  int hsmp_misc_register(struct device *dev);
+>  int hsmp_get_tbl_dram_base(u16 sock_ind);
+> +void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets);
 >  ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
->  void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets);
+> +void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets);
 >  struct hsmp_plat_device *get_hsmp_pdev(void);
-> +void hsmp_sock_teardown_lock(void);
-> +void hsmp_sock_teardown_unlock(void);
 >  #if IS_ENABLED(CONFIG_HWMON)
 >  int hsmp_create_sensor(struct device *dev, u16 sock_ind);
->  #else
 > diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index 685f2d2c574b..26c1363e79a1 100644
+> index e07f68575055..685f2d2c574b 100644
 > --- a/drivers/platform/x86/amd/hsmp/plat.c
 > +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -233,15 +233,38 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  	 * init_platform_device() may have ioremap()ed metric tables before
->  	 * failing.  hsmp_destroy_metric_read_locks() unmaps them and tears
->  	 * down the per-socket mutexes; the socket array itself is devm-managed.
-> +	 *
-> +	 * init_platform_device() also runs the data plane (hsmp_test()), so
-> +	 * drain it via the teardown rwsem and drop the global socket pointer
-> +	 * before devres frees the array.  num_sockets is left intact: it is
-> +	 * only computed once in __init (amd_num_nodes()) and is needed to
-> +	 * re-create the array on a later rebind.
->  	 */
-> +	hsmp_sock_teardown_lock();
->  	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
-> +	hsmp_pdev->sock = NULL;
-> +	hsmp_sock_teardown_unlock();
->  	return ret;
+> @@ -211,25 +211,37 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  	if (!hsmp_pdev->sock)
+>  		return -ENOMEM;
+>  
+> +	hsmp_init_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
+> +
+>  	ret = init_platform_device(&pdev->dev);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
+> -		return ret;
+> +		goto err_destroy_locks;
+>  	}
+>  
+>  	ret = hsmp_misc_register(&pdev->dev);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Failed to register misc device\n");
+> -		return ret;
+> +		goto err_destroy_locks;
+>  	}
+>  
+>  	dev_dbg(&pdev->dev, "AMD HSMP is probed successfully\n");
+>  	return 0;
+> +
+> +err_destroy_locks:
+> +	/*
+> +	 * init_platform_device() may have ioremap()ed metric tables before
+> +	 * failing.  hsmp_destroy_metric_read_locks() unmaps them and tears
+> +	 * down the per-socket mutexes; the socket array itself is devm-managed.
+> +	 */
+> +	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
+> +	return ret;
 >  }
 >  
 >  static void hsmp_pltdrv_remove(struct platform_device *pdev)
 >  {
-> +	/*
-> +	 * Drain the lock-free data plane and keep it out while the sockets are
-> +	 * torn down.  misc_deregister() does not drain already-open /dev/hsmp
-> +	 * fds and the driver permits sysfs unbind, so without this an in-flight
-> +	 * hsmp_send_message() could touch the devres-freed socket array or an
-> +	 * iounmap()ed metric table.  Dropping the global socket pointer makes
-> +	 * later messages bail out at the first check.  num_sockets is left
-> +	 * intact so an unbind/rebind cycle can re-create the array; it is only
-> +	 * computed once in __init (amd_num_nodes()) and is never recomputed on
-> +	 * probe.
-> +	 */
-> +	hsmp_sock_teardown_lock();
 >  	hsmp_misc_deregister();
->  	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
-> +	hsmp_pdev->sock = NULL;
-> +	hsmp_sock_teardown_unlock();
+> +	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
 >  }
 >  
 >  static struct platform_driver amd_hsmp_driver = {
 > 
-
--- 
- i.
 
