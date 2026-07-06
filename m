@@ -1,118 +1,267 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B81A3A4535
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 10:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039E541D4E6;
+	Mon,  6 Jul 2026 11:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783334262; cv=none; b=qaIm3B9VJ2ZRgbA4hmBVvB0EmzPdzgA771cG2OXTqTRS+DPxEKp0GQpMSYQO+Hmm6Im7LCa7z0Onw5hukfOQ71XETPrlrXlkr1xUH5CzFokcVJEgTqWH2aU/eKqILVOmHfC21aEwAI2k8Y9jnt+ejlG3SutR1o8k0Ub0e+2zUvk=
+	t=1783338071; cv=none; b=QtYWoqk4epSZLDJP0JlypAx08VvZxss04ju6VD4Go6j9ijL20IPm0k08CvAUkkbwDpctcBUQprqYfvcenNId3niK2JCpptro02yCf+ToBw1N4zKceT7l3OocxxE4KlLgVcH29iG2OL7Zj5X0rEvgJnoP5bM0gpYSWXM+jVKY0i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783334262; c=relaxed/simple;
-	bh=7NEBWzNh1uxkZkSDHwf39crAET9UaLAJ9UI8ikC2Suw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLM7mvcVmPz+tbbSlngHr7i4rlDae3Mp5Tifq6EPISh2xhtviS2qWGc9BxwUjlQ0AAKmEp5FRTyggKyr3iiVgufy2q+MZNHT7wkj4YYJ0EJf7r7LKR/uog95gjsYC0jbEMKe0I1BFs0lx9hBWOlTpMMfHQWQF8RwMkG7p2S8kdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=R+tcTVd/; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1783338071; c=relaxed/simple;
+	bh=nSlQP4XFpXMopXT/GVqAQB3dDMBfqKkJpkEqEhFWpyg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=blhZptebpEymhBpzbVgzXyKOOlBQ7m7yW2CuQQ6WYsUtIaUn+ZezIDS0nYx04nobHHheYaZPu65HTk20dzzYWUIC2XumzUcqr9eoA9naDxnPBvxr/KpauAsw4b2mEaZdbSaX+oJE3M50S44aQ/nWpd8VSwj7XXm3VTf5RZ9+G6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FYshEyB9; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="R+tcTVd/"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4938d5f86f3so18281005e9.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 03:37:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783334259; x=1783939059; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NEBWzNh1uxkZkSDHwf39crAET9UaLAJ9UI8ikC2Suw=;
-        b=R+tcTVd/7mUCrZ/BrBF64vt4eXKpZkGvmVfZZHLMglDJ7i4AGDnZTYjiCDCegW+TKl
-         7qA2Xz6KgyQ6zzLiRM7u7hbi+K8fuUoxybplzNNYLzSjPhs6wRB1xODXywt5qGusHF1z
-         VddsgKgtEg0wRXa4fis1pAy8JtV+LaGsbkRI1MBlydLOuiiSaLMN2KWQ2+PF4MgSr6uN
-         7ZJ1opd3hH/Pr6hM8x1DlJiSGRHUa3/z31VuAbgXXVAJIQkzQt4lNrJ4JO/zg/ZOxJXg
-         9m80DGHWN8DYHvpDTE7o+exD6Q0ohwGkrpbpvzh0lOrQLmC/mwIrx5nqeQtWjZ87Jrgj
-         4VYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783334259; x=1783939059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7NEBWzNh1uxkZkSDHwf39crAET9UaLAJ9UI8ikC2Suw=;
-        b=j+B+keED3wUqGjsL098Zp6zBSGJ13KlmuQYI5l1yFTVTw8OeE1ozZVXwXBjFtCglMr
-         yoGBpOv9h86GrT0EZMxSmO/u6IyXTOt3Q7D83SkAmzPCDDOkyQQXkQlUofUVu4UZ/m2w
-         TtvWgT9G5gyLg7ckUViLpEjCyeVAKVm3qEju5bDzATuBMUcCcq7HOnDhV+bGVk38oNC3
-         VGCe0JKDxIRP/UF8LKmewCYI/Nl0HHIxLz6q73Eo6mEAELllaQwFFu/DPNazKS7hTyK6
-         c8pTOY9SRtsTBvIeycngIkfzFAhKTcBwjQ8nAATczI9bX2Bc/1BMOj753khS4NUsKWPR
-         knXQ==
-X-Gm-Message-State: AOJu0YxjfEwJH5tc9fXfcPxWUJiRZm9hoAWG/OmkFIS5WAU//1XN20ie
-	qYqyYFwbPK/Fl+7vVV3O2c60ruGuIR1m4PPxL7KpIHoKaxbzSTkHz1poHMnyJBNSDAc=
-X-Gm-Gg: AfdE7clv6kYXcg1Vv/x0Obpn807FLO9HhE9Lyimc1VBWDElnBDvW5EyZiVi5kWPrpVt
-	RBwznFepuADrQxf8Bi0L8cAeRgwCKKE6StQ0WzhGdx3p5CGFz7mpq+0z6dTBLx6nQwNAKJGmTEa
-	GMdPj4Nkjo34grN/A707hmEqD9shN4J3OPw2m22mPYpYxdmpk0R7+47GwsuJmEuhGi7hmCLfNkH
-	+8YAkUm8gtvrlZyhfaC3y7yyP9/VaWceuLfVlB4Ij+7iljOENJjisCgEcF8aUispjKKD6k6aQVo
-	UhC8/RR2hzFgBW1zBQ4tZ13jOtIJhH1dIZg00LajOaCVtUw9ONDrSO6JDDifF2NKmZf8hQkGaZ9
-	sxdZQELfP3MmNFj2KqpjAjNATclNyBfmkH7CAH5fnDvFM8gJU+J1bNX/LDZC65nf5MHZFtLm8Cq
-	ynmGyfNsmXsDhgZeuUaNWziMdG4LgoOU40QvkOEA5fkq749UMs6hkvSTzj5d9ZgCob7f0Zul0QD
-	xie
-X-Received: by 2002:a05:600c:5893:b0:48e:8eb0:4957 with SMTP id 5b1f17b1804b1-493c9b3dd62mr112037115e9.2.1783334258276;
-        Mon, 06 Jul 2026 03:37:38 -0700 (PDT)
-Received: from localhost (p200300f65f47db0426af56a07ec3b32d.dip0.t-ipconnect.de. [2003:f6:5f47:db04:26af:56a0:7ec3:b32d])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-47a9de1d910sm23039242f8f.6.2026.07.06.03.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 03:37:37 -0700 (PDT)
-Date: Mon, 6 Jul 2026 12:37:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: PDx86 ML <platform-driver-x86@vger.kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: Imminent rebase of pdx86 trees to v7.2-rc2
-Message-ID: <akuE9tvj29Y6crEk@monoceros>
-References: <8084b592-cb10-2ae4-603a-615f053ca01d@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FYshEyB9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783338069; x=1814874069;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nSlQP4XFpXMopXT/GVqAQB3dDMBfqKkJpkEqEhFWpyg=;
+  b=FYshEyB9MLR8blV/PwSohqmWFovIS4C7cZnvCyiKzkZEDOA/fVrRt6pD
+   cIvVoQm3HGYFQ9bRNHt++vhMPNoVZhvCD/GGFaZBprKNzIzPnRr5Uo5SQ
+   3E6PaO3jCehBrW5cojJU1mhTnBphPGI5Xb/U8SH5l+NFvzo9lFuQ4QlHQ
+   EJmWUKWRjSqwGGexVR27bzYW+jUz0iS70v+6dTfwMvlh3Xg8/0uQd9tLE
+   xsVDu0rJIF8auCq0KXyonaWffSNWJKMsRbJPwil37qf3+xxrBnlB0z5FB
+   ZztS83lDabvnbKk9E17aTntQb0cUlsES++7al76mtOR6/D2nqLPVzUia/
+   g==;
+X-CSE-ConnectionGUID: dv/CkJebRg2epYa6qn7aFA==
+X-CSE-MsgGUID: N2AO1qzaRuy5dpKlKr+r4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="82948937"
+X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
+   d="scan'208";a="82948937"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:41:08 -0700
+X-CSE-ConnectionGUID: OfUVklBUR5yUv4SZ6IE5Ng==
+X-CSE-MsgGUID: lTl39yMsQ8qhfAnJm6FKrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
+   d="scan'208";a="258595411"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.95])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 04:41:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 6 Jul 2026 14:41:03 +0300 (EEST)
+To: Muralidhara M K <muralidhara.mk@amd.com>
+cc: muthusamy.ramalingam@amd.com, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/7] platform/x86/amd/hsmp: Serialize the data plane
+ against socket teardown
+In-Reply-To: <20260625123337.886435-6-muralidhara.mk@amd.com>
+Message-ID: <0c56c0bc-a14d-dc75-9897-b70127c8e991@linux.intel.com>
+References: <20260625123337.886435-1-muralidhara.mk@amd.com> <20260625123337.886435-6-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zwmv6j5dalbnrmce"
-Content-Disposition: inline
-In-Reply-To: <8084b592-cb10-2ae4-603a-615f053ca01d@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 25 Jun 2026, Muralidhara M K wrote:
 
---zwmv6j5dalbnrmce
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Imminent rebase of pdx86 trees to v7.2-rc2
-MIME-Version: 1.0
+> The HSMP data plane is lock-free: open /dev/hsmp fds and hwmon sysfs
+> reads call hsmp_send_message() without any coordination with driver
+> teardown.  misc_deregister() does not drain already-open fds, so an
+> in-flight message can race a concurrent unbind and touch a freed socket
+> array or an unmapped mailbox.
+> 
+> Add hsmp_sock_rwsem.  hsmp_send_message() now holds it for read across
+> the whole bounds-check + MMIO access, and hsmp_sock_teardown_lock()/
+> hsmp_sock_teardown_unlock() let a teardown path hold it for write to
+> drain any in-flight message and keep new ones out while it tears the
+> socket down.
+> 
+> Wire the non-ACPI platform path into the drain: hsmp_pltdrv_remove()
+> and the probe-failure cleanup take the write lock and drop the global
+> socket pointer before devres frees the devm_kcalloc() array.  num_sockets
+> is left intact so a later rebind can re-create the array.
+> 
+> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> ---
+>  drivers/platform/x86/amd/hsmp/hsmp.c | 55 +++++++++++++++++++++++++---
+>  drivers/platform/x86/amd/hsmp/hsmp.h |  2 +
+>  drivers/platform/x86/amd/hsmp/plat.c | 23 ++++++++++++
+>  3 files changed, 74 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+> index c3939908d95f..c15acba241c4 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/io.h>
+>  #include <linux/mutex.h>
+>  #include <linux/nospec.h>
+> +#include <linux/rwsem.h>
+>  #include <linux/semaphore.h>
+>  #include <linux/slab.h>
+>  #include <linux/sysfs.h>
+> @@ -44,6 +45,16 @@
+>  
+>  static struct hsmp_plat_device hsmp_pdev;
+>  
+> +/*
+> + * Serializes the lock-free data plane (hsmp_send_message() and the per-socket
+> + * MMIO access it performs) against socket teardown.  Callers of the data plane
+> + * hold it for read so multiple sockets can be driven concurrently; ACPI
+> + * removal holds it for write while it clears sock->dev,
 
-Hello Ilpo,
+I don't see acpi change in this patch (just hsmp_send_message and plat 
+changes)???
 
-On Mon, Jul 06, 2026 at 11:48:18AM +0300, Ilpo J=E4rvinen wrote:
-> Because of the recent mid-rc-cycle merge of the rework for=20
-> mod_devicetable.h in d2c9a99135da ("Merge tag 'device-id-rework' of=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux"), I'll be=
-=20
-> (re)basing our pdx86 tree on top of v7.2-rc2.
+> frees the socket array
+> + * and unmaps the mailbox, so a reader can never observe a half-torn-down or
+> + * freed socket.
+> + */
+> +static DECLARE_RWSEM(hsmp_sock_rwsem);
+> +
+>  /*
+>   * Send a message to the HSMP port via PCI-e config space registers
+>   * or by writing to MMIO space.
+> @@ -215,8 +226,19 @@ int hsmp_send_message(struct hsmp_message *msg)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (!hsmp_pdev.sock || msg->sock_ind >= hsmp_pdev.num_sockets)
+> -		return -ENODEV;
+> +	/*
+> +	 * Hold the teardown rwsem for read across the whole MMIO access.  ACPI
+> +	 * removal takes it for write before clearing sock->dev, freeing the
+> +	 * socket array and unmapping the mailbox, so the lock-free data plane
+> +	 * (open /dev/hsmp fds and hwmon sysfs reads) can never dereference a
+> +	 * freed socket or touch an unmapped mailbox.
+> +	 */
+> +	down_read(&hsmp_sock_rwsem);
+> +
+> +	if (!hsmp_pdev.sock || msg->sock_ind >= hsmp_pdev.num_sockets) {
+> +		ret = -ENODEV;
+> +		goto out_unlock;
+> +	}
+>  
+>  	/*
+>  	 * Sanitize sock_ind after the bounds check.  A mispredicted branch can
+> @@ -235,18 +257,22 @@ int hsmp_send_message(struct hsmp_message *msg)
+>  	 * semaphore or an unmapped mailbox.  A non-NULL dev also guarantees
+>  	 * virt_base_addr, the mailbox offsets and the semaphore are visible.
+>  	 */
+> -	/* Pairs with smp_store_release(&sock->dev) in hsmp_parse_acpi_table(). */
+> -	if (!smp_load_acquire(&sock->dev))
+> -		return -ENODEV;
+> +	/* Held under hsmp_sock_rwsem; pairs with smp_store_release(&sock->dev). */
+> +	if (!smp_load_acquire(&sock->dev)) {
+> +		ret = -ENODEV;
+> +		goto out_unlock;
+> +	}
+>  
+>  	ret = down_interruptible(&sock->hsmp_sem);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto out_unlock;
+>  
+>  	ret = __hsmp_send_message(sock, msg);
+>  
+>  	up(&sock->hsmp_sem);
+>  
+> +out_unlock:
+> +	up_read(&hsmp_sock_rwsem);
 
-Probably to late now, but I guess merging v7.2-rc2 into your tree to
-handle (potential?) merge conflicts would have been the solution that
-doesn't involve a rebase.
+Don't add unlock labels at the end but please use cleanup.h. It will 
+simplify the patch too as you don't need to alter those direct returns.
 
-Best regards
-Uwe
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
+> @@ -529,6 +555,23 @@ struct hsmp_plat_device *get_hsmp_pdev(void)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(get_hsmp_pdev, "AMD_HSMP");
+>  
+> +/*
+> + * Take the write side of the data-plane rwsem.  A caller tearing a socket down
+> + * uses this to drain any in-flight hsmp_send_message() and to keep new ones out
+> + * while it clears sock->dev, frees the socket array or unmaps the mailbox.
+> + */
+> +void hsmp_sock_teardown_lock(void)
+> +{
+> +	down_write(&hsmp_sock_rwsem);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_teardown_lock, "AMD_HSMP");
+> +
+> +void hsmp_sock_teardown_unlock(void)
+> +{
+> +	up_write(&hsmp_sock_rwsem);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(hsmp_sock_teardown_unlock, "AMD_HSMP");
 
---zwmv6j5dalbnrmce
-Content-Type: application/pgp-signature; name="signature.asc"
+Just export the lock to be taken directly in plat/acpi. It's much easier 
+to follow who locks what when you don't add wrappers like this.
 
------BEGIN PGP SIGNATURE-----
+I don't understand why acpi doesn't use write side of this lock though 
+but has it's own lock (hsmp_acpi_probe_mutex)?
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpLhW4ACgkQj4D7WH0S
-/k42xAf/Q1wZfEa/L0Fok1tVfHvD26XsSx/hI4Eb6zWf2eULZlTniSWYMQaj1X5A
-HeDI+aaEKduJjkdVzCtqMtRI9ehSl+BmFMeWvs46R4dg71tRab5f+pNJIybEPP3X
-frh01jgCM4s3nNaxaO8Drow7DXxMC9zJPVylOA2btzi2NdKxcyfLvT24OBwXixYG
-R22ZlCB8a4ACG04N2O71Yxd0GrG6TyXtr3MLeNHEh+PK7m8Yxp5+Go02/Tsnn3bb
-x1WfYEp76bCxVYGIWPFf/tBZIcuDdQEjIm3FiLJyXS1lwUCIt2+KHVAgqjOTZjS+
-fkKXqKpSuKXQ4HQnM7oZQGwn+49edg==
-=zXNb
------END PGP SIGNATURE-----
+>  MODULE_DESCRIPTION("AMD HSMP Common driver");
+>  MODULE_VERSION(DRIVER_VERSION);
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+> index 91bc21232646..5d0a6d819865 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+> @@ -70,6 +70,8 @@ void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets)
+>  ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
+>  void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev, u16 num_sockets);
+>  struct hsmp_plat_device *get_hsmp_pdev(void);
+> +void hsmp_sock_teardown_lock(void);
+> +void hsmp_sock_teardown_unlock(void);
+>  #if IS_ENABLED(CONFIG_HWMON)
+>  int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+>  #else
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index 685f2d2c574b..26c1363e79a1 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -233,15 +233,38 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  	 * init_platform_device() may have ioremap()ed metric tables before
+>  	 * failing.  hsmp_destroy_metric_read_locks() unmaps them and tears
+>  	 * down the per-socket mutexes; the socket array itself is devm-managed.
+> +	 *
+> +	 * init_platform_device() also runs the data plane (hsmp_test()), so
+> +	 * drain it via the teardown rwsem and drop the global socket pointer
+> +	 * before devres frees the array.  num_sockets is left intact: it is
+> +	 * only computed once in __init (amd_num_nodes()) and is needed to
+> +	 * re-create the array on a later rebind.
+>  	 */
+> +	hsmp_sock_teardown_lock();
+>  	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
+> +	hsmp_pdev->sock = NULL;
+> +	hsmp_sock_teardown_unlock();
+>  	return ret;
+>  }
+>  
+>  static void hsmp_pltdrv_remove(struct platform_device *pdev)
+>  {
+> +	/*
+> +	 * Drain the lock-free data plane and keep it out while the sockets are
+> +	 * torn down.  misc_deregister() does not drain already-open /dev/hsmp
+> +	 * fds and the driver permits sysfs unbind, so without this an in-flight
+> +	 * hsmp_send_message() could touch the devres-freed socket array or an
+> +	 * iounmap()ed metric table.  Dropping the global socket pointer makes
+> +	 * later messages bail out at the first check.  num_sockets is left
+> +	 * intact so an unbind/rebind cycle can re-create the array; it is only
+> +	 * computed once in __init (amd_num_nodes()) and is never recomputed on
+> +	 * probe.
+> +	 */
+> +	hsmp_sock_teardown_lock();
+>  	hsmp_misc_deregister();
+>  	hsmp_destroy_metric_read_locks(hsmp_pdev, hsmp_pdev->num_sockets);
+> +	hsmp_pdev->sock = NULL;
+> +	hsmp_sock_teardown_unlock();
+>  }
+>  
+>  static struct platform_driver amd_hsmp_driver = {
+> 
 
---zwmv6j5dalbnrmce--
+-- 
+ i.
+
