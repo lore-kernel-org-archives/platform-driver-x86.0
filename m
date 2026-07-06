@@ -1,104 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ABA384CCE;
-	Mon,  6 Jul 2026 15:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521AE309EE2;
+	Mon,  6 Jul 2026 15:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783352821; cv=none; b=oqLIeBG94K46+8wXozzmvWgyp3idsWwbiCAkegnN6AIf6le8m8kRn57EyJ2dYLu411eyYBHerq3jLVUDBeShJ/nyfwqDb9SFbf7d7Z3U164owR0pMbudzCS/iZgm6ZQmELnpGYpZL61EpNKWR6J03kak61Dnqfu0IOtLc0Wi6iY=
+	t=1783353034; cv=none; b=SP564uf+QxMZssvFri+SoJ7uuDne+t/OmXVIwXiCZiqPO2WIpCu8WLeJBHWN6LEOQaN4Ao1Gs54oiS1/MlRwp4m4whSlouoYNK8J9bNV+ZYX5gA9xkr3cAM9psU+ChQfPeN1slmuTsVXZD6uDb27CAYLp4cWFp2cuz/+rJ4lyZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783352821; c=relaxed/simple;
-	bh=8gYUW4D5wdjnaNNxOz8ev6lcg7g56HvaCKpukKDgbZk=;
+	s=arc-20240116; t=1783353034; c=relaxed/simple;
+	bh=of6d9n1ZVp2VvNBWbeQxrIvJaxz8Dqo4F/lZHKvIDzs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lnhTSUkhA+Du5BZqBo+4fAwi6a8vz4pbAB01TN8EUdW4d5+dEr5vlvUVptJOSkBPvu6ESLqlBXGjKgILehiyckEhADCxlGXHMx60E+dXBfu2Vx4E3vr/KrAd3oqWd8T1w06EbF5X/3yOSA9Y90Y+IF7AVXMl0hQ+hwA5uOAZABc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oJFSLeBQ; arc=none smtp.client-ip=192.198.163.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=mC9Q5JKFMLaaEQt/Tw7REXPIGQUdtkcX5Xi/qGfjLHVj+d0S1IkkUHqeKS/Kv/ISPCpJCLMRjfsED3LO+Uw3hJOu0znZy6xP8pkMUeV718NAPVCTAU1LqdgHO/hTJxZgDc0lJcjd4IeFYlwxJNugG3IdwNKrjK8Q+LVw2KI0jDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FVBVZkkO; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oJFSLeBQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FVBVZkkO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783352818; x=1814888818;
+  t=1783353034; x=1814889034;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8gYUW4D5wdjnaNNxOz8ev6lcg7g56HvaCKpukKDgbZk=;
-  b=oJFSLeBQcVY3dUnqGjv16/1Ve4oOVEjoLhgl+go8eGT0k2k9A1tIHVed
-   0HTJ5ABmLhFdAaIp5OwQ4zfx4XJW76w50RtmHY+cuKr4fwwfVY42A1Opp
-   nbEfV8QXCYQ5fwenBIsup0htCszKHqWNeTz2uBshg/ZUNCP05+1kCsgfb
-   SlD3+YGAF6+OfULiyUTYxaUPCI+DkGVXp1hSZKldqNGRbC/vPMnLmnckP
-   AX/hOX4MJQveq0Q7KQXkpCALNJsGXiAaBSXD+pMvwNgbuK3rRci4mEeF6
-   BZoWN8GMoBAy51umy/+kRFQSR3xwmfeyH7VV9YiHr4P1k74oX4hnqfFVy
-   g==;
-X-CSE-ConnectionGUID: oURiiWBiRKWvmH0+l4wlMg==
-X-CSE-MsgGUID: NHAFWtsESTGVscz5xuJTBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="83097974"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=of6d9n1ZVp2VvNBWbeQxrIvJaxz8Dqo4F/lZHKvIDzs=;
+  b=FVBVZkkO81v97qwqgXdQoZ5BtTEZSn8hptdpl5+zhp69DG8Wc7HTqCA0
+   Iua/lgzHUpOHNX2O5GBppmUYF1PiPf69sOaB8Ow4GlK1ag6lLh9zEg8pF
+   3VKtX/orEhXlCgZIM6AVkaFJHxZaFunveVf1rFI+fQqXnttQ54x0cVXY3
+   PlohclVweXpZXa4qC4hRMfljkSLzo1HoC+VphEFD4spHrYIS29LmWh30o
+   NBG1HLrivq2LD58UeKk3qVdcS1nUHVpnKz1s+8OtrxC2NoD4y3qJ8HZ/f
+   mX/u9zXsoPrcTEQjyYz7zOPXp9EpFEYt2ZjDbFgjEYiqZ9otPaMD0rKrP
+   Q==;
+X-CSE-ConnectionGUID: 8j/Cz05nRiy7iG5juUwfJg==
+X-CSE-MsgGUID: 6WJR7CnASM+iSX97cI0Y7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="101408853"
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="83097974"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 08:46:56 -0700
-X-CSE-ConnectionGUID: Zp59iAOJQ1OrewfxGjH2VQ==
-X-CSE-MsgGUID: HuMDZ85fRNm+tLOkf8qc7g==
+   d="scan'208";a="101408853"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 08:50:32 -0700
+X-CSE-ConnectionGUID: NvB5N+KWQv+u1kUJ01a6bg==
+X-CSE-MsgGUID: ST8IrUj4Qs29+PTwG4IXGQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,149,1779174000"; 
-   d="scan'208";a="252679141"
+   d="scan'208";a="283836189"
 Received: from vpanait-mobl.ger.corp.intel.com (HELO localhost) ([10.245.244.48])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 08:46:53 -0700
-Date: Mon, 6 Jul 2026 18:46:51 +0300
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 08:50:18 -0700
+Date: Mon, 6 Jul 2026 18:49:55 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
+To: Manuel Ebner <manuelebner@mailbox.org>, Mark Brown <broonie@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Lee Jones <lee@kernel.org>,
+	Thierry Reding <thierry.reding@avionic-design.de>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Peter Chen <peter.chen@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Chen Yu <yu.c.chen@intel.com>,
-	Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v1] platform/surface: surfacepro3_button: Stop setting
- acpi_device_name()
-Message-ID: <akvN6-V7TOuwG4c2@ashevche-desk.local>
-References: <6036011.DvuYhMxLoT@rafael.j.wysocki>
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, mfd@lists.linux.dev
+Subject: Re: [PATCH v3 02/20] driver core: platform: provide
+ platform_device_set_of_node()
+Message-ID: <akvOo2EeERLYPh72@ashevche-desk.local>
+References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+ <20260706-pdev-fwnode-ref-v3-2-1ff028e33779@oss.qualcomm.com>
+ <fbc50f89e0c3bb148656a3b8d96974f591576dec.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <6036011.DvuYhMxLoT@rafael.j.wysocki>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fbc50f89e0c3bb148656a3b8d96974f591576dec.camel@mailbox.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Mon, Jul 06, 2026 at 02:28:56PM +0200, Rafael J. Wysocki wrote:
+On Mon, Jul 06, 2026 at 04:39:00PM +0200, Manuel Ebner wrote:
+> On Mon, 2026-07-06 at 14:44 +0200, Bartosz Golaszewski wrote:
 
-> Since acpi_device_name() set by the driver is only used for input
-> class device name initialization and printing a message on probe
-> success, and SURFACE_BUTTON_DEVICE_NAME can be used instead of it
-> directly in both cases, make the driver do so and stop setting
-> acpi_device_name().
-> 
-> No intentional functional impact.
-> 
-> This will facilitate the removal of device_name from struct
-> acpi_device_pnp in the future.
+> I removed Mark Brown <broonie@opensource.wolfsonmicro.com> from recipients because:
+> “RCPT TO <broonie@opensource.wolfsonmicro.com> failed:
+> <broonie@opensource.wolfsonmicro.com>: Recipient address rejected: Domain not found”.
 
-...
-
-> -	input->name = acpi_device_name(device);
-> +	input->name = SURFACE_BUTTON_DEVICE_NAME;
->  	input->phys = button->phys;
->  	input->id.bustype = BUS_HOST;
->  	input->dev.parent = &pdev->dev;
-
-> -	dev_info(&pdev->dev, "%s [%s]\n", acpi_device_name(device),
-> +	dev_info(&pdev->dev, SURFACE_BUTTON_DEVICE_NAME " [%s]\n",
->  		 acpi_device_bid(device));
-
-I would keep one place of accessing the definition:
-
-	dev_info(&pdev->dev, "%s [%s]\n", input->name, acpi_device_bid(device));
-
-If we ever change that, we won't need to look at two (or more) places.
-
+Perhaps he needs to send a patch to update .mailmap?
+Cc'ed to Mark.
 
 -- 
 With Best Regards,
