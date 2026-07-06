@@ -1,209 +1,237 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010054.outbound.protection.outlook.com [52.101.61.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF48379C32;
-	Mon,  6 Jul 2026 14:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783347997; cv=fail; b=KZdvXi7JkfnRVBRyDdhwawcjGNokkcRKJRAYkfGWbzVZXPPOiMO90cegFWTEmZrZpqggGnTnr5D7DfF7SpBgx8o0ERg8C/ZXne886SXyzFikS81jPt9Ixvtpo3KqigZJ+gb0/5iaLN0CRfScM6evFWYL0EZ0o733cjDGqKC2/NA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783347997; c=relaxed/simple;
-	bh=dgFKm+94HwWzf8Ojlx3bZOaqVpR3xVLOsfJ3/ZrDVo0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=iWIj52D4I647OBNx8iNSL6nXONU8iG1iMsDNpvDykXMG1ZRxGH2vT7aIr1rEz19Ss+zqodYTPnS21pFdabQJz39SV1YRy4i8sC9HGWN75G1pBd/VKe/H8eUufOMgw0e9M1qkhQhPUCXR/kzkM/7+cnxQDkQzHgNOA5w4aQm7dR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ye9AAWrl; arc=fail smtp.client-ip=52.101.61.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 998AD42B313
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 14:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783348742; cv=none; b=rvGHoU/tQoAjfYV31EjD/EA2P7l2gyxFBXKOZepATpS5y04wVNlXa85gH8JJZp3scMxnV48/gk5SWRWzl4aduwsmvSkCQutHD99Sntz8ZF8PWLp4ASec/8HseoOZnD2SfeOztwlLldpyL+NUqKYvS6VTVhaOG0YbyMm7wdPIA60=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783348742; c=relaxed/simple;
+	bh=W5XMfwMSwoRfoxyd+BvGhH65S6q07rqPKTjQ5dZbpQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GCLVy8C8HH+zrsGysR+FBpEtShBsKkTJ5KFoNfRYJNxxMS7Bg4+63385dH2GlJGrvxhleuON/qKOiGuFplvnd2t9Mfn4hYWc75hcekd9wENJXaoyQc7OTv7vVVV4OUjbMVQcg9OkA4fzzlIeSZCHru8vumfKEN1o3wqTk3DvTYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RFITE47F; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ye9AAWrl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Msx4vTMb2jy6RJ4urpm3QyDI+I/JVngaFuVxsUl40EqiyJlmrdfZJA6qWvYDF4gzmZFOTUVHMfqbnvGE9aGZ9WJq3I1NwwFbiX2FYFQk34jwjTX5YX0h4up0RtYYc+EDfU+pdOsI7sJIuQ/XI0bYGlEdLOK/qjEuWzmxZJhCQyEAatuEVUFUTWkh40/lYmipiFpql2Z/s5Hw6luKSF/Jx7RJdiU/jVqqaxsI6NnlU/MqzSmvTW/5c1QjN/QJHvoCbYFfNPb3oj6D6bo6At0rMrL+HX9kreIVYRF/cqqkcSfNyboB+Z4UPXoY7f6AfJR4cgQXfl2+MHTaKcgSafRh+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GKfSs69j0rLnsWbA/euv8uaqXNcOzBva+tN2ZQP1QZA=;
- b=YXOjWCEETh6kGM4z5qSJaSxHdGGKNyUoLBMFA1ZUgRD5nE9hr87DuHHFTCelYB4MWMYlFepNZvSqT4QLRncwzpPk2NXXb0gMTvK+vitcecJ83NikuOGMEK/iuGFWSGnuVDMpGKSyxW/N/myoMJ8w3E54bJud30wpQ+kPd+x/ovcluAjMg8A6hi3u/PT8fevoQ9VbgzBNHGKfKZuWhy+u2PjvFFlwJjvxK7h/L+jX4CR5pNf7W0noEzC2MG/BN6l22XLs8TbceEVAgl3XCoQh/VuJiABYAK4joYXAzprD3iYnvBBFiH0p1VwEz8JMNMVql3Auu4b1enuCxVbELx68Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GKfSs69j0rLnsWbA/euv8uaqXNcOzBva+tN2ZQP1QZA=;
- b=ye9AAWrl86A0ifTJvQXBP64zd1Ms9TW0cyz+xOItPmZcIEOLuhSKKOFa7BG/09rxCP5ZZ9VsuK62SzZxx1MN2XDLmXwvyc9vbGdctsnOQ5t0JzObbXnWUkGpfKOsWO4JltAltyiHOX14Y5qbsfEhdJa991NTGCU+8/6m+89bDo4=
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
- by MW4PR12MB7165.namprd12.prod.outlook.com (2603:10b6:303:21b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Mon, 6 Jul 2026
- 14:26:25 +0000
-Received: from PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
- ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.21.0181.009; Mon, 6 Jul 2026
- 14:26:22 +0000
-From: "M K, Muralidhara" <Muralidhara.MK@amd.com>
-To: "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>
-CC: "platform-driver-x86@vger.kernel.org"
-	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP
- concurrency and lifecycle hardening
-Thread-Topic: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP
- concurrency and lifecycle hardening
-Thread-Index: AQHdDVLB4ezCzn58Y0WwEz4NXkI837Zgi8xw
-Date: Mon, 6 Jul 2026 14:26:22 +0000
-Message-ID:
- <PH8PR12MB7325DA925A4C5551F7E3F8ED85F12@PH8PR12MB7325.namprd12.prod.outlook.com>
-References: <20260706142114.3202259-1-muralidhara.mk@amd.com>
-In-Reply-To: <20260706142114.3202259-1-muralidhara.mk@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Enabled=True;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SetDate=2026-07-06T14:24:58.0000000Z;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Name=AMD
- General
- v26;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_ContentBits=3;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH8PR12MB7325:EE_|MW4PR12MB7165:EE_
-x-ms-office365-filtering-correlation-id: c66a1b3d-33a7-413e-1d66-08dedb6a8dc8
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|38070700021|11063799006|22082099003|18002099003|56012099006;
-x-microsoft-antispam-message-info:
- yxZCy9Z6VYo+vkE0u08ttawAAiedVlwqbAt2Kq7JIlBAd2YOHH2tpLwFVU2l4JUbHOVsXv3RpuTpgPPpD287pc+9y4ZaRAL/QhRMwjYkwPJQo/5KKPTURXJWe135qIcnfCKify32o6pB7G2MkY5jjP1zJNldYM4VwqtksKVsHyQ5+43/PCsHKPEfGjTBXwMpONWxvhvgK+8qtTu+WRUj/rd66HQcGsRcpsAAayW7E7JAPmEZauV24AYV9TvlDjQIO02aFYCeTVt9pg7pfKzZQpPMRGl6Kp+wTOoecPdZ+Zgoq/IgOGSfWAfUhza2vInwfSxCgBWd0CyLtGaBKjYIxTWV3BBc7gNxvpLf3B/UU0uL5FSPb0k0QgMpCe7143pUyELawjkhT76ANXaoPXNXFScj3sFTQp7oib+a7TIZprkvWE/3cD2rgFEdChAuJfI1n8ufoBreGnup0E9HfG838OS9xy1B0oY3tJXLou5aBnMUR8Z/lMqnUowkmSTmiVSD9KqCoHd9OfRRc7gx6NsKD+MdfT/tsq+3TWC4OOA1xSxqchKEwas/i5cJCiXC3kKMwI3yvNXeGzdnrloWjL6Tf0MOIpb5bEGttbdagCx7DDyf1+Zte47ezwxMXuFnmGHggoArmMP0gRY9F3+SN3AyDfEeLlGFmPMZldDzJ/hYo9g=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(38070700021)(11063799006)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VNPSK0rxwFYbgeLVXVutHOG4WaggVorb/DPZoxxYeuLBEaA7opHfI/wa2qEB?=
- =?us-ascii?Q?DHHVHQaBkO9zVtFzHqq2WCSHB5+Y3+Rz+77zKgzX4aIpEOuyF9xFBFUNmaMu?=
- =?us-ascii?Q?bBi0R0I4WnrLkm8N1vJladKLOBVhJCjykF5Ga3QnDuBrhMHl3cNy7cp4KkvU?=
- =?us-ascii?Q?5NEs9Z9N1AYSfBAlTvrmbzmmLuTN8McnwUjwvQz/sPxVIaGv2es0dOaZs6Tj?=
- =?us-ascii?Q?3pcqDMAZZQ4d1qv4/ma2q6Nx3twl2Rz/7l9ypZIYhXpkEsj4lQs9QR9k0kcQ?=
- =?us-ascii?Q?hG+o2Z8RQI57TvEubF0CbWwvRc4+I773OwDBRpcKuHSb2rrn6Ctmpoje6B/l?=
- =?us-ascii?Q?FQNdxt5MQRu5QP1w4UHvEgbL5Rs3f9goaS/HWx7A7lawxX7LX2Ndyb5zCv26?=
- =?us-ascii?Q?baSrmkXwg1zDgoiQyjOfF1rcYhq6n4/xcRvy/cb/7phdbuVzoT7pegNkxBZS?=
- =?us-ascii?Q?T2v64MYOJ4JiaDZJAN1jCg0zYzY00/8ojRr2fkR7ehIiE0XQA2Ilt7G41uGl?=
- =?us-ascii?Q?aIEfi/vDxFHPbzJae+4dpUh+89oGp1Ta5RTp0IAeiNMvivWomMp82Dt0MR7W?=
- =?us-ascii?Q?fJo/OAp284l+rEafGF178+JoAGQlZX4ZHtiLBJbyo/ZcohVMaOIIeGHiDqtS?=
- =?us-ascii?Q?iILhgmn7o4jDG/pYcmpJVvmRc21YSQCioLf3f6ry47Urf/1QB4j1I5Rw1iDK?=
- =?us-ascii?Q?l37FTc/DFNssyMG5WWZXiCoS8zaeXU6iTfO015CVk+rZ4m/Mv8uL4NXOWl7H?=
- =?us-ascii?Q?WHEVggNqEzgvmb61UMDq/XxvsgypQmGqSMZ0FM1eVha27Xjn++GmVHiHd9bp?=
- =?us-ascii?Q?HXL+mpDW1WP5ZJJ8qBZQ7Vw34vcW6/ZrjgNM4DVdZ3rQU8uVU5bnhWyhrgar?=
- =?us-ascii?Q?Y1UG1Cn+dQZ04VhDfkVepTVG4SN+k4WUaweJCamspBzPB6uljsE52sJnErmC?=
- =?us-ascii?Q?UVUOhCV4BPWMSMl1i/nIi72CKK5S6VvejWMjWGKdXhMCfvu9YHcSBZd8yETb?=
- =?us-ascii?Q?24/0o8qQNDlGcm55Q+4cTUmDMqtRP23TyNHzy4Sy9HRr8KbjUC/xHr3UQEu+?=
- =?us-ascii?Q?BR7mX4SZD87IYlXyBYw4XGCpfNMJVH9LXTJXJ4yNVRJO2V1XnnghKb5uEPBC?=
- =?us-ascii?Q?+KT1dW2iBk6f/GoB47U1Z6jOpLojQIaFgkKZNt98e8/oNpZZY4ekKoynXXAu?=
- =?us-ascii?Q?cVXfg0Rri8xxdAiZusjlMj3h+ipfTj92kqLRndimscOsc8DQxBzqG+wMahQZ?=
- =?us-ascii?Q?adcj/mWS4YwAyCAzHROly9JJkGujxN6k4DdtED/8jSea18MJoTtlY0m5kX2R?=
- =?us-ascii?Q?SqY7LIi95uA7iUabRXKPvMpeRtCpB+hnYS3J1ueQylPJ3WG1HjonEsetwGoF?=
- =?us-ascii?Q?1crb/9gNDe0Nl7zJrMLm/SRnexwuD4Tz7vrVO8vq4lzxtuVIVVv/r04gqtAK?=
- =?us-ascii?Q?fyNvw9Qtfcg6v0a2bZJqwKsQuOndLaadpGxGcAzFWnd1WrFWytdAhomsQmGj?=
- =?us-ascii?Q?V7sLmIXMUfcekq+hl8ic+QAO1DYQfFrqILBS9MKcwylOMM9+ambhkPhUKaIl?=
- =?us-ascii?Q?GvWiGsL6WVjrCJHLStdgeOk45DkHVNALBGpdXNsANhMxSmhATscuCOXjUHES?=
- =?us-ascii?Q?o8WFhENyUA8R8/5f+HYFJF1MR+vadm/fUbV8kGfvvO+eDBJtolfpP4qzx8g3?=
- =?us-ascii?Q?+RzR+rQsZrV0IUNPf9pAyH5xSjhiM+OaHBl95Spm21nRqbG2?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFITE47F"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-4759b4f0897so1323251f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 07:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783348739; x=1783953539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TsAtMy+jYflG5RxLXIL3sSMXV67j/iz+79CE0LBfVyk=;
+        b=RFITE47FBFKRqizFzoQBh9yO24tUWkyQXXGw+22cddW4wpiMJbMi8/5gVOe9mYO332
+         p/sJk5PH//qBoCt9D3iNj9uvvvJfTnoUzBPCiJKDr/TPpEIvt2KhOw4e4oT4UYMr10uS
+         6j98mZcSNtVjrp+6JBGepLGrIWJXj/w08i+DzBzDEYEGa/dQW94daIC72/woLSPQczLB
+         44k6EHJO/JlOR/ZFeQOMkP/2rlko+qodbbKoRqzSO0d1BhkzJgJpee6wxUpj2pTHoVuR
+         YcUbvzfzZIsFqMSVMGoZtNeZymYWOnPqV//M1uX10GPPakB2RLNlWTxQhcGqQPEyB3Y+
+         FAWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783348739; x=1783953539;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=TsAtMy+jYflG5RxLXIL3sSMXV67j/iz+79CE0LBfVyk=;
+        b=BwFvlR9RjBVfPgl5uUQVe0rgbXPuXLEDMlda++fSuzkJMD351ynqEcby9TPZeB9gzb
+         ivXdbIvQScBkqserwClzFaXYBEJQ5lqqYHM7+LBd1m02923gFFdeHjqwLmEelKcJLi52
+         JcsSwH1oCF1OWobtyFYK6QetN1skjcEp8kxaDuhQ1dVHmG/Fgw5x4/0HWO7RFlZhV45l
+         0zAC6QajEDMMWCxvw62sBJiAS6mJNS7osLuHy4yof1QFHpDdufKG98jhZxvB+OO23FK/
+         vH7lZY1H9UgjfJZyoMeFVQjSk9Z8oVwpmMsw9GztGR2HP9BIfn7DLptZ6RWzCqrxmtR3
+         8ztQ==
+X-Gm-Message-State: AOJu0Yw+AV9xgMJNHJ5Nkl/0951HarQ3ukpWmymNDZB4voJM8kPvrrmX
+	UZVIaAWExemyiDs4Ru9Arxk0+wcZneHIxLPJKLCUY7vK8qlg85/++Fj0uRVkujWxyUU=
+X-Gm-Gg: AfdE7cn7BAcKIwifoiFdDf4fzkLbRpKzdzkv2hzm9JYfBs1pDopMYUsg8o6cdmcKh43
+	U/wxE7NNlHJixnmfFZ+k8amRWqGd1g3uKbbPhSCgRwyIrbS65dwG0JuTiE4GAocQ3nrBrAvCCox
+	LL1bt3kdwXK4H8tc1kDawZDngKGqbM4OuP8UOcY5WZ3r2dVcd3CyFjrLxn/gE9NgdW+cE9IZcmS
+	1oK7lm6xJ4IZddWNE2G5pyNDivJv2FEbcaWlTxOsgxCe4VwXHHOQT1OzVkEBzIIPI6RRdurglNh
+	0iWz/r6MquavGXp5Nccjgwj4ZHXkzLtlp5874P+xl7mfs8OQSmLCWSCL8O1bAWwuwCEzEHd7s2N
+	OF710ZQpEPxcEZR9ge/9Yzv5MXOAGy4qUJ1VsQiykNlCaS/LaoiESozEsxijC8Xb7G9Eji3vt5m
+	Fz9dZUkN5cMGo=
+X-Received: by 2002:a5d:4946:0:b0:46d:d693:88cb with SMTP id ffacd0b85a97d-47de670da13mr399374f8f.46.1783348738727;
+        Mon, 06 Jul 2026 07:38:58 -0700 (PDT)
+Received: from user ([104.28.162.233])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47ad69519c2sm26504604f8f.37.2026.07.06.07.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 07:38:58 -0700 (PDT)
+From: yahia <yahia.a.abdrabou@gmail.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	yahia ahmed <yahia.a.abdrabou@gmail.com>
+Subject: [PATCH v6] hp-wmi: add battery threshold support
+Date: Mon,  6 Jul 2026 17:38:55 +0300
+Message-ID: <20260706143855.35002-1-yahia.a.abdrabou@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <4792e5f8-8af3-f227-2291-ccd10e1be868@linux.intel.com>
+References: <4792e5f8-8af3-f227-2291-ccd10e1be868@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c66a1b3d-33a7-413e-1d66-08dedb6a8dc8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2026 14:26:22.4357
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xaSWzx361RP47/IjhUmROqHnKLX67lt4tUE7eZEOZBOtEqzSEXHRD8nzb7Jq1CCJWNeN+ILHVdxWb1+0lySnXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7165
+Content-Transfer-Encoding: 8bit
 
-AMD General
+From: yahia ahmed <yahia.a.abdrabou@gmail.com>
 
-Hi Ilpo,
-While sending the patches observed git-send-email issue. Please Ignore this=
- series, I will resend again.
+Introduce battery threshold support via SBCO and GBCO WMI methods, add
+battery_get() function to retrieve the current battery mode and to test
+compatibility, add battery_set() function to set a battery mode with any
+value between 0 and 5, Expose this feature to userspace via sysfs.
 
------Original Message-----
-From: M K, Muralidhara <Muralidhara.MK@amd.com>
-Sent: Monday, July 6, 2026 7:51 PM
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org; M K,=
- Muralidhara <Muralidhara.MK@amd.com>
-Subject: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP concurren=
-cy and lifecycle hardening
+Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+---
+Note on behaviour:
+The mode wont persist past shutdown if not
+plugged because the EC clears its registers
+to save power, mode 2 is adaptive, meaning
+that the EC will set its desired percentage
+between 80 and 95% mode 5 is roughly around
+78 to 80% and if a mode was set and the current
+battery percentage is higher the EC will drain
+the battery.
+v6:
+- Add sysfs interface
+- Remove redundant enums
+- Add safety checks
+- Fix style errors
+v5:
+- Use hp_wmi_perform_query for battery_set
+- Remove mode 6 as it requires AC power to boot
+- Fix styling errors and remove redundant comments
+v4:
+- Remove redundant definitions
+- Rebase the code
+v3:
+- Fix coding style errors and warning
+- Refine the changelogs for clarity
+v2:
+- Simplify detection logic via battery_get
+- Add Battery Profiles enum table
+- Add functions to set the battery mode
+---
+ drivers/platform/x86/hp/hp-wmi.c | 75 +++++++++++++++++++++++++++++++-
+ 1 file changed, 74 insertions(+), 1 deletion(-)
 
-This series hardens the AMD HSMP ACPI and platform drivers against probe/re=
-move concurrency, use-after-free of the per-socket state, and resource leak=
-s across unbind/rebind cycles.
-
-On multi-socket systems several ACPI platform devices are probed and remove=
-d independently while a single /dev/hsmp (and the hwmon sysfs
-attributes) drive a lock-free data plane.  The existing code raced the glob=
-al is_probed handshake and the one-time socket allocation, freed the socket=
- array from under in-flight hsmp_send_message() callers, and leaked metric-=
-table mappings on rebind.
-
-The patches, in order:
-
-  1. Serialize ACPI probe/remove/init_acpi() with a dedicated mutex so
-     the is_probed handshake and the one-time socket allocation cannot
-     race across per-socket platform devices.
-  2. Map the metric-table DRAM explicitly and add per-socket mutexes.
-  3. Add hsmp_sock_rwsem so the lock-free data plane is drained and kept
-     out while a socket is torn down; wire the non-ACPI platform path
-     into it.
-  4. Refcount the ACPI socket platform devices with struct kref and run a
-     coordinated release on the final put (deregister /dev/hsmp, unmap
-     metric DRAM, free the socket array); clear the per-socket dev under
-     the teardown write lock on both remove and probe failure.
-  5. Drop any stale metric-table mapping before remapping on rebind.
-
-Testing:
-  - Each patch builds individually (W=3D1) with no new warnings; the series
-    is bisectable.
-  - checkpatch.pl --strict is clean on every patch.
-
-Changes since v2:
-  - This revision covers only the five ACPI/platform probe, teardown, and
-    lifecycle patches.  The ACPI UID / _DSD mailbox validation and the
-    sock->dev readiness-gate changes from v2 are accepted in maintainer bra=
-nch.
-  - Reworded the teardown rwsem comments in "Serialize the data plane
-    against socket teardown" so they describe the drain contract in terms
-    of a generic teardown path (a teardown path takes the write side)
-    rather than attributing it to the ACPI path, which is wired into the
-    drain in the following patch.
-
-v2: https://patch.msgid.link/20260625123337.886435-1-muralidhara.mk@amd.com
-
-Muralidhara M K (5):
-  platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
-    mutex
-  platform/x86/amd/hsmp: Add explicit metric DRAM mapping and per-socket
-    mutexes
-  platform/x86/amd/hsmp: Serialize the data plane against socket
-    teardown
-  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
-    release
-  platform/x86/amd/hsmp: Drop stale metric table mapping on rebind
-
- drivers/platform/x86/amd/hsmp/acpi.c | 147 ++++++++++++++++++++++++---  dr=
-ivers/platform/x86/amd/hsmp/hsmp.c | 112 ++++++++++++++++++--  drivers/plat=
-form/x86/amd/hsmp/hsmp.h |  11 +-  drivers/platform/x86/amd/hsmp/plat.c |  =
-39 ++++++-
- 4 files changed, 285 insertions(+), 24 deletions(-)
-
-
-base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
---
-2.34.1
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 8ba286ed8721..bbe279499062 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -302,8 +302,10 @@ enum hp_wmi_event_ids {
+ 	HPWMI_FN_P_HOTKEY		= 0x1B,
+ 	HPWMI_OMEN_KEY			= 0x1D,
+ 	HPWMI_SMART_EXPERIENCE_APP	= 0x21,
++	HPWMI_BATTERY_CONTROL		= 0x2b,
+ };
+ 
++#define HPWMI_AC_REQUIRED 0x35
+ /*
+  * struct bios_args buffer is dynamically allocated.  New WMI command types
+  * were introduced that exceeds 128-byte data size.  Changes to handle
+@@ -460,6 +462,7 @@ static struct notifier_block platform_power_source_nb;
+ static enum platform_profile_option active_platform_profile;
+ static bool platform_profile_support;
+ static bool zero_insize_support;
++static bool battery_threshold_support;
+ 
+ static struct rfkill *wifi_rfkill;
+ static struct rfkill *bluetooth_rfkill;
+@@ -1097,6 +1100,67 @@ static ssize_t postcode_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
+ }
+ 
++static int battery_get(void)
++{
++	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
++	int mode;
++
++	if (ACPI_FAILURE(acpi_evaluate_object(NULL, "\\_SB.WMID.GBCO", NULL, &output)))
++		return -EIO;
++
++	union acpi_object *obj __free(kfree) = (union acpi_object *)output.pointer;
++
++	if (!obj || obj->type != ACPI_TYPE_PACKAGE || obj->package.count < 3
++			|| obj->package.elements[2].type != ACPI_TYPE_BUFFER)
++		return -EIO;
++	mode = (int)obj->package.elements[2].buffer.pointer[0];
++	return mode;
++}
++
++static int battery_set(u8 profile)
++{
++	u8 data[4];
++	int status;
++	if (!battery_threshold_support)
++		return -EOPNOTSUPP;
++	if (profile > 5)
++		return -EINVAL;
++	memset(&data, 0, sizeof(data));
++	data[1] = profile;
++	status = hp_wmi_perform_query(HPWMI_BATTERY_CONTROL, HPWMI_WRITE, &data, sizeof(data), 0);
++	if (status < 0)
++		return -EIO;
++	if (status == HPWMI_AC_REQUIRED) {
++		pr_err("You have to be plugged in to set a profile\n");
++		return -EIO;
++	}
++	return 0;
++}
++
++static ssize_t battery_threshold_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
++{
++	int mode = battery_get();
++	if (mode < 0)
++		return -EINVAL;
++	return sysfs_emit(buf, "%d\n", mode);
++}
++
++static ssize_t battery_threshold_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	int ret;
++	u8 profile;
++	ret = kstrtou8(buf, 10, &profile);
++	if (ret)
++		return ret;
++	ret = battery_set(profile);
++	if (ret < 0)
++		return ret;
++	return count;
++}
++static DEVICE_ATTR_RW(battery_threshold);
++
+ static int camera_shutter_input_setup(void)
+ {
+ 	int err;
+@@ -2303,7 +2367,14 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 
+ 	if (err < 0)
+ 		return err;
+-
++	err = battery_get();
++	if (err >= 0) {
++		err = device_create_file(&device->dev, &dev_attr_battery_threshold);
++		if (err)
++			device_remove_file(&device->dev, &dev_attr_battery_threshold);
++		else
++			battery_threshold_support = true;
++	}
+ 	thermal_profile_setup(device);
+ 
+ 	return 0;
+@@ -2335,6 +2406,8 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
+ 	priv = platform_get_drvdata(device);
+ 	if (priv)
+ 		cancel_delayed_work_sync(&priv->keep_alive_dwork);
++	if (battery_threshold_support)
++		device_remove_file(&device->dev, &dev_attr_battery_threshold);
+ }
+ 
+ static int hp_wmi_resume_handler(struct device *device)
+-- 
+2.55.0
 
