@@ -1,374 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDDE233926;
-	Mon,  6 Jul 2026 17:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F2231835
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 18:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783360625; cv=none; b=ArkKiB5NWF1CeulNg6ZkEeLrp2gGE7USnT8EDX0aEDvfx6eUhBcszgHy2A6sSV2Npn0oW11ByBhz8Yh5F/1EVuDlGCbJ5Yt471uIUTDItObShcQj/c3f40T7UREb8vCRN8c+iGSmvJxiGgRzb9zN2MkxgKOcckVcAS1WyNYA0V8=
+	t=1783363635; cv=none; b=s11tJPvREi9hPFFoH1bCa9wr37ZYpV3Uqmqsn34JuWP/0bVBaQl141IBpasuy/RjeVbw1Dsos11laoEny2u+F2NxKObmVEaFJRRQ/fvTHKLdtYkuaUaRPePbSuFi+MVkj7KQlzpUcabn/xtiYTz0ihv0pmMcaOSO/QngFDPcQzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783360625; c=relaxed/simple;
-	bh=9EtTQqtlKqor23TbochBY+WhtH4X0sWSJyZA6RPDVkY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ns8fTCs7lcQU9XEdf/KVUstj31Kplgd8ui72N5NFGiA42meIJqqsxTqGJL3+llNAoWy3lk2kgvVd9racu4YM+EFpIpkQ+tUUemd80fE+QZhTHtVBngREle5uEJVs0XpPQOR4UQnloWAG51qXPh3Jq7u6tLNe2SuBc4lF40X7FP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uma6+97Y; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783363635; c=relaxed/simple;
+	bh=OON3yrBUBI5i3rZM45extf8vRKEwdthVDb37mRNgaew=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hyu/D+sOmBNoiTHtqFP/3v5wTZbKrM+ssVVwhMnplZhMkPfJtFy8gdJLe4Cgrhij8nd630zy0EHOYWzLYJeZxhZiRQWQRr1IPPOkV7OQRnZs7181l4mmYa1mIcYQJTtzETk9BTdL6Xik96u512nrHaaB/kgEK6M9slx2BPmIMlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NoxLhzZW; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=H/K3k9MC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uma6+97Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783360624; x=1814896624;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=9EtTQqtlKqor23TbochBY+WhtH4X0sWSJyZA6RPDVkY=;
-  b=Uma6+97YfHUdXxcE6IlvKbD2CbByfHJSWxexEJ3HF3a50wDdo7/9YC9w
-   W+SkHtt8rxkCGMEuliJC0Jn1yFedvsTulA5X/M83mHImmIAOjotAZZ5zZ
-   TH2iTAb6t2Q28vrZraT/C1XSVHgntH0IC0QjlpWBqeGYDFx+B6pfPVt05
-   SONpev3E4ms/ttck0MHmeEpJtPNAMt+xInhrXEdrn/lcmqJ9ckS0NsyZy
-   iSNgUzoZ6TX/dlQXdNZnWblwIl/zu7ei3QAPtdjDh7yHeanZo8cZNSu7C
-   YHeLQsZvis4rLbiwsVKrYmzmd23/2hhF6YdcSSDyuxQbptFoK6YlDnKC9
-   Q==;
-X-CSE-ConnectionGUID: yOpDpqWuRSy2nmAR657gNA==
-X-CSE-MsgGUID: ECwS0x7bQ7aEkOm3U+CcGA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="84028224"
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="84028224"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:57:03 -0700
-X-CSE-ConnectionGUID: P6qyeEThT5aLi+vbNKdqOA==
-X-CSE-MsgGUID: CJ3B++98Ss637+7urqK/vA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="258697478"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.95])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:56:58 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 6 Jul 2026 20:56:54 +0300 (EEST)
-To: Muhammad Bilal <meatuni001@gmail.com>
-cc: hdegoede@redhat.com, jorge.lopez2@hp.com, Thomas.Weissschuh@linutronix.de, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    stable@vger.kernel.org, Mario Limonciello <superm1@kernel.org>, 
-    Armin Wolf <W_Armin@gmx.de>
-Subject: Re: [PATCH v2 1/3] platform/x86: hp-bioscfg: pass validated element
- count to package parsers
-In-Reply-To: <20260704160759.236249-2-meatuni001@gmail.com>
-Message-ID: <66b8977e-edd1-242d-1715-d5fe7f11f244@linux.intel.com>
-References: <20260704160759.236249-1-meatuni001@gmail.com> <20260704160759.236249-2-meatuni001@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NoxLhzZW";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="H/K3k9MC"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666FsYKM1050171
+	for <platform-driver-x86@vger.kernel.org>; Mon, 6 Jul 2026 18:47:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=m/XFmTzGyIFMHErJ6/N1l2
+	U6wTYZjIQ2iUo/yEmDvQo=; b=NoxLhzZWpOQbgzSzi72hUJg4e1d+Tfa84aaw9D
+	Mw2+dD0GWhxf+gHO6JrmHZocJLJG7tDHogeBouSiBReb+vb+u6KsNw45H53UtLl8
+	H2DQnBbUngXLBTJVdTMkMajYgTQW7CErmO4vX5wvkqqE7H/4t+VfTT+1SdRUGX+Y
+	XZ/eoacZdOEwQ1RRHaC7qy4uYkwg35Hr81z0KeMCov28IeTgS8/gLKtwP+Tcg9Qf
+	e4kT7BNhIJ34Y/2Bb7tzYkXyLQGFaoAjVMCewMLj4FLXxpNqavLmlk4ujZSNn7cC
+	8AgGIr6iBg1BgnMy4rrwhhwH7tsT3nAHZ9x+6iDObdC1aHtg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f8fdw0sag-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 18:47:10 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-92e62e3459fso288603585a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 11:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1783363629; x=1783968429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/XFmTzGyIFMHErJ6/N1l2U6wTYZjIQ2iUo/yEmDvQo=;
+        b=H/K3k9MCT1v88h1C41WCsT6kjoDU7y35/syoOgHDXzVrNNtmtWgYOFtkeobKzLlA1t
+         nA55hHXIc0rqnWYCg27mnoRIXAolh8NJhT9y08BV+K4tkUkowXNWCzwMOh2ouhQrzDZX
+         IhtJbmu5Bi06vS2BcE6Zah/FX9EilVoi6zQY1N+qHBi5pROpDFy/A6Qu6uYfIEnuDeUr
+         rgzCo9NUYQ9VvNgv6uayCS93WV3uOcLDADY0mvIXvU5dIsABtJMHjoHv5HpWhDUQx0WH
+         Z79mhJKL2OB3KwzSyAn3GbjxhRrGXvAB5zPKleObnl4Gi3WSYB+rPZ42ptGRCUsKlu2L
+         UZYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783363629; x=1783968429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m/XFmTzGyIFMHErJ6/N1l2U6wTYZjIQ2iUo/yEmDvQo=;
+        b=gMJ4IdoBUiOWnAmy8fyHi05VOXaaPcz5K+nDsN6eY59YAR1Qd12zs4HlPIZhBb3rTU
+         bWAgLniibHngXeGo2KXtd6SCBQid+rOtYZU/AnJ0JzzRXwaNErHLwGi40W6ps1l3AN1G
+         FhLUC8SMiy8h8Yqf7xdKfIwmg0gFRCX4AsSycS6+akmFwg9FphgZDn0scQgFwIzPqChy
+         H4rt29lQx4oYsDSapT4h9Yfdu3kB88wiII1kn/ILGEGbaGK8bLSlks3JauX1HPyIspn+
+         uNhMZUj4Wxa1XbyjLlHB7Qt+cGjOXLvOsGnhaU5UIoGBihr9t5t8/KHDm3OUnVMXNBWL
+         XUcg==
+X-Forwarded-Encrypted: i=1; AHgh+RoMXLzIGlYZwd3DBmVgkX162Hami9M4RxWnmxxK6Tj1a0zKFg7XvkUXjOf7q1d6eUQh2pxC2jR/97EA9kImhX5S1D5E@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv01UQ408nWS1wRHBtsPyIyOUep1dfI6ejP3eHNdiVjyCGWwBb
+	DoIjUiHzy7WzBnKG3F4budiTs8AUvMGSAJo1nO0DHWO+br4/9jTOzQs8rMVXNlcdfdtdJJLUZlB
+	p4Y9nMO8h0kex476ajX+XtjwVYaLpzqnimM+ctY0hgiebM0NYjZIjyX+Q/SD013CiCTgfn/Zw90
+	gJ
+X-Gm-Gg: AfdE7cnq3WuDmUvN0j3BzZP25qAoLb0+7qzCv/mQgQwxxRTOnsu8txvSfGTidUlQQQt
+	jTR1Fr0vcERiGrmvkrRAkJKZRDRnxMYAaSKc2xpKRTZR4iId7YgwK9dwOufSuggBLA9gMIqp9WP
+	OGlx3PoPaGs86R8/483McUGn8hgdyhynV7uIglLxuU1yShPU0NojuR+xJO2Xjh4M50zSouSD3Kb
+	pg+edOK925iaBF3EryKnddotcaOgWz4hlXHpw6FGbkm2LvMzrgw5bFiXxkHVSRkNviiyBggnLvc
+	lRqi86nmv8YrL4jbhxql/JY6WsvMtOtG4DteOaQLI7mB3zTiJgehrvxXxpUbbu3o1IXMZzVomr1
+	o3c9vYo+Tw3FlxSqswKvYS6MTqEUx0+EFKyUau531QTNlPQ==
+X-Received: by 2002:a05:620a:28cf:b0:92e:5d76:743b with SMTP id af79cd13be357-92ebb600d64mr243762085a.56.1783363629508;
+        Mon, 06 Jul 2026 11:47:09 -0700 (PDT)
+X-Received: by 2002:a05:620a:28cf:b0:92e:5d76:743b with SMTP id af79cd13be357-92ebb600d64mr243756685a.56.1783363629086;
+        Mon, 06 Jul 2026 11:47:09 -0700 (PDT)
+Received: from juillet.box.freepro.com ([2a05:6e02:1041:c10:b077:843a:5587:be05])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493e0078d56sm3858625e9.8.2026.07.06.11.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 11:47:07 -0700 (PDT)
+From: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+To: sre@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+        linux@roeck-us.net, andersson@kernel.org, konradybcio@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        neil.armstrong@linaro.org, gaurav.kohli@oss.qualcomm.com,
+        manaf.pallikunhi@oss.qualcomm.com, priyansh.jain@oss.qualcomm.com
+Subject: [PATCH v5 0/3] Lenovo ThinkPad T14s EC thermal monitoring and thermal zone integration
+Date: Mon,  6 Jul 2026 20:46:45 +0200
+Message-ID: <20260706184648.35613-1-daniel.lezcano@oss.qualcomm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDE4OSBTYWx0ZWRfX21ziHaIsyfdK
+ ExWtfZnh0qQswrQn8488NbOXhG/24nYYiMQ+B9eRXMl6iXeh4ngn8S6aPjMkaT3Oz7/a3VLaSYZ
+ dnm3flw+N1DF7QhUn3De2CSvTi0ctK0=
+X-Proofpoint-ORIG-GUID: iEqtOg3fxlueme8RoQ1fjNHUxDT015Z6
+X-Authority-Analysis: v=2.4 cv=EtziaycA c=1 sm=1 tr=0 ts=6a4bf82e cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=eoimf2acIAo5FJnRuUoq:22 a=Jz99LMs1rTwwAPREzXgA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDE4OSBTYWx0ZWRfXxdA3W21wIqFz
+ 9Ubzi5Vf/6TfLN5bPkFgNLez02Px6VzKRsK42grV6y6COgwJOFhyNt/KvqmKN5zulFFsY5So8js
+ j3wmzCbsjsIavgmz6oHb0N16GK7G7onwZdZVk1Y7M0d/y/fsBYylFL8LOraQOJLv4r7mzNjpqr1
+ PSidHhA/HEnoeu/CLlQ/O78pgVXRtyWa4V1iyYVBO3hBxVox+J4g8dNJa65AGmRReXN0kSb0njP
+ Sg+2DEtFy6uPoEj1qscuPKXUjrWZghF2v7mv1jr0agC6E6Nylnr7jrFH3K+QYs1fO5vqecqsNaM
+ nsvChCnCQsNu1Q3eXXpnjAWUp1PfYf1+2+mN/3q2puXQr8nDffKxB/lFYh4MIY/4VW/48plr8oW
+ T4cT1p8gDqEy9NxDn7VAqbNuP7WyPghMfQ8oFdFciS47wGc6mJzGV79r3q2o4iETvJoF6glHKG9
+ lTw2DAFqVPM4Heu8oDA==
+X-Proofpoint-GUID: iEqtOg3fxlueme8RoQ1fjNHUxDT015Z6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-06_02,2026-07-06_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 adultscore=0 phishscore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060189
 
-On Sat, 4 Jul 2026, Muhammad Bilal wrote:
+Hi,
 
-> hp_init_bios_package_attribute() validates obj->package.count against
-> min_elements and then hands off elements = obj->package.elements to
+This series extends the Lenovo ThinkPad T14s embedded controller driver
+with environmental monitoring capabilities and integrates the exposed
+sensors into the Linux thermal framework.
 
-quoting elements = obj->package.elements statement in this context is 
-confusing. I don't think it's usually necessary to copy code like this to 
-changelog, here you can just state "elements" (which even happens to match 
-the struct member's name even).
+The EC provides access to several platform temperature sensors
+covering the SoC, keyboard area, bottom cover, charging circuitry, QTM
+module and SSD. These sensors are currently used by the firmware for
+thermal management but are not exposed to Linux.
 
-> one of the five per-type hp_populate_*_package_data() wrappers
-> (string, integer, enumeration, ordered list, password). None of these
-> wrappers receive that validated count. Instead each one re-derives it
-> locally:
-> 
->   hp_populate_integer_elements_from_package(integer_obj,
->                                             integer_obj->package.count,
->                                             instance_id);
-> 
-> integer_obj here is elements, i.e. a pointer to elements[0] (the NAME
-> field, always ACPI_TYPE_STRING). Reading ->package.count off a string
-> object aliases ->string.length in the underlying union acpi_object, so
-> the "count" passed down is not the real package size at all.
+The first patch adds hwmon support for the EC temperature sensors.
 
-Only at this point you're actually telling what the problem is.
+The second patch exposes the EC as a thermal sensor provider in the
+device tree and defines thermal zones for the keyboard skin
+temperature and the charging circuitry temperature. This allows the
+generic thermal framework to react to EC-reported temperatures and
+apply standard Linux thermal mitigation policies.
 
-My suggestion is to rewrite this so that you start by telling that wrong 
-size (count) is read and passed on by these functions (sort of summary of 
-the problem). Then explain what caused that.
+As the EC protocol is not fully decoded, the passive trip points
+get/set actions are missing, so it is not possible to program a
+threshold and receive an interrupt when crossed the way up or
+down. Consequently, the thermal zone related to the charging circuitry
+is polled every two seconds until we can set the trip points in the
+EC.
 
-> For string, integer, enumeration and password attributes,
-> hp_populate_*_elements_from_package() bounds its iteration using the
-> corresponding per-type ELEM_CNT constant (STR_ELEM_CNT,
-> INT_ELEM_CNT, ENUM_ELEM_CNT and PSWD_ELEM_CNT). This relies on
-> hp_init_bios_package_attribute() rejecting packages with fewer than
-> ELEM_CNT elements before invoking the parsers.
-> 
-> Relaxing that check would allow shorter packages to reach these
-> functions, making the fixed loop bounds unsafe.
+This series fixes critical thermal issues happening on this platform
+where a kernel compilation, or heavy workloads, lead to a system
+reboot.
 
-??
+Tested on a Lenovo ThinkPad T14s Gen 6 (Snapdragon X Elite).
 
-You might be doing this in some later patch but then you should say 
-that an upcoming patch is going to relax this check, otherwise it comes 
-out of nowhere.
+Please make sure scmi-cpufreq.ko is loaded before testing
 
-So I think you're trying to solve two cases here:
+Thanks,
 
-1) Passing wrong count.
-2) Allowing count less than what those consts define (but this is only 
-needed for some later patch?).
+Daniel
 
-But it's so that fixing 1 ends up also solving 2? I think the changelog 
-should mostly focus on 1 and then only state in the end that it also
-prepares for an upcoming change that requires supporting 2.
+---
+ Changelog:
+	v5:
+	 - Added Reviewed-by tag (Ilpo Järvinen)
+	 - Added the '#thermal-sensor-cells' property DT binding (Sashiko)
+	v4:
+ 	 - Added the missing HWMON_C_REGISTER_TZ attribute (Sashiko)
+	 - Fixed dependency with HWMON (Sashiko)
+	 - Added tags
+	v3:
+	 - Removed event based because trip point are not yet well supported
+	 - Added an empty line after variable declaration (Ilpo Järvinen)
+	 - Used MILLIDEGREE_PER_DEGREE from units.h (Ilpo Järvinen)
+	 - Made switch consistent (Ilpo Järvinen)
+	v2:
+	 - Fixed patch 1 subject prefix
+	 - Removed the fan information part
+	 - Added HWMON_T_ALARM
+	 - Fixed DT change description to reflect what it does really
 
-> hp_populate_ordered_list_elements_from_package() doesn't even use the
-> count for its main loop bound - it iterates unconditionally up to
-> ORD_ELEM_CNT:
-> 
->   for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++)
-> 
-> which relies entirely on the same coincidence.
-> 
-> This is only safe as long as every caller is guaranteed to hand these
-> functions a package with at least ELEM_CNT real elements. A following
-> change relaxes that guarantee to allow shorter packages through, which
-> would turn this into a real out-of-bounds heap read of the
-> elements[] array once the real count drops below the fixed ELEM_CNT
-> loop bound.
-> 
-> Fix this at the source: thread the real, already-validated
-> obj->package.count down through each *_package_data() wrapper instead
+Daniel Lezcano (3):
+  dt-bindings: embedded-controller: Add Lenovo ThinkPad T14s thermal
+    sensor provider support
+  platform: arm64: lenovo-thinkpad-t14s-ec: Add hwmon support for
+    temperatures
+  arm64: dts: qcom: x1e78100-t14s: Add thermal zones for keyboard skin
+    and charging sensors
 
-"thread down" sounds odd to my (non-native) ear in this context.
-
-each *_package_data() wrapper -> *_package_data() wrappers
-
-> of letting the per-type code guess at it, and use it to also bound
-
-"guess at it" sounds odd to my ear and is now even correct given your 
-explanation of the problem.
-
-> hp_populate_ordered_list_elements_from_package()'s main loop.
-
-> This is a
-> no-op for any package that already meets the existing ELEM_CNT
-> minimums, and is a prerequisite for safely accepting shorter packages.
-> 
-> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c               | 5 +++++
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h               | 5 +++++
->  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 3 ++-
->  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 3 ++-
->  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 7 ++++---
->  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++--
->  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 3 ++-
->  7 files changed, 23 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> index 27fd6cd215290..768330d291da8 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> @@ -731,26 +731,31 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
->  	switch (attr_type) {
->  	case HPWMI_STRING_TYPE:
->  		ret = hp_populate_string_package_data(elements,
-> +						      obj->package.count,
->  						      instance_id,
->  						      attr_name_kobj);
->  		break;
->  	case HPWMI_INTEGER_TYPE:
->  		ret = hp_populate_integer_package_data(elements,
-> +						       obj->package.count,
->  						       instance_id,
->  						       attr_name_kobj);
->  		break;
->  	case HPWMI_ENUMERATION_TYPE:
->  		ret = hp_populate_enumeration_package_data(elements,
-> +							   obj->package.count,
->  							   instance_id,
->  							   attr_name_kobj);
->  		break;
->  	case HPWMI_ORDERED_LIST_TYPE:
->  		ret = hp_populate_ordered_list_package_data(elements,
-> +							    obj->package.count,
->  							    instance_id,
->  							    attr_name_kobj);
->  		break;
->  	case HPWMI_PASSWORD_TYPE:
->  		ret = hp_populate_password_package_data(elements,
-> +							obj->package.count,
->  							instance_id,
->  							attr_name_kobj);
->  		break;
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-> index f1eec0e4ba075..416d7e7aaaae3 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-> @@ -401,6 +401,7 @@ int hp_populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
->  int hp_alloc_string_data(void);
->  void hp_exit_string_attributes(void);
->  int hp_populate_string_package_data(union acpi_object *str_obj,
-> +				    int str_obj_count,
->  				    int instance_id,
->  				    struct kobject *attr_name_kobj);
->  
-> @@ -411,6 +412,7 @@ int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
->  int hp_alloc_integer_data(void);
->  void hp_exit_integer_attributes(void);
->  int hp_populate_integer_package_data(union acpi_object *integer_obj,
-> +				     int integer_obj_count,
->  				     int instance_id,
->  				     struct kobject *attr_name_kobj);
->  
-> @@ -421,6 +423,7 @@ int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
->  int hp_alloc_enumeration_data(void);
->  void hp_exit_enumeration_attributes(void);
->  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-> +					 int enum_obj_count,
->  					 int instance_id,
->  					 struct kobject *attr_name_kobj);
->  
-> @@ -432,6 +435,7 @@ int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr,
->  int hp_alloc_ordered_list_data(void);
->  void hp_exit_ordered_list_attributes(void);
->  int hp_populate_ordered_list_package_data(union acpi_object *order_obj,
-> +					  int order_obj_count,
->  					  int instance_id,
->  					  struct kobject *attr_name_kobj);
->  
-> @@ -440,6 +444,7 @@ int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
->  				     int instance_id,
->  				     struct kobject *attr_name_kobj);
->  int hp_populate_password_package_data(union acpi_object *password_obj,
-> +				      int password_obj_count,
->  				      int instance_id,
->  				      struct kobject *attr_name_kobj);
->  int hp_alloc_password_data(void);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> index af4d1920d4880..3aa2c440e0528 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> @@ -304,6 +304,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
->   * @attr_name_kobj: The parent kernel object
->   */
->  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-> +					 int enum_obj_count,
->  					 int instance_id,
->  					 struct kobject *attr_name_kobj)
->  {
-> @@ -312,7 +313,7 @@ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
->  	enum_data->attr_name_kobj = attr_name_kobj;
->  
->  	hp_populate_enumeration_elements_from_package(enum_obj,
-> -						      enum_obj->package.count,
-> +						      enum_obj_count,
->  						      instance_id);
->  	hp_update_attribute_permissions(enum_data->common.is_readonly,
->  					&enumeration_current_val);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> index d96e160953e39..107e4cf1efb8a 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> @@ -279,6 +279,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
->   * @attr_name_kobj: The parent kernel object
->   */
->  int hp_populate_integer_package_data(union acpi_object *integer_obj,
-> +				     int integer_obj_count,
->  				     int instance_id,
->  				     struct kobject *attr_name_kobj)
->  {
-> @@ -286,7 +287,7 @@ int hp_populate_integer_package_data(union acpi_object *integer_obj,
->  
->  	integer_data->attr_name_kobj = attr_name_kobj;
->  	hp_populate_integer_elements_from_package(integer_obj,
-> -						  integer_obj->package.count,
-> +						  integer_obj_count,
->  						  instance_id);
->  	hp_update_attribute_permissions(integer_data->common.is_readonly,
->  					&integer_current_val);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> index f09489a085c86..a50d074125268 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> @@ -145,7 +145,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  	if (!order_obj)
->  		return -EINVAL;
->  
-> -	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++) {
-> +	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT && elem < order_obj_count; elem++, eloc++) {
-
-This looks like a separate fix belonging to own patch. It allows you also 
-to write more focused changelog text for each patch.
-
->  
->  		switch (order_obj[elem].type) {
->  		case ACPI_TYPE_STRING:
-> @@ -301,7 +301,8 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->   * @instance_id: The instance to enumerate
->   * @attr_name_kobj: The parent kernel object
->   */
-> -int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
-> +int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int order_obj_count,
-> +					  int instance_id,
->  					  struct kobject *attr_name_kobj)
->  {
->  	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
-> @@ -309,7 +310,7 @@ int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int inst
->  	ordered_list_data->attr_name_kobj = attr_name_kobj;
->  
->  	hp_populate_ordered_list_elements_from_package(order_obj,
-> -						       order_obj->package.count,
-> +						       order_obj_count,
->  						       instance_id);
->  	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
->  					&ordered_list_current_val);
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> index 4d79eb8056a5d..89316d90454d2 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> @@ -388,7 +388,8 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
->   * @instance_id: The instance to enumerate
->   * @attr_name_kobj: The parent kernel object
->   */
-> -int hp_populate_password_package_data(union acpi_object *password_obj, int instance_id,
-> +int hp_populate_password_package_data(union acpi_object *password_obj, int password_obj_count,
-> +				      int instance_id,
->  				      struct kobject *attr_name_kobj)
->  {
->  	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
-> @@ -396,7 +397,7 @@ int hp_populate_password_package_data(union acpi_object *password_obj, int insta
->  	password_data->attr_name_kobj = attr_name_kobj;
->  
->  	hp_populate_password_elements_from_package(password_obj,
-> -						   password_obj->package.count,
-> +						   password_obj_count,
->  						   instance_id);
->  
->  	hp_friendly_user_name_update(password_data->common.path,
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> index fe5a9a3a4ef17..da5e81f1d188f 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> @@ -267,6 +267,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
->   * @attr_name_kobj: The parent kernel object
->   */
->  int hp_populate_string_package_data(union acpi_object *string_obj,
-> +				    int string_obj_count,
->  				    int instance_id,
->  				    struct kobject *attr_name_kobj)
->  {
-> @@ -275,7 +276,7 @@ int hp_populate_string_package_data(union acpi_object *string_obj,
->  	string_data->attr_name_kobj = attr_name_kobj;
->  
->  	hp_populate_string_elements_from_package(string_obj,
-> -						 string_obj->package.count,
-> +						 string_obj_count,
->  						 instance_id);
->  
->  	hp_update_attribute_permissions(string_data->common.is_readonly,
-> 
+ .../lenovo,thinkpad-t14s-ec.yaml              |   5 +
+ .../qcom/x1e78100-lenovo-thinkpad-t14s.dtsi   |  67 ++++++++-
+ drivers/platform/arm64/Kconfig                |   1 +
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c | 131 ++++++++++++++++++
+ 4 files changed, 203 insertions(+), 1 deletion(-)
 
 -- 
- i.
+2.53.0
 
