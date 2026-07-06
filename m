@@ -1,227 +1,272 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55AF420893
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 13:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.133.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783343131; cv=pass; b=AzZnBojDut8GV/i+vqwaQ95t7jcru547bA1zw1VbhXIqF0pgPLP5OVznMdmJHMIqEG07mDJH2k9uOVK/0gbMgLnJ3zHoWsOyYxOEOuL6cPVx55r2i5YiqSN8RDlRotTLyOeLzVWVbVHRX/Nwi1MuD3vdoVEkQuFkfJ0UhagFy/M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783343131; c=relaxed/simple;
-	bh=9SbWC6KYVVZRMEQdEAAxcx4p2VOO5rNO11idabNFzgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=epaeXTOUvoGRUJOOfHktISjvAcN3eLczArNHQUOioc93Kdohh4XyM9MZDr1+m4hsJpOjUPCqadtVs4A7IR6XE32y765bd8+ZUG9+F3cXFYGE7AJeGwZpiRLBplUtLe64LGYzESdSLjpUNp6SyVWjclCfcrSYb6PI6WY+FnMT+pA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cvYB0pXj; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=ANICBhJ6; arc=pass smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1410242089F
+	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 13:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783343406; cv=none; b=E9yWgOtqFar6iDqmKt71MB2XSgXlQEOGgdXNKm0lnDIGkCrRdsSLnOwK1Zfe9Vz74Y5Q400FkfgQAXVw5qOtOAOxvRE79XieRogTqtZGPnFx23tBgrCpjclJobpHFLoYW8A9JoHlFRP9fdvuvMw0dO6zLJkiZmdRGx3Z7mMfU8s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783343406; c=relaxed/simple;
+	bh=ToUoBuUJoS1vI9JQbupGD9AhsrfiD0t/t7tbmkvJ+bg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R/12OhNormJNr8RQoid4HcqSIDsvWKeKQYbUtDFyJpvQZnDphn+kqHkY3ionK7rHySGobfNthl4Lq2jylDTX96YYPizHp1/11BSgHHuZoOHv4id485XoOSKbCHJhgofPMhDj6T4XWLa5djrKQ4Ia+y8332MkHIblambZcVIV7WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MjFrAnhn; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=I73Q4QHD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cvYB0pXj";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANICBhJ6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783343128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sdTMoj183NRSMeTXAp4YsXZlzmlZIQsL6VbDv6J293s=;
-	b=cvYB0pXjvqJY8CvqJxUp3GomboDc8ONmhUQRsQVeU1lB8pWpY74jFXSHwbMUC1clx40c6v
-	fTCx5naZGNCkRa2TnzcYibSDsub+LNhcsoLZDVa81Yh2F/sYTrf+yfnzwGWxxpk87Cu+ah
-	4HoO7UCW0e/I+08XYJeTjOE+K/LFWfA=
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com
- [209.85.161.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-PKb2CDj7O8CvWLHw94DImw-1; Mon, 06 Jul 2026 09:05:27 -0400
-X-MC-Unique: PKb2CDj7O8CvWLHw94DImw-1
-X-Mimecast-MFC-AGG-ID: PKb2CDj7O8CvWLHw94DImw_1783343127
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-6a17ce8b08dso1376867eaf.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 06:05:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783343127; cv=none;
-        d=google.com; s=arc-20260327;
-        b=bUG4MUScSBrhe9/r2iX6d1dS6K8iwdmQ6uVFizA9R6vw+m1MDfkC3FD3gulLEDCPau
-         +cdihW0glraWV4bGDtkhDL1Ims3yJTC1LFgkSzP1LSWYG3lTJMiRJ+47XwVUjKVTe8wX
-         3OhND5bMxldxdGc9MKYMzXOF3ckx62DxMsaZVublB+7djZv3CARSg7um0XY9Rc4HEXp+
-         /RrrS9Lv0vtZmPpPaxAvbc8u6rtuzJkzwArGiyt4KFKHwww7FtDjcfEXX+lnBgRF0yF/
-         dVxW85WoDVudAL7RmAmVJGv/NNxcx1ovmEixh8MSV0xwLvvnesZdk+i/ixuLnS2nmVyl
-         iIjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=sdTMoj183NRSMeTXAp4YsXZlzmlZIQsL6VbDv6J293s=;
-        fh=SDZt1yYcRHVqOPMW8ZhgDyCnv4/s4MKBtGxxoZwwZ0g=;
-        b=ArK9cgVNUjAwewOEkX+w3+DoTLJB6CijaeDMGaFAqKANUz9PUkb6vr1i5KDis6nwCq
-         ANU59tZgpR0geFxjXAbVubeHcHHq3wopE3r719DVT8RFzge1LqsArX7feyyWS5ROSc0J
-         qv/IkI0yH8M44GH7+FqjWjYBxcshcYK83YGHpsrkcCWtNrZSALt/T2kBBkGapC7tvsqw
-         rUmDguVBQJT1qLUG82wWgEjPy8Qg/iZQSbmtN0MFt5HarTm3C/TJR9V71shKnAkn0xAQ
-         DNoRF1Mg7Xl/g52VcngS0/E+npemZRiwqksk1yfrKC2tQ9pjIeTodeHbgmiFHPBg9Gfs
-         yHUw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MjFrAnhn";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="I73Q4QHD"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666AxS4T369581
+	for <platform-driver-x86@vger.kernel.org>; Mon, 6 Jul 2026 12:45:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ygsrBoZ5Msq9mGih2gcNmJUG+KH6qwVJkoNpq3S1CcA=; b=MjFrAnhnTzb+xV5s
+	v+4J6CGSB7Axv+Nr58UzsQpgwafsybZqVyHj6wa6qd80gwGZIVaDIPIu71l1pwAs
+	2Mkc5NH/bOSZrO15edr08Y9srJOJX2R1XayYh0b4yygYdSpy7EfuSlqjbaUz9DjA
+	HrL8KBUsmxXkhX/v4TIQzIYw0FIR+PZnYBaGVMIIQpSGWE5teYcUbkbrFKyZNhg4
+	bU3CEXzfLm2PPlChvI0t7Izu2ovMdgX5HZfe3YF/E3K5Sic6J1EkpbAggWyM8dPx
+	ariZaaWueCZsLX2beqMa2/FpzW6FHOJiITC4zMbnd7Tj6PsJlwjElOOZI2OykkVa
+	WIQehg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f88h9938a-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 12:45:28 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-92aea0d801dso280437485a.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 05:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1783343127; x=1783947927; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=sdTMoj183NRSMeTXAp4YsXZlzmlZIQsL6VbDv6J293s=;
-        b=ANICBhJ6wbQy1+cmlXMH8eDPiI6CFN8wdZPBigppQ0w5W9ljltAh1l4sAnbOetzh/W
-         ObgX+vA3aHzH24I81Ij2zoap2uiAhU99labGQRus7jsw5X+Ab2stsr3eJNADDp+c+Ymi
-         9oFk/GmX7hJc7dMqahAzhes8UKiefgI0b7eFHCw2bgqGGVmX97pSN+J/vM0VS7CWXiiL
-         Fv64d5kjTIj5ZEeLaEkirRjZbTTwQ5YSlAGnkauULnLtPR4feMmRlmMdl6sqZGAjmPr3
-         iKsdm/7zUwkNGG3V+L+3Y2W4GVSVC/oaeyeIXOFHrvXVQIdb2ww6X+Abes44cCcjI6fF
-         xtyA==
+        d=oss.qualcomm.com; s=google; t=1783341928; x=1783946728; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ygsrBoZ5Msq9mGih2gcNmJUG+KH6qwVJkoNpq3S1CcA=;
+        b=I73Q4QHD4tMMVbkKi3Ci9ug17mNeUmQz+nYVjLXhWVyMXkKvYg4Us5q3DIBsH6mLuT
+         Llsk2heEaUWlv3WPixTscluihBjh0ajhbIUU9EBvmMpvUq80ibELA3p2qwO+FghR4Rra
+         EbloWcStSWWo5qClc3o7Zo6ZmzNo3y88ZuOrUyxxDCOFZGJ+0C1L7beuWEHKHLssszfE
+         PfUocSvSnkrKJze8ZonK0oG4LnYJg/ZxPAognbfqD4Q1DjabF2QKU/p08iWSS5JepYBI
+         41EEAZ1dWYVn3BjJMuemk942O6cmZAEzJtBXtDd/ts0BBrzWpjQrT2iUveQshMlZrh+1
+         3mqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783343127; x=1783947927;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sdTMoj183NRSMeTXAp4YsXZlzmlZIQsL6VbDv6J293s=;
-        b=kqTJlFH4d/Qy3E/9rsNu7wfkCbCTVn7zRgF1JBmDCfSKcb6Fp9U3hF/Rn8cYziG1cN
-         k4Hlm6zFuy8Ws4hf73GHtWSzD1jBu5kHGjV3tB7nhLLFC6wGNRYwkNdoKSoZW4Gu2MP/
-         8Rxq4CgKkaCrrfL/BmXvq0kpcUvLagXzB6eoRXj3xWBtW7FHoeWuY5l9ACe2sjeSUDkb
-         jjcS+kc5FXDmCAd9eW589PpCJXN2GFHXWGvKWziBY2hxdtQg+6D/GNAgKMD2uEtB1nM3
-         AWii+mmoecKmuwzG6ld/bebsHMw4XwNDhw2ZCaRyHZFM28z8JPvUw/+O+qgKqrvb0m1c
-         iUJQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9wN69Xrx0pYWj86uO5WlPf/Qmh2iaB6rQZboqqBBu7+0dTmr1bjwLE/BrjvS6xsB76zJnPbLKfHv6QOB0HoYa4pq6K@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrgjD6iDxohZrv8XlXXeO9xopbpH5ToGvH8J/+4FnCRrLdLtju
-	CbCXCNNhox4UCpRIKELduQfCZB4ye8VeTzzHNW0WmrMzaaTzjvUUqOT6TzE/jYXuSAQatxIQV+9
-	8ZgkqoRe7u9Mgb69R3ZU/YS3tm9AaVZDgKvhEEh8XxIrzlcZTBgRRztxI55VbI5Fi31KgB0950d
-	uJ9mnrAI1AOnTTqlhvYacLLQOK7tzsxwKDqrJ2KjDHHgpRxRBScQ==
-X-Gm-Gg: AfdE7cny49EKwGnQMcIRSDaPWe7CQzWIkRzhLDDIEgyxmG9vnlDCl2kUikQgJRQNM2V
-	fvHU5IWHlP6MsanfBHW5/PHzRI5UnNI6RZpAhDnQe8ARRV3tky94B/jSgMLusnh4GwzexUUCgkL
-	A2AQXOwswgnY4YmDPbwENBAiF1giOoGjKFM7vqAUckH4DlJds7vpRrHazFCJY4v2WDhbM=
-X-Received: by 2002:a05:6820:81d3:b0:6a1:6f12:1aac with SMTP id 006d021491bc7-6a35526582bmr205763eaf.10.1783343124500;
-        Mon, 06 Jul 2026 06:05:24 -0700 (PDT)
-X-Received: by 2002:a05:6820:81d3:b0:6a1:6f12:1aac with SMTP id
- 006d021491bc7-6a35526582bmr205575eaf.10.1783343119494; Mon, 06 Jul 2026
- 06:05:19 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783341928; x=1783946728;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ygsrBoZ5Msq9mGih2gcNmJUG+KH6qwVJkoNpq3S1CcA=;
+        b=TWd0SeiB5JwiJjwUZpA1DlABVL3FNm7lrznhCQEFJ36ePNTMTrC/GQTgOPsLq+pYvA
+         BhSXmw4CNoeWISdpCT404FDcblc71uUi+DV+SR263h4scddKP2dAXCmrMDy56hT/UdeZ
+         WBT8gSBww20/P0cMVGJ8dQSfPn9pvszkzG7Kv1oAtBC4AHwLa4aa+sTuCbYr9x9tsAWn
+         ZNVkyR0qcJsXREhQHz5TlaqGIK6JWqOJOU7w8WuExmGuNh/6vJoIB8tbPd7PWkX5m7Zy
+         eZ058DKCCRnLurgnY6B+3LfWpg8DDGs/5W2DgUnvFYs89Iw5a1hpNiRqLlWeoqmfsp/a
+         sGMQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq7NIrZDtxfIx9xiUVgwogZJD1+9tlTcfKgwVa8VH7ypfEWHfqYDUuN/Lzq1yzGMDvUittRe3HAP1YbWUKX07zYg95J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3v/L2dpVWXYXOBavkGbyzBhTL/HwO572AlPJU92tEmoHPTyZr
+	Z/b5AG4HiVT3VBbfBsZ/fboPlczPdgMhTz4/FxfJ0c4o/rRZ8W7cN3M1T5wH0U/8xziFLQnc22v
+	rElSopOEGrNN2foKN2DId9S0DE1+RQchw8FwPmB21OJinkn43iROGWoQRjqZtRZSPuxLbYpGHSF
+	+N
+X-Gm-Gg: AfdE7ckzIwFGXGh2BBNx5enCtsGAk44oCCHstZOKb8q06ZP+5ZtYMXSaulV3c4TXADt
+	4vz/7md8oQ62ptef1JF2WifyQ+upuwWSYNv70r9o9sWHCj2wNftDG9MNgMWuuac95Pt9d2c/3/k
+	Sz1gUU8yGn09FFhW8BV/Y757r7t2VjjdjX4eKcXUU+LB+P9dA84r8fNysZglegNlApsEjVIifeW
+	k3cF1kb2xH5JfeA3xv3ldL23j4YQ/MzxyN3A8ocVY/rIJriyyF9RISOZDsXIT5zSS0jp+16z2A7
+	qreJhZpGzPN4/0PKxfS5bOIsWm4YmrY4r/azcXDcBxng6UtvRRNtjL2imBuMeDNPqNUupUL065S
+	LQxDV+BKi9hT4PUdFC3zUc9DR5bluo2LZvzAnBpbF
+X-Received: by 2002:a05:620a:2725:b0:92e:6637:db5 with SMTP id af79cd13be357-92ebb4c7b4bmr53507585a.16.1783341925307;
+        Mon, 06 Jul 2026 05:45:25 -0700 (PDT)
+X-Received: by 2002:a05:620a:2725:b0:92e:6637:db5 with SMTP id af79cd13be357-92ebb4c7b4bmr53358785a.16.1783341917264;
+        Mon, 06 Jul 2026 05:45:17 -0700 (PDT)
+Received: from brgl-qcom.local ([2a01:cb1d:dc:7e00:86f0:c42b:ef4c:d3bb])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa0a55be4sm22126539f8f.31.2026.07.06.05.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jul 2026 05:45:16 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Date: Mon, 06 Jul 2026 14:44:21 +0200
+Subject: [PATCH v3 09/20] iommu/fsl: use platform_device_set_of_node()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260629074026.35490-1-hpa@redhat.com> <20260629074026.35490-4-hpa@redhat.com>
- <PN3P287MB18292C819793395D643D426A8BF72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <49257d09-a2fd-4a9d-9479-4d2b5e0fb8a6@kernel.org> <PN3P287MB182945B5747452110940BEA08BF62@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <c7634571-4682-41d5-aa9d-8b965d641d51@kernel.org> <akT2CSCbaR0a3BMA@kekkonen.localdomain>
- <PN3P287MB18296E80E1786B05F5ACF37E8BF62@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
- <d59e796b-fe53-4103-a94b-5ffba53246b9@kernel.org> <aklcEKiFDfZwCFP-@kekkonen.localdomain>
- <PN3P287MB1829FE03558376196C9030328BF12@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-In-Reply-To: <PN3P287MB1829FE03558376196C9030328BF12@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
-From: Kate Hsuan <hpa@redhat.com>
-Date: Mon, 6 Jul 2026 21:05:08 +0800
-X-Gm-Features: AVVi8CddLzx4eQRFaxdBT2pu3p2HbYXIVt8N98r-CMBvGbAxEWVq6TYvkkHLf5w
-Message-ID: <CAEth8oG_jDMz3Sspayfv18Ue4vO6103fM0J_f_i_NG6tZ7c4XA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] platform: int3472: discrete: con_id vana for Sony
- IMX471 as power enable
-To: Tarang Raval <tarang.raval@siliconsignals.io>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil+cisco@kernel.org>, 
-	Serin Yeh <serin.yeh@intel.com>, Damjan Georgievski <gdamjan@gmail.com>, 
-	Kieran Bingham <kieran.bingham@ideasonboard.com>, computman <anis@talbi.fr>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260706-pdev-fwnode-ref-v3-9-1ff028e33779@oss.qualcomm.com>
+References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+In-Reply-To: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+To: Lee Jones <lee@kernel.org>,
+        Mark Brown <broonie@opensource.wolfsonmicro.com>,
+        Thierry Reding <thierry.reding@avionic-design.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+        Andi Shyti <andi.shyti@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+        Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Peter Chen <peter.chen@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hansg@kernel.org>,
+        =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: brgl@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+        driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        mfd@lists.linux.dev,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2377;
+ i=bartosz.golaszewski@oss.qualcomm.com; h=from:subject:message-id;
+ bh=ToUoBuUJoS1vI9JQbupGD9AhsrfiD0t/t7tbmkvJ+bg=;
+ b=owEBbQKS/ZANAwAKAQWdLsv/NoTDAcsmYgBqS6M2nbcqYQU2rto0INZYhmejKoOnH4JJ+foOF
+ gbtQ5diyWiJAjMEAAEKAB0WIQSR5RMt5bVGHXuiZfwFnS7L/zaEwwUCakujNgAKCRAFnS7L/zaE
+ wz3eD/9zvS34vmhbvapxOOuDeHkgoWjbwClrYYz28lrOOlhdhx5lHNAE1M677a9LnxVGFTNWSgn
+ z/9TlTUdzy917cFnaNTfg70HD8e/p303kaNPl4g8CNn4TxYUEHm9ktX4btw0hsN/hTGOEb9xrJt
+ YTxoQgL6mPAoTC0Lw2nQbw1KUtKQD1CFXM5HUF3lWAyZyOo0ZKAUpQ60eF/hC31K9znEizz+t6H
+ MDZ3G2qpJhCF52wAoxmhehajnKaeHhV16Ecs/vtwGrv7Yg7zibDx4RVD+ggasuNS3h+wjWclE77
+ a8ascuOrwRU45/+MqL4dliFlZ6Ybby3l8MDigKYin/YAH5vuJF1HzvySs9WsRdD6C8Lq4t75DEm
+ HXFZJ0fB1GZp0UT7ayM9xHCIglviy66c8S07wtLg6kkkLq2x3VnHMgPUcoT7h8f95M59G3qXUEA
+ 8ATrnqHYVAYpH0WshNgZ4U5bJMUAVg+VeidCRa+lK85JtBU3wAWCTEqc1gsfTY3+XhDRr5yiHx9
+ Q2zV36L8qjBGU/KX0zn+aScN54PuQD+Sw8Fl8IgXOOnNdr4kHuA1+O3XIlVqm+rrQ8GKb7n2k0x
+ SL5YGsI5Tya0+tbYEXhNPxmRmzQHjKyZL7455KsB1CiWGQk3FpnaykdRAHJuEVyv9OmujsnRceK
+ xP3+XsEnk3J1FyQ==
+X-Developer-Key: i=bartosz.golaszewski@oss.qualcomm.com; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-Proofpoint-ORIG-GUID: 4NNExKX1NPv_jPPbbJeAyeEpLR-2TyDM
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDEyOSBTYWx0ZWRfX2EviFFDkSuTQ
+ kBOwtrnWBbxXS1Hvo9GI6fsaL510DzpJVH9+LN0QYSqFD+2iI9tmuYB4vucwJPfUxTC6Mq1z2BE
+ VdEVmhjuBkVgm4mKlWBWtx4cQ0gVhfQ=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDEyOSBTYWx0ZWRfXyBOYY5LHf065
+ LkoE+FLy0UK+QMQR4eAYp7k/nqC6fJA31KW5tws2loWevzchy5FIwljOS8vuMKvDvgRPzHvx6xn
+ dle5Unwx6lGsKdL0p/dRLmvzljlV+rFeVUjp8HNrKPfrtFoJ4XGLLC0F+Jgw2HxdzIaYkb8sajX
+ FgLSz3T0Ddh9xRGa38jaiQjqJ4Kru+X2XGsYTvzcRfmYNaLqeB2qNimoiNPpHMnKeFDzICJaGMS
+ W0Z0bbXvlUE0hoGWrEySRspJKA2xJv9O+IS1SE1Rd2RnB3lNZob0t8uIkx/X0IRcaIKFkv/t7cW
+ +NeJKve+0xh/5qwwZ+EmPTIX+T89NC9a1RvllQTK04rXIXOkX+x+8/EKsMdkbr3X6jhCY8fEczb
+ /soXlCpR9YCPpli/+jOM8W+nKKED/VByOiWJSout0lLBbtIDbfwObwHVnP13wUjePXbio/4qicC
+ UrI9uq20X9F1+ZS74LQ==
+X-Proofpoint-GUID: 4NNExKX1NPv_jPPbbJeAyeEpLR-2TyDM
+X-Authority-Analysis: v=2.4 cv=GulyPE1C c=1 sm=1 tr=0 ts=6a4ba368 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=ZpdpYltYx_vBUK5n70dp:22 a=7CQSdrXTAAAA:8
+ a=QyXUC8HyAAAA:8 a=EUspDBNiAAAA:8 a=31kahzM04Zwkpn2euDMA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-06_01,2026-07-06_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060129
 
-Hi Hans, Sakari and Tarang,
+Ahead of reworking the reference counting logic for platform devices,
+encapsulate the assignment of the OF node for dynamically allocated
+platform devices with the provided helper.
 
-Thank you for your comments.
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+---
+ drivers/iommu/fsl_pamu.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-On Mon, Jul 6, 2026 at 3:16=E2=80=AFPM Tarang Raval
-<tarang.raval@siliconsignals.io> wrote:
->
-> Hi Sakari,
->
-> > On Thu, Jul 02, 2026 at 08:05:25PM +0200, Hans de Goede wrote:
-> > > > I went through the INT3472 driver and would like to propose a gener=
-ic
-> > > > approach that satisfies both sides without per-HID quirks or sensor=
- driver
-> > > > changes.
-> > > >
-> > > > The problem is:
-> > > >  - INT3472 standardizes on "avdd" internally
-> > > >  - Sony IMX sensor drivers use "vana" per datasheet, and all existi=
-ng
-> > > >    Sony DT bindings (imx219, imx290, imx415) already use vana-suppl=
-y
-> > > >  - Changing imx471 to "avdd" now will create inconsistency with tho=
-se
-> > > >    bindings, or require a rename later
-> > >
-> > > Ack, as mentioned in my reply to Sakari from 1 minute ago I'm ok
-> > > with sticking with vana for the imx* case,
-> >
-> > At least some Sony sensors use "INT" PnP vendor prefix and so telling t=
-hem
-> > apart from the rest doesn't work at least this way. There could also be
-> > other prefixes as well, they're not all "SONY". Right now there is one =
-with
-> > INT prefix and three with SONY prefix.
-> >
-> > If we start having lots of devices with the same quirk, we could also
-> > introduce a pointer to an array of IDs to avoid repeating the same quir=
-k
-> > over and over.
-> >
-> > Kate's patch adds two quirks so this could be already considered (and o=
-nly
-> > one of these IDs is using SONY prefix).
+diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
+index 25aa477a95a95cb4fa4e132727cde0a936750ee2..c83bbc3faad56d6ee1c89b0a7f74028af02c81e9 100644
+--- a/drivers/iommu/fsl_pamu.c
++++ b/drivers/iommu/fsl_pamu.c
+@@ -8,6 +8,7 @@
+ 
+ #include "fsl_pamu.h"
+ 
++#include <linux/cleanup.h>
+ #include <linux/fsl/guts.h>
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
+@@ -933,7 +934,6 @@ static struct platform_driver fsl_of_pamu_driver = {
+ static __init int fsl_pamu_init(void)
+ {
+ 	struct platform_device *pdev = NULL;
+-	struct device_node *np;
+ 	int ret;
+ 
+ 	/*
+@@ -955,7 +955,8 @@ static __init int fsl_pamu_init(void)
+ 	 * PAMU node would require significant changes to a lot of code.
+ 	 */
+ 
+-	np = of_find_compatible_node(NULL, NULL, "fsl,pamu");
++	struct device_node *np __free(device_node) =
++			of_find_compatible_node(NULL, NULL, "fsl,pamu");
+ 	if (!np) {
+ 		pr_err("could not find a PAMU node\n");
+ 		return -ENODEV;
+@@ -964,7 +965,7 @@ static __init int fsl_pamu_init(void)
+ 	ret = platform_driver_register(&fsl_of_pamu_driver);
+ 	if (ret) {
+ 		pr_err("could not register driver (err=%i)\n", ret);
+-		goto error_driver_register;
++		return ret;
+ 	}
+ 
+ 	pdev = platform_device_alloc("fsl-of-pamu", 0);
+@@ -973,7 +974,8 @@ static __init int fsl_pamu_init(void)
+ 		ret = -ENOMEM;
+ 		goto error_device_alloc;
+ 	}
+-	pdev->dev.of_node = of_node_get(np);
++
++	platform_device_set_of_node(pdev, np);
+ 
+ 	ret = pamu_domain_init();
+ 	if (ret)
+@@ -988,17 +990,11 @@ static __init int fsl_pamu_init(void)
+ 	return 0;
+ 
+ error_device_add:
+-	of_node_put(pdev->dev.of_node);
+-	pdev->dev.of_node = NULL;
+-
+ 	platform_device_put(pdev);
+ 
+ error_device_alloc:
+ 	platform_driver_unregister(&fsl_of_pamu_driver);
+ 
+-error_driver_register:
+-	of_node_put(np);
+-
+ 	return ret;
+ }
+ arch_initcall(fsl_pamu_init);
 
-The idea may look like
-
-const char *sony_hids [] =3D {
-"SONY471A",
-"TBE20A0,
-NULL
-};
-
- { /* imx471 expects "vana" as con_id for power enable */
-     .hid =3D sony_hids,   <--- A ponter to sony_hids
-     .type_from =3D INT3472_GPIO_TYPE_POWER_ENABLE,
-     .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,
-     .con_id =3D "vana",
-     .enable_time_us =3D GPIO_REGULATOR_ENABLE_TIME,
- },
-
-and
-and the following functions need to be changed.
-Do I understand it correctly?
-
-Sakari, do you want to implement this approach or could Tarang and I do tha=
-t?
-
->
-> The HID prefix is not actually a concern for the alias idea, because the
-> alias table triggers on supply_name not on HID. Since INT3472 always
-> assigns "avdd" to any POWER_ENABLE GPIO regardless of HID prefix, the
-> alias would work the same for SONY471A, TBE20A0 or any future INTXXXXX
-> prefix.
->
-> However there is a different problem with the alias idea: it would regist=
-er
-> both avdd and vana for every sensor that has a POWER_ENABLE GPIO, not jus=
-t
-> Sony IMX sensors. So I agree this is not a good approach.
->
-> The NULL-terminated HID array is the correct approach, the mapping is
-> explicit and only applied to hid we explicitly list.
->
-> I can send a patch implementing this on top of Kate's patch.
-Sounds good.
-If Sakari agree with that, I can include your patch in my series.
-
-Thank you :)
->
-> Best Regards,
-> Tarang
->
-
-
---=20
-BR,
-Kate
+-- 
+2.47.3
 
