@@ -1,115 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3C2372661;
-	Tue,  7 Jul 2026 11:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769BE3F789C
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 11:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783422763; cv=none; b=H53zrN7hbAasb8+ME8/QLhoyfQVFrNhVXx0vCVqjFP/taJb4As4d5c5EE0mVM3+fiTTuzeip8dnZY3UJNFiCnb7rXFz+u9Tdua9sEAUuUkgZLi4bl6c1qal/Z39+Z7Nne01oHipfmI5Dl+f8WAykN9JxbHBRbnEQ1exQYHj9clg=
+	t=1783424213; cv=none; b=Mq8lr7K9b5UjptQPhBriXElEYuUUdFvcjKYDR8nM3ecGIhRkMCkOR9KGDDnG00Mh11ZoTq7jGxH1SUBTZd9+Td4Au0eBY11IE9gYiQHYL9e/LaEY46Ia9HcJthRZFH1zULEL1cxe7eMxy7H0XzSpqVyDoOjpem3jd2dQ38hbFEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783422763; c=relaxed/simple;
-	bh=3E+FfDZekyWexjqd33VIDTatlPwxH3hlxzLBG1ppbzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cm4h8WuV4rtdVT8XO751d86SPqKqs0Wh4BWNkrh+Duzp37hTa7M5ENbsHg+oi10GwV36JJMrll4L1uCOvkCcFngmL8umoD9zApJNE5FIutX/fa1EAwa6qJUJ/zwzMzdYGPlF5FjPelH2dLknYkIzuhtdBB/48oMZikI8GeudClc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8OMVCVI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783424213; c=relaxed/simple;
+	bh=wDExSE2bcKaGQerGvyXHljOjP5OzC8DdCyd5Skqqvl4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MdtpNfl+vet0V2Px2awt5pBzEYzy+gZkrMS5ZSrWeWN/cSPk8tCsPhoCrcH0Z4Q8qjFyISOQquZYO9a9365gzIWnY6BrMBtYXI7XOg9+EwscVTR61vrWLNDMsUi9PnE1c0Uvx4oVH0/4ia0rJa1n8FUQKcXOyBQP1+3hix+rEgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QwXvPoMy; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8OMVCVI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F111F00A3A;
-	Tue,  7 Jul 2026 11:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783422759;
-	bh=pyvhNuRWC45cC/GsxP7LT3Pbqsqw0s7MbBgV7p5Lw6I=;
-	h=From:To:Cc:Subject:Date;
-	b=A8OMVCVIufsat+nLnqVjAGKap0VJ6V50dHh/KlnalbxucKsi79i8QkahNxint3bRw
-	 XcoSSitElqi24sqN4D1a3l0KZHKl9INLntN4dl6lh/DflcfZiaqZdHcpbEGQ1fWIy0
-	 ZZOvmW7t56AqhA27auJ7as8dtQcFV+hyUywJF5WueqOglI62wPx4vWZ+MzxaHfjNGd
-	 hyyVb2o4b5Mxm2nVjwj8H5ma5ewKw4Lo8c4bMgT16UVtdZEudi7vFbrkgbaG22SMr3
-	 UBZQbPiUBNlUBrtmA+9uoccplWd9vhbCQhv71dq4W1OdpHswkav783vyLxtcPlKuvs
-	 jJZGidzP26Obg==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Chen Yu <yu.c.chen@intel.com>,
- Maximilian Luz <luzmaximilian@gmail.com>
-Subject:
- [PATCH v2] platform/surface: surfacepro3_button: Stop setting
- acpi_device_name()
-Date: Tue, 07 Jul 2026 13:12:35 +0200
-Message-ID: <12927239.O9o76ZdvQC@rafael.j.wysocki>
-Organization: Linux Kernel Development - Intel
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QwXvPoMy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783424211; x=1814960211;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=wDExSE2bcKaGQerGvyXHljOjP5OzC8DdCyd5Skqqvl4=;
+  b=QwXvPoMyxosTLMPSienB8csCg4faWpuHVNcER9gdB/VEQ+hZDHEx+Qrp
+   LsCVJDrFyOFOLdDQgKTt/ofU7Ijlfv/v6CxAMS3sExSAtzu0zNi8NJkG0
+   VYggA4qji6XILKdmQzadB4zx5s9HrhIHjqiJhFiXAsAeu2uQNLhz0A0JW
+   aEcEVrIr2+FVROi9T9QP4BXDLguvJ1Pq0WlvJ6p5kJz3Gew8ze0Bejda0
+   Yzfm0mTbadifFwoqxxtUYLcLrzgMfT05XOw3NGOglLzZlb31stnOd2C8Z
+   MmuoLOJph3cVn/JfhtH7a/GcBNctk+D+ctqA5ciqyfo9lSj68KXmEuhAu
+   w==;
+X-CSE-ConnectionGUID: VRaFCs51Q4q1oskB3mKMCg==
+X-CSE-MsgGUID: gnyhd8NATYm922B+0F4pUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="83940321"
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="83940321"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 04:36:50 -0700
+X-CSE-ConnectionGUID: O/zoStd+QHylPOs3OSOZYw==
+X-CSE-MsgGUID: Hn2rgIkmQOq2zxzsOoGAGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="278344319"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.226])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 04:36:49 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 7 Jul 2026 14:36:46 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: amd-pmc: Add IP block table for AMD 1Ah
+ M80H SoC
+In-Reply-To: <0d48eac8-fda9-4bb8-91d1-801cf6a2797d@amd.com>
+Message-ID: <2b2d468e-ada8-c1c4-5919-f75af55614b7@linux.intel.com>
+References: <20260707054048.69152-1-Shyam-sundar.S-k@amd.com> <c07417fd-ddd9-e171-de9b-75bdfc66c5b3@linux.intel.com> <0d48eac8-fda9-4bb8-91d1-801cf6a2797d@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-288616857-1783424206=:1152"
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH v1] platform/surface: surfacepro3_button: Stop setting acpi_device_name()
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The driver sets acpi_device_name() to initialize an input class device
-name initialization and print a message on probe success, but the input
-class device name can be set directly to the "Surface Pro 3/4 Buttons"
-string literal and used for printing the message.
+--8323328-288616857-1783424206=:1152
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Make the driver do so, stop setting acpi_device_name() in it and drop
-the symbol specifically defined for this purpose.
+On Tue, 7 Jul 2026, Shyam Sundar S K wrote:
+> On 7/7/2026 13:16, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 7 Jul 2026, Shyam Sundar S K wrote:
+> >=20
+> >> AMD Family 1Ah, Model 80h has different IP subsystem layout compared t=
+o
+> >> previous AMD SoCs. The existing soc15_ip_blk[] does not match the late=
+st
+> >> firmware's DRAM export structure for S0i3 subsystem accounting.
+> >=20
+> > You say "the latest firmware" so what about the cases that have older F=
+W?
+>=20
+> Good catch =E2=80=94 "latest firmware" was misleading..
+>=20
+> This isn't a FW-version thing, it's tied to the CPU/SoC, and in fact
+> the original M80H commit(043af31c8d30) had this wrong.
 
-No intentional functional impact.
+Okay, I was actually expecting it might be the case.
 
-This will facilitate the removal of device_name from struct
-acpi_device_pnp in the future.
+One of our platform recently needed similar correction (and IIRC was=20
+first submitted with similar explanation as your here :-)). After I=20
+inquired about it that was because the FW got updated after the kernel=20
+support for it was added but before the launch (which was the other=20
+possible explanation I was expecting).
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Chen Yu <yu.c.chen@intel.com>
----
+It's important to have this kind of details correct in changelog because=20
+normal kernel devs don't have the same internal knowledge.
 
-v1 -> v2:
-   * Use input->name for printing the final message in
-     surface_button_probe() (Andy)
-   * Add R-by from Yu
+> Let me explain..
+>=20
+> PMFW (Power Management Firmware, formerly SMU) exports the power
+> status of each IP block in the SoC =E2=80=94 the subsystem accounting. It
+> writes this into DRAM, the PMC driver reads it back, and we expose it
+> via debugfs, which is very useful for inspecting S0i3/s2idle residency
+> and debugging s2idle failures.
+>=20
+> Each IP block is bit-mapped, and the set of blocks is specific to a
+> SoC generation:
+> soc15_ip_blk[]    - ~22 IP blocks
+> soc15_ip_blk_v2[] - 25 IP blocks
+> soc15_ip_blk_v3[] - 19 IP blocks
+>=20
+> As the SoC evolves, the set of blocks that factor into low-power
+> transitions changes (some added, some dropped). For Family 1Ah / Model
+> 80h, PMFW only accounts for the 19 blocks that physically exist in
+> that SoC. So the layout is fixed per SoC =E2=80=94 there is no older M80H=
+ FW
+> that reports a different layout; PMFW on this part always uses this
+> ordering.
+>=20
+> The problem is that commit 043af31c8d30 wired amd_1ah_m80_cpu_info to
+> soc15_ip_blk (the oldest table), so M80H has been reporting incorrect
+> subsystem accounting since it landed. This commit adds
+> soc15_ip_blk_v3[] with the correct ordering and points M80H at it.
+>=20
+> Shall I respin v2 with this rationale in the commit message?
+>=20
+> and add?
+>=20
+> Fixes: 043af31c8d30 ("platform/x86/amd/pmc: Add PMC driver support for
+> AMD 1Ah M80H SoC")
+>
+> (note that this is not in stable tree yet)
 
----
- drivers/platform/surface/surfacepro3_button.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Yes, please add the Fixes tag and correct the changelog. My intention is=20
+to route this through the fixes branch.
 
---- a/drivers/platform/surface/surfacepro3_button.c
-+++ b/drivers/platform/surface/surfacepro3_button.c
-@@ -20,7 +20,6 @@
- #define SURFACE_PRO3_BUTTON_HID		"MSHW0028"
- #define SURFACE_PRO4_BUTTON_HID		"MSHW0040"
- #define SURFACE_BUTTON_OBJ_NAME		"VGBI"
--#define SURFACE_BUTTON_DEVICE_NAME	"Surface Pro 3/4 Buttons"
- 
- #define MSHW0040_DSM_REVISION		0x01
- #define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
-@@ -212,11 +211,10 @@ static int surface_button_probe(struct p
- 		goto err_free_button;
- 	}
- 
--	strscpy(acpi_device_name(device), SURFACE_BUTTON_DEVICE_NAME);
- 	snprintf(button->phys, sizeof(button->phys), "%s/buttons",
- 		 acpi_device_hid(device));
- 
--	input->name = acpi_device_name(device);
-+	input->name = "Surface Pro 3/4 Buttons";
- 	input->phys = button->phys;
- 	input->id.bustype = BUS_HOST;
- 	input->dev.parent = &pdev->dev;
-@@ -239,8 +237,8 @@ static int surface_button_probe(struct p
- 		goto err_free_button;
- 	}
- 
--	dev_info(&pdev->dev, "%s [%s]\n", acpi_device_name(device),
--		 acpi_device_bid(device));
-+	dev_info(&pdev->dev, "%s [%s]\n", input->name, acpi_device_bid(device));
-+
- 	return 0;
- 
-  err_free_input:
+You may also want think if you can somehow ensure similar problem would=20
+be caught during testing of a next arch patch (but I understand it may be=
+=20
+hard for a human to pick up anomalies out of all noise).
 
+--=20
+ i.
 
-
+--8323328-288616857-1783424206=:1152--
