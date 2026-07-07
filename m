@@ -1,123 +1,130 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A26037754B
-	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 07:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA4A2DAFA9
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 07:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783407937; cv=none; b=u2fjVprAkbE1fxPXn2/OhLLRc8/BA8wGru2EX1D9sJWzzQHOqe479iUfrlWiUwNM+gaRuR92Y+H11aSwi/iUN8WhJlx8ogAsI7LKxhHpL+FvlXSH0ylhBtxzBVwv20st3asTqgt4pXapTQrQAUaDzl25Sk0h7Hq/g6odVjGc9ig=
+	t=1783410373; cv=none; b=ozy7D9eNOtSWs00gXodQEpgKq82wctDB2GkP2xikfI9L85qcDpQH477774r9r0fB0HauVAOTP531Nwcnnwcsz4GyaVhLn+N9ZZH+rWxk4odoagmzpnBl7vzCC4+spVj2Jvcr6SHt5jeyprT7Oo4/l9fdKLtZwjMmHUUzHqQ+rKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783407937; c=relaxed/simple;
-	bh=bY5LKc3I0Jv8nZpUIEOF6lgwuy/yE4feoIlM/xShIEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IcU7MBTTFnIVl3LRGpnUYAUQ17+T5z2lV+M32D5dhoA/ycRAhs70/vqnbzX12YAqhnLTkk2d8+TepTXbVWMB9+SYqHosk+4Q3322wdYYl0wP1WTfUFU3obIAj0de9FaVRL7GvEmVf+tpr1PeGLWipbGfSVnr9d+qYdiS+vRTYAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=EaP6yODx; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
+	s=arc-20240116; t=1783410373; c=relaxed/simple;
+	bh=SMhzJOarIf6aALThNo5iuP6LEw86fcTszML7UjEiQ5M=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=m7nV87alANHbbDG3iz9pWTHRUNI8lz3Gk+ZPdvOA+se5Nna6n+UNNKyWg6Ew6CPmSVZ+RxPoWOIKMvxdxT7+XUzy+bEceDF2/B6/AStQihMf85Ld5IHeRLbj8o1LqqARsUedWhCqq8XgvdCTMfvylFRhwuwf5lW6AtpfwZL2YOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dEWvW0cD; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="EaP6yODx"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8478a25f268so2907853b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jul 2026 00:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1783407935; x=1784012735; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JinMzbnW1YyIiCcwbl+3maMIpSRORpZ9ZKiJ12a6GbA=;
-        b=EaP6yODx08kgproUFTtnRXilV1dE94XAnTRvYsVcD9t5ocNt4ZsrRoeRxJIBqCmTLb
-         3PGJsgCMLDPfdoklquK6PnLQrdLoSnD9lrGLInB6xI7u75Epg4I6EY2zNrJhSA6Q7jsH
-         j/NDBeP7Ucd6OXfKb8js3E6k1bXGEaHhU4kJs+I4S1yK3fsAOBI1j09U0E9fy6SHdplm
-         ySyggBrfvb7Slw5pxesIPUgChAAx1HvupoSUKUQIHZTqCtRcT9dFfLaknFRAubZfn1L6
-         /gXURG11v5Zl7b/GQGTCouhsE5S29K5UnUpHZa/w46E/AWdkXq6uVOeG1lH9fquMKNIp
-         MQxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783407935; x=1784012735;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=JinMzbnW1YyIiCcwbl+3maMIpSRORpZ9ZKiJ12a6GbA=;
-        b=QYjwdl1h8t0YP7rHfZA9U5zm7+TRiGkrLRKbjElAhTVKhoM1zReckkMz5lcgsZKbbc
-         dfLr9B1swlZHrxmW46fXbk8+PMJ/FF+mlKdncHxXYscfKJ3JVwvbiZyrInn/bHDEHDbT
-         9/g+fSaYfgu3P8D7LOyH4IIjdu3phDBvwzrNYyiWyNtsKSljUKhOYscFzZFjfW7PXwHD
-         WEVoYw4oIVpBD7rgB1JPpDhQLn+ULo29mQgOBUTskGzGmBRGVbwjCPtCyBrNZBM9P+A3
-         HGgYAQLhJEz2vkf6QQN/sVBUMO34zZQwUuTdEyMS+9FfiI5Z2dLUs8GtAAWx2CLjqnYG
-         hxnw==
-X-Forwarded-Encrypted: i=1; AHgh+RrVdn4RGRvGtd/nCjq8HwKkGSp/FYu1OYOuZ15O8q1iQmcLxo63eCWaEs4T7IFCeWFEgQCYybaucourw0GK0z2RfjRt@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfqWNJcEfpSU/Ye0AoQTBZN5/Sw31KKe/QCDFk/RRQuG8BTe/F
-	gQ3wp/VsQsj3qTfvNFmuoArkCK0pEIGeAWWiDPttoa8+lSxGtk2ur8GwzPL0Fi7D+WE=
-X-Gm-Gg: AfdE7cmz+TLEf7xMII8Us00mzq7StTHsRMV+T+Ibv0agAmWZ6BrlrOrivnAKJ04TMGw
-	fSx7mwHxWBTi8tqMgUBai0PfeEOj6wUPxR+cIrkHSbFNancZsdz2f3VTv7rP4PXdKkKhgKuEU+0
-	MLTpYoqBrMnGz5MFl9mO/BVfTU3L9zpP3K6gc3v4an+UrF5v5mSjEvDlxzDojzMbTbWhf+V/uq5
-	PizfUnW754ycQ05x37Ab2PSEXOqIM65IIOS4wXIYpkwsu+LoXp4y5zimcoyVY9szNkHEAdzKGkt
-	sv0gSOmWovpmgMO2EV+xMoiOUMxz8V+cfxqbYHx1kNs2x8i5IRPoLzERTIBVAFAb/ExmMsq91zy
-	QjEtIbz6CI994vUO5sqv1rdQDknHKQ0okcjoqQGp0vJy3dw5lPFjE8GQ7YDu3qEsG67LOAIjghC
-	jobkRzhOhZTJ8etLdWRjedTpw48kVuHn6ZWiVL7+4nWfv4TupRYqHpeJB25PJ1Ot0NYjcxf0KRl
-	VNNMHEbGThyBwkeWivRa4bT0TrVAdELJ58925urFrE=
-X-Received: by 2002:a05:6a00:2905:b0:848:2f74:d8d2 with SMTP id d2e1a72fcca58-8482f74dc63mr1607434b3a.67.1783407935320;
-        Tue, 07 Jul 2026 00:05:35 -0700 (PDT)
-Received: from Metius.iitm.ac.in ([103.158.43.43])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-847f6d4e741sm4986516b3a.28.2026.07.07.00.05.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2026 00:05:34 -0700 (PDT)
-From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-To: s.shravan@intel.com
-Cc: Abdun Nihaal <nihaal@cse.iitm.ac.in>,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86: int1092: Fix potential memory leak in sar_probe()
-Date: Tue,  7 Jul 2026 12:35:22 +0530
-Message-ID: <20260707070524.953741-1-nihaal@cse.iitm.ac.in>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dEWvW0cD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783410371; x=1814946371;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=SMhzJOarIf6aALThNo5iuP6LEw86fcTszML7UjEiQ5M=;
+  b=dEWvW0cDT/UkLIzuwZdM8VZD3Jij3gU6ZdjneHd9QG5jGp8DGx4K1NQL
+   ZcItn5TNc9HX61D5MKoZSzdjgGe6H9gDWz5xX8zFNBPQykR3KSCwmmJrE
+   RvXuPExWKlPvE4YRcV8cdX/7LH9joKzK0U9B+w8AlWnlCmHVZvLx8H3gC
+   kgdMspFJJSZOrI5sFg3NxiED+vynrPeOXcBFaojWRo37P473kIT9r/QmI
+   8JvdOIbZF/xZmv8QXD7onHS+TssVxtzn55vmtzYTt0ymfMGaVQVWRsUzD
+   3EqDnWfuI7ZcgszbxlMxvhWCu4S1BK08ABgBjJPLy7Xje08OpxHH/1fKp
+   A==;
+X-CSE-ConnectionGUID: NPQrGBqZRdqffegbQ6g87Q==
+X-CSE-MsgGUID: kJCYHJcvRkK6dz9gN31hiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="86599631"
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="86599631"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 00:46:10 -0700
+X-CSE-ConnectionGUID: GcXiKjaUSqOFbpN5oO1UhA==
+X-CSE-MsgGUID: P0YkyWD6Q0ylkCMqiDO8/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="249940178"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.226])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 00:46:08 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 7 Jul 2026 10:46:04 +0300 (EEST)
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, Sanket.Goswami@amd.com, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: amd-pmc: Add IP block table for AMD 1Ah
+ M80H SoC
+In-Reply-To: <20260707054048.69152-1-Shyam-sundar.S-k@amd.com>
+Message-ID: <c07417fd-ddd9-e171-de9b-75bdfc66c5b3@linux.intel.com>
+References: <20260707054048.69152-1-Shyam-sundar.S-k@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The memory allocated for device_mode_info in parse_package() called by
-sar_get_data() is not freed in some of the error paths in sar_probe().
-Fix that by adding the corresponding free in the error path.
+On Tue, 7 Jul 2026, Shyam Sundar S K wrote:
 
-Fixes: dcfbd31ef4bc ("platform/x86: BIOS SAR driver for Intel M.2 Modem")
-Cc: stable@vger.kernel.org
-Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
----
- drivers/platform/x86/intel/int1092/intel_sar.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+> AMD Family 1Ah, Model 80h has different IP subsystem layout compared to
+> previous AMD SoCs. The existing soc15_ip_blk[] does not match the latest
+> firmware's DRAM export structure for S0i3 subsystem accounting.
 
-diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index 849f7b415c1e..b27fc07c087a 100644
---- a/drivers/platform/x86/intel/int1092/intel_sar.c
-+++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -273,13 +273,13 @@ static int sar_probe(struct platform_device *device)
- 	if (sar_get_device_mode(device) != AE_OK) {
- 		dev_err(&device->dev, "Failed to get device mode\n");
- 		result = -EIO;
--		goto r_free;
-+		goto r_sar;
- 	}
- 
- 	result = sysfs_create_group(&device->dev.kobj, &intcsar_group);
- 	if (result) {
- 		dev_err(&device->dev, "sysfs creation failed\n");
--		goto r_free;
-+		goto r_sar;
- 	}
- 
- 	if (acpi_install_notify_handler(ACPI_HANDLE(&device->dev), ACPI_DEVICE_NOTIFY,
-@@ -292,6 +292,9 @@ static int sar_probe(struct platform_device *device)
- 
- r_sys:
- 	sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-+r_sar:
-+	for (reg = 0; reg < MAX_REGULATORY; reg++)
-+		kfree(context->config_data[reg].device_mode_info);
- r_free:
- 	kfree(context);
- 	return result;
+You say "the latest firmware" so what about the cases that have older FW?
+
+> Add soc15_ip_blk_v3[] with the correct SoC IP ordering and wire
+> amd_1ah_m80_cpu_info to use it, enabling accurate S0i3 blocking time
+> reporting in smu_fw_info.
+> 
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+
 -- 
-2.43.0
+ i.
 
+> ---
+>  drivers/platform/x86/amd/pmc/pmc.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+> index d50ea62fa2f3..4a5650f1a3a8 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc.c
+> @@ -33,6 +33,28 @@
+>  
+>  #include "pmc.h"
+>  
+> +static const struct amd_pmc_bit_map soc15_ip_blk_v3[] = {
+> +	{"VDDCR",	BIT(0)},
+> +	{"VDDCR_LP",	BIT(1)},
+> +	{"LSOCV",	BIT(2)},
+> +	{"DISPLAY",	BIT(3)},
+> +	{"VCN",		BIT(4)},
+> +	{"JPEG",	BIT(5)},
+> +	{"UMSCH",	BIT(6)},
+> +	{"VPE",		BIT(7)},
+> +	{"MPM",		BIT(8)},
+> +	{"NPU",		BIT(9)},
+> +	{"USB_HC0",	BIT(10)},
+> +	{"eUSB_HC0",	BIT(11)},
+> +	{"RT0_ADP_HC1", BIT(12)},
+> +	{"RT1_ADP_HC1", BIT(13)},
+> +	{"RT2_ADP_HC2", BIT(14)},
+> +	{"USB4_RT0",	BIT(15)},
+> +	{"USB4_RT1",	BIT(16)},
+> +	{"USB4-RT2",	BIT(17)},
+> +	{"LAPIC",	BIT(18)},
+> +};
+> +
+>  static const struct amd_pmc_bit_map soc15_ip_blk_v2[] = {
+>  	{"DISPLAY",     BIT(0)},
+>  	{"CPU",         BIT(1)},
+> @@ -159,9 +181,9 @@ static const struct amd_pmc_cpu_info amd_1ah_m80_cpu_info = {
+>  	.smu_msg	= AMD_PMC_REGISTER_MSG_1AH_80H,
+>  	.smu_arg	= AMD_PMC_REGISTER_ARG_1AH_80H,
+>  	.smu_rsp	= AMD_PMC_REGISTER_RSP_1AH_80H,
+> -	.num_ips	= ARRAY_SIZE(soc15_ip_blk),
+> +	.num_ips	= ARRAY_SIZE(soc15_ip_blk_v3),
+>  	.scratch_reg	= AMD_PMC_SCRATCH_REG_1AH,
+> -	.ips_ptr	= soc15_ip_blk,
+> +	.ips_ptr	= soc15_ip_blk_v3,
+>  	.os_hint	= MSG_OS_HINT_RN,
+>  };
+>  
+> 
