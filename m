@@ -1,36 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA3A442106;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDD643F4DD;
 	Tue,  7 Jul 2026 21:37:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783460282; cv=none; b=qnn1tkjIv0Ize+bqyCWVLGkYlhMbmL1C2Zlt54ANXhx1Tep4Wb8i38i4m4IhbA5eAAK8YjQaqCbA/Pl/5XBo2YV911SmyUw9/KNvnFWrkk9R9qFksimLgdl4soHDFBoLIezxIAmYEFs764nwpKkTxHRiEFL4ckxVvw1a0J2xjPc=
+	t=1783460283; cv=none; b=dr3FLKcC7AOQ2H2Hh0NEz/kpR8F7BLD04EGPaAzvonYAbYmZ+DkI/ee+QBnriaXlq6ca27FFaoj12vq4y7eKOasz07Dgd0V+RMhBBV2hPhtYc017hVeIfuOptykoQTZiuvWvLCpJBEzohMf+tfbpWmEVw8gh1+91AlemWT53yXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783460282; c=relaxed/simple;
-	bh=h8Koeq+uErYWzO9JN/FzYEqg1WylBLmmTQ8oSve19QQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fHhS0lzzkBc1dCSBMhMxjfbWQ4Qjfl/4q4f4M+QqqI59jl/O3bySyVnebTitPeI4DrMYpoaz2tEynDl1OdnV/c0R4/npNDAbhpm4LjSqEtNFW2DfnlfiJgLD79SqA0uraDDsBA60jLue2HoxxF0NnyS1dcGEuAMXytfjgAbxAz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=FTetyOws; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1783460283; c=relaxed/simple;
+	bh=JCWXTRsiNvrME8XvddHmlCeSPWkb0mbkcj4T/CHz33s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J+8lNNRO63s+aIZs1NzQVcsmwHbxq/Qb03S1rbzPxgzXCQVFNnCiXrhLnGW2HzVxs5JFFJDVna4yPIrrzeAIe0OHArhhTelsxJYAVoeeBHWg71vhzbb5s/Z+jCzaIIZQALxnHvrEDKm9bY13lGQ+4tUiwVdW7Zfc2SsRaZ7PuOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=GVDvSRJk; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="FTetyOws"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="GVDvSRJk"
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 413C784BFF;
+	by disroot.org (Postfix) with ESMTP id EF16B845AC;
 	Tue, 07 Jul 2026 23:37:57 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id i74d2oDti-yb; Tue,  7 Jul 2026 23:37:56 +0200 (CEST)
+ id ecp11ivTXs3U; Tue,  7 Jul 2026 23:37:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1783460276; bh=h8Koeq+uErYWzO9JN/FzYEqg1WylBLmmTQ8oSve19QQ=;
-	h=From:To:Cc:Subject:Date;
-	b=FTetyOwsc+Lk9xEew58lhHm8E0po4mGuTd9wMQtZNKFDbpA01bVKj+DxnLBaih92V
-	 WAgaYhscCngit4nCBxfbJjYkO6G5gLHfmX/Jf3HfSILJFc85KqRkUs69an+QCNOf3v
-	 uf7W8W4195XTPnZbhpkErmsNAFc7R4BtE92wh9MmmNaEIBn/k6TJ7A/ZbfeER5Vm83
-	 2Imsw5CoeN2gUm/9IbuNQ5jBZQu1QGi9PFq+JtpFJ1PUo7OCyyIaJWCFDR1yNrhL46
-	 uLsu45D0xUtNCBimWCLdLJ/ydH/eDqpo9SX5qMIiCkplUj0U9v7Y6GM/t0JCEdsfV7
-	 cQ1xyNYUTezOA==
+	t=1783460277; bh=JCWXTRsiNvrME8XvddHmlCeSPWkb0mbkcj4T/CHz33s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=GVDvSRJk38tsNE2eqd6+iCbEbEwriMGZ5TZFufHXxduCSmFP0cjhZpqmOByIhp1G0
+	 bRasbROC3HxaD2/guPW3xTp9N8XsNC+1IsxzhU6bBU63L50NCBFYg+rCeUaLE6R7zD
+	 Jjfr7Q4S3U6lrHdFqNAY4poAtSr0hSi5nsGAC2B1uDVdEZp18He27n+HMJhNFFODZ+
+	 jgB/IKbBpOOqy6GsiZm2x+aBbJMEUtKM/rfI4dYxGhExRbhsvY4dyBUx72pJrz5XRK
+	 HB6nTZCrl34qV4D85rU9sLHcL8Acvq+3unToVoWnDNryGTuy88HnSvr0OSqGRxcFYC
+	 6vyHIHFKaDkoA==
 From: Marco Scardovi <scardracs@disroot.org>
 To: scardracs@disroot.org
 Cc: corentin.chary@gmail.com,
@@ -40,9 +41,11 @@ Cc: corentin.chary@gmail.com,
 	linux-kernel@vger.kernel.org,
 	luke@ljones.dev,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v4 0/2] platform/x86: asus-armoury: fix init errors and modernize resource management
-Date: Tue,  7 Jul 2026 23:36:10 +0200
-Message-ID: <20260707213741.6515-1-scardracs@disroot.org>
+Subject: [PATCH v4 2/2] platform/x86: asus-armoury: use cleanup.h to manage tunables
+Date: Tue,  7 Jul 2026 23:36:12 +0200
+Message-ID: <20260707213741.6515-3-scardracs@disroot.org>
+In-Reply-To: <20260707213741.6515-1-scardracs@disroot.org>
+References: <20260707213741.6515-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,57 +54,65 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series addresses a Use-After-Free vulnerability and a memory
-leak during driver initialization in the asus-armoury driver, and
-modernizes its memory management.
+Convert init_rog_tunables() to use the cleanup infrastructure to
+automatically free ac_rog_tunables if dc_rog_tunables allocation fails.
 
-Patch 1 fixes the UAF and memory leak by propagating the error code
-from init_rog_tunables(), deferring the global pointer updates, and
-adding a rollback path.
+By declaring local pointers with the __free(kfree) attribute, the
+manual kfree() in the error path can be removed. Upon successful
+initialization, the ownership is transferred to the global struct
+using no_free_ptr().
 
-Patch 2 refactors init_rog_tunables() to use the cleanup infrastructure
-via __free(kfree) and no_free_ptr() to automate memory management and
-prevent future leaks.
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
+ drivers/platform/x86/asus-armoury.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Changes in v4:
-- Rebased on top of next-20260707 to resolve conflicts cleanly.
-  No functional changes applied.
-
-Changes in v3:
-- Added a second patch to convert init_rog_tunables() to use the
-  __free(kfree) and no_free_ptr() cleanup helper macros.
-- Added #include <linux/cleanup.h>.
-Thread for v3:
-https://lore.kernel.org/platform-driver-x86/20260703103212.7406-1-scardracs@disroot.org/
-
-Changes in v2:
-- Restructured init_rog_tunables() to use local pointers
-  (ac_rog_tunables, dc_rog_tunables) and only update the global
-  static asus_armoury.rog_tunables structure once all allocations
-  have successfully succeeded. This removes the risk of exposing
-  freed or partially allocated pointers to the global struct.
-- Removed redundant assignments to NULL in the error paths. Since
-  initialization fails and the driver is not loaded, cleaning the
-  global static pointers to NULL is not necessary.
-- In init_rog_tunables(), replaced 'goto err_nomem' with direct
-  'return -ENOMEM'. The 'err_nomem' label in the original code
-  printed a generic OOM error message, which is discouraged in the
-  kernel as the allocator already issues OOM details. Because that
-  label did not perform rollback cleanup, a direct return is cleaner
-  and simpler.
-- Replaced inline cleanup in asus_fw_init() with a standard goto
-  rollback block at the end of the function for cleaner error path
-  styling.
-Thread for v2:
-https://lore.kernel.org/platform-driver-x86/20260701164333.5219-1-scardracs@disroot.org/
-
-Marco Scardovi (2):
-  platform/x86: asus-armoury: fix Use-After-Free and memory leak in
-    driver init
-  platform/x86: asus-armoury: use cleanup.h to manage tunables
-
- drivers/platform/x86/asus-armoury.c | 46 ++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index fa7d0485c712..93d9665717af 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -16,6 +16,7 @@
+ #include <linux/acpi.h>
+ #include <linux/array_size.h>
+ #include <linux/bitfield.h>
++#include <linux/cleanup.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
+ #include <linux/err.h>
+@@ -1010,7 +1011,8 @@ static int asus_fw_attr_add(void)
+ static int init_rog_tunables(void)
+ {
+ 	const struct power_limits *ac_limits, *dc_limits;
+-	struct rog_tunables *ac_rog_tunables = NULL, *dc_rog_tunables = NULL;
++	struct rog_tunables *ac_rog_tunables __free(kfree) = NULL;
++	struct rog_tunables *dc_rog_tunables __free(kfree) = NULL;
+ 	const struct power_data *power_data;
+ 	const struct dmi_system_id *dmi_id;
+ 
+@@ -1080,10 +1082,8 @@ static int init_rog_tunables(void)
+ 	dc_limits = power_data->dc_data;
+ 	if (dc_limits) {
+ 		dc_rog_tunables = kzalloc_obj(*dc_rog_tunables);
+-		if (!dc_rog_tunables) {
+-			kfree(ac_rog_tunables);
++		if (!dc_rog_tunables)
+ 			return -ENOMEM;
+-		}
+ 
+ 		dc_rog_tunables->power_limits = dc_limits;
+ 
+@@ -1124,8 +1124,8 @@ static int init_rog_tunables(void)
+ 		pr_debug("No DC PPT limits defined\n");
+ 	}
+ 
+-	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] = ac_rog_tunables;
+-	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC] = dc_rog_tunables;
++	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_AC] = no_free_ptr(ac_rog_tunables);
++	asus_armoury.rog_tunables[ASUS_ROG_TUNABLE_DC] = no_free_ptr(dc_rog_tunables);
+ 
+ 	return 0;
+ }
 -- 
 2.55.0
+
