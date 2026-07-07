@@ -1,347 +1,617 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F4B41D4CE;
-	Tue,  7 Jul 2026 13:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00AEA41DECD
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 13:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783431157; cv=none; b=t0rXO5UI+so6s7lr0Nt8SaqvqDiSlGxUbd3G1aU2jdvUcsiAU/wpy2CslGg/RRgYuP0u+Y4uU0kPrh59uc4kw9nXyWWv5dKM3xfKU8m9U1T8E03UNyk4x6Zv4I4rclFP/z3u8ZxlNxD4Bp4ootcEMywZsJd+Pe9krzue+uEisMQ=
+	t=1783431655; cv=none; b=gLahT/JSE7ViFFiqm1RgswkxA9oKGgny0b9EqVb6srYzz3bUW0X7cPCA0uEGUUmpT8QCOqa00MI3elmg1x5anATm9gH8usIyY7rqMwvxNSCMWI3hodP7ZI2NhjEAvX+pImXVUQ2G4FBbvAcoASVcPCsWk8E4fkit1eGKu4ERQ5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783431157; c=relaxed/simple;
-	bh=nvIOop0wkzf0lbjWCF3/zxj3ywTCvsCVOIEs1kM1fFM=;
+	s=arc-20240116; t=1783431655; c=relaxed/simple;
+	bh=7xJgmucfAVEMkOyzCnRHuLS/bLht+FKK++Rjtn4gLE4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Nso5oyxuBXQhT2a68y6+9eKnUYRwh8JgyDzhdEKTDeGE9eRqtWZDJ/wLbhkxBq8LF7Mtjun6neEHzqIzoLno4quxcl3ru02eS7/Eb4Q2Vxbl+HChywFvNUOV0uEVmSyHeW6st963jHvhHneIhf74c/EJuSrySlsnOVES3GZri/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PdhuXOqs; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=P3buJzDt0kpOQEKdtftotBABwBrxPKOYnDbSal3I0G0frJbSPZXiDHspPEsblwKJBZq5L7Xj2geB4+a5KoZPtfF0xmYrbBaqiRBPX/jhqsVrWW7vVCQJPVfHiEMn1mlWZ8sBsCQNc7TKN0FlQKml7di6Iukf1eGn3jrC17J9Uw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EUmBb4zT; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PdhuXOqs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EUmBb4zT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783431156; x=1814967156;
+  t=1783431653; x=1814967653;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=nvIOop0wkzf0lbjWCF3/zxj3ywTCvsCVOIEs1kM1fFM=;
-  b=PdhuXOqskDrNTYoQ8tMRUA/V844YKMxXZ1pQS+U3CuRqiWqNVoBEBcXB
-   Hi9cpBHnNjTrLOLuY0izsumSzqfDLe+nnpmqy3jl6MvvffJGr/25+a6SY
-   4MIi14V2oZKgZ2DLBbVws3MC4KJgkCdaL/cJyyj3lTjSbzjUt+XnuFCtt
-   0hj9PvqSXeFCL/pYsz2pFzJF/9Tt7UVfTw+L1WbZuMKoM5W12RQbpb5/R
-   uEdCVQYOpFaeOnXk1j6mD2rWIFq+ahpB1mN/y0qp1lVBDBdtAKzZTueec
-   D8oD8OsEbcQCgq2+ozKS+kGeNRxeFzynDoOcm1AOC3HbF37EhsFyM8VYB
-   Q==;
-X-CSE-ConnectionGUID: eyL7N0skRuCccIyzTvOwaA==
-X-CSE-MsgGUID: 9tcXnjdbRoe0ZkcuPtrEFA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84267097"
+  bh=7xJgmucfAVEMkOyzCnRHuLS/bLht+FKK++Rjtn4gLE4=;
+  b=EUmBb4zTB288WYuYiou7oolYovhUv0v65+BdNJzyAEIaJAPEnWpHtC4k
+   haquy7i/uBe8cC9cjTEtIGqmod3ye9d/JZzop81z4S++uolAF4pjo2Ias
+   Ob+0nGLgjGVbZlyuUHN/wzZDW2HfjqdTuv5upIiY5AMl65x5aqSDsT7q3
+   olujrQUOrSAbwzr8pPrjgmWrSKzQ6GP8pghRwPun3KM5we4p4viE+wYoT
+   T/PdJoYKYNA9youFayocF570gcJz+kxqJ1xrzPtX9peYAuXmZlColvrez
+   QpesQLmC6xfjitANP0O7lTdE+dOEuuusOkYAOIRRfZagItK0K71vwcD+/
+   A==;
+X-CSE-ConnectionGUID: DeoGCbyMSseSzWFplHeHNQ==
+X-CSE-MsgGUID: oLHJ6yeJSx2/fHzODgLcTw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="101623308"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="84267097"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:32:36 -0700
-X-CSE-ConnectionGUID: AvFGhoisQ06gXwv+p7NYfQ==
-X-CSE-MsgGUID: T69eIJ1HTJKL28VAlr6/Yw==
+   d="scan'208";a="101623308"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:40:52 -0700
+X-CSE-ConnectionGUID: ooel8/bgSNWo0OW5kDGRpQ==
+X-CSE-MsgGUID: Z+FMrnIfQMSg0T2zMl6jUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="277220107"
+   d="scan'208";a="284108717"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.226])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:32:31 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:40:50 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 7 Jul 2026 16:32:28 +0300 (EEST)
-To: Vishnu Sankar <vishnuocv@gmail.com>
-cc: Mark Pearson <mpearson-lenovo@squebb.ca>, skhan@linuxfoundation.org, 
-    corbet@lwn.net, hmh@hmh.eng.br, Hans de Goede <hansg@kernel.org>, 
-    derekjohn.clark@gmail.com, LKML <linux-kernel@vger.kernel.org>, 
-    ibm-acpi-devel@lists.sourceforge.net, linux-doc@vger.kernel.org, 
-    platform-driver-x86@vger.kernel.org, vsankar@lenovo.com
-Subject: Re: [PATCH v3] platform/x86: thinkpad_acpi: Add USB-C Security (USCS)
- support
-In-Reply-To: <20260613225736.30906-1-vishnuocv@gmail.com>
-Message-ID: <2c7578ec-432e-e77c-c19f-668e2edc1733@linux.intel.com>
-References: <20260613225736.30906-1-vishnuocv@gmail.com>
+Date: Tue, 7 Jul 2026 16:40:47 +0300 (EEST)
+To: Dave Carey <carvsdriver@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, 
+    Hans de Goede <hansg@kernel.org>, johannes.goede@oss.qualcomm.com
+Subject: Re: [PATCH v11 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard
+ dock detection driver
+In-Reply-To: <20260623125914.833063-3-carvsdriver@gmail.com>
+Message-ID: <7897a6df-25d4-bb3d-0804-64d9f9298ee0@linux.intel.com>
+References: <8f84ca57-b856-4da0-8d90-e2be414f8997@gmx.de> <20260623125914.833063-1-carvsdriver@gmail.com> <20260623125914.833063-3-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-1931719807-1783431647=:1152"
 
-On Sun, 14 Jun 2026, Vishnu Sankar wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
-> When active, USB-C data connections are disabled while power delivery is
-> preserved. This is useful for kiosk and physically-secured deployments.
-> 
-> Hardware interface:
-> 
-> The HKEY device exposes a read-only ACPI method USCS():
-> 
->   Return value bit layout:
->     Bit 16 : Capability flag (1 = feature present on this SKU)
->     Bit  0 : Current state  (0 = security OFF, 1 = security ON)
-> 
-> The sysfs attribute is read-only.
-> 
-> The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
-> hardware state.
-> 
-> Hotkey:
-> 
-> Fn+U followed by Fn+S generates HKEY event 0x131e.
-> 
-> sysfs interface:
-> 
->   /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
->   "enabled\n"  -- data connections are currently blocked
->   "disabled\n" -- data connections are currently allowed
-> 
->   The attribute is hidden on SKUs where the USCS capability bit (bit 16)
->   is not set, so there is no ABI impact on unsupported hardware.
-> 
-> Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
+--8323328-1931719807-1783431647=:1152
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 23 Jun 2026, Dave Carey wrote:
+
+> The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
+> that magnetically attaches to the bottom (secondary) screen in one of two
+> positions.  The Embedded Controller tracks the attachment state in a 2-bi=
+t
+> field called BKBD and signals changes via WMI event GUID
+> 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
+> device, _UID "GMZN").
+>=20
+> The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
+> both WMI interfaces used by this driver:
+>=20
+>   LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
+>   The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
+>   so the notify callback receives BKBD without a separate query.
+>=20
+>   LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
+>   8-byte buffer {uint32 IDs=3D0x00060000, uint32 Status=3DBKBD}.
+>   Used for the initial state read on probe and after resume.
+>=20
+> BKBD encoding:
+>   0 =3D keyboard detached
+>   1 =3D keyboard docked on top half of bottom screen
+>   2 =3D keyboard docked on bottom half of bottom screen
+>   3 =3D reserved (not observed in practice)
+>=20
+> This driver registers two WMI drivers sharing a module-level
+> BLOCKING_NOTIFIER_HEAD:
+>=20
+>   - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
+>     a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
+>     value extracted from the buffer.
+>=20
+>   - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
+>     its per-device private struct.  At probe time it registers a
+>     notifier_block on the chain and reads the initial BKBD state via
+>     wmidev_query_block().  The WMI buffer is parsed as
+>     struct lenovo_feature_status { __le32 id; __le32 status; }, and the
+>     ID field is verified before the status is used.
+>=20
+>   - SW_TABLET_MODE=3D1 is reported when the keyboard is detached;
+>     SW_TABLET_MODE=3D0 when docked in either position (keyboard present).
+>=20
+>   - The raw BKBD value is exposed via read-only sysfs attribute
+>     "keyboard_position".
+>=20
+>   - BKBD state is re-read via wmidev_query_block() on resume from
+>     suspend or hibernation.
+>=20
+> Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
+>=20
+> Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
 > ---
-> Changes since v2:
-> - Move usbc_security_enabled out of tp_features bitfield to a bool
->   member of tp_features to avoid unsafe concurrent bitfield RMW;
->   usbc_security_supported remains a bitfield as it is init-only.
-> - Pass &tp_features.usbc_security_enabled directly to
->   usbc_security_query() removing the local bool intermediary
->   in both init and hotkey paths.
-> - Remove extra blank line before */ in block comment.
-> - Fix kerneldoc Returns: syntax and rewrite return value description
->   to match the int return type.
-> - Split ternary return into two separate if statements for clarity
-> 
-> Changes since v1:
-> - Use guard(mutex) from cleanup.h instead of manual mutex_lock/unlock
-> - Revert usbc_security_query() to return int (-EIO/-ENODEV/0) instead
->   of bool to avoid uninitialized *enabled bug on unsupported platforms
-> - Remove !! when assigning to bool in usbc_security_query()
-> - Remove dead tp_features.usbc_security_supported check in show()
->   since is_visible() already gates the attribute on unsupported SKUs
-> - Use str_enabled_disabled() from string_choices.h in show()
-> - Fix uninitialized *enabled bug in tpacpi_usbc_security_init() by
->   only assigning usbc_security_enabled after a successful query
-> ---
->  .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
->  drivers/platform/x86/lenovo/thinkpad_acpi.c   | 116 ++++++++++++++++++
->  2 files changed, 140 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index f874db31801d..db4588af0278 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -1543,6 +1543,30 @@ Values:
->  
->  	This setting can also be toggled via the Fn+doubletap hotkey.
->  
-> +USB-C Security
-> +--------------
+> v11:
+> - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3"; these
+>   fields should reflect when the ABI lands in the kernel, not the
+>   submission date (Armin Wolf).
+>=20
+> v5:
+> - Rewrote as two WMI drivers (event + block) to avoid the deprecated
+>   wmi_query_block() API: event driver owns the GUID that delivers
+>   notifications, block driver owns the GUID used for querying state.
+>   Either can probe first; both probe callbacks check whether the other
+>   has already probed and fire the initial read when both are ready.
+> - Use wmidev_block_query() on the block wmi_device directly (replaces
+>   the deprecated wmi_query_block()).
+> - In the notify callback, read BKBD directly from the event data integer
+>   passed by the WMI core (_WED(0xEB) returns EC.BKBD; confirmed by
+>   decoding the embedded BMOF from WQDD).  Eliminates the redundant WQAF
+>   call that v4 made on every notification.
+> - Documented the two BMOF classes (LENOVO_BTKBD_EVENT and
+>   LENOVO_FEATURE_STATUS_DATA) with field layouts in the commit message
+>   and file header.
+> - sysfs keyboard_position: output bare integer, drop the parenthetical
+>   position-name suffix that a couple of reviewers found non-standard.
+> - Set .no_singleton =3D true on both WMI drivers (was missing from block
+>   driver in v4).
+> - Add PM resume callback (yb9_kbdock_resume) to re-read BKBD state
+>   after suspend/hibernation.
+>=20
+> v4:
+> - Dropped module_wmi_driver(); registered two WMI drivers manually to
+>   allow sharing state.  module_init/exit pair registers/unregisters
+>   both.
+> - Added ATTRIBUTE_GROUPS() and .dev_groups for the sysfs attribute.
+> - sysfs show: performed a live query instead of returning a cached value.
+>=20
+> v3:
+> - Switched to devm_input_allocate_device().
+> - Added DMI guard (dmi_check_system) to reject non-YB9 machines.
+> - Removed redundant MODULE_DEVICE_TABLE on block driver.
+>=20
+> v2:
+> - Added .no_singleton =3D true on the event WMI driver.
+> - Added PM suspend/resume skeleton.
+> - Fixed MODULE_LICENSE to "GPL" (was "GPL v2").
+>=20
+>  .../testing/sysfs-driver-lenovo-yb9-kbdock    |  19 ++
+>  MAINTAINERS                                   |   7 +
+>  drivers/platform/x86/lenovo/Kconfig           |  14 +
+>  drivers/platform/x86/lenovo/Makefile          |   1 +
+>  drivers/platform/x86/lenovo/yb9-kbdock.c      | 310 ++++++++++++++++++
+>  5 files changed, 351 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbd=
+ock
+>  create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/D=
+ocumentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> new file mode 100644
+> index 0000000..ebe713a
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> @@ -0,0 +1,19 @@
+> +What:=09=09/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_positi=
+on
+> +Date:=09=09June 2027
+> +KernelVersion:=097.3
+> +Contact:=09Dave Carey <carvsdriver@gmail.com>
+> +Description:
+> +=09=09Read-only attribute reporting the current keyboard dock position
+> +=09=09as reported by the Embedded Controller on the Lenovo Yoga Book 9
+> +=09=0914IAH10.
 > +
-> +sysfs: usb_c_security
+> +=09=09Possible values:
 > +
-> +Reports the current state of the USB-C Security (Restricted Mode) feature
-> +on supported ThinkPad systems. When enabled, USB-C data connections are
-> +disabled while power delivery is preserved.
+> +=09=09=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +=09=090   keyboard is not docked to any screen (detached)
+> +=09=091   keyboard docked on the top half of the bottom screen
+> +=09=092   keyboard docked on the bottom half of the bottom screen
+> +=09=09=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +The available command is::
+> +=09=09SW_TABLET_MODE input events are also emitted: 0 when the keyboard
+> +=09=09is docked (either position), 1 when detached.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d1cc0e1..00e8275 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14479,6 +14479,13 @@ L:=09platform-driver-x86@vger.kernel.org
+>  S:=09Maintained
+>  F:=09drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
+> =20
+> +LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
+> +M:=09Dave Carey <carvsdriver@gmail.com>
+> +L:=09platform-driver-x86@vger.kernel.org
+> +S:=09Maintained
+> +F:=09Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+> +F:=09drivers/platform/x86/lenovo/yb9-kbdock.c
 > +
-> +        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
+>  LETSKETCH HID TABLET DRIVER
+>  M:=09Hans de Goede <hansg@kernel.org>
+>  L:=09linux-input@vger.kernel.org
+> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/l=
+enovo/Kconfig
+> index 9c48487..938b361 100644
+> --- a/drivers/platform/x86/lenovo/Kconfig
+> +++ b/drivers/platform/x86/lenovo/Kconfig
+> @@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
+>  =09  To compile this driver as a module, choose M here: the module
+>  =09  will be called lenovo-wmi-camera.
+> =20
+> +config LENOVO_YB9_KBDOCK
+> +=09tristate "Lenovo Yoga Book 9 keyboard dock detection"
+> +=09depends on ACPI_WMI
+> +=09depends on DMI
+> +=09depends on INPUT
+> +=09help
+> +=09  Say Y here to enable keyboard dock detection on the Lenovo Yoga Boo=
+k 9
+> +=09  14IAH10.  The detachable Bluetooth keyboard magnetically attaches t=
+o
+> +=09  either screen; this driver reports SW_TABLET_MODE input events base=
+d
+> +=09  on the attachment state and exposes the raw position in sysfs.
 > +
-> +Values:
+> +=09  To compile this driver as a module, choose M here: the module will =
+be
+> +=09  called lenovo-yb9-kbdock.
 > +
-> +	* ``enabled``  - USB-C data connections are currently blocked
-> +	* ``disabled`` - USB-C data connections are currently allowed
+>  config LENOVO_YMC
+>  =09tristate "Lenovo Yoga Tablet Mode Control"
+>  =09depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/=
+lenovo/Makefile
+> index 7b2128e..2842d7d 100644
+> --- a/drivers/platform/x86/lenovo/Makefile
+> +++ b/drivers/platform/x86/lenovo/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)=09+=3D think-lmi.o
+>  obj-$(CONFIG_THINKPAD_ACPI)=09+=3D thinkpad_acpi.o
+> =20
+>  lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)=09+=3D wmi-hotkey-ut=
+ilities.o
+> +lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)=09+=3D yb9-kbdock.o
+>  lenovo-target-$(CONFIG_LENOVO_YMC)=09+=3D ymc.o
+>  lenovo-target-$(CONFIG_YOGABOOK)=09+=3D yogabook.o
+>  lenovo-target-$(CONFIG_YT2_1380)=09+=3D yoga-tab2-pro-1380-fastcharger.o
+> diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/=
+x86/lenovo/yb9-kbdock.c
+> new file mode 100644
+> index 0000000..dbf7ff4
+> --- /dev/null
+> +++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
+> @@ -0,0 +1,310 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Lenovo Yoga Book 9 keyboard-dock detection
+> + *
+> + * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magne=
+tically
+> + * attaches to the bottom screen in one of two positions.  The EC tracks
+> + * attachment state in a 2-bit field called BKBD and signals changes via=
+ WMI
+> + * event 0xEB on the WM10 ACPI device (_UID "GMZN").
+> + *
+> + * BKBD values:
+> + *   0 =3D keyboard detached
+> + *   1 =3D keyboard docked on the top half of the bottom screen
+> + *   2 =3D keyboard docked on the bottom half of the bottom screen
+> + *   3 =3D reserved / not observed
+> + *
+> + * Two WMI interfaces are used (documented in embedded BMOF, WQDD, 20705=
+ bytes):
+> + *
+> + *   LENOVO_BTKBD_EVENT (event GUID, 806BD2A2-...)
+> + *     WmiDataId(1) uint32 Status =E2=80=94 _WED(0xEB) returns EC.BKBD d=
+irectly.
+> + *     The notify callback receives BKBD as an integer; no separate quer=
+y needed.
+> + *
+> + *   LENOVO_FEATURE_STATUS_DATA (block GUID, E7F300FA-...)
+> + *     WmiDataId(1) uint32 IDs   =3D 0x00060000 (feature selector)
+> + *     WmiDataId(2) uint32 Status =3D BKBD value
+> + *     Used on probe and resume to read initial state.
+> + *
+> + * The event driver (LENOVO_BTKBD_EVENT) fires a notifier chain on each =
+WMI
+> + * event.  The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_=
+dev
+> + * and registers a notifier_block to receive those events, eliminating t=
+he
+> + * need for shared global state or a mutex.
+> + *
+> + * SW_TABLET_MODE=3D1 is reported when the keyboard is detached;
+> + * SW_TABLET_MODE=3D0 when docked in either position (keyboard present).
+> + * The raw BKBD value is exposed via the sysfs attribute "keyboard_posit=
+ion".
+> + *
+> + * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
+> + */
 > +
-> +The attribute is read-only. The USB-C Security state can only be toggled
-> +via the Fn+U followed by Fn+S hotkey chord.
-> +
-> +The sysfs attribute is not created on platforms that do not support this
-> +feature.
-> +
->  Auxmac
->  ------
->  
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index e1cee42a1683..59b485a57ffe 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -38,6 +38,7 @@
->  #include <linux/backlight.h>
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
+> +#include <linux/acpi.h>
 > +#include <linux/cleanup.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
->  #include <linux/freezer.h>
-> @@ -66,6 +67,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> +#include <linux/string_choices.h>
->  #include <linux/string_helpers.h>
->  #include <linux/sysfs.h>
->  #include <linux/types.h>
-> @@ -185,6 +187,7 @@ enum tpacpi_hkey_event_t {
->  	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
->  	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
->  	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
-> +	TP_HKEY_EV_USB_C_SECURITY	= 0x131e, /* USB C Security (Fn+U, Fn+S) */
->  	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
->  	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
->  
-> @@ -373,6 +376,8 @@ static struct {
->  	u32 has_adaptive_kbd:1;
->  	u32 kbd_lang:1;
->  	u32 trackpoint_doubletap_enable:1;
-> +	u32 usbc_security_supported:1;
-> +	bool usbc_security_enabled;
->  	struct quirk_entry *quirks;
->  } tp_features;
->  
-> @@ -11265,6 +11270,110 @@ static struct ibm_struct hwdd_driver_data = {
->  	.name = "hwdd",
->  };
->  
-> +/*************************************************************************
-> + * USB-C Security subdriver
-> + *
-> + * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
-> + * It always returns:
-> + *   bit 16 - USB-C security capability present on this SKU or not
-> + *   bit  0 - USB-C Security state (enable or disable)
-> + *
-> + * Hotkey
-> + * ------
-> + * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
-> + * The driver reads back the new state and notifies the sysfs attribute.
+> +#include <linux/dev_printk.h>
+> +#include <linux/dmi.h>
+> +#include <linux/input.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/pm.h>
+> +#include <linux/slab.h>
+> +#include <linux/wmi.h>
+> +
+> +#define YB9_KBDOCK_EVENT_GUID=09"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
+> +#define YB9_KBDOCK_QUERY_GUID=09"E7F300FA-21CD-4003-ADAC-2696135982E6"
+> +
+> +/* BKBD encoding */
+> +#define BKBD_DETACHED=09=090
+> +
+> +/* LENOVO_FEATURE_STATUS_DATA feature selector */
+> +#define YB9_FEATURE_STATUS_ID=090x00060000u
+> +
+> +/*
+> + * LENOVO_FEATURE_STATUS_DATA: 8-byte buffer {uint32 IDs, uint32 Status}=
+=2E
+> + * IDs is always 0x00060000; Status holds the BKBD value (0=E2=80=933).
 > + */
-> +
-> +/* USCS() return word bit layout */
-> +#define USCS_CAP_BIT		BIT(16)	/* capability: feature present on SKU */
-> +#define USCS_STATUS_BIT		BIT(0)	/* current security state */
-> +
-> +static DEFINE_MUTEX(usbc_security_mutex);
+> +struct lenovo_feature_status {
+> +=09__le32 id;
+> +=09__le32 status;
+> +} __packed;
 
-Please add a comment to document what the lock protects.
+Add includes for __packed and __le32.
 
 > +
-> +/**
-> + * usbc_security_query - read current USB-C security state via USCS()
-> + * @enabled: out - true when security is ON (data connections blocked)
-> + *
-> + * Returns:
-> + *   0        success, @enabled contains the current state
-> + *  -EIO      ACPI evaluation failed
-> + *  -ENODEV   capability bit absent; feature not present on this SKU*
-> + */
-> +static int usbc_security_query(bool *enabled)
+> +/* ------------------------------------------------------------------
+> + * Notifier chain =E2=80=94 event driver fires it, block driver listens
+> + * ------------------------------------------------------------------ */
+> +
+> +static BLOCKING_NOTIFIER_HEAD(yb9_kbdock_chain_head);
+> +
+> +static void devm_yb9_kbdock_unregister_notifier(void *data)
 > +{
-> +	int status;
+> +=09struct notifier_block *nb =3D data;
 > +
-> +	guard(mutex)(&usbc_security_mutex);
-> +	if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0))
-> +		return -EIO;
-> +
-> +	if (!(status & USCS_CAP_BIT)) {
-> +		pr_debug("USCS cap bit absent (raw=0x%x)\n", status);
-> +		return -ENODEV;
-> +	}
-> +
-> +	*enabled = status & USCS_STATUS_BIT;
-> +	return 0;
+> +=09blocking_notifier_chain_unregister(&yb9_kbdock_chain_head, nb);
 > +}
 > +
-> +/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------- */
-> +static ssize_t usb_c_security_show(struct device *dev,
-> +				   struct device_attribute *attr,
-> +				   char *buf)
+> +static int devm_yb9_kbdock_register_notifier(struct device *dev,
+> +=09=09=09=09=09      struct notifier_block *nb)
 > +{
-> +	return sysfs_emit(buf, "%s\n",
-> +			  str_enabled_disabled(tp_features.usbc_security_enabled));
+> +=09int ret;
+> +
+> +=09ret =3D blocking_notifier_chain_register(&yb9_kbdock_chain_head, nb);
+> +=09if (ret < 0)
+> +=09=09return ret;
+> +
+> +=09return devm_add_action_or_reset(dev, devm_yb9_kbdock_unregister_notif=
+ier, nb);
 > +}
 > +
-> +static DEVICE_ATTR_RO(usb_c_security);
+> +/* ------------------------------------------------------------------
+> + * Block WMI driver =E2=80=94 LENOVO_FEATURE_STATUS_DATA
+> + * (owns input_dev, sysfs, PM resume)
+> + * ------------------------------------------------------------------ */
 > +
-> +static struct attribute *usbc_security_attributes[] = {
-> +	&dev_attr_usb_c_security.attr,
-> +	NULL,
+> +struct yb9_kbdock_data {
+> +=09struct wmi_device=09*wdev;
+> +=09struct input_dev=09*input_dev;
+> +=09struct notifier_block=09 nb;
 > +};
 > +
-> +static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
-> +					     struct attribute *attr, int n)
+> +static int yb9_kbdock_query(struct yb9_kbdock_data *d)
 > +{
-> +	return tp_features.usbc_security_supported ? attr->mode : 0;
+> +=09struct wmi_buffer out =3D {};
+> +=09int ret;
+> +
+> +=09ret =3D wmidev_query_block(d->wdev, 0, &out,
+> +=09=09=09=09 sizeof(struct lenovo_feature_status));
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09struct lenovo_feature_status *fs __free(kfree) =3D out.data;
+> +
+> +=09if (le32_to_cpu(fs->id) !=3D YB9_FEATURE_STATUS_ID)
+> +=09=09return -EIO;
+> +
+> +=09return le32_to_cpu(fs->status);
 > +}
 > +
-> +static const struct attribute_group usbc_security_attr_group = {
-> +	.is_visible = usbc_security_attr_is_visible,
-> +	.attrs = usbc_security_attributes,
-> +};
-> +
-> +static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
+> +static void yb9_kbdock_report(struct yb9_kbdock_data *d, u32 bkbd)
 > +{
-> +	int err;
+> +=09int tablet =3D (bkbd =3D=3D BKBD_DETACHED) ? 1 : 0;
 > +
-> +	err = usbc_security_query(&tp_features.usbc_security_enabled);
-> +	if (err == -ENODEV)
-> +		return 0;
-> +	if (err)
-> +		return err;
-> +
-> +	tp_features.usbc_security_supported = true;
-> +	return 0;
+> +=09input_report_switch(d->input_dev, SW_TABLET_MODE, tablet);
+> +=09input_sync(d->input_dev);
+> +=09dev_dbg(&d->wdev->dev, "BKBD=3D%u SW_TABLET_MODE=3D%d\n", bkbd, table=
+t);
 > +}
 > +
-> +/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
-> +static bool tpacpi_usbc_security_hotkey(void)
+> +static void yb9_kbdock_sync(struct yb9_kbdock_data *d)
 > +{
-> +	if (!tp_features.usbc_security_supported)
-> +		return false;
+> +=09int bkbd =3D yb9_kbdock_query(d);
 > +
-> +	if (usbc_security_query(&tp_features.usbc_security_enabled))
-> +		return false;
-> +
-> +	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
-> +	return true;
+> +=09if (bkbd >=3D 0)
+> +=09=09yb9_kbdock_report(d, bkbd);
 > +}
 > +
-> +static struct ibm_struct usbc_security_driver_data = {
-> +	.name = "usbc_security",
-> +};
+> +static int yb9_kbdock_nb_call(struct notifier_block *nb,
+> +=09=09=09       unsigned long bkbd, void *unused)
+> +{
+> +=09struct yb9_kbdock_data *d =3D
+> +=09=09container_of(nb, struct yb9_kbdock_data, nb);
 > +
->  /* --------------------------------------------------------------------- */
->  
->  static struct attribute *tpacpi_driver_attributes[] = {
-> @@ -11325,6 +11434,7 @@ static const struct attribute_group *tpacpi_groups[] = {
->  	&dprc_attr_group,
->  	&auxmac_attr_group,
->  	&hwdd_attr_group,
-> +	&usbc_security_attr_group,
->  	NULL,
->  };
->  
-> @@ -11479,6 +11589,8 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
->  	case TP_HKEY_EV_PROFILE_TOGGLE2:
->  		platform_profile_cycle();
->  		return true;
-> +	case TP_HKEY_EV_USB_C_SECURITY:
-> +		return tpacpi_usbc_security_hotkey();
->  	}
->  
->  	return false;
-> @@ -11930,6 +12042,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
->  		.init = tpacpi_hwdd_init,
->  		.data = &hwdd_driver_data,
->  	},
-> +	{
-> +		.init = tpacpi_usbc_security_init,
-> +		.data = &usbc_security_driver_data,
-> +	},
->  };
->  
->  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
-> 
+> +=09yb9_kbdock_report(d, bkbd);
+> +=09return NOTIFY_DONE;
+> +}
+> +
+> +static ssize_t keyboard_position_show(struct device *dev,
+> +=09=09=09=09       struct device_attribute *attr,
+> +=09=09=09=09       char *buf)
+> +{
+> +=09struct yb9_kbdock_data *d =3D dev_get_drvdata(dev);
+> +=09int bkbd =3D yb9_kbdock_query(d);
+> +
+> +=09if (bkbd < 0)
+> +=09=09return bkbd;
+> +=09return sysfs_emit(buf, "%d\n", bkbd);
 
--- 
+Add include.
+
+> +}
+> +static DEVICE_ATTR_RO(keyboard_position);
+> +
+> +static const struct attribute * const yb9_kbdock_attrs[] =3D {
+> +=09&dev_attr_keyboard_position.attr,
+> +=09NULL,
+> +};
+> +ATTRIBUTE_GROUPS(yb9_kbdock);
+> +
+> +static int yb9_kbdock_resume(struct device *dev)
+> +{
+> +=09struct yb9_kbdock_data *d =3D dev_get_drvdata(dev);
+> +
+> +=09yb9_kbdock_sync(d);
+> +=09return 0;
+> +}
+> +static DEFINE_SIMPLE_DEV_PM_OPS(yb9_kbdock_pm_ops, NULL, yb9_kbdock_resu=
+me);
+> +
+> +static int yb9_kbdock_block_probe(struct wmi_device *wdev, const void *c=
+tx)
+> +{
+> +=09struct yb9_kbdock_data *d;
+> +=09struct input_dev *input_dev;
+> +=09int ret;
+> +
+> +=09d =3D devm_kzalloc(&wdev->dev, sizeof(*d), GFP_KERNEL);
+> +=09if (!d)
+> +=09=09return -ENOMEM;
+> +
+> +=09d->wdev =3D wdev;
+> +
+> +=09input_dev =3D devm_input_allocate_device(&wdev->dev);
+> +=09if (!input_dev)
+> +=09=09return -ENOMEM;
+> +
+> +=09input_dev->name=09=09=3D "Lenovo Yoga Book 9 keyboard dock switch";
+> +=09input_dev->phys=09=09=3D YB9_KBDOCK_QUERY_GUID "/input0";
+> +=09input_dev->id.bustype=09=3D BUS_HOST;
+> +=09input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
+> +
+> +=09ret =3D input_register_device(input_dev);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09d->input_dev=09=09=3D input_dev;
+> +=09d->nb.notifier_call=09=3D yb9_kbdock_nb_call;
+> +
+> +=09ret =3D devm_yb9_kbdock_register_notifier(&wdev->dev, &d->nb);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09dev_set_drvdata(&wdev->dev, d);
+> +=09yb9_kbdock_sync(d);
+> +=09return 0;
+> +}
+> +
+> +static const struct wmi_device_id yb9_kbdock_block_id_table[] =3D {
+> +=09{ .guid_string =3D YB9_KBDOCK_QUERY_GUID },
+> +=09{ }
+> +};
+> +
+> +static struct wmi_driver yb9_kbdock_block_driver =3D {
+> +=09.driver =3D {
+> +=09=09.name=09=09=3D "lenovo-yb9-kbdock",
+> +=09=09.dev_groups=09=3D yb9_kbdock_groups,
+> +=09=09.pm=09=09=3D pm_sleep_ptr(&yb9_kbdock_pm_ops),
+> +=09},
+> +=09.id_table=09=3D yb9_kbdock_block_id_table,
+> +=09.no_singleton=09=3D true,
+> +=09.probe=09=09=3D yb9_kbdock_block_probe,
+> +};
+> +
+> +/* ------------------------------------------------------------------
+> + * Event WMI driver =E2=80=94 LENOVO_BTKBD_EVENT
+> + * (fires the notifier chain on each WMI event)
+> + * ------------------------------------------------------------------ */
+> +
+> +static void yb9_kbdock_notify_new(struct wmi_device *wdev,
+> +=09=09=09=09  const struct wmi_buffer *data)
+> +{
+> +=09/*
+> +=09 * _WED(0xEB) returns EC.BKBD directly as a 32-bit integer
+> +=09 * (LENOVO_BTKBD_EVENT WmiDataId(1) uint32 Status).
+> +=09 */
+> +=09if (!data || data->length < sizeof(__le32))
+> +=09=09return;
+> +
+> +=09u32 bkbd =3D le32_to_cpu(*(const __le32 *)data->data);
+> +
+> +=09blocking_notifier_call_chain(&yb9_kbdock_chain_head, bkbd, NULL);
+> +}
+> +
+> +static const struct wmi_device_id yb9_kbdock_event_id_table[] =3D {
+> +=09{ .guid_string =3D YB9_KBDOCK_EVENT_GUID },
+> +=09{ }
+> +};
+> +MODULE_DEVICE_TABLE(wmi, yb9_kbdock_event_id_table);
+> +
+> +static struct wmi_driver yb9_kbdock_event_driver =3D {
+> +=09.driver =3D {
+> +=09=09.name =3D "lenovo-yb9-kbdock-event",
+> +=09},
+> +=09.id_table=09=3D yb9_kbdock_event_id_table,
+> +=09.no_singleton=09=3D true,
+> +=09.notify_new=09=3D yb9_kbdock_notify_new,
+> +};
+> +
+> +/* ------------------------------------------------------------------
+> + * Module init / exit
+> + * ------------------------------------------------------------------ */
+> +
+> +static const struct dmi_system_id yb9_kbdock_dmi_table[] __initconst =3D=
+ {
+> +=09{
+> +=09=09/* Lenovo Yoga Book 9 14IAH10 */
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
+> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
+> +=09=09},
+> +=09},
+> +=09{ }
+> +};
+> +
+> +static int __init yb9_kbdock_init(void)
+> +{
+> +=09int ret;
+> +
+> +=09if (!dmi_check_system(yb9_kbdock_dmi_table))
+> +=09=09return -ENODEV;
+> +
+> +=09ret =3D wmi_driver_register(&yb9_kbdock_event_driver);
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09ret =3D wmi_driver_register(&yb9_kbdock_block_driver);
+> +=09if (ret) {
+> +=09=09wmi_driver_unregister(&yb9_kbdock_event_driver);
+> +=09=09return ret;
+> +=09}
+> +
+> +=09return 0;
+> +}
+> +module_init(yb9_kbdock_init);
+> +
+> +static void __exit yb9_kbdock_exit(void)
+> +{
+> +=09wmi_driver_unregister(&yb9_kbdock_block_driver);
+> +=09wmi_driver_unregister(&yb9_kbdock_event_driver);
+> +}
+> +module_exit(yb9_kbdock_exit);
+> +
+> +MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
+> +MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
+> +MODULE_LICENSE("GPL");
+>=20
+
+--=20
  i.
 
+--8323328-1931719807-1783431647=:1152--
