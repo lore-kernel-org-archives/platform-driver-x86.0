@@ -1,164 +1,187 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010028.outbound.protection.outlook.com [52.101.56.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3983CC310
-	for <platform-driver-x86@vger.kernel.org>; Mon,  6 Jul 2026 19:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783366183; cv=none; b=ZLl9nm2J0jdxtv6Yjg8vqYlzm+/eSorgrDrI+z4NgMdkDD22pClxAiUFrybMm2RaQ4uSYK3FuWkv5MUxu8U5XuML3+NcJp0yb8wqakbT6SWgMaBP6NyHHlw1p4JbXHzxuV2uzlxPd/ltxXaSTjOpaZaC/lWj5nSZ7Len+C1APT4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783366183; c=relaxed/simple;
-	bh=w3L9gA3qWCSJOJycfuLUhr74UkEspHCqcITKn7/B1Yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kdPz8Zz1NX/kOHTiPe8U2MjLV5zzT4JPaOGNaJlSj3lqmrVAFl8hPL20I7xxWib7jJpDKmbp7E9G3wvr+CbEdZUp3+/7yI08PsvmyfE9G2mm+Q9I3iHqLMbCzOHlv7cQbvR145XmUPclCGHGaPzv5thKILPtmMg9fOsWPUS6xWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=OA23AkmY; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=V/tIcdTw; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB4E420861;
+	Tue,  7 Jul 2026 05:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783401366; cv=fail; b=qm2NK3Q62zRNP6G2wtkFZUKfywOK64JKWtEH2FGm7HCrP5sB3ied0ktx3oAg/z6DUwDIGpjsTUn4JZmAlyqbwohrzlGUFI5iaFwL5GlfI1hFemZQqNvV/QHYYaIug050ZYOnRocgU+iUwZ62w2qq9KJH5HJ7AWikNtoCt/8mgE4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783401366; c=relaxed/simple;
+	bh=1s95H4IgshmzK1jYEC7h+RY6YLAizGiU8NGvLGrtZu4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mvvgu6/8q0TkbmmQTVfy3l7aQwKZ1yyI4CSJwBbKz3xPGSUeC9gJFbleDdmZoVZZVw1djy7QC6IqH9Mz1aezbBZo49wdjcaWE0l7jb7TbYwRSoESEsMvrQncDBauoKPxZCIT1Gdk92Acq4YojR6G3VoUEp4R5dWn4ofNdUqwzqM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J4baNBWJ; arc=fail smtp.client-ip=52.101.56.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="OA23AkmY";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="V/tIcdTw"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 666FFNQa972706
-	for <platform-driver-x86@vger.kernel.org>; Mon, 6 Jul 2026 19:29:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1MNHaWIk4PBs4MJ6Wrebqp4A4AMrSu5e1jkD6u1Sr/0=; b=OA23AkmY3caOk9jB
-	dNUnlz0tTKUiOmhQT/60BasqZkYmtET8Ptz2FHtHF65SEQNdaHEKbUA7U91OLXLH
-	h0IaflwetgJaohLkZydtXvrbHM0m5kLLhYJ/fHuMbIHpSZzDFhW9U17ND/8p3aeI
-	tRdo0BCQ2mNQo/OFjrZjokhSiAx+J7MQfQ0cQnYPOzW/VQpDv1dQuCntiiXkOb/B
-	lM003tlj7LVU//H9BsGG66yxrbLqwf4J7PaFyLGzCuJDGyB3erUuiQ5g5x/qrngf
-	84FeJTr5NnBY7e5yxwajq2xT0gRruMaOHlu74kIz206u/aYC4ozBwquujD79mZEw
-	HvPzrA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f8a3r2h96-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 19:29:40 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-92e52306621so252584585a.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 06 Jul 2026 12:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783366179; x=1783970979; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1MNHaWIk4PBs4MJ6Wrebqp4A4AMrSu5e1jkD6u1Sr/0=;
-        b=V/tIcdTw3wO8CdE+BLX7cMbfXDw4oqcnUF0gB8y8xRuFAcF7PYY3tBBXGXL+OTGL98
-         m1c2Q6UIzuohG5KLVhaW6kKY1HzbsTuk+7yGXy0iE0VSTR4DTi0cK6TdTlTDwOmibigI
-         Pg8QwVawko2DFfxuYJI4+f6ZIGcubkmJfmOoM6nytuXUG5zFlcA0HRb5e1W+gmvLNbN0
-         ZusW6cG+9NkXgNHpEQxBLRhhvj09xb3Hc9j471hVooVrPOtTlwp6OPPo44gm6SvwpzfA
-         d917Sjg2lBT/TmIp+qbYpDP3rARTARHoN+ang7jSS9htr8oatFO+gKvYuF2eAj4LtFZR
-         jkMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783366179; x=1783970979;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1MNHaWIk4PBs4MJ6Wrebqp4A4AMrSu5e1jkD6u1Sr/0=;
-        b=qALch4pyzSwWyx8RXRhukFoOG9Ed2L+KLkQ8KIvvntzVTgd/59JyIBdklMwBbFoVxV
-         +2xB5o6RpmIUBQCfYZ/b+1MImYUPOFZjjIdqH/Ak1VlTbr1CUHlEjyx1o7DpbucLMB5Q
-         l0iOQB/Mii+au13GINQ+cw1uFjgCIuXx6qnaHj1X3qqm6WBDJYmLsHUxlW1zwbt3tXj0
-         IsnF142Z2c7LlzsUqzYUr9E6By2RY6LDf3R6Qw1wJ4xtgA50MTIt7g8MvG29qVjPfJwi
-         SGM5eGBNjAjs3x1EbQMfPUqhkXvioCkL38wLjz+aeRSWdBEg4mUjX/ITbQpdoCDpVgmc
-         zdeQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqmc9vWTrSp0krXyrAmXtTkXFM6aHKBrBhFc8f1SWFz2lSuI3Zd/5ZIcmZqtROGYEXoLtN7JmhT9+xNlZWO0gt6ozkS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyocaibPJwAVgqoyL751OZQqqC4rsm97mjSUhJK3V7zYRuM677H
-	qg7gRYZnYx409NLjMHenl9srT1jJ0va+pGC257ZwMID/PEu/8IGFZ6YMT4o8PcS12kh/FupRM78
-	JAqHAl9KgIudh8XbKmSCy4KtnmcZtAfsliyMo8wKYuR41Ih1m5/YfVhmo++8NGSnmy+HmAyR+Ea
-	bn
-X-Gm-Gg: AfdE7cnwjek525BRDuZ1Yo5+bWawT1y6COJJvLt7UzAJ2ZAsOaM9CHaYOWhrsGJKk3m
-	Myjz6voDK9PF0AhXN0/jD1xUfOBSFhVPK2fin0xv3aAyWtmXcL8fAK8tAg7KhF+6n47sKeS7LVc
-	cG4/DpMpTrQPC4ELRJDbUzCAxHZfafMVChTSG4kJ8OLsNXqcST57hv+c83jqMXuXIunBjkH8Ncw
-	0hvKpotf4FjCjC5iEJ0dldgFu9ans0wtkoF4JAELo4rVHFw/HiT7LBTczZNRfx9lsCtNkNsvjjC
-	HkmziwOyjnxd34NZMV/j4FnrDwfQQxIcTllfVr349zEVYEax3SX2frKxWkcd4LBCRaiNo+/C7Lh
-	IW3wBfSzhDvdGgy5JTkoxcW8ei/URoPm4lXcHwQ5qUQ6AqoUm+1o9laorKWF4RqUWmXhq8TJluV
-	ceNlCWQoa7jirh3/yaTn8TEcni
-X-Received: by 2002:a05:620a:4412:b0:92b:3720:bc59 with SMTP id af79cd13be357-92ebb4f9c01mr259962585a.28.1783366179324;
-        Mon, 06 Jul 2026 12:29:39 -0700 (PDT)
-X-Received: by 2002:a05:620a:4412:b0:92b:3720:bc59 with SMTP id af79cd13be357-92ebb4f9c01mr259956885a.28.1783366178684;
-        Mon, 06 Jul 2026 12:29:38 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aed13bb685sm3095513e87.46.2026.07.06.12.29.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 12:29:37 -0700 (PDT)
-Date: Mon, 6 Jul 2026 22:29:35 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
-Cc: sre@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-        linux@roeck-us.net, andersson@kernel.org, konradybcio@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        neil.armstrong@linaro.org, gaurav.kohli@oss.qualcomm.com,
-        manaf.pallikunhi@oss.qualcomm.com, priyansh.jain@oss.qualcomm.com
-Subject: Re: [PATCH v5 2/3] platform: arm64: lenovo-thinkpad-t14s-ec: Add
- hwmon support for temperatures
-Message-ID: <qfqoes52fjrd5ivq2tqfnua23lkm4qgyrvalik35qb4u2njmiu@5e5wugwoxkzb>
-References: <20260706184648.35613-1-daniel.lezcano@oss.qualcomm.com>
- <20260706184648.35613-3-daniel.lezcano@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J4baNBWJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aVb6TAVgLw+eYOVBXswSNfLr5zDJFrlVXPBBVjfn9akyzxl5Dan648XmceZyXTgakSuSltUh6mKUroHk2f5CzzrfHI/37DfT+G7VIK9j+J5KtSbH2g646ISBF/n7PcgeoAC1FszDl3hXpIfGaKqzX8Qciox+Q79V+f1uogBwAMnFsaoETYYC1ur0mi/suCSFaRNkOwI42WeQTE8Z/TcPMzdKJp9EwSAlMU8EeReB7kAlRhwjY+jeK1LsKJ49kp3GyHGwYGYsD0dpNwgc/4rNr5dZKDCGK1QYkgq+n9Go5o4jO1C6mwajO7451GPckoFPeWeTOXjMn52ITJSK7lcvxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hXUre6caHqK+fqFplA5A0w8c1vvuq+5rSKg9AqIo0zU=;
+ b=nd15fMvkCZyTE+anjVcHOT2tuf0jdy3plsCU/tvGwBWvu0okoXqTcQ7Sv0d5Kzrpk98SCq47JP5vYP88PJd0WNWWZTsi08d5mJRDT/wb5O2UJ74v9OANjTp6gCbvnwouzPam4zaBqxWjY1re9P9G76bTcriJQ/uXx+ZuHwCB6LFwXg36+bsisuXXFkkdqYOMaCZTKwxuKsJnl/azBZVs3sczIkCmKUj8PtaLDq+AU9SEVQ3gPdX5D1nVPRaPp1wgbm/85kkR7AijPbJbo7jgmAq+G0b6mLBKkNUuLr4FmYpjGgliM8ghUws1EjADBTCB0Qr2rmja3R+YJE9RnHqoOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hXUre6caHqK+fqFplA5A0w8c1vvuq+5rSKg9AqIo0zU=;
+ b=J4baNBWJO+44zTULvaNJisEXuvhM1vghfVatCC1MHFVuvmB6DnqskhyRX4FjtxPr/99QjUkF7rkWB9KVsR2StqZ2/SEjSfBx/ASRepsvp1aSdnPdLJ4b+rAXOShxEhKASD18/c9jybbDx/79sgdjuQDQVV9gSTqRaTPff9X3P4g=
+Received: from MN0P221CA0016.NAMP221.PROD.OUTLOOK.COM (2603:10b6:208:52a::19)
+ by IA1PR12MB6627.namprd12.prod.outlook.com (2603:10b6:208:3a1::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.15; Tue, 7 Jul
+ 2026 05:15:57 +0000
+Received: from BL6PEPF0001AB56.namprd02.prod.outlook.com
+ (2603:10b6:208:52a:cafe::2d) by MN0P221CA0016.outlook.office365.com
+ (2603:10b6:208:52a::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.9 via Frontend Transport; Tue, 7
+ Jul 2026 05:15:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF0001AB56.mail.protection.outlook.com (10.167.241.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Tue, 7 Jul 2026 05:15:56 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 7 Jul
+ 2026 00:15:54 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v3 0/5] platform/x86/amd/hsmp: ACPI/platform HSMP concurrency and lifecycle hardening
+Date: Tue, 7 Jul 2026 10:45:34 +0530
+Message-ID: <20260707051534.3381387-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260706184648.35613-3-daniel.lezcano@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDE5NyBTYWx0ZWRfX7aD41yS8icPE
- cxCyUFzhVkb5Bgm07qwjN+61XaixRaZDzwMgbIa2ro2fOcBzWxOaksteTWX6LxPg79xkTq6Qqmf
- rZZiaPA0z5t1yuWn4yZplWCcuVxhs+itMW/o1ply4toT2SVXpl+sxFsGui+TIZVAqHBD6wNf60q
- ZrsEIK2+yj4SFRq+pgysOspjONWhY5+s8OZvWQXHy9TLtnhfnq7F9GEzDcfmKxdwR4TCxqmgapc
- cxA4qKyx5ZP79ZTD5hK3aaw475uqBLc2HsqmKBokabaQQTh7rMMNXWBsgQGngfM3+H9BU8NP4Ib
- ntk0XIXQqM9dd9aXuZuuP3ebUZucOzBF2aEMHZk2rwSmrMgNdOdfG1Tm9h2jMnVLUfJ38MsxatI
- VCQcqxkBAMO8CBlnXDmjQtqc6isxkHgQXhV2D1oWOOMLYxuLrXusJ00VRecY+XxL0gF65rAHgZG
- TKioiR1Ygr4ldtOzMhA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDE5NyBTYWx0ZWRfX8fM7XSfmuck/
- IWdg4Sp2SPL6g7LZnyFc0wwbhLbEyxQynAw0dVbUATNDzHEL/iE4xmLCKqGWy+BRayMcqVda4lI
- RROj1UKD3xdU3+73XQdnxuGzK8aMeZU=
-X-Proofpoint-GUID: 8XloTq2jPpzXws7rL6Vm5jX5RtwfYyQS
-X-Proofpoint-ORIG-GUID: 8XloTq2jPpzXws7rL6Vm5jX5RtwfYyQS
-X-Authority-Analysis: v=2.4 cv=OKcXGyaB c=1 sm=1 tr=0 ts=6a4c0224 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22 a=QyXUC8HyAAAA:8
- a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=n5oyEeUQHuXu7Mk2C9cA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10 a=zZCYzV9kfG8A:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-06_02,2026-07-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 clxscore=1015 suspectscore=0
- spamscore=0 phishscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060197
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB56:EE_|IA1PR12MB6627:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb1a3ae8-73d3-4ba1-ee31-08dedbe6d361
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|82310400026|1800799024|36860700016|376014|13003099007|18002099003|11063799006|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	Wo9Qu6ivQFPMFkdL0IKohLMZzRR0NkRL2SyutpVjKv8ot9fTHO8uBsNdHMxVr8tfsP4V4Vc4COidVFL/NZ01yb0REUUPg6qeyQ9NPXJH5LdcU1tdwmNCOOD1bcwqrpCZajFOdV/mrBncM+a1Y1us/qCZijBl+LY9FoU23Ldpw+zNPwIdAyRaIrtU886OWQ8Hj061s1bqfUBYbhN9/kVQBVtFGebCRe8HKmZNGFhlJwH9pPQsGWfAG5nJk54+qAYwWOIa1JACLSR5845ikd/TTGITP2olsJwcyzfSMSCebQO6jv+0IVBfXK3ewVAiORDuKQppTRTjUfoyLw/Ek1HNlSoCIvGw5b6vSP7PyJT75sPBbr4smIxveakTB/xFl5G0P0PedA69b9VC7ZjiSM2cXByzafQ99k3aICwOR8zKZzvcgd0DipjPNrP2tbnHDyb06q8vOIKnt2OT387Rc7fCr3DDyM7uu28XaXl8LGPF/xNYuM70lCtx0GOB90QtOO/dbV5Tm28wMvg+/x0AqroH5xb9+C6G53VHCZcEARbWkiVZDZZOuWiPZATIsHLF90BelRooT1Tp8F9sawYABnike1CFBuMFHlbg5no94Kq2nCq5VyljhFXagOsOZtwGBoV98HVrEeo48Icxax3ui2kiW+x2C6LxQ+8Jt3S5ZvbrD1A=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(1800799024)(36860700016)(376014)(13003099007)(18002099003)(11063799006)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	3BiYbKsPiKXpx3aA61azhFi4bUwXLSySpx+zwfPYb0YnIdb0LG1PmHiL6fMJ6qw6yfs8KlQpS+IWSkkqm2oSxKDJoaOvOdMph6V7xmUMqhSrcgSXNt7lAnaSekO3+GKZ4yllOU7EwFrQLDM9cT60Do+ZFPVlVwxtd/tIyOLFgdmzaqfgQSLwLNY+XZBJs/uzduGJduck4UJGplIHPm5rI1lN0ogdW/OZZZVd+iwg6+etrOHv0lRmdgb9MW5hIX5UisBvS9F1grQQJfi0jgpmExR+P7EDlO7Le95G5p/FHE2RX0TEoJhnTrG6Gu/VXg095ZLihloGd0Y31lo1rtkVqip8WxXuR8xMrqDSBHDTLvDWoMqt/5zFbVXR0Tp2TPcCOA7/D9coF+k9OFAr8r8zO0I4UfoALwjDaufZmYC3nY9+/+oWnIhwC2HZD311pncH
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2026 05:15:56.8128
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb1a3ae8-73d3-4ba1-ee31-08dedbe6d361
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB56.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6627
 
-On Mon, Jul 06, 2026 at 08:46:47PM +0200, Daniel Lezcano wrote:
-> Expose the Lenovo ThinkPad T14s EC environmental sensors through
-> the hwmon subsystem.
-> 
-> The driver now registers a hwmon device providing access to six EC
-> temperature sensors corresponding to the SoC, keyboard area, base
-> cover, PMIC/charging circuitry, QTM module and SSD. Sensor labels
-> are exported to allow user space to identify each measurement.
-> 
-> This allows standard monitoring tools such as lm-sensors to report
-> platform temperatures.
-> 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on T14s OLED
-> Signed-off-by: Daniel Lezcano daniel.lezcano@oss.qualcomm.com
-> ---
->  drivers/platform/arm64/Kconfig                |   1 +
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 131 ++++++++++++++++++
->  2 files changed, 132 insertions(+)
-> 
+This series hardens the AMD HSMP ACPI and platform drivers against
+probe/remove concurrency, use-after-free of the per-socket state, and
+resource leaks across unbind/rebind cycles.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+On multi-socket systems several ACPI platform devices are probed and
+removed independently while a single /dev/hsmp and the hwmon sysfs
+attributes drive a lock-free data plane.  The existing code raced the
+global is_probed handshake and the one-time socket allocation, freed the
+socket array from under in-flight hsmp_send_message() callers, and leaked
+metric-table mappings on rebind.
+
+It sits on top of the ACPI mailbox-parsing and data-plane readiness
+cleanups (base commit ff7836fa, "Gate the data plane on a fully
+initialized socket").
+
+The patches, in order:
+
+  1. Serialize ACPI probe/remove/init_acpi() with a dedicated mutex so the
+     is_probed handshake and the one-time socket allocation cannot race.
+  2. Map the metric-table DRAM explicitly with ioremap() and unmap it from
+     the driver teardown paths, so the mapping is no longer pinned to a
+     per-socket devres scope and the ACPI side can coordinate its release.
+  3. Serialize per-socket metric-table reads with a mutex so two concurrent
+     metrics_bin readers cannot have one trigger a fresh firmware fill while
+     the other is mid-copy and return a torn snapshot.  The mutex is
+     initialized on both the platform and ACPI probe paths in this same
+     patch so no bisection point reads metrics_bin through an uninitialized
+     lock.
+  4. Replace the global is_probed flag with refcounted ACPI socket
+     ownership (a probe-mutex-guarded counter) and run a coordinated release
+     on the last unbind: deregister /dev/hsmp, unmap the metric DRAM,
+     destroy the per-socket mutexes and free the socket array.  Also drop a
+     stale metric-table mapping before remapping on rebind, and stop
+     parenting the shared /dev/hsmp to a per-socket device.
+  5. Add hsmp_sock_rwsem so the lock-free data plane (hsmp_send_message()
+     and its MMIO access) is drained and kept out while a socket is torn
+     down; wire both the platform and ACPI teardown paths into it, nested
+     inside the ACPI probe mutex.
+
+Testing:
+  - Each patch builds individually with no new warnings; the series is
+    bisectable.
+  - checkpatch.pl --strict --codespell is clean on every patch.
+
+Changes since v2:
+  - Split the old "Add explicit metric DRAM mapping and per-socket mutexes"
+    patch into two single-purpose patches: the ioremap()/unmap mapping
+    change (patch 2) and the per-socket read-serialization mutex (patch 3).
+  - Replaced the struct kref ACPI socket refcount with a simpler counter
+    guarded by the existing probe mutex, and folded the coordinated
+    release, the stale-metric-mapping-on-rebind fix and the /dev/hsmp
+    parent fix into that one patch (patch 4).
+  - Decoupled the metric-table unmap (hsmp_unmap_metric_tbls()) from the
+    mutex teardown (hsmp_destroy_metric_read_locks()) so each helper does
+    exactly one thing.
+  - Wired the ACPI metric-read mutex init/destroy in the same patch that
+    introduces the mutex, closing a bisection window where an ACPI
+    metrics_bin read could lock an uninitialized mutex.
+  - Reordered the series so all hsmp_sock_rwsem writers (platform and ACPI
+    teardown) land together in the final patch.
+
+v2: https://lore.kernel.org/platform-driver-x86/eb609912-1c42-6354-22e6-5ffd1f097e9f@linux.intel.com/T/#t
+
+Muralidhara M K (5):
+  platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
+    mutex
+  platform/x86/amd/hsmp: Map the metric table with ioremap() and unmap
+    it explicitly
+  platform/x86/amd/hsmp: Serialize per-socket metric table reads with a
+    mutex
+  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+    release
+  platform/x86/amd/hsmp: Serialize the data plane against socket
+    teardown
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 130 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 118 +++++++++++++++++++++++-
+ drivers/platform/x86/amd/hsmp/hsmp.h |  16 +++-
+ drivers/platform/x86/amd/hsmp/plat.c |  42 ++++++++-
+ 4 files changed, 286 insertions(+), 20 deletions(-)
 
 
+base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
 -- 
-With best wishes
-Dmitry
+2.34.1
+
