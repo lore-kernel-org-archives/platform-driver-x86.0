@@ -1,282 +1,394 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162102C0303;
-	Tue,  7 Jul 2026 12:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC5B3F88BA;
+	Tue,  7 Jul 2026 13:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783429071; cv=none; b=oytYyyvE2sqJqZHMrZyggTyb2an9RIa7Q5xU+kzMm8AtX+WPwJIZnibOeqwBp1153m0fO8RP4UhPoJoxavEY8nNwTWspZ7BNVB5uvZvO9zX7KD/QkvnaXutxpLSBjOXOhe9MF0CpFbO3Vn75697XB7HqltAc7HQdk42U7MHYoY0=
+	t=1783429589; cv=none; b=dXRXCOE326+XMRdNVmx2IZHqTi/BnT6fsMNq08ICqZ+HU7vpcy40u8KAofsOwevPI3YmCTMrNzGu4nvJ03BcJNCWOav4sdlhboGbuZqB/2pVT++WhFdV/kLol27Q3tIWQTO5EJ8/UB1uVsY4Iegn6GtmluuglVwSXxtCJJmFG3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783429071; c=relaxed/simple;
-	bh=05JAK6ezHh1sBS8E22kINVIzrScx55tK0GXVjjELED4=;
+	s=arc-20240116; t=1783429589; c=relaxed/simple;
+	bh=s9KsTzIpIujJFX/x/AbpZFDJ5Gix2qeUb1AgpHtXbIY=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fm5EKkICR8WPIbjK6G+rVCbDuQoXR8hcE8xoXiQx2jcgjtFzs6MsYPgCdeYkbfCjk10db5AeNqfZCnTOpQjsAzzgAQfwE1TB/wfZB8Au7YjdHkBWs3ggTHTyd3iROTVDBuRctPF1yf/6iICSYfrlrG5rrEOIJtzAekz3ktUYHVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WBiB5rtt; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=KCCCfvWnv2EMBheX70U6Qn1GFUx411ZZTnE/JbENPAU/81lvhhKjpGp3gFsk5bn2f0zggAd5vNhlS/mCNvlDlNGnrmB26OGUdxFmh4NkLvHjothLlHOJPsnhSRE6VN64XofZw93skbgarpWFozj2+czCpBC+NWGaMA9/gWqb2Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QxHTCQD+; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WBiB5rtt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QxHTCQD+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783429069; x=1814965069;
+  t=1783429588; x=1814965588;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=05JAK6ezHh1sBS8E22kINVIzrScx55tK0GXVjjELED4=;
-  b=WBiB5rttIfgHtBYdgnsjgq7YrqfNmgOrv7Jk6cq712vuWO6dfbV2bRBq
-   yQAVujA958yrP9nnX8zvwS8PAW01kE56bTHi/d8U29cBUWV/AKkFHik0/
-   1SyiLO3OcbQGzUCeqkCvgM7WQzQyhZyufATS7fatD8T9VpNKLmcNnSKv6
-   RaSAU7WLOgSzjsOHk09XNFBYXtLLQs6qBcnVs13EGtrqSLhhehSurnPJQ
-   E/eoJW8YZsNrx8lfXXV35pdTBM3YzLVyEGROGzkyzZk7Ioh/X9sSAg1Nb
-   qlThozNe9/oJuegMIz/wLKaxw2tn4v+usBiDLjmBoUL2kdjXb42uIDnOg
+  bh=s9KsTzIpIujJFX/x/AbpZFDJ5Gix2qeUb1AgpHtXbIY=;
+  b=QxHTCQD+llXvWHsDrYxU5inzONzowM4Jqpyxny4EDVApJRiMUlD+G+C5
+   M2Y2SpPhVqKCJz4vQ20REdo8vwM0fkKG3xjqoyPpiFe9fXXfxWUsqjrL6
+   cScNGv/PJKnJHIg4Trw1leffc65QXnJKKKHkGE55PmF3IXsju27G6cqnr
+   gxFMmfD4AvnEwrN+b4tG5BAXTe9Xe2UZTGLvS/7cFWqHP/m4GwlWUv13f
+   +YJtVFRBQiGamSy2hKjunWXDeFEJCyV6TTESHWX8DKaAFlBJWNqM3FFy0
+   dgEbqK/gGWzYJKBGK/3r1dH0Y9/vG4bD0KAwDgYKMcF2Dpr5x5PVXA4+c
    Q==;
-X-CSE-ConnectionGUID: 4eS8Vm45QxiFzqD5eyuyIA==
-X-CSE-MsgGUID: kx+F98XcQyuhgEd+y3kCjA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="94678573"
+X-CSE-ConnectionGUID: H7lzYX68SqiAiMXcgM1jZA==
+X-CSE-MsgGUID: ElTQ4wXoR/ajmfo+1CCxAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84166167"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="94678573"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 05:57:48 -0700
-X-CSE-ConnectionGUID: qpc1tW/8QHqCgFivBfGOnQ==
-X-CSE-MsgGUID: XAGWeOT5S8CzQ9lrdgccLg==
+   d="scan'208";a="84166167"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:06:28 -0700
+X-CSE-ConnectionGUID: jzXLdH8ZRN2lG3unjbhLyA==
+X-CSE-MsgGUID: aWF8I8c8RNmktsmDqVn2Ww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="257564568"
+   d="scan'208";a="255920709"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.226])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 05:57:45 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 06:06:24 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 7 Jul 2026 15:57:41 +0300 (EEST)
-To: =?UTF-8?Q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>
-cc: Hans de Goede <hansg@kernel.org>, krishna.chomal108@gmail.com, 
-    emreleno@gmail.com, edip@medip.dev, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: Add dual-channel PWM fan control
- for Victus S
-In-Reply-To: <20260531182825.389490-1-hello@kursatabayli.dev>
-Message-ID: <cefc3738-fbbe-d4a9-eaf9-2f869c5d04e9@linux.intel.com>
-References: <20260531182825.389490-1-hello@kursatabayli.dev>
+Date: Tue, 7 Jul 2026 16:06:21 +0300 (EEST)
+To: Navon John Lukose <navonjohnlukose@gmail.com>
+cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, sre@kernel.org, 
+    platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] platform/x86: hp-wmi: Add charge behaviour
+ support
+In-Reply-To: <20260531181326.1000801-1-navonjohnlukose@gmail.com>
+Message-ID: <edbe584a-c241-c3e6-9993-2783934885d9@linux.intel.com>
+References: <20260505200222.157144-1-navonjohnlukose@gmail.com> <20260531181326.1000801-1-navonjohnlukose@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-463222359-1783429061=:1152"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sun, 31 May 2026, Navon John Lukose wrote:
 
---8323328-463222359-1783429061=:1152
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Sun, 31 May 2026, K=C3=BCr=C5=9Fat Abayl=C4=B1 wrote:
-
-> Currently, manual fan control on supported Victus S models uses a single
-> PWM value for both CPU and GPU fans, linking their speeds via a hardcoded
-> gpu_delta offset. This prevents userspace tools from managing the thermal
-> profiles of the CPU and GPU independently.
->=20
-> Refactor the hwmon implementation to support independent dual-channel
-> PWM control:
-> - Split the single 'pwm' state into 'cpu_pwm' and 'gpu_pwm'.
-> - Expose a second PWM channel ('pwm2') to userspace via hwmon_channel_inf=
-o.
-> - Remove the gpu_delta mechanism entirely.
->=20
-> The 'pwm1_enable' mode remains shared, as the underlying hardware does
-> not support per-fan modes. When switching to manual mode, both fans are
-> smoothly initialized to their current RPMs. Additionally, ensure that
-> the HP_FAN_SPEED_AUTOMATIC flag is isolated from rpm_to_pwm mathematical
-> interpolations during mode resets to prevent unintended fan states.
->=20
-> Tested on: HP Victus 16-s0xxx
->=20
-> Signed-off-by: K=C3=BCr=C5=9Fat Abayl=C4=B1 <hello@kursatabayli.dev>
->=20
+> Some HP laptops expose battery charge mode control through the existing
+> HP BIOS WMI GUID. On HP board 85C6, command types 0x1f and 0x2b map to
+> the ACPI GBCC/GBCO and SBCC/SBCO methods through the WMI command
+> dispatcher.
+> 
+> Expose the mode control through the standard power_supply
+> charge_behaviour property using a battery hook and power_supply
+> extension. The initial quirk is limited to board 85C6 and still
+> requires a successful charge mode read before registering the extension.
+> 
+> The firmware uses different commands for restoring auto mode and setting
+> explicit charge modes, so report the last successfully requested policy
+> after seeding it from firmware at probe time. The regular battery status
+> continues to report the live charging state.
+> 
+> Compile the battery hook support only when the ACPI battery driver is
+> reachable so non-battery hp-wmi configurations keep building.
+> 
+> Assisted-by: Codex:GPT-5.5
+> Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
 > ---
-> Changes in v3:
-> - Addressed review feedback from Krishna Chomal:
->   - Expanded ternary operators in hp_wmi_fan_speed_set to standard if-els=
-e blocks.
->   - Replaced hardcoded channel numbers with CPU_FAN and GPU_FAN macros.
->=20
 > Changes in v2:
-> - Made RPM readings atomic during the transition to manual mode.
-> - Fixed a variable scoping issue in the pwm_input block.
-> ---
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 60 +++++++++++++++++---------------
->  1 file changed, 32 insertions(+), 28 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
-p-wmi.c
-> index f63bc00d9a9b..cef0c4436bd0 100644
+> - Compile the battery hook integration only when ACPI battery support is
+>   reachable.
+> - Keep charge_behaviour as the last successfully requested policy.
+> - Use FIELD_PREP() for the write-mode field and document the readback values.
+> - Leave the ACPI battery header include unguarded and split compact return
+>   handling into explicit branches.
+> - Reject unknown GBCO readback values during setup instead of treating them as
+>   auto.
+
+Why is this marked as RFC?
+
+>  drivers/platform/x86/hp/hp-wmi.c | 230 +++++++++++++++++++++++++++++++
+>  1 file changed, 230 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+> index d1cc6e7d176c..66f409962cd9 100644
 > --- a/drivers/platform/x86/hp/hp-wmi.c
 > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -488,9 +488,9 @@ struct hp_wmi_hwmon_priv {
->  =09struct mutex lock;=09/* protects mode, pwm */
->  =09u8 min_rpm;
->  =09u8 max_rpm;
-> -=09int gpu_delta;
->  =09u8 mode;
-> -=09u8 pwm;
-> +=09u8 cpu_pwm;
-> +=09u8 gpu_pwm;
->  =09struct delayed_work keep_alive_dwork;
+> @@ -14,6 +14,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/cleanup.h>
+>  #include <linux/compiler_attributes.h>
+>  #include <linux/dmi.h>
+> @@ -36,6 +37,8 @@
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  
+> +#include <acpi/battery.h>
+> +
+>  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
+>  MODULE_DESCRIPTION("HP laptop WMI driver");
+>  MODULE_LICENSE("GPL");
+> @@ -309,7 +312,9 @@ enum hp_wmi_commandtype {
+>  	HPWMI_HOTKEY_QUERY		= 0x0c,
+>  	HPWMI_FEATURE2_QUERY		= 0x0d,
+>  	HPWMI_WIRELESS2_QUERY		= 0x1b,
+> +	HPWMI_BATTERY_CHARGE_CONTROL	= 0x1f,
+>  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
+> +	HPWMI_BATTERY_CHARGE_MODE	= 0x2b,
+>  	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
+>  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
 >  };
-> =20
-> @@ -817,24 +817,20 @@ static int hp_wmi_fan_speed_max_set(int enabled)
->  =09return enabled;
+> @@ -378,6 +383,27 @@ enum hp_wireless2_bits {
+>  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+>  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +#define HPWMI_CHARGE_BEHAVIOURS \
+> +	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) | \
+> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE) | \
+> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE))
+> +
+> +/*
+> + * SBCC/SBCO read the requested mode from the high byte of the input value.
+> + * GBCO returns literal status values, not a bit mask.
+> + */
+> +#define HPWMI_CHARGE_MODE_MASK			GENMASK(15, 8)
+> +#define HPWMI_CHARGE_MODE_AUTO			0x00
+> +#define HPWMI_CHARGE_MODE_FORCE_DISCHARGE	0x02
+> +#define HPWMI_CHARGE_MODE_INHIBIT		0x05
+> +
+> +#define HPWMI_CHARGE_MODE_READ_AUTO		0x00
+> +#define HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE	0x02
+> +#define HPWMI_CHARGE_MODE_READ_INHIBIT		0x04
+> +#define HPWMI_CHARGE_MODE_READ_INHIBIT_EXT	0x06
+> +#endif
+> +
+>  struct bios_rfkill2_device_state {
+>  	u8 radio_type;
+>  	u8 bus_type;
+> @@ -465,6 +491,18 @@ static const char * const tablet_chassis_types[] = {
+>  	"32"  /* Detachable */
+>  };
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +static const struct dmi_system_id hp_wmi_charge_control_quirks[] __initconst = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
+> +			DMI_MATCH(DMI_BOARD_NAME, "85C6"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +#endif
+> +
+>  #define DEVICE_MODE_TABLET	0x06
+>  
+>  #define CPU_FAN 0
+> @@ -694,6 +732,194 @@ static int hp_wmi_read_int(int query)
+>  	return val;
 >  }
-> =20
-> -static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed=
-)
-> +static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv)
->  {
->  =09u8 fan_speed[2];
-> -=09int gpu_speed, ret;
-> +=09int ret;
-> =20
-> -=09fan_speed[CPU_FAN] =3D speed;
-> -=09fan_speed[GPU_FAN] =3D speed;
-> +=09if (priv->cpu_pwm =3D=3D HP_FAN_SPEED_AUTOMATIC)
-> +=09=09fan_speed[CPU_FAN] =3D HP_FAN_SPEED_AUTOMATIC;
-> +=09else
-> +=09=09fan_speed[CPU_FAN] =3D pwm_to_rpm(priv->cpu_pwm, priv);
-> =20
-> -=09/*
-> -=09 * GPU fan speed is always a little higher than CPU fan speed, we fet=
-ch
-> -=09 * this delta value from the fan table during hwmon init.
-> -=09 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
-> -=09 * automatic mode.
-> -=09 */
-> -=09if (speed !=3D HP_FAN_SPEED_AUTOMATIC) {
-> -=09=09gpu_speed =3D speed + priv->gpu_delta;
-> -=09=09fan_speed[GPU_FAN] =3D clamp_val(gpu_speed, 0, U8_MAX);
-> -=09}
-> +=09if (priv->gpu_pwm =3D=3D HP_FAN_SPEED_AUTOMATIC)
-> +=09=09fan_speed[GPU_FAN] =3D HP_FAN_SPEED_AUTOMATIC;
-> +=09else
-> +=09=09fan_speed[GPU_FAN] =3D pwm_to_rpm(priv->gpu_pwm, priv);
-> =20
->  =09ret =3D hp_wmi_get_fan_count_userdefine_trigger();
->  =09if (ret < 0)
-> @@ -851,7 +847,9 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_p=
-riv *priv, u8 speed)
-> =20
->  static int hp_wmi_fan_speed_reset(struct hp_wmi_hwmon_priv *priv)
->  {
-> -=09return hp_wmi_fan_speed_set(priv, HP_FAN_SPEED_AUTOMATIC);
-> +=09priv->cpu_pwm =3D HP_FAN_SPEED_AUTOMATIC;
-> +=09priv->gpu_pwm =3D HP_FAN_SPEED_AUTOMATIC;
-> +=09return hp_wmi_fan_speed_set(priv);
->  }
-> =20
->  static int hp_wmi_fan_speed_max_reset(struct hp_wmi_hwmon_priv *priv)
-> @@ -2402,7 +2400,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_=
-hwmon_priv *priv)
->  =09case PWM_MODE_MANUAL:
->  =09=09if (!is_victus_s_thermal_profile())
->  =09=09=09return -EOPNOTSUPP;
-> -=09=09ret =3D hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
-> +=09=09ret =3D hp_wmi_fan_speed_set(priv);
->  =09=09if (ret < 0)
->  =09=09=09return ret;
->  =09=09mod_delayed_work(system_wq, &priv->keep_alive_dwork,
-> @@ -2502,13 +2500,14 @@ static int hp_wmi_hwmon_write(struct device *dev,=
- enum hwmon_sensor_types type,
->  =09=09=09      u32 attr, int channel, long val)
->  {
->  =09struct hp_wmi_hwmon_priv *priv;
-> -=09int rpm;
-> +=09int cpu_rpm, gpu_rpm;
-> =20
->  =09priv =3D dev_get_drvdata(dev);
->  =09guard(mutex)(&priv->lock);
->  =09switch (type) {
->  =09case hwmon_pwm:
->  =09=09if (attr =3D=3D hwmon_pwm_input) {
-> +=09=09=09int rpm;
->  =09=09=09if (!is_victus_s_thermal_profile())
->  =09=09=09=09return -EOPNOTSUPP;
->  =09=09=09/* PWM input is invalid when not in manual mode */
-> @@ -2518,7 +2517,10 @@ static int hp_wmi_hwmon_write(struct device *dev, =
-enum hwmon_sensor_types type,
->  =09=09=09/* ensure PWM input is within valid fan speeds */
->  =09=09=09rpm =3D pwm_to_rpm(val, priv);
->  =09=09=09rpm =3D clamp_val(rpm, priv->min_rpm, priv->max_rpm);
-> -=09=09=09priv->pwm =3D rpm_to_pwm(rpm, priv);
-> +=09=09=09if (channel =3D=3D CPU_FAN)
-> +=09=09=09=09priv->cpu_pwm =3D rpm_to_pwm(rpm, priv);
-> +=09=09=09else if (channel =3D=3D GPU_FAN)
-> +=09=09=09=09priv->gpu_pwm =3D rpm_to_pwm(rpm, priv);
->  =09=09=09return hp_wmi_apply_fan_settings(priv);
->  =09=09}
->  =09=09switch (val) {
-> @@ -2532,10 +2534,14 @@ static int hp_wmi_hwmon_write(struct device *dev,=
- enum hwmon_sensor_types type,
->  =09=09=09 * When switching to manual mode, set fan speed to
->  =09=09=09 * current RPM values to ensure a smooth transition.
->  =09=09=09 */
-> -=09=09=09rpm =3D hp_wmi_get_fan_speed_victus_s(channel);
-> -=09=09=09if (rpm < 0)
-> -=09=09=09=09return rpm;
-> -=09=09=09priv->pwm =3D rpm_to_pwm(rpm / 100, priv);
-> +=09=09=09cpu_rpm =3D hp_wmi_get_fan_speed_victus_s(CPU_FAN);
-> +=09=09=09if (cpu_rpm < 0)
-> +=09=09=09=09return cpu_rpm;
-> +=09=09=09gpu_rpm =3D hp_wmi_get_fan_speed_victus_s(GPU_FAN);
-> +=09=09=09if (gpu_rpm < 0)
-> +=09=09=09=09return gpu_rpm;
-> +=09=09=09priv->cpu_pwm =3D rpm_to_pwm(cpu_rpm / 100, priv);
-> +=09=09=09priv->gpu_pwm =3D rpm_to_pwm(gpu_rpm / 100, priv);
+>  
+> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
+> +static DEFINE_MUTEX(hp_wmi_charge_lock);
 
-Could you please rebase this patch, it no longer applies cleanly and I was=
-=20
-unsure of what is the correct resolution.
+Please always add a comment telling what is protected by a lock.
 
-Please also add Radhey's Tested-by tag while preparing the next version.
+> +static enum power_supply_charge_behaviour hp_wmi_charge_behaviour =
+> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+> +
+> +static int hp_wmi_charge_mode_to_behaviour(int mode,
+> +					   enum power_supply_charge_behaviour *behaviour)
+> +{
+> +	switch (mode) {
+> +	case HPWMI_CHARGE_MODE_READ_AUTO:
+> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+> +		return 0;
+> +	case HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE:
+> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
+> +		return 0;
+> +	case HPWMI_CHARGE_MODE_READ_INHIBIT:
+> +	case HPWMI_CHARGE_MODE_READ_INHIBIT_EXT:
+> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int hp_wmi_charge_mode_read(void)
+> +{
+> +	int val = 0, ret;
+> +
+> +	ret = hp_wmi_perform_query(HPWMI_BATTERY_CHARGE_MODE, HPWMI_READ,
+> +				   &val, zero_if_sup(val), sizeof(val));
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret > 0)
+> +		return -EINVAL;
+> +
+> +	return val & 0xff;
+> +}
+> +
+> +static int hp_wmi_charge_write(enum hp_wmi_commandtype query, u32 mode)
+> +{
+> +	int ret;
+> +
+> +	mode = FIELD_PREP(HPWMI_CHARGE_MODE_MASK, mode);
+> +	ret = hp_wmi_perform_query(query, HPWMI_WRITE, &mode, sizeof(mode), 0);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret > 0)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_charge_set_behaviour(enum power_supply_charge_behaviour behaviour)
+> +{
+> +	int ret;
+> +
+> +	guard(mutex)(&hp_wmi_charge_lock);
+> +
+> +	/*
+> +	 * HP firmware exposes normal charging through the GBCC/SBCC command
+> +	 * pair, while explicit charge modes use the GBCO/SBCO command pair.
+> +	 */
+> +	switch (behaviour) {
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_CONTROL,
+> +					  HPWMI_CHARGE_MODE_AUTO);
+> +		break;
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
+> +					  HPWMI_CHARGE_MODE_INHIBIT);
+> +		break;
+> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
+> +		ret = hp_wmi_charge_write(HPWMI_BATTERY_CHARGE_MODE,
+> +					  HPWMI_CHARGE_MODE_FORCE_DISCHARGE);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * charge_behaviour is the requested policy. The live charging state is
+> +	 * still reported by the regular battery status property.
+> +	 */
+> +	hp_wmi_charge_behaviour = behaviour;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_charge_get_property(struct power_supply *psy,
+> +				      const struct power_supply_ext *ext,
+> +				      void *data,
+> +				      enum power_supply_property psp,
+> +				      union power_supply_propval *val)
+> +{
+> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&hp_wmi_charge_lock);
+> +	val->intval = hp_wmi_charge_behaviour;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hp_wmi_charge_set_property(struct power_supply *psy,
+> +				      const struct power_supply_ext *ext,
+> +				      void *data,
+> +				      enum power_supply_property psp,
+> +				      const union power_supply_propval *val)
+> +{
+> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
+> +		return -EINVAL;
+> +
+> +	return hp_wmi_charge_set_behaviour(val->intval);
+> +}
+> +
+> +static int hp_wmi_charge_property_is_writeable(struct power_supply *psy,
+> +					       const struct power_supply_ext *ext,
+> +					       void *data,
+> +					       enum power_supply_property psp)
+> +{
+> +	return psp == POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR;
+> +}
+> +
+> +static const enum power_supply_property hp_wmi_charge_properties[] = {
+> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+> +};
+> +
+> +static const struct power_supply_ext hp_wmi_charge_extension = {
+> +	.name			= "hp-wmi-charge-control",
+> +	.properties		= hp_wmi_charge_properties,
+> +	.num_properties		= ARRAY_SIZE(hp_wmi_charge_properties),
+> +	.charge_behaviours	= HPWMI_CHARGE_BEHAVIOURS,
+> +	.get_property		= hp_wmi_charge_get_property,
+> +	.set_property		= hp_wmi_charge_set_property,
+> +	.property_is_writeable	= hp_wmi_charge_property_is_writeable,
+> +};
+> +
+> +static int hp_wmi_charge_add_battery(struct power_supply *battery,
+> +				     struct acpi_battery_hook *hook)
+> +{
+> +	return power_supply_register_extension(battery, &hp_wmi_charge_extension,
+> +					       &hp_wmi_platform_dev->dev, NULL);
+> +}
+> +
+> +static int hp_wmi_charge_remove_battery(struct power_supply *battery,
+> +					struct acpi_battery_hook *hook)
+> +{
+> +	power_supply_unregister_extension(battery, &hp_wmi_charge_extension);
+> +	return 0;
+> +}
+> +
+> +static struct acpi_battery_hook hp_wmi_charge_battery_hook = {
+> +	.name = "HP WMI charge control",
+> +	.add_battery = hp_wmi_charge_add_battery,
+> +	.remove_battery = hp_wmi_charge_remove_battery,
+> +};
+> +
+> +static int __init hp_wmi_charge_control_setup(struct device *dev)
+> +{
+> +	enum power_supply_charge_behaviour behaviour;
+> +	int ret;
+> +
+> +	if (!dmi_check_system(hp_wmi_charge_control_quirks))
+> +		return 0;
+> +
+> +	ret = hp_wmi_charge_mode_read();
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	ret = hp_wmi_charge_mode_to_behaviour(ret, &behaviour);
+> +	if (ret)
+> +		return 0;
+> +
+> +	scoped_guard(mutex, &hp_wmi_charge_lock)
+> +		hp_wmi_charge_behaviour = behaviour;
+> +
+> +	return devm_battery_hook_register(dev, &hp_wmi_charge_battery_hook);
+> +}
+> +#else
+> +static int __init hp_wmi_charge_control_setup(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int hp_wmi_get_dock_state(void)
+>  {
+>  	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
+> @@ -2284,6 +2510,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+>  	if (err < 0)
+>  		return err;
+>  
+> +	err = hp_wmi_charge_control_setup(&device->dev);
+> +	if (err)
+> +		return err;
+> +
+>  	thermal_profile_setup(device);
+>  
+>  	return 0;
+> 
 
---
+-- 
  i.
 
->  =09=09=09priv->mode =3D PWM_MODE_MANUAL;
->  =09=09=09return hp_wmi_apply_fan_settings(priv);
->  =09=09case PWM_MODE_AUTO:
-> @@ -2551,7 +2557,7 @@ static int hp_wmi_hwmon_write(struct device *dev, e=
-num hwmon_sensor_types type,
-> =20
->  static const struct hwmon_channel_info * const info[] =3D {
->  =09HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
-> -=09HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
-> +=09HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT, HWMON_PWM=
-_INPUT),
->  =09NULL
->  };
-> =20
-> @@ -2592,7 +2598,7 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_=
-hwmon_priv *priv)
->  =09struct victus_s_fan_table *fan_table;
->  =09u8 min_rpm, max_rpm;
->  =09u8 cpu_rpm, gpu_rpm, noise_db;
-> -=09int gpu_delta, i, num_entries, ret;
-> +=09int i, num_entries, ret;
->  =09size_t header_size, entry_size;
-> =20
->  =09/* Default behaviour on hwmon init is automatic mode */
-> @@ -2638,10 +2644,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi=
-_hwmon_priv *priv)
->  =09if (min_rpm =3D=3D U8_MAX || max_rpm =3D=3D 0)
->  =09=09return -EINVAL;
-> =20
-> -=09gpu_delta =3D fan_table->entries[0].gpu_rpm - fan_table->entries[0].c=
-pu_rpm;
->  =09priv->min_rpm =3D min_rpm;
->  =09priv->max_rpm =3D max_rpm;
-> -=09priv->gpu_delta =3D gpu_delta;
-> =20
->  =09return 0;
->  }
->=20
---8323328-463222359-1783429061=:1152--
