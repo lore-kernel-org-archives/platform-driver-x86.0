@@ -1,467 +1,245 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.mr.icloud.com (mr-2003k-snip4-6.eps.apple.com [57.103.69.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1764435F184
-	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 20:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783455990; cv=pass; b=JDQvbFua7+hyz57YP5dPnhFL9JX9Cp8u1BKmrItjxG3BdxPjcCEk+NL/flXtWkwuS+41ibadG/X7rF99yqYLzH2R9IZ4bpeE7aqLaOat0Z6IpCjiGTnKGLYyPDLNZZnXAbDIn+ceIb/1Mbzlsii5pD7KPBXMcj51x6Qe7/o9SiY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783455990; c=relaxed/simple;
-	bh=Okcmnx4iuWETJzhrDNCEP79hq9OYC+3w8fa0OQDGGyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZ/WFtfYtZ8RvjV6wDp/UszTmb/aZbJxs3yyAgV37ExBSLqLvlY/BsO5TAS8Ib66h6cIgsu8/EjtizUzhUAdWcgzX6uu92s7ThoiHUxum4XzpoPWGc8xt2Tig59y4r5tD99tsBpoq1P7GoxIxfPbF4b1kXbS72SwOZZFwSSp98o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IUwTMGkf; arc=pass smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AC53E557C
+	for <platform-driver-x86@vger.kernel.org>; Tue,  7 Jul 2026 20:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.69.29
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783456677; cv=none; b=BsWKl4san8lUHuqtq7JPxfqAofehjH0/CRcs6fFVSgridKTmS5VI5RAxJi+FZn51w8mWzEtEPqM4OpHZ6yoAzSzYWtnkGPFdz4V7jb37bDNccS47JO87jkh7TZJMG5DVhzwr0DIgVRgDdjha9mwY8ZZaAlj1eBKQFP37bBoZlis=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783456677; c=relaxed/simple;
+	bh=oNA1VQpNrGBDNQE12Qtwp0KN9Y7WK3ZF03GW0IZy3os=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qulWGKOJxk3q0+ensUZhIGYSYk/xXsCazEhnERfDbKJv8+87dPGu9HwXyD1ik1lD98CRCpgKXEbOH/HmxZU1lIdcB60IYBiqMLSNUjgafKHaTGkis/auv/DQ21bx3HtTUBu42SlUtkTjVcVB4fKd7jSLX5XRLcPrjYkkQB/Wr3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev; spf=pass smtp.mailfrom=kursatabayli.dev; dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b=Bu5Lr6RN; arc=none smtp.client-ip=57.103.69.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kursatabayli.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IUwTMGkf"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-39b38d3c929so39027511fa.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 07 Jul 2026 13:26:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783455986; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mP23St4D1LLAJ2UlZEyDAr6J14pHPpQhMce6TXvpK3eL7Eac5V1IbQFNzGh1SnCrpj
-         1Z20JJqVrGd6AQFQmWE06tQuvsYphxLzJIBqTnVRse6FtLVja5aWPHHG9jFCe75hn6YE
-         L/radaa1xbnlMZqeg3+5v2QwyM8MBRPR9yBM/0mvGy9lxwn8aHT2MY8qYBpccahYPc09
-         l2EZX8weV9llD97IUlGsav/o1yet87HPLJosaYihzyCzqEakS0bw+t2WEte+0OG45a2t
-         kn0W+1THOfT4fyi1p3b+E76b9aMtNpryp8Ntj+w4dUfeRicyLDoa/Gs4xzMsV0aEXBbd
-         RnVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2vdqMWf3OTU2hmQJltOEb8z7E4SemE8YxCiIWickk4Q=;
-        fh=WPy+Q+o4BDfHdyxQxaYfd88qlcd9Q+ZI0fGU1LR3I4E=;
-        b=B2XozeosCdFYqokAuQZSjG/jPjo3ni8IbMlV4vXePhoiNaO2YXLmX8XWIBtyxCwp1V
-         YhKczFRP6tsMeJLvvgdt7qwgejtVenN+GkAjOtUceBpE81fdS7n/hvfG1xxVizSUdI8o
-         2ugbf7Xo0wB71qr61XoO/GHjL31/Ql6RswgODDtcX2oT/n9R3oV79P96BiCry7zNIT3O
-         3/otbeYxL2x6wCTWionhKzq7T82Q7fD6Y/run48KFMbeWwrF0h0PPDl2ahOVJ0MfIJ84
-         W14fxLPr1zF/prZqXUpk+ucIFETagNzF+GjyCkGROYB2f+s7pqCyBiABY/NPtopHFOap
-         2Gkw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783455986; x=1784060786; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2vdqMWf3OTU2hmQJltOEb8z7E4SemE8YxCiIWickk4Q=;
-        b=IUwTMGkfRbsC48X3oZOsebcM+ZM5r1pt3/aw9RUKTGe8VvhBheazswwmdkNw2/zd4q
-         +aCKdlLsFRzVaNnR1cUTMy6ARBwaPgHCN3Bd8WJ1TOedmBaJ7btulVubfZqpkh0jJd1y
-         WYEQ4dqbhYJf2rJ++OVDRe4j4R69xNFu87vcroecqXT+6twzhG/w0Bk+NnOX2WgwNUNu
-         TX2yyOcac1tY43zPtXjoXo8JW//yBDbqqI0n4f+ajG+q/r8JyfLmbPTwBHmo+LcSMj2t
-         X4dgsADman4AmsDU0R7HLwEKfq53I40eAmH1qrw6bSnx+bG6nvrp11WprUFrpbAW2VjR
-         vaKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783455986; x=1784060786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2vdqMWf3OTU2hmQJltOEb8z7E4SemE8YxCiIWickk4Q=;
-        b=CXM3TGhbJMHhIAd7fKvkAhWsPbs4vYL3yNBlVGeHH0wajW4Ob7i7mbnLEWNtiQwZbn
-         Y5O99HCR9vlw3VthBn9tNQOzwrgqzaVsuQEd9H+xTSr3U++dWes+fUL7PcbM08KkpG79
-         cLqpuw7IGT7ZHcOKb6F9+NMaU8zXogYmSYDVLvSfBoGEO+XhBX86yVeQ7/2igpF/kmbW
-         S6nS+fO42isiG44BpbkVqy9NQQof+7HmLlfjqf7ejJjEgb25vESCSsXKUWFfB0CJ11z8
-         ncIhz2mEujZ3QGUhEa5fn/Q6An+vU0fiM4CxiPkzsPmzP2cPczVLy6cNSP9qsFNc/cHg
-         ZvPA==
-X-Forwarded-Encrypted: i=1; AHgh+RrtzV2mNjdiRZx0T1XBTyyWxSZ5zxJ+BdIxavPjmToV3ng7B+sP7FaWWMT/LyG1a3AJ9O2JLMlU+wg3QmcZuvJbyEG0@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL6K/wFsqTr7pTGYD82C5jt7faRYrbnnKSqFcTPmhwz6uYsD0f
-	aZFRctfOdW/RxgPqLT912wDZMyuze3fitRq8xcsWYYyI4XVMZLaZw9xOOnmuM4dsieT/scw2BgS
-	WwZzSg69bgJCdAhCJO13ZOhxaACLkmxU=
-X-Gm-Gg: AfdE7cn9e5RQtFAQ3FsKG0PZgTtPg7F8XokxXlsqckPtXvK9BSj3dI1VGwAaiuhFzyt
-	eOrnxxZukQZOV6MGg5JIQcYfSfwgF9MRshZmErG7hdDpLDnPLHASFrTnszvzCxS+tbEn54nZcz+
-	f03sIYWq6nqFE9mmUgD2bMtxMEZHAQSx2zMjGnSAT15AosP0zg0hVv5mHbz7CvO3px5v+8iiEQe
-	VyHvtgc7Jf2DRFpW7gj1ZT4ZnAAhWJlWe1tTA4R34g7qCMdK7yMu5S3sgIzbTuztJ8jI/D8qAan
-	0xd6Z1Psklq71NDNERvVaJKMZ9fwoQJO0AZXxdsyX6xaG5eHL07BMVMX
-X-Received: by 2002:a2e:a312:0:b0:39b:2df2:9014 with SMTP id
- 38308e7fff4ca-39c5fd6fd0fmr12640621fa.7.1783455985858; Tue, 07 Jul 2026
- 13:26:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b="Bu5Lr6RN"
+Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-2a-60-percent-6 (Postfix) with ESMTPS id 54418180045E;
+	Tue, 07 Jul 2026 20:37:51 +0000 (UTC)
+X-ICL-RepId: 019f3e4d-25bb-7ba9-97b3-c1ac5b311841
+X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhBBkMGXAZeCEAEQwZeB1BcHA4FUgdeH3kTRh9ECkYRWxlKAV5FVhVPWFUJCgBHAkoZRwxVCkscUFZXCEFLQBMETxMFUgddTVYNRw9YHlwUFxVBQ14IXh9MHB0OWAYSAE0KDjYGWQVeCVYDQwU2EhRdRVgYRRhTBFgaUhRbAhwUXA4TAF4PD0wLSAFbB1wCRwtIAFoDWxxFDEsFVBpaHxhcFF8CdwBHAkoZRwxVCkscUFZXCEFVEgRACFZQVB5BBFYVbAlYBlMZVw==
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kursatabayli.dev; s=sig1; t=1783456674; x=1786048674; bh=XAG0BFYr43m42w8xofK2TmNqCUSqb4UTzLsTIPtlcUo=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=Bu5Lr6RNtOYvAIdMeBi/PKSxqeuX3j0UfA/yQ8bmUHaR+MZ/o1tG6fIdhm9VrzB+12URhvSFkpIRaBFA0wHPlx5MbhUGJAw/1aqcvlRve6Ccxqps9knFsXStOJQr74IkSeqTK9YjkhgZ1nEXh8LhotIzW4HXSu/Z1zbsEAX6lMy7EE4kLPbbrcBDTbr7HWngU7eYHRaMl+WCaMRIXYU2Zl/cGfll8CcZlwkjlvZ5A9E/a3gOQOJHvKomBpxTA9pgnGP1mEF9UQTZlor8oUZbTUrLZMMEwxNkCDSRYdYl9cRWo09Ehl0NvGdwTRYfqFCeqi2dC3DXojpz21ngL4pxag==
+mail-alias-created-date: 1779124395950
+Received: from hp (unknown [17.57.152.38])
+	by p00-icloudmta-asmtp-us-west-2a-60-percent-6 (Postfix) with ESMTPSA id 4A0721800478;
+	Tue, 07 Jul 2026 20:37:48 +0000 (UTC)
+From: =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+To: ilpo.jarvinen@linux.intel.com
+Cc: hansg@kernel.org,
+	krishna.chomal108@gmail.com,
+	radheykalra901@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+Subject: [PATCH v4] platform/x86: hp-wmi: Add dual-channel PWM fan control
+Date: Tue,  7 Jul 2026 23:37:40 +0300
+Message-ID: <20260707203740.55369-1-hello@kursatabayli.dev>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260704160759.236249-1-meatuni001@gmail.com> <20260704160759.236249-2-meatuni001@gmail.com>
- <66b8977e-edd1-242d-1715-d5fe7f11f244@linux.intel.com>
-In-Reply-To: <66b8977e-edd1-242d-1715-d5fe7f11f244@linux.intel.com>
-From: Muhammad Bilal <meatuni001@gmail.com>
-Date: Wed, 8 Jul 2026 01:26:14 +0500
-X-Gm-Features: AVVi8CcdUkq0i8mQirRHfJIdYYuAkr_5uIzqk3y6EcE5X_hrh6bBIdI-08bpIZs
-Message-ID: <CADqcGBmuhY1XUU3gpwJ0mPPRi2pxME=aa55nGjomtEDbAfGAXA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] platform/x86: hp-bioscfg: pass validated element
- count to package parsers
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: hdegoede@redhat.com, jorge.lopez2@hp.com, Thomas.Weissschuh@linutronix.de, 
-	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	stable@vger.kernel.org, Mario Limonciello <superm1@kernel.org>, Armin Wolf <W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: K-bd5vSKlzN5REMGlXCmEyUAO5WBg4z2
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA3MDIwMiBTYWx0ZWRfX90QtQK3eduOB
+ 7QV2KbWf2dD12PpR9AzBFPtmNIKctKX8s0KmScZAASBjHvxb9m57JOXejphlI39cryfMmcw10Kd
+ 9taKJ32vmuQ88C7P0vcnexHvwQdHPfQFOoeCaIhNwF5jJXgFG1oNLVLLDiTS6pVs8nIreJrjw36
+ c1LDadE1ikzXfaHkFglQpsWahRxUIZJIkIErqT6HTeLWtVLr3d87f0s3x0WgSwOCKPrzqOi+MPu
+ KJs4mFzI/WC2e4Hrvqzlt+KPAabgzqAiRGHloydDXm39MegMXjG8kOMB14bNSykzH9WtIIUki7M
+ Cqw65lCs6hJB1sxzmlo
+X-Proofpoint-GUID: K-bd5vSKlzN5REMGlXCmEyUAO5WBg4z2
 
-Hi Ilpo,
+Currently, manual fan control on supported HP models uses a single
+PWM value for both CPU and GPU fans, linking their speeds via a hardcoded
+gpu_delta offset. This prevents userspace tools from managing the thermal
+profiles of the CPU and GPU independently.
 
-I've posted v3 of the series, which splits the prerequisite changes into
-separate patches and updates the commit messages based on your review.
+Refactor the hwmon implementation to support independent dual-channel
+PWM control:
+- Split the single 'pwm' state into 'cpu_pwm' and 'gpu_pwm'.
+- Expose a second PWM channel ('pwm2') to userspace via hwmon_channel_info.
+- Remove the gpu_delta mechanism entirely.
 
-https://lore.kernel.org/all/20260707202111.35414-1-meatuni001@gmail.com/
+The 'pwm1_enable' mode remains shared, as the underlying hardware does
+not support per-fan modes. When switching to manual mode, both fans are
+smoothly initialized to their current RPMs. Additionally, ensure that
+the HP_FAN_SPEED_AUTOMATIC flag is isolated from rpm_to_pwm mathematical
+interpolations during mode resets to prevent unintended fan states.
 
-Thanks for your review.
+Tested on: HP Victus 16-s0xxx
 
-On Mon, Jul 6, 2026 at 10:57=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Sat, 4 Jul 2026, Muhammad Bilal wrote:
->
-> > hp_init_bios_package_attribute() validates obj->package.count against
-> > min_elements and then hands off elements =3D obj->package.elements to
->
-> quoting elements =3D obj->package.elements statement in this context is
-> confusing. I don't think it's usually necessary to copy code like this to
-> changelog, here you can just state "elements" (which even happens to matc=
-h
-> the struct member's name even).
->
-> > one of the five per-type hp_populate_*_package_data() wrappers
-> > (string, integer, enumeration, ordered list, password). None of these
-> > wrappers receive that validated count. Instead each one re-derives it
-> > locally:
-> >
-> >   hp_populate_integer_elements_from_package(integer_obj,
-> >                                             integer_obj->package.count,
-> >                                             instance_id);
-> >
-> > integer_obj here is elements, i.e. a pointer to elements[0] (the NAME
-> > field, always ACPI_TYPE_STRING). Reading ->package.count off a string
-> > object aliases ->string.length in the underlying union acpi_object, so
-> > the "count" passed down is not the real package size at all.
->
-> Only at this point you're actually telling what the problem is.
->
-> My suggestion is to rewrite this so that you start by telling that wrong
-> size (count) is read and passed on by these functions (sort of summary of
-> the problem). Then explain what caused that.
->
-> > For string, integer, enumeration and password attributes,
-> > hp_populate_*_elements_from_package() bounds its iteration using the
-> > corresponding per-type ELEM_CNT constant (STR_ELEM_CNT,
-> > INT_ELEM_CNT, ENUM_ELEM_CNT and PSWD_ELEM_CNT). This relies on
-> > hp_init_bios_package_attribute() rejecting packages with fewer than
-> > ELEM_CNT elements before invoking the parsers.
-> >
-> > Relaxing that check would allow shorter packages to reach these
-> > functions, making the fixed loop bounds unsafe.
->
-> ??
->
-> You might be doing this in some later patch but then you should say
-> that an upcoming patch is going to relax this check, otherwise it comes
-> out of nowhere.
->
-> So I think you're trying to solve two cases here:
->
-> 1) Passing wrong count.
-> 2) Allowing count less than what those consts define (but this is only
-> needed for some later patch?).
->
-> But it's so that fixing 1 ends up also solving 2? I think the changelog
-> should mostly focus on 1 and then only state in the end that it also
-> prepares for an upcoming change that requires supporting 2.
->
-> > hp_populate_ordered_list_elements_from_package() doesn't even use the
-> > count for its main loop bound - it iterates unconditionally up to
-> > ORD_ELEM_CNT:
-> >
-> >   for (elem =3D 1, eloc =3D 1; eloc < ORD_ELEM_CNT; elem++, eloc++)
-> >
-> > which relies entirely on the same coincidence.
-> >
-> > This is only safe as long as every caller is guaranteed to hand these
-> > functions a package with at least ELEM_CNT real elements. A following
-> > change relaxes that guarantee to allow shorter packages through, which
-> > would turn this into a real out-of-bounds heap read of the
-> > elements[] array once the real count drops below the fixed ELEM_CNT
-> > loop bound.
-> >
-> > Fix this at the source: thread the real, already-validated
-> > obj->package.count down through each *_package_data() wrapper instead
->
-> "thread down" sounds odd to my (non-native) ear in this context.
->
-> each *_package_data() wrapper -> *_package_data() wrappers
->
-> > of letting the per-type code guess at it, and use it to also bound
->
-> "guess at it" sounds odd to my ear and is now even correct given your
-> explanation of the problem.
->
-> > hp_populate_ordered_list_elements_from_package()'s main loop.
->
-> > This is a
-> > no-op for any package that already meets the existing ELEM_CNT
-> > minimums, and is a prerequisite for safely accepting shorter packages.
-> >
-> > Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
-> > ---
-> >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c               | 5 +++++
-> >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h               | 5 +++++
-> >  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 3 ++-
-> >  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 3 ++-
-> >  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 7 ++++---
-> >  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++--
-> >  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 3 ++-
-> >  7 files changed, 23 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/pla=
-tform/x86/hp/hp-bioscfg/bioscfg.c
-> > index 27fd6cd215290..768330d291da8 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> > @@ -731,26 +731,31 @@ static int hp_init_bios_package_attribute(enum hp=
-_wmi_data_type attr_type,
-> >       switch (attr_type) {
-> >       case HPWMI_STRING_TYPE:
-> >               ret =3D hp_populate_string_package_data(elements,
-> > +                                                   obj->package.count,
-> >                                                     instance_id,
-> >                                                     attr_name_kobj);
-> >               break;
-> >       case HPWMI_INTEGER_TYPE:
-> >               ret =3D hp_populate_integer_package_data(elements,
-> > +                                                    obj->package.count=
-,
-> >                                                      instance_id,
-> >                                                      attr_name_kobj);
-> >               break;
-> >       case HPWMI_ENUMERATION_TYPE:
-> >               ret =3D hp_populate_enumeration_package_data(elements,
-> > +                                                        obj->package.c=
-ount,
-> >                                                          instance_id,
-> >                                                          attr_name_kobj=
-);
-> >               break;
-> >       case HPWMI_ORDERED_LIST_TYPE:
-> >               ret =3D hp_populate_ordered_list_package_data(elements,
-> > +                                                         obj->package.=
-count,
-> >                                                           instance_id,
-> >                                                           attr_name_kob=
-j);
-> >               break;
-> >       case HPWMI_PASSWORD_TYPE:
-> >               ret =3D hp_populate_password_package_data(elements,
-> > +                                                     obj->package.coun=
-t,
-> >                                                       instance_id,
-> >                                                       attr_name_kobj);
-> >               break;
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/pla=
-tform/x86/hp/hp-bioscfg/bioscfg.h
-> > index f1eec0e4ba075..416d7e7aaaae3 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
-> > @@ -401,6 +401,7 @@ int hp_populate_string_buffer_data(u8 *buffer_ptr, =
-u32 *buffer_size,
-> >  int hp_alloc_string_data(void);
-> >  void hp_exit_string_attributes(void);
-> >  int hp_populate_string_package_data(union acpi_object *str_obj,
-> > +                                 int str_obj_count,
-> >                                   int instance_id,
-> >                                   struct kobject *attr_name_kobj);
-> >
-> > @@ -411,6 +412,7 @@ int hp_populate_integer_buffer_data(u8 *buffer_ptr,=
- u32 *buffer_size,
-> >  int hp_alloc_integer_data(void);
-> >  void hp_exit_integer_attributes(void);
-> >  int hp_populate_integer_package_data(union acpi_object *integer_obj,
-> > +                                  int integer_obj_count,
-> >                                    int instance_id,
-> >                                    struct kobject *attr_name_kobj);
-> >
-> > @@ -421,6 +423,7 @@ int hp_populate_enumeration_buffer_data(u8 *buffer_=
-ptr, u32 *buffer_size,
-> >  int hp_alloc_enumeration_data(void);
-> >  void hp_exit_enumeration_attributes(void);
-> >  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-> > +                                      int enum_obj_count,
-> >                                        int instance_id,
-> >                                        struct kobject *attr_name_kobj);
-> >
-> > @@ -432,6 +435,7 @@ int hp_populate_ordered_list_buffer_data(u8 *buffer=
-_ptr,
-> >  int hp_alloc_ordered_list_data(void);
-> >  void hp_exit_ordered_list_attributes(void);
-> >  int hp_populate_ordered_list_package_data(union acpi_object *order_obj=
-,
-> > +                                       int order_obj_count,
-> >                                         int instance_id,
-> >                                         struct kobject *attr_name_kobj)=
-;
-> >
-> > @@ -440,6 +444,7 @@ int hp_populate_password_buffer_data(u8 *buffer_ptr=
-, u32 *buffer_size,
-> >                                    int instance_id,
-> >                                    struct kobject *attr_name_kobj);
-> >  int hp_populate_password_package_data(union acpi_object *password_obj,
-> > +                                   int password_obj_count,
-> >                                     int instance_id,
-> >                                     struct kobject *attr_name_kobj);
-> >  int hp_alloc_password_data(void);
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/dri=
-vers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > index af4d1920d4880..3aa2c440e0528 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
-> > @@ -304,6 +304,7 @@ static int hp_populate_enumeration_elements_from_pa=
-ckage(union acpi_object *enum
-> >   * @attr_name_kobj: The parent kernel object
-> >   */
-> >  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
-> > +                                      int enum_obj_count,
-> >                                        int instance_id,
-> >                                        struct kobject *attr_name_kobj)
-> >  {
-> > @@ -312,7 +313,7 @@ int hp_populate_enumeration_package_data(union acpi=
-_object *enum_obj,
-> >       enum_data->attr_name_kobj =3D attr_name_kobj;
-> >
-> >       hp_populate_enumeration_elements_from_package(enum_obj,
-> > -                                                   enum_obj->package.c=
-ount,
-> > +                                                   enum_obj_count,
-> >                                                     instance_id);
-> >       hp_update_attribute_permissions(enum_data->common.is_readonly,
-> >                                       &enumeration_current_val);
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/driv=
-ers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> > index d96e160953e39..107e4cf1efb8a 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-> > @@ -279,6 +279,7 @@ static int hp_populate_integer_elements_from_packag=
-e(union acpi_object *integer_
-> >   * @attr_name_kobj: The parent kernel object
-> >   */
-> >  int hp_populate_integer_package_data(union acpi_object *integer_obj,
-> > +                                  int integer_obj_count,
-> >                                    int instance_id,
-> >                                    struct kobject *attr_name_kobj)
-> >  {
-> > @@ -286,7 +287,7 @@ int hp_populate_integer_package_data(union acpi_obj=
-ect *integer_obj,
-> >
-> >       integer_data->attr_name_kobj =3D attr_name_kobj;
-> >       hp_populate_integer_elements_from_package(integer_obj,
-> > -                                               integer_obj->package.co=
-unt,
-> > +                                               integer_obj_count,
-> >                                                 instance_id);
-> >       hp_update_attribute_permissions(integer_data->common.is_readonly,
-> >                                       &integer_current_val);
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c=
- b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> > index f09489a085c86..a50d074125268 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> > @@ -145,7 +145,7 @@ static int hp_populate_ordered_list_elements_from_p=
-ackage(union acpi_object *ord
-> >       if (!order_obj)
-> >               return -EINVAL;
-> >
-> > -     for (elem =3D 1, eloc =3D 1; eloc < ORD_ELEM_CNT; elem++, eloc++)=
+Tested-by: Radhey Kalra <radheykalra901@gmail.com>
+Signed-off-by: Kürşat Abaylı <hello@kursatabayli.dev>
+---
+Changes in v4:
+- Updated commit title and description to reflect broader HP device support instead of being limited to Victus S.
+- Rebased onto latest review-ilpo-next to resolve conflicts refactoring.
+- Added Tested-by tag from Radhey Kalra.
+
+Changes in v3:
+- Addressed review feedback from Krishna Chomal:
+- Expanded ternary operators in hp_wmi_fan_speed_set to standard if-else blocks.
+- Replaced hardcoded channel numbers with CPU_FAN and GPU_FAN macros.
+
+Changes in v2:
+- Made RPM readings atomic during the transition to manual mode.
+- Fixed a variable scoping issue in the pwm_input block.
+---
+ drivers/platform/x86/hp/hp-wmi.c | 60 +++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 0dcf2901259e..6f6c79e32fe6 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -545,9 +545,9 @@ struct hp_wmi_hwmon_priv {
+ 	struct mutex lock;	/* protects mode, pwm */
+ 	u8 min_rpm;
+ 	u8 max_rpm;
+-	int gpu_delta;
+ 	u8 mode;
+-	u8 pwm;
++	u8 cpu_pwm;
++	u8 gpu_pwm;
+ 	struct delayed_work keep_alive_dwork;
+ };
+ 
+@@ -874,24 +874,20 @@ static int hp_wmi_fan_speed_max_set(int enabled)
+ 	return enabled;
+ }
+ 
+-static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed)
++static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv)
  {
-> > +     for (elem =3D 1, eloc =3D 1; eloc < ORD_ELEM_CNT && elem < order_=
-obj_count; elem++, eloc++) {
->
-> This looks like a separate fix belonging to own patch. It allows you also
-> to write more focused changelog text for each patch.
->
-> >
-> >               switch (order_obj[elem].type) {
-> >               case ACPI_TYPE_STRING:
-> > @@ -301,7 +301,8 @@ static int hp_populate_ordered_list_elements_from_p=
-ackage(union acpi_object *ord
-> >   * @instance_id: The instance to enumerate
-> >   * @attr_name_kobj: The parent kernel object
-> >   */
-> > -int hp_populate_ordered_list_package_data(union acpi_object *order_obj=
-, int instance_id,
-> > +int hp_populate_ordered_list_package_data(union acpi_object *order_obj=
-, int order_obj_count,
-> > +                                       int instance_id,
-> >                                         struct kobject *attr_name_kobj)
-> >  {
-> >       struct ordered_list_data *ordered_list_data =3D &bioscfg_drv.orde=
-red_list_data[instance_id];
-> > @@ -309,7 +310,7 @@ int hp_populate_ordered_list_package_data(union acp=
-i_object *order_obj, int inst
-> >       ordered_list_data->attr_name_kobj =3D attr_name_kobj;
-> >
-> >       hp_populate_ordered_list_elements_from_package(order_obj,
-> > -                                                    order_obj->package=
-.count,
-> > +                                                    order_obj_count,
-> >                                                      instance_id);
-> >       hp_update_attribute_permissions(ordered_list_data->common.is_read=
-only,
-> >                                       &ordered_list_current_val);
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c =
-b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> > index 4d79eb8056a5d..89316d90454d2 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-> > @@ -388,7 +388,8 @@ static int hp_populate_password_elements_from_packa=
-ge(union acpi_object *passwor
-> >   * @instance_id: The instance to enumerate
-> >   * @attr_name_kobj: The parent kernel object
-> >   */
-> > -int hp_populate_password_package_data(union acpi_object *password_obj,=
- int instance_id,
-> > +int hp_populate_password_package_data(union acpi_object *password_obj,=
- int password_obj_count,
-> > +                                   int instance_id,
-> >                                     struct kobject *attr_name_kobj)
-> >  {
-> >       struct password_data *password_data =3D &bioscfg_drv.password_dat=
-a[instance_id];
-> > @@ -396,7 +397,7 @@ int hp_populate_password_package_data(union acpi_ob=
-ject *password_obj, int insta
-> >       password_data->attr_name_kobj =3D attr_name_kobj;
-> >
-> >       hp_populate_password_elements_from_package(password_obj,
-> > -                                                password_obj->package.=
-count,
-> > +                                                password_obj_count,
-> >                                                  instance_id);
-> >
-> >       hp_friendly_user_name_update(password_data->common.path,
-> > diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/d=
-rivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> > index fe5a9a3a4ef17..da5e81f1d188f 100644
-> > --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> > +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-> > @@ -267,6 +267,7 @@ static int hp_populate_string_elements_from_package=
-(union acpi_object *string_ob
-> >   * @attr_name_kobj: The parent kernel object
-> >   */
-> >  int hp_populate_string_package_data(union acpi_object *string_obj,
-> > +                                 int string_obj_count,
-> >                                   int instance_id,
-> >                                   struct kobject *attr_name_kobj)
-> >  {
-> > @@ -275,7 +276,7 @@ int hp_populate_string_package_data(union acpi_obje=
-ct *string_obj,
-> >       string_data->attr_name_kobj =3D attr_name_kobj;
-> >
-> >       hp_populate_string_elements_from_package(string_obj,
-> > -                                              string_obj->package.coun=
-t,
-> > +                                              string_obj_count,
-> >                                                instance_id);
-> >
-> >       hp_update_attribute_permissions(string_data->common.is_readonly,
-> >
->
-> --
->  i.
->
+ 	u8 fan_speed[2];
+-	int gpu_speed, ret;
++	int ret;
+ 
+-	fan_speed[CPU_FAN] = speed;
+-	fan_speed[GPU_FAN] = speed;
++	if (priv->cpu_pwm == HP_FAN_SPEED_AUTOMATIC)
++		fan_speed[CPU_FAN] = HP_FAN_SPEED_AUTOMATIC;
++	else
++		fan_speed[CPU_FAN] = pwm_to_rpm(priv->cpu_pwm, priv);
+ 
+-	/*
+-	 * GPU fan speed is always a little higher than CPU fan speed, we fetch
+-	 * this delta value from the fan table during hwmon init.
+-	 * Exception: Speed is set to HP_FAN_SPEED_AUTOMATIC, to revert to
+-	 * automatic mode.
+-	 */
+-	if (speed != HP_FAN_SPEED_AUTOMATIC) {
+-		gpu_speed = speed + priv->gpu_delta;
+-		fan_speed[GPU_FAN] = clamp_val(gpu_speed, 0, U8_MAX);
+-	}
++	if (priv->gpu_pwm == HP_FAN_SPEED_AUTOMATIC)
++		fan_speed[GPU_FAN] = HP_FAN_SPEED_AUTOMATIC;
++	else
++		fan_speed[GPU_FAN] = pwm_to_rpm(priv->gpu_pwm, priv);
+ 
+ 	ret = hp_wmi_get_fan_count_userdefine_trigger();
+ 	if (ret < 0)
+@@ -908,7 +904,9 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv, u8 speed)
+ 
+ static int hp_wmi_fan_speed_reset(struct hp_wmi_hwmon_priv *priv)
+ {
+-	return hp_wmi_fan_speed_set(priv, HP_FAN_SPEED_AUTOMATIC);
++	priv->cpu_pwm = HP_FAN_SPEED_AUTOMATIC;
++	priv->gpu_pwm = HP_FAN_SPEED_AUTOMATIC;
++	return hp_wmi_fan_speed_set(priv);
+ }
+ 
+ static int hp_wmi_fan_speed_max_reset(struct hp_wmi_hwmon_priv *priv)
+@@ -2499,7 +2497,7 @@ static int hp_wmi_apply_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	case PWM_MODE_MANUAL:
+ 		if (!hp_wmi_fan_control_supported())
+ 			return -EOPNOTSUPP;
+-		ret = hp_wmi_fan_speed_set(priv, pwm_to_rpm(priv->pwm, priv));
++		ret = hp_wmi_fan_speed_set(priv);
+ 		if (ret < 0)
+ 			return ret;
+ 		mod_delayed_work(system_dfl_wq, &priv->keep_alive_dwork,
+@@ -2599,13 +2597,14 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			      u32 attr, int channel, long val)
+ {
+ 	struct hp_wmi_hwmon_priv *priv;
+-	int rpm;
++	int cpu_rpm, gpu_rpm;
+ 
+ 	priv = dev_get_drvdata(dev);
+ 	guard(mutex)(&priv->lock);
+ 	switch (type) {
+ 	case hwmon_pwm:
+ 		if (attr == hwmon_pwm_input) {
++			int rpm;
+ 			if (!hp_wmi_fan_control_supported())
+ 				return -EOPNOTSUPP;
+ 			/* PWM input is invalid when not in manual mode */
+@@ -2615,7 +2614,10 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			/* ensure PWM input is within valid fan speeds */
+ 			rpm = pwm_to_rpm(val, priv);
+ 			rpm = clamp_val(rpm, priv->min_rpm, priv->max_rpm);
+-			priv->pwm = rpm_to_pwm(rpm, priv);
++			if (channel == CPU_FAN)
++				priv->cpu_pwm = rpm_to_pwm(rpm, priv);
++			else if (channel == GPU_FAN)
++				priv->gpu_pwm = rpm_to_pwm(rpm, priv);
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		}
+ 		switch (val) {
+@@ -2629,10 +2631,14 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 * When switching to manual mode, set fan speed to
+ 			 * current RPM values to ensure a smooth transition.
+ 			 */
+-			rpm = hp_wmi_get_active_fan_speed(channel);
+-			if (rpm < 0)
+-				return rpm;
+-			priv->pwm = rpm_to_pwm(rpm / 100, priv);
++			cpu_rpm = hp_wmi_get_active_fan_speed(CPU_FAN);
++			if (cpu_rpm < 0)
++				return cpu_rpm;
++			gpu_rpm = hp_wmi_get_active_fan_speed(GPU_FAN);
++			if (gpu_rpm < 0)
++				return gpu_rpm;
++			priv->cpu_pwm = rpm_to_pwm(cpu_rpm / 100, priv);
++			priv->gpu_pwm = rpm_to_pwm(gpu_rpm / 100, priv);
+ 			priv->mode = PWM_MODE_MANUAL;
+ 			return hp_wmi_apply_fan_settings(priv);
+ 		case PWM_MODE_AUTO:
+@@ -2648,7 +2654,7 @@ static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 
+ static const struct hwmon_channel_info * const info[] = {
+ 	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+-	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT),
++	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE | HWMON_PWM_INPUT, HWMON_PWM_INPUT),
+ 	NULL
+ };
+ 
+@@ -2689,7 +2695,7 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	struct victus_s_fan_table *fan_table;
+ 	u8 min_rpm, max_rpm;
+ 	u8 cpu_rpm, gpu_rpm, noise_db;
+-	int gpu_delta, i, num_entries, ret;
++	int i, num_entries, ret;
+ 	size_t header_size, entry_size;
+ 
+ 	/* Default behaviour on hwmon init is automatic mode */
+@@ -2735,10 +2741,8 @@ static int hp_wmi_setup_fan_settings(struct hp_wmi_hwmon_priv *priv)
+ 	if (min_rpm == U8_MAX || max_rpm == 0)
+ 		return -EINVAL;
+ 
+-	gpu_delta = fan_table->entries[0].gpu_rpm - fan_table->entries[0].cpu_rpm;
+ 	priv->min_rpm = min_rpm;
+ 	priv->max_rpm = max_rpm;
+-	priv->gpu_delta = gpu_delta;
+ 
+ 	return 0;
+ }
+-- 
+2.54.0
+
