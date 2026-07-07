@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79CE43785F;
-	Tue,  7 Jul 2026 17:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E934843785F;
+	Tue,  7 Jul 2026 17:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783444155; cv=none; b=XfGqKHrBcBfEnedPQMjLkc5mbhuidEvelAJzsEqCj6ZW+MdPRild8rUrlKonB2hDcUFA/7E0z2HfRQN78HpQF1oCWFwZV6N7sxz9QNNs7MBeeaeSCRq1jY5JUtHOWpgBFsbOaizbK4y0O9/yhFl0UVvXe+5DPkZue8qrcLpsxd0=
+	t=1783444164; cv=none; b=VivDC924YjE8Kx445KCwO4mC+icQ0ciAXUxrGM9JNe1+WQKlW+AfnK2pDQXBD1w+mnwgP1cJYP8qEO54l/HaUMCv7eAwI69GbpIYMjdqY0PYXPPGzaWrEOI8e12V+jMzjdHhGEKmTEcva4qMfUr4tX3ythgIrZ4lhZksnLwLID8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783444155; c=relaxed/simple;
-	bh=V2gL/m1I06ALyk1UzapJ8MVCChywNsmlt30dYoDBfzU=;
+	s=arc-20240116; t=1783444164; c=relaxed/simple;
+	bh=GF2zPUQn85142lOQs7ts7qyTo+u5sdj0p3p+Wl0Vix4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bggEPEyChaVsugbnH6fj5X7PvQ4M1nHL4757shkKcqLRcPKqtWjEQ6b0os8p86gZgG0cODalDJoXOIaIVlCs8v70lukQcN4LUaZ7fh1Foq8MPBk7z2Kec1cj+Xy8xG6e3UIITi4Rpr6y9Llde4WIAomX3xm0+ZGy1uBsOAZECCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OHb8WtAe; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=tFVq9Z3f2U34bRYRe2C1f5XwlRNKGqkaBpf2XTkbNh3DF5+aXmGUnwZ9og4K+caTF66dVdPPPRMJjMDNwVhjy6W0PI12isjHQvvz+qH1HqU+v00ZXxtow/jsBmw5hORZrEsdou3Ct19PRFath+pDlqC/oBydj+gWdqDI/lLF5lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ABn8yCcs; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OHb8WtAe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ABn8yCcs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783444155; x=1814980155;
+  t=1783444163; x=1814980163;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=V2gL/m1I06ALyk1UzapJ8MVCChywNsmlt30dYoDBfzU=;
-  b=OHb8WtAeTbXpv2nSaY1ll/AM5kIkeivG04wx3TrGVolz1zQ8ikbMWHNO
-   759Rt9pHhXbJwpDrVeXhMo938jZ7Bgam+usIY1ZiExhsUOvyJpHP4Pcqy
-   gqh/hIwsPROJFMdsP6KdBhTsRu6ouBYX/rT+0CsZ7Q5EWf+/DZIIyTRGR
-   RNMpXHT9NEy1e8UiTCJUFYokhtG2hQPrS3YcXZb55s7LMhkrAof+6OovS
-   ZlwrrPUtQTn7D7im203hrPIgKdhCbHUskgSCBCo7mi0iNFC5P40NwgHUZ
-   o6pjbNej1PMna9TfAkd/92TrDp7NUvy9CU4hMQ+fXynYhKgBrMSmBk61s
-   w==;
-X-CSE-ConnectionGUID: W8vuAGhiTrGvxBtXLavN6g==
-X-CSE-MsgGUID: lLBJH2hdR7mudMxm+inRIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="95251533"
+  bh=GF2zPUQn85142lOQs7ts7qyTo+u5sdj0p3p+Wl0Vix4=;
+  b=ABn8yCcsaH0pemkA9USycMYXpcZErgprOTCJAUh/zw3El58WqFieUQUO
+   Q+jUFU9gUSvzB1JvGQKGD979m8rZjGQ4U/ei+9KV929POQNDO3tQhKQz9
+   x22FJweq2UGkNUaoINw5bQagsYcXbPBf4CGn7NKcTPnbueOTrYbCpLz7y
+   L7Y60RCdziYOZfuMNw562QRV621h5p7GTjelVDBr8QfZpsSosdQBbUgee
+   D7eOY2ejsyOaEdI2A/4RJd8YYzTZYVPYEbtfZ9HgSiFyG+ZbQ43BupRXO
+   brPaYY2xCbAnpaaXVWc+lPDjJ6rc/KPwzRl4Ol/WwmNXykEiGlhAcVnA6
+   Q==;
+X-CSE-ConnectionGUID: cIMzuhFQRAKAF/NGoloTuA==
+X-CSE-MsgGUID: VvUfioouSi2Ga69dXSzccA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="86646785"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="95251533"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:09:15 -0700
-X-CSE-ConnectionGUID: UfKYDiWKTOqOENLNMxl5ow==
-X-CSE-MsgGUID: PaDp5Ki8TviD5PocRBz59g==
+   d="scan'208";a="86646785"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:09:21 -0700
+X-CSE-ConnectionGUID: 5jxZQ8lTRY+4L1eEJvhPHA==
+X-CSE-MsgGUID: r3i47wxKQQes5egwv2aWog==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="252967313"
+   d="scan'208";a="252302480"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.226])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:09:08 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:09:18 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: denis.benato@linux.dev, 
- =?utf-8?q?Fl=C3=A1vio_Barroso_Neves?= <flaviobn@gmail.com>
-Cc: corentin.chary@gmail.com, hansg@kernel.org, luke@ljones.dev, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260705195126.17120-1-flaviobn@gmail.com>
-References: <20260705195126.17120-1-flaviobn@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-armoury: add support for HN7306EA
- and HN7306EAC
-Message-Id: <178344413965.17784.1546722127410980980.b4-ty@b4>
-Date: Tue, 07 Jul 2026 20:08:59 +0300
+To: denis.benato@linux.dev, hansg@kernel.org, 
+ Marco Scardovi <scardracs@disroot.org>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20260701164003.4271-1-scardracs@disroot.org>
+References: <20260701164003.4271-1-scardracs@disroot.org>
+Subject: Re: [PATCH] platform/x86: asus-armoury: Add power limits quirk for
+ FA608WV
+Message-Id: <178344415300.17784.8617552757818338438.b4-ty@b4>
+Date: Tue, 07 Jul 2026 20:09:13 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,12 +60,14 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 05 Jul 2026 16:51:26 -0300, Flávio Barroso Neves wrote:
+On Wed, 01 Jul 2026 18:39:35 +0200, Marco Scardovi wrote:
 
-> Add TDP data for laptop models HN7306EA and HN7306EAC.
+> Add power limits quirk entry for ASUS ROG FA608WV laptop.
+> The limits are extracted from the device's ThrottleGear XML configuration
+> file for the 'Ryzen' profile.
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -79,8 +80,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: asus-armoury: add support for HN7306EA and HN7306EAC
-      commit: da57187dbbd5f491d825d91f5a22376eedd31510
+[1/1] platform/x86: asus-armoury: Add power limits quirk for FA608WV
+      commit: ca93308077a420146ad7b235c6ea7720f593875b
 
 --
  i.
