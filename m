@@ -1,144 +1,171 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011022.outbound.protection.outlook.com [40.93.194.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F438372B26;
-	Wed,  8 Jul 2026 04:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783484153; cv=none; b=huhRnMsYYpB8I9smxG69+QYEzRADfa3gxbFFKh/MJvX/KSBqosCBdh/4X4dpmXgcVvTDjM/xcbgDyIBgkhwuyFX70SfMWaVRlZeaZfrHmHdsCDtMVQUiEHr74CyJ7qVo2sXjEIzgwxtGYbUaz6wplmeqtHSLt8HuMHzyOtCb2Lw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783484153; c=relaxed/simple;
-	bh=cFfOKIDda/MMKV18N4C+Zf06TIvYFaqYX4SHx20aOZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4eZ8YewqoFYY7xxD9yxuwftRyDOcWJqTn166QBgGhBKThVxPufQNdwazwZwFA5cLU6Ia913PZnws6ewMqFCHPU4FCiZF2bQDJ9jctYY1Gkyj6KEFPF6DqzNmSc5+t7MTR7llDjiPXqDgwi8yx5gUeYUe3jSVsP5cpaw6QNZ0pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=NsEo3Mcl; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A6823B638;
+	Wed,  8 Jul 2026 04:24:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783484676; cv=fail; b=lNBhZeNT4eM5eHymdtsL52lGvUWhKf2Qw74npHEQ+6YdLoJoK+YioxNpydekQ0IiAT/MelKbOFPWi6yd3AhMcA29hoVd2FIhR5rOaO0mOM5ksKYLpsPZ1YIF1Yhn9TA+LQzHno/Z/D8GQ5qtRzmVO6vLoYJqgHtl/ppJylm4Yto=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783484676; c=relaxed/simple;
+	bh=s0iikXrRQjhyv3U5kepyTvE+F0EUvmP+UdOfSExjhBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qAiEFIsSjQQhsP2OMRM/GzaGDJYNhQX8hx8zMfpbHriegF2V2rCJV/okMTQKq5Ac8WpgW527GvklWXCCBi4zab0A88YtitlUVUgqFHjE+uBzqfYEpGkTDmhFlPO+7sQGqqvTDUvM1DbOSNjGp6fUm1esDvt/ITmO+9IZsGIvTmM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nFNFOSIN; arc=fail smtp.client-ip=40.93.194.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="NsEo3Mcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1783484108;
-	bh=1gNKxJ0zDNbm1CcNVKPI0fwsPQ92OZL8/QuRRZ20dU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=NsEo3MclCpdJaONAtFD456/hvO3Uxe6SyYeYJ7sr6uh79mLwRCjttkG2E48xcMdm2
-	 cUVoWCbTzJ8Wd+0RlQRCjKPDO1R6dat7WFEiyGmKGppCutYWCKca6VVFj8NdFSe/20
-	 m1UaVdjwFKQqz9JSWjrPyKwqXQBgt/BT41xdhcXk=
-X-QQ-mid: esmtpsz11t1783484079t327108fb
-X-QQ-Originating-IP: uLuv8NyVFfBep07NDN6bY5OsrbXXAmgnB7T5T3Fz3RE=
-Received: from [10.20.12.112] ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 08 Jul 2026 12:14:37 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 8671151912138788091
-EX-QQ-RecipientCnt: 9
-Message-ID: <9E24E598526FA2CD+f70e445c-e32c-4c1f-9001-1b19be021838@uniontech.com>
-Date: Wed, 8 Jul 2026 12:14:37 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nFNFOSIN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bMYTXBJwjJN8UJ8N2mk66WOUF28bHUkq7QrT5YUw7p9rzCd8Qgc3hzkay3k87/RbBhhF9kAdMqgveagHsPmjtPureNHiMXqMnlWyuPNOao18XR8aYaMVpT2fthqa906M0FYNNNMM9hPlZVfwr5HuqpPCRod0V6/J7aCYIeSvHZWT4h++8YEwLQxZAn3qOs1rFFHRWTkQ9REJOPrh4wmt93os5pPkD5uMbGYVW5dpuBKhu026ZAzdRnLIH3Jvy7jh9wrpLiS9tMOlVxGJayTQlcjNpqCKxy0W+nw/sAys2LPiIdiLXWtSdJgj3R9zgdUTJ6Q5EUmIIQWqPjB0uGhntA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RUZbikrMWHOra+bdxq1pxSGqvQ7HiooZpeIoOw3bKfs=;
+ b=xLgibRGhD5Nrj/LAQYsI5zfbWTpqoQnXIR+XEy0M9LvJfBFVrFZiWfHTD9kCMecyB9Ahir10ANmIzNL9BapaW1dRUHjS/mlD6PgD+ePhdjHdDqR9mgPu11jsb6yCjxTbP33b8cAthV4E8t9TaK42ilcHsi9OXIkRWaQSGRc7ytNm55q4AjLR/rBeZlBDiRH56S4lbM3RkIbVTh+Fpop1vlRXvoHoS907ynAwxle17FN/bUKORHgR/Qnz0uYySo0PjA/PGLRZXKP+jWUPP4H1iuBueZ2/a2wZKf/xd9zJZhwEk7hXKd7PB3PGf1rsBHXwrpGVXEXXvtNJ6cnPirZLCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RUZbikrMWHOra+bdxq1pxSGqvQ7HiooZpeIoOw3bKfs=;
+ b=nFNFOSINPphuUSSZjaaEl1etYUgdOHhYWOMscsRRBfsFJ7BbAxZQKD20b/HkoItgjRy1Yx+VlJtEY93ibPTdeZITCJqUrd8cSLYHALOmnO9FIzgILVwrAQqz10klQUdzZn23Qv/CbEUiqaJId+gye0zHcAnLYwWUfVp61RaP5Nw=
+Received: from CH3P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1e7::31)
+ by BY5PR12MB4193.namprd12.prod.outlook.com (2603:10b6:a03:20c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Wed, 8 Jul
+ 2026 04:24:30 +0000
+Received: from DM2PEPF00003FC6.namprd04.prod.outlook.com
+ (2603:10b6:610:1e7:cafe::4e) by CH3P221CA0030.outlook.office365.com
+ (2603:10b6:610:1e7::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.10 via Frontend Transport; Wed, 8
+ Jul 2026 04:24:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ DM2PEPF00003FC6.mail.protection.outlook.com (10.167.23.25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Wed, 8 Jul 2026 04:24:29 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 7 Jul
+ 2026 23:24:27 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v4 0/6] platform/x86/amd/hsmp: Serialize the data plane against socket teardown
+Date: Wed, 8 Jul 2026 09:53:59 +0530
+Message-ID: <20260708042405.3758294-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: think-lmi: Fix "Call Trace" error warning
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hansg@kernel.org>, ilpojarvinen@linux.intel.com,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org, raoxu@uniontech.com, shaoyang@uniontech.com
-References: <20260707091555.71007-1-goutongchen@uniontech.com>
- <e314eebf-06ed-44e5-9cd1-35d60d02df8c@app.fastmail.com>
-Reply-To: e314eebf-06ed-44e5-9cd1-35d60d02df8c@app.fastmail.com
-From: Gou Tongchen <goutongchen@uniontech.com>
-In-Reply-To: <e314eebf-06ed-44e5-9cd1-35d60d02df8c@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz3a-1
-X-QQ-XMAILINFO: MtnV5/DUURsJE5CkXrUwr01Law6EmC2PEn66F94KeGFkFXc79PXuIoVQ
-	iTfzaN3qbR5Q8sxMlcePJiM/N3p5NSfPO4OxJPy/EvMECiIfgkymdb+O54lN+WG7EaUUdsk
-	7c9zsUZJ7HXPRRoQMoedaAp9tVeDeo5rlxsmw7XDeRORW/JHYnEsZLnRYx5dvOYHG0vUi59
-	KbZKUfh6grJnvEOTkA9/seJDfj+7zKYhe6UXRKQWAe3I8xIu8BA5XRiGspML0Ba85dgx4A9
-	0Kiq27tRbb6EHwzwWgbWoX9q0aN8koUcFXPOEfbzcBz54P9rcF8gdhkFW/RYQZg4zJ2yukh
-	PyXhAH1iQyQ5nrQo9nejbe3V3YM5TjL4W0thZuiMWK0SMzVh7wvi6rxUMoFVWxlRTDgftPe
-	kFrum7NUR7Ml4yJI9xvlqv7XujBVOiqcM2Qq/kfQDyIFyvveyeHvcf5NQPKVXHZnMjhNh7c
-	A1AgpDolOn0hGyYIRcZ/p3+U5fRjJA6TzpGpIzk8GTFgyStHFDTtT5dQ54Gan8QFbgGvTQ3
-	1/9pxix43vyn3lIzsth4ife5fvzJ6092+Ff5vYZCRmRCUu89uKFZ538Uii0G83hz7zrB/mY
-	mtkunPZ79TvtAdbpsp85YF1sWX4y97ciM9bUzGiY29pHuR6lj9m0BSiztULVw17e2M/5aqt
-	yTd58ZHzA0tXF5qtiE4obuWZ5DnThwT49b1+RqzITHTiY+75K1EnSH355RUQWIt7/KZOrrh
-	pRaP6ByUXJE1aTSwB7InZQjuBbAikGXeSuVizuO7cG8Yn00ZUvWE3gfnfWJInBama3f99wf
-	j8FaIU83cPLsnboHVgOt6lT/jxPS0OFauYgIav1LAT2JCTrnT6C13pa1MfYRHUBZEaHpK7k
-	PjGsN8He3u4DoKOTmz3F1HPm1MgDEMlqssRQqY0MvhqDFI3exnxxrN4Js0g/PnJE2r+jN5B
-	AC/FXjW39Dz/iADgmoCu/pjZrQcRhvHyOZgpg62a/AfKl3qDVqUGTXwpH/TFdVsyM5BG7mb
-	ppG7m3hvf0XRGzwsA492P9XRRUaW57wUsfDUzuV9CH7gsXoxSxabwlDxVb7WYgOruptJXHd
-	OGlBS43v52Ep79YRoacc1s4Ocb7EckWQjjIlmmqwLaeyAYcGktOfNSF2y6YW/Pv8Q==
-X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM2PEPF00003FC6:EE_|BY5PR12MB4193:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76f98cde-7374-44d2-b344-08dedca8cdcc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700016|23010399003|1800799024|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	eIJt28k8Kvc9X83QbzAgwd+xydJULAfM16+8BiXL/fiPk1j/2PwU5X37fXJpHvP4ecfDv3L91zjFJIoT3+iana8iUqBbw4Wm5YKruhzVDiaaWrvbIhYsx/YUX7OkFgOm9L5tss41D/UWqmO5iB/aLoXComOisNelhmtgdoMgW5/66xnJvUpLZVKy7FHtRrwbrq3kCkYJ37CnhT+S4I+4+BTOGlVjZG/AJifxaCWm3s/Vhl6LgoKSUKpgQMPLVOkiQDPDJpStmwT8PYCb0wHZ65iHLNM/BLEPu6AxIvjp7caA0Kkl1qgqliiAYh1ed8GNIS8ddlTC+cINoizZgM3q6LSgKcrYdubv+75G0pIHFR/KECbQxvoaPIW0tS7A6u9K2nvtUhXj49Vxgj8/UgrYzWKGe7gs2w91jBWi+s1noB94eJSE4xskOjgknv6VxRrjOo7RBiqReaEtYRD1Pl0wU9V36XQR/iZz70k9k57oi+jG+X3NeJCG86B3DriLuJFOVH5sp9wkQkgLpackGTCZe/H9utteZP93ald/GqHG85uFhweldJG7nPoAhV/sdxxnwFDywEFoTqYQFjZh8YM+r0jQVJwCCKo429K6wS5jw+4mJTzOieW/40HhKpeifBZmAiqAigtXM614oplRSh4byImcjkte3rs1241ONX/cR2bHsHxbNRU1dGZdB1ejqVYANjVTAvGqy0i+Vo2l7tSdyQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700016)(23010399003)(1800799024)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	ARcPCrtdCOTPsNeByyrFlVCwNO+PPzUFN98cProWOa7GW59utuuG31vcUAxwU/J+d2LwBEoLU4sO+kvYUe1ReSDatm4MFU7qcj0ekRlsu+pVUX3YIkXpU/0WI3RqELdaKIINTpjiSeB7uWYP+oWnja7LbvEeONVyvhD6DyDWE1aJoSDgs2eiJ0KvZUm01ngZhlQQryGIz80inweqBfhq55nM/5QLMZiwrT4NjLp7HUaqxif/OcmtE7hip9SUUO+6zpfIuYBTt1n6SLlB5ES0BFywc55xxa9OvHg9HIcxZdTBmSrkMJrz+LfNF1h7bbSc6x3AwbHTkIIyprj64XRAvx3Ljsrht48zDkkLThu5Io1EsRTdozdR+XCh1xfu+RtWrLC+n5079w2UgAh/aRQH5IiBLvbGP98nnGJuPX4etQyEADxdZSrSHdYrY3ibsq3G
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 04:24:29.7808
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76f98cde-7374-44d2-b344-08dedca8cdcc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DM2PEPF00003FC6.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4193
+
+This series makes the AMD HSMP driver safe against concurrent probe/remove
+of its per-socket devices and against the lock-free data plane (open
+/dev/hsmp fds and hwmon/sysfs reads) racing socket teardown.
+
+The ACPI front-end binds one platform device per socket but shares a single
+socket array and a single /dev/hsmp misc device across them, while the data
+plane issues mailbox messages with no coordination with driver teardown.
+misc_deregister() does not drain already-open fds, so an in-flight message
+can touch a freed socket array or an unmapped mailbox on unbind.
+
+The fix is built up in small, bisectable steps:
+
+ 1. Serialize the ACPI probe/remove handshake with a dedicated mutex.
+ 2. Map the metric table with ioremap() and release it via a devres action,
+    so its lifetime is no longer pinned to a single per-socket devres scope.
+ 3. Serialize the per-socket metric-table fill-and-copy with a mutex.
+ 4. Clear mdev.this_device on deregister (independent hygiene fix that the
+    next patch relies on to track /dev/hsmp registration).
+ 5. Track shared socket ownership with a refcount and a single coordinated
+    release helper, drop the is_probed flag and unparent /dev/hsmp.
+ 6. Add hsmp_sock_rwsem: the data plane holds it for read, a teardown path
+    holds it for write to drain in-flight messages before freeing the socket
+    array or unmapping the mailbox.
+
+Each patch builds on its own and the series is checkpatch --strict clean.
+
+Changes since v3:
+ - Use guard()/scoped locking consistently for both the probe mutex and the
+   data-plane rwsem, from the first patch that introduces each lock.
+ - Platform teardown now uses devm_add_action_or_reset(): the metric-table
+   unmap and the per-socket mutex destroy run from a single devres action
+   instead of explicit remove()/probe-failure code. The ACPI array is shared
+   across per-socket devices and must outlive an individual unbind, so it
+   stays on explicit teardown.
+ - Split the mdev.this_device clear into its own patch (new patch 4).
+ - Drop dead defensive checks: the !sock guard in hsmp_unmap_metric_tbls()
+   and the if (sock) in hsmp_acpi_remove(). Keep and document the one in the
+   probe-failure path, where sock can legitimately be NULL.
+ - Replace the !--refs construct with a plain decrement-then-test.
+ - Explain why the probe path uses a separate mutex rather than the rwsem
+   write side: the probe path itself drives the data plane via hsmp_test(),
+   which takes the rwsem for read, so holding it for write across probe
+   would deadlock.
+ - Comment cleanups: drop history and "patch N" references, drop
+   parenthetical function asides, single space after periods.
+
+Muralidhara M K (6):
+  platform/x86/amd/hsmp: Serialize ACPI HSMP is_probed with a probe
+    mutex
+  platform/x86/amd/hsmp: Map the metric table with ioremap() and unmap
+    it explicitly
+  platform/x86/amd/hsmp: Serialize per-socket metric table reads with a
+    mutex
+  platform/x86/amd/hsmp: Clear mdev.this_device on deregister
+  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+    release
+  platform/x86/amd/hsmp: Serialize the data plane against socket
+    teardown
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 135 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 107 ++++++++++++++++++++-
+ drivers/platform/x86/amd/hsmp/hsmp.h |  15 ++-
+ drivers/platform/x86/amd/hsmp/plat.c |  26 ++++++
+ 4 files changed, 265 insertions(+), 18 deletions(-)
 
 
-On 7/7/26 21:31, Mark Pearson wrote:
-Hi
-> Hi
->
-> On Tue, Jul 7, 2026, at 5:15 AM, goutongchen@uniontech.com wrote:
->> From: goutongchen <goutongchen@uniontech.com>
->>
->> The maximum BIOS password length returned by the Lenovo platform BIOS/WMI
->> exceeded the size assumed by the think_lmi driver's internal static
->> buffer, causing the driver to trigger a WARN_ON() during self-checks.
->>
->> Increase TLMI_PWD_BUFSIZE from 128 to 256 to eliminate the recurring
->> Call Trace warnings.
->>
->> Here is the kernel warning triggered by the bug:
->>
->>    kernel: WARNING: CPU: 4 PID: 665 at drivers/platform/x86/think-lmi.c:326
->>    kernel:        tlmi_get_pwd_settings.constprop.0+0xe6/0x130 [think_lmi]
->>    kernel: Call Trace:
->>    kernel:  tlmi_analyze+0x31c/0x640 [think_lmi]
->>    ...
->>
->> Fixes: 651b57dd4087 ("platform/x86: Move Lenovo files into lenovo subdir")
-> Minor - but I don't think this is really the culprit :)
-Gou Tongchen - Because it was initially discovered on an older kernel 
-version, the path hadn't been changed at that time.
->
->> Signed-off-by: goutongchen <goutongchen@uniontech.com>
->> ---
->>   drivers/platform/x86/lenovo/think-lmi.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/lenovo/think-lmi.h
->> b/drivers/platform/x86/lenovo/think-lmi.h
->> index 017644323d46..d643cf3b81b0 100644
->> --- a/drivers/platform/x86/lenovo/think-lmi.h
->> +++ b/drivers/platform/x86/lenovo/think-lmi.h
->> @@ -8,7 +8,7 @@
->>
->>   #define TLMI_SETTINGS_COUNT  256
->>   #define TLMI_SETTINGS_MAXLEN 512
->> -#define TLMI_PWD_BUFSIZE     129
->> +#define TLMI_PWD_BUFSIZE     256
->>   #define TLMI_LANG_MAXLEN       4
->>   #define TLMI_INDEX_MAX        32
->>
->> -- 
->> 2.20.1
-> Which platform are you seeing this on please? The maxlen for passwords from the BIOS is supposed to be 128 so I'm intrigued as to where you're seeing different. It maybe should be fixed in a platform BIOS?
->
-> Mark
-
-The hardware platform is a Lenovo X7h with a Hygon 4 CPU. The specific model and BIOS version are as follows:
-
-kernel: DMI: KaiTian /LXKT-HG4M-X7, BIOS W0WKT1FA 11/18/2025
-
-I found through kernel log printing that the BIOS returned a password length of 255, so I increased TLMI_PWD_BUFSIZE to 256.
-
-Thanks.
-
-Gou Tongchen
-
->
+base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
+-- 
+2.34.1
 
