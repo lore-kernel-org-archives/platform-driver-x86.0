@@ -1,128 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DBB41DEF0;
-	Wed,  8 Jul 2026 10:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D02E3BFAD1;
+	Wed,  8 Jul 2026 11:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783508331; cv=none; b=SoWOj4z+vdYxdxkLRcc+T5rn9SJfjjoL0pKCvFtkXbvgouzaoAep1dL0OuyNQ8miFXPMl2+6KlUV9+tF83il4/kcuzFXF/qvpqSFkdgiX8g6LCZsmmdI3NAOYingSxvUgk5+V2GBPw3du7F/Yu/kUcvXfZ7YZHKcHlS3agTYS78=
+	t=1783509136; cv=none; b=jPykNzg+2BHAzKfffm4/r4V0kBaDeYODapjHybpZlQc/EQGBctMxgxXGcxzmW1U5RWKXbNi9nZb/N+q272A+1rf161mh/5l6dBV3ty1I2W6icrSzxM38hML9437kp5xQaugwCRsg8PoPvD2SZhDTzulUBDFlOlk+quSYhm0diQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783508331; c=relaxed/simple;
-	bh=uLndf3XBF0EwMHiDPu+IFBtxvE/0mb5uTssIQTZs8ho=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=aKEE2DeJPTBbKwKHjuZQEBRGd23fzJImOYJrmUL2QIWB4w55WQMl78KImfZpfA2TDQZPe77DI887AhjikDzjU+jWhubtEkFNkuYgZ1dkH7CuziAoVzisrL++ST+bd/1VKJ6eaZLdVx+igzJdncvsqJoDdqQwGb2BJg1y/+zpjn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T2Nb44Lg; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1783509136; c=relaxed/simple;
+	bh=dXbZA1E6z2cbPpn5lXVwUbC3y8RJZe9PuV/6K4qA1zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BiF3qR7rJBWbNmlFriBx6WniD58XQNt58kyh0Zl5TMaCh8AK6D9gKK7Jy9JLhDW1doGywyM1Q2jE3uZXVl3dxr7KLHFTiwqROst+wcS4IiNial7Vxvx7N5A16lXhOPP8xDX5PX/K0Igub6V6+d7tbDOcI6EHjY1pLqR7mThKQ/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NKaLLLgY; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T2Nb44Lg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NKaLLLgY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783508329; x=1815044329;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uLndf3XBF0EwMHiDPu+IFBtxvE/0mb5uTssIQTZs8ho=;
-  b=T2Nb44Lgl2qOQFkrRkO6KjCZNlL/Ltf7wW95m2VVYV4aJB8MYDWlHPR7
-   TSf1klkFo00Ef9tVjVRirrnBVdUxycuQ+n2a9u/XpT/eV5LUVqJ8neIEZ
-   oFPYOQRk5Z1rB0MGDaWZPSYi9O1j8WtDOQpgm7MeCmBTTeaZtRZQ2SPc0
-   IJ8rEqcfqluKQ/RZT8uLM4tS5n5xOJ+AQ1bjoVXeDxzW0coV9xxfQ8HCx
-   rKoLEHb7AWPKWx5Sstzz4gGfkD0saC6DmMAdYQQFjKe1ZHLtpbCcIQkXA
-   RJPGZvoCMEQZgopMJRLfhTV1E/W9hJln4AzZLYPDkFHnpMCOLUqo2qX8P
-   w==;
-X-CSE-ConnectionGUID: 5qJCsH5JSnKfz3Uw4zfaiw==
-X-CSE-MsgGUID: 09zTzd9MQrahqUxDxE/mEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84041938"
+  t=1783509135; x=1815045135;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dXbZA1E6z2cbPpn5lXVwUbC3y8RJZe9PuV/6K4qA1zI=;
+  b=NKaLLLgYSGwRbFEUPZ4WXfWAkQLZfXhRPviQaSCCWKxzP1Hwd/RZVyI5
+   qhXuK+dXM700naBdhd5VjHzf3fB68yRX1rwFVdBb5K4tRooC+h47nZN0b
+   HqlzRyvi3i/kegVxXwlN1Q9bFbd81z5OdScYJJbrEMHBh9n2zirrfivj3
+   BLmv97jfpG4CZUhQ06zO8jXEDpEWV04IHrUTpZ4Y4IibitKa+7JaNke2V
+   eeZ2GZkWMVMW7okGFl4bSqx3udTAk2pzQVKxjuOZ7hAoPkOtFqIPD9PMt
+   rUuZBYfnUwPvVhb5PmwwjRrhP3ahd79YDWKu/qN+x7cMdQsrVi6vnYScE
+   A==;
+X-CSE-ConnectionGUID: y2pZuRN5R/a+RXZU4b1NyA==
+X-CSE-MsgGUID: e/wLbpAFT1aFeVdEaqouAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84025163"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="84041938"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:58:45 -0700
-X-CSE-ConnectionGUID: swcOwHujSMu2NgzEvec59Q==
-X-CSE-MsgGUID: wwvxlwywQZWBpXcgm8ziWg==
+   d="scan'208";a="84025163"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 04:12:14 -0700
+X-CSE-ConnectionGUID: xnTXU7N2RFKFpJyFUzPznA==
+X-CSE-MsgGUID: WXa6o+4tR/u+kKLX2b+3mA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="284369825"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.169])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:58:41 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 Jul 2026 13:58:38 +0300 (EEST)
-To: Muhammad Bilal <meatuni001@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    hdegoede@redhat.com, jorge.lopez2@hp.com, Thomas.Weissschuh@linutronix.de, 
-    superm1@kernel.org, W_Armin@gmx.de, stable@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] platform/x86: hp-bioscfg: bound ordered-list
- parsing by the package count
-In-Reply-To: <20260707202111.35414-3-meatuni001@gmail.com>
-Message-ID: <25a18f2d-ce84-ad42-a779-54cec281a89c@linux.intel.com>
-References: <20260707202111.35414-1-meatuni001@gmail.com> <20260707202111.35414-3-meatuni001@gmail.com>
+   d="scan'208";a="252523743"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.100])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 04:12:00 -0700
+Date: Wed, 8 Jul 2026 14:11:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@opensource.wolfsonmicro.com>,
+	Thierry Reding <thierry.reding@avionic-design.de>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Peter Chen <peter.chen@kernel.org>,
+	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
+	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, mfd@lists.linux.dev,
+	Manuel Ebner <manuelebner@mailbox.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: Re: [PATCH v3 05/20] driver core: update kerneldoc for
+ platform_device_alloc()
+Message-ID: <ak4wfuYxO2serrQt@ashevche-desk.local>
+References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+ <20260706-pdev-fwnode-ref-v3-5-1ff028e33779@oss.qualcomm.com>
+ <ak0jyUbNonSRiP_g@ashevche-desk.local>
+ <CAMRc=Md7-XMBKpdPuZ4=epfTn6F-PXKJBZNPGuz5xbVy58BHsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md7-XMBKpdPuZ4=epfTn6F-PXKJBZNPGuz5xbVy58BHsg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, 8 Jul 2026, Muhammad Bilal wrote:
+On Wed, Jul 08, 2026 at 12:42:58AM -0700, Bartosz Golaszewski wrote:
+> On Tue, 7 Jul 2026 18:05:29 +0200, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> said:
+> > On Mon, Jul 06, 2026 at 02:44:17PM +0200, Bartosz Golaszewski wrote:
+> >> Users of platform_device_alloc() + platform_device_add() must not modify
+> >> certain fields of the dynamically created platform device object. Update
+> >> the kernel doc to say which fields are affected and which functions to
+> >> use.
+> >
+> > Consider using __private checker attribute for them as well. It will make
+> > sparse scream.
+> 
+> Sure but let's leave it for another series.
 
-> hp_populate_ordered_list_elements_from_package() differs from the other
-> per-type parsers: its main loop is bounded only by the fixed per-type
-> count and never checks elem against the number of elements actually
-> present in the package,
-> 
->   for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++)
-> 
-> whereas the string, integer, enumeration and password parsers bound
-> their main loop with "elem < count" as well.
-> 
-> This is safe today because hp_init_bios_package_attribute() rejects any
-> package with fewer than ORD_ELEM_CNT elements before the parser runs. A
-> later patch relaxes that check to accept shorter packages; 
-
-An upcoming change, however, relaxes ...
-
-> once this
-> loop can be handed fewer than ORD_ELEM_CNT elements it indexes
-> order_obj[elem] past the end of the array - an out-of-bounds heap read.
-
-I don't think we need this part of the explanation, it will never happen 
-as you're fixing it beforehand. :-) So please drop it as unnecessary 
-detail.
-
-It's pretty obvious to kernel developers anyway if there's a runaway index 
-so there's no big need in general to tell too simple basics like that.
-
-> Bound the loop by the validated element count as well, so it stops at
-> whichever comes first, the per-type count or the real package size,
-> 
->   for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT && elem < order_obj_count;
->        elem++, eloc++)
-> 
-> order_obj_count is the validated count plumbed in by the previous
-> patch. No functional change for packages that enumerate correctly
-> today.
-> 
-> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> index 83ddf99f93954..a50d074125268 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
-> @@ -145,7 +145,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
->  	if (!order_obj)
->  		return -EINVAL;
->  
-> -	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++) {
-> +	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT && elem < order_obj_count; elem++, eloc++) {
->  
->  		switch (order_obj[elem].type) {
->  		case ACPI_TYPE_STRING:
-> 
+Sure, just a side note comment that you know that we have some facilities for
+that type of problems.
 
 -- 
- i.
+With Best Regards,
+Andy Shevchenko
+
 
