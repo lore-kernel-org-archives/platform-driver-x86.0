@@ -1,39 +1,39 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A053A1A5D;
-	Wed,  8 Jul 2026 20:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4D72FF15B;
+	Wed,  8 Jul 2026 20:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783541332; cv=none; b=BHtLcoYHmLdZs6cvHGQPYrLIUE01sACkzu43uOK0N3UMnVnraTualxYdLZntrCnf8vMW2abKzmr4yFuAZmu87c2PYzgwQXTI3XticLiXUWnmsulMuQIH3d9SkJswaaHYkhF8vBA9Nxepb7Y4DwlI790WJgRIbsnZItOqODm5riw=
+	t=1783541765; cv=none; b=T4cabOwEujg73FHGlsQbq2JQQLtK32K3DvDm8Fo5cnziVDdjo813c4PTPb53n/HOMmS5dVcTFQ/5X5BRhXfFs3gYLLn5hG9ucCIVIvhzEWftA1U1H/u+SgN6EAir7xy6G2UA1TZs2O7+/nsDTyMwh7Oy9KNWeKpl3BsyFIMspm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783541332; c=relaxed/simple;
-	bh=juOCBSEgSvZ23H4Jp/YtyEVAXYbMMHg/IA5qKFVxyZY=;
+	s=arc-20240116; t=1783541765; c=relaxed/simple;
+	bh=WQ6Gvg6DCU7PafZ5XIe2X8MJaZ4TSBWmss+JTYrgt0k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TR/dwcz+6YXbVNiCg5ttT0Qh+zrPUBhDg2RfAbSx408yif4jDowpdOWd+LaeWJElMQrzl3itj53t04FoFDsSv8dyzkcSS7Ro1/bxINuyfLgCLBQ+qxJJnX+X9OSIM6ReqwikHogQD/raOgbTmGJd14oezfhD3MWk3Idt/M4Lj1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=j0spB41w; arc=none smtp.client-ip=157.90.84.7
+	 In-Reply-To:Content-Type; b=I0Zqh/MX/pIuz1K9pxQOtSvvnrswHQc+iVk0EiAFmu6rf4s9lGrdPTT+hT4VsbLecAEFHxrNz9nZXGfj/VG54DaaxxbADQOHyfRyKkxAlP0/MciEUQRi8M/cpsSL+OhRiPuB9jioE3zMkZ3ybRj2Lp3IXMHkUoOu5KTNgx0uGFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=sm5Am+Lg; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="j0spB41w"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="sm5Am+Lg"
 Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 610972FC005F;
-	Wed,  8 Jul 2026 22:08:44 +0200 (CEST)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 4143C2FC005F;
+	Wed,  8 Jul 2026 22:15:59 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1783541324;
+	s=default; t=1783541759;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+jDvFJ9nMbFUvow2lzd87Vo+VXRsdqMKbwUG1W1D+WU=;
-	b=j0spB41wqAR7EA8XC1F5y2x2LeJQXRzaRcZgoK2VFkhTa0Lpw35tLCV8o3o/Y9xmUxXFWN
-	6DLZwoysMJ+ayQ4UjhbvqiHmoWJRx/ZvargY7WmUtuC3kYaPmfBYgZR3qJh0nG6YAtwZUM
-	2AmmJCz4khyC5mEjtFvMyMItWmrLsnY=
+	bh=71CDqRN3CbwEB+DnAk9znfUfrlRKxbMvSCTNXQLRH4Y=;
+	b=sm5Am+LgSCStxeUHtHOO8rxC7bvWa4L/S9Ice2JEgkdIzsx2ahCNtuTCfjisCD0bQvF0Hf
+	SZ/Rh034dKC7HBlCMTFVoxSb9wwsigy/07gnOJcOlJZE/D6tjvMHO60qvsKwjrnrD5RPej
+	ve3/iEKO24WlSa9EoYoagpjfpYieMOE=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <df32200d-d966-40fd-b8d4-60c5b7e18822@tuxedocomputers.com>
-Date: Wed, 8 Jul 2026 22:08:43 +0200
+Message-ID: <1a91a9ff-8c81-4176-a6f2-fd2a6bc49820@tuxedocomputers.com>
+Date: Wed, 8 Jul 2026 22:15:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,146 +41,700 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] platform/x86: uniwill-laptop: Add lightbar support
- for LAPQC71A/B
+Subject: Re: [PATCH 1/7] platform/x86: uniwill-laptop: Add keyboard backlight
+ support
 To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
  hansg@kernel.org
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260530170813.10166-1-W_Armin@gmx.de>
- <20260530170813.10166-8-W_Armin@gmx.de>
+ <20260530170813.10166-2-W_Armin@gmx.de>
+ <10e25d5c-7c50-45fd-a5a9-c06b087a89dd@tuxedocomputers.com>
+ <aa39d060-5555-42bb-a4bb-d23e79f64d26@gmx.de>
 Content-Language: en-US
 From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260530170813.10166-8-W_Armin@gmx.de>
+In-Reply-To: <aa39d060-5555-42bb-a4bb-d23e79f64d26@gmx.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
 
-Am 30.05.26 um 19:08 schrieb Armin Wolf:
-> The LAPQC71A and LAPQC71B both feature a RGB lightbar with 36
-> brightness levels per color component. Extend the device descriptor
-> to supply the maximum brightness of the lightbar and whitelist
-> both models for UNIWILL_FEATURE_LIGHTBAR.
+Am 08.07.26 um 22:08 schrieb Armin Wolf:
+> Am 08.07.26 um 21:11 schrieb Werner Sembach:
 >
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> Hi,
+>>
+>> Am 30.05.26 um 19:08 schrieb Armin Wolf:
+>>> Many Uniwill-based devices support either a white-only or fully
+>>> features RGB keyboard backlight. Add support for this feature
+>>> and handle the associated WMI events.
+>>>
+>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>>> ---
+>>>   .../admin-guide/laptops/uniwill-laptop.rst    |  13 +
+>>>   drivers/platform/x86/uniwill/uniwill-acpi.c   | 392 +++++++++++++++++-
+>>>   2 files changed, 397 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst 
+>>> b/Documentation/admin-guide/laptops/uniwill-laptop.rst
+>>> index 24b41dbab886..2b1e5da703a5 100644
+>>> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
+>>> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
+>>> @@ -77,6 +77,19 @@ LED class device. The default name of this LED class 
+>>> device is ``uniwill:multico
+>>>   See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for details on 
+>>> how to control the various
+>>>   animation modes of the lightbar.
+>>>   +Keyboard Backlight
+>>> +------------------
+>>> +
+>>> +The ``uniwill-laptop`` driver supports controlling the keyboard backlight 
+>>> using the standard
+>>> +LED class interface. The default name of this LED class device is 
+>>> ``uniwill:white:kbd_backlight``
+>>> +when the keyboard backlight supports only a single color, or 
+>>> ``uniwill:multicolor:kbd_backlight``
+>>> +when the keyboard backlight supports RGB colors. The maximum intensity for 
+>>> each color channel
+>>> +in RGB mode is 50.
+>>> +
+>>> +Keep in mind that due to hardware design choices, the driver does not 
+>>> support the RGB value
+>>> +``0x000000`` (black), instead it will fall back to ``0x010101`` (faint 
+>>> white). In order to
+>>> +disable the keyboard backlight, the standard LED brightness setting has to 
+>>> be used instead.
+>>> +
+>>>   Configurable TGP
+>>>   ----------------
+>>>   diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c 
+>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>> index ab063ead45b9..fd040197b189 100644
+>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
+>>> @@ -110,8 +110,31 @@
+>>>   #define EC_ADDR_BAT_CYCLE_COUNT_2    0x04A7
+>>>     #define EC_ADDR_PROJECT_ID        0x0740
+>>> +#define PROJECT_ID_NONE            0x00
+>>> +#define PROJECT_ID_GI            0x01
+>>> +#define PROJECT_ID_GJ            0x02
+>>> +#define PROJECT_ID_GK            0x03
+>>> +#define PROJECT_ID_GICN            0x04
+>>> +#define PROJECT_ID_GJCN            0x05
+>>> +#define PROJECT_ID_GK5CN_X        0x06
+>>> +#define PROJECT_ID_GK7CN_S        0x07
+>>> +#define PROJECT_ID_GK7CPCS_GK5CQ7Z    0x08
+>>> +#define PROJECT_ID_PF            0x09
+>>> +#define PROJECT_ID_GK5CP_4X_5X_6X    0x0A
+>>> +#define PROJECT_ID_IDP            0x0B
+>>> +#define PROJECT_ID_IDY_6Y        0x0C
+>>> +#define PROJECT_ID_IDY_7Y        0x0D
+>>> +#define PROJECT_ID_PF4MU_PF4MN_PF5MU    0x0E
+>>> +#define PROJECT_ID_CML_GAMING        0x0F
+>>> +#define PROJECT_ID_GK7NXXR        0x10
+>>> +#define PROJECT_ID_GM5MU1Y        0x11
+>>>   #define PROJECT_ID_PH4TRX1        0x12
+>>> +#define PROJECT_ID_PH4TUX1        0x13
+>>> +#define PROJECT_ID_PH4TQX1        0x14
+>>>   #define PROJECT_ID_PH6TRX1        0x15
+>>> +#define PROJECT_ID_PH6TQXX        0x16
+>>> +#define PROJECT_ID_PHXAXXX        0x17
+>>> +#define PROJECT_ID_PHXPXXX        0x18
+>>>     #define EC_ADDR_AP_OEM            0x0741
+>>>   #define    ENABLE_MANUAL_CTRL        BIT(0)
+>>> @@ -214,6 +237,7 @@
+>>>   #define FAN_TABLE_OFFICE_MODE        BIT(2)
+>>>   #define FAN_V3                BIT(3)
+>>>   #define DEFAULT_MODE            BIT(4)
+>>> +#define ENABLE_CHINA_MODE        BIT(6)
+>>>     #define EC_ADDR_PL1_SETTING        0x0783
+>>>   @@ -225,11 +249,11 @@
+>>>   #define FAN_CURVE_LENGTH        5
+>>>     #define EC_ADDR_KBD_STATUS        0x078C
+>>> -#define KBD_WHITE_ONLY            BIT(0)    // ~single color
+>>> -#define KBD_SINGLE_COLOR_OFF        BIT(1)
+>>> +#define KBD_WHITE_ONLY            BIT(0)
+>>> +#define KBD_POWER_OFF            BIT(1)
+>>>   #define KBD_TURBO_LEVEL_MASK        GENMASK(3, 2)
+>>>   #define KBD_APPLY            BIT(4)
+>>> -#define KBD_BRIGHTNESS            GENMASK(7, 5)
+>>> +#define KBD_BRIGHTNESS_MASK        GENMASK(7, 5)
+>>>     #define EC_ADDR_FAN_CTRL        0x078E
+>>>   #define FAN3P5                BIT(1)
+>>> @@ -320,6 +344,9 @@
+>>>   #define LED_CHANNELS        3
+>>>   #define LED_MAX_BRIGHTNESS    200
+>>>   +#define KBD_LED_CHANNELS    3
+>>> +#define KBD_LED_MAX_INTENSITY    50
+>>> +
+>>>   #define UNIWILL_FEATURE_FN_LOCK            BIT(0)
+>>>   #define UNIWILL_FEATURE_SUPER_KEY        BIT(1)
+>>>   #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE        BIT(2)
+>>> @@ -333,6 +360,7 @@
+>>>   #define UNIWILL_FEATURE_SECONDARY_FAN        BIT(9)
+>>>   #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL    BIT(10)
+>>>   #define UNIWILL_FEATURE_USB_C_POWER_PRIORITY    BIT(11)
+>>> +#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT    BIT(12)
+>>>     enum usb_c_power_priority_options {
+>>>       USB_C_POWER_PRIORITY_CHARGING = 0,
+>>> @@ -344,6 +372,7 @@ struct uniwill_data {
+>>>       acpi_handle handle;
+>>>       struct regmap *regmap;
+>>>       unsigned int features;
+>>> +    u8 project_id;
+>>>       struct acpi_battery_hook hook;
+>>>       struct mutex battery_lock;    /* Protects the list of currently 
+>>> registered batteries */
+>>>       union {
+>>> @@ -362,6 +391,18 @@ struct uniwill_data {
+>>>       struct mutex led_lock;        /* Protects writes to the lightbar 
+>>> registers */
+>>>       struct led_classdev_mc led_mc_cdev;
+>>>       struct mc_subled led_mc_subled_info[LED_CHANNELS];
+>>> +    bool single_color_kbd;
+>>> +    u8 kbd_led_max_brightness;
+>>> +    unsigned int last_kbd_status;
+>>> +    union {
+>>> +        struct {
+>>> +            /* Protects writes to the RGB keyboard backlight registers */
+>>> +            struct mutex kbd_rgb_led_lock;
+>>> +            struct led_classdev_mc kbd_led_mc_cdev;
+>>> +            struct mc_subled kbd_led_mc_subled_info[KBD_LED_CHANNELS];
+>>> +        };
+>>> +        struct led_classdev kbd_led_cdev;
+>>> +    };
+>>>       struct mutex input_lock;    /* Protects input sequence during notify */
+>>>       struct input_dev *input_device;
+>>>       struct notifier_block nb;
+>>> @@ -376,6 +417,7 @@ struct uniwill_battery_entry {
+>>>     struct uniwill_device_descriptor {
+>>>       unsigned int features;
+>>> +    u8 kbd_led_max_brightness;
+>>>       /* Executed during driver probing */
+>>>       int (*probe)(struct uniwill_data *data);
+>>>   };
+>>> @@ -427,6 +469,9 @@ static const struct key_entry uniwill_keymap[] = {
+>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
+>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMUP, { KEY_KBDILLUMUP }},
+>>>   +    /* Reported when the EC changed the keyboard backlight brightness */
+>>> +    { KE_IGNORE,    UNIWILL_OSD_BACKLIGHT_LEVEL_CHANGE,    { KEY_UNKNOWN }},
+>>> +
+>>>       /* Reported when the user wants to toggle the microphone mute status */
+>>>       { KE_KEY,       UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
+>>>   @@ -435,11 +480,6 @@ static const struct key_entry uniwill_keymap[] = {
+>>>         /* Reported when the user wants to toggle the brightness of the 
+>>> keyboard */
+>>>       { KE_KEY,       UNIWILL_OSD_KBDILLUMTOGGLE, { KEY_KBDILLUMTOGGLE }},
+>>> -    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL0,              { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>> -    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL1,              { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>> -    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL2,              { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>> -    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL3,              { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>> -    { KE_KEY,       UNIWILL_OSD_KB_LED_LEVEL4,              { 
+>>> KEY_KBDILLUMTOGGLE }},
+>>>         /* FIXME: find out the exact meaning of those events */
+>>>       { KE_IGNORE,    UNIWILL_OSD_BAT_CHARGE_FULL_24_H, { KEY_UNKNOWN }},
+>>> @@ -547,6 +587,11 @@ static bool uniwill_writeable_reg(struct device *dev, 
+>>> unsigned int reg)
+>>>       case EC_ADDR_LIGHTBAR_AC_BLUE:
+>>>       case EC_ADDR_BIOS_OEM:
+>>>       case EC_ADDR_TRIGGER:
+>>> +    case EC_ADDR_RGB_RED:
+>>> +    case EC_ADDR_RGB_GREEN:
+>>> +    case EC_ADDR_RGB_BLUE:
+>>> +    case EC_ADDR_BIOS_OEM_2:
+>>> +    case EC_ADDR_KBD_STATUS:
+>>>       case EC_ADDR_OEM_4:
+>>>       case EC_ADDR_CHARGE_CTRL:
+>>>       case EC_ADDR_LIGHTBAR_BAT_CTRL:
+>>> @@ -583,8 +628,14 @@ static bool uniwill_readable_reg(struct device *dev, 
+>>> unsigned int reg)
+>>>       case EC_ADDR_BIOS_OEM:
+>>>       case EC_ADDR_PWM_1:
+>>>       case EC_ADDR_PWM_2:
+>>> +    case EC_ADDR_SUPPORT_2:
+>>>       case EC_ADDR_TRIGGER:
+>>>       case EC_ADDR_SWITCH_STATUS:
+>>> +    case EC_ADDR_RGB_RED:
+>>> +    case EC_ADDR_RGB_GREEN:
+>>> +    case EC_ADDR_RGB_BLUE:
+>>> +    case EC_ADDR_BIOS_OEM_2:
+>>> +    case EC_ADDR_KBD_STATUS:
+>>>       case EC_ADDR_OEM_4:
+>>>       case EC_ADDR_CHARGE_CTRL:
+>>>       case EC_ADDR_LIGHTBAR_BAT_CTRL:
+>>> @@ -616,8 +667,10 @@ static bool uniwill_volatile_reg(struct device *dev, 
+>>> unsigned int reg)
+>>>       case EC_ADDR_BIOS_OEM:
+>>>       case EC_ADDR_PWM_1:
+>>>       case EC_ADDR_PWM_2:
+>>> +    case EC_ADDR_SUPPORT_2:
+>>>       case EC_ADDR_TRIGGER:
+>>>       case EC_ADDR_SWITCH_STATUS:
+>>> +    case EC_ADDR_KBD_STATUS:
+>>>       case EC_ADDR_OEM_4:
+>>>       case EC_ADDR_CHARGE_CTRL:
+>>>       case EC_ADDR_USB_C_POWER_PRIORITY:
+>>> @@ -1441,6 +1494,246 @@ static int uniwill_led_init(struct uniwill_data *data)
+>>>                                &init_data);
+>>>   }
+>>>   +static int uniwill_notify_kbd_led(struct uniwill_data *data, int brightness)
+>>> +{
+>>> +    struct led_classdev *led_cdev;
+>>> +    int ret;
+>>> +
+>>> +    if (data->single_color_kbd)
+>>> +        led_cdev = &data->kbd_led_cdev;
+>>> +    else
+>>> +        led_cdev = &data->kbd_led_mc_cdev.led_cdev;
+>>> +
+>>> +    guard(mutex)(&led_cdev->led_access);
+>>> +
+>>> +    /* Sync the LED brightness with the actual hardware state */
+>>> +    ret = led_update_brightness(led_cdev);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    led_classdev_notify_brightness_hw_changed(led_cdev, brightness);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +#define KBD_LED_MASK    (KBD_BRIGHTNESS_MASK | KBD_APPLY | KBD_POWER_OFF)
+>>> +
+>>> +static int uniwill_kbd_led_write_brightness(struct uniwill_data *data, int 
+>>> brightness)
+>>> +{
+>>> +    /* KBD_POWER_OFF is always implicitly cleared */
+>>> +    unsigned int regval = FIELD_PREP(KBD_BRIGHTNESS_MASK, brightness) | 
+>>> KBD_APPLY;
+>>> +
+>>> +    /* We must ensure that the "apply" bit is always written */
+>>> +    return regmap_write_bits(data->regmap, EC_ADDR_KBD_STATUS, 
+>>> KBD_LED_MASK, regval);
+>>> +}
+>>> +
+>>> +static int uniwill_kbd_led_read_brightness(struct uniwill_data *data)
+>>> +{
+>>> +    unsigned int regval;
+>>> +    int ret;
+>>> +
+>>> +    ret = regmap_read(data->regmap, EC_ADDR_KBD_STATUS, &regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    return min(FIELD_GET(KBD_BRIGHTNESS_MASK, regval), 
+>>> data->kbd_led_max_brightness);
+>>> +}
+>>> +
+>>> +static int uniwill_kbd_led_brightness_set(struct led_classdev *led_cdev,
+>>> +                      enum led_brightness brightness)
+>>> +{
+>>> +    struct uniwill_data *data = container_of(led_cdev, struct uniwill_data, 
+>>> kbd_led_cdev);
+>>> +
+>>> +    return uniwill_kbd_led_write_brightness(data, brightness);
+>>> +}
+>>> +
+>>> +static enum led_brightness uniwill_kbd_led_brightness_get(struct 
+>>> led_classdev *led_cdev)
+>>> +{
+>>> +    struct uniwill_data *data = container_of(led_cdev, struct uniwill_data, 
+>>> kbd_led_cdev);
+>>> +
+>>> +    return uniwill_kbd_led_read_brightness(data);
+>>> +}
+>>> +
+>>> +static const unsigned int uniwill_kbd_led_channel_to_reg[KBD_LED_CHANNELS] = {
+>>> +    EC_ADDR_RGB_RED,
+>>> +    EC_ADDR_RGB_GREEN,
+>>> +    EC_ADDR_RGB_BLUE,
+>>> +};
+>>> +
+>>> +static int uniwill_kbd_led_mc_brightness_set(struct led_classdev *led_cdev,
+>>> +                         enum led_brightness brightness)
+>>> +{
+>>> +    struct led_classdev_mc *led_mc_cdev = lcdev_to_mccdev(led_cdev);
+>>> +    struct uniwill_data *data = container_of(led_mc_cdev, struct 
+>>> uniwill_data, kbd_led_mc_cdev);
+>>> +    unsigned int min_intensity = 0;
+>>> +    unsigned int regval;
+>>> +    int ret;
+>>> +
+>>> +    guard(mutex)(&data->kbd_rgb_led_lock);
+>>> +
+>>> +    /*
+>>> +     * The EC interprets a RGB value of 0x000000 as a command to restore
+>>> +     * the device-specfic default RGB value. Work around this by writing
+>>> +     * a RGB value of 0x010101 (faint white) instead.
+>>> +     */
+>>> +    if (data->kbd_led_mc_subled_info[0].intensity == 0 &&
+>>> +        data->kbd_led_mc_subled_info[1].intensity == 0 &&
+>>> +        data->kbd_led_mc_subled_info[2].intensity == 0)
+>>> +        min_intensity = 1;
+>>> +
+>>> +    for (int i = 0; i < KBD_LED_CHANNELS; i++) {
+>>> +        regval = max(data->kbd_led_mc_subled_info[i].intensity, 
+>>> min_intensity);
+>>> +        ret = regmap_write(data->regmap, uniwill_kbd_led_channel_to_reg[i], 
+>>> regval);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +    }
+>>> +
+>>> +    ret = regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, RGB_APPLY_COLOR, 
+>>> RGB_APPLY_COLOR);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    return uniwill_kbd_led_write_brightness(data, brightness);
+>>> +}
+>>> +
+>>> +static enum led_brightness uniwill_kbd_led_mc_brightness_get(struct 
+>>> led_classdev *led_cdev)
+>>> +{
+>>> +    struct led_classdev_mc *led_mc_cdev = lcdev_to_mccdev(led_cdev);
+>>> +    struct uniwill_data *data = container_of(led_mc_cdev, struct 
+>>> uniwill_data, kbd_led_mc_cdev);
+>>> +
+>>> +    return uniwill_kbd_led_read_brightness(data);
+>>> +}
+>>> +
+>>> +static int uniwill_kbd_led_init(struct uniwill_data *data)
+>>> +{
+>>> +    unsigned int color_indices[KBD_LED_CHANNELS] = {
+>>> +        LED_COLOR_ID_RED,
+>>> +        LED_COLOR_ID_GREEN,
+>>> +        LED_COLOR_ID_BLUE,
+>>> +    };
+>>> +    struct led_init_data init_data = {
+>>> +        .devicename = DRIVER_NAME,
+>>> +        .devname_mandatory = true,
+>>> +    };
+>>> +    bool intensity_all_zeros = true;
+>>> +    bool needs_trigger = false;
+>>> +    unsigned int regval;
+>>> +    int ret;
+>>> +
+>>> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +        return 0;
+>>> +
+>>> +    ret = regmap_read(data->regmap, EC_ADDR_SUPPORT_2, &regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    if (!(regval & CHINA_MODE)) {
+>>> +        ret = regmap_set_bits(data->regmap, EC_ADDR_BIOS_OEM_2, 
+>>> ENABLE_CHINA_MODE);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +    }
+>>> +
+>>> +    ret = regmap_read(data->regmap, EC_ADDR_KBD_STATUS, &regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    regval |= KBD_APPLY;
+>>> +    regval &= ~KBD_POWER_OFF;
+>>> +    ret = regmap_write(data->regmap, EC_ADDR_KBD_STATUS, regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    switch (data->project_id) {
+>>> +    case PROJECT_ID_PF:
+>>> +    case PROJECT_ID_PF4MU_PF4MN_PF5MU:
+>>> +    case PROJECT_ID_PH4TRX1:
+>>> +    case PROJECT_ID_PH4TUX1:
+>>> +    case PROJECT_ID_PH4TQX1:
+>>> +    case PROJECT_ID_PH6TRX1:
+>>> +    case PROJECT_ID_PH6TQXX:
+>>> +    case PROJECT_ID_PHXAXXX:
+>>> +    case PROJECT_ID_PHXPXXX:
+>>> +        data->single_color_kbd = true;
+>>> +        break;
+>>> +    default:
+>>> +        data->single_color_kbd = regval & KBD_WHITE_ONLY;
+>>> +        break;
+>>> +    }
+>>> +
+>>> +    if (data->single_color_kbd) {
+>>> +        init_data.default_label = "white:" LED_FUNCTION_KBD_BACKLIGHT;
+>>> +        data->kbd_led_cdev.max_brightness = data->kbd_led_max_brightness;
+>>> +        data->kbd_led_cdev.color = LED_COLOR_ID_WHITE;
+>>> +        data->kbd_led_cdev.flags = LED_BRIGHT_HW_CHANGED | 
+>>> LED_REJECT_NAME_CONFLICT;
+>>> +        data->kbd_led_cdev.brightness_set_blocking = 
+>>> uniwill_kbd_led_brightness_set;
+>>> +        data->kbd_led_cdev.brightness_get = uniwill_kbd_led_brightness_get;
+>>> +
+>>> +        return devm_led_classdev_register_ext(data->dev, 
+>>> &data->kbd_led_cdev, &init_data);
+>>> +    }
+>>> +
+>>> +    for (int i = 0; i < KBD_LED_CHANNELS; i++) {
+>>> +        data->kbd_led_mc_subled_info[i].color_index = color_indices[i];
+>>> +
+>>> +        ret = regmap_read(data->regmap, uniwill_kbd_led_channel_to_reg[i], 
+>>> &regval);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +
+>>> +        /*
+>>> +         * Make sure that the initial intensity value is not greater than
+>>> +         * the maximum intensity.
+>>> +         */
+>>> +        if (regval > KBD_LED_MAX_INTENSITY) {
+>>> +            regval = KBD_LED_MAX_INTENSITY;
+>>> +            ret = regmap_write(data->regmap, 
+>>> uniwill_kbd_led_channel_to_reg[i], regval);
+>>> +            if (ret < 0)
+>>> +                return ret;
+>>> +
+>>> +            needs_trigger = true;
+>>> +        }
+>>> +
+>>> +        if (regval)
+>>> +            intensity_all_zeros = false;
+>>> +
+>>> +        data->kbd_led_mc_subled_info[i].intensity = regval;
+>>> +        data->kbd_led_mc_subled_info[i].max_intensity = KBD_LED_MAX_INTENSITY;
+>>> +        data->kbd_led_mc_subled_info[i].channel = i;
+>>> +    }
+>>> +
+>>> +    /* See uniwill_kbd_led_mc_brightness_set() for an explaination. */
+>>> +    if (intensity_all_zeros) {
+>>> +        for (int i = 0; i < KBD_LED_CHANNELS; i++) {
+>>> +            data->kbd_led_mc_subled_info[i].intensity = 1;
+>>> +            ret = regmap_write(data->regmap, 
+>>> uniwill_kbd_led_channel_to_reg[i], 1);
+>>> +            if (ret < 0)
+>>> +                return ret;
+>>> +        }
+>>> +
+>>> +        needs_trigger = true;
+>>> +    }
+>>> +
+>>> +    if (needs_trigger) {
+>>> +        ret = regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, 
+>>> RGB_APPLY_COLOR,
+>>> +                    RGB_APPLY_COLOR);
+>>> +        if (ret < 0)
+>>> +            return ret;
+>>> +    }
+>>> +
+>>> +    ret = devm_mutex_init(data->dev, &data->kbd_rgb_led_lock);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    init_data.default_label = "multicolor:" LED_FUNCTION_KBD_BACKLIGHT;
+>>> +    data->kbd_led_mc_cdev.led_cdev.max_brightness = 
+>>> data->kbd_led_max_brightness;
+>>> +    data->kbd_led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
+>>> +    data->kbd_led_mc_cdev.led_cdev.flags = LED_BRIGHT_HW_CHANGED | 
+>>> LED_REJECT_NAME_CONFLICT;
+>>> +    data->kbd_led_mc_cdev.led_cdev.brightness_set_blocking = 
+>>> uniwill_kbd_led_mc_brightness_set;
+>>> +    data->kbd_led_mc_cdev.led_cdev.brightness_get = 
+>>> uniwill_kbd_led_mc_brightness_get;
+>>> +    data->kbd_led_mc_cdev.subled_info = data->kbd_led_mc_subled_info;
+>>> +    data->kbd_led_mc_cdev.num_colors = KBD_LED_CHANNELS;
+>>> +
+>>> +    return devm_led_classdev_multicolor_register_ext(data->dev, 
+>>> &data->kbd_led_mc_cdev,
+>>> +                             &init_data);
+>>> +}
+>>> +
+>>
+>> Sorry I know I'm way to late with my comment, but I'm not at all a fan of how 
+>> complex this whole function is:
+>>
+>> - When we have to set max brightness on a per device basis anyway, we can 
+>> also set rgb or white only there and can skip this whole detection mechanism 
+>> with the supported bits that are unreliable anyway
+>>
+>> - we have a 2nd "supported devices/features list" inside this function which 
+>> is abstracting away from the actual supported feature list
+>>
+>> Should i try to spin up something much simpler, but that requires explicit 
+>> setting in the device descriptor?
+>>
+>> Best regards
+>>
+>> Werner
+>>
+> Good point, but in this case i think having this small device list is OK, 
+> because the original control center
+> does something similar.
+yeah the original cc and tuxedo-drivers has these small lists all over the place 
+... also don't like it there
+> If we encounter a device that does not work with this strategy then we can indeed
+> move the code into the device descriptor.
 
-This patch lost its original attribution by accident (it originally came from 
-this RFC from me 
-https://lore.kernel.org/all/20260421201103.142403-3-wse@tuxedocomputers.com/)
+later we might not be able to get the information anymore which devices are rgb 
+and which are white only when the supported devices lists grows, then we are 
+stuck to reading the feature bits.
 
-Since the patch currently is only in for-next can this still be fixed?
-
-Obligatory:
-
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-
-Best regards,
+best regards,
 
 Werner
 
-> ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
 >
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index d688ffca3b5e..f55b239bd4d1 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -348,7 +348,6 @@
->   #define FAN_TABLE_LENGTH	16
->   
->   #define LED_CHANNELS		3
-> -#define LED_MAX_BRIGHTNESS	200
->   
->   #define KBD_LED_CHANNELS	3
->   #define KBD_LED_MAX_INTENSITY	50
-> @@ -398,6 +397,7 @@ struct uniwill_data {
->   	struct mutex super_key_lock;	/* Protects the toggling of the super key lock state */
->   	struct list_head batteries;
->   	struct mutex led_lock;		/* Protects writes to the lightbar registers */
-> +	u8 lightbar_max_brightness;
->   	struct led_classdev_mc led_mc_cdev;
->   	struct mc_subled led_mc_subled_info[LED_CHANNELS];
->   	bool single_color_kbd;
-> @@ -427,6 +427,7 @@ struct uniwill_battery_entry {
->   struct uniwill_device_descriptor {
->   	unsigned int features;
->   	u8 kbd_led_max_brightness;
-> +	u8 lightbar_max_brightness;
->   	/* Executed during driver probing */
->   	int (*probe)(struct uniwill_data *data);
->   };
-> @@ -1514,7 +1515,7 @@ static int uniwill_led_brightness_set(struct led_classdev *led_cdev, enum led_br
->   
->   	for (int i = 0; i < LED_CHANNELS; i++) {
->   		/* Prevent the brightness values from overflowing */
-> -		value = min(LED_MAX_BRIGHTNESS, data->led_mc_subled_info[i].brightness);
-> +		value = min(data->lightbar_max_brightness, data->led_mc_subled_info[i].brightness);
->   		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
->   		if (ret < 0)
->   			return ret;
-> @@ -1583,14 +1584,14 @@ static int uniwill_led_init(struct uniwill_data *data)
->   		return ret;
->   
->   	data->led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
-> -	data->led_mc_cdev.led_cdev.max_brightness = LED_MAX_BRIGHTNESS;
-> +	data->led_mc_cdev.led_cdev.max_brightness = data->lightbar_max_brightness;
->   	data->led_mc_cdev.led_cdev.flags = LED_REJECT_NAME_CONFLICT;
->   	data->led_mc_cdev.led_cdev.brightness_set_blocking = uniwill_led_brightness_set;
->   
->   	if (value & LIGHTBAR_S0_OFF)
->   		data->led_mc_cdev.led_cdev.brightness = 0;
->   	else
-> -		data->led_mc_cdev.led_cdev.brightness = LED_MAX_BRIGHTNESS;
-> +		data->led_mc_cdev.led_cdev.brightness = data->lightbar_max_brightness;
->   
->   	for (int i = 0; i < LED_CHANNELS; i++) {
->   		data->led_mc_subled_info[i].color_index = color_indices[i];
-> @@ -1603,7 +1604,7 @@ static int uniwill_led_init(struct uniwill_data *data)
->   		 * Make sure that the initial intensity value is not greater than
->   		 * the maximum brightness.
->   		 */
-> -		value = min(LED_MAX_BRIGHTNESS, value);
-> +		value = min(data->lightbar_max_brightness, value);
->   		ret = regmap_write(data->regmap, uniwill_led_channel_to_ac_reg[i], value);
->   		if (ret < 0)
->   			return ret;
-> @@ -2334,6 +2335,7 @@ static int uniwill_probe(struct platform_device *pdev)
->   
->   	data->features = device_descriptor.features;
->   	data->kbd_led_max_brightness = device_descriptor.kbd_led_max_brightness;
-> +	data->lightbar_max_brightness = device_descriptor.lightbar_max_brightness;
->   
->   	/*
->   	 * Some devices might need to perform some device-specific initialization steps
-> @@ -2673,11 +2675,13 @@ static struct uniwill_device_descriptor machenike_l16p_descriptor __initdata = {
->   
->   static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata = {
->   	.features = UNIWILL_FEATURE_SUPER_KEY |
-> +		    UNIWILL_FEATURE_LIGHTBAR |
->   		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
->   		    UNIWILL_FEATURE_CPU_TEMP |
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
->   		    UNIWILL_FEATURE_SECONDARY_FAN,
-> +	.lightbar_max_brightness = 36,
->   };
->   
->   static struct uniwill_device_descriptor lapac71h_descriptor __initdata = {
-> @@ -2701,6 +2705,7 @@ static struct uniwill_device_descriptor lapkc71f_descriptor __initdata = {
->   		    UNIWILL_FEATURE_GPU_TEMP |
->   		    UNIWILL_FEATURE_PRIMARY_FAN |
->   		    UNIWILL_FEATURE_SECONDARY_FAN,
-> +	.lightbar_max_brightness = 200,
->   };
->   
->   /*
-> @@ -3321,6 +3326,8 @@ static int __init uniwill_init(void)
->   		device_descriptor.features = UINT_MAX & ~UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT;
->   		/* Some models only support 3 brightness levels */
->   		device_descriptor.kbd_led_max_brightness = 4;
-> +		/* Some models only support 36 brightness levels per color component */
-> +		device_descriptor.lightbar_max_brightness = 200;
->   		pr_warn("Enabling potentially unsupported features\n");
->   	}
->   
+> Thanks,
+> Armin Wolf
+>
+>>>   static unsigned int uniwill_sanitize_battery_threshold(unsigned int value)
+>>>   {
+>>>       /* 0 means "charging threshold not active" */
+>>> @@ -1789,6 +2082,31 @@ static int uniwill_notifier_call(struct 
+>>> notifier_block *nb, unsigned long action
+>>>           sysfs_notify(&data->dev->kobj, NULL, "fn_lock");
+>>>             return NOTIFY_OK;
+>>> +    case UNIWILL_OSD_KB_LED_LEVEL0:
+>>> +        if (!uniwill_device_supports(data, 
+>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +            return NOTIFY_DONE;
+>>> +
+>>> +        return notifier_from_errno(uniwill_notify_kbd_led(data, 0));
+>>> +    case UNIWILL_OSD_KB_LED_LEVEL1:
+>>> +        if (!uniwill_device_supports(data, 
+>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +            return NOTIFY_DONE;
+>>> +
+>>> +        return notifier_from_errno(uniwill_notify_kbd_led(data, 1));
+>>> +    case UNIWILL_OSD_KB_LED_LEVEL2:
+>>> +        if (!uniwill_device_supports(data, 
+>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +            return NOTIFY_DONE;
+>>> +
+>>> +        return notifier_from_errno(uniwill_notify_kbd_led(data, 2));
+>>> +    case UNIWILL_OSD_KB_LED_LEVEL3:
+>>> +        if (!uniwill_device_supports(data, 
+>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +            return NOTIFY_DONE;
+>>> +
+>>> +        return notifier_from_errno(uniwill_notify_kbd_led(data, 3));
+>>> +    case UNIWILL_OSD_KB_LED_LEVEL4:
+>>> +        if (!uniwill_device_supports(data, 
+>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +            return NOTIFY_DONE;
+>>> +
+>>> +        return notifier_from_errno(uniwill_notify_kbd_led(data, 4));
+>>>       default:
+>>>           mutex_lock(&data->input_lock);
+>>>           sparse_keymap_report_event(data->input_device, action, 1, true);
+>>> @@ -1842,6 +2160,7 @@ static int uniwill_ec_init(struct uniwill_data *data)
+>>>       if (ret < 0)
+>>>           return ret;
+>>>   +    data->project_id = value;
+>>>       dev_dbg(data->dev, "Project ID: %u\n", value);
+>>>         ret = regmap_set_bits(data->regmap, EC_ADDR_AP_OEM, 
+>>> ENABLE_MANUAL_CTRL);
+>>> @@ -1885,6 +2204,7 @@ static int uniwill_probe(struct platform_device *pdev)
+>>>           return ret;
+>>>         data->features = device_descriptor.features;
+>>> +    data->kbd_led_max_brightness = device_descriptor.kbd_led_max_brightness;
+>>>         /*
+>>>        * Some devices might need to perform some device-specific 
+>>> initialization steps
+>>> @@ -1905,6 +2225,10 @@ static int uniwill_probe(struct platform_device *pdev)
+>>>       if (ret < 0)
+>>>           return ret;
+>>>   +    ret = uniwill_kbd_led_init(data);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>>       ret = uniwill_hwmon_init(data);
+>>>       if (ret < 0)
+>>>           return ret;
+>>> @@ -1976,6 +2300,31 @@ static int uniwill_suspend_battery(struct 
+>>> uniwill_data *data)
+>>>       return regmap_read(data->regmap, EC_ADDR_CHARGE_CTRL, 
+>>> &data->last_charge_ctrl);
+>>>   }
+>>>   +static int uniwill_suspend_kbd_led(struct uniwill_data *data)
+>>> +{
+>>> +    unsigned int regval;
+>>> +    int ret;
+>>> +
+>>> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +        return 0;
+>>> +
+>>> +    ret = regmap_read(data->regmap, EC_ADDR_KBD_STATUS, &regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    /*
+>>> +     * Save the current keyboard backlight settings in order to restore them
+>>> +     * during resume. We cannot use the regmap code for that since this 
+>>> register
+>>> +     * needs to be declared as volatile because the brightness can be changed
+>>> +     * by the EC.
+>>> +     */
+>>> +    data->last_kbd_status = regval;
+>>> +    FIELD_MODIFY(KBD_BRIGHTNESS_MASK, &regval, 0);
+>>> +    regval |= KBD_APPLY | KBD_POWER_OFF;
+>>> +
+>>> +    return regmap_write(data->regmap, EC_ADDR_KBD_STATUS, regval);
+>>> +}
+>>> +
+>>>   static int uniwill_suspend_nvidia_ctgp(struct uniwill_data *data)
+>>>   {
+>>>       if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
+>>> @@ -2006,6 +2355,10 @@ static int uniwill_suspend(struct device *dev)
+>>>       if (ret < 0)
+>>>           return ret;
+>>>   +    ret = uniwill_suspend_kbd_led(data);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>>       ret = uniwill_suspend_nvidia_ctgp(data);
+>>>       if (ret < 0)
+>>>           return ret;
+>>> @@ -2052,6 +2405,23 @@ static int uniwill_resume_battery(struct uniwill_data 
+>>> *data)
+>>>       return 0;
+>>>   }
+>>>   +static int uniwill_resume_kbd_led(struct uniwill_data *data)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
+>>> +        return 0;
+>>> +
+>>> +    ret = regmap_write(data->regmap, EC_ADDR_KBD_STATUS, 
+>>> data->last_kbd_status | KBD_APPLY);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    if (data->single_color_kbd)
+>>> +        return 0;
+>>> +
+>>> +    return regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, 
+>>> RGB_APPLY_COLOR, RGB_APPLY_COLOR);
+>>> +}
+>>> +
+>>>   static int uniwill_resume_nvidia_ctgp(struct uniwill_data *data)
+>>>   {
+>>>       if (!uniwill_device_supports(data, UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
+>>> @@ -2096,6 +2466,10 @@ static int uniwill_resume(struct device *dev)
+>>>       if (ret < 0)
+>>>           return ret;
+>>>   +    ret = uniwill_resume_kbd_led(data);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>>       ret = uniwill_resume_nvidia_ctgp(data);
+>>>       if (ret < 0)
+>>>           return ret;
+>>> @@ -2745,6 +3119,8 @@ static int __init uniwill_init(void)
+>>>       if (force) {
+>>>           /* Assume that the device supports all features except the charge 
+>>> limit */
+>>>           device_descriptor.features = UINT_MAX & 
+>>> ~UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT;
+>>> +        /* Some models only support 3 brightness levels */
+>>> +        device_descriptor.kbd_led_max_brightness = 4;
+>>>           pr_warn("Enabling potentially unsupported features\n");
+>>>       }
+>>
