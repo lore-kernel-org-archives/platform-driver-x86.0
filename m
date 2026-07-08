@@ -1,46 +1,46 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012045.outbound.protection.outlook.com [40.93.195.45])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012048.outbound.protection.outlook.com [40.107.200.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8831C3803C8;
-	Wed,  8 Jul 2026 04:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488163A16AB;
+	Wed,  8 Jul 2026 04:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.48
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783484683; cv=fail; b=GGGZssJuYzu2bZFH1W/25xGEJk4lV6r37PIt7zvhJTr1ntV+QBN2Un57C8eGeJpVrrXudN3T035LwkIp4jJ/Ho+UjcmZ4XC05MmfGBj2OFpGwyz9nNgGXZVCfqNSRSk88Seugt/MdSZpTVGDZ0APLvyb/RWb0NvQpZ4OkjcR6sQ=
+	t=1783484684; cv=fail; b=ofYaUpyqmojfDa9f64zix+fUHM5rY4s+UepH4lTZgSy7/6RUwtVVDJd6Osfft6/naQJC7NX2lc0ugDphpdSz3ufZXQNjpLJuANgW1X9y7bPvdBwjlAabcs8fdm/h99+SmVZDy2dO9nDDhMUiwwJ5lSpmMqogMqcNFALWwUH2P+w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783484683; c=relaxed/simple;
-	bh=1mMseSnkUwituq26m0WCL96fQ7OcK08PHGqsxPzN2k4=;
+	s=arc-20240116; t=1783484684; c=relaxed/simple;
+	bh=si97/NKqYYoIrxoz3QaiYNREHGPd4C4GDB5nGk1iKU4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iJ1JAK0JH6q997GbPVZPUHW/tuH4Vt1YZtxY4zipBkSsQeFFGv+ALA2/n3Lf0fJNaZq2U1BQJ6cMbvc+tFNKakCpif+OVQLl/pK+v6BQbAKp5dBJb9jPjXNVOyWd8jmnUUlskD+ymmnwkGftZwCOHlWpybRWNh8h74lhGTMrw9U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ybWSR3+/; arc=fail smtp.client-ip=40.93.195.45
+	 MIME-Version:Content-Type; b=glIQ9VGe5MDMuaH0z1QLmRd2gtHbGkGfKYDRtvRvSwtHbFasQ3PGmgQsx9iTKTquJK8oXzhzxQxLHONmXSnbkaL45CBKV1aa7fCddxRNJaZHUOOUTu410tPoKsWXCf/atpXbexLv4eXKKvRCODJJnkVYbKUgpZcMRG7aiL8o6oU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FVzkMDn5; arc=fail smtp.client-ip=40.107.200.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ybWSR3+/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FVzkMDn5"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p/G1TcxTwJ7x4KzEPsI7xcCyCAKFpG8dZd5CnsOAiQl/CXAczA4bjCf0hBNWE7jQZZ+Pu3UvCI9JXmz7oOcCaQtNOtnKQ88WfvUaIj0Bt0HYsVSy9xJWWwNFiN3WXxOvGA0ZtZuSrVcNYR9ykYBgw+8K7eRnaopTArXEmiks31V7hNgvI7H3t+lqTnkgXte7k9eSIR9i7n6VWHEywvwFHQiW0PNS+uVQ34Fq54Lnjv/oRtoFaHM1rLlmlC5Dy2utbQ6EEPa//GP6U+EY7lL+tp+wRrnIAyzgZhP1IG4Kr5cq+srwJtibQ9GYKDrA/mp96O0wvU4D37usUQc2PxZh5A==
+ b=H9w82aLnmv5kbqhKRkp/gMuKQlieall594wk016HgwNqqAFifz341w0829RCnuw1IDiGakgtoMKRCCDGQxoZdEhFZS2zQUKbBVQCi8iSw+DBLzEwW5dU/YFBYVVKP57T2KTyQUZkkMftwLUEGj04JOifc4xl+8oyuF0Wp9AnPXHaceRl+s8tfa5PEJPxHBIuq05OWaO6IcTJnOr8asxcGUnMUxCQMLPZbjA903MLDmqvYtDWuig7WgmeW3TwoPkFbGeml7IHmxsTm1SuzymDhBPCQ7bdfqJCOOcfqmw+yo835RCYF94QeCMLtG3d1N4e5mN0Oyy6j0Uxm2Ogcqusnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YVW+NsMKN3eN63B5ENTvDUZPf60jvBtOHQRzTAAWjKk=;
- b=lDwJerbZW/h0+RYQhxciAnLYTemiCWNQZTl+kIHXrZicSLWkdgXQ4XFHg8irfBq7c1W4pXRx9wLzXTI+p4v+TjVW79jHEDe7BIPgJUj72c4JZrSMGppo2/B62d6xBwmnERaULdw0vqqrajk+RzNIXpvW/LguaE90MvZy0fMUd/KAO51j4n26iI8q1QAEsH0k7pEn5QNgxpdi5rzPqVj3wp43ggOZza8555P+bacLQraFK86wRD+K240XGnEqKpLvqvqwn32SZwZrLullXJNS8LMfzt1Y1jER04NeLpCAHGlFo6WH9r6mQCacWEs8Be7oKjqZrZz/Aq/R49XPFrc3HA==
+ bh=CXBO7P5/T78bzMb9PL/N4LZ+yz8wzcJfEt9WHs7zYb8=;
+ b=MZ8gRaY977IDOEm9bt4Lc9d8WXHgbHfi8mUxelpQZpVjaVg/CJPTHg1bzA5NkQqjC+0qpl9Y2AsEaNuP/R4wVDgmwMvF7NbNwD+Q9RS2t2ICsKoUAhHrj5H17V/utjgsT8y3h+fyJ6twmZger1BGWCPOOA/twUvmDFRfIy7ein/v+modsqt9fXT2khnVMHcGgmn/ajengvUuSJtPMDgSUXaH6zJGFBd3OI11k9lqOyuSw0fVXdvnYWfgNKQc8PmysHWmXIx6+rT1ASnWubJkSGTRS6QhfVGXAjCOJ1LMCkxLhTPjJyIutXDeCMMWzY64XTDFrqOityFRLWR1LpLndg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YVW+NsMKN3eN63B5ENTvDUZPf60jvBtOHQRzTAAWjKk=;
- b=ybWSR3+/SQC8RxT/d5GC9gtdQ1+j+Tly3UDKZlX48HD+XOic7CU8vpVaAwbJBkXMN8GoPc0IGcBO/lJnqwSICiXpWkkQTO5pp7WiiOfjmNDQHIS09qlbJUjrh9KjRE+c7oISFTDTNYY6hTR3LbCfomOvLd9Blw+L/1CmgALMklk=
-Received: from CH5P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::21)
- by CH8PR12MB9765.namprd12.prod.outlook.com (2603:10b6:610:264::6) with
+ bh=CXBO7P5/T78bzMb9PL/N4LZ+yz8wzcJfEt9WHs7zYb8=;
+ b=FVzkMDn5jKeEaIOIjePDcWf9OQ38Mi6KpJbMU9neVnM9plc5eP2WLFJth2PMsLIheHDNdniVbCX9zHga2Y3ZFtnhTpoUzSmMigK+7wYm9I3d21ic42NgbwpwTAEZZasLFjSggrAWqeUU/019S0peeaXnW//vfr1vilfTQlGg5HM=
+Received: from CH5P222CA0022.NAMP222.PROD.OUTLOOK.COM (2603:10b6:610:1ee::18)
+ by IA0PPFAF4999BF6.namprd12.prod.outlook.com (2603:10b6:20f:fc04::be0) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Wed, 8 Jul
- 2026 04:24:39 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.13; Wed, 8 Jul
+ 2026 04:24:37 +0000
 Received: from DM2PEPF00003FC2.namprd04.prod.outlook.com
- (2603:10b6:610:1ee:cafe::76) by CH5P222CA0017.outlook.office365.com
- (2603:10b6:610:1ee::21) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:610:1ee:cafe::85) by CH5P222CA0022.outlook.office365.com
+ (2603:10b6:610:1ee::18) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.10 via Frontend Transport; Wed, 8
- Jul 2026 04:24:39 +0000
+ Jul 2026 04:24:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  DM2PEPF00003FC2.mail.protection.outlook.com (10.167.23.20) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Wed, 8 Jul 2026 04:24:39 +0000
+ 15.21.181.6 via Frontend Transport; Wed, 8 Jul 2026 04:24:33 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Tue, 7 Jul
- 2026 23:24:35 -0500
+ 2026 23:24:31 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH v4 4/6] platform/x86/amd/hsmp: Clear mdev.this_device on deregister
-Date: Wed, 8 Jul 2026 09:54:03 +0530
-Message-ID: <20260708042405.3758294-5-muralidhara.mk@amd.com>
+Subject: [PATCH v4 2/6] platform/x86/amd/hsmp: Map the metric table with ioremap() and unmap it explicitly
+Date: Wed, 8 Jul 2026 09:54:01 +0530
+Message-ID: <20260708042405.3758294-3-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260708042405.3758294-1-muralidhara.mk@amd.com>
 References: <20260708042405.3758294-1-muralidhara.mk@amd.com>
@@ -77,60 +77,137 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM2PEPF00003FC2:EE_|CH8PR12MB9765:EE_
-X-MS-Office365-Filtering-Correlation-Id: f744da09-aa91-46d9-bb90-08dedca8d34e
+X-MS-TrafficTypeDiagnostic: DM2PEPF00003FC2:EE_|IA0PPFAF4999BF6:EE_
+X-MS-Office365-Filtering-Correlation-Id: ee71401b-1330-49a0-d115-08dedca8cfd4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|23010399003|376014|1800799024|36860700016|22082099003|18002099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|376014|23010399003|82310400026|36860700016|1800799024|18002099003|22082099003|11063799006|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	CJ4bk0ju70TFqP2QFrTBQAB79YUfPx+CUIFaA7fbz76JI/omjGSAIEgI0kc4ai0S/uTwIj7tig5kqrg6IrPKZu9YOcXKUKIN/T49sRUwKFtnLv9qotWahi5kS6AOpslfT338fcTA7+MuOaATvr+/sajUhzaNXsQwUY9xrjAHL9r4dqtECC9JnfyWFPJjVCtvQPYg+T8vDXWXuFJSG+RfHgxGfeCM6F549fWeQoXfh2JSkHbgo9SZzzKCG0cVuCP5ysQ7Tzu2Mdqm0cy+4kWPjjulM0tR2a7eY3Yk9GMbSm+1zVTLhHuaeQ6yKjUycKKyy/bIUKqKSRDJcPhIdoHneSzj/PMR95ZkKiXx/e0csEA4rtSHg713Z6KrmChF+PF7f4ZaMBRxlvbhrZlQln/lpc1qhCrb5tgxZsQPCbyWkPDR8YQoAPxhhfb6+yiM0cOQYQYzOajB5BLOOijJ+OCJQFIImhp38XiH0U7PxmQJyZGPchPvYz5qKEcjlRWXCh9VOaKHv5HJ2zXWJYuUGeRTMnNtTu0OaSfrc7IXjx13u6UN3HLV4zFG8Gz6kF9mTxNVPKXkbF/oHHjFIbo7xMklEJ0BwLFcVq/yrQTVy4RLXd9GIIgI73qbTE1KWUWNedWxpfKhbc1YH3n7mmqykSlJGWHzC5w+0G6uv6//4TBPPRBi9JlCBfBhFSnLksq4us3RY6RNidxGjja0nPJY2X5OCA==
+	XJgaLsXI8UmW3/oVQDNjJC8ehNGwml0PkHdjvU6x6HiRw+YZ2bCrCcfl25C4aGBjlvo8B1jEeFnNKj2rRau/+QSDbuoeDe3AF7H/msIdEu3bHGclw/Wp1PmMPv9zV9RsnQaxhJJhkYLcvicJNCmxKjLKhoM8aRGHOpORqCKyAv/0k56BLxzA5r9IAWMyu1vkXSwAeI0O+PC+kTCikYNTaF1pKFD+uGHGeFytiz6SC/aa788QTqROgS7FQrv4O8sXKDBAakARhgYsIjRCdNygHzDyQp2krSB6Q/TfOrEKvFpnnn4I+G1/RQsXcRQ6rhxJTC/6y+IAkgOafMy6AqUy/nMXNKq+zGvpX+cPwv96QNvk6VKrkbU6j6KTWWbjogcdKYgDgzGWKnRtLBKyUa833T9Y3Fx0Uv2zW9lUq2vQkjSVwBN2E3zuWhU8wRHNK8UFGy5ytpg4oIw5uhSRy2gogfs6qpqqnMdOwsqKMvuZA8S6zdk7Sajln4NqaDiyqzliSBtIkyaytRA0r7glhTtUgPAna1+83rwD1Emz1o3Qwfq07WHxzVtgoXwGnl0VMKo/IMojl53LEFHm52hVEppzIP/q+u99TabZM399ZNqMObgZcnkHRQguOoALwDFiiCSPO2OrQJiPhhz9wNjowFnIPqrlu6fZKdXsbC6s/VEGjFVXzvQ52HYOiLoWp5mMqy3WlwLmMzLzw6UsIy3H1Wb2aw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(376014)(1800799024)(36860700016)(22082099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(82310400026)(36860700016)(1800799024)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	pj2Xicso5TIpgpJzS7ra0JwsDtQMS81X+btblnKPOKGWuKdzrLmwI1Lt5nR1IuPCWuvk0JfD0GEj+wwHUW+PwZKlawgOUm/GSz/ZTML0dpp1e4WXg3k63isOATCct1mTaX+327tYdyuW1XV0g65b1qDVZiGHLXzIoUmvvMT8+P+f84yH5x4htkRtbazyExK9Oo34PVHSCyznNbqO8LICvJdmR3hgIpwzDXKDSNnFrTx/sNkGTFt7j4v0HI3pYr1WREmrFivu4XM4x/BYl/YMo0uUe5OV+rHkw7jdZnlxd0T1JqKVqMIyVzOVZXHFMw6V5zlfH1B926Gzy615ynpjClzjSXEVkhcVt7ceHjG9niqzjlOqo971r7adSROihksdh7PqN1FoleXaXbArhyjNAK8mJINilRD/X9HH7uwB/S2j49E7ibrCYjOmww8alGBz
+	V5FYsLsOV5V/FnX009fncHflF1plUPcwLzVWdH9WRqCZGfmD/FLASqKaew1Ns+1DLmnMV3sBo7PbN7UtmUaXOJJRzQadunhPvU2qTCrI2SpvW/M4v5eWW5m6PTdoN6oKvlOSNvwLTt58M0EwVFuG3W5jxWDZy02bgakhyVXhJXFtwSPZsHKbcTVP2IvXmmpEPbGQJk6zioavapYxhc1cbaHhx/U6sPxvLHprFNzw3H7XG4Xv5IOqzMTc21fAE2AaksIisV0wm5Uwf6vVIxDxkhK+6lAHt1jKjAcr6A3MNnmnMiBy7lLm9lgXAPn0Xy4ZSAtbOaPyuSqn08iSvKAt6/n+tEYXYp5D1Z3gAPwmwPT2XuRIQWEw+rnxXggFwb+dpsQTLDEi2BZ7eB665a3XvRRdV+KbcEoMFgQhMunJY//Fw3D3xdPOhy+sL/gmoan/
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 04:24:39.0160
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 04:24:33.2152
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f744da09-aa91-46d9-bb90-08dedca8d34e
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee71401b-1330-49a0-d115-08dedca8cfd4
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DM2PEPF00003FC2.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9765
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPFAF4999BF6
 
-misc_deregister() destroys the device but leaves miscdevice.this_device
-pointing at the freed struct device. Clear it so any later check of
-this_device, and a subsequent re-register, does not observe a stale
-pointer. An upcoming change uses this_device to track whether /dev/hsmp is
-registered across the shared ACPI sockets and relies on it being NULL after
-deregister.
+The metric table DRAM region is mapped with devm_ioremap(), tying its
+lifetime to the socket device. An upcoming change lets the ACPI front-end
+share the socket array across sockets and coordinate its own teardown, so
+the mapping can no longer be pinned to a single per-socket devres scope.
+
+Switch hsmp_get_tbl_dram_base() to plain ioremap() and add
+hsmp_unmap_metric_tbls(), which drops every socket's metric_tbl_addr
+mapping. On the platform driver register it with devm_add_action_or_reset()
+so the mapping is released on both remove and probe failure; the socket
+array itself stays devm-managed.
 
 Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 ---
- drivers/platform/x86/amd/hsmp/hsmp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/amd/hsmp/hsmp.c | 19 +++++++++++++++++--
+ drivers/platform/x86/amd/hsmp/hsmp.h |  1 +
+ drivers/platform/x86/amd/hsmp/plat.c | 14 ++++++++++++++
+ 3 files changed, 32 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 10fc21887308..ccd19c7bf115 100644
+index 1a87931136fd..4586d86f72a3 100644
 --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -531,6 +531,12 @@ EXPORT_SYMBOL_NS_GPL(hsmp_misc_register, "AMD_HSMP");
- void hsmp_misc_deregister(void)
- {
- 	misc_deregister(&hsmp_pdev.mdev);
-+	/*
-+	 * misc_deregister() leaves mdev.this_device pointing at the freed
-+	 * device. Clear it so a later re-register is not skipped on a stale
-+	 * pointer.
-+	 */
-+	hsmp_pdev.mdev.this_device = NULL;
- }
- EXPORT_SYMBOL_NS_GPL(hsmp_misc_deregister, "AMD_HSMP");
+@@ -12,6 +12,7 @@
+ #include <linux/acpi.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
++#include <linux/io.h>
+ #include <linux/semaphore.h>
+ #include <linux/sysfs.h>
  
+@@ -414,6 +415,21 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
+ }
+ EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
+ 
++void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev)
++{
++	u16 i;
++
++	for (i = 0; i < pdev->num_sockets; i++) {
++		struct hsmp_socket *s = &pdev->sock[i];
++
++		if (s->metric_tbl_addr) {
++			iounmap(s->metric_tbl_addr);
++			s->metric_tbl_addr = NULL;
++		}
++	}
++}
++EXPORT_SYMBOL_NS_GPL(hsmp_unmap_metric_tbls, "AMD_HSMP");
++
+ int hsmp_get_tbl_dram_base(u16 sock_ind)
+ {
+ 	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
+@@ -438,8 +454,7 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+ 		dev_err(sock->dev, "Invalid DRAM address for metric table\n");
+ 		return -ENOMEM;
+ 	}
+-	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
+-					     sizeof(struct hsmp_metric_table));
++	sock->metric_tbl_addr = ioremap(dram_addr, sizeof(struct hsmp_metric_table));
+ 	if (!sock->metric_tbl_addr) {
+ 		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
+ 		return -ENOMEM;
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index 0509a442eaae..98c82a4c0cc3 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -64,6 +64,7 @@ void hsmp_misc_deregister(void);
+ int hsmp_misc_register(struct device *dev);
+ int hsmp_get_tbl_dram_base(u16 sock_ind);
+ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
++void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev);
+ struct hsmp_plat_device *get_hsmp_pdev(void);
+ #if IS_ENABLED(CONFIG_HWMON)
+ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index e07f68575055..e7ee6e701e5a 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -201,6 +201,16 @@ static int init_platform_device(struct device *dev)
+ 	return 0;
+ }
+ 
++/*
++ * The metric tables are mapped with ioremap() rather than devm, so release
++ * them explicitly. Registered as a devres action so it also runs on a probe
++ * failure after init_platform_device() has mapped some of them.
++ */
++static void hsmp_pltdrv_release(void *data)
++{
++	hsmp_unmap_metric_tbls(hsmp_pdev);
++}
++
+ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -211,6 +221,10 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ 	if (!hsmp_pdev->sock)
+ 		return -ENOMEM;
+ 
++	ret = devm_add_action_or_reset(&pdev->dev, hsmp_pltdrv_release, NULL);
++	if (ret)
++		return ret;
++
+ 	ret = init_platform_device(&pdev->dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
 -- 
 2.34.1
 
