@@ -1,77 +1,108 @@
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600853AB262;
-	Wed,  8 Jul 2026 09:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA5437C0F6;
+	Wed,  8 Jul 2026 09:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783503771; cv=none; b=jY3aaAurcVXQHH5OOZBQDfycGyAJmp9tXPDWP+Fv2aedhzMEBOUHMytMDsG0KlJ3f2oLb3yVNdVhmCrQm6lVLewa6UUUHClGhlUcGA7dSJBHK+qKvVS2/gS1QZKlYDAtawPmDFJy2aq2dc9Se3offvEw63LdkouHneVQQZWlHxU=
+	t=1783504799; cv=none; b=UxZqwtx8u1Hdtxz888DfMm5p0uOBt69JXOLDLTVfLTJhtB5KECbtse0EeY6WdLUyCK/cUs5iUyusnEdm2kReWy8mJxzULf+yFz9+9JeCr+BF0+0sukJQz2gXfIhtgd1u0dNrasdzshdCbMePQ6UHwgng4FxECrks2+MTCRo2rzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783503771; c=relaxed/simple;
-	bh=BOYisGVCk+iEHi+C0T2zXdedHdSUlz6rvTNVRLmvURI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SLuzPPI0pUa0JM1KftZbH4sxuhUZI8Xu15OYVdz9WJVtunSxh53c8FwBf0vS+RyseXd/YDGkYB3Mdkk7y6AsonU7y+FNbJZMKnuRiVLf2DjiliMAE19DVda8rPCfGPSoYeU3X9l2rEWMLnjep0NykhUaFjmB1KQfdK205CvschA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout3.hostsharing.net (Postfix) with ESMTPS id 708DDC88;
-	Wed, 08 Jul 2026 11:33:07 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3DE4D6022F23; Wed,  8 Jul 2026 11:33:07 +0200 (CEST)
-Date: Wed, 8 Jul 2026 11:33:07 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Guangshuo Li <lgs201920130244@gmail.com>,
-	"David E. Box" <david.e.box@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/intel/vsec: reset state before
- re-enumerating
-Message-ID: <ak4ZUw92pn_F7Z4u@wunner.de>
-References: <20260708032647.712412-1-lgs201920130244@gmail.com>
+	s=arc-20240116; t=1783504799; c=relaxed/simple;
+	bh=OzifGntnFTvV95kRKQRS8JoyMSEQwUNX5vz5l6sYaNc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=UwhE6DzoMg7PtJwQVvNlKw32aAF6fi8exAXFSvyua7/luS0igClo08B+JjGd9VCM26nsybcEghD30OUV6V30jYX4TbPXAjzLk+982Kgk9zNlHG9xA/c+P3UCS9vPsPU2E9yjFIbxJfvxPpG9yAMy1hmPvTCqzzfahRawsdYwz1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JwHK1Kkm; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JwHK1Kkm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783504798; x=1815040798;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=OzifGntnFTvV95kRKQRS8JoyMSEQwUNX5vz5l6sYaNc=;
+  b=JwHK1KkmacloKfVuoYFqkW9ZmZaEulYSLcd8K2T2H3CotNoV9l9v8PRh
+   g9Wl1+qT+WqoFZPGfdkDXaauaMS74g3XDNhL+rGIyvxPw/jBDQbHEbIjr
+   uj0LgiJDZwuKTGE3pDW2vh/VTKGsQiVN6SlfEs1blClUyTnqCN+yqBgRV
+   iKfxQliheMtEmxN+Qu3fiS5KQwRg/as1G8zN0OVkTw8GVHj+Qu7ps2qZH
+   hljfZ8kzCA4prR1mJroMMxrumIPTEfmEGTqOzbodx2I6TMDzbzX5bzxOH
+   jrIg/ol+CvbY3tgc5YhWfge1E6bicTjJRKww9OTA5SZZ4GCBSxoA2zO2V
+   g==;
+X-CSE-ConnectionGUID: Am5u7OARQh6Xhomr9DNNqw==
+X-CSE-MsgGUID: IjuIxe3sRBaDlisD1PWAbQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="83140114"
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="83140114"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 02:59:54 -0700
+X-CSE-ConnectionGUID: soRkUySDRviGABvAEXRGLw==
+X-CSE-MsgGUID: 6cm02R6bQDipVAOq3qUayg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
+   d="scan'208";a="258550507"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.169])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 02:59:51 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 8 Jul 2026 12:59:47 +0300 (EEST)
+To: Marco Scardovi <scardracs@disroot.org>
+cc: krishna.chomal108@gmail.com, eliadevito@gmail.com, emreleno@gmail.com, 
+    Hans de Goede <hansg@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+    moravec@ukf.sk, platform-driver-x86@vger.kernel.org, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, regressions@leemhuis.info, 
+    regressions@lists.linux
+Subject: Re: [PATCH v2 1/1] platform/x86: hp-wmi: fix platform profile issues
+ on generic HP laptops
+In-Reply-To: <bYfem026T1WGSu1hPtcAtQ@disroot.org>
+Message-ID: <e9b63bff-86e6-174c-3c1d-691419a35754@linux.intel.com>
+References: <ajqgkq_elUlMC0Ep@archlinux> <20260623164603.10322-2-scardracs@disroot.org> <358d9315-e974-3180-8919-3451c982fc44@linux.intel.com> <bYfem026T1WGSu1hPtcAtQ@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260708032647.712412-1-lgs201920130244@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1870850793-1783504787=:1682"
 
-On Wed, Jul 08, 2026 at 11:26:47AM +0800, Guangshuo Li wrote:
-> +++ b/drivers/platform/x86/intel/vsec.c
-> @@ -51,6 +51,13 @@ struct vsec_priv {
->  	unsigned long found_caps;
->  };
->  
-> +static void intel_vsec_reset_state(struct vsec_priv *priv)
-> +{
-> +	memset(priv->suppliers, 0, sizeof(priv->suppliers));
-> +	memset(priv->state, 0, sizeof(priv->state));
-> +	priv->found_caps = 0;
-> +}
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Seems fragile to selectively zero only portions of struct vsec_priv.
-If the struct is amended later on with additional fields, it's quite
-possible that nobody thinks about zeroing them here.
+--8323328-1870850793-1783504787=:1682
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-It's probably more robust to zero the entire struct and re-populate
-the info field.
+On Tue, 7 Jul 2026, Marco Scardovi wrote:
 
-I also don't think a separate function to reset the struct is necessary
-as I don't expect additional callers down the road.  So I suggest
-zeroing the struct inline in intel_vsec_pci_slot_reset().
+> In data marted=C3=AC 7 luglio 2026 18:40:39 Ora legale dell=E2=80=99Europ=
+a centrale, Ilpo J=C3=A4rvinen ha scritto:
+> > On Tue, 23 Jun 2026, Marco Scardovi wrote:
+> > >  ...
+> >=20
+> > You'll need to write a better justification into the changelog if you w=
+ant=20
+> > to have these above included. It also looks largely unrelated to what=
+=20
+> > you're doing according to changelog so it might actually belong to=20
+> > another patch but without proper explanation, I'm pretty much in dark=
+=20
+> > why you're doing these in the first place.
+> >=20
+> Hi Ilpo,
+>=20
+> I totally forgot I had this thread open.
+> Please consider this patch as void: I can't assure anymore its validity i=
+n
+> the long run and it's better if it's taken over by HP guys instead of me
+> tbh, also because I don't have a valid device to test it myself in the
+> first place.
 
-@David Box:  I've asked off-list for reset recovery to be tested,
-I'm hereby renewing that request.  See section "Software error injection"
-in: Documentation/PCI/pcieaer-howto.rst
+Okay. It seems Krishna is already looking at the "platform_profile:=20
+Failed to get profile for handler hp-wmi" part so we've hope of getting=20
+some solution from him eventually.
 
-Thanks,
+The other problems look unrelated to pdx86.
 
-Lukas
+--=20
+ i.
+
+--8323328-1870850793-1783504787=:1682--
