@@ -1,86 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36CD1D5160;
-	Wed,  8 Jul 2026 14:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235D643934B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jul 2026 15:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783521126; cv=none; b=Esc8bCeP4hRrC0ByI0cUW4Gf50GP89kFLeXkygMVlKjDs9D+H/k/UV76CQaDWIK7OFOhQxK2tQEnNCooOY4V3K7rEjHhB0Hi6Nc0OLTeexJxPSZJzxaQ7HrKKnztkd3IFlr77mXH5yjxkbXUmkR/yg355r1K5+NF22AenvIBkGE=
+	t=1783523359; cv=none; b=CZhAWlPyMHb7PEkUKGelO3XLUXRro0BoVjqxVcvuvHMQo0M2GLk29Or3gfdhnObh499pyGBAUIK8iiLItLVbYMetjNMe3a0cDW2Mm/GJgVGg2xsA2T94IdDZ5xnHO5g3c6O639Rd5QZ2NiTqogzLllq5n4OLdFu3STuw3C50XI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783521126; c=relaxed/simple;
-	bh=rSppmTOAmtBkSLhZVuFPsgQN1Q0/f8PC59cpT0yi3M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ft/1OxJnQh+nKWPtRoiRr/ArApGq/NlONUeSvGIK40+aPNp7hduCuXlOZlw3706215c8pbalNaCT/PkqEU/HanqhH5My4hW2/n6qSzHQJYA3Vz1f5R41HqXPRXPncesZlQtiZynSIVW7Q/yTiIgjWNX1wsElTB0QPXX8gFctWEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BLaTcr5l; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783523359; c=relaxed/simple;
+	bh=6FHB2KVdyCs7Ev/ACZ4h/nmqM0qYfR9aN11iuDUGpiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qU3IkLoWxy+5fx4huleXvL3dC8ib8RzrJSrpay7xZ3hu2tpQyoKV5sX/ALatMvX7NrpDde6/nRtb/Pqa+Qsvq85Vid8uwFYk7jEL18vEc61amh/mbaRoYWbfvauy8zscPhJTbuF58yeZr4CPwKd8PJSS2gvawbwzjwxvq3FPOCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VcN9G8rz; arc=none smtp.client-ip=74.125.224.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BLaTcr5l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783521125; x=1815057125;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rSppmTOAmtBkSLhZVuFPsgQN1Q0/f8PC59cpT0yi3M4=;
-  b=BLaTcr5lBChu5LGNdDN848KxX48+FzOK85IUbGbmNG+2SftgokS2pIsr
-   YX8pv+cOcWJH0c2XHDVvdDjAu4oKJawnTK2T2Wf+kKnbNvdDA3NnJw+UC
-   OfUDpq5HT+gAx/xhNn47wsz9Kq4zTx3NK2o9itXIVfJWYobiN2eeWTrj0
-   /tN8/dy7KCniQZkM0wohWBL7Bw8f3uyFkZ4rZ64iH2zjuz69GTBN8xGL1
-   ZCXmedNWtRDI0Y2IpxQQlFVI0dHZFY6neRHpuoN3PF/NOkv3llOHJX/tX
-   iiFdVlI4jLb+QiyhgKOLpd/Q7UmaTbzzOsbNES9kxHdEsYQGEDl4nxr1+
-   A==;
-X-CSE-ConnectionGUID: WiacP/9mTKmKy5sAyBCEzg==
-X-CSE-MsgGUID: C9lsGdwuQ/eJ6/u/g9qX1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84242362"
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="84242362"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 07:32:04 -0700
-X-CSE-ConnectionGUID: HSpXZMxUS5C6BKWTi7/d/w==
-X-CSE-MsgGUID: ZLHYUe7NSoCAd0ti1ZuKNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="247929343"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.100])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 07:32:02 -0700
-Date: Wed, 8 Jul 2026 17:32:00 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Mattia Dongili <malattia@linux.it>, Arnd Bergmann <arnd@arndb.de>,
-	platform-driver-x86@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v1] sonypi: Stop setting acpi_device_name/class()
-Message-ID: <ak5fYKbOVT4D_xbI@ashevche-desk.local>
-References: <3447860.aeNJFYEL58@rafael.j.wysocki>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcN9G8rz"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-6651bc57458so672825d50.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jul 2026 08:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783523357; x=1784128157; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=GIvOAqP0mpaS0VshVHzhofdgPrfSaI1TpwUsXOmOKMg=;
+        b=VcN9G8rzOJnWgrZVFeGMxaG9bjyw8LakXuFH+7mKP79OnGXWpCH1isXz+3QNAcc2fp
+         L27BeS8aKbMLUi3HOsSrgk5GGhjbMZIAIaK2dhmi0mVbHj8Ee8Bj5Jex6Vma6NyuXi3n
+         0EVedziBKDe/OPim6PjJtdwurCtjn4RGa3Vv4D0Jnc0bGbNQNHYmWu8hq8tS79BT95Q2
+         t0rPhPdXeSTZO7Wn7cnbDL5Rhllc5PofE0WH0GlsSGFpX3RNkcpuDFzaP2NMYMrdTGWc
+         E3jCb1gVaqYjqSuZLBVZFD+ap6cfYs8z5Tjq1gTnmoEQLya0KPAWK9S4b8Quwe2G06uR
+         aVwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783523357; x=1784128157;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GIvOAqP0mpaS0VshVHzhofdgPrfSaI1TpwUsXOmOKMg=;
+        b=oTZXm4R9cCA+bLBxhq6WGlFdULSs6HTn1UQCC3Xa7bYRvCCqU9uUb6RPssgaWI+CMo
+         S1Q3wB1Q3pTdGnpe7OteO0R5TUKAOh+oocuKhLvVJuPRd0KqR+H8Ee2YzSGGVEvMQaA+
+         Ae62yBm1sQlLiZCyeoOfgcICtxD4jW15KdMvzw344RiTI0O2lHc1EN108M3DyCzakPk3
+         2D8afT6r/T63MTm+UMSY8Drxjl7KI6WSJEIRL+PPKz6H146xCXuHnNbUZ+x6gmQv9nVZ
+         xWzpTfzyXwzMgGIjdjxRuGRm1UMHuDXE+23lCOUiK9CoP4DzSQIuwrP3BNoIJvAYCHgE
+         pizA==
+X-Gm-Message-State: AOJu0YwJ6Y9DfCDNUT2sQyYzfUDiiXjUBFqyLfDC2nMQibV9kPUkAcQy
+	3faTBaxMn4O+cOCxINVTgG7h6cpVhPeBVeG2jfvqcT6w2Wm0CUY5EHk2FZHYYkFm
+X-Gm-Gg: AfdE7ckqWHbVYKizAlwxz+kABa/Pia6rCINUEHHn3cW/slLEWrw/DSQPp9uNQ7sNFds
+	YcTsc9MnuFEBPO2/WX6XlqdrbtFw8/yqXi+PgPZNQJEvPz1ImjaZl98fzZJf4BaGPIOmuBplhRl
+	UOAMlry4QhXPzuI30XKRxQJl59cUGFrjPQzsCmvHVClwuTVIut3CHEsKacN8C8o5k1ng34V8Aju
+	N6cK/hpXTBTEH3kpnL1Wbuusa95TCjIz/u6ibaWXOWlw9sGQL7TjK+5sR1GwqLMDtRuazwBJHti
+	GXatp3MQRE+TyimwoHplhXnBnTbHoefjYFoQiSoJy5XCDmSshvIaKsOqRfI42D7nFFa+klgTnIj
+	F5024T1AgcLRE4cFu/lXUWwPPzpaI3RyE4anA3SReETqNh/6VBPUHECs22CsUyfFNaeNY3Uqdei
+	OE8VXoygS8mcc=
+X-Received: by 2002:a05:690e:1917:b0:664:da95:cf4d with SMTP id 956f58d0204a3-6679f2cda01mr2102192d50.18.1783523356877;
+        Wed, 08 Jul 2026 08:09:16 -0700 (PDT)
+Received: from fedora ([2600:381:b514:354c:5185:bf38:e2f9:b87d])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-66787a35d07sm2189485d50.15.2026.07.08.08.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 08:09:16 -0700 (PDT)
+From: Dave Carey <carvsdriver@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: ilpo.jarvinen@linux.intel.com,
+	W_Armin@gmx.de,
+	johannes.goede@oss.qualcomm.com,
+	linux-kernel@vger.kernel.org,
+	Dave Carey <carvsdriver@gmail.com>
+Subject: [PATCH v12 0/2] Lenovo Yoga Book 9 keyboard dock detection
+Date: Wed,  8 Jul 2026 11:09:07 -0400
+Message-ID: <20260708150909.23404-1-carvsdriver@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260623125914.833063-1-carvsdriver@gmail.com>
+References: <20260623125914.833063-1-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3447860.aeNJFYEL58@rafael.j.wysocki>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 06, 2026 at 02:38:15PM +0200, Rafael J. Wysocki wrote:
+Changes in v12 (addressing Ilpo Järvinen's v11 review of patch 2/2):
 
-> The driver sets acpi_device_name() and acpi_device_class() which are
-> never read afterward, so make it stop doing that.
-> 
-> No intentional functional impact.
-> 
-> This will facilitate the removal of device_name and device_class from
-> struct acpi_device_pnp in the future.
+  - Add #include <linux/sysfs.h> (for sysfs_emit)
+  - Add #include <linux/types.h> (for __le32 and __packed)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Changes in v11 (addressing Armin Wolf's v10 review of patch 2/2):
 
--- 
-With Best Regards,
-Andy Shevchenko
+  - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3";
+    these fields should reflect when the ABI lands in the kernel, not
+    the submission date.
 
+Patch 1/2 (lenovo-ymc) is unchanged from v10.
 
+Changes in v10 (addressing Armin Wolf's v9 review of patch 2/2):
+
+  - Update ABI doc: Date: June 2026, KernelVersion: 6.16
+  - Add #include <linux/compiler_attributes.h> and <linux/types.h>
+  - yb9_kbdock_query(): change return to pointer-out u32 *bkbd to avoid
+    a 0xFFFFFFFF status value being misread as -EPERM
+  - struct yb9_kbdock_data: add spinlock_t lock
+  - yb9_kbdock_report(): hold lock across input_report_switch + input_sync
+  - yb9_kbdock_sync(): return int, propagate query error to callers
+  - yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
+  - struct wmi_buffer out: remove zero-initializer (not needed)
+  - yb9_kbdock_notify_new(): drop manual length check; use
+    .min_event_size = sizeof(__le32) in struct wmi_driver instead
+
+Patch 1/2 (lenovo-ymc) is unchanged from v9.
+
+Dave Carey (2):
+  platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
+  platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+
+ Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock |  19 ++
+ MAINTAINERS                                               |   7 +
+ drivers/platform/x86/lenovo/Kconfig                       |  14 +
+ drivers/platform/x86/lenovo/Makefile                      |   1 +
+ drivers/platform/x86/lenovo/yb9-kbdock.c                  | 322 ++++++++++++
+ drivers/platform/x86/lenovo/ymc.c                         |  19 ++
+ 6 files changed, 382 insertions(+)
+
+2.47.0
