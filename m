@@ -1,108 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153923115AF
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jul 2026 07:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B483FCB0A;
+	Wed,  8 Jul 2026 08:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783496607; cv=none; b=cJSl1gU1+FD6Ay9MMIIFZ4RIObmG865OO4Rzx0a62q8W52Hlqs70PjNw75BzT1uiXeUnMh6kfOTc/RdsGhzpfj+HDjnhFuDuU/58w3p1ZTsgsLNQ0d8I+nqdCCeTTDlgFN//mEsRjILQVPECXZkWsImW1ARWmFN9P9NU5onsOxk=
+	t=1783499055; cv=none; b=DPrUbzWAFG68bdP7bmm7zAZOLIGX1lw2T7ykbE+9cdta3YJihLDwUppkgwfpXbnMrsLZRk0y0WI4yTklNBUlsWCxyxYqxG9jKkx5N7nzazL1i5F5Mzdgj4RfXkzht7NrVfWYqWZ5cVvJID1iuSgO4SA9gLZgp9ueJc+MIwGfOGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783496607; c=relaxed/simple;
-	bh=wqspe9peDUDf7Lj0Ckvg+Ou41duj870AZXBlowe/bLA=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IXypPKKMkf43oEni2uaudlF9rvh95+/ItL3hIy5jNLE1KQskVNw7iYxLC/5iv85FJxBQjGQN8Ivev3Y6TPWt/ng3w8t3i4Ascx1HOFQC1UiXYlcSiZhyi4ssS9T7aE2YOMxxZEr++q8qtxxPRAUsLaRg86JlSsUjc2SDSe1zzEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UdVixJQY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783499055; c=relaxed/simple;
+	bh=IX94bXMbbRmaCb4/ACgbttjebsI/vycb4edIzQhXcAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GX5wosphjbxrDxhMdjcrhTnm6RT/i8i7rPvMyjqDOnkqclcxKCNoyV20/yRs0ygddobdWdLEwJ3kjH7L1ZGMjAtyV8anWeXLty7sF0M46KeLjO6WqdgX4qomSuJRKBHfOVzEzDMv7YAPDbacC3S04K3Yhxhb1uaZyysDR/b1t2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyDKbu1x; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UdVixJQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850011F000E9
-	for <platform-driver-x86@vger.kernel.org>; Wed,  8 Jul 2026 07:43:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyDKbu1x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C3B1F000E9;
+	Wed,  8 Jul 2026 08:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783496582;
-	bh=wqspe9peDUDf7Lj0Ckvg+Ou41duj870AZXBlowe/bLA=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=UdVixJQYfC8sGwm2LkLtOuhdj8rGXYZvhM/nEvj78/GfwKlgApbA2mM7v4TKCDBtM
-	 TkD+j6IdxnEthYn0jShnTGRcHvUl3uWT0ZDhmk6v26dbgga280PtMUZDwzHv6zk6w9
-	 Yi8sszDGyw24AvoZisXpI7QNHqYDfzKTPKFdZGUiCUBuP3uOnWP2zicuVvIaA40jxJ
-	 EVB46mt6atPqufA0m9s4aa5bEOsisUWJKTjqkHfv44JLBSqWrvCACa81iSvV/e8lQX
-	 OTmHzverjKM3OU5lQEPWgn0fZKvlavTlsO4QonPQHPIENoNkOtr3nIiF1feGEE3W9d
-	 dt2lpEp1ZXFPw==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5aec201b582so435673e87.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jul 2026 00:43:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoJMqxydC62JfV7JrzeajvXstMFPmcC5oQvwLHXEJ8BMe5O4Hcdg+cFAZPKuEf8omgHlP7l1ipKCfoeRPBdMlfdgkzd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ2iFNztYZrdcD6Q2UD4yy8XsvutKJt6/dhPmZYy7+ReQIjEEX
-	by3oaM9e4v/mZ/AyP7SO35Ah8q5dDJsgDNaNGi+F3XmsAp+BQYjpjlk9JL1Aivfl+XJjIsbeUvC
-	lmJGLs63yxZ5DBP5JiOt9m3cJGit+MBcXfvgEOpE97Q==
-X-Received: by 2002:a05:6512:3a8:b0:5ae:a9eb:c5c3 with SMTP id
- 2adb3069b0e04-5b011478162mr274920e87.61.1783496580641; Wed, 08 Jul 2026
- 00:43:00 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 00:42:58 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 Jul 2026 00:42:58 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <ak0jyUbNonSRiP_g@ashevche-desk.local>
+	s=k20260515; t=1783499051;
+	bh=oSaZCJYBE7oj/TxkN3HTMPHlDGDkR4nh/cfAgBXZdks=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=OyDKbu1x5TFbMMPPFO/5Z4ALeaWhDLAeaZpgFxdh9fzejmYg3KyucEwzX9NlFYfos
+	 EXo/IFcVb8mZ4bKTBur+bTPOsOuzAtoOueP88RyOwRUlzKuX8p0nIDaS0QnXBrtRQs
+	 qUqd73KMpymyYKhdwl8HgsWZHYtAUTx9CdbtQFxqnScOFk9M0YkTO+MUpKNYyUAh0M
+	 tNI5JKBGy1f+SJbDzlE0JwGylrCI9lvYVikHn5q/F2uKoOJt/GM18S7koVeXNJm2hr
+	 0PEKTIc2xf1eNQlYomTW5VwHDOK804SNCnkBShign96+NtvwrSxFmS/653iNAVIbX8
+	 uftHwyrxzg9YQ==
+Message-ID: <c2e5e168-bc94-4b17-87e6-8974bb83be3e@kernel.org>
+Date: Wed, 8 Jul 2026 10:24:01 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
- <20260706-pdev-fwnode-ref-v3-5-1ff028e33779@oss.qualcomm.com> <ak0jyUbNonSRiP_g@ashevche-desk.local>
-Date: Wed, 8 Jul 2026 00:42:58 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Md7-XMBKpdPuZ4=epfTn6F-PXKJBZNPGuz5xbVy58BHsg@mail.gmail.com>
-X-Gm-Features: AVVi8Cc97SNnhCE85729H_fOi3Wx8wY1APMX-PhjHPSFVtKB-jxewFEQvchpN2c
-Message-ID: <CAMRc=Md7-XMBKpdPuZ4=epfTn6F-PXKJBZNPGuz5xbVy58BHsg@mail.gmail.com>
-Subject: Re: [PATCH v3 05/20] driver core: update kerneldoc for platform_device_alloc()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Lee Jones <lee@kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, 
-	Thierry Reding <thierry.reding@avionic-design.de>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Srinivas Kandagatla <srini@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Vinod Koul <vkoul@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Doug Berger <opendmb@gmail.com>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson <ulfh@kernel.org>, 
-	Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Peter Chen <peter.chen@kernel.org>, 
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Maximilian Luz <luzmaximilian@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, intel-xe@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-usb@vger.kernel.org, 
-	linux-mips@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	mfd@lists.linux.dev, Manuel Ebner <manuelebner@mailbox.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] platform: arm64: lenovo-thinkpad-t14s-ec: Add
+ hwmon support for temperatures
+To: Daniel Lezcano <daniel.lezcano@oss.qualcomm.com>
+Cc: sre@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ linux@roeck-us.net, andersson@kernel.org, konradybcio@kernel.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ bryan.odonoghue@linaro.org, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ neil.armstrong@linaro.org, gaurav.kohli@oss.qualcomm.com,
+ manaf.pallikunhi@oss.qualcomm.com, priyansh.jain@oss.qualcomm.com
+References: <20260707192228.14647-1-daniel.lezcano@oss.qualcomm.com>
+ <20260707192228.14647-3-daniel.lezcano@oss.qualcomm.com>
+ <20260708-wakeful-cyan-caribou-35fd09@quoll>
+ <bba69f4b-9a09-4e9e-98c7-3833924131eb@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <bba69f4b-9a09-4e9e-98c7-3833924131eb@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 7 Jul 2026 18:05:29 +0200, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> said:
-> On Mon, Jul 06, 2026 at 02:44:17PM +0200, Bartosz Golaszewski wrote:
->> Users of platform_device_alloc() + platform_device_add() must not modify
->> certain fields of the dynamically created platform device object. Update
->> the kernel doc to say which fields are affected and which functions to
->> use.
->
-> Consider using __private checker attribute for them as well. It will make
-> sparse scream.
->
+On 08/07/2026 09:31, Daniel Lezcano wrote:
+> On 7/8/26 08:30, Krzysztof Kozlowski wrote:
+>> On Tue, Jul 07, 2026 at 09:22:27PM +0200, Daniel Lezcano wrote:
+>>> +static const struct hwmon_ops t14s_ec_hwmon_ops = {
+>>> +	.is_visible = t14s_ec_hwmon_is_visible,
+>>> +	.read = t14s_ec_hwmon_read,
+>>> +	.read_string = t14s_ec_hwmon_read_string,
+>>> +};
+>>> +
+>>> +static const struct hwmon_channel_info *t14s_ec_hwmon_info[] = {
+>>> +	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
+>>> +	HWMON_CHANNEL_INFO(temp,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL,
+>>> +			   HWMON_T_INPUT | HWMON_T_LABEL),
+>>> +	NULL
+>>> +};
+>>> +
+>>> +static const struct hwmon_chip_info t14s_ec_chip_info = {
+>>> +	.ops = &t14s_ec_hwmon_ops,
+>>> +	.info = t14s_ec_hwmon_info,
+>>> +};
+>>> +
+>>> +static int t14s_ec_hwmon_probe(struct t14s_ec *ec)
+>>> +{
+>>> +	struct device *dev;
+>>> +	struct t14s_ec_hwmon_sys_thermx sys_thermx[] = {
+>>> +		{ .label = "soc",	.reg = T14S_EC_SYS_THERM0 },
+>>> +		{ .label = "keyboard",	.reg = T14S_EC_SYS_THERM1 },
+>>> +		{ .label = "base",	.reg = T14S_EC_SYS_THERM2 },
+>>> +		{ .label = "charging",	.reg = T14S_EC_SYS_THERM3 },
+>>> +		{ .label = "qtm",	.reg = T14S_EC_SYS_THERM6 },
+>>> +		{ .label = "ssd",	.reg = T14S_EC_SYS_THERM7 },
+>>> +	};
+>>> +
+>>> +	ec->ec_hwmon.sys_thermx = devm_kmemdup_array(ec->dev, sys_thermx,
+>>> +						     ARRAY_SIZE(sys_thermx),
+>>> +						     sizeof(sys_thermx[0]), GFP_KERNEL);
+>>> +	if (!ec->ec_hwmon.sys_thermx)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	dev = devm_hwmon_device_register_with_info(ec->dev, "t14s_ec", ec,
+>>> +						   &t14s_ec_chip_info, NULL);
+>>
+>> Last time I commented this looks like actual ABI break. You did not respond to
+>> that, so I assume my finding was right, thus:
+>> 1. binding is not correct (although driver should be fixed, not binding)
+>> 2. the code still breaks users
+> 
+> Sorry I misunderstood it was a question expecting an answer but an 
+> affirmation.
+> 
+> By ABI break do you mean:
 
-Sure but let's leave it for another series.
+Existing ABI contract is changed in an incompatible way, which has
+observable effects as below:
+> 
+>   * new driver with old DT will fail ?
 
-Bart
+^^^ this one.
+
+
+Best regards,
+Krzysztof
