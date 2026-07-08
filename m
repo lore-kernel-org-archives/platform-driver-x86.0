@@ -1,57 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4950C424660;
-	Wed,  8 Jul 2026 10:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0D4426D0E;
+	Wed,  8 Jul 2026 10:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783505850; cv=none; b=LbWo2WC+5Wi0vQ1s3jcWo+Xye2GUWllWgOOB7HFLaY+kDJOeIGP2o8d65BnJ3hQeJfxFQZPT9q+LnvdEeFuc9ROzxmPLZSox+GmLzebdiRbxOr8mEqBwrJiTo+e22Ec+KhJc7y0bL83G7GjK/NNdJRJhyRY1ueEc+eBSGIbEzow=
+	t=1783508095; cv=none; b=ZONx7vduuForDyX1kh72CgjldCC2UJQx41Pd4DlsQxcNNe1HLYm5xiKlXu0jxuccGoAlCjoLONMA5zeWE+OiyKT58zFVPNOIUusU6YU5je/QcEzdcE2Vg8k/ECuLNZ8++XZnojvmJuCUuu6LzQ+NAR1ZWXkEKJIzjGYBqaRCZkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783505850; c=relaxed/simple;
-	bh=z+fJlh5UrXzY/pW/XnlyhfBeYFddzjTX6YmG4k/I9fs=;
+	s=arc-20240116; t=1783508095; c=relaxed/simple;
+	bh=o9qbMTOJovTkmlO49HgJ0zWOjloIdSUzeHDdq6PoHz4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qucsKHvm6zh5Eq54hHIP3QZkuIoT9DG7APh469eDBL4RR7QXg3Q1NM/6vS4zEHYbUae6PBz19c9wQbL5wDN+qQ7G2XB/40dp3qNP+fHlERcot3fop7SlPScNGFvgQo4JQdWsoJrNm3z3+rOiVz6P+SYkuqzx5re1TMrUet1wRH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=musjK1/E; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=no7aOkqzngfzwluCVRqWgM1kUYuUUT4C3+1GegREc50WNy73sZdYYFlI3WckCImI74cB4uYj2wty/9DWLN6q445U+mrrfpXOPvgw8KunRSK0LuRoa/ruPVxtjihL3ygVmx+T7lz1UuokyD6cgikbxrpXWusT3KwdnvWd4oxu/ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WvxI76E/; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="musjK1/E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WvxI76E/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783505849; x=1815041849;
+  t=1783508090; x=1815044090;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=z+fJlh5UrXzY/pW/XnlyhfBeYFddzjTX6YmG4k/I9fs=;
-  b=musjK1/ETZhEy/SnoY/WxEjU7CtrmtgbhDWDPtoCY73RI38B+8MA5Jqo
-   enZTNRj5IH+56mHKMizIbVLorMWalwFnfvzN3oLmhbRbXO+92qyigtpK/
-   yBgZfnp5yGZeas8+DLPp3Svsuu+9G2V7Ua7gcPFoRlqxJENH/v5zJZXVL
-   3xbQ+rgqePV6uS/oOKgyA7v9EV5QfR+CBVxgS+5s+pc8yL7raidJINv/t
-   7L5YwYuP0kh6LY5FJuuWGWJjeUJqqxJo34JunnYl5cEQdlbGFgUGqH2kx
-   l0JIMiepLIKw73nieM+Bat2wzIBPjlXPH0rO2jcJzjq+vcM/iTimd1fxk
-   g==;
-X-CSE-ConnectionGUID: KCTTYtaaQduPN4EZPxuQBg==
-X-CSE-MsgGUID: xlOPMyUsSHWii6wVo9fBcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="83276398"
+  bh=o9qbMTOJovTkmlO49HgJ0zWOjloIdSUzeHDdq6PoHz4=;
+  b=WvxI76E/tCUmaFCKGnr2kHx/gZh5R1moq21dNkhExgNHmqOknzLobMfX
+   eOMv63+W1LueOc3QdC90mh9acmHJZbSjY0SMNq26MKLMIyCcBrYu8hzoD
+   JsvgBVjHjGBaskXB6sl+yfoOz5hApF+C8x/kvcN/AIuBYo9kEw98IPpUf
+   rphD5HWCMTEheDL9Y6xDeO4UMHwHK7enEUZjFXX8A94fck65iGjyNotiC
+   cXOo3e1lNL6UHJKyy5rWUnXErjm6r9Zi1S+uxNs838MbqKVqX8CmttUWI
+   vY3BI+niwKvOsKFgl9JLjHniWhHdJyrnHmXFQFdETuP+2bjIT6fu/wTNH
+   A==;
+X-CSE-ConnectionGUID: 7GAzyJSvQ32AVK+EkRn+mg==
+X-CSE-MsgGUID: f6XfBeHGT5SK++sBndT4cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="84041230"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="83276398"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:17:28 -0700
-X-CSE-ConnectionGUID: ZwxbmL06Qc2kUBJWLmDfOA==
-X-CSE-MsgGUID: XWds02OXRKCDM3pqaExstQ==
+   d="scan'208";a="84041230"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:54:40 -0700
+X-CSE-ConnectionGUID: q6gHeQYfSVy11zqX79z7qw==
+X-CSE-MsgGUID: hvQ7NmLtS3WMPQc8f2Trnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="252511542"
+   d="scan'208";a="284368889"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.169])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:17:25 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2026 03:54:35 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 Jul 2026 13:17:22 +0300 (EEST)
-To: Muralidhara M K <muralidhara.mk@amd.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/6] platform/x86/amd/hsmp: Map the metric table with
- ioremap() and unmap it explicitly
-In-Reply-To: <20260708042405.3758294-3-muralidhara.mk@amd.com>
-Message-ID: <46ccc6c2-f3d7-abb6-a6e2-3a74b48a9cae@linux.intel.com>
-References: <20260708042405.3758294-1-muralidhara.mk@amd.com> <20260708042405.3758294-3-muralidhara.mk@amd.com>
+Date: Wed, 8 Jul 2026 13:54:12 +0300 (EEST)
+To: Muhammad Bilal <meatuni001@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    hdegoede@redhat.com, jorge.lopez2@hp.com, Thomas.Weissschuh@linutronix.de, 
+    superm1@kernel.org, W_Armin@gmx.de, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] platform/x86: hp-bioscfg: pass validated element
+ count to package parsers
+In-Reply-To: <20260707202111.35414-2-meatuni001@gmail.com>
+Message-ID: <ab5eab16-8156-d3b1-06e4-072cf5807422@linux.intel.com>
+References: <20260707202111.35414-1-meatuni001@gmail.com> <20260707202111.35414-2-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -60,134 +62,255 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 8 Jul 2026, Muralidhara M K wrote:
+On Wed, 8 Jul 2026, Muhammad Bilal wrote:
 
-> The metric table DRAM region is mapped with devm_ioremap(), tying its
-> lifetime to the socket device. An upcoming change lets the ACPI front-end
-> share the socket array across sockets and coordinate its own teardown, so
-> the mapping can no longer be pinned to a single per-socket devres scope.
+> The per-type package parsers are handed the wrong element count.
 > 
-> Switch hsmp_get_tbl_dram_base() to plain ioremap() and add
-> hsmp_unmap_metric_tbls(), which drops every socket's metric_tbl_addr
-> mapping. On the platform driver register it with devm_add_action_or_reset()
-> so the mapping is released on both remove and probe failure;
+> hp_init_bios_package_attribute() validates obj->package.count and then
+> calls one of the five hp_populate_*_package_data() wrappers (string,
+> integer, enumeration, ordered list, password). Each wrapper forwards a
+> count to its hp_populate_*_elements_from_package() parser, but instead
+> of forwarding the validated obj->package.count it derives the count
+> from elements[0]. elements[0] is the NAME field and is always an
+> ACPI_TYPE_STRING, so reading ->package.count from it in fact reads
+> ->string.length through the union acpi_object. The parsers thus bound
+> themselves against the length of the name string rather than against
+> the real number of elements in the package.
+> 
+> This is safe today because hp_init_bios_package_attribute() refuses any
+> package that has fewer than the type's element count, so a parser only
+> ever runs on a full package and never reads past it regardless of the
+> bogus bound.
+> 
+> A later patch relaxes that check to accept shorter packages. Once a
 
-I feel the explanation is quite basic level description of devres 
-functionality. I'd say something like this instead:
+A later patch -> An upcoming change
 
-The unmapping for all sockets as whole is still devres managed using 
-devm_add_action_or_reset().
+This is because once a patch is accepted, it becomes "commit" or "change", 
+it no longer is patch. 
 
-> the socket array itself stays devm-managed.
+I probably explained it already once (but there have been multiple 
+submitters with this same wrong phrasing recently so I might confuse 
+people, I'm sorry about that if I did).
 
-devres managed is probably the better term in textual form. "devm" is C 
-codish way to say it in a short way.
- 
-> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> parser can receive fewer elements than its per-type count, a bound
+> taken from the name length no longer reflects the array size, and the
+> "elem < count" loop conditions and "elem + n >= count" sub-loop guards
+> read past the end of elements[] - an out-of-bounds heap read.
+> 
+> Forward the validated obj->package.count to every *_package_data()
+> wrapper so the parsers bound themselves against the real package size.
+> This does not change behaviour for the packages that enumerate
+> correctly today and is a prerequisite for accepting shorter packages
+> safely.
+> 
+> Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+
+Technically, this doesn't yet fix anything and stable people know to take 
+dependencies from the same series as long as you've the Cc stable in 
+place. So this Fixes tag can be dropped.
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 > ---
->  drivers/platform/x86/amd/hsmp/hsmp.c | 19 +++++++++++++++++--
->  drivers/platform/x86/amd/hsmp/hsmp.h |  1 +
->  drivers/platform/x86/amd/hsmp/plat.c | 14 ++++++++++++++
->  3 files changed, 32 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c               | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h               | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 3 ++-
+>  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 3 ++-
+>  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 5 +++--
+>  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++--
+>  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 3 ++-
+>  7 files changed, 22 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 1a87931136fd..4586d86f72a3 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -12,6 +12,7 @@
->  #include <linux/acpi.h>
->  #include <linux/delay.h>
->  #include <linux/device.h>
-> +#include <linux/io.h>
->  #include <linux/semaphore.h>
->  #include <linux/sysfs.h>
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 27fd6cd215290..768330d291da8 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -731,26 +731,31 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+>  	switch (attr_type) {
+>  	case HPWMI_STRING_TYPE:
+>  		ret = hp_populate_string_package_data(elements,
+> +						      obj->package.count,
+>  						      instance_id,
+>  						      attr_name_kobj);
+>  		break;
+>  	case HPWMI_INTEGER_TYPE:
+>  		ret = hp_populate_integer_package_data(elements,
+> +						       obj->package.count,
+>  						       instance_id,
+>  						       attr_name_kobj);
+>  		break;
+>  	case HPWMI_ENUMERATION_TYPE:
+>  		ret = hp_populate_enumeration_package_data(elements,
+> +							   obj->package.count,
+>  							   instance_id,
+>  							   attr_name_kobj);
+>  		break;
+>  	case HPWMI_ORDERED_LIST_TYPE:
+>  		ret = hp_populate_ordered_list_package_data(elements,
+> +							    obj->package.count,
+>  							    instance_id,
+>  							    attr_name_kobj);
+>  		break;
+>  	case HPWMI_PASSWORD_TYPE:
+>  		ret = hp_populate_password_package_data(elements,
+> +							obj->package.count,
+>  							instance_id,
+>  							attr_name_kobj);
+>  		break;
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> index f1eec0e4ba075..416d7e7aaaae3 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> @@ -401,6 +401,7 @@ int hp_populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_string_data(void);
+>  void hp_exit_string_attributes(void);
+>  int hp_populate_string_package_data(union acpi_object *str_obj,
+> +				    int str_obj_count,
+>  				    int instance_id,
+>  				    struct kobject *attr_name_kobj);
 >  
-> @@ -414,6 +415,21 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
->  }
->  EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
+> @@ -411,6 +412,7 @@ int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_integer_data(void);
+>  void hp_exit_integer_attributes(void);
+>  int hp_populate_integer_package_data(union acpi_object *integer_obj,
+> +				     int integer_obj_count,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj);
 >  
-> +void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev)
-> +{
-> +	u16 i;
-> +
-> +	for (i = 0; i < pdev->num_sockets; i++) {
-> +		struct hsmp_socket *s = &pdev->sock[i];
-> +
-> +		if (s->metric_tbl_addr) {
-> +			iounmap(s->metric_tbl_addr);
-> +			s->metric_tbl_addr = NULL;
-> +		}
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(hsmp_unmap_metric_tbls, "AMD_HSMP");
-> +
->  int hsmp_get_tbl_dram_base(u16 sock_ind)
+> @@ -421,6 +423,7 @@ int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_enumeration_data(void);
+>  void hp_exit_enumeration_attributes(void);
+>  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+> +					 int enum_obj_count,
+>  					 int instance_id,
+>  					 struct kobject *attr_name_kobj);
+>  
+> @@ -432,6 +435,7 @@ int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr,
+>  int hp_alloc_ordered_list_data(void);
+>  void hp_exit_ordered_list_attributes(void);
+>  int hp_populate_ordered_list_package_data(union acpi_object *order_obj,
+> +					  int order_obj_count,
+>  					  int instance_id,
+>  					  struct kobject *attr_name_kobj);
+>  
+> @@ -440,6 +444,7 @@ int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj);
+>  int hp_populate_password_package_data(union acpi_object *password_obj,
+> +				      int password_obj_count,
+>  				      int instance_id,
+>  				      struct kobject *attr_name_kobj);
+>  int hp_alloc_password_data(void);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> index af4d1920d4880..3aa2c440e0528 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> @@ -304,6 +304,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+> +					 int enum_obj_count,
+>  					 int instance_id,
+>  					 struct kobject *attr_name_kobj)
 >  {
->  	struct hsmp_socket *sock = &hsmp_pdev.sock[sock_ind];
-> @@ -438,8 +454,7 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
->  		dev_err(sock->dev, "Invalid DRAM address for metric table\n");
->  		return -ENOMEM;
->  	}
-> -	sock->metric_tbl_addr = devm_ioremap(sock->dev, dram_addr,
-> -					     sizeof(struct hsmp_metric_table));
-> +	sock->metric_tbl_addr = ioremap(dram_addr, sizeof(struct hsmp_metric_table));
->  	if (!sock->metric_tbl_addr) {
->  		dev_err(sock->dev, "Failed to ioremap metric table addr\n");
->  		return -ENOMEM;
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 0509a442eaae..98c82a4c0cc3 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -64,6 +64,7 @@ void hsmp_misc_deregister(void);
->  int hsmp_misc_register(struct device *dev);
->  int hsmp_get_tbl_dram_base(u16 sock_ind);
->  ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
-> +void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev);
->  struct hsmp_plat_device *get_hsmp_pdev(void);
->  #if IS_ENABLED(CONFIG_HWMON)
->  int hsmp_create_sensor(struct device *dev, u16 sock_ind);
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index e07f68575055..e7ee6e701e5a 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -201,6 +201,16 @@ static int init_platform_device(struct device *dev)
->  	return 0;
->  }
+> @@ -312,7 +313,7 @@ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+>  	enum_data->attr_name_kobj = attr_name_kobj;
 >  
-> +/*
-> + * The metric tables are mapped with ioremap() rather than devm, so release
-> + * them explicitly. Registered as a devres action so it also runs on a probe
-> + * failure after init_platform_device() has mapped some of them.
-
-Please put "Registered..." into own paragraph. It's sort of different 
-thing it's talking about that the first sentence, and you'll be adding to 
-the first paragraph in the other patch as well.
-
-/*
- * Paragraph 1.
- *
- * Paragraph 2.
-
-> + */
-> +static void hsmp_pltdrv_release(void *data)
-> +{
-> +	hsmp_unmap_metric_tbls(hsmp_pdev);
-> +}
-> +
->  static int hsmp_pltdrv_probe(struct platform_device *pdev)
+>  	hp_populate_enumeration_elements_from_package(enum_obj,
+> -						      enum_obj->package.count,
+> +						      enum_obj_count,
+>  						      instance_id);
+>  	hp_update_attribute_permissions(enum_data->common.is_readonly,
+>  					&enumeration_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> index d96e160953e39..107e4cf1efb8a 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> @@ -279,6 +279,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_integer_package_data(union acpi_object *integer_obj,
+> +				     int integer_obj_count,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj)
 >  {
->  	int ret;
-> @@ -211,6 +221,10 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
->  	if (!hsmp_pdev->sock)
->  		return -ENOMEM;
+> @@ -286,7 +287,7 @@ int hp_populate_integer_package_data(union acpi_object *integer_obj,
 >  
-> +	ret = devm_add_action_or_reset(&pdev->dev, hsmp_pltdrv_release, NULL);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = init_platform_device(&pdev->dev);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to init HSMP mailbox\n");
+>  	integer_data->attr_name_kobj = attr_name_kobj;
+>  	hp_populate_integer_elements_from_package(integer_obj,
+> -						  integer_obj->package.count,
+> +						  integer_obj_count,
+>  						  instance_id);
+>  	hp_update_attribute_permissions(integer_data->common.is_readonly,
+>  					&integer_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> index f09489a085c86..83ddf99f93954 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> @@ -301,7 +301,8 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>   * @instance_id: The instance to enumerate
+>   * @attr_name_kobj: The parent kernel object
+>   */
+> -int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
+> +int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int order_obj_count,
+> +					  int instance_id,
+>  					  struct kobject *attr_name_kobj)
+>  {
+>  	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
+> @@ -309,7 +310,7 @@ int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int inst
+>  	ordered_list_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_ordered_list_elements_from_package(order_obj,
+> -						       order_obj->package.count,
+> +						       order_obj_count,
+>  						       instance_id);
+>  	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
+>  					&ordered_list_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> index 4d79eb8056a5d..89316d90454d2 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> @@ -388,7 +388,8 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
+>   * @instance_id: The instance to enumerate
+>   * @attr_name_kobj: The parent kernel object
+>   */
+> -int hp_populate_password_package_data(union acpi_object *password_obj, int instance_id,
+> +int hp_populate_password_package_data(union acpi_object *password_obj, int password_obj_count,
+> +				      int instance_id,
+>  				      struct kobject *attr_name_kobj)
+>  {
+>  	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
+> @@ -396,7 +397,7 @@ int hp_populate_password_package_data(union acpi_object *password_obj, int insta
+>  	password_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_password_elements_from_package(password_obj,
+> -						   password_obj->package.count,
+> +						   password_obj_count,
+>  						   instance_id);
+>  
+>  	hp_friendly_user_name_update(password_data->common.path,
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> index fe5a9a3a4ef17..da5e81f1d188f 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> @@ -267,6 +267,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_string_package_data(union acpi_object *string_obj,
+> +				    int string_obj_count,
+>  				    int instance_id,
+>  				    struct kobject *attr_name_kobj)
+>  {
+> @@ -275,7 +276,7 @@ int hp_populate_string_package_data(union acpi_object *string_obj,
+>  	string_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_string_elements_from_package(string_obj,
+> -						 string_obj->package.count,
+> +						 string_obj_count,
+>  						 instance_id);
+>  
+>  	hp_update_attribute_permissions(string_data->common.is_readonly,
 > 
 
 -- 
