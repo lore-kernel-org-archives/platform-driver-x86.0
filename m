@@ -1,93 +1,83 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A05B33343B;
-	Thu,  9 Jul 2026 14:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313F5366DA5
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 15:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783606003; cv=none; b=XqOlbBciDlmxg0Dh2zgvSTNWnTqbVZpJsvHIitb/V5JCekxdVWqKZ3IyV6z7dzDzx1rZgwleRR84weKj+Et/5r081A5y4TCWKVtBVoLsBrmyWjeyMtiTHOTdIW8vgaeyJ1mdCyFVQErgBFygMiYMOVi0CdLELQqdfPypJYw2H1Q=
+	t=1783610559; cv=none; b=gD+TbNEA3Qf4dw8GzbH9jW3AdG6rktYEhH1HIhOmRMpbKqlKr7cmui00ZhtzbCPFJsAyqPqMSGS1SDdyLgF45mD4OpZDYYeT2u1tMGeU9yxjCGe6V+qmchMxuTl9cG1HhyGr39pfxACtl3JyyKKVjJaMp1zYZQ2dMK/AaNjI2qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783606003; c=relaxed/simple;
-	bh=DXmabW2L0/aV7QKEFzX14XjAQz1RqTlgTWal3TGTe2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQy1g1NcxrxVhDvs8cD7ugGAy0qJuEYC8X5S3/PJU2kPqd+yKef8YK3C4EWK/vgPMrYeog65p5QJBafkDhmNDTOdFSVsXmryMdf1SzbS2A7gqljUIi+You+fss7P7YV3b/hAL3leQ/cSFtEf28uUNfVv/+10cKw50tg/R1yiwlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=PNpQATKk; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1783610559; c=relaxed/simple;
+	bh=ABnTleBlMJ+tuT4qGs1/2pyFnn4jgtoJj2lmbkqgZ2g=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hHO1Q2dmPEisCdNzdX4tw5YxU0cSWoik5Mh83D6OJ9CR03ocDzfcQLFTYpqsIfS4ywNbJBQqyAQ5IkBdbroUwnh+xrT2lkG2iXWekbcgdqhTVdRXJowjUvAWbx8xMKosK6Q4UbUAwvd2Zg5gZvqRQqTFH3mlwnGCOOTtW4XBpK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaTojA3F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="PNpQATKk"
-Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id AC0572FC005F;
-	Thu,  9 Jul 2026 16:06:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1783605998;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DXmabW2L0/aV7QKEFzX14XjAQz1RqTlgTWal3TGTe2M=;
-	b=PNpQATKklqfPkYO5ABrcBezzNbITN9Fu1C7KgAPb3m9rsDwUb6/YMbsT4PCRCyR4Hk/1bK
-	aWqkjCBCYa9q5rfju95p/M7KyQGGnxCAqgmR512fyTj8vg5MgfxH45s7LLQVvdbR2wTNrM
-	k/FRTlp+eh/L1r3kzvj6MphX/hDhYR4=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <e34091bd-d494-43f5-a2f3-6dd21306d408@tuxedocomputers.com>
-Date: Thu, 9 Jul 2026 16:06:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaTojA3F"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D2408C2BCC9
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 15:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783610558;
+	bh=ABnTleBlMJ+tuT4qGs1/2pyFnn4jgtoJj2lmbkqgZ2g=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=gaTojA3FZ7j9CZg2v5Y5s3x5CHyS5ydyrvnIMLTfQBwwGaitcIne58dEJqpY5OgPv
+	 ZdfHXVQad7mMVMvwNZlZhCgPSZTsFciY24ceuZqq8mrmwqgQbOaCBMErcZJHBDQfTS
+	 s/nD6IG9d1fI/8UFESdyRDaa7UKiXU3SPGnAGeZWnZoPR9b2iksaIN4nO1bvjT3PBa
+	 HecwjrxEes9hsIm0NJw5hftkmu0wscWdMyau4Jl26mmJkJxT3qJvibzuKHi9Kcd3vI
+	 tZX8RalHIPbgNV+L8F6HLzLMgg/s5Q3MPQMm9jER3263HO9Z/jlMlCk1UuWxiUjk4Q
+	 hPxu5ICtmQByw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id AA2BAC3279F; Thu,  9 Jul 2026 15:22:38 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 218901] LG Gram Laptop Extra Features not working on 2024
+ models (16Z90S)
+Date: Thu, 09 Jul 2026 15:22:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: W_Armin@gmx.de
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-218901-215701-fl2mCLOHEf@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-218901-215701@https.bugzilla.kernel.org/>
+References: <bug-218901-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] platform/x86: uniwill-laptop: Add lightbar support
- for LAPQC71A/B
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20260530170813.10166-1-W_Armin@gmx.de>
- <20260530170813.10166-8-W_Armin@gmx.de>
- <df32200d-d966-40fd-b8d4-60c5b7e18822@tuxedocomputers.com>
- <d06fffe8-0cf6-3ee4-8ab6-c6a87ea4e7b9@linux.intel.com>
- <508f969d-9ba4-48d0-8e2e-ec7249392db3@tuxedocomputers.com>
- <528af158-819f-fe4f-d1ca-2617f2ad2471@linux.intel.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <528af158-819f-fe4f-d1ca-2617f2ad2471@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D218901
 
-Am 09.07.26 um 15:45 schrieb Ilpo Järvinen:
-> On Thu, 9 Jul 2026, Werner Sembach wrote:
->> Am 09.07.26 um 10:57 schrieb Ilpo Järvinen:
->>> On Wed, 8 Jul 2026, Werner Sembach wrote:
->>>
->>>> Hi Ilpo,
->>>>
->>>> Am 30.05.26 um 19:08 schrieb Armin Wolf:
->>>>> The LAPQC71A and LAPQC71B both feature a RGB lightbar with 36
->>>>> brightness levels per color component. Extend the device descriptor
->>>>> to supply the maximum brightness of the lightbar and whitelist
->>>>> both models for UNIWILL_FEATURE_LIGHTBAR.
->>>>>
->>>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> This patch lost its original attribution by accident (it originally came
->>>> from
->>>> this RFC from me
->>>> https://lore.kernel.org/all/20260421201103.142403-3-wse@tuxedocomputers.com/)
->>>>
->>>> Since the patch currently is only in for-next can this still be fixed?
->>>>
->>>> Obligatory:
->>>>
->>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>> Hi Werner,
->>>
->>> Your Signed-off-by has now been added into the commit.
->> can you also fix the author?
-> Also the author field is now changed in the review-ilpo-next branch (it
-> will eventually propagate from there to for-next).
-thx
->
+--- Comment #109 from Armin Wolf (W_Armin@gmx.de) ---
+The patch series has been accepted upstream abd will likely land with the 7=
+.3
+kernel.
+
+Regarding the missing keyboard backlight toggle reaction: i cannot map the
+associated event to KBD_ILLUMTOGGLE by default because this would result in
+duplicated toggle events on devices where the toggle happens automatically.
+
+For now i suggest you use a small script that gets launched when KEY_F16 has
+been pressed.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
