@@ -1,77 +1,75 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9192D425CFC
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 12:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD31224234
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 12:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783599856; cv=none; b=DflKz2l8l6X3nSNAg2XjBNjmVD+mfZbCqsGwLgiltFlHdI3cID1sCArCvv2ZP6JvlVa9fP5XSKUmJ6H1nxUNUQrYC3095kJHFAk+Agcfx3JpFJfWAtNQwcLI5Tupocwlq79q62daiTvLaxxVTlxSDAOy1DFkYwYbiw5P5Udosag=
+	t=1783601425; cv=none; b=l6C1gjswFg03wPtWWIt2fW8j1pjpKGv/eU/kUOdi8JgcliOibNwn2pDYPmbiY3rpAc0YUnz8Zb01DQ85ZIg3fExYRMS9BspTHnyx4MFhurbGPcWwjkj9L4CGFxCBUsSsHAtriGyUvrTy8fqYDqngpiS6mEDXBBlJt4xbgVR2360=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783599856; c=relaxed/simple;
-	bh=yX8Ev8joxZLka55dwQAXYl7wMVZVG0WGn6DZbYMjtNw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2SjeGq2XYUD1VKVEh5h2d23gKCdlw+C0v4AD+4J3iweGxJwTX1NhWYZeIMx2qT+tY3nfoQeZs/udGjeFcsC2ImOJ2+9tAindi2RUkdSQGzVJTbg9etx3+VkHXit/bSwqHjzF1ODWhfTxhS9CxB4qnHNlhFc9m4/zLwRWpRfDUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fnrjjd72; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783601425; c=relaxed/simple;
+	bh=EXfM0v4EhcxQ+tklDnuDMs1Avw18MIFqmglueS1d490=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ek53g4L8O/Te+EttsPfkYmhFYk2+ZpzDcucNVOuU3sukRqHt74Sf5wDZDy3Y+AePSZz9jGV/W6yN8nPqdEpy62GubYYM9h0OgyeamxGwHUEXtHCie2j9WKbv4wnTZgEE633n4qjUMB+pHa3zDrn4CMvrjrB+a8vfGJmzKgqxoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=uiTBm7Bo; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnrjjd72"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-847aa193d98so1491598b3a.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 05:24:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="uiTBm7Bo"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47d6c634f45so477387f8f.3
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 05:50:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783599854; x=1784204654; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=YxrG0tDMRfjVHagtSUgPcufh4KD0cWSQDbXgyNSt9RU=;
-        b=Fnrjjd72RV8zwunkiiPlO19uzZmpK/CnncwRjBPXryMITvPsMnGQJ/GpYL6uZnH9/3
-         LDfBGcAeTC7NRy+4r8A7sagXf4j7QWRPJhYvslGXHp/7p5ytkE3UR3/M5o76gcpUhAjb
-         4igVPD8qLMfHhMA9Cig+lebeLqbJdizY9P2+kJ4FQoWkH2+wFWHRFkez5OankW9LzB0Z
-         P2NleIzc1hkIg1iWQtRRyqqRyRPnozvmVu3xBq2ZtJw3qS4/c6f2ebK9In4G+3ZpISKc
-         LwnY3zH7CVR6vuQUPpHuAji6i9tqt9x97uHN5hcAVocG4Wuv2146gy/LdTOjSvaJcCdW
-         bTmw==
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1783601421; x=1784206221; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YwbEF25FIKLXdl4gOi13bRERXBt3gyz2qIndX0FIOYg=;
+        b=uiTBm7Bo9+tuX/2ZqQ60t2r7Fn5cZBujaMnd8Y8Ey60OZC195iV2FVTgoT42/o4tYQ
+         O2o4mcfw84aulDZotlr/IoEs+L/nKruF5m5nLhrAlj0XX7H7fqZFemu6Tfq6OfnLCO6R
+         vEcwtIA1H2dYZOBL2rQ0UPsTJTHg5KlZk9eDKMKezULM2x5k1XqAhwRH2g/hKs4o+lK6
+         ISQOpDZnU1ZR2Cu7IcWZ46c2JseDoLpxrcxuZS6B2TkZ4hdzix6oKiH1y2AX+LUN7L6+
+         OGjIvgzXD8+T39klXNN6Tm7TGZtPipUEADVMOlVu9V29oJ8xmWiZ/LbtebUpJnIv6JJ3
+         HaYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783599854; x=1784204654;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=YxrG0tDMRfjVHagtSUgPcufh4KD0cWSQDbXgyNSt9RU=;
-        b=RO5YDI0fs3EvaAfKEI9Wy7APNHXGXZzZ2Um+4J++jAwkaT/8c+wk5boq7SWRRmtCCl
-         n1NgRPs+DvOIp7zV9n9Q0rme6SHQ6VfQoO5x1tfExCob1rvbDLBjen0mcDd+MVmcGDOT
-         f/O3d5Q62PpJmqzX74CnyYXlUJoJ0BChwQqqPjtgp/TQTAx76XvQL/KJBV2WuDpw1FLT
-         JIhWYIoxbeA1FLivOcGcqhzOOE4f1ka5daP62Z7EmDTfwwJVWB2dZYMx4v7yeTh3InIU
-         JMrZlyRAJkdpCHFLzHLXFowPO/lRo8BmnV5i8G1HlfubTWxk3QZl5KGAOL9bG7PrcrTn
-         NJGg==
-X-Forwarded-Encrypted: i=1; AHgh+RrO9DyhuVUyWuot3+ewGXsYxeDNplgB1QPrUGi9mfF8rUcf6j88SLjzkJjjs15I/LVM6xd1tpu2P4zUObqMbngUj+4C@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsRv12LkYD8SezcZPkx4Th424d4q23cCUKnvuMrPfyc3+XSV8j
-	aFcmgBa8Qkl5jYjLpeC3afsp47ozfqWgpOCVI8Hie5py7pZvnFuv7RJ7
-X-Gm-Gg: AfdE7ckzyGxns5RezEih2ga7/+isWHGv7Yyc3zwLbqgJ4HaRxHuKJKUjGlnQfL6a+R8
-	yY6r2oF5prNILnpbhvecWiH8Pcpwi/GNT6izGUOi8jjdfC0o56T+tEPuvZ/lxAvl67tLm682NXH
-	W4XpI8l3VK/avpRJOXuCTXJvK9ThX6pvyKu3w0fZnWq+fRxqsrq+B6dM3IdzqEW5UMMFzBceUI1
-	jZk0EkJh29Lm4Mqp/kFJlXbs7jx/wOU+6dMfnaAugkbpPgy6zW023b+5Ve8brNJLkKGNGkvUsGt
-	9XK2/CYiXyGKcIFnD6kRB5vd5ke1X9T7khwxMkWqH/kj1H0hkMUb5gb6W7m7KWDI/rCdk2b9Z3q
-	JvgSDYIcowN7PGFPQZbYzX2nnOyi3wMeDsH57fiw720chCTj1VHoqlmE0hAZ1BFM=
-X-Received: by 2002:a05:6a00:244a:b0:847:9ce5:d293 with SMTP id d2e1a72fcca58-8484301f0a4mr6961545b3a.24.1783599853616;
-        Thu, 09 Jul 2026 05:24:13 -0700 (PDT)
-Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8484f973c4bsm1672517b3a.25.2026.07.09.05.24.09
+        d=1e100.net; s=20251104; t=1783601421; x=1784206221;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=YwbEF25FIKLXdl4gOi13bRERXBt3gyz2qIndX0FIOYg=;
+        b=Ven8g+PPPrTzxy0+QrSttp5B8BggjP2fzvEE/ljFdzLhgY6V00h5GrlPR6cWB0htUf
+         WKffhdomggphpr5wXVvzD6vyWImmaheoITl1bgaWuZ76dsgKPiUEmub/6wZmTFty9NS4
+         z9f6NOX5BScvXqIBmWBPwfj2HPnXGCIqfrMxSOkTcPuoQr612NkJSmMBKUBpCk7pfmNt
+         h5vFHMjhv9gDYXEdhi/SkwhRi1zKkcuKFhmMc6N7frY95uyjzN/ricuFugGeZbkRkYj4
+         SSx8UFjgEIfnG0KDNLgqI0VIC32uTahpq59UuoDTJwjlnDPyvgr10ANG7lMkv7Uyt4RN
+         jhdg==
+X-Gm-Message-State: AOJu0Yygwvs2zsKPBDLHbt9PnKKQfBO2cydxrZL2ECVzTk9tzrf57cKe
+	SGRyqhfFxCLHxNTvU1CaEsfYb99t/AxHAZWhYF6RQPMGSatVKOlRETr9qTnX7Z4OBvPNd5oYU8d
+	vKQQ=
+X-Gm-Gg: AfdE7cm3TyDFckiGa/xfk2hDe0EM2yEv91QKkBw5Aj4L+wixV93Nfxi8rqTLuvWsqNh
+	g9nS1UgwH7gRO7U0S5Czgw06Ruq6hJXYPEEFGs3DD840xgupIKqfX66Dala6GYNB+WrVH5EAghS
+	kCEqUIu26GFtQc6xXkKo7+O7hzCtPjo4QFf+4wKg4s1kd50bf4eO70W0RkSJaWELIfmSElljl4l
+	hgRNUr7I47HHudEiVdgzlk8W4E1AouBknBuycfT6/x11lSCH/vBCD9TTPwLfVzXZa49osmPximP
+	aDppkLw6UOEjMnhY2LtT1f//kZTVWrGDBOuRif/d5ZYznLzjGlYXSJd+/mzQGyhE5vK7eqk6f7B
+	HcfzjFQRQCqB5o6tkiM7MgEE8pnZav0mS4Z16340gWBWYECSGVnlnfHnUiHmovSa8KxK7S/lusm
+	+v0XF62VLSXtNm41zaXm7sm83ty6mGcvFxIjio/V63XFowSgC41qH/8kTu
+X-Received: by 2002:a05:6000:4027:b0:47d:e548:9b2 with SMTP id ffacd0b85a97d-47df071b752mr7412876f8f.2.1783601420418;
+        Thu, 09 Jul 2026 05:50:20 -0700 (PDT)
+Received: from horizon.localdomain ([150.228.38.212])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47aa0f21543sm47589451f8f.35.2026.07.09.05.50.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 05:24:11 -0700 (PDT)
-From: Mingyou Chen <qby140326@gmail.com>
-To: qby140326@gmail.com
-Cc: W_Armin@gmx.de,
-	foxido@foxido.dev,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
+        Thu, 09 Jul 2026 05:50:20 -0700 (PDT)
+From: Sean Rhodes <sean@starlabs.systems>
+To: platform-driver-x86@vger.kernel.org
+Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Julius Werner <jwerner@chromium.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sean Rhodes <sean@starlabs.systems>,
 	linux-kernel@vger.kernel.org,
-	nika@nikableh.moe,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 4/4] platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries
-Date: Thu,  9 Jul 2026 20:23:37 +0800
-Message-ID: <20260709122337.17417-5-qby140326@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260709122337.17417-1-qby140326@gmail.com>
-References: <20260709122337.17417-1-qby140326@gmail.com>
+	chrome-platform@lists.linux.dev
+Subject: [PATCH v2 0/1] coreboot CFR firmware attributes
+Date: Thu,  9 Jul 2026 13:50:16 +0100
+Message-ID: <cover.1783601414.git.sean@starlabs.systems>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,34 +78,37 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the missing Redmibook mic-mute hotkey definitions to the shared
-sparse keymap table:
-- 0x00002101 (Fn-lock disabled state)
-- 0x00012101 (Fn-lock enabled state)
+Hi,
 
-Reported-by: Nika Krasnova <nika@nikableh.moe>
-Link:
-https://lore.kernel.org/platform-driver-x86/20260531123345.237521-1-nika@nikableh.moe/
-Signed-off-by: Mingyou Chen <qby140326@gmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This adds a firmware-attributes driver for coreboot CFR tables.
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index cbe118bbe428..7d8a3be5ec68 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -634,6 +634,10 @@ static const struct key_entry bitland_mifs_wmi_keymap[] = {
- 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0),
- 	{ KEY_REFRESH_RATE_TOGGLE } },
- 
-+	/* Mic-mute key */
-+	{ KE_KEY,    BI_HOTKEY_CODE(0x21, 0, 0), { KEY_MICMUTE } },
-+	{ KE_KEY,    BI_HOTKEY_CODE(0x21, 1, 0), { KEY_MICMUTE } },
-+
- 	/* AI button has code for each position */
- 	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 1, 0),
- 	{ KEY_ASSISTANT } },
--- 
-2.55.0
+Changes since v1:
+- Add explicit includes for the helper APIs used by the driver.
+- Use __free(kfree) and no_free_ptr() for EFI name allocation.
+- Use isascii() for EFI variable name validation.
+- Convert the EFI write path mutex to scoped_guard().
+- Rename the label/current-value parser to avoid default-value ambiguity.
+- Use devm_kzalloc() and devm_mutex_init() for the driver state.
+- Clarify that -EOPNOTSUPP after a successful EFI write is the
+  reboot-required path.
+
+Tested on Star Labs Lite GLKR, firmware 26.07, Linux 6.17.0-35-generic:
+loaded coreboot_table and coreboot-cfr as test modules, verified
+firmware-attributes sysfs exposure, fwupd BIOS settings enumeration, and
+the reboot-required write path with debug_level.
+
+Thanks,
+Sean
+
+Sean Rhodes (1):
+  platform/x86: Add coreboot CFR firmware attributes
+
+ MAINTAINERS                              |   6 +
+ drivers/firmware/google/coreboot_table.h |  45 --
+ drivers/platform/x86/Kconfig             |  13 +
+ drivers/platform/x86/Makefile            |   1 +
+ drivers/platform/x86/coreboot-cfr.c      | 986 +++++++++++++++++++++++
+ include/linux/coreboot.h                 | 147 ++++
+ 6 files changed, 1153 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/platform/x86/coreboot-cfr.c
 
