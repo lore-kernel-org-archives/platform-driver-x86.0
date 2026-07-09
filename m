@@ -1,98 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D2E4A3418;
-	Thu,  9 Jul 2026 17:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EC23B7A8;
+	Thu,  9 Jul 2026 20:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783619871; cv=none; b=EE2FaWKPYjgsBplUcuEmxAHNpLcmqGFPdCF5fOssgO3291z1m8Js6iVG+7KOiOoCJTLyOPZX5sIMdbRqdLhPEQpnMz8JL0DPWjKMIAUH+OXYaeafYmdSn8YBMaZXeflRYhFzZRCHb0rHMyySlhzpllrpOnUbGH06eI22oOtTvtE=
+	t=1783627737; cv=none; b=E1+ynN1eV7/Bqb7isGR8wzo6sJpCISUzQWCElxTKKbszPdf2pf1kg3ttDmsi+Y2DEhlVKoZMZxMxrXR/jPZgdvC0sfCJlRorHqS6o2eR0O3Nbp96A8FZ7CM5tJevEZ4L2otRExFebFVo1mENojiS8axZsIsCrakiL8Ellhw0Gxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783619871; c=relaxed/simple;
-	bh=1i+LK9fhX5O7H6uoN4oD/e7ij1fq3vSkW+Jhdwob2YA=;
+	s=arc-20240116; t=1783627737; c=relaxed/simple;
+	bh=EfYOK7Sy1TgfQBQOKyfNPQB6LLiUoztQ+EFhabf7mKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HUl9xaiJUFuR9eYfgKLxiNvXwHlnjybjM0WNDOs0pLIfFk2cvz+V9ei1iCfXDUpCGDTiKgM2q6uImRab954srHeQdvlSS8dJ+/9j9rriXBwje0eQd+eTHUA7GIyBbNSVu+0evLvMdUYUDgaEm6y7wuUtt4lsMKvq1HgabBl2gYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZdnCiW1L; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tB0oLg+C+ULaQ57YXqvev/7Gmi7DK9/rWqRxwrxQZPOwyXLSY81ttfbSuJLjJUzT0sJMO8I1OyBaFPhARf5+EJRLfIagsmndk4huJWILWgBTvi33Ixj8T1mhBGaQwaeqwAn4D4rXTt39NfPyggi+kjZp4CP4wrO/QVfGAuj2xi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=BPBUyPJc; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZdnCiW1L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783619870; x=1815155870;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1i+LK9fhX5O7H6uoN4oD/e7ij1fq3vSkW+Jhdwob2YA=;
-  b=ZdnCiW1LPwOt5MSqWrPVZ5wL2S0PikBL2AJD9f00mxsIo6sKW0QojwUQ
-   a29MwIOO5xcVdm3gsbJ0JrUWiexcm0Yadf7fScQDNt23qOCGUvv+60jIV
-   HQRfbUxV0k30OX0rAR37h5RwELzxR/Y4acihqHGp8jwN++Z8G2k2YRTOb
-   gK0bFIizQEky6mwL4wSEhivtA615ye4HAWRT65ebra3w75Kh1a+TkL0rx
-   Qt7hjUE7DASuGkek7nNab5mcQkHXvqsGOCufkXsrbZ9mAdom1bCIZzlio
-   2dpUGt9V91ULKwaU1eoTx+BMyxj6N4gokPjMOQ8/8IT6nW/7Po9xn5bz1
-   A==;
-X-CSE-ConnectionGUID: 7FejHrv9RwaaJe2wk1UtIg==
-X-CSE-MsgGUID: s869R5pXS9iUp0avQ6qLzQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84505073"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84505073"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:57:48 -0700
-X-CSE-ConnectionGUID: P06DlQVuQ36Wxv5OzwpkoQ==
-X-CSE-MsgGUID: ODYrfw7WTaS6wzpQ3UN8Ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="253555413"
-Received: from debox1-desk4.jf.intel.com (HELO localhost) ([10.88.27.138])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:57:48 -0700
-Date: Thu, 9 Jul 2026 10:57:47 -0700
-From: David Box <david.e.box@linux.intel.com>
-To: Lukas Wunner <lukas@wunner.de>, michael.a.bottini@intel.com
-Cc: Guangshuo Li <lgs201920130244@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/intel/vsec: reset state before
- re-enumerating
-Message-ID: <6m7fuh2na53vrylsnq52qyxzcwnnoszxtl5kvza55ayoxsojyt@g65savkjqb4e>
-References: <20260708032647.712412-1-lgs201920130244@gmail.com>
- <ak4ZUw92pn_F7Z4u@wunner.de>
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="BPBUyPJc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vS8Z4iMknQQExwiIiHNFXxXzKHQSZuZ7acuTsu1JCFA=; b=BPBUyPJcudTGV4mZa7f7OvJW5N
+	rUjF2AjpzMv0iT6UX/ejEh/bSC/tVmehBddlXaFPTETqjtp1BtDg2Hf81zJbcSvLJUBDuok59jiJg
+	8jDOhYsciQJEaKcYcbYa9ELhnphPEEcVTVVAPWa2WtmGnZaejIomqbn5zAtGXlw8hV2obiwYftY0a
+	/JuPHJnTXnCNfQIQ0TVWbWJnKohXahX4UaHrj9urMo32EKSHx44/HA74mnR9CCpZrrvbU/r4/IpB2
+	P+7xRG9uJKgtGB21dVyZyqjer9G+hSfa2MJ74NainssunPiEFyPk0prFKfSlCi/tSzUu3GFCvMr6i
+	Xfv8kCqA==;
+Received: from authenticated-user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <carnil@debian.org>)
+	id 1whv35-003xSm-0S;
+	Thu, 09 Jul 2026 20:08:43 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 1136DBE2DE0; Thu, 09 Jul 2026 22:08:42 +0200 (CEST)
+Date: Thu, 9 Jul 2026 22:08:41 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Ponali <ponali2k@gmail.com>, Denis Benato <denis.benato@linux.dev>,
+	Luke Jones <luke@ljones.dev>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: 1141604@bugs.debian.org, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: Bug#1141604: linux-image-6.12.94+deb13-amd64: does not detect
+ ScreenPad on ASUS VivoBook
+Message-ID: <178362762638.911488.8564892548331679884@eldamar.lan>
+References: <178340264407.17924.10135409461303815312.reportbug@ananaspc>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ak4ZUw92pn_F7Z4u@wunner.de>
+In-Reply-To: <178340264407.17924.10135409461303815312.reportbug@ananaspc>
+X-Debian-User: carnil
 
-On Wed, Jul 08, 2026 at 11:33:07AM +0200, Lukas Wunner wrote:
-> On Wed, Jul 08, 2026 at 11:26:47AM +0800, Guangshuo Li wrote:
-> > +++ b/drivers/platform/x86/intel/vsec.c
-> > @@ -51,6 +51,13 @@ struct vsec_priv {
-> >  	unsigned long found_caps;
-> >  };
-> >  
-> > +static void intel_vsec_reset_state(struct vsec_priv *priv)
-> > +{
-> > +	memset(priv->suppliers, 0, sizeof(priv->suppliers));
-> > +	memset(priv->state, 0, sizeof(priv->state));
-> > +	priv->found_caps = 0;
-> > +}
-> 
-> Seems fragile to selectively zero only portions of struct vsec_priv.
-> If the struct is amended later on with additional fields, it's quite
-> possible that nobody thinks about zeroing them here.
-> 
-> It's probably more robust to zero the entire struct and re-populate
-> the info field.
-> 
-> I also don't think a separate function to reset the struct is necessary
-> as I don't expect additional callers down the road.  So I suggest
-> zeroing the struct inline in intel_vsec_pci_slot_reset().
-> 
-> @David Box:  I've asked off-list for reset recovery to be tested,
-> I'm hereby renewing that request.  See section "Software error injection"
-> in: Documentation/PCI/pcieaer-howto.rst
+Control: forwarded -1 https://lore.kernel.org/regressions/178362762638.911488.8564892548331679884@eldamar.lan
+Control: tags -1 + upstream
 
-We'll do the test and let you know. Thanks.
+Hi,
 
-David
+Ponali reported in Debian (https://bugs.debian.org/1141604) the
+following issue after updating from 6.12.90 to 6.12.94. First quoting
+the report:
+
+On Tue, Jul 07, 2026 at 07:37:24AM +0200, Ponali wrote:
+> Package: src:linux
+> Version: 6.12.94-1
+> Severity: normal
+> Tags: upstream, regression
+> X-Debbugs-Cc: ponali2k@gmail.com
+> 
+> Last known working kernel: 6.12.90-1
+> First known broken kernel: 6.12.94-1
+> 
+> 
+> Dear Maintainer,
+> 
+> I upgraded all my packages through apt, which also upgraded the linux image
+> from 6.12.90 to 6.12.94.
+> 
+> I expected the ScreenPad display to continue to be detected and exposed as a
+> DRM output, like on 6.12.90. The ScreenPad being the trackpad with a screen,
+> which came with my computer (ASUS VivoBook X532FA_S532FA).
+> 
+> After upgrading and rebooting, the new kernel caused a regression where the
+> display of the ScreenPad fails to get recognized by the kernel. The touchpad
+> functionality still works. Usually, the ScreenPad would appear as "HDMI-A-1".
+> The DRM connector for it still exists (/sys/class/drm/card0-HDMI-A-1), but
+> "status" reports "disabled"
+> 
+> I could not get the ScreenPad display to be recognized again on the new kernel,
+> so I configured GRUB to automatically boot to the 6.12.90 kernel through the
+> "Advanced Options". The ScreenPad is recognized on older kernel versions, so I
+> am still able to use it (until a new LPE comes around).
+> 
+> To replicate:
+> 1. Boot with 6.12.90. The ScreenPad display is detected as HDMI-A-1.
+> 2. Boot with 6.12.94 with the exact same hardware.
+> 3. The ScreenPad display is no longer usable.
+> 
+> 
+> My main display is eDP-1 (1920x1080), though it isn't essential. My GPU is an
+> integrated Intel iGPU, and the driver used for both screens is i915. I have
+> booted to the new kernel for reportbug to get all the information
+> automatically, but i will continue to use the old one until the appropriate
+> time.
+
+Now, Ponali did bisect the changes between 6.12.90 and 6.12.94 and
+found that the backport of the commit 8d95d1f4aa5c ("platform/x86:
+asus-wmi: fix screenpad brightness range") changed the behaviour.
+Bisect log is at: https://bugs.debian.org/1141604#22
+
+As this change was backported to other stable series as well I asked
+Ponali to please test 7.0.y and 7.1.y and confirmed that both 7.0.13
+and as well 7.1.3 show the hehaviour.
+
+#regzbot introduced: 8d95d1f4aa5c76202b0833a70998769384612488
+#regzbot link: https://bugs.debian.org/1141604
+
+Is there anything Ponali can report back to further debug the issue?
+
+Regards,
+Salvatore
