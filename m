@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790EE2D3A7C;
-	Thu,  9 Jul 2026 13:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA152E5B1B;
+	Thu,  9 Jul 2026 13:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783604392; cv=none; b=X9L775r94jMbJOJebjQ2E9mK6oO/rYnioi1WdlWhZbGis1iDnbSziNllE81hHPF40EpYpOZ+UFuBxyI1yI+AweqHPReKsF8qcbsdRHmtvG6JT+4MiCO4RNeDPwEVOiYbCvONHxd4eRywFn8p+traPoakTxVFtcTVydh7I0TVkfs=
+	t=1783604402; cv=none; b=HpwDDd3MD1cCmWo146TZk2vVvLLMUBidYT2LWMYm31W/Er/qeF4+97z0i+toyVNd8Rn8BzEiiNQJ0YxU8TLRg79BljzJLLWre3Vrb1gNud8P4SSG8aV+i0FFnakaEeYeZYlykaW8J6VpdqLzH8XR+rTKcbfacUVHvytEU4ausbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783604392; c=relaxed/simple;
-	bh=ZpzeCxWIzp/V6akkGsygKIezUfp16btzJPB8pvBddAk=;
+	s=arc-20240116; t=1783604402; c=relaxed/simple;
+	bh=2E+jKRgPDwmBBuW1KuIrv5OhaSGCL3CWoFBh/7L97gk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=K3tfU28M+3APh/kM9SUgyUqbNHM4rCzeCAIizq1nu7oqCHZPz/xRIiSsQPDGGRmJayh6u4M5TPdszJnKLmCTpl6yXLs/tXVynZ96MeNbLxjk9rl2B+IZ+55aDk5CTnAnqsX93WaNdpFNc3++TWkqW0KVzd7ffEV3oesblJDW3J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GtgBw73Y; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=ZTfoxKc9MQ8H/JI15Re3MJ+FMeWpTZWzWxlIYpKz3nM5SewZ3dFCbVyE+jHsvYNODzPYgrIAAtYoH9VgdM1SCsE8OU1GzfM6TF+tXt24GLdE64EB1Dr7PoGtxWmODak76RNgmeOn95a3aIp/COBPidL6rRD7sq+DkJ/sEh7PuRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gk6ixeNh; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GtgBw73Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gk6ixeNh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783604391; x=1815140391;
+  t=1783604399; x=1815140399;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ZpzeCxWIzp/V6akkGsygKIezUfp16btzJPB8pvBddAk=;
-  b=GtgBw73YGnggh3zufTH5826a1QB2P1Y5pOJHSWUnPUIXu19oiX+vM2bM
-   nBeLNOoHBZpl3/VoGRLH8L67C3YcHBKq4VPOsFYIsiX8/ckVRVvDt83cT
-   KIq12gw8ps1LYSM0GMuaL3OsJKFS+a2s0kXCncFn66hazIP6MwYeOh/bi
-   /pS659kJz6Kx3ePylih9YOM08Wzh9PhubqcxVr6KgxsmjkR0hVJkIxyc+
-   2pgzn97gqaQ7zqp2q+OF1JFjY5sKl+yDcuR9vMzuCb1EBs5TK5Ds7SZ/f
-   daj5WAUSnaWKY8UIPawtsFrnfZV3HQ7gq94NgsP1cI9l9Q+IKs+UiCtdg
-   g==;
-X-CSE-ConnectionGUID: DBRLyWmaSRGdSA/ufSnxaw==
-X-CSE-MsgGUID: uNCRpzJ7RkCJUv0VsyQUHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84163909"
+  bh=2E+jKRgPDwmBBuW1KuIrv5OhaSGCL3CWoFBh/7L97gk=;
+  b=Gk6ixeNha08yVKNVb2rHANKMvDMFjTU/PdJKpIGmku5byX74fmLqMM1A
+   6GAYkswQ7S0NRLqns3XxjcVz4ggWHzFv5z/2xqUU+DjqGdnJCuDNIFhgt
+   Wpg2Y9DkLDrSv0YcXwjyKZAYdsbHFldwdVKaxNhB/Nn+TNdSUw/H9quxl
+   McomwmOezleB0UT5rqusRsujvRzawlL3Neqd+EBqrBJXuFkoM+lwLuM34
+   TsH86A/ML99uiwebeSkbiQ1Yr93LUyw+GjfbiymbK48cyTeOCIhWVxlNF
+   kLEFVJdyj6VjkjfG2LqXewF0nH7QyT55KvUDQLf6Qam3QoaqIBLt5jOAw
+   Q==;
+X-CSE-ConnectionGUID: tAgtoyTKRUeslH/2OiBMrw==
+X-CSE-MsgGUID: x3v460C0R/icLROR1M3BNA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84337386"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84163909"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:51 -0700
-X-CSE-ConnectionGUID: rrqUsHMqQtyzo3fSYzLxAw==
-X-CSE-MsgGUID: 4G5bLmotRuO9VtkDRwTScA==
+   d="scan'208";a="84337386"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:58 -0700
+X-CSE-ConnectionGUID: D9/qXPQOSrydvQWg8PLUEg==
+X-CSE-MsgGUID: MLQ6lb9fSO2hxkCWOyeU7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="248221661"
+   d="scan'208";a="252846675"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:47 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: corentin.chary@gmail.com, denis.benato@linux.dev, hansg@kernel.org, 
- linux-kernel@vger.kernel.org, luke@ljones.dev, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260707213741.6515-1-scardracs@disroot.org>
-References: <20260707213741.6515-1-scardracs@disroot.org>
-Subject: Re: [PATCH v4 0/2] platform/x86: asus-armoury: fix init errors and
- modernize resource management
-Message-Id: <178360438275.12613.6796947686719643747.b4-ty@b4>
-Date: Thu, 09 Jul 2026 16:39:42 +0300
+To: =?utf-8?q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>
+Cc: hansg@kernel.org, krishna.chomal108@gmail.com, radheykalra901@gmail.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260707203740.55369-1-hello@kursatabayli.dev>
+References: <20260707203740.55369-1-hello@kursatabayli.dev>
+Subject: Re: [PATCH v4] platform/x86: hp-wmi: Add dual-channel PWM fan
+ control
+Message-Id: <178360439074.12613.11997130499136224748.b4-ty@b4>
+Date: Thu, 09 Jul 2026 16:39:50 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,18 +60,21 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15.2
 
-On Tue, 07 Jul 2026 23:36:10 +0200, Marco Scardovi wrote:
+On Tue, 07 Jul 2026 23:37:40 +0300, Kürşat Abaylı wrote:
 
-> This patch series addresses a Use-After-Free vulnerability and a memory
-> leak during driver initialization in the asus-armoury driver, and
-> modernizes its memory management.
+> Currently, manual fan control on supported HP models uses a single
+> PWM value for both CPU and GPU fans, linking their speeds via a hardcoded
+> gpu_delta offset. This prevents userspace tools from managing the thermal
+> profiles of the CPU and GPU independently.
 > 
-> Patch 1 fixes the UAF and memory leak by propagating the error code
-> from init_rog_tunables(), deferring the global pointer updates, and
-> adding a rollback path.
+> Refactor the hwmon implementation to support independent dual-channel
+> PWM control:
+> - Split the single 'pwm' state into 'cpu_pwm' and 'gpu_pwm'.
+> - Expose a second PWM channel ('pwm2') to userspace via hwmon_channel_info.
+> - Remove the gpu_delta mechanism entirely.
 > 
 > [...]
 
@@ -87,10 +89,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/2] platform/x86: asus-armoury: fix Use-After-Free and memory leak in driver init
-      commit: 5948b235891fb699b9cb8bd7475b1f17ec3e1b96
-[2/2] platform/x86: asus-armoury: use cleanup.h to manage tunables
-      commit: 55a3149ce66a0ada5ecaff17961c1a3ca3e95498
+[1/1] platform/x86: hp-wmi: Add dual-channel PWM fan control
+      commit: d61548da368a5622e793669fb1cb85972f67469d
 
 --
  i.
