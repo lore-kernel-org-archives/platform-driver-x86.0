@@ -1,90 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66062C3244;
-	Thu,  9 Jul 2026 13:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868FC1A3172;
+	Thu,  9 Jul 2026 13:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783604082; cv=none; b=Zy+0Moqoj/H080LPouDH5cy4k+epyvxerdeEUUlVJIrmxkl8GvErEOyOIK/fyQCkZHzW8/ZkxXCuWV5jpltheymsXFg69TQ+MfLTM/GzRqdzT6CbvyrgX+lTMwyBfBwu+9QsRJ88SwMHcYwCLB+zwlSkzMmU2eHV1MfkVnTTysk=
+	t=1783604377; cv=none; b=h364o+JpGP8p1gRtzlXOPeCTqI2yfGnY+i9M8atydlMqN/jyy44y4HtxAtLm+RJ8aSDMdLfMpfD10xB8l5BOU3hcpJbo0d5O77AGyOkUe3qP5lUduRcC/hSVaJsttWonZXRV+C0zEIU/ZQoxeGTUZUJ5QTEY6e8x49XRtDnh728=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783604082; c=relaxed/simple;
-	bh=z26e9RNCOvxJ5tnaUhjYrDssQR10NxyLzm7b2CbdswQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PmY+IguSpSDwxcNpHt2DOqg/Pug7SGlXNiMsjxR6wCXkCUHEpKzyYtEx5ceJVe4CFmPoEHv0Lo77xZqsft0iaK49UrKtrLgusXR8/PGvHf6YNtbQ1RMDMQtbK1ziHSAedhrzXFUfmMfBtQg2fvucgbRgfgoWddalf1AL4onsBos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMq02Nlo; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1783604377; c=relaxed/simple;
+	bh=9ww8n1YsyHedf1sBFjKIUOQec+lcYJ/wBQdsT3hUWtY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=dmvUCi2I+s6+1mbYLrtKAXgnaZ7h56pONHnIuG5FWJkerho2mmndGItP2rlv07Bs3cMfM9asENpQPSC8fCHDVEE1sqHUqwBPq89grWqL7EEwcZrI1fmS3hz/Lbho8Fq7y9bMy0Yy80uxwqMPoZ/KUbZxhCJF707MFTKip6XXNyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T+MXbyGe; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMq02Nlo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T+MXbyGe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783604081; x=1815140081;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=z26e9RNCOvxJ5tnaUhjYrDssQR10NxyLzm7b2CbdswQ=;
-  b=DMq02NloNA5HYc3gDyKeMAhraYl9w5ZFzK/bmG/GO4h4vxlvkLHWdmfY
-   ZT9/DYSbFRiZ/FwJHY4EKjruPjUmf9/24E9BWC6tlE5AxjweJSwPQfiF3
-   rFxxpUG71AZLYcDL4LP/12IJUeN0ZuUcYhLe4I7Ok61lSqjlvXJxRTXE5
-   xkD/EVVTRtreDOBiX5J8fckMe4RxOOGnFYTLmeaylGZs9J+xCbjEFC1/O
-   8HCGmuWyX9tmkMvU5fZbL5/wmvlazSjQdBQk2tvABnSHlyjg578PSZ+nQ
-   6ZDvmdHTYVCjP+USoVze1iJh8gjTvhbhfMvoi62O4ebzvqdzMtLi+nQwP
-   Q==;
-X-CSE-ConnectionGUID: QUY2/Op3R6+BMLIAHyv3Ow==
-X-CSE-MsgGUID: TOQVq1SOSSSvTLzDM9HN3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="83258598"
+  t=1783604376; x=1815140376;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=9ww8n1YsyHedf1sBFjKIUOQec+lcYJ/wBQdsT3hUWtY=;
+  b=T+MXbyGeSKwYG2MBrKFVvsJ/otRxI1Mr1znGml0hEekfrieYCJZ7kltV
+   YFu84x/O8Sc4ADR2qHCZAWxTwwYThiUBG2i+laG4hZ2JakbZHYKHn6smW
+   6+UI4xsctA1+BnzI3p71YZCBgV3SsnnnlLT18Y0haKtxzWUHwWiGGkStE
+   y8h5OteE3ZKb6dCo9k8vVwqR4CPIVS1DBfdpN5LdEDWFylY7VKqqdfMZB
+   WMAFt3CWZL4uwK5MjjUVo0jJnDT3BhKJfkfq3i2rrzyWKqnUrv+boR50W
+   GN2BKJbKP6YAznokB7/au6WRZWeLXp6/btur62Ap1lLgSSUDmyUIWFVC8
+   g==;
+X-CSE-ConnectionGUID: J+0PPiReTBGGjzGjjDP75w==
+X-CSE-MsgGUID: NYQm1DcdTXOgrmsDcX/SUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="101832718"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="83258598"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:34:39 -0700
-X-CSE-ConnectionGUID: BMH6IegSQsKSdLeEDQm5zA==
-X-CSE-MsgGUID: 6Ho+n+j0SpmSjyW+6eKHcA==
+   d="scan'208";a="101832718"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:35 -0700
+X-CSE-ConnectionGUID: TxtQrl6/QQam2kZFnMLlkQ==
+X-CSE-MsgGUID: dZjOuuA9TbK6RTQC9BVpHg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="251935115"
+   d="scan'208";a="251225535"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:34:37 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:39:30 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 9 Jul 2026 16:34:34 +0300 (EEST)
-To: Dave Carey <carvsdriver@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-    johannes.goede@oss.qualcomm.com, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 0/2] Lenovo Yoga Book 9 keyboard dock detection
-In-Reply-To: <CALPvRORKneYRyQXLQtqBTWWqRYkV5uP8e8cqpSQXYdLTb=BN9w@mail.gmail.com>
-Message-ID: <13e7bbc0-520e-ba4e-70a2-4f222201511f@linux.intel.com>
-References: <20260623125914.833063-1-carvsdriver@gmail.com> <20260708150909.23404-1-carvsdriver@gmail.com> <67a391a0-4bfa-f2f5-10eb-0a7f57e7ebea@linux.intel.com> <CALPvRORKneYRyQXLQtqBTWWqRYkV5uP8e8cqpSQXYdLTb=BN9w@mail.gmail.com>
+To: corbet@lwn.net, skhan@linuxfoundation.org, derekjohn.clark@gmail.com, 
+ hansg@kernel.org, Vishnu Sankar <vishnuocv@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, mark.pearson@lenovo.com, 
+ linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org, 
+ ibm-acpi-devel@lists.sourceforge.net, vsankar@lenovo.com, 
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+In-Reply-To: <20260709021504.465792-1-vishnuocv@gmail.com>
+References: <20260709021504.465792-1-vishnuocv@gmail.com>
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: Add USB-C Security
+ (USCS) support
+Message-Id: <178360436568.12613.9417666621877155453.b4-ty@b4>
+Date: Thu, 09 Jul 2026 16:39:25 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-480114862-1783604074=:1261"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 09 Jul 2026 11:15:04 +0900, Vishnu Sankar wrote:
 
---8323328-480114862-1783604074=:1261
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
+> When active, USB-C data connections are disabled while power delivery is
+> preserved. This is useful for kiosk and physically-secured deployments.
+> 
+> Hardware interface:
+> 
+> The HKEY device exposes a read-only ACPI method USCS():
+> 
+> [...]
 
-On Thu, 9 Jul 2026, Dave Carey wrote:
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> Apologies, pretty new to upstream submissions.=C2=A0 Are you asking that =
-I abandon this
-> thread and submit a new v1 patch series?
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-That's not what I meant but submit v12 again into own thread that is=20
-entirely unrelated to this email thread.
-
-Currently, the recent versions are part of thread that contains the=20
-earlier versions (see the thread overview towards the end):
-
-https://lore.kernel.org/platform-driver-x86/8f84ca57-b856-4da0-8d90-e2be414=
-f8997@gmx.de/T/#t
-
-On low-level, it relates to what appears/doesn't appear in=20
-References/In-Reply-To headers of the email.
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+      commit: 740f324f8f036607d59c05ab2b2fc22231c9641d
 
 --
  i.
---8323328-480114862-1783604074=:1261--
+
