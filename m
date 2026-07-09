@@ -1,1094 +1,559 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010000.outbound.protection.outlook.com [52.101.193.0])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77A12F49FD;
-	Thu,  9 Jul 2026 05:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783576212; cv=none; b=VbauJERa8mRE2VJUCmyTfeivme18waOJxlSMUcZXlC8WxfTICsB50DHSdGM07454AaVWKwYlRsQEGd7JYERlkgHeUAvJu3MNcFKOspSKZzt8rmv9FQHNRDZ46F7aY+VcEBXndRXdWMjxpJcY7taUJTTroh58blRnCfcOOhbT8mo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783576212; c=relaxed/simple;
-	bh=18cfuOqnpCYPVr4fvnLThniblSbA8URUhoW5FKjE0/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c0ykg7dXT59v2GI8Voz88HcRdWwvQJtp5gxlYKeIwADj+c2hwvYSau1MIDcLJUmDMQRCvVIrb7HUOblr0myepxr6bME2rh0Rd9bEdEaUeb1jKKxXEoi5ksEpbrn9u/ZpK6qCutGEc1Qzv4GEPObzLDV+iDeBJlSDgiCn0PwRfQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ecM0DfPl; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A808E3D524D;
+	Thu,  9 Jul 2026 06:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783580362; cv=fail; b=LQA7KQHMwDWX+sgdO7ZMKAHB3HQ7L1ACJnaRm0sdTMe5W3lZhSSkKJkqvavyWThXx0M0V1Bh8N3uHYSeKH92NQgXJkYxBR+wINEB6bFsK641nNLnABC/GqUmHLeknw/8alRmJUH93BMQ3Du6/TJIMLU2hB+Lcwn54H235q7u7OY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783580362; c=relaxed/simple;
+	bh=e/bFcRLWlCWk3kR2s2/5PzJXRq3rN3j3PaSez+vix6U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=II93RF0/6u1FKn2tTLsVkFeSBPcHSyvxtK3AHm2c8eD+BRN8pOjKHrrn96uiz3Q8QZUFl6gO52KsoFa3ZCeCmM+hIc8CGqb8GyOMNE8ACyVRTDwQ6mIc3g0ZO37qjWwz2HQkYKdNWIbRYpC/ItHGXb4WrQK3/vFq8jMm77xkzPE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eedhYx2c; arc=fail smtp.client-ip=52.101.193.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ecM0DfPl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1783576187; x=1784180987; i=w_armin@gmx.de;
-	bh=18cfuOqnpCYPVr4fvnLThniblSbA8URUhoW5FKjE0/8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ecM0DfPlOFZx3NNBWA5HzfnOsitmWaAgrLpomoGT2jt8WM6yuLSyQWar6Bn+8Kez
-	 1zXZb2DRntyxwDnaH7vBITBl7uFzTKjXinUkkv4TqriuZrA37zlxzHUYd1WtOxnaX
-	 H9MKSJ704mEH+XjdoRwyUpVod9QNh/9MYRyDT67rzw85okofgJNsiyZDkcUmOc1jo
-	 Enz+v4We+rSFd6SN9m19PzKOoiOAAkAhYYojm5QzjT8uj0fhfJiW93Wg2W20tKwDa
-	 E9yyGKiGThoaJ56DaLX72tyctI6ShtW/AqSJGzoI72HiDeSPKgLmQE9qKNMlYZgRB
-	 DWpBC76yIV7H+MsCOg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6KYb-1xABs33jp3-0130Ow; Thu, 09
- Jul 2026 07:49:46 +0200
-Message-ID: <a681b59d-1719-4a8e-9b75-e8317c899b27@gmx.de>
-Date: Thu, 9 Jul 2026 07:49:45 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eedhYx2c"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=itmiKA+XxXwawR7v1YCMvqIGgeG7emNCEvs/z3Xw6UVHCPOuzW7fS5XlnxNd8G0IJu3Hwl/KOeHo3Jn+EJNlejOmpLA6rO/TD9+RMtzSjRrjyp9sQWClrUx/ww9+QbEm2CoUFH2xySZ7XJior2doqYeFLK4yjbxF0hGKXK3lB1124AYHMSqIfP4BAjWxDuj1NsEUQTpnYnTtPlTzOBytwpYPkzWMpGUJw+Oy7uTbLKdvkAh8vSDTZLQ6+2Ipdl2HQMiV2DaKl1iko5w8gx3JSwKnLJkgAt8WVKsO2yEEnzmuUC9/5Xf8Xslfl9VGR27FbLhP/GltzfUqa5a6SVEYQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X/WvB8TYtFbHpoI4Muay6nEw1yBlOLl/HHxS3dkPDEg=;
+ b=omRXHJw3mkpxzqqTBJnVHVcGHvlPEQz1BpsQffqdN6sd/f9kVwCSagYbvevsSzj5wLCLyed1WhSlF9SbG1xQ8/tREUjAUk3OZX3WGH63Wv/2bXEWprbJUjSH4qPHWb/8o1qa2vfqTXGzn+b3aHTvpPamnJ6MSsdODBXWCLlDNlmOqzzO0B2TFP4mQ3sckb2cUPBdORUO1LT66UQUP9Wq1BqsEBLcmuN4Ts7w0jZCAEF4/PdGCaFxZi/F2HTg76/l4PMwXTXLABmB71o6j4yAFORweOoFud2s2ncNN9ZzApo5I0ZdI589h8+RXH7pbaliRuh0Uj647zqAdbMV6cNueg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X/WvB8TYtFbHpoI4Muay6nEw1yBlOLl/HHxS3dkPDEg=;
+ b=eedhYx2c720+BoGcC9AI6UWNfS49QVTJfrJxciAgqumIjs8oQYJfQdyk4zInegA8buSEwxxG6zwLlRGawWqr/rWMM9gYolkAIaoNRGz18pIB6s4eBB/HIdkMhiN01QOCN0tpP8Mx4TQidc0yLpXfOgeyML5rf3xzjLpPc9F1nbk=
+Received: from MW4PR04CA0087.namprd04.prod.outlook.com (2603:10b6:303:6b::32)
+ by SJ2PR12MB7964.namprd12.prod.outlook.com (2603:10b6:a03:4cf::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
+ 2026 06:59:09 +0000
+Received: from SJ5PEPF000001C8.namprd05.prod.outlook.com
+ (2603:10b6:303:6b:cafe::96) by MW4PR04CA0087.outlook.office365.com
+ (2603:10b6:303:6b::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.10 via Frontend Transport; Thu, 9
+ Jul 2026 06:59:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001C8.mail.protection.outlook.com (10.167.242.36) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Thu, 9 Jul 2026 06:59:09 +0000
+Received: from [127.0.1.1] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 9 Jul
+ 2026 01:59:03 -0500
+From: "Yo-Jung Leo Lin (AMD)" <Leo.Lin@amd.com>
+Date: Thu, 9 Jul 2026 14:58:18 +0800
+Subject: [PATCH v8] platform/x86/amd: Introduce Halo Box RGB LED driver
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] platform/x86: uniwill-laptop: Add keyboard backlight
- support
-To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com,
- hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260530170813.10166-1-W_Armin@gmx.de>
- <20260530170813.10166-2-W_Armin@gmx.de>
- <10e25d5c-7c50-45fd-a5a9-c06b087a89dd@tuxedocomputers.com>
- <aa39d060-5555-42bb-a4bb-d23e79f64d26@gmx.de>
- <1a91a9ff-8c81-4176-a6f2-fd2a6bc49820@tuxedocomputers.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <1a91a9ff-8c81-4176-a6f2-fd2a6bc49820@tuxedocomputers.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0o2FYelFlc8I6taKWnB+Dv76lcWZiplhR7ldeInAKmXBgYVVWA4
- /U6XKjHyAst7YnI7I6XZOTwOrQRAvCsJzHfkxN7SQlBW4CUqD5UUaSifZ9kKtvNyFsILvSG
- tpBZFnCkQHR081igym+csWylzKbxb0pBVOqHuWZ1bb71eEQLsmx9nubzd4+OAYLMchoZ6CJ
- Sx8Fws/KPMBDTaHzVZJGQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:rrmFkXn4m5g=;2JMLpI3lwQ0Q4w3Rq8+QTWdGHc0
- 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
- fozKV6V3cstQYYwb6TIYBsdYeh3596
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20260709-halo-leds-v2-plus-v8-1-b34c64277193@amd.com>
+X-B4-Tracking: v=1; b=H4sIAIpGT2oC/23RTW7DIBAF4KtErIsFY8xAV7lH1cVgQ2zVf4LEa
+ hX57sXporbkFRqJ7/E0PFnysfOJvV+eLPqlS9005sG8XVjd0njzvGvyzECAFgosb6mfeO+bxBf
+ gc/9IHAFqI0xJwRuW3Rx96L5fmR+feQ5xGvi9jZ72SSgAKqULqQRaKLnk6TH7OMjrl4+j74sp3
+ ra0tkv3Kf68Ci6wZf4lVEKddMmn5BQEIALmS+5KQ1PU08C2Jku59+bMb0WsbIKqjNXa09GrnQd
+ 55lX2TlnjHLlSExx9tfflma+yVxab2qK0JM3R670/+4tFb++jC+isUCT10eO/1/K0P2ZviBosQ
+ 107vdvfuq6/SfDEyy4CAAA=
+To: Hans de Goede <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+	<ilpo.jarvinen@linux.intel.com>, "Mario Limonciello (AMD)"
+	<superm1@kernel.org>, "Yo-Jung Leo Lin (AMD)" <Leo.Lin@amd.com>
+CC: <linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Armin Wolf <W_Armin@gmx.de>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13178; i=Leo.Lin@amd.com;
+ h=from:subject:message-id; bh=e/bFcRLWlCWk3kR2s2/5PzJXRq3rN3j3PaSez+vix6U=;
+ b=owEBbQKS/ZANAwAKAV8XsZZKKe6GAcsmYgBqT0a0seu2uXNYz0t3tTeaR3JcPIPQg1Ush/tJz
+ np373KKDXqJAjMEAAEKAB0WIQQzqV4kW+yguuqHrw5fF7GWSinuhgUCak9GtAAKCRBfF7GWSinu
+ hieTEACP8Jm33/7Lh6HzwcNKF6hJS+zLfDA6dwCQIbexoZx6GTYd0mndRyu/afs60W5OCgcWn6G
+ 9updOhvCIygmUvdozDQUqDefEtiSnN4qf/6QKaHgXtORmUuB6ZWkkDvtkEDTQz2EIu1dgwTvDEd
+ aXb2RM9NP/nQ3tmQy9vxe6InrDMT2aucVvzq2bi6ssOIxJHqodHMmAlGKxAU1GeSxeP5ZXfZ0n3
+ FDs7RhgsiuJ3mAKEHIcFVKqm9IZfptRycYAqy+hqBdmSsIWrSjGtUPYVRPPlRPWu96NCPF7uscM
+ a8ph044Sf04/5NHEMKe4ZsTcREW0L1V4bqPX9Yz+fWPIrRnMWnfrWhOkVpz/niQKlKro25Pyy75
+ Et51/7v/IbddiaZT16RVncFLR3gUAQDeacqFUxwnZr6R+un/6abBwm0clxdmJFa3uvOyMAeMiGo
+ drRLACzzNg0UAatekSAKOBqzQQ/NPhswwUNWw5QbIvlH/izAcMKVdxU80bgGQxtuIu9gWwPWiHN
+ vwPOi2CiP8rGlORtllwFexYTDDe5iR9AZ9xpVUMH+inVxjtUpKsQ4Wye7o/QC0wOieirvSDROvj
+ ZkviZolutwOEVdy+aQWv8FnLOd/BwqF+hmYgESlO/yxp1cPLo1T2YGTu5N9Hq2QijQ/3h9Ls2zg
+ p+HfVmVEUdudNCQ==
+X-Developer-Key: i=Leo.Lin@amd.com; a=openpgp;
+ fpr=33A95E245BECA0BAEA87AF0E5F17B1964A29EE86
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001C8:EE_|SJ2PR12MB7964:EE_
+X-MS-Office365-Filtering-Correlation-Id: 685b5ea7-17d8-4bb6-744f-08dedd87931d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|23010399003|376014|1800799024|82310400026|13003099007|18002099003|56012099006|5023799004|11063799006|6133799003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	yu6N6EBQGM45RtjcsvTqqWzCMwkpRk5gsELr8TxlMq85VfoLkQQpzDA9aceaRasc0ug60j+MkzQnehrgghSf0nxWx8OOWGzcJ6SHTJrer2LijUICz3cGdtbJSEXrQotJmfs4zQPFPbecoqjDvNhmrAHS3K6FIO94FwFjVQvyFAQsLV6f3HByEydj1tyQr3TXVmnDtuXZ8/r9NC+hiPYUeTR4Vu5y1CiCi5E8KrBMfEFKZNSoJTroMuxtEYDLNNH1M4ZkFhqKBpJDXJuvxUwUuQqJ4CfdcgciofNsHxouye+HD9ni5I94dM+UFums6N52GuavGCgalht7jeEodbMuKc1d0PuLjxTWKu4mPKH0jO72sHlUuuShIyUUuyNOLVhtZxc4pZxqqYfTh9ECpCNygt2UY27oPeqWwEgQnu8k0HjKAbNYNe6sM3d/KTWKR7yv7uGKaBrvgsfdC3nBBs7lj6eKZJW4LwWq1jK2Y/OmJbZpwGgTvZcDKuJrzdgWc2p/mx7k7tcmlkPQpf+uemrWE2HeAx88YIRbJgmueooo9wAa8sWyLuPPV3c+bQAtE3b9PNfzt13eVrNmN+UsmzDoRg3cfQfOcbI0seCWucueVYh385/QhdqCZHeJz/mb/bySQhOQp756j01KY1L1u5xsGJclgFl5tbpFwA8phVkek4M7vVUnC3ZR6ii6vUTHVUKYp8QPMNZsEuuvRmLoY54zpg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(376014)(1800799024)(82310400026)(13003099007)(18002099003)(56012099006)(5023799004)(11063799006)(6133799003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	m3cvqI045xeC2TbEEBeHWdYAf6RQONezJgJVey+UKamyia36RqiUnvJ/rpLKwVLazLpezYuGA4RLIymbJbTo9Q5ydXkIMc8uhc7R8poj0zk81rfcU9jQXJ9oins32DJR4wUW7klAGoKpnCfVMZQ5UCIAl/HcKkXcIOeEx739xk/6rS0+TUC5ZnpB/mGXupNq+PvP95n9cCcoJyVlG4zYM2RJOmID9pVG4boCDznxRM2FBByMzUMiJeBqV7CJyYiBfE/HTMsqVvZTg/751S3rvHxMGEen+roZcfVTVF4hBqG0fHCpYKnV/evH75VBRKo+XjiQb3oOzz8q86KxQfPTuqcS2uGMuTqqM6Jb1nGRjp/KUQnW0uZnF4Cf2gdbLAslchqbi3QS6antRjY3HgCxHVbs7mDcTgAWQ4b5PeDYd/16y0QOonCWfksIf7xDaxWW
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 06:59:09.0392
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 685b5ea7-17d8-4bb6-744f-08dedd87931d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001C8.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7964
 
-Am 08.07.26 um 22:15 schrieb Werner Sembach:
+The Halo Box features an RGB LED light bar that can be controlled
+through WMI methods to display any color combination.
 
->
-> Am 08.07.26 um 22:08 schrieb Armin Wolf:
->> Am 08.07.26 um 21:11 schrieb Werner Sembach:
->>
->>> Hi,
->>>
->>> Am 30.05.26 um 19:08 schrieb Armin Wolf:
->>>> Many Uniwill-based devices support either a white-only or fully
->>>> features RGB keyboard backlight. Add support for this feature
->>>> and handle the associated WMI events.
->>>>
->>>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>>> ---
->>>> =C2=A0 .../admin-guide/laptops/uniwill-laptop.rst=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 13 +
->>>> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c=C2=A0=C2=A0 | 392=
-=20
->>>> +++++++++++++++++-
->>>> =C2=A0 2 files changed, 397 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/Documentation/admin-guide/laptops/uniwill-laptop.rst=20
->>>> b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> index 24b41dbab886..2b1e5da703a5 100644
->>>> --- a/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> +++ b/Documentation/admin-guide/laptops/uniwill-laptop.rst
->>>> @@ -77,6 +77,19 @@ LED class device. The default name of this LED=20
->>>> class device is ``uniwill:multico
->>>> =C2=A0 See Documentation/ABI/testing/sysfs-driver-uniwill-laptop for=
-=20
->>>> details on how to control the various
->>>> =C2=A0 animation modes of the lightbar.
->>>> =C2=A0 +Keyboard Backlight
->>>> +------------------
->>>> +
->>>> +The ``uniwill-laptop`` driver supports controlling the keyboard=20
->>>> backlight using the standard
->>>> +LED class interface. The default name of this LED class device is=20
->>>> ``uniwill:white:kbd_backlight``
->>>> +when the keyboard backlight supports only a single color, or=20
->>>> ``uniwill:multicolor:kbd_backlight``
->>>> +when the keyboard backlight supports RGB colors. The maximum=20
->>>> intensity for each color channel
->>>> +in RGB mode is 50.
->>>> +
->>>> +Keep in mind that due to hardware design choices, the driver does=20
->>>> not support the RGB value
->>>> +``0x000000`` (black), instead it will fall back to ``0x010101``=20
->>>> (faint white). In order to
->>>> +disable the keyboard backlight, the standard LED brightness=20
->>>> setting has to be used instead.
->>>> +
->>>> =C2=A0 Configurable TGP
->>>> =C2=A0 ----------------
->>>> =C2=A0 diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
->>>> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> index ab063ead45b9..fd040197b189 100644
->>>> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->>>> @@ -110,8 +110,31 @@
->>>> =C2=A0 #define EC_ADDR_BAT_CYCLE_COUNT_2=C2=A0=C2=A0=C2=A0 0x04A7
->>>> =C2=A0 =C2=A0 #define EC_ADDR_PROJECT_ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x0740
->>>> +#define PROJECT_ID_NONE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x00
->>>> +#define PROJECT_ID_GI=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x01
->>>> +#define PROJECT_ID_GJ=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x02
->>>> +#define PROJECT_ID_GK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x03
->>>> +#define PROJECT_ID_GICN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x04
->>>> +#define PROJECT_ID_GJCN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x05
->>>> +#define PROJECT_ID_GK5CN_X=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x06
->>>> +#define PROJECT_ID_GK7CN_S=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x07
->>>> +#define PROJECT_ID_GK7CPCS_GK5CQ7Z=C2=A0=C2=A0=C2=A0 0x08
->>>> +#define PROJECT_ID_PF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x09
->>>> +#define PROJECT_ID_GK5CP_4X_5X_6X=C2=A0=C2=A0=C2=A0 0x0A
->>>> +#define PROJECT_ID_IDP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 0x0B
->>>> +#define PROJECT_ID_IDY_6Y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-0x0C
->>>> +#define PROJECT_ID_IDY_7Y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-0x0D
->>>> +#define PROJECT_ID_PF4MU_PF4MN_PF5MU=C2=A0=C2=A0=C2=A0 0x0E
->>>> +#define PROJECT_ID_CML_GAMING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 0x0F
->>>> +#define PROJECT_ID_GK7NXXR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x10
->>>> +#define PROJECT_ID_GM5MU1Y=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x11
->>>> =C2=A0 #define PROJECT_ID_PH4TRX1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x12
->>>> +#define PROJECT_ID_PH4TUX1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x13
->>>> +#define PROJECT_ID_PH4TQX1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x14
->>>> =C2=A0 #define PROJECT_ID_PH6TRX1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x15
->>>> +#define PROJECT_ID_PH6TQXX=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x16
->>>> +#define PROJECT_ID_PHXAXXX=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x17
->>>> +#define PROJECT_ID_PHXPXXX=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 0x18
->>>> =C2=A0 =C2=A0 #define EC_ADDR_AP_OEM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0741
->>>> =C2=A0 #define=C2=A0=C2=A0=C2=A0 ENABLE_MANUAL_CTRL=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->>>> @@ -214,6 +237,7 @@
->>>> =C2=A0 #define FAN_TABLE_OFFICE_MODE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(2)
->>>> =C2=A0 #define FAN_V3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(3)
->>>> =C2=A0 #define DEFAULT_MODE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 BIT(4)
->>>> +#define ENABLE_CHINA_MODE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-BIT(6)
->>>> =C2=A0 =C2=A0 #define EC_ADDR_PL1_SETTING=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x0783
->>>> =C2=A0 @@ -225,11 +249,11 @@
->>>> =C2=A0 #define FAN_CURVE_LENGTH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 5
->>>> =C2=A0 =C2=A0 #define EC_ADDR_KBD_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 0x078C
->>>> -#define KBD_WHITE_ONLY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(0)=C2=A0=C2=A0=C2=A0 // ~single color
->>>> -#define KBD_SINGLE_COLOR_OFF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 BIT(1)
->>>> +#define KBD_WHITE_ONLY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->>>> +#define KBD_POWER_OFF=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(1)
->>>> =C2=A0 #define KBD_TURBO_LEVEL_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 GENMASK(3, 2)
->>>> =C2=A0 #define KBD_APPLY=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(4)
->>>> -#define KBD_BRIGHTNESS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 GENMASK(7, 5)
->>>> +#define KBD_BRIGHTNESS_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 GENMASK(7, 5)
->>>> =C2=A0 =C2=A0 #define EC_ADDR_FAN_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 0x078E
->>>> =C2=A0 #define FAN3P5=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(1)
->>>> @@ -320,6 +344,9 @@
->>>> =C2=A0 #define LED_CHANNELS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- 3
->>>> =C2=A0 #define LED_MAX_BRIGHTNESS=C2=A0=C2=A0=C2=A0 200
->>>> =C2=A0 +#define KBD_LED_CHANNELS=C2=A0=C2=A0=C2=A0 3
->>>> +#define KBD_LED_MAX_INTENSITY=C2=A0=C2=A0=C2=A0 50
->>>> +
->>>> =C2=A0 #define UNIWILL_FEATURE_FN_LOCK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
->>>> =C2=A0 #define UNIWILL_FEATURE_SUPER_KEY=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 BIT(1)
->>>> =C2=A0 #define UNIWILL_FEATURE_TOUCHPAD_TOGGLE=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(2)
->>>> @@ -333,6 +360,7 @@
->>>> =C2=A0 #define UNIWILL_FEATURE_SECONDARY_FAN=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 BIT(9)
->>>> =C2=A0 #define UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL=C2=A0=C2=A0=C2=A0 =
-BIT(10)
->>>> =C2=A0 #define UNIWILL_FEATURE_USB_C_POWER_PRIORITY=C2=A0=C2=A0=C2=A0=
- BIT(11)
->>>> +#define UNIWILL_FEATURE_KEYBOARD_BACKLIGHT=C2=A0=C2=A0=C2=A0 BIT(12)
->>>> =C2=A0 =C2=A0 enum usb_c_power_priority_options {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 USB_C_POWER_PRIORITY_CHARGING =3D 0,
->>>> @@ -344,6 +372,7 @@ struct uniwill_data {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 acpi_handle handle;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
->>>> +=C2=A0=C2=A0=C2=A0 u8 project_id;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct acpi_battery_hook hook;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex battery_lock;=C2=A0=C2=A0=
-=C2=A0 /* Protects the list of=20
->>>> currently registered batteries */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 union {
->>>> @@ -362,6 +391,18 @@ struct uniwill_data {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex led_lock;=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Protects writes to the=20
->>>> lightbar registers */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct led_classdev_mc led_mc_cdev;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mc_subled led_mc_subled_info[LE=
-D_CHANNELS];
->>>> +=C2=A0=C2=A0=C2=A0 bool single_color_kbd;
->>>> +=C2=A0=C2=A0=C2=A0 u8 kbd_led_max_brightness;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int last_kbd_status;
->>>> +=C2=A0=C2=A0=C2=A0 union {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=
-* Protects writes to the RGB keyboard backlight=20
->>>> registers */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 s=
-truct mutex kbd_rgb_led_lock;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 s=
-truct led_classdev_mc kbd_led_mc_cdev;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 s=
-truct mc_subled=20
->>>> kbd_led_mc_subled_info[KBD_LED_CHANNELS];
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct led_classdev kbd_l=
-ed_cdev;
->>>> +=C2=A0=C2=A0=C2=A0 };
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex input_lock;=C2=A0=C2=A0=
-=C2=A0 /* Protects input sequence during=20
->>>> notify */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct input_dev *input_device;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct notifier_block nb;
->>>> @@ -376,6 +417,7 @@ struct uniwill_battery_entry {
->>>> =C2=A0 =C2=A0 struct uniwill_device_descriptor {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int features;
->>>> +=C2=A0=C2=A0=C2=A0 u8 kbd_led_max_brightness;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Executed during driver probing */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int (*probe)(struct uniwill_data *data=
-);
->>>> =C2=A0 };
->>>> @@ -427,6 +469,9 @@ static const struct key_entry uniwill_keymap[] =
-=3D {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_KBDILLUMDOWN, { KEY_KBDILLUMDOWN }},
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_KBDILLUMUP, { KEY_KBDILLUMUP }},
->>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 /* Reported when the EC changed the keyboa=
-rd backlight=20
->>>> brightness */
->>>> +=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL_OSD_BACKLI=
-GHT_LEVEL_CHANGE, {=20
->>>> KEY_UNKNOWN }},
->>>> +
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants to tog=
-gle the microphone mute=20
->>>> status */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_MIC_MUTE, { KEY_MICMUTE }},
->>>> =C2=A0 @@ -435,11 +480,6 @@ static const struct key_entry=20
->>>> uniwill_keymap[] =3D {
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Reported when the user wants=
- to toggle the brightness of=20
->>>> the keyboard */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 UNIWILL_OSD_KBDILLUMTOGGLE, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> -=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_OSD_KB_LED_LEVEL0, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> -=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_OSD_KB_LED_LEVEL1, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> -=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_OSD_KB_LED_LEVEL2, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> -=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_OSD_KB_LED_LEVEL3, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> -=C2=A0=C2=A0=C2=A0 { KE_KEY,=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 UNI=
-WILL_OSD_KB_LED_LEVEL4, {=20
->>>> KEY_KBDILLUMTOGGLE }},
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* FIXME: find out the exact me=
-aning of those events */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 { KE_IGNORE,=C2=A0=C2=A0=C2=A0 UNIWILL=
-_OSD_BAT_CHARGE_FULL_24_H, {=20
->>>> KEY_UNKNOWN }},
->>>> @@ -547,6 +587,11 @@ static bool uniwill_writeable_reg(struct=20
->>>> device *dev, unsigned int reg)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_LIGHTBAR_AC_BLUE:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_BIOS_OEM:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_TRIGGER:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_RED:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_GREEN:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_BLUE:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_BIOS_OEM_2:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_KBD_STATUS:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_OEM_4:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_CHARGE_CTRL:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_LIGHTBAR_BAT_CTRL:
->>>> @@ -583,8 +628,14 @@ static bool uniwill_readable_reg(struct device=
-=20
->>>> *dev, unsigned int reg)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_BIOS_OEM:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_PWM_1:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_PWM_2:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_SUPPORT_2:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_TRIGGER:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_SWITCH_STATUS:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_RED:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_GREEN:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_RGB_BLUE:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_BIOS_OEM_2:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_KBD_STATUS:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_OEM_4:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_CHARGE_CTRL:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_LIGHTBAR_BAT_CTRL:
->>>> @@ -616,8 +667,10 @@ static bool uniwill_volatile_reg(struct device=
-=20
->>>> *dev, unsigned int reg)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_BIOS_OEM:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_PWM_1:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_PWM_2:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_SUPPORT_2:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_TRIGGER:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_SWITCH_STATUS:
->>>> +=C2=A0=C2=A0=C2=A0 case EC_ADDR_KBD_STATUS:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_OEM_4:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_CHARGE_CTRL:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case EC_ADDR_USB_C_POWER_PRIORITY:
->>>> @@ -1441,6 +1494,246 @@ static int uniwill_led_init(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &init_data);
->>>> =C2=A0 }
->>>> =C2=A0 +static int uniwill_notify_kbd_led(struct uniwill_data *data, =
-int=20
->>>> brightness)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct led_classdev *led_cdev;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (data->single_color_kbd)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 led_cdev =3D &data->kbd_l=
-ed_cdev;
->>>> +=C2=A0=C2=A0=C2=A0 else
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 led_cdev =3D &data->kbd_l=
-ed_mc_cdev.led_cdev;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 guard(mutex)(&led_cdev->led_access);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 /* Sync the LED brightness with the actual hardwa=
-re state */
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D led_update_brightness(led_cdev);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 led_classdev_notify_brightness_hw_changed(led_cde=
-v, brightness);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return 0;
->>>> +}
->>>> +
->>>> +#define KBD_LED_MASK=C2=A0=C2=A0=C2=A0 (KBD_BRIGHTNESS_MASK | KBD_AP=
-PLY |=20
->>>> KBD_POWER_OFF)
->>>> +
->>>> +static int uniwill_kbd_led_write_brightness(struct uniwill_data=20
->>>> *data, int brightness)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 /* KBD_POWER_OFF is always implicitly cleared */
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int regval =3D FIELD_PREP(KBD_BRIGHTNESS=
-_MASK,=20
->>>> brightness) | KBD_APPLY;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 /* We must ensure that the "apply" bit is always =
-written */
->>>> +=C2=A0=C2=A0=C2=A0 return regmap_write_bits(data->regmap, EC_ADDR_KB=
-D_STATUS,=20
->>>> KBD_LED_MASK, regval);
->>>> +}
->>>> +
->>>> +static int uniwill_kbd_led_read_brightness(struct uniwill_data *data=
-)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int regval;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_KBD_STA=
-TUS, &regval);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return min(FIELD_GET(KBD_BRIGHTNESS_MASK, regval)=
-,=20
->>>> data->kbd_led_max_brightness);
->>>> +}
->>>> +
->>>> +static int uniwill_kbd_led_brightness_set(struct led_classdev=20
->>>> *led_cdev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enum led_brig=
-htness brightness)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D container_of(led_cd=
-ev, struct=20
->>>> uniwill_data, kbd_led_cdev);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return uniwill_kbd_led_write_brightness(data, bri=
-ghtness);
->>>> +}
->>>> +
->>>> +static enum led_brightness uniwill_kbd_led_brightness_get(struct=20
->>>> led_classdev *led_cdev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D container_of(led_cd=
-ev, struct=20
->>>> uniwill_data, kbd_led_cdev);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return uniwill_kbd_led_read_brightness(data);
->>>> +}
->>>> +
->>>> +static const unsigned int=20
->>>> uniwill_kbd_led_channel_to_reg[KBD_LED_CHANNELS] =3D {
->>>> +=C2=A0=C2=A0=C2=A0 EC_ADDR_RGB_RED,
->>>> +=C2=A0=C2=A0=C2=A0 EC_ADDR_RGB_GREEN,
->>>> +=C2=A0=C2=A0=C2=A0 EC_ADDR_RGB_BLUE,
->>>> +};
->>>> +
->>>> +static int uniwill_kbd_led_mc_brightness_set(struct led_classdev=20
->>>> *led_cdev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 enum led_brightness brightness)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct led_classdev_mc *led_mc_cdev =3D lcdev_to_=
-mccdev(led_cdev);
->>>> +=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D container_of(led_mc=
-_cdev, struct=20
->>>> uniwill_data, kbd_led_mc_cdev);
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int min_intensity =3D 0;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int regval;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 guard(mutex)(&data->kbd_rgb_led_lock);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * The EC interprets a RGB value of 0x000000=
- as a command to=20
->>>> restore
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * the device-specfic default RGB value. Wor=
-k around this by=20
->>>> writing
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * a RGB value of 0x010101 (faint white) ins=
-tead.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0 if (data->kbd_led_mc_subled_info[0].intensity =3D=
-=3D 0 &&
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[1].intensity =3D=3D 0 &&
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[2].intensity =3D=3D 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 min_intensity =3D 1;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < KBD_LED_CHANNELS; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regval =3D max(data->kbd_=
-led_mc_subled_info[i].intensity,=20
->>>> min_intensity);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_write(data=
-->regmap,=20
->>>> uniwill_kbd_led_channel_to_reg[i], regval);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_write_bits(data->regmap, EC_ADDR_T=
-RIGGER,=20
->>>> RGB_APPLY_COLOR, RGB_APPLY_COLOR);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return uniwill_kbd_led_write_brightness(data, bri=
-ghtness);
->>>> +}
->>>> +
->>>> +static enum led_brightness=20
->>>> uniwill_kbd_led_mc_brightness_get(struct led_classdev *led_cdev)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 struct led_classdev_mc *led_mc_cdev =3D lcdev_to_=
-mccdev(led_cdev);
->>>> +=C2=A0=C2=A0=C2=A0 struct uniwill_data *data =3D container_of(led_mc=
-_cdev, struct=20
->>>> uniwill_data, kbd_led_mc_cdev);
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return uniwill_kbd_led_read_brightness(data);
->>>> +}
->>>> +
->>>> +static int uniwill_kbd_led_init(struct uniwill_data *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int color_indices[KBD_LED_CHANNELS] =3D =
-{
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_RED,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_GREEN,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 LED_COLOR_ID_BLUE,
->>>> +=C2=A0=C2=A0=C2=A0 };
->>>> +=C2=A0=C2=A0=C2=A0 struct led_init_data init_data =3D {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .devicename =3D DRIVER_NA=
-ME,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .devname_mandatory =3D tr=
-ue,
->>>> +=C2=A0=C2=A0=C2=A0 };
->>>> +=C2=A0=C2=A0=C2=A0 bool intensity_all_zeros =3D true;
->>>> +=C2=A0=C2=A0=C2=A0 bool needs_trigger =3D false;
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int regval;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_SUPPORT=
-_2, &regval);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (!(regval & CHINA_MODE)) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_set_bits(d=
-ata->regmap, EC_ADDR_BIOS_OEM_2,=20
->>>> ENABLE_CHINA_MODE);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_KBD_STA=
-TUS, &regval);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 regval |=3D KBD_APPLY;
->>>> +=C2=A0=C2=A0=C2=A0 regval &=3D ~KBD_POWER_OFF;
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_write(data->regmap, EC_ADDR_KBD_ST=
-ATUS, regval);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 switch (data->project_id) {
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PF:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PF4MU_PF4MN_PF5MU:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PH4TRX1:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PH4TUX1:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PH4TQX1:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PH6TRX1:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PH6TQXX:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PHXAXXX:
->>>> +=C2=A0=C2=A0=C2=A0 case PROJECT_ID_PHXPXXX:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->single_color_kbd =
-=3D true;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +=C2=A0=C2=A0=C2=A0 default:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->single_color_kbd =
-=3D regval & KBD_WHITE_ONLY;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (data->single_color_kbd) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 init_data.default_label =
-=3D "white:"=20
->>>> LED_FUNCTION_KBD_BACKLIGHT;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_cdev.max_br=
-ightness =3D=20
->>>> data->kbd_led_max_brightness;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_cdev.color =
-=3D LED_COLOR_ID_WHITE;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_cdev.flags =
-=3D LED_BRIGHT_HW_CHANGED |=20
->>>> LED_REJECT_NAME_CONFLICT;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_cdev.bright=
-ness_set_blocking =3D=20
->>>> uniwill_kbd_led_brightness_set;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_cdev.bright=
-ness_get =3D=20
->>>> uniwill_kbd_led_brightness_get;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return devm_led_classdev_=
-register_ext(data->dev,=20
->>>> &data->kbd_led_cdev, &init_data);
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < KBD_LED_CHANNELS; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[i].color_index =3D=20
->>>> color_indices[i];
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data-=
->regmap,=20
->>>> uniwill_kbd_led_channel_to_reg[i], &regval);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Make sure that th=
-e initial intensity value is not=20
->>>> greater than
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * the maximum inten=
-sity.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (regval > KBD_LED_MAX_=
-INTENSITY) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-egval =3D KBD_LED_MAX_INTENSITY;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-et =3D regmap_write(data->regmap,=20
->>>> uniwill_kbd_led_channel_to_reg[i], regval);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 n=
-eeds_trigger =3D true;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (regval)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-ntensity_all_zeros =3D false;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[i].intensity =3D regval;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[i].max_intensity =3D=20
->>>> KBD_LED_MAX_INTENSITY;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_subled_i=
-nfo[i].channel =3D i;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 /* See uniwill_kbd_led_mc_brightness_set() for an=
-=20
->>>> explaination. */
->>>> +=C2=A0=C2=A0=C2=A0 if (intensity_all_zeros) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (int i =3D 0; i < KBD=
-_LED_CHANNELS; i++) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 d=
-ata->kbd_led_mc_subled_info[i].intensity =3D 1;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-et =3D regmap_write(data->regmap,=20
->>>> uniwill_kbd_led_channel_to_reg[i], 1);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i=
-f (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 needs_trigger =3D true;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (needs_trigger) {
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_write_bits=
-(data->regmap, EC_ADDR_TRIGGER,=20
->>>> RGB_APPLY_COLOR,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 RGB_APPLY_COLOR);
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn ret;
->>>> +=C2=A0=C2=A0=C2=A0 }
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D devm_mutex_init(data->dev, &data->kbd_rgb=
-_led_lock);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 init_data.default_label =3D "multicolor:"=20
->>>> LED_FUNCTION_KBD_BACKLIGHT;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.led_cdev.max_brightness =3D=
-=20
->>>> data->kbd_led_max_brightness;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.led_cdev.color =3D LED_COLO=
-R_ID_MULTI;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.led_cdev.flags =3D LED_BRIG=
-HT_HW_CHANGED |=20
->>>> LED_REJECT_NAME_CONFLICT;
->>>> + data->kbd_led_mc_cdev.led_cdev.brightness_set_blocking =3D=20
->>>> uniwill_kbd_led_mc_brightness_set;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.led_cdev.brightness_get =3D=
-=20
->>>> uniwill_kbd_led_mc_brightness_get;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.subled_info =3D data->kbd_l=
-ed_mc_subled_info;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_mc_cdev.num_colors =3D KBD_LED_CHAN=
-NELS;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return devm_led_classdev_multicolor_register_ext(=
-data->dev,=20
->>>> &data->kbd_led_mc_cdev,
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &init_data);
->>>> +}
->>>> +
->>>
->>> Sorry I know I'm way to late with my comment, but I'm not at all a=20
->>> fan of how complex this whole function is:
->>>
->>> - When we have to set max brightness on a per device basis anyway,=20
->>> we can also set rgb or white only there and can skip this whole=20
->>> detection mechanism with the supported bits that are unreliable anyway
->>>
->>> - we have a 2nd "supported devices/features list" inside this=20
->>> function which is abstracting away from the actual supported feature=
-=20
->>> list
->>>
->>> Should i try to spin up something much simpler, but that requires=20
->>> explicit setting in the device descriptor?
->>>
->>> Best regards
->>>
->>> Werner
->>>
->> Good point, but in this case i think having this small device list is=
-=20
->> OK, because the original control center
->> does something similar.
-> yeah the original cc and tuxedo-drivers has these small lists all over=
-=20
-> the place ... also don't like it there
->> If we encounter a device that does not work with this strategy then=20
->> we can indeed
->> move the code into the device descriptor.
->
-> later we might not be able to get the information anymore which=20
-> devices are rgb and which are white only when the supported devices=20
-> lists grows, then we are stuck to reading the feature bits.
->
-> best regards,
->
-> Werner
->
-Good point, in this case using the device descriptor for this feature dete=
-ction
-might indeed be better in the long term.
+The driver exposes the LED through the LED multicolor subsystem,
+allowing userspace to control RGB values via sysfs:
+  /sys/class/leds/amd_halo:multicolor:status/multi_intensity
+  /sys/class/leds/amd_halo:multicolor:status/brightness
 
-Do you want to send the patches or should i do it?
+Hardware interface:
+- Three separate RGB channels (Red, Green, Blue)
+- All 3 channels are configured at once with a single WMI method call
+- Value range: 0-100 (matching hardware range directly)
 
-Thanks,
-Armin Wolf
+Co-developed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Signed-off-by: Mario Limonciello (AMD) <superm1@kernel.org>
+Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
+---
+To: Hans de Goede <hansg@kernel.org>
+To: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+To: Mario Limonciello (AMD) <superm1@kernel.org>
+To: Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org
 
->>
->> Thanks,
->> Armin Wolf
->>
->>>> =C2=A0 static unsigned int uniwill_sanitize_battery_threshold(unsigne=
-d=20
->>>> int value)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* 0 means "charging threshold not act=
-ive" */
->>>> @@ -1789,6 +2082,31 @@ static int uniwill_notifier_call(struct=20
->>>> notifier_block *nb, unsigned long action
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sysfs_notify(&=
-data->dev->kobj, NULL, "fn_lock");
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return =
-NOTIFY_OK;
->>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_KB_LED_LEVEL0:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn NOTIFY_DONE;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errn=
-o(uniwill_notify_kbd_led(data, 0));
->>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_KB_LED_LEVEL1:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn NOTIFY_DONE;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errn=
-o(uniwill_notify_kbd_led(data, 1));
->>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_KB_LED_LEVEL2:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn NOTIFY_DONE;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errn=
-o(uniwill_notify_kbd_led(data, 2));
->>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_KB_LED_LEVEL3:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn NOTIFY_DONE;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errn=
-o(uniwill_notify_kbd_led(data, 3));
->>>> +=C2=A0=C2=A0=C2=A0 case UNIWILL_OSD_KB_LED_LEVEL4:
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_suppo=
-rts(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 r=
-eturn NOTIFY_DONE;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return notifier_from_errn=
-o(uniwill_notify_kbd_led(data, 4));
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&da=
-ta->input_lock);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sparse_keymap_=
-report_event(data->input_device, action, 1,=20
->>>> true);
->>>> @@ -1842,6 +2160,7 @@ static int uniwill_ec_init(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 data->project_id =3D value;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(data->dev, "Project ID: %u\n",=
- value);
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D regmap_set_bits(data->r=
-egmap, EC_ADDR_AP_OEM,=20
->>>> ENABLE_MANUAL_CTRL);
->>>> @@ -1885,6 +2204,7 @@ static int uniwill_probe(struct=20
->>>> platform_device *pdev)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->features =3D device_descr=
-iptor.features;
->>>> +=C2=A0=C2=A0=C2=A0 data->kbd_led_max_brightness =3D=20
->>>> device_descriptor.kbd_led_max_brightness;
->>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Some devices might need to per=
-form some device-specific=20
->>>> initialization steps
->>>> @@ -1905,6 +2225,10 @@ static int uniwill_probe(struct=20
->>>> platform_device *pdev)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 ret =3D uniwill_kbd_led_init(data);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_hwmon_init(data);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> @@ -1976,6 +2300,31 @@ static int uniwill_suspend_battery(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return regmap_read(data->regmap, EC_AD=
-DR_CHARGE_CTRL,=20
->>>> &data->last_charge_ctrl);
->>>> =C2=A0 }
->>>> =C2=A0 +static int uniwill_suspend_kbd_led(struct uniwill_data *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 unsigned int regval;
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_read(data->regmap, EC_ADDR_KBD_STA=
-TUS, &regval);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 /*
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Save the current keyboard backlight setti=
-ngs in order to=20
->>>> restore them
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * during resume. We cannot use the regmap c=
-ode for that since=20
->>>> this register
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * needs to be declared as volatile because =
-the brightness can=20
->>>> be changed
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 * by the EC.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>> +=C2=A0=C2=A0=C2=A0 data->last_kbd_status =3D regval;
->>>> +=C2=A0=C2=A0=C2=A0 FIELD_MODIFY(KBD_BRIGHTNESS_MASK, &regval, 0);
->>>> +=C2=A0=C2=A0=C2=A0 regval |=3D KBD_APPLY | KBD_POWER_OFF;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return regmap_write(data->regmap, EC_ADDR_KBD_STA=
-TUS, regval);
->>>> +}
->>>> +
->>>> =C2=A0 static int uniwill_suspend_nvidia_ctgp(struct uniwill_data *da=
-ta)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
->>>> @@ -2006,6 +2355,10 @@ static int uniwill_suspend(struct device *dev)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 ret =3D uniwill_suspend_kbd_led(data);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_suspend_nvidia_ctgp(da=
-ta);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> @@ -2052,6 +2405,23 @@ static int uniwill_resume_battery(struct=20
->>>> uniwill_data *data)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> =C2=A0 }
->>>> =C2=A0 +static int uniwill_resume_kbd_led(struct uniwill_data *data)
->>>> +{
->>>> +=C2=A0=C2=A0=C2=A0 int ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 ret =3D regmap_write(data->regmap, EC_ADDR_KBD_ST=
-ATUS,=20
->>>> data->last_kbd_status | KBD_APPLY);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 if (data->single_color_kbd)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>> +
->>>> +=C2=A0=C2=A0=C2=A0 return regmap_write_bits(data->regmap, EC_ADDR_TR=
-IGGER,=20
->>>> RGB_APPLY_COLOR, RGB_APPLY_COLOR);
->>>> +}
->>>> +
->>>> =C2=A0 static int uniwill_resume_nvidia_ctgp(struct uniwill_data *dat=
-a)
->>>> =C2=A0 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!uniwill_device_supports(data,=20
->>>> UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL))
->>>> @@ -2096,6 +2466,10 @@ static int uniwill_resume(struct device *dev)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 ret =3D uniwill_resume_kbd_led(data);
->>>> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> +
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D uniwill_resume_nvidia_ctgp(dat=
-a);
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret < 0)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>> @@ -2745,6 +3119,8 @@ static int __init uniwill_init(void)
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (force) {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Assume that=
- the device supports all features except=20
->>>> the charge limit */
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_descrip=
-tor.features =3D UINT_MAX &=20
->>>> ~UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT;
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Some models only suppo=
-rt 3 brightness levels */
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 device_descriptor.kbd_led=
-_max_brightness =3D 4;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr_warn("Enabl=
-ing potentially unsupported features\n");
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>
->
+v7 -> v8
+- Move local variables to the beginnign of function. (Ilpo)
+- Add trailing commas to enum declaratiion. (Ilpo)
+- Fix more white spaces
+- Remove redundant comments
+- Link to v7: https://lore.kernel.org/r/20260611-halo-leds-v2-plus-v7-1-8aad73fccb6b@amd.com
+
+v6 -> v7
+- Introduce a amd_halo_wmi_get_rgb() to get WMI values of colors, and
+  read them on probe.
+- Remove hard-coded RGB values.
+- Link to v6: https://lore.kernel.org/r/20260529-halo-leds-v2-plus-v6-1-b7bf7b904a16@amd.com
+
+v5 -> v6
+- Add missing includes and sort/group them accordingly
+- In __amd_halo_wmi_call, remove some unnecessary intermedaite variable assignments
+- In __amd_halo_wmi_call, move declaration of pointer managed by scope-based cleanup
+  helpers closer to where it is used
+- Add trailing comma to designated initializers
+- Link to v5: https://lore.kernel.org/r/20260523-halo-leds-v2-plus-v5-1-497dc9719a18@amd.com
+---
+ MAINTAINERS                             |   7 +
+ drivers/platform/x86/amd/Kconfig        |  11 ++
+ drivers/platform/x86/amd/Makefile       |   1 +
+ drivers/platform/x86/amd/amd_halo_led.c | 315 ++++++++++++++++++++++++++++++++
+ 4 files changed, 334 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 15011f5752a99..3b774bc8889c5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1138,6 +1138,13 @@ F:	drivers/char/hw_random/geode-rng.c
+ F:	drivers/crypto/geode*
+ F:	drivers/video/fbdev/geode/
+ 
++AMD HALO BOX RGB LED DRIVER
++M:	Mario Limonciello (AMD) <superm1@kernel.org>
++R:	Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/amd/amd_halo_led.c
++
+ AMD HSMP DRIVER
+ M:	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+ R:	Carlos Bilbao <carlos.bilbao@kernel.org>
+diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+index b813f92653686..a1a74ef6c8593 100644
+--- a/drivers/platform/x86/amd/Kconfig
++++ b/drivers/platform/x86/amd/Kconfig
+@@ -34,6 +34,17 @@ config AMD_WBRF
+ 	  This mechanism will only be activated on platforms that advertise a
+ 	  need for it.
+ 
++config AMD_HALO_LED
++	tristate "AMD Halo Box RGB LED Driver"
++	depends on ACPI_WMI && LEDS_CLASS_MULTICOLOR
++	help
++	  This driver provides RGB LED control for AMD Halo Box devices
++	  through the LED multicolor subsystem. The Halo Box light bar can
++	  be controlled via sysfs to display any RGB color combination.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called amd_halo_led.
++
+ config AMD_ISP_PLATFORM
+ 	tristate "AMD ISP4 platform driver"
+ 	depends on I2C && X86_64 && ACPI
+diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+index f6ff0c837f345..2f467dbbfc8a3 100644
+--- a/drivers/platform/x86/amd/Makefile
++++ b/drivers/platform/x86/amd/Makefile
+@@ -10,5 +10,6 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+ obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+ obj-$(CONFIG_AMD_PMF)		+= pmf/
+ obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
++obj-$(CONFIG_AMD_HALO_LED)	+= amd_halo_led.o
+ obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
+ obj-$(CONFIG_AMD_HFI)		+= hfi/
+diff --git a/drivers/platform/x86/amd/amd_halo_led.c b/drivers/platform/x86/amd/amd_halo_led.c
+new file mode 100644
+index 0000000000000..b21d956c7d96c
+--- /dev/null
++++ b/drivers/platform/x86/amd/amd_halo_led.c
+@@ -0,0 +1,315 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD Halo Box RGB LED Driver
++ *
++ * Copyright (C) 2026 Advanced Micro Devices, Inc.
++ *
++ * This driver provides RGB LED control for AMD Halo Box devices through
++ * the LED multicolor subsystem. The Halo Box light bar can be controlled
++ * via sysfs to display any RGB color combination.
++ */
++
++#include <linux/array_size.h>
++#include <linux/cleanup.h>
++#include <linux/compiler_attributes.h>
++#include <linux/container_of.h>
++#include <linux/dev_printk.h>
++#include <linux/device.h>
++#include <linux/device/devres.h>
++#include <linux/led-class-multicolor.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/wmi.h>
++
++#include <linux/byteorder/generic.h>
++
++#define AMD_HALO_GUID "081E747B-E028-4232-AF24-EAAEAB2B1E86"
++
++/* WMI method IDs from MOF */
++enum {
++	AMD_HALO_WMI_TURN_OFF	= 0x04,
++	AMD_HALO_WMI_RGB	= 0x07,
++};
++
++/* Arg0 of the AMD_HALO_WMI_RGB Method */
++enum {
++	AMD_HALO_RGB_CMD_GET	= 0x0,
++	AMD_HALO_RGB_CMD_SET	= 0x1,
++};
++
++/* Status codes from spec */
++#define AMD_HALO_STATUS_SUCCESS		0x0000
++#define AMD_HALO_STATUS_INVALID_PARAM	0xFFFD
++
++/* Brightness uses 0-100 range */
++#define AMD_HALO_MAX_HW_BRIGHTNESS	100
++
++/**
++ * struct amd_halo_led_data - Driver private data
++ * @wdev: WMI device pointer
++ * @led_mc: LED multicolor class device
++ * @subled_info: RGB channel information
++ * @lock: Mutex to protect WMI calls
++ */
++struct amd_halo_led_data {
++	struct wmi_device *wdev;
++	struct led_classdev_mc led_mc;
++	struct mc_subled subled_info[3];
++	struct mutex lock;
++};
++
++struct amd_halo_wmi_args {
++	__le32 arg0;
++	__le32 arg1;
++};
++
++struct amd_halo_wmi_args_rgb {
++	__le32 cmd;
++	__le32 red;
++	__le32 green;
++	__le32 blue;
++};
++
++struct amd_halo_wmi_output_rgb {
++	__le16 status;
++	u8 red;
++	u8 green;
++	u8 blue;
++} __packed;
++
++static inline int wmi_status_to_err(u16 status)
++{
++	switch (status) {
++	case AMD_HALO_STATUS_SUCCESS:
++		return 0;
++	case AMD_HALO_STATUS_INVALID_PARAM:
++		return -EINVAL;
++	default:
++		return -EIO;
++	}
++}
++
++static int __amd_halo_wmi_call(struct wmi_device *wdev,
++			       u32 method_id, void *data, size_t length)
++{
++	struct wmi_buffer input = {
++		.length = length,
++		.data = data,
++	};
++	struct wmi_buffer output = { };
++	int ret;
++
++	/* Return buffer per spec: Bytes[0:1] = Status (little-endian) */
++	ret = wmidev_invoke_method(wdev, 0, method_id,
++				   &input, &output, sizeof(__le16));
++	if (ret)
++		return ret;
++
++	__le16 *result_status __free(kfree) = output.data;
++
++	return wmi_status_to_err(le16_to_cpu(*result_status));
++}
++
++/**
++ * amd_halo_wmi_turn_off - Turn off all LED channels
++ * @wdev: WMI device pointer
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int amd_halo_wmi_turn_off(struct wmi_device *wdev)
++{
++	struct amd_halo_wmi_args args = { };
++
++	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_TURN_OFF, &args, sizeof(args));
++}
++
++/**
++ * amd_halo_wmi_set_rgb - Set all RGB channels atomically
++ * @wdev: WMI device pointer
++ * @r: brightness for red channel (0 - 100)
++ * @g: brightness for green channel (0 - 100)
++ * @b: brightness for blue channel (0 - 100)
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int amd_halo_wmi_set_rgb(struct wmi_device *wdev, u32 r, u32 g, u32 b)
++{
++	struct amd_halo_wmi_args_rgb args = {
++		.cmd = cpu_to_le32(AMD_HALO_RGB_CMD_SET),
++		.red = cpu_to_le32(r),
++		.green = cpu_to_le32(g),
++		.blue = cpu_to_le32(b),
++	};
++
++	if (r > AMD_HALO_MAX_HW_BRIGHTNESS ||
++	    g > AMD_HALO_MAX_HW_BRIGHTNESS ||
++	    b > AMD_HALO_MAX_HW_BRIGHTNESS) {
++		return -EINVAL;
++	}
++
++	return __amd_halo_wmi_call(wdev, AMD_HALO_WMI_RGB, &args, sizeof(args));
++}
++
++/**
++ * amd_halo_wmi_get_rgb - Get RGB values
++ * @wdev: WMI device pointer
++ * @r: output buffer for red value
++ * @g: output buffer for green value
++ * @b: output buffer for blue value
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int amd_halo_wmi_get_rgb(struct wmi_device *wdev, u8 *r, u8 *g, u8 *b)
++{
++	struct amd_halo_wmi_args_rgb args = {
++		.cmd = cpu_to_le32(AMD_HALO_RGB_CMD_GET),
++	};
++	struct wmi_buffer input = {
++		.length = sizeof(args),
++		.data = &args,
++	};
++	struct wmi_buffer output = { };
++	int ret;
++
++	ret = wmidev_invoke_method(wdev, 0, AMD_HALO_WMI_RGB,
++				   &input, &output, sizeof(struct amd_halo_wmi_output_rgb));
++	if (ret)
++		return ret;
++
++	struct amd_halo_wmi_output_rgb *data __free(kfree) = output.data;
++
++	ret = wmi_status_to_err(le16_to_cpu(data->status));
++	if (ret)
++		return ret;
++
++	if (data->red > AMD_HALO_MAX_HW_BRIGHTNESS ||
++	    data->green > AMD_HALO_MAX_HW_BRIGHTNESS ||
++	    data->blue > AMD_HALO_MAX_HW_BRIGHTNESS) {
++		return -EPROTO;
++	}
++
++	*r = data->red;
++	*g = data->green;
++	*b = data->blue;
++
++	return 0;
++}
++
++/**
++ * amd_halo_brightness_set - Set LED brightness
++ * @cdev: LED class device
++ * @brightness: Brightness value
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int amd_halo_brightness_set(struct led_classdev *cdev,
++				   enum led_brightness brightness)
++{
++	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
++	struct amd_halo_led_data *data = container_of(mc_cdev,
++						      struct amd_halo_led_data,
++						      led_mc);
++	u32 red_hw, green_hw, blue_hw;
++	int ret;
++
++	guard(mutex)(&data->lock);
++
++	led_mc_calc_color_components(mc_cdev, brightness);
++
++	if (brightness == 0)
++		return amd_halo_wmi_turn_off(data->wdev);
++
++	red_hw = mc_cdev->subled_info[0].brightness;
++	green_hw = mc_cdev->subled_info[1].brightness;
++	blue_hw = mc_cdev->subled_info[2].brightness;
++
++	ret = amd_halo_wmi_set_rgb(data->wdev, red_hw, green_hw, blue_hw);
++	if (ret)
++		goto out;
++
++	return 0;
++
++out:
++	/*
++	 * Consider the light bar non-functional if AMD_HALO_WMI_RGB failed.
++	 * Attempt to turn the LED off completely as clean-up.
++	 */
++	if (amd_halo_wmi_turn_off(data->wdev))
++		dev_warn_ratelimited(&data->wdev->dev, "Failed to turn LED off on cleanup\n");
++
++	return ret;
++}
++
++static int amd_halo_probe(struct wmi_device *wdev, const void *context)
++{
++	struct led_init_data led_init_data = {
++		.devicename = "amd_halo",
++		.default_label = "multicolor:" LED_FUNCTION_STATUS,
++		.devname_mandatory = true,
++	};
++	struct amd_halo_led_data *data;
++	u8 r, g, b;
++	int ret;
++
++	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	ret = devm_mutex_init(&wdev->dev, &data->lock);
++	if (ret)
++		return ret;
++
++	data->wdev = wdev;
++	dev_set_drvdata(&wdev->dev, data);
++
++	data->subled_info[0].color_index = LED_COLOR_ID_RED;
++	data->subled_info[1].color_index = LED_COLOR_ID_GREEN;
++	data->subled_info[2].color_index = LED_COLOR_ID_BLUE;
++
++	data->led_mc.led_cdev.brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
++	data->led_mc.led_cdev.max_brightness = AMD_HALO_MAX_HW_BRIGHTNESS;
++	data->led_mc.led_cdev.brightness_set_blocking = amd_halo_brightness_set;
++	data->led_mc.led_cdev.flags = LED_CORE_SUSPENDRESUME | LED_RETAIN_AT_SHUTDOWN;
++	data->led_mc.num_colors = ARRAY_SIZE(data->subled_info);
++	data->led_mc.subled_info = data->subled_info;
++
++	ret = amd_halo_wmi_get_rgb(wdev, &r, &g, &b);
++	if (ret)
++		return ret;
++
++	data->subled_info[0].intensity = r;
++	data->subled_info[1].intensity = g;
++	data->subled_info[2].intensity = b;
++
++	ret = devm_led_classdev_multicolor_register_ext(&wdev->dev, &data->led_mc,
++							&led_init_data);
++	if (ret)
++		return dev_err_probe(&wdev->dev, ret,
++				     "Failed to register multicolor LED\n");
++	return 0;
++}
++
++static const struct wmi_device_id amd_halo_id_table[] = {
++	{ .guid_string = AMD_HALO_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, amd_halo_id_table);
++
++static struct wmi_driver amd_halo_driver = {
++	.driver = {
++		.name = "amd_halo_led",
++	},
++	.id_table = amd_halo_id_table,
++	.probe = amd_halo_probe,
++	.no_singleton = true,
++};
++
++module_wmi_driver(amd_halo_driver);
++
++MODULE_AUTHOR("Mario Limonciello (AMD) <superm1@kernel.org>");
++MODULE_AUTHOR("Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>");
++MODULE_DESCRIPTION("AMD Halo Box RGB LED Control Driver");
++MODULE_LICENSE("GPL");
+
+---
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+change-id: 20260429-halo-leds-v2-plus-722c8083afe8
+
+Best regards,
+-- 
+Yo-Jung Leo Lin (AMD) <Leo.Lin@amd.com>
+
