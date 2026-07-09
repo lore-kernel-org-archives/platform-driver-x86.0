@@ -1,361 +1,145 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ED735975
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 02:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F009F5B1EB
+	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 03:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783563347; cv=none; b=NU88HTnM9jZ6da7B0SO67nqDsQXG7USuSzFJVuvh55/49edb12K+5P3oCTxjYJ22CXZJk8P1SdUOeJFO3QUIJn8wJB9lWlyieBWlbFOQxbsMiy+obGLIpkmhVWZ6N4NqYxOEkkCAfxfb1hBcM9UF3UbG7uk/GhpfJtc51fvIjJ4=
+	t=1783569162; cv=none; b=l1clQH8y/TxNbMPfnBZI4yizt23AMJc30Ol4VvtlImryWTCG/w+rrJW45TT0Rzh35it82jQL8ZQ1+mJJmXGMb3djbcuo/WEa1sa1ZnLuvHUm6j0DGaKKpJnzx8ov8SCHx+S7O6OgOsGUW/oKxoq80DGmeBNTZgUMWN+HOGy1qTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783563347; c=relaxed/simple;
-	bh=KPN/ZkZrqF4fSSBcs/sPVJGUpjpHcZRlcVIAWHsQ3UM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBSLFFPjqlBsdnd/BN9jbVwy0+mtUQGSX5aWm7zpc4NzddCoNB2ablVv9zsOUJOKndjoeNpTuGu37AsfQc4hpvl/4gQYW+PkUx72a51soelTXZnscLJuhKG0kfR0rLkZ1QS2KeC+68NL2GBZeb3HBeLRVna3LQmKjbVx1Mrrgm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPpMxiDw; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783569162; c=relaxed/simple;
+	bh=T22WlFV9BXj/7lt8yZnDD+J8qdeOeZznO+4KCjRo9GI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SyxD0eGYk80oKlDBXJVgJIp+ZtigOSJoELRx3HvYoac6u5GUGhMq0CefvnZHJnWQQQDcIzpwM31OjHljJJAFPTTdCUlDyADRn1YF3oQODq7PkSM4ohq3vpC+gYAO818jVzeIIaw+VA/FfzlR4Q/sQivMq5qLFfIED7k2R9VYSDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RmGWaaM1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPpMxiDw"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cace7da66eso14302985ad.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 08 Jul 2026 19:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783563346; x=1784168146; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=fMkPiJq/fyrzWCUwRPm6G+BYtSCZmkHOyXwa6vbMRgo=;
-        b=CPpMxiDwhmJMp0hSRtlrqt7QaRdA3h9QNbwFTa1HHhojFtKm/DcuSSPS4tkA2OSxzK
-         OBTfmY0K+Im/1fqbgFu3PinivPT2hni5EO6v6aA9kgJqeMSk0pOT0loQXUcmQn3uXyk8
-         Tfs0pyeBVupPch22mKZhNr06DKdMyug++MKnHj+96hHDf1F8sLXXSdq+6oOIhY3dGUET
-         gAjNoGIIW8FKAEjmG4bFBPZZ3UleNqgAKQkmAvS3SgXGmHYcfVKPzdaXBslUYYBPp6Kx
-         BaTIeClX06Tff/LBRRsGyptzY1w+EYyKYSmswAL1r035jYuUPzJvDaE0LXpKWy7j5oeR
-         /4XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783563346; x=1784168146;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=fMkPiJq/fyrzWCUwRPm6G+BYtSCZmkHOyXwa6vbMRgo=;
-        b=rQ8niCJSF5Pex5hUveWAvWJiMC1dF9DUYZrLQqw2Xpn6gUzrq/Xv5YUscLMTqWD90h
-         Kt1ykoXqvEo/f2eQKK0zSQNpnjKCQvKPS2sHHVMjrgjggFu/189FJkwWiif6X6bHNSkl
-         mWTTeNwBIFyvvzkSGMU+jMRM7c4Ca7ZKLJdGhenR50seug87FRWRRLwznfGoyDqu2N17
-         hj979dm6VCmJmWv7J58PjP2urwfUwpZslUc90uS92pFNd+0oZ6K7n9Oa7UVuSkK4Q0u+
-         pfsoY+7DGaQ54lWwOzcbijFXfkrmx+OZQK+o0432B+8D0Gfv/Nj+8iu9fvWnlXiJm/PS
-         2mEA==
-X-Gm-Message-State: AOJu0YwLyxtcjP1DVB38ZJA9rvCuNcGXxraA0CT2B3AK0T1bBfBtS905
-	ag3yqo2Rk8p7Od/PMJWuMhJj5g01aFkt2EwGFCQ+nMZ1672iQLumIF0Q
-X-Gm-Gg: AfdE7cnuIrRPvbPtftlJP8jzBEMK/lfzBMlidDvDec8IAHXGKNflV8wMH7WdXUrz+ne
-	7vkE3nrt5DQFb4nZgNy1ZM8D+rhTQY0H2O6z+s7gjKFxcnz/fVHuJ9ZjkDoqYdV9JaNVdvhpRs0
-	ywRx2DNeFHvXgYobQD/wYeW3Mm9smkZaDFrjzF7P/5fVG59UbbMECL+tliwJSl+zNpK7r+kkpWd
-	l+FDmCj6jiOywTCfJ46Tw0YDILlLd3fTpFnDDfiDd+KORUxx1Gu4L+ChOQEIvdOlTPEbbKesFap
-	BnIcr+NEjOIHFxEvi+fCyPFNqKYVOn00S5oPeCA3yTJg22bPYsefGKgC2pjNPT0xpiQbgymU5E+
-	3U2Cgo+u3GXZUGLvQjlUX5DtBRKmvy4iNIWF7YPbWSHotMru8jpNS/HDuyLcTYtO5a7n4b0dqcp
-	CKWGMDaO4oo09Rq2uslglrqQMOskwhl/i+wgfF2Tk=
-X-Received: by 2002:a17:903:1b23:b0:2cc:d6de:d597 with SMTP id d9443c01a7336-2ccea36a539mr54667875ad.7.1783563345563;
-        Wed, 08 Jul 2026 19:15:45 -0700 (PDT)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:e18a:624b:af6a:fe87])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d60da9sm35234455ad.84.2026.07.08.19.15.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2026 19:15:44 -0700 (PDT)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org,
-	derekjohn.clark@gmail.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	mark.pearson@lenovo.com,
-	linux-acpi@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>
-Subject: [PATCH v4] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
-Date: Thu,  9 Jul 2026 11:15:04 +0900
-Message-ID: <20260709021504.465792-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RmGWaaM1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1783569160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0H8JF3mhLhF6haw2AIvFyd1HlITa9LWt9oFByBfJwp4=;
+	b=RmGWaaM1rHJL0gRq1XaicHYICRl3T5QlFXcMacAhbWOxDAgVrGKm4UaIqEoSVhCT4dmH6F
+	60ldY9PU18TegyzVzDiMgDHnvNInYgONEKxP/Zn16Q6lWAJI1Zf4Bv2knCBJDA+C4TLGur
+	BJ97+rpt1oDgkGqkZyna/jGHBF9EVRA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-383-aV5FGsHkP06RLhWDkSSyaA-1; Wed,
+ 08 Jul 2026 23:52:38 -0400
+X-MC-Unique: aV5FGsHkP06RLhWDkSSyaA-1
+X-Mimecast-MFC-AGG-ID: aV5FGsHkP06RLhWDkSSyaA_1783569157
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 94F9F19560B5;
+	Thu,  9 Jul 2026 03:52:36 +0000 (UTC)
+Received: from [10.67.32.20] (unknown [10.67.32.20])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C17F418005B8;
+	Thu,  9 Jul 2026 03:52:32 +0000 (UTC)
+Message-ID: <5db117b7-aad1-437f-a3d4-ba7b29fc68b3@redhat.com>
+Date: Wed, 8 Jul 2026 23:52:30 -0400
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-wmi: temporarily revert to setting a
+ charge limit
+To: Denis Benato <denis.benato@linux.dev>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ "Luke D . Jones" <luke@ljones.dev>, Denis Benato <benato.denis96@gmail.com>,
+ Travers Biddle <traversbiddle@gmail.com>
+References: <20260630230940.612532-1-denis.benato@linux.dev>
+Content-Language: en-US
+From: Kate Hsuan <hpa@redhat.com>
+In-Reply-To: <20260630230940.612532-1-denis.benato@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Newer ThinkPad systems expose a USB-C Security (Restricted Mode) feature.
-When active, USB-C data connections are disabled while power delivery is
-preserved. This is useful for kiosk and physically-secured deployments.
+Hi Denis,
 
-Hardware interface:
+Upower 1.91.3 has been released, including a fix for issue #347 [1]. 
+This release addresses the -ENODATA  encountered when accessing charge 
+limits on Asus laptops, which previously caused UPower and GNOME to 
+incorrectly report charge threshold support as unavailable. The fix 
+updates the udev rule to verify file existence rather than reading the 
+attribute directly. The corresponding commit can be found at:
 
-The HKEY device exposes a read-only ACPI method USCS():
+https://gitlab.freedesktop.org/upower/upower/-/commit/83f86c75d28a57854a4b5986cbfb701249a5b6ad
 
-  Return value bit layout:
-    Bit 16 : Capability flag (1 = feature present on this SKU)
-    Bit  0 : Current state  (0 = security OFF, 1 = security ON)
+[1] https://gitlab.freedesktop.org/upower/upower/-/work_items/347
 
-The sysfs attribute is read-only.
+Thank you :)
 
-The Fn+U followed by Fn+S hotkey chord is the only way to toggle the
-hardware state.
-
-Hotkey:
-
-Fn+U followed by Fn+S generates HKEY event 0x131e.
-
-sysfs interface:
-
-  /sys/devices/platform/thinkpad_acpi/usb_c_security  (read-only)
-  "enabled\n"  -- data connections are currently blocked
-  "disabled\n" -- data connections are currently allowed
-
-  The attribute is hidden on SKUs where the USCS capability bit (bit 16)
-  is not set, so there is no ABI impact on unsupported hardware.
-
-Suggested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
-Changes since v3:
-- Add comment to usbc_security_mutex documenting what the lock protects
-
-Changes since v2:
-- Move usbc_security_enabled out of tp_features bitfield to a bool
-  member of tp_features to avoid unsafe concurrent bitfield RMW;
-  usbc_security_supported remains a bitfield as it is init-only.
-- Pass &tp_features.usbc_security_enabled directly to
-  usbc_security_query() removing the local bool intermediary
-  in both init and hotkey paths.
-- Remove extra blank line before */ in block comment.
-- Fix kerneldoc Returns: syntax and rewrite return value description
-  to match the int return type.
-- Split ternary return into two separate if statements for clarity
-
-Changes since v1:
-- Use guard(mutex) from cleanup.h instead of manual mutex_lock/unlock
-- Revert usbc_security_query() to return int (-EIO/-ENODEV/0) instead
-  of bool to avoid uninitialized *enabled bug on unsupported platforms
-- Remove !! when assigning to bool in usbc_security_query()
-- Remove dead tp_features.usbc_security_supported check in show()
-  since is_visible() already gates the attribute on unsupported SKUs
-- Use str_enabled_disabled() from string_choices.h in show()
-- Fix uninitialized *enabled bug in tpacpi_usbc_security_init() by
-  only assigning usbc_security_enabled after a successful query
----
- .../admin-guide/laptops/thinkpad-acpi.rst     |  24 ++++
- drivers/platform/x86/lenovo/thinkpad_acpi.c   | 117 ++++++++++++++++++
- 2 files changed, 141 insertions(+)
-
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index f874db31801d..db4588af0278 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1543,6 +1543,30 @@ Values:
- 
- 	This setting can also be toggled via the Fn+doubletap hotkey.
- 
-+USB-C Security
-+--------------
-+
-+sysfs: usb_c_security
-+
-+Reports the current state of the USB-C Security (Restricted Mode) feature
-+on supported ThinkPad systems. When enabled, USB-C data connections are
-+disabled while power delivery is preserved.
-+
-+The available command is::
-+
-+        cat /sys/devices/platform/thinkpad_acpi/usb_c_security
-+
-+Values:
-+
-+	* ``enabled``  - USB-C data connections are currently blocked
-+	* ``disabled`` - USB-C data connections are currently allowed
-+
-+The attribute is read-only. The USB-C Security state can only be toggled
-+via the Fn+U followed by Fn+S hotkey chord.
-+
-+The sysfs attribute is not created on platforms that do not support this
-+feature.
-+
- Auxmac
- ------
- 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 445e1403308e..91db4c8eeac2 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -38,6 +38,7 @@
- #include <linux/backlight.h>
- #include <linux/bitfield.h>
- #include <linux/bitops.h>
-+#include <linux/cleanup.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmi.h>
-@@ -67,6 +68,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-+#include <linux/string_choices.h>
- #include <linux/string_helpers.h>
- #include <linux/sysfs.h>
- #include <linux/types.h>
-@@ -186,6 +188,7 @@ enum tpacpi_hkey_event_t {
- 	TP_HKEY_EV_AMT_TOGGLE		= 0x131a, /* Toggle AMT on/off */
- 	TP_HKEY_EV_CAMERASHUTTER_TOGGLE = 0x131b, /* Toggle Camera Shutter */
- 	TP_HKEY_EV_DOUBLETAP_TOGGLE	= 0x131c, /* Toggle trackpoint doubletap on/off */
-+	TP_HKEY_EV_USB_C_SECURITY	= 0x131e, /* USB C Security (Fn+U, Fn+S) */
- 	TP_HKEY_EV_PROFILE_TOGGLE	= 0x131f, /* Toggle platform profile in 2024 systems */
- 	TP_HKEY_EV_PROFILE_TOGGLE2	= 0x1401, /* Toggle platform profile in 2025 + systems */
- 
-@@ -374,6 +377,8 @@ static struct {
- 	u32 has_adaptive_kbd:1;
- 	u32 kbd_lang:1;
- 	u32 trackpoint_doubletap_enable:1;
-+	u32 usbc_security_supported:1;
-+	bool usbc_security_enabled;
- 	struct quirk_entry *quirks;
- } tp_features;
- 
-@@ -11285,6 +11290,111 @@ static struct ibm_struct hwdd_driver_data = {
- 	.name = "hwdd",
- };
- 
-+/*************************************************************************
-+ * USB-C Security subdriver
-+ *
-+ * HKEY.USCS(0) is a read-only ACPI method; its argument is ignored.
-+ * It always returns:
-+ *   bit 16 - USB-C security capability present on this SKU or not
-+ *   bit  0 - USB-C Security state (enable or disable)
-+ *
-+ * Hotkey
-+ * ------
-+ * 0x131e (Fn+U, Fn+S): firmware toggles USBS before firing the event.
-+ * The driver reads back the new state and notifies the sysfs attribute.
-+ */
-+
-+/* USCS() return word bit layout */
-+#define USCS_CAP_BIT		BIT(16)	/* capability: feature present on SKU */
-+#define USCS_STATUS_BIT		BIT(0)	/* current security state */
-+
-+/* Protects USCS() ACPI method calls in usbc_security_query() */
-+static DEFINE_MUTEX(usbc_security_mutex);
-+
-+/**
-+ * usbc_security_query - read current USB-C security state via USCS()
-+ * @enabled: out - true when security is ON (data connections blocked)
-+ *
-+ * Returns:
-+ *   0        success, @enabled contains the current state
-+ *  -EIO      ACPI evaluation failed
-+ *  -ENODEV   capability bit absent; feature not present on this SKU*
-+ */
-+static int usbc_security_query(bool *enabled)
-+{
-+	int status;
-+
-+	guard(mutex)(&usbc_security_mutex);
-+	if (!acpi_evalf(hkey_handle, &status, "USCS", "dd", 0))
-+		return -EIO;
-+
-+	if (!(status & USCS_CAP_BIT)) {
-+		pr_debug("USCS cap bit absent (raw=0x%x)\n", status);
-+		return -ENODEV;
-+	}
-+
-+	*enabled = status & USCS_STATUS_BIT;
-+	return 0;
-+}
-+
-+/* sysfs: /sys/devices/platform/thinkpad_acpi/usb_c_security ---------- */
-+static ssize_t usb_c_security_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	return sysfs_emit(buf, "%s\n",
-+			  str_enabled_disabled(tp_features.usbc_security_enabled));
-+}
-+
-+static DEVICE_ATTR_RO(usb_c_security);
-+
-+static struct attribute *usbc_security_attributes[] = {
-+	&dev_attr_usb_c_security.attr,
-+	NULL,
-+};
-+
-+static umode_t usbc_security_attr_is_visible(struct kobject *kobj,
-+					     struct attribute *attr, int n)
-+{
-+	return tp_features.usbc_security_supported ? attr->mode : 0;
-+}
-+
-+static const struct attribute_group usbc_security_attr_group = {
-+	.is_visible = usbc_security_attr_is_visible,
-+	.attrs = usbc_security_attributes,
-+};
-+
-+static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
-+{
-+	int err;
-+
-+	err = usbc_security_query(&tp_features.usbc_security_enabled);
-+	if (err == -ENODEV)
-+		return 0;
-+	if (err)
-+		return err;
-+
-+	tp_features.usbc_security_supported = true;
-+	return 0;
-+}
-+
-+/* tpacpi_usbc_security_hotkey - handle Fn+U Fn+S hotkey (0x131e) */
-+static bool tpacpi_usbc_security_hotkey(void)
-+{
-+	if (!tp_features.usbc_security_supported)
-+		return false;
-+
-+	if (usbc_security_query(&tp_features.usbc_security_enabled))
-+		return false;
-+
-+	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "usb_c_security");
-+	return true;
-+}
-+
-+static struct ibm_struct usbc_security_driver_data = {
-+	.name = "usbc_security",
-+};
-+
- /* --------------------------------------------------------------------- */
- 
- static struct attribute *tpacpi_driver_attributes[] = {
-@@ -11345,6 +11455,7 @@ static const struct attribute_group *tpacpi_groups[] = {
- 	&dprc_attr_group,
- 	&auxmac_attr_group,
- 	&hwdd_attr_group,
-+	&usbc_security_attr_group,
- 	NULL,
- };
- 
-@@ -11499,6 +11610,8 @@ static bool tpacpi_driver_event(const unsigned int hkey_event)
- 	case TP_HKEY_EV_PROFILE_TOGGLE2:
- 		platform_profile_cycle();
- 		return true;
-+	case TP_HKEY_EV_USB_C_SECURITY:
-+		return tpacpi_usbc_security_hotkey();
- 	}
- 
- 	return false;
-@@ -11964,6 +12077,10 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_hwdd_init,
- 		.data = &hwdd_driver_data,
- 	},
-+	{
-+		.init = tpacpi_usbc_security_init,
-+		.data = &usbc_security_driver_data,
-+	},
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
--- 
-2.51.0
+On 6/30/26 7:09 PM, Denis Benato wrote:
+> A userspace regression has been observed leaving the battery charging
+> threshold unconfigured, so while the situation is being sorted revert
+> the change keeping the infrastructure in place to return to the
+> preferred behaviour whenever possible.
+>
+> Link: https://gitlab.freedesktop.org/upower/upower/-/work_items/347
+> Closes: https://lore.kernel.org/all/CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com/
+>
+> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+> ---
+>   drivers/platform/x86/asus-wmi.c | 26 +++++++++++++++++++++++---
+>   1 file changed, 23 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 3c9ef826551d..e835779b6f5f 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1618,6 +1618,8 @@ static DEVICE_ATTR_RW(charge_control_end_threshold);
+>   
+>   static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+>   {
+> +	int ret, rv;
+> +
+>   	/* The WMI method does not provide a way to specific a battery, so we
+>   	 * just assume it is the first battery.
+>   	 * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
+> @@ -1635,12 +1637,30 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
+>   
+>   	/* The charge threshold is only reset when the system is power cycled,
+>   	 * and we can't read the current threshold, however the majority of
+> -	 * platforms retains it, therefore signal the threshold as unknown
+> -	 * until user explicitly sets it to a new value.
+> +	 * platforms retains it.
+> +	 *
+> +	 * Setting a negative value would signal the threshold as unknown
+> +	 * until user explicitly sets it to a new value, however to avoid
+> +	 * regressing userspace, we initialize it to a value of 100.
+>   	 */
+> -	charge_end_threshold = -1;
+> +	charge_end_threshold = 100;
+> +	ret = asus_wmi_set_devstate(ASUS_WMI_DEVID_RSOC, charge_end_threshold, &rv);
+> +	if (ret) {
+> +		pr_err("Failed to reset battery charge threshold\n");
+> +		goto asus_wmi_battery_add_err;
+> +	}
+> +
+> +	if (rv != 1) {
+> +		pr_err("Error in battery charge threshold reset\n");
+> +		ret = -EIO;
+> +		goto asus_wmi_battery_add_err;
+> +	}
+>   
+>   	return 0;
+> +asus_wmi_battery_add_err:
+> +	device_remove_file(&battery->dev,
+> +			   &dev_attr_charge_control_end_threshold);
+> +	return ret;
+>   }
+>   
+>   static int asus_wmi_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
 
