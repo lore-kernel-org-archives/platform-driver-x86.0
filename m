@@ -1,39 +1,33 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC791AA780;
-	Thu,  9 Jul 2026 13:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C4F26FDBF;
+	Thu,  9 Jul 2026 13:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783602795; cv=none; b=C3HuaOXRbHi8rAbLy60pswm0dqukYX09vBdCJU2E7Eq7K2Lr59TErtNxQeivZbw3gEwAr+mwrRKs3neNxdeKr6nEuJ/ZB3L68ZU+AI3LQ19kjx+mGRM93Zx6Zb+kDaR/7DGEIiAjnWg3w/U/j8IELWOk/AtJLHMlYpYcRVHfFak=
+	t=1783602846; cv=none; b=IjsUqCjX0xIqXmUl2PrS1ltvXAt6FMJVN5J5wPjnRcUEVw8XdmzjdFZi88Kg73rjbUdt41F/OcMbvbNAfcpRHjkGaudNkjYcYX/E6qiAcj/lHMK0DRTP9n6E02J1Tw1mHhOapLSSnYmpdedPKOR2HR0TRxmJ/thPoz6MyfbT6m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783602795; c=relaxed/simple;
-	bh=b3KgOGKfsJr8TTcUEu+mj2LZ+7zWDIEar7XMUCnXDMc=;
+	s=arc-20240116; t=1783602846; c=relaxed/simple;
+	bh=gA6o49/FJ11NCS7sJqeM2onkDwL1L1SnZTVsGuJMSvE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MaRYpnFaIy+MrgF4PnJ61prtW/wUVLtBCFselPTRPcg5GTFtu4+mTAsbeGqQhIaRRJcGnBh/BRc8zuGbUM8I1i0mMkgr70PpmN/6d/tMYe5ZW3YvpWVqkq0HzG+ReUKNkCJT68gcvcKIM5LtW3C6dtDPVvTTX0+q4N1YOyI0skk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=A01W86M2; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	 In-Reply-To:Content-Type; b=HbLIIZ3YuaXewnRgv07cRcjUQOmoXUfI/zcycVrighyyW70ovxjz52q8agwEz3SY3BL7CPqaT+FaNr77e7td9J2+yo+Q5kVi/e0cZs9Qd/dP3R8mfiZrw3BpvV09pWk39+XXUiCdP65Be9GCzp816ddDnIro7tL5W1zLJIzT5gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=I6CxzKFR; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="A01W86M2"
-Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C97402FC005F;
-	Thu,  9 Jul 2026 15:13:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1783602790;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b3KgOGKfsJr8TTcUEu+mj2LZ+7zWDIEar7XMUCnXDMc=;
-	b=A01W86M291UjvGsG4pdl2VeB29Vy8D3E2taJAfR7s3NnusRVIlw57VeYZu5ryAhYJxyM8O
-	og8uoWhQNnDvL8MvuUWYC0Ro26Hdc0FcYmLONE8v42v1+WLUc2g4kBQMx2V8tJcUv4pb8D
-	merKH1ChF+NCjdCCjfo/Iu7lOzAINCU=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <508f969d-9ba4-48d0-8e2e-ec7249392db3@tuxedocomputers.com>
-Date: Thu, 9 Jul 2026 15:13:09 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="I6CxzKFR"
+Received: from [192.168.0.43] (chfd-03-b2-v4wan-176392-cust229.vm15.cable.virginm.net [82.19.20.230])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id F38B54DC;
+	Thu,  9 Jul 2026 15:13:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1783602787;
+	bh=gA6o49/FJ11NCS7sJqeM2onkDwL1L1SnZTVsGuJMSvE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=I6CxzKFRb0sns6cIe8GkAJFPkIy5aRUBCV3k4Kxb3vYmAu1G0jQJsvYxBPW5kpD+1
+	 eU+Vnf9DgUD1IJ1EoN21TCHsFqeNsUdkyJ8cy9Si9hCWK1QScgHdagkK98JXnMKysU
+	 elBm9jy90gs04x2uCDiDG/87rBQZOmoQg8ilQraA=
+Message-ID: <945f3325-3e53-4b14-9dff-1e3f558c52ac@ideasonboard.com>
+Date: Thu, 9 Jul 2026 14:13:53 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,45 +35,52 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] platform/x86: uniwill-laptop: Add lightbar support
- for LAPQC71A/B
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20260530170813.10166-1-W_Armin@gmx.de>
- <20260530170813.10166-8-W_Armin@gmx.de>
- <df32200d-d966-40fd-b8d4-60c5b7e18822@tuxedocomputers.com>
- <d06fffe8-0cf6-3ee4-8ab6-c6a87ea4e7b9@linux.intel.com>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Merge int3472 driver patches via the
+ media tree by default
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+References: <20260708114740.47134-1-sakari.ailus@linux.intel.com>
 Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <d06fffe8-0cf6-3ee4-8ab6-c6a87ea4e7b9@linux.intel.com>
+From: Dan Scally <dan.scally@ideasonboard.com>
+In-Reply-To: <20260708114740.47134-1-sakari.ailus@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+Hi Sakari
 
-Am 09.07.26 um 10:57 schrieb Ilpo Järvinen:
-> On Wed, 8 Jul 2026, Werner Sembach wrote:
->
->> Hi Ilpo,
->>
->> Am 30.05.26 um 19:08 schrieb Armin Wolf:
->>> The LAPQC71A and LAPQC71B both feature a RGB lightbar with 36
->>> brightness levels per color component. Extend the device descriptor
->>> to supply the maximum brightness of the lightbar and whitelist
->>> both models for UNIWILL_FEATURE_LIGHTBAR.
->>>
->>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->> This patch lost its original attribution by accident (it originally came from
->> this RFC from me
->> https://lore.kernel.org/all/20260421201103.142403-3-wse@tuxedocomputers.com/)
->>
->> Since the patch currently is only in for-next can this still be fixed?
->>
->> Obligatory:
->>
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> Hi Werner,
->
-> Your Signed-off-by has now been added into the commit.
-can you also fix the author?
->
+On 08/07/2026 12:47, Sakari Ailus wrote:
+> The int3472 driver (under drivers/platform/x86/intel/int3472) implements
+> an effective kernel API (via instantiating regulators, clocks and GPIOs)
+> that is primarily used by the drivers under drivers/media. This means that
+> there are often dependencies between patches to the int3472 driver and the
+> camera sensor drivers whereas dependencies to other parts of the x86
+> platform tree are fairly rare.
+> 
+> Assign the int3472 driver tree to the Media tree.
+> 
+> Patches that have dependencies elsewhere than in the Media tree will be
+> coordinated with the respective maintainers as usual.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+
+Acked-by: Daniel Scally <dan.scally@ideasonboard.com>
+
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2aec6afa8108..d41544a41c07 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13379,6 +13379,7 @@ INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
+>   M:	Daniel Scally <dan.scally@ideasonboard.com>
+>   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+>   S:	Maintained
+> +T:	git git://linuxtv.org/media.git
+>   F:	drivers/platform/x86/intel/int3472/
+>   F:	include/linux/platform_data/x86/int3472.h
+>   
+
