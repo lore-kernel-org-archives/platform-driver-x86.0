@@ -1,269 +1,309 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FB3279903;
-	Thu,  9 Jul 2026 13:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2C61632E7;
+	Thu,  9 Jul 2026 13:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783603429; cv=none; b=ukg6N5BPfeSA8hlbvnp28Fguh3ofAQn88kfnJhQf7WqLzvx3xByuwfBGohzTkWyY9YrrpfgfZTe9uyBr20yCZKVXx5b6BsxyqYLK/NLyK2VtDWHd7wQis41MI0txc0b+2iYZgwqVSteSLfMI2nbYUniHlipxVox9YxM2kyfPGb0=
+	t=1783603630; cv=none; b=DLno7LYIs1GmzW1WizhRx1q+4Qe2sSaOOkJFAPxohbNc18/npQ7wPvPhK2A3wg9yw3SW669cvQUXjZ096Kl7b5ZHjAnSlQw//XHuSLjgLC4geXTaU0iNMo+xQhh8oDlCv28hU9oxJjrxHdYQqRarnNlUvEdZVXNUzoRLcFoPxeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783603429; c=relaxed/simple;
-	bh=x6unTqVjPWiLzxIzKGkr+4c7CamBiZB40yVpr3ZjLEQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWTE+BV9fY3kbMmQkqLekI+ohCXppoIJd/vx+24ZLke2LA2ei/rLDpnSe0bJKO6W+NxioA7reqT0lyVRaJZWFRNRED8UMNFYqctyPtJwcam50CQ3uz1o35tglpYF1P8oPI6nSKuPak3IzFnr+0umU7WxCdgj04TwX0bWbUelPMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=AwcmcZr+; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1783603630; c=relaxed/simple;
+	bh=w1AKMnCZmfIovGPU8ll58ncQX65Yf3H6jFamLyJqkXY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=NLxzuMXbsQiNTHTpbDs4IVFE+nEils4vjUBjEHTVJWt2L0BR5/GmQl8UJXbIUOjn3ntodWacVJ5ChSCTTXnGBWsmCah55ogDI5aiX9/BEvBHMOH5YfBUuBQbvahCuuhQFPVdom4x1bw0fiY8LwuEn1DGrd9TzTwMgmqzRfwqmhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyslBQ3t; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="AwcmcZr+"
-Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 3F7A72FC005F;
-	Thu,  9 Jul 2026 15:23:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1783603419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yAhHTf2oQftncQU+NMF/MisHpgU27GT2AmN9MII05E=;
-	b=AwcmcZr+FXBbwlA+AXsc6HPzJJ9vuLqcJ0Jk0tkmH8fuKn/hldtgTerGZ8YqQARsQflvgi
-	MlAM77/K7UiU2pqC2o0uxll+D9D4jS/0AmnQ6McXvxelGwGDZQtu/N0p6yXlJc5v79WSHh
-	NV67hZeOx0QYkyLLHbo5DqKHA/POPmw=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <dba6b863-3336-42b9-af02-98cb6f77c815@tuxedocomputers.com>
-Date: Thu, 9 Jul 2026 15:23:38 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyslBQ3t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783603628; x=1815139628;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=w1AKMnCZmfIovGPU8ll58ncQX65Yf3H6jFamLyJqkXY=;
+  b=hyslBQ3tc5978Eb2qW+9nHh863jtF4cIIdg/RPeBsF29z53QE0kKXtOn
+   /gwBlACbEikzPsiIMFooC/eaU4yZjGnesFpk52yDddd0UtLH0F+uULeAE
+   4iToLc+q/8D6YD/1JDnryKoAmSDSUfE1blIy1BfkxviYvFbS3oi8wH0BS
+   azVImyTX4PaMEjwgQEhZ0phhPx617FBWA37lfgmRR08H3Lp05LcLrYObM
+   Y8v0nvwKlcBCXT867pUx1XebudjsuV4WImSA4xmyLb5NV7LvvfRS/Zo0W
+   SdKgfyMmcNFLwbuEyo7sL1ldf/qhIfKEJElrURvUsf3OSbSHomaoOW3Zn
+   A==;
+X-CSE-ConnectionGUID: wYDGCkBmS36Vw34RAKzOGw==
+X-CSE-MsgGUID: EUrEJmy0ThmDa7cJMB0Z7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88198496"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="88198496"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:27:07 -0700
+X-CSE-ConnectionGUID: vedWGonaRqaqrniQ7Y0Rqw==
+X-CSE-MsgGUID: ICyy2fGKSbe7LP8MHbtmaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="258192336"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 06:27:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 9 Jul 2026 16:26:59 +0300 (EEST)
+To: Muhammad Bilal <meatuni001@gmail.com>
+cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, jorge.lopez2@hp.com, 
+    linux@weissschuh.net, platform-driver-x86@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+    Mario Limonciello <superm1@kernel.org>, Armin Wolf <W_Armin@gmx.de>
+Subject: Re: [PATCH v4 1/4] platform/x86: hp-bioscfg: pass validated element
+ count to package parsers
+In-Reply-To: <20260708154846.12356-2-meatuni001@gmail.com>
+Message-ID: <86309036-a9b3-fa41-0abd-f4eaad6b53fa@linux.intel.com>
+References: <20260708154846.12356-1-meatuni001@gmail.com> <20260708154846.12356-2-meatuni001@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] platform/x86: uniwill-laptop: Add keyboard backlight
- support
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com,
- hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260530170813.10166-1-W_Armin@gmx.de>
- <20260530170813.10166-2-W_Armin@gmx.de>
- <10e25d5c-7c50-45fd-a5a9-c06b087a89dd@tuxedocomputers.com>
- <aa39d060-5555-42bb-a4bb-d23e79f64d26@gmx.de>
- <1a91a9ff-8c81-4176-a6f2-fd2a6bc49820@tuxedocomputers.com>
- <a681b59d-1719-4a8e-9b75-e8317c899b27@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <a681b59d-1719-4a8e-9b75-e8317c899b27@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-[...]
->>>>> +
->>>>> +static int uniwill_kbd_led_init(struct uniwill_data *data)
->>>>> +{
->>>>> +    unsigned int color_indices[KBD_LED_CHANNELS] = {
->>>>> +        LED_COLOR_ID_RED,
->>>>> +        LED_COLOR_ID_GREEN,
->>>>> +        LED_COLOR_ID_BLUE,
->>>>> +    };
->>>>> +    struct led_init_data init_data = {
->>>>> +        .devicename = DRIVER_NAME,
->>>>> +        .devname_mandatory = true,
->>>>> +    };
->>>>> +    bool intensity_all_zeros = true;
->>>>> +    bool needs_trigger = false;
->>>>> +    unsigned int regval;
->>>>> +    int ret;
->>>>> +
->>>>> +    if (!uniwill_device_supports(data, UNIWILL_FEATURE_KEYBOARD_BACKLIGHT))
->>>>> +        return 0;
->>>>> +
->>>>> +    ret = regmap_read(data->regmap, EC_ADDR_SUPPORT_2, &regval);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    if (!(regval & CHINA_MODE)) {
->>>>> +        ret = regmap_set_bits(data->regmap, EC_ADDR_BIOS_OEM_2, 
->>>>> ENABLE_CHINA_MODE);
->>>>> +        if (ret < 0)
->>>>> +            return ret;
->>>>> +    }
->>>>> +
->>>>> +    ret = regmap_read(data->regmap, EC_ADDR_KBD_STATUS, &regval);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    regval |= KBD_APPLY;
->>>>> +    regval &= ~KBD_POWER_OFF;
->>>>> +    ret = regmap_write(data->regmap, EC_ADDR_KBD_STATUS, regval);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    switch (data->project_id) {
->>>>> +    case PROJECT_ID_PF:
->>>>> +    case PROJECT_ID_PF4MU_PF4MN_PF5MU:
->>>>> +    case PROJECT_ID_PH4TRX1:
->>>>> +    case PROJECT_ID_PH4TUX1:
->>>>> +    case PROJECT_ID_PH4TQX1:
->>>>> +    case PROJECT_ID_PH6TRX1:
->>>>> +    case PROJECT_ID_PH6TQXX:
->>>>> +    case PROJECT_ID_PHXAXXX:
->>>>> +    case PROJECT_ID_PHXPXXX:
->>>>> +        data->single_color_kbd = true;
->>>>> +        break;
->>>>> +    default:
->>>>> +        data->single_color_kbd = regval & KBD_WHITE_ONLY;
->>>>> +        break;
->>>>> +    }
->>>>> +
->>>>> +    if (data->single_color_kbd) {
->>>>> +        init_data.default_label = "white:" LED_FUNCTION_KBD_BACKLIGHT;
->>>>> +        data->kbd_led_cdev.max_brightness = data->kbd_led_max_brightness;
->>>>> +        data->kbd_led_cdev.color = LED_COLOR_ID_WHITE;
->>>>> +        data->kbd_led_cdev.flags = LED_BRIGHT_HW_CHANGED | 
->>>>> LED_REJECT_NAME_CONFLICT;
->>>>> +        data->kbd_led_cdev.brightness_set_blocking = 
->>>>> uniwill_kbd_led_brightness_set;
->>>>> +        data->kbd_led_cdev.brightness_get = uniwill_kbd_led_brightness_get;
->>>>> +
->>>>> +        return devm_led_classdev_register_ext(data->dev, 
->>>>> &data->kbd_led_cdev, &init_data);
->>>>> +    }
->>>>> +
->>>>> +    for (int i = 0; i < KBD_LED_CHANNELS; i++) {
->>>>> +        data->kbd_led_mc_subled_info[i].color_index = color_indices[i];
->>>>> +
->>>>> +        ret = regmap_read(data->regmap, 
->>>>> uniwill_kbd_led_channel_to_reg[i], &regval);
->>>>> +        if (ret < 0)
->>>>> +            return ret;
->>>>> +
->>>>> +        /*
->>>>> +         * Make sure that the initial intensity value is not greater than
->>>>> +         * the maximum intensity.
->>>>> +         */
->>>>> +        if (regval > KBD_LED_MAX_INTENSITY) {
->>>>> +            regval = KBD_LED_MAX_INTENSITY;
->>>>> +            ret = regmap_write(data->regmap, 
->>>>> uniwill_kbd_led_channel_to_reg[i], regval);
->>>>> +            if (ret < 0)
->>>>> +                return ret;
->>>>> +
->>>>> +            needs_trigger = true;
->>>>> +        }
->>>>> +
->>>>> +        if (regval)
->>>>> +            intensity_all_zeros = false;
->>>>> +
->>>>> +        data->kbd_led_mc_subled_info[i].intensity = regval;
->>>>> +        data->kbd_led_mc_subled_info[i].max_intensity = 
->>>>> KBD_LED_MAX_INTENSITY;
->>>>> +        data->kbd_led_mc_subled_info[i].channel = i;
->>>>> +    }
->>>>> +
->>>>> +    /* See uniwill_kbd_led_mc_brightness_set() for an explaination. */
->>>>> +    if (intensity_all_zeros) {
->>>>> +        for (int i = 0; i < KBD_LED_CHANNELS; i++) {
->>>>> +            data->kbd_led_mc_subled_info[i].intensity = 1;
->>>>> +            ret = regmap_write(data->regmap, 
->>>>> uniwill_kbd_led_channel_to_reg[i], 1);
->>>>> +            if (ret < 0)
->>>>> +                return ret;
->>>>> +        }
->>>>> +
->>>>> +        needs_trigger = true;
->>>>> +    }
->>>>> +
->>>>> +    if (needs_trigger) {
->>>>> +        ret = regmap_write_bits(data->regmap, EC_ADDR_TRIGGER, 
->>>>> RGB_APPLY_COLOR,
->>>>> +                    RGB_APPLY_COLOR);
->>>>> +        if (ret < 0)
->>>>> +            return ret;
->>>>> +    }
->>>>> +
->>>>> +    ret = devm_mutex_init(data->dev, &data->kbd_rgb_led_lock);
->>>>> +    if (ret < 0)
->>>>> +        return ret;
->>>>> +
->>>>> +    init_data.default_label = "multicolor:" LED_FUNCTION_KBD_BACKLIGHT;
->>>>> +    data->kbd_led_mc_cdev.led_cdev.max_brightness = 
->>>>> data->kbd_led_max_brightness;
->>>>> +    data->kbd_led_mc_cdev.led_cdev.color = LED_COLOR_ID_MULTI;
->>>>> +    data->kbd_led_mc_cdev.led_cdev.flags = LED_BRIGHT_HW_CHANGED | 
->>>>> LED_REJECT_NAME_CONFLICT;
->>>>> + data->kbd_led_mc_cdev.led_cdev.brightness_set_blocking = 
->>>>> uniwill_kbd_led_mc_brightness_set;
->>>>> +    data->kbd_led_mc_cdev.led_cdev.brightness_get = 
->>>>> uniwill_kbd_led_mc_brightness_get;
->>>>> +    data->kbd_led_mc_cdev.subled_info = data->kbd_led_mc_subled_info;
->>>>> +    data->kbd_led_mc_cdev.num_colors = KBD_LED_CHANNELS;
->>>>> +
->>>>> +    return devm_led_classdev_multicolor_register_ext(data->dev, 
->>>>> &data->kbd_led_mc_cdev,
->>>>> +                             &init_data);
->>>>> +}
->>>>> +
->>>>
->>>> Sorry I know I'm way to late with my comment, but I'm not at all a fan of 
->>>> how complex this whole function is:
->>>>
->>>> - When we have to set max brightness on a per device basis anyway, we can 
->>>> also set rgb or white only there and can skip this whole detection 
->>>> mechanism with the supported bits that are unreliable anyway
->>>>
->>>> - we have a 2nd "supported devices/features list" inside this function 
->>>> which is abstracting away from the actual supported feature list
->>>>
->>>> Should i try to spin up something much simpler, but that requires explicit 
->>>> setting in the device descriptor?
->>>>
->>>> Best regards
->>>>
->>>> Werner
->>>>
->>> Good point, but in this case i think having this small device list is OK, 
->>> because the original control center
->>> does something similar.
->> yeah the original cc and tuxedo-drivers has these small lists all over the 
->> place ... also don't like it there
->>> If we encounter a device that does not work with this strategy then we can 
->>> indeed
->>> move the code into the device descriptor.
->>
->> later we might not be able to get the information anymore which devices are 
->> rgb and which are white only when the supported devices lists grows, then we 
->> are stuck to reading the feature bits.
->>
->> best regards,
->>
->> Werner
->>
-> Good point, in this case using the device descriptor for this feature detection
-> might indeed be better in the long term.
->
-> Do you want to send the patches or should i do it?
+On Wed, 8 Jul 2026, Muhammad Bilal wrote:
 
-I will not stop you if you have time to do it ^^
+> The per-type package parsers are handed the wrong element count.
+> 
+> hp_init_bios_package_attribute() validates obj->package.count and then
+> calls one of the five hp_populate_*_package_data() wrappers (string,
+> integer, enumeration, ordered list, password). Each wrapper forwards a
+> count to its hp_populate_*_elements_from_package() parser, but instead
+> of forwarding the validated obj->package.count it derives the count
+> from elements[0]. elements[0] is the NAME field and is always an
+> ACPI_TYPE_STRING, so reading ->package.count from it in fact reads
+> ->string.length through the union acpi_object. The parsers thus bound
+> themselves against the length of the name string rather than against
+> the real number of elements in the package.
+> 
+> This is safe today because hp_init_bios_package_attribute() refuses any
+> package that has fewer than the type's element count, so a parser only
+> ever runs on a full package and never reads past it regardless of the
+> bogus bound.
+> 
+> An upcoming change relaxes that check to accept shorter packages. Once
+> a parser can receive fewer elements than its per-type count, a bound
+> taken from the name length no longer reflects the array size, and the
+> "elem < count" loop conditions and "elem + n >= count" sub-loop guards
+> read past the end of elements[] - an out-of-bounds heap read.
+> 
+> Forward the validated obj->package.count to every *_package_data()
+> wrapper so the parsers bound themselves against the real package size.
+> This does not change behaviour for the packages that enumerate
+> correctly today and is a prerequisite for accepting shorter packages
+> safely.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+> ---
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c               | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.h               | 5 +++++
+>  drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 3 ++-
+>  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 3 ++-
+>  drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 5 +++--
+>  drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 5 +++--
+>  drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 3 ++-
+>  7 files changed, 22 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 27fd6cd215290..768330d291da8 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -731,26 +731,31 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+>  	switch (attr_type) {
+>  	case HPWMI_STRING_TYPE:
+>  		ret = hp_populate_string_package_data(elements,
+> +						      obj->package.count,
+>  						      instance_id,
+>  						      attr_name_kobj);
+>  		break;
+>  	case HPWMI_INTEGER_TYPE:
+>  		ret = hp_populate_integer_package_data(elements,
+> +						       obj->package.count,
+>  						       instance_id,
+>  						       attr_name_kobj);
+>  		break;
+>  	case HPWMI_ENUMERATION_TYPE:
+>  		ret = hp_populate_enumeration_package_data(elements,
+> +							   obj->package.count,
+>  							   instance_id,
+>  							   attr_name_kobj);
+>  		break;
+>  	case HPWMI_ORDERED_LIST_TYPE:
+>  		ret = hp_populate_ordered_list_package_data(elements,
+> +							    obj->package.count,
+>  							    instance_id,
+>  							    attr_name_kobj);
+>  		break;
+>  	case HPWMI_PASSWORD_TYPE:
+>  		ret = hp_populate_password_package_data(elements,
+> +							obj->package.count,
+>  							instance_id,
+>  							attr_name_kobj);
+>  		break;
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> index f1eec0e4ba075..416d7e7aaaae3 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+> @@ -401,6 +401,7 @@ int hp_populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_string_data(void);
+>  void hp_exit_string_attributes(void);
+>  int hp_populate_string_package_data(union acpi_object *str_obj,
+> +				    int str_obj_count,
+>  				    int instance_id,
+>  				    struct kobject *attr_name_kobj);
+>  
+> @@ -411,6 +412,7 @@ int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_integer_data(void);
+>  void hp_exit_integer_attributes(void);
+>  int hp_populate_integer_package_data(union acpi_object *integer_obj,
+> +				     int integer_obj_count,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj);
+>  
+> @@ -421,6 +423,7 @@ int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  int hp_alloc_enumeration_data(void);
+>  void hp_exit_enumeration_attributes(void);
+>  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+> +					 int enum_obj_count,
+>  					 int instance_id,
+>  					 struct kobject *attr_name_kobj);
+>  
+> @@ -432,6 +435,7 @@ int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr,
+>  int hp_alloc_ordered_list_data(void);
+>  void hp_exit_ordered_list_attributes(void);
+>  int hp_populate_ordered_list_package_data(union acpi_object *order_obj,
+> +					  int order_obj_count,
+>  					  int instance_id,
+>  					  struct kobject *attr_name_kobj);
+>  
+> @@ -440,6 +444,7 @@ int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj);
+>  int hp_populate_password_package_data(union acpi_object *password_obj,
+> +				      int password_obj_count,
+>  				      int instance_id,
+>  				      struct kobject *attr_name_kobj);
+>  int hp_alloc_password_data(void);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> index af4d1920d4880..3aa2c440e0528 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+> @@ -304,6 +304,7 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+> +					 int enum_obj_count,
+>  					 int instance_id,
+>  					 struct kobject *attr_name_kobj)
+>  {
+> @@ -312,7 +313,7 @@ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+>  	enum_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_enumeration_elements_from_package(enum_obj,
+> -						      enum_obj->package.count,
+> +						      enum_obj_count,
+>  						      instance_id);
+>  	hp_update_attribute_permissions(enum_data->common.is_readonly,
+>  					&enumeration_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> index d96e160953e39..107e4cf1efb8a 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+> @@ -279,6 +279,7 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_integer_package_data(union acpi_object *integer_obj,
+> +				     int integer_obj_count,
+>  				     int instance_id,
+>  				     struct kobject *attr_name_kobj)
+>  {
+> @@ -286,7 +287,7 @@ int hp_populate_integer_package_data(union acpi_object *integer_obj,
+>  
+>  	integer_data->attr_name_kobj = attr_name_kobj;
+>  	hp_populate_integer_elements_from_package(integer_obj,
+> -						  integer_obj->package.count,
+> +						  integer_obj_count,
+>  						  instance_id);
+>  	hp_update_attribute_permissions(integer_data->common.is_readonly,
+>  					&integer_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> index f09489a085c86..83ddf99f93954 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+> @@ -301,7 +301,8 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+>   * @instance_id: The instance to enumerate
+>   * @attr_name_kobj: The parent kernel object
+>   */
+> -int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
+> +int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int order_obj_count,
+> +					  int instance_id,
 
-you are probably quicker in working on your own code
+These new arguments trigger warnings for missing kerneldoc each.
 
-i would do a
+--
+ i.
 
-UNIWILL_FEATURE_KBL_WHITE_ONLY and a
+>  					  struct kobject *attr_name_kobj)
+>  {
+>  	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
+> @@ -309,7 +310,7 @@ int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int inst
+>  	ordered_list_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_ordered_list_elements_from_package(order_obj,
+> -						       order_obj->package.count,
+> +						       order_obj_count,
+>  						       instance_id);
+>  	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
+>  					&ordered_list_current_val);
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> index 4d79eb8056a5d..89316d90454d2 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+> @@ -388,7 +388,8 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
+>   * @instance_id: The instance to enumerate
+>   * @attr_name_kobj: The parent kernel object
+>   */
+> -int hp_populate_password_package_data(union acpi_object *password_obj, int instance_id,
+> +int hp_populate_password_package_data(union acpi_object *password_obj, int password_obj_count,
+> +				      int instance_id,
+>  				      struct kobject *attr_name_kobj)
+>  {
+>  	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
+> @@ -396,7 +397,7 @@ int hp_populate_password_package_data(union acpi_object *password_obj, int insta
+>  	password_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_password_elements_from_package(password_obj,
+> -						   password_obj->package.count,
+> +						   password_obj_count,
+>  						   instance_id);
+>  
+>  	hp_friendly_user_name_update(password_data->common.path,
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> index fe5a9a3a4ef17..da5e81f1d188f 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+> @@ -267,6 +267,7 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
+>   * @attr_name_kobj: The parent kernel object
+>   */
+>  int hp_populate_string_package_data(union acpi_object *string_obj,
+> +				    int string_obj_count,
+>  				    int instance_id,
+>  				    struct kobject *attr_name_kobj)
+>  {
+> @@ -275,7 +276,7 @@ int hp_populate_string_package_data(union acpi_object *string_obj,
+>  	string_data->attr_name_kobj = attr_name_kobj;
+>  
+>  	hp_populate_string_elements_from_package(string_obj,
+> -						 string_obj->package.count,
+> +						 string_obj_count,
+>  						 instance_id);
+>  
+>  	hp_update_attribute_permissions(string_data->common.is_readonly,
+> 
 
-UNIWILL_FEATURE_KBL_ONE_ZONE_RGB (there are also Uniwill devices with per-key 
-RGB, but that is controlled via a usb device)
+-- 
+ i.
 
-also required is a way to set max intensity via the device descriptor, most 
-tuxedo devices have 200 as max value there and not 50
-
-best regards,
-
-Werner
-
->
-> Thanks,
-> Armin Wolf 
-[...]
