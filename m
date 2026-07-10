@@ -1,46 +1,46 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012042.outbound.protection.outlook.com [40.107.209.42])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011041.outbound.protection.outlook.com [52.101.62.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31428370AE3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 17:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98A2374E57
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 17:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783705368; cv=fail; b=nvbx2SQgYP/jn7qAUXqyo5ePSi7GfIxuoUZwaxREUZGfOiNv9YG4OIXErpPcjx+hGv03jti/6Rvul9e/IqbVkwQJSwCwqkMRV3YMg4xO67wHleCcY93E4ZFMWh1HDMY+b5JmZ3G5/TntvoOfvHYMffOeAsG2Qc/UdE8YIA901u0=
+	t=1783705369; cv=fail; b=aMbJEXTF4yv+V75xnA5Ojswutb609fxbPV0oRZRr9tY5JupmQDMxivHUpGaW16e1l65ti8MO9HH38OGDTbhXQr7AJ2X+a7xFLqXoo3IiYi1Xy5VMdNGvlgEdENh/q4FFXC9GF8w/milx8IkQ2OFHUKlQPBY/xZ470dAfQ3S8eBs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783705368; c=relaxed/simple;
-	bh=rP7XnFJhOAcCLEt5PhQ2oLowBVHhyKiilT9+p/zZCEQ=;
+	s=arc-20240116; t=1783705369; c=relaxed/simple;
+	bh=8ChtpXBdSisokkz0j/XHxnFIYhJBzzH3vSfhk8bp1eo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Na5GocunsnhqMQ5PCJ7KVuMJ4sapl5NmPp4mxTBy36Rrrx30CSQw9Q9dU6C//1gokJ7Br6S24dO1IgmA/37kMY5lB2l/7x4GivUr8GiqVVDdjhgfJAkLqRYIKuRdczhAzNOw9b3Nxwc+mdyVXY0q1zMsui0CAomXdfJsayPahEo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3vatSIxQ; arc=fail smtp.client-ip=40.107.209.42
+	 MIME-Version:Content-Type; b=dcNYc5qn6QaqaVbJdJVcJ895jWz+xAgSFHxN5q85/sCB3WNGtFZKO9PKjMpcqpUkJuTDLv/kgYbvWTDo6jAMop7eZsyYtqxTKZBkJ+VvcQwVXSUuXrMwiahV5JVoHFjK5lumFmgEOAr1c6YcI5GAE/BcSfd8WgmrH5OXEIInFF8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zDX4xy02; arc=fail smtp.client-ip=52.101.62.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3vatSIxQ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zDX4xy02"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rYW16Fu90TgUCqjt8UKlu6EOz3WG4HPfG1SAB/dzS47JoWeAJBHfqNvTk4UdbOjaW+Lh9Fw/kGdx/yI/yDNTyZHEyLeURckVTxBeQ8mXbI3tKhFx/jMhLvUcZ0Sa+QykomufboPFYNs1uqy4E82V/tZSpzO2aXE1uwwgAxfbPL9+KbpGzXYFt7UlK94h1T+4KIZkI/jhcu7bfdE/OwG2O9HE1NAt0g61NOU0ex6jD/DNPEKBhwtedtN4RuC3U9v/lo/DSVcotxvHDYsY6bFyhVd8ZPTSX0zkyOoMSzdD3hROS1kT85GRlQhxKQnkcb9hODtHHyfDIzeT0SUUJuMIuA==
+ b=uZcROwCdjh9FiKaeA/jYujea2KfdTAjqpefEemlJbMbmXyNw+XHUarvzZtg7jSZjeG9aHRZxlEMKHWBF7EtupTsPunO6zUxVvJnq2yF4A7ULJdc2j8Dfdg4AfRVaMsqm6zepGD+sKIvhfJu6yalBT8BfCZMaLXTw6H0IncM4qcJhE6XKC3AbqRboxUEODJn3I1jysXbUk1mmRiq1hFIY8vvzo1QP2tpl0Oya9xd50mqh4ePAWcktsF6pUgocDMlKQG/nMPFbeAIuJK9WUDhg/e5ZvuloC0pIiMoYpRS51hzYbrvRlao8n98BRi0HEffrOfYrIMjkvUZLU4LtMj6sgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rPmk32St9lCjZ+ERkCEXarSPThoXqi7dvewNr1U6xdY=;
- b=fMO1R85+t9jSAMV06OjLM3xARm2fCTz0UIMvHWpeAtTeTVsRZaYS6IAyZE/WFM4CnFBMaqk0f1MXGeiOYGgQLxMauq/C2YG+zW2N1S6Y20NTNDi++xjbDcxvIGiSxs9P67B+CgnmKBuHRJ25FyELJFczPZDTyvS2hIwkV3ebjLDw3u1Pd18XbisoIP6iQI1/ggX4nkLJiUbgzpv8KJYq3Ssmt/c3jRlRAsK/h9e0JV7MxJhuyYxcmHAENT6IH07qoe569luCUXdz6uBtI5QL2nPT5JQDccfM1PM6QMC/fxNn1wIsEe/BDqGjzq9cZFLeBXtEz6VfWztpaxHiLiTVdQ==
+ bh=rbBGqF4ZtS7XKu6WWfoLzbFNvZTU8ihwKSwV9GKBBBo=;
+ b=vLyo6PiDqX7kkF4xdsy290fwZoUW5/iUGMGtVqhNJz/MUVInF7Q60fkmQwUvq8WZ7opw11TYBRtrxU3HuqTDhXc0SuzNlPW5HL21AePnXzq4f9H748+Vvi1ZID4SlDp4Rf2lKogDduaDOsEo6eHw3EqLDWHr/lGBDU9hq7H3wdyEvZLo0thbYld5DpqKhKMMg1Ras4eUXRKbhp5INljiy+h47AdhFdZfjc1QelAC+S2RonVfyz5EVONFhLIlcCiECYNYAtktcgUg+uK1kM0Hxj34Gg0/R1MWwv/dP2QT1momTuPJ209qhE1ymLJ5v2O9NIk+USfxNCK70Jzv2WCVxQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rPmk32St9lCjZ+ERkCEXarSPThoXqi7dvewNr1U6xdY=;
- b=3vatSIxQuuOVmLVY2drAcAQJBRxZreZtYHalpw47l2SuUg8w1CVQEomTBcL4PtMX5zoqqzyEBy9QXHdoNFAb/1ZU+/TVDbnDsoBgySVakgNY4FJCyPO6zglaSFOUQhH4DivyDPCz2u4l8GRr6U0rHn6ai/lxWs9d6t0SdLSnAKY=
-Received: from SJ0PR03CA0096.namprd03.prod.outlook.com (2603:10b6:a03:333::11)
- by MN0PR12MB6032.namprd12.prod.outlook.com (2603:10b6:208:3cc::20) with
+ bh=rbBGqF4ZtS7XKu6WWfoLzbFNvZTU8ihwKSwV9GKBBBo=;
+ b=zDX4xy02JfqvHJD2IL8DQ16DWVR6J5Vx9RxZl8BCuP77S/Ib0duqz2U3uhXzzf6DOVfxPRB/Q2gvchsoLhWiP4sXbwjQOlg6MhYIJi0EGO+tTb8khE1a1qlTW3lPgokGEnntLc29Jejj44VdCUz70SoaDCZvMP+w99rMMja/bVw=
+Received: from SJ0PR03CA0108.namprd03.prod.outlook.com (2603:10b6:a03:333::23)
+ by MN0PR12MB6248.namprd12.prod.outlook.com (2603:10b6:208:3c0::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.16; Fri, 10 Jul
- 2026 17:42:41 +0000
+ 2026 17:42:42 +0000
 Received: from SJ1PEPF000026C7.namprd04.prod.outlook.com
- (2603:10b6:a03:333:cafe::69) by SJ0PR03CA0096.outlook.office365.com
- (2603:10b6:a03:333::11) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:333:cafe::49) by SJ0PR03CA0108.outlook.office365.com
+ (2603:10b6:a03:333::23) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.10 via Frontend Transport; Fri,
- 10 Jul 2026 17:42:40 +0000
+ 10 Jul 2026 17:42:42 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  SJ1PEPF000026C7.mail.protection.outlook.com (10.167.244.104) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 17:42:40 +0000
+ 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 17:42:42 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 10 Jul
- 2026 12:42:37 -0500
+ 2026 12:42:39 -0500
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
 	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 1/5] platform/x86/amd/pmf: Use per-SoC smu_regs struct for SMU mailbox registers
-Date: Fri, 10 Jul 2026 23:12:15 +0530
-Message-ID: <20260710174219.2522269-2-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 2/5] platform/x86/amd/pmf: Add 1AH_M80H device IDs and extended SMU mailbox registers
+Date: Fri, 10 Jul 2026 23:12:16 +0530
+Message-ID: <20260710174219.2522269-3-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260710174219.2522269-1-Shyam-sundar.S-k@amd.com>
 References: <20260710174219.2522269-1-Shyam-sundar.S-k@amd.com>
@@ -77,218 +77,159 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C7:EE_|MN0PR12MB6032:EE_
-X-MS-Office365-Filtering-Correlation-Id: 483b7c81-70b7-49c0-fc9d-08dedeaaa3ae
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C7:EE_|MN0PR12MB6248:EE_
+X-MS-Office365-Filtering-Correlation-Id: abab9f00-3a62-4da1-5c26-08dedeaaa4c8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700016|23010399003|18002099003|22082099003|11063799006|6133799003|3023799007|56012099006;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700016|23010399003|22082099003|18002099003|11063799006|56012099006|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	ya4xwoKzM730k0Sk7xPBFbLt75Y6DTQ+I52X2qfNAuNbdCrFmDOZAbzBKWBgcBV4/A0kGZa+kTKdKBi1Rf3fdpMFsYyhpaGCfeknvkIOEd7GfKIGHkIoUhrwnMqegSyrrxzR10uQu5XThcG4BYg3x2nZX9fz2cnumDqEUWQiLhkLQnweGvgxEhXmJ9xksRDk/k8r98drnhiAaFIJVa5/zVDE3pCW6GjIWAFwtqydfNeXll88Y7StFHwppctJH+bRJZc5GewFuZOg6aD+ttlQrIpZJZItX2kPJQKGgETjZUQ6hehLZg0meNSv2jfUosrAnult6BLN0jWfzZaOytQYMAxLg4ebXNtSKZQhGh0RUaHnsL989js2IIgS+fdMe19kjgfQk3TiGKsBBhkdn2lwbc0tCX7xt0S2lxUlHtAE7Wu+RmJz68xTgxAHz3XGxuOslQSTZjnoFUwMhtVKLyjGlTacQRK3aycBeeN6z7lNHUohgRiabGNJuzOQx+nfKN9g0lyE7e/V6XqHXNLEwI4cElL0OdtwoGe2SsLhf7XZVuMyoQPWympBGJa7jr7Acic+E7igKmAbv4zBPKMbgye+6GPjOgunsFGG9C326n4oC8JlrV78FPA+mTD2JUzG5/y37pJ+EwGC1Npg6d3vQzWTUQ0rfgYY5BP/1ZY/pKbNA71wx4MY9T5MKOANHHDdEdqF72pNAaUdm8iTu+EEhWDpgw==
+	ldhvcZvlSAh+aaP5xk6Yq0ntKdgiAfKUa8iblpEMujXU67DYkmWFjDyrHrUkAJlZAJlXtDcQH7xVE0zVqkkufdQsge6/HBHgrZCgG4ybxdVd0q3d5/M/bMgS0yknUdqVvftiapdz3QCNH1lRxV17q4nQAE5qd+q3rm967tVzCwJGfRd6kILknU+Bnev/cR6h5N4/hLU0c2kr3etwtuYoo6b71+hKeBae96ujujPVMppyf4K18h+LucXqWBv94eZATXIzSWk/LbEQTTsBtqvuo3xua8eKT28dtQrziVTDdYoEh4eaxZPy4LLmhqBv+wL+EUDK3wbI+PRyzTdp0dGcwabszy7oUS2SDMDaxO9RZm70TJfbrukVYMq9rhTWxffIjYrwni9iryxn7jAeIqh7K4bonJJYFVGWID9knrXNc5Kx0HPqf3OSLLoxdke40GXOOpcnEXDprdmKqXS4iDBrnE2APRB16lPRQVjr8qvgjIGjJB+VdRKmHYsX9VWubtyJN9+SULcsaQmSoVgIOHmWpJEnUs3wyE52xKWx2LZhg8vndl9igHzdvJfZtDKIJhfQnRPdtnMeqoaUp+Fj4/iBABu8FpAjwxrT/ovmFz1SGr6SQhWvQAEKOi2h2pyW8MLqHsGJbvR1IU8VgFzHVdkdzt2oc7rjggMxOmV781qByarOOUGTDVG6NlTiCoorETCXnUQou4ENhAQZX5rSKB7YWg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700016)(23010399003)(18002099003)(22082099003)(11063799006)(6133799003)(3023799007)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700016)(23010399003)(22082099003)(18002099003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	SnO5pnEPnUCa9CYX07pjgtev9gucEmNwzQyJbV9/6jeNjwD0QAbCbGgTlabJEOXG3EXRWTl5iM06miCItEf4SdE71X2uiTRaDF4iZAWzmGiVVQamSeu7lGza5S5s60/lDAZJ6FdMrt+usdBEurG3GbJjF9ICp0iMP1fYIUjiqeCOjebv2SoUI0i7lz3FtP2MlYBiWr3mv+erb6tzM/z9tkJEsKfM0VMNI977Q9ofr/HXi1BXtZIhMFY8E4vAkpNoYE8pCQgDz7cNUGIyTXS7cOfQnMDEhpRgviMY31whjQ2WTPbwXQQGKSqNblhtGhd862y51sGrafk+HPYhUg+G7q48p/aG6pWBt2xfJ+rbj9nvLBmnFV31/9Nue2ml7MB7PaWWqUY+y4SvXH2D5e06RDmHtjBMh8/k56mNCkim4+BCCv1zA6Y8CBkPIdQDECYd
+	eMaAXK0lRMbOCrI4p2xR7G3KRidXyCT/XNGuQ4dwwQLSxR+gBo6s2wOC2sWA+81JjvWFDONk1pXzuDgmqjRhP3ojJIyDU7RyGRlOB3WtXXKG5jNxwQYki7jIVrKDVm5EuCiyDDXcUNSfZdL4BJ2zORz2bcjH5vDlfFx7JVAUbyXZOeQpoMD0BxLLOdOazxrs7KKkFRevtQBMfiU1ukS+liyaUaftwPVss++9YJDtNU/6Rgq7lJgMeDiQUdgAsH0v+pb7HuEobWWEu7l4M7lC6l/8SGy5dbJ5OOVef16FX187sOoThy2Q2YHW0x/2GuOohLqQWykzeN5TrY0YqJEsnTyZAVRRWpk1YCuhqD7sNA/A/ASXo7sOwz91L0zCgkQx3F2+dqmDsqi/avyhXuSSU0g/NWcX+pyG2AxAjY1RwsZiOxZlCZ7HRju1rW3g/xfE
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 17:42:40.3878
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 17:42:42.2856
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 483b7c81-70b7-49c0-fc9d-08dedeaaa3ae
+X-MS-Exchange-CrossTenant-Network-Message-Id: abab9f00-3a62-4da1-5c26-08dedeaaa4c8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ1PEPF000026C7.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6032
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6248
 
-Different AMD platforms use varying SMU register layouts for PMF-SMU
-mailbox communication. The register offsets are currently hardcoded as
-AMD_PMF_REGISTER_MESSAGE, AMD_PMF_REGISTER_RESPONSE and
-AMD_PMF_REGISTER_ARGUMENT directly in amd_pmf_send_cmd() and
-amd_pmf_dump_registers(), making it difficult to support platforms that
-use a different mailbox register layout without scattering per-platform
-conditionals across the send path.
+Add PCI device ID (0x115b) and ACPI ID (AMDI0109) to enable PMF driver
+support for the AMD 1AH_M80H (Family 1AH Model 80H).
 
-Introduce struct amd_pmf_smu_regs to capture the SoC-specific SMU
-mailbox register offsets (msg_reg, resp_reg, arg_reg[]) and add a
-pointer to it in struct amd_pmf_dev. RMB, PS, 1AH_M20H and 1AH_M60H
-all share the same legacy register layout and point to a single shared
-amd_pmf_legacy_smu_regs instance, avoiding redundant struct definitions.
+The 1AH_M80H platform introduces an extended SMU mailbox interface that
+uses three argument registers instead of the single register used by
+earlier platforms. Define five new register offsets for the 1AH_M80H
+mailbox: message, response and three argument registers. The extended
+argument registers are required because 1AH_M80H exposes metrics through
+a firmware managed DRAM region. The GET_METRICS_TABLE_DRAM_ADDR command
+returns a 64-bit physical address split across arg_reg[0] (low 32-bit)
+and arg_reg[1] (high 32-bit), with the metrics table size in arg_reg[2].
 
-Convert the pmf_pci_ids[] table from PCI_DEVICE() to PCI_DEVICE_DATA(),
-embedding the smu_regs pointer directly as driver_data. Introduce
-amd_pmf_get_smu_mb_offset() which resolves the matching PCI entry via
-pci_match_id() at probe time and assigns driver_data to dev->smu_regs.
-
-Update all SMU register accesses in amd_pmf_send_cmd() and
-amd_pmf_dump_registers() to go through dev->smu_regs. Remove the
-hardcoded register offset references from the send path. New platform
-support requires only a new smu_regs instance and a corresponding
-PCI_DEVICE_DATA() entry.
-
-No functional changes for existing platforms.
+Define amd_pmf_1ah_m80h_smu_regs to capture this extended register layout
+and register it in pmf_pci_ids[] via PCI_DEVICE_DATA(), keeping the
+existing amd_pmf_legacy_smu_regs shared instance for all prior platforms
+unchanged.
 
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/core.c | 51 +++++++++++++++++++++--------
- drivers/platform/x86/amd/pmf/pmf.h  | 12 +++++++
- 2 files changed, 50 insertions(+), 13 deletions(-)
+ drivers/platform/x86/amd/pmf/core.c | 29 +++++++++++++++++++++++++----
+ drivers/platform/x86/amd/pmf/pmf.h  |  3 ++-
+ 2 files changed, 27 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 58d86b4c2828..1826fc64bf56 100644
+index 1826fc64bf56..7c5a1ec3d7fc 100644
 --- a/drivers/platform/x86/amd/pmf/core.c
 +++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -176,13 +176,13 @@ static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
- {
- 	u32 value;
+@@ -26,6 +26,13 @@
+ #define AMD_PMF_REGISTER_RESPONSE	0xA78
+ #define AMD_PMF_REGISTER_ARGUMENT	0xA58
  
--	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_RESPONSE);
-+	value = amd_pmf_reg_read(dev, dev->smu_regs->resp_reg);
++/* PMF-SMU communication registers for 1AH_M80H */
++#define AMD_PMF_REG_MESSAGE_1AH_M80H	0xA04
++#define AMD_PMF_REG_RESPONSE_1AH_M80H	0xA08
++#define AMD_PMF_REG_ARGUMENT0_1AH_M80H	0xA0C
++#define AMD_PMF_REG_ARGUMENT1_1AH_M80H	0xAAC
++#define AMD_PMF_REG_ARGUMENT2_1AH_M80H	0xAB0
++
+ /* Base address of SMU for mapping physical address to virtual address */
+ #define AMD_PMF_MAPPING_SIZE		0x01000
+ #define AMD_PMF_BASE_ADDR_OFFSET	0x10000
+@@ -179,7 +186,7 @@ static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
+ 	value = amd_pmf_reg_read(dev, dev->smu_regs->resp_reg);
  	dev_dbg(dev->dev, "AMD_PMF_REGISTER_RESPONSE:%x\n", value);
  
--	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
-+	value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg);
+-	value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg);
++	value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[0]);
  	dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT:%d\n", value);
  
--	value = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_MESSAGE);
-+	value = amd_pmf_reg_read(dev, dev->smu_regs->msg_reg);
- 	dev_dbg(dev->dev, "AMD_PMF_REGISTER_MESSAGE:%x\n", value);
- }
- 
-@@ -208,7 +208,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
- 	guard(mutex)(&dev->lock);
- 
- 	/* Wait until we get a valid response */
--	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
-+	rc = readx_poll_timeout(ioread32, dev->regbase + dev->smu_regs->resp_reg,
- 				val, val != 0, PMF_MSG_DELAY_MIN_US,
- 				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
- 	if (rc) {
-@@ -217,16 +217,16 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
- 	}
- 
- 	/* Write zero to response register */
--	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_RESPONSE, 0);
-+	amd_pmf_reg_write(dev, dev->smu_regs->resp_reg, 0);
+ 	value = amd_pmf_reg_read(dev, dev->smu_regs->msg_reg);
+@@ -220,7 +227,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+ 	amd_pmf_reg_write(dev, dev->smu_regs->resp_reg, 0);
  
  	/* Write argument into argument register */
--	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_ARGUMENT, arg);
-+	amd_pmf_reg_write(dev, dev->smu_regs->arg_reg, arg);
+-	amd_pmf_reg_write(dev, dev->smu_regs->arg_reg, arg);
++	amd_pmf_reg_write(dev, dev->smu_regs->arg_reg[0], arg);
  
  	/* Write message ID to message ID register */
--	amd_pmf_reg_write(dev, AMD_PMF_REGISTER_MESSAGE, message);
-+	amd_pmf_reg_write(dev, dev->smu_regs->msg_reg, message);
- 
- 	/* Wait until we get a valid response */
--	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMF_REGISTER_RESPONSE,
-+	rc = readx_poll_timeout(ioread32, dev->regbase + dev->smu_regs->resp_reg,
- 				val, val != 0, PMF_MSG_DELAY_MIN_US,
- 				PMF_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
- 	if (rc) {
-@@ -239,7 +239,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+ 	amd_pmf_reg_write(dev, dev->smu_regs->msg_reg, message);
+@@ -239,7 +246,7 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
  		if (get) {
  			/* PMFW may take longer time to return back the data */
  			usleep_range(DELAY_MIN_US, 10 * DELAY_MAX_US);
--			*data = amd_pmf_reg_read(dev, AMD_PMF_REGISTER_ARGUMENT);
-+			*data = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg);
+-			*data = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg);
++			*data = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[0]);
  		}
  		break;
  	case AMD_PMF_RESULT_CMD_REJECT_BUSY:
-@@ -262,11 +262,18 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
- 	return rc;
- }
- 
-+/* RMB, PS, 1AH_M20H and 1AH_M60H share the same legacy SMU mailbox registers */
-+static const struct amd_pmf_smu_regs amd_pmf_legacy_smu_regs = {
-+	.msg_reg	= AMD_PMF_REGISTER_MESSAGE,
-+	.resp_reg	= AMD_PMF_REGISTER_RESPONSE,
-+	.arg_reg	= AMD_PMF_REGISTER_ARGUMENT,
+@@ -266,7 +273,19 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+ static const struct amd_pmf_smu_regs amd_pmf_legacy_smu_regs = {
+ 	.msg_reg	= AMD_PMF_REGISTER_MESSAGE,
+ 	.resp_reg	= AMD_PMF_REGISTER_RESPONSE,
+-	.arg_reg	= AMD_PMF_REGISTER_ARGUMENT,
++	.arg_reg	= { AMD_PMF_REGISTER_ARGUMENT, 0, 0 },
 +};
 +
++/* 1AH_M80H uses an extended mailbox with three argument registers */
++static const struct amd_pmf_smu_regs amd_pmf_1ah_m80h_smu_regs = {
++	.msg_reg	= AMD_PMF_REG_MESSAGE_1AH_M80H,
++	.resp_reg	= AMD_PMF_REG_RESPONSE_1AH_M80H,
++	/* arg_reg[0], arg_reg[1] and arg_reg[2] carry low, hi address and size for DRAM metrics */
++	.arg_reg	= {
++		AMD_PMF_REG_ARGUMENT0_1AH_M80H,
++		AMD_PMF_REG_ARGUMENT1_1AH_M80H,
++		AMD_PMF_REG_ARGUMENT2_1AH_M80H,
++	},
+ };
+ 
  static const struct pci_device_id pmf_pci_ids[] = {
--	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RMB) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PS) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M20H_ROOT) },
--	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_1AH_M60H_ROOT) },
-+	{ PCI_DEVICE_DATA(AMD, CPU_ID_RMB,    &amd_pmf_legacy_smu_regs) },
-+	{ PCI_DEVICE_DATA(AMD, CPU_ID_PS,     &amd_pmf_legacy_smu_regs) },
-+	{ PCI_DEVICE_DATA(AMD, 1AH_M20H_ROOT, &amd_pmf_legacy_smu_regs) },
-+	{ PCI_DEVICE_DATA(AMD, 1AH_M60H_ROOT, &amd_pmf_legacy_smu_regs) },
+@@ -274,6 +293,7 @@ static const struct pci_device_id pmf_pci_ids[] = {
+ 	{ PCI_DEVICE_DATA(AMD, CPU_ID_PS,     &amd_pmf_legacy_smu_regs) },
+ 	{ PCI_DEVICE_DATA(AMD, 1AH_M20H_ROOT, &amd_pmf_legacy_smu_regs) },
+ 	{ PCI_DEVICE_DATA(AMD, 1AH_M60H_ROOT, &amd_pmf_legacy_smu_regs) },
++	{ PCI_DEVICE_DATA(AMD, 1AH_M80H_ROOT, &amd_pmf_1ah_m80h_smu_regs) },
  	{ }
  };
  
-@@ -536,6 +543,19 @@ static void amd_pmf_deinit_features(struct amd_pmf_dev *dev)
- 	}
- }
- 
-+static int amd_pmf_get_smu_mb_offset(struct amd_pmf_dev *pdev, struct pci_dev *rdev)
-+{
-+	const struct pci_device_id *id;
-+
-+	id = pci_match_id(pmf_pci_ids, rdev);
-+	if (!id)
-+		return -ENODEV;
-+
-+	pdev->smu_regs = (const struct amd_pmf_smu_regs *)id->driver_data;
-+
-+	return 0;
-+}
-+
- static const struct acpi_device_id amd_pmf_acpi_ids[] = {
- 	{"AMDI0100", 0x100},
- 	{"AMDI0102", 0},
-@@ -624,6 +644,11 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	if (err)
- 		return err;
- 
-+	/* Populate smu_regs with SoC-specific SMU mailbox register offsets */
-+	err = amd_pmf_get_smu_mb_offset(dev, rdev);
-+	if (err)
-+		return err;
-+
- 	apmf_acpi_init(dev);
- 	platform_set_drvdata(pdev, dev);
- 	amd_pmf_dbgfs_register(dev);
+@@ -563,6 +583,7 @@ static const struct acpi_device_id amd_pmf_acpi_ids[] = {
+ 	{"AMDI0105", 0},
+ 	{"AMDI0107", 0},
+ 	{"AMDI0108", 0},
++	{"AMDI0109", 0},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 752fa5dd2267..7a8fd9d399de 100644
+index 7a8fd9d399de..088edfab08f0 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -29,6 +29,10 @@
+@@ -28,6 +28,7 @@
+ #define AMD_CPU_ID_PS                   0x14e8
  #define PCI_DEVICE_ID_AMD_1AH_M20H_ROOT 0x1507
  #define PCI_DEVICE_ID_AMD_1AH_M60H_ROOT 0x1122
++#define PCI_DEVICE_ID_AMD_1AH_M80H_ROOT	0x115b
  
-+/* Aliases required by PCI_DEVICE_DATA() macro naming convention */
-+#define PCI_DEVICE_ID_AMD_CPU_ID_RMB	AMD_CPU_ID_RMB
-+#define PCI_DEVICE_ID_AMD_CPU_ID_PS	AMD_CPU_ID_PS
-+
- struct cookie_header {
- 	u32 sign;
- 	u32 length;
-@@ -392,6 +396,13 @@ struct pmf_cbi_ring_buffer {
- 	int tail;
+ /* Aliases required by PCI_DEVICE_DATA() macro naming convention */
+ #define PCI_DEVICE_ID_AMD_CPU_ID_RMB	AMD_CPU_ID_RMB
+@@ -400,7 +401,7 @@ struct pmf_cbi_ring_buffer {
+ struct amd_pmf_smu_regs {
+ 	u32 msg_reg;
+ 	u32 resp_reg;
+-	u32 arg_reg;
++	u32 arg_reg[3];
  };
  
-+/* SoC-specific SMU mailbox register offsets */
-+struct amd_pmf_smu_regs {
-+	u32 msg_reg;
-+	u32 resp_reg;
-+	u32 arg_reg;
-+};
-+
  struct amd_pmf_dev {
- 	void __iomem *regbase;
- 	void __iomem *smu_virt_addr;
-@@ -444,6 +455,7 @@ struct amd_pmf_dev {
- 	struct mutex cbi_mutex;		     /* Protects ring buffer access */
- 	struct mutex metrics_mutex;
- 	u32 bios_output[BIOS_OUTPUT_MAX];
-+	const struct amd_pmf_smu_regs *smu_regs;
- };
- 
- struct apmf_sps_prop_granular_v2 {
 -- 
 2.34.1
 
