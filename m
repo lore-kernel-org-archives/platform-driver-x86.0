@@ -1,310 +1,374 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD233D0BFB;
-	Fri, 10 Jul 2026 09:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90EF405C5D;
+	Fri, 10 Jul 2026 10:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783676670; cv=none; b=QsA2GBfZEqeqzJ4NKxP+ur+vwg0Dh3sCtaqna1fI44mcbQJH2jYW8NyJNQdTfosjq+jxF+ZeEu6lzw8fRq+ShaE3frGy3ZayoMAMtCJZijzdXG3OmpjkbAj3NuAE82t9Mrk2jURiqxKUL41NsuRSTL2E5eM6W3T0MJKmBPS/br0=
+	t=1783678848; cv=none; b=uKwrRb+2WZKTTCVObvTyphdqo8nCo3/aA1TDKD/RSt+mZKTLCo0IARp7vPH9yUuQsHLNIH3dV/ezR1TXNMi3BHC9+Tl4GQ1d/yDfQS3+pHBxRip9QND9dsuMlg+3ntl7Ds468Kq265pP0dal2q57aQcqTOSrdtl6svYPnlkBbpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783676670; c=relaxed/simple;
-	bh=VrJiJ0hF3NHFWphjODLXdYx3/rEpNG+bDFMvH8W/16Q=;
+	s=arc-20240116; t=1783678848; c=relaxed/simple;
+	bh=FnKM2DhIQzz08qstztrl6T2iFsMlMkEFvcbkwviROQQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=t0Wsmjkgb6EHcuBBYrt9uUoanrCeuP8JlRuqhLBeSAPxuLhDtH/VUlDbW9WaHd4D1O7qxMNJsXdF3lYi1PIo67c11Wpten5kbmNI8ONJNldurnyLK2uk1v8GmbFzHFrcj7EGCagZlsFGUvpseWkltEuzt0llx2vUTvCQJDSJe3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J9lr2TcR; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=GPh98ODfWgIhG+Rt+aFwU8FmmanNQrZ4s2UUIFiqKcKqgq/YYO8qVZCD/OAN3A9snaDw8uisG2Pw26UteeCEIk6bDMA/dpS1yl/qjo+oaD/EtWLAwyqKFDwdb/glpciQb4m0talpkr5BKb6X9+rK7Fz1Cv+QNM/CexhbJP7wRBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HF3nboyl; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J9lr2TcR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HF3nboyl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783676669; x=1815212669;
+  t=1783678847; x=1815214847;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=VrJiJ0hF3NHFWphjODLXdYx3/rEpNG+bDFMvH8W/16Q=;
-  b=J9lr2TcRAokXQk8Nesz6STQGSc6KJzUE6y1ODZsKEGjLI/HkDyyz/6W6
-   sti6QxJkMkqfRrVhXNMFL2QsFCup1WP9mMG0c98o/h/tb4/5HIYWdgUtP
-   aQ+k5e9U2R0/GdOW9Hqj1/1gBv3zdSRKn1k8iGAgIb8+ixFZrnqboFmrv
-   djUYT2xfON29N4+Uzeppoche4ChGUn1d9OzNKrCVbvo1ToOExMhaSA4nG
-   yD1c2BLcDTGDPBLaegHyHuj32UgBIRYts+cNZ/+FAZ52w0Z3Buflp+41o
-   JZNK3kUOBHyabDvygy3Hqf1d5ujsicZ3w3ofMVvg3a7siCOco3gOkBpuB
-   w==;
-X-CSE-ConnectionGUID: eNWYWXR2QGW40f0lMonVwQ==
-X-CSE-MsgGUID: orJvogspQL2vN/LVdZH9EQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="95527234"
+  bh=FnKM2DhIQzz08qstztrl6T2iFsMlMkEFvcbkwviROQQ=;
+  b=HF3nboyl0ZVAuCzoILiC+BJTJZy1iXvx0q3oPJ0OkTwFJ7p7CagHVkco
+   H1bW6usZgh5TotQzCVPS9roKdCbuxe4b5tgejYAgxTG6cvnHYRVwTKB3Z
+   zaXyTlY7JoKk/qS2oQujZ09hwYcsMc5f8CFn7wlBw0hg8MsB/1s/KefYY
+   vAVyxEKeYNTiMBWYkLTbgRndfJCsQZqyaylIbJqOB01hW6z+Py5q1WKCB
+   ipKuni9kF6oS2Xo8TwHt0yZDryk8WwW/lZfq8gAbCbgWHnbFNf9TY1mc/
+   X62xZDH7IjbEbEPY9vm1Fl3X/fFe5gJweMhU0E9tERKtsh42P2kGR2R8G
+   Q==;
+X-CSE-ConnectionGUID: dnbk9xBrSZCmO8gVuTb7nw==
+X-CSE-MsgGUID: MhdgP4uySAycLMHKAbFlVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="95019960"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="95527234"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 02:44:28 -0700
-X-CSE-ConnectionGUID: u4PfLMm/TniP3Y8gg1PJPg==
-X-CSE-MsgGUID: d4dUWs1yQ72LWena5+0tVw==
+   d="scan'208";a="95019960"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:20:46 -0700
+X-CSE-ConnectionGUID: 9oqh9q9tTx6GrrycK2h2TQ==
+X-CSE-MsgGUID: l6enTpMOT+OiG7KypNyj+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="278082568"
+   d="scan'208";a="259161346"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 02:44:26 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:20:42 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 10 Jul 2026 12:44:22 +0300 (EEST)
-To: =?UTF-8?Q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: Add GPU MUX switch support
-In-Reply-To: <20260709220512.20619-1-hello@kursatabayli.dev>
-Message-ID: <30a06947-86a1-8952-0556-c6dc3fe46fc4@linux.intel.com>
-References: <20260709220512.20619-1-hello@kursatabayli.dev>
+Date: Fri, 10 Jul 2026 13:20:38 +0300 (EEST)
+To: Mingyou Chen <qby140326@gmail.com>
+cc: W_Armin@gmx.de, foxido@foxido.dev, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, nika@nikableh.moe, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] platform/x86: bitland-mifs-wmi: Merge the function
+ of redmi-wmi into the bitland driver
+In-Reply-To: <20260709122337.17417-3-qby140326@gmail.com>
+Message-ID: <9ef7475c-f513-61f5-cfaa-5cba932bed02@linux.intel.com>
+References: <20260709122337.17417-1-qby140326@gmail.com> <20260709122337.17417-3-qby140326@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-86146288-1783676662=:1178"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 9 Jul 2026, Mingyou Chen wrote:
 
---8323328-86146288-1783676662=:1178
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The bitland-mifs-wmi and legacy redmi-wmi drivers both attempt to bind
+> to
+> the same WMI GUID (46C93E13-EE9B-4262-8488-563BCA757FEF). This overlap
+> causes a device
+> registration conflict, preventing one of the drivers from loading
+> properly depending on the module initialization order.
+> 
+> Merge the event handling logic from redmi-wmi into
+> bitland-mifs-wmi. By handling both device layouts within a single
+> driver,
+> we eliminate the GUID ownership conflict.
 
-On Fri, 10 Jul 2026, K=C3=BCr=C5=9Fat Abayl=C4=B1 wrote:
+Please reflow the paragraphs to properly fill every line.
 
-> Add support for querying and switching the graphics MUX mode on HP
-> systems via WMI. This introduces the 'gpu_mux_mode' sysfs attribute
-> under the hp-wmi platform device, allowing userspace tools to check
-> and safely switch between available graphics modes (e.g., UMA, Hybrid,
-> Discrete).
->=20
-> The hardware capabilities mask is primarily read using the modern
-> 128-byte System Design Data query. However, to ensure backward
-> compatibility with older models, a fallback mechanism is implemented.
-> By mirroring the behavior of the Windows Omen Gaming Hub software, if
-> the modern query fails but the MUX WMI endpoint (0x52) responds
-> successfully to a read request, the driver defaults to a standard
-> Hybrid + Discrete support mask (0x06).
->=20
-> Signed-off-by: K=C3=BCr=C5=9Fat Abayl=C4=B1 <hello@kursatabayli.dev>
+> Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 > ---
-> Changes in v3:
->  - Rebased for the for-next branch (no functional changes).
->=20
-> Changes in v2:
->  - Replaced hardcoded bitmask with GENMASK(6, 0).
->  - Added specific defines for MUX modes instead of using raw BIT() macros=
-=2E
->  - Initialized arrays with {} instead of { 0 }.
->  - Fixed reverse xmas-tree ordering for local variable declarations.
->  - Removed empty lines between function calls and their return value chec=
-ks.
->  - Split ternary operators into standard if-statements for better readabi=
-lity.
->  - Added missing <linux/array_size.h> include.
->  - Removed unnecessary cast in hp_wmi_set_mux_mode.
-> ---
->  drivers/platform/x86/hp/hp-wmi.c | 137 +++++++++++++++++++++++++++++++
->  1 file changed, 137 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
-p-wmi.c
-> index 34c9b941bdd8..3e50eaf6570c 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -14,6 +14,8 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> =20
->  #include <linux/acpi.h>
-> +#include <linux/array_size.h>
-> +#include <linux/bits.h>
->  #include <linux/cleanup.h>
->  #include <linux/compiler_attributes.h>
->  #include <linux/dmi.h>
-> @@ -58,6 +60,12 @@ enum hp_ec_offsets {
->  #define HP_FAN_SPEED_AUTOMATIC=09 0x00
->  #define HP_POWER_LIMIT_DEFAULT=09 0x00
->  #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-> +#define HPWMI_MUX_MODE_UMA=09=09BIT(0)
-> +#define HPWMI_MUX_MODE_HYBRID=09=09BIT(1)
-> +#define HPWMI_MUX_MODE_DISCRETE=09=09BIT(2)
-> +#define HPWMI_MUX_MODE_OPTIMUS=09=09BIT(3)
-> +#define HPWMI_MUX_MODE_MASK=09=09GENMASK(6, 0)
-> +#define HPWMI_MUX_LEGACY_MASK=09=09(HPWMI_MUX_MODE_HYBRID | HPWMI_MUX_MO=
-DE_DISCRETE)
-> =20
->  #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when=
- zero insize is required
-> =20
-> @@ -381,6 +389,7 @@ enum hp_wmi_commandtype {
->  =09HPWMI_POSTCODEERROR_QUERY=09=3D 0x2a,
->  =09HPWMI_SYSTEM_DEVICE_MODE=09=3D 0x40,
->  =09HPWMI_THERMAL_PROFILE_QUERY=09=3D 0x4c,
-> +=09HPWMI_GRAPHICS_MUX_QUERY=09=3D 0x52,
+>  drivers/platform/x86/bitland-mifs-wmi.c | 203 +++++++++++++++---------
+>  1 file changed, 127 insertions(+), 76 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+> index b0d06a80e89e..cbe118bbe428 100644
+> --- a/drivers/platform/x86/bitland-mifs-wmi.c
+> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+> @@ -34,6 +34,11 @@
+>  #include <linux/units.h>
+>  #include <linux/wmi.h>
+>  
+> +#define BI_HOTKEY_CODE(id, low, high) \
+> +	(((u32)(high) << 24) | ((u32)(low) << 16) | ((u32)(id) << 8) | WMI_EVENT_TYPE_HOTKEY)
+> +
+> +#define AI_KEY_VALUE_MASK    BIT(8)
+> +
+>  #define DRV_NAME		"bitland-mifs-wmi"
+>  #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
+>  #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
+> @@ -74,34 +79,34 @@ enum bitland_mifs_power_profile {
 >  };
-> =20
->  struct victus_power_limits {
-> @@ -1173,12 +1182,139 @@ static int camera_shutter_input_setup(void)
->  =09return err;
->  }
-> =20
-> +static const u8 mux_bitmask_map[] =3D {
-> +=09[0] =3D HPWMI_MUX_MODE_HYBRID,
-> +=09[1] =3D HPWMI_MUX_MODE_DISCRETE,
-> +=09[2] =3D HPWMI_MUX_MODE_OPTIMUS,
-> +=09[3] =3D HPWMI_MUX_MODE_UMA,
-> +};
-> +
-> +static int hp_wmi_get_mux_supported_modes(u8 *supported)
-> +{
-> +=09u8 legacy_buffer[4] =3D {};
-> +=09u8 buffer[128] =3D {};
-> +=09u32 req_packet =3D 0;
-> +=09int ret;
-> +
-> +=09if (!supported)
-> +=09=09return -EINVAL;
-> +
-> +=09/* Try modern BIOS design data query (128-byte buffer) */
-> +=09ret =3D hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
-> +=09=09=09=09   buffer, zero_if_sup(req_packet), sizeof(buffer));
-> +=09if (ret =3D=3D 0) {
-> +=09=09*supported =3D buffer[7];
-> +=09=09return 0;
-> +=09}
-> +
-> +=09/*
-> +=09 * (Fallback): Legacy BIOS behavior based on Omen Gaming Hub.
-> +=09 * If the modern query is not supported, check if the MUX query endpo=
-int
-> +=09 * responds to a read request. If it succeeds, the hardware has MUX
-> +=09 * capability but lacks the mode map, defaulting to Hybrid + Discrete=
-=2E
-> +=09 */
-> +=09ret =3D hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-> +=09=09=09=09   legacy_buffer, sizeof(legacy_buffer), 0);
-> +=09if (ret =3D=3D 0) {
-> +=09=09*supported =3D HPWMI_MUX_LEGACY_MASK;
-> +=09=09return 0;
-> +=09}
-> +
-> +=09if (ret < 0)
-> +=09=09return ret;
-> +=09return -EINVAL;
-> +}
-> +
-> +static int hp_wmi_get_mux_mode(u8 *mode)
-> +{
-> +=09u8 buffer[4] =3D {};
-> +=09int ret;
-> +
-> +=09if (!mode)
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-> +=09=09=09=09   buffer, sizeof(buffer), sizeof(buffer));
-> +
-> +=09if (ret < 0)
+>  
+>  enum bitland_mifs_event_id {
+> -	WMI_EVENT_RESERVED_1		= 1,
+> -	WMI_EVENT_RESERVED_2		= 2,
+> -	WMI_EVENT_RESERVED_3		= 3,
+> -	WMI_EVENT_AIRPLANE_MODE		= 4,
+> -	WMI_EVENT_KBD_BRIGHTNESS	= 5,
+> -	WMI_EVENT_TOUCHPAD_STATE	= 6,
+> -	WMI_EVENT_FNLOCK_STATE		= 7,
+> -	WMI_EVENT_KBD_MODE		= 8,
+> -	WMI_EVENT_CAPSLOCK_STATE	= 9,
+> -	WMI_EVENT_CALCULATOR_START	= 11,
+> -	WMI_EVENT_BROWSER_START		= 12,
+> -	WMI_EVENT_NUMLOCK_STATE		= 13,
+> -	WMI_EVENT_SCROLLLOCK_STATE	= 14,
+> -	WMI_EVENT_PERFORMANCE_PLAN	= 15,
+> -	WMI_EVENT_FN_J			= 16,
+> -	WMI_EVENT_FN_F			= 17,
+> -	WMI_EVENT_FN_0			= 18,
+> -	WMI_EVENT_FN_1			= 19,
+> -	WMI_EVENT_FN_2			= 20,
+> -	WMI_EVENT_FN_3			= 21,
+> -	WMI_EVENT_FN_4			= 22,
+> -	WMI_EVENT_FN_5			= 24,
+> -	WMI_EVENT_REFRESH_RATE		= 25,
+> -	WMI_EVENT_CPU_FAN_SPEED		= 26,
+> -	WMI_EVENT_GPU_FAN_SPEED		= 32,
+> -	WMI_EVENT_WIN_KEY_LOCK		= 33,
+> -	WMI_EVENT_RESERVED_23		= 34,
+> -	WMI_EVENT_OPEN_APP		= 35,
+> +	WMI_EVENT_RESERVED_1        = 1,
+> +	WMI_EVENT_RESERVED_2        = 2,
+> +	WMI_EVENT_RESERVED_3        = 3,
+> +	WMI_EVENT_AIRPLANE_MODE     = 4,
+> +	WMI_EVENT_KBD_BRIGHTNESS    = 5,
+> +	WMI_EVENT_TOUCHPAD_STATE    = 6,
+> +	WMI_EVENT_FNLOCK_STATE      = 7,
+> +	WMI_EVENT_KBD_MODE          = 8,
+> +	WMI_EVENT_CAPSLOCK_STATE    = 9,
+> +	WMI_EVENT_CALCULATOR_START  = 11,
+> +	WMI_EVENT_BROWSER_START     = 12,
+> +	WMI_EVENT_NUMLOCK_STATE     = 13,
+> +	WMI_EVENT_SCROLLLOCK_STATE  = 14,
+> +	WMI_EVENT_PERFORMANCE_PLAN  = 15,
+> +	WMI_EVENT_FN_J              = 16,
+> +	WMI_EVENT_FN_F              = 17,
+> +	WMI_EVENT_FN_0              = 18,
+> +	WMI_EVENT_FN_1              = 19,
+> +	WMI_EVENT_FN_2              = 20,
+> +	WMI_EVENT_FN_3              = 21,
+> +	WMI_EVENT_FN_4              = 22,
+> +	WMI_EVENT_FN_5              = 24,
+> +	WMI_EVENT_REFRESH_RATE      = 25,
+> +	WMI_EVENT_CPU_FAN_SPEED     = 26,
+> +	WMI_EVENT_GPU_FAN_SPEED     = 32,
+> +	WMI_EVENT_WIN_KEY_LOCK      = 33,
+> +	WMI_EVENT_RESERVED_23       = 34,
+> +	WMI_EVENT_OPEN_APP          = 35,
 
-Remove empty line in between call and its error handling.
+Since you're moving these to left, please do it in a separate patch (or 
+not at all). In this patch, only add/change what you have to retaining the 
+existing alignment.
 
-> +=09=09return ret;
-> +=09if (ret > 0)
-> +=09=09return -EINVAL;
-> +
-> +=09/* Mask the highest bit, which might be used as a BIOS status flag */
-> +=09*mode =3D buffer[0] & HPWMI_MUX_MODE_MASK;
-> +
-> +=09return 0;
-> +}
-> +
-> +static int hp_wmi_set_mux_mode(u8 mode)
-> +{
-> +=09u8 buffer[4] =3D { mode, 0x00, 0x00, 0x00 };
-> +=09int ret;
-> +
-> +=09ret =3D hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_WRITE,
-> +=09=09=09=09   buffer, sizeof(buffer), sizeof(buffer));
-> +
-> +=09if (ret < 0)
-
-Ditto.
-
-> +=09=09return ret;
-> +=09if (ret > 0)
-> +=09=09return -EINVAL;
-> +
-> +=09return 0;
-> +}
-> +
-> +static ssize_t gpu_mux_mode_show(struct device *dev,
-> +=09=09=09=09 struct device_attribute *attr,
-> +=09=09=09=09 char *buf)
-> +{
-> +=09u8 mode;
-> +=09int ret;
-> +
-> +=09ret =3D hp_wmi_get_mux_mode(&mode);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09return sysfs_emit(buf, "%u\n", mode);
-> +}
-> +
-> +static ssize_t gpu_mux_mode_store(struct device *dev,
-> +=09=09=09=09  struct device_attribute *attr,
-> +=09=09=09=09  const char *buf,
-> +=09=09=09=09  size_t count)
-> +{
-> +=09u32 requested;
-> +=09u8 supported;
-> +=09int ret;
-> +
-> +=09ret =3D kstrtou32(buf, 0, &requested);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09if (requested >=3D ARRAY_SIZE(mux_bitmask_map))
-
-This is part of error handling for the kstrtou32() so please remove blank=
-=20
-line in between here as well.
-
-> +=09=09return -EINVAL;
-> +
-> +=09ret =3D hp_wmi_get_mux_supported_modes(&supported);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09/* Verify if the requested mode is allowed by the hardware mask */
-> +=09if (!(supported & mux_bitmask_map[requested]))
-> +=09=09return -EOPNOTSUPP;
-> +
-> +=09ret =3D hp_wmi_set_mux_mode(requested);
-> +=09if (ret)
-> +=09=09return ret;
-> +
-> +=09return count;
-> +}
-> +
->  static DEVICE_ATTR_RO(display);
->  static DEVICE_ATTR_RO(hddtemp);
->  static DEVICE_ATTR_RW(als);
->  static DEVICE_ATTR_RO(dock);
->  static DEVICE_ATTR_RO(tablet);
->  static DEVICE_ATTR_RW(postcode);
-> +static DEVICE_ATTR_RW(gpu_mux_mode);
-> =20
->  static struct attribute *hp_wmi_attrs[] =3D {
->  =09&dev_attr_display.attr,
-> @@ -1187,6 +1323,7 @@ static struct attribute *hp_wmi_attrs[] =3D {
->  =09&dev_attr_dock.attr,
->  =09&dev_attr_tablet.attr,
->  =09&dev_attr_postcode.attr,
-> +=09&dev_attr_gpu_mux_mode.attr,
->  =09NULL,
 >  };
->  ATTRIBUTE_GROUPS(hp_wmi);
->=20
+>  
+>  enum bitland_mifs_event_type {
+> @@ -601,18 +606,67 @@ static const struct attribute *const laptop_attrs[] = {
+>  ATTRIBUTE_GROUPS(laptop);
+>  
+>  static const struct key_entry bitland_mifs_wmi_keymap[] = {
+> -	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
+> -	{ KE_KEY, WMI_EVENT_CALCULATOR_START, { KEY_CALC } },
+> -	{ KE_KEY, WMI_EVENT_BROWSER_START, { KEY_WWW } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_J, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_F, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_0, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_1, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_2, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_3, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_4, { KEY_RESERVED } },
+> -	{ KE_IGNORE, WMI_EVENT_FN_5, { KEY_RESERVED } },
+> -	{ KE_END, 0 }
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_OPEN_APP, 1, 0),
+> +	{ KEY_PROG1 } },
 
---=20
+Don't ever do misleading indentations like this please.
+
+You're allowed to use 100 chars so these can fit to single line.
+
+If you still want multilines, you need to indent the members of the struct 
+by one tab (and leave only { on the first line).
+
+> +
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_CALCULATOR_START, 1, 0),
+> +	{ KEY_CALC } },
+> +
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_BROWSER_START, 1, 0),
+> +	{ KEY_WWW } },
+> +
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_J, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_F, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_0, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_1, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_2, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_3, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 0, 0), {} },
+> +
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_2, 0, 0),
+> +	{ KEY_SELECTIVE_SCREENSHOT } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_3, 0, 0),
+> +	{ KEY_ALL_APPLICATIONS } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(0x1b, 0, 0), { KEY_CONFIG } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(0x1b, 1, 0), { KEY_CONFIG } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_RESERVED_1, 1, 0),
+> +	{ KEY_SWITCHVIDEOMODE } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0),
+> +	{ KEY_REFRESH_RATE_TOGGLE } },
+> +
+> +	/* AI button has code for each position */
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 1, 0),
+> +	{ KEY_ASSISTANT } },
+> +
+> +	{ KE_KEY, BI_HOTKEY_CODE(0x19, 1, 0),
+> +	{ KEY_ASSISTANT } },
+> +
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0x80), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0), {} },
+> +
+> +	/* Xiaomi G Command Center */
+> +	{ KE_KEY, BI_HOTKEY_CODE(0x0a, 1, 0), { KEY_VENDOR } },
+> +
+> +	/* OEM preset power mode */
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 1, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 2, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 3, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(0x16, 4, 0), {} },
+> +
+> +	/* Fn Lock state */
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FNLOCK_STATE, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_FNLOCK_STATE, 1, 0), {} },
+> +
+> +	/* Fn+`/1/2/3/4 */
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_F, 1, 0), { KEY_F13 } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_0, 1, 0), { KEY_F14 } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_1, 1, 0), { KEY_F15 } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_2, 1, 0), { KEY_F16 } },
+> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_3, 1, 0), { KEY_F17 } },
+> +
+> +	{ KE_END }
+>  };
+>  
+>  static void bitland_notifier_unregister(void *data)
+> @@ -736,9 +790,12 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+>  	struct bitland_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
+>  	const struct bitland_mifs_event *event = buffer->data;
+>  	struct bitland_fan_notify_data fan_data;
+> +	struct key_entry *entry;
+> +	bool autorelease = true;
+> +	int value = 1;
+> +	u32 payload;
+>  	u8 brightness;
+>  
+> -	/* Validate event type */
+
+Why is this removed? How is it related to the change.
+
+>  	if (event->event_type != WMI_EVENT_TYPE_HOTKEY)
+>  		return;
+>  
+> @@ -752,62 +809,56 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+>  		blocking_notifier_call_chain(&bitland_notifier_list,
+>  					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
+>  					     &brightness);
+> -		break;
+> +		return;
+>  
+>  	case WMI_EVENT_PERFORMANCE_PLAN:
+>  		blocking_notifier_call_chain(&bitland_notifier_list,
+>  					     BITLAND_NOTIFY_PLATFORM_PROFILE,
+>  					     NULL);
+> -		break;
+> -
+> -	case WMI_EVENT_OPEN_APP:
+> -	case WMI_EVENT_CALCULATOR_START:
+> -	case WMI_EVENT_BROWSER_START: {
+> -		guard(mutex)(&data->lock);
+> -		if (!sparse_keymap_report_event(data->input_dev,
+> -						event->event_id, 1, true))
+> -			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
+> -				 event->event_id);
+> -		break;
+> -	}
+> +		return;
+>  
+> -	/*
+> -	 * The device has 3 fans (CPU, GPU, SYS),
+> -	 * but there are only the CPU and GPU fan has events
+> -	 */
+>  	case WMI_EVENT_CPU_FAN_SPEED:
+>  	case WMI_EVENT_GPU_FAN_SPEED:
+> +		/* Redmi refresh rate toggle quirk */
+> +		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED &&
+> +		    event->value_low == 0 && event->value_high == 0) {
+> +			payload = BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0);
+> +			goto report_key;
+> +		}
+> +
+>  		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED)
+>  			fan_data.channel = 0;
+>  		else
+>  			fan_data.channel = 1;
+>  
+> -		/* Fan speed is 16-bit value (value_low is LSB, value_high is MSB) */
+
+Is this related to your change?
+
+>  		fan_data.speed = (event->value_high << 8) | event->value_low;
+>  		blocking_notifier_call_chain(&bitland_notifier_list,
+>  					     BITLAND_NOTIFY_HWMON,
+>  					     &fan_data);
+> -		break;
+> -
+> -	case WMI_EVENT_AIRPLANE_MODE:
+> -	case WMI_EVENT_TOUCHPAD_STATE:
+> -	case WMI_EVENT_FNLOCK_STATE:
+> -	case WMI_EVENT_KBD_MODE:
+> -	case WMI_EVENT_CAPSLOCK_STATE:
+> -	case WMI_EVENT_NUMLOCK_STATE:
+> -	case WMI_EVENT_SCROLLLOCK_STATE:
+> -	case WMI_EVENT_REFRESH_RATE:
+> -	case WMI_EVENT_WIN_KEY_LOCK:
+> -		/* These events are informational or handled by firmware */
+> -		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
+> -			event->event_id, event->value_low);
+> -		break;
+> +		return;
+>  
+>  	default:
+> -		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
+> -			event->event_id, event->value_low);
+>  		break;
+>  	}
+> +
+> +	payload = get_unaligned_le32(buffer->data);
+> +
+> +report_key:
+> +	entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
+> +
+> +	if (!entry) {
+> +		dev_dbg(&wdev->dev, "Unknown WMI hotkey with payload 0x%08x\n", payload);
+> +		return;
+> +	}
+> +
+> +	/* AI key quirk */
+> +	if (entry->keycode == KEY_ASSISTANT) {
+> +		value = !(payload & AI_KEY_VALUE_MASK);
+> +		autorelease = false;
+> +	}
+> +
+> +	guard(mutex)(&data->lock);
+> +	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
+
+How about moving this report_key part into own function so you can avoid 
+adding the label and complicated break/return arrangements.
+
+
+-- 
  i.
 
---8323328-86146288-1783676662=:1178--
