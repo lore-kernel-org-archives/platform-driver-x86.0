@@ -1,63 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D52B43D500;
-	Fri, 10 Jul 2026 17:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA9B367B73;
+	Fri, 10 Jul 2026 17:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783703130; cv=none; b=kwkaenySV5j+q2yq9Kc+9yleHs6U6bpQqCHFkbuDAPsIYP0stqA6t3WerUQqJ1b+uCA5x96Wgm252h0hGdPJRLzABS3mmQB6ay7Vo3RVtH62GxMZvuASdJMjMD3rlj+zEgFTpayJ6HCjmL6Ogbs8pWonQIqbU63ks5y8rxnKdfU=
+	t=1783703445; cv=none; b=R8b+QY3olx2/PgLBwojYffSb93v5EgUBazw0Y+QqVnjmw9p3v4bbFg6KeTUjC9l+Y1WIvghpYfM1JfWarpcsyJgbaXKM52YqTrLMnwmUuwvAd7b4V57Pkd0uZI+neCr0ZEj+zlxAOvU2u6MR9dXptGAaOWS1fQGbiaZVJdcRYaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783703130; c=relaxed/simple;
-	bh=byUzLLRrmUfFQNdNkWkNcKNeBs2DrgCaBJikdGgdHhM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WJcb/5uBAIhdcAtOdjPqblFdo+KrXM5/JMP0K7nVu1jeOCGUy1R4I3hA2FfKkelm2kpQkNDzF/P/4TZj6zYpgLCbwrbZOb7OC/bugRTkmwliY5h9OwQ3sL4kwb8PjZB+HAidM/6G+l5rqI0pLgJMUa5s5PwRac7QS3KVyoiEOBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AIFkP1jh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783703445; c=relaxed/simple;
+	bh=RQ2FwVdhFdIwkCktJTz1+V8HT2zNvERNy13bs/cRqxc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jfyUwb2Fp00WljsWCu2hofn0+UGYEnTQ0uv5dnkUyYX0xl3hPdxZDzqnlFytb+Z5hW8hTWK3cPUEayIsDcaHpoVOFb0x0TPPpfkgSvLjIC+qIPq6lRmHJoZ4HtugfWQjquJOZCEPU9IWpeMs0j/sXw/JiL1OSRxdqnTD7ezBvjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDkAnIoP; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AIFkP1jh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 248341F000E9;
-	Fri, 10 Jul 2026 17:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783703129;
-	bh=P1+a4YmItzVKBNBWFo6ZQgB9w+BzCkzMTnq9vJgl93I=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=AIFkP1jh4uiSC/FQBmiHXUmsUpvdg/d2w2LgwbEhnNTnhHx/vTJLYLZk0KknWZ/4s
-	 Mfl4AgwVDRaqP7Z94qWFWLn1zXJlRbQNsQefC7SYWiML2pxJ4yhQD69tkCPG+NGI0e
-	 4ZsmTCAb7+KWhhaYzma/wiJvpn3aI0dsipUW9ETuiqhr1qG2VW7VJThioVssOpclPn
-	 LI06yTLAOfpRokXGqBfM8hKzDzB0O9jX48aM+oJdJKw98HwzccQcX3fwgVqd+qQUg4
-	 STW/S+LH7RXu0UkE4SVOuhfUh72ayy19nDk+lR7Kpc403Ve3ULw2KnCw69fRfMp+43
-	 tYIDN2hu6Wyag==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 199693924FB2;
-	Fri, 10 Jul 2026 17:05:08 +0000 (UTC)
-Subject: Re: [GIT PULL] platform-drivers-x86 for v7.2-2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <pdx86-pr-20260710142357-1409422743@linux.intel.com>
-References: <pdx86-pr-20260710142357-1409422743@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <pdx86-pr-20260710142357-1409422743@linux.intel.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.2-2
-X-PR-Tracked-Commit-Id: 2726b5758f80a546a4ddeec5019e72035a7fa166
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1f0fe3220fcfe0b71793b84ef78f0c6d9a1f2e08
-Message-Id: <178370310671.779204.12833353647964531251.pr-tracker-bot@kernel.org>
-Date: Fri, 10 Jul 2026 17:05:06 +0000
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDkAnIoP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783703444; x=1815239444;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=RQ2FwVdhFdIwkCktJTz1+V8HT2zNvERNy13bs/cRqxc=;
+  b=YDkAnIoP3aDfIwFz0euPd4orCVcTYqVe5GE433pSAWmEFhBCbH3D4sYR
+   7W44IGrHF3lcBwzWrYjy67p5pp5zQPRrti/+5NetbbDpHSz52xDJM/rgy
+   MWQcqoDGb3RR0kfQkdwVr8Ka9ibKbtXc+F+VZOC3tGlpsrvGdSWvoY6U5
+   D4hyW9NWnRAywtJA+PduLnXiE4nouaPEfuat/3Hi3wpcxAiibS2fpuiFm
+   Lurx+auWButmtg1JPwydB1QAdNX4xPIYov4n7qViKk4K7QgpEeEmzD757
+   0zdUEuFiLfFW/cHaX398jHDgH5OMxGv5FBfcZQ0StYpfh0WiiDb235ubf
+   A==;
+X-CSE-ConnectionGUID: u2CY38trRIa8TRaD5EANOw==
+X-CSE-MsgGUID: Kyu3/3prQoiToHQm+os6SQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84507205"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="84507205"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:43 -0700
+X-CSE-ConnectionGUID: 4kgc9+gbS9q9HH5b7GXjVQ==
+X-CSE-MsgGUID: lH6SnV1qQMC5qQofPN17rA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="255031656"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, Marco Scardovi <scardracs@disroot.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260617155104.10111-1-scardracs@disroot.org>
+References: <20260617155104.10111-1-scardracs@disroot.org>
+Subject: Re: [PATCH] platform/x86: asus-wmi: fix resource leaks on probe
+ failure
+Message-Id: <178370343019.25696.17820613871927104604.b4-ty@b4>
+Date: Fri, 10 Jul 2026 20:10:30 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-The pull request you sent on Fri, 10 Jul 2026 14:23:57 +0300:
+On Wed, 17 Jun 2026 17:51:04 +0200, Marco Scardovi wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.2-2
+> During driver initialization in asus_wmi_add(), various subsystems are
+> registered sequentially. However, the error path labels are out of order
+> relative to the registration sequence.
+> 
+> Specifically:
+> 1. If asus_wmi_custom_fan_curve_init() fails, the driver jumps to
+>    fail_custom_fan_curve. Because this label is placed below fail_sysfs,
+>    it bypasses the cleanup calls for the input device and sysfs groups,
+>    which were successfully registered before, leaking those resources.
+> 2. If asus_screenpad_init() fails, the driver jumps to fail_screenpad.
+>    Because fail_screenpad is placed below fail_backlight, it bypasses the
+>    cleanup calls for backlight and rfkill, leaking those resources.
+> 
+> [...]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1f0fe3220fcfe0b71793b84ef78f0c6d9a1f2e08
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Thank you!
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+The list of commits applied:
+[1/1] platform/x86: asus-wmi: fix resource leaks on probe failure
+      commit: ef3daa2b84a2b8499ce9e2ce1c865dca36d39f95
+
+--
+ i.
+
