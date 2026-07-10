@@ -1,143 +1,112 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F9D353EE0
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 03:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783654425; cv=pass; b=WBJNlHyD4EkEbV1vZy4Juhjney8ieshOsY9nuy0d8mUaX8De1qZOOtZKt0JInFVme0Xj10foR0hjrJ+6eGCgbkkSekjlVB27LygZ8IJL4avA4EGfIubc5A0wxuH6nkTIf09n1ACCkopD3OsXNLkYaxcmleOsv8x395l3KY3vUw4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783654425; c=relaxed/simple;
-	bh=7AF8MvrHg1SOY061DM3pmobhSmgDsEH6yfBsDgTLZWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hN811RpTG+v71HcpE0XuMxeFmab9WOCn7FDl7mDto73Dl4irKjsmBgkf8/j25XgGcNDq+vytANpWgwXgP8iShWGJIb6d0mAvYB3UmBxjO7QP44LdPOr6ju3aKaN0x9zA397DVJ5DIKOjgTvZ86IhKgIBk7M6vMKQ5XeQrdPePCI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dW7YNB7V; arc=pass smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77B635E926
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 03:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783654892; cv=none; b=eZbysqs/rAQz3t4xnGsfV3vnwwfUwQlxjheBIciZCI2nVeMoUy5e9C9xMybAIVJNuiiSqOE//YhJOEJHL3LYguFqpb9ltAWNrjh+BymxuRHuhScRNgnMVXfav5Jia+4b+4vgjtkhM3tV/M6iczNY1VELEAvuIRKslVc886U0GmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783654892; c=relaxed/simple;
+	bh=EOQm+BtL9bOArCL6CyGZBCxGGL0wEijkKEZh4CO61kI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pvr8ADSbpU71G07MS+CTNOGxZDPBRGGQn6r/78sWb8xqfTAkSA7tRQ25nE6moL0FyGw1qjLZJCkICvWFwTp71auHW3RmR7UKdCdc49vH42wbtC6qJfkN32XFNJtigm6QmOs1Owhq8eWhGqzLkNusC+yxHR5vd7iEuVjwoy4QiKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nvU84y+H; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dW7YNB7V"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aeb5829fd5so405743e87.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 20:33:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783654422; cv=none;
-        d=google.com; s=arc-20260327;
-        b=R1sDGaT7yHCu1R4raG324ekoTpVIP3/qLfEugaLXDdvrefW5oUjmddE2kqmaqyBmrz
-         XrsVf8c0nbp7mYH6BtSOCahm8ItnMdqNcgkqD0zDFcpATVxOnTBmVnQv4mVzdV2WkD+n
-         LEeSr1RWXCe/oYjqw7hpxOzeAbU89DiV+3Zg+b/tJZhH1Zw4ig/wKH2VpvfUcGZNjsoL
-         /Q6UwQW2OAgHc8d/ZteeEGK7dqkS7OO3xoob+en+Vjy0UfAmQFpJJZ07iiejyGxi4qgw
-         6/i+M8VihZTGJMmiStKBOFtlcvzG2PcN49PHhjBUIqyJQmSOj+wfDmiHoyWNe+cTcuDo
-         D1IA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
-        fh=VVX+G7EWHPxNBTb1YMo1pRqURfmzTonlNztnSUI8+m8=;
-        b=DP2KAF5RgdpIPMgDofOndyQMUK7fd3Q4+4LnW4UpQCiy55Ib/hrROrA8/SzjAhvoxf
-         yVUpiHjowDxh2Jt53zE19jR7/lN2LkfDqD1CaNWhP20wjlhcTFIqzgvpWDiVD5dRqIfm
-         /2AgR3wAVCHORtT647iQz7Yn6SU/AVSLxmz/JZR1vDFrl020FFp7ctLZz0pidLUfs4Pw
-         hy7zdhiSVoPs1psMZ8MPHAk+6msvHzC5ynoZAu+Dgm/rzV/ngkxrnN3CxVpHrDAFimKe
-         KpMlAOBlcaHYLf1AY4LCponGYe+xjXV4uYqGCboT4hx46kALbG79Iw9PfTJiY0rIKTBZ
-         iolA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nvU84y+H"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8484f229529so314145b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 20:41:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783654422; x=1784259222; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
-        b=dW7YNB7VPCeDIY+UnhxZrxyfiMb/Hb1T8x/I/imgyJ9aYS1vsM1JRU3mCBZKx/q8fJ
-         BYEsHXi2LObewVmuHBMPbF62p2mO3EMxO4yHN8bG94zexEsP1fDKnrGCo6e93nzFSxYQ
-         +/v5HJXPPCJ6Saxy1h1Z1U9XTD5G5rNoUYt7FsfksPzF6kUaDYaTqsG0XUCDxC/lFuNC
-         EAq7ZPvfekPeoBHdFiNZJ2uc+iOCl4EVWfYdhVn/m62oJXXo0WON0Ch4ba/GIYrqVJQm
-         fyXbht7b2ZyeWCACM8dt+/Gcy1ody4QwJpfK2PZvdNhbLzP1HkPzPRElck1uX5N7flBU
-         /Gjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783654422; x=1784259222;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1783654889; x=1784259689; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
-        b=p3jMIBNWwOWRArSchslaZacX9tO1C1SpH9OikoeiKSs/nqIMgUaYYmxaqY3aYPnDjd
-         AuzZboA8ydpNtzJqyICssRf+3kM0SxvKg/7dh+jmjwOWfNdUgyaN64+ibyt+mwT3/d0/
-         Opqqgj9lvnY/6D6QjtDc+Hk/8P2dIocgT9Qk1fdjeexedu72W6Te6GA/xhORR/Rbq2MY
-         YY6ks2aFsRHfKcqbbQ5l9qb8o62iMjIQptkI2M/GMyPHNIfb52f2KAIuwOGAi9bT6J8I
-         818I5OlPTQiYFYC1QH7eVVmnON4vIY7rC82HoJkF8Z3ApDC4adP24nh7sRvPPdkX8yas
-         E0zQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpFGLOhpuVS1aSMZMlEeuUYe5V3ebot7lIlMhdHlxC8vrR8UQecsxG8Sob+Xu+gRJCOyI+PLg2Qt6GshWCpdM0zjzSA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJApKuvA3YrKUIjIpxN8sXNiO/O53u973/kgKKl27z2vLUqeg8
-	FLUpS96pwQZjlZ48AXNu9w+6EkK3Z9Vibyqy4VvWkS0V2RlIkzBOMaUhcQ8BYSpX6PgI30lZlzL
-	C3JJ6sbeI+No3T9snFfl0TdqXF8YaWpg=
-X-Gm-Gg: AfdE7clibVcF73j+t4UNp6rgwDubnissRzYCRq+l+DXNRmCP04+7FXus7HAv39usSIM
-	WkH0iX6BJJKotROu5xHI0a9GE+hfAFemRwJspvMLIAXDNbaQESNQHe72PhVi5spg5to9cfDyghW
-	3QNWm+OWTsO71JnCcG215eYjYZv25sEvf9C/cePGqT8UljM656uEQIYuexKfZ+p8BpGu2eU85d/
-	c7ZlXSEnVLyJ9H/QeqePNm0bnJ7QWHvqqse7Y2Ly6mEXRPcQh5AxD0ggocZ9znClIOYZQ==
-X-Received: by 2002:a05:6512:3ba9:b0:5b0:1a3a:6680 with SMTP id
- 2adb3069b0e04-5b01a3a68b7mr899560e87.30.1783654422023; Thu, 09 Jul 2026
- 20:33:42 -0700 (PDT)
+        bh=ufAmwX9w86dBQWzUCT9wjAY61IKDWbukKM9VbHOOlNA=;
+        b=nvU84y+H813y6tE+Xrsdr6/6Zv4VL8nJl2cYhj2wJlsFSohEM9KJoms8aVYuZxAL39
+         u6v1MfYcHHpaz+cgRTdaEIaXldx1WsQm/3AdoLud4LUDYAxLOchjE+RMlsTYmd4jpBO4
+         xH23t3aQCJzx0XC7gJsM2CFRLxt+L3Z688Ki4BTNos3ggOTzrMoMTyYjNGOgdfr0bc3t
+         TTU6ALJLFxWCfZBA5k+8AZM0sG2FiSEfKKtFRs0A6Wv0hM/uaH31i0u23RpYg69a1N8Z
+         pr6d+/ucZFTQUxjvYCRPX2qfPYNiXB4QDz+plbAvMB2vaDcwl4KkxWq8ICh6teGYWa59
+         7Ubg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783654889; x=1784259689;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ufAmwX9w86dBQWzUCT9wjAY61IKDWbukKM9VbHOOlNA=;
+        b=cQWRe1j1XPftshR1wJwuiTJShHcULwN3u7J73+nZDFCRWQqJqE3TTAdktIhHltbiwa
+         ftILVwXYRgX3/s408PGdGT3QnkJRLCSt8c7bxkVMFTfJDKrqbj5DXWws38Dpm3syj39z
+         FsgwGvjmBoKYrFpXBAGIzxFX4kgC+XUVq39mMZTV8AAlSMRhSWxuHswZFhYN1QOJIpSB
+         DPBgY/ZSDhIUlC7uloWgSwdWaakzDNiRBdBQBBfEd6ytasMQ2yLjcmME/kEdD5nUFPs7
+         yh1EujWyOAbTVis5G1/8drnS/i4e6InvenfyoUtvC6spLteUOS8NE1SAmSmanDKWzgAK
+         rqgQ==
+X-Forwarded-Encrypted: i=1; AHgh+Row6/CPiV4nciIoVVJh1uEY+35SjdKLlfICj74owNd1P9LmetEbVeEJBISqd5PuD1cLmTpWTPUrulDbFnNIFoBsAX7n@vger.kernel.org
+X-Gm-Message-State: AOJu0YxElcdZk0FdQWjqo9vhfm5VO2HdHwREpEHWyOsoesNGZ0eczEqq
+	sL5wOZTRZUHRVbGZYcbuSbe+AcXEuqwrAjGXQZKvvCQ/5jdrW9/oE5Kv
+X-Gm-Gg: AfdE7clEUeA0fmkGVSVCR9Qid3fuL1XldyrFrSH8+jqIlSCmcOmvudlLc7LbOiHIl6U
+	eDgPLcah6YVYn0ILJlSz+cAsw+84lVc9QTaoU36HGLcz+Qf8I3SX4Z//dauX0IBHkA+tD1Xusvv
+	FJ8yxwiZHvbMxIIBE4AhEqRmRzgoRdmLm7wL/LzQoLquNKYKVpl8aAJdyluGnuPgxWn5ZO5mePs
+	f+YItwq4nH9JaoJ2BcqeiXNBqVt/TKJXooQyf/rA5QJJ3zRQ+XyfZ08GgZXY35EP+DK/D5Lc8wj
+	GpHfBlrizHPn3YfkpzXmC5pEAZeu4/5uli76p6s5S9U6B3m5uAymCjGjr+bEE7fScWta0SzRJk9
+	H4HVqVDmjUkuvsBWUvaOd/J/hcn6Zm3UHJq98bTkTVwXJzzNyejWqvuNRSFkUx44=
+X-Received: by 2002:a05:6a00:14d5:b0:847:8f68:e8d7 with SMTP id d2e1a72fcca58-84842eb8303mr9230487b3a.8.1783654888600;
+        Thu, 09 Jul 2026 20:41:28 -0700 (PDT)
+Received: from [28.0.0.1] ([2a13:edc0:18:16f::a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-847f6ddc974sm9701862b3a.60.2026.07.09.20.41.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jul 2026 20:41:28 -0700 (PDT)
+Message-ID: <1cc103de-6646-4203-b7ec-c55094c01f1e@gmail.com>
+Date: Fri, 10 Jul 2026 11:41:24 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260709021504.465792-1-vishnuocv@gmail.com> <178360436568.12613.9417666621877155453.b4-ty@b4>
-In-Reply-To: <178360436568.12613.9417666621877155453.b4-ty@b4>
-From: Vishnu Sankar <vishnuocv@gmail.com>
-Date: Fri, 10 Jul 2026 12:33:04 +0900
-X-Gm-Features: AVVi8CcSE-_ebN-X9wxVOTscT2uv2ixCpRputYr5Fbze1Zb57IGn9QootVXXpXk
-Message-ID: <CABxCQKtC5KnTRHdz7KwABRBJKVeRNXv8w__uYh9Qh1dDeoTOCw@mail.gmail.com>
-Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: corbet@lwn.net, skhan@linuxfoundation.org, derekjohn.clark@gmail.com, 
-	hansg@kernel.org, platform-driver-x86@vger.kernel.org, 
-	mark.pearson@lenovo.com, linux-acpi@vger.kernel.org, 
-	linux-doc@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	vsankar@lenovo.com, Mark Pearson <mpearson-lenovo@squebb.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] platform/x86: bitland-mifs-wmi: Merge the function
+ of redmi-wmi into the bitland driver
+To: Nika Krasnova <nika@nikableh.moe>
+Cc: Armin Wolf <W_Armin@gmx.de>, Gladyshev Ilya <foxido@foxido.dev>,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260709122337.17417-1-qby140326@gmail.com>
+ <20260709122337.17417-3-qby140326@gmail.com>
+ <20260709160749.3178278-1-nika@nikableh.moe>
+Content-Language: en-US
+From: Mingyou Chen <qby140326@gmail.com>
+In-Reply-To: <20260709160749.3178278-1-nika@nikableh.moe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 9, 2026 at 10:39=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Thu, 09 Jul 2026 11:15:04 +0900, Vishnu Sankar wrote:
->
-> > Newer ThinkPad systems expose a USB-C Security (Restricted Mode) featur=
-e.
-> > When active, USB-C data connections are disabled while power delivery i=
-s
-> > preserved. This is useful for kiosk and physically-secured deployments.
-> >
-> > Hardware interface:
-> >
-> > The HKEY device exposes a read-only ACPI method USCS():
-> >
-> > [...]
->
-> Thank you for your contribution, it has been applied to my local
-> review-ilpo-next branch. Note it will show up in the public
-> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-> local branch there, which might take a while.
->
-Thank you for accepting this.
-Understood.
-> FYI [if applicable to your patch], as per Linus' policy change, also
-> fixes are mostly routed through for-next unless the fix is for a
-> commit introduced in the most recent cycle or is clearly a regression
-> fix.
->
-Got it.
-> The list of commits applied:
-> [1/1] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
->       commit: 740f324f8f036607d59c05ab2b2fc22231c9641d
->
-> --
->  i.
->
+On 7/10/26 12:07 AM, Nika Krasnova wrote:
+> WMI_EVENT_FN_4 is missing from this ignore block (the old keymap had
+> it). FN_4 events on Bitland will now fall through to the "Unknown WMI
+> hotkey" path instead of being ignored. Looks like an accidental drop in
+> the reformat.
 
+My device never report the FN_* events
 
---=20
+But them exist in the C# userspace driver. (Might for other bitland devices)
 
-Regards,
+> This remap runs on every machine, not just Redmi. If the firmware emits
+> a CPU fan-speed event of 0 (e.g. the fan spinning down), it gets misread
+> as KEY_REFRESH_RATE_TOGGLE. Could it be gated on DMI rather than on
+> value == 0?
 
-      Vishnu Sankar
+My device never report the fan speed events.
+
+In the current driver, the hwmon status is implemented in a pull model 
+(laptop_hwmon_read) by wmi calls
+
+So I think the unnecessary events could be removed.
+
+--
+
+Mingyou Chen
+
