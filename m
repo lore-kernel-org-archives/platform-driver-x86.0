@@ -1,59 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3324071E2;
-	Fri, 10 Jul 2026 10:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D8240759B;
+	Fri, 10 Jul 2026 10:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783678894; cv=none; b=GUk/qUoTB5dRaeexYazJQkaeTmXmQWoP+5C5SZgdSiDeOHBuRHQ/xoNBnqFA+wrj8MBlqFsxv0F930o1mR/Q72/giB4GrL9vu3r1G5x+x2YtlM6r4GoXeq8fEOFZtH/32SnDAKPFLJLXTML3p2g8+XmOtStmboarXwmo9u6He18=
+	t=1783678899; cv=none; b=iZI3YJHNPSceilPNJljOHYZs9yHFtdK0jH/6jb64jonm0BSArRgbFKLaH0R16m85pynazM0Q2cqdFama+HppPpIXMdBq0CK6F8gzxhCet4v9FKKAi80nBzUT6TqkjhWrT44jUvKeTFpCdbgXMXFl+Eq1nILz+8dlmWZYRiLwfdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783678894; c=relaxed/simple;
-	bh=GPrNpFbiOjVmXmmfvLMOKTrjAc+P7OmoanwObGyOv1c=;
+	s=arc-20240116; t=1783678899; c=relaxed/simple;
+	bh=mossG8/Zt2OjGsBL4d3d2i9tWu4EFIeawtYCp7S15ug=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pxl/wMb6s9OTEffZJEVNZBPk6oq+RYfeSEMHsJPyEUEa7KqC2434erBu9hZ1UW5VaoNaJ9podNAGsqzltBqMGkLIcumPws6ESt/hCHXVfdbpJFAd+MJJMYIahYgw9q0s+v/G/AAsUpjhzVdeqirRQlphpr11fIVpGLdFxIH1INM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ii2f7YPy; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version:Content-Type; b=EfNMt77yWCOrlwqyb3Uo/znSnwpCJmacyGeOgvRy05T8025w0cUmPJ3jguKlqfySLN/qFXZNXx1l+qF4VX2Bl1HFy1qO98Yr2cclVS+JMt+Dgqi3Gb1BQBpsb6ugKiURHgemfQ4Ck3DCPWPaIlGd1Ntl48GxdroKyfx3EkDjW48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjEsKPU2; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ii2f7YPy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjEsKPU2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783678893; x=1815214893;
+  t=1783678898; x=1815214898;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=GPrNpFbiOjVmXmmfvLMOKTrjAc+P7OmoanwObGyOv1c=;
-  b=ii2f7YPyapD49+ODx8PDVUyB6ghKYdLRZldYmfSLnPbj7d/wDj2hAQEP
-   BBRow8zUvOzee6BcOI5jENGweezG7ZPF+L2g+ARVNfyRqsvBevvNCy06I
-   YG6kZrTPCG/caBNKRVSzbkSWAzTS/ZDnN2+Mp8wleg+rG3LbNyRtdobXb
-   G2KvIExQro1e2kzhoyvsJ9PBr62VgbSqqV5PahAFkSOwOeOEU8Tv2TBDd
-   E4oWCzHyHb/cJG/qJW/o/FoAU5WIMmE2Jp/V2FN6UNm3C85J8fNWJxYWL
-   hErFJ6o2LXbD97RiNmx+llJtWi0CTGH4/X5W+MBXWjcGlhiiRb7h1FY6W
-   Q==;
-X-CSE-ConnectionGUID: U953z0GzQFCTfWwjudmSdQ==
-X-CSE-MsgGUID: KUJIWaH2QK2BnbzHOhZ1wA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="95530336"
+  bh=mossG8/Zt2OjGsBL4d3d2i9tWu4EFIeawtYCp7S15ug=;
+  b=mjEsKPU2PhwQMqTVkiWcxDNMf//F6wDDm+HLF4hH1N/87t4nYFFD6sQv
+   UUPB3G+iUzNzw/1wFwCgu0h6FizPDrclblj6IKUA+AjZ1cJ4f52r9AAhv
+   lF9zVHQjmz6jeFvIVJoz9SgZplSAj6LzKOX4fMmO4jR8PQuuLx85Qj6rL
+   hRKbOTzch/8uwYz/31s569YuYVbAQa2d+2eWO8rDEnw9ZmRbyeycnpXO2
+   +vVZnURFeeHNoqri8TCo9+eaV6jYVoVbe1d/e6sJpGvpLSfDHhJg68QQW
+   lFf94kBfP3ywwvDqs5zASaEeF/mLXfXFaWAmQtuxFkeScsGgruKGPdunk
+   A==;
+X-CSE-ConnectionGUID: 3MGAsbKZQVi6iFYisM0WmQ==
+X-CSE-MsgGUID: l80eQ0XZRlSmEiRNoixFqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="83494133"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="95530336"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:21:32 -0700
-X-CSE-ConnectionGUID: cCxUB50zQEapca3VQhfCzw==
-X-CSE-MsgGUID: Xgfw7jIHSQOJpong9v1knA==
+   d="scan'208";a="83494133"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:21:38 -0700
+X-CSE-ConnectionGUID: 13SGA2RDReK9zitHCwayJA==
+X-CSE-MsgGUID: zw2LZc9jT/KhIxE7NoTOTg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="278091907"
+   d="scan'208";a="253731497"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:21:22 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 03:21:34 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, 
- "Mario Limonciello (AMD)" <superm1@kernel.org>, 
- "Yo-Jung Leo Lin (AMD)" <Leo.Lin@amd.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260709-halo-leds-v2-plus-v8-1-b34c64277193@amd.com>
-References: <20260709-halo-leds-v2-plus-v8-1-b34c64277193@amd.com>
-Subject: Re: [PATCH v8] platform/x86/amd: Introduce Halo Box RGB LED driver
-Message-Id: <178367887767.11425.6120037003232674614.b4-ty@b4>
-Date: Fri, 10 Jul 2026 13:21:17 +0300
+To: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, 
+ Linmao Li <lilinmao@kylinos.cn>
+Cc: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ =?utf-8?q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260710094355.186143-1-lilinmao@kylinos.cn>
+References: <20260710094355.186143-1-lilinmao@kylinos.cn>
+Subject: Re: [PATCH v3] platform/x86: asus-wireless: Fail probe when there
+ is no ACPI match
+Message-Id: <178367888853.11425.7384951067202918651.b4-ty@b4>
+Date: Fri, 10 Jul 2026 13:21:28 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,15 +67,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 09 Jul 2026 14:58:18 +0800, Yo-Jung Leo Lin (AMD) wrote:
+On Fri, 10 Jul 2026 17:43:55 +0800, Linmao Li wrote:
 
-> The Halo Box features an RGB LED light bar that can be controlled
-> through WMI methods to display any color combination.
+> Every platform driver can be forced to match a device that does not match
+> its list of device IDs because of device_match_driver_override(), so
+> platform drivers that rely on the existence of a device ACPI companion
+> object need to verify its presence.
 > 
-> The driver exposes the LED through the LED multicolor subsystem,
-> allowing userspace to control RGB values via sysfs:
->   /sys/class/leds/amd_halo:multicolor:status/multi_intensity
->   /sys/class/leds/amd_halo:multicolor:status/brightness
+> asus_wireless_probe() returns success when acpi_match_acpi_device()
+> finds no match, leaving behind an input device that never reports
+> anything because the notify handler is not installed.  Worse, when the
+> driver is force-bound to a device without an ACPI companion, probe
+> still succeeds and stores a NULL companion pointer, which
+> asus_wireless_remove() later passes to acpi_dev_remove_notify_handler(),
+> leading to a NULL pointer dereference on unbind.
 > 
 > [...]
 
@@ -87,8 +95,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/amd: Introduce Halo Box RGB LED driver
-      commit: 4ed460ce13710f7f2cf22e0c9e66c7add13c7a53
+[1/1] platform/x86: asus-wireless: Fail probe when there is no ACPI match
+      commit: 4aefd66ef7822cf7d3f53146dcee0b71021ed2b7
 
 --
  i.
