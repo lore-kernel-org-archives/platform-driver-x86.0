@@ -1,131 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012060.outbound.protection.outlook.com [40.107.209.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C349221D3E4;
-	Fri, 10 Jul 2026 14:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783692595; cv=none; b=rArj6CV8zmGKEd2KEMM3QjBXRXRz48DKrJ5LQPT+K2oAJVNoCWATGUzox2l54Bq/RwEZiXAVRSJgRY6aXrWgg6nYfCNtdZ+6Y9HHVZbRtnL6JKjeSut+iJHmU3AxqrT+9psMipjXaSioywBwPCn5LMQJeiQ49/ONpGUxkavFgHM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783692595; c=relaxed/simple;
-	bh=JMhdtMOLaUHWXqPIXTzBNMeZuvaIhZXyYL/o5sxmfz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ET7QZ2lPgo2Irw7+T/cf+sarPdA+1JVvm1kSlqHZpXOxHYZdeJM0fLrb3B6jf/9IkEAc/28VaBeynhgy2Z9NsVx/7HoZGr6y+ZcarB+p8MLOeaV5svY1SQ2qQE86VhlWiYXqj4+EwGy5Us9aMHcEnZ0qXmixTUNDRkGYp4Sq0Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kgmiif0J; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED95C42B31A;
+	Fri, 10 Jul 2026 14:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783694826; cv=fail; b=ZLt0Pn+XVm+PGh2rAGLgEKFOkYs9rd8h5MQ5OjDRdpVq2RQ5kiJFsE0WEPBaU1b2gAPFbjBDY23cSZSLTNyfdgcYZeqZOVoS9eiowVzkC0A/unKqcns8yJSUb6rmmui5lIaOQ3MeUu/ALKtH0NiuIIEmAVxVizRdzHjkhyCLtfM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783694826; c=relaxed/simple;
+	bh=/5ZfynE84UUCdqMUSnvuZx5RqBvZ5YIYYYUfmS5RFGY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=N2H/YJxLE8gHWClUNpPrve5JsAap2EzD6k+Xz1qGXriiggnG4HrTGh73dU3d/294v/haj+VJceK3dQNt2nuHKG+tT5Nsm6a6JVUWCti5bU9m7VuDZTBrWh+aE+/xRXXG/bn6hZH4vgqtY8uFY4HkqRLWQYdnE3Ucyabl7tzz/ew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k/V9SruX; arc=fail smtp.client-ip=40.107.209.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kgmiif0J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E7411F000E9;
-	Fri, 10 Jul 2026 14:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1783692593;
-	bh=h1xi3IKQjbdJ53JCv2L+jzRlcSu7ApiSTvfpodjcvtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kgmiif0JKq2HSeSzJ7OofwRSlUD94iS3uEV1tKQ943E0Dw5HJBa/NodJ+UjhAlKNH
-	 FGbXFGZ+JEAXY3Dr+tF4ssnWwH8WP2JApHQJxCeAynEVTGBtdWPwSFCDmJ7/fOYkFW
-	 Kncg2+p1T/D/wvPa/3glV7KVkw5wq6sn17XSngyM=
-Date: Fri, 10 Jul 2026 16:09:16 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@opensource.wolfsonmicro.com>,
-	Thierry Reding <thierry.reding@avionic-design.de>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Doug Berger <opendmb@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ulf Hansson <ulfh@kernel.org>, Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Peter Chen <peter.chen@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>, Bin Liu <b-liu@ti.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, brgl@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
-	driver-core@lists.linux.dev, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-	iommu@lists.linux.dev, linux-pm@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-usb@vger.kernel.org, linux-mips@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, mfd@lists.linux.dev,
-	stable@vger.kernel.org, Manuel Ebner <manuelebner@mailbox.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v3 00/20] driver core: count references of the platform
- device's fwnode, not OF node
-Message-ID: <2026071001-limelight-stoppable-d7cb@gregkh>
-References: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k/V9SruX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rxtzq+pURlV+UVSCj++ro3gdeOcPV73FMCRjvwS9RqWi2phc8Qhwf/n5FqFJL3uy+fjAPc5vv3zOV9Dxw/V3gtApB/rkdKVySGzxd8As33wQEcVDq57pGHHbHQSpfTaMQRKGYI/VTrIsnmFyeqgrVz6w7cquqdYAUQyXFXJI2PB2EK1DgMwbyxWrXKuG3AeblmARhsi8b3baMkmFOaOCGuWdGU5ZC47PpEo4ksXvATplMPe5jgLaAYLMHFciilZPt6F1nYqHllzFMEmTepcwW9OyqflT4+6Uz+gOhaMXAURdqY89KwGd44ZpKWLfTZH+w28oSyC7vb+KVbMRA/CFZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/JpaWOpJ2CWw4z4fg0so7cPu9e6dhE56+bh8s52w1J0=;
+ b=sX55T75SNAtPyzGE2/f7/jMVb3Cd2WqgtMktBeLw/t9OMc6qEuYlef/5I/vDaBG2ofiVTSuybWNl30xzwWhIZfSXI8owyIWI2yIzTvvAiWURoUFzQ3lIsor4WVvwPnTdse4TLWbAWES1x5GaAKBuXUILDBmN94rr6yoqE4lEtDDE2abu+FhxyR+7QmHxgBV7fBuvZSUmTjjCwwOUiq+GkC590msU30jncQt7f08muSXl8SDFTG+zpTSlPc5kf5DvOv1X2cQ2IY5XPOtoUVAtYxWDg9GH32MAVsv6V//OUtjC6pUan8RkC9n731auifT9FzSNXCfishg/GqS2EKUphA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/JpaWOpJ2CWw4z4fg0so7cPu9e6dhE56+bh8s52w1J0=;
+ b=k/V9SruX8liUaVHSKNBR9eN0Na14wm8RFMvfx7zLXoDKo00HjasghKwFdHDfztyo9Cru1eZoialEVPbS1dNDMNXJT9GpAG+XYqRicaKpGV5QtgnLOwOi0ZDwwfOWulWCspwmeznQuAC63EuKWY9dZa2SpjHlizoF/0PasW8It5g=
+Received: from BN0PR02CA0022.namprd02.prod.outlook.com (2603:10b6:408:e4::27)
+ by DS0PR12MB7946.namprd12.prod.outlook.com (2603:10b6:8:151::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.17; Fri, 10 Jul
+ 2026 14:46:59 +0000
+Received: from BL6PEPF0001AB71.namprd02.prod.outlook.com
+ (2603:10b6:408:e4:cafe::78) by BN0PR02CA0022.outlook.office365.com
+ (2603:10b6:408:e4::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.14 via Frontend Transport; Fri,
+ 10 Jul 2026 14:46:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF0001AB71.mail.protection.outlook.com (10.167.242.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 14:46:58 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 10 Jul
+ 2026 09:46:49 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v5 0/6] platform/x86/amd/hsmp: Serialize the data plane against socket teardown
+Date: Fri, 10 Jul 2026 20:16:27 +0530
+Message-ID: <20260710144633.879018-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260706-pdev-fwnode-ref-v3-0-1ff028e33779@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB71:EE_|DS0PR12MB7946:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e5f5fcd-1f09-465e-e081-08dede92180c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|82310400026|376014|1800799024|36860700016|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	DldXpbOq+q5EgYOfv3LGZLzawgmUHirI+2icIRuVg8ScNpNzrGmHsjYMA/hy68PlyRg4+eY0RNgA3LTJ4mbZ8guMTLLvKTM5i8xr7CM7gb7g7LsGaQUqGcMaVqBNwOkBwS0rNEgbwndPt/KmJXSBPyJJVTxX4BN6qqAbElD5QV2dVpJooAjTC4gC67L8cqQkewqUWJvC6DBmjO98YmKSxzNfZxHrF9f745eDcLkDtJY0mZzgKMPYblc6raF3W4XAFz+zrQP4PPZvGRzDLsduXu/YjCwPWXTIZTyXIDnsXZJypYhJLf5z1464BprIFGCNKCtLFZtYo+FtYwxz/gyzEnNmplZeMpCHMWD8Ob0dkK4VMG1vmUyd4aJPUXJVl1aKKACKMDjLCQzwQeIbVYIRbyD82UMPSLbC2x6vDM2p2LTpJRnFyLCmFQmKLQ0d/8SOlRcDVrBOqfJ1puYnt0rEwOzrdRf4oaNTlO+e3/N2eKHPgzIL3vFHIvv5LVmBvaQbEo00/3rPyiwRTjxXAGfl8v4XQnYMKh3YaFQdbdewTdIWRERuDalG2TbSmHxga08rdwxS5pd/KKHKdciw61Y8Tzg3ZryEGaHosWb49quiU3EoMtHWxPmAIitQRuNPDXM7tkBdFTddOhjxvvEM+NzAkJ/OGDAhEUepNhnTgJRIL5CpMObw/VaElBhLvNoRKX4EWSvUAPVWtkNwP+JKcSTkYA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(376014)(1800799024)(36860700016)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	qcFkXk00dq/whBQlQdMJY13PC4D05mnQAWOxdQpxrnRrmU6subtN8tYA4FRApzdX0+NgGgQJYJrNyUZJn+KMr1XdQ7GU3WLa09N9IIwZYvaonQPI5WW1zCUvbitCHqfv6+Vem9IskwqDB+jZx1YI8FiMiEZ9O2x+JyaZ9gxMkbTLADJW9XQ/ByeQOfprB3rPIFnXQFH+BmEQ++8fEIES+BNNvwnnQoCcmGu44hDEzTC2+/jeo9pLhIIpLODo+kEOe8Manvlav45vlOa9M+2taIGJFPanpSgdzNa/gaRWYIPoQ9S8yUKtmCM9R4DUbv3EzFVamSBpX0NDUnD+IG8EIhu3mB/yLlYOD67fRSuGLVRrCSkNPn4+PAFEVRyb2AsXNR86JlxR0lAt04Rl7wXFPs5gTee2pxB6fc3ij8OZTRJ65mN6VPgF5rf5dmwTrLge
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 14:46:58.2851
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e5f5fcd-1f09-465e-e081-08dede92180c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB71.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7946
 
-On Mon, Jul 06, 2026 at 02:44:12PM +0200, Bartosz Golaszewski wrote:
-> Platform device core provides helper interfaces for dealing with
-> dynamically created platform devices. Most users should use
-> platform_device_register_full() which encapsulates most of the
-> operations but some modules will want to use the split approach of
-> calling platform_device_alloc() + platform_device_add() separately for
-> various reasons.
-> 
-> With many platform devices now using dynamic software nodes as their
-> primary firmware nodes and with the platform device interface being
-> extended to also better cover the use-cases of secondary software nodes,
-> I believe it makes sense to switch to counting the references of all
-> kinds of firmware nodes.
-> 
-> To that end, I identified all users of platform_device_alloc() that also
-> assign dev.of_node or dev.fwnode manually. I noticed five cases where
-> the references are not increased as they should (patches 1-5 fix these
-> users) and provided three new functions in platform_device.h that now
-> become the preferred interfaces for assigning firmware nodes to dynamic
-> platform devices (in line with platform_device_add_data(),
-> platform_device_add_resources(), etc.). The bulk of the patches in this
-> series are small driver conversions to port all users to going through
-> the new functions that now encapsulate the refcount logic. With that
-> done, the final patch seamlessly switches to counting the references of
-> all firmware node types.
-> 
-> This effort is prerequisite of removing platform_device_release_full()
-> and unifying the release path for dynamic platform devices using
-> unmanaged software nodes.
-> 
-> Merging strategy: The entire series should go through the driver core
-> tree, possibly with an immutable branch provided to solve any potential
-> conflicts though these are rather unlikely.
+This series makes the AMD HSMP driver safe against concurrent probe/remove
+of its per-socket devices and against the lock-free data plane (open
+/dev/hsmp fds and hwmon/sysfs reads) racing socket teardown.
 
-I've added this to the driver-core-testing branch now, thanks!
+The ACPI front-end binds one platform device per socket but shares a single
+socket array and a single /dev/hsmp misc device across them, while the data
+plane issues mailbox messages with no coordination with driver teardown.
+misc_deregister() does not drain already-open fds, so an in-flight message
+can touch a freed socket array or an unmapped mailbox on unbind.
 
-greg k-h
+A single rw_semaphore, hsmp_sock_rwsem, serializes everything: the data
+plane takes it for read so messages run concurrently, and probe and remove
+take it for write to bring sockets up and tear them down while excluding and
+draining the data plane. The fix is built up in small, bisectable steps:
+
+ 1. Introduce hsmp_sock_rwsem and hold it for write across ACPI probe/remove
+    so concurrent per-socket probes cannot race the bring-up handshake or
+    the one-time socket-array allocation.
+ 2. Map the metric table with ioremap() and release it via a devres action,
+    so its lifetime is no longer pinned to a single per-socket devres scope.
+ 3. Serialize the per-socket metric-table fill-and-copy with a mutex.
+ 4. Clear mdev.this_device on deregister (independent hygiene fix that the
+    next patch relies on to track /dev/hsmp registration).
+ 5. Track shared socket ownership with a refcount and a single coordinated
+    release helper, drop the is_probed flag and unparent /dev/hsmp on the
+    ACPI path.
+ 6. Add the read side of hsmp_sock_rwsem to the data plane: split the send
+    into hsmp_send_message_locked() (asserts the rwsem is held) and
+    hsmp_send_message() (wraps it in guard(rwsem_read)). Route the probe-only
+    senders through the locked variant so probe, holding the write lock, does
+    not recurse on the rwsem.
+
+Each patch builds on its own and the series is checkpatch --strict clean.
+
+Changes since v4:
+ - Collapse the two-lock design onto a single rwsem, as suggested on v4.
+   The dedicated ACPI probe mutex is gone; probe and remove take
+   hsmp_sock_rwsem for write instead, so there is one lock rather than a
+   probe mutex nested outside the data-plane rwsem.
+ - Add hsmp_send_message_locked(), the send core that asserts the rwsem is
+   held, and reduce hsmp_send_message() to guard(rwsem_read) around it. The
+   probe-only senders (hsmp_test(), hsmp_cache_proto_ver(),
+   hsmp_get_tbl_dram_base()) call the locked variant, so the probe path can
+   hold the rwsem for write across the whole mailbox handshake without
+   recursing on it.
+ - plat.c takes the rwsem for write around init_platform_device() only, not
+   across devm_add_action_or_reset(), so the release action (which also
+   takes it for write) cannot deadlock if that registration fails.
+ - hsmp_misc_register() now takes the /dev/hsmp parent from its caller: the
+   ACPI driver passes NULL (shared singleton, per-socket devices unbind out
+   of order), while the platform driver keeps parenting to its single
+   device. v4 unparented it unconditionally, which also dropped the parent
+   for the platform path.
+ - Reword the patch 2 changelog and the devres release comment around the
+   "devm-managed" split; minor comment cleanups.
+
+Muralidhara M K (6):
+  platform/x86/amd/hsmp: Serialize ACPI HSMP probe and remove with an
+    rwsem
+  platform/x86/amd/hsmp: Map the metric table with ioremap() and unmap
+    it explicitly
+  platform/x86/amd/hsmp: Serialize per-socket metric table reads with a
+    mutex
+  platform/x86/amd/hsmp: Clear mdev.this_device on deregister
+  platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+    release
+  platform/x86/amd/hsmp: Serialize the data plane against socket
+    teardown
+
+ drivers/platform/x86/amd/hsmp/acpi.c | 137 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 113 ++++++++++++++++++++--
+ drivers/platform/x86/amd/hsmp/hsmp.h |  14 ++-
+ drivers/platform/x86/amd/hsmp/plat.c |  38 +++++++-
+ 4 files changed, 279 insertions(+), 23 deletions(-)
+
+
+base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
+-- 
+2.34.1
+
