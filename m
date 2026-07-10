@@ -1,183 +1,143 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8768579DA
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 03:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783654007; cv=none; b=QBNk36Fvlkaws4efYx28AqUopX289eK1N+rO7ltC2ox3QKVHjOBcVKp47CkPCUZ/L5ipA961EzQ6bWRgJr5iEGEHAHffxd67mpVegok5xfLI9cYLXuO7CwpqQ2oDgFEPxzmEm0vFacBa7L1z3fd1n284hh3DNM55pv2bdH3BbuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783654007; c=relaxed/simple;
-	bh=BDN+fUCj1lFREA8PP0ddjPRptXkyB3o1s0svUIgtxag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZJsN9jXZyhqbl+HcrgentLFw1lchJsMeHxStUPBjbxsSKgpc3CV7iVEeZbKxfq5X/ATZp15n6gnN7RbfKnGEl/6G6o5v0pa9FrulfLVTUuhc74gcX+lcV8GttfIkwGPf4xsBAHJNWknFK+9eNvDA8Mjp6j4s0nWD79/gTwe6Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Imkxej9q; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F9D353EE0
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 03:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783654425; cv=pass; b=WBJNlHyD4EkEbV1vZy4Juhjney8ieshOsY9nuy0d8mUaX8De1qZOOtZKt0JInFVme0Xj10foR0hjrJ+6eGCgbkkSekjlVB27LygZ8IJL4avA4EGfIubc5A0wxuH6nkTIf09n1ACCkopD3OsXNLkYaxcmleOsv8x395l3KY3vUw4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783654425; c=relaxed/simple;
+	bh=7AF8MvrHg1SOY061DM3pmobhSmgDsEH6yfBsDgTLZWg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hN811RpTG+v71HcpE0XuMxeFmab9WOCn7FDl7mDto73Dl4irKjsmBgkf8/j25XgGcNDq+vytANpWgwXgP8iShWGJIb6d0mAvYB3UmBxjO7QP44LdPOr6ju3aKaN0x9zA397DVJ5DIKOjgTvZ86IhKgIBk7M6vMKQ5XeQrdPePCI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dW7YNB7V; arc=pass smtp.client-ip=209.85.167.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imkxej9q"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2c7c61b5292so6998645ad.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 20:26:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dW7YNB7V"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5aeb5829fd5so405743e87.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 20:33:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783654422; cv=none;
+        d=google.com; s=arc-20260327;
+        b=R1sDGaT7yHCu1R4raG324ekoTpVIP3/qLfEugaLXDdvrefW5oUjmddE2kqmaqyBmrz
+         XrsVf8c0nbp7mYH6BtSOCahm8ItnMdqNcgkqD0zDFcpATVxOnTBmVnQv4mVzdV2WkD+n
+         LEeSr1RWXCe/oYjqw7hpxOzeAbU89DiV+3Zg+b/tJZhH1Zw4ig/wKH2VpvfUcGZNjsoL
+         /Q6UwQW2OAgHc8d/ZteeEGK7dqkS7OO3xoob+en+Vjy0UfAmQFpJJZ07iiejyGxi4qgw
+         6/i+M8VihZTGJMmiStKBOFtlcvzG2PcN49PHhjBUIqyJQmSOj+wfDmiHoyWNe+cTcuDo
+         D1IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
+        fh=VVX+G7EWHPxNBTb1YMo1pRqURfmzTonlNztnSUI8+m8=;
+        b=DP2KAF5RgdpIPMgDofOndyQMUK7fd3Q4+4LnW4UpQCiy55Ib/hrROrA8/SzjAhvoxf
+         yVUpiHjowDxh2Jt53zE19jR7/lN2LkfDqD1CaNWhP20wjlhcTFIqzgvpWDiVD5dRqIfm
+         /2AgR3wAVCHORtT647iQz7Yn6SU/AVSLxmz/JZR1vDFrl020FFp7ctLZz0pidLUfs4Pw
+         hy7zdhiSVoPs1psMZ8MPHAk+6msvHzC5ynoZAu+Dgm/rzV/ngkxrnN3CxVpHrDAFimKe
+         KpMlAOBlcaHYLf1AY4LCponGYe+xjXV4uYqGCboT4hx46kALbG79Iw9PfTJiY0rIKTBZ
+         iolA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783654006; x=1784258806; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=epVsqcbd6CBn8G7LYQQV28q7NORHiMRzbIRpbE4ayQA=;
-        b=Imkxej9qd/oHkDYnyBDJgXHFKz+JyahAEmzbrXPQqgLahZElgyWRJTASAcT+Z5I7tR
-         Q6eCsXLnYAU4A1Kf8ocqeQDaWk0hsRPv8Gw8hIL9ZP5g4Ub8+qt2aUjutoOLqsWqgluA
-         B28nXHqsk8roFLO/4vPP4AnfID6U3JmLe3FlBvuUvDHHSqLZTxUclV6hY66YQAAjVwl+
-         l9xJy8ySQ1Fxf2R4fhdORkZelKOH2oQXuFr0MX1CwswC+tQwWEz1Ml6hC1vqsWaXTmOO
-         uZ+TfkUfnzGKyzofs00Aa1gI0+Rl0jMzzmcCY5oCqw1xDNnhs0L8qqizNZ1aJprFJiNS
-         gvyA==
+        d=gmail.com; s=20251104; t=1783654422; x=1784259222; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
+        b=dW7YNB7VPCeDIY+UnhxZrxyfiMb/Hb1T8x/I/imgyJ9aYS1vsM1JRU3mCBZKx/q8fJ
+         BYEsHXi2LObewVmuHBMPbF62p2mO3EMxO4yHN8bG94zexEsP1fDKnrGCo6e93nzFSxYQ
+         +/v5HJXPPCJ6Saxy1h1Z1U9XTD5G5rNoUYt7FsfksPzF6kUaDYaTqsG0XUCDxC/lFuNC
+         EAq7ZPvfekPeoBHdFiNZJ2uc+iOCl4EVWfYdhVn/m62oJXXo0WON0Ch4ba/GIYrqVJQm
+         fyXbht7b2ZyeWCACM8dt+/Gcy1ody4QwJpfK2PZvdNhbLzP1HkPzPRElck1uX5N7flBU
+         /Gjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783654006; x=1784258806;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=epVsqcbd6CBn8G7LYQQV28q7NORHiMRzbIRpbE4ayQA=;
-        b=CygftVrOi2h9e0jSOHRIC/X86agLRvDn1CfIyrBEELPnu+tS3ybaef8kvV5lT6zLCZ
-         kqKFL6Iu2jJr52RKohXgcKERfiTW3x3V0lYXwF85WKSnpp4AgSlQw7o73XdVF2g1l4Q0
-         l++5FGg37ba8gswhzzPjEjyCQEw5GkMy827iEnqoujGqddcBqsU3sJ5BITHdbz2toGh9
-         VYmiP1jD8Md+C2umd1zqA2GH/WnGyXjr5x+jrGwFOOhTWmAcvYLnZ8D4m7QQfscOAQgx
-         NJeJpfuVDevngYaQvPDTHkGM1Bx5xJR1gJhr1xtwZXaxmjg0zzzA7920m5KnwATlBSgq
-         7I4w==
-X-Forwarded-Encrypted: i=1; AHgh+Rr+o9xSvO5LUZT1oplV57jHZ3QuSu8uZG8H5oV6PURTS6rnp+9bQyepiEQjX2QpI1O6odUbo8P78tKxwoQW6s2FPLEC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEWsOr9ryRSylNYry0bII6hcDaRCLmAk+YfoQYXAds10gmE5kh
-	LUzOFr9Egcs+warlPX71KyL+EyNH9GBk7u+Eajo6tPLANWdmMojWXkvo
-X-Gm-Gg: AfdE7cl8MajnqeLvK0rl2RgPG0RFYf8coSIWTAlllaZXBjkpvy37qtPM7MscxLLc8/s
-	f4FjCmYGaR+NrIpyrxYp1BJO2MlZr5534xd7dv/Ja5h2mJNOg0UmZOeKIqMh7k4KrvRQb1fhnbB
-	F6YGGorJb9yOrSS+KnZYp85OcjD9xHUr/XMC/htZdnVgYfr+g/6tNOOWNKg4GPaF/N+xcPNZmZX
-	zm32txzUfJCv44uo2eJeWQxnPDYLD74DHXJ96+d156dtYjYvC2kP3pQM+WHD9XT605H1JWsVg3C
-	+pQ73dmpc1oN9Rcmg5UkOa5ASmcMsE3hhM4lyRaw1z5WyaWUX5O+0oGrZCrr65kV1pMXpHPdMGF
-	z8D2Ml2KycqHDpBoBWNWNPVd1zcdOMtyEcqxjGbsobjV63mXOd4GqXxOGW9Rkp2U=
-X-Received: by 2002:a17:903:3890:b0:2cc:7d4a:3f5a with SMTP id d9443c01a7336-2ccea2e3ea4mr110452385ad.20.1783654005887;
-        Thu, 09 Jul 2026 20:26:45 -0700 (PDT)
-Received: from [28.0.0.1] ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9d3bc1fsm52513975ad.55.2026.07.09.20.26.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Jul 2026 20:26:44 -0700 (PDT)
-Message-ID: <ae9a92b5-5c79-41dd-8735-b2450c544d96@gmail.com>
-Date: Fri, 10 Jul 2026 11:26:39 +0800
+        d=1e100.net; s=20251104; t=1783654422; x=1784259222;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vcKE/1zZV4FR8Gq7PnI9d2/vs9rDhLuQyTr8HFgxCkk=;
+        b=p3jMIBNWwOWRArSchslaZacX9tO1C1SpH9OikoeiKSs/nqIMgUaYYmxaqY3aYPnDjd
+         AuzZboA8ydpNtzJqyICssRf+3kM0SxvKg/7dh+jmjwOWfNdUgyaN64+ibyt+mwT3/d0/
+         Opqqgj9lvnY/6D6QjtDc+Hk/8P2dIocgT9Qk1fdjeexedu72W6Te6GA/xhORR/Rbq2MY
+         YY6ks2aFsRHfKcqbbQ5l9qb8o62iMjIQptkI2M/GMyPHNIfb52f2KAIuwOGAi9bT6J8I
+         818I5OlPTQiYFYC1QH7eVVmnON4vIY7rC82HoJkF8Z3ApDC4adP24nh7sRvPPdkX8yas
+         E0zQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpFGLOhpuVS1aSMZMlEeuUYe5V3ebot7lIlMhdHlxC8vrR8UQecsxG8Sob+Xu+gRJCOyI+PLg2Qt6GshWCpdM0zjzSA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJApKuvA3YrKUIjIpxN8sXNiO/O53u973/kgKKl27z2vLUqeg8
+	FLUpS96pwQZjlZ48AXNu9w+6EkK3Z9Vibyqy4VvWkS0V2RlIkzBOMaUhcQ8BYSpX6PgI30lZlzL
+	C3JJ6sbeI+No3T9snFfl0TdqXF8YaWpg=
+X-Gm-Gg: AfdE7clibVcF73j+t4UNp6rgwDubnissRzYCRq+l+DXNRmCP04+7FXus7HAv39usSIM
+	WkH0iX6BJJKotROu5xHI0a9GE+hfAFemRwJspvMLIAXDNbaQESNQHe72PhVi5spg5to9cfDyghW
+	3QNWm+OWTsO71JnCcG215eYjYZv25sEvf9C/cePGqT8UljM656uEQIYuexKfZ+p8BpGu2eU85d/
+	c7ZlXSEnVLyJ9H/QeqePNm0bnJ7QWHvqqse7Y2Ly6mEXRPcQh5AxD0ggocZ9znClIOYZQ==
+X-Received: by 2002:a05:6512:3ba9:b0:5b0:1a3a:6680 with SMTP id
+ 2adb3069b0e04-5b01a3a68b7mr899560e87.30.1783654422023; Thu, 09 Jul 2026
+ 20:33:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] platform/x86: bitland-mifs-wmi: Hibernation fails with
- error -22 on Xiaomi Redmi Book Pro 14 2025
-To: Nabil Danial <nabildanial.93@gmail.com>
-Cc: W_Armin@gmx.de, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CAJW3z-g3kn+-EFZ+0nEA49B2DYxc8LK639yzYMgcrR-0mF7G4A@mail.gmail.com>
-Content-Language: en-US
-From: cubewhy <qby140326@gmail.com>
-In-Reply-To: <CAJW3z-g3kn+-EFZ+0nEA49B2DYxc8LK639yzYMgcrR-0mF7G4A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260709021504.465792-1-vishnuocv@gmail.com> <178360436568.12613.9417666621877155453.b4-ty@b4>
+In-Reply-To: <178360436568.12613.9417666621877155453.b4-ty@b4>
+From: Vishnu Sankar <vishnuocv@gmail.com>
+Date: Fri, 10 Jul 2026 12:33:04 +0900
+X-Gm-Features: AVVi8CcSE-_ebN-X9wxVOTscT2uv2ixCpRputYr5Fbze1Zb57IGn9QootVXXpXk
+Message-ID: <CABxCQKtC5KnTRHdz7KwABRBJKVeRNXv8w__uYh9Qh1dDeoTOCw@mail.gmail.com>
+Subject: Re: [PATCH v4] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: corbet@lwn.net, skhan@linuxfoundation.org, derekjohn.clark@gmail.com, 
+	hansg@kernel.org, platform-driver-x86@vger.kernel.org, 
+	mark.pearson@lenovo.com, linux-acpi@vger.kernel.org, 
+	linux-doc@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+	vsankar@lenovo.com, Mark Pearson <mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/10/26 9:45 AM, Nabil Danial wrote:
-> Hi everyone,
+On Thu, Jul 9, 2026 at 10:39=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> I am experiencing a hibernation (suspend-to-disk) failure on my laptop
-> since upgrading to kernel 7.1. Hibernation worked without issues on
-> kernel 7.0, but consistently fails now when the newly introduced
-> "bitland-mifs-wmi" module is loaded.
+> On Thu, 09 Jul 2026 11:15:04 +0900, Vishnu Sankar wrote:
 >
-> I notice that both redmi_wmi and bitland_mifs_wmi are currently loaded
-> on my system. I understand there is an active patch series to
-> deprecate redmi_wmi in favor of bitland_mifs_wmi for these platforms.
+> > Newer ThinkPad systems expose a USB-C Security (Restricted Mode) featur=
+e.
+> > When active, USB-C data connections are disabled while power delivery i=
+s
+> > preserved. This is useful for kiosk and physically-secured deployments.
+> >
+> > Hardware interface:
+> >
+> > The HKEY device exposes a read-only ACPI method USCS():
+> >
+> > [...]
 >
-> However, on this specific hardware (Redmi Book Pro 14 2025),
-> bitland_mifs_wmi fails to establish its platform profile during boot,
-> resulting in multiple "Failed to get profile for handler" warnings in
-> dmesg. Consequently, during the PM freeze transition, the suspend
-> callback fails with -EINVAL (-22), which blocks the system freeze
-> phase and aborts hibernation.
+> Thank you for your contribution, it has been applied to my local
+> review-ilpo-next branch. Note it will show up in the public
+> platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+> local branch there, which might take a while.
 >
-> Unloading the "bitland-mifs-wmi" module bypasses this issue and allows
-> hibernation to successfully complete. It seems the new driver's
-> suspend routine might need to be made robust against profile
-> initialization failures, or require a fix to successfully register the
-> platform profile on this hardware variant.
+Thank you for accepting this.
+Understood.
+> FYI [if applicable to your patch], as per Linus' policy change, also
+> fixes are mostly routed through for-next unless the fix is for a
+> commit introduced in the most recent cycle or is clearly a regression
+> fix.
 >
-> Below are the details of the hardware, boot logs, failure logs, and
-> the successful hibernation sequence after removing the module.
+Got it.
+> The list of commits applied:
+> [1/1] platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+>       commit: 740f324f8f036607d59c05ab2b2fc22231c9641d
 >
-> ### System Environment
-> - Hardware: XIAOMI REDMI Book Pro 14 2025
-> - OS: Chimera Linux (musl-based)
-> - Kernel: 7.1.3
+> --
+>  i.
 >
-> ### dmidecode System Information
-> Handle 0x0001, DMI type 1, 27 bytes
-> System Information
->          Manufacturer: XIAOMI
->          Product Name: REDMI Book Pro 14 2025
->          Version:
->          Serial Number: 63081/25U700201
->          UUID: 07082025-fcb3-aacd-4be6-fcb3aacd4bea
->          Wake-up Type: Power Switch
->          SKU Number: TM2411-63081
->          Family: Mi Laptop
->
-> ### dmesg platform_profile warnings on boot
-> [   15.103125] platform_profile: Failed to get profile for handler
-> bitland-mifs-wmi
-> [   15.107027] platform_profile: Failed to get profile for handler
-> bitland-mifs-wmi
-> [   17.109653] platform_profile: Failed to get profile for handler
-> bitland-mifs-wmi
->
-> ### dmesg log when hibernation fails (with bitland-mifs-wmi loaded)
-> [   68.005811] printk: Suspending console(s) (use no_console_suspend to debug)
-> [   68.010452] bitland-mifs-wmi
-> B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: dpm_run_callback():
-> bitland_mifs_wmi_suspend [bitland_mifs_wmi] returns -22
-> [   68.010469] bitland-mifs-wmi
-> B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: failed to freeze: error
-> -22
-> [   68.316796] nvme nvme0: D3 entry latency set to 10 seconds
-> [   68.382440] nvme nvme0: 14/0/0 default/read/poll queues
-> [   68.501502] PM: hibernation: Basic memory bitmaps freed
-> [   68.502346] OOM killer enabled.
-> [   68.502348] Restarting tasks: Starting
-> [   68.503286] Restarting tasks: Done
-> [   68.509265] PM: hibernation: hibernation exit
-> [   68.509644] e-hibernate[1885]: Failed to put system to sleep.
-> System resumed again: Invalid argument
-> [   68.526064] e-hibernate[1885]: e-hibernate: shutdown_or_sleep
-> failed: Invalid argument
->
-> ### Workaround (Unloading module)
-> Running "sudo rmmod bitland_mifs_wmi" allows the system to enter
-> hibernation successfully:
->
-> [  110.414050] PM: hibernation: Basic memory bitmaps freed
-> [  110.415952] OOM killer enabled.
-> [  110.415953] Restarting tasks: Starting
-> [  110.417919] Restarting tasks: Done
-> [  110.420194] PM: hibernation: hibernation exit
-> [  110.420288] e-hibernate[2690]: System returned from sleep operation
-> 'hibernate'.
->
-> ---
->
-> Please let me know if there are any other logs, DSDT tables, or test
-> patches you would like me to try.
->
-> Best regards,
-> Nabil Danial
 
-Already fixed in linux-next
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/platform/x86/bitland-mifs-wmi.c?h=next-20260709&id=d3666875c75eb1bc8090343fa0d6fc8fb7924356
+--=20
 
---
+Regards,
 
-Mingyou Chen
-
+      Vishnu Sankar
