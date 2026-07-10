@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2781E520A;
-	Fri, 10 Jul 2026 17:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7433E43B4BE;
+	Fri, 10 Jul 2026 17:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783703451; cv=none; b=pdvumceWnctXcCLni0/wmiYdfoDDuks9JYfxOgV8mSGT2XHn/bUpNyvtq4I0JLh7qLhqFwO8M89Zy+iqULDiMIeMsNY2Mxb/yBdCEsFV1B2xXoFxtQasNmd+Lfya+ffUDF2+RfARRocy5iZKkLPxm7b8l9Oh7FbFpkjw9rJT6/c=
+	t=1783703460; cv=none; b=Q9DDFdfH8bQmb5V+UJDt4ewk6iw9crlJXroqZSlZxHOmxvVqjlY3xfeRGVLe23zBzP1Wi4xwLubB6nV7DtT/Gr4kJIMCCaPMK9GajlYRZBf2LhHX0bxSv6WGxDz4Ho1CPWtAJ0CqJq72/0mAwOyo0pNCxnZDevdaT0r0z+nkDX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783703451; c=relaxed/simple;
-	bh=PIWhSb+GrWn3z4VQRu3GD8LD+33RmkIdltAdGHRClFA=;
+	s=arc-20240116; t=1783703460; c=relaxed/simple;
+	bh=iMlYPwsK3AM2VK8OokBi8GlQGWIFpFfgWPZSRxFtIPU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=PTMWmcMgoO3v4ej9KRvjnlZ934/0zYWiE62V2uBIYoWkJpWcxWizNWp2EgV/v3w8e88caazQMtEX/GBDz9A00o3vw8eMxnxfac7gV3bNJDksM8uicmhPCKbUQ7Ru5PA3FYaVEFhrUBNCW/9Oi6/u1qJhjryp27l/P98CAo0YMzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HhZmtpaE; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version:Content-Type; b=VUoay1LaEgekm1z2pZO2FrEd+q0DpJjgRfm2sQKU0OVH1FcOgeZ/YVf+iLsY3FR9mpwO5x5EPG3e3/4K9y+oEueV1Q8E8BHir5Bigsyw7mtnOSRChXZP3d1UpcaUXMF5GtFKJxp66h1Mm15CWRD7pfKYhiagbQRLXfmp5uE1tEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e1pLt4xq; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HhZmtpaE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e1pLt4xq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783703450; x=1815239450;
+  t=1783703459; x=1815239459;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=PIWhSb+GrWn3z4VQRu3GD8LD+33RmkIdltAdGHRClFA=;
-  b=HhZmtpaEObpwB4caMJf4+NyoNX4xCVK5vjVoE26oeNYkX3M8sX++iMPH
-   7/b3Q+EnlJezuygDLcWOQMwYnozXDDFLxJqz0GTQJyNYk0gh0TjAk/S4B
-   pM8et5qio0ZzUflimj/ZoeIqaKaTUNu9pk0t3pH8cdRIJk2nPmYR0uIyd
-   A9b2vMhs4uWG0kxb3KwrE1GgoowATMnmzcDuJa/iELkAp2V6E1rprYqPU
-   VCuDDUhSqrWiHteB1dIEauuurjaRsIUOqZI8Pwod6whPOj0kzFCW5XK+4
-   Kx7ojPaENsO4fukrRCHcopckVUITnOLJEx+kpc1k/0D/an4ubho8adAT/
-   w==;
-X-CSE-ConnectionGUID: B9FaPAtySjGiWRYZSHh7CQ==
-X-CSE-MsgGUID: xf/5MsjVRieRa7wAbf6B4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="109953310"
+  bh=iMlYPwsK3AM2VK8OokBi8GlQGWIFpFfgWPZSRxFtIPU=;
+  b=e1pLt4xqUEhF4UN4xkU57+cGWmunKfgLwD/5XPow1JXS6omtWGQ9MBWU
+   dgDYraIKMjdtLyZRDsvhrlPxXIP/gc4bRGTsHdSp8DVo9TeoJdt+KN4fb
+   GAIxEbXeOUT6ww7NUo7eTga6uTPkiWd5YN5wIhYxUiParbNNHj1iG3gcb
+   MF1RP1kQ5m/fTjtjxpzWwbVoPrK2/7QGqYVXb5tkCk+CBluHInkED3av4
+   x5c1tUDF9aDcmMSx73hPolFoI7E/GNRMjieHVUdNkfmwr+afPpl/DaV3o
+   BF6QjzCS83RrNn6chdWUzqiguqOE4pyDOuWBSXv/Vc32Hv2cXbmh7jrt0
+   g==;
+X-CSE-ConnectionGUID: giMf/ijGRnGUUB3Cm8+SXg==
+X-CSE-MsgGUID: aHvgzFNvQcKrjMC9V+n9wQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84507222"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="109953310"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:50 -0700
-X-CSE-ConnectionGUID: cuW8rokXTWSOrjS91q5BQA==
-X-CSE-MsgGUID: OUCkvoydQxCpffzy3Z84hg==
+   d="scan'208";a="84507222"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:59 -0700
+X-CSE-ConnectionGUID: iWo5t4l/TaS0F4okypoi2g==
+X-CSE-MsgGUID: QGtjz+VASTOaI4ewKG4K4g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="250951489"
+   d="scan'208";a="255031702"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:48 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 10:10:56 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, Vadim Pasternak <vadimp@nvidia.com>, 
- Linmao Li <lilinmao@kylinos.cn>
+To: Maximilian Luz <luzmaximilian@gmail.com>, 
+ Hans de Goede <hansg@kernel.org>, Linmao Li <lilinmao@kylinos.cn>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260706012056.524096-1-lilinmao@kylinos.cn>
-References: <20260706012056.524096-1-lilinmao@kylinos.cn>
-Subject: Re: [PATCH] platform/mellanox: mlxbf-pmc: Check ACPI_COMPANION()
- against NULL
-Message-Id: <178370344300.25696.17449610327512423041.b4-ty@b4>
-Date: Fri, 10 Jul 2026 20:10:43 +0300
+In-Reply-To: <20260706012512.524359-1-lilinmao@kylinos.cn>
+References: <20260706012512.524359-1-lilinmao@kylinos.cn>
+Subject: Re: [PATCH 0/2] platform/surface: Check ACPI companion during
+ probe
+Message-Id: <178370344996.25696.12983106316951594460.b4-ty@b4>
+Date: Fri, 10 Jul 2026 20:10:49 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,16 +63,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Mon, 06 Jul 2026 09:20:56 +0800, Linmao Li wrote:
+On Mon, 06 Jul 2026 09:25:10 +0800, Linmao Li wrote:
 
-> Every platform driver can be forced to match a device that doesn't match
-> its list of device IDs because of device_match_driver_override(), so
+> Since every platform driver can be forced to match a device that doesn't
+> match its list of device IDs because of device_match_driver_override(),
 > platform drivers that rely on the existence of a device's ACPI companion
-> object need to verify its presence.
+> object should verify its presence.
 > 
-> mlxbf_pmc_probe() passes the result of ACPI_COMPANION() to
-> acpi_device_hid(), which dereferences it, so force-binding the driver to
-> a device without an ACPI companion leads to a NULL pointer dereference.
+> Commit e4865a56d013 ("ACPI: driver: Check ACPI_COMPANION() against NULL
+> during probe") added such checks to the core ACPI platform drivers, but
+> two drivers under platform/surface dereference the result of
+> ACPI_COMPANION() in their probe functions without checking it, leading
+> to a NULL pointer dereference when force-bound to a device without an
+> ACPI companion.  Add the same checks there.
 > 
 > [...]
 
@@ -87,8 +90,10 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/mellanox: mlxbf-pmc: Check ACPI_COMPANION() against NULL
-      commit: c38cce70adef874c2a7b5132c14d6c221401deff
+[1/2] platform/surface: acpi-notify: Check ACPI companion before use
+      commit: 2b3a5dabe89e330413af403246b648c1890f368f
+[2/2] platform/surface: surfacepro3_button: Check ACPI companion before use
+      (no commit info)
 
 --
  i.
