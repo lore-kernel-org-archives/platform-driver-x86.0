@@ -1,184 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEF8450F2
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 12:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B7A425CF7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 12:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783687069; cv=none; b=ou+MXSQjRFBSHCQJY2cgR9yneiCLoBJ1QN3fKVNDBqC7ThSZJhNDqQfXe+1lHm52295g1ta0/gJsDjm/xNv1MStnceljZ7LtE+31drOsvCpSxhWTSsthH8g68pAJIwT0FWU+5u+h6RqWbVvZ2nLRuDCFSo9K7Dvsjz2d5UeiATg=
+	t=1783688082; cv=none; b=NPygQHq9iz5VticQz0+slnw3MwINekz6G3L5LQAW05jVI9NqgKIjDHRDEhntSPDr1+LhXKeRIUX+scapjuFcdlsfmTmuGpoIaeNX4k4nQr4cZLmr6DgS2mzrnhca8hIGQxZl7tLhNVBF1LA13H6/vTPWd/fIofCzSCpVOMFh67w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783687069; c=relaxed/simple;
-	bh=KvHbRATfXvG0GGlewdw38nCWY6pi1KJUFiFsALk75VI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nsZ0s9efHM7Eb9UhCd/8EVcTz8/K5qnOs6zaVffM6hGkY9NTHuEkvG2k4fK2q3F90NModvMV+rg1E5FWR+70JCYa5Y47UqDe0AUh9Dsqkvo/gC8MV5jij76Si+7KQpBphydRf/P8iwbWuC9hbYbwx7pl1Bqj8BZ++8btuFasYXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RJWhjkDU; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783688082; c=relaxed/simple;
+	bh=SRAj9AK+XuyjUQ94I+jmo2euB8RSF0Q4hWhU4G5s2Uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdZoW+4Nhqtr/KR2NeqSzeDBE7ReW2IqWS3mqhLrtS+3GCdqxMCT81eVk9VnGrIYSfAo6IPyTLCS5+GXgb9JKgPy7J1pvX0kuphF6AIO7yleTHcUunO6Y9YnRSXwPjfBLw0/zdIzRNRLgFy9WE2VLxinbaJRCb7KDj/7QqYddTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v8omxtr/; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RJWhjkDU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783687067; x=1815223067;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=KvHbRATfXvG0GGlewdw38nCWY6pi1KJUFiFsALk75VI=;
-  b=RJWhjkDUtdy+X7zIUtXTUoDncYxtH1gINOQEaCQuh1KcDwt6I6TaRZVU
-   FOwfATkkGIVP1p8IftfyhNLs8DxKDJJjQNzh4Ld3ljpRbWdRdXRiMIHsM
-   IrdUwOhlVNGOXNusH8EYNaDHTgipzASWWkn3vrwVJSBnPf/XYP+J4XTC5
-   4DQpZ6SJfmG/7YFUjpCZlvEnH9xvwTJW/cLWP6/NrBfu5S8P4WEWC4i/O
-   ibq2p967Tjd0HUezDXPzMdfKNigLmtFIEdXASNyzd5ilc1y5SAzMK6tIK
-   XkBLQ3MUqfRjl08gwAmPEG8gPNSajCoSjbp/gK9s76W2Fji9pyQUoF9V6
-   g==;
-X-CSE-ConnectionGUID: mg90r+s/QVSEeYiRj/BUTg==
-X-CSE-MsgGUID: /2JqYMbJRe2PShBiVrVptQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="107182064"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="107182064"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 05:37:47 -0700
-X-CSE-ConnectionGUID: atoM5YNeQRSiUqYkY+srJw==
-X-CSE-MsgGUID: wN1OrVYpRMaECu7yQ2yu1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="252232772"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 05:37:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 10 Jul 2026 15:37:20 +0300 (EEST)
-To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    mario.limonciello@amd.com, Sanket.Goswami@amd.com
-Subject: Re: [PATCH v7 0/7] platform/x86/amd/pmf: Introduce PMF util layer
- with userspace interface
-In-Reply-To: <20260609081044.2416731-1-Shyam-sundar.S-k@amd.com>
-Message-ID: <eaffb334-9077-6d77-bd4f-6078615d1e1d@linux.intel.com>
-References: <20260609081044.2416731-1-Shyam-sundar.S-k@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v8omxtr/"
+Message-ID: <55b49ea7-6f1b-4a6a-af8a-1df66a41d05f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1783688076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SRAj9AK+XuyjUQ94I+jmo2euB8RSF0Q4hWhU4G5s2Uo=;
+	b=v8omxtr/Ppu9yne4JOnzEDHNkKJrRMAO+EbJgDWtMsTE6lZaelNQRpCBXh4dKBGk6KwKHt
+	wnajHCu/bfOTOlQ9rUBnmeiZBzB9ZnCho7jfXDtomu2qX1yWRx+cVJPbVVfEx/Y/EsiIsn
+	0agwWPmr747F7kHGT3G+ntbcZKM5xmk=
+Date: Fri, 10 Jul 2026 14:54:13 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH] platform/x86: asus-wmi: temporarily revert to setting a
+ charge limit
+To: Kate Hsuan <hpa@redhat.com>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+ "Luke D . Jones" <luke@ljones.dev>, Denis Benato <benato.denis96@gmail.com>,
+ Travers Biddle <traversbiddle@gmail.com>
+References: <20260630230940.612532-1-denis.benato@linux.dev>
+ <5db117b7-aad1-437f-a3d4-ba7b29fc68b3@redhat.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <5db117b7-aad1-437f-a3d4-ba7b29fc68b3@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 9 Jun 2026, Shyam Sundar S K wrote:
 
-> This patch series introduces a new util layer for the AMD Platform
-> Management Framework (PMF) driver that exposes a minimal userspace
-> interface for metrics monitoring and feature discovery.
-> 
-> AMD PMF currently manages power and thermal policies internally through
-> Smart PC features, Auto Mode, Policy Builder, Static/Dynamic Power
-> Sliders. However, system designers and OEMs need visibility into PMF
-> metrics and feature status for validation, debugging, and integration
-> with monitoring tools.
-> 
-> This series addresses that need by adding a character device interface
-> that allows controlled access to PMF metrics data while maintaining
-> the driver's existing automated policy management.
-> 
-> The primary use case is integration with userspace tools like AMD
-> SystemDeck, which are widely used by system designers to:
-> - Monitor real-time power and thermal behavior
-> - Validate PMF feature operation during platform bring-up
-> - Debug thermal issues by tracking skin temperature, C-state residency,
->   and socket power metrics
-> - Verify BIOS input/output policy values during Smart PC operation
-> 
-> The util layer reads from the existing Trusted Application (TA) shared
-> memory buffer and cached BIOS output values, adding no new communication
-> overhead with the TA.
-> 
-> v7:
->  - Merge patch 3/8 into patch 1/8
->  - Use _IOWR(..., __u64) to keep ioctl number stable across extensions
->  - Clamp copy size with min_t() instead of -EINVAL for forward compatible
->  - Drop IS_ALIGNED() check and features_from_user read-back block
+On 7/9/26 05:52, Kate Hsuan wrote:
+> Hi Denis,
+>
+> Upower 1.91.3 has been released, including a fix for issue #347 [1]. This release addresses the -ENODATA  encountered when accessing charge limits on Asus laptops, which previously caused UPower and GNOME to incorrectly report charge threshold support as unavailable. The fix updates the udev rule to verify file existence rather than reading the attribute directly. The corresponding commit can be found at:
+>
+> https://gitlab.freedesktop.org/upower/upower/-/commit/83f86c75d28a57854a4b5986cbfb701249a5b6ad
+>
+> [1] https://gitlab.freedesktop.org/upower/upower/-/work_items/347
+>
+> Thank you :) 
+>
+Thank you very much Hsuan!
 
-Hi,
+Ilpo: what do we do now? I am preparing the fixed patch to revert this for stable and will soon send it.
 
-I've now applied this to the review-ilpo-next branch.
+How much do we wait to revert the revert? Or do I simply Cc stable and you don't pick the revert
+in the newer kernel? In any case just say what I need to do and I'll do it.
 
-I had to make two minor corrections while applying (one header added and 
-a spacing change).
+Thanks,
+Denis
 
--- 
- i.
-
-> v6:
->  - Guard misc_deregister() with pmf_dev_handle NULL check
->  - Move amd_pmf_cdev_unregister() to top of amd_pmf_remove()
->  - Fix bios_idx type from u32 to int and add negative-value bounds check
->  - Add missing #include <linux/bits.h> to uapi/linux/amd-pmf.h
->  - Rename amd_pmf_get_pt/lp/sp() to descriptive full names
->  - Add missing enum entries in platform_type and slider_position helpers
->  - Export amd_pmf_get_ta_custom_bios_inputs() for util layer use
->  - Fix stale/incorrect entries in Documentation/ABI
-> 
-> v5:
->  - Add actual ioctl implementation after all struct fields are defined
->  - Move features_supported field just after size for early discovery
->  - Add 8-byte alignment check for user_size to prevent odd-byte copies
->  - Add AMD_PMF prefix to all UAPI enum names to avoid namespace collisions
->  - Use size_t for loop variable instead of int with cast
->  - Use ternary operator for checkbox output
->  - Add empty line before Linux kernel headers
->  - Refactor banner to const char * for cleaner formatting
-> 
-> v4:
->  - Implement single amd_pmf_info structure which can cover all members.
->  - Add amd_pmf prefix for enums/functions within the UAPI header.
->  - Keep test-pmf tool outside of selftests directory.
->  - Include necessary header files.
->  - Address review comments received from Ilpo on v3.
-> 
-> v3:
->  - Stop exporting battery information via util layer.
->  - Optimize the core logic for fetching BIOS outputs.
->  - Update the documentation patch to reflect the current util layer design.
->  - Consolidate amd-pmf-io.h changes into common UAPI header.
->  - Define a single unified uAPI structure and IOCTL.
->  - Address other v2 review remarks [1]
-> 
-> v2:
->  - address remarks from v1
->  - add a new tool that exercises the IOCTLs from PMF interface
-> 
-> [1] https://lore.kernel.org/platform-driver-x86/20251111071010.4179492-1-
->     Shyam-sundar.S-k@amd.com/
-> 
-> Shyam Sundar S K (7):
->   platform/x86/amd/pmf: Add util layer and userspace character device
->     interface
->   platform/x86/amd/pmf: store BIOS output values for user-space metrics
->     via util IOCTL
->   platform/x86/amd/pmf: Store commonly used enums in the header file
->   platform/x86/amd/pmf: Move debug helper functions to UAPI header
->   platform/x86/amd/pmf: Implement util layer ioctl handler
->   platform/x86/amd/pmf: Introduce AMD PMF testing tool for driver
->     metrics and features
->   Documentation/ABI: add testing entry for AMD PMF character device
->     interface
-> 
->  Documentation/ABI/testing/amdpmf-interface    |  73 +++++++
->  MAINTAINERS                                   |   1 +
->  .../amd-sfh-hid/sfh1_1/amd_sfh_interface.c    |  13 +-
->  drivers/platform/x86/amd/pmf/Kconfig          |  10 +
->  drivers/platform/x86/amd/pmf/Makefile         |   2 +
->  drivers/platform/x86/amd/pmf/core.c           |   5 +
->  drivers/platform/x86/amd/pmf/pmf.h            |  34 ++-
->  drivers/platform/x86/amd/pmf/spc.c            |  72 +------
->  drivers/platform/x86/amd/pmf/tee-if.c         |  13 +-
->  drivers/platform/x86/amd/pmf/util.c           | 152 +++++++++++++
->  include/linux/amd-pmf-io.h                    |   9 -
->  include/uapi/linux/amd-pmf.h                  | 204 ++++++++++++++++++
->  tools/platform/x86/amd/Makefile               |  60 ++++++
->  tools/platform/x86/amd/test-pmf.c             | 142 ++++++++++++
->  14 files changed, 690 insertions(+), 100 deletions(-)
->  create mode 100644 Documentation/ABI/testing/amdpmf-interface
->  create mode 100644 drivers/platform/x86/amd/pmf/util.c
->  create mode 100644 include/uapi/linux/amd-pmf.h
->  create mode 100644 tools/platform/x86/amd/Makefile
->  create mode 100644 tools/platform/x86/amd/test-pmf.c
-> 
-> 
+> On 6/30/26 7:09 PM, Denis Benato wrote:
+>> A userspace regression has been observed leaving the battery charging
+>> threshold unconfigured, so while the situation is being sorted revert
+>> the change keeping the infrastructure in place to return to the
+>> preferred behaviour whenever possible.
+>>
+>> Link: https://gitlab.freedesktop.org/upower/upower/-/work_items/347
+>> Closes: https://lore.kernel.org/all/CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com/
+>>
+>> Signed-off-by: Denis Benato <denis.benato@linux.dev>
+>> ---
+>>   drivers/platform/x86/asus-wmi.c | 26 +++++++++++++++++++++++---
+>>   1 file changed, 23 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>> index 3c9ef826551d..e835779b6f5f 100644
+>> --- a/drivers/platform/x86/asus-wmi.c
+>> +++ b/drivers/platform/x86/asus-wmi.c
+>> @@ -1618,6 +1618,8 @@ static DEVICE_ATTR_RW(charge_control_end_threshold);
+>>     static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
+>>   {
+>> +    int ret, rv;
+>> +
+>>       /* The WMI method does not provide a way to specific a battery, so we
+>>        * just assume it is the first battery.
+>>        * Note: On some newer ASUS laptops (Zenbook UM431DA), the primary/first
+>> @@ -1635,12 +1637,30 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
+>>         /* The charge threshold is only reset when the system is power cycled,
+>>        * and we can't read the current threshold, however the majority of
+>> -     * platforms retains it, therefore signal the threshold as unknown
+>> -     * until user explicitly sets it to a new value.
+>> +     * platforms retains it.
+>> +     *
+>> +     * Setting a negative value would signal the threshold as unknown
+>> +     * until user explicitly sets it to a new value, however to avoid
+>> +     * regressing userspace, we initialize it to a value of 100.
+>>        */
+>> -    charge_end_threshold = -1;
+>> +    charge_end_threshold = 100;
+>> +    ret = asus_wmi_set_devstate(ASUS_WMI_DEVID_RSOC, charge_end_threshold, &rv);
+>> +    if (ret) {
+>> +        pr_err("Failed to reset battery charge threshold\n");
+>> +        goto asus_wmi_battery_add_err;
+>> +    }
+>> +
+>> +    if (rv != 1) {
+>> +        pr_err("Error in battery charge threshold reset\n");
+>> +        ret = -EIO;
+>> +        goto asus_wmi_battery_add_err;
+>> +    }
+>>         return 0;
+>> +asus_wmi_battery_add_err:
+>> +    device_remove_file(&battery->dev,
+>> +               &dev_attr_charge_control_end_threshold);
+>> +    return ret;
+>>   }
+>>     static int asus_wmi_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
+>
