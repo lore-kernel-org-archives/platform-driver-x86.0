@@ -1,46 +1,46 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011011.outbound.protection.outlook.com [52.101.52.11])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010066.outbound.protection.outlook.com [52.101.201.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995E2376466
-	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 17:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB2C376BC6
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 17:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.66
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783705378; cv=fail; b=fFNr53O/Og4+7xM76aCAwSFlLjTTM/CxoWN1gR8fZ6TM0SDfnVBAIyRSN4UIA3xyh+lIxu+kTAMbqf3BA3XHX5ihRQ+RyW8qQe4xatE0tIfhvpTd774b9bU8FZu0OvxqbxkKjNFQTk/V3+OvpVI3rRJVj6DxdclWx/0fR28FhQg=
+	t=1783705380; cv=fail; b=hmCRU7FVU4W1mSX0q/yBFCBILmeMuW7iAhjHXOkK/pJgp7PP3WVQAQpRGmCRc6/6wPpi46tBm6JzSCRqejlUP/8KKbJXfObvCg0lu5vKD+QEkFvwpI1Fhr/N+hPv9vF8DyLEHVz9SJX/9CJurS5N7j1atKrc9ynBlRAQJ3Vzjyw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783705378; c=relaxed/simple;
-	bh=GcsibWfIZVX7XQJfh08XCKsuen1cY8XcdLvR0QAkQ3E=;
+	s=arc-20240116; t=1783705380; c=relaxed/simple;
+	bh=kW0QXI00afFfE0M7doogM+1LeSoUOPwicSjuOEIWlXs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YY9ENiDr7DDrzVT0gLQg15HmmPUImxLh3BEaVVEXEzXLAXYqtgYP9vibpU0+DHQDpSnB25tWD7XSOqRKLhMmhOsaGRkWjBrX6inMzKZCm8gcEr7hfr+uPxGf7SBofWJbV9UiJtREZrK94yWnYdI7E5GSWc74oOzCZdU3gJVjZ1o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vxNm4Mqr; arc=fail smtp.client-ip=52.101.52.11
+	 MIME-Version:Content-Type; b=H/JKe/8OnuwO7cGjc5+tEi8kffwbUMwjCXbW2+xKKUbZkhRgoaCu+iytdM6dekkhM4ixuAjs2BwjU2f60tkrlA0N2lyTelffJ6f35muBa/hg2Eo/7H5360SeSzoPxgfAwUGFm1lwNa14GjW9WemO3uwC5iZSo6CVJyjPMhhRAPo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=K8PFp1Dh; arc=fail smtp.client-ip=52.101.201.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vxNm4Mqr"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="K8PFp1Dh"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y+lhDDpgmG4UMgZuVIudGji378TnO1SWvbflBDK/w/bIFEw51dyikt9z1uLAaxO2c0US6ZsFnr9sXbKFHZZKoQ+sKXUjCDkpUiLCaRSJwkPP4hAcQC3m+R9N4HOM5DCTqBejoqF6jE0F71BcNRzVQAUYl2flaIdK4U499A0DrousPz7PTIxwNgRmewG0coH9YDWn9OGLh466iFX2q1yXAcC0XBBh24xbdlXNOqrh/xThe823kWNTdLx1dnhxtktn3+qesQpc+JUWaCiYNrE2ZDkU0NcqJyw7RFSfk9DeB1ylcHEQEGLLpSyEklKcPx101beNgbNYBiJymcmr6zOq8A==
+ b=CNDkxPoUIve85lyDEZPBrSk08FBeT2iqHG8TQyVAEDJhqUtpXTbG9C8xNjKFPauFfOINKykreg0os2EF1eEHxKiL0BBGVd15VWqDf4FEZ37/V7sKxveaODUTjF0Xly5E9m0mvPFCONrKju5pDGmj+llwLasAqPNd/a6YrGWI7CCUq+Exrwag/pEptVc4qU2VZoiCnIh4HQel70pHwaUxQSu2TtSXU2GOQJ9R8pTeNd6LdILfTr2/MvmLkILcA2SKHr/vgHhe8C+e/t2lCgPrjeQa5WIb2Bvjqgzhw/R/Bighr4iV2O6yPHptpaMCsrPUyCdvX0yHhqXcUFKQZBMNLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zVDMfxV//yx6PxOZi3SX1o/9eB/r9vjOBtRfg/TVAuo=;
- b=YT9WlPbDHns6MmvK0AmE95qD/Md/mhcnKIDSKYim/cnZkcX4Vzp1WxDrFQoAYixs7UMAw5ScRRflJQ5ncTLPrfkPRu+KQmOWEj+kJYM8vNKBxqBroQChXGM98Loi+EboRS7Cfo2h5bNMGmWWQ90SSWUDkUBHQAAvWPY02zAkQcWCgSnDe5LGBF4w70rZ9lBFhsLpoCF0BT3y1ISBYvpOAVvSnTBWHlsqURFkOuj4rWQMn+r+khqniDvO+WqthQUXnFibsk4caznsBQdIq5BpMPLT3Uqvz8cnLz11sBNFa9zvW/SjU4Kf3Wp7PezWHL+PWOsuDwi3IsqpwPFn+Adaqw==
+ bh=K7Rncmtqp1R00ciNuOHmLHLnnxY3RSQ+8iMWnfw0vQE=;
+ b=hzvWKIBXcnBTmhY3UKPeC/wgmngBw5PuTmbJ127+7KkU9qRRnBXWYGcvzK93sHMYZas3wsoBXR4p88GVlgBgX7vv2wCyu4q+HKUzZqZabQT0galg5ahQ1q5qoAUN/yIqD3T54rgZqQL+W86JfcMKJ4tLizBJ8zb/MyMTp2qCo38L9hw7H9edNxKiR2vOaFGMybQfleqBosLojkCBhGKjbaDbxc+xfKOMYVBn2txZTnJwu/taBzQbEVck0CB7cAcIRpocez7lfmWLcBNn5qpseY7DQIe4xoHb9UCcXHmu+3gAT/9UEwnAqYyKG13IWwC8OOCpqWqC+acDubGtOtoBEg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVDMfxV//yx6PxOZi3SX1o/9eB/r9vjOBtRfg/TVAuo=;
- b=vxNm4MqrNqUtzA3KPkZv0tQHLrFIh2fm5/vfqM7Ybp4jZGP7x0tYRG8+rutKAh45gvMaCM9VLsSiib/mGaFBhMXhpX0saKiD6ksee/Irhv+RDlkha/44xQuw8V3V5Vu5J36WbQ+oPA2QGlNygkWzeBBf40twOd4TjBEddbyXDWg=
-Received: from SJ0PR03CA0107.namprd03.prod.outlook.com (2603:10b6:a03:333::22)
- by SJ2PR12MB8944.namprd12.prod.outlook.com (2603:10b6:a03:53e::5) with
+ bh=K7Rncmtqp1R00ciNuOHmLHLnnxY3RSQ+8iMWnfw0vQE=;
+ b=K8PFp1Dh0SJt/aT0e/f4fIPfAJ3GbbpxNTpWIVnqf8vMcyaK+bE5cP87YD6xDuGGpiD6u3g4nTTgZGk9NGVWvbB6Qkg2SuI1rdZXgh5nfGNE6UPYM9OSXTRX6+Bez+gen2CoAk/w9GcoPmh5r1sJmwRrFnShEaGfdHENVbiJ3Qo=
+Received: from SJ0PR05CA0128.namprd05.prod.outlook.com (2603:10b6:a03:33d::13)
+ by CY5PR12MB6275.namprd12.prod.outlook.com (2603:10b6:930:20::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Fri, 10 Jul
- 2026 17:42:45 +0000
-Received: from SJ1PEPF000026C7.namprd04.prod.outlook.com
- (2603:10b6:a03:333:cafe::7b) by SJ0PR03CA0107.outlook.office365.com
- (2603:10b6:a03:333::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.10 via Frontend Transport; Fri,
- 10 Jul 2026 17:42:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.18; Fri, 10 Jul
+ 2026 17:42:49 +0000
+Received: from SJ1PEPF000026C5.namprd04.prod.outlook.com
+ (2603:10b6:a03:33d:cafe::90) by SJ0PR05CA0128.outlook.office365.com
+ (2603:10b6:a03:33d::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.223.3 via Frontend Transport; Fri, 10
+ Jul 2026 17:42:49 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,20 +48,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF000026C7.mail.protection.outlook.com (10.167.244.104) with Microsoft
+ SJ1PEPF000026C5.mail.protection.outlook.com (10.167.244.102) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 17:42:45 +0000
+ 15.21.181.6 via Frontend Transport; Fri, 10 Jul 2026 17:42:49 +0000
 Received: from airavat.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 10 Jul
- 2026 12:42:42 -0500
+ 2026 12:42:46 -0500
 From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <Patil.Reddy@amd.com>,
 	<mario.limonciello@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 3/5] platform/x86/amd/pmf: Move metrics code to dedicated file
-Date: Fri, 10 Jul 2026 23:12:17 +0530
-Message-ID: <20260710174219.2522269-4-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 5/5] platform/x86/amd/pmf: Add 1AH_M80H metrics table and NPU metrics support
+Date: Fri, 10 Jul 2026 23:12:19 +0530
+Message-ID: <20260710174219.2522269-6-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260710174219.2522269-1-Shyam-sundar.S-k@amd.com>
 References: <20260710174219.2522269-1-Shyam-sundar.S-k@amd.com>
@@ -77,462 +77,589 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C7:EE_|SJ2PR12MB8944:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a78a04f-ed92-48ee-a5fe-08dedeaaa6a9
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000026C5:EE_|CY5PR12MB6275:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1abd1996-ec11-4180-00e0-08dedeaaa8f7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|82310400026|23010399003|1800799024|376014|3023799007|22082099003|18002099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|376014|1800799024|36860700016|23010399003|82310400026|5023799004|56012099006|11063799006|6133799003|3023799007|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	ndQ57NFdH4u+drhI7a6/0gtEE0g2tPIvA7bstGZ8zrLdtMj6oQAqvwDk21wVMscXB3E6KSkqzwGQwJ4p/CkyV5AeZpE/1JRPcOw93oSwFATRYMCWDmmowqJCWcm6y71EBKIWu7C+/Qelc2pZoOALVnnXEIPA+NlpFJEFozIgiIcS/Q9Jl75DvWZI2Kj09uQZwv2U/yLuFS+DDM80tHOK1WBPT1LY6cx5CW4tK+Vpc8jhAfdMcI3SQt9lRak9m9scISJ4PBA0FU3CVVGlwMflxutMvBJjkcSfU3PrEryPRfARb5pVgj1zu0qvCSBADM+pIBduyGjBmc1JjQh144FOSQ/EEAtMBXlz9ubFJJukRK3uOvj+vUO50e1J4eyjI75KwPlyLiZGoVoumuQI6faMVoyhZ3n3sJQw93QF1QJCG1KQ99Dqy/XIT7TLfFvOTMMRV3kW7tQbz0mqVg6RHAh5PTT+rxHsqW7poGLICsVcRnuyHfEijgovHEwe7MKbdKmB+6Q/FMYYOEisTTVPiz4YH3tkLy0V7oDsQd7U9CmkNZL9JTBYjMnoxsTgJBOnUa4rDc/jSghUSQho3DKzoQuETm52QbjRDjkyY/M3hodBSLmz+zKLtv+hJr7U7WpHXOCIivpATuyAbu2RozpYRS6xcQmJ4NKePeQ2qpvm/WNq4JoXMZ2QDTWqSsdIoF8PeF0DQubi2J1wHJCvPobWIsaq7A==
+	Vo/3uxqBpepZePKL9lN+J0unppQHar9tPobTdJH/ys+1bySOcFB1sP5xLqIvQiXKZvZwvE6MypnU4cIx3QBTtiy/dsflS4I/HRsUYkYy9sI0VhKc+poaLM3Wk1TyOVjVf0iU5RPV7MEsAB7davcQd32CJlHZVFvBloeB4aWQCvDtLUpeSw8Ju3QMXiJeRNL4L97WAPpXr+0vRcdSYNoa5GLwgsDFGWXF3qBQCyLT+JEGezOimlmnaVnMBZ1rT/7B4EedClgHrrBOdE0v+FYI0zo/LCaQawAH4lbASymIum8UxEP06zjuhr1SFMt8ov5UPFw9QLc32B/16r9B2Y8WRsy72/Rz7Uom6tzhlKg2jlqGrPdRmkWNzyqrE92Ln13Vb/8vLLAvtvrre3uiINSkFKiYauqKYtCCTMjV3xue6P43J3vzZ9c9suD9LpmrJDyJdtk021Jsloq4J2ueg8FpqNfviHdQ8mShZYJSYLvtCZTTQ95fEUVJggPJVM1FMUEhZOJzFREQlDy8Ola3QIH90reNBJa1pSAPLlzrrXKlc98B+Ufe8g2InLlChPI5QCPCo+zzTDnCIQio4bX27qYMFUqSxF652Vh3qtNxfSgXHdSzV7O8BsK6sfuwEUUwgsBlfjPbyisdWVt368sXqNQb4ulL1dqAvY+ubzRkxgXIw1lCWRF/mizYUq4+o4db4v6A/JUxnAEyM63dAVKKEpusMw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(82310400026)(23010399003)(1800799024)(376014)(3023799007)(22082099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700016)(23010399003)(82310400026)(5023799004)(56012099006)(11063799006)(6133799003)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	DV12T1qSu9WX6+iByzuHHf3MvmxvlJAMcCA16afByzNiU9GWKXAfCo/8oVDp38pQJEk2Pin9qjJkJFkppj0BN792Zeip5PUQtn95snxiXOvn//J5f0F/lxxZ35FMDj4VgusoJNgldBZ+g19Lct0IWrWKNIf19JrMLr/ngQuL8fxc/9h4k3DA4ztY5VjpREAh9ZQNlUW86rSbG6E1w37ulgQFMNOjSFaGD+bKGjBhZJQxjl5ScYhUZpW04745Q6fyMZ1+4EDoSHN95JhKPXkDpwpZWfMwtufcrYqI6LveV8BnXom2m8oVnn0bD5bF5MvAyjQHpoenQhSpm6RfKGH9fplW9tyDdCS9l5o5QP6B/CyTgpnC1W1D/8Tx0IYWWFaQBqUS9rhiqW1GQA2iJexOKZBY8e/63+VxHPvgIB/RErOpFF2Tt9M1NOzaGGuGToh7
+	buKD6u+8Yz9TbtzuChNUhe2C1GpZnXfyQnDGmp4A2c7V4j8caRuCh8Hqxjmo6Wgc8ZjKP92cYNc1WC6hdziT7foZxcwJIwpJRsYj3Jn12ZkGF3cP9oNgi1ymfWwovUL5vBTOztseJnJUTGpaS7KlF/4w3hRHEGRMRSwsXPL6XnRg8Bvokwpf8VIDXKbbcvH/d0FN2BYQXt4+WUNTe3ccbQMc5N2/l6Fsi/trKoDsXCzHAorLadcC0qfw0QnWHdMc/910qvCBizGVvc9AF1jthnlCb2WKtt/E8B31LbAIH0xZLBrbe4y/un+uENhiNE9scdC5LLxrcNCaviqRe2doC8W6wiOo5/o3xzET1dCGO3cK9RsR3eokRVD5g0chFrIw6TbQvxzk2oBEmrQxb16f1bpcOc7KL4TTblOK4dgzidLGgEnlsEiTkZSHCkwf1B6y
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 17:42:45.3860
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2026 17:42:49.2477
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a78a04f-ed92-48ee-a5fe-08dedeaaa6a9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1abd1996-ec11-4180-00e0-08dedeaaa8f7
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000026C7.namprd04.prod.outlook.com
+	SJ1PEPF000026C5.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8944
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6275
 
-Refactor metrics related code from core.c into a new metrics.c file
-to improve code organization and maintainability. The metrics
-functionality is evolving with new platform support, warranting a
-separate file.
+The 1AH_M80H platform introduces a new firmware managed DRAM based
+metrics table (amd_pmf_metrics_v3) covering the full platform telemetry
+including power, voltages, frequencies, throttlers and activity monitors.
 
-No functional changes.
+As a first consumer of this table, add NPU metrics retrieval. Unlike
+earlier platforms that use a transfer table command, 1AH_M80H metrics
+are accumulator based and require delta calculation between consecutive
+samples.
+
+Extend amd_pmf_npu_metrics with npu_temp, populated from the
+npu_temp_acc accumulator field available on 1AH_M80H.
+
+Key changes include:
+ - Add DRAM based metrics table support for the 1AH_M80H platform
+ - Introduce amd_pmf_get_tbl_dram_addr() to obtain the DRAM address
+ - Add amd_pmf_get_metrics_table_log_sample() to trigger metrics updates
+ - Add struct amd_pmf_metrics_v3 for the 1AH_M80H metrics format
+ - Implement accumulator based delta calculation for metrics
+ - Introduce amd_pmf_calculate_acc_npu_metrics() to get NPU metrics
 
 Co-developed-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Patil Rajesh Reddy <Patil.Reddy@amd.com>
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd/pmf/Makefile  |   2 +-
- drivers/platform/x86/amd/pmf/core.c    | 156 +--------------------
- drivers/platform/x86/amd/pmf/metrics.c | 179 +++++++++++++++++++++++++
- drivers/platform/x86/amd/pmf/pmf.h     |   3 +
- 4 files changed, 185 insertions(+), 155 deletions(-)
- create mode 100644 drivers/platform/x86/amd/pmf/metrics.c
+ drivers/platform/x86/amd/pmf/core.c    |  25 +++
+ drivers/platform/x86/amd/pmf/metrics.c | 142 ++++++++++++++++
+ drivers/platform/x86/amd/pmf/pmf.h     | 218 +++++++++++++++++++++++++
+ include/linux/amd-pmf-io.h             |   2 +
+ 4 files changed, 387 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmf/Makefile b/drivers/platform/x86/amd/pmf/Makefile
-index bf7aad80b9e9..8cac51182433 100644
---- a/drivers/platform/x86/amd/pmf/Makefile
-+++ b/drivers/platform/x86/amd/pmf/Makefile
-@@ -7,6 +7,6 @@
- obj-$(CONFIG_AMD_PMF)		+= amd-pmf.o
- amd-pmf-y 			:= core.o acpi.o sps.o \
- 				   auto-mode.o cnqf.o \
--				   tee-if.o spc.o
-+				   tee-if.o spc.o metrics.o
- # Build util.c only when AMD_PMF_UTIL_SUPPORT is enabled
- amd-pmf-$(CONFIG_AMD_PMF_UTIL_SUPPORT) += util.o
 diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index 7c5a1ec3d7fc..c0a21808b867 100644
+index c0a21808b867..5d744eb71418 100644
 --- a/drivers/platform/x86/amd/pmf/core.c
 +++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -55,7 +55,7 @@
- #define DELAY_MAX_US	3000
- 
- /* override Metrics Table sample size time (in ms) */
--static int metrics_table_loop_ms = 1000;
-+int metrics_table_loop_ms = 1000;
- module_param(metrics_table_loop_ms, int, 0644);
- MODULE_PARM_DESC(metrics_table_loop_ms, "Metrics Table sample size time (default = 1000ms)");
- 
-@@ -68,8 +68,6 @@ static bool smart_pc_support = true;
+@@ -68,6 +68,12 @@ static bool smart_pc_support = true;
  module_param(smart_pc_support, bool, 0444);
  MODULE_PARM_DESC(smart_pc_support, "Smart PC Support (default = true)");
  
--static struct device *pmf_device;
--
++/* Helper to check if platform is 1AH_M80H */
++bool is_amd_pmf_1ah_m80h(struct amd_pmf_dev *pdev)
++{
++	return pdev->cpu_id == PCI_DEVICE_ID_AMD_1AH_M80H_ROOT;
++}
++
  static int amd_pmf_pwr_src_notify_call(struct notifier_block *nb, unsigned long event, void *data)
  {
  	struct amd_pmf_dev *pmf = container_of(nb, struct amd_pmf_dev, pwr_src_notifier);
-@@ -138,37 +136,6 @@ int amd_pmf_get_power_source(void)
- 		return POWER_SOURCE_DC;
- }
+@@ -155,6 +161,12 @@ static void __maybe_unused amd_pmf_dump_registers(struct amd_pmf_dev *dev)
  
--static void amd_pmf_get_metrics(struct work_struct *work)
--{
--	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, work_buffer.work);
--	ktime_t time_elapsed_ms;
--	int socket_power;
--
--	guard(mutex)(&dev->update_mutex);
--
--	/* Transfer table contents */
--	memset(dev->buf, 0, sizeof(dev->m_table));
--	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
--	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
--
--	time_elapsed_ms = ktime_to_ms(ktime_get()) - dev->start_time;
--	/* Calculate the avg SoC power consumption */
--	socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
--
--	if (dev->amt_enabled) {
--		/* Apply the Auto Mode transition */
--		amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
--	}
--
--	if (dev->cnqf_enabled) {
--		/* Apply the CnQF transition */
--		amd_pmf_trans_cnqf(dev, socket_power, time_elapsed_ms);
--	}
--
--	dev->start_time = ktime_to_ms(ktime_get());
--	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms));
--}
--
- static inline u32 amd_pmf_reg_read(struct amd_pmf_dev *dev, int reg_offset)
- {
- 	return ioread32(dev->regbase + reg_offset);
-@@ -297,125 +264,6 @@ static const struct pci_device_id pmf_pci_ids[] = {
- 	{ }
- };
+ 	value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[0]);
+ 	dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT:%d\n", value);
++	if (is_amd_pmf_1ah_m80h(dev)) {
++		value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[1]);
++		dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT1:%d\n", value);
++		value = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[2]);
++		dev_dbg(dev->dev, "AMD_PMF_REGISTER_ARGUMENT2:%d\n", value);
++	}
  
--int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
--{
--	u64 phys_addr;
--	u32 hi, low;
--
--	/* Get Metrics Table Address */
--	if (alloc_buffer) {
--		switch (dev->cpu_id) {
--		case AMD_CPU_ID_PS:
--		case AMD_CPU_ID_RMB:
--			dev->mtable_size = sizeof(dev->m_table);
--			break;
--		case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
--		case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
--			dev->mtable_size = sizeof(dev->m_table_v2);
--			break;
--		default:
--			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
--		}
--
--		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size, GFP_KERNEL);
--		if (!dev->buf)
--			return -ENOMEM;
--	}
--
--	phys_addr = virt_to_phys(dev->buf);
--	hi = phys_addr >> 32;
--	low = phys_addr & GENMASK(31, 0);
--
--	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, SET_CMD, hi, NULL);
--	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, SET_CMD, low, NULL);
--
--	return 0;
--}
--
--int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
--{
--	int ret;
--
--	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
--
--	ret = amd_pmf_set_dram_addr(dev, true);
--	if (ret)
--		return ret;
--
--	/*
--	 * Start collecting the metrics data after a small delay
--	 * or else, we might end up getting stale values from PMFW.
--	 */
--	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms * 3));
--
--	return 0;
--}
--
--static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
--{
--	switch (pdev->cpu_id) {
--	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
--	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
--		return 0;
--	default:
--		return -EOPNOTSUPP;
--	}
--}
--
--static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
--{
--	int ret, i;
--
--	guard(mutex)(&dev->metrics_mutex);
--
--	ret = is_npu_metrics_supported(dev);
--	if (ret)
--		return ret;
--
--	ret = amd_pmf_set_dram_addr(dev, true);
--	if (ret)
--		return ret;
--
--	memset(dev->buf, 0, dev->mtable_size);
--
--	/* Send SMU command to get NPU metrics */
--	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
--	if (ret) {
--		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
--		return ret;
--	}
--
--	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
--
--	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
--	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
--		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
--	data->npu_power = dev->m_table_v2.npu_power;
--	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
--	data->npu_reads = dev->m_table_v2.npu_reads;
--	data->npu_writes = dev->m_table_v2.npu_writes;
--
--	return 0;
--}
--
--int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
--{
--	struct amd_pmf_dev *pdev;
--
--	if (!info)
--		return -EINVAL;
--
--	if (!pmf_device)
--		return -ENODEV;
--
--	pdev = dev_get_drvdata(pmf_device);
--	if (!pdev)
--		return -ENODEV;
--
--	return amd_pmf_get_smu_metrics(pdev, info);
--}
--EXPORT_SYMBOL_NS_GPL(amd_pmf_get_npu_data, "AMD_PMF");
--
- static int amd_pmf_reinit_ta(struct amd_pmf_dev *pdev)
- {
- 	bool status;
-@@ -678,7 +526,7 @@ static int amd_pmf_probe(struct platform_device *pdev)
- 	if (is_apmf_func_supported(dev, APMF_FUNC_SBIOS_HEARTBEAT_V2))
- 		amd_pmf_notify_sbios_heartbeat_event_v2(dev, ON_LOAD);
- 
--	pmf_device = dev->dev;
-+	amd_pmf_set_device(dev->dev);
- 
- 	err = amd_pmf_cdev_register(dev);
+ 	value = amd_pmf_reg_read(dev, dev->smu_regs->msg_reg);
+ 	dev_dbg(dev->dev, "AMD_PMF_REGISTER_MESSAGE:%x\n", value);
+@@ -214,6 +226,13 @@ int amd_pmf_send_cmd(struct amd_pmf_dev *dev, u8 message, bool get, u32 arg, u32
+ 			/* PMFW may take longer time to return back the data */
+ 			usleep_range(DELAY_MIN_US, 10 * DELAY_MAX_US);
+ 			*data = amd_pmf_reg_read(dev, dev->smu_regs->arg_reg[0]);
++			if (is_amd_pmf_1ah_m80h(dev) &&
++			    message == GET_1AH_M80H_METRICS_TABLE_DRAM_ADDR) {
++				dev->dram_addr.hi = amd_pmf_reg_read(dev,
++								     dev->smu_regs->arg_reg[1]);
++				dev->dram_addr.size = amd_pmf_reg_read(dev,
++								       dev->smu_regs->arg_reg[2]);
++			}
+ 		}
+ 		break;
+ 	case AMD_PMF_RESULT_CMD_REJECT_BUSY:
+@@ -518,6 +537,12 @@ static int amd_pmf_probe(struct platform_device *pdev)
  	if (err)
+ 		return err;
+ 
++	if (is_amd_pmf_1ah_m80h(dev)) {
++		err = amd_pmf_get_tbl_dram_addr(dev);
++		if (err)
++			return err;
++	}
++
+ 	apmf_acpi_init(dev);
+ 	platform_set_drvdata(pdev, dev);
+ 	amd_pmf_dbgfs_register(dev);
 diff --git a/drivers/platform/x86/amd/pmf/metrics.c b/drivers/platform/x86/amd/pmf/metrics.c
-new file mode 100644
-index 000000000000..bb4f9127c655
---- /dev/null
+index 5a8ebacbc3b3..4cb45a8bbdb4 100644
+--- a/drivers/platform/x86/amd/pmf/metrics.c
 +++ b/drivers/platform/x86/amd/pmf/metrics.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * AMD Platform Management Framework Driver - Metrics Support
-+ *
-+ * Copyright (c) 2026, Advanced Micro Devices, Inc.
-+ * All Rights Reserved.
-+ *
-+ * Authors: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-+ *	    Patil Rajesh Reddy <Patil.Reddy@amd.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/container_of.h>
-+#include <linux/device.h>
-+#include <linux/device/devres.h>
-+#include <linux/io.h>
-+#include <linux/ktime.h>
-+#include <linux/string.h>
-+#include <linux/workqueue.h>
-+
-+#include "pmf.h"
-+
-+static struct device *pmf_device;
-+
-+static void amd_pmf_get_metrics(struct work_struct *work)
+@@ -17,6 +17,8 @@
+ #include <linux/device/devres.h>
+ #include <linux/io.h>
+ #include <linux/ktime.h>
++#include <linux/math.h>
++#include <linux/minmax.h>
+ #include <linux/string.h>
+ #include <linux/workqueue.h>
+ 
+@@ -24,6 +26,89 @@
+ 
+ static struct device *pmf_device;
+ 
++static u16 amd_pmf_q10_acc_to_mW(u64 avg_acc)
 +{
-+	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, work_buffer.work);
-+	ktime_t time_elapsed_ms;
-+	int socket_power;
++	u64 val = DIV_ROUND_CLOSEST_ULL(avg_acc, 1024) * 1000;
 +
-+	guard(mutex)(&dev->update_mutex);
-+
-+	/* Transfer table contents */
-+	memset(dev->buf, 0, sizeof(dev->m_table));
-+	amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
-+	memcpy(&dev->m_table, dev->buf, sizeof(dev->m_table));
-+
-+	time_elapsed_ms = ktime_to_ms(ktime_get()) - dev->start_time;
-+	/* Calculate the avg SoC power consumption */
-+	socket_power = dev->m_table.apu_power + dev->m_table.dgpu_power;
-+
-+	if (dev->amt_enabled) {
-+		/* Apply the Auto Mode transition */
-+		amd_pmf_trans_automode(dev, socket_power, time_elapsed_ms);
-+	}
-+
-+	if (dev->cnqf_enabled) {
-+		/* Apply the CnQF transition */
-+		amd_pmf_trans_cnqf(dev, socket_power, time_elapsed_ms);
-+	}
-+
-+	dev->start_time = ktime_to_ms(ktime_get());
-+	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms));
++	return min_t(u16, val, U16_MAX);
 +}
 +
-+int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer)
++static u16 amd_pmf_q10_acc_to_int(u64 avg_acc)
 +{
-+	u64 phys_addr;
-+	u32 hi, low;
++	u64 val = DIV_ROUND_CLOSEST_ULL(avg_acc, 1024);
 +
-+	/* Get Metrics Table Address */
-+	if (alloc_buffer) {
-+		switch (dev->cpu_id) {
-+		case AMD_CPU_ID_PS:
-+		case AMD_CPU_ID_RMB:
-+			dev->mtable_size = sizeof(dev->m_table);
-+			break;
-+		case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+		case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-+			dev->mtable_size = sizeof(dev->m_table_v2);
-+			break;
-+		default:
-+			dev_err(dev->dev, "Invalid CPU id: 0x%x", dev->cpu_id);
-+		}
-+
-+		dev->buf = devm_kzalloc(dev->dev, dev->mtable_size, GFP_KERNEL);
-+		if (!dev->buf)
-+			return -ENOMEM;
-+	}
-+
-+	phys_addr = virt_to_phys(dev->buf);
-+	hi = phys_addr >> 32;
-+	low = phys_addr & GENMASK(31, 0);
-+
-+	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_HIGH, SET_CMD, hi, NULL);
-+	amd_pmf_send_cmd(dev, SET_DRAM_ADDR_LOW, SET_CMD, low, NULL);
-+
-+	return 0;
++	return min_t(u16, val, U16_MAX);
 +}
 +
-+int amd_pmf_init_metrics_table(struct amd_pmf_dev *dev)
++static u64 amd_pmf_avg_acc_metric(u32 curr_counter, u32 prev_counter,
++				  u64 curr_value, u64 prev_value)
++{
++	u32 counter_diff;
++	u64 val_diff;
++
++	/* Check for counter reset */
++	if (curr_counter <= prev_counter)
++		return 0;
++
++	counter_diff = curr_counter - prev_counter;
++
++	if (curr_value < prev_value)
++		return 0;
++
++	val_diff = curr_value - prev_value;
++
++	return DIV_ROUND_CLOSEST_ULL(val_diff, counter_diff);
++}
++
++int amd_pmf_get_tbl_dram_addr(struct amd_pmf_dev *dev)
 +{
 +	int ret;
 +
-+	INIT_DELAYED_WORK(&dev->work_buffer, amd_pmf_get_metrics);
-+
-+	ret = amd_pmf_set_dram_addr(dev, true);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Start collecting the metrics data after a small delay
-+	 * or else, we might end up getting stale values from PMFW.
-+	 */
-+	schedule_delayed_work(&dev->work_buffer, msecs_to_jiffies(metrics_table_loop_ms * 3));
-+
-+	return 0;
-+}
-+
-+void amd_pmf_set_device(struct device *p_device)
-+{
-+	pmf_device = p_device;
-+}
-+
-+static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
-+{
-+	switch (pdev->cpu_id) {
-+	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
-+	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
-+{
-+	int ret, i;
-+
-+	guard(mutex)(&dev->metrics_mutex);
-+
-+	ret = is_npu_metrics_supported(dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = amd_pmf_set_dram_addr(dev, true);
-+	if (ret)
-+		return ret;
-+
-+	memset(dev->buf, 0, dev->mtable_size);
-+
-+	/* Send SMU command to get NPU metrics */
-+	ret = amd_pmf_send_cmd(dev, SET_TRANSFER_TABLE, SET_CMD, METRICS_TABLE_ID, NULL);
++	ret = amd_pmf_send_cmd(dev, GET_1AH_M80H_METRICS_TABLE_DRAM_ADDR, GET_CMD,
++			       ARG_NONE, &dev->dram_addr.lo);
 +	if (ret) {
-+		dev_err(dev->dev, "SMU command failed to get NPU metrics: %d\n", ret);
++		dev_err(dev->dev, "Failed to get DRAM address: %d\n", ret);
 +		return ret;
 +	}
 +
-+	memcpy(&dev->m_table_v2, dev->buf, dev->mtable_size);
++	dev->metrics_table_phys = ((u64)dev->dram_addr.hi << 32) | dev->dram_addr.lo;
++	dev->mtable_size = dev->dram_addr.size;
 +
-+	data->npuclk_freq = dev->m_table_v2.npuclk_freq;
-+	for (i = 0; i < ARRAY_SIZE(data->npu_busy); i++)
-+		data->npu_busy[i] = dev->m_table_v2.npu_busy[i];
-+	data->npu_power = dev->m_table_v2.npu_power;
-+	data->mpnpuclk_freq = dev->m_table_v2.mpnpuclk_freq;
-+	data->npu_reads = dev->m_table_v2.npu_reads;
-+	data->npu_writes = dev->m_table_v2.npu_writes;
++	if (dev->mtable_size != sizeof(dev->mtable_v3)) {
++		dev_err(dev->dev, "Metrics table size mismatch: got %u, expected %zu\n",
++			dev->dram_addr.size, sizeof(dev->mtable_v3));
++		return -EINVAL;
++	}
++
++	dev->metrics_table_virt = devm_ioremap(dev->dev, dev->metrics_table_phys, dev->mtable_size);
++	if (!dev->metrics_table_virt) {
++		dev_err(dev->dev, "Failed to map DRAM address for PMF metrics table\n");
++		dev->metrics_table_phys = 0;
++		return -ENOMEM;
++	}
 +
 +	return 0;
 +}
 +
-+int amd_pmf_get_npu_data(struct amd_pmf_npu_metrics *info)
++static int amd_pmf_get_metrics_table_log_sample(struct amd_pmf_dev *dev)
 +{
-+	struct amd_pmf_dev *pdev;
++	int ret;
 +
-+	if (!info)
++	if (!dev->metrics_table_virt) {
++		dev_err(dev->dev, "Metrics DRAM not mapped\n");
 +		return -EINVAL;
++	}
 +
-+	if (!pmf_device)
-+		return -ENODEV;
++	/* Send command to PMFW to update metrics table log sample */
++	ret = amd_pmf_send_cmd(dev, GET_1AH_M80H_METRICS_TABLE_LOG_SAMPLE, SET_CMD, ARG_NONE, NULL);
++	if (ret) {
++		dev_err(dev->dev, "Failed to request metrics log sample: %d\n", ret);
++		return ret;
++	}
 +
-+	pdev = dev_get_drvdata(pmf_device);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	return amd_pmf_get_smu_metrics(pdev, info);
++	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(amd_pmf_get_npu_data, "AMD_PMF");
++
+ static void amd_pmf_get_metrics(struct work_struct *work)
+ {
+ 	struct amd_pmf_dev *dev = container_of(work, struct amd_pmf_dev, work_buffer.work);
+@@ -119,12 +204,46 @@ static int is_npu_metrics_supported(struct amd_pmf_dev *pdev)
+ 	switch (pdev->cpu_id) {
+ 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+ 	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
++	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
+ 		return 0;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+ }
+ 
++static void amd_pmf_calculate_acc_npu_metrics(struct amd_pmf_dev *dev,
++					      struct amd_pmf_npu_metrics *data)
++{
++	struct amd_pmf_metrics_iod *curr, *prev;
++	u64 val;
++	int i;
++
++	curr = &dev->mtable_v3.iod;
++	prev = &dev->prev_metrics.iod;
++
++	val = amd_pmf_avg_acc_metric(curr->counter_acc, prev->counter_acc,
++				     curr->npu_temp_acc, prev->npu_temp_acc);
++	data->npu_temp = amd_pmf_q10_acc_to_int(val);
++	val = amd_pmf_avg_acc_metric(curr->counter_acc, prev->counter_acc,
++				     curr->npu_power_acc, prev->npu_power_acc);
++	data->npu_power = amd_pmf_q10_acc_to_mW(val);
++	val = amd_pmf_avg_acc_metric(curr->counter_acc, prev->counter_acc,
++				     curr->npuhclk_freq_eff_acc,
++				     prev->npuhclk_freq_eff_acc);
++	data->mpnpuclk_freq = amd_pmf_q10_acc_to_int(val);
++	val = amd_pmf_avg_acc_metric(curr->counter_acc, prev->counter_acc,
++				     curr->aieclk_freq_eff_acc,
++				     prev->aieclk_freq_eff_acc);
++	data->npuclk_freq = amd_pmf_q10_acc_to_int(val);
++
++	for (i = 0; i < ARRAY_SIZE(curr->npu_busy_acc); i++) {
++		val = amd_pmf_avg_acc_metric(curr->counter_acc, prev->counter_acc,
++					     curr->npu_busy_acc[i],
++					     prev->npu_busy_acc[i]);
++		data->npu_busy[i] = amd_pmf_q10_acc_to_int(val);
++	}
++}
++
+ static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_metrics *data)
+ {
+ 	int ret, i;
+@@ -135,6 +254,8 @@ static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_m
+ 	if (ret)
+ 		return ret;
+ 
++	memset(data, 0, sizeof(*data));
++
+ 	switch (dev->cpu_id) {
+ 	case PCI_DEVICE_ID_AMD_1AH_M20H_ROOT:
+ 	case PCI_DEVICE_ID_AMD_1AH_M60H_ROOT:
+@@ -161,6 +282,27 @@ static int amd_pmf_get_smu_metrics(struct amd_pmf_dev *dev, struct amd_pmf_npu_m
+ 		data->npu_reads = dev->m_table_v2.npu_reads;
+ 		data->npu_writes = dev->m_table_v2.npu_writes;
+ 		break;
++	case PCI_DEVICE_ID_AMD_1AH_M80H_ROOT:
++		ret = amd_pmf_get_metrics_table_log_sample(dev);
++		if (ret)
++			return ret;
++
++		memcpy_fromio(&dev->mtable_v3, dev->metrics_table_virt, sizeof(dev->mtable_v3));
++
++		/*Ignore the first sample, as previous metrics is uninitialized (zero)
++		 * Metrics are calculated as:
++		 *	metrics = current_metrics - previous_metrics
++		 * Skipping the initial sample ensures accurate delta calculations.
++		 */
++		if (!dev->npu_metrics_have_prev) {
++			memcpy(&dev->prev_metrics, &dev->mtable_v3, sizeof(dev->mtable_v3));
++			dev->npu_metrics_have_prev = true;
++			return 0;
++		}
++
++		amd_pmf_calculate_acc_npu_metrics(dev, data);
++		memcpy(&dev->prev_metrics, &dev->mtable_v3, sizeof(dev->mtable_v3));
++		break;
+ 	}
+ 
+ 	return 0;
 diff --git a/drivers/platform/x86/amd/pmf/pmf.h b/drivers/platform/x86/amd/pmf/pmf.h
-index 088edfab08f0..4873685c84ad 100644
+index 4873685c84ad..76cfeb2b963c 100644
 --- a/drivers/platform/x86/amd/pmf/pmf.h
 +++ b/drivers/platform/x86/amd/pmf/pmf.h
-@@ -137,6 +137,8 @@ struct cookie_header {
- #define METRICS_TABLE_ID	7
- #define BIOS_OUTPUT_MAX		10
+@@ -75,6 +75,10 @@ struct cookie_header {
+ #define SET_PMF_PPT            0x25
+ #define SET_PMF_PPT_APU_ONLY   0x26
  
-+extern int metrics_table_loop_ms;
++/* Message IDs for 1AH_M80H platform */
++#define GET_1AH_M80H_METRICS_TABLE_LOG_SAMPLE	0x0E
++#define GET_1AH_M80H_METRICS_TABLE_DRAM_ADDR	0x0F
++
+ /* OS slider update notification */
+ #define DC_BEST_PERF		0
+ #define DC_BETTER_PERF		1
+@@ -139,6 +143,11 @@ struct cookie_header {
+ 
+ extern int metrics_table_loop_ms;
+ 
++#define AMD_PMF_METRIC_CORE_TYPE_MAX	4
++#define AMD_PMF_METRIC_CCX_MAX		4
++#define AMD_PMF_NUM_CLK_DPM_LEVELS	8
++#define AMD_PMF_NUM_MAX_CORES		12
 +
  typedef void (*apmf_event_handler_t)(acpi_handle handle, u32 event, void *data);
  
  static const uuid_t amd_pmf_ta_uuid[] __used = { UUID_INIT(0xd9b39bf2, 0x66bd, 0x4154, 0xaf, 0xb8,
-@@ -864,6 +866,7 @@ int amd_pmf_set_dram_addr(struct amd_pmf_dev *dev, bool alloc_buffer);
- int amd_pmf_notify_sbios_heartbeat_event_v2(struct amd_pmf_dev *dev, u8 flag);
+@@ -250,6 +259,199 @@ struct apmf_fan_idx {
+ 	u32 fan_ctl_idx;
+ } __packed;
+ 
++struct amd_pmf_metrics_iod {
++	u32 counter_acc;
++	/* Set Voltage */
++	u64 vddcr_set_voltage;
++	u64 vddcr_soc_set_voltage;
++	u64 vddcr_npu_set_voltage;
++	u64 vddcr_lp_set_voltage;
++	u64 vddcr_gfx_set_voltage;
++	u64 vdd_misc_set_voltage;
++	/* Telemetry Voltages */
++	u64 vddcr_telemetry_voltage;
++	u64 vddcr_soc_telemetry_voltage;
++	u64 vddcr_npu_telemetry_voltage;
++	u64 vddcr_lp_telemetry_voltage;
++	u64 vddcr_gfx_telemetry_voltage;
++	u64 vdd_misc_telemetry_voltage;
++	/* Telemetry Powers */
++	u64 vddcr_telemetry_power;
++	u64 vddcr_soc_telemetry_power;
++	u64 vddcr_npu_telemetry_power;
++	u64 vddcr_lp_telemetry_power;
++	u64 vddcr_gfx_telemetry_power;
++	u64 vdd_misc_telemetry_power;
++	/* Throttlers - Fast PPT */
++	u32 fppt_fused_limit;
++	u32 fppt_max_irm_limit;
++	u32 fppt_max_pbo_limit;
++	u32 fppt_limit;
++	u64 fppt_value_acc;
++	u32 fppt_residency_acc;
++	/* Throttlers - Slow PPT */
++	u32 sppt_fused_limit;
++	u32 sppt_max_irm_limit;
++	u32 sppt_max_pbo_limit;
++	u32 sppt_limit;
++	u64 sppt_value_acc;
++	u32 sppt_residency_acc;
++	/* Throttlers - STAPM */
++	u32 spl_fused_limit;
++	u32 spl_max_irm_limit;
++	u32 spl_max_pbo_limit;
++	u32 spl_limit;
++	u64 spl_value_acc;
++	u32 spl_residency_acc;
++	/* Throttlers - TDC VDDCR */
++	u32 tdc_vddcr_fused_limit;
++	u32 tdc_vddcr_max_irm_limit;
++	u32 tdc_vddcr_max_pbo_limit;
++	u32 tdc_vddcr_limit;
++	u64 tdc_vddcr_value_acc;
++	u32 tdc_vddcr_residency_acc;
++	/* Throttlers - TDC VDDCR_SOC */
++	u32 tdc_vddcr_soc_fused_limit;
++	u32 tdc_vddcr_soc_max_irm_limit;
++	u32 tdc_vddcr_soc_max_pbo_limit;
++	u32 tdc_vddcr_soc_limit;
++	u64 tdc_vddcr_soc_value_acc;
++	u32 tdc_vddcr_soc_residency_acc;
++	/* Throttlers - TDC VDDCR_NPU */
++	u32 tdc_vddcr_npu_fused_limit;
++	u32 tdc_vddcr_npu_max_irm_limit;
++	u32 tdc_vddcr_npu_max_pbo_limit;
++	u32 tdc_vddcr_npu_limit;
++	u64 tdc_vddcr_npu_value_acc;
++	u32 tdc_vddcr_npu_residency_acc;
++	/* Throttlers - TDC VDDCR_LP */
++	u32 tdc_vddcr_lp_fused_limit;
++	u32 tdc_vddcr_lp_max_irm_limit;
++	u32 tdc_vddcr_lp_max_pbo_limit;
++	u32 tdc_vddcr_lp_limit;
++	u64 tdc_vddcr_lp_value_acc;
++	u32 tdc_vddcr_lp_residency_acc;
++	/* Throttlers - TDC VDDCR_GFX */
++	u32 tdc_vddcr_gfx_fused_limit;
++	u32 tdc_vddcr_gfx_max_irm_limit;
++	u32 tdc_vddcr_gfx_max_pbo_limit;
++	u32 tdc_vddcr_gfx_limit;
++	u64 tdc_vddcr_gfx_value_acc;
++	u32 tdc_vddcr_gfx_residency_acc;
++	/* Throttlers - EDC VDDCR */
++	u32 edc_vddcr_fused_limit;
++	u32 edc_vddcr_max_irm_limit;
++	u32 edc_vddcr_max_pbo_limit;
++	u32 edc_vddcr_limit;
++	/* Throttlers - Thermal */
++	u32 thm_fused_limit;
++	u32 thm_limit;
++	u64 thm_value_acc;
++	u32 thm_residency_acc;
++	u32 prochot_residency_acc;
++	u64 gfx_temp_acc;
++	u64 soc_temp_acc;
++	u32 p3t_fused_limit;
++	u64 p3t_value_acc;
++	/* Power */
++	u64 system_power_acc;
++	u64 apu_power_acc;
++	u64 dgpu_power_acc;
++	u64 npu_power_acc;
++	/* Frequencies */
++	u64 fclk_freq_eff_acc;
++	u64 memclk_freq_eff_acc;
++	u64 lclk_freq_eff_acc;
++	u64 gfxclk_freq_eff_acc;
++	u64 socclk_freq_eff_acc;
++	u64 vclk_freq_eff_acc;
++	u64 vpeclk_freq_eff_acc;
++	u64 aieclk_freq_eff_acc;
++	u64 npuhclk_freq_eff_acc;
++	/* Bandwidth */
++	u64 dram_read_bandwidth;
++	u64 dram_write_bandwidth;
++	/* Activity Monitors */
++	u64 gfx_busy_acc;
++	u64 vcn_busy_acc;
++	u64 npu_busy_acc[3];
++	/* STT Limits */
++	u32 stt_min_limit;
++	u64 stt_apu_hotspot_temp_acc;
++	u64 stt_hs2_hotspot_temp_acc;
++	u32 stt_apu_temp_limit;
++	u64 stt_apu_skin_temp_acc;
++	/* Residencies */
++	u64 cpuoff_residency_ccx0;
++	u64 cpuoff_residency_ccx1;
++	u64 cpuoff_residency_ccx2;
++	u64 cpuoff_residency_ccx3;
++	/* DF-pstates */
++	u32 fclk_freq_table[AMD_PMF_NUM_CLK_DPM_LEVELS];
++	u32 uclk_freq_table[AMD_PMF_NUM_CLK_DPM_LEVELS];
++	u32 ddr_rate_table[AMD_PMF_NUM_CLK_DPM_LEVELS];
++	u8 dfpstate_source[AMD_PMF_NUM_CLK_DPM_LEVELS];
++	/* System */
++	u8 gfx_disabled;
++	u8 spare2[3];
++	u32 gfxclk_fmax;
++	u8 cclk_core_fuse_enable[AMD_PMF_METRIC_CORE_TYPE_MAX][AMD_PMF_NUM_MAX_CORES];
++	u8 cclk_core_enabled[AMD_PMF_METRIC_CORE_TYPE_MAX][AMD_PMF_NUM_MAX_CORES];
++	u32 cclk_fmax[AMD_PMF_METRIC_CORE_TYPE_MAX][AMD_PMF_NUM_MAX_CORES];
++	/* Overclock Capable */
++	u8 cpu_precise_and_direct_oc_capable;
++	u8 gfx_precise_and_direct_oc_capable;
++	u8 pbo_basic_oc_capable;
++	u8 pbo_advanced_oc_capable;
++	u8 pbo_nitro_oc_capable;
++	u8 memory_and_fabric_oc_capable;
++	u8 misc_oc_capable;
++	u8 extreme_cold_oc_capable;
++	u8 down_config_control_capable;
++	u8 spare0[3];
++	/* Overclock Status */
++	u32 fit_limit_scalar;
++	u8 ln2_enabled;
++	u8 cpu_precise_and_direct_oc_enabled;
++	u8 gfx_precise_and_direct_oc_enabled;
++	u8 spare1[2];
++	/* Voltage Guardband in PSM count */
++	s8 psm_guardband[5][5][3];
++	s32 core_power_limit_offset;
++	u32 max_freq_offset[5];
++	u64 npu_temp_acc;
++	u64 dfpstate_residency_acc[AMD_PMF_NUM_CLK_DPM_LEVELS];
++	u32 cclk_fboost;
++	/* PMF */
++	u32 pmf_fast_apu_ppt_limit;
++	u64 pmf_fast_apu_ppt_value_acc;
++	u32 pmf_fast_apu_ppt_residency_acc;
++	u32 pmf_slow_apu_ppt_limit;
++	u64 pmf_slow_apu_ppt_value_acc;
++	u32 pmf_slow_apu_ppt_residency_acc;
++	u32 pmf_fast_spm_limit;
++	u64 pmf_fast_spm_value_acc;
++	u32 pmf_fast_spm_residency_acc;
++	u32 pmf_slow_spm_limit;
++	u64 pmf_slow_spm_value_acc;
++	u32 pmf_slow_spm_residency_acc;
++	u32 spare3[5];
++} __packed __aligned(4);
++
++struct amd_pmf_metrics_ccx {
++	u64 core_c0[AMD_PMF_NUM_MAX_CORES];
++	u64 core_cc6[AMD_PMF_NUM_MAX_CORES];
++	u64 core_freq[AMD_PMF_NUM_MAX_CORES];
++	u64 core_freqeff[AMD_PMF_NUM_MAX_CORES];
++	u64 core_temp[AMD_PMF_NUM_MAX_CORES];
++	u64 core_power[AMD_PMF_NUM_MAX_CORES];
++} __packed __aligned(4);
++
++struct amd_pmf_metrics_v3 {
++	struct amd_pmf_metrics_iod iod;
++	struct amd_pmf_metrics_ccx ccx[AMD_PMF_METRIC_CCX_MAX];
++} __packed __aligned(4);
++
+ struct smu_pmf_metrics_v2 {
+ 	u16 core_frequency[16];		/* MHz */
+ 	u16 core_power[16];		/* mW */
+@@ -406,6 +608,12 @@ struct amd_pmf_smu_regs {
+ 	u32 arg_reg[3];
+ };
+ 
++struct amd_pmf_1ah_m80h_arg_data {
++	u32 lo;
++	u32 hi;
++	u32 size;
++};
++
+ struct amd_pmf_dev {
+ 	void __iomem *regbase;
+ 	void __iomem *smu_virt_addr;
+@@ -459,6 +667,12 @@ struct amd_pmf_dev {
+ 	struct mutex metrics_mutex;
+ 	u32 bios_output[BIOS_OUTPUT_MAX];
+ 	const struct amd_pmf_smu_regs *smu_regs;
++	void __iomem *metrics_table_virt;	/* Mapped DRAM virtual address for metrics table */
++	phys_addr_t metrics_table_phys;		/* DRAM physical address for metrics table */
++	struct amd_pmf_metrics_v3 mtable_v3;	/* IOD and CCX */
++	struct amd_pmf_1ah_m80h_arg_data dram_addr;
++	struct amd_pmf_metrics_v3 prev_metrics;	/* Previous metrics for delta calculation */
++	bool npu_metrics_have_prev;
+ };
+ 
+ struct apmf_sps_prop_granular_v2 {
+@@ -867,6 +1081,10 @@ int amd_pmf_notify_sbios_heartbeat_event_v2(struct amd_pmf_dev *dev, u8 flag);
  u32 fixp_q88_fromint(u32 val);
  int is_apmf_bios_input_notifications_supported(struct amd_pmf_dev *pdev);
-+void amd_pmf_set_device(struct device *p_device);
+ void amd_pmf_set_device(struct device *p_device);
++bool is_amd_pmf_1ah_m80h(struct amd_pmf_dev *pdev);
++
++/* Metrics layer */
++int amd_pmf_get_tbl_dram_addr(struct amd_pmf_dev *dev);
  
  /* SPS Layer */
  int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf);
+diff --git a/include/linux/amd-pmf-io.h b/include/linux/amd-pmf-io.h
+index e014d4ce5a20..b84c200b0f8e 100644
+--- a/include/linux/amd-pmf-io.h
++++ b/include/linux/amd-pmf-io.h
+@@ -60,6 +60,7 @@ struct amd_sfh_info {
+  * @mpnpuclk_freq: MPNPU [MHz]
+  * @npu_reads: NPU read bandwidth [MB/sec]
+  * @npu_writes: NPU write bandwidth [MB/sec]
++ * @npu_temp: NPU temperature [C]
+  */
+ struct amd_pmf_npu_metrics {
+ 	u16 npuclk_freq;
+@@ -68,6 +69,7 @@ struct amd_pmf_npu_metrics {
+ 	u16 mpnpuclk_freq;
+ 	u16 npu_reads;
+ 	u16 npu_writes;
++	u16 npu_temp;
+ };
+ 
+ int amd_get_sfh_info(struct amd_sfh_info *sfh_info, enum sfh_message_type op);
 -- 
 2.34.1
 
