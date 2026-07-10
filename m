@@ -1,271 +1,183 @@
-Received: from outbound.mr.icloud.com (mr-2006j-snip4-11.eps.apple.com [57.103.70.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD0A4499AA
-	for <platform-driver-x86@vger.kernel.org>; Thu,  9 Jul 2026 22:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.70.103
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783634751; cv=none; b=c47ze64g2sKYZD5ZRu98KJLj41+aUimzFvkNfAZ6nU2eg1jHfpGutjMvEMiEjUaGWfglADIyCmctxi9gYW9zpubhoHOtqh3E1IqQQ24DNYkBBBG2VkVuYovCwWUthWEK8+9WYy3/Apsaf1mRCrHDom5bTlZySNyY8DHDnT/TDgA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783634751; c=relaxed/simple;
-	bh=+QVHjnyy0E01wVD+6BbGlR62S95kRpQROGwoo7iskRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BPvXc9d8+ZwZbIVlw4NLkokKmfzK9ZMvAHP3S9gsG2sNW7kzXKB4Ry0GbhWoJb0uBM0HZ6coN0NN5xaajxV8rHbWCtL0fGQTrtkGBJeVHN/hP5xGb8awKJmLZPsIJUoar49jW6oynCbvq/JrsLxOK1PB2mmGXmjHZrr7p93hZ7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev; spf=pass smtp.mailfrom=kursatabayli.dev; dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b=ODPFcGFs; arc=none smtp.client-ip=57.103.70.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kursatabayli.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFC019D07E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 01:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783647956; cv=pass; b=j0C2D4aj5+NFe2ht8uy9PTFbp5FtSsArNJ95V1NUon8lR5WF/VJew6f0/mvULBthgvPrze1EtbwzUfCsu6fYm8ceUgm/At1J3sGMHsmPs6BHoMCuvwpf7/g7vyBKGrONWUEtCjfhvm1Ug5bQLruWpoYyK6R9HNo2XSE7mzBpLJM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783647956; c=relaxed/simple;
+	bh=XMca5hM2/rcAVM08czFhp/H98ET0Kr1FZxBtzqzDmd8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=nDiVOc6zmSWi6Ug/RJncAG2wQLaE4mBoc3EFm7hSiDCdN2mDeCKJ7q8yp8W+M/oEPi1RdlS/1EVtusNiZr2vaQuzN4a/wz/RudDdczTQ1n5jI2XVhwVDsYZ24ucZTZN3OITc7xXPQ7TMp2NHWuFK6KecXxBYP7VzPznm3nI9d9o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ba8nOd0r; arc=pass smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b="ODPFcGFs"
-Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-2 (Postfix) with ESMTPS id F3EC91800468;
-	Thu, 09 Jul 2026 22:05:45 +0000 (UTC)
-X-ICL-RepId: 019f48ea-59dc-722d-81e2-39f16a04af06
-X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhBBkMGXAZeCEAHQwZcBlBcHA4FUgdeH3kTRh9ECkYRWxlKAV5FVhVPWFUJCgBHAkoZRwxVCkscUFZXCEFLQBMETRMFUgddTVYNRw9YHlwUFxVBQ14IXh9MHB0OWAYSAE0KDjYGWQVeCVYDQwU2EhRdRVgYRRhTBFgaUhRbAhwUXA4TAF4PD0wLSAFbB1wCSQtKA1gGWRxCCU4CVBpaHxhcFF8CdwBHAkoZRwxVCkscUFZXCEFVEgRACFZQVB5BBFYVbAlYBlMZVw==
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kursatabayli.dev; s=sig1; t=1783634748; x=1786226748; bh=U/QnpNcuzc2iA8GgG+8oREZ1YmV/UBPemasgfqcXO2c=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=ODPFcGFs3ef+p6yBJXnrGXiKPKRCJNGB6bFo2u8vq8vMJR0hIYEMLJgf4jYNG95NGQama9Q554iPdhMQXx8o2Ow/qcxo4638uIbH0r45AtvwPG4PNDjZtjnilES8bxO/Ggvjzn8XrLZbVxM8CbNhgCLY6k3lt4QCT9zYY94wvTHqBS+fI4Q1SsD91ukK6axR2BcylGgJnpMtC/q+R0FO/5ANJztxOyDj/CoE6CHzJSSfAVKXiv4MFZ0y2Zo2WfGTiFXeKia6HK3vwBX3i8lXmKxH0PBQIA8/3JZWyHK1ya45gMnwpvrXWNbgL1sujtt1VODAugnLXCPqj0RSF2gtoA==
-mail-alias-created-date: 1779124395950
-Received: from hp (unknown [17.57.152.38])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-2 (Postfix) with ESMTPSA id 6D5981800105;
-	Thu, 09 Jul 2026 22:05:43 +0000 (UTC)
-From: =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
-Subject: [PATCH v3] platform/x86: hp-wmi: Add GPU MUX switch support
-Date: Fri, 10 Jul 2026 01:05:12 +0300
-Message-ID: <20260709220512.20619-1-hello@kursatabayli.dev>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ba8nOd0r"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-699fbcd23ccso573022a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 09 Jul 2026 18:45:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783647953; cv=none;
+        d=google.com; s=arc-20260327;
+        b=LvS0RN1UubqFDXb7VZIdYD86HSB3aSL0m02bVIr6NLbYaA7EsMi8IysyEs5BDUWd3+
+         D/ctGvt5Eu7HcW8xljU4jl9dsdV7BnIxqAu+jO5rSft5B8gdxsx1E0rmBgCHmcXptQui
+         pZuOcEiHUvugnPe0DvhvXXO5wxPY7QtryVsktj2Z4Kvd8tx5ds43yJ/VXYf7upO7MGFN
+         xs0DkHFzUzf1Pc+RlxZmsLiA1i1k3LZeTX+C2LY9gGG0cgSOic/C4CAgsU5rvP3g9IdT
+         OLUWAdW3hsifP0eQIkn2WWG7Zpi2dguZP3K3HO6Cx9f5UMDBBQhkBwyZl6EGicA85e3P
+         5JzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=SQOj1nH4WftxQs3zQeIVfop9vnH1wT1CfwSzsO03rk8=;
+        fh=8e/kz/de6juE1HVuGBPpByiPTaFYXpAF3IC5dd+kx8Y=;
+        b=YFMtuqaQJVOH1vjASQd4pOUdSS/AIWHamF5Z6fcRqXpSqh/gbEIwciWseM4kFa8X0E
+         HLxjrdMh3yrTqi76h4afa2naOIp/s41IHJicrmhLg8Jt6sjp40FtyEn9FE2F1J7nUogA
+         QL2qY0Z43x/7ajbSgKmkIrs3FjjxNbotaDUQf+ZhcJe92HSD+cIXBnewF+jVMMTrCBUF
+         o1dngzX4sW2+ZiIiD9ial/jRWx+5EVsGsuL2a2jzRAPQ11lTXQwnZ5rzd5lKjq1J+TVp
+         j5Yl4dbjNwnWRKCaKQg83MxqAf+ByW1gR9dL49bRa8K0KwjV0Ua4TENMMyPm48A9u4al
+         nMWQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783647953; x=1784252753; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=SQOj1nH4WftxQs3zQeIVfop9vnH1wT1CfwSzsO03rk8=;
+        b=ba8nOd0rVTljkKK1PopHYdRmlfuPI0ZcofK7xIP50pdPjMRH4FOx7reH0zbe9BvZzo
+         G0PkoQXpIC27D9W/hT/xe3RiLXIYbztknQWoYeBQKbzd+kEat0Tz79Y8xBS0pTSrQvlv
+         bpHmbk0D6XqJSSwqM2v0gUF+ifSAT8SPk/z1zxLR2wO1HxCH3PMe0uPJW892Ls0DUiGb
+         Pvj/L+up2OKOdWAQ5Qya3E6y51PjhCBwHTt1uuHBQPPxifnHAqdoeDreROdcUCpyDMmT
+         5NMMxRVw/XGYyW++8+Uk1qwbwnayJqBe/DAMtDTPfp+WNOtIwIsdRHQolGxdfLhwfX1h
+         0XFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783647953; x=1784252753;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=SQOj1nH4WftxQs3zQeIVfop9vnH1wT1CfwSzsO03rk8=;
+        b=IttgTfuuajOzrIcpLXZPiETBsZMOrx2JaTzngTHmOFZx/TtdIh+87p2tRE00iqRys/
+         O196SnujSkVd1I5heo8CjvzUYaYICRkAnpZH/p721TG3r7H4+MhmNnf1r1O2ONeyIb4z
+         MXfrTDVm32qbBnLIG8TlJltVmWgbtZuVcMQ3B1elBwX1JIQrf9PWoXNUDagWCS/CAmds
+         bCRhPEwgeMTQlRoUWgkr107TPakc6EsiuwEPbbS+huXqJh0WClx88TnWOCk52TGGxBaE
+         6Hn/KoQqaGVwWIRuFn+DKjCNMXfOBr5DHIz/iFWeHb6WaMu66I96NYGhqTB2SfLseo+7
+         rzDA==
+X-Forwarded-Encrypted: i=1; AHgh+RqEAZ9Ah6CLxZ97wJYrh9b2xv3t1uqQuCOCD03ZQS5FWzemKprZcJzYpwayb4wYArNjqAwotYHD6Sn/Rnhxy287V8YW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw12QRCul/2uIgwGFuzhwRPqiJ3VwyqXVpLj3BSsfGmh2D/6zf
+	wgSYb3n9Tm1J1MmjtSHUy3z7rLRLTC0ARQcLq++FaozIGKggGLq3U/FcHF0hQN2GwHR7pJ05KY6
+	Ei0WisrZbKXbSIege/LxwqcDCMVY45KU=
+X-Gm-Gg: AfdE7cmLANHA32PnCiuPVAJEAIYi5y3HKNffC3WypmbWmwFAVrysesb4aNwns/AUIuz
+	8s3ut5pDPdPzR7h5q+hMmEQRF0+pfARmEjFhPP3jYON4xdZJ6MJCkQhNSwRewXBPVa45uJ5qu74
+	nwtmYbCFzuJYqdaFORmg1nYbjKXugUqeFsl99vUVmE8hlTUy6kWBDBsiZ40P2jwCH9vVZrNR8j5
+	ciFVgW6xE9gX5iy6prm3kXgl0QMKSOinOOQ+5LDMcMcgDIYvIBO2VkiGmTJ5g+x5JNh8d4gD2Uh
+	WBh+BsdVyKWXK9GTvYYZpHU326NoJBE2sMHiZQ+gpTdWin9XuCplOX3B9RWm8RWzDDPrmP/5N26
+	n9pkqnsPRvkjw
+X-Received: by 2002:a05:6402:1f8f:b0:697:4fff:b90a with SMTP id
+ 4fb4d7f45d1cf-69ab4453a63mr3794621a12.4.1783647952849; Thu, 09 Jul 2026
+ 18:45:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA5MDIyMiBTYWx0ZWRfX3onloVGvxKId
- gW50yGOrinzLWeL6DRweeRqhNbsz9fz4SlzjBGfv5lRveBBahgnUqt//LAsEULiJ1DfklSH4NNZ
- pIx7u3MZXGUnXatTE8VIG2LUDMVsxoQ91TWULWq70F5g+KfMA6ilpgzDLSU4wRx9l9yd7RbxXGc
- +fSodOm0Bdc0//yBhoUyxteMa+w1Qz5CzwurFlklQ4SC7VVDjVM0fYZ/7hOdjqS7i/RrZUJeWxn
- wt4dT+MEc+ECqZj4Xlo1FJPvkY5PDnG195/KLbls66NvHWg/wshuDklTWmFzAOG6coi0qph7Ang
- jNlEASHDwHBdfJFTgkA
-X-Proofpoint-GUID: v1ow0Pc9JA3avUQXZU0IVcahQuoj88r6
-X-Proofpoint-ORIG-GUID: v1ow0Pc9JA3avUQXZU0IVcahQuoj88r6
+From: Nabil Danial <nabildanial.93@gmail.com>
+Date: Fri, 10 Jul 2026 09:45:39 +0800
+X-Gm-Features: AUfX_mwn6SsOMsGYmdPBF_B2_vZnup_cY5OpXude3xRlp1jbAhfbGwZZgYmb9uA
+Message-ID: <CAJW3z-g3kn+-EFZ+0nEA49B2DYxc8LK639yzYMgcrR-0mF7G4A@mail.gmail.com>
+Subject: [BUG] platform/x86: bitland-mifs-wmi: Hibernation fails with error
+ -22 on Xiaomi Redmi Book Pro 14 2025
+To: qby140326@gmail.com
+Cc: W_Armin@gmx.de, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for querying and switching the graphics MUX mode on HP
-systems via WMI. This introduces the 'gpu_mux_mode' sysfs attribute
-under the hp-wmi platform device, allowing userspace tools to check
-and safely switch between available graphics modes (e.g., UMA, Hybrid,
-Discrete).
+Hi everyone,
 
-The hardware capabilities mask is primarily read using the modern
-128-byte System Design Data query. However, to ensure backward
-compatibility with older models, a fallback mechanism is implemented.
-By mirroring the behavior of the Windows Omen Gaming Hub software, if
-the modern query fails but the MUX WMI endpoint (0x52) responds
-successfully to a read request, the driver defaults to a standard
-Hybrid + Discrete support mask (0x06).
+I am experiencing a hibernation (suspend-to-disk) failure on my laptop
+since upgrading to kernel 7.1. Hibernation worked without issues on
+kernel 7.0, but consistently fails now when the newly introduced
+"bitland-mifs-wmi" module is loaded.
 
-Signed-off-by: Kürşat Abaylı <hello@kursatabayli.dev>
+I notice that both redmi_wmi and bitland_mifs_wmi are currently loaded
+on my system. I understand there is an active patch series to
+deprecate redmi_wmi in favor of bitland_mifs_wmi for these platforms.
+
+However, on this specific hardware (Redmi Book Pro 14 2025),
+bitland_mifs_wmi fails to establish its platform profile during boot,
+resulting in multiple "Failed to get profile for handler" warnings in
+dmesg. Consequently, during the PM freeze transition, the suspend
+callback fails with -EINVAL (-22), which blocks the system freeze
+phase and aborts hibernation.
+
+Unloading the "bitland-mifs-wmi" module bypasses this issue and allows
+hibernation to successfully complete. It seems the new driver's
+suspend routine might need to be made robust against profile
+initialization failures, or require a fix to successfully register the
+platform profile on this hardware variant.
+
+Below are the details of the hardware, boot logs, failure logs, and
+the successful hibernation sequence after removing the module.
+
+### System Environment
+- Hardware: XIAOMI REDMI Book Pro 14 2025
+- OS: Chimera Linux (musl-based)
+- Kernel: 7.1.3
+
+### dmidecode System Information
+Handle 0x0001, DMI type 1, 27 bytes
+System Information
+        Manufacturer: XIAOMI
+        Product Name: REDMI Book Pro 14 2025
+        Version:
+        Serial Number: 63081/25U700201
+        UUID: 07082025-fcb3-aacd-4be6-fcb3aacd4bea
+        Wake-up Type: Power Switch
+        SKU Number: TM2411-63081
+        Family: Mi Laptop
+
+### dmesg platform_profile warnings on boot
+[   15.103125] platform_profile: Failed to get profile for handler
+bitland-mifs-wmi
+[   15.107027] platform_profile: Failed to get profile for handler
+bitland-mifs-wmi
+[   17.109653] platform_profile: Failed to get profile for handler
+bitland-mifs-wmi
+
+### dmesg log when hibernation fails (with bitland-mifs-wmi loaded)
+[   68.005811] printk: Suspending console(s) (use no_console_suspend to debug)
+[   68.010452] bitland-mifs-wmi
+B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: dpm_run_callback():
+bitland_mifs_wmi_suspend [bitland_mifs_wmi] returns -22
+[   68.010469] bitland-mifs-wmi
+B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B-4: PM: failed to freeze: error
+-22
+[   68.316796] nvme nvme0: D3 entry latency set to 10 seconds
+[   68.382440] nvme nvme0: 14/0/0 default/read/poll queues
+[   68.501502] PM: hibernation: Basic memory bitmaps freed
+[   68.502346] OOM killer enabled.
+[   68.502348] Restarting tasks: Starting
+[   68.503286] Restarting tasks: Done
+[   68.509265] PM: hibernation: hibernation exit
+[   68.509644] e-hibernate[1885]: Failed to put system to sleep.
+System resumed again: Invalid argument
+[   68.526064] e-hibernate[1885]: e-hibernate: shutdown_or_sleep
+failed: Invalid argument
+
+### Workaround (Unloading module)
+Running "sudo rmmod bitland_mifs_wmi" allows the system to enter
+hibernation successfully:
+
+[  110.414050] PM: hibernation: Basic memory bitmaps freed
+[  110.415952] OOM killer enabled.
+[  110.415953] Restarting tasks: Starting
+[  110.417919] Restarting tasks: Done
+[  110.420194] PM: hibernation: hibernation exit
+[  110.420288] e-hibernate[2690]: System returned from sleep operation
+'hibernate'.
+
 ---
-Changes in v3:
- - Rebased for the for-next branch (no functional changes).
 
-Changes in v2:
- - Replaced hardcoded bitmask with GENMASK(6, 0).
- - Added specific defines for MUX modes instead of using raw BIT() macros.
- - Initialized arrays with {} instead of { 0 }.
- - Fixed reverse xmas-tree ordering for local variable declarations.
- - Removed empty lines between function calls and their return value checks.
- - Split ternary operators into standard if-statements for better readability.
- - Added missing <linux/array_size.h> include.
- - Removed unnecessary cast in hp_wmi_set_mux_mode.
----
- drivers/platform/x86/hp/hp-wmi.c | 137 +++++++++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+Please let me know if there are any other logs, DSDT tables, or test
+patches you would like me to try.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 34c9b941bdd8..3e50eaf6570c 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,8 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
-+#include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/compiler_attributes.h>
- #include <linux/dmi.h>
-@@ -58,6 +60,12 @@ enum hp_ec_offsets {
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-+#define HPWMI_MUX_MODE_UMA		BIT(0)
-+#define HPWMI_MUX_MODE_HYBRID		BIT(1)
-+#define HPWMI_MUX_MODE_DISCRETE		BIT(2)
-+#define HPWMI_MUX_MODE_OPTIMUS		BIT(3)
-+#define HPWMI_MUX_MODE_MASK		GENMASK(6, 0)
-+#define HPWMI_MUX_LEGACY_MASK		(HPWMI_MUX_MODE_HYBRID | HPWMI_MUX_MODE_DISCRETE)
- 
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
- 
-@@ -381,6 +389,7 @@ enum hp_wmi_commandtype {
- 	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
- 	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
- 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
-+	HPWMI_GRAPHICS_MUX_QUERY	= 0x52,
- };
- 
- struct victus_power_limits {
-@@ -1173,12 +1182,139 @@ static int camera_shutter_input_setup(void)
- 	return err;
- }
- 
-+static const u8 mux_bitmask_map[] = {
-+	[0] = HPWMI_MUX_MODE_HYBRID,
-+	[1] = HPWMI_MUX_MODE_DISCRETE,
-+	[2] = HPWMI_MUX_MODE_OPTIMUS,
-+	[3] = HPWMI_MUX_MODE_UMA,
-+};
-+
-+static int hp_wmi_get_mux_supported_modes(u8 *supported)
-+{
-+	u8 legacy_buffer[4] = {};
-+	u8 buffer[128] = {};
-+	u32 req_packet = 0;
-+	int ret;
-+
-+	if (!supported)
-+		return -EINVAL;
-+
-+	/* Try modern BIOS design data query (128-byte buffer) */
-+	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
-+				   buffer, zero_if_sup(req_packet), sizeof(buffer));
-+	if (ret == 0) {
-+		*supported = buffer[7];
-+		return 0;
-+	}
-+
-+	/*
-+	 * (Fallback): Legacy BIOS behavior based on Omen Gaming Hub.
-+	 * If the modern query is not supported, check if the MUX query endpoint
-+	 * responds to a read request. If it succeeds, the hardware has MUX
-+	 * capability but lacks the mode map, defaulting to Hybrid + Discrete.
-+	 */
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-+				   legacy_buffer, sizeof(legacy_buffer), 0);
-+	if (ret == 0) {
-+		*supported = HPWMI_MUX_LEGACY_MASK;
-+		return 0;
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+	return -EINVAL;
-+}
-+
-+static int hp_wmi_get_mux_mode(u8 *mode)
-+{
-+	u8 buffer[4] = {};
-+	int ret;
-+
-+	if (!mode)
-+		return -EINVAL;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-+				   buffer, sizeof(buffer), sizeof(buffer));
-+
-+	if (ret < 0)
-+		return ret;
-+	if (ret > 0)
-+		return -EINVAL;
-+
-+	/* Mask the highest bit, which might be used as a BIOS status flag */
-+	*mode = buffer[0] & HPWMI_MUX_MODE_MASK;
-+
-+	return 0;
-+}
-+
-+static int hp_wmi_set_mux_mode(u8 mode)
-+{
-+	u8 buffer[4] = { mode, 0x00, 0x00, 0x00 };
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_WRITE,
-+				   buffer, sizeof(buffer), sizeof(buffer));
-+
-+	if (ret < 0)
-+		return ret;
-+	if (ret > 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static ssize_t gpu_mux_mode_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	u8 mode;
-+	int ret;
-+
-+	ret = hp_wmi_get_mux_mode(&mode);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", mode);
-+}
-+
-+static ssize_t gpu_mux_mode_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf,
-+				  size_t count)
-+{
-+	u32 requested;
-+	u8 supported;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 0, &requested);
-+	if (ret)
-+		return ret;
-+
-+	if (requested >= ARRAY_SIZE(mux_bitmask_map))
-+		return -EINVAL;
-+
-+	ret = hp_wmi_get_mux_supported_modes(&supported);
-+	if (ret)
-+		return ret;
-+
-+	/* Verify if the requested mode is allowed by the hardware mask */
-+	if (!(supported & mux_bitmask_map[requested]))
-+		return -EOPNOTSUPP;
-+
-+	ret = hp_wmi_set_mux_mode(requested);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
- static DEVICE_ATTR_RO(display);
- static DEVICE_ATTR_RO(hddtemp);
- static DEVICE_ATTR_RW(als);
- static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
-+static DEVICE_ATTR_RW(gpu_mux_mode);
- 
- static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_display.attr,
-@@ -1187,6 +1323,7 @@ static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_dock.attr,
- 	&dev_attr_tablet.attr,
- 	&dev_attr_postcode.attr,
-+	&dev_attr_gpu_mux_mode.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(hp_wmi);
--- 
-2.55.0
-
+Best regards,
+Nabil Danial
