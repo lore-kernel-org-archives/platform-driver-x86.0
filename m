@@ -1,271 +1,113 @@
-Received: from outbound.st.icloud.com (st-2003k-snip4-8.eps.apple.com [57.103.77.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738CF39FD4
-	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Jul 2026 00:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.77.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F5576025
+	for <platform-driver-x86@vger.kernel.org>; Sat, 11 Jul 2026 06:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783729066; cv=none; b=eAJ4KUNwX/HXmJZPs5QBu8NSep5trLnEPzcUPMaVIg3VCUfL4pyIUVTezbIJXtmqQ4JRTtzaagcE/HF54h+7A3TICoYchNknbECXJQ4ki/5ZRJP/iXFV0RmE0qEd/L1cP3Mx92Nmaie/Un9nVEWCml2ubCiZOYoEo4XFyi4yI5Y=
+	t=1783751034; cv=none; b=eDfxIaw+7Aj54xhiE/iGl+L/N66aw6nlxMiEiXK7uiO1TlLQI5fqagq6LoVHyskJ8rsuUWTvLPmigi1lY1Qq7sJLV6qxTCojolnnRX4n9cOZ1Cfj9JQkSK0zsmWgomivUxAI1abI7ro4kpUcAfs48/5GfJ34UHKtDCYwRtiMV0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783729066; c=relaxed/simple;
-	bh=M8XXyBoUlD0PgivYsGBPxoGb5sWHuXZII69qZuzTqF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CKr/ivQmwf5+u3ZVhH4YEAhpCTK0OoPGArmijz8a3albYJzHl53GdVlYsRrc/B+feDin15UpMHEcj7J46EBu8gfuzodTNwMDDGtclQimFx2pAZMNEWn6dFVSbwL5iI2qirHhQJlacmEz/hEYugl3nBg0s48FTYxJ4E6gIB+K7AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev; spf=pass smtp.mailfrom=kursatabayli.dev; dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b=Awd7KBd8; arc=none smtp.client-ip=57.103.77.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kursatabayli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kursatabayli.dev
+	s=arc-20240116; t=1783751034; c=relaxed/simple;
+	bh=S1/0jwBMfcPVFdbh/v4avu7b0dUuZhaQPjurjiCKQkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FpvigsihrhMKPMvvrCCs/jz4hSK9Yd1MjH4Ieq/iRY6IUc2Q/j/7D9qqgVaRJkrodBeoSLpmmTKhid3zcXqja542LqCjelOMwfDIGQW/kZnvLPDhB4yFaZ4NFfZJQYvYgjF1L4gMHW3hdZi1ap3wHk0FCdHKBYs4WOMu95pqKB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lalTUBvC; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kursatabayli.dev header.i=@kursatabayli.dev header.b="Awd7KBd8"
-Received: from outbound.st.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPS id D6F10180029C;
-	Sat, 11 Jul 2026 00:17:42 +0000 (UTC)
-X-ICL-RepId: 019f4e89-83ba-7a08-8c97-653676fcec56
-X-ICL-Out-Info: HUtFAUMHWwJACUgATUQeDx5WFlZNRAJCTQhBBkMGXAZeCEAFQwVYA1BcHA4FUgdeH3kTRh9ECkYRWxlKAV5FVhVPWFUJCgBHAkoZRwxVCkscUFZXCEFLQBMETRMFUgddTVYNRw9YHlwUFwtHQ14IXh9MHB0OWAYSAE0KDjYGWQVeCVYDQwU2EhRdRVgYRRhTBFgaUhRbAhwUXA4TAF4PD0wLSAFbB1wDQQlIAloFWBxBDUoEVBpaHxhcFF8CdwBHAkoZRwxVCkscUFZXCEFVEgRACFZQVB5BBFYVbAlYBlMZVw==
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kursatabayli.dev; s=sig1; t=1783729063; x=1786321063; bh=G7QYFNxWKTWdAyqN98/PImTZ6kC1KhYj5rz19O3B/UM=; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:x-icloud-hme; b=Awd7KBd84FrkWj8EVnBjrJ0jAzkPlOtndZD8a64aWNYsOmk9G902UCgM4nMTo6s0m5PiGBlVfOiyLqmn92AkcGMDNV8LDWVA++2VOlee//roccV9TGS6gPI2s1f044Q6nVmqWX8LjzlT+fMzlRGMrR2kdR2fYi8dABrZAEf6Tz+1tso9dXbd9/s3RuG94BNrewOR1R4exk9ddNKsRpzBwnNlb+mi8Q2iehaousPgYXhIR1kpdHgSKqbf2wjVj1EGOOUZA2AeIoQWeQ0JOB2/fj8ZJAtgIGu5sNgasWGE/8pO4McvvqKAm/k5igCjJBwU9gUId3LLzp+AjAw347AIVA==
-mail-alias-created-date: 1779124395950
-Received: from hp (unknown [17.42.251.67])
-	by p00-icloudmta-asmtp-us-east-1a-60-percent-6 (Postfix) with ESMTPSA id 87619180029E;
-	Sat, 11 Jul 2026 00:17:41 +0000 (UTC)
-From: =?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lalTUBvC"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cae1a3a744so11037555ad.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 10 Jul 2026 23:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783751032; x=1784355832; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XkRstM7R8Vg66nTgVC4msTuOth2Fa5G6vugexDMuMcA=;
+        b=lalTUBvCpgJXpjePq6VrYiX4K7GeSyr5xJrnLcyrftAaoxj4o4snesDObypzSN4zB+
+         6Ad0dTJ4z/cKf9bWp43rSIu7yyRnFlsxIbCTV+7i/fQoNWuHrDomimb+2kOvjaT1rNJE
+         /U54QYHyIvLeowSE559oSSUi9ZReCVVLyVC/n0R+nWnUdqAVch0VRqWhQNv9RXvRq6tT
+         jr3jLIsgNaTi/S9obogJtSyo751uvUfI0QYtE8wVn5sKlJmko7qfcYK38S4a5gErEEdj
+         CwiyfTIJO/K0xugMDVVHIkn/rUD++JJWJu9TsLYS8EIf9hSKp6hvXWVw8BaE8hToEYFD
+         GPqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783751032; x=1784355832;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XkRstM7R8Vg66nTgVC4msTuOth2Fa5G6vugexDMuMcA=;
+        b=BsCyqIBDo6pHFclYaYV6xQFefbHtrHgHTXG2kgOX8VcBLVSyP8J6TbeZJWDNQ35jIo
+         f1jCXkHrWK5udFI8PxcNyYOnq//KF0aLDQTy5M8MpDHNzsX+hS25fAPZJtLjT3CPZm/3
+         CJCz7L/baGLAPoF5kjGscYohHoyPE9n+zDkz9nYf5QHyXuf2KXcDDIAFuempKsdslvwF
+         6hXbsFQHbnj0ZJQRCK74oAjWf3m5zsI78TKfkd+cWLpW71E8IAPiJ+ccMpoD1xeJdt7q
+         JLnqHB/eOxfdnXKwqAuUigvEDhIxw8ytLhqGUpbifAVneLHAYrqASfGEPeDYmZEWc9CY
+         VumA==
+X-Gm-Message-State: AOJu0Yzb64kSrt6nKyv+8s4PWutyRtg12CXhrggG8g4M+YfrDyOa9pP3
+	JJt43mVBkZloFXkPdn+caL9BCXQLx4rdkOFqU9RlEmzz3W/w+BjUNvrk
+X-Gm-Gg: AfdE7ckZglCnV+P39B365BeTr4fwRL8L49S9SBcxwyRy4dNxAPjGh1MpOb/e3iBTqPF
+	b/58Yt/8gcO8zIKltWpI7a43kOnmRm0eOBzAMtp3ryGiTOOMan/DIBZfYPXwGOefoAGhna0YOJd
+	aIyr1UghM1nkB6uv1y4piSV/vgucRK1ZVj3UQ4+Efp4dwE7EFE27WpXGlXKy2Hex2nQUaTBXktG
+	HaBi3hnpqf8rTpOM/BATHZoBfA2QpOKN8i3a4ruUc2OzWcsOQj7kDO451wFvpKo4Xj+jmJvO8AV
+	YN1PcET9Bp8ePrJVun7Ryq9bvnHL11ZOJsxIiB200yeUWIhqnRCFSMy7zzM2H2q3r0M/RPv4sui
+	e+hanAtk6NVy81wJ2RcKeowRyHqK3QyzxSQmqvKAoon5xYhZZw78O2Gg9tu/vIDSo2w2zvJYUjK
+	xjZ8nnE/H7SxJS2vcsb5PuMgnTXK0wWS/1wI25jf8=
+X-Received: by 2002:a05:6a21:d83:b0:3c1:fbf:1e2e with SMTP id adf61e73a8af0-3c110a12318mr1877132637.10.1783751032179;
+        Fri, 10 Jul 2026 23:23:52 -0700 (PDT)
+Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([2400:2410:5f2b:700:a02c:24ed:3127:342c])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ca79aff904dsm4103117a12.6.2026.07.10.23.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jul 2026 23:23:51 -0700 (PDT)
+From: Vishnu Sankar <vishnuocv@gmail.com>
 To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org
+	hansg@kernel.org,
+	oliver@email.com
 Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?K=C3=BCr=C5=9Fat=20Abayl=C4=B1?= <hello@kursatabayli.dev>
-Subject: [PATCH v4] platform/x86: hp-wmi: Add GPU MUX switch support
-Date: Sat, 11 Jul 2026 03:17:23 +0300
-Message-ID: <20260711001723.14279-1-hello@kursatabayli.dev>
-X-Mailer: git-send-email 2.55.0
+	linux-acpi@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	mpearson-lenovo@squebb.ca,
+	vsankar@lenovo.com,
+	Vishnu Sankar <vishnuocv@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Fix USB-C Security probe failure on unsupported platforms
+Date: Sat, 11 Jul 2026 15:22:49 +0900
+Message-ID: <20260711062249.503264-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzExMDAwMCBTYWx0ZWRfX9kJJtnmuhE6K
- 2nlo2T/ThMUCeUXeKZQzFYTbUHZpqCSvx+DJw9d4vuzUalq2B7cqy5l+l9W1bq7v9Qh92NjP7I9
- MUvwCXe3DLdFKAcrFv1ttf6Tdxetznaj3ivXId6XMSOETPnqOQRNsDMg4Ff29/20oE7lsSApfZY
- vaEmATpPW+g49Rh7DbyPsL4ohV1XCvUDKUnx0VEMisdg842ZU7vUjnOEcYFLG+LncT/CM1TDov6
- 41mlbI6yIIGOnNf12V5kc9t5K3GuKIv6wf5RvkN6DOQHLlU24G0Zrn10vZGrUV//56Ix3at+iBR
- rFc1GoFe3Rp15uBOVUU
-X-Proofpoint-ORIG-GUID: YcgVrSpUkq47coQUxLcbE4XlwFyLj3oj
-X-Proofpoint-GUID: YcgVrSpUkq47coQUxLcbE4XlwFyLj3oj
 
-Add support for querying and switching the graphics MUX mode on HP
-systems via WMI. This introduces the 'gpu_mux_mode' sysfs attribute
-under the hp-wmi platform device, allowing userspace tools to check
-and safely switch between available graphics modes (e.g., UMA, Hybrid,
-Discrete).
+On systems where the USCS ACPI method is absent, acpi_evalf() returns
+AE_NOT_FOUND which maps to -EIO. This caused tpacpi_usbc_security_init()
+to propagate the error and thinkpad_acpi failed to probe entirely on
+unsupported platforms.
 
-The hardware capabilities mask is primarily read using the modern
-128-byte System Design Data query. However, to ensure backward
-compatibility with older models, a fallback mechanism is implemented.
-By mirroring the behavior of the Windows Omen Gaming Hub software, if
-the modern query fails but the MUX WMI endpoint (0x52) responds
-successfully to a read request, the driver defaults to a standard
-Hybrid + Discrete support mask (0x06).
+Fix this by checking for USCS method presence with acpi_has_method() before
+attempting to call it, returning -ENODEV immediately if absent.
+This follows the same pattern used by other subdrivers in thinkpad_acpi.c.
 
-Signed-off-by: Kürşat Abaylı <hello@kursatabayli.dev>
+Fixes: 67e8d1e9cacd ("platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support")
+Reported-by: Oliver Lin <oliver@email.com>
+Closes: https://lore.kernel.org/platform-driver-x86/239c8162-e1e6-4b49-8292-35547c5a525c@liuxiaozhen.dev/
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
 ---
-Changes in v4:
- - Removed empty lines between function calls and error handling.
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v3:
- - Rebased for the for-next branch (no functional changes).
-
-Changes in v2:
- - Replaced hardcoded bitmask with GENMASK(6, 0).
- - Added specific defines for MUX modes instead of using raw BIT() macros.
- - Initialized arrays with {} instead of { 0 }.
- - Fixed reverse xmas-tree ordering for local variable declarations.
- - Removed empty lines between function calls and their return value checks.
- - Split ternary operators into standard if-statements for better readability.
- - Added missing <linux/array_size.h> include.
- - Removed unnecessary cast in hp_wmi_set_mux_mode.
----
- drivers/platform/x86/hp/hp-wmi.c | 134 +++++++++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 34c9b941bdd8..b5486caaec8a 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,8 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 91db4c8eeac2..85ed506516f0 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -11368,6 +11368,9 @@ static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
+ {
+ 	int err;
  
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
-+#include <linux/bits.h>
- #include <linux/cleanup.h>
- #include <linux/compiler_attributes.h>
- #include <linux/dmi.h>
-@@ -58,6 +60,12 @@ enum hp_ec_offsets {
- #define HP_FAN_SPEED_AUTOMATIC	 0x00
- #define HP_POWER_LIMIT_DEFAULT	 0x00
- #define HP_POWER_LIMIT_NO_CHANGE 0xFF
-+#define HPWMI_MUX_MODE_UMA		BIT(0)
-+#define HPWMI_MUX_MODE_HYBRID		BIT(1)
-+#define HPWMI_MUX_MODE_DISCRETE		BIT(2)
-+#define HPWMI_MUX_MODE_OPTIMUS		BIT(3)
-+#define HPWMI_MUX_MODE_MASK		GENMASK(6, 0)
-+#define HPWMI_MUX_LEGACY_MASK		(HPWMI_MUX_MODE_HYBRID | HPWMI_MUX_MODE_DISCRETE)
- 
- #define zero_if_sup(tmp) (zero_insize_support?0:sizeof(tmp)) // use when zero insize is required
- 
-@@ -381,6 +389,7 @@ enum hp_wmi_commandtype {
- 	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
- 	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
- 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
-+	HPWMI_GRAPHICS_MUX_QUERY	= 0x52,
- };
- 
- struct victus_power_limits {
-@@ -1173,12 +1182,136 @@ static int camera_shutter_input_setup(void)
- 	return err;
- }
- 
-+static const u8 mux_bitmask_map[] = {
-+	[0] = HPWMI_MUX_MODE_HYBRID,
-+	[1] = HPWMI_MUX_MODE_DISCRETE,
-+	[2] = HPWMI_MUX_MODE_OPTIMUS,
-+	[3] = HPWMI_MUX_MODE_UMA,
-+};
++	if (!acpi_has_method(hkey_handle, "USCS"))
++		return -ENODEV;
 +
-+static int hp_wmi_get_mux_supported_modes(u8 *supported)
-+{
-+	u8 legacy_buffer[4] = {};
-+	u8 buffer[128] = {};
-+	u32 req_packet = 0;
-+	int ret;
-+
-+	if (!supported)
-+		return -EINVAL;
-+
-+	/* Try modern BIOS design data query (128-byte buffer) */
-+	ret = hp_wmi_perform_query(HPWMI_GET_SYSTEM_DESIGN_DATA, HPWMI_GM,
-+				   buffer, zero_if_sup(req_packet), sizeof(buffer));
-+	if (ret == 0) {
-+		*supported = buffer[7];
-+		return 0;
-+	}
-+
-+	/*
-+	 * (Fallback): Legacy BIOS behavior based on Omen Gaming Hub.
-+	 * If the modern query is not supported, check if the MUX query endpoint
-+	 * responds to a read request. If it succeeds, the hardware has MUX
-+	 * capability but lacks the mode map, defaulting to Hybrid + Discrete.
-+	 */
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-+				   legacy_buffer, sizeof(legacy_buffer), 0);
-+	if (ret == 0) {
-+		*supported = HPWMI_MUX_LEGACY_MASK;
-+		return 0;
-+	}
-+
-+	if (ret < 0)
-+		return ret;
-+	return -EINVAL;
-+}
-+
-+static int hp_wmi_get_mux_mode(u8 *mode)
-+{
-+	u8 buffer[4] = {};
-+	int ret;
-+
-+	if (!mode)
-+		return -EINVAL;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_READ,
-+				   buffer, sizeof(buffer), sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+	if (ret > 0)
-+		return -EINVAL;
-+
-+	/* Mask the highest bit, which might be used as a BIOS status flag */
-+	*mode = buffer[0] & HPWMI_MUX_MODE_MASK;
-+
-+	return 0;
-+}
-+
-+static int hp_wmi_set_mux_mode(u8 mode)
-+{
-+	u8 buffer[4] = { mode, 0x00, 0x00, 0x00 };
-+	int ret;
-+
-+	ret = hp_wmi_perform_query(HPWMI_GRAPHICS_MUX_QUERY, HPWMI_WRITE,
-+				   buffer, sizeof(buffer), sizeof(buffer));
-+	if (ret < 0)
-+		return ret;
-+	if (ret > 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static ssize_t gpu_mux_mode_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	u8 mode;
-+	int ret;
-+
-+	ret = hp_wmi_get_mux_mode(&mode);
-+	if (ret)
-+		return ret;
-+
-+	return sysfs_emit(buf, "%u\n", mode);
-+}
-+
-+static ssize_t gpu_mux_mode_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf,
-+				  size_t count)
-+{
-+	u32 requested;
-+	u8 supported;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 0, &requested);
-+	if (ret)
-+		return ret;
-+	if (requested >= ARRAY_SIZE(mux_bitmask_map))
-+		return -EINVAL;
-+
-+	ret = hp_wmi_get_mux_supported_modes(&supported);
-+	if (ret)
-+		return ret;
-+
-+	/* Verify if the requested mode is allowed by the hardware mask */
-+	if (!(supported & mux_bitmask_map[requested]))
-+		return -EOPNOTSUPP;
-+
-+	ret = hp_wmi_set_mux_mode(requested);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
- static DEVICE_ATTR_RO(display);
- static DEVICE_ATTR_RO(hddtemp);
- static DEVICE_ATTR_RW(als);
- static DEVICE_ATTR_RO(dock);
- static DEVICE_ATTR_RO(tablet);
- static DEVICE_ATTR_RW(postcode);
-+static DEVICE_ATTR_RW(gpu_mux_mode);
- 
- static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_display.attr,
-@@ -1187,6 +1320,7 @@ static struct attribute *hp_wmi_attrs[] = {
- 	&dev_attr_dock.attr,
- 	&dev_attr_tablet.attr,
- 	&dev_attr_postcode.attr,
-+	&dev_attr_gpu_mux_mode.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(hp_wmi);
+ 	err = usbc_security_query(&tp_features.usbc_security_enabled);
+ 	if (err == -ENODEV)
+ 		return 0;
 -- 
-2.55.0
+2.51.0
 
