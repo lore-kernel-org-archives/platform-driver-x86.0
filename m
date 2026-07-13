@@ -1,113 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-42.ptr.blmpb.com (va-2-42.ptr.blmpb.com [209.127.231.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600CA3A960A
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 09:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5CE34040A
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 09:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783935123; cv=none; b=IIg7HAF2t/2LDsaY3sMmhIJjlgICB4Kp1vzPda7RBV+ZkQX8V0G49QRJpu7Kia7jS9BdgGN4RIyNTealyEqyRHZqXoP+RKqch6Tdi/hkX2rHcQSDc3ZxzDe4Xm4+MdHCE+5fNpWfQkuomvyvKmuTpab71voCoXknCOXgKb4mLsc=
+	t=1783936101; cv=none; b=DXWCt9JDAV5ee0agHEjHcuK6Ditgk56NI5kBkPwxG0Op+REUOOfxbWxWDR5OnwI8p2q8W0z9I/T43l8Al1gm6/BCdU2ETjWmwcqJvs0WNp1sBiJxo0e6+2yyy5E027Nv7w9qzewf4y2fucjjieGpSUEOcb2IQKjjBEfUz2/ReD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783935123; c=relaxed/simple;
-	bh=NDHGXu4/crhHhf8f1+k5t3yB0zbq5kPedmZy00Mz4D4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qdQaNbV98gutel0LWfB9QuqXgbJdG6rZSBm62ykcMC4RdBiIUJ3AYQuycjySDclbjyP6yA7iHm1BtaoTZFcLAbc6qVXusekCc3nR6+yJDXgu6LYE+WQnHsQ0hQm0TcB6yFLExuI2J4QjealH+iHT81Vc1OSSXylJCufnk+FiVdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zc+NHdoI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1783936101; c=relaxed/simple;
+	bh=XFk4a8jR5MWKiw4N1EsIFCpyXNg5mGbOlYoShr7F0/s=;
+	h=Date:Message-Id:In-Reply-To:References:Cc:From:Subject:
+	 Mime-Version:Content-Type:To; b=ohCUnHE5fk0lR29kBpCwMetetS/869+aUJiib9aNi+CNmkIE4eNmuvbFQd0lnj82hu92QX9GML2iPDyAT/gPDgZEs+PLuqF6oeZrn/UtIwHWjqwSUC7d+Lf3jX+DsybuaDTQT/rQ2dC23YPd12TOwh33gCUcXD86G7XXTTG7jqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev; spf=pass smtp.mailfrom=liuxiaozhen.dev; dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b=trBQ3nGQ; arc=none smtp.client-ip=209.127.231.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=liuxiaozhen.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zc+NHdoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EFD0CC2BCFB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 09:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1783935123;
-	bh=NDHGXu4/crhHhf8f1+k5t3yB0zbq5kPedmZy00Mz4D4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Zc+NHdoIlThBIM1Rez49lS3FzO1nnOJoSqqqlwYcik4y08ss7IsHImVZ8qdDtIVh7
-	 S53LmflW3iKX1hETpWn0YFhPwDNWopw8leFSjIZTe27eBJDulHdCcFvNGNkeoiiFHC
-	 ZYveoQLIkTqIwVRZuxcG5Z5JNJTAOykPMSUy0bBEy0bCc2hbAScIbJNqihw7spN96k
-	 vexibu1/YCF3CUMnqqVBvQGijFAVMUVy01LRuoccLpxnKppGDU5ZXYQDNlVEPQd+7i
-	 2yrboPW8wvAEQTL4oQRlhaDICTUV5+t9pbNhHI7FZC4NMTlS8F4hJIp3f//Fu8lmF6
-	 nsNwDzb+6fhXg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E00F0C53BBF; Mon, 13 Jul 2026 09:32:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
- resuming after unplugging the power cord during sleep
-Date: Mon, 13 Jul 2026 09:32:02 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: blocking
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-218305-215701-isSF7ovt8h@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
-References: <bug-218305-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b="trBQ3nGQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2602171341; d=liuxiaozhen.dev; t=1783936088;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=XFk4a8jR5MWKiw4N1EsIFCpyXNg5mGbOlYoShr7F0/s=;
+ b=trBQ3nGQ0rg3xEokiiKR7ZBvrf0VD76pUMSRs8csk453t7XgxqPy0NLUeKqbu3b98uNXiN
+ wGQcJ5z+RDSZcz6zNe2AyMNG1AApTVRjMlPSASyG8lZkGe12xScsaEkp3PuLCVpK5Yi60r
+ HQkXiaXNRC0+WdoAFl2bu60jwtMmiDA7lMEylgYWGgCLNi+mvYCfHvTt8xvzqfEKh5LezD
+ iIwLviiFY6fmWaiM5cj+AXO4s3rzO3mCfpavDzKKboy1ZjpPzw5al9PfW27eD0QdPA8XkF
+ fUSwDb/D040pcyW23UQFVHgsHkpvK8QQ4cs9YMJp1LpSweaH2Ldm1zdz4z2EnQ==
+Date: Mon, 13 Jul 2026 17:48:01 +0800
+Message-Id: <3cc77770-5e42-4986-bae0-2f4fe6469d7c@liuxiaozhen.dev>
+X-Lms-Return-Path: <lba+26a54b456+2aceaa+vger.kernel.org+oliver@liuxiaozhen.dev>
+In-Reply-To: <142193d8-3860-4d9d-acc8-5b6a0569321a@liuxiaozhen.dev>
+X-Original-From: Oliver Lin <oliver@liuxiaozhen.dev>
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+References: <20260711062249.503264-1-vishnuocv@gmail.com> <142193d8-3860-4d9d-acc8-5b6a0569321a@liuxiaozhen.dev>
+Cc: <platform-driver-x86@vger.kernel.org>, <linux-acpi@vger.kernel.org>, 
+	<ibm-acpi-devel@lists.sourceforge.net>, <mpearson-lenovo@squebb.ca>, 
+	<vsankar@lenovo.com>, <hansg@kernel.org>, 
+	<ilpo.jarvinen@linux.intel.com>, <oliver@liuxiaozhen.dev>
+From: "Oliver Lin" <oliver@liuxiaozhen.dev>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix USB-C Security probe failure on unsupported platforms
+Received: from [198.18.0.0] ([23.151.104.73]) by smtp.feishu.cn with ESMTPS; Mon, 13 Jul 2026 17:48:04 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+To: "Vishnu Sankar" <vishnuocv@gmail.com>
+User-Agent: Mozilla Thunderbird
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
+Hi Vishnu,
 
---- Comment #153 from Artem S. Tashkinov (aros@gmx.com) ---
-Mario, someone used Claude to dig into the issue and here's what it has to =
-say:
+I tested the following two commits:
 
+ =C2=A0platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support
+ =C2=A0platform/x86: thinkpad_acpi: Fix USB-C Security probe failure on=20
+unsupported platforms
 
----------------------------------------------------------------
+The tests were performed with Linux 7.2.0-rc2 on:
 
-**Why it works on Windows:** AMD's Windows drivers explicitly re-initialize=
- the
-SMU CPPC handshake
-in their resume path. The Linux `amd_pmc` and `amd-pstate` drivers do not.
+Lenovo ThinkPad P15 Gen 1
+BIOS N30ET47W 1.30, EC N30HT33W
+Lenovo ThinkPad P50s
+Machine type 20FLCTO1WW
 
----
+On the ThinkPad P15 Gen 1, the firmware WMI query still produces an
+AE_AML_PACKAGE_LIMIT error while evaluating _SB.WMI1.WQA0:
 
-## How an upstream provider can fix this
+ACPI BIOS Error (bug): AE_AML_PACKAGE_LIMIT, Index (0x2) is beyond
+end of object (length 0x2)
+ACPI Error: Aborting method _SB.WMI1.WQA0 due to previous error
 
-### Kernel fix (correct layer =E2=80=94 `amd-pstate` / `amd_pmc`)
+However, with the probe-failure fix applied, thinkpad_acpi continues
+initializing successfully. The battery extension, secondary fan control,
+rfkill switch and ThinkPad extra buttons were all registered normally.
 
-`drivers/cpufreq/amd-pstate.c` =E2=80=94 The driver needs a `.resume()` cal=
-lback (or a
-`syscore_ops.resume` hook) that re-writes the CPPC `desired_perf` register =
-for
-every online CPU.
-In active mode this means re-issuing the CPPC performance request that was =
-in
-effect before
-suspend, forcing the SMU to re-accept OS-side CPPC control.
+I also tested the USB-C data path with a Xiaomi Redmi Note 13 5G:
 
-`drivers/platform/x86/amd/pmc/pmc.c` =E2=80=94 The `amd_pmc` driver orchest=
-rates the
-s2idle handshake.
-On the exit path (`amd_pmc_resume_handler`) it could call a notifier that l=
-ets
-`amd-pstate`
-re-initialize CPPC, ensuring the SMU is back under kernel control before us=
-er
-processes resume.
+Initial device detection: PASS
+Repeated unplug/replug: PASS
+S3 deep suspend/resume: PASS
+USB-C device detection after resume: PASS
 
----------------------------------------------------------------
+The device was successfully enumerated again after resume. The
+thinkpad_acpi module remained loaded and the kernel taint value was 0.
 
-Is this doable/plausible?
+On the ThinkPad P50s, which does not expose the new USB-C Security
+interface, thinkpad_acpi also initialized successfully. Existing
+thinkpad_acpi functionality, including battery registration, rfkill,
+hotkeys and suspend/resume, continued to work normally. This confirms
+that an unsupported platform no longer causes the complete
+thinkpad_acpi probe to fail.
 
---=20
-You may reply to this email to add a comment.
+I did observe existing errors on the P15 Gen 1 from the NVIDIA UCSI and
+xHCI paths:
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+ucsi_ccg 2-0008: probe with driver ucsi_ccg failed with error -110
+xhci_hcd 0000:01:00.2: xHC error in resume, USBSTS 0x401, Reinit
+
+The test kernel was built without the NVIDIA display driver. These
+messages did not prevent the ACPI UCSI Type-C ports from being created,
+and did not prevent the tested USB-C device from working before or
+after suspend.
+
+Therefore, for this series:
+
+Tested-by: Oliver Lin oliver@liuxiaozhen.dev
+
+Thanks,
+Oliver
