@@ -1,46 +1,46 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012000.outbound.protection.outlook.com [52.101.53.0])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012002.outbound.protection.outlook.com [40.107.200.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC7E356751;
-	Mon, 13 Jul 2026 04:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183F2379EEF;
+	Mon, 13 Jul 2026 04:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.2
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783917636; cv=fail; b=JNwjwcR8/8jkKk+TYXkEh1IZO6bIoUwGTF5edazxU8RDOtdfirGujtO39BoeMkB+aBWmCXqitxyjAOwTmzk5BAICBI72GaLP7loLaDrC74Y6XULra2UdwC+mhaWD38C+xyXHapjOxphG+J+ku82vOEWwBBG84gcy8Abl5XNupj4=
+	t=1783917637; cv=fail; b=kIH7qS0dilkAEXYjRvpTNG0dAoUvOyPrIvLXIlpYnMc0A/5QzMHK9ZdsGh87MgaBYeyPX6Nh6eO/dY+Db9F0PFoXP17pEE5Wn4PDOdQj/+NTmmRlgz7c4FCaSiI3KE5NfeDhFwWkY0GiKya4FkJa4WZIKlOFbxe08ZkkyArnX6Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783917636; c=relaxed/simple;
-	bh=Hy89uS3vuNGV/PYrOnuTL72Zr4yRo+AfDvK7Hn/ln9k=;
+	s=arc-20240116; t=1783917637; c=relaxed/simple;
+	bh=t6pcNxzgxUnlbOibqB4NYzZYzG/BqEyfso1F39C2H7A=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fwey0vjEMtiVDEJw66H2/Gb4StYeGrdBbkLDUP1ODqlV+6HGTBRDmi2CcTZtBk/e7tDxtkjavAiQqJBSvERS0WZIwb9veZXTnKh3JJK6pX4gjdS6poK3362YYE7qCn2/xLIh6IQH4vThi8MrvnLpxa9ZOpuP2CV+tJQeYEvM6aQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=l6iGNNy+; arc=fail smtp.client-ip=52.101.53.0
+	 MIME-Version:Content-Type; b=S6LFi/EfAnfB8Ffpva9j3SA+X41n3mb26d+g5d+6KprrvJVv2gcXwqcyyJunUNNwMG/QdXyw8gZ6CjRfl140NlnbbMbPPP7YzY0kcIdxOKffeL0AITDwDCl2henucswAGQ4L4ZNDHvWwGKtvgS6XA2duNp2mRCyvR7RaTrB1jaw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=efxYGroF; arc=fail smtp.client-ip=40.107.200.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="l6iGNNy+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="efxYGroF"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kF1WlwiLjX7t4WsXhnx3yIE4RQSqlITr4CuTqnHCx4wpl4nm73NWEiuecxg8WG8ZYqpXApOPc4A9/TMLK3RkDUVTeYnrFTPRjqwbFFrR3BBknLzr6he/tG+EmmfDJlg7IC0NZ/6BO0SiVp3hSgHkGy9GuFiMt959v2MyywbCW7D3CArIcTk8vlts1QDJo1kbDiCU3u7ZKUoyYBB3XX8jHqkc2XN2UvZDx3OeESveRKoKIAV+nrJvy/NSHmKEMFEUw/ZqCOhvZC9eLBVCGfXyjMfLsyM1W0aMw3bWRq1PJqgZmaSEqaNl1Q+S8UCugelsxQx9dR9evWcbwcGsmvLziw==
+ b=mcmFu1cewi/cZmjF6dD8BbVV4PghaKlKwxPq70IPomd4g42hw8pjI/6AfuM7OFifoGEOUgzDuYnjSc5SlOyFgJaiVSPglo+DUfkJ2VAR+PsFRt415dIzpj4NMEujnOlkV1SKoyt7qkuVzG5LNj9QNLvdxAo1OtvJFAYYTVRb/SlzZ//iheUsOZtfxsL1ZNkOiNkiQC10s46Qn4CffwjaWZSr9Eu30T+qDGV/yjL9BWK1JwYWIGoCFwym/AuvywKwpKaajIeAeApnkgTTjNmltDw9IMdaO+NCEmdSjfnMrZn2LoC7JvIk6U/Y1D/6y9Xk3iLX2qEDPBhVZK6jYZOvkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6oZHusnDBPzwzc0a7UxSnYcfVMLkGswZs9HVPFlp9kc=;
- b=i0Y21dWSwnyZSz0ij2Zs9G026vLE4+Bm+rOLbLPO7L0drZ7TuoT7ICPppanJRijvugVike8zfmFp/1zZxsVJNoHieztDcJzy1NcvmnkhNTG2tqw7HyvkD59KOf9as7eYbJoCqRY2g9goJZWCqx7o28pyI/2hP1n/zBaaAqYXsz5WAGEhDfCVHaXuDNwZfzYPQ5J4wGAimNoHPu67i5UzO0uFMs39jS5OJvEvKeDzh1WlUxeEa1vwhNLrTWPuLsjdfs/qRxMS1SfHF1vKHCcwutYwBu8J91IvQls6r0+GntWQqFeMW41r6SxPzIAN72nxuJ+K4BnEwKDuQwA2LTeB6A==
+ bh=PTQqoRjCR1NTLftlLud0dF1a5y0lq6my/fM6coKXjdo=;
+ b=VNc75k66bwKAeIGlgaaQry1Qttem8rl+6iYefcywWnj2m98GNgbCzIuSD4HFT6SA/flSwfv1+dpUfl4ExYnIRUu/graLDWV20BpOC8npaweG4OjK5lc1TlJdW2sEpw/2pnEbmVgafXoeQLz5P1m/Z0f1xXY/T86EdI7CBf38CWtXTYUjBn0F7awqWX6+1srKOo0HJOfRUTraUxpM0QIySFn5s7LQTcbjV19NK/pRFBI0SS+O+CWuL5KJ4xJwn7jY8itpHeFNSknhcUNXo3LnK8GfAsaNVDT/GIlmE+XGJU8or6892CgdC8aSXfpTW7Ft9uOLUTjCGe4A51HWAiThtA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6oZHusnDBPzwzc0a7UxSnYcfVMLkGswZs9HVPFlp9kc=;
- b=l6iGNNy+0fOHxvtYmo8t07/mR7tSnwSjIizuSt+UqB75aqfrVhF2Va7MvJhkmUDlqdT2nTxXq/AWs6VwVKe5yVRUPzNB5KFU+pO1DdAFvJjWp+e7Va3wk6cxFh0/YpD8y2kOVSdfuoOi7BLODLyTUSOMc/MhM6hx0X9JGq8cgvA=
-Received: from MW4P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::22)
- by SA3PR12MB7950.namprd12.prod.outlook.com (2603:10b6:806:31c::13) with
+ bh=PTQqoRjCR1NTLftlLud0dF1a5y0lq6my/fM6coKXjdo=;
+ b=efxYGroFCEAZUX+C7cWRZInQKtXp12YjhhVWaXQnwCm3SXpdU8xi1gMAJsZAW8jz9Vdt5V+VOODEr/whjjHt5Q+xtWhjJA5DdLBFPjs43mh88weBW/+x8e0lTJcS66rkZ5+/qBilmAy+7rqTbHjwNpnK/iSj7OqvkzJMG+t7if4=
+Received: from MW4P222CA0002.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::7)
+ by SA1PR12MB8841.namprd12.prod.outlook.com (2603:10b6:806:376::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
- 2026 04:40:26 +0000
+ 2026 04:40:29 +0000
 Received: from CO1PEPF00012E83.namprd03.prod.outlook.com
- (2603:10b6:303:114:cafe::73) by MW4P222CA0017.outlook.office365.com
- (2603:10b6:303:114::22) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:303:114:cafe::2c) by MW4P222CA0002.outlook.office365.com
+ (2603:10b6:303:114::7) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.202.19 via Frontend Transport; Mon,
- 13 Jul 2026 04:40:26 +0000
+ 13 Jul 2026 04:40:29 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,18 +50,18 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  CO1PEPF00012E83.mail.protection.outlook.com (10.167.249.58) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.223.9 via Frontend Transport; Mon, 13 Jul 2026 04:40:25 +0000
+ 15.21.223.9 via Frontend Transport; Mon, 13 Jul 2026 04:40:29 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Sun, 12 Jul
- 2026 23:40:23 -0500
+ 2026 23:40:27 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH v6 1/6] platform/x86/amd/hsmp: Serialize ACPI HSMP probe and remove with an rwsem
-Date: Mon, 13 Jul 2026 10:10:00 +0530
-Message-ID: <20260713044005.1194115-2-muralidhara.mk@amd.com>
+Subject: [PATCH v6 3/6] platform/x86/amd/hsmp: Serialize per-socket metric table reads with a mutex
+Date: Mon, 13 Jul 2026 10:10:02 +0530
+Message-ID: <20260713044005.1194115-4-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260713044005.1194115-1-muralidhara.mk@amd.com>
 References: <20260713044005.1194115-1-muralidhara.mk@amd.com>
@@ -77,165 +77,187 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF00012E83:EE_|SA3PR12MB7950:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66a6a7b8-b124-41b8-0cd9-08dee098db9e
+X-MS-TrafficTypeDiagnostic: CO1PEPF00012E83:EE_|SA1PR12MB8841:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e798de1-555f-460a-0c94-08dee098ddaa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|23010399003|18002099003|22082099003|56012099006|11063799006;
+	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|23010399003|18002099003|22082099003|11063799006|56012099006|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	qXeH7Gwq8uC51wUngSOPoSrzHXTgjOep9RJd4ozVlrp0NQZPGExkNRvabb54CjRPnK0yhVWccU8y/d18vhezCNT3Kyrk3Z0KDuEMGHHnI+hSkBfYHfYnwtw2cUIyUB/nJavuVMEuMCH53YDa/zUuCxA4VyFYQUeToCKtZ7OeqPuEM27bISRQ1a1ryrCraXLnYkxXgXL3bQUi2qGzRHetJnY/suNQ+JkHClLQQGkY5Bwyec0taGsU24cArbKPtkC7wSmBm/joE9iGssSs7HldbK3u9lVuK/VzI+AoT1OnIV0brgRqfL9EH3r8JHETpRXs5A+qxDY9ncUnLmT4fWo3jbRcKkpe7RWD/dL7PxsPEcgU9xbLsRnaNgP8Zdbq+qUUM2ZdiZ9FfO7zlqdRcf93nakHxfk57SruJlTsi9GTzJDK0pVf1TayvyeABMK+0WQdH7tn+Zp5YgjWvRPXO14iOaFHDUBgcqW3K3/I8vIV75NGcNht5JTrLqDRvy8vxGe4Yo38ZEV88+m6xx0uMMKDA9uxNiVQc7YlB80VKkkd9npt7h77js42036O/lQNfcKCDyTavxo2VdtOZ/bITy5Q7z3K8k3wUQyxybp4j3g6eOgk0Nuhwbcinsp499qNVgTwBZgMsSU3iva2EGB/9LZpTCoa9FcR7yGcRpXg/lxwgSI1x6YKCL8F9sjJiDEDYUZA7OYSiAeFt+E9Qxq451/fQA==
+	j8TomYyAjOJFulNEbNOosiUNNs+Cs3CJS735V34ZT3R8lc41efrfwCFDeygB0B7dzFh1Su2hFr7qWRSkYLRNuwB831LVxPH9itT/aHS79ThQ/fj8FzCG3ASlI7Vny5So/y8ERWe9jlvVkcTWvo07s2LiihQwImIjHZCFOPYay+MflmTFuraJ1zdvsp/4sPjo4xoe/OaQ0xNIAEl9oclUVMhzVic8MqFVXrOpj9b1P0mZjZlVhauH/ExHTEdDj7eBC6/GEcxsv7t4QlxT95iibYKT2DMuBkmqX2bRoqZeovwIcNEYeKaGjN664D3FRJmMgK+ZWFa0t9FlZXh3AE0mhB0hvMD5U0THchI51CImerBrsbaDAy99ZKeleg4fyil+wf+KT2ONk+lUUWBwD3C5Ek7ewdDoybD2sl0sTwsavRKr3ZJdZ6x2onWmWgWTaYDqOrQDBfaNohAwOSNK2o2Z92n+5k212wVIc+jZcewsPf23FOFSRhESZTuiBQXCwDlqM7LtlLS+AoZA2tIT+YhViqRsAtqtm9Jq56I0xfMw8PBnoo8w+6Ydy9rl4iBoslth0y0wqzHJ1sMOQSp3fKbLyaaXS1U2xOca3L9LyQRAc6qV31Nvi3ReukHdD5ZJjvOBhuq+sgnElx67QNxaDUepfUD5w59iu/9f0WRCLQHfyFKQK8eY+hL3zP7+KBnkxDnN2aMr6QywR0KlZyqPNusubQ==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(23010399003)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(23010399003)(18002099003)(22082099003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	5ypxIn1mwNZ2qrZVWLTwTlfabx4gM7RqdYA5g1WPs5yDCo+fAfRX5MC7fGqHf6vX+ifnszY0vErnAwIBNPBQW+m8ihlLaAxdWVVnOC0h+PDO0h9LRUBkL1/hKlAb8IWzJdgzNtYBXftBxfZArc0bWYuF63fQCbkGKu6s72pCpvc5gckIroZG/JoYVqueFd2WaAxwg3tjhOBU4yGppW2iWGhTDyBCy9KZ+byUVgXl+zQtEJkTSU8beEavPjowBHO9jrjvOMONUfgQSxEvI6jKPd/Efm7RBb9g2FWeYmZaX6noo6SEpDME08eNVi4vpfNUMed+m+dzBKZ/YHp+NHBplOFqITcmrd+8MWYqh+Cun1almw3kJnzXlm52GzIzRDGQ5/SawKFSC5CKtqmnG+BuztwYG+W4MAsy3hUV21HdAXH2fYSuoThLshrqUSnc1S82
+	uo6oC0QEa+cpIm56f7Q9aj9wsCkprDYhCmiAtgo4w1p5+af8r6aTeBfW9kGd8x0rOiZA3lsfDw/N+VhgpeIbeDvcxTeiJeaPVWKX9SYXQbW07Y0bPqrAw6nosuSLBP7yiLwFPQIOElFsWKwzh6j//BMDZ/dZDCNVNVxFo/0yRWqLNaIBtZTGotwIfvubIPw1p+lEAnrOAknNK7DXNMZUAaA6O5UyXHsZ+OG22wfyOAhMCvleWfHU2kLzsZLl2OEjR1WcXydJlZmwhVp3JbQ4CrmALco7WxgXv9gQjMc1nXQZAQ1j+AKUBGR3GjRyFaDLLMZilqKxStBgcjYFG1pquewP5hg/lt59topEb7GEy6KDR9Dv7DmqJEzPEVzWRht17+Ov3roLGBssvRTDB97K4FaUnPK0hr5IpNLRz9eJdNo18Wkh9XURv3S6mPlEyMlN
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 04:40:25.6300
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 04:40:29.0653
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66a6a7b8-b124-41b8-0cd9-08dee098db9e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e798de1-555f-460a-0c94-08dee098ddaa
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CO1PEPF00012E83.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7950
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8841
 
-Add hsmp_sock_rwsem and export it, then hold it for write across ACPI
-probe, remove and init_acpi() so concurrent per-socket platform probes
-cannot race the is_probed handshake or the one-time socket-array
-allocation. Use lockdep_assert_held_write() in init_acpi() to catch
-incorrect locking under lockdep.
+HSMP_GET_METRIC_TABLE makes the firmware refill a shared per-socket metric
+DRAM region, which hsmp_metric_tbl_read() then copies out with
+memcpy_fromio(). Two concurrent readers of the metrics_bin sysfs attribute
+on the same socket can race: one can trigger a fresh fill while the other
+is mid-copy and return a torn snapshot. (The hwmon path does not touch
+this region; it only issues power messages via hsmp_send_message().)
 
-An rw_semaphore is used rather than a plain mutex because an upcoming
-change adds a read side so the lock-free data plane runs concurrently with
-itself while probe/remove hold it for write to drain in-flight messages.
-Introducing it as an rwsem now keeps the lock type stable across that
-change.
+Embed a struct mutex metric_read_lock in each hsmp_socket and hold it
+across the fill-and-copy in hsmp_metric_tbl_read(). Add
+hsmp_init_metric_read_locks() and hsmp_destroy_metric_read_locks(), which
+take only struct hsmp_plat_device and iterate pdev->sock[] over
+pdev->num_sockets so the caller cannot pass a count that disagrees with the
+array.
+
+Wire them into both front-ends' probe and teardown paths so the mutex is
+always initialized before metrics_bin is exposed: the platform driver and
+the ACPI driver both drive hsmp_metric_tbl_read() through the same 0444
+metrics_bin attribute. Doing this in one patch avoids a bisection point
+where an ACPI read would lock an uninitialized mutex.
 
 Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 ---
- drivers/platform/x86/amd/hsmp/acpi.c | 22 ++++++++++++++++++++++
- drivers/platform/x86/amd/hsmp/hsmp.c |  9 +++++++++
- drivers/platform/x86/amd/hsmp/hsmp.h |  7 +++++++
- 3 files changed, 38 insertions(+)
+ drivers/platform/x86/amd/hsmp/acpi.c |  3 +++
+ drivers/platform/x86/amd/hsmp/hsmp.c | 28 ++++++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.h |  5 +++++
+ drivers/platform/x86/amd/hsmp/plat.c |  3 +++
+ 4 files changed, 39 insertions(+)
 
 diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 72f68cef1297..a23797bd1dd5 100644
+index a23797bd1dd5..a092d7589bcb 100644
 --- a/drivers/platform/x86/amd/hsmp/acpi.c
 +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -15,12 +15,15 @@
- #include <linux/array_size.h>
- #include <linux/bits.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/device.h>
- #include <linux/dev_printk.h>
- #include <linux/ioport.h>
- #include <linux/kstrtox.h>
-+#include <linux/lockdep.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/rwsem.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
- #include <linux/topology.h>
-@@ -482,11 +485,20 @@ static ssize_t hsmp_freq_limit_source_show(struct device *dev, struct device_att
- 	return len;
+@@ -639,6 +639,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
+ 					       GFP_KERNEL);
+ 		if (!hsmp_pdev->sock)
+ 			return -ENOMEM;
++
++		hsmp_init_metric_read_locks(hsmp_pdev);
+ 	}
+ 
+ 	ret = init_acpi(&pdev->dev);
+@@ -670,6 +672,7 @@ static void hsmp_acpi_remove(struct platform_device *pdev)
+ 	 */
+ 	if (hsmp_pdev->is_probed) {
+ 		hsmp_misc_deregister();
++		hsmp_destroy_metric_read_locks(hsmp_pdev);
+ 		hsmp_pdev->is_probed = false;
+ 	}
  }
- 
-+/*
-+ * Bring up one ACPI HSMP socket: parse its ACPI table, run the mailbox
-+ * handshake and register its sysfs/hwmon interfaces.
-+ *
-+ * Called with hsmp_sock_rwsem held for write by hsmp_acpi_probe(), so the
-+ * per-socket bring-up cannot race a concurrent probe or remove.
-+ */
- static int init_acpi(struct device *dev)
- {
- 	u16 sock_ind;
- 	int ret;
- 
-+	lockdep_assert_held_write(&hsmp_sock_rwsem);
-+
- 	ret = hsmp_get_uid(dev, &sock_ind);
- 	if (ret)
- 		return ret;
-@@ -607,6 +619,14 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 	if (!hsmp_pdev)
- 		return -ENOMEM;
- 
-+	/*
-+	 * Multiple ACPI socket devices probe in parallel, but the is_probed
-+	 * handshake and the one-time socket-array allocation below must run
-+	 * exactly once.  Serialize the whole bring-up against concurrent
-+	 * probe/remove by holding the socket rwsem for write.
-+	 */
-+	guard(rwsem_write)(&hsmp_sock_rwsem);
-+
- 	if (!hsmp_pdev->is_probed) {
- 		hsmp_pdev->num_sockets = topology_max_packages();
- 		if (!hsmp_pdev->num_sockets) {
-@@ -642,6 +662,8 @@ static int hsmp_acpi_probe(struct platform_device *pdev)
- 
- static void hsmp_acpi_remove(struct platform_device *pdev)
- {
-+	guard(rwsem_write)(&hsmp_sock_rwsem);
-+
- 	/*
- 	 * We register only one misc_device even on multi-socket system.
- 	 * So, deregister should happen only once.
 diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 1a87931136fd..e9c17698983c 100644
+index 008f3c0b2ad7..fd36c8f142c0 100644
 --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -12,6 +12,7 @@
+@@ -10,9 +10,11 @@
+ #include <asm/amd/hsmp.h>
+ 
  #include <linux/acpi.h>
++#include <linux/cleanup.h>
  #include <linux/delay.h>
  #include <linux/device.h>
-+#include <linux/rwsem.h>
+ #include <linux/io.h>
++#include <linux/mutex.h>
+ #include <linux/rwsem.h>
  #include <linux/semaphore.h>
  #include <linux/sysfs.h>
+@@ -415,6 +417,14 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
+ 	msg.msg_id	= HSMP_GET_METRIC_TABLE;
+ 	msg.sock_ind	= sock->sock_ind;
  
-@@ -40,6 +41,14 @@
- 
- static struct hsmp_plat_device hsmp_pdev;
- 
-+/*
-+ * Serializes AMD HSMP socket bring-up and teardown: ACPI probe and remove take
-+ * it for write so concurrent per-socket probes cannot race the is_probed
-+ * handshake or the one-time socket-array allocation.
-+ */
-+DECLARE_RWSEM(hsmp_sock_rwsem);
-+EXPORT_SYMBOL_NS_GPL(hsmp_sock_rwsem, "AMD_HSMP");
++	/*
++	 * HSMP_GET_METRIC_TABLE makes firmware refill this socket's shared
++	 * metric DRAM region, which is then copied out below.  Hold the
++	 * per-socket lock across the fill-and-copy so concurrent readers of the
++	 * same socket cannot return a torn snapshot.
++	 */
++	guard(mutex)(&sock->metric_read_lock);
 +
- /*
-  * Send a message to the HSMP port via PCI-e config space registers
-  * or by writing to MMIO space.
+ 	ret = hsmp_send_message(&msg);
+ 	if (ret)
+ 		return ret;
+@@ -424,6 +434,24 @@ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size)
+ }
+ EXPORT_SYMBOL_NS_GPL(hsmp_metric_tbl_read, "AMD_HSMP");
+ 
++void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev)
++{
++	u16 i;
++
++	for (i = 0; i < pdev->num_sockets; i++)
++		mutex_init(&pdev->sock[i].metric_read_lock);
++}
++EXPORT_SYMBOL_NS_GPL(hsmp_init_metric_read_locks, "AMD_HSMP");
++
++void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev)
++{
++	u16 i;
++
++	for (i = 0; i < pdev->num_sockets; i++)
++		mutex_destroy(&pdev->sock[i].metric_read_lock);
++}
++EXPORT_SYMBOL_NS_GPL(hsmp_destroy_metric_read_locks, "AMD_HSMP");
++
+ void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev)
+ {
+ 	struct hsmp_socket *sock;
 diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-index 0509a442eaae..129200d0cf81 100644
+index b0d67b93363d..ec92c2a429bb 100644
 --- a/drivers/platform/x86/amd/hsmp/hsmp.h
 +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-@@ -16,6 +16,7 @@
+@@ -15,6 +15,7 @@
+ #include <linux/hwmon.h>
  #include <linux/kconfig.h>
  #include <linux/miscdevice.h>
++#include <linux/mutex.h>
  #include <linux/pci.h>
-+#include <linux/rwsem.h>
+ #include <linux/rwsem.h>
  #include <linux/semaphore.h>
- #include <linux/sysfs.h>
+@@ -44,6 +45,8 @@ struct hsmp_socket {
+ 	void __iomem *metric_tbl_addr;
+ 	void __iomem *virt_base_addr;
+ 	struct semaphore hsmp_sem;
++	/* Serializes HSMP_GET_METRIC_TABLE fill-and-copy for this socket */
++	struct mutex metric_read_lock;
+ 	char name[HSMP_ATTR_GRP_NAME_SIZE];
+ 	struct device *dev;
+ 	u16 sock_ind;
+@@ -65,6 +68,8 @@ void hsmp_misc_deregister(void);
+ int hsmp_misc_register(struct device *dev);
+ int hsmp_get_tbl_dram_base(u16 sock_ind);
+ void hsmp_unmap_metric_tbls(struct hsmp_plat_device *pdev);
++void hsmp_init_metric_read_locks(struct hsmp_plat_device *pdev);
++void hsmp_destroy_metric_read_locks(struct hsmp_plat_device *pdev);
+ ssize_t hsmp_metric_tbl_read(struct hsmp_socket *sock, char *buf, size_t size);
+ struct hsmp_plat_device *get_hsmp_pdev(void);
+ #if IS_ENABLED(CONFIG_HWMON)
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index b5f2120765c8..7a16d1ab463b 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -212,6 +212,7 @@ static int init_platform_device(struct device *dev)
+ static void hsmp_pltdrv_release(void *data)
+ {
+ 	hsmp_unmap_metric_tbls(hsmp_pdev);
++	hsmp_destroy_metric_read_locks(hsmp_pdev);
+ }
  
-@@ -71,4 +72,10 @@ int hsmp_create_sensor(struct device *dev, u16 sock_ind);
- static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return 0; }
- #endif
- int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
+ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+@@ -224,6 +225,8 @@ static int hsmp_pltdrv_probe(struct platform_device *pdev)
+ 	if (!hsmp_pdev->sock)
+ 		return -ENOMEM;
+ 
++	hsmp_init_metric_read_locks(hsmp_pdev);
 +
-+/*
-+ * Serializes HSMP socket bring-up and teardown. ACPI probe and remove take it
-+ * for write.
-+ */
-+extern struct rw_semaphore hsmp_sock_rwsem;
- #endif /* HSMP_H */
+ 	ret = devm_add_action_or_reset(&pdev->dev, hsmp_pltdrv_release, NULL);
+ 	if (ret)
+ 		return ret;
 -- 
 2.34.1
 
