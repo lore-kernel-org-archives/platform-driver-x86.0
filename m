@@ -1,68 +1,68 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0135A387
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 11:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A159737646E
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 11:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783940567; cv=none; b=fHEujYpeefWrn5gtfOlEvv8Bqp96oZpMwjiMMiiQeJT3hlS6cvx8xH3EY3gYsIUwQ7xCBoKOmm4vVwMYMWKWQVHN4UmyISRkfDqu6LpIxYliuYZB/OuptvkZWchLP7sazSTyecGrlhrWc+w86wGWVIVxOe9sd2sBxxBu1jTJ8lk=
+	t=1783940570; cv=none; b=S5GxfiU6hJamN26m1P17Yc8m7nODA3wNcyECaCu4M4sp0KqO/vwH/aWEb5H/d8WTjSwAqAxsZTA8lBYC5e3cPLg6wm9/XAxRvJM6FBN+O/DviHLirm/AZjF01PF5s/RZMWvvJABWquGEKlHAUKUjm18MA9614jMg5hWHK/PuXm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783940567; c=relaxed/simple;
-	bh=XdMxzd8iDKQr5PS2zIsnUUypJpLDZzPkZaQ7qmg2evU=;
+	s=arc-20240116; t=1783940570; c=relaxed/simple;
+	bh=GH6CWop3wfi/VJkvt4cMc0bNyzCTH1KmyzTlNjCz/68=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nSv1aKEdpANv6OREL6AIlO/ZboX/7hGVNStDYCRJvtBA4g3VSa0cyNgopVR/b6C3y9ew+1stiBczivXPzTUUUxwBv3nlCkt7Wx0UdIY7yf1zLc69jkfIELtjkh89HUgoEyyUQRfkt7+fsY8lZDusMs9b72itRZ7x1rqTaSGWuic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=Vv6Mp1Qt; arc=none smtp.client-ip=209.85.215.174
+	 In-Reply-To:To:Cc; b=IK9rgWXFsLB9ruyvy6xPJOaDPX6Z2eTzc41UsVRTWXQXjtWxUaYR/U8GnwkhhH+PO/HbBLsPwzhAQhHGugbZFY3gh6WrzfbvYyFw4Xp9isC9BwcvO5yV5Bb6RPBxGB/nl7ODkwoCZkHiPN5qtLJuFsTYoyGBp0PmC5sC3ZuDDOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=AHazjOTx; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="Vv6Mp1Qt"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c9eefcf9175so2576502a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 04:02:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="AHazjOTx"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8487088510aso2736991b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 04:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1783940563; x=1784545363; darn=vger.kernel.org;
+        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1783940567; x=1784545367; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=FFFSD3/CjVLS0ezRz/CdhSHYIzRiivgohq9ZOTv9sGc=;
-        b=Vv6Mp1QtQSZ0TwbktUQjHmCzOuOnyqIkcvYujltX5uarPgxHuEvLrfQUW0Lwnbg7oK
-         4Zn2kucqQaHe0LyQyy5kZ+OFNBcQMV2IO3cVFV4jjXIJ/jF3jVTWrirkNNaVXUTr472R
-         MKPhAU7bkTfXX9WgFREkhBsGzrE+Q+j2cdnbItXAtYKFcOWeR24F8mVFkMOP3jCBwsIt
-         cRE5Tp+XMCp0+w9Bq5pAUODODLuCWlrzONPwC3GRE1kgNwkzf+JeUz20gio5q65Zc24a
-         nFOHMgG1nkk5ly88hw0dDanZsMTOvlFGQiscoy7OWFhvsBd+kb3Td4XX3uKUZQRM6BPA
-         LZAQ==
+        bh=eWk91/IxILRwPoM0aUwUrJJrk3OrtAhlG6TmoK3LV2g=;
+        b=AHazjOTxZXhs+0eTkazPjKH1+t7SKypGWHx0dKqpGI1DoctrYPpWB8KkXGqoVGqp9y
+         4JU951f8j55I4rB5GlouCvpAUZSnXRCz1+X2Lvg1UemKndz5mYQIK2j2n9wq77Pb8IhB
+         qcw43pAZAUc5RkcrODQNjhKN8lfu6FqHgRcKyIGPA5tlfK53k46Rhp1jZaaTNRAuBaHj
+         lWSFKKAZ4cvD2jU9pjJR64LLRIWkSnsM9tj31LyWYwrY5hFnWf2bSMeKHzNnyiVFJrb1
+         OijaweVRePRg0tgX0okuuAddUxy9fujbKEl5HWnDzEDxi1HFStJ9XNTNpA9iuWd2KOWY
+         aSyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783940563; x=1784545363;
+        d=1e100.net; s=20251104; t=1783940567; x=1784545367;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FFFSD3/CjVLS0ezRz/CdhSHYIzRiivgohq9ZOTv9sGc=;
-        b=jglMNkn0jDuJweBoIBpLgminP++CKQeMurmckg5XKr8BsMkW3FohhBBR/LPmynicbc
-         O3cip56z+g7mmwuv/YO/SAi5qG7ubZBWtDsncTkkJXq2IrGdtYGENkUVOxgNyoObwPeO
-         vr7U7euGf7w5iGG/yihbQPAIyk/Z3neac37Pp3EbkM1teoFO8N0td8OIAnz6Pi4FxzqE
-         7wEpYmqW+jwLTcMyDVFCRNGbRee35bjYTP32WRpjwD3EArd1M+9mWM4icEquikN0CJsp
-         ZAefXMS5Mobwai3C8dpQ8MvPfDinYwyLVdwZz3AUG+uzv9IGdFkJQgiXQlU6CyEv1+YA
-         nsqw==
-X-Gm-Message-State: AOJu0YwbKTmiAP1ceCa7Je5yh2hX9HjoQTo3yp6GvVSAA+Y/XCjFBAxY
-	NIFl7fDs7/RBDCTijzq+lODxBB+y7YXmVMBcsAzfidqyE/9QQblj56h7RTtEk61Y/Tw=
-X-Gm-Gg: AfdE7clTHvIrFu8RCRFO8HYP7tpQPjTqOLtTVNJpK9LvSpzkuKu/NOnaqsAaG8p0Zco
-	erCDMFCkG5pZ/X6ukErxogp/kMqDRofPwDnT52LIQE8OYo6pbdAeQhv7v6IcVcS+4fwdJL5a7Fi
-	r/aoeiYmEaFUkuVPyTi3toKHuxDm1GxBRsaoqkYCb9gVnDdsUHlKFg0VP/3SIvumodo4l9Cn+0s
-	21n3KJseEutQU/2X6YH2If2+pI9EOvVNrxAS9HTwg6t2xrimU/+L7moLwxYfB8Az5ZQbVCD3Xlm
-	8/SjEuBFnIrNc8Iwcpc+nSX9CSJ2LNOEw7Cyo4Y0Fb84VEbu50uGtLp38mquH/RmY9iq0DVtDJJ
-	pyeG7LZ/2JMilKFHBFM5RSkm8NH0YlBdC0Xn0mVHydAQJsPx/hi08YpKG1sL71fqUylT6kh3tr0
-	MS0ODuT446DUuaP3JMClxCGl0Dj+ZeFQ6tQubfEyYGbJvkfLmqXH51JIHOmH+a5QNIYCrv4+SP5
-	EWOOLNPQYUE6DD65qgPdoVjaKzqIIiLtnQ=
-X-Received: by 2002:a05:6a20:b7a7:b0:3c0:9c1b:d0b2 with SMTP id adf61e73a8af0-3c1108c2c0amr8860918637.61.1783940563499;
-        Mon, 13 Jul 2026 04:02:43 -0700 (PDT)
+        bh=eWk91/IxILRwPoM0aUwUrJJrk3OrtAhlG6TmoK3LV2g=;
+        b=Cn9h3ZCH5x/L1R9rNN8JJ16lb9NkZQ08hkBylRmhiwfYZSHramV1WQN47pm17QmU9o
+         /ZrRQri8wAKuZu8Wz5r4ydcMa6wPbsXVo2y6OeJGIGFdHlKXIu5DfTSSti4mS1q3Kyog
+         0YrVNVtVDXp7I9ZieUq365yywnLSMwUIn0rOW1WueP+MDkoS6XfVaqwHAsjTopgwpcSR
+         lVXia37oVp5bUrccreq1FrL7ry2p4r9vyzHaCKzLm903WWop2OlDgbOvnd6epdmI+Yoc
+         qAIcXH//pG7PibVEkVlmfAA4XKX7KvsFdhm3OqynvhkOLmYlu5LE+3zgNoIhgjTOLZ4d
+         g/Vg==
+X-Gm-Message-State: AOJu0Yw+APb7U5jgPYzCKZjuo8PAqtlPsrMU0mAPZ0HAf3PDRtgzVGVE
+	HsSn3BcR9keJDlPKEkD1bNcCpOoSlz6z5vJi2Ar28kaHng9DHamrv8OdsqNwQuejg8Q=
+X-Gm-Gg: AfdE7clON+pBBVLrLq4swG/sJTgE1NLARpEJEw9Zz8/ish2NZCECssof+P7CCCbu0kZ
+	op0AyO/mAYMOGB6XYrYtKlJBjBGJusNAAYTW5eCFWAmJTGWe4A5jEmxcE9eZyQfkY3h9xwB8CLw
+	0y00JwdvbGg1SFgjSl3FK9mFVvlmGE/0FZFQ1wUfppP6qZPbB2Zjwa92fUJ1h/jHD4n/zGdIjoU
+	n0G3QZSW8TbLlzEcjjAqUjwD2JHlycincol8nPgI1sYZWDndm5IhfIBUgvty3sDci1oeu8rK37C
+	i19rgZfQZcJabC6d0uVmgN7E0lNgGJ4QrJHZhPqno4S5SY2vYvek0Xg649cY7xryl2T/fJFYVS3
+	b5gjU0hcAwudfm6YtCQk2ZbJ0kRIrLOCvVhVsEkVE/0PMxcC73MjgUw5+TnjZ98NWC8C6vGOa7v
+	qu+5lUB0tQVGntL/uHXFO38eUry9YOpQS36FJQx42AcdQWiwYotvbYL3/bSaTb8M9GvL/EP4bSi
+	aonkg37djXoO/to8ZqTb6rbjOr/3OCZDN8=
+X-Received: by 2002:a05:6a20:7491:b0:3c0:9c1a:893e with SMTP id adf61e73a8af0-3c110f7f4e5mr8654866637.70.1783940566955;
+        Mon, 13 Jul 2026 04:02:46 -0700 (PDT)
 Received: from [127.0.1.1] ([103.158.43.43])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-311a6115e61sm52249087eec.22.2026.07.13.04.02.40
+        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-311a6115e61sm52249087eec.22.2026.07.13.04.02.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 04:02:43 -0700 (PDT)
+        Mon, 13 Jul 2026 04:02:46 -0700 (PDT)
 From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-Date: Mon, 13 Jul 2026 16:32:24 +0530
-Subject: [PATCH 1/2] platform/x86: int1092: Fix potential memory leak in
- sar_probe()
+Date: Mon, 13 Jul 2026 16:32:25 +0530
+Subject: [PATCH 2/2] platform/x86: int1092: Fix info leak in
+ parse_package()
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -70,124 +70,50 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260713-platx86-v1-1-c8991bff03a0@cse.iitm.ac.in>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260713-platx86-v1-2-c8991bff03a0@cse.iitm.ac.in>
 References: <20260713-platx86-v1-0-c8991bff03a0@cse.iitm.ac.in>
 In-Reply-To: <20260713-platx86-v1-0-c8991bff03a0@cse.iitm.ac.in>
 To: Shravan Sudhakar <s.shravan@intel.com>, 
  Hans de Goede <hansg@kernel.org>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>
+ stable@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>, 
+ Sashiko <sashiko-bot@kernel.org>
 X-Mailer: b4 0.13.0
 
-The memory allocated for device_mode_info in parse_package() called by
-sar_get_data() is not freed in some of the error paths in sar_probe().
-Fix that by converting to use device managed allocations.
+Sashiko reports a possible information leak due to a non-zeroized
+memory allocation for device_mode_info. Fix that by switching to use
+devm_kcalloc() for allocation.
 
-Fixes: dcfbd31ef4bc ("platform/x86: BIOS SAR driver for Intel M.2 Modem")
-Cc: stable@vger.kernel.org
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://sashiko.dev/#/patchset/20260710052806.100107-1-nihaal%40cse.iitm.ac.in
 Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
 ---
-Compile tested only. Issue found using static analysis.
-
-v1->v2:
-- Changed the patch to instead use device managed allocations for both
-  the device_mode_info and the context structure, as suggested by Ilpo
-  Järvinen.
-v2->v3:
-- Align the arguments to the opening paranthesis as suggested by Ilpo
-  Järvinen.
-
-Link to v1: https://patchwork.kernel.org/project/platform-driver-x86/patch/20260707070524.953741-1-nihaal@cse.iitm.ac.in/
-Link to v2: https://patchwork.kernel.org/project/platform-driver-x86/patch/20260710052806.100107-1-nihaal@cse.iitm.ac.in/
+Newly added in v3
 ---
- drivers/platform/x86/intel/int1092/intel_sar.c | 32 ++++++++------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ drivers/platform/x86/intel/int1092/intel_sar.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index 849f7b415c1e..7263114f0b3d 100644
+index 7263114f0b3d..f506155f35d4 100644
 --- a/drivers/platform/x86/intel/int1092/intel_sar.c
 +++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -91,8 +91,10 @@ static acpi_status parse_package(struct wwan_sar_context *context, union acpi_ob
+@@ -91,10 +91,10 @@ static acpi_status parse_package(struct wwan_sar_context *context, union acpi_ob
  	    item->package.count <= data->total_dev_mode)
  		return AE_ERROR;
  
--	data->device_mode_info = kmalloc_objs(struct wwan_device_mode_info,
--					      data->total_dev_mode);
-+	data->device_mode_info = devm_kmalloc_array(&context->sar_device->dev,
-+						    data->total_dev_mode,
-+						    sizeof(*data->device_mode_info),
-+						    GFP_KERNEL);
+-	data->device_mode_info = devm_kmalloc_array(&context->sar_device->dev,
+-						    data->total_dev_mode,
+-						    sizeof(*data->device_mode_info),
+-						    GFP_KERNEL);
++	data->device_mode_info = devm_kcalloc(&context->sar_device->dev,
++					      data->total_dev_mode,
++					      sizeof(*data->device_mode_info),
++					      GFP_KERNEL);
  	if (!data->device_mode_info)
  		return AE_ERROR;
  
-@@ -253,7 +255,7 @@ static int sar_probe(struct platform_device *device)
- 	if (!handle)
- 		return -ENODEV;
- 
--	context = kzalloc_obj(*context);
-+	context = devm_kzalloc(&device->dev, sizeof(*context), GFP_KERNEL);
- 	if (!context)
- 		return -ENOMEM;
- 
-@@ -264,7 +266,7 @@ static int sar_probe(struct platform_device *device)
- 	result = guid_parse(SAR_DSM_UUID, &context->guid);
- 	if (result) {
- 		dev_err(&device->dev, "SAR UUID parse error: %d\n", result);
--		goto r_free;
-+		return result;
- 	}
- 
- 	for (reg = 0; reg < MAX_REGULATORY; reg++)
-@@ -272,43 +274,29 @@ static int sar_probe(struct platform_device *device)
- 
- 	if (sar_get_device_mode(device) != AE_OK) {
- 		dev_err(&device->dev, "Failed to get device mode\n");
--		result = -EIO;
--		goto r_free;
-+		return -EIO;
- 	}
- 
- 	result = sysfs_create_group(&device->dev.kobj, &intcsar_group);
- 	if (result) {
- 		dev_err(&device->dev, "sysfs creation failed\n");
--		goto r_free;
-+		return result;
- 	}
- 
- 	if (acpi_install_notify_handler(ACPI_HANDLE(&device->dev), ACPI_DEVICE_NOTIFY,
- 					sar_notify, (void *)device) != AE_OK) {
- 		dev_err(&device->dev, "Failed acpi_install_notify_handler\n");
--		result = -EIO;
--		goto r_sys;
-+		sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-+		return -EIO;
- 	}
- 	return 0;
--
--r_sys:
--	sysfs_remove_group(&device->dev.kobj, &intcsar_group);
--r_free:
--	kfree(context);
--	return result;
- }
- 
- static void sar_remove(struct platform_device *device)
- {
--	struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
--	int reg;
--
- 	acpi_remove_notify_handler(ACPI_HANDLE(&device->dev),
- 				   ACPI_DEVICE_NOTIFY, sar_notify);
- 	sysfs_remove_group(&device->dev.kobj, &intcsar_group);
--	for (reg = 0; reg < MAX_REGULATORY; reg++)
--		kfree(context->config_data[reg].device_mode_info);
--
--	kfree(context);
- }
- 
- static struct platform_driver sar_driver = {
 
 -- 
 2.43.0
