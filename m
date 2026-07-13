@@ -1,64 +1,63 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6803A6B8D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 08:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870843AD529
+	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 08:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783930407; cv=none; b=IO8WvRT9r5CSi6RNYeehsTbq7PhruCK2aImJxo3rweDM0TT44VRgLppdJPA59//tCY9pxB1nW8WcYDAUb7xh6j62KbV7Ob8brQqJ64/WMTNF5p1H7PikC3iD94Vux7kqUJCoNHzD6dL2MvlGV9G5vOpMBiL0fP2IGvXk5IehS88=
+	t=1783930409; cv=none; b=MDx4dkVV4DusoJ5xGE0T58+QnGsP1a0etuqFnUo/hajQy/l0bXptUeVITb6jwpuBCDHQ/B6OdxvzzMg4wCCF5PmsPE+1EItSf80kIkjeMam7UaQTGg1M8Jhz6mlBIcfsU+Hg9ZubMYCjGN97J+jJptUaAHa282Nf5KS4C2JmO5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783930407; c=relaxed/simple;
-	bh=35oUoRW0DK5+n+ACxF4dgMpIlFiiBt5t+nhavC6fIq8=;
+	s=arc-20240116; t=1783930409; c=relaxed/simple;
+	bh=QY2qCsT5gS4+FUURGOFQWBEwlDJ5AoZzDXv74k/9cSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jywoh61CCyxMjMhWQxSIV8kIJrdMCpN8bBVMO9pci4MyQqnrAscfyD0IMh2XKWr5LfQ6glELoGZei1Op5aziJiChP0YD+oiOI5QmKTdfzP+nVs+GZ51sgOoGeGU5g+o/hPSVu/dBmzRmq98VuUuY7TfVp2qni4qOVUKtU08/86I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=A+PU9dLp; arc=none smtp.client-ip=209.85.221.49
+	 MIME-Version; b=snKgx2ru1R39e2jKfno7ui4f2GuhcGyEP/I2Y00ZXyMV2ixSSwx7PlfaiQ39hMvp5NmOD8nNqtlX0luCoHqKZrRc64a5tPmh7htALP3tW2j6lcOu826FWhHLcTD75MoG0kK/WaEsp1vM5oSqoP0JILZl24EWB/lwAD+YN81ouxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=QqzK4QZj; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="A+PU9dLp"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-476a130c138so3451493f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 01:13:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="QqzK4QZj"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-493f0ae9572so10707555e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 01:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1783930403; x=1784535203; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=HV1xf7W0XqeDB+mrV0SGgj+8q7LrpAPrrGmlafpeAYk=;
-        b=A+PU9dLpvr76z5pdx+2FL3GGanZn90o0LDtalzl6RQx31hKmd5+fkn0MkPCp+B/Q2l
-         8rxcsI9YPlaGc+SgQM8y9/Hdb7FfFIrejKOQEb5CKj+5AYqpJzw+JN4z/71x/MV1xkkD
-         SmO/j1odVSngqNpha9xO+RlICpbFw+oGcsUR1jQPJZKI9DlxhMxfyPCdCJuO43Dcxr6Z
-         5YAqpkf+YSUiznBJ+Umtr2hB6LefHr/c74/YvbasdUIqCVIBnEHKg/QSVsi0XqqtJ2PO
-         6e/Gs6tn+ISsTki8cXA6auO7jRGg16aTnP2+OOSHtG2oZG1I52KGlMYEGjvrRPmnrJPp
-         hBPg==
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1783930406; x=1784535206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=EnOZE3fkSqZ4ELC1ntUIknKBMd0F4RA56k/w3JH2jic=;
+        b=QqzK4QZjgYJZk8fdE9XM/m4S7Fuh02nshpKNR6weexg4i9XruYKSr9bM2PK/5mpNMj
+         TrQzcSesNmjLFdmZMVTfnQYXTN3S5QuuUE949GfcMt3KCCKWBisEN9s2inRsDmHzo4y0
+         CRTCHRoRMPqKhZOkWuRTPRtMosH23OcNby329r8FyiZHWqnh4CXJJbcAJHr/yli9ETd4
+         EXHgUyvlf72JQcm5yW3gqy1qjvu11Y2mzNURPX5NwUCXST/7DaTk2pCVCcq8/b2WRqJ+
+         lDi37JJFZ55FSPXHlbRNxykqE9Fwiawcf7CLewPEGKF+Wz4uvh6oMVnOTQsLrYuEUM6Q
+         7KyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783930403; x=1784535203;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HV1xf7W0XqeDB+mrV0SGgj+8q7LrpAPrrGmlafpeAYk=;
-        b=WKfVVf/IclBQCoagRbdRPUTfd/DttiABbSm2i7DR5C2aaq9SFkEPCavK3XV55tO5oP
-         wdUkJ6WRGxeRzNPT8Y/9ESCduAciggyCNMMT4m2S3UJDex9NgOfbhuXwudaDaxjpkYgg
-         u8wKOa8xLJ1qzwXxRynGRcO7/Txkb6we8s0mcveXqmsyLmZwBLEpj+dBO1lIS4jUUUfo
-         yW9wgjkzwGjzV/4gGn4fl0LlfMW3PzipzzDYtKLXiCMDk+oxh4c8ZDzXuCLLw3p7Xqze
-         +wFTaMy/o+UWyxHVeNnS81NicLMUE6a4AS9YJcxl5cnH+BAWu4S5ceECpZKrmhLs6agb
-         pvJw==
-X-Forwarded-Encrypted: i=1; AHgh+RpEMoYJGGwpsSf3/W9r/Ugf1b+20YRcjxGTB9sBtbBUWCCJtw++w4xEhNsZQZ2RMOOvpAiFjMVai5Jo8t8Si8CslcsC@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjlsSQXqxzdzYJyupin+IteCS6a26RVYyEL8OpSok++8E4PUa9
-	Xn8etXCfPSD4hs+sgYVCWVBknQFCYGWT4Dg6lu2qwdDc/KCKwXx75d3hDdAwa5QLhA==
-X-Gm-Gg: AfdE7cnAmfVevdcrLq7I+3dQDew1wmpESkCXzMupUK37j0rw97uXNfYB74h1B8iiFuz
-	UqChyJ9ufR1TJVhm0ZeaCI++MdYJ0gMcjUITwQpEBQoTT5xGgg3grhvB64mdlOK/EmCVj4n0SSO
-	rk+i3nqaPU8/NNZtki1JwtHPe4SMsUCJqI3xiyQocV4JWNKij1FDtUUzwEvjdbpl+XmZWK0BHG1
-	dm3AF/o0PVkdksytIPCvQV7HNGtpmcJg7GJC12SGZhxD7EEndm+de34wgorzLvFuPu34wMWomM8
-	CnROQ8vmJI4Is4Pt0/nLNSmrhF0IvyEnRimAoE5IeARH+ae9rlsJ48hU522138Wm7sLaPHxQYWl
-	hvLRw/5kA6OSE3ytyBQfKEUNKH6r948ccO9TIqL1L0pvCtigLfNMsa2C3eV6PNyRrruzkeqqOPq
-	nC2P3Ddybij3JxbI0vftfK9QNFxNZ+KdJuZ+ZzAPEDSHWSVg2Oi9aoS52Z
-X-Received: by 2002:a05:600c:b90:b0:493:b967:178d with SMTP id 5b1f17b1804b1-493f881d05emr82844795e9.19.1783930403309;
-        Mon, 13 Jul 2026 01:13:23 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783930406; x=1784535206;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=EnOZE3fkSqZ4ELC1ntUIknKBMd0F4RA56k/w3JH2jic=;
+        b=HJMQjtygYzNH15Tg7Z6+quH07A3Zp1e93CpLr8V4AheQQifgLBvL4SF3fs6M4bdY+X
+         06kARSjcmGYJvI7ezZcSdlPcKvlnU/Fk7SUqbWF0PNtxV8X5wTm1diL3QPXxxNSWco5F
+         UuFsK6DModrzJP93FCKF8sCuLCnkTRRxjAtk4X7OKQsA+rDIk9wbpgpKi8wXpmRSQ1nS
+         HClwYKFY10OOAAKIN6j6Ojd4+z+nmLG8amipm+3zkYaoY/Q490MavlW3fnrKuRK5X+Zw
+         NrvXrjMjTHylL0wJc53xAI55dxRS/LrZJOUc4A4WaBmxN87FB1GDJCzFrQmXkRGKcidY
+         pbDw==
+X-Forwarded-Encrypted: i=1; AHgh+Roa0v2OgEn2aCyeYviwOw7n0f6RWAp05wSLA1++FAfCJDywV6azKs67Vpc4fqIzaEh+mF+j/ORBElbEFnuZvs/uZC0B@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv3d+TUbmyReUsRYtCDoubotTSKyc8d4oRHR0gdGrfiSpNKfTU
+	HugUqzhEKpd9Rvqus2YwWttM5duESgt0DnO/698fHdgaoPkjzhWM0efTFEbj8T6IGw==
+X-Gm-Gg: AfdE7cnMTZx8j9zn4OZOj3FVUOVsv4QKv8wWnfd54kIfTn8E1aJbCQBwWTvB/sdBFIs
+	Wwy/rQk1zCrd/xXYQBpk0SWXjPddhbavMtO2vW3xjRCuFCUR3TaoD5o0dGVEBUUsT7QkZttyi6v
+	b8ZKk7d0wNy9vf/RLu8Om6vNAa/hy3WSWGbK+WHFCHSgrercgq4KuEK5NCHOF/m0qtL99F2yyZb
+	gvZjKyyf0UWW6j5v7+sbsWp8JeTlmf5WlH1KyLXxSRrSo8ECoz6c00B4RIHx9anVWAg4hcpeEGp
+	TTFpQve6jSa9m9Gl1iZn/wdqu47QDSs1y9Gc4PSjkbYpvKaIwmWSrKq3NGGgobh1CZySSDdOt1P
+	/3wwjrb0wyZ3qt1C/NWmTTE0BQyxcpIGMsjapMnRQ3WmKLT1l/PWpzbwnDhbnxS1Hi3VuEUIhgB
+	V53rq8sgDsg+Pe3sCeL8RR+cpK542ahGiD+cYrLD+ZS5wjMQsppxGQaZO+3s+TsEdHgcE=
+X-Received: by 2002:a05:600d:6413:10b0:494:1cdd:4f9e with SMTP id 5b1f17b1804b1-4941cdd5035mr4884335e9.31.1783930405768;
+        Mon, 13 Jul 2026 01:13:25 -0700 (PDT)
 Received: from horizon.localdomain ([150.228.38.212])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493eb73ae14sm343217885e9.11.2026.07.13.01.13.21
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493eb73ae14sm343217885e9.11.2026.07.13.01.13.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 01:13:22 -0700 (PDT)
+        Mon, 13 Jul 2026 01:13:25 -0700 (PDT)
 From: Sean Rhodes <sean@starlabs.systems>
 To: tzungbi@kernel.org
 Cc: hansg@kernel.org,
@@ -86,9 +85,9 @@ Cc: hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	chrome-platform@lists.linux.dev
-Subject: [PATCH v6 1/3] firmware: Move firmware attributes class helper
-Date: Mon, 13 Jul 2026 09:13:15 +0100
-Message-ID: <20260713081317.2954586-2-sean@starlabs.systems>
+Subject: [PATCH v6 2/3] firmware: Rename google firmware directory to coreboot
+Date: Mon, 13 Jul 2026 09:13:16 +0100
+Message-ID: <20260713081317.2954586-3-sean@starlabs.systems>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260713081317.2954586-1-sean@starlabs.systems>
 References: <20260713054526.2902319-1-sean@starlabs.systems>
@@ -99,286 +98,190 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Move the firmware attributes class helper from drivers/platform/x86 to
-drivers/firmware and expose its class declaration through a public Linux
-header.
+Most drivers in drivers/firmware/google are coreboot table drivers rather
+than Google-specific firmware drivers. Rename the directory to coreboot
+and update the Kconfig prompt, build path and maintainer entry.
 
-The helper is not x86-specific. Keeping it in firmware lets coreboot
-firmware drivers use the standard firmware-attributes ABI without living
-under platform/x86.
+Keep the existing CONFIG_GOOGLE_* symbols to avoid user configuration
+churn in this mechanical move.
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Signed-off-by: Sean Rhodes <sean@starlabs.systems>
 ---
- MAINTAINERS                                              | 8 ++++++++
- drivers/firmware/Kconfig                                 | 3 +++
- drivers/firmware/Makefile                                | 1 +
- .../x86 => firmware}/firmware_attributes_class.c         | 2 +-
- drivers/platform/x86/Kconfig                             | 3 ---
- drivers/platform/x86/Makefile                            | 2 --
- drivers/platform/x86/asus-armoury.c                      | 2 +-
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c       | 9 +++++----
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c             | 9 +++++----
- drivers/platform/x86/lenovo/think-lmi.c                  | 5 +++--
- drivers/platform/x86/lenovo/wmi-other.c                  | 2 +-
- drivers/platform/x86/samsung-galaxybook.c                | 3 ++-
- .../linux/firmware_attributes.h                          | 6 +++---
- 13 files changed, 33 insertions(+), 22 deletions(-)
- rename drivers/{platform/x86 => firmware}/firmware_attributes_class.c (94%)
- rename drivers/platform/x86/firmware_attributes_class.h => include/linux/firmware_attributes.h (60%)
+ MAINTAINERS                                                 | 4 ++--
+ drivers/firmware/Kconfig                                    | 2 +-
+ drivers/firmware/Makefile                                   | 2 +-
+ drivers/firmware/{google => coreboot}/Kconfig               | 6 +++---
+ drivers/firmware/{google => coreboot}/Makefile              | 0
+ drivers/firmware/{google => coreboot}/cbmem.c               | 0
+ drivers/firmware/{google => coreboot}/coreboot_table.c      | 0
+ drivers/firmware/{google => coreboot}/coreboot_table.h      | 0
+ .../firmware/{google => coreboot}/framebuffer-coreboot.c    | 0
+ drivers/firmware/{google => coreboot}/gsmi.c                | 0
+ drivers/firmware/{google => coreboot}/memconsole-coreboot.c | 0
+ .../firmware/{google => coreboot}/memconsole-x86-legacy.c   | 0
+ drivers/firmware/{google => coreboot}/memconsole.c          | 0
+ drivers/firmware/{google => coreboot}/memconsole.h          | 6 +++---
+ drivers/firmware/{google => coreboot}/vpd.c                 | 0
+ drivers/firmware/{google => coreboot}/vpd_decode.c          | 0
+ drivers/firmware/{google => coreboot}/vpd_decode.h          | 0
+ 17 files changed, 10 insertions(+), 10 deletions(-)
+ rename drivers/firmware/{google => coreboot}/Kconfig (94%)
+ rename drivers/firmware/{google => coreboot}/Makefile (100%)
+ rename drivers/firmware/{google => coreboot}/cbmem.c (100%)
+ rename drivers/firmware/{google => coreboot}/coreboot_table.c (100%)
+ rename drivers/firmware/{google => coreboot}/coreboot_table.h (100%)
+ rename drivers/firmware/{google => coreboot}/framebuffer-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/gsmi.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-x86-legacy.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.h (82%)
+ rename drivers/firmware/{google => coreboot}/vpd.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.h (100%)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index f37a81950e25..07bdba98b1b1 100644
+index 07bdba98b1b1..8cf2766d515d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -10114,6 +10114,14 @@ F:	include/linux/firewire.h
- F:	include/uapi/linux/firewire*.h
- F:	tools/firewire/
+@@ -11068,14 +11068,14 @@ S:	Maintained
+ F:	Documentation/networking/device_drivers/ethernet/google/gve.rst
+ F:	drivers/net/ethernet/google
  
-+FIRMWARE ATTRIBUTES CLASS
-+M:	Hans de Goede <hansg@kernel.org>
-+M:	Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/firmware/firmware_attributes_class.c
-+F:	include/linux/firmware_attributes.h
-+
- FIRMWARE FRAMEWORK FOR ARMV8-A
- M:	Sudeep Holla <sudeep.holla@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-GOOGLE FIRMWARE DRIVERS
++COREBOOT FIRMWARE DRIVERS
+ M:	Tzung-Bi Shih <tzungbi@kernel.org>
+ R:	Brian Norris <briannorris@chromium.org>
+ R:	Julius Werner <jwerner@chromium.org>
+ L:	chrome-platform@lists.linux.dev
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+-F:	drivers/firmware/google/
++F:	drivers/firmware/coreboot/
+ F:	include/linux/coreboot.h
+ 
+ GOOGLE TENSOR SoC SUPPORT
 diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 12dc70254842..78a239f8bbef 100644
+index 78a239f8bbef..4df0a0ad18b8 100644
 --- a/drivers/firmware/Kconfig
 +++ b/drivers/firmware/Kconfig
-@@ -8,6 +8,9 @@ menu "Firmware Drivers"
- 
- source "drivers/firmware/arm_scmi/Kconfig"
- 
-+config FW_ATTR_CLASS
-+	tristate
-+
- config ARM_SCPI_PROTOCOL
- 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
- 	depends on ARM || ARM64 || COMPILE_TEST
+@@ -293,7 +293,7 @@ endif # TURRIS_MOX_RWTM
+ source "drivers/firmware/arm_ffa/Kconfig"
+ source "drivers/firmware/broadcom/Kconfig"
+ source "drivers/firmware/cirrus/Kconfig"
+-source "drivers/firmware/google/Kconfig"
++source "drivers/firmware/coreboot/Kconfig"
+ source "drivers/firmware/efi/Kconfig"
+ source "drivers/firmware/imx/Kconfig"
+ source "drivers/firmware/meson/Kconfig"
 diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
-index 4ddec2820c96..385b6e8b7fc6 100644
+index 385b6e8b7fc6..7a8fc3eeb3f0 100644
 --- a/drivers/firmware/Makefile
 +++ b/drivers/firmware/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_FIRMWARE_MEMMAP)	+= memmap.o
- obj-$(CONFIG_MTK_ADSP_IPC)	+= mtk-adsp-ipc.o
- obj-$(CONFIG_RASPBERRYPI_FIRMWARE) += raspberrypi.o
- obj-$(CONFIG_FW_CFG_SYSFS)	+= qemu_fw_cfg.o
-+obj-$(CONFIG_FW_ATTR_CLASS)	+= firmware_attributes_class.o
- obj-$(CONFIG_SYSFB)		+= sysfb.o
- obj-$(CONFIG_SYSFB_SIMPLEFB)	+= sysfb_simplefb.o
- obj-$(CONFIG_TH1520_AON_PROTOCOL) += thead,th1520-aon.o
-diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/firmware/firmware_attributes_class.c
+@@ -30,7 +30,7 @@ obj-y				+= broadcom/
+ obj-y				+= cirrus/
+ obj-y				+= meson/
+ obj-y				+= microchip/
+-obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
++obj-$(CONFIG_GOOGLE_FIRMWARE)	+= coreboot/
+ obj-y				+= efi/
+ obj-y				+= imx/
+ obj-y				+= psci/
+diff --git a/drivers/firmware/google/Kconfig b/drivers/firmware/coreboot/Kconfig
 similarity index 94%
-rename from drivers/platform/x86/firmware_attributes_class.c
-rename to drivers/firmware/firmware_attributes_class.c
-index 736e96c186d9..503ecc288086 100644
---- a/drivers/platform/x86/firmware_attributes_class.c
-+++ b/drivers/firmware/firmware_attributes_class.c
-@@ -3,7 +3,7 @@
- /* Firmware attributes class helper module */
+rename from drivers/firmware/google/Kconfig
+rename to drivers/firmware/coreboot/Kconfig
+index b78c644fa253..b248bafe8b6b 100644
+--- a/drivers/firmware/google/Kconfig
++++ b/drivers/firmware/coreboot/Kconfig
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig GOOGLE_FIRMWARE
+-	bool "Google Firmware Drivers"
++	bool "coreboot firmware drivers"
+ 	default n
+ 	help
+-	  These firmware drivers are used by Google servers,
+-	  Chromebooks and other devices using coreboot firmware.
++	  These firmware drivers are used by devices running coreboot
++	  firmware, including Chromebooks and some Google servers.
+ 	  If in doubt, say "N".
  
- #include <linux/module.h>
--#include "firmware_attributes_class.h"
-+#include <linux/firmware_attributes.h>
+ if GOOGLE_FIRMWARE
+diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/coreboot/Makefile
+similarity index 100%
+rename from drivers/firmware/google/Makefile
+rename to drivers/firmware/coreboot/Makefile
+diff --git a/drivers/firmware/google/cbmem.c b/drivers/firmware/coreboot/cbmem.c
+similarity index 100%
+rename from drivers/firmware/google/cbmem.c
+rename to drivers/firmware/coreboot/cbmem.c
+diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/coreboot/coreboot_table.c
+similarity index 100%
+rename from drivers/firmware/google/coreboot_table.c
+rename to drivers/firmware/coreboot/coreboot_table.c
+diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/coreboot/coreboot_table.h
+similarity index 100%
+rename from drivers/firmware/google/coreboot_table.h
+rename to drivers/firmware/coreboot/coreboot_table.h
+diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/coreboot/framebuffer-coreboot.c
+similarity index 100%
+rename from drivers/firmware/google/framebuffer-coreboot.c
+rename to drivers/firmware/coreboot/framebuffer-coreboot.c
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/coreboot/gsmi.c
+similarity index 100%
+rename from drivers/firmware/google/gsmi.c
+rename to drivers/firmware/coreboot/gsmi.c
+diff --git a/drivers/firmware/google/memconsole-coreboot.c b/drivers/firmware/coreboot/memconsole-coreboot.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole-coreboot.c
+rename to drivers/firmware/coreboot/memconsole-coreboot.c
+diff --git a/drivers/firmware/google/memconsole-x86-legacy.c b/drivers/firmware/coreboot/memconsole-x86-legacy.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole-x86-legacy.c
+rename to drivers/firmware/coreboot/memconsole-x86-legacy.c
+diff --git a/drivers/firmware/google/memconsole.c b/drivers/firmware/coreboot/memconsole.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole.c
+rename to drivers/firmware/coreboot/memconsole.c
+diff --git a/drivers/firmware/google/memconsole.h b/drivers/firmware/coreboot/memconsole.h
+similarity index 82%
+rename from drivers/firmware/google/memconsole.h
+rename to drivers/firmware/coreboot/memconsole.h
+index aaff2b72b606..58899c2abaaa 100644
+--- a/drivers/firmware/google/memconsole.h
++++ b/drivers/firmware/coreboot/memconsole.h
+@@ -7,8 +7,8 @@
+  * Copyright 2017 Google Inc.
+  */
  
- const struct class firmware_attributes_class = {
- 	.name = "firmware-attributes",
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b54b5212b204..beed14c38b54 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -926,9 +926,6 @@ config DASHARO_ACPI
+-#ifndef __FIRMWARE_GOOGLE_MEMCONSOLE_H
+-#define __FIRMWARE_GOOGLE_MEMCONSOLE_H
++#ifndef __FIRMWARE_COREBOOT_MEMCONSOLE_H
++#define __FIRMWARE_COREBOOT_MEMCONSOLE_H
  
- source "drivers/platform/x86/x86-android-tablets/Kconfig"
- 
--config FW_ATTR_CLASS
--	tristate
--
- config INTEL_IMR
- 	bool "Intel Isolated Memory Region support"
- 	depends on X86_INTEL_QUARK && IOSF_MBI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 872ac3842391..cab20a4145e3 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -63,8 +63,6 @@ obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+= hp/
- # Hewlett Packard Enterprise
- obj-$(CONFIG_UV_SYSFS)       += uv_sysfs.o
- 
--obj-$(CONFIG_FW_ATTR_CLASS)	+= firmware_attributes_class.o
--
- # IBM Thinkpad (before 2005)
- obj-$(CONFIG_IBM_RTL)		+= ibm_rtl.o
- obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
-diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 495dc1e31d40..e6af93608ec5 100644
---- a/drivers/platform/x86/asus-armoury.c
-+++ b/drivers/platform/x86/asus-armoury.c
-@@ -20,6 +20,7 @@
- #include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/errno.h>
-+#include <linux/firmware_attributes.h>
- #include <linux/fs.h>
- #include <linux/kernel.h>
- #include <linux/kmod.h>
-@@ -34,7 +35,6 @@
- #include <linux/sysfs.h>
- 
- #include "asus-armoury.h"
--#include "firmware_attributes_class.h"
- 
- #define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
- 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index ab46a023cc34..963b3473991d 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -8,18 +8,19 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/align.h>
--#include <linux/fs.h>
- #include <linux/dmi.h>
--#include <linux/module.h>
-+#include <linux/firmware_attributes.h>
-+#include <linux/fs.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nls.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
-+
- #include "dell-wmi-sysman.h"
--#include "../../firmware_attributes_class.h"
- 
- #define MAX_TYPES  4
--#include <linux/nls.h>
- 
- struct wmi_sysman_priv wmi_priv = {
- 	.mutex = __MUTEX_INITIALIZER(wmi_priv.mutex),
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 27fd6cd21529..f13f21580acd 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -7,16 +7,17 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/errno.h>
-+#include <linux/firmware_attributes.h>
- #include <linux/fs.h>
--#include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nls.h>
- #include <linux/printk.h>
- #include <linux/string.h>
- #include <linux/wmi.h>
-+
- #include "bioscfg.h"
--#include "../../firmware_attributes_class.h"
--#include <linux/nls.h>
--#include <linux/errno.h>
- 
- MODULE_AUTHOR("Jorge Lopez <jorge.lopez2@hp.com>");
- MODULE_DESCRIPTION("HP BIOS Configuration Driver");
-diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
-index e215e86e3db7..4437785aa1f2 100644
---- a/drivers/platform/x86/lenovo/think-lmi.c
-+++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -13,14 +13,15 @@
- 
- #include <linux/acpi.h>
- #include <linux/array_size.h>
-+#include <linux/dmi.h>
- #include <linux/errno.h>
-+#include <linux/firmware_attributes.h>
- #include <linux/fs.h>
- #include <linux/mutex.h>
- #include <linux/string_helpers.h>
  #include <linux/types.h>
--#include <linux/dmi.h>
- #include <linux/wmi.h>
--#include "../firmware_attributes_class.h"
-+
- #include "think-lmi.h"
  
- static bool debug_support;
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index fbb32bf404f2..b175971bb308 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -33,6 +33,7 @@
- #include <linux/container_of.h>
- #include <linux/device.h>
- #include <linux/export.h>
-+#include <linux/firmware_attributes.h>
- #include <linux/gfp_types.h>
- #include <linux/hwmon.h>
- #include <linux/idr.h>
-@@ -50,7 +51,6 @@
- #include "wmi-capdata.h"
- #include "wmi-events.h"
- #include "wmi-helpers.h"
--#include "../firmware_attributes_class.h"
+@@ -33,4 +33,4 @@ int memconsole_sysfs_init(void);
+  */
+ void memconsole_exit(void);
  
- #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
- 
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 6382af0b106c..3911f60c23ea 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -14,6 +14,7 @@
- #include <linux/acpi.h>
- #include <linux/bits.h>
- #include <linux/err.h>
-+#include <linux/firmware_attributes.h>
- #include <linux/i8042.h>
- #include <linux/init.h>
- #include <linux/input.h>
-@@ -27,8 +28,8 @@
- #include <linux/sysfs.h>
- #include <linux/uuid.h>
- #include <linux/workqueue.h>
-+
- #include <acpi/battery.h>
--#include "firmware_attributes_class.h"
- 
- #define DRIVER_NAME "samsung-galaxybook"
- 
-diff --git a/drivers/platform/x86/firmware_attributes_class.h b/include/linux/firmware_attributes.h
-similarity index 60%
-rename from drivers/platform/x86/firmware_attributes_class.h
-rename to include/linux/firmware_attributes.h
-index d27abe54fcf9..d4026ba1fcc2 100644
---- a/drivers/platform/x86/firmware_attributes_class.h
-+++ b/include/linux/firmware_attributes.h
-@@ -2,11 +2,11 @@
- 
- /* Firmware attributes class helper module */
- 
--#ifndef FW_ATTR_CLASS_H
--#define FW_ATTR_CLASS_H
-+#ifndef _LINUX_FIRMWARE_ATTRIBUTES_H
-+#define _LINUX_FIRMWARE_ATTRIBUTES_H
- 
- #include <linux/device/class.h>
- 
- extern const struct class firmware_attributes_class;
- 
--#endif /* FW_ATTR_CLASS_H */
-+#endif /* _LINUX_FIRMWARE_ATTRIBUTES_H */
+-#endif /* __FIRMWARE_GOOGLE_MEMCONSOLE_H */
++#endif /* __FIRMWARE_COREBOOT_MEMCONSOLE_H */
+diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/coreboot/vpd.c
+similarity index 100%
+rename from drivers/firmware/google/vpd.c
+rename to drivers/firmware/coreboot/vpd.c
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/coreboot/vpd_decode.c
+similarity index 100%
+rename from drivers/firmware/google/vpd_decode.c
+rename to drivers/firmware/coreboot/vpd_decode.c
+diff --git a/drivers/firmware/google/vpd_decode.h b/drivers/firmware/coreboot/vpd_decode.h
+similarity index 100%
+rename from drivers/firmware/google/vpd_decode.h
+rename to drivers/firmware/coreboot/vpd_decode.h
 -- 
 2.53.0
 
