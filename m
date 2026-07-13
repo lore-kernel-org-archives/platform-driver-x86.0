@@ -1,120 +1,94 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A159737646E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 11:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606C37E2E1;
+	Mon, 13 Jul 2026 11:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783940570; cv=none; b=S5GxfiU6hJamN26m1P17Yc8m7nODA3wNcyECaCu4M4sp0KqO/vwH/aWEb5H/d8WTjSwAqAxsZTA8lBYC5e3cPLg6wm9/XAxRvJM6FBN+O/DviHLirm/AZjF01PF5s/RZMWvvJABWquGEKlHAUKUjm18MA9614jMg5hWHK/PuXm0=
+	t=1783941430; cv=none; b=pAFbwoMpF+Dux2WbCM3ltXXXY1W+37iRg12abN139FKwb9oXMw2/Hu1I8gEF9LK0lbz9jkAdwh9QP4y5xYIPwAmSpgxBb/goN1ZboyBMTUjmN9cRD2PbDdSh4WmilFeAXoUXUZN2rwvCXat/I3XXyfXN+j686e0eEuD/9k5tQUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783940570; c=relaxed/simple;
-	bh=GH6CWop3wfi/VJkvt4cMc0bNyzCTH1KmyzTlNjCz/68=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IK9rgWXFsLB9ruyvy6xPJOaDPX6Z2eTzc41UsVRTWXQXjtWxUaYR/U8GnwkhhH+PO/HbBLsPwzhAQhHGugbZFY3gh6WrzfbvYyFw4Xp9isC9BwcvO5yV5Bb6RPBxGB/nl7ODkwoCZkHiPN5qtLJuFsTYoyGBp0PmC5sC3ZuDDOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=AHazjOTx; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
+	s=arc-20240116; t=1783941430; c=relaxed/simple;
+	bh=tQUMiHl3ZKsrx0k/trDSAtIDXR9krNv/MOFdqU/HB10=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=c1UYNd6mTMhDReshLloCqk+D6/Cbc7u1EmldryLnuGNZ3UMhI48ZWQWUQp7Iqc3hpd52O82fdrlvXSDW079hKxmYCLvIz79jtdvjbQGDjOh7kP3kyxfrg3I3gihNTTRavPfkYxkz4gtaalZOcQEEaow7BQfIkNCNq1qmSLyfGMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0945RVV; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="AHazjOTx"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8487088510aso2736991b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 13 Jul 2026 04:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1783940567; x=1784545367; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=eWk91/IxILRwPoM0aUwUrJJrk3OrtAhlG6TmoK3LV2g=;
-        b=AHazjOTxZXhs+0eTkazPjKH1+t7SKypGWHx0dKqpGI1DoctrYPpWB8KkXGqoVGqp9y
-         4JU951f8j55I4rB5GlouCvpAUZSnXRCz1+X2Lvg1UemKndz5mYQIK2j2n9wq77Pb8IhB
-         qcw43pAZAUc5RkcrODQNjhKN8lfu6FqHgRcKyIGPA5tlfK53k46Rhp1jZaaTNRAuBaHj
-         lWSFKKAZ4cvD2jU9pjJR64LLRIWkSnsM9tj31LyWYwrY5hFnWf2bSMeKHzNnyiVFJrb1
-         OijaweVRePRg0tgX0okuuAddUxy9fujbKEl5HWnDzEDxi1HFStJ9XNTNpA9iuWd2KOWY
-         aSyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783940567; x=1784545367;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=eWk91/IxILRwPoM0aUwUrJJrk3OrtAhlG6TmoK3LV2g=;
-        b=Cn9h3ZCH5x/L1R9rNN8JJ16lb9NkZQ08hkBylRmhiwfYZSHramV1WQN47pm17QmU9o
-         /ZrRQri8wAKuZu8Wz5r4ydcMa6wPbsXVo2y6OeJGIGFdHlKXIu5DfTSSti4mS1q3Kyog
-         0YrVNVtVDXp7I9ZieUq365yywnLSMwUIn0rOW1WueP+MDkoS6XfVaqwHAsjTopgwpcSR
-         lVXia37oVp5bUrccreq1FrL7ry2p4r9vyzHaCKzLm903WWop2OlDgbOvnd6epdmI+Yoc
-         qAIcXH//pG7PibVEkVlmfAA4XKX7KvsFdhm3OqynvhkOLmYlu5LE+3zgNoIhgjTOLZ4d
-         g/Vg==
-X-Gm-Message-State: AOJu0Yw+APb7U5jgPYzCKZjuo8PAqtlPsrMU0mAPZ0HAf3PDRtgzVGVE
-	HsSn3BcR9keJDlPKEkD1bNcCpOoSlz6z5vJi2Ar28kaHng9DHamrv8OdsqNwQuejg8Q=
-X-Gm-Gg: AfdE7clON+pBBVLrLq4swG/sJTgE1NLARpEJEw9Zz8/ish2NZCECssof+P7CCCbu0kZ
-	op0AyO/mAYMOGB6XYrYtKlJBjBGJusNAAYTW5eCFWAmJTGWe4A5jEmxcE9eZyQfkY3h9xwB8CLw
-	0y00JwdvbGg1SFgjSl3FK9mFVvlmGE/0FZFQ1wUfppP6qZPbB2Zjwa92fUJ1h/jHD4n/zGdIjoU
-	n0G3QZSW8TbLlzEcjjAqUjwD2JHlycincol8nPgI1sYZWDndm5IhfIBUgvty3sDci1oeu8rK37C
-	i19rgZfQZcJabC6d0uVmgN7E0lNgGJ4QrJHZhPqno4S5SY2vYvek0Xg649cY7xryl2T/fJFYVS3
-	b5gjU0hcAwudfm6YtCQk2ZbJ0kRIrLOCvVhVsEkVE/0PMxcC73MjgUw5+TnjZ98NWC8C6vGOa7v
-	qu+5lUB0tQVGntL/uHXFO38eUry9YOpQS36FJQx42AcdQWiwYotvbYL3/bSaTb8M9GvL/EP4bSi
-	aonkg37djXoO/to8ZqTb6rbjOr/3OCZDN8=
-X-Received: by 2002:a05:6a20:7491:b0:3c0:9c1a:893e with SMTP id adf61e73a8af0-3c110f7f4e5mr8654866637.70.1783940566955;
-        Mon, 13 Jul 2026 04:02:46 -0700 (PDT)
-Received: from [127.0.1.1] ([103.158.43.43])
-        by smtp.googlemail.com with ESMTPSA id 5a478bee46e88-311a6115e61sm52249087eec.22.2026.07.13.04.02.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jul 2026 04:02:46 -0700 (PDT)
-From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-Date: Mon, 13 Jul 2026 16:32:25 +0530
-Subject: [PATCH 2/2] platform/x86: int1092: Fix info leak in
- parse_package()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0945RVV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783941428; x=1815477428;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=tQUMiHl3ZKsrx0k/trDSAtIDXR9krNv/MOFdqU/HB10=;
+  b=O0945RVVQbJLKTS5bcc0nnm8d6C2aDbJbGOv8Es0r3JaqoAkhVkpDZ6n
+   MocXxSt2kzwl4RcTTfeshXGAq4es7Reblkfw1OTEiLJ7A8Tl5AtiLmqsW
+   lE1gK9U1F2F5aCOo5oFQZS075J9V6PKG7LsQZmQVe1/aAUA0zXxHxbe/+
+   A7Pa84zrzvFp9wJpTSmzPPoYjzPARlvKcJnzbGHrnsxEeB0byrdqaDNhh
+   l31leBJHbkld32c/nNhq8C974bK/ZXmaJb9fFPevLFeYHBfVcdPjrwwPm
+   CjydK5pB7ovrvrzR4wmKUb8+adZGCnM62ozMbO1td8JCmLRFqNUY4xQts
+   w==;
+X-CSE-ConnectionGUID: 8VxuiZ31RWuwuJRfISUniQ==
+X-CSE-MsgGUID: rpJoGHr7TvaISn5DYLGBXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="72070986"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="72070986"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 04:17:07 -0700
+X-CSE-ConnectionGUID: W/5nthkGQ4OOPyr/ha2fsQ==
+X-CSE-MsgGUID: NbhIuxJeSg+xVTj7niQOxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="260416371"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.129])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 04:17:04 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 13 Jul 2026 14:17:00 +0300 (EEST)
+To: Oliver Lin <oliver@liuxiaozhen.dev>
+cc: Vishnu Sankar <vishnuocv@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, vsankar@lenovo.com, 
+    Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix USB-C Security probe
+ failure on unsupported platforms
+In-Reply-To: <142193d8-3860-4d9d-acc8-5b6a0569321a@liuxiaozhen.dev>
+Message-ID: <960dff77-b5da-59c5-bc61-c1a72b2748e7@linux.intel.com>
+References: <20260711062249.503264-1-vishnuocv@gmail.com> <142193d8-3860-4d9d-acc8-5b6a0569321a@liuxiaozhen.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260713-platx86-v1-2-c8991bff03a0@cse.iitm.ac.in>
-References: <20260713-platx86-v1-0-c8991bff03a0@cse.iitm.ac.in>
-In-Reply-To: <20260713-platx86-v1-0-c8991bff03a0@cse.iitm.ac.in>
-To: Shravan Sudhakar <s.shravan@intel.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>, 
- Sashiko <sashiko-bot@kernel.org>
-X-Mailer: b4 0.13.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-557944583-1783941337=:1171"
+Content-ID: <28524baf-0585-e19b-92e1-1248bb6c0d77@linux.intel.com>
 
-Sashiko reports a possible information leak due to a non-zeroized
-memory allocation for device_mode_info. Fix that by switching to use
-devm_kcalloc() for allocation.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/patchset/20260710052806.100107-1-nihaal%40cse.iitm.ac.in
-Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
----
-Newly added in v3
----
- drivers/platform/x86/intel/int1092/intel_sar.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--8323328-557944583-1783941337=:1171
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <cdce1ff9-f567-e014-13e7-8dd9e8a65411@linux.intel.com>
 
-diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index 7263114f0b3d..f506155f35d4 100644
---- a/drivers/platform/x86/intel/int1092/intel_sar.c
-+++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -91,10 +91,10 @@ static acpi_status parse_package(struct wwan_sar_context *context, union acpi_ob
- 	    item->package.count <= data->total_dev_mode)
- 		return AE_ERROR;
- 
--	data->device_mode_info = devm_kmalloc_array(&context->sar_device->dev,
--						    data->total_dev_mode,
--						    sizeof(*data->device_mode_info),
--						    GFP_KERNEL);
-+	data->device_mode_info = devm_kcalloc(&context->sar_device->dev,
-+					      data->total_dev_mode,
-+					      sizeof(*data->device_mode_info),
-+					      GFP_KERNEL);
- 	if (!data->device_mode_info)
- 		return AE_ERROR;
- 
+On Sun, 12 Jul 2026, Oliver Lin wrote:
 
--- 
-2.43.0
+> Hello Vishnu,
+>=20
+> It looks like my email address was recorded incorrectly. My address is:
+>=20
+>  =A0 =A0 oliver@liuxiaozhen.dev
+>=20
+> I'm currently testing this patch and will report back once the testing=20
+> is complete.
 
+Hi Vishnu,
+
+To make things easier for me (and me less likely to forget while=20
+applying), could you please send v2 with corrected email + the tested by=20
+from the other email.
+
+--=20
+ i.
+--8323328-557944583-1783941337=:1171--
