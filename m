@@ -1,164 +1,109 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A292741A92E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 18:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789C5331A61;
+	Tue, 14 Jul 2026 18:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784054750; cv=none; b=G3ruVhElhVgz1F2tEQXFEzH5aix86Gx79s9zOIfZN054sRjc05Yl09DTijbscoPK92pVoYthSfjIZGp4oSJw43OD9KGCvPiqAkFlYs6s5IZQPEbc4UqOicJ3YPaUzB3CTR3FV+M6r95AVt8lP1y+c73XrRsu+ycPubDwpV6yWOA=
+	t=1784055570; cv=none; b=NPPyvAwlxjn7K90QfdkdhiPyBoAllD2wvSwTt/O/ICZHmDyyxoJBba2AtQlUgCXACb6MSqB7BRFj1Kh+02mZ/dBmYncVbtvDy8ksLPURGciHxUDt5ySm6U1GBNMLtVpRdcNxPLBYBURyXMu/wrLcM0YWpGM7Aa+WqMZYykg274I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784054750; c=relaxed/simple;
-	bh=186a36ThmF/tF1x3mL7l3w9TGjthNfSRwRqEK54fbtE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=bHwuN218f2l/Dk05PMTtz4Es2M+oaPaOjvlTW+xHGv4zVIKzC8e2slE6rJ+2ZClGlbjtCY8zwEcHIgbyeHHHgC1O86E7cyB6OnWwr661f9NXHDAFoq7KvUwrkLVdRGiOThygNDJxpXs8RcAJcOzeeueuFKKsZfpr55Wdpi1YET0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RBiqUtwd; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784055570; c=relaxed/simple;
+	bh=heqNQmDwAdDrignoOrONMxusCaeZUzy0EnkWdJCXcWw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nAccznbXn5dbeDynrT1Apwnp+rMbBcab7n/JEnsZgcisi8sbk5lm1WZ3rk0ndyPuhz4Y/oco1DZek0zREdjyU0Oo4y0G6UZS4ChESLE3Zfa//ny9IJdRwFd6/iDYpcojfe8kqPVI1oUIkw855Q2zhF3pxp9RSwiyqm95ri0PJjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AQxoaP18; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RBiqUtwd"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2cabc0a1ab6so56337145ad.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 11:45:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784054749; x=1784659549; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:content-type:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Qwl3BqvfiTProMK13HWybQ2Giye2QrbR2U0JPVlA7GQ=;
-        b=RBiqUtwdM84mjwWwHvAp70ASaFGmisvDWNKxMVZy6wlMBljhmTL0cWox1dUeFUiVVe
-         CiqDdsJxzy7mW30Dn3Tf9Wn7l8lt7Ag6jkn5vFpTr+495CergP27aQ3QSbDMyh5cKQCx
-         QUwqrNjB7LlyiaEOn5QcoSF5o9L1akJ6K7ORPJaYLRIl6OfHWq/lTEz1UqrtANs0KyFn
-         XNQHbMRIj7IuB5Bvot9iO/E5apRXokhJ50PO923ial1Sh/xIlfKNEQ0Zymscn6oVmy9W
-         KnYU9fVHn/HM5tpWDtZH1kGQebwQe4A9Vnao5c2WKBb105F7diiu4PkZLRzcc0UBj0Ue
-         tfaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784054749; x=1784659549;
-        h=mime-version:content-transfer-encoding:content-type:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Qwl3BqvfiTProMK13HWybQ2Giye2QrbR2U0JPVlA7GQ=;
-        b=EUahUUlxO59MTON8jMypFeitMAyTfr3NjTm7ugChr5A0TaYUXjJRXXoUm2/1/BDIrn
-         oTvhgENHU65Vdw7MzRKKT73MwyhHtCYKMTnlu3/5wAzNX10gWRzZkElAZxIgTZxtic0U
-         HfAJAcp46H1rIEmk1GDILghDBpUV+RGodagWQslIP3sZg48mY11XBQbO1zYfVHbxNqh/
-         saz0aQUE8qaAJ9GvVYgxNaWiH9SQFk1iy9mm/KHl5M8VdMUm32T1nPew9i90SgsMsz8r
-         X3mGb8ybxFvihX6rnzga3rISiJDs7ZS7pi6wpxje4Yg0dcFOSAozn1XXqqLhyWTibmZN
-         TlRQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqLL3t7Wcgvu/muIS3O4LqG/9osF/1Q8CZRpPnV3SkpASk9Bm8DWumDNZ0u6jp6/SznCSQNTNJ9AnwBAV6tkqHgNbA/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR2SCWuf+Np+rX4Zd/0k8zGoL7kozc+UZc2KrmS7+dDlja8rbN
-	2PPYucuxuPpr6/ggqPLfARSiH9B9OEZ6EGuhwaxXOjGKnl2xN3s5rDJS
-X-Gm-Gg: AfdE7clalh02jVnhJdujl9m4Soi62Fkpd2wDxnzidj8N5O2ovRYq1AH6yT8ixK5BtPM
-	PZwGeFxcbVn2DYypAywvnixE6uL69wtLWYWbCF6a6a8PmrYQfi3tDlEzfZurvXGTnS5Jv+ZIazO
-	NFPf8yhKb9eCaTdQ7CM8fwSfZl3/9cx8ly9uBRA5LSogvNnE54AR8hvcF6pdhumP2zrO04KcEGX
-	gkKg+0iM2vfwVMAkCUIAD9fww2Ckb7uIVbxY7lfEix0S98dE6FUJdq0GPvcAETW2XNwDhryEHQs
-	UTjOEJYoZjT0hNV4xYxSX/Pqm4kLFBjMNIZ8vSDlTmqi7yy+NYwwA9Hh+4KRiOsB9lUG/+Tyy57
-	H2o2FmDxsztADI3DaA4QjJcs2N2JDUNmSFHODgpTNnu1zUUlSSznCgEwOoDRw7ixEqZOXJd0Aca
-	hAuP7uWlCbMb5OyQ==
-X-Received: by 2002:a05:6a20:2590:b0:3bf:ba89:5236 with SMTP id adf61e73a8af0-3c34d615499mr5271947637.33.1784054748924;
-        Tue, 14 Jul 2026 11:45:48 -0700 (PDT)
-Received: from [127.0.1.1] ([212.241.18.9])
-        by smtp.gmail.com with UTF8SMTPSA id a92af1059eb24-13b987fc629sm42864862c88.0.2026.07.14.11.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 11:45:48 -0700 (PDT)
-From: Musaev Ibragim <atomicus.xyz@gmail.com>
-To: Gladyshev Ilya <foxido@foxido.dev>
-Cc: Hans de Goede <hansg@kernel.org>,
- Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>,
- Mingyou Chen <qby140326@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: redmi-wmi: report EC state change events
-Date: Wed, 15 Jul 2026 00:45:36 +0600
-Message-ID: <178405473606.25865.4048095379503614221@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AQxoaP18"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784055570; x=1815591570;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=heqNQmDwAdDrignoOrONMxusCaeZUzy0EnkWdJCXcWw=;
+  b=AQxoaP18CvuwXxRpchbd4cQtZOXAnVkLzNZ/wAsLZFKCTO3ZdpBNPmnF
+   Qr7nTf+ZmA40vCBN4CPaibMBDBuKT9K+bX2dX4Pk9s7mXIzPVSSpO35vh
+   5X38lJkQNH7Q8oNzUHa2Jkxw1N5vbOJ5B+8Zzgm3bceeWK2pRHFHrAEra
+   fiTBLVRYUnEPC6FrM9ODUvn+4MTLa+IBqFPyjConbal7IOkiMBfQaQ1Q3
+   osLQPo3IgOIRe8mevSag/AUYMZtZvISyl5dwgVDQd0vqMiTzt/vJ5tFhl
+   h6fye3N9A8+xdlrn6KZ4C/JCu2wpPoDJqY0bmUwHWGbVzNleBJVabLczr
+   g==;
+X-CSE-ConnectionGUID: 3i7YMu/KR3qAE5CzD/yjXg==
+X-CSE-MsgGUID: N8F1UESCQxisHuFjfng8KQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="84730488"
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="84730488"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 11:59:29 -0700
+X-CSE-ConnectionGUID: A0Wh6wkZTLum2LxTz+yVoA==
+X-CSE-MsgGUID: gtWW4VybTTu5c9hPHdd4Gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="255442695"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa008.jf.intel.com with ESMTP; 14 Jul 2026 11:59:25 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 0B9249B; Tue, 14 Jul 2026 20:59:24 +0200 (CEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>
+Subject: [PATCH v2 3/6] ACPI: video: Convert to use acpi_dev_is_video_device() helper
+Date: Tue, 14 Jul 2026 20:53:42 +0200
+Message-ID: <20260714185915.865396-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260714185915.865396-1-andriy.shevchenko@linux.intel.com>
+References: <20260714185915.865396-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The Redmibook EC/firmware fully handles the keyboard backlight cycle,
-the OEM preset power mode (Fn+K) and the Fn lock toggle by itself, and
-sends a WMI event carrying the resulting state in the third payload
-byte. These events are currently swallowed with KE_IGNORE, so userspace
-never learns that the state changed and cannot give the user any
-feedback (OSD), even though the WMI event is the only notification
-channel for these EC-driven changes.
+Replace open coded variant of acpi_dev_is_video_device() helper.
 
-Report them as key presses instead:
-
-  - keyboard backlight cycle -> KEY_KBDILLUMTOGGLE
-  - OEM preset power mode    -> KEY_PERFORMANCE
-  - Fn lock toggle           -> KEY_FN_ESC
-
-Desktops that only look at the keycode get the usual hotkey behaviour;
-since sparse-keymap emits MSC_SCAN with the raw payload before the key
-event, an OSD daemon can additionally recover the exact new state from
-byte 2 (e.g. backlight Off/Low/High/Auto is 0x00/0x05/0x0a/0x80).
-
-Note that the power mode event must keep being read from the WMI device
-in any case: on the TM2209 the ACPI event handler (EV20) applies the
-mode change as a side effect of building the event payload for _WED.
-
-Tested on Redmi Book Pro 15 2023 (TM2209).
-
-Signed-off-by: Musaev Ibragim <atomicus.xyz@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-A related problem noticed while testing this: bitland-mifs-wmi lists the
-same event GUID (46C93E13-EE9B-4262-8488-563BCA757FEF, BITLAND_EVENT_GUID)
-in its wmi_device_id table, so on a Redmibook both drivers race for the
-event device at boot and whichever probes first wins. When bitland-mifs-wmi
-wins, the "Redmibook WMI keys" input device never appears, and since the
-MIFS control methods don't work on this machine either (different SMM
-interface — platform_profile writes fail, the kbd_backlight LED always
-reads 0), the laptop is left with no working Fn events at all until
-bitland_mifs_wmi is blacklisted. Should bitland-mifs-wmi gate its binding
-on DMI, or is another way to resolve the overlap preferred? Happy to test
-patches on TM2209.
+ drivers/acpi/video_detect.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
- drivers/platform/x86/redmi-wmi.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
-index 5889863..cc82ef5 100644
---- a/drivers/platform/x86/redmi-wmi.c
-+++ b/drivers/platform/x86/redmi-wmi.c
-@@ -29,24 +29,24 @@ static const struct key_entry redmi_wmi_keymap[] = {
- 	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
- 	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 458efa4fe9d4..cf267b518d2b 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -67,12 +67,7 @@ find_video(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 	long *cap = context;
+ 	struct pci_dev *dev;
  
--	/* Keyboard backlight */
--	{KE_IGNORE, 0x00000501, {}},
--	{KE_IGNORE, 0x00800501, {}},
--	{KE_IGNORE, 0x00050501, {}},
--	{KE_IGNORE, 0x000a0501, {}},
-+	/* Keyboard backlight: Off / Auto / Low / High (new state in byte 2) */
-+	{KE_KEY, 0x00000501,	{KEY_KBDILLUMTOGGLE}},
-+	{KE_KEY, 0x00800501,	{KEY_KBDILLUMTOGGLE}},
-+	{KE_KEY, 0x00050501,	{KEY_KBDILLUMTOGGLE}},
-+	{KE_KEY, 0x000a0501,	{KEY_KBDILLUMTOGGLE}},
- 
- 	/* Xiaomi G Command Center */
- 	{KE_KEY, 0x00010a01,	{KEY_VENDOR}},
- 
--	/* OEM preset power mode */
--	{KE_IGNORE, 0x00011601, {}},
--	{KE_IGNORE, 0x00021601, {}},
--	{KE_IGNORE, 0x00031601, {}},
--	{KE_IGNORE, 0x00041601, {}},
-+	/* OEM preset power mode: 1=Balanced 2=Silent 3=Turbo 4=Full speed */
-+	{KE_KEY, 0x00011601,	{KEY_PERFORMANCE}},
-+	{KE_KEY, 0x00021601,	{KEY_PERFORMANCE}},
-+	{KE_KEY, 0x00031601,	{KEY_PERFORMANCE}},
-+	{KE_KEY, 0x00041601,	{KEY_PERFORMANCE}},
- 
--	/* Fn Lock state */
--	{KE_IGNORE, 0x00000701, {}},
--	{KE_IGNORE, 0x00010701, {}},
-+	/* Fn Lock state: 1=on 0=off */
-+	{KE_KEY, 0x00000701,	{KEY_FN_ESC}},
-+	{KE_KEY, 0x00010701,	{KEY_FN_ESC}},
- 
- 	/* Fn+`/1/2/3/4 */
- 	{KE_KEY, 0x00011101, {KEY_F13}},
+-	static const struct acpi_device_id video_ids[] = {
+-		{ACPI_VIDEO_HID, 0},
+-		{"", 0},
+-	};
+-
+-	if (acpi_dev && !acpi_match_device_ids(acpi_dev, video_ids)) {
++	if (acpi_dev_is_video_device(acpi_dev)) {
+ 		dev = acpi_get_pci_dev(handle);
+ 		if (!dev)
+ 			return AE_OK;
 -- 
-2.54.0
+2.50.1
 
