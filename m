@@ -1,73 +1,187 @@
-Received: from ns1.suksangroup.com (ns1.suksangroup.com [103.13.31.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6CC27FB1F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 05:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.13.31.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDEF3F4829;
+	Tue, 14 Jul 2026 09:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784006898; cv=none; b=WvVsiZF8Lbc3tQm9Bs1s2wmkoaDqv/myeqVvx7Y5WV8ij8Q6iaJ2ISTaQjaN0s9n5ZUvbNFWu/+DfRw1FihfpKDzTle2PUmewM1Ul0PCA3AGxksvk5L417bvKyzxlNq5GGI4hF6mfo6om1HpPDibeFTFokpQFcksLhFOogpkZyo=
+	t=1784022025; cv=none; b=mM6xa9F4m9K1yHkgidE4MRaMW+6MTsgZih45+Fgvxp8M3gJHx/alxIffOgF6ttBXkeFHEBk7N2NQCbnBvxlWQ/HEspBUOZmtey8ZErPB2kmlJ5RCFkybV2LtRkwyWPDGpXXgJDiJZUF/fbcWtKxJZ6ZnwYrQmiBacWfWSLFUjVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784006898; c=relaxed/simple;
-	bh=FIXHRCg/P9V02VBeDQGaYQGDDLGszNk6z+3ZSyx72BM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qWHZY0UfgOVVr1z8hAH8BwkzQ5k31v1BcHyeSCXIO7KY07nI7HtoSXGklLWy3soT3pC3dUqfqBDcH5kcF3sqAiSQ5F6njBlx79JYYHQXZCE+Fv9sxHnZ2LihurmhlcSOMI6uJgZHKUuByvxTLALj4j1dyK4HcADYTiFZUovuFRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=inbox.org; spf=fail smtp.mailfrom=inbox.org; dkim=pass (2048-bit key) header.d=suksangroup.co.th header.i=@suksangroup.co.th header.b=iMvVueni; arc=none smtp.client-ip=103.13.31.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=inbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=inbox.org
+	s=arc-20240116; t=1784022025; c=relaxed/simple;
+	bh=wrPx0hvuUujnOArhp+9g7U8p8v6mfKoZo5CUAYt8ZQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXBsnxlmr3Nassr6CP+waKwLssw8VY26nusd1O1jl2+ZRT3hg5MwyOuoTp6OQaXpN6saoqKKdfR7isdqleRL5okCqja987BA6dUnmY7+TCAatNU3e0CvI3jIFx56ElC21Auahou4I3Q7t9qwt8a29hIalRNCTw4lgjoOOX9elh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OHEVJwtd; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suksangroup.co.th header.i=@suksangroup.co.th header.b="iMvVueni"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=suksangroup.co.th; s=default; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FIXHRCg/P9V02VBeDQGaYQGDDLGszNk6z+3ZSyx72BM=; b=iMvVuenihTS4JoKrDKUZfc9rCn
-	5YnBohoFDP/UT97oQXd5Hzcv15StVHc6G8YNFtuMx3+Nwb+ratbMj4+nGNGXEhZHw4o0pMkdVDgID
-	gtaPflePDZKkF/6qcZxp2NjZP7GclWAZgwzFa3sdshWQJw3clZJO/LPf6pYge5e3p7+2rDMo0Dspb
-	jpokzzac+fcPR3hJGfIk5GvmHPb3iUCvhRY4B8zLlLw4/Zdao97v3SUhUhudWqE7PubzS7OLuG0ec
-	ygGb/SGNt13gFTNGUb7jljuXRH3Yd0J0BDq0FiXbpQB7S8YV22Q9fBLtcFHbpSq1Ap85NEOTYv0tT
-	9eaW1XaQ==;
-Received: from [207.189.26.187] (port=64411)
-	by ns1.suksangroup.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.99.4)
-	(envelope-from <info@inbox.org>)
-	id 1wjVgm-0000000FzgL-2ibV
-	for platform-driver-x86@vger.kernel.org;
-	Tue, 14 Jul 2026 12:28:15 +0700
-Reply-To: hanns.schofield@lexcapitalgrowth.com
-From: Harry Schofield ESQ <info@inbox.org>
-To: platform-driver-x86@vger.kernel.org
-Subject: Dear platform-driver-x86, project info
-Date: 14 Jul 2026 00:28:12 -0500
-Message-ID: <20260714002811.8F50D1A78E4C3A6A@inbox.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OHEVJwtd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784022023; x=1815558023;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wrPx0hvuUujnOArhp+9g7U8p8v6mfKoZo5CUAYt8ZQ0=;
+  b=OHEVJwtd5G69LQyfx85sQH6YRdlPEc7aR9dFq2l1FKmn9pFC7Wo6zllY
+   x785SQv2K2GQbOt8dHkOI4SaBXnLsWsqKjhsgp90HI4hcJLrP7TUSQYiK
+   0rGGkg2MyM+q2fsgiOOpAaibedXbi6u+6ctlrehmpVul8CCGWtdp5a3C7
+   wyA9oliatAr3SIxuCDET6tngVye8Rev+3AoahNcM0buJpzt+v/Dtpwpcy
+   zYzZ6cKzoVixNn1GYPp8t8wW+geJeEqafohQlzKiJxTYlSPpT89hOU/Zo
+   hJIjGR3ryQDsaJth7s6etOyePThW9J9R3gC1GzCrbGrppzSABbDhYWtII
+   A==;
+X-CSE-ConnectionGUID: ykHrjmfGTFmgEWcWFkh3+Q==
+X-CSE-MsgGUID: bX7LW0LnQ9C9R/tm6m+jow==
+X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="84520326"
+X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
+   d="scan'208";a="84520326"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 02:40:23 -0700
+X-CSE-ConnectionGUID: 6foZP+VZTUaUDRJnvTzmAg==
+X-CSE-MsgGUID: BFUsCFjUR4eNFiQKfJyGnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
+   d="scan'208";a="252424937"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Jul 2026 02:40:19 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1008)
+	id 38DC395; Tue, 14 Jul 2026 11:40:18 +0200 (CEST)
+Date: Tue, 14 Jul 2026 12:40:16 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, brgl@kernel.org,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	driver-core@lists.linux.dev
+Subject: Re: [PATCH v7 2/4] drm/xe/i2c: use
+ device_create_managed_software_node()
+Message-ID: <alYEAE_fZCfrRAYs@kuha>
+References: <20260713-swnode-remove-on-dev-unreg-v7-0-6d6bc448427a@oss.qualcomm.com>
+ <20260713-swnode-remove-on-dev-unreg-v7-2-6d6bc448427a@oss.qualcomm.com>
+ <alUGHxyN6l7awuEn@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - ns1.suksangroup.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - inbox.org
-X-Get-Message-Sender-Via: ns1.suksangroup.com: authenticated_id: smtp@suksangroup.co.th
-X-Authenticated-Sender: ns1.suksangroup.com: smtp@suksangroup.co.th
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alUGHxyN6l7awuEn@intel.com>
 
+On Mon, Jul 13, 2026 at 11:37:03AM -0400, Rodrigo Vivi wrote:
+> On Mon, Jul 13, 2026 at 05:11:58PM +0200, Bartosz Golaszewski wrote:
+> > This driver intentionally uses the fine-grained approach to creating
+> > platform devices. It assigns a software node as the primary firmware
+> > node of the device it creates. Ahead of improving the reference counting
+> > of platform device software nodes, switch to using
+> > device_create_managed_software_node(). This way, we create a dynamic
+> > software node whose life-time is tied to the device to which it's
+> > assigned.
+> > 
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> 
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Re:Good day platform-driver-x86,
+LGTM:
 
-Please let me know if this is best email to send you the project=20
-info.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Kind regards,
+> > ---
+> >  drivers/gpu/drm/xe/xe_i2c.c | 22 ++++++++--------------
+> >  drivers/gpu/drm/xe/xe_i2c.h |  1 -
+> 
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> 
+> >  2 files changed, 8 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/xe/xe_i2c.c b/drivers/gpu/drm/xe/xe_i2c.c
+> > index 3d80eafb9a1318996d10db11e14af4cfde07ba55..af6e973e5e68125a9c006bb646447ca6e377a6e6 100644
+> > --- a/drivers/gpu/drm/xe/xe_i2c.c
+> > +++ b/drivers/gpu/drm/xe/xe_i2c.c
+> > @@ -93,13 +93,8 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> >  {
+> >  	struct pci_dev *pci = to_pci_dev(i2c->drm_dev);
+> >  	struct platform_device *pdev;
+> > -	struct fwnode_handle *fwnode;
+> >  	int ret;
+> >  
+> > -	fwnode = fwnode_create_software_node(xe_i2c_adapter_properties, NULL);
+> > -	if (IS_ERR(fwnode))
+> > -		return PTR_ERR(fwnode);
+> > -
+> >  	/*
+> >  	 * Not using platform_device_register_full() here because we don't have
+> >  	 * a handle to the platform_device before it returns. xe_i2c_notifier()
+> > @@ -107,10 +102,14 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> >  	 * platform_device_register_full() is done.
+> >  	 */
+> >  	pdev = platform_device_alloc(adapter_name, pci_dev_id(pci));
+> > -	if (!pdev) {
+> > -		ret = -ENOMEM;
+> > -		goto err_fwnode_remove;
+> > -	}
+> > +	if (!pdev)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = device_create_managed_software_node(&pdev->dev,
+> > +						  xe_i2c_adapter_properties,
+> > +						  NULL);
+> > +	if (ret)
+> > +		goto err_pdev_put;
+> >  
+> >  	if (i2c->adapter_irq) {
+> >  		struct resource res;
+> > @@ -123,8 +122,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> >  	}
+> >  
+> >  	pdev->dev.parent = i2c->drm_dev;
+> > -	platform_device_set_fwnode(pdev, fwnode);
+> > -	i2c->adapter_node = fwnode;
+> >  	i2c->pdev = pdev;
+> >  
+> >  	ret = platform_device_add(pdev);
+> > @@ -135,8 +132,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> >  
+> >  err_pdev_put:
+> >  	platform_device_put(pdev);
+> > -err_fwnode_remove:
+> > -	fwnode_remove_software_node(fwnode);
+> >  
+> >  	return ret;
+> >  }
+> > @@ -144,7 +139,6 @@ static int xe_i2c_register_adapter(struct xe_i2c *i2c)
+> >  static void xe_i2c_unregister_adapter(struct xe_i2c *i2c)
+> >  {
+> >  	platform_device_unregister(i2c->pdev);
+> > -	fwnode_remove_software_node(i2c->adapter_node);
+> >  }
+> >  
+> >  /**
+> > diff --git a/drivers/gpu/drm/xe/xe_i2c.h b/drivers/gpu/drm/xe/xe_i2c.h
+> > index 425d8160835f4648891ff75f2a9c06284241710e..b28229f056c5a664e1d41dc0cc1978782fe1c2f1 100644
+> > --- a/drivers/gpu/drm/xe/xe_i2c.h
+> > +++ b/drivers/gpu/drm/xe/xe_i2c.h
+> > @@ -30,7 +30,6 @@ struct xe_i2c_endpoint {
+> >  };
+> >  
+> >  struct xe_i2c {
+> > -	struct fwnode_handle *adapter_node;
+> >  	struct platform_device *pdev;
+> >  	struct i2c_adapter *adapter;
+> >  	struct i2c_client *client[XE_I2C_MAX_CLIENTS];
+> > 
+> > -- 
+> > 2.47.3
+> > 
 
-Harry Schofield, ceMBA
-
-
+-- 
+heikki
