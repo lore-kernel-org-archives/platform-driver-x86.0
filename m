@@ -1,135 +1,88 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from va-2-57.ptr.blmpb.com (va-2-57.ptr.blmpb.com [209.127.231.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D151A8F7B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 05:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21252353A7F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 12:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784094148; cv=none; b=RBEzyRFgqZXe7bwkLk6mAkblGUopm6iBzXzlV3l8SHYa2NDG+BvL8c6ZO7ro/Xsj+kmmR7sEHiJrv9wYc8y1O9fn70R63O5Btm1O6xlzuiW4G1g30BWwafJz3K4KcLhZwstcssgAKxej3bCHchnLeVYvTqBSbVWzAMqwEdJFtJU=
+	t=1784117507; cv=none; b=DnTBOG+nNhNs3BA9DN57Rz2L0gjaNwvrROyso6z9VLXBeQbOZfJLqO3dXkdIDGwwU0VAi+5KkuUciYdTgHnfgXimQBN2ICGdTtaQBD7vwnc8AuznjEbO4GDFTXHmtNkck9GG785OgnSNOgnXjbM2p0ttIh9QR6s9ZdnFFWtI2YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784094148; c=relaxed/simple;
-	bh=3bPhLDGbWOmTtWrpnmGN57m2PA8lZOwCGME8OXNCEd8=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=jO2d0g8ML/p4ErzulxIrQlmCSaflVXYSiwzJ5/fFvwDTYaoC7YY+t9h0OtK6VwFLYEVUbg0G9I3t8OPElzqPJDXj8BQVTtOCA8RLpc56Y8SPJJAS+kMizbw+kJNI6k6ZLTM58EW7r7q4r5uqRLrbmVe7xtlWBRpPWtHrF8xV0vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidrodgers.com; spf=none smtp.mailfrom=davidrodgers.com; dkim=pass (2048-bit key) header.d=davidrodgers-com.20251104.gappssmtp.com header.i=@davidrodgers-com.20251104.gappssmtp.com header.b=gMXN0NyW; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidrodgers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidrodgers.com
+	s=arc-20240116; t=1784117507; c=relaxed/simple;
+	bh=VpUBem712z3NXz3COfafygGDJ5mgQrVlvVKf4u2bfis=;
+	h=To:Cc:From:Content-Type:References:Message-Id:Mime-Version:
+	 Subject:Date:In-Reply-To; b=EbeR21ncYXkDAYK5YGVHZKA4vuXNW1a2OpDIgguqNvsLiSW82hYKDRdLUiJKQmgLHrw2irAHYXO0ZIEbdsA0+jIP074kdxtBXDe28YXfHnBIvJsPjvPcBwIs1Ue7XGqd4p0sndSqw4Y+a+y2vMUVNZO2vELkJKLcaaPe9hGc3E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev; spf=pass smtp.mailfrom=liuxiaozhen.dev; dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b=HcSQF0wN; arc=none smtp.client-ip=209.127.231.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=liuxiaozhen.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidrodgers-com.20251104.gappssmtp.com header.i=@davidrodgers-com.20251104.gappssmtp.com header.b="gMXN0NyW"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-8051ad12d23so16812287b3.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 22:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidrodgers-com.20251104.gappssmtp.com; s=20251104; t=1784094146; x=1784698946; darn=vger.kernel.org;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:content-type:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=R6qEG6fJET8On7DfjD65+6lcE/pVRwMU1AfHR/cJgTs=;
-        b=gMXN0NyWTaXmJbA68jirvTy5+H0J/N1bDL+wMhDx1B9pbzZWkHBJG4MHxoB64qtabI
-         /KHJaKrGzNF5DvgG6NU6PIkCYP8TFUcUssahKRVNBRlrM1dAmhPQ8kOvMZ9cZXxOAyxQ
-         09Kfl/T1TTY/gLB+4VRXo4AX/ExF6DiUCTVuFH4yJUOy/VOZGW2qTe9jBCH2Uy+MFvZv
-         K9AaP8+R/S39KcJ73zeDQznINkHv715RwAliDTX0QCmlzxhVsQZCQK1LgCnMZ6DQdnKc
-         VeFMo/YisYawOqPe+xQh7vaSOm4Ywqnd/5JKXo8rZgwCOWpX6tpAHzQHP5eglE9VQrAa
-         baFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784094146; x=1784698946;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:content-type:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=R6qEG6fJET8On7DfjD65+6lcE/pVRwMU1AfHR/cJgTs=;
-        b=PpxF/ckBlqVKjjsl3B0i77EoRD6Td0eAteqMeWUHWimLtZSkb4Y8drF4/s1BOtd2pL
-         xOndvMjG2tL9pMdPPpErO8Im9sCnpbdHGFEU0JWrpy64klGGOGLS5OaX1u3/FEKEyyvY
-         msbZGOHsbP9CWfqX34xAXG0mXLQuVsiQyNCQin/nkk60Zm0YONOtUq+YDY6C8RmOnm/T
-         JswJ1gK++wZs35dRuCX/YgLcHnemi8Ip2O2dn+epCfKJ7ErAmPnV3Sv8kO1ru7sPin0l
-         6K4hwEXRN7yDeXAOpGV9gd6fZQL0iDK/kRVfOC0io4xkyW59PRLDmF+k5Y6R8MnNs6Uz
-         BkwA==
-X-Forwarded-Encrypted: i=1; AHgh+RqAv/TuRmq6vpnHLQ3o8DumajNE9yYs+JwgyvA3C0007uw53ouBYQjXRPGV7ez0rJpfa4J4uaYimjQfbz21PgLhlVjJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/VHH1ucf3ja2Wcsqc9Y9DECjvkhBti+4uivQc65iU7JBVBdCW
-	rTeNMI7O4yv3gqjI2cEy4w4mJGELIqeCNEX2njUA6RKJ+9vSTKvxebBtMrgW4FZAWQY=
-X-Gm-Gg: AfdE7cl7OrIsi0Hxe7usFw/Lau+rSNwM2ODfXmnnu3YO/oqvl8cTLQpVJiyqW16SKQw
-	uwcutp65zpwWhktPGfABv/RpC06pKASWH0grj6RUznlWx6wy0lxQjtOKF/CehZI4QwLT1VULxsd
-	or5MjwimXXOkKsWJAkdr5SNEMRr1qNFkcFRmDDMn1gd4s2+MJPd4GF9B4mzaPyQ9hROnVB1Ob/H
-	llUnqHWJLwzcHQDvNUausYEJGnemGXTv9YznRNizweIz/lWhE1JUqnhfJM+Y1KJAYNYgHtM1ApP
-	bRNuHZzqRK2mjsCP4yyTS09kyVDku0G5Ofvyrq81cI7zeppX3qTHy+DWaSQb0Kr7nkfpmtgHsaM
-	etaONQ7e0FAF7ef2RaAPRl/qd8IMdGfxViA+063jdfgBB154RTSI4Y49DgSoDb0LaukoR0VVwcw
-	hFQabXwdY/AubaYvBqQ74km9+t6FoSRviLPylEg/U=
-X-Received: by 2002:a05:690c:ed5:b0:81e:89b2:91ae with SMTP id 00721157ae682-81e90033b3bmr128896577b3.21.1784094146085;
-        Tue, 14 Jul 2026 22:42:26 -0700 (PDT)
-Received: from smtpclient.apple ([162.230.155.43])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-81e6be9834dsm160690227b3.9.2026.07.14.22.42.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jul 2026 22:42:25 -0700 (PDT)
-From: David Rodgers <david@davidrodgers.com>
-Content-Type: text/plain;
-	charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b="HcSQF0wN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2602171341; d=liuxiaozhen.dev; t=1784117499;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=WYTY9SMuDdaHYO+63+P8lWpfvYuIcHXN/knKmBxFJ+Q=;
+ b=HcSQF0wN0qhzWkxA7jCRMcU0UtBonLoIsL+lxqIH6kInzT7usJfib1cv4C4fM1NTGL5EpI
+ /5W3nLXw/ELkaLktpROa8kooQvhHlUfbxn/Rk1AOmyhMN4xGqJKJRCtoMpaT/eWrMbNq90
+ nDylSuTLS68h50Olu18aYEKEOwpl6CPM8j/BBjD1WmN6ZCbHdPjDuXdRRZAnMDRxjen3K3
+ FMhbBqPIjw+aq8AjOP+L/qca75sizAyLZ/5t9RDEjws3oDMBM6COnAb4TeYwYNmojPsMDZ
+ 2I+5/7SsFwY60Ewp1pMt2GSWHo6IRKk3I/v994wQgRO78uVk3JucjB5mjmtUXQ==
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	"Sean Rhodes" <sean@starlabs.systems>, <tzungbi@kernel.org>
+Cc: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, 
+	<corentin.chary@gmail.com>, <luke@ljones.dev>, <denis.benato@linux.dev>, 
+	<prasanth.ksr@dell.com>, <jorge.lopez2@hp.com>, 
+	<mpearson-lenovo@squebb.ca>, <josh@joshuagrisham.com>, 
+	<briannorris@chromium.org>, <jwerner@chromium.org>, 
+	<tzimmermann@suse.de>, <javierm@redhat.com>, <kees@kernel.org>, 
+	<u.kleine-koenig@baylibre.com>, <mst@redhat.com>, 
+	<chenhuacai@kernel.org>, <wenst@chromium.org>, 
+	<florian.fainelli@broadcom.com>, <titouan.ameline@gmail.com>, 
+	<linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, 
+	<Dell.Client.Kernel@dell.com>, <chrome-platform@lists.linux.dev>, 
+	<oliver@liuxiaozhen.dev>
+From: "Oliver Lin" <oliver@liuxiaozhen.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <20260713054526.2902319-1-sean@starlabs.systems> <20260713081317.2954586-1-sean@starlabs.systems> <20260713081317.2954586-2-sean@starlabs.systems> <01401869-C099-407E-8175-174FE8EDF701@gmail.com>
+Message-Id: <f1b0a036-909f-429e-8a12-f5fd9aa73c28@liuxiaozhen.dev>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
-Subject: amd_halo_led: writing 0 to brightness bounces to max and clears
- multi_intensity
-Message-Id: <B1A2836A-FAAF-4E5A-8F39-166E51B926C1@davidrodgers.com>
-Date: Wed, 15 Jul 2026 01:42:15 -0400
-Cc: Leo.Lin@amd.com,
- platform-driver-x86@vger.kernel.org
-To: superm1@kernel.org
-X-Mailer: Apple Mail (2.3864.600.51.1.1)
+Mime-Version: 1.0
+Received: from [198.18.0.0] ([23.151.104.71]) by smtp.feishu.cn with ESMTPS; Wed, 15 Jul 2026 20:11:36 +0800
+X-Original-From: Oliver Lin <oliver@liuxiaozhen.dev>
+Content-Language: en-US
+Subject: Re: [PATCH v6 1/3] firmware: Move firmware attributes class helper
+Date: Wed, 15 Jul 2026 20:11:28 +0800
+In-Reply-To: <01401869-C099-407E-8175-174FE8EDF701@gmail.com>
+User-Agent: Mozilla Thunderbird
+X-Lms-Return-Path: <lba+26a5778f9+972fa0+vger.kernel.org+oliver@liuxiaozhen.dev>
 
- Hi Mario,
+Hi Sean,
 
-I picked up a couple of these =E2=80=9Cai halo dev platform=E2=80=9D =
-devices and I've been using the amd_halo_led driver running AMD's =
-shipped image: kernel 6.18.35+rex+2-amd64, BIOS 03.03 (2026-06-10). I =
-think I've hit a bug in the brightness handling, and=20
-since the driver is still under review on platform-driver-x86 it seemed =
-worth reporting now rather than later.
+I tested this patch as part of the full v6 series on the following systems:
 
-Writing 0 to /sys/class/leds/amd_halo:multicolor:status/brightness does =
-not turn the LED off. The value bounces back to 100 (max_brightness), =
-and a moment later multi_intensity is asynchronously zeroed to "0 0 0", =
-losing the configured color. Because=20
-that second step is deferred, an immediate read-back looks correct and =
-the problem only surfaces on a later read =E2=80=94 which makes it easy =
-to miss. Every other brightness value I tried (100, 75, 50, 1) =
-round-trips correctly; only 0 misbehaves. Writing=20
-multi_intensity "0 0 0" turns the LED off reliably, so that's the =
-workaround I've settled on.
+- Lenovo ThinkPad P15 Gen 1
+- Lenovo ThinkPad P50s
 
-  =E2=96=8E Repro from a known state:
-  =E2=96=8E
-  =E2=96=8E     # set a color at partial brightness
-  =E2=96=8E     $ printf '0 0 100' > multi_intensity
-  =E2=96=8E     $ printf '60'      > brightness
-  =E2=96=8E     $ cat multi_intensity brightness
-  =E2=96=8E     0 0 100
-  =E2=96=8E     60
-  =E2=96=8E
-  =E2=96=8E     # write 0 to brightness -> reads back as 100
-  =E2=96=8E     $ printf '0' > brightness
-  =E2=96=8E     $ cat multi_intensity brightness
-  =E2=96=8E     0 0 100
-  =E2=96=8E     100
-  =E2=96=8E
-  =E2=96=8E     # next brightness write reveals the color has been wiped
-  =E2=96=8E     $ printf '50' > brightness
-  =E2=96=8E     $ cat multi_intensity brightness
-  =E2=96=8E     0 0 0
-  =E2=96=8E     50
+On both systems, think-lmi continued to register successfully after 
+applying the series.
 
-I can't tell from userspace whether this originates in the driver's =
-brightness path or in the WMI firmware underneath it =E2=80=94 =
-everything above is black-box observation via sysfs. Happy to run tests =
-or try a debug patch if that would help.
+I compared the firmware-attributes sysfs tree, exposed file list, and 
+all readable attribute values against the unpatched kernel:
 
-One unrelated question while I'm here: the driver shipped on this =
-platform registers the LED as amd_halo:multicolor:status, whereas the =
-version posted to platform-driver-x86 uses amd_halo:rgb:light_bar. Is =
-the naming expected to converge before it lands?=20
-Anything hardcoding the sysfs path would need to account for that.
+- ThinkPad P15 Gen 1: 107 files, no differences
+- ThinkPad P50s: 294 files, no differences
 
-Thanks,=20
+Reboot and suspend/resume completed successfully on both systems, and 
+the ThinkLMI attributes remained available after resume. Full poweroff 
+was also tested successfully on the P50s.
 
- David Rodgers
+No new relevant kernel warnings, Oopses, or call traces were observed.
 
+Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
+
+Best regards,
+Oliver
