@@ -1,119 +1,135 @@
-Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E4A25B30D
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 01:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D151A8F7B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 05:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784077446; cv=none; b=fMQrObRSW97o+m7p6RxRzmFPNkwpHmuUgj3k4SwCJkiXSCpPN14jriJWu3nryOa1Rv9SXnoQNKxa0UiJHzkl+zLNW451uZmgIb8KWHz/qyIoPvsAzMFXjBamZRi2OtBNUimrDWq7wbnbKMIS4YDAMG/rJsPvrTPRjvBOTOehmrs=
+	t=1784094148; cv=none; b=RBEzyRFgqZXe7bwkLk6mAkblGUopm6iBzXzlV3l8SHYa2NDG+BvL8c6ZO7ro/Xsj+kmmR7sEHiJrv9wYc8y1O9fn70R63O5Btm1O6xlzuiW4G1g30BWwafJz3K4KcLhZwstcssgAKxej3bCHchnLeVYvTqBSbVWzAMqwEdJFtJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784077446; c=relaxed/simple;
-	bh=odsHPKGRkXpnbVJrCXqgvkItzFXDUdiBxoNTUL5323Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D19FFp/s4swgOXnTbEBY4QThPwMFpSinkTmRL037x/279WsiwfizhEcrK2gD0g/q0lnm7ffMIwIRtDg3e+FSJMZ924Xd9Ej1mpDmbmgzeYRiLKLVB1Adog0HSPoYJKWrQDA7OdKk+6OJJHgEjZBnns6oIf9gK8BTAsVBdw3say4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqDGo7wB; arc=none smtp.client-ip=74.125.224.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784094148; c=relaxed/simple;
+	bh=3bPhLDGbWOmTtWrpnmGN57m2PA8lZOwCGME8OXNCEd8=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=jO2d0g8ML/p4ErzulxIrQlmCSaflVXYSiwzJ5/fFvwDTYaoC7YY+t9h0OtK6VwFLYEVUbg0G9I3t8OPElzqPJDXj8BQVTtOCA8RLpc56Y8SPJJAS+kMizbw+kJNI6k6ZLTM58EW7r7q4r5uqRLrbmVe7xtlWBRpPWtHrF8xV0vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidrodgers.com; spf=none smtp.mailfrom=davidrodgers.com; dkim=pass (2048-bit key) header.d=davidrodgers-com.20251104.gappssmtp.com header.i=@davidrodgers-com.20251104.gappssmtp.com header.b=gMXN0NyW; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidrodgers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidrodgers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqDGo7wB"
-Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-667971437d6so7879427d50.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 18:04:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=davidrodgers-com.20251104.gappssmtp.com header.i=@davidrodgers-com.20251104.gappssmtp.com header.b="gMXN0NyW"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-8051ad12d23so16812287b3.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 22:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784077440; x=1784682240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=T92TVFn6rhO6HmCv2F8f/L0PpErBRmmCEWcKmmWl3MY=;
-        b=OqDGo7wBNlHBZFvfh5AoXJbhq86Ke1h0h2Md1W26ibZiZ2tuAZZd/3hq5kjBXEMMwW
-         kkvXUo76NCBpdk7F12eSWpIfvNM+wc6A8k2DPhncy/twSXb4XF9XUVtAO7ZsDi0DcAS2
-         Qr2idux/+0K5jJPFyEuPgN6I5xK+U9ajpgZ1BW68AIa0btKFQOri3XW1zqXDF8OZ4VpO
-         KelqnKGEm2aQpAWS8ubPtNqwKrRsqJwS7xjDcrJn/2yjDlonpiVKWhe2mSNk9QPfbGRl
-         EAw7q/EmH1L2B70xPZ3pksyM4oxdKQ1OpGh2mNMYKAPce5m+EL8yHSJK9gje1XUxStnR
-         gkGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784077440; x=1784682240;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=davidrodgers-com.20251104.gappssmtp.com; s=20251104; t=1784094146; x=1784698946; darn=vger.kernel.org;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:content-type:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=T92TVFn6rhO6HmCv2F8f/L0PpErBRmmCEWcKmmWl3MY=;
-        b=mD6Idxk6UDRwSoZZxgUGGdY7ZYjfHKD4F6snwdM9RNaIZ9YEwE9+0EyOJ4IxA6XONH
-         RQ8BgI5AFOWnr4dlkYMJtYjTy/7QMiRd8gDIcmOXiADTOKR94DvOQ65xhXsftFFLJYf2
-         yoTemjQ5T46/n8wz9jfikCYvzdCAC6S8tEGXYUI0SAKYPk8RiiybEqNh+sa8q9FXcWEF
-         gvhjQBHlH7gt6Wxxk9UdLo3AWc6KobyJov723DOI4CiZ1xE928pDSO+oX7CKmc56xU7V
-         KMMwoEEvTyhZIPhvoPI3zfxYGM6NXJgdpOBIRTNhlQCORCdEaCmn/9xuWAKnJ//+K2iI
-         Fh3w==
-X-Gm-Message-State: AOJu0Yw9TdAQRy+nBAnGqRI4sSi6/fYxof4/3MrSgVAxoqrIuMpFiDrB
-	t7gsDSzT7IqWqnVsOEWHQl8WR03N05qJSoKdpk9kSsE+RsdlsxaR1ZkLwQgWXms4XzM=
-X-Gm-Gg: AfdE7ckXm2dBWo3FMtw1SCO6MkdMXzWRj3IyV14MoocCa+1AVQ9cpUS2OangY56aYmP
-	ve4rI84iAu3reWubUqdTuOD7AY3w27Ny2UKq3Iz70oyixNmqwSenIFKIkBiui7jQCia+Vps7Q8x
-	FmRP2ImKfqqE38AcABjmqfd3g/hnFaPiW0vmCpaOQ7wMXskrQPTUWJzv3R6ncUrNUrWw4oMp7SW
-	N/7ml1VlM+y+IyGdVRvpXClYl0afHnxnEmfPcRUj6gA+8pkGsHfXf6iVzYvI78ajWfKXBz1gbTN
-	Yae9KffuQShTFDUUmV9jUPLGgco8Df+6qffvrGxmW/AD3LOZwm8bzmz6H+C423KoJjPKS25iIND
-	DNla5Jbr5xVHKFmiT2GqkRXeuPbxKxxry/Y5z7qidgtSzgW0nMLRlpPi88p5ZqZI37oJ5y0OSvo
-	AQs0aARSfgGKxs3rJi3jKvANdk2xcFw3dWbd+u+1ltCq0B+y6F
-X-Received: by 2002:a05:690e:488a:b0:667:d3e3:170f with SMTP id 956f58d0204a3-66813398a5amr609793d50.67.1784077439997;
-        Tue, 14 Jul 2026 18:03:59 -0700 (PDT)
-Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([103.161.144.215])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-667874c2d15sm17602863d50.0.2026.07.14.18.03.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 18:03:59 -0700 (PDT)
-From: Vishnu Sankar <vishnuocv@gmail.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hansg@kernel.org,
-	oliver@liuxiaozhen.dev
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	mpearson-lenovo@squebb.ca,
-	vsankar@lenovo.com,
-	Vishnu Sankar <vishnuocv@gmail.com>
-Subject: [PATCH v2] platform/x86: thinkpad_acpi: Fix USB-C Security probe failure on unsupported platforms
-Date: Wed, 15 Jul 2026 10:02:05 +0900
-Message-ID: <20260715010205.514132-1-vishnuocv@gmail.com>
-X-Mailer: git-send-email 2.51.0
+        bh=R6qEG6fJET8On7DfjD65+6lcE/pVRwMU1AfHR/cJgTs=;
+        b=gMXN0NyWTaXmJbA68jirvTy5+H0J/N1bDL+wMhDx1B9pbzZWkHBJG4MHxoB64qtabI
+         /KHJaKrGzNF5DvgG6NU6PIkCYP8TFUcUssahKRVNBRlrM1dAmhPQ8kOvMZ9cZXxOAyxQ
+         09Kfl/T1TTY/gLB+4VRXo4AX/ExF6DiUCTVuFH4yJUOy/VOZGW2qTe9jBCH2Uy+MFvZv
+         K9AaP8+R/S39KcJ73zeDQznINkHv715RwAliDTX0QCmlzxhVsQZCQK1LgCnMZ6DQdnKc
+         VeFMo/YisYawOqPe+xQh7vaSOm4Ywqnd/5JKXo8rZgwCOWpX6tpAHzQHP5eglE9VQrAa
+         baFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784094146; x=1784698946;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:content-type:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=R6qEG6fJET8On7DfjD65+6lcE/pVRwMU1AfHR/cJgTs=;
+        b=PpxF/ckBlqVKjjsl3B0i77EoRD6Td0eAteqMeWUHWimLtZSkb4Y8drF4/s1BOtd2pL
+         xOndvMjG2tL9pMdPPpErO8Im9sCnpbdHGFEU0JWrpy64klGGOGLS5OaX1u3/FEKEyyvY
+         msbZGOHsbP9CWfqX34xAXG0mXLQuVsiQyNCQin/nkk60Zm0YONOtUq+YDY6C8RmOnm/T
+         JswJ1gK++wZs35dRuCX/YgLcHnemi8Ip2O2dn+epCfKJ7ErAmPnV3Sv8kO1ru7sPin0l
+         6K4hwEXRN7yDeXAOpGV9gd6fZQL0iDK/kRVfOC0io4xkyW59PRLDmF+k5Y6R8MnNs6Uz
+         BkwA==
+X-Forwarded-Encrypted: i=1; AHgh+RqAv/TuRmq6vpnHLQ3o8DumajNE9yYs+JwgyvA3C0007uw53ouBYQjXRPGV7ez0rJpfa4J4uaYimjQfbz21PgLhlVjJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/VHH1ucf3ja2Wcsqc9Y9DECjvkhBti+4uivQc65iU7JBVBdCW
+	rTeNMI7O4yv3gqjI2cEy4w4mJGELIqeCNEX2njUA6RKJ+9vSTKvxebBtMrgW4FZAWQY=
+X-Gm-Gg: AfdE7cl7OrIsi0Hxe7usFw/Lau+rSNwM2ODfXmnnu3YO/oqvl8cTLQpVJiyqW16SKQw
+	uwcutp65zpwWhktPGfABv/RpC06pKASWH0grj6RUznlWx6wy0lxQjtOKF/CehZI4QwLT1VULxsd
+	or5MjwimXXOkKsWJAkdr5SNEMRr1qNFkcFRmDDMn1gd4s2+MJPd4GF9B4mzaPyQ9hROnVB1Ob/H
+	llUnqHWJLwzcHQDvNUausYEJGnemGXTv9YznRNizweIz/lWhE1JUqnhfJM+Y1KJAYNYgHtM1ApP
+	bRNuHZzqRK2mjsCP4yyTS09kyVDku0G5Ofvyrq81cI7zeppX3qTHy+DWaSQb0Kr7nkfpmtgHsaM
+	etaONQ7e0FAF7ef2RaAPRl/qd8IMdGfxViA+063jdfgBB154RTSI4Y49DgSoDb0LaukoR0VVwcw
+	hFQabXwdY/AubaYvBqQ74km9+t6FoSRviLPylEg/U=
+X-Received: by 2002:a05:690c:ed5:b0:81e:89b2:91ae with SMTP id 00721157ae682-81e90033b3bmr128896577b3.21.1784094146085;
+        Tue, 14 Jul 2026 22:42:26 -0700 (PDT)
+Received: from smtpclient.apple ([162.230.155.43])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-81e6be9834dsm160690227b3.9.2026.07.14.22.42.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jul 2026 22:42:25 -0700 (PDT)
+From: David Rodgers <david@davidrodgers.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: amd_halo_led: writing 0 to brightness bounces to max and clears
+ multi_intensity
+Message-Id: <B1A2836A-FAAF-4E5A-8F39-166E51B926C1@davidrodgers.com>
+Date: Wed, 15 Jul 2026 01:42:15 -0400
+Cc: Leo.Lin@amd.com,
+ platform-driver-x86@vger.kernel.org
+To: superm1@kernel.org
+X-Mailer: Apple Mail (2.3864.600.51.1.1)
 
-On systems where the USCS ACPI method is absent, acpi_evalf() returns
-AE_NOT_FOUND which maps to -EIO. This caused tpacpi_usbc_security_init()
-to propagate the error and thinkpad_acpi failed to probe entirely on
-unsupported platforms.
+ Hi Mario,
 
-Fix this by checking for USCS method presence with acpi_has_method() before
-attempting to call it, returning -ENODEV immediately if absent.
-This follows the same pattern used by other subdrivers in thinkpad_acpi.c.
+I picked up a couple of these =E2=80=9Cai halo dev platform=E2=80=9D =
+devices and I've been using the amd_halo_led driver running AMD's =
+shipped image: kernel 6.18.35+rex+2-amd64, BIOS 03.03 (2026-06-10). I =
+think I've hit a bug in the brightness handling, and=20
+since the driver is still under review on platform-driver-x86 it seemed =
+worth reporting now rather than later.
 
-Fixes: 67e8d1e9cacd ("platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support")
-Reported-by: Oliver Lin <oliver@liuxiaozhen.dev>
-Closes: https://lore.kernel.org/platform-driver-x86/239c8162-e1e6-4b49-8292-35547c5a525c@liuxiaozhen.dev/
-Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
-Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
----
-Changes since v1:
-- Fix incorrect email address for Oliver Lin
-- Add Tested-by from Oliver Lin confirming fix works on ThinkPad P15 Gen 1
-  and ThinkPad P50s
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 +++
- 1 file changed, 3 insertions(+)
+Writing 0 to /sys/class/leds/amd_halo:multicolor:status/brightness does =
+not turn the LED off. The value bounces back to 100 (max_brightness), =
+and a moment later multi_intensity is asynchronously zeroed to "0 0 0", =
+losing the configured color. Because=20
+that second step is deferred, an immediate read-back looks correct and =
+the problem only surfaces on a later read =E2=80=94 which makes it easy =
+to miss. Every other brightness value I tried (100, 75, 50, 1) =
+round-trips correctly; only 0 misbehaves. Writing=20
+multi_intensity "0 0 0" turns the LED off reliably, so that's the =
+workaround I've settled on.
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 91db4c8eeac2..85ed506516f0 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -11368,6 +11368,9 @@ static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
- {
- 	int err;
- 
-+	if (!acpi_has_method(hkey_handle, "USCS"))
-+		return -ENODEV;
-+
- 	err = usbc_security_query(&tp_features.usbc_security_enabled);
- 	if (err == -ENODEV)
- 		return 0;
--- 
-2.51.0
+  =E2=96=8E Repro from a known state:
+  =E2=96=8E
+  =E2=96=8E     # set a color at partial brightness
+  =E2=96=8E     $ printf '0 0 100' > multi_intensity
+  =E2=96=8E     $ printf '60'      > brightness
+  =E2=96=8E     $ cat multi_intensity brightness
+  =E2=96=8E     0 0 100
+  =E2=96=8E     60
+  =E2=96=8E
+  =E2=96=8E     # write 0 to brightness -> reads back as 100
+  =E2=96=8E     $ printf '0' > brightness
+  =E2=96=8E     $ cat multi_intensity brightness
+  =E2=96=8E     0 0 100
+  =E2=96=8E     100
+  =E2=96=8E
+  =E2=96=8E     # next brightness write reveals the color has been wiped
+  =E2=96=8E     $ printf '50' > brightness
+  =E2=96=8E     $ cat multi_intensity brightness
+  =E2=96=8E     0 0 0
+  =E2=96=8E     50
+
+I can't tell from userspace whether this originates in the driver's =
+brightness path or in the WMI firmware underneath it =E2=80=94 =
+everything above is black-box observation via sysfs. Happy to run tests =
+or try a debug patch if that would help.
+
+One unrelated question while I'm here: the driver shipped on this =
+platform registers the LED as amd_halo:multicolor:status, whereas the =
+version posted to platform-driver-x86 uses amd_halo:rgb:light_bar. Is =
+the naming expected to converge before it lands?=20
+Anything hardcoding the sysfs path would need to account for that.
+
+Thanks,=20
+
+ David Rodgers
 
