@@ -1,69 +1,74 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-yx1-f52.google.com (mail-yx1-f52.google.com [74.125.224.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D5D233926
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 00:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E4A25B30D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 01:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784076135; cv=none; b=jmNB8pqzQv1t2nEStME8exQvoWr3eAmsv/2s2xJhpZKnGIlW7WTE+DwbGEF/hRw4qAZ3h3bThIgH3M+/JxbStrQGYGMXTxBt4YcimQYE/cwEn3tM/xpwn2deQbfIyOqeDccfS12q5ArqF5p7Uaowl7JvAnDdzdEtFH3h53tSj8U=
+	t=1784077446; cv=none; b=fMQrObRSW97o+m7p6RxRzmFPNkwpHmuUgj3k4SwCJkiXSCpPN14jriJWu3nryOa1Rv9SXnoQNKxa0UiJHzkl+zLNW451uZmgIb8KWHz/qyIoPvsAzMFXjBamZRi2OtBNUimrDWq7wbnbKMIS4YDAMG/rJsPvrTPRjvBOTOehmrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784076135; c=relaxed/simple;
-	bh=Xhh4875qo0KPn31j0oCBWQE4DediDkd7AhMFu0bZfp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QmvzKX2TIdRr3JOzoVwr6lLZy2J9sH03Jx948t+rEbeY8S9Tot4mNrsuCfDv1cKEBhwLxYqDZQ6yJ5zGe70RO2qrLNE/nAk3EGsC/uvtZhNxfvpc8HCAhNwaHcr4FGGTYHPdtvAvXoi/Tq60quufwBhc9QFKBSb9bpN9QLnxk0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRtmm4Nu; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1784077446; c=relaxed/simple;
+	bh=odsHPKGRkXpnbVJrCXqgvkItzFXDUdiBxoNTUL5323Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D19FFp/s4swgOXnTbEBY4QThPwMFpSinkTmRL037x/279WsiwfizhEcrK2gD0g/q0lnm7ffMIwIRtDg3e+FSJMZ924Xd9Ej1mpDmbmgzeYRiLKLVB1Adog0HSPoYJKWrQDA7OdKk+6OJJHgEjZBnns6oIf9gK8BTAsVBdw3say4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OqDGo7wB; arc=none smtp.client-ip=74.125.224.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRtmm4Nu"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6986287534eso8845926a12.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 17:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqDGo7wB"
+Received: by mail-yx1-f52.google.com with SMTP id 956f58d0204a3-667971437d6so7879427d50.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 14 Jul 2026 18:04:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784076128; x=1784680928; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784077440; x=1784682240; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xUKUlfDTAo3vrLAu+doVpEONO9BXUFJiSq1WH9CFOSM=;
-        b=GRtmm4NueVkl7ASUfxMQMGsFs40Xefm+L/Jjey77TrNe4fOffmwCw23uulmhkfDTTF
-         XXXIAabsUn2um7iRYLmfhQ8t7CsFSU5xyPL3f/SDPQSrObEzxa2unbJrByhTqLVCqib5
-         O9uIAw/4BbEYVEOECZdfTRgkRhG6+Fes637roBlw3BZ0Ho5+8e24/xupxFZMrdu4Ghlp
-         wqo8GMJzVCMhyl4TwnWuKizrGzUSl6y3HMX7PYAyq0V/ZC6Pt4B7z2V/guWhsL9bPyP8
-         KW6aXUMRFRSePanniKLIv7ljmenmOfuE0tKtj4YQh7wOcFBZ/IS+roudRwq0bCabhpkx
-         AfOw==
+        bh=T92TVFn6rhO6HmCv2F8f/L0PpErBRmmCEWcKmmWl3MY=;
+        b=OqDGo7wBNlHBZFvfh5AoXJbhq86Ke1h0h2Md1W26ibZiZ2tuAZZd/3hq5kjBXEMMwW
+         kkvXUo76NCBpdk7F12eSWpIfvNM+wc6A8k2DPhncy/twSXb4XF9XUVtAO7ZsDi0DcAS2
+         Qr2idux/+0K5jJPFyEuPgN6I5xK+U9ajpgZ1BW68AIa0btKFQOri3XW1zqXDF8OZ4VpO
+         KelqnKGEm2aQpAWS8ubPtNqwKrRsqJwS7xjDcrJn/2yjDlonpiVKWhe2mSNk9QPfbGRl
+         EAw7q/EmH1L2B70xPZ3pksyM4oxdKQ1OpGh2mNMYKAPce5m+EL8yHSJK9gje1XUxStnR
+         gkGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784076128; x=1784680928;
+        d=1e100.net; s=20251104; t=1784077440; x=1784682240;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xUKUlfDTAo3vrLAu+doVpEONO9BXUFJiSq1WH9CFOSM=;
-        b=Q45ETxpqNxqJgLyfsM+Ju05dsyFTGdh6OAJLnXVCekaa3el+AKRJYVht0lUyN/wic1
-         CyN7RTB5vLgN3Oodc2yEYqMbyrUI8q2vjlmStXrLVDKYQJK52IpWekWhpgAwOzcxPR4v
-         c8apIyFUXr3tcmk4yv9PM/xqKB641j8pHSXr3uZQrD4boziTU16C+9UZPGBCh8gyVvls
-         ht4YknHejxwiWMLkscl6FmzZvC5d/TJv3hEAlXoDakgJRmnKzUbNf8bX2JqbtmeT4XE5
-         kYUWCzif6A1Arl5amJTyzPH+cYbI6Dswjv0FleZX6ElhxroUKqWi1Z4eeiZOSqXJgDxD
-         MjkA==
-X-Gm-Message-State: AOJu0Yz0tqhk0Q13AIIYz9rNCCN5sfCLVwqQNwK/1JEHDAYa0F+PVzKV
-	lkuOketRu6yu9mRax8p7b0AwSHlCXygJKv4XHNYFoRbYeeO9HZTU2sWoUbeWiZjK
-X-Gm-Gg: AfdE7cndb3aJeePCVHC4cbItupgtiyviOpSMqcjZjZojZJwivKtnOU32+0ZjkNa7aTa
-	cHo5IggcFpW8f8whxM4rXzPx/3xivlEadz2qVhHz7aFa7F9zEUmXUk0ZuDbJMLL7I/HP6mFCIYj
-	r3ZDasQ3Vj/aCnw6OlCz/Zb/56STppBuzXa9DNLeM/pulr2amrVDPIUNc++p+a5t+ccOBUuYmlt
-	uw8+aOT0jp8Aj59VdGMtciVWzxRzStYX6EZhVvip+WMCMYu6Jc/2SMj4Z7iUUR5w8c9k8B/gWRR
-	ydFbW4mEIl45nOhMHiSaGRqVF/4W7Ueglesi3HZmLo7vQpS9q8fgElB8kmk96SuHqkZrWIIqwjK
-	5on6jIw2t+hNb2Ktamc3V8Y73QNgMYJes5QASBhqSj3aK2ra8h4/9Hxf4eOroYvbzzYTYKpAHa3
-	+jLGvtmWAgsF/znU0mWT9WrWsgX2iz4kF38ECKfsa/llyiQybX9c+tgRilH42Xtw==
-X-Received: by 2002:a17:907:3d55:b0:c15:efb1:9ff7 with SMTP id a640c23a62f3a-c16616ad29bmr346193066b.28.1784076128265;
-        Tue, 14 Jul 2026 17:42:08 -0700 (PDT)
-Received: from fedora.ts.hejka.me (83.22.230.193.ipv4.supernova.orange.pl. [83.22.230.193])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c15deea5cf6sm909671966b.16.2026.07.14.17.42.04
+        bh=T92TVFn6rhO6HmCv2F8f/L0PpErBRmmCEWcKmmWl3MY=;
+        b=mD6Idxk6UDRwSoZZxgUGGdY7ZYjfHKD4F6snwdM9RNaIZ9YEwE9+0EyOJ4IxA6XONH
+         RQ8BgI5AFOWnr4dlkYMJtYjTy/7QMiRd8gDIcmOXiADTOKR94DvOQ65xhXsftFFLJYf2
+         yoTemjQ5T46/n8wz9jfikCYvzdCAC6S8tEGXYUI0SAKYPk8RiiybEqNh+sa8q9FXcWEF
+         gvhjQBHlH7gt6Wxxk9UdLo3AWc6KobyJov723DOI4CiZ1xE928pDSO+oX7CKmc56xU7V
+         KMMwoEEvTyhZIPhvoPI3zfxYGM6NXJgdpOBIRTNhlQCORCdEaCmn/9xuWAKnJ//+K2iI
+         Fh3w==
+X-Gm-Message-State: AOJu0Yw9TdAQRy+nBAnGqRI4sSi6/fYxof4/3MrSgVAxoqrIuMpFiDrB
+	t7gsDSzT7IqWqnVsOEWHQl8WR03N05qJSoKdpk9kSsE+RsdlsxaR1ZkLwQgWXms4XzM=
+X-Gm-Gg: AfdE7ckXm2dBWo3FMtw1SCO6MkdMXzWRj3IyV14MoocCa+1AVQ9cpUS2OangY56aYmP
+	ve4rI84iAu3reWubUqdTuOD7AY3w27Ny2UKq3Iz70oyixNmqwSenIFKIkBiui7jQCia+Vps7Q8x
+	FmRP2ImKfqqE38AcABjmqfd3g/hnFaPiW0vmCpaOQ7wMXskrQPTUWJzv3R6ncUrNUrWw4oMp7SW
+	N/7ml1VlM+y+IyGdVRvpXClYl0afHnxnEmfPcRUj6gA+8pkGsHfXf6iVzYvI78ajWfKXBz1gbTN
+	Yae9KffuQShTFDUUmV9jUPLGgco8Df+6qffvrGxmW/AD3LOZwm8bzmz6H+C423KoJjPKS25iIND
+	DNla5Jbr5xVHKFmiT2GqkRXeuPbxKxxry/Y5z7qidgtSzgW0nMLRlpPi88p5ZqZI37oJ5y0OSvo
+	AQs0aARSfgGKxs3rJi3jKvANdk2xcFw3dWbd+u+1ltCq0B+y6F
+X-Received: by 2002:a05:690e:488a:b0:667:d3e3:170f with SMTP id 956f58d0204a3-66813398a5amr609793d50.67.1784077439997;
+        Tue, 14 Jul 2026 18:03:59 -0700 (PDT)
+Received: from c12-ThinkPad-X1-Carbon-Gen-12 ([103.161.144.215])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-667874c2d15sm17602863d50.0.2026.07.14.18.03.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 17:42:06 -0700 (PDT)
-From: Zhan Chubukou <chubukou@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: hansg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	chubukou <chubukou@gmail.com>
-Subject: [PATCH] platform/x86: Add GETAC MPMD programmable button driver
-Date: Wed, 15 Jul 2026 02:42:03 +0200
-Message-ID: <20260715004203.14549-1-chubukou@gmail.com>
-X-Mailer: git-send-email 2.55.0
+        Tue, 14 Jul 2026 18:03:59 -0700 (PDT)
+From: Vishnu Sankar <vishnuocv@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org,
+	oliver@liuxiaozhen.dev
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	ibm-acpi-devel@lists.sourceforge.net,
+	mpearson-lenovo@squebb.ca,
+	vsankar@lenovo.com,
+	Vishnu Sankar <vishnuocv@gmail.com>
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: Fix USB-C Security probe failure on unsupported platforms
+Date: Wed, 15 Jul 2026 10:02:05 +0900
+Message-ID: <20260715010205.514132-1-vishnuocv@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,187 +77,43 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: chubukou <chubukou@gmail.com>
+On systems where the USCS ACPI method is absent, acpi_evalf() returns
+AE_NOT_FOUND which maps to -EIO. This caused tpacpi_usbc_security_init()
+to propagate the error and thinkpad_acpi failed to probe entirely on
+unsupported platforms.
 
-GETAC rugged laptops (e.g. S410) expose vendor button events through an
-ACPI device "MPMD" with hardware ID MTC0303. The Embedded Controller
-raises query methods that issue Notify(MPMD, <code>) on programmable /
-hotkey button activity. Because no Linux driver binds MTC0303, these
-notifies are silently dropped and the buttons appear dead under Linux
-(neither libinput nor acpid observe them: they are device notifies, not
-generic ACPI events).
+Fix this by checking for USCS method presence with acpi_has_method() before
+attempting to call it, returning -ENODEV immediately if absent.
+This follows the same pattern used by other subdrivers in thinkpad_acpi.c.
 
-Add a minimal ACPI driver that binds MTC0303 and forwards the notifies
-as input events through a sparse-keymap. On the S410 (BIOS R1.25) the
-programmable P2 button generates Notify(MPMD, 0x97) and is mapped to
-KEY_PROG1. Other buttons in the 0xC0..0xCB range (EC queries _Q81.._Q89,
-_Q6A, _Q6B) remain unmapped until confirmed on a given model; enable
-dynamic-debug to identify them.
-
-Signed-off-by: chubukou <chubukou@gmail.com>
+Fixes: 67e8d1e9cacd ("platform/x86: thinkpad_acpi: Add USB-C Security (USCS) support")
+Reported-by: Oliver Lin <oliver@liuxiaozhen.dev>
+Closes: https://lore.kernel.org/platform-driver-x86/239c8162-e1e6-4b49-8292-35547c5a525c@liuxiaozhen.dev/
+Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
+Signed-off-by: Vishnu Sankar <vishnuocv@gmail.com>
 ---
- MAINTAINERS                       |  6 ++
- drivers/platform/x86/Kconfig      | 11 ++++
- drivers/platform/x86/Makefile     |  3 +
- drivers/platform/x86/getac-mpmd.c | 96 +++++++++++++++++++++++++++++++
- 4 files changed, 116 insertions(+)
- create mode 100644 drivers/platform/x86/getac-mpmd.c
+Changes since v1:
+- Fix incorrect email address for Oliver Lin
+- Add Tested-by from Oliver Lin confirming fix works on ThinkPad P15 Gen 1
+  and ThinkPad P50s
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ce5c518..9bdabdf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11014,6 +11014,12 @@ F:	Documentation/filesystems/gfs2/
- F:	fs/gfs2/
- F:	include/uapi/linux/gfs2_ondisk.h
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 91db4c8eeac2..85ed506516f0 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -11368,6 +11368,9 @@ static int tpacpi_usbc_security_init(struct ibm_init_struct *iibm)
+ {
+ 	int err;
  
-+GETAC MPMD DRIVER
-+M:	chubukou <chubukou@gmail.com>
-+L:	platform-driver-x86@vger.kernel.org
-+S:	Maintained
-+F:	drivers/platform/x86/getac-mpmd.c
++	if (!acpi_has_method(hkey_handle, "USCS"))
++		return -ENODEV;
 +
- GIGABYTE WATERFORCE SENSOR DRIVER
- M:	Aleksa Savic <savicaleksa83@gmail.com>
- L:	linux-hwmon@vger.kernel.org
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b54b521..2effb96 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -440,6 +440,17 @@ config FUJITSU_TABLET
- 
-          If you have a Fujitsu convertible or slate, say Y or M here.
- 
-+config GETAC_MPMD
-+	tristate "GETAC MPMD programmable button support"
-+	depends on ACPI
-+	help
-+	  Driver for the GETAC MPMD ACPI device (HID MTC0303) which forwards
-+	  Embedded Controller button events (e.g. the programmable P2 button)
-+	  as input key events. Without this driver the buttons are silently
-+	  dropped and appear dead under Linux.
-+
-+	  Say Y or M if you have a GETAC rugged laptop (e.g. S410).
-+
- config GPD_POCKET_FAN
- 	tristate "GPD Pocket Fan Controller support"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 872ac38..8896da3 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -57,6 +57,9 @@ obj-$(CONFIG_FUJITSU_TABLET)	+= fujitsu-tablet.o
- # GPD
- obj-$(CONFIG_GPD_POCKET_FAN)	+= gpd-pocket-fan.o
- 
-+# GETAC
-+obj-$(CONFIG_GETAC_MPMD)	+= getac-mpmd.o
-+
- # Hewlett Packard
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+= hp/
- 
-diff --git a/drivers/platform/x86/getac-mpmd.c b/drivers/platform/x86/getac-mpmd.c
-new file mode 100644
-index 0000000..0f1ec8b
---- /dev/null
-+++ b/drivers/platform/x86/getac-mpmd.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * GETAC MPMD programmable button driver
-+ *
-+ * GETAC rugged laptops expose vendor events through an ACPI device named
-+ * "MPMD" with hardware ID MTC0303. The Embedded Controller raises query
-+ * methods that Notify(MPMD, <code>) on programmable / hotkey button
-+ * activity. Without a driver bound to MTC0303 these notifies are silently
-+ * dropped, so the buttons appear dead under Linux.
-+ *
-+ * This driver binds MTC0303 and forwards the notifies as input events.
-+ *
-+ * Observed on GETAC S410 (BIOS R1.25.070520):
-+ *   0x97  P2 programmable button (repeats at ~3 Hz while held)
-+ *
-+ * The 0xC0..0xCB range is generated by EC query methods _Q81.._Q89, _Q6A
-+ * and _Q6B and is left as KEY_UNKNOWN until a button is confirmed; enable
-+ * module dynamic-debug to identify further buttons on a given model.
-+ *
-+ * Copyright (C) 2026 chubukou <chubukou@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/input.h>
-+#include <linux/input/sparse-keymap.h>
-+#include <linux/module.h>
-+
-+struct getac_mpmd_priv {
-+	struct input_dev *input;
-+};
-+
-+static const struct key_entry getac_mpmd_keymap[] = {
-+	{ KE_KEY, 0x97, { KEY_PROG1 } },		/* P2 programmable button */
-+	{ KE_END, 0 }
-+};
-+
-+static void getac_mpmd_notify(struct acpi_device *adev, u32 event)
-+{
-+	struct getac_mpmd_priv *priv = acpi_driver_data(adev);
-+
-+	if (!sparse_keymap_report_event(priv->input, event, 1, true))
-+		dev_dbg(&adev->dev, "unknown notify event 0x%02x\n", event);
-+}
-+
-+static int getac_mpmd_add(struct acpi_device *adev)
-+{
-+	struct getac_mpmd_priv *priv;
-+	struct input_dev *input;
-+	int ret;
-+
-+	priv = devm_kzalloc(&adev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	input = devm_input_allocate_device(&adev->dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	input->name = "GETAC MPMD programmable buttons";
-+	input->phys = "getac-mpmd/input0";
-+	input->id.bustype = BUS_HOST;
-+
-+	ret = sparse_keymap_setup(input, getac_mpmd_keymap, NULL);
-+	if (ret)
-+		return ret;
-+
-+	ret = input_register_device(input);
-+	if (ret)
-+		return ret;
-+
-+	priv->input = input;
-+	adev->driver_data = priv;
-+	return 0;
-+}
-+
-+static const struct acpi_device_id getac_mpmd_ids[] = {
-+	{ "MTC0303" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, getac_mpmd_ids);
-+
-+static struct acpi_driver getac_mpmd_driver = {
-+	.name = "getac_mpmd",
-+	.class = "getac",
-+	.ids = getac_mpmd_ids,
-+	.ops = {
-+		.add = getac_mpmd_add,
-+		.notify = getac_mpmd_notify,
-+	},
-+};
-+
-+module_acpi_driver(getac_mpmd_driver);
-+
-+MODULE_AUTHOR("chubukou <chubukou@gmail.com>");
-+MODULE_DESCRIPTION("GETAC MPMD (MTC0303) programmable button driver");
-+MODULE_LICENSE("GPL");
+ 	err = usbc_security_query(&tp_features.usbc_security_enabled);
+ 	if (err == -ENODEV)
+ 		return 0;
 -- 
-2.55.0
+2.51.0
 
