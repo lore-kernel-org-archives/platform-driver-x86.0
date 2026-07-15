@@ -1,88 +1,141 @@
-Received: from va-2-57.ptr.blmpb.com (va-2-57.ptr.blmpb.com [209.127.231.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21252353A7F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 12:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5882E3126DF
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 13:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784117507; cv=none; b=DnTBOG+nNhNs3BA9DN57Rz2L0gjaNwvrROyso6z9VLXBeQbOZfJLqO3dXkdIDGwwU0VAi+5KkuUciYdTgHnfgXimQBN2ICGdTtaQBD7vwnc8AuznjEbO4GDFTXHmtNkck9GG785OgnSNOgnXjbM2p0ttIh9QR6s9ZdnFFWtI2YI=
+	t=1784123531; cv=none; b=hutGEx0evXU3v8ELsvfkWkmyRii4VAjuvK/ZSmX/grMqVyX+doIP4SKWG5T871aROlnGjG2IEhNu9l6joKZvgNIchx2ElvWXGwMAFWJwdB1Fq+uyLUQp/hqaV5lq7Gv4C9ZKLi1nEd5Uh5AnypVC7/SXoYYbLm3zHrVD2BNwcsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784117507; c=relaxed/simple;
-	bh=VpUBem712z3NXz3COfafygGDJ5mgQrVlvVKf4u2bfis=;
-	h=To:Cc:From:Content-Type:References:Message-Id:Mime-Version:
-	 Subject:Date:In-Reply-To; b=EbeR21ncYXkDAYK5YGVHZKA4vuXNW1a2OpDIgguqNvsLiSW82hYKDRdLUiJKQmgLHrw2irAHYXO0ZIEbdsA0+jIP074kdxtBXDe28YXfHnBIvJsPjvPcBwIs1Ue7XGqd4p0sndSqw4Y+a+y2vMUVNZO2vELkJKLcaaPe9hGc3E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev; spf=pass smtp.mailfrom=liuxiaozhen.dev; dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b=HcSQF0wN; arc=none smtp.client-ip=209.127.231.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=liuxiaozhen.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=liuxiaozhen.dev
+	s=arc-20240116; t=1784123531; c=relaxed/simple;
+	bh=bKwjUHwKtVYGmEPODLjinnmorK8YfWqZz5++Fo4yjMU=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FyyHmoBjNDc6C4MFteqvJcrzQiVac56EgZaXMUXRnriRWBBOCd6as3z4uE5eFdKkslSHhU2v1em8oMPpJ/7RQ1mk002t92nSUzdTRnmUIlcVXYXXqNv27OoSimyS5zUrv6FOyk70+p7uQ3qdVWiOndLiZIdWjYkmik664P5sgBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Obd1kB0R; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=liuxiaozhen.dev header.i=@liuxiaozhen.dev header.b="HcSQF0wN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2602171341; d=liuxiaozhen.dev; t=1784117499;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=WYTY9SMuDdaHYO+63+P8lWpfvYuIcHXN/knKmBxFJ+Q=;
- b=HcSQF0wN0qhzWkxA7jCRMcU0UtBonLoIsL+lxqIH6kInzT7usJfib1cv4C4fM1NTGL5EpI
- /5W3nLXw/ELkaLktpROa8kooQvhHlUfbxn/Rk1AOmyhMN4xGqJKJRCtoMpaT/eWrMbNq90
- nDylSuTLS68h50Olu18aYEKEOwpl6CPM8j/BBjD1WmN6ZCbHdPjDuXdRRZAnMDRxjen3K3
- FMhbBqPIjw+aq8AjOP+L/qca75sizAyLZ/5t9RDEjws3oDMBM6COnAb4TeYwYNmojPsMDZ
- 2I+5/7SsFwY60Ewp1pMt2GSWHo6IRKk3I/v994wQgRO78uVk3JucjB5mjmtUXQ==
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	"Sean Rhodes" <sean@starlabs.systems>, <tzungbi@kernel.org>
-Cc: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, 
-	<corentin.chary@gmail.com>, <luke@ljones.dev>, <denis.benato@linux.dev>, 
-	<prasanth.ksr@dell.com>, <jorge.lopez2@hp.com>, 
-	<mpearson-lenovo@squebb.ca>, <josh@joshuagrisham.com>, 
-	<briannorris@chromium.org>, <jwerner@chromium.org>, 
-	<tzimmermann@suse.de>, <javierm@redhat.com>, <kees@kernel.org>, 
-	<u.kleine-koenig@baylibre.com>, <mst@redhat.com>, 
-	<chenhuacai@kernel.org>, <wenst@chromium.org>, 
-	<florian.fainelli@broadcom.com>, <titouan.ameline@gmail.com>, 
-	<linux-kernel@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>, 
-	<Dell.Client.Kernel@dell.com>, <chrome-platform@lists.linux.dev>, 
-	<oliver@liuxiaozhen.dev>
-From: "Oliver Lin" <oliver@liuxiaozhen.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <20260713054526.2902319-1-sean@starlabs.systems> <20260713081317.2954586-1-sean@starlabs.systems> <20260713081317.2954586-2-sean@starlabs.systems> <01401869-C099-407E-8175-174FE8EDF701@gmail.com>
-Message-Id: <f1b0a036-909f-429e-8a12-f5fd9aa73c28@liuxiaozhen.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Obd1kB0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129841F00A3E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 13:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784123530;
+	bh=azN6PoEIS9LfZk2P/YaRoMe+czqWWeq+Sdt+A5Yl6qs=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=Obd1kB0RmSScjgzeb59fQpD62Fu23+y3VjrRAj05lzZVP+1Sn8vuVs+qemxHdKhks
+	 PKYATOCRXroNFprLz1coLTe1H05bTB/pW6c2WKi0voRd73qFjDC0JTlwwSx7IzrHnv
+	 CbJz0Wzo95M70WmZS+GqedhIO9MWpCKbBvWW1fR6zp8x6kqwko5qognaGsbMDlzFrH
+	 SpwMXiUYpauHqKf5t0h5pX8ZPWusEImpvt6k31oFekMvB3kD73YgVatF0sGB8fKVVr
+	 RQeyY0zLICOuoNPQNsH/xeDt5vZrA2LbM8sEZ66aR+AOGgs7qil4o1FQy02FSbG0DL
+	 TppZ/70E9iEtw==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-39ca300db70so34527881fa.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 15 Jul 2026 06:52:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpwQ1jYIqChQBJPOTxlKVUi/IdX+sC3q5q6cuM2IKmfBCmBuJgQP46oktTQBUqIfpy+rbeCj4jZLwCDFn9J4f/7nDN/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbaeE5KAp6/MH8SS8wQwhHZBE7QJJ3KJUr/oC7IV9piEDJ1nMw
+	R96pJj+L0n7qQSNnD5+WFK4YJx5iaPria+ESExsH3fLA237IPSD9peo0z3+6xNPLBqTyE0xhYH6
+	o6HJkQIKi0AT+AyBpWiVq+Z8SZJ+5Wpv088glU5PKYg==
+X-Received: by 2002:a05:651c:1601:b0:39d:b075:87a3 with SMTP id
+ 38308e7fff4ca-39db6d599bcmr6782921fa.26.1784123528581; Wed, 15 Jul 2026
+ 06:52:08 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 06:52:07 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 15 Jul 2026 06:52:07 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <DJXNZLE3L756.K5DYSTKM1UHT@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Received: from [198.18.0.0] ([23.151.104.71]) by smtp.feishu.cn with ESMTPS; Wed, 15 Jul 2026 20:11:36 +0800
-X-Original-From: Oliver Lin <oliver@liuxiaozhen.dev>
-Content-Language: en-US
-Subject: Re: [PATCH v6 1/3] firmware: Move firmware attributes class helper
-Date: Wed, 15 Jul 2026 20:11:28 +0800
-In-Reply-To: <01401869-C099-407E-8175-174FE8EDF701@gmail.com>
-User-Agent: Mozilla Thunderbird
-X-Lms-Return-Path: <lba+26a5778f9+972fa0+vger.kernel.org+oliver@liuxiaozhen.dev>
+MIME-Version: 1.0
+References: <20260713-swnode-remove-on-dev-unreg-v7-0-6d6bc448427a@oss.qualcomm.com>
+ <20260713-swnode-remove-on-dev-unreg-v7-3-6d6bc448427a@oss.qualcomm.com> <DJXNZLE3L756.K5DYSTKM1UHT@kernel.org>
+Date: Wed, 15 Jul 2026 06:52:07 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MfOipGdiGXNgVrJVO8QOivQ-=8k3sX-nMfTS0DvdZcFnw@mail.gmail.com>
+X-Gm-Features: AUfX_mwLjyY3AEZtFtbz482J96bfO_ODnTKAvgp169Ox6LYhT2Q7uUCdbTAQuQk
+Message-ID: <CAMRc=MfOipGdiGXNgVrJVO8QOivQ-=8k3sX-nMfTS0DvdZcFnw@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] driver core: platform: unify release path
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, brgl@kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, driver-core@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Sean,
+On Mon, 13 Jul 2026 20:45:13 +0200, Danilo Krummrich <dakr@kernel.org> said:
+> On Mon Jul 13, 2026 at 5:11 PM CEST, Bartosz Golaszewski wrote:
+>> @@ -599,6 +599,7 @@ static void platform_device_release(struct device *dev)
+>>  	struct platform_object *pa = container_of(dev, struct platform_object,
+>>  						  pdev.dev);
+>>
+>> +	device_remove_software_node(dev);
+>>  	fwnode_handle_put(pa->pdev.dev.fwnode);
+>
+> This technically changes the semantics of platform_device_set_fwnode():
+>
+> Previously it took an additional reference count for the fwnode pointer passed
+> to it. But now, *iff* the fwnode is a software node it consumes the callers
+> reference count, which for obvious reasons isn't great.
+>
+> Now, platform_device_set_fwnode() is unused now, so we could just get rid of it,
+> which also gets us rid of its asymmetric semantics.
+>
 
-I tested this patch as part of the full v6 series on the following systems:
+Ideally we should convert all users of platform_device_set_of_node() to
+platform_device_set_fwnode() and remove the former instead of the latter.
 
-- Lenovo ThinkPad P15 Gen 1
-- Lenovo ThinkPad P50s
+I agree it's not optimal for it to be unused now but I can start converting
+the users of platform_device_set_of_node() once this one's in the driver core
+tree.
 
-On both systems, think-lmi continued to register successfully after 
-applying the series.
+> However, couldn't we also just move the if (is_software_node(pdevinfo->fwnode))
+> conditional up here, such that we have:
+>
+> 	device_remove_software_node(dev);
+> 	if (!is_software_node(dev->fwnode))
+> 	    fwnode_handle_put(pa->pdev.dev.fwnode);
+>
+> This way, the swnode special case would go away. Well, at least the "two
+> reference counts" special case.
+>
 
-I compared the firmware-attributes sysfs tree, exposed file list, and 
-all readable attribute values against the unpatched kernel:
+Sounds good.
 
-- ThinkPad P15 Gen 1: 107 files, no differences
-- ThinkPad P50s: 294 files, no differences
+> Another special case I just noticed still remains, but is independent of this
+> change:
+>
+> If platform_device_set_fwnode() or platform_device_set_of_node() is called for a
+> device that already has a swnode set, we only call fwnode_handle_put(), but
+> software_node_notify_remove() etc. isn't called.
+>
+> Of course that never happens, but it is an inconsistency in the API. Now, it
+> seems that neither platform_device_set_fwnode() (which we should remove anyway),
+> nor platform_device_set_of_node() is ever called with a fwnode already set.
+>
+> So, either we have to special case platform_device_set_of_node() too (for the
+> case that a swnode is set already), or just require that the function must only
+> be called when no node has been set, as all users already do; I'd go for the
+> latter.
 
-Reboot and suspend/resume completed successfully on both systems, and 
-the ThinkLMI attributes remained available after resume. Full poweroff 
-was also tested successfully on the P50s.
+This sounds good too and it should be easy to implement another test case while
+at it.
 
-No new relevant kernel warnings, Oopses, or call traces were observed.
+>
+> If my proposal about moving the is_software_node() check into
+> platform_device_release() holds, it would probably be good to just add those
+> patches in a subsequent version, otherwise I'm happy to pull this in as is and
+> address the other stuff subsequently.
+>
 
-Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
+As I said: I prefer to keep platform_device_set_fwnode() and work on using it
+exclusively and drop platform_device_set_of_node(). If this is not urgent then
+it can wait until v7.3-rc1 where we'd have all this upstream, then I could send
+individual patches per subsystem tree and we'd drop
+platform_device_set_of_node() once there are no more users. Does it sound fine?
 
-Best regards,
-Oliver
+Bart
