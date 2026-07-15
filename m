@@ -1,153 +1,94 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3865940EBA9;
-	Wed, 15 Jul 2026 15:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E367D4534AD;
+	Wed, 15 Jul 2026 15:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784128776; cv=none; b=UO1ynaiaSmL6O0BosDCZccNUKkG4RwT3NzNXI395VkPY7WWs+Omn7t1rLYBq6LqC/UJToK3BuXxvRKs1gt76JSjwVI110yHnFXWR1rNkJzB6tiow6cXPs34Afr/F8IdoUrPFiT0ftwK+Z6WlahpSHesTzJx5qomjYRcyHYGBnzk=
+	t=1784128802; cv=none; b=auOb88KTjsNrkOMQOSGF8JFyzj29e8/WYzEl8Yuti+Jdgb7fNU4ZP4Hj9AY0AnsTrgs9CqZddDMFL/pY35cgODDK3b8Fm1l70g8X8DnojOh4EQ4zEd8Px4dYkjy401FKMVkITK4BGHwv1jjpVdXlxQjMdNcQgTKTA4CATos/rwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784128776; c=relaxed/simple;
-	bh=hgV7vHHe5Z4i1Y71wVyQFwaX3B4GL81fOKHipadu1WU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bk4gFFygYpv9Ayv9YGnRnuzabOC5M+WxkMiQv/vznyTmz7oCozyKP/AWdNkZcvp+90KxmlEeftwSQxB7Qs5Q2pALBiQwwu3pXJEv6KSvhTmbzJCVi5WstRFzILqFJbCAHbEmH06EOYL+xc3k54WxTU15oTuB2aOPG7zNejeaia8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=YAD1us/C; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1784128802; c=relaxed/simple;
+	bh=uPRJqOhJ5ehd7+9UhR8NT3FbaiC+PIupWZrQ/SZx09U=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=dlGaMeysDfJ+C+h0c8o6SHRNs3VAof1N34HYdK7ExjClQheBwzUx/oolL4VLGuSt/8dTgWpKpwKChRUCrvv09j53P6YloVDqI89fkjYQ4cxDZuarcZ6Ys9YUDn09yoSM6IXvczzO4dJJXny9YjVh5WlVW8MlAtJm3Lj5rVZaWuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdAFpNDc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="YAD1us/C"
-Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id D01282FC005F;
-	Wed, 15 Jul 2026 17:19:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1784128771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=se1pQrzT0O47uHRnEtsDeb1hdU2eXMWtuv0HK47yLOo=;
-	b=YAD1us/C9uk3y6MQL7leSwAvY86W6WHf7ljRfXtEpwgq0GKkNN5KnWLCYjHzF8lKk63BNM
-	7DEIails8KQr/wbNzo8/egOJ9ENWLfU8DpeEd4ZtZdCEpYSmjDojeQZKEc6w+8ogAqhG7m
-	mO+n2CnrfMH4Gnj8viw2qqp20x/DfnE=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <5bb7d5c3-a6d3-458b-b536-ece19c972024@tuxedocomputers.com>
-Date: Wed, 15 Jul 2026 17:19:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdAFpNDc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 779B91F000E9;
+	Wed, 15 Jul 2026 15:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784128796;
+	bh=uPRJqOhJ5ehd7+9UhR8NT3FbaiC+PIupWZrQ/SZx09U=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To;
+	b=DdAFpNDc88INU2wPiosqcYm01E48OL4GfhJy/jDUk5cbe0HkYVqylm3R77edrbmHq
+	 71Ttib5rCGXs7rF7z5HQkaTDjzPyo530APiLcllFfGilPwXEssE0qNLLHTSdd86Uej
+	 CNMFzfOdqEq3KpLBBFodc6/M5Y2m4P8ZleAY65sLAH7qFgbcqG3spOlFxKbamVL9gm
+	 Bj/vWxUPWfUf6LvH19/esEN5V3lMLn1vHtb/uRaJWQYO2uzhjgc5cdzeUcV1DQTqhR
+	 IDmo8q83SpfwT4teoAM+JDZz4e2zM4pwdtVW6EFOK1tg8M47GkiGHmZG43R65Dhwhp
+	 C6t3A4jvPTMZQ==
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] platform/x86: uniwill-laptop: Make
- KBD_LED_MAX_INTENSITY configurable
-To: Armin Wolf <W_Armin@gmx.de>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260710223544.49602-1-W_Armin@gmx.de>
- <20260710223544.49602-4-W_Armin@gmx.de>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260710223544.49602-4-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 15 Jul 2026 17:19:52 +0200
+Message-Id: <DJZ8VG4H46XC.36XXT1A34B0TK@kernel.org>
+Subject: Re: [PATCH v7 3/4] driver core: platform: unify release path
+Cc: "Maximilian Luz" <luzmaximilian@gmail.com>, "Hans de Goede"
+ <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Matthew Brost" <matthew.brost@intel.com>,
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>, <driver-core@lists.linux.dev>, "Bartosz
+ Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
+To: "Bartosz Golaszewski" <brgl@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260713-swnode-remove-on-dev-unreg-v7-0-6d6bc448427a@oss.qualcomm.com> <20260713-swnode-remove-on-dev-unreg-v7-3-6d6bc448427a@oss.qualcomm.com> <DJXNZLE3L756.K5DYSTKM1UHT@kernel.org> <CAMRc=MfOipGdiGXNgVrJVO8QOivQ-=8k3sX-nMfTS0DvdZcFnw@mail.gmail.com> <CAMRc=MeXwaRSDJYKeoM6PfqWqRPh9KCMF8HATFvaTWUf6N6GYA@mail.gmail.com>
+In-Reply-To: <CAMRc=MeXwaRSDJYKeoM6PfqWqRPh9KCMF8HATFvaTWUf6N6GYA@mail.gmail.com>
 
-
-Am 11.07.26 um 00:35 schrieb Armin Wolf:
-> Some (yet to be enabled) Tuxedo devices have a maximum intensity of
-> 200 instead of the default 50. Remove the hardcoded maximum intensity
-> and use the device descriptor instead.
+On Wed Jul 15, 2026 at 5:06 PM CEST, Bartosz Golaszewski wrote:
+> On Wed, 15 Jul 2026 15:52:07 +0200, Bartosz Golaszewski <brgl@kernel.org>=
+ said:
+>> On Mon, 13 Jul 2026 20:45:13 +0200, Danilo Krummrich <dakr@kernel.org> s=
+aid:
+>>> On Mon Jul 13, 2026 at 5:11 PM CEST, Bartosz Golaszewski wrote:
+>>>
+>>> So, either we have to special case platform_device_set_of_node() too (f=
+or the
+>>> case that a swnode is set already), or just require that the function m=
+ust only
+>>> be called when no node has been set, as all users already do; I'd go fo=
+r the
+>>> latter.
+>>
+>> This sounds good too and it should be easy to implement another test cas=
+e while
+>> at it.
 >
-> Suggested-by: Werner Sembach <wse@tuxedocomputers.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   drivers/platform/x86/uniwill/uniwill-acpi.c | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> index 4591ee299a90..5b8e35bf9a51 100644
-> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-> @@ -351,7 +351,6 @@
->   #define LED_CHANNELS		3
->   
->   #define KBD_LED_CHANNELS	3
-> -#define KBD_LED_MAX_INTENSITY	50
->   
->   #define UNIWILL_FEATURE_FN_LOCK			BIT(0)
->   #define UNIWILL_FEATURE_SUPER_KEY		BIT(1)
-> @@ -403,6 +402,7 @@ struct uniwill_data {
->   	struct mc_subled led_mc_subled_info[LED_CHANNELS];
->   	bool kbd_led_single_color;
->   	u8 kbd_led_max_brightness;
-> +	u8 kbd_led_max_intensity;
->   	unsigned int last_kbd_status;
->   	union {
->   		struct {
-> @@ -429,6 +429,7 @@ struct uniwill_device_descriptor {
->   	unsigned int features;
->   	bool kbd_led_single_color;
->   	u8 kbd_led_max_brightness;
-> +	u8 kbd_led_max_intensity;
->   	u8 lightbar_max_brightness;
->   	/* Executed during driver probing */
->   	int (*probe)(struct uniwill_data *data);
-> @@ -1780,8 +1781,8 @@ static int uniwill_rgb_kbd_led_init(struct uniwill_data *data)
->   		 * Make sure that the initial intensity value is not greater than
->   		 * the maximum intensity.
->   		 */
-> -		if (regval > KBD_LED_MAX_INTENSITY) {
-> -			regval = KBD_LED_MAX_INTENSITY;
-> +		if (regval > data->kbd_led_max_intensity) {
-> +			regval = data->kbd_led_max_intensity;
->   			ret = regmap_write(data->regmap, uniwill_kbd_led_channel_to_reg[i], regval);
->   			if (ret < 0)
->   				return ret;
-> @@ -1793,7 +1794,7 @@ static int uniwill_rgb_kbd_led_init(struct uniwill_data *data)
->   			intensity_all_zeros = false;
->   
->   		data->kbd_led_mc_subled_info[i].intensity = regval;
-> -		data->kbd_led_mc_subled_info[i].max_intensity = KBD_LED_MAX_INTENSITY;
-> +		data->kbd_led_mc_subled_info[i].max_intensity = data->kbd_led_max_intensity;
->   		data->kbd_led_mc_subled_info[i].channel = i;
->   	}
->   
-> @@ -2338,6 +2339,7 @@ static int uniwill_probe(struct platform_device *pdev)
->   	data->features = device_descriptor.features;
->   	data->kbd_led_single_color = device_descriptor.kbd_led_single_color;
->   	data->kbd_led_max_brightness = device_descriptor.kbd_led_max_brightness;
-> +	data->kbd_led_max_intensity = device_descriptor.kbd_led_max_intensity;
->   	data->lightbar_max_brightness = device_descriptor.lightbar_max_brightness;
->   
->   	/*
-> @@ -2675,6 +2677,7 @@ static struct uniwill_device_descriptor machenike_l16p_descriptor __initdata = {
->   		    UNIWILL_FEATURE_USB_POWERSHARE,
->   	.kbd_led_single_color = false,
->   	.kbd_led_max_brightness = 4,
-> +	.kbd_led_max_intensity = 50,
->   };
->   
->   static struct uniwill_device_descriptor lapqc71a_lapqc71b_descriptor __initdata = {
-> @@ -2858,6 +2861,7 @@ static struct uniwill_device_descriptor x4sp4nal_descriptor __initdata = {
->   		    UNIWILL_FEATURE_USB_POWERSHARE,
->   	.kbd_led_single_color = true,
->   	.kbd_led_max_brightness = 2,
-> +	.kbd_led_max_intensity = 50,
->   };
->   
->   static const struct dmi_system_id uniwill_dmi_table[] __initconst = {
-> @@ -3355,6 +3359,7 @@ static int __init uniwill_init(void)
->   		device_descriptor.kbd_led_single_color = false;
->   		/* Some models only support 3 brightness levels */
->   		device_descriptor.kbd_led_max_brightness = 4;
-> +		device_descriptor.kbd_led_max_intensity = 50;
->   		/* Some models only support 36 brightness levels per color component */
->   		device_descriptor.lightbar_max_brightness = 200;
->   		pr_warn("Enabling potentially unsupported features\n");
+> Oh but wouldn't that require us to introduce an integer return value for =
+these
+> functions? Or are you talking about simply updating the API contract?
 
-lgtm
+Yes, we could update the API contract; we could also consider adding a WARN=
+_ON()
+for the case a node is already set.
 
-Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
+> I think calling device_remove_software_node() on
+> is_software_node(dev_fwnode(dev)) in platform_device_set_fwnode() be enou=
+gh
+> to handle that case, right?
 
+Yes, we can special case it, but the "replace the existing node if any" par=
+t of
+that function is already dead code.
+
+So, if no one needs it now, I'd rather remove it and wait for someone to ha=
+ve a
+valid use-case.
