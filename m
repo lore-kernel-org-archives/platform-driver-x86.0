@@ -1,61 +1,61 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8613F6C3B
-	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 09:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6578C3FB077
+	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 09:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784195708; cv=none; b=p7PGFj5wSjS3bWYOe+aTiOawYiuudaMltBAsF5PeS/CBYuIZtRzFBkofgWsVcy/TPLnnW3HzYXSlFzZrnb1pjEBkQdThqcJTy3Yso/4jzMI1EYhL6OSsuz5Dz7lixF9iD3aYpfyZSirJTa2Ca9Irx7S88XB53QnnsSlWMX+b/rw=
+	t=1784195709; cv=none; b=IfueV4bzvXRZy944+iDrtZotiYB1TDehVTUC/lYBMtgopG42aOzUl1318XfIyY4RidINFdkzsZRkwwd0Fgo6dn8PmVnO8WvMHTkAXuQ9FXj1DgoA+YrqAUk0q3s+fSqc+C4JvnOfEZdmqbGtqb22eIqzlTJKSeiIj8OuWCvEpGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784195708; c=relaxed/simple;
-	bh=ihO86w6M9J9Q8YyLob3qKYfIJFOjlaZ6jRgiyygV+dc=;
+	s=arc-20240116; t=1784195709; c=relaxed/simple;
+	bh=A3Z6RhlbIglJq+u8zHoBltF1VWTw+p6nAPSSC3sMd1o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dxMNJG5D8/LDDAIfV67HzUDQntagyTiuWLszVhpIY8uCFH7DAQ0AR4Ck/kLHY+dxztA/TUxrZrBLo8Zn/cx5/liKEl5H+04u97SVu3aLQ3tJ5CqmDgVykIjEH83+htZgdXR7H8IVJjVc8Xy6/nB6sxk+/iNduQif8If9KQlA3tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6YY9h8W; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version; b=uKUPWxKvtjpRd9P+HixS5SjppKYNZiEwvtuREBj/+onTBnS1Fziw7TtrMKskHNUD8jx5t1KoCtBdHRxrhjuc2oE3IiwAW0BxHUr4DEBKnmxTyQNdulBASvREXyvPnr+TmaGN0yphAaJXaIJxqRI+mrZV1wHz/78vFXz6hUN/Vl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dE17dxoS; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6YY9h8W"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c082647cd0dso62794966b.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 02:55:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dE17dxoS"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c15f025146dso84021166b.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 02:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784195705; x=1784800505; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784195706; x=1784800506; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=q1ld0Bt1YKle4YYay4jF7nDW7TUGiPBFgsLEe/VJ0Xg=;
-        b=P6YY9h8WR5M2oDPlyfIbXaYCeUsIAN3aJAysiqG+vA97TAtp7U46jrsO4SF0R8t2ys
-         DHjUWDzNqP+rIrL0ZdT/TaOqKKLozw0HSIei+FBZPmjvzmdOuGe2jCHykXDUSH2Yj9d/
-         RenRb5OSt6jSr8R5xCfGvN6HFnwHZzAd3uv1luWAAUwK/KObgaMqHHbLN2lFuPQE5CHC
-         1lBuPxNYsOLLcWg6MDUp0w5VU+T5uF4CdZ59xOXjl+ZftiCtH4ZEuFfFvsoIbOSKyIet
-         k0L3h84Sd2uZ6oiYcaBZt3kaHCxOjEcGu5hgrqXbhxe2WwlI58vtxc3oPjvZn637fUn4
-         TH0w==
+        bh=HXPk9SNKfAtonBREMRo3neIdcmM3Zy3llxvKmTjH3wQ=;
+        b=dE17dxoSNSQs9ilsFcr1nnBIqYWJxNXxbug/U08rc99Qd8HLip9Y/UJt5oHoqh4/+5
+         YktT3BPmL31SdGrUfXJel5gpg4xZfa0uO8P6EK2BMtnjM0QFE2lCmWIuPxGTGYStila5
+         jjSv2+ekFvZhgKLXdIRw9HabkvtVqSW4Ql89tAQqP9OB7/uvSitCCfz7VRzQKeRjai6h
+         KrS1fyThRDNB4mMUKjUfNdPhInENJZgBhTqBFHxNSYWg7a9zFs4waVtnOIvlFpD51h77
+         IIMdzLbqXrl7O2ti7PMh67E/eLesbe3YFjZZWPqEu+HDX8e+nGvPHXs+cSU5O5+vBYE1
+         Ygow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784195705; x=1784800505;
+        d=1e100.net; s=20251104; t=1784195706; x=1784800506;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=q1ld0Bt1YKle4YYay4jF7nDW7TUGiPBFgsLEe/VJ0Xg=;
-        b=qowY2QBVTxIsdcCH3CkBh1ntIveR6RoHzhvcy1BpUYfyn1FcrVbDZoZJv0wGMGYE2o
-         xqgHQQha6f/k1iqJ59buTA/AdCzASjiNG0l2CA6GYLAioIL0DwnAi+qm2Od1nwvUGjx1
-         0X0lxNAqcBu0MBCXoJQw5xCMtCxnhddFstksQj1d4IzZVhKPesSY6YzsQ1ha7zfxmS8T
-         Ph5Y7MBo6S1xP9tQWf1q0JAHphBZ6yihcgg+j8yrqzVgIWIwqp9OQmG9Tw3qA7OuNGdf
-         n0QtK57u8509pP4uTUiIvA5JyZQD5Rx+q5hi5+qdRTwYJb/xVVbmlnhiQc2KZOqstL8N
-         ckiQ==
-X-Gm-Message-State: AOJu0Yx3dqJN2ylNpOBxC4znRhMIdMRsk2dsOcj20bxycQIh1y0efrnV
-	crcevjZnXAW9csRJygAyI4Yz0RrL9CEypK2/NJxyFxVajfNJP4J1EiCStJNIeN4DABsaJ4Gz
-X-Gm-Gg: AfdE7cmkPw1kTpxvBlK+bd6VGYr4nO3qxxtFcu6sqez0w8lIOHO0Y+MHiMEW+2nnaFH
-	Yu6KeChg558Hn7ypvdoG7hFzTdD1VYVlUg1/IOu9wWQnjuMT3kYxQ7fYyAN1EoD4Rfgsk9NrQdz
-	cXcn2+E96BaE6MzY7snQBqkUV08fp0bwta9JyYwAmrTCs7UGZgQzpBtCn45JA8DF4v6xR9NfdLi
-	O1vwXHXaGK5mNvY0AJ/dQTUJNSJYpjRdXxGHC/ODIvIVD4OSTRvRmfExUEzXXugUMz5DdSscG7E
-	Lh0CJI7xNZFsvbg78AWvv+jw8mfxgIOPi7FCT+aykmQSkvb4bFXN0ubOxipapjnWPeeb/JVTXeU
-	5rFsGk1Wf/tv3Uz0pdUJBC27k7+taasFOHcnT1q605YCx9u910ACaoEDPz6ah0xAmNwW+
-X-Received: by 2002:a17:907:60c9:b0:c15:a667:81eb with SMTP id a640c23a62f3a-c161ea8d0b3mr675990966b.6.1784195704576;
-        Thu, 16 Jul 2026 02:55:04 -0700 (PDT)
+        bh=HXPk9SNKfAtonBREMRo3neIdcmM3Zy3llxvKmTjH3wQ=;
+        b=VpsB1hklwpJCjPSp+yJYDPMIJGAnjTNQnws9mF7bOSwN/woNaaDy4quVZaV2b9TNIR
+         PeP/yTOtNkco9zXcKjF9Kmx8DbZz4Nc6aCVGzMiJIR4V1t1Y4TBYxgSi821UB/vmXgB7
+         4tfyJ//kz2pnyFhPACGs2fSj+LIh8RfWSBdqWO9KFbBxRunTHHRgmv5GagtUnxiJPqvC
+         CgZtmIxyJiZjhEHYCbwgIMUZT5A7+G6TYGtw852jGNKPifwaanet1rhIkHHz/SE1SRR8
+         FrMiGEJ7KFA8fjBVuVLlXkgWpYf53m2bIuNOKDVCVlOZE0jpFw09OxvINKJGGpeANyPd
+         1ftQ==
+X-Gm-Message-State: AOJu0YwKTxmWotO8sfNrobi2KuG4PnTs2tZKZuDX1yyMQ6PCl0eCmUdA
+	yJqXht0qp44rAaTswM/QFrou1xzlTFfKnn2/SXzX6LdkPEp7UTwABcjCpGIPty00eAWFTNWL
+X-Gm-Gg: AfdE7cmlCN2p0aomvsRyrp1V6LzpRma9gAKGy6wH3jRdeaIfQdqxqri+MCCvHNScEL0
+	0cPkoppK1/sOWzEVwcclWRF6x1nOQXRtJdMyumS71L/WQ0pesqnqfXvT6FGwpeaFZXhdtF4TZGJ
+	bD5c/9Nwj66nc8Uvb+JOP9HhRWMj3O3PqMW+coS0+hW+jjr5ThuWZSpAZ5HA9Z56H2EaF4aNCaZ
+	HIkqZxRFmX8IVf4Fi6RGy9uSAWFJNNPWTkw5zbBwPvhES0QOAubKR2MdmhX1epMn1gE3s4Nshcl
+	M7yZ0tdhxZabKutTN91iL2pYU3REA4oNFM9ABqJSZNKRGfIaFmKpQuDUfgl/7ufed1QW+feQsDP
+	tuR4YEChz/C+5RuJkjGPlNJafCwa5QqxHz4ry7BTNJCqR1xhmneAM2Nrpt48g8gyVwpbe
+X-Received: by 2002:a17:906:4fd5:b0:c12:7f37:ab92 with SMTP id a640c23a62f3a-c161e9a4576mr795020966b.4.1784195706538;
+        Thu, 16 Jul 2026 02:55:06 -0700 (PDT)
 Received: from fridge ([193.32.127.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c168744e702sm178454966b.47.2026.07.16.02.55.02
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c168744e702sm178454966b.47.2026.07.16.02.55.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2026 02:55:04 -0700 (PDT)
+        Thu, 16 Jul 2026 02:55:06 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org,
 	hansg@kernel.org,
@@ -72,9 +72,9 @@ Cc: linux-kernel@vger.kernel.org,
 	mario.limonciello@amd.com,
 	julien.robin28@free.fr,
 	Emre Cecanpunar <emreleno@gmail.com>
-Subject: [PATCH 4/5] platform/x86: hp-wmi: normalize GPU thermal mode errors
-Date: Thu, 16 Jul 2026 12:54:17 +0300
-Message-ID: <4dcb4c0b0aac63d03b8e8a3c68e41b88b8d303e6.1784195117.git.emreleno@gmail.com>
+Subject: [PATCH 5/5] platform/x86: hp-wmi: report fan speed command failures
+Date: Thu, 16 Jul 2026 12:54:18 +0300
+Message-ID: <c441b3dd6688040fe0154aad185e6e4817ccf124.1784195117.git.emreleno@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1784195117.git.emreleno@gmail.com>
 References: <cover.1784195117.git.emreleno@gmail.com>
@@ -86,60 +86,28 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The GPU thermal mode helpers return positive firmware error codes, but
-their callers only treat negative values as failures. If the mode query
-is rejected, its output parameters remain uninitialized and are then
-used to select a profile or sent back to firmware as the GPU slowdown
-temperature. A rejected mode update is likewise reported as successful.
+hp_wmi_fan_speed_set() passes the raw WMI result to
+hp_wmi_apply_fan_settings(), which only checks for negative errors. A
+positive HP firmware error consequently reaches the success path and
+schedules keep-alive work for a fan speed that was not applied.
 
-Zero the query buffer and convert positive firmware status codes to
--EINVAL in both helpers so callers never consume missing output or ignore
-a failed update.
+Convert positive firmware errors to -EINVAL before returning from the fan
+speed helper, matching the other fan control commands.
 
-Fixes: 6e4ab59b8391 ("platform/x86: hp-wmi: Add fan and thermal profile support for Victus 16-s1000")
+Fixes: c203c59fb5de ("platform/x86: hp-wmi: implement fan keep-alive")
 Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 29881749aae6..65c3bac17ad6 100644
+index 65c3bac17ad6..8f8da31bd5ef 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -1885,20 +1885,21 @@ static int victus_s_gpu_thermal_profile_get(bool *ctgp_enable,
- 					    u8 *dstate,
- 					    u8 *gpu_slowdown_temp)
- {
--	struct victus_gpu_power_modes gpu_power_modes;
-+	struct victus_gpu_power_modes gpu_power_modes = {};
- 	int ret;
- 
- 	ret = hp_wmi_perform_query(HPWMI_GET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
- 				   &gpu_power_modes, sizeof(gpu_power_modes),
- 				   sizeof(gpu_power_modes));
--	if (ret == 0) {
--		*ctgp_enable = gpu_power_modes.ctgp_enable ? true : false;
--		*ppab_enable = gpu_power_modes.ppab_enable ? true : false;
--		*dstate = gpu_power_modes.dstate;
--		*gpu_slowdown_temp = gpu_power_modes.gpu_slowdown_temp;
--	}
-+	if (ret)
-+		return ret < 0 ? ret : -EINVAL;
- 
--	return ret;
-+	*ctgp_enable = gpu_power_modes.ctgp_enable ? true : false;
-+	*ppab_enable = gpu_power_modes.ppab_enable ? true : false;
-+	*dstate = gpu_power_modes.dstate;
-+	*gpu_slowdown_temp = gpu_power_modes.gpu_slowdown_temp;
-+
-+	return 0;
- }
- 
- static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
-@@ -1929,8 +1930,10 @@ static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
- 
- 	ret = hp_wmi_perform_query(HPWMI_SET_GPU_THERMAL_MODES_QUERY, HPWMI_GM,
- 				   &gpu_power_modes, sizeof(gpu_power_modes), 0);
+@@ -907,8 +907,10 @@ static int hp_wmi_fan_speed_set(struct hp_wmi_hwmon_priv *priv)
+ 		return ret;
+ 	ret = hp_wmi_perform_query(HPWMI_VICTUS_S_FAN_SPEED_SET_QUERY, HPWMI_GM,
+ 				   &fan_speed, sizeof(fan_speed), 0);
 +	if (ret)
 +		return ret < 0 ? ret : -EINVAL;
  
@@ -147,4 +115,4 @@ index 29881749aae6..65c3bac17ad6 100644
 +	return 0;
  }
  
- /* Note: HP_POWER_LIMIT_DEFAULT can be used to restore default PL1 and PL2 */
+ static int hp_wmi_fan_speed_reset(struct hp_wmi_hwmon_priv *priv)
