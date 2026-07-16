@@ -1,38 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5512EEE84;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C4213AA2D;
 	Thu, 16 Jul 2026 05:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784180041; cv=none; b=utwsM8M1lsL8lP6v1iDr7CgN3IpqH25VpoAPXE9Pre4SeUQ9jjZFJEF2y3t6D7zO6/JIqeQZcIKw0ZhfHvF2oJmgkUrGRPLjIDZwdg48h/9ka0YmjeXBXhrEdJkKlej5MifnbEjm4qRWNjlVNgj322cL7aI9FDa2fRzr0QtcOzM=
+	t=1784180042; cv=none; b=o7J5KY/cVoMQTCnTxYmfahyj1hGPeBZh0e3er3q2PoV4OdoScKexvm4e7MA81mavgZJPKcsgMJqqu3Q3bKzmC/IB3dkok31o6102qFh0jAvjr7Kvuns5/gV11ieVTsUkSoMyJyPBFG/hp4iCebu5TtDdzkQxLzaYP7KWBWMTV6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784180041; c=relaxed/simple;
-	bh=PcD5GOVFrreSDvQNdxstxSKCQllyOPEgtRP5Mbyet1o=;
+	s=arc-20240116; t=1784180042; c=relaxed/simple;
+	bh=QPwS3ZCnXCqzKSL4Mi0GbB1RA0JgWiGgmL6cAJErlkw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l/HG/CJB7YV46WJg/vIBblD6xZ0H6/OnQ17jNpp97NPA/gUqFfoLPVJ8CdcwoJKnpNjUIiY6oVGJSxkzYwDS1B8sqFmRDEhn0M9aaAa+UrJ++UhEZUVuhtHo6DP1FqESkP0t+5msizCu04vGJVJEfQ1Cto2mc3BmUu8PfOvduZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=tgzY2nLA; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=lZ8dUQ8Ke2Jz4yF9w8Dl/S/OEyCoIKyG6OKsSzgWYO6kYyTSvkCGShg+6uHTjM6WM5vSXC/61WjMaBFhAmLdCqIqfY4SCscEBdD8CuO9DiOvHrHb5GM8mGG7NSwAVeQtTnoeoHl362b6/wvo6jh8UiUiy2sq1pWMaP5dFFupXM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=uFgzkgRy; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="tgzY2nLA"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uFgzkgRy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1784180024; x=1784784824; i=w_armin@gmx.de;
-	bh=Cx2YNdRfqX+5VIM205mVGj6LXrjPKi7S4B/J3LKKqjY=;
+	s=s31663417; t=1784180023; x=1784784823; i=w_armin@gmx.de;
+	bh=QNuY1cOFmaP1vfzrRRQRH84sgRvJlImJ5flmZGY1o7o=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=tgzY2nLAKqZ2tzZaHQKQACbPTWnHlk8x7Z8Nl7+U0zSsX2dSo8DkptALoiKYvV8z
-	 qQCIeHhwJBiPWotqI+O4nfG/tif/llmWGKHXZV9fd7twH8EY6blJitu1Wq2eFs4GP
-	 wJIIw4SD/v2BQ447Z9m0aukCqdJTEbi/YvHVKZrI9oJOZJgj7U17d4js1fT9LET3x
-	 zukJ9LsNUbohaKxeGYSzXnQzLpMKnrZcq7/2TOIHoFBuI7mE8noDIEDT0PXOvvK8I
-	 IAuUlI6B97SZeoHPi1brkt5igNM88bsIsXXqCCWYCZVS++I6MBifBG2rDVInPRu13
-	 hyOdBBxsk5xNfidaMQ==
+	b=uFgzkgRygXohd1sVg4TTGABJubs+CWgU+rYdpbiIb5d1Uia8VSzyQLi03jShgpI6
+	 z908hyhMayVyn3SX0q2GVDCg4y1ZI0uy94W8Olh/oDzxLp2gftDzIOPBb/xaXPTon
+	 IZHXAgfxlSmzL+e8iCLgjqBCmjhi9H4F+M16FDz7v3IqqtMf95ltgxhHjibDtEmvC
+	 rQ88cYV8XFyx3fAHtX+FA2XlTd3Lk6HiAmXAbwP5vG9phC8CXhjY4DEB38gEFAHd9
+	 7k7BbyKiKSIqHxiOlGTlmDFpkdtsSreb6KCvJ9qTFQjjZeRAagUhdC6MvHmSp021a
+	 WJT2QDnj40ezn02fng==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M7b2T-1wf0zd0MaD-0045nf; Thu, 16
- Jul 2026 07:33:44 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mw9QC-1x30671GhY-00tEGh; Thu, 16
+ Jul 2026 07:33:43 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: ilpo.jarvinen@linux.intel.com,
 	hansg@kernel.org
@@ -42,9 +42,9 @@ Cc: Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
 	gregkh@linuxfoundation.org,
 	arnd@arndb.de
-Subject: [PATCH 2/3] platform/x86: dell-smbios: Pass device to callbacks
-Date: Thu, 16 Jul 2026 07:33:36 +0200
-Message-Id: <20260716053337.112533-3-W_Armin@gmx.de>
+Subject: [PATCH 1/3] platform/x86: dell-smbios-wmi: Fix chardev resource management
+Date: Thu, 16 Jul 2026 07:33:35 +0200
+Message-Id: <20260716053337.112533-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260716053337.112533-1-W_Armin@gmx.de>
 References: <20260716053337.112533-1-W_Armin@gmx.de>
@@ -55,240 +55,293 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9KYAWdnuELub2POIusA8yIxHZbkZNxJ0DaZfo8X10BC6uzFsiV0
- 53ReYmaZrncdK1AsAoOI+N103UwJYxvrR9KPsrMSWDvBXVNwvBQDZIHgSjmAaD/dQw9d1wd
- 7jD61h3bggezDkST2JPrgXkXWyYWo7o43UBCTjPxvnAS0w7gUgpPgZ2wyJ3M9llpW5QzaSX
- QD3tMhqh1EdFqO5ZEQK4g==
+X-Provags-ID: V03:K1:ZiVxCvsO0l35vAPbLds7a6eCF3TPQLsE7ps4vh5Vfjv4stXeTGR
+ TvVde+tMYQrvkNzg1QmiqfNfjJLWnfefMamKZvxBHADB2l9RNpsL+BBmOFy3Y0INl5AP2Cv
+ EOEuMAmlNMfjTCM0pDoyj8pNUdQSPV/iYzVFGBGzbj+iEMLqW6Un78JBNECv940QwdHuSVZ
+ t27xAimvD8zf17N0ekTnw==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ZO2FczelPBg=;Yzgx9DlxGTaXE2h2bGe0btYJmnv
- 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
+UI-OutboundReport: notjunk:1;M01:P0:LAGRNcr5d+U=;8YXEwj+DAH7RvOj9oOWCCA5Jbmd
+ +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
 
-The WMI SMBIOS backend needs to access the its driver state container
-when performing SMBIOS calls. Pass the device associated with a given
-backend to the callback function to allow the WMI backend to retrieve
-said state container in a more straightforward manner.
+When unbinding the WMI driver while a userspace application has
+an open file descriptor for the character device, a UAF occurs:
 
+KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-=
+wmi
+
+The reason for this is that even after calling misc_deregister(),
+userspace appications can still call read() and/or ioctl() on open
+file descriptors associated with the already unregistered character
+device. This causes a UAF by attempting to access the already freed
+state container of the WMI driver.
+
+Fix this by no longer storing the state container inside
+filp->private_data. Instead retrieve the state container using
+get_first_smbios_priv() and return -ENODEV if the state container
+does not exist anymore.
+
+Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
+Closes: https://lore.kernel.org/platform-driver-x86/178144969601.60470.133=
+96800403157907003@gmail.com/
+Fixes: 93885e85a77f ("platform/x86: dell-smbios-wmi: Stop using WMI charde=
+v")
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- drivers/platform/x86/dell/dell-smbios-base.c |  6 +++---
- drivers/platform/x86/dell/dell-smbios-smm.c  |  8 ++++----
- drivers/platform/x86/dell/dell-smbios-wmi.c  | 10 ++--------
- drivers/platform/x86/dell/dell-smbios.h      |  4 +++-
- 4 files changed, 12 insertions(+), 16 deletions(-)
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 66 ++++++++++-----------
+ 1 file changed, 33 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platfo=
-rm/x86/dell/dell-smbios-base.c
-index 4b7c54b76228..d8c55ec6acd4 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-base.c
-+++ b/drivers/platform/x86/dell/dell-smbios-base.c
-@@ -40,7 +40,7 @@ struct smbios_device {
- 	struct list_head list;
- 	struct device *device;
- 	int priority;
--	int (*call_fn)(struct calling_interface_buffer *arg);
-+	smbios_callback_fn_t call_fn;
- };
-=20
- struct smbios_call {
-@@ -146,7 +146,7 @@ int dell_smbios_error(int value)
- }
- EXPORT_SYMBOL_GPL(dell_smbios_error);
-=20
--int dell_smbios_register_device(struct device *d, int priority, void *cal=
-l_fn)
-+int dell_smbios_register_device(struct device *d, int priority, smbios_ca=
-llback_fn_t call_fn)
- {
- 	struct smbios_device *priv;
-=20
-@@ -312,7 +312,7 @@ int dell_smbios_call(struct calling_interface_buffer *=
-buffer)
- 		goto out_smbios_call;
- 	}
-=20
--	ret =3D selected->call_fn(buffer);
-+	ret =3D selected->call_fn(selected->device, buffer);
-=20
- out_smbios_call:
- 	mutex_unlock(&smbios_mutex);
-diff --git a/drivers/platform/x86/dell/dell-smbios-smm.c b/drivers/platfor=
-m/x86/dell/dell-smbios-smm.c
-index 7055e2c40f34..fc4a674c692e 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios-smm.c
-+++ b/drivers/platform/x86/dell/dell-smbios-smm.c
-@@ -49,7 +49,7 @@ static void find_cmd_address(const struct dmi_header *dm=
-, void *dummy)
- 	}
- }
-=20
--static int dell_smbios_smm_call(struct calling_interface_buffer *input)
-+static int dell_smbios_smm_call(struct device *dev, struct calling_interf=
-ace_buffer *input)
- {
- 	struct smi_cmd command;
- 	size_t size;
-@@ -70,7 +70,7 @@ static int dell_smbios_smm_call(struct calling_interface=
-_buffer *input)
- }
-=20
- /* When enabled this indicates that SMM won't work */
--static bool test_wsmt_enabled(void)
-+static bool test_wsmt_enabled(struct device *dev)
- {
- 	struct calling_interface_token *wsmt;
-=20
-@@ -88,7 +88,7 @@ static bool test_wsmt_enabled(void)
- 	memset(buffer, 0, sizeof(struct calling_interface_buffer));
- 	buffer->input[0] =3D wsmt->location;
- 	buffer->output[0] =3D 99;
--	dell_smbios_smm_call(buffer);
-+	dell_smbios_smm_call(dev, buffer);
- 	if (buffer->output[0] =3D=3D 99)
- 		return true;
-=20
-@@ -109,7 +109,7 @@ int init_dell_smbios_smm(void)
-=20
- 	dmi_walk(find_cmd_address, NULL);
-=20
--	if (test_wsmt_enabled()) {
-+	if (test_wsmt_enabled(&platform_device->dev)) {
- 		pr_debug("Disabling due to WSMT enabled\n");
- 		ret =3D -ENODEV;
- 		goto fail_wsmt;
 diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platfor=
 m/x86/dell/dell-smbios-wmi.c
-index c8a6e711283d..552b80429688 100644
+index 64d0871b706e..c8a6e711283d 100644
 =2D-- a/drivers/platform/x86/dell/dell-smbios-wmi.c
 +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
-@@ -82,19 +82,13 @@ static int run_smbios_call(struct wmi_device *wdev)
- 	return 0;
- }
+@@ -6,6 +6,7 @@
+  */
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 =20
--static int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
-+static int dell_smbios_wmi_call(struct device *dev, struct calling_interf=
-ace_buffer *buffer)
- {
--	struct wmi_smbios_priv *priv;
-+	struct wmi_smbios_priv *priv =3D dev_get_drvdata(dev);
- 	size_t difference;
++#include <linux/cleanup.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
+ #include <linux/fs.h>
+@@ -13,14 +14,14 @@
+ #include <linux/miscdevice.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
++#include <linux/rwsem.h>
+ #include <linux/uaccess.h>
+ #include <linux/wmi.h>
+ #include <uapi/linux/wmi.h>
+ #include "dell-smbios.h"
+ #include "dell-wmi-descriptor.h"
+=20
+-static DEFINE_MUTEX(call_mutex);
+-static DEFINE_MUTEX(list_mutex);
++static DECLARE_RWSEM(list_lock);
+ static int wmi_supported;
+=20
+ struct misc_bios_flags_structure {
+@@ -32,6 +33,7 @@ struct misc_bios_flags_structure {
+ #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
+=20
+ struct wmi_smbios_priv {
++	struct mutex call_lock; /* Protects the content of the SMBIOS buffer */
+ 	struct dell_wmi_smbios_buffer *buf;
+ 	struct list_head list;
+ 	struct wmi_device *wdev;
+@@ -87,40 +89,35 @@ static int dell_smbios_wmi_call(struct calling_interfa=
+ce_buffer *buffer)
  	size_t size;
  	int ret;
 =20
--	guard(rwsem_read)(&list_lock);
--
--	priv =3D get_first_smbios_priv();
--	if (!priv)
--		return -ENODEV;
--
+-	mutex_lock(&call_mutex);
++	guard(rwsem_read)(&list_lock);
++
+ 	priv =3D get_first_smbios_priv();
+-	if (!priv) {
+-		ret =3D -ENODEV;
+-		goto out_wmi_call;
+-	}
++	if (!priv)
++		return -ENODEV;
+=20
  	size =3D sizeof(struct calling_interface_buffer);
  	difference =3D priv->req_buf_size - sizeof(u64) - size;
 =20
-diff --git a/drivers/platform/x86/dell/dell-smbios.h b/drivers/platform/x8=
-6/dell/dell-smbios.h
-index f421b8533a9e..1e64803bc00d 100644
-=2D-- a/drivers/platform/x86/dell/dell-smbios.h
-+++ b/drivers/platform/x86/dell/dell-smbios.h
-@@ -47,6 +47,8 @@
-=20
- struct notifier_block;
-=20
-+typedef int (*smbios_callback_fn_t)(struct device *dev, struct calling_in=
-terface_buffer *buffer);
++	guard(mutex)(&priv->call_lock);
 +
- struct calling_interface_token {
- 	u16 tokenID;
- 	u16 location;
-@@ -64,7 +66,7 @@ struct calling_interface_structure {
- 	struct calling_interface_token tokens[];
- } __packed;
+ 	memset(&priv->buf->ext, 0, difference);
+ 	memcpy(&priv->buf->std, buffer, size);
+ 	ret =3D run_smbios_call(priv->wdev);
+ 	memcpy(buffer, &priv->buf->std, size);
+-out_wmi_call:
+-	mutex_unlock(&call_mutex);
 =20
--int dell_smbios_register_device(struct device *d, int priority, void *cal=
-l_fn);
-+int dell_smbios_register_device(struct device *d, int priority, smbios_ca=
-llback_fn_t call_fn);
- void dell_smbios_unregister_device(struct device *d);
+ 	return ret;
+ }
 =20
- int dell_smbios_error(int value);
+-static int dell_smbios_wmi_open(struct inode *inode, struct file *filp)
++static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffe=
+r, size_t length,
++				    loff_t *offset)
+ {
+ 	struct wmi_smbios_priv *priv;
+=20
+-	priv =3D container_of(filp->private_data, struct wmi_smbios_priv, char_d=
+ev);
+-	filp->private_data =3D priv;
++	guard(rwsem_read)(&list_lock);
+=20
+-	return nonseekable_open(inode, filp);
+-}
+-
+-static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffe=
+r, size_t length,
+-				    loff_t *offset)
+-{
+-	struct wmi_smbios_priv *priv =3D filp->private_data;
++	priv =3D get_first_smbios_priv();
++	if (!priv)
++		return -ENODEV;
+=20
+ 	return simple_read_from_buffer(buffer, length, offset, &priv->req_buf_si=
+ze,
+ 				       sizeof(priv->req_buf_size));
+@@ -167,22 +164,24 @@ static long dell_smbios_wmi_do_ioctl(struct wmi_smbi=
+os_priv *priv,
+ static long dell_smbios_wmi_ioctl(struct file *filp, unsigned int cmd, un=
+signed long arg)
+ {
+ 	struct dell_wmi_smbios_buffer __user *input =3D (struct dell_wmi_smbios_=
+buffer __user *)arg;
+-	struct wmi_smbios_priv *priv =3D filp->private_data;
+-	long ret;
++	struct wmi_smbios_priv *priv;
+=20
+ 	if (cmd !=3D DELL_WMI_SMBIOS_CMD)
+ 		return -ENOIOCTLCMD;
+=20
+-	mutex_lock(&call_mutex);
+-	ret =3D dell_smbios_wmi_do_ioctl(priv, input);
+-	mutex_unlock(&call_mutex);
++	guard(rwsem_read)(&list_lock);
+=20
+-	return ret;
++	priv =3D get_first_smbios_priv();
++	if (!priv)
++		return -ENODEV;
++
++	guard(mutex)(&priv->call_lock);
++
++	return dell_smbios_wmi_do_ioctl(priv, input);
+ }
+=20
+ static const struct file_operations dell_smbios_wmi_fops =3D {
+ 	.owner		=3D THIS_MODULE,
+-	.open		=3D dell_smbios_wmi_open,
+ 	.read		=3D dell_smbios_wmi_read,
+ 	.unlocked_ioctl	=3D dell_smbios_wmi_ioctl,
+ 	.compat_ioctl	=3D compat_ptr_ioctl,
+@@ -254,6 +253,10 @@ static int dell_smbios_wmi_probe(struct wmi_device *w=
+dev, const void *context)
+ 	if (!priv->buf)
+ 		return -ENOMEM;
+=20
++	ret =3D devm_mutex_init(&wdev->dev, &priv->call_lock);
++	if (ret)
++		return ret;
++
+ 	ret =3D dell_smbios_wmi_register_chardev(priv);
+ 	if (ret)
+ 		return ret;
+@@ -262,9 +265,8 @@ static int dell_smbios_wmi_probe(struct wmi_device *wd=
+ev, const void *context)
+ 	if (ret)
+ 		return ret;
+=20
+-	mutex_lock(&list_mutex);
++	guard(rwsem_write)(&list_lock);
+ 	list_add_tail(&priv->list, &wmi_list);
+-	mutex_unlock(&list_mutex);
+=20
+ 	return 0;
+ }
+@@ -273,12 +275,10 @@ static void dell_smbios_wmi_remove(struct wmi_device=
+ *wdev)
+ {
+ 	struct wmi_smbios_priv *priv =3D dev_get_drvdata(&wdev->dev);
+=20
+-	mutex_lock(&call_mutex);
+-	mutex_lock(&list_mutex);
+-	list_del(&priv->list);
+-	mutex_unlock(&list_mutex);
+ 	dell_smbios_unregister_device(&wdev->dev);
+-	mutex_unlock(&call_mutex);
++
++	guard(rwsem_write)(&list_lock);
++	list_del(&priv->list);
+ }
+=20
+ static const struct wmi_device_id dell_smbios_wmi_id_table[] =3D {
 =2D-=20
 2.39.5
 
