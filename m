@@ -1,61 +1,61 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF9A3F8246
-	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 09:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674073F824A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 09:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784195704; cv=none; b=greK7STydRiE4yK0dmfP250GNMz/zMb98H3sxbL+CD1ctFWQfBG0xOg5yV9IQ5O6r5n4AwReF70FrL07NN1qk03oeE3lYl1iOIdpiAzgiPsktuzG7AF4uc9ji4QjUrK/Gfy1Y1L/rJy/5XvQWLXG2/9Z10flYnET1mNeuE7PExA=
+	t=1784195705; cv=none; b=V7E89NLHHiiLJKjB8AaWpiUjDME+I7WajSPqeWFTOyTY+6zPHucHjggZ/N6wnWs0Tv8mo5cI9b+rXEWYPqwe6YxrpDdxagZj9lmbFno+axEXhSnyehfLifzwzXU+X6ByKOAD7TAaqa6wCCtwCKl8OCxhQy+NdV8rm/WhbT0jKDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784195704; c=relaxed/simple;
-	bh=B/x2cE1aRmdbsUkUvPEg+6pLW7mDIwNEmNTYtJ+ShRo=;
+	s=arc-20240116; t=1784195705; c=relaxed/simple;
+	bh=uBlgmCUO+kSJeqMOyxoRXP9mzwn3H2Zxwb6KHpRp8a0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uc8qTp5PE2fCgTUIaRcJ/i9qT3JN8G9/ofHUSHOJEX/t94nor2A7DU+OblPiPqu8KXJ0KoQzCQ2jmHkFXakCqK8l+Bwna6ud1AIFxSTdUYsZNkvGZysNXVhoGb3MgQaE0qa1y6mfVbQKcFTqSfXHKsU3JoGPAp+nODdOm5OnWKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUflKkIH; arc=none smtp.client-ip=209.85.218.41
+	 MIME-Version; b=m4snaFx1JdGBskByWTMiN/463BZTYbbB9vDs/3eA7YYI4dZTvKA9V8dmIoaxOQU6pkFVMQ3H0+/soFi504JzMczQetISxclDKNgRazh2AT7kgWzaxWPdGBv5WO36B/yvhVLMcdEJdk4htiN5/5ES029Q8nOGjpDE6RjANDR5HJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SXjOvWxf; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUflKkIH"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c15fc4707f5so62442866b.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 02:55:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXjOvWxf"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c15b51ba80dso60437266b.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 02:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784195699; x=1784800499; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784195701; x=1784800501; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=7ZR0fiEoMrT3fcHztK+7LRjThoe5LZhnQH2vt6jvnUM=;
-        b=mUflKkIH3i0CHcsmy8g/vTLyxsY4qA+Yz8le+CPTx8Z4xZ0Hf4ywXaPWrU8gRFecrh
-         mIUB20L+kFWVSmvuqQKcFuC2GVEX77x1cro7mmCtoMAWY6SSWd2tAvOx3Xq505Lu+qfQ
-         +8Ub/6bJE0iq5g/nLPDgeS0YCSIRd6GdRmLqxHr0WSrTixiWIA8IIcAZg47bBsSxJCtk
-         AeCF29zEKP+XGMJvOxmktXJzoB0cPYUt93n9diTFd5IPjomCGUzYST5Mcvf89A1PwFC8
-         bz/EtZHpoH7sqlbKSbvPlhZusbwGbga/XArcGw08eb6UncszeZPKQV5lAOlHlTbItNUZ
-         VOBw==
+        bh=FoyX1lbtjjAFUSqHFix+1M+3EiQfqddD6tx6JBLvw0w=;
+        b=SXjOvWxfK9Dkj+iojv1dNPSa2qSDSW0nTU0lbSKMJnHXFxS1PyZLKc+xpWNaIQ1jJa
+         CJDoXqPUOxyAJIr99ST9dgTIZjUINFi1+bG9YJ83aegLVxyxTC1Yv2vLXPckIOc1q8kr
+         /G3l5/VowjTzMrqV3ZhWvTSH7FCnGYyOPv25Jp8r6kD1ims+V3s/6z8UvYZgI8kCHJYw
+         j9m+MaF7ha9r58wJgjnGhaL4SlqHe00LNoyftonvESsYFiSyAl1CHtLkKGM5fb+TQheP
+         FLuPQWlVvLoI/a0EEP2pYoJOjg9BVaTnxts392UAjRGuYVC5ucVsuVt5Gmy4+E5uICpq
+         GnEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784195699; x=1784800499;
+        d=1e100.net; s=20251104; t=1784195701; x=1784800501;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=7ZR0fiEoMrT3fcHztK+7LRjThoe5LZhnQH2vt6jvnUM=;
-        b=luvQ+ceNC5zXgi0Uqek/DVbsmpfNegCkpbMK4rp44o3M8aO88osDtPm1rimtTxTYC4
-         /Y1qOIe3SHhUOXJCfxPlyUMuYv7izvbM77/BqrN2+R+YbabjPYG2a8yGO/EAB56skqAT
-         BI1Pr8pKfY2GA20O1Hvz3xplAa/YzNPkFGckaoq7MofYULcqeCjRdTfL+mkrsD0+zKlR
-         gYEfX4HUL3GchwJmM8M55QF0nprjVQy7641lV4LlI6nwY0cGl0s7nig6bEJCFWdmoVDY
-         AIUBXP1HmGzWfT5mbm9u4ksfNijltTQKMeVP3cMrAXCVX3PenyyRfLySKPP1bjKZcZN5
-         kM5A==
-X-Gm-Message-State: AOJu0YyD2DI0RSV98wHPxA219ESr602AF/5KriTataqjO3xhFPKk68Dr
-	nG+XAjxw9qZGnj8lnD/fZuQvwfkAI/MnLGK53bB5fmNjBvtX2e/paWyGqiQpMaFb832vuLbl
-X-Gm-Gg: AfdE7cm3kPYPSxMxSnFXFeX2wiqabvwgIpM2TP/8MBTST6TghsRKi8WjNbQcrzF1rUS
-	IZYB2tiZ/CIyzVeLHqyGVbZsQQdH+noxwetg/616jYG5XoQEtjWhSZIH3mDxW7MzloKpaiNdvzC
-	IULBbZVhPyG1rAxftNgWsxphAy5HoPf9uf5V1Omm6GbGkNxg9+o34mMbgbg0kxNRjFYDWcCqFzC
-	htkYxVzd5LRmbbewaURuBqDqAT7VSQlk74dYFxa884tWjmZ4WT6Ecz0BrYmv3HuL/NldbQg0LpQ
-	3o9ug5rPs7FEgWjG7/Ps7mIKuzMxYx/9bv+JPWfBv6VR/pnQiCVjZdmkxUFJQ0CGvZNPhsicxt+
-	Yy8bdpPA/GTBTW5DvZcyFHFCXo4ulf6LTwAk0R0H2WInBoNInVzlJeSAY8BkqI1EXL0IN
-X-Received: by 2002:a17:907:1ca9:b0:c15:b4d3:c0b8 with SMTP id a640c23a62f3a-c161f35ab38mr707393066b.8.1784195698668;
-        Thu, 16 Jul 2026 02:54:58 -0700 (PDT)
+        bh=FoyX1lbtjjAFUSqHFix+1M+3EiQfqddD6tx6JBLvw0w=;
+        b=Sb/fhc/Sv+8O7S4ba2tWgqAnb0nKJj1g8no1bnlk+MHnHXruPSUeal9k1O2WzHQcIS
+         2CjqS4AureAk9lug5Yo7onlsuV1WzQVku2AJTCbRc+BxivDeW5U3yTbSE5cUXLWw9G1L
+         9ihibUPgpqeFBpo5V40MnEvGOWfA+JJh0q5vZUv2M4beKLB3XGqZnsCGUmLqpNc6T5rq
+         f60Y/gB3Cx3BpWw2P8V9saqbF53LgTIk1p2BUmvVBeQ3PQfbzS/YCbecm9GuKpnrFs2h
+         o7zrfJ5eJGJ/xYh7SWm3ppyfjA7XICU49y5yQ7bpiM2NMaFEwXMIib4CoHxTH1AOZGqE
+         Civg==
+X-Gm-Message-State: AOJu0Yz41fZA3BuIFT4zyOLqkAR3Jvx9ZvL7jjxa5uWwfuG4bBE3hXWz
+	cG+gvdI6icAz6exeiwKpld83Ko5lHCvNA3L8mWz7h/3VfxgJ2CWeH7DYLNFIPkzWBV9eDwe0
+X-Gm-Gg: AfdE7ckfekqe8trbuaiQ0ARAhGOZ6aaouts5jvB819HlysmCp/vrclTc0T43mB9MrRO
+	EjVIALZGj9iToRid64avG5KNgdKm6bDIY74xKB4D1nbyGsCUufpK2GzX+jO7DNDkLTG81ErhKRa
+	lk0Pjos3YmGuwDZItIEDmFTpb0DYJJ3RLI7l4hb8He6oVcEKGzfBCM5207UTJcc1aMxgfoVjaUU
+	2GVaud9e2yL0ovv7OmSkrFXZSumynaAn5Jh0mUsMr+ynPLFGM5STI0B/og8hVXgLbbYvF0tKEVs
+	XZ5mH1Wtdi/0VAFnjJPP3Un+vaG0bCfZo5JF7E+ip4iIYnvIuJyl3H3bbNnSTZxDxHjNCyR/7p8
+	kp2odnVtzduZZClDy8g5H3O8QRIjkcxcb1ib9owpqLwDP34n8qDdH4wTDdjFrpt4wBndU
+X-Received: by 2002:a17:907:3cc3:b0:c12:2aef:af2b with SMTP id a640c23a62f3a-c161e98a19cmr705948166b.4.1784195700705;
+        Thu, 16 Jul 2026 02:55:00 -0700 (PDT)
 Received: from fridge ([193.32.127.173])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c168744e702sm178454966b.47.2026.07.16.02.54.56
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c168744e702sm178454966b.47.2026.07.16.02.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2026 02:54:58 -0700 (PDT)
+        Thu, 16 Jul 2026 02:55:00 -0700 (PDT)
 From: Emre Cecanpunar <emreleno@gmail.com>
 To: platform-driver-x86@vger.kernel.org,
 	hansg@kernel.org,
@@ -72,9 +72,9 @@ Cc: linux-kernel@vger.kernel.org,
 	mario.limonciello@amd.com,
 	julien.robin28@free.fr,
 	Emre Cecanpunar <emreleno@gmail.com>
-Subject: [PATCH 1/5] platform/x86: hp-wmi: validate WMI response header size
-Date: Thu, 16 Jul 2026 12:54:14 +0300
-Message-ID: <dd9b30907b64b97b5e0ffb8f3e7440070192ce9c.1784195117.git.emreleno@gmail.com>
+Subject: [PATCH 2/5] platform/x86: hp-wmi: handle firmware errors in tablet mode query
+Date: Thu, 16 Jul 2026 12:54:15 +0300
+Message-ID: <ce5cd56d2ba561272770d7992e397dfbec108d4e.1784195117.git.emreleno@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <cover.1784195117.git.emreleno@gmail.com>
 References: <cover.1784195117.git.emreleno@gmail.com>
@@ -86,32 +86,83 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-hp_wmi_perform_query() reads struct bios_return without checking that
-the firmware response buffer is large enough to contain it. A truncated
-response can therefore cause an out-of-bounds read.
+hp_wmi_get_tablet_mode() accepts any nonnegative return value from
+hp_wmi_perform_query() as success. HP firmware errors are positive, so a
+rejected query makes the zeroed response look like laptop mode.
 
-Reject responses shorter than the mandatory header before accessing its
-fields or calculating the payload offset.
+Treat every nonzero result as an error and preserve negative transport
+errors. The event and resume paths pass the result directly to the input
+subsystem, where a negative errno would look like an asserted switch, so
+skip the switch update when the query fails.
 
-Fixes: 62ec30d45ecb ("misc: add HP WMI laptop extras driver")
+Fixes: 520ee4ea1cc6 ("platform/x86: hp-wmi: Fix SW_TABLET_MODE detection method")
 Signed-off-by: Emre Cecanpunar <emreleno@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/hp/hp-wmi.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 5353d997d272..205a6020e9c5 100644
+index 205a6020e9c5..e226b772ef00 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -670,6 +670,11 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 		ret = -EINVAL;
- 		goto out_free;
- 	}
-+	if (obj->buffer.length < sizeof(*bios_return)) {
-+		pr_warn("query 0x%x returned a short buffer\n", query);
-+		ret = -EINVAL;
-+		goto out_free;
-+	}
+@@ -798,8 +798,8 @@ static int hp_wmi_get_tablet_mode(void)
+ 	ret = hp_wmi_perform_query(HPWMI_SYSTEM_DEVICE_MODE, HPWMI_READ,
+ 				   system_device_mode, zero_if_sup(system_device_mode),
+ 				   sizeof(system_device_mode));
+-	if (ret < 0)
+-		return ret;
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
  
- 	bios_return = (struct bios_return *)obj->buffer.pointer;
- 	ret = bios_return->return_code;
+ 	return system_device_mode[0] == DEVICE_MODE_TABLET;
+ }
+@@ -1198,7 +1198,7 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ {
+ 	u32 event_id, event_data;
+ 	u32 *location;
+-	int key_code;
++	int key_code, state;
+ 
+ 	if (!obj)
+ 		return;
+@@ -1228,9 +1228,12 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
+ 		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+ 			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+ 					    hp_wmi_get_dock_state());
+-		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+-			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+-					    hp_wmi_get_tablet_mode());
++		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit)) {
++			state = hp_wmi_get_tablet_mode();
++			if (state >= 0)
++				input_report_switch(hp_wmi_input_dev,
++						    SW_TABLET_MODE, state);
++		}
+ 		input_sync(hp_wmi_input_dev);
+ 		break;
+ 	case HPWMI_PARK_HDD:
+@@ -2431,6 +2434,8 @@ static void __exit hp_wmi_bios_remove(struct platform_device *device)
+ 
+ static int hp_wmi_resume_handler(struct device *device)
+ {
++	int state;
++
+ 	/*
+ 	 * Hardware state may have changed while suspended, so trigger
+ 	 * input events for the current state. As this is a switch,
+@@ -2441,9 +2446,12 @@ static int hp_wmi_resume_handler(struct device *device)
+ 		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
+ 			input_report_switch(hp_wmi_input_dev, SW_DOCK,
+ 					    hp_wmi_get_dock_state());
+-		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
+-			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
+-					    hp_wmi_get_tablet_mode());
++		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit)) {
++			state = hp_wmi_get_tablet_mode();
++			if (state >= 0)
++				input_report_switch(hp_wmi_input_dev,
++						    SW_TABLET_MODE, state);
++		}
+ 		input_sync(hp_wmi_input_dev);
+ 	}
+ 
