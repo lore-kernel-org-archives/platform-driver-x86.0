@@ -1,178 +1,370 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D13B3D9DAC;
-	Thu, 16 Jul 2026 23:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784245555; cv=none; b=L3gsACiAJEwEpWKKon8it4OC5JqLbYEcAozw6WNBqkhPo0YoN0XNo+3LdEo4G4UCZUCC42mS3oJjEt8YC2zP5J82ggn1Q8CNrTOyNURNWkNdyy6lfADkP7XnbXpMt2Og9Ac7EJKeNYdk6yFnEpUJY/TkVIF3GF3tKhQpDDTzYjw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784245555; c=relaxed/simple;
-	bh=s8TYe5nzldhyA5fnj7fqcZhPu87HDXPkqLGtq22pJBs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RY9BTNBNpQ1R38VezbtXvWRLGye5dXV1W+lcW4x8YqtTHw3GohF+VglWCNph0yUY8z6rdX/2yDOam17nzf+4+L8O9pbinFbQjVIvvw/54nn8lMvgbLcLe1MAQqAqYFlHxF8Xr1KXn1UAqj0T1e3SLt65dH8W0gHavQ2+jQ+rAKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=RSy+uvlt; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FD6277C9E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 03:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=170.10.129.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784260220; cv=pass; b=rS8c/oo0wsOMVVX5gJ0ATMsQ7AKtG4sc7AZA5VkuAu5JqhhhA7YYvJiDe3jZXubYRAeDva2htiBJ7xb0tl/ygPcMMjQvLs/acclEeqAv+HTjNwAdgJy8BN4aws+PZW7sYKOIHB1ACqXBHQbxuNCmtM/j7s7LqHC4eYal6jHNVPQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784260220; c=relaxed/simple;
+	bh=PCxREgmb/Z7rWQfHkl01czglE63rU5J516+d6EIQW8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o+OpNwWKwxCJbJdbWXj+53Yt7qcsV6pbmlRTjPEuJc5Dat0dZA58THd+rHxTFiR/4TP8fz8EKuemvsCRUyiBrO2Dmd1lN5ZfzMtJOU5PEuAokSOsq9qkIjAVq+ClpFfFh9C3iZQvmai5Lx5NCxXHHAUUftyfilTJxGTXF1ojG+8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dIdQuHC1; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=UFKvXse7; arc=pass smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="RSy+uvlt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1784245547; x=1784850347; i=w_armin@gmx.de;
-	bh=PKXiaLaW3+Aba6I3ZQqmkedA4zKQ+T+LneQYnYvL5VU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=RSy+uvltsWcjEfr2EABwA2boqnuxZ9PpO5m5hOkPGjLdL6A7yg4fz6KmvLw50sEa
-	 6EedysOvUpDtm39Ns8dK+FoSICu71d488h3gFqWQqPhknlaEPNz8KaGrcDTOBhoWr
-	 RPHUcKqf7iK1oDftN61UtEIGN3HtiyNGQU8dOEKkdvaMxn5VV4FVDjWzIS0B+Tac9
-	 q5SqnpPwVUx3U4nZwQs9pduPVylj11YE24O/P4qGZ1NtmdmwrVbj67xlrn0qQcDIM
-	 VZJQYe8byRleVlDD4Em8nVLvnjWGRB5iuwgJ30r1etrRLA+HztEnXqchFxWepsMFN
-	 Rse4EnhuA5aSZ1DsVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1fii-1x8jiN1sjo-010udq; Fri, 17
- Jul 2026 01:45:47 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@weissschuh.net,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH 0/3] platform/wmi: Add aarch64 support
-Date: Fri, 17 Jul 2026 01:45:35 +0200
-Message-Id: <20260716234538.1303811-1-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIdQuHC1";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="UFKvXse7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784260217;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZmYAKofT9oILP5lZvPb1GmNCS5wwnrerJ0a/xMFFhd8=;
+	b=dIdQuHC1hTmpfxLHxcg1SP4sFk+BLgZfo/qwFGIliSlsTeqzSr/qC7EgAeDqP31umlC7sx
+	M6wKJsTgLHon0UEtS6kRauytEf48k97cqwE1ypjDnSbufYwRspAqoh7BPK83om5aRpiu3z
+	2gA+mYgBtXbwVwcif84Ad6sSW6UWKxs=
+Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
+ [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-khoNm7zMOSycvX1w6d_f9A-1; Thu, 16 Jul 2026 23:50:16 -0400
+X-MC-Unique: khoNm7zMOSycvX1w6d_f9A-1
+X-Mimecast-MFC-AGG-ID: khoNm7zMOSycvX1w6d_f9A_1784260215
+Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-43ccd5d5357so4404812fac.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 20:50:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784260215; cv=none;
+        d=google.com; s=arc-20260327;
+        b=PM8b9SSE6QEbB7Gu9b0n0aKC8y/UKoj5DoDkI8XZGCYkxJHKGygyTTM3ub62QNbnxO
+         EF9brCz52yfRbjT3qKsfuoJophMt/40ye/7xJuB2nto/YfiHCIrL5Knk9ZQEwHZ/CH7Z
+         xLWBkt/8s7OM6Wr1An1FzMFIlrfxhKtbumSLd6LXHJba+A82ihSXFoeI05PhAvHrYvCq
+         c33/96mW51XoPwXN5vvRuwaqXlhtEQBmQp5GAxMsxuEMAYvcFVWvJp7StEU9oiviSrhB
+         wy9dkSYftWjb+dhITA0X96KL3A1RhcDUA0wXABsxglvFd7GIvLiAXfyLJJrazDUQlUsR
+         lGlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZmYAKofT9oILP5lZvPb1GmNCS5wwnrerJ0a/xMFFhd8=;
+        fh=wlGg4NCBaE2ysRUlFImm09zu2jHypjWyiXLqBMGM6OA=;
+        b=smEpEIC+XMJDakpG06JPXi0a/jt1pFLy1XQd+PneGYhVaaMHtoTSmAvMkW6Mja+z74
+         nTX5qy7Io3AkoTsqWS9W+f21VG06f2H6X3xEbY6uvckZLddPz3UVJoOvqTQ6NVmQ9Ut1
+         ou4ZyGDLM8u2ZtEBJdnSen3UtdOks0/CZuaNoUxWJd3BQGseD1Mz3mAY0OsiSw1L+y5U
+         IT6PwGH9ASk++LPWrFu9RPHpuXXAvBnxWT8YWGcHSrn0HuXbgQ62Ss2dRDxe858mJ647
+         37MXcqguivhXCDwDtz4tgqDyfWpU59nUEW12luiaXBtvf+Awg8Q7E5a1lnlSaGrvy/sl
+         zOKw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1784260215; x=1784865015; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZmYAKofT9oILP5lZvPb1GmNCS5wwnrerJ0a/xMFFhd8=;
+        b=UFKvXse7cu3Zh1z7TfOlStTOdWcY9NG7jR8jEL97M17stOOemqAZ9fwLIG7AAw+pMe
+         SRyr8divDmBwog9LcKKmC/3c9V/Frr3lWy3nW+YMJiQXLea/ueTdhQ9koabCGKz9qXvr
+         hvkcnt1KiY5RuwN620uws6VyHJTUocdGQodAVMoqvlfJCfnb0aHP64pjyZjN2On4OusG
+         2xttRkshsylp1/9y35XgMygbI6Rne76Io3ahEpxseMniIczpzwvask+wl2WUHBK0KOhQ
+         3oTRNRzWR6w6BFwlLEeKJ766Do0hj3FQppMiMaKu0EcnBW3QnCdodFzRf126KgxmGiC6
+         kX+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784260215; x=1784865015;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZmYAKofT9oILP5lZvPb1GmNCS5wwnrerJ0a/xMFFhd8=;
+        b=Q4hR7uYVzuV8O2ecEO1ydWepF9+TxHSO0G5QxZP5PzfowRrrmFWimYopJPUreY4kw5
+         abbUE17p4k80a1LkOQ4pzS/hoOfhutoA/j2BzB6M7JEbqcHtT5CUZG0VDv/F/O4EwxRV
+         r45kY5PqUDoUwnPLF9kpS1rzCoNnuGCpONR2hY7bPbMKEGcxGqwLj1CdctpTdVTZ6Rti
+         PfNXAFLEQtnIbRNY8DO9PqTW8iRuA8ZwxlF4PeyeLpZsZDaIZKN2AYeSUX8tTqcpbEd8
+         Axymm+rd++6szYCCvmFl5LAkk6njK4Wlk3mxAabWIsXg6+QMGC/IGQGqN3qIkVnVx6Kg
+         SZaQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqYlFXdn3kcuODm1LR8QRYHlz62Z9CV7wmqwMf8dTy7k0EuECR+9d0nSeNsAb8iyuQWWubNy6pC/lNJpd3yYa94GCBt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx86j40ycdTs71Bs13yCJ+dPTQIwVGvEpncAOjcIALMHiXh+wkC
+	85ZdTE3r19H31BNt3u2PTWXgDtQGzUerlmZQ7lP9pwm6hypQmy+O+Er9aBSHPHO2LDsSjX/MFPl
+	/BBd4Pabw69TqhiKn4bbXjzidm35k/O1ICsfId0z7OjzPiqhPLcO7frDqEFn02Rn+5CuD910XwD
+	jE6iL83DqIB/SiPKFWwLJnUrjDX0wUA3tth/4ALVAbZVzv306iUg==
+X-Gm-Gg: AfdE7cmmMc5Ye65SM9h2XZXFk09cEXCSloPOq+wqkMavZpk8ONUPW78uoa4jrI4gPI+
+	wBTr58C1a+lskSdA51b6TWIViknaVyF6xBKZfELXDZ25j5Cfrvr+9PbJdM1JgrGy10L3jFOBrOO
+	H5NO+ffl+Gn+2QK2k8o5DjGq89JLVbedkhS6qdPNIlo5zOKn5m3z3Klw+Y
+X-Received: by 2002:a05:6871:c929:b0:43b:5268:b7a0 with SMTP id 586e51a60fabf-4569038eb5fmr318611fac.26.1784260215447;
+        Thu, 16 Jul 2026 20:50:15 -0700 (PDT)
+X-Received: by 2002:a05:6871:c929:b0:43b:5268:b7a0 with SMTP id
+ 586e51a60fabf-4569038eb5fmr318594fac.26.1784260214909; Thu, 16 Jul 2026
+ 20:50:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260711111356.54497-1-tarang.raval@siliconsignals.io>
+ <CAEth8oH=nbSv-sPa8oyKLSEYH=mWGwo0pW1OmYrXVTZPRstkAQ@mail.gmail.com> <PN3P287MB1829E30ABB1D2E409C16F2AD8BC72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <PN3P287MB1829E30ABB1D2E409C16F2AD8BC72@PN3P287MB1829.INDP287.PROD.OUTLOOK.COM>
+From: Kate Hsuan <hpa@redhat.com>
+Date: Thu, 16 Jul 2026 23:50:03 -0400
+X-Gm-Features: AUfX_mxxLRFG2_Z2-Uj-K1Slur_U160pJPWFMWY4fLTxd3XgDGXULtiqixXC7a8
+Message-ID: <CAEth8oFnXp-xpq8GQLSRDKBBkPXabgEeDPVNWJLT6M+tuyT=Lg@mail.gmail.com>
+Subject: Re: [PATCH] platform: int3472: discrete: Support multiple HIDs per
+ GPIO map entry
+To: Tarang Raval <tarang.raval@siliconsignals.io>
+Cc: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "hansg@kernel.org" <hansg@kernel.org>, 
+	Daniel Scally <dan.scally@ideasonboard.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UZfzpks7SW/NsmlYvZZjtYPjgFIhxxeLHVq6yJsFf2QYI9uyVYO
- yUC6pyme6s+wLTWQrJuqSlJ0p8b2T9MiLw99NDE8CxGxXmtINoy85XpxYpBgCkSUrB8Dnnn
- +j53rfKBA07QqVqVJnOAJ98JIElMw5TydpjDnTsEc6ZxZhZc1ytcO5HE4G7z0wNjfhdHSNK
- tyZn5NkXnH5IkD5Sme2KQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zb4h+jhYit8=;vSA4Cx/f+oSBQVuXRcn98bH7DDt
- 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
 
-The aarch64-laptops project found out that some Windows-on-Arm
-notebooks contain WMI-ACPI mapping devices (PNP0C14) that work
-exactly like on x86. Those devices however are currently not
-supported by the WMI driver core due to only supporting x86.
+Hi Tarang,
 
-The first patch removes this restriction and allows the WMI
-driver core to run on all architectures that support ACPI.
-The second patch updates the acpi-video driver to take advantage
-of the improved support for architectures other than x86, and
-the last patch enables the generic WMI BMOF driver to support
-aarch64 as well.
+Thank you for the update.
 
-All patches have been tested on a ACPI-based aarch64 VM and
-work just fine.
+On Thu, Jul 16, 2026 at 4:44=E2=80=AFAM Tarang Raval
+<tarang.raval@siliconsignals.io> wrote:
+>
+> Hi Kate,
+>
+> > Hi Tarang,
+> >
+> > Thank you for working on this.
+> >
+> > On Sat, Jul 11, 2026 at 7:16=E2=80=AFAM Tarang Raval
+> > <tarang.raval@siliconsignals.io> wrote:
+> > >
+> > > Each int3472_gpio_map entry currently maps exactly one ACPI HID to a
+> > > GPIO quirk. As more sensors needing the same quirk are identified, th=
+is
+> > > means adding a full duplicate table entry per HID, differing only in
+> > > the HID string, which does not scale.
+> > >
+> > > Change int3472_gpio_map::hid to a NULL-terminated hids array so a
+> > > single entry can match any number of ACPI HIDs, letting new HIDs be
+> > > added to the relevant array instead of duplicating quirk entries.
+> > >
+> > > Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> > > ---
+> > >
+> > > Identified while reviewing Kate Hsuan's imx471 vana con_id patch, who=
+se
+> > > two near-identical SONY471A/TBE20A0 entries are collapsed here into
+> > > one, backed by a new power_enable_hids_vana[] array.
+> > >
+> > > This patch is on top of kate's imx471 driver series[1].
+> > >
+> > > Link: https://lore.kernel.org/linux-media/20260629074026.35490-1-hpa@=
+redhat.com/T/#t [1].
+> > >
+> > > ---
+> > >  drivers/platform/x86/intel/int3472/discrete.c | 49 ++++++++++++-----=
+--
+> > >  1 file changed, 30 insertions(+), 19 deletions(-)
+> > >
+> > > diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/=
+platform/x86/intel/int3472/discrete.c
+> > > index adff564bf3fd..f86333e38341 100644
+> > > --- a/drivers/platform/x86/intel/int3472/discrete.c
+> > > +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> > > @@ -123,10 +123,21 @@ skl_int3472_gpiod_get_from_temp_lookup(struct i=
+nt3472_discrete_device *int3472,
+> > >         return desc;
+> > >  }
+> > >
+> > > +/*
+> > > + * Other vana-supply users (e.g. ST, Toshiba, Sony sensors) can be a=
+dded to
+> > > + * this array instead of adding new quirk table entries.
+> > > + */
+> > > +static const char * const power_enable_hids_vana[] =3D {
+> > Should we have a commit mentioning which laptop model exposed the HID?
+> > For example
+> >             /* Lenovo X9-14 and X9-15 */
+> > > +       "SONY471A",
+> >             /* Lenovo X1 Carbon G14 */
+>
+> I'll update in v2.
+>
+> > > +       "TBE20A0",
+> > > +       NULL
+> > > +};
+> > > +
+> > >  /**
+> > >   * struct int3472_gpio_map - Map GPIOs to whatever is expected by th=
+e
+> > >   * sensor driver (as in DT bindings)
+> > > - * @hid: The ACPI HID of the device without the instance number e.g.=
+ INT347E
+> > > + * @hids: NULL-terminated array of ACPI HIDs of the devices without =
+the
+> > > + * instance number e.g. INT347E
+> > >   * @type_from: The GPIO type from ACPI ?SDT
+> > >   * @type_to: The assigned GPIO type, typically same as @type_from
+> > >   * @enable_time_us: Enable time in usec for GPIOs mapped to regulato=
+rs
+> > > @@ -135,7 +146,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int=
+3472_discrete_device *int3472,
+> > >   * GPIO_ACTIVE_HIGH otherwise
+> > >   */
+> > >  struct int3472_gpio_map {
+> > > -       const char *hid;
+> > > +       const char * const *hids;
+> > >         u8 type_from;
+> > >         u8 type_to;
+> > >         bool polarity_low;
+> > > @@ -145,38 +156,27 @@ struct int3472_gpio_map {
+> > >
+> > >  static const struct int3472_gpio_map int3472_gpio_map[] =3D {
+> > >         {       /* mt9m114 designs declare a powerdown pin which cont=
+rols the regulators */
+> > > -               .hid =3D "INT33F0",
+> > > +               .hids =3D (const char * const[]) { "INT33F0", NULL },
+> >
+> > I think it is bettter to keep the consistent style, the hids array can
+> > be declared individually like you did for the sony sensor.
+> >
+> > for example,
+> > static const char * const power_enable_hids_vdd[] =3D {
+> >       /* mt9m114 */
+> >       "INT33F0",
+> >       NULL
+> > };
+> >
+> > ...
+> >
+> >   .hids =3D power_enable_hids_vdd;
+>
+> I'll update in v2.
+>
+> > >                 .type_from =3D INT3472_GPIO_TYPE_POWERDOWN,
+> > >                 .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,
+> > >                 .con_id =3D "vdd",
+> > >                 .enable_time_us =3D GPIO_REGULATOR_ENABLE_TIME,
+> > >         },
+> > >         {       /* ov7251 driver / DT-bindings expect "enable" as con=
+_id for reset */
+> > > -               .hid =3D "INT347E",
+> > > +               .hids =3D (const char * const[]) { "INT347E", NULL },
+> > same here.
+> >
+> > >                 .type_from =3D INT3472_GPIO_TYPE_RESET,
+> > >                 .type_to =3D INT3472_GPIO_TYPE_RESET,
+> > >                 .con_id =3D "enable",
+> > >         },
+> > >         {       /* ov08x40's handshake pin needs a 45 ms delay on som=
+e HP laptops */
+> > > -               .hid =3D "OVTI08F4",
+> > > +               .hids =3D (const char * const[]) { "OVTI08F4", NULL }=
+,
+> > same here.
+>
+> This shouldn't be a named array like power_enable_hids_vana. Unlike vana,
+> this entry's enable_time_us (45ms) is a HID-specific quirk, not a shared
+> property, so a generic power_enable_hids_dvdd array would wrongly imply
+> future HIDs added to it inherit that same delay.
+>
+> Except for this one, I'll declare the other HID arrays individually.
+I think keeping the inconsistent style is better for readability, but
+let's wait for input from the other reviewers.
 
-Armin Wolf (3):
-  platform/wmi: Remove dependency on CONFIG_X86
-  ACPI: video: Remove CONFIG_X86 handling from nvidia_wmi_ec_supported()
-  platform/x86: wmi-bmof: Move to generic WMI code
+>
+> > >                 .type_from =3D INT3472_GPIO_TYPE_HANDSHAKE,
+> > >                 .type_to =3D INT3472_GPIO_TYPE_HANDSHAKE,
+> > >                 .con_id =3D "dvdd",
+> > >                 .enable_time_us =3D 45 * USEC_PER_MSEC,
+> > >         },
+> > > -       {       /* imx471 expects "vana" as con_id for power enable *=
+/
+> > > -               .hid =3D "SONY471A",
+> > > -               .type_from =3D INT3472_GPIO_TYPE_POWER_ENABLE,
+> > > -               .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,
+> > > -               .con_id =3D "vana",
+> > > -               .enable_time_us =3D GPIO_REGULATOR_ENABLE_TIME,
+> > > -       },
+> > > -       {
+> > > -               /*
+> > > -                * imx471 (on Lenovo ThinkPads X1 G14) expects "vana"=
+ as con_id
+> > > -                * for power enable
+> > > -                */
+> > > -               .hid =3D "TBE20A0",
+> > > +       {       /* Sensors which expect "vana" as con_id for power en=
+able */
+> > > +               .hids =3D power_enable_hids_vana,
+> > >                 .type_from =3D INT3472_GPIO_TYPE_POWER_ENABLE,
+> > >                 .type_to =3D INT3472_GPIO_TYPE_POWER_ENABLE,
+> > >                 .con_id =3D "vana",
+> > > @@ -184,6 +184,17 @@ static const struct int3472_gpio_map int3472_gpi=
+o_map[] =3D {
+> > >         },
+> > >  };
+> > >
+> > > +static bool int3472_gpio_map_hids_match(struct acpi_device *adev,
+> > > +                                       const char * const *hids)
+> > > +{
+> >
+> > It is better to have a NULL guard here.
+> >        if (!hids)
+> >                return false;
+>
+> Why ?
 
- MAINTAINERS                                     |  2 +-
- drivers/acpi/Kconfig                            |  2 +-
- drivers/acpi/video_detect.c                     |  8 --------
- drivers/gpu/drm/amd/amdgpu/Kconfig              |  4 +---
- drivers/gpu/drm/gma500/Kconfig                  |  1 -
- drivers/gpu/drm/i915/Kconfig                    |  1 -
- drivers/gpu/drm/radeon/Kconfig                  |  4 +---
- drivers/gpu/drm/xe/Kconfig                      |  5 ++---
- drivers/platform/wmi/Kconfig                    | 14 +++++++++++++-
- drivers/platform/wmi/Makefile                   |  4 ++++
- drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} |  0
- drivers/platform/x86/Kconfig                    | 12 ------------
- drivers/platform/x86/Makefile                   |  3 ---
- 13 files changed, 23 insertions(+), 37 deletions(-)
- rename drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} (100%)
+>
+> There is no case where .hids can legitimately be NULL, since every
+> GPIO mapping entry is meaningless without a HID to match against.
+>
+> so the NULL check isn't needed.
+>
+> > > +       for (unsigned int i =3D 0; hids[i]; i++) {
 
-=2D-=20
-2.39.5
+Dereferencing a NULL hids pointer in the for loop will lead to a
+kernel crash.  Verifying the input parameter "hids" before
+dereferencing it makes this function more defensive.
+
+> > > +               if (acpi_dev_hid_uid_match(adev, hids[i], NULL))
+> > > +                       return true;
+> > > +       }
+> > > +
+> > > +       return false;
+> > > +}
+> > > +
+> > >  static void int3472_get_con_id_and_polarity(struct int3472_discrete_=
+device *int3472, u8 *type,
+> > >                                             const char **con_id, unsi=
+gned long *gpio_flags,
+> > >                                             unsigned int *enable_time=
+_us)
+> > > @@ -200,7 +211,7 @@ static void int3472_get_con_id_and_polarity(struc=
+t int3472_discrete_device *int3
+> > >                 if (*type !=3D int3472_gpio_map[i].type_from)
+> > >                         continue;
+> > >
+> > > -               if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i]=
+.hid, NULL))
+> > > +               if (!int3472_gpio_map_hids_match(adev, int3472_gpio_m=
+ap[i].hids))
+> > >                         continue;
+> > >
+> > >                 dev_dbg(int3472->dev, "mapping type 0x%02x pin to 0x%=
+02x %s\n",
+> > > --
+> > > 2.34.1
+> > >
+> >
+> > I tested this patch and it works.
+> >
+> > Tested-by: Kate Hsuan <hpa@redhat.com>
+>
+> Thanks for testing this patch.
+>
+> Best Regards,
+> Tarang
+
+
+
+--=20
+BR,
+Kate
 
