@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15F13AA500
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 06:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D9E3BBFD5
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 06:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784268768; cv=none; b=YKy/JdVuImW0aOtE1FefkUlhVh9SevlEA01pBlLJhis7069SyNsZfgdblsGYo35oi/ZkL043+4SDz5ravRx63y0UMXrh7btkRSyxTUs+vG2ng0R9vc6ed/ognGvQwevSEmedy7/BOIYZLtL6fPgAaTXen64EqkeRTwlq6poW/Kg=
+	t=1784270929; cv=none; b=ApIpu2g0ButtC5dnFbilVcglP1AslOYpvbNWaQAh9CPP8FXjiWRHZ03Ui73p+i+k/5sq2x9HFF8Yk4PCYh43k8eyTz2Kh604y0CLL01hZ8bTql+7y2YkxR2XhRq+m7z1UnNB9ZsrWyCwtprTXU5BFl6cOGdG1Cce1bHRVTlzeVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784268768; c=relaxed/simple;
-	bh=YTtZPXNTEWRtEorazWUqmXt1rj2In7+BHTv0OEJvd9k=;
+	s=arc-20240116; t=1784270929; c=relaxed/simple;
+	bh=mC83BgCB8gJNj2qAY4F57QN3P8hPc9I8PosthI4hnHs=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WJxtYSpPg53Pxfe3jEy/8UMdMN0EQwEHqgb2NaVzC+G11BwomgVnQcEdJU6nUkRpirxNgQX1TN7gQTrOsYfnrZf9IeqbA+/wfTVCsKOx8ti+VwkT6XPS0inb6KfbYCRBTaWrEdCCaWv3clI5FWfbueDkoVOW/qsk3UoRSyY6lK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pf3BS5dm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=iphzAtnou5TG2iesDWVZ05WxFBopkeMBkPiycUF2P1sFhUFuw/FT7pDIu5/toRoh9B8NWV6XCdjlRkbY1pgEcMcfweRFGTNttLBGpwgmTi7Yq6obNQKQnsz4T9zEDgJK6+/O9LJYahGsIMLklx3dcm5VkoHf4qagfi7mNNJYBvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKEHWsHb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pf3BS5dm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 54CC1C2BCB9
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 06:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKEHWsHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E2E10C2BCC9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 06:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1784268768;
-	bh=YTtZPXNTEWRtEorazWUqmXt1rj2In7+BHTv0OEJvd9k=;
+	s=k20201202; t=1784270927;
+	bh=mC83BgCB8gJNj2qAY4F57QN3P8hPc9I8PosthI4hnHs=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Pf3BS5dmjsIQGw6jbvCISkwDf0k0hXECJ08Td8IJOCMPJ5Gk/0hQvHJzHs7ABABlk
-	 CggK9b4DPx1XgfMwcSxLPCyEWCi80dzNpKJh34IWE+dIFQ4UyCR/20uoMMzZNTSfhS
-	 TWMEIyoMgBp3Zccmg8V/sDb/SvU/iOHotd7ZtpMUOBNt2fErCW3VLJW6SMMeLyMDwg
-	 YfW5NP9BsFz77hOmENw1TucxYgc36BpI7fiSeiT9nGMsAdmFYo8tAfQT357zGxAbCh
-	 hhU5YtBCuwDLDqJxMvV5xKc7AFP3Y0pow9Jw/2mf0j+Zj2GkXAiHKJ9/y8spHZdaPC
-	 01WFNqJR5KOhQ==
+	b=sKEHWsHbEvzYrhrLhLNaz2AZYpizqcCjDE1ocSLwNmKuXP7XUCgdd7Avd5XINNgCb
+	 AcUwUmvogWAhf6HgqRcvByEtkQdNIuomY09hfZuHKueZB8G2OcBrWgE/YE5zbUdnCo
+	 2/dO4oDnCVV0sw93+5gCQgC4t3TUUeJVO9DKTNOA8M1h34R05lesgamgE3i0Axi6OB
+	 hqbkk76cuHwFAZ1hURnGpzcHOn5TERiQ7qtMTYB9OjaYywZ7eH+WC7Lc7GJ8GeZ9h8
+	 X7sFaV8bwX79C8Efynt+AA3Sf56bbv6DNkehS1qMUlg+H65IE//M24iPV77n/jT3P0
+	 KzP81TJsKukSQ==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 2F038C433E1; Fri, 17 Jul 2026 06:12:48 +0000 (UTC)
+	id C2FBCC3279F; Fri, 17 Jul 2026 06:48:47 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221755] amd_pmc: ThinkPad T14 Gen 2 AMD machine type 20XL
- missing from s2idle quirk list - intermittent ~10s resume from s2idle
-Date: Fri, 17 Jul 2026 06:12:48 +0000
+Subject: [Bug 221759] amd_pmc: failed probe leaks LPS0 handler registration;
+ subsequent probe hits list_add BUG in acpi_register_lps0_dev
+Date: Fri, 17 Jul 2026 06:48:47 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -41,16 +41,16 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: ywc8891@gmail.com
+X-Bugzilla-Who: francisdb@gmail.com
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-221755-215701-jxUbvj4kpv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221755-215701@https.bugzilla.kernel.org/>
-References: <bug-221755-215701@https.bugzilla.kernel.org/>
+Message-ID: <bug-221759-215701-OIbRxpJmHi@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221759-215701@https.bugzilla.kernel.org/>
+References: <bug-221759-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -62,17 +62,66 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221755
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221759
 
---- Comment #3 from ywc8891@gmail.com ---
-Patch submitted to the mailing list as requested:
-https://lore.kernel.org/platform-driver-x86/20260717060744.1252065-2-ywc889=
-1@gmail.com/
+--- Comment #2 from Francis DB (francisdb@gmail.com) ---
+Tested the series on the reporting machine (Framework Desktop, FRANMFCP06, =
+BIOS
+03.05), applied on top of vanilla 7.1.3 (plus the unrelated amdgpu device-l=
+ink
+patch from bug 221073). All three patches work as intended here:
 
-(sent 2026-07-17 via git send-email to platform-driver-x86@vger.kernel.org,
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, Shyam-sundar.S-k@amd.c=
-om,
-mario.limonciello@amd.com, linux-kernel@vger.kernel.org)
+1. The reload BUG is fixed. With enable_stb=3D1, repeated `modprobe -r amd_=
+pmc &&
+modprobe amd_pmc enable_stb=3D1` cycles now complete cleanly; on the unpatc=
+hed
+kernel the second load was a guaranteed list_add BUG.
+
+2. Probe now survives the STB failure: "amd_pmc AMDI000B:00: STB initializa=
+tion
+failed (-12), continuing without STB support", and /sys/kernel/debug/amd_pm=
+c/
+stays available.
+
+3. s2idle is fully functional afterwards: an rtcwake s2idle cycle right aft=
+er a
+failed STB init reached full hardware residency (S0ix residency 59.08 s of =
+a 60
+s sleep per s0ix_stats), confirming the msg_port restore; previously the fa=
+iled
+init would have left msg_port on MSG_PORT_S2D.
+
+One residual issue in amd_stb_s2d_init(), now visible thanks to the error
+propagation fix: on this platform S2D_TELEMETRY_SIZE now succeeds, but a la=
+ter
+S2D command is refused ("SMU cmd failed. err: 0xff") and the
+S2D_PHYS_ADDR_LOW/HIGH results are never checked, so stb_phys_addr ends up 0
+and devm_ioremap(0, 16 MB) trips the ioremap-on-RAM WARN before failing with
+-ENOMEM:
+
+  amd_pmc AMDI000B:00: SMU cmd failed. err: 0xff
+  ------------[ cut here ]------------
+  ioremap on RAM at 0x0000000000000000 - 0x0000000000ffffff
+  WARNING: arch/x86/mm/ioremap.c:216 at __ioremap_caller+0xfc/0x3b0, CPU#13:
+modprobe/4592
+  Call Trace:
+   devm_ioremap+0x5a/0xb0
+   amd_stb_s2d_init+0x239/0x280 [amd_pmc]
+   amd_pmc_probe+0x2d1/0x370 [amd_pmc]
+  ...
+  amd_pmc AMDI000B:00: STB initialization failed (-12), continuing without =
+STB
+support
+
+The end result is still correct (STB unavailable, driver fine), but checking
+the return codes of the two phys-addr commands (or rejecting a zero address)
+would turn this into a clean bail-out instead of a WARN backtrace that tain=
+ts
+the kernel.
+
+Thanks for the quick turnaround. For the series as posted:
+
+Tested-by: Francis De Brabandere <francisdb@gmail.com>
 
 --=20
 You may reply to this email to add a comment.
