@@ -1,192 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DAB3A9D80;
-	Fri, 17 Jul 2026 05:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB41377567
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 06:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784267619; cv=none; b=gKExgmV2TsA0udvH0xOaGZvc7SOImWBylJSI6ddPX+60OtkTCtwU1CSs+02pcSomsSU3UT/zr/1pYc0b8nGOEmy07AGeUF3gwrpSh/4MMfO0XSHTXHZGVs4avQ2QWcE1NfBZd3yVYJ0ZkkUdDj87navFkuMjRC+EkWeBMo3cMKc=
+	t=1784268700; cv=none; b=bSMqDCGqm+yECeKMe9Lms56BRKeh6lf7iXoJ8eCjeoarClDQWZjUakDvGdWcaZTBawr1aNkWUP0m3YTiQ3ZLiMlnUkoTUDivJh7/gcG1jDUyiWLcsxoBSw59kAIeqTdDv3uQ+1zTnPOdpMnAi5xkfPJQJYNQ33YsQ6MNiero3vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784267619; c=relaxed/simple;
-	bh=XwpbIvAMbfiotVAkJaWpvjaHtWzTOheLxNeKMbUwJJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uqD55QUel4xaogHe82fg7bzekzwZySnJJ4QUSR/oBQvk8FajEa/54lsH8aCdMrdg8OBymYfdSRzf2uRurIPNtLrHA6JYaAhcmDwJHrSV4cs/UFNXrtTcdK9plN5hSE2MJwb3hr679gEVPcnmHOH/tNLONzKy6mM+/ScmCqhRrEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtxfQbJP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784268700; c=relaxed/simple;
+	bh=U/WwZ/oUhnyOWZnmaH4VAFaQclk/+DD5TbgLex4r06M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tj/JZg16ae/wVT3m7NYRAAVrpNcwRNp7lJx3R/5Y2kraH39BvI+szNuQVS1PMH3HYORiKfUTggBDfWvRv1BxeieEWk+PtxyAwiqn+5t97Hri1YJo3IRdl356qx5czZPr8wqgVqeNWyVj3KQGhuoF10HxYaL+iQQp9tTmu5Ze/I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qFYJMNf9; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtxfQbJP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D049B1F000E9;
-	Fri, 17 Jul 2026 05:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784267617;
-	bh=BtwiwC1OOAz/Ngi0IL20lPmx0q2+dVmLQEL3FN1Pjug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MtxfQbJP9qmEz0Rj5q9ZDsk1cKzW2+u7/oDJAc4FfCaZMbwZ0DtQ0HBIo/gIFSCgA
-	 CJfgkzXee+Jo+KIA1xVcFBj/AAw6xw3akbrAQQtNGD4PVG/erlV0cHfg6Yr/1HkvzV
-	 B3i+IR48la1BEEU6MqYVBxh5RxB/HZ6LZevpQPWGjFzUe8Y4FIKL3O7ZjJVMs7WtzY
-	 ttrK95uNRFqdlRJ/VOYvx6DqWdnUYSXk/m3L89gEwMc5AYwPTojftfjqQI5wmg76s2
-	 v4rOSGbYzo9hp6bWcKtGLKLlN6TE0LDOMFYsUZ46irIG9ZE+SJ5IR8B0LyOPW56z2F
-	 iJYdeMD1M9ICg==
-Date: Fri, 17 Jul 2026 05:53:31 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Sean Rhodes <sean@starlabs.systems>
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
-	corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
-	prasanth.ksr@dell.com, jorge.lopez2@hp.com,
-	mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com,
-	josh@joshuagrisham.com, briannorris@chromium.org,
-	jwerner@chromium.org, tzimmermann@suse.de, javierm@redhat.com,
-	kees@kernel.org, u.kleine-koenig@baylibre.com, mst@redhat.com,
-	chenhuacai@kernel.org, wenst@chromium.org,
-	florian.fainelli@broadcom.com, titouan.ameline@gmail.com,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	Dell.Client.Kernel@dell.com, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v6 3/3] firmware: coreboot: Add CFR firmware attributes
- driver
-Message-ID: <alnDWxTSZv5DKcB9@google.com>
-References: <20260713054526.2902319-1-sean@starlabs.systems>
- <20260713081317.2954586-1-sean@starlabs.systems>
- <20260713081317.2954586-4-sean@starlabs.systems>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFYJMNf9"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2cab1f435afso14384575ad.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 16 Jul 2026 23:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784268698; x=1784873498; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ozUb6IR9U02hBaC9DF1hIgNkHUdtWxbpjqkpQJBpLfo=;
+        b=qFYJMNf9PeLZpieZUOmyTDNjn9rbO1JDo3clJ9uuopBF9QJens9vqG5x7YWqdjmGRn
+         /eDaWt9EeD+6ITdOkTXHcKyCZMhV8430NUJdS73+wbcqzjYyj9ho3l2VAGEtkwawNaqZ
+         KcTMH+I5tX2aKGBBCA6W/kr028t6kU2XOQsu80wppC/t/WfOLnPs4LEfMFNpfc2FyiVH
+         tUS6O5Jgyz29Z5KGUF/BfqA/tP+CEfZU15nKUSsHgAa7yPUtPMpnawPuRGxMbWltQ3fx
+         9JMGbiJb3+htGzsPyboCIdTQUtiCUv6pfM7XpADrjGJFuPYSXUTElezLkaQpEtFgxwT+
+         azvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784268698; x=1784873498;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ozUb6IR9U02hBaC9DF1hIgNkHUdtWxbpjqkpQJBpLfo=;
+        b=TTw+GwwdMeTmcVyqKSnaZh2bSXjlbU0Vo5UTYXeU0pIIevigjdZYI7EKCowL7FLsKr
+         OYd/FlnHwmxIhjdJFPaDo8pkByjvKWDKXOrhHyQFaU32jGdpHiVPBJj9GYKysCe8AR9+
+         34OQHqva75s1stHZjynRjmx4iGlikEMgSv2UngpULZI9JDB/Hj4xrVxKv4XejwxqkodG
+         LxNwU4z+PRvHxSK96zFzAh5LThIE9jNHwks4iMeVbEAbZc02f8ItCdngd9/Sb/WlcyJ4
+         ZpAbayznTbNI+p9r2wO5lG4ixzLlbS3LEJLz38ZPjSkIepQFHxib9Zy7A6IQ6/PDSu5D
+         uDBQ==
+X-Gm-Message-State: AOJu0Yz+385nyejM9/YZgi838Q/4dVRaOHpFg+fdjslKyB748RxIsj/G
+	RmGVAvQ8UcL7nxEG0EkyxK9xpx4R5VTXBH3jm0G7mbqTK7SUBh/epD1ejJfnxqLu04A=
+X-Gm-Gg: AfdE7clkeaOb3Tv6C11kxWrxYgJSqTsgYg1q7TFYR8Mu/9ulTepuXLRhXkNUbDeswz/
+	cIcV+zkhGnYP/EGHXd6eo+sK264Or3pVc77PCJ4L4UAUFq/3H9s6b+2QJrCUKC9zkVV59RChRjx
+	iLTZE3tHnYyIyPQyEtf9dklFfAlPmI+0ZO2MpULKIcy8PvFJdKE+605vZCTalSAmnmVdzMIdovC
+	g0u2+Nf9SbKchl/5VeKHt/roDQouK9RtWxQHTT4n/SrXUe3M8n0RzVvQ95uEHOz/vdPhUGu8zlI
+	c5SwGyCl3h/DbOnTLCpCsZfFqW5TTiav7mQa3jAJDqqo+zYiTchHclsUmI6M4k66QE5hfYvqfuR
+	csGCPNRyog9ASyMVB0U59GV1yX9EJ/4cDzV5vRZRl6B4XqA872iSco7uOgpttlk3bv17WVtWORu
+	ua6SaiTkQH8wY4bOA=
+X-Received: by 2002:a17:902:ced1:b0:2ce:aea4:5e80 with SMTP id d9443c01a7336-2cf34a02b31mr10896805ad.6.1784268697577;
+        Thu, 16 Jul 2026 23:11:37 -0700 (PDT)
+Received: from debian.sphynx-fence.ts.net ([219.92.60.65])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13ce2cd764fsm1785294c88.12.2026.07.16.23.11.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2026 23:11:36 -0700 (PDT)
+From: Yap Weei Choong <ywc8891@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	Shyam-sundar.S-k@amd.com,
+	mario.limonciello@amd.com,
+	linux-kernel@vger.kernel.org,
+	Yap Weei Choong <ywc8891@gmail.com>
+Subject: [PATCH] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list
+Date: Fri, 17 Jul 2026 14:07:45 +0800
+Message-ID: <20260717060744.1252065-2-ywc8891@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260713081317.2954586-4-sean@starlabs.systems>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 13, 2026 at 09:13:17AM +0100, Sean Rhodes wrote:
-> diff --git a/drivers/firmware/coreboot/coreboot-cfr.c b/drivers/firmware/coreboot/coreboot-cfr.c
-...
-> +static const struct coreboot_table_entry *
-> +coreboot_cfr_child_entry(const void *base, size_t len, u32 tag)
-> +{
-> +	const struct coreboot_table_entry *entry;
-> +	size_t off = 0;
-> +
-> +	while (off < len) {
+The ThinkPad T14 Gen 2 AMD was sold under two machine types, 20XK and
+20XL, but only 20XK has been in the s2idle quirk list since the quirk
+was introduced in commit 455cd867b85b ("platform/x86: thinkpad_acpi:
+Add a s2idle resume quirk for a number of laptops").
 
-To be concise,
+On 20XL machines the firmware SMI handler therefore still runs on the
+NVMe D3->D0 transition when exiting suspend-to-idle. With IOMMU
+translation enabled (the default), this intermittently stalls resume
+for ~10.25 seconds: seven devices across three root ports (nvme, both
+xhci_hcd functions, xhci-pci-renesas, snd_hda_intel x2, snd_rn_pci_acp3x)
+block in pci_pm_resume_noirq and are released simultaneously, consistent
+with all cores being held in SMM.
 
-    for (off = 0; off < len; off += entry->size)
+Add the missing 20XL machine type, mirroring the existing 20XK entry.
+This is the same class of omission fixed by commit 9a469c6dfab3
+("platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle
+quirk list").
 
-> +static bool coreboot_cfr_value_is_valid(struct coreboot_cfr_setting *setting,
-> +					u32 value)
-> +{
-> +	u32 delta;
-> +
-> +	if (setting->type != COREBOOT_CFR_SETTING_NUMBER)
-> +		return coreboot_cfr_label_from_value(setting, value);
+Verified on a ThinkPad T14 Gen 2a (type 20XLS41C00, BIOS R1MET62W 1.32,
+kernel 6.12.95): with this entry the quirk message appears at probe and
+a 14-hour suspend resumes in ~1s with no noirq stalls, where previously
+even short suspends could hit the ~10s delay. A further two-day soak
+(short naps and two ~14-hour suspends) showed every resume clean.
 
-This deserves a comment as coreboot_cfr_label_from_value() returns a `char *`
-instead of bool.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755
+Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>
+Tested-by: Yap Weei Choong <ywc8891@gmail.com>
+---
+ drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +static ssize_t possible_values_show(struct kobject *kobj,
-> +				    struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +	ssize_t len = 0;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++) {
-> +		len += sysfs_emit_at(buf, len, "%s%s", i ? ";" : "",
-> +				     setting->values[i].label);
-> +		if (len >= PAGE_SIZE)
-> +			return len;
+diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+index 74ddf1d82..09a30f333 100644
+--- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
++++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+@@ -71,6 +71,14 @@ static const struct dmi_system_id fwbug_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
+ 		}
+ 	},
++	{
++		.ident = "T14 Gen2 AMD",
++		.driver_data = &quirk_s2idle_spurious_8042,
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "20XL"),
++		}
++	},
+ 	{
+ 		.ident = "T14 Gen1 AMD",
+ 		.driver_data = &quirk_s2idle_spurious_8042,
+-- 
+2.47.3
 
-Does it really need the check?
-
-> +static int coreboot_cfr_count_enum_values(const void *base, size_t len)
-> +{
-> +	const struct coreboot_table_entry *entry;
-> +	size_t off = 0;
-> +	int count = 0;
-> +
-> +	while (off < len) {
-
-To be consie,
-
-    for (off = 0; off < len; off += entry->size)
-
-> +static int coreboot_cfr_copy_enum_values(struct coreboot_cfr_setting *setting,
-> +					 const void *base, size_t len)
-> +{
-> +	const struct lb_cfr_enum_value *enum_value;
-> +	const struct lb_cfr_varbinary *label;
-> +	const struct coreboot_table_entry *entry;
-> +	size_t off = 0;
-> +	int count;
-> +
-> +	count = coreboot_cfr_count_enum_values(base, len);
-> +	if (count <= 0)
-> +		return count ?: -EINVAL;
-> +
-> +	setting->values = kcalloc(count, sizeof(*setting->values), GFP_KERNEL);
-> +	if (!setting->values)
-> +		return -ENOMEM;
-> +
-> +	while (off < len) {
-
-To be consie,
-
-    for (off = 0; off < len; off += entry->size)
-
-> +static int coreboot_cfr_parse_records(struct coreboot_cfr_drvdata *data,
-> +				      const void *base, size_t len)
-> +{
-> +	const struct coreboot_table_entry *entry;
-> +	const void *child_base;
-> +	size_t child_len;
-> +	size_t off = 0;
-> +	int ret;
-> +
-> +	while (off < len) {
-
-To be concise,
-
-    for (off = 0; off < len; off += entry->size)
-
-> +		switch (entry->tag) {
-> +		case CFR_TAG_OPTION_FORM:
-> +			if (entry->size < sizeof(struct lb_cfr_option_form))
-> +				return -EINVAL;
-> +
-> +			child_base = base + off + sizeof(struct lb_cfr_option_form);
-> +			child_len = entry->size - sizeof(struct lb_cfr_option_form);
-> +			ret = coreboot_cfr_parse_records(data, child_base,
-> +							 child_len);
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		case CFR_TAG_OPTION_ENUM:
-> +		case CFR_TAG_OPTION_NUMBER:
-> +		case CFR_TAG_OPTION_BOOL:
-> +			if (entry->size < sizeof(struct lb_cfr_numeric_option))
-> +				return -EINVAL;
-> +			ret = coreboot_cfr_add_numeric_option(data, base + off);
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		default:
-> +			break;
-
-Doesn't it need to do anything if sees unknown `entry->tag`?
-
-> +static int coreboot_cfr_probe(struct coreboot_device *dev)
-> +{
-...
-> +	data->class_dev = device_create(&firmware_attributes_class, NULL,
-> +					MKDEV(0, 0), NULL, DRIVER_NAME);
-> +	if (IS_ERR(data->class_dev)) {
-> +		ret = PTR_ERR(data->class_dev);
-> +		goto err_clear_data;
-
-No more data to clear,
-
-    return PTR_ERR(...);
-
-> +err_clear_data:
-> +	return ret;
-
-Nothing to do other than a return.  The label can be removed.
