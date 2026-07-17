@@ -1,61 +1,63 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FF6377AAB
-	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 08:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E1030568E
+	for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 08:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784278210; cv=none; b=XMKGKEFCppVRt5nCX7jnaAI/T29G3B0mx2pTCqzXGJreJ29JmFjm0ff5UDONfHaDLKvDj+/vq2DmWSzjH49i1SBoMySfLU8n7h3XGBKXaUOOJ7wM3ekBfSIlEabEk0pedwonY12rJ8F1Pcf6sCTS69CYixTddAwa6lXe+7TjYCM=
+	t=1784278212; cv=none; b=YSqpBt7yqmtqWHDguxk1vcTndz81TYtPCg/9/ij4/RvF8g2Je5+39kWJD+o83k2ucO2FOWYorKttE00hDJ9Nttb/v0kiRTn865hmx6XsJLjR0hxohI05rqXtfCDA4L8z95x5WK1wW5GzMA+oNbAXKB8VoA/YGzw6KbB5PrJ8rew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784278210; c=relaxed/simple;
-	bh=wQDkd4qhzspIG4mNV9Yy1WbVTQ2+GtTto+4gUSQIpa8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YOjOUSrIRY4zLd7tvC1mT+7va7Dxy2YzG0UvFGz0RRBLjvsca4ICDtNhcNMrmTl6pPuMt8iJa9wMth+Ov92bM9M/xkawCrmR1CnSBX1cs/RLHdHUaPpLwHjEAXL+UWrTQ4B8InxOYOmIWukvqYLPZtuhmjnpxwiAkpTz9sevhnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=rnoC3Nig; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1784278212; c=relaxed/simple;
+	bh=QY2qCsT5gS4+FUURGOFQWBEwlDJ5AoZzDXv74k/9cSQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IBu8g5SQ2brbVrexhFHSs6mE/4lEDXrqFZlpesA3ne84iMjrsjl8A8LhSPta5heWFjvswba8pmI1Gr+fBWIAZ6Yjl+xXKb2pjUwofxPWeoNjM8mvD9HZd3jSeRNquhQ6ZgXoNSlBY/6L0vzS/MSnS8W95bltP7jo03kT0N/KC8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=AqUmyLG1; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="rnoC3Nig"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4954c9f380bso515935e9.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 01:50:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="AqUmyLG1"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-475417f010dso3969530f8f.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 01:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1784278205; x=1784883005; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=E+3lV74b+0E9DOjl2bLZFOk6+jkzg9u0ynWt2mFCeZk=;
-        b=rnoC3NigH4d5KBr104tjbgxK2q+x6LjoSmy31YehaZZx6Nj45IyZb2MNUDrCoq8dbW
-         BrQvWqEMZ1eQxcNrKjCLxcEg1idxXVHwuUPHx71N18rQig5pMmoBQS8DT+xYLQyIUKVd
-         u8SdLw2G7KGZCWptJTlNVFNGNwvCajuNQh/XgKyiGIV4cY64zEs/hZzjg/e/z4CELXpG
-         DYteJ+ejs0kzxjiYlDuw5Z5Iqd9pIaferFhONB4beSPQw3/kaJzHveLzjgMaXZ7U5HAc
-         oJLiXQuSbyybFBC6+sH7vrz2+NWOHyppw+NWhHwPazDMTBJryR5vpf9rpc4KiUZAZ+aj
-         xjuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784278205; x=1784883005;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1784278208; x=1784883008; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=E+3lV74b+0E9DOjl2bLZFOk6+jkzg9u0ynWt2mFCeZk=;
-        b=XBpgAFmyLMZDj+aagaymQOzaJa94EjDIngokGtRNPs0OYxPESC5t93zQeLPjPB639k
-         Uh8NZowQ9OOT1GZbZB3m+b5KcXBELPHFkYoe6zHNg76PWR2mrHupTcJ1glES4hpMGcfx
-         c+liRz58ysr7nKGDqZd3ZyT9KygHcKxWozPl9ZzXflHi8PCeAF1LdwTXLkZmeeCWuXov
-         YupWgtWOxFEuxz9gJFYHBF+SmDFIT7H3AV/4l4Tf5SA7NFGfTZSvutE1iszhQ589ZSCs
-         k4ieJJ2fqWFC3lP56LxifDrZtPUaIqMJf+40Dq2vOR+SilAtP0GNlvZQuNfbrla0mxGs
-         ib1A==
-X-Forwarded-Encrypted: i=1; AHgh+Rruz0GS1Vyxs7yVIGdcjsNs4tgXQuHg2dUMBhpm354G+n6KAVR6zaFQJoCsJrRtX8Slxsmy19cRKH99p0Qwhy+sKdFP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5lmIz3Ybm6F2bEW9ezSROFwNvmHgddufSdBN/cKHgIXkv+x3F
-	+D0I3OLv4LrmqKmrX4O50Xri7rY4FHWu1T8gxUPqb5ztFJfkD6CoYfpb7BMT+uo37A==
-X-Gm-Gg: AfdE7cmm7u1ZGEiyL/FYnwWVlqoBwpkWKQlWp/dwS0/ea9C66J80XreIF3rJtqM+BfD
-	CTuH4klloMTEHj7tAS3N3Y9C1Lv4UD25hucyfFM46PnK8ImobVBZTvM366n5/o5xWBtO0q2P9lF
-	yBJvGeilBifWEr73LYM23Te8pBd9gy7lyASjLG34lGrsXWjgRoNCFVJDReet19tE1iGi+f8NUKg
-	JJd6bb+WNMLKLd643TA3+rEwQfqysjP3GO8sAMb+kGIYlhbCRrgv/JTThXKZSAIwKktDgvB7TI6
-	+x43AfY4znbdbUKqlFxpI2U98BQ6HKplofVtGf8nRVJJiGsFP5gqsPts5uqHyPCXQGO0NZDCyuf
-	+soePWzaCNppwvE1g51EClMRBTVe0EIUFNm7IKVOckhnmno4uwPyoSlulO6hufurNlmpQ5vGLQt
-	y+ee/yP+N+11TnCvfVIpB1xfQvaNt4
-X-Received: by 2002:a05:600c:41ca:b0:495:21e7:fd53 with SMTP id 5b1f17b1804b1-4954a50dacfmr13827775e9.18.1784278204852;
-        Fri, 17 Jul 2026 01:50:04 -0700 (PDT)
+        bh=EnOZE3fkSqZ4ELC1ntUIknKBMd0F4RA56k/w3JH2jic=;
+        b=AqUmyLG1bijKTbGxS40bBjvLhjzfn6b9baWEZislCNZXTKil+oJgDzp2HPiLsr2ChM
+         UxQrhEhT957d8giFlS+NtfC+3MUE2yTjTHfDV7ClrLMaJhq44esFXGRicmZDxLwyMZck
+         M0llJXZtHeVFhwCJObvAi0v83MI7OqiFzwSsuUyulu4iFGWns3leyQwqpdGmI7bDxzAt
+         NO9cZ9nc5SMKIgqtULn0NY8Y6i/37pzMiIthhB5Lm7LMkMBYe5IotN2YJU9P0zQGnNyb
+         o9SIg8bqB5FFc56me8Ik7cNDMiS46SUwnOMj+YE3/DH3jBd38xaBPi4Pl8J/YjCuZbCu
+         cU+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784278208; x=1784883008;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=EnOZE3fkSqZ4ELC1ntUIknKBMd0F4RA56k/w3JH2jic=;
+        b=Lu+cXTJnq8zAi9X8LggCsl0Qri6qgpvtxk/XAOgma3+OV1rhJsg3CwLELb7m8ARmmd
+         EoJGKNkj5jLOtGT/kObbmOrCvmo0tpwAmm3pD/VESgQQagBZo7fC+kI7TQAHSgIupp3k
+         nMiCeYueDg8W3pl5HAQ5gigaqDmbzEMktcez3uYB64FFJvk+B/gt/Fzh5aCYQvQ8h26N
+         akTSdWogds0R/NKrhGLmAaSTtg6G/KDmHdjFIIDSGcu3v1qwb3fwz6veEkh/IkGrXoFC
+         LVMz3KSplqWH/Pl33Ihx3X7U6UMMUJr++GgwwkpwyHv2jPv1HaVq4OeoRkFULDcdpuGs
+         oBcw==
+X-Forwarded-Encrypted: i=1; AHgh+RopDyEWF94yX+OGaV1ehXNH5GCTBD0y7e40nCc3gh71USzPb52EYCnkZ07byu9bq4D2yHynty7rWkbC3Khz91dFC7yj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcUoRndfQBQV6g0arjAbD+yQA5YdyNhi4jvO37w3jR1HZoomp2
+	CROSBUn+a5vxt8gouuXEzg4HBNm4ecsHT8ehn1GpMKXWMmCJKpWkRBeCEbD7eN04ZA==
+X-Gm-Gg: AfdE7cnhYrY3pjodruaRYRIi7CMDBLAw2MIMWr7wHtHbNLVvz+eBObFrel++tv0qvrp
+	dO0m4GIkSe78Pjmxcramhk9wOLNQAuthFGOKXJCx8rmzfPZtNvwthel/0GD4npVQT1DLDSj7ex1
+	0FMcGBExa3/86/Oqg9CRLV0Lp6flkXLyztEeWnqQHbcBEypO382Q6SbfNJz5Gx2rFpX1zDIuygX
+	dWyWois6Hg0+9jDMAlUDOVqjFE1OLOeUkUPuL+8xmzPGGrrWIkSxVj2XHOSjRgyjkSY3YL7oCSw
+	+XLED9CDJQqkAWEajeLs8NT10RK6zW02Jh1jE9hwMLIlMjSUakb6yZKHimD3tX6saN6iCaNiXSN
+	mBmwkdtdwaW+gva1n/WHxD3uZNmkXj37EayB2Yk7dw/dCR61lxnv1Wf6KE/s2tH4KfVEJvNWzwf
+	2GKz1IRpM8zDzBar2/uakNOkUNK75W
+X-Received: by 2002:a05:600c:1d1e:b0:493:b6ee:fcb7 with SMTP id 5b1f17b1804b1-4954a3f39ffmr18160385e9.14.1784278207615;
+        Fri, 17 Jul 2026 01:50:07 -0700 (PDT)
 Received: from horizon ([217.155.46.38])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4954a2a2504sm33972955e9.2.2026.07.17.01.50.03
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4954a2a2504sm33972955e9.2.2026.07.17.01.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jul 2026 01:50:04 -0700 (PDT)
+        Fri, 17 Jul 2026 01:50:06 -0700 (PDT)
 From: Sean Rhodes <sean@starlabs.systems>
 To: tzungbi@kernel.org
 Cc: hansg@kernel.org,
@@ -85,10 +87,12 @@ Cc: hansg@kernel.org,
 	Dell.Client.Kernel@dell.com,
 	chrome-platform@lists.linux.dev,
 	Sean Rhodes <sean@starlabs.systems>
-Subject: [PATCH v7 0/3] firmware: Add coreboot CFR firmware attributes driver
-Date: Fri, 17 Jul 2026 09:50:00 +0100
-Message-ID: <20260717085003.369496-1-sean@starlabs.systems>
+Subject: [PATCH v7 2/3] firmware: Rename google firmware directory to coreboot
+Date: Fri, 17 Jul 2026 09:50:02 +0100
+Message-ID: <20260717085003.369496-3-sean@starlabs.systems>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260717085003.369496-1-sean@starlabs.systems>
+References: <20260717085003.369496-1-sean@starlabs.systems>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -97,74 +101,36 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the firmware attributes class helper out of platform/x86, rename
-the coreboot-table firmware driver directory from google to coreboot, and
-add a coreboot CFR firmware attributes driver.
+Most drivers in drivers/firmware/google are coreboot table drivers rather
+than Google-specific firmware drivers. Rename the directory to coreboot
+and update the Kconfig prompt, build path and maintainer entry.
 
-Changes in v7:
-- Restore the existing include order in converted platform/x86 drivers
-  and add Oliver's Tested-by to patch 1.
-- Use for loops for the CFR record walks, document pointer-based value
-  validation and intentionally ignored record types, and remove a
-  redundant PAGE_SIZE check.
-- Validate the CFR payload checksum before parsing it.
-- Make EFI writes transactional: lock the complete operation, restore
-  both the variable and live state on failure, and preserve a pending
-  reboot indication when rollback cannot fully restore the setting.
-- Lock EFI reads and expose settings read-only when EFI writes are not
-  supported.
-- Skip settings beneath suppressed or dependency-gated forms, propagate
-  enclosing read-only/inactive state, and bound CFR form nesting.
-- Propagate transient probe failures instead of silently dropping
-  settings.
-- Preserve APM token zero and skip an enumeration if its values cannot
-  fit in the sysfs output buffer.
-- Simplify the device_create() error path.
+Keep the existing CONFIG_GOOGLE_* symbols to avoid user configuration
+churn in this mechanical move.
 
-Testing:
-- x86_64 allmodconfig W=1 builds of the CFR driver, firmware attributes
-  helper, and all converted platform/x86 consumers.
-- UML allmodconfig W=1 builds of the CFR driver and helper, exercising
-  the path compiled without CONFIG_X86.
-
-Sean Rhodes (3):
-  firmware: Move firmware attributes class helper
-  firmware: Rename google firmware directory to coreboot
-  firmware: coreboot: Add CFR firmware attributes driver
-
- MAINTAINERS                                   |   18 +-
- drivers/firmware/Kconfig                      |    5 +-
- drivers/firmware/Makefile                     |    3 +-
- drivers/firmware/{google => coreboot}/Kconfig |   20 +-
- .../firmware/{google => coreboot}/Makefile    |    1 +
- drivers/firmware/{google => coreboot}/cbmem.c |    0
- drivers/firmware/coreboot/coreboot-cfr.c      | 1141 +++++++++++++++++
- .../{google => coreboot}/coreboot_table.c     |    0
- .../{google => coreboot}/coreboot_table.h     |    0
- .../framebuffer-coreboot.c                    |    0
- drivers/firmware/{google => coreboot}/gsmi.c  |    0
- .../memconsole-coreboot.c                     |    0
- .../memconsole-x86-legacy.c                   |    0
- .../{google => coreboot}/memconsole.c         |    0
- .../{google => coreboot}/memconsole.h         |    6 +-
- drivers/firmware/{google => coreboot}/vpd.c   |    0
- .../{google => coreboot}/vpd_decode.c         |    0
- .../{google => coreboot}/vpd_decode.h         |    0
- .../firmware_attributes_class.c               |    2 +-
- drivers/platform/x86/Kconfig                  |    3 -
- drivers/platform/x86/Makefile                 |    2 -
- drivers/platform/x86/asus-armoury.c           |    2 +-
- .../x86/dell/dell-wmi-sysman/sysman.c         |    2 +-
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  |    2 +-
- drivers/platform/x86/lenovo/think-lmi.c       |    2 +-
- drivers/platform/x86/lenovo/wmi-other.c       |    2 +-
- drivers/platform/x86/samsung-galaxybook.c     |    2 +-
- .../linux/firmware_attributes.h               |    6 +-
- 28 files changed, 1194 insertions(+), 25 deletions(-)
- rename drivers/firmware/{google => coreboot}/Kconfig (82%)
- rename drivers/firmware/{google => coreboot}/Makefile (92%)
+Signed-off-by: Sean Rhodes <sean@starlabs.systems>
+---
+ MAINTAINERS                                                 | 4 ++--
+ drivers/firmware/Kconfig                                    | 2 +-
+ drivers/firmware/Makefile                                   | 2 +-
+ drivers/firmware/{google => coreboot}/Kconfig               | 6 +++---
+ drivers/firmware/{google => coreboot}/Makefile              | 0
+ drivers/firmware/{google => coreboot}/cbmem.c               | 0
+ drivers/firmware/{google => coreboot}/coreboot_table.c      | 0
+ drivers/firmware/{google => coreboot}/coreboot_table.h      | 0
+ .../firmware/{google => coreboot}/framebuffer-coreboot.c    | 0
+ drivers/firmware/{google => coreboot}/gsmi.c                | 0
+ drivers/firmware/{google => coreboot}/memconsole-coreboot.c | 0
+ .../firmware/{google => coreboot}/memconsole-x86-legacy.c   | 0
+ drivers/firmware/{google => coreboot}/memconsole.c          | 0
+ drivers/firmware/{google => coreboot}/memconsole.h          | 6 +++---
+ drivers/firmware/{google => coreboot}/vpd.c                 | 0
+ drivers/firmware/{google => coreboot}/vpd_decode.c          | 0
+ drivers/firmware/{google => coreboot}/vpd_decode.h          | 0
+ 17 files changed, 10 insertions(+), 10 deletions(-)
+ rename drivers/firmware/{google => coreboot}/Kconfig (94%)
+ rename drivers/firmware/{google => coreboot}/Makefile (100%)
  rename drivers/firmware/{google => coreboot}/cbmem.c (100%)
- create mode 100644 drivers/firmware/coreboot/coreboot-cfr.c
  rename drivers/firmware/{google => coreboot}/coreboot_table.c (100%)
  rename drivers/firmware/{google => coreboot}/coreboot_table.h (100%)
  rename drivers/firmware/{google => coreboot}/framebuffer-coreboot.c (100%)
@@ -176,653 +142,147 @@ Sean Rhodes (3):
  rename drivers/firmware/{google => coreboot}/vpd.c (100%)
  rename drivers/firmware/{google => coreboot}/vpd_decode.c (100%)
  rename drivers/firmware/{google => coreboot}/vpd_decode.h (100%)
- rename drivers/{platform/x86 => firmware}/firmware_attributes_class.c (94%)
- rename drivers/platform/x86/firmware_attributes_class.h => include/linux/firmware_attributes.h (60%)
 
-Range-diff against v6:
-1:  02edc6d05059 ! 1:  c414cb12d7ac firmware: Move firmware attributes class helper
-    @@ Commit message
-     
-         Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-         Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-    +    Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
-         Signed-off-by: Sean Rhodes <sean@starlabs.systems>
-     
-      ## MAINTAINERS ##
-    @@ drivers/platform/x86/Makefile: obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+= hp/
-      obj-$(CONFIG_SENSORS_HDAPS)	+= hdaps.o
-     
-      ## drivers/platform/x86/asus-armoury.c ##
-    -@@
-    - #include <linux/dmi.h>
-    - #include <linux/err.h>
-    - #include <linux/errno.h>
-    -+#include <linux/firmware_attributes.h>
-    - #include <linux/fs.h>
-    - #include <linux/kernel.h>
-    - #include <linux/kmod.h>
-     @@
-      #include <linux/sysfs.h>
-      
-      #include "asus-armoury.h"
-     -#include "firmware_attributes_class.h"
-    ++#include <linux/firmware_attributes.h>
-      
-      #define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-      
-     
-      ## drivers/platform/x86/dell/dell-wmi-sysman/sysman.c ##
-     @@
-    - #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-    - 
-    - #include <linux/align.h>
-    --#include <linux/fs.h>
-    - #include <linux/dmi.h>
-    --#include <linux/module.h>
-    -+#include <linux/firmware_attributes.h>
-    -+#include <linux/fs.h>
-    - #include <linux/kernel.h>
-    -+#include <linux/module.h>
-    -+#include <linux/nls.h>
-    - #include <linux/string.h>
-      #include <linux/sysfs.h>
-      #include <linux/wmi.h>
-    -+
-      #include "dell-wmi-sysman.h"
-     -#include "../../firmware_attributes_class.h"
-    ++#include <linux/firmware_attributes.h>
-      
-      #define MAX_TYPES  4
-    --#include <linux/nls.h>
-    - 
-    - struct wmi_sysman_priv wmi_priv = {
-    - 	.mutex = __MUTEX_INITIALIZER(wmi_priv.mutex),
-    + #include <linux/nls.h>
-     
-      ## drivers/platform/x86/hp/hp-bioscfg/bioscfg.c ##
-     @@
-    - 
-    - #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-    - 
-    -+#include <linux/errno.h>
-    -+#include <linux/firmware_attributes.h>
-    - #include <linux/fs.h>
-    --#include <linux/module.h>
-    - #include <linux/kernel.h>
-    -+#include <linux/module.h>
-    -+#include <linux/nls.h>
-    - #include <linux/printk.h>
-      #include <linux/string.h>
-      #include <linux/wmi.h>
-    -+
-      #include "bioscfg.h"
-     -#include "../../firmware_attributes_class.h"
-    --#include <linux/nls.h>
-    --#include <linux/errno.h>
-    ++#include <linux/firmware_attributes.h>
-    + #include <linux/nls.h>
-    + #include <linux/errno.h>
-      
-    - MODULE_AUTHOR("Jorge Lopez <jorge.lopez2@hp.com>");
-    - MODULE_DESCRIPTION("HP BIOS Configuration Driver");
-     
-      ## drivers/platform/x86/lenovo/think-lmi.c ##
-     @@
-    - 
-    - #include <linux/acpi.h>
-    - #include <linux/array_size.h>
-    -+#include <linux/dmi.h>
-    - #include <linux/errno.h>
-    -+#include <linux/firmware_attributes.h>
-    - #include <linux/fs.h>
-    - #include <linux/mutex.h>
-    - #include <linux/string_helpers.h>
-      #include <linux/types.h>
-    --#include <linux/dmi.h>
-    + #include <linux/dmi.h>
-      #include <linux/wmi.h>
-     -#include "../firmware_attributes_class.h"
-    -+
-    ++#include <linux/firmware_attributes.h>
-      #include "think-lmi.h"
-      
-      static bool debug_support;
-     
-      ## drivers/platform/x86/lenovo/wmi-other.c ##
-    -@@
-    - #include <linux/container_of.h>
-    - #include <linux/device.h>
-    - #include <linux/export.h>
-    -+#include <linux/firmware_attributes.h>
-    - #include <linux/gfp_types.h>
-    - #include <linux/hwmon.h>
-    - #include <linux/idr.h>
-     @@
-      #include "wmi-capdata.h"
-      #include "wmi-events.h"
-      #include "wmi-helpers.h"
-     -#include "../firmware_attributes_class.h"
-    ++#include <linux/firmware_attributes.h>
-      
-      #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
-      
-     
-      ## drivers/platform/x86/samsung-galaxybook.c ##
-     @@
-    - #include <linux/acpi.h>
-    - #include <linux/bits.h>
-    - #include <linux/err.h>
-    -+#include <linux/firmware_attributes.h>
-    - #include <linux/i8042.h>
-    - #include <linux/init.h>
-    - #include <linux/input.h>
-    -@@
-    - #include <linux/sysfs.h>
-      #include <linux/uuid.h>
-      #include <linux/workqueue.h>
-    -+
-      #include <acpi/battery.h>
-     -#include "firmware_attributes_class.h"
-    ++#include <linux/firmware_attributes.h>
-      
-      #define DRIVER_NAME "samsung-galaxybook"
-      
-2:  d5d3d1334994 = 2:  198e2d4dff44 firmware: Rename google firmware directory to coreboot
-3:  7a65c6b0e631 ! 3:  f4842df09f6e firmware: coreboot: Add CFR firmware attributes driver
-    @@ drivers/firmware/coreboot/Kconfig: config GOOGLE_COREBOOT_TABLE
-     +	tristate "coreboot CFR firmware attributes"
-     +	depends on EFI
-     +	depends on GOOGLE_COREBOOT_TABLE
-    ++	select CRC32
-     +	select FW_ATTR_CLASS
-     +	help
-     +	  This driver parses the coreboot CFR table and exposes runtime EFI
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +#include <linux/array_size.h>
-     +#include <linux/bitops.h>
-     +#include <linux/cleanup.h>
-    ++#include <linux/crc32.h>
-     +#include <linux/ctype.h>
-     +#include <linux/device.h>
-     +#include <linux/device-id/coreboot.h>
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +#define COREBOOT_CFR_APM_CNT_PORT	0xb2
-     +#define COREBOOT_CFR_APM_STS_PORT	0xb3
-     +#define COREBOOT_CFR_APM_APPLY_CMD	0xe3
-    ++#define COREBOOT_CFR_MAX_FORM_DEPTH	16
-     +
-     +static efi_guid_t coreboot_cfr_guid = EFI_GUID(0xceae4c1d, 0x335b, 0x4685,
-     +					       0xa4, 0xa0, 0xfc, 0x4a,
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	struct list_head settings;
-     +	/* Serializes EFI variable writes and the matching runtime apply hook. */
-     +	struct mutex lock;
-    ++	bool efi_writes_supported;
-     +	bool pending_reboot;
-     +};
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +coreboot_cfr_child_entry(const void *base, size_t len, u32 tag)
-     +{
-     +	const struct coreboot_table_entry *entry;
-    -+	size_t off = 0;
-    ++	size_t off;
-     +
-    -+	while (off < len) {
-    ++	for (off = 0; off < len; off += entry->size) {
-     +		if (len - off < sizeof(*entry))
-     +			return NULL;
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +
-     +		if (entry->tag == tag)
-     +			return entry;
-    -+
-    -+		off += entry->size;
-     +	}
-     +
-     +	return NULL;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	return no_free_ptr(efi_name);
-     +}
-     +
-    -+static int coreboot_cfr_read_value(const struct coreboot_cfr_setting *setting,
-    -+				   u32 *value, u32 *attrs)
-    ++static int coreboot_cfr_read_efi_value_locked(efi_char16_t *efi_name,
-    ++					      u32 *value, u32 *attrs)
-     +{
-     +	unsigned long size = sizeof(__le32);
-    -+	efi_char16_t *efi_name;
-     +	efi_status_t status;
-     +	__le32 data;
-     +	u32 attr;
-     +
-    -+	efi_name = coreboot_cfr_efi_name(setting->name);
-    -+	if (IS_ERR(efi_name))
-    -+		return PTR_ERR(efi_name);
-    -+
-     +	status = efivar_get_variable(efi_name, &coreboot_cfr_guid, &attr,
-     +				     &size, &data);
-    -+	kfree(efi_name);
-     +	if (status != EFI_SUCCESS)
-     +		return efi_status_to_err(status);
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	return 0;
-     +}
-     +
-    -+static int coreboot_cfr_write_efi_value(struct coreboot_cfr_setting *setting,
-    -+					u32 value, u32 attrs)
-    ++static int coreboot_cfr_read_value(const struct coreboot_cfr_setting *setting,
-    ++				   u32 *value, u32 *attrs)
-     +{
-     +	efi_char16_t *efi_name;
-    -+	efi_status_t status;
-    -+	__le32 data;
-    ++	int ret;
-     +
-     +	efi_name = coreboot_cfr_efi_name(setting->name);
-     +	if (IS_ERR(efi_name))
-     +		return PTR_ERR(efi_name);
-     +
-    -+	data = cpu_to_le32(value);
-    -+	status = efivar_set_variable(efi_name, &coreboot_cfr_guid, attrs,
-    -+				     sizeof(data), &data);
-    ++	ret = efivar_lock();
-    ++	if (ret) {
-    ++		kfree(efi_name);
-    ++		return ret;
-    ++	}
-    ++
-    ++	ret = coreboot_cfr_read_efi_value_locked(efi_name, value, attrs);
-    ++	efivar_unlock();
-     +	kfree(efi_name);
-    ++
-    ++	return ret;
-    ++}
-    ++
-    ++static int coreboot_cfr_write_efi_value_locked(efi_char16_t *efi_name,
-    ++					       u32 value, u32 attrs)
-    ++{
-    ++	efi_status_t status;
-    ++	__le32 data;
-    ++
-    ++	if (!efivar_supports_writes())
-    ++		return -EROFS;
-    ++
-    ++	data = cpu_to_le32(value);
-    ++	status = efivar_set_variable_locked(efi_name, &coreboot_cfr_guid, attrs,
-    ++					    sizeof(data), &data, false);
-     +	if (status != EFI_SUCCESS)
-     +		return efi_status_to_err(status);
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +#ifdef CONFIG_X86
-     +	u8 status;
-     +
-    -+	if (setting->runtime_apply_method != CFR_RUNTIME_APPLY_APM_CNT ||
-    -+	    !setting->runtime_apply_id)
-    ++	if (setting->runtime_apply_method != CFR_RUNTIME_APPLY_APM_CNT)
-     +		return -EOPNOTSUPP;
-     +
-     +	outb((u8)setting->runtime_apply_id, COREBOOT_CFR_APM_STS_PORT);
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +static int coreboot_cfr_write_value(struct coreboot_cfr_setting *setting,
-     +				    u32 value)
-     +{
-    ++	efi_char16_t *efi_name;
-     +	u32 attrs;
-     +	u32 old;
-    ++	int restore_ret;
-     +	int ret;
-     +	bool changed = false;
-     +
-     +	if (setting->read_only)
-     +		return -EACCES;
-     +
-    -+	scoped_guard(mutex, &setting->drvdata->lock) {
-    -+		ret = coreboot_cfr_read_value(setting, &old, &attrs);
-    -+		if (ret)
-    -+			return ret;
-    ++	efi_name = coreboot_cfr_efi_name(setting->name);
-    ++	if (IS_ERR(efi_name))
-    ++		return PTR_ERR(efi_name);
-     +
-    -+		if ((attrs & COREBOOT_CFR_EFI_ATTRS) != COREBOOT_CFR_EFI_ATTRS)
-    -+			return -EOPNOTSUPP;
-    ++	mutex_lock(&setting->drvdata->lock);
-    ++	ret = efivar_lock();
-    ++	if (ret)
-    ++		goto out_unlock_mutex;
-    ++
-    ++	ret = coreboot_cfr_read_efi_value_locked(efi_name, &old, &attrs);
-    ++	if (ret)
-    ++		goto out_unlock_efi;
-     +
-    -+		if (old == value)
-    -+			return 0;
-    ++	if ((attrs & COREBOOT_CFR_EFI_ATTRS) != COREBOOT_CFR_EFI_ATTRS) {
-    ++		ret = -EOPNOTSUPP;
-    ++		goto out_unlock_efi;
-    ++	}
-     +
-    -+		ret = coreboot_cfr_write_efi_value(setting, value, attrs);
-    -+		if (ret)
-    -+			return ret;
-    -+		changed = true;
-    ++	if (old == value)
-    ++		goto out_unlock_efi;
-     +
-    -+		ret = coreboot_cfr_apply_runtime(setting);
-    -+		if (ret == -EOPNOTSUPP) {
-    -+			/* EFI changed; firmware will consume it after reboot. */
-    ++	ret = coreboot_cfr_write_efi_value_locked(efi_name, value, attrs);
-    ++	if (ret)
-    ++		goto out_unlock_efi;
-    ++	changed = true;
-    ++
-    ++	ret = coreboot_cfr_apply_runtime(setting);
-    ++	if (ret == -EOPNOTSUPP) {
-    ++		/* EFI changed; firmware will consume it after reboot. */
-    ++		setting->drvdata->pending_reboot = true;
-    ++		ret = 0;
-    ++	} else if (ret) {
-    ++		restore_ret = coreboot_cfr_write_efi_value_locked(efi_name, old, attrs);
-    ++		if (restore_ret) {
-     +			setting->drvdata->pending_reboot = true;
-    -+			ret = 0;
-    -+		} else if (ret) {
-    -+			int restore_ret;
-    -+
-    -+			restore_ret = coreboot_cfr_write_efi_value(setting, old, attrs);
-    -+			if (restore_ret)
-    -+				ret = restore_ret;
-    -+			else
-    -+				changed = false;
-    ++			ret = restore_ret;
-    ++		} else if (coreboot_cfr_apply_runtime(setting)) {
-    ++			setting->drvdata->pending_reboot = true;
-    ++		} else {
-    ++			changed = false;
-     +		}
-     +	}
-     +
-    ++out_unlock_efi:
-    ++	efivar_unlock();
-    ++out_unlock_mutex:
-    ++	mutex_unlock(&setting->drvdata->lock);
-    ++	kfree(efi_name);
-    ++
-     +	if (changed)
-     +		kobject_uevent(&setting->drvdata->class_dev->kobj, KOBJ_CHANGE);
-     +	return ret;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +{
-     +	u32 delta;
-     +
-    -+	if (setting->type != COREBOOT_CFR_SETTING_NUMBER)
-    ++	if (setting->type != COREBOOT_CFR_SETTING_NUMBER) {
-    ++		/* Enum and bool values are valid only if they have a label. */
-     +		return coreboot_cfr_label_from_value(setting, value);
-    ++	}
-     +
-     +	if (value < setting->min || value > setting->max)
-     +		return false;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	for (i = 0; i < setting->n_values; i++) {
-     +		len += sysfs_emit_at(buf, len, "%s%s", i ? ";" : "",
-     +				     setting->values[i].label);
-    -+		if (len >= PAGE_SIZE)
-    -+			return len;
-     +	}
-     +
-     +	len += sysfs_emit_at(buf, len, "\n");
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +static int coreboot_cfr_count_enum_values(const void *base, size_t len)
-     +{
-     +	const struct coreboot_table_entry *entry;
-    -+	size_t off = 0;
-    ++	size_t off;
-     +	int count = 0;
-     +
-    -+	while (off < len) {
-    ++	for (off = 0; off < len; off += entry->size) {
-     +		if (len - off < sizeof(*entry))
-     +			return -EINVAL;
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +
-     +		if (entry->tag == CFR_TAG_ENUM_VALUE)
-     +			count++;
-    -+
-    -+		off += entry->size;
-     +	}
-     +
-     +	return count;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	const struct lb_cfr_enum_value *enum_value;
-     +	const struct lb_cfr_varbinary *label;
-     +	const struct coreboot_table_entry *entry;
-    -+	size_t off = 0;
-    ++	size_t off;
-     +	int count;
-     +
-     +	count = coreboot_cfr_count_enum_values(base, len);
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	if (!setting->values)
-     +		return -ENOMEM;
-     +
-    -+	while (off < len) {
-    ++	for (off = 0; off < len; off += entry->size) {
-     +		entry = base + off;
-    -+		if (entry->tag != CFR_TAG_ENUM_VALUE) {
-    -+			off += entry->size;
-    ++		if (entry->tag != CFR_TAG_ENUM_VALUE)
-     +			continue;
-    -+		}
-     +
-     +		if (entry->size < sizeof(*enum_value))
-     +			return -EINVAL;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +
-     +		setting->values[setting->n_values].value = enum_value->value;
-     +		setting->n_values++;
-    -+		off += entry->size;
-     +	}
-     +
-     +	return 0;
-     +}
-     +
-    ++static bool
-    ++coreboot_cfr_possible_values_fit(const struct coreboot_cfr_setting *setting)
-    ++{
-    ++	size_t len = 1; /* Trailing newline. */
-    ++	unsigned int i;
-    ++
-    ++	for (i = 0; i < setting->n_values; i++) {
-    ++		if (i)
-    ++			len++;
-    ++
-    ++		if (strlen(setting->values[i].label) >= PAGE_SIZE - len)
-    ++			return false;
-    ++
-    ++		len += strlen(setting->values[i].label);
-    ++	}
-    ++
-    ++	return true;
-    ++}
-    ++
-     +static int coreboot_cfr_setting_is_usable(struct coreboot_cfr_setting *setting)
-     +{
-     +	u32 value;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +}
-     +
-     +static int coreboot_cfr_add_numeric_option(struct coreboot_cfr_drvdata *data,
-    -+					   const struct lb_cfr_numeric_option *option)
-    ++					   const struct lb_cfr_numeric_option *option,
-    ++					   bool parent_read_only)
-     +{
-     +	const struct lb_cfr_varbinary *name;
-     +	const struct lb_cfr_varbinary *display_name;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	setting->min = option->min;
-     +	setting->max = option->max;
-     +	setting->step = option->step ?: 1;
-    -+	setting->read_only = option->flags & COREBOOT_CFR_OPT_READ_ONLY_FLAGS;
-    ++	setting->read_only =
-    ++		(option->flags & COREBOOT_CFR_OPT_READ_ONLY_FLAGS) ||
-    ++		!data->efi_writes_supported || parent_read_only;
-     +
-     +	runtime_apply = coreboot_cfr_child_runtime_apply(child_base, child_len);
-     +	if (IS_ERR(runtime_apply)) {
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +		goto err_put_setting;
-     +	}
-     +
-    -+	if (runtime_apply && runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT &&
-    -+	    runtime_apply->id) {
-    ++	if (runtime_apply && runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT) {
-     +		setting->runtime_apply_method = runtime_apply->method;
-     +		setting->runtime_apply_id = runtime_apply->id;
-     +	}
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +
-     +	if (ret)
-     +		goto err_put_setting;
-    ++	if (setting->type != COREBOOT_CFR_SETTING_NUMBER &&
-    ++	    !coreboot_cfr_possible_values_fit(setting)) {
-    ++		ret = 0;
-    ++		goto err_put_setting;
-    ++	}
-     +
-     +	ret = coreboot_cfr_setting_is_usable(setting);
-     +	if (ret) {
-    -+		ret = 0;
-    ++		if (ret == -ENOENT || ret == -EINVAL || ret == -EOPNOTSUPP ||
-    ++		    ret == -ENAMETOOLONG)
-    ++			ret = 0;
-     +		goto err_put_setting;
-     +	}
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +}
-     +
-     +static int coreboot_cfr_parse_records(struct coreboot_cfr_drvdata *data,
-    -+				      const void *base, size_t len)
-    ++				      const void *base, size_t len,
-    ++				      unsigned int depth,
-    ++				      bool parent_read_only)
-     +{
-    ++	const struct lb_cfr_option_form *form;
-     +	const struct coreboot_table_entry *entry;
-     +	const void *child_base;
-     +	size_t child_len;
-    -+	size_t off = 0;
-    ++	size_t off;
-     +	int ret;
-     +
-    -+	while (off < len) {
-    ++	for (off = 0; off < len; off += entry->size) {
-     +		if (len - off < sizeof(*entry))
-     +			return -EINVAL;
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +			if (entry->size < sizeof(struct lb_cfr_option_form))
-     +				return -EINVAL;
-     +
-    ++			form = base + off;
-    ++			if (form->dependency_id ||
-    ++			    form->flags & CFR_OPTFLAG_SUPPRESS)
-    ++				break;
-    ++
-    ++			if (depth >= COREBOOT_CFR_MAX_FORM_DEPTH)
-    ++				return -E2BIG;
-    ++
-     +			child_base = base + off + sizeof(struct lb_cfr_option_form);
-     +			child_len = entry->size - sizeof(struct lb_cfr_option_form);
-     +			ret = coreboot_cfr_parse_records(data, child_base,
-    -+							 child_len);
-    ++							 child_len, depth + 1,
-    ++							 parent_read_only ||
-    ++							 (form->flags &
-    ++							  COREBOOT_CFR_OPT_READ_ONLY_FLAGS));
-     +			if (ret)
-     +				return ret;
-     +			break;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +		case CFR_TAG_OPTION_BOOL:
-     +			if (entry->size < sizeof(struct lb_cfr_numeric_option))
-     +				return -EINVAL;
-    -+			ret = coreboot_cfr_add_numeric_option(data, base + off);
-    ++			ret = coreboot_cfr_add_numeric_option(data, base + off,
-    ++							      parent_read_only);
-     +			if (ret)
-     +				return ret;
-     +			break;
-     +		default:
-    ++			/* Ignore unsupported, child-only and future record types. */
-     +			break;
-     +		}
-    -+
-    -+		off += entry->size;
-     +	}
-     +
-     +	return 0;
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	if (root->size < sizeof(*root) || root->size > dev->entry.size)
-     +		return -EINVAL;
-     +
-    ++	payload_len = root->size - sizeof(*root);
-    ++	if (crc32_be(0, root + 1, payload_len) != root->checksum)
-    ++		return -EBADMSG;
-    ++
-     +	if (!efivar_is_available())
-     +		return -EPROBE_DEFER;
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	if (!data)
-     +		return -ENOMEM;
-     +
-    ++	ret = efivar_lock();
-    ++	if (ret)
-    ++		return ret;
-    ++	data->efi_writes_supported = efivar_supports_writes();
-    ++	efivar_unlock();
-    ++
-     +	INIT_LIST_HEAD(&data->settings);
-     +	ret = devm_mutex_init(&dev->dev, &data->lock);
-     +	if (ret)
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +
-     +	data->class_dev = device_create(&firmware_attributes_class, NULL,
-     +					MKDEV(0, 0), NULL, DRIVER_NAME);
-    -+	if (IS_ERR(data->class_dev)) {
-    -+		ret = PTR_ERR(data->class_dev);
-    -+		goto err_clear_data;
-    -+	}
-    ++	if (IS_ERR(data->class_dev))
-    ++		return PTR_ERR(data->class_dev);
-     +	dev_set_drvdata(data->class_dev, data);
-     +
-     +	data->attrs_kset = kset_create_and_add("attributes", NULL,
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	if (ret)
-     +		goto err_unregister_attrs;
-     +
-    -+	payload_len = root->size - sizeof(*root);
-    -+	ret = coreboot_cfr_parse_records(data, root + 1, payload_len);
-    ++	ret = coreboot_cfr_parse_records(data, root + 1, payload_len, 0, false);
-     +	if (ret)
-     +		goto err_unregister_settings;
-     +
-    @@ drivers/firmware/coreboot/coreboot-cfr.c (new)
-     +	kset_unregister(data->attrs_kset);
-     +err_unregister_dev:
-     +	device_unregister(data->class_dev);
-    -+err_clear_data:
-     +	return ret;
-     +}
-     +
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 07bdba98b1b1..8cf2766d515d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11068,14 +11068,14 @@ S:	Maintained
+ F:	Documentation/networking/device_drivers/ethernet/google/gve.rst
+ F:	drivers/net/ethernet/google
+ 
+-GOOGLE FIRMWARE DRIVERS
++COREBOOT FIRMWARE DRIVERS
+ M:	Tzung-Bi Shih <tzungbi@kernel.org>
+ R:	Brian Norris <briannorris@chromium.org>
+ R:	Julius Werner <jwerner@chromium.org>
+ L:	chrome-platform@lists.linux.dev
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+-F:	drivers/firmware/google/
++F:	drivers/firmware/coreboot/
+ F:	include/linux/coreboot.h
+ 
+ GOOGLE TENSOR SoC SUPPORT
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 78a239f8bbef..4df0a0ad18b8 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -293,7 +293,7 @@ endif # TURRIS_MOX_RWTM
+ source "drivers/firmware/arm_ffa/Kconfig"
+ source "drivers/firmware/broadcom/Kconfig"
+ source "drivers/firmware/cirrus/Kconfig"
+-source "drivers/firmware/google/Kconfig"
++source "drivers/firmware/coreboot/Kconfig"
+ source "drivers/firmware/efi/Kconfig"
+ source "drivers/firmware/imx/Kconfig"
+ source "drivers/firmware/meson/Kconfig"
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 385b6e8b7fc6..7a8fc3eeb3f0 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -30,7 +30,7 @@ obj-y				+= broadcom/
+ obj-y				+= cirrus/
+ obj-y				+= meson/
+ obj-y				+= microchip/
+-obj-$(CONFIG_GOOGLE_FIRMWARE)	+= google/
++obj-$(CONFIG_GOOGLE_FIRMWARE)	+= coreboot/
+ obj-y				+= efi/
+ obj-y				+= imx/
+ obj-y				+= psci/
+diff --git a/drivers/firmware/google/Kconfig b/drivers/firmware/coreboot/Kconfig
+similarity index 94%
+rename from drivers/firmware/google/Kconfig
+rename to drivers/firmware/coreboot/Kconfig
+index b78c644fa253..b248bafe8b6b 100644
+--- a/drivers/firmware/google/Kconfig
++++ b/drivers/firmware/coreboot/Kconfig
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig GOOGLE_FIRMWARE
+-	bool "Google Firmware Drivers"
++	bool "coreboot firmware drivers"
+ 	default n
+ 	help
+-	  These firmware drivers are used by Google servers,
+-	  Chromebooks and other devices using coreboot firmware.
++	  These firmware drivers are used by devices running coreboot
++	  firmware, including Chromebooks and some Google servers.
+ 	  If in doubt, say "N".
+ 
+ if GOOGLE_FIRMWARE
+diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/coreboot/Makefile
+similarity index 100%
+rename from drivers/firmware/google/Makefile
+rename to drivers/firmware/coreboot/Makefile
+diff --git a/drivers/firmware/google/cbmem.c b/drivers/firmware/coreboot/cbmem.c
+similarity index 100%
+rename from drivers/firmware/google/cbmem.c
+rename to drivers/firmware/coreboot/cbmem.c
+diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/coreboot/coreboot_table.c
+similarity index 100%
+rename from drivers/firmware/google/coreboot_table.c
+rename to drivers/firmware/coreboot/coreboot_table.c
+diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/coreboot/coreboot_table.h
+similarity index 100%
+rename from drivers/firmware/google/coreboot_table.h
+rename to drivers/firmware/coreboot/coreboot_table.h
+diff --git a/drivers/firmware/google/framebuffer-coreboot.c b/drivers/firmware/coreboot/framebuffer-coreboot.c
+similarity index 100%
+rename from drivers/firmware/google/framebuffer-coreboot.c
+rename to drivers/firmware/coreboot/framebuffer-coreboot.c
+diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/coreboot/gsmi.c
+similarity index 100%
+rename from drivers/firmware/google/gsmi.c
+rename to drivers/firmware/coreboot/gsmi.c
+diff --git a/drivers/firmware/google/memconsole-coreboot.c b/drivers/firmware/coreboot/memconsole-coreboot.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole-coreboot.c
+rename to drivers/firmware/coreboot/memconsole-coreboot.c
+diff --git a/drivers/firmware/google/memconsole-x86-legacy.c b/drivers/firmware/coreboot/memconsole-x86-legacy.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole-x86-legacy.c
+rename to drivers/firmware/coreboot/memconsole-x86-legacy.c
+diff --git a/drivers/firmware/google/memconsole.c b/drivers/firmware/coreboot/memconsole.c
+similarity index 100%
+rename from drivers/firmware/google/memconsole.c
+rename to drivers/firmware/coreboot/memconsole.c
+diff --git a/drivers/firmware/google/memconsole.h b/drivers/firmware/coreboot/memconsole.h
+similarity index 82%
+rename from drivers/firmware/google/memconsole.h
+rename to drivers/firmware/coreboot/memconsole.h
+index aaff2b72b606..58899c2abaaa 100644
+--- a/drivers/firmware/google/memconsole.h
++++ b/drivers/firmware/coreboot/memconsole.h
+@@ -7,8 +7,8 @@
+  * Copyright 2017 Google Inc.
+  */
+ 
+-#ifndef __FIRMWARE_GOOGLE_MEMCONSOLE_H
+-#define __FIRMWARE_GOOGLE_MEMCONSOLE_H
++#ifndef __FIRMWARE_COREBOOT_MEMCONSOLE_H
++#define __FIRMWARE_COREBOOT_MEMCONSOLE_H
+ 
+ #include <linux/types.h>
+ 
+@@ -33,4 +33,4 @@ int memconsole_sysfs_init(void);
+  */
+ void memconsole_exit(void);
+ 
+-#endif /* __FIRMWARE_GOOGLE_MEMCONSOLE_H */
++#endif /* __FIRMWARE_COREBOOT_MEMCONSOLE_H */
+diff --git a/drivers/firmware/google/vpd.c b/drivers/firmware/coreboot/vpd.c
+similarity index 100%
+rename from drivers/firmware/google/vpd.c
+rename to drivers/firmware/coreboot/vpd.c
+diff --git a/drivers/firmware/google/vpd_decode.c b/drivers/firmware/coreboot/vpd_decode.c
+similarity index 100%
+rename from drivers/firmware/google/vpd_decode.c
+rename to drivers/firmware/coreboot/vpd_decode.c
+diff --git a/drivers/firmware/google/vpd_decode.h b/drivers/firmware/coreboot/vpd_decode.h
+similarity index 100%
+rename from drivers/firmware/google/vpd_decode.h
+rename to drivers/firmware/coreboot/vpd_decode.h
 -- 
 2.53.0
+
