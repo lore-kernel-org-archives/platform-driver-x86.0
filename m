@@ -1,99 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83CC3AEF57;
-	Fri, 17 Jul 2026 11:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB1D397699;
+	Fri, 17 Jul 2026 13:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784287794; cv=none; b=liKvnSLPDdl4FX7qcBgUEbEhCF1BojjWVPtnPMfX9yAhANfZSZpinq7jVMxjsMs7jX7njcFAt1AlgF5I+dj1NxAQAXyIq4Dqde0v21tO477P74EF8qGFGWp3qCr6BD8MmQastZymgcQyqrvfwUm3QVip/sIyASPB2qXTrqDHv14=
+	t=1784294603; cv=none; b=KVnyUIYUqMcMFDctY5g1yWV42wdHhtxDopjDUxvW3EhoibsyzctE1VFSt9jHvKZfM2UGLOgWkrwTJm49Y6G9h5dyAFOj9Anb+GL1NEI/lE+L/Y9MGFZOogmbdQVbh1YA+gBE70Htc6AFxprYqswoJfLJf0FDSpoo8ER0JaNXnkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784287794; c=relaxed/simple;
-	bh=FnWLjln5PPELRk5NWwP0sl/xy9K2arrQIznTBrrBoMU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=hV9S9rAuQRW/SHavhuylzA/KSM6PgXHqVJAvVFcR2e9j1I84JyxLH/14etBFt/FuwQws59FCAMrFlVsk78ax8NG82yEuFVkplgHPr/rNPmPJCNZ5Xd3hX/GzA2ImfweIbTleslXbtdLlWU8fAtVBl2o/akhCLhJSpxS+UL1eD88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m/zkVzl/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784294603; c=relaxed/simple;
+	bh=yzoy6hQI/FsL0RzOSfZ+C3Cz+YduJhDP2tlFksTUKlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kILCUxJT24mriyv7/q3Bvir6HgeKx9/62mlYMYJBcJYWVLBpc/SfBt5XGbj6KDBG6ID7aWYSoCvwe61VrpBM9uTc+G7kyujinfYBtSiSZX/YY365E5lMYIefcNvPFoSH4CFLPCS+AafGGDmfAhtBcgg6VWqtJYIdSlB59c0MYDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FwIIAPrQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m/zkVzl/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25CE01F000E9;
-	Fri, 17 Jul 2026 11:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FwIIAPrQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B84D1F000E9;
+	Fri, 17 Jul 2026 13:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784287792;
-	bh=UiGewS0r9/rc8lwJRZJ7aP7KEJ5JJfNIV9hsJ7UhPls=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To;
-	b=m/zkVzl/QiK60y0vG/BEFhqBFPN+UlcWzhabUu7vFo9qtYsotlGFUPpfIUAErvsfQ
-	 Q6WROSESwUrR+f76DLrASOXMMklJ0/q1IOGSUd4Xif8VpeGNWHFkoObNjicyRn9xBV
-	 5/pv0t1EorqE9pgEJabu5wBv5XJLhgX+n8c3oHw9ihVlqBWdBXkablDmjCs57Wi6aA
-	 IwVWHmcOZ2qJkNum8usqusZNOYcz2bopoxe3Yez9nDt6n4/CPyq+nN6Edve0SRIZgF
-	 cLbYFfPR9TFDlEsQJr6AUUo1UDJr771zxCakvu23g53U3dmVMHzW8dVk5ePkWeDVnz
-	 c/2sh4wUjCqfw==
+	s=k20260515; t=1784294601;
+	bh=mNW7VntiWekaW5oql9S7lBzDxUZRUyoxI3S8RPzXRLE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=FwIIAPrQVfqEja7Phq+naJfjrJWI8VVMFaXyy9ol2l2yqu1PeDG9Zc0QsQjtq5XpJ
+	 zOZnqV3BoEoGs6b62Nech9Nhxe2CXUlNWeIMH+hvS8c9o4ryBdEzJXFxah6v99n9M5
+	 BwYiUY/hUTaYVzYb+gEhtTh6A2v+t4fn2dBWhloCH8YN8hLmC6HrD33wvoUWWpc0jT
+	 RrlxB8FYxczG96Xm3ReuhsyAEBDYfoaG4H3Nb5B1NVhz/KqM0vAU7guD1yr0wABu1o
+	 wAieJ1XVI/xkLr7BXbHIEZdM+04BpcRWxmITz7iULXiJdRR/3C8D6T+W54fJIBio/H
+	 NUtdlDl1b1JtA==
+Message-ID: <02b400ad-4c36-4421-b09b-25eda35a311e@kernel.org>
+Date: Fri, 17 Jul 2026 08:23:20 -0500
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 17 Jul 2026 13:29:47 +0200
-Message-Id: <DK0T8DPQIBSQ.Z9Y2UCXE54HU@kernel.org>
-Subject: Re: [PATCH v8 1/5] driver core: platform: amend the API contract
- for fwnode setters
-Cc: "Maximilian Luz" <luzmaximilian@gmail.com>, "Hans de Goede"
- <hansg@kernel.org>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Matthew Brost" <matthew.brost@intel.com>,
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, <brgl@kernel.org>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- <driver-core@lists.linux.dev>
-To: "Bartosz Golaszewski" <bartosz.golaszewski@oss.qualcomm.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260716-swnode-remove-on-dev-unreg-v8-0-5c2b8cc38c28@oss.qualcomm.com> <20260716-swnode-remove-on-dev-unreg-v8-1-5c2b8cc38c28@oss.qualcomm.com>
-In-Reply-To: <20260716-swnode-remove-on-dev-unreg-v8-1-5c2b8cc38c28@oss.qualcomm.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle
+ quirk list
+Content-Language: en-US
+To: Yap Weei Choong <ywc8891@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ Shyam-sundar.S-k@amd.com, linux-kernel@vger.kernel.org
+References: <20260717060744.1252065-2-ywc8891@gmail.com>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20260717060744.1252065-2-ywc8891@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu Jul 16, 2026 at 2:31 PM CEST, Bartosz Golaszewski wrote:
-> @@ -723,11 +725,20 @@ EXPORT_SYMBOL_GPL(platform_device_set_of_node);
->   *
->   * Assign a firmware node to this platform device. Internally keep track=
- of the
->   * reference count. Devices created with platform_device_alloc() must us=
-e this
-> - * function instead of assigning the node manually.
-> + * function instead of assigning the node manually. This function must n=
-ot be
-> + * called for a platform device that already has a software node as its =
-primary
-> + * firmware node assigned.
->   */
->  void platform_device_set_fwnode(struct platform_device *pdev,
->  				struct fwnode_handle *fwnode)
->  {
-> +	/*
-> +	 * If we call this function for a platform device whose primary
-> +	 * firmware node is a software node, we'll never end up calling the
-> +	 * symmetric software_node_notify_remove(). There are no users for this
-> +	 * right now in the tree so just disallow it.
-> +	 */
-> +	WARN_ON(is_software_node(dev_fwnode(&pdev->dev)));
->  	fwnode_handle_put(pdev->dev.fwnode);
->  	device_set_node(&pdev->dev, fwnode_handle_get(fwnode));
->  }
 
-When I suggested this I actually meant to never allow to replace an existin=
-g
-node (not only for swnodes), as I think there's no use-case for this anyway=
- and
-it makes the API more consistent.
 
-However, this can be done in a follow-up too; the patch is fine as is, as i=
-t
-addresses the problem I pointed out about software_node_notify_remove() not
-being called independently.
+On 7/17/26 01:07, Yap Weei Choong wrote:
+> The ThinkPad T14 Gen 2 AMD was sold under two machine types, 20XK and
+> 20XL, but only 20XK has been in the s2idle quirk list since the quirk
+> was introduced in commit 455cd867b85b ("platform/x86: thinkpad_acpi:
+> Add a s2idle resume quirk for a number of laptops").
+> 
+> On 20XL machines the firmware SMI handler therefore still runs on the
+> NVMe D3->D0 transition when exiting suspend-to-idle. With IOMMU
+> translation enabled (the default), this intermittently stalls resume
+> for ~10.25 seconds: seven devices across three root ports (nvme, both
+> xhci_hcd functions, xhci-pci-renesas, snd_hda_intel x2, snd_rn_pci_acp3x)
+> block in pci_pm_resume_noirq and are released simultaneously, consistent
+> with all cores being held in SMM.
+> 
+> Add the missing 20XL machine type, mirroring the existing 20XK entry.
+> This is the same class of omission fixed by commit 9a469c6dfab3
+> ("platform/x86: thinkpad_acpi: Add missing T14s Gen1 type to s2idle
+> quirk list").
+> 
+> Verified on a ThinkPad T14 Gen 2a (type 20XLS41C00, BIOS R1MET62W 1.32,
+> kernel 6.12.95): with this entry the quirk message appears at probe and
+> a 14-hour suspend resumes in ~1s with no noirq stalls, where previously
+> even short suspends could hit the ~10s delay. A further two-day soak
+> (short naps and two ~14-hour suspends) showed every resume clean.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=221755
+> Signed-off-by: Yap Weei Choong <ywc8891@gmail.com>
+> Tested-by: Yap Weei Choong <ywc8891@gmail.com>
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+> ---
+>   drivers/platform/x86/amd/pmc/pmc-quirks.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> index 74ddf1d82..09a30f333 100644
+> --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> @@ -71,6 +71,14 @@ static const struct dmi_system_id fwbug_list[] = {
+>   			DMI_MATCH(DMI_PRODUCT_NAME, "20XK"),
+>   		}
+>   	},
+> +	{
+> +		.ident = "T14 Gen2 AMD",
+> +		.driver_data = &quirk_s2idle_spurious_8042,
+> +		.matches = {
+> +			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "20XL"),
+> +		}
+> +	},
+>   	{
+>   		.ident = "T14 Gen1 AMD",
+>   		.driver_data = &quirk_s2idle_spurious_8042,
 
-So, I'll pick this up later today.
-
-Thanks,
-Danilo
