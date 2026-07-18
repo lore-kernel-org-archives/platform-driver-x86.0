@@ -1,38 +1,41 @@
 Received: from tbjjbihbhdcb.turbo-smtp.net (tbjjbihbhdcb.turbo-smtp.net [199.187.173.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5A43CE495
-	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2026 14:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EECF3B0AC6
+	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2026 15:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.187.173.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784385628; cv=none; b=o/VRjY2YHQuAtHp3p8/c5O18137byMpcNH4GTBhw9LK247pU8hLhHlZ+MSS7fv1bWX1ohMRHnNTKhwvCdDwRYyKJWvyf6LKcUcGdkgQ3ZkIFc5SVcScuR8t3svlOHxusgs5cpYCphKFX+msDYLB/iAvpqxi4vHvb/EaoV++w9as=
+	t=1784387989; cv=none; b=S1T4a/B218rfc2qYpOkOGCOTYaeb1+4E6XyvYBSy/NstI7gcj5enRkMugXoebVUrEdk57o+bbo6Cek4QmfRIrAro6YrdDMOgmrYw+0nwuh6i3FWasNCUhNU24FQAH0lSreWTfgB174biNaKqd5J8IsNcJkpLbsBYwOILvq/GpH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784385628; c=relaxed/simple;
-	bh=j39GOa3PVc1fWFVRIS1uufyG4HQ+wA9fG/2mMZMMEv8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U0ihHwE0oyVhUXDxv2bAKDKKWo6sAJo822vinrmB2S/rZRLcTAm2PDDEkxsxpXKM6Vab7ISg7DuPNdpaqrasknoXt/bh4eMi5teA1Xq22Qhto80se9UcDqYCS97bA6ytWlU3g/2Omn/eFhg3ziOwZyNKqNG4uLnuSVs/YO0Biqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me; spf=pass smtp.mailfrom=yahyatoubali.me; dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b=muQdEw7L; arc=none smtp.client-ip=199.187.173.21
+	s=arc-20240116; t=1784387989; c=relaxed/simple;
+	bh=Bj01rTs72G5G3hTMUGs2u01wBQoDXkn1eEinImEKYHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LNXeBn2YO4CsXLAwd8mM0PkQAMJX81x1UlIr34nGeXNADsazTQ6k4B8RD1wsW0dS5oPYEwXJNuWGr/t2AGd7JFjKQ91DHKSmkeDI+uLLCXDifgwxK5DwFIyuAqTAAeK7A02giUS9dJmWQtlDkI8uPWVbjb+iP6gVRHEQ8tRDIsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me; spf=pass smtp.mailfrom=yahyatoubali.me; dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b=r2cHp0VX; arc=none smtp.client-ip=199.187.173.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahyatoubali.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b="muQdEw7L"
+	dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b="r2cHp0VX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=yahyatoubali.me; s=turbo-smtp; x=1784990425; h=Received:
-	Received:From:To:Cc:Subject:Date:Message-ID:MIME-Version:
-	Content-Transfer-Encoding:Feedback-Id; bh=gEVJueUvVmiBnGL04oQrnQ
-	VuiZjMXN26cNk25Dk652w=; b=muQdEw7LH2YJBu6KWxxA9eSZeap7iIBnfncCmY
-	oBg/Qbbs4fGO7pGF8gnlge9OxGWSfacUpLccmBwSIZaZXLIDmrCr4I+D5BAAWwvm
-	tZEbBNwV7I5yvBy5EIoSWYoQwzAHAep6U/wuDw6uK3YKsRX8q0saPizy8j6bybYZ
-	PREhQ=
-Received: (qmail 1927064 invoked from network); 18 Jul 2026 14:40:24 -0000
-Received: from 105.76.9.106  by turbo-smtp.com with SMTP; 18 Jul 2026 14:40:22 -0000
-X-TurboSMTP-Tracking: 64-018cfb16-00001e639f574342e007-007-4288be1d
+	d=yahyatoubali.me; s=turbo-smtp; x=1784992787; h=Received:
+	Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	References:MIME-Version:Content-Transfer-Encoding:Feedback-Id;
+	bh=Fiz0WkfSo74SZTPU6D0LhG/TiRSGhDPRCVJNIa4nQHc=; b=r2cHp0VXUQYXn
+	k0QoUJxggQQQYDg4vS/egi4qfTpPeWydGa2JJYa52nOib7jq3ONhxDIW9zfa+PiL
+	NpY8a8rDP2qejLA7AsUc7sz7OSZ2oFfjzypQljP/+LjeP+2J4M6rEI2GJaYrrJOq
+	x3PgwAgH7zSyhdbzetPHH4ZoxYbc8I=
+Received: (qmail 2204614 invoked from network); 18 Jul 2026 15:19:46 -0000
+Received: from 105.76.9.106  by turbo-smtp.com with SMTP; 18 Jul 2026 15:19:44 -0000
+X-TurboSMTP-Tracking: 64-018cfb16-00001e63a859b342c007-007-4288be1d
 From: Yahya Toubali <yahya@yahyatoubali.me>
 To: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, linux-doc@vger.kernel.org (open list:DOCUMENTATION), linux-kernel@vger.kernel.org (open list), platform-driver-x86@vger.kernel.org (open list:LENOVO drivers)
 Cc: Yahya Toubali <yahya@yahyatoubali.me>
 Subject: [PATCH 4/5] Documentation: fix spelling typos
-Date: Sat, 18 Jul 2026 15:40:03 +0100
-Message-ID: <20260718144004.1880551-1-yahya@yahyatoubali.me>
+Date: Sat, 18 Jul 2026 16:19:10 +0100
+Message-ID: <20260718151913.1892547-4-yahya@yahyatoubali.me>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260718151913.1892547-1-yahya@yahyatoubali.me>
+References: <20260718151913.1892547-1-yahya@yahyatoubali.me>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,6 +46,8 @@ Content-Transfer-Encoding: 8bit
 Feedback-Id: 26016534
 
 Fix 'Minumum' -> 'Minimum' in lenovo-wmi-other.rst and 'maintainance' -> 'maintenance' in housekeeping.rst.
+
+Signed-off-by: Yahya Toubali <yahya@yahyatoubali.me>
 ---
  Documentation/core-api/housekeeping.rst        | 4 +++-
  Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
