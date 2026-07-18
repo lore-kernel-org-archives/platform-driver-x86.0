@@ -1,166 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BF03A75A7;
-	Fri, 17 Jul 2026 23:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784332747; cv=none; b=udb7uBIlUrj41beM7C0I03zpJcaneO8xRsRKrKSJSMiawwYTw8oGhj5SQ0gKNr1+MNbjhy+VkMLAZRek9UqgNRhH9clvkR+w154hBWIfCGT+Y0rF/3hCtXOqjpCp5dgGxj4/pxRLW5FY5eBtPgZPghqDWFaNFSG+wa+dJvjX60M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784332747; c=relaxed/simple;
-	bh=MFKwdefRCTBWwcf2jZp10uCVqiBPzCY+PZlJvwsbNPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EFlBrDwvSmCUHdnLLWCJs3DXhB/stpTGLASJ3GECnAbD7i1lMr1+ubUe9QmA/0EO71dMU5WQsaUqCvjhRuyHZPG3fSYHhjtKcnxCDv1KkY3s0jpSDp+FP+2CifL0Lp84ZJ2JR9k60N0iuhMWFKiPIyghatXcoOBwPBJe2uvWbFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOMKrUGH; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5994CB5B
+	for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2026 00:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784335166; cv=pass; b=SuLEcdyStSNuMCafNQamnq0Ug00ZR8QQf789n+QyLKNTCOGOvag5/DkPn2/o2Blodh0FrT1ezuylfPta5Iinis3MpPHSvS7ui6OasW/AVnOVR+dhPrjg77Bi+PJC6ufuGG40eds7Vrpkts9rVitXQb5BjJrRAzKUxMbigcg8lvM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784335166; c=relaxed/simple;
+	bh=s0kPzawXk5e6VvEO2jn1aV6HFzfVmnba4zjlWLdVKD0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=USojWzZkx2ip56k5n47cLclCxhjk/fl43k3jiHXgWgGlxhOOu2mUwbjRTVFmInlLVSFj3FTaCp4b+j8FvcTLXfKquHsD2IuXR+6SBugCalwGIXccRMaOKa4qwXx3ngUk48jmjlS9VzOVZQFTm3kY9S4C9n0/eFBpK6hpUSIs0kQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TOfJ1DhZ; arc=pass smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOMKrUGH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F2E11F000E9;
-	Fri, 17 Jul 2026 23:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784332745;
-	bh=3G6A+9j+sZX3IO4q+z3msgOTr6UAWCTjtBj4kWpSqs8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=MOMKrUGH4LCbuepKBvGqfl4lo96t0vHhKQkMzICkMAxxBEHY9dgk4+4qS3I/LZwZ6
-	 ERTN3U8fJIaUbofS4RjSpw/2OUBXsDBtCkY4Rr/LoYwdGXIPTWwu0BwvCwocwqrtPo
-	 SRLe+1YobrsdxVpwdvzbWyw3SPInFM1MZMdz7HKfH4tD3aLBFQznBS7bxZe7BgYede
-	 QqnkaxKS6P+wVRR91Jiuh49z12w01MQM4YtE2o8CFKniaPcGvIznHGNnECY19LYbtV
-	 f/1698WRwB2ReYfayMA0YUTU31CcpuKVmgt5gO5A+0BAZqzgmp1PiFhJSKuyuY5zlQ
-	 c6t28GxsF2aUg==
-Received: by venus (Postfix, from userid 1000)
-	id CFD3D181CD9; Sat, 18 Jul 2026 01:59:02 +0200 (CEST)
-Date: Sat, 18 Jul 2026 01:59:02 +0200
-From: Sebastian Reichel <sre@kernel.org>
-To: Pan Chuang <panchuang@vivo.com>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
-	Pengyu Luo <mitltlatltl@gmail.com>, 
-	"open list:ARM64 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] platform: arm64: Remove redundant dev_err_probe()
-Message-ID: <alrBnPQRMChEgqgt@venus>
-References: <20260717112103.213017-1-panchuang@vivo.com>
- <20260717112103.213017-2-panchuang@vivo.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TOfJ1DhZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4954bb689dfso47825e9.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 17 Jul 2026 17:39:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784335163; cv=none;
+        d=google.com; s=arc-20260327;
+        b=lMs0TDf+KfTaiAXQfkgfe8YLi4DnSFyMxaBfrdnzOFOO24ufDZe2Ab7IozvOuzBOkt
+         uoEJgfcbNnKJVP/kkQdk8NwzoXCEaItfQ2TRr//5mUIMJWDpAysHgkE8Zzpnntq0lKKg
+         ibd7+WrXjVATrorVJaHNQ1wQx8oKFBZpa2F2PMRbujtP1a0suxfuu4YYN2wCihmo68DD
+         dmjqMNR+m+y/MWVR9JHU7I9QRcKYay1QNIXR4XF6kptWyCUp9rl3kzR4IvESEVV7vUVN
+         TnILzk5kMTGBh/5wVEvtS7yQXRiOfDSKDQhcijTY8X4bjiCYj01LQXSS+XaVwVXWuyrS
+         NNHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=SLRkO0fZ0r29yomSE14773/SRoCXg/5c79uPcxE3Zr4=;
+        fh=/o0ytCvspSzr7YV+VWuEgdyyutIziK2061nlAO9VlFo=;
+        b=UBPBXyqEwyRBsPR2F1Zkbx6n9Su9Cgi6mbhDizrDyeBEUyL+QQDzPc0r9YnK7Sy3Ah
+         nJzL93AQl5LczbpO5Ux6Df1SQkTFQWD3Sc8Ls6DkYQLswA/9sQsMyQswSr/DNvkbOB8T
+         2fSQBdrxoQ3QZ50t9fmBXAecfqfiC5OCN8pek5paPuzKcMuF2ghqzbDELsjePHDSpaeb
+         crHvLvu8uO0K/p2LET3Sr9Ynl6aJ4kBbGVrcVhAI3Bt+iquvvvoyRSviRxBG6Qf/maVI
+         sNr2dvKqg2PEZC54Y+TISUXenFlyLNNVhoXaPzg+PAQfco2cXRNYyBbvPmXyXGhveAgU
+         4Ebg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1784335163; x=1784939963; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SLRkO0fZ0r29yomSE14773/SRoCXg/5c79uPcxE3Zr4=;
+        b=TOfJ1DhZE6e2ZXlspN+PGrO8mdEPSgrtHGwlV6GLYQ/88jbNC4ifdG16ano3rGBhvw
+         8wXC15g0j6cX4YcN16UAeeg1jjQ/LefNO2JkJo0PTtNNRGxq0PKV5fnYvVuhnDovFKnE
+         FmGugqlb0+z9260ns1FFsuE0UCINHrtae4n+o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784335163; x=1784939963;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=SLRkO0fZ0r29yomSE14773/SRoCXg/5c79uPcxE3Zr4=;
+        b=bzl/BE8pou9pyUxovKNRCsexUCC7JAVWSU70307pAZXu7JrL+8Ml4/EsYLgMOljSWa
+         K8ae3ON64ZO4pgcQyxhKasiAje1uV+MAgTRF7oXpil45fAFkE5lX5jOaWBEWSTQO9vwE
+         bgJkY1OiGqopM35BBeTaNSLmge9WI8CxOWxxZuNiFhXL9RZPsaOmG/SME1lJa7UfNzRT
+         DKjuYJ9Jaio6v8UQUQiyohQCitNT9ox0ZWjLH18e+14m5MGshCK6kVoGUzZmnEBJ7Yto
+         O2wmOecyfppHqSZagFJR1Qp8Z5jyoqwlV0VWfv29CKJhNKdmpVnTPrJpSPpzMUDVXW5J
+         fthA==
+X-Forwarded-Encrypted: i=1; AHgh+RpMmRE2Az4hP3zNee3FtFH0sIU5JtiWKA232nbS4UWXKrzpYfU4yWDcKD4JA/qIEC0JZx8HEXPTzmbJ9YgUPB2Y29wn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHB7TTJxa7Qu65/SZI6vWhDB6dkuKF+GZIoX+0XYXJ2SvZQn3n
+	BA+JUtOuCEBeFRn2vuwbNqqUYOw74MILMXibEdn30J8QqiiA2lUc0RvWQd9VPsxLfkqn/69pCIT
+	PyyXxHkrVAZtOz6NjsfgAOu40MAlp0MAtRZgIvoHm
+X-Gm-Gg: AfdE7ckR+iLB6xxwWrcSDepwO8xR/l0/9xlTlRtV9Ksj5KFcUwy79/oVMzYqTWGMhCh
+	PN1jpDzcenjg0zhHwFoManJaEITjAlJ8uKKn9BTbGmikbX66P18NS+CY5Tkb8v0qf4NRzegQ9Fz
+	O2QpFcAKRr8t8I9Rp6pczKF4Pqwz6r4C9PdZOhhotVSF8s4OqGjaWkky8a49zNtM/OVbildxq0B
+	5Ue0jMTq9aMiEqlR0Ll+Db63qRPn18trPHCMvlep7r2tMLfAa8dFS7KSHk=
+X-Received: by 2002:a05:600c:4995:b0:493:a96b:f9fe with SMTP id
+ 5b1f17b1804b1-4954ff99257mr447445e9.4.1784335162370; Fri, 17 Jul 2026
+ 17:39:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vnixo42rmjposadd"
-Content-Disposition: inline
-In-Reply-To: <20260717112103.213017-2-panchuang@vivo.com>
+References: <20260717085003.369496-1-sean@starlabs.systems> <20260717085003.369496-3-sean@starlabs.systems>
+In-Reply-To: <20260717085003.369496-3-sean@starlabs.systems>
+From: Julius Werner <jwerner@chromium.org>
+Date: Fri, 17 Jul 2026 17:39:10 -0700
+X-Gm-Features: AUfX_mzIDJqwj1GCrBaRE5IDRgnHx6t1V0tiy--ulOY3EGbsJtc8_36xavsFsik
+Message-ID: <CAODwPW-UZsLQhYtx3_afkNb8jtta4TO0YxhuS1a4mHomOF6fJw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] firmware: Rename google firmware directory to coreboot
+To: Sean Rhodes <sean@starlabs.systems>
+Cc: tzungbi@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
+	prasanth.ksr@dell.com, jorge.lopez2@hp.com, mpearson-lenovo@squebb.ca, 
+	derekjohn.clark@gmail.com, josh@joshuagrisham.com, briannorris@chromium.org, 
+	jwerner@chromium.org, tzimmermann@suse.de, javierm@redhat.com, 
+	kees@kernel.org, u.kleine-koenig@baylibre.com, mst@redhat.com, 
+	chenhuacai@kernel.org, wenst@chromium.org, florian.fainelli@broadcom.com, 
+	titouan.ameline@gmail.com, oliver@liuxiaozhen.dev, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	Dell.Client.Kernel@dell.com, chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+> Keep the existing CONFIG_GOOGLE_* symbols to avoid user configuration
+> churn in this mechanical move.
 
---vnixo42rmjposadd
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/7] platform: arm64: Remove redundant dev_err_probe()
-MIME-Version: 1.0
+Is this standard kernel development practice? It seems a bit weird to
+me to leave the config symbols mismatching the directory structure and
+actual meaning of the setting. How long would we leave them mismatched
+like this, forever?
 
-Hi,
+If you want to prevent user config churn, an alternative option would
+be to provide the old symbol names as transitional options, like this:
 
-On Fri, Jul 17, 2026 at 07:20:39PM +0800, Pan Chuang wrote:
-> Since commit 55b48e23f5c4 ("genirq/devres: Add error handling in
-> devm_request_*_irq()"), devm_request_threaded_irq() automatically logs
-> detailed error messages on failure. Remove the now-redundant
-> driver-specific dev_err_probe() calls.
->=20
-> Signed-off-by: Pan Chuang <panchuang@vivo.com>
-> ---
+menuconfig COREBOOT_FIRMWARE
+  bool "coreboot firmware drivers"
+  default n
+  ...
 
-Reviewed-by: Sebastian Reichel <sre@kernel.org>
+if COREBOOT_FIRMWARE
 
-Greetings,
+config COREBOOT_CBMEM
+  ...
 
--- Sebastian
+...
 
->  drivers/platform/arm64/acer-aspire1-ec.c      | 2 +-
->  drivers/platform/arm64/huawei-gaokun-ec.c     | 2 +-
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 2 +-
->  drivers/platform/arm64/lenovo-yoga-c630.c     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/platform/arm64/acer-aspire1-ec.c b/drivers/platform/=
-arm64/acer-aspire1-ec.c
-> index 08d0b155a197..501c62a096f8 100644
-> --- a/drivers/platform/arm64/acer-aspire1-ec.c
-> +++ b/drivers/platform/arm64/acer-aspire1-ec.c
-> @@ -514,7 +514,7 @@ static int aspire_ec_probe(struct i2c_client *client)
->  					aspire_ec_irq_handler, IRQF_ONESHOT,
->  					dev_name(dev), ec);
->  	if (ret)
-> -		return dev_err_probe(dev, ret, "Failed to request irq\n");
-> +		return ret;
-> =20
->  	return 0;
->  }
-> diff --git a/drivers/platform/arm64/huawei-gaokun-ec.c b/drivers/platform=
-/arm64/huawei-gaokun-ec.c
-> index 80a8ba8b8dda..d4ce8ad6426c 100644
-> --- a/drivers/platform/arm64/huawei-gaokun-ec.c
-> +++ b/drivers/platform/arm64/huawei-gaokun-ec.c
-> @@ -783,7 +783,7 @@ static int gaokun_ec_probe(struct i2c_client *client)
->  					gaokun_ec_irq_handler, IRQF_ONESHOT,
->  					dev_name(dev), ec);
->  	if (ret)
-> -		return dev_err_probe(dev, ret, "Failed to request IRQ\n");
-> +		return ret;
-> =20
->  	ec->hwmon_dev =3D devm_hwmon_device_register_with_info(dev, "gaokun_ec_=
-hwmon",
->  							     ec, &gaokun_ec_hwmon_chip_info, NULL);
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/plat=
-form/arm64/lenovo-thinkpad-t14s.c
-> index e7acb66b77f2..191ecd7f85b5 100644
-> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -594,7 +594,7 @@ static int t14s_ec_probe(struct i2c_client *client)
->  					t14s_ec_irq_handler,
->  					IRQF_ONESHOT, dev_name(dev), ec);
->  	if (ret < 0)
-> -		return dev_err_probe(dev, ret, "Failed to get IRQ\n");
-> +		return ret;
-> =20
->  	/*
->  	 * Disable wakeup support by default, because the driver currently does
-> diff --git a/drivers/platform/arm64/lenovo-yoga-c630.c b/drivers/platform=
-/arm64/lenovo-yoga-c630.c
-> index a8600a977fbc..cad40c58c55b 100644
-> --- a/drivers/platform/arm64/lenovo-yoga-c630.c
-> +++ b/drivers/platform/arm64/lenovo-yoga-c630.c
-> @@ -221,7 +221,7 @@ static int yoga_c630_ec_probe(struct i2c_client *clie=
-nt)
->  					NULL, yoga_c630_ec_thread_intr,
->  					IRQF_ONESHOT, "yoga_c630_ec", ec);
->  	if (ret < 0)
-> -		return dev_err_probe(dev, ret, "unable to request irq\n");
-> +		return ret;
-> =20
->  	ret =3D yoga_c630_aux_init(dev, YOGA_C630_DEV_PSY, ec);
->  	if (ret)
-> --=20
-> 2.34.1
->=20
+endif #COREBOOT_FIRMWARE
 
---vnixo42rmjposadd
-Content-Type: application/pgp-signature; name="signature.asc"
+# Deprecated symbol names, do not use
 
------BEGIN PGP SIGNATURE-----
+menuconfig GOOGLE_FIRMWARE
+  bool
+  transitional
+  select COREBOOT_FIRMWARE
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmpawcMACgkQ2O7X88g7
-+pqQGhAAh3Br+pGxg/oIQZvUOh7Udav0zwvGCzL6Co4H2vOGk5mvz8nkyWjV5vOi
-BJr8+k8OHxC6qgJDcx/3RBCY174/shvfl3MiBymWPIMYf7y5bBGkaMcVn6si1OWo
-bujWsXbLdRzElnnd91BhuDbw4SL46Lc7rhEgdiWGHxGzJ5TLRj1UiwMMXhwynlBC
-+9OIxTUElXalN76Lfkvz0dm2tibrx8oeMbN2ODlxd2j2EUdbC7xBkJ+Gl7fM3EXu
-+vquavr8TdyzQIlAzK9CGVe6ud35o8Nfio5CCPOQ50ouEIY+Td/jWiakOFvYpAhi
-1QMCLmkudc6omDAMPyMJ4B0qPKeaMCwhfe2vwOg7ELHpJGNx9I23NVusKJgasiF9
-TW48ZcmM/ET8K/oIhxebv1WuxfxbkkcH2/EVe3jtn7q6VYbIW8pKandiA0R58JD6
-v1tibhmWA134LxpowAAziXFwgPEuMBcY5k8jw94EvYPNUdcbo0vNiKBVyfyXzjbK
-QFzYJidNQWkSH8gO8EwTd+B4k4KTEAZ/O2my3J4jfQ3C9Jn7Vpe7oxMvQhpsW8hC
-bJZBhHVFrCxBrVYLNrLJrqk+hX3ppxEL6IpzLKJaKklUHYqlk3NYSFFVSGZNzCtE
-iY13SNshfJbQqWV8lUhLcP63ZfIBXbvQj539C0UzewzJo5SNRzQ=
-=xsnZ
------END PGP SIGNATURE-----
+config GOOGLE_CBMEM
+  bool
+  transitional
+  select COREBOOT_CBMEM
 
---vnixo42rmjposadd--
+...
