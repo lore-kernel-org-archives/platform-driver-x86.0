@@ -1,72 +1,88 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C43624CE
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 22:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACEB37F8CC;
+	Sun, 19 Jul 2026 23:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784501680; cv=none; b=PG17GPCT+CBJIf5M3mDk8G0NQWRGkv0qZpBR99u7j0oYo5L0qI/mxVYXrH11VSXVBiyDvoEtxsn2foYu5U0bbWvUa846+t/Sz+PhsHK/L3MkimcM9B0ZS4HEbSvGzxLUozq8lAgBgiEcmYTFcWXsnPkpiCvrH3FWKAMRLYQO8+I=
+	t=1784502499; cv=none; b=j4e98a6uWkiXNhQauj2GgEddgOESiiHUUdKoL3yQodJcdGsumJ1lR2DIVN1hj1/2zsT+eY85dHJZazopw2+CdpSfhg/3fl5iZzcb7IfujB0PUdjC8zv8V3gSgfNyPVYmB+XFYsEZ0xDM9ksicFubYCaHfuNeKo0w2eHUZO4CGYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784501680; c=relaxed/simple;
-	bh=6h7Zl+qQVxWwwLNDblZSH+OAgmOGACOTDe5d4+A8H0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b1PDUZgcLw10Bt+mBks5VrvM9x0+b1npCrzh/qOwpO4TrjC5W+TzeJ5OUYoPegHr1ExsJB4RVymc4LEMb9Yb9NSRtx2viTKsQPOeRNhH6K6yD1Z+j7Om9nt5D7+3ncwb/9mXOeZy0duPjIqVGAQAf5+xNg444himfjabky96Liw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org; spf=pass smtp.mailfrom=wyuan.org; dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b=RHRIE9qd; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wyuan.org
+	s=arc-20240116; t=1784502499; c=relaxed/simple;
+	bh=EgylTw5NtIWHwvNrWlvQ/LqiatKrymyNwPWTqf97PbA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=khtFuwGuNQGnrOF0lynXx33wM5e1qwFE4Owy4IYdx0iHpCfmBjdRWYcQ7QfE3fSkaNV9Mf/aTb6D0pqjY32dEH7jUsCWrEhE8cW/AQ7K84nbpgER/wqUGdq4/+2HYtkDVhMumdH8cnaei5thrrIsTlhAxDTrJFtBQvn2+w4letc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZxmllpa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b="RHRIE9qd"
-Date: Mon, 20 Jul 2026 06:54:20 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wyuan.org; s=key1;
-	t=1784501666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VPQG6ZvSD/n62usd3XLtKNk1YS8Rr48P6+5K+Z8EIl0=;
-	b=RHRIE9qdcVNC8fzIKGZh9rjfxNL2baC20gx+uOCnLWneXezHnG3VnAjKL1+SS7WZlpbFy0
-	Ghy3UWgUwsP+D0tKdcB4y3vKzp4dhVmWezhwr29ITTdbhxFiitaihGJyduh2c/8K117MEX
-	X1Ov9nxvEHmWYfR2iU+TyycNrVPHxOG81MOf/Z9lCpi7HXEM1KBvVx79re0PoScSS/kpq2
-	buxn4Qq0d47KGMc9qzivpaQrlQYx5jM0iEoli+8xsWQCd2W1du+vBfyykPoV8euQp4l82Y
-	MvJoCfxpWL52LpMfjGlDfRX5+nvfNtai1teyJbM7yWnvOWI7Rj5rA7+CzR1Kmg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Weijie Yuan <wy@wyuan.org>
-To: Yahya Toubali <yahya@yahyatoubali.me>
-Cc: Jonathan Corbet <corbet@lwn.net>, mpearson-lenovo@squebb.ca,
-	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: wmi: lenovo-wmi-other: Document
- intentional BIOS misspelling
-Message-ID: <al1VnJ-JFh_uYtYf@wyuan.org>
-References: <20260719173710.2367930-1-yahya@yahyatoubali.me>
- <87o6g250ya.fsf@trenco.lwn.net>
- <20260719224317.2450320-1-yahya@yahyatoubali.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZxmllpa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C77DA1F00A3D;
+	Sun, 19 Jul 2026 23:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784502497;
+	bh=K7NbXJhwT8cHjJAvRs9KohMqKpOUiXmG9r+4uV2sG9A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UZxmllpaRjoY7Ip+XRv0P2qsFYSXZPZXKdMT158b3st9dlVPCOhGXNQBOCKBp8NjX
+	 6Qe9MfkJZq+Vp35lcdaiDb9PqTPFsah4/j5FCQ9puy4z13V/kkDdI6dFF8iB371rFt
+	 dyNtM++LopNSjUfx21NNF7oTjFAtn/TRWULO2L1mmOnDqcL2RYoG217PqIYzB2BOlW
+	 K15JDBvkq0r3adaQgN2oTslZTIh5ifXvHWNB1gbKSWXC8U4eE3+7Ev6I0v4SLERIfw
+	 AGjNXQ2rCITFMgrmJQHTo8yrz1AgKNw/svwbanWzJY/zh57snvoZpjFlfk5bh7ONUY
+	 90iobzmeZEwCw==
+From: Danilo Krummrich <dakr@kernel.org>
+To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	brgl@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	driver-core@lists.linux.dev,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v8 0/5] driver core: unify the release path for dynamically allocated platform devices
+Date: Mon, 20 Jul 2026 01:08:11 +0200
+Message-ID: <20260719230811.812546-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260716-swnode-remove-on-dev-unreg-v8-0-5c2b8cc38c28@oss.qualcomm.com>
+References: <20260716-swnode-remove-on-dev-unreg-v8-0-5c2b8cc38c28@oss.qualcomm.com>
+X-Patch-Reply: applied
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260719224317.2450320-1-yahya@yahyatoubali.me>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jul 19, 2026 at 11:42:46PM +0100, Yahya Toubali wrote:
-> Hi Jon,
-> 
-> Yes, I used an LLM to help me format the email text because I am still
-> learning how the mailing list process works.
+On Thu, 16 Jul 2026 14:31:35 +0200, Bartosz Golaszewski wrote:
+> [PATCH v8 0/5] driver core: unify the release path for dynamically allocated platform devices
 
-I suspect it's not just the format.
+Applied, thanks!
 
-> I will work on my next patches to make sure they are well-structured
-> and follow the proper git mailing list standards.
-> 
-> Thanks for the patience and the explanation,
-> Yahya
+  Branch: driver-core-testing
+  Tree:   git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git
 
-Friendly reminder ;-)
+[1/5] driver core: platform: amend the API contract for fwnode setters
+      commit: e6054f410c97
+[2/5] platform/surface: gpe: use platform_device_register_full()
+      commit: 1e0bd438b876
+[3/5] drm/xe/i2c: use device_create_managed_software_node()
+      commit: 0f485f88656a
+[4/5] driver core: platform: unify release path
+      commit: 7d80509ff0da
+[5/5] driver core: platform: tests: add test cases for correct swnode removal
+      commit: 397f0a3958c9
 
-You may get started by wrapping your email to 72 columns first.
+The patches will appear in the next linux-next integration (typically within 24
+hours on weekdays).
 
-Thanks.
+The patches are in the driver-core-testing branch and will be promoted to
+driver-core-next after validation.
