@@ -1,209 +1,81 @@
-Received: from outbound.mr.icloud.com (mr-2002d-snip4-3.eps.apple.com [57.103.68.156])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FEE2609C5
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 09:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.68.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC2811CA9
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 13:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784454559; cv=none; b=S2adUMHUlTM7e8MpuJ0zTS1w8iFpJQ9JlzV7W2MyKXI29U3ZHS1pOHsBYQ+2MqU23ApCwAJskEKgMrey4ZeOuZne7gP6DAxA8qrYJZWL9frfNRD20qRrLw30keoeX6UqIu/3oevzKhU/e/SShO02zKRUTI/ZkQiq04Pq77rVtDs=
+	t=1784467900; cv=none; b=kpiXwSWu/FhoKhb91STY2uIt7K9iPzQKv4KSd/wg5Zfd4Iee6IH/lfIZKSGmMyZl9ERk+1TS1Wh9SEF+zQxoCFJ7VezZZTIKLAW8lqafuT4AUprS7xiJd24eLtjgAlxkZFRL1QYRusYwZ/6L5GCCfBINQfxiPJ5SyTzYPNHiXwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784454559; c=relaxed/simple;
-	bh=OEJDFSwkqM7nZVFHAcYLOCIAr3LwwUTHw5SaAe17Hb4=;
-	h=Content-Type:Message-ID:Date:MIME-Version:From:To:Cc:Subject; b=Pk2Sz+ytrR4Ax0J2veKJYXP5/pbwk3BZhu0hSoa3ZcWenjLOF+L6wKKykMBfVRXy/oPGdXeKOkt0OKf4IcDpvMxc0qkvCFA/OyTeuSLzw7+3WbR+28vEKtTQgwqS3BfCDFxhx7K2LV/e8M7RBVZBHMeslcuLdvKU5Uf8EpUz3yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=hNpygnTI; arc=none smtp.client-ip=57.103.68.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1784467900; c=relaxed/simple;
+	bh=st/8ASXi2vJ/02u0NIJjU5ymuio3RyyJv1hmQRYf7mM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EDyfnqWfp+uOgnvQk2SOB/SBu6zZojZ8zaniqwr/zP858RimuoZnomxd0eTL6mFphJw28xCWqNLLyJ+uE85ma6gd1aUko4oXO2t6bvaWhYDVUVhS7YtSzFTvDI/qq/5D+X5VqLTyrluqnqWFvT/Ne4rS+hNiKmxWUfpOaCFkzlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vigCZAGa; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="hNpygnTI"
-Received: from outbound.mr.icloud.com (unknown [127.0.0.2])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-4 (Postfix) with ESMTPS id CCAFC18001CF;
-	Sun, 19 Jul 2026 09:49:15 +0000 (UTC)
-X-ICL-RepId: 019f79c7-a87e-7337-bca1-3125199d9c1d
-X-ICL-Out-Info: HUtFAUMEWwJACUgBTUQeDx5WFlZNRAJCTQFLHVQORQNGClYBXgJLVxQEGR0PWAxWEVcXRR53AlEcVg1XQ1QEX1BfHA4EVAddBV1WUAJaS0ATBEoTBVIHXU1WDUcPWB5cFBcVQUNeCF4fTBwdDlgGEgBNCg42BlkFXglWA0MFNhIUXUVaDlsERxQXG1wAFwZbFAREClsCCQEUWhkeVQ4ICl0NQVYJGgoFQA1VCllRX1ATDBsDWVIJchlaFFwYU0VRH1RGExlOG1dNUBtfAkIP
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1784454557; x=1787046557; bh=WC5wh/07j86YH6fk+abZrbAhRFbNLDeCfm7jXeh76Pk=; h=Content-Type:Message-ID:Date:MIME-Version:From:To:Subject:x-icloud-hme; b=hNpygnTIVJyYylrpxcHc4z1890U5W2LDas9XXTnWYrcGhpi6xHdiaMPtbWmCR+G3mte+XxoA9qHYhwceWyu3ZPtbhoOQ2vSsXckgGsWdTE+SmgOauI93U/hV+Ni7rwPKdZ0N7r9eA85GmhBveAGRhpgQ2kkci1pWPSXmGvZ1YpsdMK30lho3sQ2oV8/1nbI5Sk/Z6v8FFwlsu0++RPL7WMxCejWjg8D8k6RV8PJ5HoB+xcybs7B+gfbq/cRPxjtopATW3/atk6KbxnZf3k43k7/rmGQhP8B6T70sTNHcsYfpnAqXZbebXMXjRuJfJCnUeoRVCLIHdXTWTb4AWHPJVw==
-Received: from [192.168.1.24] (unknown [17.57.152.38])
-	by p00-icloudmta-asmtp-us-west-2a-100-percent-4 (Postfix) with ESMTPSA id DBF1718001C6;
-	Sun, 19 Jul 2026 09:49:14 +0000 (UTC)
-Content-Type: multipart/mixed; boundary="------------4atBfCeNwxN8iW4sdcMVZHVn"
-Message-ID: <965b3dca-89c8-49ed-a704-94f4bc5c04eb@icloud.com>
-Date: Sun, 19 Jul 2026 10:49:12 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vigCZAGa"
+Message-ID: <9048aa8d-6453-4f16-b45c-570125380045@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784467895;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7ueRuiVy8k5OVyX0JubLZKkMNrlKN2sqmoChW8Uv7yw=;
+	b=vigCZAGapPL+XVSbDtA107AGO9VDYowCZnAr2yBxcUHo7IDXqAinu3exnUcAXbO+nYfTBE
+	Dq53GgcRz1VLmP6YyuMmsUh+FLg620XI+2EG9GOHJEogwhEoQ1FXt5fhKSEVl3Epv3EoQ4
+	CuSodPaXtpXAuL7uwhjJcI/59ahaXtI=
+Date: Sun, 19 Jul 2026 15:31:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Aleksandrs Bogdanovs <a.bogdanovs@icloud.com>
-To: jlee@suse.com
-Cc: platform-driver-x86@vger.kernel.org
-Subject: [PATCH RFT] platform/x86: acer-wmi: add mic-mute LED via
- SetLedIndicator
+Subject: Re: [PATCH] platform/x86: asus-nb-wmi: map ProArt key (0x8b) to
+ KEY_PROG3
+To: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>,
+ Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones"
+ <luke@ljones.dev>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260719090843.66777-1-nizar.m.kabbani@gmail.com>
 Content-Language: en-US
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE5MDEwNiBTYWx0ZWRfXy7CNokUam+y6
- idEiGVgdYuk1ZludsSNYQn7qL03e3PgiEl4MOfX2vqYwCXQYQ1KTUjViQAZjn5CcfbBezOAKI/6
- 68opGC5AEbDHk+pGj/j81egob2OkFj1ZUbvDCk7TikCT2hWuPdCP16TH/HR4P53yUj0jt+ACmGf
- Sriq23Pq1kEAijlEFJQT/xNTdbMoPyqXo3u1T8wokcP/Xky367wGVSdyRn2uTkB+U9uDsrgHLPx
- TW1SElv8gxyoxWpXXW4Qh1KaamEs2eFIYrNJkCnagMsdbHwb5Cdi40td0iiCa3r9zjHNwBys8yZ
- exLVRFCiuMt7omgGdn3
-X-Proofpoint-GUID: uRzytymUzGUprtyATyVZ1xjuKRqy1eGF
-X-Proofpoint-ORIG-GUID: uRzytymUzGUprtyATyVZ1xjuKRqy1eGF
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260719090843.66777-1-nizar.m.kabbani@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-This is a multi-part message in MIME format.
---------------4atBfCeNwxN8iW4sdcMVZHVn
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hello,
-
-This is an [RFT] (request for testing) patch adding mic-mute LED support 
-to acer-wmi for the Acer Aspire A517-53.
-
-The mic-mute key LED is driven by SetLedIndicator (WmiMethodId 12) of 
-the UtilityFunction class, GUID FE1DBBDA-3014-4856-870C-5B3A744BF341. 
-The ACPI method (WMBL, case 0x0C) only copies an 8-byte input buffer 
-into BLCP and triggers SMI port 0xD0, so all logic lives in BIOS SMM and 
-the buffer format is undocumented. The attached patch wires an 
-acer-wmi::micmute LED classdev (default trigger audio-micmute) calling 
-SetLedIndicator, and exposes the id/state bytes as module parameters 
-(micmute_led, micmute_id, micmute_on, micmute_off) so the encoding can 
-be found without a rebuild. The LED is not registered by default.
-
-I do not run Windows and cannot capture the argument the Acer utility 
-passes to SetLedIndicator. I am looking for a tester with the same model 
-who can trace that call (WMI/ETW trace or API Monitor) for mic-mute on 
-and off.
-
-Full analysis, decoded BMOF, disassembled SSDT, an acpidump and a sysfs 
-probe module are available here:
-
-   https://www.besttradersclub.com/downloads/
-
-The patch builds and loads cleanly on current kernels; see the commit 
-message in the attachment.
-
-Thanks,
-Aleksandrs Bogdanovs
-
---------------4atBfCeNwxN8iW4sdcMVZHVn
-Content-Type: text/x-patch; charset=UTF-8; name="acer-wmi-micmute-led.patch"
-Content-Disposition: attachment; filename="acer-wmi-micmute-led.patch"
-Content-Transfer-Encoding: base64
-
-RnJvbTogQWxla3NhbmRycyBCb2dkYW5vdnMgPGEuYm9nZGFub3ZzQGljbG91ZC5jb20+ClN1
-YmplY3Q6IFtQQVRDSCBSRlRdIHBsYXRmb3JtL3g4NjogYWNlci13bWk6IGFkZCBtaWMtbXV0
-ZSBMRUQgdmlhIFNldExlZEluZGljYXRvcgoKT24gdGhlIEFjZXIgQXNwaXJlIEE1MTctNTMg
-KGFuZCByZWxhdGl2ZXMpIHRoZSBtaWMtbXV0ZSBrZXkgaGFzIGFuIExFRCB0aGF0CldpbmRv
-d3MgbGlnaHRzIHRvIHJlZmxlY3QgdGhlIG1pY3JvcGhvbmUgc3RhdGUuIFRoZSBrZXkgaXRz
-ZWxmIGlzIGEgcGxhaW4Ka2V5Ym9hcmQgZXZlbnQgKGF0a2JkIHNjYW5jb2RlIDB4NjYpLCBz
-byB0aGUgZmlybXdhcmUgZG9lcyBub3QgZHJpdmUgdGhlIExFRAphdXRvbWF0aWNhbGx5OyB0
-aGUgV2luZG93cyBBY2VyIHV0aWxpdHkgY2F1Z2h0IHRoZSBrZXkgYW5kIHRvZ2dsZWQgdGhl
-IExFRCB2aWEKYSBXTUkgbWV0aG9kLgoKVGhlIExFRCBpcyBjb250cm9sbGVkIGJ5IFNldExl
-ZEluZGljYXRvciAoV21pTWV0aG9kSWQgMTIpIG9mIHRoZQpVdGlsaXR5RnVuY3Rpb24gY2xh
-c3MgKEdVSUQgRkUxREJCREEtMzAxNC00ODU2LTg3MEMtNUIzQTc0NEJGMzQxKS4gVGhlIEFD
-UEkKaW1wbGVtZW50YXRpb24gKFdNQkwsIGNhc2UgMHgwQykgb25seSBjb3BpZXMgYW4gOC1i
-eXRlIGlucHV0IGJ1ZmZlciBpbnRvIEJMQ1AKYW5kIHRyaWdnZXJzIFNNSSBwb3J0IDB4RDAg
-KENUSUQ9J0JMJyk7IGFsbCBsb2dpYyBsaXZlcyBpbiBCSU9TIFNNTSBhbmQgdGhlCmlucHV0
-IGJ1ZmZlciBmb3JtYXQgaXMgdW5kb2N1bWVudGVkLgoKVGhpcyBwYXRjaCB3aXJlcyB1cCBh
-biAiYWNlci13bWk6Om1pY211dGUiIExFRCBjbGFzc2RldiAoZGVmYXVsdCB0cmlnZ2VyCmF1
-ZGlvLW1pY211dGUpIGNhbGxpbmcgU2V0TGVkSW5kaWNhdG9yLiBCZWNhdXNlIHRoZSBidWZm
-ZXIgZW5jb2RpbmcgaXMgb25seQprbm93biB0byB0aGUgV2luZG93cyB1dGlsaXR5LCB0aGUg
-aWQvc3RhdGUgYnl0ZXMgYXJlIGV4cG9zZWQgYXMgbW9kdWxlCnBhcmFtZXRlcnMgKG1pY211
-dGVfbGVkLCBtaWNtdXRlX2lkLCBtaWNtdXRlX29uLCBtaWNtdXRlX29mZikgc28gdGhlIGVu
-Y29kaW5nCmNhbiBiZSBmb3VuZCB3aXRob3V0IGEgcmVidWlsZC4gVGhlIExFRCBpcyBub3Qg
-cmVnaXN0ZXJlZCBieSBkZWZhdWx0LgoKVGhpcyBpcyBzZW50IGFzIFtSRlRdOiBJIGRvIG5v
-dCBydW4gV2luZG93cyBhbmQgY2Fubm90IGNhcHR1cmUgdGhlIGFyZ3VtZW50IHRoZQpBY2Vy
-IHV0aWxpdHkgcGFzc2VzLiBJIGFtIGxvb2tpbmcgZm9yIGEgdGVzdGVyIHdpdGggdGhlIHNh
-bWUgbW9kZWwgd2hvIGNhbiB0cmFjZQp0aGUgU2V0TGVkSW5kaWNhdG9yIGNhbGwgKFdNSS9F
-VFcgdHJhY2Ugb3IgQVBJIE1vbml0b3IpIGZvciBtaWMtbXV0ZSBvbi9vZmYuCkZ1bGwgYW5h
-bHlzaXMsIGRlY29kZWQgQk1PRiwgZGlzYXNzZW1ibGVkIFNTRFQsIGFuIGFjcGlkdW1wIGFu
-ZCBhIHN5c2ZzIHByb2JlCm1vZHVsZSBhcmUgYXZhaWxhYmxlOyBzZWUgdGhlIGF0dGFjaGVk
-IGFyY2hpdmUuCgpTaWduZWQtb2ZmLWJ5OiBBbGVrc2FuZHJzIEJvZ2Rhbm92cyA8YS5ib2dk
-YW5vdnNAaWNsb3VkLmNvbT4KLS0tCiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9hY2VyLXdtaS5j
-IHwgODUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCgotLS0gYS9kcml2ZXJz
-L3BsYXRmb3JtL3g4Ni9hY2VyLXdtaS5jCisrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L2Fj
-ZXItd21pLmMKQEAgLTEwOSw2ICsxMDksOSBAQAogI2RlZmluZSBXTUlEX0dVSUQyCQkiOTU3
-NjRFMDktRkI1Ni00RTgzLUIzMUEtMzc3NjFGNjA5OTRBIgogI2RlZmluZSBXTUlEX0dVSUQz
-CQkiNjFFRjY5RUEtODY1Qy00QkMzLUE1MDItQTBERUJBMENCNTMxIgogI2RlZmluZSBXTUlE
-X0dVSUQ0CQkiN0E0RERGRTctNUI1RC00MEI0LTg1OTUtNDQwOEUwQ0M3RjU2IgorLyogVXRp
-bGl0eUZ1bmN0aW9uIGNsYXNzOiBob2xkcyBHZXQvU2V0TGVkSW5kaWNhdG9yIChtZXRob2Rz
-IDExLzEyKSAqLworI2RlZmluZSBXTUlEX1VUSUxfR1VJRAkJIkZFMURCQkRBLTMwMTQtNDg1
-Ni04NzBDLTVCM0E3NDRCRjM0MSIKKyNkZWZpbmUgV01JRF9VVElMX1NFVF9MRUQJMTIKIAog
-LyoKICAqIEFjZXIgQUNQSSBldmVudCBHVUlEcwpAQCAtMzM2LDYgKzMzOSwyMiBAQAogc3Rh
-dGljIGJvb2wgcHJlZGF0b3JfdjQ7CiBzdGF0aWMgdTY0IHN1cHBvcnRlZF9zZW5zb3JzOwog
-CisvKgorICogTWljLW11dGUgTEVEIChBY2VyIEFzcGlyZSBBNTE3LTUzIGFuZCByZWxhdGl2
-ZXMpLgorICogRHJpdmVuIGJ5IFNldExlZEluZGljYXRvciAoV21pTWV0aG9kSWQgMTIpIG9m
-IHRoZSBVdGlsaXR5RnVuY3Rpb24gY2xhc3MsCisgKiBHVUlEIEZFMURCQkRBLTMwMTQtNDg1
-Ni04NzBDLTVCM0E3NDRCRjM0MS4gVGhlIGFjdHVhbCB3b3JrIGhhcHBlbnMgaW4gQklPUwor
-ICogU01NICh0aGUgV01CTCBBQ1BJIG1ldGhvZCBjb3BpZXMgYW4gOC1ieXRlIGJ1ZmZlciBp
-bnRvIEJMQ1AgYW5kIHRyaWdnZXJzIFNNSQorICogcG9ydCAweEQwLCBDVElEPSdCTCcpLCBz
-byB0aGUgZXhhY3QgaW5wdXQgZm9ybWF0IGlzIHVuZG9jdW1lbnRlZC4gVGhlIG1vZHVsZQor
-ICogcGFyYW1ldGVycyBiZWxvdyBhbGxvdyB0dW5pbmcgdGhlIGVuY29kaW5nIGF0IGxvYWQg
-dGltZSB3aXRob3V0IGEgcmVidWlsZDoKKyAqICAgbWljbXV0ZV9sZWQgICAgPSAxICAgcmVn
-aXN0ZXIgdGhlIExFRCAoZGlzYWJsZWQgYnkgZGVmYXVsdCkKKyAqICAgbWljbXV0ZV9pZCAg
-ICAgPSBpbmRpY2F0b3IgaWQgKGJ1ZmZlciBieXRlIDApCisgKiAgIG1pY211dGVfb24vb2Zm
-ID0gc3RhdGUgdmFsdWUgKGJ1ZmZlciBieXRlIDEpCisgKi8KK3N0YXRpYyBib29sIG1pY211
-dGVfbGVkOworc3RhdGljIGludCBtaWNtdXRlX2lkID0gMHgwYzsKK3N0YXRpYyBpbnQgbWlj
-bXV0ZV9vbiA9IDB4MDE7CitzdGF0aWMgaW50IG1pY211dGVfb2ZmID0gMHgwMDsKKwogbW9k
-dWxlX3BhcmFtKG1haWxsZWQsIGludCwgMDQ0NCk7CiBtb2R1bGVfcGFyYW0oYnJpZ2h0bmVz
-cywgaW50LCAwNDQ0KTsKIG1vZHVsZV9wYXJhbSh0aHJlZWcsIGludCwgMDQ0NCk7CkBAIC0z
-NDQsNyArMzYzLDE1IEBACiBtb2R1bGVfcGFyYW0oZWNfcmF3X21vZGUsIGJvb2wsIDA0NDQp
-OwogbW9kdWxlX3BhcmFtKGN5Y2xlX2dhbWluZ190aGVybWFsX3Byb2ZpbGUsIGJvb2wsIDA2
-NDQpOwogbW9kdWxlX3BhcmFtKHByZWRhdG9yX3Y0LCBib29sLCAwNDQ0KTsKK21vZHVsZV9w
-YXJhbShtaWNtdXRlX2xlZCwgYm9vbCwgMDQ0NCk7Cittb2R1bGVfcGFyYW0obWljbXV0ZV9p
-ZCwgaW50LCAwNDQ0KTsKK21vZHVsZV9wYXJhbShtaWNtdXRlX29uLCBpbnQsIDA0NDQpOwor
-bW9kdWxlX3BhcmFtKG1pY211dGVfb2ZmLCBpbnQsIDA0NDQpOwogTU9EVUxFX1BBUk1fREVT
-QyhtYWlsbGVkLCAiU2V0IGluaXRpYWwgc3RhdGUgb2YgTWFpbCBMRUQiKTsKK01PRFVMRV9Q
-QVJNX0RFU0MobWljbXV0ZV9sZWQsICJSZWdpc3RlciBtaWMtbXV0ZSBMRUQgdmlhIFNldExl
-ZEluZGljYXRvciAoZXhwZXJpbWVudGFsKSIpOworTU9EVUxFX1BBUk1fREVTQyhtaWNtdXRl
-X2lkLCAiTWljLW11dGUgTEVEIGluZGljYXRvciBpZCAoYnl0ZSAwIG9mIFNldExlZEluZGlj
-YXRvciBidWZmZXIpIik7CitNT0RVTEVfUEFSTV9ERVNDKG1pY211dGVfb24sICJNaWMtbXV0
-ZSBMRUQgJ29uJyB2YWx1ZSAoYnl0ZSAxKSIpOworTU9EVUxFX1BBUk1fREVTQyhtaWNtdXRl
-X29mZiwgIk1pYy1tdXRlIExFRCAnb2ZmJyB2YWx1ZSAoYnl0ZSAxKSIpOwogTU9EVUxFX1BB
-Uk1fREVTQyhicmlnaHRuZXNzLCAiU2V0IGluaXRpYWwgTENEIGJhY2tsaWdodCBicmlnaHRu
-ZXNzIik7CiBNT0RVTEVfUEFSTV9ERVNDKHRocmVlZywgIlNldCBpbml0aWFsIHN0YXRlIG9m
-IDNHIGhhcmR3YXJlIik7CiBNT0RVTEVfUEFSTV9ERVNDKGZvcmNlX3NlcmllcywgIkZvcmNl
-IGEgZGlmZmVyZW50IGxhcHRvcCBzZXJpZXMiKTsKQEAgLTE5NDYsNiArMTk3Myw1NyBAQAog
-fQogCiAvKgorICogTWljLW11dGUgTEVEIHZpYSBVdGlsaXR5RnVuY3Rpb246OlNldExlZElu
-ZGljYXRvci4KKyAqIFRoZSBtZXRob2QgdGFrZXMgYW4gOC1ieXRlIGJ1ZmZlcjsgYnl0ZSAw
-ID0gaW5kaWNhdG9yIGlkLCBieXRlIDEgPSBzdGF0ZQorICogKHZhbHVlcyBhcmUgY29uZmln
-dXJhYmxlIHRocm91Z2ggdGhlIG1pY211dGVfaWQvb24vb2ZmIG1vZHVsZSBwYXJhbWV0ZXJz
-CisgKiBiZWNhdXNlIHRoZSBleGFjdCBmb3JtYXQgaXMgZGVmaW5lZCBieSB0aGUgU01NIGZp
-cm13YXJlIGFuZCB1bmRvY3VtZW50ZWQpLgorICovCitzdGF0aWMgYWNwaV9zdGF0dXMgd21p
-ZF9zZXRfbGVkX2luZGljYXRvcih1NjQgdmFsKQoreworCXN0cnVjdCBhY3BpX2J1ZmZlciBp
-bnB1dCA9IHsgKGFjcGlfc2l6ZSlzaXplb2YodmFsKSwgJnZhbCB9OworCisJcmV0dXJuIHdt
-aV9ldmFsdWF0ZV9tZXRob2QoV01JRF9VVElMX0dVSUQsIDAsIFdNSURfVVRJTF9TRVRfTEVE
-LAorCQkJCSAgICZpbnB1dCwgTlVMTCk7Cit9CisKK3N0YXRpYyBpbnQgbWljbXV0ZV9sZWRf
-c2V0KHN0cnVjdCBsZWRfY2xhc3NkZXYgKmxlZF9jZGV2LAorCQkJICAgZW51bSBsZWRfYnJp
-Z2h0bmVzcyB2YWx1ZSkKK3sKKwl1NjQgYnVmID0gKCh1NjQpKHZhbHVlID8gbWljbXV0ZV9v
-biA6IG1pY211dGVfb2ZmKSA8PCA4KSB8CisJCSAgKG1pY211dGVfaWQgJiAweGZmKTsKKwlh
-Y3BpX3N0YXR1cyBzdGF0dXM7CisKKwlzdGF0dXMgPSB3bWlkX3NldF9sZWRfaW5kaWNhdG9y
-KGJ1Zik7CisJcmV0dXJuIEFDUElfU1VDQ0VTUyhzdGF0dXMpID8gMCA6IC1FSU87Cit9CisK
-K3N0YXRpYyBzdHJ1Y3QgbGVkX2NsYXNzZGV2IG1pY211dGVfbGVkX2NkZXYgPSB7CisJLm5h
-bWUgPSAiYWNlci13bWk6Om1pY211dGUiLAorCS5tYXhfYnJpZ2h0bmVzcyA9IDEsCisJLmJy
-aWdodG5lc3Nfc2V0X2Jsb2NraW5nID0gbWljbXV0ZV9sZWRfc2V0LAorCS5kZWZhdWx0X3Ry
-aWdnZXIgPSAiYXVkaW8tbWljbXV0ZSIsCit9OworCitzdGF0aWMgaW50IGFjZXJfbWljbXV0
-ZV9sZWRfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYpCit7CisJaWYgKCFtaWNtdXRlX2xlZCkK
-KwkJcmV0dXJuIDA7CisJaWYgKCF3bWlfaGFzX2d1aWQoV01JRF9VVElMX0dVSUQpKSB7CisJ
-CXByX2luZm8oIm1pY211dGUgTEVEIHJlcXVlc3RlZCBidXQgVXRpbGl0eUZ1bmN0aW9uIFdN
-SSBHVUlEIGFic2VudFxuIik7CisJCXJldHVybiAwOworCX0KKwlyZXR1cm4gbGVkX2NsYXNz
-ZGV2X3JlZ2lzdGVyKGRldiwgJm1pY211dGVfbGVkX2NkZXYpOworfQorCitzdGF0aWMgdm9p
-ZCBhY2VyX21pY211dGVfbGVkX2V4aXQodm9pZCkKK3sKKwlpZiAoIW1pY211dGVfbGVkIHx8
-ICF3bWlfaGFzX2d1aWQoV01JRF9VVElMX0dVSUQpKQorCQlyZXR1cm47CisJbWljbXV0ZV9s
-ZWRfc2V0KCZtaWNtdXRlX2xlZF9jZGV2LCBMRURfT0ZGKTsKKwlsZWRfY2xhc3NkZXZfdW5y
-ZWdpc3RlcigmbWljbXV0ZV9sZWRfY2Rldik7Cit9CisKKy8qCiAgKiBCYWNrbGlnaHQgZGV2
-aWNlCiAgKi8KIHN0YXRpYyBzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYWNlcl9iYWNrbGln
-aHRfZGV2aWNlOwpAQCAtMjc3NSw2ICsyODUzLDEwIEBACiAJCQlnb3RvIGVycm9yX21haWxs
-ZWQ7CiAJfQogCisJZXJyID0gYWNlcl9taWNtdXRlX2xlZF9pbml0KCZkZXZpY2UtPmRldik7
-CisJaWYgKGVycikKKwkJZ290byBlcnJvcl9taWNtdXRlOworCiAJaWYgKGhhc19jYXAoQUNF
-Ul9DQVBfQlJJR0hUTkVTUykpIHsKIAkJZXJyID0gYWNlcl9iYWNrbGlnaHRfaW5pdCgmZGV2
-aWNlLT5kZXYpOwogCQlpZiAoZXJyKQpAQCAtMjgwNiw2ICsyODg4LDggQEAKIAlpZiAoaGFz
-X2NhcChBQ0VSX0NBUF9CUklHSFRORVNTKSkKIAkJYWNlcl9iYWNrbGlnaHRfZXhpdCgpOwog
-ZXJyb3JfYnJpZ2h0bmVzczoKKwlhY2VyX21pY211dGVfbGVkX2V4aXQoKTsKK2Vycm9yX21p
-Y211dGU6CiAJaWYgKGhhc19jYXAoQUNFUl9DQVBfTUFJTExFRCkpCiAJCWFjZXJfbGVkX2V4
-aXQoKTsKIGVycm9yX21haWxsZWQ6CkBAIC0yODE2LDYgKzI5MDAsNyBAQAogewogCWlmICho
-YXNfY2FwKEFDRVJfQ0FQX01BSUxMRUQpKQogCQlhY2VyX2xlZF9leGl0KCk7CisJYWNlcl9t
-aWNtdXRlX2xlZF9leGl0KCk7CiAJaWYgKGhhc19jYXAoQUNFUl9DQVBfQlJJR0hUTkVTUykp
-CiAJCWFjZXJfYmFja2xpZ2h0X2V4aXQoKTsKIAo=
-
---------------4atBfCeNwxN8iW4sdcMVZHVn--
+On 7/19/26 11:08, Nizar Al-Kabbani wrote:
+> The dedicated "ProArt" key on the ASUS ProArt PX13 (HN7306) emits ASUS
+> WMI event code 0x8b. This code is absent from the asus-nb-wmi sparse
+> keymap, so pressing the key only produces a "Unknown key code 0x8b"
+> message and does nothing in userspace.
+>
+> On this model the key is exposed solely through the WMI interface and has
+> no HID scancode, so it can only be handled inside asus-nb-wmi. Map 0x8b
+> to KEY_PROG3 so the key emits a bindable event, consistent with the
+> existing KEY_PROG3 mapping used for the ASUS programmable/Armoury key.
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+> Signed-off-by: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
+> ---
+>  drivers/platform/x86/asus-nb-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+> index 8005c08..aeb461b 100644
+> --- a/drivers/platform/x86/asus-nb-wmi.c
+> +++ b/drivers/platform/x86/asus-nb-wmi.c
+> @@ -632,6 +632,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+>  	{ KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
+>  	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+>  	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
+> +	{ KE_KEY, 0x8B, { KEY_PROG3 } }, /* ProArt key (PX13/HN7306) */
+>  	{ KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
+>  	{ KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
+>  	{ KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
