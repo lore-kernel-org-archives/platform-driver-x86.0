@@ -1,85 +1,61 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB1014ABE;
-	Sun, 19 Jul 2026 17:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133083B42D4
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 18:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784483056; cv=none; b=kcEyic7yw0nMwUFT66SmIjMz/wUCS+RPjJLzb2G8xOThc9fsIC12bS5AJO1SWwthVXhaDMVM8+9bmKbp+QahQbjonbfA57YH7i8GDehEB2cbwywdz1r4XR3HWScw145bE3l/rTxWistD/fyNeh3By5aYU8Yvqh9PtXeYL8i9QOY=
+	t=1784484184; cv=none; b=Z/e7/mjQ+e5Lk+aKw1kxp/EOJwwlGE/bJW1kgtmgv2z20mN2Jafxss9fa/39LsrQivNufndqp0v/Znnn20smZ6yFbDOpM1Acz0zlqwj6Fn24UJlY7M4x8cCn+QpCs1eshOGzLmBcW7YDAf5kTCnXOcL5buNMDKM9TpEuVQcllNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784483056; c=relaxed/simple;
-	bh=oqIlF13FYtToWfCw0PAO56C3stUXhka2Ur5vpR0phmQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PJSPDT5EPypEENiwQhNF17vmmzUlhnsb/9vYI+m+NifxkuqQTSGeQ4T1i7YavuB4uP2HPE0jxd8lINy8MxshGZWUaNhwf/NlYM7SLjU9ClgUywx4zffo1shvgp0hy2vEiQ9GGf20+gzG81phhobgmPkn+cK9NZjdVqPmVHMfM2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=gO0RogPC; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1784484184; c=relaxed/simple;
+	bh=dnPldR/s3N4izjrNbgfjBuwPlcu1I2XTGF8Nxy1JnGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8eFoNA8WUwGd7TTNARB+kTSfbZC9V3tBIW0NGT8m5yok6528gjAUOXSaGOk5tSOZCQbgxNiZzxTE3PciAhX35yhWHkPNy6u3F3n54CY0wFeyHBO3Vkp4evH53YgAVacEA+cdXYz32ed+5JZ6BzfE1nZQdUuqkuJXcehu4GSNZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org; spf=pass smtp.mailfrom=wyuan.org; dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b=RVaf0v1M; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wyuan.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="gO0RogPC"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net C1015408BC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1784483053; bh=iDopaxRzPF/gKPxBxgw6/irDLrGKGrxe1sfKCY3bUHk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gO0RogPCjtIdk9SXtQ2XnczV87OSCi3Jj9oU6DfrMO/sniXf91DVRwqef90zD08C/
-	 mOAFN6hJtTAwegey3N+7dOjaOp1ki2ePjALl9hm7U2Rk4djqt/ZDHYBibZpnfLc9Qd
-	 xdsGRxL0b44pz03LU95KURVbkox95vbYaxab8q+/FxQ+i7BaXxnv5HM7tEwrkVu8M0
-	 5VAb+i2s6+NyRoTg2Wg/xbT8lbLXrtv8uT3hdTsSO6hzPbKoiMAaZiQOIk76q1139N
-	 4J4xXlos4/7rHcTqW/RmNDJluuNxWyjdpxmHMVBn+J+tgDqK9LSpf72vgjrTx2LvJF
-	 krsCh21hSVaoA==
-Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id C1015408BC;
-	Sun, 19 Jul 2026 17:44:13 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Yahya Toubali <yahya@yahyatoubali.me>, mpearson-lenovo@squebb.ca
-Cc: linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, yahya@yahyatoubali.me
+	dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b="RVaf0v1M"
+Date: Mon, 20 Jul 2026 02:02:39 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wyuan.org; s=key1;
+	t=1784484165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dnPldR/s3N4izjrNbgfjBuwPlcu1I2XTGF8Nxy1JnGs=;
+	b=RVaf0v1MtAJFz98khGnF4YXwVKs/A9DAsfOd55A/tUefwAi6dS+W/L0+rDJ/yL+qvpMNm5
+	PJMlgbf1gtF54Og10hondCsB/tAfvUPMKp6PfxQWk8bJhYlg5nCdFW8gTgTUuvVPJVvOjE
+	Z1ZLBwRGQ2LQFB/DrAY2zEJiSlZcSAegwcvJnoPPfUnbis5snUXwWlT+RWRBKUD8kndJJj
+	boqapzs1+sLRC0Pcw/iuHjfxMm8pUkbCYCYBhOzyRyqofA16tuJbssMDLxkJO64Go4VNl6
+	72UA2jWmtxn69m6xSKscXAvvX/aPmpO4GFXgKKO+OUkJ1UmF7vbCysUiXza/gg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Weijie Yuan <wy@wyuan.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Yahya Toubali <yahya@yahyatoubali.me>, mpearson-lenovo@squebb.ca,
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] Documentation: wmi: lenovo-wmi-other: Document
  intentional BIOS misspelling
-In-Reply-To: <20260719173710.2367930-1-yahya@yahyatoubali.me>
+Message-ID: <al0RPx-cL7S6hRbK@wyuan.org>
 References: <87v7ab3p2p.fsf@trenco.lwn.net>
  <20260719173710.2367930-1-yahya@yahyatoubali.me>
-Date: Sun, 19 Jul 2026 11:44:13 -0600
-Message-ID: <87o6g250ya.fsf@trenco.lwn.net>
+ <87o6g250ya.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6g250ya.fsf@trenco.lwn.net>
+X-Migadu-Flow: FLOW_OUT
 
-Yahya Toubali <yahya@yahyatoubali.me> writes:
+On Sun, Jul 19, 2026 at 11:44:13AM -0600, Jonathan Corbet wrote:
+> One other question: are you writing these patches yourself, or using
+> some sort of LLM to create them?
 
-> The spelling "Minumum" in the FanMinSpeed entry is intentionally kept
-> as-is because it reflects the actual string returned by the system BIOS.
-> Add an explanatory note to prevent future redundant spelling-fix submissions.
->
-> Suggested-by: Jonathan Corbet <corbet@lwn.net>
-> Signed-off-by: Yahya Toubali <yahya@yahyatoubali.me>
->
-> Thanks Mark and Jon for the context.
->
-> That makes total sense. I dropped the housekeeping typo fix for now to avoid
-> unnecessary churn, and this v4 keeps the BIOS spelling but adds the explicit
-> note documenting the firmware quirk as suggested.
+I'm quite afraid and doubtful that our comments might actually be
+transformed into his agent's prompt. ;-)
 
-For future reference, text like this does not belong in the changelog.
-You can put it below this line:
-
-> ---
-
-...and the maintainer won't have to strip it out when the patch is
-applied.
-
->  Documentation/wmi/devices/lenovo-wmi-other.rst | 4 ++++
->  1 file changed, 4 insertions(+)
-
-One other question: are you writing these patches yourself, or using
-some sort of LLM to create them?
-
-Thanks,
-
-jon
+Thanks.
