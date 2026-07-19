@@ -1,156 +1,108 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05672D12ED
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 05:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99AF919AD5C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 09:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784440773; cv=none; b=EowfdvCgEYafz16LHCdFPAuLISpDPb9XzcRxTKMefzto9PXKpdmKuoG/Nc2hD0NWKZkKQrYKPbN4Tx67khDDSogZSj0Apwm5yI5tSmuqmDJNwGtFeL+rIPxtNZ1xjRwY5tOKlfixUjtpFeJhb2CArkZvmwTveLEgL3mNhyloIUU=
+	t=1784452186; cv=none; b=djQXSDFVNebyCFX5qvI+GbOrggGgvbj7XIa949H+FNX+2GSHQPoa3DzgXDjAg7IBsndWX4vlzRmJHR1u6NPjv/Txh4nk+DK16g0sguqsZk29/nBJiijtXX9XGOv6Y/XkfkbIGKJH0WYixpo/4/lA4XXs1b/GmSX18sIL+5nOweU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784440773; c=relaxed/simple;
-	bh=z7zI4ormmMwmd4+a1vmhKas9U5S2B2I5OjONa7+J2z8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nuRRNRKUkDn4L9Zd2F1NfTHVkzPLLxaRp711J/xWRaSvw6GDQ2pxH9UbNNzYFJzmaKn54VFpo7eS/NjOtMretcxc3OVqILSxZYT0mzuJcU6eUyya6VbpG4q5ghVm7VMSVlpLxlkWpGUc9I97bGSSVgmMpNFrsA9Ezy8wcdcQduY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBqnAhFb; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1784452186; c=relaxed/simple;
+	bh=J2wITQx9DAE2Cymn5q41CBXk0oUKrOmdB3ePRluadbQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=os5npaNAgsFMTxOpoEgcGhmZ789PW6qMkP8yfTUX01p80BHQr9gWFKClOhe+Xh67QVcKoG2ENUBtRNKrzK6CXvetaNUnCRgV66JJo7mFnRFWqtZBWShIkIu0vZVB2dAUf7WbbdK+H4ftcbGT4tSGBYoimBhLFv9uRXDXOoIuVnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzhqJnhm; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBqnAhFb"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-39da69c5ba3so45156191fa.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2026 22:59:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzhqJnhm"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-493d92b7db3so43978445e9.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 02:09:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784440770; x=1785045570; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DewalVKvSHtPQz7rPLf987kX4I4O55EkRGnJHsM6WDg=;
-        b=QBqnAhFbeDXfouIc6iOgVAV02XVHiNKcWvXBrKi8mu+oyBKOOy8rwsjPAOMDlHTGvG
-         Ylto4cqg0kFoE8RAinb/aNSIFJPnvpHaa2jSO0vJUV9g5IOAQ51OQE0VgrmI+WMSpRj5
-         Bd2edn5k1Z3zmE7DUzA13z/gaLhoHr0e+ColWML8tgqNoF5I9/wb7AZqodydWJAVu5R7
-         THjG+jQUIylDa1j9pgqySpxEElr0/CTgDG7jm0C3pbjcvZ5nNr4QtkuiSriPLwW0ZB4i
-         6ggnYyf0Dppl0pHGEe9/DbaxqYxCfsbdJdfAT6OvACeKgobYtFdvC1qxxeu+Dz9E/YYO
-         nmSg==
+        d=gmail.com; s=20251104; t=1784452183; x=1785056983; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jP+FexeabQancmJmT2xPEDbbgyWKp58PTaOLgL4edyE=;
+        b=bzhqJnhmUZviWIh7ratZr/jWynYvmEfIeWbLRHPvM/52xiTKI1bxaTpJMgVaI2SvlX
+         OkEqc4yBasiFWDYHEJ1frKu/bYxpDQ5dH0DVR06m32/O7x3AknwazTnTW5MKfxh4+r6s
+         euLTeDX5PCFoyUvJ0pVoJpM3IHFyOgsrp+6iVDb/JDiie3LON5aEYIqexk69rudNUd25
+         GZ8KnaHgakSwL0qfa3WMbiNpU3nRSNeRfjRreTSZdt3ffi5sdgAyp7GcjVdjyE+tQLHX
+         C1jf+v3v47KVhaf1Re3PiDcLMhL+F/rfsGLO+AAnYF6nxkCy1PQv5KerAI5WC/7J2YDn
+         IEkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784440770; x=1785045570;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DewalVKvSHtPQz7rPLf987kX4I4O55EkRGnJHsM6WDg=;
-        b=K8LZArlZ53BULA4QST96xjeUyjDYOTHMs3qUJPWw4tBlXU0PAz8NWBUyNpZfI/Dlux
-         7xZ05rGhGtb2rZP6Yj2enpdWtdwjCvhy98y8utTLYmHHm2XMJpu8aYxgp8x7vAmZtkhj
-         mfPb+nQLfJ+npTzFaCghucug0HI7yPEP8Ug8A5L7Ptkfq063ErkVNrmUJhJKLjinSzTy
-         AEhSIcgsxF5beOMBWvCEiyLFDX1wvfWomMQiQ11NlQJebqPurrINMPesKvmcCtxbP7yu
-         UFu8u5tPi8GPQ/H+ewVeTmKyayTL7PhAuIhDOkeoWNWsFI3cDqDSXl4d6MUamgSmgLVm
-         LHIQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rrsa8j6D2gHund3mWU9xQ6KCmVJlgUNFT9bGRpYE6/h7lJlo1C3hqwiyGiF9oT/DiIum6JNlGt5kbu2N+vbZidDTZHi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzuosz6HIQF3+88rnYwYZBdE0ojq59BGJv0s5KpwUqzQk8rIAD4
-	+PhRvki+TpP/nO5gy9GfUZqOiHy1j+0dBSE07RuVF1JboEZeeSyvB06Y
-X-Gm-Gg: AfdE7cmhn4m9LtLLcTgE1JOwN3p43DOhCEZp6PjV63gKMzLJsJG8Twt5rENeAlhhMGP
-	yBh2TPG28qA69wPoSMzTMPIj08KA+rZLlfx7EOwzO+eIzZ6p280AicrOIvPvyDrNFA0ukVOLcIz
-	wSjEMydlgCd7sTAFksDWKvFAfYkWvW/yeMNzj3szpU/6SvEGH8Uy0bt/NYVgUJmMtmiwIai1gbs
-	m6sTwKgHX+lUH4r5hqb5ZN0vrBtqHyCqsXBMKDr7/rPCt4DAb79RDnqaOK79p+IH0H0Zzus3jqb
-	XgEm9Nb1IrcUEN/eqNVmqMgAxzxnfljex+E+ZTg3zikKLHkCSPCCj5gxanotktJBHgFgleilukJ
-	Y71Ojiyt7Tdgs5nx+KoufQfUpBfLwcw+Yzm6riRV8+SzxOawl4yrxUA7iO7+6AIU6x5bhVCeJ1I
-	tRAU8KJQWEV96YcnAw+A==
-X-Received: by 2002:ac2:53ae:0:b0:5ae:a36b:e6d2 with SMTP id 2adb3069b0e04-5b28f98a08amr1095915e87.27.1784440769543;
-        Sat, 18 Jul 2026 22:59:29 -0700 (PDT)
-Received: from [127.0.1.1] ([185.117.148.216])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5b291da4ff2sm1514810e87.28.2026.07.18.22.59.28
+        d=1e100.net; s=20251104; t=1784452183; x=1785056983;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=jP+FexeabQancmJmT2xPEDbbgyWKp58PTaOLgL4edyE=;
+        b=lN54JeXfwI3wpD8mURL5cBgnyKy0y1B+ieLbxeL6nVVHNX0TWj82kYyXFQSAujJL/w
+         1JK26HcLmsajhUdZ8v0lEEhi/rCrWenWNywwx0MadAbeVTfXIhnJ7y1vIKuVOV2qZKYs
+         54myHqkP8aH5G0Vlc6Gi6YxrlkXgMUo2w1fDp4We5O8Ck/Sgw9cGNlmpUUr5kxGGt88v
+         2FHeP4bwLGGOrOyNU46LqpIPN4Kc4PsLxc2FkD+v3YapdSpjeIWWfa0bpQY4KTkA6Q6U
+         NIzvqR2YKsjTUY1hEEu4kxCAEg3QDUFg433SjXv8NIhWtU/UIyHkamFRMlb+az+X+ZQx
+         sHcA==
+X-Gm-Message-State: AOJu0YzfeJ+g7/+mKOvhxqO6Pym21uY3ACZskeVKE8Z5hKaWN+X00s++
+	s4Ts9mqtQ5B6UOyNBJZKXzTZ0UVPZUYpwZ1WtJLyBweUyGVXGgpXxlrh
+X-Gm-Gg: AfdE7clQWqnyILMXwtTVOk342sUdqVBNqlIpWdc3BWqgDDlwWxYP/UWc/D3DOWGddGz
+	VdGowj47/9F8Psl/u/mp+6Q3HEunkJ43NEeRmlQ4/LVfROacL3p7KaKpYLVgZpACPB55FDMf3pW
+	7OYO/IExYV/JTMSbZTHvqzJWCBhDPNregSGogc61QdTxSsVWtj2c7x55VkwsPWK5RyxfMPw4L8z
+	gRnaGB89z5hoQ0Pi5fxZPnMd4qCgauOhsQjoSTuTiDsjo/oNdI+R4TXl9pjhzIHFELW9A96C+kr
+	PbRgel0qpmKOfgyHzpnBlFDbD8ACoU8UumepGMmGnaKTw9HMxwudF0X/0+qPpBfR/RglxyV/blK
+	Ztm93YEa0+AcAx499/GQp7cfzE/usr5La2vmrQmp2vYZZKXHufJ23GKuqz0R9blnsvK3SfKFbwn
+	DGWPOtMKn4mkxLNTz9W1DBx7lcHJdq03k/Fr6XQ9KCwvpNv7s=
+X-Received: by 2002:a05:600c:a42:b0:493:eed4:7210 with SMTP id 5b1f17b1804b1-4954a3ef700mr105036445e9.11.1784452182500;
+        Sun, 19 Jul 2026 02:09:42 -0700 (PDT)
+Received: from proart-px13.tail9ecfc0.ts.net ([2001:16a2:c872:9901:bd65:b9a0:e797:25db])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49549c96f19sm202174895e9.9.2026.07.19.02.09.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jul 2026 22:59:29 -0700 (PDT)
-From: Musaev Ibragim <atomicus.xyz@gmail.com>
-To: Mingyou Chen <qby140326@gmail.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Gladyshev Ilya <foxido@foxido.dev>,
- Nika Krasnova <nika@nikableh.moe>, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] platform/x86: bitland-mifs-wmi: Merge the function
- of redmi-wmi into the bitland driver
-Date: Sun, 19 Jul 2026 11:59:26 +0600
-Message-ID: <178444076601.4076.16818759313258005640@gmail.com>
-In-Reply-To: <20260709122337.17417-3-qby140326@gmail.com>
-References: <20260709122337.17417-3-qby140326@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Sun, 19 Jul 2026 02:09:41 -0700 (PDT)
+From: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
+Subject: [PATCH] platform/x86: asus-nb-wmi: map ProArt key (0x8b) to KEY_PROG3
+Date: Sun, 19 Jul 2026 12:08:43 +0300
+Message-ID: <20260719090843.66777-1-nizar.m.kabbani@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 9 Jul 2026 20:23:35 +0800, Mingyou Chen wrote:
+The dedicated "ProArt" key on the ASUS ProArt PX13 (HN7306) emits ASUS
+WMI event code 0x8b. This code is absent from the asus-nb-wmi sparse
+keymap, so pressing the key only produces a "Unknown key code 0x8b"
+message and does nothing in userspace.
 
-Hi Mingyou,
+On this model the key is exposed solely through the WMI interface and has
+no HID scancode, so it can only be handled inside asus-nb-wmi. Map 0x8b
+to KEY_PROG3 so the key emits a bindable event, consistent with the
+existing KEY_PROG3 mapping used for the ASUS programmable/Armoury key.
 
-I own a Redmi Book Pro 15 2023 (TM2209), one of the machines redmi-wmi
-currently serves, and did a live test pass over the Redmibook side of
-this series against WMI event traces from the actual firmware. A few
-issues below, on top of what Nika already found. Happy to test v2 on
-this hardware — just Cc me.
+Signed-off-by: Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
+---
+ drivers/platform/x86/asus-nb-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0x80), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0), {} },
-> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0), {} },
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 8005c08..aeb461b 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -632,6 +632,7 @@ static const struct key_entry asus_nb_wmi_keymap[] = {
+ 	{ KE_KEY, 0x86, { KEY_PROG1 } }, /* MyASUS Key */
+ 	{ KE_KEY, 0x88, { KEY_RFKILL  } }, /* Radio Toggle Key */
+ 	{ KE_KEY, 0x8A, { KEY_PROG1 } }, /* Color enhancement mode */
++	{ KE_KEY, 0x8B, { KEY_PROG3 } }, /* ProArt key (PX13/HN7306) */
+ 	{ KE_KEY, 0x8C, { KEY_SWITCHVIDEOMODE } }, /* SDSP DVI only */
+ 	{ KE_KEY, 0x8D, { KEY_SWITCHVIDEOMODE } }, /* SDSP LCD + DVI */
+ 	{ KE_KEY, 0x8E, { KEY_SWITCHVIDEOMODE } }, /* SDSP CRT + DVI */
+-- 
+2.55.0
 
-The Auto entry has its value in the wrong byte. On the TM2209 the
-backlight state arrives in value_low as 0x00 / 0x05 / 0x0a / 0x80;
-a live trace of the backlight key cycling (payload bytes are
-[type, id, value_low, value_high]):
-
-  01 05 00 00   Off
-  01 05 05 00   Low
-  01 05 0a 00   High
-  01 05 80 00   Auto
-
-so the second entry needs to be
-BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0), otherwise the Auto
-press falls through to the unknown-hotkey path.
-
-> 	case WMI_EVENT_KBD_BRIGHTNESS:
-> 		brightness = event->value_low;
-> 		blocking_notifier_call_chain(&bitland_notifier_list,
-> 					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
-> 					     &brightness);
-
-Related: on the TM2209 these raw values (up to 0x80) end up in
-led_classdev_notify_brightness_hw_changed() against a LED registered
-with max_brightness = 3 — and the MIFS control methods behind that LED
-do not work on this machine at all (the profile SET fails with
-EOPNOTSUPP and the LED GET always returns 0; the SMM interface differs
-from the gaming models). Both the LED and the platform profile probably
-want to be gated on DMI (or on a probe-time functionality check) before
-the event GUID starts feeding them.
-
-> +		/* Redmi refresh rate toggle quirk */
-> +		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED &&
-> +		    event->value_low == 0 && event->value_high == 0) {
-
-Confirming the Redmibook side of Nika's concern: on the TM2209 Fn+S
-really is event 0x1a with value_low always 0, so the quirk does work
-here — but the event id spaces of the two device generations genuinely
-collide (0x19 is the AI-button break event on Redmibooks vs
-WMI_EVENT_REFRESH_RATE on yours; 0x1a is Fn+S here vs CPU fan speed on
-yours). Rather than value-based quirks in the notify path, have you
-considered selecting one of two keymaps at probe time by DMI? A single
-merged table will keep growing special cases.
-
-One more thing worth a comment somewhere in the merged driver: on the
-TM2209 the ACPI event handler (EV20 in an OEM SSDT) cycles the EC
-performance mode as a side effect of building the _WED payload for the
-Fn+K event. Whatever driver owns the event GUID must keep reading
-events, or Fn+K mode switching physically stops working.
-
-Related: I have a pending redmi-wmi patch that reports these EC state
-events (backlight / power mode / Fn lock) as input events so userspace
-OSDs can react [1]. Whatever form the merged driver takes, please keep
-these events observable rather than KE_IGNOREd.
-
-[1] https://lore.kernel.org/r/178405473606.25865.4048095379503614221@gmail.com
-
-Tested on Redmi Book Pro 15 2023 (TM2209, BIOS RMAPH5B0P0909).
-
---
-Musaev Ibragim
