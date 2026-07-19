@@ -1,114 +1,83 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from tbjjbihbhdcb.turbo-smtp.net (tbjjbihbhdcb.turbo-smtp.net [199.187.173.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B253711CBA;
-	Sun, 19 Jul 2026 16:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E2338E8AB
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 17:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.187.173.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784479570; cv=none; b=p7EU0bnSmgNFpqQSeaxir6KIzhNAuXLmkE6yVWZVz1DGvyQw2mSXRR22xep0CZ34Dv80HpG4x13n3qFaGdT/DML0UMdeOkNpn+6w0li3bLW2LeGWacaJ47pimQVgMWDhKGyrlz1yaH/aPG5ohLNAdIUvuRyXLwim67P4crjqxFY=
+	t=1784482660; cv=none; b=EC4bU0T1/GMsNUw1lj0YIiIMEnwzj69YPpKNmv4gZnM8OhSX1jqY9rkGJRt57jAL/ec3sBZv5K3i5iEPJr9KOKbGpRyCPhaETqXExIQxDCaDq5e2rry98zuyDolhWub5em7PvcI0/jMLoAxV9XeAIXAtA6amKdmYAGRhZOkCFvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784479570; c=relaxed/simple;
-	bh=0GrleKdYkLCOtZlvJdViPijgv9WfYFrhmgtw8u/42Nc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=SftlR6tvOT1xzel/JzoU/WhFviGUJk+pWkabY8E7qNCmNueoDJHMoexqCYPxryvpE2E9aIPmV/7S7qJChwf9vgyTgiMcN5aNTeSYKcrHzdwQE7NSjYvIxZP02FC7ghJT+2roo+vPkfKZsPeglcT4wj/kQRufpWVcAML7FPVVF4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=r82y9hIe; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1784482660; c=relaxed/simple;
+	bh=nJZwVCxqbkHts6zj0Ud6xkhvo2+8qpTec7hN7/2JIm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sAo/2JrO/kJLZwzJCSqs7cRmaGC8qONgfrfTmBD0XxxryNymrbD8png+J282bobHksB6lp50bmswNfy9ghuRSFI56Ux5m1+OydnIJnw1xqbnj2FxbMqYzsOJWV5QS20PnsKJEbRnFmjS9sQFPXXitKrFQQG50WpaSAaVi9rLUcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me; spf=pass smtp.mailfrom=yahyatoubali.me; dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b=ofrOkRvQ; arc=none smtp.client-ip=199.187.173.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahyatoubali.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="r82y9hIe"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 968A140430
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1784479567; bh=6UrEboEtHbQuciKeEEnaNVeWtSLgxWDqlD/f/4AmGRk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=r82y9hIeIZ+khgTP7H3fSmrKjHc8MGhjSnE6CAbm/8inY24jseX1/hqgyMPliFL6P
-	 Ne/Zwtrpr8huUmVEt9zlPdhOEQJHiFhykBsp4QTXw8A3VHZW9bFXIINANnzzL3j2hu
-	 1wdpCVzy6mE9Lv/79YkOXtzpAzXHi6laYkfZNJkE70KYMjHiVNtPsAE4ijYOpEDXpI
-	 6eeJVdqAjogkLcrNDGMg3TIzcRfkBf02ZqS5MqFtOSZ3P04N8FrpGD7uo6h67Y2P/J
-	 hc0X0nkNn8voXQ0MuOzf7PCCJuc3u5uyd6e7WJ4/GtlKn3VyPRXSlGRR+DobSC/Snr
-	 cypwU9EiHM4Ig==
-Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 968A140430;
-	Sun, 19 Jul 2026 16:46:07 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, Yahya Toubali
- <yahya@yahyatoubali.me>, Shuah Khan <skhan@linuxfoundation.org>, "Derek J
- . Clark" <derekjohn.clark@gmail.com>, Armin Wolf <W_Armin@gmx.de>, "open
- list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list
- <linux-kernel@vger.kernel.org>, "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>
-Cc: Weijie Yuan <wy@wyuan.org>
-Subject: Re: [PATCH v3] Documentation: fix spelling typos
-In-Reply-To: <b078b8d4-a15d-410b-ae74-39d09d39762d@app.fastmail.com>
-References: <alukuB0r73qfc1PG@wyuan.org>
- <20260718165616.1923610-1-yahya@yahyatoubali.me>
- <b078b8d4-a15d-410b-ae74-39d09d39762d@app.fastmail.com>
-Date: Sun, 19 Jul 2026 10:46:06 -0600
-Message-ID: <87v7ab3p2p.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b="ofrOkRvQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=yahyatoubali.me; s=turbo-smtp; x=1785087458; h=Received:
+	Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	References:MIME-Version:Content-Transfer-Encoding:Feedback-Id;
+	bh=XFKzPGmEJ3BPxQewhHFUIelVcZFAAKsxrifnQBu0zL8=; b=ofrOkRvQcpDMw
+	UNXjwhazyP8MlYXVNdMtLS27HAbSu18sdg4n+oeQcVSgIvQEV1THn0l52FBraOY3
+	YFfDkCrmIl+DXM68rAMRfKHgwRXhq899vhB8Jwr/GBGj0zDsaz7B57SVzNZk1xFh
+	LVtzjjZ9TSYbLo1PpEAyW97ohTB7W4=
+Received: (qmail 4055508 invoked from network); 19 Jul 2026 17:37:31 -0000
+Received: from 197.145.178.94  by turbo-smtp.com with SMTP; 19 Jul 2026 17:37:30 -0000
+X-TurboSMTP-Tracking: 64-018cfb16-00001e6511786d82c003-003-4288be1d
+From: Yahya Toubali <yahya@yahyatoubali.me>
+To: corbet@lwn.net, mpearson-lenovo@squebb.ca
+Cc: linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, yahya@yahyatoubali.me
+Subject: [PATCH] Documentation: wmi: lenovo-wmi-other: Document intentional BIOS misspelling
+Date: Sun, 19 Jul 2026 18:37:10 +0100
+Message-ID: <20260719173710.2367930-1-yahya@yahyatoubali.me>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <87v7ab3p2p.fsf@trenco.lwn.net>
+References: <87v7ab3p2p.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Feedback-Id: 26016534
 
-"Mark Pearson" <mpearson-lenovo@squebb.ca> writes:
+The spelling "Minumum" in the FanMinSpeed entry is intentionally kept
+as-is because it reflects the actual string returned by the system BIOS.
+Add an explanatory note to prevent future redundant spelling-fix submissions.
 
-> On Sat, Jul 18, 2026, at 12:56 PM, Yahya Toubali wrote:
->> Fix 'Minumum' -> 'Minimum' in lenovo-wmi-other.rst and
->> 'maintainance' -> 'maintenance' in housekeeping.rst.
->> These were flagged by checkpatch.
->>
->> Signed-off-by: Yahya Toubali <yahya@yahyatoubali.me>
->> ---
->>  Documentation/core-api/housekeeping.rst        | 2 +-
->>  Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/core-api/housekeeping.rst 
->> b/Documentation/core-api/housekeeping.rst
->> index ccb0a88b9cb3..71ba5d86f249 100644
->> --- a/Documentation/core-api/housekeeping.rst
->> +++ b/Documentation/core-api/housekeeping.rst
->> @@ -9,7 +9,7 @@ extreme workloads can't stand, such as in some DPDK 
->> usecases.
->> 
->>  The kernel work moved away by CPU isolation is commonly described as
->>  "housekeeping" because it includes ground work that performs cleanups,
->> -statistics maintainance and actions relying on them, memory release,
->> +statistics maintenance and actions relying on them, memory release,
->>  various deferrals etc...
->> 
->>  Sometimes housekeeping is just some unbound work (unbound workqueues,
->> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst 
->> b/Documentation/wmi/devices/lenovo-wmi-other.rst
->> index 011054d64eac..65cb78ef285a 100644
->> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
->> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
->> @@ -163,5 +163,5 @@ data using the `bmfdec 
->> <https://github.com/pali/bmfdec>`_ utility:
->>      [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
->>      [WmiDataId(2), read, Description("Fan ID."), 
->> WmiSizeIs("NumOfFans")] uint32 FanId[];
->>      [WmiDataId(3), read, Description("Maximum Fan Speed."), 
->> WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
->> -    [WmiDataId(4), read, Description("Minumum Fan Speed."), 
->> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
->> +    [WmiDataId(4), read, Description("Minimum Fan Speed."), 
->> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
->>    };
->
-> The minumum fix has been proposed a few times already. It's a miss-spell that comes from the BIOS, so is deliberately wrong.
->
-> That being said - I vote we correct it so that we stop getting patches that want to fix it.
-> In the interests of not seeing it again:
+Suggested-by: Jonathan Corbet <corbet@lwn.net>
+Signed-off-by: Yahya Toubali <yahya@yahyatoubali.me>
 
-Instead, why not add a line to the file saying that the BIOS actually
-behaves that way?
+Thanks Mark and Jon for the context.
 
-Thanks,
+That makes total sense. I dropped the housekeeping typo fix for now to avoid
+unnecessary churn, and this v4 keeps the BIOS spelling but adds the explicit
+note documenting the firmware quirk as suggested.
 
-jon
+---
+ Documentation/wmi/devices/lenovo-wmi-other.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst b/Documentation/wmi/devices/lenovo-wmi-other.rst
+index 01d471156738..f6760f0a6260 100644
+--- a/Documentation/wmi/devices/lenovo-wmi-other.rst
++++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
+@@ -90,6 +90,10 @@ WMI interface description
+ The WMI interface description can be decoded from the embedded binary MOF (bmof)
+ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+ 
++.. note::
++   The misspelling of "Minumum" in the FanMinSpeed entry below is deliberate
++   and reflects the actual string embedded within the system BIOS.
++
+ ::
+ 
+   [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("LENOVO_OTHER_METHOD class"), guid("{dc2a8805-3a8c-41ba-a6f7-092e0089cd3b}")]
+-- 
+2.55.0
+
+
