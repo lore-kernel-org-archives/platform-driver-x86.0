@@ -1,146 +1,156 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C2318B0F;
-	Sun, 19 Jul 2026 02:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05672D12ED
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 05:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784426458; cv=none; b=GlAQxbF5U8atgdB1Jerj2TTN57pPAmjhk3pTLkSIwBv+phEhyKRx8sgZPVaOaIw990sLMkIQbapaqtOutmcbQyr1JJNhNV+l3qc3wzyUK+Qz8UJtEFTayFq3Ia9LZQI0my9fGWss5TSK6T5txpaLqExnvTVPVJriMQLoexlXByY=
+	t=1784440773; cv=none; b=EowfdvCgEYafz16LHCdFPAuLISpDPb9XzcRxTKMefzto9PXKpdmKuoG/Nc2hD0NWKZkKQrYKPbN4Tx67khDDSogZSj0Apwm5yI5tSmuqmDJNwGtFeL+rIPxtNZ1xjRwY5tOKlfixUjtpFeJhb2CArkZvmwTveLEgL3mNhyloIUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784426458; c=relaxed/simple;
-	bh=+cgMAv4pJyqbln0Y/efgT40IJmrPzO3cjpskLGagsFo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=sXlMaEUuSsIxCRiz5+E8Kf+KAoxgEb0hfc65MIe3llbxPdP6d6XIT3kQpC24pUh/pphsFT+/kBvR6wn1K7BOmnhViixjDUXeT9juupbvFFlWMke4A1HqXti8x9RxdPxRbfKoz5exJW6yv2AXjxOHoadqFEw3tO64mNScvLpeP6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=OecwdOX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ie9riLAf; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1784440773; c=relaxed/simple;
+	bh=z7zI4ormmMwmd4+a1vmhKas9U5S2B2I5OjONa7+J2z8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nuRRNRKUkDn4L9Zd2F1NfTHVkzPLLxaRp711J/xWRaSvw6GDQ2pxH9UbNNzYFJzmaKn54VFpo7eS/NjOtMretcxc3OVqILSxZYT0mzuJcU6eUyya6VbpG4q5ghVm7VMSVlpLxlkWpGUc9I97bGSSVgmMpNFrsA9Ezy8wcdcQduY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBqnAhFb; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="OecwdOX9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ie9riLAf"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id EC0D81D0006B;
-	Sat, 18 Jul 2026 22:00:54 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Sat, 18 Jul 2026 22:00:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1784426454;
-	 x=1784512854; bh=PwCc6i1bdvaCErer9U+IdqXPKfIw2O2VAvEWFgbGNJo=; b=
-	OecwdOX9UarT0sFGwTsVuYtjhjg7A/dJvv9ZZkJPkTaEFM7ALrfXVmhijtAtdmVY
-	2RR1vrJLPRQxPcOC8ltcAyLeZ0J2CGKYmrE65DTEdfwsNgGH1TaAcZTbZq728I61
-	GulgY+6U+kRSUzaSlX8C9Tk7nPy9cgNXtzWOfbG7WvfYTOdUHo/eUAJhCLyKHtvA
-	iAZl/Pjiz8Bw0aQ9wxx7e/x+4kM6Xl/SniYVssRfpPLgHBhlmMnaqTUAdYgLPqwD
-	4Mgm2HrqwIhNf1quALwPmBJ+HrbLO0GHuteMWfr+ozpxqJMoZ6LVUkDHiDIlbK4C
-	g/R1/QegoVt1NfyZAHOgEQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1784426454; x=
-	1784512854; bh=PwCc6i1bdvaCErer9U+IdqXPKfIw2O2VAvEWFgbGNJo=; b=I
-	e9riLAficzcpsZR8UTxMOH8N3tr13iV7XbmNWt/6cOysPeYZeJ1KEnLZVz6sxsOR
-	G9VccuAxlSnOKkI0pRquqBbDRMX1UKc3xWoby5F+7AU2vGhnDsAYaEdDwZ0y/15x
-	k3BcxHDIuZ2j8+JfGDk8UnUzyg/TLN5A2e8Qh+WVlG5GpC9zYD6rAK1mj52qTlGM
-	p+GJZocrhWdq+m+i4et+dviouvLCLfX7BU0Nz9/VdpEY0dwB7j0wLpRzlJWE/x8z
-	mgn4K0XYewZYsYQFS1zluP8lz91oZIwxPpZytqhWe79Oj9jQN2+SolwqA2t/wTVR
-	SGFyWFAo6bqOwxJdR0Lxw==
-X-ME-Sender: <xms:1i9cajvfTFUZjZ_AR6kAcXh7gzJ_rvOFubvhx3rZaJSvRWMAH50QfQ>
-    <xme:1i9cavThPDLP6LO1IC47tiLp7WRR9ixS-GxBBPDxRgJlbn8sf3H9odXxHgb3RBrtw
-    PfVcc2PRzTYPtrIAlwubmCQSRZX7T2RWE_oH8iAgqh8hTLkQggu4cU>
-X-ME-Proxy-Cause: dmFkZTG0vqR8McJKPCl0CA1MVajPKZrNDkWDx/u/kAlZr/YgQ6lGJdXkT/PcKKrMSHRJmf
-    BnqWYLAfc1sWSOcXCk81eRJ4ImxwDygIYGewD0YrCQqhMQABpZuY4hd86eI70IGqfsVFNr
-    yI8yPQbcqLpIayl/9VkmbfybP8/2sShfV9h1BHOTYVhSc6Vevw9Kqy0qVdb+o9YSFdu1RQ
-    y204lUYzIMXAM7aUkccfp72gxyVwPqgl4RaXjBkGsWY0bKFefZQXX04VIRSPyNbozjVfj5
-    LETaW34cJGVSrhExiHes3AF7ZlH4RNELifoCBCBfq/sIW8stawhlqE2CUSw1owQ4aSZGZq
-    YNAmOPifesBetdKgV2egAbPU5O7yar7aWPIM0CmddmmLTZxpZ2j3NU5CnDRpDx+HAteWNm
-    EfYWnjKlzpzYn04xCQi6vDjoYEtvanIpjAvJBMco4P3fYGbTwBqQ561iXHGAmvemYA9NhW
-    3EU02mT+wqWxjTv9wbQRfZxtE0Ws2gYCCo40JZhrWSd/IIWbq759b/kPX0XzYgGYEfpej6
-    rPvtSPz/G8oPMeYCRim3UX1SFiJn8pAaTe0G5mao51vZzX9SZJ7DTXcRmWZYisF4BxzyYT
-    5erXpG4mvglNXyABx7gMmpDLKnaLvfrmemdM7Ts18x4n4Y9338w64cgCy6cw
-X-ME-Proxy: <xmx:1i9canvS9YnduKkJSo5kzOy_-NBQx_k2YF421s0LbToWRrZyORfu5w>
-    <xmx:1i9calAH9cP2iRF5JFkmnxPVFMqV2YsUUfZO0dZGgj4YK0YdJ5CZ-Q>
-    <xmx:1i9cavM1TCU449XgLgPZLf9PhcGgvgZ_Ls1qacc6AiktdQICjUaHzQ>
-    <xmx:1i9catBLZAChd_xq7yPI2GgrkmJHBxpeRZGacagXV6tNS5fDDxAPBw>
-    <xmx:1i9caploQAhVqZAf1BgLU_C9SuP0tymoA-0daqTV_EnupXG-dXoBEFdG>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 453062CE03C0; Sat, 18 Jul 2026 22:00:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBqnAhFb"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-39da69c5ba3so45156191fa.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 18 Jul 2026 22:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784440770; x=1785045570; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=DewalVKvSHtPQz7rPLf987kX4I4O55EkRGnJHsM6WDg=;
+        b=QBqnAhFbeDXfouIc6iOgVAV02XVHiNKcWvXBrKi8mu+oyBKOOy8rwsjPAOMDlHTGvG
+         Ylto4cqg0kFoE8RAinb/aNSIFJPnvpHaa2jSO0vJUV9g5IOAQ51OQE0VgrmI+WMSpRj5
+         Bd2edn5k1Z3zmE7DUzA13z/gaLhoHr0e+ColWML8tgqNoF5I9/wb7AZqodydWJAVu5R7
+         THjG+jQUIylDa1j9pgqySpxEElr0/CTgDG7jm0C3pbjcvZ5nNr4QtkuiSriPLwW0ZB4i
+         6ggnYyf0Dppl0pHGEe9/DbaxqYxCfsbdJdfAT6OvACeKgobYtFdvC1qxxeu+Dz9E/YYO
+         nmSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784440770; x=1785045570;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=DewalVKvSHtPQz7rPLf987kX4I4O55EkRGnJHsM6WDg=;
+        b=K8LZArlZ53BULA4QST96xjeUyjDYOTHMs3qUJPWw4tBlXU0PAz8NWBUyNpZfI/Dlux
+         7xZ05rGhGtb2rZP6Yj2enpdWtdwjCvhy98y8utTLYmHHm2XMJpu8aYxgp8x7vAmZtkhj
+         mfPb+nQLfJ+npTzFaCghucug0HI7yPEP8Ug8A5L7Ptkfq063ErkVNrmUJhJKLjinSzTy
+         AEhSIcgsxF5beOMBWvCEiyLFDX1wvfWomMQiQ11NlQJebqPurrINMPesKvmcCtxbP7yu
+         UFu8u5tPi8GPQ/H+ewVeTmKyayTL7PhAuIhDOkeoWNWsFI3cDqDSXl4d6MUamgSmgLVm
+         LHIQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rrsa8j6D2gHund3mWU9xQ6KCmVJlgUNFT9bGRpYE6/h7lJlo1C3hqwiyGiF9oT/DiIum6JNlGt5kbu2N+vbZidDTZHi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzuosz6HIQF3+88rnYwYZBdE0ojq59BGJv0s5KpwUqzQk8rIAD4
+	+PhRvki+TpP/nO5gy9GfUZqOiHy1j+0dBSE07RuVF1JboEZeeSyvB06Y
+X-Gm-Gg: AfdE7cmhn4m9LtLLcTgE1JOwN3p43DOhCEZp6PjV63gKMzLJsJG8Twt5rENeAlhhMGP
+	yBh2TPG28qA69wPoSMzTMPIj08KA+rZLlfx7EOwzO+eIzZ6p280AicrOIvPvyDrNFA0ukVOLcIz
+	wSjEMydlgCd7sTAFksDWKvFAfYkWvW/yeMNzj3szpU/6SvEGH8Uy0bt/NYVgUJmMtmiwIai1gbs
+	m6sTwKgHX+lUH4r5hqb5ZN0vrBtqHyCqsXBMKDr7/rPCt4DAb79RDnqaOK79p+IH0H0Zzus3jqb
+	XgEm9Nb1IrcUEN/eqNVmqMgAxzxnfljex+E+ZTg3zikKLHkCSPCCj5gxanotktJBHgFgleilukJ
+	Y71Ojiyt7Tdgs5nx+KoufQfUpBfLwcw+Yzm6riRV8+SzxOawl4yrxUA7iO7+6AIU6x5bhVCeJ1I
+	tRAU8KJQWEV96YcnAw+A==
+X-Received: by 2002:ac2:53ae:0:b0:5ae:a36b:e6d2 with SMTP id 2adb3069b0e04-5b28f98a08amr1095915e87.27.1784440769543;
+        Sat, 18 Jul 2026 22:59:29 -0700 (PDT)
+Received: from [127.0.1.1] ([185.117.148.216])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5b291da4ff2sm1514810e87.28.2026.07.18.22.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Jul 2026 22:59:29 -0700 (PDT)
+From: Musaev Ibragim <atomicus.xyz@gmail.com>
+To: Mingyou Chen <qby140326@gmail.com>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Gladyshev Ilya <foxido@foxido.dev>,
+ Nika Krasnova <nika@nikableh.moe>, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] platform/x86: bitland-mifs-wmi: Merge the function
+ of redmi-wmi into the bitland driver
+Date: Sun, 19 Jul 2026 11:59:26 +0600
+Message-ID: <178444076601.4076.16818759313258005640@gmail.com>
+In-Reply-To: <20260709122337.17417-3-qby140326@gmail.com>
+References: <20260709122337.17417-3-qby140326@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: A2E4tekp3ChN
-Date: Sat, 18 Jul 2026 22:00:34 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Yahya Toubali" <yahya@yahyatoubali.me>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <skhan@linuxfoundation.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, "Armin Wolf" <W_Armin@gmx.de>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Cc: "Weijie Yuan" <wy@wyuan.org>
-Message-Id: <b078b8d4-a15d-410b-ae74-39d09d39762d@app.fastmail.com>
-In-Reply-To: <20260718165616.1923610-1-yahya@yahyatoubali.me>
-References: <alukuB0r73qfc1PG@wyuan.org>
- <20260718165616.1923610-1-yahya@yahyatoubali.me>
-Subject: Re: [PATCH v3] Documentation: fix spelling typos
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
 
-On Sat, Jul 18, 2026, at 12:56 PM, Yahya Toubali wrote:
-> Fix 'Minumum' -> 'Minimum' in lenovo-wmi-other.rst and
-> 'maintainance' -> 'maintenance' in housekeeping.rst.
-> These were flagged by checkpatch.
->
-> Signed-off-by: Yahya Toubali <yahya@yahyatoubali.me>
-> ---
->  Documentation/core-api/housekeeping.rst        | 2 +-
->  Documentation/wmi/devices/lenovo-wmi-other.rst | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/core-api/housekeeping.rst 
-> b/Documentation/core-api/housekeeping.rst
-> index ccb0a88b9cb3..71ba5d86f249 100644
-> --- a/Documentation/core-api/housekeeping.rst
-> +++ b/Documentation/core-api/housekeeping.rst
-> @@ -9,7 +9,7 @@ extreme workloads can't stand, such as in some DPDK 
-> usecases.
-> 
->  The kernel work moved away by CPU isolation is commonly described as
->  "housekeeping" because it includes ground work that performs cleanups,
-> -statistics maintainance and actions relying on them, memory release,
-> +statistics maintenance and actions relying on them, memory release,
->  various deferrals etc...
-> 
->  Sometimes housekeeping is just some unbound work (unbound workqueues,
-> diff --git a/Documentation/wmi/devices/lenovo-wmi-other.rst 
-> b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> index 011054d64eac..65cb78ef285a 100644
-> --- a/Documentation/wmi/devices/lenovo-wmi-other.rst
-> +++ b/Documentation/wmi/devices/lenovo-wmi-other.rst
-> @@ -163,5 +163,5 @@ data using the `bmfdec 
-> <https://github.com/pali/bmfdec>`_ utility:
->      [WmiDataId(1), read, Description("Mode.")] uint32 NumOfFans;
->      [WmiDataId(2), read, Description("Fan ID."), 
-> WmiSizeIs("NumOfFans")] uint32 FanId[];
->      [WmiDataId(3), read, Description("Maximum Fan Speed."), 
-> WmiSizeIs("NumOfFans")] uint32 FanMaxSpeed[];
-> -    [WmiDataId(4), read, Description("Minumum Fan Speed."), 
-> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
-> +    [WmiDataId(4), read, Description("Minimum Fan Speed."), 
-> WmiSizeIs("NumOfFans")] uint32 FanMinSpeed[];
->    };
+On Thu, 9 Jul 2026 20:23:35 +0800, Mingyou Chen wrote:
 
-The minumum fix has been proposed a few times already. It's a miss-spell that comes from the BIOS, so is deliberately wrong.
+Hi Mingyou,
 
-That being said - I vote we correct it so that we stop getting patches that want to fix it.
-In the interests of not seeing it again:
+I own a Redmi Book Pro 15 2023 (TM2209), one of the machines redmi-wmi
+currently serves, and did a live test pass over the Redmibook side of
+this series against WMI event traces from the actual firmware. A few
+issues below, on top of what Nika already found. Happy to test v2 on
+this hardware — just Cc me.
 
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0, 0x80), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 5, 0), {} },
+> +	{ KE_IGNORE, BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x0a, 0), {} },
 
-Mark
+The Auto entry has its value in the wrong byte. On the TM2209 the
+backlight state arrives in value_low as 0x00 / 0x05 / 0x0a / 0x80;
+a live trace of the backlight key cycling (payload bytes are
+[type, id, value_low, value_high]):
+
+  01 05 00 00   Off
+  01 05 05 00   Low
+  01 05 0a 00   High
+  01 05 80 00   Auto
+
+so the second entry needs to be
+BI_HOTKEY_CODE(WMI_EVENT_KBD_BRIGHTNESS, 0x80, 0), otherwise the Auto
+press falls through to the unknown-hotkey path.
+
+> 	case WMI_EVENT_KBD_BRIGHTNESS:
+> 		brightness = event->value_low;
+> 		blocking_notifier_call_chain(&bitland_notifier_list,
+> 					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
+> 					     &brightness);
+
+Related: on the TM2209 these raw values (up to 0x80) end up in
+led_classdev_notify_brightness_hw_changed() against a LED registered
+with max_brightness = 3 — and the MIFS control methods behind that LED
+do not work on this machine at all (the profile SET fails with
+EOPNOTSUPP and the LED GET always returns 0; the SMM interface differs
+from the gaming models). Both the LED and the platform profile probably
+want to be gated on DMI (or on a probe-time functionality check) before
+the event GUID starts feeding them.
+
+> +		/* Redmi refresh rate toggle quirk */
+> +		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED &&
+> +		    event->value_low == 0 && event->value_high == 0) {
+
+Confirming the Redmibook side of Nika's concern: on the TM2209 Fn+S
+really is event 0x1a with value_low always 0, so the quirk does work
+here — but the event id spaces of the two device generations genuinely
+collide (0x19 is the AI-button break event on Redmibooks vs
+WMI_EVENT_REFRESH_RATE on yours; 0x1a is Fn+S here vs CPU fan speed on
+yours). Rather than value-based quirks in the notify path, have you
+considered selecting one of two keymaps at probe time by DMI? A single
+merged table will keep growing special cases.
+
+One more thing worth a comment somewhere in the merged driver: on the
+TM2209 the ACPI event handler (EV20 in an OEM SSDT) cycles the EC
+performance mode as a side effect of building the _WED payload for the
+Fn+K event. Whatever driver owns the event GUID must keep reading
+events, or Fn+K mode switching physically stops working.
+
+Related: I have a pending redmi-wmi patch that reports these EC state
+events (backlight / power mode / Fn lock) as input events so userspace
+OSDs can react [1]. Whatever form the merged driver takes, please keep
+these events observable rather than KE_IGNOREd.
+
+[1] https://lore.kernel.org/r/178405473606.25865.4048095379503614221@gmail.com
+
+Tested on Redmi Book Pro 15 2023 (TM2209, BIOS RMAPH5B0P0909).
+
+--
+Musaev Ibragim
