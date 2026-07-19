@@ -1,56 +1,72 @@
-Received: from tbjjbihbhdcb.turbo-smtp.net (tbjjbihbhdcb.turbo-smtp.net [199.187.173.21])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7EB31714C
-	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 22:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.187.173.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C43624CE
+	for <platform-driver-x86@vger.kernel.org>; Sun, 19 Jul 2026 22:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784501022; cv=none; b=pKvHAe4kjPubMAFuLJiSAH4DNNzeng4nzKCfZTs+iTnn4wpCT/Cea0G3a0/xdOJ4oTiM2Sbc/QzRO0XK2VQhscIzddZMnwKLWLbqQV7bPvP5s4FrEw3Vob5jHp+gG4B55fexK3hfeSgm5qhczjQGgAI4zZzY0GN3km/c3OQ42cA=
+	t=1784501680; cv=none; b=PG17GPCT+CBJIf5M3mDk8G0NQWRGkv0qZpBR99u7j0oYo5L0qI/mxVYXrH11VSXVBiyDvoEtxsn2foYu5U0bbWvUa846+t/Sz+PhsHK/L3MkimcM9B0ZS4HEbSvGzxLUozq8lAgBgiEcmYTFcWXsnPkpiCvrH3FWKAMRLYQO8+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784501022; c=relaxed/simple;
-	bh=bU9rfzZw+sYihYNfDvN67BphozTyaKjVAaqwYvV7cOc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BW+7SKDmOv6NBVGPqrwMjOHMMBg337wOzdQ/AL25ePATBxTXxlvgEKXhcemvYhBe30WyUlvYIrfiQobO4gsGoi5/0oLjqyeu1yII1qzPevpumorzpjlQlB/TlvGMiWC7n0eriCc3zXyP3Ln9dUwROvSShg/UeLcXGliZd420WE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me; spf=pass smtp.mailfrom=yahyatoubali.me; dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b=NNzR+yMt; arc=none smtp.client-ip=199.187.173.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahyatoubali.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahyatoubali.me
+	s=arc-20240116; t=1784501680; c=relaxed/simple;
+	bh=6h7Zl+qQVxWwwLNDblZSH+OAgmOGACOTDe5d4+A8H0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b1PDUZgcLw10Bt+mBks5VrvM9x0+b1npCrzh/qOwpO4TrjC5W+TzeJ5OUYoPegHr1ExsJB4RVymc4LEMb9Yb9NSRtx2viTKsQPOeRNhH6K6yD1Z+j7Om9nt5D7+3ncwb/9mXOeZy0duPjIqVGAQAf5+xNg444himfjabky96Liw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org; spf=pass smtp.mailfrom=wyuan.org; dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b=RHRIE9qd; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wyuan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wyuan.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yahyatoubali.me header.i=@yahyatoubali.me header.b="NNzR+yMt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=yahyatoubali.me; s=turbo-smtp; x=1785105821; h=Received:
-	Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	References:MIME-Version:Content-Transfer-Encoding:Feedback-Id;
-	bh=Lowszjnb5rLCrQz02KnFZwZejwYL9GUBNjyM8sCLN5I=; b=NNzR+yMtKqI5E
-	PoqGz/DHD4xCk0fH7m3wIYTOko+qKop3qEOkf9iKPaMGPvw1vWkc93GS9kQ/d2we
-	sxyZn1ONZX3JRgjN4ZEuuD6nLbx3un4Ooiv+VWsHAIBKYBy5p/68G0NordTDJEjz
-	BRZqcEXqF+jlUoUKtc81evbSgNuHak=
-Received: (qmail 1075180 invoked from network); 19 Jul 2026 22:43:39 -0000
-Received: from 197.145.178.94  by turbo-smtp.com with SMTP; 19 Jul 2026 22:43:37 -0000
-X-TurboSMTP-Tracking: 64-018cfb16-00001e655789a1c2c005-005-4288be1d
-From: Yahya Toubali <yahya@yahyatoubali.me>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Yahya Toubali <yahya@yahyatoubali.me>, Weijie Yuan <wy@wyuan.org>, mpearson-lenovo@squebb.ca, linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: wmi: lenovo-wmi-other: Document intentional BIOS misspelling
-Date: Sun, 19 Jul 2026 23:42:46 +0100
-Message-ID: <20260719224317.2450320-1-yahya@yahyatoubali.me>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <87o6g250ya.fsf@trenco.lwn.net>
-References: <20260719173710.2367930-1-yahya@yahyatoubali.me> <87o6g250ya.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=wyuan.org header.i=@wyuan.org header.b="RHRIE9qd"
+Date: Mon, 20 Jul 2026 06:54:20 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wyuan.org; s=key1;
+	t=1784501666;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VPQG6ZvSD/n62usd3XLtKNk1YS8Rr48P6+5K+Z8EIl0=;
+	b=RHRIE9qdcVNC8fzIKGZh9rjfxNL2baC20gx+uOCnLWneXezHnG3VnAjKL1+SS7WZlpbFy0
+	Ghy3UWgUwsP+D0tKdcB4y3vKzp4dhVmWezhwr29ITTdbhxFiitaihGJyduh2c/8K117MEX
+	X1Ov9nxvEHmWYfR2iU+TyycNrVPHxOG81MOf/Z9lCpi7HXEM1KBvVx79re0PoScSS/kpq2
+	buxn4Qq0d47KGMc9qzivpaQrlQYx5jM0iEoli+8xsWQCd2W1du+vBfyykPoV8euQp4l82Y
+	MvJoCfxpWL52LpMfjGlDfRX5+nvfNtai1teyJbM7yWnvOWI7Rj5rA7+CzR1Kmg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Weijie Yuan <wy@wyuan.org>
+To: Yahya Toubali <yahya@yahyatoubali.me>
+Cc: Jonathan Corbet <corbet@lwn.net>, mpearson-lenovo@squebb.ca,
+	linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: wmi: lenovo-wmi-other: Document
+ intentional BIOS misspelling
+Message-ID: <al1VnJ-JFh_uYtYf@wyuan.org>
+References: <20260719173710.2367930-1-yahya@yahyatoubali.me>
+ <87o6g250ya.fsf@trenco.lwn.net>
+ <20260719224317.2450320-1-yahya@yahyatoubali.me>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-Id: 26016534
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260719224317.2450320-1-yahya@yahyatoubali.me>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Jon,
+On Sun, Jul 19, 2026 at 11:42:46PM +0100, Yahya Toubali wrote:
+> Hi Jon,
+> 
+> Yes, I used an LLM to help me format the email text because I am still
+> learning how the mailing list process works.
 
-Yes, I used an LLM to help me format the email text because I am still learning how the mailing list process works. 
+I suspect it's not just the format.
 
-I will work on my next patches to make sure they are well-structured and follow the proper git mailing list standards.
+> I will work on my next patches to make sure they are well-structured
+> and follow the proper git mailing list standards.
+> 
+> Thanks for the patience and the explanation,
+> Yahya
 
-Thanks for the patience and the explanation,
-Yahya
+Friendly reminder ;-)
 
+You may get started by wrapping your email to 72 columns first.
+
+Thanks.
