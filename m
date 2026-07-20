@@ -1,264 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7CE395D98;
-	Mon, 20 Jul 2026 10:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851483E5A10;
+	Mon, 20 Jul 2026 10:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784542136; cv=none; b=SzDK7jJzYRpzpqAl/pfEPNLdE1a7uza28Gmg1iY0tFrrTjvyvWk0Pbmq79PjJ/Fi+JSOv82uTtcB6QRLfJyyOXsEXyGnyWY80+OWZqSwhm5rdGGKaIXuxnyGRnjz4e5bXmqFwfSgPmfLV2cXeAxHo4iKUSLCmZn0U0gehSOJ3dM=
+	t=1784542450; cv=none; b=HbIVLHlchbXDBOQDX67nelVhccIN7xdHXT+k9DhEibkanM/Tcbo0O5mtfxeQ47w5H5gUDtqWdn05iO0sKCwcL3YfCTx0gPyrZMFUHp9LKUt63LzytE2pcF+j7jYS8TMCl4ZZJs3M4Kl1L6yB3ym3zdo61MxDls5tYRc+mdll0us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784542136; c=relaxed/simple;
-	bh=hVmHyvIWoYQU4BWWqDAdHTEpHXiTCVaFtdzxz4f3HgQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=haVlXsaVhov4u/xy0u5zoZBpgVeTZvblwukYBdQTzg3dXjMCavSva3QIxXjqvUFcMnJej0HXLbrjOGeGRjq5VvetI3k2Hl5JmOo0TLBUP26tYz0TpHcgOjytMTcyPz/L4//LBrdjAteVVC7am13a4erEcR4SCmUlY17KjsjCVcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ryd9IX1e; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784542450; c=relaxed/simple;
+	bh=GJhJvAE5qcjbQIFmhYJvmP6ubRrAIY9gEwJEHl0/NQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GJkiL+fuiKTDjQAxeSoUfHnA7/xFWvAS3kHoPaHpXEBL9Gws6TmsCZFYsRkqkMa4Cvz763Xzi8U0d3q8p691yhYARm7JEYGGTfaSq/v1cFu0ROg/xAig2+fSXjmKR0vpYs+9cWdx3pl3DR2utFYDBiOVnQFIzIZMLaDZMKgIcAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwbgGgs4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ryd9IX1e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784542126; x=1816078126;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=hVmHyvIWoYQU4BWWqDAdHTEpHXiTCVaFtdzxz4f3HgQ=;
-  b=Ryd9IX1eUYPlQc8KEXmzaE+TzIYpYhLN640aaJcr4X6UY2SYGSvn74DT
-   S/2ZY0PsoBdB9hQROr0tZl2IsBEz0MSpNeyxndIbjWl42eV7lXUNp4cMk
-   +C6Sfky2m4R2zuJ/Nz9fKuSrL3r89/kjEG8RChaJIv++GU+MUOGs5934Y
-   n58354nnLfJgFO9TA6qI8uvtSL0RfyeLbOLYhmIEuQ7u8JK3T+K8UaDY/
-   qBrYkGeKdmEICrFPjyY6881BWmhrVHbivmLtQQGasIOMk/4QFR97leCPm
-   ZCbqMsXdqm8HbYN07nY0/7iNIC/UYBlmzwCaYvjVINPtUkaCKdXhrePXQ
-   w==;
-X-CSE-ConnectionGUID: seS28twdQ7m9YQQDNx8WIA==
-X-CSE-MsgGUID: oshvvaTSReW5kD5FmBCkpQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11851"; a="87658007"
-X-IronPort-AV: E=Sophos;i="6.25,174,1779174000"; 
-   d="scan'208";a="87658007"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:08:42 -0700
-X-CSE-ConnectionGUID: cymirO/IQJeFvO9wxeUPTg==
-X-CSE-MsgGUID: MEeUAfxXS8m4877q3gniIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,174,1779174000"; 
-   d="scan'208";a="256840334"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:08:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 20 Jul 2026 13:08:36 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, Dell.Client.Kernel@dell.com, 
-    shuangpeng.kernel@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, arnd@arndb.de
-Subject: Re: [PATCH 1/3] platform/x86: dell-smbios-wmi: Fix chardev resource
- management
-In-Reply-To: <20260716053337.112533-2-W_Armin@gmx.de>
-Message-ID: <d7f4d4b3-f2b8-0588-03e9-b97116aedca6@linux.intel.com>
-References: <20260716053337.112533-1-W_Armin@gmx.de> <20260716053337.112533-2-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwbgGgs4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 520CB1F000E9;
+	Mon, 20 Jul 2026 10:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784542440;
+	bh=L82yDrmLiJ1Bvvupwz1aUZXupSUPiCTIJ5flRvZzxt4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dwbgGgs4gW6vk04bGHs4DYQ73pMA8PDxXVoRnOy9/F5602GrRgr538/2+nNLqVPIa
+	 apHxwnJYEbUf488ibfN2wSuattBX3INotx8OQ6LLXX3T5tzm7N3ra111DYsdV2Kh+y
+	 tL0m0ftmiuvrNn55ANTpryF5X3vu6VJDAU4wAgtd7QVpWkKHOIpyNPEU0RcpLqiX8m
+	 DTnSiPGrvp08DQcRbtOXQWHJTIlqbBCihlyHFeP+AKAwowjOwA35f8BME+4OM6KiMg
+	 QV47iWyL+lRB22pyLENA/4mxBe6xxqaY9hDKvu5nISoIyJ0MCyBlU7HPfDbtqW2PpT
+	 wl0FCW1GLuImQ==
+Message-ID: <760d53df-7353-4f6f-b946-a3b76a09e503@kernel.org>
+Date: Mon, 20 Jul 2026 12:13:57 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: int3472: handle GPIO type 0x08 as a power
+ regulator
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Jakob Berg Jespersen <dev@berg.pm>
+Cc: Daniel Scally <dan.scally@ideasonboard.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Tooraj Taraz <tooraj.taraz@yahoo.com>, "Joseph V. Lavigne"
+ <jlavig88@gmail.com>
+References: <20260719-sp7plus-int3472-v1-1-521a43f5c191@berg.pm>
+ <al1I_A0AiKXpHKfN@kekkonen.localdomain>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <al1I_A0AiKXpHKfN@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Jul 2026, Armin Wolf wrote:
+Hi,
 
-> When unbinding the WMI driver while a userspace application has
-> an open file descriptor for the character device, a UAF occurs:
+On 20-Jul-26 00:00, Sakari Ailus wrote:
+> Hi Jakob,
 > 
-> KASAN: slab-use-after-free in _copy_to_user from platform/x86/dell-smbios-wmi
+> Thanks for the patch.
 > 
-> The reason for this is that even after calling misc_deregister(),
-> userspace appications can still call read() and/or ioctl() on open
-> file descriptors associated with the already unregistered character
-> device. This causes a UAF by attempting to access the already freed
-> state container of the WMI driver.
+> On Sun, Jul 19, 2026 at 08:15:12PM +0200, Jakob Berg Jespersen wrote:
+>> On the Microsoft Surface Pro 7+, the rear camera's INT3472 device
+>> (INT3472:01, sensor INT347A / ov8865) enumerates a GPIO of type 0x08
+>> in its _DSM which the driver does not recognise, so it is left
+>> unmapped:
+>>
+>>   int3472-discrete INT3472:01: GPIO type 0x08 unknown; the sensor may
+>>   not work
+>>
+>> The DSDT shows this pin (0x0100AF08, pin 175, active-high) sitting
+>> alongside a normal type-0x0b power-enable GPIO: it gates a second
+>> sensor power rail. Because the type is unknown the rail is never
+>> enabled, the ov8865's "dvdd" supply resolves to a dummy regulator, and
+>> the sensor never probes.
+>>
+>> Map type 0x08 for INT347A to a POWER_ENABLE regulator with con_id
+>> "dvdd", the supply the in-tree ov8865 driver already requests, so no
+>> sensor-driver change is needed. ("dvdd" rather than "avdd" because the
+>> type-0x0b power-enable pin on this INT3472 is already registered as
+>> "avdd".)
+>>
+>> Type 0x08 is not in the driver's documented function list and is not
+>> otherwise handled by mainline; based on the sensor's supply set and the
+>> con_id that brings it up, it appears to be the DVDD (digital core
+>> voltage) rail, the counterpart to the existing DOVDD (0x10) type.
+>>
+>> Related out-of-tree work approached the same rail by adding a new "pwr1"
+>> supply instead of the sensor's existing "dvdd" (linux-surface PR #1867
+>> for the Surface Pro 9, PR #2201 for the Pro 7+ ov8865); neither was sent
+>> upstream. Mapping to "dvdd" keeps the change contained to int3472.
+>>
+>> With this change the SP7+ rear camera probes and streams reliably,
+>> validated by over a month of use.
+>>
+>> Link: https://github.com/linux-surface/linux-surface/pull/1867
+>> Link: https://github.com/linux-surface/linux-surface/pull/2201
+>> Cc: Tooraj Taraz <tooraj.taraz@yahoo.com>
+>> Cc: Joseph V. Lavigne <jlavig88@gmail.com>
+>> Signed-off-by: Jakob Berg Jespersen <dev@berg.pm>
+>> ---
+>> 0x08 is left as a bare literal rather than a named constant here; if
+>> its canonical meaning is known I'm happy to add e.g.
+>> INT3472_GPIO_TYPE_DVDD and/or handle it generically like DOVDD in v2.
+>>
+>> This is my first kernel contribution, so please bear with me on any
+>> process mistakes.
+>> ---
+>>  drivers/platform/x86/intel/int3472/discrete.c | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+>> index 115bb37577a1..98c7b9bc393f 100644
+>> --- a/drivers/platform/x86/intel/int3472/discrete.c
+>> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+>> @@ -164,6 +164,19 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+>>  		.con_id = "dvdd",
+>>  		.enable_time_us = 45 * USEC_PER_MSEC,
+>>  	},
+>> +	{	/*
+>> +		 * Surface Pro 7+ ov8865 (rear camera): type 0x08 is an
+>> +		 * undocumented sensor power rail; left undriven the sensor
+>> +		 * stays in a failed power state. "dvdd" rather than "avdd"
+>> +		 * because this INT3472 also has a type 0x0b (power enable)
+>> +		 * pin already registered as "avdd".
+>> +		 */
 > 
-> Fix this by no longer storing the state container inside
-> filp->private_data. Instead retrieve the state container using
-> get_first_smbios_priv() and return -ENODEV if the state container
-> does not exist anymore.
+> GPIO type 8 is in fact "POWER1" (type 7 being "POWER0"). This hasn't been
+> seen anywhere yet so support for it hasn't been added either.
 > 
-> Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
-> Closes: https://lore.kernel.org/platform-driver-x86/178144969601.60470.13396800403157907003@gmail.com/
-> Fixes: 93885e85a77f ("platform/x86: dell-smbios-wmi: Stop using WMI chardev")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/platform/x86/dell/dell-smbios-wmi.c | 66 ++++++++++-----------
->  1 file changed, 33 insertions(+), 33 deletions(-)
+> I understand the POWER_ENABLE GPIO is for executing the entire power
+> sequence and isn't expected to be found with the other regulators, hence an
+> apparent conflict here wouldn't be an issue.
 > 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> index 64d0871b706e..c8a6e711283d 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> @@ -6,6 +6,7 @@
->   */
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
-> +#include <linux/cleanup.h>
->  #include <linux/device.h>
->  #include <linux/dmi.h>
->  #include <linux/fs.h>
-> @@ -13,14 +14,14 @@
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/rwsem.h>
->  #include <linux/uaccess.h>
->  #include <linux/wmi.h>
->  #include <uapi/linux/wmi.h>
->  #include "dell-smbios.h"
->  #include "dell-wmi-descriptor.h"
->  
-> -static DEFINE_MUTEX(call_mutex);
-> -static DEFINE_MUTEX(list_mutex);
-> +static DECLARE_RWSEM(list_lock);
+> I think for now we could map type POWER1 (8) to "dvdd", however not using a
+> quirk but doing it for all devices, like mapping POWER_ENABLE to "avdd".
+> That'd leave mapping POWER0 to "avdd" for later. The GPIO definition for
+> POWER0 could be added in any case.
 
-Please add a comment about what this protects.
+I was wondering what the internal Intel headers said for type 8, so thank
+you for clarifying that that is called POWER1. Adding a generic mapping
+of POWER1 to "dvdd" instead of using a quirk sounds good to me.
 
-Maybe move wmi_list next to it so the connection between them is more 
-obvious?
+Regards,
 
-Should get_first_smbios_priv() use lockdep_assert_held() to check it's 
-called from a safe context?
+Hans
 
--- 
- i.
-
->  static int wmi_supported;
->  
->  struct misc_bios_flags_structure {
-> @@ -32,6 +33,7 @@ struct misc_bios_flags_structure {
->  #define DELL_WMI_SMBIOS_GUID "A80593CE-A997-11DA-B012-B622A1EF5492"
->  
->  struct wmi_smbios_priv {
-> +	struct mutex call_lock; /* Protects the content of the SMBIOS buffer */
->  	struct dell_wmi_smbios_buffer *buf;
->  	struct list_head list;
->  	struct wmi_device *wdev;
-> @@ -87,40 +89,35 @@ static int dell_smbios_wmi_call(struct calling_interface_buffer *buffer)
->  	size_t size;
->  	int ret;
->  
-> -	mutex_lock(&call_mutex);
-> +	guard(rwsem_read)(&list_lock);
-> +
->  	priv = get_first_smbios_priv();
-> -	if (!priv) {
-> -		ret = -ENODEV;
-> -		goto out_wmi_call;
-> -	}
-> +	if (!priv)
-> +		return -ENODEV;
->  
->  	size = sizeof(struct calling_interface_buffer);
->  	difference = priv->req_buf_size - sizeof(u64) - size;
->  
-> +	guard(mutex)(&priv->call_lock);
-> +
->  	memset(&priv->buf->ext, 0, difference);
->  	memcpy(&priv->buf->std, buffer, size);
->  	ret = run_smbios_call(priv->wdev);
->  	memcpy(buffer, &priv->buf->std, size);
-> -out_wmi_call:
-> -	mutex_unlock(&call_mutex);
->  
->  	return ret;
->  }
->  
-> -static int dell_smbios_wmi_open(struct inode *inode, struct file *filp)
-> +static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffer, size_t length,
-> +				    loff_t *offset)
->  {
->  	struct wmi_smbios_priv *priv;
->  
-> -	priv = container_of(filp->private_data, struct wmi_smbios_priv, char_dev);
-> -	filp->private_data = priv;
-> +	guard(rwsem_read)(&list_lock);
->  
-> -	return nonseekable_open(inode, filp);
-> -}
-> -
-> -static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffer, size_t length,
-> -				    loff_t *offset)
-> -{
-> -	struct wmi_smbios_priv *priv = filp->private_data;
-> +	priv = get_first_smbios_priv();
-> +	if (!priv)
-> +		return -ENODEV;
->  
->  	return simple_read_from_buffer(buffer, length, offset, &priv->req_buf_size,
->  				       sizeof(priv->req_buf_size));
-> @@ -167,22 +164,24 @@ static long dell_smbios_wmi_do_ioctl(struct wmi_smbios_priv *priv,
->  static long dell_smbios_wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	struct dell_wmi_smbios_buffer __user *input = (struct dell_wmi_smbios_buffer __user *)arg;
-> -	struct wmi_smbios_priv *priv = filp->private_data;
-> -	long ret;
-> +	struct wmi_smbios_priv *priv;
->  
->  	if (cmd != DELL_WMI_SMBIOS_CMD)
->  		return -ENOIOCTLCMD;
->  
-> -	mutex_lock(&call_mutex);
-> -	ret = dell_smbios_wmi_do_ioctl(priv, input);
-> -	mutex_unlock(&call_mutex);
-> +	guard(rwsem_read)(&list_lock);
->  
-> -	return ret;
-> +	priv = get_first_smbios_priv();
-> +	if (!priv)
-> +		return -ENODEV;
-> +
-> +	guard(mutex)(&priv->call_lock);
-> +
-> +	return dell_smbios_wmi_do_ioctl(priv, input);
->  }
->  
->  static const struct file_operations dell_smbios_wmi_fops = {
->  	.owner		= THIS_MODULE,
-> -	.open		= dell_smbios_wmi_open,
->  	.read		= dell_smbios_wmi_read,
->  	.unlocked_ioctl	= dell_smbios_wmi_ioctl,
->  	.compat_ioctl	= compat_ptr_ioctl,
-> @@ -254,6 +253,10 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
->  	if (!priv->buf)
->  		return -ENOMEM;
->  
-> +	ret = devm_mutex_init(&wdev->dev, &priv->call_lock);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = dell_smbios_wmi_register_chardev(priv);
->  	if (ret)
->  		return ret;
-> @@ -262,9 +265,8 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
->  	if (ret)
->  		return ret;
->  
-> -	mutex_lock(&list_mutex);
-> +	guard(rwsem_write)(&list_lock);
->  	list_add_tail(&priv->list, &wmi_list);
-> -	mutex_unlock(&list_mutex);
->  
->  	return 0;
->  }
-> @@ -273,12 +275,10 @@ static void dell_smbios_wmi_remove(struct wmi_device *wdev)
->  {
->  	struct wmi_smbios_priv *priv = dev_get_drvdata(&wdev->dev);
->  
-> -	mutex_lock(&call_mutex);
-> -	mutex_lock(&list_mutex);
-> -	list_del(&priv->list);
-> -	mutex_unlock(&list_mutex);
->  	dell_smbios_unregister_device(&wdev->dev);
-> -	mutex_unlock(&call_mutex);
-> +
-> +	guard(rwsem_write)(&list_lock);
-> +	list_del(&priv->list);
->  }
->  
->  static const struct wmi_device_id dell_smbios_wmi_id_table[] = {
-> 
