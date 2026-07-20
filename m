@@ -1,239 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E793976AD;
-	Mon, 20 Jul 2026 10:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D8E2F549F;
+	Mon, 20 Jul 2026 10:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784542699; cv=none; b=Oy1FsFiAwgf2l+dDPTwl71xm3bqsJSO3WjAuKHpZBwrD/FecNlc+CioaObTNViz7Z9NVg5+JtxQo/TbOJzP1O3ZSgHkI0T6Imi07s1ZcMzYkJaXbpNrlpg0UC82mbA6UPbSW7DGFx4UxppF3SlSSa0KTxUWa5OA7EGA03sVTePM=
+	t=1784542929; cv=none; b=Am8RJqxiWsgpzYI1ZB+L6bc8/ODu5EAts653al0URVvycv/j0gGn1FcWI5Nlw3StALx63ndht5cKvMw4Q+8BjcOUGDrLX0JSN0BUJeBtjy1i9maoQbzrDdpAcOwRTFZLaeho6FhlRb/hE1EFmmSHcbGmIucmTCEpG8EkcXjMYCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784542699; c=relaxed/simple;
-	bh=m97VorIS7b0Gfji9sHqFG86n22C93faK9WA473M/Vvg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FHNIQ2vR8v4QP5BA0+SVYGszII+iwn966+xlM+3aOKjDeLrJZLpSTOTNghGCBJVaVKTExlzy4wRh1q5wKr0PljMyxlcWkqGPzuEGKtykLLYea0qbezzdy40ImheT7lcnrb3LuJPvfbEnMj1lWlrJJuZe6+tqEg+OxhC9XdQNRIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TsWMmAOx; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784542929; c=relaxed/simple;
+	bh=wYGuh2AldTLmkwb1KvBSxs4x7wXorFiwncoJUrpoD+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e52ei7ABpTRq8ZxAsROsmAPAO7dN4Liw5F4QUZqofGu1rU9OtOpIX3jap6AQcfzxgGqSGoSdBGIunAQDgbni3U93GyyNE2buG+Npup4yMUhhfOaosi1pH9Fok2mNqZYzzHlNXY+/qjaM9/2HixCLxFdEqjTFScDgHgcGlzqbz8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWKUThwY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsWMmAOx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784542698; x=1816078698;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=m97VorIS7b0Gfji9sHqFG86n22C93faK9WA473M/Vvg=;
-  b=TsWMmAOxwlLCiVAJHzEitLHhiXexr1a7/jdQEsA9oXVXi+NGGK6rk7lP
-   B0hD0Ep4uopEp4q0Zve6zbNg4NI/ry2lf+zotxWgwGgbAoyXkqhVHLkZt
-   t+B9vGBDKuJD4/pCIxxC+EsOte892uQjVwfKMtl+che1DOlXCK2r9WAnE
-   rg5luNU+LlVYeXvKQPjU4rDmVKv3y2ip5baXrWibBVUi8fSCpF7NmHWZO
-   tHK5TZQCBjJZRWyhnNVtkMYiGfZR6XHtToD9saDZqfn4Vub3De0/HvFUC
-   PHXudeiInuVjZFWRllZBm5ic/bBccSdUc8ZCwQvJOhuyOnyX48ryK/s3k
-   g==;
-X-CSE-ConnectionGUID: tSsorHCeTtKqOkct1Vh+JA==
-X-CSE-MsgGUID: UZWH4pVXTKy9H9LIEfUqMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11851"; a="87658801"
-X-IronPort-AV: E=Sophos;i="6.25,174,1779174000"; 
-   d="scan'208";a="87658801"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:18:17 -0700
-X-CSE-ConnectionGUID: jA+MHTgxTiqYsjEFZaKU/g==
-X-CSE-MsgGUID: 36PVsK3WQIm7m6zvQUyHdg==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:18:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 20 Jul 2026 13:18:11 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: Hans de Goede <hansg@kernel.org>, Dell.Client.Kernel@dell.com, 
-    shuangpeng.kernel@gmail.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, arnd@arndb.de
-Subject: Re: [PATCH 3/3] platform/x86: dell-smbios-wmi: Replace global list
- with single item
-In-Reply-To: <20260716053337.112533-4-W_Armin@gmx.de>
-Message-ID: <14853dc3-61e4-2d6f-e7ea-248aff5da157@linux.intel.com>
-References: <20260716053337.112533-1-W_Armin@gmx.de> <20260716053337.112533-4-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWKUThwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798BC1F000E9;
+	Mon, 20 Jul 2026 10:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784542928;
+	bh=Pp2s5qzqaeiHN6QY2DvHLp6GwygBxFb6Oj0tpOeXAM8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=gWKUThwYg3pWE7idNIPxpT4QnoIJkxErV4NBOisf4inFKesmdXiFpH9tcZEAmi+nz
+	 x4WfFN8rdy9UJSQD8cObeIATtOulv1Ftd3fNrrvqeskOj1ePVWsGmV4ecZGPtWTwo5
+	 7CV8oQ7nhbwHhCVHPFngldzF7H+bbZn99jfOv5uOTcrV1mbkB9QrvBZFSZ5AkVaGF0
+	 9PH6lPC1q4AOoUSMFIOJ/37cd92f5beBREKR4RnLiXKaLSk/dNTcFSDGAjNBwz1qqc
+	 OsdacBGeaTEPgkQkha2m8C7HO8IE8Q9R+y3j8412H5Huu+7AE8xZjoMolWdEP5rlNR
+	 gu9oRYRg8GEDA==
+Message-ID: <5958d6d2-26a3-4ec4-b976-5881b33696df@kernel.org>
+Date: Mon, 20 Jul 2026 12:22:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] platform: int3472: discrete: Support multiple HIDs per
+ GPIO map entry
+To: Tarang Raval <tarang.raval@siliconsignals.io>,
+ sakari.ailus@linux.intel.com
+Cc: hpa@redhat.com, linux-media@vger.kernel.org,
+ Daniel Scally <dan.scally@ideasonboard.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260718203821.17684-1-tarang.raval@siliconsignals.io>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260718203821.17684-1-tarang.raval@siliconsignals.io>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Jul 2026, Armin Wolf wrote:
+Hi,
 
-> There can only exist a single instance of the dell-smbios-wmi driver
-> at the same time because of naming conflicts with the character
-> device ("wmi/dell-smbios"). Having a global list for all instances
-> thus makes no sense.
+On 18-Jul-26 22:38, Tarang Raval wrote:
+> Each int3472_gpio_map entry currently maps exactly one ACPI HID to a
+> GPIO quirk. As more sensors needing the same quirk are identified, this
+> means adding a full duplicate table entry per HID, differing only in
+> the HID string, which does not scale.
 > 
-> Replace the global list with a single item used by the character
-> device. This simplifies the driver and allows us to mark it as
-> being multi-instance safe.
+> Change int3472_gpio_map::hid to a NULL-terminated hids array so a
+> single entry can match any number of ACPI HIDs, letting new HIDs be
+> added to the relevant array instead of duplicating quirk entries.
 > 
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> Tested-by: Kate Hsuan <hpa@redhat.com>
+
+Thank you for your patch.
+
 > ---
->  drivers/platform/x86/dell/dell-smbios-wmi.c | 67 ++++++++++-----------
->  1 file changed, 31 insertions(+), 36 deletions(-)
+> change log:
 > 
-> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> index 552b80429688..f9443ddfff55 100644
-> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
-> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
-> @@ -10,7 +10,6 @@
->  #include <linux/device.h>
->  #include <linux/dmi.h>
->  #include <linux/fs.h>
-> -#include <linux/list.h>
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -21,7 +20,6 @@
->  #include "dell-smbios.h"
->  #include "dell-wmi-descriptor.h"
->  
-> -static DECLARE_RWSEM(list_lock);
->  static int wmi_supported;
->  
->  struct misc_bios_flags_structure {
-> @@ -35,20 +33,14 @@ struct misc_bios_flags_structure {
->  struct wmi_smbios_priv {
->  	struct mutex call_lock; /* Protects the content of the SMBIOS buffer */
->  	struct dell_wmi_smbios_buffer *buf;
-> -	struct list_head list;
->  	struct wmi_device *wdev;
->  	struct device *child;
->  	u64 req_buf_size;
->  	struct miscdevice char_dev;
+> v1 -> v2:
+> 
+> - Add per-HID comments to power_enable_hids_vana[] (Lenovo X9-14/X9-15
+>   for SONY471A, Lenovo X1 Carbon G14 for TBE20A0)
+> - Convert INT33F0 (mt9m114), INT347E (ov7251) entries to use named
+>   power_enable_hids_*[] arrays instead of anonymous compound literals,
+>   for style consistency
+> - Did not convert OVTI08F4 (ov08x40) to a named array, and did not add
+>   a NULL guard in int3472_gpio_map_hids_match(): not fully convinced
+>   these changes are needed yet, but open to further discussion on both
+> 
+> Identified while reviewing Kate Hsuan's imx471 vana con_id patch, whose
+> two near-identical SONY471A/TBE20A0 entries are collapsed here into
+> one, backed by a new power_enable_hids_vana[] array.
+> 
+> This patch is on top of kate's imx471 driver series[1].
+> 
+> Link: https://lore.kernel.org/linux-media/20260629074026.35490-1-hpa@redhat.com/T/#t [1].
+> ---
+>  drivers/platform/x86/intel/int3472/discrete.c | 63 +++++++++++++------
+>  1 file changed, 44 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index adff564bf3fd..f70bd661592d 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -123,10 +123,35 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+>  	return desc;
+>  }
+> 
+> +/*
+> + * Other vana-supply users (e.g. ST, Toshiba, Sony sensors) can be added to
+> + * this array instead of adding new quirk table entries.
+> + */
+> +static const char * const power_enable_hids_vana[] = {
+> +	/* Lenovo X9-14 and X9-15 */
+> +	"SONY471A",
+> +	/* Lenovo X1 Carbon G14 */
+> +	"TBE20A0",
+> +	NULL
+> +};
+
+Small nit, IMHO it would be cleaner to have the comments behind the
+actual HID strings, e.g. :
+
+static const char * const power_enable_hids_vana[] = {
+	"SONY471A", /* Lenovo X9-14 and X9-15 */
+	"TBE20A0",  /* Lenovo X1 Carbon G14 */
+	NULL
+};
+
+and maybe also mention which sensor the HID is for, e.g.:
+
+static const char * const power_enable_hids_vana[] = {
+	"SONY471A", /* imx471 on Lenovo X9-14 and X9-15 */
+	"TBE20A0",  /* imx471 on Lenovo X1 Carbon G14 */
+	NULL
+};
+
+Otherwise this looks good to me:
+
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+
+Regards,
+
+Hans
+
+
+
+
+> +
+> +static const char * const power_enable_hids_vdd[] = {
+> +	/* mt9m114 */
+> +	"INT33F0",
+> +	NULL
+> +};
+> +
+> +static const char * const power_enable_hids_enable[] = {
+> +	/* ov7251 */
+> +	"INT347E",
+> +	NULL
+> +};
+> +
+>  /**
+>   * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
+>   * sensor driver (as in DT bindings)
+> - * @hid: The ACPI HID of the device without the instance number e.g. INT347E
+> + * @hids: NULL-terminated array of ACPI HIDs of the devices without the
+> + * instance number e.g. INT347E
+>   * @type_from: The GPIO type from ACPI ?SDT
+>   * @type_to: The assigned GPIO type, typically same as @type_from
+>   * @enable_time_us: Enable time in usec for GPIOs mapped to regulators
+> @@ -135,7 +160,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+>   * GPIO_ACTIVE_HIGH otherwise
+>   */
+>  struct int3472_gpio_map {
+> -	const char *hid;
+> +	const char * const *hids;
+>  	u8 type_from;
+>  	u8 type_to;
+>  	bool polarity_low;
+> @@ -145,38 +170,27 @@ struct int3472_gpio_map {
+> 
+>  static const struct int3472_gpio_map int3472_gpio_map[] = {
+>  	{	/* mt9m114 designs declare a powerdown pin which controls the regulators */
+> -		.hid = "INT33F0",
+> +		.hids = power_enable_hids_vdd,
+>  		.type_from = INT3472_GPIO_TYPE_POWERDOWN,
+>  		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>  		.con_id = "vdd",
+>  		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+>  	},
+>  	{	/* ov7251 driver / DT-bindings expect "enable" as con_id for reset */
+> -		.hid = "INT347E",
+> +		.hids = power_enable_hids_enable,
+>  		.type_from = INT3472_GPIO_TYPE_RESET,
+>  		.type_to = INT3472_GPIO_TYPE_RESET,
+>  		.con_id = "enable",
+>  	},
+>  	{	/* ov08x40's handshake pin needs a 45 ms delay on some HP laptops */
+> -		.hid = "OVTI08F4",
+> +		.hids = (const char * const[]) { "OVTI08F4", NULL },
+>  		.type_from = INT3472_GPIO_TYPE_HANDSHAKE,
+>  		.type_to = INT3472_GPIO_TYPE_HANDSHAKE,
+>  		.con_id = "dvdd",
+>  		.enable_time_us = 45 * USEC_PER_MSEC,
+>  	},
+> -	{	/* imx471 expects "vana" as con_id for power enable */
+> -		.hid = "SONY471A",
+> -		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+> -		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+> -		.con_id = "vana",
+> -		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+> -	},
+> -	{
+> -		/*
+> -		 * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as con_id
+> -		 * for power enable
+> -		 */
+> -		.hid = "TBE20A0",
+> +	{	/* Sensors which expect "vana" as con_id for power enable */
+> +		.hids = power_enable_hids_vana,
+>  		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+>  		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>  		.con_id = "vana",
+> @@ -184,6 +198,17 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+>  	},
 >  };
-> -static LIST_HEAD(wmi_list);
-
-Okay, nevermind the comments on patch 1.
-
---
- i.
-
->  
-> -static inline struct wmi_smbios_priv *get_first_smbios_priv(void)
-> -{
-> -	return list_first_entry_or_null(&wmi_list,
-> -					struct wmi_smbios_priv,
-> -					list);
-> -}
-> +static DECLARE_RWSEM(chardev_lock);	/* Protects chardev_priv */
-> +static struct wmi_smbios_priv *chardev_priv;
->  
->  static int run_smbios_call(struct wmi_device *wdev)
->  {
-> @@ -105,16 +97,13 @@ static int dell_smbios_wmi_call(struct device *dev, struct calling_interface_buf
->  static ssize_t dell_smbios_wmi_read(struct file *filp, char __user *buffer, size_t length,
->  				    loff_t *offset)
->  {
-> -	struct wmi_smbios_priv *priv;
-> -
-> -	guard(rwsem_read)(&list_lock);
-> +	guard(rwsem_read)(&chardev_lock);
->  
-> -	priv = get_first_smbios_priv();
-> -	if (!priv)
-> +	if (!chardev_priv)
->  		return -ENODEV;
->  
-> -	return simple_read_from_buffer(buffer, length, offset, &priv->req_buf_size,
-> -				       sizeof(priv->req_buf_size));
-> +	return simple_read_from_buffer(buffer, length, offset, &chardev_priv->req_buf_size,
-> +				       sizeof(chardev_priv->req_buf_size));
->  }
->  
->  static long dell_smbios_wmi_do_ioctl(struct wmi_smbios_priv *priv,
-> @@ -158,20 +147,18 @@ static long dell_smbios_wmi_do_ioctl(struct wmi_smbios_priv *priv,
->  static long dell_smbios_wmi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	struct dell_wmi_smbios_buffer __user *input = (struct dell_wmi_smbios_buffer __user *)arg;
-> -	struct wmi_smbios_priv *priv;
->  
->  	if (cmd != DELL_WMI_SMBIOS_CMD)
->  		return -ENOIOCTLCMD;
->  
-> -	guard(rwsem_read)(&list_lock);
-> +	guard(rwsem_read)(&chardev_lock);
->  
-> -	priv = get_first_smbios_priv();
-> -	if (!priv)
-> +	if (!chardev_priv)
->  		return -ENODEV;
->  
-> -	guard(mutex)(&priv->call_lock);
-> +	guard(mutex)(&chardev_priv->call_lock);
->  
-> -	return dell_smbios_wmi_do_ioctl(priv, input);
-> +	return dell_smbios_wmi_do_ioctl(chardev_priv, input);
->  }
->  
->  static const struct file_operations dell_smbios_wmi_fops = {
-> @@ -188,10 +175,29 @@ static void dell_smbios_wmi_unregister_chardev(void *data)
->  	misc_deregister(char_dev);
->  }
->  
-> +static void dell_smbios_wmi_clear_chardev(void *data)
+> 
+> +static bool int3472_gpio_map_hids_match(struct acpi_device *adev,
+> +					const char * const *hids)
 > +{
-> +	guard(rwsem_write)(&chardev_lock);
-> +
-> +	chardev_priv = NULL;
-> +}
-> +
->  static int dell_smbios_wmi_register_chardev(struct wmi_smbios_priv *priv)
->  {
->  	int ret;
->  
-> +	scoped_guard(rwsem_write, &chardev_lock) {
-> +		/* We can only have a single chardev at a time */
-> +		if (chardev_priv)
-> +			return -EBUSY;
-> +
-> +		chardev_priv = priv;
+> +	for (unsigned int i = 0; hids[i]; i++) {
+> +		if (acpi_dev_hid_uid_match(adev, hids[i], NULL))
+> +			return true;
 > +	}
 > +
-> +	ret = devm_add_action_or_reset(&priv->wdev->dev, dell_smbios_wmi_clear_chardev, NULL);
-> +	if (ret < 0)
-> +		return ret;
+> +	return false;
+> +}
 > +
->  	priv->char_dev.minor = MISC_DYNAMIC_MINOR;
->  	priv->char_dev.name = "wmi/dell-smbios";
->  	priv->char_dev.fops = &dell_smbios_wmi_fops;
-> @@ -255,24 +261,12 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
->  	if (ret)
->  		return ret;
->  
-> -	ret = dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call);
-> -	if (ret)
-> -		return ret;
-> -
-> -	guard(rwsem_write)(&list_lock);
-> -	list_add_tail(&priv->list, &wmi_list);
-> -
-> -	return 0;
-> +	return dell_smbios_register_device(&wdev->dev, 1, &dell_smbios_wmi_call);
->  }
->  
->  static void dell_smbios_wmi_remove(struct wmi_device *wdev)
->  {
-> -	struct wmi_smbios_priv *priv = dev_get_drvdata(&wdev->dev);
-> -
->  	dell_smbios_unregister_device(&wdev->dev);
-> -
-> -	guard(rwsem_write)(&list_lock);
-> -	list_del(&priv->list);
->  }
->  
->  static const struct wmi_device_id dell_smbios_wmi_id_table[] = {
-> @@ -310,6 +304,7 @@ static struct wmi_driver dell_smbios_wmi_driver = {
->  	.probe = dell_smbios_wmi_probe,
->  	.remove = dell_smbios_wmi_remove,
->  	.id_table = dell_smbios_wmi_id_table,
-> +	.no_singleton = true,
->  };
->  
->  int init_dell_smbios_wmi(void)
+>  static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
+>  					    const char **con_id, unsigned long *gpio_flags,
+>  					    unsigned int *enable_time_us)
+> @@ -200,7 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+>  		if (*type != int3472_gpio_map[i].type_from)
+>  			continue;
 > 
+> -		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
+> +		if (!int3472_gpio_map_hids_match(adev, int3472_gpio_map[i].hids))
+>  			continue;
+> 
+>  		dev_dbg(int3472->dev, "mapping type 0x%02x pin to 0x%02x %s\n",
+> --
+> 2.34.1
+> 
+
