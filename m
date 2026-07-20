@@ -1,33 +1,33 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F1B3A4F3D;
-	Mon, 20 Jul 2026 21:22:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD0F42CB1E;
+	Mon, 20 Jul 2026 21:59:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784582539; cv=none; b=X+VGp09b2VdqX/tfwLosOUgYliYCJi4IZ3V2dXUjBvaCRxGnaH6ZPuffi2z8YHNlQVr05htW0NT2j7p3KbAZg2LNJjnVI9Sr3ViArt6KXvsfe5gzkUnI04Nf/RiU2eUMm1w1xMLBnAkG8M2FFnYzs3LqOKOoj7cuOEdz3ul+Bus=
+	t=1784584785; cv=none; b=fIhujlcQ+tYvm+N9B+Z///ZOOlTn4tdsAjRyis98mpL1DOGcBKGobwFl6j//yEsl6aAASVY44g4wXtVLIPS4NUf+PD19MwniOo5ZgYmowzeRgQFdjw+oGouM8aDWOMK/+7o/G1IifskrN8iJ9tvhWcKVlzmt7qP1wmdsndlBOG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784582539; c=relaxed/simple;
-	bh=egY/foHv2Gw0O8fWeyU063w5lu5AO85MK/WTYF8mjX4=;
+	s=arc-20240116; t=1784584785; c=relaxed/simple;
+	bh=UkdDazohtWkl3zDqbPUEI1+7kgEx8ZXq9albSD6f2cU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QZecCAxeDUg5GI7d+bR6SzfB3i3ep8fBw9HlCwN56BS7IeVC8bQCEBFcpUO9NT8N4EgDy9OqaR3Q+lAWY38UvUb2SNhtGOXVeSkb63MLS7RJ3BupcjdisMtHbrBz4EpkenpCxvolPWBVLLCqRw6FSCjnt7jTQFWaIM9y2fIEiaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NA9ENx9z; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:Content-Type; b=XrQbUjDPmiwp99wTD10il+EhWg0Mm9cwMwY0wVwwM3KSdE3B/25E5qLkCNCnN2eMJ4oLFpA9amIJGm8i1L8Vvdyb7zdlLKgJGkLZAeamL+Yl/FEXiqsYgN+suCtsGpN80Oreiopfa4OTJxvDDQWzDegtS7JyYSPcA7FumIGmqL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JucT+hsU; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NA9ENx9z"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JucT+hsU"
 Received: from [192.168.0.43] (chfd-03-b2-v4wan-176392-cust229.vm15.cable.virginm.net [82.19.20.230])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF61FC1;
-	Mon, 20 Jul 2026 23:21:15 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 094EB8E0;
+	Mon, 20 Jul 2026 23:58:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1784582476;
-	bh=egY/foHv2Gw0O8fWeyU063w5lu5AO85MK/WTYF8mjX4=;
+	s=mail; t=1784584723;
+	bh=UkdDazohtWkl3zDqbPUEI1+7kgEx8ZXq9albSD6f2cU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NA9ENx9z17hxeWsWVf/WkbS5FRjacnLs241bxymrp/mDngE7fua7AxZoFCF2aCXiL
-	 YNKQrj/wL5dfbSWnOmE4MPnbcw7yoS9GKKW7EseniOgDaZkw3RUe8BSpr8PnuaTixR
-	 yes8Wf0Phj4zxjr7gGJT/WVeM1Zeu7Tmczg2D0g4=
-Message-ID: <9e71fe86-be85-4ec3-a25a-f45f6549cef8@ideasonboard.com>
-Date: Mon, 20 Jul 2026 22:22:11 +0100
+	b=JucT+hsUf1VLB3zZYEK2pig8McDTMdZ2xljZeJ4b44di6JtaU4lQuu4QiNEiNPSx8
+	 X9qqYKcS265EVcHp34Ss+L0pbA49zi3z6i15ZC8ak9bNF9PfNVxXdMHwz0BKGjyIfT
+	 BXJQpJJXaP4IUXYLZESYGet7BUNgFyCqHEKDIYRE=
+Message-ID: <3ef0ea37-13a0-4a73-b66d-cbbcdfe18b9a@ideasonboard.com>
+Date: Mon, 20 Jul 2026 22:59:38 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,125 +35,187 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: int3472: handle GPIO type 0x08 as a power
- regulator
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Jakob Berg Jespersen <dev@berg.pm>
-Cc: Hans de Goede <hansg@kernel.org>,
+Subject: Re: [PATCH v2] platform: int3472: discrete: Support multiple HIDs per
+ GPIO map entry
+To: Tarang Raval <tarang.raval@siliconsignals.io>,
+ sakari.ailus@linux.intel.com, hansg@kernel.org
+Cc: hpa@redhat.com, linux-media@vger.kernel.org,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tooraj Taraz <tooraj.taraz@yahoo.com>, "Joseph V. Lavigne"
- <jlavig88@gmail.com>
-References: <20260719-sp7plus-int3472-v1-1-521a43f5c191@berg.pm>
- <al1I_A0AiKXpHKfN@kekkonen.localdomain>
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260718203821.17684-1-tarang.raval@siliconsignals.io>
 Content-Language: en-US
 From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <al1I_A0AiKXpHKfN@kekkonen.localdomain>
+In-Reply-To: <20260718203821.17684-1-tarang.raval@siliconsignals.io>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi all
+Hi Tarang, thanks for the patch
 
-On 19/07/2026 23:00, Sakari Ailus wrote:
-> Hi Jakob,
+On 18/07/2026 21:38, Tarang Raval wrote:
+> Each int3472_gpio_map entry currently maps exactly one ACPI HID to a
+> GPIO quirk. As more sensors needing the same quirk are identified, this
+> means adding a full duplicate table entry per HID, differing only in
+> the HID string, which does not scale.
 > 
-> Thanks for the patch.
+> Change int3472_gpio_map::hid to a NULL-terminated hids array so a
+> single entry can match any number of ACPI HIDs, letting new HIDs be
+> added to the relevant array instead of duplicating quirk entries.
 > 
-> On Sun, Jul 19, 2026 at 08:15:12PM +0200, Jakob Berg Jespersen wrote:
->> On the Microsoft Surface Pro 7+, the rear camera's INT3472 device
->> (INT3472:01, sensor INT347A / ov8865) enumerates a GPIO of type 0x08
->> in its _DSM which the driver does not recognise, so it is left
->> unmapped:
->>
->>    int3472-discrete INT3472:01: GPIO type 0x08 unknown; the sensor may
->>    not work
->>
->> The DSDT shows this pin (0x0100AF08, pin 175, active-high) sitting
->> alongside a normal type-0x0b power-enable GPIO: it gates a second
->> sensor power rail. Because the type is unknown the rail is never
->> enabled, the ov8865's "dvdd" supply resolves to a dummy regulator, and
->> the sensor never probes.
->>
->> Map type 0x08 for INT347A to a POWER_ENABLE regulator with con_id
->> "dvdd", the supply the in-tree ov8865 driver already requests, so no
->> sensor-driver change is needed. ("dvdd" rather than "avdd" because the
->> type-0x0b power-enable pin on this INT3472 is already registered as
->> "avdd".)
->>
->> Type 0x08 is not in the driver's documented function list and is not
->> otherwise handled by mainline; based on the sensor's supply set and the
->> con_id that brings it up, it appears to be the DVDD (digital core
->> voltage) rail, the counterpart to the existing DOVDD (0x10) type.
->>
->> Related out-of-tree work approached the same rail by adding a new "pwr1"
->> supply instead of the sensor's existing "dvdd" (linux-surface PR #1867
->> for the Surface Pro 9, PR #2201 for the Pro 7+ ov8865); neither was sent
->> upstream. Mapping to "dvdd" keeps the change contained to int3472.
->>
->> With this change the SP7+ rear camera probes and streams reliably,
->> validated by over a month of use.
->>
->> Link: https://github.com/linux-surface/linux-surface/pull/1867
->> Link: https://github.com/linux-surface/linux-surface/pull/2201
->> Cc: Tooraj Taraz <tooraj.taraz@yahoo.com>
->> Cc: Joseph V. Lavigne <jlavig88@gmail.com>
->> Signed-off-by: Jakob Berg Jespersen <dev@berg.pm>
->> ---
->> 0x08 is left as a bare literal rather than a named constant here; if
->> its canonical meaning is known I'm happy to add e.g.
->> INT3472_GPIO_TYPE_DVDD and/or handle it generically like DOVDD in v2.
->>
->> This is my first kernel contribution, so please bear with me on any
->> process mistakes.
->> ---
->>   drivers/platform/x86/intel/int3472/discrete.c | 13 +++++++++++++
->>   1 file changed, 13 insertions(+)
->>
->> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
->> index 115bb37577a1..98c7b9bc393f 100644
->> --- a/drivers/platform/x86/intel/int3472/discrete.c
->> +++ b/drivers/platform/x86/intel/int3472/discrete.c
->> @@ -164,6 +164,19 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
->>   		.con_id = "dvdd",
->>   		.enable_time_us = 45 * USEC_PER_MSEC,
->>   	},
->> +	{	/*
->> +		 * Surface Pro 7+ ov8865 (rear camera): type 0x08 is an
->> +		 * undocumented sensor power rail; left undriven the sensor
->> +		 * stays in a failed power state. "dvdd" rather than "avdd"
->> +		 * because this INT3472 also has a type 0x0b (power enable)
->> +		 * pin already registered as "avdd".
->> +		 */
-> 
-> GPIO type 8 is in fact "POWER1" (type 7 being "POWER0"). This hasn't been
-> seen anywhere yet so support for it hasn't been added either.
-> 
-> I understand the POWER_ENABLE GPIO is for executing the entire power
-> sequence and isn't expected to be found with the other regulators, hence an
-> apparent conflict here wouldn't be an issue.
-> 
-> I think for now we could map type POWER1 (8) to "dvdd", however not using a
-> quirk but doing it for all devices, like mapping POWER_ENABLE to "avdd".
-> That'd leave mapping POWER0 to "avdd" for later. The GPIO definition for
-> POWER0 could be added in any case.
-> 
-> I wonder what Hans or Dan think.
+> Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+> Tested-by: Kate Hsuan <hpa@redhat.com>
+> ---
 
-Yep, sounds like a good idea to me.
+Looks fine to me, thanks again:
 
-Thanks
-Dan
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
 
+> change log:
 > 
->> +		.hid = "INT347A",
->> +		.type_from = 0x08,
->> +		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
->> +		.con_id = "dvdd",
->> +		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
->> +	},
->>   };
->>   
->>   static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
->>
+> v1 -> v2:
+> 
+> - Add per-HID comments to power_enable_hids_vana[] (Lenovo X9-14/X9-15
+>    for SONY471A, Lenovo X1 Carbon G14 for TBE20A0)
+> - Convert INT33F0 (mt9m114), INT347E (ov7251) entries to use named
+>    power_enable_hids_*[] arrays instead of anonymous compound literals,
+>    for style consistency
+> - Did not convert OVTI08F4 (ov08x40) to a named array, and did not add
+>    a NULL guard in int3472_gpio_map_hids_match(): not fully convinced
+>    these changes are needed yet, but open to further discussion on both
+> 
+> Identified while reviewing Kate Hsuan's imx471 vana con_id patch, whose
+> two near-identical SONY471A/TBE20A0 entries are collapsed here into
+> one, backed by a new power_enable_hids_vana[] array.
+> 
+> This patch is on top of kate's imx471 driver series[1].
+> 
+> Link: https://lore.kernel.org/linux-media/20260629074026.35490-1-hpa@redhat.com/T/#t [1].
+> ---
+>   drivers/platform/x86/intel/int3472/discrete.c | 63 +++++++++++++------
+>   1 file changed, 44 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index adff564bf3fd..f70bd661592d 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -123,10 +123,35 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+>   	return desc;
+>   }
+> 
+> +/*
+> + * Other vana-supply users (e.g. ST, Toshiba, Sony sensors) can be added to
+> + * this array instead of adding new quirk table entries.
+> + */
+> +static const char * const power_enable_hids_vana[] = {
+> +	/* Lenovo X9-14 and X9-15 */
+> +	"SONY471A",
+> +	/* Lenovo X1 Carbon G14 */
+> +	"TBE20A0",
+> +	NULL
+> +};
+> +
+> +static const char * const power_enable_hids_vdd[] = {
+> +	/* mt9m114 */
+> +	"INT33F0",
+> +	NULL
+> +};
+> +
+> +static const char * const power_enable_hids_enable[] = {
+> +	/* ov7251 */
+> +	"INT347E",
+> +	NULL
+> +};
+> +
+>   /**
+>    * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
+>    * sensor driver (as in DT bindings)
+> - * @hid: The ACPI HID of the device without the instance number e.g. INT347E
+> + * @hids: NULL-terminated array of ACPI HIDs of the devices without the
+> + * instance number e.g. INT347E
+>    * @type_from: The GPIO type from ACPI ?SDT
+>    * @type_to: The assigned GPIO type, typically same as @type_from
+>    * @enable_time_us: Enable time in usec for GPIOs mapped to regulators
+> @@ -135,7 +160,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+>    * GPIO_ACTIVE_HIGH otherwise
+>    */
+>   struct int3472_gpio_map {
+> -	const char *hid;
+> +	const char * const *hids;
+>   	u8 type_from;
+>   	u8 type_to;
+>   	bool polarity_low;
+> @@ -145,38 +170,27 @@ struct int3472_gpio_map {
+> 
+>   static const struct int3472_gpio_map int3472_gpio_map[] = {
+>   	{	/* mt9m114 designs declare a powerdown pin which controls the regulators */
+> -		.hid = "INT33F0",
+> +		.hids = power_enable_hids_vdd,
+>   		.type_from = INT3472_GPIO_TYPE_POWERDOWN,
+>   		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>   		.con_id = "vdd",
+>   		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+>   	},
+>   	{	/* ov7251 driver / DT-bindings expect "enable" as con_id for reset */
+> -		.hid = "INT347E",
+> +		.hids = power_enable_hids_enable,
+>   		.type_from = INT3472_GPIO_TYPE_RESET,
+>   		.type_to = INT3472_GPIO_TYPE_RESET,
+>   		.con_id = "enable",
+>   	},
+>   	{	/* ov08x40's handshake pin needs a 45 ms delay on some HP laptops */
+> -		.hid = "OVTI08F4",
+> +		.hids = (const char * const[]) { "OVTI08F4", NULL },
+>   		.type_from = INT3472_GPIO_TYPE_HANDSHAKE,
+>   		.type_to = INT3472_GPIO_TYPE_HANDSHAKE,
+>   		.con_id = "dvdd",
+>   		.enable_time_us = 45 * USEC_PER_MSEC,
+>   	},
+> -	{	/* imx471 expects "vana" as con_id for power enable */
+> -		.hid = "SONY471A",
+> -		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+> -		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+> -		.con_id = "vana",
+> -		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+> -	},
+> -	{
+> -		/*
+> -		 * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as con_id
+> -		 * for power enable
+> -		 */
+> -		.hid = "TBE20A0",
+> +	{	/* Sensors which expect "vana" as con_id for power enable */
+> +		.hids = power_enable_hids_vana,
+>   		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+>   		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+>   		.con_id = "vana",
+> @@ -184,6 +198,17 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+>   	},
+>   };
+> 
+> +static bool int3472_gpio_map_hids_match(struct acpi_device *adev,
+> +					const char * const *hids)
+> +{
+> +	for (unsigned int i = 0; hids[i]; i++) {
+> +		if (acpi_dev_hid_uid_match(adev, hids[i], NULL))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>   static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
+>   					    const char **con_id, unsigned long *gpio_flags,
+>   					    unsigned int *enable_time_us)
+> @@ -200,7 +225,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+>   		if (*type != int3472_gpio_map[i].type_from)
+>   			continue;
+> 
+> -		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
+> +		if (!int3472_gpio_map_hids_match(adev, int3472_gpio_map[i].hids))
+>   			continue;
+> 
+>   		dev_dbg(int3472->dev, "mapping type 0x%02x pin to 0x%02x %s\n",
+> --
+> 2.34.1
 > 
 
