@@ -1,177 +1,209 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010049.outbound.protection.outlook.com [40.93.198.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A3C4431A57
-	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 14:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784558511; cv=none; b=rhBTZOXHxK6UT60c5ktkNY6JpfYGpKYAhOg5uLFc5a5QrPfOmrYWaSDRx9934NG820fvGIzIusD42ikDl//lPjJ+mIah6L3eCuDaNVyZ9+2Wq2yr7gLXoqH2MOU0lSuqfdBDgPXqSnyr6K9mtHmG8kF/lwzQ6wLW4M7Q16Q5ULk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784558511; c=relaxed/simple;
-	bh=7PZbMe7/8P6mBjbl8fZa2hfgo0oWBnuR20DcxmfYwR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P0mCjsujKiQGw3YmyjQtYB6ECxR1cwc+NcLWvG/209jkRru7mz5SU3YBQcMDoSuhTlZxpYwZkPPQPawR9BRGAh2QaQ8H/DGZ+4PdAc3bl+kxE1VCnkApapvhOasoEp7NSP7J9CXI3dG2WYZbmyxByWeKBl/cfpPELrBFivxqIk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MKVdIqI7; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F263F363C61;
+	Mon, 20 Jul 2026 15:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784561575; cv=fail; b=XlcWE2KHp1CqhjnjuZtH63M6/KT7yBrU6O2Qj8rQWPxIXcnGmip95Y+2/IXGxV/FuHaZ8s5mpWP+vD1Sct/OfDe7Kf1WrdqO2dbeRkEclQu3sy7Bp7NGs4c0UGIarcp9Kxb00RZGjhu4HBCuYbCu8Xc3zk3u7jaVX3z/v5FWYHA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784561575; c=relaxed/simple;
+	bh=UwLiU78o24fz8g9A4+bzDBiXakITP6/mLxSdA4XNvCA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tlvQpLR6gTAmNSk0jnsYHeg6Xbjd+HaErjW564aEFiBPP+Pze1cjuwi7kVu1uUjzWpXnXnuu1vp06KCtGQRkMJZra+Y2EOygBvtpDc+f4dcq57s1hDOXLwN0shv+LkdEcUi5K3L+o8hSYj68FXUjxSSrq5OUalfXl1YXBe9UyJg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Wvn91kLH; arc=fail smtp.client-ip=40.93.198.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKVdIqI7"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cad8076b01so122885615ad.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 07:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784558506; x=1785163306; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tY6ci5Qy7tTGy2zsHzGFV9dNONphBOELiUVTTsGRCT8=;
-        b=MKVdIqI7ikL0X6qKgI5bh0HIR7OGCSoEPHOlp0uK9lGNbfBFVFW0kmi2D7CoQnJPbH
-         fPjOYZ81OGCs/ss6sSdFPLPGrf/csY3qAU2cSDQoN2l1W8R20dEEsxaxpjdBPgzChjRW
-         qDExY8e4ycJeJT/lD0e/NbSZiSYWV/ey8d+tTpNUDk6QESK1iehpIf6gCINpujDxGRo2
-         ipqm2VGidnPowk4yBCMaCuA0K9Fgvy+YJOr1sMZ60NNjxUsg6xKmmnOE5DNmmYk6NJq/
-         0BaNzI0qKn/TdJr2U66HNqBcEtcI2wLVWZUlSAqEucnvIdm5W1k90qP8JLxSwI42I4Tt
-         Tw7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784558506; x=1785163306;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=tY6ci5Qy7tTGy2zsHzGFV9dNONphBOELiUVTTsGRCT8=;
-        b=U+053GD1sUkW5KLlcV+YW5KjneWE9Wl6kfa5sNfmkPgWVdvf+Y7N50LxY4uFPGoAXH
-         /kPEXVhjRpdCHT3DpYETSY7z3R93+nt9nGvLXKYjnM/L0kBW0rSj5jPGHX2PEgc3Iteb
-         Wy22BVtuXVTgMiYRm7C4hHvpSwwXUkxoe0ImhnITNAgmvJegZUF3g4Qluh2jaSjnhPVl
-         3xKB5Mn+egJxdFarY9PonXa1plW68rlEPrwKG9ldm/HzyH4cfLjuBu2zZYiqcNSZGDzy
-         BZHVHmFCJlIrrvV97pkbb7RVtM0yDPivAXfPKyPZ/fsStBKRXuILRzYw32IVGHb3VcD7
-         YMvg==
-X-Gm-Message-State: AOJu0Yw2+JLwq1m41P2IfqBdJfWQRO7V1H5bBXdmboF6c8ak3MWX5GvV
-	8HgamX9wDIIKYnPAoYiejjCStmcCwA5dUoMs6kthXNt7N4QLLgNZWH1m
-X-Gm-Gg: AR+sD12tBwolqJfUHDHKkNkkFZczappHslr0EHFa9HTmBlud6BruGzbs9PrXCTYc8Ur
-	9WLE1N7fe2X0Ctw7OxD/+or+QfcF97IqG2Cz56qb6rHq+SGHTlc8Tg/s8y7nVWlrpl8ZZwUep21
-	jpUVGKjXm6JPgwpBMDDrBWaA9TE1Iq3mVfN92mDtMnYo2fmPBDoHORK/oKso+Rtqm4iqUzLczom
-	9+yUgHIALS6n9XIedFjTpljkPDglqttcqre/AGTIZ/Hsd7WP3foffl+lirjfukJ38wfShzByvba
-	ljoAmDphgucuoOnzOXokzmpIKhgOGVZpOFRIql8GvRwBDjYp/qOko+hKv4ph+Aiz/Hj7Lo7FTh+
-	MjIqrhoYAmPlWVDvgSQ1mKA/gkU2mFyRoIfLlcI9ayEncMIvRcjKCSKFndw0uWWkhrG6WnNjC9+
-	ivx6BNptNkzUG+46hmz3xptasLI0jW1g6OC4T2lQSYiA3rPrVU2rw=
-X-Received: by 2002:a17:903:360c:b0:2ce:b096:e50b with SMTP id d9443c01a7336-2cf349fe60dmr142784935ad.47.1784558506277;
-        Mon, 20 Jul 2026 07:41:46 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3142a1ddeb6sm42351107eec.20.2026.07.20.07.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jul 2026 07:41:45 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <531e3c48-bb61-4741-8fe7-a2dbc213eb1e@roeck-us.net>
-Date: Mon, 20 Jul 2026 07:41:44 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Wvn91kLH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b4AuEhB6wknA9IL86gsOprSDhfrG3JPQSn7GnLiWXyz+T0CcmX3y4lfLYSVgdRDcCJ+z4r1cZc6aAyISP4auuk/981otwpaJZz6GW9ogu0rUzCAVXueiu1w81vD9/zfPfg6gRAEE2j1k94BVP1NFpVqEGfVMI3XuWUfh82v9t0Yw+0NoaeUF2/08IoDD8tjVvCt1KED/pF69G3Y5NnTUYPk4oS1RFIqygga4YU90+xweMndl8YjndsVbmR6Hm+vIrjPY/ySGWIFiACc0WSgFMj5SvaK4FlAs2p8HHCTXUnH4Pv5pUsrKC8My2M8RGCgxA3dJLRBjbmfPH6UdbeK8Xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f49gu7OFEB3+/g1EIVfFpPhHZn4FLg7Gl2iznpkSoAo=;
+ b=yfoRpR21ygYt02bpOcnkGiCOrQr/i13vljRiICgGhxp8Vx7BYRR6DMReiTicCTzzEt6eUd3eVXD7WBS06+iY4+e/mI1rdjcgNCJkqEozQYlAVC2gxVPPyQgS4HSn69T4iDMLPn5jL5S1dFbelaTIgRoDfJWjXqm0itJ/7I5EI90fL1rwO19pDsQOOjQ9IEm5zewiDGB4H9cFDx1sveP+tEAF/KRToRYSjBBfMe13Gjz7A74MHka8nrgqCjQn/oo3CZWYUzgib63U+yYkQWkzNmGW3ek6+YnZXy2drAzPb7YpTyh+nYF9alMxSaJ15qpEqEWCZA2xogQoJcLWalEHaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f49gu7OFEB3+/g1EIVfFpPhHZn4FLg7Gl2iznpkSoAo=;
+ b=Wvn91kLHnl3gEPX4YpU8QO2hBbcRU9xAKp5mJi+F9FFf/mkoqYr224yJxZ1zMm/BTTKnujRW6ponIwo/xdNgxGxY1aMrd9GLyWvdak3D1x9/a58Fp+KMbt+z8JX0/JJUL4VxTB6UxjC5WjNVcUc4htj4Dmc0l7iK4d6pwutqTfc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB7325.namprd12.prod.outlook.com (2603:10b6:510:217::19)
+ by DM4PR12MB6663.namprd12.prod.outlook.com (2603:10b6:8:8f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.18; Mon, 20 Jul
+ 2026 15:32:46 +0000
+Received: from PH8PR12MB7325.namprd12.prod.outlook.com
+ ([fe80::8024:a7ee:b29c:a4fc]) by PH8PR12MB7325.namprd12.prod.outlook.com
+ ([fe80::8024:a7ee:b29c:a4fc%6]) with mapi id 15.21.0223.017; Mon, 20 Jul 2026
+ 15:32:46 +0000
+Message-ID: <7608d951-c2df-42e3-8738-9e83e6c8d408@amd.com>
+Date: Mon, 20 Jul 2026 21:02:40 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/6] platform/x86/amd/hsmp: Serialize the data plane
+ against socket teardown
+To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ muthusamy.ramalingam@amd.com
+References: <20260713044005.1194115-1-muralidhara.mk@amd.com>
+Content-Language: en-US
+From: "M K, Muralidhara" <muralimk@amd.com>
+In-Reply-To: <20260713044005.1194115-1-muralidhara.mk@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5PR01CA0160.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:1cf::11) To PH8PR12MB7325.namprd12.prod.outlook.com
+ (2603:10b6:510:217::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v7] platform/x86: panasonic-laptop: add fan speed mode
- for newer models
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Alex Yeo <alexyeo362@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org
-References: <b557e1f6-2072-496f-8eaa-d2899d1bded4@linux.intel.com>
- <20260718185704.3466-1-alexyeo362@gmail.com>
- <fcf57a96-b2ad-c7d5-0d6d-6d760b915195@linux.intel.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <fcf57a96-b2ad-c7d5-0d6d-6d760b915195@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7325:EE_|DM4PR12MB6663:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2e91a262-d6a7-40cd-9f36-08dee6742623
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|18002099003|22082099003|10067099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	8gPbu9OV7LCSmxJe12pdAAIikXd8tIVwE9KKRiCP9QhWyOb5SNfd1WmcunhcnGPR8ssBYdcLB/9QBBTp6r8vAEk+PkH0e4kIg8iEr/ctzAfrG8lWFcLLX6qAkgoZF+zRqBr5Dj+OIIDWrrXTsnmTiRDMPgmz8ls1TE+FPXb4sZ9eCczPtZZc8GttDARoY03IFut36NIwQphv0VRq80DQr8DmtBiPPNykgNwde8PJiLIrxHBToNv9pm+t/8R2meD1cNGgDci4YgOl8KGS+SFhkeDlun9nhargaXUKa8RxyaC4FVVl9eCyAqv9u8fhGH4MuE+K7k2jdauAYfnQ3ibFGsgsLoWlCQibCutivuKXDLNXsjVXPjwj5uWlBn1MfHcOjcE1w0anTB21wRynGkSyj3SEr4WzbmdlmQQAv5iaMzeVhhA6vRWKO/UUxqLqIVlvJro5MJFxALJTObt0PAO+WzdvUiMsu1Gkr+cIk9mZ15X3kPhyqnv7SrmbxK88umEeCU4huiuk15BaUqk8/epqTx5hSVMudyVRMoc3BJ4n3Gh5QjgIOvvaXTu2w/cY/TKl1qeg6pxv8LVWkmdP15yMtKTQKb2k7P+WUncjOXel7LZktUTjM8ouwJGf3It9K/hPeA2Sz5sPg46OC0OZjCMlN2oTjrAEP3gH7XhrYu+56Wk=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7325.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(18002099003)(22082099003)(10067099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q1BFbDJXY1IyTFBrY2JwZEs0TkxueEFVR255d1FsUU9SUEpiS3RLTTdDb013?=
+ =?utf-8?B?RElnYzRoYy9ENEs4VU5waE8wdXZVbkE1NFBwelZoZGVzM1ZGbU9VQ1ZOR0hK?=
+ =?utf-8?B?NHRoUUhPbTdnNFZVQWdxazh6L1pmQkNrL0hZMVR2OVduSWVMNXVISitacGxQ?=
+ =?utf-8?B?RWJEc1h3TURnb0xvQ3k2aGxVZXdhNVk2bEdIaEpyUDc0QlhJVms1NFlUcWx1?=
+ =?utf-8?B?VkNzaUtRRVI4MTdKdU9sZW54ZEJEb0Q2Rm1tQUZEaEw1ZXF0WGsyYWVMUlMv?=
+ =?utf-8?B?OG9SZjlYT1ozYVA1NlQ5V0o3eDdKRjErOEQvUjlqSWxFZ213NGR4K1Zya2tZ?=
+ =?utf-8?B?dzAyM3MreDRaazBtNVlmemt2TGZzdFU5dE9qOHJaSW9DRFRpaitsN1dYeVNl?=
+ =?utf-8?B?YkRDSWU2MjhjR2FPaGNHbW15RFNBU2tDMFNNczJGOHZmQVFoNklqMEVmSmt5?=
+ =?utf-8?B?Q1NNTEZ2MlJBRjJGN1ZUTEpnYzFtY0c3dFg1MUtiQ3hhWWlRYWRKMjZHOHZY?=
+ =?utf-8?B?ZW1zTnN2OHhpYjRjc2NYUThMMXhnU0VHNGRiVEJhMWZ2cGZBUzZkV0lBNHdT?=
+ =?utf-8?B?b3NnYk04VDNDN2pSTmhmT0YrY0czeFovYXNVd3cwTmEzZ09xdEw5UDY5aWFB?=
+ =?utf-8?B?RjlqZVlpcC8zYUF4YmZuRVRmUktWeFVib3ZmS010SnZHNzQ0U0Y3UjdNdjVn?=
+ =?utf-8?B?dzVENXlZaWNjay9UbzRvY3pndkpmcmMvdWo3bUVpRDc5NUlMZVFqSU45enlV?=
+ =?utf-8?B?UHVrWmtyZVUzQ3hQUHlXMTR3dXRqU0FOTXJrTU9ock1Bc2NWSk5vMTlwOGdm?=
+ =?utf-8?B?Rk5LcC9GREM2VWd6Y3F3dnQrTFVkakhBcjUreUduTytFRXpmZzhkVTF6ajhG?=
+ =?utf-8?B?UlNiUTVDSUYxZm1BallmaXdmSi9yVmRSVS9pNzhvNkpCdFFQZlRzT3VpN0NC?=
+ =?utf-8?B?djBvVmtwenQ3TnJJeHg3V2FPU3E0R2QrUW50aStmUnpxdkd5bVNuSUNvcDNl?=
+ =?utf-8?B?eHhyeXFSamd6NkhTRjdvL2NTYTg2OGhETFM2T1pWSlRvSU5neEdqem9tWGtv?=
+ =?utf-8?B?WWpBZmdSNnQzbEhnVURzandOaFNMd2JpaEpYd09YZXZXSUxGclN2KzY5RVZl?=
+ =?utf-8?B?amJQL3lGckJBRGFsdXhtVWxDcnBSdTBwR3NFQkMvTlBsRkIycy9HS3FzOTlC?=
+ =?utf-8?B?N1BJb0lkUEl5Y3QxL1pYbDcrOGNQRzlwZTZIWWpGWUp1d3oxTUN0QzJqa0pw?=
+ =?utf-8?B?QnlxSEgreExBZGtiSFAydVUxdi9FSmFuRzc5a2R1WEZEc0ZoYXVIWm9xM2xh?=
+ =?utf-8?B?ZGdmaWhTZzBNTEp2Tnl4dXcwdDlYcUt4djFkRm5OZGt5OGNPTnBHMVFqVmx5?=
+ =?utf-8?B?S2RZSzRwZlJaaHR3SmQwV2FqVUphdFlMeGNKaUJzTWxJZ2Y0SkhuTmVFMHl4?=
+ =?utf-8?B?UWdzejJjYjk3UGpBTEFQTnFROTlJTFdtbkREYlE5WlV1WHJBL0NMaS9rSHZq?=
+ =?utf-8?B?ZlZBNFVmajNWNDIvQjFDU0hGdUxjUGFXc3BiQjVuZEpjMXVpS29PRVN5TTZl?=
+ =?utf-8?B?RDdwTWhWQThtMHhsWGk1dEc3TDRIejY4ZmZMRUJpWW90NmhWa1g0ZUp4Q1FT?=
+ =?utf-8?B?NCtkenQvalI1RGRXTUNXSG9IT25YcEdQdWVxZGhvT1JWNkh1SXFiRVFHR0lR?=
+ =?utf-8?B?TUUwUWloMTJOS203YlRBRWtkWkhxSDlYRmp2anlWV1piN0ZJUlE2OFJiRDkw?=
+ =?utf-8?B?MlFkNElXbUtDVFBTK1B2R0E1OTdQR1NiTVJ2cnhmbVQ3QzdhbUFvYnlwQW1Q?=
+ =?utf-8?B?U3VCUGhhU2wyNE5VT2Uzd244aGxraW9FVXlyUmgyeDY4SHZabzNsWEgrcmxY?=
+ =?utf-8?B?dEtZazY3Q2NKRERtTHMrcXpyWUpYZVpGT2p3S2cyOEY1SmhUUDZ0ejRrcVZy?=
+ =?utf-8?B?UU5xR3Z5NytmTVRMQTEvVGhnbnZ1TnRJdEpabE1QN1lMSys2OUhFNmVLYTE2?=
+ =?utf-8?B?eVU4QWg5VWZBZDFDT05FN2ZXQUxhaGRwYkZzd1o2NE9LdXZwWnk4dHpnelNn?=
+ =?utf-8?B?WFQyVHlsL25uSVE0NDN2UGlJeUgvaVNKWTNCVllRS0xkWTFFVDhDUVFUc1ZB?=
+ =?utf-8?B?bUx1eXdEVnpMQlZpMjVydXE0NHZHWFd1VkhMcmQza2NpZGc2L3hIZFVHWkJB?=
+ =?utf-8?B?UTlNTXluY0N3M0o0a2UwQzBPQVRDK2dNNFEwalhta3I5dmtFR0VUU29WZkRa?=
+ =?utf-8?B?WjZZVDlDaTR6WTBRYU1ZVi9YL1FJTWlMZXRDbU9lNVE3VEJYYkh3SDFqT1Js?=
+ =?utf-8?B?bTVYd0h1UHNFZXB3QVppVm9pMlBVZVIwQzErRy82NXhzU1ltaGUyZz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e91a262-d6a7-40cd-9f36-08dee6742623
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7325.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2026 15:32:46.5100
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8ll7GOKg+GFfZcX/5FK87aaDsDi1GhLV4Z5Wy5qsvbr7BqmzovXM/mjRlEfwtwHS6IiU5Y4sbp0sChUz4IEfHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6663
 
-On 7/20/26 06:46, Ilpo Järvinen wrote:
-> On Sun, 19 Jul 2026, Alex Yeo wrote:
+Hi Ilpo,
+Could you please review this series.
 
-...
-
->> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
->> index b83113c26f88..2d67188de2a9 100644
->> --- a/drivers/platform/x86/panasonic-laptop.c
->> +++ b/drivers/platform/x86/panasonic-laptop.c
->> @@ -119,6 +119,9 @@
->>    *		- v0.1  start from toshiba_acpi driver written by John Belmonte
->>    */
->>   
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/printk.h>
->>   #include <linux/acpi.h>
->>   #include <linux/backlight.h>
->>   #include <linux/bits.h>
->> @@ -136,6 +139,14 @@
->>   #include <linux/types.h>
->>   #include <linux/uaccess.h>
->>   #include <acpi/video.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/hwmon.h>
->> +#include <linux/hwmon-sysfs.h>
-
-FWIW, I don't see why this is needed.
-
-...
-
->>   
->>   struct pcc_acpi {
-...
->> +	/*
->> +	 * This mutex ensures that the hwmon and thermal functions
->> +	 * for fan operations do not conflict as the PWM fan is
->> +	 * exposed to both.
->> +	 */
->> +	struct mutex			pwm_fan_lock;
-
-Maybe ask why this additional lock is used instead of relying on
-(for hwmon attributes) and using (for thermal) the hwmon subsystem
-lock.
-
-Guenter
+On 7/13/2026 10:09 AM, Muralidhara M K wrote:
+> This series makes the AMD HSMP driver safe against concurrent probe/remove
+> of its per-socket devices and against the lock-free data plane (open
+> /dev/hsmp fds and hwmon/sysfs reads) racing socket teardown.
+> 
+> The ACPI front-end binds one platform device per socket but shares a single
+> socket array and a single /dev/hsmp misc device across them, while the data
+> plane issues mailbox messages with no coordination with driver teardown.
+> misc_deregister() does not drain already-open fds, so an in-flight message
+> can touch a freed socket array or an unmapped mailbox on unbind.
+> 
+> A single rw_semaphore, hsmp_sock_rwsem, serializes everything: the data
+> plane takes it for read so messages run concurrently, and probe and remove
+> take it for write to bring sockets up and tear them down while excluding and
+> draining the data plane. The fix is built up in small, bisectable steps:
+> 
+>   1. Introduce hsmp_sock_rwsem and hold it for write across ACPI probe/remove
+>      so concurrent per-socket probes cannot race the bring-up handshake or
+>      the one-time socket-array allocation.
+>   2. Map the metric table with ioremap() and release it via a devres action,
+>      so its lifetime is no longer pinned to a single per-socket devres scope.
+>   3. Serialize the per-socket metric-table fill-and-copy with a mutex.
+>   4. Clear mdev.this_device on deregister (independent hygiene fix that the
+>      next patch relies on to track /dev/hsmp registration).
+>   5. Track shared socket ownership with a kref and a single coordinated
+>      release helper, drop the is_probed flag and unparent /dev/hsmp on the
+>      ACPI path.
+>   6. Add the read side of hsmp_sock_rwsem to the data plane: split the send
+>      into hsmp_send_message_locked() (asserts the rwsem is held) and
+>      hsmp_send_message() (wraps it in guard(rwsem_read)). Route the probe-only
+>      senders through the locked variant so probe, holding the write lock, does
+>      not recurse on the rwsem.
+> 
+> Each patch builds on its own and the series is checkpatch --strict clean.
+> 
+> Changes since v5:
+>   - Track the shared ACPI sockets with a kref instead of a hand-rolled
+>     unsigned int counter (patch 5), as suggested on v5. The first probe
+>     kref_init()s it, each further probe kref_get()s and every remove or
+>     probe failure kref_put()s; the last put runs hsmp_acpi_sock_release() as
+>     the kref release callback. get/put still happen under hsmp_sock_rwsem
+>     held for write, so the atomic is not strictly needed, but kref gives the
+>     clearer interface.
+>   - Keep the rwsem read side for the data plane rather than switching it to
+>     kref_get_unless_zero(). The kref tracks the shared socket array, but each
+>     socket's mailbox is a per-device devm_ioremap_uc() mapping that devres
+>     unmaps on that socket's individual (non-final) unbind while the array and
+>     the kref are still alive. An array-level kref would keep the array from
+>     being freed but would not stop that per-socket mailbox unmap, so the read
+>     side is what serializes the sock->dev gate and the MMIO access against a
+>     concurrent per-socket teardown. A kref_get_unless_zero() data plane would
+>     need a per-socket reference tied to each mailbox's lifetime, a larger
+>     redesign; noted for a possible follow-up.
+> 
+> Muralidhara M K (6):
+>    platform/x86/amd/hsmp: Serialize ACPI HSMP probe and remove with an
+>      rwsem
+>    platform/x86/amd/hsmp: Map the metric table with ioremap() and unmap
+>      it explicitly
+>    platform/x86/amd/hsmp: Serialize per-socket metric table reads with a
+>      mutex
+>    platform/x86/amd/hsmp: Clear mdev.this_device on deregister
+>    platform/x86/amd/hsmp: ACPI HSMP refcounted sockets and coordinated
+>      release
+>    platform/x86/amd/hsmp: Serialize the data plane against socket
+>      teardown
+> 
+>   drivers/platform/x86/amd/hsmp/acpi.c | 146 ++++++++++++++++++++++++---
+>   drivers/platform/x86/amd/hsmp/hsmp.c | 113 +++++++++++++++++++--
+>   drivers/platform/x86/amd/hsmp/hsmp.h |  14 ++-
+>   drivers/platform/x86/amd/hsmp/plat.c |  38 ++++++-
+>   4 files changed, 288 insertions(+), 23 deletions(-)
+> 
+> 
+> base-commit: ff7836fa850c2f815bc219f1e48f6ec8699f4ae7
 
