@@ -1,109 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail-106116.protonmail.ch (mail-106116.protonmail.ch [79.135.106.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E0B3CF661;
-	Mon, 20 Jul 2026 10:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874124156DD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 12:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784543593; cv=none; b=fwWiO82ef8S3IIy6WWJnGKYGceBG32PuZesOm+SLqebsFKkjzA4KI1Aa54rhLrOWOZ2sAMvXkEt04Ig8BEdLUOQSTC4EvSjfiPwuU0srXwdnDZzQ+VgA9IggrEAQnN+nxUkiIrL0xNZVzARvvluRpV0ISw+EQVPiFE5diYWnmZA=
+	t=1784550221; cv=none; b=OpdNdGjXkGkMnXOPmcfxlkwoQxxHW/k9ubm8ypvYLkOJtKSewles4W/bNFpt4lIrmsdFmk4JYivrJg26hZZbtuytveR6UyKFtRQol0wznTzvdNL+38BiiO8EATK9HAMHC7+YQrTLOtrOtX/Z9PHxUSqwCU7fp7T+T64hL7vOUQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784543593; c=relaxed/simple;
-	bh=iW8segSJAzxLXvY6MGkdyredDaE/r0nEVFBkwIAH9tI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hR7KYXi/bHvUjkGUHfx5Br9TqUhhEPjYDihh0DfRuploXH/n5mDvWL3G/yoimEd38jXEn30pvqJkHL7jpuwaJ4DbcvqcxbhfJndYtsSq8FA1Pff6haYEdT04UWNV0h5dLlP1ZNSjo1Td6wLIaSlyRzRK06BnS5S85/SO3kwu0lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FpLlUTdy; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784550221; c=relaxed/simple;
+	bh=ivja1mjH6Hef60Py77qH+mfmF5BMTbrZAg7iONyhjws=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D2+PbEBax5+muo7rtVRSedvPYUed05MmWr3B62raKgvdg3hAR8uUg4BQn3EvmOX9FfFsqV4EvMbeNeqk7kaYSnUdHvFjxzxwkQz434iVqtGQGvLqAjQ5TOQiTjS+SnjJ36txsb169zt10H3nTiMgFha3AjM+qNwT04gqG83Qywc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berg.pm; spf=pass smtp.mailfrom=berg.pm; dkim=pass (2048-bit key) header.d=berg.pm header.i=@berg.pm header.b=nhgnS8Q0; arc=none smtp.client-ip=79.135.106.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berg.pm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berg.pm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FpLlUTdy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784543592; x=1816079592;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=iW8segSJAzxLXvY6MGkdyredDaE/r0nEVFBkwIAH9tI=;
-  b=FpLlUTdyPV53M7HyCilnslVKlwFR3oRxaGQTANXmHwwJpLU7LDu6Z2L0
-   yuFXojOjhs8FLO7qvingI0PM0JL9BaTw9DOrqEad2MbTxBKFDwNSj3k5N
-   OstrgCwucoa8GO2xXKQNaZ/WUICuPHTUNgU4W/G1av/oa2cz5JsWMKULL
-   i+MMg0tcEfd+nP4eFWupN+eq7h3Iafjt1iiqK2s7bwBQF2xAcIvDhEql8
-   JVq2WTnOIi4ccrMP4NLxa7xNPw/FLVuttz2ppay3aMK/XzKy1ke6aD/uN
-   Uqlt543QkYFiA2Lll1nv4ribHStOuQoDmUY9D0UZ6jyXhpBt3jGunabN8
-   w==;
-X-CSE-ConnectionGUID: O66C4lK+R4e1QmGQX0HyYw==
-X-CSE-MsgGUID: ceMzmQajTfW2gkB59jpQlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11851"; a="87660202"
-X-IronPort-AV: E=Sophos;i="6.25,174,1779174000"; 
-   d="scan'208";a="87660202"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:33:10 -0700
-X-CSE-ConnectionGUID: lhQ0kntZR/SdiZIn8yAIeg==
-X-CSE-MsgGUID: oHhk29h/RJKQaX1WyjaaHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,174,1779174000"; 
-   d="scan'208";a="253475503"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 03:33:04 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 20 Jul 2026 13:33:01 +0300 (EEST)
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-    "Mario Limonciello (AMD)" <superm1@kernel.org>, linux-acpi@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, 
-    linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    ibm-acpi-devel@lists.sourceforge.net, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Mika Westerberg <westeri@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH v2 6/6] platform/x86: thinkpad_acpi: Convert to use
- acpi_dev_is_video_device() helper
-In-Reply-To: <20260714185915.865396-7-andriy.shevchenko@linux.intel.com>
-Message-ID: <d45b8ac1-d05c-7797-efaf-d0ff67cde80b@linux.intel.com>
-References: <20260714185915.865396-1-andriy.shevchenko@linux.intel.com> <20260714185915.865396-7-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=berg.pm header.i=@berg.pm header.b="nhgnS8Q0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=berg.pm;
+	s=protonmail; t=1784550208; x=1784809408;
+	bh=KLlnRZuoE9KiDVHowx8tPQAjTRYPMC37zV4OZ5JfM0k=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=nhgnS8Q0r7teTYObba6C4lA3rQ2Eb8kj0a83NX4Iad2cf18lkIDfrzxzMp/R2+1N3
+	 88tbFNw0V73yhmmig8RTJ/vxGJRs9CrZpa1MlrwjBIhZdE0xflZQoBvN4YGVMDh/xE
+	 yhPHnt3jS6XQshwzgaPn1WzeQ1cJtkqSE2qeWHU5595hU8OlsSJN9WcCIdpMqUS35i
+	 M8f/Ka2QEtniCchqmrRuaSMbEIfxSXFpSnbb7nT9anq3wpV/SFGiJqiivP4SibebN0
+	 4vZTvGYXtxKFFmNIh1gfDFZ24e4aq4V4aj4vR2bJEqltZQvtPxnP9NbAVTlxqTcobj
+	 Apu2AVK9BOYWg==
+Date: Mon, 20 Jul 2026 12:23:20 +0000
+To: Hans de Goede <hansg@kernel.org>
+From: Jakob Berg Jespersen <dev@berg.pm>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Daniel Scally <dan.scally@ideasonboard.com>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Tooraj Taraz <tooraj.taraz@yahoo.com>, "Joseph V. Lavigne" <jlavig88@gmail.com>
+Subject: Re: [PATCH] platform/x86: int3472: handle GPIO type 0x08 as a power regulator
+Message-ID: <wWCJgdk1-0MrfeN6bRValpATGnQ4BcEzShHI5qI7Nywi6LWcYiq9BDKaaaH5Y0SmHJl2IlGNepOmbjVkwr0APh4dA1fzX7M9VCWZM6XR_-w=@berg.pm>
+In-Reply-To: <760d53df-7353-4f6f-b946-a3b76a09e503@kernel.org>
+References: <20260719-sp7plus-int3472-v1-1-521a43f5c191@berg.pm> <al1I_A0AiKXpHKfN@kekkonen.localdomain> <760d53df-7353-4f6f-b946-a3b76a09e503@kernel.org>
+Feedback-ID: 210104851:user:proton
+X-Pm-Message-ID: 1327328da961de2628a6df74dd2779894c19e29d
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1215956946-1784543581=:1163"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1215956946-1784543581=:1163
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Monday, July 20th, 2026 at 12:14, Hans de Goede <hansg@kernel.org> wrote=
+:
 
-On Tue, 14 Jul 2026, Andy Shevchenko wrote:
-
-> Replace open coded variant of acpi_dev_is_video_device() helper.
+> Hi,
 >=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 20-Jul-26 00:00, Sakari Ailus wrote:
+> > Hi Jakob,
+> >
+> > Thanks for the patch.
+> >
+> > On Sun, Jul 19, 2026 at 08:15:12PM +0200, Jakob Berg Jespersen wrote:
+> >> On the Microsoft Surface Pro 7+, the rear camera's INT3472 device
+> >> (INT3472:01, sensor INT347A / ov8865) enumerates a GPIO of type 0x08
+> >> in its _DSM which the driver does not recognise, so it is left
+> >> unmapped:
+> >>
+> >>   int3472-discrete INT3472:01: GPIO type 0x08 unknown; the sensor may
+> >>   not work
+> >>
+> >> The DSDT shows this pin (0x0100AF08, pin 175, active-high) sitting
+> >> alongside a normal type-0x0b power-enable GPIO: it gates a second
+> >> sensor power rail. Because the type is unknown the rail is never
+> >> enabled, the ov8865's "dvdd" supply resolves to a dummy regulator, and
+> >> the sensor never probes.
+> >>
+> >> Map type 0x08 for INT347A to a POWER_ENABLE regulator with con_id
+> >> "dvdd", the supply the in-tree ov8865 driver already requests, so no
+> >> sensor-driver change is needed. ("dvdd" rather than "avdd" because the
+> >> type-0x0b power-enable pin on this INT3472 is already registered as
+> >> "avdd".)
+> >>
+> >> Type 0x08 is not in the driver's documented function list and is not
+> >> otherwise handled by mainline; based on the sensor's supply set and th=
+e
+> >> con_id that brings it up, it appears to be the DVDD (digital core
+> >> voltage) rail, the counterpart to the existing DOVDD (0x10) type.
+> >>
+> >> Related out-of-tree work approached the same rail by adding a new "pwr=
+1"
+> >> supply instead of the sensor's existing "dvdd" (linux-surface PR #1867
+> >> for the Surface Pro 9, PR #2201 for the Pro 7+ ov8865); neither was se=
+nt
+> >> upstream. Mapping to "dvdd" keeps the change contained to int3472.
+> >>
+> >> With this change the SP7+ rear camera probes and streams reliably,
+> >> validated by over a month of use.
+> >>
+> >> Link: https://github.com/linux-surface/linux-surface/pull/1867
+> >> Link: https://github.com/linux-surface/linux-surface/pull/2201
+> >> Cc: Tooraj Taraz <tooraj.taraz@yahoo.com>
+> >> Cc: Joseph V. Lavigne <jlavig88@gmail.com>
+> >> Signed-off-by: Jakob Berg Jespersen <dev@berg.pm>
+> >> ---
+> >> 0x08 is left as a bare literal rather than a named constant here; if
+> >> its canonical meaning is known I'm happy to add e.g.
+> >> INT3472_GPIO_TYPE_DVDD and/or handle it generically like DOVDD in v2.
+> >>
+> >> This is my first kernel contribution, so please bear with me on any
+> >> process mistakes.
+> >> ---
+> >>  drivers/platform/x86/intel/int3472/discrete.c | 13 +++++++++++++
+> >>  1 file changed, 13 insertions(+)
+> >>
+> >> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/p=
+latform/x86/intel/int3472/discrete.c
+> >> index 115bb37577a1..98c7b9bc393f 100644
+> >> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> >> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> >> @@ -164,6 +164,19 @@ static const struct int3472_gpio_map int3472_gpio=
+_map[] =3D {
+> >>  =09=09.con_id =3D "dvdd",
+> >>  =09=09.enable_time_us =3D 45 * USEC_PER_MSEC,
+> >>  =09},
+> >> +=09{=09/*
+> >> +=09=09 * Surface Pro 7+ ov8865 (rear camera): type 0x08 is an
+> >> +=09=09 * undocumented sensor power rail; left undriven the sensor
+> >> +=09=09 * stays in a failed power state. "dvdd" rather than "avdd"
+> >> +=09=09 * because this INT3472 also has a type 0x0b (power enable)
+> >> +=09=09 * pin already registered as "avdd".
+> >> +=09=09 */
+> >
+> > GPIO type 8 is in fact "POWER1" (type 7 being "POWER0"). This hasn't be=
+en
+> > seen anywhere yet so support for it hasn't been added either.
+> >
+> > I understand the POWER_ENABLE GPIO is for executing the entire power
+> > sequence and isn't expected to be found with the other regulators, henc=
+e an
+> > apparent conflict here wouldn't be an issue.
+> >
+> > I think for now we could map type POWER1 (8) to "dvdd", however not usi=
+ng a
+> > quirk but doing it for all devices, like mapping POWER_ENABLE to "avdd"=
+.
+> > That'd leave mapping POWER0 to "avdd" for later. The GPIO definition fo=
+r
+> > POWER0 could be added in any case.
 >=20
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platfo=
-rm/x86/lenovo/thinkpad_acpi.c
-> index 6dd7c28fc0db..aaeada46a0e7 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -774,7 +774,7 @@ static acpi_status __init tpacpi_acpi_handle_locate_c=
-allback(acpi_handle handle,
->  =09if (!strcmp(context, "video")) {
->  =09=09struct acpi_device *dev =3D acpi_fetch_acpi_dev(handle);
-> =20
-> -=09=09if (!dev || strcmp(ACPI_VIDEO_HID, acpi_device_hid(dev)))
-> +=09=09if (!acpi_dev_is_video_device(dev))
->  =09=09=09return AE_OK;
+> I was wondering what the internal Intel headers said for type 8, so thank
+> you for clarifying that that is called POWER1. Adding a generic mapping
+> of POWER1 to "dvdd" instead of using a quirk sounds good to me.
+>=20
+> Regards,
+>=20
+> Hans
+>=20
+>=20
 
-Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
---=20
- i.
+Thanks both, and thanks for the POWER0/POWER1 naming.
 
---8323328-1215956946-1784543581=:1163--
+That approach makes sense to me. For v2 I'll:
+
+ * add INT3472_GPIO_TYPE_POWER0 (7) and INT3472_GPIO_TYPE_POWER1 (8)
+   definitions,
+ * map POWER1 to "dvdd" generically in int3472_get_con_id_and_polarity(),
+   dropping the INT347A quirk,
+ * leave POWER0 defined but unmapped for now.
+
+I'll retest on the Surface Pro 7+ and send v2, with a Suggested-by:
+trailer for you, Sakari, for the generic approach.
+
+Thanks for the quick review.
+Jakob
