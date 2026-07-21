@@ -1,326 +1,257 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC4C367B60;
-	Tue, 21 Jul 2026 15:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8DF46AA91;
+	Tue, 21 Jul 2026 15:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784647769; cv=none; b=F0vmhPAAGOtDe+WLtcinpNv/JOkt/R77B0pvulpHRu4zAh6v96Zy3Wzbzi+0Luh4Ct/2kLDRvlmkZTgpShm6LIBSObQO72SSh+WtAfsxB9XPQrB5kloQw4weT434IUdiFc7k0h/5yYSFHrG5Otw8swB6o/aKcWZV/grVT+IwBVs=
+	t=1784648018; cv=none; b=f4mj7Tq9OqsjmZhBRWUEHCwD05A4MuCpiV0LYZ+/U7NPtD9zWVc034/1KC6rfD1EkPWpHD0HX7yV3CXpjFcGc4mfR8x7ytlwlOHaBpLtaB2T9BiXd0ULDQN3pTqUsnvzyxCARrY6wURMsNbb/T5I5bhQyrZlmfcHTwfh9Nq500s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784647769; c=relaxed/simple;
-	bh=6YNNZIFpa1OsYiAePENW2CYKRSiDbIY4qh/xUvVrYXo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gzXhe0Wq7LxTmPVipYCxRbTNzTwEtxkygUwGEZHXft0UIBbBr7NhTiG5TQu1ONqihSjJmu5wXtmr86FzMXkZGt1Obt2R04ILVvxXJG91R3gOMegCwDTAhoZ5NOivn+a3M094t7zc3qLXOiH6XbTsy4UQAkz1xcES5s1JfQQmOeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5GtKRfC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784648018; c=relaxed/simple;
+	bh=bYEicWFRLIPBmMNMPmRc/odkocG3XuMg47eGW3BPdn8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ac09g17XJ+WzHoIXXqDqltCRE8HWcHGltwuFPt9cBgL/2GfFDzbwEH4rtbmjqnMF7r9t/yHsPflF0+/UsAjsBSpd9CabAkC5TadQ7DnN/TpXFjzyBxKx9X3C35CnVHeJMVCkmfJUxup4Us17mOLHMjl2B6YzxdTPzw/rcPH7XbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oK6t//YT; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5GtKRfC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 642351F00A3A;
-	Tue, 21 Jul 2026 15:29:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784647768;
-	bh=vKR0zlu4bK2eye4JJSxzjC3UQbyoedFDIfb+cFpF7yI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=P5GtKRfCBc3xqCC+TlINJzdnXVxCjDemORr98LEM7iXwLwu4yz4RT8DrZSjAtEFoU
-	 3kA0E7mWKVBNs/9BurxF5ZwULBFcnTvqN6jR75eYS9VlJPFA8316RTtLVSvXT+Fcsc
-	 3QvzzKNYPzS/VCtbrXkbtrg0gmMfttl2OM4JhsNEWMdlkOAl6px66BrylVDE4esJlT
-	 qV46lU8gq9rhUGeWqnKL3yEQhPs5rkqnG85TzZKgTE2mpcT5zcR5UaUYISXXuhMv07
-	 WoNj0TAYsg6k2OMZnI5Qf8ZwIMqx6M+PUQjKKGD76fxuxgG/5rEiDZhTT98iHEPPfa
-	 lZs01SJgzeajQ==
-Message-ID: <e74d963c-8cf0-42ee-8b83-86e8c65dd0c7@kernel.org>
-Date: Tue, 21 Jul 2026 17:29:22 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oK6t//YT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784648016; x=1816184016;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bYEicWFRLIPBmMNMPmRc/odkocG3XuMg47eGW3BPdn8=;
+  b=oK6t//YTkgJItLAfoXb3RKExxAvh38Mw6GvAM7hINOUXIjKjDSvH7Xe4
+   3lJcW719kN0LoPfvexwk8wPrzOgqHzn1S8ZumafRUjZgz0BGCw4BkP86/
+   I/Ugbtxv3EPuPf6OgaSyvbrMLQ852sW4dlEZONvTiC1/Uy7ghxPXMCkT2
+   C1nbbEGLuZaRfsIEwxkJgzDDx9De8xAp8YhCRJ1ZY6agJlgYsa/VJrv7L
+   /akfXq9ngDHnuc2+jv4HESLrsdyykRhN8d+MdqKBK0opjMWsLngV76FTX
+   uTWOIdTKgLi++iroJD1OnxqBVM7q/5JaI+Xxqf99+yOcsolTBMxSoEV4F
+   A==;
+X-CSE-ConnectionGUID: lvVga/Y9S7ygGe8FLJ3LGQ==
+X-CSE-MsgGUID: Gc7FaZCcSJWcrnsBUpsJ/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="95848669"
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="95848669"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:33:35 -0700
+X-CSE-ConnectionGUID: /QOaU5UKT5CfW1pKDjagbQ==
+X-CSE-MsgGUID: hv5YqUsES8yp2wwH1YAjqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="256001819"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:33:32 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Jul 2026 18:33:28 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux@weissschuh.net, lenb@kernel.org, 
+    linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 2/3] ACPI: video: Remove CONFIG_X86 handling from
+ nvidia_wmi_ec_supported()
+In-Reply-To: <a45e7c7a-c0cd-4f6e-b48a-15beca4e022a@gmx.de>
+Message-ID: <b347c2a4-229c-3c9d-435d-569fdb16c9e5@linux.intel.com>
+References: <20260716234538.1303811-1-W_Armin@gmx.de> <20260716234538.1303811-3-W_Armin@gmx.de> <CAJZ5v0hUoTRS4fce0=Qn8J=Yf5WtHfbzUw+kyxhhPaRtB2o35A@mail.gmail.com> <a45e7c7a-c0cd-4f6e-b48a-15beca4e022a@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] treewide: Add a flag to detect the Apple T2 chip
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Andreas Noever <andreas.noever@gmail.com>,
- Mika Westerberg <westeri@kernel.org>, Yehezkel Bernat
- <YehezkelShB@gmail.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Jarkko Sakkinen <jarkko@kernel.org>,
- Mimi Zohar <zohar@linux.ibm.com>, Roberto Sassu <roberto.sassu@huawei.com>,
- Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
- Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- linux-security-module@vger.kernel.org
-References: <20260721063412.11588-1-atharvatiwarilinuxdev@gmail.com>
- <20260721063412.11588-2-atharvatiwarilinuxdev@gmail.com>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260721063412.11588-2-atharvatiwarilinuxdev@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-2134702264-1784648008=:1265"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-2134702264-1784648008=:1265
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
+On Fri, 17 Jul 2026, Armin Wolf wrote:
 
-On 21-Jul-26 08:34, Atharva Tiwari wrote:
-> Add a flag to detect Apple T2 chips on Intel Macs.
-> Cache the result to avoid repeated checks. That will
-> be used in upcoming patches.
-> 
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  arch/x86/kernel/quirks.c                      | 105 ++++++++++++++++++
->  include/linux/platform_data/x86/apple.h       |   5 +
->  .../platform_certs/keyring_handler.h          |   8 --
->  security/integrity/platform_certs/load_uefi.c |  38 ++-----
->  4 files changed, 118 insertions(+), 38 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-> index a92f18db9610..300d6436060d 100644
-> --- a/arch/x86/kernel/quirks.c
-> +++ b/arch/x86/kernel/quirks.c
-> @@ -664,8 +664,113 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2083, quirk_intel_purley_xeon_ras
->  bool x86_apple_machine;
->  EXPORT_SYMBOL(x86_apple_machine);
->  
-> +bool has_apple_t2_chip;
-> +EXPORT_SYMBOL(has_apple_t2_chip);
-> +
-> +static const struct dmi_system_id apple_t2_devices[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,4"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,3"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir9,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Macmini8,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacPro7,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMacPro1,1"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
+> Am 17.07.26 um 11:14 schrieb Rafael J. Wysocki (Intel):
+>=20
+> > On Fri, Jul 17, 2026 at 1:45=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+> > > The WMI-ACPI driver now supports architectures other than x86.
+> > > Remove the CONFIG_X86 handling from video-detect and the associated
+> > > GPU drivers to simplify the resulting code.
+> > >=20
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> >=20
+> > Or please let me know if you want me to pick up this one.
+> >=20
+> > Thanks!
+>=20
+> Hi,
+>=20
+> i would prefer if this is being picked up by the platform drivers tree, u=
+nless
+> Ilpo says otherwise.
 
-This takes quite a bit of storage, struct dmi_system_id is not
-very efficient.
+Hi.
 
-How about making this a NULL terminated array of strings:
+I'm fine with taking this, but not before gpu/ people acks and you seem to=
+=20
+not have them among receipients??
 
-const char *apple_t2_devices[] __initconst = {
-	"MacBookPro15,1",
-	...
-	"iMacPro1,1",
-	NULL
-};
+Proposed course of action: Collect tags and send v2 with a bit more=20
+receipients?
 
->  void __init early_platform_quirks(void)
->  {
->  	x86_apple_machine = dmi_match(DMI_SYS_VENDOR, "Apple Inc.") ||
->  			    dmi_match(DMI_SYS_VENDOR, "Apple Computer, Inc.");
-> +
-> +	has_apple_t2_chip = dmi_check_system(apple_t2_devices);
+--
+ i.
 
-and then here:
-
-	for (int i = 0; x86_apple_machine && apple_t2_devices[i]; i++)
-		if (dmi_match(DMI_PRODUCT_NAME, apple_t2_devices[i])) {
-			has_apple_t2_chip = true;
-			break;
-		}
-
-This should save some space and IMHO just having a compact list of
-product-names is more readable too.
-
-Regards,
-
-Hans
-
-
->  }
-> diff --git a/include/linux/platform_data/x86/apple.h b/include/linux/platform_data/x86/apple.h
-> index 079e816c3c21..47b27dceab18 100644
-> --- a/include/linux/platform_data/x86/apple.h
-> +++ b/include/linux/platform_data/x86/apple.h
-> @@ -6,8 +6,13 @@
->   * x86_apple_machine - whether the machine is an x86 Apple Macintosh
->   */
->  extern bool x86_apple_machine;
-> +/**
-> + * has_apple_t2_chip - whether the machine has the Apple T2 chip
-> + */
-> +extern bool has_apple_t2_chip;
->  #else
->  #define x86_apple_machine false
-> +#define has_apple_t2_chip false
->  #endif
->  
->  #endif
-> diff --git a/security/integrity/platform_certs/keyring_handler.h b/security/integrity/platform_certs/keyring_handler.h
-> index f92895cc50f6..a355f4400179 100644
-> --- a/security/integrity/platform_certs/keyring_handler.h
-> +++ b/security/integrity/platform_certs/keyring_handler.h
-> @@ -45,11 +45,3 @@ efi_element_handler_t get_handler_for_code_signing_keys(const efi_guid_t *sig_ty
->  efi_element_handler_t get_handler_for_dbx(const efi_guid_t *sig_type);
->  
->  #endif
-> -
-> -#ifndef UEFI_QUIRK_SKIP_CERT
-> -#define UEFI_QUIRK_SKIP_CERT(vendor, product) \
-> -		 .matches = { \
-> -			DMI_MATCH(DMI_BOARD_VENDOR, vendor), \
-> -			DMI_MATCH(DMI_PRODUCT_NAME, product), \
-> -		},
-> -#endif
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index c0d6948446c3..b4096d4c828d 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -3,42 +3,16 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/cred.h>
-> -#include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/efi.h>
->  #include <linux/slab.h>
->  #include <linux/ima.h>
-> +#include <linux/platform_data/x86/apple.h>
->  #include <keys/asymmetric-type.h>
->  #include <keys/system_keyring.h>
->  #include "../integrity.h"
->  #include "keyring_handler.h"
->  
-> -/*
-> - * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
-> - * certificates causes occurrence of a page fault in Apple's firmware and
-> - * a crash disabling EFI runtime services. The following quirk skips reading
-> - * these variables.
-> - */
-> -static const struct dmi_system_id uefi_skip_cert[] = {
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,3") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,4") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,3") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,4") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir9,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "Macmini8,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacPro7,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMacPro1,1") },
-> -	{ }
-> -};
-> -
->  /*
->   * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
->   * it does.
-> @@ -165,10 +139,14 @@ static int __init load_uefi_certs(void)
->  	unsigned long dbsize = 0, dbxsize = 0, mokxsize = 0;
->  	efi_status_t status;
->  	int rc = 0;
-> -	const struct dmi_system_id *dmi_id;
->  
-> -	dmi_id = dmi_first_match(uefi_skip_cert);
-> -	if (dmi_id) {
-> +	/*
-> +	 * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
-> +	 * certificates causes occurrence of a page fault in Apple's firmware and
-> +	 * a crash disabling EFI runtime services. The following quirk skips reading
-> +	 * these variables.
-> +	 */
-> +	if (has_apple_t2_chip) {
->  		pr_err("Reading UEFI Secure Boot Certs is not supported on T2 Macs.\n");
->  		return false;
->  	}
-
+> > > ---
+> > >   drivers/acpi/Kconfig               | 2 +-
+> > >   drivers/acpi/video_detect.c        | 8 --------
+> > >   drivers/gpu/drm/amd/amdgpu/Kconfig | 4 +---
+> > >   drivers/gpu/drm/gma500/Kconfig     | 1 -
+> > >   drivers/gpu/drm/i915/Kconfig       | 1 -
+> > >   drivers/gpu/drm/radeon/Kconfig     | 4 +---
+> > >   drivers/gpu/drm/xe/Kconfig         | 5 ++---
+> > >   7 files changed, 5 insertions(+), 20 deletions(-)
+> > >=20
+> > > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> > > index f165d14cf61a..cc1e58fa664b 100644
+> > > --- a/drivers/acpi/Kconfig
+> > > +++ b/drivers/acpi/Kconfig
+> > > @@ -224,7 +224,7 @@ config ACPI_VIDEO
+> > >          tristate "Video"
+> > >          depends on BACKLIGHT_CLASS_DEVICE
+> > >          depends on INPUT
+> > > -       depends on ACPI_WMI || !X86
+> > > +       depends on ACPI_WMI
+> > >          select THERMAL
+> > >          help
+> > >            This driver implements the ACPI Extensions For Display Ada=
+pters
+> > > diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.=
+c
+> > > index 458efa4fe9d4..af9280b244f1 100644
+> > > --- a/drivers/acpi/video_detect.c
+> > > +++ b/drivers/acpi/video_detect.c
+> > > @@ -82,8 +82,6 @@ find_video(acpi_handle handle, u32 lvl, void *conte=
+xt,
+> > > void **rv)
+> > >          return AE_OK;
+> > >   }
+> > >=20
+> > > -/* This depends on ACPI_WMI which is X86 only */
+> > > -#ifdef CONFIG_X86
+> > >   static bool nvidia_wmi_ec_supported(void)
+> > >   {
+> > >          struct wmi_brightness_args args =3D {
+> > > @@ -105,12 +103,6 @@ static bool nvidia_wmi_ec_supported(void)
+> > >           */
+> > >          return args.ret =3D=3D WMI_BRIGHTNESS_SOURCE_EC;
+> > >   }
+> > > -#else
+> > > -static bool nvidia_wmi_ec_supported(void)
+> > > -{
+> > > -       return false;
+> > > -}
+> > > -#endif
+> > >=20
+> > >   /* Force to use vendor driver when the ACPI device is known to be
+> > >    * buggy */
+> > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > index 12e4a41bf1f0..50305630f533 100644
+> > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
+> > >          # ACPI_VIDEO's dependencies must also be selected.
+> > >          select INPUT if ACPI
+> > >          select ACPI_VIDEO if ACPI
+> > > -       # On x86 ACPI_VIDEO also needs ACPI_WMI
+> > > -       select X86_PLATFORM_DEVICES if ACPI && X86
+> > > -       select ACPI_WMI if ACPI && X86
+> > > +       select ACPI_WMI if ACPI
+> > >          help
+> > >            Choose this option if you have a recent AMD Radeon graphic=
+s
+> > > card.
+> > >=20
+> > > diff --git a/drivers/gpu/drm/gma500/Kconfig
+> > > b/drivers/gpu/drm/gma500/Kconfig
+> > > index a2acaa699dd5..dc4c56638819 100644
+> > > --- a/drivers/gpu/drm/gma500/Kconfig
+> > > +++ b/drivers/gpu/drm/gma500/Kconfig
+> > > @@ -11,7 +11,6 @@ config DRM_GMA500
+> > >          select ACPI_VIDEO if ACPI
+> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >          select INPUT if ACPI
+> > > -       select X86_PLATFORM_DEVICES if ACPI
+> > >          select ACPI_WMI if ACPI
+> > >          help
+> > >            Say yes for an experimental 2D KMS framebuffer driver for =
+the
+> > > diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kcon=
+fig
+> > > index 5e939004b646..71426b9c91f0 100644
+> > > --- a/drivers/gpu/drm/i915/Kconfig
+> > > +++ b/drivers/gpu/drm/i915/Kconfig
+> > > @@ -28,7 +28,6 @@ config DRM_I915
+> > >          # but for select to work, need to select ACPI_VIDEO's
+> > > dependencies, ick
+> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >          select INPUT if ACPI
+> > > -       select X86_PLATFORM_DEVICES if ACPI
+> > >          select ACPI_WMI if ACPI
+> > >          select ACPI_VIDEO if ACPI
+> > >          select SYNC_FILE
+> > > diff --git a/drivers/gpu/drm/radeon/Kconfig
+> > > b/drivers/gpu/drm/radeon/Kconfig
+> > > index c479f0c0dd5c..3cd70aef770e 100644
+> > > --- a/drivers/gpu/drm/radeon/Kconfig
+> > > +++ b/drivers/gpu/drm/radeon/Kconfig
+> > > @@ -25,9 +25,7 @@ config DRM_RADEON
+> > >          # ACPI_VIDEO's dependencies must also be selected.
+> > >          select INPUT if ACPI
+> > >          select ACPI_VIDEO if ACPI
+> > > -       # On x86 ACPI_VIDEO also needs ACPI_WMI
+> > > -       select X86_PLATFORM_DEVICES if ACPI && X86
+> > > -       select ACPI_WMI if ACPI && X86
+> > > +       select ACPI_WMI if ACPI
+> > >          help
+> > >            Choose this option if you have an ATI Radeon graphics card=
+=2E
+> > > There
+> > >            are both PCI and AGP versions.  You don't need to choose t=
+his
+> > > to
+> > > diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+> > > index 4d7dcaff2b91..502c7b3c1f16 100644
+> > > --- a/drivers/gpu/drm/xe/Kconfig
+> > > +++ b/drivers/gpu/drm/xe/Kconfig
+> > > @@ -4,7 +4,6 @@ config DRM_XE
+> > >          depends on DRM && PCI
+> > >          depends on KUNIT || !KUNIT
+> > >          depends on INTEL_VSEC || !INTEL_VSEC
+> > > -       depends on X86_PLATFORM_DEVICES || !(X86 && ACPI)
+> > >          depends on PAGE_SIZE_4KB || COMPILE_TEST || BROKEN
+> > >          select INTERVAL_TREE
+> > >          # we need shmfs for the swappable backing store, and in
+> > > particular
+> > > @@ -29,8 +28,8 @@ config DRM_XE
+> > >          # but for select to work, need to select ACPI_VIDEO's
+> > > dependencies, ick
+> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >          select INPUT if ACPI
+> > > -       select ACPI_VIDEO if X86 && ACPI
+> > > -       select ACPI_WMI if X86 && ACPI
+> > > +       select ACPI_VIDEO if ACPI
+> > > +       select ACPI_WMI if ACPI
+> > >          select SYNC_FILE
+> > >          select CRC32
+> > >          select SND_HDA_I915 if SND_HDA_CORE
+> > > --
+> > > 2.39.5
+> > >=20
+> > >=20
+>=20
+--8323328-2134702264-1784648008=:1265--
