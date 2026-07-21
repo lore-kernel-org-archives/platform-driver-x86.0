@@ -1,182 +1,161 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175E547F2F8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 10:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C033D4611C7;
+	Tue, 21 Jul 2026 10:24:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784629251; cv=none; b=nYXyH/H8YIpAtGlzytBZqDwqYt07MwLXyH/xw1lSffx9QfmEj2Oy+Icj5hLv9MuslrcFPG/V24hkR0pTtY+ZyBumK1UKr+OJlDH5artOtbLZFN55lhlrsYlqF4gSyZFJQlh09a30hTXXPLgrYiV2TJqpssLuaGCOY9Vjk96WEnI=
+	t=1784629479; cv=none; b=sFiu+Wp31Ofk0tghNIpMPR/whO74pyDGOhLKwswWG7EWPzf1p7RQ7CjWJE+KKlH+1+ANmIlgIUAHkfSRiTpTfDoSAGWRjq8A4zK4p8xNRf2ugCY7n4NzFrNAkB5DBi9/Yg/JYjT+sv1c2lrDdET7MBNlDRzZ57D8/YFOXB8glB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784629251; c=relaxed/simple;
-	bh=iBd69bb8EuVif3tUAwJ9D/+XJVAhImzxdFHxRKdgGDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0/0vihptcojb6F6eJ+21T0Lcy8Z0+GKa+aHnwFEIEVI3c7xAYzl6NmHT/Gdm6K5lJve36FXZoHICKP/VlV5w27wBPAT1XflLaLybBFBDi0O+Gg/NKdtO3P0665xRFo4rTikt6jXxLgtOgwQHsTn/SSIcdVuUoXLCXn1HN9h/uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Bpg0ATYG; arc=none smtp.client-ip=188.68.63.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1784629479; c=relaxed/simple;
+	bh=w+QCs7/PtircRe0e6UhnPZUwxnm+QR57pLfRt5nVixc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V4rHxKdorq5GP14rLJsPMjcRtMRyz9blziXxAX8TXQO2RKzq0RTHmmTqhON5dXZaKBCwSY15YRyETv/YvvQqHuvaImHMDRMklGn711QZvRjEpiElLGGNCsK6rE/SNreelw5GJHID7qgq4Xukjx3lkhttK71mwqaNwnY3Pamkw9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VUlOJL1T; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Bpg0ATYG"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4h4D131HZSz6GBl;
-	Tue, 21 Jul 2026 12:20:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1784629239;
-	bh=iBd69bb8EuVif3tUAwJ9D/+XJVAhImzxdFHxRKdgGDU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bpg0ATYGdipKokOaUEJ4ejSvBupR9TBT/LBfGP3KYRQwMQzWDVyKvtUZvMhfXKnzQ
-	 uw16uOgZmQKqrZK7j7rKESVogaeft+O9udWNQtwLHsJ/mCYR10aDdCtdgccCfH1VW5
-	 ajFWnf3Av/jbDNvydWOBpfeAa+dL7k0jnkLBgL/Fu3ZfwePLzPQumVuvxtiItwgEqW
-	 F2MMvWFt3PNZai3/p9Ul85vlN0bR96CYqwHujZmJRjDMZJK9xPszEYfh30Ez4p/lhu
-	 rQadOik59jtdKkwNmSOc8bKxLJ3Uf14QGnJGWlMdrmEaESy609e2kqBXGmcDshUIm9
-	 fBMQBdYVB4qNQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4h4D130Yjcz4xYH;
-	Tue, 21 Jul 2026 12:20:39 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4D1217rlz8sZw;
-	Tue, 21 Jul 2026 12:20:38 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 146C55FC9C;
-	Tue, 21 Jul 2026 12:20:37 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
-Date: Tue, 21 Jul 2026 12:20:35 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VUlOJL1T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784629478; x=1816165478;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=w+QCs7/PtircRe0e6UhnPZUwxnm+QR57pLfRt5nVixc=;
+  b=VUlOJL1TK2qCyDc2a3ND5kEt79P5rk1BB+s9eVb4BF6zxcQ2vkCEHwak
+   cbAuuZZsjcBfuW5Hfwv9JAcoQyK3s7RG3QTMqbh33l+KYt//f6JPMEOhC
+   5pZg1ikpHCawJ2T93onejOdp/WYFFxLqoIUIkCKZD0q+BILRwSzWs4Zlv
+   Ljz7BXe/pxj6Psu2c1Ex5LPm3+aYJI2QczhiGJTHoWaf+sZAJGl40bZFE
+   8/DfgrTk0BLrNIjqjQSZBIlXNfJlKUEheLLdMyJCkWkIZF7LtNnuqIDsE
+   19KbidFvI9w0h6EQQCPttSVrWaV4OrYffuk13O46GvuKAtEmRqsMqNyr/
+   g==;
+X-CSE-ConnectionGUID: fzDv+01JT0uQY5yUh2+03g==
+X-CSE-MsgGUID: XPC9/9/UQvqMrgfKctuj0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="85241951"
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="85241951"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 03:24:37 -0700
+X-CSE-ConnectionGUID: Y848cS0WS2+OJshr3DIcWg==
+X-CSE-MsgGUID: BECveOkhT2av94s5AcAK1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="295931620"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 03:24:35 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Jul 2026 13:24:32 +0300 (EEST)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Hans de Goede <hansg@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+    "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
+    Francis De Brabandere <francisdb@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/4] platform/x86/amd/pmc: Fix error handling in
+ amd_stb_s2d_init()
+In-Reply-To: <20260717162023.956346-3-mario.limonciello@amd.com>
+Message-ID: <54655f38-edf4-e756-e24c-5f4cb041d63c@linux.intel.com>
+References: <20260717162023.956346-1-mario.limonciello@amd.com> <20260717162023.956346-3-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted but
- profile remains balanced on Redmi Book Pro 14 2022
-To: qby140326@gmail.com, Gladyshev Ilya <foxido@foxido.dev>
-Cc: platform-driver-x86@vger.kernel.org, hansg@kernel.org,
- Robert Munro <robert.munro@ethicsbowl.ca>, ilpo.jarvinen@linux.intel.com,
- regressions@lists.linux.dev
-References: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178462923742.1020471.14469628590378182114@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 146C55FC9C
-X-NC-CID: rSaY7LPMPElVVui73T6me1sALVtdKrrLzRyhQJut5sNRMDxo6wY=
+Content-Type: text/plain; charset=US-ASCII
 
-[top posting, to facilitate processing]
+On Fri, 17 Jul 2026, Mario Limonciello wrote:
 
-Hmm, nothing happened here.
+> amd_stb_s2d_init() has two problems on its error paths:
+> 
+>  - The return value of the S2D_TELEMETRY_SIZE SMU command is discarded.
+>    When the SMU refuses the command (e.g. "SMU cmd failed. err: 0xff")
+>    the failure is only noticed indirectly through the telemetry size
+>    check and reported as -EIO, masking the real error.
+> 
+>  - dev->msg_port is switched to MSG_PORT_S2D before issuing the S2D SMU
+>    commands but is only restored to MSG_PORT_PMC on the success path.
+>    The early "return -EIO" leaves the port stuck on MSG_PORT_S2D, so all
+>    subsequent SMU communication - including the s2idle prepare/restore
+>    handlers - is directed at the wrong mailbox.
 
-Mingyou Chen, this seems to be cause by a change of yours. Not totally
-sure yet if this qualifies as regression (sounds like one), but could
-you maybe share your view on all of this?
+If you fix the second one first (see below, it seems another place needs 
+similar fix), the first one can be fixed on top of it in own patch.
 
-Side note: Robert, have you tried if latest 7.2-rc works any better?
+> Consolidate the exit path through a single label so the message port is
+> always restored, and propagate the SMU command error directly instead of
+> inferring it from the size.
+> 
+> Assisted-by: Claude:opus
+> Reported-by: Francis De Brabandere <francisdb@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221759
+> Tested-by: Francis De Brabandere <francisdb@gmail.com>
+> Fixes: 3d7d407dfb05 ("platform/x86: amd-pmc: Add support for AMD Spill to DRAM STB feature")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/amd/pmc/mp1_stb.c | 28 +++++++++++++++-----------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmc/mp1_stb.c b/drivers/platform/x86/amd/pmc/mp1_stb.c
+> index 753d630f3283d..6a048cb2605ec 100644
+> --- a/drivers/platform/x86/amd/pmc/mp1_stb.c
+> +++ b/drivers/platform/x86/amd/pmc/mp1_stb.c
+> @@ -289,7 +289,7 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+>  	u32 phys_addr_low, phys_addr_hi;
+>  	u64 stb_phys_addr;
+>  	u32 size = 0;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	if (!enable_stb)
+>  		return 0;
+> @@ -306,13 +306,17 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+>  	/* Spill to DRAM feature uses separate SMU message port */
+>  	dev->msg_port = MSG_PORT_S2D;
+>  
+> -	amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->stb_arg.s2d_msg_id, true);
+> -	if (size != S2D_TELEMETRY_BYTES_MAX)
+> -		return -EIO;
+> +	ret = amd_pmc_send_cmd(dev, S2D_TELEMETRY_SIZE, &size, dev->stb_arg.s2d_msg_id, true);
+> +	if (ret)
+> +		goto out;
+> +	if (size != S2D_TELEMETRY_BYTES_MAX) {
+> +		ret = -EIO;
+> +		goto out;
+> +	}
+>  
+> -	/* Get DRAM size */
+> -	ret = amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->stb_arg.s2d_msg_id, true);
+> -	if (ret || !dev->dram_size)
+> +	/* Get DRAM size; fall back to the default if the query fails */
+> +	if (amd_pmc_send_cmd(dev, S2D_DRAM_SIZE, &dev->dram_size, dev->stb_arg.s2d_msg_id, true) ||
+> +	    !dev->dram_size)
+>  		dev->dram_size = S2D_TELEMETRY_DRAMBYTES_MAX;
+>  
+>  	/* Get STB DRAM address */
+> @@ -321,12 +325,12 @@ int amd_stb_s2d_init(struct amd_pmc_dev *dev)
+>  
+>  	stb_phys_addr = ((u64)phys_addr_hi << 32 | phys_addr_low);
+>  
+> -	/* Clear msg_port for other SMU operation */
+> -	dev->msg_port = MSG_PORT_PMC;
+> -
+>  	dev->stb_virt_addr = devm_ioremap(dev->dev, stb_phys_addr, dev->dram_size);
+>  	if (!dev->stb_virt_addr)
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+>  
+> -	return 0;
+> +out:
+> +	/* Restore the default message port for subsequent SMU operations */
+> +	dev->msg_port = MSG_PORT_PMC;
 
-Ciao, Thorsten
+Sashiko (correctly?) points out amd_stb_debugfs_open_v2() has the same 
+problem of leaving from msg_port.
 
-On 7/13/26 20:35, Robert Munro wrote:
-> To: Mingyou Chen <qby140326@gmail.com>, Hans de Goede
-> <hansg@kernel.org>, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
-> Subject: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted
-> but profile remains balanced on Redmi Book Pro 14 2022
-> 
-> Hello,
-> 
-> Linux 7.1's new bitland-mifs-wmi driver binds on my TIMI Redmi Book Pro
-> 14 2022 (TM2107) and exposes platform profiles, but selecting power-
-> saver is silently ineffective. The userspace request returns success
-> while the sysfs profile never leaves "balanced".
-> 
-> This reproduces without KDE:
-> 
->     $ cat /sys/class/platform-profile/platform-profile-0/name
->     bitland-mifs-wmi
-> 
->     $ cat /sys/firmware/acpi/platform_profile_choices
->     low-power balanced balanced-performance performance
-> 
->     $ cat /sys/firmware/acpi/platform_profile
->     balanced
-> 
->     $ powerprofilesctl set power-saver
->     $ echo $?
->     0
-> 
->     $ powerprofilesctl get
->     balanced
-> 
->     $ cat /sys/firmware/acpi/platform_profile
->     balanced
-> 
->     $ cat /sys/devices/system/cpu/cpufreq/policy0/
-> energy_performance_preference
->     balance_performance
-> 
-> I repeated the request while polling platform_profile every 50 ms. The
-> only observed value was "balanced"; no transient "low-power" state
-> appeared. The request completed in 162 ms with exit status 0. power-
-> profiles-daemon also persisted Profile=balanced afterward. There were no
-> relevant kernel or daemon log messages.
-> 
-> Expected result:
-> 
-> The advertised low-power profile is selected, platform_profile reads
-> "low-power", and the AMD P-State EPP becomes power-oriented.
-> 
-> Actual result:
-> 
-> The operation reports success, but firmware, power-profiles-daemon, and
-> all AMD CPU policies remain balanced.
-> 
-> System information:
-> 
->     Distribution: CachyOS
->     Kernel: 7.1.3-2-cachyos
->     DMI vendor/product/board: TIMI / Redmi Book Pro 14 2022 / TM2107
->     BIOS: TIMI RMARB4B0P1010, 2023-06-28
->     CPU: AMD Ryzen 5 6600H with Radeon Graphics
->     bitland_mifs_wmi srcversion: 0C0A58A1AE25437010C0B5E
->     power-profiles-daemon: 0.30-3
->     Power source during reproduction: AC online
->     Active profile holds: none
->     Other power managers (TLP, TuneD, auto-cpufreq): none
-> 
-> powerprofilesctl identifies both drivers:
-> 
->     power-saver:
->       CpuDriver: amd_pstate
->       PlatformDriver: platform_profile
-> 
-> The kernel taint value is 512 because of an unrelated AMDGPU display
-> warning during boot (dcn31_program_compbuf_size); bitland_mifs_wmi
-> itself is not tainted and emitted no warning during reproduction.
-> 
-> This began after the 2026-06-24 update from Linux 7.0.12 to 7.1.1, which
-> introduced bitland-mifs-wmi (dc1ec4fa86b2). Power Saver worked before
-> that update. My installed 6.18 LTS kernel does not contain this driver,
-> but I have not yet performed an LTS or vanilla-mainline A/B test, so I
-> am explicitly reporting this as reproduced on a CachyOS kernel.
-> 
-> 
-> Regards,
-> Robert
-> 
-> Assisted-by: OpenAI Codex:GPT-5
-> 
-> Robert Munro
-> Director, Executive Team
-> robert.munro@ethicsbowl.ca <mailto:robert.munro@ethicsbowl.ca>
-> ethicsbowl.ca <https://ethicsbowl.ca>
-> Ethics Bowl Canada
-> 
+To me it looks like having ->msg_port in dev is design error and it should 
+be a parameter to the relevant functions instead or with some wrapping 
+given by those functions that actually need to give the non-default port.
+
+-- 
+ i.
 
