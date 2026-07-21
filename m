@@ -1,60 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C81319049B;
-	Tue, 21 Jul 2026 17:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2B63E63AE;
+	Tue, 21 Jul 2026 17:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784654159; cv=none; b=hIi6zaWIj9wM0t5RlpB3suUJkYCLgllcjWnO8UrEWCX5yUUFecI7Qarz1sMrO/pNkVeBx3xpK7HQpMfTseBR3TYcDEse4qm5mCLVqLX8pRNUnjHiw1nBAe2RK798WGOzZ6nV7I+x2WhCfU8uaKTX4eaLn5iG/543MaKkfO0g2PI=
+	t=1784654166; cv=none; b=JXVBg/wDGbE6KUvj8yFh/sKznukWqSmL1asRL2s4yHqKpyAfyvTr/Kdt8x1SQ/BKw2HldonLMbweGQuRr3vmEnGdHq4Bf6zU3fot/5sWOWe1zM4s7IAz2BOcZML+aN0zUuuftfSFG4E2nYwWS/6omNGDLkSsHDEEflJ4ENFsMU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784654159; c=relaxed/simple;
-	bh=sY/hzYyuG1yFAktnYFj21Rvcvx1IZdMf2Jdo4FKB78Q=;
+	s=arc-20240116; t=1784654166; c=relaxed/simple;
+	bh=Ok+M0E6L3CXBgfNtOIVa9inx0M2WZCFurgdJpt6Ccy0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JrVLOa7oR8ntdJsAmpQvBLpidQf/s2icH8T+N2VaQ4ZS9KdZvbAy6Jhpo+f+Sy5Ra7iqwdLkf5sCh1msjvfk9xXF/NvwVtQpl+6YsEzvjP7fBqIbGYqeaBl8qazlHJ2BHiKMydYCFE1BJadxJlrfhwwlgV05vWMGaejP8QpxH3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDVISYLj; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version:Content-Type; b=BOARFUrxUidrZm3ekERojKjKFmdptqn88/USwiEsRsxV1BtJuP9fAXUcXuYXTLk4ilXRNdCUj6gDSp5vNmpwUmhwPfkPXTXlLgQ72pvXkqsq30q5e7P5iH114AVr+cP7ID0Qjc2Ecwti0TorxY1Qq95LPnCFhNe53UpXuI3Jqzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8gHXhid; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDVISYLj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8gHXhid"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784654158; x=1816190158;
+  t=1784654166; x=1816190166;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=sY/hzYyuG1yFAktnYFj21Rvcvx1IZdMf2Jdo4FKB78Q=;
-  b=PDVISYLjR2GcPwPfyL/bcDocvWHhhSMvgcJa3YrKljjR9Pmhjs7GDnS1
-   fHejvJSEeo+/8cuid7wW1GAwKgDww/z+iJifKWKm/x7kycV89ZKVNEQ8Y
-   5/63x3Hqn1FkLh4tRpck68I3sehydytysXNVj+MojSohURK0ch3wSeiCk
-   79Ys8+kjIF4PcdjGayVfZuSDS+uZ+NOYKOLuWUVCJjqVqAuKwNtuJaOP3
-   7+TkL3HqBSpXmpBxkZffyloomN66N8ARFY3ajTyieWDzzLeZRqL3TJkRo
-   F87148vpgDuKuNrW7jEBB6oB8jIdtN385wFR30CYTWvzLjfsqIV2bNvgA
-   g==;
-X-CSE-ConnectionGUID: LBAuhX+HR3q4IWyljBR8hw==
-X-CSE-MsgGUID: Qv/jh/iqTrCN/cc3c7iQYg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85464629"
+  bh=Ok+M0E6L3CXBgfNtOIVa9inx0M2WZCFurgdJpt6Ccy0=;
+  b=U8gHXhidSWpYkiyOFpDMQzOywfK0GMizII77Vp1ABGAWouPK+EIksaiG
+   2tDtyVYe8PDF2ULrV6ej+xzT9QuByKyBN+xlJz7Y341nGbjuZztWzhe1I
+   J22hZXx3nXqyULslWI2iX/EuFp/ya3dPoRzNF/RWm71VHmaYiPvJRVQ4t
+   v5mypZ3ocv5Atabrm+flvUrqZDaKa0FR4+tI5KFYHtllYv65TvkuKAAFo
+   n1YCOvqIUdyzrajKtca7oPW1YCj5w3Yy91elMaXKzsdtwI54YQtug/hx2
+   CSG9uHvWeqZNYjG4RVEStSuVuYR7hdBPEI8zL6r+gNgc1ZIVL33nC7LUx
+   Q==;
+X-CSE-ConnectionGUID: N1eMVfhrRHGNXw/XelhIDg==
+X-CSE-MsgGUID: +WAutTFVTJSuJzLd7dYLOQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85464649"
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="85464629"
+   d="scan'208";a="85464649"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:15:58 -0700
-X-CSE-ConnectionGUID: 43DowzGrTRCjsb8hYuQMCQ==
-X-CSE-MsgGUID: sqeU0vQZQJGqB9dmFHHUpA==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:16:05 -0700
+X-CSE-ConnectionGUID: zeo9zSEVQ1q45Bo2kNPZXw==
+X-CSE-MsgGUID: D8SiN7XkS2G5geEJmtOB3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="257894082"
+   d="scan'208";a="257894097"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:15:55 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:16:03 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- Nizar Al-Kabbani <nizar.m.kabbani@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260719090843.66777-1-nizar.m.kabbani@gmail.com>
-References: <20260719090843.66777-1-nizar.m.kabbani@gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-nb-wmi: map ProArt key (0x8b) to
- KEY_PROG3
-Message-Id: <178465415041.18499.11634321298464665556.b4-ty@b4>
-Date: Tue, 21 Jul 2026 20:15:50 +0300
+To: platform-driver-x86@vger.kernel.org, 
+ Yap Weei Choong <ywc8891@gmail.com>
+Cc: hansg@kernel.org, Shyam-sundar.S-k@amd.com, mario.limonciello@amd.com, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260717060744.1252065-2-ywc8891@gmail.com>
+References: <20260717060744.1252065-2-ywc8891@gmail.com>
+Subject: Re: [PATCH] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to
+ s2idle quirk list
+Message-Id: <178465415823.18499.423675499330587923.b4-ty@b4>
+Date: Tue, 21 Jul 2026 20:15:58 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -65,17 +64,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sun, 19 Jul 2026 12:08:43 +0300, Nizar Al-Kabbani wrote:
+On Fri, 17 Jul 2026 14:07:45 +0800, Yap Weei Choong wrote:
 
-> The dedicated "ProArt" key on the ASUS ProArt PX13 (HN7306) emits ASUS
-> WMI event code 0x8b. This code is absent from the asus-nb-wmi sparse
-> keymap, so pressing the key only produces a "Unknown key code 0x8b"
-> message and does nothing in userspace.
+> The ThinkPad T14 Gen 2 AMD was sold under two machine types, 20XK and
+> 20XL, but only 20XK has been in the s2idle quirk list since the quirk
+> was introduced in commit 455cd867b85b ("platform/x86: thinkpad_acpi:
+> Add a s2idle resume quirk for a number of laptops").
 > 
-> On this model the key is exposed solely through the WMI interface and has
-> no HID scancode, so it can only be handled inside asus-nb-wmi. Map 0x8b
-> to KEY_PROG3 so the key emits a bindable event, consistent with the
-> existing KEY_PROG3 mapping used for the ASUS programmable/Armoury key.
+> On 20XL machines the firmware SMI handler therefore still runs on the
+> NVMe D3->D0 transition when exiting suspend-to-idle. With IOMMU
+> translation enabled (the default), this intermittently stalls resume
+> for ~10.25 seconds: seven devices across three root ports (nvme, both
+> xhci_hcd functions, xhci-pci-renesas, snd_hda_intel x2, snd_rn_pci_acp3x)
+> block in pci_pm_resume_noirq and are released simultaneously, consistent
+> with all cores being held in SMM.
 > 
 > [...]
 
@@ -90,8 +92,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: asus-nb-wmi: map ProArt key (0x8b) to KEY_PROG3
-      commit: 6303451189a6d8f304221065c44ccd597e0acbe5
+[1/1] platform/x86/amd/pmc: Add T14 Gen2 AMD (20XL) to s2idle quirk list
+      commit: e25fb2258bddbcf70df69d1358be3e1274bdc5f2
 
 --
  i.
