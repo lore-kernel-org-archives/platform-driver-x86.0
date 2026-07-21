@@ -1,257 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8DF46AA91;
-	Tue, 21 Jul 2026 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1220346AA68;
+	Tue, 21 Jul 2026 15:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784648018; cv=none; b=f4mj7Tq9OqsjmZhBRWUEHCwD05A4MuCpiV0LYZ+/U7NPtD9zWVc034/1KC6rfD1EkPWpHD0HX7yV3CXpjFcGc4mfR8x7ytlwlOHaBpLtaB2T9BiXd0ULDQN3pTqUsnvzyxCARrY6wURMsNbb/T5I5bhQyrZlmfcHTwfh9Nq500s=
+	t=1784648163; cv=none; b=SqQKZifEE7i5FiSOdsCsvLN+OYk3KFx8xoNf6SxI6gbQ8DSdmtLBBnNPTys5WDt3sJgyg1k1+bYsm3s1saluZ0TQSNsKSAJL6bFKa2wVpPHQc/6o2jy/aHQde0Lnpiva5tbK8sgfrU9Zr/USJIkUW20iU8Z4zQsIRgC2nCuofAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784648018; c=relaxed/simple;
-	bh=bYEicWFRLIPBmMNMPmRc/odkocG3XuMg47eGW3BPdn8=;
+	s=arc-20240116; t=1784648163; c=relaxed/simple;
+	bh=LSOJidYWyJkfwzustefDfNuU8d4r8/kxHffPI6oNHtM=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ac09g17XJ+WzHoIXXqDqltCRE8HWcHGltwuFPt9cBgL/2GfFDzbwEH4rtbmjqnMF7r9t/yHsPflF0+/UsAjsBSpd9CabAkC5TadQ7DnN/TpXFjzyBxKx9X3C35CnVHeJMVCkmfJUxup4Us17mOLHMjl2B6YzxdTPzw/rcPH7XbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oK6t//YT; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=kOrjC4HULyf6OOCc3knsSZjyUcOPgsErZbDSkUGn9ps426hflkbGyI+SrWfxJWdoqynV3hrZp25vEv/oyUp2gbccVfOCclx5Cqcb+8D31dGcQyqSLPg8t9Yn9hhOBUf1vuFMGO3/ovpKRVOTcenhSIVYxLbWq7hOQRQRO/OI7u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aK4C3LbB; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oK6t//YT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aK4C3LbB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784648016; x=1816184016;
+  t=1784648162; x=1816184162;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=bYEicWFRLIPBmMNMPmRc/odkocG3XuMg47eGW3BPdn8=;
-  b=oK6t//YTkgJItLAfoXb3RKExxAvh38Mw6GvAM7hINOUXIjKjDSvH7Xe4
-   3lJcW719kN0LoPfvexwk8wPrzOgqHzn1S8ZumafRUjZgz0BGCw4BkP86/
-   I/Ugbtxv3EPuPf6OgaSyvbrMLQ852sW4dlEZONvTiC1/Uy7ghxPXMCkT2
-   C1nbbEGLuZaRfsIEwxkJgzDDx9De8xAp8YhCRJ1ZY6agJlgYsa/VJrv7L
-   /akfXq9ngDHnuc2+jv4HESLrsdyykRhN8d+MdqKBK0opjMWsLngV76FTX
-   uTWOIdTKgLi++iroJD1OnxqBVM7q/5JaI+Xxqf99+yOcsolTBMxSoEV4F
+  bh=LSOJidYWyJkfwzustefDfNuU8d4r8/kxHffPI6oNHtM=;
+  b=aK4C3LbBE1Uas/FAoaKnBX+BeNDSy4XNeknEqzUxzAaUf41VQLu8FTxF
+   gohT2Kh9tsMbDQnyFPQZX7ids2pP59OeWNhXO84vYDQNya0TwO1FMgKnc
+   p73NrtYCwwVUvwKlottcn1hWzUVM3TpriwRNmD0uTig8v3ShH9JAns0hp
+   Hs4De1f2PKDkokpiQvuNrGS4mDjYGB5fIwCGd2nrXUQ6nJkBAoYTo9++N
+   JjKV7D/oSlaXT947hEsDeyMNB02xBZtWKOPYzlmi3lkc8WAx/cyx9rDXx
+   vh2majO52I45sotRlmljnATbtVv5ZChO8bXyvFg2vL/ZLNNA4e+hYzX2k
    A==;
-X-CSE-ConnectionGUID: lvVga/Y9S7ygGe8FLJ3LGQ==
-X-CSE-MsgGUID: Gc7FaZCcSJWcrnsBUpsJ/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="95848669"
+X-CSE-ConnectionGUID: i6GmSVF4Rk2+3rhj5NuoWg==
+X-CSE-MsgGUID: Up+fKjRZT7eWLK4XQ8PSgA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="95616500"
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="95848669"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:33:35 -0700
-X-CSE-ConnectionGUID: /QOaU5UKT5CfW1pKDjagbQ==
-X-CSE-MsgGUID: hv5YqUsES8yp2wwH1YAjqQ==
+   d="scan'208";a="95616500"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:36:01 -0700
+X-CSE-ConnectionGUID: 6251/zbFSjC0ACQL9qlmpA==
+X-CSE-MsgGUID: jr2Bkl1oQ1WvuRUIeSx+pA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="256001819"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:33:32 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:35:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 Jul 2026 18:33:28 +0300 (EEST)
+Date: Tue, 21 Jul 2026 18:35:55 +0300 (EEST)
 To: Armin Wolf <W_Armin@gmx.de>
-cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux@weissschuh.net, lenb@kernel.org, 
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux@weissschuh.net, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org, 
     linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/3] ACPI: video: Remove CONFIG_X86 handling from
- nvidia_wmi_ec_supported()
-In-Reply-To: <a45e7c7a-c0cd-4f6e-b48a-15beca4e022a@gmx.de>
-Message-ID: <b347c2a4-229c-3c9d-435d-569fdb16c9e5@linux.intel.com>
-References: <20260716234538.1303811-1-W_Armin@gmx.de> <20260716234538.1303811-3-W_Armin@gmx.de> <CAJZ5v0hUoTRS4fce0=Qn8J=Yf5WtHfbzUw+kyxhhPaRtB2o35A@mail.gmail.com> <a45e7c7a-c0cd-4f6e-b48a-15beca4e022a@gmx.de>
+Subject: Re: [PATCH 3/3] platform/x86: wmi-bmof: Move to generic WMI code
+In-Reply-To: <20260716234538.1303811-4-W_Armin@gmx.de>
+Message-ID: <7a059319-e1a9-e2c6-c750-7ee0c3ab3861@linux.intel.com>
+References: <20260716234538.1303811-1-W_Armin@gmx.de> <20260716234538.1303811-4-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-2134702264-1784648008=:1265"
+Content-Type: multipart/mixed; boundary="8323328-1463547634-1784648155=:1265"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-2134702264-1784648008=:1265
-Content-Type: text/plain; charset=UTF-8
+--8323328-1463547634-1784648155=:1265
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Fri, 17 Jul 2026, Armin Wolf wrote:
 
-> Am 17.07.26 um 11:14 schrieb Rafael J. Wysocki (Intel):
+> Some Windows-on-Arm notebooks contain embedded Binary MOF data,
+> accessible using the WMI-ACPI interface. Move the associated driver
+> to the generic WMI code to make it possible to build it on arm64.
+> Also rework the Kconfig help text a bit.
 >=20
-> > On Fri, Jul 17, 2026 at 1:45=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wro=
-te:
-> > > The WMI-ACPI driver now supports architectures other than x86.
-> > > Remove the CONFIG_X86 handling from video-detect and the associated
-> > > GPU drivers to simplify the resulting code.
-> > >=20
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-> >=20
-> > Or please let me know if you want me to pick up this one.
-> >=20
-> > Thanks!
+> Link: https://lists.linaro.org/archives/list/aarch64-laptops@lists.linaro=
+=2Eorg/thread/U2IZENSIOOHZHGXVN7GM5HX5O3FD5KCF/
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  MAINTAINERS                                     |  2 +-
+>  drivers/platform/wmi/Kconfig                    | 12 ++++++++++++
+>  drivers/platform/wmi/Makefile                   |  4 ++++
+>  drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} |  0
+>  drivers/platform/x86/Kconfig                    | 12 ------------
+>  drivers/platform/x86/Makefile                   |  3 ---
+>  6 files changed, 17 insertions(+), 16 deletions(-)
+>  rename drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} (100%)
 >=20
-> Hi,
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3820b286f09f..bbae729a6012 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -29106,7 +29106,7 @@ L:=09platform-driver-x86@vger.kernel.org
+>  S:=09Maintained
+>  F:=09Documentation/ABI/stable/sysfs-platform-wmi-bmof
+>  F:=09Documentation/wmi/devices/wmi-bmof.rst
+> -F:=09drivers/platform/x86/wmi-bmof.c
+> +F:=09drivers/platform/wmi/bmof.c
+> =20
+>  WOLFSON MICROELECTRONICS DRIVERS
+>  L:=09patches@opensource.cirrus.com
+> diff --git a/drivers/platform/wmi/Kconfig b/drivers/platform/wmi/Kconfig
+> index 36934b5f0194..11c221a58e04 100644
+> --- a/drivers/platform/wmi/Kconfig
+> +++ b/drivers/platform/wmi/Kconfig
+> @@ -34,4 +34,16 @@ config ACPI_WMI_LEGACY_DEVICE_NAMES
+> =20
+>  source "drivers/platform/wmi/tests/Kconfig"
+> =20
+> +config WMI_BMOF
+> +=09tristate "WMI embedded Binary MOF driver"
+> +=09default ACPI_WMI
+> +=09help
+> +=09  Say Y here if you want to be able to read the firmware-embedded
+> +=09  WMI Binary MOF (Managed Object Format) data. Using this requires
+> +=09  userspace tools, see Documentation/wmi/devices/wmi-bmof.rst for
+> +=09  details.
+> +
+> +=09  To compile this driver as a module, choose M here: the module will
+> +=09  be called wmi-bmof.
+> +
+>  endif # ACPI_WMI
+> diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefil=
+e
+> index 2feff94a5594..ee2f27ea20d1 100644
+> --- a/drivers/platform/wmi/Makefile
+> +++ b/drivers/platform/wmi/Makefile
+> @@ -9,3 +9,7 @@ obj-$(CONFIG_ACPI_WMI)=09+=3D wmi.o
+> =20
+>  # Unit tests
+>  obj-y=09=09=09+=3D tests/
+> +
+> +# Binary MOF driver
+> +wmi-bmof-y=09=09:=3D bmof.o
+> +obj-$(CONFIG_WMI_BMOF)=09+=3D wmi-bmof.o
+> diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/wmi/bmof.=
+c
+> similarity index 100%
+> rename from drivers/platform/x86/wmi-bmof.c
+> rename to drivers/platform/wmi/bmof.c
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 957034f39e4e..889979034391 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -16,18 +16,6 @@ menuconfig X86_PLATFORM_DEVICES
+> =20
+>  if X86_PLATFORM_DEVICES
+> =20
+> -config WMI_BMOF
+> -=09tristate "WMI embedded Binary MOF driver"
+> -=09depends on ACPI_WMI
+> -=09default ACPI_WMI
+> -=09help
+> -=09  Say Y here if you want to be able to read a firmware-embedded
+> -=09  WMI Binary MOF (Managed Object Format) data. Using this requires
+> -=09  userspace tools and may be rather tedious.
+> -
+> -=09  To compile this driver as a module, choose M here: the module will
+> -=09  be called wmi-bmof.
+> -
+>  config HUAWEI_WMI
+>  =09tristate "Huawei WMI laptop extras driver"
+>  =09depends on ACPI_BATTERY
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
+e
+> index 872ac3842391..94a5fe4075cb 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -4,9 +4,6 @@
+>  # x86 Platform-Specific Drivers
+>  #
+> =20
+> -# Windows Management Interface
+> -obj-$(CONFIG_WMI_BMOF)=09=09+=3D wmi-bmof.o
+> -
+>  # WMI drivers
+>  obj-$(CONFIG_HUAWEI_WMI)=09=09+=3D huawei-wmi.o
+>  obj-$(CONFIG_MXM_WMI)=09=09=09+=3D mxm-wmi.o
 >=20
-> i would prefer if this is being picked up by the platform drivers tree, u=
-nless
-> Ilpo says otherwise.
 
-Hi.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-I'm fine with taking this, but not before gpu/ people acks and you seem to=
-=20
-not have them among receipients??
-
-Proposed course of action: Collect tags and send v2 with a bit more=20
-receipients?
-
---
+--=20
  i.
 
-> > > ---
-> > >   drivers/acpi/Kconfig               | 2 +-
-> > >   drivers/acpi/video_detect.c        | 8 --------
-> > >   drivers/gpu/drm/amd/amdgpu/Kconfig | 4 +---
-> > >   drivers/gpu/drm/gma500/Kconfig     | 1 -
-> > >   drivers/gpu/drm/i915/Kconfig       | 1 -
-> > >   drivers/gpu/drm/radeon/Kconfig     | 4 +---
-> > >   drivers/gpu/drm/xe/Kconfig         | 5 ++---
-> > >   7 files changed, 5 insertions(+), 20 deletions(-)
-> > >=20
-> > > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> > > index f165d14cf61a..cc1e58fa664b 100644
-> > > --- a/drivers/acpi/Kconfig
-> > > +++ b/drivers/acpi/Kconfig
-> > > @@ -224,7 +224,7 @@ config ACPI_VIDEO
-> > >          tristate "Video"
-> > >          depends on BACKLIGHT_CLASS_DEVICE
-> > >          depends on INPUT
-> > > -       depends on ACPI_WMI || !X86
-> > > +       depends on ACPI_WMI
-> > >          select THERMAL
-> > >          help
-> > >            This driver implements the ACPI Extensions For Display Ada=
-pters
-> > > diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.=
-c
-> > > index 458efa4fe9d4..af9280b244f1 100644
-> > > --- a/drivers/acpi/video_detect.c
-> > > +++ b/drivers/acpi/video_detect.c
-> > > @@ -82,8 +82,6 @@ find_video(acpi_handle handle, u32 lvl, void *conte=
-xt,
-> > > void **rv)
-> > >          return AE_OK;
-> > >   }
-> > >=20
-> > > -/* This depends on ACPI_WMI which is X86 only */
-> > > -#ifdef CONFIG_X86
-> > >   static bool nvidia_wmi_ec_supported(void)
-> > >   {
-> > >          struct wmi_brightness_args args =3D {
-> > > @@ -105,12 +103,6 @@ static bool nvidia_wmi_ec_supported(void)
-> > >           */
-> > >          return args.ret =3D=3D WMI_BRIGHTNESS_SOURCE_EC;
-> > >   }
-> > > -#else
-> > > -static bool nvidia_wmi_ec_supported(void)
-> > > -{
-> > > -       return false;
-> > > -}
-> > > -#endif
-> > >=20
-> > >   /* Force to use vendor driver when the ACPI device is known to be
-> > >    * buggy */
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > index 12e4a41bf1f0..50305630f533 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
-> > >          # ACPI_VIDEO's dependencies must also be selected.
-> > >          select INPUT if ACPI
-> > >          select ACPI_VIDEO if ACPI
-> > > -       # On x86 ACPI_VIDEO also needs ACPI_WMI
-> > > -       select X86_PLATFORM_DEVICES if ACPI && X86
-> > > -       select ACPI_WMI if ACPI && X86
-> > > +       select ACPI_WMI if ACPI
-> > >          help
-> > >            Choose this option if you have a recent AMD Radeon graphic=
-s
-> > > card.
-> > >=20
-> > > diff --git a/drivers/gpu/drm/gma500/Kconfig
-> > > b/drivers/gpu/drm/gma500/Kconfig
-> > > index a2acaa699dd5..dc4c56638819 100644
-> > > --- a/drivers/gpu/drm/gma500/Kconfig
-> > > +++ b/drivers/gpu/drm/gma500/Kconfig
-> > > @@ -11,7 +11,6 @@ config DRM_GMA500
-> > >          select ACPI_VIDEO if ACPI
-> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >          select INPUT if ACPI
-> > > -       select X86_PLATFORM_DEVICES if ACPI
-> > >          select ACPI_WMI if ACPI
-> > >          help
-> > >            Say yes for an experimental 2D KMS framebuffer driver for =
-the
-> > > diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kcon=
-fig
-> > > index 5e939004b646..71426b9c91f0 100644
-> > > --- a/drivers/gpu/drm/i915/Kconfig
-> > > +++ b/drivers/gpu/drm/i915/Kconfig
-> > > @@ -28,7 +28,6 @@ config DRM_I915
-> > >          # but for select to work, need to select ACPI_VIDEO's
-> > > dependencies, ick
-> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >          select INPUT if ACPI
-> > > -       select X86_PLATFORM_DEVICES if ACPI
-> > >          select ACPI_WMI if ACPI
-> > >          select ACPI_VIDEO if ACPI
-> > >          select SYNC_FILE
-> > > diff --git a/drivers/gpu/drm/radeon/Kconfig
-> > > b/drivers/gpu/drm/radeon/Kconfig
-> > > index c479f0c0dd5c..3cd70aef770e 100644
-> > > --- a/drivers/gpu/drm/radeon/Kconfig
-> > > +++ b/drivers/gpu/drm/radeon/Kconfig
-> > > @@ -25,9 +25,7 @@ config DRM_RADEON
-> > >          # ACPI_VIDEO's dependencies must also be selected.
-> > >          select INPUT if ACPI
-> > >          select ACPI_VIDEO if ACPI
-> > > -       # On x86 ACPI_VIDEO also needs ACPI_WMI
-> > > -       select X86_PLATFORM_DEVICES if ACPI && X86
-> > > -       select ACPI_WMI if ACPI && X86
-> > > +       select ACPI_WMI if ACPI
-> > >          help
-> > >            Choose this option if you have an ATI Radeon graphics card=
-=2E
-> > > There
-> > >            are both PCI and AGP versions.  You don't need to choose t=
-his
-> > > to
-> > > diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> > > index 4d7dcaff2b91..502c7b3c1f16 100644
-> > > --- a/drivers/gpu/drm/xe/Kconfig
-> > > +++ b/drivers/gpu/drm/xe/Kconfig
-> > > @@ -4,7 +4,6 @@ config DRM_XE
-> > >          depends on DRM && PCI
-> > >          depends on KUNIT || !KUNIT
-> > >          depends on INTEL_VSEC || !INTEL_VSEC
-> > > -       depends on X86_PLATFORM_DEVICES || !(X86 && ACPI)
-> > >          depends on PAGE_SIZE_4KB || COMPILE_TEST || BROKEN
-> > >          select INTERVAL_TREE
-> > >          # we need shmfs for the swappable backing store, and in
-> > > particular
-> > > @@ -29,8 +28,8 @@ config DRM_XE
-> > >          # but for select to work, need to select ACPI_VIDEO's
-> > > dependencies, ick
-> > >          select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >          select INPUT if ACPI
-> > > -       select ACPI_VIDEO if X86 && ACPI
-> > > -       select ACPI_WMI if X86 && ACPI
-> > > +       select ACPI_VIDEO if ACPI
-> > > +       select ACPI_WMI if ACPI
-> > >          select SYNC_FILE
-> > >          select CRC32
-> > >          select SND_HDA_I915 if SND_HDA_CORE
-> > > --
-> > > 2.39.5
-> > >=20
-> > >=20
->=20
---8323328-2134702264-1784648008=:1265--
+--8323328-1463547634-1784648155=:1265--
