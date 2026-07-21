@@ -1,214 +1,285 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016B52EDD58
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 10:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE817372EF7;
+	Tue, 21 Jul 2026 10:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784630541; cv=none; b=sL9pqttefnTJcHB20vs7Ytx9WSPDmwJbcEafGL++1ICLMXC4MnrZjoVlvaJBrJQTFPmYlGT9FstgqxiTJuQt2ELp4BhCoIsCiaCgCBijZWNXXXT0+/o398dA3lC6QukyJgiUZ91MbflTNTIrrKR3a7Pg5yGOBcWFuy6yhBhEXYY=
+	t=1784631375; cv=none; b=ctX7eGqVhwLnm8LMOxFfGWfioyPgE9tOP8ghg3fhGZx3PZK6M58oq9acZYlzl+ZZ/TwUkJeHzD2rBCNPzx0mCcZhLYyAa+m/389jweBgVsq/7Y3oxywopqMSTW5TbnPVneJa15SLPj9x9k9VPf/y5qgp+bQhv2mwdCJ77sQjoqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784630541; c=relaxed/simple;
-	bh=R+eGFGf0cgc4eA8bhxZ+anUWM2eHOrWZeI2lNIAlZxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qEMAam5conGaV8fG/vs/jAnszKtM3qp4HM7YZj7Nr1yTOdZag2klayer/lO1HMRvnMO+085rql3HJnxxoqN8pSq3dKJJZrksRiot4OfzbIedZeOjwiVYYYU/la8POIrGi3YoUuh1n6W+cZW3Tu8NNtGOpyzTeUD6EZlUP6FRmQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MzudBkhx; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784631375; c=relaxed/simple;
+	bh=KyIOxOoDdBAs4KSRu9aLmSWLfdIFzYZWetCKtt1vVgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BG2sBt8Lj68Whv04CBt991Pp7YsNnhEGhqa922JjPn+ehkey8wCVPgHav6cbJJfRPXr82kfnMZ7GS4aT5KUibOZ+PZRt1Muk9JpnNv5pEUYtvVfA/fHWhZa3iQA3KiG9J1sLZ4CcFtHvsbz4EZu+5+JqF2PxHn4ARwiVDQ2wFUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liFrF1u8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzudBkhx"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-8486ac3f347so3963982b3a.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 03:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784630539; x=1785235339; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=J6i/KJS3NLXhR3k/OosNO1oVTEegm0iAGuSI/Lf7jfU=;
-        b=MzudBkhxCC1ewW2XuSlNYsMPKjpnMpKaEIAT5CwEKMFgQ6yB0mFfSeGOsXPa9nJVKC
-         Sxo6OHO0qKCUKQGyBrxbeY7doFyl69vfCFR57mGwOIADs1VX3PeYFU9dPrM0jouArRSV
-         n2ySkeJBJObobsUONEb/LCnY3Hy3mHUmsemEcAUVHk7vwRaz1/B59p/rrVwaSRhVVdLm
-         McdsRgI6VdsdncP07bOwDOcggxpdZ2oxsR966iRq/2la4Lf5ULkYmj+xdRh++5uIhMj3
-         aWxkG+ILYY9ENTgvu6660+cQRxKp2fszgCEsS+BVtzJhIGrHGUKHZT3UKOo6Ru76Yt8a
-         aQ2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784630539; x=1785235339;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=J6i/KJS3NLXhR3k/OosNO1oVTEegm0iAGuSI/Lf7jfU=;
-        b=CAnSwrzbWbgvBgjCHs9dpsKlg62wsrldgEFe/FUhr9eSyQMidWgDZaklcK64kFMCXC
-         hpJPgWhhJPUXZusG6/tXOXHaRosXWhjj74D2Sxv6n1Wbbe0Wc2aMAIh3MteqvhzRnVh/
-         Zn6EufuUYjlxBRD2x9bplmdQNaZ9gZMNWQOloJP0knzWzwhfRsCnD5qUOP0RmDeD93Xm
-         pRL1MWruoEY/eUXVS8ehPO2eTtGXI6b2PnAbDEhDVdYqLKDi+5+kohZFE2vMtsn4PF5/
-         TsrTnCHGacrd65IeN87fVkK9wzTD5DAV5L3v/KfW2wTwQW/HKj7+WuJ+6VqhK9x6PUUE
-         YypQ==
-X-Gm-Message-State: AOJu0Yxr7NV5JCbuzaBirpiRvHtNNudw9rQzmGqmBiYaUnCK3iHeneLi
-	L+n+lFZqA82s+UzHFowxSo3VL+AtrdBJOq7oIr5ebsrnrZ/s2JuHFV9m
-X-Gm-Gg: AR+sD11R3nWZKZC2rEU1ZYvAjogRmTdeHrf80cZKa0IyVvxIBqd4T1Ls9GBzpnNguO4
-	GXnKteTRqExr7lr/h3Rh4heaUzcENu0bRNb4y/0/YIf+KdsYdEVrtjxxDl6daXWlmMdVOArjV2k
-	sOAEGvnbH0tRTlH0rxxAv+f+RMGP8zenKgYtnJhJJHOIltdJtsoBmeg0gu2mXvuy4gR6yQhwnIG
-	fg/L4ZIgfpGlIYFTf48El/pT+0nnz3pmLxMSei4dKpTkeu3ZmddJsMdG+HX3tcbIcKzTCCxzyvV
-	d7CDQiGDOYBphjxPmyUwvQDvwfOBbgMbXYyjUfhtzBPGEcs4HoQSk1iJxKZjgH99H3KJe1p2vgA
-	MQaIUCi10avbTb+/5TZz83dmGTmlVfjBVLcgfBXF28ZDc8XuSoVb0
-X-Received: by 2002:a05:6a00:12e5:b0:842:446a:4cb5 with SMTP id d2e1a72fcca58-84be686c3c1mr21311072b3a.0.1784630539077;
-        Tue, 21 Jul 2026 03:42:19 -0700 (PDT)
-Received: from [28.0.0.1] ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cb519aeb676sm5898806a12.19.2026.07.21.03.42.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2026 03:42:18 -0700 (PDT)
-Message-ID: <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
-Date: Tue, 21 Jul 2026 18:42:15 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liFrF1u8"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 78A561F000E9;
+	Tue, 21 Jul 2026 10:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784631371;
+	bh=okHY/JiU2kBs+oDZ4vo0gxjN3oGqMmtAuO7URmWs3A4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=liFrF1u86Dgalf5E9CBRJDGuB9kEKRLieFGUGa0EGnMYfpjEyEaEVmfFpwG2J8tXM
+	 yFR6tfl6ss6fg+xtJqydG/eqvZAlavce33I+x6To1TsbwM8AGcxxKLV9QXAHIRwOGb
+	 6BuwBl1s8ZS+qdzL5fSZKggD2L/U3wkCaAJI+uuffCfPrqly4AO6psCPTmPnEeye9b
+	 /nOeyAPxKFUY1FXTkr6XxGHTkMfdmuuLuMz4xpL4kaCUBlLM+TqTwfJ212ccpFnH3Q
+	 PAlR1IfkuLEo3bKyRoYUFfuSBZdQmB2UDsGc7VhFrj7IrX2kvG395oGEaBbqryHjJE
+	 KYD0rm9W7db/Q==
+Date: Tue, 21 Jul 2026 13:56:07 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] treewide: Add a flag to detect the Apple T2 chip
+Message-ID: <al9QR4v0Z_jkS44N@kernel.org>
+References: <20260721054506.11871-1-atharvatiwarilinuxdev@gmail.com>
+ <20260721054506.11871-2-atharvatiwarilinuxdev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted but
- profile remains balanced on Redmi Book Pro 14 2022
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Gladyshev Ilya <foxido@foxido.dev>
-Cc: platform-driver-x86@vger.kernel.org, hansg@kernel.org,
- Robert Munro <robert.munro@ethicsbowl.ca>, ilpo.jarvinen@linux.intel.com,
- regressions@lists.linux.dev
-References: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
- <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
-Content-Language: en-US
-From: cubewhy <qby140326@gmail.com>
-In-Reply-To: <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260721054506.11871-2-atharvatiwarilinuxdev@gmail.com>
 
-On 7/21/26 6:20 PM, Thorsten Leemhuis wrote:
-> [top posting, to facilitate processing]
->
-> Hmm, nothing happened here.
->
-> Mingyou Chen, this seems to be cause by a change of yours. Not totally
-> sure yet if this qualifies as regression (sounds like one), but could
-> you maybe share your view on all of this?
->
-> Side note: Robert, have you tried if latest 7.2-rc works any better?
->
-> Ciao, Thorsten
->
-> On 7/13/26 20:35, Robert Munro wrote:
->> To: Mingyou Chen <qby140326@gmail.com>, Hans de Goede
->> <hansg@kernel.org>, Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->> Cc: platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
->> Subject: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted
->> but profile remains balanced on Redmi Book Pro 14 2022
->>
->> Hello,
->>
->> Linux 7.1's new bitland-mifs-wmi driver binds on my TIMI Redmi Book Pro
->> 14 2022 (TM2107) and exposes platform profiles, but selecting power-
->> saver is silently ineffective. The userspace request returns success
->> while the sysfs profile never leaves "balanced".
->>
->> This reproduces without KDE:
->>
->>      $ cat /sys/class/platform-profile/platform-profile-0/name
->>      bitland-mifs-wmi
->>
->>      $ cat /sys/firmware/acpi/platform_profile_choices
->>      low-power balanced balanced-performance performance
->>
->>      $ cat /sys/firmware/acpi/platform_profile
->>      balanced
->>
->>      $ powerprofilesctl set power-saver
->>      $ echo $?
->>      0
->>
->>      $ powerprofilesctl get
->>      balanced
->>
->>      $ cat /sys/firmware/acpi/platform_profile
->>      balanced
->>
->>      $ cat /sys/devices/system/cpu/cpufreq/policy0/
->> energy_performance_preference
->>      balance_performance
->>
->> I repeated the request while polling platform_profile every 50 ms. The
->> only observed value was "balanced"; no transient "low-power" state
->> appeared. The request completed in 162 ms with exit status 0. power-
->> profiles-daemon also persisted Profile=balanced afterward. There were no
->> relevant kernel or daemon log messages.
->>
->> Expected result:
->>
->> The advertised low-power profile is selected, platform_profile reads
->> "low-power", and the AMD P-State EPP becomes power-oriented.
->>
->> Actual result:
->>
->> The operation reports success, but firmware, power-profiles-daemon, and
->> all AMD CPU policies remain balanced.
->>
->> System information:
->>
->>      Distribution: CachyOS
->>      Kernel: 7.1.3-2-cachyos
->>      DMI vendor/product/board: TIMI / Redmi Book Pro 14 2022 / TM2107
->>      BIOS: TIMI RMARB4B0P1010, 2023-06-28
->>      CPU: AMD Ryzen 5 6600H with Radeon Graphics
->>      bitland_mifs_wmi srcversion: 0C0A58A1AE25437010C0B5E
->>      power-profiles-daemon: 0.30-3
->>      Power source during reproduction: AC online
->>      Active profile holds: none
->>      Other power managers (TLP, TuneD, auto-cpufreq): none
->>
->> powerprofilesctl identifies both drivers:
->>
->>      power-saver:
->>        CpuDriver: amd_pstate
->>        PlatformDriver: platform_profile
->>
->> The kernel taint value is 512 because of an unrelated AMDGPU display
->> warning during boot (dcn31_program_compbuf_size); bitland_mifs_wmi
->> itself is not tainted and emitted no warning during reproduction.
->>
->> This began after the 2026-06-24 update from Linux 7.0.12 to 7.1.1, which
->> introduced bitland-mifs-wmi (dc1ec4fa86b2). Power Saver worked before
->> that update. My installed 6.18 LTS kernel does not contain this driver,
->> but I have not yet performed an LTS or vanilla-mainline A/B test, so I
->> am explicitly reporting this as reproduced on a CachyOS kernel.
->>
->>
->> Regards,
->> Robert
->>
->> Assisted-by: OpenAI Codex:GPT-5
->>
->> Robert Munro
->> Director, Executive Team
->> robert.munro@ethicsbowl.ca <mailto:robert.munro@ethicsbowl.ca>
->> ethicsbowl.ca <https://ethicsbowl.ca>
->> Ethics Bowl Canada
+On Tue, Jul 21, 2026 at 01:45:01AM -0400, Atharva Tiwari wrote:
+> Add a flag to detect Apple T2 chips on Intel Macs.
+> Cache the result to avoid repeated checks. That will
+> be used in upcoming patches.
+> 
+> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+> ---
+>  arch/x86/kernel/quirks.c                      | 105 ++++++++++++++++++
+>  include/linux/platform_data/x86/apple.h       |   5 +
+>  security/integrity/platform_certs/load_uefi.c |  38 ++-----
+>  3 files changed, 118 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+> index a92f18db9610..74b29738d404 100644
+> --- a/arch/x86/kernel/quirks.c
+> +++ b/arch/x86/kernel/quirks.c
+> @@ -664,8 +664,113 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2083, quirk_intel_purley_xeon_ras
+>  bool x86_apple_machine;
+>  EXPORT_SYMBOL(x86_apple_machine);
+>  
+> +bool has_apple_t2_chip;
+> +EXPORT_SYMBOL(has_apple_t2_chip);
+> +
+> +static const struct dmi_system_id apple_t2_devices[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,2"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,4"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,2"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,3"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,2"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir9,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Macmini8,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacPro7,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
+> +		},
+> +	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMacPro1,1"),
+> +		},
+> +	},
+> +	{ }
+> +};
+> +
+>  void __init early_platform_quirks(void)
+>  {
+>  	x86_apple_machine = dmi_match(DMI_SYS_VENDOR, "Apple Inc.") ||
+>  			    dmi_match(DMI_SYS_VENDOR, "Apple Computer, Inc.");
+> +
+> +	has_apple_t2_chip = dmi_check_system(apple_t2_devices);
+>  }
+> diff --git a/include/linux/platform_data/x86/apple.h b/include/linux/platform_data/x86/apple.h
+> index 079e816c3c21..50bbcc5134fc 100644
+> --- a/include/linux/platform_data/x86/apple.h
+> +++ b/include/linux/platform_data/x86/apple.h
+> @@ -6,8 +6,13 @@
+>   * x86_apple_machine - whether the machine is an x86 Apple Macintosh
+>   */
+>  extern bool x86_apple_machine;
+> +/**
+> + * has_apple_t2_chip - whether the machine has the Apple T2 chip
+> + */
+> +extern bool has_apple_t2_chip;
+>  #else
+>  #define x86_apple_machine false
+> +#define has_t2_chip false
+>  #endif
+>  
+>  #endif
+> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+> index c0d6948446c3..b4096d4c828d 100644
+> --- a/security/integrity/platform_certs/load_uefi.c
+> +++ b/security/integrity/platform_certs/load_uefi.c
+> @@ -3,42 +3,16 @@
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/cred.h>
+> -#include <linux/dmi.h>
+>  #include <linux/err.h>
+>  #include <linux/efi.h>
+>  #include <linux/slab.h>
+>  #include <linux/ima.h>
+> +#include <linux/platform_data/x86/apple.h>
+>  #include <keys/asymmetric-type.h>
+>  #include <keys/system_keyring.h>
+>  #include "../integrity.h"
+>  #include "keyring_handler.h"
+>  
+> -/*
+> - * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
+> - * certificates causes occurrence of a page fault in Apple's firmware and
+> - * a crash disabling EFI runtime services. The following quirk skips reading
+> - * these variables.
+> - */
+> -static const struct dmi_system_id uefi_skip_cert[] = {
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,2") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,3") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,4") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,2") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,3") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,4") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,2") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir9,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "Macmini8,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacPro7,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,1") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,2") },
+> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMacPro1,1") },
+> -	{ }
+> -};
+> -
+>  /*
+>   * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
+>   * it does.
+> @@ -165,10 +139,14 @@ static int __init load_uefi_certs(void)
+>  	unsigned long dbsize = 0, dbxsize = 0, mokxsize = 0;
+>  	efi_status_t status;
+>  	int rc = 0;
+> -	const struct dmi_system_id *dmi_id;
+>  
+> -	dmi_id = dmi_first_match(uefi_skip_cert);
+> -	if (dmi_id) {
+> +	/*
+> +	 * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
+> +	 * certificates causes occurrence of a page fault in Apple's firmware and
+> +	 * a crash disabling EFI runtime services. The following quirk skips reading
+> +	 * these variables.
+> +	 */
+> +	if (has_apple_t2_chip) {
+>  		pr_err("Reading UEFI Secure Boot Certs is not supported on T2 Macs.\n");
+>  		return false;
+>  	}
+> -- 
+> 2.43.0
+> 
 
-Let me explain this,
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-The bitland-mifs-wmi driver was introduced on Linux 7.1
-
-Previously, there wasn't a driver available for Bitland devices (Redmi 
-hardware is OEM'd by Bitland), and |platform_profile| was non-functional.
-
-This driver works well on my Bitland laptop (Lecoo Bellator N176).
-
-The driver support for these generic OEM designs is pretty messy. We 
-might need to introduce quirks into the driver because, despite sharing 
-the same data structure, many implementation details differ across models.
-
-
-And by the way, don't top post on kernel mailing lists.
-
---
-
-Mingyou Chen
-
-
+BR, Jarkko
