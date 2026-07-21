@@ -1,67 +1,64 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA02138B14C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 05:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECF3439347
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 06:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784612748; cv=none; b=CU/fhIm0lYA1lZRiNPl7cLAmNxWC1k+wF8DzPX0ojnj2U8bzLZ67DbOG8xujPookTV2KNm1xfMYlVsF+FyyzX0+/hQAgLVTnFjysPjrF7kpVgQ8InuEcRiQIzApp0zISS2SSxlEWKENdeMeuNg77nU8qObizkZxtNbdujmcH39s=
+	t=1784615670; cv=none; b=HSfb9jXXyp3aU2WKv1l/5AdSu9E/DQLG2PNnPRiNncs1RljG0atj4URRCTUuNewGlhPmm0Ajmg2zQXtvaNZ1nX8NGrylmFuEP2NkK3xKea0sTYPqmNu2uF1eXkBf1KzR6VNOUcBft3Ubg7J1OtnkrlJrM1NA5/vOMmjY5BvewD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784612748; c=relaxed/simple;
-	bh=DNpHQBMjU1wP0f8jQ4t452JbWb0XX8oIoHdLdwtqCfM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JnQp3MPsKN+91WgQ1UxEkJovFnPhHVNd5F2mIPNJk8aSGdaFnyC2YGEYsnrh5EUtF9i8UBscQ+NISkLrExNY+qjMIH9LCZkF0NrIhUJbidM8GYEsTmsc9FsvmHGgmQ+QBieBnu21DTAAZ1y/w28rFvor4n7jidJS8s/k/kRxRZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pzcULYBV; arc=none smtp.client-ip=209.85.215.172
+	s=arc-20240116; t=1784615670; c=relaxed/simple;
+	bh=CuR5q0hG/ysY6cDljY7+7vdeuayA1M3MknJPwWSlmnI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n7uc80KZFVfi5zS/zeKSz5izT7Q0OWJBkhMs1jrrhGG8x+jq5DQNwV7wUVYpGEwEtEE/xblpiHLwLgCwmbIxYwNLNAaKHRchzmjGGjN91MH0BlxECV+CRlkIogKSLEPJ9eiUIlR4A+cuubCYBeGd73UhoajEwlO0pKamwCDGeEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QbhARNiu; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzcULYBV"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c96c92c0980so4984720a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 22:45:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbhARNiu"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2cce6a0c9c3so98328735ad.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 23:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784612746; x=1785217546; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=UgojYRWP1WvUNsyVTZf0JAe0a0XGAFDjQiUak8O6rqY=;
-        b=pzcULYBVnMcH42hzqIwsULuQFNtipObN+NiIpKsIBH47VbCr+NjIbq1VyfD3kgfITX
-         9iZ+vh2egG2QQqzTX4YetuldKVvXBrwrHq7f4pq/61AFFQl32a79Q8T6Z+GgGxN8wjn2
-         sbxzSNeGJ+5CIQcQsa2hpxEQh/d/g7Ffnf4FxIdqlPQ9fWAio6izmjG0UuW0EtFf00tt
-         8mYD/9k81Y4hP/adpqahHlMp7QnBd0/tNL+EpdzqKHUian1XgxcMEIfT24bIq3kw8Ame
-         opVCC38Meewn8qrYWIBNcEjIt7+tjvYOo/TDgF9le0C+ZwWSMrLyJ+lCY7u+HDY258Wa
-         tPLw==
+        d=gmail.com; s=20251104; t=1784615666; x=1785220466; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Qpio1MA//9AANLCzTxy+rZBs26K9YsY9hJV884pqdVI=;
+        b=QbhARNiuqzABgVH5uyyQxIQ6PqIS2awdcowz7+cYZWFgLmQCMzKDQUg+QLptRpDDF9
+         /F5s7QE88eK8nGgCs5LYEvSo3VCotaBu2q3TbsmErsIveUeOLHlOf2jz+1EwT+ebalD7
+         8+jMhAJmnNfsmfHUng1HKScAIFjh4Imis6WNztTjzXcRTrdYfGMSJoHTFFCgefrBMuDr
+         UnshuyjcvR10IEWyAWYHSOwD44aCLOjD/ky8zhfC/PKAQScSB1auM23jaj/rBEGNkq1b
+         F4NbJHTr/RO8x5VN54YJOtpJjRha/MvSqmSwbe6aM0SdpAoamurIJSXaqygvi/ca8y4J
+         r4mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784612746; x=1785217546;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UgojYRWP1WvUNsyVTZf0JAe0a0XGAFDjQiUak8O6rqY=;
-        b=ChQcK98aXe0PgBa2DAZp6pQHSSsbywOMw6yCSuthUbJcDBegydzFcdUZUCBitvar/0
-         5W3eMDV7hd/fqfmDnujjHm2gegweg7e1TcR/UC3jMlM/Mj90GCIRn+ZJVTR/2ncqw0hP
-         FuZ+DOvfyH5p1oRD0z9TTSC60Nvma/9zLR6hPEg16kA36XXOF3ufoClIBB6LqAWxSTfS
-         rMYs69S9havUmZhewVZmf/DlFWS0wyg2xnG2Vluj+6KwjReCmWnp111rUxIgzfGeVMHT
-         EvJUtC+pS/P4KUjjnw6tlzfZYrOfDm8g4lTMlNtx0nP9MzL3CF7IlpphwoaHz8UZecKf
-         FXfw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9NJNyO2EE+uM7gmRpd1Uv0VsurNA4NsmqT+lDEjHqcKpH6HoU1fyjNwRkcINjJPSEQ6ZRKpBAT4Fwf+Tnvgzm7Nah@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1+eu2NeHqFKdZU7PgDHmqnYnNlqDepR3ZPz+W1vtXT5QyWX8M
-	5poKqdC1lpOTe03cQb5fGSNyBDSJrjytjWy9Syv5ikuL77/drT18aLw=
-X-Gm-Gg: AfdE7ckvppI/uTtIROYV+SQOwF88H2JHMjJ7hURVRse6RTxgjxbMVJV5VY+eG+EX936
-	aUvU8SHaZiDeS1zlj7v8O8pTZBME35X1JzURRrRi2XhYscPi56FzHugyeA1D0Gpz+BNabR8sbTe
-	bXvFdKp6sgw1BMBHwud36pGogAeZYf08c5MAGJyGYAS1zb0dSb7Yi6GFvBema+SeAw9xpMG1g0i
-	tEfdokgK48jMIGqT5DqGIoaUO1OeY0Gu0AyzxqE1dT2F+ZNf6RaD6P8qCLxZYbsJflw9CnKwNIn
-	zZ13Nt6P119zzdzDu0E00PVyZSlEmrE0dnXe22le3GCCSMhaOsA2lLR50l4eDw6hICuG5dqHl5r
-	sshKu4rtApIEx7wOLwYd2l8E1oSosWJeQB7Fiie4PB/PEA8Hp7FYlZMUZYhkcZ+UI8lRYFwugl8
-	B6CNlCJQ97epWB4rMzYxbLFfUH1mLxwISU0rc0uQ==
-X-Received: by 2002:a05:6a21:7111:b0:3c3:a41f:ce83 with SMTP id adf61e73a8af0-3c3ada9e0bbmr18607951637.61.1784612745975;
-        Mon, 20 Jul 2026 22:45:45 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1784615666; x=1785220466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Qpio1MA//9AANLCzTxy+rZBs26K9YsY9hJV884pqdVI=;
+        b=FJ7MdSKN9ACJhqQTDjXAkUz4R5MbALSN1CVjYusv1zQe2yv22DMpnsGJlexE2Onf8R
+         1YWxYUcHj8B9kODNQcZzom8XLOn5GXehZMvt4Z36fdQWTqSI0vqrgNFqc6UXgMhirqkK
+         NWnyhG9nEV6GNvqaU32GWrkTg6dKKFeBYtxb3buVxN7rG5Eyzj8xE+Ebv6LicotALnqx
+         zRVN0J8pviSpcqg9PO48aPQLjGN+QDqeSJG1Q0+C1RiOjGS/cJozen6eKHzWsPxZWfuD
+         DQSHcX6vxLD2fFXW+EvKtGAzXe0Vqbcyuwi1KzqXzIB2N/UL7jB3Fttnos9VLofK2pAr
+         4exQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpepCkgW8iCFIQjS82vFzmf+CkPBm4/Wp5BHAeFSbGRE0DmwvkSakrAarGry9Xs1YihN0NGSI56PHSnSY1P9Pd+zbpA@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi/cdeuKwUfKadM9sRcTj4STFkKPUza9Z9HKsUX6sT+hzqQ4Cz
+	GEkoGE8wRI0NFgiZxH5ETsLjAoBvkG9Scd/smZtGKm3fKRLrwx6MaQQ=
+X-Gm-Gg: AR+sD10BmHPkBSvi8BC+6l813q48G2n4AIgysXbjUQXk+bBvTuOFQf/XD8D20mJ6UV6
+	OTxOT2VSP8IMmOhvPnoCX/RdYJSgDni/a7bMQZRV/LeMdg/xC02aIrqHSYiEtdwsBRfgMyp0rEw
+	2aDCSEotkWJ+xwfW/9b+NP1UEotU7yz8e4dzyY3JVxWm2ymEg1JTKi/eLRLPuTKzcwXXxELky+1
+	kY1kOB+Ye4rNlhwNevX5we+fL9xaxw2KOv9Jkp3p+9w+k+qqpntP0KiiPvxCVWLAb1FbdKmEF/2
+	qhMqDEwIYjY1DkIIvM9aHKt7uGsdUZ2wY5/DtbHAjPX4JHDyTL9cv9uHSLeTqCtdN0VWkUt2Fy/
+	eDeLyKcnuh5g1u4SCn1cX4dH89GFC2OUP8cfO50q9SepYYecA765VXN+eUIyiParFANb3krtlD2
+	a3tIOm9CxMZu9wnHxnVTlbjVuAxBS1FX/E8zjDfEoiwaHk0KQA
+X-Received: by 2002:a17:902:ce87:b0:2c9:bf82:dd11 with SMTP id d9443c01a7336-2cf34895290mr177684225ad.7.1784615665937;
+        Mon, 20 Jul 2026 23:34:25 -0700 (PDT)
 Received: from at-Standard-PC-Q35-ICH9-2009.. ([27.60.20.188])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3142a1bb770sm46620876eec.16.2026.07.20.22.45.35
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3142a1dde81sm73608386eec.21.2026.07.20.23.34.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 22:45:44 -0700 (PDT)
+        Mon, 20 Jul 2026 23:34:25 -0700 (PDT)
 From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 To: 
 Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Andre Eikmeyer <andre@negmaster.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Thomas Gleixner <tglx@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -89,12 +86,10 @@ Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
 	linux-integrity@vger.kernel.org,
 	keyrings@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v2 2/2] thunderbolt: Add device links for Apple T2 NHI
-Date: Tue, 21 Jul 2026 01:45:02 -0400
-Message-ID: <20260721054506.11871-3-atharvatiwarilinuxdev@gmail.com>
+Subject: [PATCH v3 0/2] Add Apple T2 NHI device links
+Date: Tue, 21 Jul 2026 02:34:05 -0400
+Message-ID: <20260721063412.11588-1-atharvatiwarilinuxdev@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260721054506.11871-1-atharvatiwarilinuxdev@gmail.com>
-References: <20260721054506.11871-1-atharvatiwarilinuxdev@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -103,95 +98,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andre Eikmeyer <andre@negmaster.com>
+This series adds a cached flag to detect Apple T2 systems, then uses it
+to create device links for the Thunderbolt NHI.
 
-Thunderbolt NHI on T2 Macs (2018-2020). The NHI and its
-associated PCIe root ports all sit directly on the root complex
-with no upstream port. Apple's ACPI tables name Thunderbolt root
-ports as TRP0, TRP1, etc. Find them and create device links back
-to the NHI so that PCIe tunnels can be re-established after sleep.
+Changes in v3:
+- Fix build errors with non-x86 machines
+- Used __initconst for apple_t2_devices
+- Removed UEFI_QUIRK_SKIP_CERT as its unused now
+- Used IS_ENABLED(CONFIG_ACPI) in tb_apple_add_links for the T2 part
+- Removed !bid check to remove warning with -Waddress
 
-Co-developed-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Changes in v2:
+- Used a less generic name for has_t2_chip
+- Used DMI instead of PCI for has_apple_t2_chip to avoid PCI problems
+- Initialized ret in tb_apple_add_links
 
-Signed-off-by: Andre Eikmeyer <andre@negmaster.com>
----
- drivers/thunderbolt/tb.c | 51 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+Link to v2:
+https://lore.kernel.org/all/20260721054506.11871-1-atharvatiwarilinuxdev@gmail.com/
 
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index c69c323e6952..ca47bfbcefdf 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2019, Intel Corporation
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
-@@ -3305,11 +3306,59 @@ static const struct tb_cm_ops tb_cm_ops = {
- static bool tb_apple_add_links(struct tb_nhi *nhi)
- {
- 	struct pci_dev *upstream, *pdev;
--	bool ret;
-+	bool ret = false;
- 
- 	if (!x86_apple_machine)
- 		return false;
- 
-+	/* On T2 Macs. the root ports are stored in ACPI as TRP0,
-+	 * TRP1, etc. Find them and create device links
-+	 * so that PCIe tunnels can be re-established after
-+	 * sleep.
-+	 */
-+	if (has_apple_t2_chip) {
-+		struct acpi_device *adev;
-+		unsigned int slot, func;
-+		const struct device_link *link;
-+		const char *bid;
-+
-+		for (slot = 0; slot < 32; slot++) {
-+			for (func = 0; func < 8; func++) {
-+				pdev = pci_get_slot(nhi->pdev->bus, PCI_DEVFN(slot, func));
-+				if (!pdev)
-+					continue;
-+
-+				if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) !=
-+						PCI_EXP_TYPE_ROOT_PORT)
-+					goto put_pdev;
-+
-+				adev = ACPI_COMPANION(&pdev->dev);
-+				if (!adev)
-+					goto put_pdev;
-+
-+				bid = acpi_device_bid(adev);
-+				if (!bid || strncmp(bid, "TRP", 3) != 0)
-+					goto put_pdev;
-+
-+				link = device_link_add(&pdev->dev, &nhi->pdev->dev,
-+						DL_FLAG_AUTOREMOVE_SUPPLIER |
-+						DL_FLAG_PM_RUNTIME);
-+				if (link) {
-+					dev_dbg(&nhi->pdev->dev, "created link from %s\n",
-+						dev_name(&pdev->dev));
-+					ret = true;
-+				} else
-+					dev_warn(&nhi->pdev->dev,
-+						"device link creation from %s failed\n",
-+						dev_name(&pdev->dev));
-+
-+put_pdev:
-+	pci_dev_put(pdev);
-+			}
-+		}
-+		return ret;
-+	}
-+
- 	switch (nhi->pdev->device) {
- 	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
- 	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
+Link to v1:
+https://lore.kernel.org/all/20260719180308.1398-1-atharvatiwarilinuxdev@gmail.com/
+
+Atharva Tiwari (2):
+  treewide: Add a flag to detect the Apple T2 chip
+  thunderbolt: Add device links for Apple T2 NHI
+
+ arch/x86/kernel/quirks.c                      | 105 ++++++++++++++++++
+ drivers/thunderbolt/tb.c                      |  51 ++++++++-
+ include/linux/platform_data/x86/apple.h       |   5 +
+ .../platform_certs/keyring_handler.h          |   8 --
+ security/integrity/platform_certs/load_uefi.c |  38 ++-----
+ 5 files changed, 168 insertions(+), 39 deletions(-)
+
 -- 
 2.43.0
 
