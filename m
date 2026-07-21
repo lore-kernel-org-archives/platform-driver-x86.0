@@ -1,181 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1172746DFF0;
-	Tue, 21 Jul 2026 16:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2627F46D2A6;
+	Tue, 21 Jul 2026 16:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784650793; cv=none; b=dDu1n11WuLWypj7EE8+4E9Qs2isygmKRVJyNiqu7c4JwR57aPofx5FxdQxSeM/VBj49I8jp+N0zks3HfAns3ndXjctqDmlSUTNcdYsMOCwZIisheAfwSKuACd4AAzQhNc2IJLSplrA0jrszFQ4DySu2o/pYehTkfiAnEf7h8L8Y=
+	t=1784651282; cv=none; b=sJr/e38WoZWHtaVieBxl2tOxfd9Nr+fTK22yHGWKnc2CLxmOUJoVNYA46jTdEOaRjzsB8CoXgP+KugVEfguDjyCZK7R882f9sBB1GDddTp/z05EknnfNl5A9vzrAQOKsdeB10VnZ9lDr9bIFkzvNSI/W9QBQh+Wo2Q7SOaDcwMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784650793; c=relaxed/simple;
-	bh=+pulZW1Hf3G6hw3FQ9y3FTBjpmSSXi8A55kH7d/YIPk=;
+	s=arc-20240116; t=1784651282; c=relaxed/simple;
+	bh=psa1kH6hqROH8ZZEHqCoZMbR7t5X3AQv9vPutKDgSdU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=DSwmDFtj8MYeeTXip7+Wct7kXaM9YNvQLm4DrysiN4t6JOoeZYcTD3SagMC+hYxbTTV+0kF51ZjwIpqPDMkmzRtPBu8PJ0GVrR+XoTZiL+HWbwig54B4hQWxYEbnNHMqBlNh9kStUCizpiIts7QxqS+CLT88Qsp4Xj8rVkrDm1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjoRkJPR; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=OJxqByfP3hztlu+/KQFBgoIlzfpnfV7VvlwBSjPI6ERQcMdJNQGKPVQ4tiwbpoqdCosbdB7D4wFwxEaUuxJ/NgwzbhkBOGQTJmWNBjAZNcaDUfVVGUvKwLoxfyM7DL6qwVH3J58XxAYavR/lAf2XpcjW14NFiZdnZxrbOl2blwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VbgmLmlH; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjoRkJPR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VbgmLmlH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784650792; x=1816186792;
+  t=1784651282; x=1816187282;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=+pulZW1Hf3G6hw3FQ9y3FTBjpmSSXi8A55kH7d/YIPk=;
-  b=fjoRkJPRCE9JZ/E9SJgwFf+lcCErp4T51BQz3a0uMCWlXHdstf9q8dYG
-   2BrD7d1VMN4FznUtRJJZkfeV1W1OipPb8SrUQmug4/hSI9z2OXL/cg2OP
-   /B6Qa526GhgfwYXrGuRvUymoF1IsscuAZhon7MynuzEucrnIS0N4q82DF
-   Ks0rwlLAaNUPrxKX2SgPEfDE3VjkXf3lF7EK6vJYox6Fo7bmCLfVQ5sNL
-   mqWkFyckKy9KIetH+oWla+J0ZOj5eEGBa+J13d5OFt1ZArYnF3tO287rj
-   jsqWk0EvbozngMWSQjKBy4M+OlWheu+w3SGonCkye7boakZ7VeCC4GnGW
-   A==;
-X-CSE-ConnectionGUID: na5pKtgLTHym1gKiXpmXPA==
-X-CSE-MsgGUID: wTB096DnTGyBxF94KypVNA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="84387801"
+  bh=psa1kH6hqROH8ZZEHqCoZMbR7t5X3AQv9vPutKDgSdU=;
+  b=VbgmLmlHsvuCGqws8e9Fr9bq37j09Yn994hQfx7oc6zEZFXBbxdyZI9i
+   zAEM8OsdaFIon1l5r4EDF1TglXW2areTXol5mAfearMM6pBv2bjUHc3AZ
+   eAtia0Mq0ZCNgr70ZCKl8n/EDw4iG0KelyDgW7vuxXAAnzAp7t4N9EO59
+   CpMPtUNyrDWPXuCweSul9inab1EeE/k3ObyHpzOc/iLWepbNLg1ZHhu1b
+   KOBO98KIQDw2JjbD9rOFqZ7ZTQRCqXYCkoIIlnfd7k8QmXfmFkXCDE4Yv
+   Uev9meehzNSaEZ1nVzKYZGdZy8p+lZUdp4JnebdVofDktKucQSY8wAcZD
+   Q==;
+X-CSE-ConnectionGUID: siWyP0c5RvCurVyoKQPH2A==
+X-CSE-MsgGUID: NOPyI+dySMOZoX7DH5C+6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85460203"
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="84387801"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:19:51 -0700
-X-CSE-ConnectionGUID: fH2Q4k1ZQpGUXQS1Tv4s5A==
-X-CSE-MsgGUID: 7SUZkWKETo6ssAtaOEPgSA==
+   d="scan'208";a="85460203"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:28:01 -0700
+X-CSE-ConnectionGUID: 24nPBRw/RvC48Haqmrw7ow==
+X-CSE-MsgGUID: Rs7ia1VTTmSpiD7SA/uouQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="254397952"
+   d="scan'208";a="261591024"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:19:45 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:27:58 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 Jul 2026 19:19:42 +0300 (EEST)
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-cc: Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-    Matthew Brost <matthew.brost@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Danilo Krummrich <dakr@kernel.org>, brgl@kernel.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-    driver-core@lists.linux.dev
-Subject: Re: [PATCH v7 1/4] platform/surface: gpe: use
- platform_device_register_full()
-In-Reply-To: <20260713-swnode-remove-on-dev-unreg-v7-1-6d6bc448427a@oss.qualcomm.com>
-Message-ID: <51d2d692-ba40-3035-fac2-a9e8e98e6d99@linux.intel.com>
-References: <20260713-swnode-remove-on-dev-unreg-v7-0-6d6bc448427a@oss.qualcomm.com> <20260713-swnode-remove-on-dev-unreg-v7-1-6d6bc448427a@oss.qualcomm.com>
+Date: Tue, 21 Jul 2026 19:27:54 +0300 (EEST)
+To: Dave Carey <carvsdriver@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, W_Armin@gmx.de, 
+    johannes.goede@oss.qualcomm.com, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard
+ dock detection driver
+In-Reply-To: <20260713143132.381808-3-carvsdriver@gmail.com>
+Message-ID: <bd2f2f4b-9cc8-b2db-799c-4616b7ce3513@linux.intel.com>
+References: <20260713143132.381808-1-carvsdriver@gmail.com> <20260713143132.381808-3-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-354480049-1784650782=:1265"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, 13 Jul 2026, Dave Carey wrote:
 
---8323328-354480049-1784650782=:1265
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
+> that magnetically attaches to the bottom (secondary) screen in one of two
+> positions.  The Embedded Controller tracks the attachment state in a 2-bit
+> field called BKBD and signals changes via WMI event GUID
+> 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
+> device, _UID "GMZN").
+> 
+> The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
+> both WMI interfaces used by this driver:
+> 
+>    LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
+>    The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
+>    so the notify callback receives BKBD without a separate query.
+> 
+>    LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
+>    8-byte buffer {uint32 IDs=0x00060000, uint32 Status=BKBD}.
+>    Used for the initial state read on probe and after resume.
+> 
+> BKBD encoding:
+>    0 = keyboard detached
+>    1 = keyboard docked on top half of bottom screen
+>    2 = keyboard docked on bottom half of bottom screen
+>    3 = reserved (not observed in practice)
+> 
+> This driver registers two WMI drivers sharing a module-level
+> BLOCKING_NOTIFIER_HEAD:
+> 
+>    - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
+>      a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
+>      value extracted from the buffer.
+> 
+>    - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
+>      its per-device private struct.  At probe time it registers a
+>      notifier_block on the chain and reads the initial BKBD state via
+>      wmidev_query_block().  The WMI buffer is parsed as
+>      struct lenovo_feature_status { __le32 id; __le32 status; }, and the
+>      ID field is verified before the status is used.
+> 
+>    - SW_TABLET_MODE=1 is reported when the keyboard is detached;
+>      SW_TABLET_MODE=0 when docked in either position (keyboard present).
+> 
+>    - The raw BKBD value is exposed via read-only sysfs attribute
+>      "keyboard_position".
+> 
+>    - BKBD state is re-read via wmidev_query_block() on resume from
+>      suspend or hibernation.
+> 
+> Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
+> 
+> Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
 
-On Mon, 13 Jul 2026, Bartosz Golaszewski wrote:
+Hi Dave,
 
-> Creating a software node for a given set of properties and adding it to
-> a platform device can be achieved with a single call to
-> platform_device_register_full(). There's nothing in this driver that
-> suggests using the more fine-grained interfaces was intentional so
-> switch to using the high-level helper.
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> ---
->  drivers/platform/surface/surface_gpe.c | 39 ++++++++++------------------=
-------
->  1 file changed, 11 insertions(+), 28 deletions(-)
->=20
-> diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/su=
-rface/surface_gpe.c
-> index 40896a8544b0a4da4261ea881b1eaed62d93b32b..4ca7ad76f3b9d2b6c455a5d5b=
-37f23a85eb69c69 100644
-> --- a/drivers/platform/surface/surface_gpe.c
-> +++ b/drivers/platform/surface/surface_gpe.c
-> @@ -290,9 +290,9 @@ static struct platform_device *surface_gpe_device;
-> =20
->  static int __init surface_gpe_init(void)
->  {
-> +=09struct platform_device_info pdevinfo;
->  =09const struct dmi_system_id *match;
->  =09struct platform_device *pdev;
-> -=09struct fwnode_handle *fwnode;
->  =09int status;
-> =20
->  =09match =3D dmi_first_match(dmi_lid_device_table);
-> @@ -305,44 +305,27 @@ static int __init surface_gpe_init(void)
->  =09if (status)
->  =09=09return status;
-> =20
-> -=09fwnode =3D fwnode_create_software_node(match->driver_data, NULL);
-> -=09if (IS_ERR(fwnode)) {
-> -=09=09status =3D PTR_ERR(fwnode);
-> -=09=09goto err_node;
-> -=09}
-> -
-> -=09pdev =3D platform_device_alloc("surface_gpe", PLATFORM_DEVID_NONE);
-> -=09if (!pdev) {
-> -=09=09status =3D -ENOMEM;
-> -=09=09goto err_alloc;
-> +=09pdevinfo =3D (struct platform_device_info){
-> +=09=09.name =3D "surface_gpe",
-> +=09=09.id =3D PLATFORM_DEVID_NONE,
-> +=09=09.properties =3D match->driver_data,
-> +=09};
-> +
-> +=09pdev =3D platform_device_register_full(&pdevinfo);
-> +=09if (IS_ERR(pdev)) {
+Unfortunately this patch is somehow corrupted and I couldn't immediately 
+figure out where so you need to fix the problem and send the series again. 
 
-Hi,
+It may be worthwhile to send it yourself first and test you can apply it 
+with git am yourself to make sure nothing in the way you send an email is 
+causing the corruption. Once it works for you, it will likely work in my 
+end as well.
 
-Please add an include for this and PTR_ERR().
-
-With the missing include fixed,
-
-Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
-Thanks for doing these.
-
-> +=09=09platform_driver_unregister(&surface_gpe_driver);
-> +=09=09return PTR_ERR(pdev);
->  =09}
-
---=20
+--
  i.
 
-
-> =20
-> -=09platform_device_set_fwnode(pdev, fwnode);
-> -
-> -=09status =3D platform_device_add(pdev);
-> -=09if (status)
-> -=09=09goto err_add;
-> -
->  =09surface_gpe_device =3D pdev;
->  =09return 0;
-> -
-> -err_add:
-> -=09platform_device_put(pdev);
-> -err_alloc:
-> -=09fwnode_remove_software_node(fwnode);
-> -err_node:
-> -=09platform_driver_unregister(&surface_gpe_driver);
-> -=09return status;
->  }
->  module_init(surface_gpe_init);
-> =20
->  static void __exit surface_gpe_exit(void)
->  {
-> -=09struct fwnode_handle *fwnode =3D surface_gpe_device->dev.fwnode;
-> -
->  =09platform_device_unregister(surface_gpe_device);
->  =09platform_driver_unregister(&surface_gpe_driver);
-> -=09fwnode_remove_software_node(fwnode);
->  }
->  module_exit(surface_gpe_exit);
---8323328-354480049-1784650782=:1265--
