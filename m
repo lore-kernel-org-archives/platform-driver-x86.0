@@ -1,176 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFC3314B77;
-	Wed, 22 Jul 2026 13:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF973546C7;
+	Wed, 22 Jul 2026 13:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784725885; cv=none; b=r92YAYFp4WebGL1pjg/8RIZwLKjzFGPqU794shtzDDdGuj1YaYj92cbTkg4Buss6bEUTO9YpJYcG5xy+iJ5cub9Rl018NWqnFRAn+iC39gRk81dUMGNC/p0vPyj2ofpHWBP3q5X/TQ6pgLXlYvgfpv1LAohuIpzXAQaJlvY+1tI=
+	t=1784727253; cv=none; b=G/R9UkswDQz2UL9POZsOAEHpXiZ++zt+sDICSXZfMLsxKKOSHTQ7O0QvDs27QZ+UomF4giJD9q9CeKGGAxNaBM2EV2CwCXKMWws/iltThotRpqtVSq2jRp+4DMNlcpZHDOTWnJmHzM6T1NkMIk4QReUviYMIBEeBC3cXWZl5ZxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784725885; c=relaxed/simple;
-	bh=EQJzRYydUltS496SvSnVyvHJz4oeJklkbVf8katfbNo=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ewi15o1qwXOPvA+n/d9naa0TmIJbOW+UDjObm2rI0WEEAkOJ5yS/0WTLgsfFO8jbyxt53SZe3DY+yCnqNW5+zjtl8o5HQg1XhBGqoT3soRO8TVxebpX/0IiuMR7Mcba5AhRbFlTzeSVzIRwRfMB2/O7iFnwrZHDHBMnHCCfSmiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STpfh4Nl; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784727253; c=relaxed/simple;
+	bh=9fbFYhKprTp2YpUX7Llzd5qK0QBSvK1K8S4Otd1lCro=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=qg4Jup/mbi9vvcm8qE8eZowHFBO7aOGHtNUO5I0EBJddl4dzyX8A9zGl9mumyWrqqyZ0JRNIrs2NLRTVofaBeIJC8rcyWI2rFoydPJOlREb3oRlvh9tXIdWm8JnaWy4g1MFdinye53TxGNGwE/kHU9imQb422pJRvKFolV4Qxdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOpadXON; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STpfh4Nl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784725883; x=1816261883;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EQJzRYydUltS496SvSnVyvHJz4oeJklkbVf8katfbNo=;
-  b=STpfh4NlJDd6YX8EU26aJye3ikhYy6rdD4DBg15KSKohZTHuDkF16Fxm
-   UH5S5dHQcR7t93bglk3/W0Nv40VfiO/MoC+cWi3g3eg5zqvLEBJe0eQif
-   6VLHrIiiBndpE8R7kxY9NySl1mpGkymZXRwykjsW8FsQGthOS7BDrTnuM
-   vmI8zjZE/iluOPYbx4CmihCp1TBpndSP52EsGT9x4fsu3KfwISBdQcCGj
-   IiTAO9gUWpLYXTjdF5CY4KcwRxyPd00K0wnl9rOO7VTYDLNjis+m1XkuH
-   iSBRxp7mVq+wJmhU/5CcJysotpidiThH99g8nbIXWE14lXgapLlDg6Cd/
-   A==;
-X-CSE-ConnectionGUID: Tx1bPKRDR1+FQoOkourGPA==
-X-CSE-MsgGUID: xpu8ylJaQ/upjGEnffmQ4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="96875871"
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="96875871"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 06:11:23 -0700
-X-CSE-ConnectionGUID: /tsqVbTGQpKyc1u90Z64Lg==
-X-CSE-MsgGUID: gQdmyi+zRLineqp7ShgAEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="262379867"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.200])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 06:11:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 22 Jul 2026 16:11:17 +0300 (EEST)
-To: Muralidhara M K <muralidhara.mk@amd.com>
-cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    muthusamy.ramalingam@amd.com
-Subject: Re: [PATCH v6 6/6] platform/x86/amd/hsmp: Serialize the data plane
- against socket teardown
-In-Reply-To: <20260713044005.1194115-7-muralidhara.mk@amd.com>
-Message-ID: <f17da159-2a34-79ea-5fd1-b73b91ea680b@linux.intel.com>
-References: <20260713044005.1194115-1-muralidhara.mk@amd.com> <20260713044005.1194115-7-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOpadXON"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 300051F00AC4;
+	Wed, 22 Jul 2026 13:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784727250;
+	bh=RQZW+0HRVhe9UFcSH7cql90O01oghIj/tpScM/IVxcQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=QOpadXONRHyVXUFg7dTRcEjiNS0tcCIJmY40e9Oc5uWTlPpo++m/wKeynV6ZckVDO
+	 i+s5YAr41uY7jgSgSinMGIVez94+R40HQu8bn/gINjMnKz0vIEbGnXfIZ+6z/gNAh4
+	 BzZVeiRlQTvTbvW94bAszKsPmkzfi+b+FRyQ3XXwPRiqJzwH3wa+MlNO05jz6mOM69
+	 clsmKiBcKtMNEJ5OPbcSLweOVdGJMBDaJ+5GrLPHw5KglJaz3lJUaAn5MdGRrG0ouk
+	 NLRIOCamIVfaKrcDSCedp8lo/X0ghwbJermM2rVYE6Xmxesm8EreToyz4JeT8EP73q
+	 N7K1KPXc77d0A==
+From: Mark Brown <broonie@kernel.org>
+To: tiwai@suse.com, Marco Giunta <marco_giunta@outlook.it>
+Cc: perex@perex.cz, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
+ linux-sound@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
+ hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, wangweidong.a@awinic.com, 
+ nadim@symbolic.software, imitoy@imitoy.top, munzirtaha@gmail.com, 
+ yakov.till@gmail.com
+In-Reply-To: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+Subject: Re: (subset) [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec
+ driver for Lenovo Legion
+Message-Id: <178465795610.260430.18004285185903429400.b4-ty@b4>
+Date: Tue, 21 Jul 2026 19:19:16 +0100
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1861; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=9fbFYhKprTp2YpUX7Llzd5qK0QBSvK1K8S4Otd1lCro=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqYMbONts59xPaurX1cc1uvm9SLXwvd1M2nY7Iq
+ AKBkP+pYtmJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCamDGzgAKCRAk1otyXVSH
+ 0HcGCACGbecZ0k+pRjDpGj53snVGx6aBTcCQHgPe/Qpl4PcUGI49IyBw5GUO7N2blDHfF+op33b
+ Mcy1k+FEqQpEyg81hdEEez4muBONiGHlJWzSk0At67rKUBa4vv1y77EDfnL2K7meyXt6t7BRsWr
+ aRtkV7ifLspvO5kSq+RFvB0Kf3znT48QBTxoRtHHiiD4sLTVUMQCORkhl8/FWyM60zLwxwYrl6t
+ /mq/Bd87HEPYQ8cxxqTdhAPMFSoSWCWml6f8ySVDl7Lej+zApKIzfkyN1zqIOHUU7aNJGG22b0H
+ yrK2mBiCbno2GGCZQnqDAukY0XVAhCE5c8Rv4+jdFl+L72A/
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, 13 Jul 2026, Muralidhara M K wrote:
-
-> The HSMP data plane is lock-free: open /dev/hsmp fds and hwmon sysfs reads
-> call hsmp_send_message() without any coordination with driver teardown.
-> misc_deregister() does not drain already-open fds, so an in-flight message
-> can race a concurrent unbind and touch a freed socket array or an unmapped
-> mailbox.
+On Fri, 17 Jul 2026 15:25:02 +0200, Marco Giunta wrote:
+> ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
 > 
-> Add the read side of hsmp_sock_rwsem to the data plane. Split the message
-> send into hsmp_send_message_locked(), which does the bounds check and MMIO
-> access and asserts the rwsem is held, and hsmp_send_message(), which wraps
-> it in guard(rwsem_read). Probe and remove hold the rwsem for write, so they
-> drain in-flight messages and keep new ones out while they tear a socket
-> down.
+> Several Lenovo Legion laptops (Pro 7i 16IAX10H, Y9000P IAX10,
+> Pro 7 16AFR10H, R9000P ADR10) use AWINIC AW88399 smart amplifiers
+> to drive their bass woofers, connected via I2C as side codecs
+> to a Realtek ALC287 HDA codec.
 > 
-> The probe-time senders run under the probe write lock and so must not take
-> the rwsem again: route hsmp_test(), hsmp_cache_proto_ver() and
-> hsmp_get_tbl_dram_base() through hsmp_send_message_locked() to avoid
-> recursive locking. A single rwsem therefore covers both the data plane and
-> the probe/remove handshake, with no separate probe lock:
-> 
->  - acpi.c already holds it for write across probe for the socket-array and
->    misc-registration handshake, so the mailbox handshake now nests under
->    that same lock.
-> 
->  - plat.c takes it for write around init_platform_device(). It is not held
->    across devm_add_action_or_reset() so the release action, which also
->    takes it for write, cannot deadlock if that registration fails.
-> 
-> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-> ---
+> [...]
 
-While the code seems okay AFAICT, I think the comments are somewhat 
-misleading:
+Applied to
 
-> +int hsmp_send_message(struct hsmp_message *msg)
-> +{
-> +	/*
-> +	 * The data plane is lock-free: open /dev/hsmp fds and hwmon sysfs reads
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.3
 
-This says data plane is lock-free.
+Thanks!
 
-> +	 * issue messages without coordinating with driver teardown. Take
-> +	 * hsmp_sock_rwsem for read so messages run concurrently with each other
-> +	 * but are drained and kept out while probe/remove hold it for write to
-> +	 * tear a socket down.
-> +	 */
-> +	guard(rwsem_read)(&hsmp_sock_rwsem);
-> +
-> +	return hsmp_send_message_locked(msg);
-> +}
->  EXPORT_SYMBOL_NS_GPL(hsmp_send_message, "AMD_HSMP");
+[1/8] ASoC: aw88399: extract shared device library
+      https://git.kernel.org/broonie/sound/c/7fa44519a2a3
+[2/8] ASoC: aw88399: derive channel from I2C address on ACPI systems
+      https://git.kernel.org/broonie/sound/c/df5654d73061
+[3/8] ASoC: aw88399: add per-instance BSTS status bypass flag
+      https://git.kernel.org/broonie/sound/c/b4530a3e4895
+[4/8] ASoC: aw88399: add firmware reload flag for resume
+      https://git.kernel.org/broonie/sound/c/b5e1d685fb9c
+[5/8] ASoC: aw88399: add channel setter for HDA side codec
+      https://git.kernel.org/broonie/sound/c/15c9fdb3c39d
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 45dab9253c13..cfd1a8cbd459 100644
-> --- a/drivers/platform/x86/amd/hsmp/hsmp.h
-> +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -79,8 +79,8 @@ static inline int hsmp_create_sensor(struct device *dev, u16 sock_ind) { return
->  int hsmp_msg_get_nargs(u16 sock_ind, u32 msg_id, u32 *data, u8 num_args);
->  
->  /*
-> - * Serializes HSMP socket bring-up and teardown. ACPI probe and remove take it
-> - * for write.
-> + * Gates the HSMP data plane: hsmp_send_message() takes it for read; probe and
-> + * remove take it for write to bring sockets up and tear them down.
->   */
->  extern struct rw_semaphore hsmp_sock_rwsem;
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-This says data plane is gated.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Both cannot be true?
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> @@ -204,15 +206,20 @@ static int init_platform_device(struct device *dev)
->  /*
->   * The socket array is devm-managed and freed by the driver core, but the
->   * metric-table DRAM regions are mapped with plain ioremap() during probe and
-> - * are therefore not covered by devres.
-> + * the per-socket mutexes need an explicit mutex_destroy(), neither of which
-> + * devres covers.
->   *
-> - * Drop those mappings from a devres action so both remove and probe failure
-> - * unmap them exactly once, before the socket array they refer to is freed.
-> + * Take the data-plane rwsem for write to drain any in-flight
-
-This too talks about data-plane rwsem.
-
-> + * hsmp_send_message(), unmap the metric tables, destroy the mutexes and drop
-> + * the global socket pointer, all before devres frees the array. Registered as
-> + * a devres action so it runs on both remove and probe failure.
->   */
->  static void hsmp_pltdrv_release(void *data)
->  {
-> +	guard(rwsem_write)(&hsmp_sock_rwsem);
->  	hsmp_unmap_metric_tbls(hsmp_pdev);
->  	hsmp_destroy_metric_read_locks(hsmp_pdev);
-> +	hsmp_pdev->sock = NULL;
->  }
-
-My own understanding here is that the first comment tried to tell what 
-the situation was before this patch (data plane was indeed lock free), not 
-the behavior after the patch. Is my understanding correct?
-
-To avoid potential terminology related confusion, rwsem is still a lock 
-(even if the read sides are not block each other).
-
-We don't write about historic state of things but document only the 
-current code does. So if it's no longer lock free, stating it's lock 
-free is sure way to confuse the reader. :-)
-
--- 
- i.
+Thanks,
+Mark
 
