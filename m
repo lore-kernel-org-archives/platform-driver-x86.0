@@ -1,197 +1,272 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCFB43E097
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 06:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FC7446BE3;
+	Tue, 21 Jul 2026 08:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784615693; cv=none; b=gXJK9hiXa8W7dDuOrjaj/yZ1yD7JfsbEC/RSHPHg2TC8QA/iLXv20s68oymC/BCbVcESXvLIPxIwmyZW+MSpgUO6p6Ousa/DqrQHp4MmaeWOWPuueiY+i2ey9NCxaoL0ePZ69rHJXrwqhQwpur7nYeBaHtodxQLSrCwKhjozIPI=
+	t=1784621785; cv=none; b=sE53WwJ18CPmMXO6dxTgMBLyrqLHWoNirDSefXYexpKJfEpfySCrmpj3/8psV4vyLtfezhO5ypq4d/hf5lrtm0pi7lw+4xKCVWr862gMi3f8M+ghVLMr4bFLrqIpjCKdWG/mmo4YaFc8HyQ02IywyvCe4ziRlIgkdZcluEXBHTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784615693; c=relaxed/simple;
-	bh=s8XvH2OvdBsp7yjHd0Wbx0kldfTM1MtLmx4xWW/Tb+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iZAqo4U02bncdTdMPj6I/qrQSJatupvxnJKKbQZ1Exn5V1KpWNt90/O+rB+FQG5qUs6K3yOgMP0y5dle62zQZ7xPxF4xJG4L8+eM5YzPrVb67l5GVtoRKeEgLiJQA2aJsADscsjK3zNvKfJlIv8QxkzLWO0D5+P7DBtA44Anq4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2mXv6bR; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784621785; c=relaxed/simple;
+	bh=CWe0er85Mz1HG2+UoowK1fqM2T00r7dxqvSIYtwufMc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TNfL+60csTBWphgvq0zI0l3Tot8/P0GlDc1ZSY8IrTu4bfmkLKSmUKg3eb2ek9CuaJWxHsPw1cdld4DFpq7shPUNjtTy2WRhiHYF0IEbhrUIBM2xm9k/UdFXS6gwRF/g7SBT/lBvxykzykDB7Aff8A6Bj3bYPuLE/7CMV6IcFgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mRmr841T; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2mXv6bR"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c9e30214d8fso7768491a12.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 20 Jul 2026 23:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784615691; x=1785220491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mOwtl82qHyXYWFtXlT6nPpOxkBi8L7STB5ydQzlpO6c=;
-        b=L2mXv6bRLFkCqA1afDLqG6juI2t4+/xXmGUHZELFANYgtJa1GiEAWdO+vH5yRlZ5GT
-         tSpSmY2tvadIv+3/REpgXc3m5GaML5pyfQ2Tr1QOn/q+ufH4W73+aKlds5x3dXqcrah8
-         /M9jQ806DU9ZOP8IGoBFnDf0bZQdvNp79T1/QaNfWnSpm6+g/2r8gHbg16GH8dLo1ML2
-         Qj+0y3yas7qEsD2XkBkQkpFEs+5B5E+4oWh9CtSInaVn7AIQqxVzFoxmIJbaai2Dcf0E
-         HJkokg4Z7XrvjrZScQ7wQwv/oha23JJ5y3v3uqV/zGNFcnuGnq5to5Ero3OhK0Tqm3tr
-         OMSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784615691; x=1785220491;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mOwtl82qHyXYWFtXlT6nPpOxkBi8L7STB5ydQzlpO6c=;
-        b=sDeHSe/ZF1eapdO6xIHTunjKzex/JYARfzDqRDYs32Doo0PN3HuXMVajM3xNFe0lua
-         XVg83306IvW5lLG/C3AkYAKP0W1H7M0laZCPVCuSXsru5ID6A6QCW/xqO9JfCkdAEXc9
-         g07tIpsyLYpc/lcPZd6X3u/k4YISveLd3T/cK1skMCzQxePvyYF4jkoOFUYRTpc7FgzT
-         ktOe2Nb/yWM5Vi7lElUYGPPc+Hm4rv5c18Dd+fW3COSV7lR4w6pg7PhltvgnSQUKAmTM
-         5g7ARYCvT+ZHSV5+Hi27R3D8//HGcJ03v/SrNCMU5V3GoUFiU0gw/A5zpc0TkEwYYQ2A
-         O+HQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rob/5iZCYYnp9PkV2S2v9dhD8yvJ+sCzJ+34ZerD9Yoq+h6BH21EO5mEMIdRsrQFMFExUTauzKqyVj5WtfjANoajfia@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+C4Rs+kCIDmf7GyPQN/TziK+i0UJfJ9G66VNwv7sxPY+hJO5D
-	Wc21n2simaM7q3d/oR/W/whJ6GXeYuhr2lvV6bXU6+ih/EBpF3oyXXs=
-X-Gm-Gg: AfdE7cm6fbvgxMtu9koeYxU+bQehgMeaU76K7jhpDyr9NBCZ+VqaZZVOlCE8g6RmE7R
-	1bTyZcRqfJsAS1JsAaZm8znHdjneAsD805Wpj7t2RvRlup6B8WoF6Ch+iottWjIwaMQitOmax1F
-	7x6ZM9sUWCmV+yQJzIXoVvnBC09NRp/DxFZwEbGD6Ah46CiJB0yP+jPOpd8qeri0IqUWib5rJpn
-	YIGzih+fbdGqe2fgPxF1jE7zaHMNJ+KZQCSmFCSvpEfagt4LpFPL5QwqennR1JS3dOfPnczLkqV
-	kaCfazOld+KfW3fgu9kQ11QFtnXqUtrEB1mnNN+2OiVmOhaVeco+ZT9HMMgH+b0U3UPYYQWVB/7
-	Xh3IjcjNKrau9NtpS0ruf1P3Q/dCekapeP9DRCWba4UWuOiJrCxmn2HFX+stzyLTvGOjW6iYrdB
-	r0sH2xNKmTtqbV+voSn5y1IL+3MgqbHt8O5VbSjA==
-X-Received: by 2002:a05:6a20:9c8c:b0:3bf:6c08:fb8e with SMTP id adf61e73a8af0-3c3ad9d5b8fmr19136988637.48.1784615690794;
-        Mon, 20 Jul 2026 23:34:50 -0700 (PDT)
-Received: from at-Standard-PC-Q35-ICH9-2009.. ([27.60.20.188])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3142a1dde81sm73608386eec.21.2026.07.20.23.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 23:34:50 -0700 (PDT)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: 
-Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Andre Eikmeyer <andre@negmaster.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH v3 2/2] thunderbolt: Add device links for Apple T2 NHI
-Date: Tue, 21 Jul 2026 02:34:07 -0400
-Message-ID: <20260721063412.11588-3-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260721063412.11588-1-atharvatiwarilinuxdev@gmail.com>
-References: <20260721063412.11588-1-atharvatiwarilinuxdev@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mRmr841T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784621772; x=1816157772;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=CWe0er85Mz1HG2+UoowK1fqM2T00r7dxqvSIYtwufMc=;
+  b=mRmr841TQmXDTQ/bsEv1ZnS+YjNiXBnneBlJ33o/WIgKQV8PZrYEDzbn
+   uJqpOjOtk/clhQ1a3RaQyXmYKZZOZnYc9z5PJvcSYrWSYnfjyPvWrcG6O
+   x6X6CDsSUMbFikuOszZnZDRbZS85L3facBGE8AlWcuizEs5WJzsyTA++s
+   JG28F3UlGkzj28hq6vcCk3RmC1E4EGKxXhmIPBjQNIpwjxq4txTCsLfF6
+   Z8/Q2YsgRlxdqfaEbqYYHje3E2Zfm5K3Ll9nMmdhvXLivjRX4OgS4r0g8
+   F3h9MWmBm0SblbYabnolxYEYSLK/EIkEb4tPu3kwuaX7IZ1Dp6SkzYKTD
+   g==;
+X-CSE-ConnectionGUID: 9opFigB2Rh+zedUvOZnyEg==
+X-CSE-MsgGUID: +Tz5Z/PDTcmzIusZD2Ojvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="102629670"
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="102629670"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 01:16:05 -0700
+X-CSE-ConnectionGUID: hTatMzxvQEeTaTIL4auiWw==
+X-CSE-MsgGUID: TBK3RAMpTX2VS3tgoKi6fQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="261469827"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 01:16:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 21 Jul 2026 11:16:00 +0300 (EEST)
+To: Zhan Chubukou <chubukou@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: Add GETAC MPMD programmable button
+ driver
+In-Reply-To: <20260715004203.14549-1-chubukou@gmail.com>
+Message-ID: <759668e0-f9a3-0ba9-e0bd-98a722defa1c@linux.intel.com>
+References: <20260715004203.14549-1-chubukou@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-From: Andre Eikmeyer <andre@negmaster.com>
+On Wed, 15 Jul 2026, Zhan Chubukou wrote:
 
-Thunderbolt NHI on T2 Macs (2018-2020). The NHI and its
-associated PCIe root ports all sit directly on the root complex
-with no upstream port. Apple's ACPI tables name Thunderbolt root
-ports as TRP0, TRP1, etc. Find them and create device links back
-to the NHI so that PCIe tunnels can be re-established after sleep.
+> From: chubukou <chubukou@gmail.com>
+> 
+> GETAC rugged laptops (e.g. S410) expose vendor button events through an
+> ACPI device "MPMD" with hardware ID MTC0303. The Embedded Controller
+> raises query methods that issue Notify(MPMD, <code>) on programmable /
+> hotkey button activity. Because no Linux driver binds MTC0303, these
+> notifies are silently dropped and the buttons appear dead under Linux
+> (neither libinput nor acpid observe them: they are device notifies, not
+> generic ACPI events).
+> 
+> Add a minimal ACPI driver that binds MTC0303 and forwards the notifies
+> as input events through a sparse-keymap. On the S410 (BIOS R1.25) the
+> programmable P2 button generates Notify(MPMD, 0x97) and is mapped to
+> KEY_PROG1. Other buttons in the 0xC0..0xCB range (EC queries _Q81.._Q89,
+> _Q6A, _Q6B) remain unmapped until confirmed on a given model; enable
+> dynamic-debug to identify them.
+> 
+> Signed-off-by: chubukou <chubukou@gmail.com>
 
-Co-developed-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+We need a read name here. For more information, please see 
+Documentation/process/submitting-patches.rst
 
-Signed-off-by: Andre Eikmeyer <andre@negmaster.com>
----
- drivers/thunderbolt/tb.c | 51 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+> ---
+>  MAINTAINERS                       |  6 ++
+>  drivers/platform/x86/Kconfig      | 11 ++++
+>  drivers/platform/x86/Makefile     |  3 +
+>  drivers/platform/x86/getac-mpmd.c | 96 +++++++++++++++++++++++++++++++
+>  4 files changed, 116 insertions(+)
+>  create mode 100644 drivers/platform/x86/getac-mpmd.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ce5c518..9bdabdf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11014,6 +11014,12 @@ F:	Documentation/filesystems/gfs2/
+>  F:	fs/gfs2/
+>  F:	include/uapi/linux/gfs2_ondisk.h
+>  
+> +GETAC MPMD DRIVER
+> +M:	chubukou <chubukou@gmail.com>
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/platform/x86/getac-mpmd.c
+> +
+>  GIGABYTE WATERFORCE SENSOR DRIVER
+>  M:	Aleksa Savic <savicaleksa83@gmail.com>
+>  L:	linux-hwmon@vger.kernel.org
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b521..2effb96 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -440,6 +440,17 @@ config FUJITSU_TABLET
+>  
+>           If you have a Fujitsu convertible or slate, say Y or M here.
+>  
+> +config GETAC_MPMD
+> +	tristate "GETAC MPMD programmable button support"
+> +	depends on ACPI
+> +	help
+> +	  Driver for the GETAC MPMD ACPI device (HID MTC0303) which forwards
+> +	  Embedded Controller button events (e.g. the programmable P2 button)
+> +	  as input key events. Without this driver the buttons are silently
+> +	  dropped and appear dead under Linux.
+> +
+> +	  Say Y or M if you have a GETAC rugged laptop (e.g. S410).
+> +
+>  config GPD_POCKET_FAN
+>  	tristate "GPD Pocket Fan Controller support"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 872ac38..8896da3 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -57,6 +57,9 @@ obj-$(CONFIG_FUJITSU_TABLET)	+= fujitsu-tablet.o
+>  # GPD
+>  obj-$(CONFIG_GPD_POCKET_FAN)	+= gpd-pocket-fan.o
+>  
+> +# GETAC
+> +obj-$(CONFIG_GETAC_MPMD)	+= getac-mpmd.o
+> +
+>  # Hewlett Packard
+>  obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+= hp/
+>  
+> diff --git a/drivers/platform/x86/getac-mpmd.c b/drivers/platform/x86/getac-mpmd.c
+> new file mode 100644
+> index 0000000..0f1ec8b
+> --- /dev/null
+> +++ b/drivers/platform/x86/getac-mpmd.c
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * GETAC MPMD programmable button driver
+> + *
+> + * GETAC rugged laptops expose vendor events through an ACPI device named
+> + * "MPMD" with hardware ID MTC0303. The Embedded Controller raises query
+> + * methods that Notify(MPMD, <code>) on programmable / hotkey button
+> + * activity. Without a driver bound to MTC0303 these notifies are silently
+> + * dropped, so the buttons appear dead under Linux.
+> + *
+> + * This driver binds MTC0303 and forwards the notifies as input events.
+> + *
+> + * Observed on GETAC S410 (BIOS R1.25.070520):
+> + *   0x97  P2 programmable button (repeats at ~3 Hz while held)
+> + *
+> + * The 0xC0..0xCB range is generated by EC query methods _Q81.._Q89, _Q6A
+> + * and _Q6B and is left as KEY_UNKNOWN until a button is confirmed; enable
+> + * module dynamic-debug to identify further buttons on a given model.
+> + *
+> + * Copyright (C) 2026 chubukou <chubukou@gmail.com>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/input.h>
+> +#include <linux/input/sparse-keymap.h>
 
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index c69c323e6952..0cdffcf577cd 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -6,6 +6,7 @@
-  * Copyright (C) 2019, Intel Corporation
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
-@@ -3305,11 +3306,59 @@ static const struct tb_cm_ops tb_cm_ops = {
- static bool tb_apple_add_links(struct tb_nhi *nhi)
- {
- 	struct pci_dev *upstream, *pdev;
--	bool ret;
-+	bool ret = false;
- 
- 	if (!x86_apple_machine)
- 		return false;
- 
-+	/* On T2 Macs. the root ports are stored in ACPI as TRP0,
-+	 * TRP1, etc. Find them and create device links
-+	 * so that PCIe tunnels can be re-established after
-+	 * sleep.
-+	 */
-+	if (has_apple_t2_chip && IS_ENABLED(CONFIG_ACPI)) {
-+		struct acpi_device *adev;
-+		unsigned int slot, func;
-+		const struct device_link *link;
-+		const char *bid;
-+
-+		for (slot = 0; slot < 32; slot++) {
-+			for (func = 0; func < 8; func++) {
-+				pdev = pci_get_slot(nhi->pdev->bus, PCI_DEVFN(slot, func));
-+				if (!pdev)
-+					continue;
-+
-+				if (!pci_is_pcie(pdev) || pci_pcie_type(pdev) !=
-+						PCI_EXP_TYPE_ROOT_PORT)
-+					goto put_pdev;
-+
-+				adev = ACPI_COMPANION(&pdev->dev);
-+				if (!adev)
-+					goto put_pdev;
-+
-+				bid = acpi_device_bid(adev);
-+				if (strncmp(bid, "TRP", 3) != 0)
-+					goto put_pdev;
-+
-+				link = device_link_add(&pdev->dev, &nhi->pdev->dev,
-+						DL_FLAG_AUTOREMOVE_SUPPLIER |
-+						DL_FLAG_PM_RUNTIME);
-+				if (link) {
-+					dev_dbg(&nhi->pdev->dev, "created link from %s\n",
-+						dev_name(&pdev->dev));
-+					ret = true;
-+				} else
-+					dev_warn(&nhi->pdev->dev,
-+						"device link creation from %s failed\n",
-+						dev_name(&pdev->dev));
-+
-+put_pdev:
-+	pci_dev_put(pdev);
-+			}
-+		}
-+		return ret;
-+	}
-+
- 	switch (nhi->pdev->device) {
- 	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
- 	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
+You probably need something in Kconfig for these?
+
+> +#include <linux/module.h>
+> +
+> +struct getac_mpmd_priv {
+> +	struct input_dev *input;
+> +};
+> +
+> +static const struct key_entry getac_mpmd_keymap[] = {
+> +	{ KE_KEY, 0x97, { KEY_PROG1 } },		/* P2 programmable button */
+> +	{ KE_END, 0 }
+> +};
+> +
+> +static void getac_mpmd_notify(struct acpi_device *adev, u32 event)
+> +{
+> +	struct getac_mpmd_priv *priv = acpi_driver_data(adev);
+> +
+> +	if (!sparse_keymap_report_event(priv->input, event, 1, true))
+> +		dev_dbg(&adev->dev, "unknown notify event 0x%02x\n", event);
+
+Add include for dev_dbg()
+
+> +}
+> +
+> +static int getac_mpmd_add(struct acpi_device *adev)
+> +{
+> +	struct getac_mpmd_priv *priv;
+> +	struct input_dev *input;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&adev->dev, sizeof(*priv), GFP_KERNEL);
+
+Please add linux/device.h include for this.
+
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	input = devm_input_allocate_device(&adev->dev);
+> +	if (!input)
+> +		return -ENOMEM;
+> +
+> +	input->name = "GETAC MPMD programmable buttons";
+> +	input->phys = "getac-mpmd/input0";
+> +	input->id.bustype = BUS_HOST;
+> +
+> +	ret = sparse_keymap_setup(input, getac_mpmd_keymap, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = input_register_device(input);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->input = input;
+> +	adev->driver_data = priv;
+
+Once you've converted to platform_driver (see below), please use the 
+accessor to set drvdata.
+
+> +	return 0;
+> +}
+> +
+> +static const struct acpi_device_id getac_mpmd_ids[] = {
+> +	{ "MTC0303" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(acpi, getac_mpmd_ids);
+> +
+> +static struct acpi_driver getac_mpmd_driver = {
+
+Please don't add new acpi_drivers anymore. Rafael is trying to get rid all 
+of them.
+
+> +	.name = "getac_mpmd",
+> +	.class = "getac",
+> +	.ids = getac_mpmd_ids,
+> +	.ops = {
+> +		.add = getac_mpmd_add,
+> +		.notify = getac_mpmd_notify,
+> +	},
+> +};
+> +
+> +module_acpi_driver(getac_mpmd_driver);
+> +
+> +MODULE_AUTHOR("chubukou <chubukou@gmail.com>");
+> +MODULE_DESCRIPTION("GETAC MPMD (MTC0303) programmable button driver");
+> +MODULE_LICENSE("GPL");
+> 
+
 -- 
-2.43.0
+ i.
 
