@@ -1,185 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8D931B803;
-	Tue, 21 Jul 2026 16:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32AC37702C;
+	Tue, 21 Jul 2026 16:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784652468; cv=none; b=V5CcoVh4yKsLoBnBSVKEITdSdz+Ds2JUOWLmvq6SsRfog5VXfd6yW4LgvQutJbyVItYchKlZePLYvcRJ2XtBCAm614tWFaxpRPHbKm7yikMOiHqzABEua8wB9DZHH25MfI66kMGmBp0IW7803nVGjhK3FoZ72+w4qsKJCB1gEx0=
+	t=1784653054; cv=none; b=IRbrN753ZjpCA6T7YfIGFgXQqlzhM5oKHGOyqgIberrgUUl4YTv4vlltVYk3W9KhvnSTSFf6XTNPRjaWXTKBRaW6zAnylOdo9vjQBdPKn/wja8udyl2TkweCLu2NpcFiXWAw6V40ZUDj2sAnuU2NuQ0w/B/8w933cqIvgPwNsQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784652468; c=relaxed/simple;
-	bh=9aTcOenferaVgMf/wYCcLIPWt8GbhVyopqbSwG5y35I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nNCaoP5+U+lDIo4lSBpsc4RoViT+HFXoROvvDt82LDMKAuCTQ8G0bgcmJdh1lfih4nFpsNoanKVxZl6D9lgJrakCdxB+B5ZbhPSIZS0u6Xbf0PWe+H9F2iwknNdxfOqc7r0wjfvUvn7NauxpTAy9C4Lj0F1ZIcXm8+Fkkatn3+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pj5PmEyq; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784653054; c=relaxed/simple;
+	bh=sRQJqlL3yg9NvL6hLUmUFuyccZ46xa1FqXuipZq20XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tTRpO6GWF+/Z3XcrqW+onXnT52z6NKBPGiP4H7dzptJoFU3FopcaD+clu1527ZbYhbqX4zrIl/31mvSBxJGJsQm7BMb8GgmXFZimXs0r6L4AHyXAGSI1Q4aA9ZXogWs8fogBAa7nEwOQuFH7ts0l0u3mV6JJg7rsv9dhVSAYmr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1YuF8HN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pj5PmEyq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784652466; x=1816188466;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=9aTcOenferaVgMf/wYCcLIPWt8GbhVyopqbSwG5y35I=;
-  b=Pj5PmEyqOPi73TlZxn61A1283Dgmuj3+CweZhop513t9YSCC8jayg8YZ
-   D8Gf9tR8RmeQ/tB615SVrI/P9xbSB3COMrFS9hC8hkl8qvRhNFKPfgkNk
-   cVDp0g8O8QWU1n3qOuCg6Wilgd66TTV0h5zaC2HmNS6TgppYbjKwMwa5R
-   DSwtb+OjTH4xLWpuIQ6BuvUXtqSYwgGO6cMQlUQe/wrAz+e9Iac1x39An
-   1JyhJF/PE3AQmsNUWS1JS0ijR46Iwd81NHa9E4SfdfHLR5tVHIillaNlW
-   slBEU4/qEh2+xoiqdBdkKARpExU9ksgYjE2IoTAR0WoyBpqxwICoc4m5k
-   g==;
-X-CSE-ConnectionGUID: TWWGwgmgSkSa6lyni1Mzsw==
-X-CSE-MsgGUID: XYx+J3CXQ5mveciGrJUGvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="108049960"
-X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="108049960"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:47:45 -0700
-X-CSE-ConnectionGUID: IIvQkrOCSWeoYhr8QGjW+Q==
-X-CSE-MsgGUID: DzPmqPK6Tfa/5/5qA51MMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="257271890"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.47])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 09:47:42 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 21 Jul 2026 19:47:39 +0300 (EEST)
-To: Musaev Ibragim <atomicus.xyz@gmail.com>
-cc: Gladyshev Ilya <foxido@foxido.dev>, Hans de Goede <hansg@kernel.org>, 
-    Mingyou Chen <qby140326@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: redmi-wmi: report EC state change events
-In-Reply-To: <178405473606.25865.4048095379503614221@gmail.com>
-Message-ID: <0dccec1c-d0f2-f043-3176-728c53791f3d@linux.intel.com>
-References: <178405473606.25865.4048095379503614221@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1YuF8HN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 400481F000E9;
+	Tue, 21 Jul 2026 16:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784653052;
+	bh=+Yvz1VbNlr+9jCpw+hwc12v+ZMFgJIMsPEyA15hJE1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=R1YuF8HN/L+JYcvi+LWKIhjJAyttCWip5wZZoDbEwh9E++DtQG1FIANnZykXIl6v/
+	 noNBP0TsBtEsaXlFGk6eFh4KHeR9ogjv88IcYM1X9MpJinbJ6YSEHx6IyhOV8poNFJ
+	 3BBHJ2FK2aOohLgtAn1iPVAikwjkHamS+25wrcEh2NbgHH2M2IxYFWk85Je0pnIDQA
+	 59TdLS/N17xc33HmNG6EtcnvVRHg29/y/tTFOEu3Et0cuJ0UUpUKByHtaFcYefEp/k
+	 cZikFt3yp3OswMpyzrX6xOHVpM2GQCPCr9/VP5ARFD3IYil71uscMXOGQQ45Lfvwn8
+	 MrwZUpnoeparg==
+Date: Tue, 21 Jul 2026 17:57:26 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Marco Giunta <marco_giunta@outlook.it>, tiwai@suse.com, perex@perex.cz,
+	lgirdwood@gmail.com, LKML <linux-kernel@vger.kernel.org>,
+	linux-sound@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>, lenb@kernel.org,
+	Hans de Goede <hansg@kernel.org>, linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org, wangweidong.a@awinic.com,
+	nadim@symbolic.software, imitoy@imitoy.top, munzirtaha@gmail.com,
+	yakov.till@gmail.com
+Subject: Re: [PATCH 1/8] ASoC: aw88399: extract shared device library
+Message-ID: <dee6db83-7e09-4d72-91d7-c85ae1309550@sirena.org.uk>
+References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+ <DS7PR19MB772415C485FAF74297673FD7FCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+ <68b8e29c-e7d4-ca19-2e40-ad3eade6d94d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-814024303-1784652173=:1265"
-Content-ID: <19f94048-494e-1536-6ae5-285b2859d19a@linux.intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FS0zc9MIoz7/weKh"
+Content-Disposition: inline
+In-Reply-To: <68b8e29c-e7d4-ca19-2e40-ad3eade6d94d@linux.intel.com>
+X-Cookie: Love America -- or give it back.
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-814024303-1784652173=:1265
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <e6241405-62b7-90d1-6ec5-368f11665d2a@linux.intel.com>
+--FS0zc9MIoz7/weKh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 15 Jul 2026, Musaev Ibragim wrote:
-
-> The Redmibook EC/firmware fully handles the keyboard backlight cycle,
-> the OEM preset power mode (Fn+K) and the Fn lock toggle by itself, and
-> sends a WMI event carrying the resulting state in the third payload
-> byte. These events are currently swallowed with KE_IGNORE, so userspace
-> never learns that the state changed and cannot give the user any
-> feedback (OSD), even though the WMI event is the only notification
-> channel for these EC-driven changes.
+On Tue, Jul 21, 2026 at 06:21:04PM +0300, Ilpo J=E4rvinen wrote:
+> On Fri, 17 Jul 2026, Marco Giunta wrote:
 >=20
-> Report them as key presses instead:
->=20
->   - keyboard backlight cycle -> KEY_KBDILLUMTOGGLE
->   - OEM preset power mode    -> KEY_PERFORMANCE
->   - Fn lock toggle           -> KEY_FN_ESC
->=20
-> Desktops that only look at the keycode get the usual hotkey behaviour;
-> since sparse-keymap emits MSC_SCAN with the raw payload before the key
-> event, an OSD daemon can additionally recover the exact new state from
-> byte 2 (e.g. backlight Off/Low/High/Auto is 0x00/0x05/0x0a/0x80).
->=20
-> Note that the power mode event must keep being read from the WMI device
-> in any case: on the TM2209 the ACPI event handler (EV20) applies the
-> mode change as a side effect of building the event payload for _WED.
->=20
-> Tested on Redmi Book Pro 15 2023 (TM2209).
->=20
-> Signed-off-by: Musaev Ibragim <atomicus.xyz@gmail.com>
-> ---
-> A related problem noticed while testing this: bitland-mifs-wmi lists the
-> same event GUID (46C93E13-EE9B-4262-8488-563BCA757FEF, BITLAND_EVENT_GUID=
-)
-> in its wmi_device_id table, so on a Redmibook both drivers race for the
-> event device at boot and whichever probes first wins. When bitland-mifs-w=
-mi
-> wins, the "Redmibook WMI keys" input device never appears, and since the
-> MIFS control methods don't work on this machine either (different SMM
-> interface =E2=80=94 platform_profile writes fail, the kbd_backlight LED a=
-lways
-> reads 0), the laptop is left with no working Fn events at all until
-> bitland_mifs_wmi is blacklisted. Should bitland-mifs-wmi gate its binding
-> on DMI, or is another way to resolve the overlap preferred? Happy to test
-> patches on TM2209.
+> > Extract the device-level functions from aw88399.c into a new shared
+> > library module (aw88399-lib.c) with a shared header at
+> > include/sound/aw88399.h, following the pattern established by CS35L41
+> > (cs35l41-lib.c / include/sound/cs35l41.h) for chips that need both
+> > ASoC and HDA drivers.
+> >=20
+> > The shared header at include/sound/aw88399.h contains the register
+> > definitions, bit-field masks, hardware constants, device enums, the
+> > struct aw88399 definition, and the library function declarations.
+> > The ASoC-private header at sound/soc/codecs/aw88399.h is reduced to
+> > ASoC-specific definitions (PCM formats/rates, ALSA kcontrol helpers,
+> > calibration constants) and includes the shared header.
+> >=20
+> > The library contains the chip initialization, firmware loading,
+> > playback start/stop sequences, and all their internal dependencies
+> > (PLL checks, DSP management, volume control, calibration, CRC
+> > verification, etc.). The ASoC codec driver retains the ALSA controls,
+> > DAPM widgets, codec probe/remove, calibration service, and I2C bus
+> > driver registration.
+> >=20
+> > A new Kconfig symbol SND_SOC_AW88399_LIB is introduced.
+> > SND_SOC_AW88399 (the existing ASoC codec) selects it, ensuring no
+> > change for current users. The HDA side codec driver (introduced
+> > later in this series) selects the library without pulling in the
+> > full ASoC codec module. This avoids a build-time dependency on the
+> > full ASoC driver and follows the established pattern used by CS35L41
+> > (SND_SOC_CS35L41_LIB) for chips with both ASoC and HDA drivers.
+> >=20
+> > Some library functions (DSP control, volume setting, mute,
+> > calibration updates, profile management, and status helpers) are
+> > used internally by the library's start/stop sequences but are also
+> > called directly by the ASoC driver's remaining code.
+> > These are exported from the library so the ASoC module can access them.
+> >=20
+> > This is a pure code movement with no functional changes. The moved
+> > functions are identical to their originals in aw88399.c.
+> >=20
+> > Tested-by: Nadim Kobeissi <nadim@symbolic.software>
+> > Tested-by: Xia Yun'an <imitoy@imitoy.top>
+> > Tested-by: Munzir Taha <munzirtaha@gmail.com>
+> > Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
+> > ---
+> >  include/sound/aw88399.h        |  618 ++++++++++++++
+> >  sound/soc/codecs/Kconfig       |    5 +
+> >  sound/soc/codecs/Makefile      |    2 +
+> >  sound/soc/codecs/aw88399-lib.c | 1381 ++++++++++++++++++++++++++++++++
+> >  sound/soc/codecs/aw88399.c     | 1349 -------------------------------
+> >  sound/soc/codecs/aw88399.h     |  582 +-------------
+> >  6 files changed, 2008 insertions(+), 1929 deletions(-)
+> >  create mode 100644 include/sound/aw88399.h
+> >  create mode 100644 sound/soc/codecs/aw88399-lib.c
+> >=20
+> > diff --git a/include/sound/aw88399.h b/include/sound/aw88399.h
+> > new file mode 100644
+> > index 000000000000..3a2153f0ee92
+> > --- /dev/null
+> > +++ b/include/sound/aw88399.h
+> > @@ -0,0 +1,618 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only
+> > + *
+> > + * linux/sound/aw88399.h --  Platform data for AW88399
+> > + *
+> > + * Copyright (c) 2023 AWINIC Technology CO., LTD
+> > + *
+> > + * Author: Weidong Wang <wangweidong.a@awinic.com>
+> > + */
+> > +
+> > +#ifndef __SOUND_AW88399_H
+> > +#define __SOUND_AW88399_H
+> > +
+> > +#include <linux/mutex.h>
+> > +#include <linux/workqueue.h>
+> > +
+> > +/* registers list */
+> > +#define AW88399_ID_REG			(0x00)
+> > +#define AW88399_SYSST_REG		(0x01)
+> > +#define AW88399_SYSINT_REG		(0x02)
+> > +#define AW88399_SYSINTM_REG		(0x03)
+> > +#define AW88399_SYSCTRL_REG		(0x04)
+> > +#define AW88399_SYSCTRL2_REG		(0x05)
+> > +#define AW88399_I2SCTRL1_REG		(0x06)
+> > +#define AW88399_I2SCTRL2_REG		(0x07)
+> > +#define AW88399_I2SCTRL3_REG		(0x08)
+> > +#define AW88399_DACCFG1_REG		(0x09)
+> > +#define AW88399_DACCFG2_REG		(0x0A)
+> > +#define AW88399_DACCFG3_REG		(0x0B)
+> > +#define AW88399_DACCFG4_REG		(0x0C)
+> > +#define AW88399_DACCFG5_REG		(0x0D)
+> > +#define AW88399_DACCFG6_REG		(0x0E)
+> > +#define AW88399_DACCFG7_REG		(0x0F)
+> > +#define AW88399_MPDCFG1_REG		(0x10)
+> > +#define AW88399_MPDCFG2_REG		(0x11)
+> > +#define AW88399_MPDCFG3_REG		(0x12)
+> > +#define AW88399_MPDCFG4_REG		(0x13)
+> > +#define AW88399_PWMCTRL1_REG		(0x14)
+> > +#define AW88399_PWMCTRL2_REG		(0x15)
+> > +#define AW88399_PWMCTRL3_REG		(0x16)
+> > +#define AW88399_I2SCFG1_REG		(0x17)
+> > +#define AW88399_DBGCTRL_REG		(0x18)
+> > +#define AW88399_HAGCST_REG		(0x20)
+> > +#define AW88399_VBAT_REG		(0x21)
+> > +#define AW88399_TEMP_REG		(0x22)
+> > +#define AW88399_PVDD_REG		(0x23)
+> > +#define AW88399_ISNDAT_REG		(0x24)
+> > +#define AW88399_VSNDAT_REG		(0x25)
+> > +#define AW88399_I2SINT_REG		(0x26)
+> > +#define AW88399_I2SCAPCNT_REG		(0x27)
+> > +#define AW88399_ANASTA1_REG		(0x28)
+> > +#define AW88399_ANASTA2_REG		(0x29)
+> > +#define AW88399_ANASTA3_REG		(0x2A)
+> > +#define AW88399_TESTDET_REG		(0x2B)
+> > +#define AW88399_DSMCFG1_REG		(0x30)
+> > +#define AW88399_DSMCFG2_REG		(0x31)
+> > +#define AW88399_DSMCFG3_REG		(0x32)
+> > +#define AW88399_DSMCFG4_REG		(0x33)
+> > +#define AW88399_DSMCFG5_REG		(0x34)
+> > +#define AW88399_DSMCFG6_REG		(0x35)
+> > +#define AW88399_DSMCFG7_REG		(0x36)
+> > +#define AW88399_DSMCFG8_REG		(0x37)
+> > +#define AW88399_TESTIN_REG		(0x38)
+> > +#define AW88399_TESTOUT_REG		(0x39)
 
-Hi,
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-Like you've now noticed (I think), there's another series attempting to=20
-fix the GUID problem.
+--FS0zc9MIoz7/weKh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'd primarily prefer taking the GUID problem fixing series (but it=20
-should make sure this too is addressed).
+-----BEGIN PGP SIGNATURE-----
 
-If the GUID problem series not finished in this cycle, I can consider this=
-=20
-patch instead towards the end of the cycle.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmpfpPYACgkQJNaLcl1U
+h9BxUQf/VY4NV9txVgbL/xVoZWTQK42ZZf9Bvx1/gYkSUOgdULWJQdxwa+QgvxY7
+AGmJ9518BfnupE9ijpZmJDNy8J8RyXkKliBf4Nt1eSdAiXLpIqqcskNh/fvgD7HH
+qMlxjYPBuX3KgVQXn2LuDQvHJDr6mjmP8lf86U3wwTCgkGzapn4NfrlAcKgkK48u
+izYF7tZtmv+leLA5hj0VR9H7UsjwxD94c7oloFljQ4ZoExSEFV6kPE4sICIX36EC
+kDMmxBqEq7rzBTp971Vvna6MRkfJe+T/LercTnpz7ul13U/4xyJhPOPoXIyZ36I1
+uQtyrHVOXSlvoJgNSG+3XSEbXChHbA==
+=FdbR
+-----END PGP SIGNATURE-----
 
-Is that fine with you?
-
---=20
- i.
-
-
->  drivers/platform/x86/redmi-wmi.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redm=
-i-wmi.c
-> index 5889863..cc82ef5 100644
-> --- a/drivers/platform/x86/redmi-wmi.c
-> +++ b/drivers/platform/x86/redmi-wmi.c
-> @@ -29,24 +29,24 @@ static const struct key_entry redmi_wmi_keymap[] =3D =
-{
->  =09{KE_KEY, 0x00011801,=09{KEY_ASSISTANT}},
->  =09{KE_KEY, 0x00011901,=09{KEY_ASSISTANT}},
-> =20
-> -=09/* Keyboard backlight */
-> -=09{KE_IGNORE, 0x00000501, {}},
-> -=09{KE_IGNORE, 0x00800501, {}},
-> -=09{KE_IGNORE, 0x00050501, {}},
-> -=09{KE_IGNORE, 0x000a0501, {}},
-> +=09/* Keyboard backlight: Off / Auto / Low / High (new state in byte 2) =
-*/
-> +=09{KE_KEY, 0x00000501,=09{KEY_KBDILLUMTOGGLE}},
-> +=09{KE_KEY, 0x00800501,=09{KEY_KBDILLUMTOGGLE}},
-> +=09{KE_KEY, 0x00050501,=09{KEY_KBDILLUMTOGGLE}},
-> +=09{KE_KEY, 0x000a0501,=09{KEY_KBDILLUMTOGGLE}},
-> =20
->  =09/* Xiaomi G Command Center */
->  =09{KE_KEY, 0x00010a01,=09{KEY_VENDOR}},
-> =20
-> -=09/* OEM preset power mode */
-> -=09{KE_IGNORE, 0x00011601, {}},
-> -=09{KE_IGNORE, 0x00021601, {}},
-> -=09{KE_IGNORE, 0x00031601, {}},
-> -=09{KE_IGNORE, 0x00041601, {}},
-> +=09/* OEM preset power mode: 1=3DBalanced 2=3DSilent 3=3DTurbo 4=3DFull =
-speed */
-> +=09{KE_KEY, 0x00011601,=09{KEY_PERFORMANCE}},
-> +=09{KE_KEY, 0x00021601,=09{KEY_PERFORMANCE}},
-> +=09{KE_KEY, 0x00031601,=09{KEY_PERFORMANCE}},
-> +=09{KE_KEY, 0x00041601,=09{KEY_PERFORMANCE}},
-> =20
-> -=09/* Fn Lock state */
-> -=09{KE_IGNORE, 0x00000701, {}},
-> -=09{KE_IGNORE, 0x00010701, {}},
-> +=09/* Fn Lock state: 1=3Don 0=3Doff */
-> +=09{KE_KEY, 0x00000701,=09{KEY_FN_ESC}},
-> +=09{KE_KEY, 0x00010701,=09{KEY_FN_ESC}},
-> =20
->  =09/* Fn+`/1/2/3/4 */
->  =09{KE_KEY, 0x00011101, {KEY_F13}},
->=20
---8323328-814024303-1784652173=:1265--
+--FS0zc9MIoz7/weKh--
