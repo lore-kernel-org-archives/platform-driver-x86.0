@@ -1,224 +1,140 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0113F40801B
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 11:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595C248C8CA
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 12:14:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784633560; cv=none; b=LDeuyi/RQ9X6vZCvPi9n6BvVo4EsYnbwCKUI+O5r1JlVXU+vGlReEOT0u59FF5fXKlS6SB0ALUkVgirRav2paF3Y4e+INMSg0y2vk2JrsW0SVWDJUivX6wKOmc7XJngEGuUJvbzUUqqTFFdkJa88gBGl3SjCCjpJF1VXFMA/f/g=
+	t=1784636055; cv=none; b=prxPLTLJcUnARYPwcmkQ2VDfKeGds1GxP5grg5rJRNYg49oX9GE6jTS5/AOABYZ5ddbkwfz1k/EKKb7k5YiRCreOuduYMThgrYdeq6/74/2xtUGCvMUqs+wIwxZSGXx3jHQU7IXTy0ndcKQ26QzSKiopEGmre75Y46p+ob3jPdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784633560; c=relaxed/simple;
-	bh=tAqk8hjz2KhRCfWYHnmmPRXfK4YAB4YOmX5TxoFX3Qs=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VCFGNhixfMYNsAJptCXY+jDXQSyaSrJ1stHNMTwKnV/DfrndRd1GSduekSJKYuKIwXxafVkkr4LBrs8578b3HmHzuCByfeqHUPFavn7W9V/G1JGZhAh5pb3YS+6Y3YbqkU4g2GJOmIW40avpM+X/uMEHFkSgRsNQoTdog+Yn4uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISPoKgua; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=djeYcD6J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISPoKgua; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=djeYcD6J; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1784636055; c=relaxed/simple;
+	bh=6do2XeidT8JQV/NR2jPW339c0TTNOvPFVBsqscvqfks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GvK/v6B6ycqjaRY2kRrEnRTiw72YgyyRnLPVm634RwEA+5MGj27Js4Iarqd2rQINofUabYvW38rngVR/jEUazfEga6t18PwvLJSSWhfqV3ALPl0bW+I52eXVuoBtSfRI1+vRYlVkrcKmNcwaA+OLQX8rLAPHu8Cqahqce7T4VvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jv28WT+I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISPoKgua";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="djeYcD6J";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISPoKgua";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="djeYcD6J"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 51D327A4BF;
-	Tue, 21 Jul 2026 11:32:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784633554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
-	b=ISPoKguaaJoOzMSa4owILcETh6tFg7ZZUppYlcD3bqtMBOI/resmUVxukbEhZ9bqq+u4as
-	T6bWirLD8Ha0qfUwQpXoT/FMF7tVAFa3r9XKn2rgyID/wekn/BYYDNlCDmJvw2Vnnr7tkM
-	eyADW/oMiIYjUr+1uCvVTp10WWlDh5w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784633554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
-	b=djeYcD6Jw4miOtmqNKNDJa+nhX/Z063jxcyEmcgm55FeCAUjBdJ1PJ207Zburyl4ZEuvWH
-	GdyRVvJCTD1a7VCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ISPoKgua;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=djeYcD6J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784633554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
-	b=ISPoKguaaJoOzMSa4owILcETh6tFg7ZZUppYlcD3bqtMBOI/resmUVxukbEhZ9bqq+u4as
-	T6bWirLD8Ha0qfUwQpXoT/FMF7tVAFa3r9XKn2rgyID/wekn/BYYDNlCDmJvw2Vnnr7tkM
-	eyADW/oMiIYjUr+1uCvVTp10WWlDh5w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784633554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
-	b=djeYcD6Jw4miOtmqNKNDJa+nhX/Z063jxcyEmcgm55FeCAUjBdJ1PJ207Zburyl4ZEuvWH
-	GdyRVvJCTD1a7VCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1AACE779AA;
-	Tue, 21 Jul 2026 11:32:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UwjpBdJYX2rBFQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 21 Jul 2026 11:32:34 +0000
-Date: Tue, 21 Jul 2026 13:32:33 +0200
-Message-ID: <87h5lsinn2.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Marco Giunta <marco_giunta@outlook.it>
-Cc: tiwai@suse.com,
-	perex@perex.cz,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux-acpi@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	wangweidong.a@awinic.com,
-	nadim@symbolic.software,
-	imitoy@imitoy.top,
-	munzirtaha@gmail.com,
-	yakov.till@gmail.com
-Subject: Re: [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
-In-Reply-To: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
-References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jv28WT+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB44C1F00ADF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 12:14:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784636054;
+	bh=+CJT1PR+MkFlE50Rl4PiiTnA/tkQOQ2wS7feDbQvBSY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=jv28WT+ItPg5RchgH84HpIWgX4zF/Y1GcwWXOlaQM/CRHCWeLpY95Ak3cmT7VYALR
+	 c6uDnqyssXm/pfOm2Ucf0CkjnIcHk1igiJzGMGnvRsUIpuhcQfzol5pOvMS7s3RzaL
+	 LC591L1L5w+GbWro3XHSZLlsmwCYGX6ARIAUVvJR5s313wR92SBFRcJJQFEXh5uh6M
+	 dcr493vm/S+Kuql4Fq27apBT7tbkDAVrKBzviZKQPSAeGCQesnJ/iNF8mKw1s0iFcj
+	 cCrpMnHz/NcXrWrR7vtcru41aMfyxt7V9D1SfL6W9OK0rhPOEfabu9HhD3SwxnqeBo
+	 p7GbrJwQPtDQw==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5b0148201fbso6298119e87.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 05:14:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rp129J+EAHRTOGIFuywyudywjX0CKMhl/LCxg0c4je0wp+SLeP5Hw5Wu7HP1PH2dJfAaLcINXz1suuXSnNbjqip1vTn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5aiXtAe2paqpk5UV0lvlGqLxX3LKLYY70stpIqAGtI91Hpw3A
+	oXjw5NEN+1U6y5hYARM4mbOuS9Yszxg47iXZyT/vo0FduRPWu4jEfgXNQR06uTy8VbXaxe9mOb7
+	hIilwsy3iTETctLIOScY6oKoxovEJXWA=
+X-Received: by 2002:a05:6512:2919:b0:5ae:bbe5:2076 with SMTP id
+ 2adb3069b0e04-5b28f9b0445mr3425673e87.52.1784636052307; Tue, 21 Jul 2026
+ 05:14:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[outlook.it];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.it];
-	FREEMAIL_CC(0.00)[suse.com,perex.cz,gmail.com,kernel.org,vger.kernel.org,linux.intel.com,awinic.com,symbolic.software,imitoy.top];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,sashiko.dev:url]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 51D327A4BF
-X-Spam-Score: -2.01
+MIME-Version: 1.0
+References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+ <DS7PR19MB772444EB48828D8ED8EB3175FCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+In-Reply-To: <DS7PR19MB772444EB48828D8ED8EB3175FCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 21 Jul 2026 14:13:52 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iYgMmxyR-eL1tQbB9_YQepmY9nvck_5no3ArpM-Ekx9g@mail.gmail.com>
+X-Gm-Features: AUfX_mwKEnxKi2MIuOv-dcO1-op6YytCZq1R6ngZ5mDdzLPhU6hlMMdEUVCp1Rg
+Message-ID: <CAJZ5v0iYgMmxyR-eL1tQbB9_YQepmY9nvck_5no3ArpM-Ekx9g@mail.gmail.com>
+Subject: Re: [PATCH 6/8] ACPI/platform: add AWDZ8399 to serial-multi-instantiate
+To: Marco Giunta <marco_giunta@outlook.it>
+Cc: tiwai@suse.com, perex@perex.cz, lgirdwood@gmail.com, broonie@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, rafael@kernel.org, 
+	lenb@kernel.org, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	wangweidong.a@awinic.com, nadim@symbolic.software, imitoy@imitoy.top, 
+	munzirtaha@gmail.com, yakov.till@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 17 Jul 2026 15:25:02 +0200,
-Marco Giunta wrote:
-> 
-> Several Lenovo Legion laptops (Pro 7i 16IAX10H, Y9000P IAX10,
-> Pro 7 16AFR10H, R9000P ADR10) use AWINIC AW88399 smart amplifiers
-> to drive their bass woofers, connected via I2C as side codecs
-> to a Realtek ALC287 HDA codec.
-> 
-> Without a driver for these amplifiers, only the tweeters produce
-> sound, resulting in quiet and tinny audio.
-> 
-> An ASoC driver for the AW88399 already exists in-tree
-> (sound/soc/codecs/aw88399.c), contributed by AWINIC, but it targets
-> ASoC topologies and cannot drive the chip when it sits behind an
-> HDA controller. This series adds a proper HDA side codec driver,
-> following the established pattern used by the CS35L41, CS35L56,
-> and TAS2781 drivers.
-> 
-> Patch 1 extracts the device-level functions from the existing ASoC
-> driver into a shared library module (SND_SOC_AW88399_LIB) with a
-> shared header at include/sound/aw88399.h, following the CS35L41
-> precedent (SND_SOC_CS35L41_LIB / include/sound/cs35l41.h). This
-> avoids a build-time dependency on the full ASoC codec module and
-> ensures clean separation between the ASoC and HDA drivers.
-> 
-> Patches 2 through 5 prepare the shared library for use on ACPI-based
-> HDA systems: patch 2 extends channel assignment to work without
-> Device Tree properties, patch 3 adds a per-instance flag to bypass
-> an unreliable hardware status bit on certain boards, patch 4 adds
-> a firmware reload flag so that the HDA driver can signal that DSP
-> firmware needs to be re-uploaded after system sleep, and patch 5
-> adds a channel setter so that the HDA driver can configure the
-> amplifier without depending on ASoC-internal device headers.
-> 
-> Patch 6 registers the AWINIC ACPI HID "AWDZ8399" with the ACPI scan
-> ignore list and the serial-multi-instantiate driver for correct
-> enumeration of the two amplifier instances.
-> 
-> Patch 7 adds the HDA side codec driver itself, structured after the
-> CS35L41 HDA driver: an I2C bus driver, and a core driver implementing
-> HDA component binding, playback hooks, power management, and per-model
-> quirk matching using ACPI subsystem ID.
-> 
-> Patch 8 enables the driver on Lenovo Legion Pro models by adding
-> the necessary Realtek ALC287 fixups (DAC rerouting for bass speaker
-> volume control, internal microphone calibration) and AW88399 per-model
-> quirks (I2C channel swap correction, BSTS status check bypass).
-> 
-> NOTE ON FIRMWARE: This driver requires the firmware file
-> aw88399_acf.bin, which uses the same format and request path as the
-> existing ASoC driver. This firmware is not yet available in the
-> linux-firmware repository. We intend to coordinate with the AWINIC
-> maintainers (CC'd) to arrange its inclusion. In the meantime, users
-> can extract the firmware from the Windows driver and place it in
-> /lib/firmware/.
-> 
-> This work builds on the initial driver development by Yakov Till
-> ("Lyapsus") and the bounty effort organized by Nadim Kobeissi:
-> https://github.com/nadimkobeissi/16iax10h-linux-sound-saga
-> 
-> Marco Giunta (8):
->   ASoC: aw88399: extract shared device library
->   ASoC: aw88399: derive channel from I2C address on ACPI systems
->   ASoC: aw88399: add per-instance BSTS status bypass flag
->   ASoC: aw88399: add firmware reload flag for resume
->   ASoC: aw88399: add channel setter for HDA side codec
->   ACPI/platform: add AWDZ8399 to serial-multi-instantiate
->   ALSA: hda/scodec: add AW88399 HDA side codec driver
->   ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
+On Fri, Jul 17, 2026 at 3:27=E2=80=AFPM Marco Giunta <marco_giunta@outlook.=
+it> wrote:
+>
+> Register the AWINIC AW88399 ACPI hardware ID "AWDZ8399" with the
+> serial-multi-instantiate driver and add it to the ACPI scan ignore
+> list so that the two I2C amplifier instances on Lenovo Legion laptops
+> are enumerated as separate I2C client devices rather than a single
+> ACPI platform device.
+>
+> The SMI node creates two instances named "aw88399-hda" with
+> IRQ_RESOURCE_AUTO, matching the pattern used by CS35L41.
+>
+> Tested-by: Nadim Kobeissi <nadim@symbolic.software>
+> Tested-by: Xia Yun'an <imitoy@imitoy.top>
+> Tested-by: Munzir Taha <munzirtaha@gmail.com>
+> Co-developed-by: Yakov Till <yakov.till@gmail.com>
+> Signed-off-by: Yakov Till <yakov.till@gmail.com>
+> Signed-off-by: Marco Giunta <marco_giunta@outlook.it>
 
-Through a quick glance, the code changes look mostly OK.
-But I believe the potential memory leak Sashiko suggested in the patch
-7 is a real issue, and it should be fixed.
-  https://sashiko.dev/#/patchset/DS7PR19MB77247D9AD698CF0FF37DB58BFCC62%40DS7PR19MB7724.namprd19.prod.outlook.com
+The change in drivers/acpi/scan.c is fine with me, so
 
-In anyway, as this series spans over different areas, we'd need proper
-ACK's from ASoC, ACPI and platform people in order to get those merged
-to the upstream.
+Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org> # ACPI core
 
+and please feel free to route this patch as you see fit.
 
-thanks,
+Thanks!
 
-Takashi
+> ---
+>  drivers/acpi/scan.c                             |  1 +
+>  drivers/platform/x86/serial-multi-instantiate.c | 10 ++++++++++
+>  2 files changed, 11 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 9a7ac2eb9ce0..4f4552b1551b 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1752,6 +1752,7 @@ static bool acpi_device_enumeration_by_parent(struc=
+t acpi_device *device)
+>          * by the drivers/platform/x86/serial-multi-instantiate.c driver,=
+ which
+>          * knows which client device id to use for each resource.
+>          */
+> +               {"AWDZ8399", },
+>                 {"BSG1160", },
+>                 {"BSG2150", },
+>                 {"CSC3551", },
+> diff --git a/drivers/platform/x86/serial-multi-instantiate.c b/drivers/pl=
+atform/x86/serial-multi-instantiate.c
+> index 1a369334f9cb..3e89fcdd45f7 100644
+> --- a/drivers/platform/x86/serial-multi-instantiate.c
+> +++ b/drivers/platform/x86/serial-multi-instantiate.c
+> @@ -307,6 +307,15 @@ static void smi_remove(struct platform_device *pdev)
+>         smi_devs_unregister(smi);
+>  }
+>
+> +static const struct smi_node aw88399_hda =3D {
+> +       .instances =3D {
+> +               { "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               { "aw88399-hda", IRQ_RESOURCE_AUTO, 0 },
+> +               {}
+> +       },
+> +       .bus_type =3D SMI_AUTO_DETECT,
+> +};
+> +
+>  static const struct smi_node bsg1160_data =3D {
+>         .instances =3D {
+>                 { "bmc150_accel", IRQ_RESOURCE_GPIO, 0 },
+> @@ -405,6 +414,7 @@ static const struct smi_node tas2781_hda =3D {
+>   * drivers/acpi/scan.c: acpi_device_enumeration_by_parent().
+>   */
+>  static const struct acpi_device_id smi_acpi_ids[] =3D {
+> +       { "AWDZ8399", (unsigned long)&aw88399_hda },
+>         { "BSG1160", (unsigned long)&bsg1160_data },
+>         { "BSG2150", (unsigned long)&bsg2150_data },
+>         { "CSC3551", (unsigned long)&cs35l41_hda },
+> --
+> 2.55.0
+>
