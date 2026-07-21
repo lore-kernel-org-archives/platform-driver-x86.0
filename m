@@ -1,46 +1,46 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011022.outbound.protection.outlook.com [40.107.208.22])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012031.outbound.protection.outlook.com [40.107.200.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3869F46EF61;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33146EC6A;
 	Tue, 21 Jul 2026 18:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.22
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.31
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784657905; cv=fail; b=H6BoSuaCMoQF1+iUIRIUL7I38GRTgR2Lsqz3KdUV7L0Z5A70oGhRiOp7g1WazuzZ96L5soOpWsECxFVOCEqdf13XCPmIl21Kg8R5Jd6oliW8vo4lGp/accrgu+99gCWAv2u20lzBkDbfAi3l12JGroNf1xDH4j2PtVKDKjDDeo0=
+	t=1784657905; cv=fail; b=q1vEDl9UdT8Sdb4QLvRjhJC8icWnVyihCl2w1IZGPyAahBYgD2ZudRqPpKpSeJLEEGuod2lGQs3n9kyrTY6fZiWOwjlg4KUR3qQWECWI3enLIItN3qh+f71fR4As3WrZoX0XCYD3KjnKTyrDGWS8hd+SRNOXrDEopqIYqB4NWvM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784657905; c=relaxed/simple;
-	bh=yGyZXBPgSYqdf4QO5vV9d8Dh6DxPduvmuJ3PhiLwoz8=;
+	bh=StbO4t8ZwbEYRfSVqONvpDcEsgJQOEElS6lNn1YkzQM=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U3p6Iu37BMQCuRQqLBcCH7kOkNgTxdz1+SmahQMj2VAU0iisAPrl1uS++ZvezmUZ7jcERZUJjItAoXXSDyhIWfy0dlVmcm71f7goDyK3p+ZB/hRzavWMCaxiDSgFVtXx5msY7F+NWPphBPuQEy5tJ0yex+szW+suI7Yn6IgAy24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=v1sUVgDM; arc=fail smtp.client-ip=40.107.208.22
+	 MIME-Version:Content-Type; b=oKuM9iJf8Y5zQaeooviAL+j7caehbqoEp7/4dBfEiyO101iIuwhmBo7NqWdjgS63KBe95dIIWxjkXDL0bnFXhyYLEhED1yVF4sRZ0K2BRVeSLXaNjhnuxhltGwALYyO/kg+clOIcXcEW3l63UKQgWSbegupxjq2011D3ZappEUU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eDbIgpc3; arc=fail smtp.client-ip=40.107.200.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="v1sUVgDM"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eDbIgpc3"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fYGzZOw8M5/SX5L7O2mz8ofVuDtfSxWv6y0avxD1M5PgxfL6Bsb5XFQFO0q92JSM7gkiVEKkLgPvmQUZDoV+Kyc6FAnwrB0p/It646fmxmzcz2mw3H3wdQWfamesWsITm1ylPBzag5M6eP4fCrXusyQSEH3E8PHIiRTh6Qx0Htp59LV7ytRG1poEP7MV/cgQMjaDsnrLyeiKwJqJY3UFbjl0ADN176xHMKX8nhO+WrpiP3F3v64tKXrGC63yz8AWUeCjd7XvVYPesBYrm0+XPuNz6V0XQKuGyueR6ezxoNchfdlQ5c/SHEeRCaGhcN30WuIBRuvpdVdBJ07JpDadrA==
+ b=JFi+CjWi8tudcyPbRLpybNC3aBFp2r5B44xci6/BchKiX27ht9SSzlLz8hTQu2eSPkUjOiN2uZTiXhLAQd/iUDClKX3TEuaeQj5tvh2pucmjKw55QyxNkFadSuCmx6twOlZgP5IdWoX/sodbmvn86aDYHGg8XkERdlzlXmK/ooWKglEC9G2fZiex2DRlwTM8L82mzIjrYi1CoWb6vTy9POhoYsw4WBs/rUir7+6zAISALBvN3oTdrCAjgs0engJFpUsVO3iHt2WEVaLG/fIwzhtbNQV1fawq8QprnCuUZ7CT9gHn6V533pmJ930If998JGbM/Gd/bMCZLORl/elQjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bjf2VUlWJ4eNSrJy79PbE67BQdPF0GVE1c/BjBr6XMU=;
- b=rHIn4+UuGX60bVuYNXJ2rf5UEPwXv3ZxINrVhfusLHCIC7MyCbf1+2jDO6ezUcMOJf0oIF3ZLmJRrrDzPZegqIlIGZfJ7KumO+BiXHiDXxV4+D2WQCuhzAAyxPiHVgfVaR6pfc5fvOyoUoHJVkBsJSTjKZkGF0Xbv67Vhq5R2YIkMnvB8f9GCbkpuUvmSgrptA1yH03LWGDXV2d75ezbRmtJ36Z90FdguUdR0vcwBhb2LPuLW0lnd1UtzCJfwyZDHzAGtZ/++Hk59W3LC74sjgFb55tfxpAg6gWj6odkH+PzCkv5mW0Cvt8B0rtf4mIfHxJqz3VfTY7hEzC+UIOZuw==
+ bh=5qoJU1NlY+ExnmIjiErOdmDMQrGhdQBLH5XVxsJloTc=;
+ b=lZgDHHYvR27HuwltEjfUEyAcQ8tvowl+34z7jxND4PXPcGvAK9rOG65YAV4MuJVSctUL+C9i1TW9hzXnSdmJS0aT3EZw5dGh5dI7kawDWZBC1f0uiiWaZ5tzhiZ6N63fOpN9OCnHFkbLmZkrtKeROILefA4va1r27a5VZXFobD3FhVI79fH8uaExW2YGpWLQnte7MF1rynAs19djDYCInZZjf6sKMrftiSeSGFGoMqawoUNi5/lxB48f7ZycmyUBwyTF/wNF5X2omfa3JwSd4GEOikggFgAn7N2Bu+ELyzcorThLS4AUPOEq1CSRoKqIPcbUxSjbVLCjQGQCCnS+Tw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bjf2VUlWJ4eNSrJy79PbE67BQdPF0GVE1c/BjBr6XMU=;
- b=v1sUVgDMAORbsgFzFTOcJRTrkR0oY4uPc6HcZuniiqGUuIXMMOvrnjrJ0bkb/YYol6jHgzr8kS0nW8DMjVzlc7FUJYEUOgjWhVDRmsedcZ6AnfI1ApRJ69H+5GhAF1gxWmftnM/6rfMXbc73YPvgPC4elw1LCXxcQcoMpOuHiVQ=
-Received: from SJ0PR03CA0275.namprd03.prod.outlook.com (2603:10b6:a03:39e::10)
- by CH3PR12MB8236.namprd12.prod.outlook.com (2603:10b6:610:121::6) with
+ bh=5qoJU1NlY+ExnmIjiErOdmDMQrGhdQBLH5XVxsJloTc=;
+ b=eDbIgpc3fmRc1kqF/WhFjFTuvYy7bzht9VgB0tBgz4YENeSYeizK0YlLfqjolETOLOLcG0yQvwW8T+ZEChSNxk+8jHouWwqo9DwxJMP6tOY0KNGPp5GyeIzaf0sr/5amh//Jl5CqdK+uxgZO9QREsjiDXAaBMvA0mn8jddJb6dc=
+Received: from SJ0PR03CA0273.namprd03.prod.outlook.com (2603:10b6:a03:39e::8)
+ by CY5PR12MB6323.namprd12.prod.outlook.com (2603:10b6:930:20::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Tue, 21 Jul
- 2026 18:18:18 +0000
+ 2026 18:18:20 +0000
 Received: from MWH0EPF000C6189.namprd02.prod.outlook.com
- (2603:10b6:a03:39e:cafe::47) by SJ0PR03CA0275.outlook.office365.com
- (2603:10b6:a03:39e::10) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:39e:cafe::1e) by SJ0PR03CA0273.outlook.office365.com
+ (2603:10b6:a03:39e::8) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.245.10 via Frontend Transport; Tue,
- 21 Jul 2026 18:18:16 +0000
+ 21 Jul 2026 18:18:19 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,7 +50,7 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  MWH0EPF000C6189.mail.protection.outlook.com (10.167.249.121) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.245.5 via Frontend Transport; Tue, 21 Jul 2026 18:18:16 +0000
+ 15.21.245.5 via Frontend Transport; Tue, 21 Jul 2026 18:18:19 +0000
 Received: from aus0006770c4n-lx01.amd.com (10.180.168.240) by
  satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -60,11 +60,10 @@ To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 CC: Hans de Goede <hansg@kernel.org>, open list
 	<linux-kernel@vger.kernel.org>, "open list:X86 PLATFORM DRIVERS"
 	<platform-driver-x86@vger.kernel.org>, Mario Limonciello
-	<mario.limonciello@amd.com>, Francis De Brabandere <francisdb@gmail.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH v2 5/6] platform/x86/amd/pmc: Fix LPS0 and debugfs leaks when STB init fails
-Date: Tue, 21 Jul 2026 13:17:55 -0500
-Message-ID: <20260721181756.143084-6-mario.limonciello@amd.com>
+	<mario.limonciello@amd.com>, Francis De Brabandere <francisdb@gmail.com>
+Subject: [PATCH v2 6/6] platform/x86/amd/pmc: Do not fail probe when STB init fails
+Date: Tue, 21 Jul 2026 13:17:56 -0500
+Message-ID: <20260721181756.143084-7-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260721181756.143084-1-mario.limonciello@amd.com>
 References: <20260721181756.143084-1-mario.limonciello@amd.com>
@@ -80,90 +79,83 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C6189:EE_|CH3PR12MB8236:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9726576d-996c-43d2-37e7-08dee7546f62
+X-MS-TrafficTypeDiagnostic: MWH0EPF000C6189:EE_|CY5PR12MB6323:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3b72830-dab3-4f8f-4f60-08dee7547156
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|376014|82310400026|23010399003|1800799024|13003099007|22082099003|18002099003|56012099006|11063799006|10067099003;
+	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|23010399003|13003099007|22082099003|18002099003|10067099003|11063799006|56012099006|3023799007|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	321BzCNBwb5uXXnfrq8v4DmJylQETmqwTuKUZbYCJ6EYBXu044afQYWfakCiyQgEViuKwYClkZOLC2VOJ74WnrCVYlGxWBmQQ2jo4M4gq/GvewWexWe0J35kPPTHun4Q4VTXVn4GbysLawcRou9lsloDo5tVVsax124moefY+EcoPta6rF/Kzn/d8uR9ftiZxxoFm/WoPc3yUZaTOt31su47gGyuHkT0FdyDuRzr/BwEVcuRPsAQ2qP/aKD+aLtVbaRoBHN7sH3DiK3aKnREE5bsRhvXojMcdLZGOK1FLXXELCbmOAqXk+esE0z7SAOy0sKDsSDFa00o95gRfs6HiwcEDSfrvOE8KxelKVvYP8vmeiIacLJAKeUfRRnjThXz43VzGeb+18bruH75AfB+1Nqlaz8Tu6UQcRQCBkKaZPUKFcoBLEENXVYT35To6o9K2VHmsd3sAT2+THOd54hoj8R3K3ug1PhvbUbwffOqKxxOapuukHDvEc/azd7J3bJakYApfrh8ZtgvmAvKiGLlaF9AAqChxMw+8s15/ACDej2GzMqk/+MvBlY9z4Nf/+RVq+Y7H5h66IqJj6o0J7R6e7/ilT5WmBSXS+xBFWofkY/jgc0PO3p99l5UeJzF88yig8/nkKiK0EFvvUG5DzXOWCdqVFw9IL5l+gqKvgY55vrsvwhLKMlS9WElmAvg81yBKNgYLJbkeaec5lvPh26j5w==
+	XsHT/4TDXOm+53EJDOKpYP+kx9NfMgG/FSDSEEelsYxdLSlR0U1wjS4W2IS5HoTH7RUOfP9wrgfa8b/HcMHvr0nrRtrFQqIxcMmhYo7MECwcQCBg47gNRMceJGKE8Z7raCILdhTEAhi1hIjvoS+Urw54Kih13TADXOKPNt8WKPJ0gDrTs7jhb+vFgvlPMwL5QL+2PYJ/6UpCaWGSQ0Ic8z+XUwHAtSvV3aQC1C5FdINZl36vLfAr1cEty42ZOZS4YMol+coJtMAcT5v2iq/YFHNUEZg5KKLOsB6mOZBHmIMq1u6Ge1ca76JVAxrypXz2Jkaa0GVEu0iWWrLc+6urV26APqSNrMiUqLtg4BgvLFOnDPJWsa0iLKhWFYEr9FzcLhUOsqNgt4Hyb5VRp/i96GEAsEcQuxTotQTmXXRbtImiDpXQ6s91dyzoJACgODXrYoYlvoU0ey8ieRlC7Jl3EEcsZ/zMiUSWhWW7s0QsYG6xgrQAkDdnBoQrfJ1tXlBWY/eA8mnqGp2zPoUq96XEQRwhgv8sDfZi5PuoCgzgichBxyuffNQdaBwnnhwTLf4I0ynINtoU7ZGHcpiYdtw2t/0JPPAtoWcawLav3OcZJBz9F3n9eENfPnJVuSJB0KSvDPDyVldbIttki6r+a/XyPxZnBVmbXrp95Ss/8jqRh0loJxAgP1pOb2ZnRWkx8002jxHxDlK0cZ+HU6e0Ksv53Q==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(376014)(82310400026)(23010399003)(1800799024)(13003099007)(22082099003)(18002099003)(56012099006)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(23010399003)(13003099007)(22082099003)(18002099003)(10067099003)(11063799006)(56012099006)(3023799007)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	BSVR7y16Gcva78mPMyQ53zbDsYmIIrJr0QDYlMfWTnqOk6ODz7biCyaK15zRKXC+8WLWQR8rilBkirno6YJEXtr8wnH187QuNn8W+CoZiOdZywWAYvWr6Ho3P153TIrS5aXRxrslRzhNUzMd7G58qQxILGxoyLKrzSU4ApXZG8Iw0F2AjjPSaFCh5db40mzsJwCTjUVHkIHdQ3LBzYYPQ65BqK4VLqQr5pRMtlEi/s1Rmi3UbAOjpvwohzf2Ny3uHWIpPwJJlmk8j1KAycJQcYR/SReRJJANc1hkll/ySoDA1MbR92nnIm8ogXosEcfYlkYJnJjJ+2fqGESfrc459fVp1JPq29QgMcKPyyjgMAfwIELsciLZ0S9h/8aBLu58daxkxTjh55xpO/rwVaI0JvEak1lMQ+n6sepJnOdhpkKMcJHiTIts25+WCjX7o16w
+	gUV909kBC6QWc36Mx5whMtzfX25D+XnIyPNCDT7jnvP/SQ/zTxirHu2CVr7I2/2daP7NdZ/TKg9Cxsdw3uVlrco+Csk6nEK5n2vgM5yZN/neZOdW1uL+ppOn+TPbSL8q/DqEdcyYipsuyO6DjnrSMbWFpnj1N5r8Zr0ziCZ3MVH0jEt2RutVXxqJE1ZtaKuHSl3HbEog6v/FajVLv+r5HZ1rm69KcJOgSHaBtRs3kPmcZIO2LUePzP7EpkyP8a1BlqYzcNgYR+NCxzsFlTPO2CLE11UffD2iOTjUojYRNRtbZHaaQY8MxvwceGj1Gnb7I/Ys9YcOHe1p5MxJ6pwC2jiNxJ8MFJMJhnuOVpfmn4Pv9HWm2bVIjTKQEzEojZyoHpZNSHqcBborMSlU0P61SIYuSgjgFyGYkTB8ACHF4fDi8ipLffdgHExA77zO9E7/
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2026 18:18:16.3822
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2026 18:18:19.7122
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9726576d-996c-43d2-37e7-08dee7546f62
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3b72830-dab3-4f8f-4f60-08dee7547156
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	MWH0EPF000C6189.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8236
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6323
 
-amd_pmc_probe() registers the LPS0 s2idle handler with
-acpi_register_lps0_dev() and creates the driver's debugfs directory before
-calling amd_stb_s2d_init(), which is the last step in probe that can fail.
+STB (Spill to DRAM) is an optional debugging facility that is only enabled
+through the enable_stb module parameter.  On some platforms the SMU refuses
+the S2D setup outright, and on long-running systems the large telemetry
+region can fail to ioremap.  In either case amd_stb_s2d_init() returns an
+error and, because probe treated that as fatal, the entire PMC driver
+failed to load - silently disabling s0i3 support even though STB is only a
+debug aid.
 
-When amd_stb_s2d_init() fails (for example the S2D telemetry region cannot
-be ioremapped on a long-running system, or the SMU rejects the S2D setup)
-the error path only calls pci_dev_put() and returns.  This leaves
-amd_pmc_s2idle_dev_ops on the global lps0_s2idle_devops_head list and leaks
-the debugfs directory, while the devm-managed resources backing the handler
-are torn down.
+Downgrade the failure to a warning and continue probing so that s0i3
+support via the LPS0 handler no longer depends on an optional debug
+feature.
 
-Reloading the module then walks the corrupted list in
-acpi_register_lps0_dev() and hits:
-
-  list_add corruption. next->prev should be prev, but was NULL.
-  kernel BUG at lib/list_debug.c:29!
-   acpi_register_lps0_dev+0x44/0x80
-   amd_pmc_probe+0x224/0x380 [amd_pmc]
-   platform_probe+0x67/0x90
-
-Even without a reload, the stale registration means the next s2idle
-transition calls into torn-down driver state.
-
-Unwind the debugfs directory and the LPS0 registration on the
-amd_stb_s2d_init() error path.  acpi_unregister_lps0_dev() is safe to call
-unconditionally here: it is guarded on the same conditions as
-acpi_register_lps0_dev(), which is exactly what amd_pmc_remove() already
-relies on.
+Since probe no longer aborts on this path, the LPS0 and debugfs unwinding
+added by the earlier fix in this series becomes unreachable and is removed.
 
 Reported-by: Francis De Brabandere <francisdb@gmail.com>
 Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221759
 Tested-by: Francis De Brabandere <francisdb@gmail.com>
-Fixes: 83ad6974dd3b ("platform/x86/amd/pmc: Move STB block into amd_pmc_s2d_init()")
-Cc: stable@vger.kernel.org
 Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/amd/pmc/pmc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/platform/x86/amd/pmc/pmc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index d50ea62fa2f3a..630a664bdd2f4 100644
+index 630a664bdd2f4..0e013402c1c65 100644
 --- a/drivers/platform/x86/amd/pmc/pmc.c
 +++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -919,13 +919,17 @@ static int amd_pmc_probe(struct platform_device *pdev)
+@@ -917,19 +917,22 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	}
+ 
  	amd_pmc_dbgfs_register(dev);
++
++	/*
++	 * STB is an optional debug facility (enable_stb); a failure to set it
++	 * up must not stop the rest of the driver - most importantly the s0i3
++	 * LPS0 handler - from working, so treat it as non-fatal.
++	 */
  	err = amd_stb_s2d_init(dev);
  	if (err)
--		goto err_pci_dev_put;
-+		goto err_dbgfs_unregister;
+-		goto err_dbgfs_unregister;
++		dev_warn(dev->dev, "STB initialization failed (%d), continuing without STB support\n",
++			 err);
  
  	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
  		amd_mp2_stb_init(dev);
  	pm_report_max_hw_sleep(U64_MAX);
  	return 0;
  
-+err_dbgfs_unregister:
-+	amd_pmc_dbgfs_unregister(dev);
-+	if (IS_ENABLED(CONFIG_SUSPEND))
-+		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
+-err_dbgfs_unregister:
+-	amd_pmc_dbgfs_unregister(dev);
+-	if (IS_ENABLED(CONFIG_SUSPEND))
+-		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
  err_pci_dev_put:
  	pci_dev_put(rdev);
  	return err;
