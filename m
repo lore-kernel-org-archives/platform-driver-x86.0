@@ -1,164 +1,344 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012031.outbound.protection.outlook.com [40.107.200.31])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33146EC6A;
-	Tue, 21 Jul 2026 18:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E7646D2CB;
+	Tue, 21 Jul 2026 18:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784657905; cv=fail; b=q1vEDl9UdT8Sdb4QLvRjhJC8icWnVyihCl2w1IZGPyAahBYgD2ZudRqPpKpSeJLEEGuod2lGQs3n9kyrTY6fZiWOwjlg4KUR3qQWECWI3enLIItN3qh+f71fR4As3WrZoX0XCYD3KjnKTyrDGWS8hd+SRNOXrDEopqIYqB4NWvM=
+	t=1784658685; cv=pass; b=eKFkMolxtcYB2+Gm9KwpMQ9OxEOBpb3TZJUhxSmVYSnB6WS6snZC9uysTzTpFCck9iR4WIpD1mPXUoJybarJ8QWgEHifxFEGZHspr4596aisPGll4qc1dwGTvU4utVmC+eWN+4ab9Xbk1BSOPIyELxE5u9lwxHIqut/lt9mQ28c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784657905; c=relaxed/simple;
-	bh=StbO4t8ZwbEYRfSVqONvpDcEsgJQOEElS6lNn1YkzQM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oKuM9iJf8Y5zQaeooviAL+j7caehbqoEp7/4dBfEiyO101iIuwhmBo7NqWdjgS63KBe95dIIWxjkXDL0bnFXhyYLEhED1yVF4sRZ0K2BRVeSLXaNjhnuxhltGwALYyO/kg+clOIcXcEW3l63UKQgWSbegupxjq2011D3ZappEUU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eDbIgpc3; arc=fail smtp.client-ip=40.107.200.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1784658685; c=relaxed/simple;
+	bh=W8moX1nxVPBDqmSEYU2KurOsq2pedj1S8i3Ihmfxq4M=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=IhJHB9oO0TyofdcXiE83usatlcT3MWFpoAk89tM5IGvkXBNl/sJIVuvC/XF3j3ytvirsWr6S1JUTN31MSL/87PUqUFA3r7ULfciqsy/38T57QLD8kW/wr6jJ4PAeonyr9e1EHszqyNTA2fsIPC3rCw800LEjskzf8E17r8tOrds=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=maYoWBfm; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eDbIgpc3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JFi+CjWi8tudcyPbRLpybNC3aBFp2r5B44xci6/BchKiX27ht9SSzlLz8hTQu2eSPkUjOiN2uZTiXhLAQd/iUDClKX3TEuaeQj5tvh2pucmjKw55QyxNkFadSuCmx6twOlZgP5IdWoX/sodbmvn86aDYHGg8XkERdlzlXmK/ooWKglEC9G2fZiex2DRlwTM8L82mzIjrYi1CoWb6vTy9POhoYsw4WBs/rUir7+6zAISALBvN3oTdrCAjgs0engJFpUsVO3iHt2WEVaLG/fIwzhtbNQV1fawq8QprnCuUZ7CT9gHn6V533pmJ930If998JGbM/Gd/bMCZLORl/elQjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5qoJU1NlY+ExnmIjiErOdmDMQrGhdQBLH5XVxsJloTc=;
- b=lZgDHHYvR27HuwltEjfUEyAcQ8tvowl+34z7jxND4PXPcGvAK9rOG65YAV4MuJVSctUL+C9i1TW9hzXnSdmJS0aT3EZw5dGh5dI7kawDWZBC1f0uiiWaZ5tzhiZ6N63fOpN9OCnHFkbLmZkrtKeROILefA4va1r27a5VZXFobD3FhVI79fH8uaExW2YGpWLQnte7MF1rynAs19djDYCInZZjf6sKMrftiSeSGFGoMqawoUNi5/lxB48f7ZycmyUBwyTF/wNF5X2omfa3JwSd4GEOikggFgAn7N2Bu+ELyzcorThLS4AUPOEq1CSRoKqIPcbUxSjbVLCjQGQCCnS+Tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5qoJU1NlY+ExnmIjiErOdmDMQrGhdQBLH5XVxsJloTc=;
- b=eDbIgpc3fmRc1kqF/WhFjFTuvYy7bzht9VgB0tBgz4YENeSYeizK0YlLfqjolETOLOLcG0yQvwW8T+ZEChSNxk+8jHouWwqo9DwxJMP6tOY0KNGPp5GyeIzaf0sr/5amh//Jl5CqdK+uxgZO9QREsjiDXAaBMvA0mn8jddJb6dc=
-Received: from SJ0PR03CA0273.namprd03.prod.outlook.com (2603:10b6:a03:39e::8)
- by CY5PR12MB6323.namprd12.prod.outlook.com (2603:10b6:930:20::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Tue, 21 Jul
- 2026 18:18:20 +0000
-Received: from MWH0EPF000C6189.namprd02.prod.outlook.com
- (2603:10b6:a03:39e:cafe::1e) by SJ0PR03CA0273.outlook.office365.com
- (2603:10b6:a03:39e::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.245.10 via Frontend Transport; Tue,
- 21 Jul 2026 18:18:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MWH0EPF000C6189.mail.protection.outlook.com (10.167.249.121) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.245.5 via Frontend Transport; Tue, 21 Jul 2026 18:18:19 +0000
-Received: from aus0006770c4n-lx01.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41; Tue, 21 Jul 2026 13:18:07 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hansg@kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, "open list:X86 PLATFORM DRIVERS"
-	<platform-driver-x86@vger.kernel.org>, Mario Limonciello
-	<mario.limonciello@amd.com>, Francis De Brabandere <francisdb@gmail.com>
-Subject: [PATCH v2 6/6] platform/x86/amd/pmc: Do not fail probe when STB init fails
-Date: Tue, 21 Jul 2026 13:17:56 -0500
-Message-ID: <20260721181756.143084-7-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260721181756.143084-1-mario.limonciello@amd.com>
-References: <20260721181756.143084-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="maYoWBfm"
+ARC-Seal: i=1; a=rsa-sha256; t=1784658655; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XH02KziGeYM4Molhywj63UgGCfiIt9508Aa7WhFLfBFRykm3eNbQKJmnz3pKJBN5hnjjO8bs7CjTHwRihaP88zzTSWnd3WczmV07dGPjytNh8zLXetj2bPLqxcIaBvPIjZAJ0iM23E/5VEbcSjsX8ZUMhVm46cLJap0cv16W7KA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1784658655; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xl28rW6aDVyQKo+zcmef8/uqnjsUkguSjVjlYO834SM=; 
+	b=lbL1+vI9AC/zRVeB6lxjIRJ8P87bunjpUQAk0HjDuvbO1QrX7r0NUUJ+nOmfXn3D24iY9Px6tk2bzMxfU5zzkjJGpoVJHWowqpjwqK9NJnsBZCiEAeJv2CeE8rjdCeiHU99+QByGpHqp+Ow0m61QuOhHRnJ4zNeAppGzE0eYKv4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784658655;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=xl28rW6aDVyQKo+zcmef8/uqnjsUkguSjVjlYO834SM=;
+	b=maYoWBfmHpKRhwROFPVsf4Cjcj/PHFRlKSgZnx2UAJSeWjQmaP5U0yKP0quh9vda
+	5M5vIXaUROx4ngidyE/RV7Ke/YNUUz3c5uBvWj2JmdqW98K/zVq5B2LPv4PFx7Xy2Uc
+	10XKdQuCJBaUHoyFE4BN+ymz5pk86uOdeBUrEUNBD6+CpwEjI0HFKnXNoaLe28OCTQm
+	W3s/Qk+e2/zarsK2fVmCR76ga0yaDPE16Kd0YVdNG2wtJMQKc0ruQeX29/PTACpOcBe
+	m1FftACVrU+J1kapA69cSsQg7JrvfDpQEHKpkkGumOgQN06LgFXJ5zpIzl9h5f1A6wC
+	FKiCybZlqA==
+Received: by mx.zohomail.com with SMTPS id 1784658653012954.7838383886185;
+	Tue, 21 Jul 2026 11:30:53 -0700 (PDT)
+Message-ID: <7207b99c8103045943980c39867cfa03373b3675.camel@rong.moe>
+Subject: Re: [PATCH RFC v3 11/11] platform/x86: ideapad-laptop: Fully
+ support auto keyboard backlight
+From: Rong Zhang <i@rong.moe>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Jonathan
+ Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Thomas
+ =?ISO-8859-1?Q?Wei=DFschuh?=	 <linux@weissschuh.net>, Benson Leung
+ <bleung@chromium.org>, Guenter Roeck	 <groeck@chromium.org>, Marek
+ =?ISO-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,  Mark Pearson
+ <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>,
+ Hans de Goede	 <hansg@kernel.org>, Ike Panhc <ikepanhc@gmail.com>, Andrew
+ Lunn	 <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Vishnu
+ Sankar	 <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, 
+	linux-leds@vger.kernel.org, Netdev <netdev@vger.kernel.org>, 
+	linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	chrome-platform@lists.linux.dev, platform-driver-x86@vger.kernel.org
+In-Reply-To: <e4d81cf2-a44d-bcdb-1bc9-f5847b447984@linux.intel.com>
+References: <20260719-leds-trigger-hw-changed-v3-0-5fb55722e36e@rong.moe>
+	 <20260719-leds-trigger-hw-changed-v3-11-5fb55722e36e@rong.moe>
+	 <e4d81cf2-a44d-bcdb-1bc9-f5847b447984@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jul 2026 02:25:42 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C6189:EE_|CY5PR12MB6323:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3b72830-dab3-4f8f-4f60-08dee7547156
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700016|376014|82310400026|23010399003|13003099007|22082099003|18002099003|10067099003|11063799006|56012099006|3023799007|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	XsHT/4TDXOm+53EJDOKpYP+kx9NfMgG/FSDSEEelsYxdLSlR0U1wjS4W2IS5HoTH7RUOfP9wrgfa8b/HcMHvr0nrRtrFQqIxcMmhYo7MECwcQCBg47gNRMceJGKE8Z7raCILdhTEAhi1hIjvoS+Urw54Kih13TADXOKPNt8WKPJ0gDrTs7jhb+vFgvlPMwL5QL+2PYJ/6UpCaWGSQ0Ic8z+XUwHAtSvV3aQC1C5FdINZl36vLfAr1cEty42ZOZS4YMol+coJtMAcT5v2iq/YFHNUEZg5KKLOsB6mOZBHmIMq1u6Ge1ca76JVAxrypXz2Jkaa0GVEu0iWWrLc+6urV26APqSNrMiUqLtg4BgvLFOnDPJWsa0iLKhWFYEr9FzcLhUOsqNgt4Hyb5VRp/i96GEAsEcQuxTotQTmXXRbtImiDpXQ6s91dyzoJACgODXrYoYlvoU0ey8ieRlC7Jl3EEcsZ/zMiUSWhWW7s0QsYG6xgrQAkDdnBoQrfJ1tXlBWY/eA8mnqGp2zPoUq96XEQRwhgv8sDfZi5PuoCgzgichBxyuffNQdaBwnnhwTLf4I0ynINtoU7ZGHcpiYdtw2t/0JPPAtoWcawLav3OcZJBz9F3n9eENfPnJVuSJB0KSvDPDyVldbIttki6r+a/XyPxZnBVmbXrp95Ss/8jqRh0loJxAgP1pOb2ZnRWkx8002jxHxDlK0cZ+HU6e0Ksv53Q==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(376014)(82310400026)(23010399003)(13003099007)(22082099003)(18002099003)(10067099003)(11063799006)(56012099006)(3023799007)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	gUV909kBC6QWc36Mx5whMtzfX25D+XnIyPNCDT7jnvP/SQ/zTxirHu2CVr7I2/2daP7NdZ/TKg9Cxsdw3uVlrco+Csk6nEK5n2vgM5yZN/neZOdW1uL+ppOn+TPbSL8q/DqEdcyYipsuyO6DjnrSMbWFpnj1N5r8Zr0ziCZ3MVH0jEt2RutVXxqJE1ZtaKuHSl3HbEog6v/FajVLv+r5HZ1rm69KcJOgSHaBtRs3kPmcZIO2LUePzP7EpkyP8a1BlqYzcNgYR+NCxzsFlTPO2CLE11UffD2iOTjUojYRNRtbZHaaQY8MxvwceGj1Gnb7I/Ys9YcOHe1p5MxJ6pwC2jiNxJ8MFJMJhnuOVpfmn4Pv9HWm2bVIjTKQEzEojZyoHpZNSHqcBborMSlU0P61SIYuSgjgFyGYkTB8ACHF4fDi8ipLffdgHExA77zO9E7/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2026 18:18:19.7122
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3b72830-dab3-4f8f-4f60-08dee7547156
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000C6189.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6323
+User-Agent: Evolution 3.56.2-10 
+X-ZohoMailClient: External
 
-STB (Spill to DRAM) is an optional debugging facility that is only enabled
-through the enable_stb module parameter.  On some platforms the SMU refuses
-the S2D setup outright, and on long-running systems the large telemetry
-region can fail to ioremap.  In either case amd_stb_s2d_init() returns an
-error and, because probe treated that as fatal, the entire PMC driver
-failed to load - silently disabling s0i3 support even though STB is only a
-debug aid.
+Hi Ilpo,
 
-Downgrade the failure to a warning and continue probing so that s0i3
-support via the LPS0 handler no longer depends on an optional debug
-feature.
+Thanks for reviewing the series :)
 
-Since probe no longer aborts on this path, the LPS0 and debugfs unwinding
-added by the earlier fix in this series becomes unreachable and is removed.
+On Tue, 2026-07-21 at 20:14 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Sun, 19 Jul 2026, Rong Zhang wrote:
+>=20
+> > Currently, the auto brightness mode of keyboard backlight maps to
+> > brightness=3D0 in LED classdev. The only method to switch to such a mod=
+e
+> > is by pressing the manufacturer-defined shortcut (Fn+Space). However, 0
+> > is a multiplexed brightness value; writing 0 simply results in the
+> > backlight being turned off.
+> >=20
+> > With brightness processing code decoupled from LED classdev, we can now
+> > fully support the auto brightness mode. In this mode, the keyboard
+> > backlight is controlled by the EC according to the ambient light sensor
+> > (ALS).
+> >=20
+> > To utilize this, a private hardware control trigger "ideapad-auto" is
+> > added, with the event handling procedure calling the
+> > led_trigger_notify_hw_control_changed() interface to activate/deactivat=
+e
+> > the private trigger according to the current LED trigger state.
+> >=20
+> > Meanwhile, block brightness changes on exit to prevent the side effect
+> > of LED device unregistration when the private trigger is active from
+> > resetting the brightness to zero, so that we can retain the state of
+> > auto mode among boots.
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Changes in v3:
+> > - Address concerns from Sashiko
+> >   - Fix a race condition in ideapad_kbd_bl_led_cdev_brightness_set()
+> >   - Fix trigger re-registration of ideapad_kbd_bl_auto_trigger
+> >   - https://sashiko.dev/#/patchset/20260618-leds-trigger-hw-changed-v2-=
+0-c28c44053cf3%40rong.moe
+> > - Make registration failures of ideapad_kbd_bl_auto_trigger non-fatal
+> > ---
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c | 112 +++++++++++++++++++=
++++++---
+> >  1 file changed, 103 insertions(+), 9 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/pla=
+tform/x86/lenovo/ideapad-laptop.c
+> > index 66e16abda5e3..253d2962b927 100644
+> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> > @@ -1714,9 +1714,58 @@ static int ideapad_kbd_bl_led_cdev_brightness_se=
+t(struct led_classdev *led_cdev,
+> >  {
+> >  	struct ideapad_private *priv =3D container_of(led_cdev, struct ideapa=
+d_private, kbd_bl.led);
+> > =20
+> > +	/*
+> > +	 * When deinitializing: It must be the side effect of led_cdev
+> > +	 * unregistration when our private trigger is active. We've set
+> > +	 * LED_RETAIN_AT_SHUTDOWN to retain led_cdev brightness level.
+> > +	 * To do the same for auto mode, gate changes and return early.
+> > +	 */
+> > +	if (unlikely(!priv->kbd_bl.initialized))
+>=20
+> This too would need include, but I think addressing some earlier include=
+=20
+> request will cover it.
+>=20
+> > +		return 0;
+> > +
+> >  	return ideapad_kbd_bl_brightness_set(priv, brightness);
+> >  }
+> > =20
+> > +static bool ideapad_kbd_bl_auto_trigger_offloaded(struct led_classdev =
+*led_cdev)
+> > +{
+> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct ideapa=
+d_private, kbd_bl.led);
+>=20
+> Add include for container_of().
+>=20
+> > +
+> > +	return atomic_read(&priv->kbd_bl.last_hw_brightness) =3D=3D KBD_BL_AU=
+TO_MODE_HW_BRIGHTNESS;
+> > +}
+> > +
+> > +static int ideapad_kbd_bl_auto_trigger_activate(struct led_classdev *l=
+ed_cdev)
+> > +{
+> > +	struct ideapad_private *priv =3D container_of(led_cdev, struct ideapa=
+d_private, kbd_bl.led);
+> > +
+> > +	return ideapad_kbd_bl_hw_brightness_set(priv, KBD_BL_AUTO_MODE_HW_BRI=
+GHTNESS);
+> > +}
+> > +
+> > +static struct led_hw_trigger_type ideapad_kbd_bl_auto_trigger_type;
+> > +
+> > +static struct led_trigger ideapad_kbd_bl_auto_trigger =3D {
+> > +	.name =3D "ideapad-auto",
+> > +	.trigger_type =3D &ideapad_kbd_bl_auto_trigger_type,
+> > +	.activate =3D ideapad_kbd_bl_auto_trigger_activate,
+> > +	.offloaded =3D ideapad_kbd_bl_auto_trigger_offloaded,
+> > +};
+> > +
+> > +static bool ideapad_kbd_bl_auto_trigger_registered;
+> > +
+> > +static void ideapad_kbd_bl_notify_hw_control(struct ideapad_private *p=
+riv,
+> > +					     int hw_brightness, int last_hw_brightness)
+> > +{
+> > +	bool hw_control, last_hw_control;
+> > +
+> > +	if (priv->kbd_bl.type !=3D KBD_BL_TRISTATE_AUTO)
+> > +		return;
+> > +
+> > +	hw_control =3D hw_brightness =3D=3D KBD_BL_AUTO_MODE_HW_BRIGHTNESS;
+> > +	last_hw_control =3D last_hw_brightness =3D=3D KBD_BL_AUTO_MODE_HW_BRI=
+GHTNESS;
+> > +
+> > +	if (hw_control !=3D last_hw_control)
+> > +		led_trigger_notify_hw_control_changed(&priv->kbd_bl.led, hw_control)=
+;
+> > +}
+> > +
+> >  static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
+> >  {
+> >  	int hw_brightness, brightness, last_hw_brightness;
+> > @@ -1738,6 +1787,8 @@ static void ideapad_kbd_bl_notify(struct ideapad_=
+private *priv)
+> >  	if (hw_brightness =3D=3D last_hw_brightness)
+> >  		return;
+> > =20
+> > +	ideapad_kbd_bl_notify_hw_control(priv, hw_brightness, last_hw_brightn=
+ess);
+> > +
+> >  	led_classdev_notify_brightness_hw_changed(&priv->kbd_bl.led, brightne=
+ss);
+> >  }
+> > =20
+> > @@ -1768,6 +1819,24 @@ static int ideapad_kbd_bl_init(struct ideapad_pr=
+ivate *priv)
+> > =20
+> >  	switch (priv->kbd_bl.type) {
+> >  	case KBD_BL_TRISTATE_AUTO:
+> > +		priv->kbd_bl.led.max_brightness =3D 2;
+> > +
+> > +		if (!ideapad_kbd_bl_auto_trigger_registered) {
+> > +			dev_warn(&priv->platform_device->dev,
+> > +				 "Could not provide LED trigger %s for keyboard backlight\n",
+> > +				 ideapad_kbd_bl_auto_trigger.name);
+> > +			break;
+> > +		}
+> > +
+> > +		priv->kbd_bl.led.flags             |=3D LED_TRIG_HW_CHANGED;
+> > +		priv->kbd_bl.led.hw_control_trigger =3D ideapad_kbd_bl_auto_trigger.=
+name;
+> > +		priv->kbd_bl.led.trigger_type       =3D &ideapad_kbd_bl_auto_trigger=
+_type;
+>=20
+> I'm skeptical aligning makes things better here.
+>=20
+> > +
+> > +		/* Hardware remembers the last brightness level, including auto mode=
+. */
+> > +		if (hw_brightness =3D=3D KBD_BL_AUTO_MODE_HW_BRIGHTNESS)
+> > +			priv->kbd_bl.led.default_trigger =3D ideapad_kbd_bl_auto_trigger.na=
+me;
+> > +
+> > +		break;
+> >  	case KBD_BL_TRISTATE:
+> >  		priv->kbd_bl.led.max_brightness =3D 2;
+> >  		break;
+> > @@ -1779,13 +1848,22 @@ static int ideapad_kbd_bl_init(struct ideapad_p=
+rivate *priv)
+> >  		unreachable();
+> >  	}
+> > =20
+> > -	err =3D led_classdev_register(&priv->platform_device->dev, &priv->kbd=
+_bl.led);
+> > -	if (err)
+> > -		return err;
+> > +	/* Queue notifications, as kbd_bl.initialized is about to be set. */
+> > +	guard(mutex)(&priv->kbd_bl.notif_mutex);
+> > =20
+> > +	/*
+> > +	 * Setting kbd_bl.initialized after led_classdev_register() could lea=
+d
+> > +	 * to race conditions in ideapad_kbd_bl_led_cdev_brightness_set() whe=
+re
+> > +	 * kbd_bl.initialized is checked, so set it now. It can be reverted b=
+ack
+> > +	 * if the LED classdev failed to register.
+> > +	 */
+> >  	priv->kbd_bl.initialized =3D true;
+> > =20
+> > -	return 0;
+> > +	err =3D led_classdev_register(&priv->platform_device->dev, &priv->kbd=
+_bl.led);
+> > +	if (err)
+> > +		priv->kbd_bl.initialized =3D false;
+> > +
+> > +	return err;
+> >  }
+> > =20
+> >  static void ideapad_kbd_bl_exit(struct ideapad_private *priv)
+> > @@ -2612,17 +2690,30 @@ static int __init ideapad_laptop_init(void)
+> >  {
+> >  	int err;
+> > =20
+> > +	err =3D led_trigger_register(&ideapad_kbd_bl_auto_trigger);
+> > +	if (err) {
+> > +		pr_warn("Failed to register LED trigger %s: %d\n",
+>=20
+> include missing.
+>=20
+> > +			ideapad_kbd_bl_auto_trigger.name, err);
+> > +	} else {
+> > +		ideapad_kbd_bl_auto_trigger_registered =3D true;
+> > +	}
+> > +
+> >  	err =3D ideapad_wmi_driver_register();
+> >  	if (err)
+> > -		return err;
+> > +		goto err_ledtrig;
+> > =20
+> >  	err =3D platform_driver_register(&ideapad_acpi_driver);
+> > -	if (err) {
+> > -		ideapad_wmi_driver_unregister();
+> > -		return err;
+> > -	}
+> > +	if (err)
+> > +		goto err_wmi;
+> > =20
+> >  	return 0;
+> > +
+> > +err_wmi:
+> > +	ideapad_wmi_driver_unregister();
+> > +err_ledtrig:
+> > +	if (ideapad_kbd_bl_auto_trigger_registered)
+> > +		led_trigger_unregister(&ideapad_kbd_bl_auto_trigger);
+> > +	return err;
+> >  }
+> >  module_init(ideapad_laptop_init)
+> > =20
+> > @@ -2630,6 +2721,9 @@ static void __exit ideapad_laptop_exit(void)
+> >  {
+> >  	ideapad_wmi_driver_unregister();
+> >  	platform_driver_unregister(&ideapad_acpi_driver);
+>=20
+> Why is the order not the reverse of the init order?
 
-Reported-by: Francis De Brabandere <francisdb@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221759
-Tested-by: Francis De Brabandere <francisdb@gmail.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmc/pmc.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Thanks for discovering it. Since it exists before the series, I guess I
+will submit a fixup patch for it separately so that it don't have to
+wait for an RFC series.
 
-diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-index 630a664bdd2f4..0e013402c1c65 100644
---- a/drivers/platform/x86/amd/pmc/pmc.c
-+++ b/drivers/platform/x86/amd/pmc/pmc.c
-@@ -917,19 +917,22 @@ static int amd_pmc_probe(struct platform_device *pdev)
- 	}
- 
- 	amd_pmc_dbgfs_register(dev);
-+
-+	/*
-+	 * STB is an optional debug facility (enable_stb); a failure to set it
-+	 * up must not stop the rest of the driver - most importantly the s0i3
-+	 * LPS0 handler - from working, so treat it as non-fatal.
-+	 */
- 	err = amd_stb_s2d_init(dev);
- 	if (err)
--		goto err_dbgfs_unregister;
-+		dev_warn(dev->dev, "STB initialization failed (%d), continuing without STB support\n",
-+			 err);
- 
- 	if (IS_ENABLED(CONFIG_AMD_MP2_STB))
- 		amd_mp2_stb_init(dev);
- 	pm_report_max_hw_sleep(U64_MAX);
- 	return 0;
- 
--err_dbgfs_unregister:
--	amd_pmc_dbgfs_unregister(dev);
--	if (IS_ENABLED(CONFIG_SUSPEND))
--		acpi_unregister_lps0_dev(&amd_pmc_s2idle_dev_ops);
- err_pci_dev_put:
- 	pci_dev_put(rdev);
- 	return err;
--- 
-2.43.0
+And ACK to all other comments in this and previous replies. Will fix
+them when I resubmit the series.
 
+Thanks,
+Rong
+
+>=20
+> > +
+> > +	if (ideapad_kbd_bl_auto_trigger_registered)
+> > +		led_trigger_unregister(&ideapad_kbd_bl_auto_trigger);
+> >  }
+> >  module_exit(ideapad_laptop_exit)
+> > =20
+> >=20
+> >=20
