@@ -1,303 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD86371CE3;
-	Tue, 21 Jul 2026 10:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0113F40801B
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 11:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784631434; cv=none; b=c+zt8qGIArnNKxZf/ESx0t0FKcUXVmNMI0PdcMqK+cqdHiXfZI3NW3NSut8x1rK+fxyL7sdiS+wWYCeQgd5cBNt05c/0Zjs2vFFqdfyph+d3J/B3vPeHJP75LsZzG4N59n9S+DJ+CHEqQ0aRJ0k/2Yiq+09wU+Sn0AwLclB57dk=
+	t=1784633560; cv=none; b=LDeuyi/RQ9X6vZCvPi9n6BvVo4EsYnbwCKUI+O5r1JlVXU+vGlReEOT0u59FF5fXKlS6SB0ALUkVgirRav2paF3Y4e+INMSg0y2vk2JrsW0SVWDJUivX6wKOmc7XJngEGuUJvbzUUqqTFFdkJa88gBGl3SjCCjpJF1VXFMA/f/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784631434; c=relaxed/simple;
-	bh=FrPiBeNYBrkEVNu7Obl5HagOybFy3R7DOwC8GCslr60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rE+LJprHK+Dm71iCekkbKHC6zuaCv0LicPbIsDWtI5wQl+uCoJi5nAeNiwiGPqwBsNZa+9SAq98kcUjTviuU66qgly6gOPEvxGDkYvC0UymYSHnBGm+Wmi0n6+YfudeUprvSc+14SFmnjIZ2KgtLzjeBavmFxUaDJmTp35Se/As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIu0Kok7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784633560; c=relaxed/simple;
+	bh=tAqk8hjz2KhRCfWYHnmmPRXfK4YAB4YOmX5TxoFX3Qs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VCFGNhixfMYNsAJptCXY+jDXQSyaSrJ1stHNMTwKnV/DfrndRd1GSduekSJKYuKIwXxafVkkr4LBrs8578b3HmHzuCByfeqHUPFavn7W9V/G1JGZhAh5pb3YS+6Y3YbqkU4g2GJOmIW40avpM+X/uMEHFkSgRsNQoTdog+Yn4uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISPoKgua; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=djeYcD6J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISPoKgua; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=djeYcD6J; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIu0Kok7"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id AE0961F00A3A;
-	Tue, 21 Jul 2026 10:57:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784631431;
-	bh=BpON3fOLh10v0vA+o9g1WN6Hs4y84zPqKDZ0G0n+GhQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cIu0Kok7j/8vi433JBME1hP3gaHPa/UcbZAdMEwPlafyiLduVpebVjFktRfo3EWc2
-	 lHDpLLYU+qMH1LH6jmYm6+j0KULxg5j7yejOAtY3iGk85+dsdbYWoz9akjKDqxGYnC
-	 iGjNqFk/DS27tJTbeWYaZJBKFoEqupKM9UOlW/vAMEomzn3qV+VWsAEdfPSdrC1YAN
-	 kzCFw4Xey9hK66RzBzzsPMbapfMSfGm/380oXH7KksBIK8xnX8hA/XY+2DjdciMYFt
-	 PWK2egWvLMYIRI/ThXWyd5cqPfuWJOar5GrpVhEOO2+iVr0S2O4gppojQaMLc4/xHt
-	 xjR0QpbEjnl+w==
-Date: Tue, 21 Jul 2026 13:57:07 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISPoKgua";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="djeYcD6J";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISPoKgua";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="djeYcD6J"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 51D327A4BF;
+	Tue, 21 Jul 2026 11:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784633554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
+	b=ISPoKguaaJoOzMSa4owILcETh6tFg7ZZUppYlcD3bqtMBOI/resmUVxukbEhZ9bqq+u4as
+	T6bWirLD8Ha0qfUwQpXoT/FMF7tVAFa3r9XKn2rgyID/wekn/BYYDNlCDmJvw2Vnnr7tkM
+	eyADW/oMiIYjUr+1uCvVTp10WWlDh5w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784633554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
+	b=djeYcD6Jw4miOtmqNKNDJa+nhX/Z063jxcyEmcgm55FeCAUjBdJ1PJ207Zburyl4ZEuvWH
+	GdyRVvJCTD1a7VCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ISPoKgua;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=djeYcD6J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784633554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
+	b=ISPoKguaaJoOzMSa4owILcETh6tFg7ZZUppYlcD3bqtMBOI/resmUVxukbEhZ9bqq+u4as
+	T6bWirLD8Ha0qfUwQpXoT/FMF7tVAFa3r9XKn2rgyID/wekn/BYYDNlCDmJvw2Vnnr7tkM
+	eyADW/oMiIYjUr+1uCvVTp10WWlDh5w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784633554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0L8kHg02VLrI1YxiKjnStMs53qmSbWqVJ2XvVN4UDbA=;
+	b=djeYcD6Jw4miOtmqNKNDJa+nhX/Z063jxcyEmcgm55FeCAUjBdJ1PJ207Zburyl4ZEuvWH
+	GdyRVvJCTD1a7VCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1AACE779AA;
+	Tue, 21 Jul 2026 11:32:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UwjpBdJYX2rBFQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 21 Jul 2026 11:32:34 +0000
+Date: Tue, 21 Jul 2026 13:32:33 +0200
+Message-ID: <87h5lsinn2.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Marco Giunta <marco_giunta@outlook.it>
+Cc: tiwai@suse.com,
+	perex@perex.cz,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] treewide: Add a flag to detect the Apple T2 chip
-Message-ID: <al9Qg-0o0XNlo_Z6@kernel.org>
-References: <20260721063412.11588-1-atharvatiwarilinuxdev@gmail.com>
- <20260721063412.11588-2-atharvatiwarilinuxdev@gmail.com>
+	wangweidong.a@awinic.com,
+	nadim@symbolic.software,
+	imitoy@imitoy.top,
+	munzirtaha@gmail.com,
+	yakov.till@gmail.com
+Subject: Re: [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
+In-Reply-To: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260721063412.11588-2-atharvatiwarilinuxdev@gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[outlook.it];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.it];
+	FREEMAIL_CC(0.00)[suse.com,perex.cz,gmail.com,kernel.org,vger.kernel.org,linux.intel.com,awinic.com,symbolic.software,imitoy.top];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,sashiko.dev:url]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 51D327A4BF
+X-Spam-Score: -2.01
 
-On Tue, Jul 21, 2026 at 02:34:06AM -0400, Atharva Tiwari wrote:
-> Add a flag to detect Apple T2 chips on Intel Macs.
-> Cache the result to avoid repeated checks. That will
-> be used in upcoming patches.
+On Fri, 17 Jul 2026 15:25:02 +0200,
+Marco Giunta wrote:
 > 
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> ---
->  arch/x86/kernel/quirks.c                      | 105 ++++++++++++++++++
->  include/linux/platform_data/x86/apple.h       |   5 +
->  .../platform_certs/keyring_handler.h          |   8 --
->  security/integrity/platform_certs/load_uefi.c |  38 ++-----
->  4 files changed, 118 insertions(+), 38 deletions(-)
+> Several Lenovo Legion laptops (Pro 7i 16IAX10H, Y9000P IAX10,
+> Pro 7 16AFR10H, R9000P ADR10) use AWINIC AW88399 smart amplifiers
+> to drive their bass woofers, connected via I2C as side codecs
+> to a Realtek ALC287 HDA codec.
 > 
-> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-> index a92f18db9610..300d6436060d 100644
-> --- a/arch/x86/kernel/quirks.c
-> +++ b/arch/x86/kernel/quirks.c
-> @@ -664,8 +664,113 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x2083, quirk_intel_purley_xeon_ras
->  bool x86_apple_machine;
->  EXPORT_SYMBOL(x86_apple_machine);
->  
-> +bool has_apple_t2_chip;
-> +EXPORT_SYMBOL(has_apple_t2_chip);
-> +
-> +static const struct dmi_system_id apple_t2_devices[] __initconst = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,3"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro15,4"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,3"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir8,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookAir9,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Macmini8,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "MacPro7,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
-> +		},
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Apple Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "iMacPro1,1"),
-> +		},
-> +	},
-> +	{ }
-> +};
-> +
->  void __init early_platform_quirks(void)
->  {
->  	x86_apple_machine = dmi_match(DMI_SYS_VENDOR, "Apple Inc.") ||
->  			    dmi_match(DMI_SYS_VENDOR, "Apple Computer, Inc.");
-> +
-> +	has_apple_t2_chip = dmi_check_system(apple_t2_devices);
->  }
-> diff --git a/include/linux/platform_data/x86/apple.h b/include/linux/platform_data/x86/apple.h
-> index 079e816c3c21..47b27dceab18 100644
-> --- a/include/linux/platform_data/x86/apple.h
-> +++ b/include/linux/platform_data/x86/apple.h
-> @@ -6,8 +6,13 @@
->   * x86_apple_machine - whether the machine is an x86 Apple Macintosh
->   */
->  extern bool x86_apple_machine;
-> +/**
-> + * has_apple_t2_chip - whether the machine has the Apple T2 chip
-> + */
-> +extern bool has_apple_t2_chip;
->  #else
->  #define x86_apple_machine false
-> +#define has_apple_t2_chip false
->  #endif
->  
->  #endif
-> diff --git a/security/integrity/platform_certs/keyring_handler.h b/security/integrity/platform_certs/keyring_handler.h
-> index f92895cc50f6..a355f4400179 100644
-> --- a/security/integrity/platform_certs/keyring_handler.h
-> +++ b/security/integrity/platform_certs/keyring_handler.h
-> @@ -45,11 +45,3 @@ efi_element_handler_t get_handler_for_code_signing_keys(const efi_guid_t *sig_ty
->  efi_element_handler_t get_handler_for_dbx(const efi_guid_t *sig_type);
->  
->  #endif
-> -
-> -#ifndef UEFI_QUIRK_SKIP_CERT
-> -#define UEFI_QUIRK_SKIP_CERT(vendor, product) \
-> -		 .matches = { \
-> -			DMI_MATCH(DMI_BOARD_VENDOR, vendor), \
-> -			DMI_MATCH(DMI_PRODUCT_NAME, product), \
-> -		},
-> -#endif
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
-> index c0d6948446c3..b4096d4c828d 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -3,42 +3,16 @@
->  #include <linux/kernel.h>
->  #include <linux/sched.h>
->  #include <linux/cred.h>
-> -#include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/efi.h>
->  #include <linux/slab.h>
->  #include <linux/ima.h>
-> +#include <linux/platform_data/x86/apple.h>
->  #include <keys/asymmetric-type.h>
->  #include <keys/system_keyring.h>
->  #include "../integrity.h"
->  #include "keyring_handler.h"
->  
-> -/*
-> - * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
-> - * certificates causes occurrence of a page fault in Apple's firmware and
-> - * a crash disabling EFI runtime services. The following quirk skips reading
-> - * these variables.
-> - */
-> -static const struct dmi_system_id uefi_skip_cert[] = {
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,3") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro15,4") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,3") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookPro16,4") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir8,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacBookAir9,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "Macmini8,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "MacPro7,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,1") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMac20,2") },
-> -	{ UEFI_QUIRK_SKIP_CERT("Apple Inc.", "iMacPro1,1") },
-> -	{ }
-> -};
-> -
->  /*
->   * Look to see if a UEFI variable called MokIgnoreDB exists and return true if
->   * it does.
-> @@ -165,10 +139,14 @@ static int __init load_uefi_certs(void)
->  	unsigned long dbsize = 0, dbxsize = 0, mokxsize = 0;
->  	efi_status_t status;
->  	int rc = 0;
-> -	const struct dmi_system_id *dmi_id;
->  
-> -	dmi_id = dmi_first_match(uefi_skip_cert);
-> -	if (dmi_id) {
-> +	/*
-> +	 * On T2 Macs reading the db and dbx efi variables to load UEFI Secure Boot
-> +	 * certificates causes occurrence of a page fault in Apple's firmware and
-> +	 * a crash disabling EFI runtime services. The following quirk skips reading
-> +	 * these variables.
-> +	 */
-> +	if (has_apple_t2_chip) {
->  		pr_err("Reading UEFI Secure Boot Certs is not supported on T2 Macs.\n");
->  		return false;
->  	}
-> -- 
-> 2.43.0
+> Without a driver for these amplifiers, only the tweeters produce
+> sound, resulting in quiet and tinny audio.
 > 
+> An ASoC driver for the AW88399 already exists in-tree
+> (sound/soc/codecs/aw88399.c), contributed by AWINIC, but it targets
+> ASoC topologies and cannot drive the chip when it sits behind an
+> HDA controller. This series adds a proper HDA side codec driver,
+> following the established pattern used by the CS35L41, CS35L56,
+> and TAS2781 drivers.
+> 
+> Patch 1 extracts the device-level functions from the existing ASoC
+> driver into a shared library module (SND_SOC_AW88399_LIB) with a
+> shared header at include/sound/aw88399.h, following the CS35L41
+> precedent (SND_SOC_CS35L41_LIB / include/sound/cs35l41.h). This
+> avoids a build-time dependency on the full ASoC codec module and
+> ensures clean separation between the ASoC and HDA drivers.
+> 
+> Patches 2 through 5 prepare the shared library for use on ACPI-based
+> HDA systems: patch 2 extends channel assignment to work without
+> Device Tree properties, patch 3 adds a per-instance flag to bypass
+> an unreliable hardware status bit on certain boards, patch 4 adds
+> a firmware reload flag so that the HDA driver can signal that DSP
+> firmware needs to be re-uploaded after system sleep, and patch 5
+> adds a channel setter so that the HDA driver can configure the
+> amplifier without depending on ASoC-internal device headers.
+> 
+> Patch 6 registers the AWINIC ACPI HID "AWDZ8399" with the ACPI scan
+> ignore list and the serial-multi-instantiate driver for correct
+> enumeration of the two amplifier instances.
+> 
+> Patch 7 adds the HDA side codec driver itself, structured after the
+> CS35L41 HDA driver: an I2C bus driver, and a core driver implementing
+> HDA component binding, playback hooks, power management, and per-model
+> quirk matching using ACPI subsystem ID.
+> 
+> Patch 8 enables the driver on Lenovo Legion Pro models by adding
+> the necessary Realtek ALC287 fixups (DAC rerouting for bass speaker
+> volume control, internal microphone calibration) and AW88399 per-model
+> quirks (I2C channel swap correction, BSTS status check bypass).
+> 
+> NOTE ON FIRMWARE: This driver requires the firmware file
+> aw88399_acf.bin, which uses the same format and request path as the
+> existing ASoC driver. This firmware is not yet available in the
+> linux-firmware repository. We intend to coordinate with the AWINIC
+> maintainers (CC'd) to arrange its inclusion. In the meantime, users
+> can extract the firmware from the Windows driver and place it in
+> /lib/firmware/.
+> 
+> This work builds on the initial driver development by Yakov Till
+> ("Lyapsus") and the bounty effort organized by Nadim Kobeissi:
+> https://github.com/nadimkobeissi/16iax10h-linux-sound-saga
+> 
+> Marco Giunta (8):
+>   ASoC: aw88399: extract shared device library
+>   ASoC: aw88399: derive channel from I2C address on ACPI systems
+>   ASoC: aw88399: add per-instance BSTS status bypass flag
+>   ASoC: aw88399: add firmware reload flag for resume
+>   ASoC: aw88399: add channel setter for HDA side codec
+>   ACPI/platform: add AWDZ8399 to serial-multi-instantiate
+>   ALSA: hda/scodec: add AW88399 HDA side codec driver
+>   ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
+
+Through a quick glance, the code changes look mostly OK.
+But I believe the potential memory leak Sashiko suggested in the patch
+7 is a real issue, and it should be fixed.
+  https://sashiko.dev/#/patchset/DS7PR19MB77247D9AD698CF0FF37DB58BFCC62%40DS7PR19MB7724.namprd19.prod.outlook.com
+
+In anyway, as this series spans over different areas, we'd need proper
+ACK's from ASoC, ACPI and platform people in order to get those merged
+to the upstream.
 
 
-Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+thanks,
 
-BR, Jarkko
+Takashi
