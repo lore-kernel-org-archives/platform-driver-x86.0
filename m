@@ -1,70 +1,70 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E526343E071
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 22:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1D043E071
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 22:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784672437; cv=none; b=G/HQCwJHHm+u9Mlr2UMVQ5ZESgbf5YSm0xNxi3j0ffmPmcU9Vy09Or4qeYONxBOgJZaXegNF6oQ9c9FuZWSWCL0q+HlGgGsiR90S8nckcVoAC3V9V20GPO8JySBCKvWn1pW/3yBDgWgxIXVrzjaG2NoOpamS/UT5ScQMz6Zc1LM=
+	t=1784672439; cv=none; b=EHVps/QxiOWvviOO5H5e93h5qubyfVPEkZUdGDd0aPPXSiolXG9RUrNyaS6XRdoAc+arrq0cYHJPiHSMPF+oesNRLX0X1zBM7mi/CQw2gbfDlxTtNwQ2QBQYCn7xe/vP7INeGX6h+2+4RdSx+ThzMR3VH9Vsc2efEc2YtfCqez0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784672437; c=relaxed/simple;
-	bh=z+ymKth5Pyn1k36c+pKwA3h+W1QslZ+rmOSezXOzE3A=;
+	s=arc-20240116; t=1784672439; c=relaxed/simple;
+	bh=Hu0FPrigAOItOFw3LRem92ouB7CcLpRd0/8ZKHxvnJo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BKnRdfss1BEAaYzLq45XyAmIVQuuBLYlfM1DgNjLe0ELvfocxjCuAaPqoaXZKXCcOqjWfSx0+OnCTFgRRGrabA2ybhEfMvLJawkhJJWYOc1LxnkmT+5cFq53rkGkZEXVowPkB3JgkQzzzmswobZqtn1c2uRjRMehIVFMr5dFigE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QXrCu2qe; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=r2kFn3JuOOtVHXHSYNQvdhi39j03OgQdlH2p1gT9ckBZhQ+2IfxZCBVRplX7N9z3AYZW4H3Vofc4PMXcPuMeLrNKcxQLzWhVAKY0V4pu09ccmEAFR+BnnAukkoXEWteuSU0an8pT6z3n9O1Uidr9oz/+9vbdP/aGOxVF83yjmb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LYiRGE04; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QXrCu2qe"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-495437bb891so45077135e9.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 15:20:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYiRGE04"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4955de8797cso16503565e9.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 15:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784672434; x=1785277234; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fS5st+dcVncpJO6zTQ7/3nql7wHW9s/mEVwg95RCqA8=;
-        b=QXrCu2qesfLIInlTRm1KFLVdXwM2brJVenyFS5WJ0JeftP62LfQ9I0FBgD5cGtyCka
-         xybzrkK4gcZaCTsPOsmXQIfk0Qtkp9Jx10HCb82B4o5J84HkyUNHPvQ17y29fooqn2MI
-         wWfmkjP1mWPk7Sr9SGmJ5169iP9fwbBFpl7IMO9MEc9RwgqhF8xK8Mz5EDlX+9ryfatq
-         PQ936pA0F3DMe/xlsQmD01M3nj/8Mu9tH5FKRAPtOJChebVxmfsXfyPzqO+O0HSPryvr
-         f6SDHXw70i19fp+2hzocBpI3yllx68DXWn81SoxIv1d6Oal5sELXFmGd+1hLOamVOrj2
-         FMjg==
+        d=gmail.com; s=20251104; t=1784672436; x=1785277236; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WpAkIPycj3nXTBs0w+U1JyrnXqSOdBo+DmzjlLfS+mM=;
+        b=LYiRGE04gVcfc3o+2GKup6Y74pq+eZr13K6qfSWvkNs+vo06HGGkMrPtpZO1oNFWBu
+         TuDjuoHIuCd5+8qsrfE+n0DgN5NFi/Tafhl+PAjp6XYcF6r0ZDqhOOAKmxhr/8tjvogS
+         oQ7kabZG/g3xAEAgrU8Jt1o7BoAXfdFCt+SrmtuAoSTYKbG+sPIEJ/0/Yttjh8Qtp0To
+         xeijEqwNgq/SUJ8U+O/GLqctZxWmJf6YsViPym1KumztahNyfhVquyC6uoN3zagXHFBL
+         J0YTem6VLhOGRBzTmlSl1IOi+PpgGyZiN/6Pl4JIXJyDl7dKsvcHUBHxD8wnRKCYN1Td
+         Jj0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784672434; x=1785277234;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fS5st+dcVncpJO6zTQ7/3nql7wHW9s/mEVwg95RCqA8=;
-        b=flGjKMawqfbvFWsGdFk2oueo8cPsD5vyJ9RiCLtmel3mXulbITYCAwnBSgD4Go+7or
-         FjuuGgwjEGtDuqthiP8p+Ay/Os+Ir50UZx9uOMl541O/wvcQhd8k2i7PYhMV6eDVgU8A
-         PmmgdbaDxIu4ziTslFSyJmcCni3qOJShWjDfSb1BTexIFOW04bHLP48Kuo/Jzii2lIaj
-         745k8rjWGYcx+odaVBFBcDSEkdPo+4QQP5LweAv6pzm1HsHpsdM77XiATil/G81oizpZ
-         wXy3s8Zd/FIl/EnQZZVsQR0ffkAYo8neFQQnz57alGSxojYqq6bDaSDINtqbOEXWHkkA
-         Jl+A==
-X-Gm-Message-State: AOJu0Yy8t/GU15FIrUdQfmnn51zgKIMtXgk4+DIntdJ4M9vFCKONf5s3
-	x1QoUfrH1ZAuY2maRPr3kHvRNqanq3b3W2ERIBDtr4IXbbFwdkiixKCRlGRslw==
-X-Gm-Gg: AR+sD11vuc3YKb9a222pTQIOnkz5d4reVOulYdALu5ob8/2pFT28Wq22QxMu+XRsIGf
-	5mcLNVvXUoadl4KUVOvMEcyiHtRq05+3hifdoEM78I4aEmEGPoeVJAccwwo5S2cf4ichGltJXGy
-	hTNmTnRJxX7XhLSwtHXu972Hs3bPaYy+XxWSO4qHTxW4P5sJii4j0aoeSB6GVQ39+e7zHaMTGOp
-	ocMlSu51eq3JUhUmqBsTseT17KwTwWR4ETkYz2yqbRID8EsDwTv3zoLeJ044t8YjUG++wnQQmkv
-	IuzqmE3f0ySBz+hzOH09VYr11UT2NvzryZCBLYI6eSfPG0IHNVjuT4Z4UHQ/KVOUbT7MKZPe1jk
-	5TSEfwv3pUjr/HczRachPGWj+Qlrjdn1vsNmrHj6KxSqtKYDNyYdQRIvd4sXWZqTGQgwd4TVNIF
-	cExA==
-X-Received: by 2002:a05:600c:154c:b0:495:69eb:27d3 with SMTP id 5b1f17b1804b1-4956a4f6532mr18040575e9.8.1784672433991;
-        Tue, 21 Jul 2026 15:20:33 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1784672436; x=1785277236;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=WpAkIPycj3nXTBs0w+U1JyrnXqSOdBo+DmzjlLfS+mM=;
+        b=jPrYaL1pGnjo9KddVCok7rZWcMK2SdlLscY4WdceAUDfCURAeUA0EnPHXCGqz2c9M0
+         5G3BHISgMsMR7su7SVbp+LjFxWOc/y+0hSjTfDjqz+Dan9z3usNNn5x8zp1YX1uFXv0s
+         j09sR8PjAqiP7xbZY3h/j3i4F7QR/DuVxM/zBm5A96GxVLQPZNKqzLyg7Q2jxtT14yDY
+         JhjeEGhHkV8k+IuYlae+atM+c4AUtvjQRZHPeUflaewhrZurjM/FicnPBhXm2sBG19aQ
+         iPMkxrYMfVF6jV/oMBcTlHky23ynwrC5cLy00bA5ge5k4cX/NQHM3TfHnZlH5kLOfr5c
+         Gapw==
+X-Gm-Message-State: AOJu0YzRbLmceq//IGR4DB8AFToxOSYAnqmi/5xZFjRfw26c6UxRBmjR
+	SjGoS8JD7vZmYdCm/btgQOI26gzeQ81vg5MPkR0CKBVTRXwfZr+GaD6I3TYVNA==
+X-Gm-Gg: AfdE7ckQ9o1ou1fN/QNK2specGg76G7vj8p/5w3JhiOFNdXUsREtKNNoZEsJrnnQTYu
+	bhd6FvvTU3uP3bj1vvApa6+AU7IKgr9qaCFaLIt2L+9t44sgzJPnI0lztXr4Xxjk1FdpdiWRBLX
+	/7wP2aJ2fCPGKEThcVH7DWrj4GEpoqyY/q1Vqv+0ARA3BHYTu1Jx1HIceyvUN3HPHlRNyVzfEE3
+	Z7MC24CS+1JYq4dy3a470lJ0wvHJZwq4I7TufqBQoMFtIHRtD71fhKogBwRxpuhWQnHewn2khVR
+	uPCUQ/yyKtemQnlMnc1uH12Dk+APbwiV1vvFmEW6OBqVUsSUf2eu/HsIY4dPhwzpbsSbCgIlfnu
+	5Wi2OKsj+ulWizFmumqPDMKv6N55+8aGAwvlD4M6GrhEQIXuAfI6NtQOqHruPETXUs9Xp39wt95
+	vvHQ==
+X-Received: by 2002:a05:600c:4504:b0:495:495b:9248 with SMTP id 5b1f17b1804b1-4954a3d0cf9mr219647215e9.4.1784672435982;
+        Tue, 21 Jul 2026 15:20:35 -0700 (PDT)
 Received: from user ([154.176.96.113])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-495653bffefsm89553165e9.9.2026.07.21.15.20.33
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-495653bffefsm89553165e9.9.2026.07.21.15.20.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2026 15:20:33 -0700 (PDT)
+        Tue, 21 Jul 2026 15:20:35 -0700 (PDT)
 From: yahia <yahia.a.abdrabou@gmail.com>
 To: ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
-	yahia ahmed <yahia.a.abdrabou@gmail.com>
-Subject: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the modern API
-Date: Wed, 22 Jul 2026 01:20:19 +0300
-Message-ID: <20260721222025.29917-2-yahia.a.abdrabou@gmail.com>
+	yahia ahmed <yahia.a.abdrabou@gmail.com>,
+	sashiko-bot@kernel.org
+Subject: [PATCH 2/2] hp-wmi: use modern cleanup and refactor allocation functions
+Date: Wed, 22 Jul 2026 01:20:20 +0300
+Message-ID: <20260721222025.29917-3-yahia.a.abdrabou@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260721222025.29917-1-yahia.a.abdrabou@gmail.com>
 References: <20260721222025.29917-1-yahia.a.abdrabou@gmail.com>
@@ -74,131 +74,128 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: yahia ahmed <yahia.a.abdrabou@gmail.com>
 
-hp_wmi_perform_query() currently uses the deprecated GUID-based WMI
-interface wmi_evaluate_method(). 
+Refactor hp_wmi_perform_query() and encode_outsize_for_pvsz() to improve
+readability, ensure memory zeroing, and verify bounds.
 
-Migrate hp-wmi to the modern bus-based WMI API by registering a
-struct wmi_driver and replacing wmi_evaluate_method() calls with
-wmidev_evaluate_method().
+Replace the brittle if condition tree in encode_outsize_for_pvsz() with
+a switch statement, replace the manual out_free label in
+hp_wmi_perform_query() to free args and obj variables with compiler
+provided cleanup __free(), replace kmalloc with kzalloc_flex to ensure
+that memory is zeroed before use, and add a bounds check for
+obj->buffer.length to attest that it is larger than
+sizeof(struct bios_return).
 
-Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reported-by: sashiko-bot@kernel.org
+Link: https://sashiko.dev/#/patchset/20260712191130.41183-1-yahia.a.abdrabou%40gmail.com
 Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
 ---
- drivers/platform/x86/hp/hp-wmi.c | 49 ++++++++++++++++++++++++++++----
- 1 file changed, 44 insertions(+), 5 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 49 ++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..5845b169df39 100644
+index 5845b169df39..67bd3d6825f4 100644
 --- a/drivers/platform/x86/hp/hp-wmi.c
 +++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -14,6 +14,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/acpi.h>
-+#include <linux/wmi.h>
- #include <linux/cleanup.h>
- #include <linux/compiler_attributes.h>
- #include <linux/dmi.h>
-@@ -506,6 +507,14 @@ struct hp_wmi_hwmon_priv {
- 	struct delayed_work keep_alive_dwork;
- };
- 
-+struct wmi_device *hp_wmi_wdev;
-+
-+static const struct wmi_device_id hp_wmi_guid_table[] = {
-+	{ .guid_string = HPWMI_BIOS_GUID },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(wmi, hp_wmi_guid_table);
-+
- struct victus_s_fan_table_header {
- 	u8 num_fans;
- 	u8 unknown;
-@@ -606,7 +615,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 	args->datasize = insize;
- 	memcpy(args->data, buffer, flex_array_size(args, data, insize));
- 
--	ret = wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
-+	ret = wmidev_evaluate_method(hp_wmi_wdev, 0, mid, &input, &output);
- 	if (ret)
- 		goto out_free;
- 
-@@ -2717,14 +2726,40 @@ static void __init setup_active_thermal_profile_params(void)
- 	}
- }
- 
-+static int hp_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	hp_wmi_wdev = wdev;
-+	return 0;
-+}
-+
-+static void hp_wmi_remove(struct wmi_device *wdev)
-+{
-+	hp_wmi_wdev = NULL;
-+}
-+
-+static struct wmi_driver hp_wmi_wdev_driver = {
-+	.driver = {
-+		.name = "hp-wmi-wdev",
-+	},
-+	.id_table = hp_wmi_guid_table,
-+	.probe = hp_wmi_probe,
-+	.remove = hp_wmi_remove,
-+};
-+
-+
- static int __init hp_wmi_init(void)
+@@ -552,16 +552,20 @@ static inline u8 pwm_to_rpm(u8 pwm, struct hp_wmi_hwmon_priv *priv)
+ /* map output size to the corresponding WMI method id */
+ static inline int encode_outsize_for_pvsz(int outsize)
  {
- 	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
- 	int bios_capable = wmi_has_guid(HPWMI_BIOS_GUID);
- 	int err, tmp = 0;
-+	err = wmi_driver_register(&hp_wmi_wdev_driver);
-+	if (err)
-+		return err;
- 
--	if (!bios_capable && !event_capable)
--		return -ENODEV;
-+	if (!bios_capable && !event_capable) {
-+		err = -ENODEV;
-+		goto err_unregister_wmi;
+-	if (outsize > 4096)
++	if (unlikely(outsize > 4096 || outsize < 0))
+ 		return -EINVAL;
+-	if (outsize > 1024)
+-		return 5;
+-	if (outsize > 128)
+-		return 4;
+-	if (outsize > 4)
+-		return 3;
+-	if (outsize > 0)
++	switch (outsize) {
++	case 1 ... 4:
+ 		return 2;
++	case 5 ... 128:
++		return 3;
++	case 129 ... 1024:
++		return 4;
++	case 1025 ... 4096:
++		return 5;
++	default:
++		break;
 +	}
+ 	return 1;
+ }
  
- 	if (hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &tmp,
- 				 sizeof(tmp), sizeof(tmp)) == HPWMI_RET_INVALID_PARAMETERS)
-@@ -2733,7 +2768,7 @@ static int __init hp_wmi_init(void)
- 	if (event_capable) {
- 		err = hp_wmi_input_setup();
- 		if (err)
--			return err;
-+			goto err_unregister_wmi;
- 	}
+@@ -590,8 +594,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ {
+ 	struct acpi_buffer input, output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	struct bios_return *bios_return;
+-	union acpi_object *obj = NULL;
+-	struct bios_args *args = NULL;
++	union acpi_object *obj __free(kfree) = NULL;
++	struct bios_args *args __free(kfree) = NULL;
+ 	int mid, actual_insize, actual_outsize;
+ 	size_t bios_args_size;
+ 	int ret;
+@@ -602,7 +606,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
  
- 	if (bios_capable) {
-@@ -2771,7 +2806,8 @@ static int __init hp_wmi_init(void)
- err_destroy_input:
- 	if (event_capable)
- 		hp_wmi_input_destroy();
+ 	actual_insize = max(insize, 128);
+ 	bios_args_size = struct_size(args, data, actual_insize);
+-	args = kmalloc(bios_args_size, GFP_KERNEL);
++	args = kzalloc_flex(*args, data, actual_insize, GFP_KERNEL);
+ 	if (!args)
+ 		return -ENOMEM;
+ 
+@@ -617,19 +621,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 
+ 	ret = wmidev_evaluate_method(hp_wmi_wdev, 0, mid, &input, &output);
+ 	if (ret)
+-		goto out_free;
++		return ret;
+ 
+ 	obj = output.pointer;
+-	if (!obj) {
+-		ret = -EINVAL;
+-		goto out_free;
+-	}
 -
-+err_unregister_wmi:
-+	wmi_driver_unregister(&hp_wmi_wmi_driver);
- 	return err;
- }
- module_init(hp_wmi_init);
-@@ -2794,5 +2830,8 @@ static void __exit hp_wmi_exit(void)
- 		platform_device_unregister(hp_wmi_platform_dev);
- 		platform_driver_unregister(&hp_wmi_driver);
+-	if (obj->type != ACPI_TYPE_BUFFER) {
+-		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
+-		ret = -EINVAL;
+-		goto out_free;
+-	}
++	if (!obj || obj->type != ACPI_TYPE_BUFFER ||
++	    obj->buffer.length < sizeof(struct bios_return))
++		 return -EINVAL;
+ 
+ 	bios_return = (struct bios_return *)obj->buffer.pointer;
+ 	ret = bios_return->return_code;
+@@ -638,20 +635,16 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
+ 		    ret != HPWMI_RET_UNKNOWN_CMDTYPE)
+ 			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
+-		goto out_free;
++		return ret;
  	}
-+
-+	if (hp_wmi_wdev)
-+		wmi_driver_unregister(&hp_wmi_wdev_driver);
+ 
+ 	/* Ignore output data of zero size */
+ 	if (!outsize)
+-		goto out_free;
++		return 0;
+ 
+ 	actual_outsize = min(outsize, (int)(obj->buffer.length - sizeof(*bios_return)));
+ 	memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual_outsize);
+ 	memset(buffer + actual_outsize, 0, outsize - actual_outsize);
+-
+-out_free:
+-	kfree(obj);
+-	kfree(args);
+ 	return ret;
  }
- module_exit(hp_wmi_exit);
+ 
 -- 
 2.55.0
 
