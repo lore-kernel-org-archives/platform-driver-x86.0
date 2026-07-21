@@ -1,201 +1,164 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A3143F8AC
-	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 22:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF14439336
+	for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 23:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784674078; cv=none; b=iVJtYVgHChlUtbxIozyf9JMJ21VwwIlp51pyVuFze46VGbTN+PTMxBQ7yJJnUsfX6EeRq7jzIwPqZSggeC/J+isXsHl2FHunZktW/WCuVojuG6h6yJ6DQgSPEVBqrE+NKWaeDuBvKgTx/VyRjpSdV4m2azf0qwBgi9cko2pCDsM=
+	t=1784676162; cv=none; b=bXed0C4PFco5pgl7p0KA16OrghPEp8+fdD8qFTXakKCjvjVpfi7TVzdAWF2ygFgza4Xz2Pk1yN63cryuDZ8ybitfZ4qcJ8GXHojgHXRqhqgIqPbyK1Iwq43oTKzHb5RQNFgbsadfrGf+YQn9gTKHQhq4CLcr7uWZcCyLqrPF68w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784674078; c=relaxed/simple;
-	bh=my12m8vPC16KTTrb+fRsNPK1+3Qhk+aOEetxbA+nlBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F6+20+SpDkzxdsNbgpraiH/o53xoKSatgflrgl1c657Vvwp4/Eh9R5k8EIcDVq1r56ji1KrLe9O23ZrBRe8sczTVByRWN8wnRr9IYWDlxzXiSF1VMxa78aJ1ld8foKzCNAj7M5OJCssoBE5KNWuRfL+VekzUhQsOSyBbzQJvKk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y64GtJRi; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1784676162; c=relaxed/simple;
+	bh=QYpxUU9b0mpz+k23Ko+GxcX3nWGQhGbT1UxhOLy1VdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ATRtUBUy0ta9LvTJv0Zq9/pG91CUOmuxCcmh+hEXsSZaUOUFrQUQrMt2XdP1/UAr3C1ThIaOm5qg30d4xkZ7ip5VN92xarX/qJqj4zpkzs51161+0SIOtE8/plR7z/EUG/P3KmAiYQbKWezGVemRdWz8DrlsRu3lzvM8eZNa3eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJNg66UT; arc=none smtp.client-ip=209.85.221.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y64GtJRi"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-47db714766aso3156304f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 15:47:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJNg66UT"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5bf83925ddaso2942824e0c.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 21 Jul 2026 16:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784674070; x=1785278870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=TGHlnFua3ddbOxL2BdXDGmU9Mh9h+RP5G+w2AHEGFhA=;
-        b=Y64GtJRiWkHTifVulO2X6lIzYKKvaq2dIPctbe+B7fIS8WQUUPhgaJv/W5Q6CqevbD
-         4SYcyZ82Xm76+pRmscGvp+wDMchexDld0a2ScBUxxJ1kAgHWAI8NrYwkdVe51rQceSxo
-         znqBChpVkcIAzPaXBIL3UpUeEpazR96ro/46/jh20pJup7WGdfM42iquHqBiBoP70wAo
-         HIJCIyM6teTwDsVm8JQY0gk1NLuagWBgTWHq/uKtBZdgayT2DvqsvWiWduU52VHZ4gVs
-         oF+ZH1fwryML+8YJBUmmPVAO/oR9h5Msr8ue4mjtjhWg6zb1LENBffdrH/vyQ0r4ZtFi
-         nw+w==
+        d=gmail.com; s=20251104; t=1784676160; x=1785280960; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pxmnV5EYMgRiguaN7PhOdxhulBwnM9DxidYXYq4D6wM=;
+        b=mJNg66UTB/0KGCBhVVAwGHfEqOnLh/sWUecRpBxgo49ZHx2b9qHNeqc8fL4Ang4gCU
+         dxS/SKXqWE7fcwPBVIuFfDCbMILsdQVVAFprFS5YltEwXnvuc9lHwBuupYT8miJzFymF
+         Dr9UbQOJndyfK7zxUzhjAQB6UDoM03gPykAGhUbPRT+AOeIP6TEI45c70rM5jy5wucGN
+         w0oZgtXOHVr6KHIM6xzq7+d3lLpUAEwanYfDbOIT7U14MBJpl/P/9G8erRl08RvCQO8z
+         RCewf9+A75tPSO15uJtaAx0R1JeWa4iEcUcDmPdhMDVEhqitFVC+HxtG6ttnpBgZToJO
+         02/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784674070; x=1785278870;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TGHlnFua3ddbOxL2BdXDGmU9Mh9h+RP5G+w2AHEGFhA=;
-        b=m5XtbOKopHa6soNQjKvXLJ7C4AbmdpNOyX/XBTZTCMBhNGILd9KIMVBqbbJ1S4V1Po
-         HXbTPy4X864UDAomc19Xd6TigWqg545giBrdEuF7Prx0TgVTeXg47NoD5okr4ujhVkJz
-         AXKKtKFFQD1GjpYRfbjsb9ZxZyN2P9niVfpcSwKC7NxXKj9aHSB9PGNeTQZ3LQFYdydn
-         oUOAE9eA97znm/tSrHNCXC2Hjsa/K4qAlBHvoJdT1oi1BoatWulm1Gvn/Ytr72XiS/LX
-         3NIyRMLs9QBXnSrQah7AV8e+RHwEItA4Oxu8EYmSAAiZQ8TeZPP0ttd/xf+i/yMSeE82
-         elNw==
-X-Gm-Message-State: AOJu0Yxognc6AWGabpjUvap49rIRql/sQuP22RlKf9DNar6XZoRfq//K
-	yEKD/3048AjskztPciT/hXQdFldXNLsvXLwaBz2w8eZyB/ymyEddKI2IqxJfdQ==
-X-Gm-Gg: AR+sD13cVK5a43ud93qPYAnhZHYhMKSUxCBMnpFdM+jIk1aYKLt6C3Vtf/WE1TXeF/x
-	+9Xr+pSjGWcoq1lbzUlYVeU21dFuuI46Qz5TwmvPG1U9EOF9FFBZrjK1gnUzsN2XUGxOdNF2tQv
-	7m2Vqm+WrkLJtVLBSkoNpgO9F3QvDf6WvFkEKrDqp6W3bU9hw6l8mH0DUc0LilWjxMPUyOJzIkj
-	imW1bfhRPHlIusHMLUv2qgn6dG/4l/DPyJ+8flrJQKhWRmnDTXjJ9XoUJqIMj7NSkgInwxnxHRo
-	IVKjzezeUmFTDsiQczionBOLJWveHEh6IF6EwzY0iQAS8qH2RafGUjW3HILX8j+OG5kcCv/+4T9
-	BwCUkb9wrWugTdW8E+1C6gHqhQjbc5eZGcSboc/gjPAOkvdtUzM17gUSZ5JvQCQ2pfvFi9M9Hrw
-	nImg==
-X-Received: by 2002:a05:6000:2505:b0:474:bbbb:bf17 with SMTP id ffacd0b85a97d-47f84061735mr2108026f8f.0.1784674070369;
-        Tue, 21 Jul 2026 15:47:50 -0700 (PDT)
-Received: from user ([154.176.96.113])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f85c67339sm212850f8f.31.2026.07.21.15.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2026 15:47:49 -0700 (PDT)
-From: yahia <yahia.a.abdrabou@gmail.com>
-To: ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	yahia ahmed <yahia.a.abdrabou@gmail.com>,
-	sashiko-bot@kernel.org
-Subject: [PATCH v2 2/2] hp-wmi: use modern cleanup and refactor allocation functions
-Date: Wed, 22 Jul 2026 01:47:39 +0300
-Message-ID: <20260721224741.33624-3-yahia.a.abdrabou@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260721224741.33624-1-yahia.a.abdrabou@gmail.com>
-References: <20260721224741.33624-1-yahia.a.abdrabou@gmail.com>
+        d=1e100.net; s=20251104; t=1784676160; x=1785280960;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=pxmnV5EYMgRiguaN7PhOdxhulBwnM9DxidYXYq4D6wM=;
+        b=JSLy7rmEj9VvarXYFG8qVfGvOhVo8ucvWcrsBMtxDhI7gAE8MI9Oifyt3kpxYT769m
+         zj/evCjuYp5FFlj0YGVCRwF/I+7FT1Ein0NvArs+/sGmsP+NhmLg+O8ofF5ksuCyO8y+
+         vCZL3kYsqXM0nc81971p/Sl63adWTSUwEON0q2diUkt64m/wbw3dF7XS4x4OWGQkw4JB
+         KoknRBNHC0GM6rccZIu71iN7GvnlqI9XuPPZwcoa2k50y25TP/VARjgvG0Ud74doe1GB
+         FS0JXrnNgOWPx2n6520ZVzfkEblJwi1GmhnTUKPhUS1BfG+8xYuJXNuj26ZZz4bE5LCy
+         bl+A==
+X-Gm-Message-State: AOJu0Yzm05e7V23VG7UoX9MIKxXn4c+AXqMLHxPPRDBOhIZNw+ipa9ox
+	D1QaMeuPm6RdH94r2UkRcgZDNBP/7XA2DOxIlRDnKHUFGpSHiUQJTFd3
+X-Gm-Gg: AR+sD13io1ljCPwr1SKWPgGCUIpzyu66+/gDdbvYxBy1lzmJQFeTYS5Sl8V8zxYaHM9
+	km0jqRC8tw9sDA+QSvjX9qchHxx9P+VPE8AnN7Wk/s+6UNbLTPFEWkT7QtsFGY8ebXuiiXDF9F1
+	WggEkKoFr1cSPPyyQk3c+0DORm61I96aN9ZsX0ciuTdc6JXQk8mPtLbUpAfev8YVTlEydxrgbps
+	+ksGYTxtjsLBxaEL3vSbT66Yfq6Pkr/JhVPUuSe49oltwvbiz5KZvv1h+5i7U1Qb5K1i9Oblrq8
+	Th1FJIIqZzyCMUNg5NjJq3jMqzuKMWZQT6Xw/QmBAAK1s9iq9m1UI1NJbLRnaT1htsMyGbVdaRJ
+	P3M+JMWzMDqGGquqSf85W1726zH0HgeqeCSxW2NQ313bPVy/qj+r53BjjELuzprFd4gfr8kKP72
+	ZN8Brw8bPASTM45jezgCcYcU5kDiKw6kZmerJN/d4//L1iA3+mHg==
+X-Received: by 2002:a05:6122:d0e:b0:5bb:aae2:1754 with SMTP id 71dfb90a1353d-5c1bf8f630amr5782093e0c.13.1784676159967;
+        Tue, 21 Jul 2026 16:22:39 -0700 (PDT)
+Received: from [192.168.60.4] ([207.115.103.98])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5c2c6275db6sm1141816e0c.3.2026.07.21.16.22.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jul 2026 16:22:39 -0700 (PDT)
+Message-ID: <84b521b8-112b-4fed-ab82-e1e16d770e66@gmail.com>
+Date: Wed, 22 Jul 2026 07:22:32 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v7] platform/x86: panasonic-laptop: add fan speed mode
+ for newer models
+To: Guenter Roeck <linux@roeck-us.net>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org
+References: <b557e1f6-2072-496f-8eaa-d2899d1bded4@linux.intel.com>
+ <20260718185704.3466-1-alexyeo362@gmail.com>
+ <fcf57a96-b2ad-c7d5-0d6d-6d760b915195@linux.intel.com>
+ <531e3c48-bb61-4741-8fe7-a2dbc213eb1e@roeck-us.net>
+Content-Language: en-US
+From: Alex Yeo <alexyeo362@gmail.com>
+In-Reply-To: <531e3c48-bb61-4741-8fe7-a2dbc213eb1e@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: yahia ahmed <yahia.a.abdrabou@gmail.com>
 
-Refactor hp_wmi_perform_query() and encode_outsize_for_pvsz() to improve
-readability, ensure memory zeroing, and verify bounds.
 
-Replace the brittle if condition tree in encode_outsize_for_pvsz() with
-a switch statement, replace the manual out_free label in
-hp_wmi_perform_query() to free args and obj variables with compiler
-provided cleanup __free(), replace kmalloc with kzalloc_flex to ensure
-that memory is zeroed before use, and add a bounds check for
-obj->buffer.length to attest that it is larger than
-sizeof(struct bios_return).
+On 2026/07/20 10:41 PM, Guenter Roeck wrote:
+> On 7/20/26 06:46, Ilpo Järvinen wrote:
+>> On Sun, 19 Jul 2026, Alex Yeo wrote:
+> 
+> ...
+> 
+>>> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/ 
+>>> platform/x86/panasonic-laptop.c
+>>> index b83113c26f88..2d67188de2a9 100644
+>>> --- a/drivers/platform/x86/panasonic-laptop.c
+>>> +++ b/drivers/platform/x86/panasonic-laptop.c
+>>> @@ -119,6 +119,9 @@
+>>>    *        - v0.1  start from toshiba_acpi driver written by John 
+>>> Belmonte
+>>>    */
+>>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>>> +
+>>> +#include <linux/printk.h>
+>>>   #include <linux/acpi.h>
+>>>   #include <linux/backlight.h>
+>>>   #include <linux/bits.h>
+>>> @@ -136,6 +139,14 @@
+>>>   #include <linux/types.h>
+>>>   #include <linux/uaccess.h>
+>>>   #include <acpi/video.h>
+>>> +#include <linux/sysfs.h>
+>>> +#include <linux/hwmon.h>
+>>> +#include <linux/hwmon-sysfs.h>
+> 
+> FWIW, I don't see why this is needed. 
+> 
 
-Reported-by: sashiko-bot@kernel.org
-Link: https://sashiko.dev/#/patchset/20260712191130.41183-1-yahia.a.abdrabou%40gmail.com
-Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 49 ++++++++++++++------------------
- 1 file changed, 21 insertions(+), 28 deletions(-)
+If you mean linux/hwmon-sysfs.h, I agree.
+I will remove that in v8.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 5ac29361dc17..bf74667838e7 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -552,16 +552,20 @@ static inline u8 pwm_to_rpm(u8 pwm, struct hp_wmi_hwmon_priv *priv)
- /* map output size to the corresponding WMI method id */
- static inline int encode_outsize_for_pvsz(int outsize)
- {
--	if (outsize > 4096)
-+	if (unlikely(outsize > 4096 || outsize < 0))
- 		return -EINVAL;
--	if (outsize > 1024)
--		return 5;
--	if (outsize > 128)
--		return 4;
--	if (outsize > 4)
--		return 3;
--	if (outsize > 0)
-+	switch (outsize) {
-+	case 1 ... 4:
- 		return 2;
-+	case 5 ... 128:
-+		return 3;
-+	case 129 ... 1024:
-+		return 4;
-+	case 1025 ... 4096:
-+		return 5;
-+	default:
-+		break;
-+	}
- 	return 1;
- }
- 
-@@ -590,8 +594,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- {
- 	struct acpi_buffer input, output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct bios_return *bios_return;
--	union acpi_object *obj = NULL;
--	struct bios_args *args = NULL;
-+	union acpi_object *obj __free(kfree) = NULL;
-+	struct bios_args *args __free(kfree) = NULL;
- 	int mid, actual_insize, actual_outsize;
- 	size_t bios_args_size;
- 	int ret;
-@@ -604,7 +608,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 
- 	actual_insize = max(insize, 128);
- 	bios_args_size = struct_size(args, data, actual_insize);
--	args = kmalloc(bios_args_size, GFP_KERNEL);
-+	args = kzalloc_flex(*args, data, actual_insize, GFP_KERNEL);
- 	if (!args)
- 		return -ENOMEM;
- 
-@@ -619,19 +623,12 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 
- 	ret = wmidev_evaluate_method(hp_wmi_wdev, 0, mid, &input, &output);
- 	if (ret)
--		goto out_free;
-+		return ret;
- 
- 	obj = output.pointer;
--	if (!obj) {
--		ret = -EINVAL;
--		goto out_free;
--	}
--
--	if (obj->type != ACPI_TYPE_BUFFER) {
--		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
--		ret = -EINVAL;
--		goto out_free;
--	}
-+	if (!obj || obj->type != ACPI_TYPE_BUFFER ||
-+		obj->buffer.length < sizeof(struct bios_return))
-+		return -EINVAL;
- 
- 	bios_return = (struct bios_return *)obj->buffer.pointer;
- 	ret = bios_return->return_code;
-@@ -640,20 +637,16 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
- 		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
- 		    ret != HPWMI_RET_UNKNOWN_CMDTYPE)
- 			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
--		goto out_free;
-+		return ret;
- 	}
- 
- 	/* Ignore output data of zero size */
- 	if (!outsize)
--		goto out_free;
-+		return 0;
- 
- 	actual_outsize = min(outsize, (int)(obj->buffer.length - sizeof(*bios_return)));
- 	memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual_outsize);
- 	memset(buffer + actual_outsize, 0, outsize - actual_outsize);
--
--out_free:
--	kfree(obj);
--	kfree(args);
- 	return ret;
- }
- 
--- 
-2.55.0
+For the other includes:
 
+ >>> +#include <linux/sysfs.h>
+this was previously missing
+
+ >>> +#include <linux/hwmon.h>
+used this for registering the fan as a PWM fan on hwmon.
+
+> 
+>>>   struct pcc_acpi {
+> ...
+>>> +    /*
+>>> +     * This mutex ensures that the hwmon and thermal functions
+>>> +     * for fan operations do not conflict as the PWM fan is
+>>> +     * exposed to both.
+>>> +     */
+>>> +    struct mutex            pwm_fan_lock;
+> 
+> Maybe ask why this additional lock is used instead of relying on
+> (for hwmon attributes) and using (for thermal) the hwmon subsystem
+> lock.
+> 
+
+Both the hwmon and thermal devices share the same control path
+(pcc_pwm_fan_speed_read and pcc_pwm_fan_speed_set). To prevent them from
+executing concurrently and interleaving, I added pwm_fan_lock to 
+serialize access.
+
+Reading and writing fan speed requires a multi-step ACPI transaction 
+(e.g., checking/setting manual mode first before accessing or setting 
+fan speed). This is because I rely on querying ACPI for the current 
+state instead of keeping state cached in the driver. Because of this, 
+the mutex is placed in the outer hwmon and thermal callbacks rather than 
+inside the low-level ACPI helper functions.
+
+If there's a more appropriate way to synchronize this across both 
+interfaces (e.g. use hwmon_lock in place of a driver level mutex), I'd 
+be interested to hear it.
+
+Thanks
