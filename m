@@ -1,345 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8D4356767;
-	Wed, 22 Jul 2026 14:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784731387; cv=none; b=akMiMfCGTTmWn+CcXfQBSrX9zjY4tsX8RDgeVyx9dG/rvgPUvuqH/VGrjU7VP2rSWYzeGKSHoIW/Eh7el4iiHHiyPDiJhgZ+lSeoRzHVhdxQPPm5oZpkYUvaoUi3q19KtFh1gPGp5gJbaROaTMUfefl6ikV/RtR/gCtaNXMwPec=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784731387; c=relaxed/simple;
-	bh=rXioocdgzNlrdc4UE2M1ZkVIIxtFS9Ex0kV75VzD98Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Qsh2Nc1jTlQ2w0eO1bdNT7OqBbgKpyGT77Mqnrj5e1Nyqt/MfiksdVZRuJkG+jmA8iBHoanCT1UQPkyTcfdgsi2EB4Nb+v2U981Ye1rIS3bBNcEt1eG6jqsu5vhdcOvwFTjTzfpWinWbquiJojg2x2HJR4NKHe+VjrA+iQUYiIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwaXSIe6; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C81440A1F;
+	Wed, 22 Jul 2026 16:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784738263; cv=pass; b=KnrSoYXlHZKrOfVNT++waK2MTFt+AzGXjYexmm2sbJ6zSe0BU5sGY43lRKUoAgQZXYpDw//HBWpUQUqYxs+rJeFn9KnhjZ4UN5UtVfLrk5pAckEdKdkNcQyPBYo10EazKABGcmcjgJ9Twv6yWKotvylWtbV23PO2m6GCAdFERDs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784738263; c=relaxed/simple;
+	bh=F9sGgDdP97ntrZdX9pS1HAYZUppAVmPNkdrgDiuH3Ik=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=qFckQrttt7d0ujm3PGHCKS4PTiyAhlWSNlau9/Wt8/7sIPmyuqVJ7FlZ0NtxJkIsgtWCxd3aPQO4v34tGJj+NP1k8snCqrLDk9Hr8Ya5lavaipmaUm75JvEM2s56yFxhsQ2ZFXZsVmt71iYwSQyXkYBWtpJC9tq5zms6CspDT8Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=QK8JLrug; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwaXSIe6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784731385; x=1816267385;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=rXioocdgzNlrdc4UE2M1ZkVIIxtFS9Ex0kV75VzD98Q=;
-  b=GwaXSIe6r/hh5NYjrTSZchOfOblcBWfYmHkG3joldp0dCdbLElRfYYgS
-   /PhPGUz6+PPRhGQVNnrx3wdM36Hdni4ZNqQzbtSbccgwsMWsjUiPhjOGo
-   53p12sSs8DQ5f6sGTxJcspb586I0+/uTl7yHVEZmHt/dt1LnXx6OnybDu
-   PZEIA4CAKbLO1ZiF7nTCz5LkKyYh1Sbiv3u6nNj3mdQirg/jPMn30n2vs
-   ua4cyPa7wCm1qT5WUi6nGJRr8cUb+K6bzD4HZVZNrBOZxjXCqLBUGBI5r
-   IIl3IbUFwl//Teiz+F5xCzIyJtTgwrtXKIiWbp/a9+cAhZtSrAYGTwZFJ
-   g==;
-X-CSE-ConnectionGUID: zCB3g9/XRJidX8oiNr45hQ==
-X-CSE-MsgGUID: 3l/2I0BdQRyY130v7kpStQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="85239738"
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="85239738"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 07:43:02 -0700
-X-CSE-ConnectionGUID: h505YzZQSjeA7+P0udkm9Q==
-X-CSE-MsgGUID: 4Y689gFJToWzctAmomcCUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
-   d="scan'208";a="281390491"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.200])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 07:42:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 22 Jul 2026 17:42:56 +0300 (EEST)
-To: Dave Carey <carvsdriver@gmail.com>
-cc: platform-driver-x86@vger.kernel.org, hdegoede@redhat.com, W_Armin@gmx.de, 
-    jikos@kernel.org, linux-input@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Hans de Goede <johannes.goede@oss.qualcomm.com>
-Subject: Re: [PATCH v13 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard
- dock detection driver
-In-Reply-To: <20260722142712.814597-3-carvsdriver@gmail.com>
-Message-ID: <15943a77-07e3-9449-7e2f-2d72f345dfa2@linux.intel.com>
-References: <20260722142712.814597-1-carvsdriver@gmail.com> <20260722142712.814597-3-carvsdriver@gmail.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="QK8JLrug"
+ARC-Seal: i=1; a=rsa-sha256; t=1784738230; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=OL1Ve+DGL0WqquveixD2Y83mcPN2hNnlQlpFK4pFIMQ0V+JQNaVLiacEsyq51LXHOnYU2jGjq6qpSaQCFc+KDiXtvAWkbPpR/Lg2Xf0sHuuGmfxDUSCS9i1gwPE7SaupKTITe169Oxg8CFzXOqps3Sri8yKtCLialX0NzZOijLQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1784738230; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=jJ1PGazpDSOuUb91837wghlBu1TBhgu1eryggs8yc4A=; 
+	b=dW2bi7vADv8O7vnlDXP/yCrtpEztkoheFgp45kBOe916z8pyIjbKTBSiidQ7XDcrbKtA8nVFGj9VFWNcI4mLhhJ4eYOqVdF1fRClPw30InL8UneeFUKWbCQ0exAn4MWgAZEhUX+DkVE6ychh31u82fYxWhkzBpW1kIfu9v3HH/E=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784738230;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=jJ1PGazpDSOuUb91837wghlBu1TBhgu1eryggs8yc4A=;
+	b=QK8JLrug4x8BZukQaRZSyLnC+SR+JnoRaNIfTp+ssAkXJNtKji4ho8uj8kxWz9tU
+	x8yylvesPZxy5JW6jP12M2fNff6UNP6ZtQS5OF8vprchDz1uoBq8FuRwlRzbgDHQjri
+	/swYuHXEBV8aEKuRw/DWQnE7/vo7gzhqmwpIczPMCAgqtZP0CR9+B2nVIKqrFy2QonU
+	ltcJ3/0Pg0J7vgeCKHEMP9QNJAXb5gmQS3AO+GuJm6mnDv5w/nfbXceAtNNYfR5fSj4
+	3jFTyx6tuYSuh0yoqeTkU4nFAtejCytf+cpxp8fZ7vO9+FuUtPPt70Q/il4xk3tcvSi
+	YCqt8t0Zbg==
+Received: by mx.zohomail.com with SMTPS id 1784738229117212.46321746119304;
+	Wed, 22 Jul 2026 09:37:09 -0700 (PDT)
+Message-ID: <bb2a9c53669fde370f14cb9ef3e0a73fc729a5bb.camel@rong.moe>
+Subject: Re: [PATCH RFC v3 00/11] leds: Add support for hardware-initiated
+ hardware control trigger transition
+From: Rong Zhang <i@rong.moe>
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
+ <linux@weissschuh.net>,  Benson Leung <bleung@chromium.org>, Guenter Roeck
+ <groeck@chromium.org>, Marek =?ISO-8859-1?Q?Beh=FAn?=	 <kabel@kernel.org>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
+ <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Ike Panhc
+ <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar
+ <vsankar@lenovo.com>, 	linux-leds@vger.kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, 	platform-driver-x86@vger.kernel.org
+In-Reply-To: <20260722123913.GB11805@google.com>
+References: <20260719-leds-trigger-hw-changed-v3-0-5fb55722e36e@rong.moe>
+	 <20260722123913.GB11805@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Jul 2026 00:31:52 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-529663240-1784731376=:1198"
+User-Agent: Evolution 3.56.2-10 
+X-ZohoMailClient: External
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Lee,
 
---8323328-529663240-1784731376=:1198
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Wed, 2026-07-22 at 13:39 +0100, Lee Jones wrote:
+> Why is this still an RFC?
 
-On Wed, 22 Jul 2026, Dave Carey wrote:
+I plan to make it non-RFC in v4, after resolving concerns from Ilpo and
+Sashiko.
 
-> The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
-> that magnetically attaches to the bottom (secondary) screen in one of two
-> positions.  The Embedded Controller tracks the attachment state in a 2-bi=
-t
-> field called BKBD and signals changes via WMI event GUID
-> 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
-> device, _UID "GMZN").
->=20
-> The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
-> both WMI interfaces used by this driver:
->=20
->   LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
->   The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
->   so the notify callback receives BKBD without a separate query.
->=20
->   LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
->   8-byte buffer {uint32 IDs=3D0x00060000, uint32 Status=3DBKBD}.
->   Used for the initial state read on probe and after resume.
->=20
-> BKBD encoding:
->   0 =3D keyboard detached
->   1 =3D keyboard docked on top half of bottom screen
->   2 =3D keyboard docked on bottom half of bottom screen
->   3 =3D reserved (not observed in practice)
->=20
-> This driver registers two WMI drivers sharing a module-level
-> BLOCKING_NOTIFIER_HEAD:
->=20
->   - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
->     a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
->     value extracted from the buffer.
->=20
->   - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
->     its per-device private struct.  At probe time it registers a
->     notifier_block on the chain and reads the initial BKBD state via
->     wmidev_query_block().  The WMI buffer is parsed as
->     struct lenovo_feature_status { __le32 id; __le32 status; }, and the
->     ID field is verified before the status is used.
->=20
->   - SW_TABLET_MODE=3D1 is reported when the keyboard is detached;
->     SW_TABLET_MODE=3D0 when docked in either position (keyboard present).
->=20
->   - The raw BKBD value is exposed via read-only sysfs attribute
->     "keyboard_position".
->=20
->   - BKBD state is re-read via wmidev_query_block() on resume from
->     suspend or hibernation.
->=20
-> Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
->=20
-> Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
-> ---
-> v13:
-> - Resend of v12: patch was corrupted in transit.  git-send-email chose
->   quoted-printable encoding (triggered by non-ASCII in the changelog)
->   which encoded '=3D' as '=3D3D', corrupting the RST table separators in
->   the ABI doc and breaking git-am.  No content changes from v12.
->=20
-> v12:
-> - Add #include <linux/sysfs.h> (for sysfs_emit; Ilpo J=C3=A4rvinen)
-> - Add #include <linux/types.h> (for __le32 and __packed; Ilpo J=C3=A4rvin=
-en)
->=20
-> v11 (addressing Armin Wolf's v10 review):
-> - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3"
->=20
-> v10 (addressing Armin Wolf's v9 review):
-> - Update ABI doc: Date: June 2026, KernelVersion: 6.16
-> - Add #include <linux/compiler_attributes.h> and <linux/types.h>
-> - yb9_kbdock_query(): change return to pointer-out u32 *bkbd
-> - struct yb9_kbdock_data: add spinlock_t lock
-> - yb9_kbdock_report(): hold lock across input_report_switch + input_sync
-> - yb9_kbdock_sync(): return int, propagate query error to callers
-> - yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
-> - struct wmi_buffer out: remove zero-initializer
-> - yb9_kbdock_notify_new(): drop manual length check; use
->   .min_event_size =3D sizeof(__le32) in struct wmi_driver instead
->=20
->  .../testing/sysfs-driver-lenovo-yb9-kbdock    |  19 ++
->  MAINTAINERS                                   |   7 +
->  drivers/platform/x86/lenovo/Kconfig           |  14 +
->  drivers/platform/x86/lenovo/Makefile          |   1 +
->  drivers/platform/x86/lenovo/yb9-kbdock.c      | 312 ++++++++++++++++++
->  5 files changed, 353 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbd=
-ock
->  create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/D=
-ocumentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-> new file mode 100644
-> index 0000000..ebe713a
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-> @@ -0,0 +1,19 @@
-> +What:=09=09/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_positi=
-on
-> +Date:=09=09June 2027
-> +KernelVersion:=097.3
-> +Contact:=09Dave Carey <carvsdriver@gmail.com>
-> +Description:
-> +=09=09Read-only attribute reporting the current keyboard dock position
-> +=09=09as reported by the Embedded Controller on the Lenovo Yoga Book 9
-> +=09=0914IAH10.
-> +
-> +=09=09Possible values:
-> +
-> +=09=09=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +=09=090   keyboard is not docked to any screen (detached)
-> +=09=091   keyboard docked on the top half of the bottom screen
-> +=09=092   keyboard docked on the bottom half of the bottom screen
-> +=09=09=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +=09=09SW_TABLET_MODE input events are also emitted: 0 when the keyboard
-> +=09=09is docked (either position), 1 when detached.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d1cc0e1..00e8275 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14479,6 +14479,13 @@ L:=09platform-driver-x86@vger.kernel.org
->  S:=09Maintained
->  F:=09drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
-> =20
-> +LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
-> +M:=09Dave Carey <carvsdriver@gmail.com>
-> +L:=09platform-driver-x86@vger.kernel.org
-> +S:=09Maintained
-> +F:=09Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
-> +F:=09drivers/platform/x86/lenovo/yb9-kbdock.c
-> +
->  LETSKETCH HID TABLET DRIVER
->  M:=09Hans de Goede <hansg@kernel.org>
->  L:=09linux-input@vger.kernel.org
-> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/l=
-enovo/Kconfig
-> index 9c48487..938b361 100644
-> --- a/drivers/platform/x86/lenovo/Kconfig
-> +++ b/drivers/platform/x86/lenovo/Kconfig
-> @@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
->  =09  To compile this driver as a module, choose M here: the module
->  =09  will be called lenovo-wmi-camera.
-> =20
-> +config LENOVO_YB9_KBDOCK
-> +=09tristate "Lenovo Yoga Book 9 keyboard dock detection"
-> +=09depends on ACPI_WMI
-> +=09depends on DMI
-> +=09depends on INPUT
-> +=09help
-> +=09  Say Y here to enable keyboard dock detection on the Lenovo Yoga Boo=
-k 9
-> +=09  14IAH10.  The detachable Bluetooth keyboard magnetically attaches t=
-o
-> +=09  either screen; this driver reports SW_TABLET_MODE input events base=
-d
-> +=09  on the attachment state and exposes the raw position in sysfs.
-> +
-> +=09  To compile this driver as a module, choose M here: the module will =
-be
-> +=09  called lenovo-yb9-kbdock.
-> +
->  config LENOVO_YMC
->  =09tristate "Lenovo Yoga Tablet Mode Control"
->  =09depends on ACPI_WMI
-> diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/=
-lenovo/Makefile
-> index 7b2128e..2842d7d 100644
-> --- a/drivers/platform/x86/lenovo/Makefile
-> +++ b/drivers/platform/x86/lenovo/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)=09+=3D think-lmi.o
->  obj-$(CONFIG_THINKPAD_ACPI)=09+=3D thinkpad_acpi.o
-> =20
->  lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)=09+=3D wmi-hotkey-ut=
-ilities.o
-> +lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)=09+=3D yb9-kbdock.o
->  lenovo-target-$(CONFIG_LENOVO_YMC)=09+=3D ymc.o
->  lenovo-target-$(CONFIG_YOGABOOK)=09+=3D yogabook.o
->  lenovo-target-$(CONFIG_YT2_1380)=09+=3D yoga-tab2-pro-1380-fastcharger.o
-> diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/=
-x86/lenovo/yb9-kbdock.c
-> new file mode 100644
-> index 0000000..69c68a0
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
-> @@ -0,0 +1,312 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Lenovo Yoga Book 9 keyboard-dock detection
-> + *
-> + * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magne=
-tically
-> + * attaches to the bottom screen in one of two positions.  The EC tracks
-> + * attachment state in a 2-bit field called BKBD and signals changes via=
- WMI
-> + * event 0xEB on the WM10 ACPI device (_UID "GMZN").
-> + *
-> + * BKBD values:
-> + *   0 =3D keyboard detached
-> + *   1 =3D keyboard docked on the top half of the bottom screen
-> + *   2 =3D keyboard docked on the bottom half of the bottom screen
-> + *   3 =3D reserved / not observed
-> + *
-> + * Two WMI interfaces are used (documented in embedded BMOF, WQDD, 20705=
- bytes):
-> + *
-> + *   LENOVO_BTKBD_EVENT (event GUID, 806BD2A2-...)
-> + *     WmiDataId(1) uint32 Status =E2=80=94 _WED(0xEB) returns EC.BKBD d=
-irectly.
-> + *     The notify callback receives BKBD as an integer; no separate quer=
-y needed.
-> + *
-> + *   LENOVO_FEATURE_STATUS_DATA (block GUID, E7F300FA-...)
-> + *     WmiDataId(1) uint32 IDs   =3D 0x00060000 (feature selector)
-> + *     WmiDataId(2) uint32 Status =3D BKBD value
-> + *     Used on probe and resume to read initial state.
-> + *
-> + * The event driver (LENOVO_BTKBD_EVENT) fires a notifier chain on each =
-WMI
-> + * event.  The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_=
-dev
-> + * and registers a notifier_block to receive those events, eliminating t=
-he
-> + * need for shared global state or a mutex.
-> + *
-> + * SW_TABLET_MODE=3D1 is reported when the keyboard is detached;
-> + * SW_TABLET_MODE=3D0 when docked in either position (keyboard present).
-> + * The raw BKBD value is exposed via the sysfs attribute "keyboard_posit=
-ion".
-> + *
-> + * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/dmi.h>
-> +#include <linux/input.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/pm.h>
-> +#include <linux/slab.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
+Thanks,
+Rong
 
-Hi,
-
-Are you sure you sent the latest version, AFAICT, v12 had this:
-
-+#include <linux/acpi.h>
-+#include <linux/cleanup.h>
-+#include <linux/compiler_attributes.h>
-+#include <linux/dev_printk.h>
-=2E..
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+#include <linux/wmi.h>
-
-?
-
---=20
- i.
-
---8323328-529663240-1784731376=:1198--
+>=20
+> > Some laptops can tune their keyboard backlight according to ambient
+> > light sensors (auto mode). This capability is essentially a hardware
+> > control trigger. Meanwhile, such laptops also offer a shrotcut for
+> > cycling through brightness levels and auto mode. For example, on
+> > ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
+> > levels in the following sequence:
+> >=20
+> >   1 =3D> 2 =3D> 0 =3D> auto =3D> 1 ...
+> >=20
+> > Recent ThinkPad models should have similar sequence too.
+> >=20
+> > However, there are some issues preventing us from using a private
+> > hardware control trigger:
+> >=20
+> > 1. We want a mechanism to tell userspace which trigger is the hardware
+> >    control one, so that userspace can determine if auto mode is on/off,
+> >    as well as turing it on/off programmatically without obtaining the
+> >    trigger's name via other channels
+> > 2. Writing brightness has the side effect of disabling hardware control=
+,
+> >    but the hardware control trigger remains active, resulting in the
+> >    software and hardware being out of sync. Most LED drivers that
+> >    supports hardware control also suffer from the same issue
+> > 3. Turing on/off auto mode via the shortcut cannot activate/deactivate
+> >    the corresponding hardware control trigger, making the software stat=
+e
+> >    out of sync
+> > 4. Even with #3 solved, deactivating the hardware control trigger has
+> >    the side effect of emitting LED_OFF, breaking the shortcut cycle,
+> >    especially "auto =3D> 1"
+> >=20
+> > This RFC series tries to demonstrate a path on solving these issues:
+> >=20
+> > - Introduce an attribute "trigger_may_offload", so that userspace can
+> >   determine:
+> >   - if the LED device supports hardware control (supported =3D> visible=
+)
+> >   - which trigger is the hardware control trigger selected by the LED
+> >     device
+> >   - if the trigger is selected ("<foo_trigger>")
+> >   - if the trigger is offloaded ("[foo_trigger]")
+> >     - A callback offloaded() is added so that LED triggers can report
+> >       their hardware control state
+> > - Remove hardware control trigger when writing brightness
+> > - Add led_trigger_notify_hw_control_changed() interface, so that LED
+> >   drivers can notify the LED core about hardware-initiated hardware
+> >   control transitions. The LED core will then determine if the
+> >   transition is allowed and switching between "none" (i.e., no trigger)
+> >   and the device's private trigger accordingly
+> >   - This capability is restricted to the device's private trigger. If
+> >     the current trigger is neither the private trigger nor "none", no
+> >     transition will be made
+> >   - This interface is gated behind Kconfig LEDS_TRIGGERS_HW_CHANGED and
+> >     LED device flag LED_TRIG_HW_CHANGED
+> > - Tune the logic of trigger deactivation so that it won't emit LED_OFF
+> >   when the deactivation is triggered by hardware
+> >=20
+> > The last three patches are included in the RFC series to demonstrate ho=
+w
+> > to these interfaces are supposed to be utilized, so that ideapad-laptop
+> > can expose the auto mode of ThinkBook's keyboard backlight. They can be
+> > submitted separately once the dust settles, if preferred.
+> >=20
+> > [ Summary of other approaches ]
+> >=20
+> > < custom attribute >
+> >=20
+> > Pros:
+> > - simplicity, KISS
+> > - no need to touch the LED core
+> > - extensible as long as it has a sensor-neutral name
+> >   - a sensor-related name could potentially lead to a mess if a future
+> >     device implements auto mode based on multiple different sensors
+> >=20
+> > Cons:
+> > - must have zero influence on brightness_set[_blocking] callbacks
+> >   in order not to break triggers
+> >   - potential interference with triggers and the brightness attribute,
+> >     can't solve #2
+> > - weird semantic (an attribute other than "brightness" and "trigger"
+> >   changes the brightness)
+> >=20
+> > < private hardware control trigger (this series) >
+> >=20
+> > Pros:
+> > - mutually exclusive with other triggers and the brightness attribute
+> >   (hence less chaos)
+> > - semantic correctness
+> > - acts as an aggregate switch to turn on/off auto mode even a future
+> >   device implements auto mode based on multiple different sensors
+> >   - extensibility (through trigger attributes)
+> >=20
+> > Cons:
+> > - complexity
+> >=20
+> > [ Previous discussion threads ]
+> >=20
+> > https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fast=
+mail.com
+> > https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.came=
+l@rong.moe
+> >=20
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Changes in v3:
+> > - Integrate https://lore.kernel.org/all/20260712-leds-hw-control-bright=
+ness-set-v1-1-1de593b09d26@rong.moe/
+> >   into the series
+> >   - Adopt __led_trigger_is_hw_controlled() in the rest of the series
+> > - Rearrange the series so that the code using the offloaded() callback =
+is
+> >   introduced before the driver implementation (thanks Thomas Wei=C3=9Fs=
+chuh)
+> > - Reword documentations and commit messages (ditto)
+> > - Adopt guard() and lockdep (ditto)
+> > - Address concerns from Sashiko
+> >   - Fix a race condition in ideapad_kbd_bl_led_cdev_brightness_set()
+> >   - Fix trigger re-registration of ideapad_kbd_bl_auto_trigger
+> >   - https://sashiko.dev/#/patchset/20260618-leds-trigger-hw-changed-v2-=
+0-c28c44053cf3%40rong.moe
+> > - Make registration failures of ideapad_kbd_bl_auto_trigger non-fatal
+> > - Link to v2: https://patch.msgid.link/20260618-leds-trigger-hw-changed=
+-v2-0-c28c44053cf3@rong.moe
+> >=20
+> > Changes in v2:
+> > - Restrict the led_trigger_notify_hw_control_changed() interface to
+> >   private triggers only
+> >   - Drop PATCH v1 1/9 ("leds: Load trigger modules on-demand if used as
+> >     hw control trigger"), not relavant any more
+> > - Gate the led_trigger_notify_hw_control_changed() interface behind
+> >   Kconfig LEDS_TRIGGERS_HW_CHANGED and LED device flag
+> >   LED_TRIG_HW_CHANGED
+> > - Fix lock ordering inversion
+> > - ideapad-laptop:
+> >   - Only call led_trigger_notify_hw_control_changed() when needed
+> >   - Serialize keyboard backlight notifications
+> > - Reword commit messages and documentations
+> > - Link to v1: https://patch.msgid.link/20260227190617.271388-1-i@rong.m=
+oe
+> >=20
+> > ---
+> > Rong Zhang (11):
+> >       leds: Move led_trigger_is_hw_controlled() to the right place
+> >       leds: class: Remove hardware control trigger when writing brightn=
+ess
+> >       leds: trigger: Add offloaded() callback and provide trigger_may_o=
+ffload attribute
+> >       leds: cros_ec: trigger: Implement offloaded() callback
+> >       leds: turris-omnia: trigger: Implement offloaded() and declare hw=
+_control_trigger
+> >       leds: trigger: netdev: Implement offloaded() callback
+> >       leds: trigger: Enforce strict checks in led_trigger_is_hw_control=
+led()
+> >       leds: trigger: Add led_trigger_notify_hw_control_changed() interf=
+ace
+> >       platform/x86: ideapad-laptop: Decouple hardware & classdev bright=
+ness for keyboard backlight
+> >       platform/x86: ideapad-laptop: Serialize keyboard backlight notifi=
+cations
+> >       platform/x86: ideapad-laptop: Fully support auto keyboard backlig=
+ht
+> >=20
+> >  Documentation/ABI/testing/sysfs-class-led          |  25 ++
+> >  .../ABI/testing/sysfs-class-led-trigger-netdev     |   3 +
+> >  Documentation/leds/leds-class.rst                  |  72 ++++++
+> >  drivers/leds/led-class.c                           |  35 ++-
+> >  drivers/leds/led-triggers.c                        | 146 +++++++++++-
+> >  drivers/leds/leds-cros_ec.c                        |   6 +
+> >  drivers/leds/leds-turris-omnia.c                   |   7 +
+> >  drivers/leds/leds.h                                |   2 +
+> >  drivers/leds/trigger/Kconfig                       |   9 +
+> >  drivers/leds/trigger/ledtrig-netdev.c              |   8 +
+> >  drivers/platform/x86/lenovo/Kconfig                |   1 +
+> >  drivers/platform/x86/lenovo/ideapad-laptop.c       | 264 +++++++++++++=
++++-----
+> >  include/linux/leds.h                               |  19 ++
+> >  13 files changed, 532 insertions(+), 65 deletions(-)
+> > ---
+> > base-commit: 1229e2e57a5c2980ccd457b9b53ea0eed5a22ab3
+> > change-id: 20260506-leds-trigger-hw-changed-96a62188cbdf
+> >=20
+> > Thanks,
+> > Rong
+> >=20
