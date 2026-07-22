@@ -1,62 +1,63 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45AFC35AC07
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D15361DCB
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 14:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784730443; cv=none; b=DTMjlZiNbFCuZfFuVlCgorN/Z6zvNqxGrCL63/6w1TVJLe9J4hCJwybS40vTiInC8HvXN3+ZAIFwRDzPZTAOYgkvbGnH0keGvSf6jiTsme4cJESpZ+a+L4aE30IxZ6I8m7rptIrdWP5Z6egXOxdMH/Wgg6Z/qrndLKQafmp71W0=
+	t=1784730446; cv=none; b=LnrUp60pX0uGAX8caQsabVuzXCLCzvuGldnNpMiPGXhPDI7efkOJwYYvq7iPN78f5UGEKB5MSV0l81Yb+L7VoZXE8S1I3nKkMTaVY4T10KvJRkQoDgyYyP9LE4NMaFy/9pUvRBMJBZ1UYvqwJIZlMK1fkj4mccGAk+8Gkbe2Ea4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784730443; c=relaxed/simple;
-	bh=yxyu4TafIzC4Fzi3U2zMmEJdSaIIbhl+1/fqKiyfzh4=;
+	s=arc-20240116; t=1784730446; c=relaxed/simple;
+	bh=aJmjMm59w5ejvwGQHl5DgYU8xgMq1VpLMmwiy06mniI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iY+zQJRrWbzYulMzX69fZPT75VGFUw5vxD8YZKwD+EqFRkbeUvLLuaHHSehuo7wxMD6P7dcw0rGFpNPw+wN/CqxFPVv8ERvD4nc9HlGdLbPzJ1a5bQpIeBwUHBX0dpkbdi/+l0WmfeYGyabkgudk7jlX3QbxFqyIxz2XuRTiu3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRBGS75l; arc=none smtp.client-ip=209.85.160.182
+	 MIME-Version:Content-Type; b=nsoeOiWngJR3SZ2E5N27cL+sbO0NnVIQgLlMYMl7xER5S/gWIae81SdTDcqjQ0Nj50MKUkNFE2gcVtTxkOg5JwiqALo3PX3eNJwSVbsJw2NVYhfrOBbUqurBXO/NI2EaOLPihutewzMN5LwP7e7L/cztXJmolWRpwwoIXATPk+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AMrKVg2i; arc=none smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRBGS75l"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c8e2e39easo128619551cf.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 07:27:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMrKVg2i"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-5276d598b96so10844951cf.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 07:27:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784730440; x=1785335240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=EBogkq6bXpW2SrdB8gUUtEgmwXCQCaUQO6IY6/OhnhI=;
-        b=LRBGS75lOV/DcveESgD4t/LPpzJS7gPRVWMJ+MRrLxyfEtAqcGV7cB+twMotMIgbvQ
-         yE8MvXWY7f6RZPl4PMxvbwM0sU5mo+ql6C7u1CqMd2QcLN9bWM+LIPqrbqHu4r4iKIJO
-         uAmR3WaNUFjZmTnKhdaIf2NLyRjuTWAWoAqK5rgswQZj4dj+gz2dFrlmHDwV04Eu6tdS
-         X46y5nOTKw+gJ/W1BK3+xIxEa/XSoOTrfIxSC7SvY8scvx+mTDn7ztLoLkIn9qxywS+F
-         yhLXk038N2Rp7INTxjxtiv/2s2roHkfk6oRDhTitXlIGi7xzTOffWDbva+kTsPbSNM+2
-         W3Gg==
+        d=gmail.com; s=20251104; t=1784730444; x=1785335244; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rmSzFVd9ZDG9X8IPeKDIjOxrHb2WtCCQ27KIoyCvvek=;
+        b=AMrKVg2i84T6leTma3tu4jn25SofBh48T9v/7fChE5Hdpd/JKs6AuOBqRqpB+tpng/
+         920nERyGZ0yKadqMTLCSaRTdNrzINPqjI5/wigoC/73P4LrEjx1/8iIO4gJad6ZS3+1/
+         Pn6JCvntNCr2LPaCz51nbxQDb5YEjyyVWzqCZzY9YvctrQ3uIPFnFpDigY1K5E5LYdFG
+         6OpGDoqIaR/0FSdND94dTHvZLO5/uId4cizzEvIMMBb1Co4qsQFkurpF7GbySjayEDXC
+         ZUuE3cRrGbCTyFo2TooGle0Vkepd4tPoYLYdgQKGTdqZ9177tCuNsy8UcYugHtB2nvJB
+         bV2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784730440; x=1785335240;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=EBogkq6bXpW2SrdB8gUUtEgmwXCQCaUQO6IY6/OhnhI=;
-        b=FPZSv8zz3OMHK5KmxXF6l5uOtmtU/ipKsagWvO1etnVhQvsbR2SE+ipNvWNyX3bzef
-         YyShE66Mw6BbsKkGh6/y2NaDcIgSci+MAdhkmLEjc6oo8+ozm0FNiPbaCJ7SvduW9IAj
-         /IsTKO2eS+dw6MBtdFenGXBEbAaRz0uQI4Zhks7AfWzwKDfs29knLrgjYwcTmAFFUQNJ
-         ck20JkcATxYPSz8t09cyMuMwItu85XWHtkCv9RDK1CKZQUilRB8D7IzS910t0vTfgExC
-         CisQaPsm01cuMCnnijnXEpX6qv0e5dVvdwNczhppCVJtpI74as/0uq1ANCw7uD7QIQ6U
-         Z6Pg==
-X-Gm-Message-State: AOJu0YxkRZe5OdGbD8ZRaRxqXM0BRgmwlZm0ib5/TdTjhrcCMZu52ylc
-	UWWk+znJbUov1A0fFt6aMws4ApN26lEgCUQ8oWImSeKG8VQJUbJ57/HQBY7y88+6
-X-Gm-Gg: AR+sD11pzqGQIyc24fg3zez+y8dm5oXxKAdKdEFVs9BxrpvMPmavtFfdDuh4IhaqD7Y
-	ahD1jeaLwtfEQ0YCYx/aMBCEA0zoQEL0fsdakPbXip3y+LFp6JSD3t7Tx8NIhfgsRzq3ZLxPfCd
-	0kYSngGLVBomQWMFGUMCdr3sQ8+IBgyjutx7gWBQvOXy+0619HI1hgV6v3j+Co9vt80LN70Px4S
-	YsG06PiPZFiTXBkiVjBJLz5JdfiEvesVWvW59axklmlVm4weONuNRQBww+pu/X9Di78BI9ciP0A
-	BWn9Pq7bInOv6aX1wX7/OU2aVaLsao6LWWwfvKY0pCFY65hOohwzIr8RwTjAmCQRWgn4UNaFY5H
-	xrtzPhsmgk8iFCzttUaaU/E5PmfM7iYKnSBo34kLAFlZwxAp7eo2dFJcZ9Y3ZIgqSKALkCl8qJV
-	0=
-X-Received: by 2002:ac8:5d88:0:b0:519:55c0:a1e5 with SMTP id d75a77b69052e-5213c8e3aa1mr212142181cf.8.1784730439956;
-        Wed, 22 Jul 2026 07:27:19 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1784730444; x=1785335244;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rmSzFVd9ZDG9X8IPeKDIjOxrHb2WtCCQ27KIoyCvvek=;
+        b=DxD818Q/FebjNxSSYCsE01xFYYLkOdq0Jh7CZLaU+Q+1whwvu92qcfDxjVZwDmu2eV
+         LRGGrZL8bzB7f+nekjUz+FaTFJ334eVXFN6JvMOsFCEXxAasfl1ZzjsY9HH+j9XTAPbM
+         NiMWmRbYz0MljZ1w2gWR5bR2APfSDWmrLTwEYTlbAdgEOElrzm6ixQgH7c35LLbGGuB1
+         BFbeLz0nhESd2paH1BKA16+7uOtdLRVaTq18VViawE8BPlRjKPNUfNds1B5dGg1fWHtH
+         Ydm8tvfCGSK+y4c2i8YBsj4crxZ3mnlOUhEQBU/K/migAerLaNP1D7w/ggHXLLa89xhv
+         Okyg==
+X-Gm-Message-State: AOJu0YyaxcZXjqxnqG3dsesI4EUBzUMP+xWJYRSnULqGExyF7fBaBo1o
+	EZ6Uwt7j+HaxIWmtNy9Bf64eKjZ39H2sBY04oyHchMRkB5+rKwjmBxj6/NUc8tno
+X-Gm-Gg: AR+sD11y4wMnjey9cjiNNHNjNx27ZPRqLsk5KqkZC+707WJpFwxZowRt8e/wofu0Nav
+	xO2aGmMnrEPwBhPjkecNH570rJugP6fcViEYo2VY29Pb8ILc23/BA0I81q0N1Pse2NUI6DzMlbf
+	yCliRUDbJIPcFIjZesA+Xy2WmHqDe2pp7Vcpxoa+Z3NC9tC9zTwYA8acbuMB/eMhTNrbIbSl+HY
+	LwkT/7sOEO8fbUmoWst1M0EGJ/esmVAKEhPjOtbxWfLuu8wywRn2Uwy7yssLwyIJkfMJwuOiXT0
+	xDfaKhKR1YKWFVC02/RBFnQk14Lg48AHBuEgFcc+k5IvUe6KMhX4dkUPqC1R6m1b9NPqv+7ARXG
+	eTrpYbWYPjlDuYRt0LZgnphXsWwBQ2OxXH8aOn4gBVcvhIy4zjnCR0HYc4aK4l7amaXum33fIb2
+	8=
+X-Received: by 2002:ac8:5706:0:b0:51c:1a4c:3c9f with SMTP id d75a77b69052e-5213c007406mr218680981cf.4.1784730441065;
+        Wed, 22 Jul 2026 07:27:21 -0700 (PDT)
 Received: from fedora ([2600:383:441:9b80:8f82:4b87:4a4b:5554])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-527d0c4fe92sm16224981cf.11.2026.07.22.07.27.19
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-527d0c4fe92sm16224981cf.11.2026.07.22.07.27.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 07:27:19 -0700 (PDT)
+        Wed, 22 Jul 2026 07:27:20 -0700 (PDT)
 From: Dave Carey <carvsdriver@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hdegoede@redhat.com,
@@ -65,10 +66,11 @@ Cc: hdegoede@redhat.com,
 	jikos@kernel.org,
 	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Dave Carey <carvsdriver@gmail.com>
-Subject: [PATCH v13 1/2] platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
-Date: Wed, 22 Jul 2026 10:27:10 -0400
-Message-ID: <20260722142712.814597-2-carvsdriver@gmail.com>
+	Dave Carey <carvsdriver@gmail.com>,
+	Hans de Goede <johannes.goede@oss.qualcomm.com>
+Subject: [PATCH v13 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+Date: Wed, 22 Jul 2026 10:27:11 -0400
+Message-ID: <20260722142712.814597-3-carvsdriver@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260722142712.814597-1-carvsdriver@gmail.com>
 References: <20260722142712.814597-1-carvsdriver@gmail.com>
@@ -78,66 +80,494 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The Yoga Book 9 14IAH10 (DMI product name "83KJ") has a dedicated
-yb9-kbdock WMI driver that registers an input device reporting
-SW_TABLET_MODE to track the detachable Bluetooth keyboard.
+The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
+that magnetically attaches to the bottom (secondary) screen in one of two
+positions.  The Embedded Controller tracks the attachment state in a 2-bit
+field called BKBD and signals changes via WMI event GUID
+806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
+device, _UID "GMZN").
 
-lenovo-ymc also loads on this machine and creates an input node with the
-SW_TABLET_MODE capability bit set.  For input switches, the presence of
-the capability bit has semantic meaning: userspace (e.g. GNOME) reads
-the switch state at startup from every node advertising the capability
-and does not expect more than one such node.
+The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
+both WMI interfaces used by this driver:
 
-Add a DMI match for the Yoga Book 9 14IAH10 to probe() so that
-lenovo-ymc returns -ENODEV on this hardware, leaving yb9-kbdock as the
-sole SW_TABLET_MODE source.  The ymc_ec_trigger EC write, the only
-other action taken in response to a YMC event, is guarded by a separate
-DMI table that excludes this machine; no other functionality is affected.
+  LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
+  The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
+  so the notify callback receives BKBD without a separate query.
 
+  LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
+  8-byte buffer {uint32 IDs=0x00060000, uint32 Status=BKBD}.
+  Used for the initial state read on probe and after resume.
+
+BKBD encoding:
+  0 = keyboard detached
+  1 = keyboard docked on top half of bottom screen
+  2 = keyboard docked on bottom half of bottom screen
+  3 = reserved (not observed in practice)
+
+This driver registers two WMI drivers sharing a module-level
+BLOCKING_NOTIFIER_HEAD:
+
+  - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
+    a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
+    value extracted from the buffer.
+
+  - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
+    its per-device private struct.  At probe time it registers a
+    notifier_block on the chain and reads the initial BKBD state via
+    wmidev_query_block().  The WMI buffer is parsed as
+    struct lenovo_feature_status { __le32 id; __le32 status; }, and the
+    ID field is verified before the status is used.
+
+  - SW_TABLET_MODE=1 is reported when the keyboard is detached;
+    SW_TABLET_MODE=0 when docked in either position (keyboard present).
+
+  - The raw BKBD value is exposed via read-only sysfs attribute
+    "keyboard_position".
+
+  - BKBD state is re-read via wmidev_query_block() on resume from
+    suspend or hibernation.
+
+Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
+
+Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Dave Carey <carvsdriver@gmail.com>
 ---
- drivers/platform/x86/lenovo/ymc.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+v13:
+- Resend of v12: patch was corrupted in transit.  git-send-email chose
+  quoted-printable encoding (triggered by non-ASCII in the changelog)
+  which encoded '=' as '=3D', corrupting the RST table separators in
+  the ABI doc and breaking git-am.  No content changes from v12.
 
-diff --git a/drivers/platform/x86/lenovo/ymc.c b/drivers/platform/x86/lenovo/ymc.c
-index 470d53e3c9d29..a13c89dcb285a 100644
---- a/drivers/platform/x86/lenovo/ymc.c
-+++ b/drivers/platform/x86/lenovo/ymc.c
-@@ -24,6 +24,22 @@ static bool force;
- module_param(force, bool, 0444);
- MODULE_PARM_DESC(force, "Force loading on boards without a convertible DMI chassis-type");
+v12:
+- Add #include <linux/sysfs.h> (for sysfs_emit; Ilpo Järvinen)
+- Add #include <linux/types.h> (for __le32 and __packed; Ilpo Järvinen)
+
+v11 (addressing Armin Wolf's v10 review):
+- ABI doc: correct Date to "June 2027" and KernelVersion to "7.3"
+
+v10 (addressing Armin Wolf's v9 review):
+- Update ABI doc: Date: June 2026, KernelVersion: 6.16
+- Add #include <linux/compiler_attributes.h> and <linux/types.h>
+- yb9_kbdock_query(): change return to pointer-out u32 *bkbd
+- struct yb9_kbdock_data: add spinlock_t lock
+- yb9_kbdock_report(): hold lock across input_report_switch + input_sync
+- yb9_kbdock_sync(): return int, propagate query error to callers
+- yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
+- struct wmi_buffer out: remove zero-initializer
+- yb9_kbdock_notify_new(): drop manual length check; use
+  .min_event_size = sizeof(__le32) in struct wmi_driver instead
+
+ .../testing/sysfs-driver-lenovo-yb9-kbdock    |  19 ++
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/lenovo/Kconfig           |  14 +
+ drivers/platform/x86/lenovo/Makefile          |   1 +
+ drivers/platform/x86/lenovo/yb9-kbdock.c      | 312 ++++++++++++++++++
+ 5 files changed, 353 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+ create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
+
+diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+new file mode 100644
+index 0000000..ebe713a
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
+@@ -0,0 +1,19 @@
++What:		/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_position
++Date:		June 2027
++KernelVersion:	7.3
++Contact:	Dave Carey <carvsdriver@gmail.com>
++Description:
++		Read-only attribute reporting the current keyboard dock position
++		as reported by the Embedded Controller on the Lenovo Yoga Book 9
++		14IAH10.
++
++		Possible values:
++
++		==  =============================================================
++		0   keyboard is not docked to any screen (detached)
++		1   keyboard docked on the top half of the bottom screen
++		2   keyboard docked on the bottom half of the bottom screen
++		==  =============================================================
++
++		SW_TABLET_MODE input events are also emitted: 0 when the keyboard
++		is docked (either position), 1 when detached.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1cc0e1..00e8275 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14479,6 +14479,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
  
-+static const struct dmi_system_id lenovo_ymc_nosupport_dmi_table[] = {
++LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
++M:	Dave Carey <carvsdriver@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
++F:	drivers/platform/x86/lenovo/yb9-kbdock.c
++
+ LETSKETCH HID TABLET DRIVER
+ M:	Hans de Goede <hansg@kernel.org>
+ L:	linux-input@vger.kernel.org
+diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
+index 9c48487..938b361 100644
+--- a/drivers/platform/x86/lenovo/Kconfig
++++ b/drivers/platform/x86/lenovo/Kconfig
+@@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called lenovo-wmi-camera.
+ 
++config LENOVO_YB9_KBDOCK
++	tristate "Lenovo Yoga Book 9 keyboard dock detection"
++	depends on ACPI_WMI
++	depends on DMI
++	depends on INPUT
++	help
++	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book 9
++	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
++	  either screen; this driver reports SW_TABLET_MODE input events based
++	  on the attachment state and exposes the raw position in sysfs.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called lenovo-yb9-kbdock.
++
+ config LENOVO_YMC
+ 	tristate "Lenovo Yoga Tablet Mode Control"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
+index 7b2128e..2842d7d 100644
+--- a/drivers/platform/x86/lenovo/Makefile
++++ b/drivers/platform/x86/lenovo/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
+ 
+ lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= wmi-hotkey-utilities.o
++lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+= yb9-kbdock.o
+ lenovo-target-$(CONFIG_LENOVO_YMC)	+= ymc.o
+ lenovo-target-$(CONFIG_YOGABOOK)	+= yogabook.o
+ lenovo-target-$(CONFIG_YT2_1380)	+= yoga-tab2-pro-1380-fastcharger.o
+diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/x86/lenovo/yb9-kbdock.c
+new file mode 100644
+index 0000000..69c68a0
+--- /dev/null
++++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
+@@ -0,0 +1,312 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Lenovo Yoga Book 9 keyboard-dock detection
++ *
++ * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magnetically
++ * attaches to the bottom screen in one of two positions.  The EC tracks
++ * attachment state in a 2-bit field called BKBD and signals changes via WMI
++ * event 0xEB on the WM10 ACPI device (_UID "GMZN").
++ *
++ * BKBD values:
++ *   0 = keyboard detached
++ *   1 = keyboard docked on the top half of the bottom screen
++ *   2 = keyboard docked on the bottom half of the bottom screen
++ *   3 = reserved / not observed
++ *
++ * Two WMI interfaces are used (documented in embedded BMOF, WQDD, 20705 bytes):
++ *
++ *   LENOVO_BTKBD_EVENT (event GUID, 806BD2A2-...)
++ *     WmiDataId(1) uint32 Status — _WED(0xEB) returns EC.BKBD directly.
++ *     The notify callback receives BKBD as an integer; no separate query needed.
++ *
++ *   LENOVO_FEATURE_STATUS_DATA (block GUID, E7F300FA-...)
++ *     WmiDataId(1) uint32 IDs   = 0x00060000 (feature selector)
++ *     WmiDataId(2) uint32 Status = BKBD value
++ *     Used on probe and resume to read initial state.
++ *
++ * The event driver (LENOVO_BTKBD_EVENT) fires a notifier chain on each WMI
++ * event.  The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev
++ * and registers a notifier_block to receive those events, eliminating the
++ * need for shared global state or a mutex.
++ *
++ * SW_TABLET_MODE=1 is reported when the keyboard is detached;
++ * SW_TABLET_MODE=0 when docked in either position (keyboard present).
++ * The raw BKBD value is exposed via the sysfs attribute "keyboard_position".
++ *
++ * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
++ */
++
++#include <linux/acpi.h>
++#include <linux/cleanup.h>
++#include <linux/dev_printk.h>
++#include <linux/dmi.h>
++#include <linux/input.h>
++#include <linux/module.h>
++#include <linux/notifier.h>
++#include <linux/pm.h>
++#include <linux/slab.h>
++#include <linux/sysfs.h>
++#include <linux/types.h>
++#include <linux/wmi.h>
++
++#define YB9_KBDOCK_EVENT_GUID	"806BD2A2-177B-481D-BFB5-3BA0BB4A2285"
++#define YB9_KBDOCK_QUERY_GUID	"E7F300FA-21CD-4003-ADAC-2696135982E6"
++
++/* BKBD encoding */
++#define BKBD_DETACHED		0
++
++/* LENOVO_FEATURE_STATUS_DATA feature selector */
++#define YB9_FEATURE_STATUS_ID	0x00060000u
++
++/*
++ * LENOVO_FEATURE_STATUS_DATA: 8-byte buffer {uint32 IDs, uint32 Status}.
++ * IDs is always 0x00060000; Status holds the BKBD value (0–3).
++ */
++struct lenovo_feature_status {
++	__le32 id;
++	__le32 status;
++} __packed;
++
++/* ------------------------------------------------------------------
++ * Notifier chain — event driver fires it, block driver listens
++ * ------------------------------------------------------------------ */
++
++static BLOCKING_NOTIFIER_HEAD(yb9_kbdock_chain_head);
++
++static void devm_yb9_kbdock_unregister_notifier(void *data)
++{
++	struct notifier_block *nb = data;
++
++	blocking_notifier_chain_unregister(&yb9_kbdock_chain_head, nb);
++}
++
++static int devm_yb9_kbdock_register_notifier(struct device *dev,
++					      struct notifier_block *nb)
++{
++	int ret;
++
++	ret = blocking_notifier_chain_register(&yb9_kbdock_chain_head, nb);
++	if (ret < 0)
++		return ret;
++
++	return devm_add_action_or_reset(dev, devm_yb9_kbdock_unregister_notifier, nb);
++}
++
++/* ------------------------------------------------------------------
++ * Block WMI driver — LENOVO_FEATURE_STATUS_DATA
++ * (owns input_dev, sysfs, PM resume)
++ * ------------------------------------------------------------------ */
++
++struct yb9_kbdock_data {
++	struct wmi_device	*wdev;
++	struct input_dev	*input_dev;
++	struct notifier_block	 nb;
++};
++
++static int yb9_kbdock_query(struct yb9_kbdock_data *d)
++{
++	struct wmi_buffer out = {};
++	int ret;
++
++	ret = wmidev_query_block(d->wdev, 0, &out,
++				 sizeof(struct lenovo_feature_status));
++	if (ret)
++		return ret;
++
++	struct lenovo_feature_status *fs __free(kfree) = out.data;
++
++	if (le32_to_cpu(fs->id) != YB9_FEATURE_STATUS_ID)
++		return -EIO;
++
++	return le32_to_cpu(fs->status);
++}
++
++static void yb9_kbdock_report(struct yb9_kbdock_data *d, u32 bkbd)
++{
++	int tablet = (bkbd == BKBD_DETACHED) ? 1 : 0;
++
++	input_report_switch(d->input_dev, SW_TABLET_MODE, tablet);
++	input_sync(d->input_dev);
++	dev_dbg(&d->wdev->dev, "BKBD=%u SW_TABLET_MODE=%d\n", bkbd, tablet);
++}
++
++static void yb9_kbdock_sync(struct yb9_kbdock_data *d)
++{
++	int bkbd = yb9_kbdock_query(d);
++
++	if (bkbd >= 0)
++		yb9_kbdock_report(d, bkbd);
++}
++
++static int yb9_kbdock_nb_call(struct notifier_block *nb,
++			       unsigned long bkbd, void *unused)
++{
++	struct yb9_kbdock_data *d =
++		container_of(nb, struct yb9_kbdock_data, nb);
++
++	yb9_kbdock_report(d, bkbd);
++	return NOTIFY_DONE;
++}
++
++static ssize_t keyboard_position_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	struct yb9_kbdock_data *d = dev_get_drvdata(dev);
++	int bkbd = yb9_kbdock_query(d);
++
++	if (bkbd < 0)
++		return bkbd;
++	return sysfs_emit(buf, "%d\n", bkbd);
++}
++static DEVICE_ATTR_RO(keyboard_position);
++
++static const struct attribute * const yb9_kbdock_attrs[] = {
++	&dev_attr_keyboard_position.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(yb9_kbdock);
++
++static int yb9_kbdock_resume(struct device *dev)
++{
++	struct yb9_kbdock_data *d = dev_get_drvdata(dev);
++
++	yb9_kbdock_sync(d);
++	return 0;
++}
++static DEFINE_SIMPLE_DEV_PM_OPS(yb9_kbdock_pm_ops, NULL, yb9_kbdock_resume);
++
++static int yb9_kbdock_block_probe(struct wmi_device *wdev, const void *ctx)
++{
++	struct yb9_kbdock_data *d;
++	struct input_dev *input_dev;
++	int ret;
++
++	d = devm_kzalloc(&wdev->dev, sizeof(*d), GFP_KERNEL);
++	if (!d)
++		return -ENOMEM;
++
++	d->wdev = wdev;
++
++	input_dev = devm_input_allocate_device(&wdev->dev);
++	if (!input_dev)
++		return -ENOMEM;
++
++	input_dev->name		= "Lenovo Yoga Book 9 keyboard dock switch";
++	input_dev->phys		= YB9_KBDOCK_QUERY_GUID "/input0";
++	input_dev->id.bustype	= BUS_HOST;
++	input_set_capability(input_dev, EV_SW, SW_TABLET_MODE);
++
++	ret = input_register_device(input_dev);
++	if (ret)
++		return ret;
++
++	d->input_dev		= input_dev;
++	d->nb.notifier_call	= yb9_kbdock_nb_call;
++
++	ret = devm_yb9_kbdock_register_notifier(&wdev->dev, &d->nb);
++	if (ret)
++		return ret;
++
++	dev_set_drvdata(&wdev->dev, d);
++	yb9_kbdock_sync(d);
++	return 0;
++}
++
++static const struct wmi_device_id yb9_kbdock_block_id_table[] = {
++	{ .guid_string = YB9_KBDOCK_QUERY_GUID },
++	{ }
++};
++
++static struct wmi_driver yb9_kbdock_block_driver = {
++	.driver = {
++		.name		= "lenovo-yb9-kbdock",
++		.dev_groups	= yb9_kbdock_groups,
++		.pm		= pm_sleep_ptr(&yb9_kbdock_pm_ops),
++	},
++	.id_table	= yb9_kbdock_block_id_table,
++	.no_singleton	= true,
++	.probe		= yb9_kbdock_block_probe,
++};
++
++/* ------------------------------------------------------------------
++ * Event WMI driver — LENOVO_BTKBD_EVENT
++ * (fires the notifier chain on each WMI event)
++ * ------------------------------------------------------------------ */
++
++static void yb9_kbdock_notify_new(struct wmi_device *wdev,
++				  const struct wmi_buffer *data)
++{
++	/*
++	 * _WED(0xEB) returns EC.BKBD directly as a 32-bit integer
++	 * (LENOVO_BTKBD_EVENT WmiDataId(1) uint32 Status).
++	 */
++	if (!data || data->length < sizeof(__le32))
++		return;
++
++	u32 bkbd = le32_to_cpu(*(const __le32 *)data->data);
++
++	blocking_notifier_call_chain(&yb9_kbdock_chain_head, bkbd, NULL);
++}
++
++static const struct wmi_device_id yb9_kbdock_event_id_table[] = {
++	{ .guid_string = YB9_KBDOCK_EVENT_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, yb9_kbdock_event_id_table);
++
++static struct wmi_driver yb9_kbdock_event_driver = {
++	.driver = {
++		.name = "lenovo-yb9-kbdock-event",
++	},
++	.id_table	= yb9_kbdock_event_id_table,
++	.no_singleton	= true,
++	.notify_new	= yb9_kbdock_notify_new,
++};
++
++/* ------------------------------------------------------------------
++ * Module init / exit
++ * ------------------------------------------------------------------ */
++
++static const struct dmi_system_id yb9_kbdock_dmi_table[] __initconst = {
 +	{
-+		/*
-+		 * Yoga Book 9 14IAH10: SW_TABLET_MODE is reported by the
-+		 * yb9-kbdock driver.  Suppress lenovo-ymc on this machine to
-+		 * avoid userspace seeing two input nodes that both advertise
-+		 * the SW_TABLET_MODE capability.
-+		 */
++		/* Lenovo Yoga Book 9 14IAH10 */
 +		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_SYS_VENDOR,   "LENOVO"),
 +			DMI_MATCH(DMI_PRODUCT_NAME, "83KJ"),
 +		},
 +	},
 +	{ }
 +};
 +
- static const struct dmi_system_id allowed_chasis_types_dmi_table[] = {
- 	{
- 		.matches = {
-@@ -101,6 +117,9 @@ static int lenovo_ymc_probe(struct wmi_device *wdev, const void *ctx)
- 	struct input_dev *input_dev;
- 	int err;
- 
-+	if (dmi_check_system(lenovo_ymc_nosupport_dmi_table))
++static int __init yb9_kbdock_init(void)
++{
++	int ret;
++
++	if (!dmi_check_system(yb9_kbdock_dmi_table))
 +		return -ENODEV;
 +
- 	if (!dmi_check_system(allowed_chasis_types_dmi_table)) {
- 		if (force)
- 			dev_info(&wdev->dev, "Force loading Lenovo YMC support\n");
++	ret = wmi_driver_register(&yb9_kbdock_event_driver);
++	if (ret)
++		return ret;
++
++	ret = wmi_driver_register(&yb9_kbdock_block_driver);
++	if (ret) {
++		wmi_driver_unregister(&yb9_kbdock_event_driver);
++		return ret;
++	}
++
++	return 0;
++}
++module_init(yb9_kbdock_init);
++
++static void __exit yb9_kbdock_exit(void)
++{
++	wmi_driver_unregister(&yb9_kbdock_block_driver);
++	wmi_driver_unregister(&yb9_kbdock_event_driver);
++}
++module_exit(yb9_kbdock_exit);
++
++MODULE_AUTHOR("Dave Carey <carvsdriver@gmail.com>");
++MODULE_DESCRIPTION("Lenovo Yoga Book 9 keyboard dock detection");
++MODULE_LICENSE("GPL");
 -- 
 2.55.0
 
