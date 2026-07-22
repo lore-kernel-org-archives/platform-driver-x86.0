@@ -1,109 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF973546C7;
-	Wed, 22 Jul 2026 13:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2A2356750
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 14:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784727253; cv=none; b=G/R9UkswDQz2UL9POZsOAEHpXiZ++zt+sDICSXZfMLsxKKOSHTQ7O0QvDs27QZ+UomF4giJD9q9CeKGGAxNaBM2EV2CwCXKMWws/iltThotRpqtVSq2jRp+4DMNlcpZHDOTWnJmHzM6T1NkMIk4QReUviYMIBEeBC3cXWZl5ZxA=
+	t=1784730441; cv=none; b=NtSvsJwlfUaBqn3TtZlxO17kkEezJm8OI6greDFvCDwgatspD+c7ZfrK8vg/GoOwUlv6ZIULfFdz+aQQ5QNtZf250wCGu1YMjqlLR95ABqoOS0lZ1JcKGU7j8VgBxqYUnTIZuGaujNg5acYSDvLeaP/i9larPnq+e2+3TC4F8uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784727253; c=relaxed/simple;
-	bh=9fbFYhKprTp2YpUX7Llzd5qK0QBSvK1K8S4Otd1lCro=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=qg4Jup/mbi9vvcm8qE8eZowHFBO7aOGHtNUO5I0EBJddl4dzyX8A9zGl9mumyWrqqyZ0JRNIrs2NLRTVofaBeIJC8rcyWI2rFoydPJOlREb3oRlvh9tXIdWm8JnaWy4g1MFdinye53TxGNGwE/kHU9imQb422pJRvKFolV4Qxdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOpadXON; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784730441; c=relaxed/simple;
+	bh=uHv6Z8xOfCFeIc5aKMjsqa4BpxvESOYAG3MEgkL1tyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZY0Q2NRfL5onXVjqjeEnpvqcys7VofOQ3d4DcgnM2oF7ZwQtRgEWVPHQyKkuG1jTUQQP4uJtIXjllqrdeODc4hkuc5Yo4JIIhUQsy6fvaU2CoLb7Fu4TqS+Eo5WAFBj9p1tyser116k4wK80wzRsFIfpX2H1uv0qvcQHJ40mVzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBG0Gxmb; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOpadXON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 300051F00AC4;
-	Wed, 22 Jul 2026 13:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784727250;
-	bh=RQZW+0HRVhe9UFcSH7cql90O01oghIj/tpScM/IVxcQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=QOpadXONRHyVXUFg7dTRcEjiNS0tcCIJmY40e9Oc5uWTlPpo++m/wKeynV6ZckVDO
-	 i+s5YAr41uY7jgSgSinMGIVez94+R40HQu8bn/gINjMnKz0vIEbGnXfIZ+6z/gNAh4
-	 BzZVeiRlQTvTbvW94bAszKsPmkzfi+b+FRyQ3XXwPRiqJzwH3wa+MlNO05jz6mOM69
-	 clsmKiBcKtMNEJ5OPbcSLweOVdGJMBDaJ+5GrLPHw5KglJaz3lJUaAn5MdGRrG0ouk
-	 NLRIOCamIVfaKrcDSCedp8lo/X0ghwbJermM2rVYE6Xmxesm8EreToyz4JeT8EP73q
-	 N7K1KPXc77d0A==
-From: Mark Brown <broonie@kernel.org>
-To: tiwai@suse.com, Marco Giunta <marco_giunta@outlook.it>
-Cc: perex@perex.cz, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
- linux-sound@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
- hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-acpi@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, wangweidong.a@awinic.com, 
- nadim@symbolic.software, imitoy@imitoy.top, munzirtaha@gmail.com, 
- yakov.till@gmail.com
-In-Reply-To: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
-References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
-Subject: Re: (subset) [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec
- driver for Lenovo Legion
-Message-Id: <178465795610.260430.18004285185903429400.b4-ty@b4>
-Date: Tue, 21 Jul 2026 19:19:16 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBG0Gxmb"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-51c149c5722so77329451cf.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 07:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784730439; x=1785335239; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ib4XZylJ9w9egs25zIiG4greQjW32kkCzwW9LOhfZIw=;
+        b=HBG0GxmbX/GL9YsziAPfbPHH2CeVMcxVjoLv/mFNWVzz6FVXjuphtb4Lpecv8tazrO
+         hUx0JxeKKzKr/O92O9pQmyN2k6Ih8r272aWHq2/eRFxaJo6FeK0QVBx+Wso7bJnnvbx2
+         RPb69ir03sETbGaQWjyUtAGz+J5RSac8bKHek8sUcJyeP8jmZ3w9CYLuw6GveZEGOP5e
+         lPvmPUf9vJV7YjCln0bptJvlHSNR0LNvs4ww6DUj7OPPAmkQZNl6ksyp5Xp2tarqnZUV
+         w5iyrFKNh9icH5nE1RZLQ1fkeLPhODivcdM3QoZl5LNKRDvvPq+fczHVGB3PgM9Jrwwe
+         Egmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784730439; x=1785335239;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Ib4XZylJ9w9egs25zIiG4greQjW32kkCzwW9LOhfZIw=;
+        b=mIx6R0+NvmN2Xu4XXCvj6cTbmy452Fi0RejKfsZmehAAL7/M7Slj00FgcYaJgZ7Jr9
+         UOBl14HWxcvBeSEx+bTVv8cVwu4mFeJANPXYEo07okPu2p6tMhDYwrxaWiB0KVPyO4Tb
+         twMuY205Eitqyhz/nR9hcbAiPA6US3OFDro4gy3JRPuuXvkLZNn5lyE5bSaz4Nk1ppuv
+         VeKofX0HcWpI1aGlisbnVTHIRxOVToRhR1059G6CEk1uVr29HLbtcm1tqECHDVtkYEqJ
+         7hi+Z1jR0g19wFI8KgUSG5eQ6d0PAP2BcJ/DoPpCT8ONi1Sfzdi1oO/rRFH4NfdoiE2i
+         PxAg==
+X-Gm-Message-State: AOJu0Yxj0fnQqVBWWwEKCMLmguNFe0Gi4UY9RO89vTyl7R6PzSjnpiGE
+	UQJcrGnOj5E7DoPBzg4OkvpoqDm6kJHaPxIMx98vXQgK3rYInuVOr8Wn4pxukund
+X-Gm-Gg: AR+sD10bmiSGed7FD/iUj2ZUpYUipyOebAH+3u5mCyE0SUcy6hKulXYL14GSSnL11Bx
+	TVaEWprgP2CVpOLFkQH2+4Hkp9bnrS3do5uF10DzpQ2geza1IEX0MrB3wLGHX05YXl8RooAW+Ep
+	jRBD1dqGWtq74apxtaPMs6OYHyRk49LJg9829zaUUtKudClgA2g5CIOR/vFIiQHBK09wU3GfQyr
+	+dBQNH2tVIQXUsjKdWzDVHLy8xbMOINimaOgB8MyFuhhNR5ARHctCwV+87Be5Wpq9Ql4yVP7isy
+	JWFGs7K4oV1ersCMzuyJayga5LE1qqH11G5iUaX9EzuVPsRomTAsJYpqP5uXUxCuC6SZtSB52nk
+	RbtH6kXkm/sbnTeUdW672tFIh6h2+dhuwsyrwOYXHt92e30snJVxEP2SbOYNiia8veTCrj0MYHo
+	o=
+X-Received: by 2002:a05:622a:296:b0:51b:9873:e37b with SMTP id d75a77b69052e-527a5d0569bmr43874981cf.9.1784730438837;
+        Wed, 22 Jul 2026 07:27:18 -0700 (PDT)
+Received: from fedora ([2600:383:441:9b80:8f82:4b87:4a4b:5554])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-527d0c4fe92sm16224981cf.11.2026.07.22.07.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Jul 2026 07:27:18 -0700 (PDT)
+From: Dave Carey <carvsdriver@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com,
+	jikos@kernel.org,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dave Carey <carvsdriver@gmail.com>
+Subject: [PATCH v13 0/2] Lenovo Yoga Book 9 keyboard dock detection
+Date: Wed, 22 Jul 2026 10:27:09 -0400
+Message-ID: <20260722142712.814597-1-carvsdriver@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1861; i=broonie@kernel.org;
- h=from:subject:message-id; bh=9fbFYhKprTp2YpUX7Llzd5qK0QBSvK1K8S4Otd1lCro=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBqYMbONts59xPaurX1cc1uvm9SLXwvd1M2nY7Iq
- AKBkP+pYtmJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCamDGzgAKCRAk1otyXVSH
- 0HcGCACGbecZ0k+pRjDpGj53snVGx6aBTcCQHgPe/Qpl4PcUGI49IyBw5GUO7N2blDHfF+op33b
- Mcy1k+FEqQpEyg81hdEEez4muBONiGHlJWzSk0At67rKUBa4vv1y77EDfnL2K7meyXt6t7BRsWr
- aRtkV7ifLspvO5kSq+RFvB0Kf3znT48QBTxoRtHHiiD4sLTVUMQCORkhl8/FWyM60zLwxwYrl6t
- /mq/Bd87HEPYQ8cxxqTdhAPMFSoSWCWml6f8ySVDl7Lej+zApKIzfkyN1zqIOHUU7aNJGG22b0H
- yrK2mBiCbno2GGCZQnqDAukY0XVAhCE5c8Rv4+jdFl+L72A/
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 Jul 2026 15:25:02 +0200, Marco Giunta wrote:
-> ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
-> 
-> Several Lenovo Legion laptops (Pro 7i 16IAX10H, Y9000P IAX10,
-> Pro 7 16AFR10H, R9000P ADR10) use AWINIC AW88399 smart amplifiers
-> to drive their bass woofers, connected via I2C as side codecs
-> to a Realtek ALC287 HDA codec.
-> 
-> [...]
+Changes in v13:
 
-Applied to
+  - Resend of v12: v12 was corrupted in transit.  Root cause: the ABI
+    documentation uses RST table separator lines (==  ====...) which
+    contain '=' characters; git-send-email selected quoted-printable
+    transfer encoding due to non-ASCII in the changelog (UTF-8 author
+    name), encoding '=' as '=3D' and breaking git-am on the receiving
+    end.  Fixed by setting sendemail.transferEncoding=8bit.  No content
+    changes from v12.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-7.3
+Changes in v12 (addressing Ilpo Järvinen's v11 review of patch 2/2):
 
-Thanks!
+  - Add #include <linux/sysfs.h> (for sysfs_emit)
+  - Add #include <linux/types.h> (for __le32 and __packed)
 
-[1/8] ASoC: aw88399: extract shared device library
-      https://git.kernel.org/broonie/sound/c/7fa44519a2a3
-[2/8] ASoC: aw88399: derive channel from I2C address on ACPI systems
-      https://git.kernel.org/broonie/sound/c/df5654d73061
-[3/8] ASoC: aw88399: add per-instance BSTS status bypass flag
-      https://git.kernel.org/broonie/sound/c/b4530a3e4895
-[4/8] ASoC: aw88399: add firmware reload flag for resume
-      https://git.kernel.org/broonie/sound/c/b5e1d685fb9c
-[5/8] ASoC: aw88399: add channel setter for HDA side codec
-      https://git.kernel.org/broonie/sound/c/15c9fdb3c39d
+Changes in v11 (addressing Armin Wolf's v10 review of patch 2/2):
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+  - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3";
+    these fields should reflect when the ABI lands in the kernel, not
+    the submission date.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Patch 1/2 (lenovo-ymc) is unchanged from v10.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Changes in v10 (addressing Armin Wolf's v9 review of patch 2/2):
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+  - Update ABI doc: Date: June 2026, KernelVersion: 6.16
+  - Add #include <linux/compiler_attributes.h> and <linux/types.h>
+  - yb9_kbdock_query(): change return to pointer-out u32 *bkbd to avoid
+    a 0xFFFFFFFF status value being misread as -EPERM
+  - struct yb9_kbdock_data: add spinlock_t lock
+  - yb9_kbdock_report(): hold lock across input_report_switch + input_sync
+  - yb9_kbdock_sync(): return int, propagate query error to callers
+  - yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
+  - struct wmi_buffer out: remove zero-initializer (not needed)
+  - yb9_kbdock_notify_new(): drop manual length check; use
+    .min_event_size = sizeof(__le32) in struct wmi_driver instead
 
-Thanks,
-Mark
+Patch 1/2 (lenovo-ymc) is unchanged from v9.
 
+Dave Carey (2):
+  platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
+  platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+
+ Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock |  19 ++
+ MAINTAINERS                                               |   7 +
+ drivers/platform/x86/lenovo/Kconfig                       |  14 +
+ drivers/platform/x86/lenovo/Makefile                      |   1 +
+ drivers/platform/x86/lenovo/yb9-kbdock.c                  | 312 ++++++++++++
+ drivers/platform/x86/lenovo/ymc.c                         |  19 ++
+ 6 files changed, 372 insertions(+)
+
+2.55.0
