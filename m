@@ -1,269 +1,101 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C81440A1F;
-	Wed, 22 Jul 2026 16:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DC14334B5;
+	Wed, 22 Jul 2026 18:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784738263; cv=pass; b=KnrSoYXlHZKrOfVNT++waK2MTFt+AzGXjYexmm2sbJ6zSe0BU5sGY43lRKUoAgQZXYpDw//HBWpUQUqYxs+rJeFn9KnhjZ4UN5UtVfLrk5pAckEdKdkNcQyPBYo10EazKABGcmcjgJ9Twv6yWKotvylWtbV23PO2m6GCAdFERDs=
+	t=1784745343; cv=pass; b=fQe+HMWo5LLWdeo9frOgoiG7dXyAs39I2nRqWNerv61V6Ea0VgishiFz1So01A5X2QaKX16TqKxjzeWpbyOBlVea7qIQm+aZc3S69bZHKx0MSq1qm+xa9AKg9QU2vwUzBZXqsITsih7VX/zwjcUB6Xn5UCDf/BJMHX5BHv2OEvA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784738263; c=relaxed/simple;
-	bh=F9sGgDdP97ntrZdX9pS1HAYZUppAVmPNkdrgDiuH3Ik=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=qFckQrttt7d0ujm3PGHCKS4PTiyAhlWSNlau9/Wt8/7sIPmyuqVJ7FlZ0NtxJkIsgtWCxd3aPQO4v34tGJj+NP1k8snCqrLDk9Hr8Ya5lavaipmaUm75JvEM2s56yFxhsQ2ZFXZsVmt71iYwSQyXkYBWtpJC9tq5zms6CspDT8Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=QK8JLrug; arc=pass smtp.client-ip=136.143.188.12
+	s=arc-20240116; t=1784745343; c=relaxed/simple;
+	bh=zy0UTVogOFFDhH9VHuZKYVfPX1xHZCvCFqHXaouM4DA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o9rXgaU1mUCm6+BRKWKk7NxWuh10aSmRKjHoNEKGbswHoPKmDWGNm4VRy2z+xLaqn8BmvSy618t97AcU0ZUhFzp6akNpqKm7ECC3CDYbBO9SHMHulyvISy9P2k5o5vGa6KdkgWHFhQ4AyA1wPCO2FiWV4swU59qthk64NuRtOfk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=fUKPpNEi; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="QK8JLrug"
-ARC-Seal: i=1; a=rsa-sha256; t=1784738230; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="fUKPpNEi"
+ARC-Seal: i=1; a=rsa-sha256; t=1784745325; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=OL1Ve+DGL0WqquveixD2Y83mcPN2hNnlQlpFK4pFIMQ0V+JQNaVLiacEsyq51LXHOnYU2jGjq6qpSaQCFc+KDiXtvAWkbPpR/Lg2Xf0sHuuGmfxDUSCS9i1gwPE7SaupKTITe169Oxg8CFzXOqps3Sri8yKtCLialX0NzZOijLQ=
+	b=RhlBvDWpUYao+vqHsN66Hj0Fh9BAbhxNk04nkG/GLAJS6M1GNvv9A06jyepJNTOEpRWBU+ctN+uz4x/kfgq/sF46ZTZEaI5rRPKyPAxstJeArWqkYGjY16eshNWZdXJ/jwYUhpFkIMkjq7z0+cTl7xSBE5oRamppWF4bmjaDE5A=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1784738230; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=jJ1PGazpDSOuUb91837wghlBu1TBhgu1eryggs8yc4A=; 
-	b=dW2bi7vADv8O7vnlDXP/yCrtpEztkoheFgp45kBOe916z8pyIjbKTBSiidQ7XDcrbKtA8nVFGj9VFWNcI4mLhhJ4eYOqVdF1fRClPw30InL8UneeFUKWbCQ0exAn4MWgAZEhUX+DkVE6ychh31u82fYxWhkzBpW1kIfu9v3HH/E=
+	t=1784745325; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Kpxxq6ZygBt3lSdqtYIUPrbFusG5iUazetUu4YGlUSI=; 
+	b=SzN8H8lCLKSclb6ZoDNfW+KyidaBo/dbLwX/zqLihwG+CCRhtXpn97Pobh0VZcnVyU5PFIAaDhhT7IKdPyOmjHWA6DGqBYCm7w8LjJanggTQV8m/nN30hba3D4QXlV5DG1q6SjE/FF0nKgYPTCDrhVqZHMUwE76pIDgxA+80HUM=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784738230;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784745325;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=jJ1PGazpDSOuUb91837wghlBu1TBhgu1eryggs8yc4A=;
-	b=QK8JLrug4x8BZukQaRZSyLnC+SR+JnoRaNIfTp+ssAkXJNtKji4ho8uj8kxWz9tU
-	x8yylvesPZxy5JW6jP12M2fNff6UNP6ZtQS5OF8vprchDz1uoBq8FuRwlRzbgDHQjri
-	/swYuHXEBV8aEKuRw/DWQnE7/vo7gzhqmwpIczPMCAgqtZP0CR9+B2nVIKqrFy2QonU
-	ltcJ3/0Pg0J7vgeCKHEMP9QNJAXb5gmQS3AO+GuJm6mnDv5w/nfbXceAtNNYfR5fSj4
-	3jFTyx6tuYSuh0yoqeTkU4nFAtejCytf+cpxp8fZ7vO9+FuUtPPt70Q/il4xk3tcvSi
-	YCqt8t0Zbg==
-Received: by mx.zohomail.com with SMTPS id 1784738229117212.46321746119304;
-	Wed, 22 Jul 2026 09:37:09 -0700 (PDT)
-Message-ID: <bb2a9c53669fde370f14cb9ef3e0a73fc729a5bb.camel@rong.moe>
-Subject: Re: [PATCH RFC v3 00/11] leds: Add support for hardware-initiated
- hardware control trigger transition
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=Kpxxq6ZygBt3lSdqtYIUPrbFusG5iUazetUu4YGlUSI=;
+	b=fUKPpNEizIFZnJiPMwYs7ruWRk7dSyRExn5nk2kMbJnBBpJSRLzrCOCz3TVu9bpo
+	zdPhEsKiOdJGaDyQR4yTp3rjLIJFS5XQLmTUIiDwxpZO2u+6sShdMxko+8U4xhVS1G6
+	GJ92bur1kz99qwAr+ZkPTAKMMhuH+qABtI3hapMp9nmVdguDNnfxlvj2a6ZEVSkh4j4
+	v/21JvDsp39o7/90Wl1aXGx68xaLAAUgsFSIH+SaCEdM2PEcOikFOhwk+hgfOCqq5rw
+	5Gkuxc+T6HrFO66HAhfZN/9yTnwz5/bDnvmOxwGpPIkIvUwtYsLhzbWWTTWfQqBU+nE
+	e0PkWJAScg==
+Received: by mx.zohomail.com with SMTPS id 1784745321698533.9484142073169;
+	Wed, 22 Jul 2026 11:35:21 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
- <linux@weissschuh.net>,  Benson Leung <bleung@chromium.org>, Guenter Roeck
- <groeck@chromium.org>, Marek =?ISO-8859-1?Q?Beh=FAn?=	 <kabel@kernel.org>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar
- <vsankar@lenovo.com>, 	linux-leds@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, 	platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260722123913.GB11805@google.com>
-References: <20260719-leds-trigger-hw-changed-v3-0-5fb55722e36e@rong.moe>
-	 <20260722123913.GB11805@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Jul 2026 00:31:52 +0800
+Date: Thu, 23 Jul 2026 02:35:08 +0800
+Subject: [PATCH] platform/x86: ideadpad-laptop: Fix driver unregistration
+ order
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260723-ideapad-rev-exit-v1-1-bf0d8ac9b5ed@rong.moe>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQqEMBBE0atIryegaEC9irjoJKW2C5VEB0G8+
+ 7TO8kHVvyghChK12UURX0myLorik5GfeBlhJKjJ5cFa+FIJ3jgYHRucspuyLlzFjXeWK9LbFjH
+ I+Sa7/u90uBl+fzp03z+Rw/AIdAAAAA==
+X-Change-ID: b0d55ec3-ideapad-rev-exit-381b4a9cb5a4
+To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
+ "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+ Ike Panhc <ikepanhc@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Philipp Jungkamp <p.jungkamp@gmx.net>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Rong Zhang <i@rong.moe>
+X-Mailer: b4 0.16-dev-2f6f2
 X-ZohoMailClient: External
 
-Hi Lee,
+There are two drivers in the ideapad-laptop module: a wmi_driver and a
+platform_driver. The former is registered before the latter, but the
+unregistration order is the same as the init one instead of the reverse.
 
-On Wed, 2026-07-22 at 13:39 +0100, Lee Jones wrote:
-> Why is this still an RFC?
+Fix the driver unregistration order by reversing it.
 
-I plan to make it non-RFC in v4, after resolving concerns from Ilpo and
-Sashiko.
+Fixes: f32e02417614 ("platform/x86: ideapad-laptop: support for more special keys in WMI")
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index 4fbc904f1fc3..8213524504ee 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -2564,8 +2564,8 @@ module_init(ideapad_laptop_init)
+ 
+ static void __exit ideapad_laptop_exit(void)
+ {
+-	ideapad_wmi_driver_unregister();
+ 	platform_driver_unregister(&ideapad_acpi_driver);
++	ideapad_wmi_driver_unregister();
+ }
+ module_exit(ideapad_laptop_exit)
+ 
+
+---
+base-commit: 248951ddc14de84de3910f9b13f51491a8cd91df
+change-id: b0d55ec3-ideapad-rev-exit-381b4a9cb5a4
 
 Thanks,
 Rong
 
->=20
-> > Some laptops can tune their keyboard backlight according to ambient
-> > light sensors (auto mode). This capability is essentially a hardware
-> > control trigger. Meanwhile, such laptops also offer a shrotcut for
-> > cycling through brightness levels and auto mode. For example, on
-> > ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
-> > levels in the following sequence:
-> >=20
-> >   1 =3D> 2 =3D> 0 =3D> auto =3D> 1 ...
-> >=20
-> > Recent ThinkPad models should have similar sequence too.
-> >=20
-> > However, there are some issues preventing us from using a private
-> > hardware control trigger:
-> >=20
-> > 1. We want a mechanism to tell userspace which trigger is the hardware
-> >    control one, so that userspace can determine if auto mode is on/off,
-> >    as well as turing it on/off programmatically without obtaining the
-> >    trigger's name via other channels
-> > 2. Writing brightness has the side effect of disabling hardware control=
-,
-> >    but the hardware control trigger remains active, resulting in the
-> >    software and hardware being out of sync. Most LED drivers that
-> >    supports hardware control also suffer from the same issue
-> > 3. Turing on/off auto mode via the shortcut cannot activate/deactivate
-> >    the corresponding hardware control trigger, making the software stat=
-e
-> >    out of sync
-> > 4. Even with #3 solved, deactivating the hardware control trigger has
-> >    the side effect of emitting LED_OFF, breaking the shortcut cycle,
-> >    especially "auto =3D> 1"
-> >=20
-> > This RFC series tries to demonstrate a path on solving these issues:
-> >=20
-> > - Introduce an attribute "trigger_may_offload", so that userspace can
-> >   determine:
-> >   - if the LED device supports hardware control (supported =3D> visible=
-)
-> >   - which trigger is the hardware control trigger selected by the LED
-> >     device
-> >   - if the trigger is selected ("<foo_trigger>")
-> >   - if the trigger is offloaded ("[foo_trigger]")
-> >     - A callback offloaded() is added so that LED triggers can report
-> >       their hardware control state
-> > - Remove hardware control trigger when writing brightness
-> > - Add led_trigger_notify_hw_control_changed() interface, so that LED
-> >   drivers can notify the LED core about hardware-initiated hardware
-> >   control transitions. The LED core will then determine if the
-> >   transition is allowed and switching between "none" (i.e., no trigger)
-> >   and the device's private trigger accordingly
-> >   - This capability is restricted to the device's private trigger. If
-> >     the current trigger is neither the private trigger nor "none", no
-> >     transition will be made
-> >   - This interface is gated behind Kconfig LEDS_TRIGGERS_HW_CHANGED and
-> >     LED device flag LED_TRIG_HW_CHANGED
-> > - Tune the logic of trigger deactivation so that it won't emit LED_OFF
-> >   when the deactivation is triggered by hardware
-> >=20
-> > The last three patches are included in the RFC series to demonstrate ho=
-w
-> > to these interfaces are supposed to be utilized, so that ideapad-laptop
-> > can expose the auto mode of ThinkBook's keyboard backlight. They can be
-> > submitted separately once the dust settles, if preferred.
-> >=20
-> > [ Summary of other approaches ]
-> >=20
-> > < custom attribute >
-> >=20
-> > Pros:
-> > - simplicity, KISS
-> > - no need to touch the LED core
-> > - extensible as long as it has a sensor-neutral name
-> >   - a sensor-related name could potentially lead to a mess if a future
-> >     device implements auto mode based on multiple different sensors
-> >=20
-> > Cons:
-> > - must have zero influence on brightness_set[_blocking] callbacks
-> >   in order not to break triggers
-> >   - potential interference with triggers and the brightness attribute,
-> >     can't solve #2
-> > - weird semantic (an attribute other than "brightness" and "trigger"
-> >   changes the brightness)
-> >=20
-> > < private hardware control trigger (this series) >
-> >=20
-> > Pros:
-> > - mutually exclusive with other triggers and the brightness attribute
-> >   (hence less chaos)
-> > - semantic correctness
-> > - acts as an aggregate switch to turn on/off auto mode even a future
-> >   device implements auto mode based on multiple different sensors
-> >   - extensibility (through trigger attributes)
-> >=20
-> > Cons:
-> > - complexity
-> >=20
-> > [ Previous discussion threads ]
-> >=20
-> > https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fast=
-mail.com
-> > https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.came=
-l@rong.moe
-> >=20
-> > Signed-off-by: Rong Zhang <i@rong.moe>
-> > ---
-> > Changes in v3:
-> > - Integrate https://lore.kernel.org/all/20260712-leds-hw-control-bright=
-ness-set-v1-1-1de593b09d26@rong.moe/
-> >   into the series
-> >   - Adopt __led_trigger_is_hw_controlled() in the rest of the series
-> > - Rearrange the series so that the code using the offloaded() callback =
-is
-> >   introduced before the driver implementation (thanks Thomas Wei=C3=9Fs=
-chuh)
-> > - Reword documentations and commit messages (ditto)
-> > - Adopt guard() and lockdep (ditto)
-> > - Address concerns from Sashiko
-> >   - Fix a race condition in ideapad_kbd_bl_led_cdev_brightness_set()
-> >   - Fix trigger re-registration of ideapad_kbd_bl_auto_trigger
-> >   - https://sashiko.dev/#/patchset/20260618-leds-trigger-hw-changed-v2-=
-0-c28c44053cf3%40rong.moe
-> > - Make registration failures of ideapad_kbd_bl_auto_trigger non-fatal
-> > - Link to v2: https://patch.msgid.link/20260618-leds-trigger-hw-changed=
--v2-0-c28c44053cf3@rong.moe
-> >=20
-> > Changes in v2:
-> > - Restrict the led_trigger_notify_hw_control_changed() interface to
-> >   private triggers only
-> >   - Drop PATCH v1 1/9 ("leds: Load trigger modules on-demand if used as
-> >     hw control trigger"), not relavant any more
-> > - Gate the led_trigger_notify_hw_control_changed() interface behind
-> >   Kconfig LEDS_TRIGGERS_HW_CHANGED and LED device flag
-> >   LED_TRIG_HW_CHANGED
-> > - Fix lock ordering inversion
-> > - ideapad-laptop:
-> >   - Only call led_trigger_notify_hw_control_changed() when needed
-> >   - Serialize keyboard backlight notifications
-> > - Reword commit messages and documentations
-> > - Link to v1: https://patch.msgid.link/20260227190617.271388-1-i@rong.m=
-oe
-> >=20
-> > ---
-> > Rong Zhang (11):
-> >       leds: Move led_trigger_is_hw_controlled() to the right place
-> >       leds: class: Remove hardware control trigger when writing brightn=
-ess
-> >       leds: trigger: Add offloaded() callback and provide trigger_may_o=
-ffload attribute
-> >       leds: cros_ec: trigger: Implement offloaded() callback
-> >       leds: turris-omnia: trigger: Implement offloaded() and declare hw=
-_control_trigger
-> >       leds: trigger: netdev: Implement offloaded() callback
-> >       leds: trigger: Enforce strict checks in led_trigger_is_hw_control=
-led()
-> >       leds: trigger: Add led_trigger_notify_hw_control_changed() interf=
-ace
-> >       platform/x86: ideapad-laptop: Decouple hardware & classdev bright=
-ness for keyboard backlight
-> >       platform/x86: ideapad-laptop: Serialize keyboard backlight notifi=
-cations
-> >       platform/x86: ideapad-laptop: Fully support auto keyboard backlig=
-ht
-> >=20
-> >  Documentation/ABI/testing/sysfs-class-led          |  25 ++
-> >  .../ABI/testing/sysfs-class-led-trigger-netdev     |   3 +
-> >  Documentation/leds/leds-class.rst                  |  72 ++++++
-> >  drivers/leds/led-class.c                           |  35 ++-
-> >  drivers/leds/led-triggers.c                        | 146 +++++++++++-
-> >  drivers/leds/leds-cros_ec.c                        |   6 +
-> >  drivers/leds/leds-turris-omnia.c                   |   7 +
-> >  drivers/leds/leds.h                                |   2 +
-> >  drivers/leds/trigger/Kconfig                       |   9 +
-> >  drivers/leds/trigger/ledtrig-netdev.c              |   8 +
-> >  drivers/platform/x86/lenovo/Kconfig                |   1 +
-> >  drivers/platform/x86/lenovo/ideapad-laptop.c       | 264 +++++++++++++=
-+++-----
-> >  include/linux/leds.h                               |  19 ++
-> >  13 files changed, 532 insertions(+), 65 deletions(-)
-> > ---
-> > base-commit: 1229e2e57a5c2980ccd457b9b53ea0eed5a22ab3
-> > change-id: 20260506-leds-trigger-hw-changed-96a62188cbdf
-> >=20
-> > Thanks,
-> > Rong
-> >=20
