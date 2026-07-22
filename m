@@ -1,336 +1,198 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-yx1-f45.google.com (mail-yx1-f45.google.com [74.125.224.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295DE470EA6
-	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 19:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784746986; cv=none; b=DSZCAnBgnxmZ8QRlkrTKesjQ8JQAlAwwiDiTpPzOaZPA2k+GYb3KOzF78YHhbQmUvmAIF4Js7BnFTwYXA5TCOljXeeD3oY/lGFdsTvgEkVLJAkL389DJogYwp7MTk1LPDXqmIQH4bL+8aLAER9e4QVLz43UPgCR/oF8FtmO60BA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784746986; c=relaxed/simple;
-	bh=q+/pH4VpueN9qbULsKajh1beArHNGgXpSu6ae5p1T2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4u/uIOqUPzR6Z874Iceku/foNF9ScVdjZG26wvcsxjTbDW30y9Gkn0Cn96Msc/u9FT/oAZ+j2VA75MD2eVqJ1k1/iUfokKwcTksLryILluvsHAo8Qv1oWS5KoM/4bzi7y3MkjigsGCCNomBZ6mIwqaUjSd0fVn+0pQmFUy9E/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZlkjDB2i; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A6841F7EA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 20:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784750655; cv=pass; b=ihO2qefWZy8Z7sXtupF5LmrFOZiOPhtJcemW7QFt/vWQUowLF0mvdByOrpDqJpzexYuad8YiKYFwdwbQxseSas1/3ibY62ATb4TMiMux+PpLoWT3e+M4XagWXZOnCpJyR9ssIdje5KU1/woIhoNtv75asMkUKKAErcfR+Tiy35Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784750655; c=relaxed/simple;
+	bh=VUoh6Zej1p/NgfTCKZAF7lVFg7MFBi7bdeaONLT2MU0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=tCJzZ9FCGR8kzZ3OT+StOD+vOCBfP4s5w51OXyHpx69J2tusfiQDUfkStn3w4shLganpXOVKQM3q7jB54oX+gPkfXax0h6Gza0DFmi5R9Us0zUjK9J6vVvAaiWH3wb6GkBInxzjBoXW7QTvoyZN4GlknMMCooO/+hom0bpzf2a4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=eRtJKKTr; arc=pass smtp.client-ip=74.125.224.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZlkjDB2i"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-9030f8ea3b3so127847576d6.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 12:02:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="eRtJKKTr"
+Received: by mail-yx1-f45.google.com with SMTP id 956f58d0204a3-6626b5ace23so6186246d50.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 22 Jul 2026 13:04:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784750652; cv=none;
+        d=google.com; s=arc-20260327;
+        b=dsdg5VAveMw0E3nD+XNLuLz2MCiGjW6eCm/BX0TMPEtRB3vBbwBQmTVK5C9fNGEvhh
+         cJoRuYTb15fg6VbCpea3jAHIyvvoURV7ZN6h9izKxenSF1VRmFEXHU0FVtLsImPq04iL
+         C3w9UkTKVzQ4aUikF5WsfvoDSPRpeFoTrbnsDZf+ezGZRW2/K8qEz1bwm0BzLdPGI3CX
+         9fBCQ3hC38fXBn50VnNq5Rd+HeMbAE582XwtCQBt4supH5TT3vY06K/poDfvz6kEuZd4
+         hDy7gd2VWroA7krElgt/NUTplz0q3KYAEEdJya51IXEoWJV2mJwA9lnD0cbKYK4ZI9Jb
+         y+IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=K3rg68Z7dZugwFf430EjqcxzoIsDG5+smUFg2Tob6vI=;
+        fh=b/TQIWd+u1Dk/l0spdyLRVvjiSHLX5wv3vFecVuiZMw=;
+        b=ezAVACGHpSqCa0JXV9xKd124lqEfaBJJW2JKPZ7ul+zJvnnSEdJEzpamYtsSHfyJum
+         JkUSd9z5dj7ffRhu2jDEEH5bGcSO4tZoDRXG+sF1jhSVxxSCO9q/0V9sshZtCwb2JCH0
+         84UMtHekS2K61Qd4dPbWY9gBaY0z0clSRGBoos/wQF+aMWxqjBmz+Gi1h9G3Cvf7BxdT
+         hj9+/UQCtHFNa47fl7q9cRgDn2R7yUzqxpbqIU33zHsChRtVLTC3uDVNbrOVTscXsS0X
+         PdWInVXaltFo2ETs7fYLR/c3NMBY5u6ChLcuPsy+aMRjfaIyp5TpHAnAQ7Ey7Eai5ovP
+         X4TQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784746961; x=1785351761; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kkZF/WZBw7y0mWXJtKzXBAtws7VQLj2ICg8f1E9ne6E=;
-        b=ZlkjDB2ifRTxwwZM5YbL7ASzCIFmb+HK8JT02ZrbMFUai7ZYcynBy1/3WrrKUqM74Y
-         vcPT20vTb7VZ4wDMEBcoANP82lev4VDf86n01zsf+oMX16NfiISae5RMKFRH6dCDE+6E
-         EoaaVpumfn8+NLyR9cJ5I6yU89g8cQCoKvadCJIDP+tOEcRKDreoBE9ZbYDnSLB1DzD8
-         Kej+/tN5jBO+zvXEXvKAqtoIBj7810cWxfx1+v1LhL7TLEEkT1gr+3pKmWJSYnScLz9Y
-         lKe4ovilAW5teDNma1umlG2wHzfhIElH8jCTzYZyry9OgUs/LrQ9LAm0Fyy9Zu3hNknc
-         casQ==
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1784750652; x=1785355452; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=K3rg68Z7dZugwFf430EjqcxzoIsDG5+smUFg2Tob6vI=;
+        b=eRtJKKTrkWdbiqf35ILrYMd7oanMHqF091ZEr/GiIPSXRSeDJxwaonxU640+5A5GD8
+         DBolAaX8AmUD6/rX3Fark0s+REtpD+AlnILS7+JXJtSc+lj9Gsf7xwAtklZx6NSsNaUQ
+         FpQcGQMa/huoUu/zWviBl8r9VQnovCv8dD3z5GZOxOnwgq0/MbNC7Yb9xrj8lfJ/niDP
+         l8jzrtbFdZ/yUxxTwu2vTMooavXzRUorFC41lY+5zmd3MSCWFP13VC/cJT+qoT4VO252
+         Kd0wB/09sfRp1c9eWwDSgKAiQbXz1VjGDV5LusvRfWPKQOelB9jsHcHrpiH+7XqKb09/
+         Os2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784746961; x=1785351761;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kkZF/WZBw7y0mWXJtKzXBAtws7VQLj2ICg8f1E9ne6E=;
-        b=sxVZdVKlkvgqH3DJK87WxLvTHRkVRRiRARQDnFPRmmcKw6UJTjwwOlArzr8oRHhKRt
-         PgNqD7kVn3o7BHh6wpCJkhphgPUzXYeixC5yMsjacIMmdoaDKoLXS3yzxGeq/0y/RHCl
-         oHZonDaP7WaUYTM5P5ZZ76CtYrEM7NR8r0zgCvDLHn5hOKEHddeBNZ0i/BAjYamucQ0g
-         gdt6+V6mbF8eDeGApO3pUWzpNR3FGzJZghER4xkE+qMC30NIvSDnwOK3b8oPXlcHaB5e
-         TfahoJRj+Z9LGcKXuIRypGZKtgL3RpTs10vo2qikNbiCG7PCiQgfRucNLNV4FnJN82n3
-         blcg==
-X-Gm-Message-State: AOJu0Yzcsu3Pl9J4FX+/rkujLd9sRcp6L3zQlIzwjkKC9ZS45L/t1fey
-	JKnvNYJ0DSfc5gMnuIQxGvp/rRWGS/VTagTJY08wIYnTpyzMh8HyKFAm
-X-Gm-Gg: AR+sD12WeBvQSyuvmIIoueTftB0Ys5r1IQLKUws/JvPV1/+KrZO5Rpzh30XFWTm58cD
-	8nJINkTs1Hcmlx+54vU8ERnNxnX9+bP0jhEzepucnn+JYujUeycIIJgFuAl1H+pTu/Q6q5vhSNy
-	WuGZ/wih/m3L8hlopP4/FwFcC6ww7I3FIxYrZqIVzB+sC7o410gfzP0QvpIdeB/oddEta89RygE
-	5fZEh2RZLvk9wPFvr85yZHdTh9ypCCGefjVp0a6TzDzt85bj0f+Ji6cngcoDA9jFjffNBiAQsjO
-	kswQnPCBlFAUA4JIqH4OWWnHbL6rN4ugbAT9XeR7ZIU1gVJHMfuiiqDXu7qfWzpzg0uJQ/+4KQh
-	TkXYNpRNDtwdQ3FO+dRAMRtS/CIkAHB9nLO5UaPqfx98SuZoLjl4rveT9xFIkVh9+CdcLQmkfko
-	mOrWAE9/uHj2baJbVmOO/q8l7F748PoLEYvkNiLE+VrhhRjoMNmYYN2ekEiQ==
-X-Received: by 2002:a05:6214:398a:b0:8ef:4749:b1cb with SMTP id 6a1803df08f44-907ca24feb5mr2113136d6.6.1784746960946;
-        Wed, 22 Jul 2026 12:02:40 -0700 (PDT)
-Received: from ?IPV6:2600:383:440:b4b4:8f4a:ba6:c937:25ed? ([2600:383:440:b4b4:8f4a:ba6:c937:25ed])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8d5434sm27588656d6.13.2026.07.22.12.02.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Jul 2026 12:02:40 -0700 (PDT)
-Message-ID: <b928fd4b-7139-4a18-8e00-ef2ce2f1a6fb@gmail.com>
-Date: Wed, 22 Jul 2026 15:02:38 -0400
+        d=1e100.net; s=20251104; t=1784750652; x=1785355452;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=K3rg68Z7dZugwFf430EjqcxzoIsDG5+smUFg2Tob6vI=;
+        b=HBbC7jHrN03IbbjMm7w2weC8q6m85oemgo9mMDhzcIibzRU3rLzoSCob+lZMmi3n4I
+         cBeowpnKWzIu0Q/kODePFHgp0dxXXz/j9sdaL63GydM7k0NY+iySTyuaNMeBv1D06Lpt
+         HbEndEYrrPu3vWAy3aCOyW96wGkSK6oOQW6t9Cv1b1/mfA+jJY2u7U1YcR9v11j9pl3v
+         NPRrXmkwvbvKTNETCu91Xpj62umsPFheYMBov+yUVFoR0TaVWFL55f3Owdz7Mkg2ALH9
+         pHYrsSmkvJ7qRsPwuGANww0Ry5TT8mq7/XZ7lewwKsiktDOnLCe0Nqy9+Ash/6TT3gQP
+         ssBA==
+X-Forwarded-Encrypted: i=1; AHgh+RpRhF+vwsqg1aJlPxCqfUbMKdCdlYdse6RhOMIt4igecJihHuLXgCBwnq5j7UC2Pot6TVZDtHBehhEvUHBI4xWx/BNI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa9x+2nhBMAV60WjDAxKhEsCFM/ljNFlR6BuPmHw4VY/4nj2vd
+	9DsQHjxtMTTK90pbyCS+FR6mvuxdCnOs6gPSbNMYyC9D1/njsIYt2ZpEjKy0foS5FjagGTpenhz
+	5V3/RA51xpGZhtYdK46kbBmhTlcxN76pyU8poDJsc
+X-Gm-Gg: AR+sD13CiR5usyhq7cMIbCyCgyZiW0HlIHj5Gbyy2YIMT6wxHJmXPOYfQaKlXZpF+Sy
+	4/NoYeQX7Z2tAb+/5CXOysVeam5kCO0wh1qnGWOSZiqsz4zNl+eFhN6QT3GvujTsrtEGJBj5S7R
+	uvy5Lkq3r5JdV+Uakxwiv6vRsF1103kIu5CHs3NVbvPYQWf5UGWB84OLNafgW/KqjjQc/EZ5EoQ
+	hlLro6pBc8bhYub0OC8B8IMKXyQyxm5WMdC0XNylpAPa7j/4DI1dHO6YtGCBZ3DIPNYw81lDTyF
+	+q2GaXwnfTHw5fM=
+X-Received: by 2002:a05:690e:2510:10b0:667:f213:bbc3 with SMTP id
+ 956f58d0204a3-6688e8b4edbmr1297593d50.36.1784750652448; Wed, 22 Jul 2026
+ 13:04:12 -0700 (PDT)
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 22 Jul 2026 13:04:12 -0700
+Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 22 Jul 2026 13:04:11 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 2/2] platform/x86/lenovo: Add Yoga Book 9 keyboard
- dock detection driver
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, hdegoede@redhat.com, W_Armin@gmx.de,
- jikos@kernel.org, linux-input@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Hans de Goede <johannes.goede@oss.qualcomm.com>
-References: <20260722142712.814597-1-carvsdriver@gmail.com>
- <20260722142712.814597-3-carvsdriver@gmail.com>
- <15943a77-07e3-9449-7e2f-2d72f345dfa2@linux.intel.com>
-Content-Language: en-US
-From: Dave Carey <carvsdriver@gmail.com>
-In-Reply-To: <15943a77-07e3-9449-7e2f-2d72f345dfa2@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Sean Rhodes <sean@starlabs.systems>
+Date: Wed, 22 Jul 2026 13:04:11 -0700
+X-Gm-Features: AUfX_mxa4hqNsQNkqzfOIleXD9b6qvQy1FeR-OxSlkdigDwk68DoxXnuujytnxI
+Message-ID: <CABtds-0wxc+f2H5YNHx16GA=23YqNwwyt=fpJ89T07JdN6WT+A@mail.gmail.com>
+Subject: [PATCH v8 0/4] firmware: Add coreboot CFR firmware attributes driver
+To: tzungbi@kernel.org
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com, 
+	luke@ljones.dev, denis.benato@linux.dev, prasanth.ksr@dell.com, 
+	jorge.lopez2@hp.com, mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, 
+	josh@joshuagrisham.com, briannorris@chromium.org, jwerner@chromium.org, 
+	tzimmermann@suse.de, javierm@redhat.com, kees@kernel.org, 
+	u.kleine-koenig@baylibre.com, mst@redhat.com, chenhuacai@kernel.org, 
+	wenst@chromium.org, florian.fainelli@broadcom.com, titouan.ameline@gmail.com, 
+	oliver@liuxiaozhen.dev, linux-kernel@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+	chrome-platform@lists.linux.dev, sean@starlabs.systems
+Content-Type: text/plain; charset="UTF-8"
 
-Ugh ... let me check, was trying to do a few different things today at 
-the same time.  Appreciate the patience.
+Move the firmware attributes class helper out of platform/x86, rename
+the coreboot-table firmware driver directory from google to coreboot, and
+add a coreboot CFR firmware attributes driver.
 
+Changes in v8:
+- Add a preparatory include-order cleanup before moving the firmware
+  attributes class helper.
+- Add direct includes for __packed and container_of(), use scoped cleanup
+  for EFI names and the driver mutex, and document the efivar lock
+  requirement on private helpers.
+- Replace the duplicated CFR record walkers with one checked iterator that
+  distinguishes malformed input from the end of a record list.
+- Validate enum entries before accessing them and propagate malformed child
+  records instead of treating them as absent.
+- Restore the EFI variable after a failed runtime apply without retrying
+  the failed firmware operation, and only emit a change event when the new
+  EFI value remains stored.
+- Document the possible-values size limit and why CFR entries without a
+  usable runtime EFI variable are skipped.
 
--DC
+Changes in v7:
+- Restore the existing include order in converted platform/x86 drivers
+  and add Oliver's Tested-by to the helper move.
+- Use for loops for CFR record walks, document pointer-based value
+  validation and intentionally ignored record types, and remove a
+  redundant PAGE_SIZE check.
+- Validate the CFR payload checksum before parsing it.
+- Make EFI writes transactional, lock EFI reads, and expose settings
+  read-only when EFI writes are unavailable.
+- Skip settings beneath suppressed or dependency-gated forms, propagate
+  enclosing read-only or inactive state, and bound CFR form nesting.
+- Propagate transient probe failures, preserve APM token zero, and reject
+  enumeration values that cannot fit in the sysfs output buffer.
 
+Testing:
+- x86_64 defconfig W=1 build of coreboot-cfr.o on upstream master.
+- v7 x86_64 and UML allmodconfig W=1 builds of the driver and helper.
+- Runtime APM_CNT apply and reboot-needed behavior on a Star Labs Byte with
+  firmware 26.07 and Linux 6.17.
 
-On 7/22/26 10:42 AM, Ilpo Järvinen wrote:
-> On Wed, 22 Jul 2026, Dave Carey wrote:
->
->> The Lenovo Yoga Book 9 14IAH10 ships with a detachable Bluetooth keyboard
->> that magnetically attaches to the bottom (secondary) screen in one of two
->> positions.  The Embedded Controller tracks the attachment state in a 2-bit
->> field called BKBD and signals changes via WMI event GUID
->> 806BD2A2-177B-481D-BFB5-3BA0BB4A2285 (notify ID 0xEB on the WM10 ACPI
->> device, _UID "GMZN").
->>
->> The device contains embedded BMOF data (WQDD, 20705 bytes) documenting
->> both WMI interfaces used by this driver:
->>
->>    LENOVO_BTKBD_EVENT (event GUID): WmiDataId(1) uint32 Status.
->>    The ACPI _WED(0xEB) method returns EC.BKBD directly as an integer,
->>    so the notify callback receives BKBD without a separate query.
->>
->>    LENOVO_FEATURE_STATUS_DATA (block GUID, WQAF method): returns an
->>    8-byte buffer {uint32 IDs=0x00060000, uint32 Status=BKBD}.
->>    Used for the initial state read on probe and after resume.
->>
->> BKBD encoding:
->>    0 = keyboard detached
->>    1 = keyboard docked on top half of bottom screen
->>    2 = keyboard docked on bottom half of bottom screen
->>    3 = reserved (not observed in practice)
->>
->> This driver registers two WMI drivers sharing a module-level
->> BLOCKING_NOTIFIER_HEAD:
->>
->>    - The event driver (LENOVO_BTKBD_EVENT) uses .notify_new() to receive
->>      a pre-parsed wmi_buffer and fires the notifier chain with the BKBD
->>      value extracted from the buffer.
->>
->>    - The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev in
->>      its per-device private struct.  At probe time it registers a
->>      notifier_block on the chain and reads the initial BKBD state via
->>      wmidev_query_block().  The WMI buffer is parsed as
->>      struct lenovo_feature_status { __le32 id; __le32 status; }, and the
->>      ID field is verified before the status is used.
->>
->>    - SW_TABLET_MODE=1 is reported when the keyboard is detached;
->>      SW_TABLET_MODE=0 when docked in either position (keyboard present).
->>
->>    - The raw BKBD value is exposed via read-only sysfs attribute
->>      "keyboard_position".
->>
->>    - BKBD state is re-read via wmidev_query_block() on resume from
->>      suspend or hibernation.
->>
->> Tested on: Lenovo Yoga Book 9 14IAH10 (model 83KJ), kernel 7.0.
->>
->> Acked-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Signed-off-by: Dave Carey <carvsdriver@gmail.com>
->> ---
->> v13:
->> - Resend of v12: patch was corrupted in transit.  git-send-email chose
->>    quoted-printable encoding (triggered by non-ASCII in the changelog)
->>    which encoded '=' as '=3D', corrupting the RST table separators in
->>    the ABI doc and breaking git-am.  No content changes from v12.
->>
->> v12:
->> - Add #include <linux/sysfs.h> (for sysfs_emit; Ilpo Järvinen)
->> - Add #include <linux/types.h> (for __le32 and __packed; Ilpo Järvinen)
->>
->> v11 (addressing Armin Wolf's v10 review):
->> - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3"
->>
->> v10 (addressing Armin Wolf's v9 review):
->> - Update ABI doc: Date: June 2026, KernelVersion: 6.16
->> - Add #include <linux/compiler_attributes.h> and <linux/types.h>
->> - yb9_kbdock_query(): change return to pointer-out u32 *bkbd
->> - struct yb9_kbdock_data: add spinlock_t lock
->> - yb9_kbdock_report(): hold lock across input_report_switch + input_sync
->> - yb9_kbdock_sync(): return int, propagate query error to callers
->> - yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
->> - struct wmi_buffer out: remove zero-initializer
->> - yb9_kbdock_notify_new(): drop manual length check; use
->>    .min_event_size = sizeof(__le32) in struct wmi_driver instead
->>
->>   .../testing/sysfs-driver-lenovo-yb9-kbdock    |  19 ++
->>   MAINTAINERS                                   |   7 +
->>   drivers/platform/x86/lenovo/Kconfig           |  14 +
->>   drivers/platform/x86/lenovo/Makefile          |   1 +
->>   drivers/platform/x86/lenovo/yb9-kbdock.c      | 312 ++++++++++++++++++
->>   5 files changed, 353 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
->>   create mode 100644 drivers/platform/x86/lenovo/yb9-kbdock.c
->>
->> diff --git a/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
->> new file mode 100644
->> index 0000000..ebe713a
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
->> @@ -0,0 +1,19 @@
->> +What:		/sys/bus/wmi/drivers/lenovo-yb9-kbdock/<guid>/keyboard_position
->> +Date:		June 2027
->> +KernelVersion:	7.3
->> +Contact:	Dave Carey <carvsdriver@gmail.com>
->> +Description:
->> +		Read-only attribute reporting the current keyboard dock position
->> +		as reported by the Embedded Controller on the Lenovo Yoga Book 9
->> +		14IAH10.
->> +
->> +		Possible values:
->> +
->> +		==  =============================================================
->> +		0   keyboard is not docked to any screen (detached)
->> +		1   keyboard docked on the top half of the bottom screen
->> +		2   keyboard docked on the bottom half of the bottom screen
->> +		==  =============================================================
->> +
->> +		SW_TABLET_MODE input events are also emitted: 0 when the keyboard
->> +		is docked (either position), 1 when detached.
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index d1cc0e1..00e8275 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -14479,6 +14479,13 @@ L:	platform-driver-x86@vger.kernel.org
->>   S:	Maintained
->>   F:	drivers/platform/x86/lenovo/wmi-hotkey-utilities.c
->>   
->> +LENOVO YOGA BOOK 9 KEYBOARD DOCK DRIVER
->> +M:	Dave Carey <carvsdriver@gmail.com>
->> +L:	platform-driver-x86@vger.kernel.org
->> +S:	Maintained
->> +F:	Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock
->> +F:	drivers/platform/x86/lenovo/yb9-kbdock.c
->> +
->>   LETSKETCH HID TABLET DRIVER
->>   M:	Hans de Goede <hansg@kernel.org>
->>   L:	linux-input@vger.kernel.org
->> diff --git a/drivers/platform/x86/lenovo/Kconfig b/drivers/platform/x86/lenovo/Kconfig
->> index 9c48487..938b361 100644
->> --- a/drivers/platform/x86/lenovo/Kconfig
->> +++ b/drivers/platform/x86/lenovo/Kconfig
->> @@ -43,6 +43,20 @@ config LENOVO_WMI_CAMERA
->>   	  To compile this driver as a module, choose M here: the module
->>   	  will be called lenovo-wmi-camera.
->>   
->> +config LENOVO_YB9_KBDOCK
->> +	tristate "Lenovo Yoga Book 9 keyboard dock detection"
->> +	depends on ACPI_WMI
->> +	depends on DMI
->> +	depends on INPUT
->> +	help
->> +	  Say Y here to enable keyboard dock detection on the Lenovo Yoga Book 9
->> +	  14IAH10.  The detachable Bluetooth keyboard magnetically attaches to
->> +	  either screen; this driver reports SW_TABLET_MODE input events based
->> +	  on the attachment state and exposes the raw position in sysfs.
->> +
->> +	  To compile this driver as a module, choose M here: the module will be
->> +	  called lenovo-yb9-kbdock.
->> +
->>   config LENOVO_YMC
->>   	tristate "Lenovo Yoga Tablet Mode Control"
->>   	depends on ACPI_WMI
->> diff --git a/drivers/platform/x86/lenovo/Makefile b/drivers/platform/x86/lenovo/Makefile
->> index 7b2128e..2842d7d 100644
->> --- a/drivers/platform/x86/lenovo/Makefile
->> +++ b/drivers/platform/x86/lenovo/Makefile
->> @@ -8,6 +8,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->>   obj-$(CONFIG_THINKPAD_ACPI)	+= thinkpad_acpi.o
->>   
->>   lenovo-target-$(CONFIG_LENOVO_WMI_HOTKEY_UTILITIES)	+= wmi-hotkey-utilities.o
->> +lenovo-target-$(CONFIG_LENOVO_YB9_KBDOCK)	+= yb9-kbdock.o
->>   lenovo-target-$(CONFIG_LENOVO_YMC)	+= ymc.o
->>   lenovo-target-$(CONFIG_YOGABOOK)	+= yogabook.o
->>   lenovo-target-$(CONFIG_YT2_1380)	+= yoga-tab2-pro-1380-fastcharger.o
->> diff --git a/drivers/platform/x86/lenovo/yb9-kbdock.c b/drivers/platform/x86/lenovo/yb9-kbdock.c
->> new file mode 100644
->> index 0000000..69c68a0
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo/yb9-kbdock.c
->> @@ -0,0 +1,312 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Lenovo Yoga Book 9 keyboard-dock detection
->> + *
->> + * The Yoga Book 9 ships with a detachable Bluetooth keyboard that magnetically
->> + * attaches to the bottom screen in one of two positions.  The EC tracks
->> + * attachment state in a 2-bit field called BKBD and signals changes via WMI
->> + * event 0xEB on the WM10 ACPI device (_UID "GMZN").
->> + *
->> + * BKBD values:
->> + *   0 = keyboard detached
->> + *   1 = keyboard docked on the top half of the bottom screen
->> + *   2 = keyboard docked on the bottom half of the bottom screen
->> + *   3 = reserved / not observed
->> + *
->> + * Two WMI interfaces are used (documented in embedded BMOF, WQDD, 20705 bytes):
->> + *
->> + *   LENOVO_BTKBD_EVENT (event GUID, 806BD2A2-...)
->> + *     WmiDataId(1) uint32 Status — _WED(0xEB) returns EC.BKBD directly.
->> + *     The notify callback receives BKBD as an integer; no separate query needed.
->> + *
->> + *   LENOVO_FEATURE_STATUS_DATA (block GUID, E7F300FA-...)
->> + *     WmiDataId(1) uint32 IDs   = 0x00060000 (feature selector)
->> + *     WmiDataId(2) uint32 Status = BKBD value
->> + *     Used on probe and resume to read initial state.
->> + *
->> + * The event driver (LENOVO_BTKBD_EVENT) fires a notifier chain on each WMI
->> + * event.  The block driver (LENOVO_FEATURE_STATUS_DATA) owns the input_dev
->> + * and registers a notifier_block to receive those events, eliminating the
->> + * need for shared global state or a mutex.
->> + *
->> + * SW_TABLET_MODE=1 is reported when the keyboard is detached;
->> + * SW_TABLET_MODE=0 when docked in either position (keyboard present).
->> + * The raw BKBD value is exposed via the sysfs attribute "keyboard_position".
->> + *
->> + * Copyright (C) 2026 Dave Carey <carvsdriver@gmail.com>
->> + */
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/cleanup.h>
->> +#include <linux/dev_printk.h>
->> +#include <linux/dmi.h>
->> +#include <linux/input.h>
->> +#include <linux/module.h>
->> +#include <linux/notifier.h>
->> +#include <linux/pm.h>
->> +#include <linux/slab.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/types.h>
->> +#include <linux/wmi.h>
-> Hi,
->
-> Are you sure you sent the latest version, AFAICT, v12 had this:
->
-> +#include <linux/acpi.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/compiler_attributes.h>
-> +#include <linux/dev_printk.h>
-> ...
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
->
-> ?
->
+Sean Rhodes (4):
+  platform/x86: Sort firmware attributes class includes
+  firmware: Move firmware attributes class helper
+  firmware: Rename google firmware directory to coreboot
+  firmware: coreboot: Add CFR firmware attributes driver
+
+ MAINTAINERS                                   |   18 +-
+ drivers/firmware/Kconfig                      |    5 +-
+ drivers/firmware/Makefile                     |    3 +-
+ drivers/firmware/{google => coreboot}/Kconfig |   20 +-
+ .../firmware/{google => coreboot}/Makefile    |    1 +
+ drivers/firmware/{google => coreboot}/cbmem.c |    0
+ drivers/firmware/coreboot/coreboot-cfr.c      | 1185 +++++++++++++++++
+ .../{google => coreboot}/coreboot_table.c     |    0
+ .../{google => coreboot}/coreboot_table.h     |    0
+ .../framebuffer-coreboot.c                    |    0
+ drivers/firmware/{google => coreboot}/gsmi.c  |    0
+ .../memconsole-coreboot.c                     |    0
+ .../memconsole-x86-legacy.c                   |    0
+ .../{google => coreboot}/memconsole.c         |    0
+ .../{google => coreboot}/memconsole.h         |    6 +-
+ drivers/firmware/{google => coreboot}/vpd.c   |    0
+ .../{google => coreboot}/vpd_decode.c         |    0
+ .../{google => coreboot}/vpd_decode.h         |    0
+ .../firmware_attributes_class.c               |    2 +-
+ drivers/platform/x86/Kconfig                  |    3 -
+ drivers/platform/x86/Makefile                 |    2 -
+ drivers/platform/x86/asus-armoury.c           |    2 +-
+ .../x86/dell/dell-wmi-sysman/sysman.c         |    9 +-
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  |    9 +-
+ drivers/platform/x86/lenovo/think-lmi.c       |    5 +-
+ drivers/platform/x86/lenovo/wmi-other.c       |    2 +-
+ drivers/platform/x86/samsung-galaxybook.c     |    3 +-
+ .../linux/firmware_attributes.h               |    6 +-
+ 28 files changed, 1249 insertions(+), 32 deletions(-)
+ rename drivers/firmware/{google => coreboot}/Kconfig (82%)
+ rename drivers/firmware/{google => coreboot}/Makefile (92%)
+ rename drivers/firmware/{google => coreboot}/cbmem.c (100%)
+ create mode 100644 drivers/firmware/coreboot/coreboot-cfr.c
+ rename drivers/firmware/{google => coreboot}/coreboot_table.c (100%)
+ rename drivers/firmware/{google => coreboot}/coreboot_table.h (100%)
+ rename drivers/firmware/{google => coreboot}/framebuffer-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/gsmi.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-x86-legacy.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.h (82%)
+ rename drivers/firmware/{google => coreboot}/vpd.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.h (100%)
+ rename drivers/{platform/x86 => firmware}/firmware_attributes_class.c (94%)
+ rename drivers/platform/x86/firmware_attributes_class.h =>
+include/linux/firmware_attributes.h (60%)
+
+-- 
+2.53.0
