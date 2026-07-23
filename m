@@ -1,133 +1,164 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF9D4968F8
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 12:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C87C4C77D0
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 12:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784810693; cv=none; b=BMDTqkfhHf9oGI7u72c0F6i8/gwyKvze8TYmw5bq3+8+ITv5lLnZpanBhWMavWlMZ4aBbsYZZHOIr/9JLshYbNPg335i89jwqqI8GzmM2k5fQGhA7qopD7LCJ0vF9v7vk61stJy0DSdOjpLrwBHv9eXw2/IQTnjMocW3K9KAvjI=
+	t=1784811565; cv=none; b=Srpg8hWLYcqPSFn+JzySQmSPmYKXHC2aGk3flqKgx2Ly8ztARrAyrm2HAwSz5hmmOOo5yLO8uJ5Wa0uZWhS0Tx+q86M6WJUUSJRhFqOu9eWabjFyLK7Uz0eCn3ZM070kKqQvhmro4bt1F1fGMqOM1xtYQdhskvGk3GJGYnbAUv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784810693; c=relaxed/simple;
-	bh=Xig7WGnnLktfSt85EJ7ZIzdmITHXE3yWx24ihdGcLcg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PC0pjkoBE5KVjG/9dOBk4DPLRjAV5WGa9UXpyUaxNEXwMim2k3wo/d54t+GTlH9Qigkh/xShKjAOitmfNxXEtvcRZ4rXCQ+Zk/Ie66d+c+qroB5hSCNebUZu1h73RCImU8Okvr1MOOm0qDF3StXV0ES9wgqtYCWNsqelBCpU0ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=tU0wcZ9M; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
+	s=arc-20240116; t=1784811565; c=relaxed/simple;
+	bh=bznm588EPa9bJdG64W1UFIfXfyJsjnVPxb28HAqqZrM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y0EKULYU5cOCPKj+Y+jkMoZjPv/xRZ6hirzGdhMD/3z7n5xEDcQAg/OZ7XmvInS6nQngqLadXHGeiDwTiNmfJVFNjMDwOAdrZeQ9/MhHpOJDF2SpHygqOQcnHoDBvbNbzGnAQt1s/cc09ExouMNY4EAeNy9ffLAyXTktH6KIJko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TegYG/3d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5XcEGg9P; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TegYG/3d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5XcEGg9P; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="tU0wcZ9M"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-38e08baf860so618799a91.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 05:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1784810690; x=1785415490; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=lN+WRJy/Gb9/DDf5BT/PAkv7b2aSSNr6Bp0UfhvwTgY=;
-        b=tU0wcZ9MlmzZTb0tUzlIgVol25l0VBk3VuJH7HtsYs8t2J7xJDU15NJobjCk/NSfqu
-         05LPKNQoy61y0eTlMOIF9CNXZDGaa9anG1oh8tDvr+FZ9PDBx0cLEBDYk/9j2op9zeQc
-         E2XVodfMFl5oxMKhZtJOT46mStwpzn64WV3HcYz0LdaJ/iJk+YqQ8yLIlRbtmiM/wlRN
-         ROA6qTV7f0r9FzNDWxbQ8V4I1krpO3MAf/LYK2t74Z0CIizuFULxPQn0OiXciL01+c4B
-         AN+JOESBmd31dN049nQvWXH4+92sURc8sF3uijODtk/vz5NZjW8sxCZocjcdMGwczSA6
-         xOow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784810690; x=1785415490;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lN+WRJy/Gb9/DDf5BT/PAkv7b2aSSNr6Bp0UfhvwTgY=;
-        b=NNmXcCOx+Zq0sVOlk3uW6g+7oc/+8MBqHUBP6UvmSelMQMKZagoSgp6hDcXZkJM442
-         kqOoU+tc8q/M45ZwBMG6n5rYaeU0fc+PuYzdJEvI19dTnkCa0xtdidDltDtKxkP60LNh
-         cpsaxWRArMTJV2DjKPpNWFysijt1EhRmosWvo3rkm2peF5gKODt6ZZkGyjdjbA+Tlz7N
-         a/uj0CTWCl/UU9W7b1QBh1M+z7XWUIHJWD0Bvifck3kRhQdxJ+BvThqqqIR+1fmM7x5F
-         UW8w16E6lvcLdQy4gG6qytVHxa3eqSSgQCHC497oPdCIiecuQj70UGiDuoCGdrwYBVRj
-         dI/A==
-X-Gm-Message-State: AOJu0Yxrvrft1DekxeurylbHN8fLNih5EQW2lHRBDIiLr9tDckmaYXGd
-	eo6GO1f3pjB94xcR+d092eSQx1mzPhmAjFCzLSlj/sDgPkZP5zp7/Vr2BWxwXOZVCczUWB/iDnm
-	hiqCJtAw=
-X-Gm-Gg: AR+sD13yoHgWYdn2aAfN5uboifng1qT17h76cR2fanGKRCPKtTUZ8Gv0Mqcyqk1vgxx
-	THkZYXkYNlWwIeHTBPMeFj8Y3Z0s7piKgyHSA+d74fKI092tRChJIs2CQIaEuB/Hjmxn+Ms4Nk8
-	YLbg5VUIbHgYNMpLi0cHszdbM45qknfCBixKvmF3P67m/H95yttVM9EsCt2BfYmeSgb4dVa94ll
-	Ku+kFS5cEJKrbVutiMU0/fQRiZQi8C/7klg8TsOF8tFmRt16WqKoocx67xiu1iO4ETKIIfgdnBe
-	el/0FRgioxhL8YGxYwEBHNyBwczq8NynU8MPeWVAY6c5CAj0+ZWSAKzUdfVy9WCybydQvGAq6sG
-	9IZrjvAoiXaEyCMnSc5JFOhckvKTtXxUoHpfljauIUWVBtDc6+Dyms7vewj/TkyUKe7wm9NUFAn
-	w9CXuKdMweYy7sgTECyS6j9UpLyGI5rjx+w5j0eNJQac1x5JvCIMS8wbu7nS3mWsRzwFjeapiMj
-	/JcP2bd7SvWcSOZne3IoNTo
-X-Received: by 2002:a17:90b:5603:b0:38e:7eb:d07b with SMTP id 98e67ed59e1d1-38ec6622023mr3288256a91.34.1784810690513;
-        Thu, 23 Jul 2026 05:44:50 -0700 (PDT)
-Received: from [127.0.1.1] ([103.158.43.43])
-        by smtp.googlemail.com with ESMTPSA id a92af1059eb24-13d1300401fsm21663197c88.3.2026.07.23.05.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2026 05:44:50 -0700 (PDT)
-From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
-Date: Thu, 23 Jul 2026 18:14:16 +0530
-Subject: [PATCH v4 2/2] platform/x86: int1092: Fix info leak in
- parse_package()
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TegYG/3d";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5XcEGg9P";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TegYG/3d";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5XcEGg9P"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 02BD93E4E;
+	Thu, 23 Jul 2026 12:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784811197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oxd8CK9aDKgRwaDCc2ZLAd1RnUDdSF3ruOIyzkMi9z0=;
+	b=TegYG/3d1m8qblACfpZKWbWaViQPYk5o0bhlZtnphCOjnWa3S6kXKlKYPelESKsb4wgJf+
+	o8FanwIRy1Nt9sOjVPEIoKI8PIB9olyyOS7nXvsC3mY49Huo0wEiNlPYONeR4vAdrn1X6I
+	2lxp77YN4T3LqbTadOPbnmzKckxrKaI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784811197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oxd8CK9aDKgRwaDCc2ZLAd1RnUDdSF3ruOIyzkMi9z0=;
+	b=5XcEGg9PeBiIhMfAhD0HYj3kA+WdUcBKQ92UfFOSM9TXLP1hHCIo0KdyJBBtRVmZYqsDO6
+	xFZFP5nOjEkhgmCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1784811197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oxd8CK9aDKgRwaDCc2ZLAd1RnUDdSF3ruOIyzkMi9z0=;
+	b=TegYG/3d1m8qblACfpZKWbWaViQPYk5o0bhlZtnphCOjnWa3S6kXKlKYPelESKsb4wgJf+
+	o8FanwIRy1Nt9sOjVPEIoKI8PIB9olyyOS7nXvsC3mY49Huo0wEiNlPYONeR4vAdrn1X6I
+	2lxp77YN4T3LqbTadOPbnmzKckxrKaI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1784811197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oxd8CK9aDKgRwaDCc2ZLAd1RnUDdSF3ruOIyzkMi9z0=;
+	b=5XcEGg9PeBiIhMfAhD0HYj3kA+WdUcBKQ92UfFOSM9TXLP1hHCIo0KdyJBBtRVmZYqsDO6
+	xFZFP5nOjEkhgmCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 73AC5779B5;
+	Thu, 23 Jul 2026 12:53:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2xvrGrwOYmo9CwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 23 Jul 2026 12:53:16 +0000
+Date: Thu, 23 Jul 2026 14:53:16 +0200
+Message-ID: <87o6fxeukj.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Marco Giunta <marco_giunta@outlook.it>
+Cc: tiwai@suse.de,
+	broonie@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	imitoy@imitoy.top,
+	lenb@kernel.org,
+	lgirdwood@gmail.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	munzirtaha@gmail.com,
+	nadim@symbolic.software,
+	perex@perex.cz,
+	platform-driver-x86@vger.kernel.org,
+	rafael@kernel.org,
+	tiwai@suse.com,
+	wangweidong.a@awinic.com,
+	yakov.till@gmail.com
+Subject: Re: [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
+In-Reply-To: <DS7PR19MB7724E1F838E331DDE7A99E5CFCC02@DS7PR19MB7724.namprd19.prod.outlook.com>
+References: <87h5lsinn2.wl-tiwai@suse.de>
+	<DS7PR19MB7724E1F838E331DDE7A99E5CFCC02@DS7PR19MB7724.namprd19.prod.outlook.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260723-platx86-v4-2-93b4a178b595@cse.iitm.ac.in>
-References: <20260723-platx86-v4-0-93b4a178b595@cse.iitm.ac.in>
-In-Reply-To: <20260723-platx86-v4-0-93b4a178b595@cse.iitm.ac.in>
-To: Shravan Sudhakar <s.shravan@intel.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>, 
- Sashiko <sashiko-bot@kernel.org>
-X-Mailer: b4 0.13.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -1.79
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.19)[-0.950];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_TO(0.00)[outlook.it];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.it];
+	FREEMAIL_CC(0.00)[suse.de,kernel.org,linux.intel.com,imitoy.top,gmail.com,vger.kernel.org,symbolic.software,perex.cz,suse.com,awinic.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
 
-Sashiko reports a possible information leak that can occur as follows:
-- In parse_package(), memory allocated for data->device_mode_info is not
-  zeroized initially as it is allocated with devm_kmalloc_array()
-- In the for loop after the allocation, a malformed ACPI package
-  provided by firmware can cause some fields in data->device_mode_info
-  to remain uninitialized
-- Later in update_sar_data(), the uninitialized fields gets copied to
-  the fields of context->sar_data, which can be exposed to userspace
-  through sysfs attribute read (intc_data_show())
+On Thu, 23 Jul 2026 14:37:09 +0200,
+Marco Giunta wrote:
+> 
+> Hi Takashi,
+> 
+> Thanks for your useful feedback.
+> 
+> > Through a quick glance, the code changes look mostly OK.
+> > But I believe the potential memory leak Sashiko suggested in the patch
+> > 7 is a real issue, and it should be fixed.
+> 
+> I agree with this point. I will prepare a v2 and send it in a few days.
+> 
+> > In anyway, as this series spans over different areas, we'd need proper
+> > ACK's from ASoC, ACPI and platform people in order to get those merged
+> > to the upstream.
+> 
+> Since Mark has already applied patches 1-5 (ASoC library changes)
+> to broonie/sound for-7.3, should I rebase the remaining 3 patches
+> (ACPI/platform, HDA driver, realtek fixups) on his tree and send
+> a v2 just for those? Or would you prefer I do something different?
 
-Fix the leak by switching to use devm_kcalloc() for allocation.
+Please just resubmit for the remaining parts with the given Acks.
 
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://sashiko.dev/#/patchset/20260710052806.100107-1-nihaal%40cse.iitm.ac.in
-Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
----
-Newly added in v3
+Mark, could you send a pull request including your merged stuff, so
+that I can apply on the top?
 
-v3->v4:
-- Updated the commit message with the information leak path as suggested
-  by Ilpo Järvinen.
----
- drivers/platform/x86/intel/int1092/intel_sar.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int1092/intel_sar.c b/drivers/platform/x86/intel/int1092/intel_sar.c
-index 7263114f0b3d..f506155f35d4 100644
---- a/drivers/platform/x86/intel/int1092/intel_sar.c
-+++ b/drivers/platform/x86/intel/int1092/intel_sar.c
-@@ -91,10 +91,10 @@ static acpi_status parse_package(struct wwan_sar_context *context, union acpi_ob
- 	    item->package.count <= data->total_dev_mode)
- 		return AE_ERROR;
- 
--	data->device_mode_info = devm_kmalloc_array(&context->sar_device->dev,
--						    data->total_dev_mode,
--						    sizeof(*data->device_mode_info),
--						    GFP_KERNEL);
-+	data->device_mode_info = devm_kcalloc(&context->sar_device->dev,
-+					      data->total_dev_mode,
-+					      sizeof(*data->device_mode_info),
-+					      GFP_KERNEL);
- 	if (!data->device_mode_info)
- 		return AE_ERROR;
- 
+thanks,
 
--- 
-2.43.0
-
+Takashi
