@@ -1,169 +1,116 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazolkn19012073.outbound.protection.outlook.com [52.103.11.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 047224968E2;
-	Thu, 23 Jul 2026 12:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784810263; cv=fail; b=jVTMbFsEU7zy5PkTHlhqcqefpqIR72uxXhA/+ikX+uq4fgiydci+Jt7B26Vbaqc5xOi7EQVlNJMD8hfY4A/RgdgWKoVqPL/2wbUw342YLz/I5AX6ufrTBLKVc+JPw84306j/GwSDOSWyfb3mZJAqGnowZ4gvd9ncajLocyH86pU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784810263; c=relaxed/simple;
-	bh=Br179hQBCC+sa8q/nsDtPen6q5tkK8Txe3gvJceOT38=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IXN2egVc0a83ruY3XkkNp2q9tCKYOHTNTKwJ7OefH32smFPoPedJxzLPTLkVBRwkvgA+vs1Uw9b9tmFrtwg3j8FBO2Y4zNhg12S4XWK4LwuwVq3bqW9gT9rxj6cB3MyopobQWHLkrom38IIUkq3nkN/Ril4HUArWFVQ1/xJ4n/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=f1iu+d2F; arc=fail smtp.client-ip=52.103.11.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D904A2E1D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 12:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784810687; cv=none; b=Onk8M++3+s3g/mtRh3A5r/Wxvh7QYIGJigl0DAm9+w1Yt8Dbo/LxEj8wPWwFi3ye9O1auL6STexa8YkC70BBnhfDLHgQLuYmxjFLHEN9v9S/rRc0MFNpD+z7HvTxNowwSVvk907kJHME67V/4JFHsgxSX9AVxKIkskukiZJPSsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784810687; c=relaxed/simple;
+	bh=tRxKuBUnGEzCAHc5mGEOrTp+xK28sbZHQsl00p1HmII=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KEzsBY1ysvVc1gv+L6gcEJivYY59/RxkButyxquktj8NDyh7FSdsDz7Y9c2seg3J8dBiYvnkfEVF51IXBT8V+x7wKLDklCwr7fBbSOqLuKBJL3luzGd//LzqSeByOd3ixDXskD6K9uNa6P3zEUa4OzVj0t74bht4lkMaPWZUnS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in; spf=pass smtp.mailfrom=cse.iitm.ac.in; dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b=0oKzLQ+9; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cse.iitm.ac.in
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cse.iitm.ac.in
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="f1iu+d2F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KHQQ4M9tvGDeY6S4sKNJmYhqt9i3iQJAAwtiZb3MZHUks7KYBNgkZPtp3nzqctGHUFy2jpB6n7RPEaED7rr0qfYT7Sh1KYx5FWX5mLu2GPEwKf2B1wv6gYbt2HW5FQLzwxZNNdhqzZtD3tiOVQc1Rw5iNyySVUK9Nhg3W5FkkkXVKPC9K5gvyPFVUmULPjCIleCVWh04f62wUggr3FpT3VYCgwKneIDaP7etD0PJ9e/uOZRDZTUUZarn4Kg/AFepSacgfF323jvzeZOmCSdk+ZK0mDAkSSz4H/wTdMqzWRbl+kvR6TEbj+sOpH81AIjZTNlfCRu5P5a7gPOo2AkoUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Br179hQBCC+sa8q/nsDtPen6q5tkK8Txe3gvJceOT38=;
- b=PeTQbp6bUFAwAh0qrFoocsRX3ePcxav9OJ12IP5INffCDB4Os97ylLzBm3U5Q5RTMPTGzpTtQ8FN8xUmfkVdeb7vAbgLEBP7xLPH7WvUK6qvAb7cJIDxE9ReMXhwjzTOU6sa9o3OP4KxM7rS54oHWVmdt68baij/CpbvzDkx1yElepBn+D1zbhayc23Al7wgBRMxspeCnWSofMp5h0nYZxRWcGEHN2lnE9Ca/qszyX0i8BIwKTI2EW0Gda8fULKsl3+ZX+1wUUCCLbmjtJwJFxXmCZ9JtArx7kSer7YhCkZ9pezoOzlmPXLw1rK2pdvQwTVXuJGfK+PXAtPfP4L2gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Br179hQBCC+sa8q/nsDtPen6q5tkK8Txe3gvJceOT38=;
- b=f1iu+d2FoH1w/JimA2NIk6nJBZD3eHx0LgYzoeprACyoeTjkXyXnyMyC0LALrqlKXq9jIW/DJRtlmGC+iVfq7HpIXAOx0CQNEqdDCcAeCdjubdyRPkegtmo1gXArX18gRa+QuiWUpCHhW8T6IzzsbrAL6X1rihBOFtOUh2eCozR70/9PHMCUCZtPcoH0Tj/WQkOBIMqMZVOKFrHElOxMkaCAX7dnSU2lvvbHFJbFenAZj3I3/4bi0U7rvRPeoqvn9rag+UnUYrlwWg/lrbdbPnczgPK6pvtQNCM2EDUH8m5JxUgHzCu9OlgRflHHWF/gnAIsVTgDFTKpLcY8bQ+F1g==
-Received: from IA1PR19MB7712.namprd19.prod.outlook.com (2603:10b6:208:3db::7)
- by EAYPR19MB991545.namprd19.prod.outlook.com (2603:10b6:303:2db::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Thu, 23 Jul
- 2026 12:37:23 +0000
-Received: from IA1PR19MB7712.namprd19.prod.outlook.com
- ([fe80::3e3c:51e1:5e00:be4b]) by IA1PR19MB7712.namprd19.prod.outlook.com
- ([fe80::3e3c:51e1:5e00:be4b%5]) with mapi id 15.21.0245.009; Thu, 23 Jul 2026
- 12:37:23 +0000
-From: Marco Giunta <marco_giunta@outlook.it>
-To: tiwai@suse.de
-Cc: broonie@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	imitoy@imitoy.top,
-	lenb@kernel.org,
-	lgirdwood@gmail.com,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	marco_giunta@outlook.it,
-	munzirtaha@gmail.com,
-	nadim@symbolic.software,
-	perex@perex.cz,
-	platform-driver-x86@vger.kernel.org,
-	rafael@kernel.org,
-	tiwai@suse.com,
-	wangweidong.a@awinic.com,
-	yakov.till@gmail.com
-Subject: Re: [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
-Date: Thu, 23 Jul 2026 14:37:09 +0200
-Message-ID:
- <DS7PR19MB7724E1F838E331DDE7A99E5CFCC02@DS7PR19MB7724.namprd19.prod.outlook.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <87h5lsinn2.wl-tiwai@suse.de>
-References: <87h5lsinn2.wl-tiwai@suse.de>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PR3P191CA0047.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:102:55::22) To DS7PR19MB7724.namprd19.prod.outlook.com
- (2603:10b6:8:d9::20)
-X-Microsoft-Original-Message-ID:
- <20260723123709.9627-1-marco_giunta@outlook.it>
+	dkim=pass (2048-bit key) header.d=cse-iitm-ac-in.20251104.gappssmtp.com header.i=@cse-iitm-ac-in.20251104.gappssmtp.com header.b="0oKzLQ+9"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-38dfe7eb825so437951a91.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 05:44:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cse-iitm-ac-in.20251104.gappssmtp.com; s=20251104; t=1784810684; x=1785415484; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=sYg6j3DW4KziIe3Zb2Ojd7X/M+Xd8OnGpyYa/ce7ds4=;
+        b=0oKzLQ+98ILSn0+PcklOeGxjt8hOMdXDr/LwPTLP0cRtYcsYCE0SUtLRD5dLAcMPhb
+         wzU2Runcrrf7aRiB8aIKmQvDQE48xKAm74kaGoVeSXyB21WVD+NaWTp4IN70cCtnVl2S
+         3OxHyQ50Gp5OLiQRpr+18O9nOPKJ3anCuzyL/X21oJggRQgym1MFU2oQI84T9P0A3xYR
+         4oRAos7x4R/+9YHmP0R2hTi4/IcW+6cqtb5QcX08lWqRL7n4EFnAS4lMfPlHssr+qFyx
+         eLmrdehGf5AsGcsVx8tgkmUA2XgzkU5yw6lsMxdp0lnwhwwUjjaSftQ3l1/JVMX83L58
+         FaTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784810684; x=1785415484;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=sYg6j3DW4KziIe3Zb2Ojd7X/M+Xd8OnGpyYa/ce7ds4=;
+        b=UbPndWNc4hogqb9ohtktnfpsetetV0DoFdB09jWR6U3oNtCeM2KHVJ8Q1os8iPYYZw
+         hDxDo3+Vo2Dd5jRpg+BAJfxxSXymAMRdyjRwoPGcG7CiWr1y1/iyqGtFqxrc0NvSpD2G
+         ld0iYvbfl+UWPmuAhzNs8MqCX0kHGe1xCmS2EIMZBwHsMXpJShBb6ld35AP7HtY9NCIu
+         nvRoOH1lcp4X22EQbhAZ5FCb6vMD0/hur175j0DSAR9X0VNnJG0mJ8KYWSyQ0d/uejbw
+         v7vesDsukdtsbRetyvGvbCgFfnEfUmymejcZX3CAtuqknSZ9ymUoTxAhMjW/2q00aATe
+         m6dw==
+X-Gm-Message-State: AOJu0Yz5N5wbpmQDgp92QySslD7LZHbKzy5xZGe217sO5kzGqJXbUeCi
+	pP2ESX+mEng0LCwdeSMbYXCnXjkWrDiRpYDjHHVd+Sl8FIbKMJPrqgXnbN9DA9rsJdRHvSAfs0f
+	PNkTOpAo=
+X-Gm-Gg: AR+sD12HgErzpYDZYkgXRzMWTaXKxgYSHI5tagUVUT0vNqm16j2vG9XiJ3TBErnNQaL
+	CxhWX/KoCpqZXJu0UNmaJS/+AL1Y9LtmrfxLwM7/ud6qwfVjATJErh5e8hTBOsI9RvchFoF4YCZ
+	tZHvctz0q42q81KjNnfiHR6ez4w4+WrmTmipOCpllA1aM+aCJfgHch7Cpw7bbLXrOaPlc/cABwm
+	OijqTS0hWXrXMCENuN+C6jkQ3nInjtbxcgi7nP/KGC6x9Un3QizERsRaiB327uXgSNaGDG8HPp2
+	Arveue+GKt93pPOMO0PdtV7mfZiai52Fl0/D+Q1PQlcqpT9eRPznKrP2hgfWmhszWXfdEGurwrD
+	fNEizHGFt9CsBK2pyyAhHwaHbk/UihYlAipxSBSflN/wKwmb0j7oypK/fT1J5Mh2a48Nt4Qgc0e
+	/f/j6SirQ45vBgm+WCruToipUQeqBfUCnwcQ4hlt/XyXsCCaSAwOvGz3Po6BCpZPw32Yk0erOix
+	BASJWV21JwBUEx+tNGosQqU
+X-Received: by 2002:a17:90b:4b8e:b0:38e:4e62:f998 with SMTP id 98e67ed59e1d1-38ec658e6f7mr2841170a91.23.1784810683887;
+        Thu, 23 Jul 2026 05:44:43 -0700 (PDT)
+Received: from [127.0.1.1] ([103.158.43.43])
+        by smtp.googlemail.com with ESMTPSA id a92af1059eb24-13d1300401fsm21663197c88.3.2026.07.23.05.44.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2026 05:44:43 -0700 (PDT)
+From: Abdun Nihaal <nihaal@cse.iitm.ac.in>
+Subject: [PATCH v4 0/2] platform/x86: int1092: Fix two bugs in SAR driver
+Date: Thu, 23 Jul 2026 18:14:14 +0530
+Message-Id: <20260723-platx86-v4-0-93b4a178b595@cse.iitm.ac.in>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR19MB7712:EE_|EAYPR19MB991545:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77b1f534-f6ef-49cf-fd17-08dee8b72330
-X-MS-Exchange-SLBlob-MailProps:
-	30ekHghIwFoGqEgxaY/OAvK55SjXyV7lF7RCmZPL9CcWTDlbfy/loETB2/yzLsqJofIDIDSgCxFFdWycOyl0vKs0w/JNvbArKcLzZKtpH013Mkv2dmNje0pLAPv6WqhSNXQWxQ7QjrFu5OW5bQDhPwDIQ5nhZAANbuZPx6CKmxYex20kfvbH+NMpgBDiyRqYaWNGtyE/tUuV4DyX5nftpQ9QDOkokF3y9AL4FoZemgqvVpvCft2ohHBKqTYawHqJHVMEUqSP9g/qFVUt6EOKhzSsvjFzTrrooMOM6SdiRwyYI/lm1rh1pAZ32DyqK2W0HVpe/kk4C/KeZe91AOUjYc3BMOb2jYgKYSwmz6sFpUyxwB3zLP8jL2y8P/SFgZUQiJNVu0zyq18GovYcb4ubZnztbdxj7tadH7icvsaIO86SrQgpBxQo5F7+dgMoFXCL/hiC5+dzv+EVNhFjvCcMuxhhuJASNlZNJ5ql4qBjX6TaGzST43AsJxyMn50A8olZrsoVkLkzfZTTYGAaTcO607KqthDt2nWhhuqPXWVOYteCzeRm7e+5P9TqrKUJ+9X9CTP3dJV7iN3YO9BNcQagmstYl7EF0I8LmTjQl7QI2H5CBl0P6BRUqmTF5A+F990nddGWkhJ0NJLD+ByO/GSLcD6j5Nr87PTv40tW5FPsGk2hGTfXHwAlEujZUFMvryh1xDHw2ukEkUMVGVgndIHjbvWBv57RfCyresmMA1gin8zI//WSoK4+NgRnN0qRRUkT
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|24021099003|55001999006|23021999003|15080799012|5072599009|25010399006|4140399003|51005399006|8060799015|19110799012|3412199025|440099028|40105399003|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QYyaUgg6PyfA84BeG3HxO/TFhCR4YblXPtehj1LFqVhsmNR5y91EtGcWNDes?=
- =?us-ascii?Q?Cnfuku1f/4JXsw6xAGQoi7RugvUTQU/5X3r/60mG6Ge1CbZ4x+EZ+Lbf1hBQ?=
- =?us-ascii?Q?sMHja+2w1ytuYB+9Etf+lCzJqygPSSZ3NEw1FO2jfao6k4B3MP0R8sWEg/sA?=
- =?us-ascii?Q?LkBqp77MCcSvE5TolgRPxzi+7LYH7V8J2rQMBnu2aINy3j0C9mhjKRHPAjlO?=
- =?us-ascii?Q?i0KqMDp3rx2Ge3f9v9vRysczojwL0x3hbczOMb5up96i+SCR/t7agVX0tqgO?=
- =?us-ascii?Q?NJdKpyoLr3dUT5rcO5U88fU7o3QcEfYLTnGsA51nqFlu6R/8UxSBuOT3ncGm?=
- =?us-ascii?Q?wp5ZA//J+DEt9JiEHwXjZNDmSRZtPjTOreXlVe6WA8LUUGvu+FVjDaHmM5s6?=
- =?us-ascii?Q?lpN4f9iqbkvKouwCqFvsWl0y3nbifYZ+MZ+HIOCgOXfHqI+SlrPAtX/93uKt?=
- =?us-ascii?Q?CCWx2mjoNQi/VnQqKLLpGIkS41ITdrHrBDxxID+QekZKD8+Rlrz0guJCqTV7?=
- =?us-ascii?Q?r4PzNg2uFj3UIAqaBUNaSZLXwjLFHX1heeBTJEP63dPPzJVfsj+8mjKPYfjV?=
- =?us-ascii?Q?0NmhWFAlJKfkbdrfkyMvTcg07fb6uqL3V4E72Jt7+KoSt2WMVpaBkVUC95LW?=
- =?us-ascii?Q?wvzsj34S40Z1etWExawp+1U29c4RE3UKN40SJbFVTL7mmUuKWB5yYhjs2vz8?=
- =?us-ascii?Q?vESW0LOAps2/Gv6PkGsDWuLn2OKz1fZRg0jjyUpTVkkzCp2/Te7eKVnZpjgV?=
- =?us-ascii?Q?aLFlJF8n325mnyTtLqiJjvD9R4q9t3ywG5w3QRGWPHXz6ySEW3/+skPju0+n?=
- =?us-ascii?Q?CMgT3lmPyZELGNCM8uRpVRM9RtUMUqNHt5CfohKXPFdWq1it4dPa98hTbfe/?=
- =?us-ascii?Q?Uzt3gQMaEmsgeyQSRuKSKn1kmRPhtDNNsm069mCZCC0kOSF4oESfG8++kfST?=
- =?us-ascii?Q?xsSx/T8SxFPjipTRPpAsnQZHG1neZyN9NKz/GsrJVO0FC+3IFRF0s+iCVyCd?=
- =?us-ascii?Q?bKMo?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?01IYWN+fVYFwTz2VjPmJjSmWxJaGncpYkciR0N+gYEU7r4afXJnCrEgoQOaf?=
- =?us-ascii?Q?NMDCIk22ymSZ1eYJ6+3Hz96s8fCD4gi2LkSpOi1yAcq6XWp0MOm/5xexWHoY?=
- =?us-ascii?Q?aYgmGif6JviamkEcWtNJiwshyHtPZKUm4t2Yr67TOx9Y5mPaJOmT7N2vJrkO?=
- =?us-ascii?Q?OaVMddBz6myWimk6PGFRHvQ4WdFPG+d2HxCTXKDC15e2BgugBErXerX/boax?=
- =?us-ascii?Q?iR/NPV+6rqlZSKi5Nj9p0mxyZcHRFrDHilgpjKqLE96rQbloIn1KtidjgZU2?=
- =?us-ascii?Q?h8FQMuB0Il2ThB2s+2NwArySpRHVcpVl1lnE5hyd3cXlGNaXmzaQFAyv8ors?=
- =?us-ascii?Q?MrHPi/totKOwk05MAvAYAi+ZAYJN+gcLsB4tKuWfzq4zrs3onBzCoUeCPms0?=
- =?us-ascii?Q?9Pp/vQcjacTj3qmTM1zLhLMV6kZMvzNIRTd14RwiEcZZzbtemQzghwTKbmhN?=
- =?us-ascii?Q?Cq91mGpg7XhNWaxgYu3io2D58ye8xs0Jvm/vFJB1L75CAX9rJot4YahEd5GH?=
- =?us-ascii?Q?s9/BD6873AyVcel2w7JZzfG2lMe3UNBc4w4Wl8xLKSb0Wj5iG+nzv+pU6Twx?=
- =?us-ascii?Q?VOaAQ1qVwleI4fzslUH7cu3C+OHKPzX86QgopUYkZb0cObGDdV9fDl8cMXNa?=
- =?us-ascii?Q?4+Xl4FdaRas49IUmdg7rhLXgBSzf27QgSchQJkVLjD2M+eFxkFmUmmBtLMIu?=
- =?us-ascii?Q?ZWM+6ibxH/Ogx8kiGe/+I2Rx4eBfzddYWGq2kjkLRBiFa2MNwtWEs2TcyNDP?=
- =?us-ascii?Q?O+OC8X6DLXQgF/JNSxSpXCg8TX8xE/7p+1qGCFuYLRmRbYQMnxojtHLr2vA1?=
- =?us-ascii?Q?m3/LZRHNxB5kLfuIKeeFGaeEn/QVZ5YzHPb5yNl2Ijvsot99zjS43xWefyHB?=
- =?us-ascii?Q?4btj4DVT648dKn5AU4G2UtEn7Dg8r6cuWLIoZCaAbZDuRu8Nxe6L5glTPuLz?=
- =?us-ascii?Q?5XCQpF8A1EYYj+4rNwJGXgkxSNIyLF++0wQDTIj6wJVwr25+wPWAd8eZzRi6?=
- =?us-ascii?Q?C2YR0jySDadrDdOS+aUlAUlSIubhE5dMOAP7u6eyeFDdepW6sLplbSKYHpyS?=
- =?us-ascii?Q?HKDseX08IE/h47cEvUfQ8FSkWJl/P+YRo4zi3s26mWI8XS1RTOHtzc3d91bj?=
- =?us-ascii?Q?p3xgNjnn9DLKj4+cKjjcWQmDvurheLgxoXRj1w71NHa1we28Rf3Jt1175xEi?=
- =?us-ascii?Q?hV9cJSmtmLwrJWBeCthsXeUPMRANOrGKN/QyObvNzaQ4lDY7NWhS68pMsUlN?=
- =?us-ascii?Q?GM0J+UOBU8VMYNOCR674cjMic0DokQ5GezOrZ/axiQFI8rbm5bdUfNINbumG?=
- =?us-ascii?Q?m0sT4fktqwNp9RTV+nSPNuJiMHZo4PCKN1qu6fR2eBQ88iur6AjDwDKAglUt?=
- =?us-ascii?Q?43QIXc0Add00LNb3/1qZzEgIYMC2?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77b1f534-f6ef-49cf-fd17-08dee8b72330
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB7724.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2026 12:37:23.3579
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: EAYPR19MB991545
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ4MYmoC/32OQQqDMBBFr1KybkIm0Wi66j1KFzHGOmBVEgkW8
+ e6NUqhQKLOZ/5n3mIUE59EFcjktxLuIAYc+hex8IrY1/cNRrFMmggvFC5B07Mw0l4pWTjmRG2l
+ 1XZN0PXrX4LybbveUWwzT4F+7OMLWfhz75CJjOpdFBhRoj60x3dUGxxCnJzOWYU82SRQHEHjCS
+ q5YWoAX/0F5BL9fR6Cc2lJrqJqGS8N/4HVd331/Wa8VAQAA
+To: Shravan Sudhakar <s.shravan@intel.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Abdun Nihaal <nihaal@cse.iitm.ac.in>, 
+ Sashiko <sashiko-bot@kernel.org>
+X-Mailer: b4 0.13.0
 
-Hi Takashi,
+The patchset includes two fixes for
+- a potential memory leak in sar_probe()
+- an information leak in parse_package()
 
-Thanks for your useful feedback.
+Both patches are compile tested only.
 
-> Through a quick glance, the code changes look mostly OK.
-> But I believe the potential memory leak Sashiko suggested in the patch
-> 7 is a real issue, and it should be fixed.
+v2->v3:
+- Converted into a patch set with two patches
+v3->v4:
+- Updated commit message of the info leak patch to include the path in
+  which kernel memory leaks.
 
-I agree with this point. I will prepare a v2 and send it in a few days.
+Link to v1: https://patchwork.kernel.org/project/platform-driver-x86/patch/20260707070524.953741-1-nihaal@cse.iitm.ac.in/
+Link to v2: https://patchwork.kernel.org/project/platform-driver-x86/patch/20260710052806.100107-1-nihaal@cse.iitm.ac.in/
+Link to v3: https://patchwork.kernel.org/project/platform-driver-x86/cover/20260713-platx86-v1-0-c8991bff03a0@cse.iitm.ac.in/
 
-> In anyway, as this series spans over different areas, we'd need proper
-> ACK's from ASoC, ACPI and platform people in order to get those merged
-> to the upstream.
+Signed-off-by: Abdun Nihaal <nihaal@cse.iitm.ac.in>
+---
+Abdun Nihaal (2):
+      platform/x86: int1092: Fix potential memory leak in sar_probe()
+      platform/x86: int1092: Fix info leak in parse_package()
 
-Since Mark has already applied patches 1-5 (ASoC library changes)
-to broonie/sound for-7.3, should I rebase the remaining 3 patches
-(ACPI/platform, HDA driver, realtek fixups) on his tree and send
-a v2 just for those? Or would you prefer I do something different?
-
-Patch 6 (ACPI/platform) already has Acked-by tags from Rafael and Ilpo.
+ drivers/platform/x86/intel/int1092/intel_sar.c | 32 ++++++++------------------
+ 1 file changed, 10 insertions(+), 22 deletions(-)
+---
+base-commit: bee763d5f341b99cf472afeb508d4988f62a6ca1
+change-id: 20260713-platx86-be6e25a3c9dd
 
 Best regards,
-Marco
+-- 
+Abdun Nihaal <nihaal@cse.iitm.ac.in>
+
