@@ -1,70 +1,72 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com [44.245.243.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5470647D46D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 17:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A844D14883F;
+	Thu, 23 Jul 2026 17:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.245.243.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784828705; cv=none; b=MxpVBwIHSVK/V8wxG2BmypLYDlMb/1Qy/2Z2zMcoe44Y3CEFlZ8xOePgHZdxr2CLkQ0YjTcCDeCxEECU7b1X+1ogj4Uyd7dmvW9LqXSS9oZl8s828MUFviW7DCFCBduffd3YEdBOFKA0s28rQbe0FsLaRAe6j1E4VXFNr3yY6nc=
+	t=1784829220; cv=none; b=GipYwANZIMFcauOSoMWjn2WzQR6N81UBePsQfnu7Ef3+V/oVdlisSrlGpivrwnbWbJFM+tpJgiwNHs455oYOzjijRlBIrg66gri0cBDkxzHkyZZfHikF5StD7+nJmu8rG7hAcEwZ5bbFaXmt7ldul3ocHZozuonyKke4LxBEfkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784828705; c=relaxed/simple;
-	bh=DhHwGqrmGF5yoSfq33ncZPIK0I25V+MMj8wEA5tVs7s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DylC1B3QCZEV056xF283/k/zTN/lG0VNhh3wxOsfWcB8BGP04kvu2XJpFVsidYBNswBKVcgNvj4cK710uIHUHzhySmi1OLOEV5xzBw4pzeYoAt3Vy8iEMRlIB5WmqqfEaXs7Dlb/VSnkAHXUap1hTmLuNZ0hB8c/LWfPYoAH1v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e3QBjzE7; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784829220; c=relaxed/simple;
+	bh=uoZoVwOPdmdlUK8IwvU+L50ZgJrmKaIJlodOtkreFrc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GfmOh/0xXWSierIBZyHSlANwFsoUjGOZSkGMP0qDAeS0/RRhMsggVIXfdOYvulM2TvQhpSsWZ3Hd32hzCoMHSfRSrf1A95+ZvKd2+5HeZAUFxUdkXnbn4mKlhVWzQ+TpAcqP1f0ESbHtzxDO6dEoGrT8MtPIcmEuMO4PgL93Dlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=dC6kr7E0; arc=none smtp.client-ip=44.245.243.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3QBjzE7"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-cbb85186d43so621192a12.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 10:45:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="dC6kr7E0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784828698; x=1785433498; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ZvfaHJc4QvAMf7k6rlHFWVA5aGyrsoO8Rgjrzyxwtm4=;
-        b=e3QBjzE7BydS0iXxp0Z4kEZomNpA4AkgeELt4lsAuk/gSXDcmtfkeb6fvDXFarCp8i
-         KQFyPjjAQDutuoaDU+xIzYc8Jbvp88Q8F8WVgDKkXy2etF1PwnhJJslKDY/UTc1iSnk7
-         pLOPDbKfwN9BdDtKkpX8heUVewEGLqHAU746WE9jsYSa6h4+MVFpez3MAmWmrBQV6eWO
-         UbbCiCEHny5xoCBYBw9CmKDZnQZAI/tMOcT4XN0czMjZ/VF5DB67iHglgO0QjIuu9+mV
-         uEtoonBOuNxuLdQf2jr+O/shxD1KCCcmQqif8W166HzrlTcccroh29t+WQZevqG0fuQy
-         d5rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784828698; x=1785433498;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=ZvfaHJc4QvAMf7k6rlHFWVA5aGyrsoO8Rgjrzyxwtm4=;
-        b=oEk2b9T/EfCkUqBkZmIbBJfA0iodkPcnuslAYhR24tdkq6aYDGT2ZGNJMPG0/i25In
-         J0qVo1YdoqQ9RwC1oSHQcDEYgrDSWT+0xj5qP/D8VyRvFSXfw7bCbrppDuBx28Bo6Xlo
-         bJI8MqdCCMI0q84stEqa4ywUomkk3cMOwFtZ44IS+Wxa4aVxdmEv+L+ijkLTZBtw0Wp3
-         uwIOsNfg4AGBfrqMVMxzOR0LKRQ/mzkCJaOOrx3W5ZMyK+9XyAT2Xomo/q6Nc473WudK
-         VYQEqklIbKxruPy9GGLOFTZp7VeUuZpPKUNB7FMQZmFii0q3iankhvoNMqebaXE8VOsZ
-         7YwQ==
-X-Gm-Message-State: AOJu0YwhoFj9wq7BFtGBXksVfgi1PiP1Jr/DH/unL8ankgbSLi3shsLX
-	pB8D+aYwwhJP2J1Z7U70YlXgTlSNYUHArytuSLfg2+/5canmW43pU4an
-X-Gm-Gg: AR+sD125XJq9QImfuLo+HpW9B1LLvCbCi7BAWaxqlpXKQxSEliwRUxSl12Qu+lbaN2A
-	fClf5cCk274eMw5T8fRQT4aIycNI9lThamvpcARmuBPrMGhb3GEbBQ7PzghRH2cCcN+tx8SDI6Q
-	Qtk4TNjSRdnz5KO5eFkotgetirchASrUiABcbteKy17Z0lOziKx9VmimgrkY5OfiPD8mJvqfnYr
-	MgA+w7QhlNge0rRnOINNZd4hLMGzsfV3MHV/r3h3WKGHcmfZQbhuP4efyf+vTg2kJtt9AD3sFwh
-	YMZBVl/30t+H2/4v7rxxD4gAYP+5vPF+W1tw8k/r4DM2rip+fN5iiJZHLYiGFnP53/eNjFxE4o5
-	ahFXiz9NQQqwiIMWndC8jNrtdbDiDuAjj9BbmM0Qb5MTugLcOVQBodGY+9M8OGmls1nQZb95vld
-	qRA6ISsPPYXJS6fa+c+noyUnkuGB0FwvUkBWAOz8smCIa9JkKSb/GsZlYRXyQ=
-X-Received: by 2002:a05:6a21:6e83:b0:3c0:adec:b3bd with SMTP id adf61e73a8af0-3c44b15390cmr4299622637.49.1784828698013;
-        Thu, 23 Jul 2026 10:44:58 -0700 (PDT)
-Received: from archlinux ([2409:40d5:400:8351:427e:e1d5:71a3:2dff])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3147dc1a67esm22601223eec.2.2026.07.23.10.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2026 10:44:57 -0700 (PDT)
-From: Suryansh Singh <technosfan14@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Suryansh Singh <technosfan14@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8BA9 thermal profile support
-Date: Thu, 23 Jul 2026 23:14:43 +0530
-Message-ID: <20260723174443.26906-1-technosfan14@gmail.com>
-X-Mailer: git-send-email 2.55.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1784829219; x=1816365219;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VRR830S5Crc5qLMak5M08xcwDHqS7wix0djaEazdHfc=;
+  b=dC6kr7E0n/VMEE6xMPkyZeNAmTvIE6MJVjUKR/5Xc0suOaR31qgAi4gl
+   pd+eQZ9SyQROOgZdrqjRmMPWOJco0C5cfupPlnT7JqYEddw+MERIQAsqC
+   2QnM7S9x3D4q3ZHtbr4aApWwWHlE9L65S3zzj0uk9AXgBQE1loKqQ05uZ
+   /A1VOz7vOLm2iZzwqObYTnHseppTxF1vD7W3b6H+DhLWJI7loyCBpnktg
+   1YHQjWxMJpUsatzVjW8bzMklVkuPJ8W0G9DBGSD8zGAjCBNA0UWIVHILl
+   GAT7V7W6e3rn7V6Ixhw+wLhT8sgbysst5SbRRup/kXxLqpSg+PSJM0JZn
+   w==;
+X-CSE-ConnectionGUID: hQH62+quTTKqUPCe8dab8g==
+X-CSE-MsgGUID: 5eTgeY77QKWhwQVb6PB5Nw==
+X-IronPort-AV: E=Sophos;i="6.25,181,1779148800"; 
+   d="scan'208";a="23748203"
+Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
+  by internal-pdx-out-001.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2026 17:53:36 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [205.251.233.234:5323]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.12.152:2525] with esmtp (Farcaster)
+ id 630eda6d-2947-4491-9f8d-3b91b305424a; Thu, 23 Jul 2026 17:53:36 +0000 (UTC)
+X-Farcaster-Flow-ID: 630eda6d-2947-4491-9f8d-3b91b305424a
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
+ Thu, 23 Jul 2026 17:53:36 +0000
+Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
+ (172.19.116.181) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43; Thu, 23 Jul 2026
+ 17:53:31 +0000
+From: Eliav Farber <farbere@amazon.com>
+To: <rafael@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<guohanjun@huawei.com>, <mchehab@kernel.org>, <xueshuai@linux.alibaba.com>,
+	<lenb@kernel.org>, <laurent.pinchart@ideasonboard.com>, <linusw@kernel.org>,
+	<brgl@kernel.org>, <orsonzhai@gmail.com>, <baolin.wang@linux.alibaba.com>,
+	<zhang.lyra@gmail.com>, <jic23@kernel.org>, <dlechner@baylibre.com>,
+	<nuno.sa@analog.com>, <andy@kernel.org>, <dmitry.torokhov@gmail.com>,
+	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, <W_Armin@gmx.de>,
+	<ukleinek@kernel.org>, <fabio.m.de.francesco@linux.intel.com>,
+	<kaihengf@nvidia.com>, <ankita@nvidia.com>, <leitao@debian.org>,
+	<farbere@amazon.com>, <jason@os.amperecomputing.com>, <pedro.pbg@usp.br>,
+	<paulmck@kernel.org>, <frederic@kernel.org>, <kees@kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>
+Subject: [PATCH 00/12] notifier: add device-managed registration APIs and convert drivers
+Date: Thu, 23 Jul 2026 17:53:13 +0000
+Message-ID: <20260723175325.37397-1-farbere@amazon.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -72,44 +74,68 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWC002.ant.amazon.com (10.13.139.212) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-The HP OMEN 16-wd0xxx (board ID: 8BA9) has the same WMI interface
-as other Victus S boards, but requires quirks for correctly
-switching thermal profile.
+Many drivers repeat the same boilerplate when registering notifiers with
+device lifetime:
 
-Add the DMI board name to victus_s_thermal_profile_boards[] table
-and map it to omen_v1_thermal_params.
+  1. Register the notifier with *_notifier_chain_register()
+  2. Check for error
+  3. Register a devm action to unregister on teardown
+  4. Implement a per-driver static unregister callback
 
-Without this entry, platform profile switching is unavailable,
-preventing fan RPM reporting and controlling.
+This series adds devm_atomic_notifier_chain_register(),
+devm_blocking_notifier_chain_register(), and
+devm_raw_notifier_chain_register() that automatically unregister the
+notifier when the device is unbound, then converts 11 drivers to use
+them.
 
-Tested on:
-  HP OMEN 16-wd0012TX
-  DMI Board Name: 8BA9
+Each conversion eliminates a per-driver unregister callback and the
+associated devm_add_action_or_reset() call, reducing code by ~15 lines
+per driver.
 
-It has been confirmed that the platform profile is registered
-successfully, and the fan RPMs are readable and controllable.
+The implementation follows the established devres pattern used by other
+device-managed kernel APIs.
 
-Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Checkpatch reports 6 CHECKs (0 errors, 0 warnings) on patch 1:
+- "extern prototypes should be avoided in .h files"
+- "Alignment should match open parenthesis"
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8..052c64aa0 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -201,6 +201,10 @@ static const struct dmi_system_id victus_s_thermal_profile_boards[] __initconst
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
- 		.driver_data = (void *)&omen_v1_legacy_thermal_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BA9") },
-+		.driver_data = (void *)&omen_v1_thermal_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAB") },
- 		.driver_data = (void *)&omen_v1_thermal_params,
+Both are intentional to match the existing coding style in notifier.h,
+where all declarations use 'extern' and tab-indented continuation lines.
+
+Eliav Farber (12):
+  notifier: add device-managed registration APIs
+  pwm: iqs620a: use devm_blocking_notifier_chain_register()
+  iio: light: iqs621-als: use devm_blocking_notifier_chain_register()
+  iio: position: iqs624: use devm_blocking_notifier_chain_register()
+  gpio: adp5585: use devm_blocking_notifier_chain_register()
+  platform/x86: bitland-mifs-wmi: use
+    devm_blocking_notifier_chain_register()
+  Input: adp5585: use devm_blocking_notifier_chain_register()
+  ACPI: APEI: GHES: use devm_blocking_notifier_chain_register()
+  platform/x86: uniwill-wmi: use devm_blocking_notifier_chain_register()
+  gpio: eic-sprd: use devm_atomic_notifier_chain_register()
+  gpio: gpiolib-kunit: use devm_blocking_notifier_chain_register()
+  reboot: use devm_blocking_notifier_chain_register()
+
+ drivers/acpi/apei/ghes.c                   |  15 +-
+ drivers/gpio/gpio-adp5585.c                |  20 +--
+ drivers/gpio/gpio-eic-sprd.c               |  17 +--
+ drivers/gpio/gpiolib-kunit.c               |  14 +-
+ drivers/iio/light/iqs621-als.c             |  24 +---
+ drivers/iio/position/iqs624-pos.c          |  24 +---
+ drivers/input/keyboard/adp5585-keys.c      |  18 +--
+ drivers/platform/x86/bitland-mifs-wmi.c    |  17 +--
+ drivers/platform/x86/uniwill/uniwill-wmi.c |  17 +--
+ drivers/pwm/pwm-iqs620a.c                  |  21 +--
+ include/linux/notifier.h                   |  10 ++
+ kernel/notifier.c                          | 151 +++++++++++++++++++++
+ kernel/reboot.c                            |  24 +---
+ 13 files changed, 191 insertions(+), 181 deletions(-)
+
 -- 
-2.55.0
+2.47.3
 
