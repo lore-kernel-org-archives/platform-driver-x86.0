@@ -1,136 +1,209 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC06B48094A;
-	Thu, 23 Jul 2026 14:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FA72DB7BD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 15:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784817251; cv=none; b=Ee7xe17cnZLanVLAs+LpN3PODZmPsGaqvqRHe0QmNgA/H9WCRhQk75pPQI78kH60yBUdrj8uJYSb4kFFObQ315LJ3O+85/sujhReieo2ymoGOXNFvH163jA+hx0/eaAO6q52IAHyIP03ARzpiLgfEMf0bB38DRvX3VVh/rqgMAE=
+	t=1784819203; cv=none; b=TWoutf9Ghr1jO9wM+3eyYnCTe1Cfooix0u+z9cPVMucSbdfSBtT7OxYIhlF//Fkl+eHUjLxudJU/WBt9BIDkZA17Qig6JbStMAddiG5riCr/IAivpBzibkjvj/KnY+kCZDCt56b8YVRhTJ6CXq/CqPhFtKMupMEAHIgodabRhrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784817251; c=relaxed/simple;
-	bh=rnzS3t2OB9mXDKCdXxoAM7rMpi7xvwiWGRBta5UVvXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W4286ReeLlbLgg6NSwPv/tAeBeUuPeRKPpD+63RxzXwhCBFKE3xeZsZk76exZjg9qxv/urKP5tSUor9FKWjpF9R47y7ooP9xMwd8Rn/V/VQKKbzUV9ljEC4ALALsnXn0mP0OfuoCn/tQtOa7MrzmemnmCVN9EyQswzHWJOhaYlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 99A3DC04D7;
-	Thu, 23 Jul 2026 14:34:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 056E717;
-	Thu, 23 Jul 2026 14:33:13 +0000 (UTC)
-Date: Thu, 23 Jul 2026 10:33:36 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Markus Elfring <Markus.Elfring@web.de>, acpica-devel@lists.linux.dev,
- bpf@vger.kernel.org, coresight@lists.linaro.org, kvm@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, mptcp@lists.linux.dev,
- netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- virtualization@lists.linux.dev, Adrian Hunter <adrian.hunter@intel.com>,
- Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov
- <ast@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Andrew Morton
- <akpm@linux-foundation.org>, Andrii Nakryiko <andrii@kernel.org>, Ankur
- Arora <ankur.a.arora@oracle.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Bobby Eshleman
- <bobbyeshleman@meta.com>, Christian =?UTF-8?B?Qm9ybnRyw6RnZXI=?=
- <borntraeger@linux.ibm.com>, Christophe Leroy <chleroy@kernel.org>,
- Chun-Tse Shao <ctshao@google.com>, Claudio Imbrenda
- <imbrenda@linux.ibm.com>, Costa Shulyupin <costa.shul@redhat.com>, Crystal
- Wood <crwood@redhat.com>, Daniel Borkmann <daniel@iogearbox.net>, Daniel
- Lezcano <daniel.lezcano@kernel.org>, David Hildenbrand <david@kernel.org>,
- David Matlack <dmatlack@google.com>, "David S. Miller"
- <davem@davemloft.net>, Donald Hunter <donald.hunter@gmail.com>, Eduard
- Zingerman <eddyz87@gmail.com>, Emil Tsalapatis <emil@etsalapatis.com>, Eric
- Dumazet <edumazet@google.com>, Gabriele Monaco <gmonaco@redhat.com>,
- Geliang Tang <geliang@kernel.org>, Ian Rogers <irogers@google.com>, Ingo
- Molnar <mingo@redhat.com>, Ivan Pravdin <ipravdin.official@gmail.com>,
- Jakub Kicinski <kuba@kernel.org>, James Clark <james.clark@linaro.org>,
- Janosch Frank <frankja@linux.ibm.com>, Jason Xing
- <kerneljasonxing@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Joe Damato
- <joe@dama.to>, John Garry <john.g.garry@oracle.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Kaushlendra Kumar <kaushlendra.kumar@intel.com>,
- Kent Gibson <warthog618@gmail.com>, Kumar Kartikeya Dwivedi
- <memxor@gmail.com>, Len Brown <lenb@kernel.org>, Leo Yan
- <leo.yan@linux.dev>, Lukasz Luba <lukasz.luba@arm.com>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Martin KaFai
- Lau <martin.lau@linux.dev>, Masami Hiramatsu <mhiramat@kernel.org>, Mat
- Martineau <martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
- Michael Ellerman <mpe@ellerman.id.au>, Mike Leach <mike.leach@arm.com>,
- Mina Almasry <almasrymina@google.com>, Mykyta Yatsenko <yatsenko@meta.com>,
- Nam Cao <namcao@linutronix.de>, Namhyung Kim <namhyung@kernel.org>,
- Nicholas Piggin <npiggin@gmail.com>, Paolo Abeni <pabeni@redhat.com>, Paolo
- Bonzini <pbonzini@redhat.com>, Pawel Chmielewski
- <pawel.chmielewski@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Raghavendra Rao Ananta <rananta@google.com>, Saket Dumbre
- <saket.dumbre@intel.com>, Shuah Khan <shuah@kernel.org>, Simon Horman
- <horms@kernel.org>, Song Liu <song@kernel.org>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Stanislav Fomichev
- <sdf@fomichev.me>, Stefano Garzarella <sgarzare@redhat.com>, Suzuki K
- Poulose <suzuki.poulose@arm.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>,
- Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>, Tomas Glozar
- <tglozar@redhat.com>, Vipin Sharma <vipinsh@google.com>, Wander Lairson
- Costa <wander@redhat.com>, Will Deacon <will@kernel.org>, Willem de Bruijn
- <willemdebruijn.kernel@gmail.com>, Willy Tarreau <w@1wt.eu>, Yonghong Song
- <yonghong.song@linux.dev>, Zhang Chujun <zhangchujun@cmss.chinamobile.com>,
- Zhang Rui <rui.zhang@intel.com>, LKML <linux-kernel@vger.kernel.org>,
- kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] tools: Use fputc() calls in some functions
-Message-ID: <20260723103336.6593118b@gandalf.local.home>
-In-Reply-To: <amIbVOIsOeZgcBZF@tassilo>
-References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
-	<amIbVOIsOeZgcBZF@tassilo>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784819203; c=relaxed/simple;
+	bh=/okyBU+u1MqJsDQglC/cVtUrEUkdPiclhOdBObG6Ew4=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uJ079wivoZy3pSkyADhzqqVRB1/TkcOzg84teQC7DAuikw2xSwlYuSvPfu8tijea504L9L00pjHRRLe6oH/3310e1yZSlyG7kKbFO8oy9RL/ua5GxboRYvQdWCVqCqhTckBQwGy5+zpoh8QRJcXwKvvvX66Tr+roHTiVtz9Yw3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5xT+xId; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5xT+xId"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6BE9C2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Thu, 23 Jul 2026 15:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1784819202;
+	bh=/okyBU+u1MqJsDQglC/cVtUrEUkdPiclhOdBObG6Ew4=;
+	h=From:To:Subject:Date:From;
+	b=P5xT+xIdu7u6399p95MzkZ64wpj66gZAqmIYoz0FnB1CgGy30hM6x0u0KobcUxHMH
+	 4CbVnyIh/84uuGvP0qwJCDgOkBrP5gUaq1Hw7Mtx1qjJzk9AotbzdKuxMW36/kYlSN
+	 DLpTPOLL8u+4DSVoCofP+Bu9KDbKU7csgmBQyt2RM371ERKfGRZ+QmUerBMpg4zm5m
+	 jTp8neoyvYzC9kQRWVUu4F87d1/+OqyI0zioaJh9X70hg8o2kAo4IE4jqwD2z02Fda
+	 vPrqu6iNP0cWJtvyEKewtNBCR3bZNlvLvUUSBs23+nQKSDmg4UfWd5Nc65gRN2YdGc
+	 0IHwAE2T5Ppcg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id AFA54C433E1; Thu, 23 Jul 2026 15:06:42 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221780] New: Samsung Galaxy Book Pro 6 (Core Ultra X7 358H):
+ camera unavailable because samsung_galaxybook fails CSFI "block recording"
+ query
+Date: Thu, 23 Jul 2026 15:06:42 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: tm@tmgldn.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression attachments.created
+Message-ID: <bug-221780-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ncsjbmpq4hct7p4sj4iefr1r53tacukj
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 056E717
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+f7u83oRUulG9XwKl2P+q3kHYGrSLtLJ0=
-X-HE-Tag: 1784817193-538669
-X-HE-Meta: U2FsdGVkX19mSJrQ4yCgpa5T21s3DOyupJQtrDkbhb4BdFNkpGoXwq/ibfVmVhXFNmqX8uwKJldaBwfXYwLpcFxk6WAoDZEXT/gOP4/87ir9dCPM++yAwBRZudspVL4fEcLJ8BQR+IIioDSpRN3BUfGiJrTRVS7/uta9AmYBpm0bV/zvbFblUCnE1I0vyxTsAPHkh0LX+JrCxO4Fb8yldd7jKVRG3hDwMmD/y539S+5vq64BAxIp9RMpMFz5panzgBl/T6DnlC5NF2X6cBflLJ9t5of1YaVukjrextWC1Mkdf4ypcuVGdK7IR4N2F6BEhF3E+awXwxrLnbww9pI6GrXPJih6633rwSWNy/mC4FmaOinac79jHA==
 
-On Thu, 23 Jul 2026 06:47:00 -0700
-Andi Kleen <ak@linux.intel.com> wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221780
 
-> > The source code was transformed by using the Coccinelle software.  
-> 
-> gcc already does this transformation automatically.
+            Bug ID: 221780
+           Summary: Samsung Galaxy Book Pro 6 (Core Ultra X7 358H): camera
+                    unavailable because samsung_galaxybook fails CSFI
+                    "block recording" query
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: tm@tmgldn.com
+        Regression: No
 
-Yep, I showed this in my talk[1] that looked at what printf("Hello World!")
-does. Doing an objdump of:
+Created attachment 310494
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310494&action=3Dedit
+uname.txt, lspci.txt, dmesg.txt, journal.txt, ovti08f4-status.txt, dsdt.dsl
 
-#include <stdio.h>
+drivers/platform/x86/samsung-galaxybook.c
 
-int main(void) {
-	printf("Hello World!\n");
-	return 0;
+The integrated camera is not detected under Linux on a Samsung Galaxy Book =
+Pro
+6 with an Intel Core Ultra X7 358H (Panther Lake).
+
+The Intel IPU7 driver loads successfully, but no camera sensor is discovered
+because the Samsung platform driver fails to query the firmware's block
+recording feature.
+
+The driver logs:
+
+`acpi SAM0430:00: failed to execute CSFI; device responded with failure code
+0xff`
+
+After this, the camera sensor remains disabled and libcamera cannot discover
+it.
+
+## System
+
+* Laptop: Samsung Galaxy Book Pro 6
+* CPU: Intel Core Ultra X7 358H
+* Kernel: (see attached uname.txt)
+* Distribution: Arch Linux
+* IPU PCI ID: 8086:b05d
+* Camera sensor ACPI ID: OVTI08F4
+
+## Observed behaviour
+
+The IPU7 driver loads successfully.
+
+`v4l2-ctl --list-devices` shows the IPU.
+
+`libcamera` reports:
+
+`No sensor found for /dev/media0`
+
+Kernel log contains:
+
+```
+intel-ipu7 ... no subdev found in graph
+acpi SAM0430:00: failed to execute CSFI; device responded with failure code
+0xff
+```
+
+The camera sensor exists in ACPI:
+
+`OVTI08F4`
+
+but
+
+`/sys/bus/acpi/devices/OVTI08F4:00/status`
+
+contains:
+
+`0`
+
+The `samsung_galaxybook` driver loads correctly.
+
+Working features include:
+
+* keyboard backlight
+* platform profile
+
+The firmware attributes directory exists but contains no camera-related
+attributes.
+
+The privacy key generates a normal F11 key event and no ACPI notification is
+produced.
+
+## Investigation
+
+I inspected the current `drivers/platform/x86/samsung-galaxybook.c` source.
+
+The failure occurs during the `CSFI` request used for
+`GB_SASB_BLOCK_RECORDING`.
+
+The ACPI method itself exists in the firmware:
+
+```asl
+Method (CSFI, 1, Serialized)
+{
+    Return (SAWS (Arg0))
 }
+```
 
-has:
+The AML simply forwards the request to `SAWS`.
 
-0000000000001139 <main>:
-    1139:       55                      push   %rbp
-    113a:       48 89 e5                mov    %rsp,%rbp
-    113d:       48 8d 05 c0 0e 00 00    lea    0xec0(%rip),%rax        # 2004 <_IO_stdin_used+0x4>
-    1144:       48 89 c7                mov    %rax,%rdi
-    1147:       e8 e4 fe ff ff          call   1030 <puts@plt>  <<<--- puts and not printf
-    114c:       b8 00 00 00 00          mov    $0x0,%eax
-    1151:       5d                      pop    %rbp
-    1152:       c3                      ret
+`SAWS` returns the firmware response.
 
--- Steve
+The Linux driver reaches the `GB_GUNM_FAIL` check and reports:
 
-[1] https://www.youtube.com/watch?v=JRyrhsx-L5Y
+`failed to execute CSFI; device responded with failure code 0xff`
+
+This suggests the firmware rejects the request rather than the ACPI method
+itself failing.
+
+Because this query fails, the camera privacy feature is never initialised a=
+nd
+the sensor remains unavailable.
+
+## Expected behaviour
+
+The Samsung platform driver should successfully initialise the camera/priva=
+cy
+feature on this model so that the camera sensor becomes available to the In=
+tel
+IPU stack.
+
+## Attachments
+
+* uname.txt
+* lspci.txt
+* dmesg.txt
+* journal.txt
+* ovti08f4-status.txt
+* dsdt.dsl
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
