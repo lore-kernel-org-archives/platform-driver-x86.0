@@ -1,1407 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazon11021135.outbound.protection.outlook.com [40.107.57.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2B241685D;
-	Fri, 24 Jul 2026 09:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784884730; cv=none; b=acYGrdvycp/zg9m/4Aa41mCyWH9gqyeDmfhprCWmOECUsU94VU9IeMkC+FjMkIkiz0qrMYfAA0/f0V5eUN2Dokt5CpaezZWarV7FUxeinPip9T9zFP0e5UYRKSXAJSlD9O3BvypDKGVpl/v6Z07Ffn+qxGtfVYaKZzDt1E3wrUk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784884730; c=relaxed/simple;
-	bh=yqT/FZynIwNXByQR4LPfJHhARLuAvZBuDE9+Zm1oa6w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tjbXYGPoReGX7G18Pm/AxHpSE4YuCY7P+JrzXPzd/n99fmOwq0/znbAJ1t12YfbhM7LfnfEAQn+dm0jY0UCUoBwCDfsphcUVurwKqU3PdcJ3QEC5h54I1qaescDlqrs0sdO9+jxsUCEKfwGswVQ6G0qPP4IlC7gwyds5wDKjmeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FX6hIySM; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB06A38A72F;
+	Fri, 24 Jul 2026 10:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.57.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784890420; cv=fail; b=dBavT9/D1MUg+flMeQIDN+0f7ZfMhZKZr+cHl0s+2OjxYIDJGQxCpfQkFxxDQzVyhtAUZ1zts2SAzgMRdSXXXoqkbzkk/TfnMrJC06vI17mirOtfiSgqTsDmwePSG2RDIRUi3mnI7Eq1zEUaiLMHXwonxx4Bg2xXcdu5chJGzW4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784890420; c=relaxed/simple;
+	bh=PcR07A7IBKIBuqOIyvQB22OHr3IeO2W/eNloOHLLmbs=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ba/Ztg/A8cdor8STC4SDsQbTEgMdrHjjo+DDJIIQDeZwv0uZmNygWa0Stzt4nuN4ClAKfEVt73QH/grfuOu7vhrGlcj4OSI6G/4RuKIpGRFV1AOhACRhroUIuIhEtz/y5+GD0VDYsNA18JaLlma8XH2dOxBFZQi/SrtMY7vhExQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; dkim=fail (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b=KOJqlie7 reason="key not found in DNS"; arc=fail smtp.client-ip=40.107.57.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FX6hIySM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784884716; x=1816420716;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yqT/FZynIwNXByQR4LPfJHhARLuAvZBuDE9+Zm1oa6w=;
-  b=FX6hIySMcvSyT+fvu6D7DSxlPhutjfQ8mnNHvR0u8Bu7zCb+NmES7GQc
-   GsESsA7Su/8dmrV31DbZvxKeusmJYAVlK/IQUeSkqGXI1QErq7tEMdEgs
-   nFXLDO4RCbw0XUV3k7uKrBzqh3gusH+z9v/vaFzVXzp7HS+Ce/cA2zi1i
-   8KwmDskj43Lcuo1GsmmHt98hOuw4JMshCI6XYgpsnHDnZBURfNipC7h4A
-   lkGH1Q0xB5QYy9Ka0hYUC73Lpt8jsy4fXrzC3Z/NABGQmO5ULLmX0kHSD
-   7aoXFWiZlznLd7UZlzfx2+hcU0C2peleTwuapuash6Njie1lDirZM9QIi
-   w==;
-X-CSE-ConnectionGUID: QIbvIi3WQN6g9ofqTb8gvA==
-X-CSE-MsgGUID: zQR6eYV+SVaKWmsTEZZNNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="96142947"
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="96142947"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 02:18:29 -0700
-X-CSE-ConnectionGUID: F7Rc9PFrT+aGvgFmSHqOfw==
-X-CSE-MsgGUID: QAImzaufQze0rGFIzvlmZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="281969424"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 02:18:21 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 24 Jul 2026 12:18:18 +0300 (EEST)
-To: Sean Rhodes <sean@starlabs.systems>
-cc: tzungbi@kernel.org, Hans de Goede <hansg@kernel.org>, 
-    corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
-    prasanth.ksr@dell.com, jorge.lopez2@hp.com, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com, 
-    josh@joshuagrisham.com, briannorris@chromium.org, jwerner@chromium.org, 
-    tzimmermann@suse.de, javierm@redhat.com, kees@kernel.org, 
-    u.kleine-koenig@baylibre.com, mst@redhat.com, chenhuacai@kernel.org, 
-    wenst@chromium.org, florian.fainelli@broadcom.com, 
-    titouan.ameline@gmail.com, oliver@liuxiaozhen.dev, 
-    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    Dell.Client.Kernel@dell.com, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v8 4/4] firmware: coreboot: Add CFR firmware attributes
- driver
-In-Reply-To: <CABtds-2es9vcy1rxtb+HjE6gamXCgdonLfBEnwPtmNo69H0UzA@mail.gmail.com>
-Message-ID: <bce3427f-3c4a-d4aa-03f4-3d9c30f3f36f@linux.intel.com>
-References: <CABtds-2es9vcy1rxtb+HjE6gamXCgdonLfBEnwPtmNo69H0UzA@mail.gmail.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=siliconsignals.io header.i=@siliconsignals.io header.b="KOJqlie7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nS2V0qZce5/21v+r6ftQSM8FrQeYEW+5NvggKqmYXdCqAs2se9WeFI8xew7FzFwX+pFAq00nhk5fY7fzkkCEz5V5qxPNZSfbpzsOMyPB5NK6fWHjmNFyzi6Feo2lE6/9T2zwFtKKpeLBf9lV5T6jT5+WQ6ZdDa/Jmmo+TPCkmi0KwRc9kit+WbHNye09XpQED9r2KlRkC9H4iZWy9uhc14irDNdQytKOyuXl/yDL2anz/+fMg3PNcDPfXcguhkeqda8wCeMMaP54UpgdnmU/f1iHUsNlQTFgHtUrCqXgwCdOAEJxJVkBA7PEtdunPPW/FiVwOYy+JubzurmJVLtqQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=374uXpjUSSjRzP0+pCTD7FJb/iIbBzBNItmJpAwi8I4=;
+ b=bL5CO0Tx9KXf9pv0bJkAoA3jfsoINtwfYRjIIZYAyux6Q5T7A7OUvIxmVC8/Rd3n86foUHZTZB1McyOrx0W9HwA2MggF2knvhGHRJmD08enVOkPA2VfBE1sLfXooXoXx60DM/BwIt1NCup0RQIHw6XqdCF+LEbcp9E/lYhVKv8V0oKcdXLN1U6KxMNcLffwcPkKlfS9Y1QEpc/ebcFbgll/qZL1BXKqZT+Zi6+QqvzLPclSHTgWBo1Ogb6LORMMbZc+efPQ8S+T/rOCyy1xeHjUWgrP3yvr0uNU4g2kSmdMOc4AhoxeplGo+V6KZyOlNg7FvedzDFX5uvuX6Q1SMxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siliconsignals.io;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=374uXpjUSSjRzP0+pCTD7FJb/iIbBzBNItmJpAwi8I4=;
+ b=KOJqlie7F3gB1KgpODxPWj7JJooaiIrM0X0PpmNQscewkz8+s5aEAxulEVE1sbH/AriXPBaqHJVdwH26kbm7xANUFwAgQLjpCerKPksc4iU+2gRcAl34V9A70AuLQTRkp6SI1/tKN55KSpbZC+g7LhvWopb63wEBt22Xk6qVcQOVHYrLVoxoV5MfNQCqy6ketOeNjwkhF+FCLSfCQDpn1D0XvC5FOILyQPTnwSP/RHtWMbdp12UucpT505pTmxArimwVBAGO9/39a9cnMsx+L+1yUg7KnTYCgxmGAdxMUnhzwMrS5hbKqPNyA/uxbFumnWqv5IYF/U89C4ixa5xcpg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by PN3P287MB0162.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:d0::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.11; Fri, 24 Jul
+ 2026 10:53:33 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ce63:5749:b390:508b%3]) with mapi id 15.21.0245.010; Fri, 24 Jul 2026
+ 10:53:33 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: sakari.ailus@linux.intel.com,
+	johannes.goede@oss.qualcomm.com
+Cc: hpa@redhat.com,
+	Tarang Raval <tarang.raval@siliconsignals.io>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform: int3472: discrete: Support multiple HIDs per GPIO map entry
+Date: Fri, 24 Jul 2026 16:23:13 +0530
+Message-Id: <20260724105314.10621-1-tarang.raval@siliconsignals.io>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PN5P287CA0033.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:263::12) To PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:199::7)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3P287MB1829:EE_|PN3P287MB0162:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c2e5280-05ca-4a00-4eb3-08dee971ce39
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|366016|10070799003|1800799024|23010399003|18002099003|56012099006|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	Po9kS8ceSzHGGI0Q9Thk/1aDUkq3RY97MGAmS+vU7z2DCH51ZRXtI4RKmpZOk9DbjiyMpL8kdkVRkwAHzSppK9iT5xi04mzjxJ5afdyHFW6+ubGzT4DpnTj7xKFavl+dStUG7W5pE3t3O4aBAMw1OZkJJFpLn6I7u3JyhzZG0xFesErpIFLBf+Su4BLT/9vTGrIjEFS8qF9J/0RKlgyAbyT4VHU7XEgxvO3D2pEr3yJoDKJILhB5IOP+5zakItxhsF9qBTX7pNuhzWfqn0wU3QlkLOQXAHJYsLUvvWA9jn+RhqPTI4bfG/oSPmpvaNODyF5S09qKLz3kByDF3T3i9efvc3xJZLgbTLOgxfWjP+cicWjIAdFqVTlZJVwtTWnfN2W+4XkOd5tOti6sI/LczNkm+gktOH+99D105G8SnGRwcLj/Gjyc/N/VPmnC0I3AgOW3gWuU1TtXbrLX19GV7+fnZxHKO4X+Py/v3pSfCN5VWGBQM39orXx+iXkxW+tMK0IUi2dg7YPb0Xlk/GHhYanzwFnUjBgrY38hhkAV1ZMlV/G+HJdz8TaG72+aUD1GNS2Hb2HwSgv05RJhoTTDpw0X516iv4m2JA3jNPI6eunUV5JZAukIFvw1vIo27nj3M+iVJl8+8HwpUACKQqfX0nHOMCoViqchJbp1lnR0CDs=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(10070799003)(1800799024)(23010399003)(18002099003)(56012099006)(10067099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SPC0hAGOGzIZdKLxVhw14pY4IkrBOG4zOiXS5iPD9z9XozHxO8NYvfQ4rb8m?=
+ =?us-ascii?Q?wrXjgc623I3AnxtSwIf8kBYDyWp7i3kxlPs6PWwfCpjBDkuqjmJ0lUmwlRwJ?=
+ =?us-ascii?Q?2jiow5fYC9YWNZyc0v7moyleo8r3ZXCGuCSGHXFbt78FLLucHKkGDNFqV6R/?=
+ =?us-ascii?Q?8PZSrGBiRx5NzWWJgnc5hbeMh1LjkEM2tMo3KLTJ/t93sgbYLKt6U3BmydG4?=
+ =?us-ascii?Q?kv3KTq+ZhoSakbp3Qe9UOYu7BOwOoMJ9COB3i+eCJwdxkVX/4GZW++4kYpim?=
+ =?us-ascii?Q?IlV1G77rLcCYOz7pTD87vkb7hg2s1G6LBJ7IegqdEOM5kAAHPDw5PR9xQ+uS?=
+ =?us-ascii?Q?erpaT3RgXftP/dWjaBLo7W9k6LSUJjufbImi45qaCX+zlAYE01izYz1ZQDgx?=
+ =?us-ascii?Q?Slo34TMkZZzvmsrmTGMGHMOQuyVK7LRYkg3a2wQ80e5P7CANyACJtQCRpMR+?=
+ =?us-ascii?Q?baYjUO/dAvBjrkHiThfxFQYbsPgCfKyamL5mlNUHrxCivh+8U8+lmZI+eBXk?=
+ =?us-ascii?Q?BvsirwwkIt0ib0sDAMSo+eX2wT4NO/cPbCgD2EBRRj29RAOxP4e4xeQlHmHM?=
+ =?us-ascii?Q?nTbppSPFK4kGmiPM2jPuhZRn9ePM04xvvyLZOBPZTVgHM18wXz8odLW3xUqn?=
+ =?us-ascii?Q?UUDlhPKU6DEMn/VFUcPwsgsEbhTsZ1rtLh6A2EqwfYur26ynGmIvLyr/JvQe?=
+ =?us-ascii?Q?gTHxsxoIR+Fq807mGaoXqvZ039FJW8SLjEhzjvhenQKZuZOVqg1YrcFnW6DZ?=
+ =?us-ascii?Q?j9U+mYTT6TmST+Ueg0gtRdHK9a1/G5BLtz9xHNqm7Unf1auZlPo5k9QopPHD?=
+ =?us-ascii?Q?qVqONu8rf3XXPNJLLpqlaU0u5cnusdosPVrOl2mHV5MJLWZVGA9u5swwquKX?=
+ =?us-ascii?Q?bSRB/iyd6qVAaEc/jD68b9n/nUPEmEXhxXol+D8DfasLvR6Qt9XFgRinK6K2?=
+ =?us-ascii?Q?SuP0/Ow8iibeFqXk8NNwGHA9zWllpIzZJ+jQl0+Cw4dNnbNuDcTqzZfNqEwv?=
+ =?us-ascii?Q?KTfPuQs5ftTCKORh0rpupYT3Ts7C0NZTarJzEgMj8cqFDJrDhVUgt2ySwR3W?=
+ =?us-ascii?Q?dIp5TzIs95EahlLo6Kz4yfd8lvjuPNk88MDlwVXdLMlc5i7hOgdL7CJoSkaI?=
+ =?us-ascii?Q?GelMx9wylyeMx2sPSDFwFCTAQKC+kNna+6ZyUdYg4i3nFgvclBXpPZvYnEBt?=
+ =?us-ascii?Q?tnIea99Ass89RLJ6WlUaNw/JrSzL9WiIpyN1qaBraY+FqWbUxXPI0Bd9vfZs?=
+ =?us-ascii?Q?sEfH/D8ACfZeNcu5YLL6Rf+Aww4vsA7xIX46lYpKt/Vf6u8uSBlfIA7BI7w8?=
+ =?us-ascii?Q?3fOsWByQdHDQgET6HT1iCW0FTWivj7CYfvTQHg8UijYfPjNBw/5+99H4vIMl?=
+ =?us-ascii?Q?BXf470sxefdrayY6V8kRmHph/TkWoWA2hasOyVQ8CoOPGaEL/G8NMG5ZKh++?=
+ =?us-ascii?Q?ogCI6PnGPjkt1+Is6aTrAxD+OXHhHgNRu3Eg1ruLeZf85xX4iwBRwKGy4SmF?=
+ =?us-ascii?Q?nWugY69WDQnoNpEuMfofmClA67P/Tr/SEw5qDSZ2d1hv5eGpaN4spNJ/0yUd?=
+ =?us-ascii?Q?59yOPCKuhjEix33RdhC/q/crdXTasRndTUIwWC5ewPGANnXOror8px0XoeTT?=
+ =?us-ascii?Q?76BVCs8uCTfqbbhRnLdhJ0vnXJ+UDNLaOOWjLyAhCmA1qStnNx5vebFxNXby?=
+ =?us-ascii?Q?v15YMwbgyFJy7xjymEbwUEOdpbsweLlXPbG8UZEJq/DTQ9YOMp7PnXNDyh0O?=
+ =?us-ascii?Q?B7YWS0C7wjJ3a81YiIJKfq84wD14m/iCbd4mfLq6l+s5iIVouzHrdnbv6mt+?=
+X-MS-Exchange-AntiSpam-MessageData-1: AvVB1wQ4jOeKsP2EWYc6ElzYTWj1u6lz+N8=
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c2e5280-05ca-4a00-4eb3-08dee971ce39
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2026 10:53:33.4989
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZR2wOLR7jbZbcBP/wE08Vs66ToL5BXRic+KiI9VzxGqVj44vwAADNNy5RX2gVgV6VJBPJqsqyBdesntD1tDOqPdluuYfs6bwCXbWa2g40vg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3P287MB0162
 
-On Wed, 22 Jul 2026, Sean Rhodes wrote:
+Each int3472_gpio_map entry currently maps exactly one ACPI HID to a
+GPIO quirk. As more sensors needing the same quirk are identified, this
+means adding a full duplicate table entry per HID, differing only in
+the HID string, which does not scale.
 
-> coreboot can publish a CFR tree in its coreboot table to describe
-> firmware setup options. Add a firmware-attributes driver for that table
-> entry under the coreboot firmware driver directory.
-> 
-> The driver exposes runtime EFI variable-backed boolean, enum and integer
-> settings through the firmware-attributes ABI. It only registers settings
-> with readable runtime EFI variables, skips suppressed, volatile,
-> dependency-gated and non-runtime options, and keeps read-only or inactive
-> options read-only in sysfs.
-> 
-> For settings with an APM_CNT runtime-apply record, write the EFI variable
-> and ask firmware to apply the setting immediately on x86. If firmware
-> reports a failure, restore the old EFI variable value. Settings without a
-> runtime apply hook, or non-x86 builds, keep the EFI variable update and
-> set pending_reboot.
-> 
-> Tested on a Star Labs Byte with firmware 26.07 and the driver built as a
-> module against Linux 6.17: runtime APM_CNT apply was verified with
-> power_led, and reboot-needed behavior was verified with debug_level.
-> 
-> Link: https://doc.coreboot.org/drivers/cfr.html
-> Link: https://doc.coreboot.org/drivers/cfr_internal.html
-> Signed-off-by: Sean Rhodes <sean@starlabs.systems>
-> ---
->  MAINTAINERS                              |    6 +
->  drivers/firmware/coreboot/Kconfig        |   14 +
->  drivers/firmware/coreboot/Makefile       |    1 +
->  drivers/firmware/coreboot/coreboot-cfr.c | 1185 ++++++++++++++++++++++
->  4 files changed, 1206 insertions(+)
->  create mode 100644 drivers/firmware/coreboot/coreboot-cfr.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8c2634a8dc13..a32e4405d20e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6666,6 +6666,12 @@ F:	tools/testing/selftests/cgroup/test_hugetlb_memcg.c
->  F:	tools/testing/selftests/cgroup/test_kmem.c
->  F:	tools/testing/selftests/cgroup/test_memcontrol.c
-> 
-> +COREBOOT CFR FIRMWARE ATTRIBUTES DRIVER
-> +M:	Sean Rhodes <sean@starlabs.systems>
-> +L:	chrome-platform@lists.linux.dev
-> +S:	Maintained
-> +F:	drivers/firmware/coreboot/coreboot-cfr.c
-> +
->  CORETEMP HARDWARE MONITORING DRIVER
->  L:	linux-hwmon@vger.kernel.org
->  S:	Orphan
-> diff --git a/drivers/firmware/coreboot/Kconfig
-> b/drivers/firmware/coreboot/Kconfig
-> index b248bafe8b6b..5c37bdc9c9fd 100644
-> --- a/drivers/firmware/coreboot/Kconfig
-> +++ b/drivers/firmware/coreboot/Kconfig
-> @@ -44,6 +44,20 @@ config GOOGLE_COREBOOT_TABLE
->  	  device tree node /firmware/coreboot.
->  	  If unsure say N.
-> 
-> +config COREBOOT_CFR
-> +	tristate "coreboot CFR firmware attributes"
-> +	depends on EFI
-> +	depends on GOOGLE_COREBOOT_TABLE
-> +	select CRC32
-> +	select FW_ATTR_CLASS
-> +	help
-> +	  This driver parses the coreboot CFR table and exposes runtime EFI
-> +	  variable-backed options through the firmware-attributes sysfs
-> +	  interface.
-> +
-> +	  If you have a system running coreboot with CFR runtime
-> +	  configuration support, say Y or M here.
-> +
->  config GOOGLE_MEMCONSOLE
->  	tristate
->  	depends on GOOGLE_MEMCONSOLE_X86_LEGACY || GOOGLE_MEMCONSOLE_COREBOOT
-> diff --git a/drivers/firmware/coreboot/Makefile
-> b/drivers/firmware/coreboot/Makefile
-> index 8151e323cc43..1b9d0c0e7593 100644
-> --- a/drivers/firmware/coreboot/Makefile
-> +++ b/drivers/firmware/coreboot/Makefile
-> @@ -2,6 +2,7 @@
-> 
->  obj-$(CONFIG_GOOGLE_SMI)		+= gsmi.o
->  obj-$(CONFIG_GOOGLE_COREBOOT_TABLE)        += coreboot_table.o
-> +obj-$(CONFIG_COREBOOT_CFR)		+= coreboot-cfr.o
->  obj-$(CONFIG_GOOGLE_FRAMEBUFFER_COREBOOT)  += framebuffer-coreboot.o
->  obj-$(CONFIG_GOOGLE_MEMCONSOLE)            += memconsole.o
->  obj-$(CONFIG_GOOGLE_MEMCONSOLE_COREBOOT)   += memconsole-coreboot.o
-> diff --git a/drivers/firmware/coreboot/coreboot-cfr.c
-> b/drivers/firmware/coreboot/coreboot-cfr.c
-> new file mode 100644
-> index 000000000000..3df49449863a
-> --- /dev/null
-> +++ b/drivers/firmware/coreboot/coreboot-cfr.c
-> @@ -0,0 +1,1185 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * coreboot CFR firmware attributes driver.
-> + *
-> + * Parses LB_TAG_CFR_ROOT records from the coreboot table and exposes
-> + * runtime EFI variable-backed options through the firmware-attributes class.
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/bitops.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/compiler_attributes.h>
-> +#include <linux/container_of.h>
-> +#include <linux/crc32.h>
-> +#include <linux/ctype.h>
-> +#include <linux/device.h>
-> +#include <linux/device-id/coreboot.h>
-> +#include <linux/efi.h>
-> +#include <linux/err.h>
-> +#include <linux/firmware_attributes.h>
-> +#include <linux/io.h>
-> +#include <linux/kdev_t.h>
-> +#include <linux/kobject.h>
-> +#include <linux/limits.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +
-> +#include "coreboot_table.h"
-> +
-> +#define DRIVER_NAME "coreboot-cfr"
-> +
-> +#define LB_TAG_CFR_ROOT		0x47
-> +#define CFR_VERSION		0
-> +
-> +enum cfr_tags {
-> +	CFR_TAG_OPTION_FORM		= 1,
-> +	CFR_TAG_ENUM_VALUE		= 2,
-> +	CFR_TAG_OPTION_ENUM		= 3,
-> +	CFR_TAG_OPTION_NUMBER		= 4,
-> +	CFR_TAG_OPTION_BOOL		= 5,
-> +	CFR_TAG_VARCHAR_OPT_NAME	= 7,
-> +	CFR_TAG_VARCHAR_UI_NAME		= 8,
-> +	CFR_TAG_RUNTIME_APPLY		= 13,
-> +};
-> +
-> +enum cfr_option_flags {
-> +	CFR_OPTFLAG_READONLY	= BIT(0),
-> +	CFR_OPTFLAG_INACTIVE	= BIT(1),
-> +	CFR_OPTFLAG_SUPPRESS	= BIT(2),
-> +	CFR_OPTFLAG_VOLATILE	= BIT(3),
-> +	CFR_OPTFLAG_RUNTIME	= BIT(4),
-> +};
-> +
-> +enum cfr_runtime_apply_method {
-> +	CFR_RUNTIME_APPLY_NONE		= 0,
-> +	CFR_RUNTIME_APPLY_APM_CNT	= 1,
-> +};
-> +
-> +struct lb_cfr {
-> +	u32 tag;
-> +	u32 size;
-> +	u32 version;
-> +	u32 checksum;
-> +} __packed;
-> +
-> +struct lb_cfr_varbinary {
-> +	u32 tag;
-> +	u32 size;
-> +	u32 data_length;
-> +} __packed;
-> +
-> +struct lb_cfr_enum_value {
-> +	u32 tag;
-> +	u32 size;
-> +	u32 value;
-> +} __packed;
-> +
-> +struct lb_cfr_runtime_apply {
-> +	u32 tag;
-> +	u32 size;
-> +	u32 method;
-> +	u32 id;
-> +} __packed;
-> +
-> +struct lb_cfr_numeric_option {
-> +	u32 tag;
-> +	u32 size;
-> +	cb_u64 object_id;
-> +	cb_u64 dependency_id;
-> +	u32 flags;
-> +	u32 default_value;
-> +	u32 min;
-> +	u32 max;
-> +	u32 step;
-> +	u32 display_flags;
-> +} __packed;
-> +
-> +struct lb_cfr_option_form {
-> +	u32 tag;
-> +	u32 size;
-> +	cb_u64 object_id;
-> +	cb_u64 dependency_id;
-> +	u32 flags;
-> +} __packed;
-> +
-> +#define COREBOOT_CFR_OPT_SKIP_FLAGS \
-> +	(CFR_OPTFLAG_SUPPRESS | CFR_OPTFLAG_VOLATILE)
-> +
-> +#define COREBOOT_CFR_OPT_READ_ONLY_FLAGS \
-> +	(CFR_OPTFLAG_READONLY | CFR_OPTFLAG_INACTIVE)
-> +
-> +#define COREBOOT_CFR_EFI_ATTRS \
-> +	(EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | \
-> +	 EFI_VARIABLE_RUNTIME_ACCESS)
-> +
-> +#define COREBOOT_CFR_APM_CNT_PORT	0xb2
-> +#define COREBOOT_CFR_APM_STS_PORT	0xb3
-> +#define COREBOOT_CFR_APM_APPLY_CMD	0xe3
-> +#define COREBOOT_CFR_MAX_FORM_DEPTH	16
-> +
-> +static efi_guid_t coreboot_cfr_guid = EFI_GUID(0xceae4c1d, 0x335b, 0x4685,
-> +					       0xa4, 0xa0, 0xfc, 0x4a,
-> +					       0x94, 0xee, 0xa0, 0x85);
-> +
-> +enum coreboot_cfr_setting_type {
-> +	COREBOOT_CFR_SETTING_ENUM,
-> +	COREBOOT_CFR_SETTING_NUMBER,
-> +	COREBOOT_CFR_SETTING_BOOL,
-> +};
-> +
-> +struct coreboot_cfr_enum {
-> +	char *label;
-> +	u32 value;
-> +};
-> +
-> +struct coreboot_cfr_setting {
-> +	struct kobject kobj;
-> +	struct list_head node;
-> +	struct coreboot_cfr_drvdata *drvdata;
-> +	enum coreboot_cfr_setting_type type;
-> +	char *name;
-> +	char *display_name;
-> +	struct coreboot_cfr_enum *values;
-> +	unsigned int n_values;
-> +	u32 default_value;
-> +	u32 min;
-> +	u32 max;
-> +	u32 step;
-> +	u32 runtime_apply_method;
-> +	u32 runtime_apply_id;
-> +	bool read_only;
-> +};
-> +
-> +struct coreboot_cfr_drvdata {
-> +	struct device *class_dev;
-> +	struct kset *attrs_kset;
-> +	struct list_head settings;
-> +	/* Serializes EFI variable writes and the matching runtime apply hook. */
-> +	struct mutex lock;
-> +	bool efi_writes_supported;
-> +	bool pending_reboot;
-> +};
-> +
-> +struct coreboot_cfr_iterator {
-> +	const u8 *cursor;
-> +	size_t remaining;
-> +};
-> +
-> +static struct coreboot_cfr_setting *to_coreboot_cfr_setting(struct
-> kobject *kobj)
-> +{
-> +	return container_of(kobj, struct coreboot_cfr_setting, kobj);
-> +}
-> +
-> +static bool coreboot_cfr_string_is_valid_name(const char *name)
-> +{
-> +	return name && name[0] && !strchr(name, '/');
-> +}
-> +
-> +static char *coreboot_cfr_string_dup(const struct lb_cfr_varbinary *str)
-> +{
-> +	const char *data = (const char *)(str + 1);
-> +	size_t len = str->data_length;
-> +
-> +	if (len && !data[len - 1])
-> +		len--;
-> +
-> +	return kmemdup_nul(data, len, GFP_KERNEL);
-> +}
-> +
-> +static const struct coreboot_table_entry *
-> +coreboot_cfr_next_entry(struct coreboot_cfr_iterator *iterator)
-> +{
-> +	const struct coreboot_table_entry *entry;
-> +
-> +	if (!iterator->remaining)
-> +		return NULL;
-> +
-> +	if (iterator->remaining < sizeof(*entry))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	entry = (const struct coreboot_table_entry *)iterator->cursor;
-> +	if (entry->size < sizeof(*entry) || entry->size > iterator->remaining)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	iterator->cursor += entry->size;
-> +	iterator->remaining -= entry->size;
-> +
-> +	return entry;
-> +}
-> +
-> +static const struct coreboot_table_entry *
-> +coreboot_cfr_child_entry(const void *base, size_t len, u32 tag)
-> +{
-> +	struct coreboot_cfr_iterator iterator = {
-> +		.cursor = base,
-> +		.remaining = len,
-> +	};
-> +	const struct coreboot_table_entry *entry;
-> +
-> +	for (;;) {
-> +		entry = coreboot_cfr_next_entry(&iterator);
-> +		if (!entry || IS_ERR(entry))
+Change int3472_gpio_map::hid to a NULL-terminated hids array so a
+single entry can match any number of ACPI HIDs, letting new HIDs be
+added to the relevant array instead of duplicating quirk entries.
 
-IS_ERR_OR_NULL()
+Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
+Tested-by: Kate Hsuan <hpa@redhat.com>
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+---
+Change-log:
 
-> +			return entry;
-> +
-> +		if (entry->tag == tag)
-> +			return entry;
-> +	}
-> +}
-> +
-> +static const struct lb_cfr_varbinary *
-> +coreboot_cfr_child_string(const void *base, size_t len, u32 tag)
-> +{
-> +	const struct lb_cfr_varbinary *str;
-> +	const struct coreboot_table_entry *entry;
-> +
-> +	entry = coreboot_cfr_child_entry(base, len, tag);
-> +	if (IS_ERR(entry))
-> +		return ERR_CAST(entry);
-> +	if (!entry)
-> +		return NULL;
-> +
-> +	if (entry->size < sizeof(*str))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	str = (const struct lb_cfr_varbinary *)entry;
-> +	if (str->data_length > entry->size - sizeof(*str))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	return str;
-> +}
-> +
-> +static const struct lb_cfr_runtime_apply *
-> +coreboot_cfr_child_runtime_apply(const void *base, size_t len)
-> +{
-> +	const struct lb_cfr_runtime_apply *runtime_apply;
-> +	const struct coreboot_table_entry *entry;
-> +
-> +	entry = coreboot_cfr_child_entry(base, len, CFR_TAG_RUNTIME_APPLY);
-> +	if (IS_ERR(entry))
-> +		return ERR_CAST(entry);
-> +	if (!entry)
-> +		return NULL;
-> +
-> +	if (entry->size < sizeof(*runtime_apply))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	runtime_apply = (const struct lb_cfr_runtime_apply *)entry;
-> +	if (runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT &&
-> +	    runtime_apply->id > U8_MAX)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	return runtime_apply;
-> +}
-> +
-> +static efi_char16_t *coreboot_cfr_efi_name(const char *name)
-> +{
-> +	size_t len, i;
-> +
-> +	len = strlen(name);
-> +	if (len >= EFI_VAR_NAME_LEN)
-> +		return ERR_PTR(-ENAMETOOLONG);
-> +
-> +	efi_char16_t *efi_name __free(kfree) =
-> +		kcalloc(len + 1, sizeof(*efi_name), GFP_KERNEL);
-> +	if (!efi_name)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for (i = 0; i < len; i++) {
-> +		if (!isascii(name[i]))
-> +			return ERR_PTR(-EINVAL);
-> +		efi_name[i] = name[i];
-> +	}
-> +
-> +	return no_free_ptr(efi_name);
-> +}
-> +
-> +/* Caller must hold the efivar lock. */
-> +static int coreboot_cfr_read_efi_value(efi_char16_t *efi_name, u32 *value,
-> +				       u32 *attrs)
-> +{
-> +	unsigned long size = sizeof(__le32);
-> +	efi_status_t status;
-> +	__le32 data;
-> +	u32 attr;
-> +
-> +	status = efivar_get_variable(efi_name, &coreboot_cfr_guid, &attr,
-> +				     &size, &data);
-> +	if (status != EFI_SUCCESS)
-> +		return efi_status_to_err(status);
-> +
-> +	if (size != sizeof(data))
-> +		return -EINVAL;
-> +
-> +	if (!(attr & EFI_VARIABLE_RUNTIME_ACCESS))
-> +		return -EOPNOTSUPP;
-> +
-> +	*value = le32_to_cpu(data);
-> +	if (attrs)
-> +		*attrs = attr;
-> +
-> +	return 0;
-> +}
-> +
-> +static int coreboot_cfr_read_value(const struct coreboot_cfr_setting *setting,
-> +				   u32 *value, u32 *attrs)
-> +{
-> +	efi_char16_t *efi_name __free(kfree) =
-> +		coreboot_cfr_efi_name(setting->name);
-> +	int ret;
-> +
-> +	if (IS_ERR(efi_name))
-> +		return PTR_ERR(no_free_ptr(efi_name));
-> +
-> +	ret = efivar_lock();
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = coreboot_cfr_read_efi_value(efi_name, value, attrs);
-> +	efivar_unlock();
-> +
-> +	return ret;
-> +}
-> +
-> +/* Caller must hold the efivar lock. */
-> +static int coreboot_cfr_write_efi_value(efi_char16_t *efi_name, u32 value,
-> +					u32 attrs)
-> +{
-> +	efi_status_t status;
-> +	__le32 data;
-> +
-> +	if (!efivar_supports_writes())
-> +		return -EROFS;
-> +
-> +	data = cpu_to_le32(value);
-> +	status = efivar_set_variable_locked(efi_name, &coreboot_cfr_guid, attrs,
-> +					    sizeof(data), &data, false);
-> +	if (status != EFI_SUCCESS)
-> +		return efi_status_to_err(status);
-> +
-> +	return 0;
-> +}
-> +
-> +static int coreboot_cfr_apply_runtime(struct coreboot_cfr_setting *setting)
-> +{
-> +#ifdef CONFIG_X86
-> +	u8 status;
-> +
-> +	if (setting->runtime_apply_method != CFR_RUNTIME_APPLY_APM_CNT)
-> +		return -EOPNOTSUPP;
-> +
-> +	outb((u8)setting->runtime_apply_id, COREBOOT_CFR_APM_STS_PORT);
-> +	outb(COREBOOT_CFR_APM_APPLY_CMD, COREBOOT_CFR_APM_CNT_PORT);
-> +	status = inb(COREBOOT_CFR_APM_STS_PORT);
-> +	if (status)
-> +		return -EIO;
-> +
-> +	return 0;
-> +#else
-> +	return -EOPNOTSUPP;
-> +#endif
-> +}
-> +
-> +static int coreboot_cfr_write_value(struct coreboot_cfr_setting *setting,
-> +				    u32 value)
-> +{
-> +	efi_char16_t *efi_name __free(kfree) = NULL;
-> +	u32 attrs;
-> +	u32 old;
-> +	int restore_ret;
-> +	int ret;
-> +
-> +	if (setting->read_only)
-> +		return -EACCES;
-> +
-> +	efi_name = coreboot_cfr_efi_name(setting->name);
+v2 -> v3:
 
-efi_name should be declared only here, the long comming in cleanup.h 
-explains why (short summary: with __free() the placement of the var 
-declaration may impact cleanup order, while this code is "safe" currently, 
-it's better to always use to the correct pattern.)
+- Move the comments after the HID strings and include the sensor name,
+  as suggested by Hans.
+- Add the Reviewed-by tags from Hans and Daniel.
 
-> +	if (IS_ERR(efi_name))
-> +		return PTR_ERR(no_free_ptr(efi_name));
-> +
-> +	guard(mutex)(&setting->drvdata->lock);
-> +
-> +	ret = efivar_lock();
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = coreboot_cfr_read_efi_value(efi_name, &old, &attrs);
-> +	if (ret)
-> +		goto out_unlock_efi;
-> +
-> +	if ((attrs & COREBOOT_CFR_EFI_ATTRS) != COREBOOT_CFR_EFI_ATTRS) {
-> +		ret = -EOPNOTSUPP;
-> +		goto out_unlock_efi;
-> +	}
-> +
-> +	if (old == value)
-> +		goto out_unlock_efi;
-> +
-> +	ret = coreboot_cfr_write_efi_value(efi_name, value, attrs);
-> +	if (ret)
-> +		goto out_unlock_efi;
-> +
-> +	ret = coreboot_cfr_apply_runtime(setting);
-> +	if (ret == -EOPNOTSUPP) {
-> +		/* EFI changed; firmware will consume it after reboot. */
-> +		setting->drvdata->pending_reboot = true;
-> +		ret = 0;
-> +	} else if (ret) {
-> +		restore_ret = coreboot_cfr_write_efi_value(efi_name, old, attrs);
-> +		if (restore_ret) {
-> +			setting->drvdata->pending_reboot = true;
-> +			ret = restore_ret;
-> +		} else {
-> +			goto out_unlock_efi;
-> +		}
-> +	}
-> +
-> +	efivar_unlock();
-> +	kobject_uevent(&setting->drvdata->class_dev->kobj, KOBJ_CHANGE);
-> +	return ret;
-> +
-> +out_unlock_efi:
-> +	efivar_unlock();
-> +	return ret;
-> +}
-> +
-> +static const char *
-> +coreboot_cfr_label_from_value(const struct coreboot_cfr_setting *setting,
-> +			      u32 value)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++) {
-> +		if (setting->values[i].value == value)
-> +			return setting->values[i].label;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static int coreboot_cfr_parse_value(struct coreboot_cfr_setting *setting,
-> +				    const char *label, u32 *value_out)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++) {
-> +		if (!sysfs_streq(label, setting->values[i].label))
-> +			continue;
-> +
-> +		*value_out = setting->values[i].value;
-> +		return 0;
-> +	}
-> +
-> +	return kstrtou32(label, 0, value_out);
+v1 -> v2:
 
-kstrtou32() too seems to lack include.
+- Add per-HID comments to power_enable_hids_vana[] (Lenovo X9-14/X9-15
+  for SONY471A, Lenovo X1 Carbon G14 for TBE20A0)
+- Convert INT33F0 (mt9m114), INT347E (ov7251) entries to use named
+  power_enable_hids_*[] arrays instead of anonymous compound literals,
+  for style consistency
+- Did not convert OVTI08F4 (ov08x40) to a named array, and did not add
+  a NULL guard in int3472_gpio_map_hids_match(): not fully convinced
+  these changes are needed yet, but open to further discussion on both
 
-> +}
-> +
-> +static bool coreboot_cfr_value_is_valid(struct coreboot_cfr_setting *setting,
-> +					u32 value)
-> +{
-> +	u32 delta;
-> +
-> +	if (setting->type != COREBOOT_CFR_SETTING_NUMBER) {
-> +		/* Enum and bool values are valid only if they have a label. */
-> +		return coreboot_cfr_label_from_value(setting, value);
-> +	}
-> +
-> +	if (value < setting->min || value > setting->max)
-> +		return false;
-> +
-> +	if (!setting->step)
-> +		return true;
-> +
-> +	delta = value - setting->min;
-> +	return delta % setting->step == 0;
-> +}
-> +
-> +static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-> +			 char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-> +		return sysfs_emit(buf, "integer\n");
-> +
-> +	return sysfs_emit(buf, "enumeration\n");
-> +}
-> +
-> +static ssize_t display_name_language_code_show(struct kobject *kobj,
-> +					       struct kobj_attribute *attr,
-> +					       char *buf)
-> +{
-> +	return sysfs_emit(buf, "en_US.UTF-8\n");
-> +}
-> +
-> +static ssize_t display_name_show(struct kobject *kobj,
-> +				 struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	return sysfs_emit(buf, "%s\n", setting->display_name);
-> +}
-> +
-> +static ssize_t possible_values_show(struct kobject *kobj,
-> +				    struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +	ssize_t len = 0;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++) {
-> +		len += sysfs_emit_at(buf, len, "%s%s", i ? ";" : "",
-> +				     setting->values[i].label);
-> +	}
-> +
-> +	len += sysfs_emit_at(buf, len, "\n");
-> +	return len;
-> +}
-> +
-> +static ssize_t min_value_show(struct kobject *kobj, struct
-> kobj_attribute *attr,
-> +			      char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	return sysfs_emit(buf, "%u\n", setting->min);
-> +}
-> +
-> +static ssize_t max_value_show(struct kobject *kobj, struct
-> kobj_attribute *attr,
-> +			      char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	return sysfs_emit(buf, "%u\n", setting->max);
-> +}
-> +
-> +static ssize_t scalar_increment_show(struct kobject *kobj,
-> +				     struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	return sysfs_emit(buf, "%u\n", setting->step);
-> +}
-> +
-> +static ssize_t default_value_show(struct kobject *kobj,
-> +				  struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +	const char *label;
-> +
-> +	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-> +		return sysfs_emit(buf, "%u\n", setting->default_value);
-> +
-> +	label = coreboot_cfr_label_from_value(setting, setting->default_value);
-> +	if (!label)
-> +		return sysfs_emit(buf, "%u\n", setting->default_value);
-> +
-> +	return sysfs_emit(buf, "%s\n", label);
-> +}
-> +
-> +static ssize_t current_value_show(struct kobject *kobj,
-> +				  struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +	const char *label;
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret = coreboot_cfr_read_value(setting, &value, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-> +		return sysfs_emit(buf, "%u\n", value);
-> +
-> +	label = coreboot_cfr_label_from_value(setting, value);
-> +	if (!label)
-> +		return -EINVAL;
-> +
-> +	return sysfs_emit(buf, "%s\n", label);
-> +}
-> +
-> +static ssize_t current_value_store(struct kobject *kobj,
-> +				   struct kobj_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret = coreboot_cfr_parse_value(setting, buf, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!coreboot_cfr_value_is_valid(setting, value))
-> +		return -EINVAL;
-> +
-> +	ret = coreboot_cfr_write_value(setting, value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static struct kobj_attribute type_attr = __ATTR_RO(type);
-> +static struct kobj_attribute display_name_language_code_attr =
-> +	__ATTR_RO(display_name_language_code);
-> +static struct kobj_attribute display_name_attr = __ATTR_RO(display_name);
-> +static struct kobj_attribute possible_values_attr = __ATTR_RO(possible_values);
-> +static struct kobj_attribute min_value_attr = __ATTR_RO(min_value);
-> +static struct kobj_attribute max_value_attr = __ATTR_RO(max_value);
-> +static struct kobj_attribute scalar_increment_attr =
-> __ATTR_RO(scalar_increment);
-> +static struct kobj_attribute default_value_attr = __ATTR_RO(default_value);
-> +static struct kobj_attribute current_value_attr = __ATTR_RW(current_value);
-> +
-> +static struct attribute *coreboot_cfr_setting_attrs[] = {
-> +	&type_attr.attr,
-> +	&display_name_language_code_attr.attr,
-> +	&display_name_attr.attr,
-> +	&possible_values_attr.attr,
-> +	&min_value_attr.attr,
-> +	&max_value_attr.attr,
-> +	&scalar_increment_attr.attr,
-> +	&default_value_attr.attr,
-> +	&current_value_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static umode_t coreboot_cfr_attr_is_visible(struct kobject *kobj,
-> +					    struct attribute *attr, int n)
-> +{
-> +	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-> +
-> +	if (setting->type == COREBOOT_CFR_SETTING_NUMBER &&
-> +	    attr == &possible_values_attr.attr)
-> +		return 0;
-> +
-> +	if (setting->type != COREBOOT_CFR_SETTING_NUMBER &&
-> +	    (attr == &min_value_attr.attr || attr == &max_value_attr.attr ||
-> +	     attr == &scalar_increment_attr.attr))
-> +		return 0;
-> +
-> +	if (setting->read_only && attr == &current_value_attr.attr)
-> +		return 0444;
-> +
-> +	return attr->mode;
-> +}
-> +
-> +static const struct attribute_group coreboot_cfr_setting_group = {
-> +	.attrs = coreboot_cfr_setting_attrs,
-> +	.is_visible = coreboot_cfr_attr_is_visible,
-> +};
-> +
-> +static void coreboot_cfr_free_setting(struct coreboot_cfr_setting *setting)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++)
-> +		kfree(setting->values[i].label);
-> +
-> +	kfree(setting->values);
-> +	kfree(setting->display_name);
-> +	kfree(setting->name);
-> +	kfree(setting);
-> +}
-> +
-> +static void coreboot_cfr_setting_release(struct kobject *kobj)
-> +{
-> +	coreboot_cfr_free_setting(to_coreboot_cfr_setting(kobj));
-> +}
-> +
-> +static const struct kobj_type coreboot_cfr_setting_ktype = {
-> +	.release = coreboot_cfr_setting_release,
-> +	.sysfs_ops = &kobj_sysfs_ops,
-> +};
-> +
-> +static ssize_t pending_reboot_show(struct kobject *kobj,
-> +				   struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct coreboot_cfr_drvdata *data;
-> +
-> +	data = dev_get_drvdata(kobj_to_dev(kobj->parent));
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 59 +++++++++++++------
+ 1 file changed, 40 insertions(+), 19 deletions(-)
 
-These conversions are quite boilerplatey so alternatively you could do 
-(to avoid making the line very long):
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index adff564bf3fd..6c729fcfce5d 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -123,10 +123,31 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+ 	return desc;
+ }
 
-	struct device *dev = kobj_to_dev(kobj->parent);
-	struct coreboot_cfr_drvdata *data = dev_get_drvdata(dev);
++/*
++ * Other vana-supply users (e.g. ST, Toshiba, Sony sensors) can be added to
++ * this array instead of adding new quirk table entries.
++ */
++static const char * const power_enable_hids_vana[] = {
++	"SONY471A", /* imx471 on Lenovo X9-14 and X9-15 */
++	"TBE20A0", /* imx471 on Lenovo X1 Carbon G14 */
++	NULL
++};
++
++static const char * const power_enable_hids_vdd[] = {
++	"INT33F0", /* mt9m114 */
++	NULL
++};
++
++static const char * const power_enable_hids_enable[] = {
++	"INT347E", /* ov7251 */
++	NULL
++};
++
+ /**
+  * struct int3472_gpio_map - Map GPIOs to whatever is expected by the
+  * sensor driver (as in DT bindings)
+- * @hid: The ACPI HID of the device without the instance number e.g. INT347E
++ * @hids: NULL-terminated array of ACPI HIDs of the devices without the
++ * instance number e.g. INT347E
+  * @type_from: The GPIO type from ACPI ?SDT
+  * @type_to: The assigned GPIO type, typically same as @type_from
+  * @enable_time_us: Enable time in usec for GPIOs mapped to regulators
+@@ -135,7 +156,7 @@ skl_int3472_gpiod_get_from_temp_lookup(struct int3472_discrete_device *int3472,
+  * GPIO_ACTIVE_HIGH otherwise
+  */
+ struct int3472_gpio_map {
+-	const char *hid;
++	const char * const *hids;
+ 	u8 type_from;
+ 	u8 type_to;
+ 	bool polarity_low;
+@@ -145,38 +166,27 @@ struct int3472_gpio_map {
 
-But up to you.
+ static const struct int3472_gpio_map int3472_gpio_map[] = {
+ 	{	/* mt9m114 designs declare a powerdown pin which controls the regulators */
+-		.hid = "INT33F0",
++		.hids = power_enable_hids_vdd,
+ 		.type_from = INT3472_GPIO_TYPE_POWERDOWN,
+ 		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+ 		.con_id = "vdd",
+ 		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+ 	},
+ 	{	/* ov7251 driver / DT-bindings expect "enable" as con_id for reset */
+-		.hid = "INT347E",
++		.hids = power_enable_hids_enable,
+ 		.type_from = INT3472_GPIO_TYPE_RESET,
+ 		.type_to = INT3472_GPIO_TYPE_RESET,
+ 		.con_id = "enable",
+ 	},
+ 	{	/* ov08x40's handshake pin needs a 45 ms delay on some HP laptops */
+-		.hid = "OVTI08F4",
++		.hids = (const char * const[]) { "OVTI08F4", NULL },
+ 		.type_from = INT3472_GPIO_TYPE_HANDSHAKE,
+ 		.type_to = INT3472_GPIO_TYPE_HANDSHAKE,
+ 		.con_id = "dvdd",
+ 		.enable_time_us = 45 * USEC_PER_MSEC,
+ 	},
+-	{	/* imx471 expects "vana" as con_id for power enable */
+-		.hid = "SONY471A",
+-		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+-		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+-		.con_id = "vana",
+-		.enable_time_us = GPIO_REGULATOR_ENABLE_TIME,
+-	},
+-	{
+-		/*
+-		 * imx471 (on Lenovo ThinkPads X1 G14) expects "vana" as con_id
+-		 * for power enable
+-		 */
+-		.hid = "TBE20A0",
++	{	/* Sensors which expect "vana" as con_id for power enable */
++		.hids = power_enable_hids_vana,
+ 		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
+ 		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
+ 		.con_id = "vana",
+@@ -184,6 +194,17 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+ 	},
+ };
 
-> +
-> +	return sysfs_emit(buf, "%d\n", data->pending_reboot);
-> +}
-> +
-> +static struct kobj_attribute pending_reboot_attr = __ATTR_RO(pending_reboot);
-> +
-> +static int coreboot_cfr_copy_bool_values(struct coreboot_cfr_setting *setting)
-> +{
-> +	static const struct coreboot_cfr_enum bool_values[] = {
-> +		{ .label = "Disabled", .value = 0 },
-> +		{ .label = "Enabled", .value = 1 },
-> +	};
-> +	unsigned int i;
-> +
-> +	setting->values = kcalloc(ARRAY_SIZE(bool_values), sizeof(*setting->values),
-> +				  GFP_KERNEL);
-> +	if (!setting->values)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(bool_values); i++) {
-> +		setting->values[i].label = kstrdup(bool_values[i].label,
-> +						   GFP_KERNEL);
-> +		if (!setting->values[i].label)
-> +			return -ENOMEM;
-> +		setting->values[i].value = bool_values[i].value;
-> +		setting->n_values++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int coreboot_cfr_count_enum_values(const void *base, size_t len)
-> +{
-> +	struct coreboot_cfr_iterator iterator = {
-> +		.cursor = base,
-> +		.remaining = len,
-> +	};
-> +	const struct coreboot_table_entry *entry;
-> +	int count = 0;
-> +
-> +	for (;;) {
-> +		entry = coreboot_cfr_next_entry(&iterator);
-> +		if (IS_ERR(entry))
-> +			return PTR_ERR(entry);
-> +		if (!entry)
-> +			return count;
-> +
-> +		if (entry->tag == CFR_TAG_ENUM_VALUE)
-> +			count++;
-> +	}
-> +}
-> +
-> +static int coreboot_cfr_copy_enum_values(struct coreboot_cfr_setting *setting,
-> +					 const void *base, size_t len)
-> +{
-> +	struct coreboot_cfr_iterator iterator = {
-> +		.cursor = base,
-> +		.remaining = len,
-> +	};
-> +	const struct lb_cfr_enum_value *enum_value;
-> +	const struct lb_cfr_varbinary *label;
-> +	const struct coreboot_table_entry *entry;
-> +	int count;
-> +
-> +	count = coreboot_cfr_count_enum_values(base, len);
-> +	if (count <= 0)
-> +		return count ?: -EINVAL;
-> +
-> +	setting->values = kcalloc(count, sizeof(*setting->values), GFP_KERNEL);
-> +	if (!setting->values)
-> +		return -ENOMEM;
-> +
-> +	for (;;) {
-> +		entry = coreboot_cfr_next_entry(&iterator);
-> +		if (IS_ERR(entry))
-> +			return PTR_ERR(entry);
-> +		if (!entry)
-> +			return 0;
-> +
-> +		if (entry->tag != CFR_TAG_ENUM_VALUE)
-> +			continue;
-> +
-> +		if (entry->size < sizeof(*enum_value))
-> +			return -EINVAL;
-> +
-> +		enum_value = (const struct lb_cfr_enum_value *)entry;
-> +		label = coreboot_cfr_child_string(enum_value + 1,
-> +						  enum_value->size - sizeof(*enum_value),
-> +						  CFR_TAG_VARCHAR_UI_NAME);
-> +		if (IS_ERR(label))
-> +			return PTR_ERR(label);
-> +		if (!label)
-> +			return -EINVAL;
-> +
-> +		setting->values[setting->n_values].label =
-> +			coreboot_cfr_string_dup(label);
-> +		if (!setting->values[setting->n_values].label)
-> +			return -ENOMEM;
-> +
-> +		setting->values[setting->n_values].value = enum_value->value;
++static bool int3472_gpio_map_hids_match(struct acpi_device *adev,
++					const char * const *hids)
++{
++	for (unsigned int i = 0; hids[i]; i++) {
++		if (acpi_dev_hid_uid_match(adev, hids[i], NULL))
++			return true;
++	}
++
++	return false;
++}
++
+ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
+ 					    const char **con_id, unsigned long *gpio_flags,
+ 					    unsigned int *enable_time_us)
+@@ -200,7 +221,7 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		if (*type != int3472_gpio_map[i].type_from)
+ 			continue;
 
-These lines could be shorter if you'd make a local var for 
-setting->values[setting->n_values].
+-		if (!acpi_dev_hid_uid_match(adev, int3472_gpio_map[i].hid, NULL))
++		if (!int3472_gpio_map_hids_match(adev, int3472_gpio_map[i].hids))
+ 			continue;
 
-> +		setting->n_values++;
-> +	}
-> +}
-> +
-> +static bool
-> +coreboot_cfr_possible_values_fit(const struct coreboot_cfr_setting *setting)
-> +{
-> +	size_t len = 1;		/* Trailing newline. */
-> +	size_t label_len;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < setting->n_values; i++) {
-> +		if (i)
-> +			len++;
-> +
-> +		label_len = strlen(setting->values[i].label);
-> +		if (len >= PAGE_SIZE || label_len >= PAGE_SIZE - len)
-
-It would be more logical to follow this code if you make len >= PAGE_SIZE 
-check prior to even calculating the string length, it's a bit longer by 
-lines but makes more sense (IMO).
-
-> +			return false;
-> +
-> +		len += label_len;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static int coreboot_cfr_setting_is_usable(struct coreboot_cfr_setting *setting)
-> +{
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret = coreboot_cfr_read_value(setting, &value, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!coreboot_cfr_value_is_valid(setting, value))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int coreboot_cfr_register_setting(struct coreboot_cfr_drvdata *data,
-> +					 struct coreboot_cfr_setting *setting)
-> +{
-> +	int ret;
-> +
-> +	ret = kobject_init_and_add(&setting->kobj, &coreboot_cfr_setting_ktype,
-> +				   &data->attrs_kset->kobj, "%s", setting->name);
-> +	if (ret) {
-> +		kobject_put(&setting->kobj);
-> +		return ret;
-> +	}
-> +
-> +	ret = sysfs_create_group(&setting->kobj, &coreboot_cfr_setting_group);
-> +	if (ret) {
-> +		kobject_put(&setting->kobj);
-> +		return ret;
-
-Please add a rollback path to avoid duplicating kobject_put()
-
-> +	}
-> +
-> +	list_add_tail(&setting->node, &data->settings);
-> +	return 0;
-> +}
-> +
-> +static int coreboot_cfr_add_numeric_option(struct coreboot_cfr_drvdata *data,
-> +					   const struct lb_cfr_numeric_option *option,
-> +					   bool parent_read_only)
-> +{
-> +	const struct lb_cfr_varbinary *name;
-> +	const struct lb_cfr_varbinary *display_name;
-> +	const struct lb_cfr_runtime_apply *runtime_apply;
-> +	const void *child_base = option + 1;
-> +	struct coreboot_cfr_setting *setting;
-> +	size_t child_len = option->size - sizeof(*option);
-> +	int ret;
-> +
-> +	if (!(option->flags & CFR_OPTFLAG_RUNTIME))
-> +		return 0;
-> +
-> +	if (option->flags & COREBOOT_CFR_OPT_SKIP_FLAGS)
-> +		return 0;
-> +
-> +	if (option->dependency_id)
-> +		return 0;
-> +
-> +	setting = kzalloc_obj(*setting, GFP_KERNEL);
-> +	if (!setting)
-> +		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(&setting->node);
-> +	setting->drvdata = data;
-> +	setting->default_value = option->default_value;
-> +	setting->min = option->min;
-> +	setting->max = option->max;
-> +	setting->step = option->step ?: 1;
-> +	setting->read_only =
-> +		(option->flags & COREBOOT_CFR_OPT_READ_ONLY_FLAGS) ||
-> +		!data->efi_writes_supported || parent_read_only;
-> +
-> +	runtime_apply = coreboot_cfr_child_runtime_apply(child_base, child_len);
-> +	if (IS_ERR(runtime_apply)) {
-> +		ret = PTR_ERR(runtime_apply);
-> +		goto err_put_setting;
-> +	}
-> +
-> +	if (runtime_apply && runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT) {
-> +		setting->runtime_apply_method = runtime_apply->method;
-> +		setting->runtime_apply_id = runtime_apply->id;
-> +	}
-> +
-> +	name = coreboot_cfr_child_string(child_base, child_len,
-> +					 CFR_TAG_VARCHAR_OPT_NAME);
-> +	if (IS_ERR(name)) {
-> +		ret = PTR_ERR(name);
-> +		goto err_put_setting;
-> +	}
-> +	if (!name) {
-> +		ret = -EINVAL;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	setting->name = coreboot_cfr_string_dup(name);
-> +	if (!setting->name) {
-> +		ret = -ENOMEM;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	if (!coreboot_cfr_string_is_valid_name(setting->name)) {
-> +		ret = -EINVAL;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	display_name = coreboot_cfr_child_string(child_base, child_len,
-> +						 CFR_TAG_VARCHAR_UI_NAME);
-> +	if (IS_ERR(display_name)) {
-> +		ret = PTR_ERR(display_name);
-> +		goto err_put_setting;
-> +	}
-> +	if (display_name)
-> +		setting->display_name = coreboot_cfr_string_dup(display_name);
-> +	else
-> +		setting->display_name = kstrdup(setting->name, GFP_KERNEL);
-> +	if (!setting->display_name) {
-> +		ret = -ENOMEM;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	switch (option->tag) {
-> +	case CFR_TAG_OPTION_BOOL:
-> +		setting->type = COREBOOT_CFR_SETTING_BOOL;
-> +		setting->min = 0;
-> +		setting->max = 1;
-> +		setting->step = 1;
-> +		ret = coreboot_cfr_copy_bool_values(setting);
-> +		break;
-> +	case CFR_TAG_OPTION_ENUM:
-> +		setting->type = COREBOOT_CFR_SETTING_ENUM;
-> +		ret = coreboot_cfr_copy_enum_values(setting, child_base,
-> +						    child_len);
-> +		break;
-> +	case CFR_TAG_OPTION_NUMBER:
-> +		setting->type = COREBOOT_CFR_SETTING_NUMBER;
-> +		if (!setting->min && !setting->max)
-> +			setting->max = U32_MAX;
-> +		else if (setting->max < setting->min)
-> +			setting->max = U32_MAX;
-> +		ret = 0;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	if (ret)
-> +		goto err_put_setting;
-> +	/* possible_values must be returned completely in one sysfs read. */
-> +	if (setting->type != COREBOOT_CFR_SETTING_NUMBER &&
-> +	    !coreboot_cfr_possible_values_fit(setting)) {
-> +		ret = 0;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	ret = coreboot_cfr_setting_is_usable(setting);
-> +	if (ret) {
-> +		/*
-> +		 * CFR may describe options without a matching, readable runtime
-> +		 * EFI variable. Skip those, but propagate transient EFI failures.
-> +		 */
-> +		if (ret == -ENOENT || ret == -EINVAL || ret == -EOPNOTSUPP ||
-> +		    ret == -ENAMETOOLONG)
-> +			ret = 0;
-> +		goto err_put_setting;
-> +	}
-> +
-> +	/* The kobject release callback owns setting after this call. */
-> +	return coreboot_cfr_register_setting(data, setting);
-> +
-> +err_put_setting:
-> +	coreboot_cfr_free_setting(setting);
-> +	return ret;
-> +}
-> +
-> +static int coreboot_cfr_parse_records(struct coreboot_cfr_drvdata *data,
-> +				      const void *base, size_t len,
-> +				      unsigned int depth,
-> +				      bool parent_read_only)
-> +{
-> +	struct coreboot_cfr_iterator iterator = {
-> +		.cursor = base,
-> +		.remaining = len,
-> +	};
-> +	const struct lb_cfr_option_form *form;
-> +	const struct coreboot_table_entry *entry;
-> +	const void *child_base;
-> +	size_t child_len;
-> +	int ret;
-> +
-> +	for (;;) {
-> +		entry = coreboot_cfr_next_entry(&iterator);
-> +		if (IS_ERR(entry))
-> +			return PTR_ERR(entry);
-> +		if (!entry)
-> +			return 0;
-> +
-> +		switch (entry->tag) {
-> +		case CFR_TAG_OPTION_FORM:
-> +			if (entry->size < sizeof(struct lb_cfr_option_form))
-> +				return -EINVAL;
-> +
-> +			form = (const struct lb_cfr_option_form *)entry;
-> +			if (form->dependency_id ||
-> +			    form->flags & CFR_OPTFLAG_SUPPRESS)
-> +				break;
-> +
-> +			if (depth >= COREBOOT_CFR_MAX_FORM_DEPTH)
-> +				return -E2BIG;
-> +
-> +			child_base = form + 1;
-> +			child_len = entry->size - sizeof(struct lb_cfr_option_form);
-> +			ret = coreboot_cfr_parse_records(data, child_base,
-> +							 child_len, depth + 1,
-> +							 parent_read_only ||
-> +							 (form->flags &
-> +							  COREBOOT_CFR_OPT_READ_ONLY_FLAGS));
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		case CFR_TAG_OPTION_ENUM:
-> +		case CFR_TAG_OPTION_NUMBER:
-> +		case CFR_TAG_OPTION_BOOL:
-> +			if (entry->size < sizeof(struct lb_cfr_numeric_option))
-> +				return -EINVAL;
-> +			ret = coreboot_cfr_add_numeric_option(data, (const void *)entry,
-
-How about casting this into some local lb_cfr_numeric_option variable 
-first before the call to avoid using void * as an intermediate type. It 
-would better connect the dots here since you do that sizeof check, you 
-could even use < sizeof(*newlocal_var) instead of the type to make it even 
-more obvious that the size check relates to ensuring the cast is safe.
-
-> +							      parent_read_only);
-> +			if (ret)
-> +				return ret;
-> +			break;
-> +		default:
-> +			/* Ignore unsupported, child-only and future record types. */
-> +			break;
-> +		}
-> +	}
-> +}
-> +
-> +static void coreboot_cfr_unregister_settings(struct coreboot_cfr_drvdata *data)
-> +{
-> +	struct coreboot_cfr_setting *setting, *tmp;
-> +
-> +	list_for_each_entry_safe(setting, tmp, &data->settings, node) {
-> +		sysfs_remove_group(&setting->kobj, &coreboot_cfr_setting_group);
-> +		list_del(&setting->node);
-> +		kobject_put(&setting->kobj);
-> +	}
-> +}
-> +
-> +static int coreboot_cfr_probe(struct coreboot_device *dev)
-> +{
-> +	const struct lb_cfr *root = (const struct lb_cfr *)dev->raw;
-> +	struct coreboot_cfr_drvdata *data;
-> +	size_t payload_len;
-> +	int ret;
-> +
-> +	if (dev->entry.size < sizeof(*root))
-> +		return -EINVAL;
-> +
-> +	if (root->tag != LB_TAG_CFR_ROOT || root->version != CFR_VERSION)
-> +		return -EINVAL;
-> +
-> +	if (root->size < sizeof(*root) || root->size > dev->entry.size)
-> +		return -EINVAL;
-> +
-> +	payload_len = root->size - sizeof(*root);
-> +	if (crc32_be(0, root + 1, payload_len) != root->checksum)
-> +		return -EBADMSG;
-> +
-> +	if (!efivar_is_available())
-> +		return -EPROBE_DEFER;
-> +
-> +	data = devm_kzalloc(&dev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	ret = efivar_lock();
-> +	if (ret)
-> +		return ret;
-> +	data->efi_writes_supported = efivar_supports_writes();
-> +	efivar_unlock();
-> +
-> +	INIT_LIST_HEAD(&data->settings);
-> +	ret = devm_mutex_init(&dev->dev, &data->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_set_drvdata(&dev->dev, data);
-> +
-> +	data->class_dev = device_create(&firmware_attributes_class, NULL,
-> +					MKDEV(0, 0), NULL, DRIVER_NAME);
-> +	if (IS_ERR(data->class_dev))
-> +		return PTR_ERR(data->class_dev);
-> +	dev_set_drvdata(data->class_dev, data);
-> +
-> +	data->attrs_kset = kset_create_and_add("attributes", NULL,
-> +					       &data->class_dev->kobj);
-> +	if (!data->attrs_kset) {
-> +		ret = -ENOMEM;
-> +		goto err_unregister_dev;
-> +	}
-> +
-> +	ret = sysfs_create_file(&data->attrs_kset->kobj,
-> +				&pending_reboot_attr.attr);
-> +	if (ret)
-> +		goto err_unregister_attrs;
-> +
-> +	ret = coreboot_cfr_parse_records(data, root + 1, payload_len, 0, false);
-> +	if (ret)
-> +		goto err_unregister_settings;
-> +
-> +	if (list_empty(&data->settings)) {
-> +		ret = -ENODEV;
-> +		goto err_unregister_settings;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_unregister_settings:
-> +	coreboot_cfr_unregister_settings(data);
-> +	sysfs_remove_file(&data->attrs_kset->kobj, &pending_reboot_attr.attr);
-> +err_unregister_attrs:
-> +	kset_unregister(data->attrs_kset);
-> +err_unregister_dev:
-> +	device_unregister(data->class_dev);
-> +	return ret;
-> +}
-> +
-> +static void coreboot_cfr_remove(struct coreboot_device *dev)
-> +{
-> +	struct coreboot_cfr_drvdata *data = dev_get_drvdata(&dev->dev);
-> +
-> +	coreboot_cfr_unregister_settings(data);
-> +	sysfs_remove_file(&data->attrs_kset->kobj, &pending_reboot_attr.attr);
-> +	kset_unregister(data->attrs_kset);
-> +	device_unregister(data->class_dev);
-> +}
-> +
-> +static const struct coreboot_device_id coreboot_cfr_ids[] = {
-> +	{ .tag = LB_TAG_CFR_ROOT },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(coreboot, coreboot_cfr_ids);
-> +
-> +static struct coreboot_driver coreboot_cfr_driver = {
-> +	.probe = coreboot_cfr_probe,
-> +	.remove = coreboot_cfr_remove,
-> +	.drv = {
-> +		.name = DRIVER_NAME,
-> +	},
-> +	.id_table = coreboot_cfr_ids,
-> +};
-> +module_coreboot_driver(coreboot_cfr_driver);
-> +
-> +MODULE_AUTHOR("Sean Rhodes <sean@starlabs.systems>");
-> +MODULE_DESCRIPTION("coreboot CFR firmware attributes driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS("EFIVAR");
-
-Except for the minor things noted above, this generally seems okay now. 
-I've much better confidence on the entry iteration now that it is 
-centralized.
-
-(Reviewed this without that much of prior coreboot specific knowledge.)
-
--- 
- i.
+ 		dev_dbg(int3472->dev, "mapping type 0x%02x pin to 0x%02x %s\n",
+--
+2.34.1
 
