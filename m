@@ -1,125 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAFA415F0A;
-	Fri, 24 Jul 2026 12:03:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784894613; cv=none; b=GATgHVoCEbPpOWszbGy9yyTDH2v8oCTnY2EmyaFCDJkkYGaUJdRdo66dZQnRs0ZacE7qMGQhqwtwJy47D/4t4DVKsTF+ffPCM0bdd4J3lAGWAVk6gIbuZ5IL/AqQaQagdIlgzVrAsDv9QmhwAANf8/aeYZUSp/iSPrIDPGRJM4s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784894613; c=relaxed/simple;
-	bh=aTql/5VdF2AUf1AJYRuiTpOH9oUXEQkL7YfI6r1anbE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=c2Jl5YJ29Dmc1jBfM6zRhdFhjQLbjhM/gKAxkaD5CNwV1u7/NuXfmPcuzBhezt23icZaafp8kfmAPFiPfh1/bPgTIxR7LTOlxGo9pD7GCBIA3QfuF8yQdrY7FsJMoDXqr5n+UxGjF/A1IW7lp8o0KL4W7eCE5kU3f56OkDogb3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LyYg/wKv; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800EC361959;
+	Fri, 24 Jul 2026 12:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784895961; cv=pass; b=ok9iGySsTPMZdRMkw6A1chAHYP2BDlpspNt5k+Xd2hEmk5xdji4cONeyKFGNHD+QHA7TCAyIOo8oQcb5RyoZW6qKQznp5RX0Nqso2pnUXgq1QKnww5Ynb7GQl8OZN+zLTDCQUaZIFYLORTBuhM54ZAFyyeVyPT/LwJmFIaw2eRs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784895961; c=relaxed/simple;
+	bh=GsFoUUhalsYPUAoOBdM3rlHTu0neq3kPii7gWYC55mI=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=MtZWb4S0PMhHRaumYqkFt+K4E1c8K7OGDBcSxfTEQ5iJW/9rECA1j6UVqQ59Ek7eRyKL7+WfNVw6xi40UGAqMxQ/vAPhcptTj9RkzPp41AJ3IWHwTaeBbHIiUsU0VIRQVezN8+uiy2PENpGBRtJpguxXI9taIfcNua/hRf9oFE8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=poiisgX1; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LyYg/wKv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784894611; x=1816430611;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=aTql/5VdF2AUf1AJYRuiTpOH9oUXEQkL7YfI6r1anbE=;
-  b=LyYg/wKv9/ziA4Z+nC39rzMWjr4gTnvY7lZETpnSmnBuYDINOylxvGRw
-   /SC12iG6Z5qG5TTa7oJbtyoZ/iw2lt69hINDimCFJomCkOX1elXBK8lN/
-   099e4v3yhjG4hVQir7HvR4QzxGsVyixj9JedIrvbWemf7B5DwN5VpoJCW
-   4St3mWbiaPgPKeJkn/G7kk/8ZySh0EbcLbohqk2MAepgpibC1dzc15AxD
-   wAXp+n4CsCPnm9f7ThDw5Y72cFUoQKRiBIiXvCTH1j3SeW62tjTM6RNNh
-   eyjyTpXSQMG9WYWQqUVX8IbWmSKEH1I27y50/dI+ZNDPISz/Aoc8HjpmS
-   g==;
-X-CSE-ConnectionGUID: RliRLGGXRgOY9r9eMsml9w==
-X-CSE-MsgGUID: UPYzd+0ySDCdWW7i1SMu9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="85606697"
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="85606697"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 05:03:30 -0700
-X-CSE-ConnectionGUID: H8jqCiveTY66mCZPyP9x3Q==
-X-CSE-MsgGUID: bH5rQNewQ5aleBr68qrl0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="254380852"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 05:03:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 24 Jul 2026 15:03:24 +0300 (EEST)
-To: surendra <kr494167@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, jackbb_wu@compal.com, W_Armin@gmx.de, 
-    superm1@kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: dell-dw5826e: fix ACPI _DSM function index
- and bitmask usage
-In-Reply-To: <20260722034743.13565-1-kr494167@gmail.com>
-Message-ID: <75c5c138-11d0-488e-b202-4d9e703aa579@linux.intel.com>
-References: <20260722034743.13565-1-kr494167@gmail.com>
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="poiisgX1"
+ARC-Seal: i=1; a=rsa-sha256; t=1784895950; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KA7X5fVpHJvG8FfQOOtzqKGcZ1wKoy16gGicNVBbaScDJFTciN7j9yJN9hogIxnKcc5Oeq8uPk5/o3y/Xqf2h93HWNGemjl1AjJcqq7s2D0hnhLxEM56pfVmfWLXB+zKoHpuaYue89P+YmR1iQcPdOBRZVfyXGYu8QUjynf5x3Q=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1784895950; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=GsFoUUhalsYPUAoOBdM3rlHTu0neq3kPii7gWYC55mI=; 
+	b=A+FnjdbwMg6PBWmo/P1Qt8mlS+fTivvCwotVRc1w/URNsCCECBVb5OApwVyI6qKV5uGlI4tK7lgvLsY2NOGCMMslN1ufJYTrGcZNieI9rDREN0d7oDkb91aO7a46wfL8O50Nl0NPI7gSG7sucQOJqNlNRxLPbyWJ4v2cUB1r8hI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784895950;
+	s=zmail2048; d=rong.moe; i=i@rong.moe;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
+	bh=GsFoUUhalsYPUAoOBdM3rlHTu0neq3kPii7gWYC55mI=;
+	b=poiisgX1VE80N4OXtArZQcoA46KlNyaB4G/5yFQVNzUjOWuC+psPHi12XmoU6gKH
+	KcbDrZa7B9cJBK71p9i7vc6AtPQikpJhG8LHQNvj2JfIVAgzvbdX0UJnYsRpY9EVPXA
+	iLlksSxMqH763WfwRLCBYeu42+fIhl39LYwyU9tS9YrufeLGiqH0gGoEzyJs0UiWVHI
+	9gZNd1HBYon/mlSgBg4ZBJaxOBw3lYYrvx7cexATbNVbgXCmsn62ry4ftvdoLrIw4U/
+	r1Ci+cpEC0IocQ/lmkZAZugpOYo7pd2vq+C4BRXHIoTE52iXv9YGRZlaWgnIZdeIL5N
+	2QLZ4J3w4g==
+Received: by mx.zohomail.com with SMTPS id 1784895948126737.8376542638955;
+	Fri, 24 Jul 2026 05:25:48 -0700 (PDT)
+Message-ID: <49f244c86972d839773960fed75028c4cee6298a.camel@rong.moe>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: Fix driver
+ unregistration order
+From: Rong Zhang <i@rong.moe>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"
+	 <derekjohn.clark@gmail.com>, Ike Panhc <ikepanhc@gmail.com>, Hans de Goede
+	 <hansg@kernel.org>, Philipp Jungkamp <p.jungkamp@gmx.net>, 
+	platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <880d06c9-48d4-92e9-ede9-c34c0f107de2@linux.intel.com>
+References: <20260723-ideapad-rev-exit-v2-1-9c31159022de@rong.moe>
+		 <880d06c9-48d4-92e9-ede9-c34c0f107de2@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 Jul 2026 20:20:04 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Evolution 3.56.2-10 
+X-ZohoMailClient: External
 
-On Wed, 22 Jul 2026, kr494167@gmail.com wrote:
+Hi Ilpo,
 
-> From: surendra <kr494167@gmail.com>
-> 
-> PALC_DSM_FN_TRIGGER_PLDR was defined as BIT(1) (value 2).
-> 
-> acpi_evaluate_dsm() expects a 0-based function index integer (0, 1,
-> 2, ...), whereas acpi_check_dsm() expects a bitmask of supported
-> function indices (BIT(1), BIT(2), ...).
-> 
-> Because PALC_DSM_FN_TRIGGER_PLDR was defined as BIT(1),
-> acpi_evaluate_dsm() was evaluating Function Index 2 instead of Function
-> Index 1, while acpi_check_dsm() was checking for Function Index 1
-> support.
-> 
-> Fix this by setting PALC_DSM_FN_TRIGGER_PLDR to 1 (the function index)
-> and passing BIT(PALC_DSM_FN_TRIGGER_PLDR) to acpi_check_dsm().
-> 
-> Fixes: 1ab843135a77 ("platform/x86: dell-dw5826e: Add reset driver for DW5826e")
-> Signed-off-by: surendra <kr494167@gmail.com>
+On Fri, 2026-07-24 at 14:54 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Thu, 23 Jul 2026, Rong Zhang wrote:
+>=20
+> > There are two drivers in the ideapad-laptop module: a wmi_driver and a
+> > platform_driver. The former is registered before the latter, but the
+> > unregistration order is the same as the init one instead of the reverse=
+.
+> >=20
+> > Fix the driver unregistration order by reversing it.
+> >=20
+> > Fixes: f32e02417614 ("platform/x86: ideapad-laptop: support for more sp=
+ecial keys in WMI")
+> > Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> > Signed-off-by: Rong Zhang <i@rong.moe>
+> > ---
+> > Changes in v2:
+> > - Fix a typo in title
+>=20
+> Perhaps too used to writing "dead" so fingers kept typing... I can never=
+=20
+> type "roof" succesfully myself, my fingers always do "root" instead. :-)
 
-Hi,
+An ideadl root does not leak on rainy days ;-P
 
-Thanks for the fix. We, however, need your real/full name on the 
-Signed-off-by line (and From should usually match that as well) to be 
-allowed to apply the patch.
+>=20
+> Anyway, I've applied this=C2=A0but took out the Fixes tag, unless you've =
+some=20
+> real bug in mind related to it?
 
-For more information, please see:
-  Documentation/process/submitting-patches.rst
+Makes sense. It's not buggy as the two driver has no dependency on each
+other.
 
---
- i.
+>=20
+> I also added Suggested-by me to take some blame (if necessary).
 
-> ---
->  drivers/platform/x86/dell/dell-dw5826e-reset.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-dw5826e-reset.c b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> index 1ca7c3421bb5..64e6e9b1d7a0 100644
-> --- a/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> +++ b/drivers/platform/x86/dell/dell-dw5826e-reset.c
-> @@ -13,7 +13,7 @@
->  #include <linux/types.h>
->  #include <linux/uuid.h>
->  
-> -#define PALC_DSM_FN_TRIGGER_PLDR    BIT(1)
-> +#define PALC_DSM_FN_TRIGGER_PLDR    1
->  
->  static guid_t palc_dsm_guid =
->  	GUID_INIT(0x5a1a4bba, 0x8006, 0x487e, 0xbe, 0x0a, 0xac, 0xf5, 0xd8, 0xfd, 0xfe, 0x59);
-> @@ -66,7 +66,7 @@ static int palc_probe(struct platform_device *pdev)
->  	if (!handle)
->  		return -ENODEV;
->  
-> -	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, PALC_DSM_FN_TRIGGER_PLDR))
-> +	if (!acpi_check_dsm(handle, &palc_dsm_guid, 1, BIT(PALC_DSM_FN_TRIGGER_PLDR)))
->  		return -ENODEV;
->  
->  	return 0;
-> 
+Ahh, forgot that!
 
+>=20
+> Thanks for the patch and Mark for review.
+
+And thanks for reviewing and fixing my patch ;-)
+
+Thanks,
+Rong
