@@ -1,259 +1,114 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD334908C3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 14:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F29531D366;
+	Fri, 24 Jul 2026 14:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784904957; cv=none; b=TR97hivqCVjO12qFmI9ftcu8NAKUBRCChoIpxPo9d7mjBWJINg93ic/ERA2k2hi6lqhpDjFv05dliQVO5fQIsjp8+TPDWWxvAejauDtTeSb7HcFwMrEoPKlbzSe3aSUyEfuZECtjGalXYfIVYMgXWVcWagO9JMDXkYotrFVkGGU=
+	t=1784905130; cv=none; b=DxhQ9mQPhTy8t44BnIm1uIonxuZlDQZvKBXm/+iCc4m36lqoU43CSYRZA3MKHbmv5NBCSZO7uaurVTgN/nwO5cX9PnOHxr0sfLFr1uFgRMVSle5xSmb7c0KIfcfwZTP0enM9pl/sS82cgre9SI38Md3CHwzc0i1Er4OPcv2y51s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784904957; c=relaxed/simple;
-	bh=u8aHzo6YOpyuVWIFesAn1V1sPYc1XXrryYAOWdRd7/c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RXC+tNHJ0xXIlnrPh8DQqCJmuZDzuIENzqTqLmFLnP19Q0Ib4c9F1Iv6Ac7n6OwWbZrfh8X8EtczAKO7wNfIYdO7VJwT1mgfPTGCKbchBqjwpx75av61z6D1S79iPxZotkULEU3lAKalzGGfwRVDW4y+43oTMhCM2m0mVojeTjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=bGQwTbvX; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1784905130; c=relaxed/simple;
+	bh=Z37F1Y/y5gZJSWE1m+vZX0+yXqCgiPgCG/Ql/3FzlKc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=D5WrRLG1MX7hj/m/Yt4dLet9L0EhUDKRbHLQs+2MBGSbXmrHyz3sMhWvWIcO7TAzsOebSlpObrdgvpRcmk6MH/GxIvs118kMty+14lu58SVMjYhHqxUK0ynixALweATZb17eAfWi9XxAuHPgF/K6Dyu7SCweZQfUWVXIEeuEw6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gmmidWge; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="bGQwTbvX"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 31506240029
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 16:55:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1784904939;
-	bh=LxFef067aXI8pdvSjenLeDrbE4lQ07r35UMMskhl4VU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:Autocrypt:OpenPGP:From;
-	b=bGQwTbvX8P7FBpyEbQeyO7e4yFea0hJeTXbFDI4lCH3svKnVjrwByMa7mppGE8tnR
-	 UBXipVza8VY9KlzjVpzAhxUdoos48hJ+95cFbACyfQi7RAoDohw/g1VhKn3g4vP0UA
-	 /xWbJgz0ZS1VX/tYV7Z2Q0W2hgL5WkusgBwXmJKvn4bvpjAs+82gXgEbbV15Tu7KEO
-	 OTcl9qxR8XtGDuLhqQEdDlS2Rqn8i2t9wHgK7FT6wC/FWU8whZ0SbaC0qpGOhVHFaH
-	 Suq2o52cmzeFFD+Mw0BJeixeR7nib4kor/ti7qmM/gRWX1qgXmnusYKZe+TsD6V0sd
-	 +6kHCNv8FqeHQ==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4h69yv0dL5z6txl;
-	Fri, 24 Jul 2026 16:55:35 +0200 (CEST)
-From: Markus Probst <markus.probst@posteo.de>
-Date: Fri, 24 Jul 2026 14:55:37 +0000
-Subject: [PATCH v17 1/2] dt-bindings: embedded-controller: Add synology
- microp devices
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gmmidWge"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784905127; x=1816441127;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Z37F1Y/y5gZJSWE1m+vZX0+yXqCgiPgCG/Ql/3FzlKc=;
+  b=gmmidWge6s92dH258HyDH9xIOfXKSpIXu8Y3JKAVMNpiHwubk97GHU5p
+   hzOubxcU5tIISJYHo3AbCNsUz2JqHVk7Pu4AQ/YYd7uysS+3nbDkZyLiY
+   EVtkhzXOd3addPlpJ8uCffQlNZ4xuii5XbFEm2YLCHkaIMX9R2RxspVho
+   QgPUrqMxt1nxttWdN7tjP9MC6I2pWpwHC6DGf8K01RUu2L9wE80HqG0+W
+   +/KV+fbSLUaAPvAr7YF2n4gzysNj4udGf69Qi30nG7pjeeNQ+0X0FCb7P
+   3euEn6QQEpZzR9QmuACpwT6Sslmq+395USmWdW8I0fVCzBZ3lvcVNyfWj
+   Q==;
+X-CSE-ConnectionGUID: MuVZOwa/S5q4eLP519HiOw==
+X-CSE-MsgGUID: 38QSr4+DQcuevNeqxbgR8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="85764053"
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="85764053"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 07:58:47 -0700
+X-CSE-ConnectionGUID: i2h0bnRiSkmiUyIOuUZ3pw==
+X-CSE-MsgGUID: lcUP54QYS9OEn4xfKJhLog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="262248862"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 07:58:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 24 Jul 2026 17:58:41 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] platform/x86/intel/pmc: Update NVLS PCDS LPM request
+ GUID
+In-Reply-To: <20260722215259.1382305-1-xi.pardee@linux.intel.com>
+Message-ID: <d332044c-c1e8-c3cb-113d-1bc79043f2a8@linux.intel.com>
+References: <20260722215259.1382305-1-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260724-synology_microp_initial-v17-1-e2f70b4dc691@posteo.de>
-References: <20260724-synology_microp_initial-v17-0-e2f70b4dc691@posteo.de>
-In-Reply-To: <20260724-synology_microp_initial-v17-0-e2f70b4dc691@posteo.de>
-To: Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@kernel.org>, 
- Alexandre Courbot <acourbot@nvidia.com>, 
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, Markus Probst <markus.probst@posteo.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4079;
- i=markus.probst@posteo.de; h=from:subject:message-id;
- bh=u8aHzo6YOpyuVWIFesAn1V1sPYc1XXrryYAOWdRd7/c=;
- b=owEBiQJ2/ZANAwAIATR2H/jnrUPSAcsmYgBqY3zjjV65kmdjVabAExdbIXy91dCXfz3fPKWAE
- MVjEvbfOaKJAk8EAAEIADkWIQSCdBjE9KxY53IwxHM0dh/4561D0gUCamN84xsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwyLDIACgkQNHYf+OetQ9Iy0BAAoOwGG6stpsyWr8C9HZcx3m+4qG1Ku28
- bgutRtu4BCWN40gPprp/fXp7aplLAkik8tV7nEFaJ3cQgEcpvBmN1N+re3QcVjifqD1B9idLoSx
- 7Rk1FsyhibL3G43PYhX5gim/TmkSX4RvIbgzTl/nFqkb3Yyx3rMf4/yczNg2WZqlT6cM7/VK9iD
- IdrZqMlfhwpq/uvsxLK6As3m6eK8Zs2AitoLiKPg0eTVpgG5IMFVmAkG8TDkC//bU8aLi9c6h/I
- cEBo1XIFfPdCeBrfQXvJGcu5qbZXydiMnnTxkwgocR/bcm3q8IIa4AWTuY7CYdyHBxKnHAItea5
- /Bosv8TKT81IpoNlx2QXnJ8PiduV8ivdsVfwh5PZ4nlIps2gJ5kj5ynafOEf6/X/0pSLaelIN1m
- Cyu5bqC8EQECITbA5e0GlpPpL3Dvf6c23kp9FElJ5kmbhGZX8Im0ZS7hdPVqF1+NtXbpY53hbaR
- dAnaISwvqWv5PaFaSSqYRlCnC7br9gPe9cxNr/SWm8LkUXJ5xrFGQGpbCH0Tv54BVd8jfH0x+wH
- 5seYByonv7x5wbIpvLdu0BdnIIrvejD14Zuh6UF4W/y2y7JxCah+msAEkDTbBY3Dn6A0juZM9Jz
- QB+PRxozQEEN5n6opSw5UgReCuaZhmW6RP4EX5smHTXg9/wTgGWU=
-X-Developer-Key: i=markus.probst@posteo.de; a=openpgp;
- fpr=827418C4F4AC58E77230C47334761FF8E7AD43D2
-Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
-  keydata=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
-  aBeNN4ijKZchBXHPgVx+YtWRHfcm4l8=
-OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
+Content-Type: text/plain; charset=US-ASCII
 
-Add the Synology Microp devicetree bindings. Those devices are
-microcontrollers found on Synology NAS devices. They are connected to a
-serial port on the host device.
+On Wed, 22 Jul 2026, Xi Pardee wrote:
 
-Those devices are used to control certain LEDs, fan speeds, a beeper, to
-handle buttons, fan failures and to properly shutdown and reboot the
-device.
+> The PMC SSRAM PMT telemetry GUID for Nova Lake S (NVLS) PCDS die
+> changed due to a firmware version bump. The GUID is used by the PMC
+> core driver to locate the correct PMT telemetry entry in SSRAM; if it
+> doesn't match the firmware-reported value, the driver fails to find the
+> LPM (Low Power Mode) data and cannot load properly.
+> 
+> Update PCDS_LPM_REQ_GUID from 0x01091102 to 0x01091103 to match the
+> new firmware version.
 
-The device has a different feature set depending on the Synology NAS
-model, like having different number of fans, buttons and leds. Depending
-on the architecture of the model, they also need a different system
-shutdown behaviour.
+Hi,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Signed-off-by: Markus Probst <markus.probst@posteo.de>
----
- .../synology,ds918p-microp.yaml                    | 100 +++++++++++++++++++++
- 1 file changed, 100 insertions(+)
+Unfortunately this still lacks the reason why it's okay to not have 
+0x01091102 at all in the kernel.
 
-diff --git a/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
-new file mode 100644
-index 000000000000..a44101884322
---- /dev/null
-+++ b/Documentation/devicetree/bindings/embedded-controller/synology,ds918p-microp.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/embedded-controller/synology,ds918p-microp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Synology NAS on-board Microcontroller
-+
-+maintainers:
-+  - Markus Probst <markus.probst@posteo.de>
-+
-+description: |
-+  Synology Microp is a microcontroller found in Synology NAS devices.
-+  It is connected to a serial port on the host device.
-+
-+  It is necessary to properly shutdown and reboot the NAS device and
-+  provides additional functionality such as led control, fan speed control,
-+  a beeper and buttons on the NAS device.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - synology,rs1221rpp-microp
-+              - synology,rs822p-microp
-+              - synology,rs422p-microp
-+          - const: synology,rs1221p-microp
-+
-+      - items:
-+          - const: synology,ds1825p-microp
-+          - const: synology,ds1823xsp-microp
-+
-+      - items:
-+          - enum:
-+              - synology,ds725p-microp
-+              - synology,ds225p-microp
-+              - synology,ds723p-microp
-+              - synology,ds710p-microp
-+          - const: synology,ds214play-microp
-+
-+      - items:
-+          - enum:
-+              - synology,ds425p-microp
-+              - synology,ds1525p-microp
-+              - synology,ds925p-microp
-+              - synology,ds923p-microp
-+              - synology,ds1522p-microp
-+              - synology,ds1010p-microp
-+              - synology,ds411p-microp
-+          - const: synology,ds918p-microp
-+
-+      - items:
-+          - enum:
-+              - synology,ds124-microp
-+              - synology,ds223j-microp
-+              - synology,ds223-microp
-+          - const: synology,ds118-microp
-+
-+      - enum:
-+          - synology,ds118-microp
-+          - synology,ds1823xsp-microp
-+          - synology,rs1221p-microp
-+          - synology,ds918p-microp
-+          - synology,ds214play-microp
-+
-+  fan-failure-gpios:
-+    description: GPIOs needed to determine which fans stopped working on a fan failure event.
-+    minItems: 2
-+    maxItems: 3
-+
-+required:
-+  - compatible
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - synology,ds918p-microp
-+              - synology,rs422p-microp
-+    then:
-+      required:
-+        - fan-failure-gpios
-+    else:
-+      properties:
-+        fan-failure-gpios: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    embedded-controller {
-+      compatible = "synology,ds923p-microp", "synology,ds918p-microp";
-+
-+      fan-failure-gpios = <&gpio 68 GPIO_ACTIVE_HIGH>, <&gpio 69 GPIO_ACTIVE_HIGH>;
-+    };
+Whenever there's two (or more) FW versions mentioned in the changelog 
+and one is taken away, it should be explained why "removing" one does 
+not result in taking away functionality for systems that have the old 
+FW version.
+
+It may be dead obvious to you at this moment such as that this thing 
+hasn't launched but it should still be recorded into the changelog so 
+others don't need to lookup such details.
+
+It seems to become a theme these get updated so hopefully next time we 
+don't need 3 patch versions. :-)
 
 -- 
-2.54.0
+ i.
 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/nvl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/nvl.c b/drivers/platform/x86/intel/pmc/nvl.c
+> index 8dabf2511dd9d..1ed02332dbfce 100644
+> --- a/drivers/platform/x86/intel/pmc/nvl.c
+> +++ b/drivers/platform/x86/intel/pmc/nvl.c
+> @@ -14,7 +14,7 @@
+>  /* PMC SSRAM PMT Telemetry GUIDS */
+>  #define PCDH_LPM_REQ_GUID 0x01093101
+>  #define PCHS_LPM_REQ_GUID 0x01092101
+> -#define PCDS_LPM_REQ_GUID 0x01091102
+> +#define PCDS_LPM_REQ_GUID 0x01091103
+>  
+>  /*
+>   * Die Mapping to Product.
+> 
