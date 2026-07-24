@@ -1,81 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D9A39CCF8
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 07:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEA83DAACF;
+	Fri, 24 Jul 2026 08:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784879249; cv=none; b=KzrkMgdlg0W2etpX9sGRyCaxlyWwc+NoP0HUa03ClI5CLoJIMiIHhPbRL2kDTgT8AYOPGs0m/zvBSi6deuItvv/nLCQb2LrgXqkt/AoVf6wbonx7b8tM1KqQMAoJloQzxcwsxDfNpYPd/ENS074ULpskPwYecT/+JoER5bSUJKc=
+	t=1784882176; cv=none; b=oUCZ+3CkJGq1dSrGoUqgPjllzYjYHkxd5XWmAHi6dgcuoWv7vLJOmPWja5OkxzEZI7Bl4YXRf0wtECyCWZzIVuE6hoJB7SVqQMFqyOYcnOgJ91JpGoXEtCGPSXFvJDrvqPOyu3IrM6IZeKR6W06nNieTRuByIYnDBJ2Ylq+9H1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784879249; c=relaxed/simple;
-	bh=/BUSaDXK6r6Cr7G8YfpzDdPRTV1US3eERUWJZVmPUEU=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=trPwwAoLFRhv1R1NRzV1oCx8bDdWcbKKOiIS3sW+lNhOdeBSsfzAcRhAmCKs3s9PHjAF4zmIsCafDzdSDB1FNKA5r39/GcLvu9EC1CHsBLEynt0bPAqU0dpOYVJOMT5EsLv7IG544O4FEREifa6Czs5+hfaD9JKxlvuH73T4sOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwnOTDJf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784882176; c=relaxed/simple;
+	bh=2m27K8YDA2d3oCx+0nulJY0uzC0LDomgZgzJ9anfsnE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ksLbnGb+Zsc1OgZnmuGbMrNmgZMNl+eqbuOYQHPohsFYhk9EOp8YCKhcWbK45PguyfQxlhb6ruzhOpKMgaTFI5AJdkXAWjflCs0J0RfqsDIu3Sf4bGqqeb06LC7bIDCe2ntm3ZZDjeaynkUObN6m7OUPD3IMNVnxMbUPhgPrhik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nlnLy6xM; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwnOTDJf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB8C1F0156C
-	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 07:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784879248;
-	bh=/BUSaDXK6r6Cr7G8YfpzDdPRTV1US3eERUWJZVmPUEU=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=UwnOTDJfeXReRsjs0t8RcPUOPmbDUJdN/qDoEw1H4RV7wfK0tdKY+kujNxYO8ZjnF
-	 Ol2NrF4pvuTNvEEzPlMIOAzM0UAkfrPcm0Xt7qe19tlw9db3GYG7kanASwXPYtq3xn
-	 GNQmexhHw1q/+Sqn1T2slKo6rPHNC5CwTW15SDJs0hz0eEztDxO12l2ytDuOzUzFls
-	 hQAZES3MeffIlWo2k+CjZyR5maNgS6Y+4Pa1YSsKxgadyydV9PISfCU38i0w4xnlZm
-	 UkwBugy2BQBPr0qcNsTVm0AOmNwgnbJmVpjkbQ7UyLeM7iH4QCIh2wh0g6CwzVybYv
-	 Ua8KSpk0/h1Vg==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-39b3931e259so1471151fa.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 00:47:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpjJZFWFkGI14yPPzdfudMIrg2HWHdxL9J8+kxn+NGqESuoY0/Fc4HZvuYOgf9PkSxk98L7OVLNdtrSxutKJgCr6LYT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwueVwNxKBI1w2Ej5iDA/RFeYL0b7Zu7eGTWiNGtlNZDT2dzafA
-	q8Ea9gt17n5iJuykjkOnJq56xDOJ45PFhSZiKwdft5d0XJPOJT3cnQ2mruesh9yo3NTpcVAPGXl
-	srO7azKEoS15HJ4q4Q0GGKh5AJJTMx907/IthgaCvbw==
-X-Received: by 2002:a05:6512:1503:20b0:5b1:5451:d969 with SMTP id
- 2adb3069b0e04-5b2b2e57394mr897148e87.25.1784879247206; Fri, 24 Jul 2026
- 00:47:27 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 24 Jul 2026 00:47:26 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 24 Jul 2026 00:47:26 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260723175513.39849-1-farbere@amazon.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nlnLy6xM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784882172; x=1816418172;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=2m27K8YDA2d3oCx+0nulJY0uzC0LDomgZgzJ9anfsnE=;
+  b=nlnLy6xMmZ4YfaBPl9EhEJETR6npgC/lKj2EkolxQpxne5laqV2M6r9x
+   SxNcLpk/0Ft2aoLhkCTv4cppIU+mlgc0Q5sRbhLeM1AooExmiQD0o2VJG
+   bxWV90QFKIsnJMu7fucEYCTp8GbiBpE0/tAdsi68+1cYxio/IO6Nvqjtm
+   73U7Q8zJ69si7boC2gzmG03N9qaFsrDgJE5O4xKcS0rlwXEqg8bKOIkWi
+   xdMVJUm/qipWF+xaNJxiK8rq+MbsrRZvfzul91Ab/w6BfkHqI/mRcqpil
+   /xjcwuSRQkVa0yTDX39mDVshU8uCMgjymeyYQ+khGX3AxLHF7CZP2Db6s
+   g==;
+X-CSE-ConnectionGUID: tTH31UUEQaq3vHbg3nAvQA==
+X-CSE-MsgGUID: ympgh19RQJKUbtXP8T1jRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="89437725"
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="89437725"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 01:36:05 -0700
+X-CSE-ConnectionGUID: PWfznRuFRFSHbos9XEK9iw==
+X-CSE-MsgGUID: K46nMSzBQGe8BkQ8EFXI2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="281959926"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 01:35:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 24 Jul 2026 11:35:52 +0300 (EEST)
+To: Sean Rhodes <sean@starlabs.systems>
+cc: tzungbi@kernel.org, Hans de Goede <hansg@kernel.org>, 
+    corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
+    prasanth.ksr@dell.com, jorge.lopez2@hp.com, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, derekjohn.clark@gmail.com, 
+    josh@joshuagrisham.com, briannorris@chromium.org, jwerner@chromium.org, 
+    tzimmermann@suse.de, javierm@redhat.com, kees@kernel.org, 
+    u.kleine-koenig@baylibre.com, mst@redhat.com, chenhuacai@kernel.org, 
+    wenst@chromium.org, florian.fainelli@broadcom.com, 
+    titouan.ameline@gmail.com, oliver@liuxiaozhen.dev, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Dell.Client.Kernel@dell.com, chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v8 1/4] platform/x86: Sort firmware attributes class
+ includes
+In-Reply-To: <CABtds-3mgwnoV8P4nVFfro2v99_MfVomm4Uz5JyxuVAK=cfY-Q@mail.gmail.com>
+Message-ID: <2fa8bf8d-162d-db04-a85a-5f591fee447b@linux.intel.com>
+References: <CABtds-3mgwnoV8P4nVFfro2v99_MfVomm4Uz5JyxuVAK=cfY-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260723175513.39849-1-farbere@amazon.com>
-Date: Fri, 24 Jul 2026 00:47:26 -0700
-X-Gmail-Original-Message-ID: <CAMRc=MeGKMQJwZyaqfe+Q67nRMybNc6Abmd7EEUbUDm28vAfDw@mail.gmail.com>
-X-Gm-Features: AUfX_mx-B-BkBaHknNcFawRpyJtwmEcwMwNOLJMV-ettmOBp8_38aq3y77GfhSI
-Message-ID: <CAMRc=MeGKMQJwZyaqfe+Q67nRMybNc6Abmd7EEUbUDm28vAfDw@mail.gmail.com>
-Subject: Re: [PATCH 05/12] gpio: adp5585: use devm_blocking_notifier_chain_register()
-To: Eliav Farber <farbere@amazon.com>
-Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, 
-	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
-	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, 
-	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
-	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	dmitry.torokhov@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	W_Armin@gmx.de, ukleinek@kernel.org, fabio.m.de.francesco@linux.intel.com, 
-	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, 
-	jason@os.amperecomputing.com, pedro.pbg@usp.br, paulmck@kernel.org, 
-	frederic@kernel.org, kees@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 23 Jul 2026 19:55:06 +0200, Eliav Farber <farbere@amazon.com> said:
-> Replace the blocking_notifier_chain_register() +
-> devm_add_action_or_reset() pattern with a single call to
-> devm_blocking_notifier_chain_register(), removing the
-> adp5585_gpio_unreg_notifier() callback.
->
-> Signed-off-by: Eliav Farber <farbere@amazon.com>
+On Wed, 22 Jul 2026, Sean Rhodes wrote:
+
+> Move firmware_attributes_class.h into the main include block and sort the
+> affected includes. This lets the header move replace each include in place.
+> 
+> Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Signed-off-by: Sean Rhodes <sean@starlabs.systems>
 > ---
+>  drivers/platform/x86/asus-armoury.c                | 2 +-
+>  drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 9 +++++----
+>  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       | 9 +++++----
+>  drivers/platform/x86/lenovo/think-lmi.c            | 5 +++--
+>  drivers/platform/x86/lenovo/wmi-other.c            | 2 +-
+>  drivers/platform/x86/samsung-galaxybook.c          | 3 ++-
+>  6 files changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-armoury.c
+> b/drivers/platform/x86/asus-armoury.c
+> index 495dc1e31d40..f3d8c5a85762 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/err.h>
+>  #include <linux/errno.h>
+> +#include "firmware_attributes_class.h"
+>  #include <linux/fs.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kmod.h>
+> @@ -34,7 +35,6 @@
+>  #include <linux/sysfs.h>
+> 
+>  #include "asus-armoury.h"
+> -#include "firmware_attributes_class.h"
+> 
+>  #define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
+> 
+> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> index ab46a023cc34..4ff9003c6589 100644
+> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+> @@ -8,18 +8,19 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> 
+>  #include <linux/align.h>
+> -#include <linux/fs.h>
+>  #include <linux/dmi.h>
+> -#include <linux/module.h>
+> +#include "../../firmware_attributes_class.h"
+> +#include <linux/fs.h>
+>  #include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/nls.h>
+>  #include <linux/string.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/wmi.h>
+> +
+>  #include "dell-wmi-sysman.h"
+> -#include "../../firmware_attributes_class.h"
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+I'm sorry I probably wasn't specific enough with my comment but the 
+custom is to have the local includes separately in own block of includes 
+(empty line in between).
+
+Also, if there's a case where there is's linux/xx.h and 
+someotherfolder/xx.h, those should be in own "blocks" of include, each 
+group sorted alphabetically.
+
+--
+ i.
+
+>  #define MAX_TYPES  4
+> -#include <linux/nls.h>
+> 
+>  struct wmi_sysman_priv wmi_priv = {
+>  	.mutex = __MUTEX_INITIALIZER(wmi_priv.mutex),
+> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> index 27fd6cd21529..1965a329be48 100644
+> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+> @@ -7,16 +7,17 @@
+> 
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> 
+> +#include <linux/errno.h>
+> +#include "../../firmware_attributes_class.h"
+>  #include <linux/fs.h>
+> -#include <linux/module.h>
+>  #include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/nls.h>
+>  #include <linux/printk.h>
+>  #include <linux/string.h>
+>  #include <linux/wmi.h>
+> +
+>  #include "bioscfg.h"
+> -#include "../../firmware_attributes_class.h"
+> -#include <linux/nls.h>
+> -#include <linux/errno.h>
+> 
+>  MODULE_AUTHOR("Jorge Lopez <jorge.lopez2@hp.com>");
+>  MODULE_DESCRIPTION("HP BIOS Configuration Driver");
+> diff --git a/drivers/platform/x86/lenovo/think-lmi.c
+> b/drivers/platform/x86/lenovo/think-lmi.c
+> index e215e86e3db7..9e4b3e973de9 100644
+> --- a/drivers/platform/x86/lenovo/think-lmi.c
+> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+> @@ -13,14 +13,15 @@
+> 
+>  #include <linux/acpi.h>
+>  #include <linux/array_size.h>
+> +#include <linux/dmi.h>
+>  #include <linux/errno.h>
+> +#include "../firmware_attributes_class.h"
+>  #include <linux/fs.h>
+>  #include <linux/mutex.h>
+>  #include <linux/string_helpers.h>
+>  #include <linux/types.h>
+> -#include <linux/dmi.h>
+>  #include <linux/wmi.h>
+> -#include "../firmware_attributes_class.h"
+> +
+>  #include "think-lmi.h"
+> 
+>  static bool debug_support;
+> diff --git a/drivers/platform/x86/lenovo/wmi-other.c
+> b/drivers/platform/x86/lenovo/wmi-other.c
+> index fbb32bf404f2..fdebaa0a9992 100644
+> --- a/drivers/platform/x86/lenovo/wmi-other.c
+> +++ b/drivers/platform/x86/lenovo/wmi-other.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/container_of.h>
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+> +#include "../firmware_attributes_class.h"
+>  #include <linux/gfp_types.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/idr.h>
+> @@ -50,7 +51,6 @@
+>  #include "wmi-capdata.h"
+>  #include "wmi-events.h"
+>  #include "wmi-helpers.h"
+> -#include "../firmware_attributes_class.h"
+> 
+>  #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
+> 
+> diff --git a/drivers/platform/x86/samsung-galaxybook.c
+> b/drivers/platform/x86/samsung-galaxybook.c
+> index 6382af0b106c..74103c00b0c8 100644
+> --- a/drivers/platform/x86/samsung-galaxybook.c
+> +++ b/drivers/platform/x86/samsung-galaxybook.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/bits.h>
+>  #include <linux/err.h>
+> +#include "firmware_attributes_class.h"
+>  #include <linux/i8042.h>
+>  #include <linux/init.h>
+>  #include <linux/input.h>
+> @@ -27,8 +28,8 @@
+>  #include <linux/sysfs.h>
+>  #include <linux/uuid.h>
+>  #include <linux/workqueue.h>
+> +
+>  #include <acpi/battery.h>
+> -#include "firmware_attributes_class.h"
+> 
+>  #define DRIVER_NAME "samsung-galaxybook"
+> 
+> 
