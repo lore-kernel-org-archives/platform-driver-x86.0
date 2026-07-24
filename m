@@ -1,273 +1,175 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5565235358;
-	Fri, 24 Jul 2026 03:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F523A9DAB
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 07:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784862047; cv=none; b=I44uAbnfjByEqdXjlvhjp1ylPn81wF4aukZNWqNG4IXCz4CIRCQXHich9LBunhYIXWOGcSmBncUIeeZozkBp7Spk5bu1Vp3EnD10TiM+c8yjsHx/kC6/u4JsptZB3gOgM35ECn9+uAKMpbOXbye7UhuXM4+Av10rBiLtaiav0nQ=
+	t=1784879137; cv=none; b=sbuhPcES/ctuXBxbidnFSxSY6Mh/wcdtFE6UeupkKm1uGlZtEaAJIbSiAVlvow4pNNs/yU8keHQ4BjbFKN73QX2FjoKptRBB5Mtkw/v0/Fqt20dmNUemKkfx2zZbxKsHVfEGAE2JF2Y3NjkMkHuo4A6Ijf6oMjkeAAEQLfbsu3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784862047; c=relaxed/simple;
-	bh=kk1grO1DkAOAiq7kEqQIgVSlBJId66yaYGK5KYEE+HY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QcZHP7J8KiDiMSjPU2H4O2uirZ4bxec+2wQVifmgebFiAqMwSh0GzGHDloH9MqPhWVRnGnA9WCsRfE3pulHIWDtN/+CDrM2Dp3GcV/fQheSCnRoUcYQOjdDAg3k6HBZ8InwHvD9B0TGeIGCoAHz/HVDhuliJNwud7w/NVsfmFGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Us8nBLLs; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1784879137; c=relaxed/simple;
+	bh=Ga5EKR4S/Vz92tUd1yWNaId5dCO8C7LhZwYgnvT+zk8=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jqke/YgNLMg8NSHSDM2bokYr2bWy39V0WBIsVMlzX2Uh329lLx9C2dy2AQBG7RqQNEMPTYIV5O2TaQiWxs1nbglOrKTjn7Io7bi263KMZhHs4LqO+VTGyDUD9/3vybbX300FDf3Wct/JakFtsblFOwrtHbYlTpnOwTyGzsbZWkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFTGtRPi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Us8nBLLs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1784862022; x=1785466822; i=w_armin@gmx.de;
-	bh=mlNmyLlL1iW90B0H147Wg/d30JCyeRZzRozRUv+IOOA=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Us8nBLLs2daoeYflEbg/gq+U0yg309JtkRCNklYcbH4XfFNyArHoBE1Kq2iG8gJQ
-	 XoR9KKw1Sd0tA3zA8BIUpsP9Edghge3Dx2DEM6jwd3kH4hCANYFLZzKHy9OGl+Yoy
-	 hqVgoE1yBd5eGqZZnz6uteMIDyoX4RhwePYWEA4d+BwPxzxHIi4x/2jziuUuqYpZg
-	 NYgRYpK/saAP4R7GOnHXYnTnTbZJ//IC+Q735WSpjGnp8mi8x0VkwzLOzeBwUlxWU
-	 KTp9z71gwLu+oamT38o5MA8JAj1OJ4SiW7TVQKBC6aNGxx4wNZ3P5ovpgre8Guz43
-	 zQPPC/UT0L17Sp0ktA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmDIo-1xDOUQ0AYy-00fPFH; Fri, 24
- Jul 2026 05:00:22 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@weissschuh.net,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	patrik.r.jakobsson@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	jani.nikula@linux.intel.com,
-	joonas.lahtinen@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	tursulin@ursulin.net,
-	intel-gfx@lists.freedesktop.org,
-	matthew.brost@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	intel-xe@lists.freedesktop.org
-Subject: [PATCH v3 3/3] platform/x86: wmi-bmof: Move to generic WMI code
-Date: Fri, 24 Jul 2026 04:59:59 +0200
-Message-Id: <20260724025959.142826-4-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260724025959.142826-1-W_Armin@gmx.de>
-References: <20260724025959.142826-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFTGtRPi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C501F01567
+	for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 07:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784879135;
+	bh=GrrnEVjLeDYohAytxd9LGHL0XtaF/3QpIP+vjIXf7kY=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=QFTGtRPiljZBiO3q7FgTkHoETpqGXso5vKPegYuHLZmgv2Duzuk3mbNV2nfqUnvkm
+	 PDBjWMh8zLZdOunZGKGtIjoIvxd8HHpCTxfuiNMfyIjIcaWrsL/x/DO2IB5nqIj2ZS
+	 v/lqV3N9C4+EvEc+XIonse6p7T/r0+aL/XXVTB2Tt2jlcbNGuqQUptKFocEoP+LxQm
+	 V9H6Ze/8gJ6BR1qUo6aqPO1e+W3jT2AFI3lppwWGbXmNOHJKwvXS/DLvzrzpHmuaIZ
+	 Hq68lo1n2IwKrQ5nly3a3NmLvMbNdXC4cgUi22r7kQ3BsF8Dv1hYHeVtt6NrjWYqyq
+	 FjNohO9xi377A==
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-39c86ce9e29so1116451fa.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 00:45:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqqROpVhS30ppPKf/0ylGI+1USwzVTUMxz6uAC9tHUqtRQM3aMJSuI0CghAOFI2Q2PEpQBVQvw6oImK4JRbBluKlUWB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgTGbGdeaswG2It8NplgNeWQX6pJt7dJ8Tq2uxGzKy3C4H61FR
+	MUCVj6wy6aVkCsD9P5Dblgy7dcjZM4qyPWH0Pne1SruqLuUDA07tqqgTmbGmZzlUPscyyk1YtmX
+	JEdU790j8E+RoQnEktw1KP4sKygKBDXto3X9SLwcctA==
+X-Received: by 2002:a2e:9193:0:b0:39b:2df2:9014 with SMTP id
+ 38308e7fff4ca-39f07c63c72mr10175241fa.7.1784879133867; Fri, 24 Jul 2026
+ 00:45:33 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 24 Jul 2026 00:45:31 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 24 Jul 2026 00:45:31 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260723175325.37397-2-farbere@amazon.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:lC8Nm23G2Ft5kDA4hIh2S4jguiXIFp8hY6klzZ5bPL/r62/IyIC
- y4Ent/gUu6OYSQOYs4rs82W8gkPbWi71h3sKHQr+5ftl/PbulBzPgaQfPOE2icvg0z0bfIb
- 27171TN81Fq+pKwaSEaTgw0t6cn3rAw9EkR7uTL6yTMy9TdbD5Q0sQCq+qZ3bhjld0niVKv
- HvpR3E51qtyMwIA1+fryA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:aHD8YHDmDEE=;3mw208v1Esw2YdMn4NfHIL1aAfE
- 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
- KhHw0EN1Yz61hRkTi/RPi
+References: <20260723175325.37397-1-farbere@amazon.com> <20260723175325.37397-2-farbere@amazon.com>
+Date: Fri, 24 Jul 2026 00:45:31 -0700
+X-Gmail-Original-Message-ID: <CAMRc=MeE_FdDMpXzzBB2dwH18DWmmT9B=CeouoaG1tV=y6-fXQ@mail.gmail.com>
+X-Gm-Features: AUfX_mxqAq5L_5_Kqqzi2lfcFgjsyeDKqIXC9pdA6t902qhg92eJpMfCKmh9flc
+Message-ID: <CAMRc=MeE_FdDMpXzzBB2dwH18DWmmT9B=CeouoaG1tV=y6-fXQ@mail.gmail.com>
+Subject: Re: [PATCH 01/12] notifier: add device-managed registration APIs
+To: Eliav Farber <farbere@amazon.com>
+Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, 
+	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
+	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, 
+	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
+	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	dmitry.torokhov@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	W_Armin@gmx.de, ukleinek@kernel.org, fabio.m.de.francesco@linux.intel.com, 
+	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, 
+	jason@os.amperecomputing.com, pedro.pbg@usp.br, paulmck@kernel.org, 
+	frederic@kernel.org, kees@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Some Windows-on-Arm notebooks contain embedded Binary MOF data,
-accessible using the WMI-ACPI interface. Move the associated driver
-to the generic WMI code to make it possible to build it on arm64.
-Also rework the Kconfig help text a bit.
+On Thu, 23 Jul 2026 19:53:14 +0200, Eliav Farber <farbere@amazon.com> said:
+> Add devm_atomic_notifier_chain_register(),
+> devm_blocking_notifier_chain_register(), and
+> devm_raw_notifier_chain_register() that automatically unregister the
+> notifier when the device is unbound.
+>
+> Many drivers repeat the same boilerplate pattern:
+>
+>   1. Register the notifier with *_notifier_chain_register()
+>   2. Check for error
+>   3. Register a devm action to unregister on teardown
+>   4. Implement a per-driver static unregister callback
+>
+> With the new devm_*_notifier_chain_register() APIs, this reduces to a
+> single call with one error path, eliminating per-driver unregister
+> callbacks entirely.
+>
+> The implementation follows the established devres pattern used by other
+> device-managed kernel APIs.
+>
+> Signed-off-by: Eliav Farber <farbere@amazon.com>
+> ---
+>  include/linux/notifier.h |  10 +++
+>  kernel/notifier.c        | 151 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 161 insertions(+)
+>
+> diff --git a/include/linux/notifier.h b/include/linux/notifier.h
+> index 01b6c9d9956f..aa3745d7459b 100644
+> --- a/include/linux/notifier.h
+> +++ b/include/linux/notifier.h
+> @@ -46,6 +46,7 @@
+>   * often but notifier_blocks will seldom be removed.
+>   */
+>
+> +struct device;
+>  struct notifier_block;
+>
+>  typedef	int (*notifier_fn_t)(struct notifier_block *nb,
+> @@ -145,10 +146,19 @@ extern void srcu_init_notifier_head(struct srcu_notifier_head *nh);
+>
+>  extern int atomic_notifier_chain_register(struct atomic_notifier_head *nh,
+>  		struct notifier_block *nb);
+> +extern int devm_atomic_notifier_chain_register(struct device *dev,
+> +		struct atomic_notifier_head *nh,
+> +		struct notifier_block *nb);
 
-Link: https://lists.linaro.org/archives/list/aarch64-laptops@lists.linaro.=
-org/thread/U2IZENSIOOHZHGXVN7GM5HX5O3FD5KCF/
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- MAINTAINERS                                     |  2 +-
- drivers/platform/wmi/Kconfig                    | 12 ++++++++++++
- drivers/platform/wmi/Makefile                   |  4 ++++
- drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} |  0
- drivers/platform/x86/Kconfig                    | 12 ------------
- drivers/platform/x86/Makefile                   |  3 ---
- 6 files changed, 17 insertions(+), 16 deletions(-)
- rename drivers/platform/{x86/wmi-bmof.c =3D> wmi/bmof.c} (100%)
+Please don't use extern with function prototypes in new code.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3820b286f09f..bbae729a6012 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -29106,7 +29106,7 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/stable/sysfs-platform-wmi-bmof
- F:	Documentation/wmi/devices/wmi-bmof.rst
--F:	drivers/platform/x86/wmi-bmof.c
-+F:	drivers/platform/wmi/bmof.c
-=20
- WOLFSON MICROELECTRONICS DRIVERS
- L:	patches@opensource.cirrus.com
-diff --git a/drivers/platform/wmi/Kconfig b/drivers/platform/wmi/Kconfig
-index 36934b5f0194..11c221a58e04 100644
-=2D-- a/drivers/platform/wmi/Kconfig
-+++ b/drivers/platform/wmi/Kconfig
-@@ -34,4 +34,16 @@ config ACPI_WMI_LEGACY_DEVICE_NAMES
-=20
- source "drivers/platform/wmi/tests/Kconfig"
-=20
-+config WMI_BMOF
-+	tristate "WMI embedded Binary MOF driver"
-+	default ACPI_WMI
-+	help
-+	  Say Y here if you want to be able to read the firmware-embedded
-+	  WMI Binary MOF (Managed Object Format) data. Using this requires
-+	  userspace tools, see Documentation/wmi/devices/wmi-bmof.rst for
-+	  details.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called wmi-bmof.
-+
- endif # ACPI_WMI
-diff --git a/drivers/platform/wmi/Makefile b/drivers/platform/wmi/Makefile
-index 2feff94a5594..ee2f27ea20d1 100644
-=2D-- a/drivers/platform/wmi/Makefile
-+++ b/drivers/platform/wmi/Makefile
-@@ -9,3 +9,7 @@ obj-$(CONFIG_ACPI_WMI)	+=3D wmi.o
-=20
- # Unit tests
- obj-y			+=3D tests/
-+
-+# Binary MOF driver
-+wmi-bmof-y		:=3D bmof.o
-+obj-$(CONFIG_WMI_BMOF)	+=3D wmi-bmof.o
-diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/wmi/bmof.c
-similarity index 100%
-rename from drivers/platform/x86/wmi-bmof.c
-rename to drivers/platform/wmi/bmof.c
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 957034f39e4e..889979034391 100644
-=2D-- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -16,18 +16,6 @@ menuconfig X86_PLATFORM_DEVICES
-=20
- if X86_PLATFORM_DEVICES
-=20
--config WMI_BMOF
--	tristate "WMI embedded Binary MOF driver"
--	depends on ACPI_WMI
--	default ACPI_WMI
--	help
--	  Say Y here if you want to be able to read a firmware-embedded
--	  WMI Binary MOF (Managed Object Format) data. Using this requires
--	  userspace tools and may be rather tedious.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called wmi-bmof.
--
- config HUAWEI_WMI
- 	tristate "Huawei WMI laptop extras driver"
- 	depends on ACPI_BATTERY
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 872ac3842391..94a5fe4075cb 100644
-=2D-- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -4,9 +4,6 @@
- # x86 Platform-Specific Drivers
- #
-=20
--# Windows Management Interface
--obj-$(CONFIG_WMI_BMOF)		+=3D wmi-bmof.o
--
- # WMI drivers
- obj-$(CONFIG_HUAWEI_WMI)		+=3D huawei-wmi.o
- obj-$(CONFIG_MXM_WMI)			+=3D mxm-wmi.o
-=2D-=20
-2.39.5
+>  extern int blocking_notifier_chain_register(struct blocking_notifier_head *nh,
+>  		struct notifier_block *nb);
+> +extern int devm_blocking_notifier_chain_register(struct device *dev,
+> +		struct blocking_notifier_head *nh,
+> +		struct notifier_block *nb);
+>  extern int raw_notifier_chain_register(struct raw_notifier_head *nh,
+>  		struct notifier_block *nb);
+> +extern int devm_raw_notifier_chain_register(struct device *dev,
+> +		struct raw_notifier_head *nh,
+> +		struct notifier_block *nb);
+>  extern int srcu_notifier_chain_register(struct srcu_notifier_head *nh,
+>  		struct notifier_block *nb);
+>
+> diff --git a/kernel/notifier.c b/kernel/notifier.c
+> index 2f9fe7c30287..b811638aa878 100644
+> --- a/kernel/notifier.c
+> +++ b/kernel/notifier.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/device.h>
+>  #include <linux/kdebug.h>
+>  #include <linux/kprobes.h>
+>  #include <linux/export.h>
+> @@ -197,6 +198,55 @@ int atomic_notifier_chain_unregister(struct atomic_notifier_head *nh,
+>  }
+>  EXPORT_SYMBOL_GPL(atomic_notifier_chain_unregister);
+>
+> +struct atomic_notifier_chain_devres {
+> +	struct atomic_notifier_head *nh;
+> +	struct notifier_block *nb;
+> +};
+> +
+> +static void devm_atomic_notifier_chain_unregister(struct device *dev, void *res)
+> +{
+> +	struct atomic_notifier_chain_devres *dr = res;
+> +
+> +	atomic_notifier_chain_unregister(dr->nh, dr->nb);
+> +}
+> +
+> +/**
+> + *	devm_atomic_notifier_chain_register - Device-managed atomic notifier registration
+> + *	@dev: Device to tie the notifier lifetime to
+> + *	@nh: Pointer to head of the atomic notifier chain
+> + *	@n: New entry in notifier chain
+> + *
+> + *	Adds a notifier to an atomic notifier chain and registers a cleanup
+> + *	action to automatically unregister it when @dev is unbound.
+> + *
+> + *	Returns 0 on success, negative errno on error.
 
+Should be:
+
+Returns:
+0 on success...
+
+Bart
