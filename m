@@ -1,57 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3188D5464D;
-	Fri, 24 Jul 2026 15:44:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9F5372663;
+	Fri, 24 Jul 2026 15:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784907873; cv=none; b=toxiyNioiniUij89imgJpMSv4bemK8R64E8sa0AU0KrYgUH9XWeLQdgHG9KFXVl9ybK9Q7ja5cCOlVrSqrA+Cs8lR0brzteS/D5hIaXtPYSpjbn/IY2i5H7KczMvf/AIkrVzBswz43Ie3ZwJXq6yPNrdIUqDIvtppdjfySwQBmQ=
+	t=1784907876; cv=none; b=ZciOlCBYLrjwIxctk36kQireOzKOb1CnI3crEXlYeR+e4tpaFPu9a6ySwlcL3c1ICCRTiqVjuCR67KKUFmZhhK/oGVIMleZqfTU7mzQx6EpPGHGYeAK9lgnD8h7QzbyutYccd2AQK/2cm82VQdM44Fte5F53IiP0A7Wq9cSEv/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784907873; c=relaxed/simple;
-	bh=CXYFubIiFjll33ZZxcqSQS1B2W4I3BBBJAmNmcBn6RU=;
+	s=arc-20240116; t=1784907876; c=relaxed/simple;
+	bh=ASZ2VW1P7ycIu8Nkxkio47CE4/4WpGf7NfU9mkelfVI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G4phhiFCApIPJKJKRoDA9uMJzc53zdHTg53mrgYyIG0x1amrAgkmgrB8+K2FSV5QHrIBostxvJdxtzqiX9y1fPFMRwGvzZh1uvnupVF+vuCY/dxr9n8zXil/qzrfhNBnkVlOQLLltYAwcjuav4sO+3A4y917dCHv9/bCN3fMgiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k2I+SsTy; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=Gh4YyoAnfYnmxss52Op7jDUJFU9Mqbc1tmnJkwoeJIhDFC27ItsAg1SEZPKe742A/vtLgFb8IchQCiZJa1MMA8FcZUZ14MoB73Vvf27bn5xhMK9fDFaGB6/TOEAyLWvWRyN2OTPCvhvoWCB9/PA73sW+4AD09ts/Qa7600roY8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XnVt+/b1; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k2I+SsTy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XnVt+/b1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784907872; x=1816443872;
+  t=1784907875; x=1816443875;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=CXYFubIiFjll33ZZxcqSQS1B2W4I3BBBJAmNmcBn6RU=;
-  b=k2I+SsTyfSOuDS/QCs493wOLf53lKZq0p2JW5368+3vGxKb2c3kH3yvR
-   PpIbPuVBuP2LtsOw042dPXIdRVvuo8pBH9i77mA5b3xNGNFqRem77wNzV
-   sLYHMTuVGkoiQHt6ydnitJV3FcEGkLYVLX6OIL+lLa3CZ4HIFZoi6/7Mg
-   Vq8UfHkJUWIBeRTeYBbWpISzXC+8hT5ij/e3env7mnSGMd0a1N/w0IzWh
-   NACJ8MoHh04UXdxSCmWyxV8v+SnbmdqB1rhU01GXp7fQbXmWGOgDwL0RQ
-   L+PQqVGKh0mG+mW+NeBbYaYf5JZYmuX9/GumNbZOA19/u6RdQl33U1leR
-   A==;
-X-CSE-ConnectionGUID: EmpNYUSmQY+RnY81H0+q9w==
-X-CSE-MsgGUID: cxtFiG83Q52Uh7Elmw8Ldg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="102985963"
+  bh=ASZ2VW1P7ycIu8Nkxkio47CE4/4WpGf7NfU9mkelfVI=;
+  b=XnVt+/b1dgySLf9ZHfOgLZr+u8WFZ8/AQfwpeA0vfihw6/qH6BuxqE0/
+   4oJ20p8OqzU3UgGETGp7wT9HpiuYliGXwcoXFJHNEGMPGU2xnZCDT2Njm
+   fIZEq7qjFXuYg7nSTD5zwe503+WFu0pvb9uEHldCWtGS2zyWPEwdcpX79
+   JY95xvPU6wlzv4zRktagTx0pn2uUzj3bsVvUu3i5KNOCdZYwRPRjc5qus
+   S/J1MaHuvB2HuUrEmB0uSdInMjyqjuLWLwwKTJJAHZjzNEKsSGcmEHCQy
+   o511eIEBFEmsovcSBciyNtWx61SPlsR0V3iHNWU7g49UkVqRFggo4abID
+   w==;
+X-CSE-ConnectionGUID: +nKHzO/fSLSXLKSgEDjGgQ==
+X-CSE-MsgGUID: 740tNe17QQW2D/2GZCwJRA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="102985981"
 X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="102985963"
+   d="scan'208";a="102985981"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 08:44:28 -0700
-X-CSE-ConnectionGUID: CnvfeO4nTjyTNHQiDsI6JA==
-X-CSE-MsgGUID: 6NzFpOdTTfi/fUx8dhbPbg==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 08:44:35 -0700
+X-CSE-ConnectionGUID: fZimFD8gTgi/bp/7nd9JSA==
+X-CSE-MsgGUID: +5Wyr5JlSIqyJMypj0PaRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="263053652"
+   d="scan'208";a="263053689"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.8])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 08:44:25 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 08:44:32 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, 
- =?utf-8?q?K=C3=BCr=C5=9Fat_Abayl=C4=B1?= <hello@kursatabayli.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260723172734.18361-1-hello@kursatabayli.dev>
-References: <20260723172734.18361-1-hello@kursatabayli.dev>
-Subject: Re: [PATCH v5] platform/x86: hp-wmi: Add GPU MUX switch support
-Message-Id: <178490786105.16604.17883024255856963597.b4-ty@b4>
-Date: Fri, 24 Jul 2026 18:44:21 +0300
+To: Shravan Sudhakar <s.shravan@intel.com>, 
+ Hans de Goede <hansg@kernel.org>, Abdun Nihaal <nihaal@cse.iitm.ac.in>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Sashiko <sashiko-bot@kernel.org>
+In-Reply-To: <20260723-platx86-v4-0-93b4a178b595@cse.iitm.ac.in>
+References: <20260723-platx86-v4-0-93b4a178b595@cse.iitm.ac.in>
+Subject: Re: [PATCH v4 0/2] platform/x86: int1092: Fix two bugs in SAR
+ driver
+Message-Id: <178490786733.16604.4329926433327066711.b4-ty@b4>
+Date: Fri, 24 Jul 2026 18:44:27 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -59,24 +61,22 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Thu, 23 Jul 2026 20:27:34 +0300, Kürşat Abaylı wrote:
+On Thu, 23 Jul 2026 18:14:14 +0530, Abdun Nihaal wrote:
 
-> Add support for querying and switching the graphics MUX mode on HP
-> systems via WMI. This introduces the 'gpu_mux_mode' sysfs attribute
-> under the hp-wmi platform device, allowing userspace tools to check
-> and safely switch between available graphics modes (e.g., UMA, Hybrid,
-> Discrete).
+> The patchset includes two fixes for
+> - a potential memory leak in sar_probe()
+> - an information leak in parse_package()
 > 
-> The hardware capabilities mask is primarily read using the modern
-> 128-byte System Design Data query. However, to ensure backward
-> compatibility with older models, a fallback mechanism is implemented.
-> By mirroring the behavior of the Windows Omen Gaming Hub software, if
-> the modern query fails but the MUX WMI endpoint (0x52) responds
-> successfully to a read request, the driver defaults to a standard
-> Hybrid + Discrete support mask (0x06).
+> Both patches are compile tested only.
+> 
+> v2->v3:
+> - Converted into a patch set with two patches
+> v3->v4:
+> - Updated commit message of the info leak patch to include the path in
+>   which kernel memory leaks.
 > 
 > [...]
 
@@ -91,8 +91,10 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: hp-wmi: Add GPU MUX switch support
-      commit: 59f586eb9394c7697cfcd2e1bb172c95e772559e
+[1/2] platform/x86: int1092: Fix potential memory leak in sar_probe()
+      commit: 30c906cff490c3601ee9ff110fe8115fabe75fd4
+[2/2] platform/x86: int1092: Fix info leak in parse_package()
+      commit: f5eb833730c071b68a68de5d1df442aae4ae7e6e
 
 --
  i.
