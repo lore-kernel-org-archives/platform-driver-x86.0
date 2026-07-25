@@ -1,117 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF752476CEE;
-	Fri, 24 Jul 2026 23:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FB71E32D6
+	for <platform-driver-x86@vger.kernel.org>; Sat, 25 Jul 2026 03:42:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784936112; cv=none; b=J0KWaa/Munz1//BCYW2eIjIIeNnd1whPFGcvXNYu//CpZtkf4/iPsAuY3kGvjEHlLpCWJsbZbYiD6sAP6agFEyde0Ue97aPr8n3idslwePjXgd6d3Lj2BE2Y/DY6BmGRdDhJswgTB1A9A3ZslJhCTB/2yfx9GLjbwksWwr5o2/4=
+	t=1784950975; cv=none; b=lU0p1nXiQSMdWIUAiy33+zazysT1wjjCtxTfxBShJY1vqJ2Ym9NhSpeEt0AnHj32soBRpgvaOkr4qhOUkAv3O/Z9xsFnWOGJfl91mNT1PUnyplqf3CQ2svxC83d9TSyM+iba3g5Olu9JpW21zSjn2SghaYE4HguctdzJFVzqtfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784936112; c=relaxed/simple;
-	bh=aYrgDhizOckPspQJ6t3G3K3Lc7NOOpJo78OVx01YiFQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G/cSxaNLZ38oJ0X1nq0GPY0ElORcleiWqC7Akkm8pgkr2qB4x24Wfhj25KXuDl209nPlNLwTXL/IiP67u++BEachw61Hw9arR/4iQCsKPNLl3YZpLwOJuyc1XtIlbzlSCXdN6vhikgAv3oHAtpg6bAtc5HzcC/qwyzIeJuO+DGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E171F00A3A;
-	Fri, 24 Jul 2026 23:35:11 +0000 (UTC)
-Received: by venus (Postfix, from userid 1000)
-	id 93CE9181F1C; Sat, 25 Jul 2026 01:35:08 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Julia.Lawall@inria.fr, Alex Deucher <alexander.deucher@amd.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Andrew Lunn <andrew@lunn.ch>, Andrew Morton <akpm@linux-foundation.org>, 
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, 
- Borislav Petkov <bp@alien8.de>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Daniel Lezcano <daniel.lezcano@kernel.org>, 
- David Airlie <airlied@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans de Goede <hansg@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- Jani Nikula <jani.nikula@linux.intel.com>, Jaroslav Kysela <perex@perex.cz>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Jiri Pirko <jiri@resnulli.us>, 
- "Joerg Roedel (AMD)" <joro@8bytes.org>, Johan Hovold <johan@kernel.org>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Julian Anastasov <ja@ssi.bg>, Leon Romanovsky <leon@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linusw@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Mark Brown <broonie@kernel.org>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Matthew Sakai <msakai@redhat.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Maxime Ripard <mripard@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Mike Rapoport <rppt@kernel.org>, 
- Miri Korenblit <miriam.rachel.korenblit@intel.com>, 
- Nicolas Palix <nicolas.palix@imag.fr>, 
- Pablo Neira Ayuso <pablo@netfilter.org>, Paolo Abeni <pabeni@redhat.com>, 
- Ping-Ke Shih <pkshih@realtek.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Sebastian Reichel <sre@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, Simona Vetter <simona@ffwll.ch>, 
- Simon Horman <horms@verge.net.au>, Stephen Boyd <sboyd@kernel.org>, 
- Steve French <sfrench@samba.org>, Takashi Iwai <tiwai@suse.com>, 
- Thomas Renninger <trenn@suse.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Tony Luck <tony.luck@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
- Vadim Fedorenko <vadim.fedorenko@linux.dev>, Vinod Koul <vkoul@kernel.org>, 
- Will Deacon <will@kernel.org>, Yazen Ghannam <Yazen.Ghannam@amd.com>, 
- Sang-Heon Jeon <ekffu200098@gmail.com>
-Cc: cocci@inria.fr, amd-gfx@lists.freedesktop.org, 
- dmaengine@vger.kernel.org, dm-devel@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, 
- linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org, 
- linux-rdma@vger.kernel.org, linux-rtc@vger.kernel.org, 
- linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-usb@vger.kernel.org, 
- linux-wireless@vger.kernel.org, lvs-devel@vger.kernel.org, 
- netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
- nouveau@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260723184538.3888637-1-ekffu200098@gmail.com>
-References: <20260723184538.3888637-1-ekffu200098@gmail.com>
-Subject: Re: (subset) [PATCH 00/36] treewide: remove conditional returns
- with no effect
-Message-Id: <178493610858.699463.6794401814873674138.b4-ty@collabora.com>
-Date: Sat, 25 Jul 2026 01:35:08 +0200
+	s=arc-20240116; t=1784950975; c=relaxed/simple;
+	bh=TNI+xsyFvmDbWSTMVvOLXgsMWw7EYDLJffwNGdpX2Mg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HHD02TRfpywuJFwDYsPFelzgwKnLADJ9xYYihH7AoslzfFV3K/TQ6L7YZ7mUOXBiw6FPTnfcbD9+c2+FzNgQasvOmHcEabS9hesmXJeilfOl0Tn9GrI1AnL2WHrGVCZerXgE+eBfR58XEDHDPYV9J62Z/cnNpXcgdzyJqR2IxD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tKhHXapQ; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tKhHXapQ"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-38e3efab7e0so848717a91.0
+        for <platform-driver-x86@vger.kernel.org>; Fri, 24 Jul 2026 20:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784950973; x=1785555773; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lfsQHiBwJDEgyxge8TWVldY47RBjQbT7TXneOswFzY4=;
+        b=tKhHXapQIrt8SwQG8isflPwg/pfT2UEMczwqWc67GatZibKBiXorN7/FE18BVcFIQZ
+         ziLnDYX8C+qKbTh5mBbTTx3plZQ8pDlUDWlNFeNXlP5fJxbA9Oy2XskRmtvHeJUdzYnO
+         miYSqQyre1XtOlkQ5KIjYL1pOyA+T5RPlElR22tNle+RSjIaoeE1y60pER3cAw5LR0Cj
+         sTrM2Jac+R8xxcufqLfqNVaVj59IfX9J9XvG2oqfJT6HgCY+kTROrfDLhl3ozR7b1nR7
+         AejrbPzVFAv5LXet812u+gAW6OOVNvhKhc3otv0xotJ7p3h0GFW/7DX3lm/JZnCKGoqE
+         giag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784950973; x=1785555773;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lfsQHiBwJDEgyxge8TWVldY47RBjQbT7TXneOswFzY4=;
+        b=HLF4mCph1A70hkoxlmQVm8Smh1TbO+8isv8t8G0lGG0GTHhw3312yCLo63gyShpr0X
+         /z5aHz8c6QcceUXtrBN2Szq+ZK052oQB2OASXKy6mPO38j0MZ2dZo7S34/J6hvVkc4z1
+         py6Oxg8dR4rWO6oYOwvjddeG+LRhfKOZyZdGD7j8/gQttKfGPcoUCvxpJmT6M+QavhG3
+         DrXHAYcSJKbGwJRMM1oGsEe+b2SLeyZER4S1Am6FC/qL42iHyJFi6vIgNcfXNJMfnJ/F
+         OnBEeF57LOZXmqqpGNgUq8+uxhgVC8qKzHhEtH8h+XnPaKj0sKgh04YMkftT5CGVJ3xw
+         1VZw==
+X-Gm-Message-State: AOJu0YyvrhhAqlGBbVyPkIEg0BR0KdUWAbLTd9+ddUAz4a7RcE4T1XaC
+	d57xqfXckexBwf0+sVa8KyxfFYt+hfpi7wvcO2kiGJ4bcX4iVG6sTwYYQWrJTx/d
+X-Gm-Gg: AR+sD13R2kHT13kh5wiUWC7Xlo6sfhg+oWfRpioGODvjFBWinmHCuEp1BaoU2PJSDqR
+	lXMXhV0GdspWmN7vrCbk475HJ6GTyKf8Q/cOhYAbTnKyaLBT9L2eg8XlqI7ZbcM80Q1FjPWnf4H
+	34HBzMZ6LauJr/XGvPaA9J+W/+Em3XWdUM6v+AyGVllRgHGUl6ZmTXwdroPh7uVwoiCowFwPvfW
+	ryzUgp7nTQnwUY+JNOAzhpnN0iyLKBn+ZqsEglL8iR/0jr16Jy1gzf6+ejk1FsHH2RZRiJAYwRn
+	gcLAxWIJPkQqyaAehxLJFCvoIfgIhIIo/T82V9gfzr/WtHkyzAmDG1dqvyZ3t7pYgsb5bJKK7Hg
+	Jh8Y7vaBnq1gWhD8d/mJULHmf/p5ZuQ7f4kwvK7qsG35OH67hhCQf6dfpmd20Pw7gJst31qGvn1
+	22/jDq1SWucb8nf1yjiUOBbv6cr6uNpFe+1a/wXBSqtRCbTICIRkNbz+TVcgdQB7POjhjNACXVj
+	qMUvai2Qw==
+X-Received: by 2002:a17:90b:2551:b0:38e:4f31:8412 with SMTP id 98e67ed59e1d1-38f1eea7240mr2991592a91.11.1784950972582;
+        Fri, 24 Jul 2026 20:42:52 -0700 (PDT)
+Received: from [172.17.109.93] ([136.233.9.100])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13d13003f12sm51908196c88.2.2026.07.24.20.42.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2026 20:42:51 -0700 (PDT)
+Message-ID: <2210c2c5-5ef5-43b4-b01a-935ef4ee6582@gmail.com>
+Date: Sat, 25 Jul 2026 09:12:45 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] ideapad_laptop: fans do not ramp up properly under CPU load
+ on Lenovo IdeaPad 3 15ALC6 Ub (82KU)
+From: Sourajyoti Basak <basak.sb2006@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca, Derek John Clark <derekjohn.clark@gmail.com>,
+ ikepanhc@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ linux-kernel@vger.kernel.org
+References: <CAA7g7-S_nP+jPfi7pJKj0a0g-gKXMJ7+fMH_+v11JbRRm96b9g@mail.gmail.com>
+ <49faacb7-3e01-4d01-80b1-4b939a904138@gmail.com>
+ <bbfae176-ec4f-4f09-b94e-43e534c3f629@gmail.com>
+Content-Language: en-US
+In-Reply-To: <bbfae176-ec4f-4f09-b94e-43e534c3f629@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-On Fri, 24 Jul 2026 03:45:02 +0900, Sang-Heon Jeon wrote:
-> While reading mm/memblock, I found a conditional return where both
-> branches return the same value:
+On 06/07/26 10:20 pm, Sourajyoti Basak wrote:
+> On 02/06/26 8:43 pm, Sourajyoti Basak wrote:
+>> On 09/05/26 9:00 pm, Sourajyoti Basak wrote:
+>>> Hello,
+>>>
+>>> I am using a Lenovo IdeaPad 3 15ALC6 Ub (82KU), and I am encountering an
+>>> issue where the laptop fans do not respond appropriately to increasing
+>>> CPU temperatures under Linux.
+>>>
+>>> System information:
+>>> Laptop: Lenovo IdeaPad 3 15ALC6 Ub
+>>> BIOS version:GLCN46WW
+>>> System performance mode in BIOS: Extreme Performance
+>>> Kernel: Linux 7.0.5-1-cachyos
+>>> Distribution: CachyOS
+>>> CPU: AMD Ryzen 5 5500U (12) @ 4.06 GHz
+>>>
+>>> Issue description:
+>>> Under sustained CPU load (for example using stress -c $(nproc)), CPU
+>>> temperatures rapidly increase to around 95-100°C. However, the fans do
+>>> not ramp to maximum speed as expected. Therefore, the system begins
+>>> thermal throttling after some time in this state.
+>>>
+>>> As a result:
+>>>
+>>> - The CPU reaches thermal throttling temperatures.
+>>> - CPU frequencies drop significantly once throttling begins.
+>>> - Fan RPM appears capped or insufficient despite high temperatures.
+>>> - The issue appears consistently reproducible on my laptop and another
+>>>   person's laptop.
+>>>
+>>> Additional observations:
+>>>
+>>> - The issue persists across multiple recent kernel versions.
+>>> - No hardware issues appear to be present. (Verified that the fans can
+>>> indeed
+>>>   ramp up to max speed by 
+>>> `echo 1 | sudo tee /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/
+>>> fan_mode`,
+>>> which makes the fan enter "dust cleaning mode," causing it to ramp up to
+>>> max speed
+>>> and then back down to 0 RPM about 10 times.)
+>>>
+>>> Attachments:
+>>> - DSDT in `DSDT.gz`
+>>> - `dmidecode` in `dmidecode.txt`
+>>>
+>>> Data Collected during `stress -c $(nproc)` until thermal throttling:
+>>> - EC information collected in a CSV file named `ec.csv`
+>>>   (using `sudo ec_probe monitor -i 0.5 -r ec.csv` from the NBFC project)
+>>> - `sensors` information in `sensors.log`
+>>> - CPU frequencies in `cpu-freq.log`
+>>> - `dmesg` in `dmesg-live.log`
+>>>
+>>> Thank you for your time.
+>>>
+>>> Best regards,
+>>> Sourajyoti Basak
+>>
+>>
+>> Hello everyone,
+>>
+>> Just a gentle ping on this bug report. The thermal throttling issue is
+>> still present. Please let me know if there is any further ACPI/EC
+>> debugging information I can provide.
+>>
+>> Best Regards,
+>> Sourajyoti Basak
 > 
-> 	err = do_something();
-> 	if (err)
-> 		return err;
-> 	return err;
+> Hello everyone,
 > 
-> [...]
+> Just wanted to confirm that this issue still exists after updating to
+> the latest BIOS version (`GLCN68WW`) and on the latest linux kernel
+> version `Linux 7.1.2-3-cachyos`.
+> 
+> Best Regards,
+> Sourajyoti Basak
 
-Applied, thanks!
+Hello everyone,
 
-[26/36] power: supply: pm8916_lbc: remove conditional return with no effect
-        commit: b7c8d46411317f135e7791c0eddc56691de63f07
 
-Best regards,
--- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+This issue is still present even on the latest BIOS version (GLCN68WW)
+and on the latest kernel version `Linux ideapad 7.1.4-1-cachyos`
 
+Best Regards,
+Sourajyoti Basak
