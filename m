@@ -1,135 +1,174 @@
-Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.155.198.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1C537FF7F;
-	Sun, 26 Jul 2026 10:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.155.198.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82958481B1
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jul 2026 13:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785061213; cv=none; b=ZWtSosrTuMPtiEaHwH7NjvTXbc1WqAUz9HnBbtJvZeJhkzAXaahGv4MyUIZnlfsOytI/rslb2sCiSx6JCMikZOjz9EtZacFBOVaNO+TxPrrVA12MhipYVBqo1lGWqWENZBp5d0clojtIj6f8gqzb8DbOCQg+8DBtz17DxYhruUE=
+	t=1785071690; cv=none; b=TTeS2HSS6CH5V/IeS7Nm8+b+L6pTw3J58mZRsNR7sXhzS8HSfqDUDlIoE9pAnCnK97NMF6lc4iVbcx6ElmRIeMUva8oKrn1OraWDYpUcARsJmsmOjN/vdPunyKKAAM30iMVPGWTbUEGudsKKE9/B1bGMmnMfZ5dOCJtfLPKaWSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785061213; c=relaxed/simple;
-	bh=dJ68QbooWHZBKQDn5xlKP/a7N1o1WPC7m/Nz/t4kin4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VJqWjdksqNOGQDOuAEqp49qmqvFpT8NAH3XQEZbRM2TCwXe+r20SHTYSlBqOpqg7vd8A5OawkvappA79e774rRuDe3baG4tLZH8OQiFhy04DMww7KcOJRapBUkHqCBF0R2Jz5eee4Oc/aak1kTfDHZFTH1iBN6eOXm1ej+ghewo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=VDz9Ou/q; arc=none smtp.client-ip=35.155.198.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1785071690; c=relaxed/simple;
+	bh=FNxUWAsXKxStVD/cnCs1pCDJa4rlUnj+iMPiU2D1tDI=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ib4g3RjuXJWip6IOIr2SWFQ83QSf9k6B6gF8jglj60aNb3ja0sQiUgSuDcVrKXx6yi0XDid8eEXp40m6Ppjf/eAVDYqvamAQBkcurNynhQS/zKMFh2w1IuvRqD3UgdmyhhgBr76vzl2S/xjofIQkWjedJqz6ODwsdtjOBuUwz5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFScX87m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="VDz9Ou/q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1785061212; x=1816597212;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=1PjrX0TYQgXkSpJZuPaWlzS4502XZn4rTZl60p1SQXk=;
-  b=VDz9Ou/qD2OhLsvTgz/UAJNsSmUUzZHLUvNlQ4muJzitRQp2CgvNOmix
-   ij1nZj8mpq2PYI9oBWu9ZSRNYKv/ExSxj60o2T5CGlcDs4lXKe6yzp3gi
-   v0RltmuhkT1pSn/7Z1LwuxORWdlElszeyMm5kTnQAO8CCSWXk2w1SOCZI
-   TtCw4db26O+VIB3y//js1TEiVxywEBpr5bR6Iy8Z20MW9d4HSkfH3eB2S
-   pe7WVagMXPRo9dk8kcl6pcCA/xU3fx4QsRVRAHinI9pyknf+X944jURUQ
-   jmay2yiVHVq8N/ecHz0FfUzMhyL0vMmY69zoLm8JhaivYhSjW0CubAkc4
-   Q==;
-X-CSE-ConnectionGUID: pJ9FbLfKS3CWZ/9Dp/ky1w==
-X-CSE-MsgGUID: f+M/g5v9QHivYv9W/FeiNQ==
-X-IronPort-AV: E=Sophos;i="6.25,186,1779148800"; 
-   d="scan'208";a="24261773"
-Received: from ip-10-5-12-219.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.12.219])
-  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2026 10:20:11 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [205.251.233.51:3757]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.59:2525] with esmtp (Farcaster)
- id f9571028-cbe6-4f91-98d5-a41659b630fa; Sun, 26 Jul 2026 10:20:11 +0000 (UTC)
-X-Farcaster-Flow-ID: f9571028-cbe6-4f91-98d5-a41659b630fa
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Sun, 26 Jul 2026 10:20:11 +0000
-Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
- (172.19.116.181) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.45; Sun, 26 Jul 2026
- 10:20:06 +0000
-From: Eliav Farber <farbere@amazon.com>
-To: <rafael@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<guohanjun@huawei.com>, <mchehab@kernel.org>, <xueshuai@linux.alibaba.com>,
-	<lenb@kernel.org>, <laurent.pinchart@ideasonboard.com>, <linusw@kernel.org>,
-	<brgl@kernel.org>, <orsonzhai@gmail.com>, <baolin.wang@linux.alibaba.com>,
-	<zhang.lyra@gmail.com>, <jic23@kernel.org>, <dlechner@baylibre.com>,
-	<nuno.sa@analog.com>, <andy@kernel.org>, <dmitry.torokhov@gmail.com>,
-	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, <W_Armin@gmx.de>,
-	<ukleinek@kernel.org>, <fabio.m.de.francesco@linux.intel.com>,
-	<kaihengf@nvidia.com>, <ankita@nvidia.com>, <leitao@debian.org>,
-	<farbere@amazon.com>, <pedro.pbg@usp.br>, <paulmck@kernel.org>,
-	<frederic@kernel.org>, <kees@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v4 13/13] reboot: use devm_blocking_notifier_chain_register()
-Date: Sun, 26 Jul 2026 10:17:39 +0000
-Message-ID: <20260726101739.33170-14-farbere@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260726101739.33170-1-farbere@amazon.com>
-References: <20260726101739.33170-1-farbere@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFScX87m"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EFB70C2BCB3
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jul 2026 13:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1785071690;
+	bh=FNxUWAsXKxStVD/cnCs1pCDJa4rlUnj+iMPiU2D1tDI=;
+	h=From:To:Subject:Date:From;
+	b=YFScX87mmO1cSe1bhv96EBtbJbyVJQMWHJyskii4O+60vnHY9xMgYoocpq6iv0HoQ
+	 1Xb3Ctj6orykCwyS5Vmp1PwU47oJXd4FY2uRcnziHVI670zvUkdVcmQoRorP/nYUt2
+	 fAayY9uiGxu9CQXk4KTFFdcCFxqqzkPJjfaltKKmnZAuxPDhk6vEYiQimx2tra7mRi
+	 9ejWRFGw0C/ElSrO+p32YBR/gBJ3BJZYG9vpf2zv1MjSvcq++dRt8nc6+i7FDagyC0
+	 vA5EaXhmMaQ4l1yGLxvcHE9KYXGJpXknAfAyOhVQyTB+FMzehIaTKI9YeqJH+Ze/Ep
+	 BrU6fJBw61/+Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id C351EC4160E; Sun, 26 Jul 2026 13:14:49 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221796] New: intel_pmc_core: Arrow Lake-HX (Core Ultra 9 275HX)
+ uses ARL-H DMU GUID and fails to expose Die C6 telemetry / existing
+Date: Sun, 26 Jul 2026 13:14:49 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: marek.suranic@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221796-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA003.ant.amazon.com (10.13.139.43) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Replace the manual devres_alloc() + register_reboot_notifier() pattern
-with a single call to devm_blocking_notifier_chain_register(), removing
-the devm_unregister_reboot_notifier() callback.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221796
 
-Signed-off-by: Eliav Farber <farbere@amazon.com>
----
-Changes in v3:
-- Fix commit message to accurately describe the old code as using
-  devres_alloc() + register_reboot_notifier() (Sashiko)
+            Bug ID: 221796
+           Summary: intel_pmc_core: Arrow Lake-HX (Core Ultra 9 275HX)
+                    uses ARL-H DMU GUID and fails to expose Die C6
+                    telemetry / existing
+           Product: Drivers
+           Version: 2.5
+          Hardware: Intel
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: marek.suranic@gmail.com
+        Regression: No
 
- kernel/reboot.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+HARDWARE / SYSTEM
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index 695c33e75efd..557609419989 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -136,30 +136,10 @@ int unregister_reboot_notifier(struct notifier_block *nb)
- }
- EXPORT_SYMBOL(unregister_reboot_notifier);
- 
--static void devm_unregister_reboot_notifier(struct device *dev, void *res)
--{
--	WARN_ON(unregister_reboot_notifier(*(struct notifier_block **)res));
--}
--
- int devm_register_reboot_notifier(struct device *dev, struct notifier_block *nb)
- {
--	struct notifier_block **rcnb;
--	int ret;
--
--	rcnb = devres_alloc(devm_unregister_reboot_notifier,
--			    sizeof(*rcnb), GFP_KERNEL);
--	if (!rcnb)
--		return -ENOMEM;
--
--	ret = register_reboot_notifier(nb);
--	if (!ret) {
--		*rcnb = nb;
--		devres_add(dev, rcnb);
--	} else {
--		devres_free(rcnb);
--	}
--
--	return ret;
-+	return devm_blocking_notifier_chain_register(dev,
-+						     &reboot_notifier_list, nb);
- }
- EXPORT_SYMBOL(devm_register_reboot_notifier);
- 
--- 
-2.47.3
+Laptop: MSI Vector 16 HX AI A2XW
+CPU: Intel Core Ultra 9 275HX
+CPU family: 6
+CPU model: 198 (0xc6)
+CPU stepping: 2
+CPU topology: 24 cores, 1 thread per core
+Operating system: Fedora Linux 44
+Kernel: 7.1.4-204.fc44.x86_64
+Architecture: x86_64
+Preemption model: PREEMPT_DYNAMIC
 
+
+PROBLEM
+=3D=3D=3D=3D=3D=3D=3D
+
+With the unmodified intel_pmc_core module, the kernel reports:
+
+    intel_pmc_core INT33A1:00: pmc_core: couldn't get DMU telem endpoint -19
+    intel_pmc_core INT33A1:00: initialized
+
+The driver otherwise initializes, but the following debugfs entry is
+missing:
+
+    /sys/kernel/debug/pmc_core/die_c6_us_show
+
+
+RELEVANT INTEL PMT ENDPOINT
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+
+The platform exposes the following telemetry endpoint:
+
+    /sys/class/intel_pmt/telem4/guid:   0x1a06a101
+    /sys/class/intel_pmt/telem4/size:   136
+    /sys/class/intel_pmt/telem4/offset: 0
+
+The available GUID 0x1a06a101 corresponds to
+ARL_H_PMT_DMU_GUID.
+
+The Core Ultra 9 275HX has CPU model 0xc6 and is selected through the
+generic Arrow Lake configuration. The generic ARL_PMT_DMU_GUIDS list
+only checks ARL_PMT_DMU_GUID (0x1a06a102), so the available
+0x1a06a101 endpoint is not found.
+
+
+TESTED PATCH
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+    -static u32 ARL_PMT_DMU_GUIDS[] =3D
+    -    {ARL_PMT_DMU_GUID, 0x0};
+    +static u32 ARL_PMT_DMU_GUIDS[] =3D
+    +    {ARL_PMT_DMU_GUID, ARL_H_PMT_DMU_GUID, 0x0};
+
+
+RESULT
+=3D=3D=3D=3D=3D=3D
+
+After rebuilding and signing intel_pmc_core against kernel
+7.1.4-204.fc44.x86_64:
+
+- The "couldn't get DMU telem endpoint -19" message disappeared.
+- intel_pmc_core initialized successfully.
+- /sys/kernel/debug/pmc_core/die_c6_us_show became available.
+- The Die C6 telemetry value became readable.
+
+Command and output:
+
+    $ sudo cat /sys/kernel/debug/pmc_core/die_c6_us_show
+    31917705
+
+Relevant kernel log after applying the patch:
+
+    intel_pmc_core: loading out-of-tree module taints kernel.
+    intel_pmc_core INT33A1:00: initialized
+
+The out-of-tree taint is expected because the patched module was built
+and installed separately for testing.
+
+
+CONCLUSION
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+This suggests that Arrow Lake-HX model 0xc6 systems may need
+ARL_H_PMT_DMU_GUID as a fallback in ARL_PMT_DMU_GUIDS.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
