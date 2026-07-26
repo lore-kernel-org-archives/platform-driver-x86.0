@@ -1,75 +1,70 @@
-Received: from pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.26.1.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FC4366DA3;
-	Sun, 26 Jul 2026 06:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.26.1.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7502620E023
+	for <platform-driver-x86@vger.kernel.org>; Sun, 26 Jul 2026 06:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785047880; cv=none; b=CTtWbaXxPcqmojOAjGpiqMYx12INjy0T/gcdBqVDXHfQUCsmQNF6Wg02MHt1FDkxyvc9gRdhbFxGaZpfwC83V/ksMlyBLZvfY2gZGTUXt1VPu4w0+QuU5cBcf/f9B2WIUkN7vmCyG1zqxx6kJv27RDpo+BwtxflUVKI+Pw/IfJ4=
+	t=1785047882; cv=none; b=Yy860wP+jodqy755lTeQheeUOCK4TmVwlWxVTpXDe9ecBbVh7yt2Iwr9BZXO+Q6LuZNdDCp2WOI3Vrw8AKD08N1B5/660UwQ8/TkURbYf258iI94L1T3jsc6/1eJRQlSe1drRBew6qWACy9vREQtaBcwidpBpIdxdZfc2E2Megc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785047880; c=relaxed/simple;
-	bh=+M9sI2R9j80yQvV/Q3lXYCnN2bX64b4KBLooYAZ8GDU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qRxU6srIXf4F3n/NGGPequfEUCQCIS9XUyApzE+i1gE81OWjscVaOtNGleGUo1JvPMAQM/8Ujpr6Ne5zq4B8FucPp6mmBoircdkBbLnJzBLICP55aiGZ5N7IvLXNSEkgkdh6nQkkCrFWikC0Ns+uBKQTU1snqtsBypKf5KOOnvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=NN16JH64; arc=none smtp.client-ip=52.26.1.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1785047882; c=relaxed/simple;
+	bh=I1v8vjKqu1avUy9O2NCAZNSasSsEJ1XnBVAQUWqInYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GZxFzVqkgXbkVAcdVJPdLiIbenSW9gT7macoMCtqNYfQ+R1rZ04vZdP6BXukS4wffK1L/yClFb0kb2NKn0wiV/qcGalUBO69NLbqqKXhfNUMM3ri4xdL1EVPH0PF3TZvQ74t+XIG1vcHWm68FrMG3ip3HHRHg3xfP1555GP6KpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSzIAmVO; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="NN16JH64"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSzIAmVO"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2caed617615so17739545ad.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 25 Jul 2026 23:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1785047878; x=1816583878;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=N4HMI+Ypt3dUaeVDcWgB1HqH6rx98OF+47H18f4iarc=;
-  b=NN16JH64feCH+MkpQaWtFRZNhurIaBob+vOG1NRdqg+MLlkeUL4jQOmi
-   jHUmTRKuyaPcwdGs+0+u19Sl7HuBMvjW4o3FdxkiRbmn/0sGYQj0qDMsS
-   CVSTccKYwB1eOjZe84VEIKVdRZ23+u86GsQzKyEFHJoDBEXEgmNEGziva
-   Xde+S0qT38mceJ89POWon3uQICOlU6nnhtNO9BHAgEQkaxkYpPXwcsos9
-   XmVmir09yWyFTneEAgFchNOxYkXwsSvSCjdYsq5v7wW4KP88NfVH0fw3h
-   KmAailPOTLQZJXvFbV3BsKYoBBUxuVvYfR30hU7qpZimZ5lCWBs0qhaqm
-   Q==;
-X-CSE-ConnectionGUID: wXqxh7xzRFqmGjhoBU8i4Q==
-X-CSE-MsgGUID: o7Y2JX9GQ8S2ildRfbyv8w==
-X-IronPort-AV: E=Sophos;i="6.25,186,1779148800"; 
-   d="scan'208";a="24386184"
-Received: from ip-10-5-9-48.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.9.48])
-  by internal-pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2026 06:37:54 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.105:3434]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.10.59:2525] with esmtp (Farcaster)
- id 950436c8-4bf1-441c-a2d2-7aba4d901b44; Sun, 26 Jul 2026 06:37:54 +0000 (UTC)
-X-Farcaster-Flow-ID: 950436c8-4bf1-441c-a2d2-7aba4d901b44
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.43;
- Sun, 26 Jul 2026 06:37:53 +0000
-Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
- (172.19.116.181) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.45; Sun, 26 Jul 2026
- 06:37:48 +0000
-From: Eliav Farber <farbere@amazon.com>
-To: <rafael@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<guohanjun@huawei.com>, <mchehab@kernel.org>, <xueshuai@linux.alibaba.com>,
-	<lenb@kernel.org>, <laurent.pinchart@ideasonboard.com>, <linusw@kernel.org>,
-	<brgl@kernel.org>, <orsonzhai@gmail.com>, <baolin.wang@linux.alibaba.com>,
-	<zhang.lyra@gmail.com>, <jic23@kernel.org>, <dlechner@baylibre.com>,
-	<nuno.sa@analog.com>, <andy@kernel.org>, <dmitry.torokhov@gmail.com>,
-	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>, <W_Armin@gmx.de>,
-	<ukleinek@kernel.org>, <fabio.m.de.francesco@linux.intel.com>,
-	<kaihengf@nvidia.com>, <ankita@nvidia.com>, <leitao@debian.org>,
-	<farbere@amazon.com>, <pedro.pbg@usp.br>, <paulmck@kernel.org>,
-	<frederic@kernel.org>, <kees@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-	<linux-input@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>
-CC: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v3 03/12] iio: light: iqs621-als: use devm_blocking_notifier_chain_register()
-Date: Sun, 26 Jul 2026 06:37:18 +0000
-Message-ID: <20260726063727.19111-4-farbere@amazon.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260726063727.19111-1-farbere@amazon.com>
-References: <20260726063727.19111-1-farbere@amazon.com>
+        d=gmail.com; s=20251104; t=1785047879; x=1785652679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6mC6vOEunikcXdi1fUA13go/afawaKQ7pjItviCghtw=;
+        b=OSzIAmVO42TMv6feZzRTeXehi0ijnKoXimVg70UPEo8+G9vHDTJT1OcWMlKtbCD8Wu
+         HcCSi1pc0BhzyufvzTA3DQbKcwHEGzL4/q7cEZ8nfcBjHbt1Q7ZAQpSvkUL9pjBVoaxm
+         TkvNpxQnjbbHgMPxSE/qbm0Y7zhWr96Y/hYa5qN2/XKSH1dsUqtgxU1TS5mNIFsPKwvG
+         mOEZlIj+duZFlI+WL1iUjQniX4DYkyKogCtcY/PWPAplSJ0/wdW/mUrHAFYnWcw+EtGE
+         EKu82bbtHTIpuhyGYi2/bpzxaKVptCSTTIpkTBB7at/TTmu/TSx1sULZTd+rXdYsTKOf
+         qpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785047879; x=1785652679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6mC6vOEunikcXdi1fUA13go/afawaKQ7pjItviCghtw=;
+        b=TnFNxzTP+doPRpcOlyTyDW+fLN4bdfX2UDop5kwG+BW6vqzyzmwvz9SAEReeCORFDk
+         M5aCXRing4l0SUnIEDBM7Avl3zv+lDxUsGymrACD+Mfw6JK0wfEq0iX9yL2bAyTwzhKE
+         AqWeRynB8HumUoJBBH21Sz6JZn2hKt2Ankm/5X2lwIsI7gXhiy8RNSjb9CP+9ywazbMi
+         mm1K1p4RLj21OCYJyrueDk6DexLKJysv6hmBb7K9Q3rhUEh+xPiwDxQZ44TyUHT+58CW
+         ZZensLEINaif9MiEzoWWx71r+HO/GjMVp7EKhhdzK1pzXIwtMCS2/bn69XQk3EKXGiAm
+         1MnA==
+X-Gm-Message-State: AOJu0YzqSxDLDs5VvzjefpAUrEN+g29NwU4LpS4ppwgMPFNvLy+MI7WJ
+	8YRKdruFCiW128JK6EUXdq2u+EMVdmrES2Ea96OIhQ+L16i/5qvEchlN
+X-Gm-Gg: AR+sD11TpzKTd1SP0Y67d0DTHyH6icQMtjqwfS75o1OZ7UqaC74jZhRy4QOJJ6AzKJq
+	YnvpBMNjoYTle6gj29uGeDlhGc82y2OLY+BqgzxYb86Ho9VFSvXnBETkcMc7wBjyCXQA4kIlXDO
+	jzKazi7oqPT/ij5REGi+Uerb2jLv1vpzBVz81xZamoeeDAzIhsDbkkUwifnV/AX9rmNx7qz/Mx2
+	EruDtg2QGL+Ncqeoj/GoJq1dZ9y/9ZLEVDW8TOBvH6h0NL9+hRUQ1H/OA2NZsVvUtEdtGSZ3Gwy
+	BNS4aGealzbG6dF3OnyPtvPKRwoHqC+fEItOXCMXMk8JjRggtO0Ow7dqM/P4DIeOYFMHiFaQbrR
+	5rhQ2VwRp49JZDScxKdnbkuvqPU/O+rC1ulEiN5MevIfqKWECFP58a/EAqRcV2J2ifA9bxanCxm
+	nPHWDyCuOlEr99UmVcv8wHLGfiS4+2xAqCcYj6DV8qGA==
+X-Received: by 2002:a17:903:2f90:b0:2c9:d539:61e7 with SMTP id d9443c01a7336-2cfde7be3f8mr37462505ad.19.1785047879354;
+        Sat, 25 Jul 2026 23:37:59 -0700 (PDT)
+Received: from acer-nitro-anv15-41.entro.com ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2cfde5e86ccsm16948035ad.33.2026.07.25.23.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2026 23:37:58 -0700 (PDT)
+From: "shaikh.kamal" <shaikhkamal2012@gmail.com>
+To: "David E . Box" <david.e.box@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation/ABI: intel_pmt: fix 'threashold' spelling
+Date: Sun, 26 Jul 2026 12:07:34 +0530
+Message-ID: <20260726063734.19944-1-shaikhkamal2012@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,68 +72,28 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D042UWA003.ant.amazon.com (10.13.139.44) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Replace the blocking_notifier_chain_register() +
-devm_add_action_or_reset() pattern with a single call to
-devm_blocking_notifier_chain_register(), removing the
-iqs621_als_notifier_unregister() callback.
+Fix spelling error reported by codespell: threashold -> threshold.
+No functional change.
 
-Signed-off-by: Eliav Farber <farbere@amazon.com>
-Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Signed-off-by: shaikh.kamal <shaikhkamal2012@gmail.com>
 ---
- drivers/iio/light/iqs621-als.c | 24 +++---------------------
- 1 file changed, 3 insertions(+), 21 deletions(-)
+ Documentation/ABI/testing/sysfs-class-intel_pmt-features | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/light/iqs621-als.c b/drivers/iio/light/iqs621-als.c
-index cd5843e3e2c3..f9d215ef1970 100644
---- a/drivers/iio/light/iqs621-als.c
-+++ b/drivers/iio/light/iqs621-als.c
-@@ -179,19 +179,6 @@ static int iqs621_als_notifier(struct notifier_block *notifier,
- 	return NOTIFY_OK;
- }
- 
--static void iqs621_als_notifier_unregister(void *context)
--{
--	struct iqs621_als_private *iqs621_als = context;
--	struct iio_dev *indio_dev = iqs621_als->indio_dev;
--	int ret;
--
--	ret = blocking_notifier_chain_unregister(&iqs621_als->iqs62x->nh,
--						 &iqs621_als->notifier);
--	if (ret)
--		dev_err(indio_dev->dev.parent,
--			"Failed to unregister notifier: %d\n", ret);
--}
--
- static int iqs621_als_read_raw(struct iio_dev *indio_dev,
- 			       struct iio_chan_spec const *chan,
- 			       int *val, int *val2, long mask)
-@@ -563,19 +550,14 @@ static int iqs621_als_probe(struct platform_device *pdev)
- 	mutex_init(&iqs621_als->lock);
- 
- 	iqs621_als->notifier.notifier_call = iqs621_als_notifier;
--	ret = blocking_notifier_chain_register(&iqs621_als->iqs62x->nh,
--					       &iqs621_als->notifier);
-+	ret = devm_blocking_notifier_chain_register(&pdev->dev,
-+						    &iqs621_als->iqs62x->nh,
-+						    &iqs621_als->notifier);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to register notifier: %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = devm_add_action_or_reset(&pdev->dev,
--				       iqs621_als_notifier_unregister,
--				       iqs621_als);
--	if (ret)
--		return ret;
--
- 	return devm_iio_device_register(&pdev->dev, indio_dev);
- }
- 
+diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt-features b/Documentation/ABI/testing/sysfs-class-intel_pmt-features
+index cddb30e5bdf6..476ba070fb1e 100644
+--- a/Documentation/ABI/testing/sysfs-class-intel_pmt-features
++++ b/Documentation/ABI/testing/sysfs-class-intel_pmt-features
+@@ -121,7 +121,7 @@ Example 'caps' content for the 'tracing' feature:
+ 	watcher                                  Available: Yes
+ 	crashlog                                 Available: No
+ 	streaming                                Available: No
+-	threashold                               Available: No
++	threshold                               Available: No
+ 	window                                   Available: No
+ 	config                                   Available: Yes
+ 	tracing                                  Available: No
 -- 
-2.47.3
+2.43.0
 
