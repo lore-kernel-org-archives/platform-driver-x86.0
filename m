@@ -1,166 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D653ED128;
-	Mon, 27 Jul 2026 11:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1F03F88A8;
+	Mon, 27 Jul 2026 11:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785150586; cv=none; b=E291bpc/5ZWlZMdcC6azvVJ/FHLMyEWDSX8vWyGigslPWn16GvUkoqXoN5ZnqY4xaXYBu17BmBgb2/ng9sh4Vil13IllE0QHN3TRzH/5+ZYbaWUJKe40LSXvHNuftX1ow3/CJUqa3sBKjmd861q1yC6Myal0cTTbUfVgZtJa7dg=
+	t=1785150845; cv=none; b=OlXhtsxcGshzMPBD4JbbaY/mart9BLIZ6XW/DoQQM3n8Ns+81sT/DuluYmHmplflxafJmTm/A9DAkERMF1WycUZlzGL6NVJzNgSp6q8BMN4MkZ+hy1JVsR3gnr2s5GefU2Tg4gM9JLlATXsOvibjYGbynbcH2ZE1D5wUubgO1ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785150586; c=relaxed/simple;
-	bh=kCaruWpI1pazM7Yg1cdPpCF1PesbaDM35iGMeirp03M=;
+	s=arc-20240116; t=1785150845; c=relaxed/simple;
+	bh=V90ijxQ4BmhlF25qqo7qGPI0O23+ArhOp16dKrzKzQA=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EGBSR/IdhX3mlj61YZRgz5OqjszSg7hextokvlhJXEf+S8iPRZHlXC7ag7jzC7SxbLJpV3vPylBk+ywGaAN8uWG45A8K/tqhExcU+v0++GbfyVfekK4VOM5SzrFkqIzzH+CD2A1FwoywJ49KVJvuAhKVyF+9c6FWj2dSXCoaqTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PAAvMY0D; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version:Content-Type; b=TpYkjT2N0rj7gqFcbhAMSQNj4II9ZNtaFiV7UtX2xgFryUUA1Evnith5fS1c2tJ2ooebqItsi2UHWKSNt/ImYKbTBs5f+irkslgTCJ36e6cenTa9shE/LRLRegHEy7S3jSLAxXG46SdAbAqpXKargByEpUCqCp2+zYhjH4g2fms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+fAR1+n; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PAAvMY0D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+fAR1+n"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785150585; x=1816686585;
+  t=1785150844; x=1816686844;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=kCaruWpI1pazM7Yg1cdPpCF1PesbaDM35iGMeirp03M=;
-  b=PAAvMY0DKK7eZR6pLhuZpSAv1ThrOqCF+DfMMkvW+FB0heHlruxWFFTd
-   3McgATw+q5FUlavPzC/eRbQOUG2C7QGp9zdNs1jGBL44G/ZH+3qvj7b5r
-   vRHwyKfk8uhkyMjLn8+lYebcjStmAvEVGkVlv2/eFBCV/t6sdefOxK+NY
-   JpOWuykKP+lNz4pQ5jQ/MVgYzcYYv5fWILUQdWw1aECndw0ctds6RAFtE
-   ky4KjVR+vXJUMxpWI31k5AmQqIvS5Om2/+6qWFPkCsOXLBeqpM0472Xw7
-   v3/RD53WCGEgaDhwTIM96KN40ke7Ka1HHOMMMkl8z8cL24ahGvhYu0LKM
-   g==;
-X-CSE-ConnectionGUID: TAMZIGm0TbC8Vvr0zckJhg==
-X-CSE-MsgGUID: YjCtrnR9QmmPQYEMaNHeFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11857"; a="85478668"
+  bh=V90ijxQ4BmhlF25qqo7qGPI0O23+ArhOp16dKrzKzQA=;
+  b=j+fAR1+n/XOWA6FcSJ5+Cy1ayJuJQEsQJJEDVzs3vUkolkQduU0vCvHt
+   VO+TmNPrUi3ghlOd+MhRBohUclHf37kTivKGO99KJk/AoLW9uHBaXLJlk
+   6BcbzLsj0ciFi3BIIZgdrpicYemsp5VRU8CtmRTB5FcMpTXL28GfpBWX0
+   FGGa8Vj6oYAW7XuliMt5HRI5GDN6lWeyzgAPRI/IIwenIIuRfBzIRft9g
+   HiNSZn8CnnfyCKHtuHs7jUbHQ78vno7/77E+UL4DBgUbOFqLxQjSPHTny
+   fva2EYdJZss0mvZheSrctAILzKs0A5FRkfIkKV30hwDisBWiWPepCq6Gp
+   A==;
+X-CSE-ConnectionGUID: PHDSA5jrQzOeFD+D4Thwqg==
+X-CSE-MsgGUID: zKvKLSrCTeWFQbIxTHa2PA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11857"; a="85759196"
 X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="85478668"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:09:44 -0700
-X-CSE-ConnectionGUID: AiDwzKjARSqaug0cAKr9EQ==
-X-CSE-MsgGUID: 5Wk+8iKbRaGWO0eeVZKODA==
+   d="scan'208";a="85759196"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:14:04 -0700
+X-CSE-ConnectionGUID: wWVG8FrvRT6Nuq1WyWFcWg==
+X-CSE-MsgGUID: Dn2iGYoSSjezDrcEON1qcw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="297611875"
+   d="scan'208";a="262879071"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.226])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:09:39 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:14:02 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 27 Jul 2026 14:09:34 +0300 (EEST)
-To: =?ISO-8859-15?Q?Marcus_Gren=E4ngen?= <marcus@grenangen.se>
-cc: platform-driver-x86@vger.kernel.org, denis.benato@linux.dev, 
-    linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    luke@ljones.dev, Hans de Goede <hansg@kernel.org>, jikos@kernel.org, 
-    bentiss@kernel.org, corentin.chary@gmail.com
-Subject: Re: [PATCH v3 1/3] HID: asus: export asus_hid_fnlock_set() for direct
- fn-lock control
-In-Reply-To: <20260507092911.8855-2-marcus@grenangen.se>
-Message-ID: <ad587675-cef3-f5b5-eb39-0f76dea8d617@linux.intel.com>
-References: <9b568ce0-93f7-4a7f-98e4-625e910f8a1d@linux.dev> <20260507092911.8855-1-marcus@grenangen.se> <20260507092911.8855-2-marcus@grenangen.se>
+Date: Mon, 27 Jul 2026 14:13:58 +0300 (EEST)
+To: Muralidhara M K <muralidhara.mk@amd.com>
+cc: platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/8] platform/x86/amd/hsmp: Family 1Ah Model 50h-5Fh
+ HSMP and metrics
+In-Reply-To: <20260612042610.1629037-1-muralidhara.mk@amd.com>
+Message-ID: <4306b8b9-e560-90fc-54e2-d694fdefa54c@linux.intel.com>
+References: <20260612042610.1629037-1-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-771095002-1785150574=:1169"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, 12 Jun 2026, Muralidhara M K wrote:
 
---8323328-771095002-1785150574=:1169
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Hi,
+> 
+> This series extends the AMD HSMP platform driver and UAPI for Family 1Ah,
+> Model 50h-5Fh: new HSMP message IDs (including PQoS-related IDs in the
+> first patch), Zen 6 metric table layout in UAPI, relaxed response_sz
+> handling against the descriptor table, firmware-reported metric table
+> sizing for ioremap and reads, HSMP_IOCTL_GET_TELEMETRY_DATA on the
+> existing character device for a single-shot full-table copy (avoiding
+> sysfs PAGE_SIZE limits and torn reads), ACPI enablement for protocol
+> version 7 tables, Spectre-v1 hardening on user-controlled indices, and
+> coordinated metric-table access plus ACPI HSMP probe/remove lifetime
+> fixes on the shared global socket array.  Documentation is updated in
+> Documentation/arch/x86/amd_hsmp.rst.
+> 
+> v5 submission (lore.kernel.org)
+> 
+>   https://lore.kernel.org/platform-driver-x86/20260611052919.1095549-1-muralidhara.mk@amd.com/T/#t
+> 
+> Changes since v5
+> 
+> * Patch 6/8: Tighten the Spectre-v1 changelog and subject around
+>   clamping ioctl and hsmp_send_message() indices; wrap the commit
+>   description so scripts/checkpatch.pl stays quiet on line length.
+> 
+> * Patch 8/8: Broaden the final fix beyond sysfs metric locking alone.
+>   Serialize metric table refresh and memcpy_fromio(), refcount ACPI
+>   HSMP sockets with a probe mutex across init_acpi(), misc_register(),
+>   and refcount_inc(), replace devm metric DRAM maps with explicit
+>   ioremap()/mutex_init plus hsmp_metric_tbl_unmap_all() on last ACPI
+>   remove, add hsmp_acpi_free_sock_alloc_if_idle() for early probe
+>   failures, and order legacy platform remove so misc is deregistered
+>   before metric unmap (matching ACPI teardown).
+> 
+> The series is bisect-safe: each commit was built with
+>   make M=drivers/platform/x86/amd/hsmp
+> after the previous commits, and scripts/checkpatch.pl -g <rev> was run on
+> each change (0 errors / 0 warnings).
+> 
+> Thanks,
+> Muralidhara M K
+> 
+> Muralidhara M K (8):
+>   platform/x86/amd/hsmp: Add HSMP messages for Family 1Ah, Model 50h-5Fh
+>   platform/x86/amd/hsmp: Add UAPI structures for Family 1Ah Model
+>     50h-5Fh metrics table
+>   platform/x86/amd/hsmp: Unify response_sz validation to an upper-bound
+>     check
+>   platform/x86/amd/hsmp: Source metric-table size from firmware
+>   platform/x86/amd/hsmp: Add IOCTL_GET_TELEMETRY_DATA for metric table
+>     reads
+>   platform/x86/amd/hsmp: Clamp ioctl/send_message indices (Spectre v1)
+>   platform/x86/amd/hsmp: Enable HSMP_PROTO_VER7 metric tables on the
+>     ACPI driver via the IOCTL
+>   platform/x86/amd/hsmp: Serialize metric table access and ACPI HSMP
+>     teardown
 
-On Thu, 7 May 2026, Marcus Gren=C3=A4ngen wrote:
+Hi,
 
-> Some ASUS platforms cannot control fn-lock via WMI DEVS and must send a
-> HID feature report directly to the N-Key keyboard device instead.
->=20
-> Add a module-level fnlock_hdev pointer (protected by a mutex) that is set
-> at probe time for devices with QUIRK_HID_FN_LOCK and cleared at remove.
-> Export asus_hid_fnlock_set(bool) so that asus-armoury can call into
-> hid-asus without a circular dependency.
->=20
-> Signed-off-by: Marcus Gren=C3=A4ngen <marcus@grenangen.se>
-> ---
->  drivers/hid/hid-asus.c                     | 44 +++++++++++++++++++++-
->  include/linux/platform_data/x86/asus-wmi.h | 15 ++++++++
->  2 files changed, 58 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> index d34d74df3dc0..402ba9d5e982 100644
-> --- a/drivers/hid/hid-asus.c
-> +++ b/drivers/hid/hid-asus.c
-> @@ -584,6 +584,39 @@ static void asus_sync_fn_lock(struct work_struct *wo=
-rk)
->  =09asus_kbd_set_fn_lock(drvdata->hdev, drvdata->fn_lock);
->  }
-> =20
-> +/*
-> + * Module-level reference to the HID device that handles fn-lock via fea=
-ture
-> + * report. Set at probe and cleared at remove for QUIRK_HID_FN_LOCK devi=
-ces.
-> + * Protected by fnlock_hdev_lock.
-> + */
-> +static DEFINE_MUTEX(fnlock_hdev_lock);
-> +static struct hid_device *fnlock_hdev;
-> +
-> +/**
-> + * asus_hid_fnlock_set() - Set fn-lock state directly via HID feature re=
-port.
-> + * @enabled: true to lock fn (F1-F12 primary), false to unlock.
-> + *
-> + * Called by asus-armoury on platforms where the WMI DEVS path for fn-lo=
-ck is
-> + * non-functional (e.g. ASUS ProArt P16, N-Key keyboard product ID 0x19B=
-6).
-> + *
-> + * Returns: 0 on success, -ENODEV if no fn-lock capable HID device is pr=
-esent.
-> + */
-> +int asus_hid_fnlock_set(bool enabled)
-> +{
-> +=09int ret;
-> +
-> +=09guard(mutex)(&fnlock_hdev_lock);
-> +=09if (!fnlock_hdev)
-> +=09=09return -ENODEV;
-> +
-> +=09ret =3D asus_kbd_set_fn_lock(fnlock_hdev, enabled);
-> +=09if (ret < 0)
-> +=09=09return ret;
-> +
-> +=09return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(asus_hid_fnlock_set);
-> +
->  static void asus_schedule_work(struct asus_kbd_leds *led)
->  {
->  =09unsigned long flags;
-> @@ -969,6 +1002,8 @@ static int asus_input_configured(struct hid_device *=
-hdev, struct hid_input *hi)
->  =09=09drvdata->fn_lock =3D true;
->  =09=09INIT_WORK(&drvdata->fn_lock_sync_work, asus_sync_fn_lock);
->  =09=09asus_kbd_set_fn_lock(hdev, true);
-> +=09=09guard(mutex)(&fnlock_hdev_lock);
-> +=09=09fnlock_hdev =3D hdev;
->  =09}
-> =20
->  =09if (drvdata->tp) {
-> @@ -1008,6 +1043,8 @@ static int asus_input_configured(struct hid_device =
-*hdev, struct hid_input *hi)
->  =09=09drvdata->fn_lock =3D true;
->  =09=09INIT_WORK(&drvdata->fn_lock_sync_work, asus_sync_fn_lock);
->  =09=09asus_kbd_set_fn_lock(hdev, true);
-> +=09=09guard(mutex)(&fnlock_hdev_lock);
-> +=09=09fnlock_hdev =3D hdev;
+Could you please do a fresh iteration of this. It no longer seems to apply 
+cleanly and maybe sashiko now figures we should have the locking in place
+as well so we get a fresh review which hopefully does take the latest 
+improvements into account.
 
-What's going on with this patch? Why this context appears more than once=20
-on different lines???
-
-I even wasted my time on checking what hid tree has queued, and came up=20
-zero explanation (as expected).
-
---
+-- 
  i.
---8323328-771095002-1785150574=:1169--
+
