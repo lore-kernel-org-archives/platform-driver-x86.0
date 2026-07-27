@@ -1,161 +1,87 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308FC409623
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 12:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785157187; cv=pass; b=Oafah4lg2NxTgeAB8NdLWV7nhGm5j8BB5lE1T/45V5R5XGSSM7d63928yCcJ0brNxp561gYFXZCrpEtfThZtQ49b2Vp489M5/3ePG7tzklMUl1pGqCQxvruqWDwpa2Gm6ZlJQq7yccO0feVNemAg3ZZOJ4snFcA3NVzh5vD0d64=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785157187; c=relaxed/simple;
-	bh=luUc9ZQFmCjynsr/029wplBmFfuONlqLQlNMir6ffmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qJGhdhjnzBT4jotwlYa6iRYeP0FXFmD+YbGTBdkEzMszfzFWDpgOzp9GkROctnVWbhNGA7PIuRKcTIn8V4HRMm0MjsMMRRcq4yGb5B23mzSRsiF1tVimKc8Sn1HHnSxYR5qjkpQNcPERFiGgfM6rg0b0ulIpMkca64729tuuj+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jq+uwgTQ; arc=pass smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E9C3FE36D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785157537; cv=none; b=j2RH95UKe52RtIcy9VxGfOUvKOMnXeCgJYVXPpIiPrH240aoqmig/2KC4iZaBNG3Ud+TmlTMwNPtqCZUNMjVupmCYdE0M4+4T6EKrdXTd7vRgcT71TI0vDT4a4LeNB7SpU1vKQvDga2hTh4vbYo/d5eKj+IsQIXvlECRS6ZQ6sE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785157537; c=relaxed/simple;
+	bh=F1IxYhAPqVZmHS6mi7kAQp4Eo0e2Ol8GgBG3I3PWaU4=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BwiPfagDXRZUGYAkmHYkahfZyARH9RtUs8Q0ZR2J2B1Y3gX5i2fUYp5rGOn5zExWeOWeBn6JtJk0DM9nGmfvfXXhTLg87jycr2g6Q+jwCdbKgCFTmjLszHEIo4m0nAYtlVsSNT0j0x52ug6LDCDbOceNMf+6vmIgEAkIKN/l7IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiauvbQK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq+uwgTQ"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-81e9d8f3289so31449047b3.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 05:59:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785157182; cv=none;
-        d=google.com; s=arc-20260327;
-        b=T5Nl2Gw3ckNQkaOKq4y2G0IUlZ9aul0qqsOGq2Yq67mj8joT0TWxqooHfcmTAIKcd1
-         n9wDrRUvSjboX19RlY0eQB6S/S1hVmFvrq2ojJ5hOAQeDqkUhhr7cflglWgLX2G47ICI
-         0ZRaQFN6yfEjI7IIW+N5yvdp7zMHLkZzAHb01likquOrmESEB8932udT8ii7YXn+TJA0
-         52KiqanLAQTrK9hW4zxq3cw9spfvdOgs4Svs3ksvvYLcrTB/Zh/Vj45WnK11NKZDkUrB
-         nhEOJGMy4yLrvaqxU6br+eRFnYQuAoBMdAweVjyF8gzrrcnfuoDh16VNCNfrpNonMf7B
-         gQJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ix29oOBbLOf7nlyiJN1FbRfyq7KaaHwmDtcPHELsDuI=;
-        fh=lm3m3uca5dmqrm/hu1TzuWoVpiILg2BldEaVjxgBI6A=;
-        b=E5UToWN9kd/ym+enIg8q7q6LlvCeWh8E8RG2/PmR39W8pYpDVl7IIrOCXUwfH411oV
-         6gRNNaiZju7AtIeH2hWcOkajfNlCNpzg+j/Rc7NhQHz52aqMlfsz2mbbIvXSNSFi18vc
-         4h/neEwF3EUL/sDVuxJ9JFCja2luTnBe+CZNEVODiI13VQyIWLk+OuVeAy2b/pYZC1EO
-         R8VSsmAPj5bkocXUyT+GVppDofn7tQqJ+4ltLIN/eQ7E5VIyl2QlnrW78Z3LzY8GK4gk
-         pTzGXHRe2wxXQ8rLKjEp7RyCd5QnSw4/EfmYJKg4hhOMwZ2BuGnM7cHw9+gjQMK1+kMY
-         vkHQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785157182; x=1785761982; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ix29oOBbLOf7nlyiJN1FbRfyq7KaaHwmDtcPHELsDuI=;
-        b=Jq+uwgTQ0O1mmHxnBGxWcL+kdE/a9RtHdIP1tjT7Ei9n+xl4gDgXDSpklqMXUWUDZJ
-         ac+GrumYYzSuNYK88A3/T4fkN6MG4wQqkhyc+crip1OV9Ijk+VP1IqgTH+CDfXD7MNfK
-         izYR0QrNtnZH5422kCYtXpZUgaLbeTRubkLzot33FEHtm/0zOCL+zY/SYXVb/YZMHfi9
-         1UT3syyMpKMiD5iEheioIjGtc40Mtnrnje0QPSkcU+JF6Fi7cbHX042hz4Kxs0mUOVq5
-         ese1af/Z/IOALMSRWCj+UGhUzDc90HKs6jlW61M0+1P4+BJjqXHXw0K6Q6tEdTQomu6E
-         hxMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785157182; x=1785761982;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ix29oOBbLOf7nlyiJN1FbRfyq7KaaHwmDtcPHELsDuI=;
-        b=iczV7PEfEPUo9EvnMIztrpAut9EM80/RlIP9N9gKjOYBPZgmNKyzbvp5yf0HNuZaN5
-         TobgGygsOax3JLkS5wjtKtvQ7wtjBRfe/DL8IZ5HPMuin5OPZwDqzZ/sHI9xaULwsup6
-         2EAhBfGX9KJ95yk1eET1YgWF7aKrRMljkeo9KC2zxUhhGAbUpZ0IZ5w8UXV9Woc2QS9B
-         v29l76XqbXJEwXvwKG/vKI8gh05TAZs2ubLY+4F8HE9z6JDvpwhPbWiSxKUyf3O+DyoP
-         1ryHC80yIJ6XN//3dkz6Eris+42cy0ze54BQcJNPRwCZF6NY9tVHdc5v6oa8KNJx2p0r
-         Dpmg==
-X-Forwarded-Encrypted: i=1; AHgh+Rq8QxBUO1MBXR85gwpNN8cntocr7DJsVCnBXKWuaM6ueuIsLch3nbMsKHbLcVypFfVA94dn5zqfjTOiSfQgt6GczGUd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyzmUK79UxcLRQ5jZElq6+OiMH9XNxylw48RzvrBTYOfbUgUUm
-	vJUEMqRZLPpHGP2rmZKX1n95JSH/3sIKiIFOpBWC3OBO0zjvKFPXYKF3Fg1OfvcEghB8sdTXU30
-	6ojWzLQT2sea0mMlnOH7WlayEq9KVm28=
-X-Gm-Gg: AR+sD11dv7zB6bC4w6i9PfTN8LBDQeIEjeyL4WfI29cP19PbFMQaEuDfS3aNEI4x3Ng
-	QG1TitYXeqJ+Dte2GKN0dG9p0I+8hgFz0cmaipGnTfWClixWaqrViM6ttKLOeht/+pVoT9gxKRq
-	H5EFshG8fqluuSN2899kuDfLnwOE/GrEkPmW14RYQEAC+HDb7zWs5ncIaxigNBfotc7FWt3uahc
-	A1ckAq4UBLlnIrd9hnOvBa72rXI2wA3O771dqqIndvyKX/Lsw4vza5qfWMIQJW2KzaE6Q==
-X-Received: by 2002:a05:690c:6f02:b0:81e:97e2:2210 with SMTP id
- 00721157ae682-81f69ebac17mr31274727b3.69.1785157182142; Mon, 27 Jul 2026
- 05:59:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiauvbQK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916CB1F000E9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785157535;
+	bh=F1IxYhAPqVZmHS6mi7kAQp4Eo0e2Ol8GgBG3I3PWaU4=;
+	h=From:In-Reply-To:References:Date:Subject:To:Cc;
+	b=aiauvbQKCvcPkjSvA8l/Lii4R+v5S6ayvl8BWwzTyZcR3M28z3DS7RXONG6taCvi9
+	 ERO28RLBqBJATKWslAwmuJtdA6iALqszUpe0BXEPkUfqvq/O1Jw4Sq5mlzvsKETHCt
+	 f2Rp/oK7ON8h8ryagc0c7V+CmN0IxMKV9aTzVtWHfegLqeGHGCEnmvZjlE1uJEIlfb
+	 RonbDVjmUyOxn2ZmnuBh8OVN3NAZLZCXYkGReG5l+t6KFRSmQtquorXTPDKQ71mtoi
+	 ILkxAh3B9M3gJMNa8w7Ka96nDnwfb9x5jnBykV9b2VpC+1S47iy2u3+9n9hbLAdDKP
+	 /tzXPZ21Jn9tQ==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aeb2bc82ccso2608995e87.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 06:05:35 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RqIJ7uKI5qr+KqEdQ/0Qsu5d+jRoQCmiUaCgbpgMOlrWIBzl2YPE0EZp+vHTE5wf2C662me5k/tv7q3RAPP8lFSs9bw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkQWO1EwzA+9l9Bq3BFzYK0HZ0WRtttyXm3U91+XxLo21mtasA
+	M1WAHAfY3rQdFjZ2l4zBG6RY/ToEitOe+RFYkSlK8dQE+Feq95EMxaNngrWaBPffZkmkDDvit3j
+	+1PxP7HtGfIAK5aDrqtXVI30djnhlsdBsPUFavvc/yQ==
+X-Received: by 2002:a05:6512:1113:b0:5ae:b998:9134 with SMTP id
+ 2adb3069b0e04-5b2c1af51b2mr1357313e87.1.1785157534083; Mon, 27 Jul 2026
+ 06:05:34 -0700 (PDT)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 27 Jul 2026 06:05:32 -0700
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 27 Jul 2026 06:05:32 -0700
+From: Bartosz Golaszewski <brgl@kernel.org>
+In-Reply-To: <20260726101739.33170-13-farbere@amazon.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260723184538.3888637-1-ekffu200098@gmail.com> <adcfc6f2-3309-4496-8331-1ae31e85d363@sirena.org.uk>
-In-Reply-To: <adcfc6f2-3309-4496-8331-1ae31e85d363@sirena.org.uk>
-From: Sang-Heon Jeon <ekffu200098@gmail.com>
-Date: Mon, 27 Jul 2026 21:59:30 +0900
-X-Gm-Features: AUfX_mxOitBR08KsPWHGWKTOhvBmlqBsOevQYdsbBN1kI3uyZROYcZJFQfRk1pk
-Message-ID: <CABFDxMEmB=5UZx6RZgFNZyB5sg-+e2hgx_T1QjV0JzqP+auTFQ@mail.gmail.com>
-Subject: Re: [PATCH 00/36] treewide: remove conditional returns with no effect
-To: Mark Brown <broonie@kernel.org>
-Cc: Julia.Lawall@inria.fr, Alex Deucher <alexander.deucher@amd.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, David Airlie <airlied@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hansg@kernel.org>, 
-	Hans Verkuil <hverkuil@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Jakub Kicinski <kuba@kernel.org>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Jaroslav Kysela <perex@perex.cz>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Jiri Pirko <jiri@resnulli.us>, "Joerg Roedel (AMD)" <joro@8bytes.org>, 
-	Johan Hovold <johan@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Julian Anastasov <ja@ssi.bg>, 
-	Leon Romanovsky <leon@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus Walleij <linusw@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Matthew Sakai <msakai@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <mripard@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Mike Rapoport <rppt@kernel.org>, 
-	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Nicolas Palix <nicolas.palix@imag.fr>, 
-	Pablo Neira Ayuso <pablo@netfilter.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Ping-Ke Shih <pkshih@realtek.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Sebastian Reichel <sre@kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Simona Vetter <simona@ffwll.ch>, Simon Horman <horms@verge.net.au>, Stephen Boyd <sboyd@kernel.org>, 
-	Steve French <sfrench@samba.org>, Takashi Iwai <tiwai@suse.com>, Thomas Renninger <trenn@suse.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Tony Luck <tony.luck@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
-	Vinod Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>, 
-	Yazen Ghannam <Yazen.Ghannam@amd.com>, cocci@inria.fr, amd-gfx@lists.freedesktop.org, 
-	dmaengine@vger.kernel.org, dm-devel@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev, 
-	linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, lvs-devel@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+References: <20260726101739.33170-1-farbere@amazon.com> <20260726101739.33170-13-farbere@amazon.com>
+Date: Mon, 27 Jul 2026 06:05:32 -0700
+X-Gmail-Original-Message-ID: <CAMRc=Md4FHz3KhFAFBVCJb1+rYA8S506WPrEKs=X2ng6+byPuA@mail.gmail.com>
+X-Gm-Features: AUfX_mwa8bywtWm7t0TzzfpEly7iY_KFJAx4fJGIW8nzUJC_flDbreg42-ul5w0
+Message-ID: <CAMRc=Md4FHz3KhFAFBVCJb1+rYA8S506WPrEKs=X2ng6+byPuA@mail.gmail.com>
+Subject: Re: [PATCH v4 12/13] gpio: gpiolib-kunit: use devm_blocking_notifier_chain_register()
+To: Eliav Farber <farbere@amazon.com>
+Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, 
+	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
+	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, 
+	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
+	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	dmitry.torokhov@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	W_Armin@gmx.de, ukleinek@kernel.org, fabio.m.de.francesco@linux.intel.com, 
+	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
+	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2026 at 9:12=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Sun, 26 Jul 2026 12:17:38 +0200, Eliav Farber <farbere@amazon.com> said:
+> Replace the blocking_notifier_chain_register() +
+> devm_add_action_or_reset() pattern with a single call to
+> devm_blocking_notifier_chain_register(), removing the
+> gpio_unbind_unregister_notifier() callback.
 >
-> On Fri, Jul 24, 2026 at 03:45:02AM +0900, Sang-Heon Jeon wrote:
->
-> > All patches are independent and can be applied separately, but for
-> > everyone's convenience, it would be nice if they were merged through
-> > a single tree.
->
-> Please don't do this, it does not make anything more convenient - it
-> results in huge CC lists and makes it more difficult to work out who
-> will actually apply things.  If there's no dependencies just send to
-> each subsystem independently.
+> Signed-off-by: Eliav Farber <farbere@amazon.com>
+> ---
 
-Thanks for letting me know. I'll keep that in mind. In v2, I will send
-the cleanup patches to each subsystem independently.
+Assuming I'll get an immutable branch OR it doesn't conflict too much:
 
-Best Regards,
-Sang-Heon Jeon
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+
+Otherwise, this should wait until the next cycle if possible.
+
+Bart
