@@ -1,77 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx5.mail-out.lima-city.de (mx5.mail-out.lima-city.de [91.216.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640843911AB
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 15:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25141380FD4;
+	Mon, 27 Jul 2026 18:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785166936; cv=none; b=RJa4lvkIVFqfDLJ8XK0znRxcqf7AiacNiGg7bmoaE3Zd9DBpKSM7NJtysLr4fcEiptAGCoxYAiIxFfDqPYSa7Vt8vF/9p9M6GDp+y1EwT6GmQt4oQqUTxhp5fIwu59lbgzSAlmCXNWumQAipTPJ3DTsvFOE2ey6y7j8GFijLNv0=
+	t=1785176417; cv=none; b=Jj+VdovIgMtBsw8M5HC3OAP/CtYUdQFejDu4ZazS/ZBLSoqxmBthAvQ43HljnUPkAcjOK3JQ3/JpVzRZyG5NQjduw6pgqpc8/lohdwKIEevdXKR/DPXA6O9lQ6wIr+DUTq/ksgUAyHYFv2MTlKeXXoOj0huERtnZplo2zuJcL2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785166936; c=relaxed/simple;
-	bh=3q/vWqTIdtDfYuu0h2kbIQCpIyTaifUh1jVB1OVWN3s=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Jw5wMoJEJXFpZ6bC6Zj0VQfgEOtvs4e3ABc8mXc79k+UiPFwlih8t+SRu6/wbW6S/A1hlllydvKwA0sUom4ySls55lQCJlBRlXUrbqtjaK1A37LxIBu1ESvOPzaNvmSuobXHQnW1KWEh0Wq8h4vyjxLuoAZowT5NLfMmy7yVjD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AelUS1zu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785176417; c=relaxed/simple;
+	bh=csV9WpuWhlZBA3LAXCPgVvOpoHxeMaePZ0KBEePW4L8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l2uwCwKdn8udrQzkMRzyXZ7/UO9OoFXg1Phg3Ev27QrztqQmSH57rMoMKVCRlOcMjGPFTumGAX7j956kcRkLPy/U1G1vnkyMPg5YTwFxkmxcUh8AGA/t/Z5vFJRbszC6r3Nbx/IhQQCklYyoFtxT8wI4t4NKTCCaBbrb6ko5vjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks; spf=none smtp.mailfrom=deq.rocks; dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b=lb62DGh/; arc=none smtp.client-ip=91.216.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AelUS1zu"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1FC3C19425
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 15:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785166935;
-	bh=3q/vWqTIdtDfYuu0h2kbIQCpIyTaifUh1jVB1OVWN3s=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=AelUS1zu+Sf2XJVDz0RSSUHd7s8CzwLl1QIkT8Oap8TAE3TDZ3ZU6l+r2MISWBjpg
-	 CqPAVWKCCqBWIfq8N4KxsXDcvr0dpPIC+owutnOuVP2NudIr0X9vBk0QgEJuPELgDj
-	 /dllSZOYbgFIXB9aF93WyloV0avCIVTPe2uq9AnxbdJ+x9vAO2FuDR2fV0J4d8pC6g
-	 wVLoLBVnh+YVyWbY9OKmRibF7oAfmwmc3VmfVP4NAv6b9x9qdrfHRLLd2u1y1tSMu8
-	 UIXDt1DeqwFIx8IQcI+rx/cQ07SJpsutbgORWhSdeIETYAbs57KdGp8sHk/3oD6uus
-	 Fi8pD/AaCUwfQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id C360EC3279F; Mon, 27 Jul 2026 15:42:15 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221800] HP ProBook 445 G9: keyboard backlight hotkey no longer
- works after upgrade to Linux 7.1.4
-Date: Mon, 27 Jul 2026 15:42:15 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: bread708kms@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cf_regression
-Message-ID: <bug-221800-215701-EwkSUCcYry@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221800-215701@https.bugzilla.kernel.org/>
-References: <bug-221800-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b="lb62DGh/"
+From: Andre Eikmeyer <dev@deq.rocks>
+X-Lima-ML-UUID: 9ea33213-41be-4055-86e9-c6a3933aeaa7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
+	s=securedbylima-20251205; t=1785176405;
+	bh=csV9WpuWhlZBA3LAXCPgVvOpoHxeMaePZ0KBEePW4L8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lb62DGh/a9EgD2O9XJJZx69PSCCUQfj5+anz8TdlOD6y4d6Xzfh6umvWUMALWoz1W
+	 N8vAfNL5axaBNQFlw5GTj9y/E0/2zpXD9R7Bz4GLdiQGroYIOHAOGCMWQAFdydtHdN
+	 5ftdVSGuOm0zmUa2Yzkz7HJzbegDZFE6Idy1yZbnx/DRZyyBhhWRFeuvtdDiMEzYN4
+	 xgusknlPyTEWdZbId+yZdFLznlBDaDA0+bYeec5Kvc9CvoEcNVYA3rKIaUOva+oaXT
+	 /2r9iOWN8OI1Jxfhu6ASZsr3vmNls1W3Luy3M62/XUtasb11YrmwKtfj6+k7hmNU6O
+	 2DeoTWcnyy0lw==
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andre Eikmeyer <dev@deq.rocks>,
+	Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] thunderbolt: Add device links for Apple T2 NHI
+Date: Mon, 27 Jul 2026 20:20:01 +0200
+Message-ID: <20260727182001.29728-1-dev@deq.rocks>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260727112406.GI2365036@black.igk.intel.com>
+References: <20260724164641.2239-1-atharvatiwarilinuxdev@gmail.com> <20260724164641.2239-3-atharvatiwarilinuxdev@gmail.com> <20260727112406.GI2365036@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221800
+Hi Mika,
 
-bread708kms@gmail.com changed:
+the Titan Ridge and Ice Lake changes address the same missing PM
+dependency on T2 Macs, despite the different PCIe topologies. We would
+therefore prefer to keep them in one patch unless there is a technical
+reason to split them.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-         Regression|No                          |Yes
+Using the known Ice Lake Thunderbolt root-port IDs instead of the ACPI
+TRP names makes sense. We will replace the ACPI-based discovery in the
+next revision.
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks,
+Andre
