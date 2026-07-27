@@ -1,71 +1,91 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013027.outbound.protection.outlook.com [40.93.201.27])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F842376A1F;
-	Mon, 27 Jul 2026 14:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785161787; cv=fail; b=s950bPxkiJnfBU6z5mS0H+z8mT9saVNwiUG1VMJdUzG4UGlttD/AGi6PFf3H/uyCFxIlwQB9ln/eYXQTX1yh0lIqeG0y9dULB3b6Ym4fpiGIjtOA4BuBDbY4jsnjteHW5ph2Q43BxQ5eJ6NKogp5yXKEeY9uBh/I+GHifwQwF4c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785161787; c=relaxed/simple;
-	bh=VaP6ib4x63QSIe5PBOXWsjQlrI3yr5U1PyiZsiBuuEE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dMROoCOxjAtg3uvxaOJl3kazuV0FLAXfRuVrHfUQmM9GES5o9oePf5Y3jwQhHUfLRwIKgt4wh/lPNlwo2UKPB6icRvuzkjz9p1gqd1HqGOlGw0qtGzkMXrHQezru0MHo9L106+n85IFynDP/UPFxZjLthep0HBRuxju4LMERZw0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=huEfk87w; arc=fail smtp.client-ip=40.93.201.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDEB3F86E6
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 14:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785163403; cv=none; b=VoVqUxkzvmYQnvPsU/1fWl0+iMdvPtbOb81asLBZ6/xk+PSNSvHJ/nO8kRgBjkNvjpB7Y5PI5XpC+qIEpU5SdgvWWQHQHlGK81e6Fp1XbiIlSOa9x1xgQIWVPYJEEsPEb2JWntjqcOW2qVZIuJ0aOPgE836pJwRe/0uWKrQ3Y3M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785163403; c=relaxed/simple;
+	bh=6K5tiSlzsncg4FkPtoee6fhmILmD3n2OmHv5dJDH9Ig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ie3aP4UT/Rwbr6oO8buyDg43ZKT+yzjBK9q5kPv8hVXVZtGXADsTymZKjYneZS1Lbc3axJg5TBzOt7azbbK3qSIBBDfbE/0H6V17U4rReZEG+6eA9Ankqz8Y1L4X9j20br/EZY7sxn6Zcdoch8DTlEDySmoTQ/mFA0tBh+KfdJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A6D20Q0H; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=gnWCf5rv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="huEfk87w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KkABUPrL/cXjHWR02miJsruuBnnVOWB2WYtkSfo8yJKiS1Epc5YpNBjLHvdTgp4MNYZwlc4+j+1rcGgdo37b5jnOVNUxhj4anHF3KsU5+RvDF0RGh1xyE1aLqv0OnbmHpfls3Klrm+0sQQD61avc1FuuhZdpOaSdnEgJJalna2FQ5DYU/qFkSjI0dKV7L0DxRv8rhBP+6fY3ykgr5SX6D4NrfQfXCZRxZUGUzWp86yAxoxGjT6QeWtjhPZb1X2evgdz0Ur9bcDp30BsIlqNwMAdZPLcrBrGz0K9KgkS6Bj2zl1rYbpwO1OYPJZJO+cubEcEg+47oYfTgjYgNGzk0kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XaF0BE5b6ylApbjPTQJmuYHmRsJHSJ7s4KtbXwwnAig=;
- b=siq7j0Kiyvwysw1YKigEG1hgnDCsL94YLlb1MprMj4PSTDP3vcb1rQfvRcS6flma/+f5XQg4XOvUnuArPI7sRgijgSI1TDUCWAt8gL9tsoDArNBSMNtP8iWl/IkBE1nN2K+65MUoYHCa1am4ToYwdP8yxaZVxHeMLguLpqHKOV8UOUsAvizYqxP6QtsN1cpglhCleqnOROSse9/m+Xw4TQW9tC80Mq8wP66IS/MxtfVj1c+HuI+z9tO8ks9ffwWF6B7a9Zlr3+fn8FEeRQgV1NzLkahGztaZ+kAmJ+legFjavHo1dXXwZOM7+I+uBvnUAHNee11i8ghJx6P8eVUUlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XaF0BE5b6ylApbjPTQJmuYHmRsJHSJ7s4KtbXwwnAig=;
- b=huEfk87wX4crOrD0qVo/i+nlfhWXn/p9xLavsCzXQ2egnD8V2clFJdrIGmrE5Az64XmkoJ9XxVGchmeE9fFFqbHvum8SSSQFsJLI+lGhsxrKTUPCcLm5muhginrZSn3UJ6tviE/oxrrgY0U3umaVCPEXJ0/SRUA/5jUQUSrxIwc=
-Received: from SJ0PR05CA0198.namprd05.prod.outlook.com (2603:10b6:a03:330::23)
- by CH3PR12MB8880.namprd12.prod.outlook.com (2603:10b6:610:17b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.13; Mon, 27 Jul
- 2026 14:16:14 +0000
-Received: from SJ1PEPF00001CEA.namprd03.prod.outlook.com
- (2603:10b6:a03:330:cafe::3d) by SJ0PR05CA0198.outlook.office365.com
- (2603:10b6:a03:330::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.8 via Frontend Transport; Mon, 27
- Jul 2026 14:16:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ1PEPF00001CEA.mail.protection.outlook.com (10.167.242.26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.270.5 via Frontend Transport; Mon, 27 Jul 2026 14:16:13 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 27 Jul
- 2026 09:16:07 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Muralidhara M K <muralidhara.mk@amd.com>, Muthusamy Ramalingam
-	<muthusamy.ramalingam@amd.com>
-Subject: [PATCH v7 5/5] platform/x86/amd/hsmp: Enable protocol version 7 metric tables on the ACPI driver
-Date: Mon, 27 Jul 2026 19:45:42 +0530
-Message-ID: <20260727141542.3370108-6-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260727141542.3370108-1-muralidhara.mk@amd.com>
-References: <20260727141542.3370108-1-muralidhara.mk@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="A6D20Q0H";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="gnWCf5rv"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66RDlZDU4115070
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 14:43:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=42pBso3LISJ7Zb0g5z0Oloz6vbI/ciJmivh
+	lkvoWhkI=; b=A6D20Q0Hb41w7me5Rgv1r154Xp1/OUgeMQuJmOPgseWk2zIuovS
+	xb+1SFkhN9OQ7m7XQheJBGzrjwZUpWArzE9HSnujil/v797WIJgsFB2ZO0RjpEa/
+	XMkWQvjJss5l03JBUVWehRoVI8vtLJeL1d7XTUg3Mo2V0uMe2RSwGA2uGBXTk0d8
+	d6awTNW79CeWKiS9ugyxsHoN8PxRK1tWC3jqImJ3cQ7QrF1oyOYqCjuuGiY+G7Hc
+	bfKogDy6RiwW5RmCXrrIOCVRy3dOIQ+wWqQKUPgO2P3zKkLI0iOxy2zkGBx+eS2i
+	0TVheGgjSRdgBYwsJya1hzs5oSkfpMlQDYA==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fp4mrs7wn-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 14:43:17 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-5174a236220so31642311cf.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 07:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1785163397; x=1785768197; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=42pBso3LISJ7Zb0g5z0Oloz6vbI/ciJmivhlkvoWhkI=;
+        b=gnWCf5rvRmtdwXQx8o4EUx9zt3R5xPIxNkTwf5ELR2n1poIfWGShKuwxE33jCsD8be
+         myWjyF0ztiPzvm9PjgBFHiD/AnXcvAZkq+ReDlO/uSJwKgyZ0Llf/I6oQuXtWq6zNhg3
+         CW3pckufxM4kI2BlnDX8j3yrRMEAZbGp+qBMxZd5Zpe3A0L5TcaXenWy+m8Pf7vEDK79
+         d+LmbvKrVP1wnjioMAW1wxXq1NR/8rj4xfG/Yh+SOyxRpF5xzaiuLhHejm4jMxGPjEF3
+         5VPLBIrzl+3kWSW/jVZwWMpVpXuGpuHRIFFzKqDT9qx5Dd8sHX2WCxIROHY2u3fJZkbd
+         PJAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785163397; x=1785768197;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=42pBso3LISJ7Zb0g5z0Oloz6vbI/ciJmivhlkvoWhkI=;
+        b=bfqPBgp8PS3NKbb4AOY5Vvg47ngiTJOFVMJZ16kO1ijLNfaNWRDiWD3MbT0k/gGROZ
+         CVyj7S4w1LysOEVd0d8AhLKXtwAsxkm/kHS+3WjWLnaHYbho5IiVfcbDzAQAxTRiP1su
+         q79kCdPMnDJeMwduKKYaeCWL7b7TGIeFiLZJqDhUqmA/BFrQkIKlwQptxjS/8wyfMZkI
+         U9TxvgJ3XkZ/fUIc/mrVwvN/z8DL8WfzH7aQi7yIioarTiJVQlzbRlAVvfxQqCmaaJiG
+         vvS/oYeE2oiIc6yqjBcphcm7HYKQREln9j9LQg8BLX8eStuvP1/9BYty/DbYcc4xJ9NA
+         rk9Q==
+X-Forwarded-Encrypted: i=1; AHgh+RrIEkLcYaUklfy/EBW9uLkyEjLCwunSh8NHg0tsHKavgbFuc3jlhYQa5hXtOGzBc0/m73fgO7fdFF65fvO5/uzZssQR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM1xJHbCnGxZvC1nmnh0fKGm4dDhyrWzKGrJbFHuP3A9xeZYGv
+	zaZW2Cd/PYp/G2CCTqdOEsC1lumW0XIBrbOLEUx6WOdWMXGvee2SrGh3xhdjQZLn2XLWwF1pSpK
+	Xm4uZG9xIIGBfw8lD5QwixGkklZUmtx+qLGH+e7Eixb5xe/A29ixnVZqBqUGomMgXwaM57tDgv5
+	JmzluRiS5N
+X-Gm-Gg: AR+sD12XuwWQUN3ZH3aBUT2tHPJ0B5ZWAMaV0bERdWlMH+u25CjY7sgJu+QRfHGGpMS
+	eBsVCPcIu9JGYBO0+tjNN5dclPWM4kAXgNQ8KcF4WT9sA5wWDaWZ87g8jGl3gLYflis1Ug7OM38
+	AEHHSZqVAhxlY8cyD+IWdwKZqRrScnZZIlUXV4QAxFkijzpL7Nyexo0cDxIX2pG4kKFeymWMuUI
+	JimPrmhnunMKLbFJIVtXRRk2sEFhqpJ+Rwj8HdkaDuC1oiDgQC1AOeCwnol7LgoX+PqE7ePwAJr
+	ghTBzLXZNJjJy7MHmLc2tt3VyAbSyO0Z1c5I8I+nD+5igmhl/EAV16NDdyG+5rCbWzhjbaT7bFM
+	w33gwWoXXWghXD9gZBV68yJpVy8g=
+X-Received: by 2002:a05:622a:4009:b0:528:3163:716b with SMTP id d75a77b69052e-529ccb0c3f6mr11651571cf.3.1785163396889;
+        Mon, 27 Jul 2026 07:43:16 -0700 (PDT)
+X-Received: by 2002:a05:622a:4009:b0:528:3163:716b with SMTP id d75a77b69052e-529ccb0c3f6mr11651281cf.3.1785163396448;
+        Mon, 27 Jul 2026 07:43:16 -0700 (PDT)
+Received: from brgl-qcom.home ([2a01:cb1d:dc:7e00:1449:2d40:6dd2:20d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4957b5ed646sm236938845e9.0.2026.07.27.07.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2026 07:43:14 -0700 (PDT)
+From: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+To: Danilo Krummrich <dakr@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: brgl@kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Subject: [PATCH] platform/surface: gpe: add missing err.h include
+Date: Mon, 27 Jul 2026 16:43:08 +0200
+Message-ID: <20260727144308.61842-1-bartosz.golaszewski@oss.qualcomm.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,110 +93,57 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEA:EE_|CH3PR12MB8880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7972cb7a-90c5-42a1-e25a-08deebe99d75
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700016|23010399003|5023799004|56012099006|11063799006|10067099003|22082099003|18002099003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	LQKKubYWdWDyMqeB9KDigEGWe5ZeM0mTCPNcjlIA+v+RdjkhFKA4ZVUNs6gOLQBELu8Qi5+j+NRqQb+Ej0XhXoo9/5xHD1lxcKXhX4fzO744rJI7AtNJu8VcfnpRThJ1uXxAi7GEJc6D9hRkRkuSVG8xeAYAOffUED1mNw6FR3PRpkVkde57kjQWKmQCISu9o7Zs7tUVfuk7svCAn9m6Q48xeW2Y0FlHGGRBnXAY7gOypSOy4uNqMIyBO6xPwLA7U8Sz/sc5TZpiubisbdfHS+YDJNFklV65wztrBXmGIYBU1HcXzuOjGxVSo3LWDoByJzSJ5svi9NrCwvBzoIbvAHPpVJ4ynKDG2b+SeH7e7kkIROBzG2hvvFftcNlZMK+U/ibsh0GuF9N3HE+fVogJyuCyZ6dWDGXo2i3a1kC3aC9uxx6MUroPw1yUHKoJUH8XfBGwmYU2a/YMRdx6Wt6Y+7AzL6BbleXj8Mac0MOJQvh5DhW38EMVMPemHPUp1R32BmkoWwcfqZh4Ax5IXL2V1XXWHM3aWcKlfrxWvZjJvJQ85hkwL7hageD9UlvZfpDV5GKVutWvq/EMKWEdl9FhoCEwugVsWM/eeQTuQyvopCDtnmHJ3jAAWsJ8slToVRNV3MVq+TRo+ACgVGEBKprA3aLq9qVDjO9QJHTVlS0ckbVdG3TOwH1TdEiZtRKTu/U+PXWECgPDDb12vs7lFYhYpw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700016)(23010399003)(5023799004)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	5aUxCFTf6YAlo70E/WRkyOtag3mVGxLVO9RtJsGFYleAZ8qN3414BPwBuU8XRlzBbx11NuFPGPiCRvJ+jwln094TZ9eIkxf2vRs4Yfc9eT5/Zwrgl+JDwzsfEvPQ//Oo09rc7MDkOf3DFVJ6HQPYTA+7bmQeowUaoQGi5K1ahkYoCuMgSoHWMzdgQQfDlf6+3HxkW/lVoxWVBW92QOiVobwZ73bSjLR0W62TfCNWlcch2G9Xo80dXx3xSkzhimyMamKbfOXXrRNhUHOJ/qgaefDkJDMg1XUsRdT+xwZOaFs7kq5RYcqSWqjxNXdiqDzhwOilD9y+zUziSD/8lJ3MbE++eZmd+MzScmFhp44uaAvkHzfHpXICPWhN2siE2NHwkNpJO8SH2o3SOjQvBmGt9Xnl4Wgg/laf1cuHgDErFfEOynsMu2zUtVp2lmeBrDJP
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2026 14:16:13.3467
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7972cb7a-90c5-42a1-e25a-08deebe99d75
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CEA.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8880
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI3MDEzOSBTYWx0ZWRfX80RJZ6j6ttQA
+ VB6w4dNxNfyJv7pP1VwpSmnxkYU5sXNo/eqGJ+5Jqylp/IaI/m3+/Mz4g2iztXCA71iwmeRQgWV
+ JMzHOL9Bg5a01TYcYakVDipNB5fHGSY=
+X-Authority-Analysis: v=2.4 cv=UYBhjqSN c=1 sm=1 tr=0 ts=6a676e85 cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=RAioF0-LDSMA:10
+ a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22
+ a=_glEPmIy2e8OvE2BGh3C:22 a=EUspDBNiAAAA:8 a=ihY1yBl6Li-yio5GuEYA:9
+ a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-GUID: 44bqIlgkPpL_mO7VmMqX3LM_1Y8x3kRF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI3MDEzOSBTYWx0ZWRfXyecGOazzbibh
+ TqKi4WiMn9a9u52/GmYNrPenluJ7yVKUVos1l09cPMT62WWwrbY6KX6BbZrLewF40JB0m3/s20h
+ 0UYVrWlOeoa5/ZtLdUCo8gxtp4+7r9sYkUiW3NpD5clyDzIxHXpsWLHExVZ77/zoja1IAvxTGOI
+ EkYGRUpa/Hqji6KbWe9mobzoTelWx//eTq+riwEmMm/ffUnUlFq0hiXlECvELFOcvzXlz+2ld0U
+ ceHFj/7FCDEb9z9AhfAMxKEbR+w3wPRfowLMOQ7LfXCLLoYVDrvKcHHI64v8kxiSerg6i21oKoQ
+ o7XshxbgWe5WRMPgap+YdPssb1CRslVMNAAHPDa5NGr+YR5vLok46GYLrBh52Va9rLt/xbG77RY
+ H28vF7qV7sD6YSebYfuVZahDQo/+p8Fb0ZgCRyJa0YEhgN1raD0X6g2aZw6Q12FS+lEq8PU5384
+ y1WHl624wgn8rXuB91g==
+X-Proofpoint-ORIG-GUID: 44bqIlgkPpL_mO7VmMqX3LM_1Y8x3kRF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-27_04,2026-07-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 phishscore=0 adultscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607270139
 
-The ACPI driver currently prepares the per-socket metric table only
-on HSMP_PROTO_VER6. With protocol version 7 in use on Family 1Ah
-Model 50h-5Fh, userspace cannot reach the larger ~13 KB table:
-hsmp_get_tbl_dram_base() is skipped, sock->metric_tbl_addr stays
-NULL, and the ioctl added earlier in this series has nothing to read.
+We now use PTR_ERR() and IS_ERR() in this module so pull in the header
+that provides them.
 
-Widen the proto_ver gate in init_acpi() from '== HSMP_PROTO_VER6'
-to '>= HSMP_PROTO_VER6' so the DRAM region is mapped and
-sock->metric_tbl_size is populated on protocol version 7 (and any
-future compatible version), making the ioctl path functional.
-
-hsmp_metric_tbl_acpi_read() now returns -EOPNOTSUPP whenever the
-running protocol version is not VER6, because the sysfs binary
-attribute cannot carry a table larger than PAGE_SIZE. Version 7
-userspace gets a clear, actionable error and a documented pointer to
-HSMP_IOCTL_GET_TELEMETRY_DATA; version 6 userspace sees no change.
-
-The non-ACPI plat.c path is intentionally left untouched: it covers
-Family 1Ah Model 0h-Fh hardware fixed at protocol version 6, where
-the existing metrics_bin remains the supported interface.
-
-Co-developed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Signed-off-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+Fixes: 1e0bd438b876 ("platform/surface: gpe: use platform_device_register_full()")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 ---
- drivers/platform/x86/amd/hsmp/acpi.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+This must go through the driver core tree as a follow up to the commit
+it fixes.
 
-diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-index 24f54dc7254f..8257cd1da48e 100644
---- a/drivers/platform/x86/amd/hsmp/acpi.c
-+++ b/drivers/platform/x86/amd/hsmp/acpi.c
-@@ -277,13 +277,31 @@ static ssize_t hsmp_metric_tbl_acpi_read(struct file *filp, struct kobject *kobj
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct hsmp_socket *sock = dev_get_drvdata(dev);
+ drivers/platform/surface/surface_gpe.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
+index 4ca7ad76f3b9d..29b264f2a444e 100644
+--- a/drivers/platform/surface/surface_gpe.c
++++ b/drivers/platform/surface/surface_gpe.c
+@@ -11,6 +11,7 @@
  
-+	/*
-+	 * metrics_bin is a sysfs binary attribute and is capped at PAGE_SIZE.
-+	 * It can therefore only carry the protocol version 6 metric table
-+	 * (struct hsmp_metric_table).  The larger tables defined from protocol
-+	 * version 7 onwards do not fit; userspace on those systems must read
-+	 * the snapshot through HSMP_IOCTL_GET_TELEMETRY_DATA on /dev/hsmp.
-+	 * Surface the unsupported case here as -EOPNOTSUPP rather than
-+	 * silently truncating the snapshot.
-+	 */
-+	if (hsmp_pdev->proto_ver != HSMP_PROTO_VER6)
-+		return -EOPNOTSUPP;
-+
- 	return hsmp_metric_tbl_read(sock, buf, count);
- }
- 
- static umode_t hsmp_is_sock_attr_visible(struct kobject *kobj,
- 					 const struct bin_attribute *battr, int id)
- {
--	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6)
-+	/*
-+	 * Keep metrics_bin visible on protocol version 7 and later as well,
-+	 * so that userspace which expects the file to exist gets a clear
-+	 * -EOPNOTSUPP from the read handler instead of -ENOENT, and is
-+	 * pointed at HSMP_IOCTL_GET_TELEMETRY_DATA as the supported path.
-+	 */
-+	if (hsmp_pdev->proto_ver >= HSMP_PROTO_VER6)
- 		return battr->attr.mode;
- 
- 	return 0;
-@@ -539,7 +557,7 @@ static int init_acpi(struct device *dev)
- 		return ret;
- 	}
- 
--	if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
-+	if (hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
- 		ret = hsmp_get_tbl_dram_base(sock_ind);
- 		if (ret)
- 			dev_info(dev, "Failed to init metric table\n");
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
 -- 
-2.34.1
+2.47.3
 
