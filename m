@@ -1,111 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0193C140F
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 18:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DE43CF1E1
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 19:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785178625; cv=none; b=VADBG80WPH6VYdCQ2K4PKLBbGuflkhO+QnrTNsQzAsWxLWBK59q2NEHvbFvs0dZI4xP24tcnDxX1CC2r9Z1zIo1MTakxxWYLlfkBISG9VxpdQFrFMZYmgNryGlE3WzKJufGvJOPKfHqnqXLGcBlU5zrjhz2UzCzpxO/ZIayKIao=
+	t=1785181883; cv=none; b=H/sXxy4Ql8GJdKLnUXWGEMagPbZ91A8768kNf3fIWQt61cm5nQCRozUl0dIi0Im7MIavAgQXe15MuW994SJ1pBKX5Sl7LNvX307dENOPvyvbaHA+Ct34lUKZWLTY8CjeV3Nn4RQ7i40FBwv20whUCFfILQElffHAh77mYb16kec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785178625; c=relaxed/simple;
-	bh=7RrrUNqkonEHQIpCYNQURsi/3lbWfjf2A9Akn10q3yA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nIUEAZXwzIlyc0ha1ui+YONsyMLyABLgQXL42U5Dks58EdUKrHUo681BvWsyhGfx8Y7h8CfbQ3AXZpftzGstfOHzooBmPmBi+wlkZqRNuUcvU4dUMFsS+dWyUEtwkyc7b9m2phC5KDSXAVR2vK70eqiVh52QGiC6r/ZcfjIc034=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nVyDAb1m; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1785181883; c=relaxed/simple;
+	bh=LHEp5xjNPXRmYTOl7iyUCGaVLVxa648GYyPPCRFkFXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVLdHtBgZ0BEdImT6xeCLG0of0UmdVvDXwWBVAch139vZ0SzKq8pShiRGsSO701Ey4y5JQDTUldtCJlaNR0Xfl0PJAw0zW3uI1p/A43OhplRL+aUmyWkrt3m/is+Z+j5VzCWNJDaWegzj3IctIbt9qL6KRUBpPyiK8P4GeAM2ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=FoTVfR1v; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nVyDAb1m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785178624; x=1816714624;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=7RrrUNqkonEHQIpCYNQURsi/3lbWfjf2A9Akn10q3yA=;
-  b=nVyDAb1m+IM1DCCylUtG3YHWdbanw0jrayVDU2JDveQAOj8zST94N7LK
-   dzdSuoAPU6MS0P7Qyv3lllRFcERphxXk3qqOd+F/YwlFVqZKYMMQbh7Pd
-   +LcPR/H5uIc+e0tBwi7gIi4WPnETnSNwcYupVIdaWj/PBpmkLyn8fKWL9
-   g2oDTPjjwstcOVcwOwDHaU6UAf5H6/GuLiSX7xAUXtGxZ9Q6DG5w8DzYF
-   XTuYylXsby9nY9C4k2HPsUAR8ImLDZRA4xXg3PQBZUgqpXip4i2YTm4Vg
-   0TN5ktij7Ru3SV920Sm9qV+yh9oABNeOzurNcK18TPOE3Cx+WglT/rYiV
-   A==;
-X-CSE-ConnectionGUID: i5kzNxR/T3qjtzOqPLzS3w==
-X-CSE-MsgGUID: RA5iuFJvSOSwDacTrx8NEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11858"; a="108549771"
-X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="108549771"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 11:57:03 -0700
-X-CSE-ConnectionGUID: pxUwyK38RnqxyB6PiZ3hWA==
-X-CSE-MsgGUID: uIfrhm8sTxuhOhwFzdru3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="256816706"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.226])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 11:57:00 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hansg@kernel.org, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Patil.Reddy@amd.com, 
- mario.limonciello@amd.com
-In-Reply-To: <20260723111534.1940925-1-Shyam-sundar.S-k@amd.com>
-References: <20260723111534.1940925-1-Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH v3 0/7] platform/x86/amd/pmf: Add 1AH_M80H support and
- accumulator based NPU metrics
-Message-Id: <178517861557.16876.100614585681623928.b4-ty@b4>
-Date: Mon, 27 Jul 2026 21:56:55 +0300
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="FoTVfR1v"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4953de5be0aso20663725e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 12:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1785181879; x=1785786679; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5JSXCQoc1JHZ6Nq5YFbS6Dsa7OqY+l43Qmo2JkxGjUI=;
+        b=FoTVfR1vJaJIHhe1S3xqzcuaiZ5Bwizis7iHbPEa2bGj0RzRDeE2uOJ4TCx0YKXaO3
+         t+iJcOucqAgM7eI+fObtJe1ve7dWKjaDcj85Cr1fRVuDuud3QVaMX410VcmE8HPwQqVZ
+         b6Sty+H9/5ctXjuNSKxXm7f2jp4UVGSR2UFys4vsSwUB7Q8Spd6iqhB+1rPU/JxjNsbR
+         A7+ZjUztmLcQXwPYBZF50/AlwfOUpAdsOnRb+vVGobviLWLVKFqAgWRJKx1B9cW+Yz7A
+         JCK15slAIV5D7bVUtWb8NPIVTEKtLN3O36aHVVKgHbba4igWlr96pMVI6i73QjRR4ZE7
+         YHCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785181879; x=1785786679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5JSXCQoc1JHZ6Nq5YFbS6Dsa7OqY+l43Qmo2JkxGjUI=;
+        b=J5oZTlp2AbeiRt2mFSNh4bU28QNdCVDmONEUKrOZczBAnHz2355CAuu2qCwi2VQoez
+         KHTalHOu15gkCZ6djyCatFAhYydcICGey1eRQE17620yts0x+sPZdg/TVmJQtJDVoOxE
+         yt05NQ/fOs75Hl6mFGq7kCinHZzclB4ReN2VF3tseHSvaH2JSSHt6cZvRJFpL4bbM7OH
+         GuxiLRdz4XJhEqJGPDzLJAnlwA4k15K8kXPG9o2/14ddWvM0O3XbMxNPOMjemrjWTAMw
+         5EmHNCcOGIfFtrpxE6ZdC4WDPMwtt/U9hf/EIPWlWhNa7y3npaIyLKYqqjrVI7ZL/TwI
+         n2wg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr7/GbnDwP6mlqks+HzApOthzPHirTJNnuzsQvhffz52oC+cWVUwD8Ekc67zIANK0N2wxuNHVabEIDvWFgBkg4oO7Z7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKH2LNfQ2MXa6yXFj7/D8hJ3F1DPg+xWv+OMhBsAtdNVKB/AEk
+	3zn6Ba8JUNtCmLU8SOBzg7CySh4jq+lYnp9v7+ZtGxiQON398igT7SaSkXc51cQLvg==
+X-Gm-Gg: AR+sD10Cj3LfIp9VcYYc67BQ5UdoqLWusZqTHUkKQElstDquZBFic+tw98dhxIkoM6b
+	6jJQorBvRfNoNSCqC0GAlDoPJEtUURAJ7u0d4z1FYNmPGdFLZoeBQJxJhpKfpUkJgRFcDbH3iHf
+	eHISt8VFtSPZaTSqWUAayCpyp3eBVJkvMdQZSxWhMhff2K8ph1l0v1HmINMTij9rM9jt4HeDe7J
+	PaxQ2TSuqIH6QdBkbVw4dcD7THLIHLpYfKOIMI05EcWEnpdrr+XuMo/6bUHGjC1UJ8hwII725AN
+	TLKXbejEwKHmLWkIUKdW5i1sgJFQwv/pPH1LvLWKCfztcpCjqV2WNKOsuwoatWo0x4YKAVPTTYa
+	5TkCkb5CF3a+wDB8frlrHVoWYcWT3pJyVCqu5C+ZfhqeOKWLCviQxwUEXrHVIaea6zilD4774za
+	tdItV+sdW5WxRH3imQYE9Ba0eAjGnS
+X-Received: by 2002:a05:600c:a016:b0:495:63e6:5fb8 with SMTP id 5b1f17b1804b1-496b56fa3c4mr122769075e9.12.1785181878642;
+        Mon, 27 Jul 2026 12:51:18 -0700 (PDT)
+Received: from horizon ([217.155.46.38])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4957bd9e980sm253362445e9.0.2026.07.27.12.51.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2026 12:51:17 -0700 (PDT)
+From: Sean Rhodes <sean@starlabs.systems>
+To: tzungbi@kernel.org
+Cc: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Prasanth Ksr <prasanth.ksr@dell.com>,
+	Jorge Lopez <jorge.lopez2@hp.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Joshua Grisham <josh@joshuagrisham.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dell.Client.Kernel@dell.com,
+	Sean Rhodes <sean@starlabs.systems>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Julius Werner <jwerner@chromium.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>,
+	Titouan Ameline de Cadeville <titouan.ameline@gmail.com>,
+	Kees Cook <kees@kernel.org>,
+	chrome-platform@lists.linux.dev
+Subject: [PATCH v9 0/4] firmware: Add coreboot CFR firmware attributes driver
+Date: Mon, 27 Jul 2026 20:51:10 +0100
+Message-ID: <cover.1785181823.git.sean@starlabs.systems>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Transfer-Encoding: 8bit
 
-On Thu, 23 Jul 2026 16:45:27 +0530, Shyam Sundar S K wrote:
+Move the firmware attributes class helper out of platform/x86, rename the
+coreboot-table firmware driver directory from google to coreboot, and add a
+coreboot CFR firmware attributes driver.
 
-> This series cleans up the PMF-SMU mailbox handling, adds support for the
-> AMD 1AH_M80H (Family 1AH Model 80H) platform, and introduces NPU metrics
-> retrieval for it based on a firmware managed DRAM metrics table.
-> 
-> Today the SMU mailbox register offsets are hardcoded in the send path,
-> which does not scale to platforms that use a different mailbox layout.
-> The first two patches address this: patch 1 moves the offsets into a
-> per-SoC struct amd_pmf_smu_regs carried as PCI driver_data, so all
-> existing platforms share a single legacy instance and new platforms only
-> add a table entry. Patch 2 then adds the 1AH_M80H device/ACPI IDs and its
-> extended mailbox, which uses three argument registers to return the
-> 64-bit DRAM address and size of the metrics table.
-> 
-> [...]
+Changes in v9:
+- Add the missing kstrtox.h include used by kstrtou32().
+- Use a single kobject rollback path when setting registration fails.
+- Split a few helper locals for readability, including the pending reboot
+  device lookup and enum-value population.
+- Avoid an intermediate void pointer cast while parsing numeric CFR options.
+- Check the possible-values buffer length before computing each label length.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Changes in v8:
+- Add a preparatory include-order cleanup before moving the firmware
+  attributes class helper.
+- Add direct includes for __packed and container_of(), use scoped cleanup for
+  EFI names and the driver mutex, and document the efivar lock requirement on
+  private helpers.
+- Replace the duplicated CFR record walkers with one checked iterator that
+  distinguishes malformed input from the end of a record list.
+- Validate enum entries before accessing them and propagate malformed child
+  records instead of treating them as absent.
+- Restore the EFI variable after a failed runtime apply without retrying the
+  failed firmware operation, and only emit a change event when the new EFI
+  value remains stored.
+- Document the possible-values size limit and why CFR entries without a usable
+  runtime EFI variable are skipped.
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent cycle or is clearly a regression
-fix.
+Testing:
+- x86_64 out-of-tree W=1 build of drivers/firmware/coreboot/coreboot-cfr.o.
+- checkpatch --strict --git HEAD.
+- v8 x86_64 and UML allmodconfig W=1 builds of the driver and helper.
+- v8 runtime APM_CNT apply and reboot-needed behavior on a Star Labs Byte with
+  firmware 26.07 and Linux 6.17.
 
-The list of commits applied:
-[1/7] platform/x86/amd/pmf: Use per-SoC smu_regs struct for SMU mailbox registers
-      commit: e860e561926bf75e323d43fe59a9bf25d2ef33a3
-[2/7] platform/x86/amd/pmf: Add 1AH_M80H device IDs and extended SMU mailbox registers
-      commit: 2f9db5881fb37e5723bd88f939c7bffb8e7789a3
-[3/7] platform/x86/amd/pmf: Move metrics code to dedicated file
-      commit: 2e34aca48f42ef0d3ff95d79e82268b2eacae486
-[4/7] platform/x86/amd/pmf: Add missing newline in dev_err message
-      commit: d19eca503861824a6c8f8eea7eabc79e14479f84
-[5/7] platform/x86/amd/pmf: Use upper/lower_32_bits() in amd_pmf_set_dram_addr()
-      commit: 9f29ec1f46d03a7b633c5d9a668ece059d539d4c
-[6/7] platform/x86/amd/pmf: Refactor NPU metrics for platform extensibility
-      commit: 17f3e140d09da4d17dadef82ab67547e71215a64
-[7/7] platform/x86/amd/pmf: Add 1AH_M80H metrics table and NPU metrics support
-      commit: 641b41a7a12537f8898b1e14c62e0d85a8b872c2
+Sean Rhodes (4):
+  platform/x86: Sort firmware attributes class includes
+  firmware: Move firmware attributes class helper
+  firmware: Rename google firmware directory to coreboot
+  firmware: coreboot: Add CFR firmware attributes driver
 
---
- i.
+ MAINTAINERS                                   |   18 +-
+ drivers/firmware/Kconfig                      |    5 +-
+ drivers/firmware/Makefile                     |    3 +-
+ drivers/firmware/{google => coreboot}/Kconfig |   20 +-
+ .../firmware/{google => coreboot}/Makefile    |    1 +
+ drivers/firmware/{google => coreboot}/cbmem.c |    0
+ drivers/firmware/coreboot/coreboot-cfr.c      | 1193 +++++++++++++++++
+ .../{google => coreboot}/coreboot_table.c     |    0
+ .../{google => coreboot}/coreboot_table.h     |    0
+ .../framebuffer-coreboot.c                    |    0
+ drivers/firmware/{google => coreboot}/gsmi.c  |    0
+ .../memconsole-coreboot.c                     |    0
+ .../memconsole-x86-legacy.c                   |    0
+ .../{google => coreboot}/memconsole.c         |    0
+ .../{google => coreboot}/memconsole.h         |    6 +-
+ drivers/firmware/{google => coreboot}/vpd.c   |    0
+ .../{google => coreboot}/vpd_decode.c         |    0
+ .../{google => coreboot}/vpd_decode.h         |    0
+ .../firmware_attributes_class.c               |    2 +-
+ drivers/platform/x86/Kconfig                  |    3 -
+ drivers/platform/x86/Makefile                 |    2 -
+ drivers/platform/x86/asus-armoury.c           |    2 +-
+ .../x86/dell/dell-wmi-sysman/sysman.c         |    9 +-
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c  |    9 +-
+ drivers/platform/x86/lenovo/think-lmi.c       |    5 +-
+ drivers/platform/x86/lenovo/wmi-other.c       |    2 +-
+ drivers/platform/x86/samsung-galaxybook.c     |    3 +-
+ .../linux/firmware_attributes.h               |    6 +-
+ 28 files changed, 1257 insertions(+), 32 deletions(-)
+ rename drivers/firmware/{google => coreboot}/Kconfig (82%)
+ rename drivers/firmware/{google => coreboot}/Makefile (92%)
+ rename drivers/firmware/{google => coreboot}/cbmem.c (100%)
+ create mode 100644 drivers/firmware/coreboot/coreboot-cfr.c
+ rename drivers/firmware/{google => coreboot}/coreboot_table.c (100%)
+ rename drivers/firmware/{google => coreboot}/coreboot_table.h (100%)
+ rename drivers/firmware/{google => coreboot}/framebuffer-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/gsmi.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-coreboot.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole-x86-legacy.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.c (100%)
+ rename drivers/firmware/{google => coreboot}/memconsole.h (82%)
+ rename drivers/firmware/{google => coreboot}/vpd.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.c (100%)
+ rename drivers/firmware/{google => coreboot}/vpd_decode.h (100%)
+ rename drivers/{platform/x86 => firmware}/firmware_attributes_class.c (94%)
+ rename drivers/platform/x86/firmware_attributes_class.h => include/linux/firmware_attributes.h (60%)
 
