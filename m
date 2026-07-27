@@ -1,212 +1,273 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95FB3E638E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 21:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DADF3BB67B
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 22:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785187127; cv=none; b=GbKr85ox7FVUqRlOQy2YYaMmJ6BP6ZwNUULXRhO1sr3UM2OgXTw2FGY8VM+T+WkXEdtSR3Az3hz5unluy/mbQv6R2jeCWKTOsBT+q7MmlNZEB6MVZGqJUfO7lPmDfF0XFOjk8WlXiHI03xayEKmpje8YlZ3Qmbx7KjBTKNC3y6A=
+	t=1785189611; cv=none; b=Kgl43Pn/oRh/spRtkXSRssqxw0cb5jBBUYaQOD6IExhkE5fGKsq5dhTgpzzK2R5cYN9pOHsxO8dTvD5GDqMNDGDlviub+aYQ2QTKGH/yDtPVZ30WzRlOFAqSnxRmsxvs1Zl1JjT4snsGmkOLzqCgg8CCKh+yVQQbqAkdLjvK1lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785187127; c=relaxed/simple;
-	bh=u2+nVHt7la9YltrGQzMce5hV2xgh2wYAZUlmBJxwuuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LRB/xsE0FydnBhKfLe1MRKA6chw+qyNsZsF/7QQh+G4gWw1PyriUyRTLf/XBe8hUI41RTnNbEUJ6uz6glz+z4v5vBq7K/ChPWCFtbXMHkbVk+vd9QeMTSuaeUJcoNdzNn/9OgfJ4r7IZR/MYeG5KOlYToUgU9FRQmBDO0AlrTio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKTWo/gF; arc=none smtp.client-ip=209.85.214.171
+	s=arc-20240116; t=1785189611; c=relaxed/simple;
+	bh=+tpBehFHHRzpjwcHspGdrcYhHMU010vNYRitsmDKv2E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TsgQh/w3jKIcJAU8pSlheWECE0dGljhvazlA0wNcbdd8KA8ZVLsq5TCB2xaKGOq0GCoDWMlRR0xe6F4I9XrFZg+RDX6tFXhRgI6ZkiSbYKy0NPbt5W/oY0uZwv2txa3S+Wzil4elUiHTEsDSSQnfb+A/cUwU9EwAJdys33c2S4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W0CZuwXY; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKTWo/gF"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2cc73e322dbso30534305ad.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 14:18:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0CZuwXY"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-69c108fee7fso4482921a12.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 15:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785187125; x=1785791925; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=VTr/js81B4miTEjNI6MC5wSeZgIjJ1qNbYXRJnSwtn0=;
-        b=cKTWo/gFYe/HMutElxueFdzZvVXRMwKh4FPy4yJN4/t72rOrmUiqAuQ1WJtKtkLD/Y
-         cKJkKpHJc+E8GSBp5HGyr+3hAlvLM2CR707C05zk2tInYD1/66byo2Oo4CxUnzQ5I195
-         FHP4w5ctTcTqQBKSfhRjhkG0XeoU0TGn3qyIfw0S2tZt2o+F+UkXBpfDpoF1Jr25Qjx6
-         nZAQpMgL8t3HbFylrGRqY45VGix9jEF2bB1pApGWPb1gsli/zA9p8gQpB5+0SMVYvTK+
-         oSHEui5f1MmzuW5riNQJIPD2O+29rQtvNaLqGzC49RerHz0+Yf+k4jHxznInNW3lxcoI
-         q8gQ==
+        d=gmail.com; s=20251104; t=1785189607; x=1785794407; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LYbfcGu0sV3hhdUkoZ9Ne01SzTLDU29O3Krf7wBZHZ8=;
+        b=W0CZuwXYaUqf79XLXyFz/o1fTFUf1nVNKri/q//7whOReHf4AxFbzYAanJ/3pUNmba
+         JhBG16Kp8Ncd0fm/8yQecjANoN1S8Fbjz9Pqrnld/0M3SarkFPtiil2hksJfM+4+dZ3o
+         giRhJpsSY1VHBhuluhJKe/UlLSPAOogxBpFYkBlqKVocW3YOAGOBjganau5wdNrBylx7
+         O3ThmHo5ZOQDVt2PgDBDlVqfNLg1Uj5k012uixSzU3EJh3yZG+n0TKnt5rqmVINYo3n/
+         +NTUxj/xqhvww/GzixhA6XbngnFF/UkagkC8td4FssaWjVBz84ks5bLOfC5jl9OWscO0
+         T8eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785187125; x=1785791925;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VTr/js81B4miTEjNI6MC5wSeZgIjJ1qNbYXRJnSwtn0=;
-        b=SXFSbU5OKGSJCVScoTz3TmRf9aZE1UW+o28JCUKW4wY9XLfK6U+k4MiIf1cQGTVA8R
-         nKV/OLMuIUA0FeVftBaSgIheYfnzMQSU6CeQRn28sNDcQfggUKDnGOGbMZQXOnP/fpwk
-         wsIhq0OUtInOcLS06n5kFP+zqooNxrd9oUXTxOoVVWVViSGShGTNJyVl+EJstbZThwnL
-         G80YpNjszhujQwnzA/CxuTfxmcvj7ic7Ucuh1nNppGCMW5HL0k0g9hTsfe8iAA11c+7M
-         1auRKW7A2t8tuzXQTgJCFX+VyVJBzmgX7MBVGxTJXZGgeKw92U0jGpH3kKaikLen/IzD
-         8ydQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpHLy6YNJdXxvjWH/YFrIpQAVZSrbOZ+V6utvX7Fc3PNSOppSaK+kzsZaCkNb/NrPICMPytlb2yX5xUbnzXqsdExDnO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS07rqqA3QxSkto3yppMUnXpkDdqdLh9UbFYth5QznlHdHfHQv
-	Pu0SIS/5MWxVSQqsNDENMkdM7ASCdEiIcB8dTzYAmjq77oTc6srlPd0=
-X-Gm-Gg: AR+sD11KoqzQSwjrR+d+7+aT4Mzrbzci3pYdJ4VKId3Ma7tvqBFl+0o046tXr1u3cYn
-	X17xbcAU0RtJEYfEu3FqRpVQmCQ2cPVWWzqDJuOnGUBhVxc9VknUS4Z26lMklxSeWij9+Jaul7x
-	uyzntOy8nn+kCBzvGM50dXgthjohvK7BrqNGBx1HgR8Big5ZX4vN/Wy4cXt/OARLs9UiABgbycy
-	i0/GloCJDupzrasFQ84tAEdmxKfX2G2SnNt5Tv/Xe2qOYTWxOiICKXFK7D3myft0r07X9uBH21m
-	ZSR12ZD5SIwNwxB/VzJKMVD2MDdmK7/iiKF36lVmFF0jcsIEgJ208QLHyv+CMO4WTk9h8gvLeyn
-	6wFD+wnjOBagtiG1b3h2cRgJj4npVSwwqUojPgjDhBHH2MQTiZYasx7uki/Nlpi19BCo5yuV3vX
-	965GgqK9+M0dfkCq+MsmHjndBqykTA8BehC6UusYlB9+9ULlQ=
-X-Received: by 2002:a05:6a21:7116:b0:3c3:a9e1:a819 with SMTP id adf61e73a8af0-3c6c7b9562amr1345956637.24.1785187125217;
-        Mon, 27 Jul 2026 14:18:45 -0700 (PDT)
-Received: from at-Standard-PC-Q35-ICH9-2009.. ([27.59.84.42])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-314e17a6f5fsm7916699eec.31.2026.07.27.14.18.35
+        d=1e100.net; s=20251104; t=1785189607; x=1785794407;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=LYbfcGu0sV3hhdUkoZ9Ne01SzTLDU29O3Krf7wBZHZ8=;
+        b=hIAuoAiNI4LjJp/LQh5ABPCApOYt9ZDlUsF1/4EtGRV8A2Cugjbt1F1RvI4qajmvI1
+         vPHW+d2nYsinTVOwqna029b2QV3RhJiBHhEj6GCpXpUln+pn9yvmigSV+hqCOVbNqyHj
+         zbjKqO0BSvCWbGRBwNUcJimOMRrnRyfs1kX0c6d0++1rjk/79P1buONXPE0Zjf39+hWx
+         gvAbJ/QHIlh3mT5IipVQPjvMI4wf0uobZscXS1QLBaHh9TZdUuCRq0vW9tKahTw2OtL6
+         xsnS6vYHefSI7QhtaaTlTliyLSBUXUwNjSM7hKd8AKcD7Y7f1iL/xmjJ0Fm3V72//Qyo
+         m6qA==
+X-Gm-Message-State: AOJu0YxT6Conbiiu16hxaIHea09/fL6hmg955oCIOrWuBM/Sx/CWEAnB
+	YbnT8StvOZbF2gCByb9VmxHUxYSa050c2tAOPhn6ltvaqmIuTCd4RfJlvpkkZyaJPww=
+X-Gm-Gg: AR+sD10toJgLSG7fCDRZ/g7d0o2jGVwlPiLk5jZxOv7kOC01qWnnuwKxSH5lH+Zdy6D
+	YdVVA2RbtEA9LbF3SMVRO5flRk3c8mjO4007yYqtC2/TTzdg+LsQs5Vm6PFs21PNd3W7ZRGkJo/
+	0jB4I6pG+SkT6LccI63e1M91wbi0gA6ge1DYYQOEFj3cHAQH7Zcyk/gjj6uxK+CFP1Axp5/yHQv
+	eOQcfuwWz69VcdgkDcwTVPOZPMoYgUyz+IeS0F84dfzXRc7b0sSY0lDTU1qn7ABbj6YlqhDZJXw
+	KIm013CvWOxzHD8rNE+6qTsvcB++uOhIcfIVrvNmQC3x+eyWd4WmiA36EmLOPFahtqy5FIWlblv
+	Uci+Z83263r1hIJT/1xFLG+9+qyW6whWWQX49RLSF7qqkFIFOr+2R5HDK0XiDTA26zC5L
+X-Received: by 2002:a05:6402:42c9:b0:699:fbe4:16d4 with SMTP id 4fb4d7f45d1cf-69fc111ac6fmr3924141a12.18.1785189607345;
+        Mon, 27 Jul 2026 15:00:07 -0700 (PDT)
+Received: from fedora (yeal.ru. [94.103.95.240])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-69fb5946303sm3345753a12.27.2026.07.27.15.00.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 14:18:44 -0700 (PDT)
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-To: 
-Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
-	Andre Eikmeyer <dev@deq.rocks>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH v5 2/2] thunderbolt: Add device links for Apple T2 NHI
-Date: Mon, 27 Jul 2026 17:18:03 -0400
-Message-ID: <20260727211807.1223-3-atharvatiwarilinuxdev@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260727211807.1223-1-atharvatiwarilinuxdev@gmail.com>
-References: <20260727211807.1223-1-atharvatiwarilinuxdev@gmail.com>
+        Mon, 27 Jul 2026 15:00:06 -0700 (PDT)
+From: Alexander Egorov <begeebe@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	lkml@antheas.dev,
+	derekjohn.clark@gmail.com,
+	samsagax@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: oxpec: Report tablet mode on OneXPlayer Super X
+Date: Tue, 28 Jul 2026 00:59:47 +0300
+Message-ID: <20260727215947.118292-1-begeebe@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Ice Lake Thunderbolt NHI on T2 Macs (2018–2020). The NHI and its
-associated PCIe Root Ports all sit directly on the Root Complex
-with no upstream port. Identify the tunneled PCIe Root Ports by
-their PCI IDs and create device links back to the NHI so that
-PCIe tunnels can be re-established after sleep.
+The OneXPlayer Super X has a detachable pogo-pin keyboard which
+enumerates as USB device 1a86:1305. The firmware does not expose a
+tablet-mode input switch.
 
-And on other T2 Thunderbolt NHI's, like Titan Ridge, the default method
-is used to add device links.
+Without SW_TABLET_MODE, userspace treats the built-in controller and
+other pointer devices as evidence that the system is in laptop mode.
+Mutter consequently leaves automatic display rotation disabled after
+the keyboard is detached.
 
-Co-developed-by: Andre Eikmeyer <dev@deq.rocks>
-Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
+On the Super X DMI match, register a persistent input device and report
+SW_TABLET_MODE according to the pogo keyboard USB hotplug state. Report
+laptop mode while the keyboard is present and tablet mode while it is
+absent. Other USB and Bluetooth keyboards do not affect the switch.
 
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+Tested on a OneXPlayer Super X with keyboard attach and detach events.
+Mutter changes PanelOrientationManaged in both directions and applies
+accelerometer-driven display transforms only while the pogo keyboard is
+absent.
+
+Development of this patch used assistance from ChatGPT 5.6 sol.
+
+Signed-off-by: Alexander Egorov <begeebe@gmail.com>
 ---
- drivers/thunderbolt/tb.c | 54 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
+ drivers/platform/x86/Kconfig |   7 ++-
+ drivers/platform/x86/oxpec.c | 110 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index c69c323e6952..9b80e9339728 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -9,6 +9,7 @@
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/delay.h>
-+#include <linux/pci.h>
- #include <linux/pm_runtime.h>
- #include <linux/platform_data/x86/apple.h>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b54b521..3e30127 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1055,11 +1055,14 @@ config OXP_EC
+ 	depends on ACPI_EC
+ 	depends on ACPI_BATTERY
+ 	depends on HWMON
++	depends on INPUT
++	depends on USB
+ 	depends on X86
+ 	help
+ 		Enables support for the platform EC of OneXPlayer and AOKZOE
+-		handheld devices. This includes fan speed, fan controls, and
+-		disabling the default TDP behavior of the device.
++		handheld devices. This includes fan speed, fan controls, disabling
++		the default TDP behavior of the device, and tablet mode reporting
++		on supported detachable models.
  
-@@ -3305,21 +3306,70 @@ static const struct tb_cm_ops tb_cm_ops = {
- static bool tb_apple_add_links(struct tb_nhi *nhi)
- {
- 	struct pci_dev *upstream, *pdev;
--	bool ret;
-+	bool ret = false;
+ source "drivers/platform/x86/tuxedo/Kconfig"
  
- 	if (!x86_apple_machine)
- 		return false;
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index 99c0dfc..e64ae54 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -18,10 +18,12 @@
+ #include <linux/dmi.h>
+ #include <linux/hwmon.h>
+ #include <linux/init.h>
++#include <linux/input.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/processor.h>
++#include <linux/usb.h>
+ #include <acpi/battery.h>
  
-+	/* On T2 Macs with Ice Lake Thunderbolt NHIs,
-+	 * identify the tunneled PCIe Root Ports by their PCI IDs
-+	 * and create device links so that
-+	 * PCIe tunnels can be re-established after sleep.
-+	 */
-+	if (has_apple_t2_chip && (nhi->pdev->device == PCI_DEVICE_ID_INTEL_ICL_NHI0 ||
-+				nhi->pdev->device == PCI_DEVICE_ID_INTEL_ICL_NHI1)) {
-+		unsigned int slot, func;
-+		const struct device_link *link;
+ /* Handle ACPI lock mechanism */
+@@ -55,6 +57,14 @@ enum oxp_board {
+ static enum oxp_board board;
+ static struct device *oxp_dev;
+ 
++struct oxp_platform_data {
++	struct input_dev *tablet_mode_input;
++	struct notifier_block usb_notifier;
++};
 +
-+		for (slot = 0; slot < 32; slot++) {
-+			for (func = 0; func < 8; func++) {
-+				struct pci_dev *current_pdev __free(pci_dev_put) =
-+					pci_get_slot(nhi->pdev->bus, PCI_DEVFN(slot, func));
-+				if (!current_pdev)
-+					continue;
++#define OXP_SUPER_X_KEYBOARD_VID	0x1a86
++#define OXP_SUPER_X_KEYBOARD_PID	0x1305
 +
-+				if (!pci_is_pcie(current_pdev) || pci_pcie_type(current_pdev) !=
-+						PCI_EXP_TYPE_ROOT_PORT)
-+					continue;
+ /* Fan reading and PWM */
+ #define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
+ #define OXP_2_SENSOR_FAN_REG		0x58 /* Fan reading is 2 registers long */
+@@ -292,6 +302,94 @@ static const struct dmi_system_id dmi_table[] = {
+ 	{},
+ };
+ 
++static bool oxp_is_super_x_keyboard(const struct usb_device *udev)
++{
++	return le16_to_cpu(udev->descriptor.idVendor) == OXP_SUPER_X_KEYBOARD_VID &&
++	       le16_to_cpu(udev->descriptor.idProduct) == OXP_SUPER_X_KEYBOARD_PID;
++}
 +
-+				switch (current_pdev->device) {
-+				case 0x8a1d:
-+				case 0x8a1f:
-+				case 0x8a21:
-+				case 0x8a23:
-+					break;
-+				default:
-+					continue;
-+				}
++static void oxp_report_keyboard_attached(struct oxp_platform_data *data,
++					 bool attached)
++{
++	/* SW_TABLET_MODE is set when the detachable keyboard is absent. */
++	input_report_switch(data->tablet_mode_input, SW_TABLET_MODE, !attached);
++	input_sync(data->tablet_mode_input);
++}
 +
-+				link = device_link_add(&current_pdev->dev, &nhi->pdev->dev,
-+						DL_FLAG_AUTOREMOVE_SUPPLIER |
-+						DL_FLAG_PM_RUNTIME);
-+				if (link) {
-+					dev_dbg(&nhi->pdev->dev, "created link from %s\n",
-+						dev_name(&current_pdev->dev));
-+					ret = true;
-+				} else {
-+					dev_warn(&nhi->pdev->dev,
-+						"device link creation from %s failed\n",
-+						dev_name(&current_pdev->dev));
-+				}
-+			}
-+		}
-+		return ret;
++static int oxp_find_super_x_keyboard(struct usb_device *udev, void *data)
++{
++	bool *attached = data;
++
++	if (oxp_is_super_x_keyboard(udev))
++		*attached = true;
++
++	return 0;
++}
++
++static int oxp_usb_notify(struct notifier_block *nb,
++			  unsigned long action, void *notify_data)
++{
++	struct oxp_platform_data *data =
++		container_of(nb, struct oxp_platform_data, usb_notifier);
++	struct usb_device *udev = notify_data;
++
++	if (!oxp_is_super_x_keyboard(udev))
++		return NOTIFY_DONE;
++
++	switch (action) {
++	case USB_DEVICE_ADD:
++		oxp_report_keyboard_attached(data, true);
++		break;
++	case USB_DEVICE_REMOVE:
++		oxp_report_keyboard_attached(data, false);
++		break;
++	default:
++		return NOTIFY_DONE;
 +	}
 +
- 	switch (nhi->pdev->device) {
- 	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
- 	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
- 	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
-+	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
-+	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
- 		break;
- 	default:
- 		return false;
++	return NOTIFY_OK;
++}
++
++static void oxp_unregister_usb_notifier(void *notify_block)
++{
++	usb_unregister_notify(notify_block);
++}
++
++static int oxp_register_super_x_tablet_switch(struct device *dev,
++					      struct oxp_platform_data *data)
++{
++	bool keyboard_attached = false;
++	struct input_dev *input;
++	int ret;
++
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++
++	input->name = "OneXPlayer Super X Tablet Mode Switch";
++	input->phys = "oxp-platform/input0";
++	input->id.bustype = BUS_HOST;
++	input_set_capability(input, EV_SW, SW_TABLET_MODE);
++
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	data->tablet_mode_input = input;
++	data->usb_notifier.notifier_call = oxp_usb_notify;
++	usb_register_notify(&data->usb_notifier);
++
++	ret = devm_add_action_or_reset(dev, oxp_unregister_usb_notifier,
++				       &data->usb_notifier);
++	if (ret)
++		return ret;
++
++	usb_for_each_dev(&keyboard_attached, oxp_find_super_x_keyboard);
++	oxp_report_keyboard_attached(data, keyboard_attached);
++
++	return 0;
++}
++
+ /* Helper functions to handle EC read/write */
+ static int read_from_ec(u8 reg, int size, long *val)
+ {
+@@ -954,6 +1052,18 @@ static int oxp_platform_probe(struct platform_device *pdev)
+ 			return ret;
  	}
--
- 	upstream = pci_upstream_bridge(nhi->pdev);
- 	while (upstream) {
- 		if (!pci_is_pcie(upstream))
+ 
++	if (dmi_match(DMI_BOARD_NAME, "ONEXPLAYER SUPER X")) {
++		struct oxp_platform_data *data;
++
++		data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++		if (!data)
++			return -ENOMEM;
++
++		ret = oxp_register_super_x_tablet_switch(dev, data);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-2.43.0
+2.55.0
 
