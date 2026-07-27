@@ -1,87 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E9C3FE36D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C34419FA2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:42:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785157537; cv=none; b=j2RH95UKe52RtIcy9VxGfOUvKOMnXeCgJYVXPpIiPrH240aoqmig/2KC4iZaBNG3Ud+TmlTMwNPtqCZUNMjVupmCYdE0M4+4T6EKrdXTd7vRgcT71TI0vDT4a4LeNB7SpU1vKQvDga2hTh4vbYo/d5eKj+IsQIXvlECRS6ZQ6sE=
+	t=1785159722; cv=none; b=De1C0RYHLFioj0lNnKz3/MaB7mLfZTKbSm4KWbQ3ue5tVX6n/M4DUNazkgsBu1CXd5wvuAfEervMmAGk/4GDlmzWCWxYt0JkAQFqY2p4+lclAiSExPNwiZ98Z5PsFygJlhu649D616F7Qr26xE2oRcnIpOumYZlZhv+FCvEqeZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785157537; c=relaxed/simple;
-	bh=F1IxYhAPqVZmHS6mi7kAQp4Eo0e2Ol8GgBG3I3PWaU4=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BwiPfagDXRZUGYAkmHYkahfZyARH9RtUs8Q0ZR2J2B1Y3gX5i2fUYp5rGOn5zExWeOWeBn6JtJk0DM9nGmfvfXXhTLg87jycr2g6Q+jwCdbKgCFTmjLszHEIo4m0nAYtlVsSNT0j0x52ug6LDCDbOceNMf+6vmIgEAkIKN/l7IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiauvbQK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785159722; c=relaxed/simple;
+	bh=cEjTUob3/RMUWLeJdq/fHY7Csz3hUUYlH5zELynpEFw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YMYGw0Q4EXjIS0mbl/JidyVXi0YPcvJD06Uwkm6ygXeZo1DGxAcbQzSP6rad00NX962/pZTNPOcm7DCgqFKE1JpCYMaibAF/ba9bK5+nPFYxq24XCrW23DyjhwacPV+HNPCyyezwGXYpywGsNke9dsAB05YAjkZAM+6Cn8gR0mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z8d7Ld/s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=myVqyvIY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lWypVjbQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Feg9kTHd; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiauvbQK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916CB1F000E9
-	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785157535;
-	bh=F1IxYhAPqVZmHS6mi7kAQp4Eo0e2Ol8GgBG3I3PWaU4=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc;
-	b=aiauvbQKCvcPkjSvA8l/Lii4R+v5S6ayvl8BWwzTyZcR3M28z3DS7RXONG6taCvi9
-	 ERO28RLBqBJATKWslAwmuJtdA6iALqszUpe0BXEPkUfqvq/O1Jw4Sq5mlzvsKETHCt
-	 f2Rp/oK7ON8h8ryagc0c7V+CmN0IxMKV9aTzVtWHfegLqeGHGCEnmvZjlE1uJEIlfb
-	 RonbDVjmUyOxn2ZmnuBh8OVN3NAZLZCXYkGReG5l+t6KFRSmQtquorXTPDKQ71mtoi
-	 ILkxAh3B9M3gJMNa8w7Ka96nDnwfb9x5jnBykV9b2VpC+1S47iy2u3+9n9hbLAdDKP
-	 /tzXPZ21Jn9tQ==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5aeb2bc82ccso2608995e87.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 06:05:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RqIJ7uKI5qr+KqEdQ/0Qsu5d+jRoQCmiUaCgbpgMOlrWIBzl2YPE0EZp+vHTE5wf2C662me5k/tv7q3RAPP8lFSs9bw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkQWO1EwzA+9l9Bq3BFzYK0HZ0WRtttyXm3U91+XxLo21mtasA
-	M1WAHAfY3rQdFjZ2l4zBG6RY/ToEitOe+RFYkSlK8dQE+Feq95EMxaNngrWaBPffZkmkDDvit3j
-	+1PxP7HtGfIAK5aDrqtXVI30djnhlsdBsPUFavvc/yQ==
-X-Received: by 2002:a05:6512:1113:b0:5ae:b998:9134 with SMTP id
- 2adb3069b0e04-5b2c1af51b2mr1357313e87.1.1785157534083; Mon, 27 Jul 2026
- 06:05:34 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 27 Jul 2026 06:05:32 -0700
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 27 Jul 2026 06:05:32 -0700
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260726101739.33170-13-farbere@amazon.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z8d7Ld/s";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="myVqyvIY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lWypVjbQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Feg9kTHd"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5519D7D3AC;
+	Mon, 27 Jul 2026 13:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1785159715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ol+wJN7SMQsWClj0GQ/esC3CCeSGLm9ulMH1scVCpK8=;
+	b=z8d7Ld/syGosi8JLxQ7l7koNg1leoowl1zGPH97arlxOHbGDfdXKkquMgBtuigODR0f8fc
+	67jfHM4/TNTmy23YUqBzIPOIRTwntovJ3jKi0ajKO+am0lGJtphUTh700rUg6G5dKzTNzA
+	yvqHSqP8+6rJo1dUO3Tc5yHZh4yCwc8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1785159715;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ol+wJN7SMQsWClj0GQ/esC3CCeSGLm9ulMH1scVCpK8=;
+	b=myVqyvIYgkYQTbAaOvX1IWUn2XqClf3tnkU2M1Kv5O3WcQVqd+nLrJKiIL4cny5Gy6U2Lo
+	etg1duEMmR1idTCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=lWypVjbQ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Feg9kTHd
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1785159711; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ol+wJN7SMQsWClj0GQ/esC3CCeSGLm9ulMH1scVCpK8=;
+	b=lWypVjbQUPK51Q0VUVHrVkty2bjPRSd4cesGkUUjmZcLyjpAz9zKnUiszj7AAFfDr2/doE
+	tDuniYzH865kkFsX4wrpi/5/64cWRcbAQZu+BgwYdhcOjVKD0lpRnfYuHxNx7r8v3ssrpl
+	1UAuc5KLqJh1jhto+gggGP7laMiTwBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1785159711;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ol+wJN7SMQsWClj0GQ/esC3CCeSGLm9ulMH1scVCpK8=;
+	b=Feg9kTHd4K8BLrZq7OhqQnexoXA/hnXfjjR98mDJOWVVDZU6yLdpkUdoiwJVlpVUWY237S
+	hJ21oyFpyGg8jaCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D77FC779C1;
+	Mon, 27 Jul 2026 13:41:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KtRoMx5gZ2qMFgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 27 Jul 2026 13:41:50 +0000
+Date: Mon, 27 Jul 2026 15:41:50 +0200
+Message-ID: <87se548s81.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Marco Giunta <marco_giunta@outlook.it>,
+	tiwai@suse.com,
+	perex@perex.cz,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	wangweidong.a@awinic.com,
+	nadim@symbolic.software,
+	imitoy@imitoy.top,
+	munzirtaha@gmail.com,
+	yakov.till@gmail.com
+Subject: Re: [PATCH 0/8] ALSA: hda: Add AW88399 HDA side codec driver for Lenovo Legion
+In-Reply-To: <06572961-d2c6-4de5-9102-2b5fc6d5ef5d@sirena.org.uk>
+References: <DS7PR19MB77247D9AD698CF0FF37DB58BFCC62@DS7PR19MB7724.namprd19.prod.outlook.com>
+	<06572961-d2c6-4de5-9102-2b5fc6d5ef5d@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260726101739.33170-1-farbere@amazon.com> <20260726101739.33170-13-farbere@amazon.com>
-Date: Mon, 27 Jul 2026 06:05:32 -0700
-X-Gmail-Original-Message-ID: <CAMRc=Md4FHz3KhFAFBVCJb1+rYA8S506WPrEKs=X2ng6+byPuA@mail.gmail.com>
-X-Gm-Features: AUfX_mwa8bywtWm7t0TzzfpEly7iY_KFJAx4fJGIW8nzUJC_flDbreg42-ul5w0
-Message-ID: <CAMRc=Md4FHz3KhFAFBVCJb1+rYA8S506WPrEKs=X2ng6+byPuA@mail.gmail.com>
-Subject: Re: [PATCH v4 12/13] gpio: gpiolib-kunit: use devm_blocking_notifier_chain_register()
-To: Eliav Farber <farbere@amazon.com>
-Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, 
-	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
-	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, 
-	orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, 
-	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	dmitry.torokhov@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	W_Armin@gmx.de, ukleinek@kernel.org, fabio.m.de.francesco@linux.intel.com, 
-	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
-	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -2.01
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 5519D7D3AC
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,outlook.it];
+	FREEMAIL_CC(0.00)[outlook.it,suse.com,perex.cz,gmail.com,vger.kernel.org,kernel.org,linux.intel.com,awinic.com,symbolic.software,imitoy.top];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
 
-On Sun, 26 Jul 2026 12:17:38 +0200, Eliav Farber <farbere@amazon.com> said:
-> Replace the blocking_notifier_chain_register() +
-> devm_add_action_or_reset() pattern with a single call to
-> devm_blocking_notifier_chain_register(), removing the
-> gpio_unbind_unregister_notifier() callback.
->
-> Signed-off-by: Eliav Farber <farbere@amazon.com>
-> ---
+On Mon, 27 Jul 2026 13:57:06 +0200,
+Mark Brown wrote:
+> 
+> On Fri, Jul 17, 2026 at 03:25:02PM +0200, Marco Giunta wrote:
+> > Several Lenovo Legion laptops (Pro 7i 16IAX10H, Y9000P IAX10,
+> > Pro 7 16AFR10H, R9000P ADR10) use AWINIC AW88399 smart amplifiers
+> > to drive their bass woofers, connected via I2C as side codecs
+> > to a Realtek ALC287 HDA codec.
+> 
+> The following changes since commit 1590cf0329716306e948a8fc29f1d3ee87d3989f:
+> 
+>   Linux 7.2-rc4 (2026-07-19 13:54:41 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tags/asoc-aw88339-lib
+> 
+> for you to fetch changes up to 15c9fdb3c39d5073463ffa746cc64ad9682c875f:
+> 
+>   ASoC: aw88399: add channel setter for HDA side codec (2026-07-21 19:16:08 +0100)
+> 
+> ----------------------------------------------------------------
+> ASoC: Add AW88399 HDA side codec driver for Lenovo Legion
+> 
+> In order to support AW88399 HDA side codec used on the Lenovo Legion we
+> need updates to it's ASoC driver.
 
-Assuming I'll get an immutable branch OR it doesn't conflict too much:
+Pulled to for-next branch now.  Thanks.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 
-Otherwise, this should wait until the next cycle if possible.
-
-Bart
+Takashi
