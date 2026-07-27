@@ -1,45 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CBA83C4547;
-	Mon, 27 Jul 2026 20:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7FC3D5229
+	for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 20:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785184694; cv=none; b=ff062euJmeJPr4EsflfbWCOjisYiwsI/9pcPHSwluAvxuowJ+zKY+J/FpfbKa+pyd+ww8IMKjvukLBKk1lZjfSpH6R+r6DtCd7Nox1Kbn4lu1NFhnsBZp9BUUb/HXaR6IT5/zsIr+LgwlLxy9q3ORtj0+hDlCGb2xhTPBGJyUPo=
+	t=1785185954; cv=none; b=RMMZ8rFnjvoBSt5y2mvbmb28G53OxsGzExnn659GNu5TOiOoofbV3xzgdANXXB++txNklowR7tzPXGN9L/el3LFsHYhn2pM4H/pqcw8mPnNjcZFzbdpVwW0HIB+bWt9d98vUb/QmHlB86zmIEqAPR4cT942cONpVgJlNCPE8guk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785184694; c=relaxed/simple;
-	bh=LphZ4gQFKj5pWHE/qoF4Xt3q2cs8Zr8NroDSbfciro4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VU3tm3Dgsp0JZsoMIG2V8lPdpLoYNGvNTszeU8RXgkEwhUwtJY/rkCDB9cyPSV4rvy+zwGDt7jMUmRiCJBbUzpUSAodZCdyTHQOIdAbrwuWp3Zf7fcLDaTY5VqStCOV9kAAO5kwmTroov5zc7ZBQxv/2GSG4GXqK7NQ0fQiSrUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5hrLzqk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785185954; c=relaxed/simple;
+	bh=PGr5P9dO2LXR/qOVQL+3H4LAklnohNumK0AYFRphudI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YxdYgEbietYzDjyP7LfjdlgfC6Ja+dsUcvNNqd3Lk7npmCT4Wusp9/ylOELdIVofud0/EEOpXJOXShJ8OwnKebW/rFYI+wGkJTJd/vEqT6Q0SnC4nkB+ugoZyDNo22f6lIQ8zVUdWljJvWnkgYgBo3/KQ8rr0FxuMHRSF0Wip0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIuAKtXz; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5hrLzqk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CB21F000E9;
-	Mon, 27 Jul 2026 20:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785184692;
-	bh=Yvjdu6w9W5jk41VdS+aD9B7ZMG6fPgnGCjj8DXPL0N0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=L5hrLzqk7OgXAopqk3zQjj7sIUF6rRGZIYt66DTNccfc69KiaJvdck4NVZsoaGgdN
-	 gkT80C7KCnCvKX5oQ+Uavmv7wMFk6w1voXzZZsswlLUCjuLUBSCQApIMSUnGaz/CFh
-	 3wQ3uhntVXi5iW5J6v9IksAP2DYNjKaOTzLSB+UNGg/STG5+T8IyBm5tJDGl7be8ty
-	 UDISJcHlT3yf/VhcESVAxTZ7HOjnYl3NlHu97n8k1XXy+K8JNe98hAk46pvnOT9xAs
-	 dIrIJHK6nVK9rLbCrjMPD/84DNBEy1e6h28iWNhsaZXSeXt2rtgjAfa+MCt1P8IFrb
-	 4y3girB76pSmA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	brgl@kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/surface: gpe: add missing err.h include
-Date: Mon, 27 Jul 2026 22:38:06 +0200
-Message-ID: <20260727203806.2274548-1-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIuAKtXz"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4954df200ddso20591665e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 27 Jul 2026 13:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785185949; x=1785790749; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rzvTezPSbkhvfN6F0Zz9+wYvrM+jRhCImVGR1G8TcgU=;
+        b=RIuAKtXzBoFksrhL76sraDkPDK4+ZEe0pQbD6Ffv7w45EuEhZ/RXreeKAWBLzphtZV
+         oN4T5Bkpa+UiR16xKaVCG0xv6HQmxdOupF/z3bKVKI84MH+QJHgS7v9wxhK/nBWnFbLg
+         kovrWaCWGxWZrm9WuP1w6nDLfWoKDuTNd6q/BA6RLrMj1BactHzfTsxpFzFNjk3nPlmz
+         LfED1ftEPQVUWcR5J0sRbN5er3qz1UE1x9WAu8bqncLdEzsHi/cdig+kls0HHumI63Wv
+         YmR10bNglx2MuBzOuA4zlJCF6CmL9xRwCW/LkPHy28Ya5nkngPvv7Ny03ZTVvXlCADXu
+         DFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785185949; x=1785790749;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rzvTezPSbkhvfN6F0Zz9+wYvrM+jRhCImVGR1G8TcgU=;
+        b=niNOCZW1TcByWsJosG1aEpvDmM63r22oZqKRoD3gPqe2o5R99LPUhLxeV1ihlZRbOh
+         dM2cGl/ZYDW2UfF6rBa7x2SX6Yney2bMuddmPr3qiErFLlt6POifeEOVnFxapzveTawf
+         kOdEPEiCL6OXnBnKgv/phSsS1id9zuzg5qC+kJm741tkF49AG7rjiOSy4I+LtqIY1ZnZ
+         Lk3GfYTdDKw90HbP8pUrbwqBe/nnRs2OAWhOpLGTsvYv1z1UlQxAJZq+YVOCsIaS1P84
+         oIE1i48eEnqDQQ9tL28mUXTloWqqR1wu7nGTv0gSgADuFf9o5YebyIV8hhy44CWdd4WU
+         wWaw==
+X-Gm-Message-State: AOJu0YzHl0LUxQWoucJzlMIam5eDLkALqZTg74mOOEXuVbbc0L/SaGXP
+	AK6gxp9CN3lOz3O3OnjEOyAWz+sH6ndMipBuGAiPV4groswvQLlqdk0J6j6yJHiL
+X-Gm-Gg: AR+sD10jndVX+AsUiFcU323hS0CzGV8F8lUsyIrvfgLOGdHxDcztRPE29NIA1xRW1s3
+	LTtIHX8H5e44Ey2/ZrMzWy7oaAGgWb7LIERf4JNAgIM/gbjTsFbAXAdZW0Y7GR/g8TdAlbg4Rmv
+	LAwfhxZw6WOz/PKEl2Et5MMAHyb7gng1PE37xu9KSokozsL3QIl6M0XGMboGM8n7L1n6xqsG3Dm
+	1Ynq7pRpsmd6TLsuQgmzxQwFLOD4RoElGaaqwYKCMj6mNtKEKM+c647WtA7F1N2XTp62ScxQvng
+	m1phEyCJ51yR2HnLHR6EUiBYJ295bvMZGMVDOlmq7yRaInL3WUnRuLQoO898bcv2Z94W/ijfN9i
+	j586seW+tbh2c7Ecru/HKo51GmuvNCCSgv/VEyGuuXolFToS4RKiQ+XRJjHcj077JxHgoDu23dL
+	emMEkaEIxuPg==
+X-Received: by 2002:a05:600c:3b29:b0:495:3f68:699b with SMTP id 5b1f17b1804b1-496c4f8ca3dmr6326325e9.9.1785185948963;
+        Mon, 27 Jul 2026 13:59:08 -0700 (PDT)
+Received: from fedora ([2a02:ff0:220:b213:dfd1:35e6:957c:b8c2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f939c1465sm37400507f8f.26.2026.07.27.13.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2026 13:59:08 -0700 (PDT)
+From: =?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
+Subject: [PATCH] platform/x86: Add Goodix fingerprint EC mailbox transport
+Date: Mon, 27 Jul 2026 23:58:37 +0300
+Message-ID: <20260727205837.91413-1-ertugtopcu0@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260727144308.61842-1-bartosz.golaszewski@oss.qualcomm.com>
-References: <20260727144308.61842-1-bartosz.golaszewski@oss.qualcomm.com>
-X-Patch-Reply: applied
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -49,19 +75,1419 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Mon, 27 Jul 2026 16:43:08 +0200, Bartosz Golaszewski wrote:
-> [PATCH] platform/surface: gpe: add missing err.h include
+Some Goodix fingerprint sensors are connected through an ACPI-described
+embedded-controller shared-memory mailbox rather than directly through USB
+or SPI.
 
-Applied, thanks!
+Add a transport driver for the GXFP5130 platform interface. The driver
+owns the MMIO mailbox, GPIO handshakes and IRQ. It exposes opaque mailbox
+records through /dev/gxfp. Keep sensor initialization, TLS, capture and
+image processing in userspace.
 
-  Branch: driver-core-testing
-  Tree:   git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git
+Restrict the raw transport to CAP_SYS_RAWIO and document the UAPI. Handle
+device removal and system suspend without invalidating open file
+descriptors.
 
-[1/1] platform/surface: gpe: add missing err.h include
-      commit: b47dcd7b41e2
+Signed-off-by: Ertuğrul Topçu <ertugtopcu0@gmail.com>
+---
+ .../ABI/testing/dev-goodix-ec-mailbox         |  22 +
+ MAINTAINERS                                   |   8 +
+ drivers/platform/x86/Kconfig                  |   2 +
+ drivers/platform/x86/Makefile                 |   3 +
+ .../platform/x86/goodix-ec-mailbox/Kconfig    |  15 +
+ .../platform/x86/goodix-ec-mailbox/Makefile   |   2 +
+ .../x86/goodix-ec-mailbox/goodix_ec_mailbox.h | 115 +++
+ .../x86/goodix-ec-mailbox/goodix_ec_main.c    | 740 ++++++++++++++++++
+ .../x86/goodix-ec-mailbox/goodix_ec_uapi.c    | 360 +++++++++
+ include/uapi/linux/goodix_ec.h                |  37 +
+ 10 files changed, 1304 insertions(+)
+ create mode 100644 Documentation/ABI/testing/dev-goodix-ec-mailbox
+ create mode 100644 drivers/platform/x86/goodix-ec-mailbox/Kconfig
+ create mode 100644 drivers/platform/x86/goodix-ec-mailbox/Makefile
+ create mode 100644 drivers/platform/x86/goodix-ec-mailbox/goodix_ec_mailbox.h
+ create mode 100644 drivers/platform/x86/goodix-ec-mailbox/goodix_ec_main.c
+ create mode 100644 drivers/platform/x86/goodix-ec-mailbox/goodix_ec_uapi.c
+ create mode 100644 include/uapi/linux/goodix_ec.h
 
-The patch will appear in the next linux-next integration (typically within 24
-hours on weekdays).
+diff --git a/Documentation/ABI/testing/dev-goodix-ec-mailbox b/Documentation/ABI/testing/dev-goodix-ec-mailbox
+new file mode 100644
+index 000000000000..11ca80a41ca7
+--- /dev/null
++++ b/Documentation/ABI/testing/dev-goodix-ec-mailbox
+@@ -0,0 +1,22 @@
++What:		/dev/gxfp
++Date:		July 2026
++KernelVersion:	TBD
++Contact:	Ertugrul Topcu <ertugtopcu0@gmail.com>
++Description:
++		Binary userspace interface for the ACPI Goodix EC mailbox
++		fingerprint transport. Only callers with CAP_SYS_RAWIO may open
++		the device. At most one reader may be open at a time.
++
++		A write consists of struct goodix_ec_tx_header followed by exactly
++		payload_len opaque MP payload bytes. reserved and flags must be zero.
++
++		A read returns one struct goodix_ec_record_header followed by exactly
++		len bytes. mp_type is the normalized MP type and timestamp_ns is a
++		CLOCK_MONOTONIC timestamp captured when the record entered the RX
++		queue. Records are never split across reads.
++
++		poll(2) reports POLLIN while a complete record is queued. Device
++		removal reports POLLERR | POLLHUP. System suspend reports POLLERR.
++
++		GOODIX_EC_IOCTL_FLUSH_RX discards all queued receive records.
++Users:		libfprint Goodix GXFP5130 userspace driver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 92a2167f1eb8..0c62071bbc1b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11109,6 +11109,14 @@ M:	Maud Spierings <maudspierings@gocontroll.com>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/connector/gocontroll,moduline-module-slot.yaml
+ 
++GOODIX EC MAILBOX FINGERPRINT TRANSPORT DRIVER
++M:	Ertugrul Topcu <ertugtopcu0@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	Documentation/ABI/testing/dev-goodix-ec-mailbox
++F:	drivers/platform/x86/goodix-ec-mailbox/
++F:	include/uapi/linux/goodix_ec.h
++
+ GOODIX TOUCHSCREEN
+ M:	Hans de Goede <hansg@kernel.org>
+ L:	linux-input@vger.kernel.org
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 957034f39e4e..57d1311f8670 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -440,6 +440,8 @@ config FUJITSU_TABLET
+ 
+          If you have a Fujitsu convertible or slate, say Y or M here.
+ 
++source "drivers/platform/x86/goodix-ec-mailbox/Kconfig"
++
+ config GPD_POCKET_FAN
+ 	tristate "GPD Pocket Fan Controller support"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 872ac3842391..650ab67f7902 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -54,6 +54,9 @@ obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
+ obj-$(CONFIG_FUJITSU_LAPTOP)	+= fujitsu-laptop.o
+ obj-$(CONFIG_FUJITSU_TABLET)	+= fujitsu-tablet.o
+ 
++# Goodix
++obj-$(CONFIG_GOODIX_EC_MAILBOX)	+= goodix-ec-mailbox/
++
+ # GPD
+ obj-$(CONFIG_GPD_POCKET_FAN)	+= gpd-pocket-fan.o
+ 
+diff --git a/drivers/platform/x86/goodix-ec-mailbox/Kconfig b/drivers/platform/x86/goodix-ec-mailbox/Kconfig
+new file mode 100644
+index 000000000000..6f43b1323fa4
+--- /dev/null
++++ b/drivers/platform/x86/goodix-ec-mailbox/Kconfig
+@@ -0,0 +1,15 @@
++config GOODIX_EC_MAILBOX
++	tristate "Goodix fingerprint EC mailbox transport"
++	depends on X86
++	depends on ACPI
++	depends on GPIOLIB
++	help
++	  Enable transport support for Goodix fingerprint sensors connected
++	  through an ACPI-described embedded-controller shared-memory mailbox.
++
++	  The driver exposes the opaque mailbox transport through /dev/gxfp.
++	  Sensor configuration, TLS, capture and image processing remain in
++	  userspace.
++
++	  To compile this driver as a module, choose M here. The module will be
++	  called goodix_ec_mailbox.
+diff --git a/drivers/platform/x86/goodix-ec-mailbox/Makefile b/drivers/platform/x86/goodix-ec-mailbox/Makefile
+new file mode 100644
+index 000000000000..52e5516eefb0
+--- /dev/null
++++ b/drivers/platform/x86/goodix-ec-mailbox/Makefile
+@@ -0,0 +1,2 @@
++obj-$(CONFIG_GOODIX_EC_MAILBOX) += goodix_ec_mailbox.o
++goodix_ec_mailbox-y := goodix_ec_main.o goodix_ec_uapi.o
+diff --git a/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_mailbox.h b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_mailbox.h
+new file mode 100644
+index 000000000000..26fae8b5ec64
+--- /dev/null
++++ b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_mailbox.h
+@@ -0,0 +1,115 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _GOODIX_EC_H_
++#define _GOODIX_EC_H_
++
++#include <linux/gpio/consumer.h>
++#include <linux/ioport.h>
++#include <linux/kfifo.h>
++#include <linux/kref.h>
++#include <linux/miscdevice.h>
++#include <linux/mutex.h>
++#include <linux/spinlock.h>
++#include <linux/wait.h>
++#include <linux/stddef.h>
++#include <linux/types.h>
++
++#define GOODIX_EC_DRIVER_NAME		"goodix-ec-mailbox"
++
++/* Shared-memory mailbox layout. */
++#define GOODIX_EC_MMIO_SIZE		0x1000
++#define GOODIX_EC_TX_OFFSET		0x000
++#define GOODIX_EC_TX_SIZE		0x0200
++#define GOODIX_EC_RX_OFFSET		0x0200
++#define GOODIX_EC_RX_SIZE		0x0e00
++#define GOODIX_EC_PACKET_ALIGNMENT	8
++
++/* Nuvoton EC mailbox framing. */
++#define GOODIX_EC_PACKET_TYPE		0xf0
++#define GOODIX_EC_SEQUENCE_SEED		0x8881
++
++/* MP framing. The payload is opaque to the kernel. */
++#define GOODIX_MP_HEADER_SIZE		4
++
++/* Synchronous startup transaction timing. */
++#define GOODIX_WRITE_DONE_PRE_US	50
++#define GOODIX_WRITE_DONE_HIGH_US	4000
++#define GOODIX_WRITE_DONE_POST_US	200
++#define GOODIX_READ_DONE_HIGH_US	50
++#define GOODIX_READ_DONE_POST_US	200
++#define GOODIX_SYNC_RX_DELAY_US		1000
++
++struct device;
++
++struct goodix_ec_header {
++	u8 type;
++	__le16 payload_len;
++	u8 checksum;
++	__le16 sequence;
++	u8 reserved[2];
++} __packed;
++
++struct goodix_mp_header {
++	u8 type;
++	__le16 payload_len;
++	u8 checksum;
++} __packed;
++
++struct goodix_device;
++
++/* Add platform-specific transport quirks here only after hardware validation. */
++struct goodix_model_data {
++	const char *name;
++	const char *acpi_hid;
++};
++
++struct goodix_device {
++	struct device *dev;
++	struct kref refcount;
++	bool disconnected;
++	bool suspended;
++	bool irq_enabled;
++
++	void __iomem *mailbox;
++	resource_size_t mailbox_phys;
++	resource_size_t mailbox_size;
++
++	struct gpio_desc *write_done_gpio;
++	struct gpio_desc *read_done_gpio;
++	struct gpio_desc *irq_gpio;
++	int irq;
++
++	u8 *tx_buf;
++	u8 *rx_buf;
++
++	u8 *rx_reassembly;
++	size_t rx_reassembly_len;
++	size_t rx_reassembly_received;
++	u8 rx_reassembly_mp_type;
++	bool rx_reassembly_active;
++
++	u16 tx_sequence;
++	/* Serializes mailbox TX with threaded-IRQ RX access. */
++	struct mutex transfer_lock;
++
++	struct miscdevice miscdev;
++	struct kfifo rx_fifo;
++	/* Protects the RX FIFO and reader ownership state. */
++	spinlock_t rx_fifo_lock;
++	/* Serializes record-oriented read operations. */
++	struct mutex rx_read_lock;
++	wait_queue_head_t rx_wait;
++	bool rx_fifo_ready;
++	bool rx_reader_open;
++	bool misc_registered;
++
++	const struct goodix_model_data *model;
++};
++
++int goodix_ec_sync_send(struct goodix_device *gdev,
++			const u8 *tx, size_t tx_len);
++bool goodix_ec_device_get(struct goodix_device *gdev);
++void goodix_ec_device_put(struct goodix_device *gdev);
++int goodix_ec_uapi_register(struct goodix_device *gdev);
++void goodix_ec_uapi_unregister(struct goodix_device *gdev);
++
++#endif /* _GOODIX_EC_H_ */
+diff --git a/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_main.c b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_main.c
+new file mode 100644
+index 000000000000..c799f6175a34
+--- /dev/null
++++ b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_main.c
+@@ -0,0 +1,740 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Goodix fingerprint sensors behind an EC shared-memory mailbox.
++ *
++ * The tested GXFP5130 platform exposes no native Linux SPI device. The host
++ * talks to a Nuvoton EC through ACPI-described MMIO and GPIO handshakes; the EC
++ * forwards opaque MP payloads to the fingerprint sensor over its private bus.
++ *
++ * The source intentionally remains a single translation unit. Its internal
++ * order still preserves clear boundaries:
++ *
++ *   1. EC mailbox transport (MMIO/GPIO)
++ *   2. MP packet transport and RX reassembly
++ *   3. Userspace interface
++ *   4. ACPI platform-driver lifecycle
++ *
++ * Sensor protocol policy deliberately stays in userspace. This driver does
++ * not know about Goodix commands, checksums, TLS, configuration, capture, or
++ * sensor power states.
++ */
++
++#include <linux/acpi.h>
++#include <linux/align.h>
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/gpio/consumer.h>
++#include <linux/io.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/capability.h>
++#include <linux/fs.h>
++#include <linux/kernel.h>
++#include <linux/kfifo.h>
++#include <linux/miscdevice.h>
++#include <linux/poll.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/timekeeping.h>
++#include <linux/uaccess.h>
++#include <linux/unaligned.h>
++
++#include "goodix_ec_mailbox.h"
++#include <linux/goodix_ec.h>
++
++#define GXFP5130_ACPI_HID "GXFP5130"
++
++static void goodix_ec_device_release(struct kref *refcount)
++{
++	struct goodix_device *gdev =
++		container_of(refcount, struct goodix_device, refcount);
++
++	kfree(gdev);
++}
++
++bool goodix_ec_device_get(struct goodix_device *gdev)
++{
++	return kref_get_unless_zero(&gdev->refcount);
++}
++
++void goodix_ec_device_put(struct goodix_device *gdev)
++{
++	kref_put(&gdev->refcount, goodix_ec_device_release);
++}
++
++static void goodix_ec_device_put_action(void *data)
++{
++	goodix_ec_device_put(data);
++}
++
++/* -------------------------------------------------------------------------- */
++/* EC mailbox transport                                                       */
++/* -------------------------------------------------------------------------- */
++
++struct goodix_ec_acpi_gpio_state {
++	unsigned int gpio_count;
++	int irq_index;
++	int done_index[2];
++	u8 done_polarity[2];
++	unsigned int done_count;
++};
++
++static int goodix_ec_acpi_gpio_resource(struct acpi_resource *resource,
++					void *context)
++{
++	struct goodix_ec_acpi_gpio_state *state = context;
++	struct acpi_resource_gpio *gpio;
++	unsigned int index;
++
++	if (resource->type != ACPI_RESOURCE_TYPE_GPIO)
++		return 0;
++
++	gpio = &resource->data.gpio;
++	index = state->gpio_count++;
++	if (!gpio->pin_table_length)
++		return 0;
++
++	if (gpio->connection_type == ACPI_RESOURCE_GPIO_TYPE_INT) {
++		if (state->irq_index < 0)
++			state->irq_index = index;
++	} else if (gpio->connection_type == ACPI_RESOURCE_GPIO_TYPE_IO &&
++		   state->done_count < ARRAY_SIZE(state->done_index)) {
++		state->done_index[state->done_count] = index;
++		state->done_polarity[state->done_count] = gpio->polarity;
++		state->done_count++;
++	}
++
++	return 0;
++}
++
++static int goodix_ec_add_gpio_mappings(struct device *dev)
++{
++	struct goodix_ec_acpi_gpio_state state = {
++		.irq_index = -1,
++		.done_index = { -1, -1 },
++	};
++	struct acpi_gpio_mapping *mappings;
++	struct acpi_gpio_params *params;
++	struct acpi_device *adev = ACPI_COMPANION(dev);
++	LIST_HEAD(resources);
++	bool active_low;
++	int ret;
++
++	if (!adev)
++		return -ENODEV;
++
++	ret = acpi_dev_get_resources(adev, &resources,
++				     goodix_ec_acpi_gpio_resource, &state);
++	acpi_dev_free_resource_list(&resources);
++	if (ret <= 0)
++		return ret < 0 ? ret : -ENOENT;
++	if (state.irq_index < 0 || state.done_count != 2)
++		return dev_err_probe(dev, -ENOENT,
++				     "ACPI _CRS does not describe one IRQ and two done GPIOs\n");
++	if (state.done_polarity[0] != state.done_polarity[1])
++		return dev_err_probe(dev, -EINVAL,
++				     "ACPI done GPIO polarities differ\n");
++
++	active_low = state.done_polarity[0] != 0;
++	params = devm_kcalloc(dev, 3, sizeof(*params), GFP_KERNEL);
++	mappings = devm_kcalloc(dev, 4, sizeof(*mappings), GFP_KERNEL);
++	if (!params || !mappings)
++		return -ENOMEM;
++
++	params[0].crs_entry_index = state.irq_index;
++	params[0].line_index = 0;
++	params[0].active_low = false;
++	mappings[0].name = "irq-gpios";
++	mappings[0].data = &params[0];
++	mappings[0].size = 1;
++
++	params[1].crs_entry_index = state.done_index[0];
++	params[1].line_index = 0;
++	params[1].active_low = active_low;
++	mappings[1].name = "write-done-gpios";
++	mappings[1].data = &params[1];
++	mappings[1].size = 1;
++
++	params[2].crs_entry_index = state.done_index[1];
++	params[2].line_index = 0;
++	params[2].active_low = active_low;
++	mappings[2].name = "read-done-gpios";
++	mappings[2].data = &params[2];
++	mappings[2].size = 1;
++
++	ret = devm_acpi_dev_add_driver_gpios(dev, mappings);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "failed to install ACPI GPIO mappings\n");
++
++	dev_dbg(dev,
++		"ACPI GPIO mappings: irq=%d write-done=%d read-done=%d active-low=%u\n",
++		state.irq_index, state.done_index[0], state.done_index[1],
++		active_low);
++	return 0;
++}
++
++static int goodix_ec_get_gpio(struct goodix_device *gdev,
++			      struct gpio_desc **gpio,
++			      const char *name,
++			      enum gpiod_flags flags)
++{
++	*gpio = devm_gpiod_get(gdev->dev, name, flags);
++	if (IS_ERR(*gpio))
++		return dev_err_probe(gdev->dev, PTR_ERR(*gpio),
++				     "failed to acquire %s GPIO\n", name);
++
++	if (!*gpio)
++		return dev_err_probe(gdev->dev, -ENODEV,
++				     "%s GPIO missing\n", name);
++
++	return 0;
++}
++
++static void goodix_ec_mmio_write_tx(struct goodix_device *gdev, size_t len)
++{
++	size_t offset;
++
++	for (offset = 0; offset < len; offset += sizeof(u64)) {
++		u64 value = get_unaligned_le64(gdev->tx_buf + offset);
++
++		writeq(value, gdev->mailbox + GOODIX_EC_TX_OFFSET + offset);
++	}
++
++	/* Publish every qword before asserting the write-done doorbell. */
++	wmb();
++}
++
++static void goodix_ec_mmio_read_rx(struct goodix_device *gdev)
++{
++	size_t offset;
++
++	for (offset = 0; offset < GOODIX_EC_RX_SIZE; offset += sizeof(u64)) {
++		u64 value = readq(gdev->mailbox + GOODIX_EC_RX_OFFSET + offset);
++
++		put_unaligned_le64(value, gdev->rx_buf + offset);
++	}
++
++	/* Complete the mailbox snapshot before parsing its headers. */
++	rmb();
++}
++
++static int goodix_ec_pulse_write_done(struct goodix_device *gdev)
++{
++	if (!gdev->write_done_gpio)
++		return -ENODEV;
++
++	gpiod_set_value_cansleep(gdev->write_done_gpio, 0);
++	udelay(GOODIX_WRITE_DONE_PRE_US);
++
++	gpiod_set_value_cansleep(gdev->write_done_gpio, 1);
++	udelay(GOODIX_WRITE_DONE_HIGH_US);
++
++	gpiod_set_value_cansleep(gdev->write_done_gpio, 0);
++	udelay(GOODIX_WRITE_DONE_POST_US);
++
++	return 0;
++}
++
++static int goodix_ec_pulse_read_done(struct goodix_device *gdev)
++{
++	if (!gdev->read_done_gpio)
++		return -ENODEV;
++
++	/* RX must be copied before acknowledging that the host consumed it. */
++	gpiod_set_value_cansleep(gdev->read_done_gpio, 1);
++	udelay(GOODIX_READ_DONE_HIGH_US);
++
++	gpiod_set_value_cansleep(gdev->read_done_gpio, 0);
++	udelay(GOODIX_READ_DONE_POST_US);
++
++	return 0;
++}
++
++static int goodix_ec_build_packet(struct goodix_device *gdev,
++				  const u8 *payload, size_t payload_len,
++				  size_t *packet_len)
++{
++	struct goodix_ec_header *header;
++	size_t total_len;
++
++	if (!gdev || !payload || !payload_len || !packet_len)
++		return -EINVAL;
++
++	if (payload_len > U16_MAX)
++		return -EOVERFLOW;
++
++	total_len = ALIGN(sizeof(*header) + payload_len,
++			  GOODIX_EC_PACKET_ALIGNMENT);
++	if (total_len > GOODIX_EC_TX_SIZE)
++		return -EMSGSIZE;
++
++	memset(gdev->tx_buf, 0, total_len);
++
++	header = (struct goodix_ec_header *)gdev->tx_buf;
++	header->type = GOODIX_EC_PACKET_TYPE;
++	header->payload_len = cpu_to_le16(payload_len);
++	header->checksum = header->type + (payload_len & 0xff) +
++			   ((payload_len >> 8) & 0xff);
++	header->sequence = cpu_to_le16(++gdev->tx_sequence);
++
++	memcpy(gdev->tx_buf + sizeof(*header), payload, payload_len);
++	*packet_len = total_len;
++
++	return 0;
++}
++
++int goodix_ec_sync_send(struct goodix_device *gdev,
++			const u8 *tx, size_t tx_len)
++{
++	size_t packet_len;
++	int ret;
++
++	ret = goodix_ec_build_packet(gdev, tx, tx_len, &packet_len);
++	if (ret)
++		return ret;
++
++	goodix_ec_mmio_write_tx(gdev, packet_len);
++
++	ret = goodix_ec_pulse_write_done(gdev);
++	if (ret)
++		return ret;
++
++	udelay(GOODIX_SYNC_RX_DELAY_US);
++	return 0;
++}
++
++/* -------------------------------------------------------------------------- */
++/* MP packet transport */
++/* -------------------------------------------------------------------------- */
++static void goodix_ec_rx_push(struct goodix_device *gdev, u8 mp_type,
++			      const u8 *payload, size_t payload_len)
++{
++	struct goodix_ec_record_header header;
++	unsigned long flags;
++	size_t required;
++
++	if (!gdev || !payload || !payload_len ||
++	    payload_len > GOODIX_EC_UAPI_RX_MAX)
++		return;
++
++	memset(&header, 0, sizeof(header));
++	header.len = payload_len;
++	header.mp_type = mp_type >> 4;
++	header.timestamp_ns = ktime_get_ns();
++	required = sizeof(header) + payload_len;
++
++	spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++	if (!gdev->rx_fifo_ready || kfifo_avail(&gdev->rx_fifo) < required) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		dev_warn_ratelimited(gdev->dev,
++				     "RX queue full; dropping %zu-byte packet\n",
++				     payload_len);
++		return;
++	}
++
++	kfifo_in(&gdev->rx_fifo, &header, sizeof(header));
++	kfifo_in(&gdev->rx_fifo, payload, payload_len);
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++	wake_up_interruptible(&gdev->rx_wait);
++}
++
++static irqreturn_t goodix_ec_irq_thread(int irq, void *data)
++{
++	struct goodix_device *gdev = data;
++	size_t chunk_len;
++	size_t remaining;
++	u16 declared_len;
++	u8 mp_type;
++	int ret = 0;
++	int ack_ret;
++
++	mutex_lock(&gdev->transfer_lock);
++
++	goodix_ec_mmio_read_rx(gdev);
++
++	/*
++	 * Continuation IRQs contain raw payload bytes without another
++	 * MP header.
++	 */
++	if (gdev->rx_reassembly_active) {
++		remaining = gdev->rx_reassembly_len -
++			    gdev->rx_reassembly_received;
++
++		chunk_len = min_t(size_t,
++				  remaining,
++				  GOODIX_EC_RX_SIZE);
++
++		memcpy(gdev->rx_reassembly +
++		       gdev->rx_reassembly_received,
++		       gdev->rx_buf,
++		       chunk_len);
++
++		gdev->rx_reassembly_received += chunk_len;
++
++		ack_ret = goodix_ec_pulse_read_done(gdev);
++		if (ack_ret)
++			ret = ack_ret;
++
++		if (!ret &&
++		    gdev->rx_reassembly_received ==
++		    gdev->rx_reassembly_len) {
++			dev_dbg(gdev->dev,
++				"RX reassembly complete: MP=0x%02x payload=%zu bytes\n",
++				 gdev->rx_reassembly_mp_type,
++				 gdev->rx_reassembly_len);
++
++			goodix_ec_rx_push(gdev,
++					  gdev->rx_reassembly_mp_type,
++					  gdev->rx_reassembly,
++					  gdev->rx_reassembly_len);
++
++			kfree(gdev->rx_reassembly);
++			gdev->rx_reassembly = NULL;
++			gdev->rx_reassembly_len = 0;
++			gdev->rx_reassembly_received = 0;
++			gdev->rx_reassembly_mp_type = 0;
++			gdev->rx_reassembly_active = false;
++		}
++
++		mutex_unlock(&gdev->transfer_lock);
++
++		if (ret)
++			dev_warn_ratelimited(gdev->dev,
++					     "IRQ %d continuation ACK failed: %d\n",
++					     irq, ret);
++
++		return IRQ_HANDLED;
++	}
++
++	/*
++	 * Beginning of a normal MP packet.
++	 */
++	mp_type = gdev->rx_buf[0];
++
++	if ((mp_type >> 4) != 0x0a &&
++	    (mp_type >> 4) != 0x0b &&
++	    (mp_type >> 4) != 0x0c) {
++		ret = -EBADMSG;
++		goto acknowledge;
++	}
++
++	if (gdev->rx_buf[3] !=
++	    gdev->rx_buf[0] +
++	    gdev->rx_buf[1] +
++	    gdev->rx_buf[2]) {
++		ret = -EBADMSG;
++		goto acknowledge;
++	}
++
++	declared_len = get_unaligned_le16(gdev->rx_buf + 1);
++
++	/*
++	 * Whole packet fits in the mailbox: use the normal path.
++	 */
++	if (declared_len <=
++	    GOODIX_EC_RX_SIZE -
++	    sizeof(struct goodix_mp_header)) {
++		goodix_ec_rx_push(gdev,
++				  mp_type,
++				  gdev->rx_buf +
++				  sizeof(struct goodix_mp_header),
++				  declared_len);
++
++		dev_dbg(gdev->dev,
++			"IRQ %d RX queued: MP=0x%02x payload=%u bytes\n",
++			irq,
++			mp_type >> 4,
++			declared_len);
++
++		goto acknowledge;
++	}
++
++	/*
++	 * The MP payload spans multiple mailbox IRQs.
++	 */
++	gdev->rx_reassembly = kmalloc(declared_len, GFP_KERNEL);
++	if (!gdev->rx_reassembly) {
++		ret = -ENOMEM;
++		goto acknowledge;
++	}
++
++	chunk_len = GOODIX_EC_RX_SIZE -
++		    sizeof(struct goodix_mp_header);
++
++	memcpy(gdev->rx_reassembly,
++	       gdev->rx_buf +
++	       sizeof(struct goodix_mp_header),
++	       chunk_len);
++
++	gdev->rx_reassembly_len = declared_len;
++	gdev->rx_reassembly_received = chunk_len;
++	gdev->rx_reassembly_mp_type = mp_type;
++	gdev->rx_reassembly_active = true;
++
++	dev_dbg(gdev->dev,
++		"RX reassembly started: MP=0x%02x total=%u first=%zu remaining=%zu\n",
++		 mp_type >> 4,
++		 declared_len,
++		 chunk_len,
++		 (size_t)declared_len - chunk_len);
++
++acknowledge:
++	ack_ret = goodix_ec_pulse_read_done(gdev);
++	if (!ret && ack_ret)
++		ret = ack_ret;
++
++	mutex_unlock(&gdev->transfer_lock);
++
++	if (ret)
++		dev_warn_ratelimited(gdev->dev,
++				     "IRQ %d RX handling failed: %d\n",
++				     irq, ret);
++
++	return IRQ_HANDLED;
++}
++
++/* -------------------------------------------------------------------------- */
++
++static const struct goodix_model_data gxfp5130_model = {
++	.name = "GXFP5130",
++	.acpi_hid = "GXFP5130",
++};
++
++/* -------------------------------------------------------------------------- */
++/* ACPI platform driver and model selection                                   */
++/* -------------------------------------------------------------------------- */
++
++static int goodix_ec_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct acpi_device_id *match;
++	struct goodix_device *gdev;
++	struct resource *resource;
++	resource_size_t mailbox_size;
++	unsigned long irq_flags;
++	unsigned int irq_type;
++	int ret;
++
++	match = acpi_match_device(dev->driver->acpi_match_table, dev);
++	if (!match || !match->driver_data)
++		return -ENODEV;
++
++	gdev = kzalloc_obj(*gdev);
++	if (!gdev)
++		return -ENOMEM;
++	kref_init(&gdev->refcount);
++	ret = devm_add_action_or_reset(dev, goodix_ec_device_put_action, gdev);
++	if (ret)
++		return ret;
++
++	gdev->dev = dev;
++	gdev->model = (const struct goodix_model_data *)match->driver_data;
++	gdev->tx_sequence = GOODIX_EC_SEQUENCE_SEED;
++	mutex_init(&gdev->transfer_lock);
++	platform_set_drvdata(pdev, gdev);
++
++	gdev->mailbox = devm_platform_get_and_ioremap_resource(pdev, 0,
++							       &resource);
++	if (IS_ERR(gdev->mailbox))
++		return dev_err_probe(dev, PTR_ERR(gdev->mailbox),
++				     "failed to map EC mailbox MMIO resource\n");
++
++	mailbox_size = resource_size(resource);
++	if (mailbox_size < GOODIX_EC_MMIO_SIZE)
++		return dev_err_probe(dev, -EINVAL,
++				     "EC mailbox resource too small: %#llx\n",
++				     (unsigned long long)mailbox_size);
++
++	gdev->mailbox_phys = resource->start;
++	gdev->mailbox_size = mailbox_size;
++
++	gdev->tx_buf = devm_kzalloc(dev, GOODIX_EC_TX_SIZE, GFP_KERNEL);
++	if (!gdev->tx_buf)
++		return -ENOMEM;
++
++	gdev->rx_buf = devm_kzalloc(dev, GOODIX_EC_RX_SIZE, GFP_KERNEL);
++	if (!gdev->rx_buf)
++		return -ENOMEM;
++
++	ret = goodix_ec_add_gpio_mappings(dev);
++	if (ret)
++		return ret;
++
++	ret = goodix_ec_get_gpio(gdev, &gdev->write_done_gpio,
++				 "write-done", GPIOD_OUT_LOW);
++	if (ret)
++		return ret;
++
++	ret = goodix_ec_get_gpio(gdev, &gdev->read_done_gpio,
++				 "read-done", GPIOD_OUT_LOW);
++	if (ret)
++		return ret;
++
++	ret = goodix_ec_get_gpio(gdev, &gdev->irq_gpio,
++				 "irq", GPIOD_IN);
++	if (ret)
++		return ret;
++
++	gdev->irq = gpiod_to_irq(gdev->irq_gpio);
++	if (gdev->irq < 0)
++		return dev_err_probe(dev, gdev->irq,
++				     "failed to map IRQ GPIO to an IRQ\n");
++
++	irq_type = irq_get_trigger_type(gdev->irq);
++	if (irq_type == IRQ_TYPE_NONE) {
++		ret = irq_set_irq_type(gdev->irq, IRQ_TYPE_LEVEL_HIGH);
++		if (ret)
++			return dev_err_probe(dev, ret,
++					     "failed to set level-high IRQ trigger\n");
++		irq_type = IRQ_TYPE_LEVEL_HIGH;
++	}
++
++	dev_info(dev, "bound %s: mailbox=%pa size=%#llx irq=%d\n",
++		 gdev->model->name, &gdev->mailbox_phys,
++		 (unsigned long long)gdev->mailbox_size, gdev->irq);
++
++	if (gdev->irq > 0) {
++		irq_flags = IRQF_ONESHOT | IRQF_NO_AUTOEN;
++		ret = devm_request_threaded_irq(dev,
++						gdev->irq,
++						NULL,
++						goodix_ec_irq_thread,
++						irq_flags,
++						dev_name(dev),
++						gdev);
++		if (ret)
++			return dev_err_probe(dev, ret,
++					     "failed to request IRQ %d\n",
++					     gdev->irq);
++
++		dev_dbg(dev, "IRQ %d registered: flags=%#lx trigger=%#x\n",
++			gdev->irq, irq_flags, irq_type);
++	}
++
++	ret = goodix_ec_uapi_register(gdev);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "failed to register userspace interface\n");
++
++	enable_irq(gdev->irq);
++	gdev->irq_enabled = true;
++	dev_info(dev, "IRQ %d armed\n", gdev->irq);
++
++	dev_info(dev, "EC mailbox transport ready\n");
++	return 0;
++}
++
++static void goodix_ec_remove(struct platform_device *pdev)
++{
++	struct goodix_device *gdev = platform_get_drvdata(pdev);
++
++	if (!gdev)
++		return;
++
++	WRITE_ONCE(gdev->disconnected, true);
++	if (gdev->irq_enabled) {
++		disable_irq(gdev->irq);
++		synchronize_irq(gdev->irq);
++		gdev->irq_enabled = false;
++	}
++
++	goodix_ec_uapi_unregister(gdev);
++	mutex_lock(&gdev->transfer_lock);
++	kfree(gdev->rx_reassembly);
++	gdev->rx_reassembly = NULL;
++	gdev->rx_reassembly_len = 0;
++	gdev->rx_reassembly_received = 0;
++	gdev->rx_reassembly_active = false;
++
++	if (gdev->write_done_gpio)
++		gpiod_set_value_cansleep(gdev->write_done_gpio, 0);
++	if (gdev->read_done_gpio)
++		gpiod_set_value_cansleep(gdev->read_done_gpio, 0);
++	mutex_unlock(&gdev->transfer_lock);
++
++	dev_info(gdev->dev, "%s detached\n", gdev->model->name);
++}
++
++static int goodix_ec_suspend(struct device *dev)
++{
++	struct goodix_device *gdev = dev_get_drvdata(dev);
++	unsigned long flags;
++
++	if (!gdev || READ_ONCE(gdev->disconnected))
++		return 0;
++
++	WRITE_ONCE(gdev->suspended, true);
++	wake_up_interruptible_all(&gdev->rx_wait);
++	if (gdev->irq_enabled) {
++		disable_irq(gdev->irq);
++		synchronize_irq(gdev->irq);
++		gdev->irq_enabled = false;
++	}
++
++	mutex_lock(&gdev->transfer_lock);
++	gpiod_set_value_cansleep(gdev->write_done_gpio, 0);
++	gpiod_set_value_cansleep(gdev->read_done_gpio, 0);
++	kfree(gdev->rx_reassembly);
++	gdev->rx_reassembly = NULL;
++	gdev->rx_reassembly_len = 0;
++	gdev->rx_reassembly_received = 0;
++	gdev->rx_reassembly_active = false;
++	mutex_unlock(&gdev->transfer_lock);
++
++	spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++	if (gdev->rx_fifo_ready)
++		kfifo_reset(&gdev->rx_fifo);
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++	return 0;
++}
++
++static int goodix_ec_resume(struct device *dev)
++{
++	struct goodix_device *gdev = dev_get_drvdata(dev);
++
++	if (!gdev || READ_ONCE(gdev->disconnected))
++		return 0;
++
++	gpiod_set_value_cansleep(gdev->write_done_gpio, 0);
++	gpiod_set_value_cansleep(gdev->read_done_gpio, 0);
++	if (!gdev->irq_enabled) {
++		enable_irq(gdev->irq);
++		gdev->irq_enabled = true;
++	}
++	/* Permit new writes only after the receive path is armed. */
++	WRITE_ONCE(gdev->suspended, false);
++	wake_up_interruptible_all(&gdev->rx_wait);
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(goodix_ec_pm_ops, goodix_ec_suspend,
++				goodix_ec_resume);
++
++static const struct acpi_device_id goodix_ec_acpi_match[] = {
++	{
++		.id = GXFP5130_ACPI_HID,
++		.driver_data = (kernel_ulong_t)&gxfp5130_model,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(acpi, goodix_ec_acpi_match);
++
++static struct platform_driver goodix_ec_driver = {
++	.probe = goodix_ec_probe,
++	.remove = goodix_ec_remove,
++	.driver = {
++		.name = GOODIX_EC_DRIVER_NAME,
++		.acpi_match_table = ACPI_PTR(goodix_ec_acpi_match),
++		.pm = pm_sleep_ptr(&goodix_ec_pm_ops),
++	},
++};
++module_platform_driver(goodix_ec_driver);
++
++MODULE_AUTHOR("Ertugrul Topcu <ertugtopcu0@gmail.com>");
++MODULE_DESCRIPTION("Goodix fingerprint sensors over an EC mailbox");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_uapi.c b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_uapi.c
+new file mode 100644
+index 000000000000..d2f075acb481
+--- /dev/null
++++ b/drivers/platform/x86/goodix-ec-mailbox/goodix_ec_uapi.c
+@@ -0,0 +1,360 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/capability.h>
++#include <linux/errno.h>
++#include <linux/fs.h>
++#include <linux/kernel.h>
++#include <linux/kfifo.h>
++#include <linux/miscdevice.h>
++#include <linux/module.h>
++#include <linux/poll.h>
++#include <linux/slab.h>
++#include <linux/uaccess.h>
++#include <linux/unaligned.h>
++
++#include "goodix_ec_mailbox.h"
++#include <linux/goodix_ec.h>
++
++#define GOODIX_EC_RX_FIFO_BYTES (256u * 1024u)
++
++static bool goodix_ec_rx_ready(struct goodix_device *gdev)
++{
++	unsigned long flags;
++	bool ready;
++
++	spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++	ready = gdev->rx_fifo_ready && !kfifo_is_empty(&gdev->rx_fifo);
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++	return ready;
++}
++
++static int goodix_ec_uapi_open(struct inode *inode, struct file *file)
++{
++	struct miscdevice *misc = file->private_data;
++	struct goodix_device *gdev =
++		container_of(misc, struct goodix_device, miscdev);
++	unsigned long flags;
++
++	if (!capable(CAP_SYS_RAWIO))
++		return -EPERM;
++	if (!goodix_ec_device_get(gdev))
++		return -ENODEV;
++	if (READ_ONCE(gdev->disconnected)) {
++		goodix_ec_device_put(gdev);
++		return -ENODEV;
++	}
++
++	if (file->f_mode & FMODE_READ) {
++		spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++		if (!gdev->rx_fifo_ready) {
++			spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++			goodix_ec_device_put(gdev);
++			return -ENODEV;
++		}
++
++		if (gdev->rx_reader_open) {
++			spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++			goodix_ec_device_put(gdev);
++			return -EBUSY;
++		}
++
++		gdev->rx_reader_open = true;
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++	}
++
++	file->private_data = gdev;
++	return 0;
++}
++
++static int goodix_ec_uapi_release(struct inode *inode, struct file *file)
++{
++	struct goodix_device *gdev = file->private_data;
++	unsigned long flags;
++
++	if (gdev && (file->f_mode & FMODE_READ)) {
++		spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++		gdev->rx_reader_open = false;
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++	}
++	if (gdev)
++		goodix_ec_device_put(gdev);
++
++	return 0;
++}
++
++static ssize_t goodix_ec_uapi_write(struct file *file,
++				    const char __user *user_buffer,
++				    size_t count, loff_t *position)
++{
++	struct goodix_device *gdev = file->private_data;
++	struct goodix_ec_tx_header header;
++	u8 *mp_packet;
++	size_t required;
++	int ret;
++
++	if (!gdev || !user_buffer || READ_ONCE(gdev->disconnected))
++		return -ENODEV;
++
++	if (count < sizeof(header))
++		return -EINVAL;
++
++	if (copy_from_user(&header, user_buffer, sizeof(header)))
++		return -EFAULT;
++
++	if (header.payload_len > GOODIX_EC_UAPI_TX_MAX)
++		return -EMSGSIZE;
++	if (header.reserved || header.flags)
++		return -EINVAL;
++
++	required = sizeof(header) + header.payload_len;
++	if (count != required)
++		return -EINVAL;
++
++	mp_packet = kmalloc(GOODIX_MP_HEADER_SIZE +
++			    header.payload_len, GFP_KERNEL);
++	if (!mp_packet)
++		return -ENOMEM;
++
++	mp_packet[0] = header.mp_flags;
++	put_unaligned_le16(header.payload_len, mp_packet + 1);
++	mp_packet[3] = mp_packet[0] + mp_packet[1] + mp_packet[2];
++
++	if (header.payload_len &&
++	    copy_from_user(mp_packet + sizeof(struct goodix_mp_header),
++			   user_buffer + sizeof(header),
++			   header.payload_len)) {
++		kfree(mp_packet);
++		return -EFAULT;
++	}
++
++	mutex_lock(&gdev->transfer_lock);
++	if (READ_ONCE(gdev->disconnected))
++		ret = -ENODEV;
++	else if (READ_ONCE(gdev->suspended))
++		ret = -EHOSTDOWN;
++	else
++		ret = goodix_ec_sync_send(gdev, mp_packet,
++					  sizeof(struct goodix_mp_header) +
++					  header.payload_len);
++	mutex_unlock(&gdev->transfer_lock);
++
++	kfree(mp_packet);
++
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static ssize_t goodix_ec_uapi_read(struct file *file, char __user *user_buffer,
++				   size_t count, loff_t *position)
++{
++	struct goodix_device *gdev = file->private_data;
++	struct goodix_ec_record_header header;
++	unsigned long flags;
++	u8 *record;
++	size_t required;
++	int ret;
++
++	if (!gdev || !user_buffer || READ_ONCE(gdev->disconnected))
++		return -ENODEV;
++
++	ret = mutex_lock_interruptible(&gdev->rx_read_lock);
++	if (ret)
++		return ret;
++
++	for (;;) {
++		spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++
++		if (!gdev->rx_fifo_ready) {
++			spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++			ret = -ENODEV;
++			goto out_unlock;
++		}
++		if (READ_ONCE(gdev->suspended)) {
++			spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++			ret = -EHOSTDOWN;
++			goto out_unlock;
++		}
++
++		if (kfifo_len(&gdev->rx_fifo) >= sizeof(header))
++			break;
++
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++		if (file->f_flags & O_NONBLOCK) {
++			ret = -EAGAIN;
++			goto out_unlock;
++		}
++
++		ret = wait_event_interruptible(gdev->rx_wait,
++					       goodix_ec_rx_ready(gdev) ||
++					       !READ_ONCE(gdev->rx_fifo_ready) ||
++					       READ_ONCE(gdev->suspended));
++		if (ret)
++			goto out_unlock;
++	}
++
++	if (kfifo_out_peek(&gdev->rx_fifo, &header,
++			   sizeof(header)) != sizeof(header)) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		ret = -EIO;
++		goto out_unlock;
++	}
++
++	required = sizeof(header) + header.len;
++	if (kfifo_len(&gdev->rx_fifo) < required) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		ret = -EIO;
++		goto out_unlock;
++	}
++
++	if (count < required) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		ret = -EMSGSIZE;
++		goto out_unlock;
++	}
++
++	record = kmalloc(required, GFP_ATOMIC);
++	if (!record) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		ret = -ENOMEM;
++		goto out_unlock;
++	}
++
++	if (kfifo_out(&gdev->rx_fifo, record, required) != required) {
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		kfree(record);
++		ret = -EIO;
++		goto out_unlock;
++	}
++
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++	if (copy_to_user(user_buffer, record, required)) {
++		kfree(record);
++		ret = -EFAULT;
++		goto out_unlock;
++	}
++
++	kfree(record);
++	ret = required;
++
++out_unlock:
++	mutex_unlock(&gdev->rx_read_lock);
++	return ret;
++}
++
++static __poll_t goodix_ec_uapi_poll(struct file *file, poll_table *wait)
++{
++	struct goodix_device *gdev = file->private_data;
++	unsigned long flags;
++	__poll_t mask = 0;
++
++	if (!gdev || READ_ONCE(gdev->disconnected))
++		return EPOLLERR;
++
++	poll_wait(file, &gdev->rx_wait, wait);
++
++	spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++	if (!gdev->rx_fifo_ready || READ_ONCE(gdev->disconnected))
++		mask = EPOLLERR | EPOLLHUP;
++	else if (READ_ONCE(gdev->suspended))
++		mask = EPOLLERR;
++	else if (!kfifo_is_empty(&gdev->rx_fifo))
++		mask = EPOLLIN | EPOLLRDNORM;
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++	return mask;
++}
++
++static long goodix_ec_uapi_ioctl(struct file *file,
++				 unsigned int command,
++				 unsigned long argument)
++{
++	struct goodix_device *gdev = file->private_data;
++	unsigned long flags;
++
++	if (!gdev || READ_ONCE(gdev->disconnected))
++		return -ENODEV;
++
++	switch (command) {
++	case GOODIX_EC_IOCTL_FLUSH_RX:
++		spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++		if (gdev->rx_fifo_ready)
++			kfifo_reset(&gdev->rx_fifo);
++		spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++		return 0;
++	default:
++		return -ENOTTY;
++	}
++}
++
++static const struct file_operations goodix_ec_uapi_fops = {
++	.owner = THIS_MODULE,
++	.open = goodix_ec_uapi_open,
++	.release = goodix_ec_uapi_release,
++	.read = goodix_ec_uapi_read,
++	.write = goodix_ec_uapi_write,
++	.poll = goodix_ec_uapi_poll,
++	.unlocked_ioctl = goodix_ec_uapi_ioctl,
++	.compat_ioctl = compat_ptr_ioctl,
++	.llseek = noop_llseek,
++};
++
++int goodix_ec_uapi_register(struct goodix_device *gdev)
++{
++	int ret;
++
++	spin_lock_init(&gdev->rx_fifo_lock);
++	mutex_init(&gdev->rx_read_lock);
++	init_waitqueue_head(&gdev->rx_wait);
++
++	ret = kfifo_alloc(&gdev->rx_fifo, GOODIX_EC_RX_FIFO_BYTES, GFP_KERNEL);
++	if (ret)
++		return ret;
++
++	gdev->rx_fifo_ready = true;
++	gdev->rx_reader_open = false;
++
++	gdev->miscdev.minor = MISC_DYNAMIC_MINOR;
++	gdev->miscdev.name = "gxfp";
++	gdev->miscdev.fops = &goodix_ec_uapi_fops;
++	gdev->miscdev.parent = gdev->dev;
++
++	ret = misc_register(&gdev->miscdev);
++	if (ret) {
++		gdev->rx_fifo_ready = false;
++		kfifo_free(&gdev->rx_fifo);
++		return ret;
++	}
++
++	gdev->misc_registered = true;
++	dev_info(gdev->dev, "userspace interface registered: /dev/gxfp\n");
++	return 0;
++}
++
++void goodix_ec_uapi_unregister(struct goodix_device *gdev)
++{
++	unsigned long flags;
++
++	if (!gdev)
++		return;
++
++	if (gdev->misc_registered) {
++		misc_deregister(&gdev->miscdev);
++		gdev->misc_registered = false;
++	}
++
++	if (!gdev->rx_fifo_ready)
++		return;
++
++	spin_lock_irqsave(&gdev->rx_fifo_lock, flags);
++	gdev->rx_fifo_ready = false;
++	gdev->rx_reader_open = false;
++	kfifo_reset(&gdev->rx_fifo);
++	spin_unlock_irqrestore(&gdev->rx_fifo_lock, flags);
++
++	wake_up_interruptible_all(&gdev->rx_wait);
++	kfifo_free(&gdev->rx_fifo);
++}
+diff --git a/include/uapi/linux/goodix_ec.h b/include/uapi/linux/goodix_ec.h
+new file mode 100644
+index 000000000000..ff8d0d505ae7
+--- /dev/null
++++ b/include/uapi/linux/goodix_ec.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_GOODIX_EC_H_
++#define _UAPI_GOODIX_EC_H_
++
++#include <linux/ioctl.h>
++#include <linux/types.h>
++
++#define GOODIX_EC_UAPI_MAGIC		'G'
++#define GOODIX_EC_UAPI_TX_MAX		500u
++#define GOODIX_EC_UAPI_RX_MAX		(128u * 1024u)
++
++/*
++ * read(2) returns one record:
++ *   struct goodix_ec_record_header
++ *   followed by len bytes of MP payload (normally one Goodix frame).
++ */
++struct goodix_ec_record_header {
++	__u32 len;
++	__u32 mp_type;
++	__u64 timestamp_ns;
++};
++
++/*
++ * write(2) accepts:
++ *   struct goodix_ec_tx_header
++ *   followed by payload_len bytes used as the MP payload.
++ */
++struct goodix_ec_tx_header {
++	__u8 mp_flags;
++	__u8 reserved;
++	__u16 payload_len;
++	__u32 flags;
++};
++
++#define GOODIX_EC_IOCTL_FLUSH_RX	_IO(GOODIX_EC_UAPI_MAGIC, 0x11)
++
++#endif /* _UAPI_GOODIX_EC_H_ */
+-- 
+2.55.0
 
-The patch is in the driver-core-testing branch and will be promoted to
-driver-core-next after validation.
