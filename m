@@ -1,79 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E0C3F8232;
-	Mon, 27 Jul 2026 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1A9352017;
+	Mon, 27 Jul 2026 11:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785151456; cv=none; b=V0ZugsPZez81VUbHnSb2wZkokYPUSApjSHYw7QTFcjTVGFbsCA4BK9/4vVFNGNYlx/+jRnC8gJ8M0HfbBzYLgbzuS461xH7CVZ/zhx5Wzc0aZnzAnYbhHqgisImX1EDmuaChD3OW87gtjxIw/ZfUr1mEx+XTT+h6StAXT983Nko=
+	t=1785152250; cv=none; b=StVNMgqL3Yn8IaCO8damfonXlCr5+O7iz17wQdB2Qv/f2E/uSHGWJbBt/TFsl7vU+FWYdWO6sQQPulCJjmPNCRXolgZbIkPhhF5EEpGPzW/rrR69WOj1frv31AMfzCUtLOd+2AAK1BuLef/R0V8zgOnd3tfmNv8+nZnI/EbdM4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785151456; c=relaxed/simple;
-	bh=AZwWVfLUpRB56C2ybr5a6pVyaxMU0DcKOMz0DUMoBo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ud9qP60ujAPdxI9jKJVTBZyr77v8E4NwFtYYxR80ifUat3MnHAX/fj/2FYyedcSVkIeX8dUhYV+DMaDj0iQ6NPqIlXPkPs/7g8q1zjfEPYGGK1ABu/xKy0bIRRIDfvbKEh3r3jhh4psv2JYVgWfqisWkFhzediL7kutz3H0vqpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MsBjr0wo; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1785152250; c=relaxed/simple;
+	bh=/6ix+2ekyEjmxtNQWG+EytAOJTxYlBnpiXnHByYObJw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T8Q9Yn6qOUfIA9u4MC45acgW1yYREOr/ZVZWM6ihZhAEaALV5hlkj7wMSM/iZN1PA/PxNT2FM5nkVaUlcdh+fS0AwAaos8AuLF4JBitxh4VNkuL/b0MtU0nd+LwjNp9ByfsS8gXQ9L9HmZ9AGeCjecnG3XhiC4rlCtc1tl0jVaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoVN6kUH; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MsBjr0wo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoVN6kUH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785151454; x=1816687454;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AZwWVfLUpRB56C2ybr5a6pVyaxMU0DcKOMz0DUMoBo4=;
-  b=MsBjr0woAfeXUtdA09zO8UVITpo8CDI7O42Ldz5EUrbyaehdmelN9Vom
-   lLagK8Bh/ifGDp89R6YbWC5lhsNvENX17yOnFVAvA1GvBjzZA6YpmS6ho
-   oFk9hasUF/MmOCNUku4bvcVskqY8aIYWfqgiPbLqHewlaHKoGmOqHIF4r
-   76jwGrJS5rDtvS5uzlluV6KqQ9ps685lozvCW9gVFzak6RCHJJAFDwVoD
-   5dLP3HdDWq6A0Q24pfJzgN7QiTeL1AyhLumpOn4iDaatpsAJERd52QbHw
-   ZVFCdZ3baVjqbxj/9X6OhCPHXhZjwJ88wbrzXaPUX+LPTH+hy4zpr48Vr
+  t=1785152248; x=1816688248;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=/6ix+2ekyEjmxtNQWG+EytAOJTxYlBnpiXnHByYObJw=;
+  b=UoVN6kUHLiqMxrbRU8IJEgPiYMR8IKkp3NoPmD1OnE5fjUuAfFPFjr4G
+   bHHInFdIQmvdUM19WhToQdrE8gW4HdEnKt6rr+eKq0cTT1h9MhUTU9VXC
+   eO7nMi7eU0ozgp+AQ8Bi94Du+SCxGRZU3jAYgQt9pt8SMFlGa7YCQSKqX
+   VcT6TEGMoan/uLXIpKIQZvbWa0hiygZ0b0basx1dVSq5T1yJezDwIImTo
+   JroHWhSBD/PLEoCCbsEUQzjLctrdcolGwwLLcMXz3OnwEcrZq9I2lYJa0
+   wHadG3tkd4YPJQ71C4slYbuG8iRUe3uuhWtpAIp5Uc4zdWZictK7ferHY
    A==;
-X-CSE-ConnectionGUID: PZV4hTmESaatQh0Im5JHRA==
-X-CSE-MsgGUID: JtoXXW9ERzGvwqXJVdXhcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11857"; a="85660837"
+X-CSE-ConnectionGUID: zt7rixJmR9uzoVcdOyX/sw==
+X-CSE-MsgGUID: Zq6WKCFqT5iyB5vcgAcCyg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11857"; a="103128666"
 X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="85660837"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:24:13 -0700
-X-CSE-ConnectionGUID: B2tIAVOoRI+zMjKg/FOM+A==
-X-CSE-MsgGUID: pT84ywi6RbGlA48jgsWj8Q==
+   d="scan'208";a="103128666"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:37:27 -0700
+X-CSE-ConnectionGUID: jc740gvBSCmfJ/AOeJRN5Q==
+X-CSE-MsgGUID: 4x0a30kMTGOmwHJgJde0/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,188,1779174000"; 
-   d="scan'208";a="283905711"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa001.fm.intel.com with ESMTP; 27 Jul 2026 04:24:07 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id B58FB99; Mon, 27 Jul 2026 13:24:06 +0200 (CEST)
-Date: Mon, 27 Jul 2026 13:24:06 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: Andre Eikmeyer <andre@negmaster.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Mika Westerberg <westeri@kernel.org>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] thunderbolt: Add device links for Apple T2 NHI
-Message-ID: <20260727112406.GI2365036@black.igk.intel.com>
-References: <20260724164641.2239-1-atharvatiwarilinuxdev@gmail.com>
- <20260724164641.2239-3-atharvatiwarilinuxdev@gmail.com>
+   d="scan'208";a="297617694"
+Received: from rvuia-mobl.ger.corp.intel.com (HELO localhost) ([10.245.245.197])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 04:37:02 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Sang-Heon Jeon <ekffu200098@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Julia.Lawall@inria.fr, Alex Deucher
+ <alexander.deucher@amd.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, Andrew
+ Morton <akpm@linux-foundation.org>, Arkadiusz Kubalewski
+ <arkadiusz.kubalewski@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Christian =?utf-8?Q?K=C3=B6nig?= <christian.koenig@amd.com>, Daniel Lezcano
+ <daniel.lezcano@kernel.org>, David Airlie <airlied@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Eric Dumazet <edumazet@google.com>, Florian
+ Westphal <fw@strlen.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Hans de Goede <hansg@kernel.org>, Hans Verkuil <hverkuil@kernel.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Ilpo =?utf-8?Q?J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Jaroslav Kysela <perex@perex.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jiri Pirko <jiri@resnulli.us>, "Joerg
+ Roedel (AMD)" <joro@8bytes.org>, Johan Hovold <johan@kernel.org>, Jonathan
+ Cameron <jic23@kernel.org>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Julian Anastasov <ja@ssi.bg>, Leon
+ Romanovsky <leon@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Linus
+ Walleij <linusw@kernel.org>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Mark Brown <broonie@kernel.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>, Matthew Sakai
+ <msakai@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime
+ Ripard <mripard@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+ Mike Rapoport <rppt@kernel.org>, Miri Korenblit
+ <miriam.rachel.korenblit@intel.com>, Nicolas Palix
+ <nicolas.palix@imag.fr>, Pablo Neira Ayuso <pablo@netfilter.org>, Paolo
+ Abeni <pabeni@redhat.com>, Ping-Ke Shih <pkshih@realtek.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Sebastian Reichel <sre@kernel.org>, Shuah Khan <shuah@kernel.org>, Simona
+ Vetter <simona@ffwll.ch>, Simon Horman <horms@verge.net.au>, Stephen Boyd
+ <sboyd@kernel.org>, Steve French <sfrench@samba.org>, Takashi Iwai
+ <tiwai@suse.com>, Thomas Renninger <trenn@suse.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Tony Luck <tony.luck@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, Vadim Fedorenko <vadim.fedorenko@linux.dev>, Vinod
+ Koul <vkoul@kernel.org>, Will Deacon <will@kernel.org>, Yazen Ghannam
+ <Yazen.Ghannam@amd.com>, cocci@inria.fr, amd-gfx@lists.freedesktop.org,
+ dmaengine@vger.kernel.org, dm-devel@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-wired-lan@lists.osuosl.org, iommu@lists.linux.dev,
+ linux-cifs@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mm@kvack.org, linux-pm@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-sound@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-wireless@vger.kernel.org, lvs-devel@vger.kernel.org,
+ netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ nouveau@lists.freedesktop.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 00/36] treewide: remove conditional returns with no effect
+In-Reply-To: <CABFDxMFMOAZ_3kYxEGCutnGt1OSSmgvmwx-=M1RxGc3VGKORYQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20260723184538.3888637-1-ekffu200098@gmail.com>
+ <20260724144822.6af8213f@kernel.org>
+ <0ee1ef4aa7daa908bf28397ccc639c89b6aabd9c@intel.com>
+ <CABFDxMFMOAZ_3kYxEGCutnGt1OSSmgvmwx-=M1RxGc3VGKORYQ@mail.gmail.com>
+Date: Mon, 27 Jul 2026 14:36:57 +0300
+Message-ID: <a4703624643e1d2fd1a9dedc1d36ce5d34d3133f@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,129 +115,61 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260724164641.2239-3-atharvatiwarilinuxdev@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Mon, 27 Jul 2026, Sang-Heon Jeon <ekffu200098@gmail.com> wrote:
+> Hello,
+>
+> On Mon, Jul 27, 2026 at 5:30=E2=80=AFPM Jani Nikula <jani.nikula@linux.in=
+tel.com> wrote:
+>>
+>> On Fri, 24 Jul 2026, Jakub Kicinski <kuba@kernel.org> wrote:
+>> > On Fri, 24 Jul 2026 03:45:02 +0900 Sang-Heon Jeon wrote:
+>> >> Patch 1 adds a Coccinelle script that matches the pattern, including
+>> >> negation and constant-comparison variants. Where a local variable is
+>> >> assigned right before the check, the assignment and the two returns
+>> >> turn into a single return of the assigned expression.
+>> >
+>> > Huh, I thought we already had such script. Various script children have
+>> > been sending such "cleanups" in the past.
+>>
+>> We did, and it was removed, I believe in 1a617a8475e8 ("coccinelle:
+>> misc: remove "complex return code" warnings"), because people just don't
+>> want this constant churn.
+>>
+>> It's perfectly fine to have the error case and happy day scenario
+>> separated.
+>
+> Thanks for sharing the history.
+>
+> I checked the mailing list. The removed script looks similar to the
+> new one, but it is different. The removed script reported a
+> conditional return followed by an explicit return 0, where the error
+> case and happy day scenario are separated as you mentioned, and Johan
+> also complained about this 10 years ago.
+>
+> But the new script only reports when both branches return the same
+> variable, not the explicit 0. So, I think the new script is close to
+> the restricted version that Julia mentioned 10 years ago, and it
+> should be acceptable.
 
-On Fri, Jul 24, 2026 at 12:46:37PM -0400, Atharva Tiwari wrote:
-> From: Andre Eikmeyer <andre@negmaster.com>
-> 
-> Icelake Thunderbolt NHI on T2 Macs (2018-2020). The NHI and its
-> associated PCIe root ports all sit directly on the root complex
-> with no upstream port. Apple's ACPI tables name Thunderbolt root
-> ports as TRP0, TRP1, etc. Find them and create device links back
-> to the NHI so that PCIe tunnels can be re-established after sleep.
+ret =3D=3D=3D 0 after an if (ret) return.
 
-For Ice Lake we can just add the known PCI IDs without need to look into
-ACPI at all. You can look how it was done in
-pcie_has_usb4_host_interface().
+BR,
+Jani.
 
-> And on other Thunderbolt NHI's, like Titan Ridge, the default method
-> is used to add device links.
 
-Is this for another Mac then? A Titan Ride based one? That should be a
-separate patch.
+>
+>>
+>> BR,
+>> Jani.
+>>
+>>
+>> --
+>> Jani Nikula, Intel
+>
+> Best Regards,
+> Sang-Heon Jeon
 
-> Co-developed-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-> 
-> Signed-off-by: Andre Eikmeyer <andre@negmaster.com>
-> ---
->  drivers/thunderbolt/tb.c | 58 ++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 56 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-> index c69c323e6952..625451ff3ea0 100644
-> --- a/drivers/thunderbolt/tb.c
-> +++ b/drivers/thunderbolt/tb.c
-> @@ -6,9 +6,11 @@
->   * Copyright (C) 2019, Intel Corporation
->   */
->  
-> +#include <linux/acpi.h>
->  #include <linux/slab.h>
->  #include <linux/errno.h>
->  #include <linux/delay.h>
-> +#include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/platform_data/x86/apple.h>
->  
-> @@ -3305,21 +3307,73 @@ static const struct tb_cm_ops tb_cm_ops = {
->  static bool tb_apple_add_links(struct tb_nhi *nhi)
->  {
->  	struct pci_dev *upstream, *pdev;
-> -	bool ret;
-> +	bool ret = false;
->  
->  	if (!x86_apple_machine)
->  		return false;
->  
-> +	/* On T2 Macs with Icelake thunderbolt NHI's.
-> +	 * the root ports are stored in ACPI as TRP0,
-> +	 * TRP1, etc. Find them and create device links
-> +	 * so that PCIe tunnels can be re-established after
-> +	 * sleep.
-> +	 */
-> +#if IS_ENABLED(CONFIG_ACPI)
-> +	if (has_apple_t2_chip && (nhi->pdev->device == PCI_DEVICE_ID_INTEL_ICL_NHI0 ||
-> +				nhi->pdev->device == PCI_DEVICE_ID_INTEL_ICL_NHI1)) {
-> +		struct acpi_device *adev;
-> +		unsigned int slot, func;
-> +		const struct device_link *link;
-> +		const char *bid;
-> +
-> +		for (slot = 0; slot < 32; slot++) {
-> +			for (func = 0; func < 8; func++) {
-> +				struct pci_dev *current_pdev __free(pci_dev_put) =
-> +					pci_get_slot(nhi->pdev->bus, PCI_DEVFN(slot, func));
-> +				if (!current_pdev)
-> +					continue;
-> +
-> +				if (!pci_is_pcie(current_pdev) || pci_pcie_type(current_pdev) !=
-> +						PCI_EXP_TYPE_ROOT_PORT)
-> +					continue;
-> +
-> +				adev = ACPI_COMPANION(&current_pdev->dev);
-> +				if (!adev)
-> +					continue;
-> +
-> +				bid = acpi_device_bid(adev);
-> +				if (strncmp(bid, "TRP", 3) != 0)
-> +					continue;
-> +
-> +				link = device_link_add(&current_pdev->dev, &nhi->pdev->dev,
-> +						DL_FLAG_AUTOREMOVE_SUPPLIER |
-> +						DL_FLAG_PM_RUNTIME);
-> +				if (link) {
-> +					dev_dbg(&nhi->pdev->dev, "created link from %s\n",
-> +						dev_name(&current_pdev->dev));
-> +					ret = true;
-> +				} else {
-> +					dev_warn(&nhi->pdev->dev,
-> +						"device link creation from %s failed\n",
-> +						dev_name(&current_pdev->dev));
-> +				}
-> +			}
-> +		}
-> +		return ret;
-> +	}
-> +#endif
-> +
->  	switch (nhi->pdev->device) {
->  	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
->  	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
->  	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
->  	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
-> +	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_2C_NHI:
-> +	case PCI_DEVICE_ID_INTEL_TITAN_RIDGE_4C_NHI:
->  		break;
->  	default:
->  		return false;
->  	}
-> -
->  	upstream = pci_upstream_bridge(nhi->pdev);
->  	while (upstream) {
->  		if (!pci_is_pcie(upstream))
-> -- 
-> 2.43.0
+--=20
+Jani Nikula, Intel
