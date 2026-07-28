@@ -1,74 +1,67 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D301466B08;
-	Tue, 28 Jul 2026 18:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785DB46C4D2;
+	Tue, 28 Jul 2026 19:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785263926; cv=none; b=cZqM0rNdfYECOPWTEEPOjBVFgwS4SwU3X7cfxrAjjKohebzepV1MxUOKapLtRtWWcrpRmnR4hgu+6FymKzr2QqizPR3lCXqqBXuWCywm7KkMLoQszMX04qzTTI1cZDv9L9m/PtxiK/ziTYMSfhfEyV17VMkeMoHrMq6oSItmQlE=
+	t=1785266480; cv=none; b=ljDajiAvJomaiDW3IS/QmpGdv03ogOIeYcOy9/d45nUG7sAusKaUWKbz2a9m5rv4H7Fw68frPn7mvIlXe569PMTIrfZOP+RfrFezuhTI4aBaoX3Q861V6SP6GivdTYk3DreMhLcYZDM8sDcwnupdElkJFLILA6Jo9eSKmbRDdZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785263926; c=relaxed/simple;
-	bh=FcVleo9EXXD23kUsqXh9C4+bO8LYDZ2mlevbyuZBo0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C43PllLTDbEzIxkKNtYSoTGL4toO2ZB0oCH+HQe5mmZl3tMzpag6jnLt9qyrgPNBvDDqzoW4FsbTBejzy4zsxoDalXg5tU60XPyJ01SF8MMQP/JXo4rjMFSA+nZ4H6p7n6OfYiakp47gvlHGxQK8+BGpvOSti8CXed8qAzb+vlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AUAiEMw4; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1785266480; c=relaxed/simple;
+	bh=B7iiikjW3RZQKq3luZMA9Hki0kb0lG99YXABnPOZ1Rc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXw8fC2BiTaziX839O1piPSGQ6S/LWOwk9krDNsoELgioKMAQZuYL0LvWBfx9dAEaaRMrS5UN0PrlO2IGvun0Hv5kTMMgs7IDFHby4gMRWy0+gUJuCf+ZTa/57SnOk9x8kRn4OKMrebyhTvrrZhH3W1eUItYqfgo7xvpFaZklFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUKsuKFT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AUAiEMw4"
-Received: from [192.168.0.43] (chfd-03-b2-v4wan-176392-cust229.vm15.cable.virginm.net [82.19.20.230])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 50A902F8;
-	Tue, 28 Jul 2026 20:37:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1785263858;
-	bh=FcVleo9EXXD23kUsqXh9C4+bO8LYDZ2mlevbyuZBo0k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AUAiEMw4pIkZhnTPBdzqgNxSqd0woOp3uT6UZvToL2IgM8qNKFcDWwwHT3kl66XXB
-	 iLdkzK/7S3JBvdYyS1+J8+1kXJf+9YmWLY5QleOQXCUlsmPRYm5UrAxWb8G4CopjDX
-	 XflaNg1DGIHAWv3PJ18vzNZ4NM676ml1rcWS4pUQ=
-Message-ID: <1d7ca472-621f-41da-a367-09039a545a11@ideasonboard.com>
-Date: Tue, 28 Jul 2026 19:38:39 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUKsuKFT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2112F1F000E9;
+	Tue, 28 Jul 2026 19:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785266477;
+	bh=hfXSw4Cezo9CUJzD5rmxcTYpcs2wvM40Rw23eThWLlU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=eUKsuKFTMZw1c5IHwNDNl9ulQLMx+nGUmgIeMA2g6/NatpzorEKpLFNVbwbcz8dLn
+	 STaD/PdAVudqs3lxeM3KiZTE5qBPxOG2IJcZC4G+5MR8Xf4so6siRuDtljfoFBUsbK
+	 i0KyqfklcKgRt84w0MpwXqMdMjGMkHoAKAv86f5Dh8ux5blq6MZj8ZA5wXuQ1b8TJs
+	 /Sw6RGlwlPASkaETNGLMztvbXL5MCumYxTndp7yhF9HVc5gZBgVFp3l01mYFzoq8D7
+	 p3C/vq55TP/fy8MvJp8jTL2WysqQvej1kHuJUfpS8zaXvFKYWx7OHzT8/z8atmFzxX
+	 klC3Rr0N4MbxQ==
+Date: Tue, 28 Jul 2026 21:21:12 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	"Mario Limonciello (AMD)" <superm1@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	ibm-acpi-devel@lists.sourceforge.net, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v2 4/6] i2c: acpi: Convert to use
+ acpi_dev_is_video_device() helper
+Message-ID: <amkBGerBIwhNNSrj@zenone.zhora.eu>
+References: <20260714185915.865396-1-andriy.shevchenko@linux.intel.com>
+ <20260714185915.865396-5-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] MAINTAINERS: Add L: linux-media for int3472
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- ilpo.jarvinen@linux.intel.com
-References: <20260728181103.4413-1-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20260728181103.4413-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260714185915.865396-5-andriy.shevchenko@linux.intel.com>
 
-Hi Sakari
+Hi Andy,
 
-On 28/07/2026 19:11, Sakari Ailus wrote:
-> The int3472 patches now go via LMML, add the list to L: section for the
-> int3472 driver in MAINTAINERS as well.
+On Tue, Jul 14, 2026 at 08:53:43PM +0200, Andy Shevchenko wrote:
+> Replace open coded variant of acpi_dev_is_video_device() helper.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
+> Acked-by: Wolfram Sang <wsa@kernel.org>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Acked-by: Daniel Scally <dan.scally@ideasonboard.com>
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index febe918d6316..580f03d9c2eb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13371,6 +13371,7 @@ K:	\bSGX_
->   INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
->   M:	Daniel Scally <dan.scally@ideasonboard.com>
->   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> +L:	linux-media@vger.kernel.org
->   S:	Maintained
->   T:	git git://linuxtv.org/media.git
->   F:	drivers/platform/x86/intel/int3472/
+Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
+Thanks,
+Andi
