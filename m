@@ -1,67 +1,101 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E3A24CEEA;
-	Tue, 28 Jul 2026 14:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44CC25E469;
+	Tue, 28 Jul 2026 14:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785247922; cv=none; b=nw8l+9HCDYStI6VcoH4W+u1Xlp0QCztq8T+ZDlFDiYsmAqGx7RhSKkKJ1TqBj+XUEdr8Xa8fmagxpq8f+tvzvZ4xfPvmCRPbNYq+no3vOTm8olSWv5owIFuy/EpkDT5tGl+mMsS1fdjLIFSOKTe8J8uZKowSmbKX2nEfKZfwHYk=
+	t=1785250027; cv=none; b=DJAErv1YW/oM43Qx4sD3MzWuhVt0XAOVvOqP3iKABicxEWmgkm5eOFppkQwklyxNKHWgcWqxw5BJehP7EFpA4/gbvafkImpR8pMuGzobu+CKh+NkFkXH8OPCDq4Z8uNLTZLzBHp8YoLieMZmOxrt4e4PfgHY7+JMxVHSAef3+vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785247922; c=relaxed/simple;
-	bh=9JTtJGnPs1i1cBgqMngX2qGzTa1KfzAb8Mdg1rc8JPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=TsnrmPf1BGgJi1AI0u9b32HZPK1eOK6eAdOPL1ombu9SpjOZRpn7jTgfgssUWGqeKFN2Zs/hh90/ypxfG8xKSQSkTFqys2KEI+r37UprIi0FnM/bF0TEzA5JeZ7Otl34cV+/32a38vW/35unQjluw17iKz1a0vv/y1l9ZkXlyzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=kh8/lsXf; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1785250027; c=relaxed/simple;
+	bh=GDlALHpSYvMVS3esr38VHv/LWHesNAL37zDP1ToS0Eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R3KpUHuxqURk0p73WUK0aai7z6hKxidJ+YXzwSPvTlgop+M9eamJNRRIez0hCThwYBPeEw8pF0xpkFf3QlaYK6uXgDqOSjABaVUdE4pOgY739NOtA4oKGINm2Ry5TKt0EaWOnjEg72i14SiSutSVJ5l+2c5CHVcn2UhyEFGzmDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=dOyN0lfv; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="kh8/lsXf"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 54B58845C9;
-	Tue, 28 Jul 2026 16:11:58 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id eJhK4RUntSKN; Tue, 28 Jul 2026 16:11:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1785247917; bh=9JTtJGnPs1i1cBgqMngX2qGzTa1KfzAb8Mdg1rc8JPQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To;
-	b=kh8/lsXfD9xQsVcNHFJvzn0Nob9LliMDvDkz8iPgxvY+RwMt4uMReCdahZ9skam/T
-	 ClT3rDRoVNMdGHGu//tiIG484UvALGLQB2kTYVXPfmLtKEwDXDzgAU9gOYqYr31gnM
-	 qFQti4mHiIHc2xXRcmLAMUK4pQyB/sNRAW2VctRVJppSLVB+lVVZ77i+6VyLCOr9f/
-	 Lk99043NuSiSt5b0GbKQWQiSraRx13cFu4N1z33d6q8wdy38EOFRZ7smWe0ZSN1JOM
-	 1ZQ0BypvarRYo1Av24VsGY15edB0xk92iCZ+KH4zrGZe7mITLkIsQz14BL60j2fmDH
-	 cbk88/f6aNngw==
-From: Marco Scardovi <scardracs@disroot.org>
-To: ilpo.jarvinen@linux.intel.com
-Cc: bentiss@kernel.org, corentin.chary@gmail.com, denis.benato@linux.dev,
- hansg@kernel.org, jikos@kernel.org, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, luke@ljones.dev, marcus@grenangen.se,
- platform-driver-x86@vger.kernel.org
-Subject:
- Re: [PATCH v3 1/3] HID: asus: export asus_hid_fnlock_set() for direct fn-lock
- control
-Date: Tue, 28 Jul 2026 16:11:43 +0200
-Message-ID: <PFmgQnA-R8Gt_PZ7vUSlKw@disroot.org>
-In-Reply-To: <ad587675-cef3-f5b5-eb39-0f76dea8d617@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="dOyN0lfv"
+Received: from [192.168.178.102] (pd9fb98ab.dip0.t-ipconnect.de [217.251.152.171])
+	(Authenticated sender: a.erhardt@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 86ADC2FC0079;
+	Tue, 28 Jul 2026 16:46:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1785250019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sT6CbhRkcg1e9pX5FPp/IPdht09tHunh0WoTtem+JSI=;
+	b=dOyN0lfv7yq8986YwwCYMxm763MtcGIdTsl34GoLr49jCdQa7AhzeGbnbgWfq3BZDyi3AA
+	6vY/niNyCISifWwdqSOsAdjRH/oStrk2S8aWRsbZSV3PbaKao7op3GRhr6hr8GfknX1GR/
+	DywEjL1dItJIH8ZuafrfbvwEKPN9muU=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
+Message-ID: <cd0f5c3a-73b9-4954-94b3-27818b4c9664@tuxedocomputers.com>
+Date: Tue, 28 Jul 2026 16:46:53 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] platform/x86/tuxedo: Fix keyboard LED map ordering
+To: wse@tuxedocomputers.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+References: <20260728115938.125444-1-aer@tuxedocomputers.com>
+Content-Language: en-US
+From: Aaron Erhardt <aer@tuxedocomputers.com>
+In-Reply-To: <20260728115938.125444-1-aer@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Ilpo,
+This patch was sent directly to stable by accident, separate from the rest of the patch series.
 
-the 2nd one is not Marcus' fault: during merge with the tag for-next it has
-been picked up twice and Marcus filled both, thinking it was ok.
+Please ignore it. It will come with v2 or a later revisions of the series through master.
 
-Correct commit [1]
-Duplication [2]
+Sorry for the inconvenience.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/hid/hid-asus.c?h=next-20260727&id=f631011e36b87b173b71c7592b558ad05d791228
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/hid/hid-asus.c?h=next-20260727&id=4f349f4e3101c7b4c94fa2c0e530eb5374f46916
+Best regards
+Aaron
 
+Am 28.07.26 um 13:59 schrieb Aaron Erhardt:
+> The LED mappings in sirius_16_[iso|ansii]_kbl_map did contain a
+> flipped line that caused LEDs to turn on in the wrong order when
+> counting up the Lamp ID.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
+> ---
+>  drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> index 8f1ffca0430d..2b985b030197 100644
+> --- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> +++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> @@ -232,8 +232,8 @@ static const struct tux_kbl_map_entry_t sirius_16_ansii_kbl_map[] = {
+>  	{ 0x2e, { 246000,  67500, 5250 } },
+>  	{ 0x2a, { 269500,  67500, 5250 } },
+>  	{ 0x53, { 294500,  67500, 5250 } },
+> -	{ 0x55, { 311200,  67500, 5250 } },
+> -	{ 0x54, { 327900,  67500, 5250 } },
+> +	{ 0x54, { 311200,  67500, 5250 } },
+> +	{ 0x55, { 327900,  67500, 5250 } },
+>  	{ 0x56, { 344600,  67500, 5250 } },
+>  	{ 0x2b, {  31000,  85500, 5500 } },
+>  	{ 0x14, {  51500,  85500, 5500 } },
+> @@ -337,8 +337,8 @@ static const struct tux_kbl_map_entry_t sirius_16_iso_kbl_map[] = {
+>  	{ 0x2e, { 246000,  67500, 5250 } },
+>  	{ 0x2a, { 269500,  67500, 5250 } },
+>  	{ 0x53, { 294500,  67500, 5250 } },
+> -	{ 0x55, { 311200,  67500, 5250 } },
+> -	{ 0x54, { 327900,  67500, 5250 } },
+> +	{ 0x54, { 311200,  67500, 5250 } },
+> +	{ 0x55, { 327900,  67500, 5250 } },
+>  	{ 0x56, { 344600,  67500, 5250 } },
+>  	{ 0x2b, {  31000,  85500, 5500 } },
+>  	{ 0x14, {  51500,  85500, 5500 } },
 
