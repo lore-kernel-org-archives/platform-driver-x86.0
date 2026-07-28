@@ -1,47 +1,50 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B7D42DFF5;
-	Tue, 28 Jul 2026 11:59:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FBF430319;
+	Tue, 28 Jul 2026 11:59:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785239990; cv=none; b=En3KlD2uL+zUwW+z3VSJvTA+E6rmD9a0srf5EIRA81dzARnM1Mb9Hw/LFSMHi+tTuBYpmI0dC1cqqYV0YPvSzSnqPjXtCV4OI2IFWfOYdnqJIj3UWxk1hOhAGaFm6ckB0WJOV9KjoT9AKpiGWKNSORA+d+Kh5BA7eWG9OBB66PE=
+	t=1785239991; cv=none; b=CA+UCaLIfyU0ZnhdHE/ChPggvH9wHVvVLMKRaTi4jcn7ZMB6ybVohU74X4dnodRRH2oN2MNcPgvBNKgA+JHDnMjqnJTjvQqBBeukBIlTrlEwHsGl+BJlKmvB0hxpUZvhMwBzOvgcGZt2igHgKVqh4BTdD+0oRy8z0Noacf7QBQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785239990; c=relaxed/simple;
-	bh=lHRTwriL95Pr9/wHIGFYRtPnyduJsP68/G4xDpZNW6M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SzFKI2Vjp7ejnS55/Gf874YDM/e2DGB00evN0kUzfPLkss1p4FAXORSefdttbBSecfjQee0Dl7kyEz0dKJXNuwIVPzhcORotOqZ+nLjqGI/jPoiZUvDZGL18HOLPn9hV1sHIaB3rTRTaCee3gLJe/MG9xW0AslpxnxhgfayyLiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=fADgfQZR; arc=none smtp.client-ip=157.90.84.7
+	s=arc-20240116; t=1785239991; c=relaxed/simple;
+	bh=kiJc08/ov4Yk8nGFGPrn7wOVdYHPD+TCu1tooLBHak4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=syWVqdrOuLnYjrgIzIfr4xon2joiVcUM3q1EBaUrmPOoopGPdt5DVp99gV8CtKCo7zEomn8iPsCZZAOiT3QM4KMRZeb5/Y17BEXWLtbij2xB80ozIf80TP57gQ4ceWfONjD8uKrXjjHvmdCJoGpUwwVs2w1ZqL3E3QbfKaBLVZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=KxVG7RRF; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="fADgfQZR"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="KxVG7RRF"
 Received: from aerhardt-tuxedo.buero.augsburg.tuxedo.de (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
 	(Authenticated sender: a.erhardt@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 150A52FC007C;
-	Tue, 28 Jul 2026 13:59:40 +0200 (CEST)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id C9D362FC007F;
+	Tue, 28 Jul 2026 13:59:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1785239981;
+	s=default; t=1785239983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Vg1DleA7vpCyTm+joNWGDMumyeZJh2BUHdIbGtwOYzU=;
-	b=fADgfQZRSkeB70QIDnRtOul9fpGAjYtgKFXGxKFGz+vcGn8vPqp8cGvc0iIAsuS72yfS6G
-	vjrECXRV+uRbYfch+E2Qj9qr4MIbt+lk/c8g/556yEZMDGI2vibdkQ9VKg/Lpqi/dbT2pa
-	Z902LQuh/BuS+3XD4gY1zuq5vI1K7x8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=83IT5MCSN60iD6rl4rvPX5fX4gsvm+HqQUc9KBkXmmo=;
+	b=KxVG7RRF/TdSsez1ccn8M1nU6BOlZ6s8mDgQ3Z8m6r5k5VyVjLFiXfev10QikjK3ap6GWj
+	GxfKLsVra9J3ipCaXuJP06PZfQdWpARPrT2Qs8aegk+VRyY/HhtEB3dCHHkaylbLqWplJB
+	xoLGB7ktxe11jMmku7DyIxGqbo2cSPY=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
 From: Aaron Erhardt <aer@tuxedocomputers.com>
 To: wse@tuxedocomputers.com,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
-Cc: stable@vger.kernel.org,
-	Aaron Erhardt <aer@tuxedocomputers.com>,
+Cc: Aaron Erhardt <aer@tuxedocomputers.com>,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/6] platform/x86/tuxedo: Fix keyboard LED map ordering
-Date: Tue, 28 Jul 2026 13:59:38 +0200
-Message-ID: <20260728115938.125444-1-aer@tuxedocomputers.com>
+Subject: [PATCH 6/6] MAINTAINERS: Add Aaron Erhardt as maintainer of TUXEDO DRIVERS
+Date: Tue, 28 Jul 2026 13:59:41 +0200
+Message-ID: <20260728115941.125493-2-aer@tuxedocomputers.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260728115941.125493-1-aer@tuxedocomputers.com>
+References: <20260728115941.125493-1-aer@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -50,42 +53,25 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The LED mappings in sirius_16_[iso|ansii]_kbl_map did contain a
-flipped line that caused LEDs to turn on in the wrong order when
-counting up the Lamp ID.
+I'm actively working on this driver as part of my responsibilities now.
 
-Cc: stable@vger.kernel.org
 Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
 ---
- drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-index 8f1ffca0430d..2b985b030197 100644
---- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-+++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-@@ -232,8 +232,8 @@ static const struct tux_kbl_map_entry_t sirius_16_ansii_kbl_map[] = {
- 	{ 0x2e, { 246000,  67500, 5250 } },
- 	{ 0x2a, { 269500,  67500, 5250 } },
- 	{ 0x53, { 294500,  67500, 5250 } },
--	{ 0x55, { 311200,  67500, 5250 } },
--	{ 0x54, { 327900,  67500, 5250 } },
-+	{ 0x54, { 311200,  67500, 5250 } },
-+	{ 0x55, { 327900,  67500, 5250 } },
- 	{ 0x56, { 344600,  67500, 5250 } },
- 	{ 0x2b, {  31000,  85500, 5500 } },
- 	{ 0x14, {  51500,  85500, 5500 } },
-@@ -337,8 +337,8 @@ static const struct tux_kbl_map_entry_t sirius_16_iso_kbl_map[] = {
- 	{ 0x2e, { 246000,  67500, 5250 } },
- 	{ 0x2a, { 269500,  67500, 5250 } },
- 	{ 0x53, { 294500,  67500, 5250 } },
--	{ 0x55, { 311200,  67500, 5250 } },
--	{ 0x54, { 327900,  67500, 5250 } },
-+	{ 0x54, { 311200,  67500, 5250 } },
-+	{ 0x55, { 327900,  67500, 5250 } },
- 	{ 0x56, { 344600,  67500, 5250 } },
- 	{ 0x2b, {  31000,  85500, 5500 } },
- 	{ 0x14, {  51500,  85500, 5500 } },
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a674e36529f7..792eb26722b3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -27551,6 +27551,7 @@ F:	tools/testing/selftests/turbostat/
+ 
+ TUXEDO DRIVERS
+ M:	Werner Sembach <wse@tuxedocomputers.com>
++M:	Aaron Erhardt <aer@tuxedocomputers.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Supported
+ F:	drivers/platform/x86/tuxedo/
 -- 
 2.43.0
 
