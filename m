@@ -1,49 +1,49 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD28F355048;
-	Tue, 28 Jul 2026 17:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBB13A254B;
+	Tue, 28 Jul 2026 17:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785261235; cv=none; b=S48M5/XyUmyM7GCKRKdAe5hH1vIRRKdi5tbqqtHmUJtAcvLGQjvRjHhRZLGsFyuHCVW2x+nPB2zuHHinOQbVhZdJdPU8AhYJW1ChCDiMrfy+5Q7cR1E6pq1Bygp+Ye6OOPe8jeaCuFwuDojwok/uBA6OwdrP9+1qpXti6pMWjVo=
+	t=1785261238; cv=none; b=rHEZFGrHFSI6U8bLQwKr++DRx1JV2hPJMIBbGhj0PTOTYb+XjYXJZTppoiLmbAWER6Roy9Xo+eQqPSPSsDJB/kup5g6g9BpbZuifScqHAt1gGKNGnPxP6ZLLJw5d9qfIY2g1Mry8cN+/cYmM+ZabxncLIJku63VaaOeFJbJZzvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785261235; c=relaxed/simple;
-	bh=TWdb7M1Upqn9UrehERBTUCkV0cLL1dhA1cXebKZ5Qro=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=VpemE0G6Hq08Ky7jSQd8MNuIPpG2N4gnAp5nVrTzlMn5prvvhkNTydlmVBao7El3n/SwNzNZobPJX0wHPUwyHuS1/I2EjYVgQ0T2fpwss4l8m5MZPW5ULkwwU/RmZb959kDrIYz1s4fwQjUDqWoDWQEJALLOg9WeA12XHhKOFck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=vYZlC6ZV; arc=none smtp.client-ip=162.62.58.216
+	s=arc-20240116; t=1785261238; c=relaxed/simple;
+	bh=MZ66aUptBTWFExEFcP+FsAfv73lWKGWzlP+JebMwz50=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=IX2TIWpNPlpMwUPUKgJyWZsuBGY8h8iMASZ0poIJScocvVMwFZri5X64t+14ND9+FzFmvJ30TPJlrhKaFatnp2oGCh40TtKiilhTDYK0+Qz81WEOqBr7Vn1RbHrdH9l9CHC1x/Qs1Zw1F/dQqX2jzgIP3o85tW4iXfFoW4H/2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=ji19qGLW; arc=none smtp.client-ip=162.62.57.252
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="vYZlC6ZV"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="ji19qGLW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1785261226;
-	bh=jGk1hD3c3L6re9ew4aK9A96PMeKfpv2VXX1HXi5Xf+4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=vYZlC6ZVKPd2T8hCfnZt7ccKRaZfaI1BHVF8hllJsTm8b2oO2w9YK3G2B+BYwDGO9
-	 BZ35BbpG4SbIvUG/xTr/G5FFUey46k/3DVdsDDKvdT02lT/F32eE/6yMdn/unzNZyf
-	 kZG1PEtnxbxnmQaf8K2Sb6jgoUyKP83WLG8dcPwI=
+	s=s201512; t=1785261225;
+	bh=Sk6KS4cKViN5iaQRNEV72saKkoP2spKS5Yu1gXmWcl0=;
+	h=From:To:Cc:Subject:Date;
+	b=ji19qGLWTuRRBV0aOTtn8DLkXoU+tq7Xp7wSDgruWV5nwXwKRpvAVQN8f7OZ8cHk8
+	 86ROp+NQj2lpXzzQw8rthkrHLb2qUv2DzTPxCdns6F6aDxeJY/rhOqALcVsAgYLyRG
+	 yTP8XzGmL3mORJjFdko5LYSIXUHNWt1QmsH+0/KM=
 Received: from max-laptop-cachy ([240e:3a1:20e0:1ea0:2fa7:34d4:60dc:c367])
 	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
 	id D6A85AE0; Wed, 29 Jul 2026 01:53:42 +0800
-X-QQ-mid: xmsmtpt1785261225t1z6ne510
-Message-ID: <tencent_5C7132ABFCF9E9800C642850550B68FD1208@qq.com>
-X-QQ-XMAILINFO: NdJjTjI40ejM5IPcljqHsXzbN6CiC5I0D2rjuPl8JSI6+kkhiZMcSwhplmPHn4
-	 ZHwPLUOXHngZqdvmyohzwE0N6dqT6ktjAMeS/cQTFTuL0Yxy6X+xaqgQ7j8E/xKeHmQlnq3yUBOD
-	 eBIxDkxybOMk/IpgnNTMI9QOY6O9UZdib73WJkWffC+7m5Hg9NIjwa+2kU/7gUTUneQnuJ/WTHrU
-	 tKqU4BGsQPB3ZZFmxhgWFeryIFmQE8T53PWnWLQdiaMoWHGHgYJaBrLpjmCaO0QSdg8dcp3AT8cf
-	 UDEFBCxqEfzBYwtYuGgdk46C1yEZRVB8ruA2sDyPd4FHRuxaZCEqxgpWHd+vE+FByUtG6nSmcK31
-	 5jQn7reUYh15tMHNeLzNEpmen8FdESjJSDhwreq6gQLtRhQru6C7HaXsDSSdpcaQ+ZGGq5nxqQqx
-	 bLYVqQrupU3oCxbmglAH3RKsEE4LwaHsoD5qmD+nIA+0zsot0ZGDlI/5K4XWnw2qHYyd/t1Wiqrd
-	 zKZOnncLQMyqeQotMwxXjjcL9pWcjBlFycJzL1YJQIjIfGifprRiXGSOLCSuQe50S509GGYE+3Fh
-	 hohtNhGYtXO8F40HdCG4HIEYIiwx1W/ARW+omRua0Wb9jbqsQN9nOYyW3frxhHtMiJmaT+5DjgbL
-	 f/rqYMsbwaVhJZLHEiHDalFp7imGk2fQF54ccdDGM5pUmWHXNbFYDpsPFPNKPqWCNHpF/+bis+HY
-	 L6vFazDeSRz8Tynwzz3ZwqM4pR2HvqBRlMj8I/kqfWicB3Pr7hjrm/dGnggtPLwHo4WcWbY/f18r
-	 UwpYjOYGtYW4+7SD2989oeou2IFaJHow6OaZSU+i4t19bQWnW/NWtvzcsuTsDDEa/oZMHDlcs6TD
-	 vENmQxvlibirxSy1q8vRGKAf7c/tDr3T8NFeTEebRbgF8hOMUwSz53/2GS7c6PwCT3pZHi/pMvOW
-	 dl+VGnKk8wiOXnD+13L0pPT2wbBjc0q6VUW0LVpuItK9KUNhcndZZMa0y79QCJbtDDOZI0QxWWBp
-	 HsJym1IGbqqSZHsL6eLI0pbEBJ1+UmEMeScYBWbab9cAFGIZr6bD/aUruaKi6E/kFYhzXCBQ==
-X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
+X-QQ-mid: xmsmtpt1785261222tua5kb144
+Message-ID: <tencent_FCC6CDAEB2E4FF0272905D423D2CB0F5970A@qq.com>
+X-QQ-XMAILINFO: NdJjTjI40ejMWliyr3R5YFZCsCZDQhmScJoNQC0nFDmoJgRYhpuTK0ICuENK73
+	 taYnNKnSG6PD0/MB7wfoshJWt/lR84XmohuiBXQEXGvI9XfaQz+F249vmRRUyRIJXW0NfVHNW+H/
+	 MISOZKJqTJcV8jLjznXtZHSZ+C0GjfeFdO93G5IwwBe1BgPw1xmquYYT90q05i6ffmr8I3Lpqx/K
+	 ygwkHPP59S70jwL5MJDvLaRPek5I3iMSNQEPLdQLAklUI2Hbr4aFmFNh7SItqq1YTqPq8XHS713H
+	 eeM//r+Zk5ZHphXBHCNNHK5wiBkPEl07nZWbvnS3USqTPc0d5wQeWV4Y9IcSNfSccmq46urm2hhE
+	 mFxPZ4Ny7svNn+5JBUehKo4bKcIE9uYC8YQEyIwxoPGye3CgiuzN3ywQv6cPDo0bumA8+Pq8n2ua
+	 0H5hTZ/dZ9kts/RyeJnVQPAm46oIsQO9QGYV+gXEan1qzNEnh/3XW5tIR3RghKPJJhQYiPNo35ch
+	 mGgQ13zToOd0rqthEE5Q5Zd8CIZYycJyByh4SGbF/XFCbXFJBVOCsJNPMhgmLJEklX3D/uvHm+fm
+	 RcbEW8OxqYvO2LGZLx8WebOU425fX1xbwvdf1weG5KLOkkBvKKD8SCyuXA2STyHlaqkYecMvKTGg
+	 JSTu2PsJQyLx4QSz5TEH+6D9r0sE4+CQF7LfwNuZW/UuS12sOBF+9llv1Lo3wIHdffPqCZfQqWoW
+	 yT9auLe3/ZU2tRIeiEhFZ5gAmGtZs58A6nklBoO/dVjRmOsW68GL09t2S9zshPb2e13kOPKQ7lfi
+	 aKo/lF2GamyRls0Jp9wyOTkOKw3h4pILNCL+I9BwnzPJTwQLIgh9yL1b78D8OJnH8PjGWToYyG3T
+	 Ul4Zby4DmJGmf5M5SGrnRPlPgT+GPKN4iJB84CEXBZg+3CdZthF29kTRUZ/2IQs4ovYurMVT3gah
+	 KA0jokPG+20jB0BGe1XNLeUMZMYar5iyFTbqreSNTX9+95ie3uTDixIvbrpLnfOlrDzSwWC+yTlI
+	 tOgULQzH8Mu2QQCRFSm58rxkL84P5MQgCvbRLiO13ITe0S/VMHL0cEpDCMyQb7xh3YAGUgHxd49F
+	 cGy8Zx
+X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
 From: wolf109909 <wolf109909@foxmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -53,12 +53,10 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Nabil Danial <nabildanial.93@gmail.com>,
 	Yuming Sun <wolf109909@foxmail.com>
-Subject: [PATCH 2/5] platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
-Date: Wed, 29 Jul 2026 01:53:38 +0800
-X-OQ-MSGID: <20260728175341.45927-3-wolf109909@foxmail.com>
+Subject: [PATCH 0/5] platform/x86: bitland-mifs-wmi: MIFS v2 firmware support (Xiaomi Book Pro 14 2026)
+Date: Wed, 29 Jul 2026 01:53:36 +0800
+X-OQ-MSGID: <20260728175341.45927-1-wolf109909@foxmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260728175341.45927-1-wolf109909@foxmail.com>
-References: <20260728175341.45927-1-wolf109909@foxmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,149 +67,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Yuming Sun <wolf109909@foxmail.com>
 
-The MIFS v2 firmware found on e.g. the Xiaomi Book Pro 14 2026 (Intel
-Panther Lake, SSDT device "WMID" with _UID "MIFS") implements only a
-reduced WMAA command set and reports the performance mode as raw QFAN
-embedded-controller codes { 2, 3, 4, 9, 10 } instead of the v1 0..3
-enumeration. With the v1 mapping, profile_get() returns -EINVAL for
-most firmware states ("platform_profile: Failed to get profile for
-handler bitland-mifs-wmi", also reported on REDMI Book Pro 14 2025)
-and profile_set() writes values the firmware treats as no-ops, so
-power-profiles-daemon can neither read nor switch the profile;
-selecting "performance" fails outright and wedges the daemon.
+This series makes the Bitland MIFS WMI driver work on the Xiaomi Book
+Pro 14 2026 (Intel Panther Lake, Ultra 5 358H) and very likely on the
+REDMI Book Pro 14 2025, whose suspend failure was reported earlier [1].
 
-Detect the variant at probe time by querying the current mode: values
-outside the v1 enumeration mean v2 firmware. Map the v2 codes to
-platform profiles (2=quiet, 3=balanced, 4=speed, 9/10=extreme) and
-skip the v1-only AC-type capability probe, which does not exist on v2
-and now fails the call after the status-word check.
+These machines ship a reduced MIFS firmware ("v2"): the WMAA method
+implements only function groups 0x0800/0x0a00/0x0c00/0x1000, reports
+the performance mode as raw QFAN EC codes {2,3,4,9,10} instead of the
+v1 0..3 enumeration, and exposes no WMI fan function. Additionally the
+firmware never defines ECON, so \_SB.PC00.LPCB.Q_EC._STA fails and the
+ACPI EC driver never binds, which kills all EC query handlers
+(including the lid switch notifications _Q0C/_Q0D).
 
-Values verified against the laptop's SSDT WMAA method and by observing
-the EC QFAN register while switching modes.
+Symptoms fixed by this series, all reproduced and verified on the
+affected machine:
 
-Signed-off-by: Yuming Sun <wolf109909@foxmail.com>
----
- drivers/platform/x86/bitland-mifs-wmi.c | 79 +++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+* Suspend/hibernate aborted with -EINVAL from the driver's suspend
+  hook (same failure as [1]: "dpm_run_callback():
+  bitland_mifs_wmi_suspend returns -22"; 242 failures counted in
+  suspend_stats). Patch 1 makes the WMI call validate the firmware
+  status word and the suspend/resume hooks fault-tolerant.
 
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index 12426d11..342dd7e1 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -73,6 +73,21 @@ enum bitland_mifs_power_profile {
- 	WMI_PP_FULL_SPEED	= 3,
- };
- 
-+/*
-+ * MIFS v2 firmware (e.g. Xiaomi Book Pro 14 2026, SSDT "WMID" with UID
-+ * "MIFS") implements a reduced WMAA command set (only function groups
-+ * 0x0800/0x0a00/0x0c00/0x1000) and reports the performance mode as raw
-+ * QFAN EC codes instead of the v1 0..3 enumeration. Codes 9 and 10 are
-+ * the SMM-backed "extreme" modes.
-+ */
-+enum bitland_mifs_v2_power_profile {
-+	WMI_V2_PP_QUIET		= 2,
-+	WMI_V2_PP_BALANCED	= 3,
-+	WMI_V2_PP_SPEED		= 4,
-+	WMI_V2_PP_EXTREME	= 9,
-+	WMI_V2_PP_EXTREME2	= 10,
-+};
-+
- enum bitland_mifs_event_id {
- 	WMI_EVENT_RESERVED_1		= 1,
- 	WMI_EVENT_RESERVED_2		= 2,
-@@ -172,6 +187,7 @@ struct bitland_mifs_wmi_data {
- 	struct device *pp_dev;
- 	enum platform_profile_option saved_profile;
- 	bool profile_valid;
-+	bool is_v2;	/* MIFS v2 firmware: QFAN perf-mode codes */
- };
- 
- static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-@@ -217,6 +233,27 @@ static int laptop_profile_get(struct device *dev,
- 	if (ret)
- 		return ret;
- 
-+	if (data->is_v2) {
-+		switch (result.data[0]) {
-+		case WMI_V2_PP_QUIET:
-+			*profile = PLATFORM_PROFILE_LOW_POWER;
-+			break;
-+		case WMI_V2_PP_BALANCED:
-+			*profile = PLATFORM_PROFILE_BALANCED;
-+			break;
-+		case WMI_V2_PP_SPEED:
-+			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+			break;
-+		case WMI_V2_PP_EXTREME:
-+		case WMI_V2_PP_EXTREME2:
-+			*profile = PLATFORM_PROFILE_PERFORMANCE;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		return 0;
-+	}
-+
- 	switch (result.data[0]) {
- 	case WMI_PP_BALANCED:
- 		*profile = PLATFORM_PROFILE_BALANCED;
-@@ -272,6 +309,28 @@ static int laptop_profile_set(struct device *dev,
- 	int ret;
- 	u8 val;
- 
-+	if (data->is_v2) {
-+		switch (profile) {
-+		case PLATFORM_PROFILE_LOW_POWER:
-+			val = WMI_V2_PP_QUIET;
-+			break;
-+		case PLATFORM_PROFILE_BALANCED:
-+			val = WMI_V2_PP_BALANCED;
-+			break;
-+		case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+			val = WMI_V2_PP_SPEED;
-+			break;
-+		case PLATFORM_PROFILE_PERFORMANCE:
-+			val = WMI_V2_PP_EXTREME;
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+		input.payload[0] = val;
-+
-+		return bitland_mifs_wmi_call(data, &input, NULL);
-+	}
-+
- 	switch (profile) {
- 	case PLATFORM_PROFILE_LOW_POWER:
- 		val = WMI_PP_QUIET;
-@@ -705,6 +764,26 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 
- 	dev_set_drvdata(&wdev->dev, drv_data);
- 
-+	if (dev_type == BITLAND_WMI_CONTROL) {
-+		/*
-+		 * Firmware variant detection: v1 firmware reports the perf mode
-+		 * as 0..3 (enum bitland_mifs_power_profile); anything else means
-+		 * the reduced MIFS v2 command set with raw QFAN codes.
-+		 */
-+		struct bitland_mifs_input probe_in = {
-+			.operation = WMI_METHOD_GET,
-+			.function = WMI_FN_SYSTEM_PER_MODE,
-+		};
-+		struct bitland_mifs_output probe_out;
-+
-+		if (!bitland_mifs_wmi_call(drv_data, &probe_in, &probe_out) &&
-+		    probe_out.data[0] > WMI_PP_FULL_SPEED) {
-+			drv_data->is_v2 = true;
-+			dev_info(&wdev->dev,
-+				 "MIFS v2 firmware detected (QFAN mode codes)\n");
-+		}
-+	}
-+
- 	if (dev_type == BITLAND_WMI_EVENT) {
- 		/* Register input device for hotkeys */
- 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
+* power-profiles-daemon could not read or set the platform profile
+  ("Failed to get profile for handler bitland-mifs-wmi"; selecting
+  "performance" failed outright and wedged the daemon). Patch 2
+  detects the v2 firmware variant at probe and maps the QFAN codes
+  (2=quiet, 3=balanced, 4=speed, 9/10=extreme).
+
+* The hwmon device reported zero RPM on all channels because the v2
+  firmware has no WMI fan function. Patch 3 reads the two fan
+  tachometers (u16 RPM, 0 = stopped) from the EC shared-memory window
+  at 0xFE0B0300 (DSDT region "ERAM", offsets 0x69/0x6B).
+
+* Closing the lid produced no SW_LID event (screen stayed on, keys
+  pressed by the closed lid typed into the visible lock screen,
+  locking the account). Patch 4 polls the LSTE lid bit in the EC
+  window and, on a change, evaluates the very AML methods the EC
+  query would have run (_Q0C/_Q0D), restoring proper lid events.
+  DMI-gated to the affected model.
+
+All values were reverse-engineered from the machine's DSDT/SSDT
+(WMID device, _UID "MIFS") and verified live: mode switching changes
+the EC QFAN register as expected, fan tachs ramp 0 -> ~2700 RPM under
+load, lid close/open emit proper switch events consumed by
+systemd-logind, and suspend/resume cycles complete cleanly with the
+driver loaded (suspend_stats: fail 0).
+
+Notes for reviewers:
+
+* The v2 variant is detected at runtime (perf-mode query result
+  outside the v1 enumeration) so other Bitland machines sharing this
+  firmware generation get support without DMI entries; the lid quirk
+  additionally requires a DMI match.
+* On this platform the firmware perf-mode switch reaches Intel DTT
+  (\_SB.IETM, INTC10D4) via ODV variables; mainline has no driver for
+  that device, so the TDP change the firmware intends is currently
+  not applied on Linux. Programming RAPL directly from this driver
+  seemed inappropriate; I left it out. Happy to hear preferences.
+* Interactions with the in-flight "Merge redmi-wmi into
+  bitland-mifs-wmi" series [2] are limited to file context; the
+  control-device paths touched here are disjoint from the event-device
+  merge.
+
+[1] https://lists.openwall.net/linux-kernel/2026/07/10/72
+    "[BUG] platform/x86: bitland-mifs-wmi: Hibernation fails with
+    error -22 on Xiaomi Redmi Book Pro 14 2025"
+[2] https://www.spinics.net/lists/kernel/msg6309086.html
+    "[PATCH v1 0/4] Merge redmi-wmi into bitland-mifs-wmi"
+
+
+Yuming Sun (5):
+  platform/x86: bitland-mifs-wmi: validate WMAA status, never abort
+    suspend
+  platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
+  platform/x86: bitland-mifs-wmi: read fan tach from EC window on MIFS
+    v2
+  platform/x86: bitland-mifs-wmi: drive lid switch via EC poll on Xiaomi
+    Book Pro 14
+  Documentation: wmi: bitland-mifs-wmi: document MIFS v2 firmware
+    variant
+
+ .../wmi/devices/bitland-mifs-wmi.rst          |  26 ++
+ drivers/platform/x86/bitland-mifs-wmi.c       | 272 +++++++++++++++++-
+ 2 files changed, 290 insertions(+), 8 deletions(-)
+
 -- 
 2.55.0
 
