@@ -1,49 +1,50 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBB13A254B;
-	Tue, 28 Jul 2026 17:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800EA3ABD96;
+	Tue, 28 Jul 2026 17:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785261238; cv=none; b=rHEZFGrHFSI6U8bLQwKr++DRx1JV2hPJMIBbGhj0PTOTYb+XjYXJZTppoiLmbAWER6Roy9Xo+eQqPSPSsDJB/kup5g6g9BpbZuifScqHAt1gGKNGnPxP6ZLLJw5d9qfIY2g1Mry8cN+/cYmM+ZabxncLIJku63VaaOeFJbJZzvk=
+	t=1785261239; cv=none; b=LdWtmoFEuXfALpzoZIbN2vekLvAKucZl30TGjs5jzzo0tzCc6l6b85xP+QUIPJfyuacQ88js7qlUdqPjHv5UMkTXFArlEuetFVa33auiojuS9PqqHJ1df9MBWd/1ediE0Asg/St3cpwjNOMVwT+kkiVrOTYDUd6KiEzm3rzv5Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785261238; c=relaxed/simple;
-	bh=MZ66aUptBTWFExEFcP+FsAfv73lWKGWzlP+JebMwz50=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=IX2TIWpNPlpMwUPUKgJyWZsuBGY8h8iMASZ0poIJScocvVMwFZri5X64t+14ND9+FzFmvJ30TPJlrhKaFatnp2oGCh40TtKiilhTDYK0+Qz81WEOqBr7Vn1RbHrdH9l9CHC1x/Qs1Zw1F/dQqX2jzgIP3o85tW4iXfFoW4H/2Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=ji19qGLW; arc=none smtp.client-ip=162.62.57.252
+	s=arc-20240116; t=1785261239; c=relaxed/simple;
+	bh=xLxy+VHtkw8RM1Czvq8n+fuRAbrgV3yT/gXJmoqdVQE=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Yl6RKYF6wNHm14Xii4wIB/tQxwdzLy+EKqLlO00vY+jhsfyuRsPiuWH5ghS2ErEf/H9BNHXfuSumXnEi8KB3D+5QbD2ImjpNTjRTxh41JrIJe+w+neS+2p5kuf67FXtqVdia8fNhn7RZW+iQ5sBzoL0kEbUNH1tap8iU6R70ufM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=BmqzI0ky; arc=none smtp.client-ip=203.205.221.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="ji19qGLW"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="BmqzI0ky"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1785261225;
-	bh=Sk6KS4cKViN5iaQRNEV72saKkoP2spKS5Yu1gXmWcl0=;
-	h=From:To:Cc:Subject:Date;
-	b=ji19qGLWTuRRBV0aOTtn8DLkXoU+tq7Xp7wSDgruWV5nwXwKRpvAVQN8f7OZ8cHk8
-	 86ROp+NQj2lpXzzQw8rthkrHLb2qUv2DzTPxCdns6F6aDxeJY/rhOqALcVsAgYLyRG
-	 yTP8XzGmL3mORJjFdko5LYSIXUHNWt1QmsH+0/KM=
+	s=s201512; t=1785261228;
+	bh=oswLEAHt+WehuH0TMqGQrzYiJ2pqxnxi/J9JtIHFNCU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BmqzI0ky79wVnjYFYHpLsCGChP77gRgMhPRYEEMVSyeTLjts6X8eiTN1tGk+htJTv
+	 W/QVvv+Dx3ZCmlXWD0MX/wYFRDG3XaJ4cIiSd9mtarFU0FqNJE97Ilo9rD9v2M7sZD
+	 lmyscNnv6fpoGMDY+zsfFWIwAAm4oO0h6z0/2GUQ=
 Received: from max-laptop-cachy ([240e:3a1:20e0:1ea0:2fa7:34d4:60dc:c367])
 	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
 	id D6A85AE0; Wed, 29 Jul 2026 01:53:42 +0800
-X-QQ-mid: xmsmtpt1785261222tua5kb144
-Message-ID: <tencent_FCC6CDAEB2E4FF0272905D423D2CB0F5970A@qq.com>
-X-QQ-XMAILINFO: NdJjTjI40ejMWliyr3R5YFZCsCZDQhmScJoNQC0nFDmoJgRYhpuTK0ICuENK73
-	 taYnNKnSG6PD0/MB7wfoshJWt/lR84XmohuiBXQEXGvI9XfaQz+F249vmRRUyRIJXW0NfVHNW+H/
-	 MISOZKJqTJcV8jLjznXtZHSZ+C0GjfeFdO93G5IwwBe1BgPw1xmquYYT90q05i6ffmr8I3Lpqx/K
-	 ygwkHPP59S70jwL5MJDvLaRPek5I3iMSNQEPLdQLAklUI2Hbr4aFmFNh7SItqq1YTqPq8XHS713H
-	 eeM//r+Zk5ZHphXBHCNNHK5wiBkPEl07nZWbvnS3USqTPc0d5wQeWV4Y9IcSNfSccmq46urm2hhE
-	 mFxPZ4Ny7svNn+5JBUehKo4bKcIE9uYC8YQEyIwxoPGye3CgiuzN3ywQv6cPDo0bumA8+Pq8n2ua
-	 0H5hTZ/dZ9kts/RyeJnVQPAm46oIsQO9QGYV+gXEan1qzNEnh/3XW5tIR3RghKPJJhQYiPNo35ch
-	 mGgQ13zToOd0rqthEE5Q5Zd8CIZYycJyByh4SGbF/XFCbXFJBVOCsJNPMhgmLJEklX3D/uvHm+fm
-	 RcbEW8OxqYvO2LGZLx8WebOU425fX1xbwvdf1weG5KLOkkBvKKD8SCyuXA2STyHlaqkYecMvKTGg
-	 JSTu2PsJQyLx4QSz5TEH+6D9r0sE4+CQF7LfwNuZW/UuS12sOBF+9llv1Lo3wIHdffPqCZfQqWoW
-	 yT9auLe3/ZU2tRIeiEhFZ5gAmGtZs58A6nklBoO/dVjRmOsW68GL09t2S9zshPb2e13kOPKQ7lfi
-	 aKo/lF2GamyRls0Jp9wyOTkOKw3h4pILNCL+I9BwnzPJTwQLIgh9yL1b78D8OJnH8PjGWToYyG3T
-	 Ul4Zby4DmJGmf5M5SGrnRPlPgT+GPKN4iJB84CEXBZg+3CdZthF29kTRUZ/2IQs4ovYurMVT3gah
-	 KA0jokPG+20jB0BGe1XNLeUMZMYar5iyFTbqreSNTX9+95ie3uTDixIvbrpLnfOlrDzSwWC+yTlI
-	 tOgULQzH8Mu2QQCRFSm58rxkL84P5MQgCvbRLiO13ITe0S/VMHL0cEpDCMyQb7xh3YAGUgHxd49F
-	 cGy8Zx
-X-QQ-XMRINFO: Nq+8W0+stu50tPAe92KXseR0ZZmBTk3gLg==
+X-QQ-mid: xmsmtpt1785261226t22sxd4qh
+Message-ID: <tencent_E7EA7661A07F33AE6ED53F9F1C509CEC0905@qq.com>
+X-QQ-XMAILINFO: NnYhxYSyuBnLFQET87fuTjjDBKtr5Zfe02dBxw9pNtugT2MiMcPbWUxiFycExo
+	 Kw/5QoJ3U8lM6pyUQnKMcvdvvhFcOUffB6NMSvxzVYLn5lUsVz/EOki926WRhCOaqIjerPrKmhIf
+	 VAY7R8JEv4czmuDWYkr86c3/hREV53b4crzCXPbwFjBVsm0aCMz0O2Px6L2TdODdiAy1k/ixtGGv
+	 pr9Hp6DPLdBb86KLamxx8wBs3v6kl3yKbpbf/Yf/dhDsOx7wV0xzl9+CjfZ3cC27iWWHASkzds9+
+	 0kSnHI1LncI9auoSIUqRxGd3DUvcpySlvm2U95szPT2e2Z/aaIGTFg8x1XNQuOOwrEmLomaVR7PN
+	 PbxjXXg1tyq5kytrlAq7M+2xkuvI9O/V/DJi0o9oHReWT6fOPlkMZNDywBexq/x/h6q3CY5Jk7FW
+	 IwCvCye3uKOHs8QcaJ1Jy0YAzMlzoMOkWZl+ly9ITaz9t6hX2TRwheaKe3YZonjEbhSSDyWGqJRY
+	 Hsd07UkSAZ53qu4Kqmm25HlIpzXnbKNZL0tFjcR0QDBVaZrhAyeMUzPcqKR/pLpUpfAlQv/+gJNZ
+	 BsBL9RkfjNu/GnDbVehioqC/vb9cJM4WL5jKIxuPnrQiVdpePHg+sLScx7J3grfSBBnOfMn4HkAP
+	 pPI83n44to0uolQyevcrBK9MruDoKHwu1gHskHOawMoJvcw9WL89rTvEIrCnVJlWwsftH9+ruqtd
+	 DxCCALFQXA072LrbTsnzz0XjyDK5R6ctEyA6w9PDUPA2Ny/1/JL4lwK1DUgkK/agsjOw4c8VdTeG
+	 bJGiSRiHYk1j9bm+e4lm/TtwW3LNspqsCBnGwMTymNOO3AvvQ4SYa2TTS37BBCMawWdTBUtZ6Vzp
+	 vtRdckB/I5WDla47cI+ZxbWkuOOOylvFF8SMpfRIuYW/kyP0JpdOVQL9LxAAkccQxu3AyjngiarA
+	 O4QvYPsQ9fk5Hzs0ibEtMqMO6DCE7m5R5Sa+es5VTdUsLa524YdWrYky5mfqxtElYHmfjP+MidSN
+	 lvY0smgwqanFZzFfqnINPEe3sNKULlKYva16p/7IjgAuVQfQKnxOp2f52KsIgFkBn2TQ9bbeCjQp
+	 ggFMnksR0DQuWxLio=
+X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
 From: wolf109909 <wolf109909@foxmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -53,10 +54,12 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Nabil Danial <nabildanial.93@gmail.com>,
 	Yuming Sun <wolf109909@foxmail.com>
-Subject: [PATCH 0/5] platform/x86: bitland-mifs-wmi: MIFS v2 firmware support (Xiaomi Book Pro 14 2026)
-Date: Wed, 29 Jul 2026 01:53:36 +0800
-X-OQ-MSGID: <20260728175341.45927-1-wolf109909@foxmail.com>
+Subject: [PATCH 3/5] platform/x86: bitland-mifs-wmi: read fan tach from EC window on MIFS v2
+Date: Wed, 29 Jul 2026 01:53:39 +0800
+X-OQ-MSGID: <20260728175341.45927-4-wolf109909@foxmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260728175341.45927-1-wolf109909@foxmail.com>
+References: <20260728175341.45927-1-wolf109909@foxmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,90 +70,153 @@ Content-Transfer-Encoding: 8bit
 
 From: Yuming Sun <wolf109909@foxmail.com>
 
-This series makes the Bitland MIFS WMI driver work on the Xiaomi Book
-Pro 14 2026 (Intel Panther Lake, Ultra 5 358H) and very likely on the
-REDMI Book Pro 14 2025, whose suspend failure was reported earlier [1].
+The MIFS v2 firmware implements no WMI function for fan speeds (nor
+for the CPU thermometer), so on these machines the hwmon device
+reported zero RPM on every channel.
 
-These machines ship a reduced MIFS firmware ("v2"): the WMAA method
-implements only function groups 0x0800/0x0a00/0x0c00/0x1000, reports
-the performance mode as raw QFAN EC codes {2,3,4,9,10} instead of the
-v1 0..3 enumeration, and exposes no WMI fan function. Additionally the
-firmware never defines ECON, so \_SB.PC00.LPCB.Q_EC._STA fails and the
-ACPI EC driver never binds, which kills all EC query handlers
-(including the lid switch notifications _Q0C/_Q0D).
+The fan tachometers instead live in the EC shared-memory window at
+0xFE0B0300 (DSDT \_SB.PC00.LPCB.Q_EC region "ERAM") as little-endian
+u16 RPM values at offsets 0x69 and 0x6B (0 = fan stopped). Map the
+window on v2 systems and expose the two fans with proper labels; hide
+the non-existent third fan and temperature channels.
 
-Symptoms fixed by this series, all reproduced and verified on the
-affected machine:
+Offsets verified by diffing the window between idle and sustained load
+(tach values ramp 0 -> ~2700 RPM and back) on a Xiaomi Book Pro 14.
 
-* Suspend/hibernate aborted with -EINVAL from the driver's suspend
-  hook (same failure as [1]: "dpm_run_callback():
-  bitland_mifs_wmi_suspend returns -22"; 242 failures counted in
-  suspend_stats). Patch 1 makes the WMI call validate the firmware
-  status word and the suspend/resume hooks fault-tolerant.
+Signed-off-by: Yuming Sun <wolf109909@foxmail.com>
+---
+ drivers/platform/x86/bitland-mifs-wmi.c | 68 +++++++++++++++++++++++--
+ 1 file changed, 65 insertions(+), 3 deletions(-)
 
-* power-profiles-daemon could not read or set the platform profile
-  ("Failed to get profile for handler bitland-mifs-wmi"; selecting
-  "performance" failed outright and wedged the daemon). Patch 2
-  detects the v2 firmware variant at probe and maps the QFAN codes
-  (2=quiet, 3=balanced, 4=speed, 9/10=extreme).
-
-* The hwmon device reported zero RPM on all channels because the v2
-  firmware has no WMI fan function. Patch 3 reads the two fan
-  tachometers (u16 RPM, 0 = stopped) from the EC shared-memory window
-  at 0xFE0B0300 (DSDT region "ERAM", offsets 0x69/0x6B).
-
-* Closing the lid produced no SW_LID event (screen stayed on, keys
-  pressed by the closed lid typed into the visible lock screen,
-  locking the account). Patch 4 polls the LSTE lid bit in the EC
-  window and, on a change, evaluates the very AML methods the EC
-  query would have run (_Q0C/_Q0D), restoring proper lid events.
-  DMI-gated to the affected model.
-
-All values were reverse-engineered from the machine's DSDT/SSDT
-(WMID device, _UID "MIFS") and verified live: mode switching changes
-the EC QFAN register as expected, fan tachs ramp 0 -> ~2700 RPM under
-load, lid close/open emit proper switch events consumed by
-systemd-logind, and suspend/resume cycles complete cleanly with the
-driver loaded (suspend_stats: fail 0).
-
-Notes for reviewers:
-
-* The v2 variant is detected at runtime (perf-mode query result
-  outside the v1 enumeration) so other Bitland machines sharing this
-  firmware generation get support without DMI entries; the lid quirk
-  additionally requires a DMI match.
-* On this platform the firmware perf-mode switch reaches Intel DTT
-  (\_SB.IETM, INTC10D4) via ODV variables; mainline has no driver for
-  that device, so the TDP change the firmware intends is currently
-  not applied on Linux. Programming RAPL directly from this driver
-  seemed inappropriate; I left it out. Happy to hear preferences.
-* Interactions with the in-flight "Merge redmi-wmi into
-  bitland-mifs-wmi" series [2] are limited to file context; the
-  control-device paths touched here are disjoint from the event-device
-  merge.
-
-[1] https://lists.openwall.net/linux-kernel/2026/07/10/72
-    "[BUG] platform/x86: bitland-mifs-wmi: Hibernation fails with
-    error -22 on Xiaomi Redmi Book Pro 14 2025"
-[2] https://www.spinics.net/lists/kernel/msg6309086.html
-    "[PATCH v1 0/4] Merge redmi-wmi into bitland-mifs-wmi"
-
-
-Yuming Sun (5):
-  platform/x86: bitland-mifs-wmi: validate WMAA status, never abort
-    suspend
-  platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
-  platform/x86: bitland-mifs-wmi: read fan tach from EC window on MIFS
-    v2
-  platform/x86: bitland-mifs-wmi: drive lid switch via EC poll on Xiaomi
-    Book Pro 14
-  Documentation: wmi: bitland-mifs-wmi: document MIFS v2 firmware
-    variant
-
- .../wmi/devices/bitland-mifs-wmi.rst          |  26 ++
- drivers/platform/x86/bitland-mifs-wmi.c       | 272 +++++++++++++++++-
- 2 files changed, 290 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index 342dd7e1..5f7c85a8 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -17,6 +17,7 @@
+ #include <linux/err.h>
+ #include <linux/hwmon.h>
+ #include <linux/init.h>
++#include <linux/io.h>
+ #include <linux/input-event-codes.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+@@ -151,6 +152,16 @@ struct bitland_mifs_output {
+  */
+ #define MIFS_STATUS_ERROR	0xe000
+ 
++/*
++ * MIFS v2 EC shared-memory window (DSDT \_SB.PC00.LPCB.Q_EC region
++ * "ERAM"). The firmware exposes no WMI fan function, but the fan
++ * tachometers live here as little-endian u16 RPM (0 = fan stopped).
++ */
++#define MIFS_V2_EC_MEM_BASE	0xFE0B0300
++#define MIFS_V2_EC_MEM_SIZE	0x100
++#define MIFS_V2_EC_REG_FAN1	0x69
++#define MIFS_V2_EC_REG_FAN2	0x6B
++
+ static u16 mifs_status(const struct bitland_mifs_output *out)
+ {
+ 	return out->reserved1 | (out->operation << 8);
+@@ -188,6 +199,7 @@ struct bitland_mifs_wmi_data {
+ 	enum platform_profile_option saved_profile;
+ 	bool profile_valid;
+ 	bool is_v2;	/* MIFS v2 firmware: QFAN perf-mode codes */
++	u8 __iomem *ec_mem;	/* v2 EC shared-memory window */
+ };
+ 
+ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
+@@ -421,6 +433,27 @@ static const char *const fan_labels[] = {
+ 	"SYS", /* 2 */
+ };
+ 
++static const char *const fan_labels_v2[] = {
++	"Left Fan", /* 0 */
++	"Right Fan", /* 1 */
++};
++
++static umode_t laptop_hwmon_visible(const void *drvdata,
++				    enum hwmon_sensor_types type,
++				    u32 attr, int channel)
++{
++	const struct bitland_mifs_wmi_data *data = drvdata;
++
++	/* v2 firmware: two fans, no CPU temperature channel */
++	if (data->is_v2) {
++		if (type == hwmon_fan && channel < 2)
++			return 0444;
++		return 0;
++	}
++
++	return 0444;
++}
++
+ static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 			     u32 attr, int channel, long *val)
+ {
+@@ -433,6 +466,22 @@ static int laptop_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 	struct bitland_mifs_output res;
+ 	int ret;
+ 
++	/* v2: tachometers are u16 RPM in the EC shared-memory window */
++	if (data->is_v2) {
++		if (type != hwmon_fan || !data->ec_mem)
++			return -EINVAL;
++		switch (channel) {
++		case 0:
++			*val = get_unaligned_le16(data->ec_mem + MIFS_V2_EC_REG_FAN1);
++			return 0;
++		case 1:
++			*val = get_unaligned_le16(data->ec_mem + MIFS_V2_EC_REG_FAN2);
++			return 0;
++		default:
++			return -EINVAL;
++		}
++	}
++
+ 	switch (type) {
+ 	case hwmon_temp:
+ 		input.function = WMI_FN_CPU_THERMOMETER;
+@@ -468,9 +517,13 @@ static int laptop_hwmon_read_string(struct device *dev,
+ 				    enum hwmon_sensor_types type, u32 attr,
+ 				    int channel, const char **str)
+ {
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	const char *const *labels = data->is_v2 ? fan_labels_v2 : fan_labels;
++	int nlabels = data->is_v2 ? ARRAY_SIZE(fan_labels_v2) : ARRAY_SIZE(fan_labels);
++
+ 	if (type == hwmon_fan && attr == hwmon_fan_label) {
+-		if (channel >= 0 && channel < ARRAY_SIZE(fan_labels)) {
+-			*str = fan_labels[channel];
++		if (channel >= 0 && channel < nlabels) {
++			*str = labels[channel];
+ 			return 0;
+ 		}
+ 	}
+@@ -486,7 +539,7 @@ static const struct hwmon_channel_info *laptop_hwmon_info[] = {
+ };
+ 
+ static const struct hwmon_ops laptop_hwmon_ops = {
+-	.visible = 0444,
++	.is_visible = laptop_hwmon_visible,
+ 	.read = laptop_hwmon_read,
+ 	.read_string = laptop_hwmon_read_string,
+ };
+@@ -782,6 +835,15 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ 			dev_info(&wdev->dev,
+ 				 "MIFS v2 firmware detected (QFAN mode codes)\n");
+ 		}
++
++		if (drv_data->is_v2) {
++			drv_data->ec_mem = devm_ioremap(&wdev->dev,
++							MIFS_V2_EC_MEM_BASE,
++							MIFS_V2_EC_MEM_SIZE);
++			if (!drv_data->ec_mem)
++				dev_warn(&wdev->dev,
++					 "cannot map EC window, fan tach unavailable\n");
++		}
+ 	}
+ 
+ 	if (dev_type == BITLAND_WMI_EVENT) {
 -- 
 2.55.0
 
