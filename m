@@ -1,208 +1,111 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD014302F8;
-	Tue, 28 Jul 2026 11:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643A742FCDB;
+	Tue, 28 Jul 2026 11:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785239992; cv=none; b=nBY25OUpq5ZRmqqOeWVRveTK/ZpPzS14TMvWgwXhtM7kGYfLoJ/j+Tlpb18fPdTBOuIqrDcFUnD7K/XbKohlnWCxYim1itYJFtBtWtog9reroVf/eE/23rzhffw45t/yx33A2zbFjQlQyJ7pfYGKKL1mC7T98n0UYzyletdYdUQ=
+	t=1785239997; cv=none; b=VFrfyCVy1TPhVK5j9Z4+NQvL9UBPrkRPRgUSJNVQg5OPFaCtxuCj0w3Zb1TTrTtcpJp16tfaR/ZZIK3hRqE2eb/IwhtiEqikDy48v9PCcuz/K8LoVYmDiTHnl5s53F0bd/zsrwKoXvl5UHH6FqeK5y3q9UJ/NQ/wSH6PnBDewX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785239992; c=relaxed/simple;
-	bh=XkCGvuAwp5T2SGZZM4EAG3SnnmFDtk9scNvMl9Wjm0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G1BSwzNT8P1IDUquwfmt8lH5CQwNqhUkltnldv1LTtM4n0E+gC4capSU1mGmFvufaJjqZT73YNLGL5cghSLxUFeHme949lPXOS0Di425U6B+Kykdhm+AkH3Cuh2G4uDkCsL9X8mHlFDJAc+15CbSmO8i0Zy/OGNqtmDXBFFLVMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=XkV6wF/c; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1785239997; c=relaxed/simple;
+	bh=6iGHSb1YxFl+QTAiAng109nVByl/3q0N+OOEO3YYHTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ml0QE9cu1OyjKHnes8YjLKtU5H5PaAoOo0gRkLbnH9oWFnUkuGaUiUz9f2j3IpQ1yRpRFjG4th5Xaj1pSwT6sjRVAVahVFGA8XNCMaAW1d/O9BuNGc7McUgf1EzTIC420DW0V5ziHHQ2DUDRnjoz//xvh/fd6FRT7jsX1QQw2a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ivO3MorK; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="XkV6wF/c"
-Received: from aerhardt-tuxedo.buero.augsburg.tuxedo.de (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
-	(Authenticated sender: a.erhardt@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 8E0E32FC007E;
-	Tue, 28 Jul 2026 13:59:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1785239982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cf314/55BNRS1Ym6vUIxaqnrX9ZH9/8Z4JOFcIE8pkc=;
-	b=XkV6wF/cMKEiFVTMcMKnOI2jzXDE1f9Yd3hjKn71OIG43EP8r7SfisO8d3i2v5MY9tKPv4
-	f2cJxv7yUHieRV2H7hkz91RwtVAY4GBT6h64HQK8aczBY04Gb01a8AiScRcr3EiYfbouU4
-	0/IDbEsMhx0eFpbaKcSvzYFGcYhONvU=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
-From: Aaron Erhardt <aer@tuxedocomputers.com>
-To: wse@tuxedocomputers.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: Aaron Erhardt <aer@tuxedocomputers.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH 5/6] platform/x86/tuxedo: Update and extend documentation
-Date: Tue, 28 Jul 2026 13:59:40 +0200
-Message-ID: <20260728115941.125493-1-aer@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ivO3MorK"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h8Yt32zfzz40Yb;
+	Tue, 28 Jul 2026 13:59:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1785239979;
+	bh=6iGHSb1YxFl+QTAiAng109nVByl/3q0N+OOEO3YYHTc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ivO3MorKZVwDdIzVjNmzkSgJRsNc/eiihKry6Ma8FpPr31hLBQqr/wfC2fgirqxFv
+	 J3/pIMD40qMh8YBtPmacJ0bo+sIsTHo3sCAR6ERrTBTBOZ6ZyoS093+Vu3EV4P5KhL
+	 vdya0Rcy5LaRqlDW+HO39SVLYCcMlwovRI8N7vqpxYRjY+2wuhl2TitF7QIHVkOXGx
+	 dicuL8YtOL6y1Rl4AGHAb8wfudKkNeN6WjELGwkMIJJQJ8ozpYaaJbATSmEIP+FDWn
+	 yd4ej6h7IFCdKDzYpvjKWCy4jT+wB0+i1ZgHadKFMUCO1hUe4AuZhkEOC2gg1n4zel
+	 40N4s18W/5wZA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h8Yt32DtXz40MT;
+	Tue, 28 Jul 2026 13:59:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h8Yt22jKCz8sbj;
+	Tue, 28 Jul 2026 13:59:38 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1CC085FC55;
+	Tue, 28 Jul 2026 13:59:29 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <3c76ba49-4e19-4bb1-83f6-805dbfb5bcaa@leemhuis.info>
+Date: Tue, 28 Jul 2026 13:59:27 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Policy: "routed through for-next, ... unless introduced in the
+ most recent cycle"
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <56f2c589-2133-417d-9bbd-2c0b11b83c87@leemhuis.info>
+ <28ffe1e4-bbbd-3945-bb8f-f372d825d0ec@linux.intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <28ffe1e4-bbbd-3945-bb8f-f372d825d0ec@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178523996943.624316.18411309507579081375@mxe9fb.netcup.net>
+X-NC-CID: 70wUwKT8QKDG6vffWw2RQl18uMbGxgS3TpBIbTC0JWt0agYzi0E=
 
-Fill-in missing details, update information and
-clean up some obsolete documentation.
+On 7/28/26 13:39, Ilpo Järvinen wrote:
+> On Tue, 28 Jul 2026, Thorsten Leemhuis wrote:
+>> Hi Ilpo! I stumbled about a few messages of yours where you apply a
+>> commit for later mainlining were you wrote this:
+>>
+>>> FYI [if applicable to your patch], as per Linus' policy change, also
+>>> fixes are mostly routed through for-next unless the fix is for a
+>>> commit introduced in the most recent cycle or is clearly a regression
+>>> fix.
+>>
+>> Could you point me to the source of "per Linus' policy change"? I really
+>> wonder if I missed something, as from what I know Linus wants fixes for
+>> regressions in all recent released merged quickly (e.g. in the current
+>> cycle), unless very dangerous or so. My knowledge is among others based
+>> on this statement from Linus:
+>> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+> [...]
+> What I'm referring to is this policy change:
+> 
+> https://lore.kernel.org/lkml/CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com/
+> 
+> Perhaps it's just misunderstanding of my wording. [...]
 
-Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
----
- drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 51 ++++++++++++-----------
- 1 file changed, 27 insertions(+), 24 deletions(-)
+Yeah, words is not as clear as math, and even the latter sometimes
+leaves room for interpretation if you are not careful. :-D
 
-diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-index 2b985b030197..5dedf93f6d75 100644
---- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-+++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-@@ -1,9 +1,15 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * This driver implements the WMI AB device found on TUXEDO notebooks with board
-- * vendor NB04.
-+ * vendor NB04. This enables keyboard backlight control via a virtual HID
-+ * LampArray device.
-+ *
-+ * The device will be available through the regular HID interfaces, such as
-+ * hidraw and can be used by any userspace program that implements the HID
-+ * LampArray standard.
-  *
-  * Copyright (C) 2024-2025 Werner Sembach <wse@tuxedocomputers.com>
-+ * Copyright (C) 2026 Aaron Erhardt <aer@tuxedocomputers.com>
-  */
- 
- #include <linux/dmi.h>
-@@ -488,12 +494,14 @@ static int handle_lamp_array_attributes_report(struct hid_device *hdev,
- 	struct tux_hdev_driver_data_t *driver_data = hdev->driver_data;
- 
- 	rep->lamp_count = driver_data->lamp_count;
-+
-+	// Physical dimensions of the Sirius 16 keyboard
- 	rep->bounding_box_width_in_micrometers = 368000;
- 	rep->bounding_box_height_in_micrometers = 266000;
- 	rep->bounding_box_depth_in_micrometers = 30000;
- 	/*
- 	 * LampArrayKindKeyboard, see "26.2.1 LampArrayKind Values" of
--	 * "HID Usage Tables v1.5"
-+	 * "HID Usage Tables v1.7"
- 	 */
- 	rep->lamp_array_kind = 1;
- 	// Some guessed value for interval microseconds
-@@ -547,7 +555,7 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
- 	rep->update_latency_in_microseconds = 100;
- 	/*
- 	 * LampPurposeControl, see "26.3.1 LampPurposes Flags" of
--	 * "HID Usage Tables v1.5"
-+	 * "HID Usage Tables v1.7"
- 	 */
- 	rep->lamp_purpose = 1;
- 	rep->red_level_count = 0xff;
-@@ -560,8 +568,8 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
- 		rep->input_binding = driver_data->kbl_map[lamp_id].code;
- 	} else {
- 		/*
--		 * Everything bigger is reserved/undefined, see
--		 * "10 Keyboard/Keypad Page (0x07)" of "HID Usage Tables v1.5"
-+		 * Everything bigger than 0xe8 is reserved/undefined, see
-+		 * "10 Keyboard/Keypad Page (0x07)" of "HID Usage Tables v1.7"
- 		 * and should return 0, see "26.8.3 Lamp Attributes" of the same
- 		 * document.
- 		 */
-@@ -606,10 +614,7 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 	u8 key_id, key_id_j, intensity_i, red_i, green_i, blue_i;
- 	int ret;
- 
--	/*
--	 * Catching misformatted lamp_multi_update_report and fail silently
--	 * according to "HID Usage Tables v1.5"
--	 */
-+	// Catch bad reports and fail silently according to "HID Usage Tables v1.7"
- 	for (unsigned int i = 0; i < rep->lamp_count; ++i) {
- 		if (rep->lamp_id[i] > driver_data->lamp_count) {
- 			hid_dbg(hdev, "Out of bounds lamp_id in lamp_multi_update_report. Skipping whole report!\n");
-@@ -624,6 +629,7 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 		}
- 	}
- 
-+	// Fill kbl_set_multiple_keys_in update buffer
- 	for (unsigned int i = 0; i < rep->lamp_count; ++i) {
- 		key_id = driver_data->kbl_map[rep->lamp_id[i]].code;
- 
-@@ -632,6 +638,8 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
- 		     ++j) {
- 			rgb_configs_j = &next->kbl_set_multiple_keys_in.rgb_configs[j];
- 			key_id_j = rgb_configs_j->key_id;
-+
-+			// Search for existing or empty entry
- 			if (key_id_j != 0x00 && key_id_j != key_id)
- 				continue;
- 
-@@ -691,10 +699,7 @@ static int handle_lamp_range_update_report(struct hid_device *hdev,
- 	struct lamp_rgbi_tuple_t *update_channels_j;
- 	int ret;
- 
--	/*
--	 * Catching misformatted lamp_range_update_report and fail silently
--	 * according to "HID Usage Tables v1.5"
--	 */
-+	// Catch bad reports and fail silently according to "HID Usage Tables v1.7"
- 	if (rep->lamp_id_start > rep->lamp_id_end) {
- 		hid_dbg(hdev, "lamp_id_start > lamp_id_end in lamp_range_update_report. Skipping whole report!\n");
- 		return sizeof(*rep);
-@@ -706,8 +711,8 @@ static int handle_lamp_range_update_report(struct hid_device *hdev,
- 	}
- 
- 	/*
--	 * Break handle_lamp_range_update_report call down to multiple
--	 * handle_lamp_multi_update_report calls to easily ensure that mixing
-+	 * Break handle_lamp_range_update_report call down into multiple
-+	 * handle_lamp_multi_update_report calls to ensure that mixing
- 	 * handle_lamp_range_update_report and handle_lamp_multi_update_report
- 	 * does not break things.
- 	 */
-@@ -750,15 +755,12 @@ static int handle_lamp_array_control_report(struct hid_device *hdev __always_unu
- 					    struct lamp_array_control_report_t *rep)
- {
- 	/*
--	 * The keyboards firmware doesn't have any built in controls and the
--	 * built in effects are not implemented so this is a NOOP.
--	 * According to the HID Documentation (HID Usage Tables v1.5) this
-+	 * The keyboards firmware doesn't have any built-in controls and the
-+	 * built-in effects are not implemented so this is a NOOP.
-+	 * According to the HID Documentation (HID Usage Tables v1.7) this
- 	 * function is optional and can be removed from the HID Report
- 	 * Descriptor, but it should first be confirmed that userspace respects
--	 * this possibility too. The Microsoft MacroPad reference implementation
--	 * (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
--	 * already deviates from the spec at another point, see
--	 * handle_lamp_*_update_report.
-+	 * this possibility too.
- 	 */
- 
- 	return sizeof(*rep);
-@@ -894,8 +896,8 @@ static struct wmi_driver tuxedo_nb04_wmi_tux_driver = {
- };
- 
- /*
-- * We don't know if the WMI API is stable and how unique the GUID is for this
-- * ODM. To be on the safe side we therefore only run this driver on tested
-+ * We don't know whether the WMI API is stable and how unique the GUID is for
-+ * this ODM. To be on the safe side we therefore only run this driver on tested
-  * devices defined by this list.
-  */
- static const struct dmi_system_id tested_devices_dmi_table[] __initconst = {
-@@ -933,4 +935,5 @@ module_exit(tuxedo_nb04_wmi_tux_exit);
- 
- MODULE_DESCRIPTION("Virtual HID LampArray interface for TUXEDO NB04 devices");
- MODULE_AUTHOR("Werner Sembach <wse@tuxedocomputers.com>");
-+MODULE_AUTHOR("Aaron Erhardt <aer@tuxedocomputers.com>");
- MODULE_LICENSE("GPL");
--- 
-2.43.0
+Many thanks for the detailed explanation, now I understand your intend
+better. It's just that "people queue fixes for recently user-reported
+regressions in for-next instead of mainlining them quickly" was one of
+the biggest problems I saw when I started regression tracking. It got
+better, but there is still a lot of room for improvement, which is why
+that short note got me wondering what the exact meaning was. But seems
+we are mostly in alignment here.
 
+Ciao, Thorsten
