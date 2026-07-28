@@ -1,62 +1,61 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E208A40EB99
-	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jul 2026 08:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EA840B366
+	for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jul 2026 08:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785227752; cv=none; b=dbqLPr2V1b0HZTjCHgTxSXp4NGzAMWa6ggn6SzEpyGfC2gtUmcMcjS8o27FNW88JjFaonpVvjMIoJ0uIZlU5mcHzMcyM+L8R0jS7idh5fPFWdQo1AlBExu/gkPRgAFJEHcvOoULglh1rY1iqRU1nETJcn5MBYH4OhPiFzbXDzGU=
+	t=1785227755; cv=none; b=n/kTAeI2bcxFSdw0orJhJ4cdkt+xf6fp01Figu3D7aBzNr4zjEm6vU6Qh7Qqm6sL5MYCqHxZZm3beRu/nQU+PH2ExFJK9908OGdC04GaMWgKpXq5nIxMTkcoikfUFFDREMK6CvO2LRzphluDlTsvQPa+/Pql2tJledR4wKF1/Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785227752; c=relaxed/simple;
-	bh=azw4cWVx60tZteYkG5HNewmD7Ntg1IsbrViFle6npqE=;
+	s=arc-20240116; t=1785227755; c=relaxed/simple;
+	bh=8LUc3T6qcF8rKLeGVcCa+6lKE9nEqeWd3FQ47bcEyZg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SPavVIe55H5Mauoj1XrPvyx99Ks3SY7AUkJj5h+hmSaBLN0mq6e74Fwij+Ox+Lj08BWG8Uc7ZaAaTULJexvCyw9RfH0Se6hkh5ibemkBpRblf2HD47eHsYC9fWF5EDLSnVEOELm6Yfm2+BLO12k0Qesc7vcGzfkmMBE8w4kOQic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GBNOApWz; arc=none smtp.client-ip=209.85.208.54
+	 MIME-Version; b=gCGCaHo0fcgrXHR2LEs/QE0Oi6kW2AUhEpTrFkA1TDoAr9Y4l6Tmqj67Bbw4tYpD2AHIDaPjPv6R4xjFtVvGQ4JeDD+Z9R/ZxXKghnWf9cr40gDo5fvzIroMWab8rChDdfDGxj50Tsc7TUXZfl1rIEo+fYIo5fp3qm8k10pd5FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J444Uawl; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBNOApWz"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-69c108fee7fso5084549a12.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jul 2026 01:35:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J444Uawl"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-c1670dad7a8so538189366b.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 28 Jul 2026 01:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785227740; x=1785832540; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785227742; x=1785832542; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9G/wxWEeNDzEUMqOff92eWji7LEVF9MjxurifLY6lHg=;
-        b=GBNOApWzA5fykrYGzLnf8EbAZSiM6rZg3p+MHV2wgS1QMDw3HszRr6HkhM+3i/PPaz
-         BIVLTW/fISrkN35srmLpjiL0Zgo6I4Na2qR4vgGgZg3Az/F6wR2Sh9vXHm1J+ShE0gWk
-         dO1Qqp8APnCMsmgJm4jKkHjFKuuksQHfyRpcCeMJdLVi9Y6jBU7I+JzUbMm+0FCP8wjf
-         P2c3mbglk+k7hKhgFGfiQo5cBDvLsNDiKOrVtEPEivHOXqmZ5oljGVlHOlyZtpql1/KS
-         xPzrQ14Vcp/XcBSJlPVK0kjfDuI2MY5ZaKzVV21fGmZtX74wj29t15J6fXA9/2Mkj5uV
-         58Zw==
+        bh=PcWn2e/pqOXEePn1KtOQa2v1NKIiM7/wI3pZ+wT/mSA=;
+        b=J444UawlIkI4phEfEkn4kz/srVOf5uO4IGX36JS+cMCJJVCIVKkZyFiWAy00AqfWJ/
+         n5lsLVTG6G1YSB/nqBeZ77OJQsPZ4JiVjkwVZ0JhM2tmgN4fkDiv/9dJQmBcRDWO9gsB
+         2EfLt1obakERBWA9pehaIHSHUIfsitdyE84aLfSTbDw+NzQa3WtxK7+EZBJow3m0OaPo
+         yKs9aNdi4BirLRW2TQzYfOMiwG+eupBUS/vy2okXB7d752JUYOuEckkhGjUV2T8x/5eg
+         Ptum94cVmP1zhXc5WXaAAR//4xAdi6pecTrREmQGBUNaO76lb8C/0UXOxkT4I+Craf4n
+         +URw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785227740; x=1785832540;
+        d=1e100.net; s=20251104; t=1785227742; x=1785832542;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9G/wxWEeNDzEUMqOff92eWji7LEVF9MjxurifLY6lHg=;
-        b=cpgeLT0b1kJFoOBTX1QBe7Bv8bKop/czIEUYKYgBt9govZtboEjxzycO8SDOneGUE1
-         zt+8wcSyd7GF4SSaV7XuaHOodYrq+Os9SJilIEO1SstRZoESYU0m8yJbb0ByWkohCknJ
-         tCmTmGee24iLDUc8/yJOCvWIbRaRJGREfdaDdNAnO1wpE3QnRaospjtL5YZvI3akFz/E
-         6P7b7Q6/Igk0ZezdVw2yOgJIUw+c1/mDU4QvkJCB+IXeSX/guExg0eeuzdOI7oiF+09q
-         e5Csx49766lM13kTlWYeQmo+mC9ScW+WINPiy1K1kU9CRRsveMp6YWSbZ6Gfk3PI+aGM
-         WOmg==
-X-Gm-Message-State: AOJu0Yxwes47acRuQv5ltt+mr3frhD5z+Bq7F3wTiE+96uqnraxEZvhg
-	WljkuVZRl70+uAtk8glWyKfDeFNwzdV/SHCNOumtJIuWABPxTJW1qRVBa8zFD3SwWUg=
-X-Gm-Gg: AR+sD12JMBR86fJ2qzhCz4b/bp/kL2xWlM82SS8i8yRcj33olhwzKmtLFjf/JyoOxi4
-	oZClMq9JnOUas4jej3Gxw1UB7izi5/aAblBbaHn2JV3pMGb4ex5MMLJSnXnhJkNobbtRP1rlL0S
-	eh4fDLjETiK4srDplfIrs3YI9UBHCXbmrwVvFOzq4mOEstazMXXhrmPF5mKG0S3MKomwY2/f1Rh
-	5CT9Z+SntcimbCo0vXfeevb/OoBVP9YwL7aq0S+oHl1vxPSUwLL0iMMK8CmMirbELnoCSzjqR8M
-	xvr6joeaCj6blmJlU2HmDHSo9Ell6EOOmYhY3wUpadSV0VDftLiipOTB6SsM3hrRHqmBVuEnQZz
-	K65c80eLend2Vo6RM7WMWPrfk/XQSNPb/RazlIvz6cjI6NaQ4UoOvbPVtuWk37AOoH6XKbsIKam
-	/ENEk=
-X-Received: by 2002:a17:907:72d5:b0:c12:979c:5a5e with SMTP id a640c23a62f3a-c1f71b3ca4cmr64666666b.0.1785227739670;
-        Tue, 28 Jul 2026 01:35:39 -0700 (PDT)
+        bh=PcWn2e/pqOXEePn1KtOQa2v1NKIiM7/wI3pZ+wT/mSA=;
+        b=EbaeNKsu1iGyawo+xhknBKI2FRk9Ttto/Pd2+vqGI5qSUYrT84p2PuuBF/ayJMQLoO
+         FeGBhhLOL9Dd6BCVrUztj0IYqG2Ddc0ARlbV9mJfKbeUX60QXjTSdJx39ydnfXIN3qKU
+         XiBDBavZtMkHM1K7EsKbicqhf9sktelHs+2sglILUBwuuRJROHTkF+uC+iZhwDE/RJQc
+         9Fv05Hitvjk4/N5jUxEfliJZj6mcxmxKNFvEHP/AMWSRqfPyeWKzTgZmfQKBdouzFRcn
+         oq+ur+4ufEleK4pUZzpt8DgKX755lTZ23tt/krPfa5UPRWpEUN6tDHxtpWyP/IWiauBF
+         H4gQ==
+X-Gm-Message-State: AOJu0YyF3AFC9mdoJLQFgFkSsLOUxz8qpiJTLAO3ef89b+SCIqUrxni0
+	zViICztQ0caArYd4fIgLf79o+F+g3Jp2kJ85Y4z1tkTdMJ5j4syDPCRs9t2OI5g0U0E=
+X-Gm-Gg: AR+sD10KYOJv/QhaAcoUTkld8WlcElFiByGDsxhOT2MtPoUJugvc7COCedwu5tilmyf
+	iUmUkrZhtcY5DlVXd4O7WNkLEhVCxaKbKutANKLqg7sVQmmg+cGsDvXx4t+JHCjzXNn9be1ix4Q
+	ZLez3x35BOKkC/Z5ae3OiMvbJA8MaMlrr9Bld7vgM7pmNV3jHcGTZJnu3SQWqRIk+uHzSayBCTM
+	AprGrmzB+YBX3sRUbzni+6txkNZEsAxJC/4cr+L24gZW2+Tjj6FaR9pwZ/esTnr3d7TCPyoPOzj
+	bY5Zo8cX4m8AAdOOpSIO8cRZ6+IecWXye20yajT8Sol4LM7CrfvS/3fujXuPWeL47wHeG9GPd35
+	RT+BbjPeAlASxQYKAr1dOY15G4NBGzMWA3/coGYkhsUk0rWwzmagU6VcH+7mQBk/rrZKz
+X-Received: by 2002:a17:907:9414:b0:c16:1df9:6eda with SMTP id a640c23a62f3a-c1f72199a7bmr58822566b.49.1785227742229;
+        Tue, 28 Jul 2026 01:35:42 -0700 (PDT)
 Received: from fedora (yeal.ru. [94.103.95.240])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1f19ad49f1sm353753266b.1.2026.07.28.01.35.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1f19ad49f1sm353753266b.1.2026.07.28.01.35.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2026 01:35:39 -0700 (PDT)
+        Tue, 28 Jul 2026 01:35:41 -0700 (PDT)
 From: Alexander Egorov <begeebe@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: hansg@kernel.org,
@@ -65,12 +64,13 @@ Cc: hansg@kernel.org,
 	derekjohn.clark@gmail.com,
 	samsagax@gmail.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] platform/x86: oxpec: Report tablet mode on OneXPlayer detachables
-Date: Tue, 28 Jul 2026 11:35:27 +0300
-Message-ID: <20260728083529.329772-1-begeebe@gmail.com>
+Subject: [PATCH v2 2/2] platform/x86: oxpec: Report tablet mode on OneXPlayer detachables
+Date: Tue, 28 Jul 2026 11:35:29 +0300
+Message-ID: <20260728083529.329772-3-begeebe@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260727215947.118292-1-begeebe@gmail.com>
+In-Reply-To: <20260728083529.329772-1-begeebe@gmail.com>
 References: <20260727215947.118292-1-begeebe@gmail.com>
+ <20260728083529.329772-1-begeebe@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,48 +79,196 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The OneXPlayer X1 family and Super X do not expose a firmware tablet-mode
-switch. Add one based on their detachable pogo-pin keyboard devices.
+The OneXPlayer X1 family and Super X have detachable pogo-pin
+keyboards. The firmware does not expose a tablet-mode input switch.
 
-I checked the EC alternative suggested in review. The Super X ACPI EC
-operation region covers the complete 0x00-0xff register map. I captured 30
-maps with the keyboard attached, 30 detached, and 30 reattached. There were
-no stable attached-detached-reattached changes. The named ACPI fields KBFG
-and SYSK did not change either. USB hotplug is therefore the only
-attachment state exposed by this Super X firmware.
+The Super X keyboard enumerates as 1a86:1305. The X1 family folio
+keyboard enumerates as 258a:001e.
 
-The X1 keyboard ID was taken from public hardware information. X1, X1 Pro,
-and X1 Mini systems show the HAILUCK 258a:001e folio keyboard:
+Register an input device on these boards and report SW_TABLET_MODE from
+the model-specific pogo keyboard USB hotplug state. Other USB and
+Bluetooth keyboards do not affect the switch.
 
-  https://wiki.archlinux.org/title/OnexPlayer_X1_A
-  https://linux-hardware.org/?probe=517a6d5085
-  https://linux-hardware.org/?probe=98267565ff
-  https://linux-hardware.org/?probe=21f49ac935
+A complete dump of the 256-byte Super X EC register map was compared
+with the keyboard attached, detached, and reattached. No register
+changed predictably with the attachment state.
 
-The X1 family is included, but has not been tested by me because I only
-have the Super X. G1 is deliberately deferred because of its different
-keyboard layout.
+Tested on a OneXPlayer Super X. Mutter enables accelerometer-driven
+display rotation only while the pogo keyboard is absent.
 
-Ilpo, comments on whether oxpec is the right home for this functionality are
-welcome.
-
-Changes in v2:
-- add the requested Assisted-by trailer;
-- split Super X from the shared G1 AMD board ID in a preceding patch;
-- support the X1 and X1 Mini family using their folio keyboard ID;
-- use driver globals and board switches instead of platform data and DMI;
-- keep only the USB scan and notifier callbacks, with matching and reporting
-  inlined;
-- use generic keyboard vendor names and place the IDs beside their users;
-- document the complete EC map comparison.
-
-Alexander Egorov (2):
-  platform/x86: oxpec: Distinguish OneXPlayer Super X board
-  platform/x86: oxpec: Report tablet mode on OneXPlayer detachables
-
+Assisted-by: Codex:gpt-5.6
+Signed-off-by: Alexander Egorov <begeebe@gmail.com>
+---
  drivers/platform/x86/Kconfig |   2 +
- drivers/platform/x86/oxpec.c | 116 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 117 insertions(+), 1 deletion(-)
+ drivers/platform/x86/oxpec.c | 103 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 105 insertions(+)
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b54b521..3bcbd49 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1055,6 +1055,8 @@ config OXP_EC
+ 	depends on ACPI_EC
+ 	depends on ACPI_BATTERY
+ 	depends on HWMON
++	depends on INPUT
++	depends on USB
+ 	depends on X86
+ 	help
+ 		Enables support for the platform EC of OneXPlayer and AOKZOE
+diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+index df29e41..5c07a35 100644
+--- a/drivers/platform/x86/oxpec.c
++++ b/drivers/platform/x86/oxpec.c
+@@ -18,10 +18,12 @@
+ #include <linux/dmi.h>
+ #include <linux/hwmon.h>
+ #include <linux/init.h>
++#include <linux/input.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/processor.h>
++#include <linux/usb.h>
+ #include <acpi/battery.h>
+ 
+ /* Handle ACPI lock mechanism */
+@@ -55,6 +57,8 @@ enum oxp_board {
+ 
+ static enum oxp_board board;
+ static struct device *oxp_dev;
++static struct input_dev *oxp_tablet_mode_input;
++static struct notifier_block oxp_usb_notifier;
+ 
+ /* Fan reading and PWM */
+ #define OXP_SENSOR_FAN_REG		0x76 /* Fan reading is 2 registers long */
+@@ -293,6 +297,74 @@ static const struct dmi_system_id dmi_table[] = {
+ 	{},
+ };
+ 
++#define OXP_KEYBOARD_VID_QINHENG	0x1a86
++#define OXP_KEYBOARD_PID_K2445		0x1305
++#define OXP_KEYBOARD_VID_HAILUCK	0x258a
++#define OXP_KEYBOARD_PID_HAILUCK	0x001e
++
++static int oxp_find_keyboard(struct usb_device *udev, void *data)
++{
++	bool *keyboard_attached = data;
++	u16 vid = le16_to_cpu(udev->descriptor.idVendor);
++	u16 pid = le16_to_cpu(udev->descriptor.idProduct);
++
++	switch (board) {
++	case oxp_x1:
++		if (vid == OXP_KEYBOARD_VID_HAILUCK &&
++		    pid == OXP_KEYBOARD_PID_HAILUCK)
++			*keyboard_attached = true;
++		break;
++	case oxp_super_x:
++		if (vid == OXP_KEYBOARD_VID_QINHENG &&
++		    pid == OXP_KEYBOARD_PID_K2445)
++			*keyboard_attached = true;
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++static int oxp_usb_notify(struct notifier_block *nb,
++			  unsigned long action, void *data)
++{
++	struct usb_device *udev = data;
++	u16 vid = le16_to_cpu(udev->descriptor.idVendor);
++	u16 pid = le16_to_cpu(udev->descriptor.idProduct);
++	bool keyboard = false;
++
++	switch (board) {
++	case oxp_x1:
++		keyboard = vid == OXP_KEYBOARD_VID_HAILUCK &&
++			   pid == OXP_KEYBOARD_PID_HAILUCK;
++		break;
++	case oxp_super_x:
++		keyboard = vid == OXP_KEYBOARD_VID_QINHENG &&
++			   pid == OXP_KEYBOARD_PID_K2445;
++		break;
++	default:
++		break;
++	}
++
++	if (!keyboard)
++		return NOTIFY_DONE;
++
++	switch (action) {
++	case USB_DEVICE_ADD:
++		input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, false);
++		break;
++	case USB_DEVICE_REMOVE:
++		input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, true);
++		break;
++	default:
++		return NOTIFY_DONE;
++	}
++
++	input_sync(oxp_tablet_mode_input);
++	return NOTIFY_OK;
++}
++
+ /* Helper functions to handle EC read/write */
+ static int read_from_ec(u8 reg, int size, long *val)
+ {
+@@ -948,6 +1020,7 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
+ /* Initialization logic */
+ static int oxp_platform_probe(struct platform_device *pdev)
+ {
++	bool keyboard_attached = false;
+ 	struct device *dev = &pdev->dev;
+ 	struct device *hwdev;
+ 	int ret;
+@@ -965,6 +1038,33 @@ static int oxp_platform_probe(struct platform_device *pdev)
+ 			return ret;
+ 	}
+ 
++	switch (board) {
++	case oxp_x1:
++	case oxp_super_x:
++		oxp_tablet_mode_input = devm_input_allocate_device(dev);
++		if (!oxp_tablet_mode_input)
++			return -ENOMEM;
++
++		oxp_tablet_mode_input->name = "OneXPlayer Tablet Mode Switch";
++		oxp_tablet_mode_input->phys = "oxp-platform/input0";
++		oxp_tablet_mode_input->id.bustype = BUS_HOST;
++		input_set_capability(oxp_tablet_mode_input, EV_SW, SW_TABLET_MODE);
++
++		ret = input_register_device(oxp_tablet_mode_input);
++		if (ret)
++			return ret;
++
++		oxp_usb_notifier.notifier_call = oxp_usb_notify;
++		usb_register_notify(&oxp_usb_notifier);
++		usb_for_each_dev(&keyboard_attached, oxp_find_keyboard);
++		input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE,
++				    !keyboard_attached);
++		input_sync(oxp_tablet_mode_input);
++		break;
++	default:
++		break;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1005,6 +1105,9 @@ static int __init oxp_platform_init(void)
+ 
+ static void __exit oxp_platform_exit(void)
+ {
++	if (board == oxp_x1 || board == oxp_super_x)
++		usb_unregister_notify(&oxp_usb_notifier);
++
+ 	platform_device_unregister(oxp_platform_device);
+ 	platform_driver_unregister(&oxp_platform_driver);
+ }
 -- 
 2.55.0
+
