@@ -1,49 +1,49 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1E93921D8;
-	Tue, 28 Jul 2026 17:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD28F355048;
+	Tue, 28 Jul 2026 17:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785261234; cv=none; b=Zbn7reZWDa7pFV6IQDp5r20C728w3EAgmtDe2ctb0ONxHRJHyIItJy1V1YHkJ/TPa4IeVmO/GYfCR6DCIl930OH6hMDLMJaNMKoQw1fMxieOS1PzDEoauI33WuZPuv/07fgPK52qY/7tlsbdsOla+l++LnhEFmcJQr2xo/Ut4R0=
+	t=1785261235; cv=none; b=S48M5/XyUmyM7GCKRKdAe5hH1vIRRKdi5tbqqtHmUJtAcvLGQjvRjHhRZLGsFyuHCVW2x+nPB2zuHHinOQbVhZdJdPU8AhYJW1ChCDiMrfy+5Q7cR1E6pq1Bygp+Ye6OOPe8jeaCuFwuDojwok/uBA6OwdrP9+1qpXti6pMWjVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785261234; c=relaxed/simple;
-	bh=h0bUOrXiKGdJGnAxa6lQ2zpOD67aTGAm2JnIbUhiRK8=;
+	s=arc-20240116; t=1785261235; c=relaxed/simple;
+	bh=TWdb7M1Upqn9UrehERBTUCkV0cLL1dhA1cXebKZ5Qro=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Afccrh1bfsJB71J4oAf7grbRfEBhHFLiSVTjYsHyyZoWK+FCx0vvV0nGy/1CSFJiBTwszCerd6gIdIb+l2iDIUQ8nCSV9AN6k+TzC7ZgxuUsPv/OxSeWJY3lZ2STjRFypnGMo/skeNyzVmsNMxu65+iUQZoxd52t9jsUi6IW/qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=bDCHehNp; arc=none smtp.client-ip=162.62.57.49
+	 MIME-Version; b=VpemE0G6Hq08Ky7jSQd8MNuIPpG2N4gnAp5nVrTzlMn5prvvhkNTydlmVBao7El3n/SwNzNZobPJX0wHPUwyHuS1/I2EjYVgQ0T2fpwss4l8m5MZPW5ULkwwU/RmZb959kDrIYz1s4fwQjUDqWoDWQEJALLOg9WeA12XHhKOFck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=vYZlC6ZV; arc=none smtp.client-ip=162.62.58.216
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="bDCHehNp"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="vYZlC6ZV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
 	s=s201512; t=1785261226;
-	bh=aCRwCM1akQmUB/mXOuJKEbkZhGgT9OY/Rnvwj4FaNTs=;
+	bh=jGk1hD3c3L6re9ew4aK9A96PMeKfpv2VXX1HXi5Xf+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=bDCHehNpSA0FasBtJ2ygf02xa4cAtbKDTsu+c36lApsK3FkEcHSFCJ5s+IbbeCzeA
-	 hOyPagk7SUOrW20uVrDcyPBUruG1SKSZ6QncL5ae+CGokXtmMuO7fpmacIQ3rxjZo/
-	 /0jAdVlEl8r/aOIUl+C2a6btUeRy4T2yuo6KtvT8=
+	b=vYZlC6ZVKPd2T8hCfnZt7ccKRaZfaI1BHVF8hllJsTm8b2oO2w9YK3G2B+BYwDGO9
+	 BZ35BbpG4SbIvUG/xTr/G5FFUey46k/3DVdsDDKvdT02lT/F32eE/6yMdn/unzNZyf
+	 kZG1PEtnxbxnmQaf8K2Sb6jgoUyKP83WLG8dcPwI=
 Received: from max-laptop-cachy ([240e:3a1:20e0:1ea0:2fa7:34d4:60dc:c367])
 	by newxmesmtplogicsvrszc43-0.qq.com (NewEsmtp) with SMTP
 	id D6A85AE0; Wed, 29 Jul 2026 01:53:42 +0800
-X-QQ-mid: xmsmtpt1785261224tkp4q4awn
-Message-ID: <tencent_D045C063B22D28D805B9FEFDB882D5C67C07@qq.com>
-X-QQ-XMAILINFO: NmhoXJR/eu5x6/kuszAdB8SjId/j9CYCeJundjoQp9NFx5cNdqXCvpFUvQtpRh
-	 pzgfAEscY4wSJCMWqORGn/PKxJtSh3QvPCf1R974PS1EOEzjNKDBoNLrDoGSx8yyHTryo3sXlXoM
-	 GccQrHWCIDbJXnLwW9y2Gcvirx8/UgA3X5fq5BRYIWIs0mcjvMCEpkjHvIcAdMnAgGPa+nYIW+7B
-	 Q+xSdpk86533FYnbwLh5ydcqAwp5aGs1xBELuKlrl77A8zEpI6sVho7dbsmPuQ8l2V72/ECLDHwk
-	 GHllu+/+1KJdZcWByTNpV8wFSebKRdpKlLCx2+KpQiHMsYqCJn/oh4kPxnv/aQLVflkWjqbZkhJg
-	 Ixue+zgLbG/mZAce33maQnB1dawZvDu+VBq9xazid1KsDpVcKhLTLVtubO6eJl6e6N6OBO4XMvVI
-	 FAzk4KtPsekshUPKcgEHuFgBhPytYT8ycGMwfmKTvquQx4Zd0ib/ZPWUP+aal1vYkgch9Hr4E++q
-	 gX22wb/tZj4w3BfTTeYBdzfEMfgMQz86kN8CAA7rN28wsCfYdg3MHxs+Rj/CaMLzv8aXZppzh0HL
-	 Q5fp1R/RFIOHFnzaYjBlL2wynZNqCXFQt0CiOWZa11RuRVp0oJvjBKxzwx38Xy0xpckfXkgJvUUc
-	 g4e+LfwU8bVVt+jI6dAi1w6jfKGTx53fALZhVoQTuAhi2OIfMmV/MWG+2lAdYk6qjhDgkORPfdE7
-	 UCXvUrgd1aFqBNGk8dDMOx4hEXO2D3u+/N0UAz5MuAcqx5ljk/FZsMb6c3QGRG3gC3I4e6FanV7R
-	 GtWPMg8w5vcTPoHzonKiH+NpUahPymJyv4/q5/WHnXt+UylrSYt34scHaKcM2T7lDqntPodtrlCK
-	 4l7FeKrt/4QPFJQVMM2kn4BH1C7zr5Hmm5ULSpGuCJMh9EMC5okAe4hVKfALl78uU2mlsrvoZgtW
-	 qGY9tUNVQPlNrwrXLCVefngyT0xR72I//vBkP2WAcYSmR9eaETXRB1VqaodT2+L+Xz2iz2kXfF68
-	 i8Wc1kiKMCJZ1/CITaj+XAHINRThJCbamHtW5MLTvCm+sGcBXM9Jk9Y6YuqDNRd8IZjLnFSA==
-X-QQ-XMRINFO: NS+P29fieYNwqS3WCnRCOn9D1NpZuCnCRA==
+X-QQ-mid: xmsmtpt1785261225t1z6ne510
+Message-ID: <tencent_5C7132ABFCF9E9800C642850550B68FD1208@qq.com>
+X-QQ-XMAILINFO: NdJjTjI40ejM5IPcljqHsXzbN6CiC5I0D2rjuPl8JSI6+kkhiZMcSwhplmPHn4
+	 ZHwPLUOXHngZqdvmyohzwE0N6dqT6ktjAMeS/cQTFTuL0Yxy6X+xaqgQ7j8E/xKeHmQlnq3yUBOD
+	 eBIxDkxybOMk/IpgnNTMI9QOY6O9UZdib73WJkWffC+7m5Hg9NIjwa+2kU/7gUTUneQnuJ/WTHrU
+	 tKqU4BGsQPB3ZZFmxhgWFeryIFmQE8T53PWnWLQdiaMoWHGHgYJaBrLpjmCaO0QSdg8dcp3AT8cf
+	 UDEFBCxqEfzBYwtYuGgdk46C1yEZRVB8ruA2sDyPd4FHRuxaZCEqxgpWHd+vE+FByUtG6nSmcK31
+	 5jQn7reUYh15tMHNeLzNEpmen8FdESjJSDhwreq6gQLtRhQru6C7HaXsDSSdpcaQ+ZGGq5nxqQqx
+	 bLYVqQrupU3oCxbmglAH3RKsEE4LwaHsoD5qmD+nIA+0zsot0ZGDlI/5K4XWnw2qHYyd/t1Wiqrd
+	 zKZOnncLQMyqeQotMwxXjjcL9pWcjBlFycJzL1YJQIjIfGifprRiXGSOLCSuQe50S509GGYE+3Fh
+	 hohtNhGYtXO8F40HdCG4HIEYIiwx1W/ARW+omRua0Wb9jbqsQN9nOYyW3frxhHtMiJmaT+5DjgbL
+	 f/rqYMsbwaVhJZLHEiHDalFp7imGk2fQF54ccdDGM5pUmWHXNbFYDpsPFPNKPqWCNHpF/+bis+HY
+	 L6vFazDeSRz8Tynwzz3ZwqM4pR2HvqBRlMj8I/kqfWicB3Pr7hjrm/dGnggtPLwHo4WcWbY/f18r
+	 UwpYjOYGtYW4+7SD2989oeou2IFaJHow6OaZSU+i4t19bQWnW/NWtvzcsuTsDDEa/oZMHDlcs6TD
+	 vENmQxvlibirxSy1q8vRGKAf7c/tDr3T8NFeTEebRbgF8hOMUwSz53/2GS7c6PwCT3pZHi/pMvOW
+	 dl+VGnKk8wiOXnD+13L0pPT2wbBjc0q6VUW0LVpuItK9KUNhcndZZMa0y79QCJbtDDOZI0QxWWBp
+	 HsJym1IGbqqSZHsL6eLI0pbEBJ1+UmEMeScYBWbab9cAFGIZr6bD/aUruaKi6E/kFYhzXCBQ==
+X-QQ-XMRINFO: Mp0Kj//9VHAxzExpfF+O8yhSrljjwrznVg==
 From: wolf109909 <wolf109909@foxmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Nabil Danial <nabildanial.93@gmail.com>,
 	Yuming Sun <wolf109909@foxmail.com>
-Subject: [PATCH 1/5] platform/x86: bitland-mifs-wmi: validate WMAA status, never abort suspend
-Date: Wed, 29 Jul 2026 01:53:37 +0800
-X-OQ-MSGID: <20260728175341.45927-2-wolf109909@foxmail.com>
+Subject: [PATCH 2/5] platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
+Date: Wed, 29 Jul 2026 01:53:38 +0800
+X-OQ-MSGID: <20260728175341.45927-3-wolf109909@foxmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260728175341.45927-1-wolf109909@foxmail.com>
 References: <20260728175341.45927-1-wolf109909@foxmail.com>
@@ -69,110 +69,149 @@ Content-Transfer-Encoding: 8bit
 
 From: Yuming Sun <wolf109909@foxmail.com>
 
-The WMAA firmware method signals "unknown/unsupported function" with
-the status word 0xe000 in the reply. The driver never checked it, so
-calls to functions a given firmware revision does not implement
-silently returned zero-filled data instead of failing.
+The MIFS v2 firmware found on e.g. the Xiaomi Book Pro 14 2026 (Intel
+Panther Lake, SSDT device "WMID" with _UID "MIFS") implements only a
+reduced WMAA command set and reports the performance mode as raw QFAN
+embedded-controller codes { 2, 3, 4, 9, 10 } instead of the v1 0..3
+enumeration. With the v1 mapping, profile_get() returns -EINVAL for
+most firmware states ("platform_profile: Failed to get profile for
+handler bitland-mifs-wmi", also reported on REDMI Book Pro 14 2025)
+and profile_set() writes values the firmware treats as no-ops, so
+power-profiles-daemon can neither read nor switch the profile;
+selecting "performance" fails outright and wedges the daemon.
 
-Worse, the platform_profile suspend hook propagated such errors: on
-firmware whose perf-mode query returns values laptop_profile_get()
-cannot map (e.g. MIFS v2 firmware reporting raw QFAN codes, seen on
-Xiaomi Book Pro 14 2026 and REDMI Book Pro 14 2025), every suspend
-attempt died with:
+Detect the variant at probe time by querying the current mode: values
+outside the v1 enumeration mean v2 firmware. Map the v2 codes to
+platform profiles (2=quiet, 3=balanced, 4=speed, 9/10=extreme) and
+skip the v1-only AC-type capability probe, which does not exist on v2
+and now fails the call after the status-word check.
 
-  dpm_run_callback(): bitland_mifs_wmi_suspend returns -22
-  PM: Some devices failed to suspend, or early wake event detected
-
-Return -EOPNOTSUPP when the firmware reports the error status word,
-and make the suspend/resume hooks fault-tolerant: skip saving and
-restoring the profile when the query fails instead of aborting the
-whole system sleep.
-
-Status word semantics verified against the laptop's SSDT WMAA method
-(SGER=0x8000 on success, 0xe000 in the Default branch).
+Values verified against the laptop's SSDT WMAA method and by observing
+the EC QFAN register while switching modes.
 
 Signed-off-by: Yuming Sun <wolf109909@foxmail.com>
 ---
- drivers/platform/x86/bitland-mifs-wmi.c | 31 +++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ drivers/platform/x86/bitland-mifs-wmi.c | 79 +++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
 diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index 3a373184..12426d11 100644
+index 12426d11..342dd7e1 100644
 --- a/drivers/platform/x86/bitland-mifs-wmi.c
 +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -129,6 +129,18 @@ struct bitland_mifs_output {
- 	u8 data[28];
- } __packed;
+@@ -73,6 +73,21 @@ enum bitland_mifs_power_profile {
+ 	WMI_PP_FULL_SPEED	= 3,
+ };
  
 +/*
-+ * The status word of a WMAA reply is formed by the first two bytes
-+ * (reserved1 | operation << 8). MIFS firmware signals "unknown or
-+ * unsupported function" with 0xe000 and success with 0x8000.
++ * MIFS v2 firmware (e.g. Xiaomi Book Pro 14 2026, SSDT "WMID" with UID
++ * "MIFS") implements a reduced WMAA command set (only function groups
++ * 0x0800/0x0a00/0x0c00/0x1000) and reports the performance mode as raw
++ * QFAN EC codes instead of the v1 0..3 enumeration. Codes 9 and 10 are
++ * the SMM-backed "extreme" modes.
 + */
-+#define MIFS_STATUS_ERROR	0xe000
++enum bitland_mifs_v2_power_profile {
++	WMI_V2_PP_QUIET		= 2,
++	WMI_V2_PP_BALANCED	= 3,
++	WMI_V2_PP_SPEED		= 4,
++	WMI_V2_PP_EXTREME	= 9,
++	WMI_V2_PP_EXTREME2	= 10,
++};
 +
-+static u16 mifs_status(const struct bitland_mifs_output *out)
-+{
-+	return out->reserved1 | (out->operation << 8);
-+}
-+
- struct bitland_mifs_event {
- 	u8 event_type;
- 	u8 event_id;
-@@ -159,6 +171,7 @@ struct bitland_mifs_wmi_data {
- 	struct device *hwmon_dev;
+ enum bitland_mifs_event_id {
+ 	WMI_EVENT_RESERVED_1		= 1,
+ 	WMI_EVENT_RESERVED_2		= 2,
+@@ -172,6 +187,7 @@ struct bitland_mifs_wmi_data {
  	struct device *pp_dev;
  	enum platform_profile_option saved_profile;
-+	bool profile_valid;
+ 	bool profile_valid;
++	bool is_v2;	/* MIFS v2 firmware: QFAN perf-mode codes */
  };
  
  static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-@@ -181,6 +194,9 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
- 	memcpy(output, out_buf.data, sizeof(*output));
- 	kfree(out_buf.data);
+@@ -217,6 +233,27 @@ static int laptop_profile_get(struct device *dev,
+ 	if (ret)
+ 		return ret;
  
-+	if (mifs_status(output) == MIFS_STATUS_ERROR)
-+		return -EOPNOTSUPP;
-+
- 	return 0;
- }
- 
-@@ -298,17 +314,21 @@ static int bitland_mifs_wmi_suspend(struct device *dev)
- {
- 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
- 	enum platform_profile_option profile;
--	int ret;
- 
- 	/* Skip event device */
- 	if (!data->pp_dev)
- 		return 0;
- 
--	ret = laptop_profile_get(data->pp_dev, &profile);
--	if (ret == 0)
-+	/*
-+	 * Never abort suspend: some firmware revisions answer the perf-mode
-+	 * query with values this driver cannot map, or fail the call
-+	 * entirely while the system is going down.
-+	 */
-+	data->profile_valid = laptop_profile_get(data->pp_dev, &profile) == 0;
-+	if (data->profile_valid)
- 		data->saved_profile = profile;
- 
--	return ret;
-+	return 0;
- }
- 
- static int bitland_mifs_wmi_resume(struct device *dev)
-@@ -319,6 +339,9 @@ static int bitland_mifs_wmi_resume(struct device *dev)
- 	if (!data->pp_dev)
- 		return 0;
- 
-+	if (!data->profile_valid)
++	if (data->is_v2) {
++		switch (result.data[0]) {
++		case WMI_V2_PP_QUIET:
++			*profile = PLATFORM_PROFILE_LOW_POWER;
++			break;
++		case WMI_V2_PP_BALANCED:
++			*profile = PLATFORM_PROFILE_BALANCED;
++			break;
++		case WMI_V2_PP_SPEED:
++			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
++			break;
++		case WMI_V2_PP_EXTREME:
++		case WMI_V2_PP_EXTREME2:
++			*profile = PLATFORM_PROFILE_PERFORMANCE;
++			break;
++		default:
++			return -EINVAL;
++		}
 +		return 0;
++	}
 +
- 	dev_dbg(dev, "Resuming, restoring profile %d\n", data->saved_profile);
- 	return laptop_profile_set(dev, data->saved_profile);
- }
+ 	switch (result.data[0]) {
+ 	case WMI_PP_BALANCED:
+ 		*profile = PLATFORM_PROFILE_BALANCED;
+@@ -272,6 +309,28 @@ static int laptop_profile_set(struct device *dev,
+ 	int ret;
+ 	u8 val;
+ 
++	if (data->is_v2) {
++		switch (profile) {
++		case PLATFORM_PROFILE_LOW_POWER:
++			val = WMI_V2_PP_QUIET;
++			break;
++		case PLATFORM_PROFILE_BALANCED:
++			val = WMI_V2_PP_BALANCED;
++			break;
++		case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
++			val = WMI_V2_PP_SPEED;
++			break;
++		case PLATFORM_PROFILE_PERFORMANCE:
++			val = WMI_V2_PP_EXTREME;
++			break;
++		default:
++			return -EOPNOTSUPP;
++		}
++		input.payload[0] = val;
++
++		return bitland_mifs_wmi_call(data, &input, NULL);
++	}
++
+ 	switch (profile) {
+ 	case PLATFORM_PROFILE_LOW_POWER:
+ 		val = WMI_PP_QUIET;
+@@ -705,6 +764,26 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
+ 
+ 	dev_set_drvdata(&wdev->dev, drv_data);
+ 
++	if (dev_type == BITLAND_WMI_CONTROL) {
++		/*
++		 * Firmware variant detection: v1 firmware reports the perf mode
++		 * as 0..3 (enum bitland_mifs_power_profile); anything else means
++		 * the reduced MIFS v2 command set with raw QFAN codes.
++		 */
++		struct bitland_mifs_input probe_in = {
++			.operation = WMI_METHOD_GET,
++			.function = WMI_FN_SYSTEM_PER_MODE,
++		};
++		struct bitland_mifs_output probe_out;
++
++		if (!bitland_mifs_wmi_call(drv_data, &probe_in, &probe_out) &&
++		    probe_out.data[0] > WMI_PP_FULL_SPEED) {
++			drv_data->is_v2 = true;
++			dev_info(&wdev->dev,
++				 "MIFS v2 firmware detected (QFAN mode codes)\n");
++		}
++	}
++
+ 	if (dev_type == BITLAND_WMI_EVENT) {
+ 		/* Register input device for hotkeys */
+ 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
 -- 
 2.55.0
 
