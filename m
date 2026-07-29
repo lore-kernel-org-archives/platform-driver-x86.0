@@ -1,63 +1,63 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011010.outbound.protection.outlook.com [52.101.57.10])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011055.outbound.protection.outlook.com [52.101.52.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1033C3C19;
-	Wed, 29 Jul 2026 21:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25613C3C00;
+	Wed, 29 Jul 2026 21:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785360954; cv=fail; b=TEh95bWI40hH39zq3klNZDIKWSHMpMAdvakvax/fo+tsnEq5MNKx0as1S1+kBxAd4rSkutY3y6ERzNQwIj1dt92p8VJfv8xi46kinGvZ1o9/Sksc1uczmmqhS3ObhIQ1TjJOu1N8Q1uafEtB2Ykg4VP50JIp6P5d7iMWZLjl7o4=
+	t=1785361276; cv=fail; b=WEHnKcNbG1kaqI9GCwEV4p2BNZilHlatumNqEtJmacwIZzROX+llF7Q9YjDj100Q6x+U1vFJ2SqdfvL4NVkphhtGKFSPxVoyTBw0Fe7GPcCN+9lbdR6RYbfbTF9zrT3tIUEo9GHrC90RWxWpjUcc/uVOmA6P/WO3CtQcxREXUs0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785360954; c=relaxed/simple;
-	bh=e/Jo0HQH7SQDUwcFHYaNOt+jtm8i5NCZFEE1+yxd4D4=;
+	s=arc-20240116; t=1785361276; c=relaxed/simple;
+	bh=6fqJ/7q0UXx+OClYxK2RI3GS1bw7Bh4DfwfwIoB9SnM=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pC/qFtltxIa6pSKmGboO8gNNkLihV7szTDHFwsLLNHIIGORt/aZPai8mvZ91aLmyEKLSAzfNBbmcmciQbsDFnicf03/56WRluj6D9O1PHYUsa3ccZ2LTB6VFARWVfSGzFOGYbNBSqUZv29blmeQ+SDVCLAWDjkPev9sTIJs/hSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Jty0n5k; arc=fail smtp.client-ip=52.101.57.10
+	 Content-Type:MIME-Version; b=fHdmggranCn37Mo4OAbEjORpxrZ8sIve8jNCX6CvsNF6LO6dzWjwprdb3k1g9KbNwP1qZjOxLTJ9jvz4ofDn2l/Xgl4VSPCl3k0s+kF1QZUkELDh+5X+saPRUDcpBQYZ5RGdty9xUFbKTwcuJZh1ZBriTO7fzhvl9qQwFMVLBIk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mLWHBC4B; arc=fail smtp.client-ip=52.101.52.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Jty0n5k"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mLWHBC4B"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R9PXnUnrSMef2k1YLMUGzS1VV8dIKvElxwLytUZaYhGLaQ7iXGfb/cZflB9I1olpLg4Tg1iMd+U9+12Rim/K175cIAtOYy6j6VnC/pVRyqCVWeYORLiIaoarC7Eqz2Z2gk80SynujyzxvRDqfTcueCRRYqkxtiuAdmfVqByZalX17rp7lQV1mcwfrptBh5fW6kiFutzbh2SOfR8TIa8AWj/v4AbPhax6Zz8JlQA+1QUqZ1tUo9ZJGsWGcwMAYbu5Kweai7mEVXh7nGloaVrvvsZ84qdTjvRH2EDQ/fPs4gf+in0wSJok/IFolaG28LU/07QzGXB2sGR9JQJKE2pGcw==
+ b=CGc8nL7S4gO65m4d2GE1tfFcJBFIXNn+KQI/80JqDS1Hj2gqUcGoawNEzqCumClSB7nW7gf40/JMcS6VVok/5WmLjDubElnNVDHSVknOmcRWVKqXw9MGF7NeIVEMjqQUCo3/Z7AdFsgECWwj+kkF0vuVVEJf+Y2UHluQ06PllR0EgxIrieie4L2uqIMfYJkGYlkZMrPVbaEA3yEpztpETGSnlXQV0NQSkJvo96/gsAKVtPdwNvgKimfGFS2Hm+ycnP45XNE4Qkp4OKw++6fnVy8uT1ueMoFY5MjBYX8AzeRuD9AhDqdVGHtPvD7JRvkwIPdVdS3te/P+JDP6djGMJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MaOrmPE9H1lDFf7L44l4AEdr7C7FTWre6dzRoOYfq70=;
- b=dE5lHRga26UlIGR/4XpzZDZh3SyMNEx6iEEwQuBrWdGYPQc2PvdTdCHByrht+zynhSYm/FE3FKlVKDNe8+8T/FXliKYU3KMudh5NViEAZbqfwfxWoE+BrMAXwGxumYhvW8Z2kXo713nHS+kW6nTcF+GlD/QrJcYqNp0zBu+mh1161jCI/2H1MU2P5DDuHrjY0GPe0+Lujl/3rd9QEeMuWkf856zsH0TeulkqibmjaswdrVOMJzGqBa50hj8yKZg3AXQI3BzWBAfxW91P8wUjq6dprCzlsmOz+v+PvK7l3oKaLLmGfcSqdCqNDoXnARsZkOWOw65IrE/DfiSQCuTJ0A==
+ bh=1Pce3pfG8z3GJUx4AvQFCi7XWo41GyfNVvGnt1JArNU=;
+ b=ZjMuPcmOGpNzDgZMH+7Qv0JBxVBsyee8oDcuUsy1wJ79j7eMR3/z7kT7KH7sM7sX5XUaQR2bQC+q3I+f70EEcU+gqA+aBxeRsf/HMR34cQdSOVQXRnZcr92o1zKNmG+79n0s46zxz83Dj/KYsA+2OAVnCEssxZI6v516j+iJHoyj3a2Qt5jqgcRCErJJuaJYb2YAuhpMHydQJcID17h4jhOOp4BiezpwYwKD2Svxbl7yX3RXspeClQlWkjc39xdaNXQ8lc2jglxWdoNSbT1lLpX5I7gJBY6ArB4wG16PzmptD4SHGySAZq2FAeYMKy0QWOTx6AfHlN+ISs1VAgByuw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MaOrmPE9H1lDFf7L44l4AEdr7C7FTWre6dzRoOYfq70=;
- b=1Jty0n5kxv2RvcQhYYISkZvaX5qa2RGRFzyvkurj5lHB5KVriEAJKlqxoF6rFZHeNn4Y7+m1LJzLZTQJgmYk9eSOe9qsKiDZ6q5ZfAQfq8/Bg8YstzbccZ8+j/VaZDEBGRi2D188z60pV50nT6AMIPsb/QEkvZ+IaniWQxdex9E=
+ bh=1Pce3pfG8z3GJUx4AvQFCi7XWo41GyfNVvGnt1JArNU=;
+ b=mLWHBC4Br2Fr/mbTMnxcaukvFj4v9oqXjeq8fMkhyGjQTTqlPhquQPTkfOKRYg1XRDbL8fR5RI3UogERJpAijf4UrWUArByYlWgicw39C3ftrW7qkbEE7EIKb0NAJpir08f3YcOb2QLSRSYwJ07Rh6fX8ORNs95PNVQ9cX8o6dk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by CY5PR12MB9056.namprd12.prod.outlook.com (2603:10b6:930:34::5) with
+ by MN2PR12MB4405.namprd12.prod.outlook.com (2603:10b6:208:26d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
- 2026 21:35:48 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.13; Wed, 29 Jul
+ 2026 21:41:11 +0000
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0270.012; Wed, 29 Jul 2026
- 21:35:48 +0000
-Message-ID: <5348d035-b263-49d3-9067-264cdb4163ab@amd.com>
-Date: Wed, 29 Jul 2026 16:35:46 -0500
+ 21:41:11 +0000
+Message-ID: <5c7fffb6-72e1-4ead-ab02-7544593a96b3@amd.com>
+Date: Wed, 29 Jul 2026 16:41:09 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/7] platform/x86/amd/hsmp: Leave the hwmon power sensors
- off on client platforms
+Subject: Re: [PATCH 7/7] Documentation/arch/x86/amd_hsmp: Document the SMN and
+ MSR IOCTLs
 Content-Language: en-US
 To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  muthusamy.ramalingam@amd.com
 References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
- <20260729164034.1331375-5-muralidhara.mk@amd.com>
+ <20260729164034.1331375-8-muralidhara.mk@amd.com>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260729164034.1331375-5-muralidhara.mk@amd.com>
+In-Reply-To: <20260729164034.1331375-8-muralidhara.mk@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0209.namprd11.prod.outlook.com
- (2603:10b6:806:1bc::34) To PH8PR12MB6914.namprd12.prod.outlook.com
+X-ClientProxiedBy: SN7PR04CA0054.namprd04.prod.outlook.com
+ (2603:10b6:806:120::29) To PH8PR12MB6914.namprd12.prod.outlook.com
  (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,170 +66,158 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CY5PR12MB9056:EE_
-X-MS-Office365-Filtering-Correlation-Id: b918d7a3-08d6-4fab-c3be-08deedb95ac5
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|MN2PR12MB4405:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71ef6fb2-17a3-41fa-e991-08deedba1b9c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|11063799006|56012099006|10067099003|4143699003|22082099003|18002099003;
+	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|22082099003|18002099003|3023799007|11063799006|4143699003|56012099006|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	JAYKHple1+idCOgM1k0TPqn/KD2riQqDEyiqKrLfnNA9bt4ZoACCJ1s1ANt73SJ5vjx5u5PAlpwcF9hA/bL/N6lXw6InrOT2h8hw+zsdymx3ouYvjvoiepZghOpQkWaOehS3wvpHTKCyOAa5n80daONUBcWDvlS0OD+iD/KEcdQFh+glJwijFB+SnuDQth0og/SmUeWr8AED39ahGGxcY4yT3W63eGt0F6b5kSWnD5FRFP2XV2L0R7HlbZ98XFu2kn7FP5dvTOolof7Hp+B2pMCCulejGY9d5pz86JxrKNbuDsOl0gOZTnUic80SlBnU3P29wyKcs1SF/gkiHQXFMIbFYMYmkroimRBrg4gJkx/cyVx6bzjty6OLL/siJBwthz7Avtkg2yefT5fX/t+0qnUEKAu2znLh5do3Kw2jHRS8s/XHJz4zYoCY6G7K0bWeK9vIDK9fk7noazxRvj4w540Y5F1dfltt08J35BjMuG02uxMD0tFjOwLYSt2mSa87TUQqI77KAfBUQ7vIlwEpW86fRI8xrAtvvLrj2me7LaALoeB0A1RoUlCJ7K7R6bX3pbm8AU/nU+5FYu692DoEV9us0cuDS4PdEVRIi07c5HBAtmZV97HXwGfWsQAIFplmemqbXOB5u9NvkuNkga6dRGnK3vRN6gBcFGrf6Cvnlfg=
+	Voo9fsdvfcmo/xbXYJF0MEDwCOuqCvch47lqYs6igJOvImsee2o6iGdjgNcFsVL22mBewlXKOaJsUvMI1s2TWnBmzje/A75CWUzuW3+cYJ0hZg5azh9QgLqV1VWxmOuuOl4Q42b/7+1J9QN8i3hvEfVOedWLYhCT1r+ScDMIl4OVON93qq+g71Hu1gvbO7ykxmJqREg6lSu/HuQztw1x8K6RHNu9NqfSogGmKdrSHcv1BnczYQISKaQYwYfpJr2QF98sLDj7IlxJxBWOGqlapGnfw/0gGZjqKId67smyg4zySIUSdclCA9YECLVe1+DyrYEmhK627VYX83zq+adIIwvzVituwvKhE0/NsCGaqLtETA45vUd3I9asiSzsSzZgiK5N1jcPhn+fvcFdJ6DWYVU5S+UskxRJrPu+1S2BBcboTNiBqQL4q74Sp561CQmxYQjGvqXQAMJVWj57N86M71DTJCY84Ck3YVKPJenwg/bkmxzthrVY1Ey/UNRHd9luDlCkVgqGjtOgWK9bYpvhO9nQhYyfUOe3qXAyYDVPc0cL4yBGrjpnJ9GuMD2dDwBgS2pw+CXuc42tw50QDaHMs37DKbBv7PVSTi8Q1lZWWdaXJaUYwWqdAwcyxxZizLvJhRtuB+nqbkR3/7Slbv8EciuAi3UmcPDI8slffGl70eU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(11063799006)(56012099006)(10067099003)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(22082099003)(18002099003)(3023799007)(11063799006)(4143699003)(56012099006)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OERmTWJsenp6S2NuNmlZbFFiaWpmQ01ubGZ3RzYrSFZTdGpoY3RveFQwRldv?=
- =?utf-8?B?SEFSWG92NWNWSlFMVUtYYnhLQlByZEtONmpiSUFUU1JHY3ZRRlhGbnV6VEE5?=
- =?utf-8?B?THp1U3JHRi9zNlM1MFBiU0pVSCt5ekswckJuTlE0NGExaTA0bzk2bW1VN2tt?=
- =?utf-8?B?V2NGVWZDZTd0M1hmQmxUSkg5T0dRbmtLNCtKcWVmUHNYU2hsU0g0ZGY0L04v?=
- =?utf-8?B?bFdIYzlYcEFGVVQ0RFZMMTVZZFpkRFJYUHZNOG01NWVYQWE0akFUdlUyVXQx?=
- =?utf-8?B?YzAvaDZYaDd5eEJqeXV6dk9wUFc0QjFQaWpjSHR0d292NXEvc3N3Z1NZS1JZ?=
- =?utf-8?B?Q2g3VnlQT2YwOWE2V3lBbHE5UEZhWkhJNWg4T2lkL1BIQUQzVVFnckZJMjdh?=
- =?utf-8?B?VGpOUnlnTStxT3NJZHBRWWlZc2hhZXJyWGgrTXJpbkI3dXNOWEtSbzc0WXQ5?=
- =?utf-8?B?UGdCUTJoc3ZPcFhXZHZQZlg1SnNPUHNKbzJoUHdGdmhoVm1kK3JWK3BZLzhR?=
- =?utf-8?B?eXZFYjhTdUZkSHA4cWVtZlc1NE9jaXdnQ3BGV2NFMG8rQVpPT25uK1ArNnpr?=
- =?utf-8?B?cE9FV0FqSUtrMTM1NHhKaXZROUhoRWRGOWVwcWJZUTkwRWx4NUsvOGlBZ0ZW?=
- =?utf-8?B?WURDM2p5UEVGb3RSWnpGSHJ2VUVqYU9sUk5VZFFLYkNKbnJTVmNzNDEvc21J?=
- =?utf-8?B?UkFvQlMxazdWbXppTEwyWGhYWEY3WFBjcU1NbVdZQjAyYXBhWllQUTNRRk9u?=
- =?utf-8?B?YzJremhnVlZYSThSQ2Y2cDhKbEVFOE92NFFKQy9vckY4VTcxdzUxb0h2Y0lt?=
- =?utf-8?B?dmxELzBSVG5tSW12d28zZ3JMN0M1VzdMSzQrZGlvQTJlUDlqN1B0NkNKZzNl?=
- =?utf-8?B?eWdIclZIMFRKa3pnc3ZMNFI0TmRuL0pmZkgreFExeVJybE1MZmRNZW1Wb25q?=
- =?utf-8?B?YW1ZYjVoZStHMUdWNkZLeGY3SlZaRHd3dGFNL2pDb0N2TjJrWVBDNUs1YzM1?=
- =?utf-8?B?and5UlpDbTErMWIvK0UwbU9NdHpmdGlzSE5vVCsrckNKZFgzdHZvc1JlVGl6?=
- =?utf-8?B?RG5FakV0SnJXV21IMjQwOE9HTW91UHBGNVgvQjd4Yi9nQktOanozQzl3bXlW?=
- =?utf-8?B?SUZ1NWd5MTFNSFQrRXlOdmliK3RjQ2lCaitDLzJpN1hYWUpJUW1NTTZUeE9J?=
- =?utf-8?B?bzR3TXpKNDh4a2cxbkNST0xsM0Z6YnQzYkhwY3RWRExJaklEdEI5Q1RyK2RT?=
- =?utf-8?B?c1ZtMWZjR3FvK2xwR2VIaHkramYxdVpKYnY4WnRiQ0dlUHdyOGplZnVEQTVU?=
- =?utf-8?B?N1czMCs2YTRCMnZTdXJDZDZjTUptbzU4WDNXMTlBVktaVkFROWxVd2REdXBF?=
- =?utf-8?B?bnFkMUZVeDlzRC9JRUJvL1AwMGdkc3IxSDFsaE5XS1g5TUJkVnNZWWtXK3ZV?=
- =?utf-8?B?d1VuUVYvOVN4aU9VZWpLeDVtNzkxRzU4WFN0d3I1TjdTeWZwZERCQXVtV2Na?=
- =?utf-8?B?cUIwV09RTXRURkROTytaOXMzcW9leUFmQm1tdng0MWxoT3c4U2U3YTdiWW92?=
- =?utf-8?B?TlZuN21Ia1ppR1I3a2ltN2dSc012Y0wxKzhpalZpbkJrTzArNFVGRnVNOTNF?=
- =?utf-8?B?TVN5Z1YxY2EwNlplak85dmVIQmdTS1VBdzYvV2s2QjN5M1I2RUlrZDBodVZt?=
- =?utf-8?B?cWdFbWNwb0lUR05Cc2R0OWZuOGhxUkpGczdEN280WU0rUDZFSER5ZUpGV3Vt?=
- =?utf-8?B?a2JRVWpNWitHVGNMc3VEOTBWaVNPWHlMS2FyUEpiMXE0UktqaDd2TXptQ2Y5?=
- =?utf-8?B?aEpzTjNLNTFpZ1FYUVJtZ2UxRVpxTmtpRlBsUUhrdjZpL2c0VFhSZDIrMUdt?=
- =?utf-8?B?bFo5WW9jb0MzeHRuK3ZMenZPZENidzgzVjhmMURxVllMZFQxYTU1VWpJWDB5?=
- =?utf-8?B?bzcraEVDZURmS0k5VGQ5RFNnN2YxSFVhZHNDMmg0VDhOWHRZM1FqdWNHUzUv?=
- =?utf-8?B?WHRIUjVwQm9XR2pjMXdVWjNkOGpCVUdUN0VtWVJudGliZlpjZEpDTDY4VDhl?=
- =?utf-8?B?dTJKRDBTQU5jWFRScnZaeXlWcWIwd0ZZMGVJWkh6Vit6WkllczF0RHpwWitx?=
- =?utf-8?B?Rzc1cjJqbGsyVjNhTVhHZzRYNnY0amJNczJmMEVXTERrZXlVM3M0azJCUkxh?=
- =?utf-8?B?UFZjczc0MjZ6TTJzUUluM3RVT1MyRzFvU3ZkbmRJRlVWUG9yZzBHNkQ1RzVn?=
- =?utf-8?B?VkgxanM2YVNsSk8yNks3V1Yxd1JUaWpyZ3VSaUt3ZE5tVk1lODY1Yi9XU0Rh?=
- =?utf-8?B?emxRazZKRmZKQVlGaEF4M0VKZnFoZXQ5bU12YUljeFA1cGw4WXZ6UT09?=
+	=?utf-8?B?bnhPVXUrR0V2M3dkMUhTUTM5d0lkQm9VRDdHbDFkMksxZVN4cnR0L2lEVzhj?=
+ =?utf-8?B?Y0pZYThVRDMrRitCMlNJcU1hNEhlejZ3N2pBZnJzcFZSYUJxWGZGaGRDampP?=
+ =?utf-8?B?N1VyZEN6YkxidExEY2tWckp3WlFFdVdwMXB5dlJiZlZJMmt6WFM0UEx3OFdQ?=
+ =?utf-8?B?R3ZUU0dyY0ZrVlNIcEhkdXkxZjBJNllPVWRQZ1FYNmdDdGJwQ2p0QUlheU1K?=
+ =?utf-8?B?a2hjRU9STEYwUVZTZ3d5K0pQVldWanlFN3VMUFR1cEhWT3M2bXp3cXVzdHJz?=
+ =?utf-8?B?V1hkMzNlcFNDME1pQjhlU0Y2T1pDZ1NmZUNQRmMrTExpRGFNZXRUaFlnVVRx?=
+ =?utf-8?B?ZmJPcFQxRWlEdk9OTVNudlgxMXR2dm53TTlEL0k2Uk4wa2hWYUY2UXpMcjY1?=
+ =?utf-8?B?U3Z0TEI5Q3pWTS9DbG1QdFJjdWV0bHllQVhHZ3l2K2RiNnNteGx0N1BYOTc1?=
+ =?utf-8?B?SkNZNklvS29HUkt5SFpPakVOYlRmT1ZZRDVzbTU4SHJyc0l6NVlWUnZhSE16?=
+ =?utf-8?B?UXBaV2lod2JINHpMR0dwK3E5eHo4ajB5TzdDaXFoN3ZRQ2NtRzZSZDl4TnBH?=
+ =?utf-8?B?dVF1bHlOTFBSZktOUzRFQXdHWCtlSHJvVHpLRDZkSG5DblJFV1BLbGlhcWhu?=
+ =?utf-8?B?SGhqdjh4TWpmSXczU05oN2lLbWdtR0xCQThwb2tnbEtwLzJoeGZPWUhIa1lX?=
+ =?utf-8?B?NDV4V0IxemtXdFJOUlVSY3lxbVhqbXpJRHM4OThPSURqVXE5blJrODlZUUxJ?=
+ =?utf-8?B?dUdKSERsWlk0YnIzdTNwc25ub2lFQ0hFT24vRXNrSnR6b1AwZkF3U3FqT3RJ?=
+ =?utf-8?B?ckhYRmNjc2RKTklXYzZyeWdkVGQyVHcxL1lQRDg4RGVHNDMxbVVjT0xFRE1Z?=
+ =?utf-8?B?dGxHcmNlVTYzUnprd2xKd1JySEl1S2E5cW83clVpNndnLzFpWml5QW9ndnpP?=
+ =?utf-8?B?RmpLWnZOWGNhOHVtZTdia0F3a2laczNKbEVJRkRzbkVIU3lsTS9VYkwwd2ZM?=
+ =?utf-8?B?UEZBUVR3UmcrRzlLVUdWK2NJOWNGL05kcUJadGcxMlNrTXhFNCtNZUhSZGtx?=
+ =?utf-8?B?c2h0VGtqK3k1eGxGUkwxVkFUTmdYMFNFL0x4RXljbEJGdXhoNTM5Sm9xTi9F?=
+ =?utf-8?B?R08zb3d1Z21TVHZjN29jTnVXYisySVlxdGllMC9sWDhQbWdlSjNwMWtjRzJT?=
+ =?utf-8?B?dXBxdzBwWGN6MENlMEorQXFXY1M2RnlEVE1SZGVYUG5nYXprcWVlN0ROUTlw?=
+ =?utf-8?B?QVd5Q1VCekRVU3pJRjYzODhlVTgzOEpaRWhYRW9qZUxyWnh3Zm5DWDQzSFFH?=
+ =?utf-8?B?QUN2WlFNY25JVEpidHU2WmhaUnVEb0ZJcElqMVRhdHg5bUkwMEpaQTdKL2k3?=
+ =?utf-8?B?cFA4ZDFrSlgrdzRBaWIrU3haeldpbkVEZTBoTFEwdTcvZmJnSUU3NzI2UmJE?=
+ =?utf-8?B?VXM2am9SM1g1STZlT0FpN2VwSmpTRUlqL2hLVXNBR212ODEyMFRGTHhUZlRs?=
+ =?utf-8?B?bHVPdmQ0Z2dtSUxXTExIc29qWjh1cHYyS0FCVkxmUjZRTG9tcXRGdzBHVEVx?=
+ =?utf-8?B?VGVKdE5ROVNmM0tqazVMd0dwVkVUNkxnTTNSdFhyU2x4eXZTeFhvVVZFdGhI?=
+ =?utf-8?B?cTJtVjMwbFZXRWR6aUtkck93OG1wYzBXa2NmYktqNlVyTE16MUJCdWZuL1By?=
+ =?utf-8?B?OEJRc1IxY003UERmZnVzYy92eU5QSDNERWNlY2swNFlITGtIdXVEejNDL3Qz?=
+ =?utf-8?B?bVpmZVAxOFN4N0lGOS9hNEpTY25HMFVqelZmazc3SkVpTlJ4VHZqWXJTbHRY?=
+ =?utf-8?B?TlFuMGl2NVlXV1NYV25XbUFlOU1WanZkSWllU3dJUHBTaWRIOTlUclNQWmZO?=
+ =?utf-8?B?cnhEWTkxc2JwdWFvcTNjUWVMQmNObml2YStPMjUvK3N5RWFxamFKK0dvZ0Rj?=
+ =?utf-8?B?QWdjTEo2Z0JXRVVKcUpjM3pGelYyY0pLelpVcTBFejR0ZHB5eHdmZzhGbDFp?=
+ =?utf-8?B?WGZ2VXRManZpbGtCWDVFUlpSNU9NRHc0bDFQMEZRa0UrQysyMFNCVXptTjZ4?=
+ =?utf-8?B?eW9HVnVPOWtBdS85OHdLU2dVbXBPaDZ2K0hqQ1ZjNGN2MUVSa0pQOHp3a21B?=
+ =?utf-8?B?UEp0UWlEdnAxRFExekVWbmQ4OGJrbmFFUzNnY2dKSml4eGFsU21PTVZ6Szlu?=
+ =?utf-8?B?UjVJczNGajdHOEJkNndnV0l5SzJjOUVUL3ZwSm44R24vcTRtTjhienNCRUx0?=
+ =?utf-8?B?b25kbXVPQ1pQNXZkc1NrSUthZUNQWkJVLzd5UGZZQ0hFaGJ3cko0VnpUamtr?=
+ =?utf-8?B?eHBTTiszSGZKbmRMMkZsdGVSVzdyMlNkLyswNUNqQ3B6MUVUSWNTZz09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b918d7a3-08d6-4fab-c3be-08deedb95ac5
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71ef6fb2-17a3-41fa-e991-08deedba1b9c
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:35:48.2345
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:41:11.7584
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xQ3rZQWGypnBHf2CtnI0Q3lI6Cm8/tr7Dt5253Ofa1IQcUhOEtnJi0rrZLXvTD5rKP/NJnXpEzJmaRsWgL/Xlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB9056
+X-MS-Exchange-CrossTenant-UserPrincipalName: kO0efdwIsLtY8bJJyKVBq0yiOGukrnH0Z6Q4xgMYOJQoqcHXhRr0MrkaRLz9l2AegrNN3Y+y7865d1a3Yzp5GA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4405
 
 
 
 On 7/29/26 11:40, Muralidhara M K wrote:
-> hwmon.c issues the server power message IDs unconditionally, so on the
-> Family 1Ah client platforms the sensors address whatever the Ryzen
-> Master SMC set puts at those numbers:
+> Describe HSMP_IOCTL_SMN_CMD and HSMP_IOCTL_MSR_CMD: the payload structs,
+> the CAP_SYS_RAWIO and open-mode requirements, and the rule that both are
+> read-only, so a request with @write set is refused with -EPERM even for a
+> fully privileged caller on an O_RDWR handle.
 > 
-> 	power1_input	04h	HSMP_CLIENT_GET_METRICS_TABLE_VER
-> 	power1_cap	06h	HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR
-> 
-> Both match the num_args and response_sz that the sensors ask for, so
-> validate_message() accepts them and the two files report a metrics-table
-> version and the low half of a DRAM address as microwatts.
-> 
-> The other two accesses are already rejected, as they land on a client
-> message taking a different num_args: power1_cap_max on 07h
-> (HSMP_CLIENT_SET_CORE_PSM_MARGIN) and the power1_cap write path, which
-> sends HSMP_SET_SOCKET_POWER_LIMIT on 05h
-> (HSMP_CLIENT_GET_METRICS_TABLE). No unintended firmware write is
-> possible either way.
-> 
-> The client message set has no power telemetry to report instead
+> Also note that reading the protocol_version attribute can fail on the
+> Fam1Ah client platforms, because some client SMU builds reject the
+> interface-version query, which is why the telemetry ioctl rather than
+> that attribute is the way to reach the client telemetry layout.
 
-Is that right?  I thought the metrics table has accumulator values.
+I'm happy that these are (at least) defaulting to read-only, but I don't 
+understand their purpose.
 
-Which brings me to my next question - where is the format of the metrics 
-table declared?
+We already have /dev/cpu/CPUNUM/msr, and we also have amd-node which 
+provides access to SMN via /sys/kernel/debug/x86/.
 
-It's probably (but not guaranteed) the same metrics table format used in 
-PMF.  IE this:
+Can you better describe the needs of why these new messages must exist 
+and we can't have structured data for them?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-ilpo-next&id=641b41a7a12537f8898b1e14c62e0d85a8b872c2
+Even if amd_hsmp needs to use SMN or MSR to fetch specific data data, 
+this feels a lot safer to have a structured specific fetch method than 
+such a wide (albeit permissioned) pipe.
 
-But if userspace does and HSMP message to get the metrics table I think 
-we need a kernel header that shows them how to decode the structure.
-
-> , so gate
-> the registration on the platform in both drivers rather than teach
-> hwmon.c two message sets. Server behaviour is unchanged.
-> 
-> The ACPI sysfs attributes are left alone. They are hardcoded to server
-> message IDs too, but on the client each one is either meaningful or
-> rejected: 02h and 03h are the SMU and interface version queries in both
-> message sets, and the num_args and response_sz checks in
-> validate_message() reject the rest, including every ID that lands on a
-> client SET.
 > 
 > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 > ---
->   drivers/platform/x86/amd/hsmp/acpi.c | 13 ++++++++++---
->   drivers/platform/x86/amd/hsmp/plat.c | 15 +++++++++++----
->   2 files changed, 21 insertions(+), 7 deletions(-)
+>   Documentation/arch/x86/amd_hsmp.rst | 44 +++++++++++++++++++++++++++++
+>   1 file changed, 44 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index bbf2b9a8a408..57758df9d353 100644
-> --- a/drivers/platform/x86/amd/hsmp/acpi.c
-> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -670,9 +670,16 @@ static int init_acpi(struct device *dev)
->   			dev_info(dev, "Failed to init metric table\n");
->   	}
+> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
+> index 8a9d6fe7d4cf..0f03201a9f68 100644
+> --- a/Documentation/arch/x86/amd_hsmp.rst
+> +++ b/Documentation/arch/x86/amd_hsmp.rst
+> @@ -229,6 +229,50 @@ The following IOCTLs are defined:
+>     ``sizeof(struct hsmp_metric_table)``.  Later version metrics table
+>     layout is documented in the Public PPR.
 >   
-> -	ret = hsmp_create_sensor(dev, sock_ind);
-> -	if (ret)
-> -		dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
-> +	/*
-> +	 * The hwmon power messages are numbered as metric table queries in the
-> +	 * client message set, so the sensors would report those responses as
-> +	 * power readings.  Leave them off there, as plat.c does.
-> +	 */
-> +	if (!is_client_platform()) {
-> +		ret = hsmp_create_sensor(dev, sock_ind);
-> +		if (ret)
-> +			dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
-> +	}
+> +  On the Fam1Ah client platforms reading ``protocol_version`` can fail,
+> +  because some client SMU builds reject the interface-version query.
+> +  Those parts have their own telemetry layout and this ioctl is the way
+> +  to read it.
+
+It seems to me you don't actually describe the telemetry layout or what 
+should be done with SMN.
+
+> +
+> +``ioctl(file, HSMP_IOCTL_SMN_CMD, struct hsmp_smn_message *smn)``
+> +  Read a 32-bit SMN register on the socket given by ``sock_ind``.  This
+> +  reaches registers outside the HSMP message ABI, so it requires
+> +  ``CAP_SYS_RAWIO`` as well as a handle opened for reading, the latter
+> +  because the value read is written back into the request struct.
+> +
+> +  The ioctl is read-only.  ``write`` must be zero, and a request that
+> +  sets it is rejected with ``-EPERM`` even with ``CAP_SYS_RAWIO`` and an
+> +  ``O_RDWR`` handle; the field exists only so that write support could be
+> +  added later without changing the layout.  ``reserved`` must be zero.
+> +  Argument::
+> +
+> +    struct hsmp_smn_message {
+> +        __u32 smn_address; /* SMN address to read */
+> +        __u32 value;       /* Value read, filled in by the kernel */
+> +        __u16 sock_ind;    /* Socket index */
+> +        __u8  write;       /* Must be zero */
+> +        __u8  reserved;    /* Reserved, must be zero */
+> +    };
+> +
+> +``ioctl(file, HSMP_IOCTL_MSR_CMD, struct hsmp_msr_message *msr)``
+> +  Read a 64-bit MSR on the logical CPU given by ``core_id``, or on
+> +  whichever CPU the ioctl runs on when ``core_id`` is
+> +  ``HSMP_MSR_ANY_CPU`` (``(__u32)-1``).  Any other ``core_id`` must refer
+> +  to an online CPU, otherwise the call fails with ``-EINVAL``.  Requires
+> +  ``CAP_SYS_RAWIO`` and a handle opened for reading.
+> +
+> +  Read-only on the same terms as ``HSMP_IOCTL_SMN_CMD``: a non-zero
+> +  ``write`` is rejected with ``-EPERM``, and every byte of ``reserved``
+> +  must be zero.  Argument::
+> +
+> +    struct hsmp_msr_message {
+> +        __u32 msr_address; /* MSR index to read */
+> +        __u32 core_id;     /* Logical CPU, or HSMP_MSR_ANY_CPU */
+> +        __u64 value;       /* Value read, filled in by the kernel */
+> +        __u8  write;       /* Must be zero */
+> +        __u8  reserved[3]; /* Reserved, must be zero */
+> +    };
+> +
+>   The ioctl would return a non-zero on failure; you can read errno to see
+>   what happened. The transaction returns 0 on success.
 >   
->   	dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
->   
-> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index bc29b0ec18f7..17877e25f43e 100644
-> --- a/drivers/platform/x86/amd/hsmp/plat.c
-> +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -196,10 +196,17 @@ static int init_platform_device(struct device *dev)
->   				dev_info(dev, "Failed to init metric table\n");
->   		}
->   
-> -		/* Register with hwmon interface for reporting power */
-> -		ret = hsmp_create_sensor(dev, i);
-> -		if (ret)
-> -			dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
-> +		/*
-> +		 * Register with hwmon interface for reporting power.  Skipped
-> +		 * on the client, where the power messages the sensors issue
-> +		 * are numbered as metric table queries and would report those
-> +		 * responses as power readings.
-> +		 */
-> +		if (!is_client_platform()) {
-> +			ret = hsmp_create_sensor(dev, i);
-> +			if (ret)
-> +				dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
-> +		}
->   	}
->   
->   	return 0;
 
