@@ -1,248 +1,172 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010045.outbound.protection.outlook.com [40.93.198.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C31459AC5;
-	Wed, 29 Jul 2026 14:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785336231; cv=none; b=pxon5VX+KWd9qCK/lzVJmys2tU5RYT3puGxQ3M/X+BDDxAbmAEfVV/jlOWoP3Wt7YzK0NQMdX9drP+BeGHAqfZjDNrc+0ZFD//d7h9dnSZMreWLNul41+oYg2Uvu/4xCqHuqHYYai6KlXg85G2YrAswDp09hi3AELBovxTmKrJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785336231; c=relaxed/simple;
-	bh=1iw7nNcJl6uV9WVTaLdUH7sCW2a3SHle96Et+2A58/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PK9vu4pI/spjggb4lpPRDOIClt+kvNVw3O1xNFy3C/e/qLTj+5lJU7OaBJqvEzJoYU2PQC9XIP/kXgKzEamK+MvppDCu8aTc5ay3J5aT5ULuHskWfrVgYLn/rc8tKZgh9ZdXnCe9KDw8CWy7Pxc8FrBgl7QEru3tMRhOVTi1IOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=WZ8ieeWN; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759D84A33E9;
+	Wed, 29 Jul 2026 16:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785343264; cv=fail; b=Sxhk+SmUwBO4gRqNGTf2wVy6KV5PDoi4MTR0jr1qa2ZePWcqqp5RZb7lQwyvXQBvQBv2+D6dNreJHI5fr4hCE5tcKYYc+K5+SrYYQtYVq/T1qFplYvLz0X1wZJiMOyW5orsJGDctA2dLcTAHPlB2ck3eroOgDu5aCci6GZxtzzk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785343264; c=relaxed/simple;
+	bh=eI7rVBxCLgzQ7hY2crBnbSedO1lgiueIiVhLhIEG7rA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gSK0qqoqKo8Tx/bFBRjLZy62H6DX8csNhc3NPU2CoEUBT6Xx7F7E7cjSUg3PGTnl3eafCWrA0zSETuVOYxWrOmivXrbwr+36Gi7U42b0J1cP2PbviYbwFqv8B6DEA8kNvMYShdTRCuaAkNinGGFxHmLV0gmq+TK6Q4/KjUIuNSQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dhcaFNyD; arc=fail smtp.client-ip=40.93.198.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="WZ8ieeWN"
-Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id AFB05845C9;
-	Wed, 29 Jul 2026 16:43:45 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 1ZHv58qcKQmj; Wed, 29 Jul 2026 16:43:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1785336224; bh=1iw7nNcJl6uV9WVTaLdUH7sCW2a3SHle96Et+2A58/4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WZ8ieeWNZGsb9w0dEK9qq5Eo60hxxbo6sLuLA2nNN0Aug6kAZV4XQw74aFzpjBX21
-	 BNq8JjMIel2nW8xkf0GujkMhoklUp/JlLBHuBctSjanGT6/jJ424nk4KcjppbsV/j2
-	 NaQlMkNd4PYAYsM4SXff/T4OD7vI30kB+iGcdEoNLuQ3eZSAq1gIroiJsWu2Q+6H69
-	 D2vTzQAMIVpoHv9Mv+Wu5a/WZA1af+VzyfQUnia0EfjE2ZnjbogmFFOi672qog19kI
-	 2/06EH3/u6MFjzel6yqBW0wgyD+pLLSW/Ktd4b+BSUmlSFuPgxgkAkOHrQqxC4e5cH
-	 3FAWAksd3AeUQ==
-From: Marco Scardovi <scardracs@disroot.org>
-To: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
- Denis Benato <denis.benato@linux.dev>
-Cc: luke@ljones.dev, ilpo.jarvinen@linux.intel.com, corentin.chary@gmail.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] platform/x86: asus-armoury: add Whisper Mode support
-Date: Wed, 29 Jul 2026 16:43:32 +0200
-Message-ID: <wArK7qMITou2-I6Hv4EmsA@disroot.org>
-In-Reply-To: <a2efcc14-c4a5-4b16-9fed-c01176cc34b6@linux.dev>
-References:
- <20260728071843.130492-1-scardracs@disroot.org>
- <W4pHviaQQ-qfwmORrCObjQ@disroot.org>
- <a2efcc14-c4a5-4b16-9fed-c01176cc34b6@linux.dev>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dhcaFNyD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T7H2sF3lzcwjN2q0QDGF8zyDqgwKT4V6lutNGbS99EJ0soJMN/ajqN3SXKvhcy0cyOOVsmn2lm2akGjQQSBYMYy8XHzrsu3TLbF5ulFG63yCj+qhEu0oO3iIChJEYcglaxBoOqnmrToJ+LcJrQvsCvvR/SWvRTJ2N4fgNMAbS7tHjmJEV/NqcWKotsMNYgCwU8d/zUOOl8Xw0Hg0fxpylJ/E9llXOAYxbqxwTVHWFRbN9R4x0H8m2XaSaV6vw/mqY5EkUdm+ws7z+Tl1/fiNA0/EMrf6x5aUHwY7zcJQYNcaGhhIyRG4hkreZd/7RRLNlsaAmFEqIWuc5kuc0jA+aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aSxOqozU+lEO03cqcgPEa/49D6t9PGI3bcolJWkG+pw=;
+ b=OrOCH01Wij8iaIJG6rq52pBVrCrpSiOxaeHRiaZ3AEQ05U7NKwNpfXBP19PdZWCuahbGhDsBsXjQ7PhqdpHSb6BsE9tdiLAOUJ4GiDaMoBZlju6teGtIgKT8wkdwv5unJL0TWV/XOZiGO2mmschL+Akd+wobQ+P8CfCPTCMyobTmWnvvYEHSbW33S9P9DlfUgcWhkPhKVSt53P8hb+1/u4SD4q6Q7jRgFKvlZ9gbZkBp2RegFcJzztrEQ4T4pP68BGLxCLBh/vNvTToBfZaxb2sCgjuwexhUNXIA5HQqfIcQfiEOtKJwZudr1KclKX0b6kIm7M5JEVepkGRu6OZwwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aSxOqozU+lEO03cqcgPEa/49D6t9PGI3bcolJWkG+pw=;
+ b=dhcaFNyD77iSW+sBr8u4rBu0cWOXKcDckQq8I7j84gs9pjm2iinFqrLHR2jikhYvxzRLAJ0CWVsXWD9Rr1VUtynboql6q0uc0ob4jWDfgchF7IHy1vLXbPpZfSkSaypY3V0TGfTbC9bHO0wO+QOiwzEuQ1wXSAfmxSHSqfTN9+w=
+Received: from SA9PR10CA0014.namprd10.prod.outlook.com (2603:10b6:806:a7::19)
+ by CH2PR12MB4085.namprd12.prod.outlook.com (2603:10b6:610:79::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.13; Wed, 29 Jul
+ 2026 16:40:59 +0000
+Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
+ (2603:10b6:806:a7:cafe::e) by SA9PR10CA0014.outlook.office365.com
+ (2603:10b6:806:a7::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.13 via Frontend Transport; Wed,
+ 29 Jul 2026 16:40:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:40:58 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 29 Jul
+ 2026 11:40:52 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH 0/7] platform/x86/amd/hsmp: Family 1Ah client support
+Date: Wed, 29 Jul 2026 22:10:27 +0530
+Message-ID: <20260729164034.1331375-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|CH2PR12MB4085:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86a9e966-00ad-4791-211a-08deed902ada
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700016|23010399003|6133799003|56012099006|11063799006|10067099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	CiKKO+UJUddDftLUusc7FdnSXfheo+lX7ISrZle7DUxWhYQykyo3zAPv7H/JBYpSDXBQstBJ6V0V/yNqc6zmDGr/bdzxE69pokOUfz9qPJy2Xep07YoVNj0RnFOkHHRZoPPo35oPE3eBHd0dSdguR3JQduENSYgNRWaKA/y8//Z2wo398BR1CyAcz1b2H7V8Y2fNJ/IhkF5s6qo95HlLzRlQn11tQghGhB4XwKoeE6iwBwL23Y1gKG7bDzVYh9k/56WpxEAreL0OWUtrVsJjP7UYTJP146sYWxcMWwevaeJ4Rz2PzdtvPNzF1IS2Bnyf3i8mn6aoZ4tp+IkfLLlo0l+VIlz5yHHwVKv5b9Cc0pnS9nu+qbuzSPIBC34XTjwPUYqPd6RLITexXf/gxCp0RsHMaAaPthKTzw4Ykbr8XFXUUGzpHnJufQ8lFE/ot4qSKNg5PN6FyeG8vVKicjZS0JVQV66Q+XIiV4FHmMCzpZwFL3tAyEzXz345cdEeWKYu/tD+BVfjrQ+Df6AZ1sUc39fY2DrMzoI6rTHCr6j9sG3rMuXShtzX+CxKGCgUlt+CcDzN8LEB57vRiLXbZnqb8HErDjqf/RZ0LrjMrtoU/7HWNKNEun4k0BpGN1ZAQBT7txAWNfsxH0vTd+7mdiK4jLt2lUdbmlBAxocQ/hIWIZdFVgkLidk1Tskm+3c7RDzTkUHnjVfJMQNAIrMi14Kx4Q==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700016)(23010399003)(6133799003)(56012099006)(11063799006)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	Gp/ICOUplNc7n+0XKmbetWo+OOM7GeOb/5tsyMXFJMYu2SiLU65+87qaGL/C/aUk8JZsNHOe9iIpeq+S5jQQCJaEjc5GFu++4z4gWa71/4vY1mPJFIV9mx2ZK1eD3KI1nAPeiWGROd8XRDaSXZz+zPpFR+LZpr93zJCLpSPmX3hbvRzf/LzyeQxYj+PJllv0XDrNPA9aQSPGsFCV9cJ405kC7xw2xMMShfOdOasM58C7WTbCtyFaXBjziRTiZjccU3gxHdjugBI8nVMtDIm0TArHJbrB1zh1xqOBtou3Sy2sZtqLsqWSUgMduVxb3InXpxmrETzUBWUjMTqL4hXrduuK8B8zNzgFxvL0s3llniT20EBfZqB9DjEXrDhV5h77ZATz8IYKIPnvAj0ntktF73Js41kswgmBmf94Sijyi1LlNPuvgdKiR6crGg3b4nN+
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:40:58.2548
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86a9e966-00ad-4791-211a-08deed902ada
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4085
 
-In data mercoled=C3=AC 29 luglio 2026 15:34:28 Ora legale dell=E2=80=99Euro=
-pa centrale, Denis Benato ha scritto:
->=20
-> On 7/29/26 15:22, Marco Scardovi wrote:
-> > In data mercoled=C3=AC 29 luglio 2026 15:10:56 Ora legale dell=E2=80=99=
-Europa centrale, Denis Benato ha scritto:
-> >> On 7/29/26 09:32, Hans de Goede wrote:
-> >>> Hi Marco,
-> >>>
-> >>> On 28-Jul-26 15:56, Marco Scardovi wrote:
-> >>>> In data marted=C3=AC 28 luglio 2026 13:39:39 Ora legale dell=E2=80=
-=99Europa centrale, Hans=20
-> >>>> de Goede ha scritto:
-> >>>>> Hi,
-> >>>>>
-> >>>>> Thank you for your patch.
-> >>>>>
-> >>>>> On 28-Jul-26 09:18, Marco Scardovi wrote:
-> >>>>>> This series introduces support for ASUS WMI Whisper Mode hardware =
-controls
-> >>>>>> in the asus-wmi header and asus-armoury driver.
-> >>>>>>
-> >>>>>> Background & Findings:
-> >>>>>> ----------------------
-> >>>>>> After talking with Denis and thanks to NeuroMarshal reverse engine=
-ering
-> >>>>>> and
-> >>>>>> firmware trace analysis on modern ASUS laptops, three specific WMI=
- Device
-> >>>>>> IDs were identified that manage acoustic profiles and thermal regu=
-lation
-> >>>>>> under ASUS Whisper Mode:
-> >>>>>>
-> >>>>>> 1. ASUS_WMI_DEVID_WHISPER_MODE (0x0012007A):
-> >>>>>>    - Controls the BIOS-level Whisper Mode acoustic profile toggle
-> >>>>>>    (read/write boolean).>=20
-> >>>>>> 2. ASUS_WMI_DEVID_WHISPER_ENABLE (0x00090022):
-> >>>>>>    - Enables or disables Dynamic Whisper acoustic regulation (read=
-/write
-> >>>>>>    boolean).>=20
-> >>>>>> 3. ASUS_WMI_DEVID_WHISPER_STATUS (0x00090023):
-> >>>>>>    - Reports status and allows runtime control over Dynamic Whispe=
-r state
-> >>>>>>    (read/write boolean).
-> >>>>> I wonder how this interacts with the platform_profile stuff ?
-> >>>>>
-> >>>>> I would expect enabling whisper mode to lower the max performance,
-> >>>>> so does this automatically change the platform_profile away
-> >>>>> from performance when it is set to performance ?
-> >>>>>
-> >>>>> Note the platform_profile API is extensible. To me it seems more
-> >>>>> logical to expose this as a whisper mode platform-profile ?
-> >>>>>
-> >>>>> Regards,
-> >>>>>
-> >>>>> Hans
-> >>>> Hi Hans,
-> >>>>
-> >>>> Thanks for the feedback!
-> >>>> Here you can find my opinions on your questions.
-> >>>>
-> >>>> 1. Interaction with platform_profile:
-> >>>> In ASUS laptops, where presents, Whisper Mode operates as an
-> >>>> independent boolean toggle/feature controlling fan acoustic target l=
-imits in
-> >>>> firmware/EC, rather than acting as a global thermal profile. Setting=
-=20
-> >>>> WHISPER_MODE or WHISPER_ENABLE via WMI sends a direct call to the EC=
-/BIOS,=20
-> >>>> which adjusts acoustic thresholds internally without altering the ac=
-tive=20
-> >>>> platform_profile state (throttle_thermal_policy) in asus-wmi. IIRC o=
-n Windows=20
-> >>>> it even permits to "hear" the ambient to make the fans run in a way =
-to blend=20
-> >>>> with the ambient noise.
-> >>>>
-> >>>> 2. platform_profile vs firmware_attributes (asus-armoury):
-> >>>> platform_profile is designed for mutually exclusive global power/the=
-rmal
-> >>>> modes (Quiet, Balanced, Performance). Whisper Mode, on the other han=
-d,=20
-> >>>> consists of independent BIOS feature toggles (0/1 controls for BIOS =
-Whisper=20
-> >>>> Mode, Dynamic Whisper Enable, and Status).
-> >>>> Since asus-armoury is dedicated to exposing BIOS/Armoury Crate firmw=
-are
-> >>>> attributes via fw_attributes_class (similar to nv_dynamic_boost,
-> >>>> nv_temp_target, panel_od, etc.), exposing these three WMI controls as
-> >>>> sysfs firmware attributes fits the overall design of asus-armoury mu=
-ch
-> >>>> better than extending platform_profile.
-> >>>>
-> >>>> I hope I've been of help. Feel free to let me know if you have more=
-=20
-> >>>> questions: I'll try to answer the best of my capacities.
-> >>> Thank you for clarifying things. Since the EC/BIOS interface sees this
-> >>> as 2 independent settings, I agree that exposing this as a firmware
-> >>> attr is the best way to expose this.
-> >>>
-> >>> Its a bit weird that one can select Performance profile and enable
-> >>> whisper mode at the same time. But if that is how the Asus firmware
-> >>> interfaces work, then that is how it is.
-> >> Hello Hans and Marco,
-> >>
-> >> I agree that this is weird and we don't have a device with whisper mod=
-e,
-> >> but there is the possibility of the official windows app allowing whis=
-per mode
-> >> only on certain modes: we would need to find someone with windows
-> >> to confirm this, but I also don't think binding whisper to quiet/low p=
-erformance
-> >> is a bad idea.
-> >>
-> >> My opinion is that either whisper gets its own profile and is a combin=
-ation of
-> >> quiet + whisper set to 1 or we check what windows does since I don't w=
-ant
-> >> to have hardware running in configurations that ASUS never intended to.
-> >>
-> >> Best regards,
-> >> Denis
-> >>> Regards,
-> >>>
-> >>> Hans
-> >>>
-> >>>
-> > Hi Denis,
-> > I made more checks on Whisper Mode and find out why it isn't under a si=
-ngle
-> > power profile: it works the contrary of power profiles.
-> >
-> > To be more specific: while power profiles tends to match the fans with =
-the
-> > TDP, in Whisper Mode it sets the max power (if under performance) but c=
-ut
-> > it if the dB/RPMs are too high to respect the Whisper Mode. So it basic=
-ally
-> > works for any power profiles but instead of pushing up the fans to cool=
- the
-> > CPU/GPU, it kills the power to maintain the loudness in check
-> Alright, perfect.
-> > Let me know if it is a feature you want or not. If we end up deciding t=
-o kill
-> > it feel free to let me know.
-> Yes I want this to be in the kernel: I simply don't want to do things that
-> were never intended to be done, other than that I have no reservations.
->=20
-> So you have my OK with these.
->=20
->=20
-> Thank you,
-> Denis
->=20
-> > Best regards,
-> > Marco
-> >
-> >
->=20
-Hi everyone,
+This series enables the HSMP driver on the Family 1Ah client platforms
+- Medusa1 (Models 80h-87h), Olympic Ridge (Models 88h-8Fh) and Medusa2
+(Models E0h-E3h) - and adds the two read-only ioctls that bring-up on
+those parts needs.
 
-I've made more and more studies about Whisper Mode and dumped my own laptop
-to set my mind straight about Whisper Mode, because I had some more doubts
-about it.
+The client parts drive a different mailbox from the server HSMP
+interface. Its SMN addresses are fixed rather than discoverable through
+firmware, and the parts speak the Ryzen Master SMC message set instead
+of the server message IDs. Patches 1-4 teach the driver both, leaving
+server behaviour unchanged:
 
-TL;DR: Adding Whisper Mode is not useful for our drivers.
-TL;DR 2: Whisper Mode enables only when power profile Quiet is set.
+  - Patch 1 describes each platform once in struct hsmp_plat_desc,
+    which carries the mailbox addresses, the message descriptor table
+    and its size, and the IDs of the messages the driver issues itself.
+    Every lookup then picks the table matching the running platform
+    rather than testing the platform at each site. It also adds the
+    client message set to the UAPI header, and lets the client probe
+    survive an interface-version query that some client SMU builds
+    reject with "invalid message" even though the mailbox works.
 
-Whole version:
-After dumping the ACPI DSDT tables and testing runtime calls via a diagnost=
-ic=20
-module on real hardware, I verified that the Embedded Controller (EC) autom=
-atically=20
-manages Whisper Mode acoustic capping whenever `platform_profile` is set to=
- "quiet"=20
-(thermal policy 0x00120075 =3D 2).
+  - Patch 2 routes the metric table through the client message IDs,
+    which unlike the test and version queries are not numbered alike in
+    the two sets: 24h/25h on the server against 05h/06h on the client.
 
-This behavior applies to both internal hardware and connected eGPUs. Becaus=
-e the=20
-EC handles Whisper Mode natively within the quiet profile, discrete queries=
-/writes=20
-to WMI IDs 0x0012007A and 0x00090022 return 0xFFFFFFFE (unsupported).=20
+  - Patch 3 handles the ACPI device (HID AMDI0097), which on these
+    parts exposes neither a _CRS window nor a _DSD mailbox package and
+    carries a bare socket number in _UID rather than the server "IDXX"
+    form. Reads go through the read-only SMNR ACPI method, the same
+    accessor the AMDHSMP Windows driver uses.
 
-Therefore, exposing standalone Whisper Mode sysfs attributes is unnecessary=
-,=20
-as `platform_profile =3D quiet` already provides full Whisper Mode function=
-ality.
+  - Patch 4 leaves the hwmon power sensors unregistered on the client.
+    hwmon.c issues the server power message IDs unconditionally, and on
+    the client those numbers are metric-table queries that pass
+    validate_message(), so power1_input and power1_cap would report a
+    table version and the low half of a DRAM address as microwatts.
 
-Best regards,
-Marco
+Patches 5-7 add HSMP_IOCTL_SMN_CMD and HSMP_IOCTL_MSR_CMD and document
+them. Bringing a client platform up means reading SMN registers and
+core MSRs that the message set does not cover, which today means either
+debugfs, absent on production kernels, or an out-of-tree module. Both
+ioctls are read-only and require CAP_SYS_RAWIO. Each request struct
+carries a @write flag so write support could be added later without
+changing the layout, but a request that sets it is refused with -EPERM
+regardless of the caller's privilege or open mode.
 
+Each patch builds individually at W=1 and is clean under
+checkpatch.pl --strict --codespell.
+
+Muralidhara M K (7):
+  platform/x86/amd/hsmp: Add HSMP client support for Family 1Ah
+  platform/x86/amd/hsmp: Route metric table through the client messages
+  platform/x86/amd/hsmp: Add ACPI client support via the SMNR method
+  platform/x86/amd/hsmp: Leave the hwmon power sensors off on client
+    platforms
+  platform/x86/amd/hsmp: Add SMN read IOCTL support
+  platform/x86/amd/hsmp: Add MSR read IOCTL support
+  Documentation/arch/x86/amd_hsmp: Document the SMN and MSR IOCTLs
+
+ Documentation/arch/x86/amd_hsmp.rst  |  62 +++++-
+ arch/x86/include/uapi/asm/amd_hsmp.h | 210 ++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/acpi.c | 138 +++++++++++--
+ drivers/platform/x86/amd/hsmp/hsmp.c | 285 ++++++++++++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.h |  77 ++++++++
+ drivers/platform/x86/amd/hsmp/plat.c |  61 +++---
+ 6 files changed, 774 insertions(+), 59 deletions(-)
+
+
+base-commit: 775f2078b38ff2121410a35302497a1e81b8e459
+-- 
+2.34.1
 
