@@ -1,62 +1,64 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08663E1701
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 22:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B861A35F60F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 23:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785364566; cv=none; b=LC5QBcMCWGEXxV7t3dbRZYUkmvsE6ZvN8qnFEDaScnLekPxl1YB7L1s3y9tKvRC+lLH7THBmOd5u2fs9Bm1MG/+YN2UNCe6F+1xlRXRZlvFknlRV1A1iratfonb85psmnCaDPB4TdZ9JfVB3anI5DNoPHwqyT28qP0O4Zbjs/JY=
+	t=1785369180; cv=none; b=Haj+45t6IybSLPjmd+SqDGyak17I/WS7yBfDX1IXclfijt7JHsv+pZu7yDovRAYIQkOFDCMwbfxpDN8o75/S2TeT8XfSTb5aIwENoL0BlvgQ8oOQ6X46g3F59NEm1GH3+zhLQN3rfPpkvBAYFB2e0H1Nw8xQ6l9SJk/Rdg3BcHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785364566; c=relaxed/simple;
-	bh=xlsmi3u3/n3PwIaZaNdxIG53UDgFKHZO7Fzobi2NxOU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SnsKEpDeNi5ITF7IQqgx7xR/AdnaHmP/+Pp5c9TvRDwDv/8z/T9ro6oBnOTgQ4h+nOZ8LHbzfTib3V1qZeIYDO3eZYoYqCeTJOcKbf5IobqgL/YI2tvHL3lGC62zxQU8oSADgR/bc7W5gXkyvqcFL7Su47V196KlX0dxmGuw+n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNbjsIvq; arc=none smtp.client-ip=209.85.160.173
+	s=arc-20240116; t=1785369180; c=relaxed/simple;
+	bh=79W9oBMk/ds6NNokcHqp0t+a+topi7vU7hzhVRyXnFU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KP9+B9HEtgGh33XqpG+qYDtcE09+++HHzqYf6pw/PNtB1pL23y/4whdJJP80XAPk50KOfPoladkbY8VSukilCQIS1CcxX4PzJRUi4mp5TbYcBpZKz9rryAOejMoKQLfRFTYdT1s7FTf3O8RdelhPw29NPbYXN4y9pXoP+F9KjWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pE+RMP2x; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNbjsIvq"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c16ac21acso9748401cf.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 15:36:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pE+RMP2x"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-92e5cb052edso125500985a.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 16:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785364564; x=1785969364; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=u5fCX6hAU/42AizwI+7/BCppJtMsQ0i9yaIaJ+tm93M=;
-        b=aNbjsIvq44twss8lT3UUy3XwNDnWfN8s/rqxIhDfsBjPK6EZbUyVp880fMHOKMD0A7
-         XX4OkLGZ1634jLVbnPRu4FNNh2ENRT5X08K5RxxAmbIvLeItxcWadk21NsRyuQC4KCji
-         XxJrSPrM8oOd52yoIvxTAjvdkSzcEPag9qEVQdvt3sUEJiLMnpPY99pE0duNUfIdKyfu
-         VxB8taq4btFIwc+gFD/RXZJ7SVZ6CreGCcow7HghhM+Gd5bRfdaJPt50eUGFH1t/Fld1
-         jlxWcY6P8qrA8n55s0JxPO+m69jTNrcNGFnpGACfYnx8vJo9c1ldYAylFG61VA+Nh3Fl
-         9JIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785364564; x=1785969364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1785369178; x=1785973978; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=u5fCX6hAU/42AizwI+7/BCppJtMsQ0i9yaIaJ+tm93M=;
-        b=tD4i+7fHR7l79Wx6/LgxKgOBKX+yabqPPN3TvmqIcy0FMDiNu8r06WXfOKZynrxcdY
-         8t0blRXn9m29jyAMngBuHZI96+Q5ss4RwZPN9CeB39E2NyldIouDrXSF8gRQ+NFIykEk
-         tb5A9Jq0BVh6yInM4pNpfUqHhHGz8OJG5zu0/LOgEOFZ2TawzkLisRwA/XrGT5F7pbbJ
-         qRV233bsgGHJKkToLxYT9PkOVkm3lHdFV9nSr5EyzxJ6VQnFzxnVvNaQeuxDz/vKJTAr
-         VqQ1Var+pL8jucMONTYYCbD5Pcm5/JnVmI/bVVNgm0FHOVUkTaqk//A152pH+gUpXKGw
-         ftrw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp1GjgUPcg4pLFeek+xoBlIEw6SdVaHjmK9yEP/AL0Q7muDOMrCmaDzY/BRqJTO296hnFtrDwlQq2jY0VKOLS005FNG@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRtA6pryDXlWs0UTcJkCUmgKHW7TnUt3f5jcUiMpWuo6NR20Vq
-	6fdVVzF0YZ7RXuBzTbm4LyOz4NmaIFGkTxbVOdAn1T8G54+jN3ECHdc=
-X-Gm-Gg: AR+sD12jbQiOl+iI8ibXy/gJp7oBbep/QGSACs90/Ki4MnoPTS6oqGdGu4t06HqfjXt
-	WcnHylrC8fHWgjOrDTDhRsVBat9Nx8Gt3D5KFDB/vdPZpujh5W9fHzsQU3l+0C8I4ekSMk01+OV
-	tzWClNJl3IYQ7jcUwnDWr1k+8Pt//4+wuPTMhg46O0C/mw4W59qkSq+hDPyZlr8HSiRAv1/5/bR
-	PgLLr90nBi2Er/1jLL+EGfbBxLMv3Afi9l2vZgOa+qeki5yLj5PU0hJ8DbQ6DPXbt1nGExshuKd
-	ICIQSGi5SQTWdJUuAnQe0W4qBS1/XVzTCwsIPUYICqQO58HQ0sTM41xy/w5hc14eVspF5CC0qsT
-	2whLRpECeaO/e1o2YiLJZLKUni4+DL/64F+JKN17wPyLp55ttYJONJGCYIuJELbnVvyhyYNKKg3
-	3XBsh27a8AvQUD9ZemySJTm34RQK3OvlUU7uNaJOKN/xsLzxji3doSmcDUdtWrXeWgeKwo33YSZ
-	wiH4sjToWBOS0eifacV2hqCt/ZFrisPZtSQOnlVW2qMvpdoQhsf2qaPTg==
-X-Received: by 2002:a05:622a:110:b0:51c:1117:c6a with SMTP id d75a77b69052e-52b38369e63mr4179241cf.4.1785364563584;
-        Wed, 29 Jul 2026 15:36:03 -0700 (PDT)
+        bh=pS1M2hlP5/T4v0QABfckm+Bb6KcvE3YFOHjytnFxlJQ=;
+        b=pE+RMP2xY2jTdDQ4/4p9qyzZO+vkxrl69lXg/VbmOFtcxt5ceWNrbjKcEjQlU38Ds4
+         XjFfpAsghFkS71UwhPgPTkURDyTKqQXiScaNWgOVU+ByxHRj5E28KW+PL6aLlGi9Duvt
+         zc2CQL8ISsfoIy/YzO+9RKqHLedPEJ5x3KawOMtykg0baCAzG88I8Y+Z5SvRZuDsfMTk
+         PqyZpEjpecotIZExXbANObgemWUbX9dK2wuGNAusF+vKi7r496Tyvdo/KD6l3Xru1dOc
+         mxW5eytqobqteUibOkrcdfovbCKEfkgVZbQJh0okrzUbxKNr+vIDXQHWyY4unVQuRcEW
+         H0xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785369178; x=1785973978;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=pS1M2hlP5/T4v0QABfckm+Bb6KcvE3YFOHjytnFxlJQ=;
+        b=SP0Q9YBEou3YvBxpW7HAQPi3rACW3O72P7hyous72rPguhSwgK3nOq0XQ2Be4NYPK4
+         Pfs70jb81sK4AcKUUPpZk11Af/S8QITjDy3NnSENtQVKehAK+xj9xWwsioOwhoYcOFrb
+         KCqZgtIHUmL563AtG4TAbwK3PXPqduPmxzhAx7Pzo73iMZyV/R+kzJpJQmvhIV0tycV3
+         XmmbScs4yArtJZDn9kLX7y2d2KwVc3W6u3bTTLQ03t3Ua+Vsrv3NOvwfwZtz0h9ig1BW
+         Rt5ptDaB3dBupKRVimVRt+CYfZ/wKF1bLLEoOJS75S1nMIm/tPDSJboFHQ4Gg+BHi1fo
+         45kg==
+X-Forwarded-Encrypted: i=1; AHgh+RodWWXQeDhuj3AU03CsM22vrehYAvc1+2+kpF4zSVJVKDzL5GrzDOXKfq7/mTMmJi75ixrILpyPfYp2fnRyeo8V/nFM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmjUfR9UGBdW8xSKcUdlNdsTpKNCyF4Ksi2GZ/64Qw4LYKZJbo
+	s5V/Tsl2oeIjQ6uBddWQBSLz1KeUrgGZRDth+mch2D29o3mOPsEzHJM3F7ZIryqXn8wA
+X-Gm-Gg: AR+sD11s8xxkOlOObx+S63CB9wPEx1NzWiJG/KPqA5P8n5OdcajjY46/wHKHLI6eNig
+	LZm1JGtKXECrQDu89yxs4QsNTFfy5VAXY9tHgxu4deElH212PSHLOlHOvHCHPU6M+HxZTLnaIek
+	hoW+vfpcVs5XL7mxPWetyAaIOlqMcOjzhnK8GPqWjqc5Q1HAdKFD4glHPXnQvVHgC+D6oq/BsBo
+	SwEaxX3fGKOjs+UL4czpu0FYX5PBhnBIY7wn+4rP8KFDeKg46jdUPIfyzDr5zLiZnie+BF1PxJ3
+	WQ4oFj6njPmyct7bcEPJKobizpcfz7TJqF8UNAdffs/wF3MhPejaCjMMPm0L69+/jBvhqeMPms1
+	OL/wHCXyT61GuD/I3MzX0UluGqVthg2lyk45KMxycWVyoZQ5KjTB3xZ2E6v2nyF9hR+AjVMwCBs
+	BGDeHVpeDhNjYC5f/yliUurkWwUDUvjjRIqxfPqmeULRNPjby7MSrNcnpGAI/ey3NtGr0I0Uu/h
+	MdHkr72eIKhTcf2yuUcGUB1BZXeYYnUXSGB/tU1NG4T9fWeBm2iigcSOg==
+X-Received: by 2002:a05:620a:4446:b0:930:f889:3092 with SMTP id af79cd13be357-9348614e732mr40465885a.54.1785369177627;
+        Wed, 29 Jul 2026 16:52:57 -0700 (PDT)
 Received: from localhost.localdomain (ool-4577f7ba.dyn.optonline.net. [69.119.247.186])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-529e30fc51fsm28415081cf.30.2026.07.29.15.36.03
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-908323e8bc0sm2844296d6.26.2026.07.29.16.52.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 15:36:03 -0700 (PDT)
+        Wed, 29 Jul 2026 16:52:57 -0700 (PDT)
 From: Justin Vargas <justinyvar@gmail.com>
 To: jlee@suse.com,
 	hansg@kernel.org,
@@ -65,10 +67,12 @@ Cc: W_Armin@gmx.de,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Justin Vargas <justinyvar@gmail.com>
-Subject: [PATCH] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
-Date: Wed, 29 Jul 2026 18:29:20 -0400
-Message-ID: <20260729222920.6490-1-justinyvar@gmail.com>
+Subject: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
+Date: Wed, 29 Jul 2026 19:51:25 -0400
+Message-ID: <20260729235125.1698-1-justinyvar@gmail.com>
 X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260729222920.6490-1-justinyvar@gmail.com>
+References: <20260729222920.6490-1-justinyvar@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -89,9 +93,13 @@ supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
 PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
 remaining profiles work as expected.
 
+Assisted-by: Claude:claude-opus-5
 Signed-off-by: Justin Vargas <justinyvar@gmail.com>
 Tested-by: Justin Vargas <justinyvar@gmail.com>
 ---
+v2: Add Assisted-by trailer per
+    Documentation/process/coding-assistants.rst. No change to the code.
+
 Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
 kernel 7.0.11-1-cachyos:
 
@@ -114,10 +122,9 @@ The WMI mechanism was cross-checked on Windows, where NitroSense switches
 profiles via SetGamingMiscSetting with index 0x0B and the same profile
 values used by this driver.
 
-Disclosure: this patch and the analysis behind it were produced with the
-assistance of an AI model (Anthropic Claude). All testing was performed
-by me on the physical machine, and I take responsibility for the patch
-as signed off above.
+The analysis and patch were produced with AI assistance (see the
+Assisted-by trailer); all testing was performed by me on the physical
+machine, and I take responsibility for the patch as signed off above.
 
  drivers/platform/x86/acer-wmi.c | 9 +++++++++
  1 file changed, 9 insertions(+)
