@@ -1,252 +1,175 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azolkn19011037.outbound.protection.outlook.com [52.103.12.37])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2563839CCFD;
-	Wed, 29 Jul 2026 17:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785347312; cv=fail; b=HOyedOPpenaM/nWOCzOhxNzt9UjrKsT4/7PDKeT/xX4GIGfj+uSKxsomZ4j87JapXItj2PgnzC39U963Lx71miZGI1yz996M2ty9kwZ57iy9qKUeQhNcso6hkT/sc6DCO6W1Ys1eQUkQL++HzcmKqFIysi6AfMBqTXvN6EIKTIM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785347312; c=relaxed/simple;
-	bh=KOAdxVLoSd242yOLaIzJU3uC628pp5IMByULyye9Mj0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RHmrZ/Zcx9f9yt1Q46+nFtck8AuHhXsUTKzArVv63kmLfYbQiShTF6NIN80a7Px+XTOBtAGy0Qfz3u7dUFGmRc2KVR2+9MXB5BxepZhCtiyOlWlHZJjtyzf8A6ndxv+fvKToB0q4ynHl+FCaYIH/aLf6bZ+LMPAOzZeIgh7XwQA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=HPRojKGA; arc=fail smtp.client-ip=52.103.12.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B074119F7;
+	Wed, 29 Jul 2026 18:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785348320; cv=none; b=uMq45vjA1HqAU9qt6B03u2bW9IZtSw6Ni+J3LcDTsaRiD+1kuX7ffNfD9W2KT7jqzV8hoGfcetyIOPZDCQ6n+NwiRV90d7KMcyG+3IM1Znokokv8pl53zotnAiL7AuHD7K2NLtZW5JxK9jwgBjamhD/L/+dSiUaqm3RmjcBUGtU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785348320; c=relaxed/simple;
+	bh=ji/VdwiV5MB56OWUOmLFJCBZFqZZSOWA0p2ret/jjUM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LGbA7g2r7aJUXKOpX+cwnbXVS/nuebQZzCSfs4jYcVXzhKcOcYEC20f6kvikRod5U/G0riMEXaZD3JihoMdEE86vjcbckJUfc7O3iS3eRb7Pi46gPtt6RoemPAG4iUqjdbcC1ojUkRgvOsbzMCWLEmJyJN78bDLEts6DUSPDjyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4rMHHPt; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="HPRojKGA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lJV2aeufinO6fjRXoU0Ymhn1hHTTThmGgSt9yXyLLwQUY1jImO6QenhmfJP8DzmLJKFkUmKM0hAwRwVK0qdRLt3MnXNvawuYS5lxrvMnfLz2U2uOSikacj2EyR3l8AxZ6/BkvM+QcRNGmcWkTZOnVaj4mcUizao/BGIiq17RdpOeem3Whk8iubfyCcO/fL6CWR5R0/aa7xq7HFXLUz4P96fXg798c97NXOgPbrV+dmwimM3QE4KFpr19PAwMvYaDS7MlQHTa80+enq57PZCEhEFryu7nEKne47QBsbQLBt7y4sQf8XvDp+psCObSdQdYA+MEFgb/SYQYkBMr28JdHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y1ILbV09Nq0eQ7TMgn4wXI7kuC4flLrOZzxXno/jhDA=;
- b=E7b1k1+9Umccwqv5KXWFDzJI5OQslQfj0JgvSXMAxQQHNczLKb0T37m9QktELG+rdslC9m43NXkI7a93ntt+Lvexyrak/2PMLazVjHZLTOeMMxkxi/yIkNdxDvDaxYDvRoARdRfu0Pr9N/SGMWRitn5W0HVKGDY4x4c0b3yiuPnBVxusN8t68pOZ+L3REjvrR14BvZ3yGXCrprGKfMdT6uiuzreWv65cEUh5fMcOEaLziupR7lf2ek/5NmKOE6zERahsgURsSyDCDQFqYbz1elfIIrG5tAZol+SREX54qWTyj7IV9VY3jYGawLDgcM1rp4XRLMGZWtUdjV18qs3x1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y1ILbV09Nq0eQ7TMgn4wXI7kuC4flLrOZzxXno/jhDA=;
- b=HPRojKGAGJR/WuBqzjGTvS2cQsEfldRRsYK6SWgxel/gLq80iHD7hgpIrwt5USWsJ+3S6cM+fWVnrgdLvTQDWDdcGLpWDkPLP6LnjO5qv3Nxt0utdFbInC3qzgkr4B5YRMX7LpxnlPRw7F4w3E5G6o22lFOsT4FklcJEXq4NjnT4L1c52U4lJ+nYGh+PW6AZ4PMtuMZruq4AyxvRUMxnAHUp2xSeFziamTp27v/AAsPXomLMeR2cTIdCJa0uYizyDpgfCaQdQ7cxdvD8XzXW5rjwCOxfTnRET/tDVNCGD9/kXj41LcJ/mXf1TNzjP82zB9tkrRWOmvntYF5rR+P8Rg==
-Received: from DS7PR19MB7724.namprd19.prod.outlook.com (2603:10b6:8:d9::20) by
- CY8PR19MB7667.namprd19.prod.outlook.com (2603:10b6:930:77::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.270.12; Wed, 29 Jul 2026 17:48:27 +0000
-Received: from DS7PR19MB7724.namprd19.prod.outlook.com
- ([fe80::70de:3c05:ac62:7f86]) by DS7PR19MB7724.namprd19.prod.outlook.com
- ([fe80::70de:3c05:ac62:7f86%5]) with mapi id 15.21.0270.009; Wed, 29 Jul 2026
- 17:48:26 +0000
-From: Marco Giunta <marco_giunta@outlook.it>
-To: mapengyu@gmail.com
-Cc: broonie@kernel.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	imitoy@imitoy.top,
-	lenb@kernel.org,
-	lgirdwood@gmail.com,
-	linux-acpi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4rMHHPt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785348316; x=1816884316;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ji/VdwiV5MB56OWUOmLFJCBZFqZZSOWA0p2ret/jjUM=;
+  b=N4rMHHPtt1ynMHSiQER7kXrCpO30Nnm7+uIqwju8Y3rqU6k952VJduqp
+   gJiBqCOL88hfbCaprppKxanPne3qZ1g1JTujSnhYW8JVU7L6k/NfvKKgE
+   Y9ofHK2BLg64zwbIeyuAK89JfQx43vMfKQIFotjQ02rWp9n8DUwi59MDU
+   3b2Dr+/s4LcJx7nwC2SLVbRebrTAqsDMaG28mijX4+98H4TFnJFZg6J0K
+   FMrIYv21M3mxQftLISh3TPVLJGCQ4J3GO9mjoB1qsqiPsxe/zeSx5xg0g
+   ngShpQuVju1Fbo2HsnK+SrM1nSEikXPY3aYh5jIbbFbi8JQ709wH88tiP
+   A==;
+X-CSE-ConnectionGUID: de1un0TlTfCCOq7IZP8ORQ==
+X-CSE-MsgGUID: spvovQQRQAO9t54Mozw09A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="85087573"
+X-IronPort-AV: E=Sophos;i="6.25,192,1779174000"; 
+   d="scan'208";a="85087573"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2026 11:05:13 -0700
+X-CSE-ConnectionGUID: Iz2MrHwJQyW8HVe2qARQGw==
+X-CSE-MsgGUID: BVlLvQwtQCiqRGCTGla6mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,192,1779174000"; 
+   d="scan'208";a="258837130"
+Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
+  by orviesa010.jf.intel.com with ESMTP; 29 Jul 2026 11:05:14 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	marco_giunta@outlook.it,
-	munzirtaha@gmail.com,
-	nadim@symbolic.software,
-	perex@perex.cz,
-	platform-driver-x86@vger.kernel.org,
-	rafael@kernel.org,
-	tiwai@suse.com,
-	wangweidong.a@awinic.com,
-	yakov.till@gmail.com
-Subject: Re: [PATCH v2 3/3] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
-Date: Wed, 29 Jul 2026 19:48:14 +0200
-Message-ID:
- <DS7PR19MB7724B08C9CEA36A4A71C06C1FCCA2@DS7PR19MB7724.namprd19.prod.outlook.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <CALSz7m1iW_hZbkL56+OMLXm5wE2s+ytxT_oGEU+DHyvYEMx8jQ@mail.gmail.com>
-References: <CALSz7m1iW_hZbkL56+OMLXm5wE2s+ytxT_oGEU+DHyvYEMx8jQ@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI1P293CA0012.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:2::10) To DS7PR19MB7724.namprd19.prod.outlook.com
- (2603:10b6:8:d9::20)
-X-Microsoft-Original-Message-ID:
- <20260729174814.85411-1-marco_giunta@outlook.it>
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Avoid model check for recent servers
+Date: Wed, 29 Jul 2026 11:05:12 -0700
+Message-ID: <20260729180512.2048114-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB7724:EE_|CY8PR19MB7667:EE_
-X-MS-Office365-Filtering-Correlation-Id: d52c134c-d4f4-4adb-2002-08deed99974f
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|23021999003|15080799012|25010399006|4140399003|5072599009|51005399006|41001999006|55001999006|24021099003|8060799015|19110799012|440099028|3412199025|40105399003|1710799026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1IqXuY2/CGq0TWiIDMZDuEZDHgvlKcG1S+Gb7rigdPRdFE8Lg+WkvrsKccJP?=
- =?us-ascii?Q?m21xC29oRYG3fT56CzsNyA3C4wUgt4TE6CsRuaN2aTiAiWXI9W6gzNtjmC2j?=
- =?us-ascii?Q?9D32mVDottcQRNUrVkb/63NEVH9A8mBVX9tGvH1vNfsPHqRs6QREaUmWmKVQ?=
- =?us-ascii?Q?YmNHZiMSRXpQz9CaMP1EPRuQV9+nsk3qetacIb+nrSc55wq6mfT5EFiaLLv4?=
- =?us-ascii?Q?0ejvlENDujJDP06I6oK9t00xzjV4VCeEz/Etd6o0rr5nlq0Ro6OqPNRvh3lG?=
- =?us-ascii?Q?Dsoam02jR8u1ru6ZsemQnFog2yK2k/scoKSK/AoKIYLKUAJQM9qyO3VlAM0Y?=
- =?us-ascii?Q?sKsJo+VEn3DOmZjVWFmZBJr4AFGDu5zo7Qc6gn87BRia3hc07aikarDdziS9?=
- =?us-ascii?Q?0r5KtkhSqMOC6OO7R+vT+K2COacaRNiXONvAx+S7PVCv5J4Ap7rOeU7yrlpn?=
- =?us-ascii?Q?ThEW6v9yKLIdB/GNIyqRZgMfSVHXiwac7B06r3BTtBlociH0lxHDc7OcGpcq?=
- =?us-ascii?Q?ou6N3VRHuJ2ZIU+EUNxQMcPJsUL2WV01r5XRLSS669i/UIG7NWXWZWPUD8ry?=
- =?us-ascii?Q?exyKR/PbM7CaNQMdURWVaJR/Vq1+zf6cBm4D50CEP9vsovxd/DSbzlShOXKn?=
- =?us-ascii?Q?EDZ3U2v+ktD0RKa+v38/3hdcQ8j0msAe52lWDPN4roYhI81BbYy2TGsifQSC?=
- =?us-ascii?Q?tZ9UTk+bBS8hM++MeQFEiWFEJHlsGcs+XKk8Qf3VECcD9pLKDIIRdYUJFBt5?=
- =?us-ascii?Q?P+dolBiJkcIfTTBi+N5znomaIHd1X8YuNn8unL8noQJvC11hzX6qCuw3SMr6?=
- =?us-ascii?Q?wWHQ094ZCzYSHJx0k15uqEgfaih0IrlaDoqzUG36eEz7RlIGmbjvIq2OCDP1?=
- =?us-ascii?Q?BY2kLtMF+uTELyoDmzBUd9Zw3meZlJCbv2fcDysrwSEr+cigwgAiA7tnBHDZ?=
- =?us-ascii?Q?SECkh6sjA3odjKItS4iN0y0kZePXG98A2LS0sgd1o/m9jp4TkfsZyYoqkTCy?=
- =?us-ascii?Q?cxaQwF7JpsS0gtr/TQLAkUHkWw=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?wCZPQIAkQf+LmYTYMqFB5U8ZL+PChYm292Qa1YhgaP+vP1liojUW0cTr3Zq7?=
- =?us-ascii?Q?/sxKeR8IGe0NojIICW3TytuvgSASBz0y94R8eiIpnxxDIhR/EYhBvoEiFxeU?=
- =?us-ascii?Q?pZH1RBosB3rKMnVzhjAWrth+Wp0LyjyhPNveyQIVxHEGt/YVAFQ7WHFiHSXl?=
- =?us-ascii?Q?mD+DKHB/u2tIVO9R66r1cLvTVPDP4ZEnrTlJdpVTnjwudyEqzDMoxzQlEW37?=
- =?us-ascii?Q?wgxLn0KH5IACM9lPx5c608w8OJS8rUVngdA9O921wfTAfJ6QdNqp2dPyAZUQ?=
- =?us-ascii?Q?taEM/zcu0i968UvGCTL/N9a4fb44Ra+dRm/hLYracbOAdc6c8yyUVNLnI/ah?=
- =?us-ascii?Q?F1iteHR/6Ucr+7zGv2TEcNm2c12Uqq/vlMOqEFEbcLP4UTjtjtuME1242a2a?=
- =?us-ascii?Q?qpS+A7DFdqax3SCR4zz/j5VMqMPNoaM5wmM3wrte0OJ93dZW0jpjA6HMsvsK?=
- =?us-ascii?Q?GQZAk7wfoASI1fkT9t32YXDppQexT7txuKtKCxDLWxArlE2+ni2/pem+FlN6?=
- =?us-ascii?Q?iV1/a/gEbVAHKu68EcSnQhEcOksnglIfE0zKomKWPICkCeoMvwrrUt1aCohs?=
- =?us-ascii?Q?oUntCuZvll0ODY1mtj2IWgUO4wrhWiOChhnLzsHd5ZdL5m6WiAdSC0gYRMzX?=
- =?us-ascii?Q?owERrzIR6FY045KjentDZa8m7MJB9745DKox4o/sfJoenveDywIKiEzjUyZL?=
- =?us-ascii?Q?64GbZFWCbNy8CBBxONYxBoS9U8fiJqejgUu3Rwzb7pAZXI+DwL7OL6G3AgFs?=
- =?us-ascii?Q?KkdBzvSBVvI8AAP0WUag1AieVL4lf+60ZR6kc95xhik2fbZCXIggjLT6dWl+?=
- =?us-ascii?Q?7YcNrdKlYlmatApr3vNAyAoVeEdq7oafPZUEXPltEvMTEf+tRtpFjBPBQkmx?=
- =?us-ascii?Q?e9ryApHjvn6mA1BtbwLOs4p9njbuR9sOEIYBEjMYD/XqgIxeZxbs8pj4fGxK?=
- =?us-ascii?Q?+d7q45R8/P8tF5gagVRGsl6V2Flx+ocMn9htvq+tHf4aDAxKQ1uIH8VYJXch?=
- =?us-ascii?Q?87NshvrwdLXpPZvl+dPMOt0J5tt4P6xHA0A5CgN531QrvNxLRzSTbSPovZl1?=
- =?us-ascii?Q?TPdxT7W3StNsAlbi9HIEfiwsMF32+Ej5KHncYA4/ibq0TxJHXIxXkp+YsIsG?=
- =?us-ascii?Q?U2Qq9x9wbwsCokpbFKwaNRBYqHo6kjvU1HMaC87IW4azD4t7LttzAoykS7sF?=
- =?us-ascii?Q?FQTSCCYCwPCFwdCJcjlIKbSC38rBB5SMBLDRWczoasgw4OQMrjAtH2Eok38F?=
- =?us-ascii?Q?1oY1FBSkMdupKYlXEt+kahgSUpasBDstWYDp1c2BIOlKYX/pYhgj9TL3C5Zk?=
- =?us-ascii?Q?13+Un+FuP/U562tjsB1r1w8b2WYJo4OXXY5chFEDFrruWckYP8dQYxGEAti8?=
- =?us-ascii?Q?gNFy9qvhq1mecXxesZXnszjOBe450XKwJ/q/E94bTzWKTx8i50SPGtJNCo3P?=
- =?us-ascii?Q?y4lqsCVGfC4=3D?=
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: d52c134c-d4f4-4adb-2002-08deed99974f
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB7724.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 17:48:26.6159
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR19MB7667
+Content-Transfer-Encoding: 8bit
 
-Hi Aaron,
+To enable SST functions, a CPU model entry is required. This causes
+unnecessary delays in deploying new servers on older kernels.
 
-Thanks for looking at this. I think there are some misunderstandings
-I'd like to address.
+To avoid this, if no CPU model match is found, allow the SST common
+driver to load, when all of the following conditions are met:
 
-Regarding default DAC routing and the R9000P codec dump
-in bugzilla 218329#c31: that user is running a stock kernel,
-without this patch series applied; indeed, they have no
-snd_hda_scodec_aw88399 module loaded, and their dmesg shows:
+- Not running as a guest
+- The platform is identified as a server via ACPI PM profile
+- The CPU belongs to Intel family 0x19
+- MSR 0x54 is present to retrieve the PM logical ID
 
-  ALC287: picked fixup  for PCI SSID 17aa:38bb
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../intel/speed_select_if/isst_if_common.c    | 61 ++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
 
-This is the Yoga S780-14.5 Air quirk (ALC287_FIXUP_TAS2781_I2C)
-firing by mistake, because the R9000P shares PCI SSID 17aa:38bb
-with that model (one of our R9000P testers independently confirmed this
-by providing their lspci output).
-That quirk is chained to several other, and in particular it ultimately
-calls the function alc285_fixup_thinkpad_x1_gen7, which does:
+diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+index 1c48bf6d5457..8b87dec2a4cd 100644
+--- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+@@ -7,6 +7,7 @@
+  * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/cpufeature.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/fs.h>
+@@ -774,6 +775,58 @@ void isst_if_cdev_unregister(int device_type)
+ }
+ EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
+ 
++#ifdef CONFIG_ACPI
++
++static bool acpi_pm_profile_server(void)
++{
++	if (acpi_gbl_FADT.preferred_profile == PM_ENTERPRISE_SERVER ||
++	    acpi_gbl_FADT.preferred_profile == PM_PERFORMANCE_SERVER)
++		return true;
++
++	return false;
++}
++
++#else
++
++static bool acpi_pm_profile_server(void)
++{
++	return false;
++}
++
++#endif
++
++static const struct x86_cpu_id sst_allowed_families[] = {
++	X86_MATCH_VENDOR_FAM(INTEL, 19, NULL),
++	{}
++};
++
++static bool isst_features_allowed(void)
++{
++	const struct x86_cpu_id *id;
++	u64 data;
++	int ret;
++
++	/* For hypervisors, explicit model addition is required */
++	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
++		return false;
++
++	/* SST is server only feature */
++	if (!acpi_pm_profile_server())
++		return false;
++
++	/* Match for family 19 only */
++	id = x86_match_cpu(sst_allowed_families);
++	if (!id)
++		return false;
++
++	/* Check for presence of MSR 0x54 */
++	ret = rdmsrq_safe(MSR_PM_LOGICAL_ID, &data);
++	if (ret)
++		return false;
++
++	return true;
++}
++
+ #define SST_HPM_SUPPORTED	0x01
+ #define SST_MBOX_SUPPORTED	0x02
+ 
+@@ -798,8 +851,13 @@ static int __init isst_if_common_init(void)
+ 	const struct x86_cpu_id *id;
+ 
+ 	id = x86_match_cpu(isst_cpu_ids);
+-	if (!id)
++	if (!id) {
++		if (isst_features_allowed()) {
++			isst_hpm_support = true;
++			goto misc_reg;
++		}
+ 		return -ENODEV;
++	}
+ 
+ 	if (id->driver_data == SST_HPM_SUPPORTED) {
+ 		isst_hpm_support = true;
+@@ -812,6 +870,7 @@ static int __init isst_if_common_init(void)
+ 			return -ENODEV;
+ 	}
+ 
++misc_reg:
+ 	return isst_misc_reg();
+ }
+ module_init(isst_if_common_init)
+-- 
+2.54.0
 
-    static const hda_nid_t conn[] = { 0x02, 0x03 }; /* exclude 0x06 */
-    static const hda_nid_t preferred_pairs[] = {
-		0x14, 0x02, 0x17, 0x03, 0x21, 0x03, 0
-	};
-
-The HDA_CODEC_QUIRK entries in this patch exist precisely to prevent
-that collision, matching on codec SSID instead of PCI SSID.
-The "0x03*" in that bugzilla codec dump, therefore, comes from the
-wrong quirk's override, not the hardware default,
-which instead is 0x17->0x06, as can also be seen on the other Legions.
-
-Regarding the DAC 0x02 override for pin 0x17: this is necessary
-in order to fix broken volume controls. The fact that this override
-achieves this goal has been confirmed by every tester
-across all three supported models.
-Indeed, before adding this override, earlier versions of the patch
-required alsa-ucm-conf workarounds to make volume controls work at all.
-Without it and the rest of the patch as-is, the woofers turn on, but
-speaker volume is always 0 or 100% irrespective of OS volume controls.
-
-Three independent lines of evidence support this being
-the correct DAC rerouting:
-
-1. The official Lenovo Windows driver selects DAC 0x02
-   for both 0x14 and 0x17, as can be confirmed by performing a
-   realtek codec dump on a stock Windows install.
-
-2. Multiple existing quirks in alc269.c perform the same override on
-   laptops (Lenovo or otherwise) with similar sound architectures,
-   with comments explicitly stating that this is done to fix
-   volume controls, and therefore implying that this is a common issue
-   on laptops with realtek chips from this family.
-   Some examples of these quirks and comments include:
-   * alc274_fixup_hp_aio_bind_dacs:
-     "avoid DAC 0x06 for speaker switch 0x17; it has no volume
-     control"
-     "The speaker is routed to the Node 0x06 by a mistake, thus the
-     speaker's volume can't be adjusted"
-   * alc289_fixup_asus_ga401:
-     "avoid DAC 0x06 for bass speaker 0x17; it has no volume
-     control"
-   * alc287_fixup_yoga9_14iap7_bass_spk_pin:
-     "Avoid DAC 0x06 and 0x08, as they have no volume controls"
-     "Prefer both speakerbar (0x14) and bass speakers (0x17) connected
-     to DAC 0x02."
-   * alc285_fixup_hp_spectre_x360_eb1:
-     "share DAC [0x02 among 0x14 and 0x17] to have unified volume control"
-   * alc285_fixup_thinkpad_x1_gen7 itself:
-     "DAC3 (NID 0x06) -> Unused, due to the lack of volume amp"
-
-   In particular, many of these quirks share a single DAC between
-   tweeters and woofers (typically 0x02 and 0x14/0x17) without issue.
-
-3. All testers confirmed working volume control with DAC 0x02 rerouting
-   on SSIDs 3906/3907, 3927/3928, and 3938/3939. Without an override of
-   the default 0x06 routing, instead, woofer volume is either 0 or 100%
-   regardless of OS volume levels.
-
-In light of these points, an override away from 0x06 is absolutely needed
-on these machines, and preferentially towards DAC 0x02.
-
-Regarding DAC 0x03 and 4-channel playback: a 4.0 surround profile is not
-meaningful on this hardware regardless of DAC assignment.
-Indeed, selecting a 4.0 profile results in one pair of L/R channels
-(either front or rear) being silent; no DAC configuration makes
-all four channels work. I verified this empirically with both
-0x17->0x02 and 0x17->0x03 (as well as no override), so in this sense
-which DAC override is used is actually completely irrelevant.
-The correct audio profile for this hardware is analog stereo (2.0),
-which works perfectly with the DAC 0x02 override, and makes front and rear
-channels sound the same and work correctly when using speaker-test -c 4.
-More generally, the tweeters and woofers reproduce the same stereo signal,
-and don't actually represent separate channels in a true surround setup.
-That the 4.0 profiles are exposed at all is an artifact of the HDA parser,
-not a consequence of this patch's DAC override.
-
-Regarding pin 0x1d: it's true that, in practice,
-leaving the hardware default 0x40600001 untouched won't change
-anything meaningful for this node, which is essentially
-already disabled for all practical purposes. The override to
-0x411111f0 matches the Windows driver's pin configuration, which,
-as can be seen from a realtek codec dump from the official driver,
-performs this pincfg override anyway.
-I'm happy to drop this line if a maintainer considers it redundant.
-
-Happy to answer further questions, and thanks again for looking at this.
-
-Best regards,
-Marco
