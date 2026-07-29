@@ -1,63 +1,63 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011048.outbound.protection.outlook.com [40.93.194.48])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011010.outbound.protection.outlook.com [52.101.57.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C018D42D769;
-	Wed, 29 Jul 2026 21:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1033C3C19;
+	Wed, 29 Jul 2026 21:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785360612; cv=fail; b=Q2FZK2xeXVGT5TQHbTzof9fdxJMrwsmarplqjOInyTCid0pDSWeGu/eGcHYRSyAvqn7usCGwp4NLD0nidhhfVVUjvza9elog/2igLDB4gZYdzOCEb4s9V2DWtDSvM+WZWoiibC+h2QlR88xI1PpemWubvGj39/XQg22S9rX3XQY=
+	t=1785360954; cv=fail; b=TEh95bWI40hH39zq3klNZDIKWSHMpMAdvakvax/fo+tsnEq5MNKx0as1S1+kBxAd4rSkutY3y6ERzNQwIj1dt92p8VJfv8xi46kinGvZ1o9/Sksc1uczmmqhS3ObhIQ1TjJOu1N8Q1uafEtB2Ykg4VP50JIp6P5d7iMWZLjl7o4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785360612; c=relaxed/simple;
-	bh=8SMS83zGrjUpgmYX1d1YTrrqtaBjhvajZmcBc8AhApI=;
+	s=arc-20240116; t=1785360954; c=relaxed/simple;
+	bh=e/Jo0HQH7SQDUwcFHYaNOt+jtm8i5NCZFEE1+yxd4D4=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pW/lEPwp9oYDU2CIOl6T/SQWjtiW9Ok94rkb1m3x6F+TwTwgGSbXAO1yxSHWuQ3KqkFprLsBBRgp8u2h5ddxPV0Bd0JRGVFY7B+gwb3YsBzUFkbTirDf7T1ABVpQ5Q+IjRL1s4LdDnHMWl+xnbtM/lCQB6ckv3E1cDm9QGeB534=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kdVKIm3/; arc=fail smtp.client-ip=40.93.194.48
+	 Content-Type:MIME-Version; b=pC/qFtltxIa6pSKmGboO8gNNkLihV7szTDHFwsLLNHIIGORt/aZPai8mvZ91aLmyEKLSAzfNBbmcmciQbsDFnicf03/56WRluj6D9O1PHYUsa3ccZ2LTB6VFARWVfSGzFOGYbNBSqUZv29blmeQ+SDVCLAWDjkPev9sTIJs/hSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Jty0n5k; arc=fail smtp.client-ip=52.101.57.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kdVKIm3/"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Jty0n5k"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X3WxcKi5fXocWsFPMLm4ofj5iSBj0IM3cWDJJtgQJB5fcN+sf2oTmcC4Pu75ylQq4LTihx35MZxFH58VMx0OoVGfZscohfUTpO3sohOkcSaA4nZNer95aLwMChVirMIS+JISxmzaIKENb9e38n9kBhGCcXKxAs+R1WcVoSyQRPoRkVM/aoUtgo2ZNBu6/teRXXwL1yFlx1EMeQqiBfCe58S3lYOnoc6UQYzahbFvz0XsZmd41ALBTJWRIpKyqS7jJvGOKn9Tg/E8fuupssK3Sy80sxDy48SNquEj+9PqR3+UY/1jvPB11zwZtQgglIkIYLqQnUN8dy0xbuKon7MC6A==
+ b=R9PXnUnrSMef2k1YLMUGzS1VV8dIKvElxwLytUZaYhGLaQ7iXGfb/cZflB9I1olpLg4Tg1iMd+U9+12Rim/K175cIAtOYy6j6VnC/pVRyqCVWeYORLiIaoarC7Eqz2Z2gk80SynujyzxvRDqfTcueCRRYqkxtiuAdmfVqByZalX17rp7lQV1mcwfrptBh5fW6kiFutzbh2SOfR8TIa8AWj/v4AbPhax6Zz8JlQA+1QUqZ1tUo9ZJGsWGcwMAYbu5Kweai7mEVXh7nGloaVrvvsZ84qdTjvRH2EDQ/fPs4gf+in0wSJok/IFolaG28LU/07QzGXB2sGR9JQJKE2pGcw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zlvjd/cMksVJticrak2AnzGpjkbYxbYzlYbS+oUwjxg=;
- b=MI1ftiPYjd6hTYE2o7BTdeP1GrRWb1HQIEyH9ryiYdRbqLOnrRNw46miWeHC5arUQ2eCBsAg4hzD223u/N8ceYXkf05GpEFRHfwbZvjrNiKe7YziD7S4rz69buzxgWpp74ubvTDbVaY/vHiAURyM7AiUluvBFN5zbRH+uXNdQgdMbIGePcB3TKQLOLLPz/KgH/7K+RAHwTQ7stW7nWqg8U9yM+dYlACObbN5JoHDkRhHhtxcX5e1qn+y5jTy77nR20q3S0JKa1xzME/v1FFXbJ16MuF7eSOixoBMlLXgezntQivNfz5B5wLIu7zJfVtEhwUNEcnuhQldWxWmytyRNg==
+ bh=MaOrmPE9H1lDFf7L44l4AEdr7C7FTWre6dzRoOYfq70=;
+ b=dE5lHRga26UlIGR/4XpzZDZh3SyMNEx6iEEwQuBrWdGYPQc2PvdTdCHByrht+zynhSYm/FE3FKlVKDNe8+8T/FXliKYU3KMudh5NViEAZbqfwfxWoE+BrMAXwGxumYhvW8Z2kXo713nHS+kW6nTcF+GlD/QrJcYqNp0zBu+mh1161jCI/2H1MU2P5DDuHrjY0GPe0+Lujl/3rd9QEeMuWkf856zsH0TeulkqibmjaswdrVOMJzGqBa50hj8yKZg3AXQI3BzWBAfxW91P8wUjq6dprCzlsmOz+v+PvK7l3oKaLLmGfcSqdCqNDoXnARsZkOWOw65IrE/DfiSQCuTJ0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zlvjd/cMksVJticrak2AnzGpjkbYxbYzlYbS+oUwjxg=;
- b=kdVKIm3/3DXev8m1wdnn34CjSsnSm9v85MVqTf2E7/YBzMJGjw/hOirrxnLe5z8+qvsmgbFtrwi43etbbBQzYyRIi7t0GVpWL9cLtDU9M7l2EX1f3TlWoBOIu6TwNyeaAB2kDj8XHrr5bqQtSYuoaGyGLCblzZd6dfKSDeUm61A=
+ bh=MaOrmPE9H1lDFf7L44l4AEdr7C7FTWre6dzRoOYfq70=;
+ b=1Jty0n5kxv2RvcQhYYISkZvaX5qa2RGRFzyvkurj5lHB5KVriEAJKlqxoF6rFZHeNn4Y7+m1LJzLZTQJgmYk9eSOe9qsKiDZ6q5ZfAQfq8/Bg8YstzbccZ8+j/VaZDEBGRi2D188z60pV50nT6AMIPsb/QEkvZ+IaniWQxdex9E=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
- by CYXPR12MB9317.namprd12.prod.outlook.com (2603:10b6:930:e2::22) with
+ by CY5PR12MB9056.namprd12.prod.outlook.com (2603:10b6:930:34::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
- 2026 21:30:02 +0000
+ 2026 21:35:48 +0000
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0270.012; Wed, 29 Jul 2026
- 21:30:02 +0000
-Message-ID: <e8a4a7e9-4e1f-4c00-80ec-84a37c74eb2d@amd.com>
-Date: Wed, 29 Jul 2026 16:30:00 -0500
+ 21:35:48 +0000
+Message-ID: <5348d035-b263-49d3-9067-264cdb4163ab@amd.com>
+Date: Wed, 29 Jul 2026 16:35:46 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] platform/x86/amd/hsmp: Add ACPI client support via
- the SMNR method
+Subject: Re: [PATCH 4/7] platform/x86/amd/hsmp: Leave the hwmon power sensors
+ off on client platforms
 Content-Language: en-US
 To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  muthusamy.ramalingam@amd.com
 References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
- <20260729164034.1331375-4-muralidhara.mk@amd.com>
+ <20260729164034.1331375-5-muralidhara.mk@amd.com>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260729164034.1331375-4-muralidhara.mk@amd.com>
+In-Reply-To: <20260729164034.1331375-5-muralidhara.mk@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0107.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c5::28) To PH8PR12MB6914.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0209.namprd11.prod.outlook.com
+ (2603:10b6:806:1bc::34) To PH8PR12MB6914.namprd12.prod.outlook.com
  (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -66,299 +66,170 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CYXPR12MB9317:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc765273-d5b9-40f5-c723-08deedb88cc8
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CY5PR12MB9056:EE_
+X-MS-Office365-Filtering-Correlation-Id: b918d7a3-08d6-4fab-c3be-08deedb95ac5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|6133799003|11063799006|56012099006|4143699003|10067099003|3023799007|18002099003|22082099003;
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|11063799006|56012099006|10067099003|4143699003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	9y3tmBT1EjjVUOQfl5VE1lgYMXloPXPCq1JpA9AA/YbUztgjQpA3WranWe7Gp4/I+eyDgeepfLX9hSGhDYz2ucVeLU0iVqqQM5hs4mehHscV3O1c7PeYNX49Em/HsrhRXkSaWOHSCaX+Tgd8T/zq5OMIv0H7tk4azvn/6b1O8HXVJPFf+NuL/fIiR7JKxOxFGFREWkSWWlNbA3MTkY1tLJvH7Zlt4r9JS3DXLftdqmS+r1fRnuIRNm/NhVyxU3uYABrqHJ18+Kl+P+qCblx01ugfqd8Lfn7NZGFVTSCBmkJsFvXUmu/O7tKHcdwWVor1E+BgiC4IXP7V6MxZXozu863ypBuN1N0p1771yTkapk0GmVxRayYD47ObmQqjJPhJ3mvvfSyx8oJ5kEKGa9QTVEKbZjGFoF7Oa2X25Y7IFOLJOjX6leUrig5YUff1rhcKoyiTeYVqz51mM2Z+oIOjP5vtTSkaoOWPvWJGA/paTXOHlqqj0/kfmtJ8eIwiusP43jQIDfIEMg866jR1K85FeLts2/lja+7i3uhblpnnmu0t+DT7xdj8Pl1AC4079YZJ9tDlFnAC9Oy62RHTiL89EyqfK0xFMqRA8BW0jBJCmzN1lJ7BBsPwRpoTqo6nqtDbwc+0IfJJWVdKeONijiN7SBjWMOCS4yyHouPoyiWlOtA=
+	JAYKHple1+idCOgM1k0TPqn/KD2riQqDEyiqKrLfnNA9bt4ZoACCJ1s1ANt73SJ5vjx5u5PAlpwcF9hA/bL/N6lXw6InrOT2h8hw+zsdymx3ouYvjvoiepZghOpQkWaOehS3wvpHTKCyOAa5n80daONUBcWDvlS0OD+iD/KEcdQFh+glJwijFB+SnuDQth0og/SmUeWr8AED39ahGGxcY4yT3W63eGt0F6b5kSWnD5FRFP2XV2L0R7HlbZ98XFu2kn7FP5dvTOolof7Hp+B2pMCCulejGY9d5pz86JxrKNbuDsOl0gOZTnUic80SlBnU3P29wyKcs1SF/gkiHQXFMIbFYMYmkroimRBrg4gJkx/cyVx6bzjty6OLL/siJBwthz7Avtkg2yefT5fX/t+0qnUEKAu2znLh5do3Kw2jHRS8s/XHJz4zYoCY6G7K0bWeK9vIDK9fk7noazxRvj4w540Y5F1dfltt08J35BjMuG02uxMD0tFjOwLYSt2mSa87TUQqI77KAfBUQ7vIlwEpW86fRI8xrAtvvLrj2me7LaALoeB0A1RoUlCJ7K7R6bX3pbm8AU/nU+5FYu692DoEV9us0cuDS4PdEVRIi07c5HBAtmZV97HXwGfWsQAIFplmemqbXOB5u9NvkuNkga6dRGnK3vRN6gBcFGrf6Cvnlfg=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(6133799003)(11063799006)(56012099006)(4143699003)(10067099003)(3023799007)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(11063799006)(56012099006)(10067099003)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SFR0a0ErbjdzYjRONDNQY0RpbXVpaEFrcEt1Y2xueU42U0RZbFczb1RZcnJG?=
- =?utf-8?B?OHVRS2RHbjgvRUhpa2lSbXRtcTByaUMrQXNmbmFvNUFoYmU4TDlDNTloR0g4?=
- =?utf-8?B?Rnk5b080bW1sdFcyTURSSkpydlVVYlNMcXJhS1d3c2J2a1cra3hQY0hnQzdm?=
- =?utf-8?B?QWNKeTg5aXNMeGdTS1RBVm1velNuZVNjVktRVUVLTjB5ZWdDUzdIR2R4NCtt?=
- =?utf-8?B?YXJIK3dpdENtRmc2S1lxSE53aXhuM2IwbExLTC94Wm5RYUxmaVY0Y1Z0Zmk0?=
- =?utf-8?B?cFlmRVM1KzJ0OWVyejhHSGFGNVhVVHhTY3dqeHlvUHF1SW9CQ2ZXVlNSLzE5?=
- =?utf-8?B?OFJJQzkyQ2ZHeWR3SGxOSEw5YXpKcXNzZDRFZVYvSzZFUkFjUkl1R0w2L3dL?=
- =?utf-8?B?Tjd5akY2QVJpeVQ1b2w1TVlseFk4N3cvRUc2S3JtQTE4V25wQjM3MS80aml2?=
- =?utf-8?B?OHA1cnQ3Y0hnUVlWcDRSRG1CZWQrS0g5cGRhTVlVVTQrbWdtVmt3MFhRalZm?=
- =?utf-8?B?dUlLekxGN0VNaU5QR3ZwSWZndTVHclExYjNVMFZ4ZElwc0V3aGF0K3ZaMmYw?=
- =?utf-8?B?N2tLdG1WejJUYjMwVFZHNEZQQVh3aFkxZ0Z6bWR1RzJLYUxONDNMZWMvUk0r?=
- =?utf-8?B?QWovSHZXSjNFelVvWlByb2dZeG94dVNxeGlTSTMweU0vOUk3Uk80ZzB3KzFr?=
- =?utf-8?B?M1ZNY1JUUDc3OERIUnJQNHI1UDh0YTdMN204cHljU0hDODVKa2JXSTBJQXdu?=
- =?utf-8?B?ZjY1Mk1rcE45UktPYnlBVHIwUHFOK201MGU5dEpGdUpSLzhRc2xHVzY3Z3pq?=
- =?utf-8?B?RWR6T05Gd1ltTnVUTVBaNm9BM0o3R3RnVHhybFgxR2szV3pIancrdC9WTU5I?=
- =?utf-8?B?bDBoeVBxWm41djN6ZXJreHpRM25RMzB2SVFsaGYzOU01UlFLU0haT3N1NSsv?=
- =?utf-8?B?VHRYdFlJTjFwT1U4MlNkeWpTTzJaMkJ5YmN0SEdzNUN4UER0YlhFakZhSUpq?=
- =?utf-8?B?SlA2U1phZ1hmTmxUQWppTjNONHRvTktFQ3ZoT1IxMnJoZjdldy9CdjcyL0x2?=
- =?utf-8?B?a25Qeld6SnpaQk5xUzlkZWVJdmFUanQ2UVpTNVVGdnhoeWE2ZzdyZVozTVZs?=
- =?utf-8?B?UWhGb0IxdTBscHMreG93VGk3d3BQcnUyb0VLb0lPa0Q1cFdIWVZaWHU3RGpD?=
- =?utf-8?B?eVVNVk8zUG8vM3lTU2pHOGNCVWRoL2NmVmNuY3VtOUIxeVF0UjdhMXBFYWNF?=
- =?utf-8?B?bDd2U2hkc0V3YVp0ZHZhRWhQY1dwSmd3TFZnRGRvRExQcUc2R0lyeVRKcGh1?=
- =?utf-8?B?SzdmUVVQdEhtQ0ZRVGc4bFN2N21uYzAySkdvMnQ4dTlFODRrdVQrZ21wY0I1?=
- =?utf-8?B?bFl3WVM1L0RkQVkwTGpmUWsyeUJlRkpUZFhpVjFmWkdiZzRLUE12M0dpcW5j?=
- =?utf-8?B?TDJ6cHloWVpJVFpyNjh3dlAweG02THhnYWRVaUVQZWhqVEREK29RT3R6dmg2?=
- =?utf-8?B?NGp3Z1llN3ZlM1VKUUJYdUZ3dmJsZ3lXUEk1Qmo0S0lkaWZZVklCZjd3NndD?=
- =?utf-8?B?czMrYnpWZEN4RnVENjBhN3dYeWRQZEw3cWN0akw2YTB6SVVzVDAyVEExQTk2?=
- =?utf-8?B?OXV5OTVSZit0MWdRaml0MUc2Vmx2Yy84TExmMVZEZDNjMmVrYVlWMjlYN2pX?=
- =?utf-8?B?c0VDWXFCV3A1ajByOFVNaU9FSUNSRmFKaFBpRDBrK2NmcFIybVoxR2x3YmhH?=
- =?utf-8?B?azFmeEdWWXA5ZVhuUEthTUYrSU9RRkt4U3ZZeEI5MnV1M2Z1TDIwWU5ZK25w?=
- =?utf-8?B?NnRFdE1INy9IL2FSVXBtWHVlL2pkQ1piOG1HVEo4cFpJMlYvWlcrM3Y0RWpa?=
- =?utf-8?B?U0oreXF3MTZSVHpJRDFvdVdJTmorS01yRmVVUWVQdktHaUs4WndhazVmNEdX?=
- =?utf-8?B?dzdxa2M0MzRVdk1rMVBOOVQwSXR3RG9tcWMxOU5tbUlaeUVzWDhyYU9xTys5?=
- =?utf-8?B?V20vY2Q1Q1M0OU5FTUFUOXEyZHBTM3IxMG4zemdxRktHU2h4U1lUV0U2b2RE?=
- =?utf-8?B?WmozWFF6Mk1qOWw2bGUrMVNXYTM4U0pKSCtTckhTWThMWWxCaDduVlRpdDht?=
- =?utf-8?B?akFSSDQzc0J1L2FRbFlTRTZlbzMzS2VtT05ibEJYNERscmViREFtR25hdi81?=
- =?utf-8?B?Z1B3Q2tYV2lPNGtldWZNaG4rTllXU2dLTFR6UDFrSE9xZnpiV0RkckhEY1Ew?=
- =?utf-8?B?LzMwR0dtaTRjZlBtTDNOM1IzYnhBcXUwcEN0TFhlWHMvd28yYVZKU05ZYzF2?=
- =?utf-8?B?dUxBOTU2ajFxVkp6ZUsyNUo3dlV1NGlGRE5WUzNkRHZNcWw2d09Idz09?=
+	=?utf-8?B?OERmTWJsenp6S2NuNmlZbFFiaWpmQ01ubGZ3RzYrSFZTdGpoY3RveFQwRldv?=
+ =?utf-8?B?SEFSWG92NWNWSlFMVUtYYnhLQlByZEtONmpiSUFUU1JHY3ZRRlhGbnV6VEE5?=
+ =?utf-8?B?THp1U3JHRi9zNlM1MFBiU0pVSCt5ekswckJuTlE0NGExaTA0bzk2bW1VN2tt?=
+ =?utf-8?B?V2NGVWZDZTd0M1hmQmxUSkg5T0dRbmtLNCtKcWVmUHNYU2hsU0g0ZGY0L04v?=
+ =?utf-8?B?bFdIYzlYcEFGVVQ0RFZMMTVZZFpkRFJYUHZNOG01NWVYQWE0akFUdlUyVXQx?=
+ =?utf-8?B?YzAvaDZYaDd5eEJqeXV6dk9wUFc0QjFQaWpjSHR0d292NXEvc3N3Z1NZS1JZ?=
+ =?utf-8?B?Q2g3VnlQT2YwOWE2V3lBbHE5UEZhWkhJNWg4T2lkL1BIQUQzVVFnckZJMjdh?=
+ =?utf-8?B?VGpOUnlnTStxT3NJZHBRWWlZc2hhZXJyWGgrTXJpbkI3dXNOWEtSbzc0WXQ5?=
+ =?utf-8?B?UGdCUTJoc3ZPcFhXZHZQZlg1SnNPUHNKbzJoUHdGdmhoVm1kK3JWK3BZLzhR?=
+ =?utf-8?B?eXZFYjhTdUZkSHA4cWVtZlc1NE9jaXdnQ3BGV2NFMG8rQVpPT25uK1ArNnpr?=
+ =?utf-8?B?cE9FV0FqSUtrMTM1NHhKaXZROUhoRWRGOWVwcWJZUTkwRWx4NUsvOGlBZ0ZW?=
+ =?utf-8?B?WURDM2p5UEVGb3RSWnpGSHJ2VUVqYU9sUk5VZFFLYkNKbnJTVmNzNDEvc21J?=
+ =?utf-8?B?UkFvQlMxazdWbXppTEwyWGhYWEY3WFBjcU1NbVdZQjAyYXBhWllQUTNRRk9u?=
+ =?utf-8?B?YzJremhnVlZYSThSQ2Y2cDhKbEVFOE92NFFKQy9vckY4VTcxdzUxb0h2Y0lt?=
+ =?utf-8?B?dmxELzBSVG5tSW12d28zZ3JMN0M1VzdMSzQrZGlvQTJlUDlqN1B0NkNKZzNl?=
+ =?utf-8?B?eWdIclZIMFRKa3pnc3ZMNFI0TmRuL0pmZkgreFExeVJybE1MZmRNZW1Wb25q?=
+ =?utf-8?B?YW1ZYjVoZStHMUdWNkZLeGY3SlZaRHd3dGFNL2pDb0N2TjJrWVBDNUs1YzM1?=
+ =?utf-8?B?and5UlpDbTErMWIvK0UwbU9NdHpmdGlzSE5vVCsrckNKZFgzdHZvc1JlVGl6?=
+ =?utf-8?B?RG5FakV0SnJXV21IMjQwOE9HTW91UHBGNVgvQjd4Yi9nQktOanozQzl3bXlW?=
+ =?utf-8?B?SUZ1NWd5MTFNSFQrRXlOdmliK3RjQ2lCaitDLzJpN1hYWUpJUW1NTTZUeE9J?=
+ =?utf-8?B?bzR3TXpKNDh4a2cxbkNST0xsM0Z6YnQzYkhwY3RWRExJaklEdEI5Q1RyK2RT?=
+ =?utf-8?B?c1ZtMWZjR3FvK2xwR2VIaHkramYxdVpKYnY4WnRiQ0dlUHdyOGplZnVEQTVU?=
+ =?utf-8?B?N1czMCs2YTRCMnZTdXJDZDZjTUptbzU4WDNXMTlBVktaVkFROWxVd2REdXBF?=
+ =?utf-8?B?bnFkMUZVeDlzRC9JRUJvL1AwMGdkc3IxSDFsaE5XS1g5TUJkVnNZWWtXK3ZV?=
+ =?utf-8?B?d1VuUVYvOVN4aU9VZWpLeDVtNzkxRzU4WFN0d3I1TjdTeWZwZERCQXVtV2Na?=
+ =?utf-8?B?cUIwV09RTXRURkROTytaOXMzcW9leUFmQm1tdng0MWxoT3c4U2U3YTdiWW92?=
+ =?utf-8?B?TlZuN21Ia1ppR1I3a2ltN2dSc012Y0wxKzhpalZpbkJrTzArNFVGRnVNOTNF?=
+ =?utf-8?B?TVN5Z1YxY2EwNlplak85dmVIQmdTS1VBdzYvV2s2QjN5M1I2RUlrZDBodVZt?=
+ =?utf-8?B?cWdFbWNwb0lUR05Cc2R0OWZuOGhxUkpGczdEN280WU0rUDZFSER5ZUpGV3Vt?=
+ =?utf-8?B?a2JRVWpNWitHVGNMc3VEOTBWaVNPWHlMS2FyUEpiMXE0UktqaDd2TXptQ2Y5?=
+ =?utf-8?B?aEpzTjNLNTFpZ1FYUVJtZ2UxRVpxTmtpRlBsUUhrdjZpL2c0VFhSZDIrMUdt?=
+ =?utf-8?B?bFo5WW9jb0MzeHRuK3ZMenZPZENidzgzVjhmMURxVllMZFQxYTU1VWpJWDB5?=
+ =?utf-8?B?bzcraEVDZURmS0k5VGQ5RFNnN2YxSFVhZHNDMmg0VDhOWHRZM1FqdWNHUzUv?=
+ =?utf-8?B?WHRIUjVwQm9XR2pjMXdVWjNkOGpCVUdUN0VtWVJudGliZlpjZEpDTDY4VDhl?=
+ =?utf-8?B?dTJKRDBTQU5jWFRScnZaeXlWcWIwd0ZZMGVJWkh6Vit6WkllczF0RHpwWitx?=
+ =?utf-8?B?Rzc1cjJqbGsyVjNhTVhHZzRYNnY0amJNczJmMEVXTERrZXlVM3M0azJCUkxh?=
+ =?utf-8?B?UFZjczc0MjZ6TTJzUUluM3RVT1MyRzFvU3ZkbmRJRlVWUG9yZzBHNkQ1RzVn?=
+ =?utf-8?B?VkgxanM2YVNsSk8yNks3V1Yxd1JUaWpyZ3VSaUt3ZE5tVk1lODY1Yi9XU0Rh?=
+ =?utf-8?B?emxRazZKRmZKQVlGaEF4M0VKZnFoZXQ5bU12YUljeFA1cGw4WXZ6UT09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc765273-d5b9-40f5-c723-08deedb88cc8
+X-MS-Exchange-CrossTenant-Network-Message-Id: b918d7a3-08d6-4fab-c3be-08deedb95ac5
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:30:02.6694
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:35:48.2345
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /hawgvys0/PsWDY16O4YiRCK80+ke5IVCc+U5u91RAQb4FVjvIygIlxsWVgDw3fF3ZjdOutlpjDyFMHsk3FGMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9317
+X-MS-Exchange-CrossTenant-UserPrincipalName: xQ3rZQWGypnBHf2CtnI0Q3lI6Cm8/tr7Dt5253Ofa1IQcUhOEtnJi0rrZLXvTD5rKP/NJnXpEzJmaRsWgL/Xlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB9056
 
 
 
 On 7/29/26 11:40, Muralidhara M K wrote:
-> On the Family 1Ah client platforms (Models 80h-8Fh and E0h-E3h) the ACPI
-> HSMP device (HID AMDI0097, ACPI path \_SB_.TELD) is present but, unlike
-> server platforms, exposes neither a _CRS memory window nor a _DSD
-> mailbox-offset package, and names its socket differently. The probe
-> therefore failed in three places:
+> hwmon.c issues the server power message IDs unconditionally, so on the
+> Family 1Ah client platforms the sensors address whatever the Ryzen
+> Master SMC set puts at those numbers:
 > 
->    - hsmp_get_uid() requires the server "IDXX" _UID form and rejects
->      anything shorter than three characters. The client device carries a
->      bare socket number ("0"), so the probe aborted with -EINVAL before
->      it reached any of the code below, and without logging a reason.
->    - hsmp_read_acpi_crs()/_dsd() found no _CRS/_DSD and bailed out.
->    - hsmp_cache_proto_ver() issued HSMP_CLIENT_GET_INTERFACE_VER
->      (msg 0x3), which this client SMU rejects with "invalid message"
->      (0xFE) even though the mailbox is otherwise functional.
+> 	power1_input	04h	HSMP_CLIENT_GET_METRICS_TABLE_VER
+> 	power1_cap	06h	HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR
 > 
-> Handle the client explicitly:
+> Both match the num_args and response_sz that the sensors ask for, so
+> validate_message() accepts them and the two files report a metrics-table
+> version and the low half of a DRAM address as microwatts.
 > 
->    - hsmp_get_uid(): strip the "ID" prefix only when it is present, so
->      both the server "IDXX" form and a bare socket number are accepted.
->      A _UID that is neither still fails, as kstrtou16() rejects it.
->    - hsmp_parse_acpi_table(): for is_client_platform(), skip _CRS/_DSD
->      and take the fixed client SMN mailbox addresses from the platform
->      descriptor, accessed through firmware. Reads go via the read-only
->      SMNR ACPI method
->      (TELD.SMNR -> CpmReadSmnRegister, the same accessor used by the
->      AMDHSMP Windows driver's amdtelemetry_Acpi_SMNR / 'RNMS'); writes
->      go via the kernel SMN helper (amd_smn_hsmp_rdwr), as this device
->      has no ACPI SMN write method.
->    - init_acpi(): treat the interface-version query as non-fatal on the
->      client, and call hsmp_get_tbl_dram_base() whatever version was
->      reported so the metric table is fetched with
->      HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR, mirroring plat.c.
+> The other two accesses are already rejected, as they land on a client
+> message taking a different num_args: power1_cap_max on 07h
+> (HSMP_CLIENT_SET_CORE_PSM_MARGIN) and the power1_cap write path, which
+> sends HSMP_SET_SOCKET_POWER_LIMIT on 05h
+> (HSMP_CLIENT_GET_METRICS_TABLE). No unintended firmware write is
+> possible either way.
 > 
-> As on the server path, the client branch publishes sock->dev last with
-> smp_store_release(). sock->dev is the readiness gate the data plane
-> tests with smp_load_acquire(), so it must not become visible before
-> the accessor and mailbox offsets that this socket's mailbox access
-> depends on.
-> 
-> is_client_platform() covers every Family 1Ah client platform (Medusa1,
-> Olympic Ridge and Medusa2), which all share the same client SMN
-> mailbox, so one branch handles them. Server behaviour (pure
-> _DSD/_CRS/MMIO) is unchanged: the _UID handling still strips the "ID"
-> prefix those platforms use.
-> 
+> The client message set has no power telemetry to report instead
 
-Why even bother with the ACPI one? Couldn't amd_smn_hsmp_rdwr() handle 
-both read and write?
+Is that right?  I thought the metrics table has accumulator values.
 
+Which brings me to my next question - where is the format of the metrics 
+table declared?
+
+It's probably (but not guaranteed) the same metrics table format used in 
+PMF.  IE this:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-ilpo-next&id=641b41a7a12537f8898b1e14c62e0d85a8b872c2
+
+But if userspace does and HSMP message to get the metrics table I think 
+we need a kernel header that shows them how to decode the structure.
+
+> , so gate
+> the registration on the platform in both drivers rather than teach
+> hwmon.c two message sets. Server behaviour is unchanged.
+> 
+> The ACPI sysfs attributes are left alone. They are hardcoded to server
+> message IDs too, but on the client each one is either meaningful or
+> rejected: 02h and 03h are the SMU and interface version queries in both
+> message sets, and the num_args and response_sz checks in
+> validate_message() reject the rest, including every ID that lands on a
+> client SET.
+> 
 > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 > ---
->   drivers/platform/x86/amd/hsmp/acpi.c | 125 +++++++++++++++++++++++++--
->   1 file changed, 116 insertions(+), 9 deletions(-)
+>   drivers/platform/x86/amd/hsmp/acpi.c | 13 ++++++++++---
+>   drivers/platform/x86/amd/hsmp/plat.c | 15 +++++++++++----
+>   2 files changed, 21 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
-> index 8257cd1da48e..bbf2b9a8a408 100644
+> index bbf2b9a8a408..57758df9d353 100644
 > --- a/drivers/platform/x86/amd/hsmp/acpi.c
 > +++ b/drivers/platform/x86/amd/hsmp/acpi.c
-> @@ -10,6 +10,7 @@
->   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> @@ -670,9 +670,16 @@ static int init_acpi(struct device *dev)
+>   			dev_info(dev, "Failed to init metric table\n");
+>   	}
 >   
->   #include <asm/amd/hsmp.h>
-> +#include <asm/amd/node.h>
->   
->   #include <linux/acpi.h>
->   #include <linux/array_size.h>
-> @@ -71,6 +72,68 @@ static int amd_hsmp_acpi_rdwr(struct hsmp_socket *sock, u32 offset,
->   	return 0;
->   }
->   
-> +/*
-> + * Family 1Ah client platforms (Models 80h-8Fh and E0h-E3h) expose the HSMP
-> + * ACPI device (HID AMDI0097, ACPI path \_SB_.TELD) but, unlike server
-> + * platforms, the device provides neither a _CRS memory window nor a _DSD
-> + * mailbox-offset package.  The mailbox lives in SMN register space and is
-> + * reached through firmware:
-> + *
-> + *   - Reads  : the read-only ACPI method SMNR(addr) returns the 32-bit
-> + *              value of the SMN register at absolute SMN address 'addr'
-> + *              (TELD.SMNR -> CpmReadSmnRegister).  This is the ACPI BIOS
-> + *              telemetry accessor referenced by the AMDHSMP Windows driver
-> + *              (amdtelemetry_Acpi_SMNR, method 'RNMS').
-> + *   - Writes : there is no corresponding ACPI write method, so SMN writes
-> + *              are issued through the kernel SMN helper (amd_smn_hsmp_rdwr).
-> + *
-> + * The SMN mailbox addresses themselves cannot be discovered from firmware
-> + * on the client (no _DSD), so they are fixed; the SMN_HSMP_*_RM
-> + * addresses are defined in hsmp.h and shared with the platform driver
-> + * (plat.c).
-> + */
-> +
-> +/* ACPI method on \_SB_.TELD that reads one SMN register: SMNR(addr) */
-> +#define HSMP_ACPI_SMNR_METHOD		"SMNR"
-> +
-> +static int hsmp_acpi_smnr_read(struct hsmp_socket *sock, u32 smn_addr, u32 *value)
-> +{
-> +	struct acpi_object_list arg_list;
-> +	union acpi_object arg;
-> +	unsigned long long out;
-> +	acpi_status status;
-> +
-> +	arg.type		= ACPI_TYPE_INTEGER;
-> +	arg.integer.value	= smn_addr;
-> +	arg_list.count		= 1;
-> +	arg_list.pointer	= &arg;
-> +
-> +	status = acpi_evaluate_integer(ACPI_HANDLE(sock->dev),
-> +				       HSMP_ACPI_SMNR_METHOD, &arg_list, &out);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err_ratelimited(sock->dev,
-> +				    "SMNR(0x%08x) ACPI method failed: %s\n",
-> +				    smn_addr, acpi_format_exception(status));
-> +		return -EIO;
-> +	}
-> +
-> +	*value = (u32)out;
-> +	return 0;
-> +}
-> +
-> +static int amd_hsmp_acpi_smn_rdwr(struct hsmp_socket *sock, u32 offset,
-> +				  u32 *value, bool write)
-> +{
-> +	u32 smn_addr = sock->mbinfo.base_addr + offset;
-> +
-> +	/* Read path uses the firmware SMNR ACPI BIOS method. */
-> +	if (!write)
-> +		return hsmp_acpi_smnr_read(sock, smn_addr, value);
-> +
-> +	/* No ACPI write method exists; drive SMN writes through the kernel. */
-> +	return amd_smn_hsmp_rdwr(sock->sock_ind, smn_addr, value, true);
-> +}
-> +
->   /* This is the UUID used for HSMP */
->   static const guid_t acpi_hsmp_uuid = GUID_INIT(0xb74d619d, 0x5707, 0x48bd,
->   						0xa6, 0x9f, 0x4e, 0xa2,
-> @@ -89,15 +152,19 @@ static inline int hsmp_get_uid(struct device *dev, u16 *sock_ind)
->   	char *uid;
->   
->   	/*
-> -	 * UID (ID00, ID01..IDXX) is used for differentiating sockets,
-> -	 * read it and strip the "ID" part of it and convert the remaining
-> -	 * bytes to integer.
-> +	 * Server firmware differentiates the sockets with "ID00", "ID01"..
-> +	 * "IDXX", so strip the "ID" before converting the rest.  The client
-> +	 * device carries a bare socket number with no prefix to strip, so
-> +	 * only skip one when it is actually there.
->   	 */
->   	uid = acpi_device_uid(ACPI_COMPANION(dev));
-> -	if (!uid || strlen(uid) < 3)
-> +	if (!uid)
->   		return -EINVAL;
->   
-> -	return kstrtou16(uid + 2, 10, sock_ind);
-> +	if (!strncmp(uid, "ID", 2))
-> +		uid += 2;
-> +
-> +	return kstrtou16(uid, 10, sock_ind);
->   }
->   
->   static acpi_status hsmp_resource(struct acpi_resource *res, void *data)
-> @@ -240,12 +307,35 @@ static int hsmp_parse_acpi_table(struct device *dev, u16 sock_ind)
->   	int ret;
->   
->   	sock->sock_ind		= sock_ind;
-> -	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
->   
->   	sema_init(&sock->hsmp_sem, 1);
->   
->   	dev_set_drvdata(dev, sock);
->   
+> -	ret = hsmp_create_sensor(dev, sock_ind);
+> -	if (ret)
+> -		dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
 > +	/*
-> +	 * On the Family 1Ah client platforms the bound ACPI device
-> +	 * (\_SB_.TELD) has no _CRS/_DSD, so use the fixed client SMN mailbox
-> +	 * addresses and access them via firmware - reads through the SMNR
-> +	 * ACPI BIOS method, writes through the kernel SMN helper.
+> +	 * The hwmon power messages are numbered as metric table queries in the
+> +	 * client message set, so the sensors would report those responses as
+> +	 * power readings.  Leave them off there, as plat.c does.
 > +	 */
-> +	if (is_client_platform()) {
-> +		sock->amd_hsmp_rdwr		= amd_hsmp_acpi_smn_rdwr;
-> +		sock->mbinfo			= *hsmp_pdev->desc->mbinfo;
-> +		dev_info(dev,
-> +			 "Client platform: SMN mailbox via SMNR ACPI method (reads) + kernel SMN (writes)\n");
-> +		/*
-> +		 * Publish sock->dev last, for the same reason as the server
-> +		 * path below: it is the readiness gate for the data plane, so
-> +		 * it must not become visible before the accessor and the
-> +		 * mailbox offsets this socket needs.
-> +		 */
-> +		smp_store_release(&sock->dev, dev);
-> +
-> +		return 0;
+> +	if (!is_client_platform()) {
+> +		ret = hsmp_create_sensor(dev, sock_ind);
+> +		if (ret)
+> +			dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
 > +	}
-> +
-> +	sock->amd_hsmp_rdwr	= amd_hsmp_acpi_rdwr;
-> +
->   	/* Read MP1 base address from CRS method */
->   	ret = hsmp_read_acpi_crs(dev, sock);
->   	if (ret)
-> @@ -553,11 +643,28 @@ static int init_acpi(struct device *dev)
 >   
->   	ret = hsmp_cache_proto_ver(sock_ind);
->   	if (ret) {
-> -		dev_err(dev, "Failed to read HSMP protocol version\n");
-> -		return ret;
+>   	dev_set_drvdata(dev, &hsmp_pdev->sock[sock_ind]);
+>   
+> diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+> index bc29b0ec18f7..17877e25f43e 100644
+> --- a/drivers/platform/x86/amd/hsmp/plat.c
+> +++ b/drivers/platform/x86/amd/hsmp/plat.c
+> @@ -196,10 +196,17 @@ static int init_platform_device(struct device *dev)
+>   				dev_info(dev, "Failed to init metric table\n");
+>   		}
+>   
+> -		/* Register with hwmon interface for reporting power */
+> -		ret = hsmp_create_sensor(dev, i);
+> -		if (ret)
+> -			dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
 > +		/*
-> +		 * Some client SMU builds reject the interface-version query
-> +		 * with "invalid message" even though the mailbox is functional
-> +		 * (the preceding test message succeeds).  The client does not
-> +		 * need the version to reach its metric table, so treat this as
-> +		 * non-fatal there, matching the platform driver.
+> +		 * Register with hwmon interface for reporting power.  Skipped
+> +		 * on the client, where the power messages the sensors issue
+> +		 * are numbered as metric table queries and would report those
+> +		 * responses as power readings.
 > +		 */
-> +		if (is_client_platform()) {
-> +			dev_warn(dev,
-> +				 "Interface version query unsupported on client SMU; continuing\n");
-> +		} else {
-> +			dev_err(dev, "Failed to read HSMP protocol version\n");
-> +			return ret;
+> +		if (!is_client_platform()) {
+> +			ret = hsmp_create_sensor(dev, i);
+> +			if (ret)
+> +				dev_info(dev, "Failed to register HSMP sensors with hwmon\n");
 > +		}
 >   	}
 >   
-> -	if (hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
-> +	/*
-> +	 * On client parts the metric table is fetched via
-> +	 * HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR whatever interface version
-> +	 * was reported, since that query may be unsupported, mirroring plat.c.
-> +	 */
-> +	if (is_client_platform() || hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
->   		ret = hsmp_get_tbl_dram_base(sock_ind);
->   		if (ret)
->   			dev_info(dev, "Failed to init metric table\n");
+>   	return 0;
 
