@@ -1,89 +1,89 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E5748A8D7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7651D443AB5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785330019; cv=none; b=eBCCkG28hp+03KlWToIib/aqnwBTmdEzgPTnxSZuP6DtA12Q8oKmVvtXueYgOy5s60N18xrU39+PfW+ilqXqbRUUx3eggFkBEOVDGC4QI5SrVUAYBEWOD0BmPOVtVIK+5Q1HBnvWcBfoUe6cvUUlnHWx9wwJzTz/gyqfEEvCazc=
+	t=1785330204; cv=none; b=H6xJwEAZ86S9+0MlRCGDR/a3xRwFVV53F24MbNxi8Rs/ViQu4wQIhCMzjVtszbchXSA8e1/YrNrGT2hR1prYogXe5gghnJjXK04xMjGwUXn3wki62ghnkBrB8HMeov7kZZSJrQMWCNZcwPRbeB2vVIIxXpO3xUgrX9NE999YPGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785330019; c=relaxed/simple;
-	bh=usS5ZvvfleDq+b5anpht/xfqW4DM0ICjkN/d+9cZryU=;
+	s=arc-20240116; t=1785330204; c=relaxed/simple;
+	bh=/YeA6e4h90/TYAApBQ5RFPCojqWub7XeOGXkeguNddg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ny05M7H+G0vAVAAJLtgpiq4bxro3JWYdP8kDsj6nUzvtElZhPiiZ1FJgHV+Gbyd5dJLLZjSMj6nCZ2Gq11tvT0etF7cg1La8OlpvTDm99/UQ9JgaUODs3/SyueAdmaHHfBu3h6Xkou1WUSIOPZVAQQMVe4I+j06jRLDTPxnt4mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZFdJTcpg; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=MDCIw6iK; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=dl/XpxJDX5rEYsqkiOyeMRwdn++xo4/pB+lRsKsCHPyIT4iA/KwS3S96JXtHG2h1lr3Lk6xaR1cTguaX4yOpTl2xP6thyBnx3/t0cmcAvnyjJ+ZDGd3E0XPDDcc144pkTZBSnWqVm28ctooRfAyKp7dhCsJP38dthijMLuKDLrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=opC6dvDf; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bEEAoVJW; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZFdJTcpg";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="MDCIw6iK"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBXKxt1847284
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:00:16 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="opC6dvDf";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="bEEAoVJW"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBusZJ1981753
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:03:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FQuLxiXgQrlaPB545yvWNYECiZsH/JayHHgnDnwTqzo=; b=ZFdJTcpgwPRxl7yL
-	GUep+UFfx4OkU4ya/iL/f5lq1nQ2+2oIlYOaxsILHmY+DWypk3UOJ9jUCQomIJ8Y
-	8xlfw2rQodH9Dz7G63unP7WtdOfJ/RHEVSnixemkcc/OnsqRwyre9+h6TeB9zgm8
-	ZPM+BBmFUvQoAhaeqLwzSx7ffJdP03kA9v7F764Kn4vjU0TYqHJMPKy3ihlkwIgW
-	AtlA7c8eWnZAzU9+NXNCcsATvpMIwbzZcC7XtenbsYwu4tKv73nOtFcZjFztuLLx
-	0MBU9HHxwnXh1Jwj4YxpZwqNbQkuR9xAnTX5lkGt+xtvlTjR1OZ/SFMUT8EJYc/D
-	JL67cQ==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fqgrcgadd-1
+	tlh3rnxfJkXfV5KarGkZfL1Q3S+pBYhT9xp1RWLyIIQ=; b=opC6dvDf4y7teSIq
+	f1gZnd7WLAx8MAXMbfxooWoZlq+OgUkKeTEFcLhao8AZlmjo8kNpYbBz+O03AtMT
+	89w1oWmt4iQnJkwyMKmNyW1FpJxk1Z75bSnpPhT71QOaqI0nCWCZIG7n7gZAv2YU
+	JqDJJkLc5Mzdm/mQlq17YUTZutsubQxjumWApDHuwcWH1vAOr0NYM//2d+p4gVqd
+	zIrWAX59UsOANgV6LQJ85bqfNh+Dltm3EFvdjtDS6KmsX3bMieEYFQ5fPbVie7UI
+	AsdoKYZZgLjuCXn8vs5x9STsc5JBBPRjdpt2JF1KCzHRjhc3LwDCO8yOLlQ23IVL
+	Pz0N7Q==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fqh3gg88g-1
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:00:16 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-c89704da8c7so1400459a12.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 06:00:16 -0700 (PDT)
+	for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 13:03:18 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-38e7621655eso1587510a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 06:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785330015; x=1785934815; darn=vger.kernel.org;
+        d=oss.qualcomm.com; s=google; t=1785330198; x=1785934998; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=FQuLxiXgQrlaPB545yvWNYECiZsH/JayHHgnDnwTqzo=;
-        b=MDCIw6iKN2P8wU18zg/xJ47jx1ktlKc9o0e6Wr2xQuy3hHUsXd0VOGkDRNY/YUBX4J
-         tSX64ssYiWI3HNfbnr54Ls7B145iigc0iCWNDlsjRO7kN15Loee6lHiVuqGzs5LI5WvJ
-         koniOC4O/B2mS5GyFHdrZeHqzf9BwZegWq1lAloxr/aQ5/zBWNFsSAOkdTrzidjVhvhK
-         yXldY3WjYVpbFBqCCZtfKzOVuRPHrvV/sw7Nk4PQWxRCuEPbA63mnV+vR2tiqynAD0E9
-         qnsV34NEMkhM5c3DVIzflw02J/HyL1V9Lm0vvi0eOwJuyFzkmAY5SjhmX/rDq6DOCdaD
-         dXqA==
+        bh=tlh3rnxfJkXfV5KarGkZfL1Q3S+pBYhT9xp1RWLyIIQ=;
+        b=bEEAoVJW7hBeKuLwerY/7vNXT8Lv95w9Nbaqc4P77hDC8MLllq8kJFiMDNiasGZJ0h
+         Qgp9usvixjWO705BEnrowjnONvPkDS+kPFWKuZKg2g9xdfDzwIaOpgo8CwFwX1s9dV3I
+         KhMRw8GZChLzhgeYGapwbWjYAg5QMhIjObzaEsSNj4CYeSNrw1hculAftkiATSum6/BR
+         YOd4PyuKYNbxaAiBrIJ5/5rdUXIOAwisiydCHfPG8sZH3Re/WX5XofVK/p0IWhNGGc51
+         bzDEsl8mgueo3YuNxmUcdMy+bEzttvkTdbh1DI51BkjdYrqwOXhbhyn9TWH6sPU1+kgy
+         pZbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785330015; x=1785934815;
+        d=1e100.net; s=20251104; t=1785330198; x=1785934998;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=FQuLxiXgQrlaPB545yvWNYECiZsH/JayHHgnDnwTqzo=;
-        b=olsHa+uO0kyHYKfOixHOx/PvDGab7nGxIHXNomYnDI+pfkQycUBuDD6SPe3hiTfrR+
-         t3gMKd5t2433KlTqFYXv2bDJbcc31P442KVa0EFSUKyC7WuEYg5cobn59n1ip/Hh0UvG
-         pjlF8p2h7EeYh5s8g9BiSq69EmLa5ooZAKLjNL6z9lvBJuLijJ/86321yGXndTQFvf3j
-         URK322i16PKveB/+wdTubhBEOcaY0yevnjiqO2lJl5evkcVNFaV8QW2px5TglN6HUkDU
-         shNZy3r6gjuTPK1elauqdkXby+8Kf0EB+MUTNaEgPi+MVrLB3VjJMyiMBWDaIbwYBeLl
-         pSUQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrZWpZv9b04ZRBuRK+JHlUg6doLMutjMscVaWDX0m8AmdMYZ5RYPfI1B1IwKSv5QKXmQqre0N7w7b62ePJKuV9WFvOY@vger.kernel.org
-X-Gm-Message-State: AOJu0YztryKsBnHDvBq8qBjjlkxIv6OrAFvngVH7FDSumq3uu0jsXpAr
-	9T1BL2yQaDJ3Sv4fUDz8A1/bMFQc1IE7OhLAPwg/T2VcYJPLYARHVvyjN56iXhA4GRzGokESV5n
-	4Rh84w3uZwcILwouAKCxs+/aT1Lf3mjG+PoGtspXZqLn5bP08sc78JwMvbGibcOcSOT/ZN5K0E8
-	B8
-X-Gm-Gg: AR+sD13fsDhwXcHObxPfcQhNxNxC+rnRzyeieRsyplMW0MwcY3QHWfUVNwoFRtT+W7Y
-	3mhgViNNFq5UrVtwNmXEtAxQRuFM1uHOrak439++TzuC04wdlwa3YGRYFmhAVrgBziSzNkFmqXR
-	v+qzctTv6GtfkGyEw4z8brfaPeJ/cExNJDEq303ZFyysiDjXhyQyJEz4zRnYSRjH1TFFe5N/BD+
-	wCnRxjL7iNoQ09qyRMqlmzDlDXA8frJf5J1nbW2YcTIvyoyQNUhx+1A03IRKyTev/8p4m7LgevQ
-	3+ZMaehHDJftRvqqumn5IyWZ2MCfJd3AX7HD56tLu/6Dg6slWXsLQRgSDeMmp0o58/2Eu4te2W4
-	iI07bFh52sU2il8287p3xubh6VYBLI5suEgDHReBOG1U3mkg/T1Fo5iViuPB0NuDxtn6BW5pYZ4
-	6VAOddottwkYBz
-X-Received: by 2002:a17:902:da8c:b0:2cc:7e4a:bcc5 with SMTP id d9443c01a7336-2d015d48a03mr68747735ad.32.1785330014680;
-        Wed, 29 Jul 2026 06:00:14 -0700 (PDT)
-X-Received: by 2002:a17:902:da8c:b0:2cc:7e4a:bcc5 with SMTP id d9443c01a7336-2d015d48a03mr68747205ad.32.1785330014098;
-        Wed, 29 Jul 2026 06:00:14 -0700 (PDT)
+        bh=tlh3rnxfJkXfV5KarGkZfL1Q3S+pBYhT9xp1RWLyIIQ=;
+        b=g35bSvW43nod+c+s5pDzMbOJjRxWYMb0UX5X1payKIxdbi2opgXe05uJ5DwbA/JN6D
+         AuxrWl5puSlg9RI4g69zeXF9LHcsPUHGTTienayXBfPBhWful3CdA9Y5QyrvIq2kpFlh
+         xeGfynEtijSgSjvs7iXlYPBe6ZaetmJe/eCAZBzxOMzkRYBnU6WkkRo7VwFvPvaxiUhe
+         WVhjEVT81BXUo+EpfilSFToSSktKea1+jS8nxAR/rHcWy/65mbZWOh6JXPILEBzgfdoY
+         SgQMA0APcLfKw4rXI9OyXPe8vZqAvCqV51EvcYC/4qXTYq4ObVDL0RzSHdY3IhQC2WUv
+         zPRw==
+X-Forwarded-Encrypted: i=1; AHgh+RoGPuIU5iHxbmDZASPIbHcmGXtqmQSEq8gnQrcIr2UqvvgMXnvykfI+rWEcKYYfad0IEXLjeus3rCFfBh9aCeQeTreK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRZ4lZJdLMmThFZDKmUiET8vVLodnp2i2QXfaVu4sMTzo4OzMQ
+	3ziUfE3GQSicktZPpgC6Zsz0slEYWYA3qMH615QWxJWmkXDGjJZIASg6Cfx73YMEqONX/MHI6y1
+	0ZUEAXeVvg74iyJ95kmWw4l+cf/+pRl5zQmv8VRiAWT2bmIWYXjMF2Z4UInoLLU8g2XcjaFB5nP
+	U5
+X-Gm-Gg: AR+sD12zZkbFJmqpjaWxN3qCLhQB2eRKjEcAStlSucjzhxZDS1MBhb1XdW/bXFoKuZ7
+	B97cJDY2d0156ubLL8/8k43Lte5z4Hr12rCtV9wt2mDdp7QRkwW4kFdf1w/xd3bj28m9COyh70C
+	05eM8NaX+fwouPq+JiIkgYTxpLn+ya7RXKgRoR0y9kizo8KbI1gB41qqA1wH4X0eYmEHcff7ea9
+	nxsf7onMD57xKqdYl9XFrSP4YDOpr5f4qBOYn//Qhlwm7+K5buqg7Dwh5t/1Ju+as9nBBYlnVF7
+	uXpDQk/ur6VyITV1PQdPv8OpQSbZTCvPfOGL7k8oPuAP94b3P7c1CjQeINLMc2ferPUnYBWmb/W
+	r+VBM5ABNtrvq0WmdLdKh4g59j3IqCX5bOnYX16kLUAbvVD4njQhw8VMzAJ984hFoYxfMScZssW
+	M3Pi5zRVyqNO5K
+X-Received: by 2002:a17:90b:55c5:b0:366:3517:1aa2 with SMTP id 98e67ed59e1d1-38f6a1b8aa0mr6429836a91.0.1785330197194;
+        Wed, 29 Jul 2026 06:03:17 -0700 (PDT)
+X-Received: by 2002:a17:90b:55c5:b0:366:3517:1aa2 with SMTP id 98e67ed59e1d1-38f6a1b8aa0mr6429771a91.0.1785330196459;
+        Wed, 29 Jul 2026 06:03:16 -0700 (PDT)
 Received: from [10.149.71.180] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d022a1586esm11028135ad.12.2026.07.29.06.00.08
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38f642bfc71sm2710478a91.11.2026.07.29.06.03.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2026 06:00:13 -0700 (PDT)
-Message-ID: <587a9ac1-dd81-4f88-ad6a-c9cad03ac0c2@oss.qualcomm.com>
-Date: Wed, 29 Jul 2026 18:30:07 +0530
+        Wed, 29 Jul 2026 06:03:15 -0700 (PDT)
+Message-ID: <95133f63-c7fa-4c68-9db0-2123cf754f50@oss.qualcomm.com>
+Date: Wed, 29 Jul 2026 18:33:09 +0530
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -91,9 +91,9 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: embedded-controller: qcom,hamoa-crd-ec:
- Add qcom,tsens
-To: Krzysztof Kozlowski <krzk@kernel.org>,
+Subject: Re: [PATCH 2/8] platform: arm64: qcom-hamoa-ec: Add SoC junction
+ temperature reporting
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
         Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
         Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -106,116 +106,150 @@ To: Krzysztof Kozlowski <krzk@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20260728-ec_add_more_commands-v1-0-771abd65ee1a@oss.qualcomm.com>
- <20260728-ec_add_more_commands-v1-1-771abd65ee1a@oss.qualcomm.com>
- <b7a45a38-008f-45e1-b138-91ca34704bde@kernel.org>
- <d1af3fcb-f2cd-4e37-b1b1-d8caff984c84@oss.qualcomm.com>
- <e9dec9e9-afcc-45a1-9d52-2c4ff34958a0@kernel.org>
+ <20260728-ec_add_more_commands-v1-2-771abd65ee1a@oss.qualcomm.com>
+ <94081897-2e6a-4c8f-bd95-1961ca843478@oss.qualcomm.com>
 Content-Language: en-US
 From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-In-Reply-To: <e9dec9e9-afcc-45a1-9d52-2c4ff34958a0@kernel.org>
+In-Reply-To: <94081897-2e6a-4c8f-bd95-1961ca843478@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: sS_OJppXLYQ14EPmR58rexZo5l-eKvyA
-X-Authority-Analysis: v=2.4 cv=Id+3n2qa c=1 sm=1 tr=0 ts=6a69f960 cx=c_pps
- a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwOCBTYWx0ZWRfXxqGIfqIXqKSl
+ R/0eN9hjYGQUHFNrSM5gYtYlLDJA/p+axFSh1H/i37NjLrYa2dteqRpk8v5tbywyH6vwETKbhIt
+ asw9jtVbE7trNoEGhKFZ9MecxZQLgDjiNsoyo9nN2S+NYdMpxEQhgiXnWa4kGezTQyAF7IZ3TW5
+ oMyrh6t0Nz3JbBEHrd1/sskIK5aLI8Wklgvnx2Xd0UNcKY2XfTVI+CWt8SrNfQKK50dRVvIPMA5
+ n4Te6WgnIHZXXOGYs4MrggvbZVRO0VKej876QPmU5iZSRmPFjhVYDIs7kBWXqSK4aTCLuie7KF7
+ bq6AOoz/NpfTsW5TPDhzjtoylkTNk2Vf+uKDUPSGRmBmnQFctKacsFhkAAeHYmlbbhh1WuX+QLk
+ 40PLesuAhP0stFbwxElbootB6CAmaqf7CO//x+AwNwSGHzJ3oAG9smfmZbHrfrU9nXTZoHeVMGg
+ zloVH515QLTP2H2Udnw==
+X-Proofpoint-ORIG-GUID: 8xRb98xb_C6dPgFAsK4j5P4nrKB03VDP
+X-Authority-Analysis: v=2.4 cv=EOw2FVZC c=1 sm=1 tr=0 ts=6a69fa16 cx=c_pps
+ a=vVfyC5vLCtgYJKYeQD43oA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
- a=EUspDBNiAAAA:8 a=88PRl8AvwKtk7Un-c6EA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-ORIG-GUID: sS_OJppXLYQ14EPmR58rexZo5l-eKvyA
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwNyBTYWx0ZWRfX2X0kOTGYULSj
- rh6D14UjAWrR6OoV8s2Fa3AmwbS/OHzU7b74Fyz8yA1rIXyf8DGyyknVJ0irQNzwVqp4Wn9YhPp
- NMhEXe7qwVNqR1zS/DJHYCPyBUTmsYM=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwNyBTYWx0ZWRfX4JqIquXTPfgi
- 5xeIJR7ehaFzyuTXunwUPTyG/rViIFns90HCrUVJin4VxsxavL2yGq+lbSN2hA18tli6RxmMQ1O
- utPuKFDZuOzyqr6LMAsMwxYHHW9hSnTCGmbrDqrXZdiAaJMsZuOAPAMgF5OzdopQdCj8POJZAj2
- 59+ngiGtz+JTQ3Ek2xFmbMEYROlGqxFoH8GlOmbJkIGR5lTEypeXhSLnCuahx7lo0feDsELY6vi
- qUwmQHrHHBAVP+ltMUxsh45wrw/P1fJy2bmtjaKGiAIwM1qdsbtJCvZNn5dWChsShXx6m3cFA6y
- twMkbyF8O3twTms1ow/6nFezfBLwrs+AFiG5ubmPtmxgCVwwB9eF6I5UhfwaCIjTWyWAzzrt6rl
- D44++zgE6cFOWufcpcrmMm6iWBBdbH1K5nHsd9Vwi/ea6oUvW+FricCBgv5u7GKXKp3BauMgYJL
- TWB+I1HyjcougT8wV0A==
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22
+ a=gdiicE2fkixeoH3Uy70A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=rl5im9kqc5Lf4LNbBjHf:22
+X-Proofpoint-GUID: 8xRb98xb_C6dPgFAsK4j5P4nrKB03VDP
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwOCBTYWx0ZWRfX3TLDBPEf+VB+
+ HnepRnLlFWvupLP4WU6BJkDwvffjY4RrUnaFuKvb28+P5DrUnC6HtXm2jhoYmmTYHjS2KFORUo/
+ 3QR4Rq8002MihTfITFDw3ge/18TLklw=
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-29_04,2026-07-28_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 clxscore=1015
- adultscore=0 malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 suspectscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290107
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290108
 
 
 
-On 7/29/2026 6:02 PM, Krzysztof Kozlowski wrote:
-> On 29/07/2026 13:54, Anvesh Jain P wrote:
+On 7/29/2026 4:29 PM, Konrad Dybcio wrote:
+> On 7/28/26 7:44 PM, Anvesh Jain P wrote:
+>> Add the EC command definitions and handler function for reporting the
+>> SoC junction temperature (Tj) to the EC.
 >>
+>> Discover the platform's thermal sensor to zone mapping via the
+>> qcom,tsens device tree property, average the junction temperatures
+>> across the mapped zones, and periodically report the result to the EC
+>> over SMBus using a delayed work item. Serialize this and the existing
+>> EC command sequences (firmware version read, thermal capability read,
+>> SCI event control, and the SCI IRQ handler) under a new io_lock mutex,
+>> since the delayed work item now runs concurrently with those paths.
 >>
->> On 7/29/2026 4:38 PM, Krzysztof Kozlowski wrote:
->>> On 28/07/2026 19:44, Anvesh Jain P wrote:
->>>> Add the qcom,tsens property so Hamoa-based boards can list the tsens
->>>> providers, and how many leading sensor IDs on each, whose readings the
->>>> driver averages to compute the SoC junction temperature reported to
->>>> the EC for fan control.
->>>>
->>>> The generic thermal-sensors property has no standard semantic for
->>>> selecting a range of sensor IDs from a provider without enumerating
->>>> each one, so a vendor-specific phandle-array with an explicit sensor
->>>> count is used instead.
->>>>
->>>> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
->>>> ---
->>>>  .../embedded-controller/qcom,hamoa-crd-ec.yaml     | 31 ++++++++++++++++++++++
->>>>  1 file changed, 31 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml b/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml
->>>> index c07483aa5937..ec809fcd03ab 100644
->>>> --- a/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml
->>>> +++ b/Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml
->>>> @@ -33,11 +33,40 @@ properties:
->>>>    interrupts:
->>>>      maxItems: 1
->>>>  
->>>> +  # A generic "thermal-sensors" phandle only identifies individual sensor
->>>> +  # IDs, and thermal zones are a Linux-side grouping of those sensors, not
->>>> +  # a devicetree concept the EC cares about. What the driver actually needs
->>>> +  # is raw readings from a contiguous range of leading sensor IDs on each
->>>> +  # tsens provider, averaged together, so qcom,tsens pairs each provider
->>>> +  # phandle with a count instead of enumerating every sensor cell.
->>>> +  qcom,tsens:
->>>
->>>
->>> What is the point of having internal review and then IGNORE that review?
->>>
->>> NAK
->>>
->>> Best regards,
->>> Krzysztof
->>
->> Krzysztof — for context: I did move to thermal-sensors after your
->> review, but Konrad separately suggested keeping just the provider
->> phandle instead of enumerating every sensor cell, since we only need a
->> leading range per provider. qcom,tsens was meant to combine both
->> suggestions, not ignore yours. Happy to instead just go with your
->> original suggestion and use plain thermal-sensors, enumerating each
->> sensor — let me know which you'd prefer.
+>> Re-arm the periodic report on resume and cancel it on suspend to avoid
+>> racing with the modern standby transition.
+>> ---
 > 
-> How does <"thermal-sensors" phandle only identifies individual sensor>
-> and this phandlel does not? I see absolutely no difference thus you
-> duplicated the property, which I EXPLICITLY asked NOT TO during internal
-> review.
+> Missing sign-off, have you run b4 prep --check?
 >
 
-Fair — there's no real difference in shape, qcom,tsens is still just
-a phandle plus an integer cell, same as thermal-sensors. The only
-thing that changed is what the integer means (a count instead of a
-sensor ID), which isn't enough to justify a separate property.
+Thanks for reviewing my series.
 
-I'll drop qcom,tsens and go back to thermal-sensors, enumerating
-each sensor ID explicitly, as you originally suggested. Will send a v2.
-
+Ack, I missed to add sign-off while splitting the patches. I verified b4
+prep --check did pass clean here. Will add the trailer in v2.
+> [...]
 > 
 > 
-> Best regards,
-> Krzysztof
+>> +	mutex_lock(&ec->io_lock);
+>>  	ret = qcom_ec_read(ec, EC_FW_VERSION_CMD, EC_FW_VERSION_RESP_LEN, resp);
+>> +	mutex_unlock(&ec->io_lock);
+> 
+> Does it make more sense to simply stick a guard(mutex)(&ec->io_lock)
+> at the beginning of qcom_ec_read()?
+>
+
+For this call site it'd be equivalent, but a few other callers (e.g.
+qcom_ec_update_profile_from_power_supply(), qcom_ec_fan_calibrate())
+hold io_lock across multiple qcom_ec_read()/qcom_ec_write() calls plus
+state checks in between, for atomicity. Pushing the lock into
+qcom_ec_read()/qcom_ec_write() themselves would self-deadlock those
+callers unless their outer locking is also removed, which would then
+narrow the lock scope to a single command and break that atomicity.
+Keeping it at the call site here for consistency with the rest of the file.
+
+> [...]
+> 
+>> +static struct thermal_zone_device *
+>> +qcom_ec_sensor_to_zone(struct device_node *sensor_np, u32 sensor_id)
+>> +{
+>> +	struct device_node *tz_np __free(device_node) =
+>> +		of_find_node_by_name(NULL, "thermal-zones");
+>> +
+>> +	if (!tz_np)
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	for_each_available_child_of_node_scoped(tz_np, child) {
+>> +		struct of_phandle_args args;
+>> +
+>> +		if (of_parse_phandle_with_args(child, "thermal-sensors",
+>> +					       "#thermal-sensor-cells", 0, &args))
+>> +			continue;
+>> +
+>> +		of_node_put(args.np);
+>> +
+>> +		if (args.np == sensor_np &&
+>> +		    sensor_id == (args.args_count ? args.args[0] : 0))
+>> +			return thermal_zone_get_zone_by_name(child->name);
+>> +	}
+> 
+> I'm not sure that's the intended use of the API, but this is NHI
+> of_thermal_zone_find()
+>
+
+You're right, this duplicates of_thermal_zone_find()'s algorithm almost
+exactly. It's static in drivers/thermal/thermal_of.c though, so it's not
+callable from here as-is — keeping the local copy rather than touching
+that file.
+
+> [...]
+> 
+>> +static void qcom_ec_sci_evt_disable(void *data)
+>> +{
+>> +	struct device *dev = data;
+>> +	int ret;
+>> +
+>> +	ret = qcom_ec_sci_evt_control(dev, false);
+>> +	if (ret < 0)
+>> +		dev_err(dev, "Failed to disable SCI events: %d\n", ret);
+>>  }
+> 
+> This should be a separate fix. FWIW suspending and resuming on
+> linux-next/master currently gives me:
+> 
+> [   43.754787] geni_i2c a84000.i2c: error turning SE resources:-13
+> [   43.754811] qcom-hamoa-ec 3-0076: Failed to read EC SCI Event: -13
+> 
+> Konrad
+
+Agreed, will split the devm_add_action_or_reset() conversion into its
+own commit — it's an independent correctness fix (also disables SCI
+events on partial probe failure, not just on remove()), unrelated to SoC
+Tj reporting.
+
+On the -13 during suspend/resume: that looks like the SCI IRQ firing (or
+its threaded handler still running) while the I2C SE resources are down
+for suspend. Will dig into whether the IRQ needs to be quiesced/disabled
+around suspend/resume here and follow up.
 
 -- 
 Best Regards,
