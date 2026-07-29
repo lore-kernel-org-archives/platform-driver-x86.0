@@ -1,46 +1,46 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011035.outbound.protection.outlook.com [52.101.62.35])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011055.outbound.protection.outlook.com [52.101.62.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8934C9003;
-	Wed, 29 Jul 2026 16:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292A64F7988;
+	Wed, 29 Jul 2026 16:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785343274; cv=fail; b=ZML4Kh/1StowQXy4kiL9NlkEX8F+OfXV/HvdbHtMUnsaptOIaERW6wr9Mj8OLsWwDlZJa+u1VTQ7xyKTIiRq3YJP+DR4xsU5oAgUS2/9HbIa4H/eI2KfhtNtvAWvPYhZz+AFbYKszo/6CSIttgiir++L61C1zJSCHn6OoKqq4MA=
+	t=1785343278; cv=fail; b=pPT6NFxUGV/IIc7HMW59pIY7rbt6lPiiywi4f+dLTJkXJIYBQO4xHBPQznPA4OPi/7RhTa7unMuL0TIRHyimZiIxgAhKLPZeSLtwdnI8U8siH59zYe30b6a2xDRZsRRakKv0hBl1CudDRviqpoLiq9f/Olf+veu/KopN/aMpO68=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785343274; c=relaxed/simple;
-	bh=GmjXB+XuoIwoIGqXlkV7sfun6nsUFb9hdlEW1HL2jT0=;
+	s=arc-20240116; t=1785343278; c=relaxed/simple;
+	bh=WmdUPJCLvbiLOasH/JSEcupErSMxhree+KaM7zukuhA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ptmel2tlg6G2bHcBYvLKGHsAb2g3MLRLD8KypADMs3XXcI3LamG90l7FSMx+oSX2CCaaRgr2/o0pV/lfwo8jAj0TCJGEPSIOCt2elU5KvvUy5mIcBLpI8G3nmbVZkGQM6fZzDE+jxZm3n+6YZ5q2K3JGK46H8rvrtL9+1+SYXaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SJ3Qbb0E; arc=fail smtp.client-ip=52.101.62.35
+	 MIME-Version:Content-Type; b=cA4B+C7UFEQPMxxcfG6VF2BVwpRwbLxLVTFDdRlqqF/F2k9zdw17DsD8OngAVLfYSIqh/NO7VeadtuwQ0Lp++jVBY12wTGPAkBH/8zc0bN2gVNW5pFSJwPks+hNpRYtX0vaGZ/h2P1HZJoIcaJsXFXBpWLJdPUwL2cItjE1FRC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2Inja/0X; arc=fail smtp.client-ip=52.101.62.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SJ3Qbb0E"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2Inja/0X"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w6RG+YMYRkFtEaV1ZlpdLuOyNJI5/mp/011BxVqlBxJGm63+i7CvufNja55QAgBYmENewuTCpkhAQo94iPfRpkWK3uMRo0w0wEyg3Ez/seQdI+kWUKmpN60OzPImt/Hxdqz8/bpdUYpSnGWn7QO7CW1LPypBNV9AgOQPraubocMeyHoQd5WT71+lPTMBwAq9dhqSK0b86nsC+gP7CCO6AExz4E0MdhWt/uZe/v8SrZ1KuK1/3Be04xkpI00M0mIiK/iM4PDnS+95UmrEyKo8RAXwKSLgUj9wz/MsUKun7HXQ5veCkeeHXs06dPp1mOkXw/ipgoJx28Kt/89afQKoOw==
+ b=XAm+iFtgAEw/fiLlaGGi1Yjhq+xYe4atj9UnF1OKTtIvjlv6k8CyM9L0JxmL/mUBDOK5RL/av8Xl4ZOxn6qxI6PG2O5RUsQPOj+wYvUYLyHa+AbwTIImo9MYX00vUkTX6viAZfb/BDzBh2v/heKyzvFoVHt9fGlYKdAE6VlYdn8+ovhQQPp4Ec+8kMO7ickvxPLJWG6s0YfmS3CGoQC0h3nDl38WbAJdx9r2SeD7IonGu5/iN9sHXfgnhcEc9ar+HGjuBYxu7UdN8XsiU2b1iziaUjeINYNSk4gmmn4GvzoY4B5AMvU6VV1ezSDaKsWMCf4eglul8Vn8ffjKBo0XPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=frkM4vY6tBOxKiako92SMt2iSy7FnqmF+Fu91mL6nxI=;
- b=cU/Jw6Gi8vIm89WKkuSrjjSifQ9SRVSGzETkfrbXQ9oLrg/2ICVT8piqH0AX/HwsftbEoNTZp+0rholG9EGoruO+k9pIWvngH5LeJXUvHXKJlZTOfgAd2/4Ke+drKTLK6x6rpsRB0f6J6BMpk53q2kr07f5hJoiURKBPK3EEv/yDi+X5QUCXyrJlo+beVT0oIwE4BQrbTWd9NRhBDucwvQB/JX+1+Tz5ziTNh3WLyrWS/Qe+Wf6+6M0p/INYY9V7Q+ZqJnAljNeKXfsKfFZfHNUrOTYXeTcNG14DGSuIZoLo3KiRTxFbXrI0ito0W8GNy7frGn/xttFQuoRKf6U6gw==
+ bh=M87YGwDsLCx7sEBZ/rReMjcFJKIxIDHiZkfbSTLIWSQ=;
+ b=dzNij0NTg8AGpkMm2HZg1rsQpTYLxwHAIgn6lTp3nQo6ZGsieqv9ndODvqM9Gd+iQovfSY4wpVRyvDvbSqxfgXTtOA6MZcMrbWNaiYeMc10UqpwI/LJ1dW3fVrOKPF491dxDrBSQkRN83swv/813jdZ9NH603UDu/TnjVvfx+MNoWC7s9XqXayq5393sGaKGgJ9oy7DPNJp2IESlEGZsG+R2WaP8ai2j99SxQ4Xc8SSIDpUu5dHwDWGWemDJ6Zz6UNFbyFnc+2pjyewnVYCcpqQKFhq3bE1bjP1KxCtKTgHPjFpLacn/B8svulxlusZ+D5LhZOUHKB8EOsS/Es268g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=frkM4vY6tBOxKiako92SMt2iSy7FnqmF+Fu91mL6nxI=;
- b=SJ3Qbb0EUh2BrdZrNPf1IO2MhVbCe71+QOBUMvOgp27vmKCghCoTxwr9IlZi/BC7WQWTCpnEFQPNvkxP7NRWx/gIZobdem7nmIMjPvcpbshvJ4YRD32HZNj1fK1Iz7k6TjJhWeRYn0AVKgCphXJs+ecy715EQunuk8GPv0kpoaU=
-Received: from SA9PR10CA0013.namprd10.prod.outlook.com (2603:10b6:806:a7::18)
- by SJ2PR12MB8953.namprd12.prod.outlook.com (2603:10b6:a03:544::14) with
+ bh=M87YGwDsLCx7sEBZ/rReMjcFJKIxIDHiZkfbSTLIWSQ=;
+ b=2Inja/0XjZaojLxoBPgepMMDirJcM7bqgwwjV5mEfz/9DUvrSoY7Kg1SNx6FbvwVHHRO/7efZ3Od0Y5eyTxafEUiagNWuYs9N++N5dR45R+JPv7JLKl/ymlZVkCujURT/BehoAMyp4sPeXebZXv8ZJrZNKqXYwF/U3fpHWldNqo=
+Received: from SN7PR04CA0009.namprd04.prod.outlook.com (2603:10b6:806:f2::14)
+ by PH7PR12MB8825.namprd12.prod.outlook.com (2603:10b6:510:26a::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.13; Wed, 29 Jul
- 2026 16:41:05 +0000
-Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
- (2603:10b6:806:a7:cafe::f) by SA9PR10CA0013.outlook.office365.com
- (2603:10b6:806:a7::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.12 via Frontend Transport; Wed,
- 29 Jul 2026 16:41:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
+ 2026 16:41:07 +0000
+Received: from SN1PEPF0002529E.namprd05.prod.outlook.com
+ (2603:10b6:806:f2:cafe::20) by SN7PR04CA0009.outlook.office365.com
+ (2603:10b6:806:f2::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.13 via Frontend Transport; Wed,
+ 29 Jul 2026 16:41:07 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,20 +48,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SN1PEPF0002529E.mail.protection.outlook.com (10.167.242.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:41:05 +0000
+ 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:41:07 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 29 Jul
- 2026 11:41:03 -0500
+ 2026 11:41:05 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH 5/7] platform/x86/amd/hsmp: Add SMN read IOCTL support
-Date: Wed, 29 Jul 2026 22:10:32 +0530
-Message-ID: <20260729164034.1331375-6-muralidhara.mk@amd.com>
+Subject: [PATCH 6/7] platform/x86/amd/hsmp: Add MSR read IOCTL support
+Date: Wed, 29 Jul 2026 22:10:33 +0530
+Message-ID: <20260729164034.1331375-7-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260729164034.1331375-1-muralidhara.mk@amd.com>
 References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
@@ -77,158 +77,167 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|SJ2PR12MB8953:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e3717d6-76d3-4b21-bd49-08deed902f2a
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529E:EE_|PH7PR12MB8825:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb5c7482-f747-4eb9-6fad-08deed903052
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|82310400026|376014|36860700016|1800799024|6133799003|22082099003|18002099003|3023799007|56012099006|10067099003|5023799004|11063799006;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|23010399003|36860700016|6133799003|5023799004|11063799006|56012099006|10067099003|22082099003|3023799007|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	1wBv1OYRFgGIiYMudojJUvY+XKslhueDzxlY6XfKGituaL088o0Jy21JvJ22WsJwkluLyxiFDfpsshZ+7Wl1tCh7JHPziLng5zqXjeutO0cdP9sEW/SZEAYaqDvmc4IOGmg7tQDbV/ad9/plASPm5pxlCR/Q1T8NBXWc3VT67VPnRCwEExjLCikkjX/SR6Y+mJx5MAi80gpXV1WjUjJLJufXDmzVF3gl4xjErHJQ6vOIIzAEwEgBzxPUb7Fmy8yBhbEXG5jX43qpGFli8Ya3bbtSWkZfHyxVE1e6dhzPwf9LrATuRgHDgwjbJWd7aC5ot8afr418fE2jKKcIs2fnCh0ddfXgjuS7jr7vSLeojYeNYJIB47+CukAuq5bsTEIYr3Qx2mj1kbWjGY82TeTaAq4jWcArznyi6LbuFgyK+8YlmyF3abMOC09aWLism4E/au5UYOPHy0Bz9LvbMY5VLKWobdgo/uNSHQc8louqQe0gAL1NH5w0470trekxif5g+bz4Py0Ww/HQS3LETQN0YHB9CbLdeHLZXA5he8WR7vyNfylAx8deV5sROsyptJs0BqTKPNPEFbl566WGZG8Ey9PZykb2XRPpADm2SG9f/KGS+r4cIP+GdPaTEBMhzZr2sZZMwqgJC9TUrS97I78Uvq2ZGkoI/MGi1jWcZ0YGXCwBNtwHjySzgEeRskG9hbfSUoybBhgdeawjF0HRi6qKDQ==
+	tsyKfwvY0bDKIDrArg7W6aQ2mA+CWqCrklQhWpjCrpwlDosnHG+TZKcWVJBhx4ba4F9jPaqg1OtgFs1jm05wgUmuXzjHFNvlks2PdIVe2mMFiYKyOhL5/padXBoaj+nN6LI6bPC/gSx8x0qpcqmQgWP1kO5WC4O1mWOdnXoCpTlJ/fomXhM7pzedDHsjhG5mb2iTbYNzfmbhRjqrPFJr8kzxVfQby0quv80qxnHgpPzUc7muPsaM6LsOVgj1Yb1uf0RMjNJCpt3a0y77pYNz5+5u855ojoCsTq44rWF9b9Ff0oIF9O8L81PCVDaZ5exavIhMtQkQ2hX9dM484OKZf6+dF5qHip+eJ7IYj8ykaylQp94ZSTju9SGCTmaH7LAiw04JBnLrZEOZqOxpenO6sO1oxESe7TsnGhPJyO4n1iAJQvKoB0Z1uiMNoSSmCM0xfq7WBnYZ8jQemelyj9JR5Xe/O2js9hh7pO/dlDkmmeQosvTjpeNH7Hwib3p0qcJTodznC8F08K7An35X568G2hdamK2404PNi6kquuTJ2ZwOE22KKzOZKn64jh/B+qgNIEn7EumKW8c+EnyePOUVbMz7APzu6GeCpuxMSNLcQQYgD49nrISsmk57c+xYv4Cgp4WbIZAfG5NVgRHGqWbCMGiCtFNVhDQv5y5nO2tq5dsGC1ZXi0a+e0MHl0QLyLgW0cL32rlOxJPp2IlMMea2mw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(376014)(36860700016)(1800799024)(6133799003)(22082099003)(18002099003)(3023799007)(56012099006)(10067099003)(5023799004)(11063799006);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(23010399003)(36860700016)(6133799003)(5023799004)(11063799006)(56012099006)(10067099003)(22082099003)(3023799007)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	4CoUTKSC2lcT3Ioz0ogwF0H3w+s486gUpJI8wGaX3Y2XZAg8lBwc/w0JPb6Yu6+eFKYRobNEn8WLSOl5jXgdiKLdnA1J6QLxfqHgyMFMWgRNprQRWPf8bwVamyYNhZ1p3Gptv4b2Jshdc1+7VjGxSqzhUY4NjUGHTP67ipABHG2CRFzwe2vSx+xF3vmExlkqgTCKadFanVhImmrPzuXwmL+gxSLbqfVZuM8GPKL9cI/Ij7jCQUeQ/1ZLlVcpKybep7b1CdonbgiyCizxBzgFWrY5MAxTJiXb7/TLOTanupXgieIPckZorgkLkQ62kZA/nWMTL5wk2yQAq/n2Myw0VZCamwLVBqH6hxh98ewELH6s7fnZOaSPHJGoKB5xowNJIQNJar3lYC/RzEJu4HI5RjpOXJ48PL8YERYaEJ6+BmhUywzB69+7HqEhHPDUl/jj
+	9IyRzGT5pj8zuo/NveoLBBCZsCYdtwNebT6Q3Z9md3c3LWy5b47UKSmBomN3zOSAeOxtobK1N/TCdVx7dyU3QnVj/Aqd5UHL2BLa4A6QAyN8m+2+Utqif6NO4hpxCFa+XKwB4BCPcICLPQhL2nGnW5ntilbJZFhRWBjc3vG2tv9+jAmAX8edLM7j3HOx6ZJaFPVEtOtqWp6yiWPHNIJILgZIRObbo9xDzWZSZzzcyOePTxSCrVViOThp7Fn3r0XnSAhbL9wt7wq6KDz2XTitsTp4Sd9mJpDKWNfFmopMouZsPIAxffByK3vJ+YB3oP9RIPGwiIXiWj14kwC97+Q/XxifSnwaPaYpn0fHxlglUKF3e6xOOPZm3buoG29szYMTOZWvCOWmI8aXbXjoo6k3EPEBdIUGVa3aglvHPJuXib1EHExOfEoT1fsxzOJm5KnP
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:41:05.4931
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:41:07.4356
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e3717d6-76d3-4b21-bd49-08deed902f2a
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb5c7482-f747-4eb9-6fad-08deed903052
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A1.namprd05.prod.outlook.com
+	SN1PEPF0002529E.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8953
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8825
 
-Bringing up a client platform means reading SMN registers that the HSMP
-message set does not cover, and today that means either a debugfs
-interface that is not present on production kernels or an out-of-tree
-module. Add HSMP_IOCTL_SMN_CMD so a privileged tool can issue a 32-bit
-SMN read for a given socket through /dev/hsmp, routed through the same
-amd_smn_hsmp_rdwr() helper the driver already uses for its mailbox.
+Add HSMP_IOCTL_MSR_CMD to read a 64-bit MSR through /dev/hsmp, either on
+a caller-chosen logical CPU or, with HSMP_MSR_ANY_CPU, on whichever CPU
+the ioctl runs on. The read goes through rdmsrq_safe() and
+rdmsrq_safe_on_cpu(), so an unimplemented MSR returns an error rather
+than taking a #GP.
 
-The ioctl is read-only. struct hsmp_smn_message carries a @write flag so
-write support could be added later without changing the layout, but a
-request that sets it is rejected with -EPERM regardless of the caller's
-privilege or open mode: an SMN write can have side effects anywhere in
-the SoC, and nothing in this driver can bound them. Reads still require
-CAP_SYS_RAWIO, because even reading can touch registers with read side
-effects.
+This lets a tool that is already talking to the HSMP mailbox read the
+few core MSRs it needs to interpret what the mailbox reports, without
+opening a second interface and without needing the CPU it queries to be
+the one it happens to be running on.
 
-Every field of the request falls on its natural alignment under the
-surrounding #pragma pack(4), so the struct is a tight 12 bytes with the
-same wire layout for 32-bit and 64-bit callers, and the reserved byte is
-rejected when non-zero so a future kernel can repurpose it without
-breaking deployed userspace.
+Like the SMN read, the ioctl is read-only and requires CAP_SYS_RAWIO.
+struct hsmp_msr_message carries a @write flag so write support could be
+added later without changing the layout, and a request that sets it is
+rejected with -EPERM regardless of privilege or open mode.
 
-The handler takes hsmp_sock_rwsem for read across the bounds check and
-the access. /dev/hsmp is a singleton character device that outlives an
-individual socket unbind, so an ioctl on an already-open fd can run
-concurrently with teardown, and remove takes the same lock for write
-while it tears the socket array down; without the lock the check against
-num_sockets could be made against a count that is already being torn
-down. The copy_to_user() is deliberately outside the lock, because
-faulting in a userfaultfd-backed destination can block indefinitely and
-would otherwise leave a socket unbind waiting for the write lock. This
-mirrors HSMP_IOCTL_GET_TELEMETRY_DATA.
+@value is placed after the two __u32 fields so it lands on an 8-byte
+boundary, giving a tight 20-byte struct with the same wire layout on
+32-bit and 64-bit userspace under the surrounding #pragma pack(4). The
+value is staged through a u64 local rather than read straight into the
+request struct, because that struct is packed to 4 bytes and its __u64
+member is therefore not guaranteed to be 8-byte aligned. All three
+reserved bytes are rejected when non-zero so a future kernel can
+repurpose them without breaking deployed userspace.
 
-The user-controlled socket index is clamped with array_index_nospec()
-before it is used to reach per-node data, mitigating Spectre v1
-(CVE-2017-5753).
+A caller-supplied CPU index must refer to an online CPU, and is clamped
+with array_index_nospec() before the IPI that carries the read reaches
+per-CPU data, mitigating Spectre v1 (CVE-2017-5753). The CPU may go
+offline between the check and the read; that races harmlessly, as
+rdmsrq_safe_on_cpu() then fails.
 
 Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
 ---
- arch/x86/include/uapi/asm/amd_hsmp.h | 34 ++++++++++++++
- drivers/platform/x86/amd/hsmp/hsmp.c | 69 ++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
+ arch/x86/include/uapi/asm/amd_hsmp.h | 39 +++++++++++++++
+ drivers/platform/x86/amd/hsmp/hsmp.c | 75 ++++++++++++++++++++++++++++
+ 2 files changed, 114 insertions(+)
 
 diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-index b4c3ddb9d1c1..9c4ad22e47ae 100644
+index 9c4ad22e47ae..32d269e41620 100644
 --- a/arch/x86/include/uapi/asm/amd_hsmp.h
 +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-@@ -79,6 +79,31 @@ struct hsmp_message {
- 	__u16	sock_ind;		/* socket number */
+@@ -104,6 +104,38 @@ struct hsmp_smn_message {
+ 	__u8	reserved;
  };
  
++/*
++ * Sentinel for hsmp_msr_message.core_id meaning "read on the calling CPU"
++ * rather than scheduling the read on a specific logical CPU.
++ */
++#define HSMP_MSR_ANY_CPU	((__u32)-1)
++
 +/**
-+ * struct hsmp_smn_message - Request descriptor for the HSMP SMN read IOCTL
-+ * @smn_address: Input. SMN address to read.
++ * struct hsmp_msr_message - Request descriptor for the HSMP MSR read IOCTL
++ * @msr_address: Input. MSR index to read.
++ * @core_id:     Input. Logical CPU to read the MSR on, or HSMP_MSR_ANY_CPU to
++ *               read it on whichever CPU the ioctl runs on.
 + * @value:       Output. Populated by the kernel with the value read.
-+ * @sock_ind:    Input. Socket index the read is issued on.
 + * @write:       Must be zero.  This IOCTL is read-only, so a request with
 + *               @write set is rejected with -EPERM whatever the caller's
 + *               privilege or open mode.  The field is kept so that write
 + *               support could be added later without changing the layout.
-+ * @reserved:    Reserved for future use.  Callers must set this to zero; a
-+ *               non-zero value is rejected with -EINVAL so future kernels can
-+ *               repurpose the field without breaking deployed userspace.
++ * @reserved:    Reserved for future use.  Callers must set every byte to zero;
++ *               a non-zero value is rejected with -EINVAL so future kernels
++ *               can repurpose the field without breaking deployed userspace.
 + *
-+ * Every field falls on its natural alignment under the surrounding
-+ * #pragma pack(4), so the struct is a tight 12 bytes with the same wire
-+ * layout on 32-bit and 64-bit userspace.
++ * Placing @value after the two __u32 fields lands it on an 8-byte boundary, so
++ * under the surrounding #pragma pack(4) the struct is a tight 20 bytes with
++ * the same wire layout on 32-bit and 64-bit userspace.
 + */
-+struct hsmp_smn_message {
-+	__u32	smn_address;
-+	__u32	value;
-+	__u16	sock_ind;
++struct hsmp_msr_message {
++	__u32	msr_address;
++	__u32	core_id;
++	__u64	value;
 +	__u8	write;
-+	__u8	reserved;
++	__u8	reserved[3];
 +};
 +
  enum hsmp_msg_type {
  	HSMP_RSVD = -1,
  	HSMP_SET  = 0,
-@@ -664,6 +689,15 @@ struct hsmp_telemetry_data {
- #define HSMP_IOCTL_GET_TELEMETRY_DATA \
- 	_IOW(HSMP_BASE_IOCTL_NR, 1, struct hsmp_telemetry_data)
+@@ -698,6 +730,13 @@ struct hsmp_telemetry_data {
+  */
+ #define HSMP_IOCTL_SMN_CMD	_IOWR(HSMP_BASE_IOCTL_NR, 2, struct hsmp_smn_message)
  
 +/*
-+ * Read a 32-bit SMN register on a given socket.  This reaches registers
-+ * outside the HSMP message ABI, so it requires CAP_SYS_RAWIO.
-+ *
-+ * The direction is _IOWR because the kernel reads the request struct and
-+ * writes the value it read back into the same struct.
++ * Read a 64-bit MSR on a given logical CPU.  Like the SMN read above this
++ * requires CAP_SYS_RAWIO and is encoded _IOWR because the value read is
++ * written back into the request struct.
 + */
-+#define HSMP_IOCTL_SMN_CMD	_IOWR(HSMP_BASE_IOCTL_NR, 2, struct hsmp_smn_message)
++#define HSMP_IOCTL_MSR_CMD	_IOWR(HSMP_BASE_IOCTL_NR, 3, struct hsmp_msr_message)
 +
  /*
   * Client HSMP messages supported on the Family 1Ah client platforms:
   * Models 80h-87h (Medusa1), Models 88h-8Fh (Olympic Ridge) and
 diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 2326506929a4..ec11c5840b87 100644
+index ec11c5840b87..4467a0eb0224 100644
 --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -8,8 +8,10 @@
-  */
+@@ -9,10 +9,12 @@
  
  #include <asm/amd/hsmp.h>
-+#include <asm/amd/node.h>
+ #include <asm/amd/node.h>
++#include <asm/msr.h>
  
  #include <linux/acpi.h>
-+#include <linux/capability.h>
+ #include <linux/capability.h>
  #include <linux/cleanup.h>
++#include <linux/cpumask.h>
  #include <linux/delay.h>
  #include <linux/device.h>
-@@ -430,6 +432,71 @@ static bool is_get_msg(struct hsmp_message *msg)
- 	return false;
+ #include <linux/io.h>
+@@ -21,6 +23,7 @@
+ #include <linux/rwsem.h>
+ #include <linux/semaphore.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/sysfs.h>
+ #include <linux/uaccess.h>
+ 
+@@ -497,6 +500,76 @@ static long hsmp_ioctl_smn(struct file *fp, unsigned long arg)
+ 	return 0;
  }
  
 +/*
-+ * Read a 32-bit SMN register on the requested socket.
++ * Read a 64-bit MSR, either on a caller-chosen logical CPU or on whichever CPU
++ * the ioctl happens to run on.
 + *
-+ * Raw SMN access reaches registers that are not part of the HSMP message ABI
-+ * and whose side effects the driver cannot reason about, so it is gated on
-+ * CAP_SYS_RAWIO. Writes are not offered at all: the request carries a @write
-+ * flag so support could be added later, and a request that sets it today is
-+ * refused whatever the caller's privilege or open mode.
++ * Gated on CAP_SYS_RAWIO and read-only on the same terms as the SMN read
++ * above. No socket state is involved, so unlike that path this needs no
++ * serialisation against socket teardown.
 + */
-+static long hsmp_ioctl_smn(struct file *fp, unsigned long arg)
++static long hsmp_ioctl_msr(struct file *fp, unsigned long arg)
 +{
 +	void __user *arguser = (void __user *)arg;
-+	struct hsmp_smn_message smn;
-+	unsigned int sock_ind;
++	struct hsmp_msr_message msr;
++	u64 val;
 +	int ret;
 +
 +	if (!capable(CAP_SYS_RAWIO))
@@ -238,43 +247,49 @@ index 2326506929a4..ec11c5840b87 100644
 +	if (!(fp->f_mode & FMODE_READ))
 +		return -EPERM;
 +
-+	if (copy_from_user(&smn, arguser, sizeof(smn)))
++	if (copy_from_user(&msr, arguser, sizeof(msr)))
 +		return -EFAULT;
 +
-+	if (smn.write)
++	if (msr.write)
 +		return -EPERM;
 +
-+	if (smn.reserved)
++	/*
++	 * Require the padding to be zero so that it stays available for
++	 * future fields.  Callers that leave garbage here would otherwise
++	 * have it misread as a request once the bytes gain a meaning.
++	 */
++	if (memchr_inv(msr.reserved, 0, sizeof(msr.reserved)))
 +		return -EINVAL;
 +
-+	/*
-+	 * /dev/hsmp is a singleton character device that outlives an individual
-+	 * socket unbind, so an ioctl on an already-open fd can run concurrently
-+	 * with socket teardown. Hold hsmp_sock_rwsem for read across the bounds
-+	 * check and the access, since remove takes the same lock for write
-+	 * while it tears the socket array down.
-+	 */
-+	scoped_guard(rwsem_read, &hsmp_sock_rwsem) {
-+		if (!hsmp_pdev.sock || smn.sock_ind >= hsmp_pdev.num_sockets)
-+			return -ENODEV;
++	if (msr.core_id == HSMP_MSR_ANY_CPU) {
++		ret = rdmsrq_safe(msr.msr_address, &val);
++	} else {
++		unsigned int cpu;
++
++		if (msr.core_id >= nr_cpu_ids || !cpu_online(msr.core_id))
++			return -EINVAL;
 +
 +		/*
-+		 * Sanitize the user-controlled socket index against speculative
-+		 * execution. The bounds check above retires the out-of-range
-+		 * case with -ENODEV, but a mispredicted branch can still let
-+		 * the CPU speculatively use the index to reach per-node data
-+		 * and pull arbitrary kernel memory into the cache (Spectre v1,
-+		 * CVE-2017-5753).
++		 * Sanitize the user-controlled CPU index against speculative
++		 * execution, as it reaches per-CPU data through the IPI that
++		 * carries the read (Spectre v1, CVE-2017-5753).  The CPU may
++		 * go offline between the check and the read; that races
++		 * harmlessly, as rdmsrq_safe_on_cpu() then fails.
 +		 */
-+		sock_ind = array_index_nospec(smn.sock_ind, hsmp_pdev.num_sockets);
-+
-+		ret = amd_smn_hsmp_rdwr(sock_ind, smn.smn_address, &smn.value, false);
++		cpu = array_index_nospec(msr.core_id, nr_cpu_ids);
++		ret = rdmsrq_safe_on_cpu(cpu, msr.msr_address, &val);
 +	}
-+
 +	if (ret)
 +		return ret;
 +
-+	if (copy_to_user(arguser, &smn, sizeof(smn)))
++	/*
++	 * Copy through a u64 local rather than reading straight into
++	 * msr.value: the request struct is packed to 4 bytes, so its __u64
++	 * member is not guaranteed to be 8-byte aligned.
++	 */
++	msr.value = val;
++
++	if (copy_to_user(arguser, &msr, sizeof(msr)))
 +		return -EFAULT;
 +
 +	return 0;
@@ -283,12 +298,12 @@ index 2326506929a4..ec11c5840b87 100644
  static long hsmp_ioctl_msg(struct file *fp, unsigned long arg)
  {
  	int __user *arguser = (int  __user *)arg;
-@@ -620,6 +687,8 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 		return hsmp_ioctl_msg(fp, arg);
- 	case HSMP_IOCTL_GET_TELEMETRY_DATA:
+@@ -689,6 +762,8 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
  		return hsmp_ioctl_get_telemetry(fp, arg);
-+	case HSMP_IOCTL_SMN_CMD:
-+		return hsmp_ioctl_smn(fp, arg);
+ 	case HSMP_IOCTL_SMN_CMD:
+ 		return hsmp_ioctl_smn(fp, arg);
++	case HSMP_IOCTL_MSR_CMD:
++		return hsmp_ioctl_msr(fp, arg);
  	default:
  		return -ENOTTY;
  	}
