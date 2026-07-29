@@ -1,63 +1,63 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010061.outbound.protection.outlook.com [52.101.46.61])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012005.outbound.protection.outlook.com [52.101.43.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62FA42C4FC;
-	Wed, 29 Jul 2026 21:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA00489865;
+	Wed, 29 Jul 2026 21:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.5
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785360457; cv=fail; b=IAMtszbfAOJ8q3Hb3n/Nm1yuieK82LBGvIPKwSFqQgeItvQ2TQtOKyJ1UlAXBjrjcyLaMn1swCzcvlS5c9NNF2GbHv0o4gHLpM8yGA/k1CXllfjhd1fYBRqYthQIcmp5UIb01uTr9BQFSeex4BbCqJ8LY5Ui7FBPbxu5OD83LK4=
+	t=1785360546; cv=fail; b=bQwtvkREVzuwWVvfw77CjWzBcaYlQzo9pdKOaHFbPZ+ViDYVyWKUj8Rpqk/oWM8cfGCEXkx6cJosmlwuH3Ppu/KJb5wTnmAKfOxcGsn8ZyfdZ1fFpnwKLqQ2rbKT4aAA9KN212PxfmMy44Bx9usNcSF3qxA+2i5wsonQjkG5kWA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785360457; c=relaxed/simple;
-	bh=JmdXxe3HBOsYjaGJpDOoaah5MOGW0Jli/3le5xpTMCs=;
+	s=arc-20240116; t=1785360546; c=relaxed/simple;
+	bh=7jiTc31tBYJKKIh9fgtY/FFrVNoqw4Lb5xQMiKV5AgA=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sJEwIL168qorO5c9hqEw0FpVV/8pX7wIfmwWNNCQbZk5SKbDbbDOUCA4XmDLDN5/XF0gHSBffIF/4q9326hNgydMm/+/71PaXR/fdFJlglEHr92mROb7nvcmCS9qs4/9kW9aR2KFrFImlvXM6rbAzFMnWCmIyD3hJN+Lxy7p2Sk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FDMX1YiX; arc=fail smtp.client-ip=52.101.46.61
+	 Content-Type:MIME-Version; b=ejFcPq2n1PJiga/jCY2fAnI9g8qq8Pj7M4oBlLRr3Pc0lc5oUs6jkT4XHcBXfRslHLADZH8Xzm6Ka/zTOoJoKtSBZev2KeQJ40R+iyPW5pO5q8DjlWFpbQ/hXuqoDuBs4nE5ovkpmKOv6eifLUULzw4Xz6PfpKsVCdIwdmLjx+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ngv41Bah; arc=fail smtp.client-ip=52.101.43.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FDMX1YiX"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ngv41Bah"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vj2d6pojiy2HGIhQb3rR3762ifLS7aqrQRz9bDHSZd5crROOvGvvBiHt4oQYmkBHqz7FbdXlQ8xbFuqmo1ADBOB8tlyRUtNvwhTZ/TUlKfDtMNwhdIJIHS1eTurz5pqPf7DnN3UL3UjQDpMrQ9MfZjFBdAwaz6BVrr2mrQ0EDFBwFGmxJjckVZs+r5IZDhrzM2IdtAckY2nrKWEa+xsSBho3OjVZOgmsVf0j6kpjHXEVf0NJYO+3S/rLEGtJSWy3d3JOS0HotZXxREQI2t/TLE0zfi3eKTNv4du01kPSWr4tUFdCl8ldX2ehXCrTqF0sKo0AJVGaPG4ZLh8UqhkIPQ==
+ b=j6gInqc7NuToem1j7ACrlev7h3aSVQkPG4r/wyWIk6lQEQ23xXBnraEXgI/0DqJDlcfyCD7hvAFZCFzOHbUlZj9yW+cWtIaZaIUQ1JUu9fn77hXABbUJRbbxMlKC+riGN/rzT0DVjQWFAi72+iPtbBb9wrpwW6d7U/9AEF3BXlltX2coTym+PHz0BbyKkcz2Q4BeKejaale0ITzhErotzOA0hCXiOTnj+n37MKI9ryI7Xrk0B3s2j5FqACr96c/AOHPvTAMqUWrI2QlMcSW6U+/knecN18JGVTbXDlOkBmigWbrPqiNepLdzI+pb6RHaV5NGDN/XcyYViQkNB8JqWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FYS4bebI0ZLhwbMIAMsJE9oEKPQGxq2Qz3pnqpdwXtY=;
- b=nlcD8IuMN4anJpKUxR0KzifdG9CGYQvPyyF5CbDBB6ybnt8JKehoRgNka+v+owQHqx5kkgrz0hUVBQtQg/d4qMxgHWyonfk4CrCIo+WrO/MzvDoD0KBl3HuULTU8jc9ZO0dWFwsOT7LqEeT9evdpFUim4y71hheETAI2Lvk/UGTDpwxuHOfp8jQ5Q2m+aRfS8lVDgGWUIoczDVzx24GaP8d8d/qtxSJCOlmIIk4vVYVmTVstiKODrXPpsVNhk0PMtwUheC+2YQ3igPWBrKdu7CzTZVoAnF8mbgA3iJkTS5Wh+DopiDvyPA5KTS/sZynJU7+YX7kfCzPhcYwWhQiGgQ==
+ bh=qcC3Jjc3cLQ/37r+2HVvd/0qZZDkTKRJ6O556bH7sKI=;
+ b=ZSrNWHzWtAHfG41ssczV9+FlFKnhjiH4aGkUsIWazezX1qR5+aa9IVtAT/PSyyv0jb9jGEu57RCD9r1ntwl+hLutIeC8G1WNaO2bw7RHtSEN7j0Et74bn/kd+RDXKzBb43OS5nEQpePy9T3YT4yPyntL5pIUoidDqlx7BpKAGlLzMwhK+8Mtf//Q3gMOVDG7S/Dreew2msIAlnbgg4tCbIzCOZA14dmcUkHXlHG3YAsT0GV7czFupdeEevODEMmCpJsnZ663cKZbRtJAYV0rv9KrRj98FzjF727JEp0g2OgzecC1bl7HaUJZU/+s2CaMhr5slpWfp6y0Llv/s3zCcA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FYS4bebI0ZLhwbMIAMsJE9oEKPQGxq2Qz3pnqpdwXtY=;
- b=FDMX1YiXZim6bFcHEja9Ka130wDhavIJsHeaPHKmKkoZpAPBK0FZYgjKCTAXEbDtqGpUkEF75R4AI1vxgz9NF4ayHTL57YYE68Hh1pYUocRocl2VtgQPMdyENtlbSqCLYofbJLQ8j5iKG7h/ux72Zf0UfT9iu6Cc41mRmd4xL/Y=
+ bh=qcC3Jjc3cLQ/37r+2HVvd/0qZZDkTKRJ6O556bH7sKI=;
+ b=Ngv41BahJJo5ZOc5YdChVUmnhpuBWI/upkgAYVCqBODnv2YX/kIbBzUMrEgIVvK/xC09apQNDCXoX2xIkJ1WF5WBz30oQSNruXpcll2XAoh+YF3TP3X4EPAbJEPQ/AYnBqHdbrD3R5WVvLloriUobNOAY7JAFTh/vcpbOje/XJ4=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
  by CYXPR12MB9317.namprd12.prod.outlook.com (2603:10b6:930:e2::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
- 2026 21:27:29 +0000
+ 2026 21:29:03 +0000
 Received: from PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
  ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0270.012; Wed, 29 Jul 2026
- 21:27:29 +0000
-Message-ID: <04201312-5535-45cc-a93c-4e71b66e1dc4@amd.com>
-Date: Wed, 29 Jul 2026 16:27:25 -0500
+ 21:29:02 +0000
+Message-ID: <2cc5bfc3-7da1-4efa-8af8-89192eee1314@amd.com>
+Date: Wed, 29 Jul 2026 16:29:01 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] platform/x86/amd/hsmp: Add HSMP client support for
- Family 1Ah
+Subject: Re: [PATCH 2/7] platform/x86/amd/hsmp: Route metric table through the
+ client messages
 Content-Language: en-US
 To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  muthusamy.ramalingam@amd.com
 References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
- <20260729164034.1331375-2-muralidhara.mk@amd.com>
+ <20260729164034.1331375-3-muralidhara.mk@amd.com>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20260729164034.1331375-2-muralidhara.mk@amd.com>
+In-Reply-To: <20260729164034.1331375-3-muralidhara.mk@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0071.namprd11.prod.outlook.com
- (2603:10b6:806:d2::16) To PH8PR12MB6914.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0066.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::11) To PH8PR12MB6914.namprd12.prod.outlook.com
  (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -67,773 +67,200 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|CYXPR12MB9317:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6385674d-3e84-4b48-8d6f-08deedb83039
+X-MS-Office365-Filtering-Correlation-Id: 83185146-704f-4f59-c1c5-08deedb86920
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|6133799003|11063799006|56012099006|5023799004|4143699003|10067099003|3023799007|18002099003|22082099003;
+	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|11063799006|56012099006|4143699003|10067099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	IMUfQECCjEKzfKXAqaVY50FIPVKPxEG8Ndo33McHWTLYVeeNA2Ge8JMbzSKGobz7zDq6yGiT6H4lrbrzYZ/tq4H8PR2GGekzD7BQWHnshf2+ob8chsHn4TvKWkOsqz8OHZ+dwUtb9UFSWPxYzU6k5z/pRZwTpRelvVN0y1DQ7xgx5LgkJnniJVSpUIq0MT1fXZ9B+QwWm4k1ZchtsGaG64wMKQtgwgrcdTOpAX0S6LanCWFiVEqyPru8GVKbSX0yh173spnzhfAF3l908d+3/y7Sz0YOqNWxPGbRMUvIHYKL+aVX5k9GIZw3PUx1J2Gi5j9QRcwKSnvuXQUFCHj4q//fKBQ8vVIesIcq92sWCwN41t3ijXL0OG7WOrygwM4IxN+GUfo7Qegb7PHTGiK/JGj53HQJsenfcrUz8GkBFPDX7kA/b5iwztrFWDHPtsCeR9Mpo6ZdN25AwMUXeiQpr9ndixGOoYM2q4yIjgLmoKpN3Va4UiKt9WB6PmfXPJWx3RrpPlgBVF9qQPeT6nX5tVLlwqLGW5r5ldB40Ul2BW8ZEexScIS5OHaQSGrOKPaTH9TWiFZKwx18F4dBCki3EMu4IrxBziECYAK4nMc+MBXcY34LRBqVFMTJ7tdVKhG5IbK4YhQkMItG4vYdZs6Zt4Qhtt5Ksw10kJQBW/Puack=
+	svDtbmZMsiqK9UU9egZY0j+EpNd2asp+GnzYWohCxYXvamfdx0XCKMPJ3GZFnfjcsQROxKzT3iy/caynPkq7i/HTHAPSb7ku9ul55SklDZksXZjde5MdwG8xZDahKQ0ZFDJlmJx3RdBdGVizSpMi0eoU0nVOeaxqYGYQ9Iz3DdXBy0FbJu9szaWpa0QP2gnkOnrRFgDDV7J28QCKbgM8UE2JDea52H4rUsN2nfy+2RwMq6m7t8polV6rcPYI8V0n8tPPFjO22fWF36t8Tb9J9dACgFRf+kfHFW3dtEk8oL9Q0F/ysBFeV110NgPY2A7bxLfbSYPG7dPZoJEB7njgPW1+iEi1PnXu4us+F4emqlHvB0AosFldneMG8ywSqm4pJqoUc3SlxmE9R1BmNxgKn72O844HzMHChM0mvfw1pyTJ1yioa0SCRcrX1VKSCyo+cLORNl6R0QM9T1SMPA3XSIEFZUxnr0iCT5/6h4mj9/wLDxXvgH5+BMqeIs0zWn4XmnazHPMgyFq5Gq2/yhLF9m5ldPb9v7LUSQCOJWdlFxYg7Jkyw5PumWf0YYdk8PI7o4TO285Lp0nK/KTJQyzd6lbKi46xw4htR22zzmLFDtjei9jLDBfaqlInRi1gDeKtVax/lW5lLlNrfSj1d9oziBKBOflaNP0T+mDXMDsRhvw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(6133799003)(11063799006)(56012099006)(5023799004)(4143699003)(10067099003)(3023799007)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(11063799006)(56012099006)(4143699003)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b21SbXVybEFZVXFlYmFMb0VQU0tRekEvSENETG1MTjcxaE8rWHJHTEtOVUNr?=
- =?utf-8?B?WGk2TXhNdFdLZWtkbkhLdFZGQmtRMEZuWlJtVXRpZU9YZktPTnNaSlZGclA0?=
- =?utf-8?B?dDBwRkYvSzJGRmV6QWw5a3c4NFVHeWxSeU50NE9lblMreDRLK25CV1p3cGlw?=
- =?utf-8?B?eU8zaCtjUFY5OHlFRVNpMlNkUmdWYXJQZy9nUWhLMURnNXBVQlRmTVYvUklQ?=
- =?utf-8?B?M0UrejVFdjY1ZDloVEdOeG4yZDAwa3BXRHk2aUt0ZGsvMXJQU3doNHIyN3Jp?=
- =?utf-8?B?YmM4clA5bmFxdmJyWElBc3Baek9SM0N5RnVnZEtQQ3p1M09ocmRIY1UxY3Zw?=
- =?utf-8?B?Y0kxMW1sMENTMEZBYmhZa09FTEkrdjdud3kzYUhaSlV1bk9STHJQZE5Ha29W?=
- =?utf-8?B?UU1NVWJ4d1l3dzFpL24wc1J6M25KYUtPSGdycVY0V2RTbHYyUEFkd2hHejVs?=
- =?utf-8?B?WllxOXRJVFM0dU42cEtma2Z2YjE3VXltdnBwN3Z6bFJhYzIzZzJsR25uMFQw?=
- =?utf-8?B?bWdJdGRMVzNaMzdrOWk4dkkxRXhtT1h3SThpSTBKcnN0VmlvQ2c0SjIwWUc5?=
- =?utf-8?B?SGlYd05NOVpsb3J3SlY4bjZDUi9TRkU4U1dSajZiQ2ZvY2JzVUV5a0kvWTJB?=
- =?utf-8?B?NjZtUWo1dmx2MUloN2ZMZG11em5ZcmJVSWhTNHUyOEF2R3YzS1hVS2ZiYjlZ?=
- =?utf-8?B?by9FdnMzdTMrSWxWcnBVbS9sa3N1amxZUEtCMTY5bXV5N250aXFuZVNuZWZR?=
- =?utf-8?B?bThGbjQ1Qm5nZzhyWm1sYk1ocFcxd1RucG1mZG1FUTBWNGRZKzRMdUFwcytO?=
- =?utf-8?B?OGdOSmVRcjA0UnFTNnlHQ05jZHpicDg3aHJpZ3BpSmVGbTFsV1FOVTFGTkJS?=
- =?utf-8?B?U3p4OEE1cUx0SUUvUWs1cWNZK3prR2VSaW9vT290MVBtTExKY1I0NUZ5QURa?=
- =?utf-8?B?QzdWMUIzZG5PQmJ4ZmVzc0UvNU92R0FNM09HNU1LNVM0bDMxQlg2eng0dFZC?=
- =?utf-8?B?ZmFla3hMWThaczRDU3BjdUFTWUE2bDJ2b01pWHJXN0hqL0Z2cE1mSUJXb0Zv?=
- =?utf-8?B?L0RuWGFRSjlSd3RuTW05YmM3bDFmVUlUUG1nQWNzNllKOGlDVVdoeDFkaUkw?=
- =?utf-8?B?RWRua1A2cFpaVnN0bjQ2aGtSaVlGc3ZzQVo0V09rUHJDM2NTbmY5dXNjWGtI?=
- =?utf-8?B?bHZxWkUrSmFhL0xFRE5SNDJ2R093eWpnZ2pvV1dETERaV2t5MW9sSUdEMktT?=
- =?utf-8?B?NjMwRXpGWFlRVEFhU3Q3UkdYa1VCY1Flc09IQ2FuMWF2MEVRMkh5YmVoWmdS?=
- =?utf-8?B?dHExOGxuS1lNZW9sOC96a0tESmNMUVdSQ3ZyUDFPQVJUYlFHNUFPRmZOSWtx?=
- =?utf-8?B?SVdjblIvQ29yL01kT1pNTVdVWDNSQXFzRE80SEZRUTJMNU5KUHVjL20wdjlS?=
- =?utf-8?B?WFRPbkpReXdmak04RVNBMGZNMW4xSFZPWmM3V3lYTjVnbFFzQnF3NDgyaEZC?=
- =?utf-8?B?YkNmMUE0WkJYT1lQUzNROWRvVkRFNWt2cXg4eERzSlpNbU12UERRSkRQYUc2?=
- =?utf-8?B?L3pWM2loTDdxN1J4WHpEWmtIQmtadnpRVEVhMkdXWnkrVjJOLzBqT1JSS0k1?=
- =?utf-8?B?UlhhN1JTZHEvVXk1S1RUaTRhYW1kZVQ2WUNGb0pPMjFSb25UdVl5bFByZUM1?=
- =?utf-8?B?WnNiVC9pOGk4UUFBWUd0MHg1WnExTnlCMnJLNGo1bnMvbTVPTVJleElyL1B6?=
- =?utf-8?B?ZW1LT2lkbm1leWcrRDhPTFcvOGJrWm1kRndJQkQvOXZvcExGSDFhcG1ncG5i?=
- =?utf-8?B?eGI3dERNQXFYMDFQT2xSNUVSRFhHcEQwQjU1SHFuR09KejNEbk9RV2hKc01O?=
- =?utf-8?B?WjVjSWV5MEFuUmhOZlMva3hjUFBMVzNKcWQyQkRibW9JTFN6ZldUYUtDMHFn?=
- =?utf-8?B?R1NxVjRxQ3lUd0tpbTVTaGZ2aGFuMVBZblAweW9ub3c4WURuQzQ0MGxQUUlD?=
- =?utf-8?B?Y2t1Z0dJRWRWQStlN2dHUk14aGJxbm92THlSd1JZb2Q3N1YvN2V2OEc4eHlL?=
- =?utf-8?B?T3BTaFJkMi9vUzNhT0RGY2s2aXduV1cvU1dOVGU5VG5PSWg0dlhQS1piMjUz?=
- =?utf-8?B?WkZPSVZqUDVwYmpMaHVjdlZkV2U2Q0NudHM3WlZzNnhZZEVualJOUjFVVTI4?=
- =?utf-8?B?REVUd0s2NFpzcHpCa1lHTTE4UUhQSGQ2TUhucE9VRnFEUHBmQzlPNzUzRlpq?=
- =?utf-8?B?RDNpMFdYU1FXTmxCK0x0Ylh0RWxlZFlrRE1WSlZrZ0tqejRETnZ6YzdWdnVC?=
- =?utf-8?B?QUl3aWRCWGdOTXNGbjJVSExKSFJCMGtyTWFWb0huUm1CVnpTZUNsQT09?=
+	=?utf-8?B?elZ5MDVhREdRRkdVbWdJVDlQZVNzQ0lOU0h5Z0thY1pYT1ltYnZIM21tQUdC?=
+ =?utf-8?B?ekJqT0lCbVRvSmM2NWE3YVdBYjZIZUswczlTM2lqOUNYZ3B5ZEdFS3ZHL0Ux?=
+ =?utf-8?B?OXhWU1pQbGM3YzJKM0VwNWZxN0xyYjJvZlptbjZ0M1NZOHM5VkdNcmN0S2ZR?=
+ =?utf-8?B?L3RCSk0zUmJ3QnlRMVhJSzlxempJT0FJVHVYTVI4bEdrTzc2dytWM3RLY05S?=
+ =?utf-8?B?ZzBpeTB2WnBHVEl0cXlBTnZTTFIyYUN0NTNabVVXVnB1MWxaZ2RQOUdtclZR?=
+ =?utf-8?B?L2lZOGk5T29tZWxTZCszRThuYzhzY09nQTFadUNvUDFnNVlCb2FXWnhIdlZY?=
+ =?utf-8?B?eW9HU2s1OUpUS2NpTnE4OFBKNVRld0NYSG9YR2kxcDV1U0JlMlU3VHRvWUJN?=
+ =?utf-8?B?cmRseGt6bnZuMzgzbE0wUzI0ZXg3bmZUT0YycXQxOHNSS3lwWVVWRUNkV1Q5?=
+ =?utf-8?B?WFRrVEg2Vmk3QXl5UkUvNUttcm9scGRmVGtNL1NqOHlFMnBmb05Ja2FDTjkr?=
+ =?utf-8?B?SzZ4RW5WR1JzSnVzdlU5Zzl6VnozTFEyWTFqMlhQTGVWRzRQb1V2WVBXc3FQ?=
+ =?utf-8?B?S3VyU051ZGxMdTYrY3lJUGtJYVl4Sk9jUVRmSUhUZ3NLenhNbDluazd1TGNT?=
+ =?utf-8?B?RjdNWmlpQmtSK1V3MXZPc1NpYkpKUStzbkZMcEFsRzMwYVViTjdIcVhXdUZL?=
+ =?utf-8?B?aldleEJkMEdCQXlMdC9rcEhZWDd2bUJwQkdvK2UvM0hMVTBDNzY4bWF2dnJS?=
+ =?utf-8?B?UFpZOTI2d3BhUHVQWiszeHNWbFRjU3g4YVI1VUtoV1ZRU0Vyb0ZjRmN6MnJG?=
+ =?utf-8?B?TW1RMG1EK1lrR09MSndDWFNkTUk1eXNLd0dWa04yS0tWMEx5dlNkdklaNmR6?=
+ =?utf-8?B?V3NTRHFyZ3h4WXpVU2o1Vy82SUhuTmJrZWhPSUJtMTFXUWFiZFFTYzl5V3R5?=
+ =?utf-8?B?RFQyOFFlRDNwb0NUYU82d1Y1S3hxUkcxYTZHcCtvbEhzcVZoTXFUbDJ3SUdB?=
+ =?utf-8?B?YXB0TytZSU9pTnZ0ajhlZHdBakloTFZuS0hQTjZ0Y1QxS2xkRzc4aWVqcE5D?=
+ =?utf-8?B?aFdnc2RwRjBSVWdNb040UnMyeFBOeDROaVJSdTdsekJNOUdNUUUrNHNzOHVX?=
+ =?utf-8?B?ZVdzOWtJVERTNTVNV2FSUXZrY3pNVVFQR0VIOGlDdW00Z0hJVldvdnJPb1Zv?=
+ =?utf-8?B?ZkZGZ3JGSVUvaXAxNndiZTBmOXBqQVY1SnZSeGd0OW9HMGJPSWJEbXNNTVIw?=
+ =?utf-8?B?N2tmU0dZSStyQWdPcVBub0JNY1hzZGFoNGg5OEhrQWVRNW50cDc1dHA3TU92?=
+ =?utf-8?B?ekgxa2J0M041bldhcllJWUdnd0dQWXkyeG1DZTM1L1FPK1BXcnRJZmcrWG40?=
+ =?utf-8?B?Y1BSVzVZYjA3SitxVWt5clQya1BtQTFzVHZtMU9Ia1pobVNTMXdnUFJRbm1N?=
+ =?utf-8?B?ZnhMRUlNTmIvbTZrUmRRUFlaSDhoL0paVVgzTE5IUEVKQkt3V2NDcU5ScDlp?=
+ =?utf-8?B?dmJJV3I4UUFMaDl4RXE4K0ozYk1vZklZa0p4TFplaktIaFU3bUNUYkorbDl1?=
+ =?utf-8?B?RTRyYUl5U0sySncvY3dxeGhjNzFuTHl1QUpYaU50Nk9mUWgrWFBPdWNpL3hz?=
+ =?utf-8?B?L3RjMEM4djM0TEF6ZVdxdFIxWWFBMU9TcC9xbTM4T3RRTUJoczRKbmxieENs?=
+ =?utf-8?B?MUVoVmo0d1NWQkltWkhsbVpiT3d2WXMweGFtaXl3SVdsTTljWlp2OCtKUWd1?=
+ =?utf-8?B?OG15bHZBOVE1NEZWMUFEdGYydWV2VXJXVmUxTGxLd0lTZmpvYksybHc1NTFD?=
+ =?utf-8?B?ZE1ZdVE1Sjd5Qk9NNnhROERkaG9DS20ycUpzajJQU0E1MStUVCttSnlIeURJ?=
+ =?utf-8?B?MW9MTCt5alFxUEFDWWhia01QUjd1WHBSTy9WYUR0c1FnZlFHanp4eHR0TDgr?=
+ =?utf-8?B?N2dQVFpKNnFZTTRPSlpUWkVaL2hYYzE2T2VJaXZnZnN2ZnoyZzBhN0JvbFpH?=
+ =?utf-8?B?clRSZVI1S3hjUVNDZVhDcmlyNjZMRmw4cHhhcFlPR0ZtRGFpOE1RNVY2WW9Z?=
+ =?utf-8?B?cUJLeTFzSCtEK3I2OGtsYjY0a1QrMUZoYm1aRk5IRTErcElHbHZlazVGb3Vt?=
+ =?utf-8?B?dHJFd01vSmlNS3Jra253ckNYYkNRbXJ0cnNnalZjbUtrU0VXemc2NWRwazg4?=
+ =?utf-8?B?MEcxbFl1alhZOW95dXU1TG81RFVITUNQdzgrby9tVWNmRUVnVTlva0pPdUxB?=
+ =?utf-8?B?VDEwMUhtOVdGUDN1WTFVajdGL04zMmlpU0M4SzlKTlNiejZUSE8wNk9MOXMz?=
+ =?utf-8?B?dTBRM05JYlZFTjhUYzNnTzA5MTg5SVg4ZjI3c0sxSnhOaG9JcVlvUT09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6385674d-3e84-4b48-8d6f-08deedb83039
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83185146-704f-4f59-c1c5-08deedb86920
 X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:27:28.3451
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 21:29:02.8379
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1Rb/QS4sptimO6qiBOMA6UF/XvAOVN34//rJzn5xVY+Wle1OkZluD+pr6jld8q6yeu2oAPqQ07oVpt5k9z9mlQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: JJA/hOhlfE5JI25s0eFps6q6GmfDMhgYq2Tc6P9X7I3qb697OCxoSxAy9XljaVrF8RUFPg+wBTAckCa7hAJ1ng==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9317
 
 
 
 On 7/29/26 11:40, Muralidhara M K wrote:
-> Add non-ACPI HSMP mailbox support, Ryzen Master SMC client message
-> descriptors, and platform routing for the Family 1Ah client platforms:
+> Wire the client metric table and metrics DRAM address messages into the
+> metric table read path for the Family 1Ah client platforms (Models
+> 80h-8Fh and E0h-E3h), and initialise the metric table on the platform
+> driver probe.
 > 
-> 	Models 80h-87h	Medusa1
-> 	Models 88h-8Fh	Olympic Ridge
-> 	Models E0h-E3h	Medusa2
+> The client reaches its metric table through the Ryzen Master SMC message
+> set, so add the two message IDs to struct hsmp_plat_desc and have
+> hsmp_metric_tbl_read_locked() and hsmp_get_tbl_dram_base() take them
+> from there. Unlike the test and version queries, these two are not
+> numbered alike in the two sets - 24h/25h on the server against 05h/06h
+> on the client - which is why they have to come from the descriptor
+> rather than a shared constant.
 > 
-> All three share the same client mailbox addresses and message set, so a
-> single is_client_platform() predicate covers them, and the two adjacent
-> Model 8xh ranges are tested as one.
-> 
-> The client parts drive a different mailbox from the server HSMP
-> interface. They expose no _DSD/_CRS to discover the mailbox, so the SMN
-> addresses are fixed in hsmp.h and shared by the platform and ACPI
-> probes, and they speak the Ryzen Master SMC (RMSMC) message set rather
-> than the server message IDs. Add that message set and its descriptor
-> table to the UAPI header.
-> 
-> Two message descriptor tables now exist, so every lookup has to pick the
-> one matching the running platform. Rather than test the platform at each
-> lookup, describe the platform once: struct hsmp_plat_desc holds the
-> mailbox addresses, the descriptor table and its size, and the IDs of the
-> messages the driver issues itself. get_hsmp_pdev() resolves it, which
-> both drivers call before they bring any socket up and which runs on a
-> CPU that is fixed long before either can load. The server descriptor is
-> also the static initialiser, so the message plumbing cannot reach a NULL
-> descriptor even if a future caller arrives another way.
-> 
-> get_msg_desc() then indexes the table behind that pointer, and
-> validate_message(), is_get_msg(), hsmp_ioctl_msg(), hsmp_test() and
-> hsmp_cache_proto_ver() read the bound and the message IDs from the
-> descriptor. get_msg_desc() returns NULL rather than indexing out of
-> range if a caller skipped the bounds check, and the Spectre v1 clamp in
-> hsmp_ioctl_msg() uses the running platform's table size.
-> 
-> In init_platform_device() the mailbox setup becomes a copy of the
-> descriptor's addresses. The F1Ah M0h message-id offset stays behind
-> is_f1a_m0h() as an override, because it applies only to this non-ACPI
-> path while the descriptor is shared with the ACPI one. It cannot disturb
-> the client mailbox: it requires model <= 0x0F and the client models are
-> all >= 0x80. The server mailbox addresses move from plat.c to hsmp.h so
-> both address sets sit with the descriptors that consume them; the values
-> are unchanged, written to the same width as the client set they now sit
-> beside.
-> 
-> Since this is the change that lets the platform driver match the client
-> models, it also has to let the client probe survive the interface-version
-> query. Some client SMU builds reject HSMP_CLIENT_GET_INTERFACE_VER with
-> "invalid message" even though the mailbox works, as the test message
-> issued just before it shows, so treat that failure as non-fatal on the
-> client and register the socket anyway. Nothing on the client depends on
-> the reported version: hsmp_pdev->proto_ver gates the metrics_bin
-> attribute and the protocol_version sysfs file, both of which describe
-> the server interface. The query stays fatal on server parts.
-> 
-> The client descriptor table carries __attribute__((unused)), matching
-> hsmp_msg_desc_table[]. Both are defined in a UAPI header that several
-> translation units include without using the table, so without it
-> -Wunused-const-variable fires on plat.c, acpi.c and hwmon.c.
-> 
-> Document the client platforms in Documentation/arch/x86/amd_hsmp.rst,
-> which until now described HSMP as available only on the EPYC server
-> parts and MI300A. The character device and ioctl interface are unchanged
-> there; what differs is the accepted message IDs, so the text points at
-> the HSMP_CLIENT_* set in the UAPI header.
+> Fetch the metric table on the client whatever interface version was
+> reported. That query is already non-fatal there, since some client SMU
+> builds reject it while the mailbox works, so hsmp_pdev->proto_ver cannot
+> gate the client metric table the way HSMP_PROTO_VER6 gates it on the
+> server.
 > 
 > Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-
-Generic comment for the series.
-
-With such rich function comments, I think a lot of this would be really 
-valuable to have as kdoc (/** */) and then reference in hsmp documentation.
-
 > ---
->   Documentation/arch/x86/amd_hsmp.rst  |  18 +++-
->   arch/x86/include/uapi/asm/amd_hsmp.h | 137 +++++++++++++++++++++++++++
->   drivers/platform/x86/amd/hsmp/hsmp.c | 125 ++++++++++++++++++++----
->   drivers/platform/x86/amd/hsmp/hsmp.h |  73 ++++++++++++++
->   drivers/platform/x86/amd/hsmp/plat.c |  39 ++++----
->   5 files changed, 354 insertions(+), 38 deletions(-)
+>   drivers/platform/x86/amd/hsmp/hsmp.c | 16 ++++++++++++----
+>   drivers/platform/x86/amd/hsmp/hsmp.h |  4 ++++
+>   drivers/platform/x86/amd/hsmp/plat.c |  7 ++++++-
+>   3 files changed, 22 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-> index fa1fc240e212..8a9d6fe7d4cf 100644
-> --- a/Documentation/arch/x86/amd_hsmp.rst
-> +++ b/Documentation/arch/x86/amd_hsmp.rst
-> @@ -8,6 +8,21 @@ Newer Fam19h(model 0x00-0x1f, 0x30-0x3f, 0x90-0x9f, 0xa0-0xaf),
->   Fam1Ah(model 0x00-0x1f) EPYC server line of processors from AMD support
->   system management functionality via HSMP (Host System Management Port).
->   
-> +The Fam1Ah client platforms are supported as well:
-> +
-> +  =============  =============
-> +  Model          Platform
-> +  =============  =============
-> +  0x80-0x87      Medusa1
-> +  0x88-0x8f      Olympic Ridge
-> +  0xe0-0xe3      Medusa2
-> +  =============  =============
-> +
-> +They share one mailbox and speak the Ryzen Master SMC message set instead
-> +of the server HSMP message set, so the message IDs accepted on them are
-> +the HSMP_CLIENT_* ones listed in arch/x86/include/uapi/asm/amd_hsmp.h.
-> +The character device and ioctl interface described below are the same.
-> +
->   The Host System Management Port (HSMP) is an interface to provide
->   OS-level software with access to system management functions via a
->   set of mailbox registers.
-> @@ -17,7 +32,8 @@ More details on the interface can be found in chapter
->   Eg: https://docs.amd.com/v/u/en-US/55898_B1_pub_0_50
->   
->   
-> -HSMP interface is supported on EPYC line of server CPUs and MI300A (APU).
-> +HSMP interface is supported on EPYC line of server CPUs, MI300A (APU) and
-> +the Fam1Ah client platforms listed above.
->   
->   
->   HSMP device
-> diff --git a/arch/x86/include/uapi/asm/amd_hsmp.h b/arch/x86/include/uapi/asm/amd_hsmp.h
-> index eda336bfd3e9..b4c3ddb9d1c1 100644
-> --- a/arch/x86/include/uapi/asm/amd_hsmp.h
-> +++ b/arch/x86/include/uapi/asm/amd_hsmp.h
-> @@ -664,4 +664,141 @@ struct hsmp_telemetry_data {
->   #define HSMP_IOCTL_GET_TELEMETRY_DATA \
->   	_IOW(HSMP_BASE_IOCTL_NR, 1, struct hsmp_telemetry_data)
->   
-> +/*
-> + * Client HSMP messages supported on the Family 1Ah client platforms:
-> + * Models 80h-87h (Medusa1), Models 88h-8Fh (Olympic Ridge) and
-> + * Models E0h-E3h (Medusa2).
-> + * These map to Ryzen Master SMC (RMSMC) message IDs.
-> + */
-> +enum hsmp_client_message_ids {
-> +	HSMP_CLIENT_TEST = 1,			/* 01h Test message */
-> +	HSMP_CLIENT_GET_SMU_VER,		/* 02h SMU FW version */
-> +	HSMP_CLIENT_GET_INTERFACE_VER,		/* 03h Interface version */
-> +	HSMP_CLIENT_GET_METRICS_TABLE_VER,	/* 04h Metrics table version */
-> +	HSMP_CLIENT_GET_METRICS_TABLE,		/* 05h Metrics table log sample */
-> +	HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR,/* 06h Metrics table DRAM address */
-> +	HSMP_CLIENT_SET_CORE_PSM_MARGIN,	/* 07h Set core PSM margin */
-> +	HSMP_CLIENT_SET_ALL_CORE_PSM_MARGIN,	/* 08h Set all core PSM margin */
-> +	HSMP_CLIENT_SET_FAST_PPT_LIMIT,		/* 09h Set fast PPT limit */
-> +	HSMP_CLIENT_SET_VRM_VDD_CURRENT_LIMIT,	/* 0Ah Set VRM VDD current limit */
-> +	HSMP_CLIENT_SET_VRM_VDD_MAX_CURRENT_LIMIT,/* 0Bh Set VRM VDD max current limit */
-> +	HSMP_CLIENT_SET_TJ_MAX,			/* 0Ch Set TjMax */
-> +	HSMP_CLIENT_SET_FIT_LIMIT_SCALAR,	/* 0Dh Set FIT limit scalar */
-> +	HSMP_CLIENT_ENABLE_OVERCLOCKING,	/* 0Eh Enable overclocking */
-> +	HSMP_CLIENT_DISABLE_OVERCLOCKING,	/* 0Fh Disable overclocking */
-> +	HSMP_CLIENT_SET_OVERCLOCK_FREQ_ALL_CORES,/* 10h Set OC freq all cores */
-> +	HSMP_CLIENT_SET_OVERCLOCK_FREQ_PER_CORE,/* 11h Set OC freq per core */
-> +	HSMP_CLIENT_SET_OVERCLOCK_VID,		/* 12h Set OC VID */
-> +	HSMP_CLIENT_SET_FCLK_OVERCLOCK_ON_THE_FLY,/* 13h Set FCLK OC on-the-fly */
-> +	HSMP_CLIENT_GET_CORE_PERF_ORDER,	/* 14h Get core performance order */
-> +	HSMP_CLIENT_SET_SUSTAINED_POWER_LIMIT,	/* 15h Set sustained power limit */
-> +	HSMP_CLIENT_SET_SLOW_PPT_LIMIT,		/* 16h Set slow PPT limit */
-> +	HSMP_CLIENT_SET_VRM_GFX_MAX_CURRENT_LIMIT,/* 17h Set VRM GFX max current limit */
-> +	HSMP_CLIENT_SET_VRM_SOC_CURRENT_LIMIT,	/* 18h Set VRM SOC current limit */
-> +	HSMP_CLIENT_SET_FAST_SPM_LIMIT,		/* 19h Set fast SPM limit */
-> +	HSMP_CLIENT_SET_SLOW_SPM_LIMIT,		/* 1Ah Set slow SPM limit */
-> +	HSMP_CLIENT_GET_CORE_PSM_MARGIN,	/* 1Bh Get core PSM margin */
-> +	HSMP_CLIENT_GET_GFX_PSM_MARGIN,		/* 1Ch Get GFX PSM margin */
-> +	HSMP_CLIENT_SPARE_0X1D,			/* 1Dh Spare */
-> +	HSMP_CLIENT_SPARE_0X1E,			/* 1Eh Spare */
-> +	HSMP_CLIENT_SPARE_0X1F,			/* 1Fh Spare */
-> +	HSMP_CLIENT_SPARE_0X20,			/* 20h Spare */
-> +	HSMP_CLIENT_SET_GFXCLK_OVERDRIVE_BY_FREQ_VID,/* 21h Set GfxClk overdrive by freq/VID */
-> +	HSMP_CLIENT_DISABLE_GFXCLK_OVERDRIVE,	/* 22h Disable GfxClk overdrive */
-> +	HSMP_CLIENT_SET_GFX_PSM_MARGIN,		/* 23h Set GFX PSM margin */
-> +	HSMP_CLIENT_SET_CCLK_FMAX_OFFSET,	/* 24h Set CCLK Fmax offset */
-> +	HSMP_CLIENT_SET_CORE_POWER_LIMIT_OFFSET,/* 25h Set core power limit offset */
-> +	HSMP_CLIENT_ADD_EXTRA_PSM_GUARDBAND,	/* 26h Add extra PSM guardband */
-> +	HSMP_CLIENT_ADD_EXTRA_PSM_GUARDBAND_GFX,/* 27h Add extra PSM guardband GFX */
-> +	HSMP_CLIENT_SET_GFXCLK_FMAX,		/* 28h Set GfxClk Fmax */
-> +	HSMP_CLIENT_MSG_ID_MAX,
-> +};
-> +
-> +/* Client message descriptor table (Family 1Ah Models 80h-8Fh, E0h-E3h) */
-> +static const struct hsmp_msg_desc hsmp_client_msg_desc_table[]
-> +				__attribute__((unused)) = {
-> +	/* RESERVED */
-> +	{0, 0, HSMP_RSVD},
-> +	/* HSMP_CLIENT_TEST */
-> +	{1, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_SMU_VER */
-> +	{0, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_INTERFACE_VER */
-> +	{0, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_METRICS_TABLE_VER */
-> +	{0, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_METRICS_TABLE */
-> +	{0, 0, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR */
-> +	{0, 3, HSMP_GET},
-> +	/* HSMP_CLIENT_SET_CORE_PSM_MARGIN */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_ALL_CORE_PSM_MARGIN */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_FAST_PPT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_VRM_VDD_CURRENT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_VRM_VDD_MAX_CURRENT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_TJ_MAX */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_FIT_LIMIT_SCALAR */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_ENABLE_OVERCLOCKING */
-> +	{0, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_DISABLE_OVERCLOCKING */
-> +	{0, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_OVERCLOCK_FREQ_ALL_CORES */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_OVERCLOCK_FREQ_PER_CORE */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_OVERCLOCK_VID */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_FCLK_OVERCLOCK_ON_THE_FLY */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_GET_CORE_PERF_ORDER */
-> +	{1, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_SET_SUSTAINED_POWER_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_SLOW_PPT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_VRM_GFX_MAX_CURRENT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_VRM_SOC_CURRENT_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_FAST_SPM_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_SLOW_SPM_LIMIT */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_GET_CORE_PSM_MARGIN */
-> +	{1, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_GET_GFX_PSM_MARGIN */
-> +	{0, 1, HSMP_GET},
-> +	/* HSMP_CLIENT_SPARE_0X1D */
-> +	{0, 0, HSMP_RSVD},
-> +	/* HSMP_CLIENT_SPARE_0X1E */
-> +	{0, 0, HSMP_RSVD},
-> +	/* HSMP_CLIENT_SPARE_0X1F */
-> +	{0, 0, HSMP_RSVD},
-> +	/* HSMP_CLIENT_SPARE_0X20 */
-> +	{0, 0, HSMP_RSVD},
-> +	/* HSMP_CLIENT_SET_GFXCLK_OVERDRIVE_BY_FREQ_VID */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_DISABLE_GFXCLK_OVERDRIVE */
-> +	{0, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_GFX_PSM_MARGIN */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_CCLK_FMAX_OFFSET */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_CORE_POWER_LIMIT_OFFSET */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_ADD_EXTRA_PSM_GUARDBAND */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_ADD_EXTRA_PSM_GUARDBAND_GFX */
-> +	{1, 0, HSMP_SET},
-> +	/* HSMP_CLIENT_SET_GFXCLK_FMAX */
-> +	{1, 0, HSMP_SET},
-> +};
-
-How would you feel about adding a static (compile time) assert that the 
-number of entries here matched the number of enums?
-
-This can avoid making a mistake later.
-
-> +
->   #endif /*_ASM_X86_AMD_HSMP_H_*/
 > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-> index 5e123a4ecea9..9b65dbd47965 100644
+> index 9b65dbd47965..2326506929a4 100644
 > --- a/drivers/platform/x86/amd/hsmp/hsmp.c
 > +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-> @@ -45,7 +45,67 @@
+> @@ -65,6 +65,10 @@ static const struct hsmp_mbaddr_info hsmp_mbinfo_client = {
+>    * are also the only ones the two message sets have in common.  Messages named
+>    * by userspace in an ioctl need no entry here, as that path already resolves
+>    * the ID against the running platform's table.
+> + *
+> + * Being common does not mean being numbered alike.  The test and version
+> + * queries are 01h and 03h in both sets, but the two metric table messages are
+> + * 24h/25h on the server against 05h/06h on the client.
 >    */
->   #define CHECK_GET_BIT		BIT(31)
+>   static const struct hsmp_plat_desc hsmp_desc_server = {
+>   	.mbinfo			= &hsmp_mbinfo_server,
+> @@ -72,6 +76,8 @@ static const struct hsmp_plat_desc hsmp_desc_server = {
+>   	.num_msgs		= HSMP_MSG_ID_MAX,
+>   	.test_msg		= HSMP_TEST,
+>   	.proto_ver_msg		= HSMP_GET_PROTO_VER,
+> +	.metric_tbl_msg		= HSMP_GET_METRIC_TABLE,
+> +	.metric_dram_msg	= HSMP_GET_METRIC_TABLE_DRAM_ADDR,
+>   };
 >   
-> -static struct hsmp_plat_device hsmp_pdev;
-> +static const struct hsmp_mbaddr_info hsmp_mbinfo_server = {
-> +	.base_addr	= SMN_HSMP_BASE,
-> +	.msg_id_off	= SMN_HSMP_MSG_ID,
-> +	.msg_resp_off	= SMN_HSMP_MSG_RESP,
-> +	.msg_arg_off	= SMN_HSMP_MSG_DATA,
-> +};
-> +
-> +/* RM: Ryzen Master, the SMC interface these client addresses belong to */
-> +static const struct hsmp_mbaddr_info hsmp_mbinfo_client = {
-> +	.base_addr	= SMN_HSMP_BASE_RM,
-> +	.msg_id_off	= SMN_HSMP_MSG_ID_RM,
-> +	.msg_resp_off	= SMN_HSMP_MSG_RESP_RM,
-> +	.msg_arg_off	= SMN_HSMP_MSG_DATA_RM,
-> +};
-> +
-> +/*
-> + * The descriptors carry only the message IDs the driver issues itself, which
-> + * are also the only ones the two message sets have in common.  Messages named
-> + * by userspace in an ioctl need no entry here, as that path already resolves
-> + * the ID against the running platform's table.
-> + */
-> +static const struct hsmp_plat_desc hsmp_desc_server = {
-> +	.mbinfo			= &hsmp_mbinfo_server,
-> +	.msg_desc		= hsmp_msg_desc_table,
-> +	.num_msgs		= HSMP_MSG_ID_MAX,
-> +	.test_msg		= HSMP_TEST,
-> +	.proto_ver_msg		= HSMP_GET_PROTO_VER,
-> +};
-> +
-> +/* The client drives a different mailbox with the Ryzen Master SMC message set */
-> +static const struct hsmp_plat_desc hsmp_desc_client = {
-> +	.mbinfo			= &hsmp_mbinfo_client,
-> +	.msg_desc		= hsmp_client_msg_desc_table,
-> +	.num_msgs		= HSMP_CLIENT_MSG_ID_MAX,
-> +	.test_msg		= HSMP_CLIENT_TEST,
-> +	.proto_ver_msg		= HSMP_CLIENT_GET_INTERFACE_VER,
-> +};
-> +
-> +static struct hsmp_plat_device hsmp_pdev = {
-> +	/*
-> +	 * Overridden for the client in get_hsmp_pdev(), which every driver
-> +	 * calls before it touches a socket.  Defaulting it here rather than
-> +	 * leaving it NULL keeps the message plumbing safe for any caller that
-> +	 * arrives without going through there.
-> +	 */
-> +	.desc = &hsmp_desc_server,
-> +};
-> +
-> +/*
-> + * Callers must bounds-check msg_id against desc->num_msgs first; this returns
-> + * NULL rather than indexing out of range if they did not.
-> + */
-> +static inline const struct hsmp_msg_desc *get_msg_desc(u32 msg_id)
-> +{
-> +	const struct hsmp_plat_desc *desc = hsmp_pdev.desc;
-> +
-> +	if (msg_id >= desc->num_msgs)
-> +		return NULL;
-> +
-> +	return &desc->msg_desc[msg_id];
-> +}
+>   /* The client drives a different mailbox with the Ryzen Master SMC message set */
+> @@ -81,6 +87,8 @@ static const struct hsmp_plat_desc hsmp_desc_client = {
+>   	.num_msgs		= HSMP_CLIENT_MSG_ID_MAX,
+>   	.test_msg		= HSMP_CLIENT_TEST,
+>   	.proto_ver_msg		= HSMP_CLIENT_GET_INTERFACE_VER,
+> +	.metric_tbl_msg		= HSMP_CLIENT_GET_METRICS_TABLE,
+> +	.metric_dram_msg	= HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR,
+>   };
 >   
->   /*
->    * Gates the AMD HSMP data plane against socket bring-up and teardown.
-> @@ -184,30 +244,37 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+>   static struct hsmp_plat_device hsmp_pdev = {
+> @@ -643,11 +651,11 @@ static ssize_t hsmp_metric_tbl_read_locked(struct hsmp_socket *sock, char *buf,
+>   		return -EINVAL;
+>   	}
 >   
->   static int validate_message(struct hsmp_message *msg)
->   {
-> +	const struct hsmp_msg_desc *desc;
-> +
->   	/* msg_id against valid range of message IDs */
-> -	if (msg->msg_id < HSMP_TEST || msg->msg_id >= HSMP_MSG_ID_MAX)
-> +	if (msg->msg_id < hsmp_pdev.desc->test_msg ||
-> +	    msg->msg_id >= hsmp_pdev.desc->num_msgs)
-> +		return -ENOMSG;
-> +
-> +	desc = get_msg_desc(msg->msg_id);
-> +	if (!desc)
->   		return -ENOMSG;
->   
->   	/* msg_id is a reserved message ID */
-> -	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_RSVD)
-> +	if (desc->type == HSMP_RSVD)
->   		return -ENOMSG;
+> -	msg.msg_id	= HSMP_GET_METRIC_TABLE;
+> +	msg.msg_id	= hsmp_pdev.desc->metric_tbl_msg;
+>   	msg.sock_ind	= sock->sock_ind;
 >   
 >   	/*
->   	 * num_args passed by user should match the num_args specified in
->   	 * message description table.
->   	 */
-> -	if (msg->num_args != hsmp_msg_desc_table[msg->msg_id].num_args)
-> +	if (msg->num_args != desc->num_args)
->   		return -EINVAL;
->   
->   	/*
->   	 * As the HSMP protocol evolves, newer platforms may define more
->   	 * response arguments for existing messages.  Use an upper-bound
->   	 * check so that older userspace callers requesting fewer response
-> -	 * words than what the current hsmp_msg_desc_table[] defines are
-> -	 * still accepted, while rejecting requests that exceed the
-> -	 * hardware capability.
-> +	 * words than what the current descriptor table defines are still
-> +	 * accepted, while rejecting requests that exceed the hardware
-> +	 * capability.
->   	 */
-> -	if (msg->response_sz > hsmp_msg_desc_table[msg->msg_id].response_sz)
-> +	if (msg->response_sz > desc->response_sz)
->   		return -EINVAL;
->   
->   	return 0;
-> @@ -316,7 +383,7 @@ int hsmp_test(u16 sock_ind, u32 value)
->   	 * Test the hsmp port by performing TEST command. The test message
->   	 * takes one argument and returns the value of that argument + 1.
->   	 */
-> -	msg.msg_id	= HSMP_TEST;
-> +	msg.msg_id	= hsmp_pdev.desc->test_msg;
->   	msg.num_args	= 1;
->   	msg.response_sz	= 1;
->   	msg.args[0]	= value;
-> @@ -340,10 +407,15 @@ EXPORT_SYMBOL_NS_GPL(hsmp_test, "AMD_HSMP");
->   
->   static bool is_get_msg(struct hsmp_message *msg)
->   {
-> -	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_GET)
-> +	const struct hsmp_msg_desc *desc = get_msg_desc(msg->msg_id);
-> +
-> +	if (!desc)
-> +		return false;
-> +
-> +	if (desc->type == HSMP_GET)
->   		return true;
->   
-> -	if (hsmp_msg_desc_table[msg->msg_id].type == HSMP_SET_GET &&
-> +	if (desc->type == HSMP_SET_GET &&
->   	    (msg->args[0] & CHECK_GET_BIT))
->   		return true;
->   
-> @@ -354,6 +426,7 @@ static long hsmp_ioctl_msg(struct file *fp, unsigned long arg)
->   {
->   	int __user *arguser = (int  __user *)arg;
->   	struct hsmp_message msg = { 0 };
-> +	const struct hsmp_msg_desc *desc;
+> -	 * HSMP_GET_METRIC_TABLE makes firmware refill this socket's shared
+> +	 * The metric table message makes firmware refill this socket's shared
+>   	 * metric DRAM region, which is then copied out below.  Hold the
+>   	 * per-socket lock across the fill-and-copy so concurrent readers of the
+>   	 * same socket cannot return a torn snapshot.
+> @@ -713,8 +721,8 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
 >   	int ret;
 >   
->   	if (copy_struct_from_user(&msg, sizeof(msg), arguser, sizeof(struct hsmp_message)))
-> @@ -361,23 +434,28 @@ static long hsmp_ioctl_msg(struct file *fp, unsigned long arg)
->   
->   	/*
->   	 * Check msg_id is within the range of supported msg ids
-> -	 * i.e within the array bounds of hsmp_msg_desc_table
-> +	 * i.e within the array bounds of the platform's descriptor table
->   	 */
-> -	if (msg.msg_id < HSMP_TEST || msg.msg_id >= HSMP_MSG_ID_MAX)
-> +	if (msg.msg_id < hsmp_pdev.desc->test_msg ||
-> +	    msg.msg_id >= hsmp_pdev.desc->num_msgs)
->   		return -ENOMSG;
->   
->   	/*
->   	 * Sanitize the user-controlled msg_id against speculative
->   	 * execution.  The bounds check above retires the out-of-range
->   	 * case with -ENOMSG, but a mispredicted branch can still let the
-> -	 * CPU speculatively use msg_id as an index into
-> -	 * hsmp_msg_desc_table[] (here and in validate_message() /
-> +	 * CPU speculatively use msg_id as an index into the message
-> +	 * descriptor tables (here and in validate_message() /
->   	 * is_get_msg() called downstream via hsmp_send_message()), and
->   	 * pull arbitrary kernel memory into the cache (Spectre v1,
->   	 * CVE-2017-5753).  Clamp once into msg.msg_id so every downstream
->   	 * dereference sees the sanitized value.
->   	 */
-> -	msg.msg_id = array_index_nospec(msg.msg_id, HSMP_MSG_ID_MAX);
-> +	msg.msg_id = array_index_nospec(msg.msg_id, hsmp_pdev.desc->num_msgs);
-> +
-> +	desc = get_msg_desc(msg.msg_id);
-> +	if (!desc || desc->type == HSMP_RSVD)
-> +		return -ENOMSG;
->   
->   	switch (fp->f_mode & (FMODE_WRITE | FMODE_READ)) {
->   	case FMODE_WRITE:
-> @@ -410,7 +488,7 @@ static long hsmp_ioctl_msg(struct file *fp, unsigned long arg)
->   	if (ret)
->   		return ret;
->   
-> -	if (hsmp_msg_desc_table[msg.msg_id].response_sz > 0) {
-> +	if (desc->response_sz > 0) {
->   		/* Copy results back to user for get/monitor commands */
->   		if (copy_to_user(arguser, &msg, sizeof(struct hsmp_message)))
->   			return -EFAULT;
-> @@ -687,9 +765,9 @@ int hsmp_cache_proto_ver(u16 sock_ind)
->   	struct hsmp_message msg = { 0 };
->   	int ret;
->   
-> -	msg.msg_id	= HSMP_GET_PROTO_VER;
-> +	msg.msg_id	= hsmp_pdev.desc->proto_ver_msg;
 >   	msg.sock_ind	= sock_ind;
-> -	msg.response_sz = hsmp_msg_desc_table[HSMP_GET_PROTO_VER].response_sz;
+> -	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
+> -	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
+> +	msg.msg_id	= hsmp_pdev.desc->metric_dram_msg;
 > +	msg.response_sz	= get_msg_desc(msg.msg_id)->response_sz;
 >   
 >   	ret = hsmp_send_message_locked(&msg);
->   	if (!ret)
-> @@ -735,6 +813,15 @@ EXPORT_SYMBOL_NS_GPL(hsmp_misc_deregister, "AMD_HSMP");
->   
->   struct hsmp_plat_device *get_hsmp_pdev(void)
->   {
-> +	/*
-> +	 * Both drivers call this before they bring any socket up, and the CPU
-> +	 * this selects on is fixed long before either can load, so resolving
-> +	 * the platform description here is enough to have it in place for
-> +	 * every mailbox access and for the probe paths themselves.
-> +	 */
-> +	if (is_client_platform())
-> +		hsmp_pdev.desc = &hsmp_desc_client;
-> +
->   	return &hsmp_pdev;
->   }
->   EXPORT_SYMBOL_NS_GPL(get_hsmp_pdev, "AMD_HSMP");
+>   	if (ret)
 > diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
-> index 8dbff16a87b1..b4bd9800dee1 100644
+> index b4bd9800dee1..c46d53dbcd43 100644
 > --- a/drivers/platform/x86/amd/hsmp/hsmp.h
 > +++ b/drivers/platform/x86/amd/hsmp/hsmp.h
-> @@ -10,6 +10,8 @@
->   #ifndef HSMP_H
->   #define HSMP_H
->   
-> +#include <asm/amd/hsmp.h>
-> +
->   #include <linux/compiler_types.h>
->   #include <linux/device.h>
->   #include <linux/hwmon.h>
-> @@ -17,6 +19,7 @@
->   #include <linux/miscdevice.h>
->   #include <linux/mutex.h>
->   #include <linux/pci.h>
-> +#include <linux/processor.h>
->   #include <linux/rwsem.h>
->   #include <linux/semaphore.h>
->   #include <linux/sysfs.h>
-> @@ -32,6 +35,51 @@
->   
->   #define DRIVER_VERSION		"2.6"
-
-You're adding new IOCTL's in patches 5 and 6, does this version need to 
-bump for userspace to discover?
-
->   
-> +/*
-> + * To access a specific HSMP mailbox register, s/w writes the SMN address of the
-> + * HSMP mailbox register into the SMN_INDEX register, and reads/writes the
-> + * SMN_DATA reg.  Below are the SMN addresses of the HSMP mailbox registers in
-> + * SMU address space, as consumed by the fixed mailbox descriptors in hsmp.c.
-> + *
-> + * The server set is used by the non-ACPI path only; the ACPI path discovers the
-> + * equivalent values from _CRS/_DSD.  The _RM set is the client one, named for
-> + * the Ryzen Master SMC (RMSMC) interface whose mailbox it addresses, and is
-> + * used by both paths because the client exposes no _CRS/_DSD to discover them
-> + * from.  The two sets share a base and differ only in the register offsets
-> + * behind it, but are kept separate so each stays tied to the platform it was
-> + * documented for.
-> + */
-> +#define SMN_HSMP_BASE		0x03B00000
-> +#define SMN_HSMP_MSG_ID		0x00010534
-> +#define SMN_HSMP_MSG_ID_F1A_M0H	0x00010934
-> +#define SMN_HSMP_MSG_RESP	0x00010980
-> +#define SMN_HSMP_MSG_DATA	0x000109E0
-> +
-> +/* _RM: Ryzen Master SMC, the client mailbox */
-> +#define SMN_HSMP_BASE_RM	0x03B00000
-> +#define SMN_HSMP_MSG_ID_RM	0x00010A8C
-> +#define SMN_HSMP_MSG_RESP_RM	0x00010A90
-> +#define SMN_HSMP_MSG_DATA_RM	0x00010A94
-
-Although these are the same for these 3 platforms, they might not be the 
-same for the follow on ones.  Have you seen the work that's going into 
-the AMD_PMF driver to build structs of register lists?  Take a look at this.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=review-ilpo-next&id=e860e561926bf75e323d43fe59a9bf25d2ef33a3
-
-> +
-> +/*
-> + * Family 1Ah client platforms use the Ryzen Master SMC (client) mailbox and
-> + * message set instead of the server HSMP interface:
-> + *
-> + *	Models 80h-87h	Medusa1
-> + *	Models 88h-8Fh	Olympic Ridge
-> + *	Models E0h-E3h	Medusa2
-> + *
-> + * They all share the SMN_HSMP_*_RM mailbox addresses above and the same
-> + * message set, so one predicate covers them and the two adjacent Model 8xh
-> + * ranges are tested as one.
-> + */
-> +static inline bool is_client_platform(void)
-> +{
-> +	return boot_cpu_data.x86 == 0x1A &&
-> +	       ((boot_cpu_data.x86_model >= 0x80 && boot_cpu_data.x86_model <= 0x8F) ||
-> +		(boot_cpu_data.x86_model >= 0xE0 && boot_cpu_data.x86_model <= 0xE3));
-> +}
-
-Rather than enumerating lists of CPU IDs, could you instead go off the 
-ACPI ID?  Or are these identical from server to client?
-
-> +
->   struct hsmp_mbaddr_info {
->   	u32 base_addr;
->   	u32 msg_id_off;
-> @@ -40,6 +88,30 @@ struct hsmp_mbaddr_info {
->   	u32 size;
+> @@ -103,6 +103,8 @@ struct hsmp_mbaddr_info {
+>    * @test_msg:		no-op message used to probe the mailbox.  Also the
+>    *			lowest valid message ID, as ID 0 is reserved.
+>    * @proto_ver_msg:	returns the interface version.
+> + * @metric_tbl_msg:	refills this socket's metric table in DRAM.
+> + * @metric_dram_msg:	returns the DRAM address of the metric table.
+>    */
+>   struct hsmp_plat_desc {
+>   	const struct hsmp_mbaddr_info	*mbinfo;
+> @@ -110,6 +112,8 @@ struct hsmp_plat_desc {
+>   	u32				num_msgs;
+>   	u32				test_msg;
+>   	u32				proto_ver_msg;
+> +	u32				metric_tbl_msg;
+> +	u32				metric_dram_msg;
 >   };
 >   
-> +/*
-> + * Per-platform description of the mailbox and the message set behind it.
-> + * Resolved once from the running CPU and reached through hsmp_pdev->desc, so
-> + * neither the message plumbing nor the probe paths have to re-derive which
-> + * platform they are on.
-> + *
-> + * @mbinfo:		fixed SMN mailbox addresses.  The ACPI path uses these
-> + *			only where firmware exposes no _CRS/_DSD to read them
-> + *			from, i.e. on the client.
-> + * @msg_desc:		message descriptor table, indexed by message ID.
-> + * @num_msgs:		number of entries in @msg_desc, and so the exclusive
-> + *			upper bound on a valid message ID.
-> + * @test_msg:		no-op message used to probe the mailbox.  Also the
-> + *			lowest valid message ID, as ID 0 is reserved.
-> + * @proto_ver_msg:	returns the interface version.
-> + */
-> +struct hsmp_plat_desc {
-> +	const struct hsmp_mbaddr_info	*mbinfo;
-> +	const struct hsmp_msg_desc	*msg_desc;
-> +	u32				num_msgs;
-> +	u32				test_msg;
-> +	u32				proto_ver_msg;
-> +};
-> +
 >   struct hsmp_socket {
->   	struct bin_attribute hsmp_attr;
->   	struct hsmp_mbaddr_info mbinfo;
-> @@ -59,6 +131,7 @@ struct hsmp_socket {
->   struct hsmp_plat_device {
->   	struct miscdevice mdev;
->   	struct hsmp_socket *sock;
-> +	const struct hsmp_plat_desc *desc;
->   	u32 proto_ver;
->   	u16 num_sockets;
->   };
 > diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
-> index e9b2b809c0f5..7423c98a7b3e 100644
+> index 7423c98a7b3e..bc29b0ec18f7 100644
 > --- a/drivers/platform/x86/amd/hsmp/plat.c
 > +++ b/drivers/platform/x86/amd/hsmp/plat.c
-> @@ -29,17 +29,6 @@
->   
->   #define DRIVER_NAME		"amd_hsmp"
->   
-> -/*
-> - * To access specific HSMP mailbox register, s/w writes the SMN address of HSMP mailbox
-> - * register into the SMN_INDEX register, and reads/writes the SMN_DATA reg.
-> - * Below are required SMN address for HSMP Mailbox register offsets in SMU address space
-> - */
-> -#define SMN_HSMP_BASE		0x3B00000
-> -#define SMN_HSMP_MSG_ID		0x0010534
-> -#define SMN_HSMP_MSG_ID_F1A_M0H	0x0010934
-> -#define SMN_HSMP_MSG_RESP	0x0010980
-> -#define SMN_HSMP_MSG_DATA	0x00109E0
-> -
->   static struct hsmp_plat_device *hsmp_pdev;
->   
->   static int amd_hsmp_pci_rdwr(struct hsmp_socket *sock, u32 offset,
-> @@ -157,20 +146,18 @@ static int init_platform_device(struct device *dev)
->   		sock = &hsmp_pdev->sock[i];
->   		sock->sock_ind			= i;
->   		sock->dev			= dev;
-> -		sock->mbinfo.base_addr		= SMN_HSMP_BASE;
->   		sock->amd_hsmp_rdwr		= amd_hsmp_pci_rdwr;
-> +		sock->mbinfo			= *hsmp_pdev->desc->mbinfo;
->   
->   		/*
->   		 * This is a transitional change from non-ACPI to ACPI, only
->   		 * family 0x1A, model 0x00 platform is supported for both ACPI and non-ACPI.
-> +		 * It is the one part whose message-id register sits at a
-> +		 * different offset on this path than the descriptor gives.
->   		 */
->   		if (is_f1a_m0h())
->   			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID_F1A_M0H;
-> -		else
-> -			sock->mbinfo.msg_id_off	= SMN_HSMP_MSG_ID;
->   
-> -		sock->mbinfo.msg_resp_off	= SMN_HSMP_MSG_RESP;
-> -		sock->mbinfo.msg_arg_off	= SMN_HSMP_MSG_DATA;
->   		sema_init(&sock->hsmp_sem, 1);
->   
->   		/* Test the hsmp interface on each socket */
-> @@ -184,8 +171,18 @@ static int init_platform_device(struct device *dev)
->   
->   		ret = hsmp_cache_proto_ver(i);
->   		if (ret) {
-> -			dev_err(dev, "Failed to read HSMP protocol version\n");
-> -			return ret;
-> +			/*
-> +			 * Some client SMU builds reject the interface-version
-> +			 * query with "invalid message" even though the mailbox
-> +			 * is functional, as the test message above just
-> +			 * showed.  Keep going there instead of failing the
-> +			 * probe: proto_ver only gates server-side features.
-> +			 */
-> +			if (!is_client_platform()) {
-> +				dev_err(dev, "Failed to read HSMP protocol version\n");
-> +				return ret;
-> +			}
-> +			dev_warn(dev, "Interface version query unsupported on client SMU; continuing\n");
-
-Shouldn't this be fatal?  Can we fix the F/W to follow the expected HSMP 
-driver behavior?
-
+> @@ -185,7 +185,12 @@ static int init_platform_device(struct device *dev)
+>   			dev_warn(dev, "Interface version query unsupported on client SMU; continuing\n");
 >   		}
 >   
->   		if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
-> @@ -317,6 +314,12 @@ static bool legacy_hsmp_support(void)
->   	case 0x1A:
->   		switch (boot_cpu_data.x86_model) {
->   		case 0x00 ... 0x0F:
+> -		if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
 > +		/*
-> +		 * Client platforms: 80h-87h (Medusa1), 88h-8Fh (Olympic
-> +		 * Ridge), E0h-E3h (Medusa2)
+> +		 * On the client the metric table is fetched with
+> +		 * HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR whatever interface
+> +		 * version was reported, since that query may be unsupported.
 > +		 */
-> +		case 0x80 ... 0x8F:
-> +		case 0xE0 ... 0xE3:
->   			return true;
->   		default:
->   			return false;
+
+What version was reported on client platforms?  Since it's the first 
+time client is being supported with HSMP, maybe it's best that client 
+should be reporting 6.
+
+Then this part of the patch could get dropped later.
+
+> +		if (is_client_platform() || hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
+>   			ret = hsmp_get_tbl_dram_base(i);
+>   			if (ret)
+>   				dev_info(dev, "Failed to init metric table\n");
 
