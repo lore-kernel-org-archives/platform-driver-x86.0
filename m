@@ -1,45 +1,45 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010045.outbound.protection.outlook.com [40.93.198.45])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012026.outbound.protection.outlook.com [52.101.43.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759D84A33E9;
-	Wed, 29 Jul 2026 16:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74B54CA29D;
+	Wed, 29 Jul 2026 16:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.26
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785343264; cv=fail; b=Sxhk+SmUwBO4gRqNGTf2wVy6KV5PDoi4MTR0jr1qa2ZePWcqqp5RZb7lQwyvXQBvQBv2+D6dNreJHI5fr4hCE5tcKYYc+K5+SrYYQtYVq/T1qFplYvLz0X1wZJiMOyW5orsJGDctA2dLcTAHPlB2ck3eroOgDu5aCci6GZxtzzk=
+	t=1785343268; cv=fail; b=cIZS112DJQqqXKEzV3rJNpUzVHTbZAOuqOaxNiDbTihgfN58EukxOQOLLygDoXNKrJiOjA4BsfNsYmzLHzI6zUIDu0MIhiM/BtIte8MUGOwGfLqTZ8e/IRiQNSflND3htx8mXc+QsWjkfXVpx+U00GzIqxwTVMdzkGYZW/mBTc0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785343264; c=relaxed/simple;
-	bh=eI7rVBxCLgzQ7hY2crBnbSedO1lgiueIiVhLhIEG7rA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gSK0qqoqKo8Tx/bFBRjLZy62H6DX8csNhc3NPU2CoEUBT6Xx7F7E7cjSUg3PGTnl3eafCWrA0zSETuVOYxWrOmivXrbwr+36Gi7U42b0J1cP2PbviYbwFqv8B6DEA8kNvMYShdTRCuaAkNinGGFxHmLV0gmq+TK6Q4/KjUIuNSQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dhcaFNyD; arc=fail smtp.client-ip=40.93.198.45
+	s=arc-20240116; t=1785343268; c=relaxed/simple;
+	bh=Eg7hcRr+Zn0u/fwec47xWatWqIg2QWJ2ADg1Hggv0VU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lw5003wbGvtiTSlZwEit6uNn/jNCEPmhXrxXUrlk2Fu2ao9N6Rr/hBicqJER8tAl364ghmAF7CN40HdaqcjbdXXbTL0TBUVfMZySiYYyK8TG6hLRBmaE4lVpaTbqOxEfCgElbK8GIoWTAccE1fCMtTZuajkcFJffV33VtGEjFJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1GzoOt7p; arc=fail smtp.client-ip=52.101.43.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dhcaFNyD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1GzoOt7p"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T7H2sF3lzcwjN2q0QDGF8zyDqgwKT4V6lutNGbS99EJ0soJMN/ajqN3SXKvhcy0cyOOVsmn2lm2akGjQQSBYMYy8XHzrsu3TLbF5ulFG63yCj+qhEu0oO3iIChJEYcglaxBoOqnmrToJ+LcJrQvsCvvR/SWvRTJ2N4fgNMAbS7tHjmJEV/NqcWKotsMNYgCwU8d/zUOOl8Xw0Hg0fxpylJ/E9llXOAYxbqxwTVHWFRbN9R4x0H8m2XaSaV6vw/mqY5EkUdm+ws7z+Tl1/fiNA0/EMrf6x5aUHwY7zcJQYNcaGhhIyRG4hkreZd/7RRLNlsaAmFEqIWuc5kuc0jA+aw==
+ b=Gmh7KGuG0rw/ay7gmRUHB+4DZjHK039mXOzjO4y2qAWCKPLchexpLcFjQ/YouHbX5PADBh2splUBa5FhbJRfY1qQrcqCcTVeE0YFvGRWzRvrJkye0JAzn2rEzZmtMR+jbPsxxf/H+Q26X7Bn734aCgpr6+G9e1pQZoV2wiuWTKWymq+VLpvz6UhRMVq4Ufy4AG1U3YHdKh175ttTGX5wuIbeqIiKyEWk1eLTSh8hDam4FeqzVgyOEnwFqqOJwH14ic45E7sXz1/EpdN+QIT7e7DTwujfhe63MsAusfHVmw4QjPtZf4R8f93Q/gUQCJxeQh1S9+BIK//sGClCJN6+Xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aSxOqozU+lEO03cqcgPEa/49D6t9PGI3bcolJWkG+pw=;
- b=OrOCH01Wij8iaIJG6rq52pBVrCrpSiOxaeHRiaZ3AEQ05U7NKwNpfXBP19PdZWCuahbGhDsBsXjQ7PhqdpHSb6BsE9tdiLAOUJ4GiDaMoBZlju6teGtIgKT8wkdwv5unJL0TWV/XOZiGO2mmschL+Akd+wobQ+P8CfCPTCMyobTmWnvvYEHSbW33S9P9DlfUgcWhkPhKVSt53P8hb+1/u4SD4q6Q7jRgFKvlZ9gbZkBp2RegFcJzztrEQ4T4pP68BGLxCLBh/vNvTToBfZaxb2sCgjuwexhUNXIA5HQqfIcQfiEOtKJwZudr1KclKX0b6kIm7M5JEVepkGRu6OZwwg==
+ bh=holR11yWEyid+eLuS7tD2u6E42BQhUqD7BDQoXuFbxE=;
+ b=ktv5/6jgqLR/Tnpd533G+G3fytu1ZXGRa2Joj3KcRaVtDxQSaFhSiIMrrN3fPCkLtyieOs4XKOsf0XjDQQlhtM2kZ8h0LDVQVamvYTtlkjZTR9WVwxY2LvONrBmvhCKw4UqGfqSF6RB4RTq2X96XcQV+B4oDiXj1MKFLuoODsjMubxZ+2aQtc20gpBg201/g2sC/D7wSP/reWOXEfmElbNYxRVUTXpL5Jkg854CjdTcorzzl5MHevGsCcZDtDGCa1fFMtGYIVQh+/PIfwpCa4zrZsblIztTZsuY7ShmF6aiiRxhZFEXMW0eu/a8RNqrymyAlNvweBI1YkSF6QqKQiQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aSxOqozU+lEO03cqcgPEa/49D6t9PGI3bcolJWkG+pw=;
- b=dhcaFNyD77iSW+sBr8u4rBu0cWOXKcDckQq8I7j84gs9pjm2iinFqrLHR2jikhYvxzRLAJ0CWVsXWD9Rr1VUtynboql6q0uc0ob4jWDfgchF7IHy1vLXbPpZfSkSaypY3V0TGfTbC9bHO0wO+QOiwzEuQ1wXSAfmxSHSqfTN9+w=
-Received: from SA9PR10CA0014.namprd10.prod.outlook.com (2603:10b6:806:a7::19)
- by CH2PR12MB4085.namprd12.prod.outlook.com (2603:10b6:610:79::9) with
+ bh=holR11yWEyid+eLuS7tD2u6E42BQhUqD7BDQoXuFbxE=;
+ b=1GzoOt7pbn2dQD/DTz6zr5wWLv2ArFo/timKRbXSdbgpuIpWfDc+RveYZgv+S83jjsF5Cq/aWK4dJcnRdg5XP0cyqIpjHYA0Y13oBDGbF2WjkJzqpTPbI4haHwhNDLNsfqsVm7rNCRnDczkP5mEeOYZD8AqpgzJG6pSC2Yzy6uA=
+Received: from SA9PR10CA0028.namprd10.prod.outlook.com (2603:10b6:806:a7::33)
+ by IA1PR12MB6258.namprd12.prod.outlook.com (2603:10b6:208:3e6::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.13; Wed, 29 Jul
- 2026 16:40:59 +0000
-Received: from SN1PEPF000252A1.namprd05.prod.outlook.com
- (2603:10b6:806:a7:cafe::e) by SA9PR10CA0014.outlook.office365.com
- (2603:10b6:806:a7::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.13 via Frontend Transport; Wed,
- 29 Jul 2026 16:40:59 +0000
+ 2026 16:41:00 +0000
+Received: from SN1PEPF000252A1.namprd05.prod.outlook.com (2603:10b6:806:a7::4)
+ by SA9PR10CA0028.outlook.office365.com (2603:10b6:806:a7::33) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.13
+ via Frontend Transport; Wed, 29 Jul 2026 16:41:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -49,19 +49,21 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from satlexmb07.amd.com (165.204.84.17) by
  SN1PEPF000252A1.mail.protection.outlook.com (10.167.242.8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:40:58 +0000
+ 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:41:00 +0000
 Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 29 Jul
- 2026 11:40:52 -0500
+ 2026 11:40:57 -0500
 From: Muralidhara M K <muralidhara.mk@amd.com>
 To: <ilpo.jarvinen@linux.intel.com>
 CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH 0/7] platform/x86/amd/hsmp: Family 1Ah client support
-Date: Wed, 29 Jul 2026 22:10:27 +0530
-Message-ID: <20260729164034.1331375-1-muralidhara.mk@amd.com>
+Subject: [PATCH 2/7] platform/x86/amd/hsmp: Route metric table through the client messages
+Date: Wed, 29 Jul 2026 22:10:29 +0530
+Message-ID: <20260729164034.1331375-3-muralidhara.mk@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20260729164034.1331375-1-muralidhara.mk@amd.com>
+References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -74,99 +76,155 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|CH2PR12MB4085:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86a9e966-00ad-4791-211a-08deed902ada
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A1:EE_|IA1PR12MB6258:EE_
+X-MS-Office365-Filtering-Correlation-Id: fa6ce69f-e63a-4534-9f5f-08deed902bfa
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700016|23010399003|6133799003|56012099006|11063799006|10067099003|18002099003;
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|23010399003|36860700016|56012099006|11063799006|10067099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	CiKKO+UJUddDftLUusc7FdnSXfheo+lX7ISrZle7DUxWhYQykyo3zAPv7H/JBYpSDXBQstBJ6V0V/yNqc6zmDGr/bdzxE69pokOUfz9qPJy2Xep07YoVNj0RnFOkHHRZoPPo35oPE3eBHd0dSdguR3JQduENSYgNRWaKA/y8//Z2wo398BR1CyAcz1b2H7V8Y2fNJ/IhkF5s6qo95HlLzRlQn11tQghGhB4XwKoeE6iwBwL23Y1gKG7bDzVYh9k/56WpxEAreL0OWUtrVsJjP7UYTJP146sYWxcMWwevaeJ4Rz2PzdtvPNzF1IS2Bnyf3i8mn6aoZ4tp+IkfLLlo0l+VIlz5yHHwVKv5b9Cc0pnS9nu+qbuzSPIBC34XTjwPUYqPd6RLITexXf/gxCp0RsHMaAaPthKTzw4Ykbr8XFXUUGzpHnJufQ8lFE/ot4qSKNg5PN6FyeG8vVKicjZS0JVQV66Q+XIiV4FHmMCzpZwFL3tAyEzXz345cdEeWKYu/tD+BVfjrQ+Df6AZ1sUc39fY2DrMzoI6rTHCr6j9sG3rMuXShtzX+CxKGCgUlt+CcDzN8LEB57vRiLXbZnqb8HErDjqf/RZ0LrjMrtoU/7HWNKNEun4k0BpGN1ZAQBT7txAWNfsxH0vTd+7mdiK4jLt2lUdbmlBAxocQ/hIWIZdFVgkLidk1Tskm+3c7RDzTkUHnjVfJMQNAIrMi14Kx4Q==
+	9x0pu8D10rn/+rcde+s+b3AqRSU20eLP2RlDWWq5OjlWWZ5aU6Mkn04RAeA/DxuM6Nh61T0JltuijtpPNvZYKZ1qNdDAXK9+KrnYlrCsO5d/ALz8UmahifET7j3wASdPD33TW/g6BeArfRheWMWtpTbedIgwHMVBHCS/+0+q0O5RmuRnsP2wtwqluPqageKjpbDpChk1GRX/ziDG4rUceVP1KexWngVAcRHLv6ZIykCHSdgVGy6vAjbDKh9sBpcALMMGCRwhQ4TAFezC5ks7jbMPI/iZ51t9PCEhKqokGH9m7qF19uoHH2Dg3Gfqe86Li5/kt72ftyNpGWd/pH6n94q8ONb34UkIqRuaPwPPKAkXw9VVA6szbghb+8enpjepDNOmzi8D7E2l2Ns19ieJ0sHaEkaXlWLwZB5R1L4RXAhYIqNubgmTn3tvTb5cPNOdNyrdFwKmTOKHc0jYD9/dv0gi6XIsdR+jbt3WuAXG4KK/RZwqQxZlBTuFDEk9RfR1DlUayJg5lgmmNEhZ7EwPM+3c1yv8vglXZvKX+TgznuCJXrPrLNwqU08Tsq5PVd1vImYiKcomvo5RmJVQEYlMiZzABxLFfNQUOX6/q2rBokSBR6Vc+or8umKt61+ibUB0C2zmIhf7eoWzb0eys09PBZqZBL1hgDfuY+4Bkgl79l7Qt/QJSu5YuaUInoiLIJHU8YfSx7Ey2ZZPdUpxdlS81g==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700016)(23010399003)(6133799003)(56012099006)(11063799006)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(23010399003)(36860700016)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Gp/ICOUplNc7n+0XKmbetWo+OOM7GeOb/5tsyMXFJMYu2SiLU65+87qaGL/C/aUk8JZsNHOe9iIpeq+S5jQQCJaEjc5GFu++4z4gWa71/4vY1mPJFIV9mx2ZK1eD3KI1nAPeiWGROd8XRDaSXZz+zPpFR+LZpr93zJCLpSPmX3hbvRzf/LzyeQxYj+PJllv0XDrNPA9aQSPGsFCV9cJ405kC7xw2xMMShfOdOasM58C7WTbCtyFaXBjziRTiZjccU3gxHdjugBI8nVMtDIm0TArHJbrB1zh1xqOBtou3Sy2sZtqLsqWSUgMduVxb3InXpxmrETzUBWUjMTqL4hXrduuK8B8zNzgFxvL0s3llniT20EBfZqB9DjEXrDhV5h77ZATz8IYKIPnvAj0ntktF73Js41kswgmBmf94Sijyi1LlNPuvgdKiR6crGg3b4nN+
+	kzE00fyrlX6wOJOq6EIYxzhzhDt2aQH6L0e4Tjvybph6SoIVY4W6SzWDLhaaYCZ5q9wj1I6tomVTVKEeWzNO6Icw0LL0IT2z6kVerIx9juS4Dg5t1gUiLmj99+AQIeqYPFG8Ng1fMkSn9QiQ17faArOhxS9FVS4Z4oxoMgbzWVqzP5zQgptVYWOI5dleYh30OsSX2tfrRoC8209K2h278tLloNrHDTeIJOHfeaBOkEjIyOV+mXGhVkYHE0DqofNpUSAkOXh6qI9sgL+11TwK+ZfNa/w1VnGRIAyOUuQ8wGS608Ke/s0cDj8cuXcIR6kiDEuaZR+u91BAfXcJaWAKlB9fOc+eCNdpalzaSGBnMV7ESe5/VSOVR6P1NjLHB7iTIcWZYpcULLKmb9ZGmFDZ/PUWtgPyOnx7A9CsVA5AoUV5t/gA4gOEzre4/phiKCTO
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:40:58.2548
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:41:00.1484
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86a9e966-00ad-4791-211a-08deed902ada
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa6ce69f-e63a-4534-9f5f-08deed902bfa
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SN1PEPF000252A1.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4085
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6258
 
-This series enables the HSMP driver on the Family 1Ah client platforms
-- Medusa1 (Models 80h-87h), Olympic Ridge (Models 88h-8Fh) and Medusa2
-(Models E0h-E3h) - and adds the two read-only ioctls that bring-up on
-those parts needs.
+Wire the client metric table and metrics DRAM address messages into the
+metric table read path for the Family 1Ah client platforms (Models
+80h-8Fh and E0h-E3h), and initialise the metric table on the platform
+driver probe.
 
-The client parts drive a different mailbox from the server HSMP
-interface. Its SMN addresses are fixed rather than discoverable through
-firmware, and the parts speak the Ryzen Master SMC message set instead
-of the server message IDs. Patches 1-4 teach the driver both, leaving
-server behaviour unchanged:
+The client reaches its metric table through the Ryzen Master SMC message
+set, so add the two message IDs to struct hsmp_plat_desc and have
+hsmp_metric_tbl_read_locked() and hsmp_get_tbl_dram_base() take them
+from there. Unlike the test and version queries, these two are not
+numbered alike in the two sets - 24h/25h on the server against 05h/06h
+on the client - which is why they have to come from the descriptor
+rather than a shared constant.
 
-  - Patch 1 describes each platform once in struct hsmp_plat_desc,
-    which carries the mailbox addresses, the message descriptor table
-    and its size, and the IDs of the messages the driver issues itself.
-    Every lookup then picks the table matching the running platform
-    rather than testing the platform at each site. It also adds the
-    client message set to the UAPI header, and lets the client probe
-    survive an interface-version query that some client SMU builds
-    reject with "invalid message" even though the mailbox works.
+Fetch the metric table on the client whatever interface version was
+reported. That query is already non-fatal there, since some client SMU
+builds reject it while the mailbox works, so hsmp_pdev->proto_ver cannot
+gate the client metric table the way HSMP_PROTO_VER6 gates it on the
+server.
 
-  - Patch 2 routes the metric table through the client message IDs,
-    which unlike the test and version queries are not numbered alike in
-    the two sets: 24h/25h on the server against 05h/06h on the client.
+Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 16 ++++++++++++----
+ drivers/platform/x86/amd/hsmp/hsmp.h |  4 ++++
+ drivers/platform/x86/amd/hsmp/plat.c |  7 ++++++-
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
-  - Patch 3 handles the ACPI device (HID AMDI0097), which on these
-    parts exposes neither a _CRS window nor a _DSD mailbox package and
-    carries a bare socket number in _UID rather than the server "IDXX"
-    form. Reads go through the read-only SMNR ACPI method, the same
-    accessor the AMDHSMP Windows driver uses.
-
-  - Patch 4 leaves the hwmon power sensors unregistered on the client.
-    hwmon.c issues the server power message IDs unconditionally, and on
-    the client those numbers are metric-table queries that pass
-    validate_message(), so power1_input and power1_cap would report a
-    table version and the low half of a DRAM address as microwatts.
-
-Patches 5-7 add HSMP_IOCTL_SMN_CMD and HSMP_IOCTL_MSR_CMD and document
-them. Bringing a client platform up means reading SMN registers and
-core MSRs that the message set does not cover, which today means either
-debugfs, absent on production kernels, or an out-of-tree module. Both
-ioctls are read-only and require CAP_SYS_RAWIO. Each request struct
-carries a @write flag so write support could be added later without
-changing the layout, but a request that sets it is refused with -EPERM
-regardless of the caller's privilege or open mode.
-
-Each patch builds individually at W=1 and is clean under
-checkpatch.pl --strict --codespell.
-
-Muralidhara M K (7):
-  platform/x86/amd/hsmp: Add HSMP client support for Family 1Ah
-  platform/x86/amd/hsmp: Route metric table through the client messages
-  platform/x86/amd/hsmp: Add ACPI client support via the SMNR method
-  platform/x86/amd/hsmp: Leave the hwmon power sensors off on client
-    platforms
-  platform/x86/amd/hsmp: Add SMN read IOCTL support
-  platform/x86/amd/hsmp: Add MSR read IOCTL support
-  Documentation/arch/x86/amd_hsmp: Document the SMN and MSR IOCTLs
-
- Documentation/arch/x86/amd_hsmp.rst  |  62 +++++-
- arch/x86/include/uapi/asm/amd_hsmp.h | 210 ++++++++++++++++++++
- drivers/platform/x86/amd/hsmp/acpi.c | 138 +++++++++++--
- drivers/platform/x86/amd/hsmp/hsmp.c | 285 ++++++++++++++++++++++++---
- drivers/platform/x86/amd/hsmp/hsmp.h |  77 ++++++++
- drivers/platform/x86/amd/hsmp/plat.c |  61 +++---
- 6 files changed, 774 insertions(+), 59 deletions(-)
-
-
-base-commit: 775f2078b38ff2121410a35302497a1e81b8e459
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index 9b65dbd47965..2326506929a4 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -65,6 +65,10 @@ static const struct hsmp_mbaddr_info hsmp_mbinfo_client = {
+  * are also the only ones the two message sets have in common.  Messages named
+  * by userspace in an ioctl need no entry here, as that path already resolves
+  * the ID against the running platform's table.
++ *
++ * Being common does not mean being numbered alike.  The test and version
++ * queries are 01h and 03h in both sets, but the two metric table messages are
++ * 24h/25h on the server against 05h/06h on the client.
+  */
+ static const struct hsmp_plat_desc hsmp_desc_server = {
+ 	.mbinfo			= &hsmp_mbinfo_server,
+@@ -72,6 +76,8 @@ static const struct hsmp_plat_desc hsmp_desc_server = {
+ 	.num_msgs		= HSMP_MSG_ID_MAX,
+ 	.test_msg		= HSMP_TEST,
+ 	.proto_ver_msg		= HSMP_GET_PROTO_VER,
++	.metric_tbl_msg		= HSMP_GET_METRIC_TABLE,
++	.metric_dram_msg	= HSMP_GET_METRIC_TABLE_DRAM_ADDR,
+ };
+ 
+ /* The client drives a different mailbox with the Ryzen Master SMC message set */
+@@ -81,6 +87,8 @@ static const struct hsmp_plat_desc hsmp_desc_client = {
+ 	.num_msgs		= HSMP_CLIENT_MSG_ID_MAX,
+ 	.test_msg		= HSMP_CLIENT_TEST,
+ 	.proto_ver_msg		= HSMP_CLIENT_GET_INTERFACE_VER,
++	.metric_tbl_msg		= HSMP_CLIENT_GET_METRICS_TABLE,
++	.metric_dram_msg	= HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR,
+ };
+ 
+ static struct hsmp_plat_device hsmp_pdev = {
+@@ -643,11 +651,11 @@ static ssize_t hsmp_metric_tbl_read_locked(struct hsmp_socket *sock, char *buf,
+ 		return -EINVAL;
+ 	}
+ 
+-	msg.msg_id	= HSMP_GET_METRIC_TABLE;
++	msg.msg_id	= hsmp_pdev.desc->metric_tbl_msg;
+ 	msg.sock_ind	= sock->sock_ind;
+ 
+ 	/*
+-	 * HSMP_GET_METRIC_TABLE makes firmware refill this socket's shared
++	 * The metric table message makes firmware refill this socket's shared
+ 	 * metric DRAM region, which is then copied out below.  Hold the
+ 	 * per-socket lock across the fill-and-copy so concurrent readers of the
+ 	 * same socket cannot return a torn snapshot.
+@@ -713,8 +721,8 @@ int hsmp_get_tbl_dram_base(u16 sock_ind)
+ 	int ret;
+ 
+ 	msg.sock_ind	= sock_ind;
+-	msg.response_sz	= hsmp_msg_desc_table[HSMP_GET_METRIC_TABLE_DRAM_ADDR].response_sz;
+-	msg.msg_id	= HSMP_GET_METRIC_TABLE_DRAM_ADDR;
++	msg.msg_id	= hsmp_pdev.desc->metric_dram_msg;
++	msg.response_sz	= get_msg_desc(msg.msg_id)->response_sz;
+ 
+ 	ret = hsmp_send_message_locked(&msg);
+ 	if (ret)
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.h b/drivers/platform/x86/amd/hsmp/hsmp.h
+index b4bd9800dee1..c46d53dbcd43 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.h
++++ b/drivers/platform/x86/amd/hsmp/hsmp.h
+@@ -103,6 +103,8 @@ struct hsmp_mbaddr_info {
+  * @test_msg:		no-op message used to probe the mailbox.  Also the
+  *			lowest valid message ID, as ID 0 is reserved.
+  * @proto_ver_msg:	returns the interface version.
++ * @metric_tbl_msg:	refills this socket's metric table in DRAM.
++ * @metric_dram_msg:	returns the DRAM address of the metric table.
+  */
+ struct hsmp_plat_desc {
+ 	const struct hsmp_mbaddr_info	*mbinfo;
+@@ -110,6 +112,8 @@ struct hsmp_plat_desc {
+ 	u32				num_msgs;
+ 	u32				test_msg;
+ 	u32				proto_ver_msg;
++	u32				metric_tbl_msg;
++	u32				metric_dram_msg;
+ };
+ 
+ struct hsmp_socket {
+diff --git a/drivers/platform/x86/amd/hsmp/plat.c b/drivers/platform/x86/amd/hsmp/plat.c
+index 7423c98a7b3e..bc29b0ec18f7 100644
+--- a/drivers/platform/x86/amd/hsmp/plat.c
++++ b/drivers/platform/x86/amd/hsmp/plat.c
+@@ -185,7 +185,12 @@ static int init_platform_device(struct device *dev)
+ 			dev_warn(dev, "Interface version query unsupported on client SMU; continuing\n");
+ 		}
+ 
+-		if (hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
++		/*
++		 * On the client the metric table is fetched with
++		 * HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR whatever interface
++		 * version was reported, since that query may be unsupported.
++		 */
++		if (is_client_platform() || hsmp_pdev->proto_ver == HSMP_PROTO_VER6) {
+ 			ret = hsmp_get_tbl_dram_base(i);
+ 			if (ret)
+ 				dev_info(dev, "Failed to init metric table\n");
 -- 
 2.34.1
 
