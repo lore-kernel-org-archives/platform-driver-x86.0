@@ -1,177 +1,252 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011050.outbound.protection.outlook.com [52.101.62.50])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azolkn19011037.outbound.protection.outlook.com [52.103.12.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0469C42C4F0;
-	Wed, 29 Jul 2026 16:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2563839CCFD;
+	Wed, 29 Jul 2026 17:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785343282; cv=fail; b=Rv4OITai8B9FuN3iwrK+p0uP3g2YL7PXohMOBPRKCGuDcfmm7lG8RJREt5vMtUf0MR5lshFDANHxn/v2u2g7ON24uy5qedw2QNgWXzsQWYXTeY3tqPR2KUKs7l22zMgJmzoH/fn4SiXbrYVDZ89zPUOWVa/MnpIdTrF35pzTIqI=
+	t=1785347312; cv=fail; b=HOyedOPpenaM/nWOCzOhxNzt9UjrKsT4/7PDKeT/xX4GIGfj+uSKxsomZ4j87JapXItj2PgnzC39U963Lx71miZGI1yz996M2ty9kwZ57iy9qKUeQhNcso6hkT/sc6DCO6W1Ys1eQUkQL++HzcmKqFIysi6AfMBqTXvN6EIKTIM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785343282; c=relaxed/simple;
-	bh=VmD9HLuRASMHsOEl4hz8HPfWq7Fct+okaJSXLkYyiBE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jVXXIkgtHPaS8jliO/hTNQAF6z5tIZeHx2jVGkbH2Ech50vq358fZduuw9v9SOX6kvcUn0uCHCF0wQwDFAbVo7RwLU7FSh7bqFVpq1mv2e3ZiHvdayN8PGm7mqbvuiSgmMN1AacsuJzPIy6dB1eAwZGdKDDo/YPSUvCks2CdrlQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=imRWpgbv; arc=fail smtp.client-ip=52.101.62.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1785347312; c=relaxed/simple;
+	bh=KOAdxVLoSd242yOLaIzJU3uC628pp5IMByULyye9Mj0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RHmrZ/Zcx9f9yt1Q46+nFtck8AuHhXsUTKzArVv63kmLfYbQiShTF6NIN80a7Px+XTOBtAGy0Qfz3u7dUFGmRc2KVR2+9MXB5BxepZhCtiyOlWlHZJjtyzf8A6ndxv+fvKToB0q4ynHl+FCaYIH/aLf6bZ+LMPAOzZeIgh7XwQA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it; spf=pass smtp.mailfrom=outlook.it; dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b=HPRojKGA; arc=fail smtp.client-ip=52.103.12.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="imRWpgbv"
+	dkim=pass (2048-bit key) header.d=OUTLOOK.IT header.i=@OUTLOOK.IT header.b="HPRojKGA"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nL5l0GERDiLp/kMTvRaj7zlc3wY01im35RxWjGVsW6jQQAmKwRUNoNznX+XqkkPXdc7ykl+5X9bXYXaMo/VVrG6+tqr7CsUEt8KK4JSxB+rddRU/AtAzGOHsQTg1C7S/w8VxVFivxf8kdjVaMqTGFhm6cyLw4BmS5jd+RjOf7d2OLXwJGnatW/B6RVYpOJbmZ44Itjy2K2rpILvS8IF5vKiCeE3wb328TcFuxH1M79uH2SC+uF6Yji/45+3Obhh2apy+04BzE4erCykNhkaWCPhdzyuUjTbP4zJeGTdI7JCz+c/yJJTnrRcqm6j75YVqDDfj6nu1Sa/8lS78y6lT4w==
+ b=lJV2aeufinO6fjRXoU0Ymhn1hHTTThmGgSt9yXyLLwQUY1jImO6QenhmfJP8DzmLJKFkUmKM0hAwRwVK0qdRLt3MnXNvawuYS5lxrvMnfLz2U2uOSikacj2EyR3l8AxZ6/BkvM+QcRNGmcWkTZOnVaj4mcUizao/BGIiq17RdpOeem3Whk8iubfyCcO/fL6CWR5R0/aa7xq7HFXLUz4P96fXg798c97NXOgPbrV+dmwimM3QE4KFpr19PAwMvYaDS7MlQHTa80+enq57PZCEhEFryu7nEKne47QBsbQLBt7y4sQf8XvDp+psCObSdQdYA+MEFgb/SYQYkBMr28JdHw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VuZPSmxgYt2HGyEgMGTovHtYezvIBmNewBx/sehYnGM=;
- b=gNm5QTQ1We4e7DvQsfccx5A+MHy4l6SRakvhTj744Lk/g2Vw1/vkgHhHXcoMQLrCdlk+RneCjbRDuovb7NwMkATf2MTrrpMdXkjjnwFBsKVc6yqQ+5Ieu6ZeVXO/wMZd2MeQnSpXLWUT0AoFyPxozoRuUbH4FX4hw//eDN2arNl1ZT/RTdjsa3J49WgS9xyN1z2m9XsVYgniOZIdnFsUKTLsLGgtxnWWLmxbZkcSPANxaVktsdoBTUXDDfLDrKn6uMfBHByveEiIjCa/cN5LO9oR5fJ/m6F2ywjbnuDe+2ceHOD1aneCKF9b+xAPjE7s/KJRyz7mUlWrUGUN5zDWFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=y1ILbV09Nq0eQ7TMgn4wXI7kuC4flLrOZzxXno/jhDA=;
+ b=E7b1k1+9Umccwqv5KXWFDzJI5OQslQfj0JgvSXMAxQQHNczLKb0T37m9QktELG+rdslC9m43NXkI7a93ntt+Lvexyrak/2PMLazVjHZLTOeMMxkxi/yIkNdxDvDaxYDvRoARdRfu0Pr9N/SGMWRitn5W0HVKGDY4x4c0b3yiuPnBVxusN8t68pOZ+L3REjvrR14BvZ3yGXCrprGKfMdT6uiuzreWv65cEUh5fMcOEaLziupR7lf2ek/5NmKOE6zERahsgURsSyDCDQFqYbz1elfIIrG5tAZol+SREX54qWTyj7IV9VY3jYGawLDgcM1rp4XRLMGZWtUdjV18qs3x1Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.IT;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VuZPSmxgYt2HGyEgMGTovHtYezvIBmNewBx/sehYnGM=;
- b=imRWpgbvQCw7pS/iNTIpu6ZhroEH7Jwo7ArinnFT1FzUZh7AM5pTd/AQ6+lhJ9VkUayK3L7jfeAMBYEUKvW5nWJU52Lr/dlsbSt3SBnrQbv9zFqVQ6iDMGuc7HosuGR+jgg5L9Lo9bxjqShqihyNN4IieYVC4MK7P1moiCHn6bM=
-Received: from PH8PR02CA0008.namprd02.prod.outlook.com (2603:10b6:510:2d0::17)
- by DS7PR12MB6167.namprd12.prod.outlook.com (2603:10b6:8:98::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.12; Wed, 29 Jul
- 2026 16:41:13 +0000
-Received: from SN1PEPF0002529F.namprd05.prod.outlook.com
- (2603:10b6:510:2d0:cafe::49) by PH8PR02CA0008.outlook.office365.com
- (2603:10b6:510:2d0::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.13 via Frontend Transport; Wed,
- 29 Jul 2026 16:41:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF0002529F.mail.protection.outlook.com (10.167.242.6) with Microsoft
+ bh=y1ILbV09Nq0eQ7TMgn4wXI7kuC4flLrOZzxXno/jhDA=;
+ b=HPRojKGAGJR/WuBqzjGTvS2cQsEfldRRsYK6SWgxel/gLq80iHD7hgpIrwt5USWsJ+3S6cM+fWVnrgdLvTQDWDdcGLpWDkPLP6LnjO5qv3Nxt0utdFbInC3qzgkr4B5YRMX7LpxnlPRw7F4w3E5G6o22lFOsT4FklcJEXq4NjnT4L1c52U4lJ+nYGh+PW6AZ4PMtuMZruq4AyxvRUMxnAHUp2xSeFziamTp27v/AAsPXomLMeR2cTIdCJa0uYizyDpgfCaQdQ7cxdvD8XzXW5rjwCOxfTnRET/tDVNCGD9/kXj41LcJ/mXf1TNzjP82zB9tkrRWOmvntYF5rR+P8Rg==
+Received: from DS7PR19MB7724.namprd19.prod.outlook.com (2603:10b6:8:d9::20) by
+ CY8PR19MB7667.namprd19.prod.outlook.com (2603:10b6:930:77::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.270.5 via Frontend Transport; Wed, 29 Jul 2026 16:41:12 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Wed, 29 Jul
- 2026 11:41:07 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH 7/7] Documentation/arch/x86/amd_hsmp: Document the SMN and MSR IOCTLs
-Date: Wed, 29 Jul 2026 22:10:34 +0530
-Message-ID: <20260729164034.1331375-8-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260729164034.1331375-1-muralidhara.mk@amd.com>
-References: <20260729164034.1331375-1-muralidhara.mk@amd.com>
+ 15.21.270.12; Wed, 29 Jul 2026 17:48:27 +0000
+Received: from DS7PR19MB7724.namprd19.prod.outlook.com
+ ([fe80::70de:3c05:ac62:7f86]) by DS7PR19MB7724.namprd19.prod.outlook.com
+ ([fe80::70de:3c05:ac62:7f86%5]) with mapi id 15.21.0270.009; Wed, 29 Jul 2026
+ 17:48:26 +0000
+From: Marco Giunta <marco_giunta@outlook.it>
+To: mapengyu@gmail.com
+Cc: broonie@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	imitoy@imitoy.top,
+	lenb@kernel.org,
+	lgirdwood@gmail.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	marco_giunta@outlook.it,
+	munzirtaha@gmail.com,
+	nadim@symbolic.software,
+	perex@perex.cz,
+	platform-driver-x86@vger.kernel.org,
+	rafael@kernel.org,
+	tiwai@suse.com,
+	wangweidong.a@awinic.com,
+	yakov.till@gmail.com
+Subject: Re: [PATCH v2 3/3] ALSA: hda/realtek: enable AW88399 on Lenovo Legion Pro
+Date: Wed, 29 Jul 2026 19:48:14 +0200
+Message-ID:
+ <DS7PR19MB7724B08C9CEA36A4A71C06C1FCCA2@DS7PR19MB7724.namprd19.prod.outlook.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <CALSz7m1iW_hZbkL56+OMLXm5wE2s+ytxT_oGEU+DHyvYEMx8jQ@mail.gmail.com>
+References: <CALSz7m1iW_hZbkL56+OMLXm5wE2s+ytxT_oGEU+DHyvYEMx8jQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1P293CA0012.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::10) To DS7PR19MB7724.namprd19.prod.outlook.com
+ (2603:10b6:8:d9::20)
+X-Microsoft-Original-Message-ID:
+ <20260729174814.85411-1-marco_giunta@outlook.it>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002529F:EE_|DS7PR12MB6167:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0b59e3b7-feac-4a92-155e-08deed903337
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: DS7PR19MB7724:EE_|CY8PR19MB7667:EE_
+X-MS-Office365-Filtering-Correlation-Id: d52c134c-d4f4-4adb-2002-08deed99974f
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|23010399003|376014|18002099003|22082099003|11063799006|56012099006|3023799007|10067099003;
+	BCL:0;ARA:14566002|23021999003|15080799012|25010399006|4140399003|5072599009|51005399006|41001999006|55001999006|24021099003|8060799015|19110799012|440099028|3412199025|40105399003|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	XoVzauNnIaEZWiDgXCwoA5rJES4Gwoo6pel1yc9W7cw1loZaY3VENP3AzqIWQThSR/gNadk7BJtYvZKlulWr0k+ekAZqbq151EkZt+gEC0mKoNwpwhmljWubGYM7/mKMX4NCwExEP1roJYQixFhIrfi6ydmQa5chpc1YELfO3IIw/CeT4LdukojKQ16kWXq/Zo9M8Mzp5QUU4D43qi5BWSupD6Vm6PjQ+Cr2wM3SRBKI5F2KkSYvWwA+YTwYJPOBe+DnBhhh1+z7qcF/Od7LA+AFGyvEedDGAija5b/p+ps0cLxjnqD7c4cQVw2n0pXlJhzWCPHceZU/hipLjgJrm6vPdYJKzkniRobWIVR8SXqJLXxXzGfQBZZbsvdVGwCf0xKiCn9TgUJX8RD5kg6muBFuv+MAg1TPtCWSW8STzTOumrfDOstM5Zx0uPi7RFRYB5Hv8TzE0wVlyKoe8ydr2o0w8skZGxZck8KhWK1asiCiEMCe0hQHKH/aMdGowjdtqksuU75fOscCgm2dPKYasXCi/bf+qnKXigg99y7pTiMHaDu5JYLJrQoFIIZ0YfeTYeFVyO14ZK1zg4sjPwkf/BbV35cbNNtYFh73ZU5gzuxCJYWSUk7qWDAIrGPkD1WuSzf5VMOUt1/hCSc2w7crxql5MJXEQlvHgsA3N02vCG2bi0DIqhX8LX3lPFaXE4Ijf/RfORcm8aPr1KSoK/aYMQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(23010399003)(376014)(18002099003)(22082099003)(11063799006)(56012099006)(3023799007)(10067099003);DIR:OUT;SFP:1101;
+	=?us-ascii?Q?1IqXuY2/CGq0TWiIDMZDuEZDHgvlKcG1S+Gb7rigdPRdFE8Lg+WkvrsKccJP?=
+ =?us-ascii?Q?m21xC29oRYG3fT56CzsNyA3C4wUgt4TE6CsRuaN2aTiAiWXI9W6gzNtjmC2j?=
+ =?us-ascii?Q?9D32mVDottcQRNUrVkb/63NEVH9A8mBVX9tGvH1vNfsPHqRs6QREaUmWmKVQ?=
+ =?us-ascii?Q?YmNHZiMSRXpQz9CaMP1EPRuQV9+nsk3qetacIb+nrSc55wq6mfT5EFiaLLv4?=
+ =?us-ascii?Q?0ejvlENDujJDP06I6oK9t00xzjV4VCeEz/Etd6o0rr5nlq0Ro6OqPNRvh3lG?=
+ =?us-ascii?Q?Dsoam02jR8u1ru6ZsemQnFog2yK2k/scoKSK/AoKIYLKUAJQM9qyO3VlAM0Y?=
+ =?us-ascii?Q?sKsJo+VEn3DOmZjVWFmZBJr4AFGDu5zo7Qc6gn87BRia3hc07aikarDdziS9?=
+ =?us-ascii?Q?0r5KtkhSqMOC6OO7R+vT+K2COacaRNiXONvAx+S7PVCv5J4Ap7rOeU7yrlpn?=
+ =?us-ascii?Q?ThEW6v9yKLIdB/GNIyqRZgMfSVHXiwac7B06r3BTtBlociH0lxHDc7OcGpcq?=
+ =?us-ascii?Q?ou6N3VRHuJ2ZIU+EUNxQMcPJsUL2WV01r5XRLSS669i/UIG7NWXWZWPUD8ry?=
+ =?us-ascii?Q?exyKR/PbM7CaNQMdURWVaJR/Vq1+zf6cBm4D50CEP9vsovxd/DSbzlShOXKn?=
+ =?us-ascii?Q?EDZ3U2v+ktD0RKa+v38/3hdcQ8j0msAe52lWDPN4roYhI81BbYy2TGsifQSC?=
+ =?us-ascii?Q?tZ9UTk+bBS8hM++MeQFEiWFEJHlsGcs+XKk8Qf3VECcD9pLKDIIRdYUJFBt5?=
+ =?us-ascii?Q?P+dolBiJkcIfTTBi+N5znomaIHd1X8YuNn8unL8noQJvC11hzX6qCuw3SMr6?=
+ =?us-ascii?Q?wWHQ094ZCzYSHJx0k15uqEgfaih0IrlaDoqzUG36eEz7RlIGmbjvIq2OCDP1?=
+ =?us-ascii?Q?BY2kLtMF+uTELyoDmzBUd9Zw3meZlJCbv2fcDysrwSEr+cigwgAiA7tnBHDZ?=
+ =?us-ascii?Q?SECkh6sjA3odjKItS4iN0y0kZePXG98A2LS0sgd1o/m9jp4TkfsZyYoqkTCy?=
+ =?us-ascii?Q?cxaQwF7JpsS0gtr/TQLAkUHkWw=3D=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	cFxWrnbr+pBqUQX/HPQXv0qTDQCW7XEwrlsVdZJ6WFC/d7eLRikiNdb2/p0GXPNDTU3FkeiFjf0NHrr3djqbLzHZIv2slfAsB6RA7MAQf344hSbrftskn9MHMkPd6FlV6hPJxKrYXE16KlcMDBaOnQJLPvz62toN62sh4PeI1aFITHY1+Q9d8zqvOorERTd84x3cJH8S7fjxl8fYJlrEeX1VLEC2XWNztRUychy9gGqgaXHLxHrLkPjWz6C1pKwIlMbDG0ZpzHcQctVQdzgvWL7deG68xAsU8AuR0f358VUXs4sY68bQl9tNlUVVEdHZZkyqQq+FNmF+n8FEvZ5a9UpU3n5LCsIEGIkJM+Q4NhqVnjTHAgMK4V0QBMyoh2f1tFNlsjdr6nlnKcL21Qy7Tq7AAoSRi+TIJQRum8t/Skag2aVhmNMMOBIjcj1sFeix
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 16:41:12.2831
+	=?us-ascii?Q?wCZPQIAkQf+LmYTYMqFB5U8ZL+PChYm292Qa1YhgaP+vP1liojUW0cTr3Zq7?=
+ =?us-ascii?Q?/sxKeR8IGe0NojIICW3TytuvgSASBz0y94R8eiIpnxxDIhR/EYhBvoEiFxeU?=
+ =?us-ascii?Q?pZH1RBosB3rKMnVzhjAWrth+Wp0LyjyhPNveyQIVxHEGt/YVAFQ7WHFiHSXl?=
+ =?us-ascii?Q?mD+DKHB/u2tIVO9R66r1cLvTVPDP4ZEnrTlJdpVTnjwudyEqzDMoxzQlEW37?=
+ =?us-ascii?Q?wgxLn0KH5IACM9lPx5c608w8OJS8rUVngdA9O921wfTAfJ6QdNqp2dPyAZUQ?=
+ =?us-ascii?Q?taEM/zcu0i968UvGCTL/N9a4fb44Ra+dRm/hLYracbOAdc6c8yyUVNLnI/ah?=
+ =?us-ascii?Q?F1iteHR/6Ucr+7zGv2TEcNm2c12Uqq/vlMOqEFEbcLP4UTjtjtuME1242a2a?=
+ =?us-ascii?Q?qpS+A7DFdqax3SCR4zz/j5VMqMPNoaM5wmM3wrte0OJ93dZW0jpjA6HMsvsK?=
+ =?us-ascii?Q?GQZAk7wfoASI1fkT9t32YXDppQexT7txuKtKCxDLWxArlE2+ni2/pem+FlN6?=
+ =?us-ascii?Q?iV1/a/gEbVAHKu68EcSnQhEcOksnglIfE0zKomKWPICkCeoMvwrrUt1aCohs?=
+ =?us-ascii?Q?oUntCuZvll0ODY1mtj2IWgUO4wrhWiOChhnLzsHd5ZdL5m6WiAdSC0gYRMzX?=
+ =?us-ascii?Q?owERrzIR6FY045KjentDZa8m7MJB9745DKox4o/sfJoenveDywIKiEzjUyZL?=
+ =?us-ascii?Q?64GbZFWCbNy8CBBxONYxBoS9U8fiJqejgUu3Rwzb7pAZXI+DwL7OL6G3AgFs?=
+ =?us-ascii?Q?KkdBzvSBVvI8AAP0WUag1AieVL4lf+60ZR6kc95xhik2fbZCXIggjLT6dWl+?=
+ =?us-ascii?Q?7YcNrdKlYlmatApr3vNAyAoVeEdq7oafPZUEXPltEvMTEf+tRtpFjBPBQkmx?=
+ =?us-ascii?Q?e9ryApHjvn6mA1BtbwLOs4p9njbuR9sOEIYBEjMYD/XqgIxeZxbs8pj4fGxK?=
+ =?us-ascii?Q?+d7q45R8/P8tF5gagVRGsl6V2Flx+ocMn9htvq+tHf4aDAxKQ1uIH8VYJXch?=
+ =?us-ascii?Q?87NshvrwdLXpPZvl+dPMOt0J5tt4P6xHA0A5CgN531QrvNxLRzSTbSPovZl1?=
+ =?us-ascii?Q?TPdxT7W3StNsAlbi9HIEfiwsMF32+Ej5KHncYA4/ibq0TxJHXIxXkp+YsIsG?=
+ =?us-ascii?Q?U2Qq9x9wbwsCokpbFKwaNRBYqHo6kjvU1HMaC87IW4azD4t7LttzAoykS7sF?=
+ =?us-ascii?Q?FQTSCCYCwPCFwdCJcjlIKbSC38rBB5SMBLDRWczoasgw4OQMrjAtH2Eok38F?=
+ =?us-ascii?Q?1oY1FBSkMdupKYlXEt+kahgSUpasBDstWYDp1c2BIOlKYX/pYhgj9TL3C5Zk?=
+ =?us-ascii?Q?13+Un+FuP/U562tjsB1r1w8b2WYJo4OXXY5chFEDFrruWckYP8dQYxGEAti8?=
+ =?us-ascii?Q?gNFy9qvhq1mecXxesZXnszjOBe450XKwJ/q/E94bTzWKTx8i50SPGtJNCo3P?=
+ =?us-ascii?Q?y4lqsCVGfC4=3D?=
+X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-990eb.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: d52c134c-d4f4-4adb-2002-08deed99974f
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB7724.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 17:48:26.6159
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b59e3b7-feac-4a92-155e-08deed903337
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002529F.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6167
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR19MB7667
 
-Describe HSMP_IOCTL_SMN_CMD and HSMP_IOCTL_MSR_CMD: the payload structs,
-the CAP_SYS_RAWIO and open-mode requirements, and the rule that both are
-read-only, so a request with @write set is refused with -EPERM even for a
-fully privileged caller on an O_RDWR handle.
+Hi Aaron,
 
-Also note that reading the protocol_version attribute can fail on the
-Fam1Ah client platforms, because some client SMU builds reject the
-interface-version query, which is why the telemetry ioctl rather than
-that attribute is the way to reach the client telemetry layout.
+Thanks for looking at this. I think there are some misunderstandings
+I'd like to address.
 
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
----
- Documentation/arch/x86/amd_hsmp.rst | 44 +++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Regarding default DAC routing and the R9000P codec dump
+in bugzilla 218329#c31: that user is running a stock kernel,
+without this patch series applied; indeed, they have no
+snd_hda_scodec_aw88399 module loaded, and their dmesg shows:
 
-diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index 8a9d6fe7d4cf..0f03201a9f68 100644
---- a/Documentation/arch/x86/amd_hsmp.rst
-+++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -229,6 +229,50 @@ The following IOCTLs are defined:
-   ``sizeof(struct hsmp_metric_table)``.  Later version metrics table
-   layout is documented in the Public PPR.
- 
-+  On the Fam1Ah client platforms reading ``protocol_version`` can fail,
-+  because some client SMU builds reject the interface-version query.
-+  Those parts have their own telemetry layout and this ioctl is the way
-+  to read it.
-+
-+``ioctl(file, HSMP_IOCTL_SMN_CMD, struct hsmp_smn_message *smn)``
-+  Read a 32-bit SMN register on the socket given by ``sock_ind``.  This
-+  reaches registers outside the HSMP message ABI, so it requires
-+  ``CAP_SYS_RAWIO`` as well as a handle opened for reading, the latter
-+  because the value read is written back into the request struct.
-+
-+  The ioctl is read-only.  ``write`` must be zero, and a request that
-+  sets it is rejected with ``-EPERM`` even with ``CAP_SYS_RAWIO`` and an
-+  ``O_RDWR`` handle; the field exists only so that write support could be
-+  added later without changing the layout.  ``reserved`` must be zero.
-+  Argument::
-+
-+    struct hsmp_smn_message {
-+        __u32 smn_address; /* SMN address to read */
-+        __u32 value;       /* Value read, filled in by the kernel */
-+        __u16 sock_ind;    /* Socket index */
-+        __u8  write;       /* Must be zero */
-+        __u8  reserved;    /* Reserved, must be zero */
-+    };
-+
-+``ioctl(file, HSMP_IOCTL_MSR_CMD, struct hsmp_msr_message *msr)``
-+  Read a 64-bit MSR on the logical CPU given by ``core_id``, or on
-+  whichever CPU the ioctl runs on when ``core_id`` is
-+  ``HSMP_MSR_ANY_CPU`` (``(__u32)-1``).  Any other ``core_id`` must refer
-+  to an online CPU, otherwise the call fails with ``-EINVAL``.  Requires
-+  ``CAP_SYS_RAWIO`` and a handle opened for reading.
-+
-+  Read-only on the same terms as ``HSMP_IOCTL_SMN_CMD``: a non-zero
-+  ``write`` is rejected with ``-EPERM``, and every byte of ``reserved``
-+  must be zero.  Argument::
-+
-+    struct hsmp_msr_message {
-+        __u32 msr_address; /* MSR index to read */
-+        __u32 core_id;     /* Logical CPU, or HSMP_MSR_ANY_CPU */
-+        __u64 value;       /* Value read, filled in by the kernel */
-+        __u8  write;       /* Must be zero */
-+        __u8  reserved[3]; /* Reserved, must be zero */
-+    };
-+
- The ioctl would return a non-zero on failure; you can read errno to see
- what happened. The transaction returns 0 on success.
- 
--- 
-2.34.1
+  ALC287: picked fixup  for PCI SSID 17aa:38bb
 
+This is the Yoga S780-14.5 Air quirk (ALC287_FIXUP_TAS2781_I2C)
+firing by mistake, because the R9000P shares PCI SSID 17aa:38bb
+with that model (one of our R9000P testers independently confirmed this
+by providing their lspci output).
+That quirk is chained to several other, and in particular it ultimately
+calls the function alc285_fixup_thinkpad_x1_gen7, which does:
+
+    static const hda_nid_t conn[] = { 0x02, 0x03 }; /* exclude 0x06 */
+    static const hda_nid_t preferred_pairs[] = {
+		0x14, 0x02, 0x17, 0x03, 0x21, 0x03, 0
+	};
+
+The HDA_CODEC_QUIRK entries in this patch exist precisely to prevent
+that collision, matching on codec SSID instead of PCI SSID.
+The "0x03*" in that bugzilla codec dump, therefore, comes from the
+wrong quirk's override, not the hardware default,
+which instead is 0x17->0x06, as can also be seen on the other Legions.
+
+Regarding the DAC 0x02 override for pin 0x17: this is necessary
+in order to fix broken volume controls. The fact that this override
+achieves this goal has been confirmed by every tester
+across all three supported models.
+Indeed, before adding this override, earlier versions of the patch
+required alsa-ucm-conf workarounds to make volume controls work at all.
+Without it and the rest of the patch as-is, the woofers turn on, but
+speaker volume is always 0 or 100% irrespective of OS volume controls.
+
+Three independent lines of evidence support this being
+the correct DAC rerouting:
+
+1. The official Lenovo Windows driver selects DAC 0x02
+   for both 0x14 and 0x17, as can be confirmed by performing a
+   realtek codec dump on a stock Windows install.
+
+2. Multiple existing quirks in alc269.c perform the same override on
+   laptops (Lenovo or otherwise) with similar sound architectures,
+   with comments explicitly stating that this is done to fix
+   volume controls, and therefore implying that this is a common issue
+   on laptops with realtek chips from this family.
+   Some examples of these quirks and comments include:
+   * alc274_fixup_hp_aio_bind_dacs:
+     "avoid DAC 0x06 for speaker switch 0x17; it has no volume
+     control"
+     "The speaker is routed to the Node 0x06 by a mistake, thus the
+     speaker's volume can't be adjusted"
+   * alc289_fixup_asus_ga401:
+     "avoid DAC 0x06 for bass speaker 0x17; it has no volume
+     control"
+   * alc287_fixup_yoga9_14iap7_bass_spk_pin:
+     "Avoid DAC 0x06 and 0x08, as they have no volume controls"
+     "Prefer both speakerbar (0x14) and bass speakers (0x17) connected
+     to DAC 0x02."
+   * alc285_fixup_hp_spectre_x360_eb1:
+     "share DAC [0x02 among 0x14 and 0x17] to have unified volume control"
+   * alc285_fixup_thinkpad_x1_gen7 itself:
+     "DAC3 (NID 0x06) -> Unused, due to the lack of volume amp"
+
+   In particular, many of these quirks share a single DAC between
+   tweeters and woofers (typically 0x02 and 0x14/0x17) without issue.
+
+3. All testers confirmed working volume control with DAC 0x02 rerouting
+   on SSIDs 3906/3907, 3927/3928, and 3938/3939. Without an override of
+   the default 0x06 routing, instead, woofer volume is either 0 or 100%
+   regardless of OS volume levels.
+
+In light of these points, an override away from 0x06 is absolutely needed
+on these machines, and preferentially towards DAC 0x02.
+
+Regarding DAC 0x03 and 4-channel playback: a 4.0 surround profile is not
+meaningful on this hardware regardless of DAC assignment.
+Indeed, selecting a 4.0 profile results in one pair of L/R channels
+(either front or rear) being silent; no DAC configuration makes
+all four channels work. I verified this empirically with both
+0x17->0x02 and 0x17->0x03 (as well as no override), so in this sense
+which DAC override is used is actually completely irrelevant.
+The correct audio profile for this hardware is analog stereo (2.0),
+which works perfectly with the DAC 0x02 override, and makes front and rear
+channels sound the same and work correctly when using speaker-test -c 4.
+More generally, the tweeters and woofers reproduce the same stereo signal,
+and don't actually represent separate channels in a true surround setup.
+That the 4.0 profiles are exposed at all is an artifact of the HDA parser,
+not a consequence of this patch's DAC override.
+
+Regarding pin 0x1d: it's true that, in practice,
+leaving the hardware default 0x40600001 untouched won't change
+anything meaningful for this node, which is essentially
+already disabled for all practical purposes. The override to
+0x411111f0 matches the Windows driver's pin configuration, which,
+as can be seen from a realtek codec dump from the official driver,
+performs this pincfg override anyway.
+I'm happy to drop this line if a maintainer considers it redundant.
+
+Happy to answer further questions, and thanks again for looking at this.
+
+Best regards,
+Marco
