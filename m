@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BBA3FB07E
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 10:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CA13E0C66
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 10:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785406130; cv=none; b=Kv0GN5x1C+rCAbLb4REJ54ug+vASq5xgh9ZDKZaPTj/8r0XDvDOjGXlft4Qs17W3bqegmfGIKmhziq8I0KVCgEX0FnfOo7FXJC+K1G+SVpCj5rAHAp/YijTWo5AugQP42sEAH4IUbYw+4okDaB4+0CYBhrPkBs88u8zgTrEV/V8=
+	t=1785406422; cv=none; b=FXev9BjjTh4xprw2JhPJvoutDkzP6RVJGE5rJbQCT9wnzyFNvsvgN45aBZ5sda+P4VuLoVys3LhgcNy+Pvk4+tGhxIA/+j6OQjsD6zsfNMyS/3D3KgA0QjZ1dJWj5jjVwnkVbhHZEKeKcMVRO55dlYCQKPCKbs4HlFEBgjJa/iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785406130; c=relaxed/simple;
-	bh=l10OBvvBBIUFo1aa3l64mgjgZ8J4DM70y/1POWvkWfs=;
+	s=arc-20240116; t=1785406422; c=relaxed/simple;
+	bh=ZMyPf7cgA1PBcbid1bpuGClXG6ibspVv4Hfs916U62Q=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gHmA558BxUK9rIqCVD2zVoqSiuvOr5yg73ycWjyGGxkkXJYqnEo+ILVjJN/L7cxWb9GIfoOMp8jC2Quetiz6VVV4SYVtMk581nuOJ+3ofQkSetgpFn/FdmeFEIFewlWOHk3yQA+D5MTOPEIFjm8Ej61MpaqLUpED9QzAm/3fGgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f8cXwrWU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=BIlokY36OaYP0e7WDICK6wEanrh61b++30ZkntEa3GiVDloMOO1iDTfqD1cs2MHELlFlbMiQ2tZRXxv77ggDVc0qK4J8fXc1r8Q8Q0WOmUS185+mt4FoEbA6TDz4buet0Vvb9zF46cDbssnYKlGWr6KkCbp0uUTIDIRDPRSFLwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EYI8dQsu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f8cXwrWU"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F14F9C19425
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 10:08:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EYI8dQsu"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C7E8C2BD00
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 10:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785406130;
-	bh=l10OBvvBBIUFo1aa3l64mgjgZ8J4DM70y/1POWvkWfs=;
+	s=k20201202; t=1785406422;
+	bh=ZMyPf7cgA1PBcbid1bpuGClXG6ibspVv4Hfs916U62Q=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=f8cXwrWUxxXeqnfMm2FuaKq/FO5+nrnSERKAIPmGkAbzCUlSv+lzO5xNx0G5EFCwm
-	 ehQdb+EcXYeOAhAqq9oSSVuxxyaPF55UQT3gGkKp5TRT0Cs4mYY22+PEX+ChqQ2Pbd
-	 DJ0kMIuEeYnVQ5GVUQhpIoSM+HiJOY5a4W8SiBhQNqAQlmJL57M3t7csf+0qpPm5dA
-	 rW315mKyHjq6vRsdQZ/kVmItM5f6O1Qs9C102uUj6JcERvprUpAVRLXpoei5pjO10v
-	 LaqVpZTcDLL7IFHOGF0bsZFNePfd9j/bvGa9zxdRzDL2+vX8RPTYCxaaMisgIAYUfv
-	 K1H/3lqEMOWaw==
+	b=EYI8dQsug1e2P/elroI4fvQwDcdMTLlZDT1BMyRr1KbxH8mBginilr9PC8zHAURXg
+	 hW5FPPVRVqvQ9fcoohJLU7/658exkFujlQkuvar2yRZ4s7sgAoxZXKfMumHuCKoErx
+	 Dthiu3WQlyA28I5NzS+KwZy7gK5B5h89BLUGgiKknh3xygBLqdXjtKVnDprYD7/leq
+	 mtinKrJKzE+fHqnefnZMiV2ZqBx2QOLRvWcHnZVVP8IlAsy7nFw7XhKa/nMEXS+qYo
+	 MKV+n/VqHY39P860tvdZr8SKMkvmfIsrXMl6yt/U5cZf5+CNZG9Yt22Mdq9BJCT8nj
+	 1+sJT5Iwm6qNA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id E10E1C41616; Thu, 30 Jul 2026 10:08:49 +0000 (UTC)
+	id 2C8EEC41612; Thu, 30 Jul 2026 10:13:42 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 218305] Ryzen 7 7840HS gets stuck at 544MHz frequency after
  resuming after unplugging the power cord during sleep
-Date: Thu, 30 Jul 2026 10:08:49 +0000
+Date: Thu, 30 Jul 2026 10:13:41 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -47,8 +47,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-218305-215701-JEMTRAI9Ve@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.description
+Message-ID: <bug-218305-215701-oWYf8VLK5X@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-218305-215701@https.bugzilla.kernel.org/>
 References: <bug-218305-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,12 +64,19 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D218305
 
---- Comment #159 from gunnar.kistner@gmail.com ---
-Created attachment 310539
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310539&action=3Dedit
-Combined diagnostic evidence showing the CPU stuck at approximately 544 MHz
-under full load before an AC adapter state change, and recovering to
-approximately 4.39 GHz afterward. Includes cpufreq/amd-
+gunnar.kistner@gmail.com changed:
+
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+ Attachment #310539|Combined diagnostic         |Before/after CPU frequency
+        description|evidence showing the CPU    |and AC power event logs
+                   |stuck at approximately 544  |
+                   |MHz under full load before  |
+                   |an AC adapter state change, |
+                   |and recovering to           |
+                   |approximately 4.39 GHz      |
+                   |afterward. Includes         |
+                   |cpufreq/amd-                |
 
 --=20
 You may reply to this email to add a comment.
