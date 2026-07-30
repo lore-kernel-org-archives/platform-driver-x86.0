@@ -1,41 +1,41 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582653C1F46;
-	Thu, 30 Jul 2026 09:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37593D9026;
+	Thu, 30 Jul 2026 09:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785403033; cv=none; b=BvR7Y97AVIVOjlRBPNQ7sZ4VikndSbViXTmWCzRtbQcdbMtGJ1vsh0NMekuReSOAhKwdhNQj90spltWISt+IopMYbtN/qMX16tIdg87B/AXIwrTFpBkPT1KnckXRcwKUtgyGvZhrP8Rfsx3egab+n2+LooZ712kzC2nox4uf4LA=
+	t=1785403471; cv=none; b=ui7/0L0wBxWSLyLBMDqbChTKAGCEX5SnfuzhhqELUjINHmOzN3gJjeOJRo6MyDhjUHR8F1IpicFTaV7PZJHLkpIuNLU9W0uh/THIIedXY6DD5/PPe84tsJwdiGWbYNEC8KUPooCaB/i+EjnwU/HYyYHgCyyyhHlBgqNDtqiwkRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785403033; c=relaxed/simple;
-	bh=5CytVqFPPqn+mD0KY8tQ6EXXjeR0s1xAgL9HIj9haXk=;
+	s=arc-20240116; t=1785403471; c=relaxed/simple;
+	bh=MuvX+StWm+55aEqROQMh6mk4i2keyNOfaG7ySw7cTtc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qfZG2q6EkAI7Y7w6mvEjbaoavt3/cVw4yaWzQ+TaKbZAnbSjY0Y1nHOdNwNI5ZWgkjiA6CE6jRARFmwhvYg/RTfzxNPZkf6Be1oiUfE6HP+VdrXPSTSeTvRawWxK1wC8zHsAWkTOSFtp37VC4fwIRcrUT1OGZxnYI5Yz8rP+BHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fFscyl3h; arc=none smtp.client-ip=212.227.17.21
+	 In-Reply-To:Content-Type; b=qZrd1xdz2sFZIYvpkOinZAOtkMzF/TA1w4R4P+uVCPfeiUIkomw2o/GdWG/d+4Jdmfe+kjcNn0E+s2V5YvAS5wFmBkZEIH3RCHqS5aecb5UYHZm2GUSxXJVsP3PHb0OHmLhGj7Q/SMzPJbcVe240+cNvxHBTat3BRPkNmajL+PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=cl9kgHZF; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fFscyl3h"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="cl9kgHZF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1785403027; x=1786007827; i=w_armin@gmx.de;
-	bh=HK6xdJhYh5EchfFfeOP72ybbF8aPrLBmtUhBrWSCvjM=;
+	s=s31663417; t=1785403455; x=1786008255; i=w_armin@gmx.de;
+	bh=4QxiO52yW3VxfdevsPHi7J8BjB/L//MA9f7kwfGPXjY=;
 	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
 	 References:From:In-Reply-To:Content-Type:
 	 Content-Transfer-Encoding:cc:content-transfer-encoding:
 	 content-type:date:from:message-id:mime-version:reply-to:subject:
 	 to;
-	b=fFscyl3hXyiZ/Zy9GnVsSbvPg/50JjDfN+Fk1DNzLly2/I0PyYEdxc/jK18f23Ir
-	 PBh3r3uB3hCVTKUFRRxige/Z459VerNzAzeHAiKD5ZDQ9H5mGoqo8cvIT8nIs56wo
-	 cS8Yd97zttyWr0sdpUPA8iJo3CKMNJ4LEmTWva2cIOBD4KgzNmpEe1tW1j5KxITRT
-	 g/Ssq1/uc+8YX4oFDfEhCjcLeLNYx+k9iQJkp+R/7ExbYWeLdoWX7NhmNogsVSf3/
-	 IcjJ9epYaKSHOkx9erO0jCMOAW9b6+jhFFK+zS+xnraUDHQcYbWfosRZM1rodzh76
-	 aOj5amSTuoS/nB+RMg==
+	b=cl9kgHZF51r7md3rqISFqUrju5+iahrKwPAxy9Mvlr/tS2dlH3bCzbtQd/mL6OMy
+	 WIzHDg0fb3WLi37rbH7pxXzHwOHUX4WvFB8ohKPhEQPol0VlBSsX3ImcDaofLqhmK
+	 x5UfURx1FJeQeyFWruQlw8POUEVpkwS1h7SMXZyh7iE9XaLoyMpCYm8k7Yj+gCVPT
+	 jIa9gZfgYUxtfMX/25FKwZwEtO1Kwg70mUs45BH4iozu6JPn2Un7z3oyQwaqz7JV+
+	 cUqfx+JuBf0guotk8QTyFJd7QdPM1E5kZBQDB83FDJmggl1xPN81P60QFR/vum115
+	 jUuFiI0gLU23ftaisg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRCKC-1wdJg70kRI-00T2am; Thu, 30
- Jul 2026 11:17:07 +0200
-Message-ID: <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
-Date: Thu, 30 Jul 2026 11:17:03 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N49hB-1wy8XW2UpV-012qmZ; Thu, 30
+ Jul 2026 11:24:15 +0200
+Message-ID: <e469fe6b-3293-473c-83db-529ac4502612@gmx.de>
+Date: Thu, 30 Jul 2026 11:24:14 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -43,186 +43,206 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro
- ANV15-51
-To: Justin Vargas <justinyvar@gmail.com>, jlee@suse.com, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260729222920.6490-1-justinyvar@gmail.com>
- <20260729235125.1698-1-justinyvar@gmail.com>
+Subject: Re: [RESEND PATCH 0/5] platform/x86: bitland-mifs-wmi: MIFS v2
+ firmware support (Xiaomi Book Pro 14 2026)
+To: =?UTF-8?B?5a2ZIOiqiemTrQ==?= <wolf109909@outlook.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Mingyou Chen <qby140326@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Nabil Danial <nabildanial.93@gmail.com>
+References: <20260728180944.51356-1-wolf109909@outlook.com>
 Content-Language: en-US
 From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20260729235125.1698-1-justinyvar@gmail.com>
+In-Reply-To: <20260728180944.51356-1-wolf109909@outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:rwxiWW7awIySBWXo9wGyiSuTyn+rimBNSgA5I3d4AZItbgejAKM
- 9cYkfGVyCEiuBMQ9jlWdCBKzV/U8TMxXmjg04qfZSS1ucbettfgVXTdRccChsj9SZjKCmPE
- o/PKbOaOy7AZxJHkkW0dsUFsflB7eRvBNlqrNeE8lixqTKtMujPMTY/h4EpjT90rvxXqTR9
- zoYaQy/WVTiIVx9PeDyJg==
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0dKN7RkmYpkdAvlXwXJsON6cwIuADH9nLKOeLPOBKsMdcen6PuQ
+ I5mBWMep3idAmQGbtxDkMbomOWaHsFXF8qIoxIE8cnFbI0hdfQYrqCpihUo5Ql6B/5epQJI
+ zOMEPqDGIK3k80ijAkaarRfu4pEgQbzTmIykz8qwTXK7yxysGPgK8sGKwm4OSVgqbxNtdw2
+ KoOf+GHoyO04hHUGqqmtA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1B6jRziPOOY=;j3RDgK/Dw25FO4NqxPtY+hTSw+w
- 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
- 8xm
+UI-OutboundReport: notjunk:1;M01:P0:1Th8coOBRIQ=;qlWyRkj3gL4coFl/cn4OjRWDkY6
+ 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
 
-Am 30.07.26 um 01:51 schrieb Justin Vargas:
+Am 28.07.26 um 20:09 schrieb =E5=AD=99 =E8=AA=89=E9=93=AD:
 
-> The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
-> profile handling and hardware monitoring, but has no quirk entry, so
-> these features are only available when the predator_v4 module parameter
-> is passed manually.
+> Resending: the foxmail envelope rewrite (tencent...@qq.com) appears to
+> have gotten the first attempt filtered. No content changes.
 >
-> Add a quirk entry for this model.
+> This series makes the Bitland MIFS WMI driver work on the Xiaomi Book
+> Pro 14 2026 (Intel Panther Lake, Ultra 5 358H) and very likely on the
+> REDMI Book Pro 14 2025, whose suspend failure was reported earlier [1].
 >
-> Note that this machine does not support the turbo thermal profile: its
-> supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
-> PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
-> remaining profiles work as expected.
+> These machines ship a reduced MIFS firmware ("v2"): the WMAA method
+> implements only function groups 0x0800/0x0a00/0x0c00/0x1000, reports
+> the performance mode as raw QFAN EC codes {2,3,4,9,10} instead of the
+> v1 0..3 enumeration, and exposes no WMI fan function. Additionally the
+> firmware never defines ECON, so \_SB.PC00.LPCB.Q_EC._STA fails and the
+> ACPI EC driver never binds, which kills all EC query handlers
+> (including the lid switch notifications _Q0C/_Q0D).
+>
+> Symptoms fixed by this series, all reproduced and verified on the
+> affected machine:
+>
+> * Suspend/hibernate aborted with -EINVAL from the driver's suspend
+>    hook (same failure as [1]: "dpm_run_callback():
+>    bitland_mifs_wmi_suspend returns -22"; 242 failures counted in
+>    suspend_stats). Patch 1 makes the WMI call validate the firmware
+>    status word and the suspend/resume hooks fault-tolerant.
+>
+> * power-profiles-daemon could not read or set the platform profile
+>    ("Failed to get profile for handler bitland-mifs-wmi"; selecting
+>    "performance" failed outright and wedged the daemon). Patch 2
+>    detects the v2 firmware variant at probe and maps the QFAN codes
+>    (2=3Dquiet, 3=3Dbalanced, 4=3Dspeed, 9/10=3Dextreme).
+>
+> * The hwmon device reported zero RPM on all channels because the v2
+>    firmware has no WMI fan function. Patch 3 reads the two fan
+>    tachometers (u16 RPM, 0 =3D stopped) from the EC shared-memory window
+>    at 0xFE0B0300 (DSDT region "ERAM", offsets 0x69/0x6B).
+>
+> * Closing the lid produced no SW_LID event (screen stayed on, keys
+>    pressed by the closed lid typed into the visible lock screen,
+>    locking the account). Patch 4 polls the LSTE lid bit in the EC
+>    window and, on a change, evaluates the very AML methods the EC
+>    query would have run (_Q0C/_Q0D), restoring proper lid events.
+>    DMI-gated to the affected model.
 
 Hi,
 
-can you create a custom quirk entry and check if controlling the CPU/GPU fans
-works? For this you need to fill-in the number of CPU/GPU fans inside struct quirk_entry
-and set "pwm" to "1".
-
-I think fo something like "quirk_acer_predator_ph16_72", just without ".tubo = 1".
+can you share the output of "acpidump" on your machine? Missing Lid events
+usually indicate a deeper problem with the ACPI handling on a given machin=
+e.
 
 Thanks,
 Armin Wolf
 
-> Assisted-by: Claude:claude-opus-5
-> Signed-off-by: Justin Vargas <justinyvar@gmail.com>
-> Tested-by: Justin Vargas <justinyvar@gmail.com>
-> ---
-> v2: Add Assisted-by trailer per
->      Documentation/process/coding-assistants.rst. No change to the code.
 >
-> Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
-> kernel 7.0.11-1-cachyos:
+> All values were reverse-engineered from the machine's DSDT/SSDT
+> (WMID device, _UID "MIFS") and verified live: mode switching changes
+> the EC QFAN register as expected, fan tachs ramp 0 -> ~2700 RPM under
+> load, lid close/open emit proper switch events consumed by
+> systemd-logind, and suspend/resume cycles complete cleanly with the
+> driver loaded (suspend_stats: fail 0).
 >
->    $ sudo dmidecode -s system-product-name
->    Nitro ANV15-51
+> Notes for reviewers:
 >
->    $ sudo modprobe acer_wmi predator_v4=1
->    $ cat /sys/firmware/acpi/platform_profile_choices
->    low-power quiet balanced balanced-performance performance
+> * The v2 variant is detected at runtime (perf-mode query result
+>    outside the v1 enumeration) so other Bitland machines sharing this
+>    firmware generation get support without DMI entries; the lid quirk
+>    additionally requires a DMI match.
+> * On this platform the firmware perf-mode switch reaches Intel DTT
+>    (\_SB.IETM, INTC10D4) via ODV variables; mainline has no driver for
+>    that device, so the TDP change the firmware intends is currently
+>    not applied on Linux. Programming RAPL directly from this driver
+>    seemed inappropriate; I left it out. Happy to hear preferences.
+> * Interactions with the in-flight "Merge redmi-wmi into
+>    bitland-mifs-wmi" series [2] are limited to file context; the
+>    control-device paths touched here are disjoint from the event-device
+>    merge.
 >
-> Writing low-power, quiet, balanced and balanced-performance all succeed
-> and audibly change fan behaviour. Writing performance is rejected by the
-> firmware, consistent with the supported profiles bitmap (0x0A) reading
-> 0x53, i.e. bit 5 (turbo) clear.
+> [1] https://lists.openwall.net/linux-kernel/2026/07/10/72
+>      "[BUG] platform/x86: bitland-mifs-wmi: Hibernation fails with
+>      error -22 on Xiaomi Redmi Book Pro 14 2025"
+> [2] https://www.spinics.net/lists/kernel/msg6309086.html
+>      "[PATCH v1 0/4] Merge redmi-wmi into bitland-mifs-wmi"
 >
-> hwmon works: sensors reports acer-isa-0ace with fan1 3024 RPM,
-> fan2 2685 RPM, temp1 +48.0 C.
 >
-> The WMI mechanism was cross-checked on Windows, where NitroSense switches
-> profiles via SetGamingMiscSetting with index 0x0B and the same profile
-> values used by this driver.
+> Yuming Sun (5):
+>    platform/x86: bitland-mifs-wmi: validate WMAA status, never abort
+>      suspend
+>    platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
+>    platform/x86: bitland-mifs-wmi: read fan tach from EC window on MIFS
+>      v2
+>    platform/x86: bitland-mifs-wmi: drive lid switch via EC poll on Xiaom=
+i
+>      Book Pro 14
+>    Documentation: wmi: bitland-mifs-wmi: document MIFS v2 firmware
+>      variant
 >
-> The analysis and patch were produced with AI assistance (see the
-> Assisted-by trailer); all testing was performed by me on the physical
-> machine, and I take responsibility for the patch as signed off above.
+>   .../wmi/devices/bitland-mifs-wmi.rst          |  26 ++
+>   drivers/platform/x86/bitland-mifs-wmi.c       | 272 +++++++++++++++++-
+>   2 files changed, 290 insertions(+), 8 deletions(-)
 >
->   drivers/platform/x86/acer-wmi.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index e0eaaefb13d..a7290f85166 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -662,6 +662,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
->   		},
->   		.driver_data = &quirk_acer_nitro_an515_58,
->   	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "Acer Nitro ANV15-51",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
-> +		},
-> +		.driver_data = &quirk_acer_predator_v4,
-> +	},
->   	{
->   		.callback = dmi_matched,
->   		.ident = "Acer Predator PH315-53",
