@@ -1,164 +1,85 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F711395AC7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 22:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785449335; cv=pass; b=CgQLAhBGEGQ97qp8LGSmVqnrnP8l5B3yx2CPc7EacqN8dXme0CKTeTR8PJ10PbGCLJ7zy5ielVh7h26xzpKhivZTB/Yqaj1aD/xKsRTg4l/MaZV7XZtAURQzKFHPGcdcdQwuaJ1l49gS0MYiq4Z7/4jfXzAt4lTY9EvxjKspWvE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785449335; c=relaxed/simple;
-	bh=DN3co1XKFhNeGjyWgAuq91QA/HZEc5HQWOlWjkbI+Ns=;
-	h=In-Reply-To:References:MIME-Version:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OwIq0k8xsiJXDHPC5ZOmV3b0e/Qn/+HR5lPSZqM7RO/jALukP6jN6SRZD5GVqEwKp3Z7/Jdh0lOlIfC7I5VBVst6yaxssYMH9E/3bFctdAQnSxKJTdR+E/ph/Eteuabkz+y/hzDV/dOpAMQCF4MKS82dESGNeGql0CVXetg/J10=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJ9X1plW; arc=pass smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BBB472F78
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 23:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785453317; cv=none; b=u0+g7bWl9esvVIpzyBS+4L0x4RPMenqEPUQ1uVTRqXTFGKRXbTWkgpbi7eEdIavaQz5TLleBLcT5/jR2MtHd+/TJuqzClcbTuf3yf+ia/AMHQcT3vKCS6wsr2pwWXUyiSml58Tx8VwCCi2V81z7Scm+Eq4632CuGrljvoKX+RS4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785453317; c=relaxed/simple;
+	bh=gN6OlrVCMOZqyC4Y/Ea3ACjPp5S0h17Bkq+udVEKnVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uxqX05quNWtUvl+HW03a1ACxS2lv1krFUc5Lw1Abc/l/VTUPcQLN2lRgxIjay3aiKqF3/hiq8xDuWRqaj0nCVrjeTj7qw6uKaYxilLXeNpiQDyoG+kpfFEZuAgqjFYY6xRzICUM13TTiKH53xpBzC5NwCxEh6kt1R3wQJ33FDKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mYIRolud; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJ9X1plW"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-81fc442789cso5013157b3.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 15:08:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785449333; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XuWTCJHHpRNOzztI5TgOZEA0bWHsSiSP8APYSisfYhp8yc3/Y6MTlCBrt+K+wwzMVw
-         Y1E4F407j6jl+etlKgzc+kfNOeY3QDCXLDc0QxOjmT253XHOGi64n4oiVduY68zhNsQ4
-         65mamBxxUodjLtHRXTJ8Sw2VF5xEI13KhQ3opWysOPPsDzKlRrSqvX+LjsBoWd3RwwbK
-         JVWBe3BtQYawatyzOYg665k9wszGR187jmqNrWqKgDdqZUzf/xVr+sGetyMkQwT10Ax9
-         qReCYJKr0zHyWWzldToJSrWVWpv6J46TqTcDEO51GuN3a/jiMF9O8o7t6IhZLstxEPg5
-         xfXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:references:in-reply-to:dkim-signature;
-        bh=DN3co1XKFhNeGjyWgAuq91QA/HZEc5HQWOlWjkbI+Ns=;
-        fh=V4bcp99xgMrRkoXmRH08nke3buTm0RTKeWI6HwbVcpw=;
-        b=W/dgIc7QDoWuOGAC/2cAyBiEwEntK76kCHKqgxLXIxdngBsDEPDmc3VTdowpe/KLnT
-         GRszTFwT6ivGySLskAAlzbJ50c8CN0a67r68IhTOjHTTJ+gtd61hvGbuiXpM+A7khPEH
-         aYu7DwqbQqgo2ubJIWteGjYCuQPC1ZhALs4SzkmDKzDTnpzkeU0MN2CB9hva125kd76w
-         28GpVt5npIwFvbWxqlxYS8pUYofXXuKMmqX2TWQ7JliOgGOblxE9U1GM9GajZMlw0K46
-         xFyaDcEh4giDKyZeztU8RPyILa3XfE0dQBNCfrOuas3UDRHftmL3SwTjB8i5k0LYuqD/
-         1tTg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mYIRolud"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4956242332dso2152465e9.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 16:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785449333; x=1786054133; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:mime-version:references:in-reply-to:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DN3co1XKFhNeGjyWgAuq91QA/HZEc5HQWOlWjkbI+Ns=;
-        b=mJ9X1plWHON9zHyrDP6D7P/24qxnQLqLsdPf+hhdd8c6aStOOef+9YT/r7O0j3MZio
-         qsaVqhbXPw3NVaXofA4LGxMuJPCgcQO0gq3wABF3R1EWaNRy+MVqgQFYJzf8HQ5/8JLM
-         oNq5khGY3EncnppsMdXl4+Z0c0LSCUvaGIT2o0w2jktcZBz3wtVFIWAlKgdpZwbbbt/f
-         ruS15g3qYJuTfs6Z4uMvJlsO74E6I58UZDvv6z4AK424FKN8wl9l8jCIIVppIwnEGzFT
-         OTKrJSQdak4IOaIFv4WftxKxwXDjIYrFMMSc/DKpaFAmzwbvNElB7jmx3nqLsuQkvsUf
-         ZLOg==
+        d=gmail.com; s=20251104; t=1785453314; x=1786058114; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=gN6OlrVCMOZqyC4Y/Ea3ACjPp5S0h17Bkq+udVEKnVE=;
+        b=mYIRoludjg3akc7ZgIXlZLqFGbh9TKtg67rRnNhqL6+/frnsL9e2S2cqeceSDC1cJR
+         aRIfBMjqHpbAuJ0b/tYVm2FsxO+ZoiXxZGHOsu99hrZ1507XgErdqrWXZpuZhyIJ6U8Y
+         znLgQ3DqrDimX1MSOYB1f8XZl4kK+W09y8hRNNc7n5LbtwzurJt4xB0vy4CGDFQAVYXo
+         jGzTX8ny/iTmTdanqYpdH5FuF64owxmbCle6IjL2OIIhjQOyviP0LDJNvQHcVFs+Sksx
+         OPS3GFYd0mtSs2yCfmxthZXR3kKkrQ1qPaGT2Om8rjCPhakAH6g/N2HuwWLVIymle92c
+         AJFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785449333; x=1786054133;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:mime-version:references:in-reply-to:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DN3co1XKFhNeGjyWgAuq91QA/HZEc5HQWOlWjkbI+Ns=;
-        b=ELrN8HrsILOai91Nz++TcRampP6NSwXXQ9UUmjzLNf9mmM4vaQGBqyA0RbjCa7s0Qk
-         twjse2QBZ8LTMXWyEv5ZBYmycBYYPWXwpOmsUrXv4dAKhwF2hOxr3i69CewBrfJ4G1vT
-         LmzVNRLqo9K5UJDMA/pph4Y6klqMvVfAlBG+2hKHR0ImVV5Dklj7x2EvBbOOX1NxTrNA
-         TPCX5RjGiZ1apU2FxL/eL7UrP8Y3nO8hxGU47+3Yic4LqHF9q7NVHaTUSWKaNUeW9rpZ
-         +259uwLczdirf4WGCb84tHR4gjuehFkG0GBLSihmQbFT+9Dgra0nmbMCHs+KMtvOZ04N
-         tq6w==
-X-Forwarded-Encrypted: i=1; AHgh+Rr5VORb5EcnXZGLtFLblg3TlKNyEHpXIYwDNarTadO7AgvXhBvl17u5HaerQaIypO6K+mDAjfRnKcRZcBRsO4IeLEST@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1EPe9Gj7a8OhZrJa9um88u7ZMPVN+aNHymOSG4gMsP48xNK8q
-	uiDUNvJJ7quBxMSEdBTkOSuq5Z/PqlHopHx7N2x6da3M+SetOwUG92usNnN48hGxzV6hsEVhlSY
-	87pDtGqhDwz/f6KWoapQAIdf61he1mDQ=
-X-Gm-Gg: AR+sD126ToqIFUbgSWFcjqiwjuq3KAaQUr8qFl12dp8lYzqZZzc9Dd7CULG4ZrqGpAC
-	87W5u3tvymj6CjsFtbeLDBPXVo6ibRevHbY14x7txZqUeltSGjfH10DJxn30c8zlfL5A0KKbqji
-	tFwhKmWs4YiUC/y44BN2LcOCRVQwGtf7+bjv1cCrqnKVOQ7xK6kS04v8oVPtPLmn0Rckt05iW3R
-	vfbTJZLK7RP2dc29yhHBlbcFlZmIUWDRCjokFHG5mCjx5drtBPOiM71wdKzE7zLSHnP1tCO0D+4
-	NqWdMUssKOkgmD1lBZ5fdk2UmGrkg5GOZGZQbwUZiS/KJw==
-X-Received: by 2002:a05:690c:6503:b0:814:47f2:1ff with SMTP id
- 00721157ae682-81fc1e638c8mr15700227b3.27.1785449333420; Thu, 30 Jul 2026
- 15:08:53 -0700 (PDT)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 30 Jul 2026 15:08:52 -0700
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 30 Jul 2026 15:08:52 -0700
-In-Reply-To: <24f5be9c-3773-4833-cbad-630a444cc5d4@linux.intel.com>
-References: <20260630105234.54638-1-alhouseenyousef@gmail.com> <24f5be9c-3773-4833-cbad-630a444cc5d4@linux.intel.com>
+        d=1e100.net; s=20251104; t=1785453314; x=1786058114;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=gN6OlrVCMOZqyC4Y/Ea3ACjPp5S0h17Bkq+udVEKnVE=;
+        b=L1YAiMRIMmcILzGvl09WrJobLfXWPrd9REsTVhMW9ZXywfLnIwzR8hJzdqYoDLqZu2
+         xMt/c+egTn3muJZcTEgp7FDeE3ZRrM8yg1UU1k6jIgT1dH8ezGZGnGTPoOvPNTAHZiQz
+         cpoxJeXQ36F50HSeLYaig4ore8K/72/dn1g/RKZTyRx5Z3fUzDy09I0KSSvTgBOS9Y63
+         v3wLbtqVBVfC/sFtP9LxgvodY9+HzYsN4kiiiXOHtDehLWX9I1jRgNMHgxifVWN8lxTL
+         QHqZaeef5VAQZNo9KV1ldajiZfcA//KP/AhD9p4LVNigQ87bJfrGtpuNaG5Ye2O5GjsD
+         byrw==
+X-Gm-Message-State: AOJu0Yw2JXCBoQJYxZqNMIbWgOF1i3D96+11/Swexhr/3FgU7DHtj9eW
+	fsUx2vWIiuxdfLnPTLYqGVOpafzBuZaAR8j4zZmXzixHgJvUa2wXSb8m
+X-Gm-Gg: AR+sD13ToA97txzNvhiTYSxwm2zuSEt5IlLSO2fygHYCeYPFFKcGFXWgLePNqNC9zBH
+	lyNi65tAt59/JwwdrmGcV6sobejEUOJDKA8HV1UqNumGD0Wos7GGB81A/oymcqnAld6VWzKZ2H+
+	X0BlKsvx23WcyjroU+bU2Lck8uogyDIpLQEXPcbWKdHPfZzwNQDxaFUIvieSSZa9zEq0bEFE5R/
+	amLl13ckxfRdxcuzTvoGh/tjwU3U67y+N9NxnOrLTLWvUMZ7E9Aa2gPJkzVOKeWS7K3iq642gt6
+	4SpPQIlD1zSd1bWnYX6LCvJrkwLEPGZmsKsgyQ29hjXGXwDedYf9VJiIxcn0Wd5ig9zRWkgj3FW
+	pPCOPkb1DQvubVqzFBUEuGGrMV+IXgX39a/N5f9h6PFPLeknPOhHKWjXndsHxRiltoeDGVcDA/z
+	uzuEdAsDlGryBFBGi2jhRFVICiTiD5/fsHXX0stQwBPTxIJedWp+liSCIX94qtXlUIKX/Tgmdc8
+	kPpHmwmZwvNttyH1nnH7YQK0Ilxm07y0e/kBObhRZ5GeeuqT7Evr4MiqvWu5D9dxD9X1D1o
+X-Received: by 2002:a05:600c:46cb:b0:497:fee2:f54f with SMTP id 5b1f17b1804b1-49800eb74famr64874395e9.28.1785453314292;
+        Thu, 30 Jul 2026 16:15:14 -0700 (PDT)
+Received: from fedora.cable.virginm.net (cpc89770-stok19-2-0-cust13393.1-4.cable.virginm.net. [86.23.116.82])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-498010a051csm92022625e9.11.2026.07.30.16.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2026 16:15:14 -0700 (PDT)
+From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+To: W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the modern API
+Date: Fri, 31 Jul 2026 00:15:12 +0100
+Message-ID: <20260730231512.9807-1-yahia.a.abdrabou@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
+References: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Yousef Alhouseen <alhouseenyousef@gmail.com>
-Date: Thu, 30 Jul 2026 15:08:52 -0700
-X-Gm-Features: AUfX_mxikxm0fi_6sE0FQkDhDQZXcMP70TH-8D6lSuHoq-wMoDjnILDjYXue1JQ
-Message-ID: <CAMuQ4bWWBKMD_XcaN_GB+MZQ-KdLYprqD0eKAB3K=UZTZWE57g@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-wmi: handle positive BIOS error codes
-To: ilpo.jarvinen@linux.intel.com
-Cc: hansg@kernel.org, krishna.chomal108@gmail.com, rafael.j.wysocki@intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Ilpo,
+Hi,
 
-No specific hardware exhibited this; I found it by static inspection.
-hp_wmi_perform_query() documents positive BIOS error returns, while
-victus_s_gpu_thermal_profile_get() only initializes its output
-arguments when the return is zero, so these two ret < 0 checks can
-consume uninitialized values on a positive return.
+Thanks fot your review, I agree that that we should refactor to a state
+container based setup and move initial setup to a probe function.
 
-I only ran strict checkpatch and a focused Clang build of hp-wmi.o. I
-do not have a Victus S system to reproduce it. If hardware validation
-is required for this change, I am happy to withdraw it.
-
-Regards,
-Yousef
-
-On Tue, 21 Jul 2026 20:28:38 +0300 (EEST), "Ilpo J=C3=A4rvinen"
-<ilpo.jarvinen@linux.intel.com> wrote:
-> On Tue, 30 Jun 2026, Yousef Alhouseen wrote:
->
-> > hp_wmi_perform_query() returns firmware BIOS error codes as positive
-> > values. The Victus-S profile callers only reject negative errors, then
-> > consume output fields that are not filled for a positive firmware error=
-.
->
-> On which hw you see this? Please add the info.
->
-> > Treat every nonzero result from victus_s_gpu_thermal_profile_get()
-> > as a failed query before using its outputs.
-> >
-> > Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
-> > ---
-> > drivers/platform/x86/hp/hp-wmi.c | 4 ++--
-> > 1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp=
-/hp-wmi.c
-> > index 8ba286ed8721..50c5a1e152dd 100644
-> > --- a/drivers/platform/x86/hp/hp-wmi.c
-> > +++ b/drivers/platform/x86/hp/hp-wmi.c
-> > @@ -1825,7 +1825,7 @@ static int victus_s_gpu_thermal_profile_set(bool =
-ctgp_enable,
-> > &current_ppab_state,
-> > &current_dstate,
-> > &current_gpu_slowdown_temp);
-> > - if (ret < 0) {
-> > + if (ret) {
-> > pr_warn("GPU modes not updated, unable to get slowdown temp\n");
-> > return ret;
-> > }
-> > @@ -1907,7 +1907,7 @@ static int platform_profile_victus_s_get_ec(enum =
-platform_profile_option *profil
-> > &current_ppab_state,
-> > &current_dstate,
-> > &current_gpu_slowdown_temp);
-> > - if (ret < 0)
-> > + if (ret)
-> > return ret;
-> > if (current_ctgp_state =3D=3D 0 && current_ppab_state =3D=3D 0)
-> > *profile =3D PLATFORM_PROFILE_LOW_POWER;
-> >
->
-> --
-> i.
+Best regards,
+yahia
