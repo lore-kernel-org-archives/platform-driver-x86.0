@@ -1,89 +1,41 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0033F3B2D0D
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 06:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582653C1F46;
+	Thu, 30 Jul 2026 09:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785393629; cv=none; b=ZTf81fr1RSjPyyVsBUX66K41iAfMAAr1sIKZI7BkUwELKEfYN1+MA/ENZJ6sBOT0kkGScvs1rlsNI31vef08in3V3SbZs/QaT+5EWLOzJFvWTxTinC8jm/mLDLKyGHFOC0+IBi1Nksp42Rk+aEDVfZm7yOtm5vAWDso9tny5Cfs=
+	t=1785403033; cv=none; b=BvR7Y97AVIVOjlRBPNQ7sZ4VikndSbViXTmWCzRtbQcdbMtGJ1vsh0NMekuReSOAhKwdhNQj90spltWISt+IopMYbtN/qMX16tIdg87B/AXIwrTFpBkPT1KnckXRcwKUtgyGvZhrP8Rfsx3egab+n2+LooZ712kzC2nox4uf4LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785393629; c=relaxed/simple;
-	bh=Y3x16PPIVyHj8Uh+iuCq3XKJqgFqpJFXRbLoKKVW1rI=;
+	s=arc-20240116; t=1785403033; c=relaxed/simple;
+	bh=5CytVqFPPqn+mD0KY8tQ6EXXjeR0s1xAgL9HIj9haXk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tJZAeHrZsDTMqAWsKRx+2D8dzjDC4j4a9l8H0eOdBFjaLyLE2r73O8/toXTTZcDq5izxLYdgO0E4oADIxxF45H+VZMfRCOzJ3NwK1DDAWoDC48NRraswjeemAqmEqcXXOHSbO6bnAkLJAAZbUSMXLLRXI8wVTzMZtOQqwO9bOmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ts8aN9wO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=e49R6bGn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=qfZG2q6EkAI7Y7w6mvEjbaoavt3/cVw4yaWzQ+TaKbZAnbSjY0Y1nHOdNwNI5ZWgkjiA6CE6jRARFmwhvYg/RTfzxNPZkf6Be1oiUfE6HP+VdrXPSTSeTvRawWxK1wC8zHsAWkTOSFtp37VC4fwIRcrUT1OGZxnYI5Yz8rP+BHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=fFscyl3h; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ts8aN9wO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="e49R6bGn"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66U6awXe3729290
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 06:40:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	59EmuRUbgg9pAUe86V2NHMrtVqPRLri3llHo5p/HhR0=; b=Ts8aN9wO+0Hi3lpv
-	WqRUQgeVeTXb1912+2DTImx7Xzjyyeqggj1mcyos7Yov0F/Dxlao/xKaIQYUVJOz
-	MBkkcC/szBmAxFy6XnNe7zXEunOflzbfTUfpgtnGkNZdshPQYX98eKQQYAiS6Qrr
-	r5eK6mWUv1yHyPXDOp4tll+7APlP/ZY8dvDAosgER8//fdc46QNDM+Qb1GHuexDH
-	f17+7Gn4pHJ+UCd9LQouUWHY3qm05YsDi2WWHXtGy1quKbVja28EaUvtnzFE5wd9
-	wjsH/04zKJ8EcPtAmyEdzZL3Gh1sK2GkJ0uCq70iM2J41ih6kQByQGXi2xl54k4G
-	BofN+Q==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fr19ag2yv-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 06:40:27 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2ccd1958e8fso26644735ad.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 29 Jul 2026 23:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785393626; x=1785998426; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=59EmuRUbgg9pAUe86V2NHMrtVqPRLri3llHo5p/HhR0=;
-        b=e49R6bGnNlpQkITzIbXl0D02xty7T/5Gcuhy+q6ELXESbtvRLZuZpoav8DAB4AqVzV
-         0SD2z2ljYWwOVTSWAwarpzjeeoSIrPF+4tNbLSEhe8/IUoO7rnq13VXmul8OpmGE+YwT
-         G9VuyfMCH0UPea59zH+CfUc1uLykZ+VexctGU/Y4Ufffgq11XcbwwZQ2yTuHBhSdspj6
-         Yo+eb5/Cck3CthM+tKvv6kv49E9uu8Wa2Apdu7UDPXTIm48vtP+m1nRA+vs1X7gbLF5V
-         jc4sO5Qt86ZykLTDF+3VZbZBptpqLsXLgz6UJMyUNDkC1out5KoHnqAHMEMbGA6X6Xgo
-         Fncw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785393626; x=1785998426;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=59EmuRUbgg9pAUe86V2NHMrtVqPRLri3llHo5p/HhR0=;
-        b=OVsyrW3wIdvXQXQaNpJ6QAEdkW5gghYdxilJm9pkl2fT4uQGDHJdFx2/+vC/5GD9pc
-         yxL+rWzfd/6rdh9t5Gg5Bo/4juBImNOcJKoaiY6MqB4JCcKqFH08oWLnVdQn8BzJliO/
-         yvE6Z8lcNgJfviPo76W4gx44sdYL59d9tMxQUkvIAFZkd9tebVRZEH7kyFfJh4Hygpp2
-         xlU5ZlXDRMz+KDr5B8WpQAnpoZUQBrxHTRciIyOyZgG9nbteuhPAzW/KmmyAn1c0kaRJ
-         Y/OO7hcXn/qb+yV+ImKZaY4uqeSGO3mZzHH7kJE/G5OPFwPtD3C/DbPGB6UDQaNX/clW
-         cmYA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq64fWF4jNJZwDfAuEy+sOdPkOKqVc0By5PsnBZrpE6aCpykBHeRQLszTaHAd0zbZGPBARCZ7R7eDcG0Gnl0WLKKBl7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7/IuvhBU8O8L1aLXbyzUtd0IL0ikpm7oIDLfrMJ0je3/1P9Bg
-	43H/WuHfrUkzgxNBWlh+wZ1qqRP13g3cZofjTcK71B+itlth9G9ZZb4s17EF8OpFSVNbZgFMNpB
-	nR4yKHP41K7oLiKdQkYgTJThDgHG8SPTfBJifBxN4X869H5oRKENZ8twr0MHem7BVWoDevzU9wd
-	Z+
-X-Gm-Gg: AR+sD10GhAmsK4eNgJkr1PnkG5V8JivRkgLpMRU0V7bZE5HBpOWTVkECe99gY3xba3Z
-	abRwoef8reB9SCme984jXVNtc9Brk6oYEyaU+5ytn6irRmI31KpkMKH/lmBV7BaFUGnpwIirsMe
-	maWJfufxnQ6rN2vfTrtAqzh5PTJFeHdMbWBYHenQV6N6M+LLR6DkXuiEojxE0UrtXZBGp60gqT9
-	Gz73DeRKS6Xg8WHSwTOPXi5K7hYy3tctovdPUS9ly8zd0mZ5bg+tRCbXvchwu9s78l/QkCol0Ma
-	cnwgdp8es7CFjK0l6kPkisiuhtYAFT/h7rKkDYCAMCU5iGtQGUOiYUy5kAFE6Dfr3/JVpaU25nS
-	Kjhx2S0X/tzTTRgAsoJvCEQS9x+iTFxzcRz9rrHuNlfFRl8gPlCrQWLbLJM/6UyKQhQexiFagLU
-	W41zohRuDwRCFM5g==
-X-Received: by 2002:a17:903:2c10:b0:2ca:b4b9:4586 with SMTP id d9443c01a7336-2d035bdf320mr14389205ad.19.1785393626593;
-        Wed, 29 Jul 2026 23:40:26 -0700 (PDT)
-X-Received: by 2002:a17:903:2c10:b0:2ca:b4b9:4586 with SMTP id d9443c01a7336-2d035bdf320mr14389005ad.19.1785393626143;
-        Wed, 29 Jul 2026 23:40:26 -0700 (PDT)
-Received: from [10.190.200.192] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d022a45f1esm21550055ad.20.2026.07.29.23.40.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2026 23:40:25 -0700 (PDT)
-Message-ID: <bc5b3299-7895-434b-b83d-2d28e450a484@oss.qualcomm.com>
-Date: Thu, 30 Jul 2026 12:10:20 +0530
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="fFscyl3h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1785403027; x=1786007827; i=w_armin@gmx.de;
+	bh=HK6xdJhYh5EchfFfeOP72ybbF8aPrLBmtUhBrWSCvjM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=fFscyl3hXyiZ/Zy9GnVsSbvPg/50JjDfN+Fk1DNzLly2/I0PyYEdxc/jK18f23Ir
+	 PBh3r3uB3hCVTKUFRRxige/Z459VerNzAzeHAiKD5ZDQ9H5mGoqo8cvIT8nIs56wo
+	 cS8Yd97zttyWr0sdpUPA8iJo3CKMNJ4LEmTWva2cIOBD4KgzNmpEe1tW1j5KxITRT
+	 g/Ssq1/uc+8YX4oFDfEhCjcLeLNYx+k9iQJkp+R/7ExbYWeLdoWX7NhmNogsVSf3/
+	 IcjJ9epYaKSHOkx9erO0jCMOAW9b6+jhFFK+zS+xnraUDHQcYbWfosRZM1rodzh76
+	 aOj5amSTuoS/nB+RMg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MRCKC-1wdJg70kRI-00T2am; Thu, 30
+ Jul 2026 11:17:07 +0200
+Message-ID: <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
+Date: Thu, 30 Jul 2026 11:17:03 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -91,97 +43,186 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] platform: arm64: qcom-hamoa-ec: Retry I2C transfers
- on NACK
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260728-ec_add_more_commands-v1-0-771abd65ee1a@oss.qualcomm.com>
- <20260728-ec_add_more_commands-v1-6-771abd65ee1a@oss.qualcomm.com>
- <e3394d91-ddab-4983-92b5-714d5bd5220f@oss.qualcomm.com>
+Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro
+ ANV15-51
+To: Justin Vargas <justinyvar@gmail.com>, jlee@suse.com, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260729222920.6490-1-justinyvar@gmail.com>
+ <20260729235125.1698-1-justinyvar@gmail.com>
 Content-Language: en-US
-From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-In-Reply-To: <e3394d91-ddab-4983-92b5-714d5bd5220f@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260729235125.1698-1-justinyvar@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzMwMDA0NSBTYWx0ZWRfX5JLsj60/3i3h
- 4hKTRCPz8Xuc4LWJO9dbnMrUQK3+bytlEVF5OP1Jjm6u5Swj3BDRYSapHX/nEMOv+jxcKLKqkXS
- /kdx51BsWGGOq4EiEQZKqK4GeRrlEjU=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzMwMDA0NSBTYWx0ZWRfX9wzo+WItdZXq
- 1FV3qvjsm+bK1TYZe3MhuOhOjdf2lvCRc6ssMz9Ght8gJ0r1ojydvLnGCnwghGRbEPe5I/m5nUc
- tWX0EQboedzXn6skLo8UTxnr8TtjRFllGuP/MyTRz68fgd8iTRN+qUSrgXwpTqYA2HMyrNQTw48
- zAFeBwNLzQrk9BVUmR3dB9sTcOJG3ryU5mSysXegZ3c7b2HVhQrAKcU1Xo66yYv1cH/blTqAm5l
- gxE9uHRd85/YB/Vs0BrsyoBzTnwaP/q5Ozxk6S+99AyRN6DtsthzSmTP5EUYU0H2Gn8XSK//ilV
- ydq0kZcC4d1axdY7/5sLOo0gU25id888woqx093igZLPEBPBlxa1uEinKBg3nZxErTySZwWbwiq
- jhfE3D62HT8vKIsOtAhpyOCa01Ml1vvl59RNj8NTe3N0geXlfHv1x+jO+D9raZZHBwAgPnIpcCA
- o1oW2CQxdFwhh7gm2fg==
-X-Proofpoint-GUID: j8idaN8-hAw4SoT7hpgRI1aGYgNsVgBX
-X-Proofpoint-ORIG-GUID: j8idaN8-hAw4SoT7hpgRI1aGYgNsVgBX
-X-Authority-Analysis: v=2.4 cv=RPuD2Yi+ c=1 sm=1 tr=0 ts=6a6af1db cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
- a=EUspDBNiAAAA:8 a=It6PG1r-qJMbqxhxAG0A:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-30_02,2026-07-29_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607300045
+X-Provags-ID: V03:K1:rwxiWW7awIySBWXo9wGyiSuTyn+rimBNSgA5I3d4AZItbgejAKM
+ 9cYkfGVyCEiuBMQ9jlWdCBKzV/U8TMxXmjg04qfZSS1ucbettfgVXTdRccChsj9SZjKCmPE
+ o/PKbOaOy7AZxJHkkW0dsUFsflB7eRvBNlqrNeE8lixqTKtMujPMTY/h4EpjT90rvxXqTR9
+ zoYaQy/WVTiIVx9PeDyJg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1B6jRziPOOY=;j3RDgK/Dw25FO4NqxPtY+hTSw+w
+ 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
+ 8xm
 
+Am 30.07.26 um 01:51 schrieb Justin Vargas:
 
+> The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
+> profile handling and hardware monitoring, but has no quirk entry, so
+> these features are only available when the predator_v4 module parameter
+> is passed manually.
+>
+> Add a quirk entry for this model.
+>
+> Note that this machine does not support the turbo thermal profile: its
+> supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
+> PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
+> remaining profiles work as expected.
 
-On 7/29/2026 4:41 PM, Konrad Dybcio wrote:
-> On 7/28/26 7:44 PM, Anvesh Jain P wrote:
->> The EC firmware NACKs the bus instead of clock-stretching while it is
->> busy servicing internal work (e.g. right after boot, when it is also
->> emitting a burst of SCI events). A transfer issued in that window fails
->> with -ENXIO even though the EC is otherwise healthy.
->>
->> This isn't visible with the smbus-only command set used previously; it
->> surfaced while stress-testing the new fan LUT command on Hamoa, which
->> issues raw i2c_transfer() calls more aggressively and is thus more
->> likely to land in the NACK window right after boot or during an SCI
->> event burst.
->>
->> Retry qcom_ec_write() and qcom_ec_read() a bounded number of times with
->> a short delay when the EC NACKs the transfer, before giving up.
->>
->> Signed-off-by: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
->> ---
-> [...]
-> 
->>  enum qcom_ec_sci_events {
->>  	EC_FAN1_STATUS_CHANGE_EVT = 0x30,
->>  	EC_FAN2_STATUS_CHANGE_EVT,
->> @@ -233,11 +245,20 @@ static int qcom_ec_write(struct qcom_ec *ec, u8 cmd, const u8 *data, size_t len)
->>  	msg.buf[0] = cmd;
->>  	memcpy(&msg.buf[1], data, len);
->>  
->> -	ret = i2c_transfer(ec->client->adapter, &msg, 1);
->> +	for (int i = 0; i < EC_I2C_NACK_MAX_ATTEMPTS; i++) {
->> +		ret = i2c_transfer(ec->client->adapter, &msg, 1);
->> +		ret = ret == 1 ? 0 : (ret < 0 ? ret : -EIO);
-> Please break this monster up. I know it already exists in-tree, but
-> since you're moving it around, we might as well.
+Hi,
 
-Agreed, will break that up into an explicit if/else instead of the
-nested ternary in both qcom_ec_write() and qcom_ec_read().
+can you create a custom quirk entry and check if controlling the CPU/GPU fans
+works? For this you need to fill-in the number of CPU/GPU fans inside struct quirk_entry
+and set "pwm" to "1".
 
--- 
-Best Regards,
-Anvesh
+I think fo something like "quirk_acer_predator_ph16_72", just without ".tubo = 1".
 
+Thanks,
+Armin Wolf
+
+> Assisted-by: Claude:claude-opus-5
+> Signed-off-by: Justin Vargas <justinyvar@gmail.com>
+> Tested-by: Justin Vargas <justinyvar@gmail.com>
+> ---
+> v2: Add Assisted-by trailer per
+>      Documentation/process/coding-assistants.rst. No change to the code.
+>
+> Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
+> kernel 7.0.11-1-cachyos:
+>
+>    $ sudo dmidecode -s system-product-name
+>    Nitro ANV15-51
+>
+>    $ sudo modprobe acer_wmi predator_v4=1
+>    $ cat /sys/firmware/acpi/platform_profile_choices
+>    low-power quiet balanced balanced-performance performance
+>
+> Writing low-power, quiet, balanced and balanced-performance all succeed
+> and audibly change fan behaviour. Writing performance is rejected by the
+> firmware, consistent with the supported profiles bitmap (0x0A) reading
+> 0x53, i.e. bit 5 (turbo) clear.
+>
+> hwmon works: sensors reports acer-isa-0ace with fan1 3024 RPM,
+> fan2 2685 RPM, temp1 +48.0 C.
+>
+> The WMI mechanism was cross-checked on Windows, where NitroSense switches
+> profiles via SetGamingMiscSetting with index 0x0B and the same profile
+> values used by this driver.
+>
+> The analysis and patch were produced with AI assistance (see the
+> Assisted-by trailer); all testing was performed by me on the physical
+> machine, and I take responsibility for the patch as signed off above.
+>
+>   drivers/platform/x86/acer-wmi.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index e0eaaefb13d..a7290f85166 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -662,6 +662,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+>   		},
+>   		.driver_data = &quirk_acer_nitro_an515_58,
+>   	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "Acer Nitro ANV15-51",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
+> +		},
+> +		.driver_data = &quirk_acer_predator_v4,
+> +	},
+>   	{
+>   		.callback = dmi_matched,
+>   		.ident = "Acer Predator PH315-53",
