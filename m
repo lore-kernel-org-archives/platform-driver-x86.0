@@ -1,269 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ABB417D6C;
-	Thu, 30 Jul 2026 11:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785411141; cv=none; b=YB5IBXbUlJQz5t8CfBHsC+XzfIj2irjASBcRZ+fFmsuYTNCuu9lvegswMw+Ji1VFvgkDNiCozfN1zGFVYHS3OnyXCkFNTV3Z1S7o5pUhs3UoAxya1iTaZ5l/meEPjSe5hfph9rPnwgPpT1UHVQBPf7EKWJKzu6X3hj6PKUBFdU0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785411141; c=relaxed/simple;
-	bh=m1ExKWgi718ZprBimzloJzqWKB6yzODetoUWTdDAx1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FdJKHUXwbB1MJn/gzC9ejp7q6mTwkoFw2T6W66gfrqmdTdBwIK5wb1iuVcWA+fCORjJINIDZMD2iZgsaKWKNStAqAY/8vGW2Qaxk6vtxE1piimIPLKfxL1tiO/5UL1A+6Y5uAbo5Cq3woQY0Ug14eHlQ/krrMioDwd4xaZRIQHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CHEgFYsK; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535F7374E67
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 14:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785420341; cv=pass; b=JB/sW+AnLhu+j8EdtHogiaspv2yT5R3Z+Lz6ZYxZrYWM5JsOeBOT29M6nXVQxlpuSWyVWuK+xbIr+Yqa5Ar+0oZfzHb7NLuODEJdat2NN1pLCzrJRO39ksRO2tSHPjN8kVkLHghHwhEHsXEmM76EcY/FeUowUM3f9DjaUUPZRj0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785420341; c=relaxed/simple;
+	bh=XIW0skLzRfcUs+OdX9HssPF2ar7RCE0EjuAPY9HJr6A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PmNLqq5cthC7CH8Cz6IlnytCroWe7aQYtSS0j5zZYsrODHd1rjKqHCdCNKlLr7ScRU0ULLkfC3cmNlafCAz3QIYqLjqeigBb8stYX0nhYgWD6AZ2NSIysVOgb5q3xU6SZAAeghJyWOCXv4cFsq2iorxo3rdUlAo+4bPP/5SpWoo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHDeC7uy; arc=pass smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CHEgFYsK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785411138; x=1816947138;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m1ExKWgi718ZprBimzloJzqWKB6yzODetoUWTdDAx1c=;
-  b=CHEgFYsK7v04YqN45s3JR1jt52ui2PHNe6ncvoqUQTaPOOIk5Q8qfKlr
-   tIhk6CMnw9bT0iisoz6f7OWfLeEX9DV/rHEec8y+PBdyPKPJqLdXJQ2PA
-   mXiD/EW5SEwvZuI/TIom3M1tkQ/emmgDr/N5Pq4rXLTs4AlW+gMs8d3hm
-   Qu5kdGwJu7oSWPaaF78WThooQP7IsAxOzXiUJFR5niKM97hc0zE1nQK2M
-   K2NYZ6jt3d77XMHfHzmfUQwlqFYO8yNIL9LGM8RM4jEd9j1W3XfQoI9OT
-   YI4BMmSVncm0LRUT2oRh2n51SUjg9lu3QSithnNcfvxsAp/6CibtuOwDB
-   g==;
-X-CSE-ConnectionGUID: q+o3ZJESRHCA/hJ+6uwcIw==
-X-CSE-MsgGUID: RrHV7KGOSF6Bs4zYW0i1IQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="96387253"
-X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="96387253"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 04:32:16 -0700
-X-CSE-ConnectionGUID: zUnt6nDSRoyMT5L5M8xpPg==
-X-CSE-MsgGUID: YplSsbrUS8escrrvME1oDw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="283628940"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa002.fm.intel.com with ESMTP; 30 Jul 2026 04:32:10 -0700
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id DD87399; Thu, 30 Jul 2026 13:32:09 +0200 (CEST)
-Date: Thu, 30 Jul 2026 13:32:09 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
-Cc: YehezkelShB@gmail.com, andreas.noever@gmail.com, bhelgaas@google.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, dev@deq.rocks,
-	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-	hansg@kernel.org, hpa@zytor.com, ilpo.jarvinen@linux.intel.com,
-	jarkko@kernel.org, jmorris@namei.org, keyrings@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-usb@vger.kernel.org, mingo@redhat.com, paul@paul-moore.com,
-	platform-driver-x86@vger.kernel.org, roberto.sassu@huawei.com,
-	serge@hallyn.com, tglx@kernel.org, westeri@kernel.org,
-	x86@kernel.org, zohar@linux.ibm.com
-Subject: Re: [PATCH v5 2/2] thunderbolt: Add device links for Apple T2 NHI
-Message-ID: <20260730113209.GF20844@black.igk.intel.com>
-References: <20260728044841.GP2365036@black.igk.intel.com>
- <20260729183524.1199-1-atharvatiwarilinuxdev@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHDeC7uy"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4896ae35be9so865383b6e.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 07:05:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785420339; cv=none;
+        d=google.com; s=arc-20260327;
+        b=sO1Kg1a6I0t72jcPfKI8bQGOqZZqe3C63zuE7ByiDf9DFbptydEoIiupY3HGWk62fa
+         TDqyS7dHbIrDwWrWEScW9hlKRTy9jb6YLH6g7ZF8oDWfxJo3l4qn/+HY12HiI2Zo2eFG
+         Q+EAdRV3nmTHGr1WbUnoas4OjsnJJ5J0mi+VPTZSUgIx2d26uw+zS77Hi9L1rW/OT2x2
+         NyYx5RK5CufH+5ssfLv6egeMlMdXdSjjxotZ5NQAeUg+DiJJaiGCXxqjRzt5/cFl9uGo
+         0RUISK2VpdlUHBLC2xgGVPkqfKW0aVQbh+eYg6hNSkqalGx3SGiR9DNd8+iTAZlYNaq7
+         ZQiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
+        fh=FKTsrcp9jrPCkNwIo6a79wvnCBAReq08GozB7EkTsN0=;
+        b=J6PCDsJZVjBJHM8B8qg3MOd4+f38AR9/yQL+JX+d4edVyrlfLo3g3F2KuG4bMgamOx
+         DPepVJwSBnvDeSE/vPe2D8vIRsE8ZV2UTWYg7NcLO80BKkIq2Yx5vka97EAEePV/Wb9i
+         +I9r8EXRIygD2ftH+95aLMyZ/mu6n1Qc3J3cfSiCWEcQJoIAE1fujz/Gd377+vzoDfir
+         duhkqrbEdQ3YWyhdtUXtfziSgx02OHYgCP0lW9BvmQ7nmgTLGmwecAoEy+WjdD0VooyZ
+         5d6FOmh8vozcX4rHOuMvA4xuRp0wxcTunkyuVeAgkyIxDNRE96oSSiWVIuvAC3yTjPo/
+         5tKw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785420339; x=1786025139; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
+        b=EHDeC7uyLjX8Fx3vn/qpMQ3cST9PpPERgT1zlTTMzE5WcXMF5V/d3zXKErz+t7KnzU
+         SpWj6hSWXzShGvBMenbhzeGD0qkEY5BJlmYmopOkO57cpA7OwIM0TowzTUuOylbnua0Q
+         delvwy0Q07jI4xJAmNe2286FurR/eCdfGgGWLG9gtoX1CyK4cKF9tQKdbE/S8+TT9Woc
+         1dMMl2JknVM30/PsCWQen4UZwERgtRgVuocJwXeICQvZ3oNlmiWaXSeYlGUzD8uI+DcR
+         Jsx3T50vN2OG9Aerd9oYBVgc6wyg3SAe5JK5HSEit+3IwscJTWfi3d45pjI+C+hSRS7T
+         F1NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785420339; x=1786025139;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
+        b=E9UsADNGS2HrLYZbcLNuDLFRBdswxYM3SB1OxAv7W3ac9H6id7tm9trMwVGLTlVgGP
+         mi6GdhuTdigxoeCVDdySvISdeCXQXLeynLocJqKtr2PE4DU0DRyvSxTgGCSPvjL2sDdD
+         RUanXB0GhJctcp5tyviHiwVy3t1ygc/OmhSi9wdSD70FTWEuFEmSdJgkos2/CmWMWraA
+         +kKDirJ54WwpWHPy5flPuJ5nk0v+zEQrbUBCnOE5FqWFJBSiJDLmgPHaZChpJ5F0mFT4
+         zjNLYLNlZ8ps5yZh031IzIws5kqCF3JWOJLcH4RfainxhM22ot2vl0zNX0z5AAzge9ka
+         QXyg==
+X-Forwarded-Encrypted: i=1; AHgh+RoZINLP4F4fEyeNJLGx2caID8VH68SDVoriKmBusHSqyva8mEzZ16ODAFTwaw22CrGd8pRDbLQOLrNO1k7MewpRk2xY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXJxcy6hRJfcKZmcgZI6lWr/i42ARzKUzNKlPDMwAuK5tYlsTJ
+	CBigVPklpnBFF3e9kihjLmkCUPgOniBqpiZkLqIop5EUzmHR4KCE9dGNaxiz46J2vv6TEySwBQ5
+	Sw/jWXwRC6hqtiBcIYGi92kJXf3NOTA==
+X-Gm-Gg: AR+sD10i88Imp2LHcn2D9wSBVKq1IKtTs8R2pRUAmUeJOYibC7gqKAa7zq6bPd00lpX
+	V04qzbdxWfvTumrJaNanrqPFBjaYWa2DjaERisrHrA6pGQu4l8GDEiROyF8f4Qd/T7blFPr28dR
+	X4XcbeL4vmKjrG03N9d/KRSl+tQMGB3sQGOYG4Umh2G0xxzojmwc/kdmDBLw3r5Uve3HpPWQmnI
+	kmi7orOP5QTRYqOg/3Fe1QDFT9+V3mHzar4ry6d8dcgO/8NegdNUOSRSf5bn32WN6weeAigOMWj
+	XmLh9X9uEvVp3pQ3gnFLr/MA7strbLgcrdXw3y6xFhKZ
+X-Received: by 2002:a05:6808:1490:b0:4a3:fb6b:bcb8 with SMTP id
+ 5614622812f47-4ad8777971dmr1679042b6e.10.1785420338983; Thu, 30 Jul 2026
+ 07:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260729183524.1199-1-atharvatiwarilinuxdev@gmail.com>
+References: <20260729222920.6490-1-justinyvar@gmail.com> <20260729235125.1698-1-justinyvar@gmail.com>
+ <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
+In-Reply-To: <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
+From: Justin Vargas <justinyvar@gmail.com>
+Date: Thu, 30 Jul 2026 10:05:27 -0400
+X-Gm-Features: AUfX_mzUfSJrkNxZKzhv5UsnlWL1qGZbEMC4Ypxjk8LSul87JHOq8NzkK4DVhWw
+Message-ID: <CADkD=u565J=YACh5j8WDiB6kxGrr_2zb+9WpOEQbuYEZBrSGgg@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: jlee@suse.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+> can you create a custom quirk entry and check if controlling the CPU/GPU =
+fans
+> works? For this you need to fill-in the number of CPU/GPU fans inside str=
+uct
+> quirk_entry and set "pwm" to "1".
+>
+> I think fo something like "quirk_acer_predator_ph16_72", just without ".t=
+ubo =3D 1".
 
-On Wed, Jul 29, 2026 at 02:35:24PM -0400, Atharva Tiwari wrote:
-> > We should not be calling PCI functions anymore from the SW CM core. We have
-> > pci.c for that.
-> 
-> That is outside the scope of this patch, this should be another patch.
+Sure. The machine has two fans - with predator_v4=3D1 loaded, sensors repor=
+ts
+fan1 and fan2 under acer-isa-0ace - so I'll use:
 
-Agree. It should be preparatory patch for the series.
+static struct quirk_entry quirk_acer_nitro_anv15_51 =3D {
+    .cpu_fans =3D 1,
+    .gpu_fans =3D 1,
+    .predator_v4 =3D 1,
+    .pwm =3D 1,
+};
 
-> > I wonder if we can put this to pci.c, rename it to tb_pci_add_links()
-> > instead.
-> 
-> Same thing as before, its outside the scope of this patch.
-> 
-> > BTW, why you need to differentiate T2 vs. the rest of Apple x86? Don't this
-> > variable do?
-> 
-> Because the Patchset is specifically for T2 Macs.
+One note on timing: this laptop runs Windows day to day and I've been testi=
+ng
+from a live USB, so I need to set up an environment that can build and load=
+ a
+patched module on the hardware before I can report back on fan control. Tha=
+t
+may take me a few days, but I'll follow up with results either way, and sen=
+d a
+v3 once I can confirm whether PWM control works.
 
-Yes but don't x86_apple_machine is true for T2 macs as well? Why need a
-separate variable?
+Thanks for the quick review,
+Justin
 
-> > I'm not fan of __free() and the like so let's not use it here.
+
+On Thu, Jul 30, 2026 at 5:17=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 30.07.26 um 01:51 schrieb Justin Vargas:
+>
+> > The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
+> > profile handling and hardware monitoring, but has no quirk entry, so
+> > these features are only available when the predator_v4 module parameter
+> > is passed manually.
 > >
-> > Also you don't need to scan all the slots. Just look for the tunneled
-> > downstream ports based on their PCI IDs like we do already.
-> 
-> Could you please point me to the "like we do already" code you're referring to?
-
-Yes see below.
-
-> > This is unrelated change.
-> 
-> Its not. the patch specifically says T2 macs, and Titan ridge is only on T2 Macs
-> so we dont need to use has_apple_t2_chip for that.
-
-I meant the extra empty line that your patch adds.
-
-In addition to rename and move to pci.c (as separate patch) something like
-this (completely untested) I had in mind. Does that make sense? It does not
-add the Titan Ridge IDs, you can add them to the discrete part then.
-
-diff --git a/drivers/thunderbolt/tb.c b/drivers/thunderbolt/tb.c
-index ddeba0861a2b..3ad6ece6b808 100644
---- a/drivers/thunderbolt/tb.c
-+++ b/drivers/thunderbolt/tb.c
-@@ -3397,32 +3397,30 @@ static const struct tb_cm_ops tb_cm_ops = {
- 	.disconnect_xdomain_paths = tb_disconnect_xdomain_paths,
- };
- 
--/*
-- * During suspend the Thunderbolt controller is reset and all PCIe
-- * tunnels are lost. The NHI driver will try to reestablish all tunnels
-- * during resume. This adds device links between the tunneled PCIe
-- * downstream ports and the NHI so that the device core will make sure
-- * NHI is resumed first before the rest.
-- */
--static bool tb_apple_add_links(struct tb_nhi *nhi)
-+static bool add_link(struct device *dev, struct device *nhi)
- {
--	struct pci_dev *nhi_pdev = to_pci_dev(nhi->dev);
--	struct pci_dev *upstream, *pdev;
--	bool ret;
-+	const struct device_link *link;
- 
--	if (!x86_apple_machine)
--		return false;
--
--	switch (nhi_pdev->device) {
--	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
--	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
--	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
--	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
--		break;
--	default:
--		return false;
-+	link = device_link_add(dev, nhi, DL_FLAG_AUTOREMOVE_SUPPLIER |
-+				DL_FLAG_PM_RUNTIME);
-+	if (link) {
-+		dev_dbg(nhi, "created link from %s\n",
-+			dev_name(dev));
-+		return true;
-+	} else {
-+		dev_warn(nhi, "device link creation from %s failed\n",
-+			 dev_name(dev));
- 	}
- 
-+	return false;
-+}
-+
-+static bool
-+tb_pci_add_links_discrete(struct tb_nhi *nhi, struct pci_dev *nhi_pdev)
-+{
-+	struct pci_dev *upstream, *pdev;
-+	bool ret;
-+
- 	upstream = pci_upstream_bridge(nhi_pdev);
- 	while (upstream) {
- 		if (!pci_is_pcie(upstream))
-@@ -3442,30 +3440,80 @@ static bool tb_apple_add_links(struct tb_nhi *nhi)
- 	 */
- 	ret = false;
- 	for_each_pci_bridge(pdev, upstream->subordinate) {
--		const struct device_link *link;
--
- 		if (!pci_is_pcie(pdev))
- 			continue;
- 		if (pci_pcie_type(pdev) != PCI_EXP_TYPE_DOWNSTREAM ||
- 		    !pdev->is_pciehp)
- 			continue;
- 
--		link = device_link_add(&pdev->dev, nhi->dev,
--				       DL_FLAG_AUTOREMOVE_SUPPLIER |
--				       DL_FLAG_PM_RUNTIME);
--		if (link) {
--			dev_dbg(nhi->dev, "created link from %s\n",
--				dev_name(&pdev->dev));
--			ret = true;
--		} else {
--			dev_warn(nhi->dev, "device link creation from %s failed\n",
--				 dev_name(&pdev->dev));
-+		ret = add_link(&pdev->dev, nhi->dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static bool
-+tb_pci_add_links_integrated(struct tb_nhi *nhi, struct pci_dev *nhi_pdev)
-+{
-+	struct pci_bus *bus = nhi_pdev->bus;
-+	struct pci_dev *pdev;
-+	bool ret = false;
-+
-+	/*
-+	 * On intergrated the tunneled PCIe root ports are directly
-+	 * under the host bridge.
-+	 */
-+	if (!pci_is_root_bus(bus))
-+		return false;
-+
-+	for_each_pci_bridge(pdev, bus) {
-+		switch (nhi_pdev->device) {
-+		case PCI_DEVICE_ID_INTEL_ICL_NHI0:
-+			if (pdev->device == 0x8a1d || pdev->device == 0x8a1fb)
-+				ret = add_link(&pdev->dev, nhi->dev);
-+			break;
-+		case PCI_DEVICE_ID_INTEL_ICL_NHI1:
-+			if (pdev->device == 0x8a21 || pdev->device == 0x8a23)
-+				ret = add_link(&pdev->dev, nhi->dev);
-+			break;
-+		default:
-+			break;
- 		}
- 	}
- 
- 	return ret;
- }
- 
-+/*
-+ * During suspend the Thunderbolt controller is reset and all PCIe
-+ * tunnels are lost. The NHI driver will try to reestablish all tunnels
-+ * during resume. This adds device links between the tunneled PCIe
-+ * downstream ports and the NHI so that the device core will make sure
-+ * NHI is resumed first before the rest.
-+ */
-+static bool tb_apple_add_links(struct tb_nhi *nhi)
-+{
-+	struct pci_dev *nhi_pdev = to_pci_dev(nhi->dev);
-+
-+	if (!x86_apple_machine)
-+		return false;
-+
-+	switch (nhi_pdev->device) {
-+	case PCI_DEVICE_ID_INTEL_LIGHT_RIDGE:
-+	case PCI_DEVICE_ID_INTEL_CACTUS_RIDGE_4C:
-+	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_2C_NHI:
-+	case PCI_DEVICE_ID_INTEL_FALCON_RIDGE_4C_NHI:
-+		return tb_pci_add_links_discrete(nhi, nhi_pdev);
-+
-+	case PCI_DEVICE_ID_INTEL_ICL_NHI0:
-+	case PCI_DEVICE_ID_INTEL_ICL_NHI1:
-+		return tb_pci_add_links_integrated(nhi, nhi_pdev);
-+
-+	default:
-+		return false;
-+	}
-+}
-+
- struct tb *tb_probe(struct tb_nhi *nhi)
- {
- 	struct tb_cm *tcm;
-
+> > Add a quirk entry for this model.
+> >
+> > Note that this machine does not support the turbo thermal profile: its
+> > supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
+> > PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
+> > remaining profiles work as expected.
+>
+> Hi,
+>
+> can you create a custom quirk entry and check if controlling the CPU/GPU =
+fans
+> works? For this you need to fill-in the number of CPU/GPU fans inside str=
+uct quirk_entry
+> and set "pwm" to "1".
+>
+> I think fo something like "quirk_acer_predator_ph16_72", just without ".t=
+ubo =3D 1".
+>
+> Thanks,
+> Armin Wolf
+>
+> > Assisted-by: Claude:claude-opus-5
+> > Signed-off-by: Justin Vargas <justinyvar@gmail.com>
+> > Tested-by: Justin Vargas <justinyvar@gmail.com>
+> > ---
+> > v2: Add Assisted-by trailer per
+> >      Documentation/process/coding-assistants.rst. No change to the code=
+.
+> >
+> > Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
+> > kernel 7.0.11-1-cachyos:
+> >
+> >    $ sudo dmidecode -s system-product-name
+> >    Nitro ANV15-51
+> >
+> >    $ sudo modprobe acer_wmi predator_v4=3D1
+> >    $ cat /sys/firmware/acpi/platform_profile_choices
+> >    low-power quiet balanced balanced-performance performance
+> >
+> > Writing low-power, quiet, balanced and balanced-performance all succeed
+> > and audibly change fan behaviour. Writing performance is rejected by th=
+e
+> > firmware, consistent with the supported profiles bitmap (0x0A) reading
+> > 0x53, i.e. bit 5 (turbo) clear.
+> >
+> > hwmon works: sensors reports acer-isa-0ace with fan1 3024 RPM,
+> > fan2 2685 RPM, temp1 +48.0 C.
+> >
+> > The WMI mechanism was cross-checked on Windows, where NitroSense switch=
+es
+> > profiles via SetGamingMiscSetting with index 0x0B and the same profile
+> > values used by this driver.
+> >
+> > The analysis and patch were produced with AI assistance (see the
+> > Assisted-by trailer); all testing was performed by me on the physical
+> > machine, and I take responsibility for the patch as signed off above.
+> >
+> >   drivers/platform/x86/acer-wmi.c | 9 +++++++++
+> >   1 file changed, 9 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
+r-wmi.c
+> > index e0eaaefb13d..a7290f85166 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -662,6 +662,15 @@ static const struct dmi_system_id acer_quirks[] __=
+initconst =3D {
+> >               },
+> >               .driver_data =3D &quirk_acer_nitro_an515_58,
+> >       },
+> > +     {
+> > +             .callback =3D dmi_matched,
+> > +             .ident =3D "Acer Nitro ANV15-51",
+> > +             .matches =3D {
+> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
+> > +             },
+> > +             .driver_data =3D &quirk_acer_predator_v4,
+> > +     },
+> >       {
+> >               .callback =3D dmi_matched,
+> >               .ident =3D "Acer Predator PH315-53",
