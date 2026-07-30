@@ -1,89 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C103B7B76;
-	Thu, 30 Jul 2026 21:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781DE3B42FB
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 21:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785445580; cv=none; b=c/5TT6I3ZYvR/m+KQDu5E/FDfU/bG+ILcgtdWqrEljDtrX7GVujwLsqmmjw2h42G4yEPoI2q4FAjgLqpysSRZaOwt8u1B73f7UFBmt224M3cHsxCdeJSABl0qgmEDULoguY5f3OEWk5jO+9dnr6FACbqajgBKaWS92Qw3IRhmZk=
+	t=1785446164; cv=none; b=P5oE4terDFPWBy0rn8+uhEm5UIvcNqJmqqv4m7soSKFTHOE8o7wJOgYXVaCt8nSwetUjkn8/NmCDDgSH3I48/sFVxUbNKJrlmeMGazTy1LLNDZdt3zdAEcVvta38gsXtvpA2y1hLTU09655hbDhSrPHc5rU1UJl3A4CpXGxwx10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785445580; c=relaxed/simple;
-	bh=c5vdJX+14W5uHf45GQdnXORtzTRs2LpNJBoNz+dP40I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzYOo/uclJbm50Nv+CVq9xDsyP/VWB/GyNrTP7NOLKrtYHPSPvRkrKomxGkHrrnLTg98QD7EajjvEL7aUI9e5vUOey/iFXP7cNZdBRhI24gsr+lcHZP0qzZWgwzOdNyJQgpXvcwyCOdFJYvJA27cuz390/DKcttVnCbsgoT3Z20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kb/7MpGz; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1785446164; c=relaxed/simple;
+	bh=WG0+e1KN1nsoMOFFn5MjuvZvyoDnerqjnUnTWeX68Mg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NlJFhe1UTXJHAQbUrcDwt9meYudkkbktEXh1wRzO+N7PJd3r6Q2c5YZScGBvbpCuF3oTYPbaz0btl94kBlR+CG4TrjDEoGB8a+QLJs11JGe2M2krsPG7IRmNaUSfy2Kj38HdbTAzhNHniI+7YKpuetUIOa1vj8Kk/yoa6Y5dxR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdANWppI; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kb/7MpGz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785445578; x=1816981578;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=c5vdJX+14W5uHf45GQdnXORtzTRs2LpNJBoNz+dP40I=;
-  b=kb/7MpGzxvPizYu4xFcDzlKiMZNvdI9L2pjl9X97Z60t8/SFv5exR42F
-   HOVCqrTBaRD7sJbXacpGYwfC5QbOmzo/l7hiFrhYdgdl/WGNfBdvVRAZI
-   meJHCNOe64PCCSZMC/NHzkIOHcdgKInYloz6yDNvGR5j+jpCKgvhlfyIA
-   RgcOfDWlRzdbbDDuBHVLqFhozpwv+TS4dSSaiceKAku0baMKiQvYkQQ+/
-   /fCJiRbpgCF1Nu4Q9XKdbiiqa4osUulH18cZ/7jY+z9Egi7cDwncdKeYF
-   SXRwHAMAMgfZRpbHO9c9saLjsN6IkJsT84j7pq13treiAQLzrlTq3Yoeh
-   Q==;
-X-CSE-ConnectionGUID: yKu69MljReSsZv6MqYtNtw==
-X-CSE-MsgGUID: ULquD/nwQ6qw/TbPKhmoqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="85840788"
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="85840788"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 14:05:59 -0700
-X-CSE-ConnectionGUID: QsWnVGa1SQqKb6W5eryFVg==
-X-CSE-MsgGUID: 4M+lAEToRxCkSSL+X2POkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="256099625"
-Received: from debox1-desk4.jf.intel.com ([10.88.27.138])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 14:05:58 -0700
-From: "David E. Box" <david.e.box@linux.intel.com>
-To: david.e.box@intel.com,
-	david.e.box@linux.intel.com,
-	xi.pardee@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: update Intel PMC Core maintainer contact
-Date: Thu, 30 Jul 2026 14:05:41 -0700
-Message-ID: <20260730210546.3936101-1-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdANWppI"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38a0c7e841fso422977a91.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 14:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785446156; x=1786050956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WG0+e1KN1nsoMOFFn5MjuvZvyoDnerqjnUnTWeX68Mg=;
+        b=gdANWppIZaHHVrO4NaZ0vAnYOeETJRqHszRJALyTxCLTqgXFXrtYSNK//frvSJEA1M
+         3XJJ9haOTo6G6TFEVFdIkZaz52Q8g5dIQV2bVosoXWU/WWUFW/93r52sljYl22mpBKl/
+         2MLJqA4PXP/ZhvSSifBMiJxZWjtupSytErT1RK1s73DP0GXqpIkcM5CzcKqA+eoYZkU1
+         8HpTUNx7+9bcYo5oBcQR8sogLak4n13pvrOpuY+MEVc05W3e9bhnbfFlWDdj5mvoouCI
+         HnAYRTRyxcZIqKGWZbU3wEQlEpc7dIhx8SWOIQw7iUrd9xDOnXw6dWZtVg/1OHfI5+BD
+         2i+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785446156; x=1786050956;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=WG0+e1KN1nsoMOFFn5MjuvZvyoDnerqjnUnTWeX68Mg=;
+        b=TS3HichXfQiuHqbmnLvY6w0RyF2gLmsSoyL0loVDF90Y4LW54qZ9Ew7j/jo8ta1JIE
+         l6ug10atHgQoITEtPD5V8KqB+xDuwgy/iHI7AZEjZhBtdaNl4j4GUkkpQOszpzJtnaQj
+         eRMT9VCQ9qB+yZv9vrM45p7qWabfwIMw/rvJWxivghHgERpbQ5NxCn5btd7ZGRmRuGfP
+         YWJk6cSx+aOANSmGbxy6wLK9G2Dx19GE3McFbSDDwmUqZ366ITtpkmarHw/Pv5bMwLT8
+         rX2xGa1buC/NjQRgsEagSL7r4p64zRxLgoKoCUBw3PXf4IW/vLea4eNQvg75WzQq7W8M
+         Tztg==
+X-Forwarded-Encrypted: i=1; AHgh+RpTYCXKwg9CqmvoCqFs9B2eL/Oar4/iZ/7s/YfCJ4wDmyJeNDl4uuGzkdh1rPecz/dZD9njEmOj4Yeo4mjAiljooHZK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0pBpQBSWCJ6kZhmbGj4mBsdrCUqy3FFWdnfSBRjSmAhbbWIso
+	yiN0P5ycYIJenNJs2xaKn620DIxssbTA/1EHId0s54xUE5L9gpnMv8M=
+X-Gm-Gg: AR+sD10Jw6sLP8Qgp0WQAQOB888Y3Huic0HlCY+M3EnAIhAUfTtt+58InHXZCAmNs51
+	k4u8ZQohQIdieRNafufXKGS3m+t/zS8xmdghkptyZ6MilcfGdyiBduxIUmH3x8QYXDJhcDBqxEr
+	XExwhJBNTEn/9A2js0lGyGGZJ8oFnGF0dXCFyldlBfCgK2gtXbE8iAftD8IxYrwWpGsc+Z741H5
+	zl5b9skYTFHe0Hb6df1/ay+kZqIO+FyrY57nc1M4NzGWA7+k9EcxbwSjPGiq1247gQ0YMYE5jY+
+	EbIVP2PKoUICky9p3nJRau+TdTgR2osHk/AO452JEVcHWjmcp6JW7LKwyk9cvc3X0SFX/c6I3GD
+	67xwUKhgkGkkE/uHmcbilTp/1dr+QA8vQ0Nus2z9rKgTDK4ofilvfIGXkihshEbifj8j6E9gfiM
+	tPrgZXCD7lYLoK9W4MMPOWjzM7k0tBy/w5pkKGUeM2Kmw7vjeH4ZdT1gpY2nWxrSWRns+d/leio
+	MGudP/zA+YXL186OTR8TUKervr0FrvL4+rxoQ==
+X-Received: by 2002:a17:90b:380b:b0:387:e0db:3faf with SMTP id 98e67ed59e1d1-38f9c0abaecmr3050277a91.40.1785446155807;
+        Thu, 30 Jul 2026 14:15:55 -0700 (PDT)
+Received: from at-Standard-PC-Q35-ICH9-2009.. ([106.221.78.187])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13e7263cfd9sm36251186c88.4.2026.07.30.14.15.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2026 14:15:55 -0700 (PDT)
+From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+To: mika.westerberg@linux.intel.com
+Cc: YehezkelShB@gmail.com,
+	andreas.noever@gmail.com,
+	atharvatiwarilinuxdev@gmail.com,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	dev@deq.rocks,
+	dmitry.kasatkin@gmail.com,
+	eric.snowberg@oracle.com,
+	hansg@kernel.org,
+	hpa@zytor.com,
+	ilpo.jarvinen@linux.intel.com,
+	jarkko@kernel.org,
+	jmorris@namei.org,
+	keyrings@vger.kernel.org,
+	linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	mingo@redhat.com,
+	paul@paul-moore.com,
+	platform-driver-x86@vger.kernel.org,
+	roberto.sassu@huawei.com,
+	serge@hallyn.com,
+	tglx@kernel.org,
+	westeri@kernel.org,
+	x86@kernel.org,
+	zohar@linux.ibm.com
+Subject: Re: [PATCH v5 2/2] thunderbolt: Add device links for Apple T2 NHI
+Date: Thu, 30 Jul 2026 17:15:42 -0400
+Message-ID: <20260730211542.1422-1-atharvatiwarilinuxdev@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260730113209.GF20844@black.igk.intel.com>
+References: <20260730113209.GF20844@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Replace the Intel PMC Core Driver maintainer entry with the current
-maintainer email contact.
+> Agree. It should be preparatory patch for the series.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 716acfc3d7c1..6410a69a319e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13296,7 +13296,7 @@ F:	drivers/platform/x86/intel/punit_ipc.c
-=20
- INTEL PMC CORE DRIVER
- M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
--M:	David E Box <david.e.box@intel.com>
-+M:	Xi Pardee <xi.pardee@linux.intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
-
-base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
---=20
-2.43.0
-
+I think ur ideas should be implimeneted AFTER the patch, because this
+patch adds a kind-of important feature to T2 macs, and well ur ideas
+are for code quality, and well it takes time for patches to upstream
