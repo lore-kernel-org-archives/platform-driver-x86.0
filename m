@@ -1,223 +1,296 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535F7374E67
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 14:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.178
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785420341; cv=pass; b=JB/sW+AnLhu+j8EdtHogiaspv2yT5R3Z+Lz6ZYxZrYWM5JsOeBOT29M6nXVQxlpuSWyVWuK+xbIr+Yqa5Ar+0oZfzHb7NLuODEJdat2NN1pLCzrJRO39ksRO2tSHPjN8kVkLHghHwhEHsXEmM76EcY/FeUowUM3f9DjaUUPZRj0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785420341; c=relaxed/simple;
-	bh=XIW0skLzRfcUs+OdX9HssPF2ar7RCE0EjuAPY9HJr6A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PmNLqq5cthC7CH8Cz6IlnytCroWe7aQYtSS0j5zZYsrODHd1rjKqHCdCNKlLr7ScRU0ULLkfC3cmNlafCAz3QIYqLjqeigBb8stYX0nhYgWD6AZ2NSIysVOgb5q3xU6SZAAeghJyWOCXv4cFsq2iorxo3rdUlAo+4bPP/5SpWoo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHDeC7uy; arc=pass smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD213859EF
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 16:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785429401; cv=none; b=ZKhTwffU4T566AwwRt5jIJvXYOmJl172q+TBiOZHiIN4S71LDppzjmtnvbnqCbQEaReBNn3wT/tqDZV+aHeRSuyeym3yfRgaxE2Z7tnNOZpngh9EXqwnqErymroSP7h/T0lsmcIUpqPHZizBW9tn9JkVt3+JkjsgZX+bqG6V7fA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785429401; c=relaxed/simple;
+	bh=0eZV5nmOkRJHD2avaPSFKlUPU9Glaybxodgnn5vykl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bu0cRCbMfXkBfqEJYUTIhH9I1sY/aA6QFJAJ+dKm6NjqOFmcC2NsLH+3HvF3kgYvUW4vqBJFr88UUfTQaihzSUsZFbzkc/4XnGi7zJxsVgZhm5B88lMAL0EmPIDuetCX4qRq5LPZBUWaazafDYI/VXxncZ4SWHKP3JpuPVzOqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kTedV1+V; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHDeC7uy"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4896ae35be9so865383b6e.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 07:05:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785420339; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sO1Kg1a6I0t72jcPfKI8bQGOqZZqe3C63zuE7ByiDf9DFbptydEoIiupY3HGWk62fa
-         TDqyS7dHbIrDwWrWEScW9hlKRTy9jb6YLH6g7ZF8oDWfxJo3l4qn/+HY12HiI2Zo2eFG
-         Q+EAdRV3nmTHGr1WbUnoas4OjsnJJ5J0mi+VPTZSUgIx2d26uw+zS77Hi9L1rW/OT2x2
-         NyYx5RK5CufH+5ssfLv6egeMlMdXdSjjxotZ5NQAeUg+DiJJaiGCXxqjRzt5/cFl9uGo
-         0RUISK2VpdlUHBLC2xgGVPkqfKW0aVQbh+eYg6hNSkqalGx3SGiR9DNd8+iTAZlYNaq7
-         ZQiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
-        fh=FKTsrcp9jrPCkNwIo6a79wvnCBAReq08GozB7EkTsN0=;
-        b=J6PCDsJZVjBJHM8B8qg3MOd4+f38AR9/yQL+JX+d4edVyrlfLo3g3F2KuG4bMgamOx
-         DPepVJwSBnvDeSE/vPe2D8vIRsE8ZV2UTWYg7NcLO80BKkIq2Yx5vka97EAEePV/Wb9i
-         +I9r8EXRIygD2ftH+95aLMyZ/mu6n1Qc3J3cfSiCWEcQJoIAE1fujz/Gd377+vzoDfir
-         duhkqrbEdQ3YWyhdtUXtfziSgx02OHYgCP0lW9BvmQ7nmgTLGmwecAoEy+WjdD0VooyZ
-         5d6FOmh8vozcX4rHOuMvA4xuRp0wxcTunkyuVeAgkyIxDNRE96oSSiWVIuvAC3yTjPo/
-         5tKw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785420339; x=1786025139; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
-        b=EHDeC7uyLjX8Fx3vn/qpMQ3cST9PpPERgT1zlTTMzE5WcXMF5V/d3zXKErz+t7KnzU
-         SpWj6hSWXzShGvBMenbhzeGD0qkEY5BJlmYmopOkO57cpA7OwIM0TowzTUuOylbnua0Q
-         delvwy0Q07jI4xJAmNe2286FurR/eCdfGgGWLG9gtoX1CyK4cKF9tQKdbE/S8+TT9Woc
-         1dMMl2JknVM30/PsCWQen4UZwERgtRgVuocJwXeICQvZ3oNlmiWaXSeYlGUzD8uI+DcR
-         Jsx3T50vN2OG9Aerd9oYBVgc6wyg3SAe5JK5HSEit+3IwscJTWfi3d45pjI+C+hSRS7T
-         F1NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785420339; x=1786025139;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TUwtZZ6lV5B3ZrKWkDwbznKrR7KSFbpMcHo4SuJ0sak=;
-        b=E9UsADNGS2HrLYZbcLNuDLFRBdswxYM3SB1OxAv7W3ac9H6id7tm9trMwVGLTlVgGP
-         mi6GdhuTdigxoeCVDdySvISdeCXQXLeynLocJqKtr2PE4DU0DRyvSxTgGCSPvjL2sDdD
-         RUanXB0GhJctcp5tyviHiwVy3t1ygc/OmhSi9wdSD70FTWEuFEmSdJgkos2/CmWMWraA
-         +kKDirJ54WwpWHPy5flPuJ5nk0v+zEQrbUBCnOE5FqWFJBSiJDLmgPHaZChpJ5F0mFT4
-         zjNLYLNlZ8ps5yZh031IzIws5kqCF3JWOJLcH4RfainxhM22ot2vl0zNX0z5AAzge9ka
-         QXyg==
-X-Forwarded-Encrypted: i=1; AHgh+RoZINLP4F4fEyeNJLGx2caID8VH68SDVoriKmBusHSqyva8mEzZ16ODAFTwaw22CrGd8pRDbLQOLrNO1k7MewpRk2xY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXJxcy6hRJfcKZmcgZI6lWr/i42ARzKUzNKlPDMwAuK5tYlsTJ
-	CBigVPklpnBFF3e9kihjLmkCUPgOniBqpiZkLqIop5EUzmHR4KCE9dGNaxiz46J2vv6TEySwBQ5
-	Sw/jWXwRC6hqtiBcIYGi92kJXf3NOTA==
-X-Gm-Gg: AR+sD10i88Imp2LHcn2D9wSBVKq1IKtTs8R2pRUAmUeJOYibC7gqKAa7zq6bPd00lpX
-	V04qzbdxWfvTumrJaNanrqPFBjaYWa2DjaERisrHrA6pGQu4l8GDEiROyF8f4Qd/T7blFPr28dR
-	X4XcbeL4vmKjrG03N9d/KRSl+tQMGB3sQGOYG4Umh2G0xxzojmwc/kdmDBLw3r5Uve3HpPWQmnI
-	kmi7orOP5QTRYqOg/3Fe1QDFT9+V3mHzar4ry6d8dcgO/8NegdNUOSRSf5bn32WN6weeAigOMWj
-	XmLh9X9uEvVp3pQ3gnFLr/MA7strbLgcrdXw3y6xFhKZ
-X-Received: by 2002:a05:6808:1490:b0:4a3:fb6b:bcb8 with SMTP id
- 5614622812f47-4ad8777971dmr1679042b6e.10.1785420338983; Thu, 30 Jul 2026
- 07:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kTedV1+V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1785429392; x=1786034192; i=w_armin@gmx.de;
+	bh=1432RJcvHKbdVXQAdKDoT0OvfCBuZRxa9keGD2ewGps=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=kTedV1+VCBaCq2rQAIMXYHr8v7bLdTse5CWUJXGBrOAPlvrYwyz8XdS8PQ2BwvIr
+	 tVgqqBkOGt1l1N7Dl571bU6b2tH0hlB/dHAnHDFF/F2xcx1lSg5iJT587qSQb+ox0
+	 9wWogR7i8RwLjlqC70aVHExbtLGxHyLHwKOkFKFy+VEFgQzSevLm6+yYHOrXL7Fvz
+	 WCytJp6cVEJGwoIb4CXzC3vUlK5tRwBBndz1UZWKa/Q8b88Zfo19kR4Y0JH1KZWuw
+	 lZrQr0yFj1a3ghtsBn8cfss70I/cNB8C7oSX1QeJvlg1bwouF/vT0IrdKrdHSnEej
+	 Gl2n7nAFWal7oWrezw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MzQkE-1xBWqF3lTc-016E54; Thu, 30
+ Jul 2026 18:36:31 +0200
+Message-ID: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
+Date: Thu, 30 Jul 2026 18:36:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260729222920.6490-1-justinyvar@gmail.com> <20260729235125.1698-1-justinyvar@gmail.com>
- <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
-In-Reply-To: <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de>
-From: Justin Vargas <justinyvar@gmail.com>
-Date: Thu, 30 Jul 2026 10:05:27 -0400
-X-Gm-Features: AUfX_mzUfSJrkNxZKzhv5UsnlWL1qGZbEMC4Ypxjk8LSul87JHOq8NzkK4DVhWw
-Message-ID: <CADkD=u565J=YACh5j8WDiB6kxGrr_2zb+9WpOEQbuYEZBrSGgg@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: jlee@suse.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the
+ modern API
+To: yahia <yahia.a.abdrabou@gmail.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+References: <20260721222025.29917-1-yahia.a.abdrabou@gmail.com>
+ <20260721222025.29917-2-yahia.a.abdrabou@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260721222025.29917-2-yahia.a.abdrabou@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DwdZfiJOip3kAQX6M1uIFKNNtJlEKifx4VwEoOi9GjH3zcP0+Nf
+ 7jH1Mt2Uk3631n7bZQH+hV+UV29mePQixu3P6bZU9jVkbmaweWytXF/YuHAbqrCx1U9UQY+
+ zn33v0uiC23CMH7BihkXIgEY15vCgvCTgx1bxWwqGw92xl4OEMajWVmRfTV82YvBUoa+DGO
+ 4LLbazKHAFeB62cad7JpQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:e3CXkn7qF/M=;X5I9KzWJYD3oBJjlqdHOviHhjhC
+ +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
+ JaWqbRSSyxA/lkKq2pMd4x62g==
 
-> can you create a custom quirk entry and check if controlling the CPU/GPU =
-fans
-> works? For this you need to fill-in the number of CPU/GPU fans inside str=
-uct
-> quirk_entry and set "pwm" to "1".
->
-> I think fo something like "quirk_acer_predator_ph16_72", just without ".t=
-ubo =3D 1".
+Am 22.07.26 um 00:20 schrieb yahia:
 
-Sure. The machine has two fans - with predator_v4=3D1 loaded, sensors repor=
-ts
-fan1 and fan2 under acer-isa-0ace - so I'll use:
+> From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+>
+> hp_wmi_perform_query() currently uses the deprecated GUID-based WMI
+> interface wmi_evaluate_method().
+>
+> Migrate hp-wmi to the modern bus-based WMI API by registering a
+> struct wmi_driver and replacing wmi_evaluate_method() calls with
+> wmidev_evaluate_method().
 
-static struct quirk_entry quirk_acer_nitro_anv15_51 =3D {
-    .cpu_fans =3D 1,
-    .gpu_fans =3D 1,
-    .predator_v4 =3D 1,
-    .pwm =3D 1,
-};
+Hi,
 
-One note on timing: this laptop runs Windows day to day and I've been testi=
-ng
-from a live USB, so I need to set up an environment that can build and load=
- a
-patched module on the hardware before I can report back on fan control. Tha=
-t
-may take me a few days, but I'll follow up with results either way, and sen=
-d a
-v3 once I can confirm whether PWM control works.
+using the WMI device as a global variable is not a good idea, especially w=
+ithout locking.
+I suggest that you instead perform much of the setup done in hp_wmi_init()=
+ inside the
+WMI driver probe() callback and replace the usage of global variables with=
+ a state container:
 
-Thanks for the quick review,
-Justin
+https://docs.kernel.org/driver-api/driver-model/design-patterns.html
 
+Doing so requires that you first move the WMI event handling into a proper=
+ WMI event driver,
+see https://docs.kernel.org/wmi/driver-development-guide.html (sections "W=
+MI event drivers"
+and "Handling multiple WMI devices at once") for details. You can use the =
+uniwill-wmi driver
+as an inspiration regarding WMI event handling coupled with notifier block=
+s.
 
-On Thu, Jul 30, 2026 at 5:17=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+Thanks,
+Armin Wolf
+
+> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: yahia ahmed <yahia.a.abdrabou@gmail.com>
+> ---
+>   drivers/platform/x86/hp/hp-wmi.c | 49 ++++++++++++++++++++++++++++----
+>   1 file changed, 44 insertions(+), 5 deletions(-)
 >
-> Am 30.07.26 um 01:51 schrieb Justin Vargas:
->
-> > The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
-> > profile handling and hardware monitoring, but has no quirk entry, so
-> > these features are only available when the predator_v4 module parameter
-> > is passed manually.
-> >
-> > Add a quirk entry for this model.
-> >
-> > Note that this machine does not support the turbo thermal profile: its
-> > supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
-> > PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
-> > remaining profiles work as expected.
->
-> Hi,
->
-> can you create a custom quirk entry and check if controlling the CPU/GPU =
-fans
-> works? For this you need to fill-in the number of CPU/GPU fans inside str=
-uct quirk_entry
-> and set "pwm" to "1".
->
-> I think fo something like "quirk_acer_predator_ph16_72", just without ".t=
-ubo =3D 1".
->
-> Thanks,
-> Armin Wolf
->
-> > Assisted-by: Claude:claude-opus-5
-> > Signed-off-by: Justin Vargas <justinyvar@gmail.com>
-> > Tested-by: Justin Vargas <justinyvar@gmail.com>
-> > ---
-> > v2: Add Assisted-by trailer per
-> >      Documentation/process/coding-assistants.rst. No change to the code=
-.
-> >
-> > Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
-> > kernel 7.0.11-1-cachyos:
-> >
-> >    $ sudo dmidecode -s system-product-name
-> >    Nitro ANV15-51
-> >
-> >    $ sudo modprobe acer_wmi predator_v4=3D1
-> >    $ cat /sys/firmware/acpi/platform_profile_choices
-> >    low-power quiet balanced balanced-performance performance
-> >
-> > Writing low-power, quiet, balanced and balanced-performance all succeed
-> > and audibly change fan behaviour. Writing performance is rejected by th=
-e
-> > firmware, consistent with the supported profiles bitmap (0x0A) reading
-> > 0x53, i.e. bit 5 (turbo) clear.
-> >
-> > hwmon works: sensors reports acer-isa-0ace with fan1 3024 RPM,
-> > fan2 2685 RPM, temp1 +48.0 C.
-> >
-> > The WMI mechanism was cross-checked on Windows, where NitroSense switch=
-es
-> > profiles via SetGamingMiscSetting with index 0x0B and the same profile
-> > values used by this driver.
-> >
-> > The analysis and patch were produced with AI assistance (see the
-> > Assisted-by trailer); all testing was performed by me on the physical
-> > machine, and I take responsibility for the patch as signed off above.
-> >
-> >   drivers/platform/x86/acer-wmi.c | 9 +++++++++
-> >   1 file changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/ace=
-r-wmi.c
-> > index e0eaaefb13d..a7290f85166 100644
-> > --- a/drivers/platform/x86/acer-wmi.c
-> > +++ b/drivers/platform/x86/acer-wmi.c
-> > @@ -662,6 +662,15 @@ static const struct dmi_system_id acer_quirks[] __=
-initconst =3D {
-> >               },
-> >               .driver_data =3D &quirk_acer_nitro_an515_58,
-> >       },
-> > +     {
-> > +             .callback =3D dmi_matched,
-> > +             .ident =3D "Acer Nitro ANV15-51",
-> > +             .matches =3D {
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
-> > +             },
-> > +             .driver_data =3D &quirk_acer_predator_v4,
-> > +     },
-> >       {
-> >               .callback =3D dmi_matched,
-> >               .ident =3D "Acer Predator PH315-53",
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/=
+hp-wmi.c
+> index 8ba286ed8721..5845b169df39 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -14,6 +14,7 @@
+>   #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  =20
+>   #include <linux/acpi.h>
+> +#include <linux/wmi.h>
+>   #include <linux/cleanup.h>
+>   #include <linux/compiler_attributes.h>
+>   #include <linux/dmi.h>
+> @@ -506,6 +507,14 @@ struct hp_wmi_hwmon_priv {
+>   	struct delayed_work keep_alive_dwork;
+>   };
+>  =20
+> +struct wmi_device *hp_wmi_wdev;
+> +
+> +static const struct wmi_device_id hp_wmi_guid_table[] =3D {
+> +	{ .guid_string =3D HPWMI_BIOS_GUID },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(wmi, hp_wmi_guid_table);
+> +
+>   struct victus_s_fan_table_header {
+>   	u8 num_fans;
+>   	u8 unknown;
+> @@ -606,7 +615,7 @@ static int hp_wmi_perform_query(int query, enum hp_w=
+mi_command command,
+>   	args->datasize =3D insize;
+>   	memcpy(args->data, buffer, flex_array_size(args, data, insize));
+>  =20
+> -	ret =3D wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
+> +	ret =3D wmidev_evaluate_method(hp_wmi_wdev, 0, mid, &input, &output);
+>   	if (ret)
+>   		goto out_free;
+>  =20
+> @@ -2717,14 +2726,40 @@ static void __init setup_active_thermal_profile_=
+params(void)
+>   	}
+>   }
+>  =20
+> +static int hp_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	hp_wmi_wdev =3D wdev;
+> +	return 0;
+> +}
+> +
+> +static void hp_wmi_remove(struct wmi_device *wdev)
+> +{
+> +	hp_wmi_wdev =3D NULL;
+> +}
+> +
+> +static struct wmi_driver hp_wmi_wdev_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "hp-wmi-wdev",
+> +	},
+> +	.id_table =3D hp_wmi_guid_table,
+> +	.probe =3D hp_wmi_probe,
+> +	.remove =3D hp_wmi_remove,
+> +};
+> +
+> +
+>   static int __init hp_wmi_init(void)
+>   {
+>   	int event_capable =3D wmi_has_guid(HPWMI_EVENT_GUID);
+>   	int bios_capable =3D wmi_has_guid(HPWMI_BIOS_GUID);
+>   	int err, tmp =3D 0;
+> +	err =3D wmi_driver_register(&hp_wmi_wdev_driver);
+> +	if (err)
+> +		return err;
+>  =20
+> -	if (!bios_capable && !event_capable)
+> -		return -ENODEV;
+> +	if (!bios_capable && !event_capable) {
+> +		err =3D -ENODEV;
+> +		goto err_unregister_wmi;
+> +	}
+>  =20
+>   	if (hp_wmi_perform_query(HPWMI_HARDWARE_QUERY, HPWMI_READ, &tmp,
+>   				 sizeof(tmp), sizeof(tmp)) =3D=3D HPWMI_RET_INVALID_PARAMETERS)
+> @@ -2733,7 +2768,7 @@ static int __init hp_wmi_init(void)
+>   	if (event_capable) {
+>   		err =3D hp_wmi_input_setup();
+>   		if (err)
+> -			return err;
+> +			goto err_unregister_wmi;
+>   	}
+>  =20
+>   	if (bios_capable) {
+> @@ -2771,7 +2806,8 @@ static int __init hp_wmi_init(void)
+>   err_destroy_input:
+>   	if (event_capable)
+>   		hp_wmi_input_destroy();
+> -
+> +err_unregister_wmi:
+> +	wmi_driver_unregister(&hp_wmi_wmi_driver);
+>   	return err;
+>   }
+>   module_init(hp_wmi_init);
+> @@ -2794,5 +2830,8 @@ static void __exit hp_wmi_exit(void)
+>   		platform_device_unregister(hp_wmi_platform_dev);
+>   		platform_driver_unregister(&hp_wmi_driver);
+>   	}
+> +
+> +	if (hp_wmi_wdev)
+> +		wmi_driver_unregister(&hp_wmi_wdev_driver);
+>   }
+>   module_exit(hp_wmi_exit);
