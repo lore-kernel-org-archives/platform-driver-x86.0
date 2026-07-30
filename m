@@ -1,187 +1,298 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay15.grserver.gr (relay15.grserver.gr [46.62.234.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4FC431E73
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D82E3815D5
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.62.234.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785431469; cv=none; b=OxqFrqgoZXVjdUa3paXl60kvTpfxb4TOR1bbmhRnLDqQoG2OW9ELzHXN6hMniKhRsfUM03d8/z50Dhhhfmz/BI+xBenEEKx2/JSsaDzIzCS3ckxKKu+kRwyy/TYAxWDpJqyXUmV4cConn7ZUKGcWc8/2v9OVp2gHn+cJ2HF9IkQ=
+	t=1785433755; cv=none; b=YK1sf2fRjdqgIZiBtxys585l19MYelY1TQYYVImvyJEJaK2g4+g6aw/IPoPTc0SfRnTBfGLh//DFLs5FxODq7jYVE2TeExJJiNNEKcq9h1nVWpys0whJ4e8h3ib721fn2c1byp6K15Myez0/icCkheVldbehCUgWco3bVWDtiPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785431469; c=relaxed/simple;
-	bh=kPktCVfGSgaJPZ7kLJjrZO2ZEHofop+Fsrv/RsVNmrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZtYRnLwQxMioGdHpVggE6TP4E3tdcnC+AyatQZBXO+n0dtCADNBBl5fWAPJpkD6IEHb431109UankDBC/DIB9QUahwjWrPmV/STru4bIvKgZXJdJdn9tNQSZSJJbBOaawuJ2Y9o7VEBwIEyHXvg4EB+Evfgcyd/4mMqA+7QpALU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MnXIfORp; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=OP/5Cn+M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1785433755; c=relaxed/simple;
+	bh=q9qrL3ymO56+DmjRh28sOewfjg/7Tzkxw32VRA81q+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UZ0bHrLzDpCAeZhqQhU4/qjapkRd0SmOphgvG+/5Bly3pkWqtHAOLVcueCGKbG7hLeuTPJnBMJkiFKxSmGXOUjFltqd9uYunu2mKsf0IHf5pFXWGU8qxXthgO4ms9QfyTti+WquAfQCC4rpziAlO6EYE/7j1SzjK/Pnfdp+BdYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=DBMFdBAO; arc=none smtp.client-ip=46.62.234.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MnXIfORp";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="OP/5Cn+M"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66UGXXVU1571720
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:11:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3gPhQOOU18qroC0E1Q14tMzdx9r/lWFjKmTrH6UjN/Y=; b=MnXIfORpqIF5xwVt
-	sBUspfTYuCpKLWMMASA8/zdHcMR+hOt6ePC2Hq//4eyVprs5jxvuozhfBewtnVpZ
-	DFFingb9f2mYN5cpcyLQWG2SBUBLDqMpKWnOjcyI1tOnq1sF7fhBJ5s01A0NfzFW
-	6GvmhagI8wLoNZY4G0uGJ/5SUMuCcpadnL4OdUXVCD2WFOkMC+6ODA321NPj6Ubi
-	Z4kcdNB4/6CvN+AkEp8ws43CbMGzrs11mWskDv+VO3M3pMVJkuzRNQPVDyoet28W
-	ol87zaHQEX8GypOsmDVUF+Ua0deaGg4R6CDgUQbq0Rh7Ah25zaZ1gPVLG8/P4/Fs
-	toEKdw==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fr891gyfe-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:11:06 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-52845bd815bso23141cf.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 10:11:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785431466; x=1786036266; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3gPhQOOU18qroC0E1Q14tMzdx9r/lWFjKmTrH6UjN/Y=;
-        b=OP/5Cn+M1FD4DgnXqwqc3E9r0eaGzf3j0pWMNeBp6lNNzWuXeyzPYxM9pCzu1uXYB3
-         Oz1egTOIChQNBmLY/LoNEl3+/B+bn0IKavnEOAdkHnTHhB5gXxlRfwPlFabDsiMMlqK2
-         Vk+Cs8F33skBuPcJalk5f4pS4ZuA0moBWSTKnq9C7hRa0TstSRaQrI+CnhCjD/VVXAaP
-         skvkg95i7qAikpiIsw63eG8+K5ZsygiA4WOaeYEqkMyKHzKb1jSqo2F7CxbaiyKJ+3ZE
-         L0RusUQQ1iUgkHR++oEbGRn1oFd6k7KWi3NknyxFlxMaQIS8YyFMvOIdtjn5Q+Ptskqq
-         5TQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785431466; x=1786036266;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=3gPhQOOU18qroC0E1Q14tMzdx9r/lWFjKmTrH6UjN/Y=;
-        b=Zeg9sf8cQlM1pCfjymioLB+U3oi5J1lr92dQAWHRgdl0u2xdE+8TmPYrDa5pxQSocN
-         Dv7LAo7bdPT1vEM8S+gV5So8Hsqscta70uSeAtjoflBsAj3te/E+BmPb/zFD2oNj7zSN
-         PpMu0B27XTGyQdMxWNPvrpsdTwxcCHur8DC9uFyLwlUc5eQA/YUALYE1R9RiMuFyDyno
-         YtXpbXTydKsYt6k2bH9H4SBaHbQeVgDRTmDdp2LhDmxGxjrjRXRBYdAC/shIaiqNoTGi
-         SRYxiSHop1xbLNe32rAkNoZfDLyf1OgP9y9fY4p+/vNKvulLFIIjz1iU2lNhHhsYgWB0
-         Y7ew==
-X-Forwarded-Encrypted: i=1; AHgh+Rrp0oraBqLG4hFu0xWlk2mpq3aufXGF06Ei0RPE9dhDM6X9KlDskQFsc2Bh0Eel+/DFV1bKC5rz469Bz1+uRdKH9Zx5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6TCVCzhT1jwoB23bHITHOW/zTCC87PFc4ro2ZZU5ncJXVC9qU
-	bhTr4WBNZomjrDnIbG+4xCMHOmgJg6fg4ob3fxTFKvqaZLWJgpdGMtcLarRWJoMwAn9ScAbtQ6p
-	T5OAQysmI/rKa3G4APiFU8pQ711llDYj4lvegTcNim5TJqefQ0XCpTDYICxG8RpxWJZeU4nCSqr
-	4F
-X-Gm-Gg: AR+sD118G0K645Y8AanZe2bLaVt2hrOAkJGRpET0eVnugdETpe1pceHN/ruFlKUsqKi
-	XHOP8oWLnZdbw7ZjdSDB/Y0TAkHGt+spdAjDc+eHCp8QNxqbJ14p7MBq1buxAWbYOFmXGAAtw2f
-	2+QwzG1CEYSMU7iPmh23n2/sRLpPSO8ywIeVPwnN4q5LBn7Vjk3qPtxJQ8v0LlnjJCXW44jqwgS
-	AVgp9wtiJz+w/UkNkv4FrTcBFrnpvXs0iY03eAVYiV/hK7ohviG3GfVhSma9+wqE26YTF4q6lwg
-	tL8GVTvnA6BDHdVwZYkGBInMZTpaQe3l4QfP5C0btpGkCXG2WW6qjJKjoNpfGFLpQyLtEZGebX7
-	0xdUcpIbShQDXHjnnPdSGZxqV
-X-Received: by 2002:a05:622a:4ca:b0:51c:2101:f0 with SMTP id d75a77b69052e-52b42b78208mr16495481cf.2.1785431465944;
-        Thu, 30 Jul 2026 10:11:05 -0700 (PDT)
-X-Received: by 2002:a05:622a:4ca:b0:51c:2101:f0 with SMTP id d75a77b69052e-52b42b78208mr16494481cf.2.1785431465176;
-        Thu, 30 Jul 2026 10:11:05 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1fa8b760f5sm90599766b.32.2026.07.30.10.11.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2026 10:11:04 -0700 (PDT)
-Message-ID: <01a90313-8cab-4502-92ed-761834763f8b@oss.qualcomm.com>
-Date: Thu, 30 Jul 2026 19:11:01 +0200
+	dkim=pass (2048-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="DBMFdBAO"
+Received: from relay15 (localhost [127.0.0.1])
+	by relay15.grserver.gr (Proxmox) with ESMTP id 6D4FF3FE8D
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:49:11 +0000 (UTC)
+Received: from linux3247.grserver.gr (linux3247.grserver.gr [213.158.90.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by relay15.grserver.gr (Proxmox) with ESMTPS id AB4923FABD
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 17:49:10 +0000 (UTC)
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	by linux3247.grserver.gr (Postfix) with ESMTPSA id F1CBB1FF257
+	for <platform-driver-x86@vger.kernel.org>; Thu, 30 Jul 2026 20:49:09 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1785433750;
+	bh=nKhW9Xx5IZBw02kl17vkF2fw84zi2Rdz/asHN0iUmHk=;
+	h=Received:From:Subject:To;
+	b=DBMFdBAOcFVuetjtAJNoIPS0hRwRmjdWSOhWE2vFRtXP28rx0bmNX/Jw+ZvwBhRaF
+	 nzoqZk1v28wUr1cW0JvZwELUgzEYEE2koh3oQ1PaExBkNfYk68irguD+vQHAh9LEHi
+	 nL7bf92OkMo9sFyC4+ne2flyL8Kgw5NyNvQlfv6B0crb04fjDtCHkHewMm8MRARkNn
+	 QdNBv2ItYbh2UwiGl2ZHgK7dfhmoAly//DLD8VAcwVi7Y6U/h+j1P63L/5gLnLA4CT
+	 SLHwkCY2PWSe51ZtX5qmisNTF+R/ASPPcZ3iQkNJ+Uv5dqj/0j7N5MiiCvQsL6qqNH
+	 ynoYXJ/1zHEtw==
+Authentication-Results: linux3247.grserver.gr;
+        spf=pass (sender IP is 209.85.216.46) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-pj1-f46.google.com
+Received-SPF: pass (linux3247.grserver.gr: connection is authenticated)
+Received: by mail-pj1-f46.google.com with SMTP id
+ 98e67ed59e1d1-38a0c7e841fso208119a91.2
+        for <platform-driver-x86@vger.kernel.org>;
+ Thu, 30 Jul 2026 10:49:09 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwuAHRuhpLjflgP7jSDlIhxluLG/Go4I/3x206avPIIlS8pFj9K
+	OJdtfFywlL8MQvi35puvavqVEjWSNdcMdOLJ/aTJYpJhGwliry+iZUQrP00pDkHJTDCegDLFuww
+	3j4h6QP55DkdHrC5VDc6L2UPLcEfc9EI=
+X-Received: by 2002:a17:90b:5403:b0:37f:9ce1:cda4 with SMTP id
+ 98e67ed59e1d1-38f9bfff879mr3156935a91.26.1785433748533; Thu, 30 Jul 2026
+ 10:49:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: embedded-controller: qcom,hamoa-crd-ec:
- Add qcom,tsens
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260728-ec_add_more_commands-v1-0-771abd65ee1a@oss.qualcomm.com>
- <20260728-ec_add_more_commands-v1-1-771abd65ee1a@oss.qualcomm.com>
- <a46f1394-f006-4a13-b251-e5e2a0494b89@oss.qualcomm.com>
- <f079642f-87c5-4b85-bba7-f4d25e2be2a4@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <f079642f-87c5-4b85-bba7-f4d25e2be2a4@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzMwMDEyOCBTYWx0ZWRfXxbRygAvXWqXo
- WAwSf5O4Ilwqbd4IjDBsXfNdUYqh6eBStYcpKSZO/jllzuBkJUVd/RXoPO+abzl6R3Cc6/Rhdxq
- nAv5gYrceREu7/W3QeGNuOx8Fgmy46RjzojVel8Q2lIJMBnUqHhcNum7USX64icUXGXnbu76Aux
- stQ6EtoVUnMhAhtJ8RadWDMA5qyivn30Hp4qvhRgWQNAYxIpiDhXUVdC50PGmplYR6H+/j5gRs1
- UtZ6RHhCyrVjtcOaWU8K8yVSgDI8JIF5ZBY6R+AvXnVzM2KLV5b0dGSYV+KefAbymNj6DYtx2V+
- 9B97PrNidQXX52LAnFm16bIHOVXtAd7C85bM2usTQ9N3J6m4IMHIrAHxkbfsUA9twod2gtRO7j/
- 5A9ZpbM80v1ksQqiYYbcOISGYSz7lBQ+eWwl+1zwEkWmmDKhLvlMF0oKc2gUd6V84IxA9DnLEv8
- 4ypNqEQArkKTyxGPfZw==
-X-Proofpoint-ORIG-GUID: 5w98PtQ0dEt0_mAsgCANQ3oDI-deQx1G
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzMwMDEyOCBTYWx0ZWRfX4007LtOyj5q6
- Cr9+zxxjT7UHnyUxrr0krKM5S0wMZPDBwswZ+yAghVuATNMzYD2k95vV5jUZZUWeWJZG6FXW/N6
- seGNswKy1Q48Zbkmd1BvI/X75hE4FPI=
-X-Authority-Analysis: v=2.4 cv=PdzPQChd c=1 sm=1 tr=0 ts=6a6b85aa cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yOCtJkima9RkubShWh1s:22
- a=5TKC7vhQAi-i42DR7gYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-GUID: 5w98PtQ0dEt0_mAsgCANQ3oDI-deQx1G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-30_05,2026-07-30_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 malwarescore=0 clxscore=1015 bulkscore=0 lowpriorityscore=0
- adultscore=0 phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607300128
+References: <20260727215947.118292-1-begeebe@gmail.com>
+ <20260728083529.329772-1-begeebe@gmail.com>
+ <20260728083529.329772-3-begeebe@gmail.com>
+In-Reply-To: <20260728083529.329772-3-begeebe@gmail.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Thu, 30 Jul 2026 19:48:57 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFAcHh0iUsKRcvtMe=Cn+pdNXAoSYqZ09k2srsSrqWs_w@mail.gmail.com>
+X-Gm-Features: AUfX_mzgBOL7nUOhP6riWSizjfNapwm1Ddf7m1xu_vIm5vUTQKyWXJMibay3ZKI
+Message-ID: 
+ <CAGwozwFAcHh0iUsKRcvtMe=Cn+pdNXAoSYqZ09k2srsSrqWs_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: oxpec: Report tablet mode on
+ OneXPlayer detachables
+To: Alexander Egorov <begeebe@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, derekjohn.clark@gmail.com, samsagax@gmail.com,
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <178543375019.1630551.5404073115537926195@linux3247.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 1.4.5 at linux3247.grserver.gr
+X-Virus-Status: Clean
 
-On 7/29/26 2:13 PM, Anvesh Jain P wrote:
-> 
-> 
-> On 7/29/2026 4:43 PM, Konrad Dybcio wrote:
->> On 7/28/26 7:44 PM, Anvesh Jain P wrote:
->>> Add the qcom,tsens property so Hamoa-based boards can list the tsens
->>> providers, and how many leading sensor IDs on each, whose readings the
->>> driver averages to compute the SoC junction temperature reported to
->>> the EC for fan control.
+On Tue, 28 Jul 2026 at 10:35, Alexander Egorov <begeebe@gmail.com> wrote:
+>
+> The OneXPlayer X1 family and Super X have detachable pogo-pin
+> keyboards. The firmware does not expose a tablet-mode input switch.
+>
+> The Super X keyboard enumerates as 1a86:1305. The X1 family folio
+> keyboard enumerates as 258a:001e.
+>
+> Register an input device on these boards and report SW_TABLET_MODE from
+> the model-specific pogo keyboard USB hotplug state. Other USB and
+> Bluetooth keyboards do not affect the switch.
+>
+> A complete dump of the 256-byte Super X EC register map was compared
+> with the keyboard attached, detached, and reattached. No register
+> changed predictably with the attachment state.
+>
+> Tested on a OneXPlayer Super X. Mutter enables accelerometer-driven
+> display rotation only while the pogo keyboard is absent.
+>
+> Assisted-by: Codex:gpt-5.6
+> Signed-off-by: Alexander Egorov <begeebe@gmail.com>
+> ---
+>  drivers/platform/x86/Kconfig |   2 +
+>  drivers/platform/x86/oxpec.c | 103 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 105 insertions(+)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b521..3bcbd49 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1055,6 +1055,8 @@ config OXP_EC
+>         depends on ACPI_EC
+>         depends on ACPI_BATTERY
+>         depends on HWMON
+> +       depends on INPUT
+> +       depends on USB
+>         depends on X86
+>         help
+>                 Enables support for the platform EC of OneXPlayer and AOKZOE
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index df29e41..5c07a35 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -18,10 +18,12 @@
+>  #include <linux/dmi.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/init.h>
+> +#include <linux/input.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/processor.h>
+> +#include <linux/usb.h>
+>  #include <acpi/battery.h>
+>
+>  /* Handle ACPI lock mechanism */
+> @@ -55,6 +57,8 @@ enum oxp_board {
+>
+>  static enum oxp_board board;
+>  static struct device *oxp_dev;
+> +static struct input_dev *oxp_tablet_mode_input;
+> +static struct notifier_block oxp_usb_notifier;
+>
+>  /* Fan reading and PWM */
+>  #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
+> @@ -293,6 +297,74 @@ static const struct dmi_system_id dmi_table[] = {
+>         {},
+>  };
+>
+> +#define OXP_KEYBOARD_VID_QINHENG       0x1a86
+> +#define OXP_KEYBOARD_PID_K2445         0x1305
+> +#define OXP_KEYBOARD_VID_HAILUCK       0x258a
+> +#define OXP_KEYBOARD_PID_HAILUCK       0x001e
 
-[...]
+These defines need to go above with the other defines.
 
->>> +  qcom,tsens:
->>> +    description:
->>> +      List of tsens providers and, for each, the number of leading sensor
->>> +      IDs on that provider whose readings are averaged to compute the SoC
->>> +      junction temperature reported to the EC for fan control. Only
->>> +      applicable for Hamoa based devices.
->>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +    items:
->>> +      items:
->>> +        - description: phandle to a tsens thermal-sensor provider
->>> +        - description: number of leading sensor IDs on that provider to average
->>
->> Why don't we want to look at all of the TSENS sensors?
->>
->> Konrad
-> 
-> Each tsens provider has more physical sensors (16) than the count used
-> here. The leading N we take exactly matches the number of sensors
-> already wired to board thermal-zones for other purposes (CPU clusters,
-> GPU, camera, etc.) on that provider — e.g. on hamoa, tsens2 has 11 such
-> zones and tsens3 has 15, matching qcom,tsens = <&tsens2 11>, <&tsens3
-> 15>;. The remaining sensor IDs aren't referenced by any thermal-zone on
-> this platform, so there's no per-purpose reading to include in the SoC
-> Tj average.
+Can you explain the reasoning behind the name PID_K2445 and PID_HAILUCK?
 
-What you said is true
+> +
+> +static int oxp_find_keyboard(struct usb_device *udev, void *data)
+> +{
+> +       bool *keyboard_attached = data;
+> +       u16 vid = le16_to_cpu(udev->descriptor.idVendor);
+> +       u16 pid = le16_to_cpu(udev->descriptor.idProduct);
+> +
+> +       switch (board) {
+> +       case oxp_x1:
+> +               if (vid == OXP_KEYBOARD_VID_HAILUCK &&
+> +                   pid == OXP_KEYBOARD_PID_HAILUCK)
+> +                       *keyboard_attached = true;
+> +               break;
+> +       case oxp_super_x:
+> +               if (vid == OXP_KEYBOARD_VID_QINHENG &&
+> +                   pid == OXP_KEYBOARD_PID_K2445)
+> +                       *keyboard_attached = true;
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int oxp_usb_notify(struct notifier_block *nb,
+> +                         unsigned long action, void *data)
+> +{
+> +       struct usb_device *udev = data;
+> +       u16 vid = le16_to_cpu(udev->descriptor.idVendor);
+> +       u16 pid = le16_to_cpu(udev->descriptor.idProduct);
+> +       bool keyboard = false;
+> +
+> +       switch (board) {
+> +       case oxp_x1:
+> +               keyboard = vid == OXP_KEYBOARD_VID_HAILUCK &&
+> +                          pid == OXP_KEYBOARD_PID_HAILUCK;
+> +               break;
+> +       case oxp_super_x:
+> +               keyboard = vid == OXP_KEYBOARD_VID_QINHENG &&
+> +                          pid == OXP_KEYBOARD_PID_K2445;
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       if (!keyboard)
+> +               return NOTIFY_DONE;
+> +
+> +       switch (action) {
+> +       case USB_DEVICE_ADD:
+> +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, false);
+> +               break;
+> +       case USB_DEVICE_REMOVE:
+> +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, true);
+> +               break;
+> +       default:
+> +               return NOTIFY_DONE;
+> +       }
+> +
+> +       input_sync(oxp_tablet_mode_input);
+> +       return NOTIFY_OK;
+> +}
+> +
+>  /* Helper functions to handle EC read/write */
+>  static int read_from_ec(u8 reg, int size, long *val)
+>  {
+> @@ -948,6 +1020,7 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
+>  /* Initialization logic */
+>  static int oxp_platform_probe(struct platform_device *pdev)
+>  {
+> +       bool keyboard_attached = false;
+>         struct device *dev = &pdev->dev;
+>         struct device *hwdev;
+>         int ret;
+> @@ -965,6 +1038,33 @@ static int oxp_platform_probe(struct platform_device *pdev)
+>                         return ret;
+>         }
+>
+> +       switch (board) {
+> +       case oxp_x1:
+> +       case oxp_super_x:
+> +               oxp_tablet_mode_input = devm_input_allocate_device(dev);
+> +               if (!oxp_tablet_mode_input)
+> +                       return -ENOMEM;
+> +
+> +               oxp_tablet_mode_input->name = "OneXPlayer Tablet Mode Switch";
+> +               oxp_tablet_mode_input->phys = "oxp-platform/input0";
+> +               oxp_tablet_mode_input->id.bustype = BUS_HOST;
+> +               input_set_capability(oxp_tablet_mode_input, EV_SW, SW_TABLET_MODE);
+> +
+> +               ret = input_register_device(oxp_tablet_mode_input);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               oxp_usb_notifier.notifier_call = oxp_usb_notify;
+> +               usb_register_notify(&oxp_usb_notifier);
+> +               usb_for_each_dev(&keyboard_attached, oxp_find_keyboard);
+> +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE,
+> +                                   !keyboard_attached);
+> +               input_sync(oxp_tablet_mode_input);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -1005,6 +1105,9 @@ static int __init oxp_platform_init(void)
+>
+>  static void __exit oxp_platform_exit(void)
+>  {
+> +       if (board == oxp_x1 || board == oxp_super_x)
+> +               usb_unregister_notify(&oxp_usb_notifier);
 
-It also doesn't answer the question why that isn't the case
+You used a switch statement above. Match the logic and use a switch
+statement here too.
 
-Konrad
+Give it a few days before sending a V3 for Ilpo to reply.
+
+@Ilpo do you think this is an acceptable expansion for the EC driver?
+
+The rest of the patch looks fine to me.
+
+Best,
+Antheas
+
+> +
+>         platform_device_unregister(oxp_platform_device);
+>         platform_driver_unregister(&oxp_platform_driver);
+>  }
+> --
+> 2.55.0
+>
+>
+
