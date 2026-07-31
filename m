@@ -1,277 +1,316 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33776386576
-	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jul 2026 07:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.170
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785482131; cv=pass; b=luNyTBU+/PSxDDpC3+Y+iAEC7uuGu8lBiOuo0QU0rnDQ3WB5++qjY/AMsGqhL/J7kUO1F0N+oacICZffkUJg9G9SBbSqoyv8VF/PLlz7na52x/8Xixyifo2ERWh+NkqPURf1qwWt3ObAEbDm/rrN3wv2KRxbp2JXrQmLDWIbw/w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785482131; c=relaxed/simple;
-	bh=Dk03HdR44xTmogo8ZcZq5yT8mIl21lhvJ+1hkUiBmCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BGF34EDdexd9OOxmk5bR9VcFJcUTgmga0YccVL3wZogEi1XGxKVu4SelLMzEm1YTh0wDP2tJNem9IkXhm/nMQ43zMVHAzM/K+qlh2lOToMv+mJPqb9VYPPItf2NbwUuqpeRw9mCJxZI9hr6SKGTDKl+39SD211LIOCuk+UqsDME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGQyAn2v; arc=pass smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99BD3C76BC
+	for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jul 2026 08:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785486520; cv=none; b=NeZo2q9usD1hc9eXqYRHHGbADfJUOFi49h1qzAYfMinByYmtDDsJ9rVJpTSadJFVYiymKZyPrpmIanQS6QlAWuUMDBze5sa3tAVQg5koXAkyi5fw/BjMrMd58yU1WYsWvxB/gX1a12zdG4kLFyGw5IGMfvg97yxaXgDtKtRB2l0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785486520; c=relaxed/simple;
+	bh=UJwcRhwcAm345qX7xpdsr+pBH4SyAhSqu0YOyt77/jg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=msKk2YiDOMtC9XNUrV8sPhhLfN3L5TH7+A1kmo9sNVqU71Zvi9ve9eUn5v4P4PNTbGWbmLvt2CYX8KJ5RAcj1i65Hno1hw8VpSneybUc/ySvIgqlKDw4GxirPMzOrpYvwPPSJtjdoMlk48v0TtEu5ukTHP0xw98jR7Xc7SJ6Kcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=GQXRlDws; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGQyAn2v"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-48a0ca07c38so441445b6e.2
-        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jul 2026 00:15:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785482129; cv=none;
-        d=google.com; s=arc-20260327;
-        b=l5hhFCBwxBeJe/UWq+k7P9fZX0LmtuKwX08kq6kMIDiJcwXAjPPe+kmQnBKiNdkx8f
-         U7uXbYaYg5B8a77bdOedTwLpjSGtcIcoplAeN+bOEjlqMreDPjtsGjVM1Ptcoz49WXX+
-         J3XrF0bvVVOFMBi10jYZMEkoK5Faj5ODumJXOsGhmN2qQ7gx9IK8fXOuukypjSpMHG/U
-         xumGD+D51uWfe3JmgDSvVaUcRNGAEWUmwqt7JrZgX9KLVyiM6VUdZPkzSCOmdl5YazQH
-         E93h/XlMV9fJdEqJtDlN6uHR2jHHWfG1x9hpqK542XLw+3FqHJ2o67R8LCpKG0DTD1RX
-         uEVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=x4vCLoMKpG3lKFjbQu+5PS000OH8/vaU8JYyEh3/EP0=;
-        fh=09Wwjo054Uju25FVKOiZTDtloZBHkR4TjqAGkNPY334=;
-        b=Y1W+RA+jXInt1WzDzcdscmiW8MqzOYs9gZ8rHkSKw/doqgivTNS9eNyO0n+2pxoDAU
-         3QNZMYmsAxiolBV4c/thD5nBXxoCTxnaMPDk+kgoP4IfSN4OsiDOCz9l+ftraOqbOaJd
-         5/dDXNB365VURT5J+Jbfc6EiZG3oyJUdWxE4ucv4pma1QGahawdH8BoVCYgdcEvUEEUY
-         lhtVCAtu5NJ3JJgtwgoji6OggMCrvNhQ1qn30HNWTqyYRw5m6iAvlharwV/AZPl4Gjlc
-         mXOJjYNE5xrjAuJIoDaiEHAKVPuryB9BVMBxc4F2MCjvt1mOcB3aNXdBgGv81a7NoCBd
-         4c3g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GQXRlDws"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-69f2c67650aso1098762a12.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jul 2026 01:28:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785482129; x=1786086929; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=x4vCLoMKpG3lKFjbQu+5PS000OH8/vaU8JYyEh3/EP0=;
-        b=NGQyAn2v+WlI4cWoUSAtCL0OAZKuhJvOPPFkzF8BS91U1L238bhSBmMkvmQn4soxcg
-         ZFTeqTEjrFZVUQUtB7JXua2kri1VlmoKClv377seiI9meW10RMJ3x1CG95oRG7eSWLyD
-         3LN+dhc6Kb4sI/liq6g4HwZV5OWoArPzr833qZSdH37kYdGLauBy3Oqu4dRGukvEy4i0
-         7LD2VM46zZcyKHFNkgfafZbXpzpLLTgLLWTrjfmVtmeMy5DV8q63ZYCB7oOW2jM78r4z
-         VPM8+wQNOdiZd87FctEamzVGixiyPjS4FVgRjC2l7vcaveDq2xwnHJYmLLSvHc9y64jz
-         3WOw==
+        d=googlemail.com; s=20251104; t=1785486517; x=1786091317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=v8Db4xK6p2ZIwj/YaIBTMFgWUnQscWvkT46GpYRR4pw=;
+        b=GQXRlDwszE1YN4UioL7hzmBxhn6gczcNbhOeW/04EA1xZe5L3LQj9B7G1C+r1hDguR
+         47rG8+8ixQNkxR5MldGPnMs07WlKGboQL69ZI3vuJ9r8Fg2FDCw5ZkgT4TDGUHKPikEB
+         yrbA1Zv9/a2k+8rkwH3Gdeci6HSWAcMvgoQw32bbp4m4mA3BY0PL19oKGriEPuHHJgV/
+         w3CeARwY073lQM7CyCpUvMlrT2QK0MvYoG73GARpkJxM3cu971M3WkEaW5MV4d53kds2
+         fE9Ow5dgUWjhZhQbsVlOf2QFUqGJmvpY3vhrHap8ahOzZ88GQWRJHaRGipXwN9RjoLEr
+         eQuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785482129; x=1786086929;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=x4vCLoMKpG3lKFjbQu+5PS000OH8/vaU8JYyEh3/EP0=;
-        b=HzPiEPzMnsqPhkBP4btYaHfajCrH+mBCgMp/9QCj6Uv9TgR5+GNoqlMkRg8Leo6bKs
-         FHh9cInKqu4W0waBwzhIUimXvt8Sk1Hgdc8jWUoH99IokOD7GSpBox/xp8biQ1xBFB3V
-         0tFYZGzicfApC38jLoRsmbp6BE/FNKTf57Xx7jj47ZXBCFUcnNYrTQCEwLLfOT/S546F
-         8kT20rhlLRUVCGEe83mxCQvoJX7EW3VnGhdbERy0sQjgKHsei9LAP6RVUCc6myaQyr1O
-         KDIxwlswzfoiWF162zJl0bPw4G4ni7VWaTb7TuQXID6kMqq6On+nbs+Tjt8nFJoSCDLm
-         llpg==
-X-Forwarded-Encrypted: i=1; AHgh+RoMeXGJdSk8fbBqa2wA2hu5OB8X8uq+exY5zCOqF74sIjvGRIxd3JR+nsbiDA6TZmAc++lLogVlgp04Uwaf7b+dz+7F@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiZ8H7PlUAV825RBHZBj37BTZ9OYCQ0q9UMbo7r8xFev71/d9V
-	5zfORlX2xwUsT/EACyPM+4mN9+hJ32oqrUNiYDgay+qp2HJATsAWo0d82iggsSIdNmCQoa5f7YT
-	B3xicxZNDiNlHtO2gfKtO6Sg1o6D/7A==
-X-Gm-Gg: AR+sD10JQw7q8P1W76laiSlHKW4i/RTs0n5trbAAMDkcVzMTQfQVrUuqu4Z6F3ynecs
-	0xylO7qAoRaNkf0IAuUeCM8gh5xuOy+WqDi63qEtIXg0J0oA0GrVvw4OFCROdruuLV8fplb8xtT
-	b9vSV/AWuOy1is5QAaTfsCDaT73pZgP5MzAEfqzxU32eVEFZYtWDCegqT3ZQBEfOfR5EJCfZ21h
-	ujYpfuOCJYvc3IQvv15kSDMjzuGbKK46LjtF06Itofzj6mqsxG2NPkqFtsov4n0M7LiNjGrDlDA
-	zcIhLv066LQPAa8YqiKwANsit5nAJIWfkT/kdYf9dEZlQ3qqffvEH6yTOW8dipCFZ5/7dYWkjwy
-	+833sHwteUjKF0npqn/Gpz389OQ==
-X-Received: by 2002:a05:6808:1a23:b0:492:cdc2:80e0 with SMTP id
- 5614622812f47-4ae5ac20fc6mr671212b6e.23.1785482129060; Fri, 31 Jul 2026
- 00:15:29 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1785486517; x=1786091317;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=v8Db4xK6p2ZIwj/YaIBTMFgWUnQscWvkT46GpYRR4pw=;
+        b=r6t1MTRh8Q/kowJWU6ou8jo/EytCok0/banQxT+JLbTlbxI3R1EvNzfO58v1j8l3PP
+         fYLPke5E/4IOlZWFUwaUbY8j1dVMYnWtzJjWtg3xP8Ab0Lg1yXrNkBgOqJDtMIBjpZmc
+         ZsZiOhw9qI3tuj/ohG2eI8WAkof1UZE8QKjLfn0B8MonvrqRLU2cz4GHpc/lWG2xQ4oe
+         tJ6YC/peJLU8CAs24ykQ90ne3ipqFne6bXiT/LYG0et76kuQXPAFAntbYmMWc93Y4+Fa
+         zuSlL4e2Jt2ndzMsaLIE17yxiMFCttL6MO4g8gfHt2utJ1D5o/Q0TvO6uNzpU6YjFRzT
+         eURw==
+X-Forwarded-Encrypted: i=1; AHgh+RpGNzcrSmUrNguOsRSoG/CzRFQcfRAJsaZQkRPgF/aREEHOcewwPU2kmNIG9cwaeeTqHqpUD+r6bLdMi+DOjS1MttqX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQjan2ppYxAl12nrJv3lMpJZCGnpCnuyF8/ub7g0HzoKJ5DDjN
+	M7gtlbSuiJzdCRlKZrNswymW/MFyLxP2LRTmzDSPtq/VB0aA0hHivjM=
+X-Gm-Gg: AR+sD12bwq9gSFFUYtKuK4HT5wU74OFvExzWF2gAPSgQyUPZHfMrQORV9hFEcWWaukO
+	CxFCPHiCAeWfJFagJLjj9TCdOy/ZJGJiDSDeh5hSJkT8Kb6gPM8bLB6+RWLOPtgGNOdQoN6V3mm
+	IB4TJU1c3lvflnRFo+c1+mKOVU3iJMWNYtLmthLWz/lvYVrlnfw4/MoclsRquTOT6GX1VOQTz9m
+	4mItMZ/f8byun31GIx5CUQIsADeqwxVBHrwe3rA9ya7JX3BjJIgPejlZ6jsO+WBXB2gqyW3woS5
+	Vrm94FfRZ4rpajVgTqSVycJDuePNfcOOx16v9DCxqspiH3MOUl9p2kHr4gwHP0ZizJlRaBrlw6D
+	Yvx9hfA47PmzuABR56RGH1/Y3LHosfUwvaxJU/F8fRqfzEivpPZeMAl8+ET+g7XfAIFlN716C5W
+	vNE7h2LVA2IdAN8oaZCwUyWsCiVyca6g2xLOoYgqtP0gHNwWNX9mqDGzhb9Cj+EJq0O4xhvDmLi
+	s2j6JVdhaztmxqorKVnQs4b35LUmTpAe1IKtut6U8tnRGbMll3JHy928Zlpx8Cq7Vs=
+X-Received: by 2002:a05:6402:274d:b0:69f:b4f4:4ebb with SMTP id 4fb4d7f45d1cf-6a098cfa4eamr514105a12.36.1785486516739;
+        Fri, 31 Jul 2026 01:28:36 -0700 (PDT)
+Received: from pit-c621e.lan (p508faa6b.dip0.t-ipconnect.de. [80.143.170.107])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a09c660febsm581023a12.28.2026.07.31.01.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2026 01:28:36 -0700 (PDT)
+From: Pit Henrich <pithenrichmail@googlemail.com>
+X-Google-Original-From: Pit Henrich <pithenrich2d@gmail.com>
+To: hmh@hmh.eng.br
+Cc: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pithenrich2d@gmail.com
+Subject: [PATCH v3] platform/x86: thinkpad-acpi: Add X1 Fold keyboard attachment detection
+Date: Fri, 31 Jul 2026 10:28:18 +0200
+Message-ID: <20260731082818.1578104-1-pithenrich2d@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260729222920.6490-1-justinyvar@gmail.com> <20260729235125.1698-1-justinyvar@gmail.com>
- <a7c7611d-1721-407d-a4d3-ec096c5e34e2@gmx.de> <CADkD=u565J=YACh5j8WDiB6kxGrr_2zb+9WpOEQbuYEZBrSGgg@mail.gmail.com>
-In-Reply-To: <CADkD=u565J=YACh5j8WDiB6kxGrr_2zb+9WpOEQbuYEZBrSGgg@mail.gmail.com>
-From: Justin Vargas <justinyvar@gmail.com>
-Date: Fri, 31 Jul 2026 03:15:16 -0400
-X-Gm-Features: AUfX_mzW1HunjsOGsnSFRzsAKMDZ0IK20qXB3T8KcEy-SuuDGQbQB9tUg252Axs
-Message-ID: <CADkD=u7ADLuLrVcHYGFmy=3j1VDVYhx8+dA4YrJcoObtCqzauQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: jlee@suse.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-> can you create a custom quirk entry and check if controlling the CPU/GPU =
-fans
-> works? For this you need to fill-in the number of CPU/GPU fans inside str=
-uct
-> quirk_entry and set "pwm" to "1".
->
-> I think fo something like "quirk_acer_predator_ph16_72", just without ".t=
-ubo =3D 1".
+ThinkPad X1 Fold 16 Gen 1 firmware reports whether the keyboard is magnetically
+attached (on the screen), but thinkpad-acpi does not expose this to userspace.
+The state can be obtained via ACPI methods: GDST (get device state).
 
-Happy to. Based on sensors output with predator_v4=3D1 loaded, this machine=
- has
-two fans (fan1 and fan2 under acer-isa-0ace), so the quirk would be:
+Add a read-only keyboard_attached_on_screen sysfs attribute, gated by
+a DMI match.
 
-static struct quirk_entry quirk_acer_nitro_anv15_51 =3D {
-    .cpu_fans =3D 1,
-    .gpu_fans =3D 1,
-    .predator_v4 =3D 1,
-    .pwm =3D 1,
-};
+Cache the state and emit a sysfs notification on
+TP_HKEY_EV_TABLET_CHANGED (0x60c0) when it changes. Initialize the cache during
+hotkey setup and refresh it before the resume notification to keep the state
+consistent across suspend and resume.
 
-On testing: this laptop runs Windows day to day, and my earlier results cam=
-e
-from a live USB session, which turns out not to work for loading a self-bui=
-lt
-module - the live image's kernel and the current repo headers are different
-versions. I'm setting up a persistent Linux install on a separate drive so =
-I
-can build and load a patched module properly, but I've hit some snags there=
-.
+Signed-off-by: Pit Henrich <pithenrich2d@gmail.com>
+---
+This replaced the v2 patch in:
+https://lore.kernel.org/all/20260419102724.91451-1-pithenrich2d@gmail.com/
 
-So it will likely be about a week before I can report back on fan control. =
-If
-you'd rather not wait, I'm equally happy for the patch to go in as tested w=
-ith
-&quirk_acer_predator_v4, and to follow up with a separate patch adding the =
-fan
-fields once I've verified them.
+Changes v1 -> v2:
+ * Use ACPI method instead of using the EC directly (thanks Mark).
+Changes v2 -> v3:
+ * Added documentation to thinkpad-acpi.rst
+ * Patched against current thinkpad_acpi.c
 
-Either way I'll report back with results rather than leaving it open.
+---
+ .../admin-guide/laptops/thinkpad-acpi.rst     | 26 +++++-
+ drivers/platform/x86/lenovo/thinkpad_acpi.c   | 85 ++++++++++++++++++-
+ 2 files changed, 108 insertions(+), 3 deletions(-)
 
-Thanks,
-Justin
+diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+index f874db31801d..7873a58cb2f5 100644
+--- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
++++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+@@ -583,7 +583,8 @@ Events that are propagated by the driver to userspace:
+ 0x6030		System thermal table changed
+ 0x6032		Thermal Control command set completion  (DYTC, Windows)
+ 0x6040		Nvidia Optimus/AC adapter related (TO BE VERIFIED)
+-0x60C0		X1 Yoga 2016, Tablet mode status changed
++0x60C0		X1 Yoga 2016 tablet mode or X1 Fold 16 Gen 1 keyboard
++		attachment state changed
+ 0x60F0		Thermal Transformation changed (GMTS, Windows)
+ ======		=====================================================
+ 
+@@ -1634,6 +1635,29 @@ if damage detected:
+ The property is read-only. If feature is not supported then sysfs
+ attribute is not created.
+ 
++X1 Fold keyboard attachment
++---------------------------
++
++sysfs attribute: keyboard_attached_on_screen
++
++ThinkPad X1 Fold 16 Gen 1 systems can report whether the keyboard is
++currently attached on-screen.
++
++This attribute is currently supported on ThinkPad X1 Fold 16 Gen 1
++systems only.
++
++The command to check the keyboard attachment state is::
++
++	cat /sys/devices/platform/thinkpad_acpi/keyboard_attached_on_screen
++
++The values are:
++
++- 0 if the keyboard is not attached on-screen
++- 1 if the keyboard is attached on-screen
++
++The property is read-only. If feature is not supported then the sysfs
++attribute is not created.
++
+ Multiple Commands, Module Parameters
+ ------------------------------------
+ 
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 445e1403308e..66480609ee05 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -219,8 +219,9 @@ enum tpacpi_hkey_event_t {
+ 	TP_HKEY_EV_LID_OPEN		= 0x5002, /* laptop lid opened */
+ 	TP_HKEY_EV_TABLET_TABLET	= 0x5009, /* tablet swivel up */
+ 	TP_HKEY_EV_TABLET_NOTEBOOK	= 0x500a, /* tablet swivel down */
+-	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* X1 Yoga (2016):
+-						   * enter/leave tablet mode
++	TP_HKEY_EV_TABLET_CHANGED	= 0x60c0, /* posture change event:
++						   * X1 Yoga (2016): enter/leave tablet mode
++						   * X1 Fold 16 Gen 1: keyboard attachment state changed
+ 						   */
+ 	TP_HKEY_EV_PEN_INSERTED		= 0x500b, /* tablet pen inserted */
+ 	TP_HKEY_EV_PEN_REMOVED		= 0x500c, /* tablet pen removed */
+@@ -374,6 +375,7 @@ static struct {
+ 	u32 has_adaptive_kbd:1;
+ 	u32 kbd_lang:1;
+ 	u32 trackpoint_doubletap_enable:1;
++	u32 has_keyboard_attached_on_screen:1;
+ 	struct quirk_entry *quirks;
+ } tp_features;
+ 
+@@ -2888,6 +2890,63 @@ static void hotkey_tablet_mode_notify_change(void)
+ 			     "hotkey_tablet_mode");
+ }
+ 
++static bool keyboard_attached_on_screen;
++static bool keyboard_attached_on_screen_initialized;
++
++static int x1_fold_keyboard_attached_on_screen_get(bool *attached)
++{
++	int state;
++
++	if (!tp_features.has_keyboard_attached_on_screen)
++		return -ENODEV;
++
++	if (!acpi_evalf(NULL, &state, "\\_SB.DEVD.GDST", "d"))
++		return -EIO;
++
++	*attached = state != 0;
++	return 0;
++}
++
++static ssize_t keyboard_attached_on_screen_show(struct device *dev,
++						struct device_attribute *attr,
++						char *buf)
++{
++	bool attached;
++	int res;
++
++	res = x1_fold_keyboard_attached_on_screen_get(&attached);
++	if (res)
++		return res;
++
++	return sysfs_emit(buf, "%d\n", attached);
++}
++
++static DEVICE_ATTR_RO(keyboard_attached_on_screen);
++
++static void keyboard_attached_on_screen_notify_change(void)
++{
++	if (tp_features.has_keyboard_attached_on_screen)
++		sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
++			     "keyboard_attached_on_screen");
++}
++
++static bool keyboard_attached_on_screen_update(void)
++{
++	bool attached;
++
++	if (x1_fold_keyboard_attached_on_screen_get(&attached))
++		return false;
++
++	if (keyboard_attached_on_screen_initialized &&
++	    keyboard_attached_on_screen == attached)
++		return false;
++
++	keyboard_attached_on_screen = attached;
++	keyboard_attached_on_screen_initialized = true;
++
++	return true;
++}
++
+ /* sysfs wakeup reason (pollable) -------------------------------------- */
+ static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+ 			   struct device_attribute *attr,
+@@ -3017,6 +3076,7 @@ static struct attribute *hotkey_attributes[] = {
+ 	&dev_attr_hotkey_adaptive_all_mask.attr,
+ 	&dev_attr_hotkey_recommended_mask.attr,
+ 	&dev_attr_hotkey_tablet_mode.attr,
++	&dev_attr_keyboard_attached_on_screen.attr,
+ 	&dev_attr_hotkey_radio_sw.attr,
+ 	&dev_attr_doubletap_enable.attr,
+ #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
+@@ -3032,6 +3092,9 @@ static umode_t hotkey_attr_is_visible(struct kobject *kobj,
+ 	if (attr == &dev_attr_hotkey_tablet_mode.attr) {
+ 		if (!tp_features.hotkey_tablet)
+ 			return 0;
++	} else if (attr == &dev_attr_keyboard_attached_on_screen.attr) {
++		if (!tp_features.has_keyboard_attached_on_screen)
++			return 0;
+ 	} else if (attr == &dev_attr_hotkey_radio_sw.attr) {
+ 		if (!tp_features.hotkey_wlsw)
+ 			return 0;
+@@ -3448,6 +3511,7 @@ static int __init hotkey_init(struct ibm_init_struct *iibm)
+ 	}
+ 
+ 	tabletsw_state = hotkey_init_tablet_mode();
++	keyboard_attached_on_screen_update();
+ 
+ 	/* Set up key map */
+ 	keymap_id = tpacpi_check_quirks(tpacpi_keymap_qtable,
+@@ -3828,6 +3892,8 @@ static bool hotkey_notify_6xxx(const u32 hkey, bool *send_acpi_ev)
+ 	case TP_HKEY_EV_TABLET_CHANGED:
+ 		tpacpi_input_send_tabletsw();
+ 		hotkey_tablet_mode_notify_change();
++		if (keyboard_attached_on_screen_update())
++			keyboard_attached_on_screen_notify_change();
+ 		*send_acpi_ev = false;
+ 		return true;
+ 
+@@ -3984,6 +4050,8 @@ static void hotkey_resume(void)
+ 	tpacpi_send_radiosw_update();
+ 	tpacpi_input_send_tabletsw();
+ 	hotkey_tablet_mode_notify_change();
++	keyboard_attached_on_screen_update();
++	keyboard_attached_on_screen_notify_change();
+ 	hotkey_wakeup_reason_notify_change();
+ 	hotkey_wakeup_hotunplug_complete_notify_change();
+ 	hotkey_poll_setup_safe(false);
+@@ -4282,6 +4350,17 @@ static const struct dmi_system_id fwbug_list[] __initconst = {
+ 	{}
+ };
+ 
++static const struct dmi_system_id keyboard_attached_on_screen_list[] __initconst = {
++	{
++		.ident = "ThinkPad X1 Fold 16 Gen 1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Fold 16 Gen 1"),
++		},
++	},
++	{}
++};
++
+ static const struct pci_device_id fwbug_cards_ids[] __initconst = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
+@@ -12239,6 +12318,8 @@ static int __init thinkpad_acpi_module_init(void)
+ 	dmi_id = dmi_first_match(fwbug_list);
+ 	if (dmi_id)
+ 		tp_features.quirks = dmi_id->driver_data;
++	tp_features.has_keyboard_attached_on_screen =
++		dmi_check_system(keyboard_attached_on_screen_list);
+ 
+ 	/* Device initialization */
+ 	tpacpi_pdev = platform_device_register_simple(TPACPI_DRVR_NAME, PLATFORM_DEVID_NONE,
+-- 
+2.43.0
 
-On Thu, Jul 30, 2026 at 10:05=E2=80=AFAM Justin Vargas <justinyvar@gmail.co=
-m> wrote:
->
-> > can you create a custom quirk entry and check if controlling the CPU/GP=
-U fans
-> > works? For this you need to fill-in the number of CPU/GPU fans inside s=
-truct
-> > quirk_entry and set "pwm" to "1".
-> >
-> > I think fo something like "quirk_acer_predator_ph16_72", just without "=
-.tubo =3D 1".
->
-> Sure. The machine has two fans - with predator_v4=3D1 loaded, sensors rep=
-orts
-> fan1 and fan2 under acer-isa-0ace - so I'll use:
->
-> static struct quirk_entry quirk_acer_nitro_anv15_51 =3D {
->     .cpu_fans =3D 1,
->     .gpu_fans =3D 1,
->     .predator_v4 =3D 1,
->     .pwm =3D 1,
-> };
->
-> One note on timing: this laptop runs Windows day to day and I've been tes=
-ting
-> from a live USB, so I need to set up an environment that can build and lo=
-ad a
-> patched module on the hardware before I can report back on fan control. T=
-hat
-> may take me a few days, but I'll follow up with results either way, and s=
-end a
-> v3 once I can confirm whether PWM control works.
->
-> Thanks for the quick review,
-> Justin
->
->
-> On Thu, Jul 30, 2026 at 5:17=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote=
-:
-> >
-> > Am 30.07.26 um 01:51 schrieb Justin Vargas:
-> >
-> > > The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for therma=
-l
-> > > profile handling and hardware monitoring, but has no quirk entry, so
-> > > these features are only available when the predator_v4 module paramet=
-er
-> > > is passed manually.
-> > >
-> > > Add a quirk entry for this model.
-> > >
-> > > Note that this machine does not support the turbo thermal profile: it=
-s
-> > > supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
-> > > PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
-> > > remaining profiles work as expected.
-> >
-> > Hi,
-> >
-> > can you create a custom quirk entry and check if controlling the CPU/GP=
-U fans
-> > works? For this you need to fill-in the number of CPU/GPU fans inside s=
-truct quirk_entry
-> > and set "pwm" to "1".
-> >
-> > I think fo something like "quirk_acer_predator_ph16_72", just without "=
-.tubo =3D 1".
-> >
-> > Thanks,
-> > Armin Wolf
-> >
-> > > Assisted-by: Claude:claude-opus-5
-> > > Signed-off-by: Justin Vargas <justinyvar@gmail.com>
-> > > Tested-by: Justin Vargas <justinyvar@gmail.com>
-> > > ---
-> > > v2: Add Assisted-by trailer per
-> > >      Documentation/process/coding-assistants.rst. No change to the co=
-de.
-> > >
-> > > Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026),
-> > > kernel 7.0.11-1-cachyos:
-> > >
-> > >    $ sudo dmidecode -s system-product-name
-> > >    Nitro ANV15-51
-> > >
-> > >    $ sudo modprobe acer_wmi predator_v4=3D1
-> > >    $ cat /sys/firmware/acpi/platform_profile_choices
-> > >    low-power quiet balanced balanced-performance performance
-> > >
-> > > Writing low-power, quiet, balanced and balanced-performance all succe=
-ed
-> > > and audibly change fan behaviour. Writing performance is rejected by =
-the
-> > > firmware, consistent with the supported profiles bitmap (0x0A) readin=
-g
-> > > 0x53, i.e. bit 5 (turbo) clear.
-> > >
-> > > hwmon works: sensors reports acer-isa-0ace with fan1 3024 RPM,
-> > > fan2 2685 RPM, temp1 +48.0 C.
-> > >
-> > > The WMI mechanism was cross-checked on Windows, where NitroSense swit=
-ches
-> > > profiles via SetGamingMiscSetting with index 0x0B and the same profil=
-e
-> > > values used by this driver.
-> > >
-> > > The analysis and patch were produced with AI assistance (see the
-> > > Assisted-by trailer); all testing was performed by me on the physical
-> > > machine, and I take responsibility for the patch as signed off above.
-> > >
-> > >   drivers/platform/x86/acer-wmi.c | 9 +++++++++
-> > >   1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/a=
-cer-wmi.c
-> > > index e0eaaefb13d..a7290f85166 100644
-> > > --- a/drivers/platform/x86/acer-wmi.c
-> > > +++ b/drivers/platform/x86/acer-wmi.c
-> > > @@ -662,6 +662,15 @@ static const struct dmi_system_id acer_quirks[] =
-__initconst =3D {
-> > >               },
-> > >               .driver_data =3D &quirk_acer_nitro_an515_58,
-> > >       },
-> > > +     {
-> > > +             .callback =3D dmi_matched,
-> > > +             .ident =3D "Acer Nitro ANV15-51",
-> > > +             .matches =3D {
-> > > +                     DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> > > +                     DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
-> > > +             },
-> > > +             .driver_data =3D &quirk_acer_predator_v4,
-> > > +     },
-> > >       {
-> > >               .callback =3D dmi_matched,
-> > >               .ident =3D "Acer Predator PH315-53",
