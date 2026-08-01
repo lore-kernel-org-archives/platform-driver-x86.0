@@ -1,112 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37D835957
-	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EC428688C
+	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 14:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785557160; cv=none; b=MpxHGN6SWgFYHEHhA/FtPL4MceH0Au0rvDqbj3HV8lz2Fazqpq+uLGwL0n8tssspBWUvZGKR0tHoNTW3p82rsPNllx2Wu1xMNQg4bZWxh7BEaf+IG1ufzbBy6ifnEH1P7MEaE0aZV+qVhdptsDSEkiBB8MXuPuKEJNpCbyZBMS4=
+	t=1785594030; cv=none; b=mxDJEZrsqeI+7PZi2HXW5kXqR4j2rHStDW3jtDBEhDRj4/64cKEY9ebAl91cuRbnrp9Rj4yvNbPmX04TiMipKWwgCo4wr54tERkqwOAYXYthmqembnJe+NK1VaCa/qjk/PP3HyaNu5xczt6JutgGv3MC/BCWkNBBJFA/xBnPxxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785557160; c=relaxed/simple;
-	bh=bo5GxqG2GmxLlb8qPYpkl1OXHJ+w7RPZKxQKT8FOF+E=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n4X6L1IZ116EeAEJ/gIONVswMaeMoudiuzt4tZZ6pKfsUUL4TkL8xjA4nZaznJ/uElv8YbCRBSGj9d1Pf1jeeKKylb3ktg71WN0UkWt4qN50eBRZy26FVGfygJHVGx0Cl0OK6QC2lv4qeHPxX1w4U/fc1cbk5CK7dl1dFrkR2XM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+yXB9YY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785594030; c=relaxed/simple;
+	bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Z8QwkJ1uuUHI35iUrpSktyi28AfDUNH9X24hkAVEYgf7rMmZhNW2gCsOqdVNMmDWKtjnerLG9NJfYxEuMGXZObxYVRl8y1h2RSIyTsdS6oECCH3WCwprKVOGUadPWmb10l/0K0eAutkLHCHBwCKdouNLUhnI87ewigJvEa7sVOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUyMqAb+; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+yXB9YY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B378C2BCF6
-	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785557160;
-	bh=bo5GxqG2GmxLlb8qPYpkl1OXHJ+w7RPZKxQKT8FOF+E=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=l+yXB9YY/2Tq0pRHglvTsYLhD8PSz86POAEYYGsWwbfezNQGl/AfbUrmh22ZZWF0n
-	 cJmLFX6h8KCqc4uk0O3eyuNJUFxsGep1KJldMni1d53A6SrS0HAd+DTbA9WJaPfHU0
-	 xSGqQdrCZSo7MYSWUchtn5DhyvdCWwoEwB3h0TTvm/mjLI3nlEJmVojJquTYus5jB0
-	 ZOMe+EeqnstS4CZv78k2eCA8C3/Wo4smfvUWTpkDTHvLLDfe80xEGzljvhhYvFiG42
-	 e+vHDDd7HiIQznSf89vmvDqu/KlEb8EEbgo3L5APkR5SD60MxZxtL3dLDq0UL6WI9l
-	 /frdx+lmfhTBQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 43C2BC433E1; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 221789] [BUG] Prestige 16 Flip AI+ C3MTG Panther Lake - Tablet
- Mode Switch SW_TABLET_MODE) Not Detected
-Date: Sat, 01 Aug 2026 04:06:00 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: workspace0001@outlook.com
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: TAINTED_KERNEL
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-221789-215701-QTI0wpuujY@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-221789-215701@https.bugzilla.kernel.org/>
-References: <bug-221789-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUyMqAb+"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-476a130c138so2338953f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 01 Aug 2026 07:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785594027; x=1786198827; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
+        b=PUyMqAb+7HyrdWCf8Sv9infqEDJ32MieAAo6Enm79bIeCLcytxSNhukV0fuShojBpB
+         uBNfWOdbljVd0cjzizCqPSjezm6vdCDhe0iFrkhOTIS8OAJSyBli5W4FM57I9w6ba7SK
+         hNYJHq5NwPYZlINWHD8NMttgGhOAXXE2MbX5d7vK17BgPtfEO7FQS9utH6/Mi+dQsDyn
+         s1nLJ20niw0WqT/W2gPMK8BKphwS8Sg7UoOoVq1Egz6z4w0evGOenj6pfrlnWs6Jy7CZ
+         fKsGbLmz5Je2ro1b+VTl7TUxD0+WZ/rqpHN+z21sqKlUTJuURza8bCgwGXw/c+X2Euif
+         VS1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785594027; x=1786198827;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
+        b=oULbpgy5S0vZHZM1FbnHGssq5ljGo3/4/3374+ORh1puJ0hHIm9fQcoetLmmegtght
+         yAyKZyIyq61R+D6dijKhnkzicKUQ85Y8P6oLbM6AXY2smx8vhLaONbZtO3h7E7l4pkXT
+         NyX4MDLdTK7SqA7qS7MM65woiM3+cVCghPLoP5trOrUfq00P1iri5D3h2Seay4W/kGGi
+         QSjoj+wNXmPQE7AgaFDQi1aori8+e8AgmzsLUyxAHvORwhihIqbDCww4XbEWarioxxkw
+         nSzHSxUJdYCPKC/ZdCiGxmFtYKgohXxZjcNfFZtZvH+gSZ64ZrJjiiNCVsRv5degKIuj
+         oQsA==
+X-Gm-Message-State: AOJu0YyZK8c3rN4ASW455j+FcpL7kPYX46JK/u0XQPsKLsr389DcK3lr
+	C4qqWCVzmLaMkoxnZnZfVj7Tj8lgIarDWOA6f2+DFRS8uVW/L6LMIHCU
+X-Gm-Gg: AR+sD1201/oHwyt5alf0MOg3XeJ7Q6BAXLBdnJZnYrvWFZq/aGzX7F8U8aIKCqoA+r9
+	qG4P1GNXbL8LqbJ9VyjbVI/rth17aKEObtg2nvJZH86iQ8z1eRW+sR7cFqE+lOptgCCCSmjdxBI
+	dTyprhHI+GfMaV8IaBx1tQWN1dIDJEp24uuKzkx6wxDWa3M904U/Ic62CGn4a8gFUeBDcl5qeul
+	pqYU59X9otNdJHPQ8zEpOtUGrXwvGRTqgI62GdcBlOI+twzbHaAeJSHQS+1A2dHmEno+zOkCw+K
+	mdzLXLJ+yXLjpYAJo1LUlQGSyc+gfELYyrvR/j4GFft486vXmYmYyGQV4rP9jYXlk0nY1BLKrAE
+	A7FRoQiAfZjju6wTKk+4sneNAD8rL1ipfwH1SGmJDIjm01jGXEQHrQhjUvuT0VDJlU5NwJ9+21K
+	gH4KySWtTHZmkhimb8ALaJaQIWviePomCFRYGM+TcTry/A0xbUohq2V9w3GfAyTm3VCCTHkdDlW
+	FNTSdR7PBbnK1Xsqw1tkyrvzCs9mg0v9GRfMPmNBkUorzFHX3l0FgzeGfZidzsV8oJMOl4H
+X-Received: by 2002:a05:6000:4701:b0:47f:93b6:8d05 with SMTP id ffacd0b85a97d-47fd724e8d9mr8844025f8f.0.1785594027448;
+        Sat, 01 Aug 2026 07:20:27 -0700 (PDT)
+Received: from fedora.cable.virginm.net (cpc89770-stok19-2-0-cust13393.1-4.cable.virginm.net. [86.23.116.82])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd45a1240sm15247471f8f.36.2026.08.01.07.20.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2026 07:20:27 -0700 (PDT)
+From: yahia ahmed <yahia.a.abdrabou@gmail.com>
+To: W_Armin@gmx.de,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the modern API
+Date: Sat,  1 Aug 2026 15:20:25 +0100
+Message-ID: <20260801142025.15515-1-yahia.a.abdrabou@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
+References: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D221789
+Hi,
 
-work (workspace0001@outlook.com) changed:
+Currently hp_bioscfg and hp_wmi will both collide to register in the
+5FB7F034-2C63-45E9-BE91-3D44E2C707E4 GUID, so if we modernize to use
+the wmi interface we will lock one of the drivers out, So how should
+we optimally handle them?
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-         Resolution|---                         |TAINTED_KERNEL
-
---- Comment #1 from work (workspace0001@outlook.com) ---
-the issue is resolved it was the ISH server bundled with fedora that had is=
-sues
-so I downloaded and replaced it. Bellow are the steps i used to resolve the
-issue
-
-
-
-# 1. Navigate to the 2622 firmware directory
-cd
-ISH/ISH_Kit_5.8.1.7779v2_14T2_2622/Drivers/Win10/IshHeci/2622/x64/FWImage/0=
-004/
-
-# 2. Compress the file into the XZ format required by Fedora
-xz --check=3Dcrc32 -c ishS_SI_5.8.1.7779.bin > ish_ptl.bin.xz  #must use th=
-is
-flag for kernel to recognise
-
-# 3. Back up the default, non-working stock file
-sudo mv /usr/lib/firmware/intel/ish/ish_ptl.bin.xz
-/usr/lib/firmware/intel/ish/ish_ptl.bin.xz.bak
-
-# 4. Copy the new firmware to the system directory and fix permissions
-sudo cp ish_ptl.bin.xz /usr/lib/firmware/intel/ish/
-sudo chmod 644 /usr/lib/firmware/intel/ish/ish_ptl.bin.xz
-
-# 5. Tell the Intel HID driver to listen to the 360-degree folding state
-echo "options intel_hid enable_sw_tablet_mode=3D1" | sudo tee
-/etc/modprobe.d/intel-hid-tablet.conf
-
-# 6. Rebuild the system's boot image cache and restart
-sudo dracut --force
-sudo reboot
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Best regards,
+yahia
