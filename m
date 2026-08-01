@@ -1,70 +1,99 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011067.outbound.protection.outlook.com [52.101.57.67])
+Received: from mx0b-0002e601.pphosted.com (mx0b-0002e601.pphosted.com [148.163.154.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5827449B2B;
-	Fri, 31 Jul 2026 16:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32203A6B76;
+	Sat,  1 Aug 2026 02:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.154.28
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785514577; cv=fail; b=DE+WIpq02Ojx0Hd6QzZH1+BCByvIc6jzy7Tr0RvnkfiuCvYTHeQ6xl6xZqMAER/bePYvuNI7gck9lgOmpnM2ym/FSinNR+N9zGXxL9if4bLqArA/VPpJe33/c6nUMpwzwvuXbxI5cftu7oOaF45EfiIpKCuAkDmK84oPafqSLKI=
+	t=1785551385; cv=fail; b=meIjcPFaxfzhsXL/c7D6XwRLOx7q12TfEo0CY5RAu4KwjZFLMv/e2YahW7o8oIZHw1qQskBaRKiAa6BY9fxc8KHv1TeLvedWaWZgFun62pRvTNCY4Us6PknJlriSOiPJnU9PnNIx1L3RY17AF1ZBFsc+n0hqkXiKl1FDJohOqvE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785514577; c=relaxed/simple;
-	bh=fpL8Gqf/51t6eqZSbIj5GbKxPaUek8cxzxEbiwJrW90=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T4e0LrzDhV2bIKc3RkS4TuMovCbKUDWJDpAGgoqaxeJHZ8+MIF3/vYylSHIzeMQjtpR3Zm6S2SDA8AbEW6lauzMNtZDa0y9BanA8KTzJUiOxMik8LUvV7Mqbea6Zh9N7qb6Gfdf/Sn3xk8tqk5wtGKkCaQ/JAiYSBVZDWdp/s2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hM82QPKs; arc=fail smtp.client-ip=52.101.57.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1785551385; c=relaxed/simple;
+	bh=JOLLgPPeafAFgNQTSuJfE3kpvL6feMeUeTaPrceAZyI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtjcTO8Cj8oTHU8s5Ru5aC2a7C4nG/5SH7LysXtV1z0qoi7f0yG1FIgpTRWS5dcMtHa4QBJZkRMN7wsnD6WwZ8tb7dbfAcgPJz9POZa3k+kOwymWf1bn1Uyf6mWHdPH0x732bRt8PyoLBbAE3ahLwdeWhafJAHWlO5oH+Fg/L3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b=VWeJkAff; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wabTc5Xr; arc=fail smtp.client-ip=148.163.154.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hM82QPKs"
+	dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b="VWeJkAff";
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wabTc5Xr"
+Received: from pps.filterd (m0374955.ppops.net [127.0.0.1])
+	by mx0b-0002e601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66VM01bX1266236;
+	Fri, 31 Jul 2026 21:29:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=proofpoint-05-2026; bh=ZaqACCncHO/zO
+	jrz2GEBuNeTJgRgLanpZfbxO4QshL0=; b=VWeJkAffxiKkjikpE+e8sd9X1d2Aq
+	Kb+YAsb3H/VPSEv0HaiIH/gPuFlWyvsXYMTxI3DchHbQv2BfLqkhqG4ZvGJQ04Oq
+	wAxXQzeA1zAkVmgWAV8jAlJeLpCiuZsDLoNyMcdgBhGp3ysfKhQ+TYFymjtsVWIB
+	1oxJkXHiclLicsmZdcCxkrolgeBImN/9YWR0uv7nMtpdDJNmWhAnTnhtSBVyFXfu
+	Tn8C5DebEpk9YYE3yHrfhYueKZTzB9NdO6szKtcNlzt9ZoxtHM52ovcX8vJZX6Q2
+	nSsVRz2yCXYJ7J47ZBgIKaZAVX4tUcAlScNOyOeCBLYNZG2Gkj2pEBLRQ==
+Received: from bl2pr02cu003.outbound.protection.outlook.com (mail-eastusazon11011048.outbound.protection.outlook.com [52.101.52.48])
+	by mx0b-0002e601.pphosted.com (PPS) with ESMTPS id 4fru9t4btf-1
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 31 Jul 2026 21:29:21 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IF9w5PDsTLJ61u/MKzJt0yA7wXK6YMqjVfTSw911FkVVV9vIvrlyr+0fbTaB/M+Lsy1aIBRKg6D6ZjhEXuRYmXwYa959cJO+95f83dXSqC388nkdreL2/qN1C3wXT6zT6AjSa3DwkEry0BfU3o+zp9yYNBDJ+pG2flKVOxu+4OW7++B55jJPlUCm0ilLI8H7hDBP7i5udhdUyx6jeBE/e5yzfIDXvKWag0xrjHphn5WXunc2ltrxBO6cFN9lSyLGEQMDptaeajT/pgpBW+4w8/SiC0yMq1gCHLnOp2HDsCIHPbhCGfhDNWtj8C02n5jc99pJHbxnp54jIjI2MHWyVQ==
+ b=VF90PO7KIfi2i8J6k1iAVhjkodtwnX04mHCr6w0dg9jIWkfdfEYfMecrUeZHonuxFrNHT5UA0EFJPE5UrPwA2g/PXO6i8n++LSVgCgsDA1hzEuLu4xLfrDs7ieEGR1yrCekuX7pZb5cVpTfaLfNW2+KVhJUn5MRW4p9ANIikGuUZyEP+tVIJpIoDja5UsAf7NKBHouQ/v4txwce5HLvBffkA+UTHfV6jQvKNBX2nRzfLM+T11CebQi1aOQDM0zHUK6C7AxMOm/xbCrZMOD/GIOGQkageMKtE9SiDu1G7Ce28Wng8gTCxRfGzCWtBZwPerPMjAjbbTgZAs6Tw4UsbBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GiJBvLX9CdZNVY/SeCYyFy5KYtbITmmDr93iFeMHrIg=;
- b=hDZTdHTaVtrUkSZLc0JNzP7HzVR8cH/JtlHimQ7DptO+chIR/aAljsnc5yD+k+OfAMMifqX0PRvIe/X+8mhgjgtQmx7xcUOHRqQccn/zS2RiXsEhgq9DazQROtausIAkXTN9cEIkBAAMoQwf3NXkwC9/DSd7BMnFwRKeikHEXWbJ7VEXURny/x9IVg9OCZDFLFwXSnyo6/Dw5UQJyQVea+BTviCmwEnnRouvdqL3gM00Kd6dtFk+DFqMNb+XeZ6BsRDb6AbMXC8AMBnfn6dynQ4AQDsgdIAW8199MIDZAPg52LXbmE+qNoOudOb9tibraPqr6jAOCAr94jUlhjxmpQ==
+ bh=ZaqACCncHO/zOjrz2GEBuNeTJgRgLanpZfbxO4QshL0=;
+ b=ewi3c1XG/w98EBiGADfnNEVe5IKFx6XgXSz2swShMp/OKBrhe72u1KaFB36Fv0NGLzffV8ojTkLRyExABEF9sv++ulsAtSHjUx+7TQWI6OtH5veX+6TpG/76W15OXYSZfasIa5i7ALja37T4nFMEuyyh3b9gXFCRKH/JGNSoN4VJtsSD9TxuH3zd7Na+KDArJxg81Q/QG2qjqXFLs6L9JFxuoRNViSBhSZiOB7b1wobwisza4RbUzIkdu7TSunhRDMb5AslDyy68E5320aDycy3BgiWeRj5qOnw2IK5R87QyAlL/t1fxcAY+IcMO7Isq6TO7KWyhwzanzjfc3uJjLw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ 198.47.23.194) smtp.rcpttodomain=hp.com smtp.mailfrom=ti.com; dmarc=pass
+ (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GiJBvLX9CdZNVY/SeCYyFy5KYtbITmmDr93iFeMHrIg=;
- b=hM82QPKsPaeNMnED31P5BwO4GJtBbfp5mviXBWUy7N8P6t/urxdzEY5E7im04p6+HqiYTtcAKUgQGik5+xwDgmZRuvOBjKrbw8GIFAv/yhRK/2s8qnXZ21bLXyeF/EFgSbJ5CIp8AJb48eV3k34rnXQSQaW0zgIBd7I94OQTqHs=
-Received: from CH0PR13CA0035.namprd13.prod.outlook.com (2603:10b6:610:b2::10)
- by PH7PR12MB5656.namprd12.prod.outlook.com (2603:10b6:510:13b::10) with
+ bh=ZaqACCncHO/zOjrz2GEBuNeTJgRgLanpZfbxO4QshL0=;
+ b=wabTc5Xrc569fQV97k33HClBN0fWCR1ZMEjy/czpPvMuLNmYb6v5UknK8+NBgjFwZWcG/NgZRLd7jsih00K0Sjp4oQ1qSZKGccFi/MTLbocV9EqE0vHikmPwzhFmZbtSqLxb6Y8JBt2jlN8anWOsIl5eaU3QLPi9X/UINi3EFr8=
+Received: from MW4PR04CA0346.namprd04.prod.outlook.com (2603:10b6:303:8a::21)
+ by MW6PR10MB7616.namprd10.prod.outlook.com (2603:10b6:303:249::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.16; Fri, 31 Jul
- 2026 16:15:48 +0000
-Received: from CH1PEPF0000A34C.namprd04.prod.outlook.com
- (2603:10b6:610:b2:cafe::22) by CH0PR13CA0035.outlook.office365.com
- (2603:10b6:610:b2::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.9 via Frontend Transport; Fri, 31
- Jul 2026 16:15:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CH1PEPF0000A34C.mail.protection.outlook.com (10.167.244.6) with Microsoft
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.16; Sat, 1 Aug
+ 2026 02:29:18 +0000
+Received: from MWH0EPF000C618F.namprd02.prod.outlook.com
+ (2603:10b6:303:8a:cafe::21) by MW4PR04CA0346.outlook.office365.com
+ (2603:10b6:303:8a::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.270.16 via Frontend Transport; Sat, 1
+ Aug 2026 02:29:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
+ smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
+ action=none header.from=ti.com;
+Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
+ 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
+Received: from lewvzet200.ext.ti.com (198.47.23.194) by
+ MWH0EPF000C618F.mail.protection.outlook.com (10.167.249.103) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.292.8 via Frontend Transport; Fri, 31 Jul 2026 16:15:48 +0000
-Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 31 Jul
- 2026 11:15:45 -0500
-From: Muralidhara M K <muralidhara.mk@amd.com>
-To: <ilpo.jarvinen@linux.intel.com>, <Mario.Limonciello@amd.com>
-CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<muthusamy.ramalingam@amd.com>, Muralidhara M K <muralidhara.mk@amd.com>
-Subject: [PATCH v2 4/4] Documentation/arch/x86/amd_hsmp: Document the client telemetry table
-Date: Fri, 31 Jul 2026 21:45:16 +0530
-Message-ID: <20260731161516.2242993-5-muralidhara.mk@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260731161516.2242993-1-muralidhara.mk@amd.com>
-References: <20260731161516.2242993-1-muralidhara.mk@amd.com>
+ 15.21.292.8 via Frontend Transport; Sat, 1 Aug 2026 02:29:18 +0000
+Received: from DLEE214.ent.ti.com (157.170.170.117) by lewvzet200.ext.ti.com
+ (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Fri, 31 Jul
+ 2026 21:29:17 -0500
+Received: from DLEE206.ent.ti.com (157.170.170.90) by DLEE214.ent.ti.com
+ (157.170.170.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Fri, 31 Jul
+ 2026 21:29:17 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE206.ent.ti.com
+ (157.170.170.90) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
+ Transport; Fri, 31 Jul 2026 21:29:17 -0500
+Received: from LAPTOP-70RJ5B8Q ([10.250.165.249])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 6712TBqn1691017;
+	Fri, 31 Jul 2026 21:29:12 -0500
+From: Baojun Xu <baojun.xu@ti.com>
+To: <tiwai@suse.de>, <hansg@kernel.org>
+CC: <ilpo.jarvinen@linux.intel.com>, <broonie@kernel.org>,
+        <andriy.shevchenko@linux.intel.com>, <shenghao-ding@ti.com>,
+        <13916275206@139.com>, <platform-driver-x86@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>, <robinchen@ti.com>, <bill.yu@canonical.com>,
+        <pin-hao.huang@hp.com>
+Subject: [PATCH v1] ALSA: hda/tas2781: Add new quirk for HP new project (Messi)
+Date: Sat, 1 Aug 2026 10:28:31 +0800
+Message-ID: <20260801022831.1241-1-baojun.xu@ti.com>
+X-Mailer: git-send-email 2.55.0.windows.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,343 +102,81 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34C:EE_|PH7PR12MB5656:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33a84df0-6f20-48dc-7744-08deef1efb86
+X-MS-TrafficTypeDiagnostic: MWH0EPF000C618F:EE_|MW6PR10MB7616:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5b8e051-0b9a-41c3-313a-08deef74b02e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|36860700016|376014|82310400026|1800799024|6133799003|56012099006|5023799004|11063799006|10067099003|22082099003|18002099003;
+	BCL:0;ARA:13230040|376014|7416014|36860700016|82310400026|1800799024|23010399003|18002099003|56012099006|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	6CbgF6pUb1P7xJFFiziPHu6uhR0gUuCmC30e0hrxNP7Pq+bwjUJI4NJY1hO1L9EWNdtMC3mp+nXMjleUZZUwylgZhvQiJ4dFcULyaJvmAKlKKhAYqK4Ov1EcYytOhNGXmkgRxUW6Msh3ziCOS2C5KyJOrdkge+6F8Tdeb3v0gRAP9ESm+brTZ6AtWEpR4agE/xrbLfSfedegOynM1Hz9zv3EVr/qzMPpYoCTyNCNG4aDl5NXdqCxfXOH6ipZzzus0n7jMRca1FAI2ZNLh3NJQ5b6939MyR2w4wkl24IrewBpZ4MWoHnFJdCb5A23nUSq+qgDfvhy2VaDrF4K6PsHas1jwkYSP38uirY1WxQAfwfvNxQVezz9SZUqsSBTyvNz3/ojyhBUZ27BAuTqEyZLNooDN9zRzJ9wy++6rr98XuZ0dfXFq0AGVQ6rlxJHrgrLu9gIBU/277MEH1qWLBnmid4jJo5s5BSXFmTXalsQxL+xYan+OP+uHDssv/owXE9yyhmEkorvKmF29nQMzX7Y6P7DzRM/Dnp96ZrwWHGV9yDLDvtMRaWlvngX7MSRHquOKKEEzvQarp43WhWA1PtZbSKHmYSyjvaOylIrOStZI4CuB6oqyn+nsaIhFk+CpBJ4pamF9F3qkj/RmEEzvAeLx9wQypVaw/wtIhS4Pn2hvi48C0SVrgJGhY9o6daEvBQ83LRNgIwMHSL4VnKszTQDeQ==
+	34pyklKDDiCvJLWZI1KlKxnK327uFTc18RRI7ZZIE+EPjt+SPKzHY7HaXMAg0KErICM3Gc74ETZnbR+GjRTZbpOt1lrvlVgOrGtGGJDuPhp/Gxm4vjFFD8ezlWRlvIWCgY8kvIfbrmAfuTv6yVW2xYSOvBy365xo6qVDaxrAcYc9bFsF+/onqnLch9B6Y6IaZYpYOZ3kqMvgG70f57XK/cQIq0Kl/98I6Q5xT0N6swVBifqpN33am+hUIeYR+5KyBKav9yGcUrLSF426j1d/7+OB+usy8SfJV0UvL0NxKuQS5VlZ+oumKr4dhUzUUivrqLabMei9m2BcIDIA+gOrvPGu2ewpLtQPYs5UiMCRVq1Tb63HnglX/tixj2UEmb1CPQSiOgMT6AWU9IYhmz2EcR3YdUpTFRRs1Rq7Z62CuwbRyFxI3XO4x8YjJGKtqfKfzINu0dWeMWVSVd4HKcRwRvNUSROyej7OZMKbPEIqUUzTljETphIGxeul2cVUQGD6JOxjSaqw2KRrHthSlAE2uPvB1pbuNNu5/wTLzH2/hnAxP2QepumQ0pZ4e3TpZgH5OzYuwqXuLAxarFRLM3ifJ9mioh2Mhy84txL6I42GmSlI3rtpJY5gkHd1Ujugk9Dgadi+2wp7PpbtAeiyJIt6ofA3M3QJqx8XRPRDXkMBxDQe93hDkVonJaGHn3JRuvapErjBrxqGocBL99rpRToOwA==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(376014)(82310400026)(1800799024)(6133799003)(56012099006)(5023799004)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700016)(82310400026)(1800799024)(23010399003)(18002099003)(56012099006)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Ljyk4W3bU/NcPOe0Eb4ru3nvTuxCcaHm5XIaLdGmOplVwFq7oLF0TIMnnbbcQPQfxDAYW3yAVC5Sa1+cChCpxDZOrqUaEoP8+oXt/iQgmao0AqAp8/RYY1Rblrv0XhY0xgZStcJFVQ5WCDB4Bb7YTkU3bnIYiNX81UcXIBDZYXKXegma6/nas/ox8ZYeIBDEmPA9qq/f1mbOoXYJ7cFQv4o5skN8a7L71FBaxgHBFYBaBjHjq8G5OPM6w8sxBgFSX5d9VxM+qWdeivLh4mYQUOK4JNQiLN0oOMZU100wYe8lHK78KhX+oRKc4ZiuENkqjO2nLv9ZPL4CK5R/zinyl/fvzG9P60h16tbqhtnk/YqyXZjRhilsygRm1EW8BGeMdANv6CYWHg55Mdbys7LIrs6wVrX34H1ihSqeZIosWrzy5od6kjVdhd4A3ReYpDvl
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 16:15:48.0598
+	+IhYhZjypki5S1do09U5jTe9Ish9p88QZnJFOvzD7TuiwvIaUyuphOXWp1YgeV4nkiRGrxVDQpgpihT+FmUefmXccXakuJZ8s1TUKv0jbrnlwMmyztF52P/VL1OmZqzoOBSDfeVJXnStp16csifPPLcm+bdCWKDUNKvV8tJffzm8vKIS9nfI3Rn1X0aElHCIfKTMbdDZMrBCr6KxcNvS8QPdnKekspLSJDhvIa+jWTttfUl8eQZLiaDtAmyQPWpQJ4lO7RzkDHzCMNhaudyCmNEVunQLm2qgmyrLJNj4OoZNwQczLjSpGyqFmjrdqFI7SjlmyEnx5ZbewKbEMxtlPfo1Sp7OtroiwFVDii52My1icRiS6HoubOsK+OJeHdeKY9MhKJOziSZSd2B0LYUoKrXt1V78DN2ZopbGOlnft7ap+EKkQzipOpTJ7GSAMQ2t
+X-Exchange-RoutingPolicyChecked:
+	kGQDg8yR/efcyM/pSTEQDl5uAdcuZt24xfZJp3Yimnnpo1XdR+X3DKahfNojFB4WkF03aFCk2Rs00/KxiMmv5w5GMYK4jPuFJu9E/0Y/ZE2YDYxilnHPKnXVcevP9s8x+e1S9SnjGtRqvowElo4RcsoJE0ngPykxLSnOJbQHLR8B8//H5ElzGuEYIEFACWev1oyo7R7n407kvAgh8nmJ1csNAcXa5O5VwGBJnQXy7gxWs4of6FXw+Ad4/Ce+y4wQAmbCccQmfvMjQJuBYcW2gjpCEUgt9VEO0jpApYwpvoVvXiTkMVQJuoYNaKRX1DqHkBZOHRgdmSmG6Ao40gceNw==
+X-OriginatorOrg: ti.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2026 02:29:18.2851
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33a84df0-6f20-48dc-7744-08deef1efb86
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5b8e051-0b9a-41c3-313a-08deef74b02e
+X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000A34C.namprd04.prod.outlook.com
+	MWH0EPF000C618F.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5656
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR10MB7616
+X-Proofpoint-GUID: PhYT6O3v7aED6LqiO4CbzjB7_KZq9QMr
+X-Proofpoint-ORIG-GUID: PhYT6O3v7aED6LqiO4CbzjB7_KZq9QMr
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODAxMDAxMSBTYWx0ZWRfX1+W/daszWNID
+ n0WNcJJe9v+Bqs7TCmFsHmddmgr6L2/HGMDXZcowaNFgR/pmNOHdii0jLU1yl/BdfhFq96NYOcI
+ 34IWXFQcVeDIsJeSRJVJRVUEZc+cUhk=
+X-Authority-Analysis: v=2.4 cv=MIJQXsZl c=1 sm=1 tr=0 ts=6a6d5a01 cx=c_pps
+ a=SWHM+P2JNiUeaYpOZLdr7w==:117 a=WotqVVQAdb04rnGuttW3Kw==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=RAioF0-LDSMA:10 a=s63m1ICgrNkA:10
+ a=V5UXEbMT0ywA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Z8NIEmU8O1QQgoT56wFK:22
+ a=fPAWb5peG099m5CrUpKH:22 a=sozttTNsAAAA:8 a=dAWQ1WzoSw-l28kffRgA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAxMDAxMSBTYWx0ZWRfX091kBXT7OvN/
+ 1bi8E5Z8VPXnmo6gsz6CNW5tZNeyCavpR9Prd4G09iNuYBlgiWNRFjKVXTHLuSDYVBqt9GU8WNZ
+ AchRGWPdGibiIDv0aWlfaskf5kq6b/s9Hxu0i7H/m5V90/BgthORyDre1ijAFsdZBC0nUvyAHGS
+ ePEvblboHe3xaqVfubyWJI72I0cMDPZlu+fZoVw/Ir0HLvYkMKeZUIp4s3bQgc1guLGoYXeKIlJ
+ YZnbwzTZ42Q/dPUeJA8goRekITDZMEfX2oP+OuFnYCiSS6OX8k1EsfzAsmAiBa4GXyzF4iZa9pg
+ ovug6UKCX0v0CenY4joxxJg3naWkXKasLVzTod1NoWkuGRzDLPoRAsersl2TQ6yrkJR+lgpc8W0
+ heB/5n/ABlEUG59jnA0BoGnvya1l7kBORknmPE6TqcXYrcpKbII3txD1SNzBqxDRfWlhASc6Tkm
+ q8PP6G1GeJZLD6gPP1Q==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-31_07,2026-07-30_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
+ clxscore=1011 bulkscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608010011
 
-The client models return the Ryzen Master SMC telemetry table, and the
-driver copies it out without interpreting it. Document the Telemetry
-Table RM layout, which HSMP_CLIENT_GET_METRICS_TABLE_VER reports as
-version 5, so that a tool can decode a snapshot from this file.
+Add new vendor_id and subsystem_id in quirk for HP new project (Messi).
 
-Carry the RM layout as the structure declarations themselves - the array
-size defines, the per-IOD counters, the per-CCX core counters and the
-top-level table - rather than as a paraphrase of them, so the file states
-the byte layout a decoder has to follow. The Public PPR for the model in
-use stays the reference for the units and encodings, which are firmware
-defined.
-
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+Signed-off-by: Baojun Xu <baojun.xu@ti.com>
 ---
- Documentation/arch/x86/amd_hsmp.rst | 277 ++++++++++++++++++++++++++++
- 1 file changed, 277 insertions(+)
+ sound/hda/codecs/realtek/alc269.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/arch/x86/amd_hsmp.rst b/Documentation/arch/x86/amd_hsmp.rst
-index b95f09945193..cf6faba6aa44 100644
---- a/Documentation/arch/x86/amd_hsmp.rst
-+++ b/Documentation/arch/x86/amd_hsmp.rst
-@@ -221,9 +221,286 @@ The following IOCTLs are defined:
-   ``sizeof(struct hsmp_metric_table)``.  Later version metrics table
-   layout is documented in the Public PPR.
- 
-+  The Family 1Ah client models carry their own telemetry table instead,
-+  described in `Family 1Ah client telemetry table`_ below.
-+
- The ioctl would return a non-zero on failure; you can read errno to see
- what happened. The transaction returns 0 on success.
- 
-+Family 1Ah client telemetry table
-+=================================
-+On the Family 1Ah client models the table returned by
-+``HSMP_CLIENT_GET_METRICS_TABLE`` (05h) uses the Ryzen Master SMC
-+telemetry layout.  Table version 5, as reported by
-+``HSMP_CLIENT_GET_METRICS_TABLE_VER`` (04h), is the Telemetry Table RM
-+layout below.  ``HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR`` (06h) returns
-+the DRAM address the SMU writes the table to, and 05h asks it to refill
-+that region.  The driver issues both and copies the table out without
-+interpreting it.
-+
-+Use the telemetry table chapter of the AMD Public PPR for the model in
-+use as the authoritative reference.
-+
-+Telemetry Table RM layout::
-+
-+    /*
-+     * Telemetry Table RM (Ryzen Master SMC, F1A Models 80h-8Fh and
-+     * E0h-E3h client)
-+     *
-+     * Layout returned by HSMP_CLIENT_GET_METRICS_TABLE: the SMU writes the
-+     * table into DRAM at the address reported by
-+     * HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR and the driver returns it
-+     * through the HSMP_IOCTL_GET_TELEMETRY_DATA ioctl.  The structure
-+     * mirrors the RM spec published with the AMD HSMP telemetry sample
-+     * application.
-+     * Field grouping (SET VOLTAGES, TELEMETRY VOLTAGES, ... ) matches the
-+     * SMU spec; accumulator (*_acc) fields are monotonic counters from
-+     * which consumers derive deltas across two snapshots.  Units are
-+     * firmware-defined (typically mW for power, milli-degC for temperature,
-+     * MHz for frequency); see the AMD HSMP/Ryzen Master SMC spec for exact
-+     * unit definitions.
-+     *
-+     * The composition is:
-+     *   struct hsmp_telemetry_table_rm
-+     *     +-- struct hsmp_telemetry_table_rm_iod   iod;
-+     *     +-- struct hsmp_telemetry_table_rm_ccx   ccx[HSMP_TELEMETRY_RM_MAX_CCX];
-+     *
-+     * Spare fields are explicit firmware padding and must be preserved to
-+     * maintain the on-the-wire byte layout.
-+     */
-+    #define HSMP_TELEMETRY_RM_MAX_CCX               4
-+    #define HSMP_TELEMETRY_RM_CORES_PER_CCX         12
-+    #define HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE       8
-+    #define HSMP_TELEMETRY_RM_NPU_BUSY_DOMAINS      3
-+    #define HSMP_TELEMETRY_RM_OC_DOMAINS            5
-+    #define HSMP_TELEMETRY_RM_OC_SUBDOMAINS         5
-+    #define HSMP_TELEMETRY_RM_OC_GUARDBANDS         3
-+
-+    /**
-+     * struct hsmp_telemetry_table_rm_iod - I/O die counters for RM telemetry.
-+     *
-+     * Populated once per SMU telemetry sample.  Accumulator (*_acc) fields
-+     * are monotonic; consumers compute deltas across two snapshots and
-+     * normalise by accumulation_counter.  Per-rail limit fields report the
-+     * currently active limit in firmware-defined units.
-+     */
-+    struct hsmp_telemetry_table_rm_iod {
-+            __u32 accumulation_counter;
-+
-+            /* SET VOLTAGES */
-+            __u64 vddcr_set_voltage;
-+            __u64 vddcr_soc_set_voltage;
-+            __u64 vddcr_npu_set_voltage;
-+            __u64 vddcr_lp_set_voltage;
-+            __u64 vddcr_gfx_set_voltage;
-+            __u64 vdd_misc_set_voltage;
-+
-+            /* TELEMETRY VOLTAGES */
-+            __u64 vddcr_telemetry_voltage;
-+            __u64 vddcr_soc_telemetry_voltage;
-+            __u64 vddcr_npu_telemetry_voltage;
-+            __u64 vddcr_lp_telemetry_voltage;
-+            __u64 vddcr_gfx_telemetry_voltage;
-+            __u64 vdd_misc_telemetry_voltage;
-+
-+            /* TELEMETRY POWERS */
-+            __u64 vddcr_telemetry_power;
-+            __u64 vddcr_soc_telemetry_power;
-+            __u64 vddcr_npu_telemetry_power;
-+            __u64 vddcr_lp_telemetry_power;
-+            __u64 vddcr_gfx_telemetry_power;
-+            __u64 vdd_misc_telemetry_power;
-+
-+            /* THROTTLERS - FAST PPT */
-+            __u32 fppt_fused_limit;
-+            __u32 fppt_max_irm_limit;
-+            __u32 fppt_max_pbo_limit;
-+            __u32 fppt_limit;
-+            __u64 fppt_value_acc;
-+            __u32 fppt_residency_acc;
-+
-+            /* THROTTLERS - SLOW PPT */
-+            __u32 sppt_fused_limit;
-+            __u32 sppt_max_irm_limit;
-+            __u32 sppt_max_pbo_limit;
-+            __u32 sppt_limit;
-+            __u64 sppt_value_acc;
-+            __u32 sppt_residency_acc;
-+
-+            /* THROTTLERS - SPL */
-+            __u32 spl_fused_limit;
-+            __u32 spl_max_irm_limit;
-+            __u32 spl_max_pbo_limit;
-+            __u32 spl_limit;
-+            __u64 spl_value_acc;
-+            __u32 spl_residency_acc;
-+
-+            /* THROTTLERS - TDC VDDCR */
-+            __u32 tdc_vddcr_fused_limit;
-+            __u32 tdc_vddcr_max_irm_limit;
-+            __u32 tdc_vddcr_max_pbo_limit;
-+            __u32 tdc_vddcr_limit;
-+            __u64 tdc_vddcr_value_acc;
-+            __u32 tdc_vddcr_residency_acc;
-+
-+            /* THROTTLERS - TDC VDDCR SOC */
-+            __u32 tdc_vddcr_soc_fused_limit;
-+            __u32 tdc_vddcr_soc_max_irm_limit;
-+            __u32 tdc_vddcr_soc_max_pbo_limit;
-+            __u32 tdc_vddcr_soc_limit;
-+            __u64 tdc_vddcr_soc_value_acc;
-+            __u32 tdc_vddcr_soc_residency_acc;
-+
-+            /* THROTTLERS - TDC VDDCR NPU */
-+            __u32 tdc_vddcr_npu_fused_limit;
-+            __u32 tdc_vddcr_npu_max_irm_limit;
-+            __u32 tdc_vddcr_npu_max_pbo_limit;
-+            __u32 tdc_vddcr_npu_limit;
-+            __u64 tdc_vddcr_npu_value_acc;
-+            __u32 tdc_vddcr_npu_residency_acc;
-+
-+            /* THROTTLERS - TDC VDDCR LP */
-+            __u32 tdc_vddcr_lp_fused_limit;
-+            __u32 tdc_vddcr_lp_max_irm_limit;
-+            __u32 tdc_vddcr_lp_max_pbo_limit;
-+            __u32 tdc_vddcr_lp_limit;
-+            __u64 tdc_vddcr_lp_value_acc;
-+            __u32 tdc_vddcr_lp_residency_acc;
-+
-+            /* THROTTLERS - TDC VDDCR GFX */
-+            __u32 tdc_vddcr_gfx_fused_limit;
-+            __u32 tdc_vddcr_gfx_max_irm_limit;
-+            __u32 tdc_vddcr_gfx_max_pbo_limit;
-+            __u32 tdc_vddcr_gfx_limit;
-+            __u64 tdc_vddcr_gfx_value_acc;
-+            __u32 tdc_vddcr_gfx_residency_acc;
-+
-+            /* THROTTLERS - EDC VDDCR */
-+            __u32 edc_vddcr_fused_limit;
-+            __u32 edc_vddcr_max_irm_limit;
-+            __u32 edc_vddcr_max_pbo_limit;
-+            __u32 edc_vddcr_limit;
-+
-+            /* THROTTLERS - THERMAL */
-+            __u32 thm_fused_limit;
-+            __u32 thm_limit;
-+            __u64 thm_value_acc;
-+            __u32 thm_residency_acc;
-+            __u32 prochot_residency_acc;
-+            __u64 gfx_temp_acc;
-+            __u64 soc_temp_acc;
-+            __u32 p3t_fused_limit;
-+            __u64 p3t_value_acc;
-+
-+            /* POWER */
-+            __u64 system_power_acc;
-+            __u64 apu_power_acc;
-+            __u64 dgpu_power_acc;
-+            __u64 npu_power_acc;
-+
-+            /* FREQUENCIES */
-+            __u64 fclk_freq_eff_acc;
-+            __u64 memclk_freq_eff_acc;
-+            __u64 lclk_freq_eff_acc;
-+            __u64 gfxclk_freq_eff_acc;
-+            __u64 socclk_freq_eff_acc;
-+            __u64 vclk_freq_eff_acc;
-+            __u64 vpeclk_freq_eff_acc;
-+            __u64 aieclk_freq_eff_acc;
-+            __u64 npuhclk_freq_eff_acc;
-+
-+            /* BANDWIDTH */
-+            __u64 dram_read_bandwidth;
-+            __u64 dram_write_bandwidth;
-+
-+            /* ACTIVITY MONITORS */
-+            __u64 gfx_busy_acc;
-+            __u64 vcn_busy_acc;
-+            __u64 npu_busy_acc[HSMP_TELEMETRY_RM_NPU_BUSY_DOMAINS];
-+
-+            /* STT (Skin Temperature Tracking) */
-+            __u32 stt_min_limit;
-+            __u64 stt_apu_hot_spot_temp_acc;
-+            __u64 stt_hs2_hot_spot_temp_acc;
-+            __u32 stt_apu_temp_limit;
-+            __u64 stt_apu_skin_temp_acc;
-+
-+            /* RESIDENCIES - per-CCX CPU off */
-+            __u64 cpu_off_residency[HSMP_TELEMETRY_RM_MAX_CCX];
-+
-+            /* DF P-STATES */
-+            __u32 fclk_freq_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+            __u32 uclk_freq_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+            __u32 ddr_rate_table[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+            __u8  df_pstate_source[HSMP_TELEMETRY_RM_FREQ_TABLE_SIZE];
-+
-+            /* SYSTEM */
-+            __u8  gfx_disabled;
-+            __u8  spare2[3];
-+            __u32 gfxclk_fmax;
-+            __u8  cclk_core_fuse_enable[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u8  cclk_core_enabled[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u32 cclk_fmax[HSMP_TELEMETRY_RM_MAX_CCX][HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+
-+            /* OVERCLOCK CAPABLE */
-+            __u8  cpu_precise_and_direct_oc_capable;
-+            __u8  gfx_precise_and_direct_oc_capable;
-+            __u8  pbo_basic_oc_capable;
-+            __u8  pbo_advanced_oc_capable;
-+            __u8  pbo_nitro_oc_capable;
-+            __u8  memory_and_fabric_oc_capable;
-+            __u8  misc_oc_capable;
-+            __u8  extreme_cold_oc_capable;
-+            __u8  down_config_control_capable;
-+            __u8  spare0[3];
-+
-+            /* OVERCLOCK STATUS */
-+            __u32 fit_limit_scalar;
-+            __u8  ln2_enabled;
-+            __u8  cpu_precise_and_direct_oc_enabled;
-+            __u8  gfx_precise_and_direct_oc_enabled;
-+            __u8  spare1[2];
-+            __s8  psm_guardband[HSMP_TELEMETRY_RM_OC_DOMAINS]
-+                               [HSMP_TELEMETRY_RM_OC_SUBDOMAINS]
-+                               [HSMP_TELEMETRY_RM_OC_GUARDBANDS];
-+            __s32 core_power_limit_offset;
-+            __u32 max_freq_offset[HSMP_TELEMETRY_RM_OC_DOMAINS];
-+    };
-+
-+    /**
-+     * struct hsmp_telemetry_table_rm_ccx - Per-CCX core counters for RM telemetry.
-+     *
-+     * Each CCX exposes per-core monotonic counters for residency, frequency,
-+     * temperature and power.  Arrays are sized for the maximum cores per
-+     * CCX; entries past the actual enabled-core count are zero-padded by
-+     * the SMU.  Use the cclk_core_enabled[] mask in struct
-+     * hsmp_telemetry_table_rm_iod to determine which lanes are valid.
-+     */
-+    struct hsmp_telemetry_table_rm_ccx {
-+            __u64 core_c0[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u64 core_cc6[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u64 core_freq[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u64 core_freq_eff[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u64 core_temp[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+            __u64 core_power[HSMP_TELEMETRY_RM_CORES_PER_CCX];
-+    };
-+
-+    /**
-+     * struct hsmp_telemetry_table_rm - Top-level RM telemetry table.
-+     * @iod:      I/O die counters and per-rail/per-throttler/SYSTEM telemetry.
-+     * @ccx:      Per-CCX core counters, one entry per CCX.
-+     *
-+     * Returned by the SMU at the DRAM address obtained from
-+     * HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR after a successful
-+     * HSMP_CLIENT_GET_METRICS_TABLE request.  The on-wire layout is fixed
-+     * at the RM spec; future revisions will be exposed via a different
-+     * table version and a sibling struct.
-+     */
-+    struct hsmp_telemetry_table_rm {
-+            struct hsmp_telemetry_table_rm_iod iod;
-+            struct hsmp_telemetry_table_rm_ccx ccx[HSMP_TELEMETRY_RM_MAX_CCX];
-+    };
-+
- More details on the interface and message definitions can be found in chapter
- "7 Host System Management Port (HSMP)" of the respective family/model PPR
- eg: https://docs.amd.com/v/u/en-US/55898_B1_pub_0_50
+diff --git a/sound/hda/codecs/realtek/alc269.c b/sound/hda/codecs/realtek/alc269.c
+index f7877127e0e4..97ad23cc78b9 100644
+--- a/sound/hda/codecs/realtek/alc269.c
++++ b/sound/hda/codecs/realtek/alc269.c
+@@ -7577,6 +7577,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x8f42, "HP ZBook 8 G2a 14W", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8f57, "HP Trekker G7JC", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x103c, 0x8f62, "HP ZBook 8 G2a 16W", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED),
++	SND_PCI_QUIRK(0x103c, 0x8f7e, "HP Messi", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED),
+ 	SND_PCI_QUIRK(0x103c, 0x8f94, "HP ZBook 8 G2a 14", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED_INVERTED),
+ 	SND_PCI_QUIRK(0x103c, 0x8f95, "HP ZBook 8 G2a 16", ALC245_FIXUP_HP_TAS2781_I2C_MUTE_LED_INVERTED),
+ 	SND_PCI_QUIRK(0x1043, 0x1024, "ASUS Zephyrus G14 2025", ALC285_FIXUP_ASUS_GA403U_HEADSET_MIC),
 -- 
-2.34.1
+2.25.1
 
