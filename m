@@ -1,114 +1,112 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7872B370D5E
-	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 03:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37D835957
+	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785554006; cv=none; b=KKcYNIVQIeOdkmAQ+nSXopG+QI3pdd6NAismNhEoaM/2A3PQxE8kZlwFyxJqbmB5UveKZX+AM60onhrZDHiSbRpmv4E6aLmHOEe58tQd4fC1PhUaof6YWmb0E/lLuKanUDkq5zrhTuZzsswAaeeOLd/TF0ZUthjhQBcAvPhxO7E=
+	t=1785557160; cv=none; b=MpxHGN6SWgFYHEHhA/FtPL4MceH0Au0rvDqbj3HV8lz2Fazqpq+uLGwL0n8tssspBWUvZGKR0tHoNTW3p82rsPNllx2Wu1xMNQg4bZWxh7BEaf+IG1ufzbBy6ifnEH1P7MEaE0aZV+qVhdptsDSEkiBB8MXuPuKEJNpCbyZBMS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785554006; c=relaxed/simple;
-	bh=M/NbgXygmZlvsXYn7JhUqYNmLBcTfBFy6CdYk+FSEBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UKNpHK7p2FU8/8+STUlaPdYqUIWy5AanV9KG6cCL93Tw3m/ttgetbqc6n8uKyc3oQcmP/RqRVAfH9vqRLl8meeuxzs7Q4s7fEKDH3ODMotdg+nQ0+Q8GMHqmWOnUUAM3yaLGZ1hy6h0s1dUp4NSBSC6yBSmTfnsyAu2Lc6J98Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fawJ/OTC; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785557160; c=relaxed/simple;
+	bh=bo5GxqG2GmxLlb8qPYpkl1OXHJ+w7RPZKxQKT8FOF+E=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=n4X6L1IZ116EeAEJ/gIONVswMaeMoudiuzt4tZZ6pKfsUUL4TkL8xjA4nZaznJ/uElv8YbCRBSGj9d1Pf1jeeKKylb3ktg71WN0UkWt4qN50eBRZy26FVGfygJHVGx0Cl0OK6QC2lv4qeHPxX1w4U/fc1cbk5CK7dl1dFrkR2XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+yXB9YY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fawJ/OTC"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c2a76536bso15300751cf.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 31 Jul 2026 20:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785554004; x=1786158804; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3OFQi86wobJiii7OnOtEvTy6WOJzLS6xjh5R9rXpZtc=;
-        b=fawJ/OTCEqwj1b+9IreOCR+Eg2dKb1+wyflIumzePNtRi3G/tG3PCaXujRFKogzvTB
-         TQX1n22PjLKVe1kXIttkQq9ixIBGZpamZgvtkx0u3b7tQBy9BDdjrVZGP7nzMjrpISCm
-         ZNk9uEOt+W9863tZ+VvU9sf20hrYQebuchvuc2fxLyIZfamqu5nw4YMFmAXJPi8SqHZL
-         7xquiDuNUvixhtaNvcvRvPQ6AQ9lAxfpXbTJ6CMwE1kJVKSRapT5cB+4KbzsaYTrlntS
-         XYinKqnphIiu7ei9fKCX7X8HC1fw9rEhpejG4zpbFx3ov5nC5UD/3voCPrbrcH4to4+6
-         Ck6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785554004; x=1786158804;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=3OFQi86wobJiii7OnOtEvTy6WOJzLS6xjh5R9rXpZtc=;
-        b=MLC+LoX5KajK6BPseAIEVfZs+CrdS8OIiTYOLSHHnaY5a+YONx8j63mLr/p3f2WLrd
-         WR/b+EVG1YARe+8D+W5BY3m/huRxBx0/XtiO662ehgxJHfhtWVRmuqzVH0EeNKRbptD4
-         rCEHAFwtPqkKfrIFZ7YD1rIi6O8vODvq6/ZCsCFZn9oxbt679wJK3koyP6GNKDK0XVVT
-         6Sg9FQ27ZlpRDg9tSg8plFXsUUSePmojNM/BUtw7kaAoYLXYQSvMljhbDTzzc8JWWHdQ
-         w/Tbu94wdjxrARnqBA6NszI3ylvw6HvWbxg6iSTHChMyj5xeqT7w6Fw2DIWmV+VBM3P5
-         KJdg==
-X-Gm-Message-State: AOJu0Yz2IlGi4Hb3rUC/Dr8s9/+tHhAxYohKmMviR3jZrjF1Ce//d6J7
-	pM4ZxmVbsR8HzFqOOWMGtGAnHnzzjgAFyNkkP6vCiJzSd8FhrBAOvwZsUtQpaNhIujo=
-X-Gm-Gg: AR+sD12q6hwAbR+a80y5UI8d746DOQTtG5kwlxK5HKoy2lJK7H/W2koHVqZfseMkOdR
-	wFnk/LazcGdzFnNNnYgCpqwm7Q8U/X/fH18j2kaWWqEyKVMEz3p+D64St0rGVX/0aeArRzUqv5Y
-	+46v+pVaTjVeWjiqlU9UuszOQOrUS7xMVFKzHD0fV1IBoOd/3HO6Qg41frbhE3LOm5nQ1ddgqWX
-	nq7s5cBuejGMCgsdzIaKNtctkqRRAEqodQAhsxHuoujYMKAkSNkzNb5THXRldyTiwWk31zQEhOO
-	LH06iTX074yvl4oObu0RPNJk5uSPGI1vAfgtiuB1TcfTnwnv8jPTbVDXnCEGOYgA2w35xbXQy8w
-	qoK6enPEJ6RyBORRy++vZB9DpYnak2RQt3np53FosLfex330S9IWSg/vqjA/LTxZ+joAWoJI0FV
-	jE+k91So3oKb8zDt+Bvm1wrEaeQvv+1oyQRGFE/lL3HA/7EJJIIvbMCObKOfS0mfZjaQgxPBi4/
-	/V/YJlfX8ZKqdBU8NyRT1GUpBmZdp/jKXD0+d5/Ylw9edOy
-X-Received: by 2002:ac8:58cb:0:b0:51c:88b:d7e3 with SMTP id d75a77b69052e-52b5666b75emr44233251cf.3.1785554004223;
-        Fri, 31 Jul 2026 20:13:24 -0700 (PDT)
-Received: from [192.168.60.12] ([207.115.103.98])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-908436072d7sm24632176d6.49.2026.07.31.20.13.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2026 20:13:23 -0700 (PDT)
-Message-ID: <4ac9ffe4-0f14-45d7-9a62-7a5fe7c40bf3@gmail.com>
-Date: Sat, 1 Aug 2026 11:13:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+yXB9YY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6B378C2BCF6
+	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1785557160;
+	bh=bo5GxqG2GmxLlb8qPYpkl1OXHJ+w7RPZKxQKT8FOF+E=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=l+yXB9YY/2Tq0pRHglvTsYLhD8PSz86POAEYYGsWwbfezNQGl/AfbUrmh22ZZWF0n
+	 cJmLFX6h8KCqc4uk0O3eyuNJUFxsGep1KJldMni1d53A6SrS0HAd+DTbA9WJaPfHU0
+	 xSGqQdrCZSo7MYSWUchtn5DhyvdCWwoEwB3h0TTvm/mjLI3nlEJmVojJquTYus5jB0
+	 ZOMe+EeqnstS4CZv78k2eCA8C3/Wo4smfvUWTpkDTHvLLDfe80xEGzljvhhYvFiG42
+	 e+vHDDd7HiIQznSf89vmvDqu/KlEb8EEbgo3L5APkR5SD60MxZxtL3dLDq0UL6WI9l
+	 /frdx+lmfhTBQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 43C2BC433E1; Sat,  1 Aug 2026 04:06:00 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221789] [BUG] Prestige 16 Flip AI+ C3MTG Panther Lake - Tablet
+ Mode Switch SW_TABLET_MODE) Not Detected
+Date: Sat, 01 Aug 2026 04:06:00 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: workspace0001@outlook.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: TAINTED_KERNEL
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status resolution
+Message-ID: <bug-221789-215701-QTI0wpuujY@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-221789-215701@https.bugzilla.kernel.org/>
+References: <bug-221789-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v8] platform/x86: panasonic-laptop: add fan speed mode
- for newer models
-To: platform-driver-x86@vger.kernel.org
-Cc: Kenneth Chan <kenneth.t.chan@gmail.com>, Hans de Goede
- <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260729044332.382862-1-alexyeo362@gmail.com>
-Content-Language: en-US
-From: Alex Yeo <alexyeo362@gmail.com>
-In-Reply-To: <20260729044332.382862-1-alexyeo362@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hello everyone,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221789
 
-Please disregard this patch.
+work (workspace0001@outlook.com) changed:
 
-What I have found is not just a fan control method, but a set of methods 
-to control active and passive cooling policies for the cooling device + 
-a way to cap processor power and unlock it.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |RESOLVED
+         Resolution|---                         |TAINTED_KERNEL
 
-The reverse engineering notes are still relevant, but I had clearly 
-missed the part where the fan code is in proximity to the code that 
-toggles the power limit.
+--- Comment #1 from work (workspace0001@outlook.com) ---
+the issue is resolved it was the ISH server bundled with fedora that had is=
+sues
+so I downloaded and replaced it. Bellow are the steps i used to resolve the
+issue
 
-Given this, I no longer think this belongs in thermal or hwmon. 
-platform_profile appears to be the appropriate fit, although I will 
-continue investigating.
 
-Apologies for the confusion. I will redo the patch with further testing 
-and data.
 
-If I do move forward with this approach, I plan to submit this as a 
-completely new patch instead since the current subject "add fan speed 
-mode for newer models" no longer applies.
+# 1. Navigate to the 2622 firmware directory
+cd
+ISH/ISH_Kit_5.8.1.7779v2_14T2_2622/Drivers/Win10/IshHeci/2622/x64/FWImage/0=
+004/
 
-Thank you,
-Alex
+# 2. Compress the file into the XZ format required by Fedora
+xz --check=3Dcrc32 -c ishS_SI_5.8.1.7779.bin > ish_ptl.bin.xz  #must use th=
+is
+flag for kernel to recognise
+
+# 3. Back up the default, non-working stock file
+sudo mv /usr/lib/firmware/intel/ish/ish_ptl.bin.xz
+/usr/lib/firmware/intel/ish/ish_ptl.bin.xz.bak
+
+# 4. Copy the new firmware to the system directory and fix permissions
+sudo cp ish_ptl.bin.xz /usr/lib/firmware/intel/ish/
+sudo chmod 644 /usr/lib/firmware/intel/ish/ish_ptl.bin.xz
+
+# 5. Tell the Intel HID driver to listen to the 360-degree folding state
+echo "options intel_hid enable_sw_tablet_mode=3D1" | sudo tee
+/etc/modprobe.d/intel-hid-tablet.conf
+
+# 6. Rebuild the system's boot image cache and restart
+sudo dracut --force
+sudo reboot
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
