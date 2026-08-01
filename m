@@ -1,67 +1,41 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853C53911AF
-	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 14:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E243876BB
+	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 14:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785595560; cv=none; b=dQCv57+xDIrLz5tJLoUrR6qXCE73iGAGrdO6w8bWnECp9QsbAXwnIvg15jS9bShJutFOuRxvLY0pb++AIfA32oD6rCVG10depRNOHvfJWbWHS5LFTbv+n5ahK8e4hqv60jwaxdT0jm9plM7QZ+wtdTLnMyjfuNxHEIguhayOst8=
+	t=1785595931; cv=none; b=GpYwbQ/DQL1v1aAwg484nnJZYL9Xzf/ZlMzrE9htAuB3dt4fQp+sHgBb1O1VXUTD8y0CgLzokAGS1AGUkjvboT5zwlZRGzquSB+b51gkpcSo4exd1b2x5wWiiqcqRQBxGIkR1LVnERYrVjOaHoeu/KFODWQrLxbDA6CQyWnzqo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785595560; c=relaxed/simple;
-	bh=KQOed2pypt6Ma/meVK6i5cx6qB9B0YpNenFSdwTXauE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OC6RmwV/aCjzy2XPNLpgxL9Z1zepjU7Xg/Uslg9wicFis93hSn+DGEuewaTzogxlsOcj3mFxje7D2YfkH69cBIBhXRJukZkgTi2slEZJc1+m4DULivX9bk55vm5J9lz8G5tKwU1uohbuqhIbkM8zAZCWeyQue+I9eaQgyC8aKWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca; spf=pass smtp.mailfrom=ethicsbowl.ca; dkim=fail (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b=HxLyMeVq reason="key not found in DNS"; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethicsbowl.ca
+	s=arc-20240116; t=1785595931; c=relaxed/simple;
+	bh=31IojYQh/X/NzQSQI129BdI3zF6NZUXMjsvJa7wSvgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfeyNzpHQBRWydPJl3cONCe8kEXMifY7599F4SxnmeBv/0vCcY2llzo/8fHPr1VFePIYiPIg2ghplVTC+CHdHAa4iWCHilwdvjfkQGwXINwx4lqf2VZIICDLN+VvW1dbmVRpY/HLSLAu2wdea0RtT2hjJH5AugHSFSpe1IiCb7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=MDFHqCEP; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b="HxLyMeVq"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-84874b52eabso2781622b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 01 Aug 2026 07:45:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ethicsbowl.ca; s=google; t=1785595558; x=1786200358; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
-        b=HxLyMeVqGACqscfB4UO9ldH4YUq1k/L5iHCBGK6vK4amcPdziGyQrGzCGzkF7ZP9a9
-         B/WGg5+7gR5eczn1PwN1hFbms8O59BhsnNvKNAdcVWxKuRX7Iz2FqNrnTHu17jybXB9H
-         EQ0nf6xKgoky3F8XFFiWVnPfhpLfro5p6+vTWLGVIGxAUaH01TvWF1IlJ/cCdD+aYgGx
-         Y6UVZYDeFxnplYh+ZQZ0KTkuKCLqulm20+mOWOK+8Kn45+uB/tZYQHdZglFnp76j2mQ+
-         j/ypOvatbUQUw6+WWHbOx+Pc8oanMUCy6VoxTSuL3uMd2mPf97LZ0Xy9D6sb9Y38Ah0x
-         6fCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785595558; x=1786200358;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :references:cc:to:subject:from:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
-        b=XKa1gFmyRfA8XZohGz9vNIfQ4aDzyqR3US+U7xgXr+ESYmU1v8+f7y4nG7y00jYS6a
-         BmXpzkidMvkNewpty30oi90Guo55lSrH90oUmbP5lnx0IaxrK31F2QUWTj8VFZnWtnz+
-         gT3jTIY+DF8Tjuv4XJmji1pz6t5PzMWGVy2s2PKYww9LeM89lP8hxCtSE/jrpDgtWKAP
-         bGxOPY/AaKA8GyX2CR/eNbyyrl1g6R/REOdsi+lrSBnYq9J1w82wTKxUX2UeWH6s9f3p
-         NdCTOeSvSlYJjtnqD9EY2rbe/fEdW64rJ1MWEnaepCWHLAso57Iqrmvo52qUIt0avyrf
-         ZpMw==
-X-Forwarded-Encrypted: i=1; AHgh+RqcqgKcpGsD+dSD7tPVA2z2X74RMv8zE9IRbaMKcxY/W6nYsrKA+wEddTzLo0+8tGFvCn5IJWsvRo7xhVFFnmo3Xw2v@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1kUVIXiRaegtOLDAPE/izkCx6Q+r0SUg+upWk5lU2mcTDE6SV
-	01+9XBBQs1HqFPoo6UAYqz6qYxTx9LYFQJBu2lJDZLglQkzaQgW3u6k9kZn/M1tyo/I=
-X-Gm-Gg: AR+sD10eT/5FmQKWeUP013oPtMXZAf9XM6cqw0sTeKYomKQ3K5I9ZnHL+QerZZberPB
-	/hyzFJG3bK1zrfgR0PTMP8NpnCVKh7fLmD28oHWbbVQfeCd5H2dqaMwSupfTr2xTwKsn2MsVwVE
-	8Ru3CYOKu0nx5y8HWmn7+X4fwynuoLASVs6JyyZXhBYpRV5pX8WtypD0tXBssP51B1HQq8sEQKa
-	BTbAVxxvi1jswsgp7P62XLzrY6/PooApMkVn+t3j2cm0B9G7tfocxJ4bfa/Y0GlkK3iGelbiFSR
-	6/76ctUr8MWXEeD9yVvuxexDb3T8/PGxxK8PtP3Ohmge4j3rDCiO5JFrRjkQFWYNBpoKPBAOGWY
-	ScGLIVPkTjyyQI8xuiCtHPGGHEND9Dq0mOKz6MpO0ID9fsASU+wDYws+DeI86X6WgpLNRUhtlZS
-	YieVb3LD0RZSiI5cgH5n2eNQ/vWg8iAzRaznaioupJ3GcsSjG8ly2isNqD76utbxC9h71jyzK8A
-	g==
-X-Received: by 2002:a05:6a00:4146:b0:845:44c7:5e28 with SMTP id d2e1a72fcca58-84ee4834c90mr3325978b3a.31.1785595557756;
-        Sat, 01 Aug 2026 07:45:57 -0700 (PDT)
-Received: from [192.168.1.90] ([64.180.107.235])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe39e9f22fsm1739760a12.22.2026.08.01.07.45.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Aug 2026 07:45:56 -0700 (PDT)
-Message-ID: <977f3650-326d-4df9-843c-5e12194afc1f@ethicsbowl.ca>
-Date: Sat, 1 Aug 2026 07:44:52 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="MDFHqCEP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1785595925; x=1786200725; i=w_armin@gmx.de;
+	bh=31IojYQh/X/NzQSQI129BdI3zF6NZUXMjsvJa7wSvgU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=MDFHqCEPI8RIwImUPtn2avihMMgbDrBkGBUYFbWMCWojlcDdGia1cb2gplC+b3rm
+	 /RclLYgL/VFREvnMByHFZ8+oY+kGagzSoYxHaH6+64lSVP+Ji7raPhbtGZKaz5LUD
+	 Jw7jXro32WuM8Uw4omjKLCUGciCsIFF73q6M2lz8Kmb7CkMfFSmYS6kP2iUhfaZ6I
+	 GTgFNfhcCpcPkB5wkokwcNsmmPkJ2OH9V+/b6C+SQkSYk3sCMoNNRRkVp9IAp4QAg
+	 TO0uRBC7M70vwGdtIKfi468v33Lc6BKvSUcX73dQlLZscmYv70IIda6fW7WgFMXY+
+	 LputWmKeKFTjZFNywQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MuDc7-1x4xIW05Vt-013Rpn; Sat, 01
+ Aug 2026 16:52:05 +0200
+Message-ID: <6284ec25-cdf8-4e40-9a5e-0906d4ed1222@gmx.de>
+Date: Sat, 1 Aug 2026 16:52:03 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,59 +43,131 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Robert Munro <robert.munro@ethicsbowl.ca>
-Subject: Re: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted but
- profile remains balanced on Redmi Book Pro 14 2022
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Gladyshev Ilya <foxido@foxido.dev>, platform-driver-x86@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- regressions@lists.linux.dev, Mingyou Chen <qby140326@gmail.com>
-References: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
- <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
- <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
+Subject: Re: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the
+ modern API
+To: yahia ahmed <yahia.a.abdrabou@gmail.com>, ilpo.jarvinen@linux.intel.com,
+ Jorge Lopez <jorge.lopez2@hp.com>
+Cc: platform-driver-x86@vger.kernel.org
+References: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
+ <20260801142025.15515-1-yahia.a.abdrabou@gmail.com>
 Content-Language: en-US
-In-Reply-To: <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260801142025.15515-1-yahia.a.abdrabou@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:gdfcuR5OJgz5LYoXc/DWA/IYQJAhU4Q9ORFAWBBhgk4XPgZ3meZ
+ LEm0c6O1ejXbLcVqNdjdmxhNsvAMg9bi9sAEkvrA6DhyMlXPwuCmj5OQw5leXyVBNMna9HK
+ glfYBPoPu5smUvM/KkIFIhFunrCZMJTNzXub3dedTHBSiQTDDqzVa1/Ajt7/Ca0Uyvxs+uE
+ 54aJv8eLWASrx3RdNhMcA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:eFJxTitvdRg=;R4iJrOoTIrpiTFI26QhX4SPrFoy
+ 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
 
-On 2026-07-21, Thorsten Leemhuis wrote:
-> Side note: Robert, have you tried if latest 7.2-rc works any better?
+Am 01.08.26 um 16:20 schrieb yahia ahmed:
 
-No. I have now reproduced the same failure on:
+> Hi,
+>
+> Currently hp_bioscfg and hp_wmi will both collide to register in the
+> 5FB7F034-2C63-45E9-BE91-3D44E2C707E4 GUID, so if we modernize to use
+> the wmi interface we will lock one of the drivers out, So how should
+> we optimally handle them?
+>
+> Best regards,
+> yahia
 
-     Kernel: 7.2.0-rc5-1-cachyos-rc
-     bitland_mifs_wmi srcversion: 9A432DB17D1453AA4DD476C
-     power-profiles-daemon: 0.30-3
-     kernel taint: 0
+Oh no :/
 
-Starting from balanced:
+I suggest that you use the component framework to register a component inside the hp-wmi driver
+when probing a WMI device. The hp-bioscfg driver can then register a component master to bind
+to this component. During binding the WMI device handled by the hp-wmi driver can be shared
+with the hp-bioscfg driver, so both can use it.
 
-     $ powerprofilesctl set power-saver
-     $ echo $?
-     0
-     $ powerprofilesctl get
-     balanced
-     $ cat /sys/firmware/acpi/platform_profile
-     balanced
-     $ cat 
-/sys/devices/system/cpu/cpufreq/policy0/energy_performance_preference
-     balance_power
+This however might turn out to be a bit complicated, do you have a device where you can test
+both drivers? If no, then i suggest that you focus on removing all usage of wmi_install_notify_handler()
+from the hp-wmi driver instead. This does not require that you convert the whole driver to the
+new bus-based API.
 
-I polled platform_profile every 20 ms around the request, which took
-249 ms, and only observed "balanced"; it never transiently reported
-"low-power". All CPU policies reported "balance_power". No relevant
-kernel or power-profiles-daemon messages appeared.
+Thanks,
+Armin Wolf
 
-Unlike my 7.1.3 report, the EPP is now "balance_power" rather than
-"balance_performance", so the CPU-side behaviour is different. However,
-7.2-rc5 does not fix the platform-profile part of the regression: the
-request still returns success while platform_profile remains "balanced".
-
-I asked the sol-max agent what the standard way to report this issue was 
-and this mailing-list format is what it insisted I use. My apologies for 
-that.
-
-
-Regards,
-Robert Munro
