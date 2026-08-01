@@ -1,87 +1,127 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EC428688C
-	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 14:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853C53911AF
+	for <platform-driver-x86@vger.kernel.org>; Sat,  1 Aug 2026 14:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785594030; cv=none; b=mxDJEZrsqeI+7PZi2HXW5kXqR4j2rHStDW3jtDBEhDRj4/64cKEY9ebAl91cuRbnrp9Rj4yvNbPmX04TiMipKWwgCo4wr54tERkqwOAYXYthmqembnJe+NK1VaCa/qjk/PP3HyaNu5xczt6JutgGv3MC/BCWkNBBJFA/xBnPxxA=
+	t=1785595560; cv=none; b=dQCv57+xDIrLz5tJLoUrR6qXCE73iGAGrdO6w8bWnECp9QsbAXwnIvg15jS9bShJutFOuRxvLY0pb++AIfA32oD6rCVG10depRNOHvfJWbWHS5LFTbv+n5ahK8e4hqv60jwaxdT0jm9plM7QZ+wtdTLnMyjfuNxHEIguhayOst8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785594030; c=relaxed/simple;
-	bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z8QwkJ1uuUHI35iUrpSktyi28AfDUNH9X24hkAVEYgf7rMmZhNW2gCsOqdVNMmDWKtjnerLG9NJfYxEuMGXZObxYVRl8y1h2RSIyTsdS6oECCH3WCwprKVOGUadPWmb10l/0K0eAutkLHCHBwCKdouNLUhnI87ewigJvEa7sVOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PUyMqAb+; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785595560; c=relaxed/simple;
+	bh=KQOed2pypt6Ma/meVK6i5cx6qB9B0YpNenFSdwTXauE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OC6RmwV/aCjzy2XPNLpgxL9Z1zepjU7Xg/Uslg9wicFis93hSn+DGEuewaTzogxlsOcj3mFxje7D2YfkH69cBIBhXRJukZkgTi2slEZJc1+m4DULivX9bk55vm5J9lz8G5tKwU1uohbuqhIbkM8zAZCWeyQue+I9eaQgyC8aKWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca; spf=pass smtp.mailfrom=ethicsbowl.ca; dkim=fail (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b=HxLyMeVq reason="key not found in DNS"; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethicsbowl.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUyMqAb+"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-476a130c138so2338953f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 01 Aug 2026 07:20:29 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b="HxLyMeVq"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-84874b52eabso2781622b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 01 Aug 2026 07:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785594027; x=1786198827; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
-        b=PUyMqAb+7HyrdWCf8Sv9infqEDJ32MieAAo6Enm79bIeCLcytxSNhukV0fuShojBpB
-         uBNfWOdbljVd0cjzizCqPSjezm6vdCDhe0iFrkhOTIS8OAJSyBli5W4FM57I9w6ba7SK
-         hNYJHq5NwPYZlINWHD8NMttgGhOAXXE2MbX5d7vK17BgPtfEO7FQS9utH6/Mi+dQsDyn
-         s1nLJ20niw0WqT/W2gPMK8BKphwS8Sg7UoOoVq1Egz6z4w0evGOenj6pfrlnWs6Jy7CZ
-         fKsGbLmz5Je2ro1b+VTl7TUxD0+WZ/rqpHN+z21sqKlUTJuURza8bCgwGXw/c+X2Euif
-         VS1Q==
+        d=ethicsbowl.ca; s=google; t=1785595558; x=1786200358; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
+        b=HxLyMeVqGACqscfB4UO9ldH4YUq1k/L5iHCBGK6vK4amcPdziGyQrGzCGzkF7ZP9a9
+         B/WGg5+7gR5eczn1PwN1hFbms8O59BhsnNvKNAdcVWxKuRX7Iz2FqNrnTHu17jybXB9H
+         EQ0nf6xKgoky3F8XFFiWVnPfhpLfro5p6+vTWLGVIGxAUaH01TvWF1IlJ/cCdD+aYgGx
+         Y6UVZYDeFxnplYh+ZQZ0KTkuKCLqulm20+mOWOK+8Kn45+uB/tZYQHdZglFnp76j2mQ+
+         j/ypOvatbUQUw6+WWHbOx+Pc8oanMUCy6VoxTSuL3uMd2mPf97LZ0Xy9D6sb9Y38Ah0x
+         6fCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785594027; x=1786198827;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Ndz2aZDvn0okQg8nupjAf2Jth6vrHHqdLpqVsULKnNM=;
-        b=oULbpgy5S0vZHZM1FbnHGssq5ljGo3/4/3374+ORh1puJ0hHIm9fQcoetLmmegtght
-         yAyKZyIyq61R+D6dijKhnkzicKUQ85Y8P6oLbM6AXY2smx8vhLaONbZtO3h7E7l4pkXT
-         NyX4MDLdTK7SqA7qS7MM65woiM3+cVCghPLoP5trOrUfq00P1iri5D3h2Seay4W/kGGi
-         QSjoj+wNXmPQE7AgaFDQi1aori8+e8AgmzsLUyxAHvORwhihIqbDCww4XbEWarioxxkw
-         nSzHSxUJdYCPKC/ZdCiGxmFtYKgohXxZjcNfFZtZvH+gSZ64ZrJjiiNCVsRv5degKIuj
-         oQsA==
-X-Gm-Message-State: AOJu0YyZK8c3rN4ASW455j+FcpL7kPYX46JK/u0XQPsKLsr389DcK3lr
-	C4qqWCVzmLaMkoxnZnZfVj7Tj8lgIarDWOA6f2+DFRS8uVW/L6LMIHCU
-X-Gm-Gg: AR+sD1201/oHwyt5alf0MOg3XeJ7Q6BAXLBdnJZnYrvWFZq/aGzX7F8U8aIKCqoA+r9
-	qG4P1GNXbL8LqbJ9VyjbVI/rth17aKEObtg2nvJZH86iQ8z1eRW+sR7cFqE+lOptgCCCSmjdxBI
-	dTyprhHI+GfMaV8IaBx1tQWN1dIDJEp24uuKzkx6wxDWa3M904U/Ic62CGn4a8gFUeBDcl5qeul
-	pqYU59X9otNdJHPQ8zEpOtUGrXwvGRTqgI62GdcBlOI+twzbHaAeJSHQS+1A2dHmEno+zOkCw+K
-	mdzLXLJ+yXLjpYAJo1LUlQGSyc+gfELYyrvR/j4GFft486vXmYmYyGQV4rP9jYXlk0nY1BLKrAE
-	A7FRoQiAfZjju6wTKk+4sneNAD8rL1ipfwH1SGmJDIjm01jGXEQHrQhjUvuT0VDJlU5NwJ9+21K
-	gH4KySWtTHZmkhimb8ALaJaQIWviePomCFRYGM+TcTry/A0xbUohq2V9w3GfAyTm3VCCTHkdDlW
-	FNTSdR7PBbnK1Xsqw1tkyrvzCs9mg0v9GRfMPmNBkUorzFHX3l0FgzeGfZidzsV8oJMOl4H
-X-Received: by 2002:a05:6000:4701:b0:47f:93b6:8d05 with SMTP id ffacd0b85a97d-47fd724e8d9mr8844025f8f.0.1785594027448;
-        Sat, 01 Aug 2026 07:20:27 -0700 (PDT)
-Received: from fedora.cable.virginm.net (cpc89770-stok19-2-0-cust13393.1-4.cable.virginm.net. [86.23.116.82])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd45a1240sm15247471f8f.36.2026.08.01.07.20.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2026 07:20:27 -0700 (PDT)
-From: yahia ahmed <yahia.a.abdrabou@gmail.com>
-To: W_Armin@gmx.de,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] hp-wmi: Modernize hp_wmi_perform_query() to use the modern API
-Date: Sat,  1 Aug 2026 15:20:25 +0100
-Message-ID: <20260801142025.15515-1-yahia.a.abdrabou@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
-References: <eca5ecb2-7306-4dc6-bda1-faa35220b79b@gmx.de>
+        d=1e100.net; s=20251104; t=1785595558; x=1786200358;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
+        b=XKa1gFmyRfA8XZohGz9vNIfQ4aDzyqR3US+U7xgXr+ESYmU1v8+f7y4nG7y00jYS6a
+         BmXpzkidMvkNewpty30oi90Guo55lSrH90oUmbP5lnx0IaxrK31F2QUWTj8VFZnWtnz+
+         gT3jTIY+DF8Tjuv4XJmji1pz6t5PzMWGVy2s2PKYww9LeM89lP8hxCtSE/jrpDgtWKAP
+         bGxOPY/AaKA8GyX2CR/eNbyyrl1g6R/REOdsi+lrSBnYq9J1w82wTKxUX2UeWH6s9f3p
+         NdCTOeSvSlYJjtnqD9EY2rbe/fEdW64rJ1MWEnaepCWHLAso57Iqrmvo52qUIt0avyrf
+         ZpMw==
+X-Forwarded-Encrypted: i=1; AHgh+RqcqgKcpGsD+dSD7tPVA2z2X74RMv8zE9IRbaMKcxY/W6nYsrKA+wEddTzLo0+8tGFvCn5IJWsvRo7xhVFFnmo3Xw2v@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1kUVIXiRaegtOLDAPE/izkCx6Q+r0SUg+upWk5lU2mcTDE6SV
+	01+9XBBQs1HqFPoo6UAYqz6qYxTx9LYFQJBu2lJDZLglQkzaQgW3u6k9kZn/M1tyo/I=
+X-Gm-Gg: AR+sD10eT/5FmQKWeUP013oPtMXZAf9XM6cqw0sTeKYomKQ3K5I9ZnHL+QerZZberPB
+	/hyzFJG3bK1zrfgR0PTMP8NpnCVKh7fLmD28oHWbbVQfeCd5H2dqaMwSupfTr2xTwKsn2MsVwVE
+	8Ru3CYOKu0nx5y8HWmn7+X4fwynuoLASVs6JyyZXhBYpRV5pX8WtypD0tXBssP51B1HQq8sEQKa
+	BTbAVxxvi1jswsgp7P62XLzrY6/PooApMkVn+t3j2cm0B9G7tfocxJ4bfa/Y0GlkK3iGelbiFSR
+	6/76ctUr8MWXEeD9yVvuxexDb3T8/PGxxK8PtP3Ohmge4j3rDCiO5JFrRjkQFWYNBpoKPBAOGWY
+	ScGLIVPkTjyyQI8xuiCtHPGGHEND9Dq0mOKz6MpO0ID9fsASU+wDYws+DeI86X6WgpLNRUhtlZS
+	YieVb3LD0RZSiI5cgH5n2eNQ/vWg8iAzRaznaioupJ3GcsSjG8ly2isNqD76utbxC9h71jyzK8A
+	g==
+X-Received: by 2002:a05:6a00:4146:b0:845:44c7:5e28 with SMTP id d2e1a72fcca58-84ee4834c90mr3325978b3a.31.1785595557756;
+        Sat, 01 Aug 2026 07:45:57 -0700 (PDT)
+Received: from [192.168.1.90] ([64.180.107.235])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe39e9f22fsm1739760a12.22.2026.08.01.07.45.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Aug 2026 07:45:56 -0700 (PDT)
+Message-ID: <977f3650-326d-4df9-843c-5e12194afc1f@ethicsbowl.ca>
+Date: Sat, 1 Aug 2026 07:44:52 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Robert Munro <robert.munro@ethicsbowl.ca>
+Subject: Re: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted but
+ profile remains balanced on Redmi Book Pro 14 2022
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Gladyshev Ilya <foxido@foxido.dev>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ regressions@lists.linux.dev, Mingyou Chen <qby140326@gmail.com>
+References: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
+ <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
+ <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
+Content-Language: en-US
+In-Reply-To: <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2026-07-21, Thorsten Leemhuis wrote:
+> Side note: Robert, have you tried if latest 7.2-rc works any better?
 
-Currently hp_bioscfg and hp_wmi will both collide to register in the
-5FB7F034-2C63-45E9-BE91-3D44E2C707E4 GUID, so if we modernize to use
-the wmi interface we will lock one of the drivers out, So how should
-we optimally handle them?
+No. I have now reproduced the same failure on:
 
-Best regards,
-yahia
+     Kernel: 7.2.0-rc5-1-cachyos-rc
+     bitland_mifs_wmi srcversion: 9A432DB17D1453AA4DD476C
+     power-profiles-daemon: 0.30-3
+     kernel taint: 0
+
+Starting from balanced:
+
+     $ powerprofilesctl set power-saver
+     $ echo $?
+     0
+     $ powerprofilesctl get
+     balanced
+     $ cat /sys/firmware/acpi/platform_profile
+     balanced
+     $ cat 
+/sys/devices/system/cpu/cpufreq/policy0/energy_performance_preference
+     balance_power
+
+I polled platform_profile every 20 ms around the request, which took
+249 ms, and only observed "balanced"; it never transiently reported
+"low-power". All CPU policies reported "balance_power". No relevant
+kernel or power-profiles-daemon messages appeared.
+
+Unlike my 7.1.3 report, the EPP is now "balance_power" rather than
+"balance_performance", so the CPU-side behaviour is different. However,
+7.2-rc5 does not fix the platform-profile part of the regression: the
+request still returns success while platform_profile remains "balanced".
+
+I asked the sol-max agent what the standard way to report this issue was 
+and this mailing-list format is what it insisted I use. My apologies for 
+that.
+
+
+Regards,
+Robert Munro
