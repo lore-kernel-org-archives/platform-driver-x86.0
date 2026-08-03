@@ -1,115 +1,164 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A50B4137BA
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 14:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E4F358378;
+	Mon,  3 Aug 2026 16:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785767514; cv=none; b=cCYVExzAib976tnoAZ82DCSm1RrWyHLzvncQ/gVq2g8wCfLnIqPIOjF7ejYZtCKmMuEAHcwm1TUe3Dw8be5XwBG+LeTiUZRJt//RrDyES/95YGdVtJjv/23TpKfaySxkxxvwmocn5wnB3ZA7EW50BOk1+4y8oPvYxIjQvaOLWBA=
+	t=1785775383; cv=none; b=DfeJCrMktfWkKhydZKpT4p1+EgoKvWI8pu3tv2SbivYv1ehDQU+qg99qGkAoS4lJx+ukxwgwBGgn0SYXV/eaBfUp0efEY/weTcsJ9d+15+ifDKWKBf6SHpxPKx8bn/BGz1V9rJVyxoeYsO0G+tD10eLNTFSFlfOaf5TdqhG9sHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785767514; c=relaxed/simple;
-	bh=mbTl1m4q/B0mmfJqUSHx3puQD1k3DIBxLZfuWKkL4MA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LLyeFPIkxjWjudbgB6Q84HCqYonkmRZvAnwmjx7EEqB5Lwy74OryulAbzJ4JY2d7jgOCRaqofbYdLvskPHaRaOeo8ZWpF4ss5WlFiXerJIxLcJPA6/DiSUedx3id301mEfzyDfAyP/D0nf8rb0J1JPVvRZEFLnNKjNLzR2UmWpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RdjfZmRm; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785775383; c=relaxed/simple;
+	bh=3NDkwT9awZYfvoORE0bau45fdFFCeYi5IA5RKptQ3NE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=a4pLHPA4kpI67Z8MmJZuEo7UenstQGXbg945Npwr8svLBHOHqmMiuMqxV7fCIIVwrgjBM2pGaJB1XcFSktj1hwYlaDZQq+2mTwxS42c9eWe7olMBRSJLU9Y2WEFSov5GfQfCvCOPWZiI+H3DLSheT0dUAvNJcHot0lit3cjINeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DAJQT1+u; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RdjfZmRm"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-490cf322ed0so11959315e9.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 07:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785767511; x=1786372311; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=zNxBi0gHfRrbC33pAvz30lhxp0rXTHoZRpmh1XXR2eM=;
-        b=RdjfZmRmmBhZ9tsnpwBd6w8YUwgsN8ToL5Q9opJKUCBxXA14Hu6m+UtOzkiE7Tv2zn
-         v/PyYdmFxQJMc9W2vwaNc91DVbscaQvpELa7M4aPxKINXZJ3R1FPxEE1dGn9HQ3aiPRk
-         OQ4xR2R/R8KT5bOMRhM4ssv9nRFMfOSUyi4G60PEV61GtgBpqqKL2NvKjue04J6AEkJP
-         JBON4dO2S3RLTKGNwH4b2Xt96drEk7UTEQ0hIoLZ/iyv8Co+D3uxMWczHUAaqVFuKlif
-         eMxmXSDK4lsd891EcsfeQM7M/B1DkO55raFvX4c78fiz+A17iZ05dhpafsbMMCg7EixZ
-         9pDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785767511; x=1786372311;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zNxBi0gHfRrbC33pAvz30lhxp0rXTHoZRpmh1XXR2eM=;
-        b=KmnTJbFDAY8OOyWufw6KTusExUaMXqVEOqWMtzdhOFEBGy7iBQpVnWerHQJ5UI8iGl
-         4pCzKixNMBuP0AGPPAT2JtJOTaHDhIFcWxFwPkViMUyhSEXlFN2St99libCQbHEwsFKm
-         pI9BRl8P7BuGKkOLeS7Ep5F5j7u5UFXPdz7JibZSKhYBZTOfQd5TjY0AjRipDQHByRBP
-         0WE1SrrSLg4TDVujeIVyBrVf/uyUPQ/GmfH2O6S040Ee4lvLYPADihsJtOK4uStWIMmQ
-         dakwcxA6pLnI895RO4DoH27rORkoeWgIzqrksTLojxTirmCCyGIQNgDQQCtTSsl4WbML
-         xomA==
-X-Gm-Message-State: AOJu0YylE8yQVTPLJ2Zb0ZyoWRZRggFrtULx+Kb0U5Cyh9PCobF2I2VR
-	wT8/CMSZ1n4D6GYtSphBdc3kbmj2G0RMIq62G/bxj5h2FfHuamDi0alk7oKaaDNsA1U=
-X-Gm-Gg: AR+sD12ImiWQKpEaVG2Yhznyz6h5NydSMatZr3Ivdp4ksaS3bPSeX/6JeWKGjIv90AI
-	kZRzHQDYiv/OV8sHEELFtuVtIUhzu5Rdpb4JXZ4A63MxpA7MZdg8rTXRADpAQPcqBWFB5nQdT+K
-	Im7LmfsOFgPd00upDIHh1T0aUL+8GEmXwy2NDq019y3DVNii8MD0/pj13sJKmu0VZ9wDLYItDyP
-	B4wNjs3RZ8M4ZNXRPPGNWD/y8kqO+E8jSWuT79yMUnS7UGZrXGotIuC3SSGZCRxC5HG1DGDJUIW
-	EklkMOJoPaidwZQ21c+/hu/jD6i4sgXOq/4+FsWlFKDjzTsTRCIHWBUJQf467DKHIZZwUlbwFH+
-	6RdnnHIcvyH898V8SVCt4luKR89zGal2HmmqjQj0SA21NDtZGnXzgU/m2pVH+iDQ9pJdutMJgPh
-	//NhXY16tCDTHJq47zE3yB85qGkZPgOAvnqA9piznIoWQqQU76m1dWYSBOpFgNq+Ikc1gbFWG30
-	M+KiK3x7ZaLqb7xJI+suPt+tLe0ef2R8EsRwR4D+h1kIdBOJcNq
-X-Received: by 2002:a05:600c:1d1a:b0:499:49c6:bfb7 with SMTP id 5b1f17b1804b1-49949c6bfd8mr2265555e9.7.1785767482896;
-        Mon, 03 Aug 2026 07:31:22 -0700 (PDT)
-Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b98284sm236575295e9.12.2026.08.03.07.31.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2026 07:31:22 -0700 (PDT)
-From: Muhammad Bilal <meatuni001@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: jorge.lopez2@hp.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux@weissschuh.net,
-	linux-kernel@vger.kernel.org,
-	meatuni001@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH 11/13] platform/x86: hp-bioscfg: advance elem past consumed array elements in string-attributes
-Date: Mon,  3 Aug 2026 19:30:34 +0500
-Message-ID: <20260803143037.93105-12-meatuni001@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260803143037.93105-1-meatuni001@gmail.com>
-References: <20260803143037.93105-1-meatuni001@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DAJQT1+u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785775381; x=1817311381;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=3NDkwT9awZYfvoORE0bau45fdFFCeYi5IA5RKptQ3NE=;
+  b=DAJQT1+u6/rooRqUJ2w6f99t7oNVzQ5wL8belZIFucI7MGBpgQ2TlQBq
+   2hnszrIJ4ACh7iRa4MtVevrgwWW6nLPm4/6SMsAaYjsKIgNq/RTNsFxqq
+   hOGMdviuyuVUkS1qtPQX5IMmu25fYJbwx6zusKne1if3wQkhGcqX4YcHO
+   hlsvZffl6noxPhzqMn1C0ZXpxH60Q94rrA62TPJx7NyCJ9owDs9NndGDd
+   R9qM/DcuONGjd5L3Q9fyobcx4CANAV8yZwFmo2O+o3ZHdS54erKQSZD8O
+   63rRz41yemrPiJY5dUtAKs34rwgw6uGpwqcS6jS/kDGO6cwAbEHAViMsA
+   g==;
+X-CSE-ConnectionGUID: uQPDeMThTEG5Y6MQv18Tig==
+X-CSE-MsgGUID: BmxOz/WrQ1yxXtjT/d8WcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="86264780"
+X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
+   d="scan'208";a="86264780"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:43:01 -0700
+X-CSE-ConnectionGUID: GYKq5WwQTsCGfGOzoLiu0g==
+X-CSE-MsgGUID: f7298wewSpWE3SqXsJKqBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
+   d="scan'208";a="299487689"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.61])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:42:57 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Aug 2026 19:42:54 +0300 (EEST)
+To: Dave Carey <carvsdriver@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, hdegoede@redhat.com, W_Armin@gmx.de, 
+    jikos@kernel.org, linux-input@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v15 0/2] Lenovo Yoga Book 9 keyboard dock detection
+In-Reply-To: <20260728225545.1333610-1-carvsdriver@gmail.com>
+Message-ID: <369a1d84-f6a2-1075-b62e-c1852ae25894@linux.intel.com>
+References: <20260728225545.1333610-1-carvsdriver@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-134009376-1785774538=:1172"
+Content-ID: <a0a78e8b-56a6-cf99-0eaa-fcf22e5d6568@linux.intel.com>
 
-Same defect as the companion fix to enum-attributes.c in this series:
-the PREREQUISITES case consumes "size" consecutive ACPI package
-elements via elem + reqs, but the outer loop only advances "elem" by
-one per iteration, causing the next iteration to misread a leftover
-prerequisite entry as the next property and abort the parse with
--EIO on the resulting type mismatch.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Fix by advancing "elem" by (size - 1) after the loop.
+--8323328-134009376-1785774538=:1172
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <0e9fcf9e-64a6-1deb-87a9-b869e4dac184@linux.intel.com>
 
-Fixes: e6c7b3e15559 ("platform/x86: hp-bioscfg: string-attributes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
----
- drivers/platform/x86/hp/hp-bioscfg/string-attributes.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, 28 Jul 2026, Dave Carey wrote:
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-index fe5a9a3a4ef1..5abec8995911 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
-@@ -233,6 +233,8 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
- 				kfree(str_value);
- 				str_value = NULL;
- 			}
-+			if (size)
-+				elem += size - 1;
- 			break;
- 
- 		case SECURITY_LEVEL:
--- 
-2.55.0
+> Changes in v15 (addressing Ilpo J=E4rvinen's v14 review of patch 2/2):
+>=20
+>   - yb9_kbdock_notify_new(): restore .min_event_size =3D sizeof(__le32) i=
+n
+>     struct wmi_driver and remove the manual buffer-length check; the
+>     .min_event_size field was present in v12/v13 (added in v10) but was
+>     accidentally dropped in v14.
+>=20
+> Patch 1/2 (lenovo-ymc) is unchanged from v10.
 
+Thanks for all the effort. I've now applied this to the review-ilpo-next=20
+branch with Hans' reviewed by tag reinstanted as that too seemed to have=20
+gotten lost.
+
+--
+ i.
+
+> Changes in v14 (addressing Ilpo J=E4rvinen's v13 review of patch 2/2):
+>=20
+>   - Restore #include <linux/compiler_attributes.h> and <linux/spinlock.h>=
+,
+>     which were accidentally absent from v13.
+>   - Restore spinlock_t lock in struct yb9_kbdock_data, spin_lock_init(),
+>     and spin_lock/spin_unlock around input_report_switch + input_sync
+>     in yb9_kbdock_report().
+>   - Restore pointer-out yb9_kbdock_query(d, u32 *bkbd) and removal of
+>     zero-initializer from struct wmi_buffer out.
+>   - Restore int return from yb9_kbdock_sync() and error propagation in
+>     yb9_kbdock_resume() and yb9_kbdock_block_probe().
+>=20
+> Changes in v13:
+>=20
+>   - Resend of v12: v12 was corrupted in transit.  Root cause: the ABI
+>     documentation uses RST table separator lines (=3D=3D  =3D=3D=3D=3D...=
+) which
+>     contain '=3D' characters; git-send-email selected quoted-printable
+>     transfer encoding due to non-ASCII in the changelog (UTF-8 author
+>     name), encoding '=3D' as '=3D3D' and breaking git-am on the receiving
+>     end.  Fixed by setting sendemail.transferEncoding=3D8bit.  No content
+>     changes from v12.
+>=20
+> Changes in v12 (addressing Ilpo J=E4rvinen's v11 review of patch 2/2):
+>=20
+>   - Add #include <linux/sysfs.h> (for sysfs_emit)
+>   - Add #include <linux/types.h> (for __le32 and __packed)
+>=20
+> Changes in v11 (addressing Armin Wolf's v10 review of patch 2/2):
+>=20
+>   - ABI doc: correct Date to "June 2027" and KernelVersion to "7.3";
+>     these fields should reflect when the ABI lands in the kernel, not
+>     the submission date.
+>=20
+> Patch 1/2 (lenovo-ymc) is unchanged from v10.
+>=20
+> Changes in v10 (addressing Armin Wolf's v9 review of patch 2/2):
+>=20
+>   - Update ABI doc: Date: June 2026, KernelVersion: 6.16
+>   - Add #include <linux/compiler_attributes.h> and <linux/types.h>
+>   - yb9_kbdock_query(): change return to pointer-out u32 *bkbd to avoid
+>     a 0xFFFFFFFF status value being misread as -EPERM
+>   - struct yb9_kbdock_data: add spinlock_t lock
+>   - yb9_kbdock_report(): hold lock across input_report_switch + input_syn=
+c
+>   - yb9_kbdock_sync(): return int, propagate query error to callers
+>   - yb9_kbdock_resume(), yb9_kbdock_block_probe(): propagate sync error
+>   - struct wmi_buffer out: remove zero-initializer (not needed)
+>   - yb9_kbdock_notify_new(): drop manual length check; use
+>     .min_event_size =3D sizeof(__le32) in struct wmi_driver instead
+>=20
+> Patch 1/2 (lenovo-ymc) is unchanged from v9.
+>=20
+> Dave Carey (2):
+>   platform/x86/lenovo: lenovo-ymc: Suppress probe on Yoga Book 9 14IAH10
+>   platform/x86/lenovo: Add Yoga Book 9 keyboard dock detection driver
+>=20
+>  Documentation/ABI/testing/sysfs-driver-lenovo-yb9-kbdock |  19 ++
+>  MAINTAINERS                                               |   7 +
+>  drivers/platform/x86/lenovo/Kconfig                       |  14 +
+>  drivers/platform/x86/lenovo/Makefile                      |   1 +
+>  drivers/platform/x86/lenovo/yb9-kbdock.c                  | 323 ++++++++=
+++++
+>  drivers/platform/x86/lenovo/ymc.c                         |  19 ++
+>  6 files changed, 383 insertions(+)
+>=20
+> 2.55.0
+>=20
+
+--=20
+ i.
+--8323328-134009376-1785774538=:1172--
