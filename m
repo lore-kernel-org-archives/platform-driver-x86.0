@@ -1,63 +1,63 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823FE313531
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 14:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB84A314D0D
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 14:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785767457; cv=none; b=rlpuCNWyz6p7miRHOyYsbDe3b0/MSLqY1T1QJ5UveRikYQZRR7K5kOcUAKMDITMfJPEfLi5YMpj5nMJwVM6BTi9hQ39fZE+i1k46Dfn5BPSygpDYce5AbDiaDGP6qVVYsrQg3EF1h67nFgqj9VgPyKSl4qUZdGPAYQhP/jtDsts=
+	t=1785767460; cv=none; b=tv+Ig1VgeoBNL6Enj5K/9zRcYbHTm7gbj9VsBsDMMSAU2BN6DKHBLQNYpGU/8sfyzjvLidnRI6KrJTzA1AUCZgayUYRBT17v0oEJ+QmCOFO8TiS05OKT+Xjw3dJP69/knHaQ2WybOrz6XQNuCitwcut5Sdl27aAISOrEPTPR/7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785767457; c=relaxed/simple;
-	bh=OA1LKTN49b5FUMf9V/yVYL0uyXf1T9fnPQ99xO6TDc4=;
+	s=arc-20240116; t=1785767460; c=relaxed/simple;
+	bh=GXnVaGcOYcGeGF51vfhkksxSxm5iT6MduRJD27H8KxI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J35zECd+pDVSL5bId9ESPR8HpOLHnOlxByrVjnEgvOJmxHOTXAh/qUnirGzzAA/Buy8NnnbxQQEA5r3KHChSWnMQemI9Sxnr6Hyr2sS2fL2n9NWXIwKqeNZ8Q3LWM70nrps2Rurc3mEOhZ8dqbnIbB1pt+Z7NoP3wFM/5jsp31U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5U5yhws; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=ohRO8ipFAzOHTOBo3yDp1aKpDZR/vjLOgI2V/kMKwOWzHQQEjbXnaHLRZAxhRht5wx19SXaVdX0kggvfGUP15dm5nHwlo8g94KWAx902+hadHx+r3smoDbb0ZDswwZS2G0zM3+7QpKSSHSpFpMiRqzN4icuIVnYFjg3c/Jpe4Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMgunFXV; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5U5yhws"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4955de8797cso13012685e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 07:30:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMgunFXV"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4980dc26022so13781925e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 07:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785767452; x=1786372252; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785767455; x=1786372255; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=9gdrr7AdAYBlVDbcFRIgxo33EdXDmWd6yiBKqM/w3XU=;
-        b=j5U5yhwsTyH+U4iVWzHP8r5NInK1VVUwZW1yOXBWcT/bJGPZbJ428AEpdRbAWPRake
-         ZFtN2WPAwhCQs7wpo3uVAQdmAxfA8kdaZTXVniLGgqjt+z9cURPQuEUJgUv5kZMpmbFi
-         u7ppiqqdvSJdP7OTyDDbc1+pFgxKItGFHXCpRuBBb7DoTFrSGhg70pvQ5mV4s+9Dc0sC
-         SFCUf5F8R44nhU5Flznl3ESnEVtsvQng9hk09yNSaEYBBNSXZqHXAF4HA/wgyBL52IP8
-         JJ4HkwwxpcOu28y2VR1SfMpO1WBALv0YVAw2Ad0DhUgV5E+tGH2jVALM1RZTt174SsKn
-         flUw==
+        bh=jRznYyon0XGUdVgbipyEvsqHsHiyM4eqeCRczfbwZQQ=;
+        b=cMgunFXVWhAQ0qA/a8BWNqAE4aMvnXbCv+t2appMzu75LJ6iLzHYzH4FrpXyv6xGvu
+         3lyZWCK1VE0nU6bVgCsWufB5ElqeEzSEU4s3ZO2gFDWkAPNYfMh/eldeTQO40U3Nv1By
+         ut0WeWBmoWOeod3dBUQWsbu9AGV9Smfe1GZfsdu/3jXYzk+cDRzO2pJEKNs4tD+MIcFL
+         zxL4ZOoX+1ZYpsMXJhwaR3c6xhVJ3Z/nFgotwoQLlkAh1v/t2yoFn7auBmbDDWaagifI
+         6nywVuzr4zB4QNzezEq7c12+c8H/OBPYEfyposjxzs70p1xySaFcKffkBnGqoANG/LnG
+         /Xdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785767452; x=1786372252;
+        d=1e100.net; s=20251104; t=1785767455; x=1786372255;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=9gdrr7AdAYBlVDbcFRIgxo33EdXDmWd6yiBKqM/w3XU=;
-        b=LBq8GGzdias9rFpNS6I19NV/AZARUCr1g729Pyj38Wz+sy00w9vQJZQxouS7t0HfuP
-         9yTqJhTLJ9YS5YZFm0OoKD5uBSePlbFwzeQa0bdnqhk0f8VO6vTOv2BuGKC6D7sAxHHX
-         vDKxJcrbiQ14appsr8TusVKroTwb0rzBYj4tQwFixTaVutF90rD/WjX3vN//NVCW+EsY
-         GG32mFWnT2axWVlLMKV5OwKremHxTO7P7oCsdiCY0ARcT5RJ+t6DwIjtYKIplDR2alsn
-         J3/w0aKp3FDjLBaq5j5kTvhCmCIhc6elj0ethO//4sW/3IyoEIsmIdGJs2A2ERdDyjyT
-         w8ow==
-X-Gm-Message-State: AOJu0YwIykef54K50Zm+mzuTnX4T1j9DdILqg26gTGqVosCjXw7WzXgc
-	9Do8JfbTPpEd66VTqod6qMTISfJ2zLu/FfmPvNC4qb3bdSb2PS0Cxc9OtI3mh5wKHXo=
-X-Gm-Gg: AR+sD11tTQLqgv2euYz+hNbLnoHkhBnbBQkFASbYn+9SOw5kp5fswla2Rnnx0A86f/p
-	oPHtacqoXMVKzcQQtMVbhBU3E+o5nmkp/0jPS83ki2Dy4SseHJ/uI2Bg/duohLw95ziBmuCl6GQ
-	owdFQc/fbOphbj7AhLWFlXxvaCK3EcdYNzXegW0+xv0wpRFyUWw2MCEnVoHALEXiQ4G5U/k+WQT
-	mJh9GVDQHht1BoJIuOMgORAFV5iGcUBRCZce6YNtT/amhqrQd7p+d+YSyPSyW/FSJMLY0SFf48N
-	NsMT77CnpGWJuTNRPb2Ttxp8xoUc4Ye6mgkH30fUrklBV/BeaTY5G2UGCB0byqsBwoWtnZG4B2h
-	vCygCJxL7Ygl6VNOsGQdx//Xbo7L+hZ4GpuJ+wkd8VExAlgkp3ap5iie/EPQyRbOkUtuVxHv5rX
-	lxRtgM5f5bcmaGs/FpQzS2JqNMKKQFK8ponp41V3FIS8xvZDI+Qk3pWe8O9NEGgspS2+ndxYnDA
-	RFaFe2smccdw9XW94Xd0/8qu8Elx9L4IbizGZsNYg==
-X-Received: by 2002:a05:600d:8492:b0:496:c2fd:1731 with SMTP id 5b1f17b1804b1-4980c64b96dmr166980395e9.1.1785767451905;
-        Mon, 03 Aug 2026 07:30:51 -0700 (PDT)
+        bh=jRznYyon0XGUdVgbipyEvsqHsHiyM4eqeCRczfbwZQQ=;
+        b=p+B0ErixsoFar+GDLyccauR/EBuxAzJfo/2IDVsIdDxtjLk0MKOmoeLUyGiwbIuuGy
+         PGYNbbkcv28tTi1t86bsIub/xG8xUrzTEvcmzRM4TFscimiNNiqirWspmJGtcYiOsVAy
+         DD+zjEI/Kf2E7LHzne/GgGvwX5LMMtHlNj70gtZBKl7YMLmL1JZ/Od51L5Vxb2oTwHZg
+         5Wn9WZJ3b+zh2YedKwGuRYXXKV4FBe+qF7WD/YsbRaRu1olORwa1hyauzhMjH89c4nnD
+         HPmkcRPdOD+EQp3qBCm4glogT88PvzhSAXK3g7Tq7C6b7ehzInG9t0Q8Lsl0aa+srsZG
+         DMrA==
+X-Gm-Message-State: AOJu0YyUrj1RyQswRGd7vzs6SdGG/JI8EXUbsWQ7+4CNQgecBOxHmvKy
+	YU5F2P0BkbR91AAEoe+qx+giH1S68tTnUEsvCId8ugfZn2nPMl3HZpeNLfyXsqywVrQ=
+X-Gm-Gg: AR+sD11pS/zU2anzZ75LVS/2wBQvJHDGOqduEtddg31AUpRiqqL0u+mT8UtLmwY2xQ5
+	zX6Shh3ULlp51uu2zPBCVJX60bE2Gm2QrGz5ifkQSy45JqOOzW2qr9LQUr34oHu+P6ad0nX6zEx
+	Xw3smqCyRoRV5n7WzDsGox4F4wVG02mpFQlRkX5xAhld9URvsfcdxUfIbEz8sfjLVf/j095lJ5K
+	J1EUG1EFeJHAZDUdgow/h8B12gmgskqtTwo5WIXKkE+6+/wKVHfADeExBWjLnaqIqNXmu8ZRd8f
+	ClAUQtUozZntvb66SErw0l4RSdCtjjXrdZvXfF5H3DBq7tHFqxLAzyS4uguxpSPzkhQavT0JSi7
+	49uZL296MQOPtbh5cZLs3M6EMrx9vTCvbVxOpKZRrx8uTlObi7QLU4pfmUe+VVTt5kSYClsNzXY
+	/cmFJ70jiRNlBVsljRX0GBG2SMCxtsjm6yUz4g7mN0Y8cKR9QY/GjBAOy9FtOEUc9tQf6M1GO9D
+	cmDOmtpeNzbO9oWTD41I5WGbokztagUyY4j+UXpzA==
+X-Received: by 2002:a05:600c:840f:b0:493:b6ee:fcb7 with SMTP id 5b1f17b1804b1-4980c6507e7mr211322355e9.14.1785767454564;
+        Mon, 03 Aug 2026 07:30:54 -0700 (PDT)
 Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b98284sm236575295e9.12.2026.08.03.07.30.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b98284sm236575295e9.12.2026.08.03.07.30.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2026 07:30:51 -0700 (PDT)
+        Mon, 03 Aug 2026 07:30:54 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: jorge.lopez2@hp.com,
@@ -67,9 +67,9 @@ Cc: jorge.lopez2@hp.com,
 	linux-kernel@vger.kernel.org,
 	meatuni001@gmail.com,
 	stable@vger.kernel.org
-Subject: [PATCH 01/13] platform/x86: hp-bioscfg: fix off-by-one write in hp_get_string_from_buffer
-Date: Mon,  3 Aug 2026 19:30:24 +0500
-Message-ID: <20260803143037.93105-2-meatuni001@gmail.com>
+Subject: [PATCH 02/13] platform/x86: hp-bioscfg: fix heap OOB read in sk_store and kek_store
+Date: Mon,  3 Aug 2026 19:30:25 +0500
+Message-ID: <20260803143037.93105-3-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260803143037.93105-1-meatuni001@gmail.com>
 References: <20260803143037.93105-1-meatuni001@gmail.com>
@@ -81,46 +81,66 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-hp_get_string_from_buffer() clamps the converted string length against
-the destination buffer size with "size > dst_size", so when the
-converted length is exactly equal to dst_size, conv_dst_size is left
-at dst_size and the unconditional NUL terminator write
+sk_store() and kek_store() strip a trailing newline from the sysfs
+write before allocating the key buffer:
 
-	dst[conv_dst_size] = 0;
+	length = count;
+	if (buf[length - 1] == '\n')
+		length--;
+	bioscfg_drv.spm_data.signing_key = kmemdup(buf, length, GFP_KERNEL);
 
-lands one byte past the destination buffer. This is the same shape of
-bug as the previously fixed off-by-one in hp_convert_hexstr_to_str():
-the buffer is sized correctly for the content, but the terminator
-write is never checked against that size.
+but then pass the original "count" (not "length") as the copy size to
+hp_wmi_perform_query(), which memcpy()s that many bytes out of the
+"length"-sized allocation, reading one byte past it whenever the write
+ends in a newline, the normal case for a shell "echo" into sysfs.
 
-Fix by changing the comparison to ">=" so conv_dst_size is always left
-with room for the terminator.
+KASAN confirms this directly:
 
-All fixed-size destinations that reach this function (path[512],
-current_value[512], current_password/current_value[64], and the
-per-entry buffers in encodings[][512] and prerequisites[][512]) are
-affected.
+  BUG: KASAN: slab-out-of-bounds in hp_wmi_perform_query+0x1e9/0x460 [hp_bioscfg]
+  Read of size 28 at addr ffff88813c8e2b80 by task python3/16022
+  ...
+  sk_store+0xa7/0x240 [hp_bioscfg]
+  kernfs_fop_write_iter+0x3e1/0x5d0
+  ...
+  The buggy address is located 0 bytes inside of
+  allocated 27-byte region [ffff88813c8e2b80, ffff88813c8e2b9b)
 
-Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Reproduced identically for kek_store, and at multiple write sizes
+(28, 57, 201 bytes), each time reading exactly one byte past a
+kmemdup() allocation one byte smaller than the write.
+
+Fix by passing "length" instead of "count" to hp_wmi_perform_query()
+in both functions.
+
+Fixes: b2715aa2e135 ("platform/x86: hp-bioscfg: spmobj-attributes")
 Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 2bf57e6eade4..0edc6e7cfa9a 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -85,7 +85,7 @@ int hp_get_string_from_buffer(u8 **buffer, u32 *buffer_size, char *dst, u32 dst_
- 	 * bytes.
- 	 */
- 	conv_dst_size = size;
--	if (size > dst_size)
-+	if (size >= dst_size)
- 		conv_dst_size = dst_size - 1;
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+index 2b00a14792e9..4d94e48c1a4c 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c
+@@ -238,7 +238,7 @@ static ssize_t sk_store(struct kobject *kobj,
+ 	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_SK,
+ 				   HPWMI_SECUREPLATFORM,
+ 				   (void *)bioscfg_drv.spm_data.signing_key,
+-				   count, 0);
++				   length, 0);
  
- 	/*
+ 	if (!ret) {
+ 		bioscfg_drv.spm_data.mechanism = SIGNING_KEY;
+@@ -274,7 +274,7 @@ static ssize_t kek_store(struct kobject *kobj,
+ 	ret = hp_wmi_perform_query(HPWMI_SECUREPLATFORM_SET_KEK,
+ 				   HPWMI_SECUREPLATFORM,
+ 				   (void *)bioscfg_drv.spm_data.endorsement_key,
+-				   count, 0);
++				   length, 0);
+ 
+ 	if (!ret) {
+ 		bioscfg_drv.spm_data.mechanism = ENDORSEMENT_KEY;
 -- 
 2.55.0
 
