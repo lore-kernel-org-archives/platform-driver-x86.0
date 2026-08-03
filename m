@@ -1,63 +1,63 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78EA41BA7A
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 14:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D6D3A2576
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 14:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785767484; cv=none; b=OcsCtqD8pircNY+kLcne7ywUN5dEBzzxU8Qhjtywwunm4etJ5o0PjjhKwpXKVUR6LnZ2wVvxGdMSzciJvEmuTriDYCHc8hYgQfnxcLDRIz84HOPxXzZ1OW1N0B4g+6XuT7e+6xsnnRk/IUZUMaflRaQ6+s+Ba3m+qFO6o4gvFqw=
+	t=1785767492; cv=none; b=M85U6ccZ15Vsmj7XgKqSqmVWhCQ+tUhjP/S4cCL3C6izD0tqwdwqBuF9KMuP46X3Q5jTK5LNqfnZc7UlAgf5BYMF21+Lxn6Z/bXLOpawrTG3pUk4jBDy5esLSsJmfdI6dHomtzaxSUZMG8Z7mNyAGbsVdnldJUnaJpIokAnCBvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785767484; c=relaxed/simple;
-	bh=mT7/d7xo3H3nfPCihbxPgzMZLfcDW4NzWBe1wQtzgNo=;
+	s=arc-20240116; t=1785767492; c=relaxed/simple;
+	bh=arXYzsOl1OkfcjkMtMDJ5cgQlgHX5faJ6mvfLb2jvRw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hWgDb2ymLfpQARuggPUsecDO1nAkdxjhFFPCLFuka6lC2I9znhy3gpwjLyKfovvxiXkarJYaJ5BQPEEzyXA5nxLdlFDCG1TDz/RBjyVUiRfYWiYo0GBU8SiUOuySd9pmq+inpKnuzU7xHD+fYb6pjZldhGO+3LjWsMgrdL900gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANrB3e/9; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=gnCN4humgGNVGT8U+04QwCNZHJ6j2nWzRIfcaDEn0QWnRrgo5Sy8fxovaJ7SrV+e6O85ibcN6QDdRhwmk7yRfBOOiNl7VAqjo6Q5fdGAuTrkPuaNQ/E2VtWhcBoHqFjeTHOu3R1pBAVC7Vy7UeQfa1oVyKAOpe8216q9pmfZpo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z5lIjtaF; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANrB3e/9"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-495437bb891so18187645e9.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 07:31:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5lIjtaF"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4954a9e8490so15860325e9.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 07:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785767480; x=1786372280; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785767488; x=1786372288; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ndb/ZrZ5742Zc7Zv5as8TFdneRJ3/39sqxXLaYsiR40=;
-        b=ANrB3e/9knuho2yGnbBS9IRfJMdYTHIUw3cmM1zHbIQh6Y7sE7h9bGXTPABRw+97Gw
-         LLyLGNzYMC246eakAqUaNm16ZG1IbalAUQw/BNsNHgZMu0y4gUvrW7fYc25nr9fgXHdP
-         7ItN070XYaOOQJy7Bjb+AkajxFq5HVeOG1F3uCyC1Zh2mgtIJlN6b8mCjp+KTPnBizZK
-         54/pUPEnpsa8ZSSpNhRNTkMlm7jWDXLmfPame+pA7QK8MXvO13vJVNljUSIaCBxf0CSq
-         IchSsLaUN87Zr9tEixt3G+qLOxFKPCOfeWRbbB13YBjjqD01CDwtX/ZT7owFmd9RVziA
-         kaRQ==
+        bh=pRYAshv6bCkW3StAMRtfaFS8SltMPequV+AOq12EztQ=;
+        b=Z5lIjtaFUtk11Di+K4rJ6WBu0izPFWDpllTVnWYsoZj7PbzNhUWFWXp5lDUM+ONSLg
+         lJ1Xe//gpXw3okce53z2Mp0C6lYW+18smRhgI+gXA0kO0n6ABlqi4awZfnyqJa0t5ZKU
+         GURyeB5nVGoZuQHhnwjzlykpjXPbjRoHM4YIvyQfjyWWzssClxOfZgXKsiSi0ODi2R3g
+         lU+85YZLwQiNVz6jK7HM0ClfXuEcUh52mLbJyTZtuxM/BKMOzTODHy3xzBLlIaDBQCA1
+         LzqNjQhSfyxsU1xCrZsi1T8OO8/mv+WMucUZcuQKjkTInQAKSrDAdFrAMLOsvaLZZJfh
+         0O7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785767480; x=1786372280;
+        d=1e100.net; s=20251104; t=1785767488; x=1786372288;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ndb/ZrZ5742Zc7Zv5as8TFdneRJ3/39sqxXLaYsiR40=;
-        b=ayAVAkSXdYVHR3Uz9283EZphxh9/dZyqSYl5a/MsZLfCtz0XKQY6B4+I/nEMBy2UhO
-         c5F2IfFGKcJfICbwAUlQSxW2W2QgJ+KuYR+hKzOw2GpVmvo/Xa3iUwHNdjIY5QCuBppe
-         ekeFRNBMLZzygTecf/Yp1kM6EmfPOCb0TI5HCugHX8vew+eQVXxFMEgqHzjfd8LF19wD
-         Z9RpOxFJe7eg8UvqKVWgDQR4dEPQPwnuOMpL+idgatn+CGJOKG4lq+R07dxXCHt4BDXM
-         NsGab4kSg/BqcQur2YVqpZ/M9aYM4ZK1YtGjbVUd0STYSdbFsYb6STMO3zMKRIqdpShA
-         ePCQ==
-X-Gm-Message-State: AOJu0Yx7DpFNXIzZ4HtBsikEGBcnDz9svH7sdUF+z2+Z+Xj8L7pzo3GS
-	XRaTRESn/GTRWlEDrWAJ8izL+SDo1mn09Fo/u03MV/jFYvQxRIDwmcq+0nH9+sQ3pcs=
-X-Gm-Gg: AR+sD12wEzkQTXs5RnqO4nqetpMzkvzsfmf+pmMUTEbxcqC9Dw7soKGm0IpQVr08T6F
-	SSPpmchkF9iCoULAZoUGRly4XE38f3TF292WMCeI+jq/Qa+qcgePuwS5W6x6mylQWC+mIbsygPH
-	RPDR98gTx+RNbi/q+WkGVjSu6jn/U2iNY9qR8f4EUMwIt2fpUi1YIoU2CgWIF/PACts0+CZqoit
-	HLjLz+bWKqilrYhV/vZMZ7KCZtISsLgOj8Lplayqx8OxRQ6+X297WWv2aInWjfp41UsAlUzcAbc
-	S7qQYFltnizGbFoYekASgnS2YVK2ng1EWjBSwk/WNjJKJ5Z27AqbMaO1/iKYnRFvgAtqkBs/iuM
-	Qvg7AppOzlOuHTEroHjBRugbqCgT7S1qR1yPlMWOsOOTcBgoT+7EHrTdMkAo4RJxxjJqMr9lE+q
-	/9IjZ+dyS9HMwG0VVSCbZGiRKh1pFIuT6JIanN4fArtRoWYhVvopnci4DPJiwy8yQFTn9B+ou1O
-	dVMwkKR6poAImPJizmS9z6WLGDWr6SVBzjclq4MUA==
-X-Received: by 2002:a05:600c:a42:b0:495:69eb:27d3 with SMTP id 5b1f17b1804b1-4980eba0a6fmr208709925e9.8.1785767479778;
-        Mon, 03 Aug 2026 07:31:19 -0700 (PDT)
+        bh=pRYAshv6bCkW3StAMRtfaFS8SltMPequV+AOq12EztQ=;
+        b=fkllcyEMpK0b2Ghlt/cAf5LAwxGby8RC6iVeYlsDP7pfpCae3ieehIHzn/jAixHoW9
+         A+N8UI16jr7s4Xl198d8Y7kxEgx41RL7WDnyAbt3XiJDoEbrcX3eJbxYVpaDqwvdSo1k
+         gzyzwtbal6duSInaRdCoYwxZ6UIAfe4kLp24YAj8unTh7BhwJSzTf+pMNa0wORvrIkUS
+         8eom5RLwIyN9Rnp9hrSIO0aiY5E+RcpSWXoC7mtGJO6WazXvvQ7HKg83o3uxLPOXu/pF
+         2jbOLcuRCIAvBbzNfqQWNRI/FZRiIHaSVBYM4uKKEXp7ayd/pKcjSlENXJK6VDgk+4xc
+         4lLQ==
+X-Gm-Message-State: AOJu0Yx0PPVKeJbfr0cZfuEITMjb4Szw6tegJzHWAm8l5RnSpNcs4cvm
+	s3vCrU/YnCTVCJDgya4kc5TBB5Sxcy/8FTm7DV+m2V45NBywCSHU+d+4LGXTnxTQK+k=
+X-Gm-Gg: AR+sD1371kQDvl+S6XI0AFEAc2rgYrCzcrpLlAXrWPn2d0dGIFOqz5bpJZkML7br4LB
+	A6BlYPN7ntQ+MpdxSOkluCgUXDBhQ+842G0FqCZqgbOtRvsWVINLsfaL4O2tlFNxYa1sE+rwaPP
+	CXWjCIGhpjrYLhAPZ/qX99GWGeRvt0ybtlSe3bVmM5wKuQWMGJxkHL1NsRZpJX3GoqhAKdVRjVz
+	0mWLOfcvktRD9tViwciElHHkwBN4i39JuB1ngKQxDOSpqdUpGLQiQUQCObBgX57EreHILULOCbf
+	syEtwmg3veZRNs0U6BkI8szjcMK1pBNklvAHeuveyXaU8LHu2IfhimwzbkviZcTD6+uP6obaUea
+	AAiqKKtzwRKQMaXAqsf1zqWiR6x4EqbhxO7yjJUDWfu7NuoGtlieX8/dEzJXAuGkp5mRt+gMQte
+	0BI/uDsyyOrz0hOAZJ0ViSTQxxOfyYcmSTwfA49EPF5Vgg3QD50sJ7wPzEL3pDigthKYeoBw6pX
+	L+WpCFjZWaTvguO86X3RQq5GZPEA+FiYOaQFYoOnQ==
+X-Received: by 2002:a05:600c:a42:b0:495:69eb:27d3 with SMTP id 5b1f17b1804b1-4980eba0a6fmr208724155e9.8.1785767488101;
+        Mon, 03 Aug 2026 07:31:28 -0700 (PDT)
 Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b98284sm236575295e9.12.2026.08.03.07.31.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b98284sm236575295e9.12.2026.08.03.07.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2026 07:31:19 -0700 (PDT)
+        Mon, 03 Aug 2026 07:31:27 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: jorge.lopez2@hp.com,
@@ -67,9 +67,9 @@ Cc: jorge.lopez2@hp.com,
 	linux-kernel@vger.kernel.org,
 	meatuni001@gmail.com,
 	stable@vger.kernel.org
-Subject: [PATCH 10/13] platform/x86: hp-bioscfg: advance elem past consumed array elements in int-attributes
-Date: Mon,  3 Aug 2026 19:30:33 +0500
-Message-ID: <20260803143037.93105-11-meatuni001@gmail.com>
+Subject: [PATCH 12/13] platform/x86: hp-bioscfg: advance elem past consumed array elements in order-list-attributes
+Date: Mon,  3 Aug 2026 19:30:35 +0500
+Message-ID: <20260803143037.93105-13-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260803143037.93105-1-meatuni001@gmail.com>
 References: <20260803143037.93105-1-meatuni001@gmail.com>
@@ -90,18 +90,18 @@ prerequisite entry as the next property and abort the parse with
 
 Fix by advancing "elem" by (size - 1) after the loop.
 
-Fixes: 6f2c06d5a467 ("platform/x86: hp-bioscfg: int-attributes")
+Fixes: 4b2672ec71a3 ("platform/x86: hp-bioscfg: order-list-attributes")
 Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/hp/hp-bioscfg/int-attributes.c | 2 ++
+ drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-index d96e160953e3..5373af71549a 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
-@@ -243,6 +243,8 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index 704c69c18146..6696255738ba 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -232,6 +232,8 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
  				kfree(str_value);
  				str_value = NULL;
  			}
