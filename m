@@ -1,64 +1,64 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D90D349CC1
-	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 22:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E93AEEA8
+	for <platform-driver-x86@vger.kernel.org>; Mon,  3 Aug 2026 22:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785795386; cv=none; b=LW3eCKHQSuEQaenEuOb670gSws3Z4t6fJchWWn/oa5MTIPDdmAeo8pRP9+I2mkvGfe5MhPZHX7yahrxERf2m3+aFd9Jc5WJblz1qF6FBw1kb/mMxjcfSiyYQpvyFdmLFbkPhSKNtA7YoFDQTUCta5FJSQEctf7tLUXQbr4voHjE=
+	t=1785795387; cv=none; b=OCb2PB/RNzV9znZENRn8hADPSfClXEGQ2+WCoKThZoIkjEh0xvcxCoUX75ZDaCitPKfApXmGl/W3Y8i5VQZxfvIdrJSCkbJjj/0b9uRnpUmS3Fp/e0GjNfM8+4p5trvDF2cWIGIf7Y7FoXk6+ME7TGxLqIN5a10Ip7qmkuj05Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785795386; c=relaxed/simple;
-	bh=ODSEOHVW4KYU9xP2cIISQVh2g4cADrCkR6ETTeHmPoA=;
+	s=arc-20240116; t=1785795387; c=relaxed/simple;
+	bh=+Fd4D4G24Lf6HeULnGUvJTIyL+0ZgRwVDOjp2wWUOEs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZtPr3M6ax1fnm8kbT3ZWaOeCjy7JVOXIwYAyJQmF3IGi47E0lvlRgS1DYfSyUDOcI1+c4nl69FmBztDWQj++W5/wWt7k/d+XfwTpLO4NfnjXET4S/6xKji5eZwHkG/mw1jSNozEpqfr1Lpom4FUU41QH+N8PYvFLVGjnKUThHio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8bXM6do; arc=none smtp.client-ip=209.85.215.181
+	 MIME-Version; b=cEWwcUJdbP5MXj9FSA2EmLSwnvJedANC1ZKjwKkV6N6AuckJHbswj4gw/n1JWgdXDfGhjMAkS5eUR9W28KGx6/EEGQz5u6iuezkAdyCWX9mjk7R8RO7jUlyv8wkG/CygYCzu2N5KNDRJo3Br0KLDfZEK6673+4Fdb60CczjcT3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kly7RrAf; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8bXM6do"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-c9d1fff21edso2578574a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 15:16:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kly7RrAf"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-c9c26a5fb98so269458a12.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 03 Aug 2026 15:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785795384; x=1786400184; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785795385; x=1786400185; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=gtKu0FT85uYm4ILu5Mq1OuaF/iNH/TftNn4lcGyvoLs=;
-        b=d8bXM6doaHydHzm6dzFOTn3SCRvyLcTVDpPyP7wmAcp6XXXCw/36DwNmzblGsPzaES
-         Eh+WCh9n4xGq6/afaevwQOqTX64K5FmseuGSgMkprXgJ3CTC0LBAxh2s2m83ksTnUIvw
-         T5FMqPBb/76hIPjmC8/c30ri1kuGX/f8eb8Yy/tFlPfZSiprQNVZN5zLRz66ZBaxVpZQ
-         Z3bmLyGO3hzUypiRpiVHqYGRAp8+YkwFx3RAMxRTvtDEHX5QQbxlcWCA92L1MHYkZLVB
-         S/KEZzhqncWHVKzUa/qRPxQkxGSW2KFwbl+fv41gUsYWFEgp3O+wcYo8n301rE4dQjij
-         aeHw==
+        bh=5LM51EciHqg/+cWUGKzq5pQNwGKYXu9VyZMTqMOay7I=;
+        b=kly7RrAf2OvRFF9VWX+StFLnWWvJXla3DMbnHjiuM2BH1wKrki+M9DpTc+m2qvFVeZ
+         +qr5LH8M0+gDdTFbHeBrtsrO2lOeoKgN9IMbC1op/fiP+gzHf1oQrvDtf1KflkNQ35yV
+         DdyOuc3lAYp9wE+eT+++dx1XMK8/rdOA8j70n1h+tzJpoDJ8eTCEHNv8s6lzLXa4sfga
+         OI3fll1t9/m29mkrpd+JIHdmIhRz89oL94BhYgZQHNP95V0G878rjV8CRZ1gQM+OEMIa
+         UQLoFxBNQJEziNlT77hjdHLW9VBLM2zkuv6OQaX6TY7IIcYPiuALm/T0f9PMuW/AoLy1
+         C6qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785795384; x=1786400184;
+        d=1e100.net; s=20251104; t=1785795385; x=1786400185;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=gtKu0FT85uYm4ILu5Mq1OuaF/iNH/TftNn4lcGyvoLs=;
-        b=ssdjSh3vnMhjbYc2FfTZrZZrSLaqBWOTBZLoZ+hshZ/zCVQsZQhxTe93rs0nrikqVp
-         EozlBYEQgXWY1PEcQJMypAYskk0OsY6f77ZV+EVF5gKVAT3UdyHVNPk9HXpoifOdF/k/
-         kCB4d35SNieARIX67aDrIv6WOIvqfSxmKCX17gu79UYRyCy63k9FSOC6Er5iS9Kz4gAc
-         9klL78Wu+NPHltVor1+rOxmENfUcMcd/hSIC5mb/w3xS8ldAVYOMIB/eQb8+0562XgDN
-         2QohSOqGEsU1iI8VhggXdKUvsine+sB6iAESYOTGXh2ReDOcm/qKKjX2hTiiAZNjoTnT
-         2g1w==
-X-Forwarded-Encrypted: i=1; AHgh+RrpeoThyXrIsOm+DSShzZUoPEty/rhhQzDEVdYVq2GW0cLYaF63c6aLf4EhjJSOe3XlP9U/u8NueLcQf0kZ76dIlVOK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOyTLke/h8kYWYf5DGYy7EhWYKXUGWZis4jUQokXX3r4Ga9lKI
-	TthZH2WOiYF5aDOZpORcwNrrrTE8uLG/V4DwH62+OFwGYIPta06sdD9A
-X-Gm-Gg: AR+sD11LQNgzUlu7YnqJydUJW/2Iz/xZLSpqbRjs+N0Wxx8O1XAagblAKs9XxcMsWNT
-	Y9zUZZ9/0R6IKQIQc9Bt/VD1vbyKQ13OyfKu0tJs4x61Rt0/BEyPGzX54VRZESmMvmtA6lotj8/
-	fXotpNi+JZ9seRvHSsR3AT7OBBOlWZG+WHjcrZZzV4rdczOCh3J7QDUDLu1EGPODlVLMLEM1DtF
-	mdM2kH8WgOCblfDVqyFolE7QXsYOa3NjDH+yv0s5ZBXqwhJDo/YmSKPp78vjrmhEoW7zDQOSEgB
-	6h0hA1xG8ka1DrPIVqlB2AoVCXKPP59naqQjtljPr+tgU564KJOp6XjKWXduPDNhmQ8Oudl1E5o
-	NNPDOZExo1CRzE2xOpsR2cwRyea07U70Czqwlgn2FKzn/gogSoNsfRhjY9N40uDenJ47vOSFncW
-	Bb4vkgYTO1XoIjTPWaa78SKjJRNFxqms1HaFOHSrADN6947YwIi96q+RHbt2eXl1Z1u8K0J8N02
-	izcCfwC8+cV+miffVzlr6Mf/fd6wP+lO9HuwGsDEw==
-X-Received: by 2002:a05:6a21:696:b0:3c3:a7ab:135a with SMTP id adf61e73a8af0-3c92a749b53mr11060704637.20.1785795383620;
-        Mon, 03 Aug 2026 15:16:23 -0700 (PDT)
+        bh=5LM51EciHqg/+cWUGKzq5pQNwGKYXu9VyZMTqMOay7I=;
+        b=KonRih1wC3/cv/nt5q1N4raToTN63FWbC6B0DDiTyiJSp0Ne3mRLzisBXD8gVEmA/q
+         /R/MWOHNBNvZDHm26x9hvS5lQ3zQlYbaFLoFtRyccTOXiRICgCLWiSUHmZXP1YHpWsCA
+         saChSd3T0S/To7T2cM0t4bj6tHgYQd2dl0QIuGzFzpIwjBJOrLB9wcsbjObLdmyRBLy8
+         GYkXcRyf7AcQuLkqNRr4mp1EV0naoBKvc/LhW09RrOqhVI1TPp9PM8JKUAPEuU7jFp9q
+         fCcq60dbwrdduZLP3HN8JgwaPRN0epCpgJGTafnVKVUBt11aj3XJaWeU5xi4uzy8SyoT
+         UAVQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq3MyWiIJGOxsU7vLl82falMshnLW76U78jffT7BKjPpXnPA6+PEFxB7RGS6fh3KfTqrHfa43s78Pgz0dvIEZAC9q6c@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTMuJX0ela9qS4Dnfcwf5ZltUDchuvDJlB9dh8jgumborSoM1u
+	h3qZqOhSLPYwwheNddn3uhy0Tw8BCLRTy6sPyxXMDXGFVf6dYXv1Ehc36oNwMQdP
+X-Gm-Gg: AR+sD12/evkagamnbN0ABYopk2Erqz7LODta9S+VE9VD6Q3aliCbBYM8A2SLCPwM8lS
+	onx6Cejef1EGwdhC+pvTwHovGO1SsgtHsbk/xJP/h1CjLR1d8ZPwT9hCE0t5cxuh5k4qrpzNYdY
+	7k/0L2/2xoiPIYJtAjH2GPIpRiRzOEUIK/ErlO2BXXLN/bY8kh+a3tUkdWmYRaW+EJgpxUMRlmK
+	a0YPF9/ItEcP9Ql/4SKxjB8IcIUI0ggGa2grWwHWFF7yv8+ThkJPJFe68vv8ak8uw1EFRpN4O3U
+	moba5f4DrYb5DqVFURCsqECCNtRUWH1crOVa8Il9SPUBOfCfkcB9B2sGGDTnZ9WuXPGo8RlkKhr
+	gf+Ey935gfdu7FMe8kKmlpJzV3mX7kUme4OmAhcaIYWa9gipfJ1aVhTp5jffzKmn5eyX+1GWEks
+	9Rtx/zNK2s7OiOgC9Hx1oNABa9F3DypPdOGvXVti2/wglUiafqH4znbMAjrgwdC82/5Qb3eez+d
+	CWkh3l9KUbkPoALFY9/pKy36BzBK8MgMs3Kj1BG+Zu1T+VISvqy
+X-Received: by 2002:a05:6a20:431f:b0:3c3:750f:3cf9 with SMTP id adf61e73a8af0-3cb6c7b8475mr1065933637.11.1785795385301;
+        Mon, 03 Aug 2026 15:16:25 -0700 (PDT)
 Received: from lappy (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fab1334cfsm38685666c88.1.2026.08.03.15.16.23
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fab1334cfsm38685666c88.1.2026.08.03.15.16.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2026 15:16:23 -0700 (PDT)
+        Mon, 03 Aug 2026 15:16:24 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: lkml@antheas.dev
 Cc: W_Armin@gmx.de,
@@ -72,9 +72,9 @@ Cc: W_Armin@gmx.de,
 	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	"Derek J. Clark" <derekjohn.clark@gmail.com>
-Subject: [PATCH 4/6] platform/x86: msi-wmi-platform: Clean up devices
-Date: Mon,  3 Aug 2026 15:16:12 -0700
-Message-ID: <20260803221614.59324-5-derekjohn.clark@gmail.com>
+Subject: [PATCH 6/6] platform-x86: msi-wmi-platform: Add Gen 4 device
+Date: Mon,  3 Aug 2026 15:16:14 -0700
+Message-ID: <20260803221614.59324-7-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260803221614.59324-1-derekjohn.clark@gmail.com>
 References: <20250511204427.327558-1-lkml@antheas.dev>
@@ -87,119 +87,113 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current driver has multiple minor mistakes. Fix them all in one
-cleanup patch.
-
-- Device names are inconsistent/incorrect for the quirk table
-- Per the Windows DLL, PL2 must always be at least 1W higher than
-  PL1. Give PL1 and PL2 different minimum values.
-- Copy buffer before write to ensure payload is sent instead of stale
-  data
+Adds support for the MSI Claw 8 EX AI+. This device uses a unique new
+shift mode for custom TDP not previously exposed by this driver. To
+ensure that "MSI_SHIFT_MODE_USER" can still be set in the future to
+CUSTOM platform profile, store the shift mode that applies to custom in
+the quirks and check it outside the switch case in _get() since it is no
+longer a compile time const.
 
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
- drivers/platform/x86/msi-wmi-platform.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/platform/x86/msi-wmi-platform.c | 38 ++++++++++++++++++++++---
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/msi-wmi-platform.c b/drivers/platform/x86/msi-wmi-platform.c
-index fdc2f6f4ca7e..35cd35fc6446 100644
+index 8d11dad99776..0b1b64182cc3 100644
 --- a/drivers/platform/x86/msi-wmi-platform.c
 +++ b/drivers/platform/x86/msi-wmi-platform.c
-@@ -124,8 +124,9 @@ struct msi_wmi_platform_quirk {
- 	bool charge_threshold;	/* Charge threshold is supported */
- 	bool dual_fans;		/* For devices with two hwmon fans */
- 	bool restore_curves;	/* Restore factory curves on unload */
--	int pl_min;		/* Minimum PLx value */
-+	int pl1_min;		/* Minimum PL1 value */
- 	int pl1_max;		/* Maximum PL1 value */
-+	int pl2_min;		/* Minimum PL2 value */
- 	int pl2_max;		/* Maximum PL2 value */
+@@ -271,6 +271,17 @@ static struct msi_wmi_platform_quirk quirk_gen3 = {
+ 	.pl3_min = 10,
+ 	.pl3_max = 48,
  };
- 
-@@ -229,8 +230,9 @@ static struct msi_wmi_platform_quirk quirk_gen1 = {
- 	.charge_threshold = true,
- 	.dual_fans = true,
- 	.restore_curves = true,
--	.pl_min = 8,
++static struct msi_wmi_platform_quirk quirk_gen4 = {
++	.shift_mode = true,
++	.charge_threshold = true,
++	.dual_fans = true,
++	.restore_curves = true,
++	.custom_shift = MSI_PLATFORM_SHIFT_MANUAL,
 +	.pl1_min = 8,
- 	.pl1_max = 43,
++	.pl1_max = 35,
 +	.pl2_min = 9,
- 	.pl2_max = 45
- };
- static struct msi_wmi_platform_quirk quirk_gen2 = {
-@@ -238,14 +240,15 @@ static struct msi_wmi_platform_quirk quirk_gen2 = {
- 	.charge_threshold = true,
- 	.dual_fans = true,
- 	.restore_curves = true,
--	.pl_min = 8,
-+	.pl1_min = 8,
- 	.pl1_max = 30,
-+	.pl2_min = 9,
- 	.pl2_max = 37
- };
++	.pl2_max = 45,
++};
  
  static const struct dmi_system_id msi_quirks[] = {
  	{
--		.ident = "MSI Claw (gen 1)",
-+		.ident = "MSI Claw A1M",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
- 			DMI_MATCH(DMI_BOARD_NAME, "MS-1T41"),
-@@ -253,7 +256,7 @@ static const struct dmi_system_id msi_quirks[] = {
- 		.driver_data = &quirk_gen1,
+@@ -305,6 +316,14 @@ static const struct dmi_system_id msi_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_gen3,
  	},
- 	{
--		.ident = "MSI Claw AI+ 7",
-+		.ident = "MSI Claw 7 AI+ A2VM",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
- 			DMI_MATCH(DMI_BOARD_NAME, "MS-1T42"),
-@@ -261,7 +264,7 @@ static const struct dmi_system_id msi_quirks[] = {
- 		.driver_data = &quirk_gen2,
- 	},
- 	{
--		.ident = "MSI Claw AI+ 8",
-+		.ident = "MSI Claw 8 AI+ A2VM",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
- 			DMI_MATCH(DMI_BOARD_NAME, "MS-1T52"),
-@@ -1131,7 +1134,7 @@ static int msi_wmi_fw_attrs_init(struct msi_wmi_platform_data *data)
++	{
++		.ident = "MSI Claw 8 EX AI+ CG3EM",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
++			DMI_MATCH(DMI_BOARD_NAME, "MS-1T91"),
++		},
++		.driver_data = &quirk_gen4,
++	},
+ 	{ }
+ };
  
- 	if (data->quirks->pl1_max) {
- 		err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL1_SPL,
--					&fw_attr_type_int, data->quirks->pl_min,
-+					&fw_attr_type_int, data->quirks->pl1_min,
- 					data->quirks->pl1_max, &data_get_value,
- 					&data_set_value);
- 		if (err)
-@@ -1140,7 +1143,7 @@ static int msi_wmi_fw_attrs_init(struct msi_wmi_platform_data *data)
+@@ -805,10 +824,16 @@ static const struct hwmon_chip_info msi_wmi_platform_chip_info_dual = {
  
- 	if (data->quirks->pl2_max) {
- 		err = msi_fw_attr_init(data, MSI_ATTR_PPT_PL2_SPPT,
--				       &fw_attr_type_int, data->quirks->pl_min,
-+				       &fw_attr_type_int, data->quirks->pl2_min,
- 				       data->quirks->pl2_max, &data_get_value,
- 				       &data_set_value);
- 		if (err)
-@@ -1259,6 +1262,7 @@ static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user
- 		return ret;
- 
- 	down_write(&data->buffer_lock);
-+	memcpy(data->buffer, payload, data->length);
- 	ret = msi_wmi_platform_query(data->data, data->method, data->buffer,
- 				     data->length);
- 	up_write(&data->buffer_lock);
-@@ -1266,10 +1270,6 @@ static ssize_t msi_wmi_platform_debugfs_write(struct file *fp, const char __user
- 	if (ret < 0)
- 		return ret;
- 
--	down_write(&data->buffer_lock);
--	memcpy(data->buffer, payload, data->length);
--	up_write(&data->buffer_lock);
--
- 	return length;
+ static int msi_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+ {
++	struct msi_wmi_platform_data *data = drvdata;
++
+ 	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
+ 	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
++
++	if (data->quirks->custom_shift)
++		set_bit(PLATFORM_PROFILE_CUSTOM, choices);
++
+ 	return 0;
  }
  
+@@ -816,6 +841,7 @@ static int msi_wmi_platform_profile_get(struct device *dev,
+ 					enum platform_profile_option *profile)
+ {
+ 	struct msi_wmi_platform_data *data = dev_get_drvdata(dev);
++	u8 custom = data->quirks->custom_shift;
+ 	int ret;
+ 
+ 	u8 buffer[32] = { };
+@@ -829,6 +855,11 @@ static int msi_wmi_platform_profile_get(struct device *dev,
+ 	if (buffer[0] != 1)
+ 		return -EINVAL;
+ 
++	if (custom && buffer[1] == custom) {
++		*profile = PLATFORM_PROFILE_CUSTOM;
++		return 0;
++	}
++
+ 	switch (buffer[1]) {
+ 	case MSI_PLATFORM_SHIFT_SPORT:
+ 		*profile = PLATFORM_PROFILE_PERFORMANCE;
+@@ -842,9 +873,6 @@ static int msi_wmi_platform_profile_get(struct device *dev,
+ 	case MSI_PLATFORM_SHIFT_ECO:
+ 		*profile = PLATFORM_PROFILE_LOW_POWER;
+ 		return 0;
+-	case MSI_PLATFORM_SHIFT_USER:
+-		*profile = PLATFORM_PROFILE_CUSTOM;
+-		return 0;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -872,7 +900,9 @@ static int msi_wmi_platform_profile_set(struct device *dev,
+ 		buffer[1] = MSI_PLATFORM_SHIFT_ECO;
+ 		break;
+ 	case PLATFORM_PROFILE_CUSTOM:
+-		buffer[1] = MSI_PLATFORM_SHIFT_USER;
++		if (!data->quirks->custom_shift)
++			return -EINVAL;
++		buffer[1] = data->quirks->custom_shift;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.55.0
 
