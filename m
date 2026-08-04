@@ -1,210 +1,204 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23ED43901C
-	for <platform-driver-x86@vger.kernel.org>; Tue,  4 Aug 2026 11:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A552F8E95;
+	Tue,  4 Aug 2026 11:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785842933; cv=none; b=plz45p5ZapMDbtS3FPVaxDS1oGzmQDX1iCGp6eFdxA7nbtHOwzvAIw421W6lAsu2iT3v4WdDTYwvOoKoh6DpJcPDNcPuVAebHT/JkGCKTcR8FMMnjdn8ebNvHFsgXk3jj5iR1Ag7TzwlvguddKznmXpXcpUkjJXoSJnNpQRIFO8=
+	t=1785843023; cv=none; b=inGFdvu8rRg41EeNBC/TrRCOVOq2ifXohUr1408Ni8U8P3DJx80ag3GBi65hAHghs0z5hjjX5uiNEqoJn9BV/fPg1gTAfyxmdrjPmweBOGxQcKJJr2s1k3rccc9xy8DN6R7lIJQ+EKHUapNIVaLa0jgiUZ8+VbjqiSm6SyZhqKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785842933; c=relaxed/simple;
-	bh=8BWqG4YqfiBjM57lNnCy0KH8Akk8pgoZ1KQjJG8hIyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o0TCtI2C3F5USGUu3GoDGBQPdDzWoAYAaNHPocSjLXzPQm3rkpr3mPz+64IhZPbSEW9wQX5oy3PIfY0gYExjfxsLi48BFT4G0NII9SAu+84lIIBwGzcbzpWG5SgxLdbI/kHcUq/t7KO5GTMobr2yldCNRKZwXS5s7wbrlr2fcaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bAYlkwkT; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=iGirrsxS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1785843023; c=relaxed/simple;
+	bh=iHqfLDz6Q1BVISfoQmEZswPwRQYzTVlFCDIOgeLalvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KG52r2l/pcuA60Y64vFtZpj7vK4NLE31r2NZn55tO3yaCnMrvgaWX2Yd6AL5vHzl6IThG+0Z2WLYp94k2nbPzhyUqfTDuRfDJzyY0wK8V7L3fhb60xOqQ+wLPqGZ47PStOvz06qBvYq7cVrT/LfXIprgpRX42sxfO9cr5rKZy64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/QulvRN; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bAYlkwkT";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="iGirrsxS"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6748CNhN3217935
-	for <platform-driver-x86@vger.kernel.org>; Tue, 4 Aug 2026 11:28:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mUv2doTcB2KgzQLoxafx4RHjj4cI//KwVl9sabgS/aA=; b=bAYlkwkTUdWwAann
-	qho0NpK2qHNsX8QcruRCnRYdzvsvTQYXi3DmTrPv3lNOxIZv21nj//tAHX/ZxXQZ
-	ObH/d/Xzh4DUkzUXACYog/kr5jZHNlMjqxCBCPLuLaSswQtbLhpF8CqMMYaohwCW
-	Qtf/B6HxcUzRFXCKuDkY0W3fOrpSW9+ejkBihU9j9I0KsqsR3rET0/gADFT6144W
-	xyCmHtKKTVn2IZJgsFWG/96ab+j1PZcxoUJOYDyMOeB/9UxcSlnQfT3aUHpeE8J4
-	xsieTqeR6M3K2vtijqZH2RK3u6A6Hir98iFoP3yMnbxXe6JAe7EzWrCbG91Qt/Db
-	oMxZRQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4fty5sbxpa-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 04 Aug 2026 11:28:50 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-51c26012cd0so39246721cf.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 04 Aug 2026 04:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1785842930; x=1786447730; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=mUv2doTcB2KgzQLoxafx4RHjj4cI//KwVl9sabgS/aA=;
-        b=iGirrsxSLG0FQLYjoq4FKgMF/JL/FsmzIdpnBaZSjXyEa+UkNo8iDLpgvYvOoV5P7N
-         7GH/kkLesLFSjTRWGXD8u2cmiF2FUHntKU+tMhs33NyJnO8me9eJHIcrQt3hFNgSfV7e
-         86FKCFrzUED6/eCieAEfVf5rQ6pfgfKILsKGJgqTbpZMLqnMpBcUxo0jDo3sD08pDdKC
-         XqB0NkUrFEwY5hD/48h/OqEoCeg59CSSkGLIoRMOGsHHrGIg2qcjVFGtS7v+tZ2QiTvw
-         +zNjEfACxw2lNezTOposCfRwR3yugzNaDPm92ylYk/QRXwtBd1ItLbYaYiSTavcE7zcJ
-         158w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785842930; x=1786447730;
-        h=content-transfer-encoding:content-type:in-reply-to:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mUv2doTcB2KgzQLoxafx4RHjj4cI//KwVl9sabgS/aA=;
-        b=NIT7Osu7GuIy/5C+X0nOfXJ7B1L1uCz3OK9xDQHRBlOuUed2F3f2L6BTjz2GC0X8r2
-         cn1TZFKs8sv+VbOj/N/Inan+bIrkjduBdyMBVEPLb1U4ex5UgbmfQPe1RYJMLFZcyjCG
-         LO/ZSbkIghfA1OJG6IxYU21LCSKxbMqQL57GEdZncqU9N+A7WvEnyMyQoz+aDom8a92q
-         ReVX8JQbcZc9sq/UME8Eiwvgie0ZTJ2CuH9LZO9YDx6vxgKgIbEKxlljD32EG5A7uUqZ
-         fQMzRmB5+BZ8Kmysly+OuZfk4gyeOxyxiKbDOqRO9ehRYDlbuQ2MQIagjOuN5Fkkr7pN
-         wPKg==
-X-Forwarded-Encrypted: i=1; AHgh+RqDszyWBNmnSR+YkE2Xau7S9KPKkhjf34eAHBK2KynWZ0wygW0QuyklLRwmhZE4h0gM11vxsN1ZAHKSZMLXWNXK/nh7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW2tf5ILALhsceofR/sEDUUxYK7oqARkpHRIIciAfjnPPEvhzt
-	OEOhq8IzLFeKgs9OaqLXbQ6+j6yzoxkdTee5ggvdrdjVGmsFYkP6akehPlER5dDW71p3ApDVqtv
-	NodILH8qPjkAlLGHKd+DKO9gBd0TyC+ig3AnYyGUpJVp57YDeOiSBHy1n0XFW6BGFR2Gc77cXPu
-	Ih
-X-Gm-Gg: AR+sD13M1C+feANoSFp0KhthB+bCejAA7INIm2HGonPdZJfcnH4pexIO/pm4VTWzYPo
-	jG5GM8IECg2pT8n9mfyMhsjsM0daQ70crULLSXZN0fV9VkbSiQnmOKsJBggGb28RrK9/q3LTmx9
-	TST+OSw5R/KrW6jCRvvOPFD3RLiS8L4d3HRzyt96cNuCkOcpWNSvAAW6Irtf4yHDBS6z4hR8S+r
-	7Lr34SKluBx4Ue0fY0p1S9bk2X8emH3N04G0TSo0Zg+aKsSFwBEHt/ukBq78Ra/tI021UTd8W5F
-	roe8QkePT71JlQNspac5r4Pt4jhS9oX6YCGaX0+My/WCrK+XULyGw9gE2IlOzEyIfssi5EcgwDR
-	ck54ttn55Q2GDsTvQKSh7BxWqNRpkkQ==
-X-Received: by 2002:a05:622a:14d:b0:51c:1241:3b09 with SMTP id d75a77b69052e-52b567f58acmr239416721cf.39.1785842929536;
-        Tue, 04 Aug 2026 04:28:49 -0700 (PDT)
-X-Received: by 2002:a05:622a:14d:b0:51c:1241:3b09 with SMTP id d75a77b69052e-52b567f58acmr239416081cf.39.1785842929012;
-        Tue, 04 Aug 2026 04:28:49 -0700 (PDT)
-Received: from [192.168.1.110] ([178.197.219.214])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49949fec606sm95734265e9.14.2026.08.04.04.28.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2026 04:28:47 -0700 (PDT)
-Message-ID: <64d82edc-87a0-47c7-8a17-f0d1c806a294@oss.qualcomm.com>
-Date: Tue, 4 Aug 2026 13:28:42 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/QulvRN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785843021; x=1817379021;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=iHqfLDz6Q1BVISfoQmEZswPwRQYzTVlFCDIOgeLalvo=;
+  b=I/QulvRNH6OKYaMN4tCS/le2ol/qrHA7aE0h5Yu7ipUpY34SckZwbMcA
+   wQeqY1d5gBdgj63dZuC1+lFDGAD553oLSlUqPWUcguqSe//nMl3e8ppsX
+   FDigvKJ7kTPir7T6jkfHMRWgx5yYqpYXn7W2vplF7mZgKOCKSP3MlPxnp
+   zmxDhg3tGiGdZYdy61g+8aSF3h30oTI1b/Av9vl2HsAeQJt7AzqOzHGEq
+   yIlVY2BLexkIgwWBU3I8VRJMl5QYhuLBks8flACGpBTmd+nJmtIpSdbD6
+   pQ275YRkAtmDFHAgQC1LM7PDPLHZljIPwitP588gWXQQlJZIg/+TIqirj
+   A==;
+X-CSE-ConnectionGUID: XLQY+LlhSfOWysspQbIpVw==
+X-CSE-MsgGUID: AsT12gyFTqSTE1d0k1NLhg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="86589789"
+X-IronPort-AV: E=Sophos;i="6.25,204,1779174000"; 
+   d="scan'208";a="86589789"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2026 04:30:21 -0700
+X-CSE-ConnectionGUID: f4LX8IvKR8m45QvEcjWpAw==
+X-CSE-MsgGUID: YahEwf2BTJmYcabHMwejww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,204,1779174000"; 
+   d="scan'208";a="263479347"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.141])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2026 04:30:17 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id E9043121197;
+	Tue, 04 Aug 2026 14:30:20 +0300 (EEST)
+Date: Tue, 4 Aug 2026 14:30:20 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Jake Steinman <j@metarealtyinc.ca>
+Cc: "Vadillo, Miguel" <miguel.vadillo@intel.com>,
+	linux-media@vger.kernel.org, mario.limonciello@dell.com,
+	hdegoede@redhat.com, bingbu.cao@intel.com, tianshu.qiu@intel.com,
+	tomas.winkler@intel.com, hverkuil-cisco@xs4all.nl,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	kieran.bingham@ideasonboard.com, dan.scally@ideasonboard.com,
+	platform-driver-x86@vger.kernel.org,
+	libcamera-devel@lists.libcamera.org
+Subject: Re: [SOLVED] Dell Panther Lake =?utf-8?Q?I?=
+ =?utf-8?Q?R_camera_=28HIMX1092_=2F_Synaptics_SVP7500_06CB=3A0701=29_?=
+ =?utf-8?B?4oCU?= port-2 streaming gated by bridge secure-handshake
+Message-ID: <anHNTM7gr4zvSObW@kekkonen.localdomain>
+References: <CAE_FnZKNn0TzpVi+kaDZd91WtO4FN9S9AtXd9UjQZfGDDsxgfA@mail.gmail.com>
+ <agRvdKI9nj4qwDt8@kekkonen.localdomain>
+ <CAE_FnZKC+=hq-8hi-QPaHo9o=B_KoDA6+iLY2GLa-cWADMRfGA@mail.gmail.com>
+ <f7bb577c-abbe-43f5-9630-05288eeb0c41@intel.com>
+ <CAE_FnZKN5447We2ATUcc1cc_bKuQkdnva7+LOX4i0t4Bm8ybTA@mail.gmail.com>
+ <CAE_FnZJeNyoBnq1PXSE0kYQ2uE9aFv31WqrhQ-=WY78EWwwisg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/4] firmware: Rename google firmware directory to
- coreboot
-To: Sean Rhodes <sean@starlabs.systems>
-Cc: chrome-platform@lists.linux.dev,
-        Corentin Chary
- <corentin.chary@gmail.com>,
-        "Luke D. Jones" <luke@ljones.dev>,
-        Denis Benato <denis.benato@linux.dev>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Prasanth Ksr <prasanth.ksr@dell.com>,
-        Jorge Lopez <jorge.lopez2@hp.com>,
-        Mark Pearson <mpearson-lenovo@squebb.ca>,
-        "Derek J. Clark" <derekjohn.clark@gmail.com>,
-        Joshua Grisham <josh@joshuagrisham.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dell.Client.Kernel@dell.com,
-        Florian Fainelli
- <florian.fainelli@broadcom.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Chen-Yu Tsai <wenst@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Thomas Zimmermann
- <tzimmermann@suse.de>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
-        Simona Vetter <simona@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@kernel.org>,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Michal Simek <michal.simek@amd.com>, Sven Peter <sven@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?=
- <u.kleine-koenig@baylibre.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Titouan Ameline de Cadeville <titouan.ameline@gmail.com>,
-        Kees Cook <kees@kernel.org>, dri-devel@lists.freedesktop.org,
-        Oliver Lin <oliver@liuxiaozhen.dev>
-References: <cover.1785838269.git.sean@starlabs.systems>
- <6f65c9869714188539f2890aef6cf30e7bd2edcb.1785838269.git.sean@starlabs.systems>
- <e0d2a22e-a0cd-4a71-82c4-b88abcc7456e@oss.qualcomm.com>
- <04db0ee0-a8d5-4f30-a494-5c7f8ac757c8@oss.qualcomm.com>
- <CABtds-35m_cfT=Vm4MZkJYRe=dOPAKR6HYO_fu3SnwkdVQE0nQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <CABtds-35m_cfT=Vm4MZkJYRe=dOPAKR6HYO_fu3SnwkdVQE0nQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=SPJykuvH c=1 sm=1 tr=0 ts=6a71ccf2 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=+bKQE0WJfmhK2875HamI0Q==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=EUspDBNiAAAA:8 a=HHStz9QFAu1F9MAjIKUA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22
-X-Proofpoint-ORIG-GUID: k1RKQiLUchHA0BD3YYySzv65uKsin39I
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA0MDA5MSBTYWx0ZWRfX6FQxQbouvp3D
- bDQ05TB7MoRxpjoYuF+nryDCUXU55NDcy9j9rVavLfNXHUYVy9lSyD/9VucwNtxGHsntdpOTn3Y
- LH93AM0queccUXy5gFJHrZtD5JL4vQchOICQQd3ZeUVUTPekm4En2CR1DDUkog9mEpbheiuLjZD
- SOZwOxy+e1tn+/YzYFSU1jnlkSuWhL5+HC8T00fICxbZrBfeFD0aBTlvKvKmbi0BL77sxZl1fgS
- uJA2394EeTVUFRyTFz5SXaqbnNgWuOKpvVGpvzSP4hI52qZ+DIj4c54m0fXGYFnq7diXdkvEGX3
- CiYz0z+3xGyxuhB5Db79zJfJeGn/9e4RMPNVQkvtuH/3SsTq1BU84tafq8ARwar5ClUURM1BdbG
- P0K2e/MQhiXw38kWudFUzW1xS5ZSj1hQCAMoMFrK/IlKbQ5jdkk93dPFaWDZc4Ny7OGwVfUzEqI
- iNAXRQjnBpqy3e9ZZyQ==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA0MDA5MSBTYWx0ZWRfX99Xn4/a1dhhH
- mMyKV031nFb1YTR6xxSSSU3EGFTko/xuDOIfSxlVyJQ4VJMmy8Q5uRMCyQb7PUrlPTPj0dJ8hWe
- ZkgAlVTz61gDpk/YQ61rNRPnzV64+G8=
-X-Proofpoint-GUID: k1RKQiLUchHA0BD3YYySzv65uKsin39I
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-04_02,2026-08-03_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 spamscore=0 phishscore=0 adultscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608040091
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE_FnZJeNyoBnq1PXSE0kYQ2uE9aFv31WqrhQ-=WY78EWwwisg@mail.gmail.com>
 
-On 04/08/2026 13:24, Sean Rhodes wrote:
-> On Tue, 4 Aug 2026 at 12:05, Krzysztof Kozlowski
-> <krzysztof.kozlowski@oss.qualcomm.com> wrote:
->>
->> On 04/08/2026 13:02, Krzysztof Kozlowski wrote:
->>> On 04/08/2026 12:13, Sean Rhodes wrote:
->>>> rename to drivers/firmware/coreboot/Kconfig
->>>> index b78c644fa253..d273bd836245 100644
->>>> --- a/drivers/firmware/google/Kconfig
->>>> +++ b/drivers/firmware/coreboot/Kconfig
->>>> @@ -1,13 +1,16 @@
->>>>  # SPDX-License-Identifier: GPL-2.0-only
->>>> -menuconfig GOOGLE_FIRMWARE
->>>> -    bool "Google Firmware Drivers"
->>>> +menuconfig COREBOOT_FIRMWARE
->>>
->>> As pointed out by defconfig change, which is supposed to be separate
->>> commit, this will affect users of the kernel for no real gain.
->>>
->>> Do not change this.
->>
->> I am surprised that such change appeared at v10.
->>
->> Changelog is quite incomplete and I do not see any explanation for this.
+Hi Jake,
+
+On Sat, Jul 25, 2026 at 01:51:50PM -0400, Jake Steinman wrote:
+> Hi all,
 > 
-> Sorry, don't follow - so put the names back, or split it into its own patch?
+> Back in May I posted an RFC about the IR camera path on Intel Panther Lake
+> (IPU7) laptops where a Himax HM1092 sensor sits behind a Synaptics SVP7500
+> vision bridge. I could not get a single frame out of it.
+> 
+> It now works completely, and I would like help getting it upstream rather
+> than leaving it as an out-of-tree fix pack.
+> 
+> What works today
+> On a Dell XPS 16 (DA16260, Panther Lake), from a cold boot, surviving
+> reboots and kernel upgrades:
+> 
+> RGB camera (OV08x40) — streaming, 3856x2176 @30
+> IR camera (HM1092) — streaming, 648x368 @30
+> IR face authentication via Howdy — lock-screen unlock in ~0.3 s
+> s2idle suspend/resume, camera survives
+> That is the entire camera subsystem on this class of machine. Dell's own
+> driver packages bind the identical ACPI\HIMX1092 behind the identical
+> bridge on the XPS 13 9350 and DA14260/DA16260, and the same combination
+> ships on HP and Lenovo units, so this is a hardware family rather than one
+> laptop.
+> 
+> Root cause, for the archive
+> My sensor driver published V4L2_CID_LINK_FREQ = 360,960,000. That value is
+> correct, but it is the per-lane MIPI bit rate; V4L2 defines LINK_FREQ as
+> the DDR clock, which is half of it — 180,480,000. ipu7-isys therefore
+> programmed the CSI-2 D-PHY at ~721 Mbps against a sensor transmitting at
+> ~361. The clock lane came up and no data packet ever framed: zero SOF,
+> indefinitely.
+> 
+> The wrong number came from the obvious derivation — the sensor's own PLL
+> registers, 19.2 MHz * 94 / 5 = 360.96 MHz. That derivation is right; it
+> simply yields the bit clock. Anyone reverse-engineering this part from its
+> PLL configuration will land on the same value, which is why I think it is
+> worth recording publicly.
+> 
+> I would like to correct the record on things I previously reported here and
+> on the Intel trackers, all of which were wrong: the bridge does not gate
+> the data lane (with no MIPI link config at all, the sensor's clock still
+> reaches the IPU); HOST_SET_MIPI_CONFIG is not required for IR (Windows
+> never sends one); the register init table was never wrong (byte-identical
+> to Windows, in content and order); and there is no frame-trigger or
+> slave-mode register anywhere in the sensor or in any Windows driver build.
+> 
+> A diagnostic others may find useful
+> IPU7 CSI-2 PHY_STOPSTATE (port N base 0x2c0000 + N*0x4000, offset +0x4c)
+> carries one bit per data lane plus bit 16 for the clock lane:
+> 
+> 0x00010001  clock idle + data idle   - nothing transmitting
+> 0x00000001  clock ACTIVE, data parked - rate or format mismatch
+> 0x00000000  both live                 - streaming
+> The middle state is the signature of exactly this class of bug, and it is
+> otherwise very hard to distinguish from a firmware-locked sensor.
+> 
+> One caveat: ipu7-isys reads that register roughly 29 us before the sensor's
+> s_stream(1), so the value that reaches dmesg always says "idle" and is
+> useless. The sensor has to be armed out of band first for the reading to
+> mean anything. That single detail cost me weeks.
+> 
+> What I am asking for
+> One patch is ready now. ipu-bridge has no HIMX1092 entry, so a stock kernel
+> cannot construct the swnode graph for this sensor at all:
+> 
+> IPU_SENSOR_CONFIG("HIMX1092", 1, 180480000),
+> alongside the existing HIMX11B1 / HIMX2170 / HIMX2172 entries. I will send
+> this as a proper patch if it is wanted.
 
-I did not find explanation of this in the changelog. It cuts at v9, so
-maybe that's the reason, although lore pointed me the v10 as the first
-version introducing new CONFIG symbols.
+I'll pick the patch once we have rc1 in the media tree.
 
-Anyway, IMO renaming is really not worth if the sole reason is Google
-name is disliked now.
+> 
+> The sensor driver is not submittable as it stands, and I would rather hear
+> that now than waste a maintainer's review cycle. It carries out-of-tree
+> assumptions — vendor DKMS layout, debug module parameters — and needs CCI
+> accessors, a proper link_freq menu and binding documentation. I am willing
+> to do that work.
 
-Best regards,
-Krzysztof
+As you've noticed, Ramshouriesh has submitted versions of the HM1029
+driver, latest is v6. That driver seems to be in a good shape (for a
+register list based driver). Adding whatever needed for ACPI and required
+frequency configuration to the driver would be very nice. I see you're
+already working with him on this, good!
+
+> 
+> What I cannot supply is the judgement calls:
+> 
+> Is a sensor sitting behind a vendor vision bridge acceptable in
+> drivers/media/i2c/, or does this topology need a different home?
+
+The sensor driver isn't affected by this. The fact that it's behind such a
+bridge is visible in the Media graph but otherwise these bridges are
+effectively just pass-through devices for regular use cases.
+
+> Would Intel prefer to take the HM1092 driver in-house, given it is your
+> silicon and you already ship intel_cvs?
+> Is there an existing convention for the illuminator? INT3472 exposes it as
+> a LED class device, which means the sensor driver cannot drive it and the
+> userspace consumer has to — that works, but it feels like the wrong layer.
+
+The devices (sensor and the LED) are still different and there are use
+cases where both are used independently. Does HM1092 support strobing flash
+LED? That is in principle supported but often there's wiring missing. :-o
+
+> Working code, full write-up and verification tooling:
+> https://github.com/jibsta210/svp7500-camera-fix-pack
+> 
+> Prior discussion: https://github.com/intel/vision-drivers/issues/37
+> https://github.com/intel/ipu7-drivers/issues/64
+> 
+> Happy to test patches, provide captures, or rework the driver to whatever
+> shape you would accept. My preference by a wide margin is for this to end
+> up maintained in-tree rather than living as a DKMS pack that breaks on
+> every kernel bump.
+
+I'd very much like to see such an outcome as well.
+
+-- 
+Kind regards,
+
+Sakari Ailus
