@@ -1,61 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864CB1684BE
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 18:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C4637F303
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 18:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785953177; cv=none; b=iAd3TT+Mal3uOcYTL530ftpFcvCI308ajFesa1M4V4c2uegydEvq1mPMiMft2+lGZQmzGkROda5MN7LrAud/gO4uKVF1jglUtkjJwM529XJRVp8tmParhe96wK0UOt0R3bkYxteNmLOG6zQ52EufxiJL+535w6aHsUJXxEesxC4=
+	t=1785953184; cv=none; b=JKDyr+SHk8p4OnI+QJHuiCfE0pIz0OcXPJH8nSI6idox88ZPUVMlsXz0bxESKwfmNYHThYHi1iQbuKpu3i7irvvFK10FViwXQhZupwzp0sIfC2jhqmWTEPLhfxe5y14rtPRqWWPXeSzow2nM0lO5Rb2agpz2H3X3nMNI6hsXxvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785953177; c=relaxed/simple;
-	bh=aPGxXx6p6cZSwx4Rfq9MqTesKIQ9jY39WOTaHzs3+M0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qSTCft72gZswp9hZvY44/QQkzjkLysGIgKJQNrPz1mhd7rOqzqeu1aegORs9h6Yk90De/lF8M9h3iD4JtEf5JeHY+QG/yhHGxYqnyVTXOYFJrkLvlBawFB5J8HSFWGwwSi0witQmrS/R4bE8i0632wIq+qaiMON1zHtpF4kkJH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/rEUhn3; arc=none smtp.client-ip=209.85.216.47
+	s=arc-20240116; t=1785953184; c=relaxed/simple;
+	bh=sB1Kaaj57FK35DO6hz/EKtI7Pqsy9TLkFXNKzd2RZds=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nPZBAN85cpHS1AAGp+SJRt2Zf6OD7L9DyHh7AGqrjQhF59GPQEaUsRQwwGiOfJgGIeDSw965xU5SjUBrX7yNvDhwk9y9oGRy1V09o3W6jWaYMb+AbtXkNLoysdV0YfZ9DMubZ3GDhSV5OZ+RhtDfRXbwapGWY/K2+ufyP6nkIKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M3cO34Vx; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/rEUhn3"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3810c5d691bso1130616a91.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 11:06:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3cO34Vx"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-38101f85591so133083a91.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 11:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785953176; x=1786557976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=GK6vID6V8XbOUhrwHEAz5Ca1KT6fvP6lvb078p4aWHs=;
-        b=G/rEUhn3EkekdcuclnayuAJ273Ajc2uOplnRAXiI3XSQ7VgVahttIJE+on5Go3Tjs/
-         gZrVpbClks3x5YlYi+z48FeypqJ8smLBuGeCoepn1JX6Yzs7gSWj+D+vaxaCp9lOK5Y/
-         /9SOWKX9lZD1NPn0nb7tu3LfdNf/6X2drN4gIkst1cqGKOeFVZFuknv55g/ABe6CnUxF
-         jtNTj24pqRcKJPKdjdFNHlpJ68c+dKPs4U2TDvnbokCPFaGz9ftE4Ybq3B/s2WCTqiCs
-         0PQB0pD43evaODZNWDd4h43pkm0Fz1hCJjCYo0cH9DkZmGU69o3YqfjoFOMU2h2FwrUO
-         0LsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785953176; x=1786557976;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1785953180; x=1786557980; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GK6vID6V8XbOUhrwHEAz5Ca1KT6fvP6lvb078p4aWHs=;
-        b=pQ/OQ6ulMvazf5NeDv/Wd15Re3Dpv6b5Z0zC0kL5yw5/9DoHsGb1d4Zyj9VDG5mQl6
-         rHUV6eM+XPPIpT/G2so1vkBlj5DQ/q+SMdyxvGOHmr8f36mOi07s7cFOIm+pnOps3+r9
-         /tmVTosG2VVah6X2Xl1m/Im+LowHBTI+Y9PxYMQQ5HDIjnwCuKcO567ZB2KlsFIxXaiE
-         ak4K8MOnf37sZV9K/XYxS5xm8P1UPzVly+GW4vsod5GQ309clyrN7a2PTGysuyrFiFHX
-         GHdWN6X+m0Zq33ry61z+Vpd79Nau0ktnB8At0h6xmmNgnkfPwdyqq/JgS8Nrv8seeees
-         CxWg==
-X-Gm-Message-State: AOJu0YzXar9QQnQJXLIBw9zbHmUZnK+HfKWrQKVRX4YT3dVCMih5cbIa
-	m0bwa/31JmvxbwRngkR5at+y7STE1x7dQw4ad0scdQgNY9SvmkIFb08lYr9B4kB0B34=
-X-Gm-Gg: AR+sD12T/sAqXLer+TBkEfd9kMAqelE9e6ekze0kTAmKOaQ1qUJbYUuASqphayRKVCn
-	n/kmmKIFYUIaN3eH64KEaTspuqKgrwQYsxer2vIxjtD8DihVty3GSeR8J6xBX5u7CG4NUYKKYcT
-	S83GIeWKY8z6z4UlBeXL2Yq9E0yRU4lILMYTu6Ofe0F0+3JT2uJo9Gdrh3CyogtYPk4z7coddx5
-	uD2SxRy1NNK5F1hm2IwFR9reUPnZjRIrwveAg1fOzG9yWxTHPYSPut0yeKsjaOyneH9ECBf317/
-	TLV51wvaaEHaX8Jxb9yHd9CLSz4fxwizuS1IpXyC4+891OCQOx6spl7C8FugjnmIzX099yJWmx4
-	UfQQi+ake3WNuQ5RnnC7rMTTFmANpH2zxMfwCOmATYfOii1T/ua2RssGWd++aUJMOX8hoO28+/O
-	uv8+K5VlrJV1yg7LtUclfdEyujLNo0j7jtfsdVlrWWIGa8LE+pRdXhIG1HUqyd22kz3qmVwXdKL
-	lmOdI1CRj6u6k79pmzl
-X-Received: by 2002:a17:90b:3806:b0:38e:7080:b4c0 with SMTP id 98e67ed59e1d1-3903c5cfbccmr8014619a91.10.1785953175724;
-        Wed, 05 Aug 2026 11:06:15 -0700 (PDT)
+        bh=GgCvWD2l2Fq77GYiybmTZggfpFuEvRxZsMZQT9Lvm84=;
+        b=M3cO34VxS8IwTrtgmt7rMaa/IHUWd+dNbeLYxvqACBBkzV4LZLhFlf2uMuVMVx/9dO
+         cbJoN57nEKW/p8lhMQyffeCYqWvlNxm/dVfS9R1nLCaevqemx2l9a9aPMN64yPFsvU7F
+         Sy8k0tr+7P3wq6y0xQ5ymAqjPo4a41aSg1aPxOX1YnIUVIbyqY3D+VGR71x0KUm+0HgP
+         RYTYT26LRrQf8yaSVja8s7w2MMYn+ZslAaojqhlKhcWetHp4IGRP2xpIGw3C0QWe1G1/
+         sfeCngjUiXyyY949z/OlzamUeCFQOJkQAxSh1hYvaqQnN3D8UnsX0SDLkFZ1V5k4J+LT
+         0tvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785953180; x=1786557980;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=GgCvWD2l2Fq77GYiybmTZggfpFuEvRxZsMZQT9Lvm84=;
+        b=Ukm7ke6cENpris8tGIuqCJdZkM0E36VmiHrcH3DrgWmwXp28/DHyYlEr4usYmdOA1Y
+         FnH/KfcXfCCYSflh9ScWYHalpBnReYKqNPZNtRZ+DHCrjiwZpv88Vt16aO0N2T1qKn7u
+         lZiZlSjvBQ6qvCGTMLah5j872FQ73JFJy8tVodaRd5eyX8ZxLwTaJsvkULhPlaG6yguG
+         6edet+gVk+N9nQGSyyCYkFArCzYqP6jCeuGi0LbObNeS8RtWkoTjBXrUeG7j4FPeUgJk
+         4F3O2Z60wfSaM+OT5DgJv/eahr3k64iRqJ2OZqHnLZZd5lN56XN/vAnuT8sTLaVDgRp4
+         UzUw==
+X-Gm-Message-State: AOJu0YzUdO4HF1MkVLIDFY1wnhojaAJY53ReM7k6RaTS3ZyltyWjdbUF
+	fb8fxx5LwMtiAhEIWObHxmzR8PcUjDyQIQdb6B/bsQIABA80P+8vhBI73I3/VxEmVhI=
+X-Gm-Gg: AR+sD116nhve7ieHHDiCs+dNP5PE2KhQOnaGq58bSq2pWFnilFTtJbFe1/aZkcF6hx7
+	vHi4mz1Hb1oJHAQm+Tv9PYQ+bpnJREUTlBfoZxUjmOsiAWYqQOeJB+IoSauD6nXgYlBaWSMC+2M
+	HZsLEFzcmVemdPKc0vgx3D54ubOEJsaOhEbzEl+OG8Qi5CC4BkR16JXDilAlw4e40/6b4ZCEzX5
+	abcNw+SK5+uJk3QiBD2h+whO7Swi/wmqLFbAJFlMiRm5qv+agDRcGGJbCkkrCHooEB/hikAWy6s
+	y07XxnnzfWuOIxksYlbB+i0Yu5VUBmUiohskTHPmrXIQND72gLSBfaH61GZXnQyw7a2phcr6hmF
+	0uuDyy71ggS/lw0EXesrXWksIvWYm7zDrlN10FXT7T+X9qgOXm7RA9oT49QOII4LT1hcVzbbuPt
+	iyByAGzBbvRIMeKI8tPh3A9XdTGqYAWViDxmY03h3QqPjw83+3Wefto0f/nbYmN5smnNfO8bmNd
+	XbTZmJIWKDHw34QGbem
+X-Received: by 2002:a17:90b:3810:b0:38e:b3fd:d584 with SMTP id 98e67ed59e1d1-39083aa5aeemr441374a91.15.1785953180191;
+        Wed, 05 Aug 2026 11:06:20 -0700 (PDT)
 Received: from localhost ([112.204.123.220])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3903f5d9b91sm2178422a91.3.2026.08.05.11.06.12
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3903f5d9b91sm2178422a91.3.2026.08.05.11.06.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 11:06:14 -0700 (PDT)
+        Wed, 05 Aug 2026 11:06:19 -0700 (PDT)
 From: Alex Yeo <alexyeo362@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: alexyeo362@gmail.com,
@@ -63,10 +65,12 @@ Cc: alexyeo362@gmail.com,
 	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 0/1] platform/x86: panasonic-laptop: add platform_profile support
-Date: Thu,  6 Aug 2026 02:05:42 +0800
-Message-ID: <20260805180544.1134916-1-alexyeo362@gmail.com>
+Subject: [RFC PATCH v1 1/1] platform/x86: panasonic-laptop: add platform_profile support
+Date: Thu,  6 Aug 2026 02:05:43 +0800
+Message-ID: <20260805180544.1134916-2-alexyeo362@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260805180544.1134916-1-alexyeo362@gmail.com>
+References: <20260805180544.1134916-1-alexyeo362@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -75,136 +79,510 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This RFC patch adds support for mapping firmware thermal and CPU power
-operating policy to platform_profile for Panasonic Let's Note laptops.
-This originally started as a hwmon and thermal patch, but further
-analysis had revealed that these are firmware power and thermal
-policies as opposed to fan control.
+Expose firmware thermal and power management policies via the
+platform_profile interface.
 
-Panasonic firmware exposes firmware operating policy through two
-methods:
- - Fan cooling policy (active/passive)
- - Processor TDP limit (capped/uncapped)
-
-At boot, firmware defaults to an active cooling policy with the
-CPU TDP capped. Vendor drivers / DPTF normally unlocks this on
-Windows.
-
-These 2 methods map to 4 possible distinct states. Only states that
-correspond to the platform_profile ABI are mapped and exposed as
-choices. Unmapped states will be returned as "custom" by the driver.
-
-I have tested the following models:
+Supported and tested models:
  - CF-RZ6 (2016)
  - CF-SV8 (2019)
  - CF-QV9 (2020)
  - CF-SR4 (2024)
 
-State to platform_profile mapping:
+Firmware fan operating mode and the TDP limit switch are mapped onto
+the Linux platform_profile ABI.
 
- Profile                         | Fan Mode  | TDP
-+--------------------------------+-----------+------------+
- PLATFORM_PROFILE_COOL (SR4 only)| Active    | Locked
- PLATFORM_PROFILE_BALANCED       | Active    | Locked
- PLATFORM_PROFILE_QUIET          | Passive   | Locked
- PLATFORM_PROFILE_PERFORMANCE    | Active    | Unlocked
- CUSTOM (unmapped on all)        | Passive   | Unlocked
+This implementation queries the firmware for every get().
+CUSTOM is returned when the current state is not recognized.
+The set() callback writes the values regardless of what the
+current fan mode and TDP limit is.
 
-Across all of them, the fan and TDP modes are toggled by the same ACPI
-methods. However, there is a slight variation in its interpretation based
-on testing results.
+ - DMI quirks restrict support to tested models
+ - Missing includes such as sysfs.h were added based on previous
+   feedback.
+ - Logging: pr_fmt added
+ - When raising TDP, fan mode is switched first
+ - When limiting TDP, TDP limit is applied first
+ - ACPI handle for the EC device was used as the EC path varies
+   slightly between models.
 
-These methods are normally called by the DPTF/IPF _OSC handshake.
-Depending on the capability bits, the firmware will alter its thermal
-and power policy.
-
-\_SB.IETM Implementation A:
- - CF-RZ6 (2016)
- - CF-SV8 (2019)
-
-\_SB.IETM Implementation B:
- - CF-QV9 (2020)
- - CF-SR4 (2024)
-
-Models belonging to the same group share what appears to be identical
-AML code for the _OSC.
-
-This patch only exposes the ability to read and set these firmware
-toggles. The get() callback queries current firmware state and returns
-the mapped platform_profile. The set() callback sets the target state
-regardless of current state.
-
-Proposed mappings in this patch are defined in the quirks struct.
-Activation of platform_profile is gated by DMI checks.
-
-For every model except the SR4, only balanced and performance profiles
-are defined. This is because the aggressive fan paired with the locked
-TDP on the SR4 more appropriately correspond to the cool profile.
-
-Test results for the proposed mappings are below.
-
-Test results:
-================
-(CPU PkgWatt: peak / sustained)
-(Sysbench CPU: all available threads)
-
-CF-RZ6: (i5-7Y57, Startup default: Balanced)
-
- Platform Profile |  CPU PkgWatt    |  Sysbench CPU  | Stress Temp (CPU)
-+-----------------+-----------------+----------------+-------------------+
- BALANCED         |  10.0W / 9.0W   |    19712       |   57C
- PERFORMANCE      |  18.9W / 14.9W  |    29132       |   72C
-
-CF-SV8: (i5-8365U, Startup default: Balanced)
-
- Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
-+-----------------+------------------+----------------+-------------------+
- BALANCED         |  9.9W  / 9.9W    |    44695       |   58C
- PERFORMANCE      |  29.0W / 19.9W   |    71747       |   81C
-
-CF-QV9: (i5-10310U, Startup default: Balanced)
-
- Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
-+-----------------+------------------+----------------+-------------------+
- BALANCED         |  10.0W / 9.9W    |    46545       |   59C
- PERFORMANCE      |  18.9W / 14.9W   |    57416       |   70C
-
-CF-SR4: (i5-1345U, Startup default: Cool)
-
- Platform Profile |  CPU PkgWatt     |  Sysbench CPU  | Stress Temp (CPU)
-+-----------------+------------------+----------------+-------------------+
- COOL             |  12.0W / 12.0W   |    177139      |   66C
- QUIET            |  12.0W / 12.0W   |    176315      |   73C-75C
- PERFORMANCE      |  29.6W / 21.3W   |    247602      |   98C-100C
-
-CF-SR4 Notes:
- - QUIET: downclock/throttle at 75C, no increase in package_throttle_count
- - PERFORMANCE: stable boost clock, package_throttle_count increase
-
-
-Other notes:
-===============
-
-Additional notes about thermald:
-During testing, I have observed that running thermald for the first time
-since boot will trigger an _OSC negotiation that will unlock CPU TDP for
-new models (IETM Implementation B). Once thermald is running, exits or
-runs again, these bits were not observed to change again during testing.
-
-Running thermald on older models (IETM Implementation A) does not touch
-the fan curve or TDP mode setting.
-
-Suspend: observed to not alter the values set prior to suspend
-
-Thank you,
-Alex
-
-Alex Yeo (1):
-  platform/x86: panasonic-laptop: add platform_profile support
-
+Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
+---
  drivers/platform/x86/panasonic-laptop.c | 380 ++++++++++++++++++++++++
  1 file changed, 380 insertions(+)
 
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 719add753cb3..eeb89892768b 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -119,10 +119,16 @@
+  *		- v0.1  start from toshiba_acpi driver written by John Belmonte
+  */
+ 
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/acpi.h>
+ #include <linux/backlight.h>
+ #include <linux/bits.h>
++#include <linux/cleanup.h>
+ #include <linux/ctype.h>
++#include <linux/dmi.h>
++#include <linux/err.h>
++#include <linux/errno.h>
+ #include <linux/i8042.h>
+ #include <linux/init.h>
+ #include <linux/input.h>
+@@ -130,13 +136,18 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/platform_profile.h>
++#include <linux/printk.h>
+ #include <linux/seq_file.h>
+ #include <linux/serio.h>
+ #include <linux/slab.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
+ #include <linux/uaccess.h>
+ #include <acpi/video.h>
+ 
++DEFINE_FREE(acpi_dev_put, struct acpi_device *, if (_T) acpi_dev_put(_T))
++
+ MODULE_AUTHOR("Hiroshi Miura <miura@da-cha.org>");
+ MODULE_AUTHOR("David Bronaugh <dbronaugh@linuxboxen.org>");
+ MODULE_AUTHOR("Harald Welte <laforge@gnumonks.org>");
+@@ -158,12 +169,39 @@ MODULE_LICENSE("GPL");
+ #define ECO_MODE_OFF		0x00
+ #define ECO_MODE_ON		0x80
+ 
++#define PCC_ACPI_FAN_ACTIVE_MODE	0x00
++#define PCC_ACPI_FAN_PASSIVE_MODE	0x01
++#define PCC_ACPI_TDP_LIMIT_ON		0x01
++#define PCC_ACPI_TDP_LIMIT_OFF		0x00
++
+ #define ACPI_PCC_DRIVER_NAME	"Panasonic Laptop Support"
+ #define ACPI_PCC_DEVICE_NAME	"Hotkey"
+ #define ACPI_PCC_CLASS		"pcc"
+ 
+ #define ACPI_PCC_INPUT_PHYS	"panasonic/hkey0"
+ 
++enum pcc_fan_mode {
++	PCC_FAN_MODE_UNSET = 0,
++	PCC_FAN_MODE_ACTIVE,
++	PCC_FAN_MODE_PASSIVE,
++};
++
++enum pcc_tdp_mode {
++	PCC_TDP_MODE_UNSET = 0,
++	PCC_TDP_MODE_LOCKED,
++	PCC_TDP_MODE_UNLOCKED,
++};
++
++struct pcc_platform_profile {
++	enum pcc_fan_mode fan_mode;
++	enum pcc_tdp_mode tdp_mode;
++};
++
++struct pcc_quirk {
++	bool use_platform_profiles;
++	struct pcc_platform_profile platform_profiles[PLATFORM_PROFILE_LAST];
++};
++
+ /* LCD_TYPEs: 0 = Normal, 1 = Semi-transparent
+    ECO_MODEs: 0x03 = off, 0x83 = on
+ */
+@@ -239,6 +277,7 @@ static const struct key_entry panasonic_keymap[] = {
+ 
+ struct pcc_acpi {
+ 	acpi_handle		handle;
++	acpi_handle		ec_handle;
+ 	unsigned long		num_sifr;
+ 	int			sticky_key;
+ 	int			eco_mode;
+@@ -246,13 +285,111 @@ struct pcc_acpi {
+ 	int			ac_brightness;
+ 	int			dc_brightness;
+ 	int			current_brightness;
++	const struct pcc_quirk	*quirks;
+ 	struct acpi_device	*device;
+ 	struct input_dev	*input_dev;
+ 	struct backlight_device	*backlight;
+ 	struct platform_device	*platform;
++	struct device		*platform_profile_dev;
+ 	u32			sinf[] __counted_by(num_sifr);
+ };
+ 
++static struct pcc_quirk quirk_cf_sr4 = {
++	.use_platform_profiles = true,
++	.platform_profiles = {
++		[PLATFORM_PROFILE_QUIET] =  {
++			.fan_mode = PCC_FAN_MODE_PASSIVE,
++			.tdp_mode = PCC_TDP_MODE_LOCKED,
++		},
++		[PLATFORM_PROFILE_COOL] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_LOCKED,
++		},
++		[PLATFORM_PROFILE_PERFORMANCE] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
++		},
++	},
++};
++
++static struct pcc_quirk quirk_cf_qv9 = {
++	.use_platform_profiles = true,
++	.platform_profiles = {
++		[PLATFORM_PROFILE_BALANCED] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_LOCKED,
++		},
++		[PLATFORM_PROFILE_PERFORMANCE] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
++		},
++	},
++};
++
++static struct pcc_quirk quirk_cf_sv8 = {
++	.use_platform_profiles = true,
++	.platform_profiles = {
++		[PLATFORM_PROFILE_BALANCED] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_LOCKED,
++		},
++		[PLATFORM_PROFILE_PERFORMANCE] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
++		},
++	},
++};
++
++static struct pcc_quirk quirk_cf_rz6 = {
++	.use_platform_profiles = true,
++	.platform_profiles = {
++		[PLATFORM_PROFILE_BALANCED] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_LOCKED,
++		},
++		[PLATFORM_PROFILE_PERFORMANCE] =  {
++			.fan_mode = PCC_FAN_MODE_ACTIVE,
++			.tdp_mode = PCC_TDP_MODE_UNLOCKED,
++		},
++	},
++};
++
++static const struct dmi_system_id pcc_quirks[] = {
++	{
++		.ident = "Panasonic Connect Co., Ltd. CFSR4-1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Connect Co., Ltd."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CFSR4-1"),
++		},
++		.driver_data = &quirk_cf_sr4,
++	},
++	{
++		.ident = "Panasonic Corporation CFQV9-1",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CFQV9-1"),
++		},
++		.driver_data = &quirk_cf_qv9,
++	},
++	{
++		.ident = "Panasonic Corporation CFSV8-2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CFSV8-2"),
++		},
++		.driver_data = &quirk_cf_sv8,
++	},
++	{
++		.ident = "Panasonic Corporation CFRZ6-2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Panasonic Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CFRZ6-2"),
++		},
++		.driver_data = &quirk_cf_rz6,
++	},
++	{},
++};
++
+ /*
+  * On some Panasonic models the volume up / down / mute keys send duplicate
+  * keypress events over the PS/2 kbd interface, filter these out.
+@@ -958,6 +1095,207 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
+ 	return error;
+ }
+ 
++static int pcc_fan_mode_get(struct pcc_acpi *pcc, enum pcc_fan_mode *fan_mode)
++{
++	unsigned long long state;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(pcc->ec_handle, "CEFM", NULL,
++				       &state);
++	if (ACPI_FAILURE(status)) {
++		pr_err("cannot get fan mode via CEFM\n");
++		return -EIO;
++	}
++
++	if (state == PCC_ACPI_FAN_ACTIVE_MODE)
++		*fan_mode = PCC_FAN_MODE_ACTIVE;
++	else if (state == PCC_ACPI_FAN_PASSIVE_MODE)
++		*fan_mode = PCC_FAN_MODE_PASSIVE;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static int pcc_tdp_mode_get(struct pcc_acpi *pcc, enum pcc_tdp_mode *tdp_mode)
++{
++	unsigned long long state;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(pcc->ec_handle, "EPLE", NULL,
++				       &state);
++	if (ACPI_FAILURE(status)) {
++		pr_err("cannot read power limit using EPLE\n");
++		return -EIO;
++	}
++
++	if (state == PCC_ACPI_TDP_LIMIT_ON)
++		*tdp_mode = PCC_TDP_MODE_LOCKED;
++	else if (state == PCC_ACPI_TDP_LIMIT_OFF)
++		*tdp_mode = PCC_TDP_MODE_UNLOCKED;
++	else
++		return -EINVAL;
++
++	return 0;
++}
++
++static int pcc_fan_mode_set(struct pcc_acpi *pcc, enum pcc_fan_mode fan_mode)
++{
++	acpi_status status;
++
++	switch (fan_mode) {
++	case PCC_FAN_MODE_ACTIVE:
++		status = acpi_execute_simple_method(pcc->ec_handle,
++						    "SEFM",
++						    PCC_ACPI_FAN_ACTIVE_MODE);
++		break;
++	case PCC_FAN_MODE_PASSIVE:
++		status = acpi_execute_simple_method(pcc->ec_handle,
++						    "SEFM",
++						    PCC_ACPI_FAN_PASSIVE_MODE);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (ACPI_FAILURE(status)) {
++		pr_err("failed to set fan mode via SEFM\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int pcc_tdp_mode_set(struct pcc_acpi *pcc, enum pcc_tdp_mode tdp_mode)
++{
++	acpi_status status;
++
++	switch (tdp_mode) {
++	case PCC_TDP_MODE_LOCKED:
++		status = acpi_execute_simple_method(pcc->ec_handle,
++						    "SEPL",
++						    PCC_ACPI_TDP_LIMIT_ON);
++		break;
++	case PCC_TDP_MODE_UNLOCKED:
++		status = acpi_execute_simple_method(pcc->ec_handle,
++						    "SEPL",
++						    PCC_ACPI_TDP_LIMIT_OFF);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (ACPI_FAILURE(status)) {
++		pr_err("failed to set power mode via SEPL\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int pcc_platform_profile_get(struct device *dev, enum platform_profile_option *profile)
++{
++	struct pcc_acpi *pcc = dev_get_drvdata(dev);
++	enum pcc_fan_mode fan_mode;
++	enum pcc_tdp_mode tdp_mode;
++	int status;
++
++	status = pcc_fan_mode_get(pcc, &fan_mode);
++	if (status)
++		return status;
++
++	status = pcc_tdp_mode_get(pcc, &tdp_mode);
++	if (status)
++		return status;
++
++	for (enum platform_profile_option pp_opt = 0;
++	     pp_opt < PLATFORM_PROFILE_LAST;
++	     pp_opt++) {
++		enum pcc_fan_mode profile_fan_mode =
++			pcc->quirks->platform_profiles[pp_opt].fan_mode;
++		enum pcc_tdp_mode profile_tdp_mode =
++			pcc->quirks->platform_profiles[pp_opt].tdp_mode;
++
++		if (!(profile_fan_mode && profile_tdp_mode))
++			continue;
++
++		if (tdp_mode == profile_tdp_mode && fan_mode == profile_fan_mode) {
++			*profile = pp_opt;
++			return 0;
++		}
++	}
++
++	*profile = PLATFORM_PROFILE_CUSTOM;
++	return 0;
++}
++
++static int pcc_platform_profile_set_profile(struct pcc_acpi *pcc,
++					    enum pcc_fan_mode fan_mode,
++					    enum pcc_tdp_mode tdp_mode)
++{
++	int status;
++
++	switch (tdp_mode) {
++	case PCC_TDP_MODE_UNLOCKED:
++		status = pcc_fan_mode_set(pcc, fan_mode);
++		if (status)
++			return status;
++
++		return pcc_tdp_mode_set(pcc, tdp_mode);
++	case PCC_TDP_MODE_LOCKED:
++		status = pcc_tdp_mode_set(pcc, tdp_mode);
++		if (status)
++			return status;
++
++		return pcc_fan_mode_set(pcc, fan_mode);
++	default:
++		return -EINVAL;
++	}
++}
++
++static int pcc_platform_profile_set(struct device *dev, enum platform_profile_option profile)
++{
++	struct pcc_acpi *pcc = dev_get_drvdata(dev);
++	struct pcc_platform_profile pcc_profile;
++
++	pcc_profile = pcc->quirks->platform_profiles[profile];
++	if (pcc_profile.fan_mode && pcc_profile.tdp_mode)
++		return pcc_platform_profile_set_profile(pcc,
++							pcc_profile.fan_mode,
++							pcc_profile.tdp_mode);
++
++	return -EINVAL;
++}
++
++static int pcc_platform_profile_probe(void *drvdata, unsigned long *choices)
++{
++	struct pcc_acpi *pcc = drvdata;
++
++	for (enum platform_profile_option pp_opt = 0;
++	     pp_opt < PLATFORM_PROFILE_LAST;
++	     pp_opt++) {
++		enum pcc_fan_mode fan_mode =
++			pcc->quirks->platform_profiles[pp_opt].fan_mode;
++		enum pcc_tdp_mode tdp_mode =
++			pcc->quirks->platform_profiles[pp_opt].tdp_mode;
++
++		if (fan_mode && tdp_mode) {
++			set_bit(pp_opt, choices);
++		} else if (fan_mode || tdp_mode) {
++			pr_err("error probing platform profiles: malformed quirk\n");
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++static const struct platform_profile_ops pcc_platform_profile_ops = {
++	.probe = pcc_platform_profile_probe,
++	.profile_get = pcc_platform_profile_get,
++	.profile_set = pcc_platform_profile_set,
++};
++
+ /* kernel module interface */
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -979,8 +1317,37 @@ static int acpi_pcc_hotkey_resume(struct device *dev)
+ }
+ #endif
+ 
++static int acpi_pcc_platform_profile_probe(struct pcc_acpi *pcc, struct platform_device *pdev)
++{
++	struct acpi_device *adev __free(acpi_dev_put) =
++		acpi_dev_get_first_match_dev("PNP0C09", NULL, -1);
++	int err;
++
++	if (!adev) {
++		pr_err("failed to find embedded controller path\n");
++		return -ENODEV;
++	}
++
++	pcc->ec_handle = acpi_device_handle(adev);
++
++	pcc->platform_profile_dev =
++		devm_platform_profile_register(&pdev->dev,
++					       "panasonic-laptop",
++					       pcc,
++					       &pcc_platform_profile_ops);
++	if (IS_ERR(pcc->platform_profile_dev)) {
++		err = PTR_ERR(pcc->platform_profile_dev);
++		pcc->platform_profile_dev = NULL;
++		return dev_err_probe(&pdev->dev, err,
++				     "failed to register platform profiles\n");
++	}
++
++	return 0;
++}
++
+ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ {
++	const struct dmi_system_id *dmi_id;
+ 	struct backlight_properties props;
+ 	struct acpi_device *device;
+ 	struct pcc_acpi *pcc;
+@@ -1020,6 +1387,12 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ 	strscpy(acpi_device_name(device), ACPI_PCC_DEVICE_NAME);
+ 	strscpy(acpi_device_class(device), ACPI_PCC_CLASS);
+ 
++	dmi_id = dmi_first_match(pcc_quirks);
++	if (dmi_id) {
++		pcc->quirks = dmi_id->driver_data;
++		pr_debug("quirk detect: enabled quirks for %s\n", dmi_id->ident);
++	}
++
+ 	result = acpi_pcc_init_input(pcc);
+ 	if (result) {
+ 		pr_err("Error installing keyinput handler\n");
+@@ -1091,6 +1464,13 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	i8042_install_filter(panasonic_i8042_filter, NULL);
++
++	if (pcc->quirks && pcc->quirks->use_platform_profiles) {
++		result = acpi_pcc_platform_profile_probe(pcc, pdev);
++		if (result)
++			pr_warn("error occurred setting up platform profiles\n");
++	}
++
+ 	return 0;
+ 
+ out_platform:
 -- 
 2.55.0
 
