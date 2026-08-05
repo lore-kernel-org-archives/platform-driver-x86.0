@@ -1,149 +1,144 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C4535F609
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 15:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A24447DD69
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 16:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785945156; cv=none; b=fkaVaebsCJphxD/PnNuyiC3eK2xpAhks+IIKsSS77hJO0fV8qDyTcSlXjIjmhaSycRY5X9UdxmU5s+g9pgacOUOU/K43vbxL+/DxaurhXkZwhJXjSgudzm0BAKxf8ZXnFB3JLgQLfBMkuaKdC7lmGcCM8x2Eumg0Bc2zzHwdCIY=
+	t=1785946092; cv=none; b=D6Pb6BaImLn/2Fx+RJeDcBSWzdyWo3sO4NqyxiM06yxfmtVBhr2ZccNZv+aIbWHuN6L/+pfDlLg25hMLK05KZv/h7Kwanh1JHvCYkyYaWizID+eh34+vtcPHr2Q7KNSAKsoBEFxz6kvu4rZbQj4xR11ca/enONULYGMLLxg1DJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785945156; c=relaxed/simple;
-	bh=4iQhXtM3wBlDP3iTDZXeDcuQMd9KFElLNHXs6a6M4FI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKeGO6hD+an1uJU+QHw/dNuC7nPqCJGgSD659HUK9TYhsBPyR4Gl27jyJkiPyrX5fpsZyQQq7NMftz50ADWB7EAtamfZsjYHc72EJW7Ts4++sVrPTbmDClTjz9geq1s2V5sQZI3p20whxRuGIuh8azHLwb3qOEvhzSp/uHVmpuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpQMD24J; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785946092; c=relaxed/simple;
+	bh=vfXLgOihSwGGO6KeJIID3alB0htBxwpzF/a3yTq0TPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ZP5cA7CZe9D9xT0fuZoyuJ5uueX6wvxmFm47nyMuoLwHx7dH6IPfqoVjzgV/JsdhanMJeT0KGmdxyVpn8OBu39DjpryyJwf1ddWEWbUIHtTvYV4sQuMHUILEJsYLebkMxI5Ti8uW3cg6zcnTqYng7sVUgPTKUDQF+trxuny8sMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cfwK3G/L; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpQMD24J"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3810c5d691bso976080a91.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 08:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785945155; x=1786549955; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Cgf0kMu9tqp0Ksra7TtyhrKQCoqib4RLVTDl85SSveg=;
-        b=JpQMD24J3MaVw4EewVtLi+JweE5POIax0Bl6Az+LC9yCwrKvss7PMQjIcmk6KeB5Dt
-         UiAEVGHA0Ypl3X7h+J9i96W12BBnVfQkZbcQRHbFYNmlUTIJbDZYGz/fYHYJUnF0jc2+
-         eEYksx+KLG/F2ejCjQB4pESAXqngQOtutpPbG/UvN4moa0THjGKTirfZqc/jaQxlCy24
-         iqryZRp90dAZFEyCrpih4PkSlXvTvEpNi+RE53eKr2H97/cRzD/WU5fg5SGjpdFoLd6p
-         rF6QLxdwXC5rBDWpvzOny+DwAQa2Kn18f633WXMC898ijYymUyqE6DUr9c1zoBbu221I
-         ReHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785945155; x=1786549955;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Cgf0kMu9tqp0Ksra7TtyhrKQCoqib4RLVTDl85SSveg=;
-        b=maxYHEhSWe1W1vZT9kXKVqV6TooKRgGuvyQ6iAQyyCu4utD3znUBy8fCckvAwfuEGp
-         lRlTdbPSif2X5GruFhV8Zi40zpsAVqGsGzh7taQzFEvupbSEwnJeppz0+g8acFwpCSq+
-         O+1pJMRwG5xx8d5dxTGfBkUtXdgLx4Wusf2OavExiI8+PxGAjqC7lj+Aw62i3OEm84Ql
-         5cJfJ2yvHEYCUAzvbmnKL2T7dahY9AqA5Q3j3fNjiHGptfzHT4toUYMkaml+kL+khmnS
-         S/2YBRQYIS4iKNBc/aaaBPyyqDegbOyVz90t4+/B2qEnt6VkAswtXY8chiNvHFWKhQL7
-         Djtg==
-X-Forwarded-Encrypted: i=1; AHgh+Rqw1dZSEuCng+qs8RHZPNcuTrBTvi2v/C8k1jzi5O8zHcs2nT+SIWv/DXOYlqKDb8W/plP7sNwf+tVFi5/qm1xhkP++@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp3hpNtdaKR2fkbOo/2JH5czQrQ/Yx+fO4qrVXtzJYMKqlqxO7
-	O+t3ZrjHYrDwFSa+0Umx07FH7CnPOwTS8yoCksQFoacOzRu6gWiciibA
-X-Gm-Gg: AR+sD109x/+lp+o0A5A2J+QxN56RLS2IiGP8q+MN242vWpoqGijGrXT17AZd6T36HZM
-	R23iccwSl1rnDptK170iulwG8a99VvZiAeNGHk0ONV6Ehcbre7tIQdtYJZMpvnaulTyyv7bFws9
-	L5S8mSJAfFihTqPXxQqQi9zlq3N64at9dftF1DGW7hVwhRnaEk1ScJ9BrQgLOvfjlrjt41Pyf3C
-	ZMFueTuUROzi3TSBMpU7wq3uHECTUYUPplMoVgnZrjmJ2uZvP3XvA1uOg6C6wZ1q2q/QMk+TpOy
-	XqOJG821Ywh4vKZjzvWIc4+HWAdRokbCVF1LvN8AGTK7bd3q1VQ+/keFsfQsM3r6cyuRfFrYHUC
-	xDD50HwEfbohxuTDrN2KPz2AyYvdhcS+6UiR0CE0m6MszNfamCnbyZAxy8MV2r+aQBhmNeNZT17
-	diad5MG59ioQ+UcoRXA+AwCeh+/ePTbC/4KdNXtziPgtRL4oH5pUBtN298903lg4wMGvlIIKRQ+
-	GRmLeImDh4bVQ6gekI2jFwyfoNq/Ya3DIdbokxU
-X-Received: by 2002:a17:90a:fc47:b0:38d:f5bb:e0f4 with SMTP id 98e67ed59e1d1-3903c599361mr8837360a91.1.1785945154677;
-        Wed, 05 Aug 2026 08:52:34 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:bf3a:ac93:79c4:84fd])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fca9111b6sm15094060c88.13.2026.08.05.08.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 08:52:33 -0700 (PDT)
-Date: Wed, 5 Aug 2026 08:52:30 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>, 
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Nitin Joshi <nitjoshi@gmail.com>, 
-	Andrzej Pietrasiewicz <andrzej.p@collabora.com>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use input_device_enabled()
-Message-ID: <anNa7i7HnJW476bK@google.com>
-References: <anK1j7hbMyFHGBUS@google.com>
- <4ad479fa-8465-4d00-aa73-ced177254eee@app.fastmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cfwK3G/L"
+Message-ID: <f5834aa8-b39d-4260-a5cc-4710ef3d6aa2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785946074;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YqiGFdHiAYAvfxf4SfP8/xeGtXku6GeGzHvkw/pCryM=;
+	b=cfwK3G/LF/0nxl67fFWfdQzoQxIA6QnGzrTtM+zX2m7BvWwN6OBlSHFZPJVF382IoeLhJa
+	ZSqWbMzjTRQ+F2Vrg+6vpu7sRCekjSXtMxOq3AU3DQLknyFsvFJHaxTfIsLufp4ELG59f2
+	qHtfTWQob69RidjKBcp1ouB9/x2XxKE=
+Date: Wed, 5 Aug 2026 18:07:33 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ad479fa-8465-4d00-aa73-ced177254eee@app.fastmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v3_1/2=5D_platform/x86=3A_asus-wmi=3A_adju?=
+ =?UTF-8?Q?st_screenpad_power/brightness_handling_=E2=80=94_regression_on_no?=
+ =?UTF-8?Q?n-DUO_ScreenPad_=28ASUS_ZenBook_UX435EG=29?=
+To: =?UTF-8?B?TWFudWVsIEEuIFIuIGRlIE9yw7plIFLDrW9z?= <deor001@gmail.com>,
+ luke@ljones.dev, platform-driver-x86@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CAOXykpiN5v0ET3oPyNkCG72TBArD=+FphRJUySe8GAztDdGLfg@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <CAOXykpiN5v0ET3oPyNkCG72TBArD=+FphRJUySe8GAztDdGLfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Mark,
 
-On Wed, Aug 05, 2026 at 10:51:53AM -0400, Mark Pearson wrote:
-> 
-> 
-> On Wed, Aug 5, 2026, at 12:03 AM, Dmitry Torokhov wrote:
-> > From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> >
-> > Use the new helper. Inspecting input device's 'users' member needs to be
-> > done under device's mutex, so add appropriate invocations.
-> >
-> > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> > Link: https://lore.kernel.org/r/20200608112211.12125-7-andrzej.p@collabora.com
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >
-> > Not sure how this got stuck in my patch queue but it is still valid...
-> >
-> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > index 445e1403308e..f8e116e8a65d 100644
-> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > @@ -2547,9 +2547,10 @@ static void hotkey_poll_setup(const bool 
-> > may_warn)
-> > 
-> >  	lockdep_assert_held(&hotkey_mutex);
-> > 
-> > +	mutex_lock(&tpacpi_inputdev->mutex);
-> >  	if (hotkey_poll_freq > 0 &&
-> >  	    (poll_driver_mask ||
-> > -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
-> > +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
-> >  		if (!tpacpi_hotkey_task) {
-> >  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
-> >  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
-> > @@ -2566,6 +2567,7 @@ static void hotkey_poll_setup(const bool may_warn)
-> >  				  poll_user_mask, poll_driver_mask);
-> >  		}
-> >  	}
-> > +	mutex_unlock(&tpacpi_inputdev->mutex);
-> >  }
-> > 
-> >  static void hotkey_poll_setup_safe(const bool may_warn)
-> > -- 
-> 
-> Looks good to me.
-> 
-> Only note is that can you use guard(mutex)(&tpacpi_inputdev->mutex) instead of the lock/unlock? I think that's preferred these days.
+On 8/1/26 20:03, Manuel A. R. de Orúe Ríos wrote:
+> Hi Denis, Luke,
+>
+> I'm following up on this patch series (commit 034f5efd362fb87a3970d61eaf982664f84e6c5a,
+> merged for kernel 7.0.10) — I believe I've found and confirmed a regression it
+> introduces on non-DUO ScreenPad hardware.
+>
+> Hardware: ASUS ZenBook UX435EG (BIOS UX435EG.315), single ScreenPad model
+> (not ScreenPad Plus / DUO).
+>
+> Symptom: after upgrading past kernel-7.0.9-205 to kernel-7.0.10-200 (and
+> confirmed still present in 7.1.5), the ScreenPad stops functioning as a
+> secondary display entirely — it still works as a touchpad (separate i2c-hid
+> digitizer), but the panel itself never lights up as a screen.
+>
+> I bisected this cleanly across official Fedora kernel builds:
+>   kernel-7.0.9-205.fc44   -> works
+>   kernel-7.0.10-200.fc44  -> broken
+>   kernel-7.1.5-201.fc44   -> still broken
+>
+>
+> image.png
+> I understand from the review thread that this series was tested specifically
+> on a ZenBook DUO — it's very possible the DUO's ScreenPad firmware/EC
+> behaves differently enough that the polarity works out correctly there, while
+> it's inverted on this single-ScreenPad model.
+>
+> Happy to test any proposed fix on this hardware, or provide more DMI/ACPI/
+> debug info if useful. I'm currently working around this with a udev-triggered
+> script forcing bl_power=4 on boot, but would obviously prefer a proper fix.
+>
+> Kernel/hardware details:
+> DMI: ASUSTeK COMPUTER INC. ZenBook UX435EG_UX435EG/UX435EG, BIOS UX435EG.315 04/22/2022
+> Distro: Fedora Linux 44 (KDE Plasma)
+>
+> Thanks for the work on this — I know these ScreenPad quirks are a pain to
+> get right across the different hardware variants.
+>
+> Best,
+> ___________________________
 
-If that is desired the whole driver needs converting. I can do it in a
-separate patch(es) if you want.
 
-> 
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Please try the below patch and see if it fixes things for you:
 
-Thanks.
-
+From e9f4d0ef00c4f3e1ba26db68a688e523a743e733 Mon Sep 17 00:00:00 2001
+From: Denis Benato <denis.benato@linux.dev>
+Date: Wed, 5 Aug 2026 16:05:36 +0000
+Subject: [PATCH] platform/x86: asus-wmi: fix unclear usage of bd->props.power
+The bd->props.power is checked in parts of the driver correctly comparing with
+BACKLIGHT_POWER_ON, while in others with a raw usage of bd->props.power
+and !bd->props.power, moreover in certain checks the logic has been
+inverted due to BACKLIGHT_POWER_ON being defined as 0: fix both the wrong
+usage and the inconsistencies by using proper comparisons.
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
+---
+drivers/platform/x86/asus-wmi.c | 12 +++++++++---
+1 file changed, 9 insertions(+), 3 deletions(-)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 8610663b8269..3600dddd8f36 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -4500,7 +4500,8 @@static int update_screenpad_bl_status(struct backlight_device *bd)
+u32 ctrl_param = bd->props.brightness;
+int err = 0;
+- if (bd->props.power) {
++ switch (bd->props.power) {
++ case BACKLIGHT_POWER_ON:
+err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
+if (err < 0)
+return err;
+@@ -4508,12 +4509,17 @@static int update_screenpad_bl_status(struct backlight_device *bd)
+err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
+if (err < 0)
+return err;
+- }
++ break;
+- if (!bd->props.power) {
++ case BACKLIGHT_POWER_OFF:
+err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
+if (err < 0)
+return err;
++ break;
++
++ default:
++ pr_warn("Invalid screenpad backlight power state: %d\n", bd->props.power);
++ return -EINVAL;
+}
+return err;
 -- 
-Dmitry
+2.47.3
+
+
