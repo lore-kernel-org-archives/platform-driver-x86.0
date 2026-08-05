@@ -1,117 +1,210 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487A945D5FF
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 12:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4586034A3D6
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 14:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785932427; cv=none; b=W1z532/IODpRl0bxtDWIWBoeALqnLkD9bX8F2+3/W+hvZ9GrkRwBYpMt+K8okfYbdhnf2KNGR4HWFYZb/3YRGpnX5HZMpiEmExKJ3GnG72NMAlIJUIxU5YNwZXf0U2vVBaEPiE1qnz9ukmzhG47LT8xSzaVT+osthod0YmB2+hE=
+	t=1785939093; cv=none; b=SuyeN6z7zMBhj0Yfp6595e2SoCnOL+wbtChErgVtsRK+FK42fgdTvThjFuK5Z6HcfXGS/8wjnHQ61Lj89I4gX6CrT9iUJ1WYBsbyZp4FWXmsIRSOTuTHNLjh9TD3Pk/NcaMlPla2ovtVmq4QOar4evXscWwbAz3Sclkv+gkJHyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785932427; c=relaxed/simple;
-	bh=Mg2Ni4BBuBQvyEz2RvH2DPgBYlrkZ2HbMMvSXP9ifUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rHsfRf4DIGhuQ1Mf9qTDPYLAOOb/4kMItY7TD2ccxBcyQUPyD0ef2xrF+c6ra8VUf382AbhpdNPdSycuFD1gjjxzs3a6apiOb1C3y4PigfeYxf3uMkzAlFWrZ0YL1Ehh7uE4yeueykNERcWvOWyaMHu++4YWUIcKIXv6cXAkl98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g8fdMUd0; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1785939093; c=relaxed/simple;
+	bh=JG8Ss0OTuVue/GXg1JY+ufj7uhyecYonzu/cP+5/qBE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JID9MZAi+pOC6KDKBDRXr1rnB44CPuMqYkmKQUvkmauwoOt4GVfiGeC0osLj5LvyULqyqoCiMUapsgM1GZsaoDbFGR0GvgwT+mCchSWLlHH9mlw1RLeITXuMLu5hUB0xRMciES1WYPjDY3Xtbpb1HpWHtn7yIYfqlVA3d9P/jhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=PJ2DDtji; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g8fdMUd0"
-Message-ID: <c26da468-9a5a-46c1-8dbd-1784b69b3c73@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785932413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mg2Ni4BBuBQvyEz2RvH2DPgBYlrkZ2HbMMvSXP9ifUA=;
-	b=g8fdMUd0HMTaFecjIgaW73ruGWY5woYokRb99jhA+cIapCK2c3jIrB5orjaedXQoEMindW
-	hNMklFw+1u9E6QIHHsmS5YIDVyda/gkkV92CcpfE9dqGsKilNLk3uz61/uMIsMwJ/0oBP5
-	rbYEPaJvpNIvLo9q1rivRRG5G1I/IxI=
-Date: Wed, 5 Aug 2026 14:20:02 +0200
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="PJ2DDtji"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1785939088; x=1786198288;
+	bh=xnyvNzSa/1+wPuY6P4weeVEt541R3Db4bkrZkHa7rVM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=PJ2DDtjix3v7/nh6wTYroku/zLQ19ANIfExs6Ym5alwba9XfALbwWkFPW9kCXQlLP
+	 0u8USbIGH32kd3MJWhM2n919YsZ9So085xjcUqbDAbsL9mIws+94dUWB3fyzrswQaW
+	 mVXuo0oKUViXC15TfYLObc+lLhl0+V42QQVoEUVVLg7w7vtvfi8vZRg/UKkk7Lx4qz
+	 b5X/Jj+XFC2WgN1o8F2oqEn7fCyJvc4odrTZfrxjmU/82bbXCMu0H4IGclrTVwPekk
+	 qt6FBI1n7qAAJvknCOdPzNqNyb8C9L06K6tzHOdW7fuyxlqqIIxiThAs9uOEl8YHlq
+	 Bl52vhxlCPwVQ==
+Date: Wed, 05 Aug 2026 14:11:25 +0000
+To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com
+From: Robin Everaars <robineveraars@pm.me>
+Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: asus-wmi: keep the lid-flip state when UNKNOWN is set
+Message-ID: <20260805141114.699959-2-robineveraars@pm.me>
+In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
+References: <20260805101502.235668-1-robineveraars@pm.me> <20260805141114.699959-1-robineveraars@pm.me>
+Feedback-ID: 201127006:user:proton
+X-Pm-Message-ID: e29f9970c4ce80904c2df159e356f55c1a293a02
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: Placement of ASUS Aura and platform/x86 ASUS files relocation
-To: Armin Wolf <W_Armin@gmx.de>, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Hans de Goede <hansg@kernel.org>, Liang Haowen <nbg2974@gmail.com>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>
-References: <0ca263c3-7885-4a5c-bfe5-0e8e4d189666@linux.dev>
- <e0882d84-f5ea-44a8-881f-4095129e4d2d@gmx.de>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <e0882d84-f5ea-44a8-881f-4095129e4d2d@gmx.de>
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc"; charset=utf-8
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc
+Content-Type: multipart/mixed;
+ boundary=cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
+From: Robin Everaars <robineveraars@pm.me>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: corentin.chary@gmail.com,
+	luke@ljones.dev,
+	denis.benato@linux.dev,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] platform/x86: asus-wmi: keep the lid-flip state when UNKNOWN is set
+Date: Wed,  5 Aug 2026 16:11:13 +0200
+Message-ID: <20260805141114.699959-2-robineveraars@pm.me>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
+References: <20260805101502.235668-1-robineveraars@pm.me>
+ <20260805141114.699959-1-robineveraars@pm.me>
+MIME-Version: 1.0
+
+--cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+
+On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
+alongside the state bit while the machine is folded. Measured on an ASUS
+ProArt PX13 (HN7306EAC), ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000
+open and 0x00010003 folded, that is presence | status | UNKNOWN.
+
+asus_wmi_get_devstate_simple() treats that bit as "the state is not known"
+and fails the call with -ENODEV, so asus_wmi_tablet_mode_get_state()
+discards a perfectly good state sitting in bit 0 and SW_TABLET_MODE never
+moves.
+
+Add asus_wmi_tablet_sw_get_state(), which gates on the presence bit only
+and returns the status bit. Use it from the two tablet-switch paths. Every
+other caller of asus_wmi_get_devstate_simple() is untouched, so the change
+is confined to the tablet switch.
+
+Signed-off-by: Robin Everaars <robineveraars@pm.me>
+---
+v2: use FIELD_GET() for both bits and add the linux/bitfield.h include,
+    per Denis Benato. Drops the !! on the return. No functional change.
+
+ drivers/p
+latform/x86/asus-wmi.c | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 8610663..dce4d07 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/backlight.h>
++#include <linux/bitfield.h>
+ #include <linux/bits.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+@@ -706,12 +707,40 @@ static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
+ 	input_sync(asus->inputdev);
+ }
+ 
++/*
++ * Read the lid-flip state directly rather than through
++ * asus_wmi_get_devstate_simple().
++ *
++ * On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
++ * alongside the state bit while folded. Measured on an ASUS ProArt PX13
++ * (HN7306EAC), devid ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000 open and
++ * 0x00010003 folded, i.e. pre
+sence | state | UNKNOWN. The generic helper reads
++ * that bit as "the state is not known" and rejects the whole call with -ENODEV,
++ * so asus_wmi_tablet_mode_get_state() discards a perfectly good state sitting in
++ * bit 0 and the switch never moves. Only presence gates the value here, which is
++ * safe because this path serves the tablet switch alone.
++ */
++static int asus_wmi_tablet_sw_get_state(struct asus_wmi *asus, u32 dev_id)
++{
++	u32 retval;
++	int err;
++
++	err = asus_wmi_get_devstate(asus, dev_id, &retval);
++	if (err < 0)
++		return err;
++
++	if (!FIELD_GET(ASUS_WMI_DSTS_PRESENCE_BIT, retval))
++		return -ENODEV;
++
++	return FIELD_GET(ASUS_WMI_DSTS_STATUS_BIT, retval);
++}
++
+ static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
+ {
+ 	struct device *dev = &asus->platform_device->dev;
+ 	int result;
+ 
+-	result = asus_wmi_get_devstate_simple(asus, dev_id);
++	result = asus_wmi_tablet_sw_get_state(asus, dev_id);
+ 	if (result >=
+ 0) {
+ 		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
+ 		asus_wmi_tablet_sw_report(asus, result);
+@@ -786,7 +815,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
+ 	if (!asus->tablet_switch_dev_id)
+ 		return;
+ 
+-	result = asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id);
++	result = asus_wmi_tablet_sw_get_state(asus, asus->tablet_switch_dev_id);
+ 	if (result >= 0)
+ 		asus_wmi_tablet_sw_report(asus, result);
+ }
+-- 
+2.55.0
 
 
-On 8/4/26 20:22, Armin Wolf wrote:
-> Am 04.08.26 um 19:46 schrieb Denis Benato:
->
->> Hi all,
->>
->> I write this mail to ask a few questions related to the various ASUS devices in the kernel both present and futures and how to organize that work.
->>
->> To understand this mail one needs to know that AURA is the name of the lighting ASUS gave to its
->> products: each device is divided in one or more zones and each zone supports setting an effect like
->> static (1 color), strobe (2 colors and speed), rainbow (0 colors), rain (0 colors and speed), laser (1 color and direction) and these, to be represented in such a way features are not being lost requires a ned interface
->> that Derek said he wanted to develop as many other hardware would benefit from it: I will therefore need
->> to specialize it for ASUS things: where is it better to put any .c/.h file related to this interface? Is platform-x86 OK?
->>
->> The Aura interface has components (all or only certain aspects) working via: scsi, (hid) usb + i2c and wmi.
->>
->> 1. Liang Haowen has an ASUS nvme enclosure that supports the AURA protocol as scsi commands:
->> we want those to be in the kernel, but we don't know where to put the aura userspace interface (see above).
->
-> Hi,
->
-> it depends on the userspace interface. If you use the LED sysfs API (with some extensions for the effects), then i suggest
-> that you place the driver in drivers/leds, because the NVME enclosure is not a platform device. 
->
-Yeah we will have to bind the LED interface once to the nvme enclosure, up to 8 different interface to the keyboard (one per zone so we can set the physical keyboard in rain and the rear logo in static for example)
-and also TUFs manage power states via asus-wmi so one interface spawned by i2c will need to be bound
-to asus-wmi too.
+--cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - robineveraars@pm.me -
+ 0x8B6BA132.asc"; name="publickey - robineveraars@pm.me - 0x8B6BA132.asc"
+Content-Type: application/pgp-keys; filename="publickey -
+ robineveraars@pm.me - 0x8B6BA132.asc"; name="publickey -
+ robineveraars@pm.me - 0x8B6BA132.asc"
 
-The userspace interface will need to be used by different drivers, in different instances and even more than
-one driver on the same instance.
-> I assume you refer to the ROG Arion? If the SCSI commands are used to issue i2c/smbus requests, then you should also
-> place the i2c controller driver under /drivers/i2c/busses. 
->
-It is indeed a ROG Arion.
->>
->> 2. ASUS has product called "RTX Spark" coming that are arm and will support acpi: I have no idea if the asus-wmi
->> interface would be reused, but if they decide to do so (and the kernel can be made to boot lol) would platform/x86 still be the best place for ASUS drivers?
->
-> In such a case, moving the affected drivers to drivers/platform/asus/ would be a good idea. There is currently a patch series pending
-> for enabling ACPI-WMI on arm, so _theoretically_ the asus-wmi driver should work. 
->
-Splendid news!
->> 3. During the upstreaming of asus-armoury Hans de Goede asked if it's preferred to have an asus directory containing asus drivers, but the discussion died there. Now that I see there is a patchest that will also move asus files
->> would it be a good time to spawn this discussion?
->
-> IMHO having a separate asus directory for all asus-related platform drivers would indeed be very nice. You could reuse the drivers/platform/asus directory
-> for that, and leave the older asus-related drivers inside drivers/platform/x86 for the time being.
->
-> Alternatively, you could move all the affected drivers to drivers/platform/x86/asus, and after that move this directory to drivers/platform. 
->
-This looks cleaner to me if ASUS will produce ARM products that actually use that interface,
-but will wait to hear what others think.
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCkNvbW1lbnQ6IGh0dHBzOi8vZ29w
+ZW5wZ3Aub3JnClZlcnNpb246IEdvcGVuUEdQIDIuMTAuMAoKeGpNRWFoOGxaUllKS3dZQkJBSGFS
+dzhCQVFkQWFSa3p2ZTQ5ckJFSk1LSkg3NDZSWEhZKzJmVDc3b3hST2k1ZAo4SnBMKzY3TktYSnZZ
+bWx1WlhabGNtRmhjbk5BY0cwdWJXVWdQSEp2WW1sdVpYWmxjbUZoY25OQWNHMHViV1UrCndzQVJC
+Qk1XQ2dDREJZSnFIeVZsQXdzSkJ3a1FIY1YvYThzR0dvcEZGQUFBQUFBQUhBQWdjMkZzZEVCdWIz
+UmgKZEdsdmJuTXViM0JsYm5CbmNHcHpMbTl5Wng2VjVxUzg5dzdDRFlTSXNjNU54dVBKSTFyZ29F
+eVkvdjhkYlAzSApxa29OQXhVS0NBUVdBQUlCQWhrQkFwc0RBaDRCRmlFRWkydWhNcmIyWHVqRm5G
+akxIY1YvYThzR0dvb0FBQVpzCkFQOXpJS1d3dWJDbEZFczBKNmpwUUhUS1hGVHErOTlNUmtmREtx
+SVRidW1RelFEL1IyT2F6VHA0b0NKTzJiT0QKTkZsaVZBbTh5WFA2QSs1ODZ6UjJZS3QwUkFiT09B
+UnFIeVZsRWdvckJnRUVBWmRWQVFVQkFRZEEzcDVGN2I1TwpGc1dLclNXRW1FSGlhL29lN25vLyta
+MVcwT1BmZllyRFB5OERBUWdId3I0RUdCWUtBSEFGZ21vZkpXVUpFQjNGCmYydkxCaHFLUlJRQUFB
+QUFBQndBSUhOaGJIUkFibTkwWVhScGIyNXpMbTl3Wlc1d1ozQnFjeTV2Y21ldlVkUisKViszVWd2
+SVZqcURMRk9XeXlHcDVoNEpYQVBmWVpzRC8vUkhndlFLYkRCWWhCSXRyb1RLMjlsN294WnhZeXgz
+RgpmMnZMQmhxS0FBQm9GZ0VBOGU0ZVNMU2FMbXY4L2UyVzFMOS9WS0FiajJaN0pFUzZLQXBpOUJa
+Nm5RZ0JBTmhaCkZoTUZ6c3l6dTJZWXRhQjhTWXRWdGhKSjYvZUlRVFQ2VWRRRUlZc0YKPVlLaE0K
+LS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQ==
+--cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1--
 
-If I do that will platform/x86 still be the correct place to send patches? I don't want to "move" the driver away from platform/x86 mailing list just because the directory changed.
-> Thanks,
-> Armin Wolf 
->
-Best regards,
-Denis Benato
->> Thank you all for your time.
->>
->> Best regards,
->> Denis Benato
->>
->>
+--------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wqsEARYIAF0FgmpzRI0JEB3Ff2vLBhqKNRQAAAAAABwAEHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmdx+RZIipQA3El/FGSVbMllFiEEi2uhMrb2XujF
+nFjLHcV/a8sGGooAAOfNAP92Rq2el65F7qE8FWqJTWMaCxqjUR0rpo7qk+xM
+TN/xmwD/ckZu278sN3mB+U7kE8HsdY2c4yCI1Wqh+P2ktNJb3gs=
+=JFfa
+-----END PGP SIGNATURE-----
+
+
+--------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc--
+
