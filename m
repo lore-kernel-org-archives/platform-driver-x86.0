@@ -1,72 +1,72 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3914134D384;
-	Wed,  5 Aug 2026 14:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33DF41B8D9;
+	Wed,  5 Aug 2026 15:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785941537; cv=none; b=HHyudsxeOAGXOh6hrrKZGa60hnrIELITghaTKYFCeWLG5f2fUUDNhD9AUt1rc6dSb98xBR2Ys/1oq8qXkw/75jLwsf3335DNS9aanbnSTJ7m+ot+JVRZrL8ri14RHZAVWpEqXzjKzeR2Jh2Vi0W8jYLMasZ+/FWZ0XOVTrRBzwg=
+	t=1785944662; cv=none; b=bRqaXOanWsoR/WLI7h59C+t7CbMRbpQ8dVweaL0xyaH3OdUjxtyhySvfT1M9IPbDsgBJ/T1rnY34Sgf4eo6jUqEN1yeJGEnoHarA/ni8bGx2NxGXk8bM43wkUutHqJEQGi+eDJyzH7QypHozMxV/SoGk4SRwdETfZ0xSUuSUM8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785941537; c=relaxed/simple;
-	bh=0nE50Bmhcd1zI2+O5Luhqmn5LzyPW1muTcQrGscgB5I=;
+	s=arc-20240116; t=1785944662; c=relaxed/simple;
+	bh=sVoW/ZRVRqjJqvqavphaFV4WV5QPJEv3B3eqjsWNGEk=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=rjqtUbioDTixiER0iSReZ2zs/YW5HL4Dhs+yIt0ZQkefq0svL/5V36OPeykfJ4CtrUL+8nTRZMNTUkVaROMzgApuf1XU8sdWmUNWXov0ZasTiBltMX0JA95Y/quqsNrpaMXkiR9bj1rUuSSzRGjRlOt6WboWjDsaGbXSS6x2k7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Gikffz4t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EnmyxwHR; arc=none smtp.client-ip=103.168.172.145
+	 Subject:Content-Type; b=V1FjfE3jQL8wCsuTMhdAhBajSNd9TL8hdE/Sm4OhXpoJdCCtPTxLHL1fSBFb7ZqXAbJGysQVv5SLXlDQ4H5NOgFrhPQMbRY1v1gA5BhJuddXc8UciplKmvXstyHY7qDiWrnn/YUXJQPPo5YpygEE+10eikOzht6ZDoePx+dRwK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=DB/Y0YKB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=C/7NZj8u; arc=none smtp.client-ip=103.168.172.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Gikffz4t";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EnmyxwHR"
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="DB/Y0YKB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C/7NZj8u"
 Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 2F280EC0218;
-	Wed,  5 Aug 2026 10:52:14 -0400 (EDT)
+	by mailfout.phl.internal (Postfix) with ESMTP id B6D3BEC0299;
+	Wed,  5 Aug 2026 11:44:18 -0400 (EDT)
 Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Wed, 05 Aug 2026 10:52:14 -0400
+  by phl-compute-02.internal (MEProxy); Wed, 05 Aug 2026 11:44:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1785941534;
-	 x=1786027934; bh=7KDMkTxl9F/4HOh0eEBuok+yfhlCQoIvBMfmCS6/jKs=; b=
-	Gikffz4tm3fGHA4Cm5lWLpI8MumjuzZ4QOhOuWPF7TGh3TPvZWinYhLVH6iCjbcn
-	Le8CDH+IOJ9fDbk9ReLWbkP/L4RpW0MglfxNyt1Hik31nWzfIn1Cu82x1MbpxErV
-	IxO6x5um84uTuRwSOldvpwThOQy+UnyveQwqlV6BCrZtOsJ9zXHoUDNzvto4N4hx
-	HEHPECx2GgODuYJWN288A8pI1q9WRiGLfQRgPai9nxvAWSBad3zqhQPcYwH/jnFh
-	c9Xgi6b/S+THDR4UtItgUGzZ0h/Eh8+t8Tqw3r+3rytqGJ3vaV1VJxxBnWGf65r2
-	RHJL3I3OmCt/9nHQiQzxNg==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1785944658;
+	 x=1786031058; bh=Wf45szdJaK+GAMh8AEeq94XIdsGm1SsvlJxmrSUMxHw=; b=
+	DB/Y0YKBc56RVp8Goo2OlYEQTneci5kXQ0clncw8edohOP2qOx513sl5KcLFjGIr
+	5VFl6drwVGiE/LsSlE/xwVmJ95dcgdnUHM4paAJjCXGQ8fqFA3csKOAYNadjvxyM
+	NOh1aWuTUWQC/M+L/o/BqcUWTqd1NmW8wBIIdzfmwAhgmeN9GMo1WTt80osVzW54
+	/1HDcY4fjzBz1owdYxspH3RQVB2kSKgAY4/IjbmPePm647ppLSd3yK8vwCDMeQP6
+	7BynKrWz+ar63v/fhQPZhgDXWVEpJghrNgakqNBez2X/RRobF25bwuX+ljcqKD1d
+	jaQ/AxQ9CIGkuipNruwOYA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1785941534; x=
-	1786027934; bh=7KDMkTxl9F/4HOh0eEBuok+yfhlCQoIvBMfmCS6/jKs=; b=E
-	nmyxwHRPbMEmH2UJXnwJEqdlZO7rpI6Q/8VCX/oLxJ5L4v6sctnKAC2UWTMZNzeD
-	gDIymNFjN1LT4OKBoD8x8W5rT/PiHu6npGpuF1fier/NdT6DkAuvVL01LA3XUWDS
-	YeOmVL7ph25RSRquSR8tF/vu7ws0TwkxfrxoGxsLQAoPzFPWfGSMge8AA6n1GjG7
-	aA2J9Euw/v/zAPzsi9VvbFkLml6V2NFDnUFd2yv9su0HBqgzswc06C9KXxrzhgLN
-	qkirwS+FxhECEUikDxCVzhQFQoh8+5OBgOxpXtOTxOKW+VVg1kytKvFp6B0Y134D
-	RgdYkpJ/FbtPP7xbBrbGA==
-X-ME-Sender: <xms:HU5zainl_nWQuy4R2W0QyRuHDHPvvwr3rp73F3K38rt2Svhc46a1qg>
-    <xme:HU5zako8xeo5ogcFKzDVHxnmXYf59d9FY7RPHm0MUC9sWWjiq-m3iSTVDISG7nt8D
-    0ZQx7RSIqgzApNEayEUZR9Lo_AFbZ025rYi5cXTu_O5RkNh54Ar6g1A>
-X-ME-Proxy-Cause: dmFkZTFHUW4WKtHxiFIQcyZ+dSGX3BhXhx9L4A1WT/5BijJoqdxFQ4023kxxE0/i551g0n
-    aDX3O+ML/qlnEZdOP6PYJ43gSytF81DrP57C/RStqf7CJ8XgUO5lT0UZYbrDmTuf2mGH2Q
-    bXpjEa5q5HmGqsCRdG2lBTdGn5x2N1M8Km0pZ26m6xDq940RK0C7uGJMvgoiDt6jkYYAQ8
-    B5hmAF3n6JaOCH+jJr9KlAFGORtlsmYPhRjfWN8qQCv90n4WbI3oJkG9WFo5LRnD+EcrEw
-    BssUPmX9XOfuIRWU8/OI4wqmUFd+kt8mdl6rZD8GIrO8DiuUoHzptN0SyKW5/8h2HNm3Df
-    13hsyvU7CjNfPKUzJyVchbPAdfe5LUt48XiRgBP4Hv7+FhVJ9EboYLoAnY0u7Kyq6uD2Ri
-    3vWpfjYxZVG+qIS+Wv+h6sNra3pxldJ22QUeiM5FD7yiND9DTuJOwcE1ykrowQJLLQ5f+S
-    0jzIiiLonh6LtAxVDIB0EhzbenQyCl9durUBBYRu+nsTF7hKQBVfF9chf7CvL/fn1Zqe0C
-    8djcSlAbAeGdqmR5UpTUNHRjchf8EgHVM+Pr9s+b9vFplkmZ/g9JvkTc6SlEmg/mIJBuzZ
-    nfpDzKOOwWobQZyTS5ucGDQPXVWTvFqFQ/JgT4bPa9oh5+TTluIgeRtdct6w
-X-ME-Proxy: <xmx:HU5zaiKvp8yfEUaBp8W9Iw8P0VG_CXtc9pIhy94KzK2qKZ9jwsdjBA>
-    <xmx:HU5zamDw-rDe_8UpouTF4N5NlcZjIYBSNf08iQ6snLTHxVEw3BVr2Q>
-    <xmx:HU5zavuzGXePOk2dBKp_8EKmx-7-Bh8M2bhUB6GQZJNJzMSUXtEthg>
-    <xmx:HU5zasSOOiB7YlZc8nwpKDA9dF3LGHKdKN_t-ScojqdMR0io0rujVA>
-    <xmx:Hk5zaiObamMinq_dw-IytUhr3kplNpu-LJFwa_5boJw8qNeZ3N0G50vO>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1785944658; x=
+	1786031058; bh=Wf45szdJaK+GAMh8AEeq94XIdsGm1SsvlJxmrSUMxHw=; b=C
+	/7NZj8uNJ2S5CO4EX5RjCeU/iWRciYy3bVLtPxQg7qXiD8HdP6MiVUSJUKOxe703
+	uEkSwNxtGdSDWn1l1WH5ylZ7PVL5VixC+JSWHYKH4lbwWKVojIdzoxlwvffabd3m
+	rMcmYY0jU35gb1XHF3pF1cgPr/RlEOizBvG6rns5/bK6rSYnpsEIGeu7HczeH/FY
+	BTXqcPfPPEOEPksBCdlPgUBK9hPYNaWsAq9+d1Jz7+ZYzew2RbPy0E8yUzqzaCyV
+	rnoflZz8CkeaIPwuj4wvqtM7YV6bnTBD4MG1b/F6PapJqz/h/YA3NaAcFl8R6znl
+	POYgtkMT7FIWuuCrMZGEA==
+X-ME-Sender: <xms:Ulpzal3ndPDE957k7OAl1mceL0PBqmsxwC-Me66qoyB3-z1zczRNag>
+    <xme:Ulpzam7k7jRAGmWqTrkE5APrYK7xih1wB7bLnmt3oaPVWXHCNx-RsfKR42P0mYHvo
+    -p9BrZEapdDyfuM0bvcyhY5eGaPt18yUSNhYqh4QkiMawYTNDSAQKxi>
+X-ME-Proxy-Cause: dmFkZTGja0aJe/8tCx03g80QNFGn5Qbujhx+ByiXJj0A6FXHsyIijv7NqoPDDn4u06/FaP
+    BaVzvhKszVQuFEI4vA2dAtjcs6AZ80B/RoMYjjpo/VDDKqM6rwjsD27PdaZvMLCbzci6s1
+    VnLdch3gBKnATRAMr80FmzWKRJOOP11/VYZ+4r8iM5qtlMl/KA/E2pwCRLQxTnPYraJQVM
+    q5RDDstM6Rs7pO4X+d9FCAxQl2j1TAsHpSi4DWwmatzfnJG0osN0XQ0cONRUSieVhZVFYL
+    kM0l7Wzzhb8+j+mXmMAxqaShhU83Px8Cr3Z5EzmPfbSeCA7ufAYXr6cAhALgnOwtUMapf4
+    mN+wKc7LivMIpjqjivjZ3RZfiVMNuyzUME9uIYdd2QC5SjQOOUM3BAY8Gv5EPyg0LjIcs5
+    mXWbzHkDzU7ESnt9SD8sLTegsBsrVXhP6mPt4JdJ6WQmVXAeaETIYIGmhZigfgrAOfpcQQ
+    9QOR8ExgHvnYyHw5ftAb+z20vGHu9Da9FWFsYrq4ybOsaz/UpzdGhZcKk/LJHNmtw1BX1m
+    2F/zLo2TkSghZSXSXXUHvidtAE1RPsvgRAH+47+i7Wx87BBGMuqli/Y1bwa+mPXoEQlxDX
+    IewlpxeKHQmCBOUDRcgyN01R7PBp6JRjWRRwjkEnREXqaE8ft2VaYSfOWcfw
+X-ME-Proxy: <xmx:UlpzammK-LRT5IYFLpLcRiKbcOYJ53VftXhbIx7V1beTgS1O4hujHg>
+    <xmx:UlpzagYlrTP6DiIJP5uQPZcyh2EvpuRTtdzQN8o91H8TcOpe17OT-w>
+    <xmx:UlpzaoT8oWw9j4JmkQnUEKyk3V8qwn8S_2IbE5BEjJ6XrnMGF_WGQg>
+    <xmx:UlpzaqvRExnpY5K8h4OTMD-D5Pp7oXRbzIsmJhw4G8elq3rIerB6AQ>
+    <xmx:Ulpzav6YNxM78lbbV4lF3M6GKNYDSln6p9ccrwk45QzA0ksMSQk8KwRz>
 Feedback-ID: ibe194615:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9F4602CE03C1; Wed,  5 Aug 2026 10:52:13 -0400 (EDT)
+	id 46EA72CE03C2; Wed,  5 Aug 2026 11:44:18 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -74,74 +74,324 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AGBcYg3zY63F
-Date: Wed, 05 Aug 2026 10:51:53 -0400
+X-ThreadId: ApxqJso191Qc
+Date: Wed, 05 Aug 2026 11:43:57 -0400
 From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
 To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
  "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- "Hans de Goede" <hansg@kernel.org>,
+Cc: "Ike Panhc" <ikepanhc@gmail.com>, "Hans de Goede" <hansg@kernel.org>,
  =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Nitin Joshi" <nitjoshi@gmail.com>,
- "Andrzej Pietrasiewicz" <andrzej.p@collabora.com>,
+ "Maxim Mikityanskiy" <maxtram95@gmail.com>,
  "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Message-Id: <4ad479fa-8465-4d00-aa73-ced177254eee@app.fastmail.com>
-In-Reply-To: <anK1j7hbMyFHGBUS@google.com>
-References: <anK1j7hbMyFHGBUS@google.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use input_device_enabled()
+ linux-kernel@vger.kernel.org
+Message-Id: <9dd29a4b-fe15-4ff3-847e-509c4ad5cb0b@app.fastmail.com>
+In-Reply-To: <anLVzJy8IY9QSNgs@google.com>
+References: <anLVzJy8IY9QSNgs@google.com>
+Subject: Re: [PATCH v2] platform/x86: ideapad-laptop: do not poke keyboard controller
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-
-
-On Wed, Aug 5, 2026, at 12:03 AM, Dmitry Torokhov wrote:
-> From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+On Wed, Aug 5, 2026, at 2:21 AM, Dmitry Torokhov wrote:
+> On Ideapad Z570 the driver tries to disable and re-enable data coming
+> from the touchpad by poking directly into 8042 keyboard controller.
+> This may coincide with the controller resuming and leads to spews in
+> dmesg and potentially other instabilities.
 >
-> Use the new helper. Inspecting input device's 'users' member needs to be
-> done under device's mutex, so add appropriate invocations.
+> Instead of using i8042_command() to control the touchpad state create
+> an input handler that serves as a filter and drop events coming from
+> the touchpad when it is supposed to be off.
 >
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> Link: https://lore.kernel.org/r/20200608112211.12125-7-andrzej.p@collabora.com
 > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > ---
 >
-> Not sure how this got stuck in my patch queue but it is still valid...
+> v2:
+> - fix inverted condition in ideapad_tpswitch_filter()
+> - mark the handler as passive_observer so that touchpad is not activated
+>   until there are real users
+> - use READ_ONCE()/WRITE_ONCE() to access shared state flag
+> - drop stray semicolon in to_tpswitch_handle()
+> - update comments
 >
->  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/lenovo/ideapad-laptop.c | 184 ++++++++++++++++++-
+>  1 file changed, 175 insertions(+), 9 deletions(-)
 >
-> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> index 445e1403308e..f8e116e8a65d 100644
-> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> @@ -2547,9 +2547,10 @@ static void hotkey_poll_setup(const bool 
-> may_warn)
+> diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c 
+> b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> index 4fbc904f1fc3..8b4c41073b82 100644
+> --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
+> +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/dmi.h>
+> -#include <linux/i8042.h>
+>  #include <linux/init.h>
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+> @@ -210,6 +209,13 @@ struct ideapad_private {
+>  		struct led_classdev led;
+>  		unsigned int last_brightness;
+>  	} fn_lock;
+> +	struct {
+> +		bool initialized;
+> +		bool active; /* true means touchpad is enabled */
+> +		struct input_handler handler;
+> +		struct input_dev *tp_dev;
+> +		spinlock_t lock;
+> +	} tp_switch;
+>  };
 > 
->  	lockdep_assert_held(&hotkey_mutex);
+>  static bool no_bt_rfkill;
+> @@ -234,7 +240,7 @@ MODULE_PARM_DESC(set_fn_lock_led,
+>  static bool ctrl_ps2_aux_port;
+>  module_param(ctrl_ps2_aux_port, bool, 0444);
+>  MODULE_PARM_DESC(ctrl_ps2_aux_port,
+> -		 "Enable driver based PS/2 aux port en-/dis-abling on touchpad 
+> on/off toggle. If you need this please report this to: 
+> platform-driver-x86@vger.kernel.org");
+> +		 "Enable driver based suppression of touchpad events on touchpad 
+> on/off toggle. If you need this please report this to: 
+> platform-driver-x86@vger.kernel.org");
 > 
-> +	mutex_lock(&tpacpi_inputdev->mutex);
->  	if (hotkey_poll_freq > 0 &&
->  	    (poll_driver_mask ||
-> -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
-> +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
->  		if (!tpacpi_hotkey_task) {
->  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
->  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
-> @@ -2566,6 +2567,7 @@ static void hotkey_poll_setup(const bool may_warn)
->  				  poll_user_mask, poll_driver_mask);
->  		}
+>  static bool touchpad_ctrl_via_ec;
+>  module_param(touchpad_ctrl_via_ec, bool, 0444);
+> @@ -1462,6 +1468,160 @@ static void 
+> ideapad_check_special_buttons(struct ideapad_private *priv)
 >  	}
-> +	mutex_unlock(&tpacpi_inputdev->mutex);
 >  }
 > 
->  static void hotkey_poll_setup_safe(const bool may_warn)
+> +struct ideapad_tpswitch_handle {
+> +	struct input_handle handle;
+> +	struct ideapad_private *priv;
+> +};
+> +
+> +#define to_tpswitch_handle(h) \
+> +	container_of(h, struct ideapad_tpswitch_handle, handle)
+> +
+> +static int ideapad_tpswitch_connect(struct input_handler *handler,
+> +				    struct input_dev *dev,
+> +				    const struct input_device_id *id)
+> +{
+> +	struct ideapad_private *priv =
+> +		container_of(handler, struct ideapad_private, tp_switch.handler);
+> +	struct ideapad_tpswitch_handle *h;
+> +	int error;
+> +
+> +	h = kzalloc_obj(*h);
+> +	if (!h)
+> +		return -ENOMEM;
+> +
+> +	h->priv = priv;
+> +	h->handle.dev = dev;
+> +	h->handle.handler = handler;
+> +	h->handle.name = "ideapad-tpswitch";
+> +
+> +	error = input_register_handle(&h->handle);
+> +	if (error)
+> +		goto err_free_handle;
+> +
+> +	/*
+> +	 * We need to open the input handle so the input core invokes our
+> +	 * filter, but since we mark our handler as passive observer, this
+> +	 * will not cause the underlying touchpad hardware to be started
+> +	 * if there are no other users.
+> +	 */
+> +	error = input_open_device(&h->handle);
+> +	if (error)
+> +		goto err_unregister_handle;
+> +
+> +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
+> +		priv->tp_switch.tp_dev = dev;
+> +
+> +	return 0;
+> +
+> +err_unregister_handle:
+> +	input_unregister_handle(&h->handle);
+> +err_free_handle:
+> +	kfree(h);
+> +	return error;
+> +}
+> +
+> +static void ideapad_tpswitch_disconnect(struct input_handle *handle)
+> +{
+> +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
+> +	struct ideapad_private *priv = h->priv;
+> +
+> +	scoped_guard(spinlock_irq, &priv->tp_switch.lock)
+> +		priv->tp_switch.tp_dev = NULL;
+> +
+> +	input_close_device(handle);
+> +	input_unregister_handle(handle);
+> +	kfree(h);
+> +}
+> +
+> +static bool ideapad_tpswitch_filter(struct input_handle *handle,
+> +				    unsigned int type, unsigned int code,
+> +				    int value)
+> +{
+> +	struct ideapad_tpswitch_handle *h = to_tpswitch_handle(handle);
+> +	struct ideapad_private *priv = h->priv;
+> +
+> +	if (READ_ONCE(priv->tp_switch.active))
+> +		return false;
+> +
+> +	/* Allow passing button release events, drop everything else */
+> +	return !(type == EV_KEY && value == 0) &&
+> +	       !(type == EV_SYN && code == SYN_REPORT);
+> +
+
+Nit - extra empty line
+
+> +}
+> +
+> +static const struct input_device_id ideapad_tpswitch_ids[] = {
+> +	{
+> +		.flags = INPUT_DEVICE_ID_MATCH_EVBIT |
+> +				INPUT_DEVICE_ID_MATCH_KEYBIT |
+> +				INPUT_DEVICE_ID_MATCH_ABSBIT,
+> +		.bustype = BUS_I8042,
+> +		.vendor = 0x0002,
+> +		.evbit = { BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS) },
+> +		.keybit = { [BIT_WORD(BTN_TOOL_FINGER)] =
+> +				BIT_MASK(BTN_TOOL_FINGER) },
+> +		.absbit = { BIT_MASK(ABS_X) | BIT_MASK(ABS_Y) |
+> +				BIT_MASK(ABS_PRESSURE) |
+> +				BIT_MASK(ABS_TOOL_WIDTH) },
+> +	},
+> +	{ }
+> +};
+> +
+> +static int ideapad_tpswitch_init(struct ideapad_private *priv)
+> +{
+> +	int error;
+> +
+> +	if (!priv->features.ctrl_ps2_aux_port)
+> +		return 0;
+> +
+> +	spin_lock_init(&priv->tp_switch.lock);
+> +
+> +	priv->tp_switch.handler.name = "ideapad-tpswitch";
+> +	priv->tp_switch.handler.id_table = ideapad_tpswitch_ids;
+> +	priv->tp_switch.handler.filter = ideapad_tpswitch_filter;
+> +	priv->tp_switch.handler.connect = ideapad_tpswitch_connect;
+> +	priv->tp_switch.handler.disconnect = ideapad_tpswitch_disconnect;
+> +	priv->tp_switch.handler.passive_observer = true;
+> +
+> +	error = input_register_handler(&priv->tp_switch.handler);
+> +	if (error) {
+> +		dev_err(&priv->platform_device->dev,
+> +			"failed to register touchpad switch handler: %d",
+> +			error);
+> +		return error;
+> +	}
+> +
+> +	priv->tp_switch.initialized = true;
+> +	return 0;
+> +}
+> +
+> +static void ideapad_tpswitch_exit(struct ideapad_private *priv)
+> +{
+> +	if (priv->tp_switch.initialized) {
+> +		input_unregister_handler(&priv->tp_switch.handler);
+> +		priv->tp_switch.initialized = false;
+> +	}
+> +}
+> +
+> +static void ideapad_tpswitch_toggle(struct ideapad_private *priv, bool 
+> on)
+> +{
+> +	guard(spinlock_irq)(&priv->tp_switch.lock);
+> +
+> +	WRITE_ONCE(priv->tp_switch.active, on);
+> +	if (!on) {
+> +		struct input_dev *tp_dev = priv->tp_switch.tp_dev;
+> +		if (tp_dev) {
+> +			input_report_key(tp_dev, BTN_TOUCH, 0);
+> +			input_report_key(tp_dev, BTN_TOOL_FINGER, 0);
+> +			input_report_key(tp_dev, BTN_TOOL_DOUBLETAP, 0);
+> +			input_report_key(tp_dev, BTN_TOOL_TRIPLETAP, 0);
+> +			input_report_key(tp_dev, BTN_LEFT, 0);
+> +			input_report_key(tp_dev, BTN_RIGHT, 0);
+> +			input_report_key(tp_dev, BTN_MIDDLE, 0);
+> +			input_sync(tp_dev);
+> +		}
+> +	}
+> +}
+> +
+>  /*
+>   * backlight
+>   */
+> @@ -1799,7 +1959,6 @@ static void ideapad_fn_lock_led_exit(struct 
+> ideapad_private *priv)
+>  static void ideapad_sync_touchpad_state(struct ideapad_private *priv, 
+> bool send_events)
+>  {
+>  	unsigned long value;
+> -	unsigned char param;
+>  	int ret;
+> 
+>  	/* Without reading from EC touchpad LED doesn't switch state */
+> @@ -1810,12 +1969,11 @@ static void ideapad_sync_touchpad_state(struct 
+> ideapad_private *priv, bool send_
+> 
+>  	/*
+>  	 * Some IdeaPads don't really turn off touchpad - they only
+> -	 * switch the LED state. We (de)activate KBC AUX port to turn
+> -	 * touchpad off and on. We send KEY_TOUCHPAD_OFF and
+> -	 * KEY_TOUCHPAD_ON to not to get out of sync with LED
+> +	 * switch the LED state. On such devices we use an input filter to
+> +	 * suppress events from the touchpad.
+>  	 */
+>  	if (priv->features.ctrl_ps2_aux_port)
+> -		i8042_command(&param, value ? I8042_CMD_AUX_ENABLE : I8042_CMD_AUX_DISABLE);
+> +		ideapad_tpswitch_toggle(priv, value);
+> 
+>  	/*
+>  	 * On older models the EC controls the touchpad and toggles it on/off
+> @@ -2018,8 +2176,8 @@ static const struct dmi_system_id hw_rfkill_list[] = {
+>  /*
+>   * On some models the EC toggles the touchpad muted LED on touchpad toggle
+>   * hotkey presses, but the EC does not actually disable the touchpad itself.
+> - * On these models the driver needs to explicitly enable/disable the i8042
+> - * (PS/2) aux port.
+> + * On these models the driver needs to explicitly suppress data coming from
+> + * the touchpad.
+>   */
+>  static const struct dmi_system_id ctrl_ps2_aux_port_list[] = {
+>  	{
+> @@ -2402,6 +2560,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  	if (err)
+>  		goto input_failed;
+> 
+> +	err = ideapad_tpswitch_init(priv);
+> +	if (err)
+> +		goto tpswitch_failed;
+> +
+>  	err = ideapad_kbd_bl_init(priv);
+>  	if (err) {
+>  		if (err != -ENODEV)
+> @@ -2478,6 +2640,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+> 
+>  	ideapad_fn_lock_led_exit(priv);
+>  	ideapad_kbd_bl_exit(priv);
+> +	ideapad_tpswitch_exit(priv);
+> +
+> +tpswitch_failed:
+>  	ideapad_input_exit(priv);
+> 
+>  input_failed:
+> @@ -2507,6 +2672,7 @@ static void ideapad_acpi_remove(struct 
+> platform_device *pdev)
+> 
+>  	ideapad_fn_lock_led_exit(priv);
+>  	ideapad_kbd_bl_exit(priv);
+> +	ideapad_tpswitch_exit(priv);
+>  	ideapad_input_exit(priv);
+>  	ideapad_debugfs_exit(priv);
+>  }
 > -- 
 
-Looks good to me.
-
-Only note is that can you use guard(mutex)(&tpacpi_inputdev->mutex) instead of the lock/unlock? I think that's preferred these days.
+Looks good to me. Cool folk are using a 14 year old Ideapad (tends to be more common on the Thinkpads). Go Linux!
 
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
