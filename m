@@ -1,36 +1,37 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F035934F49F;
-	Wed,  5 Aug 2026 18:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71397395AC7;
+	Wed,  5 Aug 2026 18:31:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785954718; cv=none; b=UYadzVpP0xEeo1m1ttqoGW+6/XXiMqfdc/U9PwleTkE0o3fAUxWPj/CjhF5WR/Ar/SL+qEyW9zipAdkukalvKxcUgepx60kRtNiy+VPUNQeMA0+4bhtqNPnaEzANq+60385fDVEIxEIl4NsGkBNkm2kNOcIm2QXEYdL3ifTrSKc=
+	t=1785954718; cv=none; b=OzT1pDhdnCp8NjAEy+1EoGwD7D1fwsE+N9FkOEchmsGIg4bxeQYGkTnpVs95kpW3vg9cX1FiaGrX8EVTz/LWPwcH6t0PW51Tbl6GM1JYY45PJfyRPbGCy+DCGjAeECEPA2VDexELXi74DanqhtlyA6ZoQa2qUdPA2QJqNk6qnbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785954718; c=relaxed/simple;
-	bh=zqnqbLbVV6qrv+T/Db1XFaPy6nbsEstF5Deg3B4NsM8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BkB+vvH5/zouMaz4kA5vAXfKcq/hOvWeWIXHtQct5Ip1C1cEJiyBzwChn+gVQHRU0yenq+hqLRh5nQz6cNXu1dNULml4iWKDi4iruZDnBF0i348MDo149t6WCtLs0Th9rW8FsFkY6/TjPdnWTHyyxe/I4GcV59IzAjNMOuomCEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=j9rzVKWh; arc=none smtp.client-ip=178.21.23.139
+	bh=S91DiBBlcMR6mfD1rEa3LCPErql7ntLg/323ddcrQkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H5ZWzf3FDkNZN0mQrU42NsIjnBm1nqfhVjkWuiqfThjFl+4zFk3PHZdFkB5zPCojjHpsSOLuhk0NMzDt0ZRaszo9l1lWKzAvbJLDytYVhc2nyxY+D8DZMde9Krvkh5zBQjUBu7nVW6c8BX8xqpZIcsvGfYPA2FInwWGoFbcahUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Ir/lWtLG; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="j9rzVKWh"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Ir/lWtLG"
 Received: from mail01.layka.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 6871E83F5A;
-	Wed, 05 Aug 2026 20:31:47 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id CB7FEC2AD4;
+	Wed, 05 Aug 2026 20:31:48 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id IFnoSSGFRYQr; Wed,  5 Aug 2026 20:31:46 +0200 (CEST)
+ id kQOYn5AyvDjB; Wed,  5 Aug 2026 20:31:48 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1785954706; bh=zqnqbLbVV6qrv+T/Db1XFaPy6nbsEstF5Deg3B4NsM8=;
-	h=From:To:Cc:Subject:Date;
-	b=j9rzVKWh2VVGQUK2AOyqhgLDbm7+ANMEzXMGsu5yNuEOIWXqujeWmL97sOSC9ysNj
-	 +cYy2WuMXdoYG6opKolyZfraBRlxBc8t70ziFFTL1o2RF4T3tXreEAmdEqi0/xxq8b
-	 ETMlt+PlTCNv4O0nBuHVsOW65bWpcMr5fvlAm2lBw97sfKdWfTwJ4nmNrP50eOBriu
-	 HtxJOccGdOLTcsmd6EbvQukdjonhZe7BdUXT+tyvPX/pCXuqGYDJ6HswleC1R7Ycu4
-	 nEn6MEPEkBclCvR8wSzYpLNyLoWXO3Q5ZSdT2gIKyrgDET6Y+S35vLs9xidoE/ZDI7
-	 C0nZ2Qrpc2Pdg==
+	t=1785954708; bh=S91DiBBlcMR6mfD1rEa3LCPErql7ntLg/323ddcrQkU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ir/lWtLGJuBRxTobaRA1JoK+xQ/zCVbj2hSg0QlKBRa3bW4bZaqfFMyIgJ3J8VxAI
+	 T9lt9DOMGWhYd91pVsyN9BvwB8zeO9Hb1v+t84zMdOYjfpvaQi/z9Qh2HK6qxvT09x
+	 jPIezWB0NRmmX9hXSmEisfAX0odlMSqcX2+SaCWhsAP8s+30AQlSMl4yKZ4zjKRdFy
+	 3TJTVTrcxXtvDACuvW/cHYtrqtsQS3atVZdXFoSgxgI2U2HK1Dnv4kJUWDfWrYvihS
+	 vY3Z7az0XmbrFGkwn2m0fypNpiapp6VZpE979iaS6NL52zYlST/5udwNHmwuWQArqh
+	 vooKMvJ2RTKQw==
 From: Marco Scardovi <scardracs@disroot.org>
 To: Corentin Chary <corentin.chary@gmail.com>,
 	"Luke D . Jones" <luke@ljones.dev>,
@@ -40,9 +41,11 @@ To: Corentin Chary <corentin.chary@gmail.com>,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Marco Scardovi <scardracs@disroot.org>
-Subject: [PATCH 0/3] platform/x86: asus-armoury: Add dgpu_power_state and check in dgpu_disable
-Date: Wed,  5 Aug 2026 20:28:05 +0200
-Message-ID: <20260805183131.3075-1-scardracs@disroot.org>
+Subject: [PATCH 3/3] platform/x86: asus-armoury: Prevent disabling dGPU when in use
+Date: Wed,  5 Aug 2026 20:28:08 +0200
+Message-ID: <20260805183131.3075-4-scardracs@disroot.org>
+In-Reply-To: <20260805183131.3075-1-scardracs@disroot.org>
+References: <20260805183131.3075-1-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,54 +54,53 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series adds support for WMI device ID 0x00120097
-(ASUS_WMI_DEVID_DGPU_POWER_STATE) to query the power state level of the
-discrete GPU (dGPU) on ASUS ROG laptops, and uses it to prevent disabling
-the dGPU while it is in active use.
+Check ASUS_WMI_DEVID_DGPU_POWER_STATE before attempting to disable the
+discrete GPU in dgpu_disable_current_value_store(). Return -EBUSY if the
+dGPU is currently active and in use.
 
---- Background & How it Works ---
-
-Modern ASUS ROG firmware provides WMI device ID 0x00120097 in the ACPI DSTS
-evaluation method:
-
-If ((IIA0 == 0x00120097))
-{
-  Return (0x00010000)
-}
-
-When queried, DSTS returns:
-  - Bit 16 (0x00010000): Presence bit (set when supported by ACPI).
-  - Bit 0  (0x00000001): Power state status:
-      * 0: D3 cold (off / suspended)
-      * 1: D0 (active / powered on)
-
---- Patch Series Summary ---
-
-- Patch 1/3: Defines ASUS_WMI_DEVID_DGPU_POWER_STATE (0x00120097) in
-  include/linux/platform_data/x86/asus-wmi.h.
-- Patch 2/3: Registers the read-only sysfs attribute 'dgpu_power_state' in
-  drivers/platform/x86/asus-armoury.c under firmware_attributes class.
-- Patch 3/3: Consolidates dgpu_disable checks under a single 'if (disable)'
-  block and returns -EBUSY if an attempt is made to disable the dGPU while active.
-
---- Testing ---
-
-Verified on ASUS ROG G614PR hardware:
-- Reading 'current_value' returns 0 when the dGPU is suspended in D3 cold,
-  and 1 when active in D0.
-- Attempting to disable the dGPU while in use returns -EBUSY.
-
+Fixes: f99eb098090e ("platform/x86: asus-armoury: move existing tunings to asus-armoury module")
 Suggested-by: Denis Benato <denis.benato@linux.dev>
 Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+---
+ drivers/platform/x86/asus-armoury.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-Marco Scardovi (3):
-  platform/x86: asus-wmi: Add ASUS_WMI_DEVID_DGPU_POWER_STATE define
-  platform/x86: asus-armoury: Add dgpu_power_state attribute
-  platform/x86: asus-armoury: Prevent disabling dGPU when in use
-
- drivers/platform/x86/asus-armoury.c        | 29 ++++++++++++++++------
- include/linux/platform_data/x86/asus-wmi.h |  3 ++-
- 2 files changed, 24 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index f745924af8a8..2d5ca75bc727 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -515,13 +515,25 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 	if (err)
+ 		return err;
+ 
+-	if (asus_armoury.gpu_mux_dev_id) {
+-		err = armoury_get_devstate(NULL, &result, asus_armoury.gpu_mux_dev_id);
+-		if (err)
+-			return err;
+-		if (!result && disable) {
+-			pr_warn("Cannot disable dGPU when the MUX is in dGPU mode\n");
+-			return -EBUSY;
++	if (disable) {
++		if (asus_armoury.gpu_mux_dev_id) {
++			err = armoury_get_devstate(NULL, &result, asus_armoury.gpu_mux_dev_id);
++			if (err)
++				return err;
++			if (!result) {
++				pr_warn("Cannot disable dGPU when the MUX is in dGPU mode\n");
++				return -EBUSY;
++			}
++		}
++
++		if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU_POWER_STATE)) {
++			err = armoury_get_devstate(NULL, &result, ASUS_WMI_DEVID_DGPU_POWER_STATE);
++			if (err)
++				return err;
++			if (result) {
++				pr_warn("Cannot disable dGPU when it is in use\n");
++				return -EBUSY;
++			}
+ 		}
+ 	}
+ 
 -- 
 2.55.0
