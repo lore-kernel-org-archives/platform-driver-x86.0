@@ -1,186 +1,147 @@
-Received: from mail-106118.protonmail.ch (mail-106118.protonmail.ch [79.135.106.118])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DE8347537
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 14:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3914134D384;
+	Wed,  5 Aug 2026 14:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785939098; cv=none; b=Wrx5gJThGxd0nfSF95bZz5P9YtMwv8eFrupHoqO4B98iuIBbFwJ4C2b8TYDn7aG9Ae2hYFp0k3MCeqYEL7FrS6Jx5lqlQNHT8BT7HX7YGOojY6INUHjWRHIpg1+Kc8n2OCGaLrxjJ6FMs3rgZVuaNHldDyemtDA5BE+LwPgzFEk=
+	t=1785941537; cv=none; b=HHyudsxeOAGXOh6hrrKZGa60hnrIELITghaTKYFCeWLG5f2fUUDNhD9AUt1rc6dSb98xBR2Ys/1oq8qXkw/75jLwsf3335DNS9aanbnSTJ7m+ot+JVRZrL8ri14RHZAVWpEqXzjKzeR2Jh2Vi0W8jYLMasZ+/FWZ0XOVTrRBzwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785939098; c=relaxed/simple;
-	bh=mlv9MLcdbn+7HcYm+m9vNSkc4CF74X3/j3mm/v8PbvU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BEf5hvN1wqOUjVLas+l2/tFYRCkiiMsn7ngrY2JC5/po/t7RMznogFTmqW8i4oAhzW3caMXaXW7S06uCOSjU2tVsLXsxYUFMpiffeVGj+w5hQQQwJopiFybm9vQe9uFBn+LRU5lNsHG+LV8aUp6QzEVPdtXf+o4/BR66xkC40Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=BhCCSn/S; arc=none smtp.client-ip=79.135.106.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1785941537; c=relaxed/simple;
+	bh=0nE50Bmhcd1zI2+O5Luhqmn5LzyPW1muTcQrGscgB5I=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=rjqtUbioDTixiER0iSReZ2zs/YW5HL4Dhs+yIt0ZQkefq0svL/5V36OPeykfJ4CtrUL+8nTRZMNTUkVaROMzgApuf1XU8sdWmUNWXov0ZasTiBltMX0JA95Y/quqsNrpaMXkiR9bj1rUuSSzRGjRlOt6WboWjDsaGbXSS6x2k7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=Gikffz4t; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EnmyxwHR; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="BhCCSn/S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1785939094; x=1786198294;
-	bh=jh2DdhDTj/VhijBA5wm2Fhn1Zg17FPsPhl9aSLAlSgs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=BhCCSn/SSa+aEmVXNqRO3hWmQrxEe5bQ3k4Z44iwagvGdn4emQExolu4Bg1NPZahW
-	 DPb9J6f+vDs+rAWu/+BjGqP9r6TME666c2+ItlcbqYKgPkWuJUUh0VtAiaJ3SKovXM
-	 9sYGiS+3lBhxFc9uXg9lbpfTFsaaeCWWyH2bkwL4fxxkdAaax9a58ENe3ukqbnIAsv
-	 fudkVWUUegsnPlvzf1uno/5tOB3fPcRzW5jjweSn9C2k94MPb9NCsJ+a9SK0UmaMty
-	 VWqq64nw3mrAJYuHoUAJoRYNWhTWH4VKCQ7H3P/wdjUUUW5cfGkJ0YcvUu8sb184WH
-	 vBFfQCMwJXLQA==
-Date: Wed, 05 Aug 2026 14:11:29 +0000
-To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com
-From: Robin Everaars <robineveraars@pm.me>
-Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: asus-wmi: accept either lid-flip notify code
-Message-ID: <20260805141114.699959-3-robineveraars@pm.me>
-In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
-References: <20260805101502.235668-1-robineveraars@pm.me> <20260805141114.699959-1-robineveraars@pm.me>
-Feedback-ID: 201127006:user:proton
-X-Pm-Message-ID: 0c7f39118ddecf221eb0f2b24ec58429fc966f5b
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="Gikffz4t";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EnmyxwHR"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2F280EC0218;
+	Wed,  5 Aug 2026 10:52:14 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Wed, 05 Aug 2026 10:52:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1785941534;
+	 x=1786027934; bh=7KDMkTxl9F/4HOh0eEBuok+yfhlCQoIvBMfmCS6/jKs=; b=
+	Gikffz4tm3fGHA4Cm5lWLpI8MumjuzZ4QOhOuWPF7TGh3TPvZWinYhLVH6iCjbcn
+	Le8CDH+IOJ9fDbk9ReLWbkP/L4RpW0MglfxNyt1Hik31nWzfIn1Cu82x1MbpxErV
+	IxO6x5um84uTuRwSOldvpwThOQy+UnyveQwqlV6BCrZtOsJ9zXHoUDNzvto4N4hx
+	HEHPECx2GgODuYJWN288A8pI1q9WRiGLfQRgPai9nxvAWSBad3zqhQPcYwH/jnFh
+	c9Xgi6b/S+THDR4UtItgUGzZ0h/Eh8+t8Tqw3r+3rytqGJ3vaV1VJxxBnWGf65r2
+	RHJL3I3OmCt/9nHQiQzxNg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1785941534; x=
+	1786027934; bh=7KDMkTxl9F/4HOh0eEBuok+yfhlCQoIvBMfmCS6/jKs=; b=E
+	nmyxwHRPbMEmH2UJXnwJEqdlZO7rpI6Q/8VCX/oLxJ5L4v6sctnKAC2UWTMZNzeD
+	gDIymNFjN1LT4OKBoD8x8W5rT/PiHu6npGpuF1fier/NdT6DkAuvVL01LA3XUWDS
+	YeOmVL7ph25RSRquSR8tF/vu7ws0TwkxfrxoGxsLQAoPzFPWfGSMge8AA6n1GjG7
+	aA2J9Euw/v/zAPzsi9VvbFkLml6V2NFDnUFd2yv9su0HBqgzswc06C9KXxrzhgLN
+	qkirwS+FxhECEUikDxCVzhQFQoh8+5OBgOxpXtOTxOKW+VVg1kytKvFp6B0Y134D
+	RgdYkpJ/FbtPP7xbBrbGA==
+X-ME-Sender: <xms:HU5zainl_nWQuy4R2W0QyRuHDHPvvwr3rp73F3K38rt2Svhc46a1qg>
+    <xme:HU5zako8xeo5ogcFKzDVHxnmXYf59d9FY7RPHm0MUC9sWWjiq-m3iSTVDISG7nt8D
+    0ZQx7RSIqgzApNEayEUZR9Lo_AFbZ025rYi5cXTu_O5RkNh54Ar6g1A>
+X-ME-Proxy-Cause: dmFkZTFHUW4WKtHxiFIQcyZ+dSGX3BhXhx9L4A1WT/5BijJoqdxFQ4023kxxE0/i551g0n
+    aDX3O+ML/qlnEZdOP6PYJ43gSytF81DrP57C/RStqf7CJ8XgUO5lT0UZYbrDmTuf2mGH2Q
+    bXpjEa5q5HmGqsCRdG2lBTdGn5x2N1M8Km0pZ26m6xDq940RK0C7uGJMvgoiDt6jkYYAQ8
+    B5hmAF3n6JaOCH+jJr9KlAFGORtlsmYPhRjfWN8qQCv90n4WbI3oJkG9WFo5LRnD+EcrEw
+    BssUPmX9XOfuIRWU8/OI4wqmUFd+kt8mdl6rZD8GIrO8DiuUoHzptN0SyKW5/8h2HNm3Df
+    13hsyvU7CjNfPKUzJyVchbPAdfe5LUt48XiRgBP4Hv7+FhVJ9EboYLoAnY0u7Kyq6uD2Ri
+    3vWpfjYxZVG+qIS+Wv+h6sNra3pxldJ22QUeiM5FD7yiND9DTuJOwcE1ykrowQJLLQ5f+S
+    0jzIiiLonh6LtAxVDIB0EhzbenQyCl9durUBBYRu+nsTF7hKQBVfF9chf7CvL/fn1Zqe0C
+    8djcSlAbAeGdqmR5UpTUNHRjchf8EgHVM+Pr9s+b9vFplkmZ/g9JvkTc6SlEmg/mIJBuzZ
+    nfpDzKOOwWobQZyTS5ucGDQPXVWTvFqFQ/JgT4bPa9oh5+TTluIgeRtdct6w
+X-ME-Proxy: <xmx:HU5zaiKvp8yfEUaBp8W9Iw8P0VG_CXtc9pIhy94KzK2qKZ9jwsdjBA>
+    <xmx:HU5zamDw-rDe_8UpouTF4N5NlcZjIYBSNf08iQ6snLTHxVEw3BVr2Q>
+    <xmx:HU5zavuzGXePOk2dBKp_8EKmx-7-Bh8M2bhUB6GQZJNJzMSUXtEthg>
+    <xmx:HU5zasSOOiB7YlZc8nwpKDA9dF3LGHKdKN_t-ScojqdMR0io0rujVA>
+    <xmx:Hk5zaiObamMinq_dw-IytUhr3kplNpu-LJFwa_5boJw8qNeZ3N0G50vO>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9F4602CE03C1; Wed,  5 Aug 2026 10:52:13 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------9a3275b0c8d89c238941b489de727f844540f73add964d6bcec2f67699ba5ae8"; charset=utf-8
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------9a3275b0c8d89c238941b489de727f844540f73add964d6bcec2f67699ba5ae8
-Content-Type: multipart/mixed;
- boundary=8f275d80dcd37903acc880a6af70f98f7fb9fc46ab05067e6ab25d4c9798
-From: Robin Everaars <robineveraars@pm.me>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: corentin.chary@gmail.com,
-	luke@ljones.dev,
-	denis.benato@linux.dev,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] platform/x86: asus-wmi: accept either lid-flip notify code
-Date: Wed,  5 Aug 2026 16:11:14 +0200
-Message-ID: <20260805141114.699959-3-robineveraars@pm.me>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
-References: <20260805101502.235668-1-robineveraars@pm.me>
- <20260805141114.699959-1-robineveraars@pm.me>
-MIME-Version: 1.0
-
---8f275d80dcd37903acc880a6af70f98f7fb9fc46ab05067e6ab25d4c9798
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-asus-wmi pairs the devid it polls for the tablet switch with the single
-notify code it listens for, and tablet_mode_sw only offers those fixed
-pairings. Some convertibles read the hinge at one lid-flip devid but
-notify with the other, which no value covers.
-
-The ASUS ProArt PX13 (HN7306EAC) is one. ASUS_WMI_DEVID_LID_FLIP is frozen
-at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge, yet
-folding notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG. So
-tablet_mode_sw=2 pins the switch on and suspends the internal keyboard for
-good, and tablet_mode_sw=3 reads the right devid but never hears the event.
-
-Accept either lid-flip code once a lid-flip switch is registered. Both are
-the same "lid flip action" event and both already map to KEY_PROG2 in the
-sparse keymap. Machines with a keyboard-dock switch notify with 0x75 and
-are unaffected, and with no switch registered the event code is 0 and the
-old equality test still runs.
-
-Signed-off-by: Robin 
-Everaars <robineveraars@pm.me>
----
- drivers/platform/x86/asus-wmi.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index dce4d07..8b63fb4 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -820,6 +820,27 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
- 		asus_wmi_tablet_sw_report(asus, result);
- }
- 
-+/*
-+ * Some convertibles report the hinge at one lid-flip devid while their firmware
-+ * notifies with the other lid-flip code, a pairing no tablet_mode_sw value
-+ * covers. The ASUS ProArt PX13 (HN7306EAC) is one: ASUS_WMI_DEVID_LID_FLIP is
-+ * frozen at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge,
-+ * yet the fold notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG.
-+ * Accept either code once a lid-flip switch is registered; both are the same
-+ * "lid flip action" event 
-and both already map to KEY_PROG2 in the sparse keymap.
-+ */
-+static bool asus_wmi_is_tablet_switch_code(struct asus_wmi *asus, int code)
-+{
-+	if (code == asus->tablet_switch_event_code)
-+		return true;
-+
-+	if (asus->tablet_switch_event_code == NOTIFY_LID_FLIP ||
-+	    asus->tablet_switch_event_code == NOTIFY_LID_FLIP_ROG)
-+		return code == NOTIFY_LID_FLIP || code == NOTIFY_LID_FLIP_ROG;
-+
-+	return false;
-+}
-+
- /* Charging mode, 1=Barrel, 2=USB ******************************************/
- #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
- static ssize_t charge_mode_show(struct device *dev,
-@@ -4675,7 +4696,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
- 		return;
- 	}
- 
--	if (code == asus->tablet_switch_event_code) {
-+	if (asus_wmi_is_tablet_switch_code(asus, code)) {
- 		asus_wmi_tablet_mode_get_state(asus);
- 		return;
- 	}
--- 
-2.55.0
+X-ThreadId: AGBcYg3zY63F
+Date: Wed, 05 Aug 2026 10:51:53 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>
+Cc: "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Nitin Joshi" <nitjoshi@gmail.com>,
+ "Andrzej Pietrasiewicz" <andrzej.p@collabora.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ ibm-acpi-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Message-Id: <4ad479fa-8465-4d00-aa73-ced177254eee@app.fastmail.com>
+In-Reply-To: <anK1j7hbMyFHGBUS@google.com>
+References: <anK1j7hbMyFHGBUS@google.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use input_device_enabled()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 
---8f275d80dcd37903acc880a6af70f98f7fb9fc46ab05067e6ab25d4c9798
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - robineveraars@pm.me -
- 0x8B6BA132.asc"; name="publickey - robineveraars@pm.me - 0x8B6BA132.asc"
-Content-Type: application/pgp-keys; filename="publickey -
- robineveraars@pm.me - 0x8B6BA132.asc"; name="publickey -
- robineveraars@pm.me - 0x8B6BA132.asc"
 
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCkNvbW1lbnQ6IGh0dHBzOi8vZ29w
-ZW5wZ3Aub3JnClZlcnNpb246IEdvcGVuUEdQIDIuMTAuMAoKeGpNRWFoOGxaUllKS3dZQkJBSGFS
-dzhCQVFkQWFSa3p2ZTQ5ckJFSk1LSkg3NDZSWEhZKzJmVDc3b3hST2k1ZAo4SnBMKzY3TktYSnZZ
-bWx1WlhabGNtRmhjbk5BY0cwdWJXVWdQSEp2WW1sdVpYWmxjbUZoY25OQWNHMHViV1UrCndzQVJC
-Qk1XQ2dDREJZSnFIeVZsQXdzSkJ3a1FIY1YvYThzR0dvcEZGQUFBQUFBQUhBQWdjMkZzZEVCdWIz
-UmgKZEdsdmJuTXViM0JsYm5CbmNHcHpMbTl5Wng2VjVxUzg5dzdDRFlTSXNjNU54dVBKSTFyZ29F
-eVkvdjhkYlAzSApxa29OQXhVS0NBUVdBQUlCQWhrQkFwc0RBaDRCRmlFRWkydWhNcmIyWHVqRm5G
-akxIY1YvYThzR0dvb0FBQVpzCkFQOXpJS1d3dWJDbEZFczBKNmpwUUhUS1hGVHErOTlNUmtmREtx
-SVRidW1RelFEL1IyT2F6VHA0b0NKTzJiT0QKTkZsaVZBbTh5WFA2QSs1ODZ6UjJZS3QwUkFiT09B
-UnFIeVZsRWdvckJnRUVBWmRWQVFVQkFRZEEzcDVGN2I1TwpGc1dLclNXRW1FSGlhL29lN25vLyta
-MVcwT1BmZllyRFB5OERBUWdId3I0RUdCWUtBSEFGZ21vZkpXVUpFQjNGCmYydkxCaHFLUlJRQUFB
-QUFBQndBSUhOaGJIUkFibTkwWVhScGIyNXpMbTl3Wlc1d1ozQnFjeTV2Y21ldlVkUisKViszVWd2
-SVZqcURMRk9XeXlHcDVoNEpYQVBmWVpzRC8vUkhndlFLYkRCWWhCSXRyb1RLMjlsN294WnhZeXgz
-RgpmMnZMQmhxS0FBQm9GZ0VBOGU0ZVNMU2FMbXY4L2UyVzFMOS9WS0FiajJaN0pFUzZLQXBpOUJa
-Nm5RZ0JBTmhaCkZoTUZ6c3l6dTJZWXRhQjhTWXRWdGhKSjYvZUlRVFQ2VWRRRUlZc0YKPVlLaE0K
-LS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQ==
---8f275d80dcd37903acc880a6af70f98f7fb9fc46ab05067e6ab25d4c9798--
+On Wed, Aug 5, 2026, at 12:03 AM, Dmitry Torokhov wrote:
+> From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+>
+> Use the new helper. Inspecting input device's 'users' member needs to be
+> done under device's mutex, so add appropriate invocations.
+>
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> Link: https://lore.kernel.org/r/20200608112211.12125-7-andrzej.p@collabora.com
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>
+> Not sure how this got stuck in my patch queue but it is still valid...
+>
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index 445e1403308e..f8e116e8a65d 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -2547,9 +2547,10 @@ static void hotkey_poll_setup(const bool 
+> may_warn)
+> 
+>  	lockdep_assert_held(&hotkey_mutex);
+> 
+> +	mutex_lock(&tpacpi_inputdev->mutex);
+>  	if (hotkey_poll_freq > 0 &&
+>  	    (poll_driver_mask ||
+> -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
+> +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
+>  		if (!tpacpi_hotkey_task) {
+>  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
+>  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
+> @@ -2566,6 +2567,7 @@ static void hotkey_poll_setup(const bool may_warn)
+>  				  poll_user_mask, poll_driver_mask);
+>  		}
+>  	}
+> +	mutex_unlock(&tpacpi_inputdev->mutex);
+>  }
+> 
+>  static void hotkey_poll_setup_safe(const bool may_warn)
+> -- 
 
---------9a3275b0c8d89c238941b489de727f844540f73add964d6bcec2f67699ba5ae8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Looks good to me.
 
------BEGIN PGP SIGNATURE-----
-Version: ProtonMail
+Only note is that can you use guard(mutex)(&tpacpi_inputdev->mutex) instead of the lock/unlock? I think that's preferred these days.
 
-wqsEARYIAF0FgmpzRJEJEB3Ff2vLBhqKNRQAAAAAABwAEHNhbHRAbm90YXRp
-b25zLm9wZW5wZ3Bqcy5vcmfByYr1joU5wJ1eyUmgZxfXFiEEi2uhMrb2XujF
-nFjLHcV/a8sGGooAANYyAQCPUy4eTiS1Tfd8n02Rdl5VSo2d+YMYV07ZQlzS
-WjaMugEAiejF3AEcyc1V8gqffQAhwTZyTVnYjaTdYTcnvPOwFwk=
-=5wlf
------END PGP SIGNATURE-----
-
-
---------9a3275b0c8d89c238941b489de727f844540f73add964d6bcec2f67699ba5ae8--
-
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
