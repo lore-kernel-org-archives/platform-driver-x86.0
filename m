@@ -1,55 +1,55 @@
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4586034A3D6
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 14:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A027A34A3D6
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 14:11:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785939093; cv=none; b=SuyeN6z7zMBhj0Yfp6595e2SoCnOL+wbtChErgVtsRK+FK42fgdTvThjFuK5Z6HcfXGS/8wjnHQ61Lj89I4gX6CrT9iUJ1WYBsbyZp4FWXmsIRSOTuTHNLjh9TD3Pk/NcaMlPla2ovtVmq4QOar4evXscWwbAz3Sclkv+gkJHyU=
+	t=1785939096; cv=none; b=uitHkb0wAqimQFJ9xxP8Q1uUUxZVtK+5brj5ABzdo5IrSNk4+VmbsyVZmKe3cAB2Qb85VViAFPhaXeVBrYX9cRmHz0ZDxMdaYFc5JJgL+dVvl5PmXCVPJRYyoMQi1OFzNgMo6xt0Ct9clCCFoBElKKpPtFeTfilBWpLng1adH1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785939093; c=relaxed/simple;
-	bh=JG8Ss0OTuVue/GXg1JY+ufj7uhyecYonzu/cP+5/qBE=;
+	s=arc-20240116; t=1785939096; c=relaxed/simple;
+	bh=UZJf9dCFyTcQIjXRPW5mZ9mwUAnptuZj+Bgg9Vo+VtQ=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JID9MZAi+pOC6KDKBDRXr1rnB44CPuMqYkmKQUvkmauwoOt4GVfiGeC0osLj5LvyULqyqoCiMUapsgM1GZsaoDbFGR0GvgwT+mCchSWLlHH9mlw1RLeITXuMLu5hUB0xRMciES1WYPjDY3Xtbpb1HpWHtn7yIYfqlVA3d9P/jhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=PJ2DDtji; arc=none smtp.client-ip=79.135.106.31
+	 MIME-Version:Content-Type; b=IJXTwny3P/KeTCkbI5y7d04jK4Yc30p+P29O4x++ctMghzOZ+ASDn0xlmHuamwADtPBj7QftaWI6zfmWOa/y6/q85r1KVFx5n9fyzyLPvr49S+Zg74MNDJ5M2nsDLauJGcEiFE8nc5DvzLKgJ3nzxHRtfuryHdJ46FnyT/RlA/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=owqNaVY5; arc=none smtp.client-ip=79.135.106.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="PJ2DDtji"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="owqNaVY5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1785939088; x=1786198288;
-	bh=xnyvNzSa/1+wPuY6P4weeVEt541R3Db4bkrZkHa7rVM=;
+	s=protonmail3; t=1785939086; x=1786198286;
+	bh=IXPkx6aksf3K7mLJ2HH7F6xkCsrOk7IGGKuYssIcWis=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=PJ2DDtjix3v7/nh6wTYroku/zLQ19ANIfExs6Ym5alwba9XfALbwWkFPW9kCXQlLP
-	 0u8USbIGH32kd3MJWhM2n919YsZ9So085xjcUqbDAbsL9mIws+94dUWB3fyzrswQaW
-	 mVXuo0oKUViXC15TfYLObc+lLhl0+V42QQVoEUVVLg7w7vtvfi8vZRg/UKkk7Lx4qz
-	 b5X/Jj+XFC2WgN1o8F2oqEn7fCyJvc4odrTZfrxjmU/82bbXCMu0H4IGclrTVwPekk
-	 qt6FBI1n7qAAJvknCOdPzNqNyb8C9L06K6tzHOdW7fuyxlqqIIxiThAs9uOEl8YHlq
-	 Bl52vhxlCPwVQ==
-Date: Wed, 05 Aug 2026 14:11:25 +0000
+	b=owqNaVY5m5ubFkYZlauy/0wjFXtB1ZFmWZMjTVzdldFsw24vj4YNPj2cjeUjpZJka
+	 GYKA5C7KaFpnMNyX8NHEm6+mqXPdcke7H6A7fK9y1rnqyBgSLJcmgwQE6R0Rjw1Gn8
+	 LNtn+9sQRUwFvWJNo4gtN7K/INn0LAmtCoV1Ntx0n8FDiSrGpjoS53r9kp3XjLNkgl
+	 kyT2nrpSI188SUdmy2ang67+nD4DdtpDGChOYpMN1au3A686fqFvhVgkel08Qyqzfv
+	 /5NXKLnC5QmF51LLJsJ1rhYlx9/V22t1LdPYaxSs4cXNFL1JMznqmVIiTm5YLk4zS2
+	 7EnvZs14KAlJg==
+Date: Wed, 05 Aug 2026 14:11:20 +0000
 To: hansg@kernel.org, ilpo.jarvinen@linux.intel.com
 From: Robin Everaars <robineveraars@pm.me>
 Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] platform/x86: asus-wmi: keep the lid-flip state when UNKNOWN is set
-Message-ID: <20260805141114.699959-2-robineveraars@pm.me>
-In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
-References: <20260805101502.235668-1-robineveraars@pm.me> <20260805141114.699959-1-robineveraars@pm.me>
+Subject: [PATCH v2 0/2] platform/x86: asus-wmi: make the tablet switch work on the ProArt PX13
+Message-ID: <20260805141114.699959-1-robineveraars@pm.me>
+In-Reply-To: <20260805101502.235668-1-robineveraars@pm.me>
+References: <20260805101502.235668-1-robineveraars@pm.me>
 Feedback-ID: 201127006:user:proton
-X-Pm-Message-ID: e29f9970c4ce80904c2df159e356f55c1a293a02
+X-Pm-Message-ID: 2f549438a8a46a470eeddfc21fa01157284f02c6
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc"; charset=utf-8
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha256; boundary="------2a493985d898c0e1ed00876b59350c340a0377c3cab0d6ea9895cbfc7322e2fb"; charset=utf-8
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc
+--------2a493985d898c0e1ed00876b59350c340a0377c3cab0d6ea9895cbfc7322e2fb
 Content-Type: multipart/mixed;
- boundary=cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
+ boundary=38bc989c5136bca246adc4176316ef3db2d6f026fb38fe4f2cc43d89c555
 From: Robin Everaars <robineveraars@pm.me>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -58,113 +58,82 @@ Cc: corentin.chary@gmail.com,
 	denis.benato@linux.dev,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] platform/x86: asus-wmi: keep the lid-flip state when UNKNOWN is set
-Date: Wed,  5 Aug 2026 16:11:13 +0200
-Message-ID: <20260805141114.699959-2-robineveraars@pm.me>
+Subject: [PATCH v2 0/2] platform/x86: asus-wmi: make the tablet switch work on the ProArt PX13
+Date: Wed,  5 Aug 2026 16:11:12 +0200
+Message-ID: <20260805141114.699959-1-robineveraars@pm.me>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260805141114.699959-1-robineveraars@pm.me>
+In-Reply-To: <20260805101502.235668-1-robineveraars@pm.me>
 References: <20260805101502.235668-1-robineveraars@pm.me>
- <20260805141114.699959-1-robineveraars@pm.me>
 MIME-Version: 1.0
 
---cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
+--38bc989c5136bca246adc4176316ef3db2d6f026fb38fe4f2cc43d89c555
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
-alongside the state bit while the machine is folded. Measured on an ASUS
-ProArt PX13 (HN7306EAC), ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000
-open and 0x00010003 folded, that is presence | status | UNKNOWN.
+SW_TABLET_MODE never moves on an ASUS ProArt PX13 (HN7306EAC), and no
+tablet_mode_sw value fixes it, because two independent things are in the way.
 
-asus_wmi_get_devstate_simple() treats that bit as "the state is not known"
-and fails the call with -ENODEV, so asus_wmi_tablet_mode_get_state()
-discards a perfectly good state sitting in bit 0 and SW_TABLET_MODE never
-moves.
+The first is a devstate quirk. The lid-flip devstate on this machine sets
+ASUS_WMI_DSTS_UNKNOWN_BIT alongside the state bit while folded, so
+ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000 open and 0x00010003 folded.
+asus_wmi_get_devstate_simple() reads that bit as "state not known" and fails
+with -ENODEV, throwing away a valid state that is sitting in bit 0.
 
-Add asus_wmi_tablet_sw_get_state(), which gates on the presence bit only
-and returns the status bit. Use it from the two tablet-switch paths. Every
-other caller of asus_wmi_get_devstate_simple() is untouched, so the change
-is confined to the tablet switch.
+The second is the devid/notify pairing. asus-wmi ties the devid it polls to the
+one notify code it listens for, and tablet_mode_sw only offers fixed pairings.
+This chassis reads the hinge at LID_FLIP_ROG but notifies with NOTIFY_LID_FLIP,
+a combination no value covers: tablet_mode_sw=2 pins the switch on and suspends
+the internal keyboard for good, while tablet_mode_sw=3 polls the right devid but
+never hears the event.
 
-Signed-off-by: Robin Everaars <robineveraars@pm.me>
----
-v2: use FIELD_GET() for both bits and add the linux/bitfield.h include,
-    per Denis Benato. Drops the !! on the return. No functional change.
+Patch 1 adds a tablet-specific read that gates on
+ the presence bit only, used
+from the two tablet-switch paths and leaving every other
+asus_wmi_get_devstate_simple() caller alone. Patch 2 accepts either lid-flip
+notify code once a lid-flip switch is registered; both are the same "lid flip
+action" event and both already map to KEY_PROG2 in the sparse keymap.
 
- drivers/p
-latform/x86/asus-wmi.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+Machines with a keyboard-dock switch notify with 0x75 and are unaffected, and
+with no switch registered the event code is 0 so the old equality test is what
+still runs.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 8610663..dce4d07 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -15,6 +15,7 @@
- 
- #include <linux/acpi.h>
- #include <linux/backlight.h>
-+#include <linux/bitfield.h>
- #include <linux/bits.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -706,12 +707,40 @@ static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
- 	input_sync(asus->inputdev);
- }
- 
-+/*
-+ * Read the lid-flip state directly rather than through
-+ * asus_wmi_get_devstate_simple().
-+ *
-+ * On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
-+ * alongside the state bit while folded. Measured on an ASUS ProArt PX13
-+ * (HN7306EAC), devid ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000 open and
-+ * 0x00010003 folded, i.e. pre
-sence | state | UNKNOWN. The generic helper reads
-+ * that bit as "the state is not known" and rejects the whole call with -ENODEV,
-+ * so asus_wmi_tablet_mode_get_state() discards a perfectly good state sitting in
-+ * bit 0 and the switch never moves. Only presence gates the value here, which is
-+ * safe because this path serves the tablet switch alone.
-+ */
-+static int asus_wmi_tablet_sw_get_state(struct asus_wmi *asus, u32 dev_id)
-+{
-+	u32 retval;
-+	int err;
-+
-+	err = asus_wmi_get_devstate(asus, dev_id, &retval);
-+	if (err < 0)
-+		return err;
-+
-+	if (!FIELD_GET(ASUS_WMI_DSTS_PRESENCE_BIT, retval))
-+		return -ENODEV;
-+
-+	return FIELD_GET(ASUS_WMI_DSTS_STATUS_BIT, retval);
-+}
-+
- static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
- {
- 	struct device *dev = &asus->platform_device->dev;
- 	int result;
- 
--	result = asus_wmi_get_devstate_simple(asus, dev_id);
-+	result = asus_wmi_tablet_sw_get_state(asus, dev_id);
- 	if (result >=
- 0) {
- 		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
- 		asus_wmi_tablet_sw_report(asus, result);
-@@ -786,7 +815,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
- 	if (!asus->tablet_switch_dev_id)
- 		return;
- 
--	result = asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id);
-+	result = asus_wmi_tablet_sw_get_state(asus, asus->tablet_switch_dev_id);
- 	if (result >= 0)
- 		asus_wmi_tablet_sw_report(asus, result);
- }
+Tested on the one machine I have, an ASUS ProArt PX13 HN7306EAC: six clean
+SW_TABLET_MODE transitions over three fold cycles with no stray KEY_PROG2, and
+libinput suspends the internal keyboard and touchpad on fold and restores them
+on unfold. I do not have another convertible to check the untouched paths on
+hardware, so review of the dock case would be welcome.
+
+Changes in v2:
+ - Patch 1: use FIELD_GET() for the presence and state bits instead of open
+   mask-and-test, and add the linux/bitfiel
+d.h include it needs. Suggested by
+   Denis Benato. This also drops the !! on the return, since FIELD_GET already
+   yields 0 or 1. No functional change; re-tested on the same machine.
+ - No other changes. Patch 2 is unchanged.
+
+Note that asus-wmi.c had no FIELD_GET() users before this, and the neighbouring
+asus_wmi_dev_is_present() still open-codes the same presence test, so the file
+is now mixed. Happy to send a separate cleanup converting the remaining
+ASUS_WMI_DSTS_* users, and the masks in asus-wmi.h to BIT(), if that is wanted;
+it seemed wrong to fold unrelated churn into a fix.
+
+v1: https://lore.kernel.org/platform-driver-x86/20260805101502.235668-1-robineveraars@pm.me/
+
+Robin Everaars (2):
+  platform/x86: asus-wmi: keep the lid-flip state when UNKNOWN is set
+  platform/x86: asus-wmi: accept either lid-flip notify code
+
+ drivers/platform/x86/asus-wmi.c | 56 +++++++++++++++++++++++++++++++--
+ 1 file changed, 53 insertions(+), 3 deletions(-)
+
+
+base-commit: aca
+39607c1734ed976fdd65deb75b3555a5a0326
 -- 
 2.55.0
 
 
---cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1
+--38bc989c5136bca246adc4176316ef3db2d6f026fb38fe4f2cc43d89c555
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="publickey - robineveraars@pm.me -
  0x8B6BA132.asc"; name="publickey - robineveraars@pm.me - 0x8B6BA132.asc"
@@ -188,9 +157,9 @@ SVZqcURMRk9XeXlHcDVoNEpYQVBmWVpzRC8vUkhndlFLYkRCWWhCSXRyb1RLMjlsN294WnhZeXgz
 RgpmMnZMQmhxS0FBQm9GZ0VBOGU0ZVNMU2FMbXY4L2UyVzFMOS9WS0FiajJaN0pFUzZLQXBpOUJa
 Nm5RZ0JBTmhaCkZoTUZ6c3l6dTJZWXRhQjhTWXRWdGhKSjYvZUlRVFQ2VWRRRUlZc0YKPVlLaE0K
 LS0tLS1FTkQgUEdQIFBVQkxJQyBLRVkgQkxPQ0stLS0tLQ==
---cc40dcb941ef3ab625d9bb6ae90aa5384c364d38907c4f6328a902378af1--
+--38bc989c5136bca246adc4176316ef3db2d6f026fb38fe4f2cc43d89c555--
 
---------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc
+--------2a493985d898c0e1ed00876b59350c340a0377c3cab0d6ea9895cbfc7322e2fb
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -198,13 +167,13 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: ProtonMail
 
-wqsEARYIAF0FgmpzRI0JEB3Ff2vLBhqKNRQAAAAAABwAEHNhbHRAbm90YXRp
-b25zLm9wZW5wZ3Bqcy5vcmdx+RZIipQA3El/FGSVbMllFiEEi2uhMrb2XujF
-nFjLHcV/a8sGGooAAOfNAP92Rq2el65F7qE8FWqJTWMaCxqjUR0rpo7qk+xM
-TN/xmwD/ckZu278sN3mB+U7kE8HsdY2c4yCI1Wqh+P2ktNJb3gs=
-=JFfa
+wqsEARYIAF0FgmpzRIgJEB3Ff2vLBhqKNRQAAAAAABwAEHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmf0kS9YJD5knszmMw2zATKOFiEEi2uhMrb2XujF
+nFjLHcV/a8sGGooAAAF8AQDv+KSker4hSxoSu85+y/NyiBpJAtitwiWDeduw
+ClQgOgD/RE8tb4BTdR/x7z7QmWNZ7KvP6ooFP/+zlNN7sltAAw8=
+=rYjd
 -----END PGP SIGNATURE-----
 
 
---------a54b98a1276ca93ff5c63e5a87f9c379838687be18851de58cf9cbf17cb6d8cc--
+--------2a493985d898c0e1ed00876b59350c340a0377c3cab0d6ea9895cbfc7322e2fb--
 
