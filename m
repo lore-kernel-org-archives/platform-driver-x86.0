@@ -1,123 +1,117 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD1B46A5FB
-	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 12:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487A945D5FF
+	for <platform-driver-x86@vger.kernel.org>; Wed,  5 Aug 2026 12:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785931926; cv=none; b=UFBhGugPBW4Dc95Ev5Gls/YJucBcRHtTNpPfl0ydd1mv8rxZOdOZRollBDDD4L9UqQ4U1pL+KSxLYMM/aJCwTjGjEFKWAZzW/lRG6ps7X+bGssJQKtxF3I7G8EnNNLXT721LLWcmH/GtwcvJz76aJy9zH/zh5GJYU8xNCpJQTN0=
+	t=1785932427; cv=none; b=W1z532/IODpRl0bxtDWIWBoeALqnLkD9bX8F2+3/W+hvZ9GrkRwBYpMt+K8okfYbdhnf2KNGR4HWFYZb/3YRGpnX5HZMpiEmExKJ3GnG72NMAlIJUIxU5YNwZXf0U2vVBaEPiE1qnz9ukmzhG47LT8xSzaVT+osthod0YmB2+hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785931926; c=relaxed/simple;
-	bh=RVCIjScgWrnioG3jrlt8pDmLarRvvk9Mn6ykTj8u+GY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsSs/UXdhwcJwlh96ghMPqvPa3wqtV1NmPmW4ubgRTIcJELxk6DRGWg15EXQTlWfv5yVPtq8hURayuka9KzeViEGHUQTw2WY3kPnr9Q6nhg8tI3X3n/ooDCyJ6V2HXhVftqbQF5ndJfdoqK7RC66z33Z38b9ngBKNZF22vSOFbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iqFCOHbU; arc=none smtp.client-ip=95.215.58.184
+	s=arc-20240116; t=1785932427; c=relaxed/simple;
+	bh=Mg2Ni4BBuBQvyEz2RvH2DPgBYlrkZ2HbMMvSXP9ifUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rHsfRf4DIGhuQ1Mf9qTDPYLAOOb/4kMItY7TD2ccxBcyQUPyD0ef2xrF+c6ra8VUf382AbhpdNPdSycuFD1gjjxzs3a6apiOb1C3y4PigfeYxf3uMkzAlFWrZ0YL1Ehh7uE4yeueykNERcWvOWyaMHu++4YWUIcKIXv6cXAkl98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g8fdMUd0; arc=none smtp.client-ip=91.218.175.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iqFCOHbU"
-Message-ID: <a27396b5-31ad-4973-a7aa-0ae7ef269c73@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g8fdMUd0"
+Message-ID: <c26da468-9a5a-46c1-8dbd-1784b69b3c73@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785931922;
+	t=1785932413;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1kN+rvvN5L7AoRTyRwb2zBCE50Qs7dvKXpTCz3zZRUg=;
-	b=iqFCOHbUa0tD0MBxu6GAp0Ao/17/PxggsmraV1NtTVS8hAGsmMdK7ugkgnLFtc/COLCXA6
-	w5jRR8dVCMwLgkPI5tdhb+7gm+fJmForVjFx7mj0TZ26YUrLJOSA9pW9coT0BVyxJOcR5D
-	VV0Wq7442BY8cCHJuW74dHuxn3JXUmA=
-Date: Wed, 5 Aug 2026 14:11:46 +0200
+	bh=Mg2Ni4BBuBQvyEz2RvH2DPgBYlrkZ2HbMMvSXP9ifUA=;
+	b=g8fdMUd0HMTaFecjIgaW73ruGWY5woYokRb99jhA+cIapCK2c3jIrB5orjaedXQoEMindW
+	hNMklFw+1u9E6QIHHsmS5YIDVyda/gkkV92CcpfE9dqGsKilNLk3uz61/uMIsMwJ/0oBP5
+	rbYEPaJvpNIvLo9q1rivRRG5G1I/IxI=
+Date: Wed, 5 Aug 2026 14:20:02 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: accept either lid-flip notify
- code
-To: Robin Everaars <robineveraars@pm.me>, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-Cc: corentin.chary@gmail.com, luke@ljones.dev,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260805101502.235668-1-robineveraars@pm.me>
- <20260805101502.235668-3-robineveraars@pm.me>
+Subject: Re: Placement of ASUS Aura and platform/x86 ASUS files relocation
+To: Armin Wolf <W_Armin@gmx.de>, LKML <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Hans de Goede <hansg@kernel.org>, Liang Haowen <nbg2974@gmail.com>,
+ "Derek J. Clark" <derekjohn.clark@gmail.com>
+References: <0ca263c3-7885-4a5c-bfe5-0e8e4d189666@linux.dev>
+ <e0882d84-f5ea-44a8-881f-4095129e4d2d@gmx.de>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260805101502.235668-3-robineveraars@pm.me>
+In-Reply-To: <e0882d84-f5ea-44a8-881f-4095129e4d2d@gmx.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
 
-On 8/5/26 12:15, Robin Everaars wrote:
-> asus-wmi pairs the devid it polls for the tablet switch with the single
-> notify code it listens for, and tablet_mode_sw only offers those fixed
-> pairings. Some convertibles read the hinge at one lid-flip devid but
-> notify with the other, which no value covers.
+On 8/4/26 20:22, Armin Wolf wrote:
+> Am 04.08.26 um 19:46 schrieb Denis Benato:
 >
-> The ASUS ProArt PX13 (HN7306EAC) is one. ASUS_WMI_DEVID_LID_FLIP is frozen
-> at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge, yet
-> folding notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG. So
-> tablet_mode_sw=2 pins the switch on and suspends the internal keyboard for
-> good, and tablet_mode_sw=3 reads the right devid but never hears the event.
+>> Hi all,
+>>
+>> I write this mail to ask a few questions related to the various ASUS devices in the kernel both present and futures and how to organize that work.
+>>
+>> To understand this mail one needs to know that AURA is the name of the lighting ASUS gave to its
+>> products: each device is divided in one or more zones and each zone supports setting an effect like
+>> static (1 color), strobe (2 colors and speed), rainbow (0 colors), rain (0 colors and speed), laser (1 color and direction) and these, to be represented in such a way features are not being lost requires a ned interface
+>> that Derek said he wanted to develop as many other hardware would benefit from it: I will therefore need
+>> to specialize it for ASUS things: where is it better to put any .c/.h file related to this interface? Is platform-x86 OK?
+>>
+>> The Aura interface has components (all or only certain aspects) working via: scsi, (hid) usb + i2c and wmi.
+>>
+>> 1. Liang Haowen has an ASUS nvme enclosure that supports the AURA protocol as scsi commands:
+>> we want those to be in the kernel, but we don't know where to put the aura userspace interface (see above).
 >
-> Accept either lid-flip code once a lid-flip switch is registered. Both are
-> the same "lid flip action" event and both already map to KEY_PROG2 in the
-> sparse keymap. Machines with a keyboard-dock switch notify with 0x75 and
-> are unaffected, and with no switch registered the event code is 0 and the
-> old equality test still runs.
+> Hi,
 >
-> Signed-off-by: Robin 
-> Everaars <robineveraars@pm.me>
-> ---
->  drivers/platform/x86/asus-wmi.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
+> it depends on the userspace interface. If you use the LED sysfs API (with some extensions for the effects), then i suggest
+> that you place the driver in drivers/leds, because the NVME enclosure is not a platform device. 
 >
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index f68fd2bcd..bcbb98529 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -819,6 +819,27 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
->  		asus_wmi_tablet_sw_report(asus, result);
->  }
->  
-> +/*
-> + * Some convertibles report the hinge at one lid-flip devid while their firmware
-> + * notifies with the other lid-flip code, a pairing no tablet_mode_sw value
-> + * covers. The ASUS ProArt PX13 (HN7306EAC) is one: ASUS_WMI_DEVID_LID_FLIP is
-> + * frozen at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge,
-> + * yet the fold notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG.
-> + * Accept either code once a lid-flip switch is registered; both are the same
-> + * "lid flip action" ev
-> ent and both already map to KEY_PROG2 in the sparse keymap.
-> + */
-You may want to complete this kernel doc blockm adding at the beginning
-function_name() - brief
+Yeah we will have to bind the LED interface once to the nvme enclosure, up to 8 different interface to the keyboard (one per zone so we can set the physical keyboard in rain and the rear logo in static for example)
+and also TUFs manage power states via asus-wmi so one interface spawned by i2c will need to be bound
+to asus-wmi too.
 
-and below the description params and return.
-> +static bool asus_wmi_is_tablet_switch_code(struct asus_wmi *asus, int code)
-> +{
-> +	if (code == asus->tablet_switch_event_code)
-> +		return true;
-> +
-> +	if (asus->tablet_switch_event_code == NOTIFY_LID_FLIP ||
-> +	    asus->tablet_switch_event_code == NOTIFY_LID_FLIP_ROG)
-> +		return code == NOTIFY_LID_FLIP || code == NOTIFY_LID_FLIP_ROG;
-> +
-> +	return false;
-> +}
-> +
->  /* Charging mode, 1=Barrel, 2=USB ******************************************/
->  #if IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS)
->  static ssize_t charge_mode_show(struct device *dev,
-> @@ -4674,7 +4695,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  		return;
->  	}
->  
-> -	if (code == asus->tablet_switch_event_code) {
-> +	if (asus_wmi_is_tablet_switch_code(asus, code)) {
->  		asus_wmi_tablet_mode_get_state(asus);
->  		return;
->  	}
+The userspace interface will need to be used by different drivers, in different instances and even more than
+one driver on the same instance.
+> I assume you refer to the ROG Arion? If the SCSI commands are used to issue i2c/smbus requests, then you should also
+> place the i2c controller driver under /drivers/i2c/busses. 
+>
+It is indeed a ROG Arion.
+>>
+>> 2. ASUS has product called "RTX Spark" coming that are arm and will support acpi: I have no idea if the asus-wmi
+>> interface would be reused, but if they decide to do so (and the kernel can be made to boot lol) would platform/x86 still be the best place for ASUS drivers?
+>
+> In such a case, moving the affected drivers to drivers/platform/asus/ would be a good idea. There is currently a patch series pending
+> for enabling ACPI-WMI on arm, so _theoretically_ the asus-wmi driver should work. 
+>
+Splendid news!
+>> 3. During the upstreaming of asus-armoury Hans de Goede asked if it's preferred to have an asus directory containing asus drivers, but the discussion died there. Now that I see there is a patchest that will also move asus files
+>> would it be a good time to spawn this discussion?
+>
+> IMHO having a separate asus directory for all asus-related platform drivers would indeed be very nice. You could reuse the drivers/platform/asus directory
+> for that, and leave the older asus-related drivers inside drivers/platform/x86 for the time being.
+>
+> Alternatively, you could move all the affected drivers to drivers/platform/x86/asus, and after that move this directory to drivers/platform. 
+>
+This looks cleaner to me if ASUS will produce ARM products that actually use that interface,
+but will wait to hear what others think.
+
+If I do that will platform/x86 still be the correct place to send patches? I don't want to "move" the driver away from platform/x86 mailing list just because the directory changed.
+> Thanks,
+> Armin Wolf 
+>
+Best regards,
+Denis Benato
+>> Thank you all for your time.
+>>
+>> Best regards,
+>> Denis Benato
+>>
+>>
