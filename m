@@ -1,106 +1,123 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1019D2EEE85
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 13:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F5637AA78
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 13:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786022208; cv=none; b=FrpAF3GZEln3xOE2ZIUCKi0ra2kKQze9vgqkMwBzWjkj09u2o3CmE8G4ptbpFI+FXR+m76bcJB+abbBmSFmtD6uoh+ZmMMnZCJIr/4+JE8dCsmgXEDdjweUGVLy7hsJwV1oduRLN2wNeq3VxiD+1+qMzxx8ONiOw7bmqmkPAtF4=
+	t=1786024716; cv=none; b=cXQMoDwsWadtSvpow9SvIWXv45rYlDbmksAFIDePeymuLz06lffHXYfRO13nuZZoB1bz1XwXNdHJaeIyL0ZS2zkXFDYiBk7O8WH5FAJOpCnlLXRIw2nqa6pziDOddq+pXIgcgVzrNPb8x9WqUywHlPbAKYOhYeGVDmEX5VTw1Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786022208; c=relaxed/simple;
-	bh=FvWypIVfEAG2rD/8WJAl72mElKDbHhfpKppCyNZyMSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LRDvUwb1+ko4iX9S9IuIbSK5L0+jtNFlrChiRhuvG52Ir6Owx8xwx23ppivfV2YE/0TrF5Ez1ImbvOkdSrkycnb2dRkAV7X7AL3SSfzMnSX+ibRJvJp+Llw+9648qqFFFTBoTGZznoXXkc0xt8JMZqR3rwP8qvhL/Vh4/LMVZrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kZoNpVxH; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786024716; c=relaxed/simple;
+	bh=zQCckXH33vp4f7OnMpxoDD21Nh552lB0BErDJ5o5jSE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=C9kFae20lDy1yjBT2e19kJIyfVQtdnnJsvl5Euja5vDPL1SfmW7k33CffryJNl4u/7lVsBPEM9KYdg4mlRpdykdieseX2/Ge3pw4dviTKiuHLn7HMhhJ6nEdmH1Dkx2+Hri+BF5Vm5qCDAGMMS2W5nyg6W/uPaybjgnIMzmwkcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=in6l9sPJ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kZoNpVxH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786022200;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qrgHrOGuZMN0Xaoc1nMaVdn4Tjd2uZLW/P7pfqSzedM=;
-	b=kZoNpVxHFSGqb+Epwc4hpCITQO2LQqPcJHb/qfQZu867ZjJo+pGPSI0j+1Ar/HMveX4iQ6
-	bqup+kfN47MOXA2E2z/Jpadl0BQCuoQ8lbmY+qac1Nv742SxD9r7HYepCklUJv2XM1HbT0
-	3wAQYB863l4I1T8Jg2irr4/Y6O0mr/Y=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Use bool for str_supported() parameter
-Date: Thu,  6 Aug 2026 15:15:50 +0200
-Message-ID: <20260806131549.235170-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="in6l9sPJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786024713; x=1817560713;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zQCckXH33vp4f7OnMpxoDD21Nh552lB0BErDJ5o5jSE=;
+  b=in6l9sPJOS63oYWogwF4KeM3d4WL+2xphWDHHuZDOp1nUxmro2eMJVlX
+   5+4i2ER3Q0uEXH/Psvtcl9pFp5nAGWxGp9jKr9C6p5XKk4X+M/VkZtPEo
+   5/AUMg00iE+lKMuRsoyBk3Ko0twG847RjytdmZLwqWXIsyKHkL52DppNv
+   RshVVM/3hGz6Ab2xB0KGup4eZnuuyKnZtzYhrU9YAUGLdwXpiobWN6LxN
+   cVh8mRYLA8c/UYmz6Vn8vn5TlXyryOPFpvQYSwEkMQuskYVM2RSnvrGgI
+   1ivkPSe7Lk++XsFkuHB+BOnQOgkTEuPWnWllU2RidTom4RRQ36/xiQHWx
+   Q==;
+X-CSE-ConnectionGUID: /yesXafBSO6l9nqWYO+8Kg==
+X-CSE-MsgGUID: HR+u9JB/T1Ou/DDYZKrKyA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="89141300"
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="89141300"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 06:58:31 -0700
+X-CSE-ConnectionGUID: dpYy+SOVS5iTEP8fk7BlYA==
+X-CSE-MsgGUID: wCAS15fZQsGPPj/euWlFQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="265594897"
+Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 06:58:31 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	matthew.brost@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com,
+	anoop.c.vijay@intel.com,
+	badal.nilawar@intel.com,
+	matthew.d.roper@intel.com,
+	james.ausmus@intel.com
+Subject: [PATCH 0/7] Crescent Island PMT support
+Date: Thu,  6 Aug 2026 06:58:20 -0700
+Message-ID: <20260806135820.1422040-9-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1943; i=thorsten.blum@linux.dev; h=from:subject; bh=FvWypIVfEAG2rD/8WJAl72mElKDbHhfpKppCyNZyMSA=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFklnayzo0t3TV/fI6AV+LSsxny537+um+2L17fFaGYfY Azad9Gyo5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACaSX8zw33vLq/jaT3eZzs7Y wTdBJbTYNVGmtWK6UvrCKY+v1+c6GTIyLFPKufPhuaCAaM2D2UvyOPQ/WcsKMnVVbfbfe/9wzm4 bRgA=
-X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Make str_supported() take a bool, define it inline, and return string
-literals directly. Use a single inline definition for both debug and
-non-debug builds.
+The Crescent Island (CRI) GPU supports PMT via Xe driver
+registration.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+The CRI PMT MMIO mapping is shared for each PMT feature and it is
+necessary to set an index register value to access the correct memory
+space.
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 445e1403308e..022353f95cab 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -448,11 +448,14 @@ do {									\
- 		       __func__, ##arg);				\
- } while (0)
- 
-+static inline const char * __init str_supported(bool is_supported)
-+{
-+	return is_supported ? "supported" : "not supported";
-+}
-+
- #ifdef CONFIG_THINKPAD_ACPI_DEBUG
- #define vdbg_printk dbg_printk
--static const char *str_supported(int is_supported);
- #else
--static inline const char *str_supported(int is_supported) { return ""; }
- #define vdbg_printk(a_dbg_level, format, arg...)	\
- 	do { if (0) no_printk(format, ##arg); } while (0)
- #endif
-@@ -5798,7 +5801,7 @@ static int __init led_init(struct ibm_init_struct *iibm)
- 	}
- 
- 	vdbg_printk(TPACPI_DBG_INIT, "LED commands are %s, mode %d\n",
--		str_supported(led_supported), led_supported);
-+		str_supported(led_supported != TPACPI_LED_NONE), led_supported);
- 
- 	if (led_supported == TPACPI_LED_NONE)
- 		return -ENODEV;
-@@ -11515,15 +11518,6 @@ static struct proc_dir_entry *proc_dir;
- 
- static bool force_load;
- 
--#ifdef CONFIG_THINKPAD_ACPI_DEBUG
--static const char * __init str_supported(int is_supported)
--{
--	static char text_unsupported[] __initdata = "not supported";
--
--	return (is_supported) ? &text_unsupported[4] : &text_unsupported[0];
--}
--#endif /* CONFIG_THINKPAD_ACPI_DEBUG */
--
- static struct dentry *tpacpi_dbg;
- static void tpacpi_debugfs_init(void)
- {
+The PMT driver has a callback infrastructure to access data areas with
+driver specific access. It is does not support the PMT control access.
+
+CRI discovery/control spaces are part of the access window so a driver
+callback is necessary to allow for the correct window to be exposed.
+
+Add control path callback support to the PMT driver.
+
+Add CRI PMT discovery information.
+
+Update the Xe driver to support the CRI PMT access.
+
+The crashlog access needs to be done with power enabled (telem is only
+available when the device is powered).
+
+Determine which access is requested, and do the appropriate power
+request.
+
+CRI FW is loaded at device power.  Support the late-binding API to
+wait for FW readiness. (pending sysctl patch set implements the API).
+
+Michael J. Ruhl (7):
+  platform/x86/intel/pmt: complete pcidev to device update
+  platform/x86/intel/pmt: Add register access callbacks
+  drm/xe/vsec: Use correct pm state get
+  drm/xe/vsec: Support Crescent Island PMT
+  drm/xe/vsec: Crescent Island PMT decode
+  drm/xe/vsec: Crescent Island PMT callbacks
+  drm/xe/vsec: support late bind fw information
+
+ drivers/gpu/drm/xe/regs/xe_pmt.h           |   5 +
+ drivers/gpu/drm/xe/xe_device.c             |   4 +-
+ drivers/gpu/drm/xe/xe_device_types.h       |   4 +
+ drivers/gpu/drm/xe/xe_vsec.c               | 417 +++++++++++++++++++--
+ drivers/gpu/drm/xe/xe_vsec.h               |   2 +-
+ drivers/platform/x86/intel/pmt/class.c     |   5 +-
+ drivers/platform/x86/intel/pmt/class.h     |   3 +-
+ drivers/platform/x86/intel/pmt/crashlog.c  |  39 +-
+ drivers/platform/x86/intel/pmt/discovery.c |   2 +-
+ include/linux/intel_vsec.h                 |  12 +
+ 10 files changed, 448 insertions(+), 45 deletions(-)
+
+-- 
+2.43.0
+
