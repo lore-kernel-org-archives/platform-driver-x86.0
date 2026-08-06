@@ -1,1414 +1,880 @@
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51EE49483C
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 20:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786048124; cv=pass; b=HLIl5x8gNlP3ZdsU12tT6gpanex//PLVubvYWkMm6cs28BPLDcEueJCABqNrA+GARd6a0Mwb4fPnYQWYwhKrcWKN4TvVSt3wT2YJj6SXM/aXl+i6kxi/yS1sxMEbaA+w/mbwNbhK05Fv7MlIzv73s6p8qYOuwyvQJCKdJH7Oeas=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786048124; c=relaxed/simple;
-	bh=dSmOPQ76Py4ve9gOu1+JOIFOyvjvgESeE1Lb3qGB96M=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=cUIoRFE+NHCiOUpCziHdXXTbzMf7dvm93P7r0PTvuU9NWEA7GFA5f7eW/EfHJcMIvKy+BEjIYJh1umiri651/ALeiD2R9EO0tAZqOfTh2PcJ2a3j8ayWI1nt1DdtVLcy/3r4Eidx8JV7MW4a3KwRG+hN2zdvGrsHxVxq5Ll83as=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=NRCvib6n; arc=pass smtp.client-ip=74.125.224.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478083E9C03
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 21:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786052086; cv=none; b=plrSG9rKZcq3I79Su6hsjCbGhzUdia0E02RhM9eIj6xVMkkdaBlEMmWCpkxzDxp1cHiZyBLku3etZtUyOK6+8IUz4hAHppPaLjRz7JoHiY80ODwuE8uTOD1L8XmAtm+J8Rd2DBqyXMSAxW4C1QO1zLfNFzqNFlD/G9U91oazWHE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786052086; c=relaxed/simple;
+	bh=uXMOCRVy2/qdqCt+QJys4geZcjPcdBfpDeHmYjTQskk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ag6sMm7kg5zTudrNMF0Z5ZikB+Gb4EIyTJCohQlsuM16mYb4cNHe3iJkfhJtwxb52ZIDsBGrSUbWG6vL9UzQN8kxnKfBIjKFDNAKTMMIYoJkBCrPHIIwetveqJIs8sdMher6RTt1olXeUbcjvwaDG7/gSJCfgqVvzriXgH82vS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=d0P4Xhoa; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="NRCvib6n"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-664ce3000e6so2555222d50.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Aug 2026 13:28:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786048120; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BieTsj5JWKGC53huywvoHgeWwwDsaZM7loVogV8xPPPteZqjxsQFLhRI7nABTxfU63
-         jsHk8ceuHdP8v93wCfE5uTOmZFcENman/+6QhZYBbPRnZb3N7N8X/Id1h67+nOJHtL4e
-         LKSj/ostM5+ucJHcCxOW/PrDP8FS4WboXpXoGvjTsNSFFSrFv4RY0ICvmrPOM8sLmGYn
-         vZHzcSiO4KATMx57v6PBEpSAzyV0xm3ZIpAI9RbMNbx6urPHXNd/aWDXL8tG0di2uAhx
-         n4jjkF+SA3+bYKz21U+HKVEA1jebh2fXZ6mZzzsX0V/Pd4uqJD7G4Lc1i+4VN6Y8V5an
-         vrIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=3TNGtkZrJZMTa7BVrBgE0cCezgn0J9vttJ69hoLRvOk=;
-        fh=lrpDvbVZBO72yYvGQSg+Ue28+cwjCv2HAqYaTW/IyVE=;
-        b=BnVcOIpdJjDVn4PDxcFcMy7+Qke6JwI1YZlM4dFTkiDtHaima6pNRpMy8SzfGOntnx
-         KuqIloqOQw0//iYzWF8SpTdTdRxQQOCe7ScOpClOjOxI8mRin8Om02nzqrxrBbIpU87b
-         bp4ynaGyo4AmFjvcmFEzB86Xo3sVF8h2Vvmy/oiXtIY8avZxrR6YHs0hcjMy0qL6IGbf
-         ddiRcdJN0dwfQvlvRKCM2+SQFUm/wSz3BJYGBWi5kunCkqiPQbG0K2eRn3HoDJauBtGa
-         vwtCTGErdeNAODDp/r86E/mALj4KlqUfXZNaQxz7EJ8WhU7fJh61ZItQFgv56u9eQcOA
-         gMdA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1786048120; x=1786652920; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=3TNGtkZrJZMTa7BVrBgE0cCezgn0J9vttJ69hoLRvOk=;
-        b=NRCvib6nJsWDeZy4G8tkMBJu9NrmoBqktwxN1d0vw/FCuzNmWTPM/glZczQmWkG4Zd
-         Sm3gA5PbRC0mfiNzZqb6KWz3G6Yb07roQJC5awIAtwu/3Imjxt4rGmkviwJ1S1oYThHC
-         r9Sk9dU/tcftnTsuoVppOevWItSrliVJRLo9I7iAb53EGmf1vJISB4sU+QvC3lUlzOZi
-         0CDSnsL/h+5cdnTODnuIUnVA+ErqL/RrFvFLiRXh3HTBzacvB9ocuFMSrxqIj4uGx/gt
-         FISMCyIr6frmq6tOTGp+BA2aIhVrDhaLjUvrAeM7hsApCcvr378YFUgSaRFoaWVcrQpP
-         CAFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786048120; x=1786652920;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=3TNGtkZrJZMTa7BVrBgE0cCezgn0J9vttJ69hoLRvOk=;
-        b=fYAxERt/AJkjgGd2XirGaxXFoZayuYb1bYxOoAqP9MWqLbcqGoN9zk20eyWTqrFIL7
-         Yx/xZxfZA9y754yEJS9fIS3rCg3cW/GOrIY8rOob99HBjK8mNeawDLgG7Vavn0tmDKxO
-         3Ee1+vLN2hyE63YoPuWMthWdWav55+u83qXMI3AFLRu6dJ4uQ/j1Cw0v8vhQORDVGajo
-         HIWH5hfcWo2Qksm8kCLcT58kZGO3YttqnCEpfce+AHhMqXY1tr/5VKd+8boX4WSQDE2Y
-         mVpwh/yr1bYnx+qx8JMk3wH9bqF0YBAZPOBjkkusPFy4I5PwFpigDc2VS7CdNad+uKfR
-         NlKg==
-X-Forwarded-Encrypted: i=1; AHgh+RpgERoRKsa6ANABI/fmi08nvJAHM/uCHCoE4LPdMQIndFBDE0ssv2vTozixqjg85SyTGbDnLWeFMtwEVD2h6KIEZN1+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx19MU9TJFpng73NUfNMyClXdRJ+7Fjj17jDYEjggnyhXYNcIig
-	8I/aCPIM0cTgr7tJnFTfMBdK4rAt6xzra+zCIa67MpILIeeJg3rR4+6eDT+Zm0STngo3cphvUVV
-	UHGDYNpytJj/Q+R5q2hULKWzRlI15YKsVS5KS+q23
-X-Gm-Gg: AR+sD11hPXPK7jO4Kymv3I2oDsNGnd01Jn70kqXx/lWdMMspzZh2WVRXJRmnGeJHj4J
-	bU0BAQegc8Cw1wefkZhhaWuO4o455+qvEQXGWbyV5RCTGYJZAEuMk6DK8tP4yECm/NE8K36cz2N
-	QaIt+jzYjjfoCE/vGZYFE72y4B6IEwtfIYgdAbV51DbSdW7WoR+epDq7vVRy5lmmV28WPs7vwBR
-	fD4kmO4Zk59eDwzCOz9X2mmilyahBn/XTylSZSWAX+MBd8rBsGOwMeND/L6vpt9xZOAO6Eb/VAw
-	pDFGgX+iwp9DlD6HBIxI5NrqXoIjS7AEIA4X/8qb1UbvQgTPm2dqdORyiFcX9yOLUX9x05sJRA=
-	=
-X-Received: by 2002:a05:690e:250b:10b0:667:a95b:59f0 with SMTP id
- 956f58d0204a3-6699abcfe28mr8412043d50.34.1786048120103; Thu, 06 Aug 2026
- 13:28:40 -0700 (PDT)
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 6 Aug 2026 13:28:39 -0700
-Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Thu, 6 Aug 2026 13:28:39 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="d0P4Xhoa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1786052070; x=1786656870; i=w_armin@gmx.de;
+	bh=HuwxUBKWG+Rkd8meTRopdcNtpUdZCFb6bkK263UnlBY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=d0P4Xhoaxks5AEseMOKxJb9HByrzXib+tL9f6oY5apucmS3daoKqpywnTjwtNF/N
+	 MkZxouZE6XId6L/k6w1cwSAgI9K7vNweggIQ5lNpCabnKH2XVz/YHOpkS+2gdi2x0
+	 4lb26V1ZDodJNRuR7UhuYX8tpxDKvjUK+eWbjAQ8OEy/KKh2eWCVu6Qq36hnG0vHJ
+	 HzBU6Xo0bp3gZMbaGvP+WRRdrZHikoXdnSe/VeGcSusamkINC6QqJ/dgST5klGtTb
+	 5hDp+xl4duNP3aSAIkiUAKLcBfbI0y0TZLE0iy9+gRS4miw8Kzs6SvB9YSM+00YNa
+	 FcngU8s9uaJuOhxdag==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2E1G-1x2Hwx43CQ-00wHU2; Thu, 06
+ Aug 2026 23:34:30 +0200
+Message-ID: <bed19bcb-d0aa-4560-aaae-64e30a179adb@gmx.de>
+Date: Thu, 6 Aug 2026 23:34:28 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Sean Rhodes <sean@starlabs.systems>
-Date: Thu, 6 Aug 2026 13:28:39 -0700
-X-Gm-Features: AUfX_myiLt_h0WcpX8lOUgnJy9ZTuM66XUJB4yBHSgF1Gffx17pNczfeWWTd7vM
-Message-ID: <CABtds-2qyH84oOG_JhXN6eNQOV9H9vhQvSG4JCv5E+r9VdwKcw@mail.gmail.com>
-Subject: [PATCH v12 4/4] firmware: coreboot: Add CFR firmware attributes driver
-To: chrome-platform@lists.linux.dev
-Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
-	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, prasanth.ksr@dell.com, 
-	jorge.lopez2@hp.com, mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, 
-	josh@joshuagrisham.com, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com, 
-	florian.fainelli@broadcom.com, chenhuacai@kernel.org, mst@redhat.com, 
-	wenst@chromium.org, tzungbi@kernel.org, briannorris@chromium.org, 
-	jwerner@chromium.org, tzimmermann@suse.de, javierm@redhat.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@gmail.com, 
-	simona@ffwll.ch, krzysztof.kozlowski@oss.qualcomm.com, andersson@kernel.org, 
-	geert@linux-m68k.org, dmitry.baryshkov@oss.qualcomm.com, arnd@arndb.de, 
-	ebiggers@kernel.org, luca.weiss@fairphone.com, michal.simek@amd.com, 
-	sven@kernel.org, u.kleine-koenig@baylibre.com, bhelgaas@google.com, 
-	dakr@kernel.org, o-takashi@sakamocchi.jp, titouan.ameline@gmail.com, 
-	kees@kernel.org, dri-devel@lists.freedesktop.org, oliver@liuxiaozhen.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/1] platform/x86: add Acer battery control driver
+To: Jelle van der Waa <jelle@vdwaa.nl>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+ Frederik Harwath <frederik@harwath.name>
+References: <20260805184645.24542-1-jelle@vdwaa.nl>
+ <20260805184645.24542-2-jelle@vdwaa.nl>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20260805184645.24542-2-jelle@vdwaa.nl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gYTBMyoJ/WWwLojtr40or2pxmem7PZPf7ASeXf1hlqPEjkUEd47
+ Ua6Fi+9XFXgY9fCKQh4xUavNE/QjKi+8zRSzAZ1dYf38GMYTPrmDjYzQBvsIFmUsHPGBcpO
+ Wp4jKbHo9AUMFvIq4LatHrmGdHgnCdqrbdaPz6qw9Gex9vXm+KyhlnteE7dTMPRRYjqV/zK
+ JWvV0L4IHIROHVafT+aWg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2U0IF7iN+Z4=;InK1Pxo2WRsuvTAUML9nNDOkCtJ
+ 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
+ pAbAlnVxEh31hW0vRaI=
 
-coreboot can publish a CFR tree in its coreboot table to describe
-firmware setup options. Add a firmware-attributes driver for that table
-entry under the coreboot firmware driver directory.
+Am 05.08.26 um 20:46 schrieb Jelle van der Waa:
 
-The driver exposes runtime EFI variable-backed boolean, enum and integer
-settings through the firmware-attributes ABI. It only registers settings
-with readable runtime EFI variables, skips suppressed, volatile,
-dependency-gated and non-runtime options, and keeps read-only or inactive
-options read-only in sysfs.
+> Some Acer laptops can configure battery related features through Acer
+> Care Center on Windows. This driver uses the power supply extension to
+> set a battery charge limit and exposes the battery
+> temperature.
+>
+> This driver is based on the existing acer-wmi-battery project on GitHub
+> and was tested on an Acer Aspire A315-510P.
+>
+> Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
+>
+> ---
+> v5:
+> - Add Acer WMI Battery Interface documentation
+> - Drop unneeded wmi_buffer output initialisation
+> - Drop get_unaligned_le32, as wmi core returns aligned data
+> - Derive temperature divider contsant from <linux/units.h> defines
+> - Add trailing commas to any non-terminating entry in DMI match table
+> - Remove duplicate DMI entry from DMI match table
+> - Update set_battery_health_control_output members to be __le16 not u8
+>    as WMI data suggests
+> - Replace sizeof(u32) with sizeof(*result)
+> - Add an empty line between if statements in POWER_SUPPLY_PROP_TEMP case
+> - Drop unneeded .set_property callback in acer_wmi_battery_extension_v1
+> - Introduce a force module parameter for easier testing of new notebook
+>    models
+> - Use "ret" instead of "r"
+> - Check the "uReturn" value of SetBatteryHealthControl
+> v4:
+> - Add additional DMI ids from https://github.com/frederik-h/acer-wmi-bat=
+tery/blob/main/MODELS.md
+>    cross checked with DMI ids found in https://github.com/linuxhw/DMI
+> - Move DMI matching to __init and make the DMI table __initconst
+> - Port to the new wmidev_invoke_* API
+> v3:
+> - Add depends on DMI
+> - Rename CamelCase struct member names
+> - Simplify returning errors
+> - Add comma to non-terminating entries
+> - Simplified acer_wmi_battery_set_battery_health_control to acer_wmi_set=
+_battery_health_control
+> - Use sizeof for acpi_object buffer
+> - Drop POWER_SUPPLY_EXTENSION macro
+> v2:
+> - Alphabetically sort linux headers
+> - Include headers for types / _packed
+> - Use cleanup.h instead of goto + label
+> - Add missing prefix for set_battery_health_control
+> - General code formatting fixes
+> - Remove HWMON dependency in Kconfig
+> - Use wmidev_evaluate_method()
+> - Accept oversized ACPI buffers
+> - Use DRIVER_NAME for battery extension name
+> - Set no_singleton =3D true
+> - Implement DMI matching to support laptops with only battery
+>    temperature support.
+> ---
+>   .../wmi/devices/acer-wmi-battery.rst          |  70 +++
+>   drivers/platform/x86/Kconfig                  |  12 +
+>   drivers/platform/x86/Makefile                 |   1 +
+>   drivers/platform/x86/acer-wmi-battery.c       | 449 ++++++++++++++++++
+>   4 files changed, 532 insertions(+)
+>   create mode 100644 Documentation/wmi/devices/acer-wmi-battery.rst
+>   create mode 100644 drivers/platform/x86/acer-wmi-battery.c
+>
+> diff --git a/Documentation/wmi/devices/acer-wmi-battery.rst b/Documentat=
+ion/wmi/devices/acer-wmi-battery.rst
+> new file mode 100644
+> index 000000000000..8aa3e1334490
+> --- /dev/null
+> +++ b/Documentation/wmi/devices/acer-wmi-battery.rst
+> @@ -0,0 +1,70 @@
+> +.. SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> +Acer WMI Battery interface driver (acer-wmi-battery)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> +
+> +Introduction
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Some Acer laptops support setting battery charge control limits and all=
+ow a
+> +user to calibrate their battery.
+> +
+> +WMI interface description
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> +
+> +The WMI interface description can be decoded from the embedded binary M=
+OF (bmof)
+> +data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+> +
+> +::
+> +
+> +  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description(=
+"Class used to control smart battery, Version 2.88"), guid("{79772EC5-04B1=
+-4bfd-843C-61E7F77B6CC9}")]
+> +  class BatteryControl {
+> +    [key, read] string InstanceName;
+> +    [read] boolean Active;
+> +
+> +    [WmiMethodId(19), Implemented, read, write, Description("Get batter=
+y Information Interface.")] void GetBattInfoInterface([in] uint32 uBattery=
+InfoIndex, [in] uint32 uBatteryNo, [out] uint32 uReturn);
+> +    [WmiMethodId(20), Implemented, read, write, Description("Get Batter=
+y Health Control Status.")] void GetBatteryHealthControlStatus([in] uint8 =
+uBatteryNo, [in] uint8 uFunctionQuery, [in] uint8 uReserved[2], [out] uint=
+8 uFunctionList, [out] uint8 uReturn[2], [out] uint8 uFunctionStatus[5]);
+> +    [WmiMethodId(21), Implemented, read, write, Description("Set Batter=
+y Health Control.")] void SetBatteryHealthControl([in] uint8 uBatteryNo, [=
+in] uint8 uFunctionMask, [in] uint8 uFunctionStatus, [in] uint8 uReservedI=
+n[5], [out] uint16 uReturn, [out] uint16 uReservedOut);
+> +    [WmiMethodId(22), Implemented, read, write, Description("Get Batter=
+y Function Data.")] void GetBatteryFunctionData([in] uint8 uFunctionMask, =
+[in] uint8 uReservedIn[3], [out] uint8 uReturnCode[2], [out] uint8 uBACSta=
+rtTime[2], [out] uint8 uBACStopTime[2], [out] uint8 uBACStatus, [out] uint=
+8 uReservedOut[9]);
+> +    [WmiMethodId(23), Implemented, read, write, Description("Set Batter=
+y Function Data.")] void SetBatteryFunctionData([in] uint8 uFunctionMask, =
+[in] uint8 uBACSwitch, [in] uint8 uReservedIn[6], [out] uint16 uReturnCode=
+, [out] uint8 uReservedOut[2]);
+> +  };
+> +
+> +For all methods the ``uBatteryNo`` is always ``0x1``, there are no know=
+n Acer
+> +laptop models with two batteries.
+> +
+> +WMI method GetBatteryInfoInterface()
+> +------------------------------------
+> +
+> +Returns additional battery information, the data seems to be based on t=
+he
+> +"Smart Battery Data Specification". The only known value for
+> +``uBatteryInfoIndex`` is ``0x8``, the battery temperature.
+> +
+> +WMI method GetBatteryHealthControlStatus()
+> +------------------------------------------
+> +
+> +This interface does not exist on all Acer laptops, it returns whether b=
+attery
+> +charge limiting or calibration mode is enabled.
+> +
+> +When calling this method, ``uFunctionList`` is a bitmask with known val=
+ues:
+> +
+> ++--------------------+------------------------------------+
+> +| Value              | Description                        |
+> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D+
+> +| 0x01               | Health mode supported              |
+> ++--------------------+------------------------------------+
+> +| 0x02               | Calibration mode supported         |
+> ++--------------------+------------------------------------+
+> +
+> +``uFunctionStatus`` is a 5 byte array known elements are ``0`` for heal=
+th mode
+> +and ``1`` for calibration mode. A non-zero value means the mode is enab=
+led.
+> +
+> +WMI method SetBatteryHealthControl()
+> +------------------------------------
+> +
+> +This interface does not exist on all Acer laptops, it enables battery
+> +charge limiting or battery calibration.
+> +
+> +The argument ``uFunctionMask`` is known to accept either ``0x01`` for s=
+etting
+> +health mode or ``0x02`` for calibration mode; other values are unknown.
+> +``uFunctionStatus`` is an uint8 value, a non-zero value enables the giv=
+en mode.
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b5212b204..d4a8294df5e1 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -189,6 +189,18 @@ config ACER_WMI
+>   	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
+>   	  here.
+>  =20
+> +config ACER_WMI_BATTERY
+> +	tristate "Acer WMI Battery"
+> +	depends on ACPI_WMI
+> +	depends on ACPI_BATTERY
+> +	depends on DMI
+> +	help
+> +	  This is a driver for Acer laptops with battery health control. It
+> +	  adds charge limit control and battery temperature reporting.
+> +
+> +	  If you have an ACPI-WMI Battery compatible Acer laptop, say Y or M
+> +	  here.
+> +
+>   source "drivers/platform/x86/amd/Kconfig"
+>  =20
+>   config ADV_SWBUTTON
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+> index 872ac3842391..a877acd937cd 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_BITLAND_MIFS_WMI)		+=3D bitland-mifs-wmi.=
+o
+>   obj-$(CONFIG_ACERHDF)		+=3D acerhdf.o
+>   obj-$(CONFIG_ACER_WIRELESS)	+=3D acer-wireless.o
+>   obj-$(CONFIG_ACER_WMI)		+=3D acer-wmi.o
+> +obj-$(CONFIG_ACER_WMI_BATTERY)	+=3D acer-wmi-battery.o
+>  =20
+>   # AMD
+>   obj-y				+=3D amd/
+> diff --git a/drivers/platform/x86/acer-wmi-battery.c b/drivers/platform/=
+x86/acer-wmi-battery.c
+> new file mode 100644
+> index 000000000000..6163ee021ffb
+> --- /dev/null
+> +++ b/drivers/platform/x86/acer-wmi-battery.c
+> @@ -0,0 +1,449 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * acer-wmi-battery.c: Acer battery health control driver
+> + *
+> + * This is a driver for the WMI battery health control interface found
+> + * on some Acer laptops.  This interface allows to enable/disable a
+> + * battery charge limit ("health mode") and exposes the battery tempera=
+ture.
+> + *
+> + * Based on acer-wmi-battery https://github.com/frederik-h/acer-wmi-bat=
+tery/
+> + *
+> + * Copyright (C) 2022-2025  Frederik Harwath <frederik@harwath.name>
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/cleanup.h>
+> +#include <linux/compiler_attributes.h>
+> +#include <linux/dmi.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/limits.h>
+> +#include <linux/module.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/types.h>
+> +#include <linux/units.h>
+> +#include <linux/version.h>
+> +#include <linux/wmi.h>
 
-For settings with an APM_CNT runtime-apply record, write the EFI variable
-and ask firmware to apply the setting immediately on x86. If firmware
-reports a failure, restore the old EFI variable value. Settings without a
-runtime apply hook, or non-x86 builds, keep the EFI variable update and
-set pending_reboot.
+Hi,
 
-Tested on a Star Labs Byte with firmware 26.07: runtime APM_CNT apply
-was verified with power_led, and reboot-needed behavior was verified with
-debug_level.
+please also add a include of linux/byteorder/generic.h
 
-Link: https://doc.coreboot.org/drivers/cfr.html
-Link: https://doc.coreboot.org/drivers/cfr_internal.html
-Signed-off-by: Sean Rhodes <sean@starlabs.systems>
----
- MAINTAINERS                              |    6 +
- drivers/firmware/coreboot/Kconfig        |   14 +
- drivers/firmware/coreboot/Makefile       |    1 +
- drivers/firmware/coreboot/coreboot-cfr.c | 1208 ++++++++++++++++++++++
- 4 files changed, 1229 insertions(+)
- create mode 100644 drivers/firmware/coreboot/coreboot-cfr.c
+> +
+> +#include <acpi/battery.h>
+> +
+> +#define DRIVER_NAME	"acer-wmi-battery"
+> +
+> +#define ACER_BATTERY_GUID "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
+> +
+> +/*
+> + * The Acer OEM software seems to always use this battery index,
+> + * so we emulate this behaviour to not confuse the underlying firmware.
+> + *
+> + * However this also means that we only fully support devices with a
+> + * single battery for now.
+> + */
+> +#define ACER_BATTERY_INDEX	0x1
+> +
+> +static bool force;
+> +module_param_unsafe(force, bool, 0);
+> +MODULE_PARM_DESC(force, "Enable health mode control without checking fo=
+r supported devices\n");
+> +
+> +struct get_battery_health_control_status_input {
+> +	u8 battery_no;
+> +	u8 function_query;
+> +	u8 reserved[2];
+> +} __packed;
+> +
+> +struct get_battery_health_control_status_output {
+> +	u8 function_list;
+> +	u8 ret[2];
+> +	u8 function_status[5];
+> +} __packed;
+> +
+> +struct set_battery_health_control_input {
+> +	u8 battery_no;
+> +	u8 function_mask;
+> +	u8 function_status;
+> +	u8 reserved_in[5];
+> +} __packed;
+> +
+> +struct set_battery_health_control_output {
+> +	__le16 ret;
+> +	__le16 reserved_out;
+> +} __packed;
+> +
+> +enum battery_mode {
+> +	HEALTH_MODE =3D 1,
+> +	CALIBRATION_MODE =3D 2,
+> +};
+> +
+> +struct acer_wmi_battery_data {
+> +	struct acpi_battery_hook hook;
+> +	struct wmi_device *wdev;
+> +	const struct power_supply_ext *battery_ext;
+> +};
+> +
+> +bool health_mode;
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 62ddee473f55..50638f37e023 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6666,6 +6666,12 @@ F:	tools/testing/selftests/cgroup/test_hugetlb_memcg.c
- F:	tools/testing/selftests/cgroup/test_kmem.c
- F:	tools/testing/selftests/cgroup/test_memcontrol.c
+This variable should be made static and marked as __ro_after_init.
 
-+COREBOOT CFR FIRMWARE ATTRIBUTES DRIVER
-+M:	Sean Rhodes <sean@starlabs.systems>
-+L:	chrome-platform@lists.linux.dev
-+S:	Maintained
-+F:	drivers/firmware/coreboot/coreboot-cfr.c
-+
- CORETEMP HARDWARE MONITORING DRIVER
- L:	linux-hwmon@vger.kernel.org
- S:	Orphan
-diff --git a/drivers/firmware/coreboot/Kconfig
-b/drivers/firmware/coreboot/Kconfig
-index b248bafe8b6b..5c37bdc9c9fd 100644
---- a/drivers/firmware/coreboot/Kconfig
-+++ b/drivers/firmware/coreboot/Kconfig
-@@ -44,6 +44,20 @@ config GOOGLE_COREBOOT_TABLE
- 	  device tree node /firmware/coreboot.
- 	  If unsure say N.
+> +
+> +static int acer_wmi_battery_get_information(struct acer_wmi_battery_dat=
+a *data,
+> +					    u32 index, u32 battery, u32 *result)
+> +{
+> +	u32 args[2] =3D { index, battery };
+> +	struct wmi_buffer input =3D { .length =3D sizeof(args), .data =3D args=
+ };
+> +	struct wmi_buffer output;
+> +	int ret;
+> +
+> +	ret =3D wmidev_invoke_method(data->wdev, 0, 19, &input, &output, sizeo=
+f(*result));
+> +	if (ret)
+> +		return ret;
+> +
+> +	*result =3D *(u32 *)output.data;
 
-+config COREBOOT_CFR
-+	tristate "coreboot CFR firmware attributes"
-+	depends on EFI
-+	depends on GOOGLE_COREBOOT_TABLE
-+	select CRC32
-+	select FW_ATTR_CLASS
-+	help
-+	  This driver parses the coreboot CFR table and exposes runtime EFI
-+	  variable-backed options through the firmware-attributes sysfs
-+	  interface.
-+
-+	  If you have a system running coreboot with CFR runtime
-+	  configuration support, say Y or M here.
-+
- config GOOGLE_MEMCONSOLE
- 	tristate
- 	depends on GOOGLE_MEMCONSOLE_X86_LEGACY || GOOGLE_MEMCONSOLE_COREBOOT
-diff --git a/drivers/firmware/coreboot/Makefile
-b/drivers/firmware/coreboot/Makefile
-index 8151e323cc43..1b9d0c0e7593 100644
---- a/drivers/firmware/coreboot/Makefile
-+++ b/drivers/firmware/coreboot/Makefile
-@@ -2,6 +2,7 @@
+Please use __le32 here and convert the output data to u32 using le32_to_cp=
+up().
 
- obj-$(CONFIG_GOOGLE_SMI)		+= gsmi.o
- obj-$(CONFIG_GOOGLE_COREBOOT_TABLE)        += coreboot_table.o
-+obj-$(CONFIG_COREBOOT_CFR)		+= coreboot-cfr.o
- obj-$(CONFIG_GOOGLE_FRAMEBUFFER_COREBOOT)  += framebuffer-coreboot.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE)            += memconsole.o
- obj-$(CONFIG_GOOGLE_MEMCONSOLE_COREBOOT)   += memconsole-coreboot.o
-diff --git a/drivers/firmware/coreboot/coreboot-cfr.c
-b/drivers/firmware/coreboot/coreboot-cfr.c
-new file mode 100644
-index 000000000000..54aae1442bcc
---- /dev/null
-+++ b/drivers/firmware/coreboot/coreboot-cfr.c
-@@ -0,0 +1,1208 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * coreboot CFR firmware attributes driver.
-+ *
-+ * Parses LB_TAG_CFR_ROOT records from the coreboot table and exposes
-+ * runtime EFI variable-backed options through the firmware-attributes class.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitops.h>
-+#include <linux/cleanup.h>
-+#include <linux/compiler_attributes.h>
-+#include <linux/container_of.h>
-+#include <linux/crc32.h>
-+#include <linux/ctype.h>
-+#include <linux/device.h>
-+#include <linux/device-id/coreboot.h>
-+#include <linux/efi.h>
-+#include <linux/err.h>
-+#include <linux/firmware_attributes.h>
-+#include <linux/io.h>
-+#include <linux/kdev_t.h>
-+#include <linux/kobject.h>
-+#include <linux/kstrtox.h>
-+#include <linux/limits.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
-+
-+#include "coreboot_table.h"
-+
-+#define DRIVER_NAME "coreboot-cfr"
-+
-+#define LB_TAG_CFR_ROOT		0x47
-+#define CFR_VERSION		0
-+
-+enum cfr_tags {
-+	CFR_TAG_OPTION_FORM		= 1,
-+	CFR_TAG_ENUM_VALUE		= 2,
-+	CFR_TAG_OPTION_ENUM		= 3,
-+	CFR_TAG_OPTION_NUMBER		= 4,
-+	CFR_TAG_OPTION_BOOL		= 5,
-+	CFR_TAG_VARCHAR_OPT_NAME	= 7,
-+	CFR_TAG_VARCHAR_UI_NAME		= 8,
-+	CFR_TAG_RUNTIME_APPLY		= 13,
-+};
-+
-+enum cfr_option_flags {
-+	CFR_OPTFLAG_READONLY	= BIT(0),
-+	CFR_OPTFLAG_INACTIVE	= BIT(1),
-+	CFR_OPTFLAG_SUPPRESS	= BIT(2),
-+	CFR_OPTFLAG_VOLATILE	= BIT(3),
-+	CFR_OPTFLAG_RUNTIME	= BIT(4),
-+};
-+
-+enum cfr_runtime_apply_method {
-+	CFR_RUNTIME_APPLY_NONE		= 0,
-+	CFR_RUNTIME_APPLY_APM_CNT	= 1,
-+};
-+
-+struct lb_cfr {
-+	u32 tag;
-+	u32 size;
-+	u32 version;
-+	u32 checksum;
-+} __packed;
-+
-+struct lb_cfr_varbinary {
-+	u32 tag;
-+	u32 size;
-+	u32 data_length;
-+} __packed;
-+
-+struct lb_cfr_enum_value {
-+	u32 tag;
-+	u32 size;
-+	u32 value;
-+} __packed;
-+
-+struct lb_cfr_runtime_apply {
-+	u32 tag;
-+	u32 size;
-+	u32 method;
-+	u32 id;
-+} __packed;
-+
-+struct lb_cfr_numeric_option {
-+	u32 tag;
-+	u32 size;
-+	cb_u64 object_id;
-+	cb_u64 dependency_id;
-+	u32 flags;
-+	u32 default_value;
-+	u32 min;
-+	u32 max;
-+	u32 step;
-+	u32 display_flags;
-+} __packed;
-+
-+struct lb_cfr_option_form {
-+	u32 tag;
-+	u32 size;
-+	cb_u64 object_id;
-+	cb_u64 dependency_id;
-+	u32 flags;
-+} __packed;
-+
-+#define COREBOOT_CFR_OPT_SKIP_FLAGS \
-+	(CFR_OPTFLAG_SUPPRESS | CFR_OPTFLAG_VOLATILE)
-+
-+#define COREBOOT_CFR_OPT_READ_ONLY_FLAGS \
-+	(CFR_OPTFLAG_READONLY | CFR_OPTFLAG_INACTIVE)
-+
-+#define COREBOOT_CFR_EFI_ATTRS \
-+	(EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS | \
-+	 EFI_VARIABLE_RUNTIME_ACCESS)
-+
-+#define COREBOOT_CFR_APM_CNT_PORT	0xb2
-+#define COREBOOT_CFR_APM_STS_PORT	0xb3
-+#define COREBOOT_CFR_APM_APPLY_CMD	0xe3
-+#define COREBOOT_CFR_MAX_FORM_DEPTH	16
-+
-+static efi_guid_t coreboot_cfr_guid = EFI_GUID(0xceae4c1d, 0x335b, 0x4685,
-+					       0xa4, 0xa0, 0xfc, 0x4a,
-+					       0x94, 0xee, 0xa0, 0x85);
-+
-+enum coreboot_cfr_setting_type {
-+	COREBOOT_CFR_SETTING_ENUM,
-+	COREBOOT_CFR_SETTING_NUMBER,
-+	COREBOOT_CFR_SETTING_BOOL,
-+};
-+
-+struct coreboot_cfr_enum {
-+	char *label;
-+	u32 value;
-+};
-+
-+struct coreboot_cfr_setting {
-+	struct kobject kobj;
-+	struct list_head node;
-+	struct coreboot_cfr_drvdata *drvdata;
-+	enum coreboot_cfr_setting_type type;
-+	char *name;
-+	char *display_name;
-+	struct coreboot_cfr_enum *values;
-+	unsigned int n_values;
-+	u32 default_value;
-+	u32 min;
-+	u32 max;
-+	u32 step;
-+	u32 runtime_apply_method;
-+	u32 runtime_apply_id;
-+	bool read_only;
-+};
-+
-+struct coreboot_cfr_drvdata {
-+	struct device *class_dev;
-+	struct kset *attrs_kset;
-+	struct list_head settings;
-+	/* Serializes EFI variable writes and the matching runtime apply hook. */
-+	struct mutex lock;
-+	bool efi_writes_supported;
-+	bool pending_reboot;
-+};
-+
-+struct coreboot_cfr_iterator {
-+	const u8 *cursor;
-+	size_t remaining;
-+};
-+
-+static struct coreboot_cfr_setting *to_coreboot_cfr_setting(struct
-kobject *kobj)
-+{
-+	return container_of(kobj, struct coreboot_cfr_setting, kobj);
-+}
-+
-+static bool coreboot_cfr_string_is_valid_name(const char *name)
-+{
-+	return name && name[0] && !strchr(name, '/') &&
-+		strcmp(name, "pending_reboot") != 0;
-+}
-+
-+static bool coreboot_cfr_string_is_valid_label(const char *label)
-+{
-+	return label && !strchr(label, ';') && !strchr(label, '\n');
-+}
-+
-+static char *coreboot_cfr_string_dup(const struct lb_cfr_varbinary *str)
-+{
-+	const char *data = (const char *)(str + 1);
-+	size_t len = str->data_length;
-+
-+	if (len && !data[len - 1])
-+		len--;
-+
-+	return kmemdup_nul(data, len, GFP_KERNEL);
-+}
-+
-+static const struct coreboot_table_entry *
-+coreboot_cfr_next_entry(struct coreboot_cfr_iterator *iterator)
-+{
-+	const struct coreboot_table_entry *entry;
-+
-+	if (!iterator->remaining)
-+		return NULL;
-+
-+	if (iterator->remaining < sizeof(*entry))
-+		return ERR_PTR(-EINVAL);
-+
-+	entry = (const struct coreboot_table_entry *)iterator->cursor;
-+	if (entry->size < sizeof(*entry) || entry->size > iterator->remaining)
-+		return ERR_PTR(-EINVAL);
-+
-+	iterator->cursor += entry->size;
-+	iterator->remaining -= entry->size;
-+
-+	return entry;
-+}
-+
-+static const struct coreboot_table_entry *
-+coreboot_cfr_child_entry(const void *base, size_t len, u32 tag)
-+{
-+	struct coreboot_cfr_iterator iterator = {
-+		.cursor = base,
-+		.remaining = len,
-+	};
-+	const struct coreboot_table_entry *entry;
-+
-+	for (;;) {
-+		entry = coreboot_cfr_next_entry(&iterator);
-+		if (IS_ERR_OR_NULL(entry))
-+			return entry;
-+
-+		if (entry->tag == tag)
-+			return entry;
-+	}
-+}
-+
-+static const struct lb_cfr_varbinary *
-+coreboot_cfr_child_string(const void *base, size_t len, u32 tag)
-+{
-+	const struct lb_cfr_varbinary *str;
-+	const struct coreboot_table_entry *entry;
-+
-+	entry = coreboot_cfr_child_entry(base, len, tag);
-+	if (IS_ERR(entry))
-+		return ERR_CAST(entry);
-+	if (!entry)
-+		return NULL;
-+
-+	if (entry->size < sizeof(*str))
-+		return ERR_PTR(-EINVAL);
-+
-+	str = (const struct lb_cfr_varbinary *)entry;
-+	if (str->data_length > entry->size - sizeof(*str))
-+		return ERR_PTR(-EINVAL);
-+
-+	return str;
-+}
-+
-+static const struct lb_cfr_runtime_apply *
-+coreboot_cfr_child_runtime_apply(const void *base, size_t len)
-+{
-+	const struct lb_cfr_runtime_apply *runtime_apply;
-+	const struct coreboot_table_entry *entry;
-+
-+	entry = coreboot_cfr_child_entry(base, len, CFR_TAG_RUNTIME_APPLY);
-+	if (IS_ERR(entry))
-+		return ERR_CAST(entry);
-+	if (!entry)
-+		return NULL;
-+
-+	if (entry->size < sizeof(*runtime_apply))
-+		return ERR_PTR(-EINVAL);
-+
-+	runtime_apply = (const struct lb_cfr_runtime_apply *)entry;
-+	if (runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT &&
-+	    runtime_apply->id > U8_MAX)
-+		return ERR_PTR(-EINVAL);
-+
-+	return runtime_apply;
-+}
-+
-+static efi_char16_t *coreboot_cfr_efi_name(const char *name)
-+{
-+	size_t len, i;
-+
-+	len = strlen(name);
-+	if (len >= EFI_VAR_NAME_LEN)
-+		return ERR_PTR(-ENAMETOOLONG);
-+
-+	efi_char16_t *efi_name __free(kfree) =
-+		kcalloc(len + 1, sizeof(*efi_name), GFP_KERNEL);
-+	if (!efi_name)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i = 0; i < len; i++) {
-+		if (!isascii(name[i]))
-+			return ERR_PTR(-EINVAL);
-+		efi_name[i] = name[i];
-+	}
-+
-+	return no_free_ptr(efi_name);
-+}
-+
-+/* Caller must hold the efivar lock. */
-+static int coreboot_cfr_read_efi_value(efi_char16_t *efi_name, u32 *value,
-+				       u32 *attrs)
-+{
-+	unsigned long size = sizeof(__le32);
-+	efi_status_t status;
-+	__le32 data;
-+	u32 attr;
-+
-+	status = efivar_get_variable(efi_name, &coreboot_cfr_guid, &attr,
-+				     &size, &data);
-+	if (status != EFI_SUCCESS)
-+		return efi_status_to_err(status);
-+
-+	if (size != sizeof(data))
-+		return -EINVAL;
-+
-+	if (!(attr & EFI_VARIABLE_RUNTIME_ACCESS))
-+		return -EOPNOTSUPP;
-+
-+	*value = le32_to_cpu(data);
-+	if (attrs)
-+		*attrs = attr;
-+
-+	return 0;
-+}
-+
-+static int coreboot_cfr_read_value(const struct coreboot_cfr_setting *setting,
-+				   u32 *value, u32 *attrs)
-+{
-+	efi_char16_t *efi_name __free(kfree) =
-+		coreboot_cfr_efi_name(setting->name);
-+	int ret;
-+
-+	if (IS_ERR(efi_name))
-+		return PTR_ERR(no_free_ptr(efi_name));
-+
-+	ret = efivar_lock();
-+	if (ret)
-+		return ret;
-+
-+	ret = coreboot_cfr_read_efi_value(efi_name, value, attrs);
-+	efivar_unlock();
-+
-+	return ret;
-+}
-+
-+/* Caller must hold the efivar lock. */
-+static int coreboot_cfr_write_efi_value(efi_char16_t *efi_name, u32 value,
-+					u32 attrs)
-+{
-+	efi_status_t status;
-+	__le32 data;
-+
-+	if (!efivar_supports_writes())
-+		return -EROFS;
-+
-+	data = cpu_to_le32(value);
-+	status = efivar_set_variable_locked(efi_name, &coreboot_cfr_guid, attrs,
-+					    sizeof(data), &data, false);
-+	if (status != EFI_SUCCESS)
-+		return efi_status_to_err(status);
-+
-+	return 0;
-+}
-+
-+static int coreboot_cfr_apply_runtime(struct coreboot_cfr_setting *setting)
-+{
-+#ifdef CONFIG_X86
-+	u8 status;
-+
-+	if (setting->runtime_apply_method != CFR_RUNTIME_APPLY_APM_CNT)
-+		return -EOPNOTSUPP;
-+
-+	outb((u8)setting->runtime_apply_id, COREBOOT_CFR_APM_STS_PORT);
-+	outb(COREBOOT_CFR_APM_APPLY_CMD, COREBOOT_CFR_APM_CNT_PORT);
-+	status = inb(COREBOOT_CFR_APM_STS_PORT);
-+	if (status)
-+		return -EIO;
-+
-+	return 0;
-+#else
-+	return -EOPNOTSUPP;
-+#endif
-+}
-+
-+static int coreboot_cfr_write_value(struct coreboot_cfr_setting *setting,
-+				    u32 value)
-+{
-+	efi_char16_t *efi_name;
-+	u32 attrs;
-+	u32 old;
-+	int restore_ret;
-+	int ret;
-+
-+	if (setting->read_only)
-+		return -EACCES;
-+
-+	efi_name = coreboot_cfr_efi_name(setting->name);
-+	if (IS_ERR(efi_name))
-+		return PTR_ERR(efi_name);
-+
-+	mutex_lock(&setting->drvdata->lock);
-+
-+	ret = efivar_lock();
-+	if (ret)
-+		goto out_unlock_mutex;
-+
-+	ret = coreboot_cfr_read_efi_value(efi_name, &old, &attrs);
-+	if (ret)
-+		goto out_unlock_efi;
-+
-+	if ((attrs & COREBOOT_CFR_EFI_ATTRS) != COREBOOT_CFR_EFI_ATTRS) {
-+		ret = -EOPNOTSUPP;
-+		goto out_unlock_efi;
-+	}
-+
-+	if (old == value)
-+		goto out_unlock_efi;
-+
-+	ret = coreboot_cfr_write_efi_value(efi_name, value, attrs);
-+	if (ret)
-+		goto out_unlock_efi;
-+
-+	ret = coreboot_cfr_apply_runtime(setting);
-+	if (ret == -EOPNOTSUPP) {
-+		/* EFI changed; firmware will consume it after reboot. */
-+		setting->drvdata->pending_reboot = true;
-+		ret = 0;
-+	} else if (ret) {
-+		restore_ret = coreboot_cfr_write_efi_value(efi_name, old, attrs);
-+		if (restore_ret) {
-+			setting->drvdata->pending_reboot = true;
-+			ret = restore_ret;
-+		} else {
-+			goto out_unlock_efi;
-+		}
-+	}
-+
-+	efivar_unlock();
-+	kobject_uevent(&setting->drvdata->class_dev->kobj, KOBJ_CHANGE);
-+	mutex_unlock(&setting->drvdata->lock);
-+	kfree(efi_name);
-+	return ret;
-+
-+out_unlock_efi:
-+	efivar_unlock();
-+out_unlock_mutex:
-+	mutex_unlock(&setting->drvdata->lock);
-+	kfree(efi_name);
-+	return ret;
-+}
-+
-+static const char *
-+coreboot_cfr_label_from_value(const struct coreboot_cfr_setting *setting,
-+			      u32 value)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < setting->n_values; i++) {
-+		if (setting->values[i].value == value)
-+			return setting->values[i].label;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int coreboot_cfr_parse_value(struct coreboot_cfr_setting *setting,
-+				    const char *label, u32 *value_out)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < setting->n_values; i++) {
-+		if (!sysfs_streq(label, setting->values[i].label))
-+			continue;
-+
-+		*value_out = setting->values[i].value;
-+		return 0;
-+	}
-+
-+	return kstrtou32(label, 0, value_out);
-+}
-+
-+static bool coreboot_cfr_value_is_valid(struct coreboot_cfr_setting *setting,
-+					u32 value)
-+{
-+	u32 delta;
-+
-+	if (setting->type != COREBOOT_CFR_SETTING_NUMBER) {
-+		/* Enum and bool values are valid only if they have a label. */
-+		return coreboot_cfr_label_from_value(setting, value);
-+	}
-+
-+	if (value < setting->min || value > setting->max)
-+		return false;
-+
-+	if (!setting->step)
-+		return true;
-+
-+	delta = value - setting->min;
-+	return delta % setting->step == 0;
-+}
-+
-+static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			 char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-+		return sysfs_emit(buf, "integer\n");
-+
-+	return sysfs_emit(buf, "enumeration\n");
-+}
-+
-+static ssize_t display_name_language_code_show(struct kobject *kobj,
-+					       struct kobj_attribute *attr,
-+					       char *buf)
-+{
-+	return sysfs_emit(buf, "en_US.UTF-8\n");
-+}
-+
-+static ssize_t display_name_show(struct kobject *kobj,
-+				 struct kobj_attribute *attr, char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	return sysfs_emit(buf, "%s\n", setting->display_name);
-+}
-+
-+static ssize_t possible_values_show(struct kobject *kobj,
-+				    struct kobj_attribute *attr, char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+	ssize_t len = 0;
-+	unsigned int i;
-+
-+	for (i = 0; i < setting->n_values; i++) {
-+		len += sysfs_emit_at(buf, len, "%s%s", i ? ";" : "",
-+				     setting->values[i].label);
-+	}
-+
-+	len += sysfs_emit_at(buf, len, "\n");
-+	return len;
-+}
-+
-+static ssize_t min_value_show(struct kobject *kobj, struct
-kobj_attribute *attr,
-+			      char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	return sysfs_emit(buf, "%u\n", setting->min);
-+}
-+
-+static ssize_t max_value_show(struct kobject *kobj, struct
-kobj_attribute *attr,
-+			      char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	return sysfs_emit(buf, "%u\n", setting->max);
-+}
-+
-+static ssize_t scalar_increment_show(struct kobject *kobj,
-+				     struct kobj_attribute *attr, char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	return sysfs_emit(buf, "%u\n", setting->step);
-+}
-+
-+static ssize_t default_value_show(struct kobject *kobj,
-+				  struct kobj_attribute *attr, char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+	const char *label;
-+
-+	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-+		return sysfs_emit(buf, "%u\n", setting->default_value);
-+
-+	label = coreboot_cfr_label_from_value(setting, setting->default_value);
-+	if (!label)
-+		return sysfs_emit(buf, "%u\n", setting->default_value);
-+
-+	return sysfs_emit(buf, "%s\n", label);
-+}
-+
-+static ssize_t current_value_show(struct kobject *kobj,
-+				  struct kobj_attribute *attr, char *buf)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+	const char *label;
-+	u32 value;
-+	int ret;
-+
-+	ret = coreboot_cfr_read_value(setting, &value, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (setting->type == COREBOOT_CFR_SETTING_NUMBER)
-+		return sysfs_emit(buf, "%u\n", value);
-+
-+	label = coreboot_cfr_label_from_value(setting, value);
-+	if (!label)
-+		return -EINVAL;
-+
-+	return sysfs_emit(buf, "%s\n", label);
-+}
-+
-+static ssize_t current_value_store(struct kobject *kobj,
-+				   struct kobj_attribute *attr,
-+				   const char *buf, size_t count)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+	u32 value;
-+	int ret;
-+
-+	ret = coreboot_cfr_parse_value(setting, buf, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (!coreboot_cfr_value_is_valid(setting, value))
-+		return -EINVAL;
-+
-+	ret = coreboot_cfr_write_value(setting, value);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static struct kobj_attribute type_attr = __ATTR_RO(type);
-+static struct kobj_attribute display_name_language_code_attr =
-+	__ATTR_RO(display_name_language_code);
-+static struct kobj_attribute display_name_attr = __ATTR_RO(display_name);
-+static struct kobj_attribute possible_values_attr = __ATTR_RO(possible_values);
-+static struct kobj_attribute min_value_attr = __ATTR_RO(min_value);
-+static struct kobj_attribute max_value_attr = __ATTR_RO(max_value);
-+static struct kobj_attribute scalar_increment_attr =
-__ATTR_RO(scalar_increment);
-+static struct kobj_attribute default_value_attr = __ATTR_RO(default_value);
-+static struct kobj_attribute current_value_attr = __ATTR_RW(current_value);
-+
-+static struct attribute *coreboot_cfr_setting_attrs[] = {
-+	&type_attr.attr,
-+	&display_name_language_code_attr.attr,
-+	&display_name_attr.attr,
-+	&possible_values_attr.attr,
-+	&min_value_attr.attr,
-+	&max_value_attr.attr,
-+	&scalar_increment_attr.attr,
-+	&default_value_attr.attr,
-+	&current_value_attr.attr,
-+	NULL,
-+};
-+
-+static umode_t coreboot_cfr_attr_is_visible(struct kobject *kobj,
-+					    struct attribute *attr, int n)
-+{
-+	struct coreboot_cfr_setting *setting = to_coreboot_cfr_setting(kobj);
-+
-+	if (setting->type == COREBOOT_CFR_SETTING_NUMBER &&
-+	    attr == &possible_values_attr.attr)
-+		return 0;
-+
-+	if (setting->type != COREBOOT_CFR_SETTING_NUMBER &&
-+	    (attr == &min_value_attr.attr || attr == &max_value_attr.attr ||
-+	     attr == &scalar_increment_attr.attr))
-+		return 0;
-+
-+	if (setting->read_only && attr == &current_value_attr.attr)
-+		return 0444;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group coreboot_cfr_setting_group = {
-+	.attrs = coreboot_cfr_setting_attrs,
-+	.is_visible = coreboot_cfr_attr_is_visible,
-+};
-+
-+static void coreboot_cfr_free_setting(struct coreboot_cfr_setting *setting)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < setting->n_values; i++)
-+		kfree(setting->values[i].label);
-+
-+	kfree(setting->values);
-+	kfree(setting->display_name);
-+	kfree(setting->name);
-+	kfree(setting);
-+}
-+
-+static void coreboot_cfr_setting_release(struct kobject *kobj)
-+{
-+	coreboot_cfr_free_setting(to_coreboot_cfr_setting(kobj));
-+}
-+
-+static const struct kobj_type coreboot_cfr_setting_ktype = {
-+	.release = coreboot_cfr_setting_release,
-+	.sysfs_ops = &kobj_sysfs_ops,
-+};
-+
-+static ssize_t pending_reboot_show(struct kobject *kobj,
-+				   struct kobj_attribute *attr, char *buf)
-+{
-+	struct device *dev = kobj_to_dev(kobj->parent);
-+	struct coreboot_cfr_drvdata *data;
-+
-+	data = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%d\n", data->pending_reboot);
-+}
-+
-+static struct kobj_attribute pending_reboot_attr = __ATTR_RO(pending_reboot);
-+
-+static int coreboot_cfr_copy_bool_values(struct coreboot_cfr_setting *setting)
-+{
-+	static const struct coreboot_cfr_enum bool_values[] = {
-+		{ .label = "Disabled", .value = 0 },
-+		{ .label = "Enabled", .value = 1 },
-+	};
-+	unsigned int i;
-+
-+	setting->values = kcalloc(ARRAY_SIZE(bool_values), sizeof(*setting->values),
-+				  GFP_KERNEL);
-+	if (!setting->values)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < ARRAY_SIZE(bool_values); i++) {
-+		setting->values[i].label = kstrdup(bool_values[i].label,
-+						   GFP_KERNEL);
-+		if (!setting->values[i].label)
-+			return -ENOMEM;
-+		setting->values[i].value = bool_values[i].value;
-+		setting->n_values++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int coreboot_cfr_count_enum_values(const void *base, size_t len)
-+{
-+	struct coreboot_cfr_iterator iterator = {
-+		.cursor = base,
-+		.remaining = len,
-+	};
-+	const struct coreboot_table_entry *entry;
-+	int count = 0;
-+
-+	for (;;) {
-+		entry = coreboot_cfr_next_entry(&iterator);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
-+		if (!entry)
-+			return count;
-+
-+		if (entry->tag == CFR_TAG_ENUM_VALUE)
-+			count++;
-+	}
-+}
-+
-+static int coreboot_cfr_copy_enum_values(struct coreboot_cfr_setting *setting,
-+					 const void *base, size_t len)
-+{
-+	struct coreboot_cfr_iterator iterator = {
-+		.cursor = base,
-+		.remaining = len,
-+	};
-+	const struct lb_cfr_enum_value *enum_value;
-+	const struct lb_cfr_varbinary *label;
-+	const struct coreboot_table_entry *entry;
-+	struct coreboot_cfr_enum *value;
-+	int count;
-+
-+	count = coreboot_cfr_count_enum_values(base, len);
-+	if (count <= 0)
-+		return count ?: -EINVAL;
-+
-+	setting->values = kcalloc(count, sizeof(*setting->values), GFP_KERNEL);
-+	if (!setting->values)
-+		return -ENOMEM;
-+
-+	for (;;) {
-+		entry = coreboot_cfr_next_entry(&iterator);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
-+		if (!entry)
-+			return 0;
-+
-+		if (entry->tag != CFR_TAG_ENUM_VALUE)
-+			continue;
-+
-+		if (entry->size < sizeof(*enum_value))
-+			return -EINVAL;
-+
-+		enum_value = (const struct lb_cfr_enum_value *)entry;
-+		label = coreboot_cfr_child_string(enum_value + 1,
-+						  enum_value->size - sizeof(*enum_value),
-+						  CFR_TAG_VARCHAR_UI_NAME);
-+		if (IS_ERR(label))
-+			return PTR_ERR(label);
-+		if (!label)
-+			return -EINVAL;
-+
-+		value = &setting->values[setting->n_values];
-+		value->label = coreboot_cfr_string_dup(label);
-+		if (!value->label)
-+			return -ENOMEM;
-+		if (!coreboot_cfr_string_is_valid_label(value->label)) {
-+			kfree(value->label);
-+			value->label = NULL;
-+			return -EINVAL;
-+		}
-+
-+		value->value = enum_value->value;
-+		setting->n_values++;
-+	}
-+}
-+
-+static bool
-+coreboot_cfr_possible_values_fit(const struct coreboot_cfr_setting *setting)
-+{
-+	size_t len = 1;		/* Trailing newline. */
-+	size_t label_len;
-+	unsigned int i;
-+
-+	for (i = 0; i < setting->n_values; i++) {
-+		if (len >= PAGE_SIZE)
-+			return false;
-+
-+		if (i)
-+			len++;
-+
-+		label_len = strlen(setting->values[i].label);
-+		if (label_len >= PAGE_SIZE - len)
-+			return false;
-+
-+		len += label_len;
-+	}
-+
-+	return true;
-+}
-+
-+static int coreboot_cfr_setting_is_usable(struct coreboot_cfr_setting *setting)
-+{
-+	u32 value;
-+	int ret;
-+
-+	ret = coreboot_cfr_read_value(setting, &value, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (!coreboot_cfr_value_is_valid(setting, value))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int coreboot_cfr_register_setting(struct coreboot_cfr_drvdata *data,
-+					 struct coreboot_cfr_setting *setting)
-+{
-+	int ret;
-+
-+	ret = kobject_init_and_add(&setting->kobj, &coreboot_cfr_setting_ktype,
-+				   &data->attrs_kset->kobj, "%s", setting->name);
-+	if (ret)
-+		goto err_put_kobj;
-+
-+	ret = sysfs_create_group(&setting->kobj, &coreboot_cfr_setting_group);
-+	if (ret)
-+		goto err_put_kobj;
-+
-+	list_add_tail(&setting->node, &data->settings);
-+	return 0;
-+
-+err_put_kobj:
-+	kobject_put(&setting->kobj);
-+	return ret;
-+}
-+
-+static int coreboot_cfr_add_numeric_option(struct coreboot_cfr_drvdata *data,
-+					   const struct lb_cfr_numeric_option *option,
-+					   bool parent_read_only)
-+{
-+	const struct lb_cfr_varbinary *name;
-+	const struct lb_cfr_varbinary *display_name;
-+	const struct lb_cfr_runtime_apply *runtime_apply;
-+	const void *child_base = option + 1;
-+	struct coreboot_cfr_setting *setting;
-+	size_t child_len = option->size - sizeof(*option);
-+	int ret;
-+
-+	if (!(option->flags & CFR_OPTFLAG_RUNTIME))
-+		return 0;
-+
-+	if (option->flags & COREBOOT_CFR_OPT_SKIP_FLAGS)
-+		return 0;
-+
-+	if (option->dependency_id)
-+		return 0;
-+
-+	setting = kzalloc_obj(*setting, GFP_KERNEL);
-+	if (!setting)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&setting->node);
-+	setting->drvdata = data;
-+	setting->default_value = option->default_value;
-+	setting->min = option->min;
-+	setting->max = option->max;
-+	setting->step = option->step ?: 1;
-+	setting->read_only =
-+		(option->flags & COREBOOT_CFR_OPT_READ_ONLY_FLAGS) ||
-+		!data->efi_writes_supported || parent_read_only;
-+
-+	runtime_apply = coreboot_cfr_child_runtime_apply(child_base, child_len);
-+	if (IS_ERR(runtime_apply)) {
-+		ret = PTR_ERR(runtime_apply);
-+		goto err_put_setting;
-+	}
-+
-+	if (runtime_apply && runtime_apply->method == CFR_RUNTIME_APPLY_APM_CNT) {
-+		setting->runtime_apply_method = runtime_apply->method;
-+		setting->runtime_apply_id = runtime_apply->id;
-+	}
-+
-+	name = coreboot_cfr_child_string(child_base, child_len,
-+					 CFR_TAG_VARCHAR_OPT_NAME);
-+	if (IS_ERR(name)) {
-+		ret = PTR_ERR(name);
-+		goto err_put_setting;
-+	}
-+	if (!name) {
-+		ret = -EINVAL;
-+		goto err_put_setting;
-+	}
-+
-+	setting->name = coreboot_cfr_string_dup(name);
-+	if (!setting->name) {
-+		ret = -ENOMEM;
-+		goto err_put_setting;
-+	}
-+
-+	if (!coreboot_cfr_string_is_valid_name(setting->name)) {
-+		ret = -EINVAL;
-+		goto err_put_setting;
-+	}
-+
-+	display_name = coreboot_cfr_child_string(child_base, child_len,
-+						 CFR_TAG_VARCHAR_UI_NAME);
-+	if (IS_ERR(display_name)) {
-+		ret = PTR_ERR(display_name);
-+		goto err_put_setting;
-+	}
-+	if (display_name)
-+		setting->display_name = coreboot_cfr_string_dup(display_name);
-+	else
-+		setting->display_name = kstrdup(setting->name, GFP_KERNEL);
-+	if (!setting->display_name) {
-+		ret = -ENOMEM;
-+		goto err_put_setting;
-+	}
-+
-+	switch (option->tag) {
-+	case CFR_TAG_OPTION_BOOL:
-+		setting->type = COREBOOT_CFR_SETTING_BOOL;
-+		setting->min = 0;
-+		setting->max = 1;
-+		setting->step = 1;
-+		ret = coreboot_cfr_copy_bool_values(setting);
-+		break;
-+	case CFR_TAG_OPTION_ENUM:
-+		setting->type = COREBOOT_CFR_SETTING_ENUM;
-+		ret = coreboot_cfr_copy_enum_values(setting, child_base,
-+						    child_len);
-+		break;
-+	case CFR_TAG_OPTION_NUMBER:
-+		setting->type = COREBOOT_CFR_SETTING_NUMBER;
-+		if (setting->max < setting->min)
-+			ret = -EINVAL;
-+		else
-+			ret = 0;
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	if (ret)
-+		goto err_put_setting;
-+	/* possible_values must be returned completely in one sysfs read. */
-+	if (setting->type != COREBOOT_CFR_SETTING_NUMBER &&
-+	    !coreboot_cfr_possible_values_fit(setting)) {
-+		ret = 0;
-+		goto err_put_setting;
-+	}
-+
-+	ret = coreboot_cfr_setting_is_usable(setting);
-+	if (ret) {
-+		/*
-+		 * CFR may describe options without a matching, readable runtime
-+		 * EFI variable. Skip those, but propagate transient EFI failures.
-+		 */
-+		if (ret == -ENOENT || ret == -EINVAL || ret == -EOPNOTSUPP ||
-+		    ret == -ENAMETOOLONG)
-+			ret = 0;
-+		goto err_put_setting;
-+	}
-+
-+	/* The kobject release callback owns setting after this call. */
-+	return coreboot_cfr_register_setting(data, setting);
-+
-+err_put_setting:
-+	coreboot_cfr_free_setting(setting);
-+	return ret;
-+}
-+
-+static int coreboot_cfr_parse_records(struct coreboot_cfr_drvdata *data,
-+				      const void *base, size_t len,
-+				      unsigned int depth,
-+				      bool parent_read_only)
-+{
-+	struct coreboot_cfr_iterator iterator = {
-+		.cursor = base,
-+		.remaining = len,
-+	};
-+	const struct lb_cfr_option_form *form;
-+	const struct lb_cfr_numeric_option *option;
-+	const struct coreboot_table_entry *entry;
-+	const void *child_base;
-+	size_t child_len;
-+	int ret;
-+
-+	for (;;) {
-+		entry = coreboot_cfr_next_entry(&iterator);
-+		if (IS_ERR(entry))
-+			return PTR_ERR(entry);
-+		if (!entry)
-+			return 0;
-+
-+		switch (entry->tag) {
-+		case CFR_TAG_OPTION_FORM:
-+			if (entry->size < sizeof(struct lb_cfr_option_form))
-+				return -EINVAL;
-+
-+			form = (const struct lb_cfr_option_form *)entry;
-+			if (form->dependency_id ||
-+			    form->flags & CFR_OPTFLAG_SUPPRESS)
-+				break;
-+
-+			if (depth >= COREBOOT_CFR_MAX_FORM_DEPTH)
-+				return -E2BIG;
-+
-+			child_base = form + 1;
-+			child_len = entry->size - sizeof(struct lb_cfr_option_form);
-+			ret = coreboot_cfr_parse_records(data, child_base,
-+							 child_len, depth + 1,
-+							 parent_read_only ||
-+							 (form->flags &
-+							  COREBOOT_CFR_OPT_READ_ONLY_FLAGS));
-+			if (ret)
-+				return ret;
-+			break;
-+		case CFR_TAG_OPTION_ENUM:
-+		case CFR_TAG_OPTION_NUMBER:
-+		case CFR_TAG_OPTION_BOOL:
-+			option = (const struct lb_cfr_numeric_option *)entry;
-+			if (entry->size < sizeof(*option))
-+				return -EINVAL;
-+			ret = coreboot_cfr_add_numeric_option(data, option,
-+							      parent_read_only);
-+			if (ret)
-+				return ret;
-+			break;
-+		default:
-+			/* Ignore unsupported, child-only and future record types. */
-+			break;
-+		}
-+	}
-+}
-+
-+static void coreboot_cfr_unregister_settings(struct coreboot_cfr_drvdata *data)
-+{
-+	struct coreboot_cfr_setting *setting, *tmp;
-+
-+	list_for_each_entry_safe(setting, tmp, &data->settings, node) {
-+		sysfs_remove_group(&setting->kobj, &coreboot_cfr_setting_group);
-+		list_del(&setting->node);
-+		kobject_put(&setting->kobj);
-+	}
-+}
-+
-+static int coreboot_cfr_probe(struct coreboot_device *dev)
-+{
-+	const struct lb_cfr *root = (const struct lb_cfr *)dev->raw;
-+	struct coreboot_cfr_drvdata *data;
-+	size_t payload_len;
-+	int ret;
-+
-+	if (dev->entry.size < sizeof(*root))
-+		return -EINVAL;
-+
-+	if (root->tag != LB_TAG_CFR_ROOT || root->version != CFR_VERSION)
-+		return -EINVAL;
-+
-+	if (root->size < sizeof(*root) || root->size > dev->entry.size)
-+		return -EINVAL;
-+
-+	payload_len = root->size - sizeof(*root);
-+	if (crc32_be(0, root + 1, payload_len) != root->checksum)
-+		return -EBADMSG;
-+
-+	if (!efivar_is_available())
-+		return -EPROBE_DEFER;
-+
-+	data = devm_kzalloc(&dev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	ret = efivar_lock();
-+	if (ret)
-+		return ret;
-+	data->efi_writes_supported = efivar_supports_writes();
-+	efivar_unlock();
-+
-+	INIT_LIST_HEAD(&data->settings);
-+	ret = devm_mutex_init(&dev->dev, &data->lock);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&dev->dev, data);
-+
-+	data->class_dev = device_create(&firmware_attributes_class, NULL,
-+					MKDEV(0, 0), NULL, DRIVER_NAME);
-+	if (IS_ERR(data->class_dev))
-+		return PTR_ERR(data->class_dev);
-+	dev_set_drvdata(data->class_dev, data);
-+
-+	data->attrs_kset = kset_create_and_add("attributes", NULL,
-+					       &data->class_dev->kobj);
-+	if (!data->attrs_kset) {
-+		ret = -ENOMEM;
-+		goto err_unregister_dev;
-+	}
-+
-+	ret = sysfs_create_file(&data->attrs_kset->kobj,
-+				&pending_reboot_attr.attr);
-+	if (ret)
-+		goto err_unregister_attrs;
-+
-+	ret = coreboot_cfr_parse_records(data, root + 1, payload_len, 0, false);
-+	if (ret)
-+		goto err_unregister_settings;
-+
-+	if (list_empty(&data->settings)) {
-+		ret = -ENODEV;
-+		goto err_unregister_settings;
-+	}
-+
-+	return 0;
-+
-+err_unregister_settings:
-+	coreboot_cfr_unregister_settings(data);
-+	sysfs_remove_file(&data->attrs_kset->kobj, &pending_reboot_attr.attr);
-+err_unregister_attrs:
-+	kset_unregister(data->attrs_kset);
-+err_unregister_dev:
-+	device_unregister(data->class_dev);
-+	return ret;
-+}
-+
-+static void coreboot_cfr_remove(struct coreboot_device *dev)
-+{
-+	struct coreboot_cfr_drvdata *data = dev_get_drvdata(&dev->dev);
-+
-+	coreboot_cfr_unregister_settings(data);
-+	sysfs_remove_file(&data->attrs_kset->kobj, &pending_reboot_attr.attr);
-+	kset_unregister(data->attrs_kset);
-+	device_unregister(data->class_dev);
-+}
-+
-+static const struct coreboot_device_id coreboot_cfr_ids[] = {
-+	{ .tag = LB_TAG_CFR_ROOT },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(coreboot, coreboot_cfr_ids);
-+
-+static struct coreboot_driver coreboot_cfr_driver = {
-+	.probe = coreboot_cfr_probe,
-+	.remove = coreboot_cfr_remove,
-+	.drv = {
-+		.name = DRIVER_NAME,
-+	},
-+	.id_table = coreboot_cfr_ids,
-+};
-+module_coreboot_driver(coreboot_cfr_driver);
-+
-+MODULE_AUTHOR("Sean Rhodes <sean@starlabs.systems>");
-+MODULE_DESCRIPTION("coreboot CFR firmware attributes driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("EFIVAR");
+> +	kfree(output.data);
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_get_health_control_status(struct acer_wmi_b=
+attery_data *data,
+> +						      bool *health_mode)
+> +{
+> +	/*
+> +	 * Acer Care Center seems to always call the WMI method
+> +	 * with fixed parameters. This yields information about
+> +	 * the availability and state of both health and
+> +	 * calibration mode. The modes probably apply to
+> +	 * all batteries of the system.
+> +	 */
+> +	struct get_battery_health_control_status_input args =3D {
+> +		.battery_no =3D ACER_BATTERY_INDEX,
+> +		.function_query =3D 0x1,
+> +		.reserved =3D { 0x0, 0x0 },
+> +	};
+> +	struct wmi_buffer input =3D { .length =3D sizeof(args), .data =3D &arg=
+s };
+> +	struct wmi_buffer output;
+> +	int ret;
+> +
+> +	ret =3D wmidev_invoke_method(data->wdev, 0, 20, &input, &output,
+> +				   sizeof(struct get_battery_health_control_status_output));
+> +	if (ret)
+> +		return ret;
+> +
+> +	struct get_battery_health_control_status_output *status_output __free(=
+kfree) =3D output.data;
+> +
+> +	if (health_mode) {
+
+health_mode is always non-NULL, so please remove this unnecessary if-state=
+ment.
+
+> +		if (!(status_output->function_list & HEALTH_MODE))
+> +			return -EINVAL;
+> +
+> +		*health_mode =3D status_output->function_status[0] > 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_set_health_control(struct acer_wmi_battery_=
+data *data,
+> +					       u8 function, bool function_status)
+> +{
+> +	struct set_battery_health_control_input args =3D {
+> +		.battery_no =3D ACER_BATTERY_INDEX,
+> +		.function_mask =3D function,
+> +		.function_status =3D function_status ? 1 : 0,
+> +		.reserved_in =3D { 0x0, 0x0, 0x0, 0x0, 0x0 },
+> +	};
+> +	struct wmi_buffer input =3D { .length =3D sizeof(args), .data =3D &arg=
+s };
+> +	struct wmi_buffer output;
+> +	int ret;
+> +
+> +	ret =3D wmidev_invoke_method(data->wdev, 0, 21, &input, &output,
+> +				   sizeof(struct set_battery_health_control_output));
+> +	if (ret)
+> +		return ret;
+> +
+> +	struct set_battery_health_control_output *status_output __free(kfree) =
+=3D output.data;
+> +	if (le16_to_cpu(status_output->ret) !=3D 0)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_battery_ext_property_get(struct power_supply *psy,
+> +					 const struct power_supply_ext *ext,
+> +					 void *ext_data,
+> +					 enum power_supply_property psp,
+> +					 union power_supply_propval *val)
+> +{
+> +	struct acer_wmi_battery_data *data =3D ext_data;
+> +	bool health_mode;
+> +	u32 value;
+> +	int ret;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		ret =3D acer_wmi_battery_get_health_control_status(data, &health_mode=
+);
+> +		if (ret)
+> +			return ret;
+> +
+> +		val->intval =3D health_mode ? POWER_SUPPLY_CHARGE_TYPE_LONGLIFE
+> +					  : POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+> +		break;
+> +	case POWER_SUPPLY_PROP_TEMP:
+> +		ret =3D acer_wmi_battery_get_information(data, 0x8, ACER_BATTERY_INDE=
+X, &value);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (value > U16_MAX)
+> +			return -ERANGE;
+> +
+> +		val->intval =3D value + ABSOLUTE_ZERO_MILLICELSIUS / MILLIDEGREE_PER_=
+DECIDEGREE;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_battery_ext_property_set(struct power_supply *psy,
+> +					 const struct power_supply_ext *ext,
+> +					 void *ext_data,
+> +					 enum power_supply_property psp,
+> +					 const union power_supply_propval *val)
+> +{
+> +	struct acer_wmi_battery_data *data =3D ext_data;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		return acer_wmi_battery_set_health_control(data, HEALTH_MODE,
+> +				val->intval =3D=3D POWER_SUPPLY_CHARGE_TYPE_LONGLIFE);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int acer_battery_ext_property_is_writeable(struct power_supply *=
+psy,
+> +						  const struct power_supply_ext *ext,
+> +						  void *ext_data,
+> +						  enum power_supply_property psp)
+> +{
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPES:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct dmi_system_id acer_wmi_battery_health_mode_table[] =
+__initconst =3D {
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-24PT"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-44P"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A715-42G"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-57"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-58"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PHN16-71"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-34"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-43"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFE16-44"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFG16-72"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX14-71G"),
+> +		},
+> +	},
+> +	{
+> +		.matches =3D {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX16-61G"),
+> +		},
+> +	},
+> +	{}
+> +};
+
+Maybe you could move this whitelist a bit further down, just below acer_wm=
+i_battery_module_init()?
+
+Otherwise, the driver looks good to me.
+
+Thanks,
+Armin Wolf
+
+> +
+> +static const enum power_supply_property acer_battery_properties_v1[] =
+=3D {
+> +	POWER_SUPPLY_PROP_TEMP,
+> +};
+> +
+> +static const enum power_supply_property acer_battery_properties_v2[] =
+=3D {
+> +	POWER_SUPPLY_PROP_TEMP,
+> +	POWER_SUPPLY_PROP_CHARGE_TYPES,
+> +};
+> +
+> +static const struct power_supply_ext acer_wmi_battery_extension_v1 =3D =
+{
+> +	.name			=3D DRIVER_NAME,
+> +	.properties		=3D acer_battery_properties_v1,
+> +	.num_properties		=3D ARRAY_SIZE(acer_battery_properties_v1),
+> +	.get_property		=3D acer_battery_ext_property_get,
+> +	.property_is_writeable	=3D acer_battery_ext_property_is_writeable,
+
+Please remove this line, as there exist no writable properties in the v1 e=
+xtension.
+The power supply core should then automatically fall back to read-only.
+
+With those issues being addressed:
+
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+
+> +};
+> +
+> +static const struct power_supply_ext acer_wmi_battery_extension_v2 =3D =
+{
+> +	.name			=3D DRIVER_NAME,
+> +	.properties		=3D acer_battery_properties_v2,
+> +	.num_properties		=3D ARRAY_SIZE(acer_battery_properties_v2),
+> +	.charge_types           =3D BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
+> +				  BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE),
+> +	.get_property		=3D acer_battery_ext_property_get,
+> +	.set_property		=3D acer_battery_ext_property_set,
+> +	.property_is_writeable	=3D acer_battery_ext_property_is_writeable,
+> +};
+> +
+> +static int acer_battery_add(struct power_supply *battery, struct acpi_b=
+attery_hook *hook)
+> +{
+> +	struct acer_wmi_battery_data *data =3D container_of(hook, struct acer_=
+wmi_battery_data, hook);
+> +
+> +	return power_supply_register_extension(battery, data->battery_ext,
+> +					       &data->wdev->dev, data);
+> +}
+> +
+> +static int acer_battery_remove(struct power_supply *battery, struct acp=
+i_battery_hook *hook)
+> +{
+> +	struct acer_wmi_battery_data *data =3D container_of(hook, struct acer_=
+wmi_battery_data, hook);
+> +
+> +	power_supply_unregister_extension(battery, data->battery_ext);
+> +
+> +	return 0;
+> +}
+> +
+> +static int acer_wmi_battery_probe(struct wmi_device *wdev, const void *=
+context)
+> +{
+> +	struct acer_wmi_battery_data *data;
+> +
+> +	data =3D devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, data);
+> +	data->wdev =3D wdev;
+> +	data->battery_ext =3D health_mode ? &acer_wmi_battery_extension_v2
+> +					: &acer_wmi_battery_extension_v1;
+> +	data->hook.name =3D "Acer Battery Extension";
+> +	data->hook.add_battery =3D acer_battery_add;
+> +	data->hook.remove_battery =3D acer_battery_remove;
+> +
+> +	return devm_battery_hook_register(&data->wdev->dev, &data->hook);
+> +}
+> +
+> +static const struct wmi_device_id acer_wmi_battery_id_table[] =3D {
+> +	{ ACER_BATTERY_GUID, NULL },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(wmi, acer_wmi_battery_id_table);
+> +
+> +static struct wmi_driver acer_wmi_battery_driver =3D {
+> +	.driver =3D {
+> +		.name =3D DRIVER_NAME,
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +	.id_table =3D acer_wmi_battery_id_table,
+> +	.probe =3D acer_wmi_battery_probe,
+> +	.no_singleton =3D true,
+> +};
+> +
+> +static int __init acer_wmi_battery_module_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (dmi_check_system(acer_wmi_battery_health_mode_table) || force)
+> +		health_mode =3D true;
+> +	else
+> +		health_mode =3D false;
+> +
+> +	ret =3D wmi_driver_register(&acer_wmi_battery_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit acer_wmi_battery_module_exit(void)
+> +{
+> +	wmi_driver_unregister(&acer_wmi_battery_driver);
+> +}
+> +
+> +module_init(acer_wmi_battery_module_init);
+> +module_exit(acer_wmi_battery_module_exit);
+> +
+> +MODULE_AUTHOR("Frederik Harwath <frederik@harwath.name>");
+> +MODULE_AUTHOR("Jelle van der Waa <jelle@vdwaa.nl>");
+> +MODULE_DESCRIPTION("Acer battery health control WMI driver");
+> +MODULE_LICENSE("GPL");
