@@ -1,208 +1,156 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1723D954D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 06:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0890E6FC5
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 06:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785997176; cv=none; b=UDgFWoliTeUPlHAvaOyIDIwjuaIYTU250hPMogXJzHXLrDL0D43cdsF4VMjZMnj+QVrYKCnDPtOfct2165gRsxSuYkTRwwtdpL1tpvSLXH2E8zKS/J22hhawCCXffV5t38jc16KzJgN8bkztsUidihvVFmHhoUdmb9gMaeDK0/I=
+	t=1785997219; cv=none; b=uhujOOjKLotmRV4pb0PLAAcl4jTfBrYez0caAZy8Apshko0NfCjHIN6UKm7os2T7RHm3+HVPPcvk8nN6ZLFJDXBZzalhx5ywIS+sctVp5B8hoHG2nKUcs69IgPJIAAO167dK3CjoZ8ZsDvOcNcQRaN78d7wsaqd2kxMQiAfZziY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785997176; c=relaxed/simple;
-	bh=4ZQW8bAzXf3z6xTN3u8cqfzyMaqOtkEgC7NekBmJE+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hD+1Lw7Uy8KuZj2boy0yjN0hFnzHPJUSpkeep0510MlJisS6kG7DLkwlA82ux6inS0TFhBDZywbR5t/hBKx2txAUWkwZH+b+A1ItuWEvrYbQwkCwK39yEzyciKbCSeCTZ6wUdKcL7fJWoZQAAg/M4RNCFJmr7u8lWhM19dEGkRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZcadzZSF; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1785997219; c=relaxed/simple;
+	bh=vSRCWOqiLkmC/g4RK5nfPxDTazh6Hk/YJKhItLoYs8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QlyDsJ7anrwA+U3fVTa57/ihXG1VoK8a8Qweb9qSiJuNdhw1aDgd+ub2SvF8b+GlcNwrH8g7aRQ2jmMNt3KmXdddajjitWY14YVGi668PG+8V1guFp+3E7fHeaGab84z0jebl878Zc8Wt4tHnOxR+xNziNaClTpjv2hQVmOmy1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxquwDKh; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcadzZSF"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38125cebfdaso2229249a91.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 23:19:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxquwDKh"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38e347638adso2016559a91.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 23:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785997174; x=1786601974; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=a8OsaR2KbXJDR++z1B7bBvi3orWX3t7kh3YROuTJgmM=;
-        b=ZcadzZSF13qNoO7MXeCcrlQqeGOUyea16+aVLU18H4ed7fURBAFSdBO6bV+Ely9Ttb
-         +Toz0UTvD0VrK6HjAHtpJCQkAJgO5faZAkCc2PG2X/h4tnn7SDP4FUKcj80iWs1VAkWt
-         l09oaKeBwA2xK4pXqziygpkBs3lLH2JFKWqZdnaZLmbo6sUzgbXkv9YjoVEFlZf7OSTq
-         6je2w32ZQRyhzLwy1YfyjijVii8DaMlhMZSwqLAj5iBtSCGLR+iY6uBNxCHpHBucxanH
-         ENzeLCnNHQFRMMhob1N8QbjEf1PAU5zRBXVlbyqXPGv5/dnOgO2Uw22OpCSw2ilNvyZS
-         sGnw==
+        d=gmail.com; s=20251104; t=1785997217; x=1786602017; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=dqa2lb8jz1k6wRMwAtf53torsTTbREIMvGm7sGyYSQQ=;
+        b=UxquwDKhsKjCGwtuPacNsfLa4i3mMXeFWh7sXr1yiM75Kh/Bg9JVB3wZL6nGNTXy79
+         T8W4DiiEG+EOvvtNfaNNQ29fzE9M8LsMDI5DDavcfRBOxbWU5t6YcM31JkmysQMUXc7+
+         A1o+KSmqSOep0GW0urEZFUHsi3e4zz0uC9bkq4eE6OomCb5AMyAr6Wyp2Z2YGrh8WoK3
+         daV0cY6nUNJ2RgKOiVJPGS4ylYu+5t3DBAnJBR21oeNq+GgMSHepJ1hySUtl6CApGRYQ
+         GheE/kGYWHGrxsn/ISGZdISdAjYNpK+Hgibla9/hA/wGtDNlYW3dMdqvC3vYewz1QTVT
+         HpXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785997174; x=1786601974;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=a8OsaR2KbXJDR++z1B7bBvi3orWX3t7kh3YROuTJgmM=;
-        b=gnVTvxc9uvmLyMLPuQ4XWjtq2d/PFLNvBpbhVtKKfeyDcwcr+s3HsvW//s5vMlwRq1
-         MfaDS9V+o6Bt6gTfygSyEGeN3rRoKbWWRC6WU+GfuSJ5lW5aLUK2jKFsS39pQj8VBiP3
-         5WEEU06Pbbl8IEFpTo2rmV8yWusQj8rrcJzwbwxoPXVC5p8ACFC4rnrbw69OEmxnI9Mn
-         kWEgQDAzC0C4MXRlDcCms3E5payBCVYx0KhJPsw5TYUO5+PyiJFeZ8MFx/UGb5wLR0fk
-         S0HlLIMUSKx+9viQhBLiWQBPCgOOBOqbDRXLAfsP9c08PIIh/QUZZRJ2WR/KvvXOKK+h
-         sv6g==
-X-Forwarded-Encrypted: i=1; AHgh+Rra+dsw5IipBYGSxquHqQnEzuAtNdXwI2hwGF9CEOwy+SwMIbi2Xm+JAngAgundfPF1kdEktnsEtnYWkzML1/fUVjKi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfHZUnF7ifufqGdumpfBo7OywXIFBj6oUgXuof6NMUISyq+gYU
-	Non736VwV+CFmhXKfitvr3auhwy0Afiqv/IqjVUrH6T9ngQbBdvcgbYB9VtdGA==
-X-Gm-Gg: AR+sD10SV7U9YWjlW+eOqJY+b5VaAfTbbtiFaM6o5hEjPcKa7RvpyOf2kvaRypSeq0r
-	EHfF30VqWKHFic6f/m1OC4juBIpfxnnRTp18zZMun3KYAwJ+I8EHzfUMp6hxw6+FkDzh1oGnAK4
-	sMKwhI42/wmvKcUNoqEw8J68AH7Htogs5EkKg1El9/07imXB7sKdUy4uMU7NvD2zS7+887bqN2a
-	qahArilYKNqGM/m0eXTD58ho0DiRJlkIgnan18htfFJoUnSqGnXmv79qt/OO9VXiEX6AhfC4Ks7
-	ucmF/XnJLEk0doW84zEiq6hJ8HuJ8uXhZtWE6cBmiZX/HAbTgBuCLtCvzCH4oRO0iig7HCn5CQj
-	ek/wPc81mkd8WkLMAV+U6mPiIcMMuSh+3ooh5n1qvaAnk0ttQRnu8kqFjApYmQN7KdA3bDA/ot0
-	jrFk6IYApQjJK8L25+cynkLGUf4WXZ0sQBWHztrXgcArZQuCkDR8ayjdvPGpmDz86A/Pp1h80H+
-	XPEZg3XY9EN7p739U9nwGoKd1t9Vx9vhnIqVCJb+lDCkrytHnk=
-X-Received: by 2002:a05:6a20:e212:b0:3b4:7e2d:a3bc with SMTP id adf61e73a8af0-3cb85bcef1emr12802930637.0.1785997173912;
-        Wed, 05 Aug 2026 23:19:33 -0700 (PDT)
-Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:d081:36b2:965:e66f])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fca50acddsm21651689c88.3.2026.08.05.23.19.31
+        d=1e100.net; s=20251104; t=1785997217; x=1786602017;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=dqa2lb8jz1k6wRMwAtf53torsTTbREIMvGm7sGyYSQQ=;
+        b=JuVM+iWm1KUapLZK3tfLObNMihyATMs6zyQdQt117ddY4vSViPeAV1vkg6GA57704b
+         ZtMm6hyLOdp39eI3qJ5R5rwqhuMpW/xhavNdsV8gxDUhe8zBgavWtoBYx/BAlfMStITN
+         Tg3SxRZwdLQcdyAXmcglwEMK2mRxOBjvXdQ/xjX1Pql1fg0Otf2EgtB3MOf1o9/68C48
+         NpoacVK0nUno+kWkEa3aXSdpVSGL6M8OrpoCRvFj4v0ixVYGakMTLA4fexsKg+9f8XzQ
+         PZQwgZkX7mCnayVlsdhhz59wtP5nXeewEEwaYNwHr+KK5gTUnDZXIrI+/0rol0ZvqwNT
+         fVKw==
+X-Forwarded-Encrypted: i=1; AHgh+RotbQam1W5O4/7Slb86YYoy2NPQONqMS8TWWz1+nv7e7ddBaJcdDMnC3Jp1/EWi5K67IMLQZ99AJhtpK6+4ZzsIBmJX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRKUmFRgsDLOoH4ad/dx4EpCEH9euylmAaCnMFwmrd6PyiKW/U
+	lBffJKrVAYfYIbFil8XnAMGoJJrUgN+Uoqocr1o+g6FbLjNN3ZSXEUvnFrmRVg==
+X-Gm-Gg: AR+sD12nwu4c2dsOtz408ZhfH4gP3G74unDhz5IJIi6mS1JK4ctM56LD7lavBfuN0IN
+	LP2JUGgXxQJpXjAMNub+SNBCsxxzpxXO4vNTTI7Y7M9/mHvtMW88IHOQN07/vxI0iEyAPaYXE5C
+	ep5oCD5jBueS6RJmb9xCAgO/NNCkxuF6MP4otrdgsTCIs9UNIIUEeB1PVYHjMXl0evKPWx7W7n3
+	ecGbfHY5n3j1i5RhX25d/nPcjEeyWHkx0/eBuuQPz+nHkyu2v2NnzsiJOI8KlaAbmvKttJdOpFF
+	+CEIgREQNcHaaf48gvTMLEGBuz672ViyQnOh/PFAeSo/Tn0CZXwVsscKlyzB4NC18LCweP5v/IF
+	TyTkgGqJbQ0BdtbBCsCnbzxRaTAld7l74ukcahIczB3rQeBb33bbeyAdXrEp9kJCJOb8M6EnSU8
+	4ZQ4ayCHTAPREinSIQammHe8j7NdkpsKMzqYVOFNy6zyHHNkOzuEWZs7HKQb1EmPzZCi8ie6iXy
+	kkoTNuSBS1j4f29cBDbPl9uQ8N4
+X-Received: by 2002:a17:90b:2807:b0:38e:3fdc:62e5 with SMTP id 98e67ed59e1d1-3903c5ee958mr13890625a91.19.1785997217050;
+        Wed, 05 Aug 2026 23:20:17 -0700 (PDT)
+Received: from google.com ([2a00:79e0:2ebe:8:d081:36b2:965:e66f])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315867bc341sm36974257eec.27.2026.08.05.23.20.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 23:19:32 -0700 (PDT)
+        Wed, 05 Aug 2026 23:20:15 -0700 (PDT)
+Date: Wed, 5 Aug 2026 23:20:13 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Nitin Joshi <nitjoshi@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>, 
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Hans de Goede <hansg@kernel.org>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Nitin Joshi <nitjoshi@gmail.com>, 
+	Andrzej Pietrasiewicz <andrzej.p@collabora.com>, 
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, ibm-acpi-devel@lists.sourceforge.net, 
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] platform/x86: thinkpad_acpi: use __free(kfree) for automatic cleanup
-Date: Wed,  5 Aug 2026 23:19:24 -0700
-Message-ID: <20260806061925.625482-3-dmitry.torokhov@gmail.com>
-X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
-In-Reply-To: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
-References: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Use input_device_enabled()
+Message-ID: <anQneQWGrvSJoY_0@google.com>
+References: <anK1j7hbMyFHGBUS@google.com>
+ <4ad479fa-8465-4d00-aa73-ced177254eee@app.fastmail.com>
+ <anNa7i7HnJW476bK@google.com>
+ <7f1ead83-532b-4546-b6c9-ca157a0286c0@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f1ead83-532b-4546-b6c9-ca157a0286c0@app.fastmail.com>
 
-Use __free(kfree) for local pointer allocations in dispatch_proc_write(),
-tpacpi_brightness_get_ecnvram(), and auxmac_init().
+On Wed, Aug 05, 2026 at 12:15:27PM -0400, Mark Pearson wrote:
+> 
+> 
+> On Wed, Aug 5, 2026, at 11:52 AM, Dmitry Torokhov wrote:
+> > Hi Mark,
+> >
+> > On Wed, Aug 05, 2026 at 10:51:53AM -0400, Mark Pearson wrote:
+> >> 
+> >> 
+> >> On Wed, Aug 5, 2026, at 12:03 AM, Dmitry Torokhov wrote:
+> >> > From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> >> >
+> >> > Use the new helper. Inspecting input device's 'users' member needs to be
+> >> > done under device's mutex, so add appropriate invocations.
+> >> >
+> >> > Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> >> > Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> >> > Link: https://lore.kernel.org/r/20200608112211.12125-7-andrzej.p@collabora.com
+> >> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >> > ---
+> >> >
+> >> > Not sure how this got stuck in my patch queue but it is still valid...
+> >> >
+> >> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 4 +++-
+> >> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> >> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> >> > index 445e1403308e..f8e116e8a65d 100644
+> >> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> >> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> >> > @@ -2547,9 +2547,10 @@ static void hotkey_poll_setup(const bool 
+> >> > may_warn)
+> >> > 
+> >> >  	lockdep_assert_held(&hotkey_mutex);
+> >> > 
+> >> > +	mutex_lock(&tpacpi_inputdev->mutex);
+> >> >  	if (hotkey_poll_freq > 0 &&
+> >> >  	    (poll_driver_mask ||
+> >> > -	     (poll_user_mask && tpacpi_inputdev->users > 0))) {
+> >> > +	     (poll_user_mask && input_device_enabled(tpacpi_inputdev)))) {
+> >> >  		if (!tpacpi_hotkey_task) {
+> >> >  			tpacpi_hotkey_task = kthread_run(hotkey_kthread,
+> >> >  					NULL, TPACPI_NVRAM_KTHREAD_NAME);
+> >> > @@ -2566,6 +2567,7 @@ static void hotkey_poll_setup(const bool may_warn)
+> >> >  				  poll_user_mask, poll_driver_mask);
+> >> >  		}
+> >> >  	}
+> >> > +	mutex_unlock(&tpacpi_inputdev->mutex);
+> >> >  }
+> >> > 
+> >> >  static void hotkey_poll_setup_safe(const bool may_warn)
+> >> > -- 
+> >> 
+> >> Looks good to me.
+> >> 
+> >> Only note is that can you use guard(mutex)(&tpacpi_inputdev->mutex) instead of the lock/unlock? I think that's preferred these days.
+> >
+> > If that is desired the whole driver needs converting. I can do it in a
+> > separate patch(es) if you want.
+> >
+> Ah - good point. Not worth it for this IMO, unless the more experienced maintainers have a strong opinion :)
 
-This ensures automatic memory cleanup when exiting function scope and
-removes explicit kfree() calls on exit paths.
+Well, I went and did it anyways in case you want to apply it.
 
-Assisted-by: Antigravity:gemini-3.6-flash
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 40 +++++++--------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
+Thanks.
 
-diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index 0d0d6fe7eecd..200e20f90a4b 100644
---- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-+++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -885,7 +885,6 @@ static ssize_t dispatch_proc_write(struct file *file,
- 			size_t count, loff_t *pos)
- {
- 	struct ibm_struct *ibm = pde_data(file_inode(file));
--	char *kernbuf;
- 	int ret;
- 
- 	if (!ibm || !ibm->write)
-@@ -893,16 +892,15 @@ static ssize_t dispatch_proc_write(struct file *file,
- 	if (count > PAGE_SIZE - 1)
- 		return -EINVAL;
- 
--	kernbuf = memdup_user_nul(userbuf, count);
-+	char *kernbuf __free(kfree) = memdup_user_nul(userbuf, count);
- 	if (IS_ERR(kernbuf))
- 		return PTR_ERR(kernbuf);
--	ret = ibm->write(kernbuf);
--	if (ret == 0)
--		ret = count;
- 
--	kfree(kernbuf);
-+	ret = ibm->write(kernbuf);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return count;
- }
- 
- static const struct proc_ops dispatch_proc_ops = {
-@@ -6628,26 +6626,21 @@ static const struct backlight_ops ibm_backlight_data = {
- static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
- {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
- 	acpi_status status;
--	int rc;
- 
- 	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
- 	if (ACPI_FAILURE(status))
- 		return 0;
- 
--	obj = buffer.pointer;
-+	union acpi_object *obj __free(kfree) = buffer.pointer;
- 	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
- 		acpi_handle_info(adev->handle,
- 				 "Unknown _BCL data, please report this to %s\n",
- 				 TPACPI_MAIL);
--		rc = 0;
--	} else {
--		rc = obj->package.count;
-+		return 0;
- 	}
--	kfree(obj);
- 
--	return rc;
-+	return obj->package.count;
- }
- 
- /*
-@@ -10989,24 +10982,23 @@ static int auxmac_init(struct ibm_init_struct *iibm)
- {
- 	acpi_status status;
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
--	union acpi_object *obj;
- 
--	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
-+	strscpy(auxmac, "unavailable", sizeof(auxmac));
- 
-+	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
- 	if (ACPI_FAILURE(status))
- 		return -ENODEV;
- 
--	obj = buffer.pointer;
--
-+	union acpi_object *obj __free(kfree) = buffer.pointer;
- 	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
- 		pr_info("Invalid buffer for MAC address pass-through.\n");
--		goto auxmacinvalid;
-+		return 0;
- 	}
- 
- 	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
- 	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
- 		pr_info("Invalid header for MAC address pass-through.\n");
--		goto auxmacinvalid;
-+		return 0;
- 	}
- 
- 	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
-@@ -11014,13 +11006,7 @@ static int auxmac_init(struct ibm_init_struct *iibm)
- 	else
- 		strscpy(auxmac, "disabled", sizeof(auxmac));
- 
--free:
--	kfree(obj);
- 	return 0;
--
--auxmacinvalid:
--	strscpy(auxmac, "unavailable", sizeof(auxmac));
--	goto free;
- }
- 
- static struct ibm_struct auxmac_data = {
 -- 
-2.55.0.679.g6767b8d81c-goog
-
+Dmitry
