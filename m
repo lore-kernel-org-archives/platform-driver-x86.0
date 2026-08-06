@@ -1,188 +1,112 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E730E0D6
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 15:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02BB47DD72
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 15:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786029492; cv=none; b=TOaZhQ5oqOap+RZCQ7s169okt2RLBBdCMXIa7nRruVXvWAbX/yJ95t7BJyIDwNsTcCJuAB1JwWzmlNF2AndYTTB6LoaOd+mgx2vOGp6gNzmmaHdVZIrdPw+UQ6uDNoa3MQhwUcEmmd5oI553Kpqxh1QAPKr3S5YMyOc9alPd3Vw=
+	t=1786031073; cv=none; b=PUrwc4kCaN+oycDtFJcF1Qmg7slGBjWQU/9o9iRtrN2R0sfYhLHmx3kwKkiREDqNX/qF5JZtx2/zWTnKrhgCIrusXWlVt7B6IfsAhSQxGrRLDzT9NrKfdi1WAxSfOJn0XyN9eJs47HGC0Bj0VXEKhyVhLNYAAtBsA0YVNucWFCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786029492; c=relaxed/simple;
-	bh=EzZjdzPV4rfnODVzyIeZdmbUbbWn3BYVvUIFE8xQUz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZXCPpkI+zExYVgtP72ZSj5XfH5sbQGh8zX7eF1jK/7qb5zMyZcQSLVnLsSkTwMyEXYWbILMR+IWUbvASniElH9r8WkedXbkWgc0MN2Fy1jLXD0XMBCH/ilov/tDNTt63leaQ/RsqB3FP5LbSv+SOnfpeR1ElfQl67kOYocOjbUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl; spf=pass smtp.mailfrom=vdwaa.nl; dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b=SGCs5C45; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VHaTRMLR; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vdwaa.nl
+	s=arc-20240116; t=1786031073; c=relaxed/simple;
+	bh=ITcMgYP7v9fOTOfQhMguiaZ1mzTkTpBxyKci6Lw2yDI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pKE7jP/uLS02DB6LpS2vPRt8eVECpAlxkswL7HS+zfeH3yO40tM9rziK+M7LEbRzu88sUwh2MNck0zPd6xTTX0fWNi//HWRMp08TNQ/Enr/rC0AsFeG2ilJ19/SgDbf/vCox2MuE8PiZ7nZGXoIuWADhh3wE+15hUJfw0l13ShA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFTdGr15; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vdwaa.nl header.i=@vdwaa.nl header.b="SGCs5C45";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VHaTRMLR"
-Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id ED2037A00A5;
-	Thu,  6 Aug 2026 11:18:07 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-04.internal (MEProxy); Thu, 06 Aug 2026 11:18:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdwaa.nl; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1786029487;
-	 x=1786115887; bh=vi7y7zwWh0gscQC1+qdmIxnpDY6LFr+f83z43FePCEU=; b=
-	SGCs5C457xcdFUgJiJcLq75MQxRGKJxm3a79ptQVhkmYHhjk9DsgGSctfeZF/onn
-	T8NX4m3iXIUjNM1NGl7so8xyJOVOlXvRpD1ZIUPlOA2taZTESWl3EPd+gP5Yr26t
-	+7Em9teanalDP4QGZjuDWcxYQLKZnVnGXDR5fqnWXHxu6PQTeUZAa+2UDRWlK8zc
-	UDk76jPcdvq9JHOX2U3VDIrneiu7CeI/UvSbmuYALan0pJ7huGgZP5Gx2asJNjQh
-	Vgh0ek071pKl7DfI9bs9Gl9qx/ENcbjXWbTt2ws3UrlLLsRYb4w4Dy4UIPS95iMk
-	UJUk3I5hdb4hBdkb6gPD1Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786029487; x=
-	1786115887; bh=vi7y7zwWh0gscQC1+qdmIxnpDY6LFr+f83z43FePCEU=; b=V
-	HaTRMLRDOeuSn6ZSJGFGFiOmPzfwuVMv95B8ajCDUskoNw6OQFXrqLkqQu+ZcPWj
-	p8por+XcbYu7UBUtnOCWyQ8d9u+s9SPo+nwXhYZ+IhYDbZeb8Brn4Uo+PT0PrsZS
-	gFUMQPe+U1XiIWmsJ1SHpZCnsYg8zw7fULo2vbJJt6XZJhI4J8st9DwJdQJgE5MB
-	L1XNMR/qBVx8YM5/3VimV78G3csdVvM3VQaIXH3XqDIZLV/SSuSDYNCXKGJAY8zD
-	YbPqMChbFdz46NuYe2M2clQd6G2gTfSWZT8x1mTtsF7iWN7C2SN/Ixj6+HewPS6J
-	wXanOJSCCwfkYy8qfzpFA==
-X-ME-Sender: <xms:r6V0asAwVX1RcjWM09Uy2RNWBPVmQJetMQvMmZqgjpwvflgDMduaWA>
-    <xme:r6V0asVPMjFhSPx6IlxfbUi9kTUbdlaRFPQFHIUUywk9HbUAz-qBYiNaQkdK6_Dhu
-    vQVUh_Sb4SlK83blJ77R94EAOEwrLdN9qczYkfjQOMeDvsibJmDaiw>
-X-ME-Received: <xmr:r6V0aqAq9DLCv0UAuvUfoB8n1a7-uKj_fD7ZBYBm_OPfae5ksAzmpFMC3iZX-J0BnVK9zWbfmRKQQMyOhBkwpqLNlkGOcQ>
-X-ME-Proxy-Cause: dmFkZTFe6Ah8LkAylheIMJRhjf8SZKjZ0cKIRF69a1Bp4QaldlSO9otVXndqdsT/TuP6BU
-    kJhl91t3i6FTY9z6iMc5G7ZozzRgNznbiZnSoZpljbAnBbO1Ls2B9jTq6Qa2NN6FRqysKD
-    gA0NWV4lAFlMwO8kRRdYEbU13hWquvdSmJjPBSTQQHdFG73EEcxMJTO4doBhAgm8BE0d+T
-    TEVQf57KAQA0XcCvVKh2tswVnVRtlj7Pb/GZUMXkz96wUu0g0cm8kPt7LGTIbup2n+vMsu
-    KE3VTpLban5bCuAuQOedRRgJDKa6w4gzvrvP9JXL50CA2oTXQdY8gFG6Jr6IAJ1g8qQ5sg
-    kOaz2ct6VKAo3sDDB0CFqM7XkNWX2HXw7y8U+5fmasV9ycUmGOyX60bSyQgw3MsHyIfrqJ
-    9X8kyQTtJwqt47fhbalnjX35BjYVueA/FKayww8ALUjQ9iS4iqX9W1QKWuF6HKQVH5Skz5
-    Kz1kZzvh8W7NI/BohEEB3F25rDrZ661awOWJ2FSN2g+lDrhFvCXLP3qvOsskHb/izlN9K6
-    jXriyYstMsxitJPBF120gcnf3ulrcZj82BvgUiUPE2iXaWdkkGXFOUmIPGHoL2K/lpCBAT
-    Bil1W/Ou3Kfw6JXT5oX7b6PAPzidKsqhXoxfbd8kBc+otru4PyOao6xKZetg
-X-ME-Proxy: <xmx:r6V0av8zWGruueY8aTfBYuX7BhJpeRO05X4ikVcKYktNMNODc41vow>
-    <xmx:r6V0ahFRRB9x8zG_29vD53M0NxKQzzIghJAserse7NaLX04ioylIAQ>
-    <xmx:r6V0atOwxEWVYBZ_iQO10-8H9lCOVWs4JCdvTY3P5Bmy4urqMRLIqQ>
-    <xmx:r6V0arduMwsqertoZIwcTHdwyM81rU7hMkPovTV7thhuGRLi45ys1g>
-    <xmx:r6V0amNm6Z8jp2mhGGRkBREas48Dp2pXY9xTmlLmXhlZEhkiF-O5dx9k>
-Feedback-ID: i2d0446dd:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 6 Aug 2026 11:18:06 -0400 (EDT)
-Message-ID: <d72a7db6-4ec1-460d-8d40-c63301c11123@vdwaa.nl>
-Date: Thu, 6 Aug 2026 17:18:05 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFTdGr15"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51c167c58f2so17635331cf.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Aug 2026 08:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786031070; x=1786635870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Nadhn0dZp0HQhq6EhwDAfh36+34Cj3LIMRMeGdDMOFs=;
+        b=aFTdGr15R3gCF/EvLGu36SbVAxzCuzSAVAImzkSi0D5zwqAxh4IrO6TNpMOU81R884
+         nrOQ/JpyTU8s7FYQjyCQPGdW9/uwwc1PNBwLJhXuyy+XiEp2KzuMPsXeCwlZkQwoY4bM
+         crEMOOegmfhzZ7KsgkNTtBsgegqVqRL7hHPKyjyroyDCuqfPc2+Jj5VyVq8RV57JWnH/
+         OKx2F9bAFE/VjYr6aquy++25rhzeYWji5HMPyamyguTSujcI1L9EdloUSRgUXQG2Nypg
+         JAMLaUnB9Ivw05vGjRwTRLmhFSBkzeYWVxrS7z4HPUudSyk+ldXFt//FLlDwvGfwj9dz
+         fd4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786031070; x=1786635870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Nadhn0dZp0HQhq6EhwDAfh36+34Cj3LIMRMeGdDMOFs=;
+        b=gXRuG6wOpMvIN/D+2/yhdYmDbmwQpgCF39w7EORFmbYila4e968k2RkGnE4wiGAi5R
+         9OidV0WtV6HXaOyx1Nu2YxMyPEzinZgxTR6wrRT+San9a9KeyVeWwRc1cihOq/Xkx0v7
+         8+Oog2hWfwSuR7zWGB+C1XJ4iovREeW0jhBpWRs1sJ2Ja8R47Nj6IUSZnH5me3tYS0uo
+         uZDrmVnoYL2Vn4urFxSPD77fj7DdJgREdTnI51i2aCY3TnTacCWMisvnTI7YgGXjXVGO
+         ezbDLnigiqU9m7KwUUfywSDPf7g9wcnE4ATLxQnBgcxQtv+SWncg3s8GYRiehsQ392Ml
+         OxRw==
+X-Gm-Message-State: AOJu0YxewMfBnorYFVC1i0YdvQDbbc/mRrE1pkr+LMfYjxVbJmplJyYp
+	e6Wb8jcb77hEWJmJvppKWCZm/OuxObK2WuGSJPl1pLu3hOQnmJd1BT+ZfqqJcgk6
+X-Gm-Gg: AR+sD11+qjhhl0nJyh9DFw/+F3Hw6HBhI+f8hzjeWN7p/rPj2c35YhwKRBVZdg6AZE+
+	OxAbUPgrb/ByCJUVE/PHol+kK48SL4jH2nByEbtSe0ljBbMcnoO9rZlnuasItFKzW/6ys5UdkMy
+	dkqGbvGT4W4R19nBRZ5w3IJiPlWu00qkEyadoqMfSqhgVhuRYAgQ6YJ3ex1Dq8zJXyC2fATaQSJ
+	ACw8WprlYIiexNadiKwooLIgTUxdrcH64IIXQXZk2J9zq9Ypfj0YmFl1VfhTeCH9T1r5zaxxk50
+	4amax7YRkggKDznR2AI9rn5kQ6+MBlDYiAi806D6cP2r0vLMPxCCYNIXSIac6R3kCETOwcCOsfc
+	ffOnxZqTAQfs3Wl2pr75kPoBuqVk6T4yM8X86lqRAGrme3kvfw6u/RsCB3eKy2zonDG0WE9Rksc
+	eHs5REiyWvkPPd80mDNGg6fH1oJkjMZMv8Q6TQhmf5LP4mLZFGXOzOBhFcfFmRrVFuFGzk9ZFMS
+	xlB6VjYwPt+Eb7J
+X-Received: by 2002:a05:622a:2612:b0:529:e058:d185 with SMTP id d75a77b69052e-52ce6108b6fmr185947441cf.24.1786031070108;
+        Thu, 06 Aug 2026 08:44:30 -0700 (PDT)
+Received: from localhost.localdomain ([47.230.216.138])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-908800cad1esm54647186d6.47.2026.08.06.08.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2026 08:44:29 -0700 (PDT)
+From: Andrew Onyshchuk <andryk.rv@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	hmh@hmh.eng.br,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	ibm-acpi-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Andrew Onyshchuk <andryk.rv@gmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Fix fan speed reporting on Edge E330
+Date: Thu,  6 Aug 2026 08:44:17 -0700
+Message-Id: <20260806154417.618575-1-andryk.rv@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] platform/x86: add Acer battery control driver
-To: Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
- Frederik Harwath <frederik@harwath.name>
-References: <20260531090505.156394-1-jelle@vdwaa.nl>
- <20260531090505.156394-2-jelle@vdwaa.nl>
- <97d09dc5-1434-4d64-abd7-8ba465c3891b@gmx.de>
-Content-Language: en-US
-From: Jelle van der Waa <jelle@vdwaa.nl>
-Autocrypt: addr=jelle@vdwaa.nl;
- keydata= xsBNBE6QLAIBCAC3O6LmF+GKvOh7IV00TG+EKAQHAwjESnHGJOW58lKK7eAYn62ZM1uy0+6h
- yCMu5PD7+ND6U1gcgTTHYwNK8AaJt7yY4FRssgdcJk59uJBwROZtllotClJ893CuB6Wgr68b
- 07gIRbENYrB8rEoGfpUG//8/ep7sY8PS03jnFb4ll6mPlUE2oQVdYOlXgF4f9qkkIi4SQeE2
- MTuERaOrDuUNDlroJ7Yfx3J/rL5Qjn578/TKCAxg0pns6VIA/P9spRGmLhT4zP+OxZXeSZme
- IxcwFdJJXHr4oGaZvqe1yHlMmKR98rrIfPWhkw2Ls/XIZIxf6prT0XyczbzBnC2y1JyNABEB
- AAHNIkplbGxlIHZhbiBkZXIgV2FhIDxqZWxsZUB2ZHdhYS5ubD7CwHsEEwECACUCGwMGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheABQJUX8WhAhkBAAoJEMBghjN8UHc+mFwH/jjN+Qob4O36
- YiieajRwVLGuYdUDt9Z655oQYU8V4qbWf2tjUtqTYXrxLnaY6xQoYouRz9yFbh9dIKZb67ir
- 7AeVgCOtWVesGxAlGH6EY5JBZcsN0v0ScsivqQAv/Mv+4HK+XM57YlyRagD8tkprYskioWHg
- OwQfXAO6nlm4BJHWO9bHJUMgiGs7I190IKQG7iLBnJuGjsOFuy5KTLpnv+w7twmz0H+pkUPe
- jVHfJlJWdN4v1PigpgpjOR6ZepSIggMk7dHsa6GNLUOzi61yYVFe60+EGXhwyJIqSt56a4oR
- jMUcXaOugGr+JwC8Eq7Pg2+aFk+8fbe0oUzZJucHGnDOwE0ETpAsAgEIAK4Usb7B00WRxCZG
- HtM973F7V4OhOKv4kZKduxtu71bVUZsTuzn4h+m8guJ51uY/I2icUrN9gJG5aEzRqPuQi2L7
- KmZUjs3pscZWgUgiT8UZFDR6RuQ4k3CcWobsRCjYZdSblSZ8ccrLJE7xSbwKMXjAh2PEiaQT
- lS6wQbn6mHv4y3H9QVHs7+jXbmfHCxnVcwLqRmpuegSmezDaL5TlSc102voiXinhrWEZUvAB
- KDh6VuJ/60Y6zelCXVsEjRaApz90iXY1nifLhkHM8B2wG7Pum3V3X0Y0QTVD+z3EL1iq5mFu
- epKp//IOeeJN5iwHcRSJGy2s1oOzjRDyPv6v1AUAEQEAAcLAXwQYAQIACQUCTpAsAgIbDAAK
- CRDAYIYzfFB3PvDuB/0dI13hSYHW27c2Rq8BaGbIhXYYETtPD5B25/P1JJ5OQZkPmVq+vSHw
- uzUaDZHy3ZcwE+xFXzlkwXGdWos07JUGo74zV3HfeZxVEPv0HB9ACqQVU/JKjLZNj2SfhgzL
- 4F+O4Zgdsf0YaZG09F5PbMvbhoCZLfAaKWz/4fLEfhrDJLhrphUyPDXosn0UxPkDv0iiixn4
- V+bEZ5/wd8dRWi58R/iND+gRGsBREm5SpzdhnsarwoX6YdsQ449379enDNUN7jV4C3Gkon2s
- VwI2ZZbS10cY8rFSAV/CJA2E9daRoz40DI0tgXgLBAVhy7y5HWZJsDZexU0HFKJfkDi7RUPj
-In-Reply-To: <97d09dc5-1434-4d64-abd7-8ba465c3891b@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The ThinkPad Edge E330 with H3 firmware uses the non-standard EC fan
+register block. Without a matching quirk, thinkpad_acpi reads the legacy
+tachometer registers and reports 0 RPM.
 
-On 07/06/2026 22:46, Armin Wolf wrote:
-> Am 31.05.26 um 11:05 schrieb Jelle van der Waa:
-> 
->> Some Acer laptops can configure battery related features through Acer
->> Care Center on Windows. This driver uses the power supply extension to
->> set a battery charge limit and exposes the battery
->> temperature.
->>
->> This driver is based on the existing acer-wmi-battery project on GitHub
->> and was tested on an Acer Aspire A315-510P.
-> 
-> Good work, i tested it on my old Aspire notebook (v1 interface) and i 
-> can confirm
-> that the temperature reading and DMI whitelist works as intended.
-> 
-> I found a couple of minor issues, once those are addressed:
-> 
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Add the H3 BIOS family to TPACPI_FAN_NS so the driver reads the fan
+period from EC register 0x95 using the existing non-standard reporting
+path.
 
-Sorry for the long hiatus, I send a v5 yesterday and forgot to include 
-this. If it is needed to send a v6 I will include it and send that as 
-soon as possible.
-> [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), 
-> Description("Class used to control smart battery, Version 2.88"), 
-> guid("{79772EC5-04B1-4bfd-843C-61E7F77B6CC9}")]
-> class BatteryControl {
->    [key, read] string InstanceName;
->    [read] boolean Active;
-> 
->    [WmiMethodId(19), Implemented, read, write, Description("Get battery 
-> Information Interface.")] void GetBattInfoInterface([in] uint32 
-> uBatteryInfoIndex, [in] uint32 uBatteryNo, [out] uint32 uReturn);
->    [WmiMethodId(20), Implemented, read, write, Description("Get Battery 
-> Health Control Status.")] void GetBatteryHealthControlStatus([in] uint8 
-> uBatteryNo, [in] uint8 uFunctionQuery, [in] uint8 uReserved[2], [out] 
-> uint8 uFunctionList, [out] uint8 uReturn[2], [out] uint8 
-> uFunctionStatus[5]);
->    [WmiMethodId(21), Implemented, read, write, Description("Set Battery 
-> Health Control.")] void SetBatteryHealthControl([in] uint8 uBatteryNo, 
-> [in] uint8 uFunctionMask, [in] uint8 uFunctionStatus, [in] uint8 
-> uReservedIn[5], [out] uint16 uReturn, [out] uint16 uReservedOut);
->    [WmiMethodId(22), Implemented, read, write, Description("Get Battery 
-> Function Data.")] void GetBatteryFunctionData([in] uint8 uFunctionMask, 
-> [in] uint8 uReservedIn[3], [out] uint8 uReturnCode[2], [out] uint8 
-> uBACStartTime[2], [out] uint8 uBACStopTime[2], [out] uint8 uBACStatus, 
-> [out] uint8 uReservedOut[9]);
->    [WmiMethodId(23), Implemented, read, write, Description("Set Battery 
-> Function Data.")] void SetBatteryFunctionData([in] uint8 uFunctionMask, 
-> [in] uint8 uBACSwitch, [in] uint8 uReservedIn[6], [out] uint16 
-> uReturnCode, [out] uint8 uReservedOut[2]);
-> };
-> 
-> I suggest you write a tiny bit of documentation under Documentation/wmi/ 
-> devices/ using this MOF description.
-> This way future developers can better understand the WMI interface used 
-> by this driver.
+Tested on a ThinkPad Edge E330 with BIOS H3ET77WW and EC H3EC35WW.
 
-Thanks for poking me to write this, this was the first time writing a 
-WMI driver and writing a bit of documentation definitively made 
-everything click in my head.
+Signed-off-by: Andrew Onyshchuk <andryk.rv@gmail.com>
+---
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-It also sparked my curiosity. I know you added the temperature reading 
-and referenced "Smart Battery Data Specification", did you try any of 
-the other fields (such as manufacturer?)  [1]
+diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+index 445e1403308e..cca76711c547 100644
+--- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
++++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+@@ -8840,6 +8840,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('R', '0', 'T', TPACPI_FAN_NS),	/* 11e Gen5 GL */
+ 	TPACPI_Q_LNV3('R', '1', 'D', TPACPI_FAN_NS),	/* 11e Gen5 GL-R */
+ 	TPACPI_Q_LNV3('R', '0', 'V', TPACPI_FAN_NS),	/* 11e Gen5 KL-Y */
++	TPACPI_Q_LNV('H', '3', TPACPI_FAN_NS),		/* Edge E330 */
+ 	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) */
+ 	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
+ 	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
 
-[1] https://sbs-forum.org/specs/sbdat110.pdf
+base-commit: 0d839570765118029aa8bf4a95444c6a11aacf85
+-- 
+2.34.1
 
-Thanks for the review,
-
-Jelle van der Waa
