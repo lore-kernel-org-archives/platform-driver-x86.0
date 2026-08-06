@@ -1,64 +1,64 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C5C3D6CDE
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 06:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1723D954D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 06:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785997174; cv=none; b=AfXMeb7Os7E5Tm8doPFIhavO0c4KMWGfutFSqOJW2eUdyvt+m6YFO+izcSAXMfaBMZ+fRyhYWeu2fPMqoNXMYx3Hs7SW9TCsCoSeiQC4xivUn4/pnsyLW/s+dbw0RRHdq0vTDB6ZGxxyVjviAcima/7xN/zUMoL1ENQOdUXgx7A=
+	t=1785997176; cv=none; b=UDgFWoliTeUPlHAvaOyIDIwjuaIYTU250hPMogXJzHXLrDL0D43cdsF4VMjZMnj+QVrYKCnDPtOfct2165gRsxSuYkTRwwtdpL1tpvSLXH2E8zKS/J22hhawCCXffV5t38jc16KzJgN8bkztsUidihvVFmHhoUdmb9gMaeDK0/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785997174; c=relaxed/simple;
-	bh=zjy3DM/QaBJdPB9fiA3TSFlNaHa643BeCXQOZVU9YUo=;
+	s=arc-20240116; t=1785997176; c=relaxed/simple;
+	bh=4ZQW8bAzXf3z6xTN3u8cqfzyMaqOtkEgC7NekBmJE+M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gP7Fkrh/CrJ7Os0YBCuoIl7B76WUf4UWW3Y1NgsCrAckoUT+aX1k6He2RhSrxNgZl+JMV2HY1nQRYmyMexEqFidgXuOVCWXunQmRTrzI+zjXVQhdyIfKDerCErba+1uV7X3IZNyuLxzscFLqWBPLuVOIAx6Dq2YGx1q4OIvpIgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CU63kMl5; arc=none smtp.client-ip=209.85.215.180
+	 MIME-Version; b=hD+1Lw7Uy8KuZj2boy0yjN0hFnzHPJUSpkeep0510MlJisS6kG7DLkwlA82ux6inS0TFhBDZywbR5t/hBKx2txAUWkwZH+b+A1ItuWEvrYbQwkCwK39yEzyciKbCSeCTZ6wUdKcL7fJWoZQAAg/M4RNCFJmr7u8lWhM19dEGkRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZcadzZSF; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CU63kMl5"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-c9e30214d8fso1615535a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 23:19:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcadzZSF"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38125cebfdaso2229249a91.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 Aug 2026 23:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785997172; x=1786601972; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785997174; x=1786601974; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=13GK/Pkt14QeRpMzLwZYpSIxC8YbzZ4AEzQYWK33yg0=;
-        b=CU63kMl5L+MD4JhGFGj5PCw0CiVrhqIZGgEUDNQ4jvqFwmzfoD82ESS/KJhgcnF5cL
-         PvjUVYT59ZhYJvLHGGR2Ma+JZHiYJ5NP0qE85w60vw30suB2Zs2tyJzGWE2onACPbrVZ
-         XtLG99Y361IVMPtQWOu+WiixuUNu+TuTKPkLEHtKcIehiOlFPFU2DJAuMfplrzH0QV2S
-         q+V35Nrn4mF0lSrxBVB7rFwtkVcFVIT097zGWJ87R21l/VDDkKEOJI3gd2bUfToYt9Gp
-         SguAUGcO6jtPOtOj0OfUKN/FiWHEU91qoD1rL0ir+96M9ighE3/SV1+AN2e7yn8tDetF
-         M62w==
+        bh=a8OsaR2KbXJDR++z1B7bBvi3orWX3t7kh3YROuTJgmM=;
+        b=ZcadzZSF13qNoO7MXeCcrlQqeGOUyea16+aVLU18H4ed7fURBAFSdBO6bV+Ely9Ttb
+         +Toz0UTvD0VrK6HjAHtpJCQkAJgO5faZAkCc2PG2X/h4tnn7SDP4FUKcj80iWs1VAkWt
+         l09oaKeBwA2xK4pXqziygpkBs3lLH2JFKWqZdnaZLmbo6sUzgbXkv9YjoVEFlZf7OSTq
+         6je2w32ZQRyhzLwy1YfyjijVii8DaMlhMZSwqLAj5iBtSCGLR+iY6uBNxCHpHBucxanH
+         ENzeLCnNHQFRMMhob1N8QbjEf1PAU5zRBXVlbyqXPGv5/dnOgO2Uw22OpCSw2ilNvyZS
+         sGnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785997172; x=1786601972;
+        d=1e100.net; s=20251104; t=1785997174; x=1786601974;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=13GK/Pkt14QeRpMzLwZYpSIxC8YbzZ4AEzQYWK33yg0=;
-        b=MGFVJ2k6Qw8qbq+gZpECXn/MjcOxZqEd8VFPtSPn5Ys5NX3qHizrMzYbnjC9IZ12a7
-         cJw8g/pWK+yUJ14bVjkYQPWVT5q5leV60X5+wIrp1jK3LQcDOGrebRdNVwwP/jE84iD2
-         BpPPoc8UTOde/hQ4l/I2Cg8VWrAbt1KGz3ZYF6SUKr0Amt0LsaPHLUDbBHF/TQ8Lf1/H
-         rquqKF45i5y1BGWy+ogTILPerUtiobidrKOycJ8NA34nl/ot4Tbbs/uMk27Jlu/6ScBX
-         J0Y2bzPpmxfjDIFbH1JBcjjA5znWuRCyZJ1mQAyX733ud9Causbnw72BQaDZTVBZamUy
-         aKiw==
-X-Forwarded-Encrypted: i=1; AHgh+RovFTVqWGlklTGnqpAF2tyqYtrIwBfIE9oI3ncnsfu1JEEUrIyoUUYHKKMJ7E4emIyfqbhqobaY9B+nsE1FMkaKRRBN@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpJAY+4jgH4oPTlf+0p7rwa3IBCzQqpyhOIore0Gx/f3ZzNesW
-	CuklWVHrcsHw8x0PJw4JsjGdhTZV6R2Cj41xY68+mme7eodtMGxr1SlvMewJmA==
-X-Gm-Gg: AR+sD13o/is3/XgeapKMik1jyn43mu0MTEQW9kKtzLE4b0wziZQPa9SXOk9xV4e03EO
-	vmvf/bQushxFj1XUgRC5VMiedAPJavYuw2mfGXxPkqaXvmUvha53y8vHKzpXZOLLGXCQOAMqtLM
-	HZ4QhPd+oWRhQWZhheBBP+sOpYPP9gKrbM5nis7Md4YnVw1GjgFTwuGeZGP+vc1AqOge27FVTgs
-	2FXJh3fnkG8vRvU0zHJWfTJ0oPn4RWlQir55hyz1TZ7LVDoTUPcamBf3w6IS5Ao7SKQYAWVEWRg
-	uCH92Vke5Xst6VN5/9nFIc4AVWjXcET6YT1qYH9pLii9jF1rZXRp79daSdUYyDMZR+BEeuDUfWP
-	3PuQCtR2HGWXz7malXTLJVJ4JsTWDZvITnGeKXuEiJAIe9DKR0o4NZcgR9I6eR173DfqI8pLlwM
-	Yks2+NnNTTq4YJYEoGj7Mr31xPrUxtkE9tFAf4zE+daVky5iF+/86s9EgKRguNPWRCxMlEgbRy6
-	yaa/8SDWb5Bee3IB8Ba4FOHFLWt43KY4g/CZKRi37lEnItT9ZI=
-X-Received: by 2002:a05:6a20:7283:b0:3c3:875d:c546 with SMTP id adf61e73a8af0-3cb85dbc639mr13789528637.7.1785997171774;
-        Wed, 05 Aug 2026 23:19:31 -0700 (PDT)
+        bh=a8OsaR2KbXJDR++z1B7bBvi3orWX3t7kh3YROuTJgmM=;
+        b=gnVTvxc9uvmLyMLPuQ4XWjtq2d/PFLNvBpbhVtKKfeyDcwcr+s3HsvW//s5vMlwRq1
+         MfaDS9V+o6Bt6gTfygSyEGeN3rRoKbWWRC6WU+GfuSJ5lW5aLUK2jKFsS39pQj8VBiP3
+         5WEEU06Pbbl8IEFpTo2rmV8yWusQj8rrcJzwbwxoPXVC5p8ACFC4rnrbw69OEmxnI9Mn
+         kWEgQDAzC0C4MXRlDcCms3E5payBCVYx0KhJPsw5TYUO5+PyiJFeZ8MFx/UGb5wLR0fk
+         S0HlLIMUSKx+9viQhBLiWQBPCgOOBOqbDRXLAfsP9c08PIIh/QUZZRJ2WR/KvvXOKK+h
+         sv6g==
+X-Forwarded-Encrypted: i=1; AHgh+Rra+dsw5IipBYGSxquHqQnEzuAtNdXwI2hwGF9CEOwy+SwMIbi2Xm+JAngAgundfPF1kdEktnsEtnYWkzML1/fUVjKi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfHZUnF7ifufqGdumpfBo7OywXIFBj6oUgXuof6NMUISyq+gYU
+	Non736VwV+CFmhXKfitvr3auhwy0Afiqv/IqjVUrH6T9ngQbBdvcgbYB9VtdGA==
+X-Gm-Gg: AR+sD10SV7U9YWjlW+eOqJY+b5VaAfTbbtiFaM6o5hEjPcKa7RvpyOf2kvaRypSeq0r
+	EHfF30VqWKHFic6f/m1OC4juBIpfxnnRTp18zZMun3KYAwJ+I8EHzfUMp6hxw6+FkDzh1oGnAK4
+	sMKwhI42/wmvKcUNoqEw8J68AH7Htogs5EkKg1El9/07imXB7sKdUy4uMU7NvD2zS7+887bqN2a
+	qahArilYKNqGM/m0eXTD58ho0DiRJlkIgnan18htfFJoUnSqGnXmv79qt/OO9VXiEX6AhfC4Ks7
+	ucmF/XnJLEk0doW84zEiq6hJ8HuJ8uXhZtWE6cBmiZX/HAbTgBuCLtCvzCH4oRO0iig7HCn5CQj
+	ek/wPc81mkd8WkLMAV+U6mPiIcMMuSh+3ooh5n1qvaAnk0ttQRnu8kqFjApYmQN7KdA3bDA/ot0
+	jrFk6IYApQjJK8L25+cynkLGUf4WXZ0sQBWHztrXgcArZQuCkDR8ayjdvPGpmDz86A/Pp1h80H+
+	XPEZg3XY9EN7p739U9nwGoKd1t9Vx9vhnIqVCJb+lDCkrytHnk=
+X-Received: by 2002:a05:6a20:e212:b0:3b4:7e2d:a3bc with SMTP id adf61e73a8af0-3cb85bcef1emr12802930637.0.1785997173912;
+        Wed, 05 Aug 2026 23:19:33 -0700 (PDT)
 Received: from dtor-ws.sjc.corp.google.com ([2a00:79e0:2ebe:8:d081:36b2:965:e66f])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fca50acddsm21651689c88.3.2026.08.05.23.19.29
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fca50acddsm21651689c88.3.2026.08.05.23.19.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 23:19:30 -0700 (PDT)
+        Wed, 05 Aug 2026 23:19:32 -0700 (PDT)
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>,
 	"Derek J. Clark" <derekjohn.clark@gmail.com>
@@ -69,9 +69,9 @@ Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
 	platform-driver-x86@vger.kernel.org,
 	ibm-acpi-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] platform/x86: thinkpad_acpi: convert conditional mutex locks to ACQUIRE_ERR()
-Date: Wed,  5 Aug 2026 23:19:23 -0700
-Message-ID: <20260806061925.625482-2-dmitry.torokhov@gmail.com>
+Subject: [PATCH 3/3] platform/x86: thinkpad_acpi: use __free(kfree) for automatic cleanup
+Date: Wed,  5 Aug 2026 23:19:24 -0700
+Message-ID: <20260806061925.625482-3-dmitry.torokhov@gmail.com>
 X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
 In-Reply-To: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
 References: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
@@ -83,458 +83,126 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert conditional mutex_lock_killable() and mutex_lock_interruptible()
-calls to ACQUIRE() and ACQUIRE_ERR() from linux/cleanup.h.
+Use __free(kfree) for local pointer allocations in dispatch_proc_write(),
+tpacpi_brightness_get_ecnvram(), and auxmac_init().
 
-This eliminates explicit mutex_unlock() calls on return paths and
-simplifies error handling across hotkey, brightness, volume, fan, and
-dytc functions.
+This ensures automatic memory cleanup when exiting function scope and
+removes explicit kfree() calls on exit paths.
 
 Assisted-by: Antigravity:gemini-3.6-flash
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/platform/x86/lenovo/thinkpad_acpi.c | 153 ++++++++++----------
- 1 file changed, 76 insertions(+), 77 deletions(-)
+ drivers/platform/x86/lenovo/thinkpad_acpi.c | 40 +++++++--------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-index beb85ea1103b..0d0d6fe7eecd 100644
+index 0d0d6fe7eecd..200e20f90a4b 100644
 --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
 +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-@@ -2671,8 +2671,10 @@ static ssize_t hotkey_mask_store(struct device *dev,
- 	if (parse_strtoul(buf, 0xffffffffUL, &t))
- 		return -EINVAL;
- 
--	if (mutex_lock_killable(&hotkey_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&hotkey_mutex);
-+	res = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (res)
-+		return res;
- 
- 	res = hotkey_user_mask_set(t);
- 
-@@ -2680,8 +2682,6 @@ static ssize_t hotkey_mask_store(struct device *dev,
- 	hotkey_poll_setup(true);
- #endif
- 
--	mutex_unlock(&hotkey_mutex);
--
- 	tpacpi_disclose_usertask("hotkey_mask", "set to 0x%08lx\n", t);
- 
- 	return (res) ? res : count;
-@@ -2767,8 +2767,10 @@ static ssize_t hotkey_source_mask_store(struct device *dev,
- 		((t & ~TPACPI_HKEY_NVRAM_KNOWN_MASK) != 0))
- 		return -EINVAL;
- 
--	if (mutex_lock_killable(&hotkey_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&hotkey_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	HOTKEY_CONFIG_CRITICAL_START
- 	hotkey_source_mask = t;
-@@ -2782,8 +2784,6 @@ static ssize_t hotkey_source_mask_store(struct device *dev,
- 	r_ev = hotkey_driver_mask & ~(hotkey_acpi_mask & hotkey_all_mask)
- 		& ~hotkey_source_mask & TPACPI_HKEY_NVRAM_KNOWN_MASK;
- 
--	mutex_unlock(&hotkey_mutex);
--
- 	if (rc < 0)
- 		pr_err("hotkey_source_mask: failed to update the firmware event mask!\n");
- 
-@@ -2811,18 +2811,19 @@ static ssize_t hotkey_poll_freq_store(struct device *dev,
- 			    const char *buf, size_t count)
+@@ -885,7 +885,6 @@ static ssize_t dispatch_proc_write(struct file *file,
+ 			size_t count, loff_t *pos)
  {
- 	unsigned long t;
-+	int err;
+ 	struct ibm_struct *ibm = pde_data(file_inode(file));
+-	char *kernbuf;
+ 	int ret;
  
- 	if (parse_strtoul(buf, 25, &t))
+ 	if (!ibm || !ibm->write)
+@@ -893,16 +892,15 @@ static ssize_t dispatch_proc_write(struct file *file,
+ 	if (count > PAGE_SIZE - 1)
  		return -EINVAL;
  
--	if (mutex_lock_killable(&hotkey_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&hotkey_mutex);
-+	err = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (err)
-+		return err;
+-	kernbuf = memdup_user_nul(userbuf, count);
++	char *kernbuf __free(kfree) = memdup_user_nul(userbuf, count);
+ 	if (IS_ERR(kernbuf))
+ 		return PTR_ERR(kernbuf);
+-	ret = ibm->write(kernbuf);
+-	if (ret == 0)
+-		ret = count;
  
- 	hotkey_poll_set_freq(t);
- 	hotkey_poll_setup(true);
+-	kfree(kernbuf);
++	ret = ibm->write(kernbuf);
++	if (ret)
++		return ret;
  
--	mutex_unlock(&hotkey_mutex);
--
- 	tpacpi_disclose_usertask("hotkey_poll_freq", "set to %lu\n", t);
+-	return ret;
++	return count;
+ }
  
- 	return count;
-@@ -3995,12 +3996,13 @@ static int hotkey_read(struct seq_file *m)
+ static const struct proc_ops dispatch_proc_ops = {
+@@ -6628,26 +6626,21 @@ static const struct backlight_ops ibm_backlight_data = {
+ static int __init tpacpi_evaluate_bcl(struct acpi_device *adev, void *not_used)
+ {
+ 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
+ 	acpi_status status;
+-	int rc;
+ 
+ 	status = acpi_evaluate_object(adev->handle, "_BCL", NULL, &buffer);
+ 	if (ACPI_FAILURE(status))
  		return 0;
+ 
+-	obj = buffer.pointer;
++	union acpi_object *obj __free(kfree) = buffer.pointer;
+ 	if (!obj || obj->type != ACPI_TYPE_PACKAGE) {
+ 		acpi_handle_info(adev->handle,
+ 				 "Unknown _BCL data, please report this to %s\n",
+ 				 TPACPI_MAIL);
+-		rc = 0;
+-	} else {
+-		rc = obj->package.count;
++		return 0;
  	}
+-	kfree(obj);
  
--	if (mutex_lock_killable(&hotkey_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&hotkey_mutex);
-+	res = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (res)
-+		return res;
- 	res = hotkey_status_get(&status);
- 	if (!res)
- 		res = hotkey_mask_get();
--	mutex_unlock(&hotkey_mutex);
- 	if (res)
- 		return res;
+-	return rc;
++	return obj->package.count;
+ }
  
-@@ -4033,8 +4035,10 @@ static int hotkey_write(char *buf)
- 	if (!tp_features.hotkey)
+ /*
+@@ -10989,24 +10982,23 @@ static int auxmac_init(struct ibm_init_struct *iibm)
+ {
+ 	acpi_status status;
+ 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+-	union acpi_object *obj;
+ 
+-	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
++	strscpy(auxmac, "unavailable", sizeof(auxmac));
+ 
++	status = acpi_evaluate_object(NULL, "\\MACA", NULL, &buffer);
+ 	if (ACPI_FAILURE(status))
  		return -ENODEV;
  
--	if (mutex_lock_killable(&hotkey_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&hotkey_mutex);
-+	res = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (res)
-+		return res;
- 
- 	mask = hotkey_user_mask;
- 
-@@ -4053,8 +4057,7 @@ static int hotkey_write(char *buf)
- 		} else if (sscanf(cmd, "%x", &mask) == 1) {
- 			/* mask set */
- 		} else {
--			res = -EINVAL;
--			goto errexit;
-+			return -EINVAL;
- 		}
+-	obj = buffer.pointer;
+-
++	union acpi_object *obj __free(kfree) = buffer.pointer;
+ 	if (obj->type != ACPI_TYPE_STRING || obj->string.length != AUXMAC_STRLEN) {
+ 		pr_info("Invalid buffer for MAC address pass-through.\n");
+-		goto auxmacinvalid;
++		return 0;
  	}
  
-@@ -4064,8 +4067,6 @@ static int hotkey_write(char *buf)
- 		res = hotkey_user_mask_set(mask);
+ 	if (obj->string.pointer[AUXMAC_BEGIN_MARKER] != '#' ||
+ 	    obj->string.pointer[AUXMAC_END_MARKER] != '#') {
+ 		pr_info("Invalid header for MAC address pass-through.\n");
+-		goto auxmacinvalid;
++		return 0;
  	}
  
--errexit:
--	mutex_unlock(&hotkey_mutex);
- 	return res;
- }
- 
-@@ -6460,11 +6461,12 @@ static void tpacpi_brightness_checkpoint_nvram(void)
- 	vdbg_printk(TPACPI_DBG_BRGHT,
- 		"trying to checkpoint backlight level to NVRAM...\n");
- 
--	if (mutex_lock_killable(&brightness_mutex) < 0)
-+	ACQUIRE(mutex_kill, guard)(&brightness_mutex);
-+	if (ACQUIRE_ERR(mutex_kill, &guard))
- 		return;
- 
- 	if (unlikely(!acpi_ec_read(TP_EC_BACKLIGHT, &lec)))
--		goto unlock;
-+		return;
- 	lec &= TP_EC_BACKLIGHT_LVLMSK;
- 	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_BRIGHTNESS);
- 
-@@ -6482,9 +6484,6 @@ static void tpacpi_brightness_checkpoint_nvram(void)
- 		vdbg_printk(TPACPI_DBG_BRGHT,
- 			   "NVRAM backlight level already is %u (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
--
--unlock:
--	mutex_unlock(&brightness_mutex);
- }
- 
- 
-@@ -6562,8 +6561,9 @@ static int brightness_set(unsigned int value)
- 	vdbg_printk(TPACPI_DBG_BRGHT,
- 			"set backlight level to %d\n", value);
- 
--	res = mutex_lock_killable(&brightness_mutex);
--	if (res < 0)
-+	ACQUIRE(mutex_kill, guard)(&brightness_mutex);
-+	res = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (res)
- 		return res;
- 
- 	switch (brightness_mode) {
-@@ -6578,7 +6578,6 @@ static int brightness_set(unsigned int value)
- 		res = -ENXIO;
- 	}
- 
--	mutex_unlock(&brightness_mutex);
- 	return res;
- }
- 
-@@ -6601,16 +6600,14 @@ static int brightness_get(struct backlight_device *bd)
- {
- 	int status, res;
- 
--	res = mutex_lock_killable(&brightness_mutex);
--	if (res < 0)
--		return 0;
-+	ACQUIRE(mutex_kill, guard)(&brightness_mutex);
-+	res = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (res)
-+		return res;
- 
- 	res = tpacpi_brightness_get_raw(&status);
--
--	mutex_unlock(&brightness_mutex);
--
- 	if (res < 0)
--		return 0;
-+		return res;
- 
- 	return status & TP_EC_BACKLIGHT_LVLMSK;
- }
-@@ -7073,11 +7070,12 @@ static void tpacpi_volume_checkpoint_nvram(void)
+ 	if (strncmp(obj->string.pointer + AUXMAC_START, "XXXXXXXXXXXX", AUXMAC_LEN) != 0)
+@@ -11014,13 +11006,7 @@ static int auxmac_init(struct ibm_init_struct *iibm)
  	else
- 		ec_mask = TP_EC_AUDIO_MUTESW_MSK | TP_EC_AUDIO_LVL_MSK;
+ 		strscpy(auxmac, "disabled", sizeof(auxmac));
  
--	if (mutex_lock_killable(&volume_mutex) < 0)
-+	ACQUIRE(mutex_kill, guard)(&volume_mutex);
-+	if (ACQUIRE_ERR(mutex_kill, &guard))
- 		return;
- 
- 	if (unlikely(!acpi_ec_read(TP_EC_AUDIO, &lec)))
--		goto unlock;
-+		return;
- 	lec &= ec_mask;
- 	b_nvram = nvram_read_byte(TP_NVRAM_ADDR_MIXER);
- 
-@@ -7094,9 +7092,6 @@ static void tpacpi_volume_checkpoint_nvram(void)
- 			   "NVRAM mixer status already is 0x%02x (0x%02x)\n",
- 			   (unsigned int) lec, (unsigned int) b_nvram);
- 	}
+-free:
+-	kfree(obj);
+ 	return 0;
 -
--unlock:
--	mutex_unlock(&volume_mutex);
+-auxmacinvalid:
+-	strscpy(auxmac, "unavailable", sizeof(auxmac));
+-	goto free;
  }
  
- static int volume_get_status_ec(u8 *status)
-@@ -7145,12 +7140,14 @@ static int __volume_set_mute_ec(const bool mute)
- 	int rc;
- 	u8 s, n;
- 
--	if (mutex_lock_killable(&volume_mutex) < 0)
--		return -EINTR;
-+	ACQUIRE(mutex_kill, guard)(&volume_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	rc = volume_get_status_ec(&s);
- 	if (rc)
--		goto unlock;
-+		return rc;
- 
- 	n = (mute) ? s | TP_EC_AUDIO_MUTESW_MSK :
- 		     s & ~TP_EC_AUDIO_MUTESW_MSK;
-@@ -7161,8 +7158,6 @@ static int __volume_set_mute_ec(const bool mute)
- 			rc = 1;
- 	}
- 
--unlock:
--	mutex_unlock(&volume_mutex);
- 	return rc;
- }
- 
-@@ -7193,12 +7188,14 @@ static int __volume_set_volume_ec(const u8 vol)
- 	if (vol > TP_EC_VOLUME_MAX)
- 		return -EINVAL;
- 
--	if (mutex_lock_killable(&volume_mutex) < 0)
--		return -EINTR;
-+	ACQUIRE(mutex_kill, guard)(&volume_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	rc = volume_get_status_ec(&s);
- 	if (rc)
--		goto unlock;
-+		return rc;
- 
- 	n = (s & ~TP_EC_AUDIO_LVL_MSK) | vol;
- 
-@@ -7208,8 +7205,6 @@ static int __volume_set_volume_ec(const u8 vol)
- 			rc = 1;
- 	}
- 
--unlock:
--	mutex_unlock(&volume_mutex);
- 	return rc;
- }
- 
-@@ -8113,13 +8108,14 @@ static int fan_get_status_safe(u8 *status)
- 	int rc;
- 	u8 s;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 	rc = fan_get_status(&s);
- 	/* NS EC doesn't have register with level settings */
- 	if (!rc && !fan_with_ns_addr)
- 		fan_update_desired_level(s);
--	mutex_unlock(&fan_mutex);
- 
- 	if (rc)
- 		return rc;
-@@ -8312,8 +8308,10 @@ static int fan_set_level_safe(int level)
- 	if (!fan_control_allowed)
- 		return -EPERM;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	if (level == TPACPI_FAN_LAST_LEVEL)
- 		level = fan_control_desired_level;
-@@ -8322,7 +8320,6 @@ static int fan_set_level_safe(int level)
- 	if (!rc)
- 		fan_update_desired_level(level);
- 
--	mutex_unlock(&fan_mutex);
- 	return rc;
- }
- 
-@@ -8334,8 +8331,10 @@ static int fan_set_enable(void)
- 	if (!fan_control_allowed)
- 		return -EPERM;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	switch (fan_control_access_mode) {
- 	case TPACPI_FAN_WR_ACPI_FANS:
-@@ -8391,8 +8390,6 @@ static int fan_set_enable(void)
- 		rc = -ENXIO;
- 	}
- 
--	mutex_unlock(&fan_mutex);
--
- 	if (!rc)
- 		vdbg_printk(TPACPI_DBG_FAN,
- 			"fan control: set fan control register to 0x%02x\n",
-@@ -8407,8 +8404,10 @@ static int fan_set_disable(void)
- 	if (!fan_control_allowed)
- 		return -EPERM;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	rc = 0;
- 	switch (fan_control_access_mode) {
-@@ -8453,7 +8452,6 @@ static int fan_set_disable(void)
- 		vdbg_printk(TPACPI_DBG_FAN,
- 			"fan control: set fan control register to 0\n");
- 
--	mutex_unlock(&fan_mutex);
- 	return rc;
- }
- 
-@@ -8464,8 +8462,10 @@ static int fan_set_speed(int speed)
- 	if (!fan_control_allowed)
- 		return -EPERM;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	rc = 0;
- 	switch (fan_control_access_mode) {
-@@ -8499,7 +8499,6 @@ static int fan_set_speed(int speed)
- 		rc = -ENXIO;
- 	}
- 
--	mutex_unlock(&fan_mutex);
- 	return rc;
- }
- 
-@@ -8659,8 +8658,10 @@ static ssize_t fan_pwm1_store(struct device *dev,
- 	/* scale down from 0-255 to 0-7 */
- 	newlevel = (s >> 5) & 0x07;
- 
--	if (mutex_lock_killable(&fan_mutex))
--		return -ERESTARTSYS;
-+	ACQUIRE(mutex_kill, guard)(&fan_mutex);
-+	rc = ACQUIRE_ERR(mutex_kill, &guard);
-+	if (rc)
-+		return rc;
- 
- 	rc = fan_get_status(&status);
- 	if (!rc && (status &
-@@ -8674,7 +8675,6 @@ static ssize_t fan_pwm1_store(struct device *dev,
- 		}
- 	}
- 
--	mutex_unlock(&fan_mutex);
- 	return (rc) ? rc : count;
- }
- 
-@@ -10522,13 +10522,14 @@ static int dytc_profile_set(struct device *dev,
- 	int output;
- 	int err;
- 
--	err = mutex_lock_interruptible(&dytc_mutex);
-+	ACQUIRE(mutex_intr, guard)(&dytc_mutex);
-+	err = ACQUIRE_ERR(mutex_intr, &guard);
- 	if (err)
- 		return err;
- 
- 	err = convert_profile_to_dytc(profile, &perfmode);
- 	if (err)
--		goto unlock;
-+		return err;
- 
- 	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
- 		if (profile == PLATFORM_PROFILE_BALANCED) {
-@@ -10540,18 +10541,18 @@ static int dytc_profile_set(struct device *dev,
- 			 */
- 			err = dytc_cql_command(DYTC_CMD_RESET, &output);
- 			if (err)
--				goto unlock;
-+				return err;
- 		} else {
- 			/* Determine if we are in CQL mode. This alters the commands we do */
- 			err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
- 						&output);
- 			if (err)
--				goto unlock;
-+				return err;
- 		}
- 	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
- 		err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_PSC, perfmode, 1), &output);
- 		if (err)
--			goto unlock;
-+			return err;
- 
- 		/* system supports AMT, activate it when on balanced */
- 		if (dytc_capabilities & BIT(DYTC_FC_AMT))
-@@ -10559,8 +10560,6 @@ static int dytc_profile_set(struct device *dev,
- 	}
- 	/* Success - update current profile */
- 	dytc_current_profile = profile;
--unlock:
--	mutex_unlock(&dytc_mutex);
- 	return err;
- }
- 
+ static struct ibm_struct auxmac_data = {
 -- 
 2.55.0.679.g6767b8d81c-goog
 
