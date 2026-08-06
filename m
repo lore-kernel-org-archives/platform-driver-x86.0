@@ -1,157 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8622340EBA1;
-	Thu,  6 Aug 2026 21:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B95499F04
+	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 22:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786053094; cv=none; b=ZGDSjh/UeYY3QtMCWm/s6QcV/xr1NDwdQpmNld6AQyUElqhgQ6CiYQfCgvQ1krWwUx6KBpvDwkWOBn+4MlMQUlxfCitHGT4qmYd8zqkJvCERa0y0ddS684h6g1bNqZXpO2vkpVTxGELgMcWxKoYTbr6eN3ATUID78pPworxZuB4=
+	t=1786054386; cv=none; b=QCVRnOGo9QBmrY3M4lsPjVgfp8nfRxSZ4eXFadJWlnV9wuSd3+//DQXP8wTPXSswksTZWac0Ce1Ok/SVDLrXx8pZ27Eta11gpj8gOlhAfcNQscdk09kLYNGhOkCVO72o8/uNHiOhjMq7EPle5eQjo4wWdN0I+Ydj5VLe+WnkTjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786053094; c=relaxed/simple;
-	bh=7YXZzO7rHKj6qKOZ2jDkYVaRVikc1Wt8k9LrXwdPOkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ast/+CtArSYz1oAKxx39wSbWi+RiV3uenwR9z3qmHOBBEkujKuiCrpCa6otmo9mn3fYGWsr5c5E2HXX8KFZgwM+T/Li25Dcolr8FXitV4svdseprvlecpXw0/0DtOrEbdTsQfZ/syv80DtBbuKZe87AWVaVRZbes9gjgxsBEhIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STrjp17Z; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786054386; c=relaxed/simple;
+	bh=dFzIYQsm22ZBaO4KmiWxUWVKWAjICxXvqy/20mR7nD0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEkCO64bdZmoBuvOfNGAU8wUUY9c+oRim/foUXBS0KhjciyJiKFZzISnMsjd2imA93jy1kRcKckONXcVpnnmydru6m3tV8PUYRh0YRTKNHX+UPtKNykiR7pY/hGEcqZUZNZmhy9DqoPlcIUZCo8jzbtB+wmpBWtCQdUwLZ8WIwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AfsA67pU; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STrjp17Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786053093; x=1817589093;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7YXZzO7rHKj6qKOZ2jDkYVaRVikc1Wt8k9LrXwdPOkI=;
-  b=STrjp17ZrWDDfBkq6sC6Z3ueXIF2jXJWW7OIEK375PjXAX9+Kg0x881B
-   B/tFAsOhA40Z0lvuWVffvaQAEljKw7HYMqX/u7KP0ur9dOv6jJC6wRO0d
-   DHJUEQxewFwF/3wcMAPvZ3ix9baxvlK4Vk9YNc++PpXraV3YglmGArkoC
-   iKmr4WFz3XinofM9bF2IfWwapjytMYTSBBTRaGoHF485ODLSJ+83P9WYi
-   TWw13K4aqwMmD5m4HxjNkjtU44HLV1zYQPtySd2JSudd5Gj+2p4RPZQKS
-   mpPou75Nx/vjJJkTUg/wpXIUtZopZQJCa9y9NqB10rFxJ7pc54PduokLY
-   g==;
-X-CSE-ConnectionGUID: KFxNgBEHR9KxKySnE2yhMg==
-X-CSE-MsgGUID: YzVDWGa4Tq+38KhSvoMDDw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="85630870"
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="85630870"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 14:51:32 -0700
-X-CSE-ConnectionGUID: AB8YyTXOSCSKko1pPJhpvA==
-X-CSE-MsgGUID: gfPYtjsYTwuf1P+pMEQQWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="285586569"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 06 Aug 2026 14:51:25 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1ws5zl-00000000GKf-1GLg;
-	Thu, 06 Aug 2026 21:51:21 +0000
-Date: Fri, 7 Aug 2026 05:50:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Markus Elfring <Markus.Elfring@web.de>, acpica-devel@lists.linux.dev,
-	bpf@vger.kernel.org, coresight@lists.linaro.org,
-	kvm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	mptcp@lists.linux.dev, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, virtualization@lists.linux.dev,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alex Mastro <amastro@fb.com>, Alex Williamson <alex@shazbot.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andi Kleen <ak@linux.intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH] tools: Use fputc() calls in some functions
-Message-ID: <202608070547.MRKfa3bH-lkp@intel.com>
-References: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfsA67pU"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-69f7fa1c548so4277749a12.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Aug 2026 15:13:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786054383; x=1786659183; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XCAlW3t30HJ3AH9YBgbieeQV72KNNPD72b176EEDN8Q=;
+        b=AfsA67pUYg74oSBu5jvtwhSeEuXqS+XRGxP+4HCk3s3WQ22JWEuXJ1joqdqmm6CPjs
+         4j4ScsgD9fEq1bgDsoSJe/M5qHAfafnyfmd2h7N/zfaGm+WfoVMb6nA/LpArkiO2p91+
+         ONgjIAjHz/UQ2ims2AMr/5spCHhy/df+jMGuYyagZEwittwPavdrGiGxkrWUbvQWr7dO
+         b74ZnF4BrfD5fiABOE/m4lmVm/MQlFKmyN3ZR8lJG43SCRDHgQtFwWVnQlVomueUPoM4
+         FYEE1FNHTLHvKPftQwLS9/jkzBysfyeFapsUP8Vglgjv7wcz7Rd3GlDuqkc4HMrXuNbi
+         osIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786054383; x=1786659183;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XCAlW3t30HJ3AH9YBgbieeQV72KNNPD72b176EEDN8Q=;
+        b=X5N/wzX9rlFxG26aP3QiT1ie4DM6N2DgjrUclEZ1SGZ0ngfyxRH4iS91uxsjWeDJRO
+         p4Hs4TqWaGjzuO8kTGLr9G05xK6xJICkr909/XAF62Rg2T/9obzyZHlGmx5Lyqv0yKnc
+         f7gDtq9+J5rCXwa7jwiGthrEa3cdFNYUMNVjuMrmoYvUnFYmJAkhf1Z9tcZlR7Aufp91
+         KBO7OmpzppYQJyh0zj8I6Gl0kqxyv6qv6rhzdIqff3UXu0WEB+y52lWHiZ9LUZbNqEZo
+         /00VPaEPc4QcnSNk4I7Ni1793cIoKxSkTihAS+pRZciigstCfXHcKlmTmfywqBsajm36
+         ZjKw==
+X-Gm-Message-State: AOJu0Yy1DmhLnYu2XirjWqnY/lk01QqVeR3IXbMl3ZdEpkM0p6s2JRGu
+	vChZDRg4FfH9juHr4t2rKDjCDmf0+RkuC/q39ozM8kLfRKbzQpeiIThK
+X-Gm-Gg: AR+sD10y2298wRjrQNn/9tKHrkOjfduvwTea7ADwdjGVW8/FoXbb+P2CsN2Z2X4kZcp
+	+COEtWFPUHx0eVdnXM1gG/11BIqE6ilQmADs6y1m7ZKcmv2E6qX3h4RHXhEV7i42cvfdrw/Upkz
+	8G1choMtBlxCB3yvkhAM2X8cQFYmWr62RUbn9L4RfENp9XAh8D8PnWamvMjtXJJU16SscwsRF3i
+	eWdJkh/B9iikEkZNK/jzmFgZ6G92kkeN/valAYfJJ5REvIX7Khp2nxMAjtuV3zyI88jIof5OA08
+	VuhJpHZDO+Zu4AIf5Bi7ArIMmduYUy3BW1PJjnO2DrJODw7M/Bv6uru1zB6w6TqfRNnHtX7xD9s
+	JICN3W/3gvRxHxV34qAzJK9ivpfODic0xI8Ed2S6Hlt69fCSdbpoODSevqlA5IwALwEYD2aX21I
+	OsycOmtyUZIoQznaXncsLKSa/DR663DhP3fVKMbesA+OSAEIH2hQcfbzKi9yP81k23uhpN6x9b9
+	rjuX8XAQW9LW7V+MQZt
+X-Received: by 2002:a05:6402:1586:b0:6a0:ffb1:9f65 with SMTP id 4fb4d7f45d1cf-6a14f14e076mr9480767a12.20.1786054382986;
+        Thu, 06 Aug 2026 15:13:02 -0700 (PDT)
+Received: from korabsdator (m83-190-32-126.cust.tele2.se. [83.190.32.126])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a195b737b5sm1311454a12.22.2026.08.06.15.13.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2026 15:13:01 -0700 (PDT)
+From: Korab Doroci <korabdoroci@gmail.com>
+X-Google-Original-From: Korab Doroci <korab.doroci@gmail.com>
+To: josh@joshuagrisham.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Korab Doroci <korab.doroci@gmail.com>
+Subject: [PATCH] platform/x86: samsung-galaxybook: Add SAMB430 ACPI device ID
+Date: Fri,  7 Aug 2026 00:12:55 +0200
+Message-ID: <20260806221255.40148-1-korab.doroci@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48f2d61f-d468-49b7-881e-f00777db073f@web.de>
+Content-Transfer-Encoding: 8bit
 
-Hi Markus,
+Add support for the SAMB430 ACPI device found on Galaxy Book6
+laptops. Without this id the keyboard backlight device fails
+to bind to driver leaving keyboard backlight control unavailable.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Korab Doroci <korab.doroci@gmail.com>
+---
+ drivers/platform/x86/samsung-galaxybook.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v7.2-rc6 next-20260806]
-[cannot apply to acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
+index 6382af0b106c..99f72b204a51 100644
+--- a/drivers/platform/x86/samsung-galaxybook.c
++++ b/drivers/platform/x86/samsung-galaxybook.c
+@@ -1438,6 +1438,7 @@ static const struct acpi_device_id galaxybook_device_ids[] = {
+ 	{ "SAM0428" },
+ 	{ "SAM0429" },
+ 	{ "SAM0430" },
++	{ "SAMB430" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(acpi, galaxybook_device_ids);
+-- 
+2.55.0
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Elfring/tools-Use-fputc-calls-in-some-functions/20260806-165154
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/48f2d61f-d468-49b7-881e-f00777db073f%40web.de
-patch subject: [PATCH] tools: Use fputc() calls in some functions
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20260807/202608070547.MRKfa3bH-lkp@intel.com/config)
-compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260807/202608070547.MRKfa3bH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202608070547.MRKfa3bH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> builtin-check.c:300:8: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
-     300 |         fputc(stderr, '\n');
-         |               ^~~~~~
-   /usr/include/stdio.h:155:16: note: expanded from macro 'stderr'
-     155 | #define stderr stderr
-         |                ^~~~~~
-   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                       ^
->> builtin-check.c:300:16: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
-     300 |         fputc(stderr, '\n');
-         |                       ^~~~
-   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                                  ^
-   2 errors generated.
->> disas.c:540:9: error: incompatible pointer to integer conversion passing 'FILE *' (aka 'struct _IO_FILE *') to parameter of type 'int' [-Wint-conversion]
-     540 |                 fputc(stream, '\n');
-         |                       ^~~~~~
-   /usr/include/stdio.h:611:23: note: passing argument to parameter '__c' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                       ^
->> disas.c:540:17: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'FILE *' (aka 'struct _IO_FILE *') [-Wint-conversion]
-     540 |                 fputc(stream, '\n');
-         |                               ^~~~
-   /usr/include/stdio.h:611:34: note: passing argument to parameter '__stream' here
-     611 | extern int fputc (int __c, FILE *__stream) __nonnull ((2));
-         |                                  ^
-   make[5]: *** [tools/build/Makefile.build:96: tools/objtool/builtin-check.o] Error 1
-   2 errors generated.
-   make[5]: *** [tools/build/Makefile.build:95: tools/objtool/disas.o] Error 1
-   make[5]: Target '__build' not remade because of errors.
-   make[4]: *** [Makefile:123: tools/objtool/objtool-in.o] Error 2
-   make[4]: Target 'all' not remade because of errors.
-   make[3]: *** [Makefile:74: objtool] Error 2
-   make[2]: *** [Makefile:1587: tools/objtool] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
