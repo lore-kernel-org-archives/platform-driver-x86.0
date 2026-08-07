@@ -1,101 +1,117 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B95499F04
-	for <platform-driver-x86@vger.kernel.org>; Thu,  6 Aug 2026 22:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4D235DA43;
+	Fri,  7 Aug 2026 01:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786054386; cv=none; b=QCVRnOGo9QBmrY3M4lsPjVgfp8nfRxSZ4eXFadJWlnV9wuSd3+//DQXP8wTPXSswksTZWac0Ce1Ok/SVDLrXx8pZ27Eta11gpj8gOlhAfcNQscdk09kLYNGhOkCVO72o8/uNHiOhjMq7EPle5eQjo4wWdN0I+Ydj5VLe+WnkTjY=
+	t=1786066296; cv=none; b=cltP5nrHZTbSROSnpMzFdWb5fLxWRsyUfgVS7NqBAtZi8jpCvnFxNGVFavO6fWgrlIbw4BtfkYuzZ2R7h98iHxcrldI77KLGulqwzqJg1Acdnhb+IGcsvFwKoDS+pGf7I51LxQGgC6F401odCMDnpv+IasLNH08JrNyXcVMx1no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786054386; c=relaxed/simple;
-	bh=dFzIYQsm22ZBaO4KmiWxUWVKWAjICxXvqy/20mR7nD0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEkCO64bdZmoBuvOfNGAU8wUUY9c+oRim/foUXBS0KhjciyJiKFZzISnMsjd2imA93jy1kRcKckONXcVpnnmydru6m3tV8PUYRh0YRTKNHX+UPtKNykiR7pY/hGEcqZUZNZmhy9DqoPlcIUZCo8jzbtB+wmpBWtCQdUwLZ8WIwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AfsA67pU; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786066296; c=relaxed/simple;
+	bh=taqgwb4RpaHuorOFuY8dCdXDfQToTYDhk32UGL3iqAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lpNpB7h52MfySpv8u6iwRPiZKMsTAj2N2x8Pu6R7jZMtwNzTshR7xHxOhWxKhUzwYtW7wQh47ZZdbz8eg+bkmVDn7FWo4ebG60lMmEn8xsxMg2SMqQhDdgLWRuGuSgJ/sJn06HilQV7OrHvZNMQfAs35VRGOdmDGfWsAgBBHHis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DFjNTcxv; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfsA67pU"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-69f7fa1c548so4277749a12.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 06 Aug 2026 15:13:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786054383; x=1786659183; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XCAlW3t30HJ3AH9YBgbieeQV72KNNPD72b176EEDN8Q=;
-        b=AfsA67pUYg74oSBu5jvtwhSeEuXqS+XRGxP+4HCk3s3WQ22JWEuXJ1joqdqmm6CPjs
-         4j4ScsgD9fEq1bgDsoSJe/M5qHAfafnyfmd2h7N/zfaGm+WfoVMb6nA/LpArkiO2p91+
-         ONgjIAjHz/UQ2ims2AMr/5spCHhy/df+jMGuYyagZEwittwPavdrGiGxkrWUbvQWr7dO
-         b74ZnF4BrfD5fiABOE/m4lmVm/MQlFKmyN3ZR8lJG43SCRDHgQtFwWVnQlVomueUPoM4
-         FYEE1FNHTLHvKPftQwLS9/jkzBysfyeFapsUP8Vglgjv7wcz7Rd3GlDuqkc4HMrXuNbi
-         osIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786054383; x=1786659183;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XCAlW3t30HJ3AH9YBgbieeQV72KNNPD72b176EEDN8Q=;
-        b=X5N/wzX9rlFxG26aP3QiT1ie4DM6N2DgjrUclEZ1SGZ0ngfyxRH4iS91uxsjWeDJRO
-         p4Hs4TqWaGjzuO8kTGLr9G05xK6xJICkr909/XAF62Rg2T/9obzyZHlGmx5Lyqv0yKnc
-         f7gDtq9+J5rCXwa7jwiGthrEa3cdFNYUMNVjuMrmoYvUnFYmJAkhf1Z9tcZlR7Aufp91
-         KBO7OmpzppYQJyh0zj8I6Gl0kqxyv6qv6rhzdIqff3UXu0WEB+y52lWHiZ9LUZbNqEZo
-         /00VPaEPc4QcnSNk4I7Ni1793cIoKxSkTihAS+pRZciigstCfXHcKlmTmfywqBsajm36
-         ZjKw==
-X-Gm-Message-State: AOJu0Yy1DmhLnYu2XirjWqnY/lk01QqVeR3IXbMl3ZdEpkM0p6s2JRGu
-	vChZDRg4FfH9juHr4t2rKDjCDmf0+RkuC/q39ozM8kLfRKbzQpeiIThK
-X-Gm-Gg: AR+sD10y2298wRjrQNn/9tKHrkOjfduvwTea7ADwdjGVW8/FoXbb+P2CsN2Z2X4kZcp
-	+COEtWFPUHx0eVdnXM1gG/11BIqE6ilQmADs6y1m7ZKcmv2E6qX3h4RHXhEV7i42cvfdrw/Upkz
-	8G1choMtBlxCB3yvkhAM2X8cQFYmWr62RUbn9L4RfENp9XAh8D8PnWamvMjtXJJU16SscwsRF3i
-	eWdJkh/B9iikEkZNK/jzmFgZ6G92kkeN/valAYfJJ5REvIX7Khp2nxMAjtuV3zyI88jIof5OA08
-	VuhJpHZDO+Zu4AIf5Bi7ArIMmduYUy3BW1PJjnO2DrJODw7M/Bv6uru1zB6w6TqfRNnHtX7xD9s
-	JICN3W/3gvRxHxV34qAzJK9ivpfODic0xI8Ed2S6Hlt69fCSdbpoODSevqlA5IwALwEYD2aX21I
-	OsycOmtyUZIoQznaXncsLKSa/DR663DhP3fVKMbesA+OSAEIH2hQcfbzKi9yP81k23uhpN6x9b9
-	rjuX8XAQW9LW7V+MQZt
-X-Received: by 2002:a05:6402:1586:b0:6a0:ffb1:9f65 with SMTP id 4fb4d7f45d1cf-6a14f14e076mr9480767a12.20.1786054382986;
-        Thu, 06 Aug 2026 15:13:02 -0700 (PDT)
-Received: from korabsdator (m83-190-32-126.cust.tele2.se. [83.190.32.126])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a195b737b5sm1311454a12.22.2026.08.06.15.13.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 15:13:01 -0700 (PDT)
-From: Korab Doroci <korabdoroci@gmail.com>
-X-Google-Original-From: Korab Doroci <korab.doroci@gmail.com>
-To: josh@joshuagrisham.com,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Korab Doroci <korab.doroci@gmail.com>
-Subject: [PATCH] platform/x86: samsung-galaxybook: Add SAMB430 ACPI device ID
-Date: Fri,  7 Aug 2026 00:12:55 +0200
-Message-ID: <20260806221255.40148-1-korab.doroci@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFjNTcxv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786066292; x=1817602292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=taqgwb4RpaHuorOFuY8dCdXDfQToTYDhk32UGL3iqAI=;
+  b=DFjNTcxvVjomFmTEnJk01otpy0+GeVuQrj4iuXXNDVww7tpiXGIFT+pZ
+   CgUq9ECfOGGpqX34b0bWzefQzwQ3O5vVmLoisYyNvMf5vT2xkrlpqxKHV
+   MYW4eJZsfpmdPINATYpy2BNRsjSBiNl+81fmswPwCNMuWw6xfp0xjSTfj
+   vZ9ZGlMIaZ0ujvxKBmb956ezfPi23oWgPG69Lvu7WZoNu96owSE0rAnWO
+   K7DFQOqga0DKgOB78gaIaUyrLbq2V0NT6yw5LKDNoSKZdvhLy+8z/5tC4
+   XyQ0qxayyWynEvTlMc4rofxd470G/nOcqT5FGX3fgGu+oEPUuzVn0YRUP
+   Q==;
+X-CSE-ConnectionGUID: 6Kr/CIJQQ1OMAbcsWgzUNA==
+X-CSE-MsgGUID: NaVxHELORmSgDtKyUTB5cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="97266865"
+X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
+   d="scan'208";a="97266865"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 18:31:22 -0700
+X-CSE-ConnectionGUID: rtF2mFYSRteG0Dd919mAZg==
+X-CSE-MsgGUID: w52SIaqWTLy2EEAJZkJeeQ==
+X-ExtLoop1: 1
+Received: from ettammin-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.50])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 18:31:15 -0700
+Date: Fri, 7 Aug 2026 04:31:13 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Darren Hart <dvhart@infradead.org>, Lukas Wunner <lukas@wunner.de>,
+	Westerberg <mika.westerberg@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Mika Westerberg <westeri@kernel.org>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	Eric Snowberg <eric.snowberg@oracle.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] treewide: Add a flag to detect the Apple T2 chip
+Message-ID: <anU1YX6EAHxrNiLP@ashevche-desk.local>
+References: <20260727211807.1223-1-atharvatiwarilinuxdev@gmail.com>
+ <20260727211807.1223-2-atharvatiwarilinuxdev@gmail.com>
+ <20260728005847.GBamf-x27vgqj7WG7e@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260728005847.GBamf-x27vgqj7WG7e@fat_crate.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Add support for the SAMB430 ACPI device found on Galaxy Book6
-laptops. Without this id the keyboard backlight device fails
-to bind to driver leaving keyboard backlight control unavailable.
+On Mon, Jul 27, 2026 at 05:58:47PM -0700, Borislav Petkov wrote:
+> On Mon, Jul 27, 2026 at 05:18:02PM -0400, Atharva Tiwari wrote:
+> > Add a flag to detect Apple T2 chips on Intel Macs.
+> > Cache the result to avoid repeated checks. That will
+> > be used in upcoming patches.
 
-Signed-off-by: Korab Doroci <korab.doroci@gmail.com>
----
- drivers/platform/x86/samsung-galaxybook.c | 1 +
- 1 file changed, 1 insertion(+)
+Why don't you use match_string()?
 
-diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-index 6382af0b106c..99f72b204a51 100644
---- a/drivers/platform/x86/samsung-galaxybook.c
-+++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -1438,6 +1438,7 @@ static const struct acpi_device_id galaxybook_device_ids[] = {
- 	{ "SAM0428" },
- 	{ "SAM0429" },
- 	{ "SAM0430" },
-+	{ "SAMB430" },
- 	{}
- };
- MODULE_DEVICE_TABLE(acpi, galaxybook_device_ids);
+...
+
+> >  bool x86_apple_machine;
+> >  EXPORT_SYMBOL(x86_apple_machine);
+> >  
+> > +bool has_apple_t2_chip;
+> > +EXPORT_SYMBOL(has_apple_t2_chip);
+> 
+> I'm guessing this is parrotting the non-GPL export of x86_apple_machine from
+> 
+>   630b3aff8a51 ("treewide: Consolidate Apple DMI checks")
+> 
+> Lemme add those folks and ask why aren't those exports GPL only?
+
+I don't remember the details, but brief grepping shows no impediments (from my
+p.o.v.) to make them GPL. Maybe Lukas knows more?
+
 -- 
-2.55.0
+With Best Regards,
+Andy Shevchenko
+
 
