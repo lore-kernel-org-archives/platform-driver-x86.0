@@ -1,63 +1,63 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96483F7AB8
-	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Aug 2026 14:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BB63FD137
+	for <platform-driver-x86@vger.kernel.org>; Fri,  7 Aug 2026 14:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786113652; cv=none; b=PmTmeh60v3GdW3N6tlzIrthcObuvGxiHDoOKJFIpQfAuTwr5Q0MJGaK4PrVTsEa6a5kLrAwssYstSRC65ixQYYPMpwg3NBP+oOdCsRSXT0OKQe6QdtRyMPGD4NzPa4r8/ksa7bRrU57Ewbb5joxW60x+F04KB472VIrJ1GA5ZAU=
+	t=1786113660; cv=none; b=GPVuaeNyYU74BbB+1OPHPTD4gbwWm/0HJsH39/TMogbabGkoB8LHlGg59EQof7Spj1AX8oQrlmDNLgZKz9ohcDp0rpfWffDrWyC/9v8VndIANf9cT1dyii5z685qU51/GHj4N3r12FO38JN5HitnwxCrHxf2AALySC4pzh0EZeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786113652; c=relaxed/simple;
-	bh=oI0oe6VrTB67fmNgGEWtYeo5Q1VrP79oiuVCB75VHIc=;
+	s=arc-20240116; t=1786113660; c=relaxed/simple;
+	bh=1BKnXr1/MB/NkXRWCaUFR9AAMwMUPnEGjKZQWbfUj4g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d/y1EaNnyJqC0vXnaVHmw7omuPO2arMhBUfp0iqyDdVCrTzn29QuJtcJs1Q71gyyNf+Slncy4xLB0rFDG0MJv4C+GoJCvOKX0MNXVxWz0O5FKtPxPkcPuVGFChwjTJ9FYzHc3y8tM1fKvt0bSONux3DCmntLhEtrzkRp9Gzgdf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X7mJkZjd; arc=none smtp.client-ip=209.85.216.47
+	 MIME-Version; b=R6Z3PxF8WILgwJsDXzcXgJtAuA/mS51uy6HP+grWM97TZqG9px8aqqv/k5Nmc2CoBpbbFPVtGytluxajMV/LdevHRPgJQA9kXPbRkjKxiDV9uayYjKeXzbK0oLfbEA95Xc3EY46k5iwnSdacBObvLDRtsVOfSk1bTJsCbLznjfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SFcjkl1q; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X7mJkZjd"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-38ea87caafeso2969334a91.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Aug 2026 07:40:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFcjkl1q"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2d01663d816so31651185ad.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 07 Aug 2026 07:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786113645; x=1786718445; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786113636; x=1786718436; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=LShjbJeEqOu9xhr0m6OP6Zlw5WppQjCW7XffJzXc/YM=;
-        b=X7mJkZjdQFpfgvNH6bIAxBKFmj4utiRNfINNGRbt3eXpVJeNaN7BhS/CmoVPHD0/qF
-         tE6+tRnqN+LA70+t7H/Cq2rFq5dBYENBmJykcFj2sy7jdNAagx3GZ81XS3l+3KFG0ioq
-         AFbCJ8y57lYhf7/f5BUFmLlRLmJofZIq3e2MjxmjGjh4uOHv2rmbZqgjB1eXUwiYmal8
-         iI1VhK0Kzqh/TLoJqowoRSgyj4cpajxso1+r+1sXdoBpJt8qvH5eS5s9JVkHm4vRefD6
-         vY1NJ+A3IOkQShFvzEFzeOrkeEp//QT0KZIWb7ch2AlwpTwvDWdB1RFlhyfJxl92rCx6
-         uZHg==
+        bh=CcJguZmeHN+kiaiUR9y3o5cAga+xVBYwoL/bbx1DrYw=;
+        b=SFcjkl1qgfOns3w0nr+/XbYj03NBnXnnsbuQEGg6rYrgUTtuyORcmUTV3aX3XoTiuT
+         +fDhJewSSZaBNyh9G0pohSQEIA19st6qd2lh6UMJthxyQ7Cc4nne0qWrNxpAEEeYpY4H
+         6rgdU2iLGxKBvxIyuRs4816CtRm5GbVmSSXkZo6nc6BaPTS5Q6FZbnBdYlaB8naetxKy
+         iIls3nsoYkoAUJ4JIfQXtHkAiF62odW/l/BEc4zzOBklmOk0GNkytsBzahuxJC3t0aBU
+         nLuvZpJ6tcQ8ummmY3oicRJvQDPpCjBDzp03cf5YVMCCXhgB7wb7H7oWJ+v3Yof2+/EX
+         JyTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786113645; x=1786718445;
+        d=1e100.net; s=20251104; t=1786113636; x=1786718436;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=LShjbJeEqOu9xhr0m6OP6Zlw5WppQjCW7XffJzXc/YM=;
-        b=LjRu98Vkw1lUXJl9lJb6tnFMP9cX71pZVvA4V2wwMnV9KmWj/GneFyCjvRlx0uUwN3
-         Q0hf8eGEGBG6VNdHpwRvu7p7/xapWFGCFABJOIyWHpOKi9WJVA4MAd6tNyoJ3i1Qh4GZ
-         /Uflw/3ILTGaDVJE5kCldGvmRyKejQXoabO8/K7X33y6XIvnEtJN276i6vRZaeTv97JS
-         esC5dPuaHAgkHNBC8pfxo97lKvhTAeNw8IcZxUsiePsHj06LmbNofNcc+khHuhpcSVTk
-         dcMo06aBv7nL7ilOZz5VfIAdp4JoJ3cPPIphxhDsFyLzRLxQBTAvp300mWgXhgm4YFcl
-         2THw==
-X-Gm-Message-State: AOJu0Yzk99bwh1K9YADPT8F9gAK/TKU0M585oaRWbF+kUNH6ooW9YRO9
-	k6e6kZC959N+Kk7rNqDZjm+nfcd1Vxf6g8Yc7vJOqDDqME1iDHDj0y9f
-X-Gm-Gg: AR+sD13voI4rq4GwOiL8jxZESzxhN3xEYC1e2l4BOvp7Ep+EEkZlVnHmMYB1WDQ9+zT
-	mxx/c1JbHqP1S2hEatA2IJtM64Qj8KM4yDfkCUo77F+VCR/zUmAP1SBkK30z96eKepydzZatg3L
-	+W1FoGAPWXqYcEaBYOTITTnJ4NqqPVlyCeRS1IsG61r7QTSrKs1HT/TJ/VIz2vX8m7Le5ad/mkU
-	Ph50RtctYLkey4FdOr0nqKkSXzZUzPDD5zdjNAJqiMa/jiRfvPq/QLod0piAxqcGwn+Aums6HQe
-	I+9TTdAkkRVq9JobKjVshtyV7rFk6O/4o3wCHHduLyESnLupqZRUGazWnv66ZHH+1oq4rjP+TNB
-	/MoEKPVgvYlhzikEsFJVhkGObOpXhBsOVr6uvzH239+OmEzPufRb+uszZeMA5hBLZ/3n+11LsCp
-	2s4TspHjpUpyeLIb/ms8jleQkl0z7jwv/vbovzSPMP36XSlrmKpCsyylwTkAdkeKZkRzD06Foy6
-	cPMDgD8k28qnHWZP6z9IQLC9gYdzXnaN37Vqru27EDgqyHDX9EeyA==
-X-Received: by 2002:a17:90b:2e42:b0:382:1a6f:ba3b with SMTP id 98e67ed59e1d1-3909d7d2f85mr11461420a91.5.1786113644715;
-        Fri, 07 Aug 2026 07:40:44 -0700 (PDT)
+        bh=CcJguZmeHN+kiaiUR9y3o5cAga+xVBYwoL/bbx1DrYw=;
+        b=n/FEq+bGNroZBUJ1BTiS1cyPI3mTNQ/f8DmyA/roTTh0kfx1GCKegRS3Wqya4FX3hG
+         TnIjueLBtJ0jqatwTWclNYq6CZk1Rvm7AmPiBCFWiYIC5c0B5zq9r2MrQNa0mBQmqio2
+         UQ4XsTBwR/aBiTJmhwYxMyhQF0HeQCurWL0LQ9KsBYQGoLquJBJQPiyWeqfVaeoVmVPu
+         mxVHDPIHfNkORjCajy7Nb6fKysjT6E0IzNpY2uTOBHMknt4od5XN+0KtwNXaZDU3D5xJ
+         qmXygoksUrIK/z/ChWylnUEaLMtIXrGTXeqyoqP2YEHhO5RQW+E23+BaRzY8Fc88Esrz
+         qMcg==
+X-Gm-Message-State: AOJu0Ywv6WSXVs8nRj8RKCKpn2O0uKMyhfNFqgIh/rSG9sqU8i6ylBLC
+	zZX9D+7uzkL8UhVd1gMyZQtDI1QjkvKWZU7hm3bzI+qH+PB7KXeEzdWD
+X-Gm-Gg: AR+sD11h0DzbWIhHypt1upPcUxE0kpCPP/sFze+iAJRGp38bgQ3oG1XXZNkaK1xlhhG
+	aTBFVAGo2G+074PWUtFz2LjkzL1w2tOhFyQeFu7sG97meiSDDxYKKej4Ws+BLiP/aOdY+BIog1e
+	oY3Nve1nEO4RLlggoRzG128ygn1DGeSkda/u7n2xrL7lYjaeyA8vOOBmrJ3QKPy1GYacvtEyIiN
+	Lzukft/qpq+SJ5WubiQc3lrpXjpThq9HfqSU0fE/iEmqylZHSEj91rH06zoKe+LUiNAnaay+gud
+	/wOyQmvOKtSRloIWKO+HW4iqt1I++WrI7l7dvPd4qLVnlq7uFMYedMJtrpG9GR8CNaYhVCS0kid
+	nRo1PnNxr/H5PwRToaFVS8PFB4f9XPmx64RlT7U/VWuqMQS6sdm9d9H4yNH5blsCIKVtjumKPWt
+	1sA9w0mALp5c9nm9v7ctSPb6sQq8djiKlzDSrFb84VvPYL/9Oa4WrSnWZRZmCKd/HOXpR4HQhHL
+	wFlWDV/kAdOAJr3eUK0Yf25+sqS26locwfVCTaeP/8JaDlinLJ01Q==
+X-Received: by 2002:a17:90a:ec85:b0:380:f85c:94b4 with SMTP id 98e67ed59e1d1-3909d8075eamr10896910a91.7.1786113636367;
+        Fri, 07 Aug 2026 07:40:36 -0700 (PDT)
 Received: from nugod-NUC15CRHU5.tail9f095a.ts.net ([218.237.104.87])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3925ff24b91sm2917026a91.9.2026.08.07.07.40.42
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3925ff24b91sm2917026a91.9.2026.08.07.07.40.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 07:40:44 -0700 (PDT)
+        Fri, 07 Aug 2026 07:40:35 -0700 (PDT)
 From: HyeongJun An <sammiee5311@gmail.com>
 To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -66,9 +66,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
 	HyeongJun An <sammiee5311@gmail.com>
-Subject: [PATCH 2/2] platform/x86: ISST: Validate level in perf mask ioctls
-Date: Fri,  7 Aug 2026 23:40:03 +0900
-Message-ID: <20260807144003.3498972-3-sammiee5311@gmail.com>
+Subject: [PATCH 1/2] platform/x86: ISST: Validate socket ID in clos_assoc ioctl
+Date: Fri,  7 Aug 2026 23:40:02 +0900
+Message-ID: <20260807144003.3498972-2-sammiee5311@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260807144003.3498972-1-sammiee5311@gmail.com>
 References: <20260807144003.3498972-1-sammiee5311@gmail.com>
@@ -80,55 +80,52 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-isst_if_get_perf_level_mask() and isst_if_get_base_freq_mask() use the
-user-provided level as an index into perf_levels[] via
-_read_pp_level_info() and _read_bf_level_info(), but neither helper
-validates it first.
+isst_if_clos_assoc() validates the user-supplied socket_id with
+'socket_id > topology_max_packages()', but isst_common.sst_inst[] is
+allocated with topology_max_packages() entries, so the valid index range
+is [0, topology_max_packages()).  The '>' comparison lets
+socket_id == topology_max_packages() pass and index one entry past the
+array.
 
-The adjacent level-info helpers reject levels above max_level before
-reading the same per-level register block. Add the same bounds checks to
-the mask helpers, and reject disabled SST-PP levels in
-isst_if_get_perf_level_mask() to match isst_if_get_perf_level_info().
+In addition, isst_common.sst_inst[socket_id] is NULL for an in-range
+package that has no bound TPMI SST instance, and the pointer is used
+without a NULL check.  Both the out-of-bounds entry and the NULL pointer
+are then dereferenced by map_partition_power_domain_id() and the
+following power_domain_info access.
 
-This prevents out-of-bounds reads from the per-level offset table on
-invalid ioctl input.
+Reject socket_id >= topology_max_packages() and a NULL sst_inst, matching
+the checks already performed by get_instance().
 
-Fixes: ea009e4769fa3 ("platform/x86: ISST: Add SST-PP support via TPMI")
-Fixes: 06a61df83209 ("platform/x86: ISST: Add SST-BF support via TPMI")
+Fixes: 12a7d2cb811d ("platform/x86: ISST: Add SST-CP support via TPMI")
 Cc: stable@vger.kernel.org
 Assisted-by: Claude:claude-opus-5
 Signed-off-by: HyeongJun An <sammiee5311@gmail.com>
 ---
- .../platform/x86/intel/speed_select_if/isst_tpmi_core.c  | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-index b2965baeaa36..f1b6109521c5 100644
+index 24334ae70d82..b2965baeaa36 100644
 --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
 +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-@@ -1263,6 +1263,12 @@ static int isst_if_get_perf_level_mask(void __user *argp)
- 	if (!power_domain_info)
- 		return -EINVAL;
+@@ -729,7 +729,7 @@ static long isst_if_clos_assoc(void __user *argp)
+ 		if (copy_from_user(&clos_assoc, ptr, sizeof(clos_assoc)))
+ 			return -EFAULT;
  
-+	if (cpumask.level > power_domain_info->max_level)
-+		return -EINVAL;
-+
-+	if (!(power_domain_info->pp_header.level_en_mask & BIT(cpumask.level)))
-+		return -EINVAL;
-+
- 	_read_pp_level_info("mask", mask, cpumask.level, SST_PP_INFO_2_OFFSET,
- 			    SST_PP_RSLVD_CORE_MASK_START, SST_PP_RSLVD_CORE_MASK_WIDTH,
- 			    SST_MUL_FACTOR_NONE)
-@@ -1344,6 +1350,9 @@ static int isst_if_get_base_freq_mask(void __user *argp)
- 	if (!power_domain_info)
- 		return -EINVAL;
+-		if (clos_assoc.socket_id > topology_max_packages())
++		if (clos_assoc.socket_id >= topology_max_packages())
+ 			return -EINVAL;
  
-+	if (cpumask.level > power_domain_info->max_level)
-+		return -EINVAL;
-+
- 	_read_bf_level_info("BF-cpumask", mask, cpumask.level, SST_BF_INFO_1_OFFSET,
- 			    P1_HI_CORE_MASK_START, P1_HI_CORE_MASK_WIDTH,
- 			    SST_MUL_FACTOR_NONE)
+ 		cpu = clos_assoc.logical_cpu;
+@@ -747,6 +747,8 @@ static long isst_if_clos_assoc(void __user *argp)
+ 		pkg_id = clos_assoc.socket_id;
+ 
+ 		sst_inst = isst_common.sst_inst[pkg_id];
++		if (!sst_inst)
++			return -EINVAL;
+ 
+ 		punit_id = map_partition_power_domain_id(sst_inst, punit_id, &part);
+ 		if (punit_id < 0)
 -- 
 2.43.0
 
