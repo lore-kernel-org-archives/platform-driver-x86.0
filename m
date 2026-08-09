@@ -1,63 +1,63 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3627A3033D6
-	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Aug 2026 04:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F1319F121
+	for <platform-driver-x86@vger.kernel.org>; Sun,  9 Aug 2026 04:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786249623; cv=none; b=DHoKZKsEu1s1QZwTJzk5/q5cs0MM5+GvQIsQ318odiAj+rBwPn957/px704tCwYSudLZaiKwp1I7//cqnD83f6kt26kNG/SpcAYm9rQ8Mh/i7xM4YXOH2dD1+d5c87Df0kLVHpkAL4QIeLLxVGcwkkZ4ssH9N93/UnI/6P7FY/g=
+	t=1786249628; cv=none; b=l9d3vUmhe2RwctaPQ5KdF2uXexf6Ax+i+08aIGNGZL8kyUuTNPcjHSm2X3clgoegYlWtoEEOFEAmEOYkLnM7Vi1R1J9rTLEAEIZM8ZclO3xidxHoT1U/jRQ4JxugPNHRwNZJ3U5Jv8WdvzIcMwB8H3ZcXTTDHDZhy7xNQUGahhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786249623; c=relaxed/simple;
-	bh=cEHlWZML2ga4aWj1RY2I55GP/wsvqEDgh9jmkMn/Q34=;
+	s=arc-20240116; t=1786249628; c=relaxed/simple;
+	bh=3BLRNn9BFgWPIcjS83UUdtk2AE6DhPirjaUW6ukskX4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YgvW3GKFpiqvp0OQPPEZOQUVu49WixPTJo+PU+E9lUTj92HN3YVps27/upFtXIun4fE6W1eDVz//xS1nz8Yo0v4DCAi2AZXuqGHTeCN1n4W/hhx5CLJngxS78GlazbrRNF0Y4F6iNpOup16WhwTNmFjPzzjSM8pQhNyiNRC7us0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sN5zvBQ4; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=Cjl7qAG+1uPn6U2MUEWprq811oddj1hYVE0WcItZEbPmXRT/XIJGtgnvV8HPuYo2SAD3GnvGpAkY6HrlcJu4ZvcRT0xjB3ojoPav6R3ZfIbghSmmyaDnkeDSQLLNBSOcXZNf1D/1QRGgAUp+61cmiC9MjDCqWggiuBPZh6+X8iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dI65B5kF; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sN5zvBQ4"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2cab973140bso11451165ad.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Aug 2026 21:27:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dI65B5kF"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cfff5f88dbso13309705ad.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 08 Aug 2026 21:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786249621; x=1786854421; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786249627; x=1786854427; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Hq8Gl8becy/WF/DMiRZlVep4ksVkXKkaPmZC8U6R6nM=;
-        b=sN5zvBQ4TKB1JLgmbBzzG96z44kOPKrjOXI7JOlHWb8X2wZAvvMLn7jnrjVEwaJnO6
-         QTaiOgIMUUXq+OLdUgRUAi/Be6clY9forJiC2aN7v9UlOoM4Fyg1V0/ouwdY1PLMvaOO
-         R4ZC9U9fGSmjaMuT5KjgOnfu/jE4nox4BOcwzA7dbytO9T1KCi/VhrAi80X/3lX2O8KX
-         tWsQzCB+HIDqFR4mrZclj+uMJBYaXjxeSTK2/gUmkeyUEfsrP8fZqsq7dc6bGRcsYPxY
-         rGtW5PMtJUgPPeEMB5Y602FGL8X3tnGB8PmT5QoJOJff7xI743izvE5qO7TMDHKw9ag8
-         GhDg==
+        bh=hoKe5zyW8uN2y0zixFka7SwpyUgNoPXFgQjUlHoz6IY=;
+        b=dI65B5kFr0zS8rqqTyxfAWjU6TLloVMTiFsB7/K9embJBbhLbrgLPvcE8h3FFeOv67
+         3krTDnHDQUkiyONcbZ5lLcjypO9pMuCuLFInzLJGHr2HwTGvvfygOeFuIlW97jkap052
+         AnIcXmtykopC+EgL0OV0cScdZfmx0fiOVfBUnV9aFslpaT8jCkIjffmewizLkLgaHOnM
+         V/FrhndyAqlqzTmYcVUZCfGL+ygsy/SK1N5AVSTyFgCpt0c5QyAv03MElmI+iAxj8ScR
+         mAdfurGEalwMd8B4/lEglS/Szd4VO7R+EpdraC6zlpt0rdFKKkrxV8Vg1GicKkHbZXQw
+         34Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786249621; x=1786854421;
+        d=1e100.net; s=20251104; t=1786249627; x=1786854427;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Hq8Gl8becy/WF/DMiRZlVep4ksVkXKkaPmZC8U6R6nM=;
-        b=db+qlPJz4x8Wlz7ObksgrVzABAGaOaymgGhdBnuGfvSE10YgGgAy7IKEch74ITABbJ
-         v/ZdOwkm31nZ5aCZQVq5MYg9glwL/XjzSb8YllrrsG3MNOR0uvASui2ERYD7jWniTlY9
-         MYVEkcyw8UZbHB6lq4orZnAWauWNNcXOpjF+Sqh2fN2zGDClDb5E0Jue0Wjv3STPzuWS
-         A5Oc1eNRvf9vGm2UguLk5NNexu8dh/BLBDce5xcq6n4W07WDZ/bXj1TdwfvWnXIIEy5o
-         WP/lB2PA4Bawcd+LmaYg8p4os6gv5cnkeofjmk4+qjF6epcP9+TxIHdqKb6ySwuItcTw
-         Jmkg==
-X-Gm-Message-State: AOJu0Yxumfw0XrWBEmLozm7IYgAnTMGvOuTiPbth0j1LRUtUtqXyOnEA
-	4YNgl1QkQpuwSAUffTjfVmQI6J5/C9esPTtIT2V3WMN4BBhxOumFhKXS8Rzj86mK
-X-Gm-Gg: AR+sD11D5XhfOMS5Cb9qVTMVr2k+JrfS48JsoxnEqcJPFuQKrzvkpYRGi6UXV+BzF+Z
-	MzJ/di8E8SUL4gKCRkpsTa/W+piAfbC9EiagrEKEeH3wNgd3K9rsxB2syAt47HcqwIHCtlrtgAh
-	sNpSjIA2QuK074HLc08qT5HzZGB1Vp20iOf0Qhshj1T01w//0eOLSGKImEesTuWn6oR7dFhSSHJ
-	0rb3bszkX8+W93NTg33h5kXZPd9Gm3zMFJdGQmdeX9KSWHQ9YWOvk+AA2r1l2EpHBoMTHpd52hm
-	xUZOONfY+qamdpp6ukvQrg1eRtyxKPuL2PiPU036RAq95Zd9tAG42mKfltUuKPHVqY26T67c7D7
-	lc90g2cEzH6XzxmZQ+8iZJ/LVv7Eociltnb24Y4jU2tve4qjnMBptN4EtTFr9BX1uxxx4JACNe+
-	8a5t9WMTzD6lV9JhsP9Bpg94rhYRRc/uqGNu/f56nx6IpBUo3JROP5T5fR1HlRBjV8N4omcx+BD
-	XXgw0TqZHoYABQimC8V0an9Zze55bDbgOWBnDL6iue8MgxyWPZq
-X-Received: by 2002:a05:6a21:4d8c:b0:3b4:75c0:3ec0 with SMTP id adf61e73a8af0-3cbce94fef7mr12969462637.30.1786249621385;
-        Sat, 08 Aug 2026 21:27:01 -0700 (PDT)
+        bh=hoKe5zyW8uN2y0zixFka7SwpyUgNoPXFgQjUlHoz6IY=;
+        b=lUU+l4HJ461KaCDBmiS1mqQ/iX97cSTdmdxmNyek2rhzhKYC4QOcvnF1iMWh51Dpk8
+         KM4+jxVGeqSbJuVWxsPAAJMmX1bE1hni0VYUxGdA+OvgJcwX5AErtv8URjvigckPjYQK
+         nq4gZalJy0ETm/2Wnj8gEwo9x0sa5Y0v08pS3i0qq0EutGDlQmitTiYuuoKJT4oX1AM9
+         /p160YCMtIXXGBlhZqbbyOSFAjaoVKl/GG1sOWVCajOwUsgKJfadejTGY5JISdT8IN2+
+         LPs1dOk+xtsFScQjhUdLIHZv0uNkyykpB/jpxTQFOSpAKMHB75+J4vGSRNg5+MZGzxPM
+         sU8w==
+X-Gm-Message-State: AOJu0YxY36ag3rVW6EcBETOyyOAywK8NATPjaLbEnp2HMil7kLhlaNBz
+	x2NBa9On99fdG6Co/H+qWoHhwObQR7HZFAJyX9CPlkzvrv39RL5lF+x1VxWBvbW/
+X-Gm-Gg: AR+sD12h1kmvb6/7hCH2rQj36l6oUMlEueqGgvomuj/QBmdN8adZ1/t1zENfIeCUyid
+	6Dsi3+C+5N0Kv0jJldUTVPjVW6+Ovw7ZaaClwuIi8yUHxorrBqSPjgSAPXYUPfqbjpD/wltyCEj
+	oYYJNaSevux7tPrYQLu7So7mH55Vu4/neunb1I1OELs9lFN/qAPhQJxnAEhyPJzosxnDEIxLwbl
+	WJW3Nm8/W5ehugH1375VotWzf8MmlL8R8XTs7M+UCWTbar+rmVZqXiUsZ2Zep5hGzMxM1VGgyzQ
+	5tDfzwhn24k1GUIXSCYSkJd38rzArGE+Tw6IB1xoiGZKTjZ7iNu2AJUEi2yDeElCIlOHDeh/KfK
+	tBc2iFVpkD4/VeA7JK1VQfly+5olfp50I7UKCKtE+o4Q/0zVyp5UKckTxz3ti26Nx+QrTBrH/UJ
+	TfqcO2pVwwBpGCs4IaWRgPiuhty2T+aV0W+mY/Uka5FzRdpJM3QrDbMkE2zObXj/z5Lj3/acmlp
+	t+C49DmJYR9ivFvKZqktYIThpdyn0achjnX+BiTI5vGcSmlE3QS
+X-Received: by 2002:a05:6a20:6a1e:b0:3b4:7e2d:a3c2 with SMTP id adf61e73a8af0-3cb85ec567bmr31633197637.18.1786249626830;
+        Sat, 08 Aug 2026 21:27:06 -0700 (PDT)
 Received: from prof-g-y-land-Latitude-7320-Detachable (121-45-161-118.tpgi.com.au. [121.45.161.118])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1410199cf49sm21659516c88.3.2026.08.08.21.26.57
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1410199cf49sm21659516c88.3.2026.08.08.21.27.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2026 21:27:00 -0700 (PDT)
+        Sat, 08 Aug 2026 21:27:06 -0700 (PDT)
 From: Sahan Nissanka <adee.sahan@gmail.com>
 To: platform-driver-x86@vger.kernel.org,
 	linux-media@vger.kernel.org
@@ -67,9 +67,9 @@ Cc: dan.scally@ideasonboard.com,
 	ilpo.jarvinen@linux.intel.com,
 	mchehab@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
-Date: Sun,  9 Aug 2026 14:25:18 +1000
-Message-ID: <20260809042540.15849-3-adee.sahan@gmail.com>
+Subject: [PATCH 3/3] media: ipu-bridge: Add sensor configuration for OV5675 (OVTI5678)
+Date: Sun,  9 Aug 2026 14:25:19 +1000
+Message-ID: <20260809042540.15849-4-adee.sahan@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260809042540.15849-1-adee.sahan@gmail.com>
 References: <20260809042540.15849-1-adee.sahan@gmail.com>
@@ -81,83 +81,42 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The front camera of the Dell Latitude 7320 Detachable is described in
-ACPI as OVTI5678, and no driver has ever claimed that id. It reports
-chip id 0x005675 at register 0x300a, which is what
-ov5675_identify_module() expects, and it streams with this driver
-unmodified:
+The front camera of the Dell Latitude 7320 Detachable is an OV5675
+described in ACPI as OVTI5678. Without an entry here ipu-bridge creates
+no software node for it, so no fwnode endpoint exists and the sensor
+cannot be connected to the IPU6 even once a driver binds it:
 
-  ov5675 i2c-OVTI5678:00: chip id at 0x300a reads 0x005675
-    reg 0x300a = 0x00  reg 0x300b = 0x56  reg 0x300c = 0x75
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
+  intel-ipu6 0000:00:05.0: Connected 1 cameras
 
-The two other values this driver is sensitive to were read from the
-machine's ACPI SSDB before the sensor was ever powered, and both agree:
-L0NL = 2 data lanes (OV5675_DATA_LANES) and L0CK = 19200000 Hz
-(OV5675_XVCLK_19_2). Native resolution matches at 2592x1944.
+450 MHz is OV5675_LINK_FREQ_450MHZ, the only link frequency ov5675.c
+supports, and matches the two data lanes the machine's SSDB reports.
 
-With this id added the sensor binds and streams: libcamera lists it and
-capture runs at 2584x1944, 29.95 fps.
+With this entry both cameras are found and the front sensor appears in
+the media graph:
 
-This part is not a plain Bayer sensor, however, and the format this
-driver declares for it is inaccurate. It carries a 4x4 RGB-IR colour
-filter array, one pixel in four being infrared:
-
-    G I G I
-    R G B G
-    G I G I
-    B G R G
-
-Confirmed three ways. Intel's Windows IPU6 configuration for this exact
-module - matched by ACPI _DDN, so not a near relative - declares
-bayer_order="GIGI_RGBG_GIGI_BGRG" and sensor_type="RGB_IR". Measured on
-the sensor at full resolution, positions a 2x2 model treats as a single
-channel differ by 18% while the four infrared positions agree to 0.4%.
-And the module's Intel tuning data carries a 4x4 channel index map that
-agrees with both.
-
-Read as the SGRBG10 declared here, the "blue" channel is pure infrared
-and the "red" channel interleaves real red with real blue, so colour is
-wrong in a way no white balance can correct.
-
-This cannot be fixed in this driver: there is no RGB-IR media bus code
-in the V4L2 ABI. Nor is it unique to this part - ox05b1s declares
-SGRBG10 for an RGB-IR sensor of the same class and resolution. I intend
-to propose RGB-IR media bus codes separately. Until such support
-exists, this patch makes otherwise unusable hardware work, carrying the
-same known inaccuracy as the existing RGB-IR sensor support.
-
-One further note for anyone building on this: the sensor's binned
-1296x972 mode averages infrared pixels together with colour ones, which
-destroys the mosaic. Only the full resolution mode is meaningful for an
-RGB-IR aware pipeline.
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI5678:00
+  intel-ipu6 0000:00:05.0: Found supported sensor OVTI8856:00
+  intel-ipu6 0000:00:05.0: Connected 2 cameras
 
 Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
 ---
- drivers/media/i2c/ov5675.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/media/pci/intel/ipu-bridge.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5675.c b/drivers/media/i2c/ov5675.c
-index ea26df3..99dbf53 100644
---- a/drivers/media/i2c/ov5675.c
-+++ b/drivers/media/i2c/ov5675.c
-@@ -1355,6 +1355,17 @@ static const struct dev_pm_ops ov5675_pm_ops = {
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id ov5675_acpi_ids[] = {
- 	{"OVTI5675"},
-+	/*
-+	 * The front sensor of the Dell Latitude 7320 Detachable is described
-+	 * as OVTI5678 in ACPI, but the part reports chip id 0x005675 and its
-+	 * SSDB agrees with this driver on both other values that matter:
-+	 * 2 CSI-2 data lanes and a 19.2 MHz external clock.
-+	 *
-+	 * Note this variant carries a 4x4 RGB-IR colour filter array, not the
-+	 * 2x2 Bayer declared here, so colour is incorrect. There is currently
-+	 * no RGB-IR media bus code to declare instead.
-+	 */
-+	{"OVTI5678"},
- 	{}
- };
- 
+diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+index 9cebc6a..78fe1f7 100644
+--- a/drivers/media/pci/intel/ipu-bridge.c
++++ b/drivers/media/pci/intel/ipu-bridge.c
+@@ -101,6 +101,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
+ 	IPU_SENSOR_CONFIG("OVTIDB10", 1, 560000000),
+ 	/* Omnivision OV2680 */
+ 	IPU_SENSOR_CONFIG("OVTI2680", 1, 331200000),
++	/* Omnivision OV5675, described as OVTI5678 in ACPI */
++	IPU_SENSOR_CONFIG("OVTI5678", 1, 450000000),
+ 	/* Omnivision OV8856 */
+ 	IPU_SENSOR_CONFIG("OVTI8856", 3, 180000000, 360000000, 720000000),
+ 	/* Sony IMX471 */
 -- 
 2.53.0
 
