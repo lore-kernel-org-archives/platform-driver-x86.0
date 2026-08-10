@@ -1,178 +1,208 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5DB13C908
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 09:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8D03B100A;
+	Mon, 10 Aug 2026 10:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786354001; cv=none; b=LirOISwErvAUNHqmOG9oUhhhHhvIoCnK2DoYTzJROzHUKyUWe8LMWcgNUU32qDbzwaJOsq8VQTObRdu4sRRro4xJKqpUUdWGufP6VWLgpnlFJIkjICcGqhVlhQr8K5J215pw6xhetsgZdlpa+LdSCiiy5oyJMkXMJp+gHsIgDjw=
+	t=1786358528; cv=none; b=IoRsL3nrXzbr8znTi9f/tIi5E7BBefVYghrLYzk/I5iXq6LDQASIQzBwc8TfGM8SJ3R7ErDoioQitUPP3fm7maio/hnjLOENauSenxuEtGhv5cKHGZo3FpreGyfJVd6KaCvlK6sZysKYcD1PLa/a8ILtNt9gAUjobNrZXez63nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786354001; c=relaxed/simple;
-	bh=r2PkE0oi/VSTJVzcc6zI56DSvvO0dsneNQrVL+aEAKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=egGedJ8zVxXyfjIbXborNgEI6RspU8vz9lX1oOsB/lqP10XJJ4O6K8pkpg8TE1w0dEZxkErNDemywcF7gIzR9e89TSgN7XkMJhSzYGZlrB54rZAKyKuMflvWDq1BEGR/V33huySiZ7f5kVS/pnpV36ny3hlS+ou8C7xFK6l1zGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BMn5XkMW; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786358528; c=relaxed/simple;
+	bh=xWJTcy1Ky71k/7s2AfqYNR/+XMnlrvRH8NzvgYWGjEY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PRfFxJcNvmvRwN26Vo9QKBw6mW47QmBoTV0/hJw8OABFsv4S+JNQhLx0xRn80vahXjyyQejCVVAcxvZ4VHOcqS1AbtIcJR4I/BkZBQ4Fh+ozqlnMRIO/3PjMakrCr7JgKxd4hmKD57y2tHHz+U8ElUtSkCy/uE8uL/QXOY3CSSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUbyEoeY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMn5XkMW"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-38dcbade417so1504081a91.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 02:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786353999; x=1786958799; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=39MnD4WMHl99u8wHNngWbLPAoL4NahAVgxuRbaUB5js=;
-        b=BMn5XkMW7NvwY4YO6ZX1BKTeJsgLgAu+IPNxHYbk+A9MYob0pYv9KCpjQlM+eFwWhg
-         XzJgelLxVBKAmfdCPpSRGgJRMTJss+rjGz8eAmER5EZCx029HA+xEuvms50cX7Rpu8wG
-         wu72TRbcVc6rCiv41bNWL6CeDTDm1nLJUR7Zoc3Ke+7UD48xU1anIwIppG+jDYTiMRS1
-         QLE6oyMT9ZuoAyIQ3f3hry4CyZlqmq/YS0D5L8CYXLG77tDeaqx71bBFoAXBCxer0zx2
-         iU1UCNg5nu467NCnAycclNG8SI8fIGHpMnEuiHaytdXp5r4pZfaRzKmgRPaZgJPfqfUb
-         MWRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786353999; x=1786958799;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=39MnD4WMHl99u8wHNngWbLPAoL4NahAVgxuRbaUB5js=;
-        b=smFKIcIJ0kvoNhX+ALqyHALwiK52uXmnZA3DOF1FX97mpTjF5ZeFHU/WhltQ2hbqn6
-         3rauH2pzx4KuUCNEPYl9YoBFYtgWsu7M/SK1LJjMF4wjy2LCSEOp2hYddMk4vJuWgeAx
-         JfhHRRg3fJ1SFaUbT4rNz0FI/baDjj027HBgd5t+Ck0LgMgbXhmzyt+H8tp5RDkWyQge
-         4kwx/EeSKfcL1Yho8nlzUZ8Cafg/YXHAj1oCrXnZkC2QgMuoTG1KiHX2J4ULpHn7nQ1P
-         wAr/ZAgGmotk9eqsc2biBlQuaacB9/qBm21SFd8Q4/IPg01GDv/aenPOPs7UiwOgZ1gh
-         H8vQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoJ3GztxdpNoOroHBMU2oxXx8gIyh/PRky8dQ2KV6lD4GvxvnDPcWBEcoHejGtXjkSht3D25QKz4fypKeK8iQeLRiKS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcjW8JJxSgCQiyTz1qMslR3R24exrXdLhIErLeou9JwxQfzjYX
-	fqy7ObXgZkKn2gKzf4dQ1GnDRhFx2OPx6iU+KEJcF26OqpmXsqBZKdw5
-X-Gm-Gg: AR+sD11fEpmgQsar5TdiApfev0rvkpoMmdmeni8OWM31GvgJBnqOZZHXiV2UCeatE7B
-	1+aA6jLJf2S5Mj/1acukinEWvtP0l0On/9mSUSU4if2rFg1sLm9gZRLdK243qYURj3kYgeInT+K
-	a0mdI0fDBEqMSJskM+N8z7wbY4kJ4rvRYd2LZC+IQlHHdZcyl0US19KiCtlzlaya4wa9qVfxeqE
-	3t6aU2LNTGdKCdHEaNkolywJv5+PcIPsHw80sX9sK/Yj0QkiOFAM68l9eaBoAlyLRVB8Zufo32B
-	jQGZpaxixIMKJOCt4txj0wvDXY4Fa/9sVfWgbKuq7KcW0bcQI2pPZ3rLd18+UK+ltQkbiJDDwlu
-	ukMrJYpl4ytKMF+OonYwMGMsOlrvBlbgMhRpJppPC33VaZpbqxslI8JCqxMpjfADit1Yq935ycV
-	ZmUt3swwJRtgCLAUgJnej9pgadBNm0U2iIjp5HdmpQty/0QYQnpNDzViFspaF3Lo4H521xecxwe
-	J5GdRAmH0qp36026/XH
-X-Received: by 2002:a17:90b:580b:b0:38e:9e9d:9209 with SMTP id 98e67ed59e1d1-3903c5c51cdmr43016068a91.17.1786353999298;
-        Mon, 10 Aug 2026 02:26:39 -0700 (PDT)
-Received: from sahan-i3-12100 (121-45-161-118.tpgi.com.au. [121.45.161.118])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315beb88473sm38052384eec.17.2026.08.10.02.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 02:26:38 -0700 (PDT)
-From: Sahan Nissanka <adee.sahan@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sahan Nissanka <adee.sahan@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dan.scally@ideasonboard.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mchehab@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
-Date: Mon, 10 Aug 2026 19:24:45 +1000
-Message-ID: <20260810092457.12357-1-adee.sahan@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <anmHRjxruBaYQRaC@kekkonen.localdomain>
-References: <20260809042540.15849-1-adee.sahan@gmail.com> <20260809042540.15849-3-adee.sahan@gmail.com> <anmHRjxruBaYQRaC@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUbyEoeY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B3EB7C19425;
+	Mon, 10 Aug 2026 10:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1786358527;
+	bh=xWJTcy1Ky71k/7s2AfqYNR/+XMnlrvRH8NzvgYWGjEY=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=qUbyEoeYuh4v8KJ1hHPJAGHdegYG3/zUmf8baXVBPOaU5azUAtonwizW1r4Sc0EnV
+	 yS8JjgvrOiFSVMNxUMYyVzdxfdqQid9HrYnd2eTE4IrMnDxTI33hiEAaI2XY1L1Hox
+	 G623gWKo7xCV0uY5orPsb330qokqWMVHS1dLZzKnucEtu+X9XI5l7RhdCtbmrmQDtn
+	 i/2PtXVJwjXoCWCNnQu7aDXcCtDo6tPXG1g0zFC0N5Xvx6ky9Hx7ELJYS4C0KHZz2N
+	 OW58ghGbMT3KZS5Q2TNekOJum5C7QnHtdUbyRQddwjXAfEdbzQTMVPQON8jhKm5QoN
+	 6HcGhCb8u0MjA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A156C5AE5D;
+	Mon, 10 Aug 2026 10:42:07 +0000 (UTC)
+From: busybox11 via B4 Relay <devnull+busybox11th.gmail.com@kernel.org>
+Date: Mon, 10 Aug 2026 12:42:05 +0200
+Subject: [PATCH] platform/x86: asus-armoury: add dGPU disable fallback
+ DEVID for ProArt H7606 series
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260810-asus_armoury_dgpu_new_devid-v1-1-0a5c845414e4@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXM0QrCMAxA0V8ZebbQFjamvyJS4hJnBLuRWJ2M/
+ btVH8/DvSsYq7DBoVlB+SkmU64IuwaGK+aRnVA1RB873wfv0Iol1PtU9J1onEvK/EpUU3Kh6xF
+ bwrj3DPUwK19k+d2Pp7+tnG88PL5L2LYPB2rnT38AAAA=
+X-Change-ID: 20260810-asus_armoury_dgpu_new_devid-168aa5da290e
+To: Corentin Chary <corentin.chary@gmail.com>, 
+ "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ busybox11 <busybox11th@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786358526; l=5396;
+ i=busybox11th@gmail.com; s=20260810; h=from:subject:message-id;
+ bh=Mj/LFs3Xz+yRgi3a1YthYcoxuj8/zTpklNst+WslNLE=;
+ b=42lX62ttRzRI8RlgkG0xWrVEUUFKHUvyqBeaG0Q0yz5RVrve9cqzfqGmZXbN2oR3QiiikP6Fx
+ cUxuEnUHJw7BruLAErB+KGRUarrZhKM8dGoFOjhA/o3+EQtDeZbBKKe
+X-Developer-Key: i=busybox11th@gmail.com; a=ed25519;
+ pk=tAPX0PkPp+z+auNzREFUR/SmxWxLsZK6ddLlhAN/zjA=
+X-Endpoint-Received: by B4 Relay for busybox11th@gmail.com/20260810 with
+ auth_id=932
+X-Original-From: busybox11 <busybox11th@gmail.com>
+Reply-To: busybox11th@gmail.com
 
-Hi Sakari,
+From: busybox11 <busybox11th@gmail.com>
 
-Thank you for the review.
+Newer ASUS ProArt laptops (e.g. H7606 series) implement dGPU power
+control on WMI DEVID 0x00090120 instead of the usual 0x00090020.
+The default DEVID returns 0xFFFFFFFE on these models, so the
+dgpu_disable firmware attribute is never created and the dGPU cannot
+be re-enabled from Linux at all.
 
-> Most non-Bayer colour raw sensors can be programmed to produce Bayer
-> output. It'd be interesting to know what are the differences in register
-> writes compared to the Windows driver -- it might use that feature.
+Add a fallback probe for device ID 0x00090120 following the same
+approach as the gpu_mux_dev_id probe.
 
-I have not captured the Windows driver's register writes, so I cannot answer
-that directly. What I do have is Intel's shipped configuration for this exact
-module, and all of it points the other way: their stack appears to take RGB-IR
-from the sensor and convert it downstream rather than ask the sensor for
-Bayer.
+Details for 0x00090120 (confirmed on H7606W using direct WMNB calls
+and inspecting the DSDT DEVS handler):
+  - Reading DSTS returns 0x00010001 when the dGPU is off (CUMA=1),
+	or 0x00010000 when it's on.
+  - Writing DEVS: 0 enables the dGPU (calls PG00._ON() + Notifies
+	PEGP, Device Check), and 1 disables or ejects it.
 
-  - iacamera64.sys documents an IPU6 hardware block named x2b_rgbir, 314
-    registers, i.e. RGB-IR to Bayer conversion in the IPU6 itself.
+This behavior matches the dgpu_disable attribute (1 = disabled).
 
-  - graph_settings_OV5678_0BF501T3_TGL.xml, tied to this module by ACPI _DDN
-    rather than to a near relative, declares sensor_type="RGB_IR" and
-    bayer_order="GIGI_RGBG_GIGI_BGRG". The rear OV8856 on the same machine
-    declares plain GRBG, which makes a useful control.
+Signed-off-by: busybox11 <busybox11th@gmail.com>
+---
+ drivers/platform/x86/asus-armoury.c        | 32 +++++++++++++++++++++++++-----
+ include/linux/platform_data/x86/asus-wmi.h |  3 +++
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-  - The module's tuning file carries a lens shading record whose 4x4 channel
-    index map has five channels, two greens tracked separately plus IR,
-    against four on the rear sensor.
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index 495dc1e31..f39b52451 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -93,6 +93,7 @@ struct asus_armoury_priv {
+ 
+ 	u32 mini_led_dev_id;
+ 	u32 gpu_mux_dev_id;
++	u32 dgpu_disable_dev_id;
+ };
+ 
+ static struct asus_armoury_priv asus_armoury = {
+@@ -452,8 +453,8 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
+ 	if (err)
+ 		return err;
+ 
+-	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU)) {
+-		err = armoury_get_devstate(NULL, &result, ASUS_WMI_DEVID_DGPU);
++	if (asus_armoury.dgpu_disable_dev_id) {
++		err = armoury_get_devstate(NULL, &result, asus_armoury.dgpu_disable_dev_id);
+ 		if (err)
+ 			return err;
+ 		if (result && !optimus) {
+@@ -507,7 +508,8 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 	}
+ 
+ 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
+-		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL, ASUS_WMI_DEVID_DGPU);
++		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL,
++					   asus_armoury.dgpu_disable_dev_id);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -516,7 +518,7 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
+ 
+ 	return count;
+ }
+-ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
++ASUS_WMI_SHOW_INT(dgpu_disable_current_value, asus_armoury.dgpu_disable_dev_id);
+ ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
+ 
+ /* Values map for eGPU activation requests. */
+@@ -790,7 +792,6 @@ ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_
+ static const struct asus_attr_group armoury_attr_groups[] = {
+ 	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
+ 	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
+-	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
+ 	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
+ 
+ 	{ &ppt_pl1_spl_attr_group, ASUS_WMI_DEVID_PPT_PL1_SPL },
+@@ -934,6 +935,21 @@ static int asus_fw_attr_add(void)
+ 		}
+ 	}
+ 
++	asus_armoury.dgpu_disable_dev_id = 0;
++	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU))
++		asus_armoury.dgpu_disable_dev_id = ASUS_WMI_DEVID_DGPU;
++	else if (armoury_has_devstate(ASUS_WMI_DEVID_GPU_MODE))
++		asus_armoury.dgpu_disable_dev_id = ASUS_WMI_DEVID_GPU_MODE;
++
++	if (asus_armoury.dgpu_disable_dev_id) {
++		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
++					 &dgpu_disable_attr_group);
++		if (err) {
++			pr_err("Failed to create sysfs-group for dgpu_disable\n");
++			goto err_remove_gpu_mux_group;
++		}
++	}
++
+ 	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
+ 		if (!armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
+ 			continue;
+@@ -971,6 +987,9 @@ static int asus_fw_attr_add(void)
+ 			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
+ 					   armoury_attr_groups[i].attr_group);
+ 	}
++	if (asus_armoury.dgpu_disable_dev_id)
++		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &dgpu_disable_attr_group);
++err_remove_gpu_mux_group:
+ 	if (asus_armoury.gpu_mux_dev_id)
+ 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
+ err_remove_mini_led_group:
+@@ -1143,6 +1162,9 @@ static void __exit asus_fw_exit(void)
+ 					   armoury_attr_groups[i].attr_group);
+ 	}
+ 
++	if (asus_armoury.dgpu_disable_dev_id)
++		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &dgpu_disable_attr_group);
++
+ 	if (asus_armoury.gpu_mux_dev_id)
+ 		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
+ 
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index c29962d5b..faeae70f4 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -138,6 +138,9 @@
+ /* dgpu on/off */
+ #define ASUS_WMI_DEVID_DGPU		0x00090020
+ 
++/* dgpu power/mode switch, dgpu_disable fallback on some ProArt */
++#define ASUS_WMI_DEVID_GPU_MODE		0x00090120
++
+ #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+ 
+ #define ASUS_WMI_DEVID_DGPU_BASE_TGP	0x00120099
 
-  - Intel lists exactly one mode for this part, 2592x1944, where the Bayer
-    OV8856 gets several.
+---
+base-commit: 3f008280327ba5ad132965abab0c7846283cef0c
+change-id: 20260810-asus_armoury_dgpu_new_devid-168aa5da290e
 
-If the part could be told to emit Bayer, that hardware block and that tuning
-would not be needed for this module. But that is an argument about what Intel
-chose to do, not proof about what the sensor can do. I have no register-level
-documentation for this variant, and the OV5675 documentation I do have does
-not describe an RGB-IR part at all.
+Best regards,
+--  
+busybox11 <busybox11th@gmail.com>
 
-Since posting, another person working on this hardware extracted and shared
-Intel's Windows sensor driver for this part - ov5678.sys, an ACPI\OVTI5678
-KMDF driver - so I went looking for the register writes directly. They are not
-in it: the driver carries no sensor initialisation tables, and instead reads
-external configuration through an ExtFilesPath value under its service key,
-from a BSPDRIVERS store. So the Windows driver binary does not settle your
-question either, and I would rather say so than imply I have checked something
-I have not.
 
-It does suggest a cleaner way to answer it than sniffing the bus. The driver
-has a register-dump facility of its own, writing to C:\OV5678reg.txt, and a
-matching NVM dump for the module EEPROM. If the replacement machine arrives
-with the factory Windows image, letting Windows bring the camera up and then
-dumping the sensor's register state gives a direct comparison against the
-tables in ov5675.c, using Intel's own tooling rather than my inference. If
-there is a mode bit that switches the output to Bayer, that is where it should
-appear. I will report either way, including if it turns out I cannot get at
-it.
-
-> The metadata series I've been preparing adds common raw formats and moves
-> the CFA pattern to a control. Then we can add the non-Bayer patters to the
-> UAPI as well. This isn't in upstream yet though. See
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=metadata>.
-
-That is good to know, and it changes my plans usefully. I had started drafting
-an RFC proposing RGB-IR media bus codes; I will drop that rather than propose
-a competing mechanism, and follow your branch instead. The CFA pattern as a
-control looks like the better model for this - a 4x4 pattern does not reduce
-to a Bayer order, so new bus codes would have multiplied awkwardly.
-
-Two questions, then, on how you would like to proceed.
-
-Would you prefer this patch waits for the metadata series to land, and returns
-as part of describing the sensor honestly? I am content to hold it. The
-practical cost is that the front camera stays dead on this machine in the
-meantime, which is what prompted the patch, but that is not an argument for
-merging something inaccurate.
-
-And how should I read the precedent in ox05b1s? It declares SGRBG10 for an
-RGB-IR sensor of this same class and resolution, which is what I was following
-here. If that is regarded as a mistake not to repeat, I would rather know now
-and wait than argue from it.
-
-> Most of the commit message would seem to be better located in the cover
-> letter.
-
-Agreed - I will move it in v2.
-
-One other thing you should know, since it affects the series rather than this
-patch. I have asked that 1/3 not be applied: an owner of the same machine has
-shown the GPIO mapping in it is wrong, and that the sensor probes with no pin
-assignment at all, so my "it works" was never evidence that the mapping was
-right. I will verify the corrected mapping on the replacement machine before
-sending v2. Patch 3/3 is unaffected, and was independently arrived at by the
-same person.
-
---
-Sahan Nissanka
