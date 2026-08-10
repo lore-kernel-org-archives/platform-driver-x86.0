@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C928033B;
-	Mon, 10 Aug 2026 13:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110A028033B;
+	Mon, 10 Aug 2026 13:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786368704; cv=none; b=R0vowesM680oKyIUGhDci09qoIeY70NjoxdnD+khQ/EeQ8kIdQboUoh3vlpEheZI0T35OOqAqwGQfBjACDrFBveUvWCmZyDWsUnd2BkMsJGc6E0TDMAFdy+Ihz64Qdasl/6xdfNBrGR+QVnfq8Jg3ka8TENbO/4YgMQdwBPt77k=
+	t=1786369061; cv=none; b=prHV2Zf8oDaexZ/8BbOO0QuDEGPHuTWZyjUYAZvwCGQlBiCJnDI9igaA2YL/pSJMfP/uaS3y3RZHwgA/zQV4vp+uP79hanczfA1H2+UpEaBruK2+bB+9Txv6scBErkNEZKQM6pfs0Lw3niVZbqSz0CVmZQWC6/fEy2PdqORTHp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786368704; c=relaxed/simple;
-	bh=Qcws4cFwyNqXsXVVmW2aoSuRFOEEYj0NrVYoHiqA6FI=;
+	s=arc-20240116; t=1786369061; c=relaxed/simple;
+	bh=bP97RUv0CO8z/Jbp3EgdT/RxU1TcpwJR/QZE571L5F0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FBTKgKl6pbVZI3WVdLcM528tS2JlwnjQaZsHx+iGQNjqmGBwt2HeP2JJv7VgoOHGgtgTSC1JV0NHekYCB4roBi3B2fGpOOJycFSCA6u7RxmVHP+u79OrQo9IRFpbMyxVdFANpPANvjIYlR2EV/jp761HUXR2WOniTE0XubAL2no=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkAHtu5F; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=PYjWGmP9zD8zCMlpI05nV4pCAVhRDBwjXkzNysZsDr/jEjry3Z0xpjJtMlWsi+WgUeHsAW3pJlGpfMsCF7OqYPssZcwH0LT/3K8uKvCYXFBKUQze9Ok63fqVEkNOszIGMrNa0/lZFhTMo0XcmmcUdDnf/7HtKeN4mhFmzqINi0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJEk2tXa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkAHtu5F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1791F000E9;
-	Mon, 10 Aug 2026 13:31:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJEk2tXa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8964C1F000E9;
+	Mon, 10 Aug 2026 13:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786368702;
-	bh=jofVDHyCDmmGuhYIq1yXWJDWlKE6UWuDTaXepD1Etko=;
+	s=k20260515; t=1786369058;
+	bh=8aG/LpDClDrxPVKUcF9qa8ul1jl5K5yF/mC8Dhd4tes=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nkAHtu5FV3qbPvuFrMvqF54Wmfhcr+xiLYllivD82fxsY7JB2M4AUQxUZIiXJn39C
-	 XoomtcLCbV7oXrPjAxJMFb6wOqqh7w9hRVNCohaS0tCxcK82/xldcE+VSxU9Eo+deP
-	 eNqlu5lTROzVQX119GQL22leEzJH9Ti9+Hl0hI8D6MtgTWwNavlnebdYcoU8vWfjXY
-	 QNCxsBYPmgudc3TRpwE1yO/ZPrtYqsaXXUfelAQMGeZM38G5/pky1YU9Dt29ZzBEWl
-	 kDOWWCFX9YgacjFozTfyb9MpPYM7RIgCiiyaiw89DGvaQzps1Sa8iIYzSmlQt0Pz+m
-	 tDi0unrV2A82g==
-Message-ID: <04ad30f5-05b4-4a79-b872-2312543ab032@kernel.org>
-Date: Mon, 10 Aug 2026 15:31:39 +0200
+	b=IJEk2tXas4zYVpGctmkH8Ihv11vMfwwwiwG21L0vVkjk7pfoQ/DB5KAy5XkjcYdSU
+	 Rck8z2zOTtddfE4pub76N4pGo92L7dJ1CM3x33b9faImFDQsLSIK0sCKX2N5KxcQV8
+	 Qsp89r7RKRtQwnnHNwKVBuNJlT+v97vOgVhs49ktQhFr/Fwg9AtmeNCTca+rbopImk
+	 S4EHYvZ0ewDjO3j+Kcpf5aZW185QdC6lw7D+3ZYGywct+6pnsYbjlXrL5ytelDqtx3
+	 DR4P7mbnm8FnkZnAl5vjzIUlbUN2k6niqXGh2JMmiDXJXGpxpQ4YUmJF6GubsHz2Iw
+	 KdshWqch+gi5Q==
+Message-ID: <34eb08ed-5f3b-4312-84d4-fe91aebf104e@kernel.org>
+Date: Mon, 10 Aug 2026 15:37:36 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -35,154 +35,100 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] platform/x86: asus-wmi: keep the lid-flip state
- when UNKNOWN is set
+Subject: Re: [PATCH v2 2/2] platform/x86: asus-wmi: accept either lid-flip
+ notify code
 To: Robin Everaars <robineveraars@pm.me>, ilpo.jarvinen@linux.intel.com
 Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20260805101502.235668-1-robineveraars@pm.me>
  <20260805141114.699959-1-robineveraars@pm.me>
- <20260805141114.699959-2-robineveraars@pm.me>
+ <20260805141114.699959-3-robineveraars@pm.me>
 From: Hans de Goede <hansg@kernel.org>
 Content-Language: en-US, nl
-In-Reply-To: <20260805141114.699959-2-robineveraars@pm.me>
+In-Reply-To: <20260805141114.699959-3-robineveraars@pm.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-Thank you for your patches!
+Hi Robin,
 
 On 5-Aug-26 4:11 PM, Robin Everaars wrote:
-> On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
-> alongside the state bit while the machine is folded. Measured on an ASUS
-> ProArt PX13 (HN7306EAC), ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000
-> open and 0x00010003 folded, that is presence | status | UNKNOWN.
+> asus-wmi pairs the devid it polls for the tablet switch with the single
+> notify code it listens for, and tablet_mode_sw only offers those fixed
+> pairings. Some convertibles read the hinge at one lid-flip devid but
+> notify with the other, which no value covers.
 > 
-> asus_wmi_get_devstate_simple() treats that bit as "the state is not known"
-> and fails the call with -ENODEV, so asus_wmi_tablet_mode_get_state()
-> discards a perfectly good state sitting in bit 0 and SW_TABLET_MODE never
-> moves.
+> The ASUS ProArt PX13 (HN7306EAC) is one. ASUS_WMI_DEVID_LID_FLIP is frozen
+> at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge, yet
+> folding notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG. So
+> tablet_mode_sw=2 pins the switch on and suspends the internal keyboard for
+> good, and tablet_mode_sw=3 reads the right devid but never hears the event.
 > 
-> Add asus_wmi_tablet_sw_get_state(), which gates on the presence bit only
-> and returns the status bit. Use it from the two tablet-switch paths. Every
-> other caller of asus_wmi_get_devstate_simple() is untouched, so the change
-> is confined to the tablet switch.
+> Accept either lid-flip code once a lid-flip switch is registered. Both are
+> the same "lid flip action" event and both already map to KEY_PROG2 in the
+> sparse keymap. Machines with a keyboard-dock switch notify with 0x75 and
+> are unaffected, and with no switch registered the event code is 0 and the
+> old equality test still runs.
 > 
-> Signed-off-by: Robin Everaars <robineveraars@pm.me>
+> Signed-off-by: Robin 
+> Everaars <robineveraars@pm.me>
+
+nitpick: Something went wrong with the S-o-b line here
+
 > ---
-> v2: use FIELD_GET() for both bits and add the linux/bitfield.h include,
->     per Denis Benato. Drops the !! on the return. No functional change.
-> 
->  drivers/p
-> latform/x86/asus-wmi.c | 33 +++++++++++++++++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/asus-wmi.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 8610663..dce4d07 100644
+> index dce4d07..8b63fb4 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -15,6 +15,7 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/backlight.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bits.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
-> @@ -706,12 +707,40 @@ static void asus_wmi_tablet_sw_report(struct asus_wmi *asus, bool value)
->  	input_sync(asus->inputdev);
+> @@ -820,6 +820,27 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
+>  		asus_wmi_tablet_sw_report(asus, result);
 >  }
 >  
 > +/*
-> + * Read the lid-flip state directly rather than through
-> + * asus_wmi_get_devstate_simple().
-> + *
-> + * On some convertibles the lid-flip devstate sets ASUS_WMI_DSTS_UNKNOWN_BIT
-> + * alongside the state bit while folded. Measured on an ASUS ProArt PX13
-> + * (HN7306EAC), devid ASUS_WMI_DEVID_LID_FLIP_ROG answers 0x00010000 open and
-> + * 0x00010003 folded, i.e. pre
-> sence | state | UNKNOWN. The generic helper reads
-> + * that bit as "the state is not known" and rejects the whole call with -ENODEV,
-> + * so asus_wmi_tablet_mode_get_state() discards a perfectly good state sitting in
-> + * bit 0 and the switch never moves. Only presence gates the value here, which is
-> + * safe because this path serves the tablet switch alone.
+> + * Some convertibles report the hinge at one lid-flip devid while their firmware
+> + * notifies with the other lid-flip code, a pairing no tablet_mode_sw value
+> + * covers. The ASUS ProArt PX13 (HN7306EAC) is one: ASUS_WMI_DEVID_LID_FLIP is
+> + * frozen at 1 in every pose while ASUS_WMI_DEVID_LID_FLIP_ROG tracks the hinge,
+> + * yet the fold notifies with NOTIFY_LID_FLIP rather than NOTIFY_LID_FLIP_ROG.
+> + * Accept either code once a lid-flip switch is registered; both are the same
+> + * "lid flip action" event 
+> and both already map to KEY_PROG2 in the sparse keymap.
 > + */
-> +static int asus_wmi_tablet_sw_get_state(struct asus_wmi *asus, u32 dev_id)
+> +static bool asus_wmi_is_tablet_switch_code(struct asus_wmi *asus, int code)
 > +{
-> +	u32 retval;
-> +	int err;
+> +	if (code == asus->tablet_switch_event_code)
+> +		return true;
 > +
-> +	err = asus_wmi_get_devstate(asus, dev_id, &retval);
-> +	if (err < 0)
-> +		return err;
+> +	if (asus->tablet_switch_event_code == NOTIFY_LID_FLIP ||
+> +	    asus->tablet_switch_event_code == NOTIFY_LID_FLIP_ROG)
+> +		return code == NOTIFY_LID_FLIP || code == NOTIFY_LID_FLIP_ROG;
 > +
-> +	if (!FIELD_GET(ASUS_WMI_DSTS_PRESENCE_BIT, retval))
-> +		return -ENODEV;
-> +
-> +	return FIELD_GET(ASUS_WMI_DSTS_STATUS_BIT, retval);
+> +	return false;
 > +}
-> +
+This seems rather complicated, instead if adding this function please dropall usage of tablet_switch_event_code and ...
 
-Looking at the existing asus_wmi_get_devstate_bits() code (which
-asus_wmi_get_devstate_simple() wraps), the special handling of
-ASUS_WMI_DSTS_UNKNOWN_BIT is gated behind mask == ASUS_WMI_DSTS_STATUS_BIT.
+> @@ -4675,7 +4696,7 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+>  		return;
+>  	}
+>  
+> -	if (code == asus->tablet_switch_event_code) {
+> +	if (asus_wmi_is_tablet_switch_code(asus, code)) {
+>  		asus_wmi_tablet_mode_get_state(asus);
+>  		return;
+>  	}
 
-And the only caller of asus_wmi_get_devstate_bits() with a mask of
-ASUS_WMI_DSTS_STATUS_BIT is asus_wmi_get_devstate_simple().
+Replace the code check if condition with:
 
-So IMHO rather then introducing a new function, the special handling of
-ASUS_WMI_DSTS_UNKNOWN_BIT should be removed from asus_wmi_get_devstate_bits()
-and then added to asus_wmi_get_devstate_simple() changing the latter to e.g. :
+        if (code == NOTIFY_KBD_DOCK_CHANGE ||
+            code == NOTIFY_LID_FLIP ||
+            code == NOTIFY_LID_FLIP_ROG) {
 
-static int asus_wmi_get_devstate_simple(struct asus_wmi *asus, u32 dev_id)
-{
-        int ret;
-
-        ret = asus_wmi_get_devstate_bits(asus, dev_id,
-                        ASUS_WMI_DSTS_STATUS_BIT | ASUS_WMI_DSTS_UNKNOWN_BIT);
-        if (ret < 0)
-                return ret;
-        if (ret & ASUS_WMI_DSTS_UNKNOWN_BIT)
-                return -ENODEV;
-
-        return ret;
-}
-
-and then the 2 asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id)
-calls can be replaced with:
-
-	result = asus_wmi_get_devstate_bits(asus, dev_id, ASUS_WMI_DSTS_STATUS_BIT);
-
-without needing to introduce a new special helper.
+and update the commit message to match.
 
 Regards,
 
 Hans
 
-
-
-
-
-
->  static void asus_wmi_tablet_sw_init(struct asus_wmi *asus, u32 dev_id, int event_code)
->  {
->  	struct device *dev = &asus->platform_device->dev;
->  	int result;
->  
-> -	result = asus_wmi_get_devstate_simple(asus, dev_id);
-> +	result = asus_wmi_tablet_sw_get_state(asus, dev_id);
->  	if (result >=
->  0) {
->  		input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
->  		asus_wmi_tablet_sw_report(asus, result);
-> @@ -786,7 +815,7 @@ static void asus_wmi_tablet_mode_get_state(struct asus_wmi *asus)
->  	if (!asus->tablet_switch_dev_id)
->  		return;
->  
-> -	result = asus_wmi_get_devstate_simple(asus, asus->tablet_switch_dev_id);
-> +	result = asus_wmi_tablet_sw_get_state(asus, asus->tablet_switch_dev_id);
->  	if (result >= 0)
->  		asus_wmi_tablet_sw_report(asus, result);
->  }
 
