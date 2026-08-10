@@ -1,176 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32566378D72;
-	Mon, 10 Aug 2026 08:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB60E3A75BD
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 08:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786349388; cv=none; b=LpayDgS32naTiuIJ6J0P4MxYFCaoELmtD/N3JFA3fR+oRABo/DG+ZRtfbahmF2QlRVaSKNWzMRmDOo8BxsHTtjF+gSRL4LP/f3xBABL7cAO9gDgu2+0VhIuotrF0Y2FNMUS1dwkyaYek9kQWe0PPEpZ8LPFBPVNCLc4gLZ3n9k8=
+	t=1786350929; cv=none; b=L+2n2VwD5dfpZWw5ukGPiWS3AK74lxyDcLadj1p37FiHjU/XUta0cq/+wFRpw/nqpohxkUgDPFABPFhwJMlkUCfPUp7HDdjHPSuGH4LjimeIf7CyCWa33i0heQkOVw5FJcYfkGmVeXecYuboLB4clA7zRIeOOoFWNU+lhOdz8lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786349388; c=relaxed/simple;
-	bh=Q8NvrpokNA6XgIOrlb8DDh5dALyyoPzXPVLiKjvTh9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swE7syMn/RvX8cD9mv0Hju53TYCHyw6V6kEFcRD1b7lJuC4q1/w/WOtW0SjlFtCcAask05eSwD5Y8YF/Ag5RoRRRjKRNt6tFBJWen2CoCtmyphYT4bQ6x8QclQq22AYsSPVFBys78x7+wxaZWZ56LzmdUQR3FCzgpKcgiXSx5Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khP8bs6Z; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1786350929; c=relaxed/simple;
+	bh=UHHCbcurusZy4Y523Q7T4669vLhobI+gpJ2has1/PiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ShW2QXLWV8vmPekuUjl/8GwBlYXTn4E5mAf9j1mPhcty+DJ8sNQIM3WbuxrbbynpRrTdRPHsuok8lzNWy1FNAWCkMF27gWPfl90hcPnVoeD6kdJLv0Z8w4JkzhFg5kJAHwc+7UkX4g9Ohnc7MOXrL3T2SHKGXYetF1+yw1yGu70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PBXDJ4wJ; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khP8bs6Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786349387; x=1817885387;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q8NvrpokNA6XgIOrlb8DDh5dALyyoPzXPVLiKjvTh9Y=;
-  b=khP8bs6Zhv17HPx5NwxqoCuOfZb/co3/MXwfg9XfUkU5g8tckPrk/4gh
-   3Qh8/KiKnvjDfT9YG16p31qmgZo5X8WECyzERQwC7Ly0RyiY6IMeUm/wk
-   s0Km5oUW+/tev+Tsv+maVTe2aSkyIBzEVQCh5vzABkhijOk/Mx0g+ft6t
-   XgKCzNNBNreHveEc+JSAdkHt8F2Xn+BYCkmVkoJbpRXDBGgYDuXYpe0Gb
-   7KpOSj7Pdo0vZVgkPNezBlSp9sjgomI5hdAIQsL/sPmxOa9h2sTzW2oyu
-   aVOlqM5Kn2qik3Be5V+BgTp9MKvcUY8k66EbHP/QdlyRHWwJf9NVtWUO2
-   w==;
-X-CSE-ConnectionGUID: GpiKEASjQAa2zTbBH26DDA==
-X-CSE-MsgGUID: N1jV5L0WTVODFor0XaytEA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86734669"
-X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="86734669"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 01:09:46 -0700
-X-CSE-ConnectionGUID: Q9/8zGjWS3Snb2klj7JbUA==
-X-CSE-MsgGUID: pVz5vU28ROG0w+hBCicRkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="261239082"
-Received: from conormcd-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.104])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 01:09:44 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A171B121197;
-	Mon, 10 Aug 2026 11:09:42 +0300 (EEST)
-Date: Mon, 10 Aug 2026 11:09:42 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Sahan Nissanka <adee.sahan@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
-	dan.scally@ideasonboard.com, hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com, mchehab@kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBXDJ4wJ"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-384930ca5e2so1674418a91.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 01:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786350927; x=1786955727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=qGBM92czm9YEwobDEuNTbqIYrxD+/Bct4RxHXWVwj0s=;
+        b=PBXDJ4wJXkQAPO7cw9JbV3jJUlHzZFVQM8XaxO3ffNNtWF4ndbpZoxVelRKRMV7p5X
+         Cm48Vaj17iqnngOzcGhqyudoupRWOKpQt9ir8qiN1xCSxTh/g4jOwHB/jA6WFXeWQrP5
+         cP3RIxhtnn1V6c+kzyuL3Nptq1AFjRweo9qUHtfp1f0AOK+vtcgjBuoLNb6FDoieK4s1
+         AuYvaKt30QE1rOtSOcvAM+VJCy4EMzpwGuh3PSs/jx9tDfNaLmp/WCEfLjRT18p5ImPL
+         syJe2mPohSwUqeKtrDU2N4uIzqkCs4XQOkyxpGPyKCjmGOHjFzo6fH1w/N5SEuX0FgM4
+         787g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786350927; x=1786955727;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=qGBM92czm9YEwobDEuNTbqIYrxD+/Bct4RxHXWVwj0s=;
+        b=gm2MNL3K1w7rjGbgSciB2u8LulkIKypGHCu+bf0D2mjiqzlbuNgtwhHCwtP6Gk6CGZ
+         PF8NEkjk90Y1cwazn8HZK9j+RfHUQyfOe1BL1M12q69hjeYLc7j4im5fwvIiaq2vVtRZ
+         zq5kGGS2+h8iOY7OjIw6p9QXR4uvrDlNqZRt0Vbkq3CHgC5hA2DYXHgGKT5iUmJQTOoW
+         plWDoycxywrTKaosyUf2qTHxoen499jxrlEg1T7K+6T+R8xMJ0TamxBU8ExaRCH/jraz
+         Ln5KaIO9zBa+V919NrQmO3uoX5REMQTulEeU/Og0CNCLEWzd50LbvWVKs3rilbXzTXE4
+         kkyg==
+X-Gm-Message-State: AOJu0YyQxBd4+tvqKH71TdxIqx0vCEoC4ev6Z/3XVyUjwP1O7I42MZ5z
+	ySWfCe4Xs4SQrHyVSItPyKvcrqXTwcdQX4DR4axGDBzoHtuk9oNjvd2XP0Njf7Ka4Qo=
+X-Gm-Gg: AR+sD125jm+SH3/nMGZlAjXbrOJS+7B24COZDbKC0VoXf4hBRzvb2w7YjRgCQmfcEC7
+	5i5bF9A5EZG+PGqYZc6+ZuedljR00EvZk7tLNKyExZgXB+YIEYazohNmJGVs7GeVZAqgak83K0X
+	w7gXHrHMRZAUaIehZjwYj+RaLmOL/xlFKC/eglLUYaDGok5BO3hkd0eCCaiCfeacxtVSTvUoVQW
+	YCkD7vczpgWqnAD2VilrWvMOLL8LetR09iggjsZbfJfGeRpJwR2oVberBr05+OC+y343MLW+ZHE
+	FuDasG91KSMudWWAUFV+oVFc8QpeQd1eyW3YPntHTjr8X9nQKMsKF7m5u3PElBb0zZEIj1bPtaT
+	ZHtk0jTJCpUT74UmXWtsSoKX328VQXdn2e4VWFN5c4lUsZCUopeP35V+gkFedkWQ6j/brgB6dAf
+	QqLad+ew2DGjrrm3GRb7Z5fICXfp37rlAJKu8iRgiisZXOLZtmeAkNdlnt6xfkBxm0bxnjgEkSZ
+	Q9gzQZLw7dtHsTc2qv+
+X-Received: by 2002:a17:90b:538f:b0:38f:9674:ef61 with SMTP id 98e67ed59e1d1-3903c584291mr41497369a91.13.1786350926920;
+        Mon, 10 Aug 2026 01:35:26 -0700 (PDT)
+Received: from sahan-i3-12100 (121-45-161-118.tpgi.com.au. [121.45.161.118])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-390b30d465csm6156520a91.2.2026.08.10.01.35.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2026 01:35:26 -0700 (PDT)
+From: Sahan Nissanka <adee.sahan@gmail.com>
+To: platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org
+Cc: Sahan Nissanka <adee.sahan@gmail.com>,
+	dan.scally@ideasonboard.com,
+	sakari.ailus@linux.intel.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mchehab@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
-Message-ID: <anmHRjxruBaYQRaC@kekkonen.localdomain>
-References: <20260809042540.15849-1-adee.sahan@gmail.com>
- <20260809042540.15849-3-adee.sahan@gmail.com>
+Subject: Re: [PATCH 1/3] platform/x86: int3472: Add TPS68470 board data for Dell 7320 Detachable
+Date: Mon, 10 Aug 2026 18:32:54 +1000
+Message-ID: <20260810083425.9797-1-adee.sahan@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260809042540.15849-2-adee.sahan@gmail.com>
+References: <20260809042540.15849-1-adee.sahan@gmail.com> <20260809042540.15849-2-adee.sahan@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260809042540.15849-3-adee.sahan@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Sahan,
+Please do not apply this patch. The GPIO mapping in it is wrong, and I would
+rather say so than have it land.
 
-Thank you for the patchset.
+Charles Drolet, who has the same machine, reported against my out-of-tree
+repository [1] that the front sensor probes with no pin assignment at all.
+That is why a wrong mapping is invisible here: the real reset line sits
+released by default, so the camera comes up either way. Two specifics.
 
-On Sun, Aug 09, 2026 at 02:25:18PM +1000, Sahan Nissanka wrote:
-> The front camera of the Dell Latitude 7320 Detachable is described in
-> ACPI as OVTI5678, and no driver has ever claimed that id. It reports
-> chip id 0x005675 at register 0x300a, which is what
-> ov5675_identify_module() expects, and it streams with this driver
-> unmodified:
-> 
->   ov5675 i2c-OVTI5678:00: chip id at 0x300a reads 0x005675
->     reg 0x300a = 0x00  reg 0x300b = 0x56  reg 0x300c = 0x75
-> 
-> The two other values this driver is sensitive to were read from the
-> machine's ACPI SSDB before the sensor was ever powered, and both agree:
-> L0NL = 2 data lanes (OV5675_DATA_LANES) and L0CK = 19200000 Hz
-> (OV5675_XVCLK_19_2). Native resolution matches at 2592x1944.
-> 
-> With this id added the sensor binds and streams: libcamera lists it and
-> capture runs at 2584x1944, 29.95 fps.
-> 
-> This part is not a plain Bayer sensor, however, and the format this
-> driver declares for it is inaccurate. It carries a 4x4 RGB-IR colour
-> filter array, one pixel in four being infrared:
-> 
->     G I G I
->     R G B G
->     G I G I
->     B G R G
+There is no powerdown pin. This part needs no hardware to confirm - ov5675.c
+requests only "reset", via devm_gpiod_get_optional(dev, "reset", ...), and no
+"powerdown" con_id exists anywhere in that driver. So
 
-Most non-Bayer colour raw sensors can be programmed to produce Bayer
-output. It'd be interesting to know what are the differences in register
-writes compared to the Windows driver -- it might use that feature.
+	GPIO_LOOKUP("tps68470-gpio", 4, "powerdown", GPIO_ACTIVE_LOW),
 
-> 
-> Confirmed three ways. Intel's Windows IPU6 configuration for this exact
-> module - matched by ACPI _DDN, so not a near relative - declares
-> bayer_order="GIGI_RGBG_GIGI_BGRG" and sensor_type="RGB_IR". Measured on
-> the sensor at full resolution, positions a 2x2 model treats as a single
-> channel differ by 18% while the four infrared positions agree to 0.4%.
-> And the module's Intel tuning data carries a 4x4 channel index map that
-> agrees with both.
-> 
-> Read as the SGRBG10 declared here, the "blue" channel is pure infrared
-> and the "red" channel interleaves real red with real blue, so colour is
-> wrong in a way no white balance can correct.
-> 
-> This cannot be fixed in this driver: there is no RGB-IR media bus code
-> in the V4L2 ABI. Nor is it unique to this part - ox05b1s declares
-> SGRBG10 for an RGB-IR sensor of the same class and resolution. I intend
-> to propose RGB-IR media bus codes separately. Until such support
-> exists, this patch makes otherwise unusable hardware work, carrying the
-> same known inaccuracy as the existing RGB-IR sensor support.
-> 
-> One further note for anyone building on this: the sensor's binned
-> 1296x972 mode averages infrared pixels together with colour ones, which
-> destroys the mosaic. Only the full resolution mode is meaningful for an
-> RGB-IR aware pipeline.
+is never looked up. It is dead code, and my belief that the pin was needed was
+unfounded.
 
-The metadata series I've been preparing adds common raw formats and moves
-the CFA pattern to a control. Then we can add the non-Bayer patters to the
-UAPI as well. This isn't in upstream yet though. See
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=metadata>.
+The reset is on tps68470-gpio 5, not 3. Charles held the line with gpioset
+against a build with no pin assignment, so nothing else had claimed it, and
+reloaded the module: held low the sensor fails to identify with -EIO, released
+it identifies correctly. That is consistent with an active-low reset on line
+5. I have not reproduced this myself yet.
 
-Most of the commit message would seem to be better located in the cover
-letter.
+I should also correct how I arrived at 3 and 4. I took them from the Dell 7212
+and 5290 board data as prior art, and treated "the camera works" as
+confirmation. It is not. It confirms the sensor runs; it says nothing about
+whether the mapping describes this board.
 
-> 
-> Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
-> ---
->  drivers/media/i2c/ov5675.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov5675.c b/drivers/media/i2c/ov5675.c
-> index ea26df3..99dbf53 100644
-> --- a/drivers/media/i2c/ov5675.c
-> +++ b/drivers/media/i2c/ov5675.c
-> @@ -1355,6 +1355,17 @@ static const struct dev_pm_ops ov5675_pm_ops = {
->  #ifdef CONFIG_ACPI
->  static const struct acpi_device_id ov5675_acpi_ids[] = {
->  	{"OVTI5675"},
-> +	/*
-> +	 * The front sensor of the Dell Latitude 7320 Detachable is described
-> +	 * as OVTI5678 in ACPI, but the part reports chip id 0x005675 and its
-> +	 * SSDB agrees with this driver on both other values that matter:
-> +	 * 2 CSI-2 data lanes and a 19.2 MHz external clock.
-> +	 *
-> +	 * Note this variant carries a 4x4 RGB-IR colour filter array, not the
-> +	 * 2x2 Bayer declared here, so colour is incorrect. There is currently
-> +	 * no RGB-IR media bus code to declare instead.
-> +	 */
+The rail mapping may need revisiting too. Charles has avdd on AUX1 at 2.8 V
+where this patch has it on VSIO at 1.8 V, and the part wants roughly 2.8 V
+analogue. Both configurations work, which suggests these rails may serve as
+enables for regulators further down the line rather than as the supplies
+themselves. I would rather resolve that than guess again.
 
-Given the similarities, adding ov5678 support to this driver would probably
-make sense, but the output really should be Bayer or we need to wait for
-the metadata series to be merged.
+The machine this work was done on was a loan and has gone back. A second 7320
+Detachable arrives in the next few days, and I will verify the mapping on it
+before sending a v2 - including checking whether the board data generalises
+across units or merely described the one I had.
 
-> +	{"OVTI5678"},
->  	{}
->  };
->  
+Patches 2/3 and 3/3 are not affected by any of this. Charles independently
+arrived at the same ipu-bridge entry and the same ACPI id addition.
 
--- 
-Kind regards,
+My thanks to Charles for finding this and for testing it properly.
 
-Sakari Ailus
+[1] https://github.com/githomeserver/latitude-7320-camera/issues/1
+
+--
+Sahan Nissanka
