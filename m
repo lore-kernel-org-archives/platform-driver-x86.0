@@ -1,63 +1,65 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D2D3264F7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 05:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B7537F75D
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 05:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786339604; cv=none; b=JuLiUiSVzhwfqGoe4i3zqNt6YaE7ZuP5CeiRlx9IU+DZTQL3kkIBCzvbbu9Y4EuLGGQJY9Gl0tcPPjvQSrDYD3oPakgSc86uMzivUNjQV2vIAJA+jmfGBPOAyLTGlUvKCAcLb3AfRoj1ThmiGkUcXp3G4pK//fhd7LnYNjrZA6g=
+	t=1786339610; cv=none; b=uvQfESeh+J6oMznxwEK/g7GKFpU5yCVINMelI4v+3uXfZGwpxMSFX3WgJ6IL7dpXE5Go8nYicD+Bqxq3nLsrPFCHpaPLUhebNdOtqZKELwJwt0d8h7uo0wKhExoavTX+ZiYagro7Qo4NGM0FOg33uvmUYTkqU+9ZNUpTf8W+XjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786339604; c=relaxed/simple;
-	bh=sb/5C3sQ44xLLJaHxCHYqy3w0prK+2wi+L6nnye0dXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mybcmRLfO9RvHtNktAgybeMHgtHKpubVWsdnUvjdjOqu2yoWVTQxNqwSBUb8OmSL9d4Is+9+oTUlwYmCHEzRicJUU3IsyWX/tWboNQ3sDRspYYQP8T76C0w58b+ZvxpWhXEx+UmzyKBenqzkMJN8LAN3jsEGkiKpNEuBViQorps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrUZg8Es; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1786339610; c=relaxed/simple;
+	bh=1OfKgQbTMms8n5dYEYf/DXGJSmrmavWK4rq2w1ycwNg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EUMEyW5dzSMSbdJWwuzQNthiiXM2QkXdNwYQRuBjoPtAfhpZAJTEcVpjH3Q2SYq3ZVHFHuh9KZZkJMIWsP9gfkhro0ZvzAbhFK8ZTzFNONEUdmgWyIeF77sFX4dmMmwKAzO5kNsB7pbWoIHMtNVTYIvsV7CjSxoS9ptB3lXUq8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOujgiqA; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrUZg8Es"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cc73e322dbso14337265ad.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 22:26:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOujgiqA"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2d049069377so11627755ad.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 22:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786339602; x=1786944402; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=y6fagPyciHPGzfnoYK1pK78SLe2gJ1ofvXB3ksxfUjo=;
-        b=JrUZg8Es72S+fQlp0ZmTTXgLQfJCIPMhQYqEWTdcuGNBZxhH09V/HhqFH7VAmonh9i
-         Al85yTP4CNhvcvB8N81htvWTfuvYF4Jz69yMzPZ0phIPIqoD8yxO58jHjiO54svuFQEH
-         9MCWmHKKq3Ivs29xAyQFEdl2mnpvmr2WlrVqjWJHMs1C1aTIqWzFFOvxwmQiGMqn+WFn
-         LBSi4DVc70DwU/kL+VxSHqtbPkhzPMbS6/SaAacp29V41jtcugxeUxwR9mkGyzYbBUS8
-         Xb88B+rGTDECs4lOckWZIOehc1urQ8mMFrCjXa8700ThzRusS7+3rxn1TkyCq8IYDdkd
-         /Lmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786339602; x=1786944402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1786339608; x=1786944408; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=y6fagPyciHPGzfnoYK1pK78SLe2gJ1ofvXB3ksxfUjo=;
-        b=LkEOb9KwnfHalE3HUK5aVEQffnNhwP32XHPpz8hFykygZs0eAEYT1HoVtPwO9eeQLf
-         MAaXtOdactQt9OIysuKq+ZLlBKKZ5/bgMCQlx/B20GP+tFWpNNiCFx4pSwuoW9UjVArK
-         4plxYPMGDiFhe5P3r7PjVC0uDBWlWJ7xKwJwa8lxRy4hrUK2YqXwW4h+VmULfhlBva7M
-         mtNLblfoafq4M1Vodv106i4tjaslKdGSWCA+50LwnERB6JY/KsCSL1SY3kn/BAq9oK6G
-         IOjgXWzR6jGTc0cebiRG6Vqe7Wr3k+Qde5dG07R7KoE93MgzRNMg6lL+cJx+iZwuQAk+
-         gsRw==
-X-Forwarded-Encrypted: i=1; AHgh+RrEmJbs2RHOgibU5oMN5V80G2w59sTCYWGHxlKMUCojeg/kSKrjas8lO3EpYba5i+OBtqf5VcZrhz/3t2+532yuopjr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxT/ClatXFOfhjkuSZTW0InoljsqxvNgPDm4eAbmwJLnWfdlx5
-	wDDkpJmo6E2oBerS1WEFvRpC+0C2Ug814jxoOH/ae/87deq8FBIGKSTp
-X-Gm-Gg: AR+sD13UzcF4Dxevj/b8QdDTthPrfnhMA/Bk/oEqdK+zBehn7rWmPPn7L1GOVKvDA+z
-	md/BKRqxfA33GSzlpC3OVDPe9qsLVTHVnHJh4z/Ro79BH9vDQFdBtaocNgrpBDls05TAvc/weA+
-	Urj9EOLiDm8cPNcKnk6B/C9KdoO3a/x5Ro7+QzKIYCUAnC+Nfmj0tpKQ46p7wFxxD6lwLkZrU0o
-	xqT7F9QelWKIMiVrPt6X1hk6YXOdEsPYbAdjpnO2+AfU+9GJZ3zagbh74qnCG9F//eG8xLn5HUK
-	h/006JqpqtBuuh7RabiVUectXa3LRwyvBoMOdI3FYhQweLqoN23zgkaJ7R8NUyLkiloudmpTFyk
-	uzBXpFT/osPnH6prEA8N79s2gt7H/JKCpBNIxI9FIedr1NiCyVVFPCUNvILJbNs470u6E8vZ8lQ
-	JSrOg2BDjww62MT8C9tsRGPERT0yaoMY6odC+lZJsppHXdiCqkfqRZriAW5WYxij0Jfjp7sWFEI
-	UwfK7GENCJVYqN3rNAKgvxgUeQwxnrlRoIjtDRrForgd2LJSuErN4096CmG1RdURQMGvgWhe2cU
-	vPvk
-X-Received: by 2002:a17:903:2447:b0:2c9:d539:61e7 with SMTP id d9443c01a7336-2d0ca962f17mr416268455ad.19.1786339602351;
-        Sun, 09 Aug 2026 22:26:42 -0700 (PDT)
+        bh=x/8UpHFVXIXFBzrWjWV03c7PuH/XZDR/ITp80Qbxq5I=;
+        b=WOujgiqAhQC+Leux4Q28wHSaHNGneERCLjdtstCV/dGvhDhAe9o2bbGjUUNgxHAtt3
+         5Exsw5ZekEW5Cmafjfm8aL0rAoK6gLLNGqIORUJsvsn3VW5hHc7jAiqbDM6eSambn0vj
+         HC2H1x1ABss/p7UnPh7/3VgXrObhtJc2zAgLjB2LzXGmtvGKtQDL7/wlKPOTwWLKf2+9
+         fUMlFxIx7GiE5S/Scu8ikUNn8Qm6MI5RwdSdzB1vgaF3qTZi65agsNRIukKk5h26dcov
+         sWQBkI7ZSu4TXRVsvUlh949Bb6lCbPSo1vHfG0UPU+JgO9SzielfgPirlngoG85bhEyj
+         U2hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786339608; x=1786944408;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=x/8UpHFVXIXFBzrWjWV03c7PuH/XZDR/ITp80Qbxq5I=;
+        b=gsT/NI2eF2zK1PGIrZcTkfV965R3klh8HQzZ/B8kFmI5nCReB2JxPcEHAQNamYQ/dk
+         22m6bilYtlvQie2JmGQvRYKMUHVy0VEhNclbpX1CKFC8ouuF5+fwnOa4UT+QI9/Y5tY6
+         /+Dr+4keOAWNqE8n04HXXbFjV9k2+WEYHaJF8h7Ze6LwwM3WH23ISlia5cjTVqZDGD+a
+         BIM3bd7XpgrVFfqeZftGnx1LyqB0tLPAreIG1bwsCK2b7eZwSZ3CxB/59m4ztJtITJNf
+         euQQxIJlVIpuSYa6azVN8MAJCC9BBts+nhDSCZFEQqqPkwQJwqxAF6CtCEmnU9QVUYES
+         zUaw==
+X-Forwarded-Encrypted: i=1; AHgh+Rosgv2H2aO4hMITH79UCHa2SjsbI5ktGCqWZmbLewYj1GBYRRWhQewG16ajQzX2FejAG4kPFgYuwYdv21RN3F9zMBNv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5F4/6Sv8HpGXuTvBhPfWF11Pbl0lqEU1HKmX3DZOWTTlNl7Fx
+	Rf7JqdmitQ4QDHYHz0JoG/4i94qkX/vtPvXcUOQhZrP2OEfD2Q+OOzxn
+X-Gm-Gg: AR+sD10dJuIf5FV8jmLXgyhApAQUDrsYHAyGzrePK0XVmME0EpNtNizhe5ggqRvTslm
+	TK2wJzT5LHVQiAqe78NPCwOdBz1XYLfBDpQw1uLD7R6Fd9f9unznZ1h349LOIiydfp+sPOm5ELh
+	20kmFGzhisVx3T1kWnLHZPrFFZVXp3siLnqHhkSR72i/O6spBQsu7ZPF8Yta2/RIDgL2G613/0r
+	jXUwqo1hou/jRDZEVfYljTPEs7v+eqUXbLDwYom58CrkA8CoFbBC+4JPLCTxIcIspJAMerBRfgm
+	O7kv/8TJXPIlhKwOkHvMpha5jwVvWIwAeEyTJvirEFZLjB0po+x75JIqo1wA4FAqQhxvG40s2BI
+	obB+lqyJ++ofYw6Cb2MbscW56RlsgRJsulgWDGVM1iQl6VRy5NtL5BDOuG0DmKXO4n4VZv907+y
+	1ygD+hM6ckenm0sN47Mjt6ZNhGN8s8D/xIalr/OYdnALc277AyvYwkS9XRaSErtdQUj5EWKe21v
+	JQF19Jd0E0XV1EMC1bgubvMe6631kZEkpxmOfpSh9owdGksZaUaCVdAAqRxMLxOqxLPTPKvvSSY
+	jLX8
+X-Received: by 2002:a17:903:1a83:b0:2cc:307c:51fc with SMTP id d9443c01a7336-2d106e81d72mr302441485ad.21.1786339608582;
+        Sun, 09 Aug 2026 22:26:48 -0700 (PDT)
 Received: from phuc-desktop.. ([183.91.15.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d16c50cfc1sm29350025ad.82.2026.08.09.22.26.39
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d16c50cfc1sm29350025ad.82.2026.08.09.22.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2026 22:26:42 -0700 (PDT)
+        Sun, 09 Aug 2026 22:26:48 -0700 (PDT)
 From: phucduc.bui@gmail.com
 To: Eric Piel <eric.piel@tremplin-utc.net>,
 	Hans de Goede <hansg@kernel.org>,
@@ -68,10 +70,12 @@ Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	bui duc phuc <phucduc.bui@gmail.com>
-Subject: [PATCH 1/3] platform/x86: hp: hp_accel: Propagate errors from optional IRQ lookup
-Date: Mon, 10 Aug 2026 12:26:23 +0700
-Message-ID: <20260810052625.27614-1-phucduc.bui@gmail.com>
+Subject: [PATCH 2/3] platform/x86: intel: punit_ipc: Propagate errors from optional IRQ lookup
+Date: Mon, 10 Aug 2026 12:26:24 +0700
+Message-ID: <20260810052625.27614-2-phucduc.bui@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260810052625.27614-1-phucduc.bui@gmail.com>
+References: <20260810052625.27614-1-phucduc.bui@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -84,29 +88,32 @@ From: bui duc phuc <phucduc.bui@gmail.com>
 
 platform_get_irq_optional() returns a positive IRQ number on success or
 a negative error code on failure. For an optional IRQ, -ENXIO indicates
-that no optional IRQ is available, while other errors should be propagated.
+that no optional IRQ is available and the driver can fall back to polling
+mode. Other errors should be propagated so that the caller can handle
+them appropriately.
 
-Propagate all error codes returned by platform_get_irq_optional() other
-than -ENXIO.
+Treat -ENXIO as the only case where the driver falls back to polling
+mode, and propagate all other errors returned by
+platform_get_irq_optional().
 
 Signed-off-by: bui duc phuc <phucduc.bui@gmail.com>
 ---
- drivers/platform/x86/hp/hp_accel.c | 2 ++
+ drivers/platform/x86/intel/punit_ipc.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp_accel.c b/drivers/platform/x86/hp/hp_accel.c
-index 39b73dc473f1..8f6b03196540 100644
---- a/drivers/platform/x86/hp/hp_accel.c
-+++ b/drivers/platform/x86/hp/hp_accel.c
-@@ -309,6 +309,8 @@ static int lis3lv02d_probe(struct platform_device *device)
+diff --git a/drivers/platform/x86/intel/punit_ipc.c b/drivers/platform/x86/intel/punit_ipc.c
+index 6d770b950dfb..590b145fd5ca 100644
+--- a/drivers/platform/x86/intel/punit_ipc.c
++++ b/drivers/platform/x86/intel/punit_ipc.c
+@@ -245,6 +245,8 @@ static int intel_punit_ipc_probe(struct platform_device *pdev)
  
- 	/* obtain IRQ number of our device from ACPI */
- 	ret = platform_get_irq_optional(device, 0);
-+	if (ret < 0 && ret != -ENXIO)
-+		return ret;
- 	if (ret > 0)
- 		lis3_dev.irq = ret;
- 
+ 	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq < 0) {
++		if (irq != -ENXIO)
++			return irq;
+ 		dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
+ 	} else {
+ 		ret = devm_request_irq(&pdev->dev, irq, intel_punit_ioc,
 -- 
 2.43.0
 
