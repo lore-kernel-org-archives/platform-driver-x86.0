@@ -1,119 +1,176 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4AD37F738
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 07:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786345532; cv=pass; b=piRB+mdhWJh45IPUidOqowYnKbxuuWiwG0evYUNPNOziFq8s8umyOmENMgjYyJWgOc4cs9MA+Xu2eJiTSd5ruQvLTCIDk8U1jYPfHFEb6Cg7EVegx02U57a5h+yWZxYIvEnFhBMj7Rgk45eY+4VBCdjVMNPIBV+bFXIp/wQ57Lw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786345532; c=relaxed/simple;
-	bh=/aqDLbb7WCHA8JBVj7RUW1KrCp1VlqkwbhMlYSu6exY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G+ACFMFnjS16YOYJhageGVBBEpQ5mhxvTCUZ9QxTYVctnaQ93auZGOUn6f8woX5sQWyOVRxu+GsSg8yrTtlsdqwZyhcRuZNku39vhI6jJ6W488RN9CT2gKWJyOutTnkhiLODs6NwGCQHaLT2VDq0plQxWxAmzJuIRcykjh40F4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hj4mG3kM; arc=pass smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32566378D72;
+	Mon, 10 Aug 2026 08:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786349388; cv=none; b=LpayDgS32naTiuIJ6J0P4MxYFCaoELmtD/N3JFA3fR+oRABo/DG+ZRtfbahmF2QlRVaSKNWzMRmDOo8BxsHTtjF+gSRL4LP/f3xBABL7cAO9gDgu2+0VhIuotrF0Y2FNMUS1dwkyaYek9kQWe0PPEpZ8LPFBPVNCLc4gLZ3n9k8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786349388; c=relaxed/simple;
+	bh=Q8NvrpokNA6XgIOrlb8DDh5dALyyoPzXPVLiKjvTh9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=swE7syMn/RvX8cD9mv0Hju53TYCHyw6V6kEFcRD1b7lJuC4q1/w/WOtW0SjlFtCcAask05eSwD5Y8YF/Ag5RoRRRjKRNt6tFBJWen2CoCtmyphYT4bQ6x8QclQq22AYsSPVFBys78x7+wxaZWZ56LzmdUQR3FCzgpKcgiXSx5Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=khP8bs6Z; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hj4mG3kM"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39f20d19895so10292871fa.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 00:05:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786345529; cv=none;
-        d=google.com; s=arc-20260327;
-        b=qenpUSDS1R7iCXKSXD6tNFwUqGyXGkYBB/V45qX6dhinaZDS7cZZcKHLccbyGqCtah
-         BoWbT3DvxCs50n8/8lfh0er28XNzRUx8MUo5wO15whxH3DaI6JCfEJHXza8mdY++lSwm
-         4OhnP8gdHDR9lAgupj+JiFp+pujD1FmS5PuM+dpT9RUbBeHmoJxNINkWfAlekpY+sIw5
-         ttp5ZkIYMuymsRtwGaS9xTWWjjfnwJpJq3rtMvpcG+4v6mZxGP5+mEfi1ltrk0ttBomi
-         Ssg/F6FU0gzrRqzcaq5GoJJWISzKIQ0EZNPYnLYyWEuWcNOvjXVzS7rz6Wn2IYsFU6DQ
-         49Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=/aqDLbb7WCHA8JBVj7RUW1KrCp1VlqkwbhMlYSu6exY=;
-        fh=+yPStEhjzH+2VvFCQz84D20LNnHiOr9bTRW8pGxzUrc=;
-        b=GY3i6/e8HkVSIkInZv3x5iI8F+7pjz03RcBD2z+pvl8DoFHKXOM1eyCp2p8GRmpM+Y
-         tLNN2C2zLq1RGkjc8PbT7YVxdMjfq1bVAs7w3R6Jo/MhMYsdinOYIDgR09JGMDP/Lpgn
-         jtQlpk49+tLUMHkSGcgjzNW1MRDfve0cUaffkZka3hInCouei8HV1ReEQJRxODaX8n2P
-         FTGz4Cfa0GhFHzESZyqqCfLajynUTc+RzXCfdsr+XfWwtb9FJePW0xd+wYCMGKKIIdgb
-         M5q3D2zqqsfhYxy9XzAIDFTtOxvO8VmiufpvVUkYVGpkOz5DOAmZ3bOmyTUq0qtqjptr
-         76HQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786345529; x=1786950329; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/aqDLbb7WCHA8JBVj7RUW1KrCp1VlqkwbhMlYSu6exY=;
-        b=Hj4mG3kMnN31HcwOVq6qe+DqGbRrLIdeYPF3RJiiwOmNiwsutID9ywFlURqIQHz7zk
-         QHm1tYQxOsn91i1vArX9jO4LUPyCcy/+xu5HVsWZjAGMgnqKszpjxszFt/rYgWWPEWBa
-         XiJ2vUJ7qLlia54KmMgT3qqqeKoaI3oWusugYJ/VZV1II4rky01m4JUpelJor4zUmseY
-         tPN5VszazHXaIAhGt60TD1Lm40dUfmYnWGnYBbcJUZnJWGm+mu8ZBKDEXCZwwlukppc7
-         0JXzawKhqKq05dTY3zJF+1AwpO/3qdGIJXfWWq/jqNHIlaUL65APSx2gU1MtjyIXZvEr
-         jjeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786345529; x=1786950329;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/aqDLbb7WCHA8JBVj7RUW1KrCp1VlqkwbhMlYSu6exY=;
-        b=M7jfQOZ/ML3Zh1xpORgUKjWC6cg34RmksILv8G0VV9MA5wsxuBMiOTUzoDjhD/S+xS
-         nqjP2WIZrgSh/9l/6odq6yYekWOyitbdOLcx8fo/z+nU/ULk0Bq4KeqtM1nd8UOLNGux
-         sw0W4lQaCQUUvHNYxnax/gHH9IQx1QM+Ug9DclytdfxBPzEHbaTZbi4kymv37vqfF9me
-         +CWQWmQpLRPhqT2zuAz1AYpdC1z49jTlv8aflvDtNKRxdPlLxbydtcrMLfZeqN4V4JiB
-         EbucnyKhA72JYUoAbLqt9aA4X2YlwymyLwBnNUXIgQu0mRGs6HZSeBK1qr8WwnjaZwZG
-         coSw==
-X-Forwarded-Encrypted: i=1; AHgh+RrcKHl87Jg8Hi8YnRC3NAJ0d1AJgcwHJ4phBpNc0Yqlq7c3f3zEDpuaT2rFuoE/P38lIOvlGziSBGmsFs9Wq+fAbTPZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeBCBvOmmdV3PKv+MK78Ua1lZGyV9vp5oz2tJz7vH3c6Gyj7fQ
-	OyfApNxuOiCnrnMAASWrNKkUj12Q0FxGBj1m3MgtuTnCgJt1Ov3lsY2sEu7j22UXqYGLALj9Kc5
-	XRKOPreFGyPrhVxhyg6PHprFMDsnnQnM=
-X-Gm-Gg: AR+sD13ZNOVCkE3NTCvypG2oGPj16m59wWzevA8q8TAGocDivBTdeBfMvmyIRzbMiSW
-	m+AKykMaeFAOAYhSxzstbhuCqxaCKmcp/nruxQYbF02ET6HLlRZnPwoVS4qqaKZHQwnfviqVnL/
-	z9azpOPqltyB67BJe2PnSCqhdN0/yYtUkLaeT30PdEJkTtFQvLKkRedqHLjLtqbOXnA2sXXkFdR
-	5GNHq1qBYdGdrItWV10tscsMYpA0Ib1SM5mHf7YbVyXkCMdPAcZIShOAT5XJjM6QyEv8Kq59rXW
-	ytvXO+3bPv144c3UIznCCq1Md36z8njTOulmckm3ztWU20+e9v1j9icT3nlXZVvxoThypFBm14W
-	rTnWqXM2zOfNgRqKUeiRlfGrmet8WiuBOEvvdbYazyxtKamyVA1cCpDm/LZOuGFAa9NO/h/Fq75
-	tfpZmmWUiF2oJEac6vR+KIhli9NdWRYtDciiZ9fGX+5Q==
-X-Received: by 2002:a05:651c:a388:10b0:39b:1a03:bcb0 with SMTP id
- 38308e7fff4ca-39fbb1e30c3mr39938941fa.10.1786345528875; Mon, 10 Aug 2026
- 00:05:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="khP8bs6Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786349387; x=1817885387;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q8NvrpokNA6XgIOrlb8DDh5dALyyoPzXPVLiKjvTh9Y=;
+  b=khP8bs6Zhv17HPx5NwxqoCuOfZb/co3/MXwfg9XfUkU5g8tckPrk/4gh
+   3Qh8/KiKnvjDfT9YG16p31qmgZo5X8WECyzERQwC7Ly0RyiY6IMeUm/wk
+   s0Km5oUW+/tev+Tsv+maVTe2aSkyIBzEVQCh5vzABkhijOk/Mx0g+ft6t
+   XgKCzNNBNreHveEc+JSAdkHt8F2Xn+BYCkmVkoJbpRXDBGgYDuXYpe0Gb
+   7KpOSj7Pdo0vZVgkPNezBlSp9sjgomI5hdAIQsL/sPmxOa9h2sTzW2oyu
+   aVOlqM5Kn2qik3Be5V+BgTp9MKvcUY8k66EbHP/QdlyRHWwJf9NVtWUO2
+   w==;
+X-CSE-ConnectionGUID: GpiKEASjQAa2zTbBH26DDA==
+X-CSE-MsgGUID: N1jV5L0WTVODFor0XaytEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86734669"
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="86734669"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 01:09:46 -0700
+X-CSE-ConnectionGUID: Q9/8zGjWS3Snb2klj7JbUA==
+X-CSE-MsgGUID: pVz5vU28ROG0w+hBCicRkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="261239082"
+Received: from conormcd-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.104])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 01:09:44 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id A171B121197;
+	Mon, 10 Aug 2026 11:09:42 +0300 (EEST)
+Date: Mon, 10 Aug 2026 11:09:42 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Sahan Nissanka <adee.sahan@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
+	dan.scally@ideasonboard.com, hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com, mchehab@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
+Message-ID: <anmHRjxruBaYQRaC@kekkonen.localdomain>
+References: <20260809042540.15849-1-adee.sahan@gmail.com>
+ <20260809042540.15849-3-adee.sahan@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260810052625.27614-1-phucduc.bui@gmail.com> <20260810052625.27614-3-phucduc.bui@gmail.com>
-In-Reply-To: <20260810052625.27614-3-phucduc.bui@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 10 Aug 2026 10:04:52 +0300
-X-Gm-Features: AUfX_mx2Fihnb3SOjLgD27lN_XXIET8YTZWwqJ2CakRjhp5Yp_VfwgGndbeYV98
-Message-ID: <CAHp75Vd+cAOp28btmTzNXMejues5XHdy_BtZvnskshpLkr8=kw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] platform/x86: intel_scu_ipc: Handle errors from
- optional IRQ lookup
-To: phucduc.bui@gmail.com
-Cc: Eric Piel <eric.piel@tremplin-utc.net>, Hans de Goede <hansg@kernel.org>, 
-	ilpo.jarvinen@linux.intel.com, Zha Qipeng <qipeng.zha@intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260809042540.15849-3-adee.sahan@gmail.com>
 
-On Mon, Aug 10, 2026 at 8:26=E2=80=AFAM <phucduc.bui@gmail.com> wrote:
+Hi Sahan,
 
-> platform_get_irq_optional() can return errors such as -EPROBE_DEFER,
-> but the driver currently stores the return value directly in
-> scu_data.irq and continues probing.
->
-> Propagate negative errors other than -ENXIO using dev_err_probe(), and
-> only assign the IRQ to scu_data.irq when a valid IRQ number is
-> returned.
+Thank you for the patchset.
 
-You haven't read the code, have you?
-Check the implementation of __intel_scu_ipc_register() in
-drivers/platform/x86/intel_scu_ipc.c and act accordingly.
+On Sun, Aug 09, 2026 at 02:25:18PM +1000, Sahan Nissanka wrote:
+> The front camera of the Dell Latitude 7320 Detachable is described in
+> ACPI as OVTI5678, and no driver has ever claimed that id. It reports
+> chip id 0x005675 at register 0x300a, which is what
+> ov5675_identify_module() expects, and it streams with this driver
+> unmodified:
+> 
+>   ov5675 i2c-OVTI5678:00: chip id at 0x300a reads 0x005675
+>     reg 0x300a = 0x00  reg 0x300b = 0x56  reg 0x300c = 0x75
+> 
+> The two other values this driver is sensitive to were read from the
+> machine's ACPI SSDB before the sensor was ever powered, and both agree:
+> L0NL = 2 data lanes (OV5675_DATA_LANES) and L0CK = 19200000 Hz
+> (OV5675_XVCLK_19_2). Native resolution matches at 2592x1944.
+> 
+> With this id added the sensor binds and streams: libcamera lists it and
+> capture runs at 2584x1944, 29.95 fps.
+> 
+> This part is not a plain Bayer sensor, however, and the format this
+> driver declares for it is inaccurate. It carries a 4x4 RGB-IR colour
+> filter array, one pixel in four being infrared:
+> 
+>     G I G I
+>     R G B G
+>     G I G I
+>     B G R G
 
---=20
-With Best Regards,
-Andy Shevchenko
+Most non-Bayer colour raw sensors can be programmed to produce Bayer
+output. It'd be interesting to know what are the differences in register
+writes compared to the Windows driver -- it might use that feature.
+
+> 
+> Confirmed three ways. Intel's Windows IPU6 configuration for this exact
+> module - matched by ACPI _DDN, so not a near relative - declares
+> bayer_order="GIGI_RGBG_GIGI_BGRG" and sensor_type="RGB_IR". Measured on
+> the sensor at full resolution, positions a 2x2 model treats as a single
+> channel differ by 18% while the four infrared positions agree to 0.4%.
+> And the module's Intel tuning data carries a 4x4 channel index map that
+> agrees with both.
+> 
+> Read as the SGRBG10 declared here, the "blue" channel is pure infrared
+> and the "red" channel interleaves real red with real blue, so colour is
+> wrong in a way no white balance can correct.
+> 
+> This cannot be fixed in this driver: there is no RGB-IR media bus code
+> in the V4L2 ABI. Nor is it unique to this part - ox05b1s declares
+> SGRBG10 for an RGB-IR sensor of the same class and resolution. I intend
+> to propose RGB-IR media bus codes separately. Until such support
+> exists, this patch makes otherwise unusable hardware work, carrying the
+> same known inaccuracy as the existing RGB-IR sensor support.
+> 
+> One further note for anyone building on this: the sensor's binned
+> 1296x972 mode averages infrared pixels together with colour ones, which
+> destroys the mosaic. Only the full resolution mode is meaningful for an
+> RGB-IR aware pipeline.
+
+The metadata series I've been preparing adds common raw formats and moves
+the CFA pattern to a control. Then we can add the non-Bayer patters to the
+UAPI as well. This isn't in upstream yet though. See
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=metadata>.
+
+Most of the commit message would seem to be better located in the cover
+letter.
+
+> 
+> Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
+> ---
+>  drivers/media/i2c/ov5675.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/ov5675.c b/drivers/media/i2c/ov5675.c
+> index ea26df3..99dbf53 100644
+> --- a/drivers/media/i2c/ov5675.c
+> +++ b/drivers/media/i2c/ov5675.c
+> @@ -1355,6 +1355,17 @@ static const struct dev_pm_ops ov5675_pm_ops = {
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id ov5675_acpi_ids[] = {
+>  	{"OVTI5675"},
+> +	/*
+> +	 * The front sensor of the Dell Latitude 7320 Detachable is described
+> +	 * as OVTI5678 in ACPI, but the part reports chip id 0x005675 and its
+> +	 * SSDB agrees with this driver on both other values that matter:
+> +	 * 2 CSI-2 data lanes and a 19.2 MHz external clock.
+> +	 *
+> +	 * Note this variant carries a 4x4 RGB-IR colour filter array, not the
+> +	 * 2x2 Bayer declared here, so colour is incorrect. There is currently
+> +	 * no RGB-IR media bus code to declare instead.
+> +	 */
+
+Given the similarities, adding ov5678 support to this driver would probably
+make sense, but the output really should be Bayer or we need to wait for
+the metadata series to be merged.
+
+> +	{"OVTI5678"},
+>  	{}
+>  };
+>  
+
+-- 
+Kind regards,
+
+Sakari Ailus
