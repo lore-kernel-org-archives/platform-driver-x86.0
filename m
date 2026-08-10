@@ -1,49 +1,49 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A68298CAF;
-	Mon, 10 Aug 2026 04:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFCF326923;
+	Mon, 10 Aug 2026 04:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786337287; cv=none; b=FRAeUIrmKK6NwIB5tiuVpbnEr45nIHg3YaxrKw5crfEHNkzi4e0N+yCLiJeYmbaxqf+n7OBeQnSsaboe7NXDVw4QoQuKSIkX3OcsGYzQXM7ZKQ/opdCPILTP/1DI6zfCs6dewx149C273vcZeu/uGhF3ZRGeaRlZ0wdOaMjF6s8=
+	t=1786337288; cv=none; b=kh2ov6ZfeELLb82VDY3kfqsLDelKN9DfyuB9gtJPAqBV9EVJEU22GN3kNBgXhBlf3i9le6wJCs7vxgx6o7CJP6MVxtRLC/mxOtTcYw0JEOtWPqBp0DThxKF42KjkEvFnt//J1s/O++GcbOIfoD3dNzRltdiUVZJYPNHzxgwvqq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786337287; c=relaxed/simple;
-	bh=MiRpZXCGApthpwPkYsYLOqbvBjVdnFDJ9uJQblpDmjI=;
+	s=arc-20240116; t=1786337288; c=relaxed/simple;
+	bh=gjCZL/T0kGx96Lca4zmlRmD3GHhBHV4JGFqA7AdH9X4=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=M606wzW8PipXVG8J17j9JhbYHZfRiCeO8pmAHvDVLRVxntP1iLFukmPKEX1XJ/ZQK0DhV7/vm79brjF4lwFr5m73+s9jn0uNdeivK7AFxFF9CNeMUTzEsUVRU5QyJRCTWX2k33DCFt8Rp5jlkDa3WcrfdcSq11FL+caJDuE+PGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rsplwe.com; spf=pass smtp.mailfrom=rsplwe.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=xlR793XI; arc=none smtp.client-ip=203.205.221.240
+	 MIME-Version; b=CAV5ngroCFVtLoqjKESFaOiMhtA2aIyGhqfB4esUfEIAxDjI9yZAPB1f0YhojPwD3oXd2B7RG2imWJZuY/xlmUnA1LY+Z+CySwW7Fae+Gvy5SjruRVwzB9yVkgkpG8MsFc5aXlwtgTQQB8OCRKy04FmlDX5AknVS+OHmCM90Z7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rsplwe.com; spf=pass smtp.mailfrom=rsplwe.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=KD2CChdJ; arc=none smtp.client-ip=203.205.221.231
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rsplwe.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsplwe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="xlR793XI"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KD2CChdJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1786337276; bh=scHnisOyhhoYBPtx+5w2McGf58gzByIYl3moSBbPVgE=;
+	t=1786337278; bh=2PRA67SL4xV5BXdxAreMVQBkR45aqucAZFTDeNjbVkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=xlR793XICEeWpnBlGnl5VRDJ2iTZZWiBUMOrqmpVFw/iJtA4SH0F8LX1J/rrFCeB+
-	 M+XVhCIPtyBqjAf9cGMMa25ieuc7K40+Axkv0h1BaHiWKuRhNJzF3eRTN9dULnhst3
-	 X0Cn5cwyXsmPfwyvfU2WfFgRrZifLokiTJY72Zag=
+	b=KD2CChdJmAdYDvwOmRrWvwS7WN5JgIbjJXwxMROPUKt0KyCtS1zDGcc7V4+JstwVT
+	 ToXmSiSLoAH/Q4gy6uInE6IXWKpurhaH5e5vxKqobDIPAYswmPGm7UXtV/RLaKmBs2
+	 17QVHs3dQN9clpfhLzPk+xTtYfT8Y6U9J4pPptNw=
 Received: from kasumi-star ([14.218.70.170])
 	by newxmesmtplogicsvrsza73-0.qq.com (NewEsmtp) with SMTP
 	id BF4AB415; Mon, 10 Aug 2026 12:47:52 +0800
-X-QQ-mid: xmsmtpt1786337275t3ehavbzb
-Message-ID: <tencent_42266144C374B11E85F7BE04B492B9BD3308@qq.com>
-X-QQ-XMAILINFO: NhKbcYr69dwuMqGsLuMQ8n9wmkT+7YPZn4oY+2KCYcyRVUSywR0SVuSbkIRP4F
-	 sKvDipX2aSVKYtLvjUTTn6pTMDxmNIXRWAtllRGmV+1o0aOIRL91bfkuvX94MgO5DR0oCy0LPN/B
-	 R9p7jclYx8etz7qDt5ileE+C1o5WIMZgnybJsgk2C9mR3vKCa750BA+/61qEV1E0bHIGiXv2mxUy
-	 5HQXTpJ/fiAJMsLC2xVkk/zqWCSb4jqoAGthAQiHFh5s7WQgSb4M1hr3QloGAP0euP45PZrrGpiw
-	 9/jinv8/iCWalowJROEFGWA569Wkp2AVqIOmzlIHOOSeoGd8Of5iA/9+tRLyNwmpnpdciwIOjiIF
-	 cNVC0Zq0WQ5mFbymYeQwMUCIaeldisnohZmzdAuzXIudZEXvFVGWauNOYRVv3eAfFUo9l57fEapb
-	 uZrUQXARLIJub9yNPMrl/+hjCTv1iJ2nMJtlOcCp9Oh3DoQ5o9izwhzpC9hdJrA3UI+9VibTj39t
-	 U73UMKjbsHc+q7vXywIxqUquGWChx4eipJLAVlDt+NYXqgwntkBRzmIb9+AHGPz4qkIWgrv8bD3f
-	 5/MT4HeIC8bmt7rhz7/1cAzcCsCytf63aDNqDcZmgxfbrKJ5j55faVkjagsZe2vGV581DhsnxQGs
-	 /g436xCMw+Qv8BNrx3GSNUkrgXfsL4fUWEkyj/h9DDI5m16UkiX0g2Dp9njSynsB7nWmM7tA0A/Y
-	 /3J0vn/7WabQDRLDieLAsvtxy78OIPU+voZqiafneV+prLE2Ad82YXj06Uq4gKvAXatnz/k3vUpu
-	 guzQlbiZii4COOnVr0w+BN8A8LwQizCI2ziQHPBvHOY1Zr9SZ5Wjk7dROOxagl5hL+t6+oB8aqYZ
-	 3qaMkNIESZzrSEa1P4atemC9hXBMqPi1yKYyYXgjy2b31Py9zjBCOtzbr1tYiNdLjpa92WNlE+6I
-	 Gm9qFsfpZz8qn/n6mZb25bJkdETTYke2xUTQ3OlRIoB9Ed5movEpQWnO3lpbaFpNUW542CRnpld4
-	 hlRzmsLAGXF2+3p9hfKVyQmWM+MA1UFHxnfKrhPUuDJuTvK4L/FnEBehOzhhl8i8Ayzh9WrMsTxv
-	 pePccKho/w+vOWDop9gm93/cDdKfKnUg9YjFRh
-X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-mid: xmsmtpt1786337276t99k7z7uj
+Message-ID: <tencent_83AC7CB82056A710CF379116369765662205@qq.com>
+X-QQ-XMAILINFO: OATpkVjS499u8J+XX4DqcRatoDvFsmMYKPU5FfL580Mf6sa4lA2Cns8J7/wRNU
+	 k7dzFRxtf8NW9F6lBgEbGDSx3eiiAp1DlBntY7mYJvxeFK+I+tAbboZr/bTEhNrP1jK93BBcZPSN
+	 8PB0a8GxG7lwZ5lrvkcrC9L8N5nlzaBFZUAaVQCvhq29Kyt9sQ0Q/5bvpzBrAwDhfHlZV5/jhlNU
+	 zAZKtqV2Skz9p+w4kZLsa3h2UZBSG1+s7Nh9JrrD8ITlVN30bXoMrZTnwh18TUFSflo2Jpa+E4xp
+	 /21rP4rW6ixXc37HU+GHKv9GPcoXdZ7KvSMOqmHdcdxrMhhOJYv4vi2Cy5Q0L+3hR1bsU3o4kDkg
+	 ZfuL5lpIbsaDfqd2pkNToh1OAIMYTh9BeHNUzIOLyw009tcGqpitTewivWWacsfDHZY8suJNjPCy
+	 m6upe+CiLDyo6sbdN3ngKAQwdnmSxhUIP77K3XUBgFEImyra3RznDaB9SZLQMJVNwr+pM4SR+cv5
+	 gl7nqhqPvWquBBsvg2P+62CflAKzrApLZuUsXMrZMeZskSpITmNW1ckoMdfM1NOFwiKYt1OR75BD
+	 1tkUvKuYGiQlCvY5NvZv/CJdE9B3mMqfsmQGCf19BoivjbGJYARRQmDvJVEaO/Q3lyoe9l9qLwwh
+	 o5tgvSBIKIZ75tZDVFfim+b1DXhUxZnmDKvDmAbv19tBYCl/8Y+ItD1BCqitfbyEGm0fjPh4hULX
+	 jesSCN3YVL3ayyqUGyImCx6axiGzJ4bqWbZ0mPJ2YmpKCBFpaMgB2jWnPhpGmyDZ1g/1vZ9epjzI
+	 VsTWHUysGmJSymomQVHwE8dNcvcXmVeT8lvHh+XPCIgUrdXrAepBTJ0lruFaXyKJNxgZ9WPcW6kc
+	 vAq4ceXCuYgE4oyvZD7tHwZ5m4z2Vy2gFe/ztiWGgS8oipJr/3aiz3dx/XiZh+MStJ6jXiD8Eh6c
+	 052GqhPzx7SkxdUENC8KSSN3mN065UWyQRL9wV08tUygKLmbpXapVzolVU6g1EFyKQzfNsKzhmZR
+	 zUVQn6M+vnz59RvrdYK+9dgeQmiElJEEJBsiPXIQWPZhpHVLcZj8Whwmvb7H4zFYLRV3e8KAWbnG
+	 VoE//qe19s19ccBIt6iOLq/rF0gBt6pAy89hcS1QM42DAL0I9U27aqubMIbaWTK8j0LbpA
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
 From: Rsplwe <i@rsplwe.com>
 To: ilpo.jarvinen@linux.intel.com
 Cc: hansg@kernel.org,
@@ -52,9 +52,9 @@ Cc: hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Rsplwe <i@rsplwe.com>
-Subject: [PATCH 2/2] platform/x86: bitland-mifs-wmi: Add quirk support for MECHREVO MRID6
-Date: Mon, 10 Aug 2026 12:47:48 +0800
-X-OQ-MSGID: <20260810044751.43045-3-i@rsplwe.com>
+Subject: [PATCH 1/2] platform/x86: bitland-mifs-wmi: Add sysfs controls for device status
+Date: Mon, 10 Aug 2026 12:47:50 +0800
+X-OQ-MSGID: <20260810044751.43045-5-i@rsplwe.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260810044751.43045-1-i@rsplwe.com>
 References: <20260810044751.43045-1-i@rsplwe.com>
@@ -66,163 +66,269 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DMI-based quirks for MECHREVO MRID6 laptops.
+Add sysfs interfaces for controlling device status: Ambient Light, Fn Key Lock, TouchPad Lock.
 
-The MRID6 firmware does not implement the WMI_PP_FULL_SPEED profile
-and its WMI_FN_SYSTEM_AC_TYPE method always returns 0, making the AC
-adapter type check unreliable.
-
-Use machine-specific quirks to:
-- map WMI_PP_PERFORMANCE as the highest performance profile
-- skip the AC type validation for performance modes
-- hide unsupported balanced-performance/full-speed distinctions
-
-This allows platform profile switching to work correctly on affected
-systems.
+Add missing ambient light command/event definitions and updated documentation.
 
 Signed-off-by: Rsplwe <i@rsplwe.com>
 ---
- drivers/platform/x86/bitland-mifs-wmi.c | 62 +++++++++++++++++++++++--
- 1 file changed, 57 insertions(+), 5 deletions(-)
+ .../wmi/devices/bitland-mifs-wmi.rst          |   4 +
+ drivers/platform/x86/bitland-mifs-wmi.c       | 166 +++++++++++++++++-
+ 2 files changed, 168 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentation/wmi/devices/bitland-mifs-wmi.rst
+index 9e86ecc2993c..57c5e6e18132 100644
+--- a/Documentation/wmi/devices/bitland-mifs-wmi.rst
++++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
+@@ -109,6 +109,8 @@ The following Command IDs are used in the third byte of the buffer:
+ |          |                       | Bytes 6-7: GPU Fan RPM (Little Endian)   |
+ |          |                       | Bytes 10-11: SYS Fan RPM (Little Endian) |
+ +----------+-----------------------+------------------------------------------+
++| 15       | Ambient Light         | 0: Off, 1: On                            |
+++----------+-----------------------+------------------------------------------+
+ | 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,        |
+ |          |                       | 3: Custom                                |
+ +----------+-----------------------+------------------------------------------+
+@@ -168,6 +170,8 @@ Note: reserved event ids are not listed there
+ +----------+------------------------------------------------------------------+
+ | 9        | CapsLock state change                                            |
+ +----------+------------------------------------------------------------------+
++| 10       | Ambient Light state change                                       |
+++----------+------------------------------------------------------------------+
+ | 13       | NumLock state change                                             |
+ +----------+------------------------------------------------------------------+
+ | 14       | ScrollLock state change                                          |
 diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index e2652d1a1bf7..5dff4f4d923b 100644
+index 3a373184519d..e2652d1a1bf7 100644
 --- a/drivers/platform/x86/bitland-mifs-wmi.c
 +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -14,6 +14,7 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/device/devres.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/init.h>
-@@ -153,6 +154,11 @@ struct bitland_fan_notify_data {
- 	u16 speed;
+@@ -50,6 +50,7 @@ enum bitland_mifs_function {
+ 	WMI_FN_FN_LOCK			= 11,
+ 	WMI_FN_TP_LOCK			= 12,
+ 	WMI_FN_FAN_SPEEDS		= 13,
++	WMI_FN_AMBIENT_LIGHT		= 15,
+ 	WMI_FN_RGB_KB_MODE		= 16,
+ 	WMI_FN_RGB_KB_COLOR		= 17,
+ 	WMI_FN_RGB_KB_BRIGHTNESS	= 18,
+@@ -83,6 +84,7 @@ enum bitland_mifs_event_id {
+ 	WMI_EVENT_FNLOCK_STATE		= 7,
+ 	WMI_EVENT_KBD_MODE		= 8,
+ 	WMI_EVENT_CAPSLOCK_STATE	= 9,
++	WMI_EVENT_AMBIENTLIGHT_STATE	= 10,
+ 	WMI_EVENT_CALCULATOR_START	= 11,
+ 	WMI_EVENT_BROWSER_START		= 12,
+ 	WMI_EVENT_NUMLOCK_STATE		= 13,
+@@ -143,6 +145,7 @@ enum bitland_notifier_actions {
+ 	BITLAND_NOTIFY_KBD_BRIGHTNESS,
+ 	BITLAND_NOTIFY_PLATFORM_PROFILE,
+ 	BITLAND_NOTIFY_HWMON,
++	BITLAND_NOTIFY_SYSFS_STATE,
  };
  
-+struct bitland_mifs_quirk {
-+	bool no_full_speed;
-+	bool skip_ac_type;	/* EC always returns 0 for AC type */
-+};
-+
- struct bitland_mifs_wmi_data {
- 	struct wmi_device *wdev;
- 	struct mutex lock;		/* Protects WMI calls */
-@@ -162,6 +168,28 @@ struct bitland_mifs_wmi_data {
- 	struct device *hwmon_dev;
- 	struct device *pp_dev;
- 	enum platform_profile_option saved_profile;
-+	struct bitland_mifs_quirk *quirk;
-+};
-+
-+static struct bitland_mifs_quirk bitland_quirk_mrid6 = {
-+	.no_full_speed = true,
-+	.skip_ac_type = true,
-+};
-+
-+static const struct dmi_system_id bitland_quirks[] = {
-+	{
-+		/*
-+		 * MECHREVO MRID6: does not implement WMI_PP_FULL_SPEED,
-+		 * its top profile is WMI_PP_PERFORMANCE; WMI_FN_SYSTEM_AC_TYPE
-+		 * always returns 0, so the adapter type check is meaningless.
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "MECHREVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "MRID6"),
-+		},
-+		.driver_data = (void *)&bitland_quirk_mrid6,
-+	},
-+	{}
- };
- 
- static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-@@ -209,7 +237,10 @@ static int laptop_profile_get(struct device *dev,
- 		*profile = PLATFORM_PROFILE_BALANCED;
- 		break;
- 	case WMI_PP_PERFORMANCE:
--		*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-+		if (data->quirk && data->quirk->no_full_speed)
-+			*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		else
-+			*profile = PLATFORM_PROFILE_BALANCED_PERFORMANCE;
- 		break;
- 	case WMI_PP_QUIET:
- 		*profile = PLATFORM_PROFILE_LOW_POWER;
-@@ -236,6 +267,10 @@ static int bitland_check_performance_capability(struct bitland_mifs_wmi_data *da
- 	if (!power_supply_is_system_supplied())
- 		return -EOPNOTSUPP;
- 
-+	/* Some ECs never report a meaningful AC type (always 0), skip it */
-+	if (data->quirk && data->quirk->skip_ac_type)
-+		return 0;
-+
- 	ret = bitland_mifs_wmi_call(data, &input, &output);
- 	if (ret)
- 		return ret;
-@@ -267,6 +302,8 @@ static int laptop_profile_set(struct device *dev,
- 		val = WMI_PP_BALANCED;
- 		break;
- 	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-+		if (data->quirk && data->quirk->no_full_speed)
-+			return -EOPNOTSUPP;
- 		ret = bitland_check_performance_capability(data);
- 		if (ret)
- 			return ret;
-@@ -276,7 +313,10 @@ static int laptop_profile_set(struct device *dev,
- 		ret = bitland_check_performance_capability(data);
- 		if (ret)
- 			return ret;
--		val = WMI_PP_FULL_SPEED;
-+		if (data->quirk && data->quirk->no_full_speed)
-+			val = WMI_PP_PERFORMANCE;
-+		else
-+			val = WMI_PP_FULL_SPEED;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -289,11 +329,17 @@ static int laptop_profile_set(struct device *dev,
- 
- static int platform_profile_probe(void *drvdata, unsigned long *choices)
- {
-+	struct bitland_mifs_wmi_data *data = drvdata;
-+
- 	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
--	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
--	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
--
-+	if (data->quirk && data->quirk->no_full_speed) {
-+		/* No separate balanced-performance tier; performance is the top mode */
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	} else {
-+		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+		set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+	}
- 	return 0;
+ struct bitland_fan_notify_data {
+@@ -568,6 +571,139 @@ static ssize_t kb_mode_store(struct device *dev, struct device_attribute *attr,
+ 	return count;
  }
  
-@@ -815,6 +861,7 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 		.default_label = ":" LED_FUNCTION_KBD_BACKLIGHT,
- 		.devname_mandatory = true,
- 	};
-+	const struct dmi_system_id *match;
- 	int ret;
- 
- 	drv_data = devm_kzalloc(&wdev->dev, sizeof(*drv_data), GFP_KERNEL);
-@@ -829,6 +876,11 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 
- 	dev_set_drvdata(&wdev->dev, drv_data);
- 
-+	/* Apply machine-specific quirks */
-+	match = dmi_first_match(bitland_quirks);
-+	if (match && match->driver_data)
-+		drv_data->quirk = match->driver_data;
++static int bitland_state_get(struct bitland_mifs_wmi_data *data, u8 function)
++{
++	struct bitland_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_GET,
++		.reserved2 = 0,
++	};
++	struct bitland_mifs_output res;
++	int ret;
 +
- 	if (dev_type == BITLAND_WMI_EVENT) {
- 		/* Register input device for hotkeys */
- 		drv_data->input_dev = devm_input_allocate_device(&wdev->dev);
++	input.function = function;
++
++	ret = bitland_mifs_wmi_call(data, &input, &res);
++	if (ret)
++		return ret;
++
++	return res.data[0];
++}
++
++/* Switch states: 0:OFF, 1:ON */
++static ssize_t ambient_light_show(struct device *dev, struct device_attribute *attr,
++				  char *buf)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	int state;
++
++	state = bitland_state_get(data, WMI_FN_AMBIENT_LIGHT);
++	if (state < 0)
++		return state;
++
++	return sysfs_emit(buf, "%d\n", state);
++}
++
++static ssize_t ambient_light_store(struct device *dev, struct device_attribute *attr,
++				   const char *buf, size_t count)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct bitland_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_AMBIENT_LIGHT,
++	};
++	bool val;
++	int ret;
++
++	if (kstrtobool(buf, &val))
++		return -EINVAL;
++
++	input.payload[0] = val;
++
++	ret = bitland_mifs_wmi_call(data, &input, NULL);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static ssize_t fn_lock_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	int state;
++
++	state = bitland_state_get(data, WMI_FN_FN_LOCK);
++	if (state < 0)
++		return state;
++
++	return sysfs_emit(buf, "%d\n", state);
++}
++
++static ssize_t fn_lock_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct bitland_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_FN_LOCK,
++	};
++	bool val;
++	int ret;
++
++	if (kstrtobool(buf, &val))
++		return -EINVAL;
++
++	input.payload[0] = val;
++
++	ret = bitland_mifs_wmi_call(data, &input, NULL);
++	if (ret)
++		return ret;
++
++	return count;
++}
++
++static ssize_t tp_lock_show(struct device *dev, struct device_attribute *attr,
++			    char *buf)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	int state;
++
++	state = bitland_state_get(data, WMI_FN_TP_LOCK);
++	if (state < 0)
++		return state;
++
++	return sysfs_emit(buf, "%d\n", state);
++}
++
++static ssize_t tp_lock_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	struct bitland_mifs_input input = {
++		.reserved1 = 0,
++		.operation = WMI_METHOD_SET,
++		.reserved2 = 0,
++		.function = WMI_FN_TP_LOCK,
++	};
++	bool val;
++	int ret;
++
++	if (kstrtobool(buf, &val))
++		return -EINVAL;
++
++	input.payload[0] = val;
++
++	ret = bitland_mifs_wmi_call(data, &input, NULL);
++	if (ret)
++		return ret;
++	return count;
++}
++
+ /* Fan Boost: 0:Normal, 1:Max Speed */
+ static ssize_t fan_boost_store(struct device *dev,
+ 			       struct device_attribute *attr, const char *buf,
+@@ -599,11 +735,17 @@ static ssize_t fan_boost_store(struct device *dev,
+ static const DEVICE_ATTR_RW(gpu_mode);
+ static const DEVICE_ATTR_RW(kb_mode);
+ static const DEVICE_ATTR_WO(fan_boost);
++static const DEVICE_ATTR_RW(ambient_light);
++static const DEVICE_ATTR_RW(fn_lock);
++static const DEVICE_ATTR_RW(tp_lock);
+ 
+ static const struct attribute *const laptop_attrs[] = {
+ 	&dev_attr_gpu_mode.attr,
+ 	&dev_attr_kb_mode.attr,
+ 	&dev_attr_fan_boost.attr,
++	&dev_attr_ambient_light.attr,
++	&dev_attr_fn_lock.attr,
++	&dev_attr_tp_lock.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(laptop);
+@@ -653,6 +795,11 @@ static int bitland_notifier_callback(struct notifier_block *nb,
+ 		hwmon_notify_event(data_ctx->hwmon_dev, hwmon_fan,
+ 				   hwmon_fan_input, fan_info->channel);
+ 		break;
++	case BITLAND_NOTIFY_SYSFS_STATE:
++		const char *attr = data;
++
++		sysfs_notify(&data_ctx->wdev->dev.kobj, NULL, attr);
++		break;
+ 	}
+ 
+ 	return NOTIFY_OK;
+@@ -798,8 +945,6 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+ 		break;
+ 
+ 	case WMI_EVENT_AIRPLANE_MODE:
+-	case WMI_EVENT_TOUCHPAD_STATE:
+-	case WMI_EVENT_FNLOCK_STATE:
+ 	case WMI_EVENT_KBD_MODE:
+ 	case WMI_EVENT_CAPSLOCK_STATE:
+ 	case WMI_EVENT_NUMLOCK_STATE:
+@@ -810,6 +955,23 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
+ 		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
+ 			event->event_id, event->value_low);
+ 		break;
++	case WMI_EVENT_AMBIENTLIGHT_STATE:
++		blocking_notifier_call_chain(&bitland_notifier_list,
++					     BITLAND_NOTIFY_SYSFS_STATE,
++					     "ambient_light");
++		break;
++
++	case WMI_EVENT_TOUCHPAD_STATE:
++		blocking_notifier_call_chain(&bitland_notifier_list,
++					     BITLAND_NOTIFY_SYSFS_STATE,
++					     "tp_lock");
++		break;
++
++	case WMI_EVENT_FNLOCK_STATE:
++		blocking_notifier_call_chain(&bitland_notifier_list,
++					     BITLAND_NOTIFY_SYSFS_STATE,
++					     "fn_lock");
++		break;
+ 
+ 	default:
+ 		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
 -- 
 2.55.0
 
