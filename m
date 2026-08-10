@@ -1,104 +1,104 @@
-Received: from mail-pj2-f3.google.com (mail-pj2-f3.google.com [74.125.227.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04791276038
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 03:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178D41E9B1A;
+	Mon, 10 Aug 2026 04:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786332368; cv=none; b=OZWQwL3XFxcACwzhMJ80iUO0Ex9pi4JTq2jPUfnk+hSmACL7ln9G4+zWFOQFiijCLBbx7COaRJ0wGKcIqWw2yIX1CrIX5E2E0JK4eJ2/9LzNfBOA4bGOzyYMKFwkBJrCah6NbzWZ12HJhFe/ANBcfb/hbZ21d0ntMWKglBxcDQc=
+	t=1786335840; cv=none; b=UrjP0znG9jmMnEPFfv1SDUY0d4C26J+6OIpBgaIz3uVrZko3aP3iTbUrrxeR5RPLAHqsjp3Fxr4R2xU4NA87zbjAsmm/7fczzq8iH/NyQZvoL0eclVtd9FeGx33NAbMS/vxFpWaxQjY3iNnvk/32PShd4FxTF0UfJMiiiyO1obk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786332368; c=relaxed/simple;
-	bh=GK1SbB55IuQ87Y7Df/a+D9qlkQLTQbT9Otqq3Bdp8+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WYm05c46F+dW9PbbznpsE62ARjhiF/ZTMX1K+rmjNWEfT9kxYJneLz/KNmfV1ZQh0UaYoJKgkt6g7+Yu4+A/CaNthFpm+ee4Y88XwQJzpYtN721xH11CevRBghYdPQZRJJcG7fHPgKUOtg4Ojo4Ss5YAX75gcTly7Ly6tGEbehY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.227.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj2-f3.google.com with SMTP id d9443c01a7336-2ccb0e85312so8980625ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786332366; x=1786937166;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OLazUXwrZhpv/i2Hotn6S5qSVCMwZ3ZrEakPX3ozuD4=;
-        b=XuaM7qdviuYCI05wbE9wg/rvZFRy1TbREVDEW01jzYiAazbkOAHzeepB2tH9O2cD70
-         Mgq+LPhgHBi9t3la4ICrCS4t9s9znO9tg4jFIFFn8G7efZY6AZmyYKGwmbGvTO1M8K9b
-         fu0qyAYFBN5K3pZCo2a7seNjbtoT4OCZEZIj3bm/nHN+zjBxBmpDgrJLDmuh2opKHuoi
-         XDyozPSEaperBblG+81nScipuxs8vVHWOSiKHor5K04+LyYs8V2vpWWdEA/CA5u6RQWZ
-         UBOXKOEpKXKYklMvzMO0ZuDENgLUhvNjlDwRT0QvT9eHlHNDJzODiPFBLtBwVmUA7QSh
-         P8LQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpycjWoQVjIuRFEJLvVtJuPXFn02HYjiyEnrYahqnh2wu7JUzLDvRVjQpp+YCcdlPQ2IxSW9/0Cw79YVgo0fXMgnqon@vger.kernel.org
-X-Gm-Message-State: AOJu0YyENMRoGQQX+AeVRcHuAk24FKKRltKqW7+JeEoaHS7FH+O/7zGx
-	5/f/rQr1pRRAuznTGeQSdvW2qLG4RH3a30rSZQRBojmLJxITkThkosw9
-X-Gm-Gg: AR+sD11iLGAmx/N4RlpLm5sN4z/PEtO6bcKA9NbQg4ClfUP9NdnVphceuuloM8Mfpb9
-	8bL079Pw6pR+TzQhR7WeWwjB6Kpqt3pOJcPrbIzM6VeW2BhrP05wsBNzI7x9fH5rvnKzJ35dg1G
-	el1ehXoBWf1896/Rywt6t4CAEYZIkfTWiPhOvJrZ0Adx+dFdsZDg1ZcauHXg8m1m68bM89Ou775
-	7nFkGRXGQbJY5+c6VSjWw5ndPNyhyWtkOCXw19KMAEPAUXhnhyqNl91GQXn5si5Qt0ecljiDePd
-	ITy35IgUbOTdY5bKypUOSw3/xTfI1zqlBNq1A0YUB2uHbePaidyM48vXhsIcnAe7jHOMNh9mdfR
-	cSKWUyyWu/78vkcnNXN9tqriQVgVTbvIB1hcgcL2Y6WPF3xIhxWAuWWAFJYJUJbjs5OH9NmQTEu
-	dmwOmwc7KBxzk1gV3VLYhiWPRK4ckv3h52PGresRiKSe1tzn1f9A8vOTb3RTJWrD4vgmqPw7EIj
-	MuEJpxP9aF7xBn7FL/g
-X-Received: by 2002:a05:6a21:99a3:b0:3b4:7b3d:179b with SMTP id adf61e73a8af0-3cbce751791mr18017086637.12.1786332366349;
-        Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
-Received: from kylin-XiaoXinPro-16-AHP9.. ([116.128.244.171])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe8f371f4fsm3102981a12.24.2026.08.09.20.26.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
-From: Xueqin Luo <luoxueqin@kylinos.cn>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: pratap.nirujogi@amd.com,
-	mario.limonciello@amd.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xueqin Luo <luoxueqin@kylinos.cn>
-Subject: [PATCH] platform/x86: Fix NULL deref in amd_isp_probe
-Date: Mon, 10 Aug 2026 11:24:50 +0800
-Message-ID: <20260810032450.692844-1-luoxueqin@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1786335840; c=relaxed/simple;
+	bh=ZcVqvT+Y6eFRnYyRCFWzLo91a4PH7hvw4v2r0+IFFzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iG/5FFcPpu6p29a8RCQ+VRvkTUY9xuGTs1aeuW8yV9g5eOXc6/Foryp7rt29hbB1qrDq/J+p3W+V6z8QRLwXIiXizuqxMCbecB3S3oCTvEYqtb4mWm35oZOx+SsvtUKv8UT5fJQWMEqLuEbhpCWaqVke6+XbW4h3NWCAlU04sE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrftN1Pw; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrftN1Pw"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id B95921F000E9;
+	Mon, 10 Aug 2026 04:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786335838;
+	bh=uFGiMJzadKk4WX1sGbrXcX9F5jSOD0EWYJ8Z2mfpKII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=CrftN1Pw5PPEzt8ofFRGrvoIUPrn3m58F4gAMhw6PyZ6K8lS9mih2UHvQ7UgfJM+u
+	 id1TdxQitIoh2/bcsUaPHyuxkeWr9VYr588ad7U/ATEwj3XLS8uREaoytUHrK9m1sf
+	 lTkmydeKQnI32vp737oTsvYBdkYtjiPyD13ilRa4Vp90zFvZNWXXugj2QwDs0n0K/N
+	 I4Mi1e5dhslGK0mG7e1+4QUtOtcGsWLao3JeWExAsjjV+/pXgiZckXMhu+YXy6vxB9
+	 g150QZEK0Kc8W2DYqS55/aWXZQV2Y3DbazYvpj2lSTyl0vvSZLBl0cL+WI0HHGYiPe
+	 two04nd7qCD8A==
+Date: Mon, 10 Aug 2026 06:23:55 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Eliav Farber <farbere@amazon.com>
+Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, 
+	guohanjun@huawei.com, mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
+	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, orsonzhai@gmail.com, 
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, jic23@kernel.org, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, dmitry.torokhov@gmail.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, fabio.m.de.francesco@linux.intel.com, 
+	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
+	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 10/13] platform/x86: uniwill-wmi: use
+ devm_blocking_notifier_chain_register()
+Message-ID: <anlSAqWxS7boyJBT@monoceros>
+References: <20260726101739.33170-1-farbere@amazon.com>
+ <20260726101739.33170-11-farbere@amazon.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mu7hbbg5juva7cmc"
+Content-Disposition: inline
+In-Reply-To: <20260726101739.33170-11-farbere@amazon.com>
 
-amd_isp_probe() uses ACPI_COMPANION() without NULL check. Add it to
-prevent crash when driver_override matches a device without ACPI
-companion.
 
-Fixes: e1af6f0146d6 ("platform/x86: Update swnode graph for amd isp4")
-Signed-off-by: Xueqin Luo <luoxueqin@kylinos.cn>
----
- drivers/platform/x86/amd/amd_isp4.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+--mu7hbbg5juva7cmc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v4 10/13] platform/x86: uniwill-wmi: use
+ devm_blocking_notifier_chain_register()
+MIME-Version: 1.0
 
-diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-index 0d494899502c..0026d6663c5c 100644
---- a/drivers/platform/x86/amd/amd_isp4.c
-+++ b/drivers/platform/x86/amd/amd_isp4.c
-@@ -379,6 +379,11 @@ static int amd_isp_probe(struct platform_device *pdev)
- 		goto error_unregister_sw_node;
- 
- 	adev = ACPI_COMPANION(&pdev->dev);
-+	if (!adev) {
-+		ret = -ENODEV;
-+		goto error_unregister_notifier;
-+	}
-+
- 	/* initialize root amd_camera_node */
- 	adev->driver_data = (void *)pinfo->swnodes[0];
- 
-@@ -388,6 +393,8 @@ static int amd_isp_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, isp4_platform);
- 	return 0;
- 
-+error_unregister_notifier:
-+	bus_unregister_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
- error_unregister_sw_node:
- 	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
- 	return ret;
--- 
-2.43.0
+Hello,
 
+On Sun, Jul 26, 2026 at 10:17:36AM +0000, Eliav Farber wrote:
+>  int devm_uniwill_wmi_register_notifier(struct device *dev, struct notifier_block *nb)
+>  {
+> -	int ret;
+> -
+> -	ret = blocking_notifier_chain_register(&uniwill_wmi_chain_head, nb);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	return devm_add_action_or_reset(dev, devm_uniwill_wmi_unregister_notifier, nb);
+> +	return devm_blocking_notifier_chain_register(dev,
+> +						     &uniwill_wmi_chain_head,
+> +						     nb);
+>  }
+
+I'd remove this function and replace calls to it directly by
+devm_blocking_notifier_chain_register().
+
+Best regards
+Uwe
+
+--mu7hbbg5juva7cmc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmp5UlgACgkQj4D7WH0S
+/k6sGwf/UZUQmeE+yaDBE/vWSAF4KRfM4BCOpYcTy2/gv7+b5S9qFmFjWZ0HCOoh
+3V4X2yJPH6DGRzTHUVXh8dm+ZJMuNjVS01nEMJ1zlyJfJna5Cp0FJDsIhDJRCqc9
+y5GYM6P2xKFZLwL5D7FisGULZQmpmrhUXPsKsC/GpSKCplAWSTyGHtfSBPBQQuCh
+F+5zgE5mG28X8ZNw5bycaSMPtilvT4jot0aIPE3USc7k1tofx/1UcWVBWRaGFYEF
+nctDHlhw63B2c8e/RcObUVengsA4HeVjy+Xwaf7Pwk/nP0pOQEo6S+zy/rd+/62b
+57kF59SGPY7M6iDeGXMEyaXmkbc21A==
+=62yG
+-----END PGP SIGNATURE-----
+
+--mu7hbbg5juva7cmc--
