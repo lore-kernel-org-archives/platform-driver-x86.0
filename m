@@ -1,132 +1,128 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB60E3A75BD
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 08:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9763A4F30;
+	Mon, 10 Aug 2026 09:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786350929; cv=none; b=L+2n2VwD5dfpZWw5ukGPiWS3AK74lxyDcLadj1p37FiHjU/XUta0cq/+wFRpw/nqpohxkUgDPFABPFhwJMlkUCfPUp7HDdjHPSuGH4LjimeIf7CyCWa33i0heQkOVw5FJcYfkGmVeXecYuboLB4clA7zRIeOOoFWNU+lhOdz8lI=
+	t=1786353123; cv=none; b=NNn9Rq9rX4cmxRcPKIx4Y299/mhmy6r7LzVWn+w0DvnfJeSYNV842KFConBtmHdIPpqVlDrYkSmM5q3TqRuuKrEddVRtZ1+/jLeje9Xxjn92XTW+d5/5zPtxr5XwNcHT+VMFEtMTLPHQSi4AlzAanuZqykBg2Hwn8xhftp0Ngxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786350929; c=relaxed/simple;
-	bh=UHHCbcurusZy4Y523Q7T4669vLhobI+gpJ2has1/PiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ShW2QXLWV8vmPekuUjl/8GwBlYXTn4E5mAf9j1mPhcty+DJ8sNQIM3WbuxrbbynpRrTdRPHsuok8lzNWy1FNAWCkMF27gWPfl90hcPnVoeD6kdJLv0Z8w4JkzhFg5kJAHwc+7UkX4g9Ohnc7MOXrL3T2SHKGXYetF1+yw1yGu70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PBXDJ4wJ; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786353123; c=relaxed/simple;
+	bh=wB1WlKNB0e+Hd3mmjMUrAQQLQpQysiLiVLIr2FF4cqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LpB0wiFQAn7vbMoShX42v+M+mrbq5XIbXzdnGrpyBcCSLFNdQjUyRkCc+itcxXdR2rctMvNq+DWG9jqGXDFQyXw0+avy60wRqFp4G9M+cDwVyTABua64fpFXVb2ChdZMxtDXwyo6BoagAIev0GGLJkb/QXh49dgSUh/ZGVh7RmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bmpZgnj1; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBXDJ4wJ"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-384930ca5e2so1674418a91.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 01:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786350927; x=1786955727; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qGBM92czm9YEwobDEuNTbqIYrxD+/Bct4RxHXWVwj0s=;
-        b=PBXDJ4wJXkQAPO7cw9JbV3jJUlHzZFVQM8XaxO3ffNNtWF4ndbpZoxVelRKRMV7p5X
-         Cm48Vaj17iqnngOzcGhqyudoupRWOKpQt9ir8qiN1xCSxTh/g4jOwHB/jA6WFXeWQrP5
-         cP3RIxhtnn1V6c+kzyuL3Nptq1AFjRweo9qUHtfp1f0AOK+vtcgjBuoLNb6FDoieK4s1
-         AuYvaKt30QE1rOtSOcvAM+VJCy4EMzpwGuh3PSs/jx9tDfNaLmp/WCEfLjRT18p5ImPL
-         syJe2mPohSwUqeKtrDU2N4uIzqkCs4XQOkyxpGPyKCjmGOHjFzo6fH1w/N5SEuX0FgM4
-         787g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786350927; x=1786955727;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qGBM92czm9YEwobDEuNTbqIYrxD+/Bct4RxHXWVwj0s=;
-        b=gm2MNL3K1w7rjGbgSciB2u8LulkIKypGHCu+bf0D2mjiqzlbuNgtwhHCwtP6Gk6CGZ
-         PF8NEkjk90Y1cwazn8HZK9j+RfHUQyfOe1BL1M12q69hjeYLc7j4im5fwvIiaq2vVtRZ
-         zq5kGGS2+h8iOY7OjIw6p9QXR4uvrDlNqZRt0Vbkq3CHgC5hA2DYXHgGKT5iUmJQTOoW
-         plWDoycxywrTKaosyUf2qTHxoen499jxrlEg1T7K+6T+R8xMJ0TamxBU8ExaRCH/jraz
-         Ln5KaIO9zBa+V919NrQmO3uoX5REMQTulEeU/Og0CNCLEWzd50LbvWVKs3rilbXzTXE4
-         kkyg==
-X-Gm-Message-State: AOJu0YyQxBd4+tvqKH71TdxIqx0vCEoC4ev6Z/3XVyUjwP1O7I42MZ5z
-	ySWfCe4Xs4SQrHyVSItPyKvcrqXTwcdQX4DR4axGDBzoHtuk9oNjvd2XP0Njf7Ka4Qo=
-X-Gm-Gg: AR+sD125jm+SH3/nMGZlAjXbrOJS+7B24COZDbKC0VoXf4hBRzvb2w7YjRgCQmfcEC7
-	5i5bF9A5EZG+PGqYZc6+ZuedljR00EvZk7tLNKyExZgXB+YIEYazohNmJGVs7GeVZAqgak83K0X
-	w7gXHrHMRZAUaIehZjwYj+RaLmOL/xlFKC/eglLUYaDGok5BO3hkd0eCCaiCfeacxtVSTvUoVQW
-	YCkD7vczpgWqnAD2VilrWvMOLL8LetR09iggjsZbfJfGeRpJwR2oVberBr05+OC+y343MLW+ZHE
-	FuDasG91KSMudWWAUFV+oVFc8QpeQd1eyW3YPntHTjr8X9nQKMsKF7m5u3PElBb0zZEIj1bPtaT
-	ZHtk0jTJCpUT74UmXWtsSoKX328VQXdn2e4VWFN5c4lUsZCUopeP35V+gkFedkWQ6j/brgB6dAf
-	QqLad+ew2DGjrrm3GRb7Z5fICXfp37rlAJKu8iRgiisZXOLZtmeAkNdlnt6xfkBxm0bxnjgEkSZ
-	Q9gzQZLw7dtHsTc2qv+
-X-Received: by 2002:a17:90b:538f:b0:38f:9674:ef61 with SMTP id 98e67ed59e1d1-3903c584291mr41497369a91.13.1786350926920;
-        Mon, 10 Aug 2026 01:35:26 -0700 (PDT)
-Received: from sahan-i3-12100 (121-45-161-118.tpgi.com.au. [121.45.161.118])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-390b30d465csm6156520a91.2.2026.08.10.01.35.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 01:35:26 -0700 (PDT)
-From: Sahan Nissanka <adee.sahan@gmail.com>
-To: platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Sahan Nissanka <adee.sahan@gmail.com>,
-	dan.scally@ideasonboard.com,
-	sakari.ailus@linux.intel.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	mchehab@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] platform/x86: int3472: Add TPS68470 board data for Dell 7320 Detachable
-Date: Mon, 10 Aug 2026 18:32:54 +1000
-Message-ID: <20260810083425.9797-1-adee.sahan@gmail.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260809042540.15849-2-adee.sahan@gmail.com>
-References: <20260809042540.15849-1-adee.sahan@gmail.com> <20260809042540.15849-2-adee.sahan@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bmpZgnj1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786353122; x=1817889122;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=wB1WlKNB0e+Hd3mmjMUrAQQLQpQysiLiVLIr2FF4cqg=;
+  b=bmpZgnj1ebpKmt5x4jtPi+729vQ5OEjUE1UKuZODqdf1l85VomJy4vCe
+   qJg3CLMu+L7Gfc/6rzU5X1mcqbHxmwYuUY1WAm2Ceqt07JKeMIVrnmJVj
+   qU8nORXTe02Z1NYPEbdqKnFYXN75in1UbrK1+mcTI4UJTpjRpG38HmK2A
+   7RyrL6SrXmVvG3I8fTPADujuI/w1vIPrgIi0RE6B1xC7/sayEMBZeymYy
+   5EhrUzcQNn15LvGJMj1rG+eXDfP3aA+IyPK20GP10F51nbgkazYJBtt3F
+   vPbqZ6bCSNOBGlhUX79FreB0rh8nramLNOubcrfVlUS3sSp6lbPRzqMxZ
+   Q==;
+X-CSE-ConnectionGUID: bDRqmvVuRHig+VfHqvn8QA==
+X-CSE-MsgGUID: 6Qy9VgpTR0Wy1eJy/p4Ggw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="98012237"
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="98012237"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 02:11:40 -0700
+X-CSE-ConnectionGUID: m2wuEXZdRFKpDyxYknJDTA==
+X-CSE-MsgGUID: 5yKGuPpuQqiKihNAB4boaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="259127154"
+Received: from conormcd-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.244.99])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 02:11:32 -0700
+Date: Mon, 10 Aug 2026 12:11:30 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Eliav Farber <farbere@amazon.com>, rafael@kernel.org,
+	tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com,
+	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org,
+	laurent.pinchart@ideasonboard.com, linusw@kernel.org,
+	brgl@kernel.org, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com,
+	zhang.lyra@gmail.com, jic23@kernel.org, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, dmitry.torokhov@gmail.com,
+	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de,
+	fabio.m.de.francesco@linux.intel.com, kaihengf@nvidia.com,
+	ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br,
+	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 01/13] notifier: add device-managed registration APIs
+Message-ID: <anmVwiYW6fT7XhD2@ashevche-desk.local>
+References: <20260726101739.33170-1-farbere@amazon.com>
+ <20260726101739.33170-2-farbere@amazon.com>
+ <anlUQXtxrghA8kNT@monoceros>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <anlUQXtxrghA8kNT@monoceros>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Please do not apply this patch. The GPIO mapping in it is wrong, and I would
-rather say so than have it land.
+On Mon, Aug 10, 2026 at 06:37:25AM +0200, Uwe Kleine-König wrote:
+> On Sun, Jul 26, 2026 at 10:17:27AM +0000, Eliav Farber wrote:
 
-Charles Drolet, who has the same machine, reported against my out-of-tree
-repository [1] that the front sensor probes with no pin assignment at all.
-That is why a wrong mapping is invisible here: the real reset line sits
-released by default, so the camera comes up either way. Two specifics.
+...
 
-There is no powerdown pin. This part needs no hardware to confirm - ov5675.c
-requests only "reset", via devm_gpiod_get_optional(dev, "reset", ...), and no
-"powerdown" con_id exists anywhere in that driver. So
+> > +{
+> > +	struct atomic_notifier_chain_devres *dr;
+> > +	int ret;
+> > +
+> > +	dr = devres_alloc(devm_atomic_notifier_chain_unregister,
+> > +			  sizeof(*dr), GFP_KERNEL);
+> > +	if (!dr)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = atomic_notifier_chain_register(nh, n);
+> > +	if (ret) {
+> > +		devres_free(dr);
+> > +		return ret;
+> > +	}
+> > +
+> > +	dr->nh = nh;
+> > +	dr->nb = n;
+> > +	devres_add(dev, dr);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_atomic_notifier_chain_register);
+> 
+> IMHO devm_atomic_notifier_chain_register() should look as follows:
+> 
+> 	ret = atomic_notifier_chain_register(nh, n);
+> 	if (ret)
+> 		return ret;
+> 
+> 	return devm_add_action_or_reset(dev, devm_atomic_notifier_chain_unregister, dr)
+> 
+> which is much easier and includes less details from the inner workings
+> of devm. Same for the blocking variant.
 
-	GPIO_LOOKUP("tps68470-gpio", 4, "powerdown", GPIO_ACTIVE_LOW),
+Won't work. We need more than one parameter and hence the whole devres_alloc().
+Please, look closer to the code.
 
-is never looked up. It is dead code, and my belief that the pin was needed was
-unfounded.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The reset is on tps68470-gpio 5, not 3. Charles held the line with gpioset
-against a build with no pin assignment, so nothing else had claimed it, and
-reloaded the module: held low the sensor fails to identify with -EIO, released
-it identifies correctly. That is consistent with an active-low reset on line
-5. I have not reproduced this myself yet.
 
-I should also correct how I arrived at 3 and 4. I took them from the Dell 7212
-and 5290 board data as prior art, and treated "the camera works" as
-confirmation. It is not. It confirms the sensor runs; it says nothing about
-whether the mapping describes this board.
-
-The rail mapping may need revisiting too. Charles has avdd on AUX1 at 2.8 V
-where this patch has it on VSIO at 1.8 V, and the part wants roughly 2.8 V
-analogue. Both configurations work, which suggests these rails may serve as
-enables for regulators further down the line rather than as the supplies
-themselves. I would rather resolve that than guess again.
-
-The machine this work was done on was a loan and has gone back. A second 7320
-Detachable arrives in the next few days, and I will verify the mapping on it
-before sending a v2 - including checking whether the board data generalises
-across units or merely described the one I had.
-
-Patches 2/3 and 3/3 are not affected by any of this. Charles independently
-arrived at the same ipu-bridge entry and the same ACPI id addition.
-
-My thanks to Charles for finding this and for testing it properly.
-
-[1] https://github.com/githomeserver/latitude-7320-camera/issues/1
-
---
-Sahan Nissanka
