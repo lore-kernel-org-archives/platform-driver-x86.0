@@ -1,70 +1,61 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-pj2-f3.google.com (mail-pj2-f3.google.com [74.125.227.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10644288C96
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 00:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04791276038
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 03:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786322452; cv=none; b=PogPGO3dYYSqYoXvmsy7P6PGmCb3RuG3GULCxFoeeikbITf55F/TnIXODiP1UL8J4e8HI7YQphWKIVvWSqjqRELqHTE53b3GiJHohp437ZNUjON3NBtLVzqlqAuAr/XzBRU0/HvNYHKsLEWPRZdEgPtxSGMnNe2RjoPrmq2ONk0=
+	t=1786332368; cv=none; b=OZWQwL3XFxcACwzhMJ80iUO0Ex9pi4JTq2jPUfnk+hSmACL7ln9G4+zWFOQFiijCLBbx7COaRJ0wGKcIqWw2yIX1CrIX5E2E0JK4eJ2/9LzNfBOA4bGOzyYMKFwkBJrCah6NbzWZ12HJhFe/ANBcfb/hbZ21d0ntMWKglBxcDQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786322452; c=relaxed/simple;
-	bh=a7AsDEfHk7nKlPju3L5aLZ/8JTwtmK4vMDeI0q49a5w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DumMySYgESAO03xdwctHQI3iNx1hjSaF8dL3xsEXQh4Z7BsuKvBNzV8r5zE1jUqMquWFaTRKMHVeAP2fISIMf/HHV6vFDH48c13pN8dNq+7cS4qI48UTj3rRfUXUCgPo/6uqif5u/GZUZ8BAsPoPi8kYbiEiu8PTd9eunJMTerA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iuusCpwI; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1786332368; c=relaxed/simple;
+	bh=GK1SbB55IuQ87Y7Df/a+D9qlkQLTQbT9Otqq3Bdp8+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WYm05c46F+dW9PbbznpsE62ARjhiF/ZTMX1K+rmjNWEfT9kxYJneLz/KNmfV1ZQh0UaYoJKgkt6g7+Yu4+A/CaNthFpm+ee4Y88XwQJzpYtN721xH11CevRBghYdPQZRJJcG7fHPgKUOtg4Ojo4Ss5YAX75gcTly7Ly6tGEbehY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.227.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuusCpwI"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-4960fb63c75so671749b6e.2
-        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 17:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786322450; x=1786927250; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=uV5QV9NZ3xjNLUfeZCY4UqlmwUD3a3yASrZSWUswcrw=;
-        b=iuusCpwIcN2SBDr+kSxXnxiI3EjDUmza4Hb9816apN2QhDYQmH1aHUB1mjnQX/Q9AC
-         BRlScVIhmfhCkvV96//W7dcQlrjVp330JSb1CZmE81MaNhXWeIrh7jPNz/OmEMdlS0ae
-         neb7+xAEXGfcoDJ9G0kDFn23T4y8dskzADd+cNMtwYSYR7bKdwLJ789M9W1tn76I0HRr
-         sWHWR5piRR97C/s5S7dNnfLUNT21LWK8JC7i1sAwQTPdRS5Ka4gh0eN+2m4W4QhFp+RV
-         KA7nDusRrkEfyHwPI41DrHwRqqh2LN/1cl0iP2bB7lhG+psQ94pPiu3koj/8GPnwMrIe
-         pPww==
+Received: by mail-pj2-f3.google.com with SMTP id d9443c01a7336-2ccb0e85312so8980625ad.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786322450; x=1786927250;
+        d=1e100.net; s=20251104; t=1786332366; x=1786937166;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=uV5QV9NZ3xjNLUfeZCY4UqlmwUD3a3yASrZSWUswcrw=;
-        b=pkp7ycQLAXSk+/witeUpWgTYw2CEQX5k/KWRwNyUPSS2Pu4OEv2hU0JpCbGXOBDzws
-         co4qe781uZz5KWFYMGMhBRD0trVQ+0lRAdVeHf52o2gxMTkdOyUIMRkRRxL3hIhFCp30
-         FNAWpLdZgyNwwUTWOvsxH7zlaS8bknlNxe9pC4zSD2MEYQAbgDjDbezUmoU5T+Vvc5AH
-         qNBK389ZJnQT+aiC+v3oVKCN/HbIpwIBd5GKPCSH6U3QAZp9sGZRUvrMiA21lDsW46ny
-         B+kbUAScIpkWwjYxUPlVXMz3h9syRfqwN2OLzWrf2o+Jz7awupSALOipjW5OhVPgD5JP
-         QbPA==
-X-Gm-Message-State: AOJu0Yy698LWzw0HRecGqvjTrY0ykLy+9XRgwRj6EBHjC4XPY2m+da+9
-	+7w9skW9WiXQMW74THJl9xl4t7X+8MC7yvnx8Q5kxsx86mt4NZnJgF0=
-X-Gm-Gg: AR+sD10HeyRdwRC46PraI2tfHliuqqgFIvidEWaq7LS8EX/DpE6t24A/D0U62EcpohU
-	TW+aCfsDdl8uzcp8+1aboA/7NeWphq9zqIrEFMEIidN0Qh/lDtaEInqJFPBL+wy1qKmhT4U4zzS
-	wEGT/8h5gLbjb/EWRTsK78Op9I7cyRviKZnFBkND7nekZQtQmlCFLSDJ1vf1kvkbaTriA4ROzgj
-	vrxx6WjCHQ51HcBmRxLW47TiobBw5xflMO5FR1dWHNDlSFMwEVTCMfWfF73shOEDi3FcQiGHjjs
-	7AKISjBTOdvi6UOiN9m9HJ/3HRoeq5yciP2cL3w7lneqJpRQm2LqFCIi8JnGdLNPXiZgRWnhIkU
-	DckAzv9eM88fukjS3//4CB1QzrV54JXFxrfou5nLPNXGPO2glocWUYS+EFMVfKWPCTzj9wdE5EB
-	UI2CSOYye2MpD2d9qX1K4SvGi+97F8hkHcis2586Zl615h255XLaSHnA==
-X-Received: by 2002:a05:6808:10c5:b0:49a:8f0d:cdd2 with SMTP id 5614622812f47-4b1ab7769bdmr10092852b6e.5.1786322449965;
-        Sun, 09 Aug 2026 17:40:49 -0700 (PDT)
-Received: from 3511.tail24ee18.ts.net ([2600:1702:7a3e:17b0::3c])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4b1af63b441sm5132220b6e.14.2026.08.09.17.40.49
+        bh=OLazUXwrZhpv/i2Hotn6S5qSVCMwZ3ZrEakPX3ozuD4=;
+        b=XuaM7qdviuYCI05wbE9wg/rvZFRy1TbREVDEW01jzYiAazbkOAHzeepB2tH9O2cD70
+         Mgq+LPhgHBi9t3la4ICrCS4t9s9znO9tg4jFIFFn8G7efZY6AZmyYKGwmbGvTO1M8K9b
+         fu0qyAYFBN5K3pZCo2a7seNjbtoT4OCZEZIj3bm/nHN+zjBxBmpDgrJLDmuh2opKHuoi
+         XDyozPSEaperBblG+81nScipuxs8vVHWOSiKHor5K04+LyYs8V2vpWWdEA/CA5u6RQWZ
+         UBOXKOEpKXKYklMvzMO0ZuDENgLUhvNjlDwRT0QvT9eHlHNDJzODiPFBLtBwVmUA7QSh
+         P8LQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpycjWoQVjIuRFEJLvVtJuPXFn02HYjiyEnrYahqnh2wu7JUzLDvRVjQpp+YCcdlPQ2IxSW9/0Cw79YVgo0fXMgnqon@vger.kernel.org
+X-Gm-Message-State: AOJu0YyENMRoGQQX+AeVRcHuAk24FKKRltKqW7+JeEoaHS7FH+O/7zGx
+	5/f/rQr1pRRAuznTGeQSdvW2qLG4RH3a30rSZQRBojmLJxITkThkosw9
+X-Gm-Gg: AR+sD11iLGAmx/N4RlpLm5sN4z/PEtO6bcKA9NbQg4ClfUP9NdnVphceuuloM8Mfpb9
+	8bL079Pw6pR+TzQhR7WeWwjB6Kpqt3pOJcPrbIzM6VeW2BhrP05wsBNzI7x9fH5rvnKzJ35dg1G
+	el1ehXoBWf1896/Rywt6t4CAEYZIkfTWiPhOvJrZ0Adx+dFdsZDg1ZcauHXg8m1m68bM89Ou775
+	7nFkGRXGQbJY5+c6VSjWw5ndPNyhyWtkOCXw19KMAEPAUXhnhyqNl91GQXn5si5Qt0ecljiDePd
+	ITy35IgUbOTdY5bKypUOSw3/xTfI1zqlBNq1A0YUB2uHbePaidyM48vXhsIcnAe7jHOMNh9mdfR
+	cSKWUyyWu/78vkcnNXN9tqriQVgVTbvIB1hcgcL2Y6WPF3xIhxWAuWWAFJYJUJbjs5OH9NmQTEu
+	dmwOmwc7KBxzk1gV3VLYhiWPRK4ckv3h52PGresRiKSe1tzn1f9A8vOTb3RTJWrD4vgmqPw7EIj
+	MuEJpxP9aF7xBn7FL/g
+X-Received: by 2002:a05:6a21:99a3:b0:3b4:7b3d:179b with SMTP id adf61e73a8af0-3cbce751791mr18017086637.12.1786332366349;
+        Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
+Received: from kylin-XiaoXinPro-16-AHP9.. ([116.128.244.171])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe8f371f4fsm3102981a12.24.2026.08.09.20.26.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2026 17:40:49 -0700 (PDT)
-From: svav2021@gmail.com
+        Sun, 09 Aug 2026 20:26:06 -0700 (PDT)
+From: Xueqin Luo <luoxueqin@kylinos.cn>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
+Cc: pratap.nirujogi@amd.com,
+	mario.limonciello@amd.com,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Arav Verma <svav2021@gmail.com>
-Subject: [PATCH] platform/x86: intel: wmi: Use sysfs_emit and remove dead callbacks
-Date: Sun,  9 Aug 2026 19:40:36 -0500
-Message-ID: <20260810004044.3636731-1-svav2021@gmail.com>
-X-Mailer: git-send-email 2.47.3
+	Xueqin Luo <luoxueqin@kylinos.cn>
+Subject: [PATCH] platform/x86: Fix NULL deref in amd_isp_probe
+Date: Mon, 10 Aug 2026 11:24:50 +0800
+Message-ID: <20260810032450.692844-1-luoxueqin@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,62 +64,41 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arav Verma <svav2021@gmail.com>
+amd_isp_probe() uses ACPI_COMPANION() without NULL check. Add it to
+prevent crash when driver_override matches a device without ACPI
+companion.
 
-Modernize firmware_update_request_show by replacing legacy
-sprintf() call with sysfs_emit(). When altering string, also
-corrected format specifier from %d to %u to match u32 type of
-target variable.
-
-Additionally, remove empty .probe and .remove callbacks from
-wmi_driver struct, as they were print-only and redundant.
-
-Signed-off-by: Arav Verma <svav2021@gmail.com>
+Fixes: e1af6f0146d6 ("platform/x86: Update swnode graph for amd isp4")
+Signed-off-by: Xueqin Luo <luoxueqin@kylinos.cn>
 ---
- drivers/platform/x86/intel/wmi/sbl-fw-update.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ drivers/platform/x86/amd/amd_isp4.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-index 62c9c7f18..7e07cfab2 100644
---- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-+++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-@@ -61,7 +61,7 @@ static ssize_t firmware_update_request_show(struct device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+index 0d494899502c..0026d6663c5c 100644
+--- a/drivers/platform/x86/amd/amd_isp4.c
++++ b/drivers/platform/x86/amd/amd_isp4.c
+@@ -379,6 +379,11 @@ static int amd_isp_probe(struct platform_device *pdev)
+ 		goto error_unregister_sw_node;
  
--	return sprintf(buf, "%d\n", val);
-+	return sysfs_emit(buf, "%u\n", val);
- }
+ 	adev = ACPI_COMPANION(&pdev->dev);
++	if (!adev) {
++		ret = -ENODEV;
++		goto error_unregister_notifier;
++	}
++
+ 	/* initialize root amd_camera_node */
+ 	adev->driver_data = (void *)pinfo->swnodes[0];
  
- static ssize_t firmware_update_request_store(struct device *dev,
-@@ -93,18 +93,6 @@ static struct attribute *firmware_update_attrs[] = {
- };
- ATTRIBUTE_GROUPS(firmware_update);
+@@ -388,6 +393,8 @@ static int amd_isp_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, isp4_platform);
+ 	return 0;
  
--static int intel_wmi_sbl_fw_update_probe(struct wmi_device *wdev,
--					 const void *context)
--{
--	dev_info(&wdev->dev, "Slim Bootloader signaling driver attached\n");
--	return 0;
--}
--
--static void intel_wmi_sbl_fw_update_remove(struct wmi_device *wdev)
--{
--	dev_info(&wdev->dev, "Slim Bootloader signaling driver removed\n");
--}
--
- static const struct wmi_device_id intel_wmi_sbl_id_table[] = {
- 	{ .guid_string = INTEL_WMI_SBL_GUID },
- 	{}
-@@ -116,8 +104,6 @@ static struct wmi_driver intel_wmi_sbl_fw_update_driver = {
- 		.name = "intel-wmi-sbl-fw-update",
- 		.dev_groups = firmware_update_groups,
- 	},
--	.probe = intel_wmi_sbl_fw_update_probe,
--	.remove = intel_wmi_sbl_fw_update_remove,
- 	.id_table = intel_wmi_sbl_id_table,
- 	.no_singleton = true,
- };
++error_unregister_notifier:
++	bus_unregister_notifier(&i2c_bus_type, &isp4_platform->i2c_nb);
+ error_unregister_sw_node:
+ 	software_node_unregister_node_group(isp4_platform->pinfo->swnodes);
+ 	return ret;
 -- 
-2.47.3
+2.43.0
 
