@@ -1,125 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4FF13CA92;
-	Mon, 10 Aug 2026 04:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0D4B04B7;
+	Mon, 10 Aug 2026 04:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786336727; cv=none; b=Ut5H3O2XeCPNBuO0EOb7tprZKLB5ddNeesXZSoYR/u8QX1hwBwj+3b02l1FpaMUHt8oGGlHmX13cxtvYeufNSK/4Kw5GSUVfxpr1AgXOGdYkJnKjyJnQ7qaCiGHco6ic6I5GMABo0Wfr0M7l1h7XfPKnlMQp9CY/ai6YFR2SCLQ=
+	t=1786337280; cv=none; b=ho4yYLTEr+cyOPibaDbTFDeL4tvWnM+T46C382DcuIXx7FopncTI77/pVD5ApBHGzhjLVudq75VdoSP6eYTl7Tqc7p+BbUIOFi06Y50VrG9jfAWluYfv2Y462YtCqQLdeheUCq6i2Ym+POJGUnIGEZ7fDNH7lKtRWVIiNIwKs70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786336727; c=relaxed/simple;
-	bh=fNoB0Hg8c7JQX1t9VdFRqFJqKrRMH4YPN73EnmlpkqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JnlvbSO610pxMSqnSVllo9zsj+Z8huUY3z9X/fm53+0zFDWfsTTHEwzvCe1SgaV5vOFb4aAlcT9XinodzU5F2hHvdqXutSvBv4xRd+9HJQYXKt6bF85/5V2Cas3fEHGtJk8Bs/8sQyo4Tkpqx4ihy1iUk7UxVofdg9uNu55kpsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zgiqt/3G; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786337280; c=relaxed/simple;
+	bh=KV0FyRUemZ8OWLoB6vgwVCYs+bEH/RacwscrbPwV4II=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=QeGDPVzFzMoMoDuU5QAwSMe3GcoSE/PuN9Q9MSCBHTH7dfzNPnCygI1x66O4bB3OOfznpixeOClqrIYIEteUfUyd+ExPdBW2e3fFXap83I5JEm7SkZsy54vZ8u5HVufCj0omSkLD5+FpgkxY50+ItS0cUwt1PWfYAh/mGm9BWIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rsplwe.com; spf=pass smtp.mailfrom=rsplwe.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Y31VQzio; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rsplwe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsplwe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zgiqt/3G"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 542BE1F000E9;
-	Mon, 10 Aug 2026 04:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786336726;
-	bh=SXbB0p8bY1g4pIBgkLXxQqZbuZ63Hp34XN5ZoOdkkSQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Zgiqt/3GXVhdFVv8f3hUikEP/U9+ksffocqxXditNVY2lhuwfftzsC7yNiUDwoHsU
-	 M3EtqhwTwbWAj3U/27PV9/czAPMQnC3jtlcN2lzHQebVBk4g3nPJ5VJdrbOBjrze4Q
-	 WM0E5C4avNTTADAFpteBM26UtI61xbBuVfcZqz3VheZI+0tTYHe4fqd0EyFoJzc0px
-	 BpbdKq8V2DeS6ZwnL5R1TVkn+FUAhz8xF+5yZhAAB5ceNcW5ngo7T3yBVfGzvz0LC6
-	 43d3cD+0oJngQv+dv0Bcil30JgRim1mVvlJtWi0K4Fr+Y9UNdAJIFFXdR3Bl1Oy0/L
-	 obd4Hg2aFapOw==
-Date: Mon, 10 Aug 2026 06:38:43 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Eliav Farber <farbere@amazon.com>
-Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, 
-	guohanjun@huawei.com, mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
-	laurent.pinchart@ideasonboard.com, linusw@kernel.org, brgl@kernel.org, orsonzhai@gmail.com, 
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, jic23@kernel.org, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, dmitry.torokhov@gmail.com, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, fabio.m.de.francesco@linux.intel.com, 
-	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
-	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v4 02/13] pwm: iqs620a: use
- devm_blocking_notifier_chain_register()
-Message-ID: <anlRaaztPEu5u6Zn@monoceros>
-References: <20260726101739.33170-1-farbere@amazon.com>
- <20260726101739.33170-3-farbere@amazon.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Y31VQzio"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1786337275; bh=FNZ3eCshjT+SH98gKX4KVjG/8iY3p5KiutHy2kh0ohQ=;
+	h=From:To:Cc:Subject:Date;
+	b=Y31VQzioHJKG9qweTeoDE0FwcbNGinj85JKPepaEvD7xOuGyE0i1r6Pav5egEQolh
+	 lN39nLcMhe6gLdLygqcl3Vu6pf9PirLkikcN+xS/uiMF/ujj2BCTe5TUhe/HFFPTU3
+	 pMAhkg+D7/NNmc4b2P35NBfpJpF+rFQHsLk40ZLs=
+Received: from kasumi-star ([14.218.70.170])
+	by newxmesmtplogicsvrsza73-0.qq.com (NewEsmtp) with SMTP
+	id BF4AB415; Mon, 10 Aug 2026 12:47:52 +0800
+X-QQ-mid: xmsmtpt1786337272t7zq20qaf
+Message-ID: <tencent_D285050EE3C40A1536F996D142E5F6CEFC0A@qq.com>
+X-QQ-XMAILINFO: NC4p7XQIBeah7Z5MvzCg62+I1onYIpTQnQ8QsWm7Uhy1rX5rkS3/lIwDpd/gIf
+	 UfK1eAWoyo1PgJirtgfSRSfY8AS3HqtFgRjo5Wx7wyyy3oL9478e+pob1bCFKI0da9wjjE7YHu5K
+	 Ma7Ve29YPPLp/3OyYRJzOWXxdUbn48rPhYFq2IEWeVpLqW5xdPZ9xZDC41Q79jalVRjsGYGJw3sd
+	 2Qi6Li0ph6FKX2WFuqubUhiPTGIm355ozgUiSDQ0bo6YpkNhYMiEMqIAaZz6RMul4sHTIxy+/ghd
+	 uirbe8GuAY/L9XZEJeAqY22/SvSiAaRrCehRb2Jf7GFtKVT4p26oY3vwvRlheV1RXWKkmR0JaZRb
+	 /J5iDuJpcILeH58uFOTdJR54wKis7Ff28wrDtN3ZSeIaKKkT9QPLe50qwmLrmhfS1obh6Ebl/YGs
+	 PJf9RbPqZ1NmOfFoel1pIgwxBDeQcHKarUDk62c3gh8o33+lxGbmrlUY3WxNIXT0aHC6HE4N+9lw
+	 PjE6pQl5FdGig5OQ0i1YiGxwue9rZ+murtxy/vbd99mDSXj+7TvTgFF8SzOpzO5vmT01pfExPBq0
+	 L31xHIWBA3mWp1ImuL1fNE77XfF2TUGjl99z3xsL7UrxOHju2kQ+XdHtrfv1ri+zwmz3Pft4AmxH
+	 jQRdKxnSFfSOT+hyxI4HSdaJ91gU4GQf/5BmQgXQF3JNk0kjsaseYqLw7CVnkg1Ss/QgE2TQ7qaM
+	 woSB1n3g1dPcVe3+zOuqTtDBG0xbMGZQ83akIaEc0b/xT68B0RZUAnHueiX/I4jyyFAd/07DUlxn
+	 VYFKxTvQe+sqIjJtqDTm6yIOMkkFFDvyaZUHvXee6hV8kDOZ1+doxZA0VntMjiy5yR6zI0l5bCEs
+	 nJzj0foklhIk3BGw5eNdXCmEEz1m9uw/trKb8hLN2+5grpMfQN2izaXEigOM8ideSr+9eD9EeLx+
+	 Ar6GHOsmxdaV0kKKUsw06egqojm23a+zf0jlbM0AnT/eMgIyxFIy7qSy9/jjaJkpOdnjFfgqgqIE
+	 RECSoaKVsI1Bi6XMZ0WiItwRa0q/Ws5HRNiPnVXxGW9OCl076WJmSvOw6MmE6kHV27pdvWphHDUS
+	 cZdii0G+xxugdlJzqstoeDIxHZ9yrlu524pcTH
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+From: Rsplwe <i@rsplwe.com>
+To: ilpo.jarvinen@linux.intel.com
+Cc: hansg@kernel.org,
+	W_Armin@gmx.de,
+	qby140326@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rsplwe <i@rsplwe.com>
+Subject: [PATCH 0/2] platform/x86: bitland-mifs-wmi: Add device controls and MRID6 quirks
+Date: Mon, 10 Aug 2026 12:47:46 +0800
+X-OQ-MSGID: <20260810044751.43045-1-i@rsplwe.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lxpal74eyemjmxfe"
-Content-Disposition: inline
-In-Reply-To: <20260726101739.33170-3-farbere@amazon.com>
+Content-Transfer-Encoding: 8bit
 
+This patch series adds sysfs control support for ambient light, Fn key lock, and touchpad lock, and applies quirks for MECHREVO MRID6 devices.
 
---lxpal74eyemjmxfe
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 02/13] pwm: iqs620a: use
- devm_blocking_notifier_chain_register()
-MIME-Version: 1.0
+Rsplwe (2):
+  platform/x86: bitland-mifs-wmi: Add sysfs controls for device status
+  platform/x86: bitland-mifs-wmi: Add quirk support for MECHREVO MRID6
 
-Hello,
+ .../wmi/devices/bitland-mifs-wmi.rst          |   4 +
+ drivers/platform/x86/bitland-mifs-wmi.c       | 228 +++++++++++++++++-
+ 2 files changed, 225 insertions(+), 7 deletions(-)
 
-On Sun, Jul 26, 2026 at 10:17:28AM +0000, Eliav Farber wrote:
-> Replace the blocking_notifier_chain_register() +
-> devm_add_action_or_reset() pattern with a single call to
-> devm_blocking_notifier_chain_register(), removing the
-> iqs620_pwm_notifier_unregister() callback.
->=20
-> Signed-off-by: Eliav Farber <farbere@amazon.com>
-> ---
->  drivers/pwm/pwm-iqs620a.c | 21 +++------------------
->  1 file changed, 3 insertions(+), 18 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-> index 13e5e138c8e9..12f7b1415ed4 100644
-> --- a/drivers/pwm/pwm-iqs620a.c
-> +++ b/drivers/pwm/pwm-iqs620a.c
-> @@ -173,17 +173,7 @@ static const struct pwm_ops iqs620_pwm_ops =3D {
->  	.get_state =3D iqs620_pwm_get_state,
->  };
-> =20
-> -static void iqs620_pwm_notifier_unregister(void *context)
-> -{
-> -	struct iqs620_pwm_private *iqs620_pwm =3D context;
-> -	int ret;
-> =20
-> -	ret =3D blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
-> -						 &iqs620_pwm->notifier);
-> -	if (ret)
-> -		dev_err(iqs620_pwm->dev,
-> -			"Failed to unregister notifier: %d\n", ret);
-> -}
-> =20
+-- 
+2.55.0
 
-Too much remaining whitespace here. Other than that looks ok.
-
-There is no specified merge plan yet, and this depends on patch #1, so
-it cannot get applied yet. Given that IMHO patch #1 should change, I
-expect there will be a v5 and we can consider application then.
-
-Best regards
-Uwe
-
---lxpal74eyemjmxfe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmp5VdAACgkQj4D7WH0S
-/k7W7Af+N+HNhcp8o5wU5XfbYK4z26aXXjonv42lAgO+vYSVuo09+FUg908qguLD
-bQwaxNTEDLWp2KhOimYvtwOmLnBi5LpFdRkl+3O+1hNbkdEqPzEhHR2E5fYln/ni
-L53rfttbwzJAvZsNiNf7YyuWCkDn/EYR/lBjhwxkGMWAJrtvogleUK4cqx54q6yb
-FAr4pZRVLXYh00yzvHs6YYcVltcr90a+ElTaN842ccl/3fSbCyqWFbOzgv4BZhWL
-N2AeOhzToeosPeKdM0jX/PPQEeLMEdBQKmKvYYWgaIcJM64IxhD2A733ZL64GZ0W
-W3ONy68gDEEzxPPwExzGleo7svm85w==
-=VCpG
------END PGP SIGNATURE-----
-
---lxpal74eyemjmxfe--
