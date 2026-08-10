@@ -1,124 +1,123 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688F73264F7
-	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 05:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786339616; cv=none; b=oBEqHCwD+Rk0fL68GiyRPNQvZs9bdRRjcCaLR1llA8HLwOfM/y30MQsQ30YvgnZu9Em2ZT0gLAk1Cmlxnx5iY7ftijWCjq5GXMlJkYTs8ZmWiD9ddwI6NOc2Lka76GlGIL0M19xNqQZErNtRvNKryOyDML5d21DYPcSdcnLPO0k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786339616; c=relaxed/simple;
-	bh=0XBPYgMbzdfFCCRwEL0HVkGxwmcGEHskftRPioA2ZHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nC9TL2RyvH+tQB6wQLUK8mvKguNhAqX3NvUciAa16nu3InSf6DKxf6yf4K6UoJUl2BU7nwx4A+gHsaY81nf5LCt2K6syFk664qSiC5jHVX4J8EEGtPQ4msezr1r8KKrWkFBxH6zsGQoLOhC+gRh5N0wE1POwu74p6hPea/NO2CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/bYWblL; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC29A398911
+	for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 06:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786344678; cv=pass; b=lFaGxCtYmXCWPkxPJEBiIOgmQ8jVCzfkSqQS+MCjKtgcACB8Bi5R1CnfhgBh9qP5GwbvkUozafyaItJPmkDK9hRHrb2kqsRQbFpPT5WPu6pWhAVMsIps0c8yjbkLfY/FnZQXesoM2zxWd3YPJS4m7/5tGDSBgOs4tCwfRs1q3YE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786344678; c=relaxed/simple;
+	bh=atfxsE8BfY9ZYIcbeNpqBFNj6lKYI227OsjDeaGNzuU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r0jzlz4rTSECLyFfSBnqbNbMr1T9Qe3frixVL/MTxM/ELbd2FdG4gjVKVErNV+TLJnwCp3pEseB9ioYv+5FU7gxYMxSj+MAMnbpDX2VF0kUZN2IiaqIN90AokTNOHalE81sTJUXurq6aSKxazsi8ZfFRqAQKImMByGSTMzUQ828=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToIKF8CS; arc=pass smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/bYWblL"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2d049069377so11629125ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 22:26:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToIKF8CS"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c1c52d920b8so182848866b.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 09 Aug 2026 23:51:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786344675; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VxBFo4f8KVPlBRGzg73kcB/xBrgz1eS1Upokn/1quRBk4QbxP91d7uh+JAC8h+ZpP5
+         GbEg4UO0spBjMnvfmCGcbvvnJnP/o/yfw7LJ8SZaNHkTOtXUWuySKSMixlb76kE/VXtl
+         w9DwcdCtaVWal3+4OwNfDAIIoXBYPrgWzEWCfiQwrM3YTha5GS43ZhT6K1RRiA5KXCu7
+         0OuxVa1Vrkig+gB+cuvc7TKZKbk6ZoKOs5P4Z+w4UZtf6hF192L6G5txIfF98OeuQW2i
+         n9kV1n/3n4mfGF45jcP0/T1gfJfp9YKH/t+34AGa+IIBYHfKM8HDj6yWvoMUI4HPK//6
+         tOvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=atfxsE8BfY9ZYIcbeNpqBFNj6lKYI227OsjDeaGNzuU=;
+        fh=OSmekBR/b4bnRVU/KC1EF/2OJUZqG6s8XDuMum3EzPE=;
+        b=IPviCVxdnSDogZdLHOYrb1Ix4+/VHZinHQqrVdGAZ7qQeNMSSGxrkpy7/Zh6Vzt8mv
+         S0srbmF8ND4fDP7iaqdlEMTfPzevtwy2lHr4HFjnkL3rlxT3g7S66JvAniUQM1miODeg
+         LUeMbRO3+rXKkb+A9WiVo9rmti5rDGtNDVlAfBVRZRDMTxVchzwb52QHrh5wTiwhAnaB
+         fbHJWSbxKHVNKN+yLv2hUFE+cHT380ixGxktDFMrjWf8uZfBpf4zNGHlVLL8K1MadyQ7
+         SueOQ6AGi0i/w4HJbuNo0e7ZsPjfsfr6mHWOzT33NHCKpYVKSc3k2dudYXwFUy0WnCjO
+         Um+g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786339615; x=1786944415; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=inTYPJw01jcYRsAE34wz2vxcs3Bl64hbVk5OMtr6xYc=;
-        b=h/bYWblLnFu2OLxJzUwhUqsC7JQZ01e83J4RmsPqPL8F7cZZdfwQj/HItsgLGVZxkw
-         U9iC4n9cGG2O6uNLVtC8OeJufWIAPwzyl5P9GBvSHdiryM5AjoRdkrMH1VzxiG0QhC/S
-         DzYhl6QvXXraKH7Cre+5Qm7/l53Xw+WTY2dG1AoPB3RflfE+gKpAnYFImtfl6TzgOzr1
-         6tZdLEX3992ECYBKrS43CazZbUnee9Z0nov21i24GQiVwa2AadBhYtDotRorNaUuCiHz
-         eo3YgtbUd4EgRRU31djha1kXogV4mFy18433zVgISzBlq493487v8AJFb7zPNeO072Vr
-         +u+Q==
+        d=gmail.com; s=20251104; t=1786344675; x=1786949475; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=atfxsE8BfY9ZYIcbeNpqBFNj6lKYI227OsjDeaGNzuU=;
+        b=ToIKF8CSv82/sZENuMcv25uMZ2BVHN3EDcV50xAqAgjB3ZJ4IauTTdhxET8C9kDFf+
+         S6O9JdRc2MDBOA4AexTtfBpQig6qla7kzUkjf/GLumWaEd5nuagqh/XBn3yls18G/lpZ
+         +Xiu8UB1YgDcfhLBQz1cC1ksve7Ig0VEQJwZmcRvWm8YDLQ4+cZTCaWItW7xbQDLbdhd
+         PjOZzpIZ50xsHyFFa6i03NJPbZpreOZOcAQ1GSB1wLB3CxUzK/wD383tCJozV9nr7wlK
+         v0+6CBXmEjIEynMCUmWfv9vNhTK7DuG4bvg4FtAvhZi7QE1RFwyqxYpFNbzb4jI5qtlf
+         ppLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786339615; x=1786944415;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=inTYPJw01jcYRsAE34wz2vxcs3Bl64hbVk5OMtr6xYc=;
-        b=UI6AaTENtYXKhDcY5HL8WJAj3DJFfDZIp94uwlWuerT0z6waqTrCOHqkCsHSUrcqLF
-         JdePYLRbYp9PGFpzI7BMtdz3Yj02k7eMzNiyOEV1jQzCtgH1rfMkuWXTJwmdDmE0l0em
-         HQUWwg4UH0ngzcyZdxVJlXFPUlMAIJA7XrgPfjA1+Roavq/ohvTORtf/BkYTQD+FQH+P
-         PdKMBEqBm74OfHCceeshvVKgD4NPEOObK8BA8Uye7bYQ92ApTx90ciavka8AYFNmcDZj
-         Kjm8qc5dI701cPNLLhAqdLfXwAABiJJS62d9M/uVqOkh4eXEwJ05jK1ckDTOyICGRw/3
-         UOVQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpFfg5xSDSkDkfkCRPu8RE3kTUgRxWpItaymV7dqefQBr41uUeKFe8/6l/t4cGMFpC3iKFMjEwUx9QpT+FpMmWkOsxP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNSdpU1RBZpbXnDgrr8JHKVWA/3/lezB0RmooPCt0Rc3AVSLVU
-	VxSVviWhWZINx9kiPyTrZqbgoHbktRtxoLyrffOVDF04fbsWRjZlf33E
-X-Gm-Gg: AR+sD100paB1HUa2D1lfS0SWWwTr3pFwPytCz40bmZz7sPGP7L500CwGM4a70kyKg95
-	PMUl6XovF/550rU5ri+qqduX7doemrT9gQCs6qWc9lnZdlbZhOrrYZxlWe1AtSyD1rQlPCFs1E7
-	VMzbCDQJABobN0lxSEtOt9O0dV0Q8xzmQlT0jOz9KMBrqRYpmuEUl52TmYFMEVhOl8Xo/CVStkw
-	qpOQtCxXcaa1yw1f4EV0le7AaXt9CLdADP+3SL/V7LDqkTFlkvctv53lBWtT3ADAFFix4DI9Rnz
-	lweL4NzUg73djNqc+IgUqpBhW7MEQEZRBEdpMlIghQB49WNkFbjQFt4GZB9zyZkBkcxqBUiK7cx
-	2rG0SGNQII/ta2yi8n0Fu2/hOnsR2yFlQ6+oCYzuS+GA6ZHGYp0BvExwJM4kQTQ30X2SpTtTS6n
-	E+7a+KkCtXN8P9uqjuSrjQVsu9xIdkRCF8jOoKOa4lnld2/87nPtknAjHWCDrBRO1O4AoASXLU0
-	ldcNQZyzLdwgzq7iUXsvOggG+4eS/vh0h9BXYO1K2HFm1MLcUDN/tdRLTUJtlXZQSOYUJ91kpEt
-	wdxirkQkd2BHBLg=
-X-Received: by 2002:a17:903:1aa6:b0:2c8:f34c:82c0 with SMTP id d9443c01a7336-2d106a18e41mr333320905ad.2.1786339614723;
-        Sun, 09 Aug 2026 22:26:54 -0700 (PDT)
-Received: from phuc-desktop.. ([183.91.15.56])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d16c50cfc1sm29350025ad.82.2026.08.09.22.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Aug 2026 22:26:54 -0700 (PDT)
-From: phucduc.bui@gmail.com
-To: Eric Piel <eric.piel@tremplin-utc.net>,
-	Hans de Goede <hansg@kernel.org>,
-	ilpo.jarvinen@linux.intel.com,
-	Zha Qipeng <qipeng.zha@intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bui duc phuc <phucduc.bui@gmail.com>
-Subject: [PATCH 3/3] platform/x86: intel_scu_ipc: Handle errors from optional IRQ lookup
-Date: Mon, 10 Aug 2026 12:26:25 +0700
-Message-ID: <20260810052625.27614-3-phucduc.bui@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260810052625.27614-1-phucduc.bui@gmail.com>
-References: <20260810052625.27614-1-phucduc.bui@gmail.com>
+        d=1e100.net; s=20251104; t=1786344675; x=1786949475;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=atfxsE8BfY9ZYIcbeNpqBFNj6lKYI227OsjDeaGNzuU=;
+        b=q2d2E+YwzCj2RhXXGWjdsLcJwJn4F92rWZqZtRd2XMRsxBouD7QSfBoYlCidjrVcTE
+         pr9TBkEP7ts4quHqPM8VjJNPyXO24UVDv/Grit750BwT+QyPtPo+zHC28wn67vDpZ/Qr
+         Bw7Lj30ErwNRbvWISvWenOwv0F7V2CHzS9MzX4rVvuKESp9083Ilhhgd9/csXZVQ7sBS
+         0xnsJHTKxmUa2CcUdPVKela2NMr89+0aWBA5nIN9k0UVVeb+tTeUa+mdCNjySsNJ+Wrx
+         MkVToSjIDWv079MgIvunMnUlRNCFCk31YVbdc5pQ0mHxKoeOR+VmYtPfwYYlEXhBTttj
+         KxLw==
+X-Forwarded-Encrypted: i=1; AHgh+RobQXMhuSOpFBAFentwdvB7+ycxMtm5guAESL4N2SBQD6/WiK0sBOi5MIyqq8QkF77Q6+qtvCZ3pofmceZCItVYBj/S@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdhqLsZB6G20cnO8wFfn/Nz+jYpag1JbV980tgiCqOTzRNu0Po
+	NrFGoojmzJiNPp1NnnL2xAZtKigcYzD6m8GzgI1ee6ydL9XV9gOyWTdxr3ryx0Y8m93F2UC0NOh
+	ETeTOgV4sloRpXn6t7CvdVyofAnT637w=
+X-Gm-Gg: AR+sD13HlJmYnKSWViqWV37gAf8GhzLla+gzpH7oJQB0c/fUErTfvak/hLS05siyuAB
+	afijz5nJsBzdOUKYSN6c8vTLojnc3z9H8QcKjUoWwuTszDi5dwdr/vM/QBbce6/zBLWQnrbkIV1
+	CIf0cLUFTcgwcnVLRZ7XF55Cdw2EH7PumKJpYfLmSL/H2HCrXIPmXYYJ1GHYdh5LHc+ObSnZg3x
+	WMk3NfVUELo7reIR6+qu+iHt5YZsQ0UmbnX+M7gXKllGSNqIUV4ZuMDPhPkoGZ7Z4cHkaPao6z9
+	AhOgjdpxxbT5rHFkswSkLFkCnjoNbXwOgty52ygABlI0okA0g5EodyCI7R3Nsei+sGivWX0HGlT
+	5H/eVXTw56hVFDlx/cf7jODwHGVvqPxl71zZucQ7CEovmiFCbkfceVsRtOv/SuSZUvqz6pnXqUf
+	RDldYofhFoLpM+3Ql1kGLtZB9bgGcfP9mnTSLEJCM17Q==
+X-Received: by 2002:a17:907:d08e:b0:bed:9a7:5ed1 with SMTP id
+ a640c23a62f3a-c20871a8cdemr913069966b.5.1786344674587; Sun, 09 Aug 2026
+ 23:51:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260810052625.27614-1-phucduc.bui@gmail.com>
+In-Reply-To: <20260810052625.27614-1-phucduc.bui@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 10 Aug 2026 09:50:38 +0300
+X-Gm-Features: AUfX_mxI9ias1386u9cDVwwWctiV8vuFcAHDW5DtkAl66oveRMJbWyEAzQvbA4M
+Message-ID: <CAHp75VdsGhuq2JP9n-gbx52gLiK73zQVw2XEBrXmTnoO-Ojnhg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] platform/x86: hp: hp_accel: Propagate errors from
+ optional IRQ lookup
+To: phucduc.bui@gmail.com
+Cc: Eric Piel <eric.piel@tremplin-utc.net>, Hans de Goede <hansg@kernel.org>, 
+	ilpo.jarvinen@linux.intel.com, Zha Qipeng <qipeng.zha@intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: bui duc phuc <phucduc.bui@gmail.com>
+On Mon, Aug 10, 2026 at 8:26=E2=80=AFAM <phucduc.bui@gmail.com> wrote:
+>
+> From: bui duc phuc <phucduc.bui@gmail.com>
+>
+> platform_get_irq_optional() returns a positive IRQ number on success or
+> a negative error code on failure. For an optional IRQ, -ENXIO indicates
+> that no optional IRQ is available, while other errors should be propagate=
+d.
+>
+> Propagate all error codes returned by platform_get_irq_optional() other
+> than -ENXIO.
 
-platform_get_irq_optional() can return errors such as -EPROBE_DEFER,
-but the driver currently stores the return value directly in
-scu_data.irq and continues probing.
+Please, slow down with these patches.
+Always try first a single or maximum a couple of patches of a kind to
+see the comments, now you have to reconsider all what you already have
+and basically wasted your time (instead of doing this better). See my
+other reply in the other thread for the same problem.
 
-Propagate negative errors other than -ENXIO using dev_err_probe(), and
-only assign the IRQ to scu_data.irq when a valid IRQ number is
-returned.
-
-Signed-off-by: bui duc phuc <phucduc.bui@gmail.com>
----
- drivers/platform/x86/intel_scu_pltdrv.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/intel_scu_pltdrv.c b/drivers/platform/x86/intel_scu_pltdrv.c
-index d5ab62cbf5cc..4686960c44ac 100644
---- a/drivers/platform/x86/intel_scu_pltdrv.c
-+++ b/drivers/platform/x86/intel_scu_pltdrv.c
-@@ -21,8 +21,14 @@ static int intel_scu_platform_probe(struct platform_device *pdev)
- 	struct intel_scu_ipc_data scu_data = {};
- 	struct intel_scu_ipc_dev *scu;
- 	const struct resource *res;
-+	int ret;
-+
-+	ret = platform_get_irq_optional(pdev, 0);
-+	if (ret < 0 && ret != -ENXIO)
-+		return ret;
-+	if (ret > 0)
-+		scu_data.irq = ret;
- 
--	scu_data.irq = platform_get_irq_optional(pdev, 0);
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
- 		return -ENOMEM;
--- 
-2.43.0
-
+--=20
+With Best Regards,
+Andy Shevchenko
