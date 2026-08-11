@@ -1,284 +1,146 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C53B3DAAB0
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 18:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786474570; cv=pass; b=CiuLPF4Aw2TknG4mygbnlWW9uwq2c5Tx0tkzRw02K3a0gaSTMXI7GealNkJFex5PeZaq2bJbmHRlqA234/XJzvMq0WASrtqF3TrXJNkdr1mOuO0zdQjGT7r7pRr4esxe39JJLaxmwSMUX6iNiSgPi/w9CFwxHUPX82jgcD+9jC8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786474570; c=relaxed/simple;
-	bh=kDkAGR6PljlS8rVujTg0pq2FkCdeeBPJIt+uengQl0U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=NqlFpXAjhPYaR3qBZ65dP4lTuAl9dCL1oSxu1MkWgqtnkcZ9CegzQFmMHvtB7WX9I49l6IqDBG+YTZT9/IrTWGpg8MnPKVu85yKqKfD8uBV0Bxj+60CBswqyGZYOYNtYeNiyqSBnsOri2AwkUCdxwCcPZHleDJNZ44onWi1Rtlw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llOzXnS/; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D793382CB;
+	Tue, 11 Aug 2026 19:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786476571; cv=none; b=KiU/C1bNr4Rd9eeTh6dBLJ4ZMr1unq9OApsvYXndcAIHvzTOcjT2QNlTOHAOnbI9HsMxJPpUtxHE4vnePvvyg1aPLG+T+czsl89950/O/qNia82hASF4bRcGWuQR8TUJrzHRgixgMnwKCiV6+/EXXqqL44DX70/22LWIL9Abb3g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786476571; c=relaxed/simple;
+	bh=cPDAhT0Qagei4vQIDOXKHzRYx66XDdgXWkxENJy2ksU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=mmCeUKRBCUoyQSd119pALFE7FIL93TOeQadwUYWf6+DSTsupq/RLf819eNxDc7S1t7z7otfhLy2zmhFOzTTIE2qnqbyrc/MfYenCJygOBUEzmaBxWPCf/+wtQyR+QLfhwJUQwqRlrj9NOllLbghOS9SLpwH16uTIVanSmJn5oCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=MEZI5GAi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q6yoq3Iq; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llOzXnS/"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-526f963372aso2042711cf.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 11:56:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786474567; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LppyZsksYuLRCEbKeIE4UEDxL72aqfQoE5iinlnCL7uorchqo4jnqwPO54MWNYrMUm
-         ZwzrW5im1po66rfxhpKkIP5NfvKAnQJbDVQ1BDoxGr71pbk7N7RYc9lA4Zdev7PlsSBi
-         OrVTXy5xzFXKmmVTtYMOhTlA3dC9CYZ12zn8gUB8oEsLw07x7nOpc10g+SNaJ9iqHvZb
-         4PXs6AdI68G4Zbbjx7HM1MU7pVCrb16pryrjzDc9BJaEJmtO1oL0hi57/yIY2NwLefu8
-         fxCkaAaZnkAcUgO2oXZCozesklLny85ess8i+5yMm4PY/R6TO0826vaidyBzXbsWz7wR
-         02vQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=kDkAGR6PljlS8rVujTg0pq2FkCdeeBPJIt+uengQl0U=;
-        fh=Q1SPCYIfAl2zr1Gg0ryZxtFR+iCcWWDljVURULCeQHM=;
-        b=GKkk0nQglqT70gbJ43G2V2t9h0gTry1qj9PGnuaD7iLWWVks9uqrXv5ediiS1RsFi0
-         K7tYFm2W3KYYW8WxoX6BF/hNLq0fqrN9tr2sBPZggBj/VWVYcWso4Nv/PKczH94CADoh
-         ybxQvuW8DrShOJ9ofAsZEqgXb4m1qzdmyFSUlDFWurU/cjLAHhr9XfHeOoqFGM+IetnQ
-         6EzkI+ZFx6s/k2AiVp4bVJvIiudKBYgbBzcXsxGxnURiVWEMUAFLSTlle9F7sZdbk7Cx
-         tXe9U2lwh9r+uLP5vTNVsiqj2deiAWh/w+JQnH5Nad1qSEzFOD7ezCLuNG494V3RE7aZ
-         3IQA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786474567; x=1787079367; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=kDkAGR6PljlS8rVujTg0pq2FkCdeeBPJIt+uengQl0U=;
-        b=llOzXnS/JgO+llMXgEANBxiAXchkZ5MhQv1pMwFglTEv+ZQt2/ljaTNDMRvQwj7N89
-         8Z7Ap/u6Dolg2Jh8vY/hAZjBGTZLXRFbr3IQep1OOd2TxxmDJbtsC5NVQs6n9ZtncKUL
-         9Hr/jtMHjdTfpdKZozERIMkypBAQe5HQxELYA7tdwvVmMAZ1QMlGVyTOnMerRODMx0Er
-         VgQLpSFuEIJfoRgmN9dw+pZ+aSlVxGUit9w9lMGGNccrILI6Y+4BVtGGHAN7+nZLPTb3
-         OE4SxqHTT4dOzV3bkuxIWIroJjjnNoF3acjaCGUa6M8iQ9Rtl7cJKyYeSHUsmF3InwE4
-         7xfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786474567; x=1787079367;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=kDkAGR6PljlS8rVujTg0pq2FkCdeeBPJIt+uengQl0U=;
-        b=tR8tcWz4H6CjcWwLsdT5iwBY01FSt/RvLtMNYhEBXhqcxMnvaroJ+EKlbzVbYm3sHr
-         /de1+ACbHghMiYa3qVXhZ3nSDwNAQOpcoWFssXilGZMwDAaXy94GEyyHd1pJ9dA/vLRM
-         LuHIsya+p0XTKeaLyNxgNWg8zBwDyZdSLecXFwEPERsCPP+cBRCpVFJ7Abcty3FdpImq
-         0cDRAipFLe94Gs0cp7taiTN01dmguakEIGBZ9fxGIaKXa2GVEbACsabtZg5F06zsLm3w
-         rNntygnCuCdY3SRTqCEhyeqFqrEPAGwpH5SlUZAIl8M9s4I0ugGry4vNn7E648NnENpS
-         RRlA==
-X-Gm-Message-State: AOJu0YyyttObrW2f7uymPjBPOMqk0F8gil+FlFIpmEstSWICfxne3Idb
-	M4ibWlR4kT+sKugwLh355lwd5O5O6OSYakN1h6l0r7pjxPhHD1W6lyV80baCKB2RXBZXpeWAW2+
-	42gF/HhGv3bQhma1NxEHoho7//H/BNZCB+LbzkO6z7eI1
-X-Gm-Gg: AR+sD11N33oZk/1x8yLd6f4F55b3qPAkbqes0jYrDoFbBTwGunLNgEMNJIS9NCbHJt7
-	g1j4BmrP8e2YuwDwjAKHPDH/zuddK1bKfDgtrazBlfpBZyn3kMLwj7uaPXk35rTIhI+R7+abtyd
-	Rczx7KFU2Y/yFpijT7Ehw42tH0vPRiNTU/w/Siy0Z+Bslt1ep/W656WAhyUpyzv1jRZNyrPE6pb
-	pQ6UM8LR7UBilclMPOR2bmYQ5y7y3flbMs+ib7VMzaR09Vjlg5nSevD6rGQa3/xfysEaZyn6WGW
-	MhkQI6eOZIrRB/mHOvvsb3QKP81ETWognMuCPMOoudMS
-X-Received: by 2002:a05:622a:1925:b0:51c:b900:5136 with SMTP id
- d75a77b69052e-52d582b67ccmr54544831cf.0.1786474567325; Tue, 11 Aug 2026
- 11:56:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="MEZI5GAi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q6yoq3Iq"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id D2451EC017A;
+	Tue, 11 Aug 2026 15:29:28 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Tue, 11 Aug 2026 15:29:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1786476568;
+	 x=1786562968; bh=W0kYAgqlA0wFcX3jimEcDwC3Juwj5zioDaW48VzmNuc=; b=
+	MEZI5GAiEW0v+azSae7w7UR420ocoD2oiIuj5TKM39UPvHaK5NaIAOYFfC0Lzvyj
+	0YOOpZy2FiI1tN4gJWH4HEQ+keFXvf3REGi7cv3ebNkbs5Lrv8jG532hsZBsB65I
+	IY/CslR82aY3z1IfF4uC55M1gr0ky37jBdVB02LsfQUtevQ2l4byaS6mEEG7tvj8
+	IURYY5A09aqEO8vU6ovJVaQXbj1YROC035ns0LMmzjF6vJcgeoKSyMCSznoy5Nlk
+	aEHbe7N08+wHQKcTSEDgCw3V3qQsQle9ejaaGoFvPsPythySmnS4w2NYY4fTTMYV
+	u3Cz90otpfFhYVOcW9AQfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786476568; x=
+	1786562968; bh=W0kYAgqlA0wFcX3jimEcDwC3Juwj5zioDaW48VzmNuc=; b=Q
+	6yoq3Iq0KZgqB7eg/kY+zTqTEKsvvn5EqFfwTylaMeYuFv1gVpejKsDdLFK1rLXy
+	F6mQsqKOqlhX4KkmaesEHS9qczMUWUcArvMFQBJ+pLhj5n12duW60Ih25FAVTO7r
+	VlaUM6c1HOfADrOrhz8awt23qRNcHm7dyS5LZTvd4HP0A0nuJrJRQL/fvx/+Ubnp
+	HDpoG3icS/a10NuidC1eaTre/I0BFnl3zVOPKl9wO0OcNEWsgRv2YqZNHA75wcoY
+	EqDBtak2VnmOI9yod7LSr814rW9P48seYkQNlbWaJplhRpb5q7IrKz1pZhvEc4eG
+	tdtjhKIVcj/XW7RsR+XDQ==
+X-ME-Sender: <xms:F3h7aks1XsjGus3GtYdrPRvtnvyHkJZmTNmLvWCwOhTxfkxSgxTONQ>
+    <xme:F3h7asTmsPrB1VT_wQyt_OiOitXDUili2lP2KD1pV2qdk9LY1Jcd__ReHlp9Z-ahg
+    ssUCxq4B-DTo8UgGs8x33_63B89sEH0G8UfIi9mWqspzJ5oFUWYjIE>
+X-ME-Proxy-Cause: dmFkZTGjpPG+ohPDuue/ZsKnin9jXoENRu7hTX9Ft1XaCuZizubmG9ignzgktUogMp/Cdx
+    o+MXfgBU6uen+M6UD8kqT0J0FYu/Ha19LzqPLJm3zlWssLloE7gDLhVQv7ccqW8DuYWZq8
+    4jGMrEiemaraoqC+PjnjEuoSMFRhYonvCCS33OTDcaFMSFhkjCo3nrhCbzaXSOIyBZ/2XS
+    OF1BaUTiMAZK2RGRrAewdcrJtMQbj3BCyUkDFiVR7D6MeI6zEd5oRNt4AI66vFfsfwAKN/
+    5JbFakgQu7gWVV3HQrdjEQddUg2W7p0TtbK7jsxQzSeUhystj++BxkwWN9nFg1yQXRo0Mt
+    UwGKc0TiXjw6CjZSHuGMks4bdUy1BzndUxZU4JDc/4SXl+4pimU/InYqAgp2lfW/CafKph
+    74mR1LNWy/0xkjXqhbS+rfGN0I7Vt1nw2IO5DzxK75xt6rjeulGayTJK0Ff2AQEaq57O6/
+    BY/atQqfK2HL7RvE3S0/uWd3L+ACdLyaMlS3Ts1FRSz6ZsmIEA9K2rRk4aRu0j1NjwboUq
+    QoU1EaP37yScbtFMuswqB+bbWQvFKNZKyGcqTt/nt2br6Qc74nyJuRsaSr+BJMG8P7M8z8
+    rhpXqoBvAIa0IFT1mVVouekFrSykTqCWgIi0o4r6jZ8vEpQUJetfAA5tOFZg
+X-ME-Proxy: <xmx:F3h7amLPTGi5MKhjQ5KrILDKUfCl4DOPHI1bg2OM2v-Yb4VhjpxrIg>
+    <xmx:F3h7ajEO66I811kVAtWWaxkuD-z8X6NrKIRSPBLxG-pdidcsmy7-Eg>
+    <xmx:F3h7aq9AgaF44xTQJfdxQJ3qch5QF7-AdIQaci5dsb6Wz0UejNiSRw>
+    <xmx:F3h7arJ6G1mjwLeEH5DNqqFP7E8Lu7ggn7jtHHYwSNPuG-bIJN0oSg>
+    <xmx:GHh7ah41xLqEz07npF-LAZ3Ri1KbQ766jy-PpkMgM52Cuo4k7edhvrl3>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 83E922CE0072; Tue, 11 Aug 2026 15:29:27 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Martiya Aryan Mehr <martiya.ar@gmail.com>
-Date: Tue, 11 Aug 2026 22:25:55 +0330
-X-Gm-Features: AUfX_my3JfzfWKCI-3oHSwtkbEE1DX5LhM29P9JEldJQRCVs8XnCfwza9AZ5ZG4
-Message-ID: <CAM-sYPpgNU+tmfHKWg0KHfVF8f-K8oaNvfYwj-vaUGsEvf1tjg@mail.gmail.com>
-Subject: [BUG] Redmi Book Pro 16 2024 platform_profile write fails on Linux 7.1.7
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-I am testing Linux kernel support on a Xiaomi Redmi Book Pro 16 2024 laptop.
-
-I found a problem with platform_profile handling on the Arch Linux 7.1.7 kernel.
-
-Hardware:
-
-Laptop: Xiaomi Redmi Book Pro 16 2024
-Model: TM2309
-CPU: Intel Core Ultra 7 155H (Meteor Lake)
-BIOS: RMAMT6B0P0B0B
-BIOS date: 06/10/2025
-
-
-Kernel comparison:
-
-Problematic kernel:
-
-Linux 7.1.7-arch1-1
-
-Reference kernel:
-
-Linux 6.18.43-1-lts
-
-On Linux 6.18.43 LTS the platform_profile sysfs interface is not
-exposed, so the issue cannot be reproduced there.
-
-Installed packages:
-
-linux 7.1.7.arch1-1
-linux-lts 6.18.43-1
-power-profiles-daemon 0.30-1
-
-
-Problem description:
-
-On Linux 7.1.7 the platform_profile interface exists and exposes the
-following profiles:
-
-$ cat /sys/firmware/acpi/platform_profile_choices
-
-low-power balanced balanced-performance performance
-
-
-Current profile:
-
-$ cat /sys/firmware/acpi/platform_profile
-
-balanced
-
-
-Reading the current profile works correctly, but writing some profiles fails.
-
-
-Working example:
-
-$ echo low-power | sudo tee /sys/firmware/acpi/platform_profile
-
-Result:
-
-low-power
-
-
-Verification:
-
-$ cat /sys/firmware/acpi/platform_profile
-
-low-power
-
-
-However, the following profiles fail:
-
-$ echo performance | sudo tee /sys/firmware/acpi/platform_profile
-
-Result:
-
-performance
-tee: /sys/firmware/acpi/platform_profile: Operation not supported
-
-
-Same behavior with:
-
-$ echo balanced-performance | sudo tee /sys/firmware/acpi/platform_profile
-
-Result:
-
-balanced-performance
-tee: /sys/firmware/acpi/platform_profile: Operation not supported
-
-
-The same issue causes power-profiles-daemon failure:
-
-$ powerprofilesctl set performance
-
-Failed to communicate with power-profiles-daemon:
-
-Failed to activate platform driver 'platform_profile':
-Failed to write to acpi_platform_profile:
-Error writing '/sys/firmware/acpi/platform_profile':
-Operation not supported (15)
-
-
-Expected behavior:
-
-All profiles listed in:
-
-/sys/firmware/acpi/platform_profile_choices
-
-should be writable successfully, especially:
-
-balanced-performance
-performance
-
-
-Actual behavior:
-
-Writable:
-
-- low-power
-- balanced
-
-Not writable:
-
-- balanced-performance
-- performance
-
-
-Module information:
-
-Linux 7.1.7:
-
-$ modinfo redmi_wmi
-
-filename:
-/lib/modules/7.1.7-arch1-1/kernel/drivers/platform/x86/redmi-wmi.ko.zst
-
-srcversion:
-E64350B38255B1100E64863
-
-
-Linux 6.18.43 LTS:
-
-filename:
-/lib/modules/6.18.43-1-lts/kernel/drivers/platform/x86/redmi-wmi.ko.zst
-
-srcversion:
-369C9F3502463ADD78FDC0F
-
-
-Dmesg information:
-
-The laptop is detected correctly:
-
-DMI:
-XIAOMI Redmi Book Pro 16 2024/TM2309
-
-WMI device:
-
-input:
-Redmibook WMI keys
-
-
-No specific redmi_wmi error appears in dmesg.
-
-
-Additional observation:
-
-On Linux 7.1.7:
-
-$ powerprofilesctl
-
-performance:
-CpuDriver: intel_pstate
-
-balanced:
-CpuDriver: intel_pstate
-PlatformDriver: placeholder
-
-
-The platform profile backend is detected but cannot switch to
-performance or balanced-performance.
-
-
-Possible affected components:
-
-- drivers/platform/x86/redmi-wmi
-- platform_profile framework
-- processor_thermal_soc_slider
-- ACPI platform profile handling
-
-
-I can provide additional logs, ACPI tables, or help with testing
-patches if needed.
-
-Thank you.
+X-ThreadId: Azv27X2kd0kg
+Date: Tue, 11 Aug 2026 15:28:57 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Thorsten Blum" <thorsten.blum@linux.dev>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: stable@vger.kernel.org, "Mark Pearson" <markpearson@lenovo.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <5f44090c-5b08-49da-a2a7-2ce8f0ede740@app.fastmail.com>
+In-Reply-To: <20260810120556.149416-2-thorsten.blum@linux.dev>
+References: <20260810120556.149416-2-thorsten.blum@linux.dev>
+Subject: Re: [PATCH] platform/x86: think-lmi: Fix certificate thumbprint sysfs output
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+Thanks Thorsten,
+
+On Mon, Aug 10, 2026, at 8:05 AM, Thorsten Blum wrote:
+> cert_thumbprint() already returns the accumulated output length, but
+> certificate_thumbprint_show() adds that value to count again, making the
+> next line use the wrong offset. Errors returned by cert_thumbprint() are
+> also ignored and their negative values added to count.
+>
+> Assign the total length to count instead and propagate errors correctly.
+>
+> Fixes: b49f72e7f96d ("platform/x86: think-lmi: Certificate 
+> authentication support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  drivers/platform/x86/lenovo/think-lmi.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/think-lmi.c 
+> b/drivers/platform/x86/lenovo/think-lmi.c
+> index e215e86e3db7..441fca37b523 100644
+> --- a/drivers/platform/x86/lenovo/think-lmi.c
+> +++ b/drivers/platform/x86/lenovo/think-lmi.c
+> @@ -745,6 +745,8 @@ static ssize_t certificate_thumbprint_show(struct 
+> kobject *kobj, struct kobj_att
+>  		return -EOPNOTSUPP;
+> 
+>  	for (i = 0; i < ARRAY_SIZE(thumbtypes); i++) {
+> +		ssize_t ret;
+> +
+>  		if (tlmi_priv.pwdcfg.core.password_mode >= 
+> TLMI_PWDCFG_MODE_MULTICERT) {
+>  			/* Format: 'SVC | SMC, Thumbtype' */
+>  			wmistr = kasprintf(GFP_KERNEL, "%s,%s",
+> @@ -756,8 +758,12 @@ static ssize_t certificate_thumbprint_show(struct 
+> kobject *kobj, struct kobj_att
+>  		}
+>  		if (!wmistr)
+>  			return -ENOMEM;
+> -		count += cert_thumbprint(buf, wmistr, count);
+> +
+> +		ret = cert_thumbprint(buf, wmistr, count);
+>  		kfree(wmistr);
+> +		if (ret < 0)
+> +			return ret;
+> +		count = ret;
+>  	}
+> 
+>  	return count;
+Looks good to me. Thanks for the fix.
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+
+Mark
