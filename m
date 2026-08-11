@@ -1,99 +1,140 @@
-Received: from mail-pj2-f5.google.com (mail-pj2-f5.google.com [74.125.227.133])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1660E302163
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 02:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.133
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786414954; cv=none; b=uazIkYPJM7d1moi/e/FXttDA9d1JsxTnTejP2Y8k2Py+AtUqrnsgVC/TwPkItSgcBU9+QdWYg1WNTV3l9YHXeIKsCSt4RQVegIU4Qy3tybnH2oXt/ETxMLwjWJpxaTnIkJetNE0Eve+PZssTiSjmYzHYJrQSRNR6qxgOcQ16mmU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786414954; c=relaxed/simple;
-	bh=Kn0zI7rxyZegx1vgsxplNTyY4hoKLKQ2bDgVGgQ9eYA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Os16dxYcNqd2LjKs9H8YhQX7aA600keE+N88WwjrsBJMHsOrg9kTBmzAuprT84XRbEFHC+9gqZLy9oLcTz/u4w3iR0iqpqwVkeBiflknFO+K2YjLBHuM3/6agFLpGLu70BjdQ5gFTkliRIFGs2VPqNT3sbpQeeYKuifrscGxbm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.227.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4301F8AC5
+	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 03:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786419067; cv=pass; b=UNppw6Z+Am7vu3I4QklUvCZXGR928S4DbNFInyUL1xc9iPzimdMaZQFtJYLU9VnA6BfEUJdLSWJtsUCUYBCAc9m+11GqJnmyp+2Xq4efHtvm1SUBxgJlR8iNVOsLMacjV943cKLIQUqOwKcxGUZzb3Hk09wVfaV0yGw99/P4duo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786419067; c=relaxed/simple;
+	bh=avHyb9Q/l6jKUS3TlYKS4ZmrvZngg/PHXAcaK/uIa6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BsXd5CtBxAGB9ro5tc6cjD8hwBHcyMqEDYVnXj5zFWxPjd/bWNTiJ9r1WGdBfpKObIQXzRsDTrilDqoI6ai1KOCjYLrPZVoCJKgvpoydEh0TR9VLesL3Ph7rnjz9UUq03GwHlaLv4zaUC2bs1meAaDTfGCPBRReYJUp6wFA8u4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdWFe8LD; arc=pass smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj2-f5.google.com with SMTP id d9443c01a7336-2d0344e1ce9so12344285ad.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 19:22:32 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdWFe8LD"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-caf45fc5202so2182578a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 20:31:05 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786419065; cv=none;
+        d=google.com; s=arc-20260327;
+        b=HafRBdVLTqYI3eMFl+7G/7/a/JFg0TYLEyXBy/VUYYGO8r4nJbUWvLTImqwoOclLCr
+         CpDO806pCxINpqG80ykuVA2/BtNBI9cKIRMFe9McLUpA4Npp8nC9VCBuPUvF3vTN1skk
+         qO9Z/5Efj6Zl3uLqqtuHFfhO71ObUniqvFtqV0Q2dvVM6bddmfTQMOKHpCc8+w9t8GZq
+         CKIAZAhfnokcCJvnn5bZUo4j/y3lsw3xTo97ajpcIqW/yoKD/HxOOiFsv50Q5Y43wKJZ
+         2URhbSTlfERVtZSVEg3cwwobiOxhCDhCEtQjvZNh1tql1sePc6JAnG1ajvpYQ8OZPxUZ
+         07fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
+        fh=DPxIWD89TkETApqBGUmip56QJ92zWE2y2wnycKhrpio=;
+        b=PtpvrRw/dIoSvxWumS6/vD104evFg8/tAudxi8/XY4rn2a2jzV1Nyq27Ichv0ZJCr8
+         /mv3jAoZazmEgPF7j2KQeX7SUdiH1J3XCFhkacjfwIZBZaE6ZgUd3cFABo8wDWzXAYq2
+         322PiXjywzXvUEJrbw2L3DFsQYmo3VyQO/cDS3hV2ypCFG+CBjkvoIt1Bx2h1hXNN/AW
+         chC4P7sm4Sn6BxsnpmkHp18c5UYTj2DLYgax5MPZn20dbYVpA2UblJ/4THbMuo5Veiqu
+         DjJ4bucBgvlhitr3BvpKgXOjayc6UuGVuTZmB+GeyEw/uSS5sBcTxMMVKnZBCP0uMJ2u
+         3TkQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786419065; x=1787023865; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
+        b=VdWFe8LDXJRi6z+QW6TP3K8Vcg8auMF7tMWC1re8ZLQKJq/xqStx/Sv8pFhOYScAC6
+         /EIwTX57kY0wqN6o3lzWywCmXx7gkXkIs53PG9B95UtjAdBk9HKCYp6SLwVfCiCw19Q6
+         hyfhPOW2e94x8m0El0NUvg8Y3KTMMh+VLTIMLCnkWMf1uMwIpLfj0gK1M0izXeAAKc+8
+         fVNJNiln6VkBJZCPW8YNUzawhm6BJ1nmNmQcM5/jqtpNca2IywCcjVvTAPlJuQ++seKS
+         D+MWqqvKQeeQPMLlorwjeQ121XawJMMOzKhNeBHrsM9eTUoHgLm7rqEWh6EQ5kfYUl9D
+         73YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786414952; x=1787019752;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AiV0HEnxmelGmu45/owXrOpkoTF5j4XifJDvDbQKI/8=;
-        b=o4WABA7nulKErudxO6f/QBnlaMV4lDKXKyAynBwhBtOaSx9of3j7x8G3MqXe9EwxCr
-         wRWdw28Wt4wwNUKnx79nLuW+1bMgNDgMNH6hvs3mzRVxXSbjkD108CYpgURzhSplLaLm
-         XF6P2eqKfMYFWhrNgatZqJ9Fcm2ANKJZjw4hnhT1BBKAet7Vu8n3fATeAxK+Cg58OaFB
-         rIB264fIyaWY98vPiC1QLSG97LASw9+P4aIRSHESqVPIhrhtAltNTBK0bA3C9Lpjaa+1
-         lpZzPj5cfLvYyW7f2a3W/RWQJUnJIZp9Pwa1ftW2Iaxls3SPsv7hHUZIjolf9f0+V4eT
-         76wg==
-X-Forwarded-Encrypted: i=1; AHgh+Rq/MAeoWHv1gLuWw6YK952GqxuG7Q+DCStGlWO0HWIbdQJCoYUIJqMY6Hn6gudRfxWvzV0AMwlrPUbCNxkaOr0jgRvf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8fQ9vUZ7ta0fFIr7QgSqcP8dRYWKcj0fnelBNDGgbK9zszn4L
-	p7+Pf0FUZIZTEEP0cXid1JCFgHxoX+B/7OwEaK3V/q0HFedm2IDKiWXx
-X-Gm-Gg: AR+sD11pOe6OKDo7yc/wK49DIGgAJe2joNxkJ39IRKQ+DqI3JwUd5+sW3h7RHIlGBek
-	H2NmdhSq9xNlcACVnbC+IbAXevORNpGA43EVVnO3ZdcNoLhAgxJg1+3uKYUNTNeaEcoU5ekajbl
-	vODCrC011yABZNu6PoQFBV+RHnc8DAFeEGuvr4mpo6gl3ceJRuxRoT9C/eXmN7DXTXA2WGCyllM
-	E3hi6E7amqTBN75sO7TZLrWDSfS1pVqjyeSC7bAKQcI2sxO38n8loBJ0i9FPoCZFQOao4asfz0V
-	wpp3qGoSyaYH9/pdrVmkNO0iJMhBN3xNZIlsK8d09JKPgj+EXH/WeGfiJeen+jYj77IFz6cOo3s
-	NT4d0OT1Q7gwSF2JBanHTE9n209XNsDypKJIVS7sPshvFE3oCYQoufMsLHf6tecLFc1oZjLEpey
-	l+vwbBgcN53uPYMKSk2iPm4osoqBOYeQR0vkXLco0FDfcDF3NBWVBVBu16ZCl6fSgN9WQLSYRZk
-	TKNogCuLQ==
-X-Received: by 2002:a17:902:f689:b0:2c9:ff29:3f91 with SMTP id d9443c01a7336-2d31779b7e9mr1705365ad.6.1786414952391;
-        Mon, 10 Aug 2026 19:22:32 -0700 (PDT)
-Received: from kylin-XiaoXinPro-16-AHP9.. ([116.128.244.171])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d315f29afdsm389365ad.19.2026.08.10.19.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 19:22:31 -0700 (PDT)
-From: Xueqin Luo <luoxueqin@kylinos.cn>
-To: herton@canonical.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	rafael.j.wysocki@intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Xueqin Luo <luoxueqin@kylinos.cn>
-Subject: [PATCH] platform/x86: Add ACPI_COMPANION() NULL check in topstar_acpi_probe
-Date: Tue, 11 Aug 2026 10:21:15 +0800
-Message-ID: <20260811022115.338595-1-luoxueqin@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20251104; t=1786419065; x=1787023865;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
+        b=mto9iTDDUbvoIfu2o3tFTERMCEYU30enjsJB/venwj6/CM6gLVrUr6D80XFKXvcomA
+         1OAsAQwK3CGiBPxZyaoTsF4u5Ma3kypPp4WHF+KHTCPvoCq7KuqkcAKc9bNalyK0hC2+
+         6hwnh56Ifz3TF0p47wlcNB8Dpp3svC6vKKmzFBnzUiSSCgeEFR2zHZuUcqskDixSIfg/
+         /Vz8ny0X7OOg6/oiwPAC75ovLv0NSJc9joePqgUOuvppgY9raVJrWx/gyZ/H/8fIElnm
+         ZT5M5rCodg58M+iMXbt0cd2Od/N67fzEw96bXszBxuU/Zkd9zSbz6YMPv94lfDz2Bf/r
+         42Vw==
+X-Forwarded-Encrypted: i=1; AHgh+RrVsdG3HgYvqjI0RJvmsWAj5lUktp6VreMuJLBh7by+yOXajsEsFfCPfUNMxGJN5Vr9bV1FsCBgJlKPW0KBRFN4yAyv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVEfDsVw0s5k0nNmPswf+Na+16qAVpSFHSlXPUqTHGhR7FFJwx
+	i60GM4upRzsNk5bwvpd+NbiKjbf4z6JZv/Kd8awtryglwfOAbyOCT/CXu060eiAfK58vbd7w/ST
+	BYRnyE2orH4nC6Stpjd6fTXfpTYOcmYGb4eqC
+X-Gm-Gg: AR+sD11F4XDfz9BdsKmXeTIVIkKlY4SR7pMNO+cBB/gW/ml/vUPnprPjI+rngZ9KJwl
+	WfiEFe/GOP1ilwXXMAa2qtGTqDvYqR/Z2yXdKUROU3hGa+MNu8H9DPT6rYfCpRFtxCz7AhDbRRL
+	lYGHHeYCNJ0imY3FJaMsS7/z8NShlsbQ5pgFQ8j28DUnavXK5NIIjIlKGn4jkEnfsc1kaXDbOO8
+	awMXkyuw4i5Bve8gHhr6fn8NcjNjLhOC4bPNaE7wT7yUm02f8MkvF9zwamylgGDxYmUIHudb+X4
+	cy4LjMe+siISETOf/uquZLT8Amow73vxGHfgdrNy/4bcT75fn7B3sLXGjjntHapKapP+E1O5cS1
+	EM5AmoCW1PRbbzWO4xQIRIBbTVqRptGbElZMUDGMjDPtbpRL+fM2g52CX
+X-Received: by 2002:a05:6a20:5681:b0:3bf:9142:ba3a with SMTP id
+ adf61e73a8af0-3cc2bac0da2mr611986637.26.1786419065033; Mon, 10 Aug 2026
+ 20:31:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260810052625.27614-1-phucduc.bui@gmail.com> <20260810052625.27614-2-phucduc.bui@gmail.com>
+ <CAHp75VeCWatCnsWnzRe3mVM3bDCJkqJTOh8vYyY=GoFgqg18hQ@mail.gmail.com>
+In-Reply-To: <CAHp75VeCWatCnsWnzRe3mVM3bDCJkqJTOh8vYyY=GoFgqg18hQ@mail.gmail.com>
+From: Bui Duc Phuc <phucduc.bui@gmail.com>
+Date: Tue, 11 Aug 2026 10:30:53 +0700
+X-Gm-Features: AUfX_mxIITLg6rVuJbxy9Y5RFY8zGNCR4OMWUwmRuMo-6XPtF0FVqlJxnVGnn2Y
+Message-ID: <CAABR9nGwD6Qy7e-XxcamsDFZh0d=06SR=mAHNLGdVt_uEi71gw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] platform/x86: intel: punit_ipc: Propagate errors from
+ optional IRQ lookup
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Eric Piel <eric.piel@tremplin-utc.net>, Hans de Goede <hansg@kernel.org>, 
+	ilpo.jarvinen@linux.intel.com, Zha Qipeng <qipeng.zha@intel.com>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add NULL check for ACPI_COMPANION() in topstar_acpi_probe() to prevent
-NULL pointer dereference when driver_override matches a device without
-ACPI companion.
+Hi Andy,
 
-Fixes: 3471415c8186 ("platform/x86: topstar-laptop: Convert ACPI driver to a platform one")
-Signed-off-by: Xueqin Luo <luoxueqin@kylinos.cn>
----
- drivers/platform/x86/topstar-laptop.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Thank you for your review .
 
-diff --git a/drivers/platform/x86/topstar-laptop.c b/drivers/platform/x86/topstar-laptop.c
-index 0e842c55dcc5..730a599abf0f 100644
---- a/drivers/platform/x86/topstar-laptop.c
-+++ b/drivers/platform/x86/topstar-laptop.c
-@@ -287,10 +287,14 @@ static const struct dmi_system_id topstar_dmi_ids[] = {
- 
- static int topstar_acpi_probe(struct platform_device *pdev)
- {
--	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+	struct acpi_device *device;
- 	struct topstar_laptop *topstar;
- 	int err;
- 
-+	device = ACPI_COMPANION(&pdev->dev);
-+	if (!device)
-+		return -ENODEV;
-+
- 	dmi_check_system(topstar_dmi_ids);
- 
- 	topstar = kzalloc_obj(struct topstar_laptop);
--- 
-2.43.0
+>
+> >         irq = platform_get_irq_optional(pdev, 0);
+> >         if (irq < 0) {
+> > +               if (irq != -ENXIO)
+> > +                       return irq;
+> >                 dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
+>
+> I can admit that the warning message is not comprehensive, but after
+> this patch it obviously makes a regression. A previously working
+> driver for even some Linux failures (besides deferred probe) now
+> becomes unusable. Have you studied the possible error codes returned
+> by platform_get_irq_optional()? What are they? Perhaps you need to
+> improve the documentation of that API?
+>
 
+So I understand you'd prefer to keep the current behavior of the function,
+to make sure existing systems keep working fine?
+
+However, I think if this IRQs is truly meant to be optional, then any error
+other than -ENXIO should be captured and returned
+so that developers can actually investigate and fix the underlying issue.
+Silently swallowing an error and falling back to polling doesn't
+really guarantee
+the system is working correctly or safely either, does it?
+
+That said, if you'd rather keep the current implementation as-is,
+then I think it would make more sense to switch to platform_get_irq() instead.
+That would more accurately reflect that this driver doesn't actually
+treat the IRQ
+as optional, rather than using an "optional" lookup function while implementing
+it as if it weren't optional.
+
+https://elixir.bootlin.com/linux/v7.2-rc6/source/drivers/base/platform.c#L301
+
+Best regards,
+Phuc
