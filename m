@@ -1,140 +1,178 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4301F8AC5
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 03:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786419067; cv=pass; b=UNppw6Z+Am7vu3I4QklUvCZXGR928S4DbNFInyUL1xc9iPzimdMaZQFtJYLU9VnA6BfEUJdLSWJtsUCUYBCAc9m+11GqJnmyp+2Xq4efHtvm1SUBxgJlR8iNVOsLMacjV943cKLIQUqOwKcxGUZzb3Hk09wVfaV0yGw99/P4duo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786419067; c=relaxed/simple;
-	bh=avHyb9Q/l6jKUS3TlYKS4ZmrvZngg/PHXAcaK/uIa6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BsXd5CtBxAGB9ro5tc6cjD8hwBHcyMqEDYVnXj5zFWxPjd/bWNTiJ9r1WGdBfpKObIQXzRsDTrilDqoI6ai1KOCjYLrPZVoCJKgvpoydEh0TR9VLesL3Ph7rnjz9UUq03GwHlaLv4zaUC2bs1meAaDTfGCPBRReYJUp6wFA8u4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdWFe8LD; arc=pass smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ED0286409;
+	Tue, 11 Aug 2026 04:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786423598; cv=none; b=g52zOD0w4FmhNGqkftLRmwzD8Mjv0IudGyDSs5D2i6GpbJL+EDBSwk7Yb35hArK0VrP8/g9vFj5W8b2ee2mmaE+kahR/4rRgEcuv21gs7HOSRL4juFsIMFm5wUb81RS6veh4GZGmbzeOWwMcV1h+JvY4XCrv5Y5Mgya06Qpgi6U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786423598; c=relaxed/simple;
+	bh=GTkOB2Wxi5hEX2mIwzJTm5d/29Sc42ULzXtp4BpvDVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8DICEqokiDiYz1Un7a6w04BF7njYfOMHaKJ958/8eW7Odgm6vW8542k22exnTqLxQzydptOgyG027WqtePyiFMfV3tTrbK6LiWCI0bDFMKw2YkOSSsO3iRSU2+raaOKyTh6nCiy2oYOhbmei2dM8USdOEYUALobrn0mePoBhr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byL5nLN9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdWFe8LD"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-caf45fc5202so2182578a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 10 Aug 2026 20:31:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786419065; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HafRBdVLTqYI3eMFl+7G/7/a/JFg0TYLEyXBy/VUYYGO8r4nJbUWvLTImqwoOclLCr
-         CpDO806pCxINpqG80ykuVA2/BtNBI9cKIRMFe9McLUpA4Npp8nC9VCBuPUvF3vTN1skk
-         qO9Z/5Efj6Zl3uLqqtuHFfhO71ObUniqvFtqV0Q2dvVM6bddmfTQMOKHpCc8+w9t8GZq
-         CKIAZAhfnokcCJvnn5bZUo4j/y3lsw3xTo97ajpcIqW/yoKD/HxOOiFsv50Q5Y43wKJZ
-         2URhbSTlfERVtZSVEg3cwwobiOxhCDhCEtQjvZNh1tql1sePc6JAnG1ajvpYQ8OZPxUZ
-         07fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
-        fh=DPxIWD89TkETApqBGUmip56QJ92zWE2y2wnycKhrpio=;
-        b=PtpvrRw/dIoSvxWumS6/vD104evFg8/tAudxi8/XY4rn2a2jzV1Nyq27Ichv0ZJCr8
-         /mv3jAoZazmEgPF7j2KQeX7SUdiH1J3XCFhkacjfwIZBZaE6ZgUd3cFABo8wDWzXAYq2
-         322PiXjywzXvUEJrbw2L3DFsQYmo3VyQO/cDS3hV2ypCFG+CBjkvoIt1Bx2h1hXNN/AW
-         chC4P7sm4Sn6BxsnpmkHp18c5UYTj2DLYgax5MPZn20dbYVpA2UblJ/4THbMuo5Veiqu
-         DjJ4bucBgvlhitr3BvpKgXOjayc6UuGVuTZmB+GeyEw/uSS5sBcTxMMVKnZBCP0uMJ2u
-         3TkQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786419065; x=1787023865; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
-        b=VdWFe8LDXJRi6z+QW6TP3K8Vcg8auMF7tMWC1re8ZLQKJq/xqStx/Sv8pFhOYScAC6
-         /EIwTX57kY0wqN6o3lzWywCmXx7gkXkIs53PG9B95UtjAdBk9HKCYp6SLwVfCiCw19Q6
-         hyfhPOW2e94x8m0El0NUvg8Y3KTMMh+VLTIMLCnkWMf1uMwIpLfj0gK1M0izXeAAKc+8
-         fVNJNiln6VkBJZCPW8YNUzawhm6BJ1nmNmQcM5/jqtpNca2IywCcjVvTAPlJuQ++seKS
-         D+MWqqvKQeeQPMLlorwjeQ121XawJMMOzKhNeBHrsM9eTUoHgLm7rqEWh6EQ5kfYUl9D
-         73YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786419065; x=1787023865;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=uxjKn6B7akWoVJbpDPAP9JEe0PUeBNPnw5QNKIAnSh4=;
-        b=mto9iTDDUbvoIfu2o3tFTERMCEYU30enjsJB/venwj6/CM6gLVrUr6D80XFKXvcomA
-         1OAsAQwK3CGiBPxZyaoTsF4u5Ma3kypPp4WHF+KHTCPvoCq7KuqkcAKc9bNalyK0hC2+
-         6hwnh56Ifz3TF0p47wlcNB8Dpp3svC6vKKmzFBnzUiSSCgeEFR2zHZuUcqskDixSIfg/
-         /Vz8ny0X7OOg6/oiwPAC75ovLv0NSJc9joePqgUOuvppgY9raVJrWx/gyZ/H/8fIElnm
-         ZT5M5rCodg58M+iMXbt0cd2Od/N67fzEw96bXszBxuU/Zkd9zSbz6YMPv94lfDz2Bf/r
-         42Vw==
-X-Forwarded-Encrypted: i=1; AHgh+RrVsdG3HgYvqjI0RJvmsWAj5lUktp6VreMuJLBh7by+yOXajsEsFfCPfUNMxGJN5Vr9bV1FsCBgJlKPW0KBRFN4yAyv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVEfDsVw0s5k0nNmPswf+Na+16qAVpSFHSlXPUqTHGhR7FFJwx
-	i60GM4upRzsNk5bwvpd+NbiKjbf4z6JZv/Kd8awtryglwfOAbyOCT/CXu060eiAfK58vbd7w/ST
-	BYRnyE2orH4nC6Stpjd6fTXfpTYOcmYGb4eqC
-X-Gm-Gg: AR+sD11F4XDfz9BdsKmXeTIVIkKlY4SR7pMNO+cBB/gW/ml/vUPnprPjI+rngZ9KJwl
-	WfiEFe/GOP1ilwXXMAa2qtGTqDvYqR/Z2yXdKUROU3hGa+MNu8H9DPT6rYfCpRFtxCz7AhDbRRL
-	lYGHHeYCNJ0imY3FJaMsS7/z8NShlsbQ5pgFQ8j28DUnavXK5NIIjIlKGn4jkEnfsc1kaXDbOO8
-	awMXkyuw4i5Bve8gHhr6fn8NcjNjLhOC4bPNaE7wT7yUm02f8MkvF9zwamylgGDxYmUIHudb+X4
-	cy4LjMe+siISETOf/uquZLT8Amow73vxGHfgdrNy/4bcT75fn7B3sLXGjjntHapKapP+E1O5cS1
-	EM5AmoCW1PRbbzWO4xQIRIBbTVqRptGbElZMUDGMjDPtbpRL+fM2g52CX
-X-Received: by 2002:a05:6a20:5681:b0:3bf:9142:ba3a with SMTP id
- adf61e73a8af0-3cc2bac0da2mr611986637.26.1786419065033; Mon, 10 Aug 2026
- 20:31:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byL5nLN9"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 159D41F00A3A;
+	Tue, 11 Aug 2026 04:46:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786423596;
+	bh=4EpS7VWmzddg2JU4Yq8TnnLax8NwlqEQzTHK2msPp1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=byL5nLN9p4uTRnm2l4VJcv6vJJFDdD1y470p25he8zjX+zLqOcTNTWNFI7895S44W
+	 z0kimI8da0ixsHibmhCYhKPz+85CaZyZoIZ4AFIuawotNGTLvzruJOmeinclRM7LkD
+	 81mN6ZSVI5LiIt0m+g/ZioTmLN9UIGsxIVumWC8xPEkw5BT2i3XICjE90yGsWWzFO6
+	 lYxtroWnW88Qgd1mqllkvKjTesm4Z7uH8mTN/im8QxnmV7VECxpBFVQq4SyhXtNElF
+	 wL29A1nItWjVMS7BO6XX64WruWPyKNhXYZDE+EZCP2qD+3PFi520bdflVSPRcOjToZ
+	 OQT1fbMJjMytg==
+Date: Tue, 11 Aug 2026 06:46:33 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Eliav Farber <farbere@amazon.com>, rafael@kernel.org, 
+	tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, mchehab@kernel.org, 
+	xueshuai@linux.alibaba.com, lenb@kernel.org, laurent.pinchart@ideasonboard.com, 
+	linusw@kernel.org, brgl@kernel.org, orsonzhai@gmail.com, 
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, jic23@kernel.org, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, dmitry.torokhov@gmail.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, fabio.m.de.francesco@linux.intel.com, 
+	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
+	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v4 01/13] notifier: add device-managed registration APIs
+Message-ID: <anqlfa6UADHn4qbo@monoceros>
+References: <20260726101739.33170-1-farbere@amazon.com>
+ <20260726101739.33170-2-farbere@amazon.com>
+ <anlUQXtxrghA8kNT@monoceros>
+ <anmVwiYW6fT7XhD2@ashevche-desk.local>
+ <anmWCWT_p8sIMwyf@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260810052625.27614-1-phucduc.bui@gmail.com> <20260810052625.27614-2-phucduc.bui@gmail.com>
- <CAHp75VeCWatCnsWnzRe3mVM3bDCJkqJTOh8vYyY=GoFgqg18hQ@mail.gmail.com>
-In-Reply-To: <CAHp75VeCWatCnsWnzRe3mVM3bDCJkqJTOh8vYyY=GoFgqg18hQ@mail.gmail.com>
-From: Bui Duc Phuc <phucduc.bui@gmail.com>
-Date: Tue, 11 Aug 2026 10:30:53 +0700
-X-Gm-Features: AUfX_mxIITLg6rVuJbxy9Y5RFY8zGNCR4OMWUwmRuMo-6XPtF0FVqlJxnVGnn2Y
-Message-ID: <CAABR9nGwD6Qy7e-XxcamsDFZh0d=06SR=mAHNLGdVt_uEi71gw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] platform/x86: intel: punit_ipc: Propagate errors from
- optional IRQ lookup
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Eric Piel <eric.piel@tremplin-utc.net>, Hans de Goede <hansg@kernel.org>, 
-	ilpo.jarvinen@linux.intel.com, Zha Qipeng <qipeng.zha@intel.com>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pgdaeslknqpb7jv7"
+Content-Disposition: inline
+In-Reply-To: <anmWCWT_p8sIMwyf@ashevche-desk.local>
 
-Hi Andy,
 
-Thank you for your review .
+--pgdaeslknqpb7jv7
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 01/13] notifier: add device-managed registration APIs
+MIME-Version: 1.0
 
->
-> >         irq = platform_get_irq_optional(pdev, 0);
-> >         if (irq < 0) {
-> > +               if (irq != -ENXIO)
-> > +                       return irq;
-> >                 dev_warn(&pdev->dev, "Invalid IRQ, using polling mode\n");
->
-> I can admit that the warning message is not comprehensive, but after
-> this patch it obviously makes a regression. A previously working
-> driver for even some Linux failures (besides deferred probe) now
-> becomes unusable. Have you studied the possible error codes returned
-> by platform_get_irq_optional()? What are they? Perhaps you need to
-> improve the documentation of that API?
->
+Hello Andy,
 
-So I understand you'd prefer to keep the current behavior of the function,
-to make sure existing systems keep working fine?
+On Mon, Aug 10, 2026 at 12:12:41PM +0300, Andy Shevchenko wrote:
+> On Mon, Aug 10, 2026 at 12:11:40PM +0300, Andy Shevchenko wrote:
+> > On Mon, Aug 10, 2026 at 06:37:25AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > On Sun, Jul 26, 2026 at 10:17:27AM +0000, Eliav Farber wrote:
+>=20
+> ...
+>=20
+> > > > +{
+> > > > +	struct atomic_notifier_chain_devres *dr;
+> > > > +	int ret;
+> > > > +
+> > > > +	dr =3D devres_alloc(devm_atomic_notifier_chain_unregister,
+> > > > +			  sizeof(*dr), GFP_KERNEL);
+> > > > +	if (!dr)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	ret =3D atomic_notifier_chain_register(nh, n);
+> > > > +	if (ret) {
+> > > > +		devres_free(dr);
+> > > > +		return ret;
+> > > > +	}
+> > > > +
+> > > > +	dr->nh =3D nh;
+> > > > +	dr->nb =3D n;
+> > > > +	devres_add(dev, dr);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(devm_atomic_notifier_chain_register);
+> > >=20
+> > > IMHO devm_atomic_notifier_chain_register() should look as follows:
+> > >=20
+> > > 	ret =3D atomic_notifier_chain_register(nh, n);
+> > > 	if (ret)
+> > > 		return ret;
+> > >=20
+> > > 	return devm_add_action_or_reset(dev, devm_atomic_notifier_chain_unre=
+gister, dr)
+> > >=20
+> > > which is much easier and includes less details from the inner workings
+> > > of devm. Same for the blocking variant.
+> >=20
+> > Won't work. We need more than one parameter and hence the whole devres_=
+alloc().
 
-However, I think if this IRQs is truly meant to be optional, then any error
-other than -ENXIO should be captured and returned
-so that developers can actually investigate and fix the underlying issue.
-Silently swallowing an error and falling back to polling doesn't
-really guarantee
-the system is working correctly or safely either, does it?
+Oh indeed, justified concern.
 
-That said, if you'd rather keep the current implementation as-is,
-then I think it would make more sense to switch to platform_get_irq() instead.
-That would more accurately reflect that this driver doesn't actually
-treat the IRQ
-as optional, rather than using an "optional" lookup function while implementing
-it as if it weren't optional.
+> > Please, look closer to the code.
+>=20
+> And just answering ahead, no, devm_kmalloc() is not good bandaid as it ma=
+kes code
+> not anyhow better to read and have a downside of memory fragmentation.
 
-https://elixir.bootlin.com/linux/v7.2-rc6/source/drivers/base/platform.c#L301
+My idea would be to introduce a variant of devm_add_action_or_reset()
+that copies the data (in a way to prevent the fragmentation), such that
+the function could look as follows:
 
-Best regards,
-Phuc
+int devm_atomic_notifier_chain_register(struct device *dev,
+                                       struct atomic_notifier_head *nh,
+                                       struct notifier_block *n)
+{
+	struct atomic_notifier_chain_devres dr =3D {
+		.nh =3D nh,
+		/*
+		 * Maybe rename n to nb (or vice-versa) to make the
+		 * names match here?
+		 */
+		.nb =3D n,
+	};
+	int ret;
+=09
+	ret =3D atomic_notifier_chain_register(nh, n);
+	if (ret)
+		return ret;
+=09
+	return devm_copy_data_and_add_action_or_reset(dev,
+						      devm_atomic_notifier_chain_unregister,
+						      &dr, sizeof(dr));
+}
+
+The name is ugly and long, but IMHO the semantics are useful and the new
+devm_atomic_notifier_chain_register() looks IMHO nicer that the original
+=66rom Eliav's patch.
+
+But that would be a separate topic, so going with the currently
+suggested approach is fine for me.
+
+If you rename n to nb, you can have my ack.
+
+Best regards
+Uwe
+
+--pgdaeslknqpb7jv7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmp6qQ0ACgkQj4D7WH0S
+/k6ggwf/Z6S0sEQFjfzsNngJIVe2RoUmYHf1HfmknhlH/LnJGYT0OHIavL+0UQOU
+B+wpvX9017EnBs2q/1eK2G+HPFlD3maUNsneSetO+JmHsM+irw3CWi7q8Dp2WPcn
+ytwmRruben9C96hQPBK/rhAaLk/763FJ+0OHkJtc3Jr9reRXtEqdBtHdM5WzSX/q
+ccFlhWQAlYb2myD50oTjypoiw19P+hig/s0eBOZZR9y7Zpc19Hjou6Eh6hpCOR8n
+RKw8Z9tFLBn2BlxaO7WW1scfOoxSdNhvoXlj5zeQqozPxcVvmpsmS/LwY90vaCIF
+WgjPbhvYs1ELYqC5MLau4yu6CUumAA==
+=5gDi
+-----END PGP SIGNATURE-----
+
+--pgdaeslknqpb7jv7--
