@@ -1,102 +1,85 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3121A40B363
-	for <platform-driver-x86@vger.kernel.org>; Tue, 11 Aug 2026 20:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF273FF1A5;
+	Tue, 11 Aug 2026 22:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786480784; cv=none; b=DbxUnyVy0Bg3bBGeP2ZfeS8piODyOF2y52hzQsB1Gb5tkvxpacJYozI4daKDrB16YzE69zok06k1VUc+Ykk5RyLymrjgeoXPjITBV5znL/uohMmncsJUDVd6Pn98pxnIFbCzf/vQFdllA5ElcR/6gjHuBJvrTKuLgcT64en6v9c=
+	t=1786486527; cv=none; b=QVn/tSLT8w2AfHbc7f1DJdXtoEGh1AE0s7cUNV2wKYxuhg1pzobYbcLKOyWkdNqgv5KZXYGUHkyUYX6i9hbzNcEypx+I+7ZDHoqjUBKgOCN+RUKbepHGzWQAwtedMK+Lu+TV7JApNd0H/3F+rPCqhPK5ftvIfILPr9LMGyPWjco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786480784; c=relaxed/simple;
-	bh=D2o0TEwznbSnrdQ/m8p3eHjT6PByyLCpzarc5zQ2xYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cP/oMpoWjdfR2iQhpgwetJSKzpqNZ0jmfl+9TrEidGu5xLtG388WNiIm+c4uow+mpTMgb1dho6YCKGSSItpnya41+zYJW/lLLmLQiNOrg7fCYzbkkPyRh2UV+HoQz0i4OiNzM4MKn8+sJaniwDYpJMCAd3Hotpz9ckHNp3qPcks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xYFwe1LO; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1786486527; c=relaxed/simple;
+	bh=Ao/cMRXUR2ta02+HcgbQzgE786UJKeDMWO5n5Pf8tiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B8fBmKmQPS7mGufDn25611YDrL994s+zS4rvjM6NVz9GeWEyWK/UBJIdWkBsVaisZdbavY1vGD9Lmsve0yiU69mo01IleDtQ6a+rVBSqwUBHpTws/09+q9YTv0mQ7oocvMeY50CZWWYqPgUpZSgS5ng89sNwgMPZV5IIgUnCsf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g/vfdYbl; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xYFwe1LO"
-Date: Tue, 11 Aug 2026 22:39:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786480763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RvPs6sQdn1xCyxnV2mIq9/3mrxy3ZXv46BUvWDd2oFs=;
-	b=xYFwe1LO+DpDHnFuOW7LA9/36w6d5AkDBgpMizyBvMLL39z7Gf3RiWHi/mLFNJMC+RZtw+
-	CxOxiQ2Ln5khGyBXz5J4RhwP5cyyji5nufs7eiTauLRBNelKYn1bm5tUOzxZvgF45cvN0k
-	eLodpIsZ2owkt6LGtj/kYhBHENCEnZo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: "Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	stable@vger.kernel.org,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: think-lmi: Keep pending save state on
- failure
-Message-ID: <anuIdyiaqWHCjcai@linux.dev>
-References: <20260810120830.149804-3-thorsten.blum@linux.dev>
- <a4d9ab1a-683d-49d3-93c0-d533fb96bf27@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g/vfdYbl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786486525; x=1818022525;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ao/cMRXUR2ta02+HcgbQzgE786UJKeDMWO5n5Pf8tiY=;
+  b=g/vfdYblDI7j5fy2rD6lLb9nCJl+Y2F8mt8VRkEMCVRJ+xlS/IDd05NV
+   LwSHNdESoSr4U0fOJMBF2iGWVYJN5Aj+svRHw7sBkgTLQ4/zwTPXDYXx1
+   Nuqg8DTw9Ib0JX5izg009cVMLvmnTDMlpqwBWoqJ8T9SbxwykBOYkc280
+   NeXdERH455lavx4MEj+fc8D+nE3dQ8yQO00O6SadWw8YT4tf0KiIEpi2B
+   soUGGYOQ9Msa3tdSZt6QQeUzOy9jdrK8S/e2keOFzRi9pF8XnCu/yFz05
+   8tLmo4qC5lTUNfJVvYNs4KmdunvsUzAw1Ra3WVRB7KFSfIj2flCAywlAX
+   w==;
+X-CSE-ConnectionGUID: SEvZhmhnT/W5dgbsC42oPg==
+X-CSE-MsgGUID: 4vHBesrwStaM8PpzVjy9gA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="97374764"
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="97374764"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 15:15:24 -0700
+X-CSE-ConnectionGUID: Pmw6KIneTA2hnw7wlfO3Fw==
+X-CSE-MsgGUID: UcMVg3sYReuvvH5mlj9qjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="262138179"
+Received: from spandruv-desk.jf.intel.com ([10.54.55.20])
+  by orviesa010.jf.intel.com with ESMTP; 11 Aug 2026 15:15:25 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sammiee5311@gmail.com,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 0/6] platform/x86: ISST: Validate inputs
+Date: Tue, 11 Aug 2026 15:15:08 -0700
+Message-ID: <20260811221514.3905817-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4d9ab1a-683d-49d3-93c0-d533fb96bf27@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 11, 2026 at 03:29:16PM -0400, Mark Pearson wrote:
-> Hi Thorsten,
-> 
-> On Mon, Aug 10, 2026, at 8:08 AM, Thorsten Blum wrote:
-> > In save_settings_store(), the opcode and legacy password paths do not
-> > check if saving BIOS settings failed, but instead unconditionally clear
-> > save_required and set reboot_required, losing the pending save state.
-> >
-> > Check the save result in those paths too.
-> >
-> > Fixes: 318d97849fc2 ("platform/x86: think-lmi: Add bulk save feature")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> > ---
-> >  drivers/platform/x86/lenovo/think-lmi.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/lenovo/think-lmi.c 
-> > b/drivers/platform/x86/lenovo/think-lmi.c
-> > index e215e86e3db7..cc0a85d1b832 100644
-> > --- a/drivers/platform/x86/lenovo/think-lmi.c
-> > +++ b/drivers/platform/x86/lenovo/think-lmi.c
-> > @@ -1347,6 +1347,8 @@ static ssize_t save_settings_store(struct kobject 
-> > *kobj, struct kobj_attribute *
-> >  					goto out;
-> >  			}
-> >  			ret = tlmi_save_bios_settings("");
-> > +			if (ret)
-> > +				goto out;
-> >  		} else { /* old non-opcode based authentication method (deprecated) 
-> > */
-> >  			if (tlmi_priv.pwd_admin->pwd_enabled && 
-> > tlmi_priv.pwd_admin->password[0]) {
-> >  				auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-> > @@ -1363,6 +1365,8 @@ static ssize_t save_settings_store(struct kobject 
-> > *kobj, struct kobj_attribute *
-> >  				ret = tlmi_save_bios_settings(auth_str);
-> >  			else
-> >  				ret = tlmi_save_bios_settings("");
-> > +			if (ret)
-> > +				goto out;
-> >  		}
-> >  		tlmi_priv.save_required = false;
-> >  		tlmi_priv.reboot_required = true;
-> 
-> Curious - have you actually hit this condition?
+This series add all remaining parameter validation in addition to:
+[PATCH 0/2] platform/x86: ISST: Two ioctl input validation fixes
+from HyeongJun An.
 
-No, I was just reading the code and wondered why those return values
-aren't checked for errors.
+These patches are dependent on this series.
+
+Similar validation is already done in intel-speed-select tool.
+
+Srinivas Pandruvada (6):
+  platform/x86: ISST: Validate logical CPU id and clos id
+  platform/x86: ISST: Validate max level for set feature
+  platform/x86: ISST: Validate parameter for core power state
+  platform/x86: ISST: Validate parameter for frequency and priority
+  platform/x86: ISST: Use PP level enable mask
+  platform/x86: ISST: Just allow 2 bits for SST feature enable
+
+ .../intel/speed_select_if/isst_tpmi_core.c    | 55 ++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 2 deletions(-)
+
+-- 
+2.53.0
+
