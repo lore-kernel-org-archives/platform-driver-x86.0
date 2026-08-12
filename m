@@ -1,32 +1,32 @@
 Received: from bulk0.mail-out.lima-city.de (bulk0.mail-out.lima-city.de [91.216.248.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BEE46AA79;
-	Wed, 12 Aug 2026 14:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA92468C29;
+	Wed, 12 Aug 2026 14:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.248.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546094; cv=none; b=U4OP1Dvv5Vpjz+vC/wItGG7Ul9MFpJiu33RCIartwwRuaTtbGqxQ54AfOdW0cTCV+FYSIcpZxVCABfJPkyQOMhJcZe9UTDyXVy+ll1ClS6dJCq689yjtA24RCFIeflXXDDmZnFKfvtjzLyArIC9RWjGZ+IMPBUViNrvpZrisC5I=
+	t=1786546098; cv=none; b=mwWlZaZAquNQJVBJk25G3V2yEwc2apkTa+wwAQL+/NmjPHZVFhUcb7uB7BbfIw80oWP0Q1pftdn/jctFJcNWDqC0M6sNBH91CnkhNZwrFdtyiyTxpJeCLM+k/EljO8nD4IYtuuo8AbyAeSGJ1LNIYO6tMIpnffBsm9zGhAVQUAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546094; c=relaxed/simple;
-	bh=79vwdvV8p9yudrSia5lQjOpCjUlE3msAERhpr9jn+Uw=;
+	s=arc-20240116; t=1786546098; c=relaxed/simple;
+	bh=Nhd5BwNT8JgJuZ2WolA1jVTq2wOYamSWOsjVsd/H9Ns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ip5+IPl6sCTqbdz65dC9h9MxT+m68ysUPG++HjeT5nvCD2yLwvFckxTP60tdGkqgxxr8Ium9i8/3PK6qTYCpEcEGVtoBtJH451WCgmHMPRAIaVDbX4xj/qQlaNua5hH5hn69hDgQOMkJSvoLTmCzAp3IllL9Kh+M7HI5eoaNDak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks; spf=none smtp.mailfrom=deq.rocks; dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b=aYgG5EMg; arc=none smtp.client-ip=91.216.248.212
+	 MIME-Version; b=gY3uD5xCSPQkm1L7vLWiHBF82mZLPnCG1DgJbb3HArdgPHJxe3nm27CbgFHwXd0XA5AtRESw5VAbw3Xmw15Zu1mKoTQJe7pvFa+Wu/YXbateJZxe5iTxJ4bqoMn2vqHP0Vkvt+JYdCzqpUMURH9pLEo6nU9IQJUcsHnkJb6OzOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks; spf=none smtp.mailfrom=deq.rocks; dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b=G7sLTTjm; arc=none smtp.client-ip=91.216.248.212
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b="aYgG5EMg"
+	dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b="G7sLTTjm"
 From: Andre Eikmeyer <dev@deq.rocks>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
-	s=securedbylima-20251205; t=1786546080;
-	bh=79vwdvV8p9yudrSia5lQjOpCjUlE3msAERhpr9jn+Uw=;
+	s=securedbylima-20251205; t=1786546088;
+	bh=Nhd5BwNT8JgJuZ2WolA1jVTq2wOYamSWOsjVsd/H9Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aYgG5EMg9jnhxfWzBxM8uWzsJefeApzHspx9voOZPHMjsvNNv1VIvlk6OCURWRiHo
-	 Ty1wCCIJsuimQHQB3nAkLRoX3y27ytclMAmr5RBkakzc7vewiEGLKksd0lAUtXoVsd
-	 evws3iz0g2XjdzxzfzgHukX4+N69EkkGJyre8TbMbn5vMJDVO5SDlcvyW4OA3/pmpO
-	 jUnRX+EtVNkq5JVTzCTSGGZyECwr/+vrLGQif+21mZJePB3TMG4l6fbxvVk873uqBx
-	 lgUANunU2LFicHtusxKW4kkvbYb7T05pFjqYkhccxk56k1WhJ32Afj2aEn0PBnilww
-	 PJVcYKw9rtpOA==
+	b=G7sLTTjmWZM77W1pxZTDwK11BjmuVuQOoX/qZAwHg4i3kXhejBUvyLqf0tsDq6zTT
+	 orFa1BH5G/2zLBIUZOWSdOaPgtfMuxzwrA5zvTFGU5nIAripMP630j9Ntxtxf8vSlz
+	 uXqHFdw1vY9mqIfiWykKccWOU9Qeajs+Q1/vkRBVGkFEAiSN8kgekA95Jg86A3cyhe
+	 PSO04dCWDFNpq2P7kbqCaq+c3C3F9NSTj0JgqS/uO/H/0HLBZ0nEywpROo8BpsrhaE
+	 LNaZdKTfa+5i067+x2FGRC2FMPn4PwwrZSz+Rq3saZjX030D09C70NzJF4tmKKkLR2
+	 h3TiY1KAQD9Ew==
 To: platform-driver-x86@vger.kernel.org,
 	amd-gfx@lists.freedesktop.org,
 	linux-sound@vger.kernel.org
@@ -46,9 +46,9 @@ Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	Andre Eikmeyer <dev@deq.rocks>
-Subject: [PATCH v3 1/3] platform/x86: apple-gmux: add MacBookPro15,1 dGPU power sequence
-Date: Wed, 12 Aug 2026 16:47:48 +0200
-Message-ID: <20260812144750.36797-2-dev@deq.rocks>
+Subject: [PATCH v3 3/3] ALSA: hda: allow direct complete with a powered-off GPU
+Date: Wed, 12 Aug 2026 16:47:50 +0200
+Message-ID: <20260812144750.36797-4-dev@deq.rocks>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260812144750.36797-1-dev@deq.rocks>
 References: <20260812144221.35877-1-dev@deq.rocks>
@@ -61,175 +61,84 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
+The HDA controller normally needs different WAKEEN settings for runtime and
+system suspend, so azx_prepare() prevents direct complete. For a switcheroo
+audio client whose bound GPU is already runtime suspended and switched off,
+however, the controller is physically inaccessible and cannot signal wake
+events.
 
-The discrete GPU on the MacBookPro15,1 does not return after the legacy
-GMUX power-on sequence. PCI configuration space remains inaccessible, so
-runtime PM cannot provide usable hybrid graphics with the integrated GPU
-as primary.
+Resuming the HDA function during system suspend also acquires its runtime
+PM supplier. This powers the discrete GPU back on only to suspend it again
+and can expose failures while restoring an otherwise unused GPU.
 
-Evaluate the firmware PWG1 and PWG3 link methods around the GMUX
-transition and wait for PCI configuration space before completing power-on.
-Keep the sequence limited to the MacBookPro15,1 and retain the existing
-path for every other model.
+Direct complete is allowed when the bound VGA device is both runtime
+suspended and reported off by vga_switcheroo. Active GPUs and HDA
+controllers without a switcheroo binding retain the existing WAKEEN
+transition.
 
-This was tested on both the 2018 and 2019 MacBookPro15,1 revisions with the
-integrated GPU as primary. The discrete GPU transitions between DynOff and
-DynPwr, and external displays work across the transitions.
+This was tested as part of the MacBookPro15,1 hybrid graphics series on
+both the 2018 and 2019 revisions. The discrete GPU remains powered off
+across system suspend when it is unused, and suspend and resume complete
+successfully.
 
-Co-developed-by: Andre Eikmeyer <dev@deq.rocks>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
-Signed-off-by: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>
 ---
- drivers/platform/x86/apple-gmux.c | 86 ++++++++++++++++++++++++++++---
- 1 file changed, 80 insertions(+), 6 deletions(-)
+ sound/hda/controllers/intel.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/platform/x86/apple-gmux.c b/drivers/platform/x86/apple-gmux.c
-index 9c728ac..ccb059a 100644
---- a/drivers/platform/x86/apple-gmux.c
-+++ b/drivers/platform/x86/apple-gmux.c
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/vga_switcheroo.h>
- #include <linux/debugfs.h>
-+#include <linux/dmi.h>
- #include <acpi/video.h>
- #include <asm/io.h>
+diff --git a/sound/hda/controllers/intel.c b/sound/hda/controllers/intel.c
+index 28c55c5..194d962 100644
+--- a/sound/hda/controllers/intel.c
++++ b/sound/hda/controllers/intel.c
+@@ -334,9 +334,11 @@ enum {
+ #ifdef SUPPORT_VGA_SWITCHEROO
+ #define use_vga_switcheroo(chip)	((chip)->use_vga_switcheroo)
+ #define needs_eld_notify_link(chip)	((chip)->bus.keep_power)
++static bool azx_vga_is_powered_off(struct azx *chip);
+ #else
+ #define use_vga_switcheroo(chip)	0
+ #define needs_eld_notify_link(chip)	false
++#define azx_vga_is_powered_off(chip)	false
+ #endif
  
-@@ -74,6 +75,8 @@ struct apple_gmux_data {
- 	enum vga_switcheroo_client_id switch_state_external;
- 	enum vga_switcheroo_state power_state;
- 	struct completion powerchange_done;
-+	struct pci_dev *discrete_pdev;
-+	bool use_pwg_power_sequence;
+ static const char * const driver_short_names[] = {
+@@ -1025,6 +1027,10 @@ static int azx_prepare(struct device *dev)
+ 		return 0;
  
- 	/* debugfs data */
- 	u8 selected_port;
-@@ -82,6 +85,34 @@ struct apple_gmux_data {
+ 	chip = card->private_data;
++	/* A positive return allows the PM core to use direct complete. */
++	if (azx_vga_is_powered_off(chip))
++		return 1;
++
+ 	chip->pm_prepared = 1;
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
  
- static struct apple_gmux_data *apple_gmux_data;
+@@ -1185,6 +1191,24 @@ static int azx_probe_continue(struct azx *chip);
+ #ifdef SUPPORT_VGA_SWITCHEROO
+ static struct pci_dev *get_bound_vga(struct pci_dev *pci);
  
-+static int gmux_call_pwg(struct apple_gmux_data *gmux_data,
-+			 const char *method)
++static bool azx_vga_is_powered_off(struct azx *chip)
 +{
-+	acpi_handle handle = ACPI_HANDLE(&gmux_data->discrete_pdev->dev);
-+	unsigned long long result;
-+	acpi_status status;
++	struct pci_dev *pci;
++	bool powered_off = false;
 +
-+	if (!handle)
-+		return -ENODEV;
++	if (!use_vga_switcheroo(container_of(chip, struct hda_intel, chip)))
++		return false;
 +
-+	status = acpi_evaluate_integer(handle, (acpi_string)method, NULL,
-+				       &result);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(&gmux_data->discrete_pdev->dev,
-+			"failed to evaluate %s: %s\n", method,
-+			acpi_format_exception(status));
-+		return -EIO;
++	pci = get_bound_vga(chip->pci);
++	if (pci) {
++		powered_off = pm_runtime_suspended(&pci->dev) &&
++			vga_switcheroo_get_client_state(pci) == VGA_SWITCHEROO_OFF;
++		pci_dev_put(pci);
 +	}
 +
-+	if (result) {
-+		dev_err(&gmux_data->discrete_pdev->dev,
-+			"%s failed: %llu\n", method, result);
-+		return -EIO;
-+	}
-+
-+	return 0;
++	return powered_off;
 +}
 +
- struct apple_gmux_config {
- 	u8 (*read8)(struct apple_gmux_data *gmux_data, int port);
- 	void (*write8)(struct apple_gmux_data *gmux_data, int port, u8 val);
-@@ -510,14 +541,49 @@ static int gmux_switch_ddc(enum vga_switcheroo_client_id id)
- static int gmux_set_discrete_state(struct apple_gmux_data *gmux_data,
- 				   enum vga_switcheroo_state state)
+ static void azx_vs_set_state(struct pci_dev *pci,
+ 			     enum vga_switcheroo_state state)
  {
-+	int ret;
-+
- 	reinit_completion(&gmux_data->powerchange_done);
- 
- 	if (state == VGA_SWITCHEROO_ON) {
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
--		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+		if (gmux_data->use_pwg_power_sequence &&
-+		    gmux_data->discrete_pdev) {
-+			u16 vendor;
-+			int i;
-+
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 2);
-+			msleep(100);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+
-+			ret = gmux_call_pwg(gmux_data, "PWG1");
-+			if (ret)
-+				return ret;
-+
-+			for (i = 0; i < 1000; i++) {
-+				pci_read_config_word(gmux_data->discrete_pdev,
-+						     PCI_VENDOR_ID, &vendor);
-+				if (vendor != 0xffff)
-+					break;
-+				usleep_range(1000, 2000);
-+			}
-+			if (vendor == 0xffff) {
-+				dev_err(&gmux_data->discrete_pdev->dev,
-+					"timed out waiting for PCI config space\n");
-+				return -ETIMEDOUT;
-+			}
-+
-+			ret = gmux_call_pwg(gmux_data, "PWG3");
-+			if (ret)
-+				return ret;
-+		} else {
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
-+			gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 3);
-+		}
- 		pr_debug("Discrete card powered up\n");
- 	} else {
- 		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 1);
-+		if (gmux_data->use_pwg_power_sequence)
-+			usleep_range(10000, 11000);
- 		gmux_write8(gmux_data, GMUX_PORT_DISCRETE_POWER, 0);
- 		pr_debug("Discrete card powered down\n");
- 	}
-@@ -549,11 +615,16 @@ static enum vga_switcheroo_client_id gmux_get_client_id(struct pci_dev *pdev)
- 	 */
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL)
- 		return VGA_SWITCHEROO_IGD;
--	else if (pdev->vendor == PCI_VENDOR_ID_NVIDIA &&
--		 pdev->device == 0x0863)
-+	if (pdev->vendor == PCI_VENDOR_ID_NVIDIA && pdev->device == 0x0863)
- 		return VGA_SWITCHEROO_IGD;
--	else
--		return VGA_SWITCHEROO_DIS;
-+
-+	if (apple_gmux_data->use_pwg_power_sequence &&
-+	    apple_gmux_data->discrete_pdev != pdev) {
-+		pci_dev_put(apple_gmux_data->discrete_pdev);
-+		apple_gmux_data->discrete_pdev = pci_dev_get(pdev);
-+	}
-+
-+	return VGA_SWITCHEROO_DIS;
- }
- 
- static const struct vga_switcheroo_handler gmux_handler_no_ddc = {
-@@ -803,6 +874,8 @@ static int gmux_probe(struct pnp_dev *pnp, const struct pnp_device_id *id)
- 	if (!gmux_data)
- 		return -ENOMEM;
- 	pnp_set_drvdata(pnp, gmux_data);
-+	gmux_data->use_pwg_power_sequence = type == APPLE_GMUX_TYPE_MMIO &&
-+		dmi_match(DMI_PRODUCT_NAME, "MacBookPro15,1");
- 
- 	switch (type) {
- 	case APPLE_GMUX_TYPE_MMIO:
-@@ -1009,6 +1082,7 @@ static void gmux_remove(struct pnp_dev *pnp)
- 	} else
- 		release_region(gmux_data->iostart, gmux_data->iolen);
- 	apple_gmux_data = NULL;
-+	pci_dev_put(gmux_data->discrete_pdev);
- 	kfree(gmux_data);
- }
- 
 -- 
 2.55.0
 
