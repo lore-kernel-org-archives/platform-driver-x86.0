@@ -1,283 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E703793D0
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 19:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786563487; cv=none; b=bokWLP7s6pVgIRSzrfaFQB5WiOTBOzjWpqF5upMfTCzXJ+72Ym+PmlTzHNdeftm2kk9Lf6xzNF5K2QCEgQCEomvB70r53T2rMOp5sUJkxHYvHg1mTCWTEijQsmnBWIk+XwaiK2RCrp9SGrAKmSfxg7JpJiOary3PGssmCDh7+E8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786563487; c=relaxed/simple;
-	bh=VBA2UHJ7nS/0wlmYvr0XuD4V840XUMfEHlwQ5KWJ1hg=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=biSEVfik6UbG2WRTMnd5FSo/0i48MAwfz/vn+5y4M6/voX53yClvPTbTJPNqRjlXnOSXKCnqo6gDP5qkXS/hlVtRXt8JYdZFjI4vgrCsR/T1uGSZf73fW60x4W1gSjyzhH8azoHXnIi+yKzuv/SAbdabtS3wAuQjqYfD7RfJzec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAb02s7p; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA1C30DECC
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 19:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786564085; cv=pass; b=gPNRTNwVYF++CvApXXKAjGwPZV3IF5+QSz5fupI1/i5p0Zdfy5YDqw5VH4Vo0kwMFQo1wW5fr7TtDYh7FsW8oUTUyBJqGwI67ZpRI65/7QHMAOmXhf4G3cki7KZ+X3HUb6fFBiWls3INNbf6qJZ4QQrX3vqr8uiFxW1tgLl6m68=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786564085; c=relaxed/simple;
+	bh=1DVjTbKTXkhH1yUwpD/lgRqJn/mvRVunuCZAxUjSgDU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rzIAY0SbEyWsJoqG2/Gom+VFw8pTgIqpgnozKjQwt/0XvBskNyE2e5YALf6PeiUQ81bKUgQFI5FcwR68EQrAef2JhFWEfX+M66tMX3F78XrZauX253RHHBfPbTY5qUbxS6nLqCEC3gRABB2maPJMA+xZnkJKcUbXv4NxuA+TeTo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RDkWyc34; arc=pass smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAb02s7p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786563486; x=1818099486;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=VBA2UHJ7nS/0wlmYvr0XuD4V840XUMfEHlwQ5KWJ1hg=;
-  b=lAb02s7pLakuu+BGR+Vs6WEYaHNRC2vA5FzDyi7/FePtE1dUvaeuU0FZ
-   aHz1rqOR6kb3ERuHZKbE+gzidAiWjgdYNalP5P6LLWge4eErOsEctfcyz
-   j4xSkz/Tj1wC1Um5luhEmIMuv6xFR2TWNfS6eGefMCwahEXG4lu0GvRVr
-   QqGAZEy2p7uQBz4VV0wsyd/gEVjoT3v/UI9B5VLfb+5YIkpGXdpXVlkEA
-   9r4qEaaCDgkuN4triqiGX91BbzemepB3qDUNCdUPdTbx2PPgP2Tj0Pgyb
-   1R0Wo0zYExj+fcg8+5WJOGTVSeJPTvhF9fiMHyelOynC5EY8eq1GBOHf6
-   w==;
-X-CSE-ConnectionGUID: oKDmA9uMRAeGJLoBo2/LEw==
-X-CSE-MsgGUID: QjHcrBIpTF6YUAtD7rMbJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="104515423"
-X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
-   d="scan'208";a="104515423"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 12:38:06 -0700
-X-CSE-ConnectionGUID: QwhVREsiR/W0msCwfp+n+g==
-X-CSE-MsgGUID: x1BP2Q6OTpy35VTsm+ZjiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
-   d="scan'208";a="263779969"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 12:38:05 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com
-Subject: [PATCH v2 10/10] drm/xe/vsec: Update PMT internal access for CRI
-Date: Wed, 12 Aug 2026 12:37:51 -0700
-Message-ID: <20260812193742.2170188-22-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260812193742.2170188-12-michael.j.ruhl@intel.com>
-References: <20260812193742.2170188-12-michael.j.ruhl@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RDkWyc34"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4996e2575dbso2595e9.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 12:48:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786564082; cv=none;
+        d=google.com; s=arc-20260327;
+        b=iFJyABSCmxZmPAOIGfQgqz6xOqPv9Ks9xmZYxktFCrnI2/Gv3XRHF8dtHD0gOJeJB3
+         kkV4hPcUJwcDZ9m4/NYmOrRC7rT4D2qbS3T8MlR/ZS6LNnSijJom2UoscqS+1ZHUAL7W
+         gLnnTZ8TaoFi+YdShxiV9XBeKOUpScUXa4usfJQOq8SPiz+4d0Ra0V5L028Avk2nV1f8
+         k/akV09Z4YLLxSlbbQCHTLSfuvXs3bH7f+tJkzur0ahQUalxUV3UqwT0iw+aFUpyMPXB
+         KDWssqVVSoZCISOX3x2sZ4Jj2WgkexwPEKfuGZoMsjoPSMLrbJbfyEFFHIhgfmFU7vxE
+         sg/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=1DVjTbKTXkhH1yUwpD/lgRqJn/mvRVunuCZAxUjSgDU=;
+        fh=IlYa86sY714WP5B5+67rVN28Qko32jX8dkyqVltqQF4=;
+        b=VXES6d7m6m+CXM0/UE601pZNZCtiMWWAvNAGgo2pfkauWr++qt3Hdsxy2BpjdOPHrw
+         rPUx+32w6GYr/JmxZeBljeh67x448VyrUwfSc/Di+4uDihHsPIsQ9NbRPK5p28HhiFkZ
+         GCVtBmRhGjWMl7L91ScWv+dAcvtcRC2HXEjVdBoUJ52JoH69d49hXUzErBBWML1folzK
+         5iifZXSm3yomuFhPh2pOov48Mz7ls4VJU6fr0n8j6YOEcbMS4q79XH/MMff/HBhAxp8y
+         kA8XEExJLfLGrGUT3nKuHYUJpbw8MfTAbfNMsz5IgC4Yxe67tJL1PlhD4raEy8llqrEA
+         Wk6g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1786564082; x=1787168882; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1DVjTbKTXkhH1yUwpD/lgRqJn/mvRVunuCZAxUjSgDU=;
+        b=RDkWyc34VQg53X+mHtwMrao9rfu5WV5wzl1Wy7L5hDIXEXOxRK9c3xNicBYnKxE8y8
+         7s3rPBQ/AvMGfpLbjXMXfSah2HdSZDmdOlAlmZyU+Kq7584/wMHO2x1mKBE2TajiY79W
+         eXIL+zSyNvv7ydvSc+cOjMJ7X/6Ph8do3IbU8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786564082; x=1787168882;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=1DVjTbKTXkhH1yUwpD/lgRqJn/mvRVunuCZAxUjSgDU=;
+        b=Bx12DHuaCptBD7wlvaktqK7wJZM+DCIO5RXwAfwgoPfNfcBmlkPBdTCQ4ToFC8K2gU
+         AoiYNC17/Cwd0DDWVK0CAawrUT1VJOsMTQtFnxPq1q/1Bx0Hn1Ct09zXU7Nbz/Pk/3I+
+         bfIEYnvgNtUkh8U1ZfU2OF4WQw3wVkw0VhlXQ4f6XgS0HTZE0MWNovBGzMnj6H6nhwzK
+         auXwmX1XDMh2AEgm/N0vl9tbdONIm7ygFMuPNIfjV/+sLdf9tYDCLIF74pbRo49mx2Vp
+         oKYX+9KsHb7Zhgpoa5x2gjBZFPSOoQpIbJZ+i6AfRAfOFMBWN0loo5hF3hZfYrMQzoEq
+         akbA==
+X-Forwarded-Encrypted: i=1; AHgh+RoixBvSJczXygo+Hl80ETxRNpVLk82AT8HPJ7OuoU8HGFq+McPBUYfff0WkDIa0dQy/07Tth+f5JFCR4QzKda4Bc+eY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRpl5FdkQywtTsKJQ7VlOy/WDhJ/wc6jgPLe5AQT8GC+wUnnSU
+	LFoEDU058F06VO4QvtT22OibXDq8tR18meLy68rqRpn2yWXkdQPb6JeV25JQDm5P5tO2DvMhKY+
+	qHwgJXxVX1p9lK9Jw/4X+W/iJlAPD8K6P2T8TF90j
+X-Gm-Gg: AR+sD124waDDUDBEpacsP6jQnlj+e4xIgfdcUFtv45HTkEPzfcvCECaYAhy32o58uFD
+	5pkpca2oY3QE9qrbOPMp62Ys5pHw967yKchHUYR1E4pWxMdHDPafCPd9MH0cmEl2uQptGRZ8dPA
+	JPnDIqWRgXpHQDteu9rt6Z4EbXw8I6hzqqUwqSnP2qxPfkip0Dn4VPVsnrxbD9srC0msHtqWJDi
+	Dw9TEVK5l9cXDNUUi1jR2pGuSQUixQ9yXlOicBLcXg5ZEfMHFdsRpJewylAY0mbrOfUyft72n/l
+	9QvJSpIXp9jyN40aSuZx63uRvto2Hu1C1jFRdK2/EZt/n+OqJ1XHis6ASXdhH9UwuR6+3B/gfs1
+	UF78=
+X-Received: by 2002:a05:600c:a29f:b0:495:4069:b0de with SMTP id
+ 5b1f17b1804b1-49981fabe30mr92875e9.9.1786564080986; Wed, 12 Aug 2026 12:48:00
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1785838269.git.sean@starlabs.systems> <6f65c9869714188539f2890aef6cf30e7bd2edcb.1785838269.git.sean@starlabs.systems>
+ <e0d2a22e-a0cd-4a71-82c4-b88abcc7456e@oss.qualcomm.com> <04db0ee0-a8d5-4f30-a494-5c7f8ac757c8@oss.qualcomm.com>
+ <CABtds-35m_cfT=Vm4MZkJYRe=dOPAKR6HYO_fu3SnwkdVQE0nQ@mail.gmail.com>
+ <64d82edc-87a0-47c7-8a17-f0d1c806a294@oss.qualcomm.com> <CAODwPW8B2-i4Ne-ZTVUM_H-EZwn2hoaC4joRhxNM=CREDd_aUg@mail.gmail.com>
+ <c8e4a3d3-a96d-4fd1-85a6-881e68385c83@oss.qualcomm.com>
+In-Reply-To: <c8e4a3d3-a96d-4fd1-85a6-881e68385c83@oss.qualcomm.com>
+From: Julius Werner <jwerner@chromium.org>
+Date: Wed, 12 Aug 2026 12:47:48 -0700
+X-Gm-Features: AUfX_mxfmohhDd7NwZ5OlHrJ4eVefwPyRshu_429PA-DB0FUH4Xn3jxZI6eV4zY
+Message-ID: <CAODwPW__tskkkqSREHFAf9iG17oYfG5Li-1kh0y8pX=z0W_31A@mail.gmail.com>
+Subject: Re: [PATCH v11 3/4] firmware: Rename google firmware directory to coreboot
+To: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Cc: Julius Werner <jwerner@chromium.org>, Sean Rhodes <sean@starlabs.systems>, 
+	chrome-platform@lists.linux.dev, Corentin Chary <corentin.chary@gmail.com>, 
+	"Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Joshua Grisham <josh@joshuagrisham.com>, platform-driver-x86@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Chen-Yu Tsai <wenst@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Brian Norris <briannorris@chromium.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Bjorn Andersson <andersson@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Eric Biggers <ebiggers@kernel.org>, Luca Weiss <luca.weiss@fairphone.com>, 
+	Michal Simek <michal.simek@amd.com>, Sven Peter <sven@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+	Titouan Ameline de Cadeville <titouan.ameline@gmail.com>, Kees Cook <kees@kernel.org>, 
+	dri-devel@lists.freedesktop.org, Oliver Lin <oliver@liuxiaozhen.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Xe access the PMT infrastructure directly. The current usage
-is supported ONLY by BMG devices.
+> I do not consider marketing or pure "I do not like this name" as valid
+> reasons, because this is developer string (or kernel/distro
+> configurator) not end-user visible thing. And for us, the developers,
+> this marketing does not matter.
 
-CRI has further requirements for access.
+I'm not sure I'd agree that naming doesn't matter for developers? The
+style guide has an entire section about choosing good names for C
+symbols, I don't think Kconfig symbols are fundamentally different in
+that regard; they're still strings developers read to find and make
+sense of things, and leaving something with the wrong name makes it
+harder for the reading developer to find and understand it. (This
+isn't about "marketing", btw, Google the company doesn't care whether
+this driver is called GOOGLE or COREBOOT. I care as a kernel developer
+that this driver has been mostly used for something else than what it
+was originally labeled for for a long while and it's high time that we
+correct that to avoid confusing people.)
 
-Add a new API to access the GUID based on the platform.
-Use the API get the GUID for each device.
+> Anyway, defconfig change must be separate because it goes via different
+> tree, unless this is non bisectable. Keeping it here initially confused
+> me into thinking you are actually breaking use cases (which you are not).
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/regs/xe_pmt.h |  4 +++-
- drivers/gpu/drm/xe/xe_debugfs.c  | 30 +++++++++++++-----------
- drivers/gpu/drm/xe/xe_hwmon.c    | 10 ++++++--
- drivers/gpu/drm/xe/xe_pcode.c    | 10 ++++++--
- drivers/gpu/drm/xe/xe_vsec.c     | 40 ++++++++++++++++++++++++++++++++
- drivers/gpu/drm/xe/xe_vsec.h     |  1 +
- 6 files changed, 77 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/regs/xe_pmt.h b/drivers/gpu/drm/xe/regs/xe_pmt.h
-index fc9c9cb6a830..683bf401dc9d 100644
---- a/drivers/gpu/drm/xe/regs/xe_pmt.h
-+++ b/drivers/gpu/drm/xe/regs/xe_pmt.h
-@@ -10,7 +10,7 @@
- #define BMG_PMT_BASE_OFFSET		0xDB000
- #define BMG_DISCOVERY_OFFSET		(SOC_BASE + BMG_PMT_BASE_OFFSET)
- 
--#define PUNIT_TELEMETRY_GUID		XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
-+#define BMG_PUNIT_TELEMETRY_GUID	XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
- #define BMG_ENERGY_STATUS_PMT_OFFSET	(0x30)
- #define	ENERGY_PKG			REG_GENMASK64(31, 0)
- #define	ENERGY_CARD			REG_GENMASK64(63, 32)
-@@ -25,6 +25,8 @@
- #define CRI_DISCOVERY_OFFSET		(SOC_BASE + CRI_TELEMETRY_BASE_OFFSET)
- #define CRI_TELEMETRY_OFFSET		(SOC_BASE + CRI_TELEMETRY_BASE_OFFSET)
- 
-+#define CRI_PUNIT_TELEMETRY_GUID	XE_REG(CRI_DISCOVERY_OFFSET + 0x4)
-+
- #define BMG_MODS_RESIDENCY_OFFSET		(0x4D0)
- #define BMG_G2_RESIDENCY_OFFSET		(0x530)
- #define BMG_G6_RESIDENCY_OFFSET		(0x538)
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index eeceab4a9901..67903c854562 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -97,11 +97,16 @@ static void read_residency_counter(struct xe_device *xe, struct xe_mmio *mmio,
- 				   u32 offset, const char *name, struct drm_printer *p)
- {
- 	u64 residency = 0;
-+	u32 guid;
- 	int ret;
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
--				&residency, offset, sizeof(residency));
-+	guid = xe_vsec_get_guid(xe);
-+	if (!guid) {
-+		drm_warn(&xe->drm, "PMT device is not powered\n");
-+		return;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid, &residency, offset, sizeof(residency));
- 	if (ret != sizeof(residency)) {
- 		drm_warn(&xe->drm, "%s counter failed to read, ret %d\n", name, ret);
- 		return;
-@@ -706,23 +711,22 @@ void xe_debugfs_register(struct xe_device *xe)
- 				 ARRAY_SIZE(debugfs_list),
- 				 root, minor);
- 
--	if (xe->info.platform == XE_BATTLEMAGE && !IS_SRIOV_VF(xe)) {
--		drm_debugfs_create_files(debugfs_residencies,
--					 ARRAY_SIZE(debugfs_residencies),
--					 root, minor);
--	}
--
- 	/*
--	 * Pcode version read from PMT is currently only supported on CRI and BMG platforms in PF
--	 * mode, as both platforms support the necessary telemetry read mechanism and have a fixed
--	 * PUNIT_VERSION_OFFSET.
-+	 * Residencies and Pcode version read from PMT is currently only supported on CRI and BMG
-+	 * platforms in PF mode.  Both platforms support the necessary telemetry read mechanism
-+	 * and have a fixed offses for the required data.
- 	 * Attempting this access on other platforms must be verified before enabling support.
- 	 */
- 	if (!IS_SRIOV_VF(xe) &&
--	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE))
-+	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE)) {
-+		drm_debugfs_create_files(debugfs_residencies,
-+					 ARRAY_SIZE(debugfs_residencies),
-+					 root, minor);
-+
- 		drm_debugfs_create_files(pcode_info_debugfs,
- 					 ARRAY_SIZE(pcode_info_debugfs),
- 					 root, minor);
-+	}
- 
- 	debugfs_create_file("forcewake_all", 0400, root, xe,
- 			    &forcewake_all_fops);
-diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
-index 49f7e0edcc4b..db48594fcc1f 100644
---- a/drivers/gpu/drm/xe/xe_hwmon.c
-+++ b/drivers/gpu/drm/xe/xe_hwmon.c
-@@ -517,9 +517,15 @@ xe_hwmon_energy_get(struct xe_hwmon *hwmon, int channel, long *energy)
- 
- 	if (hwmon->xe->info.platform == XE_BATTLEMAGE) {
- 		u64 pmt_val;
-+		u32 guid;
- 
--		ret = xe_pmt_telem_read(hwmon->xe->drm.dev,
--					xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
-+		guid = xe_vsec_get_guid(hwmon->xe);
-+		if (!guid) {
-+			drm_warn(&hwmon->xe->drm, "PMT device is not powered\n");
-+			*energy = 0;
-+			return;
-+		}
-+		ret = xe_pmt_telem_read(hwmon->xe->drm.dev, guid,
- 					&pmt_val, BMG_ENERGY_STATUS_PMT_OFFSET,	sizeof(pmt_val));
- 		if (ret != sizeof(pmt_val)) {
- 			drm_warn(&hwmon->xe->drm, "energy read from pmt failed, ret %d\n", ret);
-diff --git a/drivers/gpu/drm/xe/xe_pcode.c b/drivers/gpu/drm/xe/xe_pcode.c
-index ccc3bdeed6bb..1b93fda1f41a 100644
---- a/drivers/gpu/drm/xe/xe_pcode.c
-+++ b/drivers/gpu/drm/xe/xe_pcode.c
-@@ -368,11 +368,17 @@ ALLOW_ERROR_INJECTION(xe_pcode_probe_early, ERRNO); /* See xe_pci_probe */
- int xe_get_pcode_version(struct xe_device *xe, struct xe_pcode_version *version)
- {
- 	int ret = 0;
-+	u32 guid;
- 
- 	guard(xe_pm_runtime)(xe);
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(xe_root_tile_mmio(xe), PUNIT_TELEMETRY_GUID),
-+	guid = xe_vsec_get_guid(xe);
-+	if (!guid) {
-+		xe_warn(xe, "PMT device is not powered\n");
-+		return -ENODATA;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid,
- 				(u64 *)version, PUNIT_VERSION_OFFSET, sizeof(*version));
- 	if (ret != sizeof(*version)) {
- 		xe_warn(xe, "pcode version read from PMT failed, ret %pe\n", ERR_PTR(ret));
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index bed5103dac19..a56f988d13eb 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -565,6 +565,46 @@ static void vsec_disable_late_bind_work(void *arg)
- 		xe_pm_runtime_put(xe);
- }
- 
-+u32 xe_vsec_get_guid(struct xe_device *xe)
-+{
-+	struct xe_mmio *mmio = xe_root_tile_mmio(xe);
-+	u32 guid;
-+
-+	/*
-+	 * Both supported platforms (BMG, CRI) require the remapper callback to
-+	 * access data. CRI needs it for the GUID.
-+	 */
-+	if (!xe->soc_remapper.set_telem_region)
-+		return 0;
-+
-+	/* caller must ensure correct power state */
-+	if (!xe_pm_runtime_get_if_active(xe))
-+		return 0;
-+
-+	mutex_lock(&xe->pmt.lock);
-+
-+	switch (xe->info.platform) {
-+	case XE_BATTLEMAGE:
-+		guid = xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID);
-+		break;
-+
-+	case XE_CRESCENTISLAND:
-+		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-+		guid = xe_mmio_read32(mmio, CRI_PUNIT_TELEMETRY_GUID);
-+		break;
-+
-+	default:
-+		guid = 0;
-+		drm_err(&xe->drm, "Unsupported platform: %u\n", xe->info.platform);
-+		break;
-+	}
-+
-+	mutex_unlock(&xe->pmt.lock);
-+	xe_pm_runtime_put(xe);
-+
-+	return guid;
-+}
-+
- /**
-  * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
-  * interface
-diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
-index c4a1e2fc67d8..43c3e9f227c5 100644
---- a/drivers/gpu/drm/xe/xe_vsec.h
-+++ b/drivers/gpu/drm/xe/xe_vsec.h
-@@ -10,6 +10,7 @@ struct device;
- struct xe_device;
- 
- int xe_vsec_init(struct xe_device *xe);
-+u32 xe_vsec_get_guid(struct xe_device *xe);
- int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
- 
- #endif
--- 
-2.43.0
-
+Fair enough. So Sean, could you maybe split this out into this patch
+which does everything (the renaming and adding of transitional
+symbols) except for the arm64 defconfig change, and then the defconfig
+change as a separate patch at the end of the series so that it can go
+through a different tree?
