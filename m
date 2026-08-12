@@ -1,167 +1,150 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bulk0.mail-out.lima-city.de (bulk0.mail-out.lima-city.de [91.216.248.212])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBB4329C7C;
-	Wed, 12 Aug 2026 14:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C283F433048;
+	Wed, 12 Aug 2026 14:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.248.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786545068; cv=none; b=Ccbi+BwvhiiSpQqYpoQSPxPdW1OQcfnuo+vST0qAjeGFFbr+OUTcB6bTzb/Kh4oxxP7hi908uHXoHWyXe2jAJAVpHM1ie+hDeOtJcNF1EGWhOEMAehHaRsJbC1Y90eQBevG01r55R1WEvR7+88Ap/hdOMpz/9LjZzY1JCQbbI7c=
+	t=1786545203; cv=none; b=dhSGhT+noEov42oOqfbmZd+xYmEOtMZ9KShjoXkRpo/zjaEcrcfAXoE5KUF4TKf5FR0oMc2uNdUYOpBkw3bhtsA2IJwOC8+prLCK4C9+slpsSRyVRViUhJJOus0+bPfGv9BjHa+EYG4Jb37NP3jHhBmHJwRlRUIYVFEeCiMAcPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786545068; c=relaxed/simple;
-	bh=m5Ck/41SNH42G9spq+w94TsEi+ZnydGCOidNAt7APzc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rd/FuZ22Pci7p/jgVZPaa2qWRgoha2dk+5Ziy4XrtcT02NfNVRXclktszMppSn1TxEKMmAVS62w5yKRsvRiaF8iiUuWYUmfMbGvGz/HtyDRiQqh452R1RHj9BTCWLre6Ys8J5jno6L3i+crMF1tMWB7KhgQ1qXV3JAYZ3mqmpxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Vk+Efjvz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7tVU6ovb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wJwaCONb; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e7bHqRWr; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1786545203; c=relaxed/simple;
+	bh=DeON9CiENPk48ETmcdA0LflKVCteSZXW32YpFnPEgDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RWXgkxvPeEwrxZYky8Rbm//Bbcp4UUPBgMN/p7zBVp4b4COEnyTYW0WOIBqWmXrPqSFIeDRBxYRRrIrMeQqaoYNNT78ppeODgfoDnDkDY4DRRcUfRmEFmqUdbX0bfLgBBXbfpTIcBs/URtWFIhgEkAgtlFB4qL7B8bGlx3ZuGaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks; spf=none smtp.mailfrom=deq.rocks; dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b=ulLQMA3I; arc=none smtp.client-ip=91.216.248.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Vk+Efjvz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7tVU6ovb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wJwaCONb";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e7bHqRWr"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1B13F3DF3;
-	Wed, 12 Aug 2026 14:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1786545053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4DT9tBNyLwA3sWYorDlzSqDnUt2SRFG6qIwU3+DA56M=;
-	b=Vk+EfjvznafJpSvUaElBpfEe96XH6oqZvgLnmwvgqfXAQDUWJ9Wa6WyOV6ZCKicIDectoS
-	AQTTJ1L13x2ItZ5uBqB5aZ56qokYoG87U/EBIQIkyFhW7h4Mwd6PX/OZf1BWn3fQgfdYVP
-	e6ld6N8R8MZLtB9lPc5VmpuG8ac37sw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1786545053;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4DT9tBNyLwA3sWYorDlzSqDnUt2SRFG6qIwU3+DA56M=;
-	b=7tVU6ovbwczQBGga1c0KdYXGyH3nMsI8t9lOhlhN5jwDKR8cNd/taRkVj2B/l4qRKrv/66
-	kpTeCdbuW54Se2Bw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1786545049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4DT9tBNyLwA3sWYorDlzSqDnUt2SRFG6qIwU3+DA56M=;
-	b=wJwaCONbUbIevo2lmTM6cdDi8WqoBaXTz62hlTf+zlAjqFpKlz3102HseuKwQP+UZ3Cs74
-	5qLtEDlgSRMKAyCm5RnlClosUA8DeazukTRaXRhq7Rxq1pIyoHGnOFfas8QUqDylhkcPme
-	TslYRAB2UMdIkKo/jHOaDqjJgPqN9rw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1786545049;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4DT9tBNyLwA3sWYorDlzSqDnUt2SRFG6qIwU3+DA56M=;
-	b=e7bHqRWrR6D/DtEX+WVZ8G4obDt527IgS8pYeLucUmf+PaPkd56vRRWWeuYjZd2QsPKe/N
-	KaEkjEozhTCYqlBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D3E64779B1;
-	Wed, 12 Aug 2026 14:30:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 9EoSM5iDfGoZIQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 12 Aug 2026 14:30:48 +0000
-Date: Wed, 12 Aug 2026 16:30:44 +0200
-Message-ID: <87bjb7za0b.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Andre Eikmeyer <dev@deq.rocks>
-Cc: Takashi Iwai <tiwai@suse.de>,	platform-driver-x86@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,	linux-sound@vger.kernel.org,	Atharva Tiwari
- <atharvatiwarilinuxdev@gmail.com>,	Hans de Goede <hansg@kernel.org>,	Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,	Alex Deucher
- <alexander.deucher@amd.com>,	Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>,	David Airlie <airlied@gmail.com>,	Simona Vetter
- <simona@ffwll.ch>,	Kenneth Feng <kenneth.feng@amd.com>,	Jaroslav Kysela
- <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Harry Wentland
- <harry.wentland@amd.com>,	Leo Li <sunpeng.li@amd.com>,
-	dri-devel@lists.freedesktop.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] ALSA: hda: allow direct complete with a powered-off GPU
-In-Reply-To: <20260812142300.34472-1-dev@deq.rocks>
+	dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b="ulLQMA3I"
+From: Andre Eikmeyer <dev@deq.rocks>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
+	s=securedbylima-20251205; t=1786544585;
+	bh=DeON9CiENPk48ETmcdA0LflKVCteSZXW32YpFnPEgDM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ulLQMA3IVlDfrJdCagk96SJ3oyXaoRuDOtkgF+6yFVuWmENJ+2VBqTYFPxlE3TWev
+	 N5Mulq4QsDgLqJZrp+rpcLcmZYX6EbinR/krs+9q6uXOVw9su4KUgw5vDu6kjlcbB1
+	 R1HZZKhXIYi243CuMSR3jwnVCGFJOxGmYwfz9WlbcZ4tk7LDIBt17bCC+NrDEjYLxH
+	 bufvEQnKu8ZRL0dQMqv9yxXysv9D5Pcnsjb5nU0BMjAu3n/ww6KO6XTMw6p4xY2RSr
+	 pHY4mbjMzfyJAv4VvOXEC0esMwgSkuE4ewoXqMSorRp9K5s8w3AvMsPLs4Hp9UVJ5K
+	 pCx80wyjpvEfw==
+To: Takashi Iwai <tiwai@suse.de>
+Cc: platform-driver-x86@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-sound@vger.kernel.org,
+	Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Kenneth Feng <kenneth.feng@amd.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Andre Eikmeyer <dev@deq.rocks>
+Subject: [PATCH v3 3/3] ALSA: hda: allow direct complete with a powered-off GPU
+Date: Wed, 12 Aug 2026 16:23:00 +0200
+Message-ID: <20260812142300.34472-1-dev@deq.rocks>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260812140347.33360-1-dev@deq.rocks>
 References: <20260812140347.33360-1-dev@deq.rocks>
-	<20260812142300.34472-1-dev@deq.rocks>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,vger.kernel.org,lists.freedesktop.org,gmail.com,kernel.org,linux.intel.com,amd.com,ffwll.ch,perex.cz,suse.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[deq.rocks:email,suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Aug 2026 16:23:00 +0200,
-Andre Eikmeyer wrote:
-> 
-> The HDA controller normally needs different WAKEEN settings for runtime and
-> system suspend, so azx_prepare() prevents direct complete. For a switcheroo
-> audio client whose bound GPU is already runtime suspended and switched off,
-> however, the controller is physically inaccessible and cannot signal wake
-> events.
-> 
-> Resuming the HDA function during system suspend also acquires its runtime
-> PM supplier. This powers the discrete GPU back on only to suspend it again
-> and can expose failures while restoring an otherwise unused GPU.
-> 
-> Direct complete is now allowed when the bound VGA device is both runtime
-> suspended and reported off by vga_switcheroo. Active GPUs and HDA
-> controllers without a switcheroo binding retain the existing WAKEEN
-> transition.
-> 
-> This was tested as part of the MacBookPro15,1 hybrid graphics series on
-> both the 2018 and 2019 revisions. The discrete GPU remains powered off
-> across system suspend when it is unused, and suspend and resume complete
-> successfully.
-> 
-> Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
-> ---
-> Changes in v3:
-> - Rework the conditional compilation as suggested in the follow-up review.
-> - Keep the switcheroo implementation in the existing switcheroo section.
-> 
-> The follow-up review crossed with the v2 submission.
-> 
-> Changes in v2:
-> - Explain the significance of the positive azx_prepare() return value.
+The HDA controller normally needs different WAKEEN settings for runtime and
+system suspend, so azx_prepare() prevents direct complete. For a switcheroo
+audio client whose bound GPU is already runtime suspended and switched off,
+however, the controller is physically inaccessible and cannot signal wake
+events.
 
-Feel free to take my ack:
+Resuming the HDA function during system suspend also acquires its runtime
+PM supplier. This powers the discrete GPU back on only to suspend it again
+and can expose failures while restoring an otherwise unused GPU.
 
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Direct complete is now allowed when the bound VGA device is both runtime
+suspended and reported off by vga_switcheroo. Active GPUs and HDA
+controllers without a switcheroo binding retain the existing WAKEEN
+transition.
 
-But I guess you'd need to refresh the patch descriptions in other two
-patches in the series, so better to resubmit the whole series with
-corrected patches :)
+This was tested as part of the MacBookPro15,1 hybrid graphics series on
+both the 2018 and 2019 revisions. The discrete GPU remains powered off
+across system suspend when it is unused, and suspend and resume complete
+successfully.
 
+Signed-off-by: Andre Eikmeyer <dev@deq.rocks>
+---
+Changes in v3:
+- Rework the conditional compilation as suggested in the follow-up review.
+- Keep the switcheroo implementation in the existing switcheroo section.
 
-thanks,
+The follow-up review crossed with the v2 submission.
 
-Takashi
+Changes in v2:
+- Explain the significance of the positive azx_prepare() return value.
+
+ sound/hda/controllers/intel.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/sound/hda/controllers/intel.c b/sound/hda/controllers/intel.c
+index 28c55c5..194d962 100644
+--- a/sound/hda/controllers/intel.c
++++ b/sound/hda/controllers/intel.c
+@@ -334,9 +334,11 @@ enum {
+ #ifdef SUPPORT_VGA_SWITCHEROO
+ #define use_vga_switcheroo(chip)	((chip)->use_vga_switcheroo)
+ #define needs_eld_notify_link(chip)	((chip)->bus.keep_power)
++static bool azx_vga_is_powered_off(struct azx *chip);
+ #else
+ #define use_vga_switcheroo(chip)	0
+ #define needs_eld_notify_link(chip)	false
++#define azx_vga_is_powered_off(chip)	false
+ #endif
+ 
+ static const char * const driver_short_names[] = {
+@@ -1025,6 +1027,10 @@ static int azx_prepare(struct device *dev)
+ 		return 0;
+ 
+ 	chip = card->private_data;
++	/* A positive return allows the PM core to use direct complete. */
++	if (azx_vga_is_powered_off(chip))
++		return 1;
++
+ 	chip->pm_prepared = 1;
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
+ 
+@@ -1185,6 +1191,24 @@ static int azx_probe_continue(struct azx *chip);
+ #ifdef SUPPORT_VGA_SWITCHEROO
+ static struct pci_dev *get_bound_vga(struct pci_dev *pci);
+ 
++static bool azx_vga_is_powered_off(struct azx *chip)
++{
++	struct pci_dev *pci;
++	bool powered_off = false;
++
++	if (!use_vga_switcheroo(container_of(chip, struct hda_intel, chip)))
++		return false;
++
++	pci = get_bound_vga(chip->pci);
++	if (pci) {
++		powered_off = pm_runtime_suspended(&pci->dev) &&
++			vga_switcheroo_get_client_state(pci) == VGA_SWITCHEROO_OFF;
++		pci_dev_put(pci);
++	}
++
++	return powered_off;
++}
++
+ static void azx_vs_set_state(struct pci_dev *pci,
+ 			     enum vga_switcheroo_state state)
+ {
+-- 
+2.55.0
