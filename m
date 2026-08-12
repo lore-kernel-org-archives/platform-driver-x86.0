@@ -1,35 +1,51 @@
-Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
+Received: from mx5.mail-out.lima-city.de (mx5.mail-out.lima-city.de [91.216.248.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420E435508;
-	Wed, 12 Aug 2026 11:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9A5442138;
+	Wed, 12 Aug 2026 12:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.248.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786534392; cv=none; b=CYGgE7HEK7ho85g5fiYThhlDgQHEm5PKsc0/knQMiB/8g32YnmAt1kYWs8p6g9bF+FrE/VoldejcR9FuCo8TmbkuQr0RveVci0yPqsr2g7+gaVvTSlPlQsPP07JTrmysQCl3UrUS3mUMjH7T0MbWWSAKgDGO+nugY1/INBIBFYc=
+	t=1786537335; cv=none; b=E1j5yGe+SSUI6cXb+D7/memWGwDg4EXahsLQrFlMOPlDvEJchDKiFL6HuGu6y7zw4phGTAXUsDr1jzfCBc18EevctU+wT1VHgIhNu3qQ9kmLHfFdYaV3uuhXC6BLSgjs5FDvBv1HqTBD7nRZau51TVGSNhzzVw0tKiiWww6UZfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786534392; c=relaxed/simple;
-	bh=U2sp9S0Rkf82WbuDqa3pEasFaapD+9sfOgUm1s+QG5U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I06OpAcnSFfj5OvqvTXgtwcIwXembg0TuiuKwGr+GkLfJFNnoo2IVLc/kEKbZyMjzQojV9ontOMY1o/SGSx8vXvvc4YnIvdHf0hzGULYs7ny2McC9T+4QOa37+oReqaULAHdDYva7pRQO1EE6R/R6ZIrWuytSyHo0BtUQ0aP5bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=193.43.8.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from ultra-5e8c07.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	(Authenticated sender: muhamadeevir)
-	by air.basealt.ru (Postfix) with ESMTPSA id 5A2422339D;
-	Wed, 12 Aug 2026 14:33:05 +0300 (MSK)
-From: nicourced@altlinux.org
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: krishna.chomal108@gmail.com,
-	emreleno@gmail.com,
-	edip@medip.dev,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ilya Mukhamadeev <nicourced@altlinux.org>
-Subject: [PATCH] platform/x86/hp/hp-wmi: Add periodic tablet mode poll
-Date: Wed, 12 Aug 2026 14:33:03 +0300
-Message-ID: <20260812113303.106965-1-nicourced@altlinux.org>
-X-Mailer: git-send-email 2.50.1
+	s=arc-20240116; t=1786537335; c=relaxed/simple;
+	bh=cdtxM7f+HSBtEgs646+l5dVOT460jHtMauo0VN3EQJ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ozRtrgL7a+e+3WBcRaNd9mXwohf3V0n3UHUOplE4yCbgSRL9rFGOStH0YpwqSwwF1jk+x3trOk/UaF2CNiZQPxEftVLfKaFRactvjsMfAr4CyPbLJETBV7RAHt1BUOF1HiLi+UHm9JUWeNpGeGJi+wb3p+UBKmuBYR10GoLwsMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks; spf=none smtp.mailfrom=deq.rocks; dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b=DVupFUoD; arc=none smtp.client-ip=91.216.248.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=deq.rocks
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=deq.rocks
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=deq.rocks header.i=@deq.rocks header.b="DVupFUoD"
+From: Andre Eikmeyer <dev@deq.rocks>
+X-Lima-ML-UUID: ade6385e-3cd9-465b-bd4f-1f889225e633
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=deq.rocks;
+	s=securedbylima-20251205; t=1786537330;
+	bh=cdtxM7f+HSBtEgs646+l5dVOT460jHtMauo0VN3EQJ0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DVupFUoDl+KkFMjTbrH5s/WPmyKX+wF1Gk4nSo1p1wmsPDpZo0Y3XphXoVSbB6BXx
+	 BeZYX0iyN2J5xqWFByTeF/uY2pueQY1GaFWGGCTZwFEIZs2G42fJ8wLIiFooc9twVM
+	 oRmYGzK2w95t/g9gJwG05sKFpqPxzuDcrQdR7Qs2exi3/FPMn9LLI6cuwZ0kPFavO4
+	 XbcieEYvpoVhoqz2MZEooCGVmSfgk9beLsLIwuvYBpiNSGiJI4pGc2P2EjiKx622v2
+	 chf+k/qJiUj0Ys8N8+npdtpVAzz6q7JWgok6CiCFeIm0MGDYYUIc1SxGGW3NtSQt5x
+	 MpE8nO2ZHal8Q==
+To: platform-driver-x86@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	linux-sound@vger.kernel.org
+Cc: Atharva Tiwari <atharvatiwarilinuxdev@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Kenneth Feng <kenneth.feng@amd.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Apple GMUX hybrid graphics support for MacBookPro15,1
+Date: Wed, 12 Aug 2026 14:22:03 +0200
+Message-ID: <20260812122206.193680-1-dev@deq.rocks>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -38,94 +54,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ilya Mukhamadeev <nicourced@altlinux.org>
+Hello everyone,
 
-Some HP convertible laptops (e.g., ProBook x360 series) do not generate
-ACPI events when switching between laptop and tablet mode, causing the
-input subsystem to never receive SW_TABLET_MODE notifications.
+This series will enable hybrid graphics on MacBookPro15,1.
 
-Add a periodic delayed work that polls the tablet mode state every
-second and reports changes via input_report_switch(). Track the last
-known state to avoid sending duplicate events, and clean up the work
-queue on module removal.
----
- drivers/platform/x86/hp/hp-wmi.c | 35 +++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+The MacBookPro15,1 normally starts Linux with the discrete GPU as primary.
+On the machines tested here that results in roughly 24 W idle power draw,
+about 12 W of which is attributable to the otherwise unused discrete GPU.
+Selecting the integrated GPU at boot avoids that cost, but the discrete GPU
+cannot currently return after GMUX powers it down, so usable hybrid graphics
+and suspend are not available.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..5fbfdde3291a 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -460,6 +460,8 @@ static struct notifier_block platform_power_source_nb;
- static enum platform_profile_option active_platform_profile;
- static bool platform_profile_support;
- static bool zero_insize_support;
-+static int last_tablet_state = -1;
-+static struct delayed_work tablet_mode_work;
- 
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
-@@ -1176,9 +1178,13 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
- 		if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
- 			input_report_switch(hp_wmi_input_dev, SW_DOCK,
- 					    hp_wmi_get_dock_state());
--		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
--			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
--					    hp_wmi_get_tablet_mode());
-+		if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit)) {
-+			int tablet = hp_wmi_get_tablet_mode();
-+			if (tablet >= 0) {
-+				last_tablet_state = tablet;
-+				input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, tablet);
-+			}
-+		}
- 		input_sync(hp_wmi_input_dev);
- 		break;
- 	case HPWMI_PARK_HDD:
-@@ -1271,6 +1277,24 @@ static void hp_wmi_notify(union acpi_object *obj, void *context)
- 	}
- }
- 
-+/*
-+ * Periodically poll tablet mode state and send input events if changed.
-+ * This works around missing ACPI events on some HP laptops.
-+ */
-+static void hp_wmi_tablet_mode_work_handler(struct work_struct *work)
-+{
-+	int cur = hp_wmi_get_tablet_mode();
-+	if (cur >= 0 && cur != last_tablet_state) {
-+		last_tablet_state = cur;
-+		if (hp_wmi_input_dev && test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit)) {
-+			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, cur);
-+			input_sync(hp_wmi_input_dev);
-+			pr_debug("Tablet mode changed to %d\n", cur);
-+		}
-+	}
-+	schedule_delayed_work(&tablet_mode_work, msecs_to_jiffies(1000));
-+}
-+
- static int __init hp_wmi_input_setup(void)
- {
- 	acpi_status status;
-@@ -1298,6 +1322,9 @@ static int __init hp_wmi_input_setup(void)
- 	if (!(val < 0)) {
- 		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
- 		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+		last_tablet_state = val;
-+		INIT_DELAYED_WORK(&tablet_mode_work, hp_wmi_tablet_mode_work_handler);
-+		schedule_delayed_work(&tablet_mode_work, msecs_to_jiffies(1000));
- 	}
- 
- 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
-@@ -1331,6 +1358,8 @@ static int __init hp_wmi_input_setup(void)
- 
- static void hp_wmi_input_destroy(void)
- {
-+	cancel_delayed_work_sync(&tablet_mode_work);
-+	last_tablet_state = -1;
- 	wmi_remove_notify_handler(HPWMI_EVENT_GUID);
- 	input_unregister_device(hp_wmi_input_dev);
- }
--- 
-2.50.1
+This series provides the missing power lifecycle across apple-gmux, amdgpu
+and the HDA controller. With the integrated GPU as primary, the discrete GPU
+then transitions between DynOff and DynPwr and offloading to the dGPU
+through DRI_PRIME is working as well as external monitor support.
 
+The result has been tested for three weeks on both the 2018 and 2019
+MacBookPro15,1 revisions. Runtime suspend and resume, system suspend and
+resume, repeated GPU wakeups and also a variety of external Thunderbolt
+and USB-C monitors were tested successfully.
+It is a huge step forward in terms of usability, convenience and battery life
+for everyone who tested.
+
+So I have this one question regarding Apple's gpu-power-prefs EFI variable.
+The firmware defaults to the discrete GPU, while selecting the integrated GPU
+is required before this hybrid configuration can take effect. Would setting
+that preference from the kernel be appropriate on a known-good model, or
+should it remain a userspace policy decision? Some discoverable way to select
+the power-efficient configuration would seem preferable to requiring users to
+know about a vendor-specific NVRAM variable before Linux behaves like a hybrid
+graphics laptop.
+
+Thank you for your time and consideration.
+
+Andre
