@@ -1,442 +1,525 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F28239020C;
-	Wed, 12 Aug 2026 19:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786564531; cv=none; b=lPG5VkUgdeJFm95v1Hsn7SSCBOPVgOm21Cj6/MilPP0xepCCfENSYbKNoKI7/zFylDZvzlC2lP6XxviwPNXmqp9teJ7XTu00dTzkysSMAXPhNE3oK5m/yus5QzGn/q4OPJ9pPydRfR8axM56WvRCM9uUmRxaCYK8SucWjnVwD+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786564531; c=relaxed/simple;
-	bh=14YMkepUba8OMXYj93ZJjJxtDbJ/KpQndWsYQqwDoqU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=D82g8WETK7546e5tvrtacT4NQXK8vzmu2XMgNf8FjCUZ/yhocJ3bgi5IH6Wj19jkZxz3c+lCHxOXXGWB+hPfpuAg4VmIkpQPjJ8Mxa7uccc/iooB3qvJPzvpnvTZDNEFH4g/gaNB1G6+BE4sie2ip6QoaRKa5KNjqAChQMWDSjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=kiqpQv/I; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Pi+Jjfxq; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D8F372ED5
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 20:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786565582; cv=fail; b=F6GaYGXgdheyczWheRsatKhi6CxnOq+KjcIqVF9wfdCctwiYV3Mpz6UBXyorcZwnm40O7t2Cd+ve85/6ZWYkQs1Yv2KKZNRm88iICD33nrtYxzh9fNjB0VpWk8ZK9iKaDncfWd0NiX6+CQu76PytUQmP7KhcJSORw54P3mgJabo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786565582; c=relaxed/simple;
+	bh=CtECkwn7tFqx3oJLzxLaRap9WP9juPc9UulP4mvWMvE=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uSaUZabmmaGYVLs7tNjdlUobH/+f4H3NqOxFLm3qZMJoZ9G+eCFZWlm+k/lV3hyhsjDD56yAm39q6cIT47hGclyBQ2yrdI8vtZB1ZnMtEH5TcwkrABjgbbBfuSBW8m6ZL9IZenPS/12aea9/bUtWKLIuxode1NlQGD7O3LGTqIY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jOZl8RNb; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="kiqpQv/I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Pi+Jjfxq"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4A2FC14000AD;
-	Wed, 12 Aug 2026 15:55:28 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Wed, 12 Aug 2026 15:55:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1786564528;
-	 x=1786650928; bh=14sp39/wf5Ys1OU60CyXVXV4uOfUigH15n3bLxJgYvw=; b=
-	kiqpQv/I5/8Oxl7Tmz4w09gCpPSXUJI1DUDKeRDM8UikknkG/HjvLUoZbGjTib4i
-	iRa9CDEwAGoZSDq2LZezNrFw/tCrRfCJXFL2WdHArPOAyW8PUYaHSDF6JXCKSL/V
-	/dON4WR4hIxVF7KD0mur1l5d4fBKAF72bjXypd4KdovmyPAxPP6uHCp41lVVjnTP
-	9jyf+251fzB8oMNRxE8ekSxqNFJFxsHnnIerxoCKfLSR5OhVL4YxmvMGuiiVCKw3
-	fs9mDrAHlfZpy4rHJ7G+q+cjTp50FlvaisskYTZy3k2KiFUSV6STColY3IVDn0jz
-	yB6npXFUxJWSw9EMtBKDJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1786564528; x=
-	1786650928; bh=14sp39/wf5Ys1OU60CyXVXV4uOfUigH15n3bLxJgYvw=; b=P
-	i+Jjfxq2wGtexTq07Z38DLRr3u1+8nDeRaDWbHg/c3zV7M8KDIIW1p/W6yBHYztf
-	mrfrQhcjmG0PFmiMsj+1XYVfEmLZr7hg6OhvtqWCdS9zkoWFMeQyaINQeBynK2f/
-	CCR38DOZzOBasuNTA5KUHiRZ4ZVHX4dEk9WyUE6eA8W+JDM6q5FnISX+qMG80Rhi
-	jYahFala6wcRXpETRTQ57RIv6MPyDtg7IB7gUL1iHA4Qj6ErZsTRZrp73qccJ6rU
-	Cu47nGFDe1ME2+A80o279jMA2WXuYuGhQS56tJnat263b1/DJykpbYTqiyGKPRGA
-	9VaZ6hD/N9lIJKetAJg+Q==
-X-ME-Sender: <xms:r898asgg8qLoa5hyHUPxkW8xP54evYKpRJlav278f_3ytGhxToY2eg>
-    <xme:r898av14em41NAjlOc4zOc2yP1d1mGDSupUylZ7Rnn-AvkIsHjvIs8KFH4JuIWzRC
-    1iMkUR8h5-u7CaaL1EsivIMvJOZK_FAiuw9qqy36Bdd_Y6yNVqGGPrE>
-X-ME-Proxy-Cause: dmFkZTGuyPvaZgtQyEOoiChlK75pJql1zw/bZTB1M749xN/GKMK00ls2Gj1dEdnfyHMpgT
-    LXkKeFvYA7cVX/Qr5dqBvtJl0+S0WlbA4TBvbY125hEh08V3nI/kh6t5lXDR96uF9PEJhy
-    eQIgd8a67ES8htaag/mPPY2ciF3bvFpHFYJIp+3HgvVO030XQ7KROKSxzsRTt2bfSKh6Mq
-    TZF0fy697yuANesslViHPEl64pm+sPfA6jJ1wKySoldhlAk4VoYef5pFDW74yG5qKdVRbW
-    pH9+2JdyODjlyMXS7DMOp1/tIHnpKUY3F6fE7hzZp8q/+lJncJnprYX5eiIpBn4k93zpGp
-    CR87OHIexJ3lqINyMSUlt/zTfP6so6YRp2mLedlSm8h8zJrtLR0yoJTTeBXA0U+44rPfJc
-    WJkDgTV/I61dYgjmL5QwrRK5NtGY3cBugJ+CgqJOTDoHAUA8ue/QG5w5Yb3wft4P4XO4rk
-    kBwtIL7quCoCryyg5NrLtGe5Dz9AgEKl8nbLLy6bMxb3ofxazW75Tifnl7usqCRjHhHxT9
-    cI0wv4JXyeSG8JCsJWKdiTfsHWAB7nZO/ZwuL28R9RUCCkcHh7Jve0iKgpo6xkAxX3PEZX
-    sgRerzsszeuksFVSZW6P4jNHlDr3m60RHWoC0LmBU3s9DeaEeSz9lF8Jq2yg
-X-ME-Proxy: <xmx:r898aq_AIvag42eCEoriGM04Z9orGCsNJzKbaNPlos7dIlZ-GPkKLg>
-    <xmx:r898aoGt_fwBwnBTNsPI9xuKEZFVRkCCXOPEsxO0KCUddDbr0KoCwQ>
-    <xmx:r898apjWQjXChcU7aUv6zBHD61KJOwiZXI9yqH0PYE5OpusGiXCecg>
-    <xmx:r898atuw3OfqPYipD-ilAXrqdg1rskDJsaEDJaS84jmgo2qKPc-61w>
-    <xmx:sM98anVnoJcV-E1Xi7K_vFnn5spW7VImzcGKhkuHgFvGkldZgFXukSrz>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2B7F22CE0072; Wed, 12 Aug 2026 15:55:27 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jOZl8RNb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786565580; x=1818101580;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version;
+  bh=CtECkwn7tFqx3oJLzxLaRap9WP9juPc9UulP4mvWMvE=;
+  b=jOZl8RNbJ+pNVr+bPsE8aRSGkv9UnQAjp0PchMCyY82c/5oe/4AF3nRk
+   MxdCncmNwf0pTq2pCGlyzhHYjUrZAR/b0C+85uoyrtPgh38NHg+ru5OL3
+   ssUnJjniYmsgQQawejTiE1mwF9QBbOofUubR9Rjd4xe4LIsZ12fL9AqFe
+   bjMftX152fUQDgVAduK5dd/53BLjAf608iHIY3wrF5UTSJJyuoA1Yd/be
+   CH/uCK0GQTOj5Xn/LRxdgmToFvwc6X4fRBJSABDGGwK+n4J5YlA4w7M7e
+   gQJC8fsKwaK3lXln02mNbxKE1iYvEgw2GUncosV/kTBcC9HQjTsaQW4hk
+   g==;
+X-CSE-ConnectionGUID: VN7h4dteS+i/DmEux4qDNw==
+X-CSE-MsgGUID: WPWSOXKcTJCzkvDJ9/9CoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="86992049"
+X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
+   d="scan'208";a="86992049"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 13:12:53 -0700
+X-CSE-ConnectionGUID: jJOeDkNQQ7eXqI/HFfM6GA==
+X-CSE-MsgGUID: jud8AJZzQ4qz+u4bXauiHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
+   d="scan'208";a="260439539"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 13:12:51 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 13:12:50 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Wed, 12 Aug 2026 13:12:50 -0700
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.41) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 13:12:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C5qDFxdOn6GHW3WUcpT2nLaw6nShJHHWR67CteOGrRBgDQSzJDYJqdPdZg4qu0HCCgUpj69EsxtFzsugOzM7uCGc2v+mtagrzlsOtQEjBqmqKeb7kB71Y93DR0746WF9+bcrUMQ4k9PySiKKDyblNQ87Mf8GzVw0oOudfxtpypEgUqEbT3v6yV/3BkcB6fBRPkJil9imG3pjZlxNcepUdKktJU+lcBmguO9rK952T71O6INGJFFSjvbzPQJ1Rzy10vAS+EbART60nk9a6iloHOT4wifxv2wkLfyAtCZDrNT1PA0OVMIx+ayYN/wQcyAx3KU8FrgVZiaZcjPJPgwCyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V3ZxU7cmYgdnwu1r7Hrw0EHqbuXIWiWIvyWiCKgEn8Y=;
+ b=ozViWvp8Lv9whw0Qzq4WfOthfy5GcN5/qH+KkF/g7YrakmNgRuItIUx6nYL5kCKC7jH+CPmb5jEgoEZ53c4J2YaKQbw/9880QCd5fnLFhI8cb6kg2j+ZAjM+3SfzVrAbOYDXib2RdlVzHG4IkY1iOeb76zjWVlTKU37ppXUFJVItZo5xvxEBsZooKf1RCVzBlXuMrhSErulwJoX11gRxHob/OSoIsQjAcipLk7BpeexXAFP1te1FKEDU92EuoK969pC7n1V+WkV7wU/Jl/EvPlno1ix4/cr4lbQ3RxpG6VXbk9EyeDDzEqmJoUedTWBhReGMpVt5LR6Dh3N4ZIaBrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com (2603:10b6:208:3aa::18)
+ by DS7PR11MB8853.namprd11.prod.outlook.com (2603:10b6:8:255::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Wed, 12 Aug
+ 2026 20:12:47 +0000
+Received: from IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::b831:13bc:a1c9:2628]) by IA1PR11MB6418.namprd11.prod.outlook.com
+ ([fe80::b831:13bc:a1c9:2628%4]) with mapi id 15.21.0315.012; Wed, 12 Aug 2026
+ 20:12:47 +0000
+From: "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+To: "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"hansg@kernel.org" <hansg@kernel.org>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "Brost, Matthew" <matthew.brost@intel.com>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>, "thomas.hellstrom@linux.intel.com"
+	<thomas.hellstrom@linux.intel.com>, "airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>, "david.e.box@linux.intel.com"
+	<david.e.box@linux.intel.com>, "Vijay, Anoop C" <anoop.c.vijay@intel.com>,
+	"Nilawar, Badal" <badal.nilawar@intel.com>, "Roper, Matthew D"
+	<matthew.d.roper@intel.com>, "Ausmus, James" <james.ausmus@intel.com>
+Subject: RE: [PATCH v2 09/10] drm/xe/vsec: Support late bind fw information
+Thread-Topic: [PATCH v2 09/10] drm/xe/vsec: Support late bind fw information
+Thread-Index: AQHdKpIuQX9i6V/b/E24K4tRochXCbaa2GoA
+Date: Wed, 12 Aug 2026 20:12:47 +0000
+Message-ID: <IA1PR11MB6418369A0E286597CD84C85CC1DC2@IA1PR11MB6418.namprd11.prod.outlook.com>
+References: <20260812193742.2170188-12-michael.j.ruhl@intel.com>
+ <20260812193742.2170188-21-michael.j.ruhl@intel.com>
+In-Reply-To: <20260812193742.2170188-21-michael.j.ruhl@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6418:EE_|DS7PR11MB8853:EE_
+x-ms-office365-filtering-correlation-id: 3520f4b3-3793-4d06-75e7-08def8ae13af
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|38070700021|921020|4143699003|11063799006|56012099006|10067099003|18002099003|22082099003;
+x-microsoft-antispam-message-info: v5LL8M6+h+rLJtnYj+yG3rEr776OiT/LzcS8cekr0PZrC3KzbgYxEks5hetPAeJppBkplSBiTdB8+FmTnvKpjIorKBazT9xpA04e0Y+wkE8j8651m/oR+4iaSop+k6Le63It2aSP0ok4nSpYulMQsI4xDAK0spssYhBpRyJbwPLFhK+Bn79j+Cf/pbI6cC7ATqEgC3c1hkUOJf7eh3IXx/5feT2aZcOJqjg8UWWpaphhJbj0hbCyJ9mf9ZPVt/4UW+YK9z9Ec+K4IF/EfXutB7yhtIjIQ3ZkcGz9smmquiDgOvI5AAagPwd0h1IgsTFJ1Q3I0cuGzfWHhLCWQFWRdaODW6koKqcS54GQKvD8b9ZQcKqVjuLIjF+h9KVvFAQJDtyhHFedQa8//7IUrk6u6FsA5zV0EDJpao0VqsghnCO2acoScWA/padUgRgYHdAizFI64koViCalVm1MBPySZrAsrShMbGxZ/14c50Q2L0VMGriCQm/rJjj2a4p3yzSKpYQRyZ8e1qYUfhwWr98P/Vs9jMpZlr74Y6ADAV6b/OpBanY5QI/WiwWPIAGS+4UNc4E5XzdirdAdEf8dGM8GzJa0bNd5Im4RLWmPBG7rqbKB30eK8GPLPxT/BEpRngd3U5qZxkZ35ImcBJ9OQPaE04GAmavFQ7qAcmQYU7uNubjQ6co7r7bWPRblY9LGiox64A/4QJZf0Bp2R9iwFHODh5/R8d40nW2JZexNapYKFZA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6418.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(38070700021)(921020)(4143699003)(11063799006)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?AJVMiDOZLM774hMatibeM2PheSO0xU6XnKoUDw7pKd+QkDjgX6JwLZKxtzBr?=
+ =?us-ascii?Q?Km4LHNhekRxR1aOAgszWANDNOB3PLMQroSQLnjM+OwKEDtHcUSVI0F2vtbp9?=
+ =?us-ascii?Q?ths0rBtJ5U8u/vTS8XRcHD5GeIgzrjGT6FrD2bR/8+1wHzERCe8IHHjFf1+a?=
+ =?us-ascii?Q?7pEAC7Mp4hYCgVfyJZAb/g5Jhenq6LtbQs0KYNYIQciCfewzZ3KRivKoSjqB?=
+ =?us-ascii?Q?AF86hgv4tIvqXWmD+mLayA1whTGx1it4QSS+BSqAD0tawOXKPJIaFDiWeGlW?=
+ =?us-ascii?Q?BvVrVUVUGbZ1/78PJp+5SH/5RPhbS4ZMPI00Fx7pfeBsVl2YQDOdr4FrgkOV?=
+ =?us-ascii?Q?9EF3qP4/eOM2G6nuh3eYFJJB6mLO5LtuuuYBqUj9sJucLABQN4mi17ens4IX?=
+ =?us-ascii?Q?iBlUoaRD2bbphnvF4xliTaFfJzqsAuBzZvuGjmNFr3jUem/XCyqaOSjDAgD3?=
+ =?us-ascii?Q?XvV6K3Sydp0GW32YiIsdMLMEkyk9eYKNbVqNZ55bsJkjxnk2l8vBe9UPQTQ4?=
+ =?us-ascii?Q?VQCTUSwRh9EUqEEhoGg8XqspTV5em2Hsa1dwootEOMul3TPy7f/S0m8J7F66?=
+ =?us-ascii?Q?1TjJXsNIMZJoxi1IjvZ6yP7AbCbyqq3EwzY4I3abFr8n/r9MpllarJIZ1HOk?=
+ =?us-ascii?Q?GJ0VIqxPSY37zo+/WDBYipN4cy++RDoBDTzVAayE+I4SxQYEvQopEfe1wpMh?=
+ =?us-ascii?Q?O6y+Qd5FR8DxWAwcd8HKd12CgqGGWDObzu45vM1fo4pM7EdrIKO0p56QRwxw?=
+ =?us-ascii?Q?Oe3fSZ9+uq+0LgRx9YCcAEUfTdWVPU/h+R3Sa9Td2vKsVw3xCD1NLeeVEnLu?=
+ =?us-ascii?Q?zBybZzl6qfk1IFjtINTb2gt/Dg0B6yTzgS6B1EfAMhKxi7qpQuZQEEVQe9sO?=
+ =?us-ascii?Q?uc0J8ELszgV9LCoPAdBH6wItvE+o0n+rCtX7/NVBW4/wb9FlIpua4aszGBoK?=
+ =?us-ascii?Q?FYY5VsockvnXJRPa/mmLztWAPo2y6aKqTY40LJGseTigiMxCbeIKSxmJE1R0?=
+ =?us-ascii?Q?60OpLtqxCiqtkm3Fu+4KkAQHW7A2WV+K5mw5SU7N8ZzCPmrxaIEZIQPOwco0?=
+ =?us-ascii?Q?V44iB2GRsVdJqmmg7Rp0RW9RyofJZ9Q6I5D2YMVDHdAL/WgavoCYz57irpJC?=
+ =?us-ascii?Q?qM6hVfXR2ahOuB/YLXXsv2oh8wt3BKNqija4zVHUuRP2E4E2lG9epas04zSH?=
+ =?us-ascii?Q?nR/OeHp/CTdNbYKdNu3qkQVvWl3A6m75CoCj7WA3AlO75GIqw7q6W2W9+EW2?=
+ =?us-ascii?Q?vVFTis4TVCa4IVJQTUOlEXoci1ZxnrgZofFG7CD2ZPj3VoMHZ723MYgv8rUW?=
+ =?us-ascii?Q?m+oaUAKF018Ig31NcCokB4nkG3XhnxVRFmSTxI3afF0D7d6tekf0dvosCQz5?=
+ =?us-ascii?Q?/23BPaNVT48znbHjPOvi4dyZmNIc3HL4BSOrgF35pAkN48+mD24lcPmBkSvc?=
+ =?us-ascii?Q?AwL5owDAVimjx4CX2fPv2srA1i6sLVrK7omu/OVEVkkIbmO8Mtfp8Pgd5Vz4?=
+ =?us-ascii?Q?ZXnKFUlG7KULcSnSdJqnW/n9OG4qFv0NVQOl0mIJ+A3ka05PTHxtCD79LO4o?=
+ =?us-ascii?Q?bUzOQ1514XBglnpJBWgl2HEbdoqFZN0Ag31WzxHJGY4K56+jWGfNc216QiZU?=
+ =?us-ascii?Q?K4jb0mdQz9qeEW+auKObYQC0TBS1OuEpy3Pq+qkEtA8JZu1tR86M4e9tIzek?=
+ =?us-ascii?Q?sX1i0YzIBRpBG0VmfGXCyvvXuMfHFbjMnaPYSCfsuUamPiJm+IaCNMC3skJn?=
+ =?us-ascii?Q?DVSyBab7RA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: AP5BIVipIj7w
-Date: Wed, 12 Aug 2026 15:55:06 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- ibm-acpi-devel@lists.sourceforge.net,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Nitin Joshi" <nitjoshi@gmail.com>, "Hans de Goede" <hansg@kernel.org>
-Message-Id: <24dca37c-b91f-4dba-aa8f-4a9fc55e8f2b@app.fastmail.com>
-In-Reply-To: <7a924f0a-0afb-4ae0-a106-37cdc76836bd@app.fastmail.com>
-References: <20260806061925.625482-1-dmitry.torokhov@gmail.com>
- <7a924f0a-0afb-4ae0-a106-37cdc76836bd@app.fastmail.com>
-Subject: Re: [ibm-acpi-devel] [PATCH 1/3] platform/x86: thinkpad_acpi: convert
- mutex_lock() to guard(mutex)
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-Exchange-RoutingPolicyChecked: JxmBpui/1jz9dYJzyWfSDfm084WvgAb40jImTHXZwRXMCwnsdtpOGTo3ApV7upBaqey3BBYbZ0ZbFeeYPgoZM9gpeGx2PaTiKte2poviAsRCqBQ5jxg8xEGH01YiD5QdXPwyp/u+NNP2QfijRFgBkx6cX+d0qCVOSnDRlFDdlcu6ThV8znABI1CxYdeaXvWkFsppAEyEDovVdMwEXCIxHv8JvVDa91PFRZJKPzkzGmMOJtP1jujj0P6BagCV4Bz6aApZcmmcO9xyEXLIdNrKjqysTeQSKxwBPnQjPS2CeL6Oql+Ssq8l8Ph+AEOXeZ92biMBQwxgx4mkx89MxNEZNQ==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6418.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3520f4b3-3793-4d06-75e7-08def8ae13af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2026 20:12:47.1184
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F1c2iKbpzi6BwRMnrqIfbzFIbN9o+BNXTW8CEjxHkZ1FvlisQdx3yzOi5vSAI6Y0MuDr9ZZaP0lRiWrZ1KF4eFUR3AU+JdF7yOeTeBXj/bE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB8853
+X-OriginatorOrg: intel.com
 
-On Wed, Aug 12, 2026, at 2:29 PM, Mark Pearson wrote:
-> Thanks Dmitry,
+
+
+>-----Original Message-----
+>From: Intel-xe <intel-xe-bounces@lists.freedesktop.org> On Behalf Of Micha=
+el
+>J. Ruhl
+>Sent: Wednesday, August 12, 2026 3:38 PM
+>To: platform-driver-x86@vger.kernel.org; intel-xe@lists.freedesktop.org;
+>hansg@kernel.org; ilpo.jarvinen@linux.intel.com; Brost, Matthew
+><matthew.brost@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
+>thomas.hellstrom@linux.intel.com; airlied@gmail.com; simona@ffwll.ch;
+>david.e.box@linux.intel.com; Vijay, Anoop C <anoop.c.vijay@intel.com>;
+>Nilawar, Badal <badal.nilawar@intel.com>; Roper, Matthew D
+><matthew.d.roper@intel.com>; Ausmus, James <james.ausmus@intel.com>
+>Subject: [PATCH v2 09/10] drm/xe/vsec: Support late bind fw information
 >
-> On Thu, Aug 6, 2026, at 2:19 AM, Dmitry Torokhov wrote:
->> Convert straightforward mutex_lock() and mutex_unlock() usages for
->> hotkey_mutex, tpacpi_inputdev_send_mutex, kbdlight_mutex, lcdshadow_dev
->> lock, and dytc_mutex to guard(mutex) and scoped_guard(mutex) helpers
->> from linux/cleanup.h.
->>
->> This improves code readability and ensures that mutexes are
->> automatically released when exiting their respective scopes.
->>
->> Assisted-by: Antigravity:gemini-3.6-flash
->> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> ---
->>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 139 ++++++++------------
->>  1 file changed, 57 insertions(+), 82 deletions(-)
->>
->> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
->> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> index f8e116e8a65d..beb85ea1103b 100644
->> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
->> @@ -2164,7 +2164,7 @@ static int tpacpi_hotkey_driver_mask_set(const 
->> u32 mask)
->>  		return 0;
->>  	}
->> 
->> -	mutex_lock(&hotkey_mutex);
->> +	guard(mutex)(&hotkey_mutex);
->> 
->>  	HOTKEY_CONFIG_CRITICAL_START
->>  	hotkey_driver_mask = mask;
->> @@ -2177,8 +2177,6 @@ static int tpacpi_hotkey_driver_mask_set(const u32 mask)
->>  							~hotkey_source_mask);
->>  	hotkey_poll_setup(true);
->> 
->> -	mutex_unlock(&hotkey_mutex);
->> -
->>  	return rc;
->>  }
->> 
->> @@ -2202,15 +2200,12 @@ static void tpacpi_input_send_tabletsw(void)
->>  {
->>  	int state;
->> 
->> -	if (tp_features.hotkey_tablet &&
->> -	    !hotkey_get_tablet_mode(&state)) {
->> -		mutex_lock(&tpacpi_inputdev_send_mutex);
->> +	if (tp_features.hotkey_tablet && !hotkey_get_tablet_mode(&state)) {
->> +		guard(mutex)(&tpacpi_inputdev_send_mutex);
->> 
->>  		input_report_switch(tpacpi_inputdev,
->>  				    SW_TABLET_MODE, !!state);
->>  		input_sync(tpacpi_inputdev);
->> -
->> -		mutex_unlock(&tpacpi_inputdev_send_mutex);
->>  	}
->>  }
->> 
->> @@ -2235,7 +2230,6 @@ static int get_camera_shutter(void)
->> 
->>  static bool tpacpi_input_send_key(const u32 hkey, bool *send_acpi_ev)
->>  {
->> -	bool known_ev;
->>  	u32 scancode;
->> 
->>  	if (tpacpi_driver_event(hkey))
->> @@ -2278,11 +2272,8 @@ static bool tpacpi_input_send_key(const u32 
->> hkey, bool *send_acpi_ev)
->>  		scancode = hkey;
->>  	}
->> 
->> -	mutex_lock(&tpacpi_inputdev_send_mutex);
->> -	known_ev = sparse_keymap_report_event(tpacpi_inputdev, scancode, 1, true);
->> -	mutex_unlock(&tpacpi_inputdev_send_mutex);
->> -
->> -	return known_ev;
->> +	guard(mutex)(&tpacpi_inputdev_send_mutex);
->> +	return sparse_keymap_report_event(tpacpi_inputdev, scancode, 1, true);
->>  }
->> 
->>  #ifdef CONFIG_THINKPAD_ACPI_HOTKEY_POLL
->> @@ -2572,9 +2563,8 @@ static void hotkey_poll_setup(const bool may_warn)
->> 
->>  static void hotkey_poll_setup_safe(const bool may_warn)
->>  {
->> -	mutex_lock(&hotkey_mutex);
->> +	guard(mutex)(&hotkey_mutex);
->>  	hotkey_poll_setup(may_warn);
->> -	mutex_unlock(&hotkey_mutex);
->>  }
->> 
->>  static void hotkey_poll_set_freq(unsigned int freq)
->> @@ -3077,13 +3067,11 @@ static void tpacpi_send_radiosw_update(void)
->> 
->>  	/* Issue rfkill input event for WLSW switch */
->>  	if (!(wlsw < 0)) {
->> -		mutex_lock(&tpacpi_inputdev_send_mutex);
->> +		guard(mutex)(&tpacpi_inputdev_send_mutex);
->> 
->>  		input_report_switch(tpacpi_inputdev,
->>  				    SW_RFKILL_ALL, (wlsw > 0));
->>  		input_sync(tpacpi_inputdev);
->> -
->> -		mutex_unlock(&tpacpi_inputdev_send_mutex);
->>  	}
->> 
->>  	/*
->> @@ -3095,7 +3083,7 @@ static void tpacpi_send_radiosw_update(void)
->> 
->>  static void hotkey_exit(void)
->>  {
->> -	mutex_lock(&hotkey_mutex);
->> +	guard(mutex)(&hotkey_mutex);
->>  	hotkey_poll_stop_sync();
->>  	dbg_printk(TPACPI_DBG_EXIT | TPACPI_DBG_HKEY,
->>  		   "restoring original HKEY status and mask\n");
->> @@ -3105,8 +3093,6 @@ static void hotkey_exit(void)
->>  	      hotkey_mask_set(hotkey_orig_mask)) |
->>  	     hotkey_status_set(false)) != 0)
->>  		pr_err("failed to restore hot key mask to BIOS defaults\n");
->> -
->> -	mutex_unlock(&hotkey_mutex);
->>  }
->> 
->>  /*
->> @@ -3423,11 +3409,11 @@ static int __init hotkey_init(struct 
->> ibm_init_struct *iibm)
->>  	if (tp_features.hotkey_mask) {
->>  		/* hotkey_source_mask *must* be zero for
->>  		 * the first hotkey_mask_get to return hotkey_orig_mask */
->> -		mutex_lock(&hotkey_mutex);
->> -		res = hotkey_mask_get();
->> -		mutex_unlock(&hotkey_mutex);
->> -		if (res)
->> -			return res;
->> +		scoped_guard(mutex, &hotkey_mutex) {
->> +			res = hotkey_mask_get();
->> +			if (res)
->> +				return res;
->> +		}
->> 
->>  		hotkey_orig_mask = hotkey_acpi_mask;
->>  	} else {
->> @@ -3526,11 +3512,11 @@ static int __init hotkey_init(struct 
->> ibm_init_struct *iibm)
->>  		hotkey_exit();
->>  		return res;
->>  	}
->> -	mutex_lock(&hotkey_mutex);
->> -	res = hotkey_mask_set(((hotkey_all_mask & ~hotkey_reserved_mask)
->> -			       | hotkey_driver_mask)
->> -			      & ~hotkey_source_mask);
->> -	mutex_unlock(&hotkey_mutex);
->> +	scoped_guard(mutex, &hotkey_mutex) {
->> +		res = hotkey_mask_set(((hotkey_all_mask & ~hotkey_reserved_mask)
->> +				       | hotkey_driver_mask)
->> +				      & ~hotkey_source_mask);
->> +	}
->>  	if (res < 0 && res != -ENXIO) {
->>  		hotkey_exit();
->>  		return res;
->> @@ -3977,11 +3963,11 @@ static void hotkey_resume(void)
->>  {
->>  	tpacpi_disable_brightness_delay();
->> 
->> -	mutex_lock(&hotkey_mutex);
->> -	if (hotkey_status_set(true) < 0 ||
->> -	    hotkey_mask_set(hotkey_acpi_mask) < 0)
->> -		pr_err("error while attempting to reset the event firmware interface\n");
->> -	mutex_unlock(&hotkey_mutex);
->> +	scoped_guard(mutex, &hotkey_mutex) {
->> +		if (hotkey_status_set(true) < 0 ||
->> +		    hotkey_mask_set(hotkey_acpi_mask) < 0)
->> +			pr_err("error while attempting to reset the event firmware interface\n");
->> +	}
->> 
->>  	tpacpi_send_radiosw_update();
->>  	tpacpi_input_send_tabletsw();
->> @@ -5034,21 +5020,16 @@ static DEFINE_MUTEX(kbdlight_mutex);
->> 
->>  static int kbdlight_set_level(int level)
->>  {
->> -	int ret = 0;
->> -
->>  	if (!hkey_handle)
->>  		return -ENXIO;
->> 
->> -	mutex_lock(&kbdlight_mutex);
->> +	guard(mutex)(&kbdlight_mutex);
->> 
->>  	if (!acpi_evalf(hkey_handle, NULL, "MLCS", "dd", level))
->> -		ret = -EIO;
->> -	else
->> -		kbdlight_brightness = level;
->> -
->> -	mutex_unlock(&kbdlight_mutex);
->> +		return -EIO;
->> 
->> -	return ret;
->> +	kbdlight_brightness = level;
->> +	return 0;
->>  }
->> 
->>  static int kbdlight_get_level(void)
->> @@ -10103,9 +10084,8 @@ static void lcdshadow_resume(void)
->>  	if (!lcdshadow_dev)
->>  		return;
->> 
->> -	mutex_lock(&lcdshadow_dev->lock);
->> +	guard(mutex)(&lcdshadow_dev->lock);
->>  	lcdshadow_set_sw_state(lcdshadow_dev, lcdshadow_dev->sw_state);
->> -	mutex_unlock(&lcdshadow_dev->lock);
->>  }
->> 
->>  static int lcdshadow_read(struct seq_file *m)
->> @@ -10137,9 +10117,8 @@ static int lcdshadow_write(char *buf)
->>  	if (state >= 2 || state < 0)
->>  		return -EINVAL;
->> 
->> -	mutex_lock(&lcdshadow_dev->lock);
->> -	res = lcdshadow_set_sw_state(lcdshadow_dev, state);
->> -	mutex_unlock(&lcdshadow_dev->lock);
->> +	scoped_guard(mutex, &lcdshadow_dev->lock)
->> +		res = lcdshadow_set_sw_state(lcdshadow_dev, state);
->> 
->>  	drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
->> 
->> @@ -10603,26 +10582,26 @@ static const struct platform_profile_ops 
->> dytc_profile_ops = {
->>  static void dytc_profile_refresh(void)
->>  {
->>  	enum platform_profile_option profile;
->> -	int output = 0, err = 0;
->> +	int output = 0, err;
->>  	int perfmode, funcmode = 0;
->> 
->> -	mutex_lock(&dytc_mutex);
->> -	if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
->> -		if (dytc_mmc_get_available)
->> -			err = dytc_command(DYTC_CMD_MMC_GET, &output);
->> -		else
->> -			err = dytc_cql_command(DYTC_CMD_GET, &output);
->> -		funcmode = DYTC_FUNCTION_MMC;
->> -	} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
->> -		err = dytc_command(DYTC_CMD_GET, &output);
->> -		/* Check if we are PSC mode, or have AMT enabled */
->> -		funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
->> -	} else { /* Unknown profile mode */
->> -		err = -ENODEV;
->> +	scoped_guard(mutex, &dytc_mutex) {
->> +		if (dytc_capabilities & BIT(DYTC_FC_MMC)) {
->> +			if (dytc_mmc_get_available)
->> +				err = dytc_command(DYTC_CMD_MMC_GET, &output);
->> +			else
->> +				err = dytc_cql_command(DYTC_CMD_GET, &output);
->> +			funcmode = DYTC_FUNCTION_MMC;
->> +		} else if (dytc_capabilities & BIT(DYTC_FC_PSC)) {
->> +			err = dytc_command(DYTC_CMD_GET, &output);
->> +			/* Check if we are PSC mode, or have AMT enabled */
->> +			funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
->> +		} else { /* Unknown profile mode */
->> +			err = -ENODEV;
->> +		}
->> +		if (err)
->> +			return;
->>  	}
->> -	mutex_unlock(&dytc_mutex);
->> -	if (err)
->> -		return;
->> 
->>  	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
->>  	err = convert_dytc_to_profile(funcmode, perfmode, &profile);
->> @@ -11425,7 +11404,7 @@ static bool tpacpi_driver_event(const unsigned 
->> int hkey_event)
->>  		if (tp_features.kbdlight) {
->>  			enum led_brightness brightness;
->> 
->> -			mutex_lock(&kbdlight_mutex);
->> +			guard(mutex)(&kbdlight_mutex);
->> 
->>  			/*
->>  			 * Check the brightness actually changed, setting the brightness
->> @@ -11437,8 +11416,6 @@ static bool tpacpi_driver_event(const unsigned 
->> int hkey_event)
->>  				led_classdev_notify_brightness_hw_changed(
->>  					&tpacpi_led_kbdlight.led_classdev, brightness);
->>  			}
->> -
->> -			mutex_unlock(&kbdlight_mutex);
->>  		}
->>  		/* Key events are suppressed by default hotkey_user_mask */
->>  		return false;
->> @@ -11460,11 +11437,11 @@ static bool tpacpi_driver_event(const 
->> unsigned int hkey_event)
->>  			enum drm_privacy_screen_status old_hw_state;
->>  			bool changed;
->> 
->> -			mutex_lock(&lcdshadow_dev->lock);
->> -			old_hw_state = lcdshadow_dev->hw_state;
->> -			lcdshadow_get_hw_state(lcdshadow_dev);
->> -			changed = lcdshadow_dev->hw_state != old_hw_state;
->> -			mutex_unlock(&lcdshadow_dev->lock);
->> +			scoped_guard(mutex, &lcdshadow_dev->lock) {
->> +				old_hw_state = lcdshadow_dev->hw_state;
->> +				lcdshadow_get_hw_state(lcdshadow_dev);
->> +				changed = lcdshadow_dev->hw_state != old_hw_state;
->> +			}
->> 
->>  			if (changed)
->>  				drm_privacy_screen_call_notifier_chain(lcdshadow_dev);
->> @@ -11485,12 +11462,10 @@ static bool tpacpi_driver_event(const 
->> unsigned int hkey_event)
->>  			pr_err("Error retrieving camera shutter state after shutter 
->> event\n");
->>  			return true;
->>  		}
->> -		mutex_lock(&tpacpi_inputdev_send_mutex);
->> -
->> -		input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, 
->> camera_shutter_state);
->> -		input_sync(tpacpi_inputdev);
->> -
->> -		mutex_unlock(&tpacpi_inputdev_send_mutex);
->> +		scoped_guard(mutex, &tpacpi_inputdev_send_mutex) {
->> +			input_report_switch(tpacpi_inputdev, SW_CAMERA_LENS_COVER, 
->> camera_shutter_state);
->> +			input_sync(tpacpi_inputdev);
->> +		}
->>  		return true;
->>  	case TP_HKEY_EV_DOUBLETAP_TOGGLE:
->>  		/* Toggle kernel-level doubletap event filtering */
->> -- 
->> 2.55.0.679.g6767b8d81c-goog
+>CRI FW is loaded on power on.  Because of this, access to
+>the FW cannot be done until it is running.
 >
-> Sorry, took me a while to get to this one.
-> Changes look good, nice cleanup.
+>Update the XE PMT probe and access to check for late bind
+>devices, verify, and wait for the appropriate FW state
+>before probe or access.
 >
-> Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>---
+> drivers/gpu/drm/xe/xe_device.c       |   4 +-
+> drivers/gpu/drm/xe/xe_device_types.h |   4 +
+> drivers/gpu/drm/xe/xe_vsec.c         | 142 +++++++++++++++++++++++++--
+> drivers/gpu/drm/xe/xe_vsec.h         |   2 +-
+> 4 files changed, 144 insertions(+), 8 deletions(-)
 >
-> Mark
+>diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device=
+.c
+>index 71111ad32465..df6716a975fb 100644
+>--- a/drivers/gpu/drm/xe/xe_device.c
+>+++ b/drivers/gpu/drm/xe/xe_device.c
+>@@ -1139,7 +1139,9 @@ int xe_device_probe(struct xe_device *xe)
+> 	for_each_gt(gt, xe, id)
+> 		xe_gt_sanitize_freq(gt);
 >
-Ran a build with all 3 patches on a P14s G7 and couldn't see any problems.
-So, for the series:
-Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>-	xe_vsec_init(xe);
+>+	err =3D xe_vsec_init(xe);
+>+	if (err)
+>+		goto err_unregister_display;
+>
+> 	err =3D xe_sriov_init_late(xe);
+> 	if (err)
+>diff --git a/drivers/gpu/drm/xe/xe_device_types.h
+>b/drivers/gpu/drm/xe/xe_device_types.h
+>index 3f1a70813a99..5d9e6e66c665 100644
+>--- a/drivers/gpu/drm/xe/xe_device_types.h
+>+++ b/drivers/gpu/drm/xe/xe_device_types.h
+>@@ -468,6 +468,10 @@ struct xe_device {
+> 		struct mutex lock;
+> 		/** @pmt.base_offset: device specific base offset */
+> 		u64 base_offset;
+>+		/** @pmt.work: support late-bind probe */
+>+		struct delayed_work work;
+>+		/** @pmt.retry_count: late-bind probe retry */
+>+		u32 retry_count;
+> 	} pmt;
+>
+> 	/** @soc_remapper: SoC remapper object */
+>diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+>index 578d59048b39..bed5103dac19 100644
+>--- a/drivers/gpu/drm/xe/xe_vsec.c
+>+++ b/drivers/gpu/drm/xe/xe_vsec.c
+>@@ -3,6 +3,7 @@
+> #include <linux/bitfield.h>
+> #include <linux/bits.h>
+> #include <linux/cleanup.h>
+>+#include <linux/delay.h>
+> #include <linux/errno.h>
+> #include <linux/intel_vsec.h>
+> #include <linux/module.h>
+>@@ -17,6 +18,7 @@
+> #include "xe_mmio.h"
+> #include "xe_platform_types.h"
+> #include "xe_pm.h"
+>+#include "xe_sysctrl.h"
+> #include "xe_vsec.h"
+>
+> #include "regs/xe_pmt.h"
+>@@ -162,6 +164,14 @@ enum capability {
+> 	WATCHER,
+> };
+>
+>+/*
+>+ * Late bind will delay 100msec for up to 20 seconds
+>+ */
+>+#define VSEC_LATE_BIND_DELAY_MSEC	(100)
+>+#define VSEC_LATE_BIND_RETRY		(200)
+>+
+>+static void cri_late_bind_probe(struct xe_device *xe);
+>+
+> static int bmg_guid_decode(u32 guid, int *index, u32 *offset)
+> {
+> 	u32 record_id =3D FIELD_GET(GUID_RECORD_ID, guid);
+>@@ -272,6 +282,56 @@ static int xe_guid_decode(u32 guid, int *index, u32
+>*offset)
+> 	return -ENODEV;
+> }
+>
+>+#define WAITING_FOR_SYCTLR
+>+#ifdef WAITING_FOR_SYCTLR
+>+static bool xe_is_oobmsm_fw_ready(struct xe_device *xe)
+>+{
+>+	return true;
+>+}
+>+#endif
+>+
+>+static void cri_late_bind_probe_work(struct work_struct *work)
+>+{
+>+	struct xe_device *xe =3D container_of(work, struct xe_device,
+>pmt.work.work);
+>+
+>+	if (xe_is_oobmsm_fw_ready(xe)) {
+>+		cri_late_bind_probe(xe);
+>+		xe_pm_runtime_put(xe);
+>+		return;
+>+	}
+>+
+>+	xe->pmt.retry_count++;
+>+
+>+	/* wait up to 20 seconds */
+>+	if (xe->pmt.retry_count =3D=3D VSEC_LATE_BIND_RETRY) {
+>+		drm_warn(&xe->drm, "PMT probe: Late Binding failed to
+>complete\n");
+>+		xe_pm_runtime_put(xe);
+>+		return;
+>+	}
+>+
+>+	if (!schedule_delayed_work(&xe->pmt.work,
+>msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC)))
+>+		xe_pm_runtime_put(xe);
+>+}
+>+
+>+static bool wait_for_fw(struct xe_device *xe)
+>+{
+>+	int retries =3D VSEC_LATE_BIND_RETRY;  /* wait up to 20 secs */
+>+
+>+	if (xe->info.platform !=3D XE_CRESCENTISLAND)
+>+		return true;
+>+
+>+	while (retries--) {
+>+		if (xe_is_oobmsm_fw_ready(xe))
+>+			return true;
+>+
+>+		msleep(VSEC_LATE_BIND_DELAY_MSEC);
+>+	}
+>+
+>+	drm_warn(&xe->drm, "Late Binding failed to complete\n");
+>+
+>+	return false;
+>+}
+>+
+> /*
+>  * xe_pmt_telem_read is a callback API.  I.e this can be accessed externa=
+l to
+>  * XE driver (PMT driver scope).  Because of this, DRM hotplug needs to b=
+e
+>@@ -318,6 +378,11 @@ int xe_pmt_telem_read(struct device *dev, u32 guid,
+>u64 *data, loff_t user_offse
+> 		goto dev_exit;
+> 	}
+>
+>+	if (!wait_for_fw(xe)) {
+>+		ret =3D -ENODATA;
+>+		goto runtime_exit;
+>+	}
+>+
+> 	mutex_lock(&xe->pmt.lock);
+>
+> 	/* set SoC re-mapper index register based on GUID memory region */
+>@@ -327,6 +392,7 @@ int xe_pmt_telem_read(struct device *dev, u32 guid,
+>u64 *data, loff_t user_offse
+>
+> 	mutex_unlock(&xe->pmt.lock);
+>
+>+runtime_exit:
+> 	xe_pm_runtime_put(xe);
+>
+> dev_exit:
+>@@ -374,6 +440,10 @@ static int xe_pmt_read_reg(struct device *dev, u32
+>guid, u32 *reg, u32 offset)
+> 	disc_addr +=3D CRI_DISCOVERY_OFFSET + inst + offset;
+>
+> 	xe_pm_runtime_get(xe);
+>+	if (!wait_for_fw(xe)) {
+>+		ret =3D -ENODATA;
+>+		goto runtime_exit;
+>+	}
+> 	mutex_lock(&xe->pmt.lock);
+>
+> 	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+>@@ -381,6 +451,8 @@ static int xe_pmt_read_reg(struct device *dev, u32
+>guid, u32 *reg, u32 offset)
+> 	memcpy_fromio(reg, disc_addr, sizeof(*reg));
+>
+> 	mutex_unlock(&xe->pmt.lock);
+>+
+>+runtime_exit:
+> 	xe_pm_runtime_put(xe);
+>
+> dev_exit:
+>@@ -416,6 +488,10 @@ static int xe_pmt_write_reg(struct device *dev, u32
+>guid, u32 reg, u32 offset)
+> 	disc_addr +=3D CRI_DISCOVERY_OFFSET + inst + offset;
+>
+> 	xe_pm_runtime_get(xe);
+>+	if (!wait_for_fw(xe)) {
+>+		ret =3D -ENODATA;
+>+		goto runtime_exit;
+>+	}
+> 	mutex_lock(&xe->pmt.lock);
+>
+> 	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+>@@ -425,6 +501,9 @@ static int xe_pmt_write_reg(struct device *dev, u32
+>guid, u32 reg, u32 offset)
+> 	mutex_unlock(&xe->pmt.lock);
+> 	xe_pm_runtime_put(xe);
+
+The above _put should have been removed.
+
+This will be fixed.
+
+m
+
+>+runtime_exit:
+>+	xe_pm_runtime_put(xe);
+>+
+> dev_exit:
+> 	drm_dev_exit(idx);
+>
+>@@ -454,12 +533,44 @@ static enum xe_vsec get_platform_info(struct
+>xe_device *xe)
+> 	return vsec_platforms[xe->info.platform];
+> }
+>
+>+static void cri_late_bind_probe(struct xe_device *xe)
+>+{
+>+	struct intel_vsec_platform_info *info;
+>+	struct device *dev =3D xe->drm.dev;
+>+	enum xe_vsec platform;
+>+
+>+	platform =3D get_platform_info(xe);
+>+	if (platform !=3D XE_VSEC_CRI)
+>+		return;
+>+
+>+	info =3D &xe_vsec_info[platform];
+>+	if (!info->headers)
+>+		return;
+>+
+>+	info->priv_data =3D &xe_cri_pmt_cb;
+>+	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+>+
+>+	intel_vsec_register(dev, info);
+>+}
+>+
+>+static void vsec_disable_late_bind_work(void *arg)
+>+{
+>+	struct xe_device *xe =3D arg;
+>+
+>+	/*
+>+	 * If was work was cancelled while it was still pending, we need to
+>+	 * take care of releasing the runtime reference
+>+	 */
+>+	if (disable_delayed_work_sync(&xe->pmt.work))
+>+		xe_pm_runtime_put(xe);
+>+}
+>+
+> /**
+>  * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
+>  * interface
+>  * @xe: valid xe instance
+>  */
+>-void xe_vsec_init(struct xe_device *xe)
+>+int xe_vsec_init(struct xe_device *xe)
+> {
+> 	struct intel_vsec_platform_info *info;
+> 	struct device *dev =3D xe->drm.dev;
+>@@ -467,30 +578,44 @@ void xe_vsec_init(struct xe_device *xe)
+>
+> 	platform =3D get_platform_info(xe);
+> 	if (platform =3D=3D XE_VSEC_UNKNOWN)
+>-		return;
+>+		return 0;
+>
+> 	info =3D &xe_vsec_info[platform];
+> 	if (!info->headers)
+>-		return;
+>+		return 0;
+>
+> 	switch (platform) {
+> 	case XE_VSEC_BMG:
+> 		if (!xe->soc_remapper.set_telem_region)
+>-			return;
+>+			return 0;
+> 		xe->pmt.base_offset =3D BMG_TELEMETRY_OFFSET;
+> 		info->priv_data =3D &xe_bmg_pmt_cb;
+> 		break;
+>
+> 	case XE_VSEC_CRI:
+> 		if (!xe->soc_remapper.set_telem_region)
+>-			return;
+>+			return 0;
+> 		xe->pmt.base_offset =3D CRI_TELEMETRY_OFFSET;
+>+
+>+		xe->pmt.retry_count =3D 0;
+>+		INIT_DELAYED_WORK(&xe->pmt.work,
+>cri_late_bind_probe_work);
+>+
+>+		xe_pm_runtime_get_noresume(xe);
+>+		if (!xe_is_oobmsm_fw_ready(xe)) {
+>+			schedule_delayed_work(&xe->pmt.work,
+>+
+>msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC));
+>+			return devm_add_action_or_reset(xe->drm.dev,
+>+
+>	vsec_disable_late_bind_work,
+>+							xe);
+>+		}
+>+
+> 		info->priv_data =3D &xe_cri_pmt_cb;
+> 		xe->soc_remapper.set_telem_region(xe,
+>CRI_IDX_TELEM_DISCOVERY);
+> 		break;
+>
+> 	default:
+>-		break;
+>+		drm_err(&xe->drm, "Unsupported platform: %u\n", platform);
+>+		return 0;
+> 	}
+>
+> 	/*
+>@@ -498,5 +623,10 @@ void xe_vsec_init(struct xe_device *xe)
+> 	 * resources.
+> 	 */
+> 	intel_vsec_register(dev, info);
+>+
+>+	if (platform =3D=3D XE_VSEC_CRI)
+>+		xe_pm_runtime_put(xe);
+>+
+>+	return 0;
+> }
+> MODULE_IMPORT_NS("INTEL_VSEC");
+>diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
+>index a25b4e6e681b..c4a1e2fc67d8 100644
+>--- a/drivers/gpu/drm/xe/xe_vsec.h
+>+++ b/drivers/gpu/drm/xe/xe_vsec.h
+>@@ -9,7 +9,7 @@
+> struct device;
+> struct xe_device;
+>
+>-void xe_vsec_init(struct xe_device *xe);
+>+int xe_vsec_init(struct xe_device *xe);
+> int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t
+>user_offset, u32 count);
+>
+> #endif
+>--
+>2.43.0
+
