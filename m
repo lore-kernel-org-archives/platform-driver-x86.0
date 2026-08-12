@@ -1,151 +1,136 @@
-Received: from air.basealt.ru (air.basealt.ru [193.43.8.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1511D314B96
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 08:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.43.8.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9443EFFA7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 09:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786521708; cv=none; b=jFZvBJ6DxspqpVThU2gcIZ/1agpgjyMAotIHWKdRuqsxaAHhWa9WPjM0+8Eh1gToAVxvoEFbbBEZ+cctudlreWmHYKSVsuIovMlG8wFzJ+s27eCmAhQT0sDg2Eqwi74nTSaTWOp152ZqpYaSihYgxiEz0cfUwqkFm5HZFvtbMck=
+	t=1786525221; cv=none; b=ICZg7t0/fzxzBG4B2bJ4XlKOKXaMIc1Ppp9j2dLsIVzzwqPYMs4By7T1dEKFyk95bP8kEsaHX2JneIAFh6Ic4ViPV255SET/hbTIXIrslfCQRs2Kr3bThRy8XQpzDRqr26D+L5IUcSj77aV03upJvV6F/I//5CFy7F8fx/AD0KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786521708; c=relaxed/simple;
-	bh=fY02pbggqDt7t6nRXYyKMlHTdsUT2PIkqcP5Nw7uYa8=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=PkTYOff8R/LrxNSaO5XXUtxCG9H+vQgOeicM/OJgtta7UnOU3ah3i75m+Sm7L/tdUCRrkM/szE3a/TiZ5nrhQ60YNg+eJk1tQ7wZ0b84feGDm4gjfkKjJZnZBbru6nqZsI7OfoVQCs0xJrQOzw2FElNf9i0R/8fYNGYyDratFOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=basealt.ru; spf=pass smtp.mailfrom=basealt.ru; dkim=pass (2048-bit key) header.d=basealt.ru header.i=@basealt.ru header.b=hBfkZ5Si; arc=none smtp.client-ip=193.43.8.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=basealt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=basealt.ru
+	s=arc-20240116; t=1786525221; c=relaxed/simple;
+	bh=yqBRs45rJW/f0nLW7fpTNVLvsms8VxpJ9uXllGHL8qI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fxBWFAvFFYIqcjbo0B4J1pYgyiYJB1MzeKigUBYRwe/V0oN3EIim5rpkRw0CbPy7nYkbqSn5JLL97LJgw0BXVgyBK5AO59pTB35E863kQ790RSJxptcnQKdTRBdgf4oIs6FRTAk6JdLhARM0t7co+/+twQWk9yB2EqPEkUPcX3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdbPIqey; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=basealt.ru header.i=@basealt.ru header.b="hBfkZ5Si"
-Received: from [10.88.144.209] (obninsk.basealt.ru [217.15.195.17])
-	(Authenticated sender: muhamadeevir)
-	by air.basealt.ru (Postfix) with ESMTPSA id EFFE223372;
-	Wed, 12 Aug 2026 11:01:40 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=basealt.ru; s=dkim;
-	t=1786521701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=jR/zicVrJcHE7+O84oBcfFDOQlUTX3iqBmyckXS/5fo=;
-	b=hBfkZ5SiaCBd7ADBbzqCC3UrRUrwf8ae7tseqstWvELtKZoZcZfC+9mqw+l1pZl7ClOqw1
-	dFHNQvCkNKdyLxKe5PxXVkhLYdLnhsSVO34Ng2lLWfMR5kZy8hhbOpHo3i8m1noEx01epA
-	xs+tZLk2vSE3W/3/LZEKNwYQV6VQVwWiTOXMtiCpFHh1pPlfn+3j9/1O/z+devPQ8P/KGi
-	Oo/4x6iO1kF/5YTuwl2sOETqbO0RDZ41XsHks5E8mzLQgjNkGyfQIE/2XAiJEx2de3EkNO
-	9RSLcvSVsIi3jk41GFoyXXiDlSmE646EssA8ZwakeLwpyzcxODmVcZPpklV/UA==
-Message-ID: <8bae58a6-83d6-4444-a97d-c6302eb666c9@basealt.ru>
-Date: Wed, 12 Aug 2026 11:01:39 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdbPIqey"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cbee3777e1cso465587a12.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 02:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786525219; x=1787130019; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xrc/ShWziw9uFMoeJyr/D7LL2jAZid2JLgmjk8Dtuqg=;
+        b=PdbPIqeyujfPQZ//rTzOCq0rXiUEfiTpXNDu2EmdhprFGn7QnnnEem8Bdko1WTNX3z
+         gyWy9IOSthZWeqISlWVr0bRTQNbjkytAtxxitPSErzlHsIuUiNApftpwy8AB7b2Uoc6h
+         0SQ7LGz1rES2z250csTFwCVkTqMTSQt7lZ1F/Pw8BFh2ru6xeeTeQgspVkgMlZ213flR
+         p7z7gFXWzPSGDdfE+MNipqxmg5U4/g7Fp4TIlaW/CsrSd6gyDotxCBGN5ACk1xrOuFBU
+         q0H9Lr2dloo/7cnMxzIseRYoN3vTFO+rdWPuZAAu+9Npa9HT7cVSrYrhV9XIK46kAFlK
+         Ugaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786525219; x=1787130019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xrc/ShWziw9uFMoeJyr/D7LL2jAZid2JLgmjk8Dtuqg=;
+        b=blkSOpyte9V/KcO2HmwvRi0cb8NDh++k/AOuAhpG75nxhDi/qQi3TNTseflyeBo3dk
+         V8cB4m3dKOz72nx2p3DIO2U3BSTDjSCo9vauxDFVZArz69zX2EYdol/0beM6iCvpZooa
+         lz2USSpeJuAiVGb58kJZ5nAcOwmpg0WEDVcoFpOitdpgwWRXfJfbi8XFqqhEqQYkKKg7
+         /TFPr+leN3wtEIImpu7ZtZVWw99lY9CSsz8SkEXbNVzBpC51zX/68SH9FiKak/NZEzGj
+         unM7Z4kSvXdgGbxOb2i91vWp1ISJnwUrZr9aYmDhlLlOxrrelui/k0DJtvp4E/JEEYHb
+         Et2g==
+X-Forwarded-Encrypted: i=1; AHgh+RrlY1/WarUvwLx+RHGo9pHM3+dSCd+x4XK9KWCCyNlD3bQIgpKK/B7EuuAGEzkBnQmEYth6Jukx3+JTFD8XyCErKxSc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXe2+E/e/KcmxIvYcDP+a9g3zGsknZzlgDe91wtruUwYmlshAR
+	hxetA503DIYQM1DLgsvqO+JUHRO7bkQtyODb/WL6rpnyGj2uVmpma58Z
+X-Gm-Gg: AR+sD11EMBYrWteTVJYafSOr+P6m8CaPipV8VOZz8oafmwMD3an+0XibXU06ZKwU5QQ
+	oh8bfZMqM3MFEzfXNhHj1NyEKGcC1ucLHSvDufFTke7cysNQwPPhd459IsBsBliWVIBYxJ+j4wm
+	W+kWOCmQpPNsKynN8h6DXfWHnR3qhG6Jmf8wEfEnH8wAjZKWisHkzj5FK5nBtvPyBTM0LwICBoR
+	LJzkcZp70PiQxJk+pxxC8XLHXzxp1a0aW8pS7hgNOEDrYaymMmMP3mmeo0tVEOZxOFUqK3SeHaj
+	3LAMtoDsBG+72WkIQ+zAuNGTyb/Mi9Pum+Orjld3Xv6S2ugoDBwxyYv0l/Zq97nVRNheMWTyZr8
+	v0Wq6Jni8b8LTwCVHxh6Ni204hgve4MrV0UMgfZ3claQS41wl1NxanWL3KQBLKcuswnAL53HQjg
+	G9/bl68cL7H0qD9Qf5GRnzSpCYnH07ZVjGxYr76fojvHit73V+s4XVtfHzbBaQ9QxSg5Gez6Zcy
+	M7Vb9F8UQg=
+X-Received: by 2002:a05:6a20:431c:b0:3be:b0b3:3962 with SMTP id adf61e73a8af0-3cc3f5b35fdmr3946999637.9.1786525219239;
+        Wed, 12 Aug 2026 02:00:19 -0700 (PDT)
+Received: from volcano9f8e-host.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31cf6d726f1sm13571562eec.26.2026.08.12.02.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2026 02:00:18 -0700 (PDT)
+From: Hemanth Selam <hemanth.selam@gmail.com>
+To: naveenkrishna.chatradhi@amd.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: carlos.bilbao@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86/amd/hsmp: Reject negative power cap writes in hwmon
+Date: Wed, 12 Aug 2026 14:30:12 +0530
+Message-ID: <20260812090012.140193-1-hemanth.selam@gmail.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: platform-driver-x86@vger.kernel.org, hansg@kernel.org,
- ilpo.jarvinen@linux.intel.com
-From: =?UTF-8?B?0JjQu9GM0Y8g0JzRg9GF0LDQvNCw0LTQtdC10LI=?=
- <muhamadeevir@basealt.ru>
-Subject: [PATCH] platform/x86: hp-wmi: Add periodic tablet mode poll
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Greetings!
+hsmp_hwmon_write() takes the user-supplied hwmon value as a signed long
+and assigns "val / MICROWATT_PER_MILLIWATT" to msg.args[0], which is a
+__u32.  MICROWATT_PER_MILLIWATT is an unsigned long, so a negative write
+to power1_cap (e.g. "echo -1 > power1_cap") is first converted to a huge
+unsigned value by the division and then stored into the u32 argument.
 
-Some HP convertible laptops (e.g., ProBook x360 series) do not generate
-ACPI events when switching between laptop and tablet mode, causing the
-input subsystem to never receive SW_TABLET_MODE notifications.
+As a result a nonsensical, multi-gigawatt socket power limit is sent to
+the SMU via HSMP_SET_SOCKET_POWER_LIMIT instead of the write being
+rejected.
 
-Add a periodic delayed work that polls the tablet mode state every
-second and reports changes via input_report_switch(). Track the last
-known state to avoid sending duplicate events, and clean up the work
-queue on module removal.
+Reject negative values with -EINVAL before the conversion.
 
+Tested with HSMP enabled:
+
+  CAP=$(dirname $(grep -l amd_hsmp_hwmon \
+        /sys/class/hwmon/hwmon*/name | head -1))/power1_cap
+
+  # negative write
+  echo -1000000 > $CAP ; echo "ret=$?"
+  # valid positive write must still work
+  echo 400000000 > $CAP ; echo "ret=$?"
+
+Before:
+  # echo -1000000 > $CAP ; echo "ret=$?"
+  ret=0                             <- accepted; bogus limit sent to SMU
+  # echo 400000000 > $CAP ; echo "ret=$?"
+  ret=0
+
+After:
+  # echo -1000000 > $CAP ; echo "ret=$?"
+  bash: echo: write error: Invalid argument
+  ret=1                             <- rejected with -EINVAL
+  # echo 400000000 > $CAP ; echo "ret=$?"
+  ret=0                             <- valid write still works
+
+Fixes: 92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
+Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
 ---
-  drivers/platform/x86/hp/hp-wmi.c | 37 +++++++++++++++++++++++++++++---
-  1 file changed, 34 insertions(+), 3 deletions(-)
+ drivers/platform/x86/amd/hsmp/hwmon.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c 
-b/drivers/platform/x86/hp/hp-wmi.c
-index 8ba286ed8721..4a4d57fa6d29 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -460,6 +460,8 @@ static struct notifier_block platform_power_source_nb;
-  static enum platform_profile_option active_platform_profile;
-  static bool platform_profile_support;
-  static bool zero_insize_support;
-+static int last_tablet_state = -1;
-+static struct delayed_work tablet_mode_work;
-
-  static struct rfkill *wifi_rfkill;
-  static struct rfkill *bluetooth_rfkill;
-@@ -1176,9 +1178,14 @@ static void hp_wmi_notify(union acpi_object *obj, 
-void *context)
-                 if (test_bit(SW_DOCK, hp_wmi_input_dev->swbit))
-                         input_report_switch(hp_wmi_input_dev, SW_DOCK,
-hp_wmi_get_dock_state());
--               if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit))
--                       input_report_switch(hp_wmi_input_dev, 
-SW_TABLET_MODE,
--  hp_wmi_get_tablet_mode());
-+               if (test_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit)) {
-+                       int tablet = hp_wmi_get_tablet_mode();
-+                       if (tablet >= 0) {
-+                               last_tablet_state = tablet;
-+  input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE,
-+                                           tablet);
-+                       }
-+               }
-                 input_sync(hp_wmi_input_dev);
-                 break;
-         case HPWMI_PARK_HDD:
-@@ -1271,6 +1278,24 @@ static void hp_wmi_notify(union acpi_object *obj, 
-void *context)
-         }
-  }
-
-+/*
-+ * Periodically poll tablet mode state and send input events if changed.
-+ * This works around missing ACPI events on some HP laptops.
-+ */
-+static void hp_wmi_tablet_mode_work_handler(struct work_struct *work)
-+{
-+       int cur = hp_wmi_get_tablet_mode();
-+       if (cur >= 0 && cur != last_tablet_state) {
-+               last_tablet_state = cur;
-+               if (hp_wmi_input_dev && test_bit(SW_TABLET_MODE, 
-hp_wmi_input_dev->swbit)) {
-+                       input_report_switch(hp_wmi_input_dev, 
-SW_TABLET_MODE, cur);
-+                       input_sync(hp_wmi_input_dev);
-+                       pr_debug("Tablet mode changed to %d\n", cur);
-+               }
-+       }
-+       schedule_delayed_work(&tablet_mode_work, msecs_to_jiffies(1000));
-+}
+diff --git a/drivers/platform/x86/amd/hsmp/hwmon.c b/drivers/platform/x86/amd/hsmp/hwmon.c
+index 0cc9a742497f..c8314eee06f4 100644
+--- a/drivers/platform/x86/amd/hsmp/hwmon.c
++++ b/drivers/platform/x86/amd/hsmp/hwmon.c
+@@ -31,6 +31,9 @@ static int hsmp_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+ 	if (attr != hwmon_power_cap)
+ 		return -EOPNOTSUPP;
+ 
++	if (val < 0)
++		return -EINVAL;
 +
-  static int __init hp_wmi_input_setup(void)
-  {
-         acpi_status status;
-@@ -1298,6 +1323,10 @@ static int __init hp_wmi_input_setup(void)
-         if (!(val < 0)) {
-                 __set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-                 input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+               last_tablet_state = val;
-+               INIT_DELAYED_WORK(&tablet_mode_work,
-+  hp_wmi_tablet_mode_work_handler);
-+               schedule_delayed_work(&tablet_mode_work, 
-msecs_to_jiffies(1000));
-         }
-
-         err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
-@@ -1331,6 +1360,8 @@ static int __init hp_wmi_input_setup(void)
-
-  static void hp_wmi_input_destroy(void)
-  {
-+       cancel_delayed_work_sync(&tablet_mode_work);
-+       last_tablet_state = -1;
-         wmi_remove_notify_handler(HPWMI_EVENT_GUID);
-         input_unregister_device(hp_wmi_input_dev);
-  }
+ 	msg.num_args = 1;
+ 	msg.args[0] = val / MICROWATT_PER_MILLIWATT;
+ 	msg.msg_id = HSMP_SET_SOCKET_POWER_LIMIT;
 -- 
-2.50.1
+2.43.7
 
