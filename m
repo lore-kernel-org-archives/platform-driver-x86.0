@@ -1,63 +1,63 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEC84398F1
-	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 11:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C0943933D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 11:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786533534; cv=none; b=Td+u5xUa1ZbA+wYIrFlIoerNvhiWlrtAKcjwaV8aZTtdRUJsnrLfx7fHCCvUeeWIXrpG9DjGN2LeaORao5ZqIQhNFltwuz6HB5dL8xgfFE0YXwXrxowv1GUdi+wsbnNHqHtlufaQa7J0p7Tja5qo7zGcPeYAkJ37SsHG84O3Qhc=
+	t=1786533536; cv=none; b=PERIi1cXK+E/Y95PWR8yDxN5nPlHQ0TAm1j8cqxQKELi9p4NNkDGXL/MxUzaldniRhMO34C817ovVrGec9agaIdkX0QZwPj0fIr6NMMUTkxMwHT8cmyWaoOoNZ93Bp2NHzJr+6hJd/m3nF7CWTu4X/ynHQ0F4WSZBRCIVLT7s5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786533534; c=relaxed/simple;
-	bh=rhV+qOT/cedymAeQ3DQaL+LQcUHG8piPrtIkVunzAvs=;
+	s=arc-20240116; t=1786533536; c=relaxed/simple;
+	bh=rhIU1zG+Cz1JEJ/DZCxK23rcEZYVi7vpJbqoVBA+2qQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ftQdmucm9nvyw+G7sXY2u/TuObnpPc1g1a/ndlbpTwtXff7WlUDxUk23N2crJWYi3ZGRy5RBLLi3Lm0oWRZgkdg2rFFmmNaNGrcrcCjtMu1bu9n5XO4xG0YDqimWUnM/a75fc6tg8Wqt+XqoUM1Zx+sSzhirt6BGkgAySuwbkUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=El+bs9Sm; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=oyW69o7BFS7m1p182FoYJiGl78+M9glWLSOcM5Iv0foiMm46poQVM0eYHR0CYgM+0LL8u1Ej/DtZiX9FtQHVHAWh6aqJvgz2YwbGjRpUZFKn6BcEMzB7FnIymIP56oZxuEcZ3L0HDUdCh8jC9718kPSEA4cJdOQTUey9chtpGZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyDDhKJQ; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="El+bs9Sm"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49553515a8bso12057935e9.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 04:18:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyDDhKJQ"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47f7854678cso551746f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 12 Aug 2026 04:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786533530; x=1787138330; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786533533; x=1787138333; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=hNoDrCXm49lLgm2lL6InxDz3MAxyPtaZVFbbdYtrWx4=;
-        b=El+bs9SmlR5VflEY64GBmIIQXIbymJJyrUbkoKgDXdttek2k9NrNJ5kx/71CgaEPR6
-         zssv7Isd40wJNSNdFUzyZ8paFQuvU92g0xbLSrzWkLbQXXAgDwLMdUrouGCms1ZYbbUC
-         9vyId+qBqtrq4oyWvlZxNL1dXWW+mZSOOJZ7A7GozfrPKNwW34OD1t517kqocku3bz3Y
-         6gvIrWQscbjKJGXINXkx0GwprlqNZOpl5+s7hTX9XK/tuvMWx438UzC1H0DJG8R+TSOO
-         FtPCAkP99Y1MULZ0AW/kezwl+VPKSQrAxfgG+sVlIUsyjZe9pv9XAQn/ms6f1xy8nz9C
-         t0Hg==
+        bh=TzXAlvJrvz8VJKZL5THLFAhA3g1WFYpeVuZ+6qv41B0=;
+        b=eyDDhKJQcUn/6qaVG70x5845SB6g7ihlqCZ1k9C8xA4s08vUsk807yQ2iMtWsio3AR
+         eyWyrgb7t4KDldnvAQbkbVKu9qRmGkn8fyAb4KLpFZFPN3VV4L+kWVJRpgedCGc3rtS1
+         RNwFF3phhL4r1S04kTxp3VeywprfsEVJ4QIOBUGJYt8zZtMsXQYIw+WMa1c8yXcXI/Hk
+         CyWCvNOCnMkPfCeVphomyYmgSylyVP4OV011SyQKlB+nw038Tea1oPI6Zss8wvXxUnCb
+         JCer5DqazN1QUHGUOAyJkS/691E3Q9hpy47cZAuQyykkXhxzJYgH5Z4Kdn23CPmAWgdI
+         hKEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786533530; x=1787138330;
+        d=1e100.net; s=20251104; t=1786533533; x=1787138333;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=hNoDrCXm49lLgm2lL6InxDz3MAxyPtaZVFbbdYtrWx4=;
-        b=ORtd9FHzchr2r6VIw01ypcPWJGO1C2kQEBXd+OzFvncrrlrv0dkHoxr9TgsylwBBqj
-         qW1Z+WttnYEuq17x7tcCHla9kL6gNRS2xcBxsFk5Wcu7vbyYvzjQ7rINByi0tqumpU+P
-         6oGl/QYCrFwNYWgjzyGWS+a3a9qraOJTWcouq5rnuUzUTchVBOIyz9crAvXGk+tllzqn
-         e+VH0NOgvHv9CAHli5Vj6WD6xiFZTbZjBoC3jtG6fuJ3zwC29LVJPxUIwHA4YQBi9L7m
-         /CDqwTvBMgq8/U29R+MHhs004u5fV5xardsqKuKEbrwf0jQxve0bZ6ebLJvycf9YnmiX
-         a8wA==
-X-Gm-Message-State: AOJu0YwaKo/lhjkweQQm9Zn6c3RcBrS/1CLnPHIcrjyo/4DaxxJe/vQC
-	vzbNND0uSjjKmhp2N1chZN870jE8VvN85V6i53hSCJunF4Z/6/zwp6k7gG3cnczk
-X-Gm-Gg: AR+sD100uBZZkCsY1j59ue45KAKpMgpuuE3kUc5VR8OqwmPW0//zC543Cfy4qHmWDlB
-	NRw6dzEe556bhyr/Q1z0baAgDsgc9xIWUO4x+hwz4X8xq7elBo0BCE6RBGKHjhgDPHoi/7hK1uV
-	o+fqA258a7aUp/E+W076QyYlwbUIVsmUOf0FuI0iyxAZTdZ0AytqH5bn86tN5tYH99c8Uq4c/zH
-	aUrHvne4Qk1ICXmfu+0kTAxyZYYOxR4aDWdr9CnQ1TSIgOathoNbxgwzXRfQq6ICo0wH8TWr017
-	h8UrQzcTWnnqU+IoM8iP7fZqPjIGW9eZXahU7Odm+pLRN7nX6lYr/D2ieUO9P/54paiFy3YcCWS
-	+zypWT7fGAYBfuLhIO/zHbBQ+iVIq6CE/ShepvfaOoCu+JsCE2SQXUgdO/q0dpu3Isj47cMrMms
-	BF2Y0yuYwkLCYBA+xHoE8KiWSR90fn5Mp1bx8l4+ZOXWsqnSKyu+h6BICBGMAupRP+z9BXFvpW0
-	EmhqkbTv+OKVDfLkz5XquyTvUW8GPY32aqaxhxF/A==
-X-Received: by 2002:a05:600c:8209:b0:496:c977:3b6d with SMTP id 5b1f17b1804b1-4997c139b0bmr62363425e9.12.1786533530450;
-        Wed, 12 Aug 2026 04:18:50 -0700 (PDT)
+        bh=TzXAlvJrvz8VJKZL5THLFAhA3g1WFYpeVuZ+6qv41B0=;
+        b=oLLRF4+hCHdapAzyBwDkW5q7La4gY9mrgjFxw5NJb23bbuFBamFwVKvxn2ZCSF+q9C
+         VSP/4iqahxdJU8YgmnAZN2VIpmKXmikTyZylJBKPy/xG2/0QL+1B4zls5Lcv+zdsinL+
+         vwjqrGHNmklAQ0gi5upRjbhmSridUlw88B8I92EZSlwhBCLj+ROplyyGNhrF4GkkzLY4
+         02GyY886JwaROB7G6IlUmM2Go/N6/zN39C/ieBlUFnZ/WbS9CwdHqsu6xzsVDqtUNf5R
+         jclKb8mhZIfHcmrDmv1o0MQLkdR3UC4CZXy8l+j2eeZbsc0GLk2M/N6eR/24f5GYrnwL
+         kd5A==
+X-Gm-Message-State: AOJu0YzGH61fzu43ffO4aIr7p7HghN1WbSA8l59hRn23GF5TXtY4NhFi
+	IGoV+oDtrQTiQxZT4SKxdjCJcPoBqzw+8BW7keE89bGRQqCPWkxTPbBsYPLKzuNm
+X-Gm-Gg: AR+sD11I6kHAi9ml6DuEWF1zX1ip5Q72aRBwlKvrB+KmED8Q/FBjuBQrP0sRlfd4A+M
+	f+X9Iq/4/vl38PJYt5Ta87OrjHOq/NR7+5+5WacMLmOtcFc0gBCHSf16V3y+gOj5YhftF/UJIWs
+	Ite3wA4boVcNa75NAdyw4ZdWF6EoSIhL5yUJhZyyc+zl7z+th7PmGhkzobnqTwlWve1q4ihuiuR
+	DetnQAFCSEM7qPLww0PEvjcAyIVSG93zsWfwImP6xKtyExoJu87t+AoClBJif6qlLWDIch2Qx6Q
+	KaeelyRLwaZdN/Q49eMW24Jlc4ycSzlRxZifAj3UntDkEjcO+S0LcZ7fQ3cUko/entHloR3tbhK
+	wM4Q1ZjCh9r3pSSq7mSG0KQUoi6Ha4AlXZPgkXZ5nFBCldnlnOMj2GhbTecanpO3P0bvlX3rFFb
+	5ER+12jWdMoN5m0XTh1v1dZKahUExKcE/3Zgxc6IGUWcbRZGYGBGOGEQ9SoP5K/+1NwtL32eE74
+	NOJnM0G81+hcQobNKoDtyreHkH1g9Ss0wu54gDwFQ==
+X-Received: by 2002:a05:6000:490d:b0:47f:ebe3:ca31 with SMTP id ffacd0b85a97d-48152dfd065mr6373537f8f.28.1786533533075;
+        Wed, 12 Aug 2026 04:18:53 -0700 (PDT)
 Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48150d702c9sm6670072f8f.34.2026.08.12.04.18.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48150d702c9sm6670072f8f.34.2026.08.12.04.18.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 04:18:50 -0700 (PDT)
+        Wed, 12 Aug 2026 04:18:52 -0700 (PDT)
 From: Muhammad Bilal <meatuni001@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: jorge.lopez2@hp.com,
@@ -67,9 +67,9 @@ Cc: jorge.lopez2@hp.com,
 	linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org,
 	Muhammad Bilal <meatuni001@gmail.com>
-Subject: [PATCH v2 6/9] platform/x86: hp-bioscfg: add missing bounds check in PSWD_ENCODINGS loop
-Date: Wed, 12 Aug 2026 16:18:26 +0500
-Message-ID: <20260812111829.172273-7-meatuni001@gmail.com>
+Subject: [PATCH v2 7/9] platform/x86: hp-bioscfg: fix new_password_store overwriting current_password
+Date: Wed, 12 Aug 2026 16:18:27 +0500
+Message-ID: <20260812111829.172273-8-meatuni001@gmail.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260812111829.172273-1-meatuni001@gmail.com>
 References: <20260812111829.172273-1-meatuni001@gmail.com>
@@ -81,45 +81,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PREREQUISITES loop earlier in the same function checks
-"elem + reqs" against password_obj_count before indexing the ACPI
-package element array:
+current_password_store() and new_password_store() both call
+store_password_instance() with is_current = true:
 
-	if (elem + reqs >= password_obj_count) {
-		pr_err("Error elem-objects package is too small\n");
-		return -EINVAL;
+	static ssize_t new_password_store(...)
+	{
+		return store_password_instance(kobj, buf, count, true);
 	}
 
-The PSWD_ENCODINGS loop performs the identical indexing pattern,
-password_obj[elem + pos_values], with no equivalent check, causing an
-out-of-bounds read of the package element array whenever
-encodings_size is larger than the number of elements actually present.
+so a write to new_password is routed to current_password instead, and
+the new_password field is never written by either sysfs entry point.
 
-Fix by adding the same bounds check, matching PREREQUISITES.
+Fix by passing false from new_password_store(), matching what the
+is_current parameter is meant to select.
 
 Fixes: 8646a3b5ee3a ("platform/x86: hp-bioscfg: passwdobj-attributes")
 Cc: stable@vger.kernel.org
 Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-index 86fa03a5ee9a..acb123985ede 100644
+index acb123985ede..6bd56d3f5bd0 100644
 --- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
 +++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
-@@ -351,6 +351,11 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
- 		case PSWD_ENCODINGS:
- 			size = min_t(u32, password_data->encodings_size, MAX_ENCODINGS_SIZE);
- 			for (pos_values = 0; pos_values < size; pos_values++) {
-+				if (elem + pos_values >= password_obj_count) {
-+					pr_err("Error elem-objects package is too small\n");
-+					return -EINVAL;
-+				}
-+
- 				ret = hp_convert_hexstr_to_str(password_obj[elem + pos_values].string.pointer,
- 							       password_obj[elem + pos_values].string.length,
- 							       &str_value, &value_len);
+@@ -123,7 +123,7 @@ static ssize_t new_password_store(struct kobject *kobj,
+ 				  struct kobj_attribute *attr,
+ 				  const char *buf, size_t count)
+ {
+-	return store_password_instance(kobj, buf, count, true);
++	return store_password_instance(kobj, buf, count, false);
+ }
+ 
+ static struct kobj_attribute password_new_password = __ATTR_WO(new_password);
 -- 
 2.55.0
 
