@@ -1,63 +1,63 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9BE3E1CF8
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 22:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810883D6CC9
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 22:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786659476; cv=none; b=rPVMjrTa6xvl7OET5arKcDPcktG1Enq+kXfejjUJA8ejV45NcQIWyLlLprvy83IOaLfCb0Wuo7q6zAPoVQQ3JY5vXVY9XIFI4xlWOUjaOXI6su2BhnPswuGwE1xyFl+346Bvv+ag7HoPpxAvwZhKvUPslMyKjRDzK2F6wk+DUNs=
+	t=1786659480; cv=none; b=WMxU704pRrstCqHtKYKvYT00cLhtbl5SFzfTwLTQq8NsQxEKtKRmQifueGHNCLtlTc3ZgLFWbgpVPthdBWkG+STodYoKhPuAn3Nroiqbtf/1V5HOUB0vyqJdjsVfMPp5P6YeAicSqhK0jr8658kgFQd9nGovPu5odCR+Yftf5fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786659476; c=relaxed/simple;
-	bh=5cPTCnPJa6O937ZZQIFK/lzfkFCIFcrM09a2SqAhsCw=;
+	s=arc-20240116; t=1786659480; c=relaxed/simple;
+	bh=xsQDYjfQm1eCxXVjzDCszXGmvYXCzlN4tkF8rFLYnPw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qdSM9IZx5276ddic/is751q6ih29UkyCT/zqwYELNq5KtFI3GzFWSPNfgRV5s4IXJSLO4j/qYnlax7zzUadQyD1grQfpEaTz/wLa0WFi+MV8IMRZCvz00zLzcfCDg6GW7m4ELzbsLwghQOF5kfQ7k5KwDZ5R56VQBVM+vK0So9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fRvebYl7; arc=none smtp.client-ip=209.85.216.52
+	 MIME-Version; b=lcQynFy8f/KUz9uabWGuOzLAvtwMOEWt25OZ3xiTfLjPswo1ZZ9JdXBluUVuEcbobIpenK/BOy5E+Of7vwIpxY2Nm/WtQPCY8F6m199o/ytSvRa9mehSpR1f3G3+Fg1Cqz6L16PEySEHftS38YZqovGpw/uJQibfzQQ3n/VoaR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AOlcwfBQ; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRvebYl7"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-38d489b6b71so408438a91.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 15:17:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOlcwfBQ"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-84e04df8c46so291621b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 15:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786659474; x=1787264274; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786659477; x=1787264277; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=GDWpzRdkpQScqquzbwd+Qr1uIGmT0mrL4KFJepX9iCw=;
-        b=fRvebYl7+/xUmaauyPrE6SOAbdgQzDPfB2s5BA6XhRRdtSMBz1Op5MjOdrKGIDBGmz
-         X8mlyM8Wnb5UaQWmsUf5TqWyjjmBi44AHPFSMdav8kiOyhU/5AOVldczV/u4FYv2xHMl
-         PHw2g2x9XFgXqXlD1HwHX0BdpiqssxxTcgaF8xOuWrdBoU5KJN+25kylRBj2KXbrq53p
-         oV+J1UZT0ycav/r7P/+t1rC2GptE8YwezDIM2VwHlWdFWqhQFuwT0NSdZslkllpoU0z+
-         2Gb/vTAqt4V7UVIIvJmUvwExF9W+UcTCToGu/q2gLfjbNLtd69uQRvgP2ufgsiZgYFJl
-         M6Iw==
+        bh=W0RUKgI78wtLWKhEVRZgKOfPx5UGL6e83+wjMlqNKno=;
+        b=AOlcwfBQW6aX0650cgruInboaYXd6v4L/IKYfTJ6B1VuVEAFAUlokI5154CfjCE914
+         LfLnVgZj3FvCQMFJH8sUW3EZAqa3aYdLC0JLWtaIDVAaMwH5gNcsYdGB7O4y9mQ1AKMB
+         7eG86HW+bMvuHHOtKVnEqUmtpnrCgqIaMBFl9/rLlrTNh8K1DVRnaLL++0aQpW59JBcR
+         80JX8N4+dm78s+7HncqRwo46CPnCicgkjQP3CiSaiY5CkSAgbzauEvJBlTfGUNmr0NrJ
+         VhZU6lG1fc1cMCHLK4jMk7L7xq0GpiTPgtvhISd+o3jyJjZpuRHKa1Rr4ASsn15jJJTV
+         dHcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786659474; x=1787264274;
+        d=1e100.net; s=20251104; t=1786659477; x=1787264277;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=GDWpzRdkpQScqquzbwd+Qr1uIGmT0mrL4KFJepX9iCw=;
-        b=LQ+744WuOaDGDIYlq9C5XQ0Ebi6T8kPAlX2D8kgSRUO7juWpQQpGPc8kW0C8YFgVpw
-         wtPkVGluafSu8gzYnVRTygkEMkNb2FKeAooW94iBHi/CllqPZPlN9+z2dxPLULOLUrWF
-         IHyrdSSZBe+cnWKKHq/FJObjwn88Ve+vIz3PhSUe2WfW3liTqfSY7g9iRUWQz6gsU+dh
-         c9dfsYoBA15sBGeDDbUYlU9gbifbsDG8LzZ+Bw9raKs0SQw0nFVU9Tq0sKLwzHxBj6l3
-         JkGIDkTp+dLpbTNF3d0Vw/gHvnbbJtZfpJPaoR3eme/Ju8YPQSZwQ1AUr7LqDLPjeZmY
-         1mWw==
-X-Gm-Message-State: AOJu0Yz6fyzDVg53YEDCPnllZFeNDHclR6hCYCTYaw9L8G007anL24wm
-	iKeTjSJeLJAe3WDfcmfVFHSVHOaNQne4A3utnAkY3Sw6YpsUI9TMSMQg
-X-Gm-Gg: AR+sD10Hu7e20cfgxyhpwPpCp71eOsYUDQRB27tncoJbMOkJ4T76Fhf9pUoobg1fKno
-	zB14tDRVTL5z/a9mu8m0Tj9YbBuYFAKmhIaZ2lZZpVHOTb2mLstOQfiKzEuFxzTrz+N/t+Bj77m
-	SjVFho0R5NwbzAoBDCv8EuuTyfxcrdLF08lanejIFKjNSoIIDZJxhwz3+dLI5SgRGyIW2md8jQv
-	koX9rWw/6bbluI7TOvUhaXumhVFGn6ZdBhTv+n/tqrOxUBu9yg0RwA7QJ0oXfxeXHDFrez/B1rK
-	R2wR/RsQF1jnJodfVJc67CvIigmwl1TFZwRp5jYDyhlYX8z9n2/zwTqMSFOoHBs+inrO5S4cadF
-	7J0a4Bd5TdJA6Y32aBwlW6tjynP943y7jYgxKf1tUSh1bqwBeGrLroK3A580D0qIsnu8TMPlgu2
-	L6r7VF4+qO8g3BUow7QzhFwpmv4++TU7sbc2K8kdWzsNt/9qW/qEYT0sar+zRT7jxZGDZ/OC9cJ
-	J0Wji9/KDyUDUXhYVk=
-X-Received: by 2002:a17:90b:4c8f:b0:38d:dfd1:7c1 with SMTP id 98e67ed59e1d1-3933b77fff8mr1008035a91.2.1786659473561;
-        Thu, 13 Aug 2026 15:17:53 -0700 (PDT)
+        bh=W0RUKgI78wtLWKhEVRZgKOfPx5UGL6e83+wjMlqNKno=;
+        b=XPNqDbBs93xILsS90oyP6SINTKlMvKzdkpOBX8SKiF0nXInh/DTTybzV2lFw0DsCSZ
+         Azlr8cJOtBTqzCHUlQErdv3RSQyC5URAyo0ycG9fpzSCbtkPnOMzEAQg+/cj3V2ohRKj
+         o6S2OxxVl+wXbijRJqrZwwiaHSUl7Iqa93lm36fLwdHkWjunKDlDu4a0uDtW/0QpxH8M
+         rIpnUwgUzeqgoPKxOgQ5ZdTB+vLA11pgT4u/PxH8YjED6G7IZiKHfvUH1hQsq/2VwuHy
+         Fxcug+Cm36bGH4+wmZ03once0cZzvHzgkWWq/FEKKHiMHk51SsYSnDtDIjQiY3/tBNn1
+         B9mQ==
+X-Gm-Message-State: AOJu0Ywqmwr7qG/XbySRe7aVr67/VYwCQtCepxvQfGmyoHW/er1ZPDJs
+	z/vnfJX5pP/lqQakOoHzsOn2rlf/XLnEDsraOyr/8Efi10fk3b2oRqn2cH8FElW4
+X-Gm-Gg: AR+sD10edQ6ab/bHzDqieywPqfNzhPlcMs4ND/IlKLKaV5uk0eHlKfSxYjuxTTDImT1
+	WIJ/XACd4ua+5XZI0/4GYc1uPikcwAhnH6B5R958puhDT40kn+hltYtX5BrEVUgifWRq02/iNnI
+	x8qKErHAloRjWwGos2NipyOss3/OQ1GH15x0hrxt+eqR9rvWjm5o08pltrj6+/wQO64yhrkoLwv
+	lIF6TUiWv4u/NeCV6uHLV2OKXj/LbonvFmjKvO4sN7asZ3R6Patjq3FxOAoTGHBNCVSTyQ/tWqQ
+	17AIMWW3/Q98hbkRZmy9TzjGHFQjgGymR14TaICJ+EzdIjft++MPz5n+huRXdFiNWCXTchqP/DL
+	ToasM+l4QK+EnaBss+LJAfMAChOEBgIHi+ofZXIvW46rTpN7pa2Vc3HVT1xF+Vc9yRZH4GfbKBT
+	05/6GthMqg3F7wSeuvU7tIX33J6ZXfntxb1a19T/s5azrXEGanR4jMoSs6GWQfyJSoW0wPG2REQ
+	2n1KxwUETrXjCYcu3Q=
+X-Received: by 2002:a05:6a20:7d9f:b0:3cc:3d08:da39 with SMTP id adf61e73a8af0-3cc714e62bbmr1286185637.0.1786659476717;
+        Thu, 13 Aug 2026 15:17:56 -0700 (PDT)
 Received: from sonic ([2804:18:167:9e8c:e6b5:fa0:d068:30e3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ebc667bfesm11463318eec.2.2026.08.13.15.17.50
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ebc667bfesm11463318eec.2.2026.08.13.15.17.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 15:17:53 -0700 (PDT)
+        Thu, 13 Aug 2026 15:17:56 -0700 (PDT)
 From: Hilgad Montelo <hilgad.montelo@gmail.com>
 To: kenneth.t.chan@gmail.com,
 	hansg@kernel.org,
@@ -65,9 +65,9 @@ To: kenneth.t.chan@gmail.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hilgad Montelo <hilgad.montelo@gmail.com>
-Subject: [PATCH v2 1/3] platform/x86: panasonic-laptop: Handle CF-33 rotation-lock button
-Date: Thu, 13 Aug 2026 19:17:42 -0300
-Message-ID: <20260813221744.25668-2-hilgad.montelo@gmail.com>
+Subject: [PATCH v2 2/3] platform/x86: panasonic-laptop: Add driver for CF-33 A1/A2 buttons (TBTN)
+Date: Thu, 13 Aug 2026 19:17:43 -0300
+Message-ID: <20260813221744.25668-3-hilgad.montelo@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260813221744.25668-1-hilgad.montelo@gmail.com>
 References: <20260813221744.25668-1-hilgad.montelo@gmail.com>
@@ -79,177 +79,233 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the Panasonic Toughbook CF-33 the bezel "Rotation Lock" button does
-not signal via ACPI notify like the other hotkeys. Instead the
-embedded controller injects raw i8042/PS2 scancodes that alias the
-real Left-GUI/Meta key:
+On the Panasonic Toughbook CF-33 the bezel A1/A2 buttons are wired to
+a separate ACPI device, MAT003C (ACPI path \_SB.TBTN), rather than the
+main Hotkey device (MAT0019/HKEY) this driver already talks to.
+MAT003C was present in the ACPI namespace but had no driver bound to
+it, so A1/A2 produced no signal through any channel: no evdev events,
+no ACPI notify (nothing logged), no WMI device, and no correlated ACPI
+GPE interrupt activity.
 
-    press:   e0 5b   65
-    release: e5      e0 db
+Found by dumping and disassembling the platform's ACPI tables
+(acpidump -b + iasl -d) and searching for EC _Qxx query handlers that
+push scancodes into a hotkey queue. TBTN turned out to implement its
+own HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's:
+_Qxx handlers call TBTN.HIND(code) then Notify(TBTN, 0x80); HINF()
+dequeues one scancode from a small EC-side FIFO. Confirmed scancodes:
+0x38/0x39 = A1 press/release, 0x42/0x43 = A2 press/release. Unlike
+HKEY, TBTN's codes never set the high bit -- press and release are
+distinct scancodes rather than one code plus an up/down flag.
 
-e0 5b / e0 db are the standard AT scancode for the physical Left-GUI
-key. The bare 65 / e5 bytes interleaved with them are not valid codes
-for any real key and only ever appear as part of this vendor signal
-(confirmed by tracing raw bytes crossing the i8042 port on the actual
-hardware). Left unfiltered, this shows up as a spurious KEY_LEFTMETA +
-KEY_F14 combo, which does nothing useful and can trigger desktop
-environment Meta-key bindings on every press.
+TBTN.SQTY returns 1 (it has no brightness/battery data, just a
+button-availability flag), so it cannot be probed via the existing
+acpi_pcc_hotkey_probe(), which requires num_sifr > SINF_DC_CUR_BRIGHT
+(assumes every device has the full brightness/eco-mode/battery SINF
+block). Add a second, minimal platform_driver bound to MAT003C
+instead, with its own small input device reporting KEY_PROG2 (A1) and
+KEY_PROG3 (A2) -- both already carry standard XKB keysym mappings
+(XF86Launch2/XF86Launch3), so no udev/hwdb work is needed for desktop
+environments to bind them to actions.
 
-This driver already installs an i8042 filter (panasonic_i8042_filter)
-to de-duplicate volume key events. Extend it with a small state
-machine that recognizes and swallows the exact e0 5b 65 ... e5 e0 db
-sequence, and emits a single debounced KEY_ROTATE_LOCK_TOGGLE event
-instead. The 600ms debounce is needed because the EC repeats the
-make/break unit every ~280-400ms for as long as the button is
-physically held, which would otherwise fire multiple toggles for one
-tap. If a byte sequence starts the same way but doesn't complete the
-pattern, the buffered e0 5b bytes are replayed unfiltered, so a
-genuine Left-GUI keypress is unaffected.
-
-Verified on a CF-33 Mk1: each button press now produces exactly one
-KEY_ROTATE_LOCK_TOGGLE pair, the plain keyboard device stays silent
-during presses (no more stray LEFTMETA/F14), and GNOME's auto-rotate
-lock correctly engages/disengages. Brightness and volume hotkeys are
-unaffected.
+Verified on a CF-33 Mk1: evtest shows clean KEY_PROG2/KEY_PROG3
+press/release pairs with real physical timing; confirmed bindable as
+GNOME custom shortcuts and launching applications correctly.
 
 Signed-off-by: Hilgad Montelo <hilgad.montelo@gmail.com>
 ---
- drivers/platform/x86/panasonic-laptop.c | 85 ++++++++++++++++++++++++-
- 1 file changed, 84 insertions(+), 1 deletion(-)
+ drivers/platform/x86/panasonic-laptop.c | 168 +++++++++++++++++++++++-
+ 1 file changed, 167 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 719add7..0c0e4a6 100644
+index 0c0e4a6..93e6511 100644
 --- a/drivers/platform/x86/panasonic-laptop.c
 +++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -127,6 +127,7 @@
- #include <linux/init.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
-+#include <linux/jiffies.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -256,15 +257,81 @@ struct pcc_acpi {
- /*
-  * On some Panasonic models the volume up / down / mute keys send duplicate
-  * keypress events over the PS/2 kbd interface, filter these out.
-+ *
-+ * On the CF-33 the bezel "Rotation Lock" button also signals over this same
-+ * interface, instead of via an ACPI notify like the other hotkeys. It does
-+ * so by injecting scancodes that alias the real Left-GUI/Meta key
-+ * (e0 5b make / e0 db break), interleaved with a bare byte (0x65 / 0xe5)
-+ * that no physical key on this keyboard uses. Left unfiltered this shows up
-+ * as a bogus LEFTMETA+F14 combo. We recognize and swallow the whole
-+ * sequence and emit a single debounced KEY_ROTATE_LOCK_TOGGLE instead; any
-+ * byte that breaks the expected pattern is treated as a genuine key and
-+ * replayed unfiltered.
-  */
-+enum rot_lock_state {
-+	ROT_IDLE,
-+	ROT_WAIT_65,
-+	ROT_WAIT_E5,
-+	ROT_WAIT_E0B,
-+	ROT_WAIT_DB,
+@@ -197,6 +197,42 @@ static const struct acpi_device_id pcc_device_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, pcc_device_ids);
+ 
++/*
++ * On the CF-33 the bezel A1/A2 buttons are wired to a separate ACPI device
++ * (MAT003C, ACPI path \_SB.TBTN) rather than the main Hotkey (MAT0019/HKEY)
++ * device the rest of this driver talks to. TBTN implements its own
++ * HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's, but
++ * SQTY only reports a single SIFR element (a button-availability flag) --
++ * it has none of HKEY's brightness/battery/backlight state, so it can't be
++ * probed via acpi_pcc_hotkey_probe(), which requires the full SINF block.
++ * Register a second, minimal platform_driver for it instead.
++ */
++#define METHOD_TBTN_QUERY	"HINF"
++#define TBTN_NOTIFY		0x80
++
++static const struct acpi_device_id tbtn_device_ids[] = {
++	{ "MAT003C", 0},
++	{ "", 0},
++};
++MODULE_DEVICE_TABLE(acpi, tbtn_device_ids);
++
++struct tbtn_acpi {
++	acpi_handle		handle;
++	struct input_dev	*input_dev;
 +};
 +
- static bool panasonic_i8042_filter(unsigned char data, unsigned char str,
- 				   struct serio *port, void *context)
- {
-+	struct pcc_acpi *pcc = context;
- 	static bool extended;
-+	static enum rot_lock_state rstate = ROT_IDLE;
-+	static unsigned long last_toggle;
-+	const unsigned long debounce = msecs_to_jiffies(600);
++static int tbtn_probe(struct platform_device *pdev);
++static void tbtn_remove(struct platform_device *pdev);
++
++static struct platform_driver acpi_tbtn_driver = {
++	.probe = tbtn_probe,
++	.remove = tbtn_remove,
++	.driver = {
++		.name = "Panasonic Tablet Buttons",
++		.acpi_match_table = tbtn_device_ids,
++	},
++};
++
+ #ifdef CONFIG_PM_SLEEP
+ static int acpi_pcc_hotkey_resume(struct device *dev);
+ #endif
+@@ -961,6 +997,112 @@ static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data)
+ 	}
+ }
  
- 	if (str & I8042_STR_AUXDATA)
- 		return false;
- 
-+	switch (rstate) {
-+	case ROT_WAIT_65:
-+		if (data == 0x65) {
-+			rstate = ROT_WAIT_E5;
-+			if (pcc && pcc->input_dev &&
-+			    time_after(jiffies, last_toggle + debounce)) {
-+				input_report_key(pcc->input_dev,
-+						  KEY_ROTATE_LOCK_TOGGLE, 1);
-+				input_sync(pcc->input_dev);
-+				input_report_key(pcc->input_dev,
-+						  KEY_ROTATE_LOCK_TOGGLE, 0);
-+				input_sync(pcc->input_dev);
-+				last_toggle = jiffies;
-+			}
-+			return true;
-+		}
-+		/* Not our sequence: replay the buffered genuine Left-GUI make. */
-+		rstate = ROT_IDLE;
-+		serio_interrupt(port, 0xe0, 0);
-+		serio_interrupt(port, 0x5b, 0);
-+		break;
-+	case ROT_WAIT_E5:
-+		if (data == 0xe5) {
-+			rstate = ROT_WAIT_E0B;
-+			return true;
-+		}
-+		rstate = ROT_IDLE;
-+		break;
-+	case ROT_WAIT_E0B:
-+		if (data == 0xe0) {
-+			rstate = ROT_WAIT_DB;
-+			return true;
-+		}
-+		rstate = ROT_IDLE;
-+		break;
-+	case ROT_WAIT_DB:
-+		rstate = ROT_IDLE;
-+		if (data == 0xdb)
-+			return true;
-+		break;
-+	case ROT_IDLE:
-+		break;
++/*
++ * TBTN's HINF dequeues one raw scancode from a small EC-side FIFO (0 if
++ * empty) and re-Notify()s itself if more than one entry was pending, so a
++ * single evaluate-and-report per notification is sufficient here -- unlike
++ * HKEY, TBTN's codes never set the high bit, since press and release are
++ * distinct scancodes rather than one code plus an up/down flag.
++ */
++static void tbtn_report_key(struct tbtn_acpi *tbtn, unsigned int code)
++{
++	static const struct {
++		unsigned int code;
++		unsigned int keycode;
++		bool down;
++	} keymap[] = {
++		{ 0x38, KEY_PROG2, true },  /* A1 press */
++		{ 0x39, KEY_PROG2, false }, /* A1 release */
++		{ 0x42, KEY_PROG3, true },  /* A2 press */
++		{ 0x43, KEY_PROG3, false }, /* A2 release */
++	};
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(keymap); i++) {
++		if (keymap[i].code != code)
++			continue;
++		input_report_key(tbtn->input_dev, keymap[i].keycode, keymap[i].down);
++		input_sync(tbtn->input_dev);
++		return;
 +	}
 +
- 	if (data == 0xe0) {
- 		extended = true;
- 		return true;
-@@ -276,6 +343,19 @@ static bool panasonic_i8042_filter(unsigned char data, unsigned char str,
- 		case 0x2e: /* e0 2e / e0 ae, Volume Down press / release */
- 		case 0x30: /* e0 30 / e0 b0, Volume Up press / release */
- 			return true;
-+		case 0x5b: /* e0 5b, possible start of rotate-lock sequence */
-+			if (data == 0x5b) {
-+				rstate = ROT_WAIT_65;
-+				return true;
-+			}
-+			/*
-+			 * data == 0xdb: genuine Left-GUI/Meta break code.
-+			 * The rotate-lock sequence only ever begins with
-+			 * the make code, so this is a real key release,
-+			 * not our sequence; the code below replays it
-+			 * untouched.
-+			 */
-+			fallthrough;
- 		default:
- 			/*
- 			 * Report the previously filtered e0 before continuing
-@@ -944,6 +1024,9 @@ static int acpi_pcc_init_input(struct pcc_acpi *pcc)
- 		goto err_free_dev;
- 	}
- 
-+	/* Synthesized by panasonic_i8042_filter(), not part of the ACPI keymap. */
-+	input_set_capability(input_dev, EV_KEY, KEY_ROTATE_LOCK_TOGGLE);
++	pr_info("Unknown TBTN hotkey event: 0x%02x\n", code);
++}
 +
- 	error = input_register_device(input_dev);
- 	if (error) {
- 		pr_err("Unable to register input device\n");
-@@ -1090,7 +1173,7 @@ static int acpi_pcc_hotkey_probe(struct platform_device *pdev)
- 		pcc->platform = NULL;
- 	}
++static void tbtn_notify(acpi_handle handle, u32 event, void *data)
++{
++	struct tbtn_acpi *tbtn = data;
++	unsigned long long result;
++	acpi_status status;
++
++	if (event != TBTN_NOTIFY)
++		return;
++
++	status = acpi_evaluate_integer(tbtn->handle, METHOD_TBTN_QUERY,
++				       NULL, &result);
++	if (ACPI_FAILURE(status)) {
++		pr_err("TBTN: error getting hotkey status\n");
++		return;
++	}
++
++	if (result)
++		tbtn_report_key(tbtn, result);
++}
++
++static int tbtn_probe(struct platform_device *pdev)
++{
++	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
++	struct tbtn_acpi *tbtn;
++	struct input_dev *input_dev;
++	int error;
++
++	if (!device)
++		return -ENODEV;
++
++	tbtn = devm_kzalloc(&pdev->dev, sizeof(*tbtn), GFP_KERNEL);
++	if (!tbtn)
++		return -ENOMEM;
++
++	tbtn->handle = device->handle;
++	device->driver_data = tbtn;
++
++	input_dev = devm_input_allocate_device(&pdev->dev);
++	if (!input_dev)
++		return -ENOMEM;
++
++	input_dev->name = "Panasonic Tablet Buttons";
++	input_dev->phys = "panasonic/tbtn0";
++	input_dev->id.bustype = BUS_HOST;
++	input_dev->id.vendor = 0x0001;
++	input_dev->id.product = 0x0002;
++	input_dev->id.version = 0x0100;
++	input_set_capability(input_dev, EV_KEY, KEY_PROG2);
++	input_set_capability(input_dev, EV_KEY, KEY_PROG3);
++
++	error = input_register_device(input_dev);
++	if (error) {
++		pr_err("TBTN: unable to register input device\n");
++		return error;
++	}
++
++	tbtn->input_dev = input_dev;
++
++	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
++						tbtn_notify, tbtn);
++	if (error)
++		return error;
++
++	return 0;
++}
++
++static void tbtn_remove(struct platform_device *pdev)
++{
++	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
++
++	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY, tbtn_notify);
++	device->driver_data = NULL;
++}
++
+ static void pcc_optd_notify(acpi_handle handle, u32 event, void *data)
+ {
+ 	if (event != ACPI_NOTIFY_EJECT_REQUEST)
+@@ -1221,4 +1363,28 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+ 	kfree(pcc);
+ }
  
--	i8042_install_filter(panasonic_i8042_filter, NULL);
-+	i8042_install_filter(panasonic_i8042_filter, pcc);
- 	return 0;
- 
- out_platform:
+-module_platform_driver(acpi_pcc_driver);
++static int __init panasonic_module_init(void)
++{
++	int error;
++
++	error = platform_driver_register(&acpi_pcc_driver);
++	if (error)
++		return error;
++
++	error = platform_driver_register(&acpi_tbtn_driver);
++	if (error) {
++		platform_driver_unregister(&acpi_pcc_driver);
++		return error;
++	}
++
++	return 0;
++}
++
++static void __exit panasonic_module_exit(void)
++{
++	platform_driver_unregister(&acpi_tbtn_driver);
++	platform_driver_unregister(&acpi_pcc_driver);
++}
++
++module_init(panasonic_module_init);
++module_exit(panasonic_module_exit);
 -- 
 2.53.0
 
