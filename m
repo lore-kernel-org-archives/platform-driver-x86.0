@@ -1,63 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810883D6CC9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 22:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11B33E3156
+	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 22:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786659480; cv=none; b=WMxU704pRrstCqHtKYKvYT00cLhtbl5SFzfTwLTQq8NsQxEKtKRmQifueGHNCLtlTc3ZgLFWbgpVPthdBWkG+STodYoKhPuAn3Nroiqbtf/1V5HOUB0vyqJdjsVfMPp5P6YeAicSqhK0jr8658kgFQd9nGovPu5odCR+Yftf5fg=
+	t=1786659482; cv=none; b=kHYVmynRu7UCORrf2Spltyao2p96WKh5SyBvt5abd/wHGUoZQbzA4AczCIYz7+EaSiqE0JeMKGS3j8eXeMnSs+/yeZ1O7iSmqhWAKlnN4KNOU2CN/LPjyIKQBaZ7FVamv0SGpgFOf8+aSlMkucbkZPpEO1FeviArcrPsyB3cR24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786659480; c=relaxed/simple;
-	bh=xsQDYjfQm1eCxXVjzDCszXGmvYXCzlN4tkF8rFLYnPw=;
+	s=arc-20240116; t=1786659482; c=relaxed/simple;
+	bh=Fx11ZzcEMDx+XWvgLsyL/NzaNa77kctud5tY5T/YvMU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lcQynFy8f/KUz9uabWGuOzLAvtwMOEWt25OZ3xiTfLjPswo1ZZ9JdXBluUVuEcbobIpenK/BOy5E+Of7vwIpxY2Nm/WtQPCY8F6m199o/ytSvRa9mehSpR1f3G3+Fg1Cqz6L16PEySEHftS38YZqovGpw/uJQibfzQQ3n/VoaR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AOlcwfBQ; arc=none smtp.client-ip=209.85.210.178
+	 MIME-Version; b=rDqpVvduPS4W8gm+dMiS8lmKIqZfy5qeb0HHHjB4j+4Ua+XlzdnjGjBZ5Xu7pWOrUTKOYpglYP+x7a6HS3NJMo/6WsdAtkjfTsaLIReh/4IqCy0n6XHO39dyIMZXsNkwJ6H20ygQAYl44xRISqb0Jzq8Bnm9FOYMTfv5WvFmnp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgyAGMgu; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOlcwfBQ"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-84e04df8c46so291621b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 15:17:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgyAGMgu"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cbee846deecso354509a12.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 15:18:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786659477; x=1787264277; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786659480; x=1787264280; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=W0RUKgI78wtLWKhEVRZgKOfPx5UGL6e83+wjMlqNKno=;
-        b=AOlcwfBQW6aX0650cgruInboaYXd6v4L/IKYfTJ6B1VuVEAFAUlokI5154CfjCE914
-         LfLnVgZj3FvCQMFJH8sUW3EZAqa3aYdLC0JLWtaIDVAaMwH5gNcsYdGB7O4y9mQ1AKMB
-         7eG86HW+bMvuHHOtKVnEqUmtpnrCgqIaMBFl9/rLlrTNh8K1DVRnaLL++0aQpW59JBcR
-         80JX8N4+dm78s+7HncqRwo46CPnCicgkjQP3CiSaiY5CkSAgbzauEvJBlTfGUNmr0NrJ
-         VhZU6lG1fc1cMCHLK4jMk7L7xq0GpiTPgtvhISd+o3jyJjZpuRHKa1Rr4ASsn15jJJTV
-         dHcA==
+        bh=6kwzuj7mx25GPpnRY6pHNhOgcyjHMHZYoHK7gFZt5W0=;
+        b=DgyAGMgucPEotkq2lpIAYvp06ZAK2t16lOcL+r2uXDhrKPpabmI5d68w3+t0D4iXbj
+         /F95tQUB33RAhm7vhszOYNNfpf0uX0cLNn7UwgP2X/mUFWFZknSVQztEyzMJAPNlEYLE
+         o4JuheHbQNRxJxFEUB83uVFK3YWttT+ypyX/sVSBJtke7CB28j1bUIvi6i4Gh09lqMSK
+         pOrDwHpsgnWY/Nz7im306L/YZlqGalki3gu8NXaSA/btw8ONv+Pgp86fPgu7wklJp2Cy
+         117pwgPycO/zWWQuoG0fr7ReEOWRAEr7aov/MIJ+xWWyRQzTmkl4SJaCgPpxWJ7XU59s
+         F8XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786659477; x=1787264277;
+        d=1e100.net; s=20251104; t=1786659480; x=1787264280;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=W0RUKgI78wtLWKhEVRZgKOfPx5UGL6e83+wjMlqNKno=;
-        b=XPNqDbBs93xILsS90oyP6SINTKlMvKzdkpOBX8SKiF0nXInh/DTTybzV2lFw0DsCSZ
-         Azlr8cJOtBTqzCHUlQErdv3RSQyC5URAyo0ycG9fpzSCbtkPnOMzEAQg+/cj3V2ohRKj
-         o6S2OxxVl+wXbijRJqrZwwiaHSUl7Iqa93lm36fLwdHkWjunKDlDu4a0uDtW/0QpxH8M
-         rIpnUwgUzeqgoPKxOgQ5ZdTB+vLA11pgT4u/PxH8YjED6G7IZiKHfvUH1hQsq/2VwuHy
-         Fxcug+Cm36bGH4+wmZ03once0cZzvHzgkWWq/FEKKHiMHk51SsYSnDtDIjQiY3/tBNn1
-         B9mQ==
-X-Gm-Message-State: AOJu0Ywqmwr7qG/XbySRe7aVr67/VYwCQtCepxvQfGmyoHW/er1ZPDJs
-	z/vnfJX5pP/lqQakOoHzsOn2rlf/XLnEDsraOyr/8Efi10fk3b2oRqn2cH8FElW4
-X-Gm-Gg: AR+sD10edQ6ab/bHzDqieywPqfNzhPlcMs4ND/IlKLKaV5uk0eHlKfSxYjuxTTDImT1
-	WIJ/XACd4ua+5XZI0/4GYc1uPikcwAhnH6B5R958puhDT40kn+hltYtX5BrEVUgifWRq02/iNnI
-	x8qKErHAloRjWwGos2NipyOss3/OQ1GH15x0hrxt+eqR9rvWjm5o08pltrj6+/wQO64yhrkoLwv
-	lIF6TUiWv4u/NeCV6uHLV2OKXj/LbonvFmjKvO4sN7asZ3R6Patjq3FxOAoTGHBNCVSTyQ/tWqQ
-	17AIMWW3/Q98hbkRZmy9TzjGHFQjgGymR14TaICJ+EzdIjft++MPz5n+huRXdFiNWCXTchqP/DL
-	ToasM+l4QK+EnaBss+LJAfMAChOEBgIHi+ofZXIvW46rTpN7pa2Vc3HVT1xF+Vc9yRZH4GfbKBT
-	05/6GthMqg3F7wSeuvU7tIX33J6ZXfntxb1a19T/s5azrXEGanR4jMoSs6GWQfyJSoW0wPG2REQ
-	2n1KxwUETrXjCYcu3Q=
-X-Received: by 2002:a05:6a20:7d9f:b0:3cc:3d08:da39 with SMTP id adf61e73a8af0-3cc714e62bbmr1286185637.0.1786659476717;
-        Thu, 13 Aug 2026 15:17:56 -0700 (PDT)
+        bh=6kwzuj7mx25GPpnRY6pHNhOgcyjHMHZYoHK7gFZt5W0=;
+        b=P88J3V4qHFytEx5jpTnUcoDYDviGNU2G3ot+l6TLKjwWLZUZprI8ruxJrxJN8nMpWs
+         BaZ0ADjrWstL48078HjpXxit1o37fmThnlS/WuPDgNyZJaNBLJtW8AvsD0hYc3t80SJ4
+         LseTlvKBEyu4WP0a+TvqjRijkNx/yadcgE1Ls+AvxN/36Q9OXGMaZkqt4MPYQlmtPMx0
+         vlgh8cfXx1g4nK0Qjk9yKiTZnfMqXN/LrVa+vrJLrnDd+qiSorczvfuDOpDmld5KwVx2
+         bbmClzKx+33uS7Zf4Up9Zjy+5F7Ubs/u31WN+WkJQmGbpzSIgD7uXc9ELgivv9hwP8xZ
+         YNsw==
+X-Gm-Message-State: AOJu0YydCtW8uH0C7K3zyZrtd+0hoEepZT6/8+JA8DQAHggp+ktWeqvx
+	/4218y8eF+nY/n64SHF9/E7uacgZr0jAIt1LquM8/NWuzkPwQfGoCgQS4jOtJugy
+X-Gm-Gg: AR+sD12zT1WFsI7rRLdbdMqio07B9aqNdUwSfFArEEiHszCHLkTOWovBRePjZ6Q86fD
+	/OXukpJvvjMQCUk/E9pehvST48nEkqiNV9DdCZxBW4CPqHgFHEdYgMCJfoZ6d6FcHUuw55lNlRH
+	jYCh04to1GaWQeuVu0ggBte6ciNnG1E9fklDvyuGvHgpjBvlp6+wAopgmXzHHuFv2MKlODSGg4Z
+	NInJynjBEmVfLaEMP8ZIUUlI/5TUu9zYwvBziirqZrjq5Nz6gIH5B5o5aniYts58HyNo0rWSGgF
+	zs9rMtQFsQwDOjCzcm1CVZntEhBxlKeH+5032gwe37vxb5UGU5Cn3+hxDZSGJYM3VCFaNZjUOeM
+	EmamJ7gmh/WDGY1Fsvz++rw5sofTLpHEzH/xPOd0E15E0CKhPn/qU2H61KbM68aeahF2zB0YuqS
+	NorCtm+85DF20UsV0pXvXQHMFKRkd4KEfQ4yY+Tzohrgr18KqoE2ombAP1vXcAOnd5mqD4Y1Wur
+	zA/k+g4xr6sD+lxRys=
+X-Received: by 2002:a05:6a21:2d4b:b0:3b2:a809:ffe with SMTP id adf61e73a8af0-3cc71a2d522mr1308747637.14.1786659479811;
+        Thu, 13 Aug 2026 15:17:59 -0700 (PDT)
 Received: from sonic ([2804:18:167:9e8c:e6b5:fa0:d068:30e3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ebc667bfesm11463318eec.2.2026.08.13.15.17.54
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ebc667bfesm11463318eec.2.2026.08.13.15.17.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 15:17:56 -0700 (PDT)
+        Thu, 13 Aug 2026 15:17:59 -0700 (PDT)
 From: Hilgad Montelo <hilgad.montelo@gmail.com>
 To: kenneth.t.chan@gmail.com,
 	hansg@kernel.org,
@@ -65,9 +65,9 @@ To: kenneth.t.chan@gmail.com,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hilgad Montelo <hilgad.montelo@gmail.com>
-Subject: [PATCH v2 2/3] platform/x86: panasonic-laptop: Add driver for CF-33 A1/A2 buttons (TBTN)
-Date: Thu, 13 Aug 2026 19:17:43 -0300
-Message-ID: <20260813221744.25668-3-hilgad.montelo@gmail.com>
+Subject: [PATCH v2 3/3] platform/x86: panasonic-laptop: Fix sentinel write past pcc->sinf[]
+Date: Thu, 13 Aug 2026 19:17:44 -0300
+Message-ID: <20260813221744.25668-4-hilgad.montelo@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260813221744.25668-1-hilgad.montelo@gmail.com>
 References: <20260813221744.25668-1-hilgad.montelo@gmail.com>
@@ -79,233 +79,61 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On the Panasonic Toughbook CF-33 the bezel A1/A2 buttons are wired to
-a separate ACPI device, MAT003C (ACPI path \_SB.TBTN), rather than the
-main Hotkey device (MAT0019/HKEY) this driver already talks to.
-MAT003C was present in the ACPI namespace but had no driver bound to
-it, so A1/A2 produced no signal through any channel: no evdev events,
-no ACPI notify (nothing logged), no WMI device, and no correlated ACPI
-GPE interrupt activity.
+acpi_pcc_retrieve_biosdata() rejects SINF packages only when
+pcc->num_sifr is strictly less than hkey->package.count, then
+unconditionally writes a trailing sentinel at
+pcc->sinf[hkey->package.count]. But pcc->sinf[] is allocated with
+exactly pcc->num_sifr elements (valid indices 0..num_sifr-1), so that
+write needs num_sifr strictly greater than package.count to stay in
+bounds -- num_sifr == package.count passes the existing check but
+still overflows by one element.
 
-Found by dumping and disassembling the platform's ACPI tables
-(acpidump -b + iasl -d) and searching for EC _Qxx query handlers that
-push scancodes into a hotkey queue. TBTN turned out to implement its
-own HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's:
-_Qxx handlers call TBTN.HIND(code) then Notify(TBTN, 0x80); HINF()
-dequeues one scancode from a small EC-side FIFO. Confirmed scancodes:
-0x38/0x39 = A1 press/release, 0x42/0x43 = A2 press/release. Unlike
-HKEY, TBTN's codes never set the high bit -- press and release are
-distinct scancodes rather than one code plus an up/down flag.
+This is exactly the case probe()'s existing num_sifr++ workaround
+("Some DSDT-s have an off-by-one bug where the SINF package count is
+one higher than the SQTY reported value") is written to accommodate:
+when a DSDT's SINF package count equals SQTY+1, the workaround makes
+num_sifr equal to package.count, which is precisely the boundary that
+overflows here. Found via UBSan (array-index-out-of-bounds) on
+hardware where HKEY.SQTY returns 37 and HKEY.SINF()'s package has 38
+elements: num_sifr becomes 38 after the += 1 workaround, the loop
+correctly fills indices 0..37, and the sentinel write then targets
+index 38, one past the end -- a silent 4-byte heap overflow on kernels
+without CONFIG_UBSAN.
 
-TBTN.SQTY returns 1 (it has no brightness/battery data, just a
-button-availability flag), so it cannot be probed via the existing
-acpi_pcc_hotkey_probe(), which requires num_sifr > SINF_DC_CUR_BRIGHT
-(assumes every device has the full brightness/eco-mode/battery SINF
-block). Add a second, minimal platform_driver bound to MAT003C
-instead, with its own small input device reporting KEY_PROG2 (A1) and
-KEY_PROG3 (A2) -- both already carry standard XKB keysym mappings
-(XF86Launch2/XF86Launch3), so no udev/hwdb work is needed for desktop
-environments to bind them to actions.
-
-Verified on a CF-33 Mk1: evtest shows clean KEY_PROG2/KEY_PROG3
-press/release pairs with real physical timing; confirmed bindable as
-GNOME custom shortcuts and launching applications correctly.
+Tightening the rejection check to num_sifr <= package.count would
+avoid the overflow but breaks probe() entirely on exactly this
+hardware, since num_sifr == package.count is the case the off-by-one
+workaround exists to support. Nothing else in the driver reads this
+sentinel value back, so simply skip the write when there is no room
+for it instead.
 
 Signed-off-by: Hilgad Montelo <hilgad.montelo@gmail.com>
 ---
- drivers/platform/x86/panasonic-laptop.c | 168 +++++++++++++++++++++++-
- 1 file changed, 167 insertions(+), 1 deletion(-)
+ drivers/platform/x86/panasonic-laptop.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 0c0e4a6..93e6511 100644
+index 93e6511..9511440 100644
 --- a/drivers/platform/x86/panasonic-laptop.c
 +++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -197,6 +197,42 @@ static const struct acpi_device_id pcc_device_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, pcc_device_ids);
- 
-+/*
-+ * On the CF-33 the bezel A1/A2 buttons are wired to a separate ACPI device
-+ * (MAT003C, ACPI path \_SB.TBTN) rather than the main Hotkey (MAT0019/HKEY)
-+ * device the rest of this driver talks to. TBTN implements its own
-+ * HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's, but
-+ * SQTY only reports a single SIFR element (a button-availability flag) --
-+ * it has none of HKEY's brightness/battery/backlight state, so it can't be
-+ * probed via acpi_pcc_hotkey_probe(), which requires the full SINF block.
-+ * Register a second, minimal platform_driver for it instead.
-+ */
-+#define METHOD_TBTN_QUERY	"HINF"
-+#define TBTN_NOTIFY		0x80
-+
-+static const struct acpi_device_id tbtn_device_ids[] = {
-+	{ "MAT003C", 0},
-+	{ "", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, tbtn_device_ids);
-+
-+struct tbtn_acpi {
-+	acpi_handle		handle;
-+	struct input_dev	*input_dev;
-+};
-+
-+static int tbtn_probe(struct platform_device *pdev);
-+static void tbtn_remove(struct platform_device *pdev);
-+
-+static struct platform_driver acpi_tbtn_driver = {
-+	.probe = tbtn_probe,
-+	.remove = tbtn_remove,
-+	.driver = {
-+		.name = "Panasonic Tablet Buttons",
-+		.acpi_match_table = tbtn_device_ids,
-+	},
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- static int acpi_pcc_hotkey_resume(struct device *dev);
- #endif
-@@ -961,6 +997,112 @@ static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data)
+@@ -476,7 +476,16 @@ static int acpi_pcc_retrieve_biosdata(struct pcc_acpi *pcc)
+ 		} else
+ 			pr_err("Invalid HKEY.SINF data\n");
  	}
- }
+-	pcc->sinf[hkey->package.count] = -1;
++	/*
++	 * pcc->sinf[] has pcc->num_sifr elements (valid indices
++	 * 0..num_sifr-1). On DSDTs where SINF's package count equals
++	 * num_sifr exactly -- the off-by-one case probe()'s num_sifr++
++	 * already allocates a spare element for -- there is no room left
++	 * for this trailing sentinel; nothing reads it back, so just skip
++	 * the write rather than running one element past the flex array.
++	 */
++	if (hkey->package.count < pcc->num_sifr)
++		pcc->sinf[hkey->package.count] = -1;
  
-+/*
-+ * TBTN's HINF dequeues one raw scancode from a small EC-side FIFO (0 if
-+ * empty) and re-Notify()s itself if more than one entry was pending, so a
-+ * single evaluate-and-report per notification is sufficient here -- unlike
-+ * HKEY, TBTN's codes never set the high bit, since press and release are
-+ * distinct scancodes rather than one code plus an up/down flag.
-+ */
-+static void tbtn_report_key(struct tbtn_acpi *tbtn, unsigned int code)
-+{
-+	static const struct {
-+		unsigned int code;
-+		unsigned int keycode;
-+		bool down;
-+	} keymap[] = {
-+		{ 0x38, KEY_PROG2, true },  /* A1 press */
-+		{ 0x39, KEY_PROG2, false }, /* A1 release */
-+		{ 0x42, KEY_PROG3, true },  /* A2 press */
-+		{ 0x43, KEY_PROG3, false }, /* A2 release */
-+	};
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(keymap); i++) {
-+		if (keymap[i].code != code)
-+			continue;
-+		input_report_key(tbtn->input_dev, keymap[i].keycode, keymap[i].down);
-+		input_sync(tbtn->input_dev);
-+		return;
-+	}
-+
-+	pr_info("Unknown TBTN hotkey event: 0x%02x\n", code);
-+}
-+
-+static void tbtn_notify(acpi_handle handle, u32 event, void *data)
-+{
-+	struct tbtn_acpi *tbtn = data;
-+	unsigned long long result;
-+	acpi_status status;
-+
-+	if (event != TBTN_NOTIFY)
-+		return;
-+
-+	status = acpi_evaluate_integer(tbtn->handle, METHOD_TBTN_QUERY,
-+				       NULL, &result);
-+	if (ACPI_FAILURE(status)) {
-+		pr_err("TBTN: error getting hotkey status\n");
-+		return;
-+	}
-+
-+	if (result)
-+		tbtn_report_key(tbtn, result);
-+}
-+
-+static int tbtn_probe(struct platform_device *pdev)
-+{
-+	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+	struct tbtn_acpi *tbtn;
-+	struct input_dev *input_dev;
-+	int error;
-+
-+	if (!device)
-+		return -ENODEV;
-+
-+	tbtn = devm_kzalloc(&pdev->dev, sizeof(*tbtn), GFP_KERNEL);
-+	if (!tbtn)
-+		return -ENOMEM;
-+
-+	tbtn->handle = device->handle;
-+	device->driver_data = tbtn;
-+
-+	input_dev = devm_input_allocate_device(&pdev->dev);
-+	if (!input_dev)
-+		return -ENOMEM;
-+
-+	input_dev->name = "Panasonic Tablet Buttons";
-+	input_dev->phys = "panasonic/tbtn0";
-+	input_dev->id.bustype = BUS_HOST;
-+	input_dev->id.vendor = 0x0001;
-+	input_dev->id.product = 0x0002;
-+	input_dev->id.version = 0x0100;
-+	input_set_capability(input_dev, EV_KEY, KEY_PROG2);
-+	input_set_capability(input_dev, EV_KEY, KEY_PROG3);
-+
-+	error = input_register_device(input_dev);
-+	if (error) {
-+		pr_err("TBTN: unable to register input device\n");
-+		return error;
-+	}
-+
-+	tbtn->input_dev = input_dev;
-+
-+	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
-+						tbtn_notify, tbtn);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+static void tbtn_remove(struct platform_device *pdev)
-+{
-+	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
-+
-+	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY, tbtn_notify);
-+	device->driver_data = NULL;
-+}
-+
- static void pcc_optd_notify(acpi_handle handle, u32 event, void *data)
- {
- 	if (event != ACPI_NOTIFY_EJECT_REQUEST)
-@@ -1221,4 +1363,28 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
- 	kfree(pcc);
- }
- 
--module_platform_driver(acpi_pcc_driver);
-+static int __init panasonic_module_init(void)
-+{
-+	int error;
-+
-+	error = platform_driver_register(&acpi_pcc_driver);
-+	if (error)
-+		return error;
-+
-+	error = platform_driver_register(&acpi_tbtn_driver);
-+	if (error) {
-+		platform_driver_unregister(&acpi_pcc_driver);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit panasonic_module_exit(void)
-+{
-+	platform_driver_unregister(&acpi_tbtn_driver);
-+	platform_driver_unregister(&acpi_pcc_driver);
-+}
-+
-+module_init(panasonic_module_init);
-+module_exit(panasonic_module_exit);
+ end:
+ 	kfree(buffer.pointer);
 -- 
 2.53.0
 
