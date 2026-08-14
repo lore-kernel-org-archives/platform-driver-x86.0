@@ -1,139 +1,406 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11B33E3156
-	for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 22:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A481E98E3
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 03:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786659482; cv=none; b=kHYVmynRu7UCORrf2Spltyao2p96WKh5SyBvt5abd/wHGUoZQbzA4AczCIYz7+EaSiqE0JeMKGS3j8eXeMnSs+/yeZ1O7iSmqhWAKlnN4KNOU2CN/LPjyIKQBaZ7FVamv0SGpgFOf8+aSlMkucbkZPpEO1FeviArcrPsyB3cR24=
+	t=1786678766; cv=none; b=LePW9JoiOo1rU3U7lSkJ9g2kqFtV3wJEpN28gRGV9ADtLgXksrxCu5ZuGoUNbbWZbkFnw9tHtnXeaNJ5hobErjnopkcV9PCzvdOEOBbyM4Wbvu0cR9w0g0tda3OZey31wL4f3xFihEjmIBArz1+VM4Eavm4g0RlokiAgYzOtuAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786659482; c=relaxed/simple;
-	bh=Fx11ZzcEMDx+XWvgLsyL/NzaNa77kctud5tY5T/YvMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rDqpVvduPS4W8gm+dMiS8lmKIqZfy5qeb0HHHjB4j+4Ua+XlzdnjGjBZ5Xu7pWOrUTKOYpglYP+x7a6HS3NJMo/6WsdAtkjfTsaLIReh/4IqCy0n6XHO39dyIMZXsNkwJ6H20ygQAYl44xRISqb0Jzq8Bnm9FOYMTfv5WvFmnp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgyAGMgu; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1786678766; c=relaxed/simple;
+	bh=tU52kobVZ0mWzI5CBatRF9t2vRK5O8wR37oS7pEJuJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7/oDdwjzLzLxHHoCmBoC3Hb1Pffu6zJrSaVCWgZgutFbZeo5Xp5mm2QVzYxckLRJgguXKeSqaiowKzy/JkOoQQFmWGhXll2aU6s6rmiGz9ADo9HQ3F1Mz8yXCk/+vZ8yztrtxSjSADkfWtmi9J7ToQzW8ZCIigzL1FMV8u4ebk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tNUs1WAD; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgyAGMgu"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cbee846deecso354509a12.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 15:18:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNUs1WAD"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cea3004256so7028005ad.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 20:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786659480; x=1787264280; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=6kwzuj7mx25GPpnRY6pHNhOgcyjHMHZYoHK7gFZt5W0=;
-        b=DgyAGMgucPEotkq2lpIAYvp06ZAK2t16lOcL+r2uXDhrKPpabmI5d68w3+t0D4iXbj
-         /F95tQUB33RAhm7vhszOYNNfpf0uX0cLNn7UwgP2X/mUFWFZknSVQztEyzMJAPNlEYLE
-         o4JuheHbQNRxJxFEUB83uVFK3YWttT+ypyX/sVSBJtke7CB28j1bUIvi6i4Gh09lqMSK
-         pOrDwHpsgnWY/Nz7im306L/YZlqGalki3gu8NXaSA/btw8ONv+Pgp86fPgu7wklJp2Cy
-         117pwgPycO/zWWQuoG0fr7ReEOWRAEr7aov/MIJ+xWWyRQzTmkl4SJaCgPpxWJ7XU59s
-         F8XQ==
+        d=gmail.com; s=20251104; t=1786678765; x=1787283565; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=tcxxYDVPsk84iOlr8Lz1AxWckzSgZuum0qdbctVTnaA=;
+        b=tNUs1WADHtjvNr4GTPd45ZOmN5Dyu6ZBZLv+BB50VDAWbJaYKqR/beXU6aoYKeq9SD
+         SdDSu6vhAliJOoNS7cZpYg+2kKFnf53W6pnIPRfNHdNePUKQIV89eUncOBDLqEqJYKAw
+         kiVl7aj+BJpwSMqev4Go7MntySGR5Eyy03457eH62loZwlXczKyenL86ZJcxkZCol/z2
+         ajSSB7NNKKxLWcVA4nb83j5RYcqqT5R5z2WaZ5My2/dJtTM+61ehQ2IYbQfyMKz1MQec
+         6Ozof9anO4sFcQDE9J8iK4OHraUJz1B/1v+cBCD7DsSiVev8o9iZoH9Jqr5UT0nUxRoi
+         hN1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786659480; x=1787264280;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=6kwzuj7mx25GPpnRY6pHNhOgcyjHMHZYoHK7gFZt5W0=;
-        b=P88J3V4qHFytEx5jpTnUcoDYDviGNU2G3ot+l6TLKjwWLZUZprI8ruxJrxJN8nMpWs
-         BaZ0ADjrWstL48078HjpXxit1o37fmThnlS/WuPDgNyZJaNBLJtW8AvsD0hYc3t80SJ4
-         LseTlvKBEyu4WP0a+TvqjRijkNx/yadcgE1Ls+AvxN/36Q9OXGMaZkqt4MPYQlmtPMx0
-         vlgh8cfXx1g4nK0Qjk9yKiTZnfMqXN/LrVa+vrJLrnDd+qiSorczvfuDOpDmld5KwVx2
-         bbmClzKx+33uS7Zf4Up9Zjy+5F7Ubs/u31WN+WkJQmGbpzSIgD7uXc9ELgivv9hwP8xZ
-         YNsw==
-X-Gm-Message-State: AOJu0YydCtW8uH0C7K3zyZrtd+0hoEepZT6/8+JA8DQAHggp+ktWeqvx
-	/4218y8eF+nY/n64SHF9/E7uacgZr0jAIt1LquM8/NWuzkPwQfGoCgQS4jOtJugy
-X-Gm-Gg: AR+sD12zT1WFsI7rRLdbdMqio07B9aqNdUwSfFArEEiHszCHLkTOWovBRePjZ6Q86fD
-	/OXukpJvvjMQCUk/E9pehvST48nEkqiNV9DdCZxBW4CPqHgFHEdYgMCJfoZ6d6FcHUuw55lNlRH
-	jYCh04to1GaWQeuVu0ggBte6ciNnG1E9fklDvyuGvHgpjBvlp6+wAopgmXzHHuFv2MKlODSGg4Z
-	NInJynjBEmVfLaEMP8ZIUUlI/5TUu9zYwvBziirqZrjq5Nz6gIH5B5o5aniYts58HyNo0rWSGgF
-	zs9rMtQFsQwDOjCzcm1CVZntEhBxlKeH+5032gwe37vxb5UGU5Cn3+hxDZSGJYM3VCFaNZjUOeM
-	EmamJ7gmh/WDGY1Fsvz++rw5sofTLpHEzH/xPOd0E15E0CKhPn/qU2H61KbM68aeahF2zB0YuqS
-	NorCtm+85DF20UsV0pXvXQHMFKRkd4KEfQ4yY+Tzohrgr18KqoE2ombAP1vXcAOnd5mqD4Y1Wur
-	zA/k+g4xr6sD+lxRys=
-X-Received: by 2002:a05:6a21:2d4b:b0:3b2:a809:ffe with SMTP id adf61e73a8af0-3cc71a2d522mr1308747637.14.1786659479811;
-        Thu, 13 Aug 2026 15:17:59 -0700 (PDT)
-Received: from sonic ([2804:18:167:9e8c:e6b5:fa0:d068:30e3])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31ebc667bfesm11463318eec.2.2026.08.13.15.17.57
+        d=1e100.net; s=20251104; t=1786678765; x=1787283565;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tcxxYDVPsk84iOlr8Lz1AxWckzSgZuum0qdbctVTnaA=;
+        b=gCLq0330T12PUVZ2UVL5HGtGI/G2Qj5UzaCcLMBCfThmIhGoHKTsef7XxELoKnRA3Z
+         iccxXSoZmb5UeWLwKjn4tJCtzbFOmkJnOy82pIKSvZPar6O74eey5JPDG/vNKCJfDXxu
+         jXqSBsuShpsAw2C1LzKnoyqPZ/1en3/Soax91rJBNpqR8LX4jQ6DMpuD2aPMqxHSr5/c
+         /8kPv+MVo7nxYbOnKk3pg3gM9xrERujQWj5ioMbQow9YxHKj1vrLnq7rVcnGlHSmmjda
+         O77tVETrDnUaiu10JL8tb0oRPPO6TIjDKXiw/pfhuEvD5US5lXC8cQLcpAY03oCaTajz
+         de4A==
+X-Forwarded-Encrypted: i=1; AHgh+RqbThHUaJ6LE/t2qzrAjMaahDav2BGRJYdvVPTPG3nh9FZYYh7KsegS4ajFwVwI4ogK93DTMEvRyMhDGqZ6kDM96BE0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAVHDh1VKNgvbH4c40ypzVb7t4nKY91br03SbxMV8a1m5912+U
+	JQLfnRJU21rci0XzP5R0NuNOlubJ4OZsHrGrCgpJs5RhchBtykKTzC3q
+X-Gm-Gg: AR+sD13mBfz8MHfR31yzQQ32vwDN6yyII8g8W1nm/muPFDSYFJfQC+G/wLePA94BTOB
+	uCdx54+QLl1b98610tmog1dmrlMxXyCNmRm6BFrE1gdJ4sjx54YyXF8wKLNS2vQAKNclKHefYTs
+	z5kjQVSaj/+aU+qre6ag6X3egOPItW2/vATDQZ0Xg1XSZCMhTaR6PAgzuSTUe+1LXxefN1/kZZ+
+	oGPwGB3WqI8cKvLv0UUKnnVYHzfK7ybcsTDW2rrLPIbWVp530Lc0nD2xBs6Fuul6WfNus6IuSg2
+	fEB6X4WFrJ5dFskQ7qJ1VU+JQe/yeUeQxJzV+s9fHHLtxt1q339C/NS/jigtZH9gp0+ghBibzf5
+	2HsMnM38XP3SVnFaph167Qb8CmELcu9qb0JVpqIxXnlYaZTTpiOhx4UP7jetYkRFVxjSPxFSrit
+	DPyy5P4DT/VPnjKFclkmgwF3VybCyyRt9Tkl5or5mwc33ZXQ6NqoIpiQDmqPQJDozrbnVziyLMd
+	A==
+X-Received: by 2002:a17:903:1b45:b0:2cc:864b:539 with SMTP id d9443c01a7336-2d3b08682e5mr32580005ad.6.1786678764514;
+        Thu, 13 Aug 2026 20:39:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aeb29f45sm3765685ad.43.2026.08.13.20.39.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 15:17:59 -0700 (PDT)
-From: Hilgad Montelo <hilgad.montelo@gmail.com>
-To: kenneth.t.chan@gmail.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hilgad Montelo <hilgad.montelo@gmail.com>
-Subject: [PATCH v2 3/3] platform/x86: panasonic-laptop: Fix sentinel write past pcc->sinf[]
-Date: Thu, 13 Aug 2026 19:17:44 -0300
-Message-ID: <20260813221744.25668-4-hilgad.montelo@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260813221744.25668-1-hilgad.montelo@gmail.com>
-References: <20260813221744.25668-1-hilgad.montelo@gmail.com>
+        Thu, 13 Aug 2026 20:39:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 13 Aug 2026 20:39:23 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Nikita Dubrovskih <testname142@gmail.com>
+Cc: linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2] hwmon: Add fan monitoring support for HONOR FMI-XX
+Message-ID: <d0fa2041-427b-499f-abce-820f50d94316@roeck-us.net>
+References: <20260812192242.859307-1-testname142@gmail.com>
+ <20260813091411.1186193-1-testname142@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260813091411.1186193-1-testname142@gmail.com>
 
-acpi_pcc_retrieve_biosdata() rejects SINF packages only when
-pcc->num_sifr is strictly less than hkey->package.count, then
-unconditionally writes a trailing sentinel at
-pcc->sinf[hkey->package.count]. But pcc->sinf[] is allocated with
-exactly pcc->num_sifr elements (valid indices 0..num_sifr-1), so that
-write needs num_sifr strictly greater than package.count to stay in
-bounds -- num_sifr == package.count passes the existing check but
-still overflows by one element.
+On Thu, Aug 13, 2026 at 12:14:11PM +0300, Nikita Dubrovskih wrote:
+> The HONOR FMI-XX firmware exposes a serialized \\GFNS ACPI method.
+> It returns a status byte and a 16-bit fan speed in RPM for either of two
+> firmware channels.
+> 
+> Add a DMI-restricted, read-only hwmon driver using that firmware
+> interface. The driver deliberately exposes no fan control or direct
+> Embedded Controller access.
+> 
+> The interface was validated on firmware 1.09 with fan channel 0
+> reporting approximately 2500-2800 RPM. Channel 1 is readable and
+> remained at 0 RPM during idle and a short CPU load.
+> 
+> Signed-off-by: Nikita Dubrovskih <testname142@gmail.com>
+> ---
 
-This is exactly the case probe()'s existing num_sifr++ workaround
-("Some DSDT-s have an off-by-one bug where the SINF package count is
-one higher than the SQTY reported value") is written to accommodate:
-when a DSDT's SINF package count equals SQTY+1, the workaround makes
-num_sifr equal to package.count, which is precisely the boundary that
-overflows here. Found via UBSan (array-index-out-of-bounds) on
-hardware where HKEY.SQTY returns 37 and HKEY.SINF()'s package has 38
-elements: num_sifr becomes 38 after the += 1 workaround, the loop
-correctly fills indices 0..37, and the sentinel write then targets
-index 38, one past the end -- a silent 4-byte heap overflow on kernels
-without CONFIG_UBSAN.
+Looks ok. I do not have any further comments.
 
-Tightening the rejection check to num_sifr <= package.count would
-avoid the overflow but breaks probe() entirely on exactly this
-hardware, since num_sifr == package.count is the case the off-by-one
-workaround exists to support. Nothing else in the driver reads this
-sentinel value back, so simply skip the write when there is no room
-for it instead.
+This is an RFC, so I won't apply it.
 
-Signed-off-by: Hilgad Montelo <hilgad.montelo@gmail.com>
----
- drivers/platform/x86/panasonic-laptop.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Thanks,
+Guenter
 
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 93e6511..9511440 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -476,7 +476,16 @@ static int acpi_pcc_retrieve_biosdata(struct pcc_acpi *pcc)
- 		} else
- 			pr_err("Invalid HKEY.SINF data\n");
- 	}
--	pcc->sinf[hkey->package.count] = -1;
-+	/*
-+	 * pcc->sinf[] has pcc->num_sifr elements (valid indices
-+	 * 0..num_sifr-1). On DSDTs where SINF's package count equals
-+	 * num_sifr exactly -- the off-by-one case probe()'s num_sifr++
-+	 * already allocates a spare element for -- there is no room left
-+	 * for this trailing sentinel; nothing reads it back, so just skip
-+	 * the write rather than running one element past the flex array.
-+	 */
-+	if (hkey->package.count < pcc->num_sifr)
-+		pcc->sinf[hkey->package.count] = -1;
- 
- end:
- 	kfree(buffer.pointer);
--- 
-2.53.0
-
+> Changes in v2:
+> - Drop the redundant mutex and callback argument validation.
+> - Remove unused platform drvdata and simplify the init error path.
+> - Align the macro definition and order the MAINTAINERS entry.
+> 
+>  Documentation/hwmon/honor-fmi.rst |  32 ++++++
+>  Documentation/hwmon/index.rst     |   1 +
+>  MAINTAINERS                       |   7 ++
+>  drivers/hwmon/Kconfig             |  10 ++
+>  drivers/hwmon/Makefile            |   1 +
+>  drivers/hwmon/honor-fmi.c         | 178 ++++++++++++++++++++++++++++++
+>  6 files changed, 229 insertions(+)
+>  create mode 100644 Documentation/hwmon/honor-fmi.rst
+>  create mode 100644 drivers/hwmon/honor-fmi.c
+> 
+> diff --git a/Documentation/hwmon/honor-fmi.rst b/Documentation/hwmon/honor-fmi.rst
+> new file mode 100644
+> index 0000000..a42a1dd
+> --- /dev/null
+> +++ b/Documentation/hwmon/honor-fmi.rst
+> @@ -0,0 +1,32 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +Kernel driver honor-fmi
+> +=======================
+> +
+> +Supported systems:
+> +
+> +  * HONOR FMI-XX
+> +
+> +Author: Nikita Dubrovskih <testname142@gmail.com>
+> +
+> +Description
+> +-----------
+> +
+> +The driver provides read-only monitoring of the fan speed on the HONOR FMI-XX.
+> +The system firmware implements a ``GFNS`` ACPI method which returns the speed
+> +of one of two firmware fan channels in RPM. Embedded Controller access and
+> +serialization are handled by the firmware method.
+> +
+> +The driver does not expose fan control or direct Embedded Controller access.
+> +
+> +Sysfs entries
+> +-------------
+> +
+> +The following attributes are supported:
+> +
+> +======================= ======= =============================================
+> +Name                    Perm    Description
+> +======================= ======= =============================================
+> +``fan1_input``          RO      Fan channel 0 speed in RPM
+> +``fan2_input``          RO      Fan channel 1 speed in RPM
+> +======================= ======= =============================================
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index 29130df..91052fa 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -90,6 +90,7 @@ Hardware Monitoring Kernel Drivers
+>     gxp-fan-ctrl
+>     hac300s
+>     hih6130
+> +   honor-fmi
+>     hp-wmi-sensors
+>     hs3001
+>     htu31
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8014b9f..7f2e3f8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11876,6 +11876,13 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
+>  F:	drivers/iio/pressure/mprls0025pa*
+>  
+> +HONOR FMI-XX HARDWARE MONITOR DRIVER
+> +M:	Nikita Dubrovskih <testname142@gmail.com>
+> +L:	linux-hwmon@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/hwmon/honor-fmi.rst
+> +F:	drivers/hwmon/honor-fmi.c
+> +
+>  HP BIOSCFG DRIVER
+>  M:	Jorge Lopez <jorge.lopez2@hp.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 2bfbcc0..8a11a30 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -2785,6 +2785,16 @@ config SENSORS_ASUS_EC
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called asus_ec_sensors.
+>  
+> +config SENSORS_HONOR_FMI
+> +	tristate "HONOR FMI-XX fan monitor"
+> +	depends on X86
+> +	help
+> +	  If you say yes here, you get support for fan speed monitoring on
+> +	  the HONOR FMI-XX laptop through its firmware ACPI method.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called honor-fmi.
+> +
+>  config SENSORS_HP_WMI
+>  	tristate "HP WMI Sensors"
+>  	depends on ACPI_WMI
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 63effc0..e098793 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_SENSORS_ACPI_POWER) += acpi_power_meter.o
+>  obj-$(CONFIG_SENSORS_ATK0110)	+= asus_atk0110.o
+>  obj-$(CONFIG_SENSORS_ASUS_EC)	+= asus-ec-sensors.o
+>  obj-$(CONFIG_SENSORS_ASUS_WMI)	+= asus_wmi_sensors.o
+> +obj-$(CONFIG_SENSORS_HONOR_FMI)	+= honor-fmi.o
+>  obj-$(CONFIG_SENSORS_HP_WMI)	+= hp-wmi-sensors.o
+>  
+>  # Native drivers
+> diff --git a/drivers/hwmon/honor-fmi.c b/drivers/hwmon/honor-fmi.c
+> new file mode 100644
+> index 0000000..3421e40
+> --- /dev/null
+> +++ b/drivers/hwmon/honor-fmi.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Read-only fan monitoring for the HONOR FMI-XX.
+> + *
+> + * The firmware-provided \GFNS ACPI method accepts a three-byte buffer.
+> + * Byte 2 selects fan 0 or 1. It returns a status byte followed by a
+> + * little-endian 16-bit fan speed in RPM. The method owns all Embedded
+> + * Controller access and serialization; this driver deliberately exposes no
+> + * fan control interface.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/dmi.h>
+> +#include <linux/err.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define HONOR_FMI_GFNS_RESULT_SIZE	3
+> +
+> +struct honor_fmi_data {
+> +	acpi_handle gfns;
+> +};
+> +
+> +static const struct dmi_system_id honor_fmi_dmi_table[] = {
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "HONOR"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FMI-XX"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(dmi, honor_fmi_dmi_table);
+> +
+> +static int honor_fmi_read_rpm(struct honor_fmi_data *data, int channel,
+> +			      long *rpm)
+> +{
+> +	union acpi_object input = {
+> +		.buffer = {
+> +			.type = ACPI_TYPE_BUFFER,
+> +			.length = 3,
+> +		},
+> +	};
+> +	struct acpi_object_list arguments = {
+> +		.count = 1,
+> +		.pointer = &input,
+> +	};
+> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *result;
+> +	u8 input_bytes[3] = { 0, 0, channel };
+> +	acpi_status status;
+> +	int ret = 0;
+> +
+> +	input.buffer.pointer = input_bytes;
+> +
+> +	status = acpi_evaluate_object(data->gfns, NULL, &arguments, &output);
+> +	if (ACPI_FAILURE(status))
+> +		return -EIO;
+> +
+> +	result = output.pointer;
+> +	if (!result || result->type != ACPI_TYPE_BUFFER ||
+> +	    result->buffer.length < HONOR_FMI_GFNS_RESULT_SIZE) {
+> +		ret = -EPROTO;
+> +		goto out_free;
+> +	}
+> +
+> +	if (result->buffer.pointer[0]) {
+> +		ret = -EIO;
+> +		goto out_free;
+> +	}
+> +
+> +	*rpm = result->buffer.pointer[1] |
+> +	       (result->buffer.pointer[2] << 8);
+> +
+> +out_free:
+> +	kfree(output.pointer);
+> +	return ret;
+> +}
+> +
+> +static umode_t honor_fmi_is_visible(const void *data,
+> +				    enum hwmon_sensor_types type, u32 attr,
+> +				    int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +static int honor_fmi_read(struct device *dev, enum hwmon_sensor_types type,
+> +			  u32 attr, int channel, long *value)
+> +{
+> +	struct honor_fmi_data *data = dev_get_drvdata(dev);
+> +
+> +	return honor_fmi_read_rpm(data, channel, value);
+> +}
+> +
+> +static const struct hwmon_ops honor_fmi_hwmon_ops = {
+> +	.is_visible = honor_fmi_is_visible,
+> +	.read = honor_fmi_read,
+> +};
+> +
+> +static const struct hwmon_channel_info * const honor_fmi_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info honor_fmi_chip_info = {
+> +	.ops = &honor_fmi_hwmon_ops,
+> +	.info = honor_fmi_hwmon_info,
+> +};
+> +
+> +static int honor_fmi_probe(struct platform_device *pdev)
+> +{
+> +	struct honor_fmi_data *data;
+> +	struct device *hwmon_dev;
+> +	acpi_status status;
+> +
+> +	if (!dmi_check_system(honor_fmi_dmi_table))
+> +		return -ENODEV;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	status = acpi_get_handle(NULL, "\\GFNS", &data->gfns);
+> +	if (ACPI_FAILURE(status))
+> +		return dev_err_probe(&pdev->dev, -ENODEV,
+> +				     "firmware does not provide \\GFNS\n");
+> +
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev, "honor_fmi",
+> +							 data,
+> +							 &honor_fmi_chip_info,
+> +							 NULL);
+> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +static struct platform_driver honor_fmi_driver = {
+> +	.probe = honor_fmi_probe,
+> +	.driver = {
+> +		.name = "honor-fmi-hwmon",
+> +	},
+> +};
+> +
+> +static struct platform_device *honor_fmi_device;
+> +
+> +static int __init honor_fmi_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (!dmi_check_system(honor_fmi_dmi_table))
+> +		return -ENODEV;
+> +
+> +	ret = platform_driver_register(&honor_fmi_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	honor_fmi_device = platform_device_register_simple("honor-fmi-hwmon",
+> +							   PLATFORM_DEVID_NONE,
+> +							   NULL, 0);
+> +	if (IS_ERR(honor_fmi_device)) {
+> +		platform_driver_unregister(&honor_fmi_driver);
+> +		return PTR_ERR(honor_fmi_device);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit honor_fmi_exit(void)
+> +{
+> +	platform_device_unregister(honor_fmi_device);
+> +	platform_driver_unregister(&honor_fmi_driver);
+> +}
+> +
+> +module_init(honor_fmi_init);
+> +module_exit(honor_fmi_exit);
+> +
+> +MODULE_AUTHOR("Nikita Dubrovskih <testname142@gmail.com>");
+> +MODULE_DESCRIPTION("HONOR FMI-XX fan speed monitor");
+> +MODULE_LICENSE("GPL");
