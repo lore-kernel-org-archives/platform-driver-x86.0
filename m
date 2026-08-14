@@ -1,406 +1,128 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A481E98E3
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 03:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6480846DFFC;
+	Fri, 14 Aug 2026 12:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786678766; cv=none; b=LePW9JoiOo1rU3U7lSkJ9g2kqFtV3wJEpN28gRGV9ADtLgXksrxCu5ZuGoUNbbWZbkFnw9tHtnXeaNJ5hobErjnopkcV9PCzvdOEOBbyM4Wbvu0cR9w0g0tda3OZey31wL4f3xFihEjmIBArz1+VM4Eavm4g0RlokiAgYzOtuAs=
+	t=1786711795; cv=none; b=hU72iEsCE8wqqF0hQI4YEBCfHMMLC6DA2sTaAecanYJHDFBvMlKeX7QKxDG72DmkY3rlbhdBvrRr4Xt8c2tRFMLvenn8M5SkGSWiwJLYwqwiSUEnzcOQp82GqmlCGNPI7PiEm7uNOts/UeuVO+IxBvwA/0d4xVt+M/Ngr8QxgrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786678766; c=relaxed/simple;
-	bh=tU52kobVZ0mWzI5CBatRF9t2vRK5O8wR37oS7pEJuJA=;
+	s=arc-20240116; t=1786711795; c=relaxed/simple;
+	bh=N6Wm7zvO1O97Kiw/b6HRbmjzTds561mSYObozWbWlp4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V7/oDdwjzLzLxHHoCmBoC3Hb1Pffu6zJrSaVCWgZgutFbZeo5Xp5mm2QVzYxckLRJgguXKeSqaiowKzy/JkOoQQFmWGhXll2aU6s6rmiGz9ADo9HQ3F1Mz8yXCk/+vZ8yztrtxSjSADkfWtmi9J7ToQzW8ZCIigzL1FMV8u4ebk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tNUs1WAD; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QdtxOcSDzDzXR9ITkjL+s0zwxAQmLpLAE98iIODtqPV9FsLa9jQgjvM6x/VxXT/5k0HJ+4j8ngzNxj6GV5uKL+DKNPQk5XBTpRVB0GSzic3TKGkMJCiYMvuH0c3LSC9UHzeFcTqjgeBbSYUPM/sGuQlZZ0ni7/XaEzRSQ6Br3zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWTGi5Q7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNUs1WAD"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cea3004256so7028005ad.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 13 Aug 2026 20:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786678765; x=1787283565; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=tcxxYDVPsk84iOlr8Lz1AxWckzSgZuum0qdbctVTnaA=;
-        b=tNUs1WADHtjvNr4GTPd45ZOmN5Dyu6ZBZLv+BB50VDAWbJaYKqR/beXU6aoYKeq9SD
-         SdDSu6vhAliJOoNS7cZpYg+2kKFnf53W6pnIPRfNHdNePUKQIV89eUncOBDLqEqJYKAw
-         kiVl7aj+BJpwSMqev4Go7MntySGR5Eyy03457eH62loZwlXczKyenL86ZJcxkZCol/z2
-         ajSSB7NNKKxLWcVA4nb83j5RYcqqT5R5z2WaZ5My2/dJtTM+61ehQ2IYbQfyMKz1MQec
-         6Ozof9anO4sFcQDE9J8iK4OHraUJz1B/1v+cBCD7DsSiVev8o9iZoH9Jqr5UT0nUxRoi
-         hN1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786678765; x=1787283565;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tcxxYDVPsk84iOlr8Lz1AxWckzSgZuum0qdbctVTnaA=;
-        b=gCLq0330T12PUVZ2UVL5HGtGI/G2Qj5UzaCcLMBCfThmIhGoHKTsef7XxELoKnRA3Z
-         iccxXSoZmb5UeWLwKjn4tJCtzbFOmkJnOy82pIKSvZPar6O74eey5JPDG/vNKCJfDXxu
-         jXqSBsuShpsAw2C1LzKnoyqPZ/1en3/Soax91rJBNpqR8LX4jQ6DMpuD2aPMqxHSr5/c
-         /8kPv+MVo7nxYbOnKk3pg3gM9xrERujQWj5ioMbQow9YxHKj1vrLnq7rVcnGlHSmmjda
-         O77tVETrDnUaiu10JL8tb0oRPPO6TIjDKXiw/pfhuEvD5US5lXC8cQLcpAY03oCaTajz
-         de4A==
-X-Forwarded-Encrypted: i=1; AHgh+RqbThHUaJ6LE/t2qzrAjMaahDav2BGRJYdvVPTPG3nh9FZYYh7KsegS4ajFwVwI4ogK93DTMEvRyMhDGqZ6kDM96BE0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAVHDh1VKNgvbH4c40ypzVb7t4nKY91br03SbxMV8a1m5912+U
-	JQLfnRJU21rci0XzP5R0NuNOlubJ4OZsHrGrCgpJs5RhchBtykKTzC3q
-X-Gm-Gg: AR+sD13mBfz8MHfR31yzQQ32vwDN6yyII8g8W1nm/muPFDSYFJfQC+G/wLePA94BTOB
-	uCdx54+QLl1b98610tmog1dmrlMxXyCNmRm6BFrE1gdJ4sjx54YyXF8wKLNS2vQAKNclKHefYTs
-	z5kjQVSaj/+aU+qre6ag6X3egOPItW2/vATDQZ0Xg1XSZCMhTaR6PAgzuSTUe+1LXxefN1/kZZ+
-	oGPwGB3WqI8cKvLv0UUKnnVYHzfK7ybcsTDW2rrLPIbWVp530Lc0nD2xBs6Fuul6WfNus6IuSg2
-	fEB6X4WFrJ5dFskQ7qJ1VU+JQe/yeUeQxJzV+s9fHHLtxt1q339C/NS/jigtZH9gp0+ghBibzf5
-	2HsMnM38XP3SVnFaph167Qb8CmELcu9qb0JVpqIxXnlYaZTTpiOhx4UP7jetYkRFVxjSPxFSrit
-	DPyy5P4DT/VPnjKFclkmgwF3VybCyyRt9Tkl5or5mwc33ZXQ6NqoIpiQDmqPQJDozrbnVziyLMd
-	A==
-X-Received: by 2002:a17:903:1b45:b0:2cc:864b:539 with SMTP id d9443c01a7336-2d3b08682e5mr32580005ad.6.1786678764514;
-        Thu, 13 Aug 2026 20:39:24 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aeb29f45sm3765685ad.43.2026.08.13.20.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 20:39:23 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 13 Aug 2026 20:39:23 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Nikita Dubrovskih <testname142@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2] hwmon: Add fan monitoring support for HONOR FMI-XX
-Message-ID: <d0fa2041-427b-499f-abce-820f50d94316@roeck-us.net>
-References: <20260812192242.859307-1-testname142@gmail.com>
- <20260813091411.1186193-1-testname142@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWTGi5Q7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80B61F000E9;
+	Fri, 14 Aug 2026 12:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786711787;
+	bh=/N/HX1GSPPOcqxWY/4dtIRIphxWYu1pio+UkOSgheTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YWTGi5Q7f/pZmJbmyIgbKJXzr77Dl+/MMrgnXHtQhpdZC8lW4AM2lJ29i/13HYRdd
+	 ZQKimYvkaspsstjrhlp1dq/ocDqT+e9aYeFGesZYVmKzima9JfENh95wImTEFhAOOF
+	 InlnEDgETc0DXUW/G9AqEj8peU3XxtQ8u3hD8h31hatop8+Hh8AjZU393+lWriyc/Z
+	 EVITiCpW6A/dgpEBJrpHeJdXAzSOokK69IItB/oZQJMvMjkSmvkKYCrS9oZWm39vIJ
+	 V0pIfa1+uydAKd2dHEyqaNtmy1/312M8sPv1nFW1nNhSKMxOOlcZBEOhOyutdrHw5Y
+	 mPs6QRNcCyzvA==
+Date: Fri, 14 Aug 2026 14:49:31 +0200
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	manivannan.sadhasivam@oss.qualcomm.com, Rob Herring <robh@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, linux-acpi@vger.kernel.org, 
+	Sui Jingfeng <sui.jingfeng@linux.dev>
+Subject: Re: [PATCH v3 03/14] software node: Implement device_get_match_data
+ fwnode callback
+Message-ID: <ks2nm67zp5i2grzomu7mjb7uhkuwtd7w5stoqp5kri2clpxpsp@ayn42h7meh5l>
+References: <20260110-pci-m2-e-v3-0-4faee7d0d5ae@oss.qualcomm.com>
+ <20260110-pci-m2-e-v3-3-4faee7d0d5ae@oss.qualcomm.com>
+ <aWSpFk9z0zpyKjr6@smile.fi.intel.com>
+ <6l3rs5pv6xnrbygpvqrdxqoqtybjyefsltk5bl4336q56rfoza@ejo3sxuufghe>
+ <aWSwgRiEkT9unYw9@smile.fi.intel.com>
+ <6peb6afhpm4l7opxbdt3b5sx32longevwds5c3dlqji2hr5dlh@kxuvj55jkqgi>
+ <ljqd5ovcsg7t62tdzd77w5mv5buawm3x7xyapy7n7l7azcaorh@tytj46t2lxyb>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260813091411.1186193-1-testname142@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ljqd5ovcsg7t62tdzd77w5mv5buawm3x7xyapy7n7l7azcaorh@tytj46t2lxyb>
 
-On Thu, Aug 13, 2026 at 12:14:11PM +0300, Nikita Dubrovskih wrote:
-> The HONOR FMI-XX firmware exposes a serialized \\GFNS ACPI method.
-> It returns a status byte and a 16-bit fan speed in RPM for either of two
-> firmware channels.
+On Mon, Jan 12, 2026 at 10:01:23PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Jan 12, 2026 at 02:32:21PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jan 12, 2026 at 10:27:45AM +0200, Andy Shevchenko wrote:
+> > > On Mon, Jan 12, 2026 at 01:49:54PM +0530, Manivannan Sadhasivam wrote:
+> > > > + Dmitry Torokhov (who was against this patch previously)
+> > > > 
+> > > > On Mon, Jan 12, 2026 at 09:56:06AM +0200, Andy Shevchenko wrote:
+> > > > > On Sat, Jan 10, 2026 at 12:26:21PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > > 
+> > > > > > Because the software node backend of the fwnode API framework lacks an
+> > > > > > implementation for the .device_get_match_data function callback.
+> > > > > 
+> > > > > Maybe this is done on purpose. Have you thought about this aspect?
+> > > > 
+> > > > IMO, software nodes were introduced to add sub-properties to the existing
+> > > > firmware nodes, but it has usecase/potential to go beyond that. More below.
+> > > 
+> > > Potential doesn't mean the necessity.
+> > > 
+> > > > > > This makes it difficult to use(and/or test) a few drivers that originates
+> > > > > > from DT world on the non-DT platform.
+> > > > > 
+> > > > > How difficult? DSA implementation went to the way of taking DT overlay
+> > > > > approach. Why that one can't be applied here?
+> > > > 
+> > > > Sometimes you do not have any DT node at all.
+> > > 
+> > > Yes, that is exactly the case I have referred to. The PCI core (in Linux)
+> > > is able to create DT subtree on non-OF based platforms.
+> > > 
+> > 
+> > Maybe I should look into creating dynamic DT node for the device and insert it
+> > to the uart node. Theoretically it should work.
+> > 
 > 
-> Add a DMI-restricted, read-only hwmon driver using that firmware
-> interface. The driver deliberately exposes no fan control or direct
-> Embedded Controller access.
+> It worked flawlessly. So I sent v4 incorporating this design:
+> https://lore.kernel.org/linux-pci/20260112-pci-m2-e-v4-0-eff84d2c6d26@oss.qualcomm.com/
 > 
-> The interface was validated on firmware 1.09 with fan channel 0
-> reporting approximately 2500-2800 RPM. Channel 1 is readable and
-> remained at 0 RPM during idle and a short CPU load.
-> 
-> Signed-off-by: Nikita Dubrovskih <testname142@gmail.com>
-> ---
 
-Looks ok. I do not have any further comments.
+Andy, I had to revive this old thread of a merged series as Krzk is not in
+favour of adding DT overlay or dynamic OF nodes for these BT devices [1]. His
+objections are due to the fact that we are just adding BT nodes of a
+discoverable device (M.2 PCIe device) without any resources. So the node just
+contains the compatible to match with the serdev driver and nothing else.
 
-This is an RFC, so I won't apply it.
+And he suggested to use swnodes or other similar mechanisms to plug with the
+serdev driver as that's the only thing we want here, not a true hardware
+description.
 
-Thanks,
-Guenter
+Since you strongly objected the swnode approach in this series, I wanted to hear
+your opinion before I rework the code.
 
-> Changes in v2:
-> - Drop the redundant mutex and callback argument validation.
-> - Remove unused platform drvdata and simplify the init error path.
-> - Align the macro definition and order the MAINTAINERS entry.
-> 
->  Documentation/hwmon/honor-fmi.rst |  32 ++++++
->  Documentation/hwmon/index.rst     |   1 +
->  MAINTAINERS                       |   7 ++
->  drivers/hwmon/Kconfig             |  10 ++
->  drivers/hwmon/Makefile            |   1 +
->  drivers/hwmon/honor-fmi.c         | 178 ++++++++++++++++++++++++++++++
->  6 files changed, 229 insertions(+)
->  create mode 100644 Documentation/hwmon/honor-fmi.rst
->  create mode 100644 drivers/hwmon/honor-fmi.c
-> 
-> diff --git a/Documentation/hwmon/honor-fmi.rst b/Documentation/hwmon/honor-fmi.rst
-> new file mode 100644
-> index 0000000..a42a1dd
-> --- /dev/null
-> +++ b/Documentation/hwmon/honor-fmi.rst
-> @@ -0,0 +1,32 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Kernel driver honor-fmi
-> +=======================
-> +
-> +Supported systems:
-> +
-> +  * HONOR FMI-XX
-> +
-> +Author: Nikita Dubrovskih <testname142@gmail.com>
-> +
-> +Description
-> +-----------
-> +
-> +The driver provides read-only monitoring of the fan speed on the HONOR FMI-XX.
-> +The system firmware implements a ``GFNS`` ACPI method which returns the speed
-> +of one of two firmware fan channels in RPM. Embedded Controller access and
-> +serialization are handled by the firmware method.
-> +
-> +The driver does not expose fan control or direct Embedded Controller access.
-> +
-> +Sysfs entries
-> +-------------
-> +
-> +The following attributes are supported:
-> +
-> +======================= ======= =============================================
-> +Name                    Perm    Description
-> +======================= ======= =============================================
-> +``fan1_input``          RO      Fan channel 0 speed in RPM
-> +``fan2_input``          RO      Fan channel 1 speed in RPM
-> +======================= ======= =============================================
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 29130df..91052fa 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -90,6 +90,7 @@ Hardware Monitoring Kernel Drivers
->     gxp-fan-ctrl
->     hac300s
->     hih6130
-> +   honor-fmi
->     hp-wmi-sensors
->     hs3001
->     htu31
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8014b9f..7f2e3f8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11876,6 +11876,13 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/iio/pressure/honeywell,mprls0025pa.yaml
->  F:	drivers/iio/pressure/mprls0025pa*
->  
-> +HONOR FMI-XX HARDWARE MONITOR DRIVER
-> +M:	Nikita Dubrovskih <testname142@gmail.com>
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/hwmon/honor-fmi.rst
-> +F:	drivers/hwmon/honor-fmi.c
-> +
->  HP BIOSCFG DRIVER
->  M:	Jorge Lopez <jorge.lopez2@hp.com>
->  L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 2bfbcc0..8a11a30 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -2785,6 +2785,16 @@ config SENSORS_ASUS_EC
->  	  This driver can also be built as a module. If so, the module
->  	  will be called asus_ec_sensors.
->  
-> +config SENSORS_HONOR_FMI
-> +	tristate "HONOR FMI-XX fan monitor"
-> +	depends on X86
-> +	help
-> +	  If you say yes here, you get support for fan speed monitoring on
-> +	  the HONOR FMI-XX laptop through its firmware ACPI method.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called honor-fmi.
-> +
->  config SENSORS_HP_WMI
->  	tristate "HP WMI Sensors"
->  	depends on ACPI_WMI
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 63effc0..e098793 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -11,6 +11,7 @@ obj-$(CONFIG_SENSORS_ACPI_POWER) += acpi_power_meter.o
->  obj-$(CONFIG_SENSORS_ATK0110)	+= asus_atk0110.o
->  obj-$(CONFIG_SENSORS_ASUS_EC)	+= asus-ec-sensors.o
->  obj-$(CONFIG_SENSORS_ASUS_WMI)	+= asus_wmi_sensors.o
-> +obj-$(CONFIG_SENSORS_HONOR_FMI)	+= honor-fmi.o
->  obj-$(CONFIG_SENSORS_HP_WMI)	+= hp-wmi-sensors.o
->  
->  # Native drivers
-> diff --git a/drivers/hwmon/honor-fmi.c b/drivers/hwmon/honor-fmi.c
-> new file mode 100644
-> index 0000000..3421e40
-> --- /dev/null
-> +++ b/drivers/hwmon/honor-fmi.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Read-only fan monitoring for the HONOR FMI-XX.
-> + *
-> + * The firmware-provided \GFNS ACPI method accepts a three-byte buffer.
-> + * Byte 2 selects fan 0 or 1. It returns a status byte followed by a
-> + * little-endian 16-bit fan speed in RPM. The method owns all Embedded
-> + * Controller access and serialization; this driver deliberately exposes no
-> + * fan control interface.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/dmi.h>
-> +#include <linux/err.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define HONOR_FMI_GFNS_RESULT_SIZE	3
-> +
-> +struct honor_fmi_data {
-> +	acpi_handle gfns;
-> +};
-> +
-> +static const struct dmi_system_id honor_fmi_dmi_table[] = {
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "HONOR"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FMI-XX"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(dmi, honor_fmi_dmi_table);
-> +
-> +static int honor_fmi_read_rpm(struct honor_fmi_data *data, int channel,
-> +			      long *rpm)
-> +{
-> +	union acpi_object input = {
-> +		.buffer = {
-> +			.type = ACPI_TYPE_BUFFER,
-> +			.length = 3,
-> +		},
-> +	};
-> +	struct acpi_object_list arguments = {
-> +		.count = 1,
-> +		.pointer = &input,
-> +	};
-> +	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *result;
-> +	u8 input_bytes[3] = { 0, 0, channel };
-> +	acpi_status status;
-> +	int ret = 0;
-> +
-> +	input.buffer.pointer = input_bytes;
-> +
-> +	status = acpi_evaluate_object(data->gfns, NULL, &arguments, &output);
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
-> +
-> +	result = output.pointer;
-> +	if (!result || result->type != ACPI_TYPE_BUFFER ||
-> +	    result->buffer.length < HONOR_FMI_GFNS_RESULT_SIZE) {
-> +		ret = -EPROTO;
-> +		goto out_free;
-> +	}
-> +
-> +	if (result->buffer.pointer[0]) {
-> +		ret = -EIO;
-> +		goto out_free;
-> +	}
-> +
-> +	*rpm = result->buffer.pointer[1] |
-> +	       (result->buffer.pointer[2] << 8);
-> +
-> +out_free:
-> +	kfree(output.pointer);
-> +	return ret;
-> +}
-> +
-> +static umode_t honor_fmi_is_visible(const void *data,
-> +				    enum hwmon_sensor_types type, u32 attr,
-> +				    int channel)
-> +{
-> +	return 0444;
-> +}
-> +
-> +static int honor_fmi_read(struct device *dev, enum hwmon_sensor_types type,
-> +			  u32 attr, int channel, long *value)
-> +{
-> +	struct honor_fmi_data *data = dev_get_drvdata(dev);
-> +
-> +	return honor_fmi_read_rpm(data, channel, value);
-> +}
-> +
-> +static const struct hwmon_ops honor_fmi_hwmon_ops = {
-> +	.is_visible = honor_fmi_is_visible,
-> +	.read = honor_fmi_read,
-> +};
-> +
-> +static const struct hwmon_channel_info * const honor_fmi_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info honor_fmi_chip_info = {
-> +	.ops = &honor_fmi_hwmon_ops,
-> +	.info = honor_fmi_hwmon_info,
-> +};
-> +
-> +static int honor_fmi_probe(struct platform_device *pdev)
-> +{
-> +	struct honor_fmi_data *data;
-> +	struct device *hwmon_dev;
-> +	acpi_status status;
-> +
-> +	if (!dmi_check_system(honor_fmi_dmi_table))
-> +		return -ENODEV;
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	status = acpi_get_handle(NULL, "\\GFNS", &data->gfns);
-> +	if (ACPI_FAILURE(status))
-> +		return dev_err_probe(&pdev->dev, -ENODEV,
-> +				     "firmware does not provide \\GFNS\n");
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev, "honor_fmi",
-> +							 data,
-> +							 &honor_fmi_chip_info,
-> +							 NULL);
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static struct platform_driver honor_fmi_driver = {
-> +	.probe = honor_fmi_probe,
-> +	.driver = {
-> +		.name = "honor-fmi-hwmon",
-> +	},
-> +};
-> +
-> +static struct platform_device *honor_fmi_device;
-> +
-> +static int __init honor_fmi_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (!dmi_check_system(honor_fmi_dmi_table))
-> +		return -ENODEV;
-> +
-> +	ret = platform_driver_register(&honor_fmi_driver);
-> +	if (ret)
-> +		return ret;
-> +
-> +	honor_fmi_device = platform_device_register_simple("honor-fmi-hwmon",
-> +							   PLATFORM_DEVID_NONE,
-> +							   NULL, 0);
-> +	if (IS_ERR(honor_fmi_device)) {
-> +		platform_driver_unregister(&honor_fmi_driver);
-> +		return PTR_ERR(honor_fmi_device);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit honor_fmi_exit(void)
-> +{
-> +	platform_device_unregister(honor_fmi_device);
-> +	platform_driver_unregister(&honor_fmi_driver);
-> +}
-> +
-> +module_init(honor_fmi_init);
-> +module_exit(honor_fmi_exit);
-> +
-> +MODULE_AUTHOR("Nikita Dubrovskih <testname142@gmail.com>");
-> +MODULE_DESCRIPTION("HONOR FMI-XX fan speed monitor");
-> +MODULE_LICENSE("GPL");
+- Mani
+
+[1] https://lore.kernel.org/linux-pci/768142f0-2638-41f3-a34f-dc80bb99eb7f@kernel.org
+
+-- 
+மணிவண்ணன் சதாசிவம்
