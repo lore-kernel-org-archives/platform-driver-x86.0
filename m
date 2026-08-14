@@ -1,76 +1,70 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC9446D543
-	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 13:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E769D48A8B9
+	for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 17:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786713943; cv=none; b=VJbVmD4cOX7EUAsrjbq8zG08prloJX7XhOod+3OetMm6wnMr+DHtreDAJRVq2PrLhBGu1rqfZyVTytZRhMylr6bHpo9IFKHw/MZNYoB5YfL7XQy+m0Exaic5sKdGFpaNMkIro8lNx4ceF4L1IUY4HuQBmpmC1R1/UN7Q84dqiKQ=
+	t=1786727622; cv=none; b=CsjRXXdIRpi0XVx6+YLK77O9oPUpCiS8Aic995+TPAAFvLNjg9LlTQ4DrcI64PDjhFnj5GZCG7UHIiApVeqKFfzXfgjP81UxyC4Xo0rGXwqa9GcvROCuRBBECVUgesEcxTHR1N3AbrARC06cAxVuWaID2Fi+RR7toyU5qodf9Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786713943; c=relaxed/simple;
-	bh=1JczU84B8rmiuf0LymRFab/jM+TRSyiW7sJkBS9HHcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WUTmYl7RKSV+w1kg8a6PbuZ15dMOkua1MEMbSmuN4ZNll+SyRvMQVPn4O2YUCH+l5RFd9OLdP9kj7pSEw3BKaCnU4VPuDhO24yAzK172TjgT2AGUSQIkqqhRcXq9ZdsE9nTejMHv3sZTbPEasfOnTPMijgbWkLnnccqz5js8Thw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n/6r8ES/; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1786727622; c=relaxed/simple;
+	bh=FeqbqNP3zLNoEG6b+EyVcihft2lb5wII998d67nc8ng=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DUvIK6r/+mRzI7F86tdrJwitPTnYc95KX0eFW0jGHjDKUiu7voNp5HGie4FmFIouX5bVlRTs5lvr8G8VZJ7QtK7vvm/ExEpzdFcZhaA3PCjjjrzwjG5fDNHS0GIWp4gngIwznaqMyrgRjsSxvZuNoKGbhE01BmLEaG6QzgTvRmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUQz+QZh; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/6r8ES/"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ccf2360620so10193495ad.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 06:25:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUQz+QZh"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5b2a4359d16so1077609e87.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 14 Aug 2026 10:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786713942; x=1787318742; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786727619; x=1787332419; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=adjv8vZUdzZ0w4vt4IlqvnT0//3yukWKBpOwksiqJ2s=;
-        b=n/6r8ES/zwXX9QJvxORJYtt3fBQ2eMwmB4sew6m7rJ8Hc7UMJqIQT/kQ7ae3Yde7z0
-         +uwei/DijzTGmtd9SHHB1bJTiMydoPECPihD8wr3VaAMNui39Qg+xCcOa5Y+BGehAVLx
-         PjSx2KZOocuWFUcEIRUO6NttjBcsiuRdne7JvxRxJsLzZAf0T2eKmWtP/kkFZ+8ME6lO
-         AYUiPSoOEJEowqE8BG9SqKX9xX1zZ59CEP5mWm18Y6jTfcW3S563Ay4zSmRP4f1dZrF0
-         Vo/kAYXDjvky8VhB16+DUnbfyk66qiLUvBizxl/obXKLScYoNUYShqAHWhv7Z4caK/34
-         W9xw==
+        bh=DJBvH/RhEcaopV2aPOOG9XqHhvKgYhLc4QE9wD0XMC8=;
+        b=cUQz+QZhHn4psLkVYndIy1hoFhaM3/bxz4oiZf8L5E1LL5fCwafngWeoGUxMl31Ob8
+         aNEj//E15UB8dwFhW5Cay28oGhBWhGqWxDrDoZtesfKymHfMSooA2pjnrrbB0KQw6i/r
+         IFGBg2Nd7Zy3LKn0U1z/2CfHOSMfyGv/2jQYwhrXjal2oy0oVk/RYisFtdivgKGA1Z0b
+         OTBgZkYkU1cKg5iBfUETVwtMQ+nBpQKUZvjANVBz3BV3tz0s8/iYBHqjVpE9vEL9ydf1
+         jtuQK3YVSyE1JtLEUz8uG84LEniyiq3Yo/kFmsOhIh9iko9KqXDoQwV6qSZd1Dl58W6r
+         7siw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786713942; x=1787318742;
+        d=1e100.net; s=20251104; t=1786727619; x=1787332419;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=adjv8vZUdzZ0w4vt4IlqvnT0//3yukWKBpOwksiqJ2s=;
-        b=FYYb5c8B7CLhc5R/yTSsnH/Ad5wP1nx9H5YyzEp8+BfVYmILAgavYOTp4VGtJL8V4d
-         Z3ZUFbzUvuoWYfTT5mr+VjbzSasILb+lznKOY4IXnCArglDQ/12cxbt45sE47UWKYv2t
-         YR3zds+OTKQ44NcErvtvj1W83NaNsp9ZIGBos+XB6zCPp9c6Nl/lByTpFOsk0mFVB9wE
-         gIdD9K3gaS78l1auF3XzS+z3yWzk+waGCXcy7UKSnZzzRmvEx0sqyK/ppRAB3UrwNbqb
-         9w2kEBU+z3lkl47Ix6iaVi+itp++dbMY6/bedmw5mBE9mcGStjXeU9e56CLNwqRncrF7
-         +GrQ==
-X-Forwarded-Encrypted: i=1; AHgh+RryKVSO8SWMdbB8nO3Z7Gm1io/oOA8e0A4Noq1vidG3RKenXprWDb6dsYhKf2pVFkKSU2rpArWj8ObVbnDRF5GZ1mT4@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHtFwtor+NnWcp2Dk5YCHlwN/XhqcuKU1iJiiHbI2Ps2BW3PGJ
-	bOk35cY/vIAL/TLzCZ7Sxyr0zy3uzfPi5jTS2vHDdiZBRiTFlw9wQ7rD
-X-Gm-Gg: AR+sD12PpfSwqG6EKsKVi0/zKYLG7UM2iOjF1YwVVoPsRenZ5/P+Y8oh7O4iJXjGsI0
-	jIQjLsF7L7vqtvgC6e1uvkgKYjKJJA0sH8o82Zf0eueqw5suHiMhrjg36Dx2p8rhSrd9q6M02ea
-	DRrpYl2KWMzRe34A3VvrDjaar5nhsNWJQOLODGUJALcBA283nBr6VkCHEKX7YGCUXRR4FsweK5w
-	0hx28lzwWalZP9LOwt9PZzpt9+Vvh3vq0Vl+YXkxgmqGke1jel/hP7lRbEE3d9Lg6QmGQOjQrz3
-	3ZKyMPo7ETO889a/7EfuE8PpCG8EqF8MMSNuDeCR/FktBMTRI5bGqM1tgIhdiJpnoUg5p93W9K1
-	7e9VaK5DsGU+ComPmLUmYkTmfnP5cCQUuiniFvBUYc784xIg4ERuHtgycfJLcKq/8WQYMyHhRDt
-	M3TZ+ot4lVigK1MC2bzoA5xkH1AOzN5zGyfz2T1I5GPHlaigaU6HCoM92eHb2PzFIVFUUQOBs0S
-	pcx9IZKN/B+8Vxz0nkUVIydOTXwjrFCiEUhlTmzd0O5B4+3RYKSTfm47JvYMMWl
-X-Received: by 2002:a17:902:e752:b0:2cc:307c:51fc with SMTP id d9443c01a7336-2d3b0dd5affmr60397215ad.21.1786713941808;
-        Fri, 14 Aug 2026 06:25:41 -0700 (PDT)
-Received: from nugod-NUC15CRHU5.tail9f095a.ts.net ([218.237.104.87])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3ae7a4521sm9636075ad.19.2026.08.14.06.25.39
+        bh=DJBvH/RhEcaopV2aPOOG9XqHhvKgYhLc4QE9wD0XMC8=;
+        b=Qi/f3NBUJIQyQOOJloK1pBXJLa9/ZUfvSfa0BpeT5yL+pg3MZE9qEHpaM9Dgfy0JQs
+         yvCmW0Lgyk+0HfqMwtEuGcr3rFxQwwiZFPvC6Yxh4aX4fQidtTBNlRrBVBFhxYi0IliU
+         lEMScfhOg1P0toaniivyeQH1NQHz9eLDUTJVvu2Bv96iEnVLMFmFS9W8L1sBIMujsbs9
+         P3SRR48VnQbJywszpG++taCTCiY5R8p1BmCSiXjUgknR7T6kEp7lXWVjcm+Qfxo9Dwm8
+         lucyof2uf/FdldAhduXZNIG0+ssRgZxjMSR/azU3yF8S73pQuOlg9Y53iEqbdiI+wS49
+         786Q==
+X-Gm-Message-State: AOJu0Yxa0l1k1afeYi1ZCD2cSZwIPL/pAKwP4uvzUBId87/Je7tioj+C
+	q8kUoCykbFtIJpNTepmT3inVZXO14d2P6lHj7yvh+9WIQKeBFzRFoJaO
+X-Gm-Gg: AR+sD113ermvID2iYgGDwdGOWNCs85OBBsIdANwOcmSwXa+jItzs0lCYtG/grOWBE5H
+	imVaNLierl0sJlWz7ROtNVHLU3XjcL7Vp6YoBuaezaEF6Wd/UItc9ghMlc6O+oa/2npjBn3ac5h
+	u08QVU5uT0Z31zqLmtdiLpYfhUBCFAagvqFI8uYZ/1ejKZyssgz8A2c3SOzrg/8P04A0f4LBEDv
+	E66csxJ3FnVmm+/NrCzEnrhh1kkjxtoikYt7jpGGf8eGXpWZRCV+2Susf7APTlp3nablyDlBlfW
+	+vrm+j39z3LWENN5SkqMjgxcX4SAWs8W7usAUt+8pHYDatmeOlb/58P1gbxDyC1bpXAEzuqtuK8
+	it5nfjwDNZYtqEumisw6MgHjJWL3BVyltpQCRlL0vy59HfibBDTixRT8/WSS5JsL3X667OWJwFM
+	NpGF9mp4Hzujhl58dXASmV9S5f2xFwIWBaoBoApUdZ+av3jsujgyCx7d4AWTvv7xo=
+X-Received: by 2002:ac2:4e08:0:b0:5b4:5f6b:d43e with SMTP id 2adb3069b0e04-5b45f6bde40mr158668e87.14.1786727618882;
+        Fri, 14 Aug 2026 10:13:38 -0700 (PDT)
+Received: from archlinux ([178.207.93.112])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b458bed9c1sm663266e87.47.2026.08.14.10.13.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2026 06:25:41 -0700 (PDT)
-From: HyeongJun An <sammiee5311@gmail.com>
-To: Prasanth Ksr <prasanth.ksr@dell.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Divya Bharathi <divya.bharathi@dell.com>,
-	Dell.Client.Kernel@dell.com,
-	platform-driver-x86@vger.kernel.org,
+        Fri, 14 Aug 2026 10:13:38 -0700 (PDT)
+From: Ruzal Daminov <daminovruzal7@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	HyeongJun An <sammiee5311@gmail.com>
-Subject: [PATCH] platform/x86: dell-wmi-sysman: Fix instance ID bounds
-Date: Fri, 14 Aug 2026 22:25:35 +0900
-Message-ID: <20260814132535.4169956-1-sammiee5311@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	Ruzal Daminov <daminovruzal7@gmail.com>
+Subject: [PATCH 2/2] platform/x86: huawei-wmi: add modern Honor MagicBook hotkeys
+Date: Fri, 14 Aug 2026 20:13:24 +0300
+Message-ID: <20260814171324.16727-1-daminovruzal7@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,45 +73,40 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The get_instance_id() macro walks the per-type attribute array with
-'i <= instances_count'.  Each array is allocated with exactly
-instances_count entries, so the valid range is [0, instances_count)
-and the last iteration reads one element past the end.  On a name miss
-that out-of-bounds attribute_name is handed to strcmp(), which reads on
-until it finds a NUL byte.
+Honor MagicBook laptops (e.g. FMI-76 / X14 / X16 Plus series) use the
+ACPI WMI interface (GUID 0xA0) with modern function key scancodes.
 
-Every kobject in these ksets is built from an entry that was populated,
-so a miss does not look reachable from sysfs today.  The bound is wrong
-either way and the read is out of bounds.
+Add the missing keycodes to huawei_wmi_keymap[]:
+ - 0x0287: Mic mute key (Fn+F7) -> KEY_MICMUTE
+ - 0x0288: Camera toggle (Fn+F8) -> KEY_CAMERA
+ - 0x028a: Honor Connect / Share (Fn+F10) -> KEY_CONFIG
+ - 0x028b: YOYO AI Assistant (Fn+F11) -> KEY_VOICECOMMAND
+ - 0x028e: Screenshot key (Fn+F12) -> KEY_PRINT
 
-The matching macro in hp-bioscfg carried the same off-by-one and was
-corrected by commit 25150715e0b0 ("platform/x86: hp-bioscfg: Fix kernel
-panic in GET_INSTANCE_ID macro").  That macro takes a kobject pointer
-out of the out-of-bounds element and dereferences it, so it could fault.
-This one reads a char array.
+Tested on Honor MagicBook X14 Plus (FMI-76, AMD Ryzen 8845HS).
 
-Use '<' to match the allocation.
-
-Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
-Assisted-by: Claude:claude-opus-5
-Signed-off-by: HyeongJun An <sammiee5311@gmail.com>
+Signed-off-by: Ruzal Daminov <daminovruzal7@gmail.com>
 ---
- drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/huawei-wmi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-index 3bddedad5eba..eb48ced55823 100644
---- a/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-+++ b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
-@@ -107,7 +107,7 @@ enum {
- static int get_##type##_instance_id(struct kobject *kobj)			\
- {										\
- 	int i;									\
--	for (i = 0; i <= wmi_priv.type##_instances_count; i++) {		\
-+	for (i = 0; i < wmi_priv.type##_instances_count; i++) {			\
- 		if (!(strcmp(kobj->name, wmi_priv.type##_data[i].attribute_name)))\
- 			return i;						\
- 	}									\
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 93cca17fd..d5f77fb68 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -72,6 +72,12 @@ struct huawei_wmi {
+ static struct huawei_wmi *huawei_wmi;
+ 
+ static const struct key_entry huawei_wmi_keymap[] = {
++	{ KE_KEY, 0x0287, { KEY_MICMUTE } },
++	{ KE_KEY, 0x0288, { KEY_CAMERA } },              /* Fn+F8: Camera */
++	{ KE_KEY, 0x028a, { KEY_CONFIG } },              /* Fn+F10: Honor Connect */
++	{ KE_KEY, 0x028b, { KEY_VOICECOMMAND } },        /* Fn+F11: YOYO AI */
++	{ KE_KEY, 0x028e, { KEY_PRINT } },               /* Fn+F12: Screenshot */
++
+ 	{ KE_KEY,    0x281, { KEY_BRIGHTNESSDOWN } },
+ 	{ KE_KEY,    0x282, { KEY_BRIGHTNESSUP } },
+ 	{ KE_KEY,    0x284, { KEY_MUTE } },
 -- 
-2.43.0
+2.55.0
 
