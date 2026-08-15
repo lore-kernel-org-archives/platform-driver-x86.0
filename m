@@ -1,61 +1,63 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F2041D120
-	for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 13:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B305741C2FB
+	for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 13:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786800373; cv=none; b=d9yRG6zLvmtQZ2oPdG/HDNg+lDrP9viwkgh0V5CeanKxWFlpcYD4C9PLp5HHZCBYA9OfBDPO41lrcGM7f4472aWEQ498+hywzhw7JXBlsdFQ1sChbnaCsw5P+EEqetCTlIzjwr6+BwfsA1XNLsPUtopTBZK0WxFDJ0Qc3laQkpo=
+	t=1786800378; cv=none; b=FGvfefp/PRRO1cj25HyuNhsbFnRuahSipgrqhulRIwX2K9IRGMvAvJPBRo5IQDpMeukHeSq1IfZArqJtXGu37+AqkxLRicBsIz8kqMsXz/mc5uK0Ki61wO/BcLlTiewu2b8nFsAfLnCr/3obJUDQXjj9BOi0W/nwV4JDR9r/DY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786800373; c=relaxed/simple;
-	bh=FzePQHlEPWRZKRkjCI9DVfH999wh2P3kGecIiN7Wjvg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u+vFDdSpJWbTKhGknYIJfl1BNS9jDrzDybAYAR9GqC8Hy9ERkW503ud9DVMs8Rvl1G5s1A+lM5afizd775Dy5Ne2UXHLyQtqRU6D1RmVNs4oRDW/ZK5Yhoo07DfebdV/PISfMeCLp69MKZFk+ceMCaanwFg9In9y5hSerIF9MTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j06RS3Uz; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1786800378; c=relaxed/simple;
+	bh=QY5aebFr1evE8tRE7OmTPb6tag7jx6XNKxf+rMRmOXQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SQHkr2AfbqKD/9nV61Q648qqcnnmudqujmzosAaz1n50thIW0ded4ISLHhul2PtANU3Bb3V12/zutTPMo3G9Tb4Q+wY5g0clCiOIfHokJQnU745TCG26C1QUuWXIE6WCwe+AgUGVgGnPwYSxB67Qu0upd8TgmD1lBg7xY626BDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxTOGfqa; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j06RS3Uz"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cf6d65d8a7so24749505ad.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 06:26:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxTOGfqa"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2caea3f742bso33470775ad.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 06:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786800371; x=1787405171; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dBgOSVuw8spjvLbhAcWL9ijCscqSXairX6O31hylohY=;
-        b=j06RS3Uzu6tAT4CjfUf9lGr+mmyd5I+WX+TKmJnMiBLYayQ60bHRxY2R4aDz9IGMMc
-         AoHAkPUIzrdnJZDAkOo3s3tmSoSzd8fTQCQWbeUCaNtifoNOMYIqalcOWgk61d3mKgYj
-         eGn7FltFQg0Cjg1hDYn1tSanhJjkwzU/lvX08G+3wFVrCwwVKhJBKS/OQkplSyT4dpqe
-         NOuDKxWN1+qIg4A+qWNbtMUuOTskfd08ECYqLJxEfAL4vLDOd4OQByFm29HQxs5Bo59D
-         e3Rp4JNuzJZkwgPY1keJ7bnm8LqnMx8x6YiAwx0Oi5iglGLeuWv9Zaq1w/ze24gCakdM
-         TIsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786800371; x=1787405171;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1786800376; x=1787405176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dBgOSVuw8spjvLbhAcWL9ijCscqSXairX6O31hylohY=;
-        b=elZGJP58qE41j86luUl+DUOZZdC07cwF1Ld5rJdxFScjaL9XZSvY+CT1JQpiK3V5dS
-         KeKlPPRMnlZoY7PK4zDlsATAYJOzLMbARBjR2FR4b6RSGOzj1Jz90SUDD79N/QzATe+y
-         Xt2efeKK6758Pugf4bzIUUVoN+xKqFazW1t49aZnii+gFENpmsOb9MGqqJotrbikwyfE
-         HsUcF83Q61Y7OYf0E7L6Rv/iDa1zjAwUnQATJOJer0BqbD4D94dPJV7isnFWI3eCoHA5
-         T9ChBJyPh0Ye/rFeU1+RNBD4cwEnPZ1BFI8c4dCC4i1VJQFFKoV/cxXduEedcmXhSDIR
-         mJtw==
-X-Forwarded-Encrypted: i=1; AHgh+Rpy+x4cGaMUo78lN9JU+Bn4ftmhthT+TwTd/2yPExSFlhj2V0XULwxB2auv9sppSBn1R6np4vXrSGUba+SWMwb1ZrbJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXuvy81wYKkVx11elXDhdMJ5NgQnKaK5YvgMY0m+fWpNexKtQw
-	pocCDNL2wFH0fTM/321eIZQl7K+t34JjIY4fVndGTGmICHzgmdwi+ObT
-X-Gm-Gg: AR+sD11wJL1WiPWGFckQ3btiL8MGZl0WUdfSpVPqxkEuXnOaNl6WVPHGNVJpGGJQLJd
-	bcst5GnzyFsaWBmX6trHiUzEacf4qfeZ0V8AgQkEZ3OZsvLnzwN+Pb8en/fOm/mmzY6uTe+nrSd
-	JD6tWRv8Mn4dUd2lNQ63fF8I8Uhns6dTmKUnSFeN8Z0rF/7Bfu37vpP3aj1CvOnrf729NiuDJmy
-	0FOw00OifBhVOl6yzOcVoNIzfrAI+HiabyEEKr7+idrVSQJJRI2/l/5nDpwMMLMeR62YLwCI/dE
-	3lJrcND5FhByJRJjJb0BdlPdffVwB7KUm6Cs/839oN5pUtVA0ziXSzuO2+3oKq+f5qoRvz173Mb
-	EZ7drUV4yxQneP3p/TwdWri6yanAFbfr+o/lJibcis4AAUS30wCTqlLfG+gkVQcDaL8lEY9iShk
-	ClN/C5xFUmIdfy1u4pimAlokZQCvsrHrBGWJg=
-X-Received: by 2002:a17:902:e952:b0:2cf:b23d:77f with SMTP id d9443c01a7336-2d3b0cc05edmr145190755ad.20.1786800371371;
-        Sat, 15 Aug 2026 06:26:11 -0700 (PDT)
+        bh=A3guaqxr7NyyvixOm12MKeegXbSzy/kPgiJ95xUExEc=;
+        b=jxTOGfqa7YPkgGNk9fL+yWewh56gjq0ffZwRsXT/1EoNj5Sfnu6NPEM8WgmaB7cCyI
+         dhvCbTGjE8v9i5bQSZY3EQ5NFH7YG7dK4LwW5rIY8ofIisHWiX/DW7uBJ6Ew9l8tT+BD
+         lxuKKNxAySlQkXvyxe7kcINUOS+61WC6RApdNl7Qv4BZcr4Gj5dkFsBWnOCKi14Q8BGx
+         xshQyJs2bm5/0i+L8TzNHwSs3y7qPpH6sDsugoXA9GzAM1CRthXlexTjmqEhl8C45YnX
+         U4gHzk58/N2Elhd08FFLGNOWVwkFkLILrsAH3dCO6KA8AoK05kVsCrnK2yJAXnlOSP0l
+         MrhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786800376; x=1787405176;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=A3guaqxr7NyyvixOm12MKeegXbSzy/kPgiJ95xUExEc=;
+        b=IFRm9zEMh7te9/QmHmCdjReW3N4gc2Ysx99vFPpztDdBLGm867GPn0j9lo2JNCmz6+
+         0HmFrxAKejDQKXk0+417VdvHVSJCz5434Ai1IqmK6dmUkXJNB+i2ldYgT1CuYZN2zSkW
+         BOpH26wktzjnst6fj6DDzRDlMHgLS2T6PEC35ZlInbWO79Gf3jFvvMnoOf+YutAU+nbl
+         zRJSoEBt1kWlhf/HbC2Ipk1njrGTvxuH58zl4wPMWWLATzmk0PIn+ISNxxLgC174nU06
+         0I7XClBmcHk1slxcctyy2GMNWu/LeKkENuR6C7C6oFgKMKj3ZORIjVSvomqnMsoBjbTf
+         CsMA==
+X-Forwarded-Encrypted: i=1; AHgh+Rph6E87i3TZtoAslUbxUPZWlit47asEJPvSis6xYVijK0++SGafRGwwlx29T6aTdVBd9sQcUFCF0xtHRr/p06NvhkLP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytdg5mZh5vpqQNaGR1bHZPR5jKnuazmZS6EDAPs4VViVH5vbK+
+	n/36BCms+W1s0dAOFqModID32Due0oLMJ7eoKhy+wokMSCYb9AHyu9U6
+X-Gm-Gg: AR+sD120nZsxWA0bIFRzA93bEDUpWXoMQRNTZBtcnSgOJXYwkjiWU45ypXB2/BHbXXo
+	bxXX532JXdHTl5Pwn2mZ1znK+6hjTeRvcRvooagKMKKGOzdzx7Y9SQ7PN4CFYBOtuHS9nuxLo9j
+	IAaurlElIlBzFFSMwCvyasuMNcPihZGd22k0Iai+cGy3K7oM1iao48jeA40277x7I1rYLI/sEcu
+	moBjzU8qMnyvD9m6JLOG+QG4hjwCQMa68FR44trIB6syFJz33J0NVw535BcpiO6nYDMq5IITleP
+	J+HPUqVTgxsReKaQcxwDSOmnprOFH/EoDgApQXFV8GojZWGzQNb9mR2T3QxIElKCKII4JiwMsej
+	/3G8/wPBpIZ1XQoscRUumWyFvPFB8pwYc2jGXOtTy4yiQhkd2QvvQ/PnfidhrOgvGpnTiBtyhRQ
+	7PlITl2hB8peqgPcL0EYHHF5aq1lMyH4s+MFg=
+X-Received: by 2002:a17:902:f64d:b0:2ca:619f:9733 with SMTP id d9443c01a7336-2d3b0c88987mr170712065ad.17.1786800376008;
+        Sat, 15 Aug 2026 06:26:16 -0700 (PDT)
 Received: from qby-laptop ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc81a6sm19433245ad.72.2026.08.15.06.26.07
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc81a6sm19433245ad.72.2026.08.15.06.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Aug 2026 06:26:10 -0700 (PDT)
+        Sat, 15 Aug 2026 06:26:15 -0700 (PDT)
 From: Mingyou Chen <qby140326@gmail.com>
 To: qby140326@gmail.com
 Cc: W_Armin@gmx.de,
@@ -68,10 +70,12 @@ Cc: W_Armin@gmx.de,
 	vlku.milos.fun@gmail.com,
 	i@rsplwe.com,
 	wolf109909@outlook.com
-Subject: [PATCH v3 0/6] Merge redmi-wmi into bitland-mifs-wmi
-Date: Sat, 15 Aug 2026 21:25:41 +0800
-Message-ID: <20260815132547.29022-1-qby140326@gmail.com>
+Subject: [PATCH v3 1/6] MAINTAINERS: Add maintainer entry of bitland-mifs-wmi driver
+Date: Sat, 15 Aug 2026 21:25:42 +0800
+Message-ID: <20260815132547.29022-2-qby140326@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260815132547.29022-1-qby140326@gmail.com>
+References: <20260815132547.29022-1-qby140326@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,47 +84,31 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series consolidates the standalone 'redmi-wmi' driver into the
-'bitland-mifs-wmi' driver to eliminate code duplication and centralize
-the maintenance of overlapping ACPI WMI event streams.
+Add a new maintainer entry for the bitland-mifs-wmi platform driver.
 
-Bitland is the ODM manufacturer for various Xiaomi Redmibook models. Both
-platforms share the exact same keyboard event stream WMI GUID
-(46C93E13-EE9B-4262-8488-563BCA757FEF). While redmi-wmi previously parsed
-the 4-byte payload as a bulk u32 scancode, bitland-mifs-wmi deconstructed
-it into discrete type/id/value fields.
+Signed-off-by: Mingyou Chen <qby140326@gmail.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Redmi operations are not verified on real hardware, the operations are
-reversed from the proprietary software (XiaomiGCommandCenter)
-
-Additionally, this series cleans up the redundant Kconfig/Makefile hooks,
-updates the MAINTAINERS entry accordingly, and introduces a newly reported
-mic-mute hotkey definition for Redmibooks.
-
-Testing status:
-- Fully regression-tested on native Bitland hardware.
-- Redmi-specific logic blocks are compile-tested only.
-  Feedback from Redmibook hardware owners is highly appreciated.
-
-Mingyou Chen (6):
-  MAINTAINERS: Add maintainer entry of bitland-mifs-wmi driver
-  platform/x86: bitland-mifs-wmi: Merge the function of redmi-wmi into
-    the bitland driver
-  platform/x86: bitland-mifs-wmi: Add Redmi mic-mute key entries
-  platform/x86: redmi-wmi: Drop redmi-wmi driver
-  platform/x86: bitland-mifs-wmi: Add per-machine ops table
-  platform/x86: bitland-mifs-wmi: Add Redmi laptop support
-
- MAINTAINERS                             |   5 +-
- drivers/platform/x86/Kconfig            |  12 -
- drivers/platform/x86/Makefile           |   1 -
- drivers/platform/x86/bitland-mifs-wmi.c | 559 ++++++++++++++++++++----
- drivers/platform/x86/redmi-wmi.c        | 154 -------
- 5 files changed, 485 insertions(+), 246 deletions(-)
- delete mode 100644 drivers/platform/x86/redmi-wmi.c
-
-
-base-commit: 967a69120f57273e2ea4396074eceb0daa35a9c4
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f37a81950e25..af86b1df1a94 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22774,6 +22774,13 @@ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/redmi-wmi.c
+ 
++BITLAND LAPTOP DRIVER
++M:	Mingyou Chen <qby140326@gmail.com>
++M:	Gladyshev Ilya <foxido@foxido.dev>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/bitland-mifs-wmi.c
++
+ REDPINE WIRELESS DRIVER
+ L:	linux-wireless@vger.kernel.org
+ S:	Orphan
 -- 
 2.55.0
 
