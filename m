@@ -1,43 +1,44 @@
-Received: from mta0.migadu.com (out-47.mta0.migadu.com [91.218.175.47])
+Received: from mta1.migadu.com (out-167.mta1.migadu.com [95.215.58.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4D4352C54
-	for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 09:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BAD4B0483
+	for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 09:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786785759; cv=none; b=lcPjZ6Wx/ZkGZew34vp340lJCFxxe6FQcWsJsSuGXdcWit6FeirEqjXGrMfMbAyVfbhpk3YZw7PeI6O4T76+LgAoLmfVAYw9EinnSFCxzXxC79s3cZvqo5k4lxqik/wHLHkQhP9/vELHTDOHnO+zQHc+qQsKa+bCc7uABUT3uv0=
+	t=1786786554; cv=none; b=Fx11w1aiN48UeJhyVTxC28tVCrniV+7LiuNYbZXv+7CehUKTIDkJcMDN2nCOGbXrBmhpP6MvdMvHndpeGcw1ZAiCPluSFl3H4+NoU8iYG7O88nFqVakPSQbHtPYJ5BFNCFdniAdruWR+pn9HCR0UELSH53WTvCgt03y95e2eW58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786785759; c=relaxed/simple;
-	bh=1Jemc0udqo95SvjO+bw28kGUcObykWuv/+fTQVmkRNc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q++DQqHTk1/t/Uk+NgxV/5DBJ0/oJKe8ByeUB6UqTOTjpDkQmAbcO4sR3dwhmSv5r08RoutobgR1cETakSPsqiRCUDcONQ2CaD7v0S1GkBJTS0m4ZROx4F82vdZWBaPcmB7mpa+iHG7DNcCfsrNL/pf9OZNylFpW86cvgXoU5Fg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d5yc5aSA; arc=none smtp.client-ip=91.218.175.47
+	s=arc-20240116; t=1786786554; c=relaxed/simple;
+	bh=gMNZJzMy8fvGZnwzy1l+ago2w//J+DKZSCPQ/3w/mP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sW+WxEccy9OyL3HRTtzumXTA0hh6iHLy7HRk4g/nmTZ3JHhyMi8G5AYj1j4nEDgSo5O9/DKQ6OzeAFf3iRcbtPAYToqvKsk1r2Aliiuuw5RcmY/tVg+T9Y1zAfUIHzetOWebSR6FZEm1ZZktytEyWKBIEcoGQ+mxwPn37rk5ms8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UybbAAkN; arc=none smtp.client-ip=95.215.58.167
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d5yc5aSA"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UybbAAkN"
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=1Jemc0udqo95SvjO+bw28kGUcObykWuv/+fTQVmkRNc=;
+DKIM-Signature: a=rsa-sha256; bh=gMNZJzMy8fvGZnwzy1l+ago2w//J+DKZSCPQ/3w/mP8=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786785755; v=1; x=1787390555;
- b=d5yc5aSAA9f03JFjsfy3selOeJDZY83JXX6q8LfeApVC61OBvvilPERSC3llwIOzO673QJCB
- 0pEFCqyAglLxylxL4/7vv1MC3+Mhk6Kg7pYMh2exigq5GJ/T+XjysTLEpwXugf5G0HLsXhifILt
- I94VeERN3H6cuQ0iTWqijl1U=
+ t=1786786549; v=1; x=1787391349;
+ b=UybbAAkNFHIXb/9/ldUhhnBvXLjmsTP8bLFz39rk/6nyt67zgZ0e6a/eALknyZ3TX8A7dBwt
+ ig1HSpUM1j/Hs0vekNJjaNbtjTn9m1a8+NR289hmUsir6P/c79R00jC7jqPRFitlL47O0iUPS4N
+ U0AgifiyGDdqqbaYuO3NIuZQ=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
 Received: from fedora.fritz.box (62.216.208.217)
-	by mta11.migadu.com with ESMTPS id 6ec7395b40bd43da;
-	Sat, 15 Aug 2026 09:22:35 +0000
+	by mta12.migadu.com with ESMTPS id 828fdea9f6f9e662;
+	Sat, 15 Aug 2026 09:35:49 +0000
 X-Migadu-Flow: FLOW_OUT
 From: Thorsten Blum <thorsten.blum@linux.dev>
-To: "David E. Box" <david.e.box@linux.intel.com>,
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc: Thorsten Blum <thorsten.blum@linux.dev>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86/intel/vsec: Use bool for run_once
-Date: Sat, 15 Aug 2026 11:21:39 +0200
-Message-ID: <20260815092138.91072-3-thorsten.blum@linux.dev>
+Subject: [PATCH] platform/x86: think-lmi: Use ARRAY_SIZE() in tlmi_errstr_to_err()
+Date: Sat, 15 Aug 2026 11:34:32 +0200
+Message-ID: <20260815093431.98950-2-thorsten.blum@linux.dev>
 X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -45,36 +46,27 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=902; i=thorsten.blum@linux.dev; h=from:subject; bh=1Jemc0udqo95SvjO+bw28kGUcObykWuv/+fTQVmkRNc=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFkN+ouMWhVZpKJeh/59slBgn9RJnscv/57ZcaGQXbJU1 I1fkkuso5SFQYyLQVZMkeXBrB8zfEtrKjeZROyEmcPKBDKEgYtTACbiKs3IcMeY72BboYjjmR2t SfV7Js44dG7WPK4NFdaRbecM1wRx8jL8FUg13ilXMWfWS3etq7skVnMqRM8u9Fhatl+bb4Zw+XV RLgA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=755; i=thorsten.blum@linux.dev; h=from:subject; bh=gMNZJzMy8fvGZnwzy1l+ago2w//J+DKZSCPQ/3w/mP8=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFkNRsu/3Pe2dklrkb/w7aqN1Y/jOs+Kp584/7z+mUxqs XGyRcuGjlIWBjEuBlkxRZYHs37M8C2tqdxkErETZg4rE8gQBi5OAZjI68sM/3QzYzqlbyt180XJ n+NRn32WO5xxfd5HxWtWr/XYNx14zsrwT+0OUySXckXAspNd8sEbk462H6/++ePGu/tLOlj/Cvx L5AYA
 X-Developer-Key: i=thorsten.blum@linux.dev; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
 
-Use bool for run_once in intel_vsec_pci_init().
+Use the ARRAY_SIZE() helper to simplify tlmi_errstr_to_err().
 
 Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- drivers/platform/x86/intel/vsec.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/x86/lenovo/think-lmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel/vsec.c
-index 5ab2215fdd7f..f78438d5c936 100644
---- a/drivers/platform/x86/intel/vsec.c
-+++ b/drivers/platform/x86/intel/vsec.c
-@@ -669,7 +669,7 @@ static int intel_vsec_pci_init(struct pci_dev *pdev)
+diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
+index 26ee6ab34a15..81ab6aafee47 100644
+--- a/drivers/platform/x86/lenovo/think-lmi.c
++++ b/drivers/platform/x86/lenovo/think-lmi.c
+@@ -249,7 +249,7 @@ static int tlmi_errstr_to_err(const char *errstr)
  {
- 	struct vsec_priv *priv = pci_get_drvdata(pdev);
- 	const struct intel_vsec_platform_info *info = priv->info;
--	int run_once = 0;
-+	bool run_once = false;
- 	bool found_any = false;
- 	int num_caps;
+ 	int i;
  
-@@ -682,7 +682,7 @@ static int intel_vsec_pci_init(struct pci_dev *pdev)
- 
- 		if (!run_once) {
- 			intel_vsec_skip_missing_dependencies(pdev);
--			run_once = 1;
-+			run_once = true;
- 		}
+-	for (i = 0; i < sizeof(tlmi_errs)/sizeof(struct tlmi_err_codes); i++) {
++	for (i = 0; i < ARRAY_SIZE(tlmi_errs); i++) {
+ 		if (!strcmp(tlmi_errs[i].err_str, errstr))
+ 			return tlmi_errs[i].err_code;
  	}
- 
