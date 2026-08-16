@@ -1,66 +1,66 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E193CB548
-	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 06:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120A23CF1F0
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 06:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786861297; cv=none; b=Zz5+CTMe+/0gF4hQuQCzZSiCnysYzKedeF0s+aXj4GdrTnhMye3TLQkfI5huPM+9mjbk9GJM8MvEFvb8hWOhrS4/W5/LO1mEZoj/NmQ/Ge8ldpOmBCNSJ0VAHc/WYfNbRAq4B8sckgi8vzlHZBn7sjNqi1DQyG+Qg9TJdAxiLdk=
+	t=1786862297; cv=none; b=Fx737BOQn6TDChQC9VW6hHociUumnPZDcGyD/S1yoVEgcc4Mi1h+1SusWNEb37YKjDKNfjtBVETpNOwPNnSIWhdDxVEJPne8i8lAw+De/MDmADbvl9a0xOj6R8eX67k59C86gqydw+6jEa64yItuXhzXiBAdQsbjWQsbAR4d2Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786861297; c=relaxed/simple;
-	bh=laeV9at4Cg0ZdfV3bdDP2ipECAj7MtpRyjK9lceKJ78=;
+	s=arc-20240116; t=1786862297; c=relaxed/simple;
+	bh=Cc7N/DASirQc8Vnf1QsLcrPN1w/aNvwB5BKzajnY7BU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kakQlozMjorfKzPhoFk1WzWOeIr9BHGTE5W+kY3ZgqhFoLe6qU4cHJxBEL28g0EeSBGqH7p26lUsBExLhdFfpXawePOlAHXMT48Dqt8VFrXISPDJB7Bw1z3Dua2kX7JsFVnaJGDa9/TmmQBjUgdSgps0hoHdIOcdNg+jIL7VQu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XGWWG2XX; arc=none smtp.client-ip=209.85.216.42
+	 In-Reply-To:Content-Type; b=svFiWygi/17A77q7THzAjwJlPkYey4J1b7TguMkLT4wDAk+47U0i0Edw3LbT9z7RtapMNqx9TL8S6gVNOXAGonNiI81fyExIbx25h5q/ikaJD1fYrQA2GknjeLw7IchQQne9H3DSu/aMkNa+9fSF0Rffu4pY6ql3vUGenQaQxsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkAVqI8M; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGWWG2XX"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-381c51fde6bso2903809a91.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 23:21:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkAVqI8M"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cbed97fa26fso1430287a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 23:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786861295; x=1787466095; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1786862295; x=1787467095; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=kRUO/D5FOdb4mMofke3nTU3E5B21KgV6AwD1uBldejA=;
-        b=XGWWG2XXJOowSVRyUy1k0/N2WZ5abjgPwHQOpbmlsA5ThBgt8GF6JP4Gd1a5KidSMc
-         o08IyQurCRy1LT85vHkAEWsS2JIYlLOJhSt/fxhV94vC4ROsr8dlmzuepHEfhw6tGdwQ
-         KEz8WPOdM3K4sCpUQdv/rY7OKQlAnbvua2R2GQxUcfSx4pNppe67MY8IutgKeGDVrrjo
-         Fi08EhINwVZcvokb5q+iLP7RSw+0ZxL7p1Ea7D1y/fGWsujSh7ENIsInGxMrcv0ByCop
-         Q2bCHe6bHcNhWaACEc8obM1Qw/18kRIykc8DdyYi56uGvcWRykR0l3WnJ05p9w0UGpk7
-         9c7w==
+        bh=GJCq/P5nUBoAI0/gyzz3Rba9CnEb3gphxbyTfWhwb58=;
+        b=hkAVqI8M2LJuteN2Vt3Xy0c+i3SH1YyVVn8M1xH5xcjMM6T+rtnHfv/2EfboOm4b9c
+         uNVGuAxM6hkIvy4KNPJUsM4D81zcVb5AA1vQXTFvooFwT1OxJbVBLCgqcnOZEiFu+Mis
+         MIloZa68IuMusKyufX8wWtq1k1vI9X04n+uaHEoHapcnuprs6ZwYs+yF2IkETqyVqc9R
+         HnM9zCEsWsedno+t42DnM6KjnkQhJVJZ2O8txH8i2LfwTTVsYfsjv+nA4MVulNJ5kQ+M
+         UNJMt+YCjl0usgAwlZQQoSEzFVmk0SXStZYZ4RC4clnI6NFX7RXny28GjEoaYr/HBPcn
+         FFZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786861295; x=1787466095;
+        d=1e100.net; s=20251104; t=1786862295; x=1787467095;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=kRUO/D5FOdb4mMofke3nTU3E5B21KgV6AwD1uBldejA=;
-        b=V0xEx9Ro0IbmZx4mNB4dPSDpXtyBxbcPGuU+bF5+2NvuoC0AIbNbl/Xx5me4z9EgA1
-         iewZSwsalFnYjq1R7bWgKimt0O0/4L6tY6eDdOICvSey+n6s+JczvW8NmM7I4AWZbq2d
-         9gu54HhaMZKwjy1wdo1WHLW6WgDA85StZA2jbxw7RTriljF398LdMY2FtaetNik9faWh
-         rCe/oSeWIX22M1+43PY+ioO5Z/KyDYF+pzsQG0gL0T99bupjN8J/tqwmJtFhW+TsV7+o
-         vupYbV5FYbuytmmy+tmT/nyPkvY5x33vdQIMfHIwRE+6X6pas2P5Mqrcx2XC4ymzi+rB
-         1qeA==
-X-Gm-Message-State: AOJu0Yw2XqmjaNNRvExNIuHIdtgi5jaPoagCpKXfY6Zbgh2feuaLMyO+
-	4Ci5w9B6I627jZCFCmGg9xHTVNC9phBEADOEArUHaeGzJWdoM11SazdeDTNnXGNB
-X-Gm-Gg: AR+sD12jxwlur6+E2tH/0BIhgdovaeRpExOqerJ8iFYX1chLceV46KZGBsHbIr/4dYh
-	uGRcrrq7m5lCOdV3Zro8uztKzfNcQrLpTc+5T7kKd/7QEshaTD5AQewRaig5Py75Hgd+9TeXS3b
-	Rcew+D19SB3kcEi+BX3VVFx1SlG4RICgpOd+0O9AUq2iy63ote3zblBp22UGZu0dgKJ78dDxrai
-	khXVkDVI/DJ8YIEe77aQGUwYwGifCSRhNIc68lO8GXidsKiL97Y8krgw72AUJFhsBFXdNwdFh8O
-	vVqFD5J3OvK0djFKy2OaC90vqaIw4T3yn7j4N2/fN/oTzvDGK3GSUd1RSSM9mP9H6HXyx7aRut8
-	XDSJFKWnRGRHtm1XCSrxHJjy4+wKNiCFwm/wLVxpd/oSdqzkHqMRWvRikhshiLLstqi0xd5d3fA
-	jMFDgPuZLjlOfKst2GlwDKMjJFdtOhvb373sA=
-X-Received: by 2002:a17:90b:582c:b0:381:c500:b0d1 with SMTP id 98e67ed59e1d1-3933bad0d4cmr20439262a91.20.1786861294939;
-        Sat, 15 Aug 2026 23:21:34 -0700 (PDT)
+        bh=GJCq/P5nUBoAI0/gyzz3Rba9CnEb3gphxbyTfWhwb58=;
+        b=kzkyO3BQNO8jQetKT2OyZ+H3b6hQRr4JpIAbbH7OcPkMVRTP36AfkqDDL9WuXH6m6b
+         NLfVJ0AIoiCc/dgMFP410VB8UjRPaVFRPOIncNoRVYEfKqWZHP7iFJcWE3KRgTwJYaMa
+         NGmlBeu57E7AWj9PyQM/Dk9Dh+KPHL3NsGjwaqTID2hnIeBhLzrCvc7+uDlQZfSWAZIg
+         lg44QUUnoEOvNan8LwVdXHcEZy0Piavep5lLqYy0PKhrbEbk2j8ZXYvaOeLiL8rWbqJk
+         roLgpaa6IPQdwkGFoLPfgQMdzHUltnJGjMnaDwYEr+UChiDITLKoS+1CeBpwPc+4FcAt
+         Yytw==
+X-Gm-Message-State: AOJu0YxxO8s2xyQRomreC4Xo+4Ctw+e3H+dbBYSpWiNHLpZAuIMllVc8
+	DW1HudqvwnecPjJWkwG1JhzPqOZvCxvN3HUrLfPMKH0yhTZmjAM5HqbU
+X-Gm-Gg: AR+sD10U6x1nQLodIZ8EBiRgamuHya6Z2/2BIjyISWDFrEK2BHFWr+kHjdmBqTe3u8l
+	0sob75w1I7YRwSedj2oNVVIvoPunt/g/xPt6iUQdMxCithA2ZpUArecP8kZyj6wjuZPwKhRvkgs
+	+cClZhTCjD+BUzp9/HnFE5LHHQXUUxbJy9UxN4eAJO0FtYYfxidIU7RqlcvxuxVsxJizOmpmfYe
+	R4jQOdJqi2GP536SzxSUb8qBguvwSFgsZyZjNUxpFwpUM+ucoOcBp9rPVmNCmnidwwapYk5y44M
+	W+qD0WCRmytBX/pZq6IWZtEhQrn4/d7LNuZs626ClvRlavRiJ4mj66EXOHC7G6Klu+Pi1HRAqYn
+	mjB+0n3r9dUGgPABYJxzRB3vdDU7ZMYRa7q56375DRz3fQomLOYvrFX2UZ1qRUd+d2uUl5DmJaq
+	jIraCNPPmfASlpwwzJ8v6NH1Feh5YlyR7V+/I=
+X-Received: by 2002:a05:6a21:3381:b0:3c4:3672:b86 with SMTP id adf61e73a8af0-3cc704e5028mr15797578637.3.1786862295350;
+        Sat, 15 Aug 2026 23:38:15 -0700 (PDT)
 Received: from [28.0.0.1] ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39339d04382sm3697574a91.1.2026.08.15.23.21.33
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc095a1fbe7sm2122247a12.21.2026.08.15.23.38.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2026 23:21:34 -0700 (PDT)
-Message-ID: <71f66925-9a2e-4d95-87fe-eb11de78b215@gmail.com>
-Date: Sun, 16 Aug 2026 14:21:32 +0800
+        Sat, 15 Aug 2026 23:38:14 -0700 (PDT)
+Message-ID: <46295e2a-0e27-4936-a04a-2f8c71560740@gmail.com>
+Date: Sun, 16 Aug 2026 14:38:12 +0800
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -73,39 +73,33 @@ Subject: Re: [BUG] bitland-mifs-wmi: Power profiles not working on Xiaomi Mi
 To: Bheda Rahul <rahulbheda131313@gmail.com>
 Cc: platform-driver-x86@vger.kernel.org
 References: <CAEX=435pEyPHPjJgQnJUJLL8JJD65RsRa7Sjbx4NedZFG80dtA@mail.gmail.com>
+ <71f66925-9a2e-4d95-87fe-eb11de78b215@gmail.com>
+ <CAEX=436pkA5eG7N2MXpgE6kPL-Cbue3XeiLHOMPc2kFaxVj7ng@mail.gmail.com>
 Content-Language: en-US
 From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <CAEX=435pEyPHPjJgQnJUJLL8JJD65RsRa7Sjbx4NedZFG80dtA@mail.gmail.com>
+In-Reply-To: <CAEX=436pkA5eG7N2MXpgE6kPL-Cbue3XeiLHOMPc2kFaxVj7ng@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/16/26 2:19 PM, Bheda Rahul wrote:
-> Hello,
+On 8/16/26 2:32 PM, Bheda Rahul wrote:
 >
-> I'm running Fedora with Linux kernel 7.1.8 on my Xiaomi Mi NoteBook 
-> Ultra, and the new bitland-mifs-wmi driver loaded automatically for my 
-> system.
+> I unloaded |redmi_wmi| but the issue is still not resolved.
 >
-> i run
-> cat /sys/firmware/acpi/platform_profile_choices it gives output
-> low-power balanced balanced-performance performance
+> Regarding the patch: for testing it, do I only need to compile the 
+> driver module itself, or do I need to build the full kernel? Sorry for 
+> the beginner question.
 >
-> If I try to switch to Performance mode (echo performance > 
-> /sys/firmware/acpi/platform_profile), I get an error: Operation not 
-> supported.
-> If I try to switch to Quiet mode (echo low-power > 
-> /sys/firmware/acpi/platform_profile), it doesn't give an error, but it 
-> silently fails. If I check the file immediately after, it still says 
-> balanced.
-> I have attached my dmidecode output and my ACPI tables (acpidump) in 
-> case you want to look at my hardware's specific implementation.
-> (and also an AI analysis if u want to look otherwise forget it)
-> Please let me know if there's any testing I can do to help get this 
-> model supported!
+> Thanks!"
 >
-> Thanks for your work on the driver.
->
-Could you test my latest patch?
+You need to compile the entire kernel.
 
-https://lore.kernel.org/platform-driver-x86/20260816001129.16998-1-qby140326@gmail.com/T/#t
+By the way, for speeding up the build, you could run:
+
+     make localmodconfig
+
+to generate a kernel config that suit your machine.
+
+Then run the following commands to build and install the kernel:
+
+     make -j$(nproc) && sudo make modules_install && sudo make install
 
