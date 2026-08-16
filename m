@@ -1,105 +1,225 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120A23CF1F0
-	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 06:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3971396565
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 06:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786862297; cv=none; b=Fx737BOQn6TDChQC9VW6hHociUumnPZDcGyD/S1yoVEgcc4Mi1h+1SusWNEb37YKjDKNfjtBVETpNOwPNnSIWhdDxVEJPne8i8lAw+De/MDmADbvl9a0xOj6R8eX67k59C86gqydw+6jEa64yItuXhzXiBAdQsbjWQsbAR4d2Yk=
+	t=1786862432; cv=none; b=MkdDj8qQ6AnpaROpkQcb0lmBCwh2LlVprAI1xS9O3GElIm7NqGEyvK5HA8k0LXKApO9AeBpmBpPAnQG9hiNAjteoOB9IYA1aWeo4/sxgwrFEi/9VAgTuEMq2RU7H0qii6VKvTAhvrY040wtp1J/c+BWCmqK9Ymt2iCRmKbAcod8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786862297; c=relaxed/simple;
-	bh=Cc7N/DASirQc8Vnf1QsLcrPN1w/aNvwB5BKzajnY7BU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=svFiWygi/17A77q7THzAjwJlPkYey4J1b7TguMkLT4wDAk+47U0i0Edw3LbT9z7RtapMNqx9TL8S6gVNOXAGonNiI81fyExIbx25h5q/ikaJD1fYrQA2GknjeLw7IchQQne9H3DSu/aMkNa+9fSF0Rffu4pY6ql3vUGenQaQxsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkAVqI8M; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786862432; c=relaxed/simple;
+	bh=hWhmx6Qy3TBxTVTd+1/Qw5Owce+67VvdslQFBsJ+A6w=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=OWONux6iXERYnlGvrKpl8SBCQNisGnLNShImo+cUDvfDEcRWW0++X+GANmmi4cnEBORymlUM2Lza4hNiwjguQ5/8bDCqn5m4lXz2nwgIz5H2eK+sIXPfB7PoX4eJY2kVmxPL7VGaXYjaS56MxwMl4vyypjJn8gTQZIm394uPVTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmJ7vevj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkAVqI8M"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cbed97fa26fso1430287a12.0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 15 Aug 2026 23:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786862295; x=1787467095; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=GJCq/P5nUBoAI0/gyzz3Rba9CnEb3gphxbyTfWhwb58=;
-        b=hkAVqI8M2LJuteN2Vt3Xy0c+i3SH1YyVVn8M1xH5xcjMM6T+rtnHfv/2EfboOm4b9c
-         uNVGuAxM6hkIvy4KNPJUsM4D81zcVb5AA1vQXTFvooFwT1OxJbVBLCgqcnOZEiFu+Mis
-         MIloZa68IuMusKyufX8wWtq1k1vI9X04n+uaHEoHapcnuprs6ZwYs+yF2IkETqyVqc9R
-         HnM9zCEsWsedno+t42DnM6KjnkQhJVJZ2O8txH8i2LfwTTVsYfsjv+nA4MVulNJ5kQ+M
-         UNJMt+YCjl0usgAwlZQQoSEzFVmk0SXStZYZ4RC4clnI6NFX7RXny28GjEoaYr/HBPcn
-         FFZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786862295; x=1787467095;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=GJCq/P5nUBoAI0/gyzz3Rba9CnEb3gphxbyTfWhwb58=;
-        b=kzkyO3BQNO8jQetKT2OyZ+H3b6hQRr4JpIAbbH7OcPkMVRTP36AfkqDDL9WuXH6m6b
-         NLfVJ0AIoiCc/dgMFP410VB8UjRPaVFRPOIncNoRVYEfKqWZHP7iFJcWE3KRgTwJYaMa
-         NGmlBeu57E7AWj9PyQM/Dk9Dh+KPHL3NsGjwaqTID2hnIeBhLzrCvc7+uDlQZfSWAZIg
-         lg44QUUnoEOvNan8LwVdXHcEZy0Piavep5lLqYy0PKhrbEbk2j8ZXYvaOeLiL8rWbqJk
-         roLgpaa6IPQdwkGFoLPfgQMdzHUltnJGjMnaDwYEr+UChiDITLKoS+1CeBpwPc+4FcAt
-         Yytw==
-X-Gm-Message-State: AOJu0YxxO8s2xyQRomreC4Xo+4Ctw+e3H+dbBYSpWiNHLpZAuIMllVc8
-	DW1HudqvwnecPjJWkwG1JhzPqOZvCxvN3HUrLfPMKH0yhTZmjAM5HqbU
-X-Gm-Gg: AR+sD10U6x1nQLodIZ8EBiRgamuHya6Z2/2BIjyISWDFrEK2BHFWr+kHjdmBqTe3u8l
-	0sob75w1I7YRwSedj2oNVVIvoPunt/g/xPt6iUQdMxCithA2ZpUArecP8kZyj6wjuZPwKhRvkgs
-	+cClZhTCjD+BUzp9/HnFE5LHHQXUUxbJy9UxN4eAJO0FtYYfxidIU7RqlcvxuxVsxJizOmpmfYe
-	R4jQOdJqi2GP536SzxSUb8qBguvwSFgsZyZjNUxpFwpUM+ucoOcBp9rPVmNCmnidwwapYk5y44M
-	W+qD0WCRmytBX/pZq6IWZtEhQrn4/d7LNuZs626ClvRlavRiJ4mj66EXOHC7G6Klu+Pi1HRAqYn
-	mjB+0n3r9dUGgPABYJxzRB3vdDU7ZMYRa7q56375DRz3fQomLOYvrFX2UZ1qRUd+d2uUl5DmJaq
-	jIraCNPPmfASlpwwzJ8v6NH1Feh5YlyR7V+/I=
-X-Received: by 2002:a05:6a21:3381:b0:3c4:3672:b86 with SMTP id adf61e73a8af0-3cc704e5028mr15797578637.3.1786862295350;
-        Sat, 15 Aug 2026 23:38:15 -0700 (PDT)
-Received: from [28.0.0.1] ([2a13:edc0:18:16f::a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc095a1fbe7sm2122247a12.21.2026.08.15.23.38.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Aug 2026 23:38:14 -0700 (PDT)
-Message-ID: <46295e2a-0e27-4936-a04a-2f8c71560740@gmail.com>
-Date: Sun, 16 Aug 2026 14:38:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmJ7vevj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D9ACEC2BCF4
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 06:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1786862431;
+	bh=hWhmx6Qy3TBxTVTd+1/Qw5Owce+67VvdslQFBsJ+A6w=;
+	h=From:To:Subject:Date:From;
+	b=mmJ7vevjPFYx6fjfGHaQkTvrO3H2mts9z1Ivn1IX50LaEw+ULQ0Ilu7h6PEjrji26
+	 s8DQH297VAqqvig0muS9NTGzJoQzcf5hh3ZkQ9+4SAcxu55kC5Y2qIpnszkopw1D3O
+	 DXSihLmnP/s8qiRR5x7z+fxgfWKUO40jLPwQw7Z/egr+QX3wBhzLwUKjvKUxhAHOez
+	 Epmx075Fo5U+TZru6ZKTk+CSFYiFGVye7S1Xka+CczWx4WIv2mW7ZhDi/B6YaPnBJk
+	 lfQilFY7wT8rzrtM3vounGYaulYpbSBgj73g9UHSI1CEfErHOBJgO+aerfW/qtp8di
+	 vRNFnHeZjLQ/g==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id B3605C3279F; Sun, 16 Aug 2026 06:40:31 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221893] New: amd_pmc - Last suspend didn't reach deepest state
+ on HP ProBook 445 14 G11 (AMD Ryzen 7 7735U)
+Date: Sun, 16 Aug 2026 06:40:31 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: rayshuee@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221893-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] bitland-mifs-wmi: Power profiles not working on Xiaomi Mi
- NoteBook Ultra
-To: Bheda Rahul <rahulbheda131313@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-References: <CAEX=435pEyPHPjJgQnJUJLL8JJD65RsRa7Sjbx4NedZFG80dtA@mail.gmail.com>
- <71f66925-9a2e-4d95-87fe-eb11de78b215@gmail.com>
- <CAEX=436pkA5eG7N2MXpgE6kPL-Cbue3XeiLHOMPc2kFaxVj7ng@mail.gmail.com>
-Content-Language: en-US
-From: Mingyou Chen <qby140326@gmail.com>
-In-Reply-To: <CAEX=436pkA5eG7N2MXpgE6kPL-Cbue3XeiLHOMPc2kFaxVj7ng@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 8/16/26 2:32 PM, Bheda Rahul wrote:
->
-> I unloaded |redmi_wmi| but the issue is still not resolved.
->
-> Regarding the patch: for testing it, do I only need to compile the 
-> driver module itself, or do I need to build the full kernel? Sorry for 
-> the beginner question.
->
-> Thanks!"
->
-You need to compile the entire kernel.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221893
 
-By the way, for speeding up the build, you could run:
+            Bug ID: 221893
+           Summary: amd_pmc - Last suspend didn't reach deepest state on
+                    HP ProBook 445 14 G11 (AMD Ryzen 7 7735U)
+           Product: Drivers
+           Version: 2.5
+          Hardware: AMD
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: rayshuee@gmail.com
+        Regression: No
 
-     make localmodconfig
+The HP ProBook 445 14 inch G11 Notebook PC (AMD Ryzen 7 7735U / Rembrandt,
+board 8C79) fails to reach the deepest s2idle sleep state when the PS/2
+keyboard (i8042) is registered as a wakeup source.
 
-to generate a kernel config that suit your machine.
+Every suspend cycle logs:
 
-Then run the following commands to build and install the kernel:
+  amd_pmc AMDI0007:00: Last suspend didn't reach deepest state
 
-     make -j$(nproc) && sudo make modules_install && sudo make install
+Because the SoC never enters PC10/S0i3, the GPU power domain is not fully
+powered down. On resume, the SMU is in an inconsistent state, leading to
+a cascade of amdgpu failures:
 
+  amdgpu 0000:05:00.0: failed to write reg 1aa89 wait reg 1aa8a
+  amdgpu 0000:05:00.0: SMU is resuming...
+  amdgpu 0000:05:00.0: SMU is resumed successfully!
+  amdgpu 0000:05:00.0: [drm] *ERROR* IB test failed on gfx_0.0.0 (-110).
+  amdgpu 0000:05:00.0: ib ring test failed (-110).
+  amdgpu 0000:05:00.0: SMU: No response msg_reg: 1a resp_reg: 0
+  amdgpu 0000:05:00.0: Failed to disable gfxoff!
+  amdgpu 0000:05:00.0: ring sdma0 timeout
+  amdgpu 0000:05:00.0: GPU reset begin!
+  amdgpu 0000:05:00.0: GPU Recovery Failed: -62
+  amdgpu 0000:05:00.0: ASIC reset failed
+
+The system remains accessible via SSH but the display never recovers,
+requiring a hard reboot.
+
+
+HARDWARE INFORMATION
+
+  CPU: AMD Ryzen 7 7735U with Radeon Graphics (Rembrandt / Zen3+)
+  GPU: AMD YELLOW_CARP (DCN 3.1.2, GFX 10.3.x) - integrated
+  PMC: amd_pmc AMDI0007:00, SMU firmware 69.71.0 (program 4)
+  BIOS: HP W78 Ver. 01.08.01 (03/11/2026) - latest available
+  EC firmware: 6.50 - latest available
+  Board vendor: HP
+  Board name: 8C79
+  Product name: HP ProBook 445 14 inch G11 Notebook PC
+  Sleep mode: s2idle only (no S3/deep support)
+
+
+ROOT CAUSE
+
+This is an EC (Embedded Controller) firmware bug. The EC triggers spurious
+IRQ1 (PS/2 keyboard) wakeups without any keyboard activity, preventing the
+SoC from reaching its deepest sleep state (PC10/S0i3).
+
+This is the same class of bug already handled for many other AMD laptops
+in drivers/platform/x86/amd/pmc/pmc-quirks.c:
+
+  - Lenovo ThinkPads (T14/X13/P14s Gen1-2 AMD) - quirk_s2idle_spurious_8042
+  - HP Laptop 15s-eq2xxx - quirk_s2idle_spurious_8042
+  - Framework Laptop 13 (Phoenix) - quirk_spurious_8042
+  - MECHREVO Wujie 14X - quirk_spurious_8042
+  - PCSpecialist Lafite Pro V 14M - quirk_spurious_8042 (bugzilla #220116)
+
+The issue persists even with the latest HP firmware (BIOS W78 01.08.01,
+EC 6.50), indicating HP has not fixed this in their EC firmware.
+
+
+WORKAROUND
+
+Disabling i8042 wakeup fully resolves the issue:
+
+  echo disabled | sudo tee /sys/bus/serio/devices/serio0/power/wakeup
+
+After this, suspend reaches deep s2idle, the GPU powers down correctly,
+and resume is clean with no amdgpu errors. The keyboard wake-up function
+is not affected in practice -- the laptop wakes via lid sensor or power
+button, which is the expected behavior on laptop hardware.
+
+
+PROPOSED FIX
+
+Add the HP ProBook 445 14 G11 (board 8C79) to the fwbug_list in
+drivers/platform/x86/amd/pmc/pmc-quirks.c:
+
+  /* HP ProBook 445 14 G11: EC triggers spurious IRQ1, blocking deep s2idle=
+ */
+  {
+      .ident =3D "HP ProBook 445 14 inch G11 Notebook PC",
+      .driver_data =3D &quirk_s2idle_spurious_8042,
+      .matches =3D {
+          DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
+          DMI_MATCH(DMI_BOARD_NAME, "8C79"),
+      }
+  },
+
+This follows the same pattern as the existing HP Laptop 15s-eq2xxx entry
+(gitlab drm/amd #2684), which uses quirk_s2idle_spurious_8042 for the
+same class of bug on HP hardware.
+
+Patch is attached.
+
+
+STEPS TO REPRODUCE
+
+1. Boot the system with default configuration (i8042 wakeup enabled)
+2. Run: sudo systemctl suspend
+3. Wait a few seconds, then wake the system
+4. Observe: display remains black, SSH may work but GPU is non-functional
+5. Check dmesg: amd_pmc AMDI0007:00: Last suspend didn't reach deepest state
+   followed by amdgpu SMU/IB test/GFXOFF errors
+
+
+STEPS TO VERIFY WORKAROUND
+
+1. Run: echo disabled | sudo tee /sys/bus/serio/devices/serio0/power/wakeup
+2. Run: sudo systemctl suspend
+3. Wake the system
+4. Observe: display recovers normally, system fully functional
+5. Check dmesg: no "Last suspend didn't reach deepest state" message,
+   no amdgpu errors, SMU resumes cleanly
+
+
+LOGS
+
+Before workaround (broken):
+
+  PM: suspend entry (s2idle)
+  amd_pmc AMDI0007:00: Last suspend didn't reach deepest state
+  amdgpu 0000:05:00.0: failed to write reg 1aa89 wait reg 1aa8a
+  amdgpu 0000:05:00.0: SMU is resuming...
+  amdgpu 0000:05:00.0: SMU is resumed successfully!
+  amdgpu 0000:05:00.0: [drm] *ERROR* IB test failed on gfx_0.0.0 (-110).
+  amdgpu 0000:05:00.0: ib ring test failed (-110).
+  amdgpu 0000:05:00.0: SMU: No response msg_reg: 1a resp_reg: 0
+  amdgpu 0000:05:00.0: Failed to disable gfxoff!
+  amdgpu 0000:05:00.0: ring sdma0 timeout
+  amdgpu 0000:05:00.0: GPU reset begin!
+  amdgpu 0000:05:00.0: GPU Recovery Failed: -62
+
+After workaround (working):
+
+  PM: suspend entry (s2idle)
+  PM: suspend exit
+  amdgpu 0000:05:00.0: SMU is resuming...
+  amdgpu 0000:05:00.0: SMU is resumed successfully!
+  (no errors, display recovers normally)
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
