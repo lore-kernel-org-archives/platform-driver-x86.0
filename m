@@ -1,80 +1,74 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5E230BDB
-	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 07:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0780433CE9A
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 07:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786863648; cv=none; b=JYp4K0hDIqiadTXqZnzvK/5139JCyo7GmoFKNHxwAsKb0o7qr17Qrf0/UWAjl9BR/ivHT911kyAqqQeOWSpe0CSdtnrb/YhXv4tkmZcHxMYNDR3SiVIv3vks/VGFAjZL4Or5m8M5VU1aeA4o2nXKpFQadxwd3SbSXEkjkle2olw=
+	t=1786863686; cv=none; b=DxrmIAkbBzRTEjGPSKObZC6e7/a1cL52kYgDC1Th8Jw2/fdVPZdgwUuG6O/OqFNfBDx5KNAfKr4reU7+Z8nhDbpFwH+zWKPFFuzuOXjfR/+pH4wIpyw8KR2INYdVcWVhmAZfcvGlptZ7THPTZG1M453Ii4pd1DIyfR8erK6/wF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786863648; c=relaxed/simple;
-	bh=B9XeMK1teoid3EDavi1ya0Y/ENbiyOW+ju5Gm1c6kR0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NICr9G1uJF17gF2mb7w0cOJ2oyrLt6ran8lO1dSliO29fykBi7dI94Mwb6L2q7TIQCaxZYzqFGHsEDjGYxs+87f89iBHrdDO6pZXfbh3BXvrXDc7WBU1wLK9aJLSktG8ESO8rpB/puvzc3wvmtdkYqBk/7rUH9hffslk4amSgeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iezq2UZT; arc=none smtp.client-ip=209.85.215.175
+	s=arc-20240116; t=1786863686; c=relaxed/simple;
+	bh=7tgzoPWzFY5rR9YUevYOk6KErD2WcG+sjkxfdixHkAk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=owZpN6k6UPNGDL3jBQtKoi8ELkTXsuky58/t7IvL18x2pjMfgAPK4lQcFNJfrs9xYZ+snjqVkecqs9UroAewM9eWt+JJwjLorqRs8JZaGBLSjDE5QRLBSxI3i5w766Fo++XNjZiWHv7TxxUSln2Z45D0Jg4puPxV8iNF0RyRfF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Omu+zczR; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iezq2UZT"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-ca7bea5e5b3so1747462a12.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 00:00:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Omu+zczR"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-38f620399a0so2072211a91.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 00:01:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786863646; x=1787468446; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=R8mLDz1whjogRQyNLRWT9rHha8U0V06aQIFCizQjqqI=;
-        b=iezq2UZTfi6cdP1XlE41MsLZgyw19/rfi3b36QWwBkBfI1+mTXMUfRWrR80WObzNJM
-         DEN7zXCKknoGHpdiQcEONOP6cSEZv/vqgJRFPUF9xIQiRK9W1FIggDo4tKlut1D9LDAq
-         ZrCyaY4v1sxMYFgyYB2mRkd1rmOB3K8MnDPIV4umwGaFg+86gKK1XakhTDnNhgHeOkW5
-         bHHj8kpcLUfUFAkcgjdagYgAa3KZ9a71zunePfLPe27agzwXoYurq5th/XE4AoD5JKtN
-         G4tqxuL+oBgEUCLkwZPRe97r4UXXAokp8nq1Fm+XPgvDxM3BuZ1w1OeblaG+40hTU1t9
-         qRsA==
+        d=gmail.com; s=20251104; t=1786863684; x=1787468484; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IOuZBoqirCVlxRk94H9F8kHz9mSaZAp6k7vbbQdUzuA=;
+        b=Omu+zczR/jYzXsWwqOlxUdTLNnbSjdXid1XCMykp8to6LP5cc9pB6OPPXaQ6IThYHM
+         A3clpxDYwKXZsPRBB9RTUc/ZyjzndX58Aus5WtoqNLf3ZiGj4SYvGBzQYCng+vPcphSA
+         6AxfnayfizIaF/gyZzOib6P6CVyKX8l88hOmbF6xOD25jD9tO/L9XDtiyOx9a2cr/2pf
+         MPqKsWIMKE1u1hXPHtb6dnkonpiV5sFz77YLVsxegh6wS+gO57ezuaEP/ur/oiys4O10
+         cA18hoW4KGwEZbsHBalP4bSyrrekLxV21xrsYc7syX6GZyKClKnYz+N6I6CGRszJOZxf
+         w0eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786863646; x=1787468446;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=R8mLDz1whjogRQyNLRWT9rHha8U0V06aQIFCizQjqqI=;
-        b=HySzR8j/DeFwz0y0T1S5XG+ESZRXG4F/W4IJ36IC/2A4r5mf34RC5Mt/P3iOIfh0Hs
-         qAIdZdKTFNK9Drw1upunUV3tm63UnOOjpggkY0YHNACOAPzIhCNVgBfR76JGBu9GwTTe
-         kHMW5SDo9xnEJHEcdSNOcZyKro1DRZYQQcw/a2inXTjEd9YXg5W+u8kbE87C6r6ho4BV
-         1g3E/4xZwO20Q/bT0QusNL696ZIRlkFTL+9ldIe9vbK/itowbDrcFIMpIr9EXij7Md1Y
-         Bc57ooIjGGViKGPpTacAxzMeOiyZf+jBk6M4nkc/p2Vg8qOErb5R0VTfBjop+RtBbuvs
-         JA0A==
-X-Forwarded-Encrypted: i=1; AHgh+RrkUnGb5i1UPQ8Vzddw/ZULpxRcZwYecEBXedpxlgiaZrVAgqT3pFI9eQ/S8zxu4z9hx2cFlbuNMfNGHUSO+xLH/Die@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYS/OPzaLfIa/8oQUN2+Pz0exfrzsoHO5mAfmIZUr8939HVJLD
-	72GVfj6v89PkgX14+U9Oow4W51GXQwmq90G1ZjcRLyWmHGW4yiiKsUmo
-X-Gm-Gg: AR+sD13lNjRYXzK/jbZAHgmYJ/Y63B/KPsh53kHpYq6Fwecrsl/uGqMEqyWmHlCPaFR
-	XWSVrb326HtolySG6TKjsDJH7vRMB0N+tmogWhfKOVFbpVNtNcQPfnsoGlcZbcsAkeeQbSY4Cnh
-	pHcyhKjykF15W0OqOSVSGEkypqcQx5kfzt9gcNlbINJCh1Cv/t0tgmaX0XOuvUU1oQssxihJSKU
-	uWhU8wiL+0i7BedzufOcdE51Qyqoe1j9WcgtGiVITq7fZ7AmovJm7xG1qlAJdOEMYUHyqWXFoZo
-	qrAxVZe7+Ci+SeQ/UJVWov8lVvYJpnpDyZTVRvFxHDKqaKQoxkYUPXHmM20kzs+y++XsLeFQRT4
-	UO5nvYJiwlMtuDL2XYxXmgwULi7JEQAIs8JUulyLiAcrRd/CyQ//Hc6ghHnE9xvsEhyT0Ui0l5K
-	2uYLpsATd2eRWdCXcpebsg/V7ISYFHTrFRgXBWw8WC7sTUfBIWZpFJSeXjRwCRbrOORBhG6/a4d
-	fiFfTYErKq5+xOEWuqbkZ/X
-X-Received: by 2002:a05:6a21:999d:b0:398:837a:7af0 with SMTP id adf61e73a8af0-3cc71f54de7mr16102328637.30.1786863645870;
-        Sun, 16 Aug 2026 00:00:45 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1786863684; x=1787468484;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IOuZBoqirCVlxRk94H9F8kHz9mSaZAp6k7vbbQdUzuA=;
+        b=EKtrOlyQsQOT5Jxo15jauRiuBgiSdGC6YAeN9zLL31reLV6Wkh1rT7H/mJIsjF7uZL
+         gofZzJI0FVyw/6YPpeva24HWLdN3zxBYhbpIB7akZ2IGPoUQxtTLJLohe1voKwCS+cGe
+         rKluErc9iHL+wLXAtDztJGP+9xPtgkvt0x5MU/M79SfxnkD9L+MgQCI9OPc8kTvRp9k3
+         R5GEnamb4+nsqULclu2YNIBm8NtiGTF89YIIiZKA2+XSQCK9jRRtq5dNEZwxKVwJgIbu
+         LRKWjU1ocaUp1PxH8yn+lbt5OgD9tySMJcuJIUhJpDTHRNp3Dyke+68njjYjmYPl9UrL
+         CiOQ==
+X-Gm-Message-State: AOJu0Ywt0s43/JKtuta9MrHV2RryjFH1DObBWoEOvMEfPwMY5m/NZV4u
+	CGH2zLoRLBgS607Gbu/+GMgZ4hx2+JjKbqJQ+heFR1M/ZB+5x2XkFjeLGh7Sqchy
+X-Gm-Gg: AR+sD115XqKVVPf+TWLoXOhiX8+KbgEHiiTss33os5JBGxyXfB35N6OyiuTtMH9LarH
+	0FMB+ReiFiLU9yDADph4InfSRCiLcR/tvdCjfbLtDszzD8R2DiFIFpeVT3nsvlfJy/RPHc/BtWv
+	ugE9a25WLlD+Sz6/TuIWMncShaPMWyVm3f+w5muNWwFfLBDiASqUoxVNQADpeOKgK3e/8q7ebUz
+	h2UyXumAGTBNWXV7rLkR2b3KIwW5g0QDdhb11t8UIUQWLdAYh/W8mvkgTtwGvF7NZVrizY6NYzw
+	I6HVNcUyKHxLccZ1IWRtaDTkWB3cH+oz5r6oBgSMMZrqKKHV6T6pCiBgOmOfn0c0s2+VYjuJfpn
+	VLioIkkyPI3JmOR4Ys/5MlHYUwX+U98xp46vgUZpiwnqA3pBSEUJhNiOcjYe5oJakhOuTnLWig5
+	dYhFoWT0VuiLMo9pQOnsZrh+n52YcwzC4kOrD5levi36W4kNDaN1KapuiS6uovm+g6EPXDWLb4N
+	B7INtl5NHzWHA==
+X-Received: by 2002:a17:90b:3c44:b0:380:83fc:4315 with SMTP id 98e67ed59e1d1-3933bf4ac9amr19927427a91.21.1786863683967;
+        Sun, 16 Aug 2026 00:01:23 -0700 (PDT)
 Received: from sahan-Latitude-7320-Detachable ([203.87.98.231])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-320ea8fe3cdsm23054054eec.28.2026.08.16.00.00.42
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-320e9df03e1sm22632612eec.16.2026.08.16.00.01.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2026 00:00:45 -0700 (PDT)
+        Sun, 16 Aug 2026 00:01:23 -0700 (PDT)
 From: Sahan Nissanka <adee.sahan@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sahan Nissanka <adee.sahan@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dan.scally@ideasonboard.com,
+To: platform-driver-x86@vger.kernel.org
+Cc: dan.scally@ideasonboard.com,
+	sakari.ailus@linux.intel.com,
 	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	mchehab@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
-Date: Sun, 16 Aug 2026 17:00:06 +1000
-Message-ID: <20260816070025.9267-1-adee.sahan@gmail.com>
+	linux@cdrolet.dev,
+	linux-kernel@vger.kernel.org,
+	Sahan Nissanka <adee.sahan@gmail.com>
+Subject: [PATCH v2] platform/x86: int3472: Add TPS68470 board data for Dell 7320 Detachable
+Date: Sun, 16 Aug 2026 17:01:03 +1000
+Message-ID: <20260816070108.9308-1-adee.sahan@gmail.com>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260810092457.12357-1-adee.sahan@gmail.com>
-References: <20260809042540.15849-1-adee.sahan@gmail.com> <20260809042540.15849-3-adee.sahan@gmail.com> <anmHRjxruBaYQRaC@kekkonen.localdomain> <20260810092457.12357-1-adee.sahan@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -83,213 +77,272 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Sakari,
+The Dell Latitude 7320 Detachable has two MIPI cameras behind an Intel
+IPU6, both powered by a TPS68470 PMIC. Without board data the PMIC
+driver fails:
 
-I said I would report back on whether this sensor can be programmed to emit
-Bayer, either way. A replacement machine arrived, so here is the answer, and
-a correction to something I told you earlier.
+  int3472-tps68470 i2c-INT3472:07: error -ENODEV: No board-data found
+  for this model
 
-Short version: I can find no way to make it emit Bayer, I have now looked
-directly at the sensor rather than inferring from Intel's configuration, and
-the module's own factory label says it is RGB-IR.
+and because the sensors declare an ACPI _DEP on the control logic they
+are never enumerated at all - no i2c client is created for either of
+them, so nothing can bind them.
 
-## Correction first
+Add board data for the front sensor, which ACPI describes as OVTI5678.
+Reset is on tps68470-gpio 5, active low. There is no powerdown pin.
 
-In my previous reply I said the Windows driver "reads external configuration
-through an ExtFilesPath value under its service key, from a BSPDRIVERS
-store". That was wrong and I would rather withdraw it than leave it for
-someone else to chase. Those strings are in the binary but the code path is
-unused: there is no such directory on either Windows install I have looked
-at, and the value is unset under HKLM\SYSTEM\CurrentControlSet\Services. I
-inferred a mechanism from strings without checking it worked.
+On its own this patch clears the -ENODEV, registers the seven rails and
+the reset lookup, and lets the two i2c clients be created. No sensor
+driver binds yet: ov5675 does not recognise the OVTI5678 ACPI id, and
+that is a separate change to a different subsystem which this patch does
+not depend on.
 
-## Intel's own configuration files say RGB-IR, in as many words
+The reset line was established by making the probe fail rather than by
+observing that the camera works: held physically low the sensor does not
+identify, held high it does, and driving tps68470-gpio 3 has no effect
+either way. That distinction matters here, because the sensor probes
+with no pin assignment at all - the line sits released by default - so a
+wrong mapping is invisible in normal operation. Charles Drolet found
+this and ran the control test; it has since been reproduced on a second
+Latitude 7320 Detachable, three trials per condition, which also
+confirms the board data describes the model rather than one machine.
 
-I have since had the whole System32 from the factory image, and the useful
-thing in it turned out not to be the driver binary but a configuration file
-beside it. Two byte-identical copies of graph_settings_OV5678_*.xml ship in
-System32\drivers, Apache-2.0, Copyright Intel, and the first content line is:
+The individual supply assignment could not be determined. The sensor's
+i2c bus only responds when VSIO, AUX1 and AUX2 are all enabled together,
+so no experiment here distinguishes which rail feeds avdd, dvdd or
+dovdd, and the voltages suggest these rails act as enables for
+regulators further down rather than as the supplies themselves. What is
+established is that this set of rails must be enabled: with the
+conventional ANA/CORE/VSIO mapping the sensor does not respond at all.
 
-  <sensor_modes sensor_name="OV5678" csi_port="0" metadata="0"
-                interlaced="0" bayer_order="GIGI_RGBG_GIGI_BGRG">
+The rails that have no consumers are given their own regulator_init_data
+rather than borrowing the Dell 7212's. They hold identical values today,
+but sharing them couples two unrelated machines: the 7212 has a second
+camera that is not registered yet, and adding it would mean giving those
+structures consumer supplies, which this board would then silently
+inherit.
 
-with exactly one mode beneath it:
+Note the control logic here enumerates as INT3472:07, not :05 as on the
+other Dell models in this file. The board data lookup matches on DMI and
+device name, so this has to be exact. Note also that a Dell Latitude
+7320 laptop exists which is a different machine without an IPU6, hence
+"detachable" throughout.
 
-  <sensor_mode name="2592X1944" id="0" width="2592" height="1944"
-               fps="30" bpp="10" sensor_type="RGB_IR" ...>
+The rear OVTI8856 sensor shares this PMIC. It is left out deliberately:
+it needs changes to ov8856 beyond board data, and it exhibits a suspend
+regression that the front sensor does not, so it belongs in its own
+patch.
 
-That is Intel, for this exact part, declaring a 4x4 mosaic, a sensor type
-of RGB_IR, and a single mode with no binned variant. The order string is
-not ad-hoc; it is one of the 4x4 entries in Intel's public enum [3]:
+Co-developed-by: Charles Drolet <linux@cdrolet.dev>
+Signed-off-by: Charles Drolet <linux@cdrolet.dev>
+Signed-off-by: Sahan Nissanka <adee.sahan@gmail.com>
+---
+Rebased onto v7.2-rc7; v1 was generated against v7.0, before the MSI
+Prestige AI+ Evo and Intel NVL entries landed in this file.
 
-  cmc_bayer_order_gigi_rgbg_gigi_bgrg,   /*!< Order: 1st row: G I G I,
-    2nd row: R G B G, 3rd row: G I G I, 4th row: B G R G (4x4). */
+Changes since v1 [1]:
+ - Reset is on tps68470-gpio 5, not 3. Established by holding the line low
+   and making the probe fail, with gpio 3 driven as a control; reproduced
+   on a second Latitude 7320 Detachable, three trials per condition, which
+   also shows the board data describes the model and not one machine.
+ - Dropped the powerdown lookup rather than correcting it. ov5675.c only
+   ever requests "reset", so no "powerdown" con_id was ever looked up.
+ - Dropped the CLDB C0W4=3 corroboration from the commit message. It
+   agreed with the wrong pin.
+ - Rewrote the supply paragraph. v1 claimed the rail assignment was
+   confirmed on hardware; it is not determinable here, because the
+   sensor's i2c bus only responds when VSIO, AUX1 and AUX2 are all
+   enabled together. What is established is that this set of rails must
+   be enabled, not which one feeds which supply.
+ - Gave the consumerless rails their own regulator_init_data instead of
+   sharing the Dell 7212's. The values are identical today, but the 7212
+   has a second camera that is not registered yet; adding it would mean
+   giving those structures consumer supplies, which this board would then
+   silently inherit. Suggested by Charles Drolet.
+ - Declared VIO always_on at VSIO's voltage, as the Surface Go entry does,
+   rather than valid_ops_mask = REGULATOR_CHANGE_STATUS as inherited from
+   the 7212 in v1. This corrects the description, not the behaviour: VIO
+   is registered with tps68470_always_on_reg_ops, which implements neither
+   .enable nor .disable, so v1 declared a capability the ops do not
+   provide and the rail is on either way. Confirmed on hardware - VIO
+   comes up with use_count 1 and no sysfs "state" attribute, which is the
+   always_on signature and not seen on the other six rails.
+ - Named everything dell_7320_detachable_* rather than after the sensor.
+   A product may carry several sensors, the same sensor may be wired
+   differently elsewhere, and a Dell Latitude 7320 laptop exists which is
+   a different machine without an IPU6. Also suggested by Charles Drolet.
+ - Added Co-developed-by/Signed-off-by for Charles Drolet, who found the
+   reset line and ran the control test. He also booted an earlier draft of
+   this patch on v7.2-rc7, applied by hand, and confirmed the -ENODEV is
+   gone with no other effect; the VIO change below postdates that test.
+ - Sent standalone. Patches 2/3 and 3/3 of the v1 series are held pending
+   the discussion on 2/3 [2] about non-Bayer output and the metadata
+   series; this patch does not depend on them.
 
-kept in a cmc_bayer_order_4x4 family separate from the 2x2 orders. It
-matches the pattern I measured over i2c position for position, and I had
-not seen the file when I measured it.
+No tps68470_gpio_swnode: the daisy-chain-enable property exists to put
+GPIOs 1 and 2 into input mode for the PMIC's i2c pass-through, which this
+machine does not use - both sensors are direct ACPI i2c clients.
 
-The same directory carries graph settings for the rear OV8856 on this
-machine. Those say bayer_order="GRBG", with two modes. Same vendor, same
-generation, same file format, and the two parts are described differently.
+[1] https://lore.kernel.org/all/20260809042540.15849-1-adee.sahan@gmail.com/
+[2] https://lore.kernel.org/all/anmHRjxruBaYQRaC@kekkonen.localdomain/
 
-I have to correct something I told you, since I am now citing these files.
-I said ov5678.sys was the only file on the system referencing the part.
-That is wrong: eight files under System32 contain the string, including the
-two XMLs above and Intel's iacamera64 extension INFs, and the .sys itself
-carries it mostly as UTF-16. I checked the file count and not the claim.
+ .../x86/intel/int3472/tps68470_board_data.c   | 120 ++++++++++++++++++
+ 1 file changed, 120 insertions(+)
 
-The narrower point I was making does hold. No mode register table is stored
-as data anywhere in the driver: 182424 bytes total, 19 KB .rdata and 7 KB
-.data on disk, and the longest run of ordered (u16 register, u8 value)
-records anywhere in the image is 21, against the 150 writes one mode of
-ov5675.c issues. The register-dump facility I hoped to use
-(C:\OV5678reg.txt) has no code referencing it, unlike the NVM dump paths
-which do. So the register programming is built in code - but the pipeline
-configuration is plain data, and that data says RGB-IR.
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index c535424..2312c26 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -369,6 +369,102 @@ static const struct tps68470_regulator_platform_data intel_nvl_tps68470_pdata =
+ 	},
+ };
+ 
++/* Settings for Dell Latitude 7320 Detachable */
++
++static struct regulator_consumer_supply dell_7320_detachable_vsio_consumer_supplies[] = {
++	REGULATOR_SUPPLY("avdd", "i2c-OVTI5678:00"),
++};
++
++static struct regulator_consumer_supply dell_7320_detachable_aux1_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dvdd", "i2c-OVTI5678:00"),
++};
++
++static struct regulator_consumer_supply dell_7320_detachable_aux2_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dovdd", "i2c-OVTI5678:00"),
++};
++
++static const struct regulator_init_data dell_7320_detachable_core_reg_init_data = {
++	.constraints = {
++		.min_uV = 1200000,
++		.max_uV = 1200000,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++};
++
++static const struct regulator_init_data dell_7320_detachable_ana_reg_init_data = {
++	.constraints = {
++		.min_uV = 2815200,
++		.max_uV = 2815200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++};
++
++static const struct regulator_init_data dell_7320_detachable_vcm_reg_init_data = {
++	.constraints = {
++		.min_uV = 2815200,
++		.max_uV = 2815200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++};
++
++/* Ensure the always-on VIO regulator has the same voltage as VSIO */
++static const struct regulator_init_data dell_7320_detachable_vio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.always_on = 1,
++	},
++};
++
++static const struct regulator_init_data dell_7320_detachable_vsio_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_7320_detachable_vsio_consumer_supplies),
++	.consumer_supplies = dell_7320_detachable_vsio_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_7320_detachable_aux1_reg_init_data = {
++	.constraints = {
++		.min_uV = 1213200,
++		.max_uV = 1213200,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_7320_detachable_aux1_consumer_supplies),
++	.consumer_supplies = dell_7320_detachable_aux1_consumer_supplies,
++};
++
++static const struct regulator_init_data dell_7320_detachable_aux2_reg_init_data = {
++	.constraints = {
++		.min_uV = 1800600,
++		.max_uV = 1800600,
++		.apply_uV = 1,
++		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++	},
++	.num_consumer_supplies = ARRAY_SIZE(dell_7320_detachable_aux2_consumer_supplies),
++	.consumer_supplies = dell_7320_detachable_aux2_consumer_supplies,
++};
++
++static const struct tps68470_regulator_platform_data dell_7320_detachable_tps68470_pdata = {
++	.reg_init_data = {
++		[TPS68470_CORE] = &dell_7320_detachable_core_reg_init_data,
++		[TPS68470_ANA]  = &dell_7320_detachable_ana_reg_init_data,
++		[TPS68470_VCM]  = &dell_7320_detachable_vcm_reg_init_data,
++		[TPS68470_VIO]  = &dell_7320_detachable_vio_reg_init_data,
++		[TPS68470_VSIO] = &dell_7320_detachable_vsio_reg_init_data,
++		[TPS68470_AUX1] = &dell_7320_detachable_aux1_reg_init_data,
++		[TPS68470_AUX2] = &dell_7320_detachable_aux2_reg_init_data,
++	},
++};
++
+ static struct gpiod_lookup_table surface_go_int347a_gpios = {
+ 	.dev_id = "i2c-INT347A:00",
+ 	.table = {
+@@ -411,6 +507,14 @@ static struct gpiod_lookup_table intel_nvl_tps68470_gpios = {
+ 	}
+ };
+ 
++static struct gpiod_lookup_table dell_7320_detachable_gpios = {
++	.dev_id = "i2c-OVTI5678:00",
++	.table = {
++		GPIO_LOOKUP("tps68470-gpio", 5, "reset", GPIO_ACTIVE_LOW),
++		{ }
++	}
++};
++
+ static const struct property_entry int3472_tps68470_daisy_chain_gpio_props[] = {
+ 	PROPERTY_ENTRY_BOOL("daisy-chain-enable"),
+ 	{ }
+@@ -469,6 +573,15 @@ static const struct int3472_tps68470_board_data intel_nvl_tps68470_board_data =
+ 	},
+ };
+ 
++static const struct int3472_tps68470_board_data dell_7320_detachable_tps68470_board_data = {
++	.dev_name = "i2c-INT3472:07",
++	.tps68470_regulator_pdata = &dell_7320_detachable_tps68470_pdata,
++	.n_gpiod_lookups = 1,
++	.tps68470_gpio_lookup_tables = {
++		&dell_7320_detachable_gpios,
++	},
++};
++
+ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 	{
+ 		.matches = {
+@@ -529,6 +642,13 @@ static const struct dmi_system_id int3472_tps68470_board_data_table[] = {
+ 		},
+ 		.driver_data = (void *)&intel_nvl_tps68470_board_data,
+ 	},
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 7320 Detachable"),
++		},
++		.driver_data = (void *)&dell_7320_detachable_tps68470_board_data,
++	},
+ 	{ }
+ };
+ 
 
-## So I tested the sensor instead, which is a better answer anyway
+base-commit: db2ddb87143519e20a95aa36c60b36107b736a58
+-- 
+2.53.0
 
-Even a perfect capture of Windows' register writes would only show what
-Intel chose to do. Testing the part directly shows what it can do.
-
-I mapped its register space over i2c across 0x3000-0x5fff, validating every
-read against the chip id at 0x300a (00 56 75) so a bad read could not pass
-as data. ov5675.c issues 150 writes to 132 distinct registers across 14
-pages; I looked for pages
-that are populated but never written, since those are the uncharacterised
-ones. After removing aliases the candidates collapse:
-
-  0x51xx, 0x56xx   512 registers, all zero (unimplemented reads as 0x00)
-  0x41xx           byte-for-byte alias of 0x40xx
-  0x3300           appears to hold 128 registers; is 16, aliased 8x
-                   (only the low 5 bits decode). Contents are a threshold
-                   ladder: 0x00c8 0x0190 0x0258 0x0320.
-  0x5800           a second instance of the DPC block configured at 0x5780,
-                   differing in two bytes
-  0x3200, 0x3d00, 0x3e00, 0x3f00, 0x4300, 0x5a00   2 to 10 registers each
-
-Nothing resembling a CFA or output-format control exists in that space.
-
-I then bit-swept 0x5000-0x5003, the ISP control block, of which ov5675.c
-writes only 0x5000. All 32 bits, one at a time, capturing a full-resolution
-frame after each and measuring the mean of all 16 positions of the 4x4 cell.
-Four bits changed the image and all four are accounted for:
-
-  0x5000 bit0   black level correction enable (every position lifts by the
-                ~64 count pedestal)
-  0x5002 bit5   output saturates, all 16 positions at 1023
-  0x5003 bit3   the same
-  0x5002 bit1   a one-column CFA phase shift: every position takes its
-                right-hand neighbour's value
-
-That last one is the only interesting one, and it is decisive against a
-Bayer mode rather than for it: after the shift the cell still contains
-exactly four dark positions out of sixteen. The infrared pixels are still
-there, merely relabelled. A real Bayer mode would remove that cluster
-entirely. For reference the baseline cell reads green 281-285, IR 82.6-82.8,
-red 201.9, blue 177.5, and the four IR positions agree with each other to
-under 1%.
-
-This is not exhaustive: I have not mapped outside 0x3000-0x5fff, and I have
-no register documentation for this variant. But within the space the driver
-touches and the space adjacent to it, there is no such control.
-
-## Two further pieces of evidence
-
-I read the module EEPROM at i2c 0x51 - it needs the sensor's rails up, which
-is why it had not been read before. Near the end of the payload, in plain
-ASCII:
-
-    W7G97\0  ASSY,CMRA,5M,RGBR,MIPI,0MIC,FF\0  0BF501,
-
-That is Dell's own part description for the module: 5 megapixel, RGBR,
-MIPI, no microphone, fixed focus. 0BF501 matches the ACPI _DDN. I have not
-seen this data on Linux before; Windows writes it to NVM dump files that no
-install I have seen actually produced.
-
-And I can replace my earlier citation of the closed iacamera64.sys with a
-public one. Intel's own open-source tree declares the conversion block:
-
-  IPU6_FW_PSYS_ISA_X2B_SVE_RGBIR_ID
-  drivers/media/pci/intel/ipu6/psys/ipu6-platform-resources.h
-  in github.com/intel/ipu6-drivers
-
-"X2B" being X-to-Bayer. That repo also contains no ov5678 driver at all, so
-Intel never shipped one for Linux.
-
-## Where that leaves the patch
-
-I think it leaves your condition unmet, and I am not going to argue around
-that. The sensor emits RGB-IR and I cannot make it do otherwise, so
-declaring SGRBG10 describes it incorrectly however convenient that is for
-getting a picture.
-
-So: I will hold 2/3 for the metadata series rather than press it, and follow
-your branch. If it would help to have a non-Bayer 4x4 pattern exercising the
-CFA-pattern control early, I have hardware and I am happy to test.
-
-Two things I would value your view on for v2, both prompted by this being a
-distinct part rather than an OV5675 variant.
-
-First, should it register under a distinct name? Userspace picks tuning by
-sensor model, so as written my patch makes an RGB-IR part indistinguishable
-from a real OV5675, and any tuning shipped for it would be wrong for the
-genuine article. Reusing ov5675.c for the programming interface while
-reporting a different model seems more honest than either pretending it is
-an OV5675 or duplicating the driver, but I do not know if that is idiomatic.
-
-Second, this part should probably not expose its binned mode at all.
-Binning averages the infrared pixels together with the colour ones and
-destroys the mosaic, and Intel's own graph settings for this sensor declare
-exactly one mode, 2592x1944, against two for the plain-Bayer OV8856 on the
-same machine. I have a change gating the
-mode list on the ACPI id so real OV5675 parts are unaffected. Worth
-including, or noise until the format question is settled?
-
-The first of those is really the same question I asked about ox05b1s and did
-not want to argue from: it declares SGRBG10 for an RGB-IR sensor of this
-class. If that is regarded as a precedent to follow, my original patch is
-fine as it stands; if it is regarded as a mistake, then a distinct model name
-is the way to avoid repeating it, and I would rather take the second reading.
-No need to answer both - the ox05b1s one covers it.
-
-Separately, on 1/3, where I said I would verify the mapping on the
-replacement machine and check whether the board data generalises across
-units rather than describing the one I had. Both are done.
-
-The GPIO mapping in v1 was wrong, as I reported. Charles Drolet found it and
-I have now reproduced it on a second Latitude 7320 Detachable - reset is
-tps68470-gpio 5 rather than 3, active low, and there is no powerdown pin at
-all since ov5675.c only ever requests "reset". The test is to make the probe
-fail on demand: held low the sensor does not identify, held high it does, and
-driving gpio 3 changes nothing either way, three trials each.
-
-The board data does generalise. On the second machine the DMI match, the
-_DEP clearing and both sensor i2c clients all behave as on the first, and
-the front camera streams. The one thing that is genuinely load-bearing is
-the choice of rails: with consumers on ANA/CORE/VSIO the sensor does not
-respond on i2c at all, and moving them to VSIO/AUX1/AUX2 fixes it with
-nothing else changed. Which of those three is avdd I still cannot determine
-- Charles found the sensor's i2c only answers when all three are enabled
-together - so v2 says that explicitly rather than implying it was measured.
-
-v2 of that patch is ready and does not depend on this discussion. It is
-generated against v7.2-rc7 with a base-commit trailer - v1 predated the
-MSI Prestige and Intel NVL entries landing in that file, so it no longer
-applied cleanly - and it has been tested standalone. With the ov5675 and
-ipu-bridge changes both reverted to their in-tree versions and no module
-parameters anywhere, the board data registers all seven rails at the
-expected voltages and nothing else on the machine changes; no sensor
-binds, which is the honest result for that patch by itself. With the
-other two applied on top, the reset lookup resolves on tps68470-gpio 5
-and the camera streams.
-
-Thanks for the pointer to the metadata branch - it saved me proposing bus
-codes that would not have worked for a 4x4 pattern.
-
-[3] https://github.com/intel/ipu6-camera-bins/blob/main/include/ipu6/
-    ia_imaging/ia_cmc_types.h
-
---
-Sahan Nissanka
