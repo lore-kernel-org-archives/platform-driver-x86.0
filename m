@@ -1,127 +1,295 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D073115A2;
-	Sun, 16 Aug 2026 06:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5E230BDB
+	for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 07:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786862840; cv=none; b=U7Xwro065xdZ5/n6sJ6YRE4ef6czrbb8qRT0iVQfWSQ/s3O9yAA7iRtGqoR83JIbAY/6i2HKBZcWLCpbu0zWhoARqnnWiS/PLXp7Jg2R2jfJneqnVXEftSlTmGWRT18rTK5hri4LajbRY8nZiqze4HjIJE/XvMlOW6Yjt9ne3Vw=
+	t=1786863648; cv=none; b=JYp4K0hDIqiadTXqZnzvK/5139JCyo7GmoFKNHxwAsKb0o7qr17Qrf0/UWAjl9BR/ivHT911kyAqqQeOWSpe0CSdtnrb/YhXv4tkmZcHxMYNDR3SiVIv3vks/VGFAjZL4Or5m8M5VU1aeA4o2nXKpFQadxwd3SbSXEkjkle2olw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786862840; c=relaxed/simple;
-	bh=tuGgDjjUnd7XTMmE5p/sSXutNK7SpeFudznU3x1ov5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dTQRp7BKGeS7oXKCsDvkKF/m2wEIAFYl163E9EwGuuw5wKmczO3YCUgPPggRRu5w3CfzJhFuguRT0vZAvDVbj09NUWBSxwbqeAVjk2OOPY6fNSShjrOC2dRKNFVGSqhYmUJmy0TOE6W9Jox1xvKlBfv7pHEbvAtidTjpRy/9uoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vocyr0LK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786863648; c=relaxed/simple;
+	bh=B9XeMK1teoid3EDavi1ya0Y/ENbiyOW+ju5Gm1c6kR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NICr9G1uJF17gF2mb7w0cOJ2oyrLt6ran8lO1dSliO29fykBi7dI94Mwb6L2q7TIQCaxZYzqFGHsEDjGYxs+87f89iBHrdDO6pZXfbh3BXvrXDc7WBU1wLK9aJLSktG8ESO8rpB/puvzc3wvmtdkYqBk/7rUH9hffslk4amSgeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iezq2UZT; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vocyr0LK"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 6B4991F000E9;
-	Sun, 16 Aug 2026 06:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786862839;
-	bh=x2T0QVPCk/bam794xGeOwBl2jyK+bAZTLI+QcRCUKY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Vocyr0LK4zCzV4g7MyqKqD6dAlpo6nZ/Zi4MtNooNvhyscxySoUVAMofIYt1oIAYC
-	 hftZiwGQjnl3Ts3+XgIck48BiHSphifAp4txHV/AkawSjRJXWIWNlUydivsqChndK1
-	 aWH3meu4InEjNg8tyX/+K+yEhxgZr5CFMLsaNq7mu8gisY8lDSNfS3a02A01OBWPJe
-	 KYYzHGOdwWJOs0KpdAzKsQM05kgSuEnhp9dFNgzjBBUpdwkF5TFVGBzeYYw7jKhKF9
-	 36l33vAtCiw4YxZOM4rFrJc2uVqXQwrAYUjiAPww06bQHT5xshG85YvazAHBJxCzTI
-	 yDcrdZD6PcYgg==
-Date: Sun, 16 Aug 2026 08:47:16 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Farber, Eliav" <farbere@amazon.com>
-Cc: "rafael@kernel.org" <rafael@kernel.org>, 
-	"tony.luck@intel.com" <tony.luck@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"guohanjun@huawei.com" <guohanjun@huawei.com>, "mchehab@kernel.org" <mchehab@kernel.org>, 
-	"xueshuai@linux.alibaba.com" <xueshuai@linux.alibaba.com>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linusw@kernel.org" <linusw@kernel.org>, 
-	"brgl@kernel.org" <brgl@kernel.org>, "orsonzhai@gmail.com" <orsonzhai@gmail.com>, 
-	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>, "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>, 
-	"jic23@kernel.org" <jic23@kernel.org>, "dlechner@baylibre.com" <dlechner@baylibre.com>, 
-	"nuno.sa@analog.com" <nuno.sa@analog.com>, "andy@kernel.org" <andy@kernel.org>, 
-	"dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "hansg@kernel.org" <hansg@kernel.org>, 
-	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, "W_Armin@gmx.de" <W_Armin@gmx.de>, 
-	"fabio.m.de.francesco@linux.intel.com" <fabio.m.de.francesco@linux.intel.com>, "kaihengf@nvidia.com" <kaihengf@nvidia.com>, 
-	"ankita@nvidia.com" <ankita@nvidia.com>, "leitao@debian.org" <leitao@debian.org>, 
-	"pedro.pbg@usp.br" <pedro.pbg@usp.br>, "paulmck@kernel.org" <paulmck@kernel.org>, 
-	"frederic@kernel.org" <frederic@kernel.org>, "kees@kernel.org" <kees@kernel.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v4 10/13] platform/x86: uniwill-wmi: use
- devm_blocking_notifier_chain_register()
-Message-ID: <aoFcyiofUhsetEiq@monoceros>
-References: <20260726101739.33170-1-farbere@amazon.com>
- <20260726101739.33170-11-farbere@amazon.com>
- <anlSAqWxS7boyJBT@monoceros>
- <MN0PR18MB5870444BD9375EF4F7131851C6D82@MN0PR18MB5870.namprd18.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iezq2UZT"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-ca7bea5e5b3so1747462a12.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 00:00:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786863646; x=1787468446; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=R8mLDz1whjogRQyNLRWT9rHha8U0V06aQIFCizQjqqI=;
+        b=iezq2UZTfi6cdP1XlE41MsLZgyw19/rfi3b36QWwBkBfI1+mTXMUfRWrR80WObzNJM
+         DEN7zXCKknoGHpdiQcEONOP6cSEZv/vqgJRFPUF9xIQiRK9W1FIggDo4tKlut1D9LDAq
+         ZrCyaY4v1sxMYFgyYB2mRkd1rmOB3K8MnDPIV4umwGaFg+86gKK1XakhTDnNhgHeOkW5
+         bHHj8kpcLUfUFAkcgjdagYgAa3KZ9a71zunePfLPe27agzwXoYurq5th/XE4AoD5JKtN
+         G4tqxuL+oBgEUCLkwZPRe97r4UXXAokp8nq1Fm+XPgvDxM3BuZ1w1OeblaG+40hTU1t9
+         qRsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786863646; x=1787468446;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=R8mLDz1whjogRQyNLRWT9rHha8U0V06aQIFCizQjqqI=;
+        b=HySzR8j/DeFwz0y0T1S5XG+ESZRXG4F/W4IJ36IC/2A4r5mf34RC5Mt/P3iOIfh0Hs
+         qAIdZdKTFNK9Drw1upunUV3tm63UnOOjpggkY0YHNACOAPzIhCNVgBfR76JGBu9GwTTe
+         kHMW5SDo9xnEJHEcdSNOcZyKro1DRZYQQcw/a2inXTjEd9YXg5W+u8kbE87C6r6ho4BV
+         1g3E/4xZwO20Q/bT0QusNL696ZIRlkFTL+9ldIe9vbK/itowbDrcFIMpIr9EXij7Md1Y
+         Bc57ooIjGGViKGPpTacAxzMeOiyZf+jBk6M4nkc/p2Vg8qOErb5R0VTfBjop+RtBbuvs
+         JA0A==
+X-Forwarded-Encrypted: i=1; AHgh+RrkUnGb5i1UPQ8Vzddw/ZULpxRcZwYecEBXedpxlgiaZrVAgqT3pFI9eQ/S8zxu4z9hx2cFlbuNMfNGHUSO+xLH/Die@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYS/OPzaLfIa/8oQUN2+Pz0exfrzsoHO5mAfmIZUr8939HVJLD
+	72GVfj6v89PkgX14+U9Oow4W51GXQwmq90G1ZjcRLyWmHGW4yiiKsUmo
+X-Gm-Gg: AR+sD13lNjRYXzK/jbZAHgmYJ/Y63B/KPsh53kHpYq6Fwecrsl/uGqMEqyWmHlCPaFR
+	XWSVrb326HtolySG6TKjsDJH7vRMB0N+tmogWhfKOVFbpVNtNcQPfnsoGlcZbcsAkeeQbSY4Cnh
+	pHcyhKjykF15W0OqOSVSGEkypqcQx5kfzt9gcNlbINJCh1Cv/t0tgmaX0XOuvUU1oQssxihJSKU
+	uWhU8wiL+0i7BedzufOcdE51Qyqoe1j9WcgtGiVITq7fZ7AmovJm7xG1qlAJdOEMYUHyqWXFoZo
+	qrAxVZe7+Ci+SeQ/UJVWov8lVvYJpnpDyZTVRvFxHDKqaKQoxkYUPXHmM20kzs+y++XsLeFQRT4
+	UO5nvYJiwlMtuDL2XYxXmgwULi7JEQAIs8JUulyLiAcrRd/CyQ//Hc6ghHnE9xvsEhyT0Ui0l5K
+	2uYLpsATd2eRWdCXcpebsg/V7ISYFHTrFRgXBWw8WC7sTUfBIWZpFJSeXjRwCRbrOORBhG6/a4d
+	fiFfTYErKq5+xOEWuqbkZ/X
+X-Received: by 2002:a05:6a21:999d:b0:398:837a:7af0 with SMTP id adf61e73a8af0-3cc71f54de7mr16102328637.30.1786863645870;
+        Sun, 16 Aug 2026 00:00:45 -0700 (PDT)
+Received: from sahan-Latitude-7320-Detachable ([203.87.98.231])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-320ea8fe3cdsm23054054eec.28.2026.08.16.00.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2026 00:00:45 -0700 (PDT)
+From: Sahan Nissanka <adee.sahan@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Sahan Nissanka <adee.sahan@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dan.scally@ideasonboard.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mchehab@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: i2c: ov5675: Add OVTI5678 ACPI id
+Date: Sun, 16 Aug 2026 17:00:06 +1000
+Message-ID: <20260816070025.9267-1-adee.sahan@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260810092457.12357-1-adee.sahan@gmail.com>
+References: <20260809042540.15849-1-adee.sahan@gmail.com> <20260809042540.15849-3-adee.sahan@gmail.com> <anmHRjxruBaYQRaC@kekkonen.localdomain> <20260810092457.12357-1-adee.sahan@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gkd4u7j63fnaijay"
-Content-Disposition: inline
-In-Reply-To: <MN0PR18MB5870444BD9375EF4F7131851C6D82@MN0PR18MB5870.namprd18.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
+Hi Sakari,
 
---gkd4u7j63fnaijay
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 10/13] platform/x86: uniwill-wmi: use
- devm_blocking_notifier_chain_register()
-MIME-Version: 1.0
+I said I would report back on whether this sensor can be programmed to emit
+Bayer, either way. A replacement machine arrived, so here is the answer, and
+a correction to something I told you earlier.
 
-Hello,
+Short version: I can find no way to make it emit Bayer, I have now looked
+directly at the sensor rather than inferring from Intel's configuration, and
+the module's own factory label says it is RGB-IR.
 
-On Sun, Aug 16, 2026 at 05:39:47AM +0000, Farber, Eliav wrote:
-> > On Sun, Jul 26, 2026 at 10:17:36AM +0000, Eliav Farber wrote:
-> > >  int devm_uniwill_wmi_register_notifier(struct device *dev, struct=20
-> > > notifier_block *nb)  {
-> > > -	int ret;
-> > > -
-> > > -	ret =3D blocking_notifier_chain_register(&uniwill_wmi_chain_head, n=
-b);
-> > > -	if (ret < 0)
-> > > -		return ret;
-> > > -
-> > > -	return devm_add_action_or_reset(dev, devm_uniwill_wmi_unregister_no=
-tifier, nb);
-> > > +	return devm_blocking_notifier_chain_register(dev,
-> > > +						     &uniwill_wmi_chain_head,
-> > > +						     nb);
-> > >  }
-> >
-> > I'd remove this function and replace calls to it directly by devm_block=
-ing_notifier_chain_register().
->=20
-> uniwill_wmi_chain_head is static in uniwill-wmi.c and the caller is in
-> uniwill-acpi.c. The wrapper encapsulates access to this module-private
-> notifier head - removing it would require exposing the variable through
-> the header, which breaks the current abstraction.
->=20
-> I'd prefer to keep the wrapper as-is.
+## Correction first
 
-Sounds like a good justification, thanks for considering my suggestion.
+In my previous reply I said the Windows driver "reads external configuration
+through an ExtFilesPath value under its service key, from a BSPDRIVERS
+store". That was wrong and I would rather withdraw it than leave it for
+someone else to chase. Those strings are in the binary but the code path is
+unused: there is no such directory on either Windows install I have looked
+at, and the value is unset under HKLM\SYSTEM\CurrentControlSet\Services. I
+inferred a mechanism from strings without checking it worked.
 
-Uwe
+## Intel's own configuration files say RGB-IR, in as many words
 
---gkd4u7j63fnaijay
-Content-Type: application/pgp-signature; name="signature.asc"
+I have since had the whole System32 from the factory image, and the useful
+thing in it turned out not to be the driver binary but a configuration file
+beside it. Two byte-identical copies of graph_settings_OV5678_*.xml ship in
+System32\drivers, Apache-2.0, Copyright Intel, and the first content line is:
 
------BEGIN PGP SIGNATURE-----
+  <sensor_modes sensor_name="OV5678" csi_port="0" metadata="0"
+                interlaced="0" bayer_order="GIGI_RGBG_GIGI_BGRG">
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmqBXPEACgkQj4D7WH0S
-/k5G9QgAiPl0SaJnsb71wiarjshHUxBTQ25ctRmpttPlhvHHEBw0CiKuC69HBhlW
-x4a5BrRCQa6F8Tu9QxhAfS+3LfmK8Jxxfmk2cYWxruNUqH7u8elLQxzRTq/GlWX4
-E8a1chJddKP7vbmFVM3YClG+ilryPCNVS2Xg/b+yIT+VgCRzdQjEgme3k6qagUOR
-cIw6LAy1xDecauMYWU94PiXkO48m6a46dST1tmxjveaXMv4ZPJW8vCIg50XRQnMI
-iuFeH4M8+m0g4eZy+4yAaSM7qcevqFFk0fJQFdlOrACDhqFthJIoxF7QFRWrIi4c
-4goHTZRM+F+JcMu6mVFcA7UMd9GPOg==
-=7fHf
------END PGP SIGNATURE-----
+with exactly one mode beneath it:
 
---gkd4u7j63fnaijay--
+  <sensor_mode name="2592X1944" id="0" width="2592" height="1944"
+               fps="30" bpp="10" sensor_type="RGB_IR" ...>
+
+That is Intel, for this exact part, declaring a 4x4 mosaic, a sensor type
+of RGB_IR, and a single mode with no binned variant. The order string is
+not ad-hoc; it is one of the 4x4 entries in Intel's public enum [3]:
+
+  cmc_bayer_order_gigi_rgbg_gigi_bgrg,   /*!< Order: 1st row: G I G I,
+    2nd row: R G B G, 3rd row: G I G I, 4th row: B G R G (4x4). */
+
+kept in a cmc_bayer_order_4x4 family separate from the 2x2 orders. It
+matches the pattern I measured over i2c position for position, and I had
+not seen the file when I measured it.
+
+The same directory carries graph settings for the rear OV8856 on this
+machine. Those say bayer_order="GRBG", with two modes. Same vendor, same
+generation, same file format, and the two parts are described differently.
+
+I have to correct something I told you, since I am now citing these files.
+I said ov5678.sys was the only file on the system referencing the part.
+That is wrong: eight files under System32 contain the string, including the
+two XMLs above and Intel's iacamera64 extension INFs, and the .sys itself
+carries it mostly as UTF-16. I checked the file count and not the claim.
+
+The narrower point I was making does hold. No mode register table is stored
+as data anywhere in the driver: 182424 bytes total, 19 KB .rdata and 7 KB
+.data on disk, and the longest run of ordered (u16 register, u8 value)
+records anywhere in the image is 21, against the 150 writes one mode of
+ov5675.c issues. The register-dump facility I hoped to use
+(C:\OV5678reg.txt) has no code referencing it, unlike the NVM dump paths
+which do. So the register programming is built in code - but the pipeline
+configuration is plain data, and that data says RGB-IR.
+
+## So I tested the sensor instead, which is a better answer anyway
+
+Even a perfect capture of Windows' register writes would only show what
+Intel chose to do. Testing the part directly shows what it can do.
+
+I mapped its register space over i2c across 0x3000-0x5fff, validating every
+read against the chip id at 0x300a (00 56 75) so a bad read could not pass
+as data. ov5675.c issues 150 writes to 132 distinct registers across 14
+pages; I looked for pages
+that are populated but never written, since those are the uncharacterised
+ones. After removing aliases the candidates collapse:
+
+  0x51xx, 0x56xx   512 registers, all zero (unimplemented reads as 0x00)
+  0x41xx           byte-for-byte alias of 0x40xx
+  0x3300           appears to hold 128 registers; is 16, aliased 8x
+                   (only the low 5 bits decode). Contents are a threshold
+                   ladder: 0x00c8 0x0190 0x0258 0x0320.
+  0x5800           a second instance of the DPC block configured at 0x5780,
+                   differing in two bytes
+  0x3200, 0x3d00, 0x3e00, 0x3f00, 0x4300, 0x5a00   2 to 10 registers each
+
+Nothing resembling a CFA or output-format control exists in that space.
+
+I then bit-swept 0x5000-0x5003, the ISP control block, of which ov5675.c
+writes only 0x5000. All 32 bits, one at a time, capturing a full-resolution
+frame after each and measuring the mean of all 16 positions of the 4x4 cell.
+Four bits changed the image and all four are accounted for:
+
+  0x5000 bit0   black level correction enable (every position lifts by the
+                ~64 count pedestal)
+  0x5002 bit5   output saturates, all 16 positions at 1023
+  0x5003 bit3   the same
+  0x5002 bit1   a one-column CFA phase shift: every position takes its
+                right-hand neighbour's value
+
+That last one is the only interesting one, and it is decisive against a
+Bayer mode rather than for it: after the shift the cell still contains
+exactly four dark positions out of sixteen. The infrared pixels are still
+there, merely relabelled. A real Bayer mode would remove that cluster
+entirely. For reference the baseline cell reads green 281-285, IR 82.6-82.8,
+red 201.9, blue 177.5, and the four IR positions agree with each other to
+under 1%.
+
+This is not exhaustive: I have not mapped outside 0x3000-0x5fff, and I have
+no register documentation for this variant. But within the space the driver
+touches and the space adjacent to it, there is no such control.
+
+## Two further pieces of evidence
+
+I read the module EEPROM at i2c 0x51 - it needs the sensor's rails up, which
+is why it had not been read before. Near the end of the payload, in plain
+ASCII:
+
+    W7G97\0  ASSY,CMRA,5M,RGBR,MIPI,0MIC,FF\0  0BF501,
+
+That is Dell's own part description for the module: 5 megapixel, RGBR,
+MIPI, no microphone, fixed focus. 0BF501 matches the ACPI _DDN. I have not
+seen this data on Linux before; Windows writes it to NVM dump files that no
+install I have seen actually produced.
+
+And I can replace my earlier citation of the closed iacamera64.sys with a
+public one. Intel's own open-source tree declares the conversion block:
+
+  IPU6_FW_PSYS_ISA_X2B_SVE_RGBIR_ID
+  drivers/media/pci/intel/ipu6/psys/ipu6-platform-resources.h
+  in github.com/intel/ipu6-drivers
+
+"X2B" being X-to-Bayer. That repo also contains no ov5678 driver at all, so
+Intel never shipped one for Linux.
+
+## Where that leaves the patch
+
+I think it leaves your condition unmet, and I am not going to argue around
+that. The sensor emits RGB-IR and I cannot make it do otherwise, so
+declaring SGRBG10 describes it incorrectly however convenient that is for
+getting a picture.
+
+So: I will hold 2/3 for the metadata series rather than press it, and follow
+your branch. If it would help to have a non-Bayer 4x4 pattern exercising the
+CFA-pattern control early, I have hardware and I am happy to test.
+
+Two things I would value your view on for v2, both prompted by this being a
+distinct part rather than an OV5675 variant.
+
+First, should it register under a distinct name? Userspace picks tuning by
+sensor model, so as written my patch makes an RGB-IR part indistinguishable
+from a real OV5675, and any tuning shipped for it would be wrong for the
+genuine article. Reusing ov5675.c for the programming interface while
+reporting a different model seems more honest than either pretending it is
+an OV5675 or duplicating the driver, but I do not know if that is idiomatic.
+
+Second, this part should probably not expose its binned mode at all.
+Binning averages the infrared pixels together with the colour ones and
+destroys the mosaic, and Intel's own graph settings for this sensor declare
+exactly one mode, 2592x1944, against two for the plain-Bayer OV8856 on the
+same machine. I have a change gating the
+mode list on the ACPI id so real OV5675 parts are unaffected. Worth
+including, or noise until the format question is settled?
+
+The first of those is really the same question I asked about ox05b1s and did
+not want to argue from: it declares SGRBG10 for an RGB-IR sensor of this
+class. If that is regarded as a precedent to follow, my original patch is
+fine as it stands; if it is regarded as a mistake, then a distinct model name
+is the way to avoid repeating it, and I would rather take the second reading.
+No need to answer both - the ox05b1s one covers it.
+
+Separately, on 1/3, where I said I would verify the mapping on the
+replacement machine and check whether the board data generalises across
+units rather than describing the one I had. Both are done.
+
+The GPIO mapping in v1 was wrong, as I reported. Charles Drolet found it and
+I have now reproduced it on a second Latitude 7320 Detachable - reset is
+tps68470-gpio 5 rather than 3, active low, and there is no powerdown pin at
+all since ov5675.c only ever requests "reset". The test is to make the probe
+fail on demand: held low the sensor does not identify, held high it does, and
+driving gpio 3 changes nothing either way, three trials each.
+
+The board data does generalise. On the second machine the DMI match, the
+_DEP clearing and both sensor i2c clients all behave as on the first, and
+the front camera streams. The one thing that is genuinely load-bearing is
+the choice of rails: with consumers on ANA/CORE/VSIO the sensor does not
+respond on i2c at all, and moving them to VSIO/AUX1/AUX2 fixes it with
+nothing else changed. Which of those three is avdd I still cannot determine
+- Charles found the sensor's i2c only answers when all three are enabled
+together - so v2 says that explicitly rather than implying it was measured.
+
+v2 of that patch is ready and does not depend on this discussion. It is
+generated against v7.2-rc7 with a base-commit trailer - v1 predated the
+MSI Prestige and Intel NVL entries landing in that file, so it no longer
+applied cleanly - and it has been tested standalone. With the ov5675 and
+ipu-bridge changes both reverted to their in-tree versions and no module
+parameters anywhere, the board data registers all seven rails at the
+expected voltages and nothing else on the machine changes; no sensor
+binds, which is the honest result for that patch by itself. With the
+other two applied on top, the reset lookup resolves on tps68470-gpio 5
+and the camera streams.
+
+Thanks for the pointer to the metadata branch - it saved me proposing bus
+codes that would not have worked for a 4x4 pattern.
+
+[3] https://github.com/intel/ipu6-camera-bins/blob/main/include/ipu6/
+    ia_imaging/ia_cmc_types.h
+
+--
+Sahan Nissanka
