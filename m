@@ -1,433 +1,124 @@
 Received: from mail.kekto.ru (mail.kekto.ru [188.242.149.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECE43BE64C;
-	Sun, 16 Aug 2026 22:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAA254774;
+	Sun, 16 Aug 2026 22:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.242.149.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786918132; cv=none; b=VO8ocQuXrJYqDd3MfbmOResnWy7ubQOPYQ5IhnP0xW+rwdKRpl9Jj85AvHZN/ahhKvb+Zi9Nx1+f3S5NGbmH9H/W5qdeCZxZjOyyg8+R/t4C7ZcEpp/x4GmwxKtI+sjVDaVFOqVtrNgyfXF/p6Fzt+lH4a+T9mw5MJmTnK9+wWM=
+	t=1786918708; cv=none; b=shYfD9ySodlD/JzS+wktJCePQwFkLf5mZtOOMNqNZZBMGnxD69Y5uM2oaj6ByfGvvP8QGxcZFXNRzcQwXdTqGLlLcDJ/KYEcKa0TawzsQr3MC4/WJcdjJ2w0gx3d3BdTkLuyS7GMXJs/QR/x7/Su8DqooUxFH4qe0RqrZ4P780I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786918132; c=relaxed/simple;
-	bh=SWYR7T+h1gjyDYMKMOR/HHQzL/z4FzH2aC43sv4popY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gXzR80NDO7St0mdwlU/IHW5E1+EVHr6eJmmqUtmbDfVN+163b2wuqqNsmWJHKLQxMa5+Vlr012v9TuREXKMLvL3lHbZx9j5sR8wYiY0+FZ2n6cXeIVwn9M7RtwKzXAU57YDAnFd4BSr7XFHPlVBgWJxQFM+l25Hsv9Q7HwkjkFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kekto.ru; spf=pass smtp.mailfrom=kekto.ru; dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b=wPczZ6iC; arc=none smtp.client-ip=188.242.149.39
+	s=arc-20240116; t=1786918708; c=relaxed/simple;
+	bh=pEefwPKXbDwplecmseLGTwLCR3nTCLTM3ZXpzL7+pgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dRzOsy+d3xPfVDLTKj5Pf6N8eldS18MOkZElc6YwcFSEF7yZ9iONwa9vd9gh46cBDQVEJz4PhI9d7ylImqz1vUJxH+/W5QHMvkGLBkfYMqu7gOWMlFhxxs5wskDM/5rkBZ1Owwnoc493WfO4kEImz9mrYeoIJfbjuVLbvDnjT7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kekto.ru; spf=pass smtp.mailfrom=kekto.ru; dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b=EreateGF; arc=none smtp.client-ip=188.242.149.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kekto.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kekto.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b="wPczZ6iC"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B2BFB20B4C;
-	Mon, 17 Aug 2026 00:58:42 +0300 (MSK)
+	dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b="EreateGF"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E016E251C1;
+	Mon, 17 Aug 2026 01:18:19 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kekto.ru; s=dkim;
-	t=1786917526; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=2hFH5S1fM6UVEdkA6k1Ce/EfNSsgGL3+zLTrdVYxOxk=;
-	b=wPczZ6iCg1e/+pGMGgh1GONAM4eLOsm185LQ+pvDhhBJJX7GDjuU5xx/YIOWuPCrOHdOu7
-	WsPi6JLOgaV6vLBZeHUN2tTwYKQdtIqjNdYjd+kQF8cEo61o9LXhK1Sg48MlvHZSPhto3v
-	AbepnmyQIx+TLxzwi7feJ94PGXwJ+55DlQeJfP1gDG9miX9Tg7jWiDjKL0gvIx+O7Iwmt4
-	f/peCS910tUyRM2NXKd31sGyXkCr1/C6kkdaBaOOPNLplKa9jfrLQgGr6QPcr9QenPshLg
-	29EgZDjx1etLJHt5HD78A3GtTD2+8kqI9Em1TLeb1Z96C4VLjQMPZ4VyQoKVdQ==
+	t=1786918702; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=ZcD5aQ/lregBiKRr9FW2Vjgz0Sw0fO2lpyg0c3GuD5U=;
+	b=EreateGFo5YCCbvOucZdlOf0dWBYwEtwOIGnnFNb6g/u5c7GcZHq8TlEQELWYkGyP/mWRj
+	U8NA4nFarpQakG9hljCZecrtU4TJy8QxonRHU01cEmVCDH11mhqM37G3sMEutVSNFKiusm
+	M19aRK4LB6Iz2Wuz29RwyHCpI472GN+qNGs7wnHWN0ju8g42gboRL7i8mJNJrnMpXD4rBf
+	uJbrJSdGGObVgiioath7N3V3tYe/toNYMHS/dkn6Q/1Nx4Zwn8/UMqx70oNnX4PfLLBWXC
+	1HFJnUzurC8vu6yQyAVjOGp6wAwxPjp2eeO1BQjs19v2pmdMGqL9GKMfy/QZyw==
 From: kento@kekto.ru
-To: platform-driver-x86@vger.kernel.org
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	W_Armin@gmx.de,
-	qby140326@gmail.com,
-	foxido@foxido.dev,
+To: =?UTF-8?q?=E5=AD=99=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: KentoNion <kento@kekto.ru>,
 	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	corbet@lwn.net,
-	skhan@linuxfoundation.org,
-	KentoNion <mrKentoNion@gmail.com>
-Subject: [PATCH] platform/x86: bitland-mifs-wmi: add TM2424 thin-ultrabook perf-mode quirk
-Date: Mon, 17 Aug 2026 00:58:25 +0300
-Message-ID: <20260816215825.289356-1-kento@kekto.ru>
+	Mingyou Chen <qby140326@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Nabil Danial <nabildanial.93@gmail.com>
+Subject: Re: [RESEND PATCH 2/5] platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
+Date: Mon, 17 Aug 2026 01:18:03 +0300
+Message-ID: <20260816221803.304168-1-kento@kekto.ru>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260728180944.51356-3-wolf109909@outlook.com>
+References: <20260728180944.51356-1-wolf109909@outlook.com> <20260728180944.51356-3-wolf109909@outlook.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 X-Last-TLS-Session-Version: TLSv1.3
 
-From: KentoNion <mrKentoNion@gmail.com>
+From: KentoNion <kento@kekto.ru>
 
-The in-tree mapping of platform_profile to sequential cmd 0x08 values
-0..3 matches Tongfang/Redmi G gaming firmware. Xiaomi Book Pro 14 (DMI
-board_name TM2424) uses a different encoding:
+Hi Yuming, Mingyou, all,
 
-  Quiet=0x02, Turbo=0x03, Full-speed=0x04, Auto=0x09, Eco=0x0A
+I sent a TM2424-only quirk today [1] before I had seen this series.
+Please treat this series as the right vehicle; I am not proposing a
+competing v2. Two things from live testing on the same machine class
+(Xiaomi Book Pro 14 2026, DMI board_name=3DTM2424, SKU TM2424-77080)
+disagree with patch 2/5 and with a note in 0/5.
 
-On this SKU the DC-barrel-jack gate also wrongly blocks Performance:
-the machine only charges over USB-C. Full-speed is still rejected by
-firmware on battery (status byte != 0x80), so honour that status and
-fall back to Turbo.
+On Tue, Jul 28, 2026 at 06:09:58PM +0000, Yuming Sun wrote:
+> Map the v2 codes to platform profiles (2=3Dquiet, 3=3Dbalanced, 4=3Dspeed,
+> 9/10=3Dextreme)
 
-hwmon, keyboard LED and gpu_mode/kb_mode/fan_boost are unimplemented
-on this firmware (0xE0); skip registering them.
+On this SKU those bytes are the Xiaomi thin-ultrabook names from the
+Windows OEM stack (MIControl / XiControl [2]), not "extreme":
 
-Tested on Xiaomi Book Pro 14 2026 (TM2424-77080): performance on AC
-holds ~50W package power.
+  0x02  Quiet
+  0x03  Turbo
+  0x04  Full-speed   (firmware rejects this on battery; status !=3D 0x80)
+  0x09  Auto / Smart
+  0x0A  Eco          (dims keyboard backlight and panel; more aggressive
+                      than Quiet)
 
-Signed-off-by: KentoNion <mrKentoNion@gmail.com>
----
- .../wmi/devices/bitland-mifs-wmi.rst          |  22 +-
- drivers/platform/x86/bitland-mifs-wmi.c       | 190 +++++++++++++++++-
- 2 files changed, 196 insertions(+), 16 deletions(-)
+Confirmed by SET/GET with status byte 0x80, and by UX: Eco really dims
+the machine. 0x01 Balance is rejected and does not stick.
 
-diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-index 9e86ecc2993c..99799fd1b09c 100644
---- a/Documentation/wmi/devices/bitland-mifs-wmi.rst
-+++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-@@ -93,8 +93,11 @@ The following Command IDs are used in the third byte of the buffer:
- +----------+-----------------------+------------------------------------------+
- | ID       | Name                  | Values / Description                     |
- +==========+=======================+==========================================+
--| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet,    |
--|          |                       | 3: Full-speed                            |
-+| 8        | SystemPerMode         | Gaming line: 0 Balance, 1 Performance,   |
-+|          |                       | 2 Quiet, 3 Full-speed.                   |
-+|          |                       | Thin-ultrabook (TM2424): 0x02 Quiet,     |
-+|          |                       | 0x03 Turbo, 0x04 Full-speed, 0x09 Auto,  |
-+|          |                       | 0x0A Eco.                                |
- +----------+-----------------------+------------------------------------------+
- | 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA           |
- +----------+-----------------------+------------------------------------------+
-@@ -188,11 +191,18 @@ Performance Modes
- -----------------
- Changing the performance mode via Command ID 0x08 (SystemPerMode) affects the
- power limits (PL1/PL2) and fan curves managed by the Embedded Controller (EC).
--Note that the "Full-speed" and "Performance" mode (1, 3) is typically only
--available when the system is connected to a DC power source (not USB-C/PD).
- 
--In the driver implementation, switch to performance/full-speed mode without
--DC power connected will throw the EOPNOTSUPP error.
-+Two firmware encodings exist:
-+
-+* Gaming line (Tongfang/Redmi G): sequential values 0..3. Full-speed and
-+  Performance typically require a DC barrel jack; the driver returns
-+  ``-EOPNOTSUPP`` otherwise.
-+* Thin-ultrabook line (Xiaomi Book Pro 14, DMI ``board_name=TM2424``):
-+  Quiet=0x02, Turbo=0x03, Full-speed=0x04, Auto=0x09, Eco=0x0A. These
-+  machines charge over USB-C only. Full-speed is still rejected by firmware
-+  on battery (status byte != 0x80); the driver then falls back to Turbo.
-+
-+The firmware status byte is ``OutData[1]`` (0x80 accepted / supported).
- 
- Graphics Switching
- ------------------
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-index b0d06a80e89e..e255fd3b30fb 100644
---- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -2,7 +2,11 @@
- /*
-  * Linux driver for Bitland notebooks.
-  *
-- * Copyright (C) 2026 2 Mingyou Chen <qby140326@gmail.com>
-+ * Copyright (C) 2026 Mingyou Chen <qby140326@gmail.com>
-+ *
-+ * Thin-ultrabook firmware (Xiaomi Book Pro 14 / TM2424) uses a different
-+ * cmd 0x08 encoding than the gaming line. Detected via DMI; other Bitland
-+ * hardware keeps the original 0..3 mapping.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -14,6 +18,7 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/device/devres.h>
-+#include <linux/dmi.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/init.h>
-@@ -38,6 +43,9 @@
- #define BITLAND_MIFS_GUID	"B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B"
- #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
- 
-+/* Firmware status in output.operation (wire OUT[1]): request accepted. */
-+#define MIFS_STATUS_OK		0x80
-+
- enum bitland_mifs_operation {
- 	WMI_METHOD_GET	= 250,
- 	WMI_METHOD_SET	= 251,
-@@ -73,6 +81,15 @@ enum bitland_mifs_power_profile {
- 	WMI_PP_FULL_SPEED	= 3,
- };
- 
-+/* cmd 0x08 values on the thin-ultrabook firmware line (TM2424). */
-+enum bitland_mifs_thin_perf_mode {
-+	WMI_THIN_QUIET		= 0x02,
-+	WMI_THIN_TURBO		= 0x03,
-+	WMI_THIN_FULL_SPEED	= 0x04,
-+	WMI_THIN_AUTO		= 0x09,
-+	WMI_THIN_ECO		= 0x0A,
-+};
-+
- enum bitland_mifs_event_id {
- 	WMI_EVENT_RESERVED_1		= 1,
- 	WMI_EVENT_RESERVED_2		= 2,
-@@ -123,7 +140,7 @@ struct bitland_mifs_input {
- 
- struct bitland_mifs_output {
- 	u8 reserved1;
--	u8 operation;
-+	u8 operation;	/* firmware status on replies: MIFS_STATUS_OK = accepted/supported */
- 	u8 reserved2;
- 	u8 function;
- 	u8 data[28];
-@@ -159,6 +176,18 @@ struct bitland_mifs_wmi_data {
- 	struct device *hwmon_dev;
- 	struct device *pp_dev;
- 	enum platform_profile_option saved_profile;
-+	bool thin_ultrabook;		/* DMI quirk: TM2424 thin-ultrabook firmware */
-+};
-+
-+static const struct dmi_system_id bitland_mifs_thin_ultrabook_table[] = {
-+	{
-+		.ident = "Xiaomi Book Pro 14 (TM2424)",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "XIAOMI"),
-+			DMI_MATCH(DMI_BOARD_NAME, "TM2424"),
-+		},
-+	},
-+	{ }
- };
- 
- static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
-@@ -167,23 +196,118 @@ static int bitland_mifs_wmi_call(struct bitland_mifs_wmi_data *data,
- {
- 	struct wmi_buffer in_buf = { .length = sizeof(*input), .data = (void *)input };
- 	struct wmi_buffer out_buf = { 0 };
-+	struct bitland_mifs_output local_output;
-+	struct bitland_mifs_output *dest = output ? output : &local_output;
- 	int ret;
- 
- 	guard(mutex)(&data->lock);
- 
--	if (!output)
--		return wmidev_invoke_procedure(data->wdev, 0, 1, &in_buf);
--
--	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf, sizeof(*output));
-+	/*
-+	 * Always parse the reply so SET can check output.operation
-+	 * (firmware status) instead of fire-and-forget.
-+	 */
-+	ret = wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf, sizeof(*dest));
- 	if (ret)
- 		return ret;
- 
--	memcpy(output, out_buf.data, sizeof(*output));
-+	memcpy(dest, out_buf.data, sizeof(*dest));
- 	kfree(out_buf.data);
- 
- 	return 0;
- }
- 
-+/* --- Thin-ultrabook (TM2424) perf mode --- */
-+
-+static int bitland_thin_wmi_perf_set(struct bitland_mifs_wmi_data *data, u8 val)
-+{
-+	struct bitland_mifs_input input = {
-+		.operation = WMI_METHOD_SET,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	struct bitland_mifs_output output;
-+	int ret;
-+
-+	input.payload[0] = val;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &output);
-+	if (ret)
-+		return ret;
-+
-+	if (output.operation != MIFS_STATUS_OK) {
-+		dev_dbg(&data->wdev->dev,
-+			"perf mode %#x rejected by firmware (status=%#x)\n",
-+			val, output.operation);
-+		return -EREMOTEIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bitland_thin_profile_get(struct bitland_mifs_wmi_data *data,
-+				    enum platform_profile_option *profile)
-+{
-+	struct bitland_mifs_input input = {
-+		.operation = WMI_METHOD_GET,
-+		.function = WMI_FN_SYSTEM_PER_MODE,
-+	};
-+	struct bitland_mifs_output output;
-+	int ret;
-+
-+	ret = bitland_mifs_wmi_call(data, &input, &output);
-+	if (ret)
-+		return ret;
-+
-+	switch (output.data[0]) {
-+	case WMI_THIN_ECO:
-+	case WMI_THIN_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case WMI_THIN_AUTO:
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case WMI_THIN_FULL_SPEED:
-+	case WMI_THIN_TURBO:
-+		*profile = PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default:
-+		/*
-+		 * Unknown readback (e.g. Balance 0x01, not offered on
-+		 * TM24*): degrade to balanced rather than failing sysfs.
-+		 */
-+		dev_dbg(&data->wdev->dev,
-+			"unrecognized thin perf mode readback: %#x\n",
-+			output.data[0]);
-+		*profile = PLATFORM_PROFILE_BALANCED;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bitland_thin_profile_set(struct bitland_mifs_wmi_data *data,
-+				    enum platform_profile_option profile)
-+{
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		return bitland_thin_wmi_perf_set(data, WMI_THIN_ECO);
-+	case PLATFORM_PROFILE_BALANCED:
-+		return bitland_thin_wmi_perf_set(data, WMI_THIN_AUTO);
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		/*
-+		 * Full-speed is rejected by firmware on battery. There
-+		 * is no DC-jack on this model; honour the status byte
-+		 * and fall back to Turbo.
-+		 */
-+		if (bitland_thin_wmi_perf_set(data, WMI_THIN_FULL_SPEED) == 0)
-+			return 0;
-+		return bitland_thin_wmi_perf_set(data, WMI_THIN_TURBO);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+/* --- Gaming-line (Tongfang/Redmi G) perf mode - unchanged behavior --- */
-+
- static int laptop_profile_get(struct device *dev,
- 			      enum platform_profile_option *profile)
- {
-@@ -197,6 +321,9 @@ static int laptop_profile_get(struct device *dev,
- 	struct bitland_mifs_output result;
- 	int ret;
- 
-+	if (data->thin_ultrabook)
-+		return bitland_thin_profile_get(data, profile);
-+
- 	ret = bitland_mifs_wmi_call(data, &input, &result);
- 	if (ret)
- 		return ret;
-@@ -256,6 +383,9 @@ static int laptop_profile_set(struct device *dev,
- 	int ret;
- 	u8 val;
- 
-+	if (data->thin_ultrabook)
-+		return bitland_thin_profile_set(data, profile);
-+
- 	switch (profile) {
- 	case PLATFORM_PROFILE_LOW_POWER:
- 		val = WMI_PP_QUIET;
-@@ -286,11 +416,20 @@ static int laptop_profile_set(struct device *dev,
- 
- static int platform_profile_probe(void *drvdata, unsigned long *choices)
- {
-+	struct bitland_mifs_wmi_data *data = drvdata;
-+
- 	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
- 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
--	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
- 	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 
-+	/*
-+	 * Thin-ultrabook line exposes exactly 3 firmware-backed levels
-+	 * (Eco/Auto/Full-speed-or-Turbo) - no separate
-+	 * balanced-performance step, unlike the gaming line's 4 modes.
-+	 */
-+	if (!data->thin_ultrabook)
-+		set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, choices);
-+
- 	return 0;
- }
- 
-@@ -592,13 +731,35 @@ static const DEVICE_ATTR_RW(gpu_mode);
- static const DEVICE_ATTR_RW(kb_mode);
- static const DEVICE_ATTR_WO(fan_boost);
- 
--static const struct attribute *const laptop_attrs[] = {
-+static struct attribute *laptop_attrs[] = {
- 	&dev_attr_gpu_mode.attr,
- 	&dev_attr_kb_mode.attr,
- 	&dev_attr_fan_boost.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(laptop);
-+
-+/* gpu_mode/kb_mode/fan_boost are unsupported on thin-ultrabook firmware. */
-+static umode_t laptop_attrs_is_visible(struct kobject *kobj,
-+				       struct attribute *attr, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
-+
-+	if (data->thin_ultrabook)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group laptop_group = {
-+	.attrs = laptop_attrs,
-+	.is_visible = laptop_attrs_is_visible,
-+};
-+
-+static const struct attribute_group *laptop_groups[] = {
-+	&laptop_group,
-+	NULL,
-+};
- 
- static const struct key_entry bitland_mifs_wmi_keymap[] = {
- 	{ KE_KEY, WMI_EVENT_OPEN_APP, { KEY_PROG1 } },
-@@ -667,6 +828,7 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 		return -ENOMEM;
- 
- 	drv_data->wdev = wdev;
-+	drv_data->thin_ultrabook = dmi_check_system(bitland_mifs_thin_ultrabook_table) > 0;
- 
- 	ret = devm_mutex_init(&wdev->dev, &drv_data->lock);
- 	if (ret)
-@@ -693,12 +855,20 @@ static int bitland_mifs_wmi_probe(struct wmi_device *wdev, const void *context)
- 		return input_register_device(drv_data->input_dev);
- 	}
- 
-+	if (drv_data->thin_ultrabook)
-+		dev_info(&wdev->dev, "using thin-ultrabook perf-mode values\n");
-+
- 	/* Register platform profile */
- 	drv_data->pp_dev = devm_platform_profile_register(&wdev->dev, DRV_NAME, drv_data,
- 							  &laptop_profile_ops);
- 	if (IS_ERR(drv_data->pp_dev))
- 		return PTR_ERR(drv_data->pp_dev);
- 
-+	if (drv_data->thin_ultrabook) {
-+		/* hwmon and keyboard LED WMI functions return 0xE0 here. */
-+		return 0;
-+	}
-+
- 	/* Register hwmon */
- 	drv_data->hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
- 								   "bitland_mifs",
--- 
-2.55.0
+That makes the SET path in 2/5 invert the user's intent:
 
+  platform_profile     2/5 writes     firmware meaning on TM2424
+  ----------------     ---------      --------------------------
+  low-power            0x02 Quiet     not the strongest saver (Eco)
+  balanced             0x03 Turbo     a high-power mode
+  performance          0x09 "extreme" Auto, not Full-speed
+
+So "performance" never programs 0x04. On AC, 0x04 is the mode that
+holds ~50 W package power under stress-ng + turbostat here; 0x03 is
+noticeably lower. That is also why I disagree with the cover-letter
+note that the TDP change "is currently not applied on Linux": a Linux
+DTT driver is not required for the firmware preset to move package
+power. I did not program RAPL from this driver either.
+
+Suggested mapping (matches power-profiles-daemon's three choices):
+
+  SET low-power    -> 0x0A Eco
+  SET balanced     -> 0x09 Auto
+  SET performance  -> 0x04 Full-speed; if firmware NACK, 0x03 Turbo
+
+  GET 0x0A / 0x02  -> low-power
+  GET 0x09         -> balanced
+  GET 0x04 / 0x03  -> performance
+
+Mingyou already pointed out that `probe_out.data[0] > 3` misses v2
+when the machine is sitting in Quiet (2) or Turbo (3). A DMI match
+(XIAOMI + TM2424, and likely other TM24*) plus the >3 heuristic would
+cover both.
+
+Everything else in this series looks strictly better than my quirk:
+status-word / suspend -22 (Nabil's TM2411), EC fan tachs, lid poll.
+Please keep those. I only ask to retarget patch 2/5's names and SET
+values before this lands, otherwise Linux "performance" on these
+thin machines will select Auto.
+
+I can test a v3 of 2/5 on TM2424.
+
+[1] https://lore.kernel.org/lkml/20260816215825.289356-1-kento@kekto.ru/
+[2] https://github.com/Oksion/XiControl/blob/main/docs/01-wmi-protocol.md
+
+Thanks,
+KentoNion
