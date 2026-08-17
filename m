@@ -1,120 +1,86 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCAC40EBA6
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 12:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328293B42F2
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 12:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786968816; cv=none; b=fwsfF5WMtmH+zM80EstEWKXvVnfISyZsGsEAmkBj1LIq96qAgoxbTrpNHaTL0jP5+suUjcz2Vw9x4nep7pOehJuYXev9my//vC3godPdYG69dyBwFXELNW2lE3AnpyfmZnqmQAXljPUXlAL/8aY4RZrW+sxf3xElTuQ/5Qjh2/A=
+	t=1786969105; cv=none; b=FN9CaFvAivYovo5WPFcBKboMVPzoZ15tGCxOYnB+x+/uZ2baDhQJDQV0A5bIVpByuHMFyjhpk98t5tjn27jKkOlRXxTSGWCkmxUn+IpYcBVfyFAvhv+wDJR88dbSEEpwd+GE8CKjPHS3wymu7v33tv054lHIO+9X8tlxlU4c3E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786968816; c=relaxed/simple;
-	bh=I3p7Ixbr3gMslM7s6tlFYx3Hm6njMqcDjl7yySj7DaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NxwuHM4C+6Mn9pAV9Yj3fZzBffIUFDrrroIqVC3MfzGVwOpv7OZdEwa5q5JN8uApZsDahdjaayvrqLc3kolCrpVUXtVPTdH16mDx/gDG/bunOw511UZ7vIxqENlDrH+iVIneFEGIKQhuctBWLfGemQrCKYJsbQZ7PrwELM25aII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cr/Dqo24; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786969105; c=relaxed/simple;
+	bh=kAeJX9Uec/6XKxjU9aI3iiCC/zao+WP5C5A6QEo6DTA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cgmKFc0ii/wfJ9TmrhdTk77hyWLwVLpxRgN1GnZLqCgJ0hBmlg3eZqbQqjnbzjfecqEhDY13JJvLVPWTZO8EeR9oSiFrzSduwV2zCxSWNpWdds6YYYAuZq2vSAAKgbaZL4PaEPbl2jOSQbsNhdcvN9YF7kDf2ov669SQNR+bjTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eze0YQB5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr/Dqo24"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7ee4399c3abso2178378a34.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 05:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786968813; x=1787573613; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=vSMRF6/GypLU9/RRslG/etgDsRm6mo7Tc/SOfBco6T8=;
-        b=Cr/Dqo24cxzNRY9Jjd/0ydnHMb+2g9/W2zyCHobTqoqwGrohxn7WOnMjn+dQJAg//r
-         1ipn2vQkJcv3IawR0iUMuituc+ZWd4z3ml5VIgfhsZ8B+HjrDdPKfqJeiUZPTwKZoFbd
-         aXbW2oiDpValwqvqvC1GVktGu/GuWfZ71hlwiSD+ZjqT801mYAimvSzBaTWCdZ5qwDom
-         IT4WbJ+PaBHV4db2BpHTJy5KoIFlDqH+7CkUYaOID/yWgH2qzwrxFXOJix02j127uem6
-         Wk+pmE1Q/dzBKP/90L9MEQ/2cHmdxji3fmFAjXPBYR2nyqQw/ZxxlkB320dvN8pqW6gB
-         gzbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786968813; x=1787573613;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=vSMRF6/GypLU9/RRslG/etgDsRm6mo7Tc/SOfBco6T8=;
-        b=eugu4xhepY3EIgxZWBEeNjcqRnt3DWVCohjt54A8lgejn9wLyYRloAZnqPZGfhJQkZ
-         MGvVOgUzMHYbAJXnO7/1ktsKrQ40dtz4O1U6pG6+JSd0fBnlz7Id7wE/wQVw4mPHxx7t
-         +nR4Qe64DGd3OM50sYjv9HMef7dUeCf1ISzTwSlcEZ2QThTMklQ5CTu5dnx8fpxvy/Wr
-         NGx3Vt4RERjVfJnVk8Y+X5uz2imMoubuxWL0Bs2XbsmyGhmruDvK+liqrnWVI8Fa7EHZ
-         sUrD4Rrs0kgNw80ZcsibK47l5s0wxS7U9Nu9xuAOHW/Vd60AH9x8nV+IbwdSikdoD5Kx
-         KWWw==
-X-Gm-Message-State: AOJu0Ywk70Ezy9VvztyoHfsfaZ6uIP2IVnWaJ6NfQTi12Dm0Q9wk/FbB
-	tB0qG015yvEqTpohxWR6eDPOMY5CVQ/Bj+8NKoQHdTh63XsxjLQRDGIJ
-X-Gm-Gg: AR+sD10HIfe+GMJznpRMQKRlpdkARLXc4N28tDyXFv7GxtEkqd1aHB+OJzDViC3xFCd
-	7rcuI0Z8pG0KdsbvManPHb+zUP/Y7H+xI2772/N5jShyGsZW+zSS3pQaY/I5gqiCThE1sdYmBjM
-	CFQHpvhNh0amGbWCAEAFqz9Pi2rsZZTDo76r46IIt4gHbHkYyXjyMjUZxe8q7nd7qfbjj/oZJAT
-	quxj+a87w+xGteFXCp9AWKYaSxYviliVl5SdoDABqF4YQIUiSnPlREwCYa91ZT79Ur+TfYid09O
-	1bNIeI/O9f7kjoCbhlxWeBjQNOh0yzqZhJIzSmOs6DBC2JD+NbuXKXYMuxk20rUUuaMrkx//p2f
-	OO/CZIyXrUbegB5uPTOoTOwwgBueQijGuSseghS1YEHdRKx9a+9K21rzDYl1VfsYzT7JUf/fo1I
-	bTjkrL/55/PSihpYeQMwhWGpLKNx4qppdf3ngblcSCpu7vtiYYvWAISQQ0M02me2izjavidCHAR
-	iONYJ47XmrjH32wVhayVds=
-X-Received: by 2002:a05:6809:195:10b0:4b2:5529:ed46 with SMTP id 5614622812f47-4b25529f97emr12291871b6e.8.1786968813455;
-        Mon, 17 Aug 2026 05:13:33 -0700 (PDT)
-Received: from archlinux ([2409:40d5:5e:a2f1:79a4:a963:a64a:5d0e])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4b2906a3edesm739007b6e.0.2026.08.17.05.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 05:13:32 -0700 (PDT)
-From: Suryansh Singh <technosfan14@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Suryansh Singh <technosfan14@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8BAA thermal profile support
-Date: Mon, 17 Aug 2026 17:42:33 +0530
-Message-ID: <20260817121233.44636-1-technosfan14@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eze0YQB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC23E1F000E9
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 12:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786969104;
+	bh=kAeJX9Uec/6XKxjU9aI3iiCC/zao+WP5C5A6QEo6DTA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=eze0YQB5lPfNlDWjUjrTgwsxG0+3M1FksHBXLa0UTw3rTEgl/fP3wsXcAGO4ykciq
+	 P1b8d49T0pvav5ShnI6SSy1CrkXC5hH2Wge83IoZCfcVpgkv3bGeIIySwNMvYAe8xb
+	 YQt6NHAhxSmVRjJ37NqPl0JP5DBwgRm0lxWJzCJQtNatB1T3vcC5YFlS4x4gvGg3y5
+	 8+WZe+K8O72Tu/ZTYuU7SjwKSY6svTe30hl5f5Bd3D9M/u+FniSC8Q6xAXNabFMUMV
+	 tbSK8pigs+1XIhOcJ2R6WRwehU329/ED39tyd1Dn8XkpVHGgi/Ls4hg4QT+HO/jzZX
+	 KTa1fKVXsPi2g==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5b2b92065ffso3016060e87.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 05:18:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoDdTGwswteSTVZHBsn2iUP/R8L5S6mSTObCWmfe7zSBbCB7Lq3VpemUk4fyC/WmEzqv+sZ7HSevvXydd1I5e0uVIcJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvD9Xg4h5MRNLmKpPvgCin1bQKItpEUn86EKx4VwJ5m2qFHP0K
+	d1hVFs1X8n/3lXkf8GG/gDrQiQzqQALyWVsV60w5Pl2rg2jDNKEkSnaASLtcR2N/ZaKFlzS+v9u
+	4NktfPkS71Unl8o3S+6Oxp0FVLYhSlzU=
+X-Received: by 2002:a05:6512:3985:b0:5b2:a55f:2ce1 with SMTP id
+ 2adb3069b0e04-5b45918bfbcmr2928871e87.37.1786968767385; Mon, 17 Aug 2026
+ 05:12:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260816060648.4030-1-farbere@amazon.com> <20260816060648.4030-12-farbere@amazon.com>
+In-Reply-To: <20260816060648.4030-12-farbere@amazon.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Mon, 17 Aug 2026 14:12:34 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=AXgHSR7TGFeAQv=7yu9VhSznQy99MKDTgM2rJjv5HNw@mail.gmail.com>
+X-Gm-Features: AcwNN1UtCvrDpVC9uuvoUfBmhVJEvfMufMk34D8Z0GoJ1ENEbtfx026qmqKhJwc
+Message-ID: <CAD++jL=AXgHSR7TGFeAQv=7yu9VhSznQy99MKDTgM2rJjv5HNw@mail.gmail.com>
+Subject: Re: [PATCH v5 11/13] gpio: eic-sprd: use devm_atomic_notifier_chain_register()
+To: Eliav Farber <farbere@amazon.com>
+Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, 
+	mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
+	laurent.pinchart@ideasonboard.com, brgl@kernel.org, orsonzhai@gmail.com, 
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, jic23@kernel.org, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	dmitry.torokhov@gmail.com, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	W_Armin@gmx.de, ukleinek@kernel.org, fabio.m.de.francesco@linux.intel.com, 
+	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
+	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, 
+	saket.dumbre@intel.com, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The HP OMEN 16-wf0xxx (board ID: 8BAA) has the same WMI interface
-as other OMEN boards and is compatible with the existing
-omen_v1_board_params.
+On Sun, Aug 16, 2026 at 8:09=E2=80=AFAM Eliav Farber <farbere@amazon.com> w=
+rote:
 
-Add the DMI board name to hp_wmi_feature_boards[] table
-and map it to omen_v1_board_params.
+> Replace the atomic_notifier_chain_register() +
+> devm_add_action_or_reset() pattern with a single call to
+> devm_atomic_notifier_chain_register(), removing the
+> sprd_eic_unregister_notifier() callback.
+>
+> Signed-off-by: Eliav Farber <farbere@amazon.com>
+> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Without this entry, platform profile switching is unavailable,
-preventing fan RPM reporting and controlling.
+Reviewed-by: Linus Walleij <linusw@kernel.org>
 
-Tested on:
-
-HP OMEN 16-wf0xxx
-
-DMI Board Name: 8BAA
-
-It has been confirmed that the platform profile is registered
-successfully, and the fan RPMs are readable and controllable.
-
-Link: https://www.reddit.com/r/HPOmen/comments/1siukdu/guide_native_fan_control_on_hp_omen_16wfx0xxx/
-
-Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 3c737ef3809c..5f4853d82de6 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -255,6 +255,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8A4D") },
- 		.driver_data = (void *)&omen_v1_legacy_board_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BAA") },
-+		.driver_data = (void *)&omen_v1_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8BA9") },
- 		.driver_data = (void *)&omen_v1_board_params,
--- 
-2.55.0
-
+Yours,
+Linus Walleij
