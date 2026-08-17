@@ -1,124 +1,102 @@
-Received: from mail.kekto.ru (mail.kekto.ru [188.242.149.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAA254774;
-	Sun, 16 Aug 2026 22:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.242.149.39
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786918708; cv=none; b=shYfD9ySodlD/JzS+wktJCePQwFkLf5mZtOOMNqNZZBMGnxD69Y5uM2oaj6ByfGvvP8QGxcZFXNRzcQwXdTqGLlLcDJ/KYEcKa0TawzsQr3MC4/WJcdjJ2w0gx3d3BdTkLuyS7GMXJs/QR/x7/Su8DqooUxFH4qe0RqrZ4P780I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786918708; c=relaxed/simple;
-	bh=pEefwPKXbDwplecmseLGTwLCR3nTCLTM3ZXpzL7+pgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dRzOsy+d3xPfVDLTKj5Pf6N8eldS18MOkZElc6YwcFSEF7yZ9iONwa9vd9gh46cBDQVEJz4PhI9d7ylImqz1vUJxH+/W5QHMvkGLBkfYMqu7gOWMlFhxxs5wskDM/5rkBZ1Owwnoc493WfO4kEImz9mrYeoIJfbjuVLbvDnjT7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kekto.ru; spf=pass smtp.mailfrom=kekto.ru; dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b=EreateGF; arc=none smtp.client-ip=188.242.149.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kekto.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kekto.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204B12D7DFE
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 02:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786934140; cv=pass; b=Np/yTTxm6nZoGzlCIw7A4osma8o92xHqksjSDFMqWOaGGzuSTcp0G+YsSf6qLow70ADmS3Oqy2Lgkk7fCYshCYE5NBFgfXz34wbjyN3nf00LLZ6iiZsIhb9sp55PFYhg34wX/lnYTLy8ptJ0iwyy/fabvqEFrcKgm13KY9s8xb0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786934140; c=relaxed/simple;
+	bh=jy4ITIKArET/N50bQPN9FTLH59G9qDybtNKi0fRwPa8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VlljogAFjNSkJ+HnmjUSlUr7hgrQP/215JGUrmwHfs0AznU1evbreHp4QY42uSAG0sDO5nTjhQN/MofdgrcqRa2UuQFz/fgrRaHOZL1Sqf+im2ZJSLal984ZjZjDwv65ALqCLTxCSpLg+XwxJ09kLsHLDl1cecZOGG8YsGEd50w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QdBHhIwQ; arc=pass smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kekto.ru header.i=@kekto.ru header.b="EreateGF"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E016E251C1;
-	Mon, 17 Aug 2026 01:18:19 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kekto.ru; s=dkim;
-	t=1786918702; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ZcD5aQ/lregBiKRr9FW2Vjgz0Sw0fO2lpyg0c3GuD5U=;
-	b=EreateGFo5YCCbvOucZdlOf0dWBYwEtwOIGnnFNb6g/u5c7GcZHq8TlEQELWYkGyP/mWRj
-	U8NA4nFarpQakG9hljCZecrtU4TJy8QxonRHU01cEmVCDH11mhqM37G3sMEutVSNFKiusm
-	M19aRK4LB6Iz2Wuz29RwyHCpI472GN+qNGs7wnHWN0ju8g42gboRL7i8mJNJrnMpXD4rBf
-	uJbrJSdGGObVgiioath7N3V3tYe/toNYMHS/dkn6Q/1Nx4Zwn8/UMqx70oNnX4PfLLBWXC
-	1HFJnUzurC8vu6yQyAVjOGp6wAwxPjp2eeO1BQjs19v2pmdMGqL9GKMfy/QZyw==
-From: kento@kekto.ru
-To: =?UTF-8?q?=E5=AD=99=E8=AA=89=E9=93=AD?= <wolf109909@outlook.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: KentoNion <kento@kekto.ru>,
-	linux-kernel@vger.kernel.org,
-	Mingyou Chen <qby140326@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Nabil Danial <nabildanial.93@gmail.com>
-Subject: Re: [RESEND PATCH 2/5] platform/x86: bitland-mifs-wmi: support MIFS v2 perf-mode mapping
-Date: Mon, 17 Aug 2026 01:18:03 +0300
-Message-ID: <20260816221803.304168-1-kento@kekto.ru>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260728180944.51356-3-wolf109909@outlook.com>
-References: <20260728180944.51356-1-wolf109909@outlook.com> <20260728180944.51356-3-wolf109909@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdBHhIwQ"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6a15d54ac95so4096517a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 16 Aug 2026 19:35:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786934137; cv=none;
+        d=google.com; s=arc-20260327;
+        b=l0ts056A+FVeMpsp7+YnFFjvakv4Q8FWfENEp/huNXhGmrHN9mFdUxCxloMfql1q1R
+         KrJWpeKh94905Gk8TlLfVGeQ2sgX4Eqm1toRSJIEersUJ9dNjgQZ12h68oNZoJm0FpOQ
+         9klgF3ZZurhZn/ZzRIdxk4APOphHSkU3ApAcULS7OimpxzU45GZZ/QBe0rwuSounOevG
+         s8H9ZrQd8VjnPlekXmxXjFAzbtExgGNogwkniQEkrSLUsPfQyyZaXIPgvcBKA37gq1Ss
+         T4LgeQBP8PKr5pv7J47AmQf74BzMx7KpRM79W/sLLBiSfxsO4/53OcqXhhcFeO3Ik5gv
+         5FPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=jy4ITIKArET/N50bQPN9FTLH59G9qDybtNKi0fRwPa8=;
+        fh=xhdCNAjITSX/96nvGZ1APHJMQ6OC801Kh/50Z96RBiw=;
+        b=IPHV6u7FYzWwXlT4bkhYALZbaEmqP9nve4RQF2JXgsU1O5P7Xq6q4i8O5oKbv8XnFW
+         CNkXMciV8NOZfg+AAv+vzIxHyuxH9Yf7dRWl17V62qKP8gtoruZgKsi/JC5SDrS6a+AY
+         zMWJKXiUiL8A5+fxmmbVLR0kXEGEKj9DL+Mj9Um3JmWPRm5BmWqmm5upWibHa1AHdeXe
+         NRTo/2gttC6ckR9+zX3mhrxTxiLuKdU6NyyevKwBNf3kn2f+ATlsjxgw6+/DfeIYLrB/
+         vZKLEsbet4Q05JLivZk4+HLDZoXaI1tEXV76MAcJfwvVD3iJoz6LxYYrKojYj4+/3GPM
+         DrsQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786934137; x=1787538937; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jy4ITIKArET/N50bQPN9FTLH59G9qDybtNKi0fRwPa8=;
+        b=QdBHhIwQN1pnJQQ+wYHTFiVXG0mlKhAds5VsRpqARVB54zBFQ2zRStV4v3m1Tdn5g0
+         moEqD+q4rGM32YQVRjT9WG1Q6Wq4mR9lkBK6FvKP9nDuKVJsonJflvAA6TO4fmWjviWR
+         AKH2dDY5NVntiKqqD5O4Z/0NVmos+Ij5S9X4BAKj8jhBEIe4htx0LRac9hts/BzDj4yY
+         AY0Q2K5Wu3G162BEJO2YZnMmL7SuNrGbizK/ppBXvlz40dmmoJaqsNj75hP1kYLXjxrC
+         dodZA/3YVqIDhc9SFFiDcYQT9thHicxmbPC4pwqf9fHB6gXBL2eilnDPnCXd1qIowd9c
+         fMPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786934137; x=1787538937;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=jy4ITIKArET/N50bQPN9FTLH59G9qDybtNKi0fRwPa8=;
+        b=QHIazUrwRkekNBc0p5FbKGZ36rzqSKzZtoPd+JQbdzuLb48HRzL6BdcYMZ+KYjQ8LD
+         8nnu0FqASNyCny+UO2e364BEbKuHLacjXWvUCLZSZL4efvxfzcN8pUMU+Go8bR8OOHEK
+         CMfUCdILOLEl6s5xCQZ9v7yKlx54JyMfnRfcWS14ya6yE0mBrFdXOxV3YlSR9/8jyjf3
+         VhQJLIqUJAnHwuwGH+dc/GxJhK2/gvvpvntaL3l2PWOq8kFRLAd4YtthhSVp0dfAXKYf
+         XRj0LRc2Wj29enQN1hSg08jry1Dy2OYTT2x6hb8Ds6UeuM+76UA6MmR9zwOoVmwDXI26
+         8n0g==
+X-Gm-Message-State: AOJu0YyX4yt2DhFtZkUTMkqSuHn7X4XGNrmFtX5OfJ2ua3VrGMfVkEbb
+	QyaONeuGZvoJc7JsKnrwNaWC1P8JDvO+DhquxyfUVOST8o3o+gQEXF8To5DEU/Tacit4Ii9YLZl
+	jgZZmqJxnzNH5LITTBIoklNZ1u6/9x17nlRhj
+X-Gm-Gg: AR+sD11141K/d8lNex8KWbkEvvrHvzyYQMEKXDq+UBZEOg9Tp9OF3sa7tWGn8fKb/zK
+	8P3bOcVSU7Rd3Leqpw/k2Gz+tztNa77wCIkqOie8GCoq6hPWGEv8h7k6O4R6DuXiqGepuJcNupF
+	7w/dDj+Mgt5BQ0+QX5JcTYyg/ihABWoXFzHvHIFW3R8pHJggd1pBMzxxFEZGVJ5i+sgnuIYZc+U
+	CzKKKuAK6S7lKPHbKtumLBRUotetMhzV05GBOZ9pqgPAzrb0jQApVXS4Xzdgyw/JTJrbQOPsUWt
+	D6oS3S6EIxQ8OnYSdRf0TaIi9/jQ9P40V7YtR2zzDUsEqb1tCXuvK79RvcTk
+X-Received: by 2002:a05:6402:5058:b0:69f:4c65:86c2 with SMTP id
+ 4fb4d7f45d1cf-6a38a8dbf50mr9469813a12.2.1786934136860; Sun, 16 Aug 2026
+ 19:35:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Last-TLS-Session-Version: TLSv1.3
+References: <CAEX=435pEyPHPjJgQnJUJLL8JJD65RsRa7Sjbx4NedZFG80dtA@mail.gmail.com>
+ <71f66925-9a2e-4d95-87fe-eb11de78b215@gmail.com> <CAEX=436pkA5eG7N2MXpgE6kPL-Cbue3XeiLHOMPc2kFaxVj7ng@mail.gmail.com>
+ <46295e2a-0e27-4936-a04a-2f8c71560740@gmail.com> <CAEX=436MOAPVPdqsupWFk5=2naeB1ghgRFCYi8FiLeGk9MLZDw@mail.gmail.com>
+ <77155747-5550-468f-b8af-c25b713e9c14@gmail.com> <CAEX=436Nzf_NiHmuYcN8NpEnD1PdgtEz6qzLk_9wu9XHeSKeRw@mail.gmail.com>
+ <83f9fcc0-f80c-4395-a513-34343162ef7e@gmail.com> <CAEX=43630i1znyzkfQNd21eiYOXsjDhmugejk7n+XrQenE-NHw@mail.gmail.com>
+ <CAEX=435Oud97yous1cRA9rBbE5vtXvO7aCshx=kfJCQzoHZJjg@mail.gmail.com>
+In-Reply-To: <CAEX=435Oud97yous1cRA9rBbE5vtXvO7aCshx=kfJCQzoHZJjg@mail.gmail.com>
+From: Bheda Rahul <rahulbheda131313@gmail.com>
+Date: Mon, 17 Aug 2026 08:05:24 +0530
+X-Gm-Features: AcwNN1XJztfuEGCU6oCDlGjFRZzH-LQp_nWj4iDEJkhduJCn2rV77niIonbHnps
+Message-ID: <CAEX=435jev98qs1tQdEci6Jkm-qAF0wo54jA8m+trNGski4P3Q@mail.gmail.com>
+Subject: Re: [BUG] bitland-mifs-wmi: Power profiles not working on Xiaomi Mi
+ NoteBook Ultra
+To: Mingyou Chen <qby140326@gmail.com>
+Cc: "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: KentoNion <kento@kekto.ru>
-
-Hi Yuming, Mingyou, all,
-
-I sent a TM2424-only quirk today [1] before I had seen this series.
-Please treat this series as the right vehicle; I am not proposing a
-competing v2. Two things from live testing on the same machine class
-(Xiaomi Book Pro 14 2026, DMI board_name=3DTM2424, SKU TM2424-77080)
-disagree with patch 2/5 and with a note in 0/5.
-
-On Tue, Jul 28, 2026 at 06:09:58PM +0000, Yuming Sun wrote:
-> Map the v2 codes to platform profiles (2=3Dquiet, 3=3Dbalanced, 4=3Dspeed,
-> 9/10=3Dextreme)
-
-On this SKU those bytes are the Xiaomi thin-ultrabook names from the
-Windows OEM stack (MIControl / XiControl [2]), not "extreme":
-
-  0x02  Quiet
-  0x03  Turbo
-  0x04  Full-speed   (firmware rejects this on battery; status !=3D 0x80)
-  0x09  Auto / Smart
-  0x0A  Eco          (dims keyboard backlight and panel; more aggressive
-                      than Quiet)
-
-Confirmed by SET/GET with status byte 0x80, and by UX: Eco really dims
-the machine. 0x01 Balance is rejected and does not stick.
-
-That makes the SET path in 2/5 invert the user's intent:
-
-  platform_profile     2/5 writes     firmware meaning on TM2424
-  ----------------     ---------      --------------------------
-  low-power            0x02 Quiet     not the strongest saver (Eco)
-  balanced             0x03 Turbo     a high-power mode
-  performance          0x09 "extreme" Auto, not Full-speed
-
-So "performance" never programs 0x04. On AC, 0x04 is the mode that
-holds ~50 W package power under stress-ng + turbostat here; 0x03 is
-noticeably lower. That is also why I disagree with the cover-letter
-note that the TDP change "is currently not applied on Linux": a Linux
-DTT driver is not required for the firmware preset to move package
-power. I did not program RAPL from this driver either.
-
-Suggested mapping (matches power-profiles-daemon's three choices):
-
-  SET low-power    -> 0x0A Eco
-  SET balanced     -> 0x09 Auto
-  SET performance  -> 0x04 Full-speed; if firmware NACK, 0x03 Turbo
-
-  GET 0x0A / 0x02  -> low-power
-  GET 0x09         -> balanced
-  GET 0x04 / 0x03  -> performance
-
-Mingyou already pointed out that `probe_out.data[0] > 3` misses v2
-when the machine is sitting in Quiet (2) or Turbo (3). A DMI match
-(XIAOMI + TM2424, and likely other TM24*) plus the >3 heuristic would
-cover both.
-
-Everything else in this series looks strictly better than my quirk:
-status-word / suspend -22 (Nabil's TM2411), EC fan tachs, lid poll.
-Please keep those. I only ask to retarget patch 2/5's names and SET
-values before this lands, otherwise Linux "performance" on these
-thin machines will select Auto.
-
-I can test a v3 of 2/5 on TM2424.
-
-[1] https://lore.kernel.org/lkml/20260816215825.289356-1-kento@kekto.ru/
-[2] https://github.com/Oksion/XiControl/blob/main/docs/01-wmi-protocol.md
-
-Thanks,
-KentoNion
+I also read the driver's description, which states that performance
+mode is only supported when a DC barrel charger is connected. However,
+this model only supports USB-C charging.
