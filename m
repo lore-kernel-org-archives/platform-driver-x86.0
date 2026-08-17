@@ -1,84 +1,85 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+Received: from mail-yx1-f42.google.com (mail-yx1-f42.google.com [74.125.224.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9383A782D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 21:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B0E43F086
+	for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 21:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.42
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787001906; cv=pass; b=BTWFx9yDqo92f26td0aEZiv+UQUga5m176CJxP23vrUScvldCidB6fl3SUfHvcUhz184Pk76PaF90BCMEEwAYna9jEQeBt0v6v8q3ZITlcQQJ2CyYkfHpP4IN5gCdFNlnCRNZtsOV+980UzTEn8Ib+W1mlGCwvDxqwMzW07AnpI=
+	t=1787002058; cv=pass; b=OHzck/WVVAOoYF2oNzntwzOAYdBGJcgD1QJZz58vFAO3UTHK/K3nLEkUVJxWw3iQXNYFrJJfIkVTT2lkfsDfaAVvxzN+MVVfXbHPNZ4jYA/xhjuFWMOp2YcQLamMUlnxVGCYUWv7Hej1CT9OLRtp3WA5Hq6w3GOYufBFkyr08DQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787001906; c=relaxed/simple;
-	bh=IppDC7HdKodWjTBoSVL4c7NytYkiU2pxiZ108IcjzNM=;
+	s=arc-20240116; t=1787002058; c=relaxed/simple;
+	bh=9tHY00/zVpv15LRlOltrWpIy51qnOvn2gYJhldF+wJg=;
 	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ioIbCY4WEMKHknEINSVZTHeMyRvckL+aS/IfYfx2AJ/wyKqH3z7gJH0VWT9OgWupaPIRqBkzp2Qq17hAnbZ1QBuaCFV17uDpJHxEUE5ZM/F5+0CMhJFihtcD7RWo5BQ2se0YSWwUcndYF7MpyKpy8Rn8cSMqg5Hvk+FkSPDpNxI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=0Xn7TRy5; arc=pass smtp.client-ip=209.85.128.181
+	 To:Cc:Content-Type; b=QRMtmuTH4uStAsajfQhDg/ZrkcYPDLp7GSgho5khAASEhEGkmuxMspWtHWidbK4RAREnVTfo5D0xhBh921n88LvLWll+efS+hGdBccnhWr+WfgED95o3adkVAoor75otA7k/l2jkLMqUopzcyZp6FDdlWN7ap12rB4aGAs7/luU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=al2g2j3v; arc=pass smtp.client-ip=74.125.224.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="0Xn7TRy5"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-836c4474028so38966857b3.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 14:25:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787001903; cv=none;
+	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="al2g2j3v"
+Received: by mail-yx1-f42.google.com with SMTP id 956f58d0204a3-66bd7857841so2921270d50.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 17 Aug 2026 14:27:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787002055; cv=none;
         d=google.com; s=arc-20260327;
-        b=UpPkfzBou9jpW0K4pXSl3Sy8zYrCTGamqihLNxU7wAYZIdR59MN0PvF4eF+zDP9r5b
-         tmO2G15h/goO3TGCxP4uaQZsiA21AMdd1/QGst9L9Gsj9NRMQvYZgU9qRQFRcGAomPUS
-         iGeFnx1XtMnKcUpNOU5fNcWyNHbXI25+g+P2y3howLta4e+w5C7yyUzdr0aOWklirZmQ
-         yiqiJPKPEHjGMfV+lKe33llj16fMaJZJ/4evLnS3wNpqYCi2gzi74AtxduU38LB0CEB9
-         8zsN41bs0/QHjj8Sgfi8SGJ+a+QC3nAZDdPuN8NyU9hbbqKZSZS0us2+0G0aUnBb9Si/
-         0G8A==
+        b=aos7Szr1Em6UjgTUmEYmS+pjesSqzIpYPgzIH3cVg5Si9+3w1uSZraWHR57CPYu25U
+         vl7fOfSXBDLc8DQueHozJqjZ8Hsg3ZAuXcZD6ds6PgnT5pSjX+NJ+UxAS63ciUvBewhp
+         88Qr67k1jV93aS/ixQtcF/ZCgIbJYh7qQHq7AUjkIyHvNxxC6ODrBgPg4fWo2wsWDjod
+         lwCJCG6jV/77vG/RBHgiaUiVQS+LzHUKB+Mp1xcyk47UJjCnhrJY288soTwl/s4JDtrS
+         86xQj+tPWkWbddmf5KRThTFEbS6yOBTmKaH86aGAdtJMJbWfjH7f5khklSJiMH7t19Vj
+         thtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:references:in-reply-to
-         :mime-version:dkim-signature;
-        bh=uC+ZPkSmY48LELILJXdTqPOhnPXkVBcTQXLErnsNTc4=;
-        fh=C7sBqEBPn8Qal1BfBtdP1SXlEx0gk9A7g1X40tjYh4U=;
-        b=o8n7z0jPq1JTZLiPNTa/RAg/Msi4MDm+lHpgzo2mX/DF1mNsLHu382bBLSEa9a9C+l
-         dovrkqWdVKC+aVjqRKGqkH4lQHybTj6mjR8mB1JmIql2Yn8mPm227a79mBlJr1R80Zng
-         sAuQwpM3to0Jqe3iBLFj+YZVRWQ1Kf6aA2ir/XN5dm3wUprs7Ixi4sMgnZ2P4mDE6E25
-         xvHAhaAmt5a2v/rD2Eqq6It5g411DMKIXk9QfidnG2vHDMpQZRqhXDld92rB+45uc7vv
-         zaCjkmRTRVwWcQYRaY0JZ827FbaIYCXMxBSgYvDz1MM6zWkg4cuvnXGxAV3lrd9cXYzT
-         K/DA==;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :references:in-reply-to:mime-version:dkim-signature;
+        bh=ca4eMcGxa8KIFHG+pXXqzU5NDD92u+6oxQHxaxWgz1Q=;
+        fh=NK7vKdR6Glm0ZZlB9z6JzPOZGyWH6nFnzFSiiNoD7j0=;
+        b=ABXiOfgn9YBzZsE5aqNLg1E+rgt6t7AI4KqhV3K0f42e4XRBePbYOcEWYRQiwL47uO
+         b+AdBfXYwQ1J1ksmGz9T0H/tcwcambJ8RYQ9Wlf3LZtYmy1hEoTuwPf62tFLOHkxUXf9
+         8o+6I2HcBNkyBwjQdxyG3z0vmfNMkVaM6HJ1lPYo93wjZS9ucnILm+O9uediZasETN/Z
+         2+YtFzxdMvs9TLgxxRbTapDrcJWgxM21FVw5jY3/1m2mtKXKHmahAhFtUIZGtXsWFIRW
+         sAodOgJYoPWRKfiz6oAme6TY+/5lc1M7BGWTOJx1Ud01ATL8DyLyF1P2R3C5ju3abc17
+         kPtA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1787001903; x=1787606703; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=uC+ZPkSmY48LELILJXdTqPOhnPXkVBcTQXLErnsNTc4=;
-        b=0Xn7TRy5yvA7Em6nMiiIzxDYGkxgiUpzuygDiGm1mAnl0bMBc6DDk0m3J/NkUQFaEg
-         PMHR9h0e9B/COUt1VvaRPlxlNy4sA//BR+MUoY4ofop2qPl0QGzVzd/A5nyRSCsRswTD
-         +cBO3VdHV4+MFedhq174/vzk8pgntKI3PjoKmcOFGOYZVKLLZll+jnklaEC4vRYtMTOz
-         EFIVWaYIL375tcGCldq1+0OKJX1HGzCmhOAztKfpSr0+vYJNh/jZzxbhhpWmAUNU4UcY
-         mIn+vX89FP4V2Eaah4SA5Mw42MqEIivVyT64pyn3RVSfkkLRBPlCPdhk6YWXfRSZx2H1
-         73aA==
+        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1787002055; x=1787606855; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:references:in-reply-to:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ca4eMcGxa8KIFHG+pXXqzU5NDD92u+6oxQHxaxWgz1Q=;
+        b=al2g2j3v71X7bHLAtxRma20YNbrz4ZhPO65njhvbqnW17JDXVilPFBBZpWJbg3pO21
+         UuhStdHsG1pWKbCTT1P5qftl2moDzQYnmJVzjxwTe1YGaSn6dWPeBaMY3GN6fxMYc6nj
+         szRkrD27K9GPqf99UnW+CFzgHI+1tZ46wUXRiIWk2BAqUcrpC7kOX272gDaiSEtF5YOj
+         gpLed2wXFyUr4cL9poJngQk0zboM6L/vx5nwivs0ukrQVWb55m6QwCt6/K1STkywgUDg
+         iOVCX4HxIXWqpA9EC/sRSRjwYB2FtunsibJ2mZPXbe1NFTcQaQFAElEgKB+2tofDtKKQ
+         2JeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787001903; x=1787606703;
-        h=content-type:cc:to:subject:message-id:date:from:references
-         :in-reply-to:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=uC+ZPkSmY48LELILJXdTqPOhnPXkVBcTQXLErnsNTc4=;
-        b=PpEyU/UDBSG0kzINmRa5e7fd8AYACgRy+mXWlQCt2euSr9eNahhVxE35AFe90r/Bzu
-         nI8hQssTC0xaXyBcc1HJ3PxEt/1/MmqygNLc/g7O7MIrbKUVMfkRKakD/qgYYTEwhFLi
-         bfvgytpbWlqi6TsF58BWunFOCn5S9MuOERicYu/M2h7sawT1+Bau33AgNayt9kGFItl9
-         9OxbLJ2iNgt9XsxC8SxtqH6VB6tz87jIE9tECwqbMuJXPI4i74rVUsL025/IPp4HwqKF
-         tvSIErnrHpOz7BARzUG7xy5lv75drpGiNdjOlkNu16OHLvSQ2OVADXgGzUn1J28Sgyfz
-         IBhg==
-X-Forwarded-Encrypted: i=1; AHgh+RrG+owEp2G9qScPAmHNdnuynBySfNBl9n1OSNeOlsqrUsXwSg9MNy8ZDiezwdix9S5qk70qtIoScbCBwRotikRK+iAO@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa6wAUu6aPy5g5HI33iyJlvGV54joKSlpnhnKMrjSyipL63OKA
-	48vnl7WbtA07KSnon3c+9PRPzqPUdPRlo81Imn92Uiupr2vwTMmFi3l3VZC3y0mwp/RgcFpHY95
-	zBRu5x0clGUSiR0PvfzHLsFyBc44DH5QVIqrGDIkE
-X-Gm-Gg: AR+sD132VUVHZrE9NL2q+CN6eYRXw4lmtW9peAvWfMS/Z8+TAFheJAuqUxeO8cUmMgz
-	DsDjRBRHvbeDVUcR42LqZI1s3sBaj8ThbEK5CqnMIqrO3AN/D6OpahqGTBSRZUCEwXyKBSqniMT
-	tXHKa2QJwX5paijvwiMzNsbTFjv6I21ydW0483O7VFfv1h6sG2iSes35e8cR3964kCy+1LmOmOV
-	Mxg7HnK0iF1kCXdV9niX9TruSCjiUK3U4ZM5CW7/MjfqtzlkIjlKU6v0OCGhALpE3zj8zq5ECYB
-	4iocyMwVQIUceotmi0aKqe/L/mg7Tf0ze6O1O2ePw+24rAi/CAuANW4nbMpvMYOsV0o1ofWf
-X-Received: by 2002:a05:690e:1306:b0:664:eb8c:9e3c with SMTP id
- 956f58d0204a3-66c72d0980bmr8736238d50.46.1787001902711; Mon, 17 Aug 2026
- 14:25:02 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787002055; x=1787606855;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:references:in-reply-to:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ca4eMcGxa8KIFHG+pXXqzU5NDD92u+6oxQHxaxWgz1Q=;
+        b=Zvt/FBvF7nZRrkgqMd2b1+F4gmcsztalmupkh7xqpSdiUAZZ4AG4ZcHHacSk2JUMfs
+         7m4WX+sOGx5CVc4VHQ7vl5lbLNWpDSWKGr9hYyLGuRoIwEfXtYEfmt1poGgsE+QR4Exz
+         9NuuMmNqxEtU0E26rEYAjDB6tKGD2nIli6wn0Q2/Ajuq2vGujoHGCc6G3n8YUD2aSxMo
+         N7U3wLQBHT/8CwkBeKuUnQ/T+MCXtHeQVH6JGlncvtKWKDDox7hTo55mRywKILkDUfS/
+         4WATdhEPzjXOkmeNu1YqJiWTqp7ATagtpvV3jjXdVFgZxwN/VXh8DCGte3joyy0In4uU
+         +YdA==
+X-Forwarded-Encrypted: i=1; AHgh+RqAMNqxWbDx3PBY7/uG1YobF9VmN/4qsczRTbs37j8FiyQvFHogLeNovNHJfGZixnq5j5mOVAeBX9ZFOT/1o/iqnsYa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX2jnbuQeDNOk4Q/SmEm8DhFzKE/HyfHb2csYWl5Fz3/qSTjKC
+	CUwdiVz+m6OC3JBIg7mhhobVYZGE1dtADkB/YUlK0wQPn/ESW0qy6ApDfXycHnbuzl2pNX679Oi
+	KnrnB5Hq682ZsZtif0m0+4M9bWqjL0wWp4RthZ83F
+X-Gm-Gg: AR+sD130L9sxf5hTUMIVsyLj8vzxtBlfBPWS5A8bGSCWEMezVsOo0+2MECx2Xgj8ee0
+	FgAUQfHecnUwfTfOFFKB5G1PgQeeb2QchnfDS/lKh/kAXSm+nKhlebDZZ+SoTKqLO19cI8bpQUO
+	iNHxVfCUJyOzgtPmgDkO5gZ9dZW/7llClVqj8L5Pcvp0TyT9rrnxaJeZB8kkshii5HVHmB0xAZq
+	wgivxI9+pzfnoxiueQzQuiY/zo0yPAmpbqGW3fVcdxEBfNbFvraeAiwXTw2Dm7bl0xF7ccReULT
+	TiLrxJfeMGyjDQHepRX/wSEDnjiyRPmw5Uv5w0KXCR4Nu5vi6QadlmnW+AoYu3m6lhoAd1tC
+X-Received: by 2002:a05:690e:e85:b0:669:113d:7183 with SMTP id
+ 956f58d0204a3-66c72d282cdmr10287083d50.40.1787002054766; Mon, 17 Aug 2026
+ 14:27:34 -0700 (PDT)
 Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Mon, 17 Aug 2026 14:25:02 -0700
+ Mon, 17 Aug 2026 14:27:33 -0700
 Received: from 77377267392 named unknown by gmailapi.google.com with HTTPREST;
- Mon, 17 Aug 2026 14:25:01 -0700
+ Mon, 17 Aug 2026 14:27:33 -0700
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -88,10 +89,10 @@ MIME-Version: 1.0
 In-Reply-To: <CABtds-0YAuFxEOUREOCOB2HErVp8h+dkhMwTj2ZrQqh_dGHMTw@mail.gmail.com>
 References: <CABtds-0YAuFxEOUREOCOB2HErVp8h+dkhMwTj2ZrQqh_dGHMTw@mail.gmail.com>
 From: Sean Rhodes <sean@starlabs.systems>
-Date: Mon, 17 Aug 2026 14:25:01 -0700
-X-Gm-Features: AcwNN1W2nrfwJkcKJDJypHH8fsf07_HO4F3bBtgGI5y9ucOVgcOJe38ZwikfogY
-Message-ID: <CABtds-3HuofWaoDbMHPBc34eivjtaYeBLb4qk+bDXmz59d=1Qg@mail.gmail.com>
-Subject: [PATCH v13 1/5] platform/x86: Sort firmware attributes class includes
+Date: Mon, 17 Aug 2026 14:27:33 -0700
+X-Gm-Features: AcwNN1V14uoooqWOX3w5engFL_zlRkFbkdBnAzwUKfuDQAraspdTlsGVuLqqdKw
+Message-ID: <CABtds-2zdAbqAWJd+6HD3zU-017jUKZd_QYmdFw60FDqF3aEXg@mail.gmail.com>
+Subject: [PATCH v13 2/5] firmware: Move firmware attributes class helper
 To: chrome-platform@lists.linux.dev
 Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
 	hansg@kernel.org, ilpo.jarvinen@linux.intel.com, prasanth.ksr@dell.com, 
@@ -109,164 +110,235 @@ Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev,
 	dakr@kernel.org, o-takashi@sakamocchi.jp, titouan.ameline@gmail.com, 
 	kees@kernel.org, dri-devel@lists.freedesktop.org, oliver@liuxiaozhen.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move firmware_attributes_class.h into the main include block and sort the
-affected includes. This lets the header move replace each include in place.
+Move the firmware attributes class helper from drivers/platform/x86 to
+drivers/firmware and expose its class declaration through a public Linux
+header.
 
-Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
+The helper is not x86-specific. Keeping it in firmware lets coreboot
+firmware drivers use the standard firmware-attributes ABI without living
+under platform/x86.
+
+Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+Tested-by: Oliver Lin <oliver@liuxiaozhen.dev>
 Signed-off-by: Sean Rhodes <sean@starlabs.systems>
 ---
- drivers/platform/x86/asus-armoury.c                | 2 +-
- drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 9 +++++----
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c       | 9 +++++----
- drivers/platform/x86/lenovo/think-lmi.c            | 5 +++--
- drivers/platform/x86/lenovo/wmi-other.c            | 2 +-
- drivers/platform/x86/samsung-galaxybook.c          | 3 ++-
- 6 files changed, 17 insertions(+), 13 deletions(-)
+ MAINTAINERS                                               | 8 ++++++++
+ drivers/firmware/Kconfig                                  | 3 +++
+ drivers/firmware/Makefile                                 | 1 +
+ .../x86 =3D> firmware}/firmware_attributes_class.c          | 2 +-
+ drivers/platform/x86/Kconfig                              | 3 ---
+ drivers/platform/x86/Makefile                             | 2 --
+ drivers/platform/x86/asus-armoury.c                       | 2 +-
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c        | 2 +-
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c              | 2 +-
+ drivers/platform/x86/lenovo/think-lmi.c                   | 2 +-
+ drivers/platform/x86/lenovo/wmi-other.c                   | 2 +-
+ drivers/platform/x86/samsung-galaxybook.c                 | 2 +-
+ .../linux/firmware_attributes.h                           | 6 +++---
+ 13 files changed, 22 insertions(+), 15 deletions(-)
+ rename drivers/{platform/x86 =3D> firmware}/firmware_attributes_class.c (9=
+4%)
+ rename drivers/platform/x86/firmware_attributes_class.h =3D>
+include/linux/firmware_attributes.h (60%)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8014b9f8253e..caef5ab15a4c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10106,6 +10106,14 @@ F:	include/linux/firewire.h
+ F:	include/uapi/linux/firewire*.h
+ F:	tools/firewire/
+
++FIRMWARE ATTRIBUTES CLASS
++M:	Hans de Goede <hansg@kernel.org>
++M:	Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/firmware/firmware_attributes_class.c
++F:	include/linux/firmware_attributes.h
++
+ FIRMWARE FRAMEWORK FOR ARMV8-A
+ M:	Sudeep Holla <sudeep.holla@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 12dc70254842..78a239f8bbef 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -8,6 +8,9 @@ menu "Firmware Drivers"
+
+ source "drivers/firmware/arm_scmi/Kconfig"
+
++config FW_ATTR_CLASS
++	tristate
++
+ config ARM_SCPI_PROTOCOL
+ 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+ 	depends on ARM || ARM64 || COMPILE_TEST
+diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
+index 4ddec2820c96..385b6e8b7fc6 100644
+--- a/drivers/firmware/Makefile
++++ b/drivers/firmware/Makefile
+@@ -16,6 +16,7 @@ obj-$(CONFIG_FIRMWARE_MEMMAP)	+=3D memmap.o
+ obj-$(CONFIG_MTK_ADSP_IPC)	+=3D mtk-adsp-ipc.o
+ obj-$(CONFIG_RASPBERRYPI_FIRMWARE) +=3D raspberrypi.o
+ obj-$(CONFIG_FW_CFG_SYSFS)	+=3D qemu_fw_cfg.o
++obj-$(CONFIG_FW_ATTR_CLASS)	+=3D firmware_attributes_class.o
+ obj-$(CONFIG_SYSFB)		+=3D sysfb.o
+ obj-$(CONFIG_SYSFB_SIMPLEFB)	+=3D sysfb_simplefb.o
+ obj-$(CONFIG_TH1520_AON_PROTOCOL) +=3D thead,th1520-aon.o
+diff --git a/drivers/firmware/x86/firmware_attributes_class.c
+b/drivers/firmware/firmware_attributes_class.c
+similarity index 94%
+rename from drivers/platform/x86/firmware_attributes_class.c
+rename to drivers/firmware/firmware_attributes_class.c
+index 736e96c186d9..503ecc288086 100644
+--- a/drivers/platform/x86/firmware_attributes_class.c
++++ b/drivers/firmware/firmware_attributes_class.c
+@@ -3,7 +3,7 @@
+ /* Firmware attributes class helper module */
+
+ #include <linux/module.h>
+-#include "firmware_attributes_class.h"
++#include <linux/firmware_attributes.h>
+
+ const struct class firmware_attributes_class =3D {
+ 	.name =3D "firmware-attributes",
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b54b5212b204..beed14c38b54 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -926,9 +926,6 @@ config DASHARO_ACPI
+
+ source "drivers/platform/x86/x86-android-tablets/Kconfig"
+
+-config FW_ATTR_CLASS
+-	tristate
+-
+ config INTEL_IMR
+ 	bool "Intel Isolated Memory Region support"
+ 	depends on X86_INTEL_QUARK && IOSF_MBI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 872ac3842391..cab20a4145e3 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -63,8 +63,6 @@ obj-$(CONFIG_X86_PLATFORM_DRIVERS_HP)	+=3D hp/
+ # Hewlett Packard Enterprise
+ obj-$(CONFIG_UV_SYSFS)       +=3D uv_sysfs.o
+
+-obj-$(CONFIG_FW_ATTR_CLASS)	+=3D firmware_attributes_class.o
+-
+ # IBM Thinkpad (before 2005)
+ obj-$(CONFIG_IBM_RTL)		+=3D ibm_rtl.o
+ obj-$(CONFIG_SENSORS_HDAPS)	+=3D hdaps.o
 diff --git a/drivers/platform/x86/asus-armoury.c
 b/drivers/platform/x86/asus-armoury.c
-index 495dc1e31d40..f3d8c5a85762 100644
+index f3d8c5a85762..e6af93608ec5 100644
 --- a/drivers/platform/x86/asus-armoury.c
 +++ b/drivers/platform/x86/asus-armoury.c
-@@ -20,6 +20,7 @@
+@@ -20,7 +20,7 @@
  #include <linux/dmi.h>
  #include <linux/err.h>
  #include <linux/errno.h>
-+#include "firmware_attributes_class.h"
+-#include "firmware_attributes_class.h"
++#include <linux/firmware_attributes.h>
  #include <linux/fs.h>
  #include <linux/kernel.h>
  #include <linux/kmod.h>
-@@ -34,7 +35,6 @@
- #include <linux/sysfs.h>
-
- #include "asus-armoury.h"
--#include "firmware_attributes_class.h"
-
- #define ASUS_NB_WMI_EVENT_GUID "0B3CBB35-E3C2-45ED-91C2-4C5A6D195D1C"
-
 diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
 b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-index ab46a023cc34..4ff9003c6589 100644
+index 4ff9003c6589..963b3473991d 100644
 --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
 +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-@@ -8,18 +8,19 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+@@ -9,7 +9,7 @@
 
  #include <linux/align.h>
--#include <linux/fs.h>
  #include <linux/dmi.h>
--#include <linux/module.h>
-+#include "../../firmware_attributes_class.h"
-+#include <linux/fs.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nls.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
- #include <linux/wmi.h>
-+
- #include "dell-wmi-sysman.h"
 -#include "../../firmware_attributes_class.h"
-
- #define MAX_TYPES  4
--#include <linux/nls.h>
-
- struct wmi_sysman_priv wmi_priv = {
- 	.mutex = __MUTEX_INITIALIZER(wmi_priv.mutex),
++#include <linux/firmware_attributes.h>
+ #include <linux/fs.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
 b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 27fd6cd21529..1965a329be48 100644
+index 1965a329be48..f13f21580acd 100644
 --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
 +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -7,16 +7,17 @@
-
+@@ -8,7 +8,7 @@
  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-+#include <linux/errno.h>
-+#include "../../firmware_attributes_class.h"
- #include <linux/fs.h>
--#include <linux/module.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nls.h>
- #include <linux/printk.h>
- #include <linux/string.h>
- #include <linux/wmi.h>
-+
- #include "bioscfg.h"
+ #include <linux/errno.h>
 -#include "../../firmware_attributes_class.h"
--#include <linux/nls.h>
--#include <linux/errno.h>
-
- MODULE_AUTHOR("Jorge Lopez <jorge.lopez2@hp.com>");
- MODULE_DESCRIPTION("HP BIOS Configuration Driver");
++#include <linux/firmware_attributes.h>
+ #include <linux/fs.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
 diff --git a/drivers/platform/x86/lenovo/think-lmi.c
 b/drivers/platform/x86/lenovo/think-lmi.c
-index e215e86e3db7..9e4b3e973de9 100644
+index 9e4b3e973de9..4437785aa1f2 100644
 --- a/drivers/platform/x86/lenovo/think-lmi.c
 +++ b/drivers/platform/x86/lenovo/think-lmi.c
-@@ -13,14 +13,15 @@
-
- #include <linux/acpi.h>
+@@ -15,7 +15,7 @@
  #include <linux/array_size.h>
-+#include <linux/dmi.h>
+ #include <linux/dmi.h>
  #include <linux/errno.h>
-+#include "../firmware_attributes_class.h"
+-#include "../firmware_attributes_class.h"
++#include <linux/firmware_attributes.h>
  #include <linux/fs.h>
  #include <linux/mutex.h>
  #include <linux/string_helpers.h>
- #include <linux/types.h>
--#include <linux/dmi.h>
- #include <linux/wmi.h>
--#include "../firmware_attributes_class.h"
-+
- #include "think-lmi.h"
-
- static bool debug_support;
 diff --git a/drivers/platform/x86/lenovo/wmi-other.c
 b/drivers/platform/x86/lenovo/wmi-other.c
-index fbb32bf404f2..fdebaa0a9992 100644
+index fdebaa0a9992..b175971bb308 100644
 --- a/drivers/platform/x86/lenovo/wmi-other.c
 +++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -33,6 +33,7 @@
+@@ -33,7 +33,7 @@
  #include <linux/container_of.h>
  #include <linux/device.h>
  #include <linux/export.h>
-+#include "../firmware_attributes_class.h"
+-#include "../firmware_attributes_class.h"
++#include <linux/firmware_attributes.h>
  #include <linux/gfp_types.h>
  #include <linux/hwmon.h>
  #include <linux/idr.h>
-@@ -50,7 +51,6 @@
- #include "wmi-capdata.h"
- #include "wmi-events.h"
- #include "wmi-helpers.h"
--#include "../firmware_attributes_class.h"
-
- #define LENOVO_OTHER_MODE_GUID "DC2A8805-3A8C-41BA-A6F7-092E0089CD3B"
-
 diff --git a/drivers/platform/x86/samsung-galaxybook.c
 b/drivers/platform/x86/samsung-galaxybook.c
-index 6382af0b106c..74103c00b0c8 100644
+index 74103c00b0c8..3911f60c23ea 100644
 --- a/drivers/platform/x86/samsung-galaxybook.c
 +++ b/drivers/platform/x86/samsung-galaxybook.c
-@@ -14,6 +14,7 @@
+@@ -14,7 +14,7 @@
  #include <linux/acpi.h>
  #include <linux/bits.h>
  #include <linux/err.h>
-+#include "firmware_attributes_class.h"
+-#include "firmware_attributes_class.h"
++#include <linux/firmware_attributes.h>
  #include <linux/i8042.h>
  #include <linux/init.h>
  #include <linux/input.h>
-@@ -27,8 +28,8 @@
- #include <linux/sysfs.h>
- #include <linux/uuid.h>
- #include <linux/workqueue.h>
-+
- #include <acpi/battery.h>
--#include "firmware_attributes_class.h"
+diff --git a/drivers/platform/x86/firmware_attributes_class.h
+b/include/linux/firmware_attributes.h
+similarity index 60%
+rename from drivers/platform/x86/firmware_attributes_class.h
+rename to include/linux/firmware_attributes.h
+index d27abe54fcf9..d4026ba1fcc2 100644
+--- a/drivers/platform/x86/firmware_attributes_class.h
++++ b/include/linux/firmware_attributes.h
+@@ -2,11 +2,11 @@
 
- #define DRIVER_NAME "samsung-galaxybook"
+ /* Firmware attributes class helper module */
 
--- 
+-#ifndef FW_ATTR_CLASS_H
+-#define FW_ATTR_CLASS_H
++#ifndef _LINUX_FIRMWARE_ATTRIBUTES_H
++#define _LINUX_FIRMWARE_ATTRIBUTES_H
+
+ #include <linux/device/class.h>
+
+ extern const struct class firmware_attributes_class;
+
+-#endif /* FW_ATTR_CLASS_H */
++#endif /* _LINUX_FIRMWARE_ATTRIBUTES_H */
+--=20
 2.53.0
