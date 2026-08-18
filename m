@@ -1,113 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EEF47255E
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 12:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAD92E175F;
+	Tue, 18 Aug 2026 13:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787057343; cv=none; b=UY5z5JdeoTsqalAmDpB9549+gUl8Wn4sEZx7dPdOn1zWXGGNckRiy+iz2EnB4OwFGKbvlXfXYmqaQDwB4yNgnrlgPhkmCgK1EyIZCoSlEu3gYUCAQr3tQ+Ho9Ip1n++C3vaxHyta5fgP7YD78YRdazU7sd+YlL6E1wTASUoyPYA=
+	t=1787058209; cv=none; b=E7T+HKk0m7dLvLHr/WaIbKlHyhhMPQtPyJEKvqOkCphzL04PQMkBOZTPuREycRLLLzYZWdHpHH3aIoWc+kz7eOBTb66JQVMDtI2m+0wTlQH+EO+RuxU1mtt3Q5P6FnIEasDQ4pMbx54AMLpsljlDikGmprjlUL7t+7j4Y/Aeka4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787057343; c=relaxed/simple;
-	bh=Q6mxO7YB3iHXx+mmtPYzSoigNbCGicLLD0nxgeB8kj4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=j+O1+5iINdvq7ZJnPAASQle7/2vQ6x8o/9Ca5mK7eM7YWIfCpa9Ekqe4LeRVQZpd+xP5WZJisINmEd9mcGvj/gH1usHWXLJmGstbnXNHhzM5gbEHBKhUlMOpPjVcy4rK++oof9EwM7Wtg6L1LiXM1otqpuKy+Ym+YmBQweSZINk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c1ZlZxFZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1787058209; c=relaxed/simple;
+	bh=07g9W6ppxqZepjErZR6fncpo5KfHYS+3fliqMUG+vuU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hc8AUrzDgg1nIhrryshbmGEV+AJaO3alXBAuRajSTqC8Bb7P6OhMCLaYETAf59PQa/XLBzPvv8ar4mVBWTSkbPuOMEnip3mUsIsfA7JyK1NxwfAY2t8TFEeDieKdm3Yles/2jrPcXnla//smXriBlwtiAgjSWpnkdaNRqJ0MrWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iRFepc6p; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1ZlZxFZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B2D67C2BCB3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 12:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1787057342;
-	bh=Q6mxO7YB3iHXx+mmtPYzSoigNbCGicLLD0nxgeB8kj4=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=c1ZlZxFZHNXtQIn5L0mitUbQ4TJs2iQ9uHraaSScgkD9sAs3YiaJ3ArC1jk5lxKA6
-	 jBXMM5Hj8BljeBJcMoVi3CaTiMQBbVwYL2QEWS2sMrvmskJGvn4bNnUBjX8hlSHUpo
-	 yJU8WhNOL3ya3S72t8FF8vYX+Uw/tMyIt3X34dhMOI+5PEfL0KORKW3y+1GebKGMRM
-	 0j5D5ZPgTye44T5c3ofx1fKgMB+zCT+6UUqnP0k0GgU7yc35FeUt36Iy7hd49gEtUo
-	 hTsbmuzYQD60TC1zxSR4+nDzXKeTuFyb+z6MLvSCys8yLAUnqMGTh0GSVmFnJlTerL
-	 G8nOLsVagbH0Q==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 88CAFC41614; Tue, 18 Aug 2026 12:49:02 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220926] HP ENVY 16-h1xxx (Hayden): hp_wmi platform_profile
- fails to read/write
-Date: Tue, 18 Aug 2026 12:49:02 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: technosfan14@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-220926-215701-Jj9eCOoutU@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220926-215701@https.bugzilla.kernel.org/>
-References: <bug-220926-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iRFepc6p"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787058207; x=1818594207;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=07g9W6ppxqZepjErZR6fncpo5KfHYS+3fliqMUG+vuU=;
+  b=iRFepc6pdLPCFThjMHNmo5O9YII4rW/xdzmip+YbocrBsF5h4QooM6CN
+   vplEJLz/GYA/8PqW1HLKwBkZsgXw6RAQhNiAviJMYUZ0R1SsmBSvnrwM2
+   vkBsADbVsW84HDuyhrAiWl/imY9XDKuX0vL/h6YFwPt8ICzhVg/FMQZwt
+   9wU+aJSF86QQKia7hW0yAE367p0rhuz7U1jbeaZWlK8lyswKcEJBff6hW
+   ORZ7i7AIcmHHLOtFWgbfFqeNPWNjzTCRa+krmyBPtm6xQBdGY9qW1+CgV
+   r6GMTcMsZ2mx5usoNNymGYvc9tokIpwtKdRctPw5f9yCJehIPavvZ1nqX
+   Q==;
+X-CSE-ConnectionGUID: 2F+KnfRbQnK6vxfvNHAdUw==
+X-CSE-MsgGUID: wWdEcqHaS6Oa0ugZWD/2pQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87671902"
+X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
+   d="scan'208";a="87671902"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:03:26 -0700
+X-CSE-ConnectionGUID: 9W3WNcx/Qpuf57LfEbdJMw==
+X-CSE-MsgGUID: OUNbaOdCSdeDk1QdsE264A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
+   d="scan'208";a="261936119"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:03:24 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 18 Aug 2026 16:03:20 +0300 (EEST)
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: ISST: Avoid model check for recent
+ servers
+In-Reply-To: <20260729180512.2048114-1-srinivas.pandruvada@linux.intel.com>
+Message-ID: <9cbea11b-ef1c-cda5-8fdd-e9cff29612ff@linux.intel.com>
+References: <20260729180512.2048114-1-srinivas.pandruvada@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220926
+On Wed, 29 Jul 2026, Srinivas Pandruvada wrote:
 
-Suryansh Singh (technosfan14@gmail.com) changed:
-
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |technosfan14@gmail.com
-
---- Comment #2 from Suryansh Singh (technosfan14@gmail.com) ---
-(In reply to Gibs from comment #1)
-> I have the same problem on same platform on kernel 7.1.8.
-> Changing profiles does change fan behavior, but RPM reads 0 with hp-wmi.
->=20
-> Package power also seems to max at 40W no matter the profile. On Windows I
-> have peaks of 115W and then drops at 55W after a short while.
->=20
-> I also tried mapping my board ID to Omen or Victus configs but doesn't wo=
-rk,
-> the ENVY seems to be different.
+> To enable SST functions, a CPU model entry is required. This causes
+> unnecessary delays in deploying new servers on older kernels.
+> 
+> To avoid this, if no CPU model match is found, allow the SST common
+> driver to load, when all of the following conditions are met:
+> 
+> - Not running as a guest
+> - The platform is identified as a server via ACPI PM profile
+> - The CPU belongs to Intel family 0x19
 
 Hi,
 
-Could you please provide your board ID, or clarify if it is the same as And=
-res?
+Sashiko notes this shouldn't be hex (and is contradicting with the code 
+that uses decimal)? 
+
+-- 
+ i.
 
 
-Are you sure you've tried out all Omen or Victus configs? The latest branch=
- for
-the platforms/x86 subsystem (pdx86/for-next) has an expanded driver scope
-compared to the current upstream version of the kernel you're running, so
-consider using the code on that branch for mapping your board ID to specific
-driver data in hp_wmi_feature_boards[]
-
-
-In case none of the existing parameters apply to your ENVY laptop, the EC
-behavior and specific quirks required to get it working will have to be rev=
-erse
-engineered and patched into the code, rather than the regular patch of mapp=
-ing
-the board ID under predefined parameters.
-You may contact me at my mail if that happens to be true, I'll be glad to h=
-elp
-in the whole process if it gets that complex.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+> - MSR 0x54 is present to retrieve the PM logical ID
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../intel/speed_select_if/isst_if_common.c    | 61 ++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> index 1c48bf6d5457..8b87dec2a4cd 100644
+> --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
+> @@ -7,6 +7,7 @@
+>   * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>   */
+>  
+> +#include <linux/acpi.h>
+>  #include <linux/cpufeature.h>
+>  #include <linux/cpuhotplug.h>
+>  #include <linux/fs.h>
+> @@ -774,6 +775,58 @@ void isst_if_cdev_unregister(int device_type)
+>  }
+>  EXPORT_SYMBOL_GPL(isst_if_cdev_unregister);
+>  
+> +#ifdef CONFIG_ACPI
+> +
+> +static bool acpi_pm_profile_server(void)
+> +{
+> +	if (acpi_gbl_FADT.preferred_profile == PM_ENTERPRISE_SERVER ||
+> +	    acpi_gbl_FADT.preferred_profile == PM_PERFORMANCE_SERVER)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +#else
+> +
+> +static bool acpi_pm_profile_server(void)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif
+> +
+> +static const struct x86_cpu_id sst_allowed_families[] = {
+> +	X86_MATCH_VENDOR_FAM(INTEL, 19, NULL),
+> +	{}
+> +};
+> +
+> +static bool isst_features_allowed(void)
+> +{
+> +	const struct x86_cpu_id *id;
+> +	u64 data;
+> +	int ret;
+> +
+> +	/* For hypervisors, explicit model addition is required */
+> +	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+> +		return false;
+> +
+> +	/* SST is server only feature */
+> +	if (!acpi_pm_profile_server())
+> +		return false;
+> +
+> +	/* Match for family 19 only */
+> +	id = x86_match_cpu(sst_allowed_families);
+> +	if (!id)
+> +		return false;
+> +
+> +	/* Check for presence of MSR 0x54 */
+> +	ret = rdmsrq_safe(MSR_PM_LOGICAL_ID, &data);
+> +	if (ret)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+>  #define SST_HPM_SUPPORTED	0x01
+>  #define SST_MBOX_SUPPORTED	0x02
+>  
+> @@ -798,8 +851,13 @@ static int __init isst_if_common_init(void)
+>  	const struct x86_cpu_id *id;
+>  
+>  	id = x86_match_cpu(isst_cpu_ids);
+> -	if (!id)
+> +	if (!id) {
+> +		if (isst_features_allowed()) {
+> +			isst_hpm_support = true;
+> +			goto misc_reg;
+> +		}
+>  		return -ENODEV;
+> +	}
+>  
+>  	if (id->driver_data == SST_HPM_SUPPORTED) {
+>  		isst_hpm_support = true;
+> @@ -812,6 +870,7 @@ static int __init isst_if_common_init(void)
+>  			return -ENODEV;
+>  	}
+>  
+> +misc_reg:
+>  	return isst_misc_reg();
+>  }
+>  module_init(isst_if_common_init)
+> 
