@@ -1,141 +1,201 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB87E2D061C
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 19:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787080317; cv=none; b=jleK9Ker66ut6e2t75/kK3LER5FQinw5rf3A3rS1ugd4KEf9gkAhoATlC1QKovAUAztuq0f1Jd/Dyt684cB4pWCX6R+H8YmYqO6su8TDgwpdeSvtuxzCKZjppYtZg9olPYwaM5jCFvIbAbJOrmHhmnoSZpvFHCwfOisNyAMbw+o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787080317; c=relaxed/simple;
-	bh=prE0cxZeAxUrFNCwuGQT3qOCxUJi84Egaqgt5CsozWw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rkTcb/0Jfp5kFxBNp6C5B1XLgvjx8xYG3yGVb3GEJNaiOr7kx2PVMUlv7Yg1KEgXCrZm2G8gfkPJFED7l8Kz2ihJv9nzxJVuL8sNGEJxLOh7xcorRObKt8sDGlBnq3mN7gTA+6LHzO6K4uPbFGg7Z1AhB9sudzISWCGcb2+1B3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYgjWFln; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F5636212E
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 19:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787080607; cv=pass; b=rD8bzWjha44fMPxWl/+2UtATxoqqvOFdvWtbYBsJEndmKl5Q6pTGTvq9N1MydAjvvjMlTViqbU62LxAu2MSch34oKOQ04Tv1WCzEZvEZFsqqC9cYSyDRGA5gF5TAU+mcKy0pwFf8fU7lQhZvDU4Qqq71nKRsH78JgIyB8fsMWFg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787080607; c=relaxed/simple;
+	bh=jnUs4jwUuhP2XNi5yuvx6HOb3PmM28YCMYg+bxW2YwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IJnZosOYzFSGLwS5S+bb7uqcs7hlXWcq43VPI3ruzw8vmrvW9ssHg5oAsk4MuEz796cD6JR8UkEX6G4qGQ5N5kLUk0ZWc0ws/6wWZkI8aT+1YXCS/GAbwIj9em8vPfkR8+XCw9nhPC3ZGH0abad5j8YO5kDBdlivDOWKlwGbpYA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYmEbS5S; arc=pass smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYgjWFln"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6a3819e8be8so243090a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 12:11:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYmEbS5S"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-c20ce3c118aso27188466b.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 12:16:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787080601; cv=none;
+        d=google.com; s=arc-20260327;
+        b=r4zrW9fgU8Wp3L4gLnRmB3bOtBnNwWheKFm8miFBnuIQY+FzWI4zFDiVsHnq2rJ5NF
+         9PZ1ZS2p0nte9GUMj3jzQV2sphsa58eo1WOSlJ8iYDaSD8Q0VLqTPEL91ZIEE0euagm1
+         jMoFp9lvpwO3V8irT8JyPRZ199uwaOiDveeA5toshf6VfoRpJy5XJDJSiJE9Zi+Vum3f
+         ajYEnH4gnT/U4qaGXZe10X5QHlZiDxlsoUiH8MwDDf2CbtuEnbSBoKVK8NEmSs7xEyza
+         Rv8504QX1h9P5Uxt0c2H5PP1UXos4gW0Ux236fmc8yEVqboozfn6t4ZWdY9AcBnMkv+4
+         6smw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=K6F63kr4+87sB4ghmMaGvMuNwmiTbtkXM8okV9uIZ1I=;
+        fh=lXjYBd+6+wLfqZeQUMnYHxhspxQW4nZcoWFS1lF2arw=;
+        b=a0yY7eACk7Q6Cfqk6x2U7HKBdENb94FbQCr8Rv6XzRRwCE39KrKxtQ3+wVtAqy4Zfz
+         b2ECoBKYWQ0P/RC2jVo5MTFrPjW8KsVaXge8nRe7swE+oNN1ljQdKX0ARamzk5qNf7Jd
+         YMJBB9ilAr2JGlMjsqsDp2o2ZXwwCbrX/P07ey6hCgOLgdJl//RvyO4+ylORscWsAFC6
+         iRGtKHZ3r/dKGXp5y689etOgcr9Gz1GXBJGiFYwO6wRXFu9lKxCHkIbV8ixE0DGzmc7g
+         JwHE6MHxDf9c5f91q1H2hPNHSRgV8LpZGFiekT8mq8o3tjEtpT446SvpOtqMA+8GB/2j
+         wMxA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787080314; x=1787685114; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1787080601; x=1787685401; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=CXD7tc6oMBFEmd9i6wgkKuOD03Mu31Lz4UBhvt5Ho/Q=;
-        b=fYgjWFlnQeLQuMHfOq7WtkXNwV3pEcfK9oUDZDgqwkiXpUM4uJl/fI32jGYMw+gO2X
-         14Tr4HVN/9zeBEB2eEJ+JYx3Crf0MJ7kI/vyEMwAmJb3yXv36pL6O/yRO9/YNMPKH5lm
-         CzonU0d+HYAK2srMK48GTqYIVkiNAQUJHE0+qAc6j9cOp+mmZjG7i+PXD1WymsZZSyKJ
-         opTmOrUxr5nlSZA6lmcCDZZq/7OSX3ipzJ5RyGi0THrIDl9IE6n81vW0PwGS2+kvoiXQ
-         jHXK60TgLS0Ycigs6jDu62WiqkTNGQ+JEclEis3eL8GwFzil4457KTUweuhdmK/KaEyM
-         zO1A==
+        bh=K6F63kr4+87sB4ghmMaGvMuNwmiTbtkXM8okV9uIZ1I=;
+        b=NYmEbS5SasrS3hLsCZCiiduPWqbojChcPw0c40+I2PLFN3nDPmrdQBhqAyFv5AUPB+
+         T3jJZoSXApRgWdhFOJWJPDoVkznG9aFMnZeZQgmuosOywvA8BMU5fNmkAl36fIIKj5oW
+         TPIxi3Q0OXbNQuuIUdBoBp7DgszafsnoxbIIJPdGTz/+4tC1CFz03WEPxAy9H/dokTO8
+         33aj7kfRcscH8CK6miOs8sASbbJZL8lBMwtJPi/KD4Ko/95BRamyneJxC/3aG5ogf4rh
+         OlGXi+AtQXHXfJXaxUcAwW0gn3Q5elMd4lKKE3pCv/j7jjSHiaxt4k5VMCyD9LFoq8CQ
+         8+wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787080314; x=1787685114;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+        d=1e100.net; s=20251104; t=1787080601; x=1787685401;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CXD7tc6oMBFEmd9i6wgkKuOD03Mu31Lz4UBhvt5Ho/Q=;
-        b=qiF4Q9ZD2uQCIvqousIsUj5uKUGsaxf6aFjoh3gM27bxZkTGJa8U0rIYcvNTXn8Ejg
-         fNMcZ4jgPJz56/Gsas61gb0WVrHVcMir/HiGJ07AKnbn1RmImnx5OX29a8Zeen3AlKnF
-         pKzgAtDC9GjbV1HyhKGHd6/BRiJHuvdsHyr/sk6IcfgbpikmvMbmYgADbt4TRgV3MmAd
-         sAS6Bfl6iRFFfmQozTlq0DLkC95h5U7tSYNYhLTeAvkzUKxGSDk7pwCIvoOOtvTlpUFE
-         UwTBu2JhSwTnerA22Hw4KWM6yTCCdNVoWuA1CWQq3jbCLVnUDhkt+y5IjN6xVaQboFUe
-         hOjg==
-X-Gm-Message-State: AOJu0YwUh4q2MWrhpQN5CJ5z1Ec3zP7zNRQOwNiHhwtMgIYxvZsqsnz8
-	su8Od+ZzixOMCPWld0aPe/ddZDJYYIdgh0vbPKqjzuLvP6ilInRCJ0sJAjKKOBNvQn7nkg==
-X-Gm-Gg: AR+sD10lrp8gIEINlrI0GGnyi5RJI9C92GRziprXuCsOLHGAcFq7bLRQ5cMfNCjrU7Z
-	J9OcHDVS7uh43fOUjdbk2HtfZj+A030jfHnnD3sZQYxpkVfqU7/VXMP//53WY72aPChFvkepBNN
-	4tO2l7YDEWEZsRo1+8EwUlNDgZcNAFr0QjU0U38GeXcx4T0dbI2l9qhS16ipDH5YzfpAf9oQSDG
-	NsRM0cVxXGqNC1rsfi0/RDIf4DlL5KoiIcbJAnEHW4dmN4ESo2ekShOKHKGPKrXefO/5OmnLehT
-	K3lambdk0bOzPTjzx/+4fLOsOAk8c7oVvCanIsghK/vj2bsnrvJfjUm8JiN1NgArivfSFOuNlnV
-	K+SpCWBAEDcE5zaihX4CoKNOfiG3EUy/iVWIwuP+ecUrpVvoCS9uqgTaW8zZ/ubdbFwGwRx//LY
-	IJPvIGQ4css1FNbYRM+exyrq8uNoQ4Ua5M4zqa9KWuN6/dP+08JFhSmeDObLJqa4TU97ilgwsN3
-	t1JDdpj4OvylXGoV1d5ig==
-X-Received: by 2002:a05:6402:24cd:b0:6a0:9ce5:3f5c with SMTP id 4fb4d7f45d1cf-6a3e3c986f2mr4530938a12.7.1787080314075;
-        Tue, 18 Aug 2026 12:11:54 -0700 (PDT)
-Received: from fedora ([2a00:7c80:0:3b5::11])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a3d8531694sm2291552a12.11.2026.08.18.12.11.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 12:11:53 -0700 (PDT)
-From: Muhammad Bilal <meatuni001@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: jorge.lopez2@hp.com,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	linux@weissschuh.net,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Muhammad Bilal <meatuni001@gmail.com>
-Subject: [PATCH v3 2/2] platform/x86: hp-bioscfg: remove dead bounds check in audit_log_entries_show
-Date: Wed, 19 Aug 2026 00:11:08 +0500
-Message-ID: <20260818191120.38556-3-meatuni001@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260818191120.38556-1-meatuni001@gmail.com>
-References: <20260818191120.38556-1-meatuni001@gmail.com>
+        bh=K6F63kr4+87sB4ghmMaGvMuNwmiTbtkXM8okV9uIZ1I=;
+        b=aFQ6JFV9CkLUK5wuq+zdfpv3j8HVVcUPLaSsfGIJTHDFqElF77oAR+eXeBtNTttjI4
+         zAFfLYkGdbXMtXQ5xXcHrhOpmhJE71aJB8p3ijl0MG0/CzhCVQI1/FUIdjT6sN2Nq1K1
+         EV1kyDf6dtJ0rVldw97n9hXV6YFZT0hbT4a2owpTjXrp7Wti5jYhNyE2D3jKX+sbq2CF
+         8b9UsL04YOK0cFfEzieKf0/yAseTmFAnod5o3sVx8zO+DA1lteF2Lp7NlCN4eAIjHj09
+         fToDhnFgrDjvJY0e1YRtOi59ATWZJ7Uy8HQdgcSOBYBtxnXAzlE9UkRoOqUmOSa3DxPE
+         CO6Q==
+X-Gm-Message-State: AOJu0Yzi4CWuSYTlnSEOIwWdqCJW1wgDi5MmyJIGZpK+rSpvWFfrxVCY
+	3RExdBi5mt4uIJeh0Ap1/RqP6++YxPLdMOb5imM0aApdPhZrJYYI00gDIxT0GIfOgQdry8MXAZs
+	PIl8t6jP1DOSlWfi8xyNLKHY0YAiJe9c=
+X-Gm-Gg: AR+sD10j7NPv4Uy9NZX+uBC5cNyIhLxkj7N0cdhqxyDXGhDqn2wPaQXKUV97YKjeL0r
+	QC7q5n9qUsT9lluWC76KjFVQzBcUUL+EuhY4iyDhtCy/z/oF0zID1cd7loyaW4s2jxe4qOv3BrN
+	46QEQeSWDtvNXioYfMlSIK0g01k3z38q2nHaf3+wq8o+++PHe5JGhL/3FbjRefX0R8G5QIkuLmt
+	qCMvDN5HQROh4vDoLztDNlRfwtIfJOkgWR0RlJSe0QT091IPmmSfzBoCRcG2vMssWFTkxkMAaeS
+	cA4AOEVx6HBper+xpqOy4eJRL94D2friFcoi6xGfynKLE8gdfvgRqrruIX4KfE1kv2fzFitr3Be
+	wjajj3krFkwENxgyZ6gfHW2w66XRG8biuK1vGCQ==
+X-Received: by 2002:a17:907:d26:b0:beb:d461:7b09 with SMTP id
+ a640c23a62f3a-c2229968e30mr40655666b.11.1787080600847; Tue, 18 Aug 2026
+ 12:16:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260812111829.172273-1-meatuni001@gmail.com> <056903f7-802d-3db5-f0c8-b1c66d37b8c2@linux.intel.com>
+In-Reply-To: <056903f7-802d-3db5-f0c8-b1c66d37b8c2@linux.intel.com>
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Wed, 19 Aug 2026 00:16:29 +0500
+X-Gm-Features: AcwNN1XEhyBjD7AyymcuQxdYUrgbM3et6h0a80EohmeOa4x5Usm8h0K4YUfdQq8
+Message-ID: <CADqcGBnCt-Rkxa3ms7g-nbe2+Js9fyzSH52KQPNZBvoeTiaRcg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] platform/x86: hp-bioscfg: fix multiple memory
+ safety bugs and parsing errors
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, jorge.lopez2@hp.com, 
+	Hans de Goede <hansg@kernel.org>, linux@weissschuh.net, 
+	LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-audit_log_entries_show() checks "count * LOG_ENTRY_SIZE > PAGE_SIZE"
-prior to entering the loop. Because "count" is already bounded to fit
-within PAGE_SIZE, the inner loop check "(LOG_ENTRY_SIZE * i) > PAGE_SIZE"
-can never be reached and is dead code.
+Hi Ilpo,
 
-Remove the redundant inner bounds check and eliminate the unnecessary
-"else" block after "break" to clean up the loop control flow.
+Thank you for applying patches 1-3 and 6-9 to review-ilpo-next, and thanks
+for the heads-up regarding Guangshuo Li's earlier patch for the password
+encodings bounds check.
 
-Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
----
-Changes in v3:
-  - Remove the dead inner loop check completely instead of adjusting
-    the boundary arithmetic, as noted by Ilpo Järvinen.
-  - Remove the redundant else block after break.
+I have submitted v3 for the remaining two patches (patches 4 and 5) here:
+https://lore.kernel.org/r/20260818191120.38556-1-meatuni001@gmail.com
 
-Changes in v2:
-  - None for this patch; resubmitted as part of the v2 series.
+Once these remaining fixes settle, I will look into refactoring and
+consolidating the duplicate ACPI element parsing logic across the
+attribute files as you requested.
 
-Link: https://lore.kernel.org/r/20260803143037.93105-1-meatuni001@gmail.com [v1]
-Link: https://lore.kernel.org/r/20260812111829.172273-1-meatuni001@gmail.com [v2]
----
- drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Thanks,
+Muhammad
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-index b57e42f29282..3b20757a3e74 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c
-@@ -93,15 +93,12 @@ static ssize_t audit_log_entries_show(struct kobject *kobj,
- 					   HPWMI_SURESTART,
- 					   audit_log_buffer, 1, 128);
- 
--		if (ret < 0 || (LOG_ENTRY_SIZE * i) > PAGE_SIZE) {
--			/*
--			 * Encountered a failure while reading
--			 * individual logs. Only a partial list of
--			 * audit log will be returned.
--			 */
-+		/*
-+		 * Encountered a failure while reading individual logs.
-+		 * Only a partial list of audit log will be returned.
-+		 */
-+		if (ret < 0)
- 			break;
--		} else {
--			memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
--			buf += LOG_ENTRY_SIZE;
--		}
-+
-+		memcpy(buf, audit_log_buffer, LOG_ENTRY_SIZE);
-+		buf += LOG_ENTRY_SIZE;
- 	}
- 
- 	return i * LOG_ENTRY_SIZE;
--- 
-2.43.0
+On Tue, Aug 18, 2026 at 5:08=E2=80=AFPM Ilpo J=C3=A4rvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
+>
+> On Wed, 12 Aug 2026, Muhammad Bilal wrote:
+>
+> > This series fixes several bugs in the hp-bioscfg driver:
+> >
+> > 1. Memory safety issues (patches 1-6):
+> >    - Off-by-one NUL terminator write in hp_get_string_from_buffer()
+> >    - Heap OOB read in sk_store()/kek_store() when passing original
+> >      count instead of trimmed length to hp_wmi_perform_query()
+> >    - Heap OOB read on empty password write in validate_password_input()
+> >    - 16-byte heap overflow in hp_calculate_security_buffer() for empty
+> >      authentication tokens
+> >    - Off-by-one heap OOB write in audit_log_entries_show() when more
+> >      than 256 log entries are reported
+> >    - Missing bounds check in the PSWD_ENCODINGS parsing loop
+> >
+> > 2. Logic bugs (patches 7-8):
+> >    - new_password_store() incorrectly passing is_current=3Dtrue, causin=
+g
+> >      writes to land in current_password instead
+> >    - ORD_LIST_ELEMENTS case using a stale NULL str_value pointer
+> >      instead of converting the current ACPI element directly
+> >
+> > 3. ACPI package element index tracking (patch 9):
+> >    - Five attribute-type parsers (enum, int, string, order-list,
+> >      passwd) all share the same defect: multi-element array cases
+> >      consume "size" consecutive elements but the outer loop only
+> >      advances by one, causing the next iteration to misread a
+> >      leftover array entry as the next property and abort with -EIO
+> >
+> > Tested on HP EliteBook 840 G2 (BIOS M71 Ver. 01.31), kernel 7.2.0-rc5+,
+> > with CONFIG_KASAN_GENERIC=3Dy and CONFIG_SLUB_DEBUG=3Dy.
+> >
+> > This series applies on top of:
+> >   commit ea4d8f8ba283 ("platform/x86: hp-bioscfg: fix
+> >   slab-out-of-bounds write in hp_convert_hexstr_to_str")
+> >
+> > Changes in v2:
+> >   - Squash patches 9-13 from v1 into a single patch (now patch 9),
+> >     as the fix is identical across all five attribute-type parsers.
+> >     Requested by Ilpo J=C3=A4rvinen.
+> >
+> > v1: https://lore.kernel.org/all/20260803143037.93105-1-meatuni001@gmail=
+.com/
+> >
+> > Muhammad Bilal (9):
+> >   platform/x86: hp-bioscfg: fix off-by-one write in
+> >     hp_get_string_from_buffer
+> >   platform/x86: hp-bioscfg: fix heap OOB read in sk_store and kek_store
+> >   platform/x86: hp-bioscfg: fix heap OOB read on empty password write
+> >   platform/x86: hp-bioscfg: fix 16-byte heap overflow for empty auth
+> >     token
+> >   platform/x86: hp-bioscfg: fix off-by-one heap OOB write in
+> >     audit_log_entries_show
+> >   platform/x86: hp-bioscfg: add missing bounds check in PSWD_ENCODINGS
+> >     loop
+> >   platform/x86: hp-bioscfg: fix new_password_store overwriting
+> >     current_password
+> >   platform/x86: hp-bioscfg: fix ORD_LIST_ELEMENTS never being parsed
+> >   platform/x86: hp-bioscfg: advance elem past consumed array elements
+>
+> Hi,
+>
+> Thanks for the update, I've applied patches 1-3 and 6-9 to the
+> review-ilpo-next branch. For patch 4, the approach in Josh's patch seem
+> better (IMO) and patch 5 seemed to be changing dead code (AFAICT).
+>
+> (And once again, I really hate the amount of unnecessary copy paste in
+> this driver.)
+>
+> --
+>  i.
+>
+> >  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c        |  2 +-
+> >  .../platform/x86/hp/hp-bioscfg/enum-attributes.c    |  4 ++++
+> >  drivers/platform/x86/hp/hp-bioscfg/int-attributes.c |  2 ++
+> >  .../x86/hp/hp-bioscfg/order-list-attributes.c       |  6 +++++-
+> >  .../x86/hp/hp-bioscfg/passwdobj-attributes.c        | 13 +++++++++++--
+> >  .../platform/x86/hp/hp-bioscfg/spmobj-attributes.c  |  6 +++---
+> >  .../platform/x86/hp/hp-bioscfg/string-attributes.c  |  2 ++
+> >  .../x86/hp/hp-bioscfg/surestart-attributes.c        |  2 +-
+> >  8 files changed, 29 insertions(+), 8 deletions(-)
+> >
+> >
