@@ -1,92 +1,110 @@
-Received: from est0.einsof.dev (est0.einsof.dev [212.56.34.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-208.mta1.migadu.com [95.215.58.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D52745FFAC;
-	Tue, 18 Aug 2026 17:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.56.34.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F21B3DA5B6
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 18:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787075966; cv=none; b=sFOi3uYjLz8MnPp6PQuFcc15Qa9stkHjvGwhK3g71BdzIaQHXCPUU1FG5I69jskwxjYxS9ReeHONndNWqXtATIt8SJJz41I4V6g3fMcfclUXDaR0qgxYIiDgiXnSFiuwolKCeV/Rb25suj9EUKGphMqGG3cY3lUlxy/GfRtrCPg=
+	t=1787076571; cv=none; b=Io8FFdeFLKwnZnmpTfhDbmXSnbiPm5Je2gtdBAKu1DhE1BNeTBn46FqhqPeSJES9xdDSC68i0xXdjhWtp9lTzbtNVqqAAhdleEU72zu9cFKev0pOlLrRkZWX/4XlwPs4EKYnpbV+PPMq+kZrRfbfbL1V4eOnTmXWdXKMQsKwYHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787075966; c=relaxed/simple;
-	bh=XfoFWTtsnh0ySWCGWl/2MoS3N7dXGa/++gXzGFUePEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pevphsX6jjPWqcexIfTycjm/ST/JEjIvQF5l9MiJqPOcc6toCIUqADP82j4ApChcqm+h2GjsubDXY+6KyXeQ74pQq/+7tD5/56BCvqWH0NtxuwcZWJS624GHYDb5LKi/Sy65DfLddGLK1gsqM32GLTVNkQhq3REY4V9ZYKr3iQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=godjango.dev; spf=pass smtp.mailfrom=godjango.dev; dkim=pass (2048-bit key) header.d=godjango.dev header.i=@godjango.dev header.b=O44VcG3m; arc=none smtp.client-ip=212.56.34.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=godjango.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=godjango.dev
+	s=arc-20240116; t=1787076571; c=relaxed/simple;
+	bh=Tnemrcjd9fh2vvG6rFLUWx574efrfYNiAxaRbjFxloQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g9TVhgmONEqMgsBCow2O3G3Gm8oS+mMr3eoDao2wpOHGlYv5FqTvG4cJzWAJ+mCHW8ZdADJFQBGT3xJ7709orRpQJqJn/Lj9/5+1DtL+DhmJho6oYr+HnuC19VE9LMySx3f7HQZtF5Zbbh1KhLdXTKNo4s6nhf/EQXql1ysD8F0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OXht5iC8; arc=none smtp.client-ip=95.215.58.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=godjango.dev header.i=@godjango.dev header.b="O44VcG3m"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 76AEDCC9A70;
-	Tue, 18 Aug 2026 13:59:17 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=godjango.dev;
-	s=dkim; t=1787075962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=XYGNXOfE5EcMcUb3wYdLLmDJqxifJUZiEGh/qbJSCHw=;
-	b=O44VcG3m5yFFy/vRiUVUiERrIy2YKECCagCu16Avu5ZmP0HQ3mrzXz+DDiShVjwes+wl1A
-	vYU4icVw58/NBY5eNX4yGYwZB0Oqln8PfZdM2RWdv5Gpe/WLAX9kfJyBogwrbB76dlrgTK
-	3JH+hTkjS0ACvjbElyI/zOBZGbLCtca6HpZrUFB6yis+OdLvm5XF2qvPJ1qdYD6hz/e762
-	6eFTZ0TqbjbVPk7lFv6TB4m5eFG3SsufvSRPuO6srZcIxARZ7jVOi36V18KeeKVF7OERUx
-	VGtZUYq9+V9qaSO8X1jTXmYkh4x5hA/23TzD8n09NFE6JAn7Ne4fxpNTINFjYg==
-From: Luis Miguel Arias <luismiguel@godjango.dev>
-To: corentin.chary@gmail.com,
-	luke@ljones.dev,
-	denis.benato@linux.dev
-Cc: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Luis Miguel Arias <luismiguel@godjango.dev>
-Subject: [PATCH] platform/x86: asus-wmi: restore battery charge limit support
-Date: Tue, 18 Aug 2026 13:58:14 -0400
-Message-ID: <20260818175814.65757-1-luismiguel@godjango.dev>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OXht5iC8"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=Tnemrcjd9fh2vvG6rFLUWx574efrfYNiAxaRbjFxloQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787076566; v=1; x=1787681366;
+ b=OXht5iC8JYgxCgbsa1UljYmvTNqpm+lCoFsAG8OGLDJGlDXXTOqPO+d+DJsFO+y7at7rT+eI
+ 8zttQBI6nnYPSWwpjUIzmYJZ25kTCyCrMtLHABL+1oAyidhreVKzQ97wikg5jcu3b19YSlEeTqC
+ AepmVZWGT645tVfzEYtXy28g=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: from [10.80.0.99] (151.61.14.130)
+	by smtp.migadu.com with ESMTPS id 681296a5d9c6ccc9;
+	Tue, 18 Aug 2026 18:09:16 +0000
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <ee73bd1c-05ce-4d1f-bd85-392b2d794544@linux.dev>
+Date: Tue, 18 Aug 2026 20:09:11 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: asus-wmi: restore battery charge limit
+ support
+To: Luis Miguel Arias <luismi@gdcore.dev>, corentin.chary@gmail.com,
+ luke@ljones.dev
+Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260818174850.51457-1-luismi@gdcore.dev>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260818174850.51457-1-luismi@gdcore.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On ASUS systems where the charge threshold is supported through
-ASUS_WMI_DEVID_RSOC, initializing charge_end_threshold to -1 causes
-the sysfs attribute to return -ENODATA. This makes TLP consider
-charge threshold support unavailable.
 
-Initialize the cached threshold to 100 instead, allowing userspace
-to set the desired threshold normally.
+On 8/18/26 19:48, Luis Miguel Arias wrote:
+> On ASUS systems where the charge threshold is supported through
+> ASUS_WMI_DEVID_RSOC, initializing charge_end_threshold to -1 causes
+> the sysfs attribute to return -ENODATA. This makes TLP consider
+> charge threshold support unavailable.
+>
+> Initialize the cached threshold to 100 instead, allowing userspace
+> to set the desired threshold normally.
+>
+> Tested on ASUS with TLP 1.8.0:
+>
+> Before this change:
+> * charge_end_threshold = -1
+> * TLP reported no charge threshold support
+>
+> After this change:
+> * TLP reports "charge threshold" as supported
+> * natacpi (asus_wmi) is active
+> * charge_control_end_threshold can be set to 80%
+Hi Luis,
 
-Tested on ASUS with TLP 1.8.0:
+I'm confused here... I sent a temporary revert for this while we waited for
+Upower to allow changing threshold with -ENODATA. The current version
+of upower is fixed and I wasn't even aware TLP could do this: how do
+you do it?
 
-Before this change:
-* charge_end_threshold = -1
-* TLP reported no charge threshold support
+This means TLP also need to support -ENODATA properly and stop treating
+it as an error... Do you want to contact them or do you want me to do it?
 
-After this change:
-* TLP reports "charge threshold" as supported
-* natacpi (asus_wmi) is active
-* charge_control_end_threshold can be set to 80%
+Anyway the main idea is that this is not the expected behavior and is
+considered bad practice to change the limit at boot without user asking,
+so I think the wise thing to do is for Ilpo to apply my temporary revert to
+platform/x86 too while we wait for TLP to behave properly...
 
-Signed-off-by: Luis Miguel Arias <luismiguel@godjango.dev>
----
- drivers/platform/x86/asus-wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+P.S. newer version should have v2. v3 etc...
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 80144c412..87363b198 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1586,7 +1586,7 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
- 	 * platforms retains it, therefore signal the threshold as unknown
- 	 * until user explicitly sets it to a new value.
- 	 */
--	charge_end_threshold = -1;
-+	charge_end_threshold = 100;
- 
- 	return 0;
- }
--- 
-2.47.3
-
+Best regards,
+Denis
+> Signed-off-by: Luis Miguel Arias <luismi@gdcore.dev>
+> ---
+>  drivers/platform/x86/asus-wmi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index 80144c412..87363b198 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -1586,7 +1586,7 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
+>  	 * platforms retains it, therefore signal the threshold as unknown
+>  	 * until user explicitly sets it to a new value.
+>  	 */
+> -	charge_end_threshold = -1;
+> +	charge_end_threshold = 100;
+>  
+>  	return 0;
+>  }
