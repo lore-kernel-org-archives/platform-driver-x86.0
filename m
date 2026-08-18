@@ -1,110 +1,124 @@
-Received: from mta1.migadu.com (out-208.mta1.migadu.com [95.215.58.208])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F21B3DA5B6
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 18:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB9547DD69
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 19:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787076571; cv=none; b=Io8FFdeFLKwnZnmpTfhDbmXSnbiPm5Je2gtdBAKu1DhE1BNeTBn46FqhqPeSJES9xdDSC68i0xXdjhWtp9lTzbtNVqqAAhdleEU72zu9cFKev0pOlLrRkZWX/4XlwPs4EKYnpbV+PPMq+kZrRfbfbL1V4eOnTmXWdXKMQsKwYHw=
+	t=1787080309; cv=none; b=uqNB64e+ZkJMU8bLmemTLVeLzBo0siaxgSsgDNGU40E3NbEHGjbeO0GPhv7AZd/am5jluaQ6vyv4Ot0BAhC5LtHdvJvPkDxHZ8dS1DIXS/Kyia+f2IvZRXwSuqh6JHnN2t/H5F1+aDo+ofbFBqUqfv+HpmGKxe7YhhnzExRVODs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787076571; c=relaxed/simple;
-	bh=Tnemrcjd9fh2vvG6rFLUWx574efrfYNiAxaRbjFxloQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g9TVhgmONEqMgsBCow2O3G3Gm8oS+mMr3eoDao2wpOHGlYv5FqTvG4cJzWAJ+mCHW8ZdADJFQBGT3xJ7709orRpQJqJn/Lj9/5+1DtL+DhmJho6oYr+HnuC19VE9LMySx3f7HQZtF5Zbbh1KhLdXTKNo4s6nhf/EQXql1ysD8F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OXht5iC8; arc=none smtp.client-ip=95.215.58.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1787080309; c=relaxed/simple;
+	bh=ule8uQVSZjN9SPPiWy3GFwV3RocTGH0iwCj1Srick0E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OWV6Z64nnZkDrXHbTW28pf+gb/QC6V7GVhlfeY6lyDzwT9OKpO1geUnizccdmrZ6WcJQ2/69fb9zM8n0HkbO8kuQa1fz7zhPV0sj/eZfNTNj/KCA1GhEO7HD73GNp03LfFo0Nf5k1SlnGthzK34X7moCkTad6YR/GujaXSmudUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=myKX29Bg; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OXht5iC8"
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=Tnemrcjd9fh2vvG6rFLUWx574efrfYNiAxaRbjFxloQ=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787076566; v=1; x=1787681366;
- b=OXht5iC8JYgxCgbsa1UljYmvTNqpm+lCoFsAG8OGLDJGlDXXTOqPO+d+DJsFO+y7at7rT+eI
- 8zttQBI6nnYPSWwpjUIzmYJZ25kTCyCrMtLHABL+1oAyidhreVKzQ97wikg5jcu3b19YSlEeTqC
- AepmVZWGT645tVfzEYtXy28g=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: from [10.80.0.99] (151.61.14.130)
-	by smtp.migadu.com with ESMTPS id 681296a5d9c6ccc9;
-	Tue, 18 Aug 2026 18:09:16 +0000
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <ee73bd1c-05ce-4d1f-bd85-392b2d794544@linux.dev>
-Date: Tue, 18 Aug 2026 20:09:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myKX29Bg"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6a38098734bso370664a12.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 12:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787080306; x=1787685106; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=NBjTtOnXKHIl2x358G0aMOpF37tP5HHwZIxgH1uzThI=;
+        b=myKX29BgKbqeVFArR+Ck0DDhnzsEzl1tfEvey3CzFrZywS1/GfaK9yFm/zGe96r+9p
+         t/vMmEHON2LD8uUWU+Nb2zFUHMzDVvQc5C/ibjuK1z/mu9Wguu+xxLm2kut4LMom7rqN
+         wcquF2lLNNG8IS+H0/5U9KFraOq1ugqvMoNLyeKldt4EvKD8yepmYYsxomGq553N+scx
+         cq9pVhwoyqse82YDlKoTRbvU1x9wQRCKPfZ6/OwE1gRLgmOke051IBehv+SIc2W+C0MY
+         jFZSh75w6eTJcL95GVRvHO5k+W7E0SuCDmS2wfmmNHs7kJB7IQcBcI3bA8/YOsHYuqHC
+         Wtog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787080306; x=1787685106;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=NBjTtOnXKHIl2x358G0aMOpF37tP5HHwZIxgH1uzThI=;
+        b=aGrfBOtmwRrvQKaYUU0/YlPhCI5mSea+tFqrcYiMB/FgYRzLGqe9Kr1ukmCdOL5w3c
+         zShtGlZpIMxZhjyou2QN4d0B/RvibNfefrpOoXeIOMrb6BbPP9ehYcighbKj8nvWZaZN
+         Fe/5Sl8igK72MPqkbMocsyvrcczxtJ28Q71FeKjSzDc94yZrupUgvWbLKh1eB9LW43Ns
+         KnpEXNvsEvSdQGCtfeppS4d9k4UeMRxQ7zW+Pkc8enK7u20hkxY8Nd9Oogvx88Qk19pD
+         3EVYssla1+7AANER9gsseQcW3mdQ69UuEL11hSLcUPXI3G9aGyR4up7R1D+53jZ6IvvP
+         4/5A==
+X-Gm-Message-State: AOJu0YzWb64mlaUyY/jFCItzk4SOdINQzcFZQrv2guaYwzz4ScXHTeOu
+	6h78Y8RiBbUQOWKZ34v9TO+Yjfw31IpBAzPAXCkfIMxGfErplfLJ59J2aurW7icM9RVEjw==
+X-Gm-Gg: AR+sD10WOIyM0yAMpLLr6hbyqFh//zz9Ulhhk1gukxWu++omEP8aNgkLpVd/7+u9GTr
+	sq0uVB/e/unICgB2aG98PWnHYsFQOrRaWK5OHKjP91R1mEuNG0ZXIrIb7pFZ6WAuX8eX+h8gu86
+	8emxl4JwZfVy0qa2Yuf8BoLLKklh9v4/Uij0dfq3NOnDWltlTmJFkfPphxAL/ihzZJMxArFJ4li
+	mS/YH+QZ7U4G5JMYq6GpJgvkOEbaLFszFv1T5Va4X6Ki4w9nFtv9D9ytwkArFrxzdi3x2tVA/nj
+	p5XzZ6MYWqmtm7+m9XNKMLBqwoOUDCz/C3Mh7U0ycqFaayyiJRlMjNJNbQf0yhMSOpOGiO88ncF
+	p08Kg9y0Q5zdwnVyc2urUMl4vz6RnBtmCujzNAifr/XZRzikzOY1YqcYhway9blKiFbAHtP7j3q
+	v+6H/8LQ+KqN0my2y0apejKjvnN64KzexpxGhwlWB2ytk2/yyCAz9kPg6c/9bIZyapq8SmXCXyL
+	j1tTxiFcDMum/bpaa/5Eg==
+X-Received: by 2002:a05:6402:2310:b0:6a0:a644:355e with SMTP id 4fb4d7f45d1cf-6a3fb7191c9mr119441a12.2.1787080306275;
+        Tue, 18 Aug 2026 12:11:46 -0700 (PDT)
+Received: from fedora ([2a00:7c80:0:3b5::11])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a3d8531694sm2291552a12.11.2026.08.18.12.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 12:11:45 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: jorge.lopez2@hp.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux@weissschuh.net,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v3 0/2] platform/x86: hp-bioscfg: fix empty auth token overflow and clean up audit log loop
+Date: Wed, 19 Aug 2026 00:11:06 +0500
+Message-ID: <20260818191120.38556-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-wmi: restore battery charge limit
- support
-To: Luis Miguel Arias <luismi@gdcore.dev>, corentin.chary@gmail.com,
- luke@ljones.dev
-Cc: hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260818174850.51457-1-luismi@gdcore.dev>
-Content-Language: en-US
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <20260818174850.51457-1-luismi@gdcore.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Ilpo,
 
-On 8/18/26 19:48, Luis Miguel Arias wrote:
-> On ASUS systems where the charge threshold is supported through
-> ASUS_WMI_DEVID_RSOC, initializing charge_end_threshold to -1 causes
-> the sysfs attribute to return -ENODATA. This makes TLP consider
-> charge threshold support unavailable.
->
-> Initialize the cached threshold to 100 instead, allowing userspace
-> to set the desired threshold normally.
->
-> Tested on ASUS with TLP 1.8.0:
->
-> Before this change:
-> * charge_end_threshold = -1
-> * TLP reported no charge threshold support
->
-> After this change:
-> * TLP reports "charge threshold" as supported
-> * natacpi (asus_wmi) is active
-> * charge_control_end_threshold can be set to 80%
-Hi Luis,
+This is v3 for the remaining two patches (patches 4 and 5) from the v2
+series [2], addressing your review feedback:
 
-I'm confused here... I sent a temporary revert for this while we waited for
-Upower to allow changing threshold with -ENODATA. The current version
-of upower is fixed and I wasn't even aware TLP could do this: how do
-you do it?
+- Patch 1/2 (was patch 4 in v2): Remove the special-case "if (!authlen)"
+  return entirely in hp_calculate_security_buffer(). The generic
+  calculation already naturally yields 20 bytes for empty strings,
+  eliminating duplicate logic and fixing the 16-byte heap overflow
+  (reported earlier by Josh Snyder [3]).
 
-This means TLP also need to support -ENODATA properly and stop treating
-it as an error... Do you want to contact them or do you want me to do it?
+- Patch 2/2 (was patch 5 in v2): Remove the dead inner bounds check in
+  audit_log_entries_show() since "count * LOG_ENTRY_SIZE > PAGE_SIZE" is
+  already checked prior to entering the loop, and clean up the redundant
+  "else" block after "break".
 
-Anyway the main idea is that this is not the expected behavior and is
-considered bad practice to change the limit at boot without user asking,
-so I think the wise thing to do is for Ilpo to apply my temporary revert to
-platform/x86 too while we wait for TLP to behave properly...
+Changes in v3:
+  - Patch 1/2: Remove the "if (!authlen)" check completely instead of
+    adjusting the formula, avoiding code duplication as suggested by
+    Ilpo Järvinen.
+  - Patch 2/2: Remove the dead loop check and the redundant else block
+    instead of adjusting loop boundary math.
 
-P.S. newer version should have v2. v3 etc...
+Changes in v2:
+  - Squashed v1 patches 9-13 into a single patch (applied in
+    review-ilpo-next).
 
-Best regards,
-Denis
-> Signed-off-by: Luis Miguel Arias <luismi@gdcore.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 80144c412..87363b198 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1586,7 +1586,7 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
->  	 * platforms retains it, therefore signal the threshold as unknown
->  	 * until user explicitly sets it to a new value.
->  	 */
-> -	charge_end_threshold = -1;
-> +	charge_end_threshold = 100;
->  
->  	return 0;
->  }
+Link: https://lore.kernel.org/r/20260803143037.93105-1-meatuni001@gmail.com [1]
+Link: https://lore.kernel.org/r/20260812111829.172273-1-meatuni001@gmail.com [2]
+Link: https://lore.kernel.org/r/20260402-hp-bioscfg-overflow-v1-1-6985f8c9e67c@code406.com [3]
+
+Muhammad Bilal (2):
+  platform/x86: hp-bioscfg: fix 16-byte heap overflow for empty auth
+    token
+  platform/x86: hp-bioscfg: remove dead bounds check in
+    audit_log_entries_show
+
+ drivers/platform/x86/hp/hp-bioscfg/spmobj-attributes.c    | 4 ----
+ drivers/platform/x86/hp/hp-bioscfg/surestart-attributes.c | 9 +++------
+ 2 files changed, 3 insertions(+), 10 deletions(-)
+
+-- 
+2.43.0
