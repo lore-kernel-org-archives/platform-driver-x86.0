@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09C3ACA6E;
-	Tue, 18 Aug 2026 10:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690B3E0220;
+	Tue, 18 Aug 2026 10:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787048123; cv=none; b=qIKOgzB/bFYxLkWubut+VvLd+r7UNTHYq6dBYAQBsMtP66o/SuzKRgtNbaNPhqK/6jNxobE9qzy1cYoLU86UZQGapL4Lf5RRU1dXk28yfe/VXeSjMwVEExeM3iBhAPESo7n/7rDJjPd9Gwl7lG2Ec/ZgCmD/Dde5OOA+zHBJlNw=
+	t=1787048794; cv=none; b=kDxoAQ9x2vfDU8WxPJvZlAPAVDu8Ghowu2XUld3LY/HiUFBScdYDxWo5vnLcl/bKbRt1A1+Y9vWskFXOU8n2oJOipGC6/o5AOcmg4Pb4oGvTAmCgnCpTiwrvMAZpYWVdndB80rFAFK6j2Uw7HFkYX92c31DUKSdWznQGrbxnFo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787048123; c=relaxed/simple;
-	bh=s9xQW02rgBx4m4H1s7qUHntQNLerorLAjrdGy20aSGw=;
+	s=arc-20240116; t=1787048794; c=relaxed/simple;
+	bh=etnah3mbBU/mN/dq+uD0thd4IDt99r5Tx70rGW6SQx4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=O5P6yVxedR3zfWzeKmG8cgx5dae1r+Ill9MgOnsifqm48dA66+Ch7F8CM4yR+8+X2HCcpdvSfMF3nEYWoAxsaedeMcQdoILyLvG3RBilV6Xan0cu7S+JNMSAdB5VtFUDe9/R/qABqAO6DZnC6qQgjj1UqoNWq2CEkIFl+YRyoCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VEXrXfWP; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version:Content-Type; b=U1blvIgRa9wvxE6IRnsKizC4SUtrw/7dkp2+D9FrCJOmQP6Mo4Rndjad0AY8AZ+eQbhgDxrC2AkYlURqX+675klE1uL/QdX3cbcWZ6OESAexxBQkkQT46iUnQkMNyRFWVRhHWMOEEFdOgv+8LU8nCKDdYP+HcXLLsRYxjSif/es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kU+rjRUd; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VEXrXfWP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kU+rjRUd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787048118; x=1818584118;
+  t=1787048792; x=1818584792;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=s9xQW02rgBx4m4H1s7qUHntQNLerorLAjrdGy20aSGw=;
-  b=VEXrXfWPdC2fHGggkB3rh77fL/XNAc45ZxsaaxQ7H2d3Z1IGu0l4t1OY
-   Gcb4NvFTx89wYW08sud/Ye2duU5QcVj7J4kdxHi1ecylqgbqTfWGuYwI+
-   3deM5ZD9Hpy4hm5yCvEI1oL38mVs8kf6gipmRMGHR1EmW0duHlGKrQm38
-   GaEdKdiYEtqou3jSaOmCqeTTZ93thDAsetyPhiapfXmM5/0HwoN9DVYZM
-   n92n4is4h3rB1lmGBaoFGfqLpm8V0cjczPSitG2TXcK0aODNAGc1McPLd
-   H8v1TEg78vgDqN0aqgxluiyO1K//XWUAl10zyI3eCshObnFV5613EkNnq
-   g==;
-X-CSE-ConnectionGUID: SN0RP4Z5S/e9NbOTddF2rA==
-X-CSE-MsgGUID: sD/onSiWTiqyEwmJcS5siA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87452512"
+  bh=etnah3mbBU/mN/dq+uD0thd4IDt99r5Tx70rGW6SQx4=;
+  b=kU+rjRUdMIBOe88sb19f5RRs5j/P+MpRcMTDRL6KDyyrUZzKRkT8UuEJ
+   AOAFXHJJGLtKfEIXC1OihpJTw6h+203XKy4g+I4DAPfWY8O0P2WkeIeKR
+   OcokzZn+v8V/MGgwVh4D0C8+uhTqgaIC7YzlYmkH/+9KzgzvmqOhFnPHE
+   q2q0Oke3Ufa9D6ESIE/UqEA1Uu++giOuM8uOl0m5WcCiH9yroDBIG5o+/
+   7DHHPWaDnp0BBxbdBfJvzFEkZMRsXHcXOrwXar7mWyXE9PPHwqflIWIah
+   jhi2qV4Jk+th4kK61y3RYXvB4jdj8cIdyUxP+1vYUozwv17zcH2prWYPS
+   Q==;
+X-CSE-ConnectionGUID: erX94/9LTpKBbIxvnLoalA==
+X-CSE-MsgGUID: ZXHJPVwYRVaE8y36PwaCfA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87392691"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="87452512"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 03:15:18 -0700
-X-CSE-ConnectionGUID: CnIpiULsSqGjrO+CcuDOiQ==
-X-CSE-MsgGUID: xTsc0SHZSuGBiTwBBvP+rQ==
+   d="scan'208";a="87392691"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 03:26:32 -0700
+X-CSE-ConnectionGUID: fluTChAlTQ2q8ixcPHMD8A==
+X-CSE-MsgGUID: UEqA5LbOSvi0qwlIZC6+sQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="268693205"
+   d="scan'208";a="258988319"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 03:15:16 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 03:26:30 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Aug 2026 13:15:12 +0300 (EEST)
-To: James Alexander <opensource@inspiredexperts.com>
-cc: Daniel Scally <dan.scally@ideasonboard.com>, 
-    Sakari Ailus <sakari.ailus@linux.intel.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+Date: Tue, 18 Aug 2026 13:26:26 +0300 (EEST)
+To: Ruzal Daminov <daminovruzal7@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
     LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: int3472: add HP Spectre handshake delay
-In-Reply-To: <20260816204247.2844986-1-opensource@inspiredexperts.com>
-Message-ID: <efd97842-f8af-e2eb-c2ea-2e5a13f57040@linux.intel.com>
-References: <20260816204247.2844986-1-opensource@inspiredexperts.com>
+Subject: Re: [PATCH 2/2] platform/x86: huawei-wmi: add modern Honor MagicBook
+ hotkeys
+In-Reply-To: <20260814171324.16727-1-daminovruzal7@gmail.com>
+Message-ID: <13b32041-0e33-367e-732a-1b8431c7628c@linux.intel.com>
+References: <20260814171324.16727-1-daminovruzal7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,85 +61,50 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Sun, 16 Aug 2026, James Alexander wrote:
+On Fri, 14 Aug 2026, Ruzal Daminov wrote:
 
-> The OVTI08F4 sensor on an HP Spectre x360 14-eu0xxx failed to read its
-> chip ID with error -121 when the existing 45 ms handshake delay was used.
-> Increasing the delay to 150 ms allowed the sensor to probe.
+> Honor MagicBook laptops (e.g. FMI-76 / X14 / X16 Plus series) use the
+> ACPI WMI interface (GUID 0xA0) with modern function key scancodes.
 > 
-> Keep the existing delay for other OVTI08F4 systems. Add a reusable
-> handshake-delay field to the discrete-device quirks and set it only for the
-> affected HP Spectre family through DMI matching.
+> Add the missing keycodes to huawei_wmi_keymap[]:
+>  - 0x0287: Mic mute key (Fn+F7) -> KEY_MICMUTE
+>  - 0x0288: Camera toggle (Fn+F8) -> KEY_CAMERA
+>  - 0x028a: Honor Connect / Share (Fn+F10) -> KEY_CONFIG
+>  - 0x028b: YOYO AI Assistant (Fn+F11) -> KEY_VOICECOMMAND
+>  - 0x028e: Screenshot key (Fn+F12) -> KEY_PRINT
 > 
-> Compile-tested against Linux base fd923b32d761. Hardware-tested with the
-> full patch set across 25 consecutive reboots on the affected laptop running
-> Ubuntu 7.0.0-29-generic; the sensor probed successfully on every boot.
+> Tested on Honor MagicBook X14 Plus (FMI-76, AMD Ryzen 8845HS).
 > 
-> Signed-off-by: James Alexander <opensource@inspiredexperts.com>
+> Signed-off-by: Ruzal Daminov <daminovruzal7@gmail.com>
 > ---
-> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-> index 115bb3757..80efeb452 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete.c
-> @@ -193,6 +193,9 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
->  			      GPIO_ACTIVE_LOW : GPIO_ACTIVE_HIGH;
->  		*con_id = int3472_gpio_map[i].con_id;
->  		*enable_time_us = int3472_gpio_map[i].enable_time_us;
-> +		if (int3472_gpio_map[i].type_to == INT3472_GPIO_TYPE_HANDSHAKE &&
-> +		    int3472->quirks.handshake_enable_time_us)
-> +			*enable_time_us = int3472->quirks.handshake_enable_time_us;
->  		return;
->  	}
+>  drivers/platform/x86/huawei-wmi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> index 93cca17fd..d5f77fb68 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -72,6 +72,12 @@ struct huawei_wmi {
+>  static struct huawei_wmi *huawei_wmi;
 >  
-> diff --git a/drivers/platform/x86/intel/int3472/discrete_quirks.c b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-> index 552869ef9..d31f7c764 100644
-> --- a/drivers/platform/x86/intel/int3472/discrete_quirks.c
-> +++ b/drivers/platform/x86/intel/int3472/discrete_quirks.c
-> @@ -8,6 +8,10 @@ static const struct int3472_discrete_quirks lenovo_miix_510_quirks = {
->  	.avdd_second_sensor = "i2c-OVTI2680:00",
->  };
->  
-> +static const struct int3472_discrete_quirks hp_spectre_14_eu0xxx_quirks = {
-> +	.handshake_enable_time_us = 150 * USEC_PER_MSEC,
+>  static const struct key_entry huawei_wmi_keymap[] = {
+> +	{ KE_KEY, 0x0287, { KEY_MICMUTE } },
+> +	{ KE_KEY, 0x0288, { KEY_CAMERA } },              /* Fn+F8: Camera */
+> +	{ KE_KEY, 0x028a, { KEY_CONFIG } },              /* Fn+F10: Honor Connect */
+> +	{ KE_KEY, 0x028b, { KEY_VOICECOMMAND } },        /* Fn+F11: YOYO AI */
+> +	{ KE_KEY, 0x028e, { KEY_PRINT } },               /* Fn+F12: Screenshot */
+> +
+>  	{ KE_KEY,    0x281, { KEY_BRIGHTNESSDOWN } },
+>  	{ KE_KEY,    0x282, { KEY_BRIGHTNESSUP } },
+>  	{ KE_KEY,    0x284, { KEY_MUTE } },
 
-Hi,
+??? Multiple of those keys are already in the array ???
 
-Please add include for USEC_PER_MSEC.
+I suppose you'd have noticed it if you'd have not added the leading zeros 
+and would have put those correctly in their place in the numerical order.
 
---
+Please also keep the existing formatting.
+
+-- 
  i.
 
-> +};
-> +
->  const struct dmi_system_id skl_int3472_discrete_quirks[] = {
->  	{
->  		/* Lenovo Miix 510-12IKB */
-> @@ -17,5 +21,14 @@ const struct dmi_system_id skl_int3472_discrete_quirks[] = {
->  		},
->  		.driver_data = (void *)&lenovo_miix_510_quirks,
->  	},
-> +	{
-> +		/* HP Spectre x360 2-in-1 Laptop 14-eu0xxx */
-> +		.matches = {
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "HP"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME,
-> +					"HP Spectre x360 2-in-1 Laptop 14-eu0xxx"),
-> +		},
-> +		.driver_data = (void *)&hp_spectre_14_eu0xxx_quirks,
-> +	},
->  	{ }
->  };
-> diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
-> index a73841dfa..797694aa8 100644
-> --- a/include/linux/platform_data/x86/int3472.h
-> +++ b/include/linux/platform_data/x86/int3472.h
-> @@ -96,6 +96,8 @@ struct int3472_cldb {
->  struct int3472_discrete_quirks {
->  	/* For models where AVDD GPIO is shared between sensors */
->  	const char *avdd_second_sensor;
-> +	/* Override the default delay for handshake GPIO regulators */
-> +	unsigned int handshake_enable_time_us;
->  };
->  
->  struct int3472_gpio_regulator {
-> 
