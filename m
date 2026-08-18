@@ -1,134 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-71.mta1.migadu.com [95.215.58.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C092E175F;
-	Tue, 18 Aug 2026 13:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03263803E1
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 13:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787058582; cv=none; b=AwAxwFBt5SVbanCpkqdzwvu/ty4Hy+jxTpPJBKvzY2xCMWlDt4p19fquFJ+UzzLKwD7JX2jOfOlvgn10KlBfRaRLFMYihlDhpRrLcQld6syI0vzTtTpuGi3QCPfqL3DMiTi39mGzgsh58ypJBOUUW45TnHDEOUP5O3kMmw6oEUg=
+	t=1787058946; cv=none; b=b9zf1DSOn0dRUlX8HO2Mpmmew2Qg0Mio1XAPkRyMj92l3YhNXbZmgQjUjuK5ymNltX68xMsoTg08gECJa98ViWmOtO8PzMbWGLCE7kSK9Kx1dqBx0eiNRNGWLkHNubs49NTdrIIeZKWKZvmlaJzgN5agKTu0TBFL+cEbhrFcdKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787058582; c=relaxed/simple;
-	bh=v+mCXUzWg2XHpp3kLiM3T6TnCjkGMKGv3cEHTTi+s/Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=QPirqFN3puAeyl6bA4V7iu/QPin7QP5sEcAMi9T3Q8fDIQoFekFLr6Yz6sR4pB7g4slHv6NbZUchloz6oR7cZ/5XeJJKWQLD8iEtZhmaRUK9+XNP003ooNVvAUfBu5eh5s/0z6vVszYN5eDFaF6YRVqaATYjhTCOYrRsWkGqcQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jsb3B3uf; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787058946; c=relaxed/simple;
+	bh=d4AEsAjQVAZ7vwOjVpYPcLqw/t5b03u3Gr3BSlgMvLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2ghYazgm8nXRtXlT8XewIdJINrFGPKJLh1q8roN+M11bdDfpjCO3fj/DUqrWY4ocNi2gVQIlNPJdr66hAkNRuZZr+VLxOQKdVCJVyeU1JF/7FI3wDrvw31n/iZGujwo/bs/N5uMzha105O/9RKkO0lAG2wQqjQu/laRtBQR//k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lz8mOX3B; arc=none smtp.client-ip=95.215.58.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jsb3B3uf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787058581; x=1818594581;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=v+mCXUzWg2XHpp3kLiM3T6TnCjkGMKGv3cEHTTi+s/Q=;
-  b=Jsb3B3uf55b4NKz2QavqxvpcQgWdJWADiy+RrScTtMhRTSc+6B0/dwCX
-   wSwLsULZXYRVCR4S8UrIEW1WX+DXTv3ysWr2w6VFTUEp2F42oqSLzTFq/
-   n1BEHlA31koVHPDZnUGOtwdWm/KKj4JkEZrXDQuJCL2b82nb/LUZ4xYgo
-   9cZV2QveXYWM7l3c4poGbBFgyEZ/5Y/YWJyahX+Z2PhgGHpLCNBU11nYu
-   swe0RnJBpUhaKXXJ6mz2S/DG55l5tfvxXdBSeQ46XUASiUhwcvN6ea+gq
-   NjE9mUlI96KzGgFqXwJ6aKfM5bCb1hYWAfgPMv/eqPgdMU5D0Nw89dekY
-   Q==;
-X-CSE-ConnectionGUID: ulUtmxNpRc2u7wmMFdtMlw==
-X-CSE-MsgGUID: Rj/lQjyGRo+If06838u5lQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87618104"
-X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="87618104"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:09:40 -0700
-X-CSE-ConnectionGUID: X1mDF0SqSXu9a6DMZjt8uA==
-X-CSE-MsgGUID: LdkVkzWqRRaDWmhSs2qWaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="263496825"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:09:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Aug 2026 16:09:33 +0300 (EEST)
-To: Arav Verma <svav2021@gmail.com>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: intel: wmi: Use sysfs_emit and remove dead
- callbacks
-In-Reply-To: <20260810004044.3636731-1-svav2021@gmail.com>
-Message-ID: <6e95fc3d-8792-4f87-55d1-d0fcb32c37bb@linux.intel.com>
-References: <20260810004044.3636731-1-svav2021@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lz8mOX3B"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=d4AEsAjQVAZ7vwOjVpYPcLqw/t5b03u3Gr3BSlgMvLc=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787058942; v=1; x=1787663742;
+ b=lz8mOX3By5nFE7irYrDunKvCCGIuIK2YqVjPCTSxh0eG3YaAls2pSbGwL7fejWZn8Ds/N4U3
+ xLLHaHPhv/sxZrLtKu9dBOklThN8VfZe9ujwaK12z4iWb6uA96GArHQm4j9V+rjYbrPS4jd0fNQ
+ 7cacUUzM7HQc4iRzynCGcPU0=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: from linux.dev (62.216.208.217)
+	by mta12.migadu.com with ESMTPS id e0058b7dd93a47ab;
+	Tue, 18 Aug 2026 13:15:42 +0000
+X-Migadu-Flow: FLOW_OUT
+Date: Tue, 18 Aug 2026 15:15:40 +0200
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>, stable@vger.kernel.org,
+	Mark Pearson <markpearson@lenovo.com>,
+	platform-driver-x86@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform/x86: think-lmi: Fix current password length
+ check
+Message-ID: <aoRa_PwLxneo9Juv@linux.dev>
+References: <20260813082049.41209-2-thorsten.blum@linux.dev>
+ <daeefbce-83f6-f161-71f5-38730fe9c9d5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <daeefbce-83f6-f161-71f5-38730fe9c9d5@linux.intel.com>
 
-On Sun, 9 Aug 2026, svav2021@gmail.com wrote:
-
-> From: Arav Verma <svav2021@gmail.com>
+On Tue, Aug 18, 2026 at 02:28:50PM +0300, Ilpo Järvinen wrote:
+> On Thu, 13 Aug 2026, Thorsten Blum wrote:
+> > current_password_store() checks the password length before removing the
+> > trailing newline, which can reject valid passwords that are exactly
+> > ->maxlen bytes long.
+> > 
+> > It also passes ->maxlen to strscpy(), which truncates passwords without
+> > a newline.
+> > 
+> > Use strchrnul() to measure the password length up to the newline, then
+> > copy that many bytes and add a trailing NUL terminator.
+> > 
+> > Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> > ---
+> > Changes in v2:
+> > - Keep and reword the newline comment
+> > - v1: https://lore.kernel.org/r/20260810132018.156868-3-thorsten.blum@linux.dev/
+> > ---
+> >  drivers/platform/x86/lenovo/think-lmi.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/lenovo/think-lmi.c b/drivers/platform/x86/lenovo/think-lmi.c
+> > index e215e86e3db7..d0ceb6aaa69e 100644
+> > --- a/drivers/platform/x86/lenovo/think-lmi.c
+> > +++ b/drivers/platform/x86/lenovo/think-lmi.c
+> > @@ -438,14 +438,14 @@ static ssize_t current_password_store(struct kobject *kobj,
+> >  	struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
+> >  	size_t pwdlen;
+> >  
+> > -	pwdlen = strlen(buf);
+> > +	/* Strip newline; setting password won't work if one is present. */
+> > +	pwdlen = strchrnul(buf, '\n') - buf;
+> >  	/* pwdlen == 0 is allowed to clear the password */
+> >  	if (pwdlen && ((pwdlen < setting->minlen) || (pwdlen > setting->maxlen)))
+> >  		return -EINVAL;
+> >  
+> > -	strscpy(setting->password, buf, setting->maxlen);
+> > -	/* Strip out CR if one is present, setting password won't work if it is present */
+> > -	strreplace(setting->password, '\n', '\0');
+> > +	memcpy(setting->password, buf, pwdlen);
+> > +	setting->password[pwdlen] = '\0';
 > 
-> Modernize firmware_update_request_show by replacing legacy
-> sprintf() call with sysfs_emit(). When altering string, also
-> corrected format specifier from %d to %u to match u32 type of
-> target variable.
+> Hi,
 > 
-> Additionally, remove empty .probe and .remove callbacks from
-> wmi_driver struct, as they were print-only and redundant.
+> I don't understand why is this strscpy() -> memcpy() conversion required? 
 
-Hi,
+It's not required, strscpy() would also work.
 
-Please split these two entirely independent changes to two a patch series.
-
-Always stop and reconsider when you have to say "Additionally,"; one 
-almost always wants to add another patch into the series instead of 
-writing that magic phrase.
-
-> Signed-off-by: Arav Verma <svav2021@gmail.com>
-> ---
->  drivers/platform/x86/intel/wmi/sbl-fw-update.c | 16 +---------------
->  1 file changed, 1 insertion(+), 15 deletions(-)
+> Wouldn't it work with:
 > 
-> diff --git a/drivers/platform/x86/intel/wmi/sbl-fw-update.c b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-> index 62c9c7f18..7e07cfab2 100644
-> --- a/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-> +++ b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
-> @@ -61,7 +61,7 @@ static ssize_t firmware_update_request_show(struct device *dev,
->  	if (ret)
->  		return ret;
->  
-> -	return sprintf(buf, "%d\n", val);
-> +	return sysfs_emit(buf, "%u\n", val);
->  }
->  
->  static ssize_t firmware_update_request_store(struct device *dev,
-> @@ -93,18 +93,6 @@ static struct attribute *firmware_update_attrs[] = {
->  };
->  ATTRIBUTE_GROUPS(firmware_update);
->  
-> -static int intel_wmi_sbl_fw_update_probe(struct wmi_device *wdev,
-> -					 const void *context)
-> -{
-> -	dev_info(&wdev->dev, "Slim Bootloader signaling driver attached\n");
-> -	return 0;
-> -}
-> -
-> -static void intel_wmi_sbl_fw_update_remove(struct wmi_device *wdev)
-> -{
-> -	dev_info(&wdev->dev, "Slim Bootloader signaling driver removed\n");
-> -}
-> -
->  static const struct wmi_device_id intel_wmi_sbl_id_table[] = {
->  	{ .guid_string = INTEL_WMI_SBL_GUID },
->  	{}
-> @@ -116,8 +104,6 @@ static struct wmi_driver intel_wmi_sbl_fw_update_driver = {
->  		.name = "intel-wmi-sbl-fw-update",
->  		.dev_groups = firmware_update_groups,
->  	},
-> -	.probe = intel_wmi_sbl_fw_update_probe,
-> -	.remove = intel_wmi_sbl_fw_update_remove,
->  	.id_table = intel_wmi_sbl_id_table,
->  	.no_singleton = true,
->  };
+> 	strscpy(..., pwdlen);
 > 
+> ?
 
--- 
- i.
+However, strscpy(setting->password, buf, pwdlen) wouldn't work because
+pwdlen is the number of characters to copy, but the destination buffer
+size also needs to include room for the NUL terminator. Since there is
+no NUL before pwdlen, it would copy only pwdlen - 1 characters and set
+setting->password[pwdlen - 1] = '\0'.
 
+strscpy(setting->password, buf, pwdlen + 1) would work, but since we
+already know that exactly pwdlen bytes need to be copied, memcpy() is
+sufficient.
