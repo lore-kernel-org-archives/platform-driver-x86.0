@@ -1,112 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E5A423EA2;
-	Tue, 18 Aug 2026 08:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F494028D9
+	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787041616; cv=none; b=mMqLKQBWNytxT5DsboPIsyBdiUx+ZDb67H1xk/GZbdp4xheAcB0Z/dD1wa9HxfbTlvziWI/J5B1OYAYgC2bsHAEKRmbsaDaDJ8jkX6NDZ1zBSUxsVcgAiB/6ceccNH7m76uI3xefVMKz0BMpRDBbYq2tvY3fNhCx4SOM5If+lVU=
+	t=1787041791; cv=none; b=aPpwRgtZyVZRX6Yizw9o6mauqYX3h1r7PT2ihWs7jnjulySaLjOQdV92sta7W3pFJ6HQz6+Qd6SU4P61xNYylaqlCC3sEJclbLTncqlQTPSPi6VNukRS0LigX6kvFm3BRQUs6slMAZMkcqaoLjdfWs/Lx3rL8vjcNo6Q5TAi6WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787041616; c=relaxed/simple;
-	bh=4phCkJfenRg107fZkQ7iErF8Bl7JZhhxA3UMBCXdsDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bavtO4DsUUfXSCh0GqsF9gggPjf7r534yigBwhull4JbIocPfdtWwmNLH08rPnQd9A4aEAQ5lggnbjn+wc4UuXsOAv3pE9BnxFX8h5Wmt9+9RW0R2PW2Unj7nRpT4agQnecTttcHu3f3tWLw+FHJ0VYsobBrc/v/gHNc7KuhVZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yk8utEmC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787041791; c=relaxed/simple;
+	bh=b1j8d02SnXPqzPZjvTHQcLZm1J8zA5HnNmDqjFQQ5Ck=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k9QIiRIXa5rWFztt7LPdk061SMHjj3jS8EQk567whyqcxPc5As4ah4Tjz7bTC5eLyAEYEn84nUo77CMXhi9qQJO8tgj+SQCJ7w/NJbmtOPxXyWI/IJSmksoXkHJfKFA8HE+JV4FrkzCF1GBrGkta2HGNRa9bOBRKBMbLd1iHjk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXsQbMYQ; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yk8utEmC"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 8D4181F000E9;
-	Tue, 18 Aug 2026 08:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787041615;
-	bh=4phCkJfenRg107fZkQ7iErF8Bl7JZhhxA3UMBCXdsDY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Yk8utEmCxy96+toKCErkoYApQaMdiPS/mCchSNuianQYv5m27/NqvByr5wIHg/m/V
-	 JYPws0OalIunJ4Yd2Snp/HnkIw1rSMOTd/6QctDhGAOp0jvQrHwF0n9PaeAGt00qC0
-	 saa1+8NO9+GG/Co8K7GGanrbgXB+dSdO7Oxcz2iFPdZC6CEgC3Yj9aPfTOcd+dIN8Z
-	 +LT3Vfdjc4SKL6Lbp/+x2xuv4GH2gVaRlGE3hHt8WEvPCMdOBXAxXd0WAG3L93H+O5
-	 nZwX4r8hyUboRXsOUUNS71jbX+QUFn7K0le4nTVH+Oymi6Gwb5Ng2kBuVnesHYQesU
-	 PTDG5N+c0BpDA==
-Date: Tue, 18 Aug 2026 10:26:52 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Eliav Farber <farbere@amazon.com>, rafael@kernel.org, 
-	tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, mchehab@kernel.org, 
-	xueshuai@linux.alibaba.com, lenb@kernel.org, laurent.pinchart@ideasonboard.com, 
-	brgl@kernel.org, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, 
-	zhang.lyra@gmail.com, jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, dmitry.torokhov@gmail.com, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, W_Armin@gmx.de, fabio.m.de.francesco@linux.intel.com, 
-	kaihengf@nvidia.com, ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, 
-	paulmck@kernel.org, frederic@kernel.org, kees@kernel.org, saket.dumbre@intel.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v5 01/13] notifier: add device-managed registration APIs
-Message-ID: <aoQWOsPeyU9o3Ahn@monoceros>
-References: <20260816060648.4030-1-farbere@amazon.com>
- <20260816060648.4030-2-farbere@amazon.com>
- <aoFgF2E4p4DqYLGG@monoceros>
- <CAD++jLk+MMH=-ifdSs=Vm4G9RO5-yVs8NLUb4AE1wYH5FQrmjg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXsQbMYQ"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2d58efc7356so23692805ad.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 01:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787041789; x=1787646589; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=akMTcbcYeBU31aVMacIUPTcUA5VWizsZ0RTahsbm5BQ=;
+        b=WXsQbMYQkhBPnCEeYcHgSotdtAqSO1qv+RFaAaKX9QT4gVcxDN3W3be7uDewYvnaZO
+         8FvtaBhkt+Bi8fU5q6B1qEb962YgLLHl1VvLN33Wgzwfz9vYo+Vdd8EfKzWtjbPoV6EU
+         XxZGY3qxjIv2ngquviijG7wZ6vVWlb4RUWZkIUW/urWJC2LUrcxlZMclS5HscwtWkZfz
+         SkRNUVDYtS2Z2xzqefe9AbCP4+SOxaB9FzZTTYu6mPu5hkuFYJq8XpN0D/SNPzY5MLPc
+         pFMZq5ChLEEIGo3rVmGq5NwsUBCz739c+3r14pAUkrRf2UNkjyCyExEcNHaz5E7UAtBY
+         YHew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787041789; x=1787646589;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=akMTcbcYeBU31aVMacIUPTcUA5VWizsZ0RTahsbm5BQ=;
+        b=Z+UuHC2TzgEcESthiWcv/soPXdm1ddOcsv8znJ32SWbvNHosK0Bfghcvilwix/lC7e
+         ebHlHXRzG7em/UX3PJaHCaxNi/g06U3AWGayHGqKQxtYOlwGK6eEy7DLR0pZZR18tHIL
+         hsVSgNYYRjSPO+ABqMIyiVL7INGbvAifMBWsHHJHDloXHWtHfjUCiBbVP3Z5z/tOhDmv
+         5eSDyWpIfQ73eJT2FSRSku8syg15WBIb+RxECF1LBx96O/WoBMnZLp5J5uy9rLzEOC6s
+         Qo0OHGAr4CENWCRakH1vIZerJoNNSHVQFd9Qml91lueGU7OwcuZDQz62WkeLRUp6AYTf
+         /QFw==
+X-Gm-Message-State: AOJu0Yy/A/bNSFlc77HkzuhSS5lBgbWngstkbe4gzdd8m4Jl4El2p/Pd
+	lo1Yow0YgY/HJkPjQoVXchxRyIiHqPUci6Eiy6j+XjnYm+9n6DFcMS9J
+X-Gm-Gg: AR+sD13esqNlruyt+rgXqTtbeUXbpv7QDsuVbNElnAjW38nwtneVeYCk+uGCdqw+056
+	k+zIdPXHXYQ66csM7/woMVXHhBqKKSrhFLqHmQ+zo0a3LuWvdGsKfXCKUSKrriZn+UOeyu/PrYY
+	OhWJpKG4/xJQcJptJmRtqnxlPaEII40aGs3HNdl3o7dUHtlnX0SOpcfuR6LyCfht4z/1vS6YvZ1
+	qcQb+TSNXg6rGkh8zK0soXOY4vF//j9cmkRPGBvni3//NFI5CodPh8i33mAVbgzg1VhKL8CDmAS
+	AHML7Zth0jv/cMu3Qu6FZ7Y5elJLbr/bKeLDWZO5ntvWOeKreETKzc0AJfyD0ypkOfRQwCLgetM
+	l7iYpqWTuUTTkiNRA6eB0vfYxVGPiyeL/HYAlQn7nonF9stMjbiUhdYnE2GQmlny+WYaab9nUjc
+	a5dGTiaBCVqzGI5hKAPpcDh8rhl54B4iJSDUEwWyIrNDgdtYxHsmEK++KkjSV22CUEsqzY2y1D9
+	X3AJHJZhBHnEcAQq7OCWSwHP4C5tToUcQ==
+X-Received: by 2002:a17:903:384c:b0:2ce:7563:70a5 with SMTP id d9443c01a7336-2d3b0d1254emr375377765ad.6.1787041789361;
+        Tue, 18 Aug 2026 01:29:49 -0700 (PDT)
+Received: from archlinux ([223.228.161.145])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3267c490ee9sm15680979eec.25.2026.08.18.01.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 01:29:48 -0700 (PDT)
+From: Suryansh Singh <technosfan14@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Suryansh Singh <technosfan14@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8A43 thermal profile support
+Date: Tue, 18 Aug 2026 13:59:25 +0530
+Message-ID: <20260818082925.14854-1-technosfan14@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="atk2on2uarby33p4"
-Content-Disposition: inline
-In-Reply-To: <CAD++jLk+MMH=-ifdSs=Vm4G9RO5-yVs8NLUb4AE1wYH5FQrmjg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+The HP OMEN 16-n0xxx AMD (board ID: 8A43) supports the existing
+OMEN thermal profile handling.
 
---atk2on2uarby33p4
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 01/13] notifier: add device-managed registration APIs
-MIME-Version: 1.0
+Add the DMI board name to omen_thermal_profile_boards[] so that
+the existing thermal profile support is enabled for this board.
 
-Hello Linus,
+This enables the existing fan control and platform profile
+handling for 8A43.
 
-On Mon, Aug 17, 2026 at 02:10:13PM +0200, Linus Walleij wrote:
-> On Sun, Aug 16, 2026 at 9:04=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@k=
-ernel.org> wrote:
->=20
-> > I suggested to add "Must be called in process context." to the kdoc for
-> > devm_atomic_notifier_chain_register() as this is a relevant difference
-> > to atomic_notifier_chain_register() and create an immutable branch for
-> > it as a base for subsystems to apply their follow-up patches. I'd wait
-> > till Wednesday for concerns and review tags to tickle in.
->=20
-> I think this is a good approach, but we are in the merge window,
-> don't you wanna wait for v7.3-rc1 and create the immutable branch
-> based on that?
+The board has been reported as working with this configuration
+in OmenCtl.
 
-My thought was to base on v7.2, and then consider the topic done for me.
-=20
-> (But Bartosz will be the one pulling the immutable branch...)
+Link: https://github.com/yunusemreyl/OmenCtl/commit/39d03b62028555d3014085f0d9cb3eb57a501871
 
-It shouldn't make a difference for him if the branch's base is v7.2 or
-v7.3-rc1, still more given that there are no changes staged in next to
-the affected files (`git log v7.2..next/master --
-include/linux/notifier.h kernel/notifier.c`).
+Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards
-Uwe
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 49321d7feb93..5551f8134cdb 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -207,7 +207,7 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
+ 	"88F7", "88FD", "88FE", "88FF",
+ 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+-	"8A15", "8A42",
++	"8A15", "8A42", "8A43",
+ 	"8BAD",
+ 	"8C58",
+ 	"8E41",
+-- 
+2.55.0
 
---atk2on2uarby33p4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmqEF0QACgkQj4D7WH0S
-/k6+ewf/TQPKKAWHFqB2guxJQb4tJtqqrt9CfxNlHgpRy98IQr+Wzsclp/2b55PD
-+Vt8rK1QzYpoCbHNgn48yp+ZwOgUgZLGuFt1oOMJuz4TML4VoRQW/KQBjYb8RH6h
-bZwXKf20jhh0jcWWdq+Oloo7khDa3AfPjzRMezSt63HtWnFWyDBFmk+Hpj2iK5wV
-ydEynNxomqrfrzujN4nShzkby6/nearXk+4xXCvj02C50nfaHCtzBWc07ic2TP90
-xDPXfb0bl2EHmQ7jRNKDBne2D3J7gm+NVDzSblze4JXAuRSbDl51QXnnQ49Me8pn
-JJE4fMKe0QjKuFoPX4pzR1Up39HZcg==
-=T8Ew
------END PGP SIGNATURE-----
-
---atk2on2uarby33p4--
