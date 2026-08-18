@@ -1,58 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39D347887A;
-	Tue, 18 Aug 2026 14:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D615C472F76;
+	Tue, 18 Aug 2026 14:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787062104; cv=none; b=JLTpY0S9LbZth+aXAG6quXnSR6jcU+t5glLaN/+niCMBuqpUzrvLaVhGYkh29R0VSk75ROAymCkszcVRQIsKWr6HAfgeFJio+i2WPuoLLk/WueCVDn/bnlK3ni2d2APqPLIDcm3BmgSeVBQSLu+pGK1BnodpeNJsTziGQkg88Yk=
+	t=1787062111; cv=none; b=WNwCARUgP/MWNx+54kNHsOtUVw/jmaGEsyoVPhjwQ7omw9sGJd3S8t0qEIFzYbOoBNcMhd/jgP0/WCu20NDPIqckYquOaQLazN3S072Lfr+4rsCFfAgEh9saxOvsS4Zsk6Vzg8ZjNtwIgZymYaix7EnI22F5pr5cU/KsJ/CMa54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787062104; c=relaxed/simple;
-	bh=Tn8UubTL8rEJ5YowuBgFNtmXR2ewrpcEYSWJmEk4HHE=;
+	s=arc-20240116; t=1787062111; c=relaxed/simple;
+	bh=ZKuueehRYEzl6uFVW/adUeh5fTNO3cMKRLz5r1fw834=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Ls8DJGtAkkMnmRh06I4ziFwQMshc489CE+c7Q9r6PYOCtY3Vssq884yxvQREq5Y2YC2Co5RIZTAxuqoHv78QKfb/e+AIhek6QHW4NGvla+eCar3S0uEwoJmVxqxL6A8lW4MB6g1AFsuWOpZFnhkROKV5uk207QB5Fe3e9wONDP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFEborFP; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=QMjknJkg5zO7lkTwSduLbHDQ4wFCUNbI6HqHCBf9Z9uFnjtLpl1PDVwgdWggpzG+dcfBGLAZi3uE+KKnGuzzKGniOoF/nNd5yS8YTuPlpByW9/Wxn2zT8VKjwv4qB9Vde3+KtgjADudhQM0QmsTXm2WV+96stNxPZLt3156rUrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DGMNQpho; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFEborFP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DGMNQpho"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787062103; x=1818598103;
+  t=1787062110; x=1818598110;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=Tn8UubTL8rEJ5YowuBgFNtmXR2ewrpcEYSWJmEk4HHE=;
-  b=kFEborFPJ4yNSkzTFgIF5O2ZpAVn1SKIin97KiBEze+lofr3+m3ynb54
-   A1fMy0WmuIvb4jKyoiLrjCj1p3wFFC6UQqYB7RsN5bpjK7iUb4mycC4gQ
-   F+K65QAGk8DKvNCi5X6c68hFK8dldLs+n15UOWao+bOVoXkL+eQDyPUiJ
-   Zi1c3kUPK4dtNvy/R+nKEQhWsLK+phEmsw7n/B/p7Won+9TEjvPT+6c5h
-   dA5josnBMbJSjIySBKBC374zLZADTBOCUhMQwFTPYbyAroGfw6XR4I4ho
-   LEH1WJFmeKEHOtRBASSJ7PBQFbwhMVkcWjusRTkLbwHc1I2fa8ij1qXnN
-   Q==;
-X-CSE-ConnectionGUID: ocKRnQknTw6y7PHyFgMucQ==
-X-CSE-MsgGUID: VUkDZo5PQGejOcC0ZhIrbg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="105089179"
+  bh=ZKuueehRYEzl6uFVW/adUeh5fTNO3cMKRLz5r1fw834=;
+  b=DGMNQphoZlU5Z9OXs+DejEk21W0RPq+c0m+AFNzxjtWWKLuLcmXv6QoO
+   X9ZBXePrP11dfGhk/H63Nm351ekGmePzZoAmDEZBmDCB83u4KV88/e/3n
+   SXFCcY5OeVqP4rqhOZaKW+z5an+epfxLxDB4vrB9cBHaNbGMlnxzzR0p+
+   XWXz4JLRxts85XMy8PL3u7N8SK+Fw1mdLHtGvTUVrOEQw2i1w8P7xfcan
+   fRNvMkESl3Zgp0Y5sza76Kfl13hqBYFgMOXUs2oJdSJ2dmia14s2SKib6
+   ocKrS2bXyF3jHvp/ob2WiEKgDWXY5RG+omYXjGm5z2eozfQO7GUIoSG59
+   w==;
+X-CSE-ConnectionGUID: PEgiPPtWSX2ob3KsyZcw/g==
+X-CSE-MsgGUID: JDqL4DRTRryytRRS1jS+dg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="105089191"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="105089179"
+   d="scan'208";a="105089191"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:08:22 -0700
-X-CSE-ConnectionGUID: zHjFFlrBSBaoO4gAWYp7lA==
-X-CSE-MsgGUID: wqQirejzQB2SMfDTThbt9w==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:08:29 -0700
+X-CSE-ConnectionGUID: k8PHZEZVTOyXh2vXjV6eXw==
+X-CSE-MsgGUID: eQKniEV5QRG2pIhnz5Sc5w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="267214063"
+   d="scan'208";a="267214071"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:08:20 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:08:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: teackot@gmail.com, hansg@kernel.org, 
- Yaroslav Dudkov <aroslavdudkov622@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260807180553.869371-1-aroslavdudkov622@gmail.com>
-References: <20260807180553.869371-1-aroslavdudkov622@gmail.com>
-Subject: Re: [PATCH] platform/x86: msi-ec: Add MSI Katana GF76 11UEK EC
- firmware
-Message-Id: <178706209613.20251.7048425180181532039.b4-ty@b4>
-Date: Tue, 18 Aug 2026 17:08:16 +0300
+To: platform-driver-x86@vger.kernel.org, 
+ Andrew Onyshchuk <andryk.rv@gmail.com>
+Cc: mpearson-lenovo@squebb.ca, derekjohn.clark@gmail.com, hmh@hmh.eng.br, 
+ hansg@kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20260806154417.618575-1-andryk.rv@gmail.com>
+References: <20260806154417.618575-1-andryk.rv@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix fan speed reporting
+ on Edge E330
+Message-Id: <178706210259.20251.17365085472196116757.b4-ty@b4>
+Date: Tue, 18 Aug 2026 17:08:22 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,14 +65,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Fri, 07 Aug 2026 18:05:53 +0000, Yaroslav Dudkov wrote:
+On Thu, 06 Aug 2026 08:44:17 -0700, Andrew Onyshchuk wrote:
 
-> Add the firmware string '17L1EMS1.107' to the ALLOWED_FW_13 array.
-> This enables Embedded Controller support, including battery charge
-> thresholds, for the MSI Katana GF76 11UEK (MS-17L1) laptop.
+> The ThinkPad Edge E330 with H3 firmware uses the non-standard EC fan
+> register block. Without a matching quirk, thinkpad_acpi reads the legacy
+> tachometer registers and reports 0 RPM.
 > 
-> Tested on MSI Katana GF76 11UEK with EC firmware 17L1EMS1.107 and
-> BIOS E17L1IMS.312.
+> Add the H3 BIOS family to TPACPI_FAN_NS so the driver reads the fan
+> period from EC register 0x95 using the existing non-standard reporting
+> path.
 > 
 > [...]
 
@@ -85,8 +88,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: msi-ec: Add MSI Katana GF76 11UEK EC firmware
-      commit: ef2c7d3b75d9270979f9a3fb32edee811c383fbc
+[1/1] platform/x86: thinkpad_acpi: Fix fan speed reporting on Edge E330
+      commit: 051292bf7697e72a760401b6883c55a98beecc5b
 
 --
  i.
