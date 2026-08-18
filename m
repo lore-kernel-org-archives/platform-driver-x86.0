@@ -1,59 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6D235028C;
-	Tue, 18 Aug 2026 14:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADD3379C22;
+	Tue, 18 Aug 2026 14:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787063627; cv=none; b=NzMUkH08A+oMzWsVVHlM/sTzv4y+WGBHNpGqf3GHb6x1LqK0cV0IpY5/v4WChr19/6WKbx4KIy451zBLX3L7AaSG1Aza2LnGeKf4cdyjJM9vc3hEUTGNBTQ6riYIGkdLxzU56ugkI7zG/e4EPZp0IJiSHBF3hXfVNli4+6aHStA=
+	t=1787063631; cv=none; b=oy8lqCEAwT+Mhkm0BfPtyhFySJ1XPh63+j5yL9eFTu/f6NMTCyAjEIaj02GlgrGM2b/O//3dGxz4wbXVcb8LZ8wLMydiccbM79JV9JZGGPWxBhHQgCIrAPr76SvtaHo1nMJs1unTdwBNrBrcf1wBzhcuzS7SbLLKOGKIDIS2CwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787063627; c=relaxed/simple;
-	bh=dnuyB07hZXabzDHoucw3PcRkxPHRpRa8/K0WkwOXd/0=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=R8RBtzYQ+hbGvA3mQS3u39lt6KmNLFMua4HHgIqT4KUUXwLTP+KTMuz3UPPAcJEKKCvOoeXTxAymU8+gdzR5fKRU+EevnA3TfGQDs2RJsmnqMfB8p/018p/GMEkXcKjHt6BpI+jIxDcek3tkMkEWBfI4OyS3uwpqC4OcEUCEtBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceE/USpi; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1787063631; c=relaxed/simple;
+	bh=D4GJYhnBNZ5TRw/ZJyagH1PzwZy6hjkHEuu0d1UNVcY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gLCmiSZgH4B1GekQoJ+8b3zwnUiz6nF+Fn93gDMcDLpqfHRrOW78ZbuIu6gdrORlQEbNguPFVdJ6x1nzG0IYo3mGly3jXrkY9/WwHcYEChyvd3mWmmIo7hQdZpOkTXnOCRPVtbtScRGmSppUBg4zmbj6TmPTRDrqvctUhIPa0Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WM2j3HL5; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceE/USpi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WM2j3HL5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787063626; x=1818599626;
-  h=from:to:in-reply-to:references:subject:message-id:date:
-   mime-version:content-transfer-encoding;
-  bh=dnuyB07hZXabzDHoucw3PcRkxPHRpRa8/K0WkwOXd/0=;
-  b=ceE/USpir050L5caLmWfWpxuqSaAbzxRdzqfSIPkrKG1AEkq6DAg7+Io
-   GwHZL70vyzGsNptejq+++STu1OUlm5BJ29nCWWydzNnW2ATVkW+0q+2in
-   Q1E9cozAiCyg3GTTlIOdLdE/uNZd1K/U8NS/8vU/nCvyhkRA3SwXVgxCy
-   PoeRyKv9voVpQGPOJOd9RRaSMZuz5D6h54wSU/w+aSSdNub5Bnm8HPlcS
-   +X3fzZUuF5vR+KSypdAO9YeBPyKdRudtEPI1eV7XysI5bkWhGzWZykprF
-   SAInUfYYVgu514MKdJ8fcPDvkKUWP+VLvdDHfn2KJQi3iIwsePBVjqd8u
-   w==;
-X-CSE-ConnectionGUID: iCOTfcQ4TJGPyxo8BGRjQA==
-X-CSE-MsgGUID: 09e3hrbtQkOct7TMvaMqNw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="75086862"
+  t=1787063629; x=1818599629;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=D4GJYhnBNZ5TRw/ZJyagH1PzwZy6hjkHEuu0d1UNVcY=;
+  b=WM2j3HL5MEqX3zDWPWOXZDaNuAD8gppB/rLiyrHlLQV4qNQ3ZN/GvMQ/
+   fVyChAmoeCS8sQz/+SQw141bJ+tvVkA/R60HBOZKK6jPRACO7o7WSXSvr
+   Ua6GaSFZIWV/9YzD/XZNlXJz2Donrxkhcb+OtrgS4rHhRtpE142lZbAmz
+   dzM4SFXw+lUHmVJ76DyO+h11zR6IUntUdA2cSA3ukNncmrnWJaPzkXWft
+   R3KsOAZ9QKlHp0DkRML2j3OQG6QNON6fBYYhFOTJEmZbQEgWTOcctgVwr
+   ohkpeOKuwUD0L4NOb3ZPToDS3GwrfKqE3/SDvoOj7O24Ug7vVdWPs2a/U
+   g==;
+X-CSE-ConnectionGUID: KCRH42RWR828gAi04geWdQ==
+X-CSE-MsgGUID: vuurn2/tQ3GznKX8zrRV1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="98712348"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="75086862"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:33:45 -0700
-X-CSE-ConnectionGUID: YDqEbnVEQkiNQ8p9OS6LTA==
-X-CSE-MsgGUID: 2edh2vn4RKCmw7NxdJYS+g==
+   d="scan'208";a="98712348"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:33:37 -0700
+X-CSE-ConnectionGUID: iqC05Be9RRmSY/jat4UHNw==
+X-CSE-MsgGUID: K8t73fnmQVqqkOMAKyEzCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="263511854"
+   d="scan'208";a="265273095"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:33:42 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 07:33:34 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Guangshuo Li <lgs201920130244@gmail.com>
-In-Reply-To: <20260708090937.740435-1-lgs201920130244@gmail.com>
-References: <20260708090937.740435-1-lgs201920130244@gmail.com>
-Subject: Re: [PATCH] platform/x86: hp-bioscfg: fix password encoding bounds
- check
-Message-Id: <178706361766.21379.7161904015923422300.b4-ty@b4>
-Date: Tue, 18 Aug 2026 17:33:37 +0300
+To: Gladyshev Ilya <foxido@foxido.dev>, 
+ Musaev Ibragim <atomicus.xyz@gmail.com>
+Cc: Hans de Goede <hansg@kernel.org>, Mingyou Chen <qby140326@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <178405473606.25865.4048095379503614221@gmail.com>
+References: <178405473606.25865.4048095379503614221@gmail.com>
+Subject: Re: [PATCH] platform/x86: redmi-wmi: report EC state change events
+Message-Id: <178706360989.21379.3372926673211357885.b4-ty@b4>
+Date: Tue, 18 Aug 2026 17:33:29 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,15 +63,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 08 Jul 2026 17:09:37 +0800, Guangshuo Li wrote:
+On Wed, 15 Jul 2026 00:45:36 +0600, Musaev Ibragim wrote:
 
-> The password PSWD_ENCODINGS parser reads password_obj[elem + pos_values]
-> while copying the supported password encodings from the ACPI package.
-> 
-> The outer loop only guarantees that elem is within password_obj_count.
-> The encoding count is bounded by MAX_ENCODINGS_SIZE, but that does not
-> guarantee that the ACPI package contains enough entries for all
-> elem + pos_values accesses.
+> The Redmibook EC/firmware fully handles the keyboard backlight cycle,
+> the OEM preset power mode (Fn+K) and the Fn lock toggle by itself, and
+> sends a WMI event carrying the resulting state in the third payload
+> byte. These events are currently swallowed with KE_IGNORE, so userspace
+> never learns that the state changed and cannot give the user any
+> feedback (OSD), even though the WMI event is the only notification
+> channel for these EC-driven changes.
 > 
 > [...]
 
@@ -87,8 +86,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: hp-bioscfg: fix password encoding bounds check
-      commit: e213939ed9e6e6badf7aa48c4c8dd9a9cdf00615
+[1/1] platform/x86: redmi-wmi: report EC state change events
+      commit: e0d6312578e1fd03738fc2ac8ac21c8bd84e965e
 
 --
  i.
