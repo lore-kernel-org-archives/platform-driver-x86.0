@@ -1,94 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2DD29E116;
-	Tue, 18 Aug 2026 13:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C6A46D540;
+	Tue, 18 Aug 2026 13:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787058967; cv=none; b=PPjClBd4o6dl8eDj0Tg6F/XV0cOdN6Qq74gnGv8qZRhRoHKJKmujqs2RBwKZVRJDCvpQdtYlFTWf9vRdpQ6egYTZxznQLPMTRfvDzOIho7pBgnZ6hDRXN+Q/7r7k5Wux4atoCsFh8HoWeKuLL/Q6FquF7U6fd5j7TNNm1vuZdJI=
+	t=1787059181; cv=none; b=We+/uG/7dod5830uJbajCHVbH3uySqwGg45mfDWmXKF0vJekink0osHdtDq6bAgyShsOAbOH2ffr2RhnP0d/43t1osfYZg5h8jKo0wxAJP6Eq3KUvCbYjJtxue7fYWrfWnIQr5oMVc2R3hxqKfme7/sF9kWA0Z77PST+XOLXdc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787058967; c=relaxed/simple;
-	bh=tUogCi0hZvlHQFvE4uk74gCiQtyjIxnm63D0thlbwXw=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HbOVvySVYJ6KXKQ9zhHhx13qAaFcKWmd525qY5mm1ahp/Py7Bu4zj3yLeBrd6x9V6YEUoCWHWkdAotsQYtpO4Uk5ttfi+TlQEme2nOEgqPc15Uvde3uk92Xye2pOrPv7FE9OeDGS6GM5AJ9uzmAkrKLS73Yen4CUqQnZeEICyn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3JWdUD+; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1787059181; c=relaxed/simple;
+	bh=1+Exl2XzAQLnAmavtEB6DTy6Xoz6OvFtmQbTlWX1e/w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=asYJAcJHI786ddll7h8V0SelhRjiZOyoUTDjR8b8zgib3J97O1WUQU8vKKHOY5Qff8WzEfHTFO1X8wVqJ7JBb7JqwATwjVmnAxTcjYkD7cHDBxhV//RjBaZKiwNinXbT61Bhsppv5UMYJq61PHld7wCsUboDz6DNllQQCx/Sl2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sak7NFsW; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3JWdUD+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sak7NFsW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787058966; x=1818594966;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=tUogCi0hZvlHQFvE4uk74gCiQtyjIxnm63D0thlbwXw=;
-  b=b3JWdUD+PJ3saTePsv1PFvDyhi5ZzEDWewrTW97NytmIrOvz2RsxEuVG
-   XRi/DImqgUmHLD7h3YXuqORVMGSrB0IXAwXetwM7058M19foIdgTDPTW7
-   LUD6W5C5LTdpepE8qthyezPgngfHEEh86KiK13/2siRmE0fTrKmT32Fev
-   7hyub0p2ahY8uYcjl50mTqRXA5fKaOtrk1TPvVbRXS2jFIHVMwO8e3ErN
-   F+HM2LQsPxtbzRC/PIh81W0ZQZbvETieHaTM8BIeZIxT4XSU7Xs6Or2F2
-   ewRh21bLywMG8NR/odIWgaTcJh6wBSPpxuAEGI7LHY3aIgbT0hyN5COsp
-   A==;
-X-CSE-ConnectionGUID: sODtv4fhQryBHmUPL9+VGQ==
-X-CSE-MsgGUID: MbG2mP1mS3CkVmGJPkZJ3w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="110336267"
+  t=1787059180; x=1818595180;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=1+Exl2XzAQLnAmavtEB6DTy6Xoz6OvFtmQbTlWX1e/w=;
+  b=Sak7NFsWrmssvyVRoD9acFavFdhlienUAyeD8t6tKlM+7wcoSCsEI7tJ
+   P1An+5lDf1xWW7pZ8ik50sbej7X9TnTvmhS7uhHamuABdQc7RpTG/hkdL
+   Fgvitua801j+nauJG+xvBZdlRQvxOqsCWvMfYb465Yakf/K7+XLv+Hstm
+   hnVDBVDBUmOSQD7erh6+7XjeUp/FttnOUGPtCwDBI/gtoM/0c8V9fqBV4
+   1B5TqGpvIKkiYV74U89c/mUqeXMR6nsvoV0XIrNoY9t/6csUyFcj8N/zU
+   DSDKmD3TBBmbuFBDHxthN5PS3D/jW5OfRxdTougHumK1vSW4dM5gtbs0N
+   w==;
+X-CSE-ConnectionGUID: Zd0qsmkYTQquVe92wKvW9w==
+X-CSE-MsgGUID: Jg6Unr27Qgeg81z7yJm14g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87467139"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="110336267"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:16:06 -0700
-X-CSE-ConnectionGUID: Af3IxYTdQ5C9VPRhc6nPGg==
-X-CSE-MsgGUID: +Bp3k//oQLadDR5/IsVCTA==
+   d="scan'208";a="87467139"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:19:39 -0700
+X-CSE-ConnectionGUID: 7mls0YVtTeOTllOwRN9Piw==
+X-CSE-MsgGUID: azmllD98RTqH4wy8lRWuAw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="295153056"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:16:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Aug 2026 16:16:00 +0300 (EEST)
-To: Korab Doroci <korabdoroci@gmail.com>
-cc: josh@joshuagrisham.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, Korab Doroci <korab.doroci@gmail.com>
-Subject: Re: [PATCH] platform/x86: samsung-galaxybook: Add SAMB430 ACPI device
- ID
-In-Reply-To: <20260806221255.40148-1-korab.doroci@gmail.com>
-Message-ID: <8744b157-4064-8377-1f8a-b5c0ae2622f3@linux.intel.com>
-References: <20260806221255.40148-1-korab.doroci@gmail.com>
+   d="scan'208";a="261477396"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.201]) ([10.125.111.201])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 06:19:39 -0700
+Message-ID: <85ece7bce84287b4d08cf546cbf7a58991a3e747.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: ISST: Avoid model check for recent servers
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org,
+ LKML	 <linux-kernel@vger.kernel.org>
+Date: Tue, 18 Aug 2026 06:19:38 -0700
+In-Reply-To: <9cbea11b-ef1c-cda5-8fdd-e9cff29612ff@linux.intel.com>
+References: <20260729180512.2048114-1-srinivas.pandruvada@linux.intel.com>
+	 <9cbea11b-ef1c-cda5-8fdd-e9cff29612ff@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.2 (3.60.2-1.fc44) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Fri, 7 Aug 2026, Korab Doroci wrote:
+On Tue, 2026-08-18 at 16:03 +0300, Ilpo J=C3=A4rvinen wrote:
+> On Wed, 29 Jul 2026, Srinivas Pandruvada wrote:
+>=20
+> > To enable SST functions, a CPU model entry is required. This causes
+> > unnecessary delays in deploying new servers on older kernels.
+> >=20
+> > To avoid this, if no CPU model match is found, allow the SST common
+> > driver to load, when all of the following conditions are met:
+> >=20
+> > - Not running as a guest
+> > - The platform is identified as a server via ACPI PM profile
+> > - The CPU belongs to Intel family 0x19
+>=20
+> Hi,
+>=20
+> Sashiko notes this shouldn't be hex (and is contradicting with the
+> code=20
+> that uses decimal)?=20
 
-> Add support for the SAMB430 ACPI device found on Galaxy Book6
-> laptops. Without this id the keyboard backlight device fails
-> to bind to driver leaving keyboard backlight control unavailable.
-> 
-> Signed-off-by: Korab Doroci <korab.doroci@gmail.com>
-> ---
->  drivers/platform/x86/samsung-galaxybook.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/samsung-galaxybook.c b/drivers/platform/x86/samsung-galaxybook.c
-> index 6382af0b106c..99f72b204a51 100644
-> --- a/drivers/platform/x86/samsung-galaxybook.c
-> +++ b/drivers/platform/x86/samsung-galaxybook.c
-> @@ -1438,6 +1438,7 @@ static const struct acpi_device_id galaxybook_device_ids[] = {
->  	{ "SAM0428" },
->  	{ "SAM0429" },
->  	{ "SAM0430" },
-> +	{ "SAMB430" },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(acpi, galaxybook_device_ids);
-> 
+Hi,
 
-Thanks for the patch but this is already added by the commit 31e1acf15df9 
-("platform/x86: samsung-galaxybook: Add SAMB430 device ID").
 
--- 
- i.
+Yes, this should be 19 not 0x19. Code is correct. I will send an
+update.
 
+Thanks,
+Srinivas
