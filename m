@@ -1,121 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F91A3E2ABA;
-	Tue, 18 Aug 2026 11:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28E03E2ABA;
+	Tue, 18 Aug 2026 11:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787051959; cv=none; b=Lhd87oApAIAdMHJIMZ3CSFAtJaNXDwOyBC6XXVSRIfP9D/5dgd7oCjWaAqL8izQWoUwYh4y9kbNQVkjGAdfHdM15ER1L+1FB0XDLFJD0okL6WxmtVKu75R3JlJI9zqVawtKebUCdUaCvJBSqYyJ8NAE7yNxa4PBut7fjgBNxnhg=
+	t=1787052016; cv=none; b=Q8jEK7BqLoh/W3Ls/cWoYR2wRIEqU1iORnYwjDzUwI9H2wXsQ+A42yUsSem56sV0wV1F3H1Elbjz7IIVGOzdKorVgPioF1sv5Xb4g70yTZsytxSX6O18+dQqRGloKnn9NW4sU/XbkzGSgyhrWBL4AYM6p0oYLY35L+88M3ueKw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787051959; c=relaxed/simple;
-	bh=cG8tyCMr3Cy2JJ2XexByS214Y0+BNTbsopdstItC+b0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jPV8xgtgV6qJvubQMD5hMgXDncj1KVe5OkQI+DouM5ydmI1fPe5LByPOXb0O2Hc7ZOY/93Qcf+iu/fJwJbYq0Xdzpkgv2sv0OG49wEQUYn1YWb00cKtJXe/FJOTvQ8TPbBdMRQrBlcn5KUaAFjlyD99RX02d8KVBIxd1aYE+wtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QY9JuSov; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1787052016; c=relaxed/simple;
+	bh=zAsv0TF8ARMtA7qZt86H6H+J1X0i/sRVEG/AfeXD/ko=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NSSXnE4WCXOPhNA3wutiQvpB3KfhbgY1hnuHUTCkK4STjLAfVbQ4KDPd/KdNmvZteX04ZHEoRk2DPqvbTknTe4fvf1m2dR4PlASJVab6EJfKxPXTQizGaGvEDB61l+V2l8awilarDRiBwAYEcrdF2VxSURVVE+rY/CPAj6T72aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RCbZ7Wy3; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QY9JuSov"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RCbZ7Wy3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787051958; x=1818587958;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=cG8tyCMr3Cy2JJ2XexByS214Y0+BNTbsopdstItC+b0=;
-  b=QY9JuSovymhL6hljbHJKBH/SqvNUBnb15ZNkeIne0DWWiZ3eXCZs++Nl
-   8QVdsWx3wmuLzkyE/dO4LdV5qiK8TDItxhVKbWGRs40kqtmjWpFfyHLpS
-   /h4W4LO2KGSC5f7rjOAGFc+xPdyC4dbg+yZ+QVdHTrpu46Wzpz29O8fbp
-   T3dx/WT2+eZb2YYt7vVYODwlpfByp1jKutF5PNXDeeOrZraPBGC2mrfYw
-   ilY/7Bf5O+mXYz+8m4rqis8qBk7L+2Gl9cY4lKwe/MktCqEDEjtfdR73V
-   WASd+8pLj1MoL/HBC4YVRhTxtcP+BVVXuJ6fe2aYnymoCavxjO4oGbLdB
-   w==;
-X-CSE-ConnectionGUID: R09uEm9OQs+h/UFTwoCuwg==
-X-CSE-MsgGUID: xXB1SHThTlaiXZl6668l4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="98131694"
+  t=1787052014; x=1818588014;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=zAsv0TF8ARMtA7qZt86H6H+J1X0i/sRVEG/AfeXD/ko=;
+  b=RCbZ7Wy3wxhU3ZkcmZvjXLhBvAmxyaDOPVHp0yWOe6BHExh3+loaXcaB
+   N2DEbHBpxLZ8UFNsAnRYziDheiTVjA5SzOpb0a/Djgn3P1FtwWqd6+m2D
+   ZH5ey9uDSbrATu8HsDdxFWmBLRfIqez/S/OQH9Uu+jm7faus5m6HWYm2d
+   zBqy195WKFtQ+ZvMIJQtH0SKkUsMZmCdI/7boz8s/cDt/SEDRGK9SS9oe
+   u849wBi86IiJwXAb/MuMSJ7pS3ptPW7vNgNsQ8oXQWGkAl/tj25cAcYxY
+   nbJ6N1DBSpqJ2fUDziSbbC0fZJ5ipaT1dYdJnGMpzayJF/Iky9pp1tjah
+   A==;
+X-CSE-ConnectionGUID: YZrLJfd8SCWZntptRG6YNw==
+X-CSE-MsgGUID: lqQmkjRJQrKvRJXdLgV7Bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="75071414"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="98131694"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 04:19:17 -0700
-X-CSE-ConnectionGUID: s25X1BEWSpG9ijFn0qpx5g==
-X-CSE-MsgGUID: SQCqEc3IRA2yBmpt7ySxww==
+   d="scan'208";a="75071414"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 04:20:14 -0700
+X-CSE-ConnectionGUID: 1vyvk9H8TEaFu+3ErrfvEg==
+X-CSE-MsgGUID: 2zlshcsMT8i4caC7bIw2eg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="270420058"
+   d="scan'208";a="303423621"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.38])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 04:19:14 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 04:20:12 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 18 Aug 2026 14:19:11 +0300 (EEST)
-To: Mohsen Tahmasebi <moh53n@moh53n.net>
-cc: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hansg@kernel.org>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform/x86: acer-wmi: allow hwmon without
- predator_v4
-In-Reply-To: <20260813154939.9850-1-moh53n@moh53n.net>
-Message-ID: <894d18f6-6f17-5d3b-00d1-65f395fb23de@linux.intel.com>
-References: <20260813154939.9850-1-moh53n@moh53n.net>
+To: hansg@kernel.org, Suryansh Singh <technosfan14@gmail.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260817121233.44636-1-technosfan14@gmail.com>
+References: <20260817121233.44636-1-technosfan14@gmail.com>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add OMEN board 8BAA thermal
+ profile support
+Message-Id: <178705200736.11998.7849772756911563694.b4-ty@b4>
+Date: Tue, 18 Aug 2026 14:20:07 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-On Thu, 13 Aug 2026, Mohsen Tahmasebi wrote:
+On Mon, 17 Aug 2026 17:42:33 +0530, Suryansh Singh wrote:
 
-> Some Acer laptops expose the same WMI sensor interface without necessarily
-> supporting other predator_v4 features.
-> Currently, ACER_CAP_HWMON is enabled only through predator_v4 quirk, but
-> this quirk enables both ACER_CAP_PLATFORM_PROFILE and ACER_CAP_HWMON.
+> The HP OMEN 16-wf0xxx (board ID: 8BAA) has the same WMI interface
+> as other OMEN boards and is compatible with the existing
+> omen_v1_board_params.
 > 
-> This commit adds a separate hwmon quirk so ACER_CAP_HWMON can be enabled
-> without other predator_v4 features.
+> Add the DMI board name to hp_wmi_feature_boards[] table
+> and map it to omen_v1_board_params.
 > 
-> Signed-off-by: Mohsen Tahmasebi <moh53n@moh53n.net>
-> ---
->  drivers/platform/x86/acer-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index e0eaaefb13d..83448561189 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -403,6 +403,7 @@ struct quirk_entry {
->  	u8 turbo;
->  	u8 cpu_fans;
->  	u8 gpu_fans;
-> +	u8 hwmon;
+> [...]
 
-Hi,
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-Thanks for the patch.
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-Why is this u8? This should be bool.
+The list of commits applied:
+[1/1] platform/x86: hp-wmi: Add OMEN board 8BAA thermal profile support
+      commit: 7a3db155e06275e0d302a243420739abe1f71b45
 
-Some others should have been too. If you want (not mandatory), you could 
-add patches to your series to convert the other as well when prepare v2 
-of the series.
-
->  	u8 predator_v4;
->  	u8 pwm;
->  };
-> @@ -421,6 +422,9 @@ static void __init set_quirks(void)
->  		interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
->  					 | ACER_CAP_TURBO_FAN;
->  
-> +	if (quirks->hwmon)
-> +		interface->capability |= ACER_CAP_HWMON;
-> +
->  	if (quirks->predator_v4)
->  		interface->capability |= ACER_CAP_PLATFORM_PROFILE |
->  					 ACER_CAP_HWMON;
-
-Please properly split .hwmon completely out of .predator_v4 so that quirk 
-entries that have .predator_v4 also use .hwmon.
-
-I'm on the borderline if also .predator_v4 should be renamed to something 
-related to platform profile.
-
--- 
+--
  i.
 
