@@ -1,104 +1,181 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1235E353A70
-	for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 23:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151BB37B3FD
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 04:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787096198; cv=none; b=iFqgQusu9bgvJN47hX2a/8/g+3v3C6kTorn7RJmEphvvOueiDEaJ25me0/FuIKPEQkwVNmiQN01a2sk0EePXk4XDD9biLDimIMrwN3EhDPEbIFp/oHh5AIOUyIMCvhEFwbBBmxLu5YkEaImNowjzaKjNmpOXfHyAEiAeUzLDMgA=
+	t=1787113115; cv=none; b=TVTqcyT16axBtG1jsZyd2S4Avvcgv9iVwOQKehtRwam52t4pyQMS4Bdf5X6EKYKxKdPv9ujSWWTMICXjg+tgVbemJxFgYbl0+yixrHDzA7BvEXk9Ngdl4lkvf1Nyam75qGpFyJVPeUih8Lzi/7V2BRRqab23sf9G1OiNPZ169Sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787096198; c=relaxed/simple;
-	bh=04/k0HG1eRbygsQ7nkV1skRD84HVvidkF82cWdZsu4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PBlRlpWbPgRpi+RSJzy/idj5Nh28u1AWxDJgTqZCrrF/IW5MiEeXI2cE0Y/yThSFm9ZSE7pDtZYyRFeY+qnxYJ6c2OglwPSZGADp45+YreQotObY05gZAg9c+KT8M8TnBhEKqH6AFaeaypY+qPR5Olr4ed3IIyHUI1kIDEWcllw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLvtGhuB; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1787113115; c=relaxed/simple;
+	bh=twl+Uy0y2/fAxdUU6z1/qMBiydXMkJib8gHA07kXbRw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QFz1ewbPSVdCfk1OUhDNVzXQrhx44OPGH11ztrmUq4W3hOmaZwxzAdnHQwsabbellaVzH6m/6elMqhdcGkNbJMDUljP7KH7DIo6ptAtpChP5/BTFVtIxL1gJ4pmnP95RjqrQW/jEFPXusgE32lAPp81uCuRHJJvpIIjH9Jq6tb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iR3yZjVk; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLvtGhuB"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cbedf318752so239784a12.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 16:36:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iR3yZjVk"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-92e6a434cabso38577685a.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 Aug 2026 21:18:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787096196; x=1787700996; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=1EGd/77iz2abHF5y4GuEtLKn0yrAYtLez+CqQGXBQpE=;
-        b=JLvtGhuBRA8o08zhZ33nqqkHKpVSRHxwOyA+30Hj8MiWwnyI6DI7jKKNw2uv9XGuJ+
-         L5nDjYkyg2SC6Z5f0tLsvLxiMv7rpP6KJKDjKP/KNgmBxL/hEhLq2xp2q4SwOeSedjLf
-         /TtujYxbWNebHkP4M43Hj3yXgVxoS/wjbgP1/fhLA4pIH4rg3rNE3sLDULptdz3sN9kt
-         Uelfo7lWhbufai/YStfqHWpkvM1RXP9tlOrEI2TS0JwbgTpXfg2HTbxHxnPL87YUuo1G
-         4WG1L02oiPh0NXrbnbGi/rkZUVykKxb8hMyIBtVf2QBaxBIloCxOqvirG3uuo97r918q
-         p9rQ==
+        d=gmail.com; s=20251104; t=1787113113; x=1787717913; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Ue4mlQRNH0auXc1LYUFJMHPBAnoA99PxBpDAzjIJ1LQ=;
+        b=iR3yZjVkG/qrzYFMV3MVbwDa58K6QKYDBaJRvCyCa2HdF2SA16aMdvyZJN9vEtWJHh
+         64LqSMWSDro92o0oji+btP2vRNKwAnXYv9+HDPW0D7/eZZGUL4xVqBL3BnHDFZuAS8od
+         teezztsVYs1VT1cF+o5n8cMbArk2H+fukKKvEC7nVKGWjLR3OV03C9k+DtkAoN8tQ8Ck
+         e453CiLBJwl2gdhYR8vbtbXi5nICd9GnahNeLI5CQCPJHndCiST2SyOIhiLQPwEyVokL
+         +i/LUkTx2jiAgQGqvAUM+/P/JKZzyxO1aTo5T74JgKvR8Vk+OBWJO3u4PYV4dje5yaen
+         Pgpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787096196; x=1787700996;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1EGd/77iz2abHF5y4GuEtLKn0yrAYtLez+CqQGXBQpE=;
-        b=SXNKx4pendU3XST2xJcT80/7MaOpxJA0inCBhGmkdhSO2nkBVagrxRRfEFptpCjeUK
-         5faRognaAQtKJiYDikiP8RJRq6lCYj/ej3rk505yFwgyok3X1NRAE4QtzJJWfJWb4wUD
-         m57WZrySPG6aEv30pQbDRteIfcWA08HytA/STtUx0GTzVN6LN8YslflOZ/FNyo8w9sYY
-         DJTW+0Tsg4cLjgQzNbvcBjUbN3TTxoB+fgJbHcbbWxGfZ9pbXdkYUHWDKxDw+4frrywN
-         wM3nep2sJaNd9MVAFrM+OmPIDdoCmtMRshaVbnWrJjKQByfw5D79SfcMJPC5NJ92UBoX
-         12vw==
-X-Forwarded-Encrypted: i=1; AHgh+RoRmgQLu9RckRRjdy9H+29J0G1uw1RLW4D/wm/51isl6ONMvZhnjbZxtna7fvh4GNYPvAchPdEFseuehCQW6RVtnicF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxubk7QUoyiRgdS48eskv4bo3XO/9egLS6mFYjVFBYrHLQqBVD8
-	bykdHe4ck/hEDhZTHoVGlKGhedIbJlySTJREfInAjeOBhkB+cPC7I/BV
-X-Gm-Gg: AR+sD1394qxNdjjhf2FiQiGpPt8Fy2/SGBirh0nQ1ar95s3I+67Y8+8t8T3pHuJxXgH
-	em/02CYIcLREef2TPLQze5YFrMB6GmSnQfa0nWq+eOKkHgWBG1UYihN5SWbKXxrwGVkKyVfkwGt
-	tmelDCN3kNrvGIQDmJR08KQfpdY1DQStWLMpjh4abZjRZGtfHv35RSMWDJ1NGAX+AThK0bs06i2
-	p+4PnniIHRJB+IqDTuaf3CBKoyQLLHrwwRKv7+ThggogU+dkPRPUx+tVOEtVWEMBo+reymcQCgV
-	PumS57GgHGfG+2wcFtli5KOFwzygIfY9vbC90DZ5wUhq6X+Po3ghPD8d67l9iVfSpY3/Pge8ffq
-	vtzb491fVTOR7ZaXXzBe4a/78OGONcXWOOUpNVAYBsA5AwlyomiDBXptzpZ2oasHpdZ6uHDQKec
-	piAgA/Srqu+lR+nQDaaVfDxgvLgxQvwSVe4Ailv+1Fj548NUbZWjv+6sGw99AzBYEmZeKJX1vxr
-	w==
-X-Received: by 2002:a17:90b:5484:b0:380:f389:447b with SMTP id 98e67ed59e1d1-395810840ccmr900386a91.11.1787096196075;
-        Tue, 18 Aug 2026 16:36:36 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327bf10a94dsm558957eec.15.2026.08.18.16.36.35
+        d=1e100.net; s=20251104; t=1787113113; x=1787717913;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Ue4mlQRNH0auXc1LYUFJMHPBAnoA99PxBpDAzjIJ1LQ=;
+        b=qcqt/sJJOlSou/8ZTv0OggotqElN48Uko8ljvUA2ikOzrXc9xv94JEF+IeCRC3uIjs
+         zmKSwLLiq5SHDYamJfz/vqCvcTmC2ePCYb68wVe+Sn9UIiSRA7fvRSuNGipqgqXvERpO
+         cB+TSLeBihxmjlF3zCwq92PiMuhERXCR5KoJ1HOtUeFviBuzZYzFIEIFrULdB/NvEbfx
+         JwKXpHzk9gvVdk8j5wh4uWYk41j7Wx91CK5EELG5B+q9JrWdyuah2sKPFhPX/YfPUxvZ
+         h/B3IWBAzmWmEJSOXoiTMtEBzWNy9mV4SHwueyLuLSavEGBGtr2dEo1AeRTw5QuySfgG
+         RvWg==
+X-Forwarded-Encrypted: i=1; AHgh+Rohs9T/b8Q1os4D8J9rHA3dmzLWVJCKKM5rfL7uTQVoo/IDPR69njR04gXBDYxkRN03fZG75+hS+YnkOg+Qr0dgRCla@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdOX1auWm1jBXIalBokhsx4u0pkqZqFE2fRvTNlvhEFjGDYYDQ
+	7b1b1ovzo8zIHzC0h6uqEYzjh3HAq216NQiy/SH93FkGQ/YrOC2rmDY=
+X-Gm-Gg: AR+sD12iCWpIzRm+ZbFvIUKeIgEXuybAvknARdJwljlHECQRafvUma3kSCUDEJxdyxh
+	2SXyRhfap2RR7PNYENyRFNm1Y17Yx6Ef7/0UV40MGf5QfmraUI2UyKZuL0an2cOODR4VM0aV6kk
+	kQbsEmGpMwDhL/+paCKBhAx87z2gf8E+l7VpgRmM6mIZz1qNqU3b787lFBQZdWU2szQGTUoIH3+
+	PHqocRvbw+LWKU3t5lKKYpEz2d2TnuSaTnaenrZ67qmQUfVZTZdB5hMsccr7zliOtpejLLqz8nM
+	Lq5P5x7pdB0KRwqtUa051jIEVAjxL4uJp8FWaQYT6lAUCajb6fJ1jCGqHpL7Ks0GDkiGOl5LXsw
+	bNh8dBZ8lWHdO37a2orHoZ3JyzMMj2KQDHb9kQULh+DwDsEB3riw31lLYl23mdYDigjSuoQNmND
+	m6b+z+/HSzJUn8DbQUmSEOuVG/4cfIob9MAa9RIKDfZXUaXLApf0nKvFAPXaQuXAuFMWIKVJyAL
+	+8pAyCCJFXgnicjRLFmHZJ1Pv+v7GrC6fU3AuefZQRnmdYI3g9wdK5k6873eqt/IJZqgSiLKOhf
+	D4TisR0HZOb0wFXleDyNpFAM3OJApvKntcKrw4g=
+X-Received: by 2002:a05:620a:284a:b0:937:11c9:37f1 with SMTP id af79cd13be357-9371e29f5bcmr202570285a.16.1787113109685;
+        Tue, 18 Aug 2026 21:18:29 -0700 (PDT)
+Received: from localhost.localdomain (ool-18ba9fde.dyn.optonline.net. [24.186.159.222])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9372056b728sm49696085a.29.2026.08.18.21.18.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 16:36:35 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 18 Aug 2026 16:36:34 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Nikita Dubrovskih <testname142@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] hwmon: Add fan monitoring support for HONOR FMI-XX
-Message-ID: <facb9524-b665-459f-b522-ded46d5bb57c@roeck-us.net>
-References: <20260812192242.859307-1-testname142@gmail.com>
- <20260813091411.1186193-1-testname142@gmail.com>
- <20260815232405.2107574-1-testname142@gmail.com>
- <20260815234041.2262291-1-testname142@gmail.com>
+        Tue, 18 Aug 2026 21:18:29 -0700 (PDT)
+From: Justin Vargas <justinyvar@gmail.com>
+To: jlee@suse.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: W_Armin@gmx.de,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Justin Vargas <justinyvar@gmail.com>
+Subject: [PATCH v3] platform/x86: acer-wmi: Add support for Acer Nitro ANV15-51
+Date: Wed, 19 Aug 2026 00:17:40 -0400
+Message-ID: <20260819041740.9645-1-justinyvar@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260729222920.6490-1-justinyvar@gmail.com>
+References: <20260729222920.6490-1-justinyvar@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260815234041.2262291-1-testname142@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 16, 2026 at 02:40:41AM +0300, Nikita Dubrovskih wrote:
-> The HONOR FMI-XX firmware exposes a serialized \\GFNS ACPI method.
-> It returns a status byte and a 16-bit fan speed in RPM for either of two
-> firmware channels.
-> 
-> Add a DMI-restricted, read-only hwmon driver using that firmware
-> interface. The driver deliberately exposes no fan control or direct
-> Embedded Controller access.
-> 
-> The interface was validated on firmware 1.09 with fan channel 0
-> reporting approximately 2500-2800 RPM. Channel 1 is readable and
-> remained at 0 RPM during idle and a short CPU load.
-> 
-> Signed-off-by: Nikita Dubrovskih <testname142@gmail.com>
+The Acer Nitro ANV15-51 uses the Predator V4 WMI interface for thermal
+profile handling, hardware monitoring and fan control, but has no quirk
+entry, so none of these features are available.
 
-Queued for 7.4.
+Add a quirk entry for this model.
 
-Thanks,
-Guenter
+Note that this machine does not support the turbo thermal profile: its
+supported profiles bitmap (misc setting 0x0A) reads 0x53, and writing
+PLATFORM_PROFILE_PERFORMANCE is rejected by the firmware. The four
+remaining profiles work as expected.
+
+Assisted-by: Claude:claude-opus-5
+Signed-off-by: Justin Vargas <justinyvar@gmail.com>
+Tested-by: Justin Vargas <justinyvar@gmail.com>
+---
+v3: Use a model-specific quirk_entry with cpu_fans, gpu_fans and pwm
+    set, as suggested by Armin Wolf, instead of reusing
+    quirk_acer_predator_v4. Fan control is now tested (see below).
+v2: Add Assisted-by trailer per
+    Documentation/process/coding-assistants.rst.
+
+Tested on an Acer Nitro ANV15-51, BIOS V1.60 (04/08/2026), by building
+this patch as an out-of-tree acer-wmi module against kernel
+7.1.8-1-cachyos and loading it on the machine.
+
+Thermal profiles:
+
+  $ cat /sys/firmware/acpi/platform_profile_choices
+  low-power quiet balanced balanced-performance performance
+
+  low-power, quiet, balanced and balanced-performance all apply
+  successfully and audibly change fan behaviour. Writing performance
+  fails with -EIO, consistent with the supported profiles bitmap
+  (misc setting 0x0A) reading 0x53, i.e. bit 5 (turbo) clear.
+
+hwmon and fan control, via the acer hwmon device:
+
+  pwm_enable  pwm    fan1 (CPU)  fan2 (GPU)
+  2 (auto)    229    2311 RPM    2057 RPM
+  1 (manual)  255    8167 RPM    2077 RPM
+  1 (manual)  128    4482 RPM    2065 RPM
+
+  Setting pwm2 to 255 raised fan2 to 7284 RPM while fan1 was unaffected,
+  so the two fans are independently controllable. Restoring
+  pwm1_enable/pwm2_enable to 2 returned both fans to automatic control
+  (2267 / 2000 RPM at idle).
+
+  temp1_input, temp2_input and temp3_input are also exposed.
+
+The WMI mechanism was cross-checked on Windows, where NitroSense switches
+profiles via SetGamingMiscSetting with index 0x0B and the same profile
+values used by this driver.
+
+The analysis and patch were produced with AI assistance (see the
+Assisted-by trailer); all testing was performed by me on the physical
+machine, and I take responsibility for the patch as signed off above.
+
+ drivers/platform/x86/acer-wmi.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index e0eaaefb13d..86c212df49f 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -466,6 +466,13 @@ static struct quirk_entry quirk_acer_predator_ph315_53 = {
+ 	.gpu_fans = 1,
+ };
+ 
++static struct quirk_entry quirk_acer_nitro_anv15_51 = {
++	.cpu_fans = 1,
++	.gpu_fans = 1,
++	.predator_v4 = 1,
++	.pwm = 1,
++};
++
+ static struct quirk_entry quirk_acer_predator_ph16_72 = {
+ 	.turbo = 1,
+ 	.cpu_fans = 1,
+@@ -662,6 +669,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+ 		},
+ 		.driver_data = &quirk_acer_nitro_an515_58,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "Acer Nitro ANV15-51",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
++		},
++		.driver_data = &quirk_acer_nitro_anv15_51,
++	},
+ 	{
+ 		.callback = dmi_matched,
+ 		.ident = "Acer Predator PH315-53",
+-- 
+2.47.3
+
