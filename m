@@ -1,320 +1,112 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67333E3DA7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 07:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787125310; cv=pass; b=Png1lzWGzFSE67xKGsZ1jCu1y3Oea54SW9GqhjKwJ+Ml2EVBNdZVo+8NBexUp85aAYwXgWgKuiUUMRpDR1di6bCVKtOAiQms5CZ9aMDwfmNcn+PwmDFTzTKdQssru30DDINt0/EhYIWoYMAv5ZORvE6WVZq8TkFi83tKHwjhhZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787125310; c=relaxed/simple;
-	bh=i8g1kh5bGRn9T0dWTjOgak9HjdcyEv47iojLtZJK1TM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ssPnQviu1faBXeqmdEvE2RaK9lAVJrF+3tki0B+cA1GSZm3CcB3Bk57iENuvkJyubEffa2BPeABzprAkKSXXIPnV7thFBhTd722qkmb9FQHKE9XD/UgHx0DlomHhpb0p9lowVZIhYRE+7Hnf4ijKmK1IixO2HPgWf+Tn6GmUPOg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpJ+Wkqg; arc=pass smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B84142C518
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 08:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787128945; cv=none; b=T+v/Kf8K0w2s84k4Qs5dEvdTKhHBe7rgLucT3T68IjO0WLSnPqsZzxk87YbmIJVp1UzQ7gTeMYtbOJsBsGzkyPlwr3186PqwfZZYGeSgXj67ZIJn6bs9JVWsv8P4TA0Rqcpr5eeHapDn/JciToAnsYsebSXAj6jLQi2RxuRBI9I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787128945; c=relaxed/simple;
+	bh=4cQw0pq/jjepvlo9ohv0JOqq+XlV7DYQraIl6fNArYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SBr4NtagtyP8JS8uzUnhh7qiIZILMziONlGH0KeJdyHSaT+BQoICK6eJ+qTfiop/TSVreOzhPt7PA1ZvAy/zKDgV9sDMPlVR/r/NFDe7iRW/FzqL7ZfoGMtWYp/3W0iE8DLPd48WKzgoI017FuY0iwVLb3Pl5M2+Opa8Ty+ita4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bLi0iwLX; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpJ+Wkqg"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c169ae1cb26so346107166b.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 00:41:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787125305; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ao8n4rGIvJnUGZFbXZ8XBMd1vVdbpHmx7Sy6irqaZZBard3sGLSHGn8bpP0iP9KPVO
-         IgPqOdEwCUeSfqCf6lM/x3EON+o0DzWmnTcSOH7n1QU3c3VXditjxvYJx1/mhoZdiMDM
-         Ob9Hal1pvtBMHJDxX74Y9t1ZBOEIpKK4pE/gFGAntZfeaQOBgz9BQm4wkhYIlqCNQlHl
-         tJgM9GCkNG73xRUcmUBDVfd6dkN66NUftQcd+mQOuwoueVIyrCX/TD3IbkTgzJ/j5mHQ
-         18RHMd0LMQZft046MnuzyGL/GnvW4Jof2+dPNlaY0UZg5bP1t8vxytny40xp68T0eLxM
-         hpjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=2XM8VjGIfz5XNFSi41BuHFpvUKE6C2ApVU9tTkW8ke8=;
-        fh=+8F767tSuaaCZL4NnNZWvYFBAgMM9CdPDOTbLZfBBxw=;
-        b=YG+7Fynj0bp8/vF0WUe4i8IOnCenaUjSTdd8wYc4td7G4gt9uRGqgXGFlqfDkMuVed
-         O8Ww6I8b+icnmCArIRaaUaOE3jMlKlA9TfUJrUMybCJDdRcHTSxB0qUtNL78HoaA3R8/
-         XkiSTpPckkibkWAbPLhau8Ny6drd+fvIHfAIV5GLWSnCBB019kdQsahRv61v6FAvRJeo
-         ZwCU05uu0Ncdbki3S7rIXLAM5cQYrAEjzVqIpCWyIoFcmBnQi90LAN6HQeeD5vuNfWFt
-         UDJ7mg+jR7cyRwZUD4e+uNyfFC9iBKbDyEc2+oymm3oxP5Qk2K4g1LBjHnWNq2zYvXoZ
-         Hv+A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLi0iwLX"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4954f5e8020so4085075e9.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 01:42:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787125305; x=1787730105; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=2XM8VjGIfz5XNFSi41BuHFpvUKE6C2ApVU9tTkW8ke8=;
-        b=KpJ+WkqgIYnJD6I7LAaemSa2VxMM5QcGLwCqP9p4ETHZcSmc8B/CYU3rlmEph/n+Qz
-         MrlRbJXuYC7u5VmIANHBrT1MTGEaTZMkDJHi2Hc08jF1iozJ9EYdeCUVj4Cu9TSNT1SD
-         1C1MmLLxGoxyo+CAsGq7ZzFVq4l9Dz3BYQSqAwqhx0yn/+81hvpeSWhvkMs9v4ldU1GT
-         KrBMIFxkWfKaNvfnG55Azd1tmydnUWQUySPEZKMjnAyNj2waXMyCVfENItClkepIGzxh
-         h3lBnQZ7J45+AB58Q1o96lKNvg0x6FQEtV8IWAv0O2u0OWy4uxjGj+WFaGTngpqZtGhr
-         7G8w==
+        d=gmail.com; s=20251104; t=1787128943; x=1787733743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=2FHuXv09poE+H5HGYip68omnxeMmk6P3u15moGjr2K0=;
+        b=bLi0iwLXbFcU5cQK0ggUsv9rN3oEDxUY+IqFtVhsuG8kBzXaoDWVDQq8YaNPKHusJV
+         j3ZGsSmsdXnXhY5xNghLhnLm1fSf0oqQSjwHe9SFzhF7y6FAChhJuuU/PW8KzVal1fEO
+         n3KpDTUQL2969yo4S3pQU333lUK5Y4aenx8wres5qX6bZ+w1dCk5JNFXI48SMWUsMrHk
+         ufPfiymGzTuF983X666RXB6uEkhGi5rCnXpKYmanQcQBSWahAbPH/puoEyHa4tI9Ddzm
+         6PZuBCeOTQP5K8E2FYVTINAcXkNV2+PfF7C/BFaq1AT8jm6CfldvyzNceU/RTsLSpskQ
+         zT5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787125305; x=1787730105;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2XM8VjGIfz5XNFSi41BuHFpvUKE6C2ApVU9tTkW8ke8=;
-        b=isZoHSpOwmGAc1w5bXa9R9VMNjExkEQSZprbqzh8fwh9lbIqFMbNRoFqjebrrwoKG3
-         PW+xo3PBkJcei1N7WG8LBOk0RB9YeapABdFGQPLvxGSvoCc3a5dJVvtAi+5H9xCMWW36
-         EsxA8VmCH4vIWEGy2TJEBH95j9XO1gFrpxL9oFaia5pAQ6PErntEXSHjFH5BxswnPH1X
-         KuEPeHyYlEdttb3eIrLjjpqIK5cxIcrRElb0FTmHQhWu2vmESStC9ToVcT9sSzVK2o1Y
-         htRorb9kFF2axXZLZY8pYSS8L7jzg9mMpoxEhQ/SVgYhD3MAOEvlnRLLHoupikPmS5lI
-         Z8tQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rrp5L7vfF/aOhJ83PoVJjxBxs60KqhOTTRFUBwYNy9TGHzfC253CcFbOTupfPZ7xv+cdh1uCUvyPIx7ndTyF+hkHs8n@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcaWFSi2dBqTbgjrlb6pXH93gopY1ab6JlbYASdEYoCUi3c7mU
-	gkVlIExn5wMgOoRf2DpEpFgjyEw0BPMgTYl59talJmNfmbTarW2uSwiLMAeLoEbSgcBcKusPPzc
-	c0GNcCANltQsiGF8/K4kdEMSveijzhWs=
-X-Gm-Gg: AR+sD12fD6dQpVXiyMyQdx5y+oGFMzmXCqYayDOV/BHif/LR/6SIBNH3YD6bh/gTFBK
-	yecxnCPIJeQvUP+otcZZh7L3dtRbBgJ1pV2nvKanrJg2FM5ud6a0FwA4gNeaQFjF7JqDCKCumhL
-	Kqf5dh08rLQajchSskUiBUPrTl9EbTNpihnKpm2LeoT9R8LCGAeFnB5+tYwKB4wMU+lspth9tpb
-	KurEdxPA+uhiqqvrfJ2NbdifXcgTUDE3NYZwAIfV1VVtxt+3G6ghWJ9Ee8xzvp/1oDqnemnUwOz
-	FPxFAXJ3sYgII+L0XDlg8bwWHGPzY7SqqkksWo0mvRAbXmHx6o2N45vFLg==
-X-Received: by 2002:a17:907:1ca1:b0:c21:7c98:d9ec with SMTP id
- a640c23a62f3a-c237e153a0cmr174800166b.5.1787125304729; Wed, 19 Aug 2026
- 00:41:44 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787128943; x=1787733743;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2FHuXv09poE+H5HGYip68omnxeMmk6P3u15moGjr2K0=;
+        b=Xju0fBYkJZO3iehfoeHqjCwlfH977PO40BId9vFe+2qPJlwEvrRc3SmmnlE2Q3lOrq
+         Mdi5hHCTV17zuH2w0b+SxPG07QXMlBpenmyDIV+uFPJc5wKNVD4FyVsNNMgJPnQhO7gd
+         bhxGbd/SEB64WQAVtSOf8XOjOhNNHzvbEkhvMI0wqolFAFn3OmS1ZjJYaVKmlZW812ZM
+         W1GxPyhM6BmlsfXmvvMguJ5Goat5aph30AeIX+G0UnuCOUSK1cnRED89VBKtpOfQp1nR
+         5x6ICrkM0oJRegI6yK1k4XpAWpNgmhkkxwa9eHv/LMhJmWPCf6MLjhdCDyRMEcu2wegP
+         XIPQ==
+X-Gm-Message-State: AOJu0YzjET+XfZs42uiNjhpWNt63bjQZaDWp2ggD9eONCpK34gHQhh8I
+	lVOUktbImFEA4L7sV1NSNGAWvB6e86Rls0DPmFihjmTkpY2HY1NoLm+l5G9r/EAtnW/j4w==
+X-Gm-Gg: AR+sD10Bhy60/GsAVOJxxTPTihzZA4E+Hcl8kxnFfXc952NhVqe29QbT3eCNqlJhFtM
+	Xb17ODcsOwcs0n5O3OQygI5mrB0AQopGcNWy7XKQCVK/874aVV+lPiTfPAH5r9jY85APL9cXnZn
+	Aw3rNNtzFSs18vPbKIKPpQUCFFnE2cKfQSPuh4CBTEBsMsUljNGMU4W9qm/0cKHmniTK+lehunH
+	kQ1FPz4hpfeH99Rq0dvT901IiGdGhjGmZVdqqjQ2yvW7YksSqwoTDO/YNqvHyRsLu7N0CmhBd/t
+	O7yXjxKIxKSfVDLJxVpZO4m/RZY+7Bz6S8kIGZvZXu2Y+TAqOuxWilvGwqGPmumxzpPFoYJ95dp
+	Iy3TKR2ZijU7KzdSVw3fUL63XUPTqqU14c7AlV9HuLSFl7wxvcPFvEhQsLO6UcMws9LV4N8hFAy
+	h7/tC1LiJuaJXgrQdBS4/87jPX+MRpGhNGa9W8JOp5lvInD8PIFzDMiiMF5j8ADqr9
+X-Received: by 2002:a05:600c:528d:b0:493:bd2a:93be with SMTP id 5b1f17b1804b1-499aa17d6a0mr56432445e9.6.1787128941652;
+        Wed, 19 Aug 2026 01:42:21 -0700 (PDT)
+Received: from DESKTOP-25PDM0G ([2a09:bac1:1e20:8::3a3:5a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499aa17f202sm41536315e9.13.2026.08.19.01.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2026 01:42:20 -0700 (PDT)
+From: Ruzal Daminov <daminovruzal7@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ruzal Daminov <daminovruzal7@gmail.com>
+Subject: [PATCH v2] platform/x86: huawei-wmi: add camera toggle keycode
+Date: Wed, 19 Aug 2026 11:38:36 +0300
+Message-ID: <20260819083836.1410-1-daminovruzal7@gmail.com>
+X-Mailer: git-send-email 2.55.0.windows.4
+In-Reply-To: <20260814171324.16727-1-daminovruzal7@gmail.com>
+References: <20260814171324.16727-1-daminovruzal7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260802-leds-trigger-hw-changed-v4-0-f97e2ca976fe@rong.moe>
-In-Reply-To: <20260802-leds-trigger-hw-changed-v4-0-f97e2ca976fe@rong.moe>
-From: Ike Panhc <ikepanhc@gmail.com>
-Date: Wed, 19 Aug 2026 15:41:33 +0800
-X-Gm-Features: AcwNN1XvW54R3BtlIAEO0ZYWyRgIsnsmisrbLic33f3L9pxDYLLAY4SdpzDzLc8
-Message-ID: <CADwxbCUVY7OP-BgBW-xd-AZCn_Msh8TPmiRX0__F2f-SHw2O-w@mail.gmail.com>
-Subject: Re: [PATCH v4 00/12] leds: Add support for hardware-initiated
- hardware control trigger transition
-To: Rong Zhang <i@rong.moe>
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-	=?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
-	Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, 
-	Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 2, 2026 at 1:27=E2=80=AFAM Rong Zhang <i@rong.moe> wrote:
->
-> Some laptops can tune their keyboard backlight according to ambient
-> light sensors (auto mode). This capability is essentially a hardware
-> control trigger. Meanwhile, such laptops also offer a shrotcut for
-> cycling through brightness levels and auto mode. For example, on
-> ThinkBook, pressing Fn+Space ("shortcut") cycles keyboard backlight
-> levels in the following sequence:
->
->   1 =3D> 2 =3D> 0 =3D> auto =3D> 1 ...
->
-> Recent ThinkPad models should have similar sequence too.
->
-> However, there are some issues preventing us from using a private
-> hardware control trigger:
->
-> 1. We want a mechanism to tell userspace which trigger is the hardware
->    control one, so that userspace can determine if auto mode is on/off,
->    as well as turing it on/off programmatically without obtaining the
->    trigger's name via other channels
-> 2. Writing brightness has the side effect of disabling hardware control,
->    but the hardware control trigger remains active, resulting in the
->    software and hardware being out of sync. Most LED drivers that
->    supports hardware control also suffer from the same issue
-> 3. Turing on/off auto mode via the shortcut cannot activate/deactivate
->    the corresponding hardware control trigger, making the software state
->    out of sync
-> 4. Even with #3 solved, deactivating the hardware control trigger has
->    the side effect of emitting LED_OFF, breaking the shortcut cycle,
->    especially "auto =3D> 1"
->
-> This series tries to demonstrate a path on solving these issues:
->
-> - Introduce an attribute "trigger_may_offload", so that userspace can
->   determine:
->   - if the LED device supports hardware control (supported =3D> visible)
->   - which trigger is the hardware control trigger selected by the LED
->     device
->   - if the trigger is selected ("<foo_trigger>")
->   - if the trigger is offloaded ("[foo_trigger]")
->     - A callback offloaded() is added so that LED triggers can report
->       their hardware control state
-> - Remove hardware control trigger when writing brightness
-> - Add led_trigger_notify_hw_control_changed() interface, so that LED
->   drivers can notify the LED core about hardware-initiated hardware
->   control transitions. The LED core will then determine if the
->   transition is allowed and switching between "none" (i.e., no trigger)
->   and the device's private trigger accordingly
->   - This capability is restricted to the device's private trigger. If
->     the current trigger is neither the private trigger nor "none", no
->     transition will be made
->   - This interface is gated behind Kconfig LEDS_TRIGGERS_HW_CHANGED and
->     LED device flag LED_TRIG_HW_CHANGED
-> - Tune the logic of trigger deactivation so that it won't emit LED_OFF
->   when the deactivation is triggered by hardware
->
-> The last three patches are included in the series to demonstrate how
-> these interfaces are supposed to be utilized, so that ideapad-laptop
-> can expose the auto mode of ThinkBook's keyboard backlight. They can be
-> submitted separately once the dust settles, if preferred.
->
-> The last patch in the series depends on commit 5029bff09e79
-> ("platform/x86: ideapad-laptop: Fix driver unregistration order") from
-> platform-drivers-x86/for-next.
->
-> [ Summary of other approaches ]
->
-> < custom attribute >
->
-> Pros:
-> - simplicity, KISS
-> - no need to touch the LED core
-> - extensible as long as it has a sensor-neutral name
->   - a sensor-related name could potentially lead to a mess if a future
->     device implements auto mode based on multiple different sensors
->
-> Cons:
-> - must have zero influence on brightness_set[_blocking] callbacks
->   in order not to break triggers
->   - potential interference with triggers and the brightness attribute,
->     can't solve #2
-> - weird semantic (an attribute other than "brightness" and "trigger"
->   changes the brightness)
->
-> < private hardware control trigger (this series) >
->
-> Pros:
-> - mutually exclusive with other triggers and the brightness attribute
->   (hence less chaos)
-> - semantic correctness
-> - acts as an aggregate switch to turn on/off auto mode even a future
->   device implements auto mode based on multiple different sensors
->   - extensibility (through trigger attributes)
->
-> Cons:
-> - complexity
->
-> [ Previous discussion threads ]
->
-> https://lore.kernel.org/r/08580ec5-1d7b-4612-8a3f-75bc2f40aad2@app.fastma=
-il.com
-> https://lore.kernel.org/r/1dbfcf656cdb4af0299f90d7426d2ec7e2b8ac9e.camel@=
-rong.moe
->
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
-> Changes in v4:
-> - Drop the RFC prefix
-> - Add a new patch in the series to address a concern from Sashiko
->   - [PATCH v4 08/12] leds: trigger: Do not attach trigger to a removing L=
-ED
->   - Without it, following patches will expose a race condition
->   - https://sashiko.dev/#/patchset/20260719-leds-trigger-hw-changed-v3-0-=
-5fb55722e36e@rong.moe
-> - Address other concerns from Sashiko
->   - Reject insane hardware brightness
->   - Do not notify the LED trigger core when the registration of the
->     private trigger has failed
-> - Enable LEDS_TRIGGERS_HW_CHANGED by default when
->   LEDS_BRIGHTNESS_HW_CHANGED is enabled
-> - Add missing #include (Thanks Ilpo J=C3=A4rvinen)
-> - Remove needless #include (ditto)
-> - Remove needless code alignment (ditto)
-> - Link to v3: https://patch.msgid.link/20260719-leds-trigger-hw-changed-v=
-3-0-5fb55722e36e@rong.moe
->
-> Changes in v3:
-> - Integrate https://lore.kernel.org/all/20260712-leds-hw-control-brightne=
-ss-set-v1-1-1de593b09d26@rong.moe/
->   into the series
->   - Adopt __led_trigger_is_hw_controlled() in the rest of the series
-> - Rearrange the series so that the code using the offloaded() callback is
->   introduced before the driver implementation (thanks Thomas Wei=C3=9Fsch=
-uh)
-> - Reword documentations and commit messages (ditto)
-> - Adopt guard() and lockdep (ditto)
-> - Address concerns from Sashiko
->   - Fix a race condition in ideapad_kbd_bl_led_cdev_brightness_set()
->   - Fix trigger re-registration of ideapad_kbd_bl_auto_trigger
->   - https://sashiko.dev/#/patchset/20260618-leds-trigger-hw-changed-v2-0-=
-c28c44053cf3%40rong.moe
-> - Make registration failures of ideapad_kbd_bl_auto_trigger non-fatal
-> - Link to v2: https://patch.msgid.link/20260618-leds-trigger-hw-changed-v=
-2-0-c28c44053cf3@rong.moe
->
-> Changes in v2:
-> - Restrict the led_trigger_notify_hw_control_changed() interface to
->   private triggers only
->   - Drop PATCH v1 1/9 ("leds: Load trigger modules on-demand if used as
->     hw control trigger"), not relavant any more
-> - Gate the led_trigger_notify_hw_control_changed() interface behind
->   Kconfig LEDS_TRIGGERS_HW_CHANGED and LED device flag
->   LED_TRIG_HW_CHANGED
-> - Fix lock ordering inversion
-> - ideapad-laptop:
->   - Only call led_trigger_notify_hw_control_changed() when needed
->   - Serialize keyboard backlight notifications
-> - Reword commit messages and documentations
-> - Link to v1: https://patch.msgid.link/20260227190617.271388-1-i@rong.moe
->
-> ---
-> Rong Zhang (12):
->       leds: Move led_trigger_is_hw_controlled() to the right place
->       leds: class: Remove hardware control trigger when writing brightnes=
-s
->       leds: trigger: Add offloaded() callback and provide trigger_may_off=
-load attribute
->       leds: cros_ec: Implement offloaded() trigger callback
->       leds: turris-omnia: Implement offloaded() trigger callback and decl=
-are hw_control_trigger
->       leds: trigger: netdev: Implement offloaded() callback
->       leds: trigger: Enforce strict checks in led_trigger_is_hw_controlle=
-d()
->       leds: trigger: Do not attach trigger to a removing LED
->       leds: trigger: Add led_trigger_notify_hw_control_changed() interfac=
-e
->       platform/x86: ideapad-laptop: Decouple hardware & classdev brightne=
-ss for keyboard backlight
->       platform/x86: ideapad-laptop: Serialize keyboard backlight notifica=
-tions
->       platform/x86: ideapad-laptop: Fully support auto keyboard backlight
->
->  Documentation/ABI/testing/sysfs-class-led          |  25 ++
->  .../ABI/testing/sysfs-class-led-trigger-netdev     |   3 +
->  Documentation/leds/leds-class.rst                  |  72 ++++++
->  drivers/leds/led-class.c                           |  39 ++-
->  drivers/leds/led-triggers.c                        | 150 +++++++++++-
->  drivers/leds/leds-cros_ec.c                        |   6 +
->  drivers/leds/leds-turris-omnia.c                   |   7 +
->  drivers/leds/leds.h                                |   2 +
->  drivers/leds/trigger/Kconfig                       |  10 +
->  drivers/leds/trigger/ledtrig-netdev.c              |   8 +
->  drivers/platform/x86/lenovo/Kconfig                |   1 +
->  drivers/platform/x86/lenovo/ideapad-laptop.c       | 270 +++++++++++++++=
-++----
->  include/linux/leds.h                               |  19 ++
->  13 files changed, 546 insertions(+), 66 deletions(-)
-> ---
-> base-commit: c7acedb2db001160b1ec41cdcc759dd664150666
-> change-id: 20260506-leds-trigger-hw-changed-96a62188cbdf
->
-> Thanks,
-> Rong
->
+Honor MagicBook laptops emit WMI event code 0x288 when pressing the
+camera e-shutter / privacy toggle key (Fn+F8 on Honor).
 
-Review and test on my ideapads. Though I don't have ambient light
-sensor on my machines,
-Everything looks good from my side.
+Add the missing 0x288 keycode to huawei_wmi_keymap[] in correct numerical
+order and map it to KEY_CAMERA_ACCESS_TOGGLE.
 
-Acked-by: Ike Panhc <ikepanhc@gmail.com>
+Tested on Honor MagicBook X14 Plus (FMI-76, AMD Ryzen 8845HS).
 
-Many thanks,
-Ike
+Signed-off-by: Ruzal Daminov <daminovruzal7@gmail.com>
+---
+v2:
+ - Drop duplicate keys already present in the table.
+ - Remove leading zeros to match existing table style.
+ - Place 0x288 in correct numerical order.
+ - Map 0x288 to KEY_CAMERA_ACCESS_TOGGLE.
+
+ drivers/platform/x86/huawei-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+index 93cca17fdf5868..b5463edc4053d4 100644
+--- a/drivers/platform/x86/huawei-wmi.c
++++ b/drivers/platform/x86/huawei-wmi.c
+@@ -78,6 +78,7 @@ static const struct key_entry huawei_wmi_keymap[] = {
+ 	{ KE_KEY,    0x285, { KEY_VOLUMEDOWN } },
+ 	{ KE_KEY,    0x286, { KEY_VOLUMEUP } },
+ 	{ KE_KEY,    0x287, { KEY_MICMUTE } },
++	{ KE_KEY,    0x288, { KEY_CAMERA_ACCESS_TOGGLE } },
+ 	{ KE_KEY,    0x289, { KEY_WLAN } },
+ 	// Huawei |M| key
+ 	{ KE_KEY,    0x28a, { KEY_CONFIG } },
+-- 
+2.45.2
