@@ -1,186 +1,193 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011037.outbound.protection.outlook.com [40.93.194.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023248AE35
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 16:41:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787157717; cv=none; b=Hh/pJyTviMD4aAcFDrStJ8OXbGISjhmjcqo5hhY66pJpoMW/FADBEZfgMBmSDMRvM6IpvrfBakqE4QoHxSi0JWfmNHbDkARxVd4upXHAaQf430b3xPrTFRnLS1NKxRsjSwXmajhp7NORhXM1Hq937dBFC0uKulT/TOq5SkuP0eY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787157717; c=relaxed/simple;
-	bh=HP7cwLLH8dW1t2oc1FU0NkBsNtWJfCQQ6Q9W9x3ZuTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CoimE7tNbeEn7h5DjSShejRkPY/6k6ue8pt7MeeXgtuGmYlmLpbzrL3+qXXeVgWI/p91LzgcJjm3kqvmCxABKx/bv5zLPbFlK9YLb4biSf8DSxfdlIurDK2GfSIT8YM6kzREwM2bpSk1r4WrOczNdAJVy0DtuH/gxBpcTd0k7+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lpWoeYVn; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=V4dGOo3H; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C9F3C1D48;
+	Wed, 19 Aug 2026 16:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787158017; cv=fail; b=E0MToD6KxcbvFHYSidN0WIG6ryvu6nACzEHSbvb3FurHOsw1gmvEdFsi2EJjhSszr63MmzW3x9+drVf9nujMMUPCEXwils5nQtp3SMcLTwxdOlKo5gbr6popDW1YjZToZD22R1w/3BzpzgrcG9n1Y2ChKbIFHmMV11lD4LCKC1A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787158017; c=relaxed/simple;
+	bh=yhzFQ8QHgrd3IrgzsbvQC4t5cwCj8yXmUcF+A6ZgGBI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=aNKAAZ4hUbX/pex5Z+awsozjbG3WxSAO42v7xD6mylxdMtW/XfcEEPqBbUc1rNXgsgQe7FhpIATcGo5TvHapOAO9veeu3Y2EhZULEipOl+U6CLZ9PSPjMssurKk/ez7ktToV92g1a22x5whbPQdEiJpxxX1BdO3QTjphg0XiaT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qZENh7P7; arc=fail smtp.client-ip=40.93.194.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lpWoeYVn";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="V4dGOo3H"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67JF1B3O3869656
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 16:41:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	H8r6EYyPEhzz3zHgDtbwiTb8LdJaEzXX4pw4FkanEG4=; b=lpWoeYVn6V6Yaws3
-	xVINMntCwiN2mufWU3rLvai6ixE20n6QtNm4+CuLL4wh7L+oSIzD2dN7E+IwtpKs
-	sbz4+k1hxwTbRDnVWrfGXhBmlzZf7ggNYuPJsKwTb2O8TbCwqU0WDNLYI22yDN4W
-	ky9uePOFhFr3M71TyyPGOXyTMpzY5hAvg8XbE0P5YF+uo8SlnXlaWMnkfaIm1JNG
-	dPo4ar+ybqpb3W815U9CIAR7bYCBb5pMFKQL9ZKKlBbs0KXfx7duY+GFxq7FI96z
-	A9CZo1TbaZDYMOmhSo+eRhLQR9mi0zIgxwSB2WF88nJkP+b9w5mL5G8j7xh3q/RH
-	wrEaWw==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g5ervgjmt-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 16:41:54 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-52b4e315000so4004671cf.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 09:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1787157713; x=1787762513; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=H8r6EYyPEhzz3zHgDtbwiTb8LdJaEzXX4pw4FkanEG4=;
-        b=V4dGOo3HY+YpQfI0AUWIfzXLJuHXJAnpvcIm1PbQ9bRADJ3s11rSE55BijackvbXFC
-         MUwGzXqaBvxXf1o3fYo65QaltKdS+5XgOsmlxaocbC0fp1aDfbTQFt2CnobKGFv6Rw3k
-         nBtT655qGhgS6H5TbC0Rk7SH33grwxtg9HLS6MPHbhuIeUo3nHQODSANdzhVRZBJWkOU
-         tYYsik/YNUFqTpXpSfDDTOeXpPZBaivJNCMqUpEAXtKIQ3lFQA/ZOEjV6KRVOu9599qx
-         BqTv8R1zpTukRd6TwAJ+vSyw1a6lgPDfjFNXjgxGcelgPrFU4Nh6i5cIuql0b5C1dXJ4
-         8G7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787157713; x=1787762513;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=H8r6EYyPEhzz3zHgDtbwiTb8LdJaEzXX4pw4FkanEG4=;
-        b=XsvTr+sLqSKsEbMpZ/mTQ8+dTFLVUoc1zgcOCjZmqiAuHmmN/v+Bs8w1tzovD2fhy2
-         bWeGIIl/Ybl8d8xiaMcfeAV2cBmDB5RTyVL0Bx5z/DZOoUW9AJMbEs5NX/wmjN5pfjEL
-         RQ6WV6Uz63ANIIm3ghcK58WwiG0DZzyFp5raVfRAcbdb5+yPJqKuPP1e/PcEE1SNZ6wZ
-         i4/XZy7vUy0YLexHTS1tbdaQA8+avlg33O1guvjOuXVtENlfQYVq93fuyYI1ZMeCEXCU
-         qWS7IiAY8uY1rhV5Aokftd1hDzBe/Sgp4BOe0a4EJpWyWjJUnSotakBxQF6smKzcWJx3
-         me4w==
-X-Forwarded-Encrypted: i=1; AHgh+Rr3AaF117g8R27x+FmpkD8EaxwAcct1rVnpefUUte/jSaShu6FO6uCmcBxSU2fgglCbou8FZKUxiP1aeh545JSvEqN8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL9khEg4wNgP05jS5eQh/U49nyS5eDlyTGMJLwVx9nxWk62mqf
-	EnK4lbMYHHggDE9L+HEIp1bTttzVmw4mfAkHkhrBeH5pWqWRKhB0CGkmktfR3/bE4llT29s2PJr
-	GjBHnxuM/U5TbHxIpffRxsKUlOdg4aKWTqpgPSYpzkAtBF0v7LTImzdF618PjUy5HadX+VLV7r+
-	qM
-X-Gm-Gg: AR+sD13SKwUBrytZi/myDuXYjRMXKxYO7dXRYeKRFew1q9NqjJC/+M4nlD4CkflAfnT
-	lCinT+BAbDlfme0AZXnQlpqknqHa1Clahg3TPybyZ0x8cAO0hbuubaZkAe1DmUDPCMRzoMCXr31
-	wBt4u4fZNx219zUtEjwKNpIN1OiTm0V8XELe4ewrJYLMPr+LQZHPWZgcrZu2vB4UI4XJJK4EMXD
-	0/l3FvYTnQKtALtGCLSOpANzC3B/z5q0BrY6L/2D91/iXx9Lqmg4OOeS8l7vKTpPu2adVq2Qrnw
-	fNzfBqOqwg+2MdY8XdSe1kM08qGPdCo3/H2zTlJKY4YgEZIUSmS2WbNsyqsdYjsRHWIG9ORgTzD
-	lb/T2tHjsPrRoeyT2P6c1lbt8
-X-Received: by 2002:a05:622a:593:b0:51b:eab3:4ef1 with SMTP id d75a77b69052e-52dd606a2e5mr42413791cf.4.1787157713035;
-        Wed, 19 Aug 2026 09:41:53 -0700 (PDT)
-X-Received: by 2002:a05:622a:593:b0:51b:eab3:4ef1 with SMTP id d75a77b69052e-52dd606a2e5mr42413251cf.4.1787157712489;
-        Wed, 19 Aug 2026 09:41:52 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c243c7a8204sm105374566b.19.2026.08.19.09.41.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2026 09:41:51 -0700 (PDT)
-Message-ID: <ed3dc2dc-69dd-4b48-a5c6-47ca72cfee05@oss.qualcomm.com>
-Date: Wed, 19 Aug 2026 18:41:49 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qZENh7P7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ua8rU1Sy5/jIaDF3R4X6eCw5HJyuILzMYtU+u0fLHCvEZIhu8I66TS/PC68wI1nNl37uOdIZgKPL9dZndfnTxSiGO+AMWb//9KcjfZc1w/lNfNbqnCulrUM0gVLWBphA7teo8lQ3TdelCbRwx3gIqMRmLt4N5+JbsbNih9lEUX7lgnfMvEUuvJS+q6GSQTe4Lx8u8NjnII0fvYUQ7SgkqeRx/9366g1/7SowsSANinZ6z5+/UzXxS0ETJaP8shsiRKK6GyTBbRLJuTYDLN007ZNp1tYX3BM+Z5tbKe9wcUbtpVmZTitKwvEw8XfQTG/EJ3GQmgyEkquZIkh5P5nqsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0EJcAotOC200Qe/KYw7Lhrqhy4s6QGXepD4HtwvhmLY=;
+ b=oNrm3CuMy7ppY+rBc3i/xG42O87cak/wgSbb/jtUqWbFyjP0+kheHOuoPesayI6WYlbRBfthTQZCVTVFd1TK6YZxaL345lSlanBoQxx3xzWQ6/lYrTtVsJd9J1EW2Z17MSlwZAdmfSMr8gBiz6OiaWQRvbEgFU0JHNIMYxLWo+yF1VBTF1ePAcGFtCr2xdEOhbwI1SfOJUOh4wuVuENeDnTthTULWq6JqS1vPUXMvYUJhwVyxbyp6eF9CrSsHEoRobMwdcVU+vUG+EUfI/Tr0yya1nsDCF8twMgMx7Hnq7VAKonvsdPXMHLv9eS3GavlrsmoF8Na4oIq3zws105mXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0EJcAotOC200Qe/KYw7Lhrqhy4s6QGXepD4HtwvhmLY=;
+ b=qZENh7P74JjNzSVp5Qg7hh8FPMaj5ONY05U/lLaFehbv9o69sMaIpVZVAN8dT0gyVwRkc31twV7dpOOhxBUxv2UePQjh5GXe5CMMUS9tAJUzXEGFrx4bJtwkvnXnq0n5hy53lrxyImaiu6shRrXubmEP1wP3GFXCEPcVKaZab2A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by SN7PR12MB8002.namprd12.prod.outlook.com (2603:10b6:806:34b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Wed, 19 Aug
+ 2026 16:46:52 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0315.012; Wed, 19 Aug 2026
+ 16:46:52 +0000
+Message-ID: <227d88b8-9224-46f4-a92d-138d3b7ab60e@amd.com>
+Date: Wed, 19 Aug 2026 11:46:32 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/4] platform/x86/amd/hsmp: Add ACPI client support for
+ Family 1Ah
+Content-Language: en-US
+To: Muralidhara M K <muralidhara.mk@amd.com>, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260819073157.2426504-1-muralidhara.mk@amd.com>
+ <20260819073157.2426504-4-muralidhara.mk@amd.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20260819073157.2426504-4-muralidhara.mk@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR10CA0018.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::28) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] platform: arm64: qcom-hamoa-ec: Add fan RPM query and
- LUT calibration
-To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>,
-        Sibi Sankar <sibi.sankar@oss.qualcomm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20260728-ec_add_more_commands-v1-0-771abd65ee1a@oss.qualcomm.com>
- <20260728-ec_add_more_commands-v1-4-771abd65ee1a@oss.qualcomm.com>
- <eb8731e2-6cc5-49d1-a746-3c81563094f0@oss.qualcomm.com>
- <96411e0c-f357-40d5-81f8-14523836280e@oss.qualcomm.com>
- <3fa15948-eb8b-4f3e-af90-5b88fcc44d75@oss.qualcomm.com>
- <46f53628-ea22-42e5-8de5-a2a76b6360a8@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <46f53628-ea22-42e5-8de5-a2a76b6360a8@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: M7TU9AbXK5fxj3-B9dcmHleZx7KtfgTp
-X-Authority-Analysis: v=2.4 cv=VZ3H+lp9 c=1 sm=1 tr=0 ts=6a85dcd2 cx=c_pps
- a=WeENfcodrlLV9YRTxbY/uA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
- a=GwNM78hDF0K4Zjgp8RMA:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE5MDEzMCBTYWx0ZWRfX7ju0mnOcyOK+
- +Fzm54vis7NpogfENZI5Fj4q1UeQp+gr7BKkjQxGJzFEuMcYU7Q2oo0GN1ZEmu48fvmabd8b1Sy
- 8YXfzlB3/ejTvbnExYbdTHaygyN3AYQWZjRbfKhkK5IgLdHfB9dGi3+12CZaHp/dtWYisfGygGy
- v6SMUDUtPq99oMdyB1wgTTWEeZI7G3X6iYhnlLfQuL5VtRgzHIDzdLwpkj/jhVcc9zIhb6+p/b9
- h6u+0Ma2pwgO6+wpg22GBOBm8hyS1QBGrzZKgNcSg7vfgkabGeRkl4pPdae9yl7wQBJTuqlNVPs
- kpoN8K7dN4TF9cSNyJG7QCqIYMv9xYfpJSG32YqGF7U9JaW6aE5nW2bjnio+z7hrtCsWou4aXgL
- VdI/pCKwbbE15QbpJOAKIM7WTnWlik2PWsd9TFpEcQF9wYh3V2k35kBUk1xSI43HzFBb9w+Okxs
- YqqEqmMl+zRDJ7pHdQQ==
-X-Proofpoint-ORIG-GUID: M7TU9AbXK5fxj3-B9dcmHleZx7KtfgTp
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODE5MDEzMCBTYWx0ZWRfX/RA00SyqMgoN
- Ls4uoQSqjZaKBZndf7OUB8P+T67AZ7KVTe6CyBT3fjJk0ik9byUVsWNH0mJ6gFMZ5s8Z3+W3t+G
- LwYSCnuotcLjvdfwlwd72Wz19jdE+TU=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-19_04,2026-08-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608190130
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|SN7PR12MB8002:EE_
+X-MS-Office365-Filtering-Correlation-Id: 93127b13-109f-443a-511b-08defe11782c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|3023799007|56012099006|10067099003|4143699003|11063799006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	EbKj7wrEGdEIbZIYpKMqGO+UtLuoaOcf4Nm+Y4VxpEzprcYM9rLxrfB8dttUkBJqoIp8x6HZpPCFpMXD7GFDPPNquiM2/fc9ivjHgxtUnxOtX2mbR2nabjI1MV7TT8uWdN7z+U3YFLMv2BRiFXUuHyJeVz/Y9LWPLu2UOtrOyZBKdH6hAa/RGPjmLXtlBTkrBHShuJIm5jtF8qo54k0stx/FmXK8SZPMxgmM919q6nybCIF9ep7TgnsUnNyZXdvld5Fxa0ihseQHPPou0ARL+Okw+FRaKFh9077eJ30jd1sNFb4VPASlWW2s9cmHS2iBojTPMYyq140RqFaCe1WHDezcqUtp4Tfqh1BimRC74BnhhUifUxy4CeBNZEEAbrk0tLrEI4ouL+Zcx1y992vA9mvXHyAzM8j9mtsqRRiINbCMLzPyY7hCVnJk0kaRqi3NkF+bftZrOLH7NBaeTGI0xTnWzlnmp9ZlM8LzQtXqP343o2X8EoPqXEGieWm+fgVa+oXaSzTnwcdgktkCYkFaFAI9xNbPi3mM6nj+c4DuMyA8KPnt9l/VNBpxKVANcr7CzfjvbRjnOhuGGfV/2KW8+yjvQGJmZWXTqsfjKTJxzGVVTxfwJXjBqH6AxK8d9CfrSzii2+0634yGO4sWdjEEtArDGE9FszlyZh9qRhXLb1A=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(3023799007)(56012099006)(10067099003)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N3hiYkdUSDFpMStLcTR1eHkrU0I4Ny9WMGVab2hVdi9yVGZZVGJKcUNPSndM?=
+ =?utf-8?B?NG1XOVFnc2tPT0hqcVB0NXVNK2ZhNTBjOTB6NjhsV3BIRHpQZ0FKd1VxeGdn?=
+ =?utf-8?B?U2JNZCt5VXNla2lTNWpxaFkzRTF1aUZXVUNtbE1ETm1xQkJFYjlNbnFwdXBk?=
+ =?utf-8?B?WXE0Z0swcDlRR2c2cEowT0paOTFRVVdMblJBY2lHVEQ2ejZjbHV3cGlucUFQ?=
+ =?utf-8?B?WTRuYzMveXdROXNxVnFOREFvblkyYVluMENUT1M1ZTMxcStWM1NnZGFBTzBK?=
+ =?utf-8?B?eDZJdVd4NFFOOVhmQlBEK1kwNVJSZUw3U2J2cEZzOCs5S01YWU5MRW1icGFJ?=
+ =?utf-8?B?cytpSE9kVTBmNGtSQ2dHZ0I0bjhtOFJqMUNnbmwyWlhDV00yL3VETUdxNzRK?=
+ =?utf-8?B?K3kwUUdHZHJ5Qm9VZHdMV0JzL1ZjR1Q2N3poUVU1cUE1Nm1JYVJuMm1KWHAr?=
+ =?utf-8?B?czhyMG5xSDV0S2RMWU5QZHk5TXFBUi9Cb1pudmMvTmNvYW1ZRmdKOG1nM1dL?=
+ =?utf-8?B?aWJNbjNCRzlCYUZIVDhnLzZZMHBYQ1lSVnRITUloTzdpUlkrM3FMbzU4NEN3?=
+ =?utf-8?B?SlppVjlOZVpLMEJUUjdiSWNsY1RKeXhNbSt0UE9tSFYySVV4LzlRZlNNZ2dC?=
+ =?utf-8?B?dkJ5SE9GY1JrNW9QNGU5ZjZvNjcrN0pIZUlOU01oT3F2anMvSXlVVE9LYzRt?=
+ =?utf-8?B?b1BmMHdpSkIzcXp0OGVKbGJkNTUyMXR4c2w1N2cvaXpaZGxYV3VJWUZyaHlh?=
+ =?utf-8?B?VWs3cmx4dFZwaGtPbXhBcUoxOFNndVgxY0VBaXBjTnBSTit0dnhKTURDVjlk?=
+ =?utf-8?B?U0ZEbnRMVEd6NkFWcUtDV2VsdW9hTGNoR1BlVWJFMG5xcDdPSFd1NUJtRytO?=
+ =?utf-8?B?NXVlaGNEWkRONTJEK0ZxU2Mxb1Y0TkRmTVRKRi91b2NHVHlsbnhIRHB0ZVFT?=
+ =?utf-8?B?STQ4ZXJBeTBUMEI3a01pMEhSamIxRkphenFKS1ZOaVNrU1FtRkkrVmJvcm9r?=
+ =?utf-8?B?b1N5Y0QvNXBvRmo2NStBc2hNa2huaHRFNHYwME5MQzVCb0pDZFRKT3EvYWJ5?=
+ =?utf-8?B?U0loMDlhekZMWisva2QzY1pkRG04dzduV1REeGp6a3RobFRaT3JJMkt6S0JV?=
+ =?utf-8?B?UUZVV0NjNTY0TytJZldsaVJ4UTdoNWFmWU1Na1kzMFFtRlQ0V0hjTG8vb1cv?=
+ =?utf-8?B?b1pwMzdqd0VXRW1FVGQ4UEFWT2l4eVptM1VwaVpwUUZHb0dMazg3QWxKbXlO?=
+ =?utf-8?B?aTRZSDBQVFEvcDNjL3h3TmxNU2VQUno0MnF6enh6Qms0WUZRWmFhdzJ1Z0Rl?=
+ =?utf-8?B?TVU1TmRPd0wwM016WFNlSm5ZcHY0VmRUbkJ3UUMycHpndnBtUVBSU3dHc1JE?=
+ =?utf-8?B?bUs3ZnhSRkFReHVBYkFHTU54M2lVQ3JlMmpySnpCMUp5SGtlMlJ6WVBzZEsv?=
+ =?utf-8?B?cDVoM3FVdEVnRGRJMnpVZzVES1hwekdQQWVsRDhidmFTVGswelgxT250VnJG?=
+ =?utf-8?B?b3Y2dEZ3SmwyQ0NZYXBMdTNsNlhlY25idytkTE5KcWM0VVVTMVlQWWM0dUg1?=
+ =?utf-8?B?RDFWcFdsVExEMmNKM2pUNDVFdjFPYUNKdHkyWG1EWVFsUndLUG9jQ0EwbU5Q?=
+ =?utf-8?B?MmF4M09vRmJDTVRDQkg3aThuOXViTnZDL2I4Vi93V3hwZ084Ym8xR0ZTV0pR?=
+ =?utf-8?B?MjI0dndFNTRZRmt1dDVVUWtwMzIrWTZQZXMzWEVCQ1BBbkc2WS9tcHUrRSti?=
+ =?utf-8?B?aTZrRGM1NS9tai9BTi9oOUw1MXoxN2RUbkl6SlNOUGZlK2NhcGZaNFg5Y3I4?=
+ =?utf-8?B?dlBOT2dlMTVxMXNUZFBCMENhcmsyOW1RMXozZkxrczRxeHlJYnFmbmFiaks5?=
+ =?utf-8?B?cTBXQnNRWGEvT3ZpbjRnSzc3dXRvc3F4d1Q4WGlvVHFBbHZaTEhDSERadTVX?=
+ =?utf-8?B?MC9laDVyRzVQWFo2Nld1ZTlmUDUxMCt1eXQwVjBGY0o1RmN2ZmVRNmx3aUh0?=
+ =?utf-8?B?RWo4ZHhnMzF3N0hML01FK1AyZ1JwMDFTZEtxcjRySzZlK0VEb3FtNVlyQi9u?=
+ =?utf-8?B?S0JMZVhWSGpKVmlRQU1zN0NHM3pZMDF4ZUNwbHBTQjZpQjRYTVlZaFNiM2dM?=
+ =?utf-8?B?ZjlSQzV2Z2Z0WTQ0eHAwUlpmcEVpNlRyeUlINHhSYnVjNkhjYU5kYWtja3JF?=
+ =?utf-8?B?anhrVU1JTkpiU0xTS0dzUjlzc09qZjh5aUNlVDF2SzR6SlM0Z1d4T0lwally?=
+ =?utf-8?B?RW5UZU5pS2VVTWhnZnNVa2psSHVoR2JSUHN6T2N6TU1DQkxvU1NlZkt1RWVI?=
+ =?utf-8?B?V3RBWCtOb2pvYnhLTzB5TWlYclAweWw4L2J4STk3UzVVcExxYVhxUT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93127b13-109f-443a-511b-08defe11782c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2026 16:46:51.9044
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2le/AV8Qdb9R4gKUKv6b/376nRr77sAO821Qyq1BtcG4CaZDfyDoKKczRz3A1KHuFjxLTdOxQxZ/VK7QKpW4Gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8002
 
-On 7/31/26 8:25 AM, Anvesh Jain P wrote:
+
+
+On 8/19/26 02:31, Muralidhara M K wrote:
+> The ACPI HSMP device (HID AMDI0097) on the Family 1Ah client platforms
+> (Models 80h-8Fh and E0h-E3h) describes its mailbox the same way server
+> platforms already do, via _CRS/_DSD, so hsmp_parse_acpi_table() and
+> hsmp_get_uid() need no client-specific handling.
 > 
+> Client firmware does not respond to the interface version query
+> (HSMP_CLIENT_GET_INTERFACE_VER). Instead, query the metrics table version,
+> as it is the only version-related request supported by the client firmware.
+> Server-side behavior remains unchanged.
 > 
-> On 7/30/2026 10:38 PM, Konrad Dybcio wrote:
->> On 7/30/26 8:35 AM, Anvesh Jain P wrote:
->>>
->>>
->>> On 7/29/2026 4:37 PM, Konrad Dybcio wrote:
->>>> On 7/28/26 7:44 PM, Anvesh Jain P wrote:
->>>>> Add the EC command definitions and handler functions for querying fan
->>>>> RPM and programming per-fan LUTs (lookup tables mapping SoC
->>>>> temperature to target RPM), and introduce a raw i2c_transfer()-based
->>>>> transport for the two commands, since their variable-length,
->>>>> sub-command-addressed payloads don't fit the smbus block-data model
->>>>> used by the existing commands.
->>>>>
->>>>> Fan LUT geometry and temperature breakpoints vary by board, so encode
->>>>> them in per-compatible qcom_ec_lut_config data selected via
->>>>> device_get_match_data(). Add configs for the Hamoa CRD, Hamoa/Purwa
->>>>> IOT EVK, and Glymur CRD ECs; IOT EVK boards share the Hamoa LUT
->>>>> geometry but are bring-up platforms without a calibrated fan curve,
->>>>> so skip_lut_set suppresses the LUT-set command on those boards.
+> Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
+> ---
+>   drivers/platform/x86/amd/hsmp/acpi.c | 2 +-
+>   drivers/platform/x86/amd/hsmp/hsmp.c | 8 ++++++--
+>   2 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd/hsmp/acpi.c b/drivers/platform/x86/amd/hsmp/acpi.c
+> index 8257cd1da48e..275258ee86bf 100644
+> --- a/drivers/platform/x86/amd/hsmp/acpi.c
+> +++ b/drivers/platform/x86/amd/hsmp/acpi.c
+> @@ -557,7 +557,7 @@ static int init_acpi(struct device *dev)
+>   		return ret;
+>   	}
+>   
+> -	if (hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
+> +	if (is_client_platform() || hsmp_pdev->proto_ver >= HSMP_PROTO_VER6) {
 
-[...]
+I'm still not happy that we are missing HSMP protocol version in the 
+client platform, but given the current status quo this makes sense.
 
-> 2a. The EC's LUT storage isn't persistent across reboots, so we'd need
-> to cache max_rpm on the driver side instead to skip recalibration.
-> Initial probe after a fresh boot would still need one calibration pass
-> either way.
+I just hope this can get fixed in platform F/W and this commit reverted 
+later.
 
-Are you saying that without this patch, we could be in a situation where
-the fan simply wouldn't spin because the LUT would be null on the EC
-side? Would UEFI not do it for us?
+>   		ret = hsmp_get_tbl_dram_base(sock_ind);
+>   		if (ret)
+>   			dev_info(dev, "Failed to init metric table\n");
+> diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+> index 60889c1b1099..f35a891772e0 100644
+> --- a/drivers/platform/x86/amd/hsmp/hsmp.c
+> +++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+> @@ -196,12 +196,16 @@ static const struct hsmp_plat_desc hsmp_desc_server = {
+>   	.metric_dram_msg	= HSMP_GET_METRIC_TABLE_DRAM_ADDR,
+>   };
+>   
+> -/* The client drives a different mailbox with the Ryzen Master SMC message set */
+> +/*
+> + * Client firmware queries the metrics table version instead of the
+> + * interface version (HSMP_CLIENT_GET_INTERFACE_VER) to provide a unified
+> + * interface across multiple client platforms.
+> + */
+>   static const struct hsmp_plat_desc hsmp_desc_client = {
+>   	.msg_desc		= hsmp_client_msg_desc_table,
+>   	.num_msgs		= HSMP_CLIENT_MSG_ID_MAX,
+>   	.test_msg		= HSMP_CLIENT_TEST,
+> -	.proto_ver_msg		= HSMP_CLIENT_GET_INTERFACE_VER,
+> +	.proto_ver_msg		= HSMP_CLIENT_GET_METRICS_TABLE_VER,
+>   	.metric_tbl_msg		= HSMP_CLIENT_GET_METRICS_TABLE,
+>   	.metric_dram_msg	= HSMP_CLIENT_GET_METRICS_TABLE_DRAM_ADDR,
+>   };
 
-> 2b. cur_state already reports RPM-derived state via the cooling-device
-> ABI. Is it worth also adding PWM hwmon on top of that?
-
-We have to deduce the RPM number, whereas IIUC we can query the PWM
-state (if not, then there's no point)
-
-Konrad
