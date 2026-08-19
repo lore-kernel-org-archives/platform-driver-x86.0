@@ -1,40 +1,41 @@
 Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C768C30B514;
-	Wed, 19 Aug 2026 15:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662282641C6;
+	Wed, 19 Aug 2026 15:03:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787151779; cv=pass; b=MB9cNWtIJ+/6MjmixWrZQeVYfnQdb2SIWF73U9g+Ta3UIBdq5DCB0TRDgUkWYsRAlFqRFtAi5S9iBK14qFwvQXFJMG2cEMekGyZvqcYHYlMGInrjdCdudYysGGvltJTYWxFrpjv5HRuuFRHK2P2SV8KIgasF59bMMwTJIvTL2Pg=
+	t=1787151783; cv=pass; b=s4tgnCzA/rZX4NwLgFGbQ8afla8ZzCFN+qZMBF/JsJmbPRGAes3seGjNKswmLdQ6Wyqrz09zhHPJsBkZcr0PL/7cvzSLEFEdY4y4wTUpQa60XqMSx2Z4ZGLNnMqwX6QtrCSMtGB3+zOVf0Q3qhu5uxEi8TmGIfV71W49bAj2KbA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787151779; c=relaxed/simple;
-	bh=m3/zjIJSD+vXrzk6rhthVn9Qvj8nBL+iV6kZjDZ5YlE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PPUBC52lblc0+SEi8u7ku+B/HT6HmDU8YK5oA6cF4CjExQUE/o6jVGEJDb/piCBkeROdfo+OAZXIn1txdFpo3H/uaK6wr9cKB/v8G4obUFCamOIPSWyGI4JOejVIj0DN3GBNgFvhBaJwYSJfKIxQen+OlbYsNHQz6cQjxFmRjxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net; spf=pass smtp.mailfrom=moh53n.net; dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b=IGDvQ4Jb; arc=pass smtp.client-ip=136.143.188.15
+	s=arc-20240116; t=1787151783; c=relaxed/simple;
+	bh=SMO2MHJbq71fyxP8ZjUE5Nl1oUxYu8pFzMmNXFs8U7c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fahs8J5D/jaKC0l6A73ueIxGArHWlG6IAAjvJoADR1G6ib7zhXYDa7OlVLsDciPCOkrBV+TLHbbemyx8BAqgFaWHEpSixs0mcHszo8y9RFov2gHVgrsEGrxVDygs+SCMJZ3HJpPRyzrnIxTXl4LF3z+X5bgHFYIRXcTO93s43oA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net; spf=pass smtp.mailfrom=moh53n.net; dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b=N4ckAWhU; arc=pass smtp.client-ip=136.143.188.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moh53n.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b="IGDvQ4Jb"
-ARC-Seal: i=1; a=rsa-sha256; t=1787151771; cv=none; 
+	dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b="N4ckAWhU"
+ARC-Seal: i=1; a=rsa-sha256; t=1787151775; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=esz8luwtA74Da7sU3ERxXJCqPcElxLuusCel2ZrVsWNi2G0ThPtu3r73Y+zFowTFIgzDUi6PZz5F5AD0bXFshfTmjGR0goqIgeEkXaCxLqqAd8KzmJDp9cw5NoM8Mb+lZoE5Q8ONTtgeuvW/VaeNGLjhpIKTfB6kslozZY19wYY=
+	b=AwCwsVy3rVmxC3J/F/6f3guV/CsZLJsM+ARmMwMouNJ5RHNdJcazVpGRxmtK2yvHVRYs5vf8XW8uuSiocFkpeAjsLbTtGwxT+OGppZe0LMRCUWMQQ/q66DCiUON1blG20TaQR1x54uL64kfF7BuYlSo0BbilhRpPAR9yQ3LzKuc=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1787151771; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=HHrUYYDSSlPVwfozUxV1ycfTth9Y4+4LVqyHkpMPRbc=; 
-	b=Pi9WSeUMNYNI00g8fkw8zleATKi4lfiMwcMMPBdxWQh+j5n7qgaolOuCYAPQQSbYtaTqUjfbrJHMl3r0VxUY1ugvPeQnqadtlQiR6Ic6V7/eUOzVXzhVQVXdrslaXokByNa6iZ0n3fBLk9EjV/1dOQ+gx+ODGBY6KZZY5Uxll+g=
+	t=1787151775; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3MNqYbFJnKy4NPdfL8vs1fXxa91OFs319jHjqVyMIZo=; 
+	b=PRGGaK2Pv7ZGDqms1mq3rR54bCUPd4YTrQNfDdA6J46HTEF4rQ3/Wtbh7AhEdosNr32vMnsrvKDQFJqhNn0nmsw8yyGTMzJLWXeI0iidollETbjaxiI67UW48Hl2v+mWJN9nQUT3GGk5z3ETZmFi7dU+G4nBTxwWjETS7CxX6JI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=moh53n.net;
 	spf=pass  smtp.mailfrom=moh53n@moh53n.net;
 	dmarc=pass header.from=<moh53n@moh53n.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1787151771;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1787151775;
 	s=m; d=moh53n.net; i=moh53n@moh53n.net;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=HHrUYYDSSlPVwfozUxV1ycfTth9Y4+4LVqyHkpMPRbc=;
-	b=IGDvQ4JbdX3E1r+UNkfD5Wg3yS1gba8PWtckBWM8Qs0hxOX/zfgjtspKIXtTLZyV
-	BMHuDETbMG8p8c6TBPy2FNtIcVAZYRzMN5ijEJS01SiBSE1cyQCRb5uCmW9Y+7ACXod
-	yPLollgajmJVt1ftPX9Qz/xoG9i5g5ahI5Yc14sE=
-Received: by mx.zohomail.com with SMTPS id 1787151769136622.4658863488661;
-	Wed, 19 Aug 2026 08:02:49 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=3MNqYbFJnKy4NPdfL8vs1fXxa91OFs319jHjqVyMIZo=;
+	b=N4ckAWhU2hT7FELq5zOGtK4T5mQ7Zhj07ShH90LVbRStoYCq2A7F99C8dIbPgTjn
+	jFwKvQAe5d3ps4mZCkU1TehrxVABzCgKWx9rhMo3xZ1BtNs4mEefrPgNM51jTSMDAVn
+	guFD5eYB+7UO8newTS1Q6SOjA85vtAVdmMHC4bRM=
+Received: by mx.zohomail.com with SMTPS id 1787151772568510.72067280081603;
+	Wed, 19 Aug 2026 08:02:52 -0700 (PDT)
 From: Mohsen Tahmasebi <moh53n@moh53n.net>
 To: "Lee, Chun-Yi" <jlee@suse.com>,
 	Hans de Goede <hansg@kernel.org>,
@@ -42,10 +43,12 @@ To: "Lee, Chun-Yi" <jlee@suse.com>,
 Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Mohsen Tahmasebi <moh53n@moh53n.net>
-Subject: [PATCH v2 0/3] platform/x86: acer-wmi: enable hwmon on Aspire A315-58G
-Date: Wed, 19 Aug 2026 18:31:55 +0330
-Message-ID: <20260819150205.19453-1-moh53n@moh53n.net>
+Subject: [PATCH v2 1/3] platform/x86: acer-wmi: use bool for boolean quirk fields
+Date: Wed, 19 Aug 2026 18:31:56 +0330
+Message-ID: <20260819150205.19453-2-moh53n@moh53n.net>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260819150205.19453-1-moh53n@moh53n.net>
+References: <20260819150205.19453-1-moh53n@moh53n.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -55,32 +58,77 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Some Acer laptops expose the same WMI sensor interface without necessarily
-supporting platform profile functionality.
+Use bool for quirk fields that only represent boolean values.
 
-This series cleans up the quirk fields by using bool, separates hwmon from
-platform profile support, renames the predator_v4 quirk field to
-platform_profile, and enables hwmon support on the Acer Aspire A315-58G.
+Signed-off-by: Mohsen Tahmasebi <moh53n@moh53n.net>
+---
+ drivers/platform/x86/acer-wmi.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Changes in v2:
-- Use bool for boolean quirk fields, as suggested.
-- Completely split hwmon from the predator_v4 quirk field.
-- Rename the predator_v4 quirk field to platform_profile, as suggested.
-- Enable hwmon for existing Predator-v4 quirk entries.
-
-Link to v1: https://lore.kernel.org/platform-driver-x86/20260813154939.9850-1-moh53n@moh53n.net/
-
-
-Mohsen Tahmasebi (3):
-  platform/x86: acer-wmi: use bool for boolean quirk fields
-  platform/x86: acer-wmi: split hwmon from platform profile quirk
-  platform/x86: acer-wmi: enable hwmon on Aspire A315-58G
-
- drivers/platform/x86/acer-wmi.c | 56 ++++++++++++++++++++++-----------
- 1 file changed, 38 insertions(+), 18 deletions(-)
-
-
-base-commit: bd5f485f3f026225b86573e559af0b7254ef4184
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index e0eaaefb13d0..00c3113c4cf8 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -400,11 +400,11 @@ struct quirk_entry {
+ 	u8 mailled;
+ 	s8 brightness;
+ 	u8 bluetooth;
+-	u8 turbo;
++	bool turbo;
+ 	u8 cpu_fans;
+ 	u8 gpu_fans;
+-	u8 predator_v4;
+-	u8 pwm;
++	bool predator_v4;
++	bool pwm;
+ };
+ 
+ static struct quirk_entry *quirks;
+@@ -456,34 +456,34 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
+ };
+ 
+ static struct quirk_entry quirk_acer_nitro_an515_58 = {
+-	.predator_v4 = 1,
+-	.pwm = 1,
++	.predator_v4 = true,
++	.pwm = true,
+ };
+ 
+ static struct quirk_entry quirk_acer_predator_ph315_53 = {
+-	.turbo = 1,
++	.turbo = true,
+ 	.cpu_fans = 1,
+ 	.gpu_fans = 1,
+ };
+ 
+ static struct quirk_entry quirk_acer_predator_ph16_72 = {
+-	.turbo = 1,
++	.turbo = true,
+ 	.cpu_fans = 1,
+ 	.gpu_fans = 1,
+-	.predator_v4 = 1,
+-	.pwm = 1,
++	.predator_v4 = true,
++	.pwm = true,
+ };
+ 
+ static struct quirk_entry quirk_acer_predator_pt14_51 = {
+-	.turbo = 1,
++	.turbo = true,
+ 	.cpu_fans = 1,
+ 	.gpu_fans = 1,
+-	.predator_v4 = 1,
+-	.pwm = 1,
++	.predator_v4 = true,
++	.pwm = true,
+ };
+ 
+ static struct quirk_entry quirk_acer_predator_v4 = {
+-	.predator_v4 = 1,
++	.predator_v4 = true,
+ };
+ 
+ /* This AMW0 laptop has no bluetooth */
 -- 
 2.54.0
 
