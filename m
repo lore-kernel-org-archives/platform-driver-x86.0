@@ -1,133 +1,344 @@
-Received: from sender6-op-o15.zoho.com (sender6-op-o15.zoho.com [165.173.180.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2837F2E2286;
-	Wed, 19 Aug 2026 15:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787151788; cv=pass; b=irfYG22kPN/dqvMdCnVgxu1gfvr1+8b1ETpQFAkoVQOyR0Pf5YRT3ORpMDP9G30M741fLpZqpF4YFhfr85PCRRRVNYJIFDZ3eRv75hMwnHx2/XxT/aRFHj7LWfuSmU99rZDUF9uZw9sPp7X6/2UUS+8SzRQvQyl6Yd4CjUGy5Qo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787151788; c=relaxed/simple;
-	bh=1zdlcDSdVfkExXAIBQVPG5DSLOfh0fmqIta9Y3+UyxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tm7WHElH5xlKXkjyJi+tLXMrDwR7HdUDjlQF7dAGiP1LJg0riY0/5ScWW42SBcypB4JkU0mQzXfKks80+/B182iIv6BO42cCJ8Y5BWJF+7JCuZC9yHCVcNIHzyhMlwKJcaaqKuB7wLBO77to2qdDi5/yUN15ElaDodvntHX0B0I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net; spf=pass smtp.mailfrom=moh53n.net; dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b=qx/BzFvu; arc=pass smtp.client-ip=165.173.180.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moh53n.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CE547DD48
+	for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 15:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787152887; cv=none; b=ok5n5+mDk1fCEuq/8WuauYNw86XfCb7k7pujIQdpOftEAAD7UPAzgp7nCHJKhW0ti/UH5PopFOlLOqU0BkR3dTcANfTUCysfCOuGMivDOI8ebHn/aDmLGxMBlOXd0g6MhD9nsW8zWTK7lu8br+9T5Dbmlb/GC/61JvPTEHNYUSo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787152887; c=relaxed/simple;
+	bh=MKNgMRpgXBs1k36yPifDtp69lXqrNZHJTAajRYMV7sM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a0DuUuO0gKf5KS0P891OTdbe/c5RCgxrqsyO1ul1EsYbIAQLIU6/x3Wl1XjEW0e+HarXGz2rIN+/m659OP6akyrHxk1bsJbr242YQ/+wbIF9EQtRdSz8gMXxOqjTNVOmKEkfD2FmX2lWF1/BDsmnkrQbDzg4UmNEjbxCRTfwXoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DdVk4hTI; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b="qx/BzFvu"
-ARC-Seal: i=1; a=rsa-sha256; t=1787151781; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lI3NyIbNpgKr6kqd5esBHzu3EQCN5ah0RqCekH9DNO8+iXQJOKsm+MNNMqh1qyrw8DxhOJhjRI+q101KeFWYv4eVKjOCB39Z0YYWjwU2XtPfoqrmQ6ymSJYn9um1EpLoyFLZUZbIDg+ekqwhOV6s92LzF5jdzzYeyeShfScKq8U=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1787151781; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=w1pIiMV0CDPT1wXtgm8CpGYvIn/qekcSsBDMkUN3DtY=; 
-	b=a1uCIu6+1DDZy63Iw2PPP1Kki7YQSfh5ZprOVhoPxDGe4aZN+tJJ8qsQHP/3nz6smB1oCtEgPYNIwGoQ0f2KISb7n8QNqdccJDnCuLulsvMrwbx91/VzaQv0+MPXyTQrw6XbQMk+Jo/jVd8V5LvKC7kTEBnjjLtpZkFGK5Fgx/M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=moh53n.net;
-	spf=pass  smtp.mailfrom=moh53n@moh53n.net;
-	dmarc=pass header.from=<moh53n@moh53n.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1787151781;
-	s=m; d=moh53n.net; i=moh53n@moh53n.net;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=w1pIiMV0CDPT1wXtgm8CpGYvIn/qekcSsBDMkUN3DtY=;
-	b=qx/BzFvubiybJ6O2PTCjNSjZyructaSDlvxjaVdDqfVRIGwG7I1snJw/fB3lAPO0
-	5EI2EvfE18JmQvOT74zQm6HGn4Cnsz2a7DZyOyOA5gh403+7lkcgyDHJngnZL1x5Cdm
-	RwWWGjVPMJhNV6JYM3Tpv7gnEwyS4Zw6komBRXrU=
-Received: by mx.zohomail.com with SMTPS id 1787151778736586.4064554143913;
-	Wed, 19 Aug 2026 08:02:58 -0700 (PDT)
-From: Mohsen Tahmasebi <moh53n@moh53n.net>
-To: "Lee, Chun-Yi" <jlee@suse.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mohsen Tahmasebi <moh53n@moh53n.net>
-Subject: [PATCH v2 3/3] platform/x86: acer-wmi: enable hwmon on Aspire A315-58G
-Date: Wed, 19 Aug 2026 18:31:58 +0330
-Message-ID: <20260819150205.19453-4-moh53n@moh53n.net>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260819150205.19453-1-moh53n@moh53n.net>
-References: <20260819150205.19453-1-moh53n@moh53n.net>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DdVk4hTI"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4980dc26022so12590255e9.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 Aug 2026 08:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1787152883; x=1787757683; darn=vger.kernel.org;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=MKNgMRpgXBs1k36yPifDtp69lXqrNZHJTAajRYMV7sM=;
+        b=DdVk4hTIR24wU5M//vNZ49u4+8CAF5LX4T2N36yL+HbHGvO6IC6y7fV+K2DOtIgqVx
+         7Q+d+fOAhZoHaK/Rg7+ZgSQo6Be9XWRDEe0AbttDKcr0zAZiXEaHqPLpOVMLeSABjlJa
+         bFy37BS4lY6plXD0uarVORk5r3UvUUJ0baYGc2Pa2mZ7atnYcPYc/m/izmbwNkAWA/qc
+         GjXv41rJeDTr4O84SCPriFN6xnHl46ptyn4qEchLdvkfqtf+wbgvDNn/EH59WCKSKwh3
+         q9ttC+0SA8I9+3IHzaC+mWNnEG1Vs99RaCY3pNO/S5rM8Z02WPQcLLlkqJY4lTBhJdWW
+         KyNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787152883; x=1787757683;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MKNgMRpgXBs1k36yPifDtp69lXqrNZHJTAajRYMV7sM=;
+        b=FPaVehc3++afLcQAuTvI4634f9IO6KFyD7/ak9m/BjbDjpbKOEWirlK5s4p86VnEAo
+         auU7fxWQnCMf7uuzAyRxi83spGHpS1LRRArBMI8IIATqF+soB0qBup/fbCLNWWXo57Xb
+         b8lLQYTd4MFvbha3WFM15xfkxVt1z8UqoEJrwnwtsc+EfsIO+rLw8hgkppWczuZ3bZbx
+         8nlfEeTM6NyTjyQBxBg///LyVAcX+424pP4bvmr3mwLgq2Dvoe3yULv0xuD7nTgPOP8Y
+         DWehMcwf9FW4zoI8FU0jvaAm1F/QNFoknMX3CJZ0Jck2uA9WuufRCnRt6SCpWDbULApL
+         tubQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqyW70rpEUD1PKOa1bMP1JbvMsbOTm2C/30wISj8ZsDizMJ5cqeD17g0MFpXSTQ556+QYtb98DQjH+4LA+iQ3gHzLhx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3KfUwnH5yLg8o3UvbKFgdVj1cNM0ZZoZndqBvOqV2eK8WEWGh
+	Kr9ULNLeqk9e96Y5mDBH6Lmj8LkOpMceNG5MAWO74leUTuMSZuNXdzvTUz8M4+WH1ow=
+X-Gm-Gg: AR+sD11ylI55B2gXHB33sjSCoqrs6+NwRt1p0Bi7sICWuIT2rM3RAXawOyGvz7RH7HY
+	XOwSTo2bqemm/Ij8B9uqsX07HKdkQGHGj5vruEzWVRcIOyYVOqFVx59Ir3EDdNbWLow1H3JBtUV
+	eQrxrqZwJ/CvApQqwzjEjR6m/RgR3IjmIMJSllBh2Vytf4R0Np8gViA7Zkn+1W81pPsRiB9XjUW
+	Tq7pt6QZX2Aro1didDKHTo5NUyv/l0/m2Iglu2zLuTwTtranXPAqXvy2++hSEi92zZl+JmEaQ5P
+	Kjy+C+FpiiJXhWSAk5y99zBIxGZJfgiAnk/vct6m3Pyr/6//DY7DoXgMa7IPg2E+TLJZ+zW/x4k
+	e4HU+43pHXweRcGJyh48n0RRSeHoWJuvZrAVGvusAL/SH5MFvwpVciNdccjRI8HJgapwLrEcMZH
+	ZHGApw6omm6kHRjBx4heIawRQqCObnGQsS7KWmFTuPSzJp3r2OTE+G5fFol7X09QV+Umpj6Azit
+	mjOt2GhbTnu3O/wu/5b5Xqn/RPc7fyBtmJJA2SxIFeGMi71ttkv60Lti38iHtc0EIFtC1uSYG28
+	Z1EmeG8eJlIffw==
+X-Received: by 2002:a05:600c:5253:b0:499:79b9:e226 with SMTP id 5b1f17b1804b1-499aa109edbmr89278865e9.0.1787152881956;
+        Wed, 19 Aug 2026 08:21:21 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499a9dffa59sm88551995e9.3.2026.08.19.08.21.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2026 08:21:21 -0700 (PDT)
+Message-ID: <819fea2f-7df9-484a-9565-80578cfdfa3c@suse.com>
+Date: Wed, 19 Aug 2026 17:21:18 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/13] x86/msr: Drop 32-bit MSR interfaces
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
+ Tony Luck <tony.luck@intel.com>, Reinette Chatre
+ <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>,
+ James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+ Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Huang Rui <ray.huang@amd.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Artem Bityutskiy <dedekind1@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org
+References: <20260819102314.1499258-1-jgross@suse.com>
+ <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Hc4PeuQ841RPSm0B83GP3ggL"
 
-The Acer Aspire A315-58G supports the Acer hwmon interface and reports
-CPU, GPU and external temperatures.
-Note that the GPU temperature reports 0 when the Nvidia MX350 GPU is in
-D3cold, but reports a valid value when the GPU is in D3hot/D0.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Hc4PeuQ841RPSm0B83GP3ggL
+Content-Type: multipart/mixed; boundary="------------TnQmW2xUHDfryHdoV1v2DtYY";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, virtualization@lists.linux.dev, linux-ide@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-coco@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org
+Cc: Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal
+ <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>,
+ linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>,
+ Tony Luck <tony.luck@intel.com>, Reinette Chatre
+ <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>,
+ James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+ Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe
+ <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ Len Brown <lenb@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Huang Rui <ray.huang@amd.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Guenter Roeck <linux@roeck-us.net>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Artem Bityutskiy <dedekind1@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org
+Message-ID: <819fea2f-7df9-484a-9565-80578cfdfa3c@suse.com>
+Subject: Re: [PATCH v2 00/13] x86/msr: Drop 32-bit MSR interfaces
+References: <20260819102314.1499258-1-jgross@suse.com>
+ <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
+In-Reply-To: <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
 
-This commit enables hwmon for this model.
+--------------TnQmW2xUHDfryHdoV1v2DtYY
+Content-Type: multipart/mixed; boundary="------------TnjqcXnTcN66nC2lLK07OASL"
 
-Signed-off-by: Mohsen Tahmasebi <moh53n@moh53n.net>
----
+--------------TnjqcXnTcN66nC2lLK07OASL
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Tested on Acer Aspire A315-58G (BIOS V1.35).
+T24gMTkuMDguMjYgMTY6NDAsIERhdmUgSGFuc2VuIHdyb3RlOg0KPiBIZXkgSnVlcmdlbiwN
+Cj4gDQo+IFRoZXNlIGxvb2sgZ3JlYXQuIFRoYW5rcyBmb3IgZG9pbmcgaXQhDQo+IA0KPiBU
+aGUgb25seSB3b25reSB0aGluZyBpcyBob3cgd2UncmUgZ29pbmcgdG8gYWN0dWFsbHkgbWVy
+Z2UgaXQuIFdlDQo+IG9idmlvdXNseSBjYW4ndCBkbyBwYXRjaGVzIDEwLTExIHVudGlsIGFs
+bCB0aGUgInN0b3AgdXNpbmciIHBhdGNoZXMgaGF2ZQ0KPiBiZWVuIGFwcGxpZWQuDQo+IA0K
+PiBJIG9idmlvdXNseSAxMDAlIHJlYWxpemUgdGhhdCBpdCdzIGR1cmluZyB0aGUgbWVyZ2Ug
+d2luZG93LCBidXQgYW55IGFja3MNCj4gdGhhdCB0aGUgbWFpbnRhaW5lcnMgb2YgNS05IHBy
+b3ZpZGUgaW4gdGhlIG5leHQgZmV3IHdlZWtzIHdvdWxkIGJlIHN1cGVyDQo+IGhlbHBmdWwu
+IE9yLCBpZiBhbnkgb2YgdGhvc2UgbWFpbnRhaW5lcnMgd2FudCB0byBjaGVycnkgcGljayB0
+aGVpcg0KPiBzdWJzeXN0ZW0ncyBzdHVmZiBvdXQgb2YgdGhpcyBzZXJpZXMgYW5kIGFwcGx5
+IGl0LCB0aGF0IHdvdWxkIGJlIGdyZWF0IHRvby4NCj4gDQo+IEJ1dCwgdGhlIGxhc3QgdGlt
+ZSB3ZSBkaWQgc29tZSBNU1IgZnVuY3Rpb24gbXVuZ2luZywgdGhlIHRpcCB0cmVlDQo+IGNh
+cnJpZWQgbW9zdCBvZiB0aGUgcGF0Y2hlcy4gSSB3b3VsZCBleHBlY3Qgd2UnbGwgaGF2ZSBh
+IHJlcGVhdCBvZiB0aGF0DQo+IGhlcmUgdG9vLiBJJ2xsIHBlbmNpbCBpbiB0aGUgaWRlYSBv
+ZiBqdXN0IG1lcmdpbmcgdGhlIGxvdCBhcm91bmQgLXJjMSB0aW1lLg0KDQpJbmdvIHJlcXVl
+c3RlZCB0aGlzIHNlcmllcyB0byBiZSBjYXJyaWVkIHRocm91Z2ggdGhlIHRpcCB0cmVlLg0K
+DQoNCkp1ZXJnZW4NCg0K
+--------------TnjqcXnTcN66nC2lLK07OASL
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-With this series applied and MX350 GPU in D3hot:
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-  $ cat /sys/class/dmi/id/sys_vendor
-  Acer
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-  $ cat /sys/class/dmi/id/product_name
-  Aspire A315-58G
+--------------TnjqcXnTcN66nC2lLK07OASL--
 
-  $ sensors
-  ...
-  acer-isa-0ace
-  Adapter: ISA adapter
-  temp1:        +57.0°C
-  temp2:        +50.0°C
-  temp3:        +56.0°C
-  ...
+--------------TnQmW2xUHDfryHdoV1v2DtYY--
 
-Sensor mapping:
-  temp1: CPU temperature
-  temp2: GPU temperature
-  temp3: external temperature
+--------------Hc4PeuQ841RPSm0B83GP3ggL
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
- drivers/platform/x86/acer-wmi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmqFye4FAwAAAAAACgkQsN6d1ii/Ey+U
+SAf8C8haRR6O0CCShzFFYF1D7zhf+INyEBxTFvh5fq5QSa2E0aTWRzrn9ZHLe6z7fRE5/VsjIWJW
+Wv+uKkLyygytd0ZT/GRy6kcNe/ZXUfnmmjl4yX97epKZY9piuLckqPyKGDTINYQYCUJhwhRcBtU8
+QgLvU3AibgE96qSyLjBZbjX5raJrBq+SoXpf3eUKQTfGhO+UgmwRr6QKVYFJISjaEsWGxfaCizwW
+ahMu/cKoa67H1yUC0LHEBdKJu0MZbTgR6SuwUbyHTsCiO7oVBRblyWEIDNUdSPNm3FGHbRMoQx+f
+LJyOH4+/xJ6CwkTpHibkwDMlRNYMS0IC7i1B0GMXlw==
+=AZsj
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1d1c0d3bcec3..8f02be054ca6 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -454,6 +454,10 @@ static struct quirk_entry quirk_acer_aspire_1520 = {
- 	.brightness = -1,
- };
- 
-+static struct quirk_entry quirk_acer_aspire_a315_58g = {
-+	.hwmon = true,
-+};
-+
- static struct quirk_entry quirk_acer_travelmate_2490 = {
- 	.mailled = 1,
- };
-@@ -642,6 +646,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
- 		},
- 		.driver_data = &quirk_acer_travelmate_2490,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "Acer Aspire A315-58G",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-58G"),
-+		},
-+		.driver_data = &quirk_acer_aspire_a315_58g,
-+	},
- 	{
- 		.callback = dmi_matched,
- 		.ident = "Acer TravelMate 2490",
--- 
-2.54.0
-
+--------------Hc4PeuQ841RPSm0B83GP3ggL--
