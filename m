@@ -1,117 +1,611 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-65-225.siemens.flowmailer.net (mta-65-225.siemens.flowmailer.net [185.136.65.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843D6391E78
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Aug 2026 09:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539E5421A18
+	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Aug 2026 11:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787218633; cv=none; b=dXzz6gyp45xpFfq+D5Rx2b/kKVakTjHuLIm2+mjDjrLTzaFJV8cIZu3BszQ/kM2mt4rvD9h5ze23+47SL7NtRKJvDoaedorz0rudDPTtkBeLENourTt36jltKX+igfJcvJi7vjZolyTi0ytoVRiI8Pf6LzFGA/fi53xBX17T/2M=
+	t=1787224791; cv=none; b=IJ5nMW03wZIbMWClvxwCyr/IRaRjR0hl7qXPdg2WJRQNyQrQP5wEwvZDyQx6RwKdQnTWPKQPvvCA81NaAtFueYBeBWP4x5XXA3I7sZlwU96t+tFW/TnEXUamKx+gA+AYboG51Bwgvyc9H5e5OnZ+pFO7XG9Xz2oQBeoNca6lchc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787218633; c=relaxed/simple;
-	bh=EKY/eZEJ6NPZuRRkUmq51tkmekSHRD23MidOpKUoeRI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=S/L2kKpSmcAH04+42xtX7uXMt6PEMJASNRx68GRnavIkR7GF7hbSc7SfFonRIPdWxBsLfmwKAhm9qVb6YzZAqWgeDhUMB4Cga9Rz+v624H9A9PQf4pgH4OKaK3cE8YXF157ZMnQ5itOW8r1D6G+ax2xvnq3U5Skyz3Vs26k1tr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfDmw2wj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1787224791; c=relaxed/simple;
+	bh=tsrrtMOaSmCvbJsJMwjlzIxVnXxX6FNEauxzI0cICTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=t91CqQhnIuBi7WfMBGZTKKZQdvPhxvsKeipShTsOTVl3VtQ8nj6i9xr+ynCeWueTn2yPwIBmxpRkhR4SOjkR5bEcUC+NXrGFxfahJIApqpXnSIKwSKswoyBerOGAmIvqaLfa2ss+Ni3iNQmA5m2A8GyVPlFD7IkLpZsAy52GtSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.b=US+CCXlB; arc=none smtp.client-ip=185.136.65.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfDmw2wj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 92217C2BCC7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Aug 2026 09:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1787218632;
-	bh=EKY/eZEJ6NPZuRRkUmq51tkmekSHRD23MidOpKUoeRI=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=OfDmw2wjz2mCq3bArKGRfWZ6XC8xDZ7fOolhk7SMyBEDne9xsxuDXzS9QCmfi3/y+
-	 QtJDZH3/7t9pWP1KXhtfzdvKWDF7vRU5Sm7OxCarI/d/ws/AbKjwCUUa/UTr71Kz3A
-	 N5h/1EagDb/3m+oc+dvvD0IFEGYkZ2VcxlT6g3juPaF9jJYIpWvrO1Iuxw0o8lOkFk
-	 SfPUxpZv/jNxxJOCpbqomFI8bDUaSy+tCKZIB3/KStpuS4denrZf66n5yLfi5n3qdp
-	 vx6yx4LqyutGRFrjadrNZdJSuxwf9u2LP1y0/A7N2PMTODJ5m1j/Rm+fnXwV11+f4l
-	 ZZnLZ/KS9SfCA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 751B7C433E1; Thu, 20 Aug 2026 09:37:12 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 220926] HP ENVY 16-h1xxx (Hayden): hp_wmi platform_profile
- fails to read/write
-Date: Thu, 20 Aug 2026 09:37:12 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: gibs23@proton.me
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220926-215701-wguLNY7zB6@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-220926-215701@https.bugzilla.kernel.org/>
-References: <bug-220926-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=benedikt.niedermayr@siemens.com header.b="US+CCXlB"
+Received: by mta-65-225.siemens.flowmailer.net with ESMTPSA id 2026082011194139c9452489000207b1
+        for <platform-driver-x86@vger.kernel.org>;
+        Thu, 20 Aug 2026 13:19:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=benedikt.niedermayr@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=3TlzmawEqaM4vsTW6GrDeKaRBMUhGjEnShrRYYj9y44=;
+ b=US+CCXlB0BUemhwSAGPAJFkqIlL31jcnEKohd4X+HeYL5hDxBOxrlJGoN6Lh8E8vSGiXM8
+ 9R4OVGlfYAJChyBm7eIQ/FJbFZRMBjPolsL6koh1p2Bi08jQIF4VsWJefDMCOvKh9hcIWeVM
+ nGcGb0hKXLh2PI1p2x2NIfh52Tz3EJ4Bxiy0qABAtqK0sGFnjX5l/YBt/a1gNnXM4ntGF8gQ
+ vZ/l5G8ZA0oVxwObstX/W3NJzDMglKEblZdt87frq4GiCXhGhb3bRqYK3qndZKz4w7fq/Ych
+ r4VWiGUfJfgb5l6o9wE1Dmruije7jWiZgaKmen/rNTK3TpVqZVJ0cAJg==;
+From: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
+To: andi.shyti@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: baocheng.su@siemens.com,
+	tobias.schaffner@siemens.com,
+	linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] i2c: i2c-nct6126: add support for NCT6126D Super I/O
+Date: Thu, 20 Aug 2026 13:19:39 +0200
+Message-ID: <20260820111940.2434594-2-benedikt.niedermayr@siemens.com>
+In-Reply-To: <20260820111940.2434594-1-benedikt.niedermayr@siemens.com>
+References: <20260820111940.2434594-1-benedikt.niedermayr@siemens.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1323861:519-21489:flowmailer
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D220926
+This adds support for an i2c master driver for the NCT6126D Super I/O
+chips SMBUs controller. The NCT6126D exposes an SMBus master controller
+inside Logical Device B (the Hardware Monitor / SB-TSI block).
 
---- Comment #4 from Gibs (gibs23@proton.me) ---
-(In reply to Suryansh Singh from comment #2)
-> (In reply to Gibs from comment #1)
-> > I have the same problem on same platform on kernel 7.1.8.
-> > Changing profiles does change fan behavior, but RPM reads 0 with hp-wmi.
-> >=20
-> > Package power also seems to max at 40W no matter the profile. On Window=
-s I
-> > have peaks of 115W and then drops at 55W after a short while.
-> >=20
-> > I also tried mapping my board ID to Omen or Victus configs but doesn't =
-work,
-> > the ENVY seems to be different.
->=20
-> Hi,
->=20
-> Could you please provide your board ID, or clarify if it is the same as
-> Andres?
->=20
->=20
-> Are you sure you've tried out all Omen or Victus configs? The latest bran=
-ch
-> for the platforms/x86 subsystem (pdx86/for-next) has an expanded driver
-> scope compared to the current upstream version of the kernel you're runni=
-ng,
-> so consider using the code on that branch for mapping your board ID to
-> specific driver data in hp_wmi_feature_boards[]
->=20
->=20
-> In case none of the existing parameters apply to your ENVY laptop, the EC
-> behavior and specific quirks required to get it working will have to be
-> reverse engineered and patched into the code, rather than the regular pat=
-ch
-> of mapping the board ID under predefined parameters.
-> You may contact me at my mail if that happens to be true, I'll be glad to
-> help in the whole process if it gets that complex.
+The I/O base address is discovered dynamically and is expected to be
+programmed by the BIOS into LD B CR62h (MSB) and CR63h (LSB).
 
-I tried the version from the next branch but still no results. With
-&omen_v1_no_ec_thermal_params I get a kernel panic, and with the others the
-driver fails to load with hp-wmi hp-wmi: probe with driver hp-wmi failed wi=
-th
-error -22.
-For one of them I got an extra:
-hp_wmi: Unknown EC layout for board 8BE5. Thermal profile readback will be
-disabled. Please report this to platform-driver-x86@vger.kernel.org
+TODO: Explain handling of the CR30h register.
 
---=20
-You may reply to this email to add a comment.
+The SMBus master controller shares the same CR30h register with the
+Hardware Monitor (logical device B), which is currently used by the
+nct6775 driver. The nct6775 driver force overrides the CR30h register
+to 0x01, if not already set by the bios.
+This driver in turn is more defensive and will not probe the chip if the
+CR30h register is not set to 0x01.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Signed-off-by: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
+---
+ MAINTAINERS                      |   5 +
+ drivers/i2c/busses/Kconfig       |  11 +
+ drivers/i2c/busses/Makefile      |   1 +
+ drivers/i2c/busses/i2c-nct6126.c | 473 +++++++++++++++++++++++++++++++
+ 4 files changed, 490 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-nct6126.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8014b9f8253e..760d7a088629 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19315,6 +19315,11 @@ F:	drivers/nubus/
+ F:	include/linux/nubus.h
+ F:	include/uapi/linux/nubus.h
+ 
++NUVOTON NCT6126D I2C/SMBUS DRIVER
++M:	Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
++S:	Maintained
++F:	drivers/i2c/busses/i2c-nct6126.c
++
+ NUVOTON NCT6694 MFD DRIVER
+ M:	Ming Yu <tmyu0@nuvoton.com>
+ S:	Supported
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index d35456994280..9dd265abdfbc 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -258,6 +258,17 @@ config I2C_NFORCE2
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-nforce2.
+ 
++config I2C_NCT6126
++	tristate "Nuvoton NCT6126D SMBus master"
++	depends on X86 && HAS_IOPORT
++	help
++	  If you say yes to this option, support will be included for the
++	  SMBus master controller embedded in the Nuvoton NCT6126D Super-I/O
++	  chip (Logical Device B).
++
++	  This driver can also be built as a module. If so, the module
++	  will be called i2c-nct6126.
++
+ config I2C_NVIDIA_GPU
+ 	tristate "NVIDIA GPU I2C controller"
+ 	depends on PCI
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 3755c54b3d82..69042afb1f04 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_I2C_I801)		+= i2c-i801.o
+ obj-$(CONFIG_I2C_ISCH)		+= i2c-isch.o
+ obj-$(CONFIG_I2C_ISMT)		+= i2c-ismt.o
+ obj-$(CONFIG_I2C_NFORCE2)	+= i2c-nforce2.o
++obj-$(CONFIG_I2C_NCT6126)	+= i2c-nct6126.o
+ obj-$(CONFIG_I2C_NVIDIA_GPU)	+= i2c-nvidia-gpu.o
+ obj-$(CONFIG_I2C_PIIX4)		+= i2c-piix4.o
+ obj-$(CONFIG_I2C_SIS5595)	+= i2c-sis5595.o
+diff --git a/drivers/i2c/busses/i2c-nct6126.c b/drivers/i2c/busses/i2c-nct6126.c
+new file mode 100644
+index 000000000000..ce71883744e8
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-nct6126.c
+@@ -0,0 +1,473 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * i2c-nct6126 - i2c adapter driver for the Nuvoton NCT6126D Super-I/O chip.
++ *
++ * The NCT6126D exposes an SMBus master controller inside Logical Device B
++ * (the Hardware Monitor / SB-TSI block). Its I/O base address is programmed
++ * by BIOS into LD B CR62h (MSB) and CR63h (LSB).
++ *
++ * Inspired by nct6775-platform.c and gpio-f7188x.c.
++ *
++ * Copyright (c) Siemens AG, 2026
++ *
++ * Author: Benedikt Niedermayr <benedikt.niedermayr@siemens.com>
++ */
++
++#define DRVNAME "i2c-nct6126"
++#define pr_fmt(fmt) DRVNAME ": " fmt
++
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/string.h>
++
++/*
++ * Super-I/O configuration space
++ */
++#define SIO_LDSEL		0x07	/* Logical Device Select */
++#define SIO_DEVID		0x20	/* CR20/CR21: 16-bit chip ID */
++#define SIO_UNLOCK_KEY		0x87	/* Enter extended function mode */
++#define SIO_LOCK_KEY		0xAA	/* Exit extended function mode */
++
++/* Accepted chip IDs */
++#define SIO_NCT6126D_A_ID	0xD283	/* NCT6126D, A version */
++#define SIO_NCT6126D_B_ID	0xD284	/* NCT6126D, B version */
++
++/* Logical Device B: Hardware Monitor + SB-TSI / SMBus master */
++#define SIO_LD_HM_SMBUS		0x0B
++#define SIO_LDB_ENABLE		0x30	/* bit0: block active (CR30) */
++#define SIO_LDB_SMBUS_BASE	0x62	/* CR62 = MSB, CR63 = LSB */
++
++/* SMBus base address constraints */
++#define SMBUS_BASE_MIN		0x100
++#define SMBUS_BASE_MAX		0xFFE
++
++/*
++ * SMBus controller register offsets (base + offset)
++ * All registers are accessed directly at smbus_base + offset.
++ */
++#define NCT6126D_SMWRSIZE	0x01
++#define NCT6126D_SMCMD		0x02
++#define NCT6126D_SMIDX		0x03
++#define NCT6126D_SMCTL		0x04
++#define NCT6126D_SMADDR		0x05
++#define NCT6126D_ERROR_STS	0x09
++#define NCT6126D_SMCTL3		0x0e
++#define NCT6126D_SMBUS_REGION_SIZE	0x20
++
++/* Bit definitions */
++#define NCT6126D_FIFO_NULL		BIT(0)
++#define NCT6126D_FIFO_FULL		BIT(1)
++#define NCT6126D_ERR_NACK		BIT(1)
++#define NCT6126D_ERR_BER		BIT(2)
++#define NCT6126D_ERR_TIMEOUT		BIT(4)
++#define NCT6126D_ERR_ADNACK		BIT(5)
++#define NCT6126D_RST			BIT(6)
++#define NCT6126D_MANUAL_MODE		BIT(7)
++#define NCT6126D_ACTIVE_MANUAL_MODE	BIT(2)
++
++/* SMBus command codes */
++#define NCT6126_CMD_READ_BYTE	0
++#define NCT6126_CMD_WRITE_BYTE	8
++
++/* Timing / retry limits */
++#define SMBUS_RW_LOOP_MAX	5
++#define SMBUS_FIFO_WAIT_US	100
++#define SMBUS_FIFO_MAX_CLEAR_TIME	0xff
++
++/*
++ * Super-I/O functions.
++ */
++static inline int nct_superio_inb(int base, int reg)
++{
++	outb(reg, base);
++	return inb(base + 1);
++}
++
++static int nct_superio_inw(int base, int reg)
++{
++	int val;
++
++	outb(reg++, base);
++	val = inb(base + 1) << 8;
++	outb(reg, base);
++	val |= inb(base + 1);
++
++	return val;
++}
++
++static inline int nct_superio_enter(int base)
++{
++	if (!request_muxed_region(base, 2, DRVNAME)) {
++		pr_err("SIO config port %#x already in use\n", base);
++		return -EBUSY;
++	}
++
++	/* Datasheet 7.1.1: key must be written twice */
++	outb(SIO_UNLOCK_KEY, base);
++	outb(SIO_UNLOCK_KEY, base);
++
++	return 0;
++}
++
++static inline void nct_superio_select(int base, int ld)
++{
++	outb(SIO_LDSEL, base);
++	outb(ld, base + 1);
++}
++
++static inline void nct_superio_exit(int base)
++{
++	outb(SIO_LOCK_KEY, base);
++	release_region(base, 2);
++}
++
++struct nct6126_sio {
++	int           addr;       /* SIO config port: 0x2e or 0x4e */
++	unsigned long smbus_base; /* from LD B CR62/CR63 */
++};
++
++struct nct6126_smbus {
++	unsigned long    port_addr;
++	struct i2c_adapter adap;
++};
++
++static int __init nct6126_find(int addr, struct nct6126_sio *sio)
++{
++	int err;
++	u16 devid;
++	u8  enable, msb, lsb;
++	unsigned long base;
++
++	err = nct_superio_enter(addr);
++	if (err)
++		return err;
++
++	/* Verify chip identity */
++	devid = nct_superio_inw(addr, SIO_DEVID);
++	if (devid != SIO_NCT6126D_A_ID && devid != SIO_NCT6126D_B_ID) {
++		err = -ENODEV;
++		goto out;
++	}
++
++	/* Select Logical Device B (HM + SB-TSI/SMBus master) */
++	nct_superio_select(addr, SIO_LD_HM_SMBUS);
++
++	/*
++	 * Check CR30 bit 0: if clear, the block is not decoding its I/O
++	 * range on the LPC bus.  Every inb() at the SMBus window would
++	 * return 0xFF.  We do NOT write this bit: nct6775 owns CR30 and
++	 * maintains it across suspend/resume.
++	 */
++	enable = nct_superio_inb(addr, SIO_LDB_ENABLE);
++	if (!(enable & BIT(0))) {
++		pr_info("LD B inactive (CR30 bit0=0): BIOS has not enabled the HM/SMBus block\n");
++		err = -ENODEV;
++		goto out;
++	}
++
++	/*
++	 * Read the SMBus master base address programmed by BIOS.
++	 * Datasheet 19.7.1, 23.11: LD B CR62h (MSB) / CR63h (LSB).
++	 * BIOS must program this.
++	 */
++	msb  = nct_superio_inb(addr, SIO_LDB_SMBUS_BASE);
++	lsb  = nct_superio_inb(addr, SIO_LDB_SMBUS_BASE + 1);
++	base = ((unsigned long)msb << 8) | lsb;
++
++	if (base < SMBUS_BASE_MIN || base > SMBUS_BASE_MAX || (base & 1)) {
++		pr_err("invalid SMBus base %#lx in LD B CR62/63\n", base);
++		err = -ENXIO;
++		goto out;
++	}
++
++	sio->addr = addr;
++	sio->smbus_base = base;
++	err = 0;
++
++	pr_info("Found nct6126d at %#x, SMBus base %#lx\n", addr, base);
++
++out:
++	nct_superio_exit(addr);
++	return err;
++}
++
++/*
++ * SMBus
++ */
++static int nct_smbus_err_check(u8 err_code)
++{
++	if (err_code & NCT6126D_ERR_ADNACK)
++		return -ENXIO;
++	if (err_code & NCT6126D_ERR_TIMEOUT)
++		return -ETIMEDOUT;
++	if (err_code & (NCT6126D_ERR_BER | NCT6126D_ERR_NACK))
++		return -EXDEV;
++	return 0;
++}
++
++static void nct6126_smbus_init_config(struct nct6126_smbus *priv,
++				      u8 slave_addr, u8 slave_reg)
++{
++	u8 val;
++
++	/* Reset SMBus controller */
++	val = inb(priv->port_addr + NCT6126D_SMCTL);
++	val |= NCT6126D_RST;
++	outb(val, priv->port_addr + NCT6126D_SMCTL);
++	outb(0,   priv->port_addr + NCT6126D_SMCTL);
++
++	/* 7-bit slave address; hardware expects it left-shifted by 1 */
++	outb(slave_addr << 1, priv->port_addr + NCT6126D_SMADDR);
++	outb(slave_reg,       priv->port_addr + NCT6126D_SMIDX);
++}
++
++static int nct6126_smbus_enable_manual_mode(struct nct6126_smbus *priv)
++{
++	u8 val;
++
++	val = inb(priv->port_addr + NCT6126D_SMCTL);
++	val |= NCT6126D_MANUAL_MODE;
++	outb(val, priv->port_addr + NCT6126D_SMCTL);
++
++	val = inb(priv->port_addr + NCT6126D_SMCTL3);
++	val |= NCT6126D_ACTIVE_MANUAL_MODE;
++	outb(val, priv->port_addr + NCT6126D_SMCTL3);
++
++	/*
++	 * Wait ~200 us for the slave to respond, then read the error
++	 * status.  Per Nuvoton FAE: error must be checked after manual
++	 * mode is activated due to the one-shot enable behaviour.
++	 */
++	usleep_range(200, 300);
++	val = inb(priv->port_addr + NCT6126D_ERROR_STS);
++
++	return nct_smbus_err_check(val);
++}
++
++static int nct6126_smbus_write8(struct nct6126_smbus *priv,
++				u8 slave_addr, u8 slave_reg, u8 *data)
++{
++	int loop_cnt;
++	int err;
++
++	if (!request_muxed_region(priv->port_addr,
++				  NCT6126D_SMBUS_REGION_SIZE, DRVNAME))
++		return -EBUSY;
++
++	nct6126_smbus_init_config(priv, slave_addr, slave_reg);
++
++	outb(1,                      priv->port_addr + NCT6126D_SMWRSIZE);
++	outb(NCT6126_CMD_WRITE_BYTE, priv->port_addr + NCT6126D_SMCMD);
++
++	loop_cnt = SMBUS_RW_LOOP_MAX;
++	while ((inb(priv->port_addr + NCT6126D_SMCTL3) & NCT6126D_FIFO_FULL) &&
++	       --loop_cnt)
++		usleep_range(SMBUS_FIFO_WAIT_US, SMBUS_FIFO_WAIT_US * 2);
++
++	if (loop_cnt == 0) {
++		err = -ETIMEDOUT;
++		goto out;
++	}
++
++	outb(*data, priv->port_addr);
++	err = nct6126_smbus_enable_manual_mode(priv);
++
++out:
++	release_region(priv->port_addr, NCT6126D_SMBUS_REGION_SIZE);
++	return err;
++}
++
++static int nct6126_smbus_read8(struct nct6126_smbus *priv,
++			       u8 slave_addr, u8 slave_reg, u8 *data)
++{
++	int loop_cnt;
++	int err;
++
++	if (!request_muxed_region(priv->port_addr,
++				  NCT6126D_SMBUS_REGION_SIZE, DRVNAME))
++		return -EBUSY;
++
++	nct6126_smbus_init_config(priv, slave_addr, slave_reg);
++
++	outb(0, priv->port_addr + NCT6126D_SMWRSIZE);
++	outb(NCT6126_CMD_READ_BYTE, priv->port_addr + NCT6126D_SMCMD);
++
++	err = nct6126_smbus_enable_manual_mode(priv);
++	if (err)
++		goto out;
++
++	loop_cnt = SMBUS_RW_LOOP_MAX;
++	while ((inb(priv->port_addr + NCT6126D_SMCTL3) & NCT6126D_FIFO_NULL) &&
++	       --loop_cnt)
++		usleep_range(SMBUS_FIFO_WAIT_US, SMBUS_FIFO_WAIT_US * 2);
++
++	if (loop_cnt == 0) {
++		err = -ETIMEDOUT;
++		goto out;
++	}
++
++	*data = inb(priv->port_addr);
++
++	/* Drain any residual FIFO entries */
++	loop_cnt = SMBUS_FIFO_MAX_CLEAR_TIME;
++	while (!(inb(priv->port_addr + NCT6126D_SMCTL3) & NCT6126D_FIFO_NULL) &&
++	       --loop_cnt)
++		inb(priv->port_addr);
++
++	err = (loop_cnt == 0) ? -ETIMEDOUT : 0;
++
++out:
++	release_region(priv->port_addr, NCT6126D_SMBUS_REGION_SIZE);
++	return err;
++}
++
++/*
++ * i2c_algorithm
++ */
++static int nct6126_smbus_xfer(struct i2c_adapter *adap, u16 addr, u16 flags,
++			      char read_write, u8 cmd, int size,
++			      union i2c_smbus_data *data)
++{
++	struct nct6126_smbus *priv = i2c_get_adapdata(adap);
++
++	if (!priv)
++		return -ENODEV;
++
++	if (read_write == I2C_SMBUS_READ)
++		return nct6126_smbus_read8(priv, addr, cmd, &data->byte);
++	else
++		return nct6126_smbus_write8(priv, addr, cmd, &data->byte);
++}
++
++static u32 nct6126_functionality(struct i2c_adapter *adap)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA;
++}
++
++static const struct i2c_algorithm nct6126_algo = {
++	.smbus_xfer    = nct6126_smbus_xfer,
++	.functionality = nct6126_functionality,
++};
++
++static int nct6126_smbus_probe(struct platform_device *pdev)
++{
++	struct nct6126_sio   *sio = dev_get_platdata(&pdev->dev);
++	struct nct6126_smbus *priv;
++	struct i2c_adapter   *adap;
++	int err;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->port_addr = sio->smbus_base;
++
++	adap              = &priv->adap;
++	adap->owner       = THIS_MODULE;
++	adap->class       = I2C_CLASS_HWMON;
++	adap->algo        = &nct6126_algo;
++	adap->dev.parent  = &pdev->dev;
++	adap->nr          = -1;
++	strscpy(adap->name, DRVNAME, sizeof(adap->name));
++	i2c_set_adapdata(adap, priv);
++
++	err = i2c_add_adapter(adap);
++	if (err) {
++		dev_err(&pdev->dev, "failed to add i2c adapter: %d\n", err);
++		return err;
++	}
++
++	platform_set_drvdata(pdev, priv);
++	return 0;
++}
++
++static void nct6126_smbus_remove(struct platform_device *pdev)
++{
++	struct nct6126_smbus *priv = platform_get_drvdata(pdev);
++
++	i2c_del_adapter(&priv->adap);
++}
++
++static struct platform_driver nct6126_smbus_driver = {
++	.driver = {
++		.name = DRVNAME,
++	},
++	.probe  = nct6126_smbus_probe,
++	.remove = nct6126_smbus_remove,
++};
++
++#define MAX_PDEVS 1
++static struct platform_device *nct6126_pdevs[MAX_PDEVS];
++static int nct6126_pdevs_cnt;
++
++static int __init nct6126_device_add(const struct nct6126_sio *sio)
++{
++	struct platform_device *pdev;
++	int err;
++
++	pdev = platform_device_alloc(DRVNAME, 0);
++	if (!pdev)
++		return -ENOMEM;
++
++	err = platform_device_add_data(pdev, sio, sizeof(*sio));
++	if (err) {
++		pr_err("platform data allocation failed\n");
++		goto err_put;
++	}
++
++	err = platform_device_add(pdev);
++	if (err) {
++		pr_err("platform device registration failed\n");
++		goto err_put;
++	}
++
++	nct6126_pdevs[nct6126_pdevs_cnt++] = pdev;
++	return 0;
++
++err_put:
++	platform_device_put(pdev);
++	return err;
++}
++
++static int __init nct6126_smbus_init(void)
++{
++	struct nct6126_sio sio;
++	int err;
++
++	if (nct6126_find(0x2e, &sio) && nct6126_find(0x4e, &sio))
++		return -ENODEV;
++
++	err = platform_driver_register(&nct6126_smbus_driver);
++	if (err)
++		return err;
++
++	err = nct6126_device_add(&sio);
++	if (err)
++		goto err_unreg_driver;
++
++	return 0;
++
++err_unreg_driver:
++	platform_driver_unregister(&nct6126_smbus_driver);
++	return err;
++}
++
++static void __exit nct6126_smbus_exit(void)
++{
++	while (nct6126_pdevs_cnt > 0)
++		platform_device_unregister(nct6126_pdevs[--nct6126_pdevs_cnt]);
++
++	platform_driver_unregister(&nct6126_smbus_driver);
++}
++
++module_init(nct6126_smbus_init);
++module_exit(nct6126_smbus_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Benedikt Niedermayr <benedikt.niedermayr@siemens.com>");
++MODULE_DESCRIPTION("SMBus master driver for Nuvoton NCT6126D Super-I/O");
+-- 
+2.43.0
+
