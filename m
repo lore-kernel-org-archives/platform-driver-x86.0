@@ -1,116 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E6C33D6D6;
-	Fri, 21 Aug 2026 14:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A24390610
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 18:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787321242; cv=none; b=kjZOgjamGuyQyhMyqf1CStcg2f+am6tZOCRI7UiQpiXeotRR2vwrw/2GzPRutlbRpTHKc3TQcZfPG8S/L+oHYVc7Nsn6iPiq5gaWYv/6c29Z9RbQ8hwC4GHpdTTG+LxSbUutmi0ryzv2bsQ747TRm4fPVIVpglFyEbVfV5Ci1yk=
+	t=1787337524; cv=none; b=qCc3rGQyRazFM3bKnBrpYu8MfKSp4XsWKwKhsdh7qiW79I3/2kI9w41zIFyeYgpPinvtGVQ3xR4dL7OSZI1YrYoIS2lPHf3tG47dAenNLEecl/cyw4NUtLLGH80DG1KxlvPakyQ87VqtVQ6d2/obopJT9BP2RCbvi+pnlU5G67g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787321242; c=relaxed/simple;
-	bh=GjecpBH1xTn94qIZgQWgjmpZwS1YB4z2vSwqNMDIB9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IcmZwmWFwWeKZJf6pjzoUHaLcvrh9Cdk5CUFFNeVn0LkxdwBwN9n2o3O1yleF5YZ8u0Qd03PNoeLxfPwt53w/1XqAmD5kxE7TRvAOXvip3hI59A/v54j/511+og8Y4odwtG/FN0wfPiOm9e1mQDKtXmZ07VSDTOr92LUM4lDIuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKBS6jEV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787337524; c=relaxed/simple;
+	bh=z8INkx2o2cfHkD1mfAKQ7JZQsvh5s2hytmLtF8u8KIw=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=YXql9UgSqtZPvBi28IACWxU5u1DKKHoZWKj1SrITFayVjESQjeo3mUctAnve/QQYJQL4ObLF84lGSzdnTH/qI7ZS6+f9/XXj9I38QanuNTXQpBfG080SbsJxwzNvuEJvYAHg8ohXcOv5wRprRKBJtsggvTyQMVlmf+urX7NK7yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dk/eatll; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKBS6jEV"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 3D2841F00A3A;
-	Fri, 21 Aug 2026 14:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787321240;
-	bh=IeSQymyuwP8rOsJyZKQXQI2AMDhLlQ28DVhVHVPw+0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bKBS6jEVw6/sSA2BHkrWFKGb21GeWSyTGNm57uKVKZqRRDPbk0Jmq2CuW1l0mqT3R
-	 ofKqQRg8aoLhWupvC3fZtYHMn6qjHEm/U3mmgCt+QNtqaHG/f+wGDbKbPQDleKikPP
-	 M3YTMU+1w3mHaO/tFvtTYg+zw8vyHLbbhDasghfQXpk9NhCZFKxC/LFsK2gSLm4lsi
-	 U7qe+c8hckUGSu8y0f9Zf6kEA1D4pXx4E6zGXCcOJnsjeUIMZfRW/P4qkpp5PQba5c
-	 7wvvuGRMXBT/Y6Np1UHsD6WGyLQpF6RdDr/stvO84r/6RacKVD9C63eB4cnmDOeTc2
-	 Y0IQhHJa7JGmQ==
-Date: Fri, 21 Aug 2026 16:07:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Bartosz Golaszewski <brgl@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <kees@kernel.org>, Armin Wolf <W_Armin@gmx.de>, 
-	Hans de Goede <hansg@kernel.org>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Eliav Farber <farbere@amazon.com>, tony.luck@intel.com, bp@alien8.de, 
-	guohanjun@huawei.com, mchehab@kernel.org, xueshuai@linux.alibaba.com, lenb@kernel.org, 
-	laurent.pinchart@ideasonboard.com, linusw@kernel.org, orsonzhai@gmail.com, 
-	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, fabio.m.de.francesco@linux.intel.com, kaihengf@nvidia.com, 
-	ankita@nvidia.com, leitao@debian.org, pedro.pbg@usp.br, paulmck@kernel.org, 
-	frederic@kernel.org, saket.dumbre@intel.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	acpica-devel@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] Base commit for
- devm_{atomic,blocking}_notifier_chain_register()
-Message-ID: <aohZHuN68wIyaxWy@monoceros>
-References: <20260816060648.4030-1-farbere@amazon.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dk/eatll"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B5B3C19425
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 18:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1787337522;
+	bh=z8INkx2o2cfHkD1mfAKQ7JZQsvh5s2hytmLtF8u8KIw=;
+	h=From:To:Subject:Date:From;
+	b=dk/eatll11c93ZnVNisBsPeZzYJuA0EnzQxuBzTihpW25jJO9IHmcOhPz0+l4rvJ6
+	 5mi6Rhg/yzg+NwM01tFc6u+8HwQeXkKMkCXadCqotpUKiGCnLAqs0bkr6zfxfB7HKE
+	 QXW7EY4eo2GXfdFZgW/AwOoLHOJzhINBQTojaFEPpV/4bUhlbGIUgi5hiDv8ibJ6AQ
+	 n/BIg6XePK4JwtVXF0X2JdvHGM1tUBX3pF/ETq7fzIZH1yJRKM3LaYiIUe+HgVQntI
+	 RSXU6hiRSuSMbtm1reowXQ11FvCuqavdrkYNV12juYbAInuoPV/qlTEeCHc1K1zn8z
+	 J3PNOQpjtD9MA==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 09EF7C41612; Fri, 21 Aug 2026 18:38:42 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 221905] New: [REGRESSION] apple-properties: device path parse
+ error -19 at 0x14 on iMac14,3
+Date: Fri, 21 Aug 2026 18:38:41 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: ch3fdan@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-221905-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qmfh2vthygwjdtsx"
-Content-Disposition: inline
-In-Reply-To: <20260816060648.4030-1-farbere@amazon.com>
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D221905
 
---qmfh2vthygwjdtsx
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [GIT PULL] Base commit for
- devm_{atomic,blocking}_notifier_chain_register()
-MIME-Version: 1.0
+            Bug ID: 221905
+           Summary: [REGRESSION] apple-properties: device path parse error
+                    -19 at 0x14 on iMac14,3
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: ch3fdan@gmail.com
+        Regression: No
 
-Hello,
+--=20
+You may reply to this email to add a comment.
 
-On Sun, Aug 16, 2026 at 06:05:59AM +0000, Eliav Farber wrote:
-> Many drivers repeat the same boilerplate when registering notifiers with
-> device lifetime:
->=20
->   1. Register the notifier with *_notifier_chain_register()
->   2. Check for error
->   3. Register a devm action to unregister on teardown
->   4. Implement a per-driver static unregister callback
->=20
-> This series adds devm_atomic_notifier_chain_register() and
-> devm_blocking_notifier_chain_register() that automatically unregister
-> the notifier when the device is unbound, then converts 11 drivers to use
-> them.
-
-I applied the first patch on top of v7.2 for you to merge into your
-subsystem trees as base for applying the patch(es) from this series that
-should go via your tree.
-
-Find it at
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/d=
-evm_notifier_chain_register-for-7.3
-
-This tag only contains this single commit e38b9eda475f ("notifier: add
-device-managed registration APIs"). I intend to include it in my PR for
-v7.3-rc1, feel free to do the same.
-
-Best regards
-Uwe
-
---qmfh2vthygwjdtsx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmqIW5MACgkQj4D7WH0S
-/k52lQf/SSaOWkSYXKMtLPhk2tniUdDRYaQQKqCM8eM7DNAYMQ5ny4RwcPBa2HPx
-kCeG2UF9tQ00N0UP7yOClWXul0KviSa6sc7/9IQHJrg7Irl6KGpEU78U9KBlzhbX
-8qXTKxd37NjyBiNtSgMrDOWk1kM2L0t3ZI05sFohC9iwBzBnMlZ7HMFDmEX5F2EJ
-bUmPO4bgSbIltqDIBHmIJbU9Z/4qtNjlnS//NuyvLc8bxe/eFT+TBaX1EMB+GEqx
-J/NJlI5kzXTVpxqqBaLQprxG5+PgmFLucMLIhUJWCXU/6PeitD1+nd96cXei6Xfx
-dE6APgTbM4m0zIOzE2+7vOOf9+kvMQ==
-=rDi/
------END PGP SIGNATURE-----
-
---qmfh2vthygwjdtsx--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
