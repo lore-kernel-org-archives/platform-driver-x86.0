@@ -1,84 +1,227 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1991D318EE7
-	for <platform-driver-x86@vger.kernel.org>; Thu, 20 Aug 2026 22:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787263824; cv=pass; b=tdr8RZw5pEZQPsmvWsq6Vw+9Ca7rm6WB+1mnD3KfuvRsx+mu7EYWiLUtipW0/r/2VvKdNm4xFuzQwrxb0Yfms3SHFN8InW3+YjrqpQgvJldm5vfUCOCPyc1c6A39RRoS5HTJQsb4EfpaMjCc2XVnO20sQIiBbwtuoYU4AdNdoNQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787263824; c=relaxed/simple;
-	bh=OouqVlEmTiWxYhNTfqjqiWUBwBBzwGiV/v0w3r9eTGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MMmawc2ykYTIITJkH4iutGU3TpBkg5s5pOFn+SyOYseTYg+s0R7p9ViMZAE+As1O2VAkyj5eeNwwXk5v2aTQ59zgmdopgUp0f0E3NYABy21+5vj3oQz3NqS21Zqi53PyNhe7WZKWdV2l0om/qJvBIOA6HcdCSKOp5blhovVm0SQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net; spf=pass smtp.mailfrom=moh53n.net; dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b=mFkudQ8G; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=moh53n.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moh53n.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2CDB2C86D
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 02:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787277699; cv=none; b=rtZZ35zH7NdbRtQ5YYBpLn9hoR6SpTLlTqwxb2giEYYYojaq4HaquNXBk0hixyRvkms6ah3AarRCtSPDK8SAMupJpvm4utSqYf9Dg4w0Ls/pg/fysQ0bUVdCfmk/RMb9fC1TZnH4iarB4uhJ9m60qiwPCKqcYL/4FgiS7UQZDXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787277699; c=relaxed/simple;
+	bh=MW8t6Yc8qT6OlkINTNiRCOE1QLKjJaqu4nPtRgOlmPo=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SnVbFBD07QvHwx/c/flU4VfXQtJcys+El/PVXVvqqcD35DLzhn9ZDjWBmHH3GJbRoz5WKXPQfkeRgX2/cE0TByNvT8vsraxV2ggmnM9VtLZ8tNZY4sIzYDoeg7nC/BmbT3X9vl6x+lyeMHZXyd3oeI8SkUU5LBeCqTHGAB7AmFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkGFB8yd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=moh53n.net header.i=moh53n@moh53n.net header.b="mFkudQ8G"
-ARC-Seal: i=1; a=rsa-sha256; t=1787263814; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=GCC4KzbzxgfMr9syhGB5nz/Zn7fJfvItYel7LU/M1y+IwestXudsBPP+gR2IAsCchvE6enOpXKM/EryG1w8tF0yx252NA41gwh3J61d44wDC7vbsrCqhlX+4e9IyduZCzc3nSb4ACPj3arXl7zLst9lvshYy5xJu5aP9cwh1iIU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1787263814; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=OouqVlEmTiWxYhNTfqjqiWUBwBBzwGiV/v0w3r9eTGI=; 
-	b=CXOcAKsigXvKxoFebyqDM0VJPkEs7J8CH/gL3W0SQRTbYEHGMppSupCMUaAkDjlhvVhYjBLTNHTNsKCNmi0cVOkt6dLwMdORc4JP6zb8O6RWw1ovk/+yEbFFcmJGWuOPvrDHhTmwbyNTbbJWz2jbd42KuAhI7ETR2RoWqcC7E8k=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=moh53n.net;
-	spf=pass  smtp.mailfrom=moh53n@moh53n.net;
-	dmarc=pass header.from=<moh53n@moh53n.net>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1787263814;
-	s=m; d=moh53n.net; i=moh53n@moh53n.net;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=OouqVlEmTiWxYhNTfqjqiWUBwBBzwGiV/v0w3r9eTGI=;
-	b=mFkudQ8GyyaT8ecup//GTrUvUuOCIU1Ofl6fWNOBaLGm6SNowyixgariN0glYkYT
-	LHJn7EPfok/mMo4uxXXjv447dKAq3Rnfaxd/CqfdVHuzBLnXyxixs67g8QAqW2x/LmI
-	KoDSF1J0+Yc4pRCxHDJAA3cONgpjf+T9P/Asnf8s=
-Received: by mx.zohomail.com with SMTPS id 1787263810979196.01955481807715;
-	Thu, 20 Aug 2026 15:10:10 -0700 (PDT)
-Date: Fri, 21 Aug 2026 01:40:06 +0330
-From: Mohsen Tahmasebi <moh53n@moh53n.net>
-To: Jelle van der Waa <jelle@vdwaa.nl>
-Cc: Armin Wolf <W_Armin@gmx.de>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, 
-	Frederik Harwath <frederik@harwath.name>
-Subject: Re: [PATCH v6 1/1] platform/x86: add Acer battery control driver
-Message-ID: <sna7wvf6wina7hpj7okaxhof25gakk5ywzusbhm4iwb32fej3f@ltolrxw4zdrq>
-References: <20260812192319.276246-1-jelle@vdwaa.nl>
- <20260812192319.276246-2-jelle@vdwaa.nl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkGFB8yd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 98071C2BCF7
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 02:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1787277698;
+	bh=MW8t6Yc8qT6OlkINTNiRCOE1QLKjJaqu4nPtRgOlmPo=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=lkGFB8ydaVajSU5L50JN9j+Kqv40fpY8d680bkqxJm2zvTZWM1QH2QoBwPyLnb9sa
+	 vQmQwZmjHZJVPWmMGHuudB8sAdhLsQ3OkWWqSeFw19cVPPuspt6HU+LNDn0gmG8VcH
+	 dvUoB+53umz2moD49vlVgQRwPRlE1f7jmyGFdvlH+mZiZN5zdtPzjPYVZsotAP2ZyK
+	 UVMZX/EZzz29i2t8a3/qELKPoN+g4vSPot1bz1K3Mg5DTLqU+xJCU53lfoyr6ZTVI7
+	 ncKdSlDAhMjdd+H/NT4x9hpJCFkTWvCKj0sE86i2zlHjS7NBfTQqh/Qec17wNcoCv7
+	 AeI6nbUPrC1jw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7DE36C3279F; Fri, 21 Aug 2026 02:01:38 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 220926] HP ENVY 16-h1xxx (Hayden): hp_wmi platform_profile
+ fails to read/write
+Date: Fri, 21 Aug 2026 02:01:38 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: technosfan14@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-220926-215701-RVrxujg49A@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-220926-215701@https.bugzilla.kernel.org/>
+References: <bug-220926-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260812192319.276246-2-jelle@vdwaa.nl>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-0.2.10.1.5.2/287.245.6
-X-ZohoMailClient: External
 
-Hi Jelle,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D220926
 
-I tested v6 on an Acer Aspire A315-58G, BIOS V1.35, kernel 7.2.0 + this patch.
+--- Comment #5 from Suryansh Singh (technosfan14@gmail.com) ---
+(In reply to Gibs from comment #3)
+> (In reply to Suryansh Singh from comment #2)
+> > (In reply to Gibs from comment #1)
+> > > I have the same problem on same platform on kernel 7.1.8.
+> > > Changing profiles does change fan behavior, but RPM reads 0 with hp-w=
+mi.
+> > >=20
+> > > Package power also seems to max at 40W no matter the profile. On Wind=
+ows
+> I
+> > > have peaks of 115W and then drops at 55W after a short while.
+> > >=20
+> > > I also tried mapping my board ID to Omen or Victus configs but doesn't
+> work,
+> > > the ENVY seems to be different.
+> >=20
+> > Hi,
+> >=20
+> > Could you please provide your board ID, or clarify if it is the same as
+> > Andres?
+> >=20
+> >=20
+> > Are you sure you've tried out all Omen or Victus configs? The latest br=
+anch
+> > for the platforms/x86 subsystem (pdx86/for-next) has an expanded driver
+> > scope compared to the current upstream version of the kernel you're
+> running,
+> > so consider using the code on that branch for mapping your board ID to
+> > specific driver data in hp_wmi_feature_boards[]
+> >=20
+> >=20
+> > In case none of the existing parameters apply to your ENVY laptop, the =
+EC
+> > behavior and specific quirks required to get it working will have to be
+> > reverse engineered and patched into the code, rather than the regular p=
+atch
+> > of mapping the board ID under predefined parameters.
+> > You may contact me at my mail if that happens to be true, I'll be glad =
+to
+> > help in the whole process if it gets that complex.
+>=20
+> Hello, thank you for offering to help!
+>=20
+> It is the same board:
+> cat /sys/class/dmi/id/board_name
+> 8BE5
+>=20
+> I had a look on the motherboard and I found a ENE KB9542GF chip, this see=
+ms
+> to be the EC. It may be present on a few Dell laptops, may have found it =
+on
+> an Alienware. There's also a different package for this chip, still marked
+> KB9542 but different suffix and QFP package, which is also present on some
+> other laptops, like ENVY x360 by the results of some searches.
+>=20
+> I will have a look at the latest branch as you suggested, will report back
+> after testing.
 
-Since A315-58G is not in acer_wmi_battery_health_mode_table, I tested the
-battery health mode with force=1.
+(In reply to Gibs from comment #4)
+> (In reply to Suryansh Singh from comment #2)
+> > (In reply to Gibs from comment #1)
+> > > I have the same problem on same platform on kernel 7.1.8.
+> > > Changing profiles does change fan behavior, but RPM reads 0 with hp-w=
+mi.
+> > >=20
+> > > Package power also seems to max at 40W no matter the profile. On Wind=
+ows
+> I
+> > > have peaks of 115W and then drops at 55W after a short while.
+> > >=20
+> > > I also tried mapping my board ID to Omen or Victus configs but doesn't
+> work,
+> > > the ENVY seems to be different.
+> >=20
+> > Hi,
+> >=20
+> > Could you please provide your board ID, or clarify if it is the same as
+> > Andres?
+> >=20
+> >=20
+> > Are you sure you've tried out all Omen or Victus configs? The latest br=
+anch
+> > for the platforms/x86 subsystem (pdx86/for-next) has an expanded driver
+> > scope compared to the current upstream version of the kernel you're
+> running,
+> > so consider using the code on that branch for mapping your board ID to
+> > specific driver data in hp_wmi_feature_boards[]
+> >=20
+> >=20
+> > In case none of the existing parameters apply to your ENVY laptop, the =
+EC
+> > behavior and specific quirks required to get it working will have to be
+> > reverse engineered and patched into the code, rather than the regular p=
+atch
+> > of mapping the board ID under predefined parameters.
+> > You may contact me at my mail if that happens to be true, I'll be glad =
+to
+> > help in the whole process if it gets that complex.
+>=20
+> I tried the version from the next branch but still no results. With
+> &omen_v1_no_ec_thermal_params I get a kernel panic, and with the others t=
+he
+> driver fails to load with hp-wmi hp-wmi: probe with driver hp-wmi failed
+> with error -22.
 
-The battery WMI GUID is present and all of tests worked with no errors:
+I see, the kernel panic is slightly unusual, but other than that I believe =
+your
+board does not match with any of the provided driver data yet, causing a
+mismatch between the actual parameters and the ones in the code, and hence =
+the
+error.
 
-- battery temperature is reported correctly
-- charge_type mode switch works
-- charging stops at 80% with Long_Life enabled
-- charging continues beyond 80% after switching back to Standard
-- the setting survives AC unplug/replug and reboot
-- no warnings or errors in dmesg
 
-$ cat /sys/class/dmi/id/sys_vendor
-Acer
+> For one of them I got an extra:
+> hp_wmi: Unknown EC layout for board 8BE5. Thermal profile readback will be
+> disabled. Please report this to platform-driver-x86@vger.kernel.org
 
-$ cat /sys/class/dmi/id/product_name
-Aspire A315-58G
 
-Tested-by: Mohsen Tahmasebi <moh53n@moh53n.net>
+I'm assuming this one happened when you mapped it to Victus S thermal param=
+s,
+they still use HP_EC_OFFSET_UNKNOWN, and that is what leads to that warning
+message (explicitly defined in hp-wmi.c).
+
+
+Can you attach the text files made out of these commands?
+
+sudo modprobe ec_sys
+sudo hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt
+sudo acpidump > acpidump.txt
+
+If possible, please also provide two more EC dumps, one while plugged in and
+one while on battery power (can be named as ec_charging.txt and
+ec_battery.txt). This will help me isolate the ENVY's performance flags, if
+there are any relevant to the charging status.
+
+
+Also, I noticed this a bit late, but in your first comment you mentioned th=
+at
+you could switch profile which changed fan behavior, but hp-wmi read fan RP=
+M at
+0 and the package power didn't change.
+
+How were you changing the profile, if you meant you did that on Linux, or d=
+id
+you change it in Windows prior to rebooting? Since the driver hit a -22 pro=
+be
+error when you tested, the standard /sys/firmware/acpi/platform_profile node
+shouldn't even be exposed. Was it exposed before you even added your board =
+ID
+in the driver?
+
+
+It might take me a while to figure out everything and multiple tests through
+your device to make a working patch, but I'll try my best to help.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
