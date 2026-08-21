@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE75C469851
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 10:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714E047A884
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 11:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787309744; cv=none; b=bMl92KaATBIaA1Jz/iTJMNjHOyCyCda/2YEY/U5eDt5StrVcDQyOaeRN1qdHDN+UiWFBIHpxtcjzrVE1F+gZ7KSI06BvLDpBvexYw7yk9e2o9ifScYB05Vii3PYE/ypIrsKA8AaiOcEQa0AueNXxbwqv+R7ZcgxyHTsELTlR5WI=
+	t=1787310657; cv=none; b=MP1/jsGyS7XBWwXuiSLb96btv8juRfzfUFvoVgZma2QpuZ37SC+dSrhRpTLwbYFlprb+Qv/8TY/piwVkliE0HocQdR+nzGjayIdmdDAVTrcsy9/4S2GYOONg5CRj6WLdXZDW6mv/eHbWKiUdxH6uQ4SHmfsPWbpfpxKSsXh/K1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787309744; c=relaxed/simple;
-	bh=+Y5KPZbKIIiImxX7aIFIVXnQ23qJK2eJu5jCA9CBj+s=;
+	s=arc-20240116; t=1787310657; c=relaxed/simple;
+	bh=d/qLsANXemAaxIkl7V5TPEGGxCfWCZ2B+N+jWhLmh6Y=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f7Birvo1BtdOdxgMiOwjRYZcFx5cQfn9e9JKr2pQzLgq/A8HqysRbmGEtAAoHEpO78hIZ5oTywZHAl96KzhUqxDq7qpLqRmPTYEX7uKxdSw6oHDX2uPWPygrWqV47EQyew5vaPfJdPVlIaM6XLIqmrp3kPI/x6Fr6FK/fOg+U5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru2IQVUS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Xykvuvw1vxhehJJ9eib/TiOVvjtkHl+Q0RN8W1f1ukoTLdjYWUYBfUtgNeCQEcutdurVfbl79Gxc/3WisOuM6vIHNm4aV4+eeFhxB9w6BffOuiXNDBr+0Q4civpetBE+7zkjgHsC9KySNFMRGF0hUtmYom/vvF8XsX8f5FUCxcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p77MCVWz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru2IQVUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7DA22C19425
-	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 10:55:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p77MCVWz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1A281C19425
+	for <platform-driver-x86@vger.kernel.org>; Fri, 21 Aug 2026 11:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1787309743;
-	bh=+Y5KPZbKIIiImxX7aIFIVXnQ23qJK2eJu5jCA9CBj+s=;
+	s=k20201202; t=1787310657;
+	bh=d/qLsANXemAaxIkl7V5TPEGGxCfWCZ2B+N+jWhLmh6Y=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=ru2IQVUSgNPe97mraw5U/kzhHoCO3iRRrtLLupGkqVswl6Xf9y/+cTqvrEqk2RXvX
-	 mas6VFgfW4GRWtXxS1wuFCT6OfkPAV/EkEH0EXvaesRMr6hMzC5AIcCGXT3Zb3Jxt7
-	 XyWDTAQBYFHqLmz1USIrn71srX/xzsXfKYElmh/cTA4KXDtRLaVm5WCAXw+To1jYi5
-	 FfzKlVrkkq7CZPn0aHy8kXXlqp95gPJq+WuPL1uesS4gVMqDcuEc9xXw8sYT+Uqnmi
-	 D0bVz3/HHBclq/6BdU6hJUQDEvFx4uIVlEoc6WscGjz2jRr6JyJ6LiS8jTWcc/V+nm
-	 l7JUgSmwFLY9w==
+	b=p77MCVWzlGaW71ovjd8VB8Wv1YnwgbkFQcTSqk3Sxf4l5vHIq0fVVLEnhTWpa86hD
+	 J0nw/LPP7swS4r6cnoe6noGzEih99peNioX+sCQwtZsa6hbXpD+EhfuA0rHnpYolif
+	 VhLLZJRfwcLcGiMeGZ+UdeFJBcv5AODjmmpOW9XwYsyF8nvlIct/ad+OzOpA2WL9oS
+	 52t37Ngi5/fWZ+hBX8p+9/wixGaMGl6eYKCyHW/T1W+sSsQL7OL39o6blaaiDMWCXv
+	 rj50IcMj+glC4wrv1bs4JVQZ6FPyd72WzFPB8thmts58QnDjbREGjt3mQ8nnG0Gu2F
+	 uyYKsedOyGb0A==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 5B504C41614; Fri, 21 Aug 2026 10:55:43 +0000 (UTC)
+	id 0A25CC41614; Fri, 21 Aug 2026 11:10:57 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 220926] HP ENVY 16-h1xxx (Hayden): hp_wmi platform_profile
  fails to read/write
-Date: Fri, 21 Aug 2026 10:55:43 +0000
+Date: Fri, 21 Aug 2026 11:10:56 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-220926-215701-9dR898cuW9@https.bugzilla.kernel.org/>
+Message-ID: <bug-220926-215701-aWT19hnbpu@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-220926-215701@https.bugzilla.kernel.org/>
 References: <bug-220926-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,62 +64,11 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D220926
 
---- Comment #15 from Gibs (gibs23@proton.me) ---
-Forgot to mention a detail, some data is missing when battery is disconnect=
-ed
-from laptop:
-
-```
-sudo dd if=3D/dev/mem bs=3D1 skip=3D$((0xFE0B0800)) count=3D512 2>/dev/null=
- | hexdump
--C
-00000000  00 00 00 00 00 00 40 00  00 00 00 00 00 00 1a 01  |......@.......=
-..|
-00000010  01 00 32 1b ff 00 ff ff  ff ff ff ff 00 00 00 e4  |..2...........=
-..|
-00000020  00 00 00 00 1e 00 02 02  06 01 00 00 52 00 00 00  |............R.=
-..|
-00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-*
-00000050  00 00 00 00 00 00 00 00  63 05 00 00 00 00 00 00  |........c.....=
-..|
-00000060  00 80 16 20 33 33 33 2d  32 44 2d 32 37 2d 41 00  |... 333-2D-27-=
-A.|
-00000070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-00000080  00 00 00 00 0b 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-00000090  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-000000a0  00 00 00 d8 41 00 00 36  00 00 00 08 64 2a 00 78  |....A..6....d*=
-.x|
-000000b0  37 37 00 00 00 00 00 01  00 00 08 00 cb 02 00 00  |77............=
-..|
-000000c0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-000000d0  00 00 00 00 00 00 00 00  00 00 00 01 00 00 00 00  |..............=
-..|
-000000e0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-*
-00000100  00 00 00 03 00 06 05 00  39 00 37 3b 1b 39 60 21  |........9.7;.9=
-`!|
-00000110  4e 61 22 4f 62 2a 50 63  32 50 64 32 50 64 32 50  |Na"Ob*Pc2Pd2Pd=
-2P|
-00000120  64 32 50 64 32 00 00 00  00 00 03 00 06 00 00 39  |d2Pd2.........=
-.9|
-00000130  00 37 3b 22 39 60 24 4e  61 25 4f 62 2d 50 63 35  |.7;"9`$Na%Ob-P=
-c5|
-00000140  50 64 35 50 64 35 50 64  35 50 64 35 00 00 00 00  |Pd5Pd5Pd5Pd5..=
-..|
-00000150  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |..............=
-..|
-*
-00000200
-```
-
-Both in ec dump or /dev/mem one.
+--- Comment #16 from Gibs (gibs23@proton.me) ---
+Another detail I forgot to mention, 0x102 seems to also be coupled to actual
+fan speed values, but is singular. It does track the two fan speeds, but se=
+ems
+to be a higher value. Maybe PWM 8bit signal where the fan speeds are %?
 
 --=20
 You may reply to this email to add a comment.
