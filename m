@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5DA3B811F
-	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 09:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C95A392821
+	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 09:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787391384; cv=none; b=FX/M9fj2zdf/oNnEqRdhuOrvzaC5CQSOBGGWKsy0UOIXVoFdeIZIGq+VpcfIMfhFU6UPm5q478usdJ8VefZJFrmJe1qISNn59e0/3i8Fu14ciKAbGqoImvGF3OWH0NbW1ueioN3WXR9BdchY5LR9v0AsJ3URDy1yRaDWuqfuVZI=
+	t=1787391508; cv=none; b=cvXimW20DGAu+/Y4CvufEIH+UuiNDergrWC9DNlPZtBxvwrAC3998WVGUlJq38JX0Gt0iZ0CJp06eLYmM1wV0sm/iJX3zlLKaF6OtvibznUMzB9zjMaKiLrCFS6AhLtPLRoWA0FFLW0sGVChWYlA9nwI6oAkbNZn9lfSn5x1SME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787391384; c=relaxed/simple;
-	bh=ccXTEvmLvAPpaSn0iT0w2YQxzgFQPkHDdjUbevM9F1s=;
+	s=arc-20240116; t=1787391508; c=relaxed/simple;
+	bh=X1f67GZYAHrDfSyI9i5wBsPMIUq+qeDT25R4vyxDTig=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=okmmL/uR8d8LcNJBz/pb36kBt7hTuX9qISjQb8mNhSNik53v1xQDBAVU6mTH5APZHCD9g9YshAteGgm+nf/dhkH8l64LGYfX2YemS1zEtAOux8KSWZ8nb2J/OwYVJnpXFpcec2vigU5ZoRfnZOgnlVZm2SaEaU4atH0eC8jn9fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1mE7opM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=B7EOWjVmTdWvyjHD8s1xGPX/mr3+ot0ms4cmsoLFxt2CRR5cMJr7zvsXIW5z1vyZfC3STNbiWvkWfHomOJ6PfqLhokqwLXw4JAzUGKp8S0HCvpxIWuKVqo37jszVCf5ckrOS/tGUUmJK8prGiIkQMZ2Dc6M3GAyeULBfVXe5H1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndgmHk4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1mE7opM"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CEE6EC2BCB8
-	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 09:36:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndgmHk4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AFFB1C2BCB8
+	for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 09:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1787391383;
-	bh=ccXTEvmLvAPpaSn0iT0w2YQxzgFQPkHDdjUbevM9F1s=;
+	s=k20201202; t=1787391507;
+	bh=X1f67GZYAHrDfSyI9i5wBsPMIUq+qeDT25R4vyxDTig=;
 	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=O1mE7opMoHhZTXDABAz07TzBwSPzGFFcQTn8l3HuvKc1vrDcrpoGa8oQk6P798afx
-	 vquzRdAlywUAEqqEZpuJ0McGrE1Y9pQtxg1+wXD25pAw6H5nS8ftqhR311r+P6oKWt
-	 l9dQ6yoyFllVdYY5MiOZRD/V4MFHffZ/C5oysreTPXE/j/L3G2HiNF6TumMEUEP0J1
-	 c/ZdjJFptiME/KrKQ67o1K1qDt4Of+jsJjmQTQ1bJQRnzpiseJEHYBewZbMGRoK/Iv
-	 6yP5sdOfMoXDmTLZgLaOVNYcFz5olJUpvshjhmjdrrcbh5LquKdak0DbcAX8ff0XWk
-	 4uI7ZRoEfKW4w==
+	b=ndgmHk4rbBRmi1tminkPkWb+RrA4NBMeV8Gz0ggWJEdwpokSRYHpNo00zVk6n126z
+	 QiBuqD7weTdcMw4bH5SbWdZfVQHSydX+rDNUeOzpqNqT5vSdf4J+FsQec+DxKEuyeh
+	 lcICXpYQn5IGnPaySN/l+70K7WyLbekb2zRW7oLLdgZ8V2sV/4JIImdNkGG+0REr++
+	 dE5SH3X33kATcB6/Ygv1/u4akFq0MUFUbLEfHrSZsjIvb4emwZWUojAep/IdwgKt6Y
+	 /7pQSMLQaVhv9FNr2fSteU3KVnHbnv5QpVNt9AL8vB30J8UqIu81D6k95VHJoOwNtl
+	 m+3IrWEdKmCCA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id A623EC3279F; Sat, 22 Aug 2026 09:36:23 +0000 (UTC)
+	id A027DC433E1; Sat, 22 Aug 2026 09:38:27 +0000 (UTC)
 From: bugzilla-daemon@kernel.org
 To: platform-driver-x86@vger.kernel.org
 Subject: [Bug 221907] Acer Nitro AN515-58: internal display backlight cannot
  be controlled (WMBF/WQ00 firmware bug)
-Date: Sat, 22 Aug 2026 09:36:23 +0000
+Date: Sat, 22 Aug 2026 09:38:27 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -48,7 +48,7 @@ X-Bugzilla-Priority: P3
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-221907-215701-zMOSLwARKU@https.bugzilla.kernel.org/>
+Message-ID: <bug-221907-215701-U5EjC3EJyX@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-221907-215701@https.bugzilla.kernel.org/>
 References: <bug-221907-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -64,10 +64,10 @@ MIME-Version: 1.0
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D221907
 
---- Comment #2 from aich (mathena161@gmail.com) ---
-Created attachment 310712
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310712&action=3Dedit
-dmidecode output confirming model and BIOS 2.21
+--- Comment #3 from aich (mathena161@gmail.com) ---
+Created attachment 310713
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D310713&action=3Dedit
+acpidump text output
 
 --=20
 You may reply to this email to add a comment.
