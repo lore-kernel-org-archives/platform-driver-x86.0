@@ -1,114 +1,161 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FB67E792
-	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 08:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7222A31E830;
+	Sun, 23 Aug 2026 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787472605; cv=none; b=hzOSJxHzXMCKaalA2ydsQg2EMVJxFH4mUujH6jVGlwcCReif5KQmP3UTsmvDC7sZ1xXOpyP+anzo2nv7XhJdppDlg96Vg4aJVdKZFYwtnEXvZ97nZOBCIMCT7dbxUJn/sTE901epIC6kDYHfMKbtKeyGmQ3zo5saau3jEO7evi0=
+	t=1787475970; cv=none; b=owyaBNsjJKmuflHgK3ASh1cpGZonsiKoUUr5S2Gikot5fGw9j9Egaq01M6RA1tJOmFDLQOzsXzUlFlEWMKwYgHdD0ijiSv8Wull3MJBwOEvSnCSmpUWvCxwoKJ7+CvFJFFrS2Zumq74zpH7s2JRfUUU3F3MdgsYFH2Xn59LBYTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787472605; c=relaxed/simple;
-	bh=RDjpUB7vI2pGf8GQpVPPkUy/snyYNbCJCGpp2g9RYg0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eshr6QDAuTel83F9PQbcaqfmitljUOk4G/L/x0EHgLScE6Aih54+OoEo2f28UCOGOKxWtHdRg1z5OAW8OWk7968kTSJON3z/xhlggvcPb7qK8QrQE5SbIHew4foAY6jXq8uT6t8GCkTvCEF3VxsW+drTFbtn7u14BwPhHB5h4Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dA11L5/l; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787475970; c=relaxed/simple;
+	bh=BIOVbq/Kxgiv+mg1/biVyMp4Ww0S3dHHa/buypgw3eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ifkf5CLyjgcmBJ+VRzHYut3Ywv75fHtFbardOvAngiA+rMBR5qvZc8nftsqSz1Mw/cwmQtPZtHP6fGTANmq5CbDAF/n7seR4NkqUo5etaPuJ00wpA8dNJEH3+fbFGM0vXpbeyqzidDUNF0iSuWH+HhXwxlGdFVmfSQLsbfTAaqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GQooo3kG; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dA11L5/l"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-38dc69c74b8so2533190a91.0
-        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 01:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787472603; x=1788077403; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UEhXBg1fEF/fFeb9MOBKITkAQWONHg+xzCkjTkQHMEU=;
-        b=dA11L5/licVy9htpyx6jjO4ALpj49aiSdMAGilc3VoI4vb0t0k8VmdmpJ7LHNQ3EtE
-         hRXDBm8ZNwBajiCBsu/uumYEy1l9UuQdmBehsuihKNScpgAcF1+RlKJANofaXDdrjKyX
-         qEKwVmNtdN/qdMFlZMxHRsCUXCt4CX2vOhvvZc3X1i+ZKDogPL9Juyi986tjSmbmFIrw
-         Q+ajvh7T1ij1Ti/f/b7ZPCG8QGyug5JX49Mvoidz1V+K/hOuq2tL036UmX3e5TatiP2S
-         hQrqam2s11LdBR1xjkEhheHa8Q8VGYEv4WI79FtXZE5UgvGvPUZ4mSgV1cq2GJH1dd5V
-         yetw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787472603; x=1788077403;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=UEhXBg1fEF/fFeb9MOBKITkAQWONHg+xzCkjTkQHMEU=;
-        b=TkzB5lvbPEquskqvxMQ4GoOtJMnDl7kPc3gTZUlSJg04AaHZN8ZMlwCR007TZRfLRL
-         LLw9HuMhatz7LkmW+EiiJkaGZOXYUCZp7xPvTgZ462mWeO4a2LHQB/j6euQyOR0YlKDp
-         w7G7OmJ6qH6Q0FrntNVlFYsg5OOrABtAveo1yOgkvG73q3db1bPQ3FX2/I9uzN04usI+
-         8XH5Cthu/DDGGEHmI9de8ew0A3DmbptyFyI5HbRHanH4QcQ7KusPzAqSFZQ8rhL+0uZM
-         NPkkPk5DdQ/g06Zxbu3o+97entmmc9LItsKGzN6Uf2S7J4QKs6d5ptbtJXhQBaFp+wK6
-         DEAQ==
-X-Gm-Message-State: AFuF++nWViIVsJAN0J6ShbZ0ga8K2mZgb4fwtj3xj7CmyoBRsX66DnAB
-	Hw9joL8/A/fQ/mFi9rzKsyfPYZqYn1Es+lVtKljDT7WdK44AlgAKJqoWNdBNhR9d
-X-Gm-Gg: AR+sD10LGnxFOYkaxBbXYZKhODxbPuWsAr+onYaoqyCP4hVqrbu2HFXxCZU9a+GoWTx
-	RIcmbA3y2H6M3wi/S/YRis6QLyt71miVUml+szTetYTwPTZfb9C9A4h+KvLNY1ve/JZpM0naDyO
-	ppFjGrRUahuGasi2l3ubZkWK+9yKVqWAGKRpMqesvhFfKqYjWY4kISDg0PNV/W8hd/XssjWt++W
-	5WkFMUK53rvGoWDzANk1nDqFXLC5yc1tyiRHaS7a7gFTZAXLBuQvvOtg5lL9oH11BYNBpwkXrXw
-	DbWwBSr8esGxG8jiLitEmPyDeshfTTSpeDIkJRs9qpAxUPI0PAt/NFph9L6jjM83+QllxJh1G3C
-	jdeadm4Is/ZIkJy+GFGcIpZIUM6UkvyXGFJ5kTCFGQd+C4Qh8GG5Cy+QTdMcg3d+ic/nQhcFXis
-	tJQ7utOoLRLiTEBwPlr3wSC468BsFrFuB1IVxWsvFv8pUSlF05JfhwJLxJ3JN+nGpIyNSmSBxGI
-	iGGSSsgExYcw4As9Nr9RG8=
-X-Received: by 2002:a17:90b:224a:b0:385:393e:7124 with SMTP id 98e67ed59e1d1-395df677766mr15716092a91.14.1787472603377;
-        Sun, 23 Aug 2026 01:10:03 -0700 (PDT)
-Received: from archlinux ([223.184.221.173])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327f90c31a5sm13624455eec.11.2026.08.23.01.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2026 01:10:02 -0700 (PDT)
-From: Suryansh Singh <technosfan14@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Suryansh Singh <technosfan14@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8D42 thermal profile support
-Date: Sun, 23 Aug 2026 13:39:46 +0530
-Message-ID: <20260823080946.103082-1-technosfan14@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GQooo3kG"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hSSnd4ypMz4GRs;
+	Sun, 23 Aug 2026 11:05:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787475957;
+	bh=BIOVbq/Kxgiv+mg1/biVyMp4Ww0S3dHHa/buypgw3eo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=GQooo3kGgDH1qR42CU8mpcusIHAD3IlDDI3DpopfSfx8hMyhdPNfcPH2GfeqBq494
+	 tp4cUTHI/9mOdMi2vC7CLg4RP1H6zypp5FRPXOl7QJVY8sPIgilaBBPvJO2SJ4DuaO
+	 003mRadLi9mBJetEZy6FFfHOErqYPUSwEDgzwxNtfUIl2sst8fTpUcUDUPTMzF2zBz
+	 NTWtOVZl2vIq99YCQOGsZRfRfRxMDn1FULdzCTSMi641qpsiFIjEx7QEiwbloPFCqh
+	 iHbJpt84xmnyfPKak1Bf8sazEAGMpjANdGZfoNaAqrxymJPzHuNj7DVA0ahPGX06yY
+	 m/v692006civA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hSSnd4GYlz7xRX;
+	Sun, 23 Aug 2026 11:05:57 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hSSnc6fGZz8tZK;
+	Sun, 23 Aug 2026 11:05:56 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 116615FAEB;
+	Sun, 23 Aug 2026 11:05:56 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <3e64d1dc-7d33-4156-bf14-1573cde3cd0e@leemhuis.info>
+Date: Sun, 23 Aug 2026 11:05:54 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] hp_bioscfg hangs boot on HP Laptop 15-bs1xx;
+ blacklisting fixes it
+To: =?UTF-8?Q?VOLKAN_SAL=C4=B0H?= <volkan.salih.06@gmail.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: 
+ <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178747595632.2441704.2874934309583728851@mxe9fb.netcup.net>
+X-NC-CID: i8BYNCHcTtG8sNuFxh6eS56s8fFuiRt5pYddU75jzLp42x97qu0=
 
-The HP OMEN MAX 16-ah0xxx (board ID: 8D42) uses the existing
-OMEN v1 WMI interface but does not use the standard EC thermal
-profile parameters.
+Hi! Thx for your report.
 
-Furthermore, it is the closest sibling of board 8D41, which is
-already included in the table with omen_v1_no_ec_board_params.
+On 8/23/26 02:36, VOLKAN SALİH wrote:
+> 
+> I am seeing a boot regression involving hp_bioscfg on an HP Laptop
+> 15-bs1xx.
+> 
+> System:
+>   Model: HP Laptop 15-bs1xx
+>   SKU: 7WG51EA#AB8
+>   Mainboard: HP 8444
+>   BIOS: F.75 (04/26/2024)
+>   GPU: Intel HD Graphics 5500 / Broadwell-U [8086:1616]
+>   Distribution: Zorin OS 18.1 Pro (Ubuntu 24.04 based)
+> 
+> Kernel results:
+>   6.17.0-40-generic:
+>     boots normally
+> 
+>   7.0.0-30-generic:
+>     hangs during boot
+> 
+>   7.0.0-30-generic with acpi=off:
+>     boots
+> 
+>   7.0.0-30-generic with only hp_bioscfg blacklisted:
+>     boots normally with ACPI enabled
 
-Add the DMI board name to hp_wmi_feature_boards[] and map it to
-omen_v1_no_ec_board_params.
+The latter three are heavily patches vendor kernels. Please test if
+vanilla 7.2 is still affected and report back if it is; if not, you want
+to talk to your vendor about backporting fixes, as 7.0 is EOL and thus
+unsupported upstream.
 
-This enables the existing board-specific handling for 8D42,
-including platform profile and fan control support.
-
-Link: https://github.com/yunusemreyl/OmenCtl/issues/93
-
-Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index 68ea52045a5d..6ecc033e5af3 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -327,6 +327,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
- 		.driver_data = (void *)&omen_v1_no_ec_board_params,
- 	},
-+	{
-+		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D42") },
-+		.driver_data = (void *)&omen_v1_no_ec_board_params,
-+	},
- 	{
- 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D87") },
- 		.driver_data = (void *)&omen_v1_no_ec_board_params,
--- 
-2.55.0
+Ciao, Thorsten
+> The working kernel command line workaround is:
+> 
+>   module_blacklist=hp_bioscfg modprobe.blacklist=hp_bioscfg
+> 
+> The boot reaches hp_bioscfg initialization immediately before the hang.
+> The WMI GUID shown during probing is:
+> 
+>   5FB7F034-2C63-45E9-BE91-3D44E2C707E4
+> 
+> The system also reports these firmware ACPI errors:
+> 
+>   ACPI BIOS Error (bug): Could not resolve symbol
+>   [\_SB.PCI0.LPCB.HEC.ECRD], AE_NOT_FOUND
+> 
+>   ACPI Error: Aborting method \_TZ.TZ00._TMP due to previous error
+>   ACPI Error: Aborting method \_TZ.TZ01._TMP due to previous error
+> 
+> I inspected the hp_bioscfg module from Ubuntu's 7.0.0-30 kernel:
+> 
+>   /lib/modules/7.0.0-30-generic/kernel/drivers/platform/x86/hp/hp-bioscfg/hp-bioscfg.ko.zst
+> 
+> It contains the old error strings:
+> 
+>   hp_bioscfg: ACPI-package does not have enough elements: %d < %d
+>   Error expected type %d for elem %d, but got type %d instead
+> 
+> I noticed the recent patch series:
+> 
+>   "platform/x86: hp-bioscfg: fix ACPI package handling on HP EliteBook 840 G2"
+> 
+> including:
+> 
+>   e0ddfd77c0c3 - pass validated element count to package parsers
+>   1d143d78299d - bound ordered-list parsing by package count
+>   40e10e6cc8f7 - accept reduced ACPI packages from older HP BIOS
+>   b0e2af3ec94e - warn on element type mismatch instead of failing
+> 
+> The series was applied to the platform-drivers-x86 review-ilpo-next
+> branch.
+> 
+> Could this HP 15-bs1xx boot hang be another manifestation of the same
+> older-HP-BIOS ACPI package handling problem?
+> 
+> If so, would these fixes be suitable for backporting to the affected
+> stable/vendor kernel series?
+> 
+> I can test patches or a patched hp_bioscfg module on this machine.
+> 
+> Regards,
+> mr.Volkan SALiH
+> 
 
