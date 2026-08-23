@@ -1,75 +1,71 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E9D3ABD8E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 03:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4439378C9C
+	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 07:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787455821; cv=none; b=NAm5Grm4nfkC+eNtnK7i/GeEqZT2WhbsCJWt8h+CftDT/Bd6b24cLKZawPlHqhvMfptIE/3Rap3HRMYhbq8cibxJ9iWSEnvQn5J9DpJkDIxekAh7wPv24Y/v8u8Fmk4tBHW77R0870aeBUt6gyKT2HrfTa2ezfQnzICSXjRSRQM=
+	t=1787469901; cv=none; b=ijeRJIvLzOSFI64ykU4DDqSRG7vEuB4QMMtflRdiSIXPbQbx20I3tZrORBq2dfw3Bp4hMaQerhKu6C4q3NxTL1eBGqSbteOynVGMtqqykCAX3mAeUqglVZbn57aMFVrHpB4C477aCFtdIT6MeuOY3ex1ttbe3QgkftPWVI1C6Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787455821; c=relaxed/simple;
-	bh=odra2VZjpA+fNo6c1sHn1YdBhevb290OHSdsszE1tR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TDNV5Um2rcSQvK2FFNOWcyH5w427pu4RWOAig1Yof3xqX+Xs+BNBclcFw9mM3bQ1M2XUOd4R453lSsf0UOS6kqF8hTkBOD4zhsGnhXHBbu9lhR1QDkDm6WWCuedXxIi8fC9HzbxtmoGc3XpKIDFCZKHRxY6UMs5px5WP2pLSYgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+Bxvo9u; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1787469901; c=relaxed/simple;
+	bh=Ylsv8ee+1zR5y7VPJWLV1FS+rM2NjJEeJwha35FYmN0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h4Q/oVpLRVxDzq5+4wkU9Cs4nqn49q86JiC/6itWGVCdvOZapHs7ItT87yw7dS04DJJ8M9T4BpzBXMJxk1dv+R1nCyeNzVLVNoWtUFLGB7whKCM82RwjhjYC21iJSnbguEbpROQOia6N2vFDCoIw3BZDOnJZjF+PV8twBv+wHes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrP68DxX; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+Bxvo9u"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2cf27856f9cso25301065ad.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 20:30:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrP68DxX"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cc147d86bebso1987135a12.0
+        for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 00:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787455819; x=1788060619; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1787469899; x=1788074699; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=stLZT/okqSNFXuljKE8tIV/AU6lfezXDB7JUzrH4ujw=;
-        b=h+Bxvo9uG8oRyD9F1wmvLWyuP4iaPPcwTq5srStnEvFZC7lCerjAqLu826MENlzkS2
-         mJBIjQRBOeM1mitPmnXO8e1pHTztct29V+goIremNuB42uCtZ2dWnNACm0oTgDevvhDk
-         pnAY9TlIqroqJt7i8n8YV41sGEXb7SFub0qWJoc2ChE4yvdP697J5YFyeobTggtVYjGo
-         uukuOLmOTpPVO6OCKf01vFbewj2UF5ANjAZdBCUh7yeQlFVypK2ulTgvO2E0atzHtw/z
-         NfvdLUP8cxc9jWdMrg4YyL5gkuTYuQJW4Ty9vhZ2mQ2vTO02EwV1WiWa9YfXFGy9Zoac
-         0FfA==
+        bh=AjsApFGVG7tJ0+HhZ2tY2CwV7JcnIjEfyQ7AIHL7rqY=;
+        b=PrP68DxXc4lPOyUQvpN6K5q+441NhuIhSIQIz4DdjLzGud0ZDhLYcllWHt/a0nLMji
+         BrE4Bgj6AK6AAiXvwSIeIzD9ZZnDz+wn+OiVJrcuB6b7DUmKEWjsqBwD5bGYOaHmWtJV
+         UVXcQrkzPL6iq5NbX882ob7HfpawFwovoWtnbP0KXoGnm/gyialEnLowgMRSO/5i5/Eo
+         MtZrkDGSw3/wXNhtseJiUzEPg1819PIGJDvSADuTlNGufRrCRNAlm6dGbeot1C0sI1FG
+         8Ir6tFchRonhf/LPD2/DbWWJdMoq4KT60sC85cwjfRIzCjG/+yVp0uaQX4LH5Ru4u1NB
+         pz2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787455819; x=1788060619;
+        d=1e100.net; s=20251104; t=1787469899; x=1788074699;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=stLZT/okqSNFXuljKE8tIV/AU6lfezXDB7JUzrH4ujw=;
-        b=r9rCMpowbU68TNjjMoF+Pdk6r6/s2sRPvsN+AbSkb96qv2hwoJnNKfLuauwEPQU3d7
-         l/POuBcWOYY8eD4RseKaMaM6yQGnFj8dF3Z1GDhywF7kL6y7DkA/HjoM6677d2ybiC4L
-         XZz7Z3XQ0AXO8L4EhrqRhT+kQwjFMwTDSKhiyDeNP2/n/AXI1aCjjhs/daKuzS1re14B
-         PHAibSmBzItFwwX5jXVgGL4snz/VKPhgb4ZoNuSmKyQ3fl6cmVRZh+G6uaGwbz8WaLI/
-         YHHcRmzG/tJ5pulprUzQVHL2kK4OVdXUBgOrkd6/iXYPL8rb1NjtJmkV5ELjXHKOtxCt
-         RgGQ==
-X-Gm-Message-State: AFuF++mpXTwEkaHcsrASiVEhx9Y772k6DF1WAoo16JjNJuenRk2RRfOd
-	N0v160Fuu3I3BuVFUUFC2U4i/pI/MuoTBDQfZcNmz7pa0ufPNV4p/ZPE
-X-Gm-Gg: AR+sD10iB3jA7IOxVuFF9C4GRPRptp3vXsr6gcWJDfvLEw28hDyESIQI/hvcoFvKp7e
-	Aq8MepWP3vLtJlVvpGa7J6++ecGRjFx4tV/iESbN2j0nvTETQ88eAOv8uW7yHHbrh8TqGwjUvea
-	H1wBHXPDE13C54/Uno8Nz0kE2ifvmzwoXT3I6Ut+Jfd6cYbT1cosRMGjGm2bO9ZX5UYC1IQZsQP
-	KDPXEuFLMfsXocsOjtk4BjuYZr4x6a7lU3QB+BU+Xt5l32+y+i3HNG8eZxHcgUsSZaJqFU3dOEM
-	ybd8lfyZk6t6+7NGmSGj/NAFEgiGNd3b8b27lyiBqXf6MlToqm1YwYawfzZTWUsp8yFHMZRGGmB
-	wlPDA3wuINPZ1JbhSSeuLD0m/9YoYx0LPBZjW3rcbC6NgSzTxrFPBSIvtL5+p4aGoK0Wa/lhKD+
-	ytz4oPe87ZL1sxJIyndxmncCuDWa94Nim16fzKsjyFTISbGZ/qLpcMijc7mPTVDU8vi51fKm2O3
-	edNtFLDRgwbQb5foP3bWYWl5F14cKSpsUgM8zc=
-X-Received: by 2002:a17:90b:5288:b0:37f:e326:6557 with SMTP id 98e67ed59e1d1-395c3368e30mr34024160a91.4.1787455819561;
-        Sat, 22 Aug 2026 20:30:19 -0700 (PDT)
-Received: from DESKTOP-NUG3VVK.localdomain ([39.117.86.115])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395e49d8d26sm4601465a91.10.2026.08.22.20.30.16
+        bh=AjsApFGVG7tJ0+HhZ2tY2CwV7JcnIjEfyQ7AIHL7rqY=;
+        b=fQSRlZUaPrUvao2vrS+CdHGB6P+Jv0iUv4elxbfdS9TG3q7bJvUnMiLlCtQZ3+ZJF3
+         PIW1tNP5kyiOKUoQPD3xlkX95Us02n4uNBqyc76KHIsqAWjaOfJnZ2bW5Lm7OURDOqsQ
+         RaP92YhfugtI5K6lOc1Rd6jEJJJVmDK0p9+hppOib+hQOzOL/UfPaw+Bt630Hip9h9HM
+         XTvjUaGgoBc7DICkLtwpek+lypcw2Oqi9quNz/cpvi150h2/DbYTsXWU38Kxys55YMz0
+         boHHBO2TyJCS93FcNcET8Byrh7mvG0az5BeA4KgKJShEbXH4y0Hi5C5dtepGEGHM2mMW
+         +PKw==
+X-Gm-Message-State: AFuF++kd0n0qomhtqf80lPV5x5h390A/My9jEaKadPATvq+QKGKgV6dm
+	9Blwbzgb0DQ8OLTxrPizmwANCX+rnDYGEonq0MlzqyMK1nahyhy3aHE1
+X-Gm-Gg: AR+sD13pHjtHp41IFyQa+sTBRahIrTaSaIMO/mU7ofXJwokObdqSLhWTaKKcOtW3S64
+	ONHMdShb527TAz+X5FXhfz9Zbn5TV0RZHa8eJwjD282GuLpPmRqFr3zCCEk0dMpxaQizu/UBogD
+	C9vc43PEzm+ONxOZ5M7rZS/a0tjAWu4OV7QHs8koHSSm0SUnrQ2etMAYZGuLv5jZbyMC8ixQuMI
+	Ne1n1M7FpS5OPoNhBwzpWdAk1rNOsip8kdENk+CjzzzQb7WiMBCGv4g0tL02rUKvFlmlLNIug8B
+	U9z8OIh9HG+1DI7xcmgSsc1Bh4OzxCe4YwFEjXg5a+4U90P3Cp1BJKGIEWQZRmqLEHpOKimW79p
+	a19RH//UkH84lGgNRyM8me4jPLjdJL3l3w/8+ezmDxqL7PHC3lO3lNp8F5bAh+kB1wQ3t6SVxPL
+	CxL2l6fSr4WrLEzXVW1Pg8Y/5S3w1rF3y3sqp0vIg6IEAOubx0eueZS7giDUAMOvxdkAhQbka1A
+	e9oLoBMoRPhAnSmPNQk6xQ=
+X-Received: by 2002:a05:6a20:a111:b0:3c8:e304:99d0 with SMTP id adf61e73a8af0-3cd14870281mr27135096637.0.1787469899470;
+        Sun, 23 Aug 2026 00:24:59 -0700 (PDT)
+Received: from archlinux ([223.184.221.173])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327ff728ca7sm10742188eec.3.2026.08.23.00.24.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Aug 2026 20:30:19 -0700 (PDT)
-From: Yongho Park <yhpark7i@gmail.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Armin Wolf <W_Armin@gmx.de>
+        Sun, 23 Aug 2026 00:24:58 -0700 (PDT)
+From: Suryansh Singh <technosfan14@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
 Cc: platform-driver-x86@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Yongho Park <yhpark7i@gmail.com>
-Subject: [PATCH] docs: wmi: fix spelling of "frequency"
-Date: Sun, 23 Aug 2026 12:30:06 +0900
-Message-ID: <20260823033006.45651-1-yhpark7i@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	linux-kernel@vger.kernel.org,
+	Suryansh Singh <technosfan14@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8A18 thermal profile support
+Date: Sun, 23 Aug 2026 12:54:07 +0530
+Message-ID: <20260823072407.74512-1-technosfan14@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -78,26 +74,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix a typo in the Lenovo GameZone WMI documentation.
+The HP OMEN 17-ck1000nw (board ID: 8A18) supports the existing
+OMEN thermal profile handling.
 
-Signed-off-by: Yongho Park <yhpark7i@gmail.com>
+Add the DMI board name to omen_thermal_profile_boards[] so that
+the existing thermal profile support is enabled for this board.
+
+This enables the existing fan control and platform profile
+handling for 8A18.
+
+The board has been reported as working with this configuration
+in OmenCtl.
+
+Link: https://github.com/yunusemreyl/OmenCtl/commit/ea60e1c52859f0f299e092ae0478cdc7de82122f
+
+Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
 ---
- Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
+ drivers/platform/x86/hp/hp-wmi.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-index 1769ad3d57b9..3579aa32c5d6 100644
---- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-+++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-@@ -152,7 +152,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-     [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
-     [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
-     [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalue;
--    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffsetFreq;
-+    [WmiDataId(4), read, Description("OC Offset frequency.")] uint32 OCOffsetFreq;
-     [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMinOffset;
-     [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMaxOffset;
-     [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetScale;
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index b2773fc1aca4..68ea52045a5d 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -207,7 +207,7 @@ static const char * const omen_thermal_profile_boards[] = {
+ 	"886B", "886C", "88C8", "88CB", "88D1", "88D2", "88F4", "88F5", "88F6",
+ 	"88F7", "88FD", "88FE", "88FF",
+ 	"8900", "8901", "8902", "8912", "8917", "8918", "8949", "894A", "89EB",
+-	"8A15", "8A42", "8A43",
++	"8A15", "8A18", "8A42", "8A43",
+ 	"8BAD",
+ 	"8C58",
+ 	"8E41",
 -- 
-2.43.0
+2.55.0
 
