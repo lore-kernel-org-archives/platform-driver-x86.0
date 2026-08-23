@@ -1,165 +1,103 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0401B5A79B
-	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 00:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787445384; cv=pass; b=iE9UTN/9f9YDewX/AbX6X0xe2hF8+LsoFJhC0PbqXFt4VvZtBTlrOOdBKLfszQS+EQyhjy5S2QEYr89odhvuJekKcA6G6ApINbQgDMAjhV2ZZDGmO9JKZUaiq8kb1s8HvErJy73EdTynPXdA7rdJ4LgfyKQ94PT6nKKfN7+KnkY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787445384; c=relaxed/simple;
-	bh=IpHcjZ3NayMqvBih3E3O9x4doOsXtbt93QADiafRZnc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=q6f7c+z29yY1mjxJUwZPn9BtsCZmkMByqECbb+GQe3UC6a47VdveUe5pLGw1GqgCSQugUAQ2Enr0+pR7eUs6Qhb70fqD9Wt6fyx6NzZbUJDwjAwIIndpeP2UZI2Lbh68wqgCWDlIppdYHeD7ShORrdECkSz1nfkF37xl9duwrH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0OxvrY6; arc=pass smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E9D3ABD8E
+	for <platform-driver-x86@vger.kernel.org>; Sun, 23 Aug 2026 03:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787455821; cv=none; b=NAm5Grm4nfkC+eNtnK7i/GeEqZT2WhbsCJWt8h+CftDT/Bd6b24cLKZawPlHqhvMfptIE/3Rap3HRMYhbq8cibxJ9iWSEnvQn5J9DpJkDIxekAh7wPv24Y/v8u8Fmk4tBHW77R0870aeBUt6gyKT2HrfTa2ezfQnzICSXjRSRQM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787455821; c=relaxed/simple;
+	bh=odra2VZjpA+fNo6c1sHn1YdBhevb290OHSdsszE1tR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TDNV5Um2rcSQvK2FFNOWcyH5w427pu4RWOAig1Yof3xqX+Xs+BNBclcFw9mM3bQ1M2XUOd4R453lSsf0UOS6kqF8hTkBOD4zhsGnhXHBbu9lhR1QDkDm6WWCuedXxIi8fC9HzbxtmoGc3XpKIDFCZKHRxY6UMs5px5WP2pLSYgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+Bxvo9u; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0OxvrY6"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5bfb5e20a90so1957073e0c.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 17:36:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787445382; cv=none;
-        d=google.com; s=arc-20260327;
-        b=LotgNKn75rrDri2nMEu2Ttb3oxUHcYqWx6yUkzmdBQtKpRayWIEiTeAw/uaW8RwxoT
-         fZZVuLo+VDfTqAYvYTu0Nznpf3x0eAEYXqyYe2/fHDGiF97vKJ8YFHQ6alx3Slq7X4f9
-         xoW7gG+9fuN12b2Qr8KusBHRian1W6US2Tss6/aGpNQJskIKuUi2TjlfVm4V26luigJ7
-         TphTn/yQHpr+xIbpvATP8yVd/xy/bin4sXrOLGk71YLUM1x+0SfqxDqtvNohSFJxDyjA
-         Kq1hFUzPFXpfg6yZH8qCRhvjWCgTHhnS/PiX1mTPUnr+hFg516QMgj+mVW9kKv4wiLMI
-         5arQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        fh=GdQqk2P51xns1fPGwWHNeNIYurP/vrmta3owGmOOd0g=;
-        b=jhGXGB0u8Fa3fCNzo3bbMZiEwCw1X1c8L/ltJ0pZ/9282WYB4/d9j9J+i5kqK09/Lo
-         2/novvymALWXPWk8fWJiAOygadJbKfc0kNPBidr/gNItQYOZj6J5M+9a3PIXRS1l3c4r
-         9nNyJqbuOnBx7NWqUFY6VoREe6A8StqyEpLu6T7FqFDR6/k7FSFd4cPfKSJzFw0KLuWA
-         9t5mD6xEQLXAOM7tKd+z2HlDAluXpybin5TsjSVKclsSD15EHDjW/lmIs7U5dR8MeAW6
-         igTpe/228zoAhBDFkpXRfgoY5JHuJIP/IlbLurbn2bfkU5k9n+gPr9mxVha0hfgPQWYl
-         uqRg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+Bxvo9u"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2cf27856f9cso25301065ad.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 22 Aug 2026 20:30:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787445382; x=1788050182; darn=vger.kernel.org;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        b=B0OxvrY6Imbe3vLVhklm5A/fruf4zFOoF/Knb+Fa+uHQhrfwLYNlJr2/2XEJZmZd6T
-         X5KKzjdxfSeOXHfL3G8E3rDWkuLHxq+C0UtVhgiLK4liwtJoFc5Ow09cFNBtllveFRf2
-         gV0Q1rSCt2ubuRZHPxdSyGgJDiu7Wftd6zY2trKc5zhWwupJgPByoS04Y+xlnoKMiLqC
-         DFXpbHYF2Hv0mHohlnDll83Sugs1qMmUziH1fQuMgFVoS9AvjFJiR/8upLgL2Qio4fkb
-         HOYxnbYtBb9jvIBRelIufjH5T+mP/Cw5hQLy0DQlNdfk0kdFojVzQ8LgZjqxYnE/WXgK
-         /U8g==
+        d=gmail.com; s=20251104; t=1787455819; x=1788060619; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=stLZT/okqSNFXuljKE8tIV/AU6lfezXDB7JUzrH4ujw=;
+        b=h+Bxvo9uG8oRyD9F1wmvLWyuP4iaPPcwTq5srStnEvFZC7lCerjAqLu826MENlzkS2
+         mJBIjQRBOeM1mitPmnXO8e1pHTztct29V+goIremNuB42uCtZ2dWnNACm0oTgDevvhDk
+         pnAY9TlIqroqJt7i8n8YV41sGEXb7SFub0qWJoc2ChE4yvdP697J5YFyeobTggtVYjGo
+         uukuOLmOTpPVO6OCKf01vFbewj2UF5ANjAZdBCUh7yeQlFVypK2ulTgvO2E0atzHtw/z
+         NfvdLUP8cxc9jWdMrg4YyL5gkuTYuQJW4Ty9vhZ2mQ2vTO02EwV1WiWa9YfXFGy9Zoac
+         0FfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787445382; x=1788050182;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        b=VstjdMLwW3T+jKMPjlpEcX3GiHY3BoN75QvNlqcaWeBA9tLcvPNkfQL4/FP7rbzK/Y
-         OJ3M0JJQavFuvCOpBvJmUZLhf0C2HBKfAi9qvHPHbZPCcSapymSh7Sbsrg0SNDGag2Hz
-         pXluOf9/jYvPoTvVZJQxAIHO0EiQr77ZZK8yGIkT/WmTKk2efM7BHk6+LIYkq+QPtNV5
-         0B+aqWwfhmeGytVm71CvjUAfFYpV3WgO78OHDP3/ryFOihB2eppk/K9y4+XjNesjHOoS
-         vMbgZRrojzALcF9kaEnHIOxYTMCIvj3oSuHfz3xL5W8l6k+wz1swbtuhVxsTDqSugwsD
-         w76w==
-X-Gm-Message-State: AFuF++nT3G42hGCKIBppvftWBXibyN6oTwaO7IDB4mm76Ttnfl/6sh1j
-	nefLTTBJ2w+7XnTOftYKrTFspO4mGcckbitEZsDSM+sEN3yBZVBOPsQoFL0v2Oo4d6GTDg5zVFE
-	rmfnNMYyfJ00Zy5VoCGqCg8rZNaRGC1qxxLoojSs=
-X-Gm-Gg: AR+sD10tgy5OJfNowv1Pt9OnfVhVL0GyrFX8XrdibPADgvL+R5HrQSpbS+4pBv9Xi2b
-	nh9i9CT8KeNNWzDosWZN95PdyWateyrNBHWZAqGEOs/5JK3PiZETIckmozNoVlbR/Lo0CI9XX6P
-	VmIQQo8ERzMSgBm4qtCqyQeH2AaRwOd1F4ECh8hywm+k2liprL9GJmIOylbr+NQfqbU5nq4mZSa
-	FjdRq12+kLzloGZTENfPrq37naMo0aT94gHtrd1fXz7SgWS06htaY9cNryERn/7AKAyCsC4dOaL
-	2fuw3bCmzIs4f6SoJgmvGDKRsD9qbNLuZTJeIQIzytIT
-X-Received: by 2002:a05:6122:489a:b0:5c3:2f5c:55b3 with SMTP id
- 71dfb90a1353d-5c5ff7a68a2mr8236180e0c.3.1787445381909; Sat, 22 Aug 2026
- 17:36:21 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787455819; x=1788060619;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=stLZT/okqSNFXuljKE8tIV/AU6lfezXDB7JUzrH4ujw=;
+        b=r9rCMpowbU68TNjjMoF+Pdk6r6/s2sRPvsN+AbSkb96qv2hwoJnNKfLuauwEPQU3d7
+         l/POuBcWOYY8eD4RseKaMaM6yQGnFj8dF3Z1GDhywF7kL6y7DkA/HjoM6677d2ybiC4L
+         XZz7Z3XQ0AXO8L4EhrqRhT+kQwjFMwTDSKhiyDeNP2/n/AXI1aCjjhs/daKuzS1re14B
+         PHAibSmBzItFwwX5jXVgGL4snz/VKPhgb4ZoNuSmKyQ3fl6cmVRZh+G6uaGwbz8WaLI/
+         YHHcRmzG/tJ5pulprUzQVHL2kK4OVdXUBgOrkd6/iXYPL8rb1NjtJmkV5ELjXHKOtxCt
+         RgGQ==
+X-Gm-Message-State: AFuF++mpXTwEkaHcsrASiVEhx9Y772k6DF1WAoo16JjNJuenRk2RRfOd
+	N0v160Fuu3I3BuVFUUFC2U4i/pI/MuoTBDQfZcNmz7pa0ufPNV4p/ZPE
+X-Gm-Gg: AR+sD10iB3jA7IOxVuFF9C4GRPRptp3vXsr6gcWJDfvLEw28hDyESIQI/hvcoFvKp7e
+	Aq8MepWP3vLtJlVvpGa7J6++ecGRjFx4tV/iESbN2j0nvTETQ88eAOv8uW7yHHbrh8TqGwjUvea
+	H1wBHXPDE13C54/Uno8Nz0kE2ifvmzwoXT3I6Ut+Jfd6cYbT1cosRMGjGm2bO9ZX5UYC1IQZsQP
+	KDPXEuFLMfsXocsOjtk4BjuYZr4x6a7lU3QB+BU+Xt5l32+y+i3HNG8eZxHcgUsSZaJqFU3dOEM
+	ybd8lfyZk6t6+7NGmSGj/NAFEgiGNd3b8b27lyiBqXf6MlToqm1YwYawfzZTWUsp8yFHMZRGGmB
+	wlPDA3wuINPZ1JbhSSeuLD0m/9YoYx0LPBZjW3rcbC6NgSzTxrFPBSIvtL5+p4aGoK0Wa/lhKD+
+	ytz4oPe87ZL1sxJIyndxmncCuDWa94Nim16fzKsjyFTISbGZ/qLpcMijc7mPTVDU8vi51fKm2O3
+	edNtFLDRgwbQb5foP3bWYWl5F14cKSpsUgM8zc=
+X-Received: by 2002:a17:90b:5288:b0:37f:e326:6557 with SMTP id 98e67ed59e1d1-395c3368e30mr34024160a91.4.1787455819561;
+        Sat, 22 Aug 2026 20:30:19 -0700 (PDT)
+Received: from DESKTOP-NUG3VVK.localdomain ([39.117.86.115])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-395e49d8d26sm4601465a91.10.2026.08.22.20.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2026 20:30:19 -0700 (PDT)
+From: Yongho Park <yhpark7i@gmail.com>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Yongho Park <yhpark7i@gmail.com>
+Subject: [PATCH] docs: wmi: fix spelling of "frequency"
+Date: Sun, 23 Aug 2026 12:30:06 +0900
+Message-ID: <20260823033006.45651-1-yhpark7i@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?Q?VOLKAN_SAL=C4=B0H?= <volkan.salih.06@gmail.com>
-Date: Sun, 23 Aug 2026 03:36:10 +0300
-X-Gm-Features: AcwNN1W0_Bz7QYAT9V60rz2l4_bJDFUR0hstZX3hdx3Ab_UhZbX18RbGhS9ja7g
-Message-ID: <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
-Subject: [REGRESSION] hp_bioscfg hangs boot on HP Laptop 15-bs1xx;
- blacklisting fixes it
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Fix a typo in the Lenovo GameZone WMI documentation.
 
-I am seeing a boot regression involving hp_bioscfg on an HP Laptop
-15-bs1xx.
+Signed-off-by: Yongho Park <yhpark7i@gmail.com>
+---
+ Documentation/wmi/devices/lenovo-wmi-gamezone.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-System:
-  Model: HP Laptop 15-bs1xx
-  SKU: 7WG51EA#AB8
-  Mainboard: HP 8444
-  BIOS: F.75 (04/26/2024)
-  GPU: Intel HD Graphics 5500 / Broadwell-U [8086:1616]
-  Distribution: Zorin OS 18.1 Pro (Ubuntu 24.04 based)
+diff --git a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+index 1769ad3d57b9..3579aa32c5d6 100644
+--- a/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
++++ b/Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+@@ -152,7 +152,7 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
+     [WmiDataId(1), read, Description("P-State ID.")] uint32 PStateID;
+     [WmiDataId(2), read, Description("CLOCK ID.")] uint32 ClockID;
+     [WmiDataId(3), read, Description("Default value.")] uint32 defaultvalue;
+-    [WmiDataId(4), read, Description("OC Offset freqency.")] uint32 OCOffsetFreq;
++    [WmiDataId(4), read, Description("OC Offset frequency.")] uint32 OCOffsetFreq;
+     [WmiDataId(5), read, Description("OC Min offset value.")] uint32 OCMinOffset;
+     [WmiDataId(6), read, Description("OC Max offset value.")] uint32 OCMaxOffset;
+     [WmiDataId(7), read, Description("OC Offset Scale.")] uint32 OCOffsetScale;
+-- 
+2.43.0
 
-Kernel results:
-  6.17.0-40-generic:
-    boots normally
-
-  7.0.0-30-generic:
-    hangs during boot
-
-  7.0.0-30-generic with acpi=off:
-    boots
-
-  7.0.0-30-generic with only hp_bioscfg blacklisted:
-    boots normally with ACPI enabled
-
-The working kernel command line workaround is:
-
-  module_blacklist=hp_bioscfg modprobe.blacklist=hp_bioscfg
-
-The boot reaches hp_bioscfg initialization immediately before the hang.
-The WMI GUID shown during probing is:
-
-  5FB7F034-2C63-45E9-BE91-3D44E2C707E4
-
-The system also reports these firmware ACPI errors:
-
-  ACPI BIOS Error (bug): Could not resolve symbol
-  [\_SB.PCI0.LPCB.HEC.ECRD], AE_NOT_FOUND
-
-  ACPI Error: Aborting method \_TZ.TZ00._TMP due to previous error
-  ACPI Error: Aborting method \_TZ.TZ01._TMP due to previous error
-
-I inspected the hp_bioscfg module from Ubuntu's 7.0.0-30 kernel:
-
-  /lib/modules/7.0.0-30-generic/kernel/drivers/platform/x86/hp/hp-bioscfg/hp-bioscfg.ko.zst
-
-It contains the old error strings:
-
-  hp_bioscfg: ACPI-package does not have enough elements: %d < %d
-  Error expected type %d for elem %d, but got type %d instead
-
-I noticed the recent patch series:
-
-  "platform/x86: hp-bioscfg: fix ACPI package handling on HP EliteBook 840 G2"
-
-including:
-
-  e0ddfd77c0c3 - pass validated element count to package parsers
-  1d143d78299d - bound ordered-list parsing by package count
-  40e10e6cc8f7 - accept reduced ACPI packages from older HP BIOS
-  b0e2af3ec94e - warn on element type mismatch instead of failing
-
-The series was applied to the platform-drivers-x86 review-ilpo-next
-branch.
-
-Could this HP 15-bs1xx boot hang be another manifestation of the same
-older-HP-BIOS ACPI package handling problem?
-
-If so, would these fixes be suitable for backporting to the affected
-stable/vendor kernel series?
-
-I can test patches or a patched hp_bioscfg module on this machine.
-
-Regards,
-mr.Volkan SALiH
