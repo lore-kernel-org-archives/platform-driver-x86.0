@@ -1,369 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDD445D5E3
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Aug 2026 16:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B4746C842;
+	Mon, 24 Aug 2026 16:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787588627; cv=none; b=AjI1MXeiPQjSUqVvU2A0I5VIO+Kc1VDQ3zhi5GTNkSvkMp4AWmCACdOgJKGHSNqq/j7G8+/zSu132Ic8M1AT+jIA9VKdK6XlWzbYcppvIs0fP44fEOWTIf3uBnmro4PzWcVmR2+GFzyInCLbiD/6DWuQUxtnN5BeqxEkjvcBUgM=
+	t=1787589076; cv=none; b=Cj1UPFVt+NmmWoLqWgTvOllNG6CaFOQH7bF4NT5hTHv+mQHdeGEbe615F+a7xx4L+a2gOHv5PY5sr4zr7rvs1KJX7vsVVT6I00vwR1u0LSzuUjjy1D4vMFLiTHOYYjztA9oeu4T6aYjjkAbZ0QcoTbyhVrDUtJjD7CrcH/nAOuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787588627; c=relaxed/simple;
-	bh=g9Ob5FN0fJtpIbss7YypgDhiHZ5CsX2f+6htY7fm/Y8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iCAxnNc2420P0An6WxZ2op+t3j1Z20uZjiktaVSjGi/0WapzG1F6w6Psp5EYn2GfM5MTYiR7eCZYPNdFaaXvQCqA9C8nw0SxjyO0AuR8QcJTIBc4DPz+xLjVM6OimujcM07g9HAAhSAK5mSfoVM1mKmEmZU5ELQoVdcRGLC3yn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L6xHrKq2; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787589076; c=relaxed/simple;
+	bh=eUroCkCxim85sjTNDEJsgp7DZCHD7cLWs6ogWnSoWvM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Z/mw2QIv26q8KfeckiUwZ9p+Oa+nA1eOEfhbVPiOlVkEIxz2jvNq/Xn/AuHYVCM9m0y9kPzbzQOI0Tuue257944Q9oYp7uQC0RYwneHP1cu/Mj0HSbMki5pvjTSji9mFeYVd2EoFwnhlW+Pk0njHKTTNTUoI4kvkWCfRvoc9hEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMlcMRyr; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L6xHrKq2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMlcMRyr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787588624; x=1819124624;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=g9Ob5FN0fJtpIbss7YypgDhiHZ5CsX2f+6htY7fm/Y8=;
-  b=L6xHrKq2c/wG5r17gUeRdrOToCttVGarTseR+9b+JntKb2U4jQOR4fNG
-   Dirbk1CgznrbRxwzQdNeOus+TWCTkTBhVO49d90QjjW2a2dApFSHpeJ45
-   zJJSq8jLq21gPVlQROvtasITS+Xcbi6TSsJKiV+giZ4DizmnjgE4OSkY7
-   ZRE/rnqIqZQKyLZ2i2dBBuZni+Pleu25AmDsuPCr17mrR2bcEbVPnez0I
-   yb2vb7oreEsC6a98lhY/cynD+wWmBsIiZ9R8Cbf3mfDQhyjl+r2plvEB9
-   VNdqkoBbYqQBpwAMPj/3z6/lec9+f5iAJiz58lCrtnsJFUxBgWtUt4bvH
-   Q==;
-X-CSE-ConnectionGUID: MMKq1eHOS8+ihvAe4xK01A==
-X-CSE-MsgGUID: zmMnabaGT4CaB32SUszdPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="91858109"
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="91858109"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 09:23:44 -0700
-X-CSE-ConnectionGUID: Id5fXeTBTECHfcq4dLm3Qg==
-X-CSE-MsgGUID: 15IeVAMHSPKP1QO+vSEgHA==
+  t=1787589074; x=1819125074;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=eUroCkCxim85sjTNDEJsgp7DZCHD7cLWs6ogWnSoWvM=;
+  b=iMlcMRyrYvci6++guLwjkB7YdXsHTtusvoof9nUNXkKgoGIcvXzVbK1o
+   358DoTuK6p9HFTbBe86Vy1UNiNJinm1k2aEShQnPX2mhg36smEpgdQ76m
+   z6439lHCjtDIVTJK9qqFrsyPwIizgEgsEODUAzUG1YybhNCIrLGEQ7C7d
+   XkU8nofDqb0YgdRCmz0C+RXrRcOTEXOAtvnbPMAdCez4qkkrECfn+yxbe
+   spckuoFTIn90+neWkU0GvSrjavXI9Lv7IBx9I5JWO6WDRXQpNzUOWm9vt
+   eOri1FN/VsRboLnfRNp7YcTLI/jQqAI1TYajBhGl8rxUEzIj43zP4DDAc
+   w==;
+X-CSE-ConnectionGUID: 1TlCUNbrTweP9DU8fkgGaA==
+X-CSE-MsgGUID: XCBe8DMlTWa47RrAFLrfZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88059902"
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="88059902"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 09:31:13 -0700
+X-CSE-ConnectionGUID: KgoFzuhWSomjfLP+R1IU7Q==
+X-CSE-MsgGUID: twc6k6eBSzuDtG5KZJTb+A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="267088154"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 09:23:45 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com,
-	karthik.poosa@intel.com
-Subject: [PATCH v3 10/10] drm/xe/vsec: Update PMT internal access for CRI
-Date: Mon, 24 Aug 2026 09:23:26 -0700
-Message-ID: <20260824162317.2450380-22-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260824162317.2450380-12-michael.j.ruhl@intel.com>
-References: <20260824162317.2450380-12-michael.j.ruhl@intel.com>
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="290568413"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.154])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 09:31:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Aug 2026 19:31:07 +0300 (EEST)
+To: Marco Scardovi <scardracs@disroot.org>
+cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
+    Denis Benato <denis.benato@linux.dev>, luke@ljones.dev, 
+    corentin.chary@gmail.com, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] platform/x86: asus-armoury: add Whisper Mode
+ support
+In-Reply-To: <W4pHviaQQ-qfwmORrCObjQ@disroot.org>
+Message-ID: <bd7adc8b-8716-26d8-6963-1d201bda5d1c@linux.intel.com>
+References: <20260728071843.130492-1-scardracs@disroot.org> <846ca0a3-bd37-4424-aa95-6ab255f48a48@kernel.org> <ae9b94f9-7108-4973-9a99-79a008170b5d@linux.dev> <W4pHviaQQ-qfwmORrCObjQ@disroot.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-843884749-1787589067=:1164"
 
-Xe access the PMT infrastructure directly. The current usage
-is supported ONLY by BMG devices.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-CRI has further requirements for access.
+--8323328-843884749-1787589067=:1164
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Add a new API to access the GUID based on the platform.
-Use the API get the GUID for each device.
+On Wed, 29 Jul 2026, Marco Scardovi wrote:
 
-Minor cleanup for a newly unused parameter (mmio).
+> In data mercoled=C3=AC 29 luglio 2026 15:10:56 Ora legale dell=E2=80=99Eu=
+ropa centrale, Denis Benato ha scritto:
+> >=20
+> > On 7/29/26 09:32, Hans de Goede wrote:
+> > > Hi Marco,
+> > >
+> > > On 28-Jul-26 15:56, Marco Scardovi wrote:
+> > >> In data marted=C3=AC 28 luglio 2026 13:39:39 Ora legale dell=E2=80=
+=99Europa centrale, Hans=20
+> > >> de Goede ha scritto:
+> > >>> Hi,
+> > >>>
+> > >>> Thank you for your patch.
+> > >>>
+> > >>> On 28-Jul-26 09:18, Marco Scardovi wrote:
+> > >>>> This series introduces support for ASUS WMI Whisper Mode hardware =
+controls
+> > >>>> in the asus-wmi header and asus-armoury driver.
+> > >>>>
+> > >>>> Background & Findings:
+> > >>>> ----------------------
+> > >>>> After talking with Denis and thanks to NeuroMarshal reverse engine=
+ering
+> > >>>> and
+> > >>>> firmware trace analysis on modern ASUS laptops, three specific WMI=
+ Device
+> > >>>> IDs were identified that manage acoustic profiles and thermal regu=
+lation
+> > >>>> under ASUS Whisper Mode:
+> > >>>>
+> > >>>> 1. ASUS_WMI_DEVID_WHISPER_MODE (0x0012007A):
+> > >>>>    - Controls the BIOS-level Whisper Mode acoustic profile toggle
+> > >>>>    (read/write boolean).>=20
+> > >>>> 2. ASUS_WMI_DEVID_WHISPER_ENABLE (0x00090022):
+> > >>>>    - Enables or disables Dynamic Whisper acoustic regulation (read=
+/write
+> > >>>>    boolean).>=20
+> > >>>> 3. ASUS_WMI_DEVID_WHISPER_STATUS (0x00090023):
+> > >>>>    - Reports status and allows runtime control over Dynamic Whispe=
+r state
+> > >>>>    (read/write boolean).
+> > >>> I wonder how this interacts with the platform_profile stuff ?
+> > >>>
+> > >>> I would expect enabling whisper mode to lower the max performance,
+> > >>> so does this automatically change the platform_profile away
+> > >>> from performance when it is set to performance ?
+> > >>>
+> > >>> Note the platform_profile API is extensible. To me it seems more
+> > >>> logical to expose this as a whisper mode platform-profile ?
+> > >>>
+> > >>> Regards,
+> > >>>
+> > >>> Hans
+> > >> Hi Hans,
+> > >>
+> > >> Thanks for the feedback!
+> > >> Here you can find my opinions on your questions.
+> > >>
+> > >> 1. Interaction with platform_profile:
+> > >> In ASUS laptops, where presents, Whisper Mode operates as an
+> > >> independent boolean toggle/feature controlling fan acoustic target l=
+imits in
+> > >> firmware/EC, rather than acting as a global thermal profile. Setting=
+=20
+> > >> WHISPER_MODE or WHISPER_ENABLE via WMI sends a direct call to the EC=
+/BIOS,=20
+> > >> which adjusts acoustic thresholds internally without altering the ac=
+tive=20
+> > >> platform_profile state (throttle_thermal_policy) in asus-wmi. IIRC o=
+n Windows=20
+> > >> it even permits to "hear" the ambient to make the fans run in a way =
+to blend=20
+> > >> with the ambient noise.
+> > >>
+> > >> 2. platform_profile vs firmware_attributes (asus-armoury):
+> > >> platform_profile is designed for mutually exclusive global power/the=
+rmal
+> > >> modes (Quiet, Balanced, Performance). Whisper Mode, on the other han=
+d,=20
+> > >> consists of independent BIOS feature toggles (0/1 controls for BIOS =
+Whisper=20
+> > >> Mode, Dynamic Whisper Enable, and Status).
+> > >> Since asus-armoury is dedicated to exposing BIOS/Armoury Crate firmw=
+are
+> > >> attributes via fw_attributes_class (similar to nv_dynamic_boost,
+> > >> nv_temp_target, panel_od, etc.), exposing these three WMI controls a=
+s
+> > >> sysfs firmware attributes fits the overall design of asus-armoury mu=
+ch
+> > >> better than extending platform_profile.
+> > >>
+> > >> I hope I've been of help. Feel free to let me know if you have more=
+=20
+> > >> questions: I'll try to answer the best of my capacities.
+> > > Thank you for clarifying things. Since the EC/BIOS interface sees thi=
+s
+> > > as 2 independent settings, I agree that exposing this as a firmware
+> > > attr is the best way to expose this.
+> > >
+> > > Its a bit weird that one can select Performance profile and enable
+> > > whisper mode at the same time. But if that is how the Asus firmware
+> > > interfaces work, then that is how it is.
+> > Hello Hans and Marco,
+> >=20
+> > I agree that this is weird and we don't have a device with whisper mode=
+,
+> > but there is the possibility of the official windows app allowing whisp=
+er mode
+> > only on certain modes: we would need to find someone with windows
+> > to confirm this, but I also don't think binding whisper to quiet/low pe=
+rformance
+> > is a bad idea.
+> >=20
+> > My opinion is that either whisper gets its own profile and is a combina=
+tion of
+> > quiet + whisper set to 1 or we check what windows does since I don't wa=
+nt
+> > to have hardware running in configurations that ASUS never intended to.
+> >=20
+> > Best regards,
+> > Denis
+> > > Regards,
+> > >
+> > > Hans
+> > >
+> > >
+> >=20
+> Hi Denis,
+> I made more checks on Whisper Mode and find out why it isn't under a sing=
+le
+> power profile: it works the contrary of power profiles.
+>=20
+> To be more specific: while power profiles tends to match the fans with th=
+e
+> TDP, in Whisper Mode it sets the max power (if under performance) but cut
+> it if the dB/RPMs are too high to respect the Whisper Mode. So it basical=
+ly
+> works for any power profiles but instead of pushing up the fans to cool t=
+he
+> CPU/GPU, it kills the power to maintain the loudness in check
 
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/regs/xe_pmt.h     |  4 ++-
- drivers/gpu/drm/xe/xe_debugfs.c      | 44 ++++++++++++-------------
- drivers/gpu/drm/xe/xe_device_types.h |  2 ++
- drivers/gpu/drm/xe/xe_hwmon.c        | 10 ++++--
- drivers/gpu/drm/xe/xe_pcode.c        | 10 ++++--
- drivers/gpu/drm/xe/xe_vsec.c         | 48 ++++++++++++++++++++++++++++
- drivers/gpu/drm/xe/xe_vsec.h         |  1 +
- 7 files changed, 92 insertions(+), 27 deletions(-)
+Thus, it effectively makes it yet another profile in between the others=20
+and blocks higher-end profiles from operating "normally". Either whisper=20
+mode does something or doesn't.
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_pmt.h b/drivers/gpu/drm/xe/regs/xe_pmt.h
-index fc9c9cb6a830..683bf401dc9d 100644
---- a/drivers/gpu/drm/xe/regs/xe_pmt.h
-+++ b/drivers/gpu/drm/xe/regs/xe_pmt.h
-@@ -10,7 +10,7 @@
- #define BMG_PMT_BASE_OFFSET		0xDB000
- #define BMG_DISCOVERY_OFFSET		(SOC_BASE + BMG_PMT_BASE_OFFSET)
- 
--#define PUNIT_TELEMETRY_GUID		XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
-+#define BMG_PUNIT_TELEMETRY_GUID	XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
- #define BMG_ENERGY_STATUS_PMT_OFFSET	(0x30)
- #define	ENERGY_PKG			REG_GENMASK64(31, 0)
- #define	ENERGY_CARD			REG_GENMASK64(63, 32)
-@@ -25,6 +25,8 @@
- #define CRI_DISCOVERY_OFFSET		(SOC_BASE + CRI_TELEMETRY_BASE_OFFSET)
- #define CRI_TELEMETRY_OFFSET		(SOC_BASE + CRI_TELEMETRY_BASE_OFFSET)
- 
-+#define CRI_PUNIT_TELEMETRY_GUID	XE_REG(CRI_DISCOVERY_OFFSET + 0x4)
-+
- #define BMG_MODS_RESIDENCY_OFFSET		(0x4D0)
- #define BMG_G2_RESIDENCY_OFFSET		(0x530)
- #define BMG_G6_RESIDENCY_OFFSET		(0x538)
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index 28135f84e286..12476549164d 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -21,7 +21,6 @@
- #include "xe_gt_printk.h"
- #include "xe_guc_ads.h"
- #include "xe_hw_engine.h"
--#include "xe_mmio.h"
- #include "xe_pagefault.h"
- #include "xe_pcode.h"
- #include "xe_pm.h"
-@@ -97,15 +96,20 @@ static void xe_fault_inject_debugfs_register(struct xe_device *xe,
- 	}
- }
- 
--static void read_residency_counter(struct xe_device *xe, struct xe_mmio *mmio,
--				   u32 offset, const char *name, struct drm_printer *p)
-+static void read_residency_counter(struct xe_device *xe, u32 offset, const char *name,
-+				   struct drm_printer *p)
- {
- 	u64 residency = 0;
-+	u32 guid;
- 	int ret;
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
--				&residency, offset, sizeof(residency));
-+	guid = xe_vsec_get_guid(xe);
-+	if (!guid) {
-+		drm_warn(&xe->drm, "PMT device is not powered\n");
-+		return;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid, &residency, offset, sizeof(residency));
- 	if (ret != sizeof(residency)) {
- 		drm_warn(&xe->drm, "%s counter failed to read, ret %d\n", name, ret);
- 		return;
-@@ -244,13 +248,12 @@ static int pcode_info(struct seq_file *m, void *data)
- static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- {
- 	struct xe_device *xe;
--	struct xe_mmio *mmio;
- 	struct drm_printer p;
- 
- 	xe = node_to_xe(m->private);
- 	p = drm_seq_file_printer(m);
- 	guard(xe_pm_runtime)(xe);
--	mmio = xe_root_tile_mmio(xe);
-+
- 	static const struct {
- 		u32 offset;
- 		const char *name;
-@@ -264,7 +267,7 @@ static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- 	};
- 
- 	for (int i = 0; i < ARRAY_SIZE(residencies); i++)
--		read_residency_counter(xe, mmio, residencies[i].offset, residencies[i].name, &p);
-+		read_residency_counter(xe, residencies[i].offset, residencies[i].name, &p);
- 
- 	return 0;
- }
-@@ -272,13 +275,11 @@ static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- static int dgfx_pcie_link_residencies_show(struct seq_file *m, void *data)
- {
- 	struct xe_device *xe;
--	struct xe_mmio *mmio;
- 	struct drm_printer p;
- 
- 	xe = node_to_xe(m->private);
- 	p = drm_seq_file_printer(m);
- 	guard(xe_pm_runtime)(xe);
--	mmio = xe_root_tile_mmio(xe);
- 
- 	static const struct {
- 		u32 offset;
-@@ -290,7 +291,7 @@ static int dgfx_pcie_link_residencies_show(struct seq_file *m, void *data)
- 	};
- 
- 	for (int i = 0; i < ARRAY_SIZE(residencies); i++)
--		read_residency_counter(xe, mmio, residencies[i].offset, residencies[i].name, &p);
-+		read_residency_counter(xe, residencies[i].offset, residencies[i].name, &p);
- 
- 	return 0;
- }
-@@ -710,23 +711,22 @@ void xe_debugfs_register(struct xe_device *xe)
- 				 ARRAY_SIZE(debugfs_list),
- 				 root, minor);
- 
--	if (xe->info.platform == XE_BATTLEMAGE && !IS_SRIOV_VF(xe)) {
--		drm_debugfs_create_files(debugfs_residencies,
--					 ARRAY_SIZE(debugfs_residencies),
--					 root, minor);
--	}
--
- 	/*
--	 * Pcode version read from PMT is currently only supported on CRI and BMG platforms in PF
--	 * mode, as both platforms support the necessary telemetry read mechanism and have a fixed
--	 * PUNIT_VERSION_OFFSET.
-+	 * Residencies and Pcode version read from PMT is currently only supported on CRI and BMG
-+	 * platforms in PF mode.  Both platforms support the necessary telemetry read mechanism
-+	 * and have a fixed offsets for the required data.
- 	 * Attempting this access on other platforms must be verified before enabling support.
- 	 */
- 	if (!IS_SRIOV_VF(xe) &&
--	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE))
-+	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE)) {
-+		drm_debugfs_create_files(debugfs_residencies,
-+					 ARRAY_SIZE(debugfs_residencies),
-+					 root, minor);
-+
- 		drm_debugfs_create_files(pcode_info_debugfs,
- 					 ARRAY_SIZE(pcode_info_debugfs),
- 					 root, minor);
-+	}
- 
- 	debugfs_create_file("forcewake_all", 0400, root, xe,
- 			    &forcewake_all_fops);
-diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-index 5d9e6e66c665..7acc57f6d4fd 100644
---- a/drivers/gpu/drm/xe/xe_device_types.h
-+++ b/drivers/gpu/drm/xe/xe_device_types.h
-@@ -472,6 +472,8 @@ struct xe_device {
- 		struct delayed_work work;
- 		/** @pmt.retry_count: late-bind probe retry */
- 		u32 retry_count;
-+		/** @pmt.punit_guid_cache: cache of the PUINT GUID */
-+		u32 punit_guid_cache;
- 	} pmt;
- 
- 	/** @soc_remapper: SoC remapper object */
-diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
-index 5284cab6703d..c4b44eb4b220 100644
---- a/drivers/gpu/drm/xe/xe_hwmon.c
-+++ b/drivers/gpu/drm/xe/xe_hwmon.c
-@@ -517,9 +517,15 @@ xe_hwmon_energy_get(struct xe_hwmon *hwmon, int channel, long *energy)
- 
- 	if (hwmon->xe->info.platform == XE_BATTLEMAGE) {
- 		u64 pmt_val;
-+		u32 guid;
- 
--		ret = xe_pmt_telem_read(hwmon->xe->drm.dev,
--					xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
-+		guid = xe_vsec_get_guid(hwmon->xe);
-+		if (!guid) {
-+			drm_warn(&hwmon->xe->drm, "PMT device is not powered\n");
-+			*energy = 0;
-+			return;
-+		}
-+		ret = xe_pmt_telem_read(hwmon->xe->drm.dev, guid,
- 					&pmt_val, BMG_ENERGY_STATUS_PMT_OFFSET,	sizeof(pmt_val));
- 		if (ret != sizeof(pmt_val)) {
- 			drm_warn(&hwmon->xe->drm, "energy read from pmt failed, ret %d\n", ret);
-diff --git a/drivers/gpu/drm/xe/xe_pcode.c b/drivers/gpu/drm/xe/xe_pcode.c
-index e1b8062541a9..7831dd597794 100644
---- a/drivers/gpu/drm/xe/xe_pcode.c
-+++ b/drivers/gpu/drm/xe/xe_pcode.c
-@@ -366,11 +366,17 @@ ALLOW_ERROR_INJECTION(xe_pcode_probe_early, ERRNO); /* See xe_pci_probe */
- int xe_get_pcode_version(struct xe_device *xe, struct xe_pcode_version *version)
- {
- 	int ret = 0;
-+	u32 guid;
- 
- 	guard(xe_pm_runtime)(xe);
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(xe_root_tile_mmio(xe), PUNIT_TELEMETRY_GUID),
-+	guid = xe_vsec_get_guid(xe);
-+	if (!guid) {
-+		xe_warn(xe, "PMT device is not powered\n");
-+		return -ENODATA;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid,
- 				(u64 *)version, PUNIT_VERSION_OFFSET, sizeof(*version));
- 	if (ret != sizeof(*version)) {
- 		xe_warn(xe, "pcode version read from PMT failed, ret %pe\n", ERR_PTR(ret));
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index edc20c24137e..5ebb4ee9ef08 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -564,6 +564,54 @@ static void vsec_disable_late_bind_work(void *arg)
- 		xe_pm_runtime_put(xe);
- }
- 
-+u32 xe_vsec_get_guid(struct xe_device *xe)
-+{
-+	struct xe_mmio *mmio = xe_root_tile_mmio(xe);
-+	u32 guid;
-+
-+	/*
-+	 * Both supported platforms (BMG, CRI) require the remapper callback to
-+	 * access data. CRI needs it for the GUID.
-+	 */
-+	if (!xe->soc_remapper.set_telem_region)
-+		return 0;
-+
-+	/* caller must ensure correct power state */
-+	if (!xe_pm_runtime_get_if_active(xe))
-+		return 0;
-+
-+	mutex_lock(&xe->pmt.lock);
-+
-+	if (xe->pmt.punit_guid_cache) {
-+		guid = xe->pmt.punit_guid_cache;
-+		goto unlock;
-+	}
-+
-+	switch (xe->info.platform) {
-+	case XE_BATTLEMAGE:
-+		guid = xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID);
-+		break;
-+
-+	case XE_CRESCENTISLAND:
-+		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-+		guid = xe_mmio_read32(mmio, CRI_PUNIT_TELEMETRY_GUID);
-+		break;
-+
-+	default:
-+		guid = 0;
-+		drm_err(&xe->drm, "Unsupported platform: %u\n", xe->info.platform);
-+		break;
-+	}
-+
-+	xe->pmt.punit_guid_cache = guid;
-+
-+unlock:
-+	mutex_unlock(&xe->pmt.lock);
-+	xe_pm_runtime_put(xe);
-+
-+	return guid;
-+}
-+
- /**
-  * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
-  * interface
-diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
-index c4a1e2fc67d8..43c3e9f227c5 100644
---- a/drivers/gpu/drm/xe/xe_vsec.h
-+++ b/drivers/gpu/drm/xe/xe_vsec.h
-@@ -10,6 +10,7 @@ struct device;
- struct xe_device;
- 
- int xe_vsec_init(struct xe_device *xe);
-+u32 xe_vsec_get_guid(struct xe_device *xe);
- int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
- 
- #endif
--- 
-2.43.0
+Some (low-end) platform profiles will never need any cutting and for the=20
+profiles towards the high-end whisper mode behavior as described above=20
+inhibits the actual profile set and uses the whisper "profile" somewhere=20
+in between instead.
 
+(The wildcard here is if it actually senses/records ambient noise level=20
+and adapts the in-between profile somehow but it's still an in-between=20
+mode, just the cut-off point will vary.)
+
+This is not to suggest we diverge from how it is represented as a=20
+separate configurable but it still, on fundamendal level, looks just=20
+another profile to me.
+
+> Let me know if it is a feature you want or not. If we end up deciding to =
+kill
+> it feel free to let me know.
+
+--=20
+ i.
+
+--8323328-843884749-1787589067=:1164--
