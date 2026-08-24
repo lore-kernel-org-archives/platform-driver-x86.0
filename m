@@ -1,151 +1,135 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9131343E4B1
-	for <platform-driver-x86@vger.kernel.org>; Mon, 24 Aug 2026 15:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83542367281;
+	Mon, 24 Aug 2026 15:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787584166; cv=none; b=LYFYgvhFnUuMJHnQUCjI+0d0sIJRJK441TotzO4f2FAf3w9GS0+6ksvwBmS22dwLaWyus4R6tKLOD8qLqphfM3nFbqctLoP+r7h0fTJEgyEL9Z+NVLvazWJ3lUFThXoJ4wg1mEtWYsllXzvEVKaQivbpVCB0vBIfGKVHwLrjcSo=
+	t=1787584395; cv=none; b=EgMYgTjvR+r72TH4E/Cyzkag0rSzDcigPIdUaRfSqlqeUlMe5160CX/Bu4cL2jG0gv9ZiJwWMzyYJXjvI253sX9UpJ3jGIZdSDUmDsihFunRe7n5HdGspNLSY1qD6YSVkXbCLoGMZXPEBTsdZpTNClMu/w/SthlFcY1KTSka6A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787584166; c=relaxed/simple;
-	bh=waubqiuCOYRQ2QTo7ozti7dFGxycb8EqFHbDI6qm6Lk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QLDjk8yt1uta1Y1aR/+OzOyxYClEkuLJHMNXw9j2+OV6qLhNLPOeZKY9MK0162wYP4jWOMRdB2edVuhgtByngKPkNY++0repaYBEe/17UQEhlnUQ5M3hatv8bqPD3AaODN3UAbRhf0qk7kkO3kYo5p17FGkBgu0/LM3i8rqwexU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems; spf=pass smtp.mailfrom=starlabs.systems; dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b=AR6nvY/P; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=starlabs.systems
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starlabs.systems
+	s=arc-20240116; t=1787584395; c=relaxed/simple;
+	bh=ZbSyAmzlDTthC63fgw6axKRqZWtYhob+aM8/te0gO98=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MyDI6fboT7jwegYmKxYVeGLRQMEcgSchH8sxB/DzQGZGsl3M0E+etdkWnd/01gQYIJy+RH2gvrVNhf/FARKkmiCPrGXBYWkjcvbAzwbBedfL6JVpDJ8A2vSYmEixxwihIDexG9lSnqo45atFt5HD5D0uKZw2zN2UnDMNngxGKuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dpkx+HWw; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=starlabs-systems.20251104.gappssmtp.com header.i=@starlabs-systems.20251104.gappssmtp.com header.b="AR6nvY/P"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-47de0093c42so2844427f8f.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 24 Aug 2026 08:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=starlabs-systems.20251104.gappssmtp.com; s=20251104; t=1787584161; x=1788188961; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=waubqiuCOYRQ2QTo7ozti7dFGxycb8EqFHbDI6qm6Lk=;
-        b=AR6nvY/Psx4TTNQNDB31lAycc2iiDIBCzGW04/3RpSrmoAuvftFu3JnfbIAhMSBacB
-         HvT59dSmps60GDIebv9Xt/XlX9BnKy5yTrETg1TjlSXO1kIbwm1rNV2eC3C4Kh9P+yAM
-         VyQFldwnyuAxdhwJSaIIlPIwMI0+OXsTypVbg08G/vVbF5i0dG0Nf5ayeDtJ0aEmYugL
-         wqMelDwrGS/2JP5EkAuiWXVMKf19AQ8dpQ7JRpRUiGR7obn6TrRFesrBxF2QeBNHli2c
-         xOn+JYOTn7U31gjKhPy0tq0z5AXHIApbnVbaj1BxyoyL4pvAy8JSeGpNnaVCA45QYbWt
-         LM8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787584161; x=1788188961;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=waubqiuCOYRQ2QTo7ozti7dFGxycb8EqFHbDI6qm6Lk=;
-        b=p6LYeqT1YTtRJaODzwiS4P//EpkdexQZ4P67/fYGNwMdhrP7VJylf+fKlSqEdIXXXx
-         wSkPk6DRDqoGctF9Mh1kopxbrnk/wmtdFuclLJKcYqg+tUYNQrq+BcwXFdiH+6wjL/ix
-         gt/G/pkdok3pQ4z+s4HSGzrcwEe0cOdR3PYf+qbR84LqG/rw7DJhwjeYKiat5f3KtlAZ
-         PNRmTRIzuYMJ0c7ncRF4hEC4DmaVMuMSn5uID9w12C/boglcdlPPZ7WpJjtXXvU7JPZQ
-         BEr+bW1WSN6vVSVVsra5fWCG/bQtVqpGnDddfZEl+Ad+wnRqJ0zNkgCElIcCa3A1Vky0
-         Wvxw==
-X-Forwarded-Encrypted: i=1; AHgh+RqMJGtoa0H3XYD3HmSRbeeW53rImUxOkpBhov2mNsN8EwjdzigsUHWUKb0/8lsqtk070WzbmfMB4bjdgWM1b5TGiYW+@vger.kernel.org
-X-Gm-Message-State: AFuF++l2L9lZLumUKIYZbfPujuBK0aEh982IQeYRdIX/x53ccL/3LYus
-	5e0Aert9uekR0yHbH3gpos8WU+IIRgy0w9o6tmn9Gy69OolcrnjJMtDzUkQjLlbw+A==
-X-Gm-Gg: AR+sD130uSqhSn8dDWytXG+H5MDZTtdYvYdSik9JgQvygrhdAzj/IIEeJZ0X3gM8ASa
-	i3ldCBTnYH018Vk8r/UQ8VOhxXhC/y9CO3h7WhbqSF99TjK+/sJa71tnKjx7t+v51QSEU/Jvc/Z
-	ddugB/LY6gSqGvXtQTMptQjLmX4SOU5gzFhjjCBK5VHJSq5rCAqTuhbhbrOrmpY6zjwP1e+iSrt
-	C83+RwO55ZaW7a88hnN1gdkwGvDXPL9TYNwryzgNKE3W26v5IJ0dUP7vc5fiAgoOp24DsBX+iOF
-	Uv9ZRGe5ipurO/ARJkOoNFplmhaJ5VDs/GXELf0oRByCz75sN3xQq4spJOjemogkCDLFUgDT9tJ
-	y2ndtxcVQCByb8l5bHMDj+RGr8SQb8T4RitQHsKu66QOIG8GeubMV3wPCfFAoyEno1NplZ+STyk
-	oU4f0KpAsonGmQOnSbbvdMyjPV6grZuAlKtDwOGLpkgEYEcNJ3GxStvcS01UhZN+LKdD4may2me
-	T/xvBLG1AyaEiH7Nk9WeKDrnl9AMGg=
-X-Received: by 2002:a05:600c:5294:b0:499:8ba4:8cae with SMTP id 5b1f17b1804b1-499b830d665mr374268665e9.1.1787584160350;
-        Mon, 24 Aug 2026 08:09:20 -0700 (PDT)
-Received: from horizon.localdomain ([216.128.28.240])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499c8f382b1sm63920035e9.8.2026.08.24.08.09.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2026 08:09:19 -0700 (PDT)
-From: Sean Rhodes <sean@starlabs.systems>
-To: linux-kernel@vger.kernel.org
-Cc: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D. Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Prasanth Ksr <prasanth.ksr@dell.com>,
-	Jorge Lopez <jorge.lopez2@hp.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Joshua Grisham <josh@joshuagrisham.com>,
-	platform-driver-x86@vger.kernel.org,
-	Dell.Client.Kernel@dell.com,
-	Sean Rhodes <sean@starlabs.systems>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Chen-Yu Tsai <wenst@chromium.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>,
-	Titouan Ameline de Cadeville <titouan.ameline@gmail.com>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	Kees Cook <kees@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	chrome-platform@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Luca Weiss <luca.weiss@fairphone.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Sven Peter <sven@kernel.org>
-Subject: [PATCH v13 RESEND 5/5] arm64: defconfig: Update coreboot firmware symbols
-Date: Mon, 24 Aug 2026 16:09:02 +0100
-Message-ID: <540bd3107a81da9555655ed2d5a9252ed04a620a.1787584107.git.sean@starlabs.systems>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <cover.1787584107.git.sean@starlabs.systems>
-References: <cover.1787584107.git.sean@starlabs.systems>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dpkx+HWw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787584393; x=1819120393;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZbSyAmzlDTthC63fgw6axKRqZWtYhob+aM8/te0gO98=;
+  b=Dpkx+HWwxZKw3heD54+K6rIQf1L3ZdPLF8EbjU9ozWZmcZ0OqUzuVOTK
+   VGPe5Hwa7G6lVU760wrECsCtKYQduH+FlXrDdh3JHOTdi1HKWpAD3epEP
+   L1+NvJPSmGMMp/d9PmWS9ik0PJc2BrdzYdBHbJwiHVxwJDIMuqX/mPnoN
+   vqSSVKBZWb4lfxHtriSRJqWlK2WX+OOt+hK3fDgxzUXWPnZVf117Augsj
+   oG93WK8V6llu07e/Z2unlKYf3blvCGyTp+FPmEb68MluTehNRxAkGzMsS
+   SDDnDordrq4C+jDDDVkkZjplo3MbyYn5CSOe+PEv4S9jGn5BcxViPIVL9
+   g==;
+X-CSE-ConnectionGUID: r4TPu06dSoKdlaiptC9WlQ==
+X-CSE-MsgGUID: /R+8sYPbRBG0fj6ZvX5aoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="91850751"
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="91850751"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 08:13:11 -0700
+X-CSE-ConnectionGUID: LjG+ytrFTgqTBzLgJ28DYA==
+X-CSE-MsgGUID: iJ7As//rSh+eu4Hln4oUbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="267598947"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.154])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 08:13:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Aug 2026 18:13:06 +0300 (EEST)
+To: Aaron Erhardt <aer@tuxedocomputers.com>
+cc: wse@tuxedocomputers.com, Hans de Goede <hansg@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 3/6] platform/x86/tuxedo: Use intensity according to HID
+ spec
+In-Reply-To: <20260728115918.125349-4-aer@tuxedocomputers.com>
+Message-ID: <65d76abf-2e31-7188-af0c-88bf70dbe83e@linux.intel.com>
+References: <20260728115918.125349-1-aer@tuxedocomputers.com> <20260728115918.125349-4-aer@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The generic coreboot firmware Kconfig symbols were renamed from
-CONFIG_GOOGLE_* to CONFIG_COREBOOT_* while keeping the old names as
-transitional compatibility symbols.
+On Tue, 28 Jul 2026, Aaron Erhardt wrote:
 
-Select the new names directly in the arm64 defconfig so the checked-in
-defconfig follows the visible Kconfig symbols. Keep this separate from
-the rename patch so the configuration churn is easy to review
-independently.
+> For RGB LEDs, the HID spec offers an example that uses only two
+> intensity values for turning LEDs on and off. All other color values
+> are submitted through the color channels individually, thus avoiding
+> duplicated handling of brightness.
 
-Signed-off-by: Sean Rhodes <sean@starlabs.systems>
----
- arch/arm64/configs/defconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hi,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 654a102cb5bc..32ec89a872d9 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -267,9 +267,9 @@ CONFIG_RASPBERRYPI_FIRMWARE=y
- CONFIG_INTEL_STRATIX10_SERVICE=y
- CONFIG_INTEL_STRATIX10_RSU=m
- CONFIG_MTK_ADSP_IPC=m
--CONFIG_GOOGLE_FIRMWARE=y
--CONFIG_GOOGLE_CBMEM=m
--CONFIG_GOOGLE_COREBOOT_TABLE=m
-+CONFIG_COREBOOT_FIRMWARE=y
-+CONFIG_COREBOOT_CBMEM=m
-+CONFIG_COREBOOT_TABLE=m
- CONFIG_EFI_CAPSULE_LOADER=y
- CONFIG_IMX_SCU=y
- CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y
+If you want to pursue this, please provide better justification. You 
+basically just rewrote the existing comment that told the current behavior 
+is intentionally written as it is --- without really explain why you want 
+to change it and what was problem with the current behavior.
+
+> Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
+> ---
+>  drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 25 ++++++++++++-----------
+>  1 file changed, 13 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> index 11babc7c7767..8f1ffca0430d 100644
+> --- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> +++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> @@ -553,7 +553,7 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
+>  	rep->red_level_count = 0xff;
+>  	rep->green_level_count = 0xff;
+>  	rep->blue_level_count = 0xff;
+> -	rep->intensity_level_count = 0xff;
+> +	rep->intensity_level_count = 0x1;
+>  	rep->is_programmable = 1;
+>  
+>  	if (driver_data->kbl_map[lamp_id].code <= 0xe8) {
+> @@ -640,22 +640,23 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
+>  					j + 1;
+>  			rgb_configs_j->key_id = key_id;
+>  			/*
+> -			 * While this driver respects update_channel.intensity
+> -			 * according to "HID Usage Tables v1.5" also on RGB
+> -			 * leds, the Microsoft MacroPad reference implementation
+> +			 * This driver uses update_channel.intensity according to
+> +			 * "Color Attributes Examples" in "HID Usage Tables v1.7".
+> +			 * Only two intensity values are allowed for turning LEDs
+> +			 * on or off, while color and brightness can be controlled
+> +			 * through the RGB values. This is also identical to the
+> +			 * Microsoft MacroPad reference implementation
+>  			 * (https://github.com/microsoft/RP2040MacropadHidSample
+> -			 * 1d6c3ad) does not and ignores it. If it turns out
+> -			 * that Windows writes intensity = 0 for RGB leds
+> -			 * instead of intensity = 255, this driver should also
+> -			 * ignore the update_channel.intensity.
+> +			 * 1d6c3ad).
+>  			 */
+> -			intensity_i = rep->update_channels[i].intensity;
+> +			intensity_i = min(1, rep->update_channels[i].intensity);
+>  			red_i = rep->update_channels[i].red;
+>  			green_i = rep->update_channels[i].green;
+>  			blue_i = rep->update_channels[i].blue;
+> -			rgb_configs_j->red = red_i * intensity_i / 0xff;
+> -			rgb_configs_j->green = green_i * intensity_i / 0xff;
+> -			rgb_configs_j->blue = blue_i * intensity_i / 0xff;
+> +
+> +			rgb_configs_j->red = red_i * intensity_i;
+> +			rgb_configs_j->green = green_i * intensity_i;
+> +			rgb_configs_j->blue = blue_i * intensity_i;
+>  
+>  			break;
+>  		}
+> 
+
+-- 
+ i.
+
