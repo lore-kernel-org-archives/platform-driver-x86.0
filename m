@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109943EDAA3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 09:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3593EC685
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 09:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787649919; cv=none; b=ixcJ9bEhtJPFRKeePzffkFulSTPYBWHvXyC8DvpFpfGl1dsO5oiJEzOnELFZ+yRePFUxY6ShFSX2OqS6IUbK+1F3m1ozcIGAGi08/AFFU3Wr0WGqJmVahWh1UTINJYDEfZtxtBUdqHW9QDgv3mzU4LXAt9KUT4viqVSUzkvArDc=
+	t=1787650492; cv=none; b=ImhqDUjzWzuLxUBo+FM1ETrP4qQbi5JH5td9bn3QeWOuLKOVYwJzqsDA7fZHsjGEmaHbJlND50GIYkcEMX/xErkVEtrdxuDjEylPzs9M97zWNOuE5jIyodawqNzaCa0gcpWJahkc1hiVeA3Qp6Y1ae8cT6i76JTpMXHYgbfxoS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787649919; c=relaxed/simple;
-	bh=pJeY+IDZoxUUAM+treuSd8yyFD+N+Azac6t1yMoNIok=;
+	s=arc-20240116; t=1787650492; c=relaxed/simple;
+	bh=KlF/8GVOr+Pgut7IyB9p0C8vh65ERwpQ25zE27gbb3M=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VSjZ66XsjMKqY0WPMkkxfcjeQb6tMI+t1dhycu1I5e72i5Niu1yVWDPawSBNYbTnxQoe5yrRHv046UERW5uJTrI8+hFuiiFzPb0uS1hZiL0cJ+unkFwNte5lqG0JlA1DBCUW5U3TQSaNPJiAUkwXxM9ntl3VM9uqNYn0qQD/v6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l2dwk8rW; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=g8ElL4U0miuqRMRS5jGbOTWuurL/rnrpskvmm1nF45z9Hr/iOH7r00IlvRST608w0OnzdMEvXkbANH0izZokA03n6Odq4kPiav+YSfa4j43fi3JGxmN4O/9NJuq8gi+87INJa4O5A1lJ9T++zDU0YFXJnz9w2wQm1N3IZOJei0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eznmjm1O; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l2dwk8rW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eznmjm1O"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787649918; x=1819185918;
+  t=1787650490; x=1819186490;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=pJeY+IDZoxUUAM+treuSd8yyFD+N+Azac6t1yMoNIok=;
-  b=l2dwk8rWI+VmJQk67Eax90fDQRL82KzRO4yPBu5utpjXLFdgQHaVU4uJ
-   PcPcuLKLowvmyJslbnZcsHjtGND8j+ehMPliBIGj4gq2TcY66UqqWMz+m
-   72uGLlOrJrMfWzmEx5v5vfnR1nFZUkJ7zx1394MFdx4bUAHNE6JTmWZ3h
-   fwPGv3ikmd7L8XBjMlNQ4UDSvRwPentwhf5dQApy/T79vd9RJETKl7y7N
-   AATdSAjA/2EoU9FupwneCKU2FgKGbxxSTXxv/VyZbBz6VUoNuokvXaCun
-   HJ4tvpz9DZrqetK0VgrJs7Qr3rtaJvQHq2hJzRrmQ7Yfklw2psNP1AzTc
-   A==;
-X-CSE-ConnectionGUID: 9JH0lH9ETGaqkx2+iCzRrQ==
-X-CSE-MsgGUID: LEGSsrX4QaaWy1NGTXbx2A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="98700041"
+  bh=KlF/8GVOr+Pgut7IyB9p0C8vh65ERwpQ25zE27gbb3M=;
+  b=eznmjm1OTw/vormoSLKFkLWKKmkLcZQhRHILFUtNWdnQ0WVVAgV+UDoO
+   pmOumRUmfuWPyPFiIZPJUlW2nbF747G9C42QXhI1+1F/GkiARrExyvX+Z
+   P0/spdYPxCY8ewx8wH3DG+h4TL/Ktag0KRLYMQgmr7xLl6PYb1GN41p+J
+   1FCgBFkZC8lFO0GRgJ70kI5G+8c381P1a25ShPVuPxcuX0XBHVJD7cIRa
+   p2ff0ftMSmMBmyq0WoNx6P5UUPmy7m++KRwx+pSQs29huUzFao/i89HCK
+   AD7LYYxfmVN4MAipYlQgfqMui7Fz9sGJGrTOCe8vVpTRx2Ob5QlFS5lGI
+   g==;
+X-CSE-ConnectionGUID: fG+uMFG1TY6/Nhqoccbpuw==
+X-CSE-MsgGUID: G0aeTnujQsCX8pr65WoUGw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88129495"
 X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="98700041"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 02:25:17 -0700
-X-CSE-ConnectionGUID: ZWe0VgYaR/WDd/Rj8AbWsA==
-X-CSE-MsgGUID: nHg48yhSS7etBShLlOVfsA==
+   d="scan'208";a="88129495"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 02:34:49 -0700
+X-CSE-ConnectionGUID: /yxF89rURqCy/kBjwuWgpg==
+X-CSE-MsgGUID: GY+AQnHERUCkSGIzWXx6GA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="264613797"
+   d="scan'208";a="263965814"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 02:25:11 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 02:34:44 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 25 Aug 2026 12:25:07 +0300 (EEST)
+Date: Tue, 25 Aug 2026 12:34:41 +0300 (EEST)
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     Hans de Goede <hansg@kernel.org>, matthew.brost@intel.com, 
@@ -52,11 +52,11 @@ cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
     airlied@gmail.com, simona@ffwll.ch, david.e.box@linux.intel.com, 
     anoop.c.vijay@intel.com, badal.nilawar@intel.com, 
     matthew.d.roper@intel.com, james.ausmus@intel.com, karthik.poosa@intel.com
-Subject: Re: [PATCH v3 01/10] platform/x86/intel/pmt: complete pcidev to
- device update
-In-Reply-To: <20260824162317.2450380-13-michael.j.ruhl@intel.com>
-Message-ID: <02945d33-f4cb-faaf-9d68-f2a84177a02d@linux.intel.com>
-References: <20260824162317.2450380-12-michael.j.ruhl@intel.com> <20260824162317.2450380-13-michael.j.ruhl@intel.com>
+Subject: Re: [PATCH v3 02/10] platform/x86/intel/pmt: Add register access
+ callbacks
+In-Reply-To: <20260824162317.2450380-14-michael.j.ruhl@intel.com>
+Message-ID: <d86e5e19-e6fe-468f-1a9e-cf51c0b2da2f@linux.intel.com>
+References: <20260824162317.2450380-12-michael.j.ruhl@intel.com> <20260824162317.2450380-14-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -67,103 +67,134 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 24 Aug 2026, Michael J. Ruhl wrote:
 
-> Previously the pcidev usage was moved to the struct device.
-> The struct device is set for only the telemetry endpoints.
-
-I fail to understand any of this (1st sentence has even broken grammar 
-afaict, and we don't set struct x but variables pointing to them). Please 
-rephrase.
-
-> This usage prevents other PMT features (crashlog) from using
-
-What "this usage". Perhaps try to avoid using "this" as it often results 
-in very vague references.
-
-> the callback mechanism.
+> Some HW does not have direct MMIO access to PMT control and data
+> features.
 > 
-> Use struct device in the intel_pmt_entry.
-
-Don't leave lines short like this in middle of a paragraph.
-
-> Update callback usage to os the pmt entry rather than the
-> telemetry endpoint.
->
-> Fixes: 353042d54d82 ("platform/x86/intel/vsec: Switch exported helpers from pci_dev to device")
-
-With no changelog understandable for mere mortals like me, my assumptions 
-is 353042d54d82 was incomplete, is that what you tried to say?
-
+> Augment the current callback infrastructure (data access) to allow
+> a registered driver to customize read/write access to the control
+> paths for PMT usage.
+> 
 > Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 > ---
->  drivers/platform/x86/intel/pmt/class.c     | 5 ++---
->  drivers/platform/x86/intel/pmt/class.h     | 3 +--
->  drivers/platform/x86/intel/pmt/discovery.c | 2 +-
->  3 files changed, 4 insertions(+), 6 deletions(-)
+>  drivers/platform/x86/intel/pmt/crashlog.c | 39 +++++++++++++++++++++--
+>  include/linux/intel_vsec.h                | 14 +++++++-
+>  2 files changed, 49 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-> index d0ab8e33c62a..402d51df834a 100644
-> --- a/drivers/platform/x86/intel/pmt/class.c
-> +++ b/drivers/platform/x86/intel/pmt/class.c
-> @@ -100,7 +100,7 @@ intel_pmt_read(struct file *filp, struct kobject *kobj,
->  	if (count > entry->size - off)
->  		count = entry->size - off;
+> diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
+> index f936daf99e4d..5923ad7abbd9 100644
+> --- a/drivers/platform/x86/intel/pmt/crashlog.c
+> +++ b/drivers/platform/x86/intel/pmt/crashlog.c
+> @@ -129,7 +129,19 @@ static void pmt_crashlog_rmw(struct crashlog_entry *crashlog, u32 bit, bool set)
+>  {
+>  	const struct crashlog_control *control = &crashlog->info->control;
+>  	struct intel_pmt_entry *entry = &crashlog->entry;
+> -	u32 reg = readl(entry->disc_table + control->offset);
+> +	u32 guid = entry->header.guid;
+> +	u32 reg;
+> +	int err;
+> +
+> +	if (entry->cb && entry->cb->read_reg) {
+> +		err = entry->cb->read_reg(entry->dev, guid, &reg, control->offset);
+> +		if (err) {
+> +			pr_err("%s: failed to read reg: %d\n", __func__, err);
+
+Never print __func__ in any user consumable message (level > debug) but 
+write the message in plain English.
+
+Also, this needs include.
+
+> +			return;
+> +		}
+> +	} else {
+> +		reg = readl(entry->disc_table + control->offset);
+
+Add include.
+
+> +	}
 >  
-> -	count = pmt_telem_read_mmio(entry->ep->dev, entry->cb, entry->header.guid, buf,
-> +	count = pmt_telem_read_mmio(entry->dev, entry->cb, entry->header.guid, buf,
->  				    entry->base, off, count);
+>  	reg &= ~control->trigger_mask;
 >  
->  	return count;
-> @@ -286,8 +286,6 @@ static int pmt_resolve_access_pci(struct intel_pmt_entry *entry,
->  		return -EINVAL;
->  	}
+> @@ -138,14 +150,35 @@ static void pmt_crashlog_rmw(struct crashlog_entry *crashlog, u32 bit, bool set)
+>  	else
+>  		reg &= ~bit;
 >  
-> -	entry->pcidev = pci_dev;
-> -
->  	return 0;
+> -	writel(reg, entry->disc_table + control->offset);
+> +	if (entry->cb && entry->cb->write_reg) {
+> +		err = entry->cb->write_reg(entry->dev, guid, reg, control->offset);
+> +		if (err) {
+> +			pr_err("%s: failed to write reg: %d\n", __func__, err);
+
+Rephrase without using __func__.
+
+> +			return;
+> +		}
+> +	} else {
+> +		writel(reg, entry->disc_table + control->offset);
+> +	}
 >  }
 >  
-> @@ -365,6 +363,7 @@ static int intel_pmt_populate_entry(struct intel_pmt_entry *entry,
->  	entry->guid = header->guid;
->  	entry->size = header->size;
->  	entry->cb = ivdev->priv_data;
-> +	entry->dev = ivdev->dev;
+>  /* Read the status register and see if the specified @bit is set */
+>  static bool pmt_crashlog_rc(struct crashlog_entry *crashlog, u32 bit)
+>  {
+>  	const struct crashlog_status *status = &crashlog->info->status;
+> -	u32 reg = readl(crashlog->entry.disc_table + status->offset);
+> +	struct intel_pmt_entry *entry = &crashlog->entry;
+> +	u32 guid = entry->header.guid;
+> +	u32 reg;
+> +	int err;
+> +
+> +	if (entry->cb && entry->cb->read_reg) {
+> +		err = entry->cb->read_reg(entry->dev, guid, &reg, status->offset);
+> +		if (err) {
+> +			pr_err("%s: failed to read reg: %d\n", __func__, err);
+> +			return false;
+
+It seems you need a lerger rework here to properly return error codes.
+
+> +		}
+> +	} else {
+> +		reg = readl(crashlog->entry.disc_table + status->offset);
+
+entry->disc_table
+
+> +	}
+
+This looks mostly duplicated code, add a helper?
+
 >  
->  	return 0;
+>  	return !!(reg & bit);
 >  }
-> diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-> index a0ece4fc3837..258cb460e61c 100644
-> --- a/drivers/platform/x86/intel/pmt/class.h
-> +++ b/drivers/platform/x86/intel/pmt/class.h
-> @@ -20,7 +20,6 @@
->  #define GET_ADDRESS(v)		((v) & GENMASK(31, 3))
+> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
+> index 843cda8f8644..917d9397a993 100644
+> --- a/include/linux/intel_vsec.h
+> +++ b/include/linux/intel_vsec.h
+> @@ -90,13 +90,25 @@ enum intel_vsec_quirks {
+>   * @read_telem: when specified, called by client driver to access PMT
+>   * data (instead of direct copy).
+>   * * dev:   device reference for the callback's use
+> - * * guid:  ID of data to acccss
+> + * * guid:  ID of data to access
+>   * * data:  buffer for the data to be copied
+>   * * off:   offset into the requested buffer
+>   * * count: size of buffer
+> + * @read_reg: when specified called by client driver to read PMT state
+> + * * dev:      device reference for the callback's use
+> + * * guid:     ID of data to access
+> + * * reg_data: register data
+> + * * offset:   offset of register to read
+> + * @write_reg: when specified called by client driver to write PMT state
+> + * * dev:      device reference for the callback's use
+> + * * guid:     ID of data to access
+> + * * reg_data: register data
+> + * * offset:   offset of register to write
+>   */
+>  struct pmt_callbacks {
+>  	int (*read_telem)(struct device *dev, u32 guid, u64 *data, loff_t off, u32 count);
+> +	int (*read_reg)(struct device *dev, u32 guid, u32 *reg_data, u32 offset);
+> +	int (*write_reg)(struct device *dev, u32 guid, u32 reg_data, u32 offset);
+>  };
 >  
->  struct device;
-> -struct pci_dev;
->  extern struct class intel_pmt_class;
->  
->  struct telem_endpoint {
-> @@ -42,7 +41,7 @@ struct intel_pmt_header {
->  
->  struct intel_pmt_entry {
->  	struct telem_endpoint	*ep;
-> -	struct pci_dev		*pcidev;
-> +	struct device		*dev;
->  	struct intel_pmt_header	header;
->  	u32			disc_header[PMT_DISC_DWORDS];
->  	struct bin_attribute	pmt_bin_attr;
-> diff --git a/drivers/platform/x86/intel/pmt/discovery.c b/drivers/platform/x86/intel/pmt/discovery.c
-> index c482368bfaae..f4203d240f54 100644
-> --- a/drivers/platform/x86/intel/pmt/discovery.c
-> +++ b/drivers/platform/x86/intel/pmt/discovery.c
-> @@ -609,7 +609,7 @@ void intel_pmt_get_features(struct intel_pmt_entry *entry)
->  
->  	mutex_lock(&feature_list_lock);
->  	list_for_each_entry(feature, &pmt_feature_list, list) {
-> -		if (feature->priv->parent != entry->ep->dev)
-> +		if (feature->priv->parent != entry->dev)
->  			continue;
->  
->  		pmt_get_features(entry, feature);
+>  struct vsec_feature_dependency {
 > 
 
 -- 
