@@ -1,113 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AE837F74C;
-	Tue, 25 Aug 2026 19:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5723B42C3
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 19:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787686533; cv=none; b=XlkZLIhQEJjJ1CbfRbeP5zRi8fOSJhAXS39XFhT5R+RMy/2FIcrPqM6wBZ4TYnBMaPBHHl25Q6zo0inNrQOO+0p4zrRb6OS4N8NJpEZu/UhMteWz2qLASRuzDkT5Ckn3stxZa3CGPaYeZG4d9Zuu5sZvocooVPirMQyu+mljH8g=
+	t=1787686593; cv=none; b=pv9Rv5l2CTMUf0gpd49UzFt8Fr1cuBiXQGp+Mq7MRwzJjsa1aMKaeP9d5CTpP/KnERZgaLxuf1yHaK3lPcbgUVskAz2lnsXBhOCumEW8D2Z5J8tk2CTYZV0Zh8fx3NIABwMPpvS1QB6SoPUwNG7T4g+fs6Dc3RgFPjxNzgtZIj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787686533; c=relaxed/simple;
-	bh=G2387h91OgjKMpA4bsCx87CZruyGQ+mdSovTf7kGdB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ax3Ah6PrYwaMfvVor6XaBM91RK+R+A+ds3Hyv0P7vTzLjLTcxiM7wmaDB+0S6ef9dryrVEh1JM8ry23/F9oSkJYda9pLln48L8fqtKEeqO/Ux50WyYksl3Y3NSZnoLluXjAIR4S0l66FcJ7VnVPWLPOb6sTeiOjdaBN3SWT5k2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YTTP9yfZ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787686593; c=relaxed/simple;
+	bh=29Xh/vK/vKYDoiR0wGwbxNp6DMh5MDA7D6PZ2uSfbUM=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p71rpEzB7s+zwDXSqZeY4fvC7vBP2tmWzKfAkB/NsQmIdIZm/Cwl1zXInbs1U03rsGAJoPWt45YMdfzWMs2NJOpqSKEu0B4fJWQwDJWv9fR9KDBvcRgxZRjGxCQZBAin5EV2fHhTKfijIJ15a+7OkijqvKFb1AoKbEJLf4O/Ctc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=davidstephenson.net; spf=pass smtp.mailfrom=davidstephenson.net; dkim=pass (2048-bit key) header.d=davidstephenson.net header.i=@davidstephenson.net header.b=z3JY9MsY; arc=none smtp.client-ip=109.224.244.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=davidstephenson.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidstephenson.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTTP9yfZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787686529; x=1819222529;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G2387h91OgjKMpA4bsCx87CZruyGQ+mdSovTf7kGdB4=;
-  b=YTTP9yfZzd7559HfYQ61OsVN0uMVbfSFXv9GRMlOruBMrFGWWxefnqBa
-   6ALoqd8XYPknaxLPXq5OadPRAkLlqFGba3a4g9zISzpWzlgle52vLfSUw
-   C6PW7E/t2gS4bxSyY7Bk65S9GBVe9AhdplNdYtPaXqsi3lTo9ebFOPHey
-   geJ35PILFxA99SfQ+pubbOrZHb95+u5XVqxLjQOX4JxWGfIFg27rCgYyS
-   lz0oaQJpOHyeenu0/7E6Sqb5tEKAfrhMykl1qpiwFq4ZISKx+rGwmW0Is
-   KQIyA65khV9RtS+7Vp7slY7dhr9fWFIsxkJ4UNj+K2Pe5ZRQNwvPYoY23
-   g==;
-X-CSE-ConnectionGUID: EFKjqINpQnCGpY6yuLc1Hg==
-X-CSE-MsgGUID: HZtUkfuuQ0u1GSh9LNQR2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="99511187"
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="99511187"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 12:35:25 -0700
-X-CSE-ConnectionGUID: xT7nIAUbTT6XCKRxQH2B6Q==
-X-CSE-MsgGUID: qtANlQHSTRaJqEHzYH+dLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="272613295"
-Received: from carterle-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.168])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 12:35:23 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id A4F97121C10;
-	Tue, 25 Aug 2026 22:35:35 +0300 (EEST)
-Date: Tue, 25 Aug 2026 22:35:35 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Hans de Goede <hansg@kernel.org>,
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] ACPI: Support __free() from cleanup.h for ACPI
- objects
-Message-ID: <ao3uh2xos_1uwAgJ@kekkonen.localdomain>
-References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com>
- <20260824211338.3583976-4-sakari.ailus@linux.intel.com>
- <CAJZ5v0ieb2FcANOt0MRMsTrwtbLiUF48W_c=3z3OpNH92d=7vg@mail.gmail.com>
- <ao2FmNRFjSJVxhrL@kekkonen.localdomain>
- <CAJZ5v0gQVFxSkkjPbRf6bsKdgUBGduZV0M5SWrHoeB246ZLqew@mail.gmail.com>
- <134e9566-7913-86d7-1e8b-b2ca9ebec55c@linux.intel.com>
- <CAJZ5v0h4KD6Q1DeuwbFQ83U1=wKORMWUQNA2BwnFtsYAyzz_Ow@mail.gmail.com>
- <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=davidstephenson.net header.i=@davidstephenson.net header.b="z3JY9MsY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidstephenson.net;
+	s=protonmail3; t=1787686583; x=1787945783;
+	bh=29Xh/vK/vKYDoiR0wGwbxNp6DMh5MDA7D6PZ2uSfbUM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=z3JY9MsYrxos/mc7M1aQcPJ+xMVv+fuBqn140Kss6bey5P0Zci03nxe572Zv0zN1c
+	 jrK5r3pud7RE6y74ZnAbuMSbFQhPuoZIsx2AdOOXqtbST8x30ZtooZqDE0MydQWZaj
+	 Jk9I1UTEIKnnqBX5N87Kx51ySDSBZEErh/CwXGSHa1IaPU4x4hKmJ9ivlVTLeZcADo
+	 cv3XQa/AB9hWo9wzI+q+qhinsKCWoKkXRDDGkUNAwmqJ/pkYXVE7Ox9bALXChSLbmB
+	 WfS+4XuSUuEmpfkcC93Qk5iuspm9EOdQ7Cqe2DVfni+d0FCq+65GRti0Eibtn8h9Nv
+	 tgzlAR7Q+4y0Q==
+Date: Tue, 25 Aug 2026 19:36:21 +0000
+To: Sebastian Reichel <sre@kernel.org>
+From: David Stephenson <git@davidstephenson.net>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
+Subject: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send KEY_KBDILLUMTOGGLE on Fn+Space
+Message-ID: <20260825193556.133277-1-git@davidstephenson.net>
+Feedback-ID: 197172805:user:proton
+X-Pm-Message-ID: a72af546a45307294f11fa04650b63de288f60ef
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rafael, Ilpo,
+On the T14s, the EC already steps the keyboard backlight when you press
+Fn+Space: off, then low, then high.
 
-On Tue, Aug 25, 2026 at 03:08:07PM +0200, Rafael J. Wysocki (Intel) wrote:
-> > If there is a cleanup.h "free" that can only be used with objects
-> > returned by acpi_evaluate_dsm_typed(), I'll be fine with that.
-> >
-> > Or if everyone agrees that doing
-> >
-> >     union acpi_object *out_obj __free(ACPI_FREE) = NULL;
-> >
-> > is not confusing and fine, I may just say "Hey, I don't care that much".
-> 
-> And particularly there is this paragraph in a comment in cleanup.h:
-> 
->  * Given that the "__free(...) = NULL" pattern for variables defined at
->  * the top of the function poses this potential interdependency problem
->  * the recommendation is to always define and assign variables in one
->  * statement and not group variable definitions at the top of the
->  * function when __free() is used.
-> 
-> regarding a broken code example, so I would think that this is not a
-> made-up concern.
+We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
+We then also send KEY_KBDILLUMTOGGLE.
 
-That's indeed a valid concern, still quite unlikely in practice but
-probably hard to find when it happens, so avoiding that is definitely
-preferred. That being said, the biggest trap in cleanup.h is probably in
-scoped_guard(), and doing __free() = NULL somewhere doesn't matter much in
-the end.
+The extra key is the problem. Desktops treat it as "please toggle the
+light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
+fights the EC's three steps. The on-screen bar also stays empty,
+because Toggle() always returns 0%.
 
-In this case I'll just call ACPI_FREE() sooner.
+thinkpad_acpi on x86 already skips the key when the firmware changed
+the light. It only uses brightness_hw_changed. Do the same here: keep
+the LED update, do not send KEY_KBDILLUMTOGGLE.
 
--- 
-Regards,
+Tested on a Lenovo ThinkPad T14s Gen 6 (21N1, Snapdragon X Elite) with
+GNOME. After this change the OSD bar tracks off / 50% / 100%.
 
-Sakari Ailus
+Signed-off-by: David Stephenson <git@davidstephenson.net>
+---
+ drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platfo=
+rm/arm64/lenovo-thinkpad-t14s.c
+index 5590302a5..22d20a907 100644
+--- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
++++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+@@ -488,8 +488,14 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void *=
+data)
+ =09case T14S_EC_EVT_NONE:
+ =09=09break;
+ =09case T14S_EC_EVT_KEY_FN_SPACE:
++=09=09/*
++=09=09 * Firmware already cycles the keyboard backlight
++=09=09 * (off / low / high). Notify userspace through the LED
++=09=09 * class only. Emitting KEY_KBDILLUMTOGGLE as well makes
++=09=09 * desktop environments toggle the LED a second time.
++=09=09 */
+ =09=09t14s_kbd_bl_update(ec);
+-=09=09fallthrough;
++=09=09break;
+ =09case T14S_EC_EVT_KEY_FN_F4:
+ =09case T14S_EC_EVT_KEY_FN_F7:
+ =09case T14S_EC_EVT_KEY_FN_4:
+--=20
+2.55.0
+
+
