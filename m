@@ -1,156 +1,411 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE773EDAA8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 09:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C458438F941
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 10:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787651608; cv=none; b=VzloxXO/kn6zcTR/kn+Eb+lKpXLxZ/py1K8xFHu0g8x6OIjXz2Md2/eJXxsavJ6A2Cqi/0KEb7iGxeXsCsz84Yb732+GX3k4hm3zO/x4mabBjq/CnTqBhNAUNzGGpKvLNKxnOioeTC2h30KolSADt4fQ/U5GsZZz2GA5th8Bwsg=
+	t=1787652113; cv=none; b=N0ROM7NPq4Q83KDnkqGm0zbpp9aDVxW07Unm0FjZmHUQMqI736y4alk4I7yTHVznCS68ntqMR3OtEMhCeuWkZSOcclKH1ytMEvEBjW6k2/T/GNIofPefc5ieQA6m56lcplT27smcp+5xyG473Zl6Lw6iByYK4Ph1Zjk51luvbsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787651608; c=relaxed/simple;
-	bh=l5X6ihKbm+gmWczFyqZudpJABTmGS7exPIXHaJYGFxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jkdh7CZYKdzjiAIU/lJjRRSWuRwJezczERB8kz8bMn8jLrI7648PmJgLtTBAKG6cWtd1hY6W7MezIllXY0LUGvxLVnbHR8x5K7q+NlVI1x3tLCRfTw4RX33629Xqv3F/wPIbvRWfrvqm2NZ8np1vTOduVII/6FWiZqFf1wpx8Ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=niYAYoXO; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YcZ4BFda; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1787652113; c=relaxed/simple;
+	bh=YxaGARli0gtpIXtPCgC64XiFHNRJ2TaYmCCJ15DOB10=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=k5odVdlQfoLmDX7/SU28vYIkFqq9aQWeVby93PKDeiUaDfFNZMypdgjWPy+a4mLlj23lSA4kTYjXjKg49qcdeaA7K/EXezB2kVnR7u74FWh5Kf/Wc0Vdut1v/bfZQP0acALf30k3pgMaqN8E96rdWexNSXQ0zogRIY5mHd2+xLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eb0Xgqgv; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="niYAYoXO";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YcZ4BFda"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67P88IG01706727
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 09:53:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dql0ic0Yn/JBQsVTOCXTrILTSajEuRbm9CRzP1GLCp0=; b=niYAYoXO9OStFEvY
-	oBLMZ2QFwuwv5XNwvZQqTgg0YG8OO8tCsdwxy4j41blGlmYO4etpQcG6ehQdOSxM
-	SAG616GbzRA3/qiZjhC6yUUaX7FBZTBKjtIAI7CFWqtFEsjFmJssx+7TL3E2haT9
-	rKLH8l4zNw1+yIHi5J8byyT+1dy43RKvku/z6MsOgsB0LwgKwyWwgDWMYjPjKz39
-	aDxGPV/vVRNALTEDheriZVSFwNn75pAedj6KOqZG6I9co+tSdf+O1LSZ5zgOKesX
-	M9EA3BaTVxHwX8soSfBIlcos3xAuzbMQVnVxxNKmwHHawUmp8L7mcbi1TtRnaW/s
-	1uE9gQ==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g93kvsaqw-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 09:53:25 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-51c07313be5so10798731cf.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 02:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1787651605; x=1788256405; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dql0ic0Yn/JBQsVTOCXTrILTSajEuRbm9CRzP1GLCp0=;
-        b=YcZ4BFdax4Uc+1Vv4CWjxKw4ftbI0lNQ/6+WPcwW7A8Car2fcl8y1os7vi02BLgP6p
-         oO6M6/yU7s671E1Zup2WnaeJJncGc/gCey12wA5HvRoIOv3o8ML8ki41EJ3gGbcyBLB7
-         1r8lxLad+6geAdE91p7A0suay93/hkptDAvZuZh7gYE7cvQ4RPoKSoWK4n0akjMazUT0
-         NliYELc413fedIFLfgiOUv5Fmu/hWH2aLugOFNF2HELB3FMQVq7CMCxhBqc5FwZEn1DI
-         +8iz7RQ86XSN1XirTiGNWSOhuzkXFKgzUBRE6mqG+frsYq4biAumEt4w+lc0FzLePvqu
-         K2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787651605; x=1788256405;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dql0ic0Yn/JBQsVTOCXTrILTSajEuRbm9CRzP1GLCp0=;
-        b=br+vOt3gCJzwVZZXRMeGVPT31J8QPbcgQ1l4BDk62lZ1dC0ewaZ6VDEoEUO9xuK1ok
-         vaPfyZH8a+cQUYEQPS9qgDhneGXk62c0yJETkXRgUddw8KRcHwmgizrmjBnceSxT4i6s
-         N7uhYpzv9aM5hJihmJx4e7bh85W00cI8LlplidGc0aPYIXS9be2bFkFzGIItNxPKvyO8
-         jtYbGxvrquaG+xWEEJzugKHZXkqDTWm10i5QYh++nc2UJhK+ENjUbXXhh7alG3hUivqK
-         SgjcCQQ369tT/83NbdVKoLFGgEqCDdSiw2+N1m3Vtzr0p2p+SUNrDI7ske4/QuAGHbyg
-         pv2w==
-X-Forwarded-Encrypted: i=1; AHgh+Rp/MXWM2ls6WLbRjkL/uM9cDG3qCJkT3ml0n9ECIrCAZ9W9K5fs6QxxYSolj3p9QmEMXnh00+o08VbehztCQ/53DnIV@vger.kernel.org
-X-Gm-Message-State: AFuF++l56e6dcFQfoE/0EFvmzJk0pZJlC1+6asLq1GxU46lwtUoBC2Ev
-	YLxrWP8qypOvV2leFmfngJ2BPUTH7UOjsiRrBuMifBLb6SKL40+YyjWrN1SzDUwQbWHH1Sqkidm
-	363hwDTcsEQV8lZxDiTtplemXEr7j91wxaMah4/Cey4HVNxyQR5aPL7T9HLplIMYRrSiXSAKPL7
-	5e
-X-Gm-Gg: AR+sD13QhkVRAAvekB5zdg34/+7zqipnViRbF5MrWKX0gBUXV+cOjqa7zUkX8LAdGkN
-	SwLkqf4LhN6ovWbAQSApYd5J5vm8AzhbcdjirROyzGKuo/XRtvPnKdJ6BDMOMf76msYi4KsZz+A
-	y5wEettioo+VKTfd8MWCKsUI4XtHuRgx80wJSk9prESHt8nAHXcQidl2QOhZnW52mNAvrgPilUe
-	ek1V6K5y5fS02Fdo++cBgqYGm5LURj76z0g8BUpgWbKDc1IoT5jon+wXJDyqjI6AnqZ+RfHc1Qx
-	u7Q4Hn+LBjnM/ZCnEjrMWhiUgQzP4AVj/+vllUPMg3YqQP/7pX330iSUGcaWsnvG8LTCn5EpO7p
-	oMznqKBQvjjeMjmaAoVsba2n4
-X-Received: by 2002:a05:622a:607:b0:52d:9a83:419d with SMTP id d75a77b69052e-52df54d7275mr238711271cf.0.1787651604768;
-        Tue, 25 Aug 2026 02:53:24 -0700 (PDT)
-X-Received: by 2002:a05:622a:607:b0:52d:9a83:419d with SMTP id d75a77b69052e-52df54d7275mr238710981cf.0.1787651604251;
-        Tue, 25 Aug 2026 02:53:24 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c249606b59fsm1923235166b.12.2026.08.25.02.53.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2026 02:53:23 -0700 (PDT)
-Message-ID: <150c1500-4d78-4350-9ce9-407615a08312@oss.qualcomm.com>
-Date: Tue, 25 Aug 2026 11:53:20 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eb0Xgqgv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787652112; x=1819188112;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YxaGARli0gtpIXtPCgC64XiFHNRJ2TaYmCCJ15DOB10=;
+  b=Eb0XgqgvDEba8SQ9a8IE4JPSyKaYSEUxVdFsscTtzmz5wF0Fg74UN97Q
+   e1B3KAuaL+6FGaX5B3SZQaHW2AreC6rGNr4uj8cNPyla6QiWtPvGtSweP
+   suGOh3vH5hebInOQeyzyLeBkB1c2WfTPP4L3MvSnX+9k4Gqg2B3ID/oME
+   4jPeFdyp7SGTTBLojVbzc+7SuZ/X0iq1y6rPf5/548TRRkerlvMYyBHcv
+   vR+W7Nhb5U7gZO7qMsbZO4fV6YsCFQNATEJgHxdaWozoV2Wb9kANDug4x
+   CnpJ1JVngGKmbVHDGRe31huTumkE7fgH8B78O91Mf1g+abcJREqKKbc+b
+   A==;
+X-CSE-ConnectionGUID: fJDNx631S5CbuyFvPZtZyw==
+X-CSE-MsgGUID: L1l0Q1/FRaW+EBAhfN1fvg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88243466"
+X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
+   d="scan'208";a="88243466"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:01:51 -0700
+X-CSE-ConnectionGUID: kmOFvwqaSqqU1anoxu+fiw==
+X-CSE-MsgGUID: P5MZKd8oSBCpzQM2qI1m5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
+   d="scan'208";a="305479649"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:01:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 25 Aug 2026 13:01:43 +0300 (EEST)
+To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    Hans de Goede <hansg@kernel.org>, matthew.brost@intel.com, 
+    rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, 
+    airlied@gmail.com, simona@ffwll.ch, david.e.box@linux.intel.com, 
+    anoop.c.vijay@intel.com, badal.nilawar@intel.com, 
+    matthew.d.roper@intel.com, james.ausmus@intel.com, karthik.poosa@intel.com
+Subject: Re: [PATCH v3 09/10] drm/xe/vsec: Support late bind fw information
+In-Reply-To: <20260824162317.2450380-21-michael.j.ruhl@intel.com>
+Message-ID: <2ddf97e4-ce07-e435-bb5a-605ddcdcdeef@linux.intel.com>
+References: <20260824162317.2450380-12-michael.j.ruhl@intel.com> <20260824162317.2450380-21-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: x1e80100-dell-xps13-9345:
- introduce EC
-To: Aleksandrs Vinarskis <alex@vinarskis.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        laurentiu.tudor1@dell.com, Abel Vesa <abel.vesa@oss.qualcomm.com>,
-        Tobias Heider <tobias.heider@canonical.com>,
-        Val Packett <val@packett.cool>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Stephan Gerhold <stephan.gerhold@linaro.org>
-References: <20260801-dell-xps-9345-ec-v3-0-9f4bdb5a5dad@vinarskis.com>
- <20260801-dell-xps-9345-ec-v3-3-9f4bdb5a5dad@vinarskis.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260801-dell-xps-9345-ec-v3-3-9f4bdb5a5dad@vinarskis.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI1MDA4MyBTYWx0ZWRfXxs76weUW9r7y
- TJXl+b9y2VkDk58uyArK0cdN2g/HfoLj1WpUhwy6ny9B6Y10VMKkveP5i7Z3OanhEKu02EhcfRo
- xo28aZyo5tORd5fzfeI06NG5ccUlazMW4tv7ssVva5PvZ4azCbi3GfAA8kPErOfaaQCQXL9yjzQ
- sfQ6owcrE+oEkTcr+vw6M8EmvQYtbiCZrWzrinQuFYzKsnI1Hm4NUktDHDhKdR/Xpz9xqw/IdVR
- fJPSghg8Opv5/693c9QLOfvh/EfVugnIIJdq78nc33kkpdc/XC0CBjTJGBvdyzCSbXGsX5Qf2Pl
- lyXjnMwkiiwE08ayvdnHHE2f1E/NZKG2K2MZrBKEt497xGai6LAJxPr4oiZsrXPOdcC4rzCO1Cd
- LrIoSb32UdAntmpHkeK/A6pYvhcxUadQ2Pe3YILQ/XmHizlav5uhun0RLGSVsbsOT6NOvwgg2qP
- bq/MOlLGzTNhGwwnjxw==
-X-Authority-Analysis: v=2.4 cv=aPHAb79m c=1 sm=1 tr=0 ts=6a8d6615 cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=3WHJM1ZQz_JShphwDgj5:22
- a=I76Qk8w-AAAA:8 a=EUspDBNiAAAA:8 a=BDX-M9UYCxStvK4FQfUA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=vUPM0Wvl0xcrLs4nqPIT:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI1MDA4MyBTYWx0ZWRfX9tPvO8R93bnQ
- ptCPJoKjpYLiiKj6Oer1WsDFuEFrKrnxoIRdxfDzTGLVE0GVve9H4FKYAUI4xQwkfJGalPLmeFl
- 5Ducdlca6pwa/vAdQHUcvuK7CV6W7RU=
-X-Proofpoint-ORIG-GUID: Zyxs3ccC6KQVKvmErFF8534wL7Yl1S9y
-X-Proofpoint-GUID: Zyxs3ccC6KQVKvmErFF8534wL7Yl1S9y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-25_02,2026-08-24_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 adultscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608250083
+Content-Type: text/plain; charset=US-ASCII
 
-On 8/1/26 8:22 PM, Aleksandrs Vinarskis wrote:
-> Describe embedded controller, its interrupt and required thermal zones.
-> Add EC's reset GPIO to reserved range, as triggering it during device
-> operation leads to unrecoverable and unusable state.
+On Mon, 24 Aug 2026, Michael J. Ruhl wrote:
+
+> CRI FW is loaded on power on.  Because of this, access to
+> the FW cannot be done until it is running.
 > 
-> Signed-off-by: Aleksandrs Vinarskis <alex@vinarskis.com>
+> Update the XE PMT probe and access to check for late bind
+> devices, verify, and wait for the appropriate FW state
+> before probe or access.
+> 
+> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 > ---
+>  drivers/gpu/drm/xe/xe_device.c       |   4 +-
+>  drivers/gpu/drm/xe/xe_device_types.h |   4 +
+>  drivers/gpu/drm/xe/xe_vsec.c         | 141 +++++++++++++++++++++++++--
+>  drivers/gpu/drm/xe/xe_vsec.h         |   2 +-
+>  4 files changed, 143 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index 74d566693dfd..bf02f881095f 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -1140,7 +1140,9 @@ int xe_device_probe(struct xe_device *xe)
+>  	for_each_gt(gt, xe, id)
+>  		xe_gt_sanitize_freq(gt);
+>  
+> -	xe_vsec_init(xe);
+> +	err = xe_vsec_init(xe);
+> +	if (err)
+> +		goto err_unregister_display;
+>  
+>  	err = xe_sriov_init_late(xe);
+>  	if (err)
+> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+> index 3f1a70813a99..5d9e6e66c665 100644
+> --- a/drivers/gpu/drm/xe/xe_device_types.h
+> +++ b/drivers/gpu/drm/xe/xe_device_types.h
+> @@ -468,6 +468,10 @@ struct xe_device {
+>  		struct mutex lock;
+>  		/** @pmt.base_offset: device specific base offset */
+>  		u64 base_offset;
+> +		/** @pmt.work: support late-bind probe */
+> +		struct delayed_work work;
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Not sure if xe driver has some strange policy on headers due to their 
+love for local headers... but if there isn't, this one doesn't have a 
+direct include in this file.
 
-Konrad
+> +		/** @pmt.retry_count: late-bind probe retry */
+> +		u32 retry_count;
+>  	} pmt;
+>  
+>  	/** @soc_remapper: SoC remapper object */
+> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+> index 578d59048b39..edc20c24137e 100644
+> --- a/drivers/gpu/drm/xe/xe_vsec.c
+> +++ b/drivers/gpu/drm/xe/xe_vsec.c
+> @@ -3,6 +3,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bits.h>
+>  #include <linux/cleanup.h>
+> +#include <linux/delay.h>
+>  #include <linux/errno.h>
+>  #include <linux/intel_vsec.h>
+>  #include <linux/module.h>
+> @@ -17,6 +18,7 @@
+>  #include "xe_mmio.h"
+>  #include "xe_platform_types.h"
+>  #include "xe_pm.h"
+> +#include "xe_sysctrl.h"
+>  #include "xe_vsec.h"
+>  
+>  #include "regs/xe_pmt.h"
+> @@ -162,6 +164,14 @@ enum capability {
+>  	WATCHER,
+>  };
+>  
+> +/*
+> + * Late bind will delay 100msec for up to 20 seconds
+> + */
+> +#define VSEC_LATE_BIND_DELAY_MSEC	(100)
+> +#define VSEC_LATE_BIND_RETRY		(200)
+
+Remove the parenthesis?
+
+> +
+> +static void cri_late_bind_probe(struct xe_device *xe);
+> +
+>  static int bmg_guid_decode(u32 guid, int *index, u32 *offset)
+>  {
+>  	u32 record_id = FIELD_GET(GUID_RECORD_ID, guid);
+> @@ -272,6 +282,56 @@ static int xe_guid_decode(u32 guid, int *index, u32 *offset)
+>  	return -ENODEV;
+>  }
+>  
+> +#define WAITING_FOR_SYCTLR
+> +#ifdef WAITING_FOR_SYCTLR
+
+It seems Rodrigo also noted this. Looks debug leftover or something along 
+those lines to me.
+
+> +static bool xe_is_oobmsm_fw_ready(struct xe_device *xe)
+> +{
+> +	return true;
+
+Returning unconditionally true causes some dead code below on the caller 
+side.
+
+> +}
+> +#endif
+> +
+> +static void cri_late_bind_probe_work(struct work_struct *work)
+> +{
+> +	struct xe_device *xe = container_of(work, struct xe_device, pmt.work.work);
+> +
+> +	if (xe_is_oobmsm_fw_ready(xe)) {
+> +		cri_late_bind_probe(xe);
+> +		xe_pm_runtime_put(xe);
+> +		return;
+> +	}
+> +	xe->pmt.retry_count++;
+> +
+> +	/* wait up to 20 seconds */
+> +	if (xe->pmt.retry_count == VSEC_LATE_BIND_RETRY) {
+> +		drm_warn(&xe->drm, "PMT probe: Late Binding failed to complete\n");
+> +		xe_pm_runtime_put(xe);
+> +		return;
+> +	}
+> +
+> +	if (!schedule_delayed_work(&xe->pmt.work, msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC)))
+> +		xe_pm_runtime_put(xe);
+> +}
+> +
+> +static bool wait_for_fw(struct xe_device *xe)
+> +{
+> +	int retries = VSEC_LATE_BIND_RETRY;  /* wait up to 20 secs */
+> +
+> +	if (xe->info.platform != XE_CRESCENTISLAND)
+> +		return true;
+> +
+> +	while (retries--) {
+> +		if (xe_is_oobmsm_fw_ready(xe))
+> +			return true;
+> +
+> +		msleep(VSEC_LATE_BIND_DELAY_MSEC);
+> +	}
+> +
+> +	drm_warn(&xe->drm, "Late Binding failed to complete\n");
+> +
+> +	return false;
+> +}
+> +
+>  /*
+>   * xe_pmt_telem_read is a callback API.  I.e this can be accessed external to
+>   * XE driver (PMT driver scope).  Because of this, DRM hotplug needs to be
+> @@ -318,6 +378,11 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+>  		goto dev_exit;
+>  	}
+>  
+> +	if (!wait_for_fw(xe)) {
+> +		ret = -ENODATA;
+> +		goto runtime_exit;
+> +	}
+> +
+>  	mutex_lock(&xe->pmt.lock);
+>  
+>  	/* set SoC re-mapper index register based on GUID memory region */
+> @@ -327,6 +392,7 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+>  
+>  	mutex_unlock(&xe->pmt.lock);
+>  
+> +runtime_exit:
+>  	xe_pm_runtime_put(xe);
+>  
+>  dev_exit:
+> @@ -374,6 +440,10 @@ static int xe_pmt_read_reg(struct device *dev, u32 guid, u32 *reg, u32 offset)
+>  	disc_addr += CRI_DISCOVERY_OFFSET + inst + offset;
+>  
+>  	xe_pm_runtime_get(xe);
+> +	if (!wait_for_fw(xe)) {
+> +		ret = -ENODATA;
+> +		goto runtime_exit;
+> +	}
+>  	mutex_lock(&xe->pmt.lock);
+>  
+>  	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> @@ -381,6 +451,8 @@ static int xe_pmt_read_reg(struct device *dev, u32 guid, u32 *reg, u32 offset)
+>  	memcpy_fromio(reg, disc_addr, sizeof(*reg));
+>  
+>  	mutex_unlock(&xe->pmt.lock);
+> +
+> +runtime_exit:
+>  	xe_pm_runtime_put(xe);
+>  
+>  dev_exit:
+> @@ -416,6 +488,10 @@ static int xe_pmt_write_reg(struct device *dev, u32 guid, u32 reg, u32 offset)
+>  	disc_addr += CRI_DISCOVERY_OFFSET + inst + offset;
+>  
+>  	xe_pm_runtime_get(xe);
+> +	if (!wait_for_fw(xe)) {
+> +		ret = -ENODATA;
+> +		goto runtime_exit;
+> +	}
+>  	mutex_lock(&xe->pmt.lock);
+>  
+>  	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> @@ -423,6 +499,8 @@ static int xe_pmt_write_reg(struct device *dev, u32 guid, u32 reg, u32 offset)
+>  	memcpy_toio(disc_addr, &reg, sizeof(reg));
+>  
+>  	mutex_unlock(&xe->pmt.lock);
+> +
+> +runtime_exit:
+>  	xe_pm_runtime_put(xe);
+>  
+>  dev_exit:
+> @@ -454,12 +532,44 @@ static enum xe_vsec get_platform_info(struct xe_device *xe)
+>  	return vsec_platforms[xe->info.platform];
+>  }
+>  
+> +static void cri_late_bind_probe(struct xe_device *xe)
+> +{
+> +	struct intel_vsec_platform_info *info;
+> +	struct device *dev = xe->drm.dev;
+> +	enum xe_vsec platform;
+> +
+> +	platform = get_platform_info(xe);
+> +	if (platform != XE_VSEC_CRI)
+> +		return;
+> +
+> +	info = &xe_vsec_info[platform];
+> +	if (!info->headers)
+> +		return;
+> +
+> +	info->priv_data = &xe_cri_pmt_cb;
+> +	xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+> +
+> +	intel_vsec_register(dev, info);
+> +}
+> +
+> +static void vsec_disable_late_bind_work(void *arg)
+> +{
+> +	struct xe_device *xe = arg;
+> +
+> +	/*
+> +	 * If was work was cancelled while it was still pending, we need to
+
+Fix grammar.
+
+> +	 * take care of releasing the runtime reference
+
+Add .
+
+> +	 */
+> +	if (disable_delayed_work_sync(&xe->pmt.work))
+> +		xe_pm_runtime_put(xe);
+> +}
+> +
+>  /**
+>   * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
+>   * interface
+>   * @xe: valid xe instance
+>   */
+> -void xe_vsec_init(struct xe_device *xe)
+> +int xe_vsec_init(struct xe_device *xe)
+>  {
+>  	struct intel_vsec_platform_info *info;
+>  	struct device *dev = xe->drm.dev;
+> @@ -467,30 +577,44 @@ void xe_vsec_init(struct xe_device *xe)
+>  
+>  	platform = get_platform_info(xe);
+>  	if (platform == XE_VSEC_UNKNOWN)
+> -		return;
+> +		return 0;
+>  
+>  	info = &xe_vsec_info[platform];
+>  	if (!info->headers)
+> -		return;
+> +		return 0;
+>  
+>  	switch (platform) {
+>  	case XE_VSEC_BMG:
+>  		if (!xe->soc_remapper.set_telem_region)
+> -			return;
+> +			return 0;
+>  		xe->pmt.base_offset = BMG_TELEMETRY_OFFSET;
+>  		info->priv_data = &xe_bmg_pmt_cb;
+>  		break;
+>  
+>  	case XE_VSEC_CRI:
+>  		if (!xe->soc_remapper.set_telem_region)
+> -			return;
+> +			return 0;
+>  		xe->pmt.base_offset = CRI_TELEMETRY_OFFSET;
+> +
+> +		xe->pmt.retry_count = 0;
+> +		INIT_DELAYED_WORK(&xe->pmt.work, cri_late_bind_probe_work);
+> +
+> +		xe_pm_runtime_get_noresume(xe);
+> +		if (!xe_is_oobmsm_fw_ready(xe)) {
+> +			schedule_delayed_work(&xe->pmt.work,
+> +					      msecs_to_jiffies(VSEC_LATE_BIND_DELAY_MSEC));
+> +			return devm_add_action_or_reset(xe->drm.dev,
+> +							vsec_disable_late_bind_work,
+> +							xe);
+> +		}
+> +
+>  		info->priv_data = &xe_cri_pmt_cb;
+>  		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
+>  		break;
+>  
+>  	default:
+> -		break;
+> +		drm_err(&xe->drm, "Unsupported platform: %u\n", platform);
+> +		return 0;
+>  	}
+>  
+>  	/*
+> @@ -498,5 +622,10 @@ void xe_vsec_init(struct xe_device *xe)
+>  	 * resources.
+>  	 */
+>  	intel_vsec_register(dev, info);
+> +
+> +	if (platform == XE_VSEC_CRI)
+> +		xe_pm_runtime_put(xe);
+> +
+> +	return 0;
+>  }
+>  MODULE_IMPORT_NS("INTEL_VSEC");
+> diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
+> index a25b4e6e681b..c4a1e2fc67d8 100644
+> --- a/drivers/gpu/drm/xe/xe_vsec.h
+> +++ b/drivers/gpu/drm/xe/xe_vsec.h
+> @@ -9,7 +9,7 @@
+>  struct device;
+>  struct xe_device;
+>  
+> -void xe_vsec_init(struct xe_device *xe);
+> +int xe_vsec_init(struct xe_device *xe);
+>  int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
+>  
+>  #endif
+> 
+
+-- 
+ i.
+
