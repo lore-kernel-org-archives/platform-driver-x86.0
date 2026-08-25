@@ -1,198 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79343B4EAB;
-	Tue, 25 Aug 2026 20:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787690149; cv=none; b=C2G5Bh5JM5CGlxzS8pYRY+/ZgQFgElhxCjKPPhM4lbUhcUa8vMFu/nUaUjnftbjA5nVlJ6uF5khez8LdJ7o76p1NfmbZiF3QhkWHQsvgXYWaB8smgXQt1lDM1o6Fp90oceUqYRNzKstVrbJiqUDAzY/TuEGW9t+C0xsh8WJtZ5A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787690149; c=relaxed/simple;
-	bh=nYwrWeiJpQvEx8p+mHVcietcK4XfVvx+OHJhe7UBico=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LscGj8LZzbcyzuraDf8OsaFSeCeAa+QEFuwRcw+kYC7ZT/4+ZB9Wyh+W9FExSHw4ZEHjxrFYdIsngDSqfOCUWv4S68VzFE/cbyxYO+1lJtrUlukh/KCdOSF3pLdlBW3b6YKSukq6Nr1i3yv2nw7wRiUCetRT55xKUqdI4dQrwdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4Idrn8e; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D97343D8A
+	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 21:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787691740; cv=pass; b=lMG6kOJRiylidOXNy22VoAbkxiybLvdYhWryyT2BpEjbw05I0DrupM+X8nHCAyva2ejwOe4/viZAXZnch+UN52hJPtFKJSHfJvPVvqghB1IqAaPf0acncmHaTrmfV0BX5GW/wPU5rJ0mnT2sMHJHWkXN+8PBt16OUNkGgjEsc5U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787691740; c=relaxed/simple;
+	bh=8Z55nOfNecibBt1FEq+yGBsNqq8Hmyzrvp9hgj4mrb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fAtnNxhG6elTTkCOhyR5GJNIxqW5wATJ6gv/aSRDcQX/oJpF1F8fFIrLjOE2ShUv8SDQ1m9O7mo8+0jfPP93xMi+z5Cbf2rENVSAAz0q2E7eDr3kPtmLRns65CzMoxb3SDgqIHbrlXzrEGlxhXNd7280+O/fDftGDDOtNnJwJFU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FjJHZerG; arc=pass smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4Idrn8e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787690148; x=1819226148;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nYwrWeiJpQvEx8p+mHVcietcK4XfVvx+OHJhe7UBico=;
-  b=k4Idrn8e2hlCb4WIclB/e+I/HL1fxaEesq2CP4ra77+om9uVAyZUFJm5
-   AO0ch7GnFJF59XmbhEHWhJmwu6gy0/QR0wkTFbZiRPWbHJzTJU8TFRLgq
-   /RZTNeKAHSw4JYqS3h5QC2I2e4482Dspn3fxhepAMeg+KdYwB/py29/yS
-   hGWV095H1m+pMadgvEksiGOPd8wkBZNUp1t/pqftNOntPCZHPn6p1svVp
-   X7kCtldg3Ww7DWE9B4ifBVbRFHjMPAbPKnQzpTj/hOtN/glUJLCZcdO4C
-   cy9dP+O1KIpEeTpIlVYZxwDSkdmN54sPBk6lkGyHlvTtrx4YQ2sRyGGS0
-   w==;
-X-CSE-ConnectionGUID: X4Rgemh3RdePLNgUJckwtA==
-X-CSE-MsgGUID: 8BMP0y4lS8+Mz4kZGrC4gA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88194758"
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="88194758"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 13:35:43 -0700
-X-CSE-ConnectionGUID: 2i38PWHyTnGac4JFqAzJYg==
-X-CSE-MsgGUID: QA4ha/q0T7KbvrksOMKBfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="265579298"
-Received: from carterle-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.168])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 13:35:41 -0700
-Received: from punajuuri.localdomain (unknown [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 63C20121C43;
-	Tue, 25 Aug 2026 23:35:53 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
-	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1wyxs9-0000000Fd5F-2G3g;
-	Tue, 25 Aug 2026 23:35:53 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	Len Brown <lenb@kernel.org>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 3/3] platform/x86: int3472: Clean up GPIO parsing
-Date: Tue, 25 Aug 2026 23:35:53 +0300
-Message-ID: <20260825203553.3725132-4-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260825203553.3725132-1-sakari.ailus@linux.intel.com>
-References: <20260825203553.3725132-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjJHZerG"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7eb5bdb50fcso245326a34.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 14:02:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787691737; cv=none;
+        d=google.com; s=arc-20260327;
+        b=djc/nitHYB1Q6KLUf3zEwQs1paElgXa9iA+3eG5Cp+SQDG6l1kRdbvB9oW46BdfCZo
+         eMrx9frLb7pTEc2f47jtYkdcssMR+FIMUob/pItqMvDse7Bi1xVP+DJosMEe2+RJHozv
+         1VLNCTGY643+Lvvm5UkdXTfv4rr6dy6Bv6Q9JabAP/omZaXT8OeyyByP0R6D52zgeP6S
+         LMKtmSLSnzA69aE4a0mqZbOdQaXHwzZHbV9eIXApwSUeoUe724Uj6NX8ER0/OFib8MFm
+         6/fozdLbzuHDctgbcM1kclISn1ObA2blCGiMeKLypewvXGluUgLrlQvki5ktcIQWu+XW
+         sDWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5e1R7iDOVBGqKm4i7gvnb2yeuebWqXJlNe86yECIkaQ=;
+        fh=qGVGCw0GoWGiYjh5rRQE4AWvzI//JH00VKSNM32P2dg=;
+        b=ggKN7MQ1DXb5iC3AFm32dv+feEoSOTtsB9dMSxYNHA9eB3NNV+LItTX0CRI+Mi5HFk
+         PVHTGKDj4I75maq51zUei0f7n2y3Yd1YbkwTCupuu/MNMvJX9QKjg4DUu9OKDbw9oJt2
+         SRtU4/9Ri1fsEgdm9XDp8o3bVu3V+OPMHN3GiokEwWA1Br7bADrd3RJ8jOtiwY1SrsRt
+         +2Tmkr9zf9j8Ffs65Y3vC39obgpOezEemipertQXNP4nwBD5HDwlleF8v0QLg2Lt4h1C
+         Tdb7s7BQZMnCIuLgVHmsKpEoyXDVvGL0U43VtusHe2uwhrXxNwBLqodU91TaA8yt8+tF
+         V2xg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787691737; x=1788296537; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=5e1R7iDOVBGqKm4i7gvnb2yeuebWqXJlNe86yECIkaQ=;
+        b=FjJHZerGwdz1KbdMN1v7UFWRNLc09OOaK62LEnHhDLBlhPA/3w0L0B8R8zPCHluvoO
+         XSCIVOQfcozsCPlO26pjylh630XvmB67uasVxTqoU8AVPwWBbp6MnRyQeCFADzpDArtC
+         V0WPyz1LfWY1msGfChcFK9jRTzz6o3Xv4A/X75EEjAMmrju5d0QPF1QponqLrlmbqR0w
+         jNmLkNkq5I5aVGrGeoOgmGjzbsTR0oxxR5OfntVXwUnPpycthGUQfBdQpvDZahvXqFKR
+         A9OAHfPdK7ilBzRIswyDgHMVwV8QQogR4xIR8qG7/KCXu/ENLMX6hz1Q8vhxdBHUMjnX
+         HQNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787691737; x=1788296537;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5e1R7iDOVBGqKm4i7gvnb2yeuebWqXJlNe86yECIkaQ=;
+        b=tNCOh0bPprtaam62m7jTMt/Z79sCBwu1DO/KGcEoboDGN5UVeiAcVbHbXUeQLyNyl2
+         xGqkC2d9x7/hugpW5HMAOBjyuJSsBhgwrHPWD23aYhKHgGXs7CllV96j1nv1WLhzn2bK
+         idyBG5ub6rzAUYT9UrDZhnCiKwQwLiojNSVcmoaiAi5jHh6idqQa93YG6BlJuvDhfK9r
+         tdbxK1iv9Le0/yO9ADI1ASHoI5DeDNemidnpksjT466/JbVf13FyGzTPLmoJcTAaWY8W
+         VUQG3bq9yI+Oool0tS2UOrMdfKsqYtBRPyayZ0ylW83n1N70oQKf3MrXKieGx9Z1Eq2Z
+         V1Yg==
+X-Forwarded-Encrypted: i=1; AHgh+RpKqFWB13D0/xxBa8H+WQ1GfEJJpfdHGAZjdYeJR0/fXBTVWumY8GjAlXMltW+DUtX1+WfldYZE+LlphjeDEIqMqFNJ@vger.kernel.org
+X-Gm-Message-State: AFuF++kLcddBMMejfXaEYngdkgbiKt8QYOVzTi9UI4PXabZ+xbGx+NPi
+	CohD1Rn0BdSSOWffuJMeFOHLmD/+8DPZKKzW7UrPKqM1Wv7HXuAid8No6ECnRnGS6q8pelq+i6r
+	kMJJldMiWtUjTlqf758FTxT8+XUCeY6g=
+X-Gm-Gg: AR+sD13IPdiAfLqftuGT14Rujq+Ou/EoMpWxwlUaxT2UnwNQjG8Uqs1HhMYGlJPoucq
+	58XB7Z8McFicwnaMpPXQEuRRGzzaSijsvXXPXv9/0YTI+54+QnWmyczvnSvdIQMo5saSTFcH7ua
+	46cpuV7VJfSrbm6Eaysb3q6A5EyPDXDtBAuRoB0V0lZe5yhrrE83DI/zrmPLgNTzYiuT4IBrN7m
+	5Y4sXwrZ+9vzWi+SFxM1bn8ftOw9c0IBaBcr7NBUU8ZUja/yoTz2GN5awy1GPlxakg2e8zCJe1c
+	7N2Yhn6b+OwQtOVcdSvlbHVfD2q91ZIPzmXFoLXxF5QvxuTmgm/ypKYSHBNUNHxQ2vG+IasizR4
+	=
+X-Received: by 2002:a05:6830:6017:b0:7ee:38af:b195 with SMTP id
+ 46e09a7af769-7f4c4dc57e0mr1972094a34.2.1787691737171; Tue, 25 Aug 2026
+ 14:02:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260825203553.3725132-1-sakari.ailus@linux.intel.com> <20260825203553.3725132-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <20260825203553.3725132-2-sakari.ailus@linux.intel.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Date: Tue, 25 Aug 2026 23:01:59 +0200
+X-Gm-Features: AcwNN1VtAJclNRsrkPgeHaIrL9qzOn516dlDtkbrCWTLTGf5OgwIn6sak7oDRMw
+Message-ID: <CAPybu_3JSL5qAUTpL27GotvQfSzMtcJGGC68eRsCiZ0YwNBNaA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] platform/x86: int3472: Address Coccinelle warning
+ on an error print
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>, 
+	Daniel Scally <dan.scally@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In skl_int3472_handle_gpio_resources(), only a single integer value from
-the ACPI object is used so release it early and avoid having to call
-ACPI_FREE() on it later on. This makes it possible to return an error
-where it happens, except when we're holding a reference to a GPIO. ngpios
-is also incremented earlier on but that does not introduce a functional
-change.
+On Tue, Aug 25, 2026 at 10:36=E2=80=AFPM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Fix the following Coccinelle warning:
+>
+> ./tps68470.c:164:58-65: WARNING: Consider using %pe to print PTR_ERR()
+>
+> by using %pe specifier for printing an error code.
+>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/platform/x86/intel/int3472/tps68470.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/plat=
+form/x86/intel/int3472/tps68470.c
+> index a77ed32abe55..dc777dbac61f 100644
+> --- a/drivers/platform/x86/intel/int3472/tps68470.c
+> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
+> @@ -161,7 +161,7 @@ static int skl_int3472_tps68470_probe(struct i2c_clie=
+nt *client)
+>
+>         regmap =3D devm_regmap_init_i2c(client, &tps68470_regmap_config);
+>         if (IS_ERR(regmap)) {
+> -               dev_err(&client->dev, "Failed to create regmap: %ld\n", P=
+TR_ERR(regmap));
+> +               dev_err(&client->dev, "Failed to create regmap: %pe\n", r=
+egmap);
+>                 return PTR_ERR(regmap);
+>         }
+>
+> --
+> 2.47.3
+>
+>
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/platform/x86/intel/int3472/discrete.c | 42 ++++++++-----------
- 1 file changed, 18 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index 9cd4f78875ab..1f8751a7db0c 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -328,6 +328,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	u8 active_value, pin, type;
- 	unsigned long gpio_flags;
- 	union acpi_object *obj;
-+	unsigned int obj_value;
- 	struct gpio_desc *gpio;
- 	const char *con_id;
- 	int ret;
-@@ -343,24 +344,27 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 				      &int3472_gpio_guid, 0x00,
- 				      int3472->ngpios + 2,
- 				      NULL, ACPI_TYPE_INTEGER);
--
- 	if (!obj) {
- 		dev_warn(int3472->dev, "No _DSM entry for GPIO pin %u\n",
- 			 agpio->pin_table[0]);
- 		return 1;
- 	}
- 
--	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj->integer.value);
-+	obj_value = obj->integer.value;
-+
-+	ACPI_FREE(obj);
-+
-+	type = FIELD_GET(INT3472_GPIO_DSM_TYPE, obj_value);
- 
- 	int3472_get_con_id_and_polarity(int3472, &type, &con_id, &gpio_flags, &enable_time_us);
- 
--	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj->integer.value);
-+	pin = FIELD_GET(INT3472_GPIO_DSM_PIN, obj_value);
- 	/* Pin field is not really used under Windows and wraps around at 8 bits */
- 	if (pin != (agpio->pin_table[0] & 0xff))
- 		dev_dbg(int3472->dev, FW_BUG "%s %s pin number mismatch _DSM %d resource %d\n",
- 			con_id, agpio->resource_source.string_ptr, pin, agpio->pin_table[0]);
- 
--	active_value = FIELD_GET(INT3472_GPIO_DSM_SENSOR_ON_VAL, obj->integer.value);
-+	active_value = FIELD_GET(INT3472_GPIO_DSM_SENSOR_ON_VAL, obj_value);
- 	if (!active_value)
- 		gpio_flags ^= GPIO_ACTIVE_LOW;
- 
-@@ -368,16 +372,18 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 		agpio->resource_source.string_ptr, agpio->pin_table[0],
- 		str_high_low(gpio_flags == GPIO_ACTIVE_HIGH));
- 
-+	int3472->ngpios++;
-+
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 	case INT3472_GPIO_TYPE_POWERDOWN:
- 	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
- 		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
- 		if (ret)
--			dev_err_probe(int3472->dev, ret,
--				      "Failed to map GPIO pin to sensor\n");
-+			return dev_err_probe(int3472->dev, ret,
-+					     "Failed to map GPIO pin to sensor\n");
- 
--		break;
-+		return 1;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
- 	case INT3472_GPIO_TYPE_PRIVACY_LED:
- 	case INT3472_GPIO_TYPE_STROBE:
-@@ -385,11 +391,9 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	case INT3472_GPIO_TYPE_DOVDD:
- 	case INT3472_GPIO_TYPE_HANDSHAKE:
- 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
--		if (IS_ERR(gpio)) {
--			ret = PTR_ERR(gpio);
--			dev_err_probe(int3472->dev, ret, "Failed to get GPIO\n");
--			break;
--		}
-+		if (IS_ERR(gpio))
-+			return dev_err_probe(int3472->dev, PTR_ERR(gpio),
-+					     "Failed to get GPIO\n");
- 
- 		switch (type) {
- 		case INT3472_GPIO_TYPE_CLK_ENABLE:
-@@ -427,23 +431,13 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 		if (ret)
- 			gpiod_put(gpio);
- 
--		break;
-+		return ret < 0 ? ret : 1;
- 	default:
- 		dev_warn(int3472->dev,
- 			 "GPIO type 0x%02x unknown; the sensor may not work\n",
- 			 type);
--		ret = 1;
--		break;
-+		return 1;
- 	}
--
--	int3472->ngpios++;
--	ACPI_FREE(obj);
--
--	/*
--	 * Either return an error or tell acpi_dev_get_resources() to not make a
--	 * copy of the resource.
--	 */
--	return ret < 0 ? ret : 1;
- }
- 
- int int3472_discrete_parse_crs(struct int3472_discrete_device *int3472)
--- 
-2.47.3
-
+--=20
+Ricardo Ribalda
