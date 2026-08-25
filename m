@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AACB23EAAA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D009326AC5;
 	Tue, 25 Aug 2026 18:15:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787681738; cv=none; b=R37t43HVlEnpw6X3JAFoR344d7KdoJa8Wm2Ute8Dh8HZtKRMrtSEObEmMxFtKuo7R3cDbk9tZZsexaVTGy0TY60l616nA9nqobtL6WPqlnbuz6WW/sbg6Lc57p03CrMM547DAZDJh+nOZmBWFNAXntozVj15XoddvrjzxXU1l7E=
+	t=1787681738; cv=none; b=ls7LLgQezEAc2j8rrE2MHbVpqI2ZBZNTuDf25msD75WgV8beKH40j0j3b+2Q8XFJ86UnvRx4PXspnUdiLJfLrXwOgQUHdg6r9Msw1sEj9kAbHbLmC2nVlbBOCMplytOgDYEJh9x2OepVTPA0fMm56fM8fOiqDAS/svlgCYMn0PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787681738; c=relaxed/simple;
-	bh=HpXSFglQBwpdFwyc3DEg6LqxExJmQQCYCkTKib1d9Aw=;
+	bh=qA60IvVIKunK0kboQXNF7O/eTm70MAmNUKiDqF0nAI8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s5jRtAwdg06EG0rzOUW89rwK/HlQCaU1trExasFTcTbSOyjQhDNJolrneIOsvAjpa/Tn1z7xne7v2THE9RDkgv8FPjuM2dOueRFdBxvicRJBwcReKYqrim1G74rL20g2S8QQOtv1ecZ+SqMjZYxjwioaNSTPFhE4TtSSfFo6xaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uzf2SCon; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=u77Li8TQq1X16nv40/M7MLcx7QrDzlHWmVMxXseIFecmsbLKJvGcpHw6QKQ2vGjz5Tzd03YGz01mSjoqfoWE5zsR3p6fqONKAHO1VRLhYIa/5wLNARUGCtSwUGgv1OQphxl3tjBJiWwQ3gmhaB+1SEKX+Ld2bzEbVCJE9bc58F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZJiVJpC; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uzf2SCon"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZJiVJpC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787681736; x=1819217736;
+  t=1787681737; x=1819217737;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HpXSFglQBwpdFwyc3DEg6LqxExJmQQCYCkTKib1d9Aw=;
-  b=Uzf2SConFzvh43StwN9t0q14ef0uj3Q0Em0a/VdpVQleq32F2kWUfFkp
-   kWrhSVx9XcDUriaiEPYHMebn7Gh38JByk2LNwRAEc1aC6hu8hBaZ7jweZ
-   2O8SNm3x8g9SYYUuqLOBLdM2UummKulemrI3PXu8pn+URzcs4cmNiEAvW
-   /zBa0TnKOvGXnoITHRWzBpkHI8l0XRJNqpbF373xEGth6w3b+GD1Pchbk
-   AGLzebmp4D99Lz1ElhsIh0w7qvf965FoOLX+BrEsWs0siFG47I06pPBpS
-   5wZT2WLFuOBTXVIyzed14Ac78uIOKQ+tHDlM/5sxcyst8Mx8Y6bYZs7f6
-   g==;
-X-CSE-ConnectionGUID: LLqwP6UCSB2KmQiunLfsDw==
-X-CSE-MsgGUID: eX7zEROXRgm2AaRsbYVr/w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88174206"
+  bh=qA60IvVIKunK0kboQXNF7O/eTm70MAmNUKiDqF0nAI8=;
+  b=QZJiVJpC1YCZO6IC8x1ZDob+3HKhKEp3OGJm0+x8VVheHlzifGXf5fIR
+   WVFzjkYo1FU3qmnwhAzsmj0jKf47flRCOeqyfds6ymB4Qn4gDdWhhiVIK
+   kEGyHFGSY72Ym7jK6Mmw4CM2jUOEUurfbrTri5HrxquqvswxtcBbGglnD
+   VRzDGF344wqwdHSNeuezR4ythbjoN1W4xVIrfgUQ4Gwqv+eFo+bYYtv6a
+   ZeAvDK+ObygRODCDswkUrQTAA/G88pzE9Frn5sB3athBNklGOaiVrHN0Z
+   3iuPju6gGnV9b93OEjWOmsHwKCBp+tz0mRfMT8RagIsId94++lhJJGWb5
+   A==;
+X-CSE-ConnectionGUID: BJnKQXJGSCWhIfw83m3ZdA==
+X-CSE-MsgGUID: +bBEY3UtQCK1GBfLo7717g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88174211"
 X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="88174206"
+   d="scan'208";a="88174211"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
   by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:34 -0700
-X-CSE-ConnectionGUID: j6tLA+LfSlyXS21Zo2B6PA==
-X-CSE-MsgGUID: kOwfoDxQQS6AoEaIUWoJuQ==
+X-CSE-ConnectionGUID: O8RDDvbzRzmwUn5PrwoCIw==
+X-CSE-MsgGUID: pcdRHad8Sy+I+cP0WGIprg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="265559598"
+   d="scan'208";a="265559602"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO agluck-desk3.home.arpa) ([10.124.222.141])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:33 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:34 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hansg@kernel.org>
@@ -53,9 +53,9 @@ Cc: Borislav Petkov <bp@alien8.de>,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>,
 	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: [PATCH 2/7] x86/mce: Enumeration updates for Intel bitfix filter reset
-Date: Tue, 25 Aug 2026 11:15:21 -0700
-Message-ID: <20260825181526.13203-3-tony.luck@intel.com>
+Subject: [PATCH 3/7] platform/x86/intel/bff: Add stub Intel bitfix filter driver
+Date: Tue, 25 Aug 2026 11:15:22 -0700
+Message-ID: <20260825181526.13203-4-tony.luck@intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260825181526.13203-1-tony.luck@intel.com>
 References: <20260825181526.13203-1-tony.luck@intel.com>
@@ -67,56 +67,117 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-IA32_CORE_CAPABILITIES enumerates the bitfix filter reset feature.
-
-Also add definitions for the threshold status field in the machine
-check status registers.
+Check if platform supports enhanced cache error reporting and the
+bitfix filter reset feature.
 
 Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/include/asm/mce.h       | 6 ++++++
- arch/x86/include/asm/msr-index.h | 2 ++
- 2 files changed, 8 insertions(+)
+ drivers/platform/x86/intel/bff.c    | 59 +++++++++++++++++++++++++++++
+ drivers/platform/x86/intel/Kconfig  | 13 +++++++
+ drivers/platform/x86/intel/Makefile |  1 +
+ 3 files changed, 73 insertions(+)
+ create mode 100644 drivers/platform/x86/intel/bff.c
 
-diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
-index e575b702063d..0d5bcb6f1750 100644
---- a/arch/x86/include/asm/mce.h
-+++ b/arch/x86/include/asm/mce.h
-@@ -13,6 +13,7 @@
- #define MCG_CTL_P		BIT_ULL(8)   /* MCG_CTL register available */
- #define MCG_EXT_P		BIT_ULL(9)   /* Extended registers available */
- #define MCG_CMCI_P		BIT_ULL(10)  /* CMCI supported */
-+#define MCG_TES_P		BIT_ULL(11)  /* Threshold-based error status supported */
- #define MCG_SEAM_NR		BIT_ULL(12)  /* MCG_STATUS_SEAM_NR supported */
- #define MCG_EXT_CNT_MASK	0xff0000     /* Number of Extended registers */
- #define MCG_EXT_CNT_SHIFT	16
-@@ -41,6 +42,11 @@
- #define MCI_STATUS_PCC		BIT_ULL(57)  /* processor context corrupt */
- #define MCI_STATUS_S		BIT_ULL(56)  /* Signaled machine check */
- #define MCI_STATUS_AR		BIT_ULL(55)  /* Action required */
-+#define MCI_STATUS_TES_SHIFT	53           /* Threshold-based error status */
-+#define MCI_STATUS_TES_MASK	GENMASK_ULL(54, 53)
-+#define MCI_STATUS_TES(s)	(((s) & MCI_STATUS_TES_MASK) >> MCI_STATUS_TES_SHIFT)
-+#define  MCI_STATUS_TES_GREEN	1	     /* Threshold-based errors below threshold */
-+#define  MCI_STATUS_TES_YELLOW	2	     /* Threshold-based errors above threshold */
- #define MCI_STATUS_CEC_SHIFT	38           /* Corrected Error Count */
- #define MCI_STATUS_CEC_MASK	GENMASK_ULL(52,38)
- #define MCI_STATUS_CEC(c)	(((c) & MCI_STATUS_CEC_MASK) >> MCI_STATUS_CEC_SHIFT)
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 18c4be75e927..13d3efc87b14 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -114,6 +114,8 @@
- #define MSR_IA32_CORE_CAPS_INTEGRITY_CAPS	  BIT(MSR_IA32_CORE_CAPS_INTEGRITY_CAPS_BIT)
- #define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
- #define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
-+#define MSR_IA32_CORE_CAPS_BFF_RESET_DETECT_BIT   9
-+#define MSR_IA32_CORE_CAPS_BFF_RESET_DETECT	  BIT(MSR_IA32_CORE_CAPS_BFF_RESET_DETECT_BIT)
+diff --git a/drivers/platform/x86/intel/bff.c b/drivers/platform/x86/intel/bff.c
+new file mode 100644
+index 000000000000..9522bdb1401d
+--- /dev/null
++++ b/drivers/platform/x86/intel/bff.c
+@@ -0,0 +1,59 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2026 Intel Corporation. */
++
++/*
++ * Intel driver to reset bitfix filters when they overflow.
++ *
++ * Each bitfix filter has limited slots to track corrected errors.
++ * These slots can be filled by transient corrected errors (e.g.,
++ * bit flips from particle strikes) that don't represent permanent
++ * hardware defects.
++ *
++ * When the filter overflows (yellow status), reset it to reclaim
++ * slots occupied by transient corrected errors. If the overflow
++ * repeats frequently after reset, it indicates persistent hardware
++ * defects that need attention: the system should be scheduled for
++ * servicing.
++ */
++#define pr_fmt(fmt) "bff: " fmt
++
++#include <linux/cpufeature.h>
++#include <linux/errno.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/types.h>
++
++#include <asm/cpufeatures.h>
++#include <asm/mce.h>
++#include <asm/msr.h>
++#include <asm/msr-index.h>
++
++static int __init bff_init(void)
++{
++	u64 core_caps, mcg_cap;
++
++	if (!cpu_feature_enabled(X86_FEATURE_MCA))
++		return -ENODEV;
++	rdmsrq(MSR_IA32_MCG_CAP, mcg_cap);
++	if (!(mcg_cap & MCG_TES_P))
++		return -ENODEV;
++
++	if (!cpu_feature_enabled(X86_FEATURE_CORE_CAPABILITIES))
++		return -ENODEV;
++
++	rdmsrq(MSR_IA32_CORE_CAPS, core_caps);
++	if (!(core_caps & MSR_IA32_CORE_CAPS_BFF_RESET_DETECT))
++		return -ENODEV;
++
++	return 0;
++}
++
++static void __exit bff_exit(void)
++{
++}
++
++module_init(bff_init);
++module_exit(bff_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Intel bitfix filter reset driver");
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 2900407d6095..f4e9af0116ee 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -251,3 +251,16 @@ config INTEL_VSEC
  
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_vsec.
++
++config INTEL_BFF_RESET
++	tristate "Intel bitfix filter reset driver"
++	depends on CPU_SUP_INTEL && X86_MCE
++	help
++	  Adds support for Intel systems that implement bitfix filters to
++	  suppress repeated logging and signaling of the same corrected
++	  error. Those filters can become clogged with transient errors
++	  over time. Clearing the filter may make space for additional
++	  hard errors.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_bff.
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index 138b13756158..dc4e374758d5 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -27,6 +27,7 @@ intel-target-$(CONFIG_INTEL_ISHTP_ECLITE)	+= ishtp_eclite.o
+ intel-target-$(CONFIG_INTEL_OAKTRAIL)		+= oaktrail.o
+ intel-target-$(CONFIG_INTEL_SDSI)		+= sdsi.o
+ intel-target-$(CONFIG_INTEL_VSEC)		+= vsec.o
++intel-target-$(CONFIG_INTEL_BFF_RESET)		+= bff.o
+ 
+ # Intel PMIC / PMC / P-Unit drivers
+ intel-target-$(CONFIG_INTEL_BYTCRC_PWRSRC)	+= bytcrc_pwrsrc.o
 -- 
 2.55.0
 
