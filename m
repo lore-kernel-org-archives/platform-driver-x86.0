@@ -1,63 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDDA346E54;
-	Tue, 25 Aug 2026 18:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4726F3F3297;
+	Tue, 25 Aug 2026 18:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787681747; cv=none; b=O4s5XWnokRajuq/o1TAN16azDKLWIsJAySH462mZZYG8BFaGoM01PqGexa4u4W1txYsLSgAVs6rv06ypsG86HZfD7LbEW9GtfD8RCnnpE6zbpJKGL8gYkH5d7II+WHYuQ8zTMKDMajQzD2LMR7UjFf5z8+TIbfU+37FJj4ezHAo=
+	t=1787682562; cv=none; b=BfiL2BH1xDNTloUgQmxr3LEgQq6ZjlYRbTSj0mUSG/2+4+6P1RJ/xpsvSEhuo8suvwbM9GVVGm54AiaHsbZ5T6Dvgea3aVQoO4WqPUO0nstgomVSi/Pftvj2CGGQRKkXZPr+3AXZPclguXR0BE5Ks6IIO8+up3hYdsUalfPdb7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787681747; c=relaxed/simple;
-	bh=PELISMkprQd9ZEo2y8Iazx3I4f6IpFv/qOObgsRVBYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SI4c64chqfmwzPGesPw0zG1UcnVOW+iWm1IEGFLELlqqEgjsEmaUaJE9FQLhM0SBnRiL7wnA8RAMMoxWNGSKEjLckWmrLbKDDTWwqFxZUELj0HfKR3rfJlznIlELaNW/+4hlWbWjKu964zAlirw1ziLEmpcUgXjgUGbKrAqQYb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kb8fIe6I; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787682562; c=relaxed/simple;
+	bh=JEl+Upxfeya2Uh32EIDP0IhCmLkYXbyVFIsL2BbCQTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k26SKatU9yTf98YEpzm4eHxfyj0BJyB1+CmHrmpUsObJdU8ei7z1wC0IzDszJvjplJgdIHRg8jl2fRsewTH9p9opecSzQanyCn5fK1QBPHnuBcUK41+0utRImoTDNWAXPxUNd4ygHLwvl9zyzbZCp91FBkZ0yeVLNldxMlAYn/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cS7KpsAo; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kb8fIe6I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787681738; x=1819217738;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PELISMkprQd9ZEo2y8Iazx3I4f6IpFv/qOObgsRVBYg=;
-  b=Kb8fIe6IEnXl8xo9xEDAjIXlscfA3nSHkcTNJsi653ktXz4wsJS2xW8j
-   DnMnfgMKCYlyBX/13ArXXUzLFRU5AZVaK5K86uLaDGxa6Ri+kjuSGtIfR
-   t83WtgwfaYoffVsXgdulFr7HebNngU7j5TsYbbXD3ktOJWiW7p79glR0u
-   73CbYjxe67pBki0XFTmq5FaGy4rQIHvd4mVDD+eCc8npG+BAyDJ+rwXJe
-   k+eyy1wDguGa97rEzfMaD9lu6fyOF9uS+itpGApsNMVRnJrAwGPCEL0r6
-   NA9iLa8y5q7zJ/kl/gVbtUlczt+qiDnebjhuv4ppWzbGKN8gYwP/DnYUx
-   Q==;
-X-CSE-ConnectionGUID: A7GuX+orQdiQNXq9maepxQ==
-X-CSE-MsgGUID: c6zC01P3SMmiUXenvHKogg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88174226"
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="88174226"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:35 -0700
-X-CSE-ConnectionGUID: aukwALA0RqihITxgGtoj3Q==
-X-CSE-MsgGUID: 9CnREe/JRaKfAbr13APjdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
-   d="scan'208";a="265559611"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO agluck-desk3.home.arpa) ([10.124.222.141])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:35 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>,
-	Breno Leitao <leitao@debian.org>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: [PATCH 6/7] platform/x86/intel/bff: Compute unique ID for overflowed filter
-Date: Tue, 25 Aug 2026 11:15:25 -0700
-Message-ID: <20260825181526.13203-7-tony.luck@intel.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260825181526.13203-1-tony.luck@intel.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cS7KpsAo"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BE96240E01DA;
+	Tue, 25 Aug 2026 18:29:17 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 88bu8M89P2DL; Tue, 25 Aug 2026 18:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1787682548; bh=lJia37a4X8Og99UqFaHPSHYA8ZBHdD+gVZP37KIKs6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cS7KpsAo2lMeK+GWuUVP70jXK0HPrVG1XqWv90sBrn/igvfU0KgVjEEW0vzjiki+h
+	 phPMYzQmQvHwBp/Ygz69saQ/UKM0t5qGAXMNOO4GluzyQ6We523uad1VYVFMVlnSII
+	 nU2wzQx39A1dfLcLQ0eA5vObvNfK6q/nXFEZ+S6w+C7eFKmDagNPIfNgXYKUD4CZMe
+	 aRc5GdkjGPRx7BFNSP3unD4vd6b5t0NYz26B5y1RrPQZPQCaK4BepgraYvs3RUSFsu
+	 cpW5oftEFIMNh/EREjCwRxG8ehMdRw+w3ZSqRE3ki8YxpnwiaZShoOqZ4uYM4/7iPr
+	 ezn620FO5pZysGe/s/rY3ZRaxlJ1Mfe7cI+fEliYNWAZFHyqMjeDvViKR8T14XuDhB
+	 WOVzCUIj8t5KWXEQV/SOXL3ZLzh5ZiOzHYFRbmLFyQSJKsSFk2WpMItvI+3OYpkld2
+	 jMTsn7Uubl/oVmpEbR6hX8bn8xotPM8/RGoDRhKDHiPZ177RL/UPLre3laGxjDDZYC
+	 nlFThyurEbHYLwBZUpPcNRRHdbG3gbji34bRnEO2ysMULWkvIPzLpmbRAblMqwziM8
+	 D2XvIJ/nNxZqPZWdia/OsU9/AlEfTTnOd1xnoNIhWv6rivMwJjDtL9JaEtoJ4PFPEF
+	 UMTW9/wxGk3Ig2lzC38YMPfk=
+Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::1a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 855A140E01E1;
+	Tue, 25 Aug 2026 18:29:00 +0000 (UTC)
+Date: Tue, 25 Aug 2026 11:28:57 -0700
+From: Borislav Petkov <bp@alien8.de>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>, Breno Leitao <leitao@debian.org>,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: Re: [PATCH 0/7] Intel platform driver to reset bitfix filters
+Message-ID: <20260825182857.GBao3e6Qv_Xg0LCXFM@fat_crate.local>
 References: <20260825181526.13203-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -65,139 +61,21 @@ List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260825181526.13203-1-tony.luck@intel.com>
 
-Each L2 cache instance has its own bitfix filter, but always reports
-errors in machine check bank 3 (on Diamond Rapids).
+On Tue, Aug 25, 2026 at 11:15:19AM -0700, Tony Luck wrote:
+> This code was originally developend by Qiuxu as an add-on to an EDAC
+> driver. But not everyone wants to run an EDAC driver,
 
-Compute a unique bitfix filter instance number based on the CPU that
-logged the error and the machine check bank number.
+Interesting, what's so bad about EDAC drivers that makes you move all that
+functionality which is clearly RAS/MCE/EDAC into some random platform driver?
 
-Special case for banks associated with the Integrated Memory Hub (IMH).
-Here the "even" numbered CPU modules are associated with IMH0 and the
-"odd" modules with IMH1.
+There's also arch/x86/kernel/cpu/mce/intel.c and that doesn't fit either?
 
-The unique id will be used to store a time stamp of when the bitfix
-filter overflowed so that frequent overflows can be logged.
-
-Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- drivers/platform/x86/intel/bff.c | 74 ++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/bff.c b/drivers/platform/x86/intel/bff.c
-index 8cc29d11e019..ae9dc0bf2777 100644
---- a/drivers/platform/x86/intel/bff.c
-+++ b/drivers/platform/x86/intel/bff.c
-@@ -18,13 +18,18 @@
- #define pr_fmt(fmt) "bff: " fmt
- 
- #include <linux/bits.h>
-+#include <linux/cacheinfo.h>
-+#include <linux/cleanup.h>
- #include <linux/cpufeature.h>
-+#include <linux/cpuhplock.h>
- #include <linux/device-id/x86_cpu.h>
- #include <linux/errno.h>
- #include <linux/init.h>
-+#include <linux/limits.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
- #include <linux/printk.h>
-+#include <linux/topology.h>
- #include <linux/types.h>
- 
- #include <asm/cpu_device_id.h>
-@@ -34,6 +39,8 @@
- #include <asm/msr.h>
- #include <asm/msr-index.h>
- 
-+#define NUM_IMH_PER_SKT		2
-+
- /* Intel bitfix filter control register defines */
- #define MSR_MC0_BFF_CTL		0x000006c0
- #define MSR_MCx_BFF_CTL(x)	(MSR_MC0_BFF_CTL + (x))
-@@ -67,11 +74,78 @@ MODULE_DEVICE_TABLE(x86cpu, bff_cpu_ids);
- 
- static const enum bff_type *bank_types;
- 
-+/* Diamond Rapids maps APICID[2] to the IMH instance. */
-+static void bff_set_imh_id(struct mce *mce, unsigned long *id)
-+{
-+	int imh_num = (NUM_IMH_PER_SKT * topology_physical_package_id(mce->extcpu)) +
-+		      ((mce->apicid >> 2) & 0x1);
-+
-+	*id |= imh_num;
-+}
-+
-+static bool bff_set_cache_id(int cpu, int level, unsigned long *id)
-+{
-+	int cacheid;
-+
-+	guard(cpus_read_lock)();
-+
-+	cacheid = get_cpu_cacheinfo_id(cpu, level);
-+	if (cacheid == -1) {
-+		pr_warn("Could not get L%d cache id for CPU %d\n", level, cpu);
-+		return false;
-+	}
-+
-+	*id |= cacheid;
-+
-+	return true;
-+}
-+
-+#define BFF_ID_BANK_SHIFT	16
-+
-+/*
-+ * Cache IDs are only unique within a cache level.
-+ * Include the MCA bank number so each BFF-capable hardware
-+ * resource has a unique tracking ID.
-+ */
-+static unsigned long get_bff_id(struct mce *mce)
-+{
-+	unsigned long id = (unsigned long)mce->bank << BFF_ID_BANK_SHIFT;
-+
-+	switch (bank_types[mce->bank]) {
-+	case BFF_BANK_DCU:
-+	case BFF_BANK_DTLB:
-+		if (!bff_set_cache_id(mce->extcpu, 1, &id))
-+			return ULONG_MAX;
-+		break;
-+
-+	case BFF_BANK_MLC:
-+		if (!bff_set_cache_id(mce->extcpu, 2, &id))
-+			return ULONG_MAX;
-+		break;
-+
-+	case BFF_BANK_CCF:
-+		if (!bff_set_cache_id(mce->extcpu, 3, &id))
-+			return ULONG_MAX;
-+		break;
-+
-+	case BFF_BANK_HSF:
-+	case BFF_BANK_IOCACHE:
-+		bff_set_imh_id(mce, &id);
-+		break;
-+	default:
-+		return ULONG_MAX;
-+	}
-+
-+	return id;
-+}
-+
- static void handle_bff(struct mce *mce)
- {
- 	/* The bitfix filter overflowed, get the target CPU to reset it. */
- 	if (wrmsrq_on_cpu(mce->extcpu, MSR_MCx_BFF_CTL(mce->bank), MCI_BFF_RESET))
- 		pr_warn("Failed to reset bitfix filter for CPU %d Bank %d\n", mce->extcpu, mce->bank);
-+
-+	pr_debug("unique_id = 0x%lx\n", get_bff_id(mce));
- }
- 
- static int bff_mce_notify(struct notifier_block *nb, unsigned long val, void *data)
 -- 
-2.55.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
