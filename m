@@ -1,331 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF753F6C55
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 10:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED6E33A70A;
+	Tue, 25 Aug 2026 10:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787653467; cv=none; b=tNPxeOWRqYgdJPgUE00jDoLUa9B6zS1oS4mOb6n5Sf9a1XDro9/1tCX8qfo5HvfLxTlKQY9izxw/Sd5rlfVX6nsznW2lXkC0oZgQS6diJOpsE84rToSPwVSuFTmTJZy4CzLY+QJlSZ/irtY7ZLD/U3FeXWY5Na6VMdRUHpLxaMI=
+	t=1787654434; cv=none; b=eOLC34VQ/kuMA7ur4RTRcbD5GQYgegCudecBsQmooAZOywwYK+/rx+47s3DW53GGu1fMM1/F80VVENbOgqHsmGBCb4AN8bfyF5FxJg9UsTROBT97oTi99mdsRlaMZOjwpeU8XTNgTDt2jqpBbNy5wXwuWDCnfo/OzDen0kQp2EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787653467; c=relaxed/simple;
-	bh=kNoy8AKOY1wWNj8juVwV7TW0lnjOGkOApVSZ3hOtt6w=;
+	s=arc-20240116; t=1787654434; c=relaxed/simple;
+	bh=2UlGPhvf1IelelSqNZWrSHBBORdUH//fV9XtF1YIr3M=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=WDYVaXOafWoIUz71XlU+kIdUWZnvUvjHSZjiKpfLCwXfEoZSyLNtHfYthKH2oGzpI8lb+Q2WLZ1B0alXfVFO3vD7jbMU4A8Hro7kTVJNd/v4f3MA1X4DAA9qN2Ro6ChxByt3xMHjbPFw/PfSTMy3LhprZcVXG4UJr0k2cNhRwbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXK1SM7m; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=QjI/dZ0hv6m25/I7NqHJOve2/vfxJDwbZU0e3YJOdOOp3MWIwvFGHLgdEyhhqkn54MIhxisvRv4C8wO/TKAjSw8tgQdVz2cJszp6Nr52ymATIGP/E83uEvS7z3Y7+lr1O4+wrMOW3QgU9MnLkR7kTps4n/SDbjN7ieVtU2k2+pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ISXg2O4N; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXK1SM7m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ISXg2O4N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787653466; x=1819189466;
+  t=1787654432; x=1819190432;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=kNoy8AKOY1wWNj8juVwV7TW0lnjOGkOApVSZ3hOtt6w=;
-  b=lXK1SM7m3bkoDoUaJUmNqHHsq6fehEMwlYL24t4WfeBf3Ol0GAN99KYG
-   F/el2qWSrzcu/bRL8G9Ntgm8OuhWR9sRqhX8Z9nlpaPX66Vw/XtIiJZdc
-   z2JdF6XTBi53AScfzSdQf1s4T4Y/2bxAANbIzT+TkTWpXFxMSFoLycDe5
-   WRHDPjhi5CUEKd3/Z1nYMOZ9KWKOoUz3BAVg+Lz9iNvxueLvcUiBFsQXo
-   lBh5huch0KysX0RmZ58ONd5VZqwKSsptT+E9kLT/lTQFiNDFPqZAVWxZP
-   V/j8xj1qdDKg/nsKNdw/S77y9uBWVFQU2swqCmxnqYIPanQU3CiJ23QBS
-   w==;
-X-CSE-ConnectionGUID: 7jM3+56OSkSDB93LMfqu5w==
-X-CSE-MsgGUID: hAcpKuUbR12kbCa0wrb6wQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="91982521"
+  bh=2UlGPhvf1IelelSqNZWrSHBBORdUH//fV9XtF1YIr3M=;
+  b=ISXg2O4NwPSSlCTTNmz8WWCM05HT6bKDNFiJnIH2zMxax5ale7SyIC4E
+   98R+VmL2fxNJpGijcAtGpWuKbXhLZfATMWSPhD4hC2d3KGoreb68L0YTr
+   2uMebyUzkIdcs6lh/yGQQ0fRzGyy7/JiiVm0+RaddF7CX7t0bfGByhUS4
+   JyNAmUul5lJtj2uL6QMvakQ9/PhV5fMZqddsYu59rf/ft+VL8gPIM6Gl5
+   MDY1WnEcZZ6zZaUlMXIDkLrzRSdxRnQ+tqijPWJ/cJFfbGrrY1mrFpEih
+   u2xCZyzdL0RBMqqUkNI1uaaVcz6H5bYdKNjTYcnN+57oTXdUzwr3efowv
+   A==;
+X-CSE-ConnectionGUID: nQEew+T4TSezH7JSqI1/Ow==
+X-CSE-MsgGUID: CqMUzCSLTQePWvw6Gw8bHQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="75652411"
 X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="91982521"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:24:25 -0700
-X-CSE-ConnectionGUID: OxiElLsLQwWkOxuAZCsjCw==
-X-CSE-MsgGUID: 9qR2zucvSS6EyyfQBFthTA==
+   d="scan'208";a="75652411"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:40:31 -0700
+X-CSE-ConnectionGUID: OLEmgLAYQQOR6IwxK00jzw==
+X-CSE-MsgGUID: c2paStVUT+exClcTDAVSSQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,242,1779174000"; 
-   d="scan'208";a="271043362"
+   d="scan'208";a="272475724"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:24:20 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 03:40:28 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 25 Aug 2026 13:24:16 +0300 (EEST)
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    Hans de Goede <hansg@kernel.org>, matthew.brost@intel.com, 
-    rodrigo.vivi@intel.com, thomas.hellstrom@linux.intel.com, 
-    airlied@gmail.com, simona@ffwll.ch, david.e.box@linux.intel.com, 
-    anoop.c.vijay@intel.com, badal.nilawar@intel.com, 
-    matthew.d.roper@intel.com, james.ausmus@intel.com, karthik.poosa@intel.com
-Subject: Re: [PATCH v3 07/10] drm/xe/vsec: Crescent Island PMT decode
-In-Reply-To: <20260824162317.2450380-19-michael.j.ruhl@intel.com>
-Message-ID: <910a5090-230a-139e-4d7a-60c48ac88031@linux.intel.com>
-References: <20260824162317.2450380-12-michael.j.ruhl@intel.com> <20260824162317.2450380-19-michael.j.ruhl@intel.com>
+Date: Tue, 25 Aug 2026 13:40:25 +0300 (EEST)
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+cc: linux-media@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+    linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>, 
+    Daniel Scally <dan.scally@ideasonboard.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] platform/x86: int3472: Clean up GPIO parsing
+In-Reply-To: <20260824211338.3583976-6-sakari.ailus@linux.intel.com>
+Message-ID: <dbf333db-28ca-78ab-db76-f1773db844c7@linux.intel.com>
+References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com> <20260824211338.3583976-6-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-25408568-1787653456=:1165"
+Content-Type: text/plain; charset=US-ASCII
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 25 Aug 2026, Sakari Ailus wrote:
 
---8323328-25408568-1787653456=:1165
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Mon, 24 Aug 2026, Michael J. Ruhl wrote:
-
-> Crescent Island (CRI) has different index and offset values for
-> accessing the PMT data area.
->=20
-> Update the decode path to support the CRI device.
->=20
-> Update the data read callback so to support the CRI usage.
->=20
-> Define several magic numbers.
->=20
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> In skl_int3472_handle_gpio_resources(), return an error where it happens,
+> except when we're holding a reference to a GPIO. This involves
+> incrementing ngpios earlier on but that does not introduce a functional
+> change.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
->  drivers/gpu/drm/xe/xe_device_types.h |   2 +
->  drivers/gpu/drm/xe/xe_vsec.c         | 135 ++++++++++++++++++++++-----
->  2 files changed, 114 insertions(+), 23 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe=
-_device_types.h
-> index 180d450a6deb..3f1a70813a99 100644
-> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> @@ -466,6 +466,8 @@ struct xe_device {
->  =09struct {
->  =09=09/** @pmt.lock: protect access for telemetry data */
->  =09=09struct mutex lock;
-> +=09=09/** @pmt.base_offset: device specific base offset */
-> +=09=09u64 base_offset;
->  =09} pmt;
-> =20
->  =09/** @soc_remapper: SoC remapper object */
-> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-> index 6345b0b4b26b..dc42b9492428 100644
-> --- a/drivers/gpu/drm/xe/xe_vsec.c
-> +++ b/drivers/gpu/drm/xe/xe_vsec.c
-> @@ -108,23 +108,47 @@ static struct intel_vsec_platform_info xe_vsec_info=
-[] =3D {
->  /*
->   * The GUID will have the following bits to decode:
->   *   [0:3]   - {Telemetry space iteration number (0,1,..)}
-> - *   [4:7]   - Segment (SEGMENT_INDEPENDENT-0, Client-1, Server-2)
-> + *   [4:7]   - BMG Segment (SEGMENT_INDEPENDENT-0, Client-1, Server-2)
-> + *   [4:5]   - CRI Segment (SEGMENT_INDEPENDENT-0, Client-1, Server-2)
-> + *   [6:7]   - CRI Instance
->   *   [8:11]  - SOC_SKU
->   *   [12:27] =E2=80=93 Device ID =E2=80=93 changes for each down bin SKU=
-=E2=80=99s
->   *   [28:29] - Capability Type (Crashlog-0, Telemetry Aggregator-1, Watc=
-her-2)
->   *   [30:31] - Record-ID (0-PUNIT, 1-OOBMSM_0, 2-OOBMSM_1)
->   */
->  #define GUID_TELEM_ITERATION=09GENMASK(3, 0)
-> -#define GUID_SEGMENT=09=09GENMASK(7, 4)
->  #define GUID_SOC_SKU=09=09GENMASK(11, 8)
->  #define GUID_DEVICE_ID=09=09GENMASK(27, 12)
->  #define GUID_CAP_TYPE=09=09GENMASK(29, 28)
->  #define GUID_RECORD_ID=09=09GENMASK(31, 30)
-> =20
-> -#define PUNIT_TELEMETRY_OFFSET=09=090x0200
-> -#define PUNIT_WATCHER_OFFSET=09=090x14A0
-> -#define OOBMSM_0_WATCHER_OFFSET=09=090x18D8
-> -#define OOBMSM_1_TELEMETRY_OFFSET=090x1000
-> +#define BMG_GUID_SEGMENT=09GENMASK(7, 4)
-> +
-> +#define CRI_GUID_SEGMENT=09GENMASK(5, 4)
-> +#define CRI_GUID_INSTANCE=09GENMASK(7, 6)
-> +
-> +#define BMG_IDX_TELEM_PUNIT=09=090x00
-> +#define BMG_IDX_TELEM_OOBMSM=09=090x01
-> +#define BMG_IDX_CRASHLOG_PUNIT=09=090x02
-> +#define BMG_IDX_CRASHLOG_OOBMSM=09=090x04
-> +
-> +#define BMG_PUNIT_TELEMETRY_OFFSET=090x0200
-> +#define BMG_PUNIT_WATCHER_OFFSET=090x14A0
-> +#define BMG_OOBMSM_0_WATCHER_OFFSET=090x18D8
-> +#define BMG_OOBMSM_1_TELEMETRY_OFFSET=090x1000
+>  drivers/platform/x86/intel/int3472/discrete.c | 42 +++++++++----------
+>  1 file changed, 21 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+> index 2024eaa09033..400bee9e4cb8 100644
+> --- a/drivers/platform/x86/intel/int3472/discrete.c
+> +++ b/drivers/platform/x86/intel/int3472/discrete.c
+> @@ -369,15 +369,23 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  		agpio->resource_source.string_ptr, agpio->pin_table[0],
+>  		str_high_low(gpio_flags == GPIO_ACTIVE_HIGH));
+>  
+> +	/*
+> +	 * int3472->ngpios can be incremented here as it is an argument to the
+> +	 * _DSM, not e.g. an index to an array in C. Additionally, in case of an
+> +	 * error the value won't be used.
+> +	 */
 
-IMO, it would be better to do the plain renames first to get a clean diff=
-=20
-for the new stuff.
+I wasn't expecting comment for this. You might have added it because of 
+my questions but IMO it's not needed.
 
---=20
- i.
+I think just the old way/place was confusing, especially given how 
+some/part of the error cases did increment it. But after moving it here, 
+it makes much more sense even without that comment.
 
-> +#define CRI_IDX_TELEM_DISCOVERY=09=090x00
-> +#define CRI_IDX_TELEM_PUNIT=09=090x01
-> +#define CRI_IDX_TELEM_OOBMSM=09=090x02
-> +#define CRI_IDX_CRASHLOG_PUNIT=09=090x03
-> +#define CRI_IDX_WATCHER_OOBMSM=09=090x03  /* PUNIT and OOBMSM share this=
- index */
-> +#define CRI_IDX_CRASHLOG_OOBMSM=09=090x04
+And one can determine it's not being used for C arrays by using grep so 
+that too seems just unnecessary detail.
+
+> +	int3472->ngpios++;
 > +
-> +#define CRI_PUNIT_TELEMETRY_OFFSET=09=090x0200
-> +#define CRI_PUNIT_WATCHER_OFFSET=09=090x08A0
-> +#define CRI_OOBMSM_WATCHER_OFFSET=09=090x0CF8
-> +#define CRI_OOBMSM_GFSP_TELEMETRY_OFFSET=090x1600
-> +#define CRI_PUNIT_CRASHLOG_OFFSET=09=090x0E60
-> =20
->  enum record_id {
->  =09PUNIT,
-> @@ -138,45 +162,92 @@ enum capability {
->  =09WATCHER,
->  };
-> =20
-> -static int xe_guid_decode(u32 guid, int *index, u32 *offset)
-> +static int bmg_guid_decode(u32 guid, int *index, u32 *offset)
->  {
->  =09u32 record_id =3D FIELD_GET(GUID_RECORD_ID, guid);
->  =09u32 cap_type  =3D FIELD_GET(GUID_CAP_TYPE, guid);
-> -=09u32 device_id =3D FIELD_GET(GUID_DEVICE_ID, guid);
+>  	switch (type) {
+>  	case INT3472_GPIO_TYPE_RESET:
+>  	case INT3472_GPIO_TYPE_POWERDOWN:
+>  	case INT3472_GPIO_TYPE_HOTPLUG_DETECT:
+>  		ret = skl_int3472_map_gpio_to_sensor(int3472, agpio, con_id, gpio_flags);
+>  		if (ret)
+> -			dev_err_probe(int3472->dev, ret, "Failed to map GPIO pin to sensor\n");
+> +			return dev_err_probe(int3472->dev, ret,
+> +					     "Failed to map GPIO pin to sensor\n");
+>  
+> -		break;
+> +		return 0;
+>  	case INT3472_GPIO_TYPE_CLK_ENABLE:
+>  	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>  	case INT3472_GPIO_TYPE_STROBE:
+> @@ -385,24 +393,24 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  	case INT3472_GPIO_TYPE_DOVDD:
+>  	case INT3472_GPIO_TYPE_HANDSHAKE:
+>  		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
+> -		if (IS_ERR(gpio)) {
+> -			ret = PTR_ERR(gpio);
+> -			dev_err_probe(int3472->dev, ret, "Failed to get GPIO\n");
+> -			break;
+> -		}
+> +		if (IS_ERR(gpio))
+> +			return dev_err_probe(int3472->dev, PTR_ERR(gpio),
+> +					     "Failed to get GPIO\n");
+>  
+>  		switch (type) {
+>  		case INT3472_GPIO_TYPE_CLK_ENABLE:
+>  			ret = skl_int3472_register_gpio_clock(int3472, gpio);
+>  			if (ret)
+> -				dev_err_probe(int3472->dev, ret, "Failed to register clock\n");
+> +				dev_err_probe(int3472->dev, ret,
+> +					      "Failed to register clock\n");
+
+Don't know why changed linesplits in this instead doing them directly in 
+the 2nd patch.
+
+>  
+>  			break;
+>  		case INT3472_GPIO_TYPE_PRIVACY_LED:
+>  		case INT3472_GPIO_TYPE_STROBE:
+>  			ret = skl_int3472_register_led(int3472, gpio, con_id);
+>  			if (ret)
+> -				dev_err_probe(int3472->dev, ret, "Failed to register LED\n");
+> +				dev_err_probe(int3472->dev, ret,
+> +					      "Failed to register LED\n");
+>  
+>  			break;
+>  		case INT3472_GPIO_TYPE_POWER_ENABLE:
+> @@ -413,7 +421,8 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
+>  							     con_id, second_sensor);
+>  			if (ret)
+> -				dev_err_probe(int3472->dev, ret, "Failed to register regulator\n");
+> +				dev_err_probe(int3472->dev, ret,
+> +					      "Failed to register regulator\n");
+>  
+>  			break;
+>  		default: /* Never reached */
+> @@ -424,22 +433,13 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+>  		if (ret)
+>  			gpiod_put(gpio);
+>  
+> -		break;
+> +		return ret;
+>  	default:
+>  		dev_warn(int3472->dev,
+>  			 "GPIO type 0x%02x unknown; the sensor may not work\n",
+>  			 type);
+> -		ret = 1;
+> -		break;
+> +		return 1;
+>  	}
 > -
-> -=09if (device_id !=3D BMG_DEVICE_ID)
-> -=09=09return -ENODEV;
+> -	int3472->ngpios++;
 > -
-> -=09if (cap_type > WATCHER)
-> -=09=09return -EINVAL;
-> =20
->  =09*offset =3D 0;
-> =20
->  =09if (cap_type =3D=3D CRASHLOG) {
-> -=09=09*index =3D record_id =3D=3D PUNIT ? 2 : 4;
-> +=09=09*index =3D record_id =3D=3D PUNIT ? BMG_IDX_CRASHLOG_PUNIT : BMG_I=
-DX_CRASHLOG_OOBMSM;
->  =09=09return 0;
->  =09}
-> =20
->  =09switch (record_id) {
->  =09case PUNIT:
-> -=09=09*index =3D 0;
-> +=09=09*index =3D BMG_IDX_TELEM_PUNIT;
->  =09=09if (cap_type =3D=3D TELEMETRY)
-> -=09=09=09*offset =3D PUNIT_TELEMETRY_OFFSET;
-> +=09=09=09*offset =3D BMG_PUNIT_TELEMETRY_OFFSET;
->  =09=09else
-> -=09=09=09*offset =3D PUNIT_WATCHER_OFFSET;
-> +=09=09=09*offset =3D BMG_PUNIT_WATCHER_OFFSET;
->  =09=09break;
-> =20
->  =09case OOBMSM_0:
-> -=09=09*index =3D 1;
-> +=09=09*index =3D BMG_IDX_TELEM_OOBMSM;
->  =09=09if (cap_type =3D=3D WATCHER)
-> -=09=09=09*offset =3D OOBMSM_0_WATCHER_OFFSET;
-> +=09=09=09*offset =3D BMG_OOBMSM_0_WATCHER_OFFSET;
->  =09=09break;
-> =20
->  =09case OOBMSM_1:
-> -=09=09*index =3D 1;
-> +=09=09*index =3D BMG_IDX_TELEM_OOBMSM;
-> +=09=09if (cap_type =3D=3D TELEMETRY)
-> +=09=09=09*offset =3D BMG_OOBMSM_1_TELEMETRY_OFFSET;
-> +=09=09break;
-> +=09default:
-> +=09=09return -EINVAL;
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
-> +static int cri_guid_decode(u32 guid, int *index, u32 *offset)
-> +{
-> +=09u32 record_id =3D FIELD_GET(GUID_RECORD_ID, guid);
-> +=09u32 cap_type  =3D FIELD_GET(GUID_CAP_TYPE, guid);
-> +=09u32 instance  =3D FIELD_GET(CRI_GUID_INSTANCE, guid);
-> +
-> +=09*offset =3D 0;
-> +
-> +=09if (cap_type =3D=3D CRASHLOG) {
-> +=09=09if (record_id =3D=3D PUNIT) {
-> +=09=09=09*index =3D CRI_IDX_CRASHLOG_PUNIT;
-> +=09=09=09*offset =3D CRI_PUNIT_CRASHLOG_OFFSET;
-> +=09=09} else {
-> +=09=09=09*index =3D CRI_IDX_CRASHLOG_OOBMSM;
-> +=09=09}
-> +=09=09return 0;
-> +=09}
-> +
-> +=09switch (record_id) {
-> +=09case PUNIT:
-> +=09=09*index =3D CRI_IDX_TELEM_PUNIT;
->  =09=09if (cap_type =3D=3D TELEMETRY)
-> -=09=09=09*offset =3D OOBMSM_1_TELEMETRY_OFFSET;
-> +=09=09=09*offset =3D CRI_PUNIT_TELEMETRY_OFFSET;
-> +=09=09else
-> +=09=09=09*offset =3D CRI_PUNIT_WATCHER_OFFSET;
-> +=09=09break;
-> +
-> +=09case OOBMSM_0:
-> +=09=09*index =3D CRI_IDX_TELEM_OOBMSM;
-> +=09=09switch (instance) {
-> +=09=09case 0:
-> +=09=09=09if (cap_type =3D=3D WATCHER) {
-> +=09=09=09=09*index =3D CRI_IDX_WATCHER_OOBMSM;
-> +=09=09=09=09*offset =3D CRI_OOBMSM_WATCHER_OFFSET;
-> +=09=09=09}
-> +=09=09=09break;
-> +
-> +=09=09case 1:
-> +=09=09=09if (cap_type =3D=3D TELEMETRY)
-> +=09=09=09=09*offset =3D CRI_OOBMSM_GFSP_TELEMETRY_OFFSET;
-> +=09=09=09break;
-> +
-> +=09=09default:
-> +=09=09=09return -EINVAL;
-> +=09=09}
->  =09=09break;
-> +
->  =09default:
->  =09=09return -EINVAL;
->  =09}
-> @@ -184,6 +255,23 @@ static int xe_guid_decode(u32 guid, int *index, u32 =
-*offset)
->  =09return 0;
+> -	/*
+> -	 * Either return an error or tell acpi_dev_get_resources() to not make a
+> -	 * copy of the resource.
+> -	 */
+> -	return ret < 0 ? ret : 1;
 >  }
-> =20
-> +static int xe_guid_decode(u32 guid, int *index, u32 *offset)
-> +{
-> +=09u32 cap_type  =3D FIELD_GET(GUID_CAP_TYPE, guid);
-> +=09u32 device_id =3D FIELD_GET(GUID_DEVICE_ID, guid);
-> +
-> +=09if (cap_type > WATCHER)
-> +=09=09return -EINVAL;
-> +
-> +=09if (device_id =3D=3D BMG_DEVICE_ID)
-> +=09=09return bmg_guid_decode(guid, index, offset);
-> +
-> +=09if (device_id =3D=3D CRI_DEVICE_ID)
-> +=09=09return cri_guid_decode(guid, index, offset);
-> +
-> +=09return -ENODEV;
-> +}
-> +
->  /*
->   * xe_pmt_telem_read is a callback API.  I.e this can be accessed extern=
-al to
->   * XE driver (PMT driver scope).  Because of this, DRM hotplug needs to =
-be
-> @@ -193,8 +281,8 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u=
-64 *data, loff_t user_offse
->  =09=09      u32 count)
->  {
->  =09struct xe_device *xe =3D kdev_to_xe_device(dev);
-> -=09void __iomem *telem_addr =3D xe->mmio.regs + BMG_TELEMETRY_OFFSET;
->  =09u32 cap_type =3D FIELD_GET(GUID_CAP_TYPE, guid);
-> +=09void __iomem *telem_addr =3D xe->mmio.regs + xe->pmt.base_offset;
->  =09u32 mem_region;
->  =09u32 offset;
->  =09int ret =3D 0;
-> @@ -286,6 +374,7 @@ void xe_vsec_init(struct xe_device *xe)
->  =09case XE_VSEC_BMG:
->  =09=09if (!xe->soc_remapper.set_telem_region)
->  =09=09=09return;
-> +=09=09xe->pmt.base_offset =3D BMG_TELEMETRY_OFFSET;
->  =09=09info->priv_data =3D &xe_pmt_cb;
->  =09=09break;
->  =09default:
->=20
---8323328-25408568-1787653456=:1165--
+>  
+>  int int3472_discrete_parse_crs(struct int3472_discrete_device *int3472)
+> 
+
+-- 
+ i.
