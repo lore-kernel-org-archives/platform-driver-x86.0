@@ -1,190 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F2D471432
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 14:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4200124B28;
+	Tue, 25 Aug 2026 18:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787668998; cv=none; b=BHjwTL8VgEBNzLTF06dlubJp0F4/vntcEnl1fB7RTt4i7c3frVz6fAqc7GZdx5Mg052f4PAii59tmuP1ACNLdaktZijb8yiytvcVWA/L20or3giwam3YHtuuczMuPXoTQxGf/ASJ0X3wx8dwmxHM/j2NmI2iCcizMckahvY8qQU=
+	t=1787681736; cv=none; b=rEcjnjqkHRdUjYSzB2uga9ncRrh7t6K5i87waAaYH78ade26CYWR9/nwVG97NUeGbp2kfeBz4+ZLlIDMErsEuiYikPouxltidjKKzWinCr04UvEJjMeHMlSrP64hph2i0RX54m242UVhszNKSE4QS20C7U1PzYhuTIM7XO/ZEUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787668998; c=relaxed/simple;
-	bh=wch87i9yJYzX6N4Tw9uzlMwiZrqht4WcrmhzTQ4ye38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AvK5J0f1//rTV6kBa/ye7XJ7Lu36xbsD9nnWMVf3BvWh2jWF2ZmydWsjAdi3DqmZaTaUL7olPYGl9pKFnUEPs+97EMlvj7YZrpqwMUTwgmKCXcmDa/psiTO5f+ek496E4Bhn56JFaDwbkbOkZ8+zF49XdepXerzm1v3xCQ1ErHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBVp3+rh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787681736; c=relaxed/simple;
+	bh=BQRcC2xG25uM6+R1xvzpnNV4l0LH9qmzaH2Rw5U2sE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s8Zl8O9qmL9ttsdVVeqer9qPNN2eoroLtLjqZEiLCdDnfXEJ4PpvMq1BIXg6fp6jJbMX97Z4CXlVs6PkEmQIFYXj7lhntfwtYUAN9Ipi3/fjz6+Xc4/twM2nmkOftEzuDuRPt6ZgODIc2aAN4fqvBRcyg7Bt4uBbNM5WUiCIsRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZG4qV+Tk; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBVp3+rh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B7351F00AC4
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 14:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787668996;
-	bh=wFVBzOqPc8UOPhde8GY7epvGk77JTDfDkKrM8bjfz9Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dBVp3+rhMhgESq5Bk68zaGBVsPUVuGiSYAZXJ1JjYilUYEoou8PKBwgPk759hpJMd
-	 nK8udHHCOWHU7vRyesvhWnyXUg70xdeEiEYnRgR6Z1hhXyhw7tQxgnYyQqjEZXOvyC
-	 qEQOKVb8iTrT63/GBFNj16jtNBeyeRo4aYjxKkjfl+EQ57NwqJ3IrivBEXSYU52+t5
-	 h3j3BFUbt3QdnH8orji+ByALcgpt6XGHb/g+FS6DLxDiHT85iOzM+kdmMHKQBVC98h
-	 umJUaETul4dY3tBEHo89k62YjT15weBS/CLFdqJxTE7lng5vQwCypZl0DpLEoDPB5f
-	 ay8cLHwl+3xsg==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-39c953950dfso37109701fa.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 07:43:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RrvPGHTfpm92UUhNPspUzGayx0/PHtSdrYyKvmuZUmPE/doqG+ECra1SfujkQ+WhSevBY02mAVVwqABK8tt0Z/3uXxM@vger.kernel.org
-X-Gm-Message-State: AFuF++kcZJ0RIHNqxDt9KVl+HzTypGGzoL7WmSQDFF9yKkuCDTa9s+uo
-	u986OvN4CNMpmA/MBhm+a3Mpu1xBv/0lHw6U6YJ0vpv41XksZuLrdyLkwOv4YNUv+7m60CoN++b
-	s3GPZic4FYenzTCRl8Y9QWMBPsjhuIqk=
-X-Received: by 2002:a05:651c:b29:b0:39b:2757:c1d3 with SMTP id
- 38308e7fff4ca-3a1aec08881mr83137611fa.9.1787668994165; Tue, 25 Aug 2026
- 07:43:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZG4qV+Tk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787681734; x=1819217734;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BQRcC2xG25uM6+R1xvzpnNV4l0LH9qmzaH2Rw5U2sE4=;
+  b=ZG4qV+Tk58uSii7Y9z2qcQErFV/dWjsZASFDct8oNMbm8NDHHEDZGxvN
+   Txf1WxPYBMhmbUfsWOn4dKxCNXRfyznqUTjpR0E5XM+f8m+vXsoB4Y/8P
+   /RiDZnPNPaJgTovS3pGPLCZEdVMM7sJXgi7qOTJ2Sl9qazuk0308Y0ylu
+   B4hkhcFupRrN23nnpKNCTgDuJhku49Khlo9nHmRQ/VCKOyawsyNVOItVw
+   c9z/8utEMq7t+EBkj91Q/vpaosktS+rTfFnIl8jQyRn2XjP+bmyF2zyx0
+   6EF5+Vkaf3HYqCJkPXh053tCIfuYdStpSsKG9SrL+sWlT7l6Xh80PosYS
+   Q==;
+X-CSE-ConnectionGUID: 48YvkCD6SveJHWJ7OUHlPg==
+X-CSE-MsgGUID: ZQelDRSBRKWhG+TV/xcwMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88174195"
+X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
+   d="scan'208";a="88174195"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:33 -0700
+X-CSE-ConnectionGUID: 5QRSZkUrRKiNUYCMYGyHVg==
+X-CSE-MsgGUID: nYB2sVXxRPKJvHw+0RL08Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
+   d="scan'208";a="265559591"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO agluck-desk3.home.arpa) ([10.124.222.141])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 11:15:33 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Hans de Goede <hansg@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>,
+	Breno Leitao <leitao@debian.org>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH 0/7] Intel platform driver to reset bitfix filters
+Date: Tue, 25 Aug 2026 11:15:19 -0700
+Message-ID: <20260825181526.13203-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com>
- <20260824211338.3583976-4-sakari.ailus@linux.intel.com> <CAJZ5v0ieb2FcANOt0MRMsTrwtbLiUF48W_c=3z3OpNH92d=7vg@mail.gmail.com>
- <ao2FmNRFjSJVxhrL@kekkonen.localdomain> <CAJZ5v0gQVFxSkkjPbRf6bsKdgUBGduZV0M5SWrHoeB246ZLqew@mail.gmail.com>
- <134e9566-7913-86d7-1e8b-b2ca9ebec55c@linux.intel.com> <CAJZ5v0h4KD6Q1DeuwbFQ83U1=wKORMWUQNA2BwnFtsYAyzz_Ow@mail.gmail.com>
- <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com> <831afa75-ab9f-b54e-a5a5-6b46f4fe26cc@linux.intel.com>
-In-Reply-To: <831afa75-ab9f-b54e-a5a5-6b46f4fe26cc@linux.intel.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Tue, 25 Aug 2026 16:42:31 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iYNQgrKfH0Jpv1g1Ja3d=vA8+TWpWKaipivjd0iN-gUQ@mail.gmail.com>
-X-Gm-Features: AcwNN1WzxmKSLqDHEdyKyFwsm9FCSoLC9qlNcs_i000cZYtvQgZf5gLQKfFi4kg
-Message-ID: <CAJZ5v0iYNQgrKfH0Jpv1g1Ja3d=vA8+TWpWKaipivjd0iN-gUQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] ACPI: Support __free() from cleanup.h for ACPI objects
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Daniel Scally <dan.scally@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 25, 2026 at 3:51=E2=80=AFPM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Tue, 25 Aug 2026, Rafael J. Wysocki (Intel) wrote:
->
-> > On Tue, Aug 25, 2026 at 3:02=E2=80=AFPM Rafael J. Wysocki (Intel)
-> > <rafael@kernel.org> wrote:
-> > >
-> > > On Tue, Aug 25, 2026 at 2:32=E2=80=AFPM Ilpo J=C3=A4rvinen
-> > > <ilpo.jarvinen@linux.intel.com> wrote:
-> > > >
-> > > > On Tue, 25 Aug 2026, Rafael J. Wysocki (Intel) wrote:
-> > > >
-> > > > > On Tue, Aug 25, 2026 at 2:07=E2=80=AFPM Sakari Ailus
-> > > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > >
-> > > > > > Hi Rafael,
-> > > > > >
-> > > > > > On Tue, Aug 25, 2026 at 01:51:18PM +0200, Rafael J. Wysocki (In=
-tel) wrote:
-> > > > > > > On Mon, Aug 24, 2026 at 11:13=E2=80=AFPM Sakari Ailus
-> > > > > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > > > >
-> > > > > > > > Use DEFINE_FREE() to allow ACPI objects to be released auto=
-matically.
-> > > > > > >
-> > > > > > > But at least some of them are allocated by ACPICA functions l=
-ike
-> > > > > > > acpi_evaluate_object() and so they have no proper constructor=
-s.
-> > > > > >
-> > > > > > You could still assign the return buffer to a local variable. I=
-t's not
-> > > > > > ideal API-wise though.
-> > > > >
-> > > > > Exactly.
-> > > > >
-> > > > > > I'm not quite sure what was the point you wanted to make but I =
-reckon this
-> > > > > > wasn't an ack. :-)
-> > > > >
-> > > > > Using the _FREE with variables that are not initialized through a
-> > > > > constructor is questionable, so this is generally not particularl=
-y
-> > > > > clean.
-> > > >
-> > > > The driver does call ACPI_FREE() for that pointer so clearly it's a=
-lready
-> > > > using something ending with "_FREE" already. So unless Rafael is
-> > > > suggesting ACPI_FREE() should be renamed, I'm a bit lost what that
-> > > > even means on concrete terms.
-> > >
-> > > Sorry for the confusion.
-> > >
-> > > I just don't want people to do things like this:
-> > >
-> > >     struct acpi_buffer output =3D { ACPI_ALLOCATE_BUFFER };
-> > >     union acpi_object *out_obj __free(ACPI_FREE);
-> > >     acpi_status status;
-> > >
-> > >     status =3D acpi_evaluate_object(handle, METHOD_NAME, NULL, &outpu=
-t);
-> > >     if (ACPI_FAILURE(status))
-> > >         return AN_ERROR;
-> > >
-> > >    out_obj =3D output.pointer;
-> > >
-> > > > > There is no cleanup.h in ACPICA that is a more traditional C code
-> > > > > base, so mixing up ACPICA code, which ACPI_FREE() is strictly
-> > > > > speaking, with cleanup.h stuff is not particularly straightforwar=
-d
-> > > > > IMV.  I'd rather not do it.
-> > > >
-> > > > Perhaps add the DEFINE_FREE() into int3472 driver then, it seems to=
- be
-> > > > what intel/pmc is already doing (I don't seem to anymore recall why=
- it was
-> > > > added there). Using cleanup.h for that variable it clearly simplifi=
-es the
-> > > > code flow.
-> > >
-> > > Well, fair enough, but as I said elsewhere, the code flow
-> > > simplification can also be achieved in a different way.
-> > >
-> > > > It feels a bit stupid to duplicate it there but I guess we'll
-> > > > just have to live with that if there's no place in any acpi related
-> > > > headers for cleanup.h.
-> > >
-> > > If there is a cleanup.h "free" that can only be used with objects
-> > > returned by acpi_evaluate_dsm_typed(), I'll be fine with that.
-> > >
-> > > Or if everyone agrees that doing
-> > >
-> > >     union acpi_object *out_obj __free(ACPI_FREE) =3D NULL;
-> > >
-> > > is not confusing and fine, I may just say "Hey, I don't care that muc=
-h".
-> >
-> > And particularly there is this paragraph in a comment in cleanup.h:
-> >
-> >  * Given that the "__free(...) =3D NULL" pattern for variables defined =
-at
-> >  * the top of the function poses this potential interdependency problem
-> >  * the recommendation is to always define and assign variables in one
-> >  * statement and not group variable definitions at the top of the
-> >  * function when __free() is used.
-> >
-> > regarding a broken code example, so I would think that this is not a
-> > made-up concern.
->
-> That comment relates to how defining the variables at the start of
-> functions may result in wrong/unexpected cleanup order. More imporantly,
-> the comment is not an argument for not using __free() but an instruction
-> on what is the correct pattern to use it so those ordering issues do not
-> occur.
->
-> The cleanups will execute in reverse order the variables where defined so
-> a variable defined at start may be cleaned up only after releasing a lock
-> that was taken mid-function (which often is safe but one can easily
-> envision cases where the lock should be still held when the cleanup runs)=
-.
+Some Intel CPUs implement a "bitfix filter" to suppress reporting of the
+same corrected errors repeatedly in the case where aging silicon
+develops stuck bits.
 
-I agree with all of the above.
+But when systems run for weeks, or months, the filters may become clogged
+with transient errors.
 
-Though I think that cleanup ordering issues are easier to overlook
-when the "__free(...) =3D NULL" pattern is used, which is why I wouldn't
-like to encourage using it.
+When the filter is full (indicated by a "yellow" signature in a machine
+check bank) clear the filter. This may make space for additional hard
+errors.
+
+Save a time stamp when clearing a filter. Log with "WARN" severity if
+the filter overflows quickly (in tem minutes or less).
+
+This code was originally developend by Qiuxu as an add-on to an EDAC
+driver. But not everyone wants to run an EDAC driver, so I pulled the
+code out into a standalone platform driver. Much of Qiuxu's code was
+cut-and-pasted into this driver, so he gets Co-developed-by credit
+throughout.
+
+Qiuxu Zhuo (1):
+  cacheinfo: Export get_cpu_cacheinfo_id() for loadable modules
+
+Tony Luck (6):
+  x86/mce: Enumeration updates for Intel bitfix filter reset
+  platform/x86/intel/bff: Add stub Intel bitfix filter driver
+  platform/x86/intel/bff: Add Diamond Rapids support
+  platform/x86/intel/bff: Reset bitfix filter when it overflows
+  platform/x86/intel/bff: Compute unique ID for overflowed filter
+  platform/x86/intel/bff: Report frequent filter resets
+
+ include/linux/cacheinfo.h           |  12 +-
+ arch/x86/include/asm/mce.h          |   6 +
+ arch/x86/include/asm/msr-index.h    |   2 +
+ drivers/base/cacheinfo.c            |  17 ++
+ drivers/platform/x86/intel/bff.c    | 284 ++++++++++++++++++++++++++++
+ drivers/platform/x86/intel/Kconfig  |  13 ++
+ drivers/platform/x86/intel/Makefile |   1 +
+ 7 files changed, 324 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/bff.c
+
+
+base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
+-- 
+2.55.0
+
