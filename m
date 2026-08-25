@@ -1,94 +1,103 @@
-Received: from mail-24420.protonmail.ch (mail-24420.protonmail.ch [109.224.244.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5723B42C3
-	for <platform-driver-x86@vger.kernel.org>; Tue, 25 Aug 2026 19:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DAE35AC3E;
+	Tue, 25 Aug 2026 20:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787686593; cv=none; b=pv9Rv5l2CTMUf0gpd49UzFt8Fr1cuBiXQGp+Mq7MRwzJjsa1aMKaeP9d5CTpP/KnERZgaLxuf1yHaK3lPcbgUVskAz2lnsXBhOCumEW8D2Z5J8tk2CTYZV0Zh8fx3NIABwMPpvS1QB6SoPUwNG7T4g+fs6Dc3RgFPjxNzgtZIj8=
+	t=1787690145; cv=none; b=IKeQul/8Fk656vABcW/pDnLyoeUEDmILhJVAaFc3FB92geLnTa2GVMkGa/xQfClc4JEC2EaPZQhHVy7zo+wOcs8SIkjG9nemsC5u3a1PVe6ytoSeLuKHU2ZnkAYGp8QZnAtono+TqzUN+ad09AaWfT0xnBIReH1DFlyYwjcc5OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787686593; c=relaxed/simple;
-	bh=29Xh/vK/vKYDoiR0wGwbxNp6DMh5MDA7D6PZ2uSfbUM=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p71rpEzB7s+zwDXSqZeY4fvC7vBP2tmWzKfAkB/NsQmIdIZm/Cwl1zXInbs1U03rsGAJoPWt45YMdfzWMs2NJOpqSKEu0B4fJWQwDJWv9fR9KDBvcRgxZRjGxCQZBAin5EV2fHhTKfijIJ15a+7OkijqvKFb1AoKbEJLf4O/Ctc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=davidstephenson.net; spf=pass smtp.mailfrom=davidstephenson.net; dkim=pass (2048-bit key) header.d=davidstephenson.net header.i=@davidstephenson.net header.b=z3JY9MsY; arc=none smtp.client-ip=109.224.244.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=davidstephenson.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidstephenson.net
+	s=arc-20240116; t=1787690145; c=relaxed/simple;
+	bh=n+9qrQZN4kh9MdewAjcnnMvikhpfz9CV7dhIesTCrkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ba0lNSG/TIhA9M+tm+hMexb5osSgGZ/zEZ0NOOUZjjCRqw3V5xkAvZXq/SSC9OZfsG0WX1LgGtYiSVZwry4yrhdxmuWXl9BKykVCPzq8cZmP31+g84GsaiXf+fNCOfHxrVPV4CIC32N2x1+APz5XiEL27E1abkoqNzRzvI0Cyys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TsyS+kdV; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidstephenson.net header.i=@davidstephenson.net header.b="z3JY9MsY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=davidstephenson.net;
-	s=protonmail3; t=1787686583; x=1787945783;
-	bh=29Xh/vK/vKYDoiR0wGwbxNp6DMh5MDA7D6PZ2uSfbUM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=z3JY9MsYrxos/mc7M1aQcPJ+xMVv+fuBqn140Kss6bey5P0Zci03nxe572Zv0zN1c
-	 jrK5r3pud7RE6y74ZnAbuMSbFQhPuoZIsx2AdOOXqtbST8x30ZtooZqDE0MydQWZaj
-	 Jk9I1UTEIKnnqBX5N87Kx51ySDSBZEErh/CwXGSHa1IaPU4x4hKmJ9ivlVTLeZcADo
-	 cv3XQa/AB9hWo9wzI+q+qhinsKCWoKkXRDDGkUNAwmqJ/pkYXVE7Ox9bALXChSLbmB
-	 WfS+4XuSUuEmpfkcC93Qk5iuspm9EOdQ7Cqe2DVfni+d0FCq+65GRti0Eibtn8h9Nv
-	 tgzlAR7Q+4y0Q==
-Date: Tue, 25 Aug 2026 19:36:21 +0000
-To: Sebastian Reichel <sre@kernel.org>
-From: David Stephenson <git@davidstephenson.net>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
-Subject: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send KEY_KBDILLUMTOGGLE on Fn+Space
-Message-ID: <20260825193556.133277-1-git@davidstephenson.net>
-Feedback-ID: 197172805:user:proton
-X-Pm-Message-ID: a72af546a45307294f11fa04650b63de288f60ef
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsyS+kdV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787690144; x=1819226144;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=n+9qrQZN4kh9MdewAjcnnMvikhpfz9CV7dhIesTCrkw=;
+  b=TsyS+kdVysYoDp1IrEb8rOF+kyXiifAKnhS2XK7de/5eHKDXkcDG8P+e
+   CK0diR6lKG2jBTDTc9x3wt++Q1GgSTAdVOt/7AoLMueM1vgiSTPI8zuiF
+   r9PWUSkH2ZZXw4I9W0QfNjFyBhyNS9r7U4W7x3I/B+nA4nihNnX1hN0PI
+   3yG3Hu76mTAjNmxjOIE62D7oxn/3kvoOYRcyxbll5rvNtoAzwNx+/qVgR
+   JskBUOSjsno3J7FrT0RWyWS1WCI2tRT2cmWvmeESu1YRUmLs1d4cN0nrX
+   PDOtT5DErMe3xKgSaahTpXIMhvD3ubNzsfhrF4UJwjafIvQzi6GB5GVib
+   w==;
+X-CSE-ConnectionGUID: D3hrepgKR3KxTiUnS5zQtw==
+X-CSE-MsgGUID: zZk2K+USQyu8H0WZ1ro8GQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88194749"
+X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
+   d="scan'208";a="88194749"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 13:35:43 -0700
+X-CSE-ConnectionGUID: /DQJl0tBRK+9liSl4Ejnlg==
+X-CSE-MsgGUID: EC4CEAFrSwaQUAR1a4sA4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,243,1779174000"; 
+   d="scan'208";a="265579296"
+Received: from carterle-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.168])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2026 13:35:41 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 6178B121C16;
+	Tue, 25 Aug 2026 23:35:53 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.98.2)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1wyxs9-0000000Fd54-1z3j;
+	Tue, 25 Aug 2026 23:35:53 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-media@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	Len Brown <lenb@kernel.org>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 0/3] Fix static analyser and compiler warnings in int3472
+Date: Tue, 25 Aug 2026 23:35:50 +0300
+Message-ID: <20260825203553.3725132-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On the T14s, the EC already steps the keyboard backlight when you press
-Fn+Space: off, then low, then high.
+Hi folks,
 
-We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
-We then also send KEY_KBDILLUMTOGGLE.
+The two first patches address smatch and compiler warnings in int3472. The
+third patch clean up GPIO parsing in the int3472 driver.
 
-The extra key is the problem. Desktops treat it as "please toggle the
-light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
-fights the EC's three steps. The on-screen bar also stays empty,
-because Toggle() always returns 0%.
+since v2:
 
-thinkpad_acpi on x86 already skips the key when the firmware changed
-the light. It only uses brightness_hw_changed. Do the same here: keep
-the LED update, do not send KEY_KBDILLUMTOGGLE.
+- Drop the __free(ACPI_FREE) change.
 
-Tested on a Lenovo ThinkPad T14s Gen 6 (21N1, Snapdragon X Elite) with
-GNOME. After this change the OSD bar tracks off / 50% / 100%.
+- Move ACPI_FREE() earlier in the function and save the object's integer
+  value into a local variable.
 
-Signed-off-by: David Stephenson <git@davidstephenson.net>
----
- drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+- Fix return values -- 0 was returned by v2 in some cases where 1 was the
+  right value.
 
-diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platfo=
-rm/arm64/lenovo-thinkpad-t14s.c
-index 5590302a5..22d20a907 100644
---- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-+++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-@@ -488,8 +488,14 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void *=
-data)
- =09case T14S_EC_EVT_NONE:
- =09=09break;
- =09case T14S_EC_EVT_KEY_FN_SPACE:
-+=09=09/*
-+=09=09 * Firmware already cycles the keyboard backlight
-+=09=09 * (off / low / high). Notify userspace through the LED
-+=09=09 * class only. Emitting KEY_KBDILLUMTOGGLE as well makes
-+=09=09 * desktop environments toggle the LED a second time.
-+=09=09 */
- =09=09t14s_kbd_bl_update(ec);
--=09=09fallthrough;
-+=09=09break;
- =09case T14S_EC_EVT_KEY_FN_F4:
- =09case T14S_EC_EVT_KEY_FN_F7:
- =09case T14S_EC_EVT_KEY_FN_4:
---=20
-2.55.0
+Sakari Ailus (3):
+  platform/x86: int3472: Address Coccinelle warning on an error print
+  platform/x86: int3472: Fix uninitialised variable warning
+  platform/x86: int3472: Clean up GPIO parsing
 
+ drivers/platform/x86/intel/int3472/discrete.c | 51 +++++++++----------
+ drivers/platform/x86/intel/int3472/tps68470.c |  2 +-
+ 2 files changed, 25 insertions(+), 28 deletions(-)
+
+
+base-commit: 56c29fa3ee666197516a231e75aed789ae9c530d
+-- 
+2.47.3
 
