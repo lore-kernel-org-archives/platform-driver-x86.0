@@ -1,156 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEF0392C2A
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 10:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F673BCD3C
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 10:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787739493; cv=none; b=BDNIkxVylWWwq+IhemUS2lOClULCqIo5Ylg6uQb0PxQyVo/vFdGm/OWGR+knhjgy9CXzoVJGjJmIuwZZZ6nCSTVsd0kc7L2rVQXP+u877rj/KFY+duvhB7q2YH0YZ2FUfcE0inuJJzn31WLyH4KOUTzh3FT4J5jr+0aIAuQAGzI=
+	t=1787740240; cv=none; b=VPsTzFwi2MnCXcXfwjvQxwnHatmTWtLXwxDib3+TJ8217QFVwJuHoQ2bJB8H0WrU79Gwrxt7mSMEqLy4L7YcAzItKdrvCohe7bhMGlJtAb62WP34WQU8992dbbO/Bzf0Swb3Okkxqx7mKXNXWyLimZq7vRXQG8xoJ/5kB1G9FVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787739493; c=relaxed/simple;
-	bh=sqL24K0KfJdbx0vHEs3vDO0I9peitKLJ5huBhDqLg/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=So3Iec1ypFNFGv/dFUSUavv8eJQMC4im4d3cEIHyO0PpBUaRZ2Nybmu3m199A+UqsmdVvsvCmD6i4Tp/vkdOjr5bvhnM7PNA2SWSaYupBih3cndewcv2wL+KHIWzxQ8x6fTjjoDerZSW2DTR5GB7fV0EkqnWC/ujUpWCtj3fY0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEYJ0QiP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787740240; c=relaxed/simple;
+	bh=nmanUXENTYAWhJcrZe5nnCdfVN8VqAFDHENUPTMv+nk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7wSmN1O6zCUqATjRno7TRSmPG6cGUA3M16YMZ8cgTVOe9rFY21URV1jnh5S1dauAJYRBRD8BGDfP6+Rx3XtThvhVXUwxWb5bAU4nX8UsJaJfeoWL/N4O7vKXk8iFSQ9rH1blN6f8zlFjWnNddtIwwDoM4vYoxS2VAkp8P/Y7D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OpoPN8+6; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEYJ0QiP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE5C1F00A3F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 10:18:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787739492;
-	bh=mDV5gdsC6yguzGKpIGUB6MMAjCOyqIfbyxfQVnSthAw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=WEYJ0QiPsNz/hfSPDfjvjPu8n3hqjXwZNZvTlaejmuycz+nSglf5e425z6K8VtWCA
-	 8e6IlIR4tv4OdCBmVs1wtRiGE1c268+VscF/ztbKnZawYk8E8RX2Zn8BZV5lx0pIpx
-	 qB7mhhpgEBgQFNs8SaouLWV1Uo4loeSEKxBKDGUBUQHLVKPQLVdwqsjnwZHgvlgsov
-	 IIjlNvBrI3XA5c13p43a+if6kDPffd1PeYjkxe/rjRU6mF9Z8Om74N5NwbZzU9X5W/
-	 D0j2jTYXElRy+eXLnzSnfU3FlsgCxOt45gqzsaVw5oucoSCvUO/6cUCbfQea7d8y6+
-	 0TP6AIixhaM0g==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-39fa5e3a428so7058671fa.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 03:18:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoEbERU+e5FHqxLbS9heTpsrFd/ER9h9srkLqyWp7tOkUJ+IMgGcIj9KFNKONaGJo+bNqb/o8Sipz4TD5HkspwUeK8P@vger.kernel.org
-X-Gm-Message-State: AFuF++lDDTNiFYDi4VyS9tD3l+rgR9IGW1d3p4mmX9KalLYbU52xj1V6
-	GdsKHnqow0QZ7fFGvSPTV/HBCzJt6PLh7NwTzmNzExvSKhk6++mgIDObsqy8jCLwhIxguFxDIzL
-	iUI45HSzTOChOW8dXHa+ECLUHf7NdveI=
-X-Received: by 2002:a2e:b8cd:0:b0:3a1:8dd6:aada with SMTP id
- 38308e7fff4ca-3a1fbb66ed5mr9694031fa.4.1787739490431; Wed, 26 Aug 2026
- 03:18:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpoPN8+6"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-cc149372c14so570924a12.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 03:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787740238; x=1788345038; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=fTwczG03AOy3mBcQRAusH2eukvjICUjX1lQZk3L+S68=;
+        b=OpoPN8+62oXfJZl20WXoSgC/eJu7Dlot0p27AYL5pC38nmxOdYVD7c+0IqE8iHVloN
+         Lo8bqBqepJhI1qcgdbCaEPHZVSJYkzMZuWRoLuCuvIDZm18W/2v/japf5yg9uW1QMEaZ
+         08A53TuOI+aifFdq0EwaqAXfIb/5vkmrJ3U8JnSso1epcyqARdJJwPYrSeWZe2qnq5IL
+         lcKA+DNnLqLotBsW0tqSG7zQc3e1b6YH+TzLh3+9po/i8/HWS7VUGd75CkG3dbEFJn2l
+         DO3NQ7sNoEBslwyJFgDSC5On1pYSs2TWK+X0vjEzTGTsglAtb0ukfn9KusC8ltJofVoZ
+         tmgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787740238; x=1788345038;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fTwczG03AOy3mBcQRAusH2eukvjICUjX1lQZk3L+S68=;
+        b=cXJSsIM/cSKyfGppV7xXDMwAKab2y+hb4k0NzevIS6ePksAwEXw1d+I1GrWKkXIcXS
+         QMw9N8okDS9eRnoijOv475qcxiWRUMvTZagX+Q4Su+7xTg/GhKO/2Rcf+0/9FZrSuIUq
+         Gj2+xA/nlhlySzw0Ms+MPPoasD8rSiMkQZ8yJF7DD+m7Qpx7TFb7j9VRd+ZC/I30Vy72
+         hiT6VNJzVs7hllXVyitTS0n1swkh5mBe40DN+Pwt62tleAAFHQwjHBtvSnEM63Iiuz4P
+         p2j/HUWj0qIGgrncoYvpkoIt75YuhYhspuGp+eYegchRhyZEE2TaBL0WuxN0pQqWEPr0
+         Kejw==
+X-Gm-Message-State: AFuF++kfh+cYdvxOvvRaC4iOrf2kKafbgn3IWEQHvy6f5ZTQNxFKBuKh
+	c7eRzf53LoBdPY+oEEfusbtbUr6p5n+L9gXinLqxfwJi6HtuSM6/N6NV
+X-Gm-Gg: AR+sD112aoHs7o+cfBrVUQIc5da6W6bE/PqYVnY5n2g98Bgd/jx6j5+mHuEvYZhSlC/
+	yO/uoI4ytC+/Nq20JmmCB18bLDLmfmPZmBxRumC6tJnDROKxPFSEVH0GuOqXp1EeiRXZLFf9eKd
+	JpHIUNseYsJQYNejyqTQakRRkx+aNyAA8kwADGLP76a+hNlqmq6j30shHMb1qEHDr3NvhYn98zH
+	rKxHt2uPQUe29tdPoTYBO4FfjBS5tSma09+qFEk30w/2iakHNFYcJm4QOpfSSa23sW1CiSsodDK
+	vZuKRxAFLgzgDfTHE7BQNNXe1OWDi0UdGLPJ04sNQOdmEBeWX0liaYf/PeoAPX8NajeF9icPMax
+	0vYIx+5TQs0Mu3earzF3JpKfLdpHhyCIMcIVxKSo+cGRQPDi3Q25JpnHX3Av6/GGrDPNiihMjHs
+	kJuKXWYL6Wd3LB7Ibn/hHclFd3bRdT7qvC8BngCO92w7EBIDz8IN5+kr6UwBbTSLqNWO5ixwia6
+	ldsLw5vnFl2XSgSd9Tm4OLWMjblpEql9WaZN4BUUQ==
+X-Received: by 2002:a05:6a21:6b0a:b0:3b3:d0f:7883 with SMTP id adf61e73a8af0-3cf762853b2mr12031072637.7.1787740237439;
+        Wed, 26 Aug 2026 03:30:37 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3283d8dc465sm7267468eec.24.2026.08.26.03.30.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2026 03:30:36 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Muhammad Bilal <meatuni001@gmail.com>
+Subject: [PATCH v2] platform/x86: hp-wmi: fix heap OOB read and memory corruption in hp_wmi_perform_query()
+Date: Wed, 26 Aug 2026 15:30:12 +0500
+Message-ID: <20260826103012.240453-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com>
- <20260824211338.3583976-4-sakari.ailus@linux.intel.com> <CAJZ5v0ieb2FcANOt0MRMsTrwtbLiUF48W_c=3z3OpNH92d=7vg@mail.gmail.com>
- <ao2FmNRFjSJVxhrL@kekkonen.localdomain> <CAJZ5v0gQVFxSkkjPbRf6bsKdgUBGduZV0M5SWrHoeB246ZLqew@mail.gmail.com>
- <134e9566-7913-86d7-1e8b-b2ca9ebec55c@linux.intel.com> <CAJZ5v0h4KD6Q1DeuwbFQ83U1=wKORMWUQNA2BwnFtsYAyzz_Ow@mail.gmail.com>
- <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com>
- <ao3uh2xos_1uwAgJ@kekkonen.localdomain> <762e0630-1b04-6a82-69b6-ca5148e74cff@linux.intel.com>
-In-Reply-To: <762e0630-1b04-6a82-69b6-ca5148e74cff@linux.intel.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Wed, 26 Aug 2026 12:17:26 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g+82WhVmdK=MT8oyuZ=d=Lb7adwEepmTx4JKebh-bqRg@mail.gmail.com>
-X-Gm-Features: AcwNN1XVhFh3nFaaB5EpSZughSsqDc3uvAx5MZLQaiHg6Md-aDFOcSXi5vYryYg
-Message-ID: <CAJZ5v0g+82WhVmdK=MT8oyuZ=d=Lb7adwEepmTx4JKebh-bqRg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] ACPI: Support __free() from cleanup.h for ACPI objects
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	"Rafael J. Wysocki (Intel)" <rafael@kernel.org>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Daniel Scally <dan.scally@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 26, 2026 at 11:04=E2=80=AFAM Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> On Tue, 25 Aug 2026, Sakari Ailus wrote:
->
-> > Hi Rafael, Ilpo,
-> >
-> > On Tue, Aug 25, 2026 at 03:08:07PM +0200, Rafael J. Wysocki (Intel) wro=
-te:
-> > > > If there is a cleanup.h "free" that can only be used with objects
-> > > > returned by acpi_evaluate_dsm_typed(), I'll be fine with that.
-> > > >
-> > > > Or if everyone agrees that doing
-> > > >
-> > > >     union acpi_object *out_obj __free(ACPI_FREE) =3D NULL;
-> > > >
-> > > > is not confusing and fine, I may just say "Hey, I don't care that m=
-uch".
-> > >
-> > > And particularly there is this paragraph in a comment in cleanup.h:
-> > >
-> > >  * Given that the "__free(...) =3D NULL" pattern for variables define=
-d at
-> > >  * the top of the function poses this potential interdependency probl=
-em
-> > >  * the recommendation is to always define and assign variables in one
-> > >  * statement and not group variable definitions at the top of the
-> > >  * function when __free() is used.
-> > >
-> > > regarding a broken code example, so I would think that this is not a
-> > > made-up concern.
-> >
-> > That's indeed a valid concern, still quite unlikely in practice but
-> > probably hard to find when it happens, so avoiding that is definitely
-> > preferred. That being said, the biggest trap in cleanup.h is probably i=
-n
-> > scoped_guard(), and doing __free() =3D NULL somewhere doesn't matter mu=
-ch in
-> > the end.
->
-> __free() =3D NULL is not that hard to catch during review (or even in
-> code already in-tree), have done that dozens of times myself by now.
-> Checkpatch, too, should be able to catch that easily, if it doesn't
-> already.
->
-> None of those cases I've commented on had a bug, so it was just for
-> teaching submitters & readers of that code the correct __free() pattern.
-> I think the concern is largely overblown given how rare actual bugs are
-> even if the wrong pattern is used. Put that to contrast to memleaks found
-> on our rollback paths, __free() looks a clear win despite very rare to
-> occur caveats.
->
-> Given what I've seen, I'd say on dangerous level __free() =3D NULL is
-> somewhere around using MAGIC_SIZE_DEFINE instead sizeof(*obj) when doing
-> mem allocs. It usually isn't buggy even if we don't want to teach people
-> to use it.
->
-> Besides, it was actually Rafael himself who brought the unsafe pattern
-> into this discussion (I immediately noticed the problem but since it was
-> not an actual patch, I didn't raise a concern). Sakari's patch did use th=
-e
-> correct pattern (and if it wouldn't have done so, there would have been a
-> review comment from me ;-)). In my reply to Rafael, I intentionally left
-> the right side open with "=3D ..." to not place that NULL there.
->
-> > In this case I'll just call ACPI_FREE() sooner.
->
-> That works too in this case, yes.
+hp_wmi_perform_query() evaluates an ACPI WMI method and expects a
+struct bios_return header in the returned buffer. However, it only
+checks that the ACPI object type is ACPI_TYPE_BUFFER without verifying
+that obj->buffer.length is at least sizeof(*bios_return) (8 bytes).
 
-So overall, something like this can be defined
+If the firmware or ACPI method returns a buffer shorter than 8 bytes:
 
-static inline void free_acpi_object(union acpi_object *obj)
-{
-        ACPI_FREE(obj);
-}
+1. bios_return->return_code at offset 4 reads out of bounds from the
+   allocated ACPI buffer slab.
 
-DEFINE_FREE(acpi_object_free, union acpi_object *, free_acpi_object(_T))
+2. If return_code evaluates to 0 and outsize is non-zero,
+   (int)(obj->buffer.length - sizeof(*bios_return)) evaluates to a
+   negative integer (e.g. -8 for a 0-length buffer). actual_outsize is
+   set to this negative value and passed to memcpy(buffer, ...,
+   actual_outsize), where the signed negative value is cast to
+   size_t (e.g. 0xfffffffffffffff8), attempting to copy ~18 Exabytes
+   and triggering an immediate kernel crash. Additionally,
+   memset(buffer + actual_outsize, ...) performs an out-of-bounds
+   write before buffer.
 
-and used along with acpi_evaluate_dsm*().
+Fix this by ensuring obj->buffer.length is at least sizeof(*bios_return)
+before accessing the return code, and compute actual_outsize safely
+using min_t(u32, ...), which is sound specifically because the guard
+above already rules out obj->buffer.length being smaller than
+sizeof(*bios_return) by the time that subtraction runs.
 
-Moreover, a wrapper around acpi_evaluate_object() returning a pointer
-to union acpi_object on success and NULL on failure can be defined and
-used along with the above.
+Fixes: c3021ea1beee ("hp-wmi: allow setting input and output buffer sizes separately")
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+---
+v2: Rebased onto current platform-drivers-x86.git 'fixes' (confirmed
+    matching current mainline, blob b2773fc1aca414792b99406315496a2c3a64dd06).
+    v1 was diffed against a stale local copy of hp-wmi.c that predated
+    a batch of unrelated upstream changes (GPU MUX switch support, new
+    OMEN/Victus board IDs), so its hunks no longer applied. The fix
+    itself is unchanged, only the base and line numbers moved. Also
+    correcting the recipient list: Hans de Goede's address is
+    hdegoede@redhat.com, not hansg@kernel.org as v1 had it.
 
-IMV that would be way cleaner than wrapping a raw cleanup macro around
-ACPI_FREE().
+ drivers/platform/x86/hp/hp-wmi.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-I generally think that there needs to be a wrapper layer around the
-ACPICA API, so drivers don't need to call functions returning
-acpi_status directly, for instance.
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index b2773fc..d7ad206 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -691,8 +691,9 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 		goto out_free;
+ 	}
+ 
+-	if (obj->type != ACPI_TYPE_BUFFER) {
+-		pr_warn("query 0x%x returned an invalid object 0x%x\n", query, ret);
++	if (obj->type != ACPI_TYPE_BUFFER ||
++	    obj->buffer.length < sizeof(*bios_return)) {
++		pr_warn("query 0x%x returned wrong type or too small buffer\n", query);
+ 		ret = -EINVAL;
+ 		goto out_free;
+ 	}
+@@ -711,7 +712,7 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	if (!outsize)
+ 		goto out_free;
+ 
+-	actual_outsize = min(outsize, (int)(obj->buffer.length - sizeof(*bios_return)));
++	actual_outsize = min_t(u32, outsize, obj->buffer.length - sizeof(*bios_return));
+ 	memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual_outsize);
+ 	memset(buffer + actual_outsize, 0, outsize - actual_outsize);
+ 
+-- 
+2.55.0
 
-Someday we'll get there.
