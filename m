@@ -1,129 +1,194 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012018.outbound.protection.outlook.com [40.107.200.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A717474245;
-	Wed, 26 Aug 2026 16:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB27E370D54
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 18:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.174
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787762222; cv=fail; b=Q8G+RVJ+TYX6RZskjvDdtCbi7KTBCIPl9Ly5qnoVhW2b+/W+DY7xWjJs868SXByg4Egpva934zxjnkok6CldVbxoWrqFcBufmk69g7xW7dzycBw1eulc9sC7Iw3xlCvnMtVPC8lpH9O7j9hb+a1vBPMID+ypDyqqExOgCpgST9s=
+	t=1787768968; cv=pass; b=IxisF90wIlN+UjvmVObzypmGsCuCZJ/fZYaftLK1KYczkM++MfTKpGvi8mI181Q0BNFWah6jCJeuYsDYSgN7I6fMb0gGFxTyLk3a9Z1hK+ZWnOfuJCr9fbwaOvuXnmAZlUC6zW/6CUI1a8IIDj+kO3QYrPHOZ8UDShKBoRKnEg8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787762222; c=relaxed/simple;
-	bh=2WRSl2ymd38RGpzY7YLErZ8ZVGUcmBBfe5CowhAvtRA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q1neuSwuUIgcDj+KzZfXpHLQjQfQ4odV4MLjA+5r+bg3JIhmo22mqkFXiihim3Wb9R/BHQAZpotelpecQOF5bGn9/NmWIyivUyH9wSKB3aZ7aoNpOKo55c+CvWtjD5VvsA2EifjEyRz+opcNg48+L4TsHDj7yXQpxcmrQG9fbeY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lu9an3ld; arc=fail smtp.client-ip=40.107.200.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1787768968; c=relaxed/simple;
+	bh=W7mkBWhlbEBQTXcAXYI4y9O+bpp9KINa2CXplI24LYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=hmqyuze1AbdZxo/Z4Qd0AFoZY6rTOklxZ7mW3xK5o3pFHpiNVKL4dvpD/cihk3It8P+qluR/THaQ+aomHIWzDfsMPkxo2AsMBYz76OWPZqlQmzjytkEXE0+JptaHoxMX0qeWOK0j3aD/wc6vxZgZAweReeTojHtSPe8j3hJIZPY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c5gNXBzr; arc=pass smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lu9an3ld"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kdjAWdpc2vTyB02rbnt8ChNJnfwImWtOW38JANdcAE+0gkF17KzC1qQ0fiRGo+hsV53e0iC+7so/hqveU6zf4i5bzDD0m2pCnZd77I71gZPHhocZOtPXCK+SzeWHPu1IRDyEb64KPxhcH4z17V+r5CaQeYXs4pQfRe2y4fGdSRl4EKb/y4RCJoFbdvrFcA6ejlMSd7Q4LuE+RbihoRbPzPCaFNULaZwEVr74iRzU9hZ6pphw15nKXj7BfxMPKMf7dq4SATdjVc7IREy3cITrfgE9PhE7M0o6tcpq95U3ApQTZSprqklgfx1sBNsx55noILbscKNXYuMc/5XsL3yeRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZfZcEzvXqlfM/r+1M0PvtR1kcBKiHfN+UkD713+CmRw=;
- b=bSZfL5v+OrxDKwwOe/NyVMZCXi6tLqQSHw874BxmWQ9pH8A2HvLTZJiXsIyfFTWqwhoKDkdJBzD9KUIAYxHCbD/4lCgdQ1Qbm5XLLWhGZ8LMqb3ROzVawVaR5NiJfsEcokzj3Pp7vtAz1fimcykvalOi0nYde6BVsfFtL9ghBJIJOvMRSgK+EAOgt7M8y18TVJSUqvtW304qbJ3emSkfXUrUWo0IIRuz3gtb3kebe/LLse0ST33i6TJestTNoLlbWERv/IXNy5zJ6wo/TjmX6azKieoVFHq0rn85+KHH78HWSQJ6iV90PKiy5akkG/4CGr6NWMZmuY2gC0rLRbGa3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 149.199.90.133) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZfZcEzvXqlfM/r+1M0PvtR1kcBKiHfN+UkD713+CmRw=;
- b=lu9an3ldsrgTUxB34cs+HJHph68TUZpADf1hvwDIMBtSFKB4i2rc4HqSpw6dCYM1smncJy4QLdBviByXjz/MSYj60YlUpAcGfDftE+bd6K1TlbCqiARMwk8wb77re9l8GoOEPEwk5LYKq445WzJeImqB4YnGMz8PPsz3uRR/vSs=
-Received: from CY8P222CA0001.NAMP222.PROD.OUTLOOK.COM (2603:10b6:930:6b::28)
- by PH0PR12MB7790.namprd12.prod.outlook.com (2603:10b6:510:289::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.7; Wed, 26 Aug
- 2026 16:36:46 +0000
-Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
- (2603:10b6:930:6b:cafe::79) by CY8P222CA0001.outlook.office365.com
- (2603:10b6:930:6b::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.360.10 via Frontend Transport; Wed,
- 26 Aug 2026 16:36:44 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 149.199.90.133) smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=amd.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- amd.com discourages use of 149.199.90.133 as permitted sender)
-Received: from satlexmb07.amd.com (149.199.90.133) by
- CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.360.3 via Frontend Transport; Wed, 26 Aug 2026 16:36:43 +0000
-Received: from dogwood-dvt-marlim.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Wed, 26 Aug 2026 11:36:41 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hansg@kernel.org>, open list
-	<linux-kernel@vger.kernel.org>, "open list:X86 PLATFORM DRIVERS"
-	<platform-driver-x86@vger.kernel.org>, Shyam Sundar S K
-	<Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH] platform/x86/amd/pmf: Add AMDI0112 ACPI ID
-Date: Wed, 26 Aug 2026 11:36:11 -0500
-Message-ID: <20260826163611.2268377-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5gNXBzr"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-3a20dec69f9so1581671fa.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 11:29:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787768953; cv=none;
+        d=google.com; s=arc-20260327;
+        b=DbBIMUpuiGHQsnuWHs5+v7O3b8jUEs6qdKz9EkUePqXITVH3BvnQcE5m60f7C3xOWf
+         7GzX71I6uoNHEu6CBvjDqB0G9Kn/xabZ78+P+6sWmfK3ijO7M20vOZQd3/OWOMNEdxMi
+         u8mxfQqghWwlfM9M7vQir3BRz2fHuZmLOdXZNr1094Xe4DRq6VSLOEQKnQUcnubhdat1
+         T/jADJBsv+DAJaYilVsMAyb+2dJ2zwRfwVVIhycVmoW+I7Mj2xLTlqgKZzS7FTkI0XCL
+         6kIIuUU4rZGyx/pzabGheOEdq/V5iMVBCwEcT1mXp3q2SdbsOprtIiyoK75TJ5ZAcVzW
+         1LGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=9LMLIlbR3UN8G7qFrtL9wTDK1BiXLaCnZuZP3ilgoc4=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=R96rZPo4Dj4YmDJbNng2TQPn/AeTxvRKqLUmu/KhBvN7OjISRied+PIbFbu6EP1ZA9
+         Bg8aEzF7n+2Igg6J4YiPqiQWqqTf1b+V9pbzeRehFXGsdw+It5I1mIJLOICKhjdES83e
+         x3118T0O+RtuQxo6pzClrbHDHGkYLr0cISh/5RUvasKNiP3thiTyZR3V0mXNKoLvyJbJ
+         48SSkozYqkDI9aGAVRxUKqGn7SazLmnHCP3rIsGWRveR35A7GBbP8QkBzQZEq6uY2mOH
+         MJrDMqvCLbyrL0HV39RHC4CjFxXrmMVx+8uV9En779YHQd0flrtc1+CliDyFZmWqlIYE
+         HTEA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787768953; x=1788373753; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=9LMLIlbR3UN8G7qFrtL9wTDK1BiXLaCnZuZP3ilgoc4=;
+        b=c5gNXBzrA44G7VzVBcAjx7xbNcRJyKXi1n+G3HA+CpYmVMzNZsdzmxjMkYassPHZiS
+         UEFJgJ0lz7skt96vaNdJsVr+5ySgACEg6835UUUcwlOcZRvN1aqo91udtXYV1gt7z2+i
+         8ddrvyXBX2arr9LeGMgUnvRC/QY9HUc50s74qQCvozR+7g6zTwwtAfRDNP8jQV2IfpsC
+         Pwu/L7F1Xr3yneYObnvee/c+7nOKaPy3xYSceNvc3yxfabyZ+14a/n3kSu0vUKTu66Ut
+         GMNjpWl0a/ZwerA3tTVuws2ZPUwLhhQjKwApZgJpT8dw2TgcAK3fxP7xgrPdhyB/NdOc
+         Ui+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787768953; x=1788373753;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=9LMLIlbR3UN8G7qFrtL9wTDK1BiXLaCnZuZP3ilgoc4=;
+        b=ULv0iKtsqGSYKDyBSdCVUd2XOICOrVNL1fxhaRt/kdDRmqzMHpxctdnNDEs+v8Pewa
+         2j4JNg0mJTcsYi0rTwzsUuog4xmhTfF/TeWCZkiDlO2k37mIgGgQ0actv5YUnViod5Vw
+         e6lKUxdon3g5rnw79XukpmzEEDmLIKRIP5UZSem/eEfsHXWS5ZmnAmMsVxx6iJFM8nLP
+         jfPcrN2CDCbnvAR1YjqL4lE9Bppmqo60UrZ3Tx456JWwbabIVdWXg0KL0HcF6/tOULMt
+         py/4BMhkrO+/9IUgWzL4WD2XZo0zmb0Vah9eq/IlEwIaPeff3tJ0rAzoH/FUn7cEWpiu
+         Zmyw==
+X-Gm-Message-State: AFuF++nVTtRcPPic64YSChL48NaP7s5EOqDD/bQyfJRr5Pq76AJe8GPK
+	3iJ8hP4T+kFVll6iJo8tLkmWqRU6n+UCzp4pGVuhOQQVCLExCTEt7B71KNE8l/3gaahOAAB+vAU
+	6F/3ZLnX5YHpwbcVbZerFPVMlCnw5J2XBMGlr
+X-Gm-Gg: AR+sD10smXpO0SvdTkgVUoNkn+phTvl/C8cq6mS4Wvm4jOCjI2oiAxX3laV1YONRx3r
+	8GNHqbHstquX/QAc0uy8shDYqHhuim5riQjhJ4URdsGQntyQhrD/aD9G+88/Wq61uxOxyosuXAN
+	DfDED6HpiXhfufjMubkqOq4pCsXKXIlBPBJXQ8KpRZjJoKJvyIRrkTkyJWpzVFDWXF5Cvbmrav/
+	1bK9G0v+y4fsYEaXcfwVbno3z5UMRYUX+iDjTQhHCuFViCCZx2glWhlzhiIKdkIeEr72zRbOehi
+	SLOrCnfjMe+IPZcUED+OVjfeNBvUXknqMF1km9kgtPywHw==
+X-Received: by 2002:a05:651c:154e:b0:3a1:4509:937e with SMTP id
+ 38308e7fff4ca-3a1fd473b5emr24104211fa.4.1787768953074; Wed, 26 Aug 2026
+ 11:29:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|PH0PR12MB7790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2770aae5-1203-4b98-1860-08df039036da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|82310400026|36860700016|1800799024|10067099003|18002099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	wFQvpSQ5a7luO4tpbtqYY1znC+mDCET2SJJB1cr+qTZYWL5Xrq5lNWa86XIQIrrUlUOSPv4F4pm+vIvETP+FXGxPHMIvYrfwHHX/xEmtXLWg8y6rc4sorouzsMoSUChiMvQ6MvI449AKvocJFm20AqO3J+P10gmyQdoPL488Nz+AqM2f90JTa/OBMQAALFqh9M8jGWmgPIcYeSVlTPWqqjHi/BtWR/o+CeSrV4wp56RHiTkqLXxWBfmW6PiXy0lKCdnvj+ewqzuL4pihBNBE1lLd828LavE8yKrvOKPLBIEu6xeGf7KjUPj3hCsfvuPuZeasYzv71lF0sIoJyzbbZffogfb/lrif4rIv/XuZRYXUpwb0rap553mCnI0a6UpAkb5fDWxsoF+Frq0eZdLVWQvnLvJOEokCim8emVjBwA784SSErMN2bEhRGKUdOqMS9kYfWvx6T2DiHUb4if8RwkzT1c7p8NURr2TZxyDI/XkP3MNzeEL4ELJsXSERRAiRK0MmGc9cuRKp2qo3PL1DTvJ78zrReivbhDPJjkzZ2ecU2IyxEMkzYk59vxkEw4RxFfxrKj7KdbwmbUf8AXEj8a+Mx59EniOVZBcwTg60VNBDRsG8EPf8Vmhk9a/k66l1A128rKzWjwaFck9xwrRcbFcCv1aJAB2nKpIYT9GUZ7YHkzG/pdmcmaOeunwyCJMSG3M3gwnjbH5V8uWfQQ6bdg==
-X-Forefront-Antispam-Report:
-	CIP:149.199.90.133;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:unknown-90-133.xilinx.com;CAT:NONE;SFS:(13230040)(376014)(23010399003)(82310400026)(36860700016)(1800799024)(10067099003)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	yyKHazsUkGgznZk+VeeSt+4vCgjnuVm5KXWSAycr/GzsmY5I/AbUdqrWESdCrnCBPiXGCrv6mSlyjotPPKctIG8OAvpbMx5Bq1IEaJ2xHorCLzuX7fXzuRs/tRY3vQY1iAdwdZGW9D4Fkh9uY2OaYMQ6bzn3YE0JHgZAv7P/SIttVDOF8Rhl3Q35FujdLfFkASXqwzoaAQy/syqwQjja5D1dbSoVaAm0NJljBtfmzBuBD5CWlKWnfoaAwCJDeQjELOr+RrbUAfm5Hp/3qXiFb8VPy8h0FZrfJCQOuWB+4qyUBLO5MiUxoTBit0M3El+Go1mTWKugC3pJBlkkshOT4e0WhlBP7geeuBd4vkFMQSi0q/R4LOsxV+ViNcixBARHATgxsPEKwHK5keRPWbxCIlg0n2fviRJjMsEgJalROB6kREYmFuIsjIASMG0A24GD
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2026 16:36:43.9451
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2770aae5-1203-4b98-1860-08df039036da
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[149.199.90.133];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE37.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7790
+References: <CADnoEWSR1T+-EjhPtiDuDzETvm5jWcn6aFC_u5LJxNaq1EoM2Q@mail.gmail.com>
+ <CADnoEWSCveEOTPS43SfK1v9ydEAAyEov8OgDiUf-hiY91muW7w@mail.gmail.com>
+In-Reply-To: <CADnoEWSCveEOTPS43SfK1v9ydEAAyEov8OgDiUf-hiY91muW7w@mail.gmail.com>
+From: =?UTF-8?B?0JDQu9C10LrRgdC10Lk=?= <korn3r@gmail.com>
+Date: Wed, 26 Aug 2026 21:29:01 +0300
+X-Gm-Features: AcwNN1XJXK-9g_SzhWrkQwhafsIxbA0lPCVI2K8qYdKb3Y67V8dr-nGB452N9bI
+Message-ID: <CADnoEWTVq+-1DuiUFfpq2n=WObW2h2ivxhmBeV4pg1O9nqqBOQ@mail.gmail.com>
+Subject: Re: (text) ASUS Vivobook 15 X1504VAP support request (WMI payloads attached)
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The AMDI0112 ID is used to bind the PMF driver to some platforms.
-It doesn't have any Linux side code changes relative to the most
-similar AMDI0105.
+disregard that, im just not very smart and pl limits even under
+windows do not represent very much of how it actually works and what
+values are used.
+sorry for spamming
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/platform/x86/amd/pmf/core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/amd/pmf/core.c b/drivers/platform/x86/amd/pmf/core.c
-index b4eae65e675b8..5966190d1496b 100644
---- a/drivers/platform/x86/amd/pmf/core.c
-+++ b/drivers/platform/x86/amd/pmf/core.c
-@@ -454,6 +454,7 @@ static const struct acpi_device_id amd_pmf_acpi_ids[] = {
- 	{"AMDI0107", 0},
- 	{"AMDI0108", 0},
- 	{"AMDI0109", 0},
-+	{"AMDI0112", 0},
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
-
-base-commit: 5b05bb3f6c5716fab6911e12d60dd1f43ad9806a
--- 
-2.43.0
-
+On Wed, 26 Aug 2026 at 18:59, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B5=D0=B9 <k=
+orn3r@gmail.com> wrote:
+>
+> I added debug messages to module and rebuilt kernel:
+> [    6.727983] asus_wmi: throttle_thermal_policy_write: dev=3D0x00110019,=
+ mode=3D1
+> [    6.727986] asus_wmi: throttle_thermal_policy_write: sending value
+> 0x02 to dev 0x00110019
+> [  763.352769] asus_wmi: throttle_thermal_policy_write: dev=3D0x00110019,=
+ mode=3D2
+> [  763.352774] asus_wmi: throttle_thermal_policy_write: sending value
+> 0x01 to dev 0x00110019
+>
+> the problem is despite those messages dev 0x00110019 my cpu package
+> power is limited to 15w.
+> but if i reboot and do
+> sudo mount -t debugfs none /sys/kernel/debug
+> sudo echo "0x00110019" > /sys/kernel/debug/asus-nb-wmi/dev_id
+> sudo echo "0x00000002" > /sys/kernel/debug/asus-nb-wmi/ctrl_param
+>
+> my cpu package power cap is set properly (output of simple bash script
+> for monitoring values of current cpu power consumption)
+> 18:45:56 |  3.71 W      |  30   |  64
+> 18:45:58 |  28.36 W      |  30   |  64
+> 18:46:00 |  46.25 W      |  30   |  64
+> 18:46:02 |  44.51 W      |  30   |  64
+> 18:46:04 |  41.15 W      |  30   |  64
+>
+>
+> no one reposended (please dont write this stuff here, so here you some de=
+bug)
+>
+>
+> On Tue, 25 Aug 2026 at 09:04, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B5=D0=B9 =
+<korn3r@gmail.com> wrote:
+> >
+> > Hello. I would like to participate in adding my laptop to list of suppo=
+rted.
+> >
+> > dmidecode -s system-product-name: "ASUS Vivobook 15 X1504VAP_X1504VA"
+> >
+> > currently neither ppd nor asusd cant properly set performance mode
+> > (powerlimit seems to be set, but not governor). confirmed by tests.
+> >
+> > got a dump of WMI calls under Windows
+> >
+> > mounting debugfs and doing next commands made power consumption go to
+> > proper values (above 40w power on cpu package versus 15w cap with
+> > either asusd or platform-profile-daemon setting Performance profile)
+> > echo "0x00110019" > /sys/kernel/debug/asus-nb-wmi/dev_id
+> > echo "0x00000002" > /sys/kernel/debug/asus-nb-wmi/ctrl_param
+> >
+> > Summary of captured WMI commands for ASUS Vivobook 15 X1504VAP_X1504VA
+> >
+> > All commands use the "DEVS" (Device Status) WMI method.
+> >
+> > | Function                 | Device ID (hex) | Value (hex) | Value
+> > (dec) | Action                          |
+> > |--------------------------|-----------------|-------------|-----------=
+--|---------------------------------|
+> > | Performance Profile      | 0x00110019      | 00          | 0
+> >   | Balanced mode                   |
+> > | Performance Profile      | 0x00110019      | 01          | 1
+> >   | Quiet mode                      |
+> > | Performance Profile      | 0x00110019      | 02          | 2
+> >   | Performance mode                |
+> > | Touchpad                 | 0x00100013      | 00          | 0
+> >   | Lock / Disable                  |
+> > | Touchpad                 | 0x00100013      | 01          | 1
+> >   | Unlock / Enable                 |
+> > | Fn Key Mode              | 0x00100023      | 00          | 0
+> >   | Hotkey mode (inverted Fn)       |
+> > | Fn Key Mode              | 0x00100023      | 01          | 1
+> >   | Normal mode (standard Fn)       |
+> > | Battery Charging         | 0x00120057      | 50          | 80
+> >   | Safe Charge ON / Limit to 80%   |
+> > | Battery Charging         | 0x00120057      | 64          | 100
+> >   | Safe Charge OFF / Charge to 100%|
+> > | Battery Charging         | 0x00120057      | 80          | 128
+> >   | Full charge for next 24h ON     |
+> >
+> > Raw Payloads:
+> >
+> > Performance:    44 45 56 53 08 00 00 00 19 00 11 00 02 00 00 00
+> > Balanced:       44 45 56 53 08 00 00 00 19 00 11 00 00 00 00 00
+> > Quiet:          44 45 56 53 08 00 00 00 19 00 11 00 01 00 00 00
+> > Touchpad Lock:  44 45 56 53 08 00 00 00 13 00 10 00 00 00 00 00
+> > Touchpad Unlock:44 45 56 53 08 00 00 00 13 00 10 00 01 00 00 00
+> > Fn Hotkey mode: 44 45 56 53 08 00 00 00 23 00 10 00 00 00 00 00
+> > Fn Normal mode: 44 45 56 53 08 00 00 00 23 00 10 00 01 00 00 00
+> > SafeCharge Off: 44 45 56 53 08 00 00 00 57 00 12 00 64 00 00 00
+> > SafeCharge On:  44 45 56 53 08 00 00 00 57 00 12 00 50 00 00 00
+> > Full charge 24h On:  44 45 56 53 08 00 00 00 57 00 12 00 80 00 00 00
+> >
+> > Sorry if too many people in CC, deepseek suggested to add you too.
