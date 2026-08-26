@@ -1,60 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4359E3B7B6B;
-	Wed, 26 Aug 2026 08:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB5E3542D4;
+	Wed, 26 Aug 2026 09:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787733568; cv=none; b=fKCbz2YdMvj+rDyTtLNqxSYxU/wfQojCGZ+583rZSfhtcsEUxYUKZuSbnt70Qj+tMs3w0+3VVY3EsNCPUWyadmFkloryJD17xk5EHn3i7UuDMLHEua92ZzoZ66X0dD5YjwN7O6UA8xVvGxpyrbrD6GojDxKaGCk2BK6Xq5xzOBU=
+	t=1787735084; cv=none; b=hBxDDf2k74bNt0n6pjzURD6dsj4zZzRwH2R7PEkbO5wnXS2OP7E28DNknfnlC0bKCs1GDvlvIEpJYnMgEGU0NS9QF9Qc5EOtfrtoJpRqQEvRDd09xx5dJWvbxScW5zE8zfGE/hv7ao1phz970VgdcEFGsvNne+fA+sPlfnB/Oa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787733568; c=relaxed/simple;
-	bh=TdZ8UFNh1OALXK9j0y/76G5BZoSIOCMAqrFD1yHPzKc=;
+	s=arc-20240116; t=1787735084; c=relaxed/simple;
+	bh=IfXNrmMA/cv+Wpzmni7v9jr3O3VipieGv6mDQHETTFU=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZCNJOxRO4AwjZ1ySKJwo8iG3oagbcByrMPRSD44v2aY5jXI6S/CsYbqL/L7VSEEAyjxRCiVfUNb6FxC7GLsaxw4Me6KMXtrZN0qJZ9ql25Zqu5l4TGLKQ2fDcHCAzgDnuIHl6lZLt9Dmm0FHQ8bKnq+pdt1GhKzSQn5T881AbRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V0PRV0Mv; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version:Content-Type; b=PDNN2Ftr7YuT/xT2CU2X0eKfmW+WFYrm3TJqfXGdtpZW2HqVopl8JNSKOlaJK4JIBBbd5pcFvt3j1olbURSQqJtHVk5iJNuRqlNr8b9q6MxCeCJdu1UX1wOF/Sv4ikJl/0DPtMEXvjYzsmE7HiUZlGVUFl2xI8hPwU1F35pG1jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNwUlUeU; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V0PRV0Mv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNwUlUeU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787733566; x=1819269566;
+  t=1787735082; x=1819271082;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=TdZ8UFNh1OALXK9j0y/76G5BZoSIOCMAqrFD1yHPzKc=;
-  b=V0PRV0MvIZOPN9f1ayZ+6ddUxXqsdVkz/JUXZ1OXZqYZHxdcLRve0A96
-   sgVr9nmmvT9qMj1WHYn4Jb/PErsoXo1O0ZB+5vmSH0EV4OAYZGQ8DGYVb
-   perSIxCcbt5v82e40ducTk5TGtSq6ikhyHdEr4Ate3L5AGl4sciHqCMxx
-   aT8aSw2hGnO8XKtSuDbnouMaDZ6T9PZuNZaDPXR2Ju0CjSdcrSK4N13M9
-   aRwGleKhgzl8s6RnTiseZu3UuUZmrc4dK/V+h+aPcHniqpLBa4tSdc8AM
-   1NqNYUJKcJgvKqOtAeWlo9v+VkwZcMSVuxjt8XFhTekiea72Pem/LsYca
-   g==;
-X-CSE-ConnectionGUID: s8VA1+98SIOx1tY4kqtbSg==
-X-CSE-MsgGUID: G3oU3EHfTYi6vsZ1ebZR3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="105588190"
+  bh=IfXNrmMA/cv+Wpzmni7v9jr3O3VipieGv6mDQHETTFU=;
+  b=dNwUlUeUXeOn8R0n/qVqp9xzcg3N9cwVn9tXjlzIAYJLJHJ2zCHcXiZO
+   /ntAL92xQBgkvbGnby1WsfZEBsyQftxgeTF3nuh50bUNnGB6vHwV0uy9F
+   3Zb5YerymucTA5LbFiWxWz8Gbyi5L0LtUue0FvgqPOTkCdGKi5fu7aqBw
+   01qbPhTfDaIS55B32JPrGDx/VphAQJHANTfbHENwS0LmVL7EnEEdRDnid
+   yu01y7r9JPm8FZFq92x0TtTn9+bitALwiM2BtIDhxLXda1MzoxDot2wiI
+   zjBPL+hZjhcrlCS1RvKlUIQcdI+ylXGl5ZP4sLheir3ptOSPfGSn8Ss0i
+   A==;
+X-CSE-ConnectionGUID: 1d7VDQk+Qq+p2TY58y9jKQ==
+X-CSE-MsgGUID: +mMXgdbMRrigTedrjMVu8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="105735840"
 X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="105588190"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 01:39:26 -0700
-X-CSE-ConnectionGUID: PBtX6s1IThmjYuDWm4PyWA==
-X-CSE-MsgGUID: pPBjI0rKThuYUGkwenanNg==
+   d="scan'208";a="105735840"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 02:04:41 -0700
+X-CSE-ConnectionGUID: lSKGzLEPSXuaMgYNPyd0+Q==
+X-CSE-MsgGUID: D1VVjkgZSjq8j5B0QQ+cGg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="263224045"
+   d="scan'208";a="261389778"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.247])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 01:39:22 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 02:04:38 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Aug 2026 11:39:18 +0300 (EEST)
-To: Tony Luck <tony.luck@intel.com>
-cc: Hans de Goede <hansg@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-    Breno Leitao <leitao@debian.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev, 
-    Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH 7/7] platform/x86/intel/bff: Report frequent filter
- resets
-In-Reply-To: <20260825181526.13203-8-tony.luck@intel.com>
-Message-ID: <80796712-e183-45d5-1325-553dd0e9d409@linux.intel.com>
-References: <20260825181526.13203-1-tony.luck@intel.com> <20260825181526.13203-8-tony.luck@intel.com>
+Date: Wed, 26 Aug 2026 12:04:34 +0300 (EEST)
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, 
+    linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
+    Daniel Scally <dan.scally@ideasonboard.com>, 
+    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] ACPI: Support __free() from cleanup.h for ACPI
+ objects
+In-Reply-To: <ao3uh2xos_1uwAgJ@kekkonen.localdomain>
+Message-ID: <762e0630-1b04-6a82-69b6-ca5148e74cff@linux.intel.com>
+References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com> <20260824211338.3583976-4-sakari.ailus@linux.intel.com> <CAJZ5v0ieb2FcANOt0MRMsTrwtbLiUF48W_c=3z3OpNH92d=7vg@mail.gmail.com> <ao2FmNRFjSJVxhrL@kekkonen.localdomain>
+ <CAJZ5v0gQVFxSkkjPbRf6bsKdgUBGduZV0M5SWrHoeB246ZLqew@mail.gmail.com> <134e9566-7913-86d7-1e8b-b2ca9ebec55c@linux.intel.com> <CAJZ5v0h4KD6Q1DeuwbFQ83U1=wKORMWUQNA2BwnFtsYAyzz_Ow@mail.gmail.com> <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com>
+ <ao3uh2xos_1uwAgJ@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,159 +65,64 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 25 Aug 2026, Tony Luck wrote:
+On Tue, 25 Aug 2026, Sakari Ailus wrote:
 
-> If an instance of a bitfix filter contains some transient errors built
-> up over time, then resetting the filter will free up slots in the filter
-> to store persistent errors.
+> Hi Rafael, Ilpo,
 > 
-> Save a time stamp when "yellow" status is seen and clear the filter.
+> On Tue, Aug 25, 2026 at 03:08:07PM +0200, Rafael J. Wysocki (Intel) wrote:
+> > > If there is a cleanup.h "free" that can only be used with objects
+> > > returned by acpi_evaluate_dsm_typed(), I'll be fine with that.
+> > >
+> > > Or if everyone agrees that doing
+> > >
+> > >     union acpi_object *out_obj __free(ACPI_FREE) = NULL;
+> > >
+> > > is not confusing and fine, I may just say "Hey, I don't care that much".
+> > 
+> > And particularly there is this paragraph in a comment in cleanup.h:
+> > 
+> >  * Given that the "__free(...) = NULL" pattern for variables defined at
+> >  * the top of the function poses this potential interdependency problem
+> >  * the recommendation is to always define and assign variables in one
+> >  * statement and not group variable definitions at the top of the
+> >  * function when __free() is used.
+> > 
+> > regarding a broken code example, so I would think that this is not a
+> > made-up concern.
 > 
-> Log at KERN_WARNING level if the overflow occurred quickly after a
-> previous overflow on the same bitfix filter instance. Use KERN_NOTICE
-> for first, or long delayed, overflow.
-> 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
->  drivers/platform/x86/intel/bff.c | 71 +++++++++++++++++++++++++++++++-
->  1 file changed, 70 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/bff.c b/drivers/platform/x86/intel/bff.c
-> index ae9dc0bf2777..7c22a1ad6b9d 100644
-> --- a/drivers/platform/x86/intel/bff.c
-> +++ b/drivers/platform/x86/intel/bff.c
-> @@ -23,14 +23,19 @@
->  #include <linux/cpufeature.h>
->  #include <linux/cpuhplock.h>
->  #include <linux/device-id/x86_cpu.h>
-> +#include <linux/err.h>
->  #include <linux/errno.h>
-> +#include <linux/gfp_types.h>
->  #include <linux/init.h>
-> +#include <linux/jiffies.h>
->  #include <linux/limits.h>
->  #include <linux/module.h>
->  #include <linux/notifier.h>
->  #include <linux/printk.h>
-> +#include <linux/slab.h>
->  #include <linux/topology.h>
->  #include <linux/types.h>
-> +#include <linux/xarray.h>
+> That's indeed a valid concern, still quite unlikely in practice but
+> probably hard to find when it happens, so avoiding that is definitely
+> preferred. That being said, the biggest trap in cleanup.h is probably in
+> scoped_guard(), and doing __free() = NULL somewhere doesn't matter much in
+> the end.
 
-A bonus point from paying attention to having necessary includes already 
-in v1 throughout the series. :-) (No action required, I'm just happy to 
-see that for a change.)
+__free() = NULL is not that hard to catch during review (or even in
+code already in-tree), have done that dozens of times myself by now.
+Checkpatch, too, should be able to catch that easily, if it doesn't 
+already.
 
->  #include <asm/cpu_device_id.h>
->  #include <asm/cpufeatures.h>
-> @@ -39,6 +44,16 @@
->  #include <asm/msr.h>
->  #include <asm/msr-index.h>
->  
-> +/*
-> + * A 10-minute observation period helps distinguish between:
-> + *
-> + *  - A long-term accumulation of transient corrected errors
-> + *    (filter stays clear after reset).
-> + *
-> + *  - Permanent defects (filter overflows again quickly).
-> + */
-> +#define BFF_OVERFLOW_INTERVAL   secs_to_jiffies(10 * 60)
-> +
->  #define NUM_IMH_PER_SKT		2
->  
->  /* Intel bitfix filter control register defines */
-> @@ -74,6 +89,8 @@ MODULE_DEVICE_TABLE(x86cpu, bff_cpu_ids);
->  
->  static const enum bff_type *bank_types;
->  
-> +static DEFINE_XARRAY(bff_bank_xa);
-> +
->  /* Diamond Rapids maps APICID[2] to the IMH instance. */
->  static void bff_set_imh_id(struct mce *mce, unsigned long *id)
->  {
-> @@ -139,13 +156,58 @@ static unsigned long get_bff_id(struct mce *mce)
->  	return id;
->  }
->  
-> +/*
-> + * Save current timestamp for bff_id. Return true if it is within
-> + * BFF_OVERFLOW_INTERVAL of previous timestamp for this bff_id.
-> + */
-> +static bool bff_note_event_and_check_burst(unsigned long bff_id)
-> +{
-> +	unsigned long now = jiffies, when;
-> +	unsigned long *ts;
-> +
-> +	if (bff_id == ULONG_MAX)
-> +		return false;
-> +
-> +	ts = xa_load(&bff_bank_xa, bff_id);
-> +	if (!ts) {
-> +		ts = kzalloc_obj(*ts);
-> +		if (!ts) {
-> +			pr_warn("Timestamp allocation failed\n");
-> +			return false;
-> +		}
-> +		if (IS_ERR(xa_store(&bff_bank_xa, bff_id, ts, GFP_KERNEL))) {
-> +			kfree(ts);
-> +			pr_warn("Timestamp save failure\n");
-> +			return false;
-> +		}
-> +		*ts = now;
-> +
-> +		return false;
-> +	}
-> +
-> +	when = *ts + BFF_OVERFLOW_INTERVAL;
+None of those cases I've commented on had a bug, so it was just for 
+teaching submitters & readers of that code the correct __free() pattern.
+I think the concern is largely overblown given how rare actual bugs are 
+even if the wrong pattern is used. Put that to contrast to memleaks found 
+on our rollback paths, __free() looks a clear win despite very rare to 
+occur caveats.
 
-You could try to name "when" more descriptively so the name tells its the 
-end of the ("too fast") burst time window.
+Given what I've seen, I'd say on dangerous level __free() = NULL is 
+somewhere around using MAGIC_SIZE_DEFINE instead sizeof(*obj) when doing 
+mem allocs. It usually isn't buggy even if we don't want to teach people 
+to use it.
 
-> +	*ts = now;
-> +
-> +	return time_before(now, when);
-> +}
-> +
->  static void handle_bff(struct mce *mce)
->  {
-> +	bool burst = false;
-> +
->  	/* The bitfix filter overflowed, get the target CPU to reset it. */
->  	if (wrmsrq_on_cpu(mce->extcpu, MSR_MCx_BFF_CTL(mce->bank), MCI_BFF_RESET))
->  		pr_warn("Failed to reset bitfix filter for CPU %d Bank %d\n", mce->extcpu, mce->bank);
->  
-> -	pr_debug("unique_id = 0x%lx\n", get_bff_id(mce));
-> +	/* Get unique id for bitfix filter instance that overflowed */
-> +	burst = bff_note_event_and_check_burst(get_bff_id(mce));
-> +
-> +	if (burst)
-> +		pr_warn_ratelimited(HW_ERR "Socket %d CPU %d Bank %d bitfix filter overflowed frequently\n",
-> +				    mce->socketid, mce->extcpu, mce->bank);
-> +	else
-> +		pr_notice_ratelimited(HW_ERR "Socket %d CPU %d Bank %d bitfix filter overflowed\n",
-> +				      mce->socketid, mce->extcpu, mce->bank);
->  }
->  
->  static int bff_mce_notify(struct notifier_block *nb, unsigned long val, void *data)
-> @@ -205,7 +267,14 @@ static int __init bff_init(void)
->  
->  static void __exit bff_exit(void)
->  {
-> +	unsigned long bff_id;
-> +	unsigned long *ts;
-> +
->  	mce_unregister_decode_chain(&bff_notifier);
-> +
-> +	xa_for_each(&bff_bank_xa, bff_id, ts)
-> +		kfree(ts);
-> +	xa_destroy(&bff_bank_xa);
->  }
->  
->  module_init(bff_init);
-> 
+Besides, it was actually Rafael himself who brought the unsafe pattern 
+into this discussion (I immediately noticed the problem but since it was 
+not an actual patch, I didn't raise a concern). Sakari's patch did use the 
+correct pattern (and if it wouldn't have done so, there would have been a 
+review comment from me ;-)). In my reply to Rafael, I intentionally left 
+the right side open with "= ..." to not place that NULL there.
+
+> In this case I'll just call ACPI_FREE() sooner.
+
+That works too in this case, yes.
 
 -- 
  i.
