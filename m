@@ -1,37 +1,37 @@
-Received: from mta1.migadu.com (out-12.mta1.migadu.com [95.215.58.12])
+Received: from mta1.migadu.com (out-49.mta1.migadu.com [95.215.58.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27A21ABD7
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 20:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42E53B4E9B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 20:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787777154; cv=none; b=YFTcfFaxAWse6PE7whZCrlvjC1hILhuwYWatdi0YWT/svWUp1pt+yHazfwT+gfgsKQsyjRMmKE0MUuJSp2GADVokxMKCWviAt6xeXmAIyS1u/YZdLOU0O4hZnfrCaG1BrEJHU76qAB32ZZ2WX6Nzasm6Y3OBdtdGDNp5/UQc7tA=
+	t=1787777452; cv=none; b=TGf1vdNomCpKkVCx0FUVYq866gG4xskErS3yZjRlqjJbFwD/tQlZKdL5ZR7pwOWXQflIaCTBblWZtls68RgUNEQL4sncd08HmupXOIiLuVvjrUHf0t7WNMG7mHUtd53oWWLKDhARk28OyM4dfWNR7J3sSEpB142gWxkKD5qMmWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787777154; c=relaxed/simple;
-	bh=opkMbCowtGRJIKWDtznrnAR6Udb84HiEcQuLn82R/UA=;
+	s=arc-20240116; t=1787777452; c=relaxed/simple;
+	bh=tlRBaNd4c7LdUEnL8a3fY9ST53hUWPR5pngNeUIicIQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=imfWCRoFYuQgPtR9ZK/WcAXMMvDGZjvAMlXn0dZYEdf4bec+/CIonrrTj/TFaoxCDvjFExvpPS0Vc+i5KXUvwmp1tISwtvzr162OnV7mRDgTB1Z+1PloYqg2EIGPVRtwvrJoQBYpshnFNhaNY3E1Zu+/hCs6B5fm6X78u86czvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y/G4xRB7; arc=none smtp.client-ip=95.215.58.12
+	 In-Reply-To:Content-Type; b=Gpdd/K8BKO7cd9GPSBA8i2qzUfmOi4J/4GOf76RuIl2oUcfO43nLXAfyD5JKTDwS6HqYQYdA7C5+vY/Myuldm/J+LwnHmEFSCNH3zLLzGZLppHm3HQtuR4Nz9BbFDBc+k41q/zWsPSQc+4mfd6SNW8pclE0s1WyOYKw++1KUlpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OxPkf+ns; arc=none smtp.client-ip=95.215.58.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y/G4xRB7"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OxPkf+ns"
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=opkMbCowtGRJIKWDtznrnAR6Udb84HiEcQuLn82R/UA=;
+DKIM-Signature: a=rsa-sha256; bh=tlRBaNd4c7LdUEnL8a3fY9ST53hUWPR5pngNeUIicIQ=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787777149; v=1; x=1788381949;
- b=Y/G4xRB7IkCzS7XR1ecG7QQWRrIPL1cYlor+ob5D+GqtKvmtLfoBF3B83p/Ij/ZB7dQerCO/
- 2itai4IFh8PhBiVIBn1KQP6deBc+XegQKyvXR0tM5T8LxPynoSU8ai0w03tN7GTnWqH1AQme+NT
- 4HRUy1zxMz8qZHyK2uC/cALE=
+ t=1787777446; v=1; x=1788382246;
+ b=OxPkf+nsRvy8358caGwxRlpy9AcvIOFrjeNjKrmYVwyFcDSIKDCZ9RZ13hm8GTYp/2KR7owW
+ EpFbuBT7PUHpXeeGIEmruJApOONGW8HCGOquhvn2Q6kNK4S5/pjgpUKXw5UMWMSgo+2cMepjLr3
+ mcJu+Yj0vAYi5oPnIlXKze1Q=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
 Received: from [10.8.1.6] (107.189.15.163)
-	by smtp.migadu.com with ESMTPS id 544a8b63d04562fd;
-	Wed, 26 Aug 2026 20:45:49 +0000
-X-Mizu-Trace-ID: 544a8b63d04562fd
+	by smtp.migadu.com with ESMTPS id bdfe0f7ab2abe926;
+	Wed, 26 Aug 2026 20:50:46 +0000
+X-Mizu-Trace-ID: bdfe0f7ab2abe926
 X-Migadu-Flow: FLOW_OUT
-Message-ID: <bb3bc2e6-c27d-4660-82b8-b22557cc8101@linux.dev>
-Date: Wed, 26 Aug 2026 23:45:41 +0300
+Message-ID: <c20571fe-8747-4256-86f2-0bfb4656be56@linux.dev>
+Date: Wed, 26 Aug 2026 23:50:38 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -39,151 +39,250 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/6] platform/x86: bitland-mifs-wmi: Merge the function
- of redmi-wmi into the bitland driver
+Subject: Re: [PATCH v5 4/6] platform/x86: redmi-wmi: Drop redmi-wmi driver
 To: Mingyou Chen <qby140326@gmail.com>
 Cc: W_Armin@gmx.de, hansg@kernel.org, ilpo.jarvinen@linux.intel.com,
  linux-kernel@vger.kernel.org, nika@nikableh.moe,
  platform-driver-x86@vger.kernel.org, vlku.milos.fun@gmail.com, i@rsplwe.com,
  wolf109909@outlook.com, rahulbheda131313@gmail.com
 References: <20260816100813.300450-1-qby140326@gmail.com>
- <20260816100813.300450-3-qby140326@gmail.com>
+ <20260816100813.300450-5-qby140326@gmail.com>
 Content-Language: en-US
 From: Ilya Gladyshev <ilya.gladyshev@linux.dev>
-In-Reply-To: <20260816100813.300450-3-qby140326@gmail.com>
+In-Reply-To: <20260816100813.300450-5-qby140326@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Thank you for your patch. I have tested it on my Redmi Book Pro 15 2022, 
-and everything works as expected, so
-
-Tested-by: Ilya Gladyshev <ilya.gladyshev@linux.dev>
+Reviewed-by: Ilya Gladyshev <ilya.gladyshev@linux.dev>
 
 On 8/16/26 13:08, Mingyou Chen wrote:
-> The bitland-mifs-wmi and legacy redmi-wmi drivers both attempt to bind
-> to the same WMI GUID (46C93E13-EE9B-4262-8488-563BCA757FEF). This
-> overlap causes a device registration conflict, preventing one of the
-> drivers from loading properly depending on the module initialization
-> order.
+> The redmi-wmi driver is no longer needed because its functionality
+> has been superseded by the new generic bitland platform driver.
+> All supported Redmi laptop models are now handled properly via the
+> updated WMI interfaces in bitland-mifs-wmi.
 > 
-> Merge the event handling logic from redmi-wmi into bitland-mifs-wmi. By
-> handling both device layouts within a single driver, we eliminate the
-> GUID ownership conflict.
+> Remove the obsolete code, Kconfig entries, and Makefile references
+> to clean up the platform directory.
 > 
-> Tested-by: Nika Krasnova <nika@nikableh.moe>
 > Signed-off-by: Mingyou Chen <qby140326@gmail.com>
 > ---
->   drivers/platform/x86/bitland-mifs-wmi.c | 139 ++++++++++++++++--------
->   1 file changed, 96 insertions(+), 43 deletions(-)
+>   MAINTAINERS                      |   6 --
+>   drivers/platform/x86/Kconfig     |  12 ---
+>   drivers/platform/x86/Makefile    |   1 -
+>   drivers/platform/x86/redmi-wmi.c | 154 -------------------------------
+>   4 files changed, 173 deletions(-)
+>   delete mode 100644 drivers/platform/x86/redmi-wmi.c
 > 
-> diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
-> index b0d06a80e89e..8b6476881de6 100644
-> --- a/drivers/platform/x86/bitland-mifs-wmi.c
-> +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-> @@ -34,6 +34,11 @@
->   #include <linux/units.h>
->   #include <linux/wmi.h>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index af86b1df1a94..b92bc4816fa6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22768,12 +22768,6 @@ S:	Maintained
+>   T:	git https://github.com/pkshih/rtw.git
+>   F:	drivers/net/wireless/realtek/rtw89/
 >   
-> +#define BI_HOTKEY_CODE(id, low, high) \
-> +	(((u32)(high) << 24) | ((u32)(low) << 16) | ((u32)(id) << 8) | WMI_EVENT_TYPE_HOTKEY)
-> +
- > ...> +
-> +	/* AI button has code for each position */
-> +	{ KE_KEY, BI_HOTKEY_CODE(WMI_EVENT_FN_5, 1, 0), { KEY_ASSISTANT } },
-> +
-> +	{ KE_KEY, BI_HOTKEY_CODE(0x19, 1, 0), { KEY_ASSISTANT } },
-
-Why empty line between two KEY_ASSISTANT mappings?
-
->   static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
->   				    const struct wmi_buffer *buffer)
->   {
-> -	struct bitland_mifs_wmi_data *data = dev_get_drvdata(&wdev->dev);
->   	const struct bitland_mifs_event *event = buffer->data;
->   	struct bitland_fan_notify_data fan_data;
-> +	u32 payload;
->   	u8 brightness;
->   
->   	/* Validate event type */
-> @@ -752,24 +821,13 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_KBD_BRIGHTNESS,
->   					     &brightness);
-> -		break;
-> +		return;
->   
->   	case WMI_EVENT_PERFORMANCE_PLAN:
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_PLATFORM_PROFILE,
->   					     NULL);
-> -		break;
+> -REDMIBOOK WMI DRIVERS
+> -M:	Gladyshev Ilya <foxido@foxido.dev>
+> -L:	platform-driver-x86@vger.kernel.org
+> -S:	Maintained
+> -F:	drivers/platform/x86/redmi-wmi.c
 > -
-> -	case WMI_EVENT_OPEN_APP:
-> -	case WMI_EVENT_CALCULATOR_START:
-> -	case WMI_EVENT_BROWSER_START: {
-> -		guard(mutex)(&data->lock);
-> -		if (!sparse_keymap_report_event(data->input_dev,
-> -						event->event_id, 1, true))
-> -			dev_warn(&wdev->dev, "Unknown key pressed: 0x%02x\n",
-> -				 event->event_id);
-> -		break;
+>   BITLAND LAPTOP DRIVER
+>   M:	Mingyou Chen <qby140326@gmail.com>
+>   M:	Gladyshev Ilya <foxido@foxido.dev>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b54b5212b204..036fc76f62df 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -90,18 +90,6 @@ config XIAOMI_WMI
+>   	  To compile this driver as a module, choose M here: the module will
+>   	  be called xiaomi-wmi.
+>   
+> -config REDMI_WMI
+> -	tristate "Redmibook WMI key driver"
+> -	depends on ACPI_WMI
+> -	depends on INPUT
+> -	select INPUT_SPARSEKMAP
+> -	help
+> -	  Say Y here if you want support for WMI-based hotkey events on
+> -	  Xiaomi Redmibook devices.
+> -
+> -	  To compile this driver as a module, choose M here: the module will
+> -	  be called redmi-wmi.
+> -
+>   config GIGABYTE_WMI
+>   	tristate "Gigabyte WMI temperature driver"
+>   	depends on ACPI_WMI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 872ac3842391..0da4876f766e 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -12,7 +12,6 @@ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+>   obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+>   obj-$(CONFIG_NVIDIA_WMI_EC_BACKLIGHT)	+= nvidia-wmi-ec-backlight.o
+>   obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+> -obj-$(CONFIG_REDMI_WMI)			+= redmi-wmi.o
+>   obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>   obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
+>   
+> diff --git a/drivers/platform/x86/redmi-wmi.c b/drivers/platform/x86/redmi-wmi.c
+> deleted file mode 100644
+> index 58898630eda6..000000000000
+> --- a/drivers/platform/x86/redmi-wmi.c
+> +++ /dev/null
+> @@ -1,154 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/* WMI driver for Xiaomi Redmibooks */
+> -
+> -#include <linux/acpi.h>
+> -#include <linux/bits.h>
+> -#include <linux/device.h>
+> -#include <linux/input.h>
+> -#include <linux/input/sparse-keymap.h>
+> -#include <linux/module.h>
+> -#include <linux/mutex.h>
+> -#include <linux/unaligned.h>
+> -#include <linux/wmi.h>
+> -
+> -#include <uapi/linux/input-event-codes.h>
+> -
+> -#define WMI_REDMIBOOK_KEYBOARD_EVENT_GUID "46C93E13-EE9B-4262-8488-563BCA757FEF"
+> -
+> -#define AI_KEY_VALUE_MASK BIT(8)
+> -
+> -static const struct key_entry redmi_wmi_keymap[] = {
+> -	{KE_KEY, 0x00000201,	{KEY_SELECTIVE_SCREENSHOT}},
+> -	{KE_KEY, 0x00000301,	{KEY_ALL_APPLICATIONS}},
+> -	{KE_KEY, 0x00001b01,	{KEY_CONFIG}},
+> -	{KE_KEY, 0x00011b01,	{KEY_CONFIG}},
+> -	{KE_KEY, 0x00010101,	{KEY_SWITCHVIDEOMODE}},
+> -	{KE_KEY, 0x00001a01,	{KEY_REFRESH_RATE_TOGGLE}},
+> -
+> -	/* AI button has code for each position */
+> -	{KE_KEY, 0x00011801,	{KEY_ASSISTANT}},
+> -	{KE_KEY, 0x00011901,	{KEY_ASSISTANT}},
+> -
+> -	/* Keyboard backlight */
+> -	{KE_IGNORE, 0x00000501, {}},
+> -	{KE_IGNORE, 0x00800501, {}},
+> -	{KE_IGNORE, 0x00050501, {}},
+> -	{KE_IGNORE, 0x000a0501, {}},
+> -
+> -	/* Xiaomi G Command Center */
+> -	{KE_KEY, 0x00010a01,	{KEY_VENDOR}},
+> -
+> -	/* OEM preset power mode */
+> -	{KE_IGNORE, 0x00011601, {}},
+> -	{KE_IGNORE, 0x00021601, {}},
+> -	{KE_IGNORE, 0x00031601, {}},
+> -	{KE_IGNORE, 0x00041601, {}},
+> -
+> -	/* Fn Lock state */
+> -	{KE_IGNORE, 0x00000701, {}},
+> -	{KE_IGNORE, 0x00010701, {}},
+> -
+> -	/* Fn+`/1/2/3/4 */
+> -	{KE_KEY, 0x00011101, {KEY_F13}},
+> -	{KE_KEY, 0x00011201, {KEY_F14}},
+> -	{KE_KEY, 0x00011301, {KEY_F15}},
+> -	{KE_KEY, 0x00011401, {KEY_F16}},
+> -	{KE_KEY, 0x00011501, {KEY_F17}},
+> -
+> -	{KE_END}
+> -};
+> -
+> -struct redmi_wmi {
+> -	struct input_dev *input_dev;
+> -	/* Protects the key event sequence */
+> -	struct mutex key_lock;
+> -};
+> -
+> -static int redmi_wmi_probe(struct wmi_device *wdev, const void *context)
+> -{
+> -	struct redmi_wmi *data;
+> -	int err;
+> -
+> -	/* Init dev */
+> -	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
+> -	if (!data)
+> -		return -ENOMEM;
+> -
+> -	dev_set_drvdata(&wdev->dev, data);
+> -
+> -	err = devm_mutex_init(&wdev->dev, &data->key_lock);
+> -	if (err)
+> -		return err;
+> -
+> -	data->input_dev = devm_input_allocate_device(&wdev->dev);
+> -	if (!data->input_dev)
+> -		return -ENOMEM;
+> -
+> -	data->input_dev->name = "Redmibook WMI keys";
+> -	data->input_dev->phys = "wmi/input0";
+> -
+> -	err = sparse_keymap_setup(data->input_dev, redmi_wmi_keymap, NULL);
+> -	if (err)
+> -		return err;
+> -
+> -	return input_register_device(data->input_dev);
+> -}
+> -
+> -static void redmi_wmi_notify(struct wmi_device *wdev, union acpi_object *obj)
+> -{
+> -	struct key_entry *entry;
+> -	struct redmi_wmi *data = dev_get_drvdata(&wdev->dev);
+> -	bool autorelease = true;
+> -	u32 payload;
+> -	int value = 1;
+> -
+> -	if (obj->type != ACPI_TYPE_BUFFER) {
+> -		dev_err(&wdev->dev, "Bad response type %u\n", obj->type);
+> -		return;
 > -	}
-> +		return;
->   
->   	/*
->   	 * The device has 3 fans (CPU, GPU, SYS),
-> @@ -777,6 +835,14 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
->   	 */
->   	case WMI_EVENT_CPU_FAN_SPEED:
->   	case WMI_EVENT_GPU_FAN_SPEED:
-> +		/* Redmi refresh rate toggle quirk */
-> +		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED &&
-> +		    event->value_low == 0 && event->value_high == 0) {
-> +			payload = BI_HOTKEY_CODE(WMI_EVENT_REFRESH_RATE, 0, 0);
-> +			bitland_mifs_wmi_report_key(wdev, payload);
-> +			return;
-> +		}
-> +
->   		if (event->event_id == WMI_EVENT_CPU_FAN_SPEED)
->   			fan_data.channel = 0;
->   		else
-> @@ -787,27 +853,14 @@ static void bitland_mifs_wmi_notify(struct wmi_device *wdev,
->   		blocking_notifier_call_chain(&bitland_notifier_list,
->   					     BITLAND_NOTIFY_HWMON,
->   					     &fan_data);
-> -		break;
 > -
-> -	case WMI_EVENT_AIRPLANE_MODE:
-> -	case WMI_EVENT_TOUCHPAD_STATE:
-> -	case WMI_EVENT_FNLOCK_STATE:
-> -	case WMI_EVENT_KBD_MODE:
-> -	case WMI_EVENT_CAPSLOCK_STATE:
-> -	case WMI_EVENT_NUMLOCK_STATE:
-> -	case WMI_EVENT_SCROLLLOCK_STATE:
-> -	case WMI_EVENT_REFRESH_RATE:
-> -	case WMI_EVENT_WIN_KEY_LOCK:
-> -		/* These events are informational or handled by firmware */
-> -		dev_dbg(&wdev->dev, "State change event: id=%d value=%d\n",
-> -			event->event_id, event->value_low);
-> -		break;
-> +		return;
->   
->   	default:
-> -		dev_dbg(&wdev->dev, "Unknown event: id=0x%02x value=0x%02x\n",
-> -			event->event_id, event->value_low);
->   		break;
->   	}
-> +
-> +	payload = get_unaligned_le32(buffer->data);
-> +	bitland_mifs_wmi_report_key(wdev, payload);
->   }
+> -	if (obj->buffer.length < 32) {
+> -		dev_err(&wdev->dev, "Invalid buffer length %u\n", obj->buffer.length);
+> -		return;
+> -	}
+> -
+> -	payload = get_unaligned_le32(obj->buffer.pointer);
+> -	entry = sparse_keymap_entry_from_scancode(data->input_dev, payload);
+> -
+> -	if (!entry) {
+> -		dev_dbg(&wdev->dev, "Unknown WMI event with payload %u", payload);
+> -		return;
+> -	}
+> -
+> -	/* AI key quirk */
+> -	if (entry->keycode == KEY_ASSISTANT) {
+> -		value = !(payload & AI_KEY_VALUE_MASK);
+> -		autorelease = false;
+> -	}
+> -
+> -	guard(mutex)(&data->key_lock);
+> -	sparse_keymap_report_entry(data->input_dev, entry, value, autorelease);
+> -}
+> -
+> -static const struct wmi_device_id redmi_wmi_id_table[] = {
+> -	{ WMI_REDMIBOOK_KEYBOARD_EVENT_GUID, NULL },
+> -	{ }
+> -};
+> -
+> -static struct wmi_driver redmi_wmi_driver = {
+> -	.driver = {
+> -		.name = "redmi-wmi",
+> -		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> -	},
+> -	.id_table = redmi_wmi_id_table,
+> -	.min_event_size = 32,
+> -	.probe = redmi_wmi_probe,
+> -	.notify = redmi_wmi_notify,
+> -	.no_singleton = true,
+> -};
+> -module_wmi_driver(redmi_wmi_driver);
+> -
+> -MODULE_DEVICE_TABLE(wmi, redmi_wmi_id_table);
+> -MODULE_AUTHOR("Gladyshev Ilya <foxido@foxido.dev>");
+> -MODULE_DESCRIPTION("Redmibook WMI driver");
+> -MODULE_LICENSE("GPL");
 
-[nitpick]
-Would it make sense to place this inside the `default` case? That might 
-make the control flow simpler (no break->return changes, everything 
-still happens in the switch).
-
->   static const struct wmi_device_id bitland_mifs_wmi_id_table[] = {
-
----
-Ilya Gladyshev // foxido.dev
