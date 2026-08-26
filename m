@@ -1,39 +1,39 @@
 Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461EB390218;
-	Wed, 26 Aug 2026 08:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7E83B895A;
+	Wed, 26 Aug 2026 08:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787732880; cv=none; b=JzIQLV0axx5B1LaYMi78NVHRNQ5VziVMlx3j6gT5fn+l4vJ26LCHEUShO6+cGMm4oArPTdehwuHXb+jR037fyLbQ5lb/uhfdxpaIdWjy8gQLqqqVz0YMrsB4VuWM9XK0navoeha6nQmW0IXqK2mY+EvwJqRZIM7eK0woiww0U7A=
+	t=1787732883; cv=none; b=UG0aQY+vk3PHWSUO2cOrvMCeuaRRqbiX2gveMJlTQa+8M4Ns6JjEcRZfj+9VXYXuMDBkt4IoWNS6lAep1tIITbCpG8n4RGw0Pe2Ni+wydLgOVKaD8/SqnU4PBsvr9YETxDCrV6GF6iAt5GE05cfWCmoRmTfPA44jtakhDBb7QSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787732880; c=relaxed/simple;
-	bh=x+zcCb6F//VKq+D5uhef3qUozauFXmbvbS05w+5x4Jw=;
+	s=arc-20240116; t=1787732883; c=relaxed/simple;
+	bh=Z8bGCtpWwElFmmzhHy0PWP9wVrIVNpfvAfq0i9xbl3k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vl723QBxda5VmgXpk5ObNCO2QYGTE731Do66UkMy9d+4dYYcyKbW5OThImx1igB0891FYzkNDs83HA78xiHIyhy0YlvszVEVDWCDjuZDhvw2VJ6FDPwPtKE81KrHPYNsBwUDWo6p5bS8xi/BREgPyFz81RTV9ZDoHxnabjMaxGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=LyxYirCS; arc=none smtp.client-ip=157.90.84.7
+	 In-Reply-To:Content-Type; b=czov6RNnZGRGvT6UniJanYr7GKHdU9PUjQxaZGvhBJefSQaWErpfJlma4Gi0uDv4eLeWs63ypifwombqugmGLdthWj61jmcqjhgJ6fsNqRiZEPiMGdqrOA4w7sgIKTmKrJReXnqrICde2dd1ytcpoStrKJfXGkAvesyCiq9M04Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=aP8GfSxp; arc=none smtp.client-ip=157.90.84.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="LyxYirCS"
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="aP8GfSxp"
 Received: from [10.10.12.8] (business-24-134-105-141.pool2.vodafone-ip.de [24.134.105.141])
 	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 085002FC0061;
-	Wed, 26 Aug 2026 10:27:51 +0200 (CEST)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 3796D2FC0065;
+	Wed, 26 Aug 2026 10:27:59 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1787732872;
+	s=default; t=1787732879;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g/7MH1wlE2Je+7fCtbbf421Y8h5zM4YmBFQ4UZa7WPI=;
-	b=LyxYirCSaYpVzTWRzGWWB4qNgNjOwx0P/e4gSnNxSYzCdeUlRWOPlJTN/I0l0QuXj/RaLG
-	wLvYQ2QMSxJTTUm8wTQsHLUJ436mip3HAZ6Dhwp5n+bK7xxShDjmo7k6hGpnsZPnmU6dtD
-	OLFXXKIvkDVbHybUJcETCidK4K2KSRw=
+	bh=6YkkWufRzs9dENT+cgMm5ZgsDiLq3k8lXZD4z2Ojb7k=;
+	b=aP8GfSxpF9XAV8gGC9lMdit2VxeIKI7cygnHImjDHo14pfiK+HW+NpomlCewk6gyOQg+xt
+	+wIl+uN/fLKNQvv/DVQswVrR5xS0wXyL1+v826FKf0hYtfF3aMzIoDGTcCqRf6WkclwNsp
+	OGy7XUkRsL90vuQHlfGRPaVJkdNoLC4=
 Authentication-Results: mail.tuxedocomputers.com;
 	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <c79d33c4-5ff4-4f1c-aa8b-e4d0daeb6647@tuxedocomputers.com>
-Date: Wed, 26 Aug 2026 10:27:51 +0200
+Message-ID: <8d5a1226-da78-4dfd-9f75-1a7bbc4536db@tuxedocomputers.com>
+Date: Wed, 26 Aug 2026 10:27:58 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -41,101 +41,86 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] platform/x86/tuxedo: Set HID report ID on success
+Subject: Re: [PATCH v3 3/6] platform/x86/tuxedo: Use intensity according to
+ HID spec
 To: Aaron Erhardt <aer@tuxedocomputers.com>, hansg@kernel.org,
  ilpo.jarvinen@linux.intel.com
 Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20260826081149.235487-1-aer@tuxedocomputers.com>
- <20260826081149.235487-3-aer@tuxedocomputers.com>
+ <20260826081149.235487-4-aer@tuxedocomputers.com>
 Content-Language: en-US
 From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <20260826081149.235487-3-aer@tuxedocomputers.com>
+In-Reply-To: <20260826081149.235487-4-aer@tuxedocomputers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 Am 26.08.26 um 10:11 schrieb Aaron Erhardt:
-> While not strictly necessary due to the synchronous handling of HID
-> requests, it is better to set the ID of the HID report before
-> returning the buffer. This also better complies with the HID spec and
-> avoids problems with userspace tools expecting a report ID.
+> So far, this driver assumed incorrectly that the HID spec requires an
+> 8-bit intensity value to be honored. The spec actually allows multiple
+> intensities for RGB lamps, but suggest to rather set brightness
+> through the individual channels, which is also what the Microsoft
+> MacroPad reference implementation does.
+>
+> Accordingly, this commit simplifies intensity handling by offering
+> only two intensity values for turning LEDs on and off. All other color
+> values are submitted through the color channels individually, thus
+> avoiding duplicated handling of brightness.
+>
+> Additionally, the incorrect comments explaining the deviation from the
+> MacroPad reference implementation were removed.
 >
 > Signed-off-by: Aaron Erhardt <aer@tuxedocomputers.com>
 Reviewed-by: Werner Sembach <wse@tuxedocomputers.com>
 > ---
->   drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 26 +++++++++++++++++------
->   1 file changed, 19 insertions(+), 7 deletions(-)
+>   drivers/platform/x86/tuxedo/nb04/wmi_ab.c | 25 ++++++++++++-----------
+>   1 file changed, 13 insertions(+), 12 deletions(-)
 >
 > diff --git a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-> index 72205de72256..11babc7c7767 100644
+> index 11babc7c7767..8f1ffca0430d 100644
 > --- a/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
 > +++ b/drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-> @@ -766,6 +766,8 @@ static int handle_lamp_array_control_report(struct hid_device *hdev __always_unu
->   static int tux_ll_raw_request(struct hid_device *hdev, u8 reportnum, u8 *buf,
->   			      size_t len, unsigned char rtype, int reqtype)
->   {
-> +	int ret = -EINVAL;
+> @@ -553,7 +553,7 @@ static int handle_lamp_attributes_response_report(struct hid_device *hdev,
+>   	rep->red_level_count = 0xff;
+>   	rep->green_level_count = 0xff;
+>   	rep->blue_level_count = 0xff;
+> -	rep->intensity_level_count = 0xff;
+> +	rep->intensity_level_count = 0x1;
+>   	rep->is_programmable = 1;
+>   
+>   	if (driver_data->kbl_map[lamp_id].code <= 0xe8) {
+> @@ -640,22 +640,23 @@ static int handle_lamp_multi_update_report(struct hid_device *hdev,
+>   					j + 1;
+>   			rgb_configs_j->key_id = key_id;
+>   			/*
+> -			 * While this driver respects update_channel.intensity
+> -			 * according to "HID Usage Tables v1.5" also on RGB
+> -			 * leds, the Microsoft MacroPad reference implementation
+> +			 * This driver uses update_channel.intensity according to
+> +			 * "Color Attributes Examples" in "HID Usage Tables v1.7".
+> +			 * Only two intensity values are allowed for turning LEDs
+> +			 * on or off, while color and brightness can be controlled
+> +			 * through the RGB values. This is also identical to the
+> +			 * Microsoft MacroPad reference implementation
+>   			 * (https://github.com/microsoft/RP2040MacropadHidSample
+> -			 * 1d6c3ad) does not and ignores it. If it turns out
+> -			 * that Windows writes intensity = 0 for RGB leds
+> -			 * instead of intensity = 255, this driver should also
+> -			 * ignore the update_channel.intensity.
+> +			 * 1d6c3ad).
+>   			 */
+> -			intensity_i = rep->update_channels[i].intensity;
+> +			intensity_i = min(1, rep->update_channels[i].intensity);
+>   			red_i = rep->update_channels[i].red;
+>   			green_i = rep->update_channels[i].green;
+>   			blue_i = rep->update_channels[i].blue;
+> -			rgb_configs_j->red = red_i * intensity_i / 0xff;
+> -			rgb_configs_j->green = green_i * intensity_i / 0xff;
+> -			rgb_configs_j->blue = blue_i * intensity_i / 0xff;
 > +
->   	if (rtype != HID_FEATURE_REPORT)
->   		return -EINVAL;
+> +			rgb_configs_j->red = red_i * intensity_i;
+> +			rgb_configs_j->green = green_i * intensity_i;
+> +			rgb_configs_j->blue = blue_i * intensity_i;
 >   
-> @@ -775,13 +777,15 @@ static int tux_ll_raw_request(struct hid_device *hdev, u8 reportnum, u8 *buf,
->   		case LAMP_ARRAY_ATTRIBUTES_REPORT_ID:
->   			if (len != sizeof(struct lamp_array_attributes_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_array_attributes_report(hdev,
-> +			ret = handle_lamp_array_attributes_report(hdev,
->   				(struct lamp_array_attributes_report_t *)buf);
-> +			break;
->   		case LAMP_ATTRIBUTES_RESPONSE_REPORT_ID:
->   			if (len != sizeof(struct lamp_attributes_response_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_attributes_response_report(hdev,
-> +			ret = handle_lamp_attributes_response_report(hdev,
->   				(struct lamp_attributes_response_report_t *)buf);
-> +			break;
+>   			break;
 >   		}
->   		break;
->   	case HID_REQ_SET_REPORT:
-> @@ -789,28 +793,36 @@ static int tux_ll_raw_request(struct hid_device *hdev, u8 reportnum, u8 *buf,
->   		case LAMP_ATTRIBUTES_REQUEST_REPORT_ID:
->   			if (len != sizeof(struct lamp_attributes_request_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_attributes_request_report(hdev,
-> +			ret = handle_lamp_attributes_request_report(hdev,
->   				(struct lamp_attributes_request_report_t *)buf);
-> +			break;
->   		case LAMP_MULTI_UPDATE_REPORT_ID:
->   			if (len != sizeof(struct lamp_multi_update_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_multi_update_report(hdev,
-> +			ret = handle_lamp_multi_update_report(hdev,
->   				(struct lamp_multi_update_report_t *)buf);
-> +			break;
->   		case LAMP_RANGE_UPDATE_REPORT_ID:
->   			if (len != sizeof(struct lamp_range_update_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_range_update_report(hdev,
-> +			ret = handle_lamp_range_update_report(hdev,
->   				(struct lamp_range_update_report_t *)buf);
-> +			break;
->   		case LAMP_ARRAY_CONTROL_REPORT_ID:
->   			if (len != sizeof(struct lamp_array_control_report_t))
->   				return -EINVAL;
-> -			return handle_lamp_array_control_report(hdev,
-> +			ret = handle_lamp_array_control_report(hdev,
->   				(struct lamp_array_control_report_t *)buf);
-> +			break;
->   		}
->   		break;
->   	}
->   
-> -	return -EINVAL;
-> +	/* Set report number on success */
-> +	if (ret > 0)
-> +		buf[0] = reportnum;
-> +
-> +	return ret;
->   }
->   
->   static const struct hid_ll_driver tux_ll_driver = {
