@@ -1,129 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB5E3542D4;
-	Wed, 26 Aug 2026 09:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546B727144B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 09:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787735084; cv=none; b=hBxDDf2k74bNt0n6pjzURD6dsj4zZzRwH2R7PEkbO5wnXS2OP7E28DNknfnlC0bKCs1GDvlvIEpJYnMgEGU0NS9QF9Qc5EOtfrtoJpRqQEvRDd09xx5dJWvbxScW5zE8zfGE/hv7ao1phz970VgdcEFGsvNne+fA+sPlfnB/Oa4=
+	t=1787735350; cv=none; b=g1ShkI6LxwEAiIhIviOj+5hCL1GfRekM6vXJ4StfaEcMa8IIjfdc1grvdqhRUt6WBdU8CygD4veDmIiUBsCAJhcPiCGaealyk3pV95uPdRT8ZgeyR2SJv5nFG6xci6nfjprbPHfNrq24a04aukJwvTCx/IAIBN6oT7oYlFJF4E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787735084; c=relaxed/simple;
-	bh=IfXNrmMA/cv+Wpzmni7v9jr3O3VipieGv6mDQHETTFU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PDNN2Ftr7YuT/xT2CU2X0eKfmW+WFYrm3TJqfXGdtpZW2HqVopl8JNSKOlaJK4JIBBbd5pcFvt3j1olbURSQqJtHVk5iJNuRqlNr8b9q6MxCeCJdu1UX1wOF/Sv4ikJl/0DPtMEXvjYzsmE7HiUZlGVUFl2xI8hPwU1F35pG1jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dNwUlUeU; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787735350; c=relaxed/simple;
+	bh=+6JFwj86L0geMJ4PtWbM8iOP1WogyjSiv7jFOskyhYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vENyGpk2mNMavMCZ2D84L+uDdCNTK3ivQSZLs0OkUWBWT2C42SFGsjmSqcuxG+f3dqXWVgkgYthG4lN9exw5uFVV35hsIKfpOBfW9bUS925u1r5aCk3kq4CoXr5iAobcsMqnBIMnBeexWhpN9gCUpUwygX5ajI/xC4XH4Zw+MBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcQtr5ic; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dNwUlUeU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787735082; x=1819271082;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=IfXNrmMA/cv+Wpzmni7v9jr3O3VipieGv6mDQHETTFU=;
-  b=dNwUlUeUXeOn8R0n/qVqp9xzcg3N9cwVn9tXjlzIAYJLJHJ2zCHcXiZO
-   /ntAL92xQBgkvbGnby1WsfZEBsyQftxgeTF3nuh50bUNnGB6vHwV0uy9F
-   3Zb5YerymucTA5LbFiWxWz8Gbyi5L0LtUue0FvgqPOTkCdGKi5fu7aqBw
-   01qbPhTfDaIS55B32JPrGDx/VphAQJHANTfbHENwS0LmVL7EnEEdRDnid
-   yu01y7r9JPm8FZFq92x0TtTn9+bitALwiM2BtIDhxLXda1MzoxDot2wiI
-   zjBPL+hZjhcrlCS1RvKlUIQcdI+ylXGl5ZP4sLheir3ptOSPfGSn8Ss0i
-   A==;
-X-CSE-ConnectionGUID: 1d7VDQk+Qq+p2TY58y9jKQ==
-X-CSE-MsgGUID: +mMXgdbMRrigTedrjMVu8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="105735840"
-X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="105735840"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 02:04:41 -0700
-X-CSE-ConnectionGUID: lSKGzLEPSXuaMgYNPyd0+Q==
-X-CSE-MsgGUID: D1VVjkgZSjq8j5B0QQ+cGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="261389778"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.247])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 02:04:38 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Aug 2026 12:04:34 +0300 (EEST)
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, 
-    linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    Daniel Scally <dan.scally@ideasonboard.com>, 
-    Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] ACPI: Support __free() from cleanup.h for ACPI
- objects
-In-Reply-To: <ao3uh2xos_1uwAgJ@kekkonen.localdomain>
-Message-ID: <762e0630-1b04-6a82-69b6-ca5148e74cff@linux.intel.com>
-References: <20260824211338.3583976-1-sakari.ailus@linux.intel.com> <20260824211338.3583976-4-sakari.ailus@linux.intel.com> <CAJZ5v0ieb2FcANOt0MRMsTrwtbLiUF48W_c=3z3OpNH92d=7vg@mail.gmail.com> <ao2FmNRFjSJVxhrL@kekkonen.localdomain>
- <CAJZ5v0gQVFxSkkjPbRf6bsKdgUBGduZV0M5SWrHoeB246ZLqew@mail.gmail.com> <134e9566-7913-86d7-1e8b-b2ca9ebec55c@linux.intel.com> <CAJZ5v0h4KD6Q1DeuwbFQ83U1=wKORMWUQNA2BwnFtsYAyzz_Ow@mail.gmail.com> <CAJZ5v0ggPGEu8YQTpeTC6=tVNr1zponkCbs+UQPieAH5k6ngUg@mail.gmail.com>
- <ao3uh2xos_1uwAgJ@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcQtr5ic"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B32C1F000E9;
+	Wed, 26 Aug 2026 09:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787735348;
+	bh=IjxIlB1BULRmQXE+VxT7WyEuZyg2I234XN+jO2pvHQo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=fcQtr5icyeRlMS/25oROgR7iP8GCmXV6zkJgXdZd8lRfBl6aF67JCH0WFqzrxvO/8
+	 D36w5UkSyb+mOia9mytZQcTaaX1S26go1nFYsJ7sYP9EMrWr4Bc60aeSGznz8CBM2x
+	 8gNy+UmMY3Enn5YQix3PkeibZinfrIWhlu/203ZqbJIcw3Ibwri7bJBBi27POVW3yD
+	 7ja3zR6UuV187+wfTqpdLqsPXuPNMV5sf9dY2Jj9p68rIDEF6AuEBagRgKQHKGqzXQ
+	 yQODiEQ3AUATRHpjvCX2jZtp9MoR34kOTmkkHNKJuYFCTdUJ/r4XC9X1J1SjXORuSi
+	 JdpaP5Hr7T6dg==
+Message-ID: <8cf8ef11-0d21-4d09-ba8c-004132a3a0a7@kernel.org>
+Date: Wed, 26 Aug 2026 11:09:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
+ KEY_KBDILLUMTOGGLE on Fn+Space
+To: David Stephenson <git@davidstephenson.net>,
+ Sebastian Reichel <sre@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org
+References: <20260825193556.133277-1-git@davidstephenson.net>
+From: Hans de Goede <hansg@kernel.org>
+Content-Language: en-US, nl
+In-Reply-To: <20260825193556.133277-1-git@davidstephenson.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Aug 2026, Sakari Ailus wrote:
+Hi,
 
-> Hi Rafael, Ilpo,
+On 25-Aug-26 21:36, David Stephenson wrote:
+> On the T14s, the EC already steps the keyboard backlight when you press
+> Fn+Space: off, then low, then high.
 > 
-> On Tue, Aug 25, 2026 at 03:08:07PM +0200, Rafael J. Wysocki (Intel) wrote:
-> > > If there is a cleanup.h "free" that can only be used with objects
-> > > returned by acpi_evaluate_dsm_typed(), I'll be fine with that.
-> > >
-> > > Or if everyone agrees that doing
-> > >
-> > >     union acpi_object *out_obj __free(ACPI_FREE) = NULL;
-> > >
-> > > is not confusing and fine, I may just say "Hey, I don't care that much".
-> > 
-> > And particularly there is this paragraph in a comment in cleanup.h:
-> > 
-> >  * Given that the "__free(...) = NULL" pattern for variables defined at
-> >  * the top of the function poses this potential interdependency problem
-> >  * the recommendation is to always define and assign variables in one
-> >  * statement and not group variable definitions at the top of the
-> >  * function when __free() is used.
-> > 
-> > regarding a broken code example, so I would think that this is not a
-> > made-up concern.
+> We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
+> We then also send KEY_KBDILLUMTOGGLE.
 > 
-> That's indeed a valid concern, still quite unlikely in practice but
-> probably hard to find when it happens, so avoiding that is definitely
-> preferred. That being said, the biggest trap in cleanup.h is probably in
-> scoped_guard(), and doing __free() = NULL somewhere doesn't matter much in
-> the end.
+> The extra key is the problem. Desktops treat it as "please toggle the
+> light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
+> fights the EC's three steps. The on-screen bar also stays empty,
+> because Toggle() always returns 0%.
+> 
+> thinkpad_acpi on x86 already skips the key when the firmware changed
+> the light. It only uses brightness_hw_changed. Do the same here: keep
+> the LED update, do not send KEY_KBDILLUMTOGGLE.
+> 
+> Tested on a Lenovo ThinkPad T14s Gen 6 (21N1, Snapdragon X Elite) with
+> GNOME. After this change the OSD bar tracks off / 50% / 100%.
+> 
+> Signed-off-by: David Stephenson <git@davidstephenson.net>
 
-__free() = NULL is not that hard to catch during review (or even in
-code already in-tree), have done that dozens of times myself by now.
-Checkpatch, too, should be able to catch that easily, if it doesn't 
-already.
+Thanks, patch looks good to me:
 
-None of those cases I've commented on had a bug, so it was just for 
-teaching submitters & readers of that code the correct __free() pattern.
-I think the concern is largely overblown given how rare actual bugs are 
-even if the wrong pattern is used. Put that to contrast to memleaks found 
-on our rollback paths, __free() looks a clear win despite very rare to 
-occur caveats.
+Reviewed-by: Hans de Goede <johannes.goede@oss.qualcomm.com>
 
-Given what I've seen, I'd say on dangerous level __free() = NULL is 
-somewhere around using MAGIC_SIZE_DEFINE instead sizeof(*obj) when doing 
-mem allocs. It usually isn't buggy even if we don't want to teach people 
-to use it.
+Regards,
 
-Besides, it was actually Rafael himself who brought the unsafe pattern 
-into this discussion (I immediately noticed the problem but since it was 
-not an actual patch, I didn't raise a concern). Sakari's patch did use the 
-correct pattern (and if it wouldn't have done so, there would have been a 
-review comment from me ;-)). In my reply to Rafael, I intentionally left 
-the right side open with "= ..." to not place that NULL there.
+Hans
 
-> In this case I'll just call ACPI_FREE() sooner.
 
-That works too in this case, yes.
 
--- 
- i.
+> ---
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> index 5590302a5..22d20a907 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -488,8 +488,14 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void *data)
+>  	case T14S_EC_EVT_NONE:
+>  		break;
+>  	case T14S_EC_EVT_KEY_FN_SPACE:
+> +		/*
+> +		 * Firmware already cycles the keyboard backlight
+> +		 * (off / low / high). Notify userspace through the LED
+> +		 * class only. Emitting KEY_KBDILLUMTOGGLE as well makes
+> +		 * desktop environments toggle the LED a second time.
+> +		 */
+>  		t14s_kbd_bl_update(ec);
+> -		fallthrough;
+> +		break;
+>  	case T14S_EC_EVT_KEY_FN_F4:
+>  	case T14S_EC_EVT_KEY_FN_F7:
+>  	case T14S_EC_EVT_KEY_FN_4:
 
