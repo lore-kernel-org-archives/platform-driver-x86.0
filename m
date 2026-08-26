@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48DBBA34;
-	Wed, 26 Aug 2026 06:07:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8F02066DE;
+	Wed, 26 Aug 2026 06:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787724443; cv=none; b=nGi5O9sE/GSmiCw5THyftDjrR7eOqvuT7IKaz5+vCzgluKQRnv5OnGVmHaUuxNrWCb37NovoHxUwcKNUWdxycSjlmDTpStp7rDyXDM3pcU/yn5A0J98RsjiQ26wnNKvFdspVxeMIAwNlcaB8rYIOHL387nY9w+1MyyKAJZSohnY=
+	t=1787724481; cv=none; b=bK7/BDv+MEDGU4rKu1PqzdUkGCro2RHHI4+zOUQnwf0xvOs+FL9E6ZZ0IkWIhLVQbUwSsVJORrkycq48byVgnQHav412A3GtolSq0vPT70p8yoTyUftstfEKAZK3A0/aYRXLkb8Eb3x7RfilNFvkNgTevzem8BUUMUlOAtLyTUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787724443; c=relaxed/simple;
-	bh=zW9f1bEvZ4x5bxZjWutNFk9gjYrZ540HG/0JamedKvs=;
+	s=arc-20240116; t=1787724481; c=relaxed/simple;
+	bh=RD6QVBPnL95A2nbdXL1WmKm15P81+c+dUGy88c6tx90=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bApLVhy2kY0Bf8QgB0s3lY2Fmqx0CgBjBgfNvWdPThSAswYzNnA+z/dtnUekRBDmPJp4UqpfzzY89h8SX+Hp3b+ny+xGWMkydpuQ802/9f5XnGyeG+fZUeTKlt5aebV/h9zy3oUvOOWpgSxhs7fUyYKPiwGXfp3ivG78d5L3NzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ec8j9Kuu; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOO+0vsEgtGnNfDQ9nauWzgxjmNhjrOYxz7fiDMvgAuD3mDfW+tBS1cRJBVsv9IST4RgSOLeJ9qquS9COnb6Tzij+rldB8XI9/d/vpwwUIKDHPfU+K2VDNB4qMzLuyXPKPyoNGBB5sG0hHBOqjxJh90F/QDcfviwzhx6Iq+V0Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3rrI2Zo; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ec8j9Kuu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2787D1F000E9;
-	Wed, 26 Aug 2026 06:07:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3rrI2Zo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A852A1F000E9;
+	Wed, 26 Aug 2026 06:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787724442;
-	bh=Sz6PqnW19SjpOwoLfiJCtjkUAIIP+g2E+lZPpGrN7vE=;
+	s=k20260515; t=1787724480;
+	bh=dFO/ykH2CGhqjy9gG6n+B+xyCQz/sDpwXbPuI04tWt0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ec8j9KuuhQ1aODrKh1IPPW+t5WNcQsJOuDmTb7EYk3BlxAjuBgWd1vM1s+lyrnECR
-	 oEt2GQDNHfmzo5g7hXaH7L0douvY7fjdP0QkraRH3OHgMhBrmjArbgk4CZf7cnsNvn
-	 aHTM7H8r5TPzyZvKI8A6uy7HJ/+Hc7T6p46c9yqWUM61UQih0nnbRAWnhdPCgVlijm
-	 prY2wsx1oAKoWxEnzYNMYJrBZreDK3jZA48HXBYzJbpZLzqvMKyTPqwwGwBhQkAWux
-	 mBj+1ZNWkXaWBrkUiQxOsV/dVnhzGDLA8nPR6+qiZEqgkywzF+VGu1B2tZcfDVjoNE
-	 E4BFhWg9UIoGQ==
-Date: Wed, 26 Aug 2026 06:07:14 +0000
+	b=C3rrI2ZofAaYdWkBs7G0W1oare1gecw+He+jGZWXN1l8lqEkEtAoss2f4sxLsRToT
+	 6X/SR+PhvxhGQrcHvY2f3TLRbtmk4+/x+jK8R3mAINbuaG0g1SUuSe4apwgJ/Zkyg6
+	 tqzBXXf/pakbh+BW6zVDqm7fju9BToK8PoTSMPkQEQM7JIACkeHBfR1JKO19fKOYci
+	 gSnsgHV96RyPtVIwm+ngBmEuRiQA0YvFe92oJ4KogpmOGe0hXf4HRDJJq53yZ80jD2
+	 Fe2Hgq+MAIL9akH1Kg68TGP8jYZrMV+F8HxFqrPIP3gem+egqoCBlQOlRt7DKvNVY/
+	 OGq164veYgG6Q==
+Date: Wed, 26 Aug 2026 06:07:51 +0000
 From: Tzung-Bi Shih <tzungbi@kernel.org>
 To: Sean Rhodes <sean@starlabs.systems>
 Cc: linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>,
@@ -64,11 +64,11 @@ Cc: linux-kernel@vger.kernel.org, Corentin Chary <corentin.chary@gmail.com>,
 	Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@kernel.org>,
 	Luca Weiss <luca.weiss@fairphone.com>,
 	Michal Simek <michal.simek@amd.com>, Sven Peter <sven@kernel.org>
-Subject: Re: [PATCH v13 RESEND 1/5] platform/x86: Sort firmware attributes
- class includes
-Message-ID: <ao6CkvFgrZeo-s8J@google.com>
+Subject: Re: [PATCH v13 RESEND 3/5] firmware: Rename google firmware
+ directory to coreboot
+Message-ID: <ao6Ct-x-vw_TkF5B@google.com>
 References: <cover.1787584107.git.sean@starlabs.systems>
- <b967ec0f8adb69417a3d81ee5546e4a238e29e11.1787584107.git.sean@starlabs.systems>
+ <557d363a779c3c03bfe939dc2fefd6a4265fa7ad.1787584107.git.sean@starlabs.systems>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -77,27 +77,18 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b967ec0f8adb69417a3d81ee5546e4a238e29e11.1787584107.git.sean@starlabs.systems>
+In-Reply-To: <557d363a779c3c03bfe939dc2fefd6a4265fa7ad.1787584107.git.sean@starlabs.systems>
 
-On Mon, Aug 24, 2026 at 04:08:58PM +0100, Sean Rhodes wrote:
-> Move firmware_attributes_class.h into the main include block and sort the
-> affected includes. This lets the header move replace each include in place.
+On Mon, Aug 24, 2026 at 04:09:00PM +0100, Sean Rhodes wrote:
+> Most drivers in drivers/firmware/google are coreboot table drivers rather
+> than Google-specific firmware drivers. Rename the directory to coreboot
+> and update the Kconfig prompt, build path and maintainer entry.
 ...
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-> index 495dc1e31d40..f3d8c5a85762 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -20,6 +20,7 @@
->  #include <linux/dmi.h>
->  #include <linux/err.h>
->  #include <linux/errno.h>
-> +#include "firmware_attributes_class.h"
->  #include <linux/fs.h>
->  #include <linux/kernel.h>
->  #include <linux/kmod.h>
+>  drivers/gpu/drm/sysfb/Kconfig                 |  2 +-
 
-I don't really follow why it is beneficial to make the
-firmware_attributes_class.h replacement in-place.  Moving relative includes
-like "firmware_attributes_class.h" into the <linux/...> block creates an
-awkward intermediate state.  How about drop patch 1 and simply update the
-includes directly in patch 2?
+The patch has no build-time dependency on other patches in the series.  I'm
+happy to apply it once v7.3-rc1 is out to move this forward.
+
+For the drivers/gpu/drm/sysfb/Kconfig change, could the DRM maintainers
+please provide an Acked-by so this can go through the same tree?  Otherwise,
+it needs to be separated before the patch can be applied.
