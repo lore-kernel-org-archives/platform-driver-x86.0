@@ -1,187 +1,192 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B3438F633
-	for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 15:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F9F442387;
+	Wed, 26 Aug 2026 16:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787759969; cv=pass; b=nJsdmjmLAAkiHhjGUKSwMJVNbnLVIdtEbluB0DrzOxO4JJol0DSsPUL3b0T9dP9GBWUvG53cGgGJVSfXzZ2bAOwlbNc1ZksMqRq3EN/1GAQVrMkr4q8XdaIvf3vFkNH/IcyUX6/JrQ3CFI7RFjLLvwIsS7apNfQvdubA/Vfbf6k=
+	t=1787760628; cv=fail; b=URkHW8x7TQtfXpbvF9KOUP2zhQHck8sIGDaKkBQZTmi7Gvg/NR1PBHWk3NO7Vkw4Skk9DGsgmZfLPPRU3Myp5fhnKU1qHliIYGaF4aHSGuzC1qSMoEeou6ZAsY8hq4CLnn4W23bOQDD8SXZYajzARp0kfj+bP/WicramDAE+BY0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787759969; c=relaxed/simple;
-	bh=ewqqiCfh0TRZKhXX1gDHk4TFYmCPl4ntkxHInIAMpdo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UKIK6fu5ACFD7anyz6Kcj/fCYDiCT/4XmlTyvS3C/KLva2kiRTzF9yI1XpP6O8nKymsyP3jjOlEYHUo6bITPNru+V7V8KSG7Ttgc6btc9OlNVA5oqZYtTyyyY//nCT2w0SuRlFIX0x47bhRhAHMAlPZSg6KW4CCAk7qkKYraFFM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VJfUOO4o; arc=pass smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787760628; c=relaxed/simple;
+	bh=qq1SczrexSvP/7gcAsSu8bfxzu0L+tSCCN3bGvg49zI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=u3UjuUWfEWhRw3+WwVu4khc6syn2idBI8kAfsfa+uQFpeIw5Pzvho+ozqTlwPVjMlce+AiW0z9BCEfblyVQXLPWxyHZF9QEmwH2k2ngysy4WjYmXhtA7gs6Thbr/d/79Ua1y0Bs6/lp2AW1K+Qvib6nTK4/Ix+f4ZA8G2cGgtl4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hN5L59pp; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJfUOO4o"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3a115c08b0bso9218831fa.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 Aug 2026 08:59:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787759966; cv=none;
-        d=google.com; s=arc-20260327;
-        b=qZk2P/pccqfI8idSNbQ+FhvSOG/08jrCsck10IUxwhgTDUepW/ud3xNMjVaRa9DJu+
-         inAC+S+vSIyGuli9PLYPC8y+9aW0k3jN+1VTMRsFfUQUD81H9xMEYshG23V33zy+3sN7
-         xQMD5fUOv/zFWJszoc75ok7lWyTWPIZg4ZmusneOECb4ayQyg2YLokq60iyIB5Te6bEt
-         e0AZBrcFXT+a+VYG5Cl3c8PHfkPRrCDDgCdeq/J/IrQCredRspO7E3zq+L9lC+FAxlzb
-         H7XOosR8w/lPVGZsVtTD2YmyA1049ijW645mZxJc5f3dAZChIA5OUPHAwCowcHc9tVEX
-         KT7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ij7y7rUK1s0vtd21AVgQn2YAV8w4d4klp1Ce1rOEqkE=;
-        fh=PITwvsLaIjHlISYI2F9xBcxMCu1hfi2NSjsKTBPLtno=;
-        b=M2EOweLtKDUpE5zzi8UhfnD8XmqMaAs7B/+7eIbwhls/YPub55giLdoDoZS92gnxkX
-         AcqkCJ9izmeQz+zyqs4MKpHP5ni6LkUUo+G1rfP52tP3w0aV093QR+M2v+OkHvhmswvp
-         rHjKdo8OniMyLch5xB92LwVNcBdbG8p4DJ4Y56fQNlTsx+yuAlROIAzKOJNssNs49ZPl
-         FFdSqoVJ8sTg1UPmpibwDZOUoXvVfI7vAZUjg4J5NZ6VvA9ZA8sx7UWd34ehz43SsQAH
-         RnVpUbD2KBR6bm8OnMa8INbEpq3bTLt3xBUF+XduoAHJjb3sS7ZsNztyklGqu9PnsLTt
-         wBGw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787759966; x=1788364766; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ij7y7rUK1s0vtd21AVgQn2YAV8w4d4klp1Ce1rOEqkE=;
-        b=VJfUOO4oMmbzHfm4bRfyNxaRP1XIomAUCTlCrrLhDuURDnfSYdLU21ZfLjGxWzP9bm
-         xpj17PL8yXsd7fxv8MakB4so3Bfi/N4iKi6zjS4GVCwVK6sbKx15A4IDIyJoCWDg4gjv
-         Xtz1QzqnRQv67+nf+Atp66W/sFWlWXlB1wY/wHyxI1nh1Ur+mCWQFIVU8skvXMP4ZuzH
-         jDhUd1BdkhXeAX3u8gsKK4hJfna9Wede4RKJkMMiW1Y2QufjcMTBJJWCMR8uO73QalUK
-         iBjatzWr9CVpcQZnSbXFBirwJwKcn++vMtQe2odS/UmQR9HpqfhTMZd02cCvYO40LQpK
-         Np7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787759966; x=1788364766;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ij7y7rUK1s0vtd21AVgQn2YAV8w4d4klp1Ce1rOEqkE=;
-        b=aHwt8Pg6NfuNPfEkxVYoBaMy/0cirDpcCYcmq0WOmEvp4U3GXvDkJ54I6mkL1RIUZt
-         hyMyCTn6ghQpu5OEzfhM9QTv57Oa+wp7fwnT9vDI1Qn704TBIq0oOxXTvVZ2+HBaDrKg
-         /Ds5qYrVjpludS95rYdZnoUzk8GtOVdtOVNowUhdocjmMiqFN2fww36gjn+nkBwCz3EE
-         lGEh5u6T6DFpG3T5RlTscJQoiOi9kVoMC4/hB8zqpMgHL5apx8d7FfQsDJ5OUeFrnK8S
-         ROyqwWc6IyR2vEFee3kI1fD5LwYJoaeF07nnFSpGNHJlZmBvUFu0RJ16hYw6D1MT4y5+
-         EGJQ==
-X-Gm-Message-State: AFuF++lm+ylmK3yhwk8Dh34CUTGa/uydbJaq0nFVu4d2kVKrEMuG2RtN
-	ZI5BA8S1gf+gTFsk36YyUVq5SWIz3ObeAbLPLFuiOw1fi+vZGRd/n2S/cbuxDVCJKdqfpWkevWm
-	/y0d5yyI+ghmGVbMMGewBO+jo3wGIwtTBFvu1
-X-Gm-Gg: AR+sD11XHdbCMBCAjFKRcAZu9SamwowHKQVmW1Rl6xPXbI90xdin9gxligjA9rcNTZY
-	cstrY8TnL32qqXfZ/3sgCDoaZjMth9RxDMYnfDUi2ssdwByFmmM4rVjDhfNxmjSdyfrdl9ZNPGN
-	9R1EYFPTuEk4y5KMzOhfyaTGQdDk6pcPfooT3X2snl+HdYSZTbo9DJt0SWLBwwjW9BdPMaL+kOJ
-	r1tFGFQRkVcYwAvhXc5WgZks1WQdrcDgwqUYSaboab03KinhPK/IBp+rBamEnqTOTQE5+xABsxA
-	24QULwepvjiN2sVra6xuhKd75X/ftkU90qQURiI2pXPqQ9Y=
-X-Received: by 2002:a05:651c:b22:b0:39f:fc5b:5183 with SMTP id
- 38308e7fff4ca-3a1fd46657amr17985041fa.3.1787759965357; Wed, 26 Aug 2026
- 08:59:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hN5L59pp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787760625; x=1819296625;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=qq1SczrexSvP/7gcAsSu8bfxzu0L+tSCCN3bGvg49zI=;
+  b=hN5L59ppM6XXEqVGgnSCJ391zujJx5O5huBkVM35ibJ4ABcc+Irwmp90
+   oBiCc9m0/GrCJH0LW38w5FV1rgNMkemr5TxagS7FHm4wwR81W+VqAJXzY
+   28KbteXFbIYEsoqi/c4IrhMLXe7F1jPysRzbSDV60F1T4ueL1dR5ps8ge
+   lw8oGZ8pnQu6posAChaKSgedM0MmhTNwAasij7lnQFkBNHeGuYO9ya6lX
+   k4ALUHPBsOVAsqS0edEyxjYTPEWk6U5Y/+X7h5z8zLNEnTC+XzILCdirz
+   qqgKe5gX9FEobqFaGZiyqIr2S46IbhaD7deZyOL8J62ctSP5bYbbqGkLE
+   Q==;
+X-CSE-ConnectionGUID: d8BoxXOjRimZvtFW+hc+cg==
+X-CSE-MsgGUID: ivcILvxCRq+lC1w9lw+8KA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11887"; a="98581849"
+X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
+   d="scan'208";a="98581849"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 09:10:24 -0700
+X-CSE-ConnectionGUID: 5b9sUIHjTveVDeTdduJAVg==
+X-CSE-MsgGUID: mUVguqJ8ThSZZXzlEDJvig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
+   d="scan'208";a="271422077"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 09:10:24 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Wed, 26 Aug 2026 09:10:23 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46 via Frontend Transport; Wed, 26 Aug 2026 09:10:23 -0700
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.39)
+ by edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 26 Aug 2026 09:10:23 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Bw9o84w3s3BpnNUp+EurSkI92wzKLeM3xuQaci3N021BsWNaiXxFwQmyen+eICWTrZ61qoD/DvKx9D/YvbDWQmgoxX7MAzvcPTNy1SbxsIiUbHb7005v08kYRmUoM5lHge48kxMv9R4ncdA6Cku8yQL8SVKcdcuv8BAkiSdIb5aCu+QbE2SV22eyJrVyNP+Nh7QYrRIWRAKiOR3Oklc/4XFOtd5IcBgByWrgJ3EZACEwQdM4GA6HrO6yFu9Kiq7mBdecvqI1Sgj1Gb5juass8bEc98GQqNAULB+RPFbGcB2NHcqnuJVRat/WbvqCVEZ8tUlKM1EQ+2eDiJQLjWbHRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JC4WDB1Ib2ZsdL+9GXuA2fcYIVRFlfkleWHYPSmvS3I=;
+ b=QEvflkAbmxwvfqCWP8MCxHU93eNO9jhGHs+BoyzscmiIUJHrkNFnx4hfl8LIBKPEfnPEoe1ibzH/ncbJQ0ItzkjcK3FjxPvu/0fOYnwTfCcJh4FlE3hwZvwLbafKE4Wr6F1mJnB4u7ioxLQMBpxUf2zM+oX3M6UUTFk25e6bNbnjY6zzhHsgnkVv/zsD8vUIJlBt6z3+KDPzi826eYcXsfG7SRomRGmNqXJTVrs8jxK3uU4J27muM/AtWa/93Ooje88CBjHWHX/JmyO+RghogMywaB1nQBxB8mtJrkS/nSevoMj7RV1fewpRMgleaoKOVpBcYso+PL2eXSItfNLVlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
+ by LVXPR11MB9778.namprd11.prod.outlook.com (2603:10b6:408:386::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Wed, 26 Aug
+ 2026 16:10:20 +0000
+Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::3454:2577:75f2:60a6]) by SJ1PR11MB6083.namprd11.prod.outlook.com
+ ([fe80::3454:2577:75f2:60a6%4]) with mapi id 15.21.0360.006; Wed, 26 Aug 2026
+ 16:10:19 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: Hans de Goede <hansg@kernel.org>, Borislav Petkov <bp@alien8.de>, "Breno
+ Leitao" <leitao@debian.org>, "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Subject: RE: [PATCH 4/7] platform/x86/intel/bff: Add Diamond Rapids support
+Thread-Topic: [PATCH 4/7] platform/x86/intel/bff: Add Diamond Rapids support
+Thread-Index: AQHdNL3E722JKPRtkEWbvDZojxTny7av/TKAgACCvBA=
+Date: Wed, 26 Aug 2026 16:10:19 +0000
+Message-ID: <SJ1PR11MB6083BFB77A052D824D68D5C0FCAE2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+References: <20260825181526.13203-1-tony.luck@intel.com>
+ <20260825181526.13203-5-tony.luck@intel.com>
+ <1dd80e86-aba7-0cf9-c2ca-5f72c9f0dcf3@linux.intel.com>
+In-Reply-To: <1dd80e86-aba7-0cf9-c2ca-5f72c9f0dcf3@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|LVXPR11MB9778:EE_
+x-ms-office365-filtering-correlation-id: f0a27695-3298-4e95-3014-08df038c8654
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|23010399003|38070700021|56012099006|11063799006|10067099003|4143699003|18002099003|22082099003;
+x-microsoft-antispam-message-info: lrr3wnuPEUOMWmyEo6IjVianSv159rBftHl5hmiP0spberfPlhHAqmJ1QjYjyYbKBVFx3hKhSkpC/2UwPWcK+lcKvBsfR1K0yiTVhGGJgjreJWNKpPomIO3I7lALhk5Oa7fR8TIs/oRfITLTTTRmJL6Evcxh3Jf87bSkHLazGwV4X3UzboEMwulZE2PInpI6MXMRrLcNZzY3Z2D+8fdpV8IAnY6nyl88OMxGeZCYmFGOOy4C2y7oZvWLFBpcQGsSgdsb4HrJjpiyxW1nxT4lyfFjvXP/kIm/bBw5qzd0GbMCSrHKh0AtGd7CJQeS4MRBHA6XXrFHEHKxz5qXM2+ibexdhJ9MU7gK1QTguoibX6nZS5dYb+wqv5m/nPpKmrtUOwHkC/f8C4nLmcrB3Vhnp0ijZVUz4qJf0s6OKb4AgW7O/vOuCcIZOwmKs0t2nnqxH6ORxxZQavgr+PbMP/5PEPeKuXyNhWVSVIM1AK9irPoGIKSG547GAuFRKpnLHfgFm5wmctl4H5XpJskZjt8Q8Pf5lP7uXqTyIVpbsXPOPSEmE+QTDrYE0bKqi8ylJFSi+wvdrqN9EjKjn2CD3hTVnNmTMnRqn265uXf9O11S3WbULk3jBHktDAI9lNERhyCAuv6mFCSiakSyyHSNxdxrgqjWAMmJKtQFuTLfIk2i14xH97OcGz04rtbR8GP540V+vdtZckTE3P/1FLr2SD6PZBhKl5eEu7j9pe7LZdp5lqk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(23010399003)(38070700021)(56012099006)(11063799006)(10067099003)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?kKJ7vMqsY3z4HEoK5CjSR87aSQiuTH8mA9+T7rp5MVMu59GRvAFsspq1nK?=
+ =?iso-8859-1?Q?1GW1Sq1Vf63dm1yNxvTKn+UNq2q/42FHEcKiKRJOseXFNfdE0CbfO6wy2k?=
+ =?iso-8859-1?Q?rAUYBxsDhuikNCekshvMpLVUKR2tUewwh/yajL6RtY5vtsGbOAmn0k+U1B?=
+ =?iso-8859-1?Q?Pst5sdUw2N0xxCaCLik/towrakAUbUWEJUFP2g7STn0Y24gfe5P5blozf2?=
+ =?iso-8859-1?Q?T0tnrzGdMm+0QobeoDz+/fzsd4yl1FqjqETJS5Ba/KskANu+llCUfp2lNl?=
+ =?iso-8859-1?Q?BhQ0cHCSOBFUOeQS9lesTNF3mHqwux1U/6OcgU55cuxw23Ic1X8opPJlcs?=
+ =?iso-8859-1?Q?b01Uovy17neQofvfLQHVKWeWzzIIpoluyAEyyi0oEaf5uzw31qnYo3WhQn?=
+ =?iso-8859-1?Q?Yos6A/BoXICaps09nCmvTYMZaDCzmx4cEEWN0uR+/gTmzrvIejCQ+fcvhL?=
+ =?iso-8859-1?Q?dfX/B4nfFJdiWmOreYfGzaIUn+lo5VuESkK6l5hWGaLNo1PUbDyANH+E5P?=
+ =?iso-8859-1?Q?wYcFwqes98s7/79H+uVxKf5o/W+ZQqzGiuNz+5MCX6/2Zi2XD+RbSNlXWj?=
+ =?iso-8859-1?Q?4uKGHA1cglvZnbC7nXJjUwSJO6PUa9h9+Akblrzn8+Gr24rZdc4y3+Exyb?=
+ =?iso-8859-1?Q?6iU+KGzQhlJKJVWs+dyIOhvyROM6ulG3H15Yczp9i5PQYGRCW9W9kMfmtt?=
+ =?iso-8859-1?Q?Lz4rygK67bwu4KaqzHzhxtCbT4TEvJ9yyH11NlFZR530oyXXwFnwPYnoXJ?=
+ =?iso-8859-1?Q?6mbvwmo0iVbz0Sb7KTaPc3rUgrT2dx71uz/503JzFl2j7dvr976Z3qSbwJ?=
+ =?iso-8859-1?Q?/ucgv0/gsasy1/atOj6hFo7ZeVXYPHm+TEpyJLNwIOP+x9sXjsDUDOkeRO?=
+ =?iso-8859-1?Q?n9wG6vqRaMZ/M1VEwa2KVFFBTJSLmFTT+eq9NPa0C1jMA9muLX564YmQhx?=
+ =?iso-8859-1?Q?fOoB5pjFQYMeTZApvM8IRW0dzy6COH5sVyr8OAiKjR8VGrVv8TwNsONYHW?=
+ =?iso-8859-1?Q?1Bd33R3m7wy/jPitQn2G5f6fo2Rf4qLxrForB6f1vi9DDLy5IlZAIoFSfU?=
+ =?iso-8859-1?Q?e/i/7a8J5NKntweYCrETjOnwGLH15//f6o5lSoDLh4BLslDp2zBLYy3YRP?=
+ =?iso-8859-1?Q?7SMy3Ama+0jeuyapbqW/f0z9wyYyFYcsC7BQ2EfrePUiQWzZIAZnXN40SE?=
+ =?iso-8859-1?Q?bop0LdA2IVGbtklfMJF+gpdrU0kaCuoK0wWdUm/p6bUnqRzlpB7NRinwKJ?=
+ =?iso-8859-1?Q?3jve9yBoPji+VrpLIao+rJgdMddTN2SBQv9UHWgMCqXglGMyr94iA2LhWu?=
+ =?iso-8859-1?Q?zfjNZzGBTOUCdne1aJE3jSgjWhk1Bkhvm8VodMjVupqQABAxWWdlj3p2zY?=
+ =?iso-8859-1?Q?DFmZZMGnbXZGxUZVDOACrm9GdUj+iG0c5v+LWivaRZGnrLxQo1G9X/EOVH?=
+ =?iso-8859-1?Q?UaaxvUzaAHhHSIfgJoRK0Nq3CaUzRGbIwuHtLzcdySiXQn3rUNQJrw9aQv?=
+ =?iso-8859-1?Q?5S88Kh/5VNcG+yd/ATbKNVcGaK/BUxowtfXJ418NAZ59fOmFzx8/WIgJWZ?=
+ =?iso-8859-1?Q?q03erEpKG2q/E3dOuaITfmEBaBiHuRkGXnXlN/jH9+wmkuyR8UcuFJy/x8?=
+ =?iso-8859-1?Q?0mItr1DcOZAiJ/8ECy2nrUVpPiXEYaPRVFK7ffF+oTpHrcvCPWnSSO4xwP?=
+ =?iso-8859-1?Q?CAWLPY++3OkFNtJDSlovzHuCFaCNOWQpnMlbIc4Ir2/gFtcTQUmCeEVV2F?=
+ =?iso-8859-1?Q?fBRzymk/Lx7cpKxoIOeyrPEkUuXVHZQ7zu31yjGs3ahOJV?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADnoEWSR1T+-EjhPtiDuDzETvm5jWcn6aFC_u5LJxNaq1EoM2Q@mail.gmail.com>
-In-Reply-To: <CADnoEWSR1T+-EjhPtiDuDzETvm5jWcn6aFC_u5LJxNaq1EoM2Q@mail.gmail.com>
-From: =?UTF-8?B?0JDQu9C10LrRgdC10Lk=?= <korn3r@gmail.com>
-Date: Wed, 26 Aug 2026 18:59:14 +0300
-X-Gm-Features: AcwNN1XlQtBkh2CPtBUsPio410_tdoYxyRdtVZX4xA1CwhUBGIzhvdtCk79N1Bo
-Message-ID: <CADnoEWSCveEOTPS43SfK1v9ydEAAyEov8OgDiUf-hiY91muW7w@mail.gmail.com>
-Subject: Re: (text) ASUS Vivobook 15 X1504VAP support request (WMI payloads attached)
-To: platform-driver-x86@vger.kernel.org
-Cc: luke@ljones.dev, corentin.chary@gmail.com, ilpo.jarvinen@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Exchange-RoutingPolicyChecked: Yw+WPlZz0IaUrJ3I5KsNCNeSBd2Dc58N0EwIceb8bVoaG/UfaD8669NGpgfNcoGiPnSj2Nd+hHHOX02GEp0MfJt8oJ+J5sdOWcuSqBtXPbk7fXRJAATbGMxHeSHhkfkAJB6uzP+CHW5Pv36SLTo5/knTLocQ6gT1BUwX1N/KXHavJf6TpRcF3ok3w3tjB6eIZObDldX+/4dF6zfDVrsJctKnu+FnIVxSVNA7UMLbSkJmVcC+LeI4NVh6ZE4fTjBOBNY9w/VatHgTrqbjjL5DIxzkn/iG+R6tefHlJAwvfOXYR5ZGlAs2u4SfP/PnjzVGxG+xaLlKHn7DpA6XufEsew==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0a27695-3298-4e95-3014-08df038c8654
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2026 16:10:19.3498
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1eYP69qUY0+rR1F3LfCRqCHriSZWGdbjAH1B1xbWdmJSzkOlnI/xT2hE1LWVx3WpPMYH2yFMVWpmG6q96eeR2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVXPR11MB9778
+X-OriginatorOrg: intel.com
 
-I added debug messages to module and rebuilt kernel:
-[    6.727983] asus_wmi: throttle_thermal_policy_write: dev=3D0x00110019, m=
-ode=3D1
-[    6.727986] asus_wmi: throttle_thermal_policy_write: sending value
-0x02 to dev 0x00110019
-[  763.352769] asus_wmi: throttle_thermal_policy_write: dev=3D0x00110019, m=
-ode=3D2
-[  763.352774] asus_wmi: throttle_thermal_policy_write: sending value
-0x01 to dev 0x00110019
+Hi Ilpo.
 
-the problem is despite those messages dev 0x00110019 my cpu package
-power is limited to 15w.
-but if i reboot and do
-sudo mount -t debugfs none /sys/kernel/debug
-sudo echo "0x00110019" > /sys/kernel/debug/asus-nb-wmi/dev_id
-sudo echo "0x00000002" > /sys/kernel/debug/asus-nb-wmi/ctrl_param
+Thanks for reviewing.
 
-my cpu package power cap is set properly (output of simple bash script
-for monitoring values of current cpu power consumption)
-18:45:56 |  3.71 W      |  30   |  64
-18:45:58 |  28.36 W      |  30   |  64
-18:46:00 |  46.25 W      |  30   |  64
-18:46:02 |  44.51 W      |  30   |  64
-18:46:04 |  41.15 W      |  30   |  64
+> > +/* Machine check bank scope types */
+> > +enum bff_type {
+> > +   BFF_NONE =3D 0,
+> > +   BFF_BANK_DCU,
+> > +   BFF_BANK_DTLB,
+> > +   BFF_BANK_MLC,
+> > +   BFF_BANK_CCF,
+> > +   BFF_BANK_HSF,
+> > +   BFF_BANK_IOCACHE,
+> > +};
 
+Trailing comma here because this enum will expand when additional CPUs are =
+supported that
+have different types of banks that support the bitfix filter.
 
-no one reposended (please dont write this stuff here, so here you some debu=
-g)
+> > +
+> > +static const enum bff_type dmr_mcbanks[MAX_NR_BANKS] =3D {
+> > +   [1]     =3D BFF_BANK_DCU,
+> > +   [2]     =3D BFF_BANK_DTLB,
+> > +   [3]     =3D BFF_BANK_MLC,
+> > +   [6]     =3D BFF_BANK_CCF,
+> > +   [13]    =3D BFF_BANK_HSF,
+> > +   [17]    =3D BFF_BANK_IOCACHE
+>
+> Please add trailing comma.
 
+No trailing comma here because this list is complete. Diamond rapids will n=
+ot suddenly add a new bitfix filter attached to a bank numbered > 17.
 
-On Tue, 25 Aug 2026 at 09:04, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B5=D0=B9 <k=
-orn3r@gmail.com> wrote:
->
-> Hello. I would like to participate in adding my laptop to list of support=
-ed.
->
-> dmidecode -s system-product-name: "ASUS Vivobook 15 X1504VAP_X1504VA"
->
-> currently neither ppd nor asusd cant properly set performance mode
-> (powerlimit seems to be set, but not governor). confirmed by tests.
->
-> got a dump of WMI calls under Windows
->
-> mounting debugfs and doing next commands made power consumption go to
-> proper values (above 40w power on cpu package versus 15w cap with
-> either asusd or platform-profile-daemon setting Performance profile)
-> echo "0x00110019" > /sys/kernel/debug/asus-nb-wmi/dev_id
-> echo "0x00000002" > /sys/kernel/debug/asus-nb-wmi/ctrl_param
->
-> Summary of captured WMI commands for ASUS Vivobook 15 X1504VAP_X1504VA
->
-> All commands use the "DEVS" (Device Status) WMI method.
->
-> | Function                 | Device ID (hex) | Value (hex) | Value
-> (dec) | Action                          |
-> |--------------------------|-----------------|-------------|-------------=
-|---------------------------------|
-> | Performance Profile      | 0x00110019      | 00          | 0
->   | Balanced mode                   |
-> | Performance Profile      | 0x00110019      | 01          | 1
->   | Quiet mode                      |
-> | Performance Profile      | 0x00110019      | 02          | 2
->   | Performance mode                |
-> | Touchpad                 | 0x00100013      | 00          | 0
->   | Lock / Disable                  |
-> | Touchpad                 | 0x00100013      | 01          | 1
->   | Unlock / Enable                 |
-> | Fn Key Mode              | 0x00100023      | 00          | 0
->   | Hotkey mode (inverted Fn)       |
-> | Fn Key Mode              | 0x00100023      | 01          | 1
->   | Normal mode (standard Fn)       |
-> | Battery Charging         | 0x00120057      | 50          | 80
->   | Safe Charge ON / Limit to 80%   |
-> | Battery Charging         | 0x00120057      | 64          | 100
->   | Safe Charge OFF / Charge to 100%|
-> | Battery Charging         | 0x00120057      | 80          | 128
->   | Full charge for next 24h ON     |
->
-> Raw Payloads:
->
-> Performance:    44 45 56 53 08 00 00 00 19 00 11 00 02 00 00 00
-> Balanced:       44 45 56 53 08 00 00 00 19 00 11 00 00 00 00 00
-> Quiet:          44 45 56 53 08 00 00 00 19 00 11 00 01 00 00 00
-> Touchpad Lock:  44 45 56 53 08 00 00 00 13 00 10 00 00 00 00 00
-> Touchpad Unlock:44 45 56 53 08 00 00 00 13 00 10 00 01 00 00 00
-> Fn Hotkey mode: 44 45 56 53 08 00 00 00 23 00 10 00 00 00 00 00
-> Fn Normal mode: 44 45 56 53 08 00 00 00 23 00 10 00 01 00 00 00
-> SafeCharge Off: 44 45 56 53 08 00 00 00 57 00 12 00 64 00 00 00
-> SafeCharge On:  44 45 56 53 08 00 00 00 57 00 12 00 50 00 00 00
-> Full charge 24h On:  44 45 56 53 08 00 00 00 57 00 12 00 80 00 00 00
->
-> Sorry if too many people in CC, deepseek suggested to add you too.
+-Tony
