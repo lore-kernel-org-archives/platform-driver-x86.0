@@ -1,84 +1,93 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECE83DC4C9;
-	Thu, 27 Aug 2026 08:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1910374A0D;
+	Thu, 27 Aug 2026 08:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787819137; cv=none; b=fZo9VrhEOqopnIYAQPnsGIEd+STipBKi68D8VLDox6FgDZXpVYayqx0lQcI0Llmpicw05B7dqwT/EEyCx6qLD63Q873qeJZBnERjdUtyC/Bpr0lHMIPUYYkH9AYm71yzA6cqcm5q7mM7lxdePZpME3MluDQaq55SZnBehkOUKiw=
+	t=1787819588; cv=none; b=H1IjpOAZIVbeO8lV5iD0ddUUbxUCYvI7Bd77gfb7u+NIPhtPY8sOk0hM3NhSjy9UR6tjQf5NvjI8IV8xraZT00IvuKUk0VKw8FpdLoP8AloI7T/r5clgpldEObA2ZfELYtwLu6nCoBNGkgYMLgyZu8NQqBiwAYSRnWFChlr6+tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787819137; c=relaxed/simple;
-	bh=WfWuG5f6Q4mcQI7yw1Kum7F2uTU4MHruQ3BxN2a6InY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y8N1Awi+oTNM9jaizJ3HkapWTsFdHPiFeKXr/riZprZ422sc3FM0KoppjNEN7hxNnyCXwhFmDC9ldW8v9l7qpyygUr8LIOH4cJBVymaP3ZtdBdmDvQjH3I0e3yywCV1IvFPTq5QLXPApdimTiDV1GO0GJaASRLAvsLPzBHFNLzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AJUt/+sp; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1787819588; c=relaxed/simple;
+	bh=QyRMewST/3Bmbdb92oHtW42ZsbNMwMqsp0tL/EC46y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NuAtsIMcGAsJQqO+KCah9ESdfFrBQaHZWHtLcQ2C7F0BCNfqqfasehXba+v5lpmyNUQEagorEEJWocd5qpkJoH1PywhA+08jxy5grt22HMcPHi8O5sUapFb+tb/sY/Go5cESi1ceUB+OYiG5zdnk6ix9SznXK49qKRRenDK7STE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=an7In7C/; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AJUt/+sp"
-Received: from [192.168.68.124] (unknown [149.106.186.222])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 87AB9227;
-	Thu, 27 Aug 2026 10:23:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1787819040;
-	bh=WfWuG5f6Q4mcQI7yw1Kum7F2uTU4MHruQ3BxN2a6InY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AJUt/+spht9tWD6EAkyKOd1XqYf68RYKMpJvrZMdU6K8HBk+JHzZNoeix0zlLuxoW
-	 ja74V/GXIOsJ7DxGyrg0FT8ZDMNFGv43eIetcqG+uuo3wjBTXP91+PXkxFaZ5aGHUO
-	 Qpm88e/0otT7tpUZUdmawDoXoooj2prvOqZwS6Rc=
-Message-ID: <7356012b-b5aa-4d11-8dbe-30cd82dfe3b8@ideasonboard.com>
-Date: Thu, 27 Aug 2026 09:25:20 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="an7In7C/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787819585; x=1819355585;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QyRMewST/3Bmbdb92oHtW42ZsbNMwMqsp0tL/EC46y4=;
+  b=an7In7C/M9w3u001SFZNC0P2Zch1YGq0GGcFWR/oWkwbifdgzt7l/gIP
+   pO2tpCwIBGjXAUnxczuhWLAHHFqYoxvI5SnTvngilxewXEZ+Ea0rp2+DZ
+   aQJC7U6EBMk81UNmLs4w1hs0IhXmPdK/a0QeXzO6F60tnzv36G9TG+aE9
+   M46AnqP994qubRsGdxrEMtrpEjobZ+nlyHukNSKqiU0KjkCADEy4p2wBS
+   LXzKsDOtVdT5lY9I9uDGPduLqNQo0GZreudFo1GX88tXM4sXmAYEswmJ3
+   WBajKs38IpWPMz7D0w+ECKpRKLCobVv3pq1XDuYqjpXiWw2p/RFKAq3Sa
+   Q==;
+X-CSE-ConnectionGUID: dQP2cRETTpWyEFwVIz2axA==
+X-CSE-MsgGUID: 6dTHDUugRT+Hwid2I36yDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11887"; a="98647400"
+X-IronPort-AV: E=Sophos;i="6.25,246,1779174000"; 
+   d="scan'208";a="98647400"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 01:33:03 -0700
+X-CSE-ConnectionGUID: UPDTF/WZTKi/VJp0ImibXQ==
+X-CSE-MsgGUID: I5uxyM2uTUeVWCrHDKm8GA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,246,1779174000"; 
+   d="scan'208";a="297696948"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 01:33:00 -0700
+Date: Thu, 27 Aug 2026 11:32:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Thierry Chatard <tchatard@gmail.com>
+Cc: linux-kernel@vger.kernel.org, hansg@kernel.org, lee@kernel.org,
+	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	djrscally@gmail.com, linux-media@vger.kernel.org,
+	mchehab@kernel.org, sakari.ailus@linux.intel.com,
+	jacopo.mondi@ideasonboard.com, nicholas@rothemail.net,
+	v.vitovt@gmail.com
+Subject: Re: [PATCH v8 6/6] media: ov8858: add ACPI device ID INT3477
+Message-ID: <ao_2OdOHwcuL8uNi@ashevche-desk.local>
+References: <20260826112452.13539-1-tchatard@gmail.com>
+ <20260826112452.13539-7-tchatard@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] platform/x86: int3472: Address Coccinelle warning
- on an error print
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-acpi@vger.kernel.org,
- Len Brown <lenb@kernel.org>, Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- platform-driver-x86@vger.kernel.org
-References: <20260825203553.3725132-1-sakari.ailus@linux.intel.com>
- <20260825203553.3725132-2-sakari.ailus@linux.intel.com>
-Content-Language: en-US
-From: Dan Scally <dan.scally@ideasonboard.com>
-In-Reply-To: <20260825203553.3725132-2-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260826112452.13539-7-tchatard@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi Sakari - thanks for the patches
+On Wed, Aug 26, 2026 at 01:24:51PM +0200, Thierry Chatard wrote:
+> The Omnivision OV8858 appears in ACPI firmware under the HID INT3477 on
+> Intel IPU3-based platforms such as the Dell Latitude 5285 2-in-1. Add
+> INT3477 to the ACPI match table so the driver binds when instantiated by
+> ipu_bridge.
 
-On 25/08/2026 21:35, Sakari Ailus wrote:
-> Fix the following Coccinelle warning:
-> 
-> ./tps68470.c:164:58-65: WARNING: Consider using %pe to print PTR_ERR()
-> 
-> by using %pe specifier for printing an error code.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> ---
+This version looks pretty much okay to me, with the exceptions of some
+nit-picks here and there and the main issue is the process related, id est how
+the email thread is formed and absence of the cover letter.
 
-Reviewed-by: Daniel Scally <dan.scally@ideasonboard.com>
+Thanks for this work!
 
->   drivers/platform/x86/intel/int3472/tps68470.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel/int3472/tps68470.c b/drivers/platform/x86/intel/int3472/tps68470.c
-> index a77ed32abe55..dc777dbac61f 100644
-> --- a/drivers/platform/x86/intel/int3472/tps68470.c
-> +++ b/drivers/platform/x86/intel/int3472/tps68470.c
-> @@ -161,7 +161,7 @@ static int skl_int3472_tps68470_probe(struct i2c_client *client)
->   
->   	regmap = devm_regmap_init_i2c(client, &tps68470_regmap_config);
->   	if (IS_ERR(regmap)) {
-> -		dev_err(&client->dev, "Failed to create regmap: %ld\n", PTR_ERR(regmap));
-> +		dev_err(&client->dev, "Failed to create regmap: %pe\n", regmap);
->   		return PTR_ERR(regmap);
->   	}
->   
+So, since there is no cover letter, there is no clearness how this all is
+supposed to be merged. I assume either media tree or PDx86 with the immutable
+branch for others (MFD, and PDx86 or media). I'm not sure that MFD is a good
+choice to take it, so, Lee, please, ack the respective patch if you agree
+on the contents and the merge approach.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
