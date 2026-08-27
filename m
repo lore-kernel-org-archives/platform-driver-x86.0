@@ -1,111 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2CF44A3ED;
-	Thu, 27 Aug 2026 12:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE18C477995
+	for <platform-driver-x86@vger.kernel.org>; Thu, 27 Aug 2026 15:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787834969; cv=none; b=Dl+rRTa+XVEaU8kgcD7vASDPV++Qi1iO3SAPSlOPJGdg+FMiApxDHoqyQ6C/lXAiJY5R/hVin+u6d0A/mD2P2DNO6R9xWKkv4D0H+0n6ni4VMz1cmtUR8rhTqvVT2luEWmQFASGBJxa5b7PMBT3TmqH6L1NTLbAmeAAi7Qj+sYU=
+	t=1787843517; cv=none; b=mcZNQVDOJT7wW57Xl78qeWXHFDoJ+z5iZJI6gQjpdm+aW+ghydoI0iM8CIwTv0NM1Udq5bL72ZK5Cd9idVVHdkEBhDyM62fdao7woVCSjzenCUzzAdnRVs0dbmQBAtGv8mmzxMw5JXZCmMYc84tlI9/HFFRvT+oVyR7s8wY8RF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787834969; c=relaxed/simple;
-	bh=WccHgyxAi+nBOE6XPI0X71OtXCwAStMIRl9JJFqDmUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpuy0c3iaQwdX4hXApcxU3BabSqtS8Sm2e+EEJPVo+Azaa24ZAXrqZDsBAKzIH07OzXJcaZVVV28stYFaeQY0FMMilfOYPiQLPIESjAD4dltHMMufEpI8sBYh2rVj5Bi0pMeIVhnpn3k1YJ1mGcYEkf/Po7BRg01CHDb6Qr+hC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UjgXa3Bk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787843517; c=relaxed/simple;
+	bh=TS8uJOxY0VqqIlMJUo9bqOEciSpsr3A5gB1Tj/EyK2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Arq6DvBpUKLpmwXUiUtjOF+VX+Np8d7X6tJAD0sF/mrslDUOHnKiziTYRP9xrv18YyzpPVI4c2evXLZzB3kfrxDwGq7UkZaL/ufihJ+jZN5m8wC12nUghfSfiZu14DrC6EGqZxGCWQxdwhaTUQr27TjHpOrmNif4q8a0riiIIXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3IsbMW8; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UjgXa3Bk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1A31F000E9;
-	Thu, 27 Aug 2026 12:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787834950;
-	bh=HyDreMhM8N9JTmhSp9B7DPAqPwJUx4KyypUPXl0B5YU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UjgXa3BkL/lES3mcrKXQAccwqIUeoCH9pX7zqiI6VZCrau8vdTYwIvyomxGPkMiIG
-	 rw3+KJz59pIgcnJv+BqBb5uUDUixzeiGhWXzPdpxYAXrFjE/g/v7pLNSCr5CDmw71T
-	 x+B8nfrFBoEEqmqiY++UdyZvOlDGOQNLLnf62o7cqSBiBK3dgEmF24oShD9B9Voq/I
-	 a0i0UA11p96DWClV+uwXMmXq6tLQdEUNrfZ8UkL0kRKsEJTochM9QlXbvIM2pMFykb
-	 aS1yEduMnZoinNnIU/pMzToje2BPPfUWWyUO3rObHyR9NZPOKVHBAiZqIm1okYgVYN
-	 isNLUwzK1ZBlw==
-Date: Thu, 27 Aug 2026 13:49:05 +0100
-From: Lee Jones <lee@kernel.org>
-To: Thierry Chatard <tchatard@gmail.com>
-Cc: linux-kernel@vger.kernel.org, hansg@kernel.org,
-	platform-driver-x86@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-	djrscally@gmail.com, linux-media@vger.kernel.org,
-	mchehab@kernel.org, sakari.ailus@linux.intel.com,
-	jacopo.mondi@ideasonboard.com, nicholas@rothemail.net,
-	andriy.shevchenko@intel.com, v.vitovt@gmail.com
-Subject: Re: [PATCH v8 0/6] Enable cameras on Dell Latitude 5285 2-in-1
-Message-ID: <20260827124905.GH770273@google.com>
-References: <20260826112452.13539-1-tchatard@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3IsbMW8"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7f48c750afcso2526479a34.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Aug 2026 08:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787843515; x=1788448315; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=NmdIKvxkFSGNeSljb2NxmA94mTGO/+oX2AMXwxdIcUM=;
+        b=F3IsbMW82AWwTL6Ogw7yy3cMqU1FarlbaDJqCntwBRZPrS2nrWEMCHDBZ409RBXS50
+         vHry3QRzxVfsjR5+mKywBY+inKv3cyFkVTHPOQbJa9UjZnMucHt7NKVybUyNPpcEKwvU
+         RrxuKT9oDS5m8G6flKN5PcvJYUY2YzltsvpMcOKP5H03aCj6Oboza4vcTctlhcy0oFix
+         mkqbv178fEg9bCnaKam7fSqrjGAogjP3wVPaDCTveUQV2j+OpUNCY3TbtpWjEo4F6vO+
+         lmHBeXurxDpyQdQmbYT3rZ7zaVoexkZX/UPPefzSnHBd9tpCjlpf6Kszk542SvhB0ueK
+         0yzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787843515; x=1788448315;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=NmdIKvxkFSGNeSljb2NxmA94mTGO/+oX2AMXwxdIcUM=;
+        b=jKS5ecxyieulyHi3827xcrBrE++FwOfrNLehAy73DgpZEwe+GE4ebLzDoTlnc5HcCd
+         Xy/T5c8q7J3G73P2PXFv86zm3CwARTQpyV9EpEU+eryLXEK9Tz6NoxNG/Ic3BFK3VHTR
+         Kp+Fv1591vuPSJs3GzEUsLS57pQCVRC/YfFAc1zMjSZIuEXTNzsQ3Y+HaFDhlXLQ3P23
+         ePGn/A1vH/QEwOHOUtqA4yxrEVTD6WTL5HkhRCpsXiAE4TTZdc6mwk2Sk3HwGgYXcxsZ
+         LQkvjx/eYs1nvDqeLON57drkeAOJ0I6FxDgcTBn64nDutKxnuGfkfSKOgUaFxtOOVMB0
+         mn2A==
+X-Gm-Message-State: AFuF++n1hAYPd64Pb4zfoWeAJHX6q+bBbhMtHITkiytMuy85sCJMbjQW
+	NSkLvCHx98YlZFsQZTRIMilBiwbpApeWa+ZlDuTG4PL7K1AHY8r3l0vo
+X-Gm-Gg: AR+sD12Y8ZeHu7pHyYDsq2TjlJjVzW/1zoTwEloD0aPfKhrPjrE6zvW85/2oD70zgrN
+	ByU2fhN9oCae0L+RXE5C5s3xvePFxg1O4hNbiXwnsFbmTzzHcqloLV/ygexr/bUuZdLZdycpyMj
+	WpvzVtnX2J/QXlHDYCZYLphcQqcT8LnIuvsaCWXU4s/lPER/EQPMAnr/A97bhr+KMxiHZH9R1dK
+	cOQzjDbIy+OPLOPmons9iTa9U/K3qkFnk/qssC9/kfTtc8k6aPxQUwKjwmK4WkAnry/31WX9ow1
+	UXgvQFOr6nAf8WsY/c0lpVoJQRrxclms8bwrxU0ent+eBfWLfB583NBu8/J1uTJQvAm/CJkBNOx
+	uKFfUTjH6x4K6cqxj+l2U0G4XYMJumKNK0b26ukHi/Nz6B7NwlCGmIZeXsphM/JBvVpsVHeljF8
+	ENcf7aonGhqxDUZUl2CoYDHNWXg37onCcFhmbcTDHo63HTU8MyKcxkbyZlrVFSOZmpslDShVZOj
+	2FVAYS+gdQIPHvbhAHqxQxljegCMt9xdCY=
+X-Received: by 2002:a05:6820:829:b0:6b1:b771:bc43 with SMTP id 006d021491bc7-6b1b771bccfmr4253535eaf.23.1787843514529;
+        Thu, 27 Aug 2026 08:11:54 -0700 (PDT)
+Received: from archlinux ([2409:40d5:415:fb30:8fb3:a7e9:62b3:e2c9])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141a8f47d8csm17142074c88.8.2026.08.27.08.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2026 08:11:54 -0700 (PDT)
+From: Suryansh Singh <technosfan14@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Suryansh Singh <technosfan14@gmail.com>,
+	Otoniel Matute <otonielgrang@users.noreply.github.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add OMEN board 8D40 thermal profile support
+Date: Thu, 27 Aug 2026 20:40:18 +0530
+Message-ID: <20260827151018.25991-1-technosfan14@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260826112452.13539-1-tchatard@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, 26 Aug 2026, Thierry Chatard wrote:
+The HP OMEN Slim 16t-an000 (board ID: 8D40) uses the existing
+OMEN v1 WMI interface but does not use the standard EC thermal
+profile parameters.
 
-> This series enables the front (OV5670/INT3479) and rear (OV8858/INT3477)
-> cameras on the Dell Latitude 5285 2-in-1 under Linux.
-> 
-> Per Documentation/process/coding-assistants.rst: this work was developed
-> with significant help from an AI coding assistant (Claude Code, by
-> Anthropic). I used it to help reverse-engineer the ACPI/TPS68470 bring-up,
-> iterate on the board data, and draft these patches. I have reviewed and
-> tested all of it on the actual hardware and take full responsibility for
-> the result.
-> 
-> The series spans two trees: patches 1-4 target platform-drivers-x86 and
-> patches 5-6 target linux-media. All six are needed for a working system.
-> 
-> Changes since v7 (addressing Andy Shevchenko's review):
-> - Patch 1 (intel_lpss): rework the quirk to be data-driven. Match the
->   machine by DMI and the device (INT3446) by ACPI ID, carry
->   QUIRK_IGNORE_RESOURCE_CONFLICTS in the ACPI match data, and apply it to
->   the per-device info in probe, mirroring the PCI counterpart. Drop the
->   duplicate spt_i2c_info_ignore_conflicts struct and the machine-specific
->   dev_info(). Fix the include ordering.
-> - New patch 2 (int3472: tps68470): split the int -> unsigned int loop
->   counter change out of the clock-consumer patch into its own cleanup.
-> - Patch 3 (int3472: tps68470, was patch 2): trim the commit message; no
->   code change beyond the counter split above.
-> - Patch 6 (ov8858, was patch 5): use a C99 initialiser for the ACPI match
->   entry and drop the comma after the sentinel.
-> 
-> On the open question from the review: I kept the per-table
-> gpiod_add_lookup_table() loop rather than switching to
-> gpiod_add_lookup_tables(). There is no gpiod_remove_lookup_tables()
-> counterpart for the error-unwind path, the board data uses a counted (not
-> NULL-terminated) array, and the singular form is what the rest of the tree
-> uses, including int3472/discrete.c.
-> 
-> Earlier changelogs (v2-v7) are in the v7 posting:
->   https://lore.kernel.org/all/20260819140107.1329091-1-tchatard@gmail.com/
-> 
-> Tested on Ubuntu 25.10 (kernel 6.17.0-22-generic) and Ubuntu 26.04
-> (kernel 7.0.0-30-generic). Both cameras working in Zoom, Chrome, and GNOME
-> Camera via PipeWire. Also independently tested on the closely-related Dell
-> Latitude 5290 2-in-1 (same IPU3/TPS68470/OV5670/OV8858/DW9714 stack) by
-> Vitalii Tytskyi:
->   https://github.com/vitovt/dell-5290-camera-kernel/tree/master/patches
-> 
-> Thierry Chatard (6):
->   platform/x86: intel_lpss: add resource conflict quirk for Dell Latitude 5285
->   platform/x86: int3472: tps68470: use unsigned int for GPIO lookup loop counters
->   platform/x86: int3472: tps68470: fix clock consumer registration for Dell Latitude 5285
->   platform/x86: int3472: tps68470: add board data for Dell Latitude 5285
->   media: ipu-bridge: add sensor configuration for OV8858 (INT3477)
->   media: ov8858: add ACPI device ID INT3477
+Furthermore, it is the closest sibling of board 8D41 and 8D42,
+which are already included in the table with
+omen_v1_no_ec_board_params.
 
-What command did you use to create this set?
+Add the DMI board name to hp_wmi_feature_boards[] and map it to
+omen_v1_no_ec_board_params.
 
-Where is the diff?  Walking through each patch to see if there is
-anything I should look at is suboptimal.
+This enables the existing board-specific handling for 8D40,
+including platform profile and fan control support.
 
+Link: https://github.com/CachyOS/kernel-patches/issues/157
+
+Tested-by: Otoniel Matute <otonielgrang@users.noreply.github.com>
+Signed-off-by: Suryansh Singh <technosfan14@gmail.com>
+---
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index 6ecc033e5af3..fba6d202672a 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -323,6 +323,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D26") },
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D40") },
++		.driver_data = (void *)&omen_v1_no_ec_board_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+ 		.driver_data = (void *)&omen_v1_no_ec_board_params,
 -- 
-Lee Jones
+2.55.0
+
