@@ -1,150 +1,135 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A0A2F8E8B
-	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Aug 2026 00:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E59A35F19D
+	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Aug 2026 02:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787877325; cv=none; b=LalWZw9ipfCYhcnLN0sDBZ4E5a3XHBl6YMx5CXzBZYyje+DASGxAeJQ/8DrqP7N4w79DnVmfQupKQkzEhFsZ7Ns3+AuqG6TqN6rZ4DqEzlL8xQgf/RcelNnZfDNpxhdRQbAqvPYZBMuWuDvxK83uyT2knT5OGkXwJN3ABxl9KoQ=
+	t=1787885266; cv=none; b=R5hT+621Vtm2vgP+qYE7fe79jk6VzEE5mS83ILmFMqesJI9IL9hTALsL4exwzQ5VqXR74+U6necF/JgVHLk3YfhjVTIvTiEpxuyKIaf7TMixmVQb9dxuv9dvOrgIQ4D/FV7DiA6K8435nvQ/8dpfeeff7WoY5R72v4frIYu9/oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787877325; c=relaxed/simple;
-	bh=hgvBQqs9ybbtiCRwx4R8lM6PFL2reQCSBTs5mW11U7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wn01uWA0OxDz8SHuzUMiBUky4ZpN/tpAA+c+jbh+nOYeUeR49/Et08JNVu3DPfziVa5vZhpSHUEqtDW3sK3maJM5lFJpv9vUWdHITrqUJZYtJNhmWN1PDZHv7zMx/u0HsXtAPOdF2Vag7J1hLbzPzsfJAxE//ne+R020KMamxAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WH9I2c07; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1787885266; c=relaxed/simple;
+	bh=r7bYlS0ZfXppJ6Y7GdWAXlpWYLSdLUndMo9cUyjaL/4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=mkv5jcLU7DwEpUaTM4d8RdPMzUATOqWfdcMmBmiqgHMPIlQoucKqUavaySNEUZyIUic3ljKL61iclEl78VaTsyZlD4MD8BTelPK87/AIf9U8yfyWEXyTypwrkyWp6qgrm1+uQKNn09zE2ct8M4mdaqyvV0YV5hpAwi2A9k0o0P0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MRCP5ST4; arc=none smtp.client-ip=209.85.217.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH9I2c07"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-381b831d535so986970a91.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Aug 2026 17:35:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MRCP5ST4"
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-784a1696a21so354485137.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 Aug 2026 19:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787877323; x=1788482123; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=UqRYF/uH+FzRwfodmF4P9j9BArNyskaK986eMD8UNug=;
-        b=WH9I2c07cC7oFNDolhQN14TPZFj/QtEYj1NF8+pV54//FOxc+iHGNV5JRc1b5hZV+d
-         MmrtN6KPyTVIJjv+aBtHBXrPrhYL/fLWU6HHE00z9MovpIWEPWp+WVSR7X5rCN1MOLq8
-         LykBSlX+SjrzUeGfNoaEyF2jsLF0p9yC78KrjbZzXlKM4vqOgnNeJ8TwFG1J0kpkdNKD
-         SaPSv+tArgznf6o5pkrW2V1x4xJ37YReGWfJBPqOYP1u2N70+ES1vDm++6U8T/cbOswL
-         4GmmAUeFRM8RJXfjYbb6JqaXGzu+ED+TSsfa1rJT9lCSXKrBuceqalmMkjzLy/jSPecd
-         djsg==
+        d=gmail.com; s=20251104; t=1787885262; x=1788490062; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=r7bYlS0ZfXppJ6Y7GdWAXlpWYLSdLUndMo9cUyjaL/4=;
+        b=MRCP5ST4m0TZQoTCEqZd8vaujWNhfiLUiNchHwRXaGD3nzZVi03nFPV97WM4ErGWGN
+         Q8o4GWj0SMPay9Ypd2Z4KcIwg4m1nFCRTcP3yqZIkVroqzlCyvxRURf4xs9OzN4st1jf
+         TC902PmYMwO/jaEcYwqUqXumG8Ke7wSwF3R0oDjafkIuRFKJKSDgLBZFPy3L7AAhRXfi
+         WsZlPikf3VClbjRXt1VUnMdHI4+7GU6G+La6/wcdrJxaUEOn+QplJu+nwq5X4dEf0xJ8
+         GxRIC5cpQgtpsYkSTtE3E7FkHTPdvL2yba5UmnEznVszA1mJaGwHmicUASsSMU7wNYmg
+         A/mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787877323; x=1788482123;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=UqRYF/uH+FzRwfodmF4P9j9BArNyskaK986eMD8UNug=;
-        b=SAB9lK2F6glJHrWKHmbyAGlhlU9c2IxPgvQWKf9EvYVdPRyyW9jaeT5D+ZQX6d0C08
-         OCA3DnAuQo0M+iZmxXvkkaYo+fNT7RV6PGBZ0lFhMXPiX93M8o/0Q4+6ezm7XAop2KJs
-         slexDnKIgltw18R/UUVW6uUJprzGKpqwn6eEqddq/n1AIPXK5QrWyvpOqxQgg5AzZHUv
-         /MM/pz2UDy2wpm96iOOfue1IGaki/3MRdLoxEufI/VEzxIdqZLJpbrpL53yGOq6KsarX
-         fOTxaPJjxTtckz9Aem4mjwDBwpj/c9zEtDyOLv913PEPHlOF96yU8Hzq5Gv15aXmZcjn
-         D8PQ==
-X-Gm-Message-State: AFuF++nv116C5CZbGLT9BwW7C7PSGCuqm0BCGsRIo/y08kZ0i9XJQCjq
-	U2ptyZNxnVtN7NtXkphtiiAiX41+WnPUm2mzKQpPe95gfjEPet5uFr4ieQcDqmNo
-X-Gm-Gg: AR+sD13jOk8syGaKMFWs99CG7/6qahoQANLoxXAsJhjqbTtA7gm6V2/IAHUSTgTIM99
-	5eSNItPMuOR2GQzy0GhjYzsAEQviccPzjIG+hltpGsPEZ/yb/oz/wES8MQxQnzLkfkRwodqciO5
-	NpgCTTzwuNG0Nh88zwxYgNE7qwuAMSpTpOA9To9GOjef1Nh86Sfu5NdNB9wgZy9jjzZrbKCbijm
-	nw8pIicAjddGP2qb+YrxDAy1jm2ycrCMzNKUFPqZYGPygXsM/pY9R9iMdM3lygMbCdudeZJcnbr
-	xqfB3bIenksC5fzi4lbxhPmtiS73Qw7hEraFoqVWJJYEWKliyDs57AKiULYfcmTtyzIKJ3eAEQm
-	XKUnbrX8zpyDyqaUgOLFrKo6N51HxgBugPzu1/QwWWuCj72w8RnmNEtbABBKP1s7dBv4prG3SK0
-	gkn+sYgY5AppRQ31RQsX97yL2VrdxWPVGIpraDJJc3edjvPgsgqc6PCXTi3/DG25zDpS4mQtXN0
-	ul1eekQAl4ht6i0PuPG
-X-Received: by 2002:a17:90a:fc4e:b0:395:5eec:b932 with SMTP id 98e67ed59e1d1-396d0f8fdbemr6212593a91.11.1787877323138;
-        Thu, 27 Aug 2026 17:35:23 -0700 (PDT)
-Received: from localhost ([112.204.113.180])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-396ddc58f3dsm165584a91.16.2026.08.27.17.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2026 17:35:22 -0700 (PDT)
-From: Alex Yeo <alexyeo362@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: alexyeo362@gmail.com,
-	Kenneth Chan <kenneth.t.chan@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] platform/x86: panasonic-laptop: register FN key up/down events
-Date: Fri, 28 Aug 2026 08:34:31 +0800
-Message-ID: <20260828003432.88748-1-alexyeo362@gmail.com>
-X-Mailer: git-send-email 2.55.0
+        d=1e100.net; s=20251104; t=1787885262; x=1788490062;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=r7bYlS0ZfXppJ6Y7GdWAXlpWYLSdLUndMo9cUyjaL/4=;
+        b=fxCoA9KiJtYThZE0O/tGegEkc8k0nUUi4k2XA4benV75YWpt9bKUlNSq6jYQSZ/x+9
+         bLlz037rJyrjHz/URx0pcnJjBxrdqjNM0EATVK0bb8X171UB0klLOCWViRq0bF7NUzle
+         ddXcd5m2gZ7jpGdmdKiTdsASWEt8/MD34QN6s3wttImkBkaw7j6FMXEtvNPlgsFft9Sr
+         5+fdxNEqoeR/6JVCgWdPb4S9kGdMTRUHCPTucfR0ni2zF8DTXSDGGCGNMcUJ3jMBDad0
+         wN+ncYUCyy21IyJEviLK8LyZ7GhLjkkIYcxvsDjx1wRzhAsIc3+FXJdiFNyPoGwVBj85
+         yr9A==
+X-Gm-Message-State: AFuF++lgbXiGl2yyJa8TEZWjaHmRaDs3bEIKFGMjfuI1GofLDRRTHSSF
+	W1/z4lLpsm0OrVgXMmFajBf3pnVjZj2XgeN3IYSbCjMuhOkJVzdtVAXh
+X-Gm-Gg: AR+sD11cUf36jpXU7C/z2TZLcJmh672Cq9DRVDc1r2YwEmcmltGdc0KDGe9h1zzF1YE
+	uy3Z/4qbpen+sQgpgeOonOujx8N3vJJS9IW2hiu6V1ktYG+ZdudnJkUTdXhJHv5UGyIeTb89S+B
+	qJrkIv3P9+gwpF/8kevxegbJmCoK6ifX7ivasigZurM8EdXQiNL1xlVX+DNLJicXPicSbmzq2JG
+	MVN2idNsVb85pwya02+nFOar4GslF0BTafCNgaKOevclVmUMoKS1dKNsykZsPfQqfaLp5rCyEQd
+	a1keyv2rQRqVhWqsmc39QtaO1OZ+GFj42e6oqkp4EPrhUc+RKKocK7Nxv+Ck867sHgnHW7cOXSu
+	Y+ngXyY9/Q+kA0bA7jR4s09HxNb653xQLuxuf+LtvoZuuPhsTenJuhvFdAHGKS6BDTmSuj7fCwA
+	e5xU2o05HI6J8SlcOdhVkr6V8F3F2dIWga4/iTBrwprrvqtBTmWJ9YDsw=
+X-Received: by 2002:a05:6102:2acf:b0:778:f972:32eb with SMTP id ada2fe7eead31-7859996dba0mr1238685137.12.1787885262568;
+        Thu, 27 Aug 2026 19:47:42 -0700 (PDT)
+Received: from localhost ([2800:bf0:61:1127:ab87:5602:531c:8dfb])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-785f247e397sm239421137.0.2026.08.27.19.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2026 19:47:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 27 Aug 2026 21:47:39 -0500
+Message-Id: <DL08FHLYHRAB.2CA5JTNXDMNSQ@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Rickey Bartlett" <subtexel@gmail.com>, <kuurtb@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, <Dell.Client.Kernel@dell.com>
+Subject: Re: [PATCH] platform/x86/dell: alienware-wmi-wmax: add Alienware
+ Area-51 AAT2250
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <CAAqcVzxJMxg83EJJD+e2eatjmEbF63jX2i8x0=KKeNv2F=5PEQ@mail.gmail.com>
+In-Reply-To: <CAAqcVzxJMxg83EJJD+e2eatjmEbF63jX2i8x0=KKeNv2F=5PEQ@mail.gmail.com>
 
-For Let's Note laptops, pressing the FN key sends a signal for both
-keyup and keydown.
+On Thu Aug 27, 2026 at 2:37 PM -05, Rickey Bartlett wrote:
+> Add the Alienware Area-51 (2025 desktop, model AAT2250) to the AWCC DMI
+> table. Tested on hardware with BIOS 1.6.0: loading with
+> force_platform_profile=3D1 force_hwmon=3D1 exposes a working platform
+> profile (quiet/balanced/balanced-performance/custom) and a fully
+> functional hwmon interface (6 fans - CPU, 3 top, 2 front - with
+> fan boost control and temperature sensors). G-Mode is not applicable
+> to this desktop, so generic_quirks is used.
 
-FN key down: 0x0030
-FN key up: 0x0031
+I would move this G-Mode sentence right after the first sentence.
 
-Currently, pressing the FN key causes the following output in dmesg:
+>
+> The full product name is matched to avoid colliding with the
+> "Alienware Area-51m" and "Alienware 16/18 Area-51" laptop entries.
 
-[  +0.322901] Unknown hotkey event: 0x0030
-[  +1.101006] Unknown hotkey event: 0x0031
+Same for this paragraph, it makes more sense together with the first
+paragraph. Then you can let the "Tested on" stuff be its own paragraph.
 
-This has a tendency to spam dmesg as this is printed every time
-the FN key is pressed regardless of whether or not it was used
-as a modifier to activate functions like brightness, etc.
+>
+> Signed-off-by: Rickey Bartlett <subtexel@gmail.com>
+> ---
+> drivers/platform/x86/dell/alienware-wmi-wmax.c | 8 ++++++++
+> 1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -122,6 +122,14 @@
+> .driver_data =3D &g_series_quirks,
+> },
+> {
+> + .ident =3D "Alienware Area-51 AAT2250",
+> + .matches =3D {
+> + DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
+> + DMI_MATCH(DMI_PRODUCT_NAME, "Alienware Area-51 AAT2250"),
+> + },
+> + .driver_data =3D &generic_quirks,
+> + },
+> + {
+> .ident =3D "Alienware Area-51m",
+> .matches =3D {
+> DMI_MATCH(DMI_SYS_VENDOR, "Alienware"),
 
-Map both the keyup/down events so it is no longer reported as
-unknown hotkeys.
+This is not the right indentation of the file. I believe your patch got
+corrupted. It was probably your mail client so you should check that
+out. Additionally, please use ./scripts/get_maintainer.pl to get all
+maintainers and lists involved. You are missing Ilpo and LKML.
 
-Once the patch has been applied, evtest shows the following when
-the FN key is pressed (and released):
+Thanks for adding this model! Could you also email me the acpidump of
+that machine? I like to keep acpidumps of every model on the list on my
+personal archive.
 
-Event: time 1787875023.918171, type 4 (EV_MSC), code 4 (MSC_SCAN), value 30
-Event: time 1787875023.918171, type 1 (EV_KEY), code 464 (KEY_FN), value 1
-Event: time 1787875023.918171, -------------- SYN_REPORT ------------
-Event: time 1787875024.038462, type 4 (EV_MSC), code 4 (MSC_SCAN), value 30
-Event: time 1787875024.038462, type 1 (EV_KEY), code 464 (KEY_FN), value 0
-Event: time 1787875024.038462, -------------- SYN_REPORT ------------
-
-Tested on the following Let's Note models:
- - CF-SX1
- - CF-RZ6
- - CF-SV8
- - CF-QV9
- - CF-SR4
-
-Signed-off-by: Alex Yeo <alexyeo362@gmail.com>
----
- drivers/platform/x86/panasonic-laptop.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
-index 19d194ff37ca..cfc2c79da554 100644
---- a/drivers/platform/x86/panasonic-laptop.c
-+++ b/drivers/platform/x86/panasonic-laptop.c
-@@ -232,6 +232,7 @@ static const struct key_entry panasonic_keymap[] = {
- 	{ KE_KEY, 41, { KEY_MACRO9 } },
- 	{ KE_KEY, 42, { KEY_MACRO10 } },
- 	{ KE_KEY, 43, { KEY_MACRO11 } },
-+	{ KE_KEY, 48, { KEY_FN } },
- 	{ KE_END, 0 }
- };
- 
-@@ -863,6 +864,17 @@ static void acpi_pcc_generate_keyinput(struct pcc_acpi *pcc)
- 					key, 0x80, false);
- 	}
- 
-+	/*
-+	 * Let's Note models report both FN key down and key up
-+	 * without the expected 0x80 key up/down bit
-+	 */
-+	if (key == 48) {
-+		updown = 1;
-+	} else if (key == 49) {
-+		key = 48;
-+		updown = 0;
-+	}
-+
- 	/*
- 	 * Don't report brightness key-presses if they are also reported
- 	 * by the ACPI video bus.
--- 
-2.55.0
-
+--=20
+Thanks,
+ ~ Kurt
