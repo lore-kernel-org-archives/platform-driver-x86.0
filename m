@@ -1,117 +1,118 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F006418A36
-	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 18:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C1641D626
+	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 22:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788028389; cv=none; b=ePxoODQ6PcGrOkhhysVbiDA3FvjVOcPUl715//BayFES3ooUJTTWIT/lUkMtLFTJKN2LeySi/eFD88sFjEmdu5E74jydt8zuYPfzBbchfslGsuQuqnWJTD3eVLkZALr1G/mqjh1WkGVqjgPidOLiSnT6OH+5qQUwxuaI6vQKmJ0=
+	t=1788044255; cv=none; b=Fbs+WMsdbF1aI4B5CpkzMdsLNnIAdyeqmpbC9gxRozSntm1ceZwUxMS3ScxPpvMd05zSQV0jXbYdaQ6IvyKv+S5Mk0qCs0jMwhy76A5xbsL3oeueoFyZNfTcpCXLWkn+ED5Os9FLO3aVCwgotmgGb7J7L8x1upxls7xWMRRKTqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788028389; c=relaxed/simple;
-	bh=vyCh1a/9f+HWTyY1McW6nzBV+qOi8oUrXthPikpGcDM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=alcewOZjPLrEkSKuAiaoxst1BcUG1ymNQu2eNcSUgtEIDobGqY+ubbeMxwl834bHkM2N3a01BD4mqSQMCv7A9wiEzCWwSStNypXG18EAYIGaZaYuWUdfVAS8pT4KdSylPy6dScE7uSE8Irm7EL7RkrMoRIqaeqzM4ggo/R19K+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLgmVA74; arc=none smtp.client-ip=209.85.128.48
+	s=arc-20240116; t=1788044255; c=relaxed/simple;
+	bh=Z6iAHN7f3v2qJZDWLBrgfCSFCZC8Je5UhoAFvCrNcKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T8sC67/un4imX7lCpEeriSezWuIHS9OP9qwbq+fqEdyyg2+vpa4f+YFi6uGjo4KLSCHU2oirPPSjktGiLJdbE6MIuoM7eLUoiD8I+GVtbwXIega2BvsbXCRkMjCEGdoq8cBZCb+EFZbH0LKUxluiYxqBEoJ3imsKEcskXwCV8yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TEDQi5VB; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLgmVA74"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49b8eeb3ff2so14460225e9.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 11:33:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEDQi5VB"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-499840a2575so13632705e9.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 15:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788028386; x=1788633186; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1788044252; x=1788649052; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=6wuDpNUGIrjwH77k9nZgATZRXnq+7uzbWIulgX39iog=;
-        b=RLgmVA74Pv98zN79EveyDhNtzUOp0v5T8MFcoeLKODI2by1Uv5//ieDZaMkdIWZkBc
-         dNS0ekod/hH9gz24uIh3S7iKuepddVBFeGC3MfUAD8YBPBTZ28GBIAy6kf+43lOwGZc+
-         Ovfw+R113RTTSGc5FU+N0mLzRjtisvlRj6bPrhXKbMvzir3lHQwtcnKVAPh2ssN2pacg
-         ttJJ9dKgJSTz11xjrCEXVqzIJyKoby9DAHR/RyUJ511avUibTBvnG5roVluEQ66mdo/X
-         cy7zuNrflYrwUrVte17dBhrE0WhhpJBVf+02HYUAP411op2d/joClsTBbCqqj/n9j2xy
-         sgyw==
+        bh=FtlM88NQidqFT8NjUtWtKrEvDDJn026XfxLb81ixvB4=;
+        b=TEDQi5VBqTiSY9vz4peEgTUhey2dAo0/WVKsP7wpP8tRNkF5IXVbWbRa4Cu8aX0EFy
+         FL1nfs6ne+3AvZvOswUzuKmu15pL6RvZVbCwTlR8Fah9LIfljO6EIluQiQKLwzuayofD
+         XGF5Q8U9iD9iB1d9Pt0V1MlHqbcI4VA1zWC2GsTrr61cuO472gP93a4CaB3vYWd4KQ/W
+         WFLse14wIFBsY6S5lLUfouJxu61beRFP3Rx5afwvtRfKEi9KyDyx1Xye35KlydmWclH9
+         n4DukdbIyqtg2aAtoV0SyRmSiVeeWG328k/uhXLLTHlpn42mpiL2xX7jE9ODpzB8/x9x
+         WiYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788028386; x=1788633186;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6wuDpNUGIrjwH77k9nZgATZRXnq+7uzbWIulgX39iog=;
-        b=h4YexsrU1g585f4HUR3sFQ/7NziFkl7y4UmduzpkCPapjni/13p5Fvc5D6MBh7vmfm
-         oxyQXoE73hX6Q3inbJkGy3vNF9fleo3wXuG0RBALMUHgnvChhUpTE6dG7Cf+KpQQA94i
-         LDKVt+ScvY+QBs/vRj7p8WiQj/m8h4hoMoqnKpNEmSMPbwwyxgE00Ma1GMrLCx+iI27R
-         zCfs5QKf5rMx3LFlvKR8PCJqTcbPlcofxrgyrjepctUuQcTo1p7eNnJXmmZQ3hE6jihj
-         s5F3LoikwwM22C84SrpNZo3ayjHkuVTYZxfPvOkb7rURnTAxzVbgkfkLMr8WmcRGY0wU
-         dZCw==
-X-Gm-Message-State: AFuF++nnrAhwY/pf+OzCmHwkIS/7vyEtIm6i/rFWbHhdM1depbMnk86B
-	/Y/LGy6OesoqFjJE0ZVXHgBgCx1N6jix+OETK2J9D3H1oBdvJHLsv1n4
-X-Gm-Gg: AR+sD135fIFMvTqIA5YN6VJsEGSqPqzNghL/SalsPTis0JPdOZoAfF5Ok16tuLCIXjm
-	gZksS+pyfPAdpRTU4MY7LMJgtA4GjBDGrpoS9sBDwhdQAOKCWYdU0R94vHE+W8cPa6dZ33AoqrQ
-	+VdOmhABNSRNtVKC7Lj0GvkuKHm+89KhZRGOcI/8UdnjLtvQcFX8ySxH6ANXcD4+1II9vQfu0Xs
-	I9Bvd82Gj1lXHN4INptUabn3Z1f32JTJNDynUFicroGfPrIfykQFnAmyhkb4RG5FC+mexe+TRYu
-	1tMP5VjeUpnCINTOm2+9V6NpWZdkAmTA8eaIqrAcEOMmRQia2cNzvu/k9FxGtOJhaGTpXJ8WV/q
-	84CyusnQqZS8DCBHtVhnZ28OJGdi37G5MxrbU2odxCLhpCAV3giiGliIYxmYTiQIj4UmlxNrbdw
-	I0LH+SIbpGWlVs7QJ0NXufD2CYOQl7OmSwGB8cr0/veQJJf6pywlk+Maluh0KaF3PrejwiGjiuR
-	kG/MGssEU0RIq85Dt+hoQ==
-X-Received: by 2002:a05:600c:4445:b0:493:e451:a9e1 with SMTP id 5b1f17b1804b1-49b91c2e150mr230254995e9.2.1788028386010;
-        Sat, 29 Aug 2026 11:33:06 -0700 (PDT)
-Received: from [192.168.1.11] ([148.252.146.192])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm48682495e9.0.2026.08.29.11.33.05
+        d=1e100.net; s=20251104; t=1788044252; x=1788649052;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=FtlM88NQidqFT8NjUtWtKrEvDDJn026XfxLb81ixvB4=;
+        b=orMvLyRB67dWEs9eRQh5ottIqCssVN453RNfdiF/fLPQ0Lcdy15JzA4AV3fBQ/bcj3
+         EmSypE9H7yrD8sjUMHHB8sY4bfYTnvWPfa10syL+oOyi3q8cKWiwJSVr6BVCuX1M7s0C
+         qTZ2rQRv1Pu0ZAGsCu6qx9TFRI0FlUU62p/KQKm7XIDlup8xCKCyJDh62WRkKNHgPe3+
+         60GQaQNtFmdgouaEeunEwrhCVGjDHiCZ0T+gSqpAcijwcsrs/iV179TTWcaBTtFNiiUm
+         DWAMrFOrmdW4nuaCg0jwLTn5LJwMe2HX4mn3qehGuKN48vgI7SZJyhkhpvpI8TRkMXqy
+         lMGg==
+X-Forwarded-Encrypted: i=1; AHgh+RoTJ6Njo3N9dsd8Wu2sOxui8hCAvqV5fu3VSGPZ6AC4BjytRE3UlwQgWlip33IdfqfpATNtE5Lzl0H4W/75JxVtyREb@vger.kernel.org
+X-Gm-Message-State: AFuF++l23/h27S34gfPYg+hnnXwZxXVIvatD1SgTpMO89+0PERMCkRa9
+	PPhFPAGiThqmTmpycoOTw+yBCQy5gMnhZ2xhHuRMncMIi35+t7lXJxFa
+X-Gm-Gg: AR+sD122jmNI+NAbYjr4VSaDjZav7CXE/Ukq3VUMKIP3MOaI/tZ4bzZCtuGW1Vhi0ax
+	fHg85m8ux1yN2OjnQ7Y2fl4T/ycADJigkBbT6K/Hw2WuqEk9c9MUCvu6bXFxem8C4LhLqiAESWw
+	E7Ob7zU/ahqAaO3IkrhbJVVBp6DQfujCvsTJe62CwpNhWwBJms0e+NBPzEnTbvmuIA6qklntEaH
+	ZwcnUby3b3wMoo2RiaR/TbQ97du5dxfx417H20YMVezrLOSABCD5C8exqn1e1n4zQaatNhKmnpL
+	WFMwquEPNBaB587qUWz0Xht5kdpHjxr8of70cktQSfLFoTkzxvHXw4IVBI01Ju1NcuSZCJkf4Jl
+	4Vm+YphIl/LeSOHVnnHW+QfFx9ygLHIuxX/5XhsMdMZX8MjWa3TGgTFAi/ZEWOUUSkUgiC3O1KF
+	R1grq9rricTZJ6XmF+AWL9ZJO38cOqyZ/LUkwQyFCvnnVP6yr9D6OrUHSnxpnk8fCozwFgpO6Ty
+	u+fYxU5KncPk47q9l0Oiu+tFt/lE3QAtbG763Gg5lo9
+X-Received: by 2002:a05:600c:a02:b0:499:da8b:1476 with SMTP id 5b1f17b1804b1-49b91c52579mr214245935e9.14.1788044251665;
+        Sat, 29 Aug 2026 15:57:31 -0700 (PDT)
+Received: from 1Z10 ([37.161.113.184])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm60751835e9.0.2026.08.29.15.57.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2026 11:33:05 -0700 (PDT)
-From: Dale Whinham <daleyo@gmail.com>
-Date: Sat, 29 Aug 2026 19:32:49 +0100
-Subject: [PATCH 3/3] platform/surface: aggregator_registry: Add performance
- profile and fan support for Surface Pro 11
+        Sat, 29 Aug 2026 15:57:31 -0700 (PDT)
+From: Maurizio Casciano <mauriziocasciano7@gmail.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Maurizio Casciano <mauriziocasciano7@gmail.com>
+Subject: [PATCH v3 0/3] platform/x86: Describe Yoga Book haptics and audio resources
+Date: Sun, 30 Aug 2026 00:57:26 +0200
+Message-ID: <20260829225729.395270-1-mauriziocasciano7@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <apLZF6b3F39z6bUc@google.com>
+References: <apLZF6b3F39z6bUc@google.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260829-surface-pro-11-aggregator-registry-fixes-v1-3-ebf5cca9d205@gmail.com>
-References: <20260829-surface-pro-11-aggregator-registry-fixes-v1-0-ebf5cca9d205@gmail.com>
-In-Reply-To: <20260829-surface-pro-11-aggregator-registry-fixes-v1-0-ebf5cca9d205@gmail.com>
-To: Maximilian Luz <luzmaximilian@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>, 
- Dale Whinham <daleyo@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788028380; l=918;
- i=daleyo@gmail.com; s=20251214; h=from:subject:message-id;
- bh=vyCh1a/9f+HWTyY1McW6nzBV+qOi8oUrXthPikpGcDM=;
- b=4GzIgkBsV2o4Fqd+QlelJ0rMSJif4w7WE+Cw4asWjQBk4+WVAGjp4y+cfRpKmA4NfW5zuez0b
- 3/1hdgl7oszASD4QYnwcRTv0O6IJc+fgx9N46hF73B9Ed3yFbDaGiYn
-X-Developer-Key: i=daleyo@gmail.com; a=ed25519;
- pk=M4mvgx1TB2TniKaedTDsO3PbLKgFosJuegXRXPbn2Ds=
+Content-Transfer-Encoding: 8bit
 
-The EC on the Surface Pro 11 exposes the performance profile and fan
-interfaces. Enable their associated drivers.
+The Lenovo Yoga Book YB1-X91F/L firmware omits software properties for
+its two DRV2604 haptic controllers and does not instantiate or map all
+resources used by the RT5677 audio design.
 
-Signed-off-by: Dale Whinham <daleyo@gmail.com>
----
- drivers/platform/surface/surface_aggregator_registry.c | 2 ++
- 1 file changed, 2 insertions(+)
+Attach board software nodes describing the DRV2604 mode, waveform
+library and enable GPIOs, instantiate the TS3A227E headset detector, and
+attach software-node GPIO properties to the RT5677 codec for the second
+speaker amplifier and headphone path.
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 2cb8278d98ea..061d4a567a06 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -410,7 +410,9 @@ static const struct software_node *ssam_node_group_sp11[] = {
- 	&ssam_node_hub_kip,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
-+	&ssam_node_tmp_perf_profile_with_fan,
- 	&ssam_node_tmp_sensors,
-+	&ssam_node_fan_speed,
- 	&ssam_node_hid_kip_keyboard,
- 	&ssam_node_hid_kip_penstash,
- 	&ssam_node_hid_kip_touchpad,
+Changes since v2:
 
+- replace the RT5677 GPIO lookup table with GPIO properties on a
+  codec-attached software node, as suggested by Dmitry; and
+- reprobe the codec after attaching the software node so its GPIO
+  provider is initialized with the new fwnode.
+
+All three patches pass strict checkpatch.  They were built and booted on
+a Lenovo Yoga Book YB1-X91L.  Both haptic devices played effects before
+and after s2idle.  From a fresh boot, the RT5677 GPIO consumers were
+present, GPIO2 went high during speaker playback, GPIO4 went high during
+headphone playback, and microphone capture succeeded.
+
+With Best Regards,
+Maurizio Casciano
+
+Maurizio Casciano (3):
+  platform/x86: x86-android-tablets: Describe Yoga Book haptics
+  platform/x86: x86-android-tablets: Add Yoga Book TS3A227E
+  platform/x86: x86-android-tablets: Add Yoga Book audio GPIOs
+
+ .../platform/x86/x86-android-tablets/lenovo.c | 188 +++++++++++++++++-
+ 1 file changed, 187 insertions(+), 1 deletion(-)
+
+base-commit: 32e17ef088fc55858886738d0b904248e98b30e0
 -- 
-2.55.0
-
+2.53.0
