@@ -1,127 +1,175 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-244108.protonmail.ch (mail-244108.protonmail.ch [109.224.244.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494C52E54B6
-	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 07:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59C93264C7
+	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 08:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787989170; cv=none; b=ja+fq+/+cIPNC3yBpK0V6aX7XAlabBHnKuqwvAhn5RJtV4DIldwPy6HnZvupH8DzCOgVWKWwFudJdoWt3TFYCuH4vbyoPIDG9akgWB0hmX1+T0YOVUatmlNOyhcUmv/Y91JA7/mW0JWy57n2uvCGJOCIvXSuZOmR8KzO7AIZZ+A=
+	t=1787992191; cv=none; b=O4UF8qTcMilHU99Xi2GpWk9nLxKKL0xyf52/Q46aiRubEXkKaN/2WuA/Tn2+iaoaQwtOWwuJOKsLuRYS+V/1rNFxREuLMlO4u0v0+I4umY+ijShKhJuxe6gWe6BCelC0GtMAC2H2FGqngZv63IokeFbq6G9MK/CTU18g8I0x4F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787989170; c=relaxed/simple;
-	bh=Fl0jnXaPEWiKqd7Q32TYDalsVlXkvLPGZIAW6itNGmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFTjW0RVQ/0EdNTYP7nR3Sirxw4hVgU2bfWa2pFCt5et2OkezZjrknKMArPC4q1iNqaKWUACfysWR6LgrVwsvwvWqD0D+AnSD96YF1GtyTiyl1y1j35skZZlEqt6TChJa9ONlymB5lL63jTf/TalTAKdZ5uLAgvw3gk6Rv7aKL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SC/fSue1; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787992191; c=relaxed/simple;
+	bh=17aXPwxiJwF69jf+c1HQ/RDCTJOMI6Tn1YRf/EMPGow=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ChX063uhsYJkVDSMChoqNwUT9Eir1wZmHe+2m2NMcVlx7Fp3lx6fOPN7/QEPdKIix0YQ8/v6UG1twdpVTvH2GXPIp1COVHUnsdUyl9r4Utk7nUTQ0Wt0WWvzKCQleMDmBlH65SeCqqlTIn6K+r1y8dgQMUbzLNEIEDsX0bKMbO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berg.pm; spf=pass smtp.mailfrom=berg.pm; dkim=pass (2048-bit key) header.d=berg.pm header.i=@berg.pm header.b=a/Ip4aBb; arc=none smtp.client-ip=109.224.244.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=berg.pm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=berg.pm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SC/fSue1"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-38fdeaed181so2807325a91.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 00:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787989168; x=1788593968; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=E+jXy+0y1xn3HgSoRA0hzYr820gLXgKV38btGuCIEbE=;
-        b=SC/fSue1wzc46H0xezHE37Ice6kEbzcKtOoe0r8/QjtH5+4fewpc3OGVAhdyIrAUBK
-         xj5WtCx7jfRdAKqi3CwN3CK6gZp2mXg0dUfZtnB3HvT5lhKN0tFOq/Eszg3kpnYFUqiJ
-         vMHBfs6EZHzJBSPcK1zggB03BnNrJbne1FH09LOHmz1wckpmRzVtmbacQC5Ll55AFg03
-         CWj5K8su++/LW9IeRb8Jz1Da1iRWsjU7twlqH0d9N6DMYdme2wuAUrpl5xsYElZJHiJr
-         vjZn77x0iEsjmRUytqb2dFGTCYWEdg9WbjeXUASi6JagBpHZXhQnxjNYAkAzi/WjWySj
-         vdqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787989168; x=1788593968;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=E+jXy+0y1xn3HgSoRA0hzYr820gLXgKV38btGuCIEbE=;
-        b=BpIPm0BXhzo45puUt2LcpzLWmfk3V6czopVGGqek5CySYcam92cFNA754yUWhO8kvq
-         ANjHBs5ZuNaRWG+p7pkL+Ngsu2uxnM3DJ2gSMo/qnrip5o62UiWTuY4EmYUhAueUouFP
-         1QwMexri+qhS/gI6XW2TNFVRt0pijNt6hbL3jQFDQT6clGvnfeUkNhAe+GGfF5W0IRRH
-         xTTmWOLHlWllXKviFMtDoXTZfwJ8NwFbyWH5b1w/vBU/+txLMQoT7xvwvqzFj5CrbP+u
-         dcSrLQWYPfkUsAKSmptDD5iVbPcuNu9fesmm2OrzOCLYXkUOgIM2y2ekRwUaGjhCD1Vw
-         r4MA==
-X-Forwarded-Encrypted: i=1; AKwUvBw67Tm5w08DQlBUqQZoncxL2Qm/PKX+s1wIHYCvPUVukrASsNwiGd7FVVAkCs7LNH0bZx23oio01fGvozJlP5G5tbbO@vger.kernel.org
-X-Gm-Message-State: AFuF++mz2NbFetzmPWr0AmIkpX0gMSjOwFbIXGqgeHRNCqO8rJWzC4SL
-	/JorYc0Om7yfzQWVgWQO9b6/a9UwYiLMK+p9F2XBYfQgqsF2PbGqxD/9
-X-Gm-Gg: AYBFou2+MHFiuw6P1t/yOEXysQHo0Abo2mUVV9hUbOWY1X/U64fKPm5HJVIc6332vk/
-	QANQNbD62Q8R+Cs2SJie5hDPLODHQZbWpD4g/B8JYld+RyFqFo2DjOnrQ5GEq34BKqCYN+caAx2
-	UclgM58//hF7qjJT/9gKm+gbWEB6GCYcIJh3EAwNK9/q/Dl8vuxYcx8TBqWdiPQ8v1QI9nkrNtw
-	z9kJcWg+DIivfMHG2VjzJ9e3EeSPmr0zoqCrx/grW1qLnU0AaMsGYlUwNsmc3Tkr+nkJQzk40gY
-	bEUDEvHkniHpq4Qiye6MdPr1cs+WY09e6fBAZ9rTgWIK8IO76BHyu9tzZ8xbrFygGxEh6fwzII7
-	fpfehWhCpTfTRAwWFokcvb8qhTMvfp8UaluallhvpjTyAeGHzliyo6o09PYBiq9Rqw8OnlZ0Ov/
-	Te61iaH3LeDti8DOesjQXkNB/DpXIILg9OrI+Rc/GDIERQupMPiFVRx82LMiy4Tsth+gMpBnptr
-	K0hVipkzklzF0HnkBLnFIoybMUOEdglOBOmzHtsjh1nA35gtnSN9kMzgQ==
-X-Received: by 2002:a17:90b:3ec3:b0:37f:e177:f58 with SMTP id 98e67ed59e1d1-396d0ebd7eemr19840989a91.9.1787989168442;
-        Sat, 29 Aug 2026 00:39:28 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0de4de3sm17201372c88.12.2026.08.29.00.39.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2026 00:39:28 -0700 (PDT)
-Date: Sat, 29 Aug 2026 13:09:24 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Arda =?utf-8?B?RG/En3U=?= Ari <arfeliousheres@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Fix board_params typo for 8DD6
- board
-Message-ID: <apKKuL5lh2OK-6lq@archlinux>
-References: <20260827235139.154462-1-arfeliousheres@gmail.com>
+	dkim=pass (2048-bit key) header.d=berg.pm header.i=@berg.pm header.b="a/Ip4aBb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=berg.pm;
+	s=protonmail; t=1787992179; x=1788251379;
+	bh=7oRmJ2JX9SjpY6C/SXCk9S84RaRvCnvAhCHlB7P4mR8=;
+	h=From:Date:Subject:Message-Id:To:Cc:From:To:Cc:Date:Subject:
+	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=a/Ip4aBbJGeReuRd1WH0oAu3Yq7/WmH9H7bbUFEtOhX/TRTmrrEWG3vJh6GonFM1W
+	 HI6BwREaaLaxGtLNjH5mp4hOPsM6ZPK3CLxgN9L/ZqdDpCDD6sqvMXNyd0MfOAnUqt
+	 NT7xOZAba8qKETyE/Fv9XRmGpm50Ug02GKKPxvUW7tgg4O8jrJE2TguN85Jrkvay9E
+	 YG0IG7HFfQ7KJkG3D+oDXcNykGVk35Rf/ClvVztToRdaH8j5Ji/qdl/vUYARGP1t7q
+	 xv7ops7uoiq+hO2+giFTv+Qb6aWa4IHWOzqfp0Zg6RR59WY1h6B36vep0VeUiKimxo
+	 zDf/2bFcv59Gg==
+X-Pm-Submission-Id: 4hX7hw5gNHz2Schg
+From: Jakob Berg Jespersen <dev@berg.pm>
+Date: Sat, 29 Aug 2026 10:29:09 +0200
+Subject: [PATCH v3] platform/x86: int3472: support the POWER1 GPIO type
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260827235139.154462-1-arfeliousheres@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3WNTQ7CIBgFr9KwFtMPWimuvIdxQflpMdoSaImm6
+ d2FutCFLid5M29BQXurAzoWC/I62mDHIQHdFUj2Yug0tioxIiU5lAw4Do652xywHSZaMYIbU0L
+ VNkozLlGynNfGPrbi+fLmMLdXLaecyYvehmn0z+0yQt79r0fAgGsCoqKmlsDh1Grf7d0d5XYkX
+ zb5YZNkS2WE4UxIKtTHXtf1BYLqaFP8AAAA
+X-Change-ID: 20260719-sp7plus-int3472-8f014b8de79c
+To: Daniel Scally <dan.scally@ideasonboard.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tooraj Taraz <tooraj.taraz@yahoo.com>, 
+ "Joseph V. Lavigne" <jlavig88@gmail.com>, "D. Manresa" <dmanresa@gmail.com>, 
+ Jakob Berg Jespersen <dev@berg.pm>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787992176; l=4742;
+ i=dev@berg.pm; s=20260719; h=from:subject:message-id;
+ bh=17aXPwxiJwF69jf+c1HQ/RDCTJOMI6Tn1YRf/EMPGow=;
+ b=dbV30rfjQdGqZ21edpu8veocZUStpZAUfOfjUl9Vy1eFK+OjkqOx5HOI0JHeI79P5Fh/3LEWa
+ 3FbTlFhoVLQCyIihqGKjRvggxAufu8aC3rb+1uCwr8FRBeILl9gJ8Gy
+X-Developer-Key: i=dev@berg.pm; a=ed25519;
+ pk=b1r+eoJThwSQ/r5DjO7jrcosyrIsyhlOuKk9CBdvBxs=
 
-On Fri, Aug 28, 2026 at 02:51:39AM +0300, Arda Doğu Ari wrote:
->When adding support for board 8DD6, &omen_v1_no_ec_thermal_params
->was passed as driver_data instead of &omen_v1_no_ec_board_params.
+INT3472 can describe a second sensor power rail as a GPIO of type
+POWER1 (0x08), which the driver does not recognise, so the rail is left
+unmapped and never enabled:
 
-Hi,
+  int3472-discrete INT3472:01: GPIO type 0x08 unknown; the sensor may
+  not work
 
-When I added support for 8DD6 [1] &omen_v1_no_ec_thermal_params was
-indeed the correct quirk. But because Radhey Kalra's board-specific
-feature data patch [2] was accepted first, my patch probably lead to a
-merge conflict that had to be resolved manually, which is why this is
-subtle bug got introduced in the first place.
+On the Microsoft Surface Pro 7+ the rear camera's INT3472 (INT347A,
+ov8865) has such a pin; without it the ov8865 "dvdd" supply resolves to
+a dummy regulator and the sensor never probes.
 
->Because active_board_params expects a pointer to struct
->hp_wmi_board_params, dereferencing active_board_params->thermal_profile
->results in a type confusion bug and invalid memory access. Update the entry
->to point to omen_v1_no_ec_board_params.
+Define the POWER0 (0x07) and POWER1 (0x08) GPIO types and map POWER1 to
+a regulator with con_id "dvdd" for all devices, the supply the in-tree
+ov8865 driver already requests. POWER0 is defined but left unmapped, as
+no device that uses it is known.
 
-Thank you very much for observing and sending a patch for the same.
+Out-of-tree work approached the same rail by exposing it to the sensor
+as a new "pwr1" supply (linux-surface PR #1867 for the Surface Pro 9,
+PR #2201 for the Pro 7+ ov8865); mapping POWER1 to the existing "dvdd"
+keeps the change contained to int3472.
 
-[1]: https://lore.kernel.org/platform-driver-x86/20260623141314.33947-1-krishna.chomal108@gmail.com
-[2]: https://lore.kernel.org/platform-driver-x86/20260615091034.987029-1-radheykalra901@gmail.com
+With this change the Surface Pro 7+ rear camera probes and streams
+reliably.
 
->Fixes: a7320d6eb9c42 ("platform/x86: hp-wmi: Add support for OMEN MAX 16-ak0xxx (8DD6)")
->Cc: stable@vger.kernel.org
->Signed-off-by: Arda Doğu Ari <arfeliousheres@gmail.com>
->---
-> drivers/platform/x86/hp/hp-wmi.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
->index b2773fc1aca4..615b4cf6fc45 100644
->--- a/drivers/platform/x86/hp/hp-wmi.c
->+++ b/drivers/platform/x86/hp/hp-wmi.c
->@@ -337,7 +337,7 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
-> 	},
-> 	{
-> 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8DD6") },
->-		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
->+		.driver_data = (void *)&omen_v1_no_ec_board_params,
-> 	},
-> 	{
-> 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
->-- 
->2.55.0
->
+Link: https://github.com/linux-surface/linux-surface/pull/1867
+Link: https://github.com/linux-surface/linux-surface/pull/2201
+Suggested-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Jakob Berg Jespersen <dev@berg.pm>
+---
+Changes in v3:
+- No functional changes; the patch is identical to v2, rebased onto
+  current pdx86/for-next (which has since gained the multi-HID GPIO map
+  entries and the IMX471 "vana" entries).
+- Resent with linux-media@vger.kernel.org on Cc, as requested.
+- Link to v2: https://patch.msgid.link/20260729-sp7plus-int3472-v2-1-cdfaf97ac3ad@berg.pm
+
+Changes in v2:
+
+- Reworked from a per-device INT347A quirk into a generic mapping of the
+  POWER1 (0x08) GPIO type to "dvdd" for all devices, per review.
+- Added INT3472_GPIO_TYPE_POWER0 (0x07) and POWER1 (0x08) definitions;
+  POWER0 is defined but left unmapped for now.
+- Retested on the Surface Pro 7+ (kernel 7.1.5): the rear ov8865 probes,
+  instantiates its VCM, and streams.
+- Link to v1: https://patch.msgid.link/20260719-sp7plus-int3472-v1-1-521a43f5c191@berg.pm
+---
+ drivers/platform/x86/intel/int3472/discrete.c | 8 ++++++++
+ include/linux/platform_data/x86/int3472.h     | 2 ++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 6c729fcfce5d..6ab8e589fcd3 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -266,6 +266,10 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+ 		*con_id = "avdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+ 		break;
++	case INT3472_GPIO_TYPE_POWER1:
++		*con_id = "dvdd";
++		*gpio_flags = GPIO_ACTIVE_HIGH;
++		break;
+ 	case INT3472_GPIO_TYPE_DOVDD:
+ 		*con_id = "dovdd";
+ 		*gpio_flags = GPIO_ACTIVE_HIGH;
+@@ -296,6 +300,8 @@ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3
+  * 0x00 Reset
+  * 0x01 Power down
+  * 0x02 Strobe
++ * 0x07 Power 0
++ * 0x08 Power 1
+  * 0x0b Power enable
+  * 0x0c Clock enable
+  * 0x0d Privacy LED
+@@ -382,6 +388,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 	case INT3472_GPIO_TYPE_PRIVACY_LED:
+ 	case INT3472_GPIO_TYPE_STROBE:
+ 	case INT3472_GPIO_TYPE_POWER_ENABLE:
++	case INT3472_GPIO_TYPE_POWER1:
+ 	case INT3472_GPIO_TYPE_DOVDD:
+ 	case INT3472_GPIO_TYPE_HANDSHAKE:
+ 		gpio = skl_int3472_gpiod_get_from_temp_lookup(int3472, agpio, con_id, gpio_flags);
+@@ -408,6 +415,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
+ 		case INT3472_GPIO_TYPE_POWER_ENABLE:
+ 			second_sensor = int3472->quirks.avdd_second_sensor;
+ 			fallthrough;
++		case INT3472_GPIO_TYPE_POWER1:
+ 		case INT3472_GPIO_TYPE_DOVDD:
+ 		case INT3472_GPIO_TYPE_HANDSHAKE:
+ 			ret = skl_int3472_register_regulator(int3472, gpio, enable_time_us,
+diff --git a/include/linux/platform_data/x86/int3472.h b/include/linux/platform_data/x86/int3472.h
+index a73841dfae27..b1040e36deb8 100644
+--- a/include/linux/platform_data/x86/int3472.h
++++ b/include/linux/platform_data/x86/int3472.h
+@@ -25,6 +25,8 @@
+ #define INT3472_GPIO_TYPE_RESET					0x00
+ #define INT3472_GPIO_TYPE_POWERDOWN				0x01
+ #define INT3472_GPIO_TYPE_STROBE				0x02
++#define INT3472_GPIO_TYPE_POWER0				0x07
++#define INT3472_GPIO_TYPE_POWER1				0x08
+ #define INT3472_GPIO_TYPE_POWER_ENABLE				0x0b
+ #define INT3472_GPIO_TYPE_CLK_ENABLE				0x0c
+ #define INT3472_GPIO_TYPE_PRIVACY_LED				0x0d
+
+---
+base-commit: 5b05bb3f6c5716fab6911e12d60dd1f43ad9806a
+change-id: 20260719-sp7plus-int3472-8f014b8de79c
+
+Best regards,
+--  
+Jakob Berg Jespersen <dev@berg.pm>
+
