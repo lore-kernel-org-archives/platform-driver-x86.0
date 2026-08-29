@@ -1,125 +1,112 @@
-Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCA82E737E
-	for <platform-driver-x86@vger.kernel.org>; Fri, 28 Aug 2026 16:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB5B323416
+	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 07:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787933285; cv=none; b=GohYYjgYggvTe73fLOzEpUByYE6a+ldcQcQ+PQIQSHAuKsPhumJ9bi15qmsYdOeDe6RlcUsumbCrlrMm865Z/orltD3xaBfE+92B/AzG8lEgg82mFWU25B5iSnnuBmWjfuru6HuZp24FJQ/d7mZc17dbPa3BBisQYE2Qos/lCQE=
+	t=1787987933; cv=none; b=SRHb7odD0wYJzt+jOvnj//GJFaZEBLNoPgm4azCN82ZTDPWqH0kPrSxRHucRwNeKqIY9ToZKm4l5o7+AeToGT4NXWwg0ei2TbEt3qsp+K6JwAj101VV3/VeIUc5vrzw9j7tL5544Gq2Cjgloz6Y+cqYn5QTwnISWdXzPLg6TQeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787933285; c=relaxed/simple;
-	bh=El6eduJDviCKkDnqtlBare5p9hMhasbCq56T7DPYEGY=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XKk8nzaFBM9POiQCqay1zqQoHEgAqDIr5AZbpOouFh/xnHOEWx3K/JP8aH1NJabDrGEX2E0r1zUjf8YFkeBXt3qBuyTCqB3YBNgV+2MBrRJiY9ykqDodKkjS906sIVHKrpem06eVN8kzx+wMQOzFx9/7UVYG/u2QWQSWfvmlt0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=JhAwYVps; arc=none smtp.client-ip=109.224.244.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
+	s=arc-20240116; t=1787987933; c=relaxed/simple;
+	bh=uz3vQj8FYbM4kGyR/T+IybsJavOIJ5kvlHU/+x+Z1EQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LiVXv0NEfpo2wuiGFQadBRfs6D3wYTLk23SGACCBur/Ejk8RfWquY5uNjoST/Y8+0B5652h77vgJZ16ifj8xoSE5kfwD1xRmtJY2tIWpQUNK6hsn94XhlPq1yRgWCOj5+BkcLhMPYb4ixdoa+pnd2ty6J3Oh7r+TLnDRSoe+U/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M4pj8MRa; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="JhAwYVps"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
-	s=protonmail2; t=1787933277; x=1788192477;
-	bh=rmiVJNZ1uNGkCaiKCXdHNv3jP0Dr/SN01JscirGjtrk=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=JhAwYVpsR2xSgcCS2PI7QP7bcqUtAlX8usExYEdYmROCEN51J2yU4stvU4K0Z0dWt
-	 ljW7kKPmUjXDfIy57JdXBUbOTfpiFlWiHaS5Vj4L/4zSgmWfjwii1ejvk+onOdYbAl
-	 wT+lPMdiP+eF5TvCVDwjBcrr0AQSsbF6aSLxwJ8C6lW0xZ/o2xZRZ+9bW9Ga9zAjQ6
-	 mbt9Pkemi3+Mgeju1/qNjHEh0bGH3BtnU6H/DOXoysCNgKAHR9cMg+wLz8gPVBa1iN
-	 9GcuvNMwmXDRPTZZ/8jqK92bGQo6miCYN3tYtKvNY9bCxgjAeWu0oGjydX5Z16fSHi
-	 5TidpFsL02+5Q==
-Date: Fri, 28 Aug 2026 16:07:51 +0000
-To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Hans de Goede <hansg@kernel.org>, Corentin Chary <corentin.chary@gmail.com>, "Luke D . Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>
-From: Ahmed Yaseen <yaseen@ghoul.dev>
-Cc: Nir Yehoshua <nir@ciphersecuritylabs.com>, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Ahmed Yaseen <yaseen@ghoul.dev>
-Subject: [PATCH] platform/x86: asus-wmi: validate custom fan curves on enable
-Message-ID: <20260828160743.31957-1-yaseen@ghoul.dev>
-Feedback-ID: 177610485:user:proton
-X-Pm-Message-ID: 9028eccc52cb5ff53aa712b03ef09c96021593eb
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4pj8MRa"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-cbedf433a99so1882846a12.2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 00:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787987932; x=1788592732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ztdXvXEqMzZ0Iyqk5KJ2aSAe13KdXybpN8xuCs49paw=;
+        b=M4pj8MRaqZYoGds6BkzqaVc9UOcT5iyx7rQje9HLInsDjLTFgyopazUx+XfanRiSOv
+         ZCu09rAXuZDt+vjUvLpSg7sHeh9NcdUZFsvjUFnx12qIWvoiuqN7w/5BbOUYb8iTrYEO
+         aCT4WJDgOmFn1cQzLkScLIHxKYli5imWRX2KtJ/mnLtjO2QE32XW1zC+nOg2tV4MzTs7
+         m2zKitQN+0eHwb2JV90gq2NWjwFBifa5R8qffcjbmJjPrBwu6SofFeqdhWr10MfRUY5m
+         gKuXBGAbQiajsBFZve/vnLiZ1b8Nko4vEtkwFSYs8OT99iVruXSD3w0ZUQr+iEShH/Te
+         30mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787987932; x=1788592732;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ztdXvXEqMzZ0Iyqk5KJ2aSAe13KdXybpN8xuCs49paw=;
+        b=d/Bnvtxe6ONOiqG4F1fKK0xkd5ai/AZAEPETvxXYyEVp9xryUXSHBx66XM/2yojB0f
+         s9R6Ye3XPqQJjhCQYhdY0SX9y1MqqyCFj90731gRzckMZROH9nzPPRh3jknJJep5cdjw
+         VEwglt7SyDN9TN09IM9LgBebfCIMIkA/wmFpd7RJS05pU8SImfb9DwwbBOJxXxqFHEmm
+         +QAlEFi848xMmEKV1nlMK0EVjJ+J+X40QjgD5banYlNRAl6DejoqOFvBTGa7KSJYXXq1
+         mhibqgcwWj7icvl0KF0VKfLjBwF5zpWz6NA422W6w5iGNjoHy6gCf+GbEL0KNMRJ74kO
+         aQbw==
+X-Gm-Message-State: AFuF++llUCDuTJjk7VREHWY9wfxKTgfXMMWxJxVIiOGLarX4NaXqEYR8
+	8qEOI9p3mNWYXcX3xExpMc1CnQEEHkrzEACwMpp3LakiiHqygVBrwx/o
+X-Gm-Gg: AR+sD10OTKokEwrKbGwHCLoq3hVozL9A/U+JBBnC88G7xLxmzK0j/bGWqsV572Bod+t
+	SjTT3/1a/XFnhArhcVf/nXaOF+CUQw9U3ES8iOFOOqZxpFWornxNXAUxgcF9eXjnybbp4oGZTHZ
+	VqR2vY2Ex3TgtmPUj9Fq7CJaSj3EMiAADT+9f5GoeNZphYDLdFrjKEM9m6WVbg+Ew2oYlo8ea9N
+	Xw1j/GlNsULc9Pan/cX3FkaaNBjyPj+z+b+GuSs2KkZlPKGiBc9VqzJ+ZN0ph8xOJaXnU33OyBj
+	m4r4BiqwyBDUtUpI9afx6cU3Cs9acCeFcziebJqgLrioBw1dZT7UtD8bQzyC7gPcFre5MJlfyzp
+	1onQ+sFc06ivl1teDunDO/lzXYNrhMPP+q/VnxWgAl7rHGfO57K5h0cH49+m5xWFubfTaiygKub
+	gN8kYybYoySvc7rZJ/6XZAC+a2yvj2HwZZqAtFUZEBle5k/xofAvc6L7/QAA+DgFVbpqtF3TLMw
+	mPl5yuUDJMJP5DGLMYyPqci+gMEC8H4g8mI4ARWMFISogKrWG0Gcd+nhpqlKmBnn/nSWqDwFzqN
+	V2OlXA==
+X-Received: by 2002:a05:6a20:2587:b0:3d0:d933:af97 with SMTP id adf61e73a8af0-3d267b6d040mr18600165637.15.1787987931774;
+        Sat, 29 Aug 2026 00:18:51 -0700 (PDT)
+Received: from archlinux.tailec59cb.ts.net ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0d2e465sm18648545c88.4.2026.08.29.00.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2026 00:18:51 -0700 (PDT)
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: ilpo.jarvinen@linux.intel.com,
+	hansg@kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krishna Chomal <krishna.chomal108@gmail.com>,
+	Jan Ziobro <ziobrojan79@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Add support for Omen 16-am0xxx (8D3F)
+Date: Sat, 29 Aug 2026 12:48:43 +0530
+Message-ID: <20260829071843.62902-1-krishna.chomal108@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Custom fan curves reach firmware unchecked, so a curve whose temperature
-or PWM decreases from one point to the next is accepted. The firmware
-does not respect such a curve: a first point of 100% followed by 50%
-leaves every point running at 100%. The kernel keeps reporting the
-points that were written, so sysfs stops describing what the fans are
-actually doing.
+The HP Omen 16-am0xxx (board ID: 8D3F) has the same WMI interface as
+other Victus S boards, but requires quirks for correctly switching
+thermal profile.
 
-Reject the curve when it is enabled. Validate on enable rather than on
-write because fan curves are written one point at a time and are
-inconsistent mid-write.
+Add the DMI board name to hp_wmi_feature_boards[] table and
+map it to omen_v1_legacy_board_params.
 
-Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan cu=
-rves")
-Reported-by: Nir Yehoshua <nir@ciphersecuritylabs.com>
-Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
+Testing on board 8D3F confirmed that platform profile is registered
+successfully and fan RPMs are readable and controllable.
+
+Tested-by: Jan Ziobro <ziobrojan79@gmail.com>
+Signed-off-by: Krishna Chomal <krishna.chomal108@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/platform/x86/hp/hp-wmi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wm=
-i.c
-index a65090429ca7..3b743fec5c64 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -3714,6 +3714,33 @@ static int fan_curve_write(struct asus_wmi *asus,
- =09=09=09=09=09 arg1, arg2, arg3, arg4, &ret);
- }
-=20
-+/*
-+ * A fan curve is a set of points the firmware interpolates between, so it
-+ * only makes sense if neither temperature nor PWM ever decreases along it=
-.
-+ */
-+static int fan_curve_validate(struct device *dev, struct fan_curve_data *d=
-ata)
-+{
-+=09u8 *percents =3D data->percents;
-+=09u8 *temps =3D data->temps;
-+=09int i;
-+
-+=09for (i =3D 1; i < FAN_CURVE_POINTS; i++) {
-+=09=09if (temps[i] < temps[i - 1]) {
-+=09=09=09dev_warn(dev, "fan curve: temperature decreases at point %d (%u <=
- %u)\n",
-+=09=09=09=09 i, temps[i], temps[i - 1]);
-+=09=09=09return -EINVAL;
-+=09=09}
-+
-+=09=09if (percents[i] < percents[i - 1]) {
-+=09=09=09dev_warn(dev, "fan curve: pwm decreases at point %d (%u < %u)\n",
-+=09=09=09=09 i, percents[i], percents[i - 1]);
-+=09=09=09return -EINVAL;
-+=09=09}
-+=09}
-+
-+=09return 0;
-+}
-+
- static ssize_t fan_curve_store(struct device *dev,
- =09=09=09       struct device_attribute *attr, const char *buf,
- =09=09=09       size_t count)
-@@ -3798,6 +3825,11 @@ static ssize_t fan_curve_enable_store(struct device =
-*dev,
- =09}
-=20
- =09if (data->enabled) {
-+=09=09err =3D fan_curve_validate(dev, data);
-+=09=09if (err) {
-+=09=09=09data->enabled =3D false;
-+=09=09=09return err;
-+=09=09}
- =09=09err =3D fan_curve_write(asus, data);
- =09=09if (err)
- =09=09=09return err;
-
-base-commit: 6b8c8af514d739d0335f5579b585e02babe8a727
---=20
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index b2773fc1aca4..4011d2a8afc6 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -323,6 +323,10 @@ static const struct dmi_system_id hp_wmi_feature_boards[] __initconst = {
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D26") },
+ 		.driver_data = (void *)&omen_v1_legacy_board_params,
+ 	},
++	{
++		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D3F") },
++		.driver_data = (void *)&omen_v1_legacy_board_params,
++	},
+ 	{
+ 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8D41") },
+ 		.driver_data = (void *)&omen_v1_no_ec_board_params,
+-- 
 2.55.0
-
 
