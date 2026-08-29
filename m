@@ -1,66 +1,68 @@
 Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D7736F905
-	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 18:33:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1FD30B521
+	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 18:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788028386; cv=none; b=UfwNNdEiHbOKnNiaaWlut7do6A1U2GCX+3AgZccta2ucKWaTepndibXymyI29hco6amP5FBloobxekusBViKw9r4WIpuQlaOvyHmi5dSqqsvneFQqK06r9+N7ididn1MbnPqFCTFy94cqFyMcao0CXLBkDc7ac9LVhmuUdFUVd4=
+	t=1788028387; cv=none; b=iKIKqIqGdRe/VX9Ekwfo3tQj7reorbV4dcE8zMeh5vWm7u4U4FTsqqPhamNq2XLZg0HFUAF4OyhaaCSJmNnPSzeBxZHDaU6BBho+ZdZUH8dz1839wfj/rvFIosuttWs7lA3lULtFOCvXdStytHdqS7DYn574cA52tnuFnHuX89s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788028386; c=relaxed/simple;
-	bh=k0iTyq30Pts7oCqW5WqZ0ekJF2O8zcdRnmPhaFpT+eg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gnVy5ygOVyOmvRVhb6/NshXvUM9eQN7ZwIrho/bv77mMRJrzLPlzGxGUC9edA/4ikP8nIQhRgQ+u/eJw0Zuw0LHV2e12tdQ9xfDSY2U+Pe+gr+5vfyfRZFAe4sYn/DTbFicDXT/O+YSVcadt1ksUTI+BF/4yX6Qnag7+yxr3AdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f2aG9m0S; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1788028387; c=relaxed/simple;
+	bh=Y7n8Jd+vU65M/f4cJXPLsgOJs3sP89cql7nnQNaY4TE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=f4y1LPbWdagzsIg1B1afKuFZw2kFcHPI5GFT/8U8MxbRVzOHnxxbT1fWagSMk5zCOcVvmy7cdOWHjScAe8vzLPkpDUcYWJct9tIaAiCd3F0JHjCCSGoddbf42AkNxHmI0ulbsAQb/3KbGy9UK1IPKX+E2VP1VI9sFV2tzHLEdp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L59eqZrK; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2aG9m0S"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4995b0343c1so19513675e9.3
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 11:33:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L59eqZrK"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49b8f86c6deso11619965e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 11:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788028383; x=1788633183; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=T+s7fLb5lkfJr6wykxA18vctDqherQx/EMTkQ2+CSEE=;
-        b=f2aG9m0STY3ATUV0IY7+SBywVN6bjyHrQQc5v2IbGx9zfElIs2SN/FbJJnRHBYU/pu
-         tGbWyBK/ihkRILGbmZ81b9lFUg+D9lEl8Wqq2SRjuioknSSviUNmVcX/6KxUDJgIMDg/
-         kxFr30LYaZAeVTFnUl3YpfC0aBNbqnCuA8t+NmbSuLcn9yjn20OnYdLt3o38AgDnGwOX
-         5U4XhV2iisYr37QNSHS7GpU92lr9WNgKP+bA1NDJU562dX4vduaNJrfpG8OApCOtW0L1
-         dmt9cEsumpvH6USzTuAZCHZc7lPxBHh9zDs+HlK0xI0n/nRN9xJb4ffh3BTyvgEbztlM
-         ZY3Q==
+        d=gmail.com; s=20251104; t=1788028384; x=1788633184; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=9q77ZBna8uTSysxmt0Df+bgic8Xkh0Mfn0XxXlD/cDA=;
+        b=L59eqZrKHgcRwv0cEgFaskAikglbFHP7c02+zqZv8Ou+3sVF/CxrEL1+H6UtgxXX/r
+         udooaRS+OZiClrMv9uCaxJ97LXHKkVGzjJ3vTj9NtU4Tc8XtYlT53RmQz0dn0TEKDR3C
+         jKel8LTekzbacnFr1AEQ4BUWG4SlDiMFiseMkIkYAkmDgNixZodwsICThsC1OFNHhcO4
+         3Rz+DMNH5HfRKxDqTqD3mPrfFD0a3oprzydwt/wpKXCgmurFBn4a+Wco3gUF3GN5pKdw
+         pdZvEP/b6eExlGwS277zVsZbykWN7qBwtKj5WkdO85ycj4jlCRMHMY74fJ1R2r2lZy0K
+         RAXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788028383; x=1788633183;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=T+s7fLb5lkfJr6wykxA18vctDqherQx/EMTkQ2+CSEE=;
-        b=F1VPan09hchHzUKXdZG96r5iazWo7hKq9huFtiW0Gdk/VBk9STAThoRM0h1p2LjHpe
-         mXIr/MZeW0G0VOBXDAc3kv+cblBkG1PkqQjat+Kk3yfurCcX6+Rx2bGeHILw2JgIntmm
-         0oDg+DSPOhJuDTx53Ieuxr1y9+gY/0VI6pEfLeBieCcFzwMXfvbt7fPPr4izyIdIlDGz
-         JPQ3j4aoZ9la2npZBPcZKXiF5YJamfnqNGljuS2RDKbMb1etRPYacpuUoO8BiD87BKmp
-         VulYlDfSRau6qaclm7J2jN6pcRmEmSq1H1em6AogOBOJ73d56dJlX8eObHqM1tgyV5/D
-         y36A==
-X-Gm-Message-State: AFuF++lccDQNNs4wQVQqdycL+ciiaKAxIeWZS+WRUOUHFWz+kqSmlw3B
-	KZrnJXH8tLxw4KkP2jRYHnN/iEXHrHGkEqQuiaaNl1yu6cwxaJCG6MHp
-X-Gm-Gg: AR+sD10euhUDw8fV6uPfJvziW/hMXkNPZxoGY8/KqlFWUtz5gJkIy86x9G//skURJLD
-	ZYrh1FlxMC5nW9QmBynRhbfqMb+ltXvz3zzAu1gYq0pjtwR6MOYCzjJRex2Hbnvg9aEVfYCK73B
-	Rbdjap36Ymx3AZ8+pONy+Br67asWwHrPRelGkF+rK40F8Grzz43La9SnpApZ8+bDiOgJItilX+f
-	O9ciYPvS2VfjIdOdpZBHhAxtGN1XJaTTbyEPBKhcu3DNB+dRLnKHGY0l5AwvX3MSDnpCLA/WvnT
-	9AQBO8oanyltE6T6+GOMcR7cUc1GLYwvJtWk9e1LvHNHehqNlv3Ggp3cQ3jb7rRWAif1ENXNd6m
-	wY9o6E1Ei8YT1wH5IH4syoWM01MDHpRc9ozrmxBPtJgFssvyQEQT+Bxk5LrYAbjXfX+TX9Xmnii
-	U2AadjB+b98gEt9Zwh+MXcE4r8hucHYHskighpzxkOWOqndXF+cAKGzCGMJ0+51JPMMn9tlD1Tv
-	sWFxM/4W57q3K/gDr5nkA==
-X-Received: by 2002:a05:600c:4514:b0:499:900c:9c68 with SMTP id 5b1f17b1804b1-49b91c1f2a2mr233129365e9.6.1788028382804;
-        Sat, 29 Aug 2026 11:33:02 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788028384; x=1788633184;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=9q77ZBna8uTSysxmt0Df+bgic8Xkh0Mfn0XxXlD/cDA=;
+        b=m7jF5U6RA+ZMshqKv4mgpbPV6jQj1f1fOfG009B9dmxWOU/s1UWmOqqk9mn4Zf40xa
+         xZSKJa1ZNIWM7EGSo0IrgqKspNW+o9zL584tTrImOxz8WjGF8nQBfhpHMLE34popxWQz
+         i8KF8oaW5nkuVM0dbXHIosACFNkKM/pZkuv1bmeGk7cHNrcz4EHBXolujnt7BPYBCqtg
+         u60/4GKqFV8RNLEWuOhkGattzFmot+at9yM5ljrEaFlnVW46+L2USGuLCCUvXIPU0Xpu
+         7EFP7SEL/th9Pe9kXkWOEeQ5xUBAMDrD8cITgEQ1Q6cl85FE/1Zt8cE2dX3l91ZvBCzE
+         Ts4Q==
+X-Gm-Message-State: AFuF++nMPLIVczE65A27CPeKP86zCCALNJAmso4HjMWoP2b55jLQtYat
+	Dcd9e6LNf0tZBwJuzCE2O9gz1siKl1KsFq8UYGtqDbnxklQW+aPWscn7
+X-Gm-Gg: AR+sD10OAQza0ufl/zHdc8ri+XdotzAS8CouPe/gxjVYbqA9BnDsG4VvC/2u82dzOlX
+	oRatKMR2bcRlliYKsn1gAYoWx1/MyTh0kck3LcGyMb6FqEilpf6xS6nxNtF5SeBp997kRu9P6zJ
+	ha9I1Dh0KaU3IJgsZ7V6HbSJNHnzCoU2hACyT7QUDJpanadFkFzaubHaYMTC+qVhxXzGA78H+kw
+	zCckl7LO4GzI0llRqjILn6Tzp17MB9EIP25FFs2pWc5hCu/CRxt0JiML1sesc7Qtr73cZCy/FE/
+	qgsfFRanLPsvYvfKgRGRGQVmVm/mhVtwdi/vWv/H2Nup6rez7q5vhS3KK6llqrv1PBBvJ/lKwzf
+	skBkZo3/fhLHppbM7l7pop2qbRapZ6/HlyomrO5Lw1vHAKNiE5mNCXocyt/I6OAGg7KHXipYNNT
+	1mPOZBdZygQvs1OsoZWhZqKFfHbekVPjLZId1aphZAiOqpLIcHoIk/8fkL0Wq6U7vrefJqEvpKU
+	p7gXZnAI4eTrkRjz8F6DWs=
+X-Received: by 2002:a05:600c:a403:b0:49b:924e:9a28 with SMTP id 5b1f17b1804b1-49b924e9b14mr211361875e9.1.1788028383899;
+        Sat, 29 Aug 2026 11:33:03 -0700 (PDT)
 Received: from [192.168.1.11] ([148.252.146.192])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm48682495e9.0.2026.08.29.11.33.00
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm48682495e9.0.2026.08.29.11.33.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2026 11:33:01 -0700 (PDT)
+        Sat, 29 Aug 2026 11:33:03 -0700 (PDT)
 From: Dale Whinham <daleyo@gmail.com>
-Subject: [PATCH 0/3] SSAM registry fixes for Surface Pro 11
-Date: Sat, 29 Aug 2026 19:32:46 +0100
-Message-Id: <20260829-surface-pro-11-aggregator-registry-fixes-v1-0-ebf5cca9d205@gmail.com>
+Date: Sat, 29 Aug 2026 19:32:47 +0100
+Subject: [PATCH 1/3] platform/surface: aggregator_registry: Remove sensors
+ device for Surface Pro 11
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,10 +71,9 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQrCMBCF4auUWTuQjFCrVxEXaZzEcdGUmVSU0
- rsb6+rx8eBfwViFDS7dCsovMSlTgz90EB9hyoxybwZy1LuBzmiLphAZZy3oPYaclXOoRbGtWNU
- PJnmzoR+dPyZy6TQQtNysvB+tdr39bcv45Fh/fdi2L8U3qd+MAAAA
-X-Change-ID: 20260829-surface-pro-11-aggregator-registry-fixes-1b013f20f782
+Message-Id: <20260829-surface-pro-11-aggregator-registry-fixes-v1-1-ebf5cca9d205@gmail.com>
+References: <20260829-surface-pro-11-aggregator-registry-fixes-v1-0-ebf5cca9d205@gmail.com>
+In-Reply-To: <20260829-surface-pro-11-aggregator-registry-fixes-v1-0-ebf5cca9d205@gmail.com>
 To: Maximilian Luz <luzmaximilian@gmail.com>, 
  Hans de Goede <hansg@kernel.org>, 
  =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -80,36 +81,38 @@ Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
  =?utf-8?q?J=C3=A9r=C3=B4me_de_Bretagne?= <jerome.debretagne@gmail.com>, 
  Dale Whinham <daleyo@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788028380; l=994;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788028380; l=993;
  i=daleyo@gmail.com; s=20251214; h=from:subject:message-id;
- bh=k0iTyq30Pts7oCqW5WqZ0ekJF2O8zcdRnmPhaFpT+eg=;
- b=X4V5bLZ/YK6DWtkEs2o5HFWma/eZpM8XtUfiAHiJBtwKd39/OH8dZWzMzuzwxTWAR9aYynq7F
- n6aKhz8/m3PAN/ofzdUYXoEwxGMvlf6DBR34ZoOYDuVxHdEiAtN6IvX
+ bh=Y7n8Jd+vU65M/f4cJXPLsgOJs3sP89cql7nnQNaY4TE=;
+ b=7AWC53IxGJVuibJ88Di+p0XY9scJ0THKtYuhvWibXeX0SBavJdEtW/ucSb1gnRFPra2fmZuzs
+ aAa3vm4fo8eB1QFNiBC6IOMk3MOyjUa78iLRsa/AX4/5ae+g0p+Y0uq
 X-Developer-Key: i=daleyo@gmail.com; a=ed25519;
  pk=M4mvgx1TB2TniKaedTDsO3PbLKgFosJuegXRXPbn2Ds=
 
-This series brings a handful of important fixes to the Surface
-System Aggregator Module client device registry for the Surface Pro 11
-(Qualcomm X1):
+Remove ssam_node_hid_sam_sensors as this device is not present on
+Surface Pro 11. This fixes a probe failure in dmesg:
 
- - An unneeded driver was removed, silencing a dmesg error.
- - Tablet mode detection fixed by replacing KIP with POS driver.
- - Performance profile and fan support added.
+surface_hid 01:15:01:06:00: unexpected descriptor length: got 0, expected 9
+surface_hid 01:15:01:06:00: probe with driver surface_hid failed with error -71
 
 Signed-off-by: Dale Whinham <daleyo@gmail.com>
 ---
-Dale Whinham (3):
-      platform/surface: aggregator_registry: Remove sensors device for Surface Pro 11
-      platform/surface: aggregator_registry: Fix tablet-mode detection on Surface Pro 11
-      platform/surface: aggregator_registry: Add performance profile and fan support for Surface Pro 11
+ drivers/platform/surface/surface_aggregator_registry.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- drivers/platform/surface/surface_aggregator_registry.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
----
-base-commit: 3eaac948bf4505bc7e3b12d3ccf4ad900e5df082
-change-id: 20260829-surface-pro-11-aggregator-registry-fixes-1b013f20f782
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index d37a7e4c6b02..82c2144e10ec 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -415,7 +415,6 @@ static const struct software_node *ssam_node_group_sp11[] = {
+ 	&ssam_node_hid_kip_penstash,
+ 	&ssam_node_hid_kip_touchpad,
+ 	&ssam_node_hid_kip_fwupd,
+-	&ssam_node_hid_sam_sensors,
+ 	&ssam_node_kip_tablet_switch,
+ 	NULL,
+ };
 
-Best regards,
---  
-Dale Whinham <daleyo@gmail.com>
+-- 
+2.55.0
 
