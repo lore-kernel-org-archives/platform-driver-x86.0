@@ -1,64 +1,64 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E49426436
-	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 22:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85C9425879
+	for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 22:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788044257; cv=none; b=sC0zTiGzIDcBPGX4CuB4W+1ltE6nmIf5ufXPfj63UUZJ3LS8YG9D5my1tgtD8BXqa6+Ij+CVbJq8O+mzfJ4+MXbzTQ0ygSyOYKpoVWkuvy9hYalHOIrPzC5N+osWBpwitMsaiRaz7Zjdavsp/F03b5SdPcqmaPn03PHvmf+5/4I=
+	t=1788044258; cv=none; b=IY7hqHnxcYUrhgSjsVrJgDlHJRKkk5G3moIKznL1KTh09AXxD9x7I4fFXet3/ZiY3Qc6IECJJuBeXnvNonF9S6KqsQIIVLSvuEK+0BWv8yQfz22nJJ9D4Ah4x/dk4ESK4oL7L1lnHNFsSDQmdppoirQIyX4ylyLeWcb5jL1tgWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788044257; c=relaxed/simple;
-	bh=cjcLOY/D7lVRaByVczqrL5rjjCkLFHF7BPCS1jyPqUw=;
+	s=arc-20240116; t=1788044258; c=relaxed/simple;
+	bh=ikr0xmonSVEBBrsqTIBByVAQfkgWDFTQ5xl7Lwxfkqo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UWs9wCZ/4xEZtG7FX3rMPk0hH3RtoPudPxAoJe24iYLTb5CV/LcjCB6WnPpxCg59jUPJYlZjmXfO1A/soIH6ZbmJDUqUm/QHGbcYTdeOaN1XCovSTC/8NmNvXaOp0tC18U6fxxlV9MFP44pXJM5Z/74VpE1OxGmztnqXuUcP+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXupkFy1; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=BLZyCkjELBaS2ttPmUd05JW8+dI7xtDf6t7kmSgqMagVemc1DzM1LUZdfuS3Bk75dWEgrHZJo21EH8NI33c4Qr8mW9ElXvWjToBnPk5iWLQhaddGcJV9s3Lo/9XzQ0VRECeCvnsKWEvAhmmMud+/LRNcm1ACKYu02tQN7oTSRP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFBU2vRU; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXupkFy1"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-498028b3d5eso23355195e9.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 15:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFBU2vRU"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49b9320423cso21403155e9.0
+        for <platform-driver-x86@vger.kernel.org>; Sat, 29 Aug 2026 15:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788044254; x=1788649054; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788044255; x=1788649055; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=VF9RZeRdjwZZGV5LYrTlCzInFj7A0kFinPR+50b7jeI=;
-        b=bXupkFy1rtni87eGI1RobMePPu9r7efs4nLdgTIIBZ8rRHMmOXm0tH7kHnKnnatlI1
-         lJG+SGIkVSizP+pPOB81gub5F1o2Ie7KDcX+GbDb7Vt4r/oDsoQA4v6Krw4vz0r3XVFY
-         8ZkM+7E9hC1IQiHNDbAeIaaSVU2bNV6pNDPcGJ5x+Lor7M8lsEHZuyCVTTMr6w440zAS
-         llpwojUQqW+IXyjPssBFqo5dqatxRk/fJ8nPM8bIWkBPa0e64PEr72vt2vJVRjAsjxpu
-         d+T64J7FbHycV4pfGSaZngPy/jvOeAnW50z8twZlLl2a8NdW2+y6SWHaCzK2lAxUjuHH
-         wqaA==
+        bh=mhbptZ7sTwzXtkLdl4fxPAWO4oqXaG6ecccqmYbEYoA=;
+        b=hFBU2vRUeEnl3wznIlVufoHZ1vkWLuxJVECq5ie74IP7hUg3suB9VrprCBzDtbkZwz
+         TIIZACASBA51sQ6NW2xZerQaMN4wCAYQw0gmOwBrvT4IKPucpyKZyoAeWiPtCQN0yRjx
+         MAOZm+bK0StSNAk17KWYMSyQaRWgEYNVQaCPKJb3Y2E40Akxhq4nd8ffNBuMsC9A4zxw
+         HAzcrTqykwwTqBGw8rMpEj7SL9hhLWbqZakbH41rKxoptrHMiADFP/73aBJTAYOgbi7+
+         xAVYv9+2XyHeMKzMc7wKSrWJxTReikU3WbOD6l2pV/wheh0hOfwJbCo7uZpw9V+PsVQz
+         MMVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788044254; x=1788649054;
+        d=1e100.net; s=20251104; t=1788044255; x=1788649055;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VF9RZeRdjwZZGV5LYrTlCzInFj7A0kFinPR+50b7jeI=;
-        b=a8K/Jh95TsCuwfYwQLgzn+rCVJA1tqBpBiz6koG3d2kD1QHvpGpMM342TfMm3fuApV
-         Ch+EZnloxZERMoN9uasPP9OQLdn3P5gVcAdJ5W7/8XPw+PQP3oP4+Iq9OuyPZNW2osL7
-         wBP/SJRWm+Dvu9oQ7HrhKJXlStVZB4T0OUqd5B2xn7RkpCwA2t2jwtDCy7c5GhxyoPmw
-         hNTlTfNg4MJxBKmbgTJuFMVoUW+uhcouIzD9Mu24TdUWp38gYC9ntV/02Uv4x/CUbgI8
-         VFQCZ7M/buj5r2wv2uqZnaAfwPihNj6yQHJZ7fuK8kvUMrjUOe5VU2YUnP/ANa97iamf
-         JobQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqSMVMdFASo/ZUAhRcgEQ5Rlf7rEjy4ldpzqRZxQ9FMiWvxN6evkYzA/Kw+168QoMPk6Sp8fCJgmG57jElcneFAtLdZ@vger.kernel.org
-X-Gm-Message-State: AFuF++m7Ohn3a6vG43DKYP6Cu2nRyCxLYkVfMGypqZarvzRus0vF69AD
-	o6Xof3mTydDetLn9lGtaBs+8wroc++V3gEW6DCcFcTwGy5evei9LAA9d
-X-Gm-Gg: AR+sD112F2cX+p6NQ9viHjQk1BUNWxEojcwjcKgmboggWWU3ZL+YrwbhMss3ErjDt3b
-	Ons/6RsaMKIwddZf3e0ilOPS/b9ueSE8yn0XQV8HwB51YzYKtbp/kDUQiBgTEgvYu3bx7Um4RD0
-	H7+y5BggraQJUCwwqeDpaCX0PMyZx688dfoV82KVipPWkTW9JofqQ+TJqnhh98Y9DkqeukUCgh7
-	Z+PT8ZzUvEvu+alnXi6Oj574zsBfg8lUI//43JfNHNdy/uXhQx2HkbhDICpecclmYmplqV3m6zg
-	I/ogdWbJbTkZLTLB5NG3aAZ1SkGgdarro0ZfHpwg/FF65Bp9hDZFKjZ/dsxZq1uLTdHqfoDGJfh
-	+3dYGiBQmu2BjcAHI/kCDpOAaHTLqNHa97jAuThL4WR3dFL7SY1jv133F5DzWZeq+/udKsbbkpr
-	XX6+JV46Bzm1o6gOp3+H5xWTqyaM8r6tX+l7ZNQ0wd1DJ1rIh/FG4ksVQQFnJSbBx+empm26qug
-	JjcO5Pvt9sPRUJyu9nKmF9xq46DgAzSYBatqmYus04S
-X-Received: by 2002:a05:600c:6207:b0:49c:d28f:2cd6 with SMTP id 5b1f17b1804b1-49cd28f2e19mr26580525e9.12.1788044253876;
-        Sat, 29 Aug 2026 15:57:33 -0700 (PDT)
+        bh=mhbptZ7sTwzXtkLdl4fxPAWO4oqXaG6ecccqmYbEYoA=;
+        b=gptoS7d/MDDnv3z4dzUFPoIj1Y92aQ3X6QJ9bGowdU7mHNZ+VqBb2hKBWg4lbr8zRT
+         2JdhqoRfg1EJ/wYdAKweGhDf+EVjdq+WYuiaMc6YAhcIhLw3RvUd3kEi9aSneT8w2Ihp
+         EzomQOia+0GeL6mbLY17TqcXxcK7Bz2H3Pv00v5YFwu/JWZ3GCWQB+HqwzYMCr1EGoqQ
+         dHTLj6roY0ez338ilMDz+TEGpDtikG1jQNlI/5sOKszcOF4KqFwBpeTLfL1y4/ZIJgYM
+         VzOSXcVQuhBorBX1qhII5wjSkw/YiGTmGrhRpMO+GjO8EpMletaigGUeTxOE1KaGt2Lb
+         gFsg==
+X-Forwarded-Encrypted: i=1; AHgh+Rpc2Y34fF8Nh9X9n1DBoq3RSei24xtiAEUFjj1vR0LA9I8i11g0AJZB/4ftsVQVGbTUnzRIsWYMrkyDz58IUuSu0+MW@vger.kernel.org
+X-Gm-Message-State: AFuF++kXNRgVLeyFEmCnC/RzhJzu9utR9ahT8rAR2uZioNaXm5Fe8NM2
+	38zj0L3dzQxcQxnvNGgiciLqPGzk/aaUJynjiT9keWbXE1hdH+vd2hd8
+X-Gm-Gg: AR+sD13mhDnFJnK25Tk6qG0fzz8NIK4wa7zlEr9V/t+ne0aqECeGFH/wg+Cw4s6GjeW
+	0j/2lDsFyrHMIdnec/ww2RayoRBo4XgNP2+YUm54kCjnC2B5fLKUVw03KDC0vOraVIJGdpI8eFb
+	woeIsq2ePYyzjfxEYsOVQJq+wezIWKACam8v6PRq1ukQNdkAnarewHFY4h0WPTa2Vfa9JoQNvPZ
+	hjM6chdB+LhI1d+7+aCb+fBhvxtooZ5aKKwbR6OtNgBUmUC6BL/Q7nqu5heUgskxmhWgMj+qhup
+	kMANSJXi/oubQV1txRzEs98Rrbev1aMIioF5CG8m1fAcfGzB2tTlaCRYjdWxp458yhZhB3670kE
+	yTBc6FWin49AzqmWoK3RTBlvufcH8fpHtOGv6tz7DDgJGE2jpK1DO4ghy7W3N2Gs6qKTYRITG1i
+	DHXGJAqBCH7JbvAf+0+YVQV8odR3xVlrXTqrWxU4UFXLqSh+t8FT1lB3tce+hP7x2zBcZxC8pH/
+	BUxB491/hYyChiYOLMXPuDc8YH/g+ZfVl5v1buBSxo9ahV68OE7lZY=
+X-Received: by 2002:a05:600c:4452:b0:493:f140:c3fb with SMTP id 5b1f17b1804b1-49b91c2e42bmr261263835e9.7.1788044255220;
+        Sat, 29 Aug 2026 15:57:35 -0700 (PDT)
 Received: from 1Z10 ([37.161.113.184])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm60751835e9.0.2026.08.29.15.57.31
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ccea6b814sm60751835e9.0.2026.08.29.15.57.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2026 15:57:33 -0700 (PDT)
+        Sat, 29 Aug 2026 15:57:34 -0700 (PDT)
 From: Maurizio Casciano <mauriziocasciano7@gmail.com>
 To: Hans de Goede <hansg@kernel.org>
 Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
@@ -66,9 +66,9 @@ Cc: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Maurizio Casciano <mauriziocasciano7@gmail.com>
-Subject: [PATCH v3 1/3] platform/x86: x86-android-tablets: Describe Yoga Book haptics
-Date: Sun, 30 Aug 2026 00:57:27 +0200
-Message-ID: <20260829225729.395270-2-mauriziocasciano7@gmail.com>
+Subject: [PATCH v3 2/3] platform/x86: x86-android-tablets: Add Yoga Book TS3A227E
+Date: Sun, 30 Aug 2026 00:57:28 +0200
+Message-ID: <20260829225729.395270-3-mauriziocasciano7@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260829225729.395270-1-mauriziocasciano7@gmail.com>
 References: <apLZF6b3F39z6bUc@google.com>
@@ -81,142 +81,74 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ACPI enumerates the Yoga Book YB1-X91F/L haptic controllers as
-DRV2604:00 and DRV2604:01, but omits the properties used by drv260x to
-identify their mode, waveform library and enable GPIO.
+The Yoga Book YB1-X91F/L firmware describes the TS3A227E headset
+detector as a secondary resource of the RT5677 codec rather than as an
+independent I2C device. No client is therefore created for it.
 
-Register board software nodes and attach them to the existing I2C
-devices. Describe the enable signals using their Cherryview GPIO
-providers and pins from the firmware resource tables, keeping this
-board-specific mapping out of the generic input driver. Hold device
-references until removal, reprobe after adding properties to cover an
-earlier built-in probe, and detach the nodes in reverse order.
+Instantiate the device on I2C1 at address 0x3b, describe its GPIO
+interrupt, and provide the mic-bias setting used by the Yoga Book
+design. This lets the ASoC machine driver use jack and button detection.
 
 Signed-off-by: Maurizio Casciano <mauriziocasciano7@gmail.com>
 Assisted-by: Codex:gpt-5.6-sol [sparse]
 ---
- .../platform/x86/x86-android-tablets/lenovo.c | 98 +++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ .../platform/x86/x86-android-tablets/lenovo.c | 29 ++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/x86-android-tablets/lenovo.c b/drivers/platform/x86/x86-android-tablets/lenovo.c
-index 8d825e0b4661..a8c849ee03db 100644
+index a8c849ee03db..88693b9a1b01 100644
 --- a/drivers/platform/x86/x86-android-tablets/lenovo.c
 +++ b/drivers/platform/x86/x86-android-tablets/lenovo.c
-@@ -114,6 +114,41 @@ static const struct software_node lenovo_yb1_x90_hideep_ts_node = {
- 	.properties = lenovo_yb1_x90_hideep_ts_props,
+@@ -149,6 +149,16 @@ static const struct software_node * const lenovo_yb1_x91_drv2604_nodes[] = {
+ 	&lenovo_yb1_x91_drv2604_1_node,
  };
  
-+static const struct property_entry lenovo_yb1_x91_drv2604_0_props[] = {
-+	PROPERTY_ENTRY_U32("mode", 0), /* DRV260X_LRA_MODE */
-+	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
-+	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[0], 79,
-+			    GPIO_ACTIVE_HIGH),
++static const struct property_entry lenovo_yb1_ts3a227e_props[] = {
++	/* Value taken from the Lenovo Android kernel code drop. */
++	PROPERTY_ENTRY_U32("ti,micbias", 7),
 +	{ }
 +};
 +
-+static const struct property_entry lenovo_yb1_x91_drv2604_1_props[] = {
-+	PROPERTY_ENTRY_U32("mode", 0), /* DRV260X_LRA_MODE */
-+	PROPERTY_ENTRY_U32("library-sel", 0), /* DRV260X_LIB_EMPTY */
-+	PROPERTY_ENTRY_GPIO("enable-gpios", &cherryview_gpiochip_nodes[1], 47,
-+			    GPIO_ACTIVE_HIGH),
-+	{ }
-+};
-+
-+static const struct software_node lenovo_yb1_x91_drv2604_0_node = {
-+	.properties = lenovo_yb1_x91_drv2604_0_props,
-+};
-+
-+static const struct software_node lenovo_yb1_x91_drv2604_1_node = {
-+	.properties = lenovo_yb1_x91_drv2604_1_props,
-+};
-+
-+static const struct software_node *lenovo_yb1_x91_swnodes[] = {
-+	&lenovo_yb1_x91_drv2604_0_node,
-+	&lenovo_yb1_x91_drv2604_1_node,
-+	NULL
-+};
-+
-+static const struct software_node * const lenovo_yb1_x91_drv2604_nodes[] = {
-+	&lenovo_yb1_x91_drv2604_0_node,
-+	&lenovo_yb1_x91_drv2604_1_node,
++static const struct software_node lenovo_yb1_ts3a227e_node = {
++	.properties = lenovo_yb1_ts3a227e_props,
 +};
 +
  static const struct x86_i2c_client_info lenovo_yb1_x90_i2c_clients[] __initconst = {
  	{
  		/* BQ27542 fuel-gauge */
-@@ -283,9 +318,72 @@ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __init
+@@ -304,7 +314,7 @@ const struct x86_dev_info lenovo_yogabook_x90_info __initconst = {
+ 	.init = lenovo_yb1_x90_init,
+ };
+ 
+-/* Lenovo Yoga Book X91F/L Windows tablet needs manual instantiation of the fuel-gauge client */
++/* Lenovo Yoga Book X91F/L Windows tablet needs extra platform descriptions. */
+ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __initconst = {
+ 	{
+ 		/* BQ27542 fuel-gauge */
+@@ -315,6 +325,23 @@ static const struct x86_i2c_client_info lenovo_yogabook_x91_i2c_clients[] __init
+ 			.swnode = &fg_bq25890_supply_node,
+ 		},
+ 		.adapter_path = "\\_SB_.PCI0.I2C1",
++	}, {
++		/* The jack-detection IC is described as a secondary RT5677 resource. */
++		.board_info = {
++			.type = "ts3a227e",
++			.addr = 0x3b,
++			.dev_name = "ts3a227e",
++			.swnode = &lenovo_yb1_ts3a227e_node,
++		},
++		.adapter_path = "\\_SB_.PCI0.I2C1",
++		.irq_data = {
++			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
++			.chip = "INT33FF:00",
++			.index = 77,
++			.trigger = ACPI_EDGE_SENSITIVE,
++			.polarity = ACPI_ACTIVE_LOW,
++			.con_id = "ts3a227e_irq",
++		},
  	},
  };
  
-+#define YB1_X91_DRV2604_0_DEVICE "i2c-DRV2604:00"
-+#define YB1_X91_DRV2604_1_DEVICE "i2c-DRV2604:01"
-+
-+static struct device *lenovo_yb1_x91_drv2604_devs[2];
-+
-+static void lenovo_yb1_x91_add_haptics_props(struct device *dev, int index,
-+					     const char *name)
-+{
-+	struct device *haptics_dev;
-+	int ret;
-+
-+	haptics_dev = bus_find_device_by_name(&i2c_bus_type, NULL, name);
-+	if (!haptics_dev) {
-+		dev_warn(dev, "cannot find %s, haptics will be unavailable\n", name);
-+		return;
-+	}
-+
-+	ret = device_add_software_node(haptics_dev,
-+				       lenovo_yb1_x91_drv2604_nodes[index]);
-+	if (ret) {
-+		put_device(haptics_dev);
-+		dev_warn(dev, "failed to add properties to %s: %d\n", name, ret);
-+		return;
-+	}
-+
-+	/* Apply the properties if a built-in driver already attempted to probe. */
-+	ret = device_reprobe(haptics_dev);
-+	if (ret)
-+		dev_warn(dev, "failed to reprobe %s: %d\n", name, ret);
-+
-+	lenovo_yb1_x91_drv2604_devs[index] = haptics_dev;
-+}
-+
-+static void lenovo_yb1_x91_remove_haptics_props(int index)
-+{
-+	struct device *haptics_dev = lenovo_yb1_x91_drv2604_devs[index];
-+
-+	if (!haptics_dev)
-+		return;
-+
-+	device_remove_software_node(haptics_dev);
-+	put_device(haptics_dev);
-+	lenovo_yb1_x91_drv2604_devs[index] = NULL;
-+}
-+
-+static int __init lenovo_yb1_x91_init(struct device *dev)
-+{
-+	lenovo_yb1_x91_add_haptics_props(dev, 0, YB1_X91_DRV2604_0_DEVICE);
-+	lenovo_yb1_x91_add_haptics_props(dev, 1, YB1_X91_DRV2604_1_DEVICE);
-+
-+	return 0;
-+}
-+
-+static void lenovo_yb1_x91_exit(void)
-+{
-+	lenovo_yb1_x91_remove_haptics_props(1);
-+	lenovo_yb1_x91_remove_haptics_props(0);
-+}
-+
- const struct x86_dev_info lenovo_yogabook_x91_info __initconst = {
- 	.i2c_client_info = lenovo_yogabook_x91_i2c_clients,
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x91_i2c_clients),
-+	.swnode_group = lenovo_yb1_x91_swnodes,
-+	.gpiochip_type = X86_GPIOCHIP_CHERRYVIEW,
-+	.init = lenovo_yb1_x91_init,
-+	.exit = lenovo_yb1_x91_exit,
- };
- 
- /* Lenovo Yoga Tablet 2 1050F/L's Android factory image has everything hardcoded */
 -- 
 2.53.0
 
