@@ -1,149 +1,220 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C75F2DF156;
-	Sun, 30 Aug 2026 12:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788093217; cv=none; b=CocFVp/rGXsGNamV/JxP5p6AIsvpYThzBELuzIX4ODizRTESUj4upNKN+TgYEbAKB8A/s5bFA6ANtUdBjdgyuANuJ7Vl/K+FhwcQ0ZEm3hPost971i06Ffr0XODApxuuIh7ALFc1k+uJkS8mX0kZX6guireQZ7mG+IIu1cA6W5M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788093217; c=relaxed/simple;
-	bh=DbS4K0kZj80XZmqjo44t/Qjn+1io5xEwIT9YkDGH9+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BnTUjK6LEcc1AScYgxYk4X9DhAnBl5cbrHPrK9nK021a427xmb4PYY6RC1qTRu9Rvfi9+SJZ0I0YGqEvn6XZxjx2HZwW2OXpL7PYQgNtdX75fJxSYx744q7DrqCanSxG8lVTRtQa9J9wcXFAvH9MVkot955T+f4xLmnM8snd0L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hlK1wUhc; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45033812D1
+	for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 13:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788096468; cv=pass; b=J2gImeBcxUKZJv9jqJwY0CCigl7rYNOHMdXy3JeidmPthPD/M9Yuia5bdGEzhwxBKy3oGaX4SpY+Ayo6Sgn9Dlv+t/iNmuDolC+08tp6wT80M0OBlp9fyDXy13i1vgCIvV6m3UC/Wbt8ey+Dq0jcD744ftl/vAOdwCIxhnG/eSY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788096468; c=relaxed/simple;
+	bh=YPKz5OqBk9usb2e2pk4uZojEfnktwmodxCOMK6glqFg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qPVjh/lvmF01Hx7PnZCBNbKModkJjAgWF4kgxujr49cyQnaRCt+B8h+v9B36LR5pyhjHIlercGRyu8v5ZRTjRyJu4wv0bjxO05wiiZYkWMtEyPBgYAYwStVxyKG2Aud3gVJtFBJXgNlxmQWHaY6AM75axj3bB3yT+H6+dKMejZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=leXjO4jK; arc=pass smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hlK1wUhc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD1221F000E9;
-	Sun, 30 Aug 2026 12:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788093216;
-	bh=4r6vDlF4GeRZu+YbnR/Ofgz9TBi/72A0IMpB00yGr6k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hlK1wUhcEZFVy1sf2jHxjutcO4rR3Lp9F0A4JZNm7rR3cz1uJokSofUA1uejeGazq
-	 549fQcZY5nOWLyuMplQBZOr6hUZRVxeUBq34TVUBY1GiwBjdUdKxJ5gQxkugHrZUN9
-	 8lFQ2eZ0cUzi0NEj2rLABip/BhoJRsPM+ps3u6Direa/KRed9ir1iFOOrR7J7qrT9W
-	 kKOnlxGpkSOWRkS/YzYaKbjh1XD2MFvd9jJunKPuvPUyazmIgRTMPXioMikRMrs+Kw
-	 ruuf4VeXGZkMaQAtp+/IP0X1H9CXjT4xL5ZkqnELhgoOqLoxXyEep5+heJn5f+o5Q1
-	 Cx9XdlpNnjfnA==
-Message-ID: <75a42495-d6d0-4ff2-ae05-a0a1bbc30261@kernel.org>
-Date: Sun, 30 Aug 2026 14:33:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leXjO4jK"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-52b6543169fso17210631cf.2
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 06:27:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788096466; cv=none;
+        d=google.com; s=arc-20260327;
+        b=B/f7bVkC/9Mi9HaIW0AQeP0XZWaQHyvFWur/yRuycjSv96VtpVU+QS3jahHldaTev2
+         SEt6pL4PgXzfPg49qPLAEThwwKcbNrPAax7vGepT2W6pr2U3ahVu4dp+FxcT0NOM3pvB
+         Yb4anra2OMXNWfmoYFUT/lyz/JB7U5BPKZ2Q0HCXobePHi/ttEChs+7518ohJEM3sC4l
+         4jTi/cL2hgw3diTkXYsTWDtxk4i46evEJ7Ihe/n16VWmrIsBvVUXJz2rpiR34NyCMR2G
+         dhGhO5tcelBCRR0RSbbplTkxeePGN5LGqGWsVEtDxtUYrpFcAr3AXbqbR4JoM4hyGY23
+         6aZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=YPKz5OqBk9usb2e2pk4uZojEfnktwmodxCOMK6glqFg=;
+        fh=TD4sZqhsH/iv/OLydsm3bSXE3Wyk5I4GJvr3NZ5gMnc=;
+        b=bxsSb0uEQ8xNXWhXiaAoCszvChpC4rFahaRvTcX0n9DSJPNed0eEQ/fvbKrzjDKiSD
+         UVK55maEu38Yflzzzor6D4u4KCvN8OJEX7spUz4fmMo+ZVHnv0RaC5YRvfYXXrsKpdng
+         bx/2l2J0Ii1XfEK7Mn689QrqH/CLlv+632JpetHAYdQQurwBSjrEJdTsbu8/MknOcBCY
+         ZZa19Xo8NQo9MHG7OLQdcalNLVjkxeDJE2eSUmTzyVzQGUG6qHaqYhT94Sz6hVTDGX+v
+         dvb2HA1aY9KYTX9CWIHlWQR97lOuNKtXhzsviqIFybQtVDwW16e1HBUH8j5fLRGNzoPJ
+         24eg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788096466; x=1788701266; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=YPKz5OqBk9usb2e2pk4uZojEfnktwmodxCOMK6glqFg=;
+        b=leXjO4jKHQ6Cbc1JBzxk9ScLlNkd2tSoW/JxG9XGbNjYAJgN/tLQk1c+Pjo2swnjaX
+         kr/Zqhrh+VKlDVTTVGdsEhWjarXnqp9TXQtl06ZHkqVnXYpuEPLLYcPUrWKclGHt0umx
+         ZnOrbWD2c3Wq82atVwLXdM5JPJMzw4yQHBIkkVMPhFm4lHmLhnLZKicTsf8FRQFyL+AR
+         Wn1m6u7snZLjIFIeHGqAY5j5dSRe053VJyPU5S5JZWAleIWrNcYPa1+xBeDO3u12rLOx
+         DR7Y/fxNNX/3WhbYhWdV0RuPmMovAsx4E7vp+olaYmGjLa3y6WWYF5rYtOJkvoe3C2VU
+         Bgjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788096466; x=1788701266;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=YPKz5OqBk9usb2e2pk4uZojEfnktwmodxCOMK6glqFg=;
+        b=CYuBxI+C1s2G3R7pZqSuJM/IMAuThj7r78w9DuU+YipCtBz2eJsDdb6ENCeAIb+aeo
+         p4iZersWYtBi4igZg4DMTV+VTqNnqQS+J9Oi/L7dwSQKvLWk0owjn9RvyQPHjk8NM7qj
+         Z+WF6TJryQJBCYsLnBmaOwYy7ISvEK7nTdmk7T8nRszwOGIN6CqC5PPGg1/61iDUom2Q
+         cFaR1UxP8RaTbCvmgr5zf22YwidOY4jdkYM/mSvpIysGPj4o8WdMc8Z+nsq/j6zYGvwG
+         BmSJm2gubNbnzyFkRl7jZ+sEVgCWiMajSPZUyCzR2UX8yQ0HMw5Id7j39XtXTqCWaKEw
+         o8og==
+X-Forwarded-Encrypted: i=1; AHgh+Rpp84PAGtwjXc2rdQKaNcFJH9rkyt53vIVeFIhG5FwSD2s/2WEBlzoS5F3GgQcwBPFgJ0KVLQd6lfBG1C4lB3NU6OHq@vger.kernel.org
+X-Gm-Message-State: AFuF++na7VcIYkbfPyO0xyPjYs7e+It1FWZHUrGkc9rW0fB3VrGYIjM+
+	GaipA5eKXcwKfn7zRa3YHbJJYwaDWBW0gxTIwow+znGirqdOirRsv8Sysho8qwV2WlCsli69Fl0
+	0ptXfokxqgVuMzxZI6vXu5evAZUONE5E=
+X-Gm-Gg: AR+sD12ZWyhBWyOF6eGuoH/+pOJUmH6OObkFtRl27Wn3gdl8BAzk1howmuyYibi9DCq
+	evjfj7r71Jth8by5DjHgn5HcfjsJspxHWPZTA6Sz88j6hNqaTaWFPXXONPUMbDa21VNkFuysf0l
+	JXahX4WN0u/9SEWTX3KTeJ42MY2zsWFo2qaTdoRvHVgg8+3sY4+FNEOJYqUzBaQfGWBVVJdPUw8
+	AP8oMxaNdij3U6KbpKQEarDw29fk83tl0K95/gvb6+x0H3dw9UapSoEMsMyiu8bhnhwTBVS0wq8
+	ihX9b0XPVeprLGqq4XokOkHoIZ6J7E55ZukPzNassrydirV7FJ+nKA==
+X-Received: by 2002:a05:622a:608:b0:52f:b37f:35c7 with SMTP id
+ d75a77b69052e-52fb963ff45mr228736891cf.23.1788096465724; Sun, 30 Aug 2026
+ 06:27:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: int3472: unhandled GPIO type 0x08 leaves the rear camera dead
- (Surface Pro 11, Intel)
-To: Sergey Lebedev <lsa.uz@pm.me>, Daniel Scally
- <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260830112736.85573-1-lsa.uz@pm.me>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260830112736.85573-1-lsa.uz@pm.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <178806598504.23591.11490486941444891398.reportbug@localhost>
+ <178807922598.807847.18300931641658404390@eldamar.lan> <ac830f9d-ea86-4f49-b88b-9aa8a09015c0@gmx.de>
+In-Reply-To: <ac830f9d-ea86-4f49-b88b-9aa8a09015c0@gmx.de>
+From: Mo Jun <royclark086@gmail.com>
+Date: Sun, 30 Aug 2026 21:26:00 +0800
+X-Gm-Features: AcwNN1V7T-iwBuAmO8RzAd8_9s0H2yuoPxXxuECbkRKPOz2U3ZJQLvpqb0mJ0WY
+Message-ID: <CAL2p-7jB4LUEPhyBy2QjtK+Cn_hMBQ+ereWZryHpZ3JDJ_ZpPw@mail.gmail.com>
+Subject: Re: asus-laptop: Fn hotkeys no longer work on ThinkPad SL400 after
+ 378500dc1313 ("platform/x86: asus-laptop: Register ACPI notify handler directly")
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1146124@bugs.debian.org, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Denis Benato <denis.benato@linux.dev>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Armin Wolf,
 
-On 30-Aug-26 13:27, Sergey Lebedev wrote:
-> Hello,
-> 
-> On a Microsoft Surface Pro 11 for Business (Intel, Lunar Lake) the rear
-> camera does not work, and it traces to a single unhandled GPIO type in
-> int3472-discrete.
-> 
->   int3472-discrete INT3472:00: GPIO type 0x08 unknown;
->     the sensor may not work
->   ov13858 i2c-OVTID858:00: failed to find sensor: -5
->   ov13858 i2c-OVTID858:00: probe with driver ov13858 failed with error -5
+On Sun, Aug 30, 2026 at 7:59=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 30.08.26 um 10:42 schrieb Salvatore Bonaccorso:
+>
+> > Control: forwarded -1 https://lore.kernel.org/regressions/178807922598.=
+807847.18300931641658404390@eldamar.lan
+> > Control: tags -1 + upstream
+> >
+> > Hi
+> >
+> > In Debian, in https://bugs.debian.org/1146124, Jun Mo, reported the
+> > following, with a bisection result:
+> >
+> > On Sun, Aug 30, 2026 at 12:59:45PM +0800, Jun MO wrote:
+> >> Dear Maintainer,
+> >>
+> >> Fn hotkeys on Lenovo ThinkPad SL400, which are supported by the
+> >> module asus-laptop, no longer work starting from Linux 7.1. Normally
+> >> when those keys/key combinations are pressed,
+> >> acpi_listen/kacpimon/"evtest
+> >> /dev/input/by-path/platform-asus_laptop-event" will capture related
+> >> events, for example:
+> >>
+> >> $ acpi_listen
+> >> ^[[1;2Photkey ATK0101:00 00000032 00000000
+> >> button/mute MUTE 00000080 00000000 K
+> >> ^C
+> >>
+> >> Starting from Linux 7.1, there are not any related event captured by t=
+hose command.
+> >>
+> >> Using snapshot.debian.org, I found out that the last working kernel ve=
+rsion is 7.0.14-1 while the first not working version is 7.1~rc2-1~exp1.
+> >>
+> >> Following instructions in [1] and using /boot/config-7.0.14+deb14-amd6=
+4, a bisect resulted in:
+> >>
+> >> git bisect start
+> >> # status: waiting for both 'good' and 'bad' commits
+> >> # good: [458c6079fc1d41d564c37679c8ace02cd83ee817] Linux 7.0.14
+> >> git bisect good 458c6079fc1d41d564c37679c8ace02cd83ee817
+> >> # status: waiting for 'bad' commit, 1 'good' commit known
+> >> # bad: [7fd2df204f342fc17d1a0bfcd474b24232fb0f32] Linux 7.1-rc2
+> >> git bisect bad 7fd2df204f342fc17d1a0bfcd474b24232fb0f32
+> >> # good: [028ef9c96e96197026887c0f092424679298aae8] Linux 7.0
+> >> git bisect good 028ef9c96e96197026887c0f092424679298aae8
+> >> # good: [334fbe734e687404f346eba7d5d96ed2b44d35ab] Merge tag 'mm-stabl=
+e-2026-04-13-21-45' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/m=
+m
+> >> git bisect good 334fbe734e687404f346eba7d5d96ed2b44d35ab
+> >> # good: [cdd4dc3aebeab43a72ce0bc2b5bab6f0a80b97a5] Merge tag 'ntfs-for=
+-7.1-rc1-v2' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/nt=
+fs
+> >> git bisect good cdd4dc3aebeab43a72ce0bc2b5bab6f0a80b97a5
+> >> # bad: [beaba8bfbb91e3bb3133eacacd62fd6fea515e34] Merge tag 'probes-v7=
+.1-2' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace
+> >> git bisect bad beaba8bfbb91e3bb3133eacacd62fd6fea515e34
+> >> # good: [bea8d77e45a8b77f2beca1affc9aa7ed28f39b17] Merge tag 'staging-=
+7.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging
+> >> git bisect good bea8d77e45a8b77f2beca1affc9aa7ed28f39b17
+> >> # bad: [065c4e67cc2c40e6dd94649e8e720096fbabd4ee] Merge tag 'uml-for-7=
+.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/uml/linux
+> >> git bisect bad 065c4e67cc2c40e6dd94649e8e720096fbabd4ee
+> >> # good: [4b0b946019e7376752456380b67e54eea2f10a7c] Merge tag 'for-linu=
+s' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+> >> git bisect good 4b0b946019e7376752456380b67e54eea2f10a7c
+> >> # bad: [d6116d86e58a04a9522e349c4a27145521c01ad7] platform/x86: int347=
+2: Use local variable for LED struct access
+> >> git bisect bad d6116d86e58a04a9522e349c4a27145521c01ad7
+> >> # good: [19ebacfb442b83aa5fe75f9c6851b4edbfff3760] platform/x86: dell/=
+dell-rbtn: Convert ACPI driver to a platform one
+> >> git bisect good 19ebacfb442b83aa5fe75f9c6851b4edbfff3760
+> >> # bad: [378500dc1313e2c06a2f675bb00ab5d7880433ba] platform/x86: asus-l=
+aptop: Register ACPI notify handler directly
+> >> git bisect bad 378500dc1313e2c06a2f675bb00ab5d7880433ba
+> >> # good: [03ae0a0d0973b9e584a05136aab08fee2ef8e455] platform/x86: uniwi=
+ll-laptop: Implement USB-C power priority setting
+> >> git bisect good 03ae0a0d0973b9e584a05136aab08fee2ef8e455
+> >> # good: [b0bcf48c74cc7f72d1b6effc7cecdae871b1785e] platform/x86: toshi=
+ba_acpi: Register ACPI notify handler directly
+> >> git bisect good b0bcf48c74cc7f72d1b6effc7cecdae871b1785e
+> >> # good: [553b2ac59fbb434330287fde0cabc64bc6f11ceb] platform/x86: toshi=
+ba_bluetooth: Convert ACPI driver to a platform one
+> >> git bisect good 553b2ac59fbb434330287fde0cabc64bc6f11ceb
+> >> # good: [3a96c7915d93231e128df74901fe8fcb960b0ecb] platform/x86: toshi=
+ba_haps: Convert ACPI driver to a platform one
+> >> git bisect good 3a96c7915d93231e128df74901fe8fcb960b0ecb
+> >> # first 'bad' commit: [378500dc1313e2c06a2f675bb00ab5d7880433ba] platf=
+orm/x86: asus-laptop: Register ACPI notify handler directly
+> >>
+> >> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1143721#15
+> > #regzbot introduced: 378500dc1313e2c06a2f675bb00ab5d7880433ba
+> > #regzbot link: https://bugs.debian.org/1146124
+> >
+> > Does this rings a bell?
+>
+> I think i found the culprit, could you please test the attached patch?
 
-There already is a patch which should fix this on the list:
+Build the module with the patch(only "make -C .
+M=3Ddrivers/platform/x86") and load the built
+drivers/platform/x86/asus-laptop.ko, now the Fn hotkeys works again.
 
-https://lore.kernel.org/platform-driver-x86/20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm/
+Thanks!
 
 Regards,
+Jun MO
 
-Hans
-
-
-
-> 
-> The result is 32 /dev/video* nodes and a media graph with zero entities.
-> The IPU7 itself is healthy - firmware loads, CSE authenticates, the device
-> reaches secure mode - so the failure is entirely on the sensor-power side.
-> 
-> Reproduced on 6.17, 7.0.0-28 and 7.0.0-30 (Ubuntu 26.04), and the switch
-> in drivers/platform/x86/intel/int3472/discrete.c still has no case for
-> 0x08 in 7.1.0-rc7, so I do not believe this is already fixed.
-> 
-> What the firmware describes
-> ---------------------------
-> 
-> The DSDT declares three INT3472 devices. Decoding their _DSM returns with
-> the driver's own field layout (type = bits 7:0, pin = bits 15:8):
-> 
->   Device (ICL0)  -> INT3472:00, the rear sensor (OVTID858 / ov13858)
->     0x1000070B   type 0x0b POWER_ENABLE   pin  7
->     0x10000500   type 0x00 RESET          pin  5
->     0x1000060D   type 0x0d PRIVACY_LED    pin  6
->     0x10000408   type 0x08 <unknown>      pin  4    <- refused
-> 
->   Device (ICL1)
->     0x1000200B   type 0x0b POWER_ENABLE   pin 32
->     0x10000810   type 0x10 DOVDD          pin  8
->     0x10000900   type 0x00 RESET          pin  9
->     0x10000A0D   type 0x0d PRIVACY_LED    pin 10
-> 
->   Device (ICL2)
->     0x1000170B   type 0x0b POWER_ENABLE   pin 23
->     0x10001600   type 0x00 RESET          pin 22
->     0x1000250D   type 0x0d PRIVACY_LED    pin 37
-> 
-> ICL0 is the only one of the three that declares a fourth GPIO, it is the
-> only one carrying type 0x08, and it is the one whose sensor fails. I would
-> not claim that proves causation - the driver returns 1 for the unknown
-> type and carries on, so POWER_ENABLE, RESET and PRIVACY_LED are all still
-> registered - but it is the only resource the kernel declines on this
-> machine, and the sensor then does not answer on I2C.
-> 
-> The question
-> ------------
-> 
-> What is type 0x08 meant to be, and should discrete.c handle it? If it is
-> another regulator - the shape of ICL1's DOVDD entry suggests the encoding
-> supports several - then adding it may be all this machine needs. If it is
-> something else, I am happy to be told what and to test whatever you would
-> like tried.
-> 
-> I have not sent a patch because I would only be guessing at the semantics,
-> and guessing wrong here means silently powering a sensor rail for the wrong
-> reason.
-> 
-> What I can provide
-> ------------------
-> 
->   - full acpidump / disassembled DSDT for this machine
->   - any debug patch or instrumented build you would like run; the machine
->     is available and I can rebuild and boot kernels on it
->   - dmesg at any log level
-> 
-> Two adjacent facts, in case they matter, though I am not asking for
-> anything about them here: the front (SONY0681) and IR (SMO55F0) sensors
-> have no in-tree driver bound at all, and intel_ipu7_isys still announces
-> itself as a staging module.
-> 
->   Machine: Microsoft Surface Pro 11 for Business (Intel Core Ultra 7 268V)
->   DMI SKU: Surface_Pro_11th_Edition_With_Intel_For_Business_2103
->   Firmware: UEFI 17.100.143 (2025-11-19)
->   Kernel:   7.0.0-30-generic, Ubuntu 26.04.1 LTS
-> 
+>
 > Thanks,
-> Sergey Lebedev
-> 
-
+> Armin Wolf
+>
+> >
+> > Regards,
+> > Salvatore
+> >
