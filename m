@@ -1,162 +1,161 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373FE3B6C01;
-	Sun, 30 Aug 2026 14:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788099251; cv=none; b=NouCKwLaFw4ULG7PdT5vZaIHbTRgCaFt4DMMtCzmE6+msXy3lVIhMf3e/6pH34A6meA2FoWMEsUR/mu4Mdacqt0ptFc30wZZLzRzUKhvN6uASAsebL5n7/L81aJ5fuSFwwrJ7SkcHuTTmIFefjJIvROhvzvyJT7fWh7LuFwGWpk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788099251; c=relaxed/simple;
-	bh=JBXgjRPgkgipMjrVz/UPNDg11gkGeniqWvOfMdAQPZo=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kCurra+1E9SoUkEXdv/75m80QUyDA8GW90AXrK3hsne5bgWXgIpJNRIEDadc5eg708XC4ZTbk8XHv/WMnYGviMOBEzjE/CF8vuFW7uTgLCPYkZKQxCwy8WcfzXPqncxZsTgr7lW6Xx3YgocG5tBf6mndjWz7cobgVUR4NhJcBrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=b9Il1G4N; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB622DCF74
+	for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 14:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788100921; cv=pass; b=eVEcfPCWg4WdviKeq3iBIC0DbjBTSe+AXZqYrtGJoGiTiUnj/CzySgJKc3MQII8z/99bj/D43j7hw8rDOhvkq6oOPai85Cqa4N9H4fljaR/tE/Ymb3IGmfkVcKovua7N86/non3ny76F6Z4rgyWyoKVVHyApVCQuor9xKbthpfY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788100921; c=relaxed/simple;
+	bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOco0eVOirNcUzDX9Np3CeQ35U81pY8riXfScpcjKnuspKumTz2RpwJQOQ8ZMEvbW039NT16D8g8PRvznVn59UZVHz08dxpCYMKq5QbE9iMJRFdnipW15j4HaEsXMPTbAaAOg8Z3YUFDTuJo+6fdNAdL7aIPZExO8AYZrZzrJ6I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXBURXWr; arc=pass smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="b9Il1G4N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1788099244; x=1788358444;
-	bh=gABTmVA6p5jpKrbDQzvfZ2ui8YhnTIivnH2v83tkwZc=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=b9Il1G4NtsTfBcWOD7BZQPfYW0HHD48nDWchf8uu/VobcYZ5XQHXZJv+9zD5yADwR
-	 SdrgSM9h4YRzH7uBIoAfSYPzmVKyNzTHeU7I788tav00SXXHsWX5v3JF9KJn192Cwf
-	 gX/0lgcnKqfQj3V0F+pApOz24LL++KSNZldchzgLBQNmDwDzwIMbTKmk1UDO0BWcvJ
-	 i6jPb8MKou7XQ29JPn2zqPzEG3cYgyw9orlL/1rHoCc/oTswFNJHJQIndITV6kLQaF
-	 80hALYXXFLqpLyXmhzCI8OkDVYKjd+p8xkdDH8V2zxySxXbcLdfue1wNLSwZgccIyU
-	 3KlDoL99YqSiQ==
-Date: Sun, 30 Aug 2026 14:14:01 +0000
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede <hansg@kernel.org>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: soc_button_array: ignored -EPROBE_DEFER loses the buttons on 68% of boots (Surface Pro 11)
-Message-ID: <20260830141355.55898-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: e7ef77e3c7823f58a32037638293872bfb2c16ff
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXBURXWr"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-938cd95b06eso216114585a.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 07:42:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788100919; cv=none;
+        d=google.com; s=arc-20260327;
+        b=g0Jva2MiW9h8/dZx4vDAhGKtRL8O/Qto8uADublKjPLKvTPd7A9yXpOUOcXq4NEvIu
+         txPjhqvLEcr683a3zpQG27ZdASHm3ZSlsGmEWujr5neUgLlNg2ekl9+1rKOse64QpcZn
+         QDDaTKiXwNyTTh+aBEc/usWbgPZV8dwlNLLKxfsWs3+ayItRl1uY3co/LVKNZIioqnDo
+         KxANZIaKDsiVSo7mt4fQtieGdQlaRGDjHjDa4Mz1n7Xws2hNnrlO1xk7wnYFpQ8b+VM0
+         iwb4+9DbAfZXgE3z3EJaCYRnS0Nt0D4tF8a6mlLkx97EWW0QHseae7hpMCxuPGWbpjQf
+         KHwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
+        fh=ItqjbCH57n7auGwuvYpFLTswBGFVcy3S/w2rKk8HAXQ=;
+        b=H4G46k0J9YaN+7AzjMdGIAVRx7cHVDtU7YWUj44o2BwpZGoTpcPvro3iWDaw5yMnps
+         rKnIj2zCNE7OFrAoOtJJyfCDl/QcUoQOs0nK8iENpP9/TkfgtsTMUFPBVMOsfj37GKk4
+         BpEx9U+LYJKeOFSKzS3Zw5GvHvuELvV2E9KqL4QKBEzxtLmZG6gG1wgPwpuO//CMTyBV
+         Guz/HXXREwsI3rRUOTxOJMLzqJ7isTsnOE8BMW9BidYCmDIqnKzqnWCUcf1+1vl3H1/9
+         8tSq+WRGVPCBxQO5EXKZIiZ0n9Tiif+8TAtbD+/G/rHMuN7QsDUxNMcHzqm0dPv+gpWh
+         Zqpg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788100919; x=1788705719; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
+        b=lXBURXWrf4b79f5nrkWuaWt/bQy4YBTe9qdOGvStNheZXm1l3O4r4dq4v1GJ92tH48
+         3aVjqCenfXsOvuHfeaZ3b7TXi2tSmz/mjgOsFGn5qDlwnbz265Ov+kCCX4n3QoNf5qpJ
+         b/GUyzyUFy3UcHMprvrb/KKjenhVCiVRWPOWAivkz2+i7zNIWlSE20cTaiyvGmXsuil+
+         z3B6uQAHokmGq4T7Iv7w24rEbqIDC5E6DYBk21e3qjWksqCx7v0wemNY7G+DPCdvGUGe
+         1pGsKO0qFSxEiqQAUZFJ3zLQ4yvjJnqu5bMAj9wLhJPb4GUw2PySCFWtQQCG5ZAAPUBw
+         idOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788100919; x=1788705719;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
+        b=F2OZk5JgpwTYxdMDSS7kJbcv0OC4cWaP8wRugoKuop3fp+5ypLYuTVm56QaWeLAxwb
+         krh1MwYe6YVKqVV8jUDgbdgM6ATk+XJh2AcB/JiO9ekNTaMDcyjb5O+NyUFe9Ts6sZht
+         NqYMtjcKZK7Vax6S3XyhXkRsKxnJktqXOocUGIEACOJqwVdujam3syQGDk0ylCklehAA
+         cwk0yAUohAJZEX5Tn2LXZQbZWWyGuRd7Bw78NFImFqLwmgK7UNx76SkFexuqmy4LVRpm
+         /KxeVNEcbCzOml4xdJJNUoX2EoAcTi9HioOWX+W2rDeg3VzuZg30TfzN2BtVsnMk1uJJ
+         IWvA==
+X-Forwarded-Encrypted: i=1; AHgh+Rrate6cjPEMuojfZlzKCJ4csLTcHcEo5NUs44g2jbUkpZkpws0aV/B7VJDZWV6JBDLUs8GmpiNLKU/YbO443xlNtKOx@vger.kernel.org
+X-Gm-Message-State: AFuF++kRmzJiSZiGQVP9kBt3wByISYEL/SFScThCJsbEwW0RRbAHSzjW
+	qMhNr6hvl3gTHlyI1PdAU37tn3kreb3W+gZnSwpYCsMvpnKcOVyI0OKi4sxknVeMbtI9sZTjDkH
+	IPXbAbpe1OyOnPhDH6YUev+LS63GMUOA=
+X-Gm-Gg: AR+sD10teQSll2zXVj4Q8Je4V8480WFYai9ewxPA4ic80k5JQUdIyaYJuR/p2+fOBNh
+	QFYL3eYFwJ2jijeRRvL5x7J6rbpqPtgSFSw+IbjKKf1bkDE9DwpvYJYld5TLNCLZxjQ3oB6qiiE
+	fA5pZ5I0IbmCBc+O92RGFpR2OpGSjJEbsbcdwHKnZz7BKyXHwxf+VoZUPU6+GFnYBWTc8dCS9FF
+	V9euveZmdLZ6IGbp3TKvvGiegWtNQYmXRB8L/cRV8iUyhMXR91K9cUl6Fojm9NbOxsYS9Rppec1
+	Jaf0gffQbtz3iwICdMUcoJp4LW+CZePnZCMJqmPyFDo3oF4UEWEdIdt0K5atEnHP
+X-Received: by 2002:a05:620a:2991:b0:936:af34:468e with SMTP id
+ af79cd13be357-93936bcb3admr243073685a.4.1788100919120; Sun, 30 Aug 2026
+ 07:41:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <178806598504.23591.11490486941444891398.reportbug@localhost>
+ <178807922598.807847.18300931641658404390@eldamar.lan> <ac830f9d-ea86-4f49-b88b-9aa8a09015c0@gmx.de>
+ <CAL2p-7jB4LUEPhyBy2QjtK+Cn_hMBQ+ereWZryHpZ3JDJ_ZpPw@mail.gmail.com>
+In-Reply-To: <CAL2p-7jB4LUEPhyBy2QjtK+Cn_hMBQ+ereWZryHpZ3JDJ_ZpPw@mail.gmail.com>
+From: Mo Jun <royclark086@gmail.com>
+Date: Sun, 30 Aug 2026 22:41:46 +0800
+X-Gm-Features: AcwNN1WQigLhzHYMImI_yaaj0penJs2Fw872JT4mNKejiAeGOR1zlQRiow_gi2k
+Message-ID: <CAL2p-7hqJOfzLuuXF0b=H1zAzirp4UN+Ty59W2F34PCAdstMsw@mail.gmail.com>
+Subject: Re: asus-laptop: Fn hotkeys no longer work on ThinkPad SL400 after
+ 378500dc1313 ("platform/x86: asus-laptop: Register ACPI notify handler directly")
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1146124@bugs.debian.org, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Denis Benato <denis.benato@linux.dev>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: multipart/mixed; boundary="0000000000001b75af065a44b030"
+
+--0000000000001b75af065a44b030
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Armin Wolf,
 
-On a Microsoft Surface Pro 11 for Business (Intel, Lunar Lake) the power an=
-d
-volume buttons fail to appear on most boots. The probe runs, gives up
-silently, and the device is lost until something rebinds it by hand.
+On Sun, Aug 30, 2026 at 9:26=E2=80=AFPM Mo Jun <royclark086@gmail.com> wrot=
+e:
+>
+> Hi Armin Wolf,
+>
+> On Sun, Aug 30, 2026 at 7:59=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
+:
+> >
+>> [...]
+> >
+> > I think i found the culprit, could you please test the attached patch?
+>
+> Build the module with the patch(only "make -C .
+> M=3Ddrivers/platform/x86") and load the built
+> drivers/platform/x86/asus-laptop.ko, now the Fn hotkeys works again.
 
-Measured across the 40 boots in this machine's journal, using the monotonic
-offset of the first "input: gpio-keys" message:
+I found that after rmmod the built module, it can not be insmod again.
+Also the system experienced NULL pointer dereferences in
+acpi_bus_generate_netlink_event() which may related to the built
+module.
 
-  driver attached on its own   13 boots   at 1.28 - 1.78 s
-  did not attach               27 boots   68 %
+I guess these was caused that the patch only change calling to
+acpi_dev_install_notify_handler(), not
+acpi_dev_remove_notify_handler().
+After change ACPI_DEVICE_NOTIFY to ACPI_ALL_NOTIFY in calling to
+acpi_dev_remove_notify_handler()(see attached patch), now the module
+can be insmod again after once rmmod.
 
-The timing is binary. Either the inputs appear at about 1.3 s, or they neve=
-r
-appear at all - no intermediate values in 40 boots.
+Regards,
+Jun MO
 
-Where it fails
---------------
+--0000000000001b75af065a44b030
+Content-Type: application/x-patch; name="asus-laptop.patch"
+Content-Disposition: attachment; filename="asus-laptop.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mtfwyujb0>
+X-Attachment-Id: f_mtfwyujb0
 
-Nothing at all is logged on a failing boot, so I built with
-soc_button_array.dyndbg=3D+p on the kernel command line. On four consecutiv=
-e
-failing boots the probe printed exactly one line:
-
-  [    1.286567] soc_button_array MSHW0040:00: OEM Platform Revision 129
-
-That eliminates most of the possibilities:
-
-  - the probe does run
-  - it passes soc_device_check_MSHW0040() - oem_platform_rev is 129, not 0
-  - it passes gpiod_count() - the dev_dbg("no GPIO attached, ignoring...")
-    would have printed with dyndbg on, and did not
-
-By elimination the buttons are lost inside soc_button_device_create(), at
-
-        error =3D soc_button_lookup_gpio(&pdev->dev, info->acpi_index,
-                                       &gpio, &irq);
-        if (error || irq < 0) {
-                /*
-                 * Skip GPIO if not present. Note we deliberately
-                 * ignore -EPROBE_DEFER errors here. ...
-                 */
-                continue;
-        }
-
-Every button is skipped, n_buttons stays 0, and the two returns that follow
-are both silent:
-
-        if (n_buttons =3D=3D 0) { error =3D -ENODEV; goto err_free_mem; }
-  and
-        if (!priv->children[0] && !priv->children[1]) return -ENODEV;
-
-which is why nothing reaches the log.
-
-The GPIO controller here is INTC105D, five gpiochips driven by
-pinctrl-intel-platform. Both that and soc_button_array are modules in this
-config:
-
-  CONFIG_INPUT_SOC_BUTTON_ARRAY=3Dm
-  CONFIG_PINCTRL_INTEL_PLATFORM=3Dm
-
-A manual bind always works: 25 unbind/bind cycles at runtime gave 25
-successes and 0 failures. The failure exists only in the early-boot window.
-
-One hypothesis, tested and wrong
----------------------------------
-
-Since both are modules, load order looked like the cause, so I tried
-
-  softdep soc_button_array pre: pinctrl-intel-platform
-
-verified applied (modprobe --show-depends inserts pinctrl first), with the
-rescue that normally binds it by hand disabled so nothing masked the result=
-.
-Five boots: 2 successes, 3 failures - the same rate as before.
-
-pinctrl_intel_platform is a dependency of fifteen other modules and is
-loaded long before either way. softdep orders modules; the race is against
-the asynchronous probe of the individual INTC105D:0N devices, which registe=
-r
-their gpiochips at their own pace. Reporting this so nobody else spends the
-evening on it.
-
-Why no patch
-------------
-
-The comment says -EPROBE_DEFER is discarded because Intel uses "virtual
-GPIOs" that never materialise, so deferring on them would hang the probe
-forever. A fix has to tell that case apart from a controller that simply ha=
-s
-not probed yet, and I do not know which signal you would want to use for
-that. Guessing would risk reintroducing the problem the workaround exists
-for.
-
-Happy to test whatever shape you would prefer - the machine is here and I
-can build and boot kernels on it.
-
-Related but probably not the same bug
---------------------------------------
-
-  https://github.com/linux-surface/linux-surface/issues/885
-
-Open since 2022 on a Surface Pro 7+ and a Pro 6: same shape - driver loaded=
-,
-gpio-keys absent, rebind fixes it - but there the buttons are lost during a
-session rather than never appearing at boot. Cross-referencing rather than
-merging the two, since the triggers differ.
-
-  Machine:  Surface Pro 11 for Business (Intel Core Ultra 7 268V)
-  DMI SKU:  Surface_Pro_11th_Edition_With_Intel_For_Business_2103
-  Firmware: UEFI 17.100.143 (2025-11-19)
-  Kernel:   7.0.0-30-generic, Ubuntu 26.04.1
-
-Thanks,
-Sergey Lebedev
-
+LS0tIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbGFwdG9wLmMub3JpZwkyMDI2LTA4LTI4IDE0
+OjI1OjIyLjAwMDAwMDAwMCArMDgwMAorKysgZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy1sYXB0
+b3AuYwkyMDI2LTA4LTMwIDIyOjIwOjUxLjQ3ODU2NTg2MSArMDgwMApAQCAtMTg4Nyw3ICsxODg3
+LDcgQEAKIAlpZiAocmVzdWx0ICYmIHJlc3VsdCAhPSAtRU5PREVWKQogCQlnb3RvIGZhaWxfcGVn
+YV9yZmtpbGw7CiAKLQlyZXN1bHQgPSBhY3BpX2Rldl9pbnN0YWxsX25vdGlmeV9oYW5kbGVyKGRl
+dmljZSwgQUNQSV9ERVZJQ0VfTk9USUZZLAorCXJlc3VsdCA9IGFjcGlfZGV2X2luc3RhbGxfbm90
+aWZ5X2hhbmRsZXIoZGV2aWNlLCBBQ1BJX0FMTF9OT1RJRlksCiAJCQkJCQkgYXN1c19hY3BpX25v
+dGlmeSwgYXN1cyk7CiAJaWYgKHJlc3VsdCkKIAkJZ290byBmYWlsX3BlZ2FfcmZraWxsOwpAQCAt
+MTkxNyw3ICsxOTE3LDcgQEAKIHsKIAlzdHJ1Y3QgYXN1c19sYXB0b3AgKmFzdXMgPSBwbGF0Zm9y
+bV9nZXRfZHJ2ZGF0YShwZGV2KTsKIAotCWFjcGlfZGV2X3JlbW92ZV9ub3RpZnlfaGFuZGxlcihh
+c3VzLT5kZXZpY2UsIEFDUElfREVWSUNFX05PVElGWSwKKwlhY3BpX2Rldl9yZW1vdmVfbm90aWZ5
+X2hhbmRsZXIoYXN1cy0+ZGV2aWNlLCBBQ1BJX0FMTF9OT1RJRlksCiAJCQkJICAgICAgIGFzdXNf
+YWNwaV9ub3RpZnkpOwogCWFzdXNfYmFja2xpZ2h0X2V4aXQoYXN1cyk7CiAJYXN1c19yZmtpbGxf
+ZXhpdChhc3VzKTsK
+--0000000000001b75af065a44b030--
