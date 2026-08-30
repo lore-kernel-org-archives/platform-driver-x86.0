@@ -1,161 +1,172 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010030.outbound.protection.outlook.com [52.101.193.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB622DCF74
-	for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 14:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A9E35C6AD;
+	Sun, 30 Aug 2026 14:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.30
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100921; cv=pass; b=eVEcfPCWg4WdviKeq3iBIC0DbjBTSe+AXZqYrtGJoGiTiUnj/CzySgJKc3MQII8z/99bj/D43j7hw8rDOhvkq6oOPai85Cqa4N9H4fljaR/tE/Ymb3IGmfkVcKovua7N86/non3ny76F6Z4rgyWyoKVVHyApVCQuor9xKbthpfY=
+	t=1788101006; cv=fail; b=M33W1NhJkQt7DzC+p49qltvbl42iQ4fQIsB7WcUoKNY2QHJ2+vBKAinATUA5tYAVCGEoovwTb3B7IvuEEZuXmvz9YqGIwZNHJCcqPxKMFUPt/iGb3fflfFmLTU5iRFeZAoLd5uBFJfFnj1BIOFu0tElwez5PDwoDJRUS+HPpIoM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100921; c=relaxed/simple;
-	bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOco0eVOirNcUzDX9Np3CeQ35U81pY8riXfScpcjKnuspKumTz2RpwJQOQ8ZMEvbW039NT16D8g8PRvznVn59UZVHz08dxpCYMKq5QbE9iMJRFdnipW15j4HaEsXMPTbAaAOg8Z3YUFDTuJo+6fdNAdL7aIPZExO8AYZrZzrJ6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXBURXWr; arc=pass smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788101006; c=relaxed/simple;
+	bh=l+h2rk7Ls8dGzyuzOE61GWmQqku+tsqSEyP7gF3RL3M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aUgZiCd6N4wQKY11JTw1Hgdyeft8sskM9XudjTQvus0nisifCjrYnBX3YRZI69/9hkP4Wa5aHEndMspz6VgNEQJ2VCf1/prt7dmYP2bdsGOcKd6VucHXcHxxlvMOkbDPvz8mjem5lFKhgC3HKNZ1b7RgkyfFfAs09XO0WVTH5jQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qtps6qlk; arc=fail smtp.client-ip=52.101.193.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXBURXWr"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-938cd95b06eso216114585a.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 30 Aug 2026 07:42:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788100919; cv=none;
-        d=google.com; s=arc-20260327;
-        b=g0Jva2MiW9h8/dZx4vDAhGKtRL8O/Qto8uADublKjPLKvTPd7A9yXpOUOcXq4NEvIu
-         txPjhqvLEcr683a3zpQG27ZdASHm3ZSlsGmEWujr5neUgLlNg2ekl9+1rKOse64QpcZn
-         QDDaTKiXwNyTTh+aBEc/usWbgPZV8dwlNLLKxfsWs3+ayItRl1uY3co/LVKNZIioqnDo
-         KxANZIaKDsiVSo7mt4fQtieGdQlaRGDjHjDa4Mz1n7Xws2hNnrlO1xk7wnYFpQ8b+VM0
-         iwb4+9DbAfZXgE3z3EJaCYRnS0Nt0D4tF8a6mlLkx97EWW0QHseae7hpMCxuPGWbpjQf
-         KHwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
-        fh=ItqjbCH57n7auGwuvYpFLTswBGFVcy3S/w2rKk8HAXQ=;
-        b=H4G46k0J9YaN+7AzjMdGIAVRx7cHVDtU7YWUj44o2BwpZGoTpcPvro3iWDaw5yMnps
-         rKnIj2zCNE7OFrAoOtJJyfCDl/QcUoQOs0nK8iENpP9/TkfgtsTMUFPBVMOsfj37GKk4
-         BpEx9U+LYJKeOFSKzS3Zw5GvHvuELvV2E9KqL4QKBEzxtLmZG6gG1wgPwpuO//CMTyBV
-         Guz/HXXREwsI3rRUOTxOJMLzqJ7isTsnOE8BMW9BidYCmDIqnKzqnWCUcf1+1vl3H1/9
-         8tSq+WRGVPCBxQO5EXKZIiZ0n9Tiif+8TAtbD+/G/rHMuN7QsDUxNMcHzqm0dPv+gpWh
-         Zqpg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788100919; x=1788705719; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
-        b=lXBURXWrf4b79f5nrkWuaWt/bQy4YBTe9qdOGvStNheZXm1l3O4r4dq4v1GJ92tH48
-         3aVjqCenfXsOvuHfeaZ3b7TXi2tSmz/mjgOsFGn5qDlwnbz265Ov+kCCX4n3QoNf5qpJ
-         b/GUyzyUFy3UcHMprvrb/KKjenhVCiVRWPOWAivkz2+i7zNIWlSE20cTaiyvGmXsuil+
-         z3B6uQAHokmGq4T7Iv7w24rEbqIDC5E6DYBk21e3qjWksqCx7v0wemNY7G+DPCdvGUGe
-         1pGsKO0qFSxEiqQAUZFJ3zLQ4yvjJnqu5bMAj9wLhJPb4GUw2PySCFWtQQCG5ZAAPUBw
-         idOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788100919; x=1788705719;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=1EKpfNX509NAcA59LbrSCuzxDKgr6ESuiyJW4nYMZtE=;
-        b=F2OZk5JgpwTYxdMDSS7kJbcv0OC4cWaP8wRugoKuop3fp+5ypLYuTVm56QaWeLAxwb
-         krh1MwYe6YVKqVV8jUDgbdgM6ATk+XJh2AcB/JiO9ekNTaMDcyjb5O+NyUFe9Ts6sZht
-         NqYMtjcKZK7Vax6S3XyhXkRsKxnJktqXOocUGIEACOJqwVdujam3syQGDk0ylCklehAA
-         cwk0yAUohAJZEX5Tn2LXZQbZWWyGuRd7Bw78NFImFqLwmgK7UNx76SkFexuqmy4LVRpm
-         /KxeVNEcbCzOml4xdJJNUoX2EoAcTi9HioOWX+W2rDeg3VzuZg30TfzN2BtVsnMk1uJJ
-         IWvA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrate6cjPEMuojfZlzKCJ4csLTcHcEo5NUs44g2jbUkpZkpws0aV/B7VJDZWV6JBDLUs8GmpiNLKU/YbO443xlNtKOx@vger.kernel.org
-X-Gm-Message-State: AFuF++kRmzJiSZiGQVP9kBt3wByISYEL/SFScThCJsbEwW0RRbAHSzjW
-	qMhNr6hvl3gTHlyI1PdAU37tn3kreb3W+gZnSwpYCsMvpnKcOVyI0OKi4sxknVeMbtI9sZTjDkH
-	IPXbAbpe1OyOnPhDH6YUev+LS63GMUOA=
-X-Gm-Gg: AR+sD10teQSll2zXVj4Q8Je4V8480WFYai9ewxPA4ic80k5JQUdIyaYJuR/p2+fOBNh
-	QFYL3eYFwJ2jijeRRvL5x7J6rbpqPtgSFSw+IbjKKf1bkDE9DwpvYJYld5TLNCLZxjQ3oB6qiiE
-	fA5pZ5I0IbmCBc+O92RGFpR2OpGSjJEbsbcdwHKnZz7BKyXHwxf+VoZUPU6+GFnYBWTc8dCS9FF
-	V9euveZmdLZ6IGbp3TKvvGiegWtNQYmXRB8L/cRV8iUyhMXR91K9cUl6Fojm9NbOxsYS9Rppec1
-	Jaf0gffQbtz3iwICdMUcoJp4LW+CZePnZCMJqmPyFDo3oF4UEWEdIdt0K5atEnHP
-X-Received: by 2002:a05:620a:2991:b0:936:af34:468e with SMTP id
- af79cd13be357-93936bcb3admr243073685a.4.1788100919120; Sun, 30 Aug 2026
- 07:41:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qtps6qlk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v/AHfv4CjiibAPvyDci2+uwni7zr48F70LOk5QcApwCcgOgBTf1n46uWs2A4qs5MthJNggm7nXDQw6GzqFxMOcoqUyJzb+E1WjUTyjBF0Et68oqk3NDgXa5aa62M1CtL2qabsDpwytZHXmI7pRr8DWo7YHnkmCxi4B01z0g0dfHrIaPlyqVKv9KePLCkDiSkFgUNe7CJjxQjILzKFeIK+SC5Onq6uNcBhwmYEaSIuvDqB2hHgF+eNMQv7kPJcRPbeyunNMdHGu1xv/gUrdpIoQQFq4pt5Z7oSfjIE3zg2gqSREifrtzfHROC9JD6ACl8wLfSe9Nmd532j/5kuhqPxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jW94O9jdVYnBy5uF1TQzI28I+JnPSAmZVhCEUm7gMRw=;
+ b=fCWAhK4IU+HSnkaE2AlZeLSjQhu48jky7qpfKt4lOVR5CabzdAFiTEwUaTjP39IqQJcU1zAWIpkrHLZRF26iKOPojYIEH+/FHL+POyVmC5NkRuwyzclDoWUv58vi7UQw42r2FC4z5bR3NSVT7+/P5Xcb8nfFjs+Ez52wWbot7gccZZXk49ll8MkrhNN7Agb6w5Fgr8wQg9zoDsLfoF3A8NzDNxPbditT96/OfVLqYoD3KvZn9tmkQf9QkvIhI0uVFbvU9fiNc8bJPK+EK08ZcryfJ4j+YUN/CvLCIvG2EaT9hAqddY8wMxvKByW9OcUq+iCNZ/Ng2IT9C0uYvBHIMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jW94O9jdVYnBy5uF1TQzI28I+JnPSAmZVhCEUm7gMRw=;
+ b=qtps6qlkS/uNPC4UpRMuCl6GwhqbA4LS6Yj8LqGdY12OMipQ3xwKAS/gXEHHvQd7kZoWE/zbYzcK5h6nThuI1lGszCNzMS+0+JFdDuy2sIZ0wPXv8qGCFEqOaXIQY06RNOrIqGcPsA8KDjXozARGnY6oedwVzZKegnEkzRuUMVg=
+Received: from BN9PR03CA0108.namprd03.prod.outlook.com (2603:10b6:408:fd::23)
+ by SA0PR12MB4463.namprd12.prod.outlook.com (2603:10b6:806:92::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Sun, 30 Aug
+ 2026 14:43:19 +0000
+Received: from LV8PEPF0000005B.namprd02.prod.outlook.com (2603:10b6:408:fd::4)
+ by BN9PR03CA0108.outlook.office365.com (2603:10b6:408:fd::23) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.360.13
+ via Frontend Transport; Sun, 30 Aug 2026 14:43:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ LV8PEPF0000005B.mail.protection.outlook.com (10.167.245.136) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.382.8 via Frontend Transport; Sun, 30 Aug 2026 14:43:18 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.46; Sun, 30 Aug
+ 2026 09:43:16 -0500
+From: Muralidhara M K <muralidhara.mk@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>, <Mario.Limonciello@amd.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Muralidhara M K <muralidhara.mk@amd.com>
+Subject: [PATCH v4 0/4] platform/x86/amd/hsmp: Family 1Ah client support
+Date: Sun, 30 Aug 2026 20:12:52 +0530
+Message-ID: <20260830144256.2113643-1-muralidhara.mk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <178806598504.23591.11490486941444891398.reportbug@localhost>
- <178807922598.807847.18300931641658404390@eldamar.lan> <ac830f9d-ea86-4f49-b88b-9aa8a09015c0@gmx.de>
- <CAL2p-7jB4LUEPhyBy2QjtK+Cn_hMBQ+ereWZryHpZ3JDJ_ZpPw@mail.gmail.com>
-In-Reply-To: <CAL2p-7jB4LUEPhyBy2QjtK+Cn_hMBQ+ereWZryHpZ3JDJ_ZpPw@mail.gmail.com>
-From: Mo Jun <royclark086@gmail.com>
-Date: Sun, 30 Aug 2026 22:41:46 +0800
-X-Gm-Features: AcwNN1WQigLhzHYMImI_yaaj0penJs2Fw872JT4mNKejiAeGOR1zlQRiow_gi2k
-Message-ID: <CAL2p-7hqJOfzLuuXF0b=H1zAzirp4UN+Ty59W2F34PCAdstMsw@mail.gmail.com>
-Subject: Re: asus-laptop: Fn hotkeys no longer work on ThinkPad SL400 after
- 378500dc1313 ("platform/x86: asus-laptop: Register ACPI notify handler directly")
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1146124@bugs.debian.org, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Denis Benato <denis.benato@linux.dev>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>, 
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="0000000000001b75af065a44b030"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PEPF0000005B:EE_|SA0PR12MB4463:EE_
+X-MS-Office365-Filtering-Correlation-Id: e8af8a17-cfa6-4f8f-f7b8-08df06a507f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|23010399003|36860700016|6133799003|3023799007|10067099003|11063799006|56012099006|18002099003|5023799004;
+X-Microsoft-Antispam-Message-Info:
+	MK4TFBthvOng/GilVgRzPiGWEU0XB/+YAkir4vgEAIzidhrjtcIgIr9kpJgbj0DlGEhbcmXNLGaw6+zaM9WYX+/x/5LerGKaVeZ7l25vFyoEReWyf458eexhMXirikzSDgkP+J3hWP9fdVrLoPaRCoYBqIUEoXgUvZ1w6JHO1uDLlgQUAfikwZn8WPsV4V9GEdVREoFHqQ48GJn/2GgjXK8HKILAcKzeILmNbakUsDXBDCdBv777WmmZOmr2YNGAp/cuNruM4qJgKG/JmDlUQlI5FSGf3ZyVNeafSgYit6mcEqZqaoRtWjkLZz+dCe2FELPVnL9gr+ILDvoPZVsKin2MHhQhh1oIreVBlgVQxERLlKzvUxaTxCmQXyTTMWBwS+n51nzI/Yv1fcEne3LCilbpSbQezCFNSpm0b1vuln2esooseOnThMyFGt+BzUVJUoQWxvkISn2iKra6f1VuKo0HCGcoT6Q/jVf2lJiSh7cniybGYwIoxaFlRFAD0tN4JOUZxUOCRxxUTLqx2/viuZBc6Utl4HQCTWmrKc+hKbPASr+/EaaJC9Sb3O0xE/uHj72fj4UKOt7FlGvWVGPkMf6tLMo+KlsQFxBRwFz7l+Re+vcacFE8q13V08NljTenV3vHzQDAOPGOCulKUOoUTUkf6Biplc5hS56LWtu8oCqw5VHwjsVu0qA/AF+1HIa721DSsLZTrPTodvq/gJNnmA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(23010399003)(36860700016)(6133799003)(3023799007)(10067099003)(11063799006)(56012099006)(18002099003)(5023799004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	st+5ldCDhmNxvKBhar1elv3q626qRYi7lgijAUH5/ouTTnEn9kkiqeln6sgI1bupaCoChJx9mZWs8Gp5dUSAkp2fjBXE5PbXX/DiyxtkaVgkgvZW7UmyGBkq8z7gH3J9yTqrUeeczv16JXzeNQNsSd2wscpPPb7ZxDHWBMx2wvkFpVZKiqMLgXShpLT/fuNr5B2RgPAM9LvCORjcx2zxtuuIbcl63jHUajiJg63znfWZ+R9k7J03gutMqhQeyqnfKxHL+CV0W/JVCcuuSNJ/+vkftFnlxCgHZPJPmqY4D/w3lMTywQ/FOQfA4+bDnFRbvMSiC4MJKIcI5ZXBwdLaqO7OM5PTJkHXMLOCZxwBW1IDxGJY+Vx2EyqeWqaY2JFRF7FN33BmRRLnx7nF7gPnfemeS/scItOumn8BVpgsGMuIdxQoimmjIc7amcZ/q/E2
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2026 14:43:18.2090
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e8af8a17-cfa6-4f8f-f7b8-08df06a507f0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	LV8PEPF0000005B.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4463
 
---0000000000001b75af065a44b030
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This series enables the HSMP driver on the Family 1Ah client platforms,
+Models 80h-8Fh and E0h-E3h.
 
-Hi Armin Wolf,
+The client parts drive a different mailbox from the server HSMP
+interface, but the latest BIOS describes it through ACPI _CRS/_DSD the
+same way a server socket's mailbox is described, and the parts speak
+the Ryzen Master SMC message set instead of the server message IDs.
+Patches 1-3 teach the driver the message set and let the client reach
+its mailbox through the existing _CRS/_DSD-driven MMIO path, leaving
+server behaviour unchanged, and patch 4 includes the telemetry table
+those parts return. Only the ACPI driver probes them.
 
-On Sun, Aug 30, 2026 at 9:26=E2=80=AFPM Mo Jun <royclark086@gmail.com> wrot=
-e:
->
-> Hi Armin Wolf,
->
-> On Sun, Aug 30, 2026 at 7:59=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote=
-:
-> >
->> [...]
-> >
-> > I think i found the culprit, could you please test the attached patch?
->
-> Build the module with the patch(only "make -C .
-> M=3Ddrivers/platform/x86") and load the built
-> drivers/platform/x86/asus-laptop.ko, now the Fn hotkeys works again.
+Changes in v4:
 
-I found that after rmmod the built module, it can not be insmod again.
-Also the system experienced NULL pointer dereferences in
-acpi_bus_generate_netlink_event() which may related to the built
-module.
+  - SMU now answers the interface version query on client platforms,
+    so hsmp_desc_client.proto_ver_msg goes back to
+    HSMP_CLIENT_GET_INTERFACE_VER instead of
+    HSMP_CLIENT_GET_METRICS_TABLE_VER.
+  - Add Reviewed-by tag
 
-I guess these was caused that the patch only change calling to
-acpi_dev_install_notify_handler(), not
-acpi_dev_remove_notify_handler().
-After change ACPI_DEVICE_NOTIFY to ACPI_ALL_NOTIFY in calling to
-acpi_dev_remove_notify_handler()(see attached patch), now the module
-can be insmod again after once rmmod.
+Changes in v3:
 
-Regards,
-Jun MO
+  - is_client_platform() now tells client and server apart through the
+    ACPI-reported PM profile (FADT preferred_profile) instead of a
+    hardcoded Family 1Ah model range, the same signal amd-pstate
+    already keys off of. Future client generations are recognised as
+    long as firmware reports the right PM profile, with no driver
+    update needed.
+  - hsmp_desc() now resolves the running platform's descriptor once and
+    caches the pointer behind READ_ONCE()/WRITE_ONCE() instead of
+    recomputing it on every call. Concurrent first callers are benign,
+    since every one of them computes and stores that same pointer, so
+    the pair only needs to keep the load/store from being torn or
+    reordered by the compiler, not order it against anything else.
+  - The client message enum in amd_hsmp.h is now documented with
+    kernel-doc, one @member entry per message describing its inputs
+    and outputs, rather than a block comment plus a same-line comment
+    per enumerator. Noted there that not every platform supports every
+    message and that an unsupported one returns -ENOMSG.
+  - Patch 4: the Telemetry Table RM layout moved out of the .rst and
+    into amd_hsmp.h as real kernel-doc'd struct/enum declarations,
+    giving userspace one authoritative definition of the byte layout.
+    The .rst now just points at struct hsmp_telemetry_table_rm. The
+    structs are now also packed to a 4-byte boundary to match
+    firmware's actual layout, and the trailing NPU/PMF counters and
+    spare padding firmware carries after the overclocking fields are
+    no longer missing. Verified field-by-field against AMD's internal
+    metrics table header and end-to-end against a live snapshot off
+    Family 1Ah client hardware.
 
---0000000000001b75af065a44b030
-Content-Type: application/x-patch; name="asus-laptop.patch"
-Content-Disposition: attachment; filename="asus-laptop.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mtfwyujb0>
-X-Attachment-Id: f_mtfwyujb0
+Each patch builds individually at W=1 and is clean under
+checkpatch.pl --strict, kernel-doc, codespell and the htmldocs build.
 
-LS0tIGRyaXZlcnMvcGxhdGZvcm0veDg2L2FzdXMtbGFwdG9wLmMub3JpZwkyMDI2LTA4LTI4IDE0
-OjI1OjIyLjAwMDAwMDAwMCArMDgwMAorKysgZHJpdmVycy9wbGF0Zm9ybS94ODYvYXN1cy1sYXB0
-b3AuYwkyMDI2LTA4LTMwIDIyOjIwOjUxLjQ3ODU2NTg2MSArMDgwMApAQCAtMTg4Nyw3ICsxODg3
-LDcgQEAKIAlpZiAocmVzdWx0ICYmIHJlc3VsdCAhPSAtRU5PREVWKQogCQlnb3RvIGZhaWxfcGVn
-YV9yZmtpbGw7CiAKLQlyZXN1bHQgPSBhY3BpX2Rldl9pbnN0YWxsX25vdGlmeV9oYW5kbGVyKGRl
-dmljZSwgQUNQSV9ERVZJQ0VfTk9USUZZLAorCXJlc3VsdCA9IGFjcGlfZGV2X2luc3RhbGxfbm90
-aWZ5X2hhbmRsZXIoZGV2aWNlLCBBQ1BJX0FMTF9OT1RJRlksCiAJCQkJCQkgYXN1c19hY3BpX25v
-dGlmeSwgYXN1cyk7CiAJaWYgKHJlc3VsdCkKIAkJZ290byBmYWlsX3BlZ2FfcmZraWxsOwpAQCAt
-MTkxNyw3ICsxOTE3LDcgQEAKIHsKIAlzdHJ1Y3QgYXN1c19sYXB0b3AgKmFzdXMgPSBwbGF0Zm9y
-bV9nZXRfZHJ2ZGF0YShwZGV2KTsKIAotCWFjcGlfZGV2X3JlbW92ZV9ub3RpZnlfaGFuZGxlcihh
-c3VzLT5kZXZpY2UsIEFDUElfREVWSUNFX05PVElGWSwKKwlhY3BpX2Rldl9yZW1vdmVfbm90aWZ5
-X2hhbmRsZXIoYXN1cy0+ZGV2aWNlLCBBQ1BJX0FMTF9OT1RJRlksCiAJCQkJICAgICAgIGFzdXNf
-YWNwaV9ub3RpZnkpOwogCWFzdXNfYmFja2xpZ2h0X2V4aXQoYXN1cyk7CiAJYXN1c19yZmtpbGxf
-ZXhpdChhc3VzKTsK
---0000000000001b75af065a44b030--
+Muralidhara M K (4):
+  platform/x86/amd/hsmp: Add HSMP client support for Family 1Ah
+  platform/x86/amd/hsmp: Route metric table through the client messages
+  platform/x86/amd/hsmp: Add ACPI client support for Family 1Ah
+  platform/x86/amd/hsmp: Document and expose client telemetry table in
+    UAPI
+
+ Documentation/arch/x86/amd_hsmp.rst  |  24 +-
+ arch/x86/include/uapi/asm/amd_hsmp.h | 398 +++++++++++++++++++++++++++
+ drivers/platform/x86/amd/hsmp/acpi.c |   2 +-
+ drivers/platform/x86/amd/hsmp/hsmp.c | 269 +++++++++++++++---
+ drivers/platform/x86/amd/hsmp/hsmp.h |  27 ++
+ 5 files changed, 686 insertions(+), 34 deletions(-)
+
+
+base-commit: 08dbfad3f5040f5bdb6c529da20d6d4e81fefd72
+-- 
+2.34.1
+
