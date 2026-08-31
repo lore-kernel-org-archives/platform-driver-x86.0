@@ -1,154 +1,97 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-106120.protonmail.ch (mail-106120.protonmail.ch [79.135.106.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351753624C5
-	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 17:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADE5396B73
+	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 18:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788199145; cv=none; b=MvoOHHcXmTcsmIf4Ko7sivSqHwg06EcnG14KlZ85eXvijrZ6IwxfBYaib2WCw7oubrPuiDw3CQ5JB6IVf4EEuAQ65mRuxIP32OoYyjlAgqlzot6VMf87/5PEoiq53yOHSFUfPUCa0UJCUy+u0yp9aTF4jXQuqVstfXjdT3ux9C8=
+	t=1788199732; cv=none; b=fi/qePwvab8Nz+x9qvoYb0gAbGR0II3BJzY8D7n943IKF2TJRhQpwWrzaBgh6teWA0M56Fu+kc+0Aa/4Y/Rjf3Y3iotOFYFSZo6AJ9odOIPLKS/QkkaatDPEX4RsdBh1m1C3tGilvMAhRv+AjXOr/A2Vpoa28C4n67wXm0D/e8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788199145; c=relaxed/simple;
-	bh=fMvS95Zokxhi4YAY/DKRZh4u0zJjTtwNe/Ad1WemONA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSikOF65fREQpK9uofV0wMfN/YIXZBYVU2VRIOUByAgs4SSPq79isJ/I9q13OhQpqn4p2kRa6KU/qfa2J2Luo796Bya6jb0Tl3V7vBYHJpzUZGMK5u+Jh0n0a8wZGO5ez2bpmivMsb5Ub9i6i5clZG1t+PUIj9SX5w7zg98pNQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFtXxhmG; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788199732; c=relaxed/simple;
+	bh=pKKPWnil6aZM92FvO2EtFHScDtXvo48CLmoVvqXVCJ4=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uDukLFKwNjgIS6KNnk2EbpOhNEdijzw4192i2o9i6pGuV2ajHyyd7HGmrGsXhCGrjZ5PGQUiXY8mf/zOsXPdkTOkykkh5Wscusp4N1Hm9qDasA6C/6SiFbKq/HyIyKDrqPuw9aRw83eMGSlUzQxp3NDQUiRmg4Nz3EoS3gmW244=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=Zx6OsNUt; arc=none smtp.client-ip=79.135.106.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFtXxhmG"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cbee846deecso80794a12.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 10:59:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788199142; x=1788803942; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=2ZgJ5g0NbcsQZow9nFskcMFtht0b6aFS+BcFnkpsMUc=;
-        b=fFtXxhmGbnlogy0zGaOAsEU8RfCdLAm2l2jewh7ubAP+7+Lhwf+jZd/2qaDwzMJuvp
-         6py6zEpPGn5jHIQJC+ExeWJxVnYJXVqPqBeNPUiBRA2EIswzT3FFKSB0qs1d2Bdu5Gjv
-         c/F6rvdOxg4ob6anZSk2GY637/KtOPuV9nDyMObDbM6WBnwQL6YNyQuk6U2MT+SWpakl
-         bhFcqAkopJkaYKgXs5r2T1SWy5Exxi3MGrUmv8iyApO+nCJqgk9SG/9JBnGt9KPJzNkS
-         bpDt585NE9AYOxsuQkfCW0gOXQCnB8t7Vhl8ABX4f4q/R+3/6h/HYi3giC+AxqDYMho/
-         GUQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788199142; x=1788803942;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:from
-         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=2ZgJ5g0NbcsQZow9nFskcMFtht0b6aFS+BcFnkpsMUc=;
-        b=SVkfV/0+kr9cnBoUdnvhrdJVnJfk0KrqroEhNPZRzbaWjrGgXVHVwikSJcYcmz3Xqc
-         zzWDfqF6dbBgaUXNAhpfZExbkirYHVTkQ8wL26XYl2Nq8qrKMNStEW8C2QWYB+KnCaKz
-         hCDXT4vG0shUcYN6aKG3g3qh4VVdkLpsc+FauKxeOz8WQ5167C9SMl/nRwsG9gbaAQLb
-         JOtFBHJRT/v1QnLINr39mMQpyi7/zkLVnn+m5/NelbcTM9sxBSZxYLqmeWqTXE6YRUOH
-         HhKgayaNaygMKl5iZZh2pjCnkcMmT7iWgh5+JlJAaLJCBfQoJLMzPX760lY+cYGnE6tG
-         RBJQ==
-X-Forwarded-Encrypted: i=1; AHgh+RppIfpxL1zEfbdBLczyQGn9crpA/1d28Qc2802aFl1+GCF7fjqWQge7w57EES7gQ6f+HKZ1eVS7L3YT/d2I0YTcDqWN@vger.kernel.org
-X-Gm-Message-State: AFuF++kHdTVC8vJu1lBmtQK6SF8tFNdsxwirMhQZ2FivoZtQd1WpJ89D
-	fc+hp5tVE+q/Z3tf1jp6Ey37IOeNt3cB+jF8HuLD11luyBReSfQBFEDo
-X-Gm-Gg: AR+sD12+D34kEYP0zFOyZrzVXiIqcF+5O9sXDXDpibY5dTOyperSuCbTmM058syIVxg
-	26FerD5llcjrxfKlGohPsdjKOQLvueQ+HGDsZXb5jM8xqKcXD9IOjHGOfPXxTDs5ZWEELzabogD
-	0IBNCPmyPeQ5EmomwmCdd6je3pE7tgr621MX8czVXcnfymdKP9vQhyYvJjk9YtuQb0mIwbZBKgc
-	PrC60imnzwRmeF0w0eheaP16HO/TviqvW1Dt61olcbhOjbjJupOi//+HJ0cIfOb9BrEn24DDKor
-	qJL21OOj8m0It2BFIyekYXOFmK5cnjvQLJaDKQXBbPGr7JD0ZUZrUbwz5L+kwwnMuhzCcK+Jm37
-	ZRFixX1ivviCXD2tSuRdPV5phwVP38QGW+B6z7tUCV71JwbknisKqOWkFeRd0hUOkvSxMxowJoJ
-	7sm2RqblsoBSmLXX6G8J1PxBhktsCFuyBg9IRZBQnpq62far+8WbtwMFrK/tTLLdMjorO3tB5zV
-	pD+c552VzrZ3a9TXz0tYecP/1v3RuwxsLLv1jM/wTX9e3y6AZXEeku6iKLCBmtU2bhI
-X-Received: by 2002:a05:6a21:498a:b0:3d3:ae50:97cd with SMTP id adf61e73a8af0-3d3ae5099c5mr26881038637.26.1788199142325;
-        Mon, 31 Aug 2026 10:59:02 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286fa37fa5sm34701575eec.29.2026.08.31.10.59.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 10:59:01 -0700 (PDT)
-Date: Mon, 31 Aug 2026 23:28:57 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Arda =?utf-8?B?RG/En3U=?= Ari <arfeliousheres@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: hp-wmi: Fix board_params typo for 8DD6
- board
-Message-ID: <apW_MbaycTf33RWu@archlinux>
-References: <20260827235139.154462-1-arfeliousheres@gmail.com>
- <apKKuL5lh2OK-6lq@archlinux>
- <8cc78401-cc88-3136-5d72-eaab779a8690@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="Zx6OsNUt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1788199728; x=1788458928;
+	bh=ud9Z8Bw5t6Z2OMZmDvaT+RhQGQ0VuInIaw0zRd2D2fs=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=Zx6OsNUtNSkxqlqsiku0oFstV92IetTWq6eIXCijHs/bsNOG2Ii/ZF03sCI9Bi0eR
+	 9L1rQvRXrAz4doB8I7VMVMY9LvddgAK3jNjzFeErjzmxgfrguRqp+iGznZA2gk+3KC
+	 nqw4YxjPTGyxyW6zk3FQOYGnTp7V1mr07e2qSLyaJC3YmvVXfdGtizi67YSNcxL2af
+	 q6yFxxkHVlEH/nn3fGXOTDNWbX9/vIKNQxcC5Ea5fZMlrwGqzNrQFwsxKuJ3MiuSdi
+	 0sasg3BtwL4trtOVegn68EzIBWBafCIm+MINHrGQGnd0aIl1w0EFbXurzFYHBdVHGZ
+	 8eDWPrrvMLDOQ==
+Date: Mon, 31 Aug 2026 18:08:42 +0000
+To: Daniel Scally <dan.scally@ideasonboard.com>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Hans de Goede <hansg@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
+Subject: int3472: the vendor GPIO type table, and four values that differ
+Message-ID: <20260831180837.69000-1-lsa.uz@pm.me>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: ec6d30b849da34829e65d0e8b9e493a639e056e3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8cc78401-cc88-3136-5d72-eaab779a8690@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 31, 2026 at 07:38:40PM +0300, Ilpo Järvinen wrote:
->On Sat, 29 Aug 2026, Krishna Chomal wrote:
->
->> On Fri, Aug 28, 2026 at 02:51:39AM +0300, Arda Doğu Ari wrote:
->> > When adding support for board 8DD6, &omen_v1_no_ec_thermal_params
->> > was passed as driver_data instead of &omen_v1_no_ec_board_params.
->>
->> Hi,
->>
->> When I added support for 8DD6 [1] &omen_v1_no_ec_thermal_params was
->> indeed the correct quirk. But because Radhey Kalra's board-specific
->> feature data patch [2] was accepted first, my patch probably lead to a
->> merge conflict that had to be resolved manually, which is why this is
->> subtle bug got introduced in the first place.
->
->It's my fault for not catching it (though to my defence, I got sick around
->the time the merge window ends so I had less time for handling the patches
->in the first place and I only now realize compiler won't catch this
->problem for me because the old structs are still there).
+Working on the cameras of a Surface Pro 11 (Lunar Lake) I pulled the
+complete GPIO type table out of Intel's Windows camera driver,
+iactrllogic64.sys. Ten of its twenty entries correspond to constants in
+int3472.h. Six agree. Four do not, and I cannot tell from here which side
+is right, so this is a question rather than a patch.
 
-No problem, take care.
+The table as the vendor driver indexes it:
 
->> > Because active_board_params expects a pointer to struct
->> > hp_wmi_board_params, dereferencing active_board_params->thermal_profile
->> > results in a type confusion bug and invalid memory access. Update the entry
->> > to point to omen_v1_no_ec_board_params.
->>
->> Thank you very much for observing and sending a patch for the same.
->
->I've queued the patch to the review-ilpo-fixes branch already. If Krishna
->wants to give a reviewed-by tag, I can still add that to the commit.
+  0x00 Reset          0x01 Enable         0x02 Strobe        0x03 Torch
+  0x04 Flash          0x05 LedRear        0x06 LedFront      0x07 Power0
+  0x08 Power1         0x09 Standby        0x0a WriteProtect  0x0b PowerEn
+  0x0c Mclk           0x0d PrivateLED     0x0e Avdd          0x0f Core
+  0x10 Handshake      0x11 HDMI_INT_IO    0x12 HDMIDetect    0x13 Reserved
 
-Reviewed-by: Krishna Chomal <krishna.chomal108@gmail.com>
+Why I believe the indexing rather than a coincidence: five entries land
+exactly on values the kernel arrived at independently. 0x00 Reset, 0x07
+and 0x08 Power0 and Power1, 0x0b POWER_ENABLE against the vendor's
+PowerEn, 0x0c CLK_ENABLE against Mclk, and 0x0d PRIVACY_LED against
+PrivateLED. Five independent hits on a plain array index is not chance.
 
->-- 
-> i.
->
->> [1]:
->> https://lore.kernel.org/platform-driver-x86/20260623141314.33947-1-krishna.chomal108@gmail.com
->> [2]:
->> https://lore.kernel.org/platform-driver-x86/20260615091034.987029-1-radheykalra901@gmail.com
->>
->> > Fixes: a7320d6eb9c42 ("platform/x86: hp-wmi: Add support for OMEN MAX
->> > 16-ak0xxx (8DD6)")
->> > Cc: stable@vger.kernel.org
->> > Signed-off-by: Arda Doğu Ari <arfeliousheres@gmail.com>
->> > ---
->> > drivers/platform/x86/hp/hp-wmi.c | 2 +-
->> > 1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/drivers/platform/x86/hp/hp-wmi.c
->> > b/drivers/platform/x86/hp/hp-wmi.c
->> > index b2773fc1aca4..615b4cf6fc45 100644
->> > --- a/drivers/platform/x86/hp/hp-wmi.c
->> > +++ b/drivers/platform/x86/hp/hp-wmi.c
->> > @@ -337,7 +337,7 @@ static const struct dmi_system_id
->> > hp_wmi_feature_boards[] __initconst = {
->> > 	},
->> > 	{
->> > 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8DD6") },
->> > -		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
->> > +		.driver_data = (void *)&omen_v1_no_ec_board_params,
->> > 	},
->> > 	{
->> > 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
->> > --
->> > 2.55.0
->> >
->>
+Where we disagree:
+
+  value   int3472.h              vendor driver
+  0x01    POWERDOWN              Enable
+  0x10    DOVDD                  Handshake
+  0x12    HANDSHAKE              HDMIDetect
+  0x13    HOTPLUG_DETECT         Reserved
+
+0x12 is the interesting one, because HANDSHAKE appears on both sides but
+two slots apart. If the kernel's 0x12 came from observing a machine
+rather than from documentation, one of these is off by the distance
+between 0x10 and 0x12.
+
+I have no machine that exercises any of the four, so I cannot test them.
+If the kernel's values were derived from hardware that works, they are
+the better evidence, and this table is Intel's internal naming for a
+different set of platforms. If any of them were inferred, this is worth
+a second look.
+
+The ten values with no kernel constant may be useful when one turns up
+in an unfamiliar _DSM: Strobe, Torch, Flash, LedRear, LedFront, Standby,
+WriteProtect, Avdd, Core, HDMI_INT_IO. Two are already relevant
+elsewhere. 0x02 Strobe is what an infrared illuminator uses on sensors
+that route it through the sensor's own GPIOs, and 0x0e Avdd names a rail
+int3472 already registers under that name from a different type.
+
+Provenance: read out of the driver binary shipped in the Windows
+DriverStore on my own machine. I am not attaching the binary or quoting
+code from it.
+
+Sergey Lebedev
 
