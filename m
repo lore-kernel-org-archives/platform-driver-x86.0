@@ -1,77 +1,64 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C363CF95E
-	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 12:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B6C3F9F45;
+	Mon, 31 Aug 2026 12:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788180459; cv=none; b=mKqNUul1UVEZl0pM7Mnfvgm1IKTdT4aB4RI1QDV5SROHTSp2k0oLZ4dYbE2uRz+eoBep7PSuyj5IyGZ5EbUMpQNSbcS4jbW7ptIInX48MQx5GEuNDB8xn8XVFneVL9Vd2SWsRfz00w5eaIM0JeqOAXWQEt9kClFXATa8Laa65aY=
+	t=1788180720; cv=none; b=ntoIQBwwwbLaBbqFL1l4NnbtgPnUuKZgkG+AZIv/AjSSdqVxD0+BEzTvickoJvXoO1bmogzZHBY9+u4SvYaUu+Kl1TQA1b0XRQ9lSkgzQnAFvJVtU6cmTen1+Vt7PnurFtqArNbxZo3IB6lKCf578vziLQzanZja5ZGlNXi/g68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788180459; c=relaxed/simple;
-	bh=wh/usU8PfMdv8Q0zcva5WvxQQI9WUSSFSzU9ey8jYxI=;
+	s=arc-20240116; t=1788180720; c=relaxed/simple;
+	bh=Oajofr7KPV85sFuo8LuV95A6tWjTPeAaHRq02rjjfeU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yg/9NiDpBx5OCG047ix5TUeuysUnXvJS+lPzFpCugL8YnBHeAFzW5S/S45b9a9Kl2iPjmMsh8GWNfG9CEGvHbXt68sOiWhsdOTQxAimKUxV6CUV+PkPqh1hvXCjKNbzbS5PQttYDhtqJaz/d3B/RT1ahiHRvt0jvNx6OdYbBJK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aW4FYJdH; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IeDKUKt2GUJzRdWq4Q8jb2+lxHmGpSKia3txq0dFrMFO4/9dA34LDYJt4aKVMx8SoEc7fyMakQ3eXbPQzHBffV+nG9RziNppI4whlEGV35cz1Lsy9zouZ8CX4koMT7g91nA4GDGrMPtDJN5Nwqa+NH/mkz4e7aEobn4SF0PITTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UbLRK3oa; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aW4FYJdH"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-381b831d535so5890051a91.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 05:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788180455; x=1788785255; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Wgm3ZGfYPmE/vTxPbnTRUSBVqhRpYYPYKdu/n7NN0+A=;
-        b=aW4FYJdHMvAHmv43bxg7/qcAGOr31VqhPy/9bev0g84ZCZQEEb+Gxt9ZmtSpgF/Ol6
-         65TkabUFwCw6yAUaIkeVpV7vKkqAFDeVYnUYeMw/OQhFmsteWE2QDzNaPFFnf3gY6fF/
-         lbZJHUjhYxQFY9db4d9DgWhE+5LGoNidK8eGf8o2EzQPzDqaZfTKG2kujBo0lXBp7lVE
-         C7TbscmlSA91LWQFHoPfIrYkxF2o17RLMj+eqi2IxB3vbE2bCDb/8Ujl9KeZJjEeoLOc
-         HkuxyCQM5g8S4dtESlHuiY5yeSiNoVU1RglVWjt95EXBZ3nzQBjzKbXy8zZN7we3J3Oo
-         +4WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788180455; x=1788785255;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Wgm3ZGfYPmE/vTxPbnTRUSBVqhRpYYPYKdu/n7NN0+A=;
-        b=EIbFNNY8BEIAZ+/zKZ5Ybs3QTVCxHhkB4q4AKCzW8djOBYSWeZTb+MojqLEyPEaTNf
-         7aMkqmeEWf5YwDzJWbAg+cfeb43+5gKOxrKdQgizM5s85gxfKfIyKenp+otPCZ+kYGHL
-         CnjShNY5wXr88xq9Zomtrs8/cEF7cgm7Cv+H8XZf1L00Y+fOVXr+VBa3deDRrZxPdoua
-         49giA/c/jUMy3VTv7MDXiEj+NM7ytHzSXJ6kjeYldL5i6ZbUd1pe9HVcY9btKMxTlTHT
-         8tZAN3s3Sjjxm7Bc1OA74CWoNSRxrTOrb3nc6/Nij5kIwSxsHUC8LjI6Ls1PvgIHe5wI
-         78ww==
-X-Forwarded-Encrypted: i=1; AKwUvBwJ2Zv7r6w9M7AsHREGRXI0kjnrZomADsiEuTu7daU1IS4fQD1/I+jq7tga5IvOTAMNMgC0W9SAIVIJ4lpknq0vlhTs@vger.kernel.org
-X-Gm-Message-State: AFuF++lolP/leU1qICyZEohMeJ8ZR861+DOTVyhogfsI4001Hha8ewvP
-	rPLSHjm0Q/zKCF7MOVkgdivCyr88bacYYjN+CeNmb1Y2WoQFzRoFGEbY
-X-Gm-Gg: AYBFou1KCEoxXy7jo+aCuSkHbs7mwkKBQ1tI43bD6lIj2OgoZd1ceetC6xFDXObHF0C
-	pr1Zx2n4CDnu8c2oLUcXbhkvC8uIJIxXg8fq63gSTDD28Kr6tQSqeNO8JHCmn1dNxukCaZKvyTg
-	V+iD8MYwe4/3TcVoTkHg34Rxg0xgkF2zR9bp+ef9lbay3796WZaru+W6hjh4i8m7njRIMJkeyBV
-	OljSRJY9CYOOp7pElvG9/Ee3Bi/h84og/uwyVpXBmOwfkAiTJ2PSziyyzJjoFvBlqFFMpA85pck
-	5Mq/GWZiiex0qPnXK+HZsuHQY9jyWaelP1MeAiuZWyeUrNnFcBraWEvK/SLMPNeStrrmVSnKcNN
-	rri1+H5YqdaqEp/qYhhTw5ZPXGWFzPtyQ+6B2zZKnFBqoCAFtxAsqnFY7FWpOEZczP/Ofrnos7z
-	Uz7Zz/XQfMa4s16zG09kyeC7sKPecSY+jWQDdCeVv3lbF3g8nICh7udCMXfMcZ0Ql/JZr2Qxc8N
-	ChlpBgd1trvwaVVzZIK0dcEqBzsKA==
-X-Received: by 2002:a17:90b:590f:b0:398:9be5:b417 with SMTP id 98e67ed59e1d1-3989be5b4bdmr27613593a91.18.1788180455457;
-        Mon, 31 Aug 2026 05:47:35 -0700 (PDT)
-Received: from google.com ([2a00:79e0:2ebe:8:15e9:e9f4:23e3:4f32])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286fa400c8sm34340875eec.30.2026.08.31.05.47.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 05:47:30 -0700 (PDT)
-Date: Mon, 31 Aug 2026 05:47:22 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>, 
-	Linus Walleij <linusw@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UbLRK3oa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788180717; x=1819716717;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Oajofr7KPV85sFuo8LuV95A6tWjTPeAaHRq02rjjfeU=;
+  b=UbLRK3oaPRsAVIMYjpg7xB8PFmGp6Hv/5S8MM78iR3D2iS5UwfThJ+Bm
+   ATQCJ44RKIOivkgvYpSSi1joOm6Vr6OljrsuRqeOAyFyRXJwvLGQPw+qk
+   emtgWP+kvg8gjcJWYboOhEZDPbzptZmxLuBT0bEWvYqszd8VLM6AiHFQ+
+   vgzPqUYo1tA0rPwB1W1K4lEUfAubWd0FUmdz6AF9tBT6E9uHbe/ZWdPcF
+   Buy5mzPAVHplCY9Q4aIzkThmuPzwaZyk5dSAe7YoFG9S3bL9K1S5makMs
+   jbRqvLb345TC6xsyGD0EKw7rVdQ1QUCVYLKWNxFIHoyDr0hgyWoPxIS+/
+   A==;
+X-CSE-ConnectionGUID: 97hTi5eUTjuoKy765E3bkQ==
+X-CSE-MsgGUID: Zpg5qCWFSoWxoxFK1lQbmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88463140"
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="88463140"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:51:56 -0700
+X-CSE-ConnectionGUID: l4RmVY4yRKewSayijrYXnA==
+X-CSE-MsgGUID: Z2L+3ySJSeazq0gcpPIuSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="267460591"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.140])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:51:53 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id B8B5411F7F5;
+	Mon, 31 Aug 2026 15:51:49 +0300 (EEST)
+Date: Mon, 31 Aug 2026 15:51:49 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Jakob Berg Jespersen <dev@berg.pm>, linux-media@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] platform/x86: x86-android-tablets: fix Arizona and
- Crystal Cove GPIO lookups
-Message-ID: <apV3jbqWfNRa8zN2@google.com>
-References: <20260830-x86-android-lenovo-swnode-v1-0-066a91acb4ba@gmail.com>
- <eadd7091-c61e-4fb7-b1a4-cf307108b199@kernel.org>
+Subject: Re: [PATCH v2] media: i2c: ov13858: add regulator, clock and reset
+ GPIO handling
+Message-ID: <apV45bZYB3MAd7tE@kekkonen.localdomain>
+References: <20260831124352.86935-1-lsa.uz@pm.me>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -80,78 +67,247 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eadd7091-c61e-4fb7-b1a4-cf307108b199@kernel.org>
+In-Reply-To: <20260831124352.86935-1-lsa.uz@pm.me>
 
-On Mon, Aug 31, 2026 at 11:42:06AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 30-Aug-26 1:15 PM, Dmitry Torokhov wrote:
-> > When gpiolib dropped name-against-label matching in favor of firmware node
-> > identity mapping, lookups referencing unattached software nodes (such as
-> > arizona and gpio_crystalcove in x86-android-tablets) stopped working.
-> > 
-> > This series fixes the lookups and cleans up redundant software node
-> > registrations on Lenovo tablets:
-> > - Point Arizona GPIO property entries directly to the codec device software
-> >   node, which is attached to the parent device.
-> > - Hold a device reference in gpio_secondary_fwnode_init() to ensure safety
-> >   during devres action teardown.
-> > - Generalize gpio_secondary_fwnode_init() to accept a node group argument
-> >   and use it to attach crystalcove_gpiochip_node as a secondary firmware
-> >   node to INT33FD:00 on Lenovo Yoga Tab 2 models.
-> > - Drop redundant swnode group registrations on Lenovo Yoga Tab 3 and
-> >   Yoga Tab 2 models where codec software nodes are already registered when
-> >   attached to their respective devices.
-> > 
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> So I've given this a test on a Yoga Tablet 3 (yt3) tablet yesterday and
-> there everything works.
-> 
-> Then I also tested this on a Lenovo Yoga Tablet 2 1380 since the YT3 does
-> not cover the crystal_cove GPIO case and there things do not work.
-> 
-> It seems that trying to get the crystal_cove GPIOs indefinetely returns
-> -EPROBE_DEFER. I'll try to debug thus further this evening.
+Hi Sergey,
 
-I wonder if the patch below will help.
+Thanks for the update. A new more comments below...
 
-Thanks.
+On Mon, Aug 31, 2026 at 12:44:00PM +0000, Sergey Lebedev wrote:
+> The driver assumes the sensor is already powered when probe() reads its chip
+> ID. That holds where the rails and clock are ACPI power resources, but not
+> where an INT3472 companion device registers them as regulators, a clock and a
+> reset GPIO for the sensor driver to consume, which this driver does not do.
+> 
+> Request the three supplies and the reset GPIO, and sequence them along with
+> the clock the driver already looks up, in runtime PM callbacks.
+> 
+> Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+> ---
+> Changes in v2, all from Sakari Ailus's review:
+> - commit message cut down; the detail below
+> - dropped the comment on the supply names; it is a KAPI with int3472
+> - ARRAY_SIZE() directly instead of a local macro
+> - fsleep() instead of usleep_range()
+> - one function each for power on and off, used as the PM callbacks directly,
+>   instead of a pair of wrappers
+> - removed the now-useless dev_err() in the probe error path
+> - i declared inside its loop
+> Link to v1: https://patch.msgid.link/20260831100404.40463-1-lsa.uz@pm.me
+> 
+> Without the patch the first I2C transaction fails:
+> 
+>   ov13858 i2c-OVTID858:00: failed to find sensor: -5
+> 
+> The power sequence follows ov02c10: supplies, then clock, then release reset,
+> and the reverse on the way down.
+> 
+> Measured on a Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7),
+> with the parts isolated one at a time:
+> 
+>   supplies enabled, clock enabled   sensor identifies, driver binds
+>   supplies enabled, clock left off  -EIO
+>   supplies left off, clock enabled  -EIO
+> 
+> so both are needed; a longer settling delay alone is not enough. Verified
+> across five module unload/load cycles with no probe failure, and again after
+> this rework, with the sensor streaming each time.
+> 
+> This needs POWER1 GPIO support in int3472 to be useful on that machine: the
+> dvdd rail is described there as an INT3472 GPIO of type 0x08, and without that
+> patch the rail is never registered.
+> Link: https://patch.msgid.link/20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm
+> 
+> The same sensor on the Surface Pro 10 was made to work downstream by forcing
+> the regulators on for the driver's lifetime, which the people who did it
+> called too broad for upstream. Runtime PM keeps them off while the sensor is
+> idle instead.
+> Link: https://github.com/linux-surface/linux-surface/issues/2153
+> 
+> dovdd is not described on this machine and resolves to a dummy regulator. It
+> is listed because it is one of the three supplies these sensors normally take.
+> 
+> A working camera also needs an ipu-bridge entry for OVTID858, separately.
+> ---
+> --- a/drivers/media/i2c/ov13858.c
+> +++ b/drivers/media/i2c/ov13858.c
+> @@ -3,9 +3,12 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-event.h>
+> @@ -1028,9 +1031,17 @@
+>  	}
+>  };
+>  
+> +static const char * const ov13858_supply_names[] = {
+> +	"dovdd",	/* Digital I/O power */
+> +	"avdd",		/* Analog power */
+> +	"dvdd",		/* Digital core power */
+> +};
+> +
+>  struct ov13858 {
+>  	struct device *dev;
+>  	struct clk *clk;
+> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov13858_supply_names)];
+> +	struct gpio_desc *reset_gpio;
+>  
+>  	struct v4l2_subdev sd;
+>  	struct media_pad pad;
+> @@ -1653,8 +1664,54 @@
+>  {
+>  	v4l2_ctrl_handler_free(ov13858->sd.ctrl_handler);
+>  	mutex_destroy(&ov13858->mutex);
+> +}
+> +
+> +static int ov13858_power_on(struct device *dev)
+> +{
+> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+> +	struct ov13858 *ov13858 = to_ov13858(sd);
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
+
+Please wrap lines over 80 unless there's a specific reason to do otherwise.
+
+> +	if (ret) {
+> +		dev_err(ov13858->dev, "failed to enable regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(ov13858->clk);
+> +	if (ret) {
+> +		dev_err(ov13858->dev, "failed to enable clock: %d\n", ret);
+> +		regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
+> +		return ret;
+> +	}
+> +
+> +	if (ov13858->reset_gpio) {
+> +		/* Hold reset for at least 1 ms on a back to back off-on */
+> +		fsleep(1000);
+> +		gpiod_set_value_cansleep(ov13858->reset_gpio, 0);
+> +	}
+> +
+> +	/* t4: 8192 XVCLK cycles after reset is released, before the first I2C */
+> +	fsleep(5000);
+> +
+> +	return 0;
+>  }
+>  
+> +static int ov13858_power_off(struct device *dev)
+> +{
+> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+> +	struct ov13858 *ov13858 = to_ov13858(sd);
+> +
+> +	gpiod_set_value_cansleep(ov13858->reset_gpio, 1);
+> +	regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
+> +	clk_disable_unprepare(ov13858->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_RUNTIME_DEV_PM_OPS(ov13858_pm_ops, ov13858_power_off,
+> +				 ov13858_power_on, NULL);
+> +
+>  static int ov13858_probe(struct i2c_client *client)
+>  {
+>  	struct ov13858 *ov13858;
+> @@ -1678,14 +1735,34 @@
+>  				     "external clock %lu is not supported\n",
+>  				     freq);
+>  
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(ov13858_supply_names); i++)
+> +		ov13858->supplies[i].supply = ov13858_supply_names[i];
+> +
+> +	ret = devm_regulator_bulk_get(ov13858->dev, ARRAY_SIZE(ov13858_supply_names),
+> +				      ov13858->supplies);
+> +	if (ret)
+> +		return dev_err_probe(ov13858->dev, ret,
+> +				     "failed to get regulators\n");
+> +
+> +	ov13858->reset_gpio = devm_gpiod_get_optional(ov13858->dev, "reset",
+> +						      GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ov13858->reset_gpio))
+> +		return dev_err_probe(ov13858->dev,
+> +				     PTR_ERR(ov13858->reset_gpio),
+> +				     "failed to get reset GPIO\n");
+> +
+>  	/* Initialize subdev */
+>  	v4l2_i2c_subdev_init(&ov13858->sd, client, &ov13858_subdev_ops);
+>  
+> +	ret = ov13858_power_on(ov13858->dev);
+> +	if (ret)
+> +		return ret;
+> +
+>  	/* Check module identity */
+>  	ret = ov13858_identify_module(ov13858);
+>  	if (ret) {
+>  		dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
+> -		return ret;
+> +		goto error_power_off;
+>  	}
+>  
+>  	/* Set default mode to max resolution */
+> @@ -1693,7 +1770,7 @@
+>  
+>  	ret = ov13858_init_controls(ov13858);
+>  	if (ret)
+> -		return ret;
+> +		goto error_power_off;
+>  
+>  	/* Initialize subdev */
+>  	ov13858->sd.internal_ops = &ov13858_internal_ops;
+> @@ -1729,8 +1806,10 @@
+>  
+>  error_handler_free:
+>  	ov13858_free_controls(ov13858);
+> -	dev_err(ov13858->dev, "%s failed:%d\n", __func__, ret);
+>  
+> +error_power_off:
+> +	ov13858_power_off(ov13858->dev);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -1744,11 +1823,14 @@
+>  	ov13858_free_controls(ov13858);
+>  
+>  	pm_runtime_disable(ov13858->dev);
+> +	if (!pm_runtime_status_suspended(ov13858->dev))
+> +		ov13858_power_off(ov13858->dev);
+> +	pm_runtime_set_suspended(ov13858->dev);
+>  }
+>  
+>  static const struct i2c_device_id ov13858_id_table[] = {
+> -	{ .name = "ov13858" },
+> -	{ }
+> +	{ "ov13858" },
+> +	{}
+
+This is an unrelated change (and not preferred either).
+
+>  };
+>  
+>  MODULE_DEVICE_TABLE(i2c, ov13858_id_table);
+> @@ -1766,6 +1848,7 @@
+>  	.driver = {
+>  		.name = "ov13858",
+>  		.acpi_match_table = ACPI_PTR(ov13858_acpi_ids),
+> +		.pm = pm_ptr(&ov13858_pm_ops),
+>  	},
+>  	.probe = ov13858_probe,
+>  	.remove = ov13858_remove,
+> 
 
 -- 
-Dmitry
+Kind regards,
 
-From 9376af2b6a9c91cd6a05969b583f40d451050988 Mon Sep 17 00:00:00 2001
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date: Mon, 31 Aug 2026 04:59:24 -0700
-Subject: [PATCH] gpio: crystalcove: add missing MODULE_ALIAS()
-
-The crystalcove GPIO driver lacks a MODULE_ALIAS() to allow it to be
-auto-loaded. This results in consumers indefinitely deferring their
-probe with -EPROBE_DEFER (waiting for the GPIO controller to appear)
-when it's compiled as a module, as it will never be loaded.
-
-Fix this by adding the missing platform alias.
-
-Fixes: 104fb1d5153c ("gpio: Add support for Intel Crystal Cove PMIC")
-Assisted-by: LLM
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/gpio/gpio-crystalcove.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crystalcove.c
-index 0fb5c06d0886..ab7fab5b9754 100644
---- a/drivers/gpio/gpio-crystalcove.c
-+++ b/drivers/gpio/gpio-crystalcove.c
-@@ -396,3 +396,4 @@ module_platform_driver(crystalcove_gpio_driver);
- MODULE_AUTHOR("Yang, Bin <bin.yang@intel.com>");
- MODULE_DESCRIPTION("Intel Crystal Cove GPIO Driver");
- MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:crystal_cove_gpio");
--- 
-2.55.0.897.gb25b4bd76c-goog
-
-
-
-
+Sakari Ailus
