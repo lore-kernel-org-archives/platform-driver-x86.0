@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E70C471258;
-	Mon, 31 Aug 2026 13:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B005803B5;
+	Mon, 31 Aug 2026 13:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788184173; cv=none; b=oLv6nToyceUx5BBd2qcO6b2NUO5WTT/1gs4MRLqo3wrq7JRsvy9vG9wHh++5pOd9LjvzQNfZrPPhzdsDaJh/LvqLS9kWYfhc/995ea+7RT3W/Vo6I17IIyxupfhW1z1oHIcQKEYdE8zzyf9pavb9Q66a0bvwEZ/69ZNjs1NYdbo=
+	t=1788184189; cv=none; b=jkl17QpZ34+ofbnYpUL9OVSVoCAMv6cBHXU8G518RPCj873ZoZq0qlXZxM7xrdpFS2ZIhDwz1odOEUvDBCf1wudnr/d9jd4C+akDhag3xuQWJ1Y9kiwV1jVOQLsQnLJxNB3ax2FyLogoP82PJYXYdJNtEXZvMegeTRX5iRrNRwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788184173; c=relaxed/simple;
-	bh=maj71gLSTEZs/M0cVdDA3QZ9a3mo5d82Pd/9XOvqcuE=;
+	s=arc-20240116; t=1788184189; c=relaxed/simple;
+	bh=LPueD1hUsDjQlY4SKgu6VHjnhiah98+PhF0cjozIjDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HkzCbVRF8vtP+vUYXexJIjv2f/7nKJOhdtc90rAaT8/86TUMztLKoNIPUfUn+alK9Eew7YJYubArXvH6ECgrtQDjFwmRzT8hBeVhpONLiSBXX9ut+Q7u6oV1zGO3muYnzKhGUACW+59mpuCJqbFvurwZfTg/UVKBIXo/PdEd1NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6s9jtme; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ifTzv3kGi3xn2WK17+Ks9pvkZcAFkXUXpXPyUMf5RQKeFFwxORn8ofB2Jqty4RROH7+uccL1CwSiqy2GolE6E08d9FIFBMg/JRFahvhBKgpgytm/URYfA6/BiDxGQMY8lNRq3YMDSvXqksbYxPUV+JX4xvT2A4jXnde+CGzXYXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cbLXvWdT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6s9jtme"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F041F000E9;
-	Mon, 31 Aug 2026 13:49:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cbLXvWdT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3B91F00A3D;
+	Mon, 31 Aug 2026 13:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788184171;
-	bh=KWH8q/+Nf3LEPl4TzZQQclYGb8veuIRW8X4vfBv1HmA=;
+	s=k20260515; t=1788184186;
+	bh=sEnbmS/e3mUQWPuHjNXWSDPAdU/HRaTajz+dBcPwjX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=A6s9jtmeVpM01M3WzbUvMowGFAyMwh82ZyLtk6G4ZJDlDHp3CWJUCPvQ7LLgoTFC8
-	 JjjaYXrW/Pc6E2Y9uOHJkymdHcoh1qt6rpOp+DX/SecXXhFw+tn/1KqNK3vap8TRk+
-	 v9MJ++b6lMK7NyuzPxYOOkeozaoM5do/+vdzPQ7NqVlUTjapbpeva7xyxB2MA+XkNT
-	 Cj31VmvkED1V9p8JwPtjjvqWPrwg4YuAFVcNF+9YY4GUw9EsdAgu4KpllDFZ3IE+B8
-	 h8gATBZm9J20+ZGO8EkFKMTAU4IevDL9moftOYRJJ/PMRGW6Bl22yAWA4WEWoDaPVa
-	 r77kR2vBzYmDg==
+	b=cbLXvWdT39QgBFWWQBTWB6aOXGRgsvBs/9IFM31ocpAPeazTpEtV/8NJcomr4E9Xq
+	 6GUwAgdD+MTJ1Yess+8jAVekVnyy/dvznlSwKYscDwi/+NCnbnhHimCmrqR7TbbJBw
+	 iNQsakS8gTd/NISmDC7qYoUxSukHYk1vZDAfE1Wq1mCAHbvFg258p4nt+9V9PWJsVU
+	 hO47biD36a1k2PN+985Qi0SWqV3X5I91kR5xGp8UE0kppdWwxbv5IyknQk4/ArW/J1
+	 ljoFItTHa1hVrWejwOyB0ytX1ZUtW256O8o+w73bG/8SSRFbjkoQ5OST+UTKWrYCnk
+	 gAkfF+xlLQpWQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Muralidhara M K <muralidhara.mk@amd.com>,
-	Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>,
+Cc: Luis de Carlos <reskoldo73@gmail.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	naveenkrishna.chatradhi@amd.com,
+	teackot@gmail.com,
 	hansg@kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.18] platform/x86/amd/hsmp: Clamp ioctl/send_message indices (Spectre v1)
-Date: Mon, 31 Aug 2026 09:29:21 -0400
-Message-ID: <20260831133314.4125787-533-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.18-6.12] platform/x86: msi-ec: Add support for MSI Pulse GL66 12th Gen
+Date: Mon, 31 Aug 2026 09:29:31 -0400
+Message-ID: <20260831133314.4125787-543-sashal@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260831133314.4125787-1-sashal@kernel.org>
 References: <20260831133314.4125787-1-sashal@kernel.org>
@@ -55,27 +54,16 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.18.48
 Content-Transfer-Encoding: 8bit
 
-From: Muralidhara M K <muralidhara.mk@amd.com>
+From: Luis de Carlos <reskoldo73@gmail.com>
 
-[ Upstream commit d20457b46eca76b9bb716dd31af591cad21607b5 ]
+[ Upstream commit ab7be7ed913086e076bfd8aba79f614f415cd6dc ]
 
-Although validate_message() checks msg_id, a mispredicted branch can
-still allow speculative indexing into hsmp_msg_desc_table[]. Clamp
-msg.msg_id with array_index_nospec() at entry to hsmp_ioctl_msg() so
-downstream dereferences (including via is_get_msg() and
-hsmp_send_message()) see a bounded index.
+Add the firmware string '1583EMS1.109' to the ALLOWED_FW_10 array.
+This enables Embedded Controller support, including battery charge
+thresholds, for the MSI Pulse GL66 12UEK (MS-1583) laptop.
 
-Similarly, hsmp_send_message() bounds-checks msg->sock_ind before
-indexing hsmp_pdev.sock[], but a mispredicted branch can still
-speculatively use the raw index (Spectre v1, CVE-2017-5753). Apply
-array_index_nospec() after the check so every caller that reaches
-hsmp_pdev.sock[] through this helper sees a clamped socket
-index—including hsmp_ioctl_msg() and any other path that hands a
-user-derived struct hsmp_message to hsmp_send_message().
-
-Reviewed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>
-Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>
-Link: https://patch.msgid.link/20260612042610.1629037-7-muralidhara.mk@amd.com
+Signed-off-by: Luis de Carlos <reskoldo73@gmail.com>
+Link: https://patch.msgid.link/20260527134750.25263-1-reskoldo73@gmail.com
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
@@ -83,396 +71,363 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 LLM Generated explanations, may be completely bogus:
 
-# Stable Backport Analysis: `platform/x86/amd/hsmp: Clamp
-ioctl/send_message indices (Spectre v1)`
+## Phase 1: Commit Message Forensics
 
-**Local tree:** Linux **6.18.44** (`v6.18.44-1-g2736c32da98b9`)
-**Commit under review:** `d5be735237be5` (upstream: `d20457b46eca`) —
-present on `autosel` branch, **not** in current `HEAD`
+### Step 1.1: Subject Line
+**Record:** `[platform/x86: msi-ec]` `[Add]` — Add firmware whitelist
+entry to enable EC support for MSI Pulse GL66 12th Gen (MS-1583).
 
----
+### Step 1.2: Commit Message Tags
+**Record:**
+- **Signed-off-by:** Luis de Carlos `<reskoldo73@gmail.com>` (author)
+- **Link:**
+  https://patch.msgid.link/20260527134750.25263-1-reskoldo73@gmail.com
+- **Reviewed-by:** Ilpo Järvinen `<ilpo.jarvinen@linux.intel.com>`
+  (subsystem maintainer)
+- **Signed-off-by:** Ilpo Järvinen (committer/maintainer)
+- No Fixes:, Reported-by:, Tested-by:, Cc: stable@vger.kernel.org, or
+  syzbot tags
+- Notable: Reviewed and committed by platform/x86 maintainer Ilpo
+  Järvinen
 
-## PHASE 1: COMMIT MESSAGE FORENSICS
+### Step 1.3: Commit Body Analysis
+**Record:**
+- **Bug description:** Not a crash/corruption bug. The `msi-ec` driver
+  refuses to load on firmware `1583EMS1.109` because it is absent from
+  `ALLOWED_FW_10`.
+- **Symptom:** Driver init returns `-EOPNOTSUPP` with "Firmware version
+  is not supported"; battery charge thresholds and other EC extras
+  unavailable on MSI Pulse GL66 12UEK (MS-1583).
+- **Root cause:** Missing firmware string in the whitelist for existing
+  `CONF10` configuration.
+- **Version info:** None stated; laptop is 12th Gen (Alder Lake era).
 
-**Step 1.1 — Subject parse**
-Record: `[platform/x86/amd/hsmp]` `[Clamp]` — Spectre v1 mitigation for
-user-controlled array indices in HSMP ioctl/send_message paths.
-
-**Step 1.2 — Tags**
-Record:
-- `Reviewed-by: Muthusamy Ramalingam <muthusamy.ramalingam@amd.com>`
-  (AMD)
-- `Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>`
-  (platform-drivers-x86 maintainer)
-- `Signed-off-by: Muralidhara M K <muralidhara.mk@amd.com>` (author)
-- `Link: https://patch.msgid.link/20260612042610.1629037-7-
-  muralidhara.mk@amd.com`
-- No `Fixes:`, `Reported-by:`, `Cc: stable@vger.kernel.org`, or syzbot
-  tags
-- `[Upstream commit d20457b46eca...]` marker present (pipeline artifact
-  — ignored per instructions)
-
-**Step 1.3 — Body analysis**
-Record:
-- **Bug:** After bounds checks on `msg_id` and `sock_ind`, a
-  mispredicted branch (Spectre v1 / CVE-2017-5753) can still cause
-  speculative indexing into `hsmp_msg_desc_table[]` and
-  `hsmp_pdev.sock[]`, leaking kernel memory into cache.
-- **Symptom:** Side-channel information disclosure (not a direct crash).
-- **Root cause:** Missing `array_index_nospec()` after bounds checks on
-  user-controlled indices.
-- **Fix:** Clamp `msg.msg_id` in `hsmp_ioctl()` before downstream use;
-  clamp `sock_ind` in `hsmp_send_message()` before socket array access.
-- Note: commit message refers to `hsmp_ioctl_msg()` but the actual
-  function is `hsmp_ioctl()` (verified in source).
-
-**Step 1.4 — Hidden bug fix?**
-Record: No — this is an explicit Spectre v1 security fix, not disguised
-cleanup.
+### Step 1.4: Hidden Bug Fix Detection
+**Record:** Not a hidden bug fix. This is explicit hardware enablement —
+adding a firmware identification string so an existing, tested
+configuration (`CONF10`) is selected for a new laptop variant.
+Functionally equivalent to adding a device ID.
 
 ---
 
-## PHASE 2: DIFF ANALYSIS
+## Phase 2: Diff Analysis
 
-**Step 2.1 — Inventory**
-Record:
-- **Files:** `drivers/platform/x86/amd/hsmp/hsmp.c` (+23 / -1)
-- **Functions:** `hsmp_send_message()`, `hsmp_ioctl()`
-- **Scope:** Single-file, surgical security fix
+### Step 2.1: Change Inventory
+**Record:**
+- **Files:** `drivers/platform/x86/msi-ec.c` (+1 line)
+- **Functions/areas:** `ALLOWED_FW_10[]` firmware whitelist array
+- **Scope:** Single-file, single-line surgical change
 
-**Step 2.2 — Code flow changes**
+### Step 2.2: Code Flow Change
+**Record:**
+- **Before:** `load_configuration()` iterates `CONFIGS[]`, calls
+  `match_string()` on each `allowed_fw` list. Firmware `1583EMS1.109`
+  matches nothing → warning + `-EOPNOTSUPP` → `msi_ec_init()` fails →
+  module does not load.
+- **After:** `1583EMS1.109` matches `ALLOWED_FW_10` → `CONF10` is copied
+  into `conf` → `battery_hook_register()` succeeds → charge threshold
+  sysfs attributes become available.
+- **Path affected:** Module initialization (`__init`), normal boot path
+  for matching MSI hardware.
 
-| Hunk | Before | After |
-|------|--------|-------|
-| `hsmp_send_message()` | Bounds-check `sock_ind`, then directly index
-`hsmp_pdev.sock[msg->sock_ind]` | After bounds check, `sock_ind =
-array_index_nospec(msg->sock_ind, hsmp_pdev.num_sockets)` then index
-with clamped value |
-| `hsmp_ioctl()` | Bounds-check `msg_id`, then call `is_get_msg()` /
-`hsmp_send_message()` with raw `msg_id` | After bounds check,
-`msg.msg_id = array_index_nospec(msg.msg_id, HSMP_MSG_ID_MAX)` before
-any table dereference |
+### Step 2.3: Bug Mechanism
+**Record:** Category: **Hardware enablement / device identification**
+(not memory safety, race, or crash). The driver deliberately whitelists
+firmware versions before exposing EC register addresses. Missing entry =
+safe refusal to load, not a kernel defect.
 
-Record: Both hunks affect the userspace ioctl hot path and the shared
-`hsmp_send_message()` helper used by ioctl.
-
-**Step 2.3 — Bug mechanism**
-Record: **Memory safety / Spectre v1 speculative out-of-bounds read.**
-User-supplied `msg_id` and `sock_ind` pass explicit bounds checks, but
-CPU speculation can bypass those checks and index past array ends into
-adjacent kernel memory. `array_index_nospec()` masks the index so
-speculative execution cannot use out-of-range values.
-
-**Step 2.4 — Fix quality**
-Record: Fix is minimal, follows the established kernel Spectre-
-mitigation pattern (`array_index_nospec` after bounds check). No new
-locking or API changes. Regression risk is very low. Compiles
-successfully in this tree without additional includes (verified).
+### Step 2.4: Fix Quality
+**Record:** Obviously correct — reuses existing `CONF10` already used
+for `1582EMS1.107` (GF66 11UC), a closely related MS-158x platform.
+Minimal change. Regression risk very low: only affects systems reporting
+exactly this firmware string; no API, locking, or memory management
+changes.
 
 ---
 
-## PHASE 3: GIT HISTORY INVESTIGATION
+## Phase 3: Git History Investigation
 
-**Step 3.1 — Blame**
-Record: Vulnerable ioctl/send_message logic dates to `91f410aa679a03`
-("platform/x86: Add AMD system management interface", Feb 2022, first in
-**v6.0**). Bounds checks on `sock_ind` added in `8e75dff56e003` (Oct
-2024 refactor). Bug has been present since driver introduction.
+### Step 3.1: Blame
+**Record:** `ALLOWED_FW_10` and `CONF10` introduced in `8abba08944663`
+("platform/x86: msi-ec: Add more EC configs", 2023-10-06, v6.6 era).
+Present in this tree since driver merge.
 
-**Step 3.2 — Fixes: tag**
-Record: N/A — no `Fixes:` tag present.
+### Step 3.2: Fixes: Tag
+**Record:** N/A — no Fixes: tag present.
 
-**Step 3.3 — Related file history**
-Record: Recent `hsmp.c` changes in this tree include timeout/semaphore
-fixes (`784e48a82976e`, `f8afb12a2d750`) and `2c78fb287e1f4` (NULL check
-for `metric_tbl_addr`). No prior Spectre/nospec fix for HSMP in `HEAD`.
+### Step 3.3: Related File History
+**Record:** Recent `msi-ec.c` history in this tree (v6.18.44):
+- `59fff63cc2b75` Merge platform-drivers-x86 v6.7-1
+- `6284e67aa6cb3` Fix the 3rd config
+- `8abba08944663` Add more EC configs
+- `392cacf2aa10d` Add new msi-ec driver (v6.4)
 
-**Step 3.4 — Author context**
-Record: Muralidhara M K (AMD). Patch is part of v6 series "Family 1Ah
-Model 50h-5Fh HSMP and metrics" but this specific commit only touches
-existing ioctl/send paths — no dependency on new message IDs from other
-series patches.
+On master but not in this stable tree:
+- `ab7be7ed91308` — this commit (Pulse GL66)
+- `4c8f323b9e151` — unrelated include fix for future acpi.h change
 
-**Step 3.5 — Dependencies**
-Record: **Standalone.** Applies cleanly (`git apply --check` passed). No
-prerequisite commits required. `array_index_nospec` and
-`include/linux/nospec.h` exist in this tree.
+**Standalone:** Yes. No series dependency.
 
----
+### Step 3.4: Author Context
+**Record:** Luis de Carlos is a hardware reporter/user contributor. Ilpo
+Järvinen is the platform/x86 maintainer who reviewed and committed the
+patch.
 
-## PHASE 4: MAILING LIST AND EXTERNAL RESEARCH
-
-**Step 4.1 — Original discussion**
-Record: `b4 dig -c d5be735237be5` found thread at
-https://patch.msgid.link/20260612042610.1629037-7-muralidhara.mk@amd.com
-— `[PATCH v6 6/8]`. Series revisions: v5 and v6 exist; committed version
-matches v6. Full lore thread fetch blocked by Anubis bot protection
-(could not read inline review text).
-
-**Step 4.2 — Reviewers**
-Record: `b4 dig -w` shows CC to `platform-driver-x86@vger.kernel.org`,
-`linux-kernel@vger.kernel.org`, AMD reviewer, and Ilpo Järvinen.
-
-**Step 4.3 — Bug report**
-Record: N/A — no external bug report or syzbot link. Security issue
-identified by code review in patch series context.
-
-**Step 4.4 — Series context**
-Record: Patch 6/8 in Family 1Ah HSMP series. The Spectre fix is
-independent of patches 1–5 and 7–8 (new hardware messages/metrics). Safe
-to backport alone.
-
-**Step 4.5 — Stable list**
-Record: Not searched on lore stable list (thread content unavailable).
-No evidence against backport found.
+### Step 3.5: Prerequisites
+**Record:** No prerequisites. `CONF10`, `CONFIGS[]`,
+`load_configuration()`, and `ALLOWED_FW_10` all exist in v6.18.44. The
+`4c8f323b9e151` dmi.h include commit is independent and not needed for
+this one-line addition.
 
 ---
 
-## PHASE 5: CODE SEMANTIC ANALYSIS
+## Phase 4: Mailing List and External Research
 
-**Step 5.1 — Key functions**
-Record: `hsmp_ioctl()`, `hsmp_send_message()`, `validate_message()`,
-`is_get_msg()`
+### Step 4.1: Original Discussion
+**Record:**
+- **b4 dig URL:**
+  https://patch.msgid.link/20260527134750.25263-1-reskoldo73@gmail.com
+- **Series revisions:** v1 → v2 (v2 is what was committed)
+- **Reviewer feedback:** Ilpo Järvinen applied to his review branch with
+  acknowledgment ("Thank you for your contribution, it has been
+  applied")
+- **No NAKs, no stable nomination** in thread
+- **No objections** raised
 
-**Step 5.2 — Callers**
-Record:
-- `hsmp_ioctl()` — registered as `.unlocked_ioctl` / `.compat_ioctl` in
-  `hsmp_fops`, exposed via misc device `/dev/hsmp` (mode **0644**)
-- `hsmp_send_message()` — called from `hsmp_ioctl()`,
-  `hsmp_msg_get_nargs()`, `hsmp_test()`, internal metric/proto paths,
-  and `hwmon.c` (kernel-constructed messages with trusted indices)
+### Step 4.2: Reviewers
+**Record:** CC'd: `platform-driver-x86@vger.kernel.org`, `linux-
+kernel@vger.kernel.org`, teackot@gmail.com (driver author),
+hansg@kernel.org. Reviewed/committed by Ilpo Järvinen.
 
-**Step 5.3 — Callees**
-Record: `copy_struct_from_user()`, `is_get_msg()` →
-`hsmp_msg_desc_table[]`, `validate_message()` → `hsmp_msg_desc_table[]`,
-`down_interruptible()`, `__hsmp_send_message()`
+### Step 4.3: Bug Report
+**Record:** No external bug report, syzbot, or bugzilla link. User-
+submitted hardware enablement from laptop owner.
 
-**Step 5.4 — Reachability**
-Record: **Userspace-reachable.** Any local user can open `/dev/hsmp`
-(world-readable/writable) and issue ioctl with crafted
-`msg_id`/`sock_ind`. This is the primary attack surface.
-`hsmp_send_message()` is also exported (`EXPORT_SYMBOL_NS_GPL`) for
-other kernel modules.
+### Step 4.4: Related Patches
+**Record:** Standalone 1/1 patch. No multi-patch series dependencies.
 
-**Step 5.5 — Similar patterns**
-Record: Kernel has extensive precedent for `array_index_nospec` Spectre
-fixes (e.g., `c2178ff1c70eb` ipv4/icmp, `f0e441be08a2e` drm/ioc32,
-`1f5f94c6c6b2e` vhost/vdpa). No similar fix yet in
-`drivers/platform/x86/`.
+### Step 4.5: Stable Mailing List
+**Record:** Not searched separately; no stable nomination found in the
+patch thread itself.
 
 ---
 
-## PHASE 6: CROSS-REFERENCING AGAINST LOCAL TREE
+## Phase 5: Code Semantic Analysis
 
-**Step 6.1 — Buggy code present?**
-Record: **YES.** Current `HEAD` at
-`drivers/platform/x86/amd/hsmp/hsmp.c` lines 213–215 and 308–338 contain
-bounds checks without `array_index_nospec`. Driver present since v6.0;
-fully present in 6.18.44.
+### Step 5.1: Key Functions
+**Record:** `ALLOWED_FW_10[]` (data), `load_configuration()`,
+`msi_ec_init()`.
 
-**Step 6.2 — Backport complications**
-Record: **Clean apply.** `git apply --check` succeeded. Patch compiles
-(`make drivers/platform/x86/amd/hsmp/hsmp.o` succeeded). No conflicts
-with recent hsmp changes in this tree.
+### Step 5.2: Callers
+**Record:** `msi_ec_init()` → `load_configuration()` at module init.
+`msi_ec` is a loadable module (`CONFIG_MSI_EC`, tristate) probed on MSI
+laptops matching DMI vendor table. Called once at boot/module load.
 
-**Step 6.3 — Fix already present?**
-Record: **NO.** `grep array_index_nospec drivers/platform/x86/amd/hsmp/`
-returns nothing on `HEAD`. Fix exists only on `autosel` branch
-(`d5be735237be5`), not merged into current `HEAD`.
+### Step 5.3: Callees
+**Record:** `ec_get_firmware_version()` reads EC register 0xa0;
+`match_string()` compares against whitelist; on match,
+`battery_hook_register()` exposes charge threshold sysfs via ACPI
+battery hook.
 
----
+### Step 5.4: Reachability
+**Record:** Triggered when `CONFIG_MSI_EC=m/y` on MSI laptop with
+firmware `1583EMS1.109`. Requires root to load module (or built-in at
+boot). Not a syscall path; hardware-specific platform driver init.
 
-## PHASE 7: SUBSYSTEM AND MAINTAINER CONTEXT
-
-**Step 7.1 — Subsystem**
-Record: `drivers/platform/x86/amd/hsmp` — AMD HSMP platform driver.
-**Criticality: IMPORTANT** (peripheral driver, but security-sensitive
-when `CONFIG_AMD_HSMP` is enabled on AMD EPYC/MI300A servers).
-
-**Step 7.2 — Activity**
-Record: Actively maintained — recent commits for protocol v7 messages,
-telemetry sysfs, semaphore/timeout fixes in 6.16–6.18 timeframe.
+### Step 5.5: Similar Patterns
+**Record:** The driver has 14 `ALLOWED_FW_*` arrays with the same
+pattern. Adding entries to existing arrays is the established mechanism
+for new hardware variants (e.g., `8abba08944663` added many configs at
+once).
 
 ---
 
-## PHASE 8: IMPACT AND RISK ASSESSMENT
+## Phase 6: Cross-Reference Against Local Tree
 
-**Step 8.1 — Who is affected**
-Record: Systems with `CONFIG_AMD_HSMP` / `CONFIG_AMD_HSMP_ACPI` /
-`CONFIG_AMD_HSMP_PLAT` on AMD EPYC and MI300A platforms. Not universal,
-but real production server hardware.
+### Step 6.1: Buggy Code Exists?
+**Record:** **YES.** Local tree is **v6.18.44** (6.18.y stable).
+`ALLOWED_FW_10` exists with only `"1582EMS1.107"`. Firmware
+`1583EMS1.109` is not whitelisted. Commit `ab7be7ed91308` is on master
+but not in this tree.
 
-**Step 8.2 — Trigger conditions**
-Record: Local user opens `/dev/hsmp` and issues ioctl with out-of-range
-`msg_id` or `sock_ind` crafted to exploit branch misprediction.
-**Unprivileged local users can trigger** (device mode 0644). Trigger
-requires Spectre v1 exploitation techniques but the vulnerable code
-pattern is confirmed present.
+### Step 6.2: Backport Complications
+**Record:** **Clean apply expected.** Single-line insertion into
+existing array at line 825. No conflicts with local modifications. Index
+in commit (`f19504dbf164c`) matches current tree structure around
+`CONF9`/`ALLOWED_FW_10`.
 
-**Step 8.3 — Failure mode severity**
-Record: **Speculative kernel memory disclosure** (Spectre v1 side
-channel). Severity: **HIGH** from security perspective (CVE-2017-5753
-class). No direct crash or data corruption, but information leak from
-kernel to userspace.
-
-**Step 8.4 — Risk-benefit**
-Record:
-- **Benefit:** Closes a known Spectre v1 gadget on a world-accessible
-  device node; aligns with established kernel security policy.
-- **Risk:** Very low — 23 lines, standard `array_index_nospec` pattern,
-  compiles and applies cleanly.
-- **Ratio:** Strong benefit, minimal risk → backport warranted.
+### Step 6.3: Related Fixes Already Present?
+**Record:** No. `git grep 1583EMS1` returns no matches. No alternative
+fix for Pulse GL66 in this tree.
 
 ---
 
-## PHASE 9: FINAL SYNTHESIS
+## Phase 7: Subsystem and Maintainer Context
 
-**Step 9.1 — Evidence summary**
+### Step 7.1: Subsystem Criticality
+**Record:** `drivers/platform/x86/` — **PERIPHERAL** platform driver for
+MSI laptop EC extras. Optional module; laptop functions without it (no
+crash), but battery charge threshold control is unavailable.
 
-**FOR backport:**
-- Real Spectre v1 security vulnerability (CVE-2017-5753)
-- User-controlled indices via ioctl on world-accessible `/dev/hsmp`
-- Standard, obviously-correct mitigation pattern
-- Small, single-file, standalone fix
-- Reviewed by AMD engineer and platform-x86 maintainer
-- Applies and compiles cleanly on 6.18.44
-- Bug present since driver introduction (v6.0)
-- Strong kernel precedent for identical fixes in stable
+### Step 7.2: Subsystem Activity
+**Record:** Driver added v6.4 (2023), configs expanded v6.6. Mature but
+still receiving firmware whitelist additions. Low churn in stable tree.
 
-**AGAINST backport:**
-- Limited to AMD HSMP-enabled systems (not all kernels/users)
-- No syzbot report or user crash report (side-channel, hard to observe)
-- Part of larger patch series (but this commit is self-contained)
+---
 
-**Unresolved:** Full lore review thread content unavailable (bot
-protection). Does not affect technical assessment.
+## Phase 8: Impact and Risk Assessment
 
-**Step 9.2 — Stable rules checklist**
-1. Obviously correct and tested? **PASS** — standard
-   `array_index_nospec`; compiles in this tree; reviewed by AMD +
-   maintainer.
-2. Fixes a real bug? **PASS** — Spectre v1 speculative OOB read on user-
-   controlled indices.
-3. Important issue? **PASS** — security vulnerability (information
-   disclosure).
-4. Small and contained? **PASS** — 23 lines, 1 file, 2 functions.
-5. No new features/APIs? **PASS** — pure hardening, no behavior change
-   for valid inputs.
-6. Can apply to local tree? **PASS** — clean apply, successful compile
-   on 6.18.44.
+### Step 8.1: Who Is Affected
+**Record:** **Hardware-specific** — owners of MSI Pulse GL66 12UEK
+(MS-1583) with firmware `1583EMS1.109` who build/load `CONFIG_MSI_EC`.
+Small population.
 
-**Step 9.3 — Exception categories**
-Record: N/A (security hardening, not device ID/quirk/build/doc
-exception).
+### Step 8.2: Trigger Conditions
+**Record:** Boot or `modprobe msi-ec` on matching MSI laptop with this
+exact firmware. Not timing-dependent. Requires `CONFIG_MSI_EC` enabled.
+Unprivileged users cannot trigger module load.
 
-**Step 9.4 — Decision rationale**
-This fix closes a Spectre v1 gadget in the AMD HSMP driver where local
-users can pass crafted indices through a world-accessible ioctl
-interface. The vulnerable code exists in Linux 6.18.44, the patch is
-minimal and self-contained, and it follows the same pattern routinely
-accepted for stable backports. The limited hardware scope does not
-outweigh the security nature of the fix.
+### Step 8.3: Failure Mode Severity
+**Record:** Without patch: driver refuses to load (`-EOPNOTSUPP`),
+charge thresholds unavailable. **Severity: LOW** — missing
+functionality, not crash, corruption, hang, or security issue. Laptop
+otherwise works.
+
+### Step 8.4: Risk-Benefit
+**Record:**
+- **Benefit:** Enables battery charge threshold and EC extras for a real
+  laptop on stable kernel; matches official stable rule allowing device
+  ID additions
+- **Risk:** Very low — 1 line, whitelist-only, reuses proven `CONF10`
+  config
+- **Ratio:** Moderate benefit for affected users, negligible risk
+
+---
+
+## Phase 9: Final Synthesis
+
+### Step 9.1: Evidence Summary
+
+**FOR backporting:**
+- Explicitly allowed by `Documentation/process/stable-kernel-rules.rst`:
+  "just add a device ID"
+- Firmware string is this driver's device-identification mechanism
+- 1 line, obviously correct, maintainer-reviewed
+- Driver and `CONF10` already exist in v6.18.44
+- Clean apply, no dependencies
+- Enables real hardware functionality for stable-kernel users
+
+**AGAINST backporting:**
+- Not a crash/corruption/security/deadlock fix
+- Affects one laptop model with small user base
+- Optional module — system works without it
+- No user bug reports beyond patch author
+
+**Unresolved:** Whether `CONF10` register map is fully validated on
+MS-1583 (author and maintainer accepted it; no independent test reports
+in thread).
+
+### Step 9.2: Stable Rules Checklist
+1. Obviously correct and tested? **PASS** — maintainer
+   reviewed/committed; trivial whitelist addition
+2. Fixes real bug affecting users? **PASS** — per stable rules, "just
+   add a device ID" is sufficient; missing ID prevents driver from
+   loading on real hardware
+3. Important issue? **PASS (by exception)** — not crash-level, but
+   device ID additions are explicitly permitted
+4. Small and contained? **PASS** — 1 line, 1 file
+5. No new features or APIs? **PASS** — no new APIs; enables existing
+   `CONF10` on new hardware variant
+6. Can apply to local tree? **PASS** — driver infrastructure present,
+   clean 1-line apply
+
+### Step 9.3: Exception Category
+**Record:** **NEW DEVICE ID** — firmware version string added to
+existing driver's whitelist, enabling existing `CONF10` configuration.
+Directly matches stable-kernel-rules.rst line 15 and the user's "NEW
+DEVICE IDs" exception.
+
+### Step 9.4: Decision Rationale
+
+This commit adds firmware `1583EMS1.109` to the `ALLOWED_FW_10`
+whitelist so the existing `msi-ec` driver loads on the MSI Pulse GL66
+12UEK. The local tree (v6.18.44) has the driver and `CONF10` but lacks
+this string, so affected laptops cannot use kernel-managed battery
+charge thresholds.
+
+Per the stable rules in this tree's own documentation, patches that
+"just add a device ID" are explicitly acceptable for stable. The
+firmware string serves as the device identifier for `msi-ec`. The change
+is one line, maintainer-reviewed, applies cleanly, and carries
+negligible regression risk.
 
 ---
 
 ## Verification
 
-- [Phase 1] Parsed commit `d5be735237be5` / upstream `d20457b46eca`:
-  subject, tags, body; noted `hsmp_ioctl_msg` vs `hsmp_ioctl` naming
-  discrepancy
-- [Phase 2] Diff: +23/-1 in `hsmp.c`; two hunks in `hsmp_send_message()`
-  and `hsmp_ioctl()`
-- [Phase 3] `git describe HEAD`: v6.18.44; `git blame`: vulnerable code
-  from `91f410aa679a03` (v6.0)
-- [Phase 3] `git log -20 -- drivers/platform/x86/amd/hsmp/hsmp.c`: no
-  prior nospec fix in HEAD
-- [Phase 3] `git merge-base --is-ancestor d5be735 HEAD`: commit NOT in
-  HEAD; on `autosel` branch
-- [Phase 4] `b4 dig -c d5be735237be5`: lore URL found, patch 6/8 of v6
-  series
-- [Phase 4] `b4 dig -a`: v5 and v6 revisions exist
-- [Phase 4] `b4 dig -w`: platform-driver-x86@, AMD reviewer CC'd
-- [Phase 4] WebFetch lore thread: blocked by Anubis (UNVERIFIED: inline
-  reviewer stable nominations)
-- [Phase 5] `grep hsmp_send_message`: ioctl path + kernel-internal
-  callers identified
-- [Phase 5] Read `hsmp.c:439-446`: misc device mode 0644 confirmed
-- [Phase 5] Read `arch/x86/include/uapi/asm/amd_hsmp.h`: `HSMP_TEST=1`,
-  `HSMP_MSG_ID_MAX`, `hsmp_msg_desc_table[]` confirmed
-- [Phase 6] `grep array_index_nospec drivers/platform/x86/amd/hsmp/`: no
-  matches on HEAD (bug present)
-- [Phase 6] `git apply --check`: patch applies cleanly
-- [Phase 6] `make drivers/platform/x86/amd/hsmp/hsmp.o` with patch:
-  compile succeeded
-- [Phase 7] Read `drivers/platform/x86/amd/hsmp/Kconfig`: AMD_HSMP
-  targets EPYC/MI300A
-- [Phase 8] Device mode 0644: unprivileged local access confirmed
+- [Phase 1] Parsed subject, tags, body; identified hardware enablement
+  intent
+- [Phase 1] No syzbot/Fixes:/Cc: stable tags found
+- [Phase 2] Diff: +1 line to `ALLOWED_FW_10[]` in
+  `drivers/platform/x86/msi-ec.c`
+- [Phase 2] Read `load_configuration()` at lines 1306–1337: confirms
+  `-EOPNOTSUPP` without whitelist match
+- [Phase 3] `git describe HEAD`: v6.18.44
+- [Phase 3] `git blame -L 824,827`: `ALLOWED_FW_10` from `8abba08944663`
+  (2023-10-06)
+- [Phase 3] `git show ab7be7ed91308`: confirmed commit hash and 1-line
+  diff
+- [Phase 3] `git log HEAD..master -- drivers/platform/x86/msi-ec.c`: 2
+  commits (this + unrelated include fix)
+- [Phase 3] `git show 4c8f323b9e151`: confirmed NOT a prerequisite
+- [Phase 4] `b4 dig -c ab7be7ed91308`: found v2 thread at
+  patch.msgid.link
+- [Phase 4] `b4 dig -a`: v1→v2 series, v2 committed
+- [Phase 4] `b4 dig -w`: Ilpo Järvinen, platform-driver-x86 list CC'd
+- [Phase 4] Read `/tmp/msi-ec-pulse.mbox`: maintainer applied patch, no
+  NAKs, no stable CC
+- [Phase 5] `grep match_string`: used in `load_configuration()` line
+  1319
+- [Phase 5] Read `Kconfig` MSI_EC help text: confirms charge threshold
+  purpose
+- [Phase 6] `grep 1583EMS1`: not present in local tree
+- [Phase 6] `grep 1582EMS1`: present at line 825, confirming target
+  array exists
+- [Phase 6] Read `Documentation/process/stable-kernel-rules.rst` line
+  15: "just add a device ID" explicitly allowed
+- [Phase 8] Confirmed failure mode is `-EOPNOTSUPP` (LOW severity), not
+  crash
 
-**YES**The background lookups are done and match what we already used in
-the review:
+**YES**The MSI Pulse GL66 `msi-ec` commit is a good stable backport
+candidate for this tree (v6.18.44).
 
-- **Commit hash:** `d5be735237be5` — `platform/x86/amd/hsmp: Clamp
-  ioctl/send_message indices (Spectre v1)`
-- **`hsmp.c` history:** ioctl/send paths go back to the original HSMP
-  driver (`91f410aa679a03`, v6.0); recent churn is mostly refactors,
-  protocol v7, and timeout/semaphore fixes
-- **Fix in tree:** not in current `HEAD` (6.18.44); only on `autosel`
+It adds one firmware string (`1583EMS1.109`) to the existing
+`ALLOWED_FW_10` whitelist so the already-present `CONF10` config can
+load on the MSI Pulse GL66 12UEK. Without it, `msi-ec` returns
+`-EOPNOTSUPP` and battery charge thresholds stay unavailable.
 
-Verdict for this tree is still **YES** — small Spectre v1 hardening on
-`/dev/hsmp`, applies and builds cleanly.
+This fits the stable rule for device ID additions: one line, maintainer-
+reviewed, clean apply, and the driver infrastructure is already in
+6.18.y. It is hardware enablement, not a crash fix, but that is
+explicitly allowed for this kind of change.
 
- drivers/platform/x86/amd/hsmp/hsmp.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+**YES**
 
-diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
-index 19f82c1d30905..008a02ace4842 100644
---- a/drivers/platform/x86/amd/hsmp/hsmp.c
-+++ b/drivers/platform/x86/amd/hsmp/hsmp.c
-@@ -202,6 +202,7 @@ static int validate_message(struct hsmp_message *msg)
- int hsmp_send_message(struct hsmp_message *msg)
- {
- 	struct hsmp_socket *sock;
-+	unsigned int sock_ind;
- 	int ret;
+ drivers/platform/x86/msi-ec.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/msi-ec.c b/drivers/platform/x86/msi-ec.c
+index f19504dbf164c..0157e233e4300 100644
+--- a/drivers/platform/x86/msi-ec.c
++++ b/drivers/platform/x86/msi-ec.c
+@@ -823,6 +823,7 @@ static struct msi_ec_conf CONF9 __initdata = {
  
- 	if (!msg)
-@@ -212,7 +213,15 @@ int hsmp_send_message(struct hsmp_message *msg)
+ static const char * const ALLOWED_FW_10[] __initconst = {
+ 	"1582EMS1.107", // GF66 11UC
++	"1583EMS1.109", // Pulse GL66 12UEK
+ 	NULL
+ };
  
- 	if (!hsmp_pdev.sock || msg->sock_ind >= hsmp_pdev.num_sockets)
- 		return -ENODEV;
--	sock = &hsmp_pdev.sock[msg->sock_ind];
-+
-+	/*
-+	 * Sanitize sock_ind after the bounds check.  A mispredicted branch can
-+	 * still let the CPU speculatively use msg->sock_ind as an index into
-+	 * hsmp_pdev.sock[] (Spectre v1, CVE-2017-5753), including for callers
-+	 * other than hsmp_ioctl_msg() that pass a user-derived socket index.
-+	 */
-+	sock_ind = array_index_nospec(msg->sock_ind, hsmp_pdev.num_sockets);
-+	sock = &hsmp_pdev.sock[sock_ind];
- 
- 	ret = down_interruptible(&sock->hsmp_sem);
- 	if (ret < 0)
-@@ -308,6 +317,19 @@ long hsmp_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
- 	if (msg.msg_id < HSMP_TEST || msg.msg_id >= HSMP_MSG_ID_MAX)
- 		return -ENOMSG;
- 
-+	/*
-+	 * Sanitize the user-controlled msg_id against speculative
-+	 * execution.  The bounds check above retires the out-of-range
-+	 * case with -ENOMSG, but a mispredicted branch can still let the
-+	 * CPU speculatively use msg_id as an index into
-+	 * hsmp_msg_desc_table[] (here and in validate_message() /
-+	 * is_get_msg() called downstream via hsmp_send_message()), and
-+	 * pull arbitrary kernel memory into the cache (Spectre v1,
-+	 * CVE-2017-5753).  Clamp once into msg.msg_id so every downstream
-+	 * dereference sees the sanitized value.
-+	 */
-+	msg.msg_id = array_index_nospec(msg.msg_id, HSMP_MSG_ID_MAX);
-+
- 	switch (fp->f_mode & (FMODE_WRITE | FMODE_READ)) {
- 	case FMODE_WRITE:
- 		/*
 -- 
 2.53.0
 
