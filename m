@@ -1,209 +1,288 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1AF3EE1C0;
-	Mon, 31 Aug 2026 12:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788178256; cv=fail; b=dOduzZ17X9lgPrcL3Oz8KycHfLG8KmgYzDpgq0+rUGexXtO2ZgCtlqZS1+qsNicg4+RG00yBCEoEZ2x+7Hb3jR7zpzvn9zv4ltZOrICR9lPTr9Lg6a7929v87brKjUa5/wz3wQdDumub9MqWdQjL3J0O/vfRmE33busSREu5/A4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788178256; c=relaxed/simple;
-	bh=DgVkdaA9M22rxVi+siJylA9bBDOejD2U7ArOVZvBAdE=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ICYzMHIdmZ7OloR2TO0AqoJQ3DZiyR2P7vC2X/oYRGKlzaiapEDk9uDmeVTzKsS4BDCJqaax38eeJW6RAop6g13LIO16hmEcr2no1mkjJ4sUbbAvabFi0KSVjMAzXmDOWPV6syXeDtJ4Js1fAHZ9LG+gNCrMZLnsuehAm90i2kI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RHmDBa3Z; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71033ADBA2;
+	Mon, 31 Aug 2026 12:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788180252; cv=none; b=uawPrYtD4D5/ZCmxB5sy75KBB2nR4lthEZfms1Nvs8dR+5ibSBJ1l1ws9x+FplxaoR/kJzAKsN83CJDnNvs1BnJuMr6wqNQMlVJFhYNAwDpNqVqPcOHor4CrSIbfZkaBauge2LaBNnKOKSqnk5vxCxKuSy/eMvZ+OJVNAkI4SFo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788180252; c=relaxed/simple;
+	bh=RhinvOlP7HCyS/uj95yyg5DU+3uQnsU4o454PCaHbWI=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QaazYcCjoYbVBsialrp6CkBO9NpxIlkxoZvDj8WAnBcHBzKf6+zm9jLjHw7rH0wX8Sgxtm0TGK+zFPXwmMJrceSuMJgKVrnW0jjRGyrLW6I8I81/1g1lCd9HAmwNbchM2bANllU/VmnWK3zq+/eLY4957mH27Swu3bA2x4nl854=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=rimR6HWa; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RHmDBa3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788178252; x=1819714252;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DgVkdaA9M22rxVi+siJylA9bBDOejD2U7ArOVZvBAdE=;
-  b=RHmDBa3Z7+oQmflyHxILFinXh3CUT9aVa6buRcFYpbSDYGltNLqn3WY+
-   fELAE6aXA12dfh38BPBVCYJDot6F8akydTvQs5Do9WHnrrb0FR+l8aUcD
-   PRu+c5KROqc7W3DhLE7uQGdMSGWrL0pFYMHh8fi1yZX0C7RcjFSKbiNzc
-   hRJy9RgCmMpDQe2HPJfFuXU9yP7hOBKYihrauanNStFyDAAKiMLN7aPXM
-   wRaC2u+6nzucLP/K2g45Sws5Df9rZUnVZQoAzs5u2rszhNVqmd4232Esd
-   RmuUG1MnCOhWio9xPqaMpCezDl0yc3SSZgu0hqrfSmOfKNBvZeychxsP1
-   Q==;
-X-CSE-ConnectionGUID: gjcskRnHStGdR7CdHt5ZDg==
-X-CSE-MsgGUID: GhJp/OxHSN6w/Mbbg3urpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="92450231"
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="92450231"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:10:51 -0700
-X-CSE-ConnectionGUID: TbM8snLbSEufNkEvcGcZbw==
-X-CSE-MsgGUID: kDS2KEsnTwWqYBEtHFGWoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="268827586"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:10:51 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Mon, 31 Aug 2026 05:10:50 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Mon, 31 Aug 2026 05:10:50 -0700
-Received: from DM1PR04CU001.outbound.protection.outlook.com (52.101.61.14) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Mon, 31 Aug 2026 05:10:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E6GF6Ask3CTnCOpCXO8N4Z0EhEzIhD1YFDUR235Nukeh9my1obzDd3s5XLGRGluzikXMZeSvQD02kDBW5N5qp2tYjaFbKtRYBiW4HqdCQD3TTrrCJKJy2RQLbdUV06MDNsrHzSv+rSvfPPg5zUE1I0jDSOQMl5IU6ffeYWJG3cAxVvnPaH4h8Nt3kfJKfaKdrgRwEJEWE7HENPmhg3h3esRO0cTYSL0GmHIuWhSkNtrOyjhWwDMNhD3Kb4y1Ph+NavaBgE79I5qmGVtOWelVYmnwhlGLqYCaCGE14quePYzYBdwAmhcg7X+VefrbnXZnKm4ho+db90RE1MVjzaUhNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JEYOKeaTic09MykWnkO9nqEZ4lKoGf0SUubQygGkfDE=;
- b=r0Vqbqg1QEREa3OTpNpjhwIwG1e6otnpabg9T7y2ezgX+QAwRiIqS+yeUd6MAKlZJjZwJeyBQWIVQYkAroZEveVPSai3XH4n2p2zPCzZhAYZbI1SLcXTKrRvQOlBMUUIBJO/ZnlbHhuVST4yP4gg1lTByYMyj+aqWtt00Ul31F0O7c0r9jh83F3akegBNOfUc/vCR5XoUqUdaTX4BosRtELdzKfT9VprFBZDqGT6fI7OJleHI6hVgR92FBgmbzoIgtfvut6rNsZDJnKM/v11kVM6iI8339buujoo5NndahiAp/7I0x1bczcotIOAqFv6YyILnNLRXKLEbV7A8eSa5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f27) by DS4PR11MB895587.namprd11.prod.outlook.com
- (2603:10b6:8:53d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Mon, 31 Aug
- 2026 12:10:46 +0000
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::ed8b:1455:8b29:144c]) by DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::ed8b:1455:8b29:144c%7]) with mapi id 15.21.0360.008; Mon, 31 Aug 2026
- 12:10:46 +0000
-Message-ID: <0ebc889d-766f-4bf0-b590-51be61cc9a8d@intel.com>
-Date: Mon, 31 Aug 2026 14:10:41 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: asus-laptop: Fix ACPI event handling
-To: Armin Wolf <W_Armin@gmx.de>, <corentin.chary@gmail.com>,
-	<luke@ljones.dev>, <denis.benato@linux.dev>
-CC: <hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<royclark086@gmail.com>
-References: <20260830235058.324140-1-W_Armin@gmx.de>
-Content-Language: en-US
-From: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-In-Reply-To: <20260830235058.324140-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS4PR09CA0028.eurprd09.prod.outlook.com
- (2603:10a6:20b:5d4::16) To DM3PPF63A6024A9.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f27)
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="rimR6HWa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1788180246; x=1788439446;
+	bh=sKmkbCtJsOXdCXQUTzGC7kdJktkSE1Uq06Y4dwPvjqg=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=rimR6HWae11QIe020Yh/nON68KFWL/5HM2W+lonHJNNE0Dx76PGWClNfvpRec65+r
+	 J0wvT0Oyzxk50eXqY1pI9ZZBl6YDzTB5vyKDzUrwD/fV1t4VCQlT2UPenywoheTOLK
+	 Xr9/w2D3m6dirlSt/aum5Fd+rpsI+waq33DBR9OpBPSyPJhqBUdkTIwtjCU27oLKH4
+	 ykHA4M+vvHfs2I7olfpKuCkzhPDssEKvhMB/3ijUgnn/n04Uva3Tb4mQn3lhXqtOR2
+	 WtxFz34/ERkdaAuEWP5jTFmUYIgR8/P04nifVx2qlCD/S2xzdA3p3XLkewtQ4iaKhR
+	 ttZIsmKRe0N2Q==
+Date: Mon, 31 Aug 2026 12:44:00 +0000
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Daniel Scally <dan.scally@ideasonboard.com>, Jakob Berg Jespersen <dev@berg.pm>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] media: i2c: ov13858: add regulator, clock and reset GPIO handling
+Message-ID: <20260831124352.86935-1-lsa.uz@pm.me>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: 8135d971aaa816250a55b22583a16f3ccbff1a7b
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM3PPF63A6024A9:EE_|DS4PR11MB895587:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff4a14b0-53da-46e7-2085-08df0758e35a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|23010399003|10067099003|11063799006|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: d/DGtBawXms/orppuXTQG/VBP2SmDNJOu4q7FUhgaSBW2BgGp2wETx8Lvg/QORag3nGxQKCyfwaI+upTJ2g0P75aFa8gJc9CQWFlw6NAGQ9El5ptJsZYhAQjCVeGb+251Cm07GmS/APIXkzkLDowHtHYNQKekkLSBi+Cvt6ikZoG19ejHxKPymUHi5o6AvWrwEN4Co5VwNrt7rPNqanAvKsBJmCevlX3ti5PEo4f1tEvEZMCkGtC1aY7M/+qrk4smL55GspmoxMSzs9GlgM4cuTupzN2FNQLIGkhuZebzL3ZkoZdOxkxje6RQVpnZhQ5eWyC0YI8fzVc6UQwo2WfkfrbjNV/QlV0hW5Lw/4J+U0nUSlFrIbVKRt9wnG2qW5d8rucZkQNts6foovRJHvWxnotn67neTubo0fwkgDaPe5rQjENla+jy++000rm87kKE3+48mFPaF9cGJfjePYCaiJfpQeOO+hsdh0b7WOvxFtcP/4JuwHIXaznHDse8W1InwqAjktO3qMhYDzSr9YXi0Yfkx3ep1sJ13x8kCkLeTnLCeOb78AAUtjb40vI664fPw3Pf66/HzY04R6NFLCd+9UfllTNYBrXukWtl/bNm7tpdRRFdWmcxuTyfX2OFtTXgXDeJ1qzVx/WfNESxK8BN3YlMFpQjquYnOg0fOZpyqw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PPF63A6024A9.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(23010399003)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cWNQZW0zaUVIZjM0N2RCZUh2R09MeFI0YnhNR1lnYnFYUlV3dk9WdGdXMUor?=
- =?utf-8?B?TjRyME55Q1ZPS0tsdU5CV2NHK3FTVXV1aytRdXBaOHk4aURTd04xSnY3NnVy?=
- =?utf-8?B?RVB6UkJBU2NOR29GTG9lOEkyWmhUUnpEZDZ0UXZpcGlaaXBPeVJLT1RoZkEw?=
- =?utf-8?B?WjJIQ2xJZUJVelVZMnBCcnAxTDJaS1BkOE12M0RpZWpmVXVoZUhnSHQzUExJ?=
- =?utf-8?B?TittYTZrSmVvcmo4ZEhXcVMwdloySDBQbmlOQ01qdzNnV1kzaTNONjN0Uy9p?=
- =?utf-8?B?aTNZaGhUNG12Y1luMG1naVRkVm1pWGR6WDNwQjczbTVMdndiUXh1WSs2L2Ix?=
- =?utf-8?B?VEYrejFReVlwMTI4ZFJqSjRKVjdOL1h4ZDZHZHFkOVR2dFVEZml5SzFmYTU4?=
- =?utf-8?B?ZUJWMnBGZ3JKK1hUc2doem8yeE1rTHA3c1lKc1k3UmFpaUFHTWxUcEJPTXpt?=
- =?utf-8?B?ZGpuQ3VEQURGc2VLNmZpaHpYdzNZQVF4M2JLaURUM0lwamlOZ0h3SUVyYnhx?=
- =?utf-8?B?dk1YTXljZFJGbytoaFlFczR2dlMyRUtBN2lyRFVQVjkxa0NFZFBhQVc1K2wz?=
- =?utf-8?B?eW4zZCsxNmRYclJzVmxzaUhNTnZOVUg5Y3lKMGFsTDBocXQ1R3N4WEozY3Z5?=
- =?utf-8?B?ODJsSXdGanNmNDhZYktyWXJQczlQU3F6VTIyeWVvK2lrb1JqdFdvZDk1OGdC?=
- =?utf-8?B?aG41Y2FxVlRYTTRSTnlUbFlTRS9CMnB4elRmUTM2OWlCSjVwVk54bk9namhs?=
- =?utf-8?B?dGxpTW9RbWRtd25GeHE2RURJRXU0QVBDZW80TmtBaGZxUlpOOVRRZU0rOTRi?=
- =?utf-8?B?dHRNSkQvVk9SUFE4emNqMHI3ZDVuQ2JPelBVMFNUNHpwcm5jU2hjSnd0Zzkr?=
- =?utf-8?B?dEs0RnRRTFF5eGQ3WEl1SzJTTVdVckRBUnlYeTVXdmRkYmRYRDZFMXpDNlhM?=
- =?utf-8?B?dGppUTN3R0Jaa2tubEZCTjljdzNkRmltdnl2L3VxbXVtTDBOWHF6UG9zMHhS?=
- =?utf-8?B?Zkcxc2xaZmZUNW4vK3hSdTNuZTBjblFlVEFoQTJ1aDVUQWMwQjdhVlhybTE1?=
- =?utf-8?B?QVE4NWRUYVNLN3JtbmtDTkhOT3QrdFVWcFdaOExLaEphMExWcWhpSDlLTHZ5?=
- =?utf-8?B?ZExrcDdOYzJ2a2xGci9LOTdRbzlpTXorNkthcmVuSjhZNGZlaFdJdG9tbk1C?=
- =?utf-8?B?Z29WVnJMUHlQaGlDV0o2Skk4US8xWFdPeHJRc0lHanI5WURoaElITEVEV2t4?=
- =?utf-8?B?dmF6eGZoUlViSWdaU3VFSElrNnMzbkQ5SDNSQlhxUmwvcXg0emRCNE1QTnR1?=
- =?utf-8?B?NzBzdVFXUEVPRHpROGJHSEtCa1J3L3hwamJrdEhjdUJKSWdHYkQ1Qm8zencx?=
- =?utf-8?B?cTcyL1RVR0tQWEdSY0hrLy9MVFlld3BBTEI0Vk9iRnpIcERkcXRJODhyRkpJ?=
- =?utf-8?B?RldiVGxLWjBFN2t4NDBsbklDbVdjK24xNXFiMDdXSlR0Nk9ITjJKaCs4TG9m?=
- =?utf-8?B?OHFNUTIyK1ZsaUo4UFlmckdiYnMvTlduY2liNlBTdVpIenIrSXBaUWx2aDdt?=
- =?utf-8?B?d2kzZWRUNVhkOVplQnU0bjBrb2lONWY2WERwVWpNRDNiL0JoOGxiTzNKZ3V4?=
- =?utf-8?B?ZUoxQjkxSTgyN2Iyekh6RXFtU0QyY1Z2Z3hOLzVqQU1sVitHU3RjbzRmQVJv?=
- =?utf-8?B?MUc5RzVNWHpPd2FEbDdLYnRUMGViK2pZQWVsR2E1UkU0VGJ0S00rWStFMlh6?=
- =?utf-8?B?LzB5UVdZMUJzUVlEV3F1akRhc01zeWlyMUVDcWgvMEd4bm1MNzdKMmY3S1F6?=
- =?utf-8?B?cnlXdDV5NmtFekJtb2xib3VDM2thdThOcGlpRUFVaTk1TzhYb3dCZlRMcHgr?=
- =?utf-8?B?NWN4aGJrb0JGVVFYSnhUeUl2aldlUWJtRjl6VEFNTWdhdlNwRzRneWt3UFVv?=
- =?utf-8?B?QnJwSkdSMVZPMjBhcWZVOVVnVUxWczlKWHRjQjFUMXIzenlPT2laVDQ5alpz?=
- =?utf-8?B?cHBJYVRpMFR2OGsydHFwRWNZd2JQMG5zR093L0RLQzhzQ3psQjcwWWo1RUxW?=
- =?utf-8?B?aTVVVjVqbXFLbGdGTlhmM0pJRzlVdWxaZnRIOG5FckFERDlqWUV1TWFDWk4v?=
- =?utf-8?B?c2V5a3BKdEFiRDYyT1M3NGIwSEpXOGJDdEpPMnNWOWt0ejhCOGxqdGg0MGpl?=
- =?utf-8?B?Mlp3OGY3M1o2Q0NSeVJGU1pNR3dyZ285TjF6Lzc3TEpzdGFjb2VlNmluc05q?=
- =?utf-8?B?WFpIK1owTHV0aDdvclpxamRKaVNhRmhIMzVaMG50ekJic1lNdWJxYm0wUXNZ?=
- =?utf-8?B?YjllaDFaaDhpTnkwOG9qdEVvUzRuN05GbFNqNVFaYVkvOGUzQ3NDOUhpKzJw?=
- =?utf-8?Q?ESUo6ly9Zasow5O4=3D?=
-X-Exchange-RoutingPolicyChecked: FrRkIN/CdYgHY1F65ltYmslLybGVs8AiNfESBT8GWo/ULm4SUw6IsGx+Hdh0nEl3RO/0/Ax7u7zE88uhe4hDKDeEI6xke7UexbE2G/oLUYCHoUODxZUrxHWVZpNx5Ydsm9FFEtZtOl8AQT2F4qpjUtB5fkqebxve9wkxVN4CFCcQFqu3WrN7AICtPUcGFeIrgeTe+ra82AlBVG/CZP3T0LEqR+u+pPaPizVzRG7iOJRZkUi6+o5wDNR0CPzL61hkOnmj35/4ymJHgE0rDBc7WbpFDDmfNtlsJhnGccS1JvFZPdELjroQvoy2XlCqpa2eO1XyqRhQ/9mnXOYNzizkQA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff4a14b0-53da-46e7-2085-08df0758e35a
-X-MS-Exchange-CrossTenant-AuthSource: DM3PPF63A6024A9.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2026 12:10:46.6068
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o0T54hutQml7FC7LNdXqdRN86VgNzXwoKw7/6OYk4jGAHIO+5VUwUc5RMWSbujRoQnmzSyXSANQowyUoGnBKnVcITDqds/4JpxLXPqSek8s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR11MB895587
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+The driver assumes the sensor is already powered when probe() reads its chi=
+p
+ID. That holds where the rails and clock are ACPI power resources, but not
+where an INT3472 companion device registers them as regulators, a clock and=
+ a
+reset GPIO for the sensor driver to consume, which this driver does not do.
 
-On 8/31/2026 1:50 AM, Armin Wolf wrote:
-> The event codes inside asus_keymap[] span a wide range from 0x02
-> till 0xC5, but using ACPI_DEVICE_NOTIFY prevents us from receiving
-> event codes below 0x80.
->
-> Fix this by using ACPI_ALL_NOTIFY instead.
->
-> Fixes: 378500dc1313 ("platform/x86: asus-laptop: Register ACPI notify handler directly")
-> Reported-by: Mo Jun <royclark086@gmail.com>
-> Closes: https://bugs.debian.org/1146124
-> Tested-by: Mo Jun <royclark086@gmail.com>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Request the three supplies and the reset GPIO, and sequence them along with
+the clock the driver already looks up, in runtime PM callbacks.
 
-Thanks for taking care of this!
+Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+---
+Changes in v2, all from Sakari Ailus's review:
+- commit message cut down; the detail below
+- dropped the comment on the supply names; it is a KAPI with int3472
+- ARRAY_SIZE() directly instead of a local macro
+- fsleep() instead of usleep_range()
+- one function each for power on and off, used as the PM callbacks directly=
+,
+  instead of a pair of wrappers
+- removed the now-useless dev_err() in the probe error path
+- i declared inside its loop
+Link to v1: https://patch.msgid.link/20260831100404.40463-1-lsa.uz@pm.me
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Without the patch the first I2C transaction fails:
 
+  ov13858 i2c-OVTID858:00: failed to find sensor: -5
 
-> ---
->   drivers/platform/x86/asus-laptop.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/asus-laptop.c b/drivers/platform/x86/asus-laptop.c
-> index 449addd1ac7a..79a575d0f5b4 100644
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -1882,7 +1882,7 @@ static int asus_acpi_probe(struct platform_device *pdev)
->   	if (result && result != -ENODEV)
->   		goto fail_pega_rfkill;
->   
-> -	result = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
-> +	result = acpi_dev_install_notify_handler(device, ACPI_ALL_NOTIFY,
->   						 asus_acpi_notify, asus);
->   	if (result)
->   		goto fail_pega_rfkill;
-> @@ -1912,7 +1912,7 @@ static void asus_acpi_remove(struct platform_device *pdev)
->   {
->   	struct asus_laptop *asus = platform_get_drvdata(pdev);
->   
-> -	acpi_dev_remove_notify_handler(asus->device, ACPI_DEVICE_NOTIFY,
-> +	acpi_dev_remove_notify_handler(asus->device, ACPI_ALL_NOTIFY,
->   				       asus_acpi_notify);
->   	asus_backlight_exit(asus);
->   	asus_rfkill_exit(asus);
+The power sequence follows ov02c10: supplies, then clock, then release rese=
+t,
+and the reverse on the way down.
+
+Measured on a Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7=
+),
+with the parts isolated one at a time:
+
+  supplies enabled, clock enabled   sensor identifies, driver binds
+  supplies enabled, clock left off  -EIO
+  supplies left off, clock enabled  -EIO
+
+so both are needed; a longer settling delay alone is not enough. Verified
+across five module unload/load cycles with no probe failure, and again afte=
+r
+this rework, with the sensor streaming each time.
+
+This needs POWER1 GPIO support in int3472 to be useful on that machine: the
+dvdd rail is described there as an INT3472 GPIO of type 0x08, and without t=
+hat
+patch the rail is never registered.
+Link: https://patch.msgid.link/20260829-sp7plus-int3472-v3-1-454b50485ce2@b=
+erg.pm
+
+The same sensor on the Surface Pro 10 was made to work downstream by forcin=
+g
+the regulators on for the driver's lifetime, which the people who did it
+called too broad for upstream. Runtime PM keeps them off while the sensor i=
+s
+idle instead.
+Link: https://github.com/linux-surface/linux-surface/issues/2153
+
+dovdd is not described on this machine and resolves to a dummy regulator. I=
+t
+is listed because it is one of the three supplies these sensors normally ta=
+ke.
+
+A working camera also needs an ipu-bridge entry for OVTID858, separately.
+---
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -3,9 +3,12 @@
+=20
+ #include <linux/acpi.h>
+ #include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-event.h>
+@@ -1028,9 +1031,17 @@
+ =09}
+ };
+=20
++static const char * const ov13858_supply_names[] =3D {
++=09"dovdd",=09/* Digital I/O power */
++=09"avdd",=09=09/* Analog power */
++=09"dvdd",=09=09/* Digital core power */
++};
++
+ struct ov13858 {
+ =09struct device *dev;
+ =09struct clk *clk;
++=09struct regulator_bulk_data supplies[ARRAY_SIZE(ov13858_supply_names)];
++=09struct gpio_desc *reset_gpio;
+=20
+ =09struct v4l2_subdev sd;
+ =09struct media_pad pad;
+@@ -1653,8 +1664,54 @@
+ {
+ =09v4l2_ctrl_handler_free(ov13858->sd.ctrl_handler);
+ =09mutex_destroy(&ov13858->mutex);
++}
++
++static int ov13858_power_on(struct device *dev)
++{
++=09struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
++=09struct ov13858 *ov13858 =3D to_ov13858(sd);
++=09int ret;
++
++=09ret =3D regulator_bulk_enable(ARRAY_SIZE(ov13858_supply_names), ov13858=
+->supplies);
++=09if (ret) {
++=09=09dev_err(ov13858->dev, "failed to enable regulators: %d\n", ret);
++=09=09return ret;
++=09}
++
++=09ret =3D clk_prepare_enable(ov13858->clk);
++=09if (ret) {
++=09=09dev_err(ov13858->dev, "failed to enable clock: %d\n", ret);
++=09=09regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->su=
+pplies);
++=09=09return ret;
++=09}
++
++=09if (ov13858->reset_gpio) {
++=09=09/* Hold reset for at least 1 ms on a back to back off-on */
++=09=09fsleep(1000);
++=09=09gpiod_set_value_cansleep(ov13858->reset_gpio, 0);
++=09}
++
++=09/* t4: 8192 XVCLK cycles after reset is released, before the first I2C =
+*/
++=09fsleep(5000);
++
++=09return 0;
+ }
+=20
++static int ov13858_power_off(struct device *dev)
++{
++=09struct v4l2_subdev *sd =3D dev_get_drvdata(dev);
++=09struct ov13858 *ov13858 =3D to_ov13858(sd);
++
++=09gpiod_set_value_cansleep(ov13858->reset_gpio, 1);
++=09regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->suppl=
+ies);
++=09clk_disable_unprepare(ov13858->clk);
++
++=09return 0;
++}
++
++static DEFINE_RUNTIME_DEV_PM_OPS(ov13858_pm_ops, ov13858_power_off,
++=09=09=09=09 ov13858_power_on, NULL);
++
+ static int ov13858_probe(struct i2c_client *client)
+ {
+ =09struct ov13858 *ov13858;
+@@ -1678,14 +1735,34 @@
+ =09=09=09=09     "external clock %lu is not supported\n",
+ =09=09=09=09     freq);
+=20
++=09for (unsigned int i =3D 0; i < ARRAY_SIZE(ov13858_supply_names); i++)
++=09=09ov13858->supplies[i].supply =3D ov13858_supply_names[i];
++
++=09ret =3D devm_regulator_bulk_get(ov13858->dev, ARRAY_SIZE(ov13858_supply=
+_names),
++=09=09=09=09      ov13858->supplies);
++=09if (ret)
++=09=09return dev_err_probe(ov13858->dev, ret,
++=09=09=09=09     "failed to get regulators\n");
++
++=09ov13858->reset_gpio =3D devm_gpiod_get_optional(ov13858->dev, "reset",
++=09=09=09=09=09=09      GPIOD_OUT_HIGH);
++=09if (IS_ERR(ov13858->reset_gpio))
++=09=09return dev_err_probe(ov13858->dev,
++=09=09=09=09     PTR_ERR(ov13858->reset_gpio),
++=09=09=09=09     "failed to get reset GPIO\n");
++
+ =09/* Initialize subdev */
+ =09v4l2_i2c_subdev_init(&ov13858->sd, client, &ov13858_subdev_ops);
+=20
++=09ret =3D ov13858_power_on(ov13858->dev);
++=09if (ret)
++=09=09return ret;
++
+ =09/* Check module identity */
+ =09ret =3D ov13858_identify_module(ov13858);
+ =09if (ret) {
+ =09=09dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
+-=09=09return ret;
++=09=09goto error_power_off;
+ =09}
+=20
+ =09/* Set default mode to max resolution */
+@@ -1693,7 +1770,7 @@
+=20
+ =09ret =3D ov13858_init_controls(ov13858);
+ =09if (ret)
+-=09=09return ret;
++=09=09goto error_power_off;
+=20
+ =09/* Initialize subdev */
+ =09ov13858->sd.internal_ops =3D &ov13858_internal_ops;
+@@ -1729,8 +1806,10 @@
+=20
+ error_handler_free:
+ =09ov13858_free_controls(ov13858);
+-=09dev_err(ov13858->dev, "%s failed:%d\n", __func__, ret);
+=20
++error_power_off:
++=09ov13858_power_off(ov13858->dev);
++
+ =09return ret;
+ }
+=20
+@@ -1744,11 +1823,14 @@
+ =09ov13858_free_controls(ov13858);
+=20
+ =09pm_runtime_disable(ov13858->dev);
++=09if (!pm_runtime_status_suspended(ov13858->dev))
++=09=09ov13858_power_off(ov13858->dev);
++=09pm_runtime_set_suspended(ov13858->dev);
+ }
+=20
+ static const struct i2c_device_id ov13858_id_table[] =3D {
+-=09{ .name =3D "ov13858" },
+-=09{ }
++=09{ "ov13858" },
++=09{}
+ };
+=20
+ MODULE_DEVICE_TABLE(i2c, ov13858_id_table);
+@@ -1766,6 +1848,7 @@
+ =09.driver =3D {
+ =09=09.name =3D "ov13858",
+ =09=09.acpi_match_table =3D ACPI_PTR(ov13858_acpi_ids),
++=09=09.pm =3D pm_ptr(&ov13858_pm_ops),
+ =09},
+ =09.probe =3D ov13858_probe,
+ =09.remove =3D ov13858_remove,
+
