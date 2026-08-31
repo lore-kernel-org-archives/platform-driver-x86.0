@@ -1,229 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7818223D7FB;
-	Mon, 31 Aug 2026 02:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788142133; cv=fail; b=abdqO6Cm7sbMp/bGbisPwd9MDIOttQAX95+7OP7p/hyQnfjvgHTdFWfuzH0WixbqFi594Nq9EBqW9kjwwydtbkTJu2MxNU6W2PlWY65wWAWCsks+Hdguep49Q+vzw2u5fv4je7d6o25dWYwDmDcoS0reXmLf/N/u070hxCGdYEI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788142133; c=relaxed/simple;
-	bh=aAwM4Wij2QVqZRdAbZD7ou9931r371/tgD48FL8XoTY=;
-	h=Message-ID:Date:Subject:To:References:CC:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=DPzV/X1WJ6QzDuvpS+NhA++JV4mUHzD5Vfk/DuUbgg2AJNr6prUF3gFuyQIs5fevDF2xWJI4IUlPxwWWyreykqOzOGUkk9Pu+58C5IPmrFluBM1dutcdhNngCYNGq1mhPQwQIAqF3O8gPmGpypfEKl56BPexCzgTkXxXF8DYY3U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ERcZA0If; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8E13BFAFB
+	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 07:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788162845; cv=none; b=bpNEqkrN1Uu55u3zbO5d4Bs5EKbpEVaWVm0DQ3emkxHRS0fesFHrCzri51iUcHUWw9KjDgF3Pv4PXgWhW6vVPzf0VpLa116bsFMG2/h8cUBFX3tIbqvWG00RZCSLjf+7OHqpWTBtI+Olxy5tMtXhFUSBKdqW8bc/19K5j6Rc3H4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788162845; c=relaxed/simple;
+	bh=o+nv3GS3nR3FzyVR/oiyw6wodd+l3ZqiVNhB6DUQA40=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E+mrClJ+gRqkFa/6boKCMegr9cZAVx/CvkVvP/q15qTTfNJ64uv4BQ0BVGjBx8yGpqVLq4LSksL5lG8lFK2JSg7yx74so/SR0De2v1oaa9bxCpmPLvsS36bmoIJp4k7x6O9uceiOu4WHbAIIRJdN5WNvErCFOnoU64P3uEaHXys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qE7dTxzi; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ERcZA0If"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788142132; x=1819678132;
-  h=message-id:date:subject:to:references:cc:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=aAwM4Wij2QVqZRdAbZD7ou9931r371/tgD48FL8XoTY=;
-  b=ERcZA0IftiTUeOq2Ijmmz4DrIw6guxg/04k2y1f6sxRJYnD3hIlcWLIt
-   U+CWxCptcZHUr8EdDB6dqFcQD9gjbVWR02JbdiUdYrYN1y1HFp+DJLObf
-   XrhnTOv3mcTDOjocuw+1k4Zpc6Y3OfsnjXC4Z9rSE7RRCi/Nhhw8nWEBL
-   I66YQUsR/vJhPRdYc/H72I06Nuqmsxa7h9AZarsO+L6rZJgPu75jq5rUT
-   +o0t4U2tcD8UFJaLiiqqusO3ClXGXND2snBLeRUsSwnt92DII374+wl1H
-   Fs1IYhriu8jKG24lBzZ5m/c9ZrHWxmtZyZN66RLgs1RcaTon5ujT6q1DD
-   Q==;
-X-CSE-ConnectionGUID: fk6PK3RnSdyy5gp1k5HceA==
-X-CSE-MsgGUID: LKjdnK+pT2CGg7UUaM3dyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88395686"
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="88395686"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 19:08:51 -0700
-X-CSE-ConnectionGUID: Je7xHZtsRN2CAtGWwpAtNA==
-X-CSE-MsgGUID: 1AmAavz0ROypoCvmVzVlWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,252,1779174000"; 
-   d="scan'208";a="268703591"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2026 19:08:50 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Sun, 30 Aug 2026 19:08:50 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Sun, 30 Aug 2026 19:08:50 -0700
-Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.12) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Sun, 30 Aug 2026 19:08:49 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XPUvT8SXmysiOt7vfUHeeszhHPIY0A0L4D8SKnlDDRGWwLyTZxA5DCanQKVM+65pkD54h58BAhj+HH/KFzz45O6HhOKsUU+0Xza141tdSxrkAL74V9l8WvbRZsHLmviAO0DCQEETlY+UQBV4FbbEVsxeDeN4nlJOthWE3ot3tR+WwocC/0wLIeyb0Vv2Zz3PF++PvlQEqQEAT2ToF3tPhSIIU+foEERriuMvnGUPra/F85fg1w9gNHas14jgRlE6PCQqqQp7DZCeRhea91T0E4qd+dAFwV/nugV0RNS45XoMXheECVvoFhBZ5TPqFveESZ84/LhqFtGJWuBRjQp3aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kCpx2y0ANrK7qQ0evtYzwJp1fje6mCb33t43dwgjKBk=;
- b=QtcHSt8YfUSN6rp6zLgHrZCrstH38XtL0M+MohXavVS6XLBGfxmbMLTOEIeztgCUVtMgQmzE909Wn1c2w16gchcBSG0WXmrUfJk6z435E3mpuK8nV5IJ7yUN8D3VIlM26fRFXg/T8EcLK0OsDo+3+2ISPeIAbrd+Qhu5tn1Ifwnr+LFqwZZiPCFNNClhD3OI+TO4CKba33VyjDvxV2rm8zPVJ79Q+L1STw5r2CFsYQC+ox5JU+ob+Z6UXu9TlnhIVTf+WwiD0qFupzw3NwHwBX/aVNRuVqo/9l5ZsaTMnEZMJbj3Rvd5GH5FcIQl+g8FT95UZba8j+9uZ8YseRsX7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com (2603:10b6:8:61::19) by
- CY8PR11MB7730.namprd11.prod.outlook.com (2603:10b6:930:74::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.360.13; Mon, 31 Aug 2026 02:08:47 +0000
-Received: from DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::3058:1480:e4ac:5765]) by DM4PR11MB6020.namprd11.prod.outlook.com
- ([fe80::3058:1480:e4ac:5765%4]) with mapi id 15.21.0360.008; Mon, 31 Aug 2026
- 02:08:47 +0000
-Message-ID: <b475039b-defe-46e7-ab85-46e3196da667@intel.com>
-Date: Mon, 31 Aug 2026 10:08:39 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: Cache-aware scheduling does not work well with amd big/little
- cores
-To: Mario Limonciello <mario.limonciello@amd.com>, Klaus Kusche
-	<klaus.kusche@computerix.info>
-References: <2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info>
- <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
-Content-Language: en-US
-CC: "Badole, Vishal" <Vishal.Badole@amd.com>, <tim.c.chen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	<platform-driver-x86@vger.kernel.org>, K Prateek Nayak
-	<KPrateek.Nayak@amd.com>, <ricardo.neri@intel.com>
-From: "Chen, Yu C" <yu.c.chen@intel.com>
-In-Reply-To: <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qE7dTxzi"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-38d489b6b71so3583222a91.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 00:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788162843; x=1788767643; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=0hUiROj/TsY8I709fp6Eg5xqKVDPTNNMVY5D3Z2bgZ0=;
+        b=qE7dTxziS10R1BoElXLzLMeSF/qIXlSfu7zKMmV5Apy/6/bJ1h6/4bUo9jn/3TD998
+         mbq/jR+MbzW9to65y+whbQgrOPO8Bo1LuWHRwDVfIGLcCKK/L4zlxHxFYMNitAxGtPRW
+         CG2c3GLagBOXP8ilkcwpwRK1r4lDjIEwLG0BrRepvlKpzAPdlln6Lgn4TyVXqxAEYJCi
+         fbvqc345kKZxE5bvIpSDYXyIn38ysWV69HyDD2fCJUs+hyZUbP3kNJ1V2EUN5FKHXcSJ
+         Jl5+YNWYXs6Jhtw/q2AwgC3YXW8BhIonzXvJ6YwX4tIrw+EUKimQMPpZTGLRDL8ryVhA
+         TvfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788162843; x=1788767643;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=0hUiROj/TsY8I709fp6Eg5xqKVDPTNNMVY5D3Z2bgZ0=;
+        b=J3O0gR4FqqfKyws8Mxkgx6VVDs4xkuLr5BdvbEFMK8vJ1V0Z4yiHlPqsLusl3I1RYp
+         S7pAGMLa65qxChCRjX/RrgDa2ppk4B64pBJSwLAFbebCAB19tP7s0ekIX7/YOXrqXyyf
+         6+4NREmFikvnvIRl3oKktY/0qWy4Rer4hW0Vcs9dlGCC3/n0JoFj8Sngxc+bURSOkn86
+         kU5ohqExF9rW/Kb5cORzdtswYrwPWjbmRgtCv6VF7rveP0d1d6y1wipOwCd7XQtXDE+n
+         ZvKwfh/LsqhEAh/NTh5sVUkBdzeRrlXf+1xZxYQEp7zxnSJENxQ8/F2FRe+Hwt5q9LYK
+         u9sA==
+X-Forwarded-Encrypted: i=1; AKwUvBxSSsdrWzgGHT3WRcEEh2l9H5JP2BN0wNtpXJ3YeBxyc7GnWl6KpRXV7qAMBHmjEvpsdkZ11kw2LFUq5PZqPkCO3Vw7@vger.kernel.org
+X-Gm-Message-State: AFuF++mGuM22chktadGA4LLBqcBzuoztKgcaGiOZnpEvWPqpvRsss2a0
+	0Q35fNEdBEHW9aSB+YTha237TlqwD+cBBjmFMNZ2GhNkdamGkPyRD0pZ
+X-Gm-Gg: AYBFou1XhUo24UjnGAO0J4dLnSciXIa/OkcALV+7/zZ1pOqLJyaXXtiAC0ll2sIHpDy
+	RNk2z/csvUiYPQiERz4WVkKKGgzwv4n+isBTxNNB0cWzl/Kvj27tGUsAyXg52Jea6FrgF2YO5rp
+	/6zrPnMuQMhgye+Ah1Ljz3nqCAAXWH0EiyDGkhZBQJdJp0EXVHIpIhFbx+2pLYs0DxuNZrh4YZz
+	qXFjCv0SasTgLuoicFXr8A1AahEOcU2LkNEAMP/XX4FZEBbZavH+SqWO/GDsxn6QOK6VKQqwem9
+	XOPKViOsDkQQGOoMxt1F0q7U/Qa0fvvZjOsygoGlh9nSfg7omlewQIk6UhjmsDAQZv8P4noxaqk
+	b2j6X0ZYOesON2uBonax2keVCMwSaDHY8K9WX8a8qNLv9aSiDwoHlUeflWKxdCaqqBRRUM+RtQ1
+	ZqI6i0lnOXw+mvCDFzFeyQdSG2FIiIENAWrc37xCoREoM1FUgJw6JIb5exl+12pYDXjSWuxaIZx
+	bQFHNdnmusiLMgEu/8eeoirjVLSqfVJMZNMX3JwstUeqfwKAZNe4wFdgaNc+fvyOF8EXC2FG7LT
+	HhZHQr8=
+X-Received: by 2002:a17:90a:e70c:b0:398:9be8:ea68 with SMTP id 98e67ed59e1d1-398f86c8470mr2607153a91.21.1788162843411;
+        Mon, 31 Aug 2026 00:54:03 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([103.16.69.192])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0d40ac7sm25336992c88.7.2026.08.31.00.54.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2026 00:54:02 -0700 (PDT)
+From: Aditya <mradityadash@gmail.com>
+To: Derek John Clark <derekjohn.clark@gmail.com>
+Cc: Ilpo =?utf-8?q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hansg@kernel.org>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>, Guenter Roeck <linux@roeck-us.net>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [RFC PATCH 3/3] platform/x86: lenovo: Add Legion Go Fan Method
+ curve driver
+Date: Mon, 31 Aug 2026 12:55:03 +0530
+Message-Id: <53842308-7AA5-4885-94D9-527F6140CA6C@gmail.com>
+In-Reply-To:
+ <CAFqHKT=ozs1i1GwTwhh_A3DQauvn78cL8GHvJJGz+arRsZ=1Vg@mail.gmail.com>
+References:
+ <CAFqHKT=ozs1i1GwTwhh_A3DQauvn78cL8GHvJJGz+arRsZ=1Vg@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TP0P295CA0058.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:3::17) To DM4PR11MB6020.namprd11.prod.outlook.com
- (2603:10b6:8:61::19)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6020:EE_|CY8PR11MB7730:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7799ebcd-7d20-4f74-ab69-08df0704caee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|56012099006|10067099003|4143699003|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: LIwMt9fI82uUpa65pIZ7XCMJuWq8iBx0/n23G/3e0fIinpsCvQn18rciQV8yImFzYC6F3WUBHKt2HnEAMHaDePcw7eOqnJqGLvFkOu6/6omHJBn1BTy6j2RE1RxTBRsNnMKonHl6U5R93VvVC6ZW5Wcp5M1luGJ/fJeWGOD9kVZhBrG0bWCDTO/2gPyGqVb+9ckOIgz2cE7Ab7DEkEOUfnSbFrt+4X0MLQHSJExyzItrV6uWvCS8JVkt6R1sjqqqilx6PYiN+glfk20gZsBV89FvZyrfwkJDK5z1WIoYVcXorwDewPvS0dI9r7fsHbM/FF5s1nA8YfLmTYLMIomJ9nt8j2k/D70v7Ca5JBHdamiP1Np2AGvMYsbXFW+m2gf6nPzLuii2rirN9sjkHXNS9h2N4G+MJC/t+ETv9HJX/FPCI9Ja5mhSZhUSN3qZ8iMhnx2AWYF1HFpFXPNHJsF1n9Trm0nTDj2B5BDfcL0vd26qoZsaVGidDUYXYmvFovdhjc1IXsLJXY61iQpNHYR0HF2Bpn+wy2TvO3lggjiGzYzYyKSzfAD/KrpQY7PrVJDrS09oxjX2uD9yT8MTwBCqiPkuHppVBNUc47MNfJTDrzoPIsw1qRF+jFqd3AoL+2tEpdMKckwrIqt2g2JM14ZrkbkaKHMR+rE2dUZ0nsDUA4c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6020.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(56012099006)(10067099003)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cWszelRNN3hNVWRTUUxyazZkcitWblIxZTJpQXN4S0dTVEVraVdnTUFJWU9D?=
- =?utf-8?B?cGlGa0ptYjA0dzZGTEZyV3o1MUlod0NKNS9RZW5oc3VLQzcwOGx0SlNydzcv?=
- =?utf-8?B?Wkd3VHRFTDV0RDhod0ZtQnUwQWwwNjl4d0VyK0JhNWtYZDM4QmpiMWo5OFNy?=
- =?utf-8?B?ZDdiK3Qyb0taYjNid0F6d0wydnhKbHRldHMzZ2JoekhvU09sM3ZNdmV1bHlI?=
- =?utf-8?B?Z3BpOFZjOVZzWlovU2I4U3dKWXZVazIyYkZwY0ZPU2VocTVHV3l4cGdaTWpN?=
- =?utf-8?B?ays5V2pYcjZUaytCRkViSzJycTV1N3lTT09DWG9Oa2pPQ0dpUXhWSlAxODln?=
- =?utf-8?B?Wnp5WmVWbVJMR3ZPS2IzVlJNTDkxVWFXemQ2U2FneTErbi84SHZOYzlDWTd3?=
- =?utf-8?B?NDZrRzJwK2tYcWZpRUhFVngrWFFrSmpUQnlmbS80UmtFWC9HN25GVStJS29I?=
- =?utf-8?B?c0lZU085RGlNblhtZUtZN0JkV2VYWElPa1c3SE9uanNTZTdNYnMveEZvMko1?=
- =?utf-8?B?Zy8wSlRva09NUXFVWXpZWUUwVFpZa3ZkWU42dzBab2Z6MmdGSnlDS0VYNDI0?=
- =?utf-8?B?V1FuK0xMQjJrWGNGajE4T1JHVmxyRUwwc3MwZ3VRYmZNYVhYQkdPVWVFZWpt?=
- =?utf-8?B?NEpKOFlwdE9qZUo2MGFLUFdBd2ZxeDBqTEkvaEdIZnNvYitYQ0RkYTFiOFVL?=
- =?utf-8?B?ZHFuR0xRUEVVbXowNXZGMm5XQndaa0hUS25vUGQ5a1hHdk5jTW9EOWI5REZa?=
- =?utf-8?B?bDRZamRic1FYcEdZRHJKWlBKSW9WbmV5NlZEY0gvVjBEa2tMT2k3Um50TkZJ?=
- =?utf-8?B?Nk1xeWRxTVhPNlVpUHcvbmU5bC9oaWpoakk2ZjdkdVd5S25hQm94SnlBS2JM?=
- =?utf-8?B?cWhCM29Ra2hFdDNtTmU5dmFHMnB5aTV3VkNWeW45ZnpDMlZhZzdzdy81TEpj?=
- =?utf-8?B?TU5TaWVObVplSy9hdzdFZENZNm5IVzlVLzNoNU1iaUcvaU55dkIrYlR0UU1k?=
- =?utf-8?B?RXA0eHZyZi82cHhzQStRN2FhWnpyckM5M3F2Kyt0R0dSaXRvQlZQbVNuR3Zz?=
- =?utf-8?B?aHNiWS9EQWUwYzBRVVo2N1dsbUsrb1dxbUFBTXhZV2xGdFU4d3ZwNnRKQlJ5?=
- =?utf-8?B?SDdXcGxxVGNrSDlSdDIxRmpWWkpYSnVtQ3ErdHhXUi96OGFjWUdkcDcwS2ts?=
- =?utf-8?B?QmtLZTZMaWJUOUI1SEc3QkhpcFl5RkZQc3hReVVaRU9ndG9qNE9RRE1kOUVT?=
- =?utf-8?B?VFdVUC9MMkovSHhleDZ6WHIrNGxsMDlLV3h3NjVXV1hjY0dXSUFkOVM3d091?=
- =?utf-8?B?T0JrUURHd2JCVEFTeDFXR0ttYmcxMFJhRGhHQXRIM21aKzVvdEtGazhrSlJR?=
- =?utf-8?B?R3NRQXRRelpKRHRmNk1HQ2FsZUlmRGExTkNyRDl1VllBek91eGNUeGloSlF4?=
- =?utf-8?B?cVNlSjRQRkZTSVQwR1lEZXhlU09URWt0aFkrdS93bEY4eTUxUmxyUzlESmtG?=
- =?utf-8?B?SWxWWEdlWDB6djZSV09HK2pST1BTSEdId2hDb1NSUDhRdWlNbjJ6RHExZzJo?=
- =?utf-8?B?V3ZPWEVkRTExRTUyOEI3anVHUm02L0c2OFEvSGxxRjA2VTU1S3VsTS9SVzFu?=
- =?utf-8?B?T1NxZmtna1BqbldtYW5tZkV4N09lQWVRaVVndWY5b1p1RGZzckVwR283ZXE3?=
- =?utf-8?B?ekU4UWR6WXhhVEJDamgraXAyeFRxNWVNV0JROWt5T0srakxuekk1am5UR29D?=
- =?utf-8?B?V0ZXMUN0dGlheExvVHl6QytaeDdpa2c3bC9PZHQwNjZDWmVoNC9kb1JlSGR5?=
- =?utf-8?B?TGxFTDc2YSs4SEZ3eVFJZ3FxZXlGVC9WeVMzTVVHVmFSOThBV2FESHdXVWcw?=
- =?utf-8?B?bUJRaUtKQzJmZmhha1QvWFYzazVXNzN0aVhVVjdMbUFKSUlVdlN1ejFKTnU2?=
- =?utf-8?B?MzYxYUorSVRGN1R1ckh5WEdtdC9wZkliNVErZ1ZpSTdUM3VLSzF0VkZ4UU9K?=
- =?utf-8?B?ZzVGeVg5eW5TMEJheldCeWx3T0x1V3VQTG5jbWtjd3ZOUXRKTkliWkNhRmhx?=
- =?utf-8?B?Q1VSd0VlVTdKOWFIV1V0SkcxYnY2RGlaVXVKNDdsc3NTblhENVJ3RjlGQk0v?=
- =?utf-8?B?VjN4ZmN2RFhzN0RRcFB6WTI0NDJwZkpWZUd6aEsyUWI2NnJHMEFHZTZuOThC?=
- =?utf-8?B?bTh6aVdBK1pFZS94SnZFVHBxdm1VZzRpbEx1cDAyaVdDMnNZRC9NRHlQMUVC?=
- =?utf-8?B?NkJjaXNiQjJpcldxeXZDNG5hRmN1aDhOb3J3akhtejhHTGdDUHVxaTludjBS?=
- =?utf-8?B?dUZmZXJySVhuMG5xbFF4NElxZFRIeEdHRmZBQkpmaWwrT0hRWk1mQT09?=
-X-Exchange-RoutingPolicyChecked: MU75jRhlBzVsysT5CJ25tSvNlTD0MbQJzglutsz/ygsFUWNWrlU+IMWxmL1UotZUWIhpH3ElbyEtivwn9843cSvvx5CzE3fT7GS5ZU88EUkxyoxXuLlWRg0qgIdoRzRnZQkw3cF5r/uzLPsHOVXyBiIIYTarmRWGsbe2LlIKoBDqPf08JCWx7AMRKrqY4r2MFmgIrD2/Z8A27JQdwHAnAN2dfR8AMYMBDmVarytXo1WfXZBjqV1HsoUZWa7lOAN6s3ryRnJ5QKn1mf1/QFbL35cr8ZC/yy+j7I5Dmt4/bbP4Zjn6V5jB8puJNINzVOg+RHxnC/pQIrt4B8iB9bMuow==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7799ebcd-7d20-4f74-ab69-08df0704caee
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6020.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2026 02:08:47.6864
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XpLWC9VQuuvwTkfZCi3MkdcQr+zaNDDs0zell1dF6Djl5pU49cx9C8IBAVUPux2Wi3uK+6pJk0Rh7ERZdunBPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7730
-X-OriginatorOrg: intel.com
 
-Hi,
+Hi Derek,
 
-On 8/31/2026 9:53 AM, Mario Limonciello wrote:
-> Add a few others who have worked on CAS.
-> 
-> On 8/29/26 10:42, Klaus Kusche wrote:
->>
->> Hello,
->>
->> I'm running linux on an AMD Ryzen HX 370.
->> I use Gentoo and compile a lot of things (including the kernel)
->> with Clang using full LTO, which results in a single LTO process
->> running for minutes on an otherwise idle processor.
->>
->> Before Cache-aware scheduling was introduced,
->> AMD's pstate driver informed the scheduler about big and little cores,
->> and the scheduler always moved those LTO processes to a big/fast core.
->>
->> Now, the cache-aware scheduling takes precedence over big/little
->> scheduling: All big cores form one L3 cache domain,
->> and all little cores form the other L3 cache domain.
->>
->> When a process is started on a little core (and LTO is in most cases),
->> it will no longer be moved to a big core,
->> even if it runs for minutes and all big cores are idle.
->>
->> In case of LTO this hurts twice and badly
->> (slows down LTO not just noticeably, but dramatically:
->> In total, any compilation with LTO-linking takes much longer
->> compared to earlier kernels without cache-aware scheduling):
->>
->> * The little cores run slower (3.3 GHz instead of 5.1 GHz).
->>
->> * LTO linking is very cache intensive,
->> and the L3 cache of the little cores is only half the size (8 MB)
->> of the L3 cache of the big cores (16 MB).
->>
->>
->> So if a big core is idling, and a process on a little core
->> is long-running, big/little scheduling should overrule
->> cache-aware scheduling and move that process to a big core,
->> even if this moves the process to another cache domain.
->>
->> Greetings
->>
-> 
-> Not so sure if it would help this case but I will note there is a 
-> debugfs knob you might be able to use called aggr_tolerance (it was 
-> introduced in c1e7fe5e75ed11fa85368e5a186472afd3858f3a if you want to 
-> read more about it's background).
+Thanks for the review.
 
-Thanks Mario and Kusche for bringing this issue up. Yes, we can tune Cache
-Aware scheduling via debugfs or even turn it off. The issue in current code
-is that the cache aware scheduling overwrites the strategy of asymmetric 
-scheduling,
-and Ricardo also found this issue previous and there is a patch to address
-that, by honoring CPU capacity during cache aware scheduling, for the 
-**misfit**
-task. It would be helpful to see if this patch makes things better:
-https://lore.kernel.org/lkml/20260825174112.2580942-1-tim.c.chen@linux.intel.com/
+I have been investigating the BIOS of a sample of devices, which can be
+broadly classified as follows:
 
-thanks,
-Chenyu
+- Do not have Fan Method
+  - 8JCN - Legion Y530-15ICH
+  - BHCN - Legion Y540, Y545, and Y7000 2019 families
+
+- Have Fan Method
+  - Do not have Method 5 / stub
+    - K1CN - Legion 7 16IAX7, Legion Y9000K IAX7
+    - JVCN - Yoga Slim 7 ProX 14ARH7
+
+  - Have Method 5
+    - Take direct input for Method 6
+      - All Legion Go, Go 2, Go S (N3CN, RRCN, RQCN, QCCN, S0CN)
+
+    - Take index based input for Method 6
+      - Have Method 5 SensorTable equal to Method 5 FanTable
+        - M3CN - Legion Slim 5 16APH8, 16ARH8
+        - LYCN - LOQ 15APH8, 16APH8
+        - R3CN - LOQ 15IRX10, 17IRX10; G5000 IRX10
+        - R8CN - LOQ 15AHP10
+
+      - Have Method 5 SensorTable be all zeros
+        - N2CN - Legion Pro 7 16IRX9H; Legion Y9000P IRX9H
+        - LPCN - Legion Pro 5 16ARX8, Pro 7 16ARX8H, R9000P ARX8
+          variants
+        - KWCN - Legion Pro 5 16IRX8, Pro 7 16IRX8/16IRX8H, Y9000P
+          IRX8 variants
+        - MHCN - Legion 9 16IRX8
+        - RYCN - Legion 5 15AKP10; R7000 AKP10
+        - Q8CN - LOQ 15IAX9E
+        - Q7CN - Legion Pro 7 16IAX10H; Y9000P IAX10
+        - RZCN - Legion 9 18IAX10; Legion NX IAX10
+        - RGCN - Legion 5 15AHP10; R7000 AHP10
+        - RECN - Legion Pro 5 16AFR10; R7000P/R9000P AFR10 variants
+
+For the direct based families, there is no actual discriminator or
+value that can tell that the devices take direct input. There are two
+possible discriminators I have found so far:
+  - SensorTable contains 10, 20, 30, ..., 100 exactly
+  - Their Fan Table GUID read function is a stub
+    - However the Legion Go 1 does not conform to this, therefore it
+      has to become a quirk.
+
+None of the direct based families expose any information on the range of
+each point on the curve. 0-100 can be taken as the nominal range.
+
+For the index based families, Legion drivers send the current power tier
+(current_mode) as the first Method 6 byte. However, this value comes from
+the Other Mode GUID.
+
+All families can use FanTableSize and SensorTableSize for their respective
+Method 5 arrays. FanTableSize can be used for the Method 6 array size.
+
+Then, based on this power tier, the respective Fan Table GUID table is
+accessed. FanTable_Len for that table determines the range of each point
+for Method 6. Each index will be within 1..FanTable_Len.
+
+None of the reviewed Method 6 implementations consume SensorTable values.
+
+The driver should not read back Method 6. Consumers can use Method 5 if they
+need to confirm the result.
+
+The Other Mode GUID for these families did not seem to have a fan table
+route through it. Only Full Speed and individual fan speed controls were
+found here. The firmware based fan curve remains under Fan Method 5/6.
+
+Regarding individual fan speed controls, they did not work on my Legion
+Go 1 device. Submitting RPM to it does not change the RPM. The EC fields
+which take this input are not exposed to any WMI interface as far as I
+have seen on the Legion Go 1.
+
+This also cannot replace firmware based fan curves as it will require a
+userspace driver to continuously monitor temperature and set RPM.
+
+Some open questions:
+
+- How should the Other Mode dependency be resolved? Should it be a helper
+  in Fan Method, or should Fan Method be incorporated directly?
+- What should be the discriminator for direct based families?
+
+Thanks,
+Aditya
