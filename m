@@ -1,96 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3726C4AF16B;
-	Mon, 31 Aug 2026 17:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351753624C5
+	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 17:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788197352; cv=none; b=aPPEy3PXRu610zW7bH+cc1HHXixYZh8EOSKLZ6CkekLSFUldIazbsH3db4HJ1gOBMkG7Z2+gg9Vw/DzS+gnKrAOWBrA0ISJEPBz4u7Ahx/Ep2VGxrjfZhVaJuguyQyTT4e98Z5CbqIziVeB/N5K84xDvJQd/eW9jbx97cH8mxLM=
+	t=1788199145; cv=none; b=MvoOHHcXmTcsmIf4Ko7sivSqHwg06EcnG14KlZ85eXvijrZ6IwxfBYaib2WCw7oubrPuiDw3CQ5JB6IVf4EEuAQ65mRuxIP32OoYyjlAgqlzot6VMf87/5PEoiq53yOHSFUfPUCa0UJCUy+u0yp9aTF4jXQuqVstfXjdT3ux9C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788197352; c=relaxed/simple;
-	bh=a1/znAPVOMGvYSl25o82OKUV2aH5tav4WPnmQ9FKMlw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=t6d4rYKY9Pmi2Q5zSNOZ0Kz/3yLFcWp9O73KkXXxJJmCOME8uOF4AdRUHMIiT9DKyrFmz8VxISvzvDLtLiGraNu3h8gicjFw4G3zBWgEhpo9bun8w/YzDTtSjEHqk4SS6kjaQvJeqpH8NiRysBD85xy65Uh8PZ3C4oMHfiBJXRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YshEmdCx; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788199145; c=relaxed/simple;
+	bh=fMvS95Zokxhi4YAY/DKRZh4u0zJjTtwNe/Ad1WemONA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSikOF65fREQpK9uofV0wMfN/YIXZBYVU2VRIOUByAgs4SSPq79isJ/I9q13OhQpqn4p2kRa6KU/qfa2J2Luo796Bya6jb0Tl3V7vBYHJpzUZGMK5u+Jh0n0a8wZGO5ez2bpmivMsb5Ub9i6i5clZG1t+PUIj9SX5w7zg98pNQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFtXxhmG; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YshEmdCx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788197350; x=1819733350;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=a1/znAPVOMGvYSl25o82OKUV2aH5tav4WPnmQ9FKMlw=;
-  b=YshEmdCxx6k4ugUwy+EfV0C5aFUcFwqdma+U6m5t6tjS+Nvu3V2glXu5
-   IxBytzsFLr9p7oFoG5saRFJ4QolliosnKbezJFDRGHvd2bYz4MyU9OUmx
-   VsK1Oib0HaEhNvagfOQUxmadkJjntFYg6DtJb2RcDN77AqUGcfCPqJtLw
-   2gy1rLufQrZmWluHCQyNDaxhRH8VQATURn01oPpezGK5xhErlXSk5vGEO
-   iWJwdu+Rcv6DsxkAx2H3nu1jJ/ATeVE0gnGvNpwH7CpiQVGgt2mo3f8pv
-   jiDRLICa7s5YNrCxNv4Yn1WPzFNK7cEc0O4wPw/N+o7T3sNE8VzjFROcQ
-   A==;
-X-CSE-ConnectionGUID: wLj9vUXhRUCk9llHaWWFKw==
-X-CSE-MsgGUID: iwwuPu8YSB+8+3KUsylzlw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11892"; a="105985186"
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="105985186"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 10:29:09 -0700
-X-CSE-ConnectionGUID: gL8afe7FQ4as9lljLKc0Ug==
-X-CSE-MsgGUID: nG6uwSFoRkWPwaYiZzvQow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="265143274"
-Received: from unknown (HELO [10.241.243.185]) ([10.241.243.185])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 10:29:08 -0700
-Message-ID: <406a5c407bbe60cafc24f715e089f5552a0791f9.camel@linux.intel.com>
-Subject: Re: Cache-aware scheduling does not work well with amd big/little
- cores
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Klaus Kusche <klaus.kusche@computerix.info>, "Chen, Yu C"
-	 <yu.c.chen@intel.com>, Mario Limonciello <mario.limonciello@amd.com>
-Cc: "Badole, Vishal" <Vishal.Badole@amd.com>, Peter Zijlstra
-	 <peterz@infradead.org>, linux-kernel@vger.kernel.org, "maintainer:X86
- ARCHITECTURE (32-BIT AND 64-BIT)"
-	 <x86@kernel.org>, platform-driver-x86@vger.kernel.org, K Prateek Nayak
-	 <KPrateek.Nayak@amd.com>, ricardo.neri@intel.com
-Date: Mon, 31 Aug 2026 10:29:08 -0700
-In-Reply-To: <369d0bbb-db7a-4f86-bee2-332d5295c452@computerix.info>
-References: <2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info>
-	 <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
-	 <b475039b-defe-46e7-ab85-46e3196da667@intel.com>
-	 <369d0bbb-db7a-4f86-bee2-332d5295c452@computerix.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFtXxhmG"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cbee846deecso80794a12.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 10:59:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788199142; x=1788803942; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2ZgJ5g0NbcsQZow9nFskcMFtht0b6aFS+BcFnkpsMUc=;
+        b=fFtXxhmGbnlogy0zGaOAsEU8RfCdLAm2l2jewh7ubAP+7+Lhwf+jZd/2qaDwzMJuvp
+         6py6zEpPGn5jHIQJC+ExeWJxVnYJXVqPqBeNPUiBRA2EIswzT3FFKSB0qs1d2Bdu5Gjv
+         c/F6rvdOxg4ob6anZSk2GY637/KtOPuV9nDyMObDbM6WBnwQL6YNyQuk6U2MT+SWpakl
+         bhFcqAkopJkaYKgXs5r2T1SWy5Exxi3MGrUmv8iyApO+nCJqgk9SG/9JBnGt9KPJzNkS
+         bpDt585NE9AYOxsuQkfCW0gOXQCnB8t7Vhl8ABX4f4q/R+3/6h/HYi3giC+AxqDYMho/
+         GUQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788199142; x=1788803942;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:from
+         :date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=2ZgJ5g0NbcsQZow9nFskcMFtht0b6aFS+BcFnkpsMUc=;
+        b=SVkfV/0+kr9cnBoUdnvhrdJVnJfk0KrqroEhNPZRzbaWjrGgXVHVwikSJcYcmz3Xqc
+         zzWDfqF6dbBgaUXNAhpfZExbkirYHVTkQ8wL26XYl2Nq8qrKMNStEW8C2QWYB+KnCaKz
+         hCDXT4vG0shUcYN6aKG3g3qh4VVdkLpsc+FauKxeOz8WQ5167C9SMl/nRwsG9gbaAQLb
+         JOtFBHJRT/v1QnLINr39mMQpyi7/zkLVnn+m5/NelbcTM9sxBSZxYLqmeWqTXE6YRUOH
+         HhKgayaNaygMKl5iZZh2pjCnkcMmT7iWgh5+JlJAaLJCBfQoJLMzPX760lY+cYGnE6tG
+         RBJQ==
+X-Forwarded-Encrypted: i=1; AHgh+RppIfpxL1zEfbdBLczyQGn9crpA/1d28Qc2802aFl1+GCF7fjqWQge7w57EES7gQ6f+HKZ1eVS7L3YT/d2I0YTcDqWN@vger.kernel.org
+X-Gm-Message-State: AFuF++kHdTVC8vJu1lBmtQK6SF8tFNdsxwirMhQZ2FivoZtQd1WpJ89D
+	fc+hp5tVE+q/Z3tf1jp6Ey37IOeNt3cB+jF8HuLD11luyBReSfQBFEDo
+X-Gm-Gg: AR+sD12+D34kEYP0zFOyZrzVXiIqcF+5O9sXDXDpibY5dTOyperSuCbTmM058syIVxg
+	26FerD5llcjrxfKlGohPsdjKOQLvueQ+HGDsZXb5jM8xqKcXD9IOjHGOfPXxTDs5ZWEELzabogD
+	0IBNCPmyPeQ5EmomwmCdd6je3pE7tgr621MX8czVXcnfymdKP9vQhyYvJjk9YtuQb0mIwbZBKgc
+	PrC60imnzwRmeF0w0eheaP16HO/TviqvW1Dt61olcbhOjbjJupOi//+HJ0cIfOb9BrEn24DDKor
+	qJL21OOj8m0It2BFIyekYXOFmK5cnjvQLJaDKQXBbPGr7JD0ZUZrUbwz5L+kwwnMuhzCcK+Jm37
+	ZRFixX1ivviCXD2tSuRdPV5phwVP38QGW+B6z7tUCV71JwbknisKqOWkFeRd0hUOkvSxMxowJoJ
+	7sm2RqblsoBSmLXX6G8J1PxBhktsCFuyBg9IRZBQnpq62far+8WbtwMFrK/tTLLdMjorO3tB5zV
+	pD+c552VzrZ3a9TXz0tYecP/1v3RuwxsLLv1jM/wTX9e3y6AZXEeku6iKLCBmtU2bhI
+X-Received: by 2002:a05:6a21:498a:b0:3d3:ae50:97cd with SMTP id adf61e73a8af0-3d3ae5099c5mr26881038637.26.1788199142325;
+        Mon, 31 Aug 2026 10:59:02 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3286fa37fa5sm34701575eec.29.2026.08.31.10.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2026 10:59:01 -0700 (PDT)
+Date: Mon, 31 Aug 2026 23:28:57 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Arda =?utf-8?B?RG/En3U=?= Ari <arfeliousheres@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: hp-wmi: Fix board_params typo for 8DD6
+ board
+Message-ID: <apW_MbaycTf33RWu@archlinux>
+References: <20260827235139.154462-1-arfeliousheres@gmail.com>
+ <apKKuL5lh2OK-6lq@archlinux>
+ <8cc78401-cc88-3136-5d72-eaab779a8690@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8cc78401-cc88-3136-5d72-eaab779a8690@linux.intel.com>
 
-On Mon, 2026-08-31 at 13:24 +0200, Klaus Kusche wrote:
-> Hello,
->=20
-> both patches in combination seem to have the desired effect.
->=20
-> But I just look at a bar graph showing the current load
-> of each core.=20
-> The graph suggests that long-running CPU-intensive processes=20
-> migrate to fast cores when fast cores become available.
-> And I have the impression that LTO compilations
-> finish significantly faster now.
->=20
-> I don't have exact numbers or benchmarks.
+On Mon, Aug 31, 2026 at 07:38:40PM +0300, Ilpo Järvinen wrote:
+>On Sat, 29 Aug 2026, Krishna Chomal wrote:
+>
+>> On Fri, Aug 28, 2026 at 02:51:39AM +0300, Arda Doğu Ari wrote:
+>> > When adding support for board 8DD6, &omen_v1_no_ec_thermal_params
+>> > was passed as driver_data instead of &omen_v1_no_ec_board_params.
+>>
+>> Hi,
+>>
+>> When I added support for 8DD6 [1] &omen_v1_no_ec_thermal_params was
+>> indeed the correct quirk. But because Radhey Kalra's board-specific
+>> feature data patch [2] was accepted first, my patch probably lead to a
+>> merge conflict that had to be resolved manually, which is why this is
+>> subtle bug got introduced in the first place.
+>
+>It's my fault for not catching it (though to my defence, I got sick around
+>the time the merge window ends so I had less time for handling the patches
+>in the first place and I only now realize compiler won't catch this
+>problem for me because the old structs are still there).
 
-Thanks for testing the fix.
+No problem, take care.
 
-If you just apply https://lore.kernel.org/lkml/20260825174112.2580942-1-tim=
-.c.chen@linux.intel.com/,
-with default aggr_tolerance, what numbers do you see?
+>> > Because active_board_params expects a pointer to struct
+>> > hp_wmi_board_params, dereferencing active_board_params->thermal_profile
+>> > results in a type confusion bug and invalid memory access. Update the entry
+>> > to point to omen_v1_no_ec_board_params.
+>>
+>> Thank you very much for observing and sending a patch for the same.
+>
+>I've queued the patch to the review-ilpo-fixes branch already. If Krishna
+>wants to give a reviewed-by tag, I can still add that to the commit.
 
-That will be helpful for further tuning.  Thanks.
+Reviewed-by: Krishna Chomal <krishna.chomal108@gmail.com>
 
-Tim=20
+>-- 
+> i.
+>
+>> [1]:
+>> https://lore.kernel.org/platform-driver-x86/20260623141314.33947-1-krishna.chomal108@gmail.com
+>> [2]:
+>> https://lore.kernel.org/platform-driver-x86/20260615091034.987029-1-radheykalra901@gmail.com
+>>
+>> > Fixes: a7320d6eb9c42 ("platform/x86: hp-wmi: Add support for OMEN MAX
+>> > 16-ak0xxx (8DD6)")
+>> > Cc: stable@vger.kernel.org
+>> > Signed-off-by: Arda Doğu Ari <arfeliousheres@gmail.com>
+>> > ---
+>> > drivers/platform/x86/hp/hp-wmi.c | 2 +-
+>> > 1 file changed, 1 insertion(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/platform/x86/hp/hp-wmi.c
+>> > b/drivers/platform/x86/hp/hp-wmi.c
+>> > index b2773fc1aca4..615b4cf6fc45 100644
+>> > --- a/drivers/platform/x86/hp/hp-wmi.c
+>> > +++ b/drivers/platform/x86/hp/hp-wmi.c
+>> > @@ -337,7 +337,7 @@ static const struct dmi_system_id
+>> > hp_wmi_feature_boards[] __initconst = {
+>> > 	},
+>> > 	{
+>> > 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8DD6") },
+>> > -		.driver_data = (void *)&omen_v1_no_ec_thermal_params,
+>> > +		.driver_data = (void *)&omen_v1_no_ec_board_params,
+>> > 	},
+>> > 	{
+>> > 		.matches = { DMI_MATCH(DMI_BOARD_NAME, "8E35") },
+>> > --
+>> > 2.55.0
+>> >
+>>
 
