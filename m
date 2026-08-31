@@ -1,38 +1,39 @@
-Received: from mail-244118.protonmail.ch (mail-244118.protonmail.ch [109.224.244.118])
+Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485F637207D
-	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 18:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCCA3655E4
+	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 18:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788201958; cv=none; b=lruNFV4uSzfPvPX8PnJhH17+xw+NeG7tdN1iTpeHMUj4yXx3yzCpjN7J2sv7qqBi7CxiVziN8oKBxeQ0tP3mxAz+Qzgdrw1nzBK5OwET7Mcr/eA68tQ4j/B0wLJ/8DvWwtEIqN2FJakp8+IW95M/3psJWeruA1xxLEgFkw4JWRo=
+	t=1788202105; cv=none; b=iYUhaFF+WCGClyc+V5/HkFfxIn6hUg7+vs8tTdm7Bb2hK8MoWkhtNFki4FHR0NoiCBkdiy2aqGsqdfKvrAfVmF2onJnn+E8pup56zCUiwNT8V8WH7GU1+5zKNjXVZjX/LA0ZbCp5RTM+ksC6fsiJaCmY6ygfYJBj/Ym4qUY7wTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788201958; c=relaxed/simple;
+	s=arc-20240116; t=1788202105; c=relaxed/simple;
 	bh=Az2Pl7f1QwhQKoRNPr+QTqcoARhJrySgPolWHdwi4M0=;
-	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SffoRZneXEhCPn0pYjPYxV17BJRPYk1mJeU/9+IKIAzJ427h2odxEaNgPKbuzoVAYIZjFY3WYzy87DvMOQqJ5PIKg8aveggq3m/FVS6bTjPG/yCTy32N79HngFqGMZshMM2/0cR4BddffnQi7vHDVeqAlLiQ04B9iqSrJNgtT9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=ALamzQIs; arc=none smtp.client-ip=109.224.244.118
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mvTwahaIrxfUv/B2eExd9jKfHSWYoiihsiOFQm7ezCXEbMzuVbExfehOSXRGgGOBq25tyoonEdy/HpXfkl8amCsPWfjJE6l5gKW5tldsgfVLjaMq5cTkau6Lu93ok1RRrlK6QLMiV8ajG1BAIPURPrWY0KNXzCkpHuyx8fftS7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=nhMN4Gg3; arc=none smtp.client-ip=185.70.43.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="ALamzQIs"
+	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="nhMN4Gg3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
-	s=protonmail2; t=1788201950; x=1788461150;
+	s=protonmail2; t=1788202095; x=1788461295;
 	bh=hHFk5EVxfr8xhwx4V530sofgTok9YiDl5MjT46/MXxM=;
-	h=Date:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
 	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=ALamzQIsEuHqJzHfGYHDjRpjNMp4wXbJGQbwbxzWQfhiJ1eeVCknZdz8FR2Ek5+Gc
-	 OOzyRHmZLAzTPqpGpEfjpinBpSeXWH5Q2BuEgO2xrRWlWaz67E3N/aTVvWU+LSfaKJ
-	 VbApG1OmA34NRJWhvVs8yGcJVxv5AYkqk9wiNszBer9ofN+XhdcMk6mX55roA3rJjm
-	 ox4bhq8+r2y55E2llV0FE64ggt0tk6z0DXUES06V9wzPXCIwnGqDmYqd7B/RyzCdM1
-	 ljGwSk7X2wDH2u/p98EWQwE/eS9uhSdP7RsyOlC26xWwf/Ya8LkuSg8YGloB83i7bl
-	 qb7j/JrkPAk7A==
-Date: Mon, 31 Aug 2026 18:45:44 +0000
+	b=nhMN4Gg3fIryM/gC0UK7ZgkH1TKtOy2IGKrPE1vHeCT9/XWkWD8P2PEsyrriaxipT
+	 rzXLLdEu8gwpKOCGE/Inr/a0ha8cueXlaO6uoK9oaS9Ut1L4MZDuwj8FlBVQCpV9aG
+	 t7deCN50cWhAzN6HhEUybytkGavsXgk5zdfzaAqHM18HDOl9BevPjj2COzBCvVdxcd
+	 T+7y6kh3Mvomf/seQxgN2qVo7JBoBxSm0MIz+a8YjIh8FH2Y1oWq1hYmuwETbsEvAq
+	 GYs4pH6m01+CcDk393fx7+J4ZdqbvYu3n4aMifWahSp3AKnrg0eOXS3BRVzO8z48Nk
+	 InqnqH9D1ypmQ==
+Date: Mon, 31 Aug 2026 18:48:08 +0000
+To: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 From: Ahmed Yaseen <yaseen@ghoul.dev>
 Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Nir Yehoshua <nir@ciphersecuritylabs.com>, Ahmed Yaseen <yaseen@ghoul.dev>
 Subject: [PATCH v2] platform/x86: asus-wmi: validate custom fan curves on enable
-Message-ID: <20260831-fan-curve-validation-v2-1-36f4223aedf6@ghoul.dev>
+Message-ID: <20260831-fan-curve-validation-v2-1-7274ca16c8fe@ghoul.dev>
 Feedback-ID: 177610485:user:proton
-X-Pm-Message-ID: 06014c918ac4eb6db907ce9912256e96113176cf
+X-Pm-Message-ID: 94db74f0edd852b9a8cb4a700b5a0e1a0afbb9de
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
