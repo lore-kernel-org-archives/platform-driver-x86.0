@@ -1,134 +1,110 @@
-Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
+Received: from www74.your-server.de (www74.your-server.de [213.133.104.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCCA3655E4
-	for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 18:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FC0380FF1;
+	Mon, 31 Aug 2026 18:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788202105; cv=none; b=iYUhaFF+WCGClyc+V5/HkFfxIn6hUg7+vs8tTdm7Bb2hK8MoWkhtNFki4FHR0NoiCBkdiy2aqGsqdfKvrAfVmF2onJnn+E8pup56zCUiwNT8V8WH7GU1+5zKNjXVZjX/LA0ZbCp5RTM+ksC6fsiJaCmY6ygfYJBj/Ym4qUY7wTM=
+	t=1788202184; cv=none; b=rljihJFxrjTojTXf3CXW89e9s2oUjcEca89dndj8A6V94nzB6oaw23HJL09qB/lqHmHiq76ANwvcsqkYXNhvMQJhnrZxqj0jqhCKCOFkoFzJhS3qHz8a/4L2Ezoz7RfAsDyYQx7L75DBEOzQgQWPlmSRCwvqC9HzCPn+xZYuEgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788202105; c=relaxed/simple;
-	bh=Az2Pl7f1QwhQKoRNPr+QTqcoARhJrySgPolWHdwi4M0=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mvTwahaIrxfUv/B2eExd9jKfHSWYoiihsiOFQm7ezCXEbMzuVbExfehOSXRGgGOBq25tyoonEdy/HpXfkl8amCsPWfjJE6l5gKW5tldsgfVLjaMq5cTkau6Lu93ok1RRrlK6QLMiV8ajG1BAIPURPrWY0KNXzCkpHuyx8fftS7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=nhMN4Gg3; arc=none smtp.client-ip=185.70.43.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
+	s=arc-20240116; t=1788202184; c=relaxed/simple;
+	bh=hTGudjtpdSOtOrAOCrFcB4XC3BXnwQSa0ef2M+jtzV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PddE8C+gb1WHiyn46hmeOPr5ja5L5Jf6i8hmRh0U3T82bRh+B0yjkF+zWhHUIAOmFrJxBSWHhvQC9umI3M6Anh+OgFsGuN7GDXX13FBLT4//xn2au32V9mK/Bvp8umm8RxHEKbUUEpdg2OSGE+3mBe/xJdFo0GcbQHTGJhCnM0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=computerix.info; spf=pass smtp.mailfrom=computerix.info; dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b=EG3KKG1N; arc=none smtp.client-ip=213.133.104.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=computerix.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=computerix.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="nhMN4Gg3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
-	s=protonmail2; t=1788202095; x=1788461295;
-	bh=hHFk5EVxfr8xhwx4V530sofgTok9YiDl5MjT46/MXxM=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=nhMN4Gg3fIryM/gC0UK7ZgkH1TKtOy2IGKrPE1vHeCT9/XWkWD8P2PEsyrriaxipT
-	 rzXLLdEu8gwpKOCGE/Inr/a0ha8cueXlaO6uoK9oaS9Ut1L4MZDuwj8FlBVQCpV9aG
-	 t7deCN50cWhAzN6HhEUybytkGavsXgk5zdfzaAqHM18HDOl9BevPjj2COzBCvVdxcd
-	 T+7y6kh3Mvomf/seQxgN2qVo7JBoBxSm0MIz+a8YjIh8FH2Y1oWq1hYmuwETbsEvAq
-	 GYs4pH6m01+CcDk393fx7+J4ZdqbvYu3n4aMifWahSp3AKnrg0eOXS3BRVzO8z48Nk
-	 InqnqH9D1ypmQ==
-Date: Mon, 31 Aug 2026 18:48:08 +0000
-To: Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-From: Ahmed Yaseen <yaseen@ghoul.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Nir Yehoshua <nir@ciphersecuritylabs.com>, Ahmed Yaseen <yaseen@ghoul.dev>
-Subject: [PATCH v2] platform/x86: asus-wmi: validate custom fan curves on enable
-Message-ID: <20260831-fan-curve-validation-v2-1-7274ca16c8fe@ghoul.dev>
-Feedback-ID: 177610485:user:proton
-X-Pm-Message-ID: 94db74f0edd852b9a8cb4a700b5a0e1a0afbb9de
+	dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b="EG3KKG1N"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=computerix.info; s=default2306; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=UV1gM1U2p8jHqQ3spHsXWtQidWRgEuz/1lspV0W9kXs=; b=EG3KKG1NYSezy0W2lQR8oHm7i0
+	WNb40Y+XQZuUZcqmN3KOGHCmHV/A8HNJZD1g+dvQBdkGQR4ot6rquFFDG0eq2JG07nUmU0alIH8s7
+	ZxrUnygvGBjnXNlsaczsk9GS3UhaXG6JF16mBLyWqAjCRiLcsj1xOdWTa4gmjzO31ydd1z+4evLEl
+	pVZ1RqtgbNG3kO02QnDuqgSDBKih02e3g+soJ1YMZuInPIHN7yiJg48513KArp9dh9xTazDbyG8Xv
+	qhV0ARfDffisIp7XR0YTm2SXVPqOMcfpZiY4yqpFdhYwi7MLDrqlWw+PX34SW6rbc4thmo2OvKsBp
+	oKhgfIpQ==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www74.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <klaus.kusche@computerix.info>)
+	id 1x174Y-000BE3-1P;
+	Mon, 31 Aug 2026 20:49:34 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <klaus.kusche@computerix.info>)
+	id 1x174X-000He4-2J;
+	Mon, 31 Aug 2026 20:49:33 +0200
+Message-ID: <3a8985e1-77b4-4127-af0a-ec1c397eb1ad@computerix.info>
+Date: Mon, 31 Aug 2026 20:49:32 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Cache-aware scheduling does not work well with amd big/little
+ cores
+Content-Language: en-US
+To: Tim Chen <tim.c.chen@linux.intel.com>, "Chen, Yu C"
+ <yu.c.chen@intel.com>, Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Badole, Vishal" <Vishal.Badole@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ platform-driver-x86@vger.kernel.org, K Prateek Nayak
+ <KPrateek.Nayak@amd.com>, ricardo.neri@intel.com
+References: <2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info>
+ <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
+ <b475039b-defe-46e7-ab85-46e3196da667@intel.com>
+ <369d0bbb-db7a-4f86-bee2-332d5295c452@computerix.info>
+ <406a5c407bbe60cafc24f715e089f5552a0791f9.camel@linux.intel.com>
+From: Klaus Kusche <klaus.kusche@computerix.info>
+In-Reply-To: <406a5c407bbe60cafc24f715e089f5552a0791f9.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: Clear (ClamAV 1.4.3/28109/Mon Aug 31 08:24:07 2026)
 
-Custom fan curves reach firmware unchecked, so a curve whose temperature
-or PWM decreases from one point to the next is accepted. The firmware
-does not respect such a curve: a first point of 100% followed by 50%
-leaves every point running at 100%. The kernel keeps reporting the
-points that were written, so sysfs stops describing what the fans are
-actually doing.
 
-Check the curve when enabling and reject it if it is invalid. Validation
-is done on enable rather than on write because fan curves are written
-one point at a time and are inconsistent mid-write.
+This would need some more testing efforts,
+because all my kernels are built without debugfs
+(using an earlier version of Mario's patch),
+and without Mario's patch and without debugfs,
+I don't get any big/little scheduling at all.
+So I'd need to build and test with debugfs
+(tomorrow I'm on a mountain tour, perhaps later this week).
 
-Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan cu=
-rves")
-Reported-by: Nir Yehoshua <nir@ciphersecuritylabs.com>
-Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
----
-Changes in v2:
-- Rephrased second paragraph of commit message (Ilpo)
-- Link to v1: https://patch.msgid.link/20260828160743.31957-1-yaseen@ghoul.=
-dev
----
- drivers/platform/x86/asus-wmi.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Prof. Dr. Klaus Kusche
+Privat: Söllmnitz 32 d, D-07554 Gera/Söllmnitz
+036695/859909 klaus.kusche@computerix.info https://www.computerix.info
+Dienstlich: DHGE Gera, Weg der Freundschaft 4, D-07546 Gera
+klaus.kusche@dhge.de https://www.dhge.de
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wm=
-i.c
-index a65090429ca7..3b743fec5c64 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -3714,6 +3714,33 @@ static int fan_curve_write(struct asus_wmi *asus,
- =09=09=09=09=09 arg1, arg2, arg3, arg4, &ret);
- }
-=20
-+/*
-+ * A fan curve is a set of points the firmware interpolates between, so it
-+ * only makes sense if neither temperature nor PWM ever decreases along it=
-.
-+ */
-+static int fan_curve_validate(struct device *dev, struct fan_curve_data *d=
-ata)
-+{
-+=09u8 *percents =3D data->percents;
-+=09u8 *temps =3D data->temps;
-+=09int i;
-+
-+=09for (i =3D 1; i < FAN_CURVE_POINTS; i++) {
-+=09=09if (temps[i] < temps[i - 1]) {
-+=09=09=09dev_warn(dev, "fan curve: temperature decreases at point %d (%u <=
- %u)\n",
-+=09=09=09=09 i, temps[i], temps[i - 1]);
-+=09=09=09return -EINVAL;
-+=09=09}
-+
-+=09=09if (percents[i] < percents[i - 1]) {
-+=09=09=09dev_warn(dev, "fan curve: pwm decreases at point %d (%u < %u)\n",
-+=09=09=09=09 i, percents[i], percents[i - 1]);
-+=09=09=09return -EINVAL;
-+=09=09}
-+=09}
-+
-+=09return 0;
-+}
-+
- static ssize_t fan_curve_store(struct device *dev,
- =09=09=09       struct device_attribute *attr, const char *buf,
- =09=09=09       size_t count)
-@@ -3798,6 +3825,11 @@ static ssize_t fan_curve_enable_store(struct device =
-*dev,
- =09}
-=20
- =09if (data->enabled) {
-+=09=09err =3D fan_curve_validate(dev, data);
-+=09=09if (err) {
-+=09=09=09data->enabled =3D false;
-+=09=09=09return err;
-+=09=09}
- =09=09err =3D fan_curve_write(asus, data);
- =09=09if (err)
- =09=09=09return err;
-
----
-base-commit: 6b8c8af514d739d0335f5579b585e02babe8a727
-change-id: 20260831-fan-curve-validation-991770300ff3
-
-Best regards,
--- =20
-Ahmed Yaseen <yaseen@ghoul.dev>
-
+On 31/08/2026 19:29, Tim Chen wrote:
+> On Mon, 2026-08-31 at 13:24 +0200, Klaus Kusche wrote:
+>> Hello,
+>>
+>> both patches in combination seem to have the desired effect.
+>>
+>> But I just look at a bar graph showing the current load
+>> of each core. 
+>> The graph suggests that long-running CPU-intensive processes 
+>> migrate to fast cores when fast cores become available.
+>> And I have the impression that LTO compilations
+>> finish significantly faster now.
+>>
+>> I don't have exact numbers or benchmarks.
+> 
+> Thanks for testing the fix.
+> 
+> If you just apply https://lore.kernel.org/lkml/20260825174112.2580942-1-tim.c.chen@linux.intel.com/,
+> with default aggr_tolerance, what numbers do you see?
+> 
+> That will be helpful for further tuning.  Thanks.
+> 
+> Tim 
 
