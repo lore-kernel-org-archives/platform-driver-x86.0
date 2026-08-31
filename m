@@ -1,313 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B6C3F9F45;
-	Mon, 31 Aug 2026 12:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100AD2F747A;
+	Mon, 31 Aug 2026 13:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788180720; cv=none; b=ntoIQBwwwbLaBbqFL1l4NnbtgPnUuKZgkG+AZIv/AjSSdqVxD0+BEzTvickoJvXoO1bmogzZHBY9+u4SvYaUu+Kl1TQA1b0XRQ9lSkgzQnAFvJVtU6cmTen1+Vt7PnurFtqArNbxZo3IB6lKCf578vziLQzanZja5ZGlNXi/g68=
+	t=1788181298; cv=none; b=Q239KZXOGq+DqFaVSJ/4HIKJXQW8hLkrBcko22vGNqwKSQ5V4i/aAjCMoxLiIPzUBSvrmKGk1fWXRErdR1fNCzs2rKX4Zouo/gJYkIxCNhE+WxUztzAt9FtJga1tSXdUyXp+pmvwuswEc6XRc83U97uzRh6BucilzBerUzOSKHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788180720; c=relaxed/simple;
-	bh=Oajofr7KPV85sFuo8LuV95A6tWjTPeAaHRq02rjjfeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IeDKUKt2GUJzRdWq4Q8jb2+lxHmGpSKia3txq0dFrMFO4/9dA34LDYJt4aKVMx8SoEc7fyMakQ3eXbPQzHBffV+nG9RziNppI4whlEGV35cz1Lsy9zouZ8CX4koMT7g91nA4GDGrMPtDJN5Nwqa+NH/mkz4e7aEobn4SF0PITTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UbLRK3oa; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788181298; c=relaxed/simple;
+	bh=6Br8hzMSTA1lJTk1xRXZt5M8m6mB2XpRmP5DwPhh25Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oLWO2v1NJOwHMFIf6mYIMqet9qj67q4CeB2kHA+xs2cOJl+jV4/PfLjrCOAoZAwgxSiGsgky6wy+urGwJsvFFcIyKc4PALkQlyEZnZ3n1n5xpI+xx/piDGSw+FvqDrKmYcbXyCKvm+8rkr6/fgnD+DyJM85RDKf/secnMxItOAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=tq3UD49r; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UbLRK3oa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788180717; x=1819716717;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Oajofr7KPV85sFuo8LuV95A6tWjTPeAaHRq02rjjfeU=;
-  b=UbLRK3oaPRsAVIMYjpg7xB8PFmGp6Hv/5S8MM78iR3D2iS5UwfThJ+Bm
-   ATQCJ44RKIOivkgvYpSSi1joOm6Vr6OljrsuRqeOAyFyRXJwvLGQPw+qk
-   emtgWP+kvg8gjcJWYboOhEZDPbzptZmxLuBT0bEWvYqszd8VLM6AiHFQ+
-   vgzPqUYo1tA0rPwB1W1K4lEUfAubWd0FUmdz6AF9tBT6E9uHbe/ZWdPcF
-   Buy5mzPAVHplCY9Q4aIzkThmuPzwaZyk5dSAe7YoFG9S3bL9K1S5makMs
-   jbRqvLb345TC6xsyGD0EKw7rVdQ1QUCVYLKWNxFIHoyDr0hgyWoPxIS+/
-   A==;
-X-CSE-ConnectionGUID: 97hTi5eUTjuoKy765E3bkQ==
-X-CSE-MsgGUID: Zpg5qCWFSoWxoxFK1lQbmA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88463140"
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="88463140"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:51:56 -0700
-X-CSE-ConnectionGUID: l4RmVY4yRKewSayijrYXnA==
-X-CSE-MsgGUID: Z2L+3ySJSeazq0gcpPIuSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="267460591"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.140])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 05:51:53 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id B8B5411F7F5;
-	Mon, 31 Aug 2026 15:51:49 +0300 (EEST)
-Date: Mon, 31 Aug 2026 15:51:49 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Jakob Berg Jespersen <dev@berg.pm>, linux-media@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: i2c: ov13858: add regulator, clock and reset
- GPIO handling
-Message-ID: <apV45bZYB3MAd7tE@kekkonen.localdomain>
-References: <20260831124352.86935-1-lsa.uz@pm.me>
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="tq3UD49r"
+Received: from spock.localnet (unknown [212.20.115.26])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519MLKEM768 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 8FAEF635B040;
+	Mon, 31 Aug 2026 15:01:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1788181288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PA1cS1FfafxMWazdG6J5KfTxyGBl8DLna3cwR6X5eUA=;
+	b=tq3UD49raDLzZCgHRkxYACITtHW/0o8zlGA6YJmtel07XwqHEHukrwgVrI0HDwf+sG3PTx
+	OnD+KeOM3NZGtfkMtiPlL8ERkNf1/pHQ7j6Rp00UxEDj9fjTSLK7HMpolAVmGhx3T92iZA
+	z6Us8mrL6X5BvpDkWNCZIel9rCO8fqQ=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+ Pedro Falcato <pfalcato@suse.de>, Sanket Goswami <Sanket.Goswami@amd.com>,
+ platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd/pmf: fix build on !CONFIG_AMD_PMF_DEBUG
+Date: Mon, 31 Aug 2026 15:01:10 +0200
+Message-ID: <eyfjqxPuTjOJWaKP7sJSbw@natalenko.name>
+In-Reply-To: <20260831114346.2041361-1-pfalcato@suse.de>
+References: <20260831114346.2041361-1-pfalcato@suse.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260831124352.86935-1-lsa.uz@pm.me>
+Content-Type: multipart/signed; boundary="nextPartsw2MwA-XS16apVyHs8V1Vw";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
+x-ms-reactions: disallow
 
-Hi Sergey,
+--nextPartsw2MwA-XS16apVyHs8V1Vw
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd/pmf: fix build on !CONFIG_AMD_PMF_DEBUG
+Date: Mon, 31 Aug 2026 15:01:10 +0200
+Message-ID: <eyfjqxPuTjOJWaKP7sJSbw@natalenko.name>
+In-Reply-To: <20260831114346.2041361-1-pfalcato@suse.de>
+References: <20260831114346.2041361-1-pfalcato@suse.de>
+MIME-Version: 1.0
 
-Thanks for the update. A new more comments below...
+Hello.
 
-On Mon, Aug 31, 2026 at 12:44:00PM +0000, Sergey Lebedev wrote:
-> The driver assumes the sensor is already powered when probe() reads its chip
-> ID. That holds where the rails and clock are ACPI power resources, but not
-> where an INT3472 companion device registers them as regulators, a clock and a
-> reset GPIO for the sensor driver to consume, which this driver does not do.
-> 
-> Request the three supplies and the reset GPIO, and sequence them along with
-> the clock the driver already looks up, in runtime PM callbacks.
-> 
-> Signed-off-by: Sergey Lebedev <lsa.uz@pm.me>
+On pond=C4=9Bl=C3=AD 31. srpna 2026 13:43:46, st=C5=99edoevropsk=C3=BD letn=
+=C3=AD =C4=8Das Pedro Falcato wrote:
+> amd_pmf_get_ta_custom_bios_inputs() is used by non-debug features.
+>=20
+> Fix the build on !CONFIG_AMD_PMF_DEBUG by moving
+> amd_pmf_get_ta_custom_bios_inputs() outside the ifdef CONFIG_AMD_PMF_DEBU=
+G.
+>=20
+> Fixes: 5bda82c797c9 ("platform/x86/amd/pmf: Implement util layer ioctl ha=
+ndler")
+> Reported-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+> Link: https://lore.kernel.org/all/fS7s9V_xTaedaqEAaxwKnQ@natalenko.name/
+> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 > ---
-> Changes in v2, all from Sakari Ailus's review:
-> - commit message cut down; the detail below
-> - dropped the comment on the supply names; it is a KAPI with int3472
-> - ARRAY_SIZE() directly instead of a local macro
-> - fsleep() instead of usleep_range()
-> - one function each for power on and off, used as the PM callbacks directly,
->   instead of a pair of wrappers
-> - removed the now-useless dev_err() in the probe error path
-> - i declared inside its loop
-> Link to v1: https://patch.msgid.link/20260831100404.40463-1-lsa.uz@pm.me
-> 
-> Without the patch the first I2C transaction fails:
-> 
->   ov13858 i2c-OVTID858:00: failed to find sensor: -5
-> 
-> The power sequence follows ov02c10: supplies, then clock, then release reset,
-> and the reverse on the way down.
-> 
-> Measured on a Microsoft Surface Pro 11 for Business (Intel Lunar Lake, IPU7),
-> with the parts isolated one at a time:
-> 
->   supplies enabled, clock enabled   sensor identifies, driver binds
->   supplies enabled, clock left off  -EIO
->   supplies left off, clock enabled  -EIO
-> 
-> so both are needed; a longer settling delay alone is not enough. Verified
-> across five module unload/load cycles with no probe failure, and again after
-> this rework, with the sensor streaming each time.
-> 
-> This needs POWER1 GPIO support in int3472 to be useful on that machine: the
-> dvdd rail is described there as an INT3472 GPIO of type 0x08, and without that
-> patch the rail is never registered.
-> Link: https://patch.msgid.link/20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm
-> 
-> The same sensor on the Surface Pro 10 was made to work downstream by forcing
-> the regulators on for the driver's lifetime, which the people who did it
-> called too broad for upstream. Runtime PM keeps them off while the sensor is
-> idle instead.
-> Link: https://github.com/linux-surface/linux-surface/issues/2153
-> 
-> dovdd is not described on this machine and resolves to a dummy regulator. It
-> is listed because it is one of the three supplies these sensors normally take.
-> 
-> A working camera also needs an ipu-bridge entry for OVTID858, separately.
-> ---
-> --- a/drivers/media/i2c/ov13858.c
-> +++ b/drivers/media/i2c/ov13858.c
-> @@ -3,9 +3,12 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-event.h>
-> @@ -1028,9 +1031,17 @@
->  	}
->  };
->  
-> +static const char * const ov13858_supply_names[] = {
-> +	"dovdd",	/* Digital I/O power */
-> +	"avdd",		/* Analog power */
-> +	"dvdd",		/* Digital core power */
-> +};
-> +
->  struct ov13858 {
->  	struct device *dev;
->  	struct clk *clk;
-> +	struct regulator_bulk_data supplies[ARRAY_SIZE(ov13858_supply_names)];
-> +	struct gpio_desc *reset_gpio;
->  
->  	struct v4l2_subdev sd;
->  	struct media_pad pad;
-> @@ -1653,8 +1664,54 @@
+>  drivers/platform/x86/amd/pmf/spc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/am=
+d/pmf/spc.c
+> index 94355b435a66..592ba4de4c7f 100644
+> --- a/drivers/platform/x86/amd/pmf/spc.c
+> +++ b/drivers/platform/x86/amd/pmf/spc.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/units.h>
+>  #include "pmf.h"
+> =20
+> -#ifdef CONFIG_AMD_PMF_DEBUG
+>  u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_enact_table *in, int=
+ index)
 >  {
->  	v4l2_ctrl_handler_free(ov13858->sd.ctrl_handler);
->  	mutex_destroy(&ov13858->mutex);
-> +}
-> +
-> +static int ov13858_power_on(struct device *dev)
-> +{
-> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
-> +	struct ov13858 *ov13858 = to_ov13858(sd);
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
-
-Please wrap lines over 80 unless there's a specific reason to do otherwise.
-
-> +	if (ret) {
-> +		dev_err(ov13858->dev, "failed to enable regulators: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(ov13858->clk);
-> +	if (ret) {
-> +		dev_err(ov13858->dev, "failed to enable clock: %d\n", ret);
-> +		regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
-> +		return ret;
-> +	}
-> +
-> +	if (ov13858->reset_gpio) {
-> +		/* Hold reset for at least 1 ms on a back to back off-on */
-> +		fsleep(1000);
-> +		gpiod_set_value_cansleep(ov13858->reset_gpio, 0);
-> +	}
-> +
-> +	/* t4: 8192 XVCLK cycles after reset is released, before the first I2C */
-> +	fsleep(5000);
-> +
-> +	return 0;
+>  	switch (index) {
+> @@ -31,6 +30,7 @@ u32 amd_pmf_get_ta_custom_bios_inputs(struct ta_pmf_ena=
+ct_table *in, int index)
 >  }
->  
-> +static int ov13858_power_off(struct device *dev)
-> +{
-> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
-> +	struct ov13858 *ov13858 = to_ov13858(sd);
-> +
-> +	gpiod_set_value_cansleep(ov13858->reset_gpio, 1);
-> +	regulator_bulk_disable(ARRAY_SIZE(ov13858_supply_names), ov13858->supplies);
-> +	clk_disable_unprepare(ov13858->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_RUNTIME_DEV_PM_OPS(ov13858_pm_ops, ov13858_power_off,
-> +				 ov13858_power_on, NULL);
-> +
->  static int ov13858_probe(struct i2c_client *client)
+>  EXPORT_SYMBOL(amd_pmf_get_ta_custom_bios_inputs);
+> =20
+> +#ifdef CONFIG_AMD_PMF_DEBUG
+>  void amd_pmf_dump_ta_inputs(struct amd_pmf_dev *dev, struct ta_pmf_enact=
+_table *in)
 >  {
->  	struct ov13858 *ov13858;
-> @@ -1678,14 +1735,34 @@
->  				     "external clock %lu is not supported\n",
->  				     freq);
->  
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(ov13858_supply_names); i++)
-> +		ov13858->supplies[i].supply = ov13858_supply_names[i];
-> +
-> +	ret = devm_regulator_bulk_get(ov13858->dev, ARRAY_SIZE(ov13858_supply_names),
-> +				      ov13858->supplies);
-> +	if (ret)
-> +		return dev_err_probe(ov13858->dev, ret,
-> +				     "failed to get regulators\n");
-> +
-> +	ov13858->reset_gpio = devm_gpiod_get_optional(ov13858->dev, "reset",
-> +						      GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ov13858->reset_gpio))
-> +		return dev_err_probe(ov13858->dev,
-> +				     PTR_ERR(ov13858->reset_gpio),
-> +				     "failed to get reset GPIO\n");
-> +
->  	/* Initialize subdev */
->  	v4l2_i2c_subdev_init(&ov13858->sd, client, &ov13858_subdev_ops);
->  
-> +	ret = ov13858_power_on(ov13858->dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Check module identity */
->  	ret = ov13858_identify_module(ov13858);
->  	if (ret) {
->  		dev_err(ov13858->dev, "failed to find sensor: %d\n", ret);
-> -		return ret;
-> +		goto error_power_off;
->  	}
->  
->  	/* Set default mode to max resolution */
-> @@ -1693,7 +1770,7 @@
->  
->  	ret = ov13858_init_controls(ov13858);
->  	if (ret)
-> -		return ret;
-> +		goto error_power_off;
->  
->  	/* Initialize subdev */
->  	ov13858->sd.internal_ops = &ov13858_internal_ops;
-> @@ -1729,8 +1806,10 @@
->  
->  error_handler_free:
->  	ov13858_free_controls(ov13858);
-> -	dev_err(ov13858->dev, "%s failed:%d\n", __func__, ret);
->  
-> +error_power_off:
-> +	ov13858_power_off(ov13858->dev);
-> +
->  	return ret;
->  }
->  
-> @@ -1744,11 +1823,14 @@
->  	ov13858_free_controls(ov13858);
->  
->  	pm_runtime_disable(ov13858->dev);
-> +	if (!pm_runtime_status_suspended(ov13858->dev))
-> +		ov13858_power_off(ov13858->dev);
-> +	pm_runtime_set_suspended(ov13858->dev);
->  }
->  
->  static const struct i2c_device_id ov13858_id_table[] = {
-> -	{ .name = "ov13858" },
-> -	{ }
-> +	{ "ov13858" },
-> +	{}
+>  	int i;
+>=20
 
-This is an unrelated change (and not preferred either).
+This fixes it for me, thank you.
 
->  };
->  
->  MODULE_DEVICE_TABLE(i2c, ov13858_id_table);
-> @@ -1766,6 +1848,7 @@
->  	.driver = {
->  		.name = "ov13858",
->  		.acpi_match_table = ACPI_PTR(ov13858_acpi_ids),
-> +		.pm = pm_ptr(&ov13858_pm_ops),
->  	},
->  	.probe = ov13858_probe,
->  	.remove = ov13858_remove,
-> 
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
 
--- 
-Kind regards,
+=2D-=20
+Oleksandr Natalenko, MSE
+--nextPartsw2MwA-XS16apVyHs8V1Vw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Sakari Ailus
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmqVexYACgkQil/iNcg8
+M0tp/Q/8CJAnsrT2K6FMWR+Wgsj80NaVyR7At2WnvZeMT84WtY46XeTdyaOdv2CD
+yGrZFoy5/9Jd3Wns/y34cffX29/d/vTcqInYzxYMtnDTQZs2lW2lRe0ZfXDtHj2W
+aOhILoRROYfIw8eSyF8zR6CkVg/Z0Ru3/CzGd1kHsNBsdeHk56W8med+ISltyrzt
+HF85IsTLh20fr3I9SA0x1NdW/VCS/qtMtOYuRlPDk2pGx/Rrw19mH6DM6RyvlZts
+UAoM/p2rPlKXiFqWX3khvkLq0sMKh7c565W1uVOHLzNt2UzV6krJ3r6VStAebWZ4
+lJes+86UIt9ShhO7ajjtZf8GqDEhpSH37LZtU7OT1on39PryVbMGm5LaP9NbhOnU
+Y98x3CEk1HR9RbnHW3h1gXjlZu6L861q9iTh4Q+xljanqr4xn+5hOmkDE4+v5NGT
+YVPIwRgN5lffzTFwOGbzzLv2ssVHqQ3P6DVw8tFS7E+VgWpFJCIehtxyKT2qm03e
+sN0Ypq9F6Y/3Bkd63weMiiohp0AvQUlPlTgNZZUpiWtUF7+Zven24g2nhcDxwbyD
+dVtEupgSarlMRRXHDPmdkozW9gxCWVwzMyHibdYGh/lwBSID8kWSModInLalvHbB
+G9mwjYgeF/b4+tCIr9rGoomKPzxYO/wsdsw06IrkGxnTpmprcKk=
+=7IXP
+-----END PGP SIGNATURE-----
+
+--nextPartsw2MwA-XS16apVyHs8V1Vw--
+
+
+
