@@ -1,104 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FBB41834A;
-	Tue,  1 Sep 2026 15:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029DE38D415
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 15:24:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788275355; cv=none; b=gAwd5h9OJSclo/JSjjGtgABLGFyK2qg0hrQz7zLV6Ni0295wMNQ5T50LbyqBIQZ1mIHOpbcZj5ZxmO00MXbsOCsLtS5D5qOPHaC1E1JoyWeDyaXULVTDPdcT/ZBSAGZhDK5ft4RRlEgiaShxxaViNkUtSFAolCSFldeZuoyIkeE=
+	t=1788276247; cv=none; b=Hbyf6M8MmweoJjwL1/Q+K+sVIwV6gQtT4LRJWjUof2CvYEg8rciUHLlynf92aTGTqzV9fDm328yFLnCKZjJw1Q1GaHwOXhpTJZVr40NVmFll0LFKPQERqt9Ss5ToUibzw4GstKcQbfaddOw4hP4c01OSTLo8lggurSyFOucW49s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788275355; c=relaxed/simple;
-	bh=qdZIrGsYtpKF0jD6D3TXpSKXSMansKwbWqNgyncJx1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q7BFurWmvBGFeDU1SWR1wzz3+eY4WkF5vajNkduznGi1o3FlFJNGf7m5K195LdaGoc6z+3Gn4N28rbbmrNYEzZNl/1W4YPg2l5TH/bWdWUtraN+s0nCkSmyaag1mgts8OuDylfUZnsn6Ekfk/yfrxOIpv+IBLLqpLKUfiQAyg9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8GDKfzM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788276247; c=relaxed/simple;
+	bh=UmojlSheAV64LrmT3kln3La1H/0LyFhB+PKdJBZ9i1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jOV/HBZRyd54Y4BvZKI2ClvMJ5CtzkVa6htKkqmBy+fVwTIkcIPl3s9t/5PhTdJvYnNH2tYj4YOJZsXmmPZhHkkdvqMAD28dpadDqUXfDT60FF+J1PjGnHA9ECxPrQP212EexZTv+zc1HkIU4B05+keHwBsCGWrFfP7MfREaHx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ybnjbt0c; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8GDKfzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451A21F000E9;
-	Tue,  1 Sep 2026 15:09:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ybnjbt0c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2841F00A3A;
+	Tue,  1 Sep 2026 15:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788275353;
-	bh=cxCzQVp3dn2zkb9xI9KYVvtk2KgN++DYQbd3xIdl0nM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=P8GDKfzMin3+VLBtqOnaBmxyPho65vXmoFCR2y/wj5kftoxAMOEJ7SBrOsYE559gR
-	 xpc6ZstKjxYfZD+T8SezOGj74QX7OA3glneUFH0MKp9z841k0QRp7rqFWPd+GHFmNn
-	 RnvZGtSMyi/duDz2GF6V6AIv1KkJKIHBXT7F4VUOuBcX+O3j+6u+SmctddH36mJuH3
-	 eR4nKvYtAJBDQv28Hn5KQjL5ArNxUkT+ODscKQG7HTtnorcBiB5T0ORpsKflHHibas
-	 5yNN37DVmVrhwcseYiv6Bk+0tdY8d5/95BgquumKKbEkKHfGJX7Sh0neYlg9tauDxh
-	 It7GpkvWlfY4w==
-Message-ID: <fe3427a3-1771-4ae0-9043-8576640f5e45@kernel.org>
-Date: Tue, 1 Sep 2026 10:09:12 -0500
+	s=k20260515; t=1788276245;
+	bh=ETXnEfS8sG1tSm7IJJnW5zDFtZj3Cd5bpgXHjk8Gnkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ybnjbt0c+SYCQrmbl6Ye8c0NIozrFxbqCPaMMaht1SibJxtQjTJ8KxvMjDMP5bq6B
+	 3MTaK1gyJvL6ogmGxpuCQGOPmLRjAZD/yR6SibZDDgG8Djobljc/MEiNUNsZEAF/Q+
+	 p2X4j9Z9m9wGQW7qes66ozRLi3uWUq5vSRoxxZfEMdp20rjKZyfEiYXjvrkLt5C7BW
+	 5QPtsjM/01zZQNQ2MIuey2+hiiPZJ/n1lQAEpEKhulVVd3h5rgDawzsItPUOnEb51/
+	 lRuUEqBvzojips4/vydMQ3cIaZEpC9gNo0DHR4ps2cRE4yD5Wghad+KY/agZ9rVVr8
+	 KmokJzUucm01A==
+Received: by venus (Postfix, from userid 1000)
+	id 7F11D181B0C; Tue, 01 Sep 2026 17:24:03 +0200 (CEST)
+Date: Tue, 1 Sep 2026 17:24:03 +0200
+From: Sebastian Reichel <sre@kernel.org>
+To: David Stephenson <git@davidstephenson.net>
+Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
+Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
+ KEY_KBDILLUMTOGGLE on Fn+Space
+Message-ID: <apbt8k0IH2U28-Cm@venus>
+References: <20260825193556.133277-1-git@davidstephenson.net>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] platform/x86/amd/pmf: Clean up undesirable function
- outlining
-Content-Language: en-US
-To: Rong Zhang <i@rong.moe>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Sanket Goswami <Sanket.Goswami@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260901-amd-pmf-fix-outlining-v1-0-b54ff94d3d45@rong.moe>
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20260901-amd-pmf-fix-outlining-v1-0-b54ff94d3d45@rong.moe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5mbmsvvik7ninqyc"
+Content-Disposition: inline
+In-Reply-To: <20260825193556.133277-1-git@davidstephenson.net>
 
-On 9/1/26 10:02, Rong Zhang wrote:
-> The amd-pmf driver is notably bloated due to undesirable function
-> outlining and linkage. Simple and dump helper functions as well as
-> wrappers should really be static inline functions instead of global ones
-> from the very beginning, or else they are prone to the overhead of
-> function outlining and linkage, which bloats themselves and their
-> callers.
-> 
-> The series converts all these helper functions and wrappers into static
-> inline functions, and shrink the module (!CONFIG_AMD_PMF_DEBUG &&
-> CONFIG_AMD_PMF_UTIL_SUPPORT) size by 1472 Bytes (GCC 16 -O2):
-> 
->        text       data        bss      total filename	(before)
->       26810      31672       2768      61250 amd-pmf.ko
-> 
->        text       data        bss      total filename	(after)
->       26046      30964       2768      59778 amd-pmf.ko
-> 
-> As for CONFIG_AMD_PMF_DEBUG && CONFIG_AMD_PMF_UTIL_SUPPORT builds, the
-> module size is shrunk by 1187 Bytes:
-> 
->        text       data        bss      total filename	(before)
->       34593      45500       2784      82877 amd-pmf.ko
-> 
->        text       data        bss      total filename	(after)
->       33988      44918       2784      81690 amd-pmf.ko
-> 
-> This should also optimize the performance a little bit theoretically,
-> though it's probably not very important on modern hardware anyway.
-> 
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
-> Rong Zhang (5):
->        platform/x86/amd/pmf: Inline !AMD_PMF_DEBUG stub
->        platform/x86/amd/pmf: Inline simple helper functions of Core Layer
->        platform/x86/amd/pmf: Inline simple helper function of SPS Layer
->        platform/x86/amd/pmf: Inline simple helper function of Smart PC TA interfaces
->        platform/x86/amd/pmf: Inline wrappers of ap{mf,ts}_if_call_store_buffer()
-> 
->   drivers/platform/x86/amd/pmf/acpi.c |  76 +-----------------
->   drivers/platform/x86/amd/pmf/core.c |  22 ------
->   drivers/platform/x86/amd/pmf/pmf.h  | 150 +++++++++++++++++++++++++++++++-----
->   drivers/platform/x86/amd/pmf/spc.c  |  15 ----
->   drivers/platform/x86/amd/pmf/sps.c  |   5 --
->   5 files changed, 131 insertions(+), 137 deletions(-)
-> ---
-> base-commit: 9ffed84a24d60ec506d8961fe138f0baa92fdbd0
-> change-id: 6f1861db-amd-pmf-fix-outlining-204546e884cf
-> 
-> Thanks,
-> Rong
 
-Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+--5mbmsvvik7ninqyc
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
+ KEY_KBDILLUMTOGGLE on Fn+Space
+MIME-Version: 1.0
+
+Hi,
+
+On Tue, Aug 25, 2026 at 07:36:21PM +0000, David Stephenson wrote:
+> On the T14s, the EC already steps the keyboard backlight when you press
+> Fn+Space: off, then low, then high.
+>=20
+> We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
+> We then also send KEY_KBDILLUMTOGGLE.
+>=20
+> The extra key is the problem. Desktops treat it as "please toggle the
+> light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
+> fights the EC's three steps. The on-screen bar also stays empty,
+> because Toggle() always returns 0%.
+>=20
+> thinkpad_acpi on x86 already skips the key when the firmware changed
+> the light. It only uses brightness_hw_changed. Do the same here: keep
+> the LED update, do not send KEY_KBDILLUMTOGGLE.
+>=20
+> Tested on a Lenovo ThinkPad T14s Gen 6 (21N1, Snapdragon X Elite) with
+> GNOME. After this change the OSD bar tracks off / 50% / 100%.
+>=20
+> Signed-off-by: David Stephenson <git@davidstephenson.net>
+> ---
+
+Reviewed-by: Sebastian Reichel <sre@kernel.org>
+
+Greetings,
+
+-- Sebastian
+
+>  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/plat=
+form/arm64/lenovo-thinkpad-t14s.c
+> index 5590302a5..22d20a907 100644
+> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
+> @@ -488,8 +488,14 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void=
+ *data)
+>  	case T14S_EC_EVT_NONE:
+>  		break;
+>  	case T14S_EC_EVT_KEY_FN_SPACE:
+> +		/*
+> +		 * Firmware already cycles the keyboard backlight
+> +		 * (off / low / high). Notify userspace through the LED
+> +		 * class only. Emitting KEY_KBDILLUMTOGGLE as well makes
+> +		 * desktop environments toggle the LED a second time.
+> +		 */
+>  		t14s_kbd_bl_update(ec);
+> -		fallthrough;
+> +		break;
+>  	case T14S_EC_EVT_KEY_FN_F4:
+>  	case T14S_EC_EVT_KEY_FN_F7:
+>  	case T14S_EC_EVT_KEY_FN_4:
+> --=20
+> 2.55.0
+>=20
+>=20
+
+--5mbmsvvik7ninqyc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmqW7gQACgkQ2O7X88g7
++prahBAAgLl8K27mTJVxx3giz1Lj3eC/xrb0xAQsYhZ3C91Jw9UbhYRYPBqId74N
+c+vmUXUszCSHLxZv8FxrqrYtAOZMDoV8nePFMNGgBRrSJirMNn81Y7dyz/E6x/3q
+YFhFIrbDevZb6NHrzs+iJOqqtXGCsfwV72jVu01GV4bgSDGDmPfa3rQzR7wAvkuZ
+GfjNXwhlodyfvPPktrgNxPBFu4FFCDTuN1FMFMJr7ctQg6U4VLuM7cP6d064I2W1
+HOIDfpiINCXVxARUNDy1Tr64bX+6jUJUCkNofF2fZ27o79c28o3fzaN3XW/Sc8HO
+G75EIzSciN6U5aptOnFv00qyaTYmu12xSJBLYI0iURV0tJmLQmpalqF8hQrQloq/
+6WyK9RQwI4yLZy+5P+00R5NYuqwKO9+A86h5lSvfymPbzuRAAjE+JQ+jhFEiNS4W
+PaQKY/+KCLwM8ArD6VmtGmvYy7uDiV6xGmk7zz+NvY6ZvHoYYOsKymoXU6KdYceT
+/cFsnTsGQKir6nmifcrh7LCsLNJJPix+xUCV/HtiTNJHZP79SHKbgu9cl1332480
+8Y3RtFNVaEeEk7oheGNVEyDK68yUnRioRP6mDppjhZYAUWzq2SXGSIIAVgXqkukz
+gq5M+j5PZVAimwCWQvASgOi28AbI6pYdwE/dTTwKcYXLD27Q7DM=
+=C2YE
+-----END PGP SIGNATURE-----
+
+--5mbmsvvik7ninqyc--
