@@ -1,122 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63A52D7398;
-	Tue,  1 Sep 2026 13:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7666436B901
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 14:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788269754; cv=none; b=qG7EOj6a2AI6uFtlNL8GrNDhFd+8Xtg0+3Dhsmks2iRC8pM1AwXHPfwqVHtSx5oT83g5WpvS4I/RA1SXrwZ5gIazg0sdwruOz1AIMn2ZakVD47+bhMOwQgim0EAhxAjxjvroe8RsA0x5KX1XpeomDoJoAKExmAfLdI6TQzgd34w=
+	t=1788272336; cv=none; b=arZ914jFrAE+gj4q0f4Gvef/F4k0hVMPI/6Oy5d4LYs/GtBLMocU5B/dRNozggqaA7TKS6g5lmEi50MfFjRsJXSn+P/LkmjpQukNAuj4CIl87qKF9E7J6kExSPqf2ByL0qvynd1aX9L8keMWNdfJQLWBmXY6bJWsXaVpvcXUI/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788269754; c=relaxed/simple;
-	bh=BEZSqzgqKkVtMPyjZEXxDEFetEdFyxyp1n4nWBeuGyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CBHsjW28/FR7eqSA/MaiYpEjMyUwXvAMQstKcn+2n2MYVv4CIPwIVdXxI7h0tMdRx28/O5Da7FxW4NyTBEGO+4eMGm01KxbHgM40QVn39WmDCUaHmr5gpmAcId5DlOOtqvEOAbYzH87XWUU68Omj0svTWRkkte+pnSZtu4cfS0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ag6+6ui3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788272336; c=relaxed/simple;
+	bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TCO7SdWCQCvn8Ih8bDnCBgVp+XeNwB1/FWIIVMVaotsiB6aUi43/g37uqO+yhXi0uto4UsjtJWJKWrh8+PIiHdh4lLqaoNn5hbPv6X5tUtEhSC/hbTZvalGRnqRkylB49yHgLweAt4gNglbEcL4TCs96Gnu9ZG97f93oVXCUmKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tJp7rvKu; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ag6+6ui3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1297E1F000E9;
-	Tue,  1 Sep 2026 13:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788269753;
-	bh=mzO+bYppb5Zmv3Hn7XxzPKX20sxxrHx25fF2rE5/Z7Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Ag6+6ui3bjpETsI7/oMnYjn9Hl07blI6ypqdVxL6YSGlq5W6j94P+HD29TruHeSwe
-	 WhWz+vC8OA7qGS8wvz9q4TYH3JBjrfTvDW9SyPsfPls4PPuuhL+eOsRwqstKFtJDvm
-	 agVCwm7RQrJBygjREoI+DqOjFgdknGTYLklR/TYzzVHMG2G009qH2IU/xxrh9mE9wf
-	 Lk6IMeBD/27m9fyorfEBknig/98sfDio0XQ+sqWSinqZEPhr4yZMhvnwf/OVyyi8e8
-	 HbEXrfCkIlArvwSRfxft6AHaFBs2h+Db+KzyHJEfnRB+MdqZ2fPHzisDAOxSS3w7/t
-	 BXLF7VT9OGyAg==
-Message-ID: <5e406926-f35b-43a2-b41c-912c281a21a1@kernel.org>
-Date: Tue, 1 Sep 2026 15:35:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJp7rvKu"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49b392ccaacso68544225e9.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 07:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788272333; x=1788877133; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
+        b=tJp7rvKuNXudQnAen7LkRkbc6pu3WQiwbx+1IEE1DWHF85S2jAM/54ZDCnMKotfvRZ
+         VST47cq+FRJ/5/SkKo75iIfq6sioR1ijPRTtjjY1ueM2Wpalh0SBVYEgjxt8RJr4v8U1
+         xDX34UNmz9wjGVPSTf6hYpHTN4EmlYoNS75MfADFEItIL+CrUeTon/XObJfQ4H5+NyfJ
+         g91JWC9JOwPMnGi8HUVyFRWNb+VfoqFRP9QYAARt9pvJ+S8cyFTG8AzLs647wFflmDci
+         JMXRj36kU6ZQttyNXzbciTCKHPb1433cn/pZTokyZMPSG4p4jjce+l+CvAPsv+89fT7k
+         tCSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788272333; x=1788877133;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
+        b=A72I09YFvS4DeB5cuVjG3NxR6pbLG2A0M8VURVNN0mfbu8yrQmdXPnOGuq4bhbskU2
+         UxCH09/6lqbbaKPsI26B/mhmu/O0hCvGNrFwOKJsm6QZAS88yWZFMvsuXUpD+FEvoV+m
+         aDYVfghb8xQKRrecmEr3DD62aXwObJoIMOA+j/X3VxPgurvUck1Y2vhHLzzFwkAirGq8
+         5E7b/DjMVstbl0EWgwKDYSnaSElPNBJNUApIuV1UMI6GLwNor/9Mhy7ZGR3Ruzdb+D2X
+         nXdK8yRueRukrN9B+exEkx2G4nvAXRvXVBU3OiJQMTb4EzqwWHDHXmhYsoikwCKt0HjT
+         TOXg==
+X-Gm-Message-State: AFuF++n59lqsN64whDRXj/sKBDy8EGariao5hIuorwLIkSkssH9qj7JL
+	i3SPCW95eukSncgZ9hT8OWTJWCS9lDuGS4eg+YAKotdDnRGVte+iIhNv
+X-Gm-Gg: AR+sD112huo/cMBHG+kpHQ6qlrXQsjka+LErYy5Uc/DOaWF9AaVasZ8qDF1hjs1fTEX
+	+FV3ti9TqDlHH8FlfOna4OWR7MGakLRQ4N94RNW5vZrSNUChwJVdBkP6Ok5MZJ9b/FZ3IS9rRQ0
+	qla1nNNensNkwU6Wv+7u+EvdoOTKibixFFxdzE7O+KpcqW9A56wQg4xIdtX3s46dwaDv7vyPqSw
+	S0obYjfC5wxZZ1ocba5eY55g0udKd4SlEuAXylH7cJ32NFVoFUutulySInDIZIcH89Zcs5i6Pv9
+	LjCsfWny1GeU0cMKbAz7gE/iD1Fud+hp1qEPkeGVxDg1sCKkRptQKh4YWnBR0HqDYtvZtMKwo8o
+	CwSDakVDWaWbS8TUKXpIOg1KExuhmAIBCt1NsJgjacFiTdtJzWDBpEL89XAvR6A3DyCWmsG4myv
+	W/TUghi4JjLk2uHLC8Pl4/KGPJ6X7whYndc7jPp7RYVHPVBIV5dHL8Hc+bdTo=
+X-Received: by 2002:a05:600c:81ca:b0:49b:47b3:d6d with SMTP id 5b1f17b1804b1-49b91c3b7c4mr600777375e9.10.1788272333267;
+        Tue, 01 Sep 2026 07:18:53 -0700 (PDT)
+Received: from fedora ([2a02:ff0:220:b213:dfd1:35e6:957c:b8c2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48442d781bcsm4831531f8f.26.2026.09.01.07.18.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2026 07:18:52 -0700 (PDT)
+From: =?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
+To: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
+Subject: Re: [PATCH v3] platform/x86: Add Goodix fingerprint EC mailbox transport
+Date: Tue,  1 Sep 2026 17:12:25 +0300
+Message-ID: <20260901141225.282753-1-ertugtopcu0@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260816194955.468107-1-ertugtopcu0@gmail.com>
+References: <20260727205837.91413-1-ertugtopcu0@gmail.com> <20260803074454.49474-1-ertugtopcu0@gmail.com> <20260816194955.468107-1-ertugtopcu0@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: int3472: the vendor GPIO type table, and four values that differ
-To: Sergey Lebedev <lsa.uz@pm.me>, Daniel Scally <dan.scally@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
- platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-References: <20260831180837.69000-1-lsa.uz@pm.me>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260831180837.69000-1-lsa.uz@pm.me>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-On 31-Aug-26 20:08, Sergey Lebedev wrote:
-> Working on the cameras of a Surface Pro 11 (Lunar Lake) I pulled the
-> complete GPIO type table out of Intel's Windows camera driver,
-> iactrllogic64.sys. Ten of its twenty entries correspond to constants in
-> int3472.h. Six agree. Four do not, and I cannot tell from here which side
-> is right, so this is a question rather than a patch.
-> 
-> The table as the vendor driver indexes it:
-> 
->   0x00 Reset          0x01 Enable         0x02 Strobe        0x03 Torch
->   0x04 Flash          0x05 LedRear        0x06 LedFront      0x07 Power0
->   0x08 Power1         0x09 Standby        0x0a WriteProtect  0x0b PowerEn
->   0x0c Mclk           0x0d PrivateLED     0x0e Avdd          0x0f Core
->   0x10 Handshake      0x11 HDMI_INT_IO    0x12 HDMIDetect    0x13 Reserved
-> 
-> Why I believe the indexing rather than a coincidence: five entries land
-> exactly on values the kernel arrived at independently. 0x00 Reset, 0x07
-> and 0x08 Power0 and Power1, 0x0b POWER_ENABLE against the vendor's
-> PowerEn, 0x0c CLK_ENABLE against Mclk, and 0x0d PRIVACY_LED against
-> PrivateLED. Five independent hits on a plain array index is not chance.
-> 
-> Where we disagree:
-> 
->   value   int3472.h              vendor driver
->   0x01    POWERDOWN              Enable
+Gentle ping on this patch. v3 fixes the i386 build failure reported by
+the kernel test robot and has been verified with the reported i386 W=1
+configuration. The driver has also been tested on the target hardware.
 
-Same thing just different names, sensors typically have an active
-low powerdown pin (so driving high enables it). Also older Windows
-code has been known to call this "pwdn".
+I would appreciate any review or feedback when convenient.
 
->   0x10    DOVDD                  Handshake
-
-Another reverse engineering has mapped 0x10 to AVDD, see:
-
-https://lore.kernel.org/platform-driver-x86/20260901063353.67252-1-dmanresa@gmail.com/
-https://github.com/linux-surface/linux-surface/pull/2252#issuecomment-5483523423
-
-Which seems to make morse sense, given that we've determined that
-this controls a regulator and we also have a mapping of 0x12 to
-HANDSHAKE provided directly by Intel.
-
-When we mapped 0x0b PowerEn to avdd we just knew it controlled
-a regulator and weren't sure which one. Since most drivers just bulk
-enable all regulators this does not matter in practice.
-
-So when this second (after 0x0b / power-enable) regulator related
-GPIO showed up we mapped it to dovdd instead of avdd. Maybe we should
-swap them but then we first need to verify that all relevant sensor
-drivers check for both dovdd and avdd.
-
->   0x12    HANDSHAKE              HDMIDetect
-
-We have:
-
-0x12 = HANDSHAKE
-0x13 = HOTPLUG_DETECT = HDMIDetect
-
-Coming directly from Intel and both have been verified on
-actual hw.
-
-So I believe that the mappings found here:
-
-https://github.com/linux-surface/linux-surface/pull/2252#issuecomment-5483523423
-
-are the correct ones, no idea where the differences you found come
-from.
-
-Regards,
-
-Hans
-
-
+Thanks,
+Ertuğrul
