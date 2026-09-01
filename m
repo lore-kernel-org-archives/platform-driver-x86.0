@@ -1,108 +1,131 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE61349C4C4
-	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 18:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C9549E5FE
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 19:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788287297; cv=none; b=SaDM+NixLOUiyk/fd4ucNAutTooAhNtzRmRmL9aB1JtFfUr2C3rbclx7Xd0SWzpJFJdmzAu6p7VTWssagS6Tvdv6peP630JtOQP1Q5gLXJRnBIghbS5FtUWVPMVUB7yFCNy8+XvlO5BncGSIvYSIZs3QSlPmVxTkh8PBCZnrvDA=
+	t=1788290795; cv=none; b=RGiUMQvJ1RSwtbOEjwK3OYekcOqkJg3SFYHj2cWYe9cm4cmn01DWNffjY2DHCqtYLJwfTUkUrmYr7NmZcHliUCQ7vXSZECq3opgIfLHcDkkf+uJDFYYP6QMix0p6ifxB7Q3+gdVi13Ir6jCBOMcjlQQt1A5uZF+W+lUSN5JGSM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788287297; c=relaxed/simple;
-	bh=h1Zgr03BycATT1NyB2dQnRebiLa5/QB61OxcvRSCjKc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ud/bjgDsloJM6MdDV+b26MejR7cXkIld9aEpvp2b52zxc+/gx98CixGL5/CDwqDs3kEB4XzHQQ4Kw0+nQq4nMtvioz6ES1iDTAwpdLvgE8lYFQte9tX0oflJeIu4IqTc+7w5P8tessAUsv7CbRyE7EdESmCWGJxVt58ZC7jFuvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=KCd8YuZu; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1788290795; c=relaxed/simple;
+	bh=8IldVcKFWxRF8a6xnc4EgOvN6n/T6fyKnTnlCA44KsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M2HzTtWBGt+fuDh9lzBG/ECNzVE+ooJbzOK4KuspOeb1FHrAXcQ+yHywj1q5EbZB+k7NbGDtsmxCnDRtsYGwS2i2yWgnp5Apm337hQ9LgMTEpru3ELYT/BlUqaX3c6ApE+AlkQSOJms+SFKpNLMa0pczoObQLwVd2NqQi4anP/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ocFyX2/p; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="KCd8YuZu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1788287283; x=1788546483;
-	bh=CLDb88AnKEaJ3a37+zNEZC/o+q1YjkVDRyLkUtKKm70=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=KCd8YuZu0Sv6YUCTHyFJKzZ36jqjWyZKaPBoS0uKCy/mfleCKlYzu1pNOyD+mIAsJ
-	 sZJT5Trb8EbV6oL+CsAf+1VQbdYaDPiA5HE+QDNCUAeaFPYEAl+qPF8qJ2BaBHcgbP
-	 4TtS1wYPR9A3NPw3aJSJ1ZpwQN0uKZYuSSyIVrHJEcpsbluvifasP+ha8uejd4ya/I
-	 V1TQXZKKYnNVZCdlJLJ4z6+F85XDjTrwYepRgx91tW0N+3dHDPBGg7sqZcTc1DpJBq
-	 hXAnSnLXnvxzfena2oryknJBUqk57spH/E5Na1IV8DZtdlHidPh+fUtkZkOB5baYSN
-	 8qKQk2drUTAHg==
-Date: Tue, 01 Sep 2026 17:58:50 +0000
-To: Hans de Goede <hansg@kernel.org>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Daniel Scally <dan.scally@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, platform-driver-x86@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: int3472: the vendor GPIO type table, and four values that differ
-Message-ID: <20260901175842.47669-1-lsa.uz@pm.me>
-In-Reply-To: <20260831180837.69000-1-lsa.uz@pm.me>
-References: <20260831180837.69000-1-lsa.uz@pm.me>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: db76af1fc13371a7bdb29ab22c03cd6bfe670e7c
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocFyX2/p"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-69fab5a852cso356824a12.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 12:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788290793; x=1788895593; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=R+dXlhW9X6Vrf/RHdUTXz/EyouRxzz9SL0VdPXRzdMM=;
+        b=ocFyX2/pyQNio0CRrsg2Rx8OvZTrONbRU0wGmi3iA5xKSDvKSL2a3iyY8cyCfwfWex
+         ar7+ldz4uhJ+RTQcj9FOv5OZFufVo/eclXExogi3+PmXsDIuYVQYRQEwf/9m3xPv5XYf
+         o1vY0QaMjvM90vOIamed9iqGLbgSyiGpy1LdgT1fG0Ul/KH9EXtEiqQ3OrNNSgiv0RUp
+         K354k3ikbAyfm/0Ur85LF+KTqvqb1kxRnfAEVMpVeksKq5o23SBRkQwRfFX0oz2SK2DF
+         KyYWmcz2htoQfQkw1x47CcJBv/d6w6rOW3z2m8p4zc6YMn1xxaZ8POogSo3iT/vpn2EO
+         U+tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788290793; x=1788895593;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=R+dXlhW9X6Vrf/RHdUTXz/EyouRxzz9SL0VdPXRzdMM=;
+        b=rrkIoKyKC/Xr8m7kE9d9K+iBuJ2o19TjGGVk/3jY/CWolPhAkDvHHvsxgDC6o/d54d
+         VpLffDdgXlAF8EaYVN9B1u7/bOJNYekyjCTudAOkQ7UGG7E6brNzABaeQpC9bR2wfUV5
+         zKbmT1s6gLf2hlBmK5YU7edHKeHexCC4Ya7sStnbHfb/Tla3Qk8bdYpKiFLcq2Q7T4gT
+         1Y3uCPOI9nuUd8WvrYXp90mftj22tKf0c6iJFob5X//YTqyhcB5AamJtzCxbl1j7Q84L
+         oCCb9bKy7Q4GUuPx5nUqV+Y4E8I1iK9E21NZeesWxo7rp3vZUmwKV0T7VNyBnKkir9JL
+         lAKw==
+X-Forwarded-Encrypted: i=1; AKwUvBxGXOGYjSmNQuXx/cwTqekK70EczUHtUPCqwjYUWKW2AU0PUX34AHg04epqbyNeF/QEJdQZs496FEuqcbuJtY9gcbp/@vger.kernel.org
+X-Gm-Message-State: AFuF++nLixgssGD05Y0+qtQjUIbnTZnzjnoqm4q7TZDoweICsVBCpRvD
+	fzqcl+VpHFiuXmRRXpu56f0Sg2avoLOQvcKfvEmAeCXv4uX5CpVl8mn8
+X-Gm-Gg: AYBFou2nejAOEWuMcFp42oLPjNCU5Bbq5r4zDazuSehgLc/ZnA9fvEzNUSoVUSRsZMk
+	IEWRDAmSgExHH3EXfW9j8P3xjmdmJClGtY+GniWBftXKDz3J2YMYCeQvOXu5H0jXO9XbiRwBuMe
+	rD2bPBRCLFg++zDPrSwyeMOD9XNtwKyQmStInNxbQSb1seJ+2GRQC0N/K3nYJ35Wjoj4B/fagQR
+	+AGpjLDFIrcsDq+glqkq1/4CMWd6nNAlKaxCHhWle6uEcWWleegjIcoeg+G/kopZUGVByZjz/QW
+	EwNlIn9bWcH84brQ+fcxPgT1UpLONxFcYR9zwruKO735/RD9nzD+K4xPonTjXgzDySojL0AFuIO
+	7t01h+Hk/wzpHOrUgR0iOHzHJx40LZNgfRGK8wDgnQ/vPpl9h3MxtafOYw2dvaPtXMl8wSt0nWC
+	WZapBsc7jWXabmzGaR36kSuQh6b6g8c7wW2M4w/Kx0naoh75D3uSPODR/FcJ8m2g==
+X-Received: by 2002:a05:6402:388b:b0:6a3:f4fe:9d5f with SMTP id 4fb4d7f45d1cf-6a6829af072mr27436a12.11.1788290792518;
+        Tue, 01 Sep 2026 12:26:32 -0700 (PDT)
+Received: from khalil-hp.home ([62.250.116.161])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a67f94242csm146373a12.21.2026.09.01.12.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2026 12:26:32 -0700 (PDT)
+From: Khalil <khalilst@gmail.com>
+X-Google-Original-From: Khalil <khalil@rentman.nl>
+To: Mark Brown <broonie@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
+	patches@opensource.cirrus.com,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Khalil <khalil@rentman.nl>
+Subject: [PATCH v3 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with broken ACPI cs-gpios
+Date: Tue,  1 Sep 2026 21:26:22 +0200
+Message-ID: <20260901192625.1497791-1-khalil@rentman.nl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hans, thank you - your two anchors let me find the bug, and it was mine.
+v3 of the patch series fixing dual CS35L56 amplifiers on HP laptops
+with Intel Lunar Lake and broken ACPI cs-gpios.
 
-You wrote that 0x12 =3D HANDSHAKE came from Intel directly, and pointed at
-dmanresa's independent mapping of 0x10 to AVDD. Neither fits the table I
-sent, so I went back to the binary. The table I posted is short by two
-entries.
+Changes since v2:
+- Rebased onto broonie/spi for-next (commit b00c00f7dc)
+- No code changes
 
-My first pass ran strings(1) with a minimum length of three, which
-silently dropped every name shorter than that. Two were dropped, both
-sitting between PrivateLED and Avdd:
+Changes since RFC v1 (addressing feedback from Richard Fitzgerald):
+- Added DMI quirk table: GPIO CS fixup is now only applied on known
+  affected platforms (HP EliteBook 8 G1i, board 8D8A), not generically
+  for all devices with CS > 0.
+- Fixed chip select range check: only chip selects outside the
+  controller's num_chipselect range are fixed up. A NULL cs_gpiods[cs]
+  within range means "native chip select", not broken.
+- Removed ASUS reference (GU605C was fixed by BIOS update).
+- Added Patch 1/3 (spi core): __spi_add_device() now preserves preset
+  cs_gpiod on the device instead of unconditionally overwriting from
+  ctlr->cs_gpiods. Suggested by Richard Fitzgerald.
+- Patch 2/3 (serial-multi-instantiate): Extracted GPIO fixup into a
+  dedicated helper function with DMI-based quirk table.
+- Patch 3/3 (spi-pxa2xx): Handles clock gating on Intel LPSS
+  controllers when GPIO chip select is active.
 
-  0001f370: 4544 0000 4146 0000 494f 0000 4176 6464   ED..AF..IO..Avdd
-                      ^^^^        ^^^^
-                      0x0e AF     0x0f IO
+Tested on HP EliteBook 8 G1i 16 inch (Intel Core Ultra 7 258V,
+Lunar Lake-M) with 2x CS35L56 Rev B0. Both amplifiers probe
+successfully, load calibration and tuning, and produce audio.
 
-Everything above 0x0d was therefore reported two slots low. Corrected,
-the table runs 0x00..0x15:
+Related bug reports:
+- https://bugs.launchpad.net/ubuntu/+source/alsa-driver/+bug/2131138
+- https://bugzilla.kernel.org/show_bug.cgi?id=221064
+- https://github.com/thesofproject/linux/issues/5621
 
-  0x00 Reset       0x01 Enable       0x02 Strobe       0x03 Torch
-  0x04 Flash       0x05 LedRear      0x06 LedFront     0x07 Power0
-  0x08 Power1      0x09 Standby      0x0a WriteProtect 0x0b PowerEn
-  0x0c Mclk        0x0d PrivateLED   0x0e AF           0x0f IO
-  0x10 Avdd        0x11 Core         0x12 Handshake    0x13 HDMI_INT_IO
-  0x14 HDMIDetect  0x15 Reserved
+Khalil (3):
+  spi: Preserve preset cs_gpiod in __spi_add_device()
+  platform/x86: serial-multi-instantiate: Fix SPI chip select on
+    platforms with incomplete ACPI cs-gpios
+  spi: pxa2xx: Handle clock gating for GPIO chip select devices
 
-Every disagreement I reported disappears:
+ .../platform/x86/serial-multi-instantiate.c   | 168 ++++++++++++++++++
+ drivers/spi/spi-pxa2xx.c                      |  45 ++++-
+ drivers/spi/spi.c                             |   3 +-
+ 3 files changed, 211 insertions(+), 5 deletions(-)
 
-  value   int3472.h        vendor, corrected
-  0x01    POWERDOWN        Enable          - same pin, as you explained
-  0x10    DOVDD            Avdd
-  0x12    HANDSHAKE        Handshake       - agrees
-  0x13    HOTPLUG_DETECT   HDMI_INT_IO     - agrees, same function
-
-So the answer to the question I asked is that the kernel was right at
-every disputed value and my table was wrong. Sorry for the noise.
-
-One thing survives, and it is the reason I am writing rather than just
-withdrawing. You said the 0x10 dovdd mapping was a guess - that you knew
-it controlled a regulator, did not know which, and picked dovdd because
-avdd was already taken by 0x0b. Intel's own table calls 0x10 Avdd. That
-is a second, independent vote for dmanresa's reading, arrived at from a
-different artifact.
-
-It does not settle what 0x0b should be called. If 0x10 is avdd, then
-0x0b - which the vendor calls PowerEn, and which the kernel calls
-POWER_ENABLE, not a rail name at all - may never have needed a rail
-name. Your point that drivers bulk-enable everything still decides
-whether any of this is worth changing.
-
-The indexing is still positional inference: nothing in the binary takes
-the address of these strings, so I am reading an array of logging text
-and assuming its order is the enum's order. What makes me believe it now
-is that three values established independently of this binary - Intel's
-0x12, dmanresa's 0x10, and the kernel's 0x13 - all land at once under a
-single two-slot correction. That is a much better argument than the one
-I made the first time.
-
-Sergey Lebedev
+-- 
+2.43.0
 
