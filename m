@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5A0374E6D
-	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 19:27:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D97B4A2049
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 19:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788290875; cv=none; b=Z3e8bdDJZ53BOpHZhUO3cOSTULJ9x3Eki3Zyji82rXx6H8kxFeRVDf0n7r7r2pvNdY1VhpQgd+70yUGgLsRiC28l4+hf9/OGqB0dyQ0K8bLLj3lU9ukdaDnWMfaTPFagvLZW6wQnXm3nbDm+V9dGDeg+dYTSu84/ruNN15dtGaw=
+	t=1788290877; cv=none; b=uQ59mDLsnqgH8bHgUzkvKBcFqXOPkipfNNtP1qRzdurimiFJcfy1tmjV8T5+mNTZB8NjgTKpjqj4WcbOsrsCUu6jr7AXUXVK0grg4WPB0SNfmtHFyB1hgdVo06QQAW32CZ9bl5WJwoEUXXl4+joSqjx8KkMf5m9hT839Fc06qdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788290875; c=relaxed/simple;
-	bh=ZOZNZgfcko3Y/gUKybJGv4kvbZnT46ie1Po2g+DdJx4=;
+	s=arc-20240116; t=1788290877; c=relaxed/simple;
+	bh=C9qUbqxtsoplUxq3BM5BwqcgPbGIhj11gz0jI+/Ruko=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TuqjrSalHu5A5DrWlrFSrtwsedLvLSuXoQ4hW9gWTYNbHgSeseVHA6Xqw2/v1OOll5jpCJ7+75vIVUAd12c7F7jlgkp75anCvDHTr64Enwn4DY6GZCucZ/bDvkLWuPYGK73iVhQmu5zlL7h5jD8E2Q+2NO25UhARF3IphvgaF0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EgpvFJW6; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=JvfRDR11UpAp63R2V6E/dXqQb1zzJQxaj78Ft+5j7NoSX56zzb76Ss4opxD82DsIlF0EvsbT1J3j23xds+YFz5lm6mXWjD6Baax4ZMKFiO9+ylxS1oLd5vx9ByBwPt1oj92sKZcoYYiaXIg/+EVmFfnzMANhHRF00lgyqEMBeBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yi58SP+w; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EgpvFJW6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yi58SP+w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788290874; x=1819826874;
+  t=1788290875; x=1819826875;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=ZOZNZgfcko3Y/gUKybJGv4kvbZnT46ie1Po2g+DdJx4=;
-  b=EgpvFJW6ZUf5ZFEkuyK81XXfWurGfc1CrjjLzV60JKiZpl4dNooxzpzj
-   kicv3bkPJei1kt79MK8QgNhLXqrLvi90vrn5DZsid5BLs320jKkzgQ0f2
-   p3JKOsmIqC8YgS+U0BTR1eM+1wo8pxb82Zg6Y5l0zLCFxGQnRM2yrkaie
-   CoevblkasOuDfRaPQs4EyTAAHh0sFUpI0BoOobhf3sPb0wIhQn5uYPCVb
-   Cu5g96GfMZ0ihrIOI9qgXKkgXSY4t96PD8B195wj6PJ/1x+0PyoND/ns0
-   d39SSNrb7tQGxNb64gYneA5H87HG9BKYKGyut7nZebC0Ruvcc5qshUnGe
+  bh=C9qUbqxtsoplUxq3BM5BwqcgPbGIhj11gz0jI+/Ruko=;
+  b=Yi58SP+wfLNYii5sMbFrcwh/H/EU+ic1jKkUApFGEZExG7EJIAsxGbP4
+   H4c4o036QT2jzJpw3FooTxZGkmwi9LRavjR7urQhRH4wIwaBZsHcRXwqH
+   8DTytpMJRASYU1FOLkXxbGgRqS7Z0Ytvja950LjAAXScT/AjsNuUcrmsp
+   5pgNd2uqEWvDAFBp6g7o+6RiQjHVStTlyLmALVzzsquGrNYbkMorlz+MM
+   dzyhdVufj/M/uXbabCXUcuLz6/8izGDm7sGrUPBmUj5XQ1Lr8KNrJ9E16
+   hJamrkCAjm8260LonCqdVMqCRxS5pQ51A0iUSdA/rIL1qvnL/pFTTks3f
    w==;
-X-CSE-ConnectionGUID: VMv2URhhRNixsfbEQAR1uQ==
-X-CSE-MsgGUID: Rf0p/2/bQrqpS6OAPbFNBQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="88762473"
+X-CSE-ConnectionGUID: pWJyems5RwSCkCUsphlXog==
+X-CSE-MsgGUID: ZCh3G9G2TnmAFW5ScTNq5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="88762482"
 X-IronPort-AV: E=Sophos;i="6.25,256,1779174000"; 
-   d="scan'208";a="88762473"
+   d="scan'208";a="88762482"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 12:27:54 -0700
-X-CSE-ConnectionGUID: c8TEZDY2T1ykH+i5Ioh/hg==
-X-CSE-MsgGUID: +PDLXsMCSoyuvx1LG+ixYA==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 12:27:55 -0700
+X-CSE-ConnectionGUID: b4MvIHZLSG67yg+4m8Z2MQ==
+X-CSE-MsgGUID: g6pEH/OLQZew8wUhiol3xA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,256,1779174000"; 
-   d="scan'208";a="269776731"
+   d="scan'208";a="269776736"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 12:27:54 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 12:27:55 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 To: platform-driver-x86@vger.kernel.org,
 	intel-xe@lists.freedesktop.org,
@@ -59,9 +59,9 @@ To: platform-driver-x86@vger.kernel.org,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v4 05/18] platform/x86/intel/pmt: Add helpers for callback info
-Date: Tue,  1 Sep 2026 12:27:40 -0700
-Message-ID: <20260901192736.626777-25-michael.j.ruhl@intel.com>
+Subject: [PATCH v4 06/18] platform/x86/intel/pmt: Do not remap when using callbacks
+Date: Tue,  1 Sep 2026 12:27:41 -0700
+Message-ID: <20260901192736.626777-26-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260901192736.626777-20-michael.j.ruhl@intel.com>
 References: <20260901192736.626777-20-michael.j.ruhl@intel.com>
@@ -73,76 +73,56 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor some open coded checks into helpers.
+A callback indicates that the parent driver is responsible
+for accessing the data area.  Creating a PMT memory remap
+is redundant.
+
+If a read_telem callback has been provided, do not create a
+remap.
 
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/platform/x86/intel/pmt/class.c    |  2 +-
- drivers/platform/x86/intel/pmt/class.h    | 15 +++++++++++++++
- drivers/platform/x86/intel/pmt/crashlog.c |  4 ++--
- 3 files changed, 18 insertions(+), 3 deletions(-)
+ drivers/platform/x86/intel/pmt/class.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/pmt/class.c b/drivers/platform/x86/intel/pmt/class.c
-index 402d51df834a..af7c951b569a 100644
+index af7c951b569a..350129121ff1 100644
 --- a/drivers/platform/x86/intel/pmt/class.c
 +++ b/drivers/platform/x86/intel/pmt/class.c
-@@ -64,7 +64,7 @@ pmt_memcpy64_fromio(void *to, const u64 __iomem *from, size_t count)
- int pmt_telem_read_mmio(struct device *dev, struct pmt_callbacks *cb, u32 guid, void *buf,
- 			void __iomem *addr, loff_t off, u32 count)
+@@ -373,7 +373,6 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 				  struct device *parent)
  {
--	if (cb && cb->read_telem)
-+	if (is_cb_read_telem(cb))
- 		return cb->read_telem(dev, guid, buf, off, count);
+ 	struct intel_vsec_device *ivdev = dev_to_ivdev(parent);
+-	struct resource res = {0};
+ 	struct device *dev;
+ 	int ret;
  
- 	addr += off;
-diff --git a/drivers/platform/x86/intel/pmt/class.h b/drivers/platform/x86/intel/pmt/class.h
-index 258cb460e61c..d8291a5f08a7 100644
---- a/drivers/platform/x86/intel/pmt/class.h
-+++ b/drivers/platform/x86/intel/pmt/class.h
-@@ -71,6 +71,21 @@ struct intel_pmt_namespace {
- 				struct intel_pmt_entry *entry);
- };
+@@ -403,14 +402,18 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 	if (!entry->size)
+ 		return 0;
  
-+static inline bool is_cb_read_telem(struct pmt_callbacks *cb)
-+{
-+	return cb && cb->read_telem ? true : false;
-+}
+-	res.start = entry->base_addr;
+-	res.end = res.start + entry->size - 1;
+-	res.flags = IORESOURCE_MEM;
++	if (!is_cb_read_telem(entry->cb)) {
++		struct resource res = {0};
+ 
+-	entry->base = devm_ioremap_resource(dev, &res);
+-	if (IS_ERR(entry->base)) {
+-		ret = PTR_ERR(entry->base);
+-		goto fail_ioremap;
++		res.start = entry->base_addr;
++		res.end = res.start + entry->size - 1;
++		res.flags = IORESOURCE_MEM;
 +
-+static inline bool is_cb_read_reg(struct pmt_callbacks *cb)
-+{
-+	return cb && cb->read_reg ? true : false;
-+}
-+
-+static inline bool is_cb_write_reg(struct pmt_callbacks *cb)
-+{
-+	return cb && cb->write_reg ? true : false;
-+}
-+
- int pmt_telem_read_mmio(struct device *dev, struct pmt_callbacks *cb, u32 guid, void *buf,
- 			void __iomem *addr, loff_t off, u32 count);
- bool intel_pmt_is_early_client_hw(struct device *dev);
-diff --git a/drivers/platform/x86/intel/pmt/crashlog.c b/drivers/platform/x86/intel/pmt/crashlog.c
-index 142c368a60f8..32f6a7d42b8d 100644
---- a/drivers/platform/x86/intel/pmt/crashlog.c
-+++ b/drivers/platform/x86/intel/pmt/crashlog.c
-@@ -132,7 +132,7 @@ static int pmt_crashlog_read_reg(struct intel_pmt_entry *entry, u32 *reg, u32 of
++		entry->base = devm_ioremap_resource(dev, &res);
++		if (IS_ERR(entry->base)) {
++			ret = PTR_ERR(entry->base);
++			goto fail_ioremap;
++		}
+ 	}
  
- 	*reg = 0;
- 
--	if (entry->cb && entry->cb->read_reg) {
-+	if (is_cb_read_reg(entry->cb)) {
- 		ret = entry->cb->read_reg(entry->dev, entry->header.guid, reg, offset);
- 		if (ret) {
- 			pr_err_ratelimited("failed to read reg: %d\n", ret);
-@@ -164,7 +164,7 @@ static int pmt_crashlog_rmw(struct crashlog_entry *crashlog, u32 bit, bool set)
- 	else
- 		reg &= ~bit;
- 
--	if (entry->cb && entry->cb->write_reg) {
-+	if (is_cb_write_reg(entry->cb)) {
- 		ret = entry->cb->write_reg(entry->dev, entry->header.guid, reg, control->offset);
- 		if (ret) {
- 			pr_err_ratelimited("failed to write reg: %d\n", ret);
+ 	sysfs_bin_attr_init(&entry->pmt_bin_attr);
 -- 
 2.43.0
 
