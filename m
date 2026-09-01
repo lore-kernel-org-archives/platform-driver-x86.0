@@ -1,142 +1,217 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2242C34DB72
-	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 06:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788244438; cv=none; b=tvbe4bVtEuFA4S/3s404jSjYQvQ68xe+2mgPDmNLQrjPvxQY9sdl5cdXkx9L8f7pKuCvcYua09HRHJEPzMSkikl4isoX1W35mML8TGDFd4Ae4y2swJ7lEG7rPaUq1qbh/SSiiSbYae4ThyohHMYJ0hw2E48kw3Ip5ULGekuc/po=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788244438; c=relaxed/simple;
-	bh=3MN6mJw7rnS3zO50ztLcXj8mGLoxtAzQ6H3bT8/qQvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u6xx+G6G/EcOrwC9FvsNW9qby3tUDw9QZvRAzv/7Oq3HJ80lTWI3f1rxmKSgMQwhoFrd119E+H/wrBlX+QbDQPf2qEGOUDFiVjZydqn+XDZ7l8uXdQrAvjFusdWDfRz2pXH+ijnUgG+U23qmfZ2XZltP6NJwiKsvubbxULROobg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+vYFkJ4; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F677459AF4
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 07:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788247631; cv=pass; b=I9xvXIRN4skxAs5gRE2+GdfOmvChq+NjYKVFWKj+tD771crfyqhBiwEepKNp5Ge0MRg78x2ThcCqphGfj0OwACMqXlHnPQBrVHm3fVVtkJI2JR3cVv9l6xFeGrX7NBimeNvy3WrT0CqfoyFBgLZYwLTyZcVdloZxragjg7k7VUY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788247631; c=relaxed/simple;
+	bh=TTiImoeuu6oqTfGi4FTKpcXaarsimrn8hK8+zbcbTXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=UekPP1VU/KWOg6pxf/b4buUeYGFMqbJ5sU5jHR/QJ0/byLjseoFMq/B7DVcpMNzYdxe9h9OHALFZQnBgxHoXeybFpJorgKsV5O7FcPV0PtII7E6gpU4rSwo5HWI3ocUQ8BSXihsPMWHHwFIt/A7+/cbOM6ENK+784EyMifbcHec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgY9UcWs; arc=pass smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+vYFkJ4"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-482fc2b44a7so541512f8f.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 Aug 2026 23:33:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgY9UcWs"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-52de50e77ffso53670311cf.2
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 00:27:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788247629; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RYQ+lJvaMUlgzZtRw03nAZv11A2n4ww6eyImK9ZugOeDu2PY6XpzE+wQxI+qwP/5Rh
+         2aCZQVW4PdnX6hjDxNSySOiLmX3GHw6k1pPHSiZH0WQTr38ZVkI+iYjZOcjmJOXsr+P3
+         uH8T4homgmtoE59k+bmSplpYUXpZf6H1Dpny8U/bCqtSVqulZ3cTylqGwTWFuGYhYJnY
+         iZ3NqnTN8Q8LAosfqwILmIrMi5kCgP5W7MXP79rHu38K9b3vSEdztR/jU1I3m4Z45f1Z
+         mE2hRCDpMgPoQKZmkuLQcDFQ4NsA3c5gpm3RZaOTzFyhNO9QAUsy+G9x+slxFU1MgXGX
+         /pTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=2m2vaigGoQsm/v/eKr50EmVOmqzIDlxfX3yYmCw2BWY=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=TTC31HtYP5AqPSVUf7NbVIdENzzH8VLYH2+Iuv9gnZySvVmmzYuJjtQ+Ik2iGLM/qW
+         iiQOgasYZqR3QmXaBSUh46VTcYctMK8FqPmPzhNCXCaZOffJak23iYwmA7lU9jhCitQ2
+         5JQD5t61Kb1e2qwvJANhQ/vax5q09uLqMnmKvkhuZF4S/knFjNLSkKDm96gduX7MpHPm
+         HqQv86/maSWDwuWcMP4wHr948fg7T2EfGpR+KXXvSI6T2XV1nsKO1DhQDUzxcGmeG7l5
+         iwCtEEhT6onInAmh5jXqagMR07Eb0qtyMzT8YaubDsu5xpxZO7xFMBtWssG1NMrObAsW
+         NAuw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788244435; x=1788849235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1788247629; x=1788852429; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=nS+2pInjOlXM2iS9Ri0UnSYcq50eo6ocFMYoCRo65n4=;
-        b=S+vYFkJ4ViU6+axc6o1UkhIDPPx45QX1OZWm2YobQ2pqnmt/8PCDOWp6fUnQB1lFt8
-         NDRYDw1JXvyxcFHt6KU6KMBeU6J9Uqai2tcaIqBah0M1uvI7fhvhoZafZZBxEDyL0y6+
-         79VoNswJEIbbIVIGtpfXD35P+1BvAeCIe9D0NzJ/gBZsPqi1J5zrazceeWryrvU4BH/M
-         91NdHwkVm3lQD+xZc2mQOcLHuXwaoaI0c2PxYFhed832ZZxnZYEijG0WwU35WpvBvawD
-         mVM39Th6a3XPYhIEecZcR0RUfo2ACPwG9UUu8I12oaAPZ4zXTWJnv/kg2kdtg4Rr+eTt
-         z/bA==
+        bh=2m2vaigGoQsm/v/eKr50EmVOmqzIDlxfX3yYmCw2BWY=;
+        b=fgY9UcWsnInAhjBDQX9I0J/zmX4IUszHi11YBVzwBWCh+c13TFHTRt4uqEX4fWkHWW
+         aRNm+Tt/kWs/W6PQaA/qK6235fwt7ATPf8FMBsKhs14Ppq9DDYJskJvjjroxC1WHu+S4
+         Eafs6nmvfqxdz6YTzTpiiRxvkbVRL0lK3AiUJt3OL9ra7d/s+z8g+Qm2UXEZniwkrdzy
+         y1sxfPC0qFdvXoWo/HUMvGjGH/8mQGJIApJiH4xarQzs/yfuIlrQXyKXXPm8b4H2KALa
+         S3Yv10BNMEIL9rbEzAR2cLwvsNfA6eKmE02/VXm6Ym5H5fBUeyg47YQ5ZxVY2vo3dQJL
+         UvOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788244435; x=1788849235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=nS+2pInjOlXM2iS9Ri0UnSYcq50eo6ocFMYoCRo65n4=;
-        b=NQ4IA940XyOowaxBBDppfCp2tMWxNi/YaLJERV/GpO/CXN+4Ng7rY19duMhOneEQMP
-         hI4TdGjLufbtjhQQD30JY9OM2fSjTPW/3RkgDouYdpVw0PrTeEbizXG+8tXRtTm6+tNw
-         MiKRyW8/q2qoOhGSJ5JAJ6etqGwxjDATa2uIHV425N53Y6hlH7/w16QDO2pOaPlV2zn8
-         9n5ExhMLkUUSKARDuyE+VFqCJCOcb+jRcp0159pu5osDKNzdiY0gS2GAWLi6yF7FYJI/
-         DT6R9FMknWCiUxWDlAWuK6RvQ5hn7VL+82cSeWF/WuWqkgUpZ673q7mdm9q62InYqMdC
-         aSoQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqzyoe0c3loziTk4uNfpiLDj6C4ho034rK39kJSeH7J7q6pqIIUfqR79XiizJjN2OFj+Jek7WeAczU1d4Qu9uMqipAu@vger.kernel.org
-X-Gm-Message-State: AFuF++k/sR1rr0lx9rJM/Q1BRZaxI/HTE4BuSaRqMLBgdhh18QwFZQem
-	viAaIst1qDbZNZR1StlBCJKU9837sSRdMtrTSXHYA60HZ87H1rVuk2w=
-X-Gm-Gg: AR+sD10wKY+yiVgwhunPKb3nTZ87+VJkvdKC8RkvFLvSFZuozSwxDHlBXJhrzpYMVRA
-	ZZF4YKnzFBbQnbLizkayCGIYhS1abnW65cHq2Ov3u3dY3AxpJaRl82dRBkXYmZQgZbhYAgFPhtt
-	rukTDQHAYO0bjPmPCo1Y2ykPeUWmpbAZXf8FL7HqbXNdlPjt5d/sqQggZCY9HeEX3V6+S8ePdVT
-	hKZpI0Qj2amufIPDKlgn99p0soBQe34GHbOaMwIaaNtJho6s7SEno2l/coMMTA8/NxiX5UjfY2x
-	UHg61odU0WyfSgilCoWI2zHFYptwiePd3WOjfq8YHBxxaw7IawpE2hP6gYKdFUBlt02qs6Yc4sI
-	alS78sI18Ywn9QRLKOr6/vUcKWxxTWWKOU9n0o0KMDm9tWT55xDFzEbFy0yCQc1SEvpgopDHPMb
-	uafRC+7NMgPTB6zdihIykyJgPiy2Ed/B2yMCb2TC/kr5VnFu/cYvOCHumC3ypJ/r4KPEG9hGEXl
-	RYq1xJ8hqFVaBR2bC/B1fM0q6NofimqV9BfA3g9y6FQ5g==
-X-Received: by 2002:a05:600c:a55:b0:499:60bf:c6f7 with SMTP id 5b1f17b1804b1-49b91c4cc2cmr543640105e9.13.1788244435072;
-        Mon, 31 Aug 2026 23:33:55 -0700 (PDT)
-Received: from surface.. (84.124.213.91.dyn.user.ono.com. [84.124.213.91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cdce171c3sm47078975e9.8.2026.08.31.23.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2026 23:33:54 -0700 (PDT)
-From: "D. Manresa" <dmanresa@gmail.com>
-To: Jakob Berg Jespersen <dev@berg.pm>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>
-Cc: Hans de Goede <johannes.goede@oss.qualcomm.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Tooraj Taraz <tooraj.taraz@yahoo.com>,
-	"Joseph V. Lavigne" <jlavig88@gmail.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"D . Manresa" <dmanresa@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: int3472: support the POWER1 GPIO type
-Date: Tue,  1 Sep 2026 08:33:53 +0200
-Message-ID: <20260901063353.67252-1-dmanresa@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm>
-References: <20260829-sp7plus-int3472-v3-1-454b50485ce2@berg.pm>
+        d=1e100.net; s=20251104; t=1788247629; x=1788852429;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=2m2vaigGoQsm/v/eKr50EmVOmqzIDlxfX3yYmCw2BWY=;
+        b=do51iaI+fYCPP5ZQtoe5V9sm0jm12wTABOdfVjGExQ+LjnQbYyflyD+IGmSytAOx4j
+         GyozX8SVVtVtDby93J0IDk5vRmErdp2xna0Q/TvbhZDpJiStEKknDH4QqaCCmho0o5hw
+         mNY5pg4RmNwZR5YohqjSN6J4xUPQgvocgMLP7y67xilhPrCinkzLP6yKCl6kx08bc+aQ
+         x/HnbMpmMIu40TBX2eDp3mc5vkins4NJoE9huJSj6yck7TXXSF8aM3lL/6SwlrBd5C8W
+         CsrG27eV8itrX/Y8a4ftTFv99eexZE0RlzC/w7Rap4IrJvXuZS9gLjHeL3OgVcVBgywQ
+         TGdg==
+X-Gm-Message-State: AFuF++lLdrWN8dz4Gj7Vr4e2qBfJ+Ti3X/soQuBbl9GeUs9/cNUVcLu4
+	kuyoTNh08I2E374wN6BMXi0WYDo/wRpaJ7K3rEytGT5uPfiHmGNIz7xihx9eh4wd5e7cF9n7TON
+	MLjaj5TmVwCeCjSCDx3q/a+Cyda0aYmS1fqNawec8Rw==
+X-Gm-Gg: AR+sD13RDv/puwWCPv9SCRrbPUFwfrPxTaQJ5JzPxsdPSti1gR5SnssMffqcY702+0e
+	FNh0hYAcmeBfOdHVH0Dgy6QwtO4oQ8cUYSbHGI2vhqwqcish2eS8wyK8utr76yq9HiAdm9NSSyz
+	0ACrBkK01Vi2XEAgi/K8thqA84vWkxoDHVs5gAmALkq4/i5f8vOufQEVlZDceI/WWoMwIyIEtRn
+	Pv7f+NAPoWQopcEmDFJK4vM6m6079noik0snHYJz1jG35QlmSlPgUf+z4OCKbZxsN1JtcK1cfUf
+	YpruQD7arjeyrPN4/kS1UMZVr+KL6z8Ai7m1YZZlEz0VX54nNZCwOlx53SfEf7hV/tfD46BY3PS
+	nGbAfZujOHCz5rw==
+X-Received: by 2002:a05:622a:1e19:b0:51c:61a:50fa with SMTP id
+ d75a77b69052e-52fb967d009mr436677171cf.39.1788247628910; Tue, 01 Sep 2026
+ 00:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAAC2M2xn7ESd-E57smPvd71VNp_AiQP0HbTZF-L+p4jZ3ZNR0A@mail.gmail.com>
+In-Reply-To: <CAAC2M2xn7ESd-E57smPvd71VNp_AiQP0HbTZF-L+p4jZ3ZNR0A@mail.gmail.com>
+From: powerfullz <wleizc7319@gmail.com>
+Date: Tue, 1 Sep 2026 15:26:54 +0800
+X-Gm-Features: AcwNN1VtZ9yMUHF489Apk_f0vj8bMt3-t376pss2VQdtQxyUE6wKXZ6rnwk0JeE
+Message-ID: <CAAC2M2zZu14OFYbQ65_Z8rVHCFUpnXQbZfLemV9kcsUBNvVC2Q@mail.gmail.com>
+Subject: Fwd: [BUG] platform/x86: bitland-mifs-wmi: performance profiles
+ unreachable on USB-C-only models (RedmiBook Pro 14S)
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since this thread is where the INT3472 _DSM GPIO type codes are being
-discussed, relaying a piece of vendor-side documentation that surfaced in
-the linux-surface work: the type-name table inside Intel's own Windows
-driver. Extracted by the tester known as fildunsky on GitHub (relayed here
-with their permission and at their request - full context and discussion in
-https://github.com/linux-surface/linux-surface/pull/2252):
+---------- Forwarded message ---------
+=E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9A powerfullz <wleizc7319@gmail.com>
+Date: 2026=E5=B9=B49=E6=9C=881=E6=97=A5=E5=91=A8=E4=BA=8C 15:14
+Subject: [BUG] platform/x86: bitland-mifs-wmi: performance profiles
+unreachable on USB-C-only models (RedmiBook Pro 14S)
+To: qby140326@gmail.com <qby140326@gmail.com>
+Cc: <latform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 
-From iactrllogic64.sys, "Intel(R) Control Logic", 04/04/2024, shipped in the
-Surface Pro 8 driver package (analysable without a Windows install):
+[Resend to the correct list address; the previous attempt had a typo in
+the platform-driver-x86 address, so this never reached the list. The
+driver author was already contacted directly.]
 
-  0x00  Reset          0x07  Power0         0x0E  AF
-  0x01  Enable         0x08  Power1         0x0F  IO
-  0x02  Strobe         0x09  Standby        0x10  Avdd
-  0x03  Torch          0x0A  WriteProtect   0x11  Core
-  0x04  Flash          0x0B  PowerEn        0x12  (Handshake)
-  0x05  LedRear        0x0C  Mclk
-  0x06  LedFront       0x0D  PrivateLED
+Hi Mingyou,
 
-Extraction data, for anyone who wants to reproduce or challenge it: name
-pointer array in .data at VA 0x140021060 (file offset 0x1F260), stride 8,
-indexed by the _DSM type code; strings in .rdata at VA 0x14001E4C0;
-SetGpioOutput at VA 0x1400027C0 rejects type >= 0x13 and indexes per-type
-state as base + 0x50 + type*32, consistent with that layout.
+Thanks for getting this driver upstream -- fan/temperature monitoring and
+keyboard backlight both work correctly on my machine.
 
-What this does and does not say:
+However, the platform_profile implementation makes the two high-power
+profiles permanently unreachable on USB-C-only models, and this breaks
+power-profiles-daemon entirely.
 
-- It confirms 0x07/0x08 are simply "Power0"/"Power1" on the vendor side -
-  generic numbered rails with no supply semantics - which if anything
-  supports mapping them by what the consuming sensor driver requests, as
-  this patch does with "dvdd".
+System information
+------------------
+Model:     RedmiBook Pro 14S (dmidecode -s system-product-name)
+CPU:       AMD (integrated graphics only, no dGPU)
+Charging:  USB-C PD only -- this model has no barrel-jack DC input
+Kernel:    7.2.2-zen1-1-zen (Arch Linux)
+Userspace: power-profiles-daemon
 
-- It says the vendor calls 0x10 "Avdd" and 0x11 "Core", while mainline since
-  v7.0 names 0x10 INT3472_GPIO_TYPE_DOVDD and registers "dovdd". Worth
-  knowing, with two caveats: it is a single artifact and the electrical
-  claim is unproven (the Windows control logic raises every described line
-  in sequence regardless of name, so a working camera under Windows proves
-  nothing about which rail is which); and con_id in int3472 follows what
-  in-tree sensor drivers request rather than vendor naming anyway (0x0b is
-  "PowerEn" in this table and is registered as "avdd"). Empirically, on the
-  Surface Pro 8 the consumer of the 0x10 rail is the ST VD55G0, which
-  requests "vddio" - lining up with neither name and resolved there by a
-  per-HID mapping.
+Symptom
+-------
+  $ cat /sys/class/platform-profile/platform-profile-0/name
+  bitland-mifs-wmi
+  $ cat /sys/class/platform-profile/platform-profile-0/choices
+  low-power balanced balanced-performance performance
+  $ cat /sys/class/platform-profile/platform-profile-0/profile
+  balanced
 
-- For the enable-delay discussions, the same binary's power-on sequence
-  (discrete::DiscreteControl::SensorOn):
+  $ sudo sh -c 'echo performance > /sys/firmware/acpi/platform_profile'
+  sh: write error: Operation not supported
 
-    Enable -> 2ms -> Power0 -> 5ms -> Power1 -> 5ms -> PowerEn -> 2ms ->
-    Avdd -> 2ms -> Reset held -> 2ms -> Mclk (or the ACPI clock when there
-    is no Mclk GPIO) -> Reset released -> 2ms -> Enable asserted -> Handshake
+  $ powerprofilesctl set performance
+  Failed to communicate with power-profiles-daemon: GDBus.Error:...:
+  Failed to activate platform driver 'platform_profile': Failed to write
+  to acpi_platform_profile: Error writing
+  '/sys/firmware/acpi/platform_profile': Operation not supported (15)
 
-fildunsky still has the binary and is happy to re-check it against specific
-questions; anything for them is best routed through the PR thread above.
+'low-power' and 'balanced' work fine. Only 'performance' and
+'balanced-performance' fail, and they fail regardless of whether the
+USB-C charger is connected.
 
-D. Manresa <dmanresa@gmail.com>
+Analysis
+--------
+In bitland_check_performance_capability():
+
+    /* Full-speed/performance mode requires DC power (not USB-C) */
+    if (!power_supply_is_system_supplied())
+            return -EOPNOTSUPP;
+
+    ret =3D bitland_mifs_wmi_call(data, &input, &output);
+    if (ret)
+            return ret;
+
+    if (output.data[0] !=3D WMI_SYSTEM_AC_CIRCULARHOLE)
+            return -EOPNOTSUPP;
+
+WMI_FN_SYSTEM_AC_TYPE can only ever report WMI_SYSTEM_AC_TYPEC on this
+machine, because the barrel-jack connector does not physically exist.
+The second check therefore evaluates to true unconditionally, and
+PLATFORM_PROFILE_PERFORMANCE / PLATFORM_PROFILE_BALANCED_PERFORMANCE are
+dead code on this hardware.
+
+This looks like it was written for the barrel-jack gaming models
+(Redmi G and similar), where gating full-speed mode on the high-wattage
+adapter makes sense. The thin-and-light SKUs share the same MIFS WMI
+interface but not the connector.
+
+Secondary issue: API contract
+-----------------------------
+Independently of the hardware question, advertising a profile in
+->probe() via set_bit() and then rejecting it in ->profile_set() is
+problematic. Userspace reads 'choices' as the set of supported profiles,
+so power-profiles-daemon loads the platform_profile driver, offers a
+performance mode to the user, and then fails the whole transaction --
+which also prevents the amd_pstate CPU driver from applying its EPP
+change, even though amd_pstate alone would have worked fine.
+
+Before 7.1 this machine had no platform_profile at all, ppd used
+amd_pstate only, and performance mode worked. The new driver is thus a
+functional regression for these models.
+
+Workaround for other users
+--------------------------
+    sudo systemctl edit power-profiles-daemon.service
+
+    [Service]
+    ExecStart=3D
+    ExecStart=3D/usr/lib/power-profiles-daemon --block-driver=3Dplatform_pr=
+ofile
+
+hwmon, keyboard backlight, hotkeys and the gpu_mode/kb_mode/fan_boost
+attributes all keep working; only ppd's use of platform_profile is
+disabled.
+
+Proposed fix
+------------
+Patch below simply drops the connector-type check and keeps the
+on-battery check. Rationale: the EC clamps the power limits according to
+the negotiated PD contract anyway, so requesting full-speed mode over
+USB-C is safe -- it just yields less headroom than a barrel-jack
+adapter would.
+
+If you would rather keep the restriction for the barrel-jack models, the
+alternative is to move the capability probe into
+platform_profile_probe() and only set_bit() the high-power profiles when
+the machine actually supports them, so that 'choices' stays honest and
+->profile_set() never fails for an advertised profile. I am happy to
+respin in that direction if you prefer, and I can test either version on
+the RedmiBook Pro 14S.
+
+Thanks,
+powerfullz
