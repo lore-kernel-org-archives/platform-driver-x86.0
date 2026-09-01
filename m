@@ -1,139 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029DE38D415
-	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 15:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CEE47ECC1
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 16:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788276247; cv=none; b=Hbyf6M8MmweoJjwL1/Q+K+sVIwV6gQtT4LRJWjUof2CvYEg8rciUHLlynf92aTGTqzV9fDm328yFLnCKZjJw1Q1GaHwOXhpTJZVr40NVmFll0LFKPQERqt9Ss5ToUibzw4GstKcQbfaddOw4hP4c01OSTLo8lggurSyFOucW49s=
+	t=1788280335; cv=none; b=D9Q9/5hQEcmUbJEOn8RQw1cVgjwNGWVrcqLtDF6JZlCPyivm/kpeLjkg4Ocj7YJLfeJwvR0z4Y8xvrIZC9p8DPpavDFEK/HmUiY8PjeuoEFOvamK+MivJNeNEFNCg3jCVp0VOrTRdISKiS+GMg2A12LYDetkeKILcREqFHYFDl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788276247; c=relaxed/simple;
-	bh=UmojlSheAV64LrmT3kln3La1H/0LyFhB+PKdJBZ9i1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jOV/HBZRyd54Y4BvZKI2ClvMJ5CtzkVa6htKkqmBy+fVwTIkcIPl3s9t/5PhTdJvYnNH2tYj4YOJZsXmmPZhHkkdvqMAD28dpadDqUXfDT60FF+J1PjGnHA9ECxPrQP212EexZTv+zc1HkIU4B05+keHwBsCGWrFfP7MfREaHx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ybnjbt0c; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788280335; c=relaxed/simple;
+	bh=p4GObHGaJ5CEWbDCuhA6lpqninXfQCRLaBbM7efY+I8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V7rXr2+odY2U43jsGSbEZkfFIelnBZFOAxHlX9jGix6floXueUA6Ed7zK96zbVyVv8w5i0dlzj/JcjqCKVznQZhlCdASxKZaXMVgwZVWCsO/8dAm/iPf/Oh6qE+37QHU0ADmdgwXfv6QqJqwGc9U7V9UFsCwsK6hr3oV7nHqeW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=en/DMJ+B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ybnjbt0c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2841F00A3A;
-	Tue,  1 Sep 2026 15:24:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="en/DMJ+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 505081F00A3D
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 16:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788276245;
-	bh=ETXnEfS8sG1tSm7IJJnW5zDFtZj3Cd5bpgXHjk8Gnkk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ybnjbt0c+SYCQrmbl6Ye8c0NIozrFxbqCPaMMaht1SibJxtQjTJ8KxvMjDMP5bq6B
-	 3MTaK1gyJvL6ogmGxpuCQGOPmLRjAZD/yR6SibZDDgG8Djobljc/MEiNUNsZEAF/Q+
-	 p2X4j9Z9m9wGQW7qes66ozRLi3uWUq5vSRoxxZfEMdp20rjKZyfEiYXjvrkLt5C7BW
-	 5QPtsjM/01zZQNQ2MIuey2+hiiPZJ/n1lQAEpEKhulVVd3h5rgDawzsItPUOnEb51/
-	 lRuUEqBvzojips4/vydMQ3cIaZEpC9gNo0DHR4ps2cRE4yD5Wghad+KY/agZ9rVVr8
-	 KmokJzUucm01A==
-Received: by venus (Postfix, from userid 1000)
-	id 7F11D181B0C; Tue, 01 Sep 2026 17:24:03 +0200 (CEST)
-Date: Tue, 1 Sep 2026 17:24:03 +0200
-From: Sebastian Reichel <sre@kernel.org>
-To: David Stephenson <git@davidstephenson.net>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>
-Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
- KEY_KBDILLUMTOGGLE on Fn+Space
-Message-ID: <apbt8k0IH2U28-Cm@venus>
-References: <20260825193556.133277-1-git@davidstephenson.net>
+	s=k20260515; t=1788280334;
+	bh=n7PsGS51DMFD9X2awrSyQeuUAIWY2ojuh4Ip9J/3AzY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=en/DMJ+B4O0/lZDAjP2LwhNUDO6ZaRsmMhWKlLtrQpNY8IJwbMlZm5nFRJAB5C92w
+	 J64nx6gY8vnF+TtbL5dqkhKPe2TXGAPq2gJJR3jDr3vJce7fG+n9YLUlal20vUV0TE
+	 CtekgujcmEInVMOKHq2qcDSHIc2rOebUafVxl2KjmRMtyzeNp0MbYQ2FGbubJC75w2
+	 e7kKBZuUUCqnuJYXXS0IhU/uBaekk3XLIEsSN2CC5oGuahjravyQwQIoaVfUoBz6xk
+	 wpqmEqWZLqrM4ZT08V1v5EE8XAiRVcalzWYiZ7K1inhoQ+sEUk2onTRHBoTSourZYb
+	 ODcsJihWcBH2A==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39c7ef2b1e2so22481fa.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 09:32:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AKwUvBzff7jyj/9wwy3Fk8p6rjKVvIbrIG6X0n8whlv3ZTSAM7PS1KmemWif55cR2AtXBQu6KQRiYFto1y5ZVs14vNDiRvE/@vger.kernel.org
+X-Gm-Message-State: AFuF++lg0NdwlsUnxtxoQJRz1tKB+6y44DwA9Su0WeK3Pdq0j7a3VfeA
+	RDmsEfoY/ISiT1/s5BsZXDz25JkQep+Spkp1GUfAxYlM5DCXhFiXoxBW7lgxKO7MTun3T77n13E
+	QLidKoPSBtynH3Em23mMGNhLaZ82yHbk=
+X-Received: by 2002:a2e:a9a1:0:b0:3a2:72c:cde9 with SMTP id
+ 38308e7fff4ca-3a339661bb1mr22065241fa.4.1788280332554; Tue, 01 Sep 2026
+ 09:32:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5mbmsvvik7ninqyc"
-Content-Disposition: inline
-In-Reply-To: <20260825193556.133277-1-git@davidstephenson.net>
-
-
---5mbmsvvik7ninqyc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <6314925.lOV4Wx5bFT@rafael.j.wysocki> <apaCk3qmZ5hO_aNC@ashevche-desk.local>
+In-Reply-To: <apaCk3qmZ5hO_aNC@ashevche-desk.local>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Tue, 1 Sep 2026 18:31:17 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jKCLBuSQX0EnzEftQZaq4ZSCpTFOGP5u4cx2gxieJpLQ@mail.gmail.com>
+X-Gm-Features: AcwNN1Wzb093icNUrYCJFMRArZKM-wbAwOubP5kdL57VnOA0hhP0Kg3PeTHwRNw
+Message-ID: <CAJZ5v0jKCLBuSQX0EnzEftQZaq4ZSCpTFOGP5u4cx2gxieJpLQ@mail.gmail.com>
+Subject: Re: [PATCH v1] ACPI: bus: Drop two fields from struct acpi_device_pnp
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] platform: arm64: thinkpad-t14s-ec: don't send
- KEY_KBDILLUMTOGGLE on Fn+Space
-MIME-Version: 1.0
 
-Hi,
+On Tue, Sep 1, 2026 at 9:45=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Aug 31, 2026 at 10:07:10PM +0200, Rafael J. Wysocki wrote:
+>
+> > There are two fields in struct acpi_device_pnp, device_name and
+> > device_class, that were supposed to be populated and used by device
+> > drivers, but they have never been used consistently and now they
+> > are only set for the bus object in acpi_set_pnp_ids() (and never
+> > read afterward).
+> >
+> > Drop them along with all of the associated symbols except for
+> > MAX_ACPI_CLASS_NAME_LEN and the acpi_device_class typedef that
+> > are used by the ACPI netlink messaging code.  Move those two
+> > definitions closer to the struct acpi_bus_event that refers to
+> > the acpi_device_class type.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> ...
+>
+> > +#define MAX_ACPI_CLASS_NAME_LEN              20
+> > +typedef char acpi_device_class[MAX_ACPI_CLASS_NAME_LEN];
+>
+> Are you planning to use this in some future code?
+>
+> >  struct acpi_bus_event {
+> >       struct list_head node;
+> >       acpi_device_class device_class;
+>
+> Otherwise I would go with complete replacement of the above to simple
+>
+>         char acpi_device_class[20];
+>
+> here.
 
-On Tue, Aug 25, 2026 at 07:36:21PM +0000, David Stephenson wrote:
-> On the T14s, the EC already steps the keyboard backlight when you press
-> Fn+Space: off, then low, then high.
->=20
-> We report that change with t14s_kbd_bl_update() (brightness_hw_changed).
-> We then also send KEY_KBDILLUMTOGGLE.
->=20
-> The extra key is the problem. Desktops treat it as "please toggle the
-> light." GNOME calls Keyboard.Toggle() and changes the LED itself. That
-> fights the EC's three steps. The on-screen bar also stays empty,
-> because Toggle() always returns 0%.
->=20
-> thinkpad_acpi on x86 already skips the key when the firmware changed
-> the light. It only uses brightness_hw_changed. Do the same here: keep
-> the LED update, do not send KEY_KBDILLUMTOGGLE.
->=20
-> Tested on a Lenovo ThinkPad T14s Gen 6 (21N1, Snapdragon X Elite) with
-> GNOME. After this change the OSD bar tracks off / 50% / 100%.
->=20
-> Signed-off-by: David Stephenson <git@davidstephenson.net>
-> ---
+This is in use in the Thinkpad driver.
 
-Reviewed-by: Sebastian Reichel <sre@kernel.org>
-
-Greetings,
-
--- Sebastian
-
->  drivers/platform/arm64/lenovo-thinkpad-t14s.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/arm64/lenovo-thinkpad-t14s.c b/drivers/plat=
-form/arm64/lenovo-thinkpad-t14s.c
-> index 5590302a5..22d20a907 100644
-> --- a/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> +++ b/drivers/platform/arm64/lenovo-thinkpad-t14s.c
-> @@ -488,8 +488,14 @@ static irqreturn_t t14s_ec_irq_handler(int irq, void=
- *data)
->  	case T14S_EC_EVT_NONE:
->  		break;
->  	case T14S_EC_EVT_KEY_FN_SPACE:
-> +		/*
-> +		 * Firmware already cycles the keyboard backlight
-> +		 * (off / low / high). Notify userspace through the LED
-> +		 * class only. Emitting KEY_KBDILLUMTOGGLE as well makes
-> +		 * desktop environments toggle the LED a second time.
-> +		 */
->  		t14s_kbd_bl_update(ec);
-> -		fallthrough;
-> +		break;
->  	case T14S_EC_EVT_KEY_FN_F4:
->  	case T14S_EC_EVT_KEY_FN_F7:
->  	case T14S_EC_EVT_KEY_FN_4:
-> --=20
-> 2.55.0
->=20
->=20
-
---5mbmsvvik7ninqyc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmqW7gQACgkQ2O7X88g7
-+prahBAAgLl8K27mTJVxx3giz1Lj3eC/xrb0xAQsYhZ3C91Jw9UbhYRYPBqId74N
-c+vmUXUszCSHLxZv8FxrqrYtAOZMDoV8nePFMNGgBRrSJirMNn81Y7dyz/E6x/3q
-YFhFIrbDevZb6NHrzs+iJOqqtXGCsfwV72jVu01GV4bgSDGDmPfa3rQzR7wAvkuZ
-GfjNXwhlodyfvPPktrgNxPBFu4FFCDTuN1FMFMJr7ctQg6U4VLuM7cP6d064I2W1
-HOIDfpiINCXVxARUNDy1Tr64bX+6jUJUCkNofF2fZ27o79c28o3fzaN3XW/Sc8HO
-G75EIzSciN6U5aptOnFv00qyaTYmu12xSJBLYI0iURV0tJmLQmpalqF8hQrQloq/
-6WyK9RQwI4yLZy+5P+00R5NYuqwKO9+A86h5lSvfymPbzuRAAjE+JQ+jhFEiNS4W
-PaQKY/+KCLwM8ArD6VmtGmvYy7uDiV6xGmk7zz+NvY6ZvHoYYOsKymoXU6KdYceT
-/cFsnTsGQKir6nmifcrh7LCsLNJJPix+xUCV/HtiTNJHZP79SHKbgu9cl1332480
-8Y3RtFNVaEeEk7oheGNVEyDK68yUnRioRP6mDppjhZYAUWzq2SXGSIIAVgXqkukz
-gq5M+j5PZVAimwCWQvASgOi28AbI6pYdwE/dTTwKcYXLD27Q7DM=
-=C2YE
------END PGP SIGNATURE-----
-
---5mbmsvvik7ninqyc--
+It might be replaced with something else, but that would be a separate patc=
+h.
