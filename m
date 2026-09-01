@@ -1,91 +1,159 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7666436B901
-	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 14:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76108248880
+	for <platform-driver-x86@vger.kernel.org>; Tue,  1 Sep 2026 14:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788272336; cv=none; b=arZ914jFrAE+gj4q0f4Gvef/F4k0hVMPI/6Oy5d4LYs/GtBLMocU5B/dRNozggqaA7TKS6g5lmEi50MfFjRsJXSn+P/LkmjpQukNAuj4CIl87qKF9E7J6kExSPqf2ByL0qvynd1aX9L8keMWNdfJQLWBmXY6bJWsXaVpvcXUI/c=
+	t=1788273573; cv=none; b=rc7zLFeuxP567dODs0p8MRTgetaXVspHZGk+5tB31mrw/0yd4XrlP03j3oP2mas0c2+8DML1KOSbxk2KsLSc/lNnFlJpm9owz82nhmALt+O1OyLTqtUTlzcs734Hv1Brhpwqp9zAD6R4fOPHu1TneC/u09g66Xi3ahBseXrA32A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788272336; c=relaxed/simple;
-	bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TCO7SdWCQCvn8Ih8bDnCBgVp+XeNwB1/FWIIVMVaotsiB6aUi43/g37uqO+yhXi0uto4UsjtJWJKWrh8+PIiHdh4lLqaoNn5hbPv6X5tUtEhSC/hbTZvalGRnqRkylB49yHgLweAt4gNglbEcL4TCs96Gnu9ZG97f93oVXCUmKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tJp7rvKu; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1788273573; c=relaxed/simple;
+	bh=PpjuOycMnvKcsr6i4JwrDRk3fLhhuojReIjxUw1zJuY=;
+	h=Subject:Date:Message-ID:From:To:Cc:Content-Type:MIME-Version; b=tHO03JiWMkc9FLmjr/O9efqr6SdYjPB+AMdojCexCGjysed7EIf1c8R3lSLFR4Kq6GLLTEdqv6DXghK4TrGU4R0ouaoYIMe3uBcKPtRyp8lr93Y91z+qnnCvI/hy1cFMiK2ud/xbhuldXJ3Akhgac7z2DN9bBpvkrgcs+74a/4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9o/nJgs; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tJp7rvKu"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49b392ccaacso68544225e9.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 07:18:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9o/nJgs"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cc1bc88a20eso1428739a12.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Sep 2026 07:39:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788272333; x=1788877133; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
-        b=tJp7rvKuNXudQnAen7LkRkbc6pu3WQiwbx+1IEE1DWHF85S2jAM/54ZDCnMKotfvRZ
-         VST47cq+FRJ/5/SkKo75iIfq6sioR1ijPRTtjjY1ueM2Wpalh0SBVYEgjxt8RJr4v8U1
-         xDX34UNmz9wjGVPSTf6hYpHTN4EmlYoNS75MfADFEItIL+CrUeTon/XObJfQ4H5+NyfJ
-         g91JWC9JOwPMnGi8HUVyFRWNb+VfoqFRP9QYAARt9pvJ+S8cyFTG8AzLs647wFflmDci
-         JMXRj36kU6ZQttyNXzbciTCKHPb1433cn/pZTokyZMPSG4p4jjce+l+CvAPsv+89fT7k
-         tCSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788272333; x=1788877133;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1788273571; x=1788878371; darn=vger.kernel.org;
+        h=mime-version:content-transfer-encoding:content-type:cc:to:from
+         :message-id:date:subject:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=woJiB8K0LeShA9aB8DmGEak5D/ZNM5PjGjBLk3ZtCLo=;
-        b=A72I09YFvS4DeB5cuVjG3NxR6pbLG2A0M8VURVNN0mfbu8yrQmdXPnOGuq4bhbskU2
-         UxCH09/6lqbbaKPsI26B/mhmu/O0hCvGNrFwOKJsm6QZAS88yWZFMvsuXUpD+FEvoV+m
-         aDYVfghb8xQKRrecmEr3DD62aXwObJoIMOA+j/X3VxPgurvUck1Y2vhHLzzFwkAirGq8
-         5E7b/DjMVstbl0EWgwKDYSnaSElPNBJNUApIuV1UMI6GLwNor/9Mhy7ZGR3Ruzdb+D2X
-         nXdK8yRueRukrN9B+exEkx2G4nvAXRvXVBU3OiJQMTb4EzqwWHDHXmhYsoikwCKt0HjT
-         TOXg==
-X-Gm-Message-State: AFuF++n59lqsN64whDRXj/sKBDy8EGariao5hIuorwLIkSkssH9qj7JL
-	i3SPCW95eukSncgZ9hT8OWTJWCS9lDuGS4eg+YAKotdDnRGVte+iIhNv
-X-Gm-Gg: AR+sD112huo/cMBHG+kpHQ6qlrXQsjka+LErYy5Uc/DOaWF9AaVasZ8qDF1hjs1fTEX
-	+FV3ti9TqDlHH8FlfOna4OWR7MGakLRQ4N94RNW5vZrSNUChwJVdBkP6Ok5MZJ9b/FZ3IS9rRQ0
-	qla1nNNensNkwU6Wv+7u+EvdoOTKibixFFxdzE7O+KpcqW9A56wQg4xIdtX3s46dwaDv7vyPqSw
-	S0obYjfC5wxZZ1ocba5eY55g0udKd4SlEuAXylH7cJ32NFVoFUutulySInDIZIcH89Zcs5i6Pv9
-	LjCsfWny1GeU0cMKbAz7gE/iD1Fud+hp1qEPkeGVxDg1sCKkRptQKh4YWnBR0HqDYtvZtMKwo8o
-	CwSDakVDWaWbS8TUKXpIOg1KExuhmAIBCt1NsJgjacFiTdtJzWDBpEL89XAvR6A3DyCWmsG4myv
-	W/TUghi4JjLk2uHLC8Pl4/KGPJ6X7whYndc7jPp7RYVHPVBIV5dHL8Hc+bdTo=
-X-Received: by 2002:a05:600c:81ca:b0:49b:47b3:d6d with SMTP id 5b1f17b1804b1-49b91c3b7c4mr600777375e9.10.1788272333267;
-        Tue, 01 Sep 2026 07:18:53 -0700 (PDT)
-Received: from fedora ([2a02:ff0:220:b213:dfd1:35e6:957c:b8c2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48442d781bcsm4831531f8f.26.2026.09.01.07.18.52
+        bh=Sq8WERtPgYhkPbAu1lD9X5RHbMKk+hk5c82yqST5k6M=;
+        b=E9o/nJgsD3nmRXeyyKjwqPAgLLTLQvaEZKQSEcBx4xjzI/Mwd7nEWobbpTs8j45r9J
+         6GwHWhhDUDUHihgxEqSj6nMJ+bJYg2LD+tQ0hbTctzn0PxsppQ/pwuWH6g9GZwzGgibN
+         KFMxR5u4egf5ogmzCauuFrd+Hy102S7swgDWoBclVbmcc6W2SMYpk76LiKbJUZnPpqfc
+         VDTrG5mVKcNhz5Lm1wB4kamup/9xLpnY3e+8cCP0+AWVLPPJi7AJRoWI8fURef8cAZm9
+         LUr81ZC1mm9BtOURc5bVZDUhXhelAeJPA7EiVpNdfwMvmpnnZBakk3Li4hO5ExoN2u9J
+         azzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788273571; x=1788878371;
+        h=mime-version:content-transfer-encoding:content-type:cc:to:from
+         :message-id:date:subject:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Sq8WERtPgYhkPbAu1lD9X5RHbMKk+hk5c82yqST5k6M=;
+        b=kLZVbxSaRiYjVRMGmGKkEHrzJvhrQcOGUVg3CPxxcFUPLWt6IRqmNrXmszEsSbQt+e
+         WQbCUkx4OXbq50tq7mkLMBjRAfILFehyPvLJwSoXrXvU+bBTIioVJruxEkjjY/S8XmkR
+         asmqBxjjVndav2ktUvW1qGf1QqCZh0mGnNz2SoZH7WRLGt2lUvX08q95WKOLKxnLdQDh
+         Je7/0F8WlTVtaWm0KX7E6zwumXiIlg+BWS+CnX4ezP2O/OAyJaXsXYK2mV1MLfvAi3K0
+         7Aik95CFucpgqJM5RTe+mEtCt5eW3fvKfrqKkvU162A6uMyk0bMjLDm87sWuGWjf1B+E
+         gR9g==
+X-Forwarded-Encrypted: i=1; AKwUvBwYClan5XTmDlUhm3lYcn6ouLgCuBnZ2y004/t0Jkigz+8pn9BFjgzaDm+KSNHtVhPq0wlEjxXlfe8uMt2ZjqpIIgV1@vger.kernel.org
+X-Gm-Message-State: AFuF++lVi3c8rWOCZj+23EqAODZndv0M3KTjX/cdbfgaOYYIAZ/pwKGd
+	qvq29p+JMHYalLSDFX9qMJanhCGBEE6n9Z3z7pDdol5HZJdZ38UYXjzJ
+X-Gm-Gg: AYBFou1JFfdGjcOn6vyiHFIn4Jr5+VWbu0s78meFtQ06SusQqAJz0t8x7TP68BNyRk7
+	OqSJecGL7hE/4CaKVgH1ed92bzh8pjR8EjsLRnAlCEA7MZcQNT6wVsf3BbqAlo+lJUGk8Vl89Al
+	XwDZmoFHX22Pn+Rg+iu23Xj3966UOzvzcMiUnK16c9jF0mD2WmmFc5jZPvkqnYLcaAmqkZMUddL
+	wWeevUjNEjMxBi8d66XIPzH5f6ptmAT1MKvrJ6kuEVE04H8mFoCtQVcbwoKDAXH4Tz7lwrG1JgQ
+	maD6CN06cU6HfXG8rxZavoPp9TMbujbUijWgPH8Na9k5IxEi3K+u3frY5y4MyNoh3hl4YQaCK5g
+	+S1LIvuEG6/h/969swk4bQDqZW6RdtPr4Sx5zGOTMJyqCj+Tr+mbN+Brr4+tB8YUfhl4MNl4MlG
+	s7XLp1dydT7S6XvdwZjbXiKsw/tHgfXb68NsRdT4mHj4/xB1hIRSxbHJoKvcZTOqWmJhhmyl62A
+	yp4
+X-Received: by 2002:a17:90b:6c7:b0:396:6344:3b63 with SMTP id 98e67ed59e1d1-396d0e25905mr53255820a91.2.1788273570553;
+        Tue, 01 Sep 2026 07:39:30 -0700 (PDT)
+Received: from [192.168.71.146] ([240e:b8f:91e2:d400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39ae0dfcd65sm59248a91.3.2026.09.01.07.39.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 07:18:52 -0700 (PDT)
-From: =?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ertu=C4=9Frul=20Top=C3=A7u?= <ertugtopcu0@gmail.com>
-Subject: Re: [PATCH v3] platform/x86: Add Goodix fingerprint EC mailbox transport
-Date: Tue,  1 Sep 2026 17:12:25 +0300
-Message-ID: <20260901141225.282753-1-ertugtopcu0@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260816194955.468107-1-ertugtopcu0@gmail.com>
-References: <20260727205837.91413-1-ertugtopcu0@gmail.com> <20260803074454.49474-1-ertugtopcu0@gmail.com> <20260816194955.468107-1-ertugtopcu0@gmail.com>
+        Tue, 01 Sep 2026 07:39:29 -0700 (PDT)
+Subject:
+ [PATCH RFC 0/1] leds: add ASUS Aura SCSI driver for ROG NVMe enclosures
+Date: Tue, 01 Sep 2026 22:26:46 +0800
+Message-ID: <202609012200.RFC0.lhw@gmail.com>
+From: Liang Haowen <nbg2974@gmail.com>
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Martin K. Petersen <mkp@kernel.org>, linux-scsi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi,
 
-Gentle ping on this patch. v3 fixes the i386 build failure reported by
-the kernel test robot and has been verified with the reported i386 W=1
-configuration. The driver has also been tested on the target hardware.
 
-I would appreciate any review or feedback when convenient.
+Hello,
 
-Thanks,
-Ertuğrul
+this is the v1 I promised in the "Placement of ASUS Aura and
+platform/x86 ASUS files relocation" thread: the LED side of ASUS Aura
+RGB on ROG external NVMe enclosures, posted for review in drivers/leds
+as Armin suggested, and in line with the shared ASUS Aura interface
+Denis has been coordinating.
+
+The hardware: ROG external NVMe enclosures (ROG STRIX Arion, USB
+0b05:1932) are plain USB mass-storage devices. They expose two mass
+storage interfaces (BOT and UAS) and no HID interface; the Aura LEDs
+hang off an ENE controller reached through vendor SCSI commands on the
+same LUN as the disk. The Arion has 4 independently addressable LEDs,
+verified on hardware.
+
+The interface: the driver registers a scsi_device_handler, matches by
+INQUIRY strings (vendor "ROG", model "ESD-S1C"), does not claim the
+sdev (sd keeps owning the disk), and exposes each LED as a multicolor
+LED class device, /sys/class/leds/asus-arion:led0 through led3.
+
+Protocol summary: a 16-byte vendor CDB (opcode 0xec, 'A' 'S'
+signature, register index, argument count in cdb[13]). MODE 0x8021
+(Static) must be written first in every sequence or the device ignores
+the whole sequence; colours are written to 0x8160 + 3 * led and
+0x8100 + 3 * led (3 bytes each, order R, B, G; both tables are written
+because firmware revisions pull from one or the other); APPLY 0x80a0
+takes 0x01 to apply and 0xaa to save, and only the save makes a change
+stick.
+
+A transport gotcha that seems worth wider visibility: the CDB cannot
+go through scsi_execute_cmd(), because it derives the command length
+from scsi_command_size(opcode), which maps vendor opcode 0xec to
+10 bytes. The ENE protocol is a 16-byte CDB with the data length in
+cdb[13], so scsi_execute_cmd() drops that byte and the device silently
+ignores the write (GOOD status, no error). The driver builds the block
+request by hand and forces cmd_len =3D 16, which is what SG_IO does from
+userspace. Any kernel driver sending a vendor CDB whose real length
+does not match scsi_command_size(opcode) is going to hit the same
+thing.
+
+Placement: per Armin's suggestion in the thread, the LED side belongs
+in drivers/leds, since the enclosure is not a platform device and the
+user-facing interface is the multicolor LED sysfs. What is posted here
+is the driver as verified on hardware, still monolithic. The agreed
+shape going forward, with Denis, is a SCSI transport helper in
+drivers/scsi feeding an Aura LED driver in drivers/leds behind a
+shared ASUS Aura interface; the Kconfig, Makefile and MAINTAINERS
+wiring lands with that split. So the main questions for this round are
+the LED interface, the protocol handling and the placement.
+
+Known caveats, stated up front:
+
+- the handler attaches manually until a notifier lands
+  (echo asus_aura > /sys/block/sdX/device/dh_state);
+- SAVE (0xaa) is issued on every colour change, which writes the
+  enclosure flash each time; wear has not been characterized yet;
+- the LEDs are registered with a NULL parent device, because
+  parenting them to the sdev creates a reference cycle that blocks
+  the sdev's final release on unplug and leaks the LED nodes and the
+  module refcount.
+
+Comments on the interface shape and on folding this into the shared
+Aura work are very welcome.
+
+Signed-off-by: Liang Haowen <nbg2974@gmail.com>
+
+Liang Haowen (1):
+  leds: add ASUS Aura SCSI driver for ROG NVMe enclosures
+
+ drivers/leds/leds-asus-aura-scsi.c | 302 +++++++++++++++++++++++++++++++++++=
+++
+ 1 file changed, 302 insertions(+)
+
+--=20
+2.55.0
+
