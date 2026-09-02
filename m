@@ -1,176 +1,130 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70ECB38E8D3;
-	Wed,  2 Sep 2026 19:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788376862; cv=pass; b=f1DiDYe2mtFG7jIiwlE6Ie51UJbpTfVBqeA4cPZPgk8Co8Wk7CF9yfYVD07YHD9KtwcLrrIIj+JFX5EoYWs2Kr11Io6c6YH3MEsOIzsUxBi6TddHv/EmbuSsqJzkvq2uyBQ1tpuOe3F62gwUQQgHyEYRAHbgSKTp6Pftt7s5Vy0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788376862; c=relaxed/simple;
-	bh=WB/y+I+OGXd5+lSeYRYNlG7bWuPUAsWONedA8rBrFw8=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=RA5p4z5ifzFvUzhgD+4lR6y2exxlXRL84nt7qFgObfQJoR62jaaVYoTfzroVQGx+/6FBp2g1nvYyS9hflXFNDPGw196yW/7S5Ja/zl80hhWVH5aDv5agCk1RcDHq9vf3mWSyheREHAEgz4tHwD9DRFoCqGSILDjU2fcPntWSafk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=EVoDmiKm; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AF43914FA
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Sep 2026 19:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788377563; cv=none; b=exeHuDV0VQpN7+qypxjeB48GXFHvLUXs1dNbxMIokky7tpFcB1zyAMeq3n8SstJr8NhrOvAOOtZ8Cc6R07qpqwUwqtaJBxpg7/4pBFcMMYxVxakt6AUDk1mBtMaTY1fh1UJcRrQBVeRarw6SS+MAWAnDM4Lw+vWCZeJjLJKZmSA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788377563; c=relaxed/simple;
+	bh=A2t1kYCaqwOs1VtKcCPI2iJFoH08N6NPdPizyRT98Lo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iGCrCAnvccxN51RFWoLM2QHdvSG5mSVkcsDbMzqlOAqEaPxikJ42kOI6is/dKyyRLQaKooZ+/x96EJLdbxrev2s5A3bgnjNAMXcArr+G08GQzbudmo3SFcdMZ+12WPU32iolqhOE24WMRnY1xJOOQQd/9EAA8U8A4/BWEjNXgHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1s5JUC0; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="EVoDmiKm"
-ARC-Seal: i=1; a=rsa-sha256; t=1788376851; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AQ8WNBMN0VojsfPf8Z0tshaqVIXpwQiC43Y2Oz56G7sElqmKFfZL1JVVP1XndFHvRhG9VvqvdbVPtH0ze1SkV8qVwKC8KzRs3FVATEyIymwG9TVCeGWwz/USCd3dQp1WHzSL4BXQ8cHBf8Vm6o4IMF6p3LBSA7H12WPO4/iA1e0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1788376851; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=szIh6WcIgwAVe3/omV91b4EK5M/Q077a47SuW6IWMks=; 
-	b=oL0C4+En6Sjy0c27SZWf6EDPWR9FD+KqW7e9BJ6I4ffXuoTXuKVvlsTYFdpmjFZmsA2lMalk9OVohbwyZeXo31yPjdBuMoprvp081OaAWwIvvlQXUxf65V2r0POC3dNkLRxpztVXP6RZ1MEftBFYkf44GXwdVn1KPnNtpHZwIEw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1788376851;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=szIh6WcIgwAVe3/omV91b4EK5M/Q077a47SuW6IWMks=;
-	b=EVoDmiKmE4t3vKi3uNgVPmPXqru1GS5lO4vrJc7q2nH4y/nQu4YIu85biiuuBE4U
-	JqjmDKyB7mpdmUCJROFtZWJZRj3suoctq9UQN/JxhwxSdgmCU0zhIUaLxYOv3sw/mdc
-	ePZgbB27e/LwDxyUPVc53nVeXGViJh1AOZhsExIavS8vCfbHh5qNrRSylnxWgLGI9FV
-	E+BkuTlzEdUiztopqrnu7TUQxgnH8i/h1V/hFe/dSKHtow+YOFK75g3JDXEiwzAj51p
-	F1E3NtMxCfSe4flXKSRNCbSVKQDQrYM/Ik4wlPaVjR5EcrtS2DYoXDYinAzaHVmIzzS
-	/gbwoZcMNA==
-Received: by mx.zohomail.com with SMTPS id 1788376848137140.70314822538194;
-	Wed, 2 Sep 2026 12:20:48 -0700 (PDT)
-Message-ID: <8fd61cb314df880cd70d4fdd30642ed58af38c2b.camel@rong.moe>
-Subject: Re: [PATCH v6 11/12] platform/x86: ideapad-laptop: Decouple
- hardware & classdev brightness for keyboard backlight
-From: Rong Zhang <i@rong.moe>
-To: lee@kernel.org, sashiko-reviews@lists.linux.dev
-Cc: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-leds@vger.kernel.org, platform-driver-x86
-	 <platform-driver-x86@vger.kernel.org>
-In-Reply-To: <20260902181558.5FAD11F000E9@smtp.kernel.org>
-References: <20260902-leds-trigger-hw-changed-v6-0-55693cd78877@rong.moe>
-	 <20260902-leds-trigger-hw-changed-v6-11-55693cd78877@rong.moe>
-	 <20260902181558.5FAD11F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 03:15:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1s5JUC0"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92e99ef0902so136594185a.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Sep 2026 12:32:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788377551; x=1788982351; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vguoEC+MJZq9zYntrbQ6UkhdOenYXbbtJ/8LtnXQRQU=;
+        b=F1s5JUC0e4gLx7QGzNMsFHTRpgCS2bUfHPVAbJ4qKzGJcU/pVaO7ibCX4skdLoJoSW
+         HfBDV+14MyvY1JVugKtwueJU19UXgyF01ZI9J3W+1na0dqgXVN+kM9bDxCj1bk6fILx2
+         0nw/+AA4nF7ih1fQfJqzzCnsVy53LZxvRNtfmilI30kjKoiFpikNh9ZP32eedzaN154L
+         lQrAXIck9khPxexRxxpxDwwKlbGf3PHmpzfukPkU6CLty5rxofHPupf/w5azz8u1pyJu
+         Fp0+8cvecmo2tmkSCko8+BqwE3ME9qGoEmBtwo2kLvFi+kSVP5XCXiM5xsUxMy5GWP/f
+         npBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788377551; x=1788982351;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vguoEC+MJZq9zYntrbQ6UkhdOenYXbbtJ/8LtnXQRQU=;
+        b=PIEeVjl19CEwXeBittoDs/ead9UQIvbnEJGTPSFid8xoyI/Ch397RE12NOrQAZY2aU
+         sKAlU1JRksBdaYR4cdSRccqKbP1Pz6JSbyB/dHAyBXfroaj3Sc2jGbbwvC4h/tC06HQN
+         OJW8fBmuC8zXKLBzvSQ2kfcyHYvpsU3xYtzQQvfBOsOrXo02mmE/SSYOLI2PvXN2NFV6
+         WBATxwWGfuZ49f9WaSsvI4hq7Y7LvFtr71FA6O+mD2f2EVkk3wWwbA10MNjE9dTtK4D9
+         0nPUAVL1J6hFQVV55D5GSD+3wik0FL41OoUXHFjzLyNgMRILAH85WIqitqDVK3vCW3Fp
+         9VgA==
+X-Forwarded-Encrypted: i=1; AKwUvBwTEBDUT+4bb32/RtidC+poVkepaly4UkjaNDiP+mypxO9NwA3NARHtKjNOVfZR1pgQKYTOE1mcJepWh0r7sPbq8CzS@vger.kernel.org
+X-Gm-Message-State: AFuF++lxD1bs8rynnC2809SlPGkbhOPE7tdGszTk93/M5ZkaiOuUvWzt
+	1kzCI4SfCHonXeNnNcK3YxL0xJt2Gqpr4XlxRcpkyWLNuopjLvLvDLw=
+X-Gm-Gg: AYBFou1CVOfhxM4PjD1ICEb6NfpLJHEXl9t7Tm2MTI3ePo63NxumyC4c9zIuUbp4W6w
+	doLjOkPsJGonl5dfXX2pkPwC5EV9M6SCFyfKvA5UpehwbJIvPndTvx5eJ5iRNQmiEuwg38XWQpy
+	5G8pD4sYB1kJw7TQlGa26dEmHTrexEsIUiB9m9AK12uTkGwyVBW5pYBh1Fq5vvZA1aoKy0R+jfi
+	wdsUDlQ4/KIzauuyXvAHWM5UwCdxpEIRl2ig/bpkqnVoqUu6ZVkTia+eqpsuW6lU6pEFXdAd4Sp
+	hGhh4lpK/DMRU2+ht4Ug0YIT2mq/rzc59J0XZ0HCuu34eNDtM0EXmkruPLNHIzqXpr82Tf3+EA2
+	DYVuMefs5be7TzzBCrNs48VTsD57RVvTPwQ2CGoXJy5wpiWSzAFRheP3n07RoDiAfczCdxVWOTu
+	ocFoXwHs85iiyMgrd4cPbeECpWq+FRZQi8DI406B60cqv83Q6TNz77pCr3/M7KE6uct3/ZsJTf0
+	vn1w1tJoWtVSxDo5SD3AGXUfbICsHcc7mT/zMGpcROt9G5pjGM01O8oJzftYlj36GCcnS+wwsp6
+	k/9OCrI7scWiohw7HLS6xGxTD+mo
+X-Received: by 2002:a05:620a:3c97:b0:939:6dfa:db9d with SMTP id af79cd13be357-9396dfadf02mr130537285a.50.1788377551081;
+        Wed, 02 Sep 2026 12:32:31 -0700 (PDT)
+Received: from localhost.localdomain (ool-18ba9fde.dyn.optonline.net. [24.186.159.222])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9395f17eefdsm284698085a.11.2026.09.02.12.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2026 12:32:30 -0700 (PDT)
+From: Justin Vargas <justinyvar@gmail.com>
+To: jlee@suse.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: W_Armin@gmx.de,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Justin Vargas <justinyvar@gmail.com>
+Subject: [PATCH] platform/x86: acer-wmi: Remove unused platform_profile_support variable
+Date: Wed,  2 Sep 2026 15:30:39 -0400
+Message-ID: <20260902193039.21725-1-justinyvar@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-Hi Lee,
+The platform_profile_support variable is assigned during platform
+profile setup but is never read anywhere in the driver. Remove it.
 
-On Wed, 2026-09-02 at 18:15 +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issu=
-e(s) to consider:
->=20
-> New issues:
-> - [Low] Incorrect format string `%d` used for `unsigned int hw_brightness=
-` in `dev_warn`.
+Assisted-by: Claude:claude-opus-5
+Signed-off-by: Justin Vargas <justinyvar@gmail.com>
+---
+Found while reading through the driver. Compile tested only, as this
+is a pure dead-code removal.
 
-Well, let me fix it in the next revision.
+hp-wmi.c and asus-wmi.c appear to carry the same unused variable -
+declared and assigned once, never read. All three were converted to
+devm_platform_profile_register() in the same series, which may be where
+the last reader went, though my clone is too shallow to confirm that.
+Happy to send patches for the other two as well if that is useful; I
+left them out here to keep this patch focused on the driver I use.
 
->=20
-> Pre-existing issues:
-> - [High] The driver uses the unmanaged `led_classdev_register` API instea=
-d of the managed `devm_led_classdev_register` API.
+If the intent was for this variable to be checked somewhere rather than
+removed, let me know and I will send that instead.
 
-This is yet another LLM hallucination. The driver needs to manage LED
-unregistration itself to coordinate with ACPI notification handling.
+Disclosure: this patch was produced with the assistance of an AI model
+(see the Assisted-by trailer). I have reviewed it and take
+responsibility for it as signed off above.
 
-Sashiko's concerns on other patches in the series are either pre-existing
-issues that are out of the scope of the series, or LLM hallucinations.
+ drivers/platform/x86/acer-wmi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Lee, I believe the series is ready for your review. Could you kindly
-shine some light on the series? If you decide to apply PATCH v6 1-9 to
-the LED tree, I will send a v7 solely for pdx86. Otherwise I will refresh
-the whole series according to your insights.
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 61ae622c93d..528a89c3eed 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -839,7 +839,6 @@ static const struct dmi_system_id non_acer_quirks[] __initconst = {
+ };
+ 
+ static struct device *platform_profile_device;
+-static bool platform_profile_support;
+ 
+ /*
+  * The profile used before turbo mode. This variable is needed for
+@@ -2199,8 +2198,6 @@ static int acer_platform_profile_setup(struct platform_device *device)
+ 			&device->dev, "acer-wmi", NULL, &acer_predator_v4_platform_profile_ops);
+ 		if (IS_ERR(platform_profile_device))
+ 			return PTR_ERR(platform_profile_device);
+-
+-		platform_profile_support = true;
+ 	}
+ 	return 0;
+ }
+-- 
+2.47.3
 
-Thanks,
-Rong
-
-> --
->=20
-> commit 227fca9f070999fc85599521adcec4975c6e441e
-> Author: Rong Zhang <i@rong.moe>
->=20
-> platform/x86: ideapad-laptop: Decouple hardware & classdev brightness for=
- keyboard backlight
->=20
-> This commit decouples hardware brightness from LED classdev brightness to
-> better support models with an ambient light sensor (ALS). It also introdu=
-ces
-> a refactor of the initialization path to prepare for exposing the auto
-> brightness mode.
->=20
-> > diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/pla=
-tform/x86/lenovo/ideapad-laptop.c
-> > index 684421ba53cbc..712999b6900df 100644
-> > --- a/drivers/platform/x86/lenovo/ideapad-laptop.c
-> > +++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
->=20
-> [ ... ]
->=20
-> > @@ -1594,7 +1619,24 @@ static int ideapad_kbd_bl_check_tristate(int typ=
-e)
-> >  	return (type =3D=3D KBD_BL_TRISTATE) || (type =3D=3D KBD_BL_TRISTATE_=
-AUTO);
-> >  }
-> > =20
-> > -static int ideapad_kbd_bl_brightness_get(struct ideapad_private *priv)
-> > +static int ideapad_kbd_bl_brightness_parse(struct ideapad_private *pri=
-v, unsigned int hw_brightness)
-> > +{
-> > +	/* Off, low or high */
-> > +	if (hw_brightness <=3D priv->kbd_bl.led.max_brightness)
-> > +		return hw_brightness;
-> > +
-> > +	/* Auto (controlled by EC according to ALS), report as off */
-> > +	if (priv->kbd_bl.type =3D=3D KBD_BL_TRISTATE_AUTO &&
-> > +	    hw_brightness =3D=3D KBD_BL_AUTO_MODE_HW_BRIGHTNESS)
-> > +		return 0;
-> > +
-> > +	/* Unknown value */
-> > +	dev_warn(&priv->platform_device->dev,
-> > +		 "Unknown keyboard backlight value: %d", hw_brightness);
->=20
-> [Severity: Low]
-> Does this dev_warn() use the correct format string for its argument?
-> The hw_brightness variable is passed as an unsigned int, but the format
-> string uses %d which expects a signed int.
->=20
-> > +	return -EINVAL;
-> > +}
->=20
-> [ ... ]
->=20
-> > @@ -1710,21 +1758,35 @@ static int ideapad_kbd_bl_init(struct ideapad_p=
-rivate *priv)
-> >  	if (err)
-> >  		return err;
->=20
-> [ ... ]
->=20
-> > +	/* Reject insane values. */
-> > +	err =3D ideapad_kbd_bl_brightness_parse(priv, hw_brightness);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> >  	err =3D led_classdev_register(&priv->platform_device->dev, &priv->kbd=
-_bl.led);
->=20
-> [Severity: High]
-> This isn't a bug introduced by this patch, but should this use the manage=
-d
-> devm_led_classdev_register() API instead?
->=20
-> The LED subsystem guidelines mandate using managed registration APIs to
-> prevent resource leaks and use-after-free hazards during driver removal.
->=20
-> >  	if (err)
-> >  		return err;
