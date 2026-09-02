@@ -1,62 +1,64 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3400F374E76
-	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Sep 2026 17:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5C93793A8
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Sep 2026 17:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788371256; cv=none; b=ROnkInSLBflvpaSLF8RDjU9ZKA75FFls6gzAbGUuEVi0l+0rpeV8zt4pbxJsEtzpAJqDMZF5wAXdctXE6IwPr+kpjDfR0tgo2QhbGQahTpJtWB8dOkAYEc4/doBVdD9fjuo7OSovjjvssn1jk70X+12RjGN5uzcHTeF69V/yf0U=
+	t=1788371260; cv=none; b=HpnATzrTaDoc60Zddyc3UcrRxPIcXIV7q04ddT8oGgLlhrsP4iVVTmkmmbaJjUD7g1FAiwBtz2Mu7ZfrYeGh5EhiOr5A9miLmriWhhcJyPa9weMWf3NGS5bcQs6uRdWlRPBBWm3g8xT3TaYa+T4AeijvWhksl+IxpqEtUmoRoMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788371256; c=relaxed/simple;
-	bh=RSO5hJPt/u6vxLaap4YM1BOcxseAMLB98i5YdofYKNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hyYI4IvjjCcOkMa5fZznFH/YfDlW53tdh0oEJNuHh+56wsnGF3nECSCS0CZJ5jrjiePKs/NoVwXoEp1KF0OII+pKsDsJKPOfYBfBsiLYQoN2UsL473iqY0ZvF9AtcwVVuEznXCaoaBBRlTu9XGZaTjFs693XeCUsKSUPZPt+K/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EE8GIO/h; arc=none smtp.client-ip=209.85.215.178
+	s=arc-20240116; t=1788371260; c=relaxed/simple;
+	bh=gXEosb8CMRb1UXN41ZT9pY3EtnW7zgAt89WGeEYzu2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wz+LSbAuemxK6+hepXUUz3tZVr9XMB0TEY0P0u18qpYvk4J09vtZA2zmtctATMjfr5WcO0Nby/+mssDLQ5uF/0fykmF217SEATlkGj729qssDzHRCLd6inbraldcM5VfL4bEvcf5elNx+xJX/M7gDYexuFSh8S6FctRNjSP3fko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSR9BfuY; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EE8GIO/h"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-cc1c3d79b9bso1138601a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Sep 2026 10:47:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSR9BfuY"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2d6e954afbdso8649725ad.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Sep 2026 10:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788371254; x=1788976054; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=9ajJdf+X/nuYZVAyiO85HtOmnTDxcjy4YZBTuYBU9do=;
-        b=EE8GIO/hpF7t8arLp5OxtZ+FzhEp+XhRTET/3yVvZP16Ijd2qExS3LV8fAr8sNm8jV
-         GDqaff0BlaJkg0oO6L5XYLL8oQGaEzwB41o6qwOTnYKT8N3YNwsTDyb4wqsIC6FtvoPJ
-         JthULVAUnI/oAvG7HSOF8qWD7cSIE6nK6CxOYpbVF6OLIa0RkFj0OAJesjy3yjhmqghc
-         9p8h5WoLKUzrtMr3SfVwx+osovE2Tf0/Tj0wDfpQopxTOZV+eW9rbJvqwdHOn0iZnEe/
-         S/s0GdMAh7BPzXFXz9cPCouC2fUZavvnmCoow84gM5YV9eOpVO6Oqo4fpNa7stC/UmLP
-         Q+CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788371254; x=1788976054;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1788371258; x=1788976058; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=9ajJdf+X/nuYZVAyiO85HtOmnTDxcjy4YZBTuYBU9do=;
-        b=BMLzWe87U32a9EvHJt9c6CvEHYS06hK88arIhUIwfnmbPg0oyPNCvUiXs4nJ5KAYQT
-         pwp9p/GIWvA59oc/nI5s85alR08J+O0w49RlV0V8TBM9yQMHQ4v94QvSQzyoeA/Sjg6m
-         Kv29WHGIsMIS6Nbxo/KmG7QZ8R3MAjO4qPFwuqW5lRY0mXFE6tmcih8fwRt2gLOeB9/k
-         Jb79mrAvnN7tji3iv5t2iDiQGUkRA/3jJCdMmazvwg/GYXS/g8fXBiSZHusAkrIKB13r
-         JmGK65+ySgQOblXXkK8LpRdfVwZJwoFoKPzOh5mLFljejT+strSCt4L/TXV5Rl1nDyHY
-         fP0g==
-X-Gm-Message-State: AFuF++mo5paaRtUrlNkrO7gYHmYb29LvFNGn5JL/pZ2sHScmOg5vOcYn
-	gRiWlRtD5qF93H8Qedt8I/Qf2WbCjv8Z4eAO6AJlhjhG/nOKimvItgc1f2L3qemD
-X-Gm-Gg: AYBFou2bJ8GN+ZOPxxGR70hw/KlZ5gGBrrrIRj97kKLKfgpngW8sNTd1BKcfevu9n2b
-	QjecVeccPm/CeWlP2VmqtcThLIkfSZRTTrnI40vLeK8h0y+F0HGvbfherqD3xIWX4Vtyo1AiToy
-	q0IntisEjwxEJccroF8zpvz+rd6GCpQx8fh3JyxiFCBKFwino4O5Kki6jLs73xg+At6un+N0LNQ
-	bCOhKXNa7UDnGobwnG98n7RHAIMOqGoQVhSYZlQWq+aEcJ0M3LtJR/3ihr2RVJVxM3bj2rEVYn9
-	J3rQGjftI/y7Q8Z9NwhW6g1Kbyi1SnuVnYN1K61LA/7YscqTCaPjdyyobogvDrYE7e7mY9zsEVI
-	ZmBeBtbPra3R64iaLmbU4cVtWeqEAwjjIAIaMKmCCxJsFtk+30RdccmCdfSdI4Z6autitn3flFg
-	L7l9GLHjQzFi+bEKwqJpuBIBbc/85X754sFgGLhetDElAE0jeob2AfX9I6Kb9POkY24pupTdm/G
-	+fdwQ==
-X-Received: by 2002:a17:90b:4c4e:b0:38e:bbf1:de3f with SMTP id 98e67ed59e1d1-39aee0674ecmr9248404a91.12.1788371254420;
-        Wed, 02 Sep 2026 10:47:34 -0700 (PDT)
+        bh=Ay1coFvWOs2E2g41bXIVDKRlEoaNqpmJez8UBW0Q5bY=;
+        b=eSR9BfuYsSUpniVwiv4SGZC2rX2fnQiLrpTyvwttsURol7txP1s8e7fRWjXU66cshP
+         T4tN3aSbDT01+72POcXZ5TLUj4+LjHts2P4miSKrelFpt76Ts2xPBGv2hnJZtzZJQutQ
+         /zTkb8OcVZIImXXVmQhjwJRN400SJoEVQnXrs5qTHtoISDm+V8CIxJuoAZSq4wpM1Ezv
+         55MjLNFU7VM2qLUmLTxT8A6Oz8ou5G42UCNe5fz5ptwHVFOULOQL4U4tQymAeTQ2dpry
+         EjS0gT1QSYT21UILCniNl8Qr70ndMNBJ0o8cjA8cl5zsp+Ow5Jn+5GP1v+MkgG2HJ/OD
+         bW+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788371258; x=1788976058;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Ay1coFvWOs2E2g41bXIVDKRlEoaNqpmJez8UBW0Q5bY=;
+        b=lLufojBvg1LzDVxbQW2Qzp4B+ubJ8D8roZH06E1M9qvUTdA/N+iGt9CzgDWq7KMyo9
+         deUpImGxQgPKwUC5vodqfNkPLcKckYtF6ot5ZY2p5W2d827FjQQ06S+ZY54L8lLe/O/6
+         J9JBQKQ1pvR4OTf/SaRJ0r5Ym5VtMnQesQRSL1Dwv2D8GM6qLKX34uoLumMqg55D3+h/
+         Ka13o/fcCOwvvc+lCf8zjl0B93vxwP5t4WAm40FMWAVHN88GQLBRsT7jZ/SVbAS2Djy+
+         hRx1HS1C0+QCIf6yN092Hgujcw1mP2XIM891AjqVjOKzngw3UNG1Z8tSdusCljJ//3ZI
+         9ymg==
+X-Gm-Message-State: AFuF++koikws6Jq8gXIHFLbnZpEUyYbwh2zenGuQYN/xrSZhKHG7j9Hl
+	W9StlvyH9jLIKUMJ/m0AzemrcrZg+9ZLZdarIHPFIje/dUPfWrbiby4FYNRMU3yo
+X-Gm-Gg: AYBFou2UTmY3TSOWsC8XSQB0L4XKHUI2JCYJGFsdeCjj3GBeyCmmyQzQzvXnPXmOsGo
+	eieIMdnaPV4uHRpR45g5knxBh6oTnEncnJNsWF8K8DMhkIzlvwn9KWae/ePXeh7dEzDpIZnlwO1
+	ltn1+Slbq4Hj5YqVICpydC0UibRsjO7G+LY2eHOye3NiJK0aEvTJAHRD22SVkF8l4rWlASlLd5n
+	54syKNDRRFLY1RFpMHf2FbArULjKbGLzOqCUAiZvbuW5b+hKJL+JOnO2d5unbfMIYygi6xiqio2
+	8px15AVtVgyu5DlkF7Hh4+5Wk5Y2v0vK+ZAQ9dkfHxl2g/ijEVm/oR4RYhwMPBRuuensuwcoF4I
+	jzmxGTUHIyBd/nmjfUosVeKEqGkfpV33w87nvEZlvqkYHnpjggxojUZDUSsQce19Lx6VHH3AjKe
+	TFJzUE49gH4KR6aZrcVHoG8UJZcJ0BA1D5FHJYuUAxy5YvtNECknmK5+3GALWU5pqkuAr99xaIk
+	ZrqNoEBI6P5ggNJ
+X-Received: by 2002:a17:90b:2f06:b0:398:a2a3:b631 with SMTP id 98e67ed59e1d1-39aee12359fmr10172568a91.19.1788371257581;
+        Wed, 02 Sep 2026 10:47:37 -0700 (PDT)
 Received: from mizar.onca-liberty.ts.net ([182.10.129.37])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b083f04d1sm470584a91.8.2026.09.02.10.47.31
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39b083f04d1sm470584a91.8.2026.09.02.10.47.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2026 10:47:33 -0700 (PDT)
+        Wed, 02 Sep 2026 10:47:37 -0700 (PDT)
 From: Idotoho Reimon Simanjuntak <idotohors@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -66,10 +68,12 @@ Cc: linux-kernel@vger.kernel.org,
 	"Luke D . Jones" <luke@ljones.dev>,
 	Corentin Chary <corentin.chary@gmail.com>,
 	Idotoho Reimon Simanjuntak <idotohors@gmail.com>
-Subject: [PATCH v3 0/3] platform/x86: asus-wmi: fix FA401 series keyboard sleep strobe
-Date: Thu,  3 Sep 2026 00:47:15 +0700
-Message-ID: <20260902174718.16228-1-idotohors@gmail.com>
+Subject: [PATCH v3 1/3] platform/x86: asus-wmi: use named masks for TUF RGB commands
+Date: Thu,  3 Sep 2026 00:47:16 +0700
+Message-ID: <20260902174718.16228-2-idotohors@gmail.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260902174718.16228-1-idotohors@gmail.com>
+References: <20260902174718.16228-1-idotohors@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -79,43 +83,124 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series fixes the keyboard sleep strobe effect on ASUS TUF Gaming
-FA401 (A14) series laptops and refactors the TUF RGB state/mode
-interface.
+Replace open-coded bit shifts and magic numbers in kbd_rgb_mode_store()
+and kbd_rgb_state_store() with FIELD_PREP() and named GENMASK() masks.
 
-The FA401 does not report the TUF RGB state WMI device (0x00100057) via
-standard DSTS probing, yet the EC supports the state flags required for
-the sleep strobe animation. In addition, Modern Standby (S0ix/s2idle)
-entry requires re-asserting the keyboard backlight and power state at
-LPS0 prepare time because display servers and DRM drivers blank the
-backlight to 0 prior to sleep.
+Define ASUS_WMI_TUF_RGB_STATE_CMD_ID (0xbd) as a named constant instead
+of an inline literal, making the required arg0 command ID self-documenting.
 
-Changes in v3:
-- Split the series into 3 patches: preparatory bitmask cleanup, FA401
-  DMI quirk, and S0ix sleep re-assertion (per Ilpo Järvinen).
-- Use FIELD_PREP() and named GENMASK() definitions consistently
-  (per Ilpo Järvinen).
-- Address Denis Benato's feedback regarding userspace policy:
-  * Check the TUF_RGB_STATE_SLEEP flag so the kernel honors any user
-    decision to disable sleep LEDs.
-  * Dynamically track the user's active brightness level
-    (kbd_led_last_level) so the sleep strobe preserves dim/bright
-    preferences rather than forcing max brightness.
-- Hook into ACPI LPS0 s2idle dev ops (.prepare): ensures brightness and
-  state are re-asserted after the display server and DRM drivers blank
-  the screen, immediately prior to S0ix entry.
-Link: https://lore.kernel.org/platform-driver-x86/20260902032353.16106-1-idotohors@gmail.com/ # v2
+In kbd_rgb_state_store(), remove the unused intermediate "flags" variable
+entirely. The old BIT(1)/BIT(3)/BIT(5)/BIT(7) construction is replaced by
+FIELD_PREP with per-flag named masks (TUF_RGB_STATE_BOOT, _AWAKE, _SLEEP,
+_KEYBOARD), building arg0 directly. This preserves the exact sysfs input
+format ("cmd boot awake sleep keyboard") and the resulting WMI argument
+bit layout — no behavioral change.
 
-Idotoho Reimon Simanjuntak (3):
-  platform/x86: asus-wmi: use named masks for TUF RGB commands
-  platform/x86: asus-wmi: enable TUF RGB state for FA401 via DMI quirk
-  platform/x86: asus-wmi: re-assert FA401 keyboard state before S0ix
+In kbd_rgb_mode_store(), replace the positional shift expressions for
+arg1 and arg2 with FIELD_PREP using TUF_RGB_MODE_{CMD,MODE,RED,GREEN}
+and TUF_RGB_MODE_{BLUE,SPEED} masks respectively.
 
- drivers/platform/x86/asus-nb-wmi.c |  13 ++++
- drivers/platform/x86/asus-wmi.c    | 120 +++++++++++++++++++++++++----
- drivers/platform/x86/asus-wmi.h    |   1 +
- 3 files changed, 118 insertions(+), 16 deletions(-)
+This is a preparatory cleanup to improve readability before adding
+model-specific quirks that depend on these definitions.
 
+Signed-off-by: Idotoho Reimon Simanjuntak <idotohors@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 48 ++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index a65090429..efc730c2c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/backlight.h>
++#include <linux/bitfield.h>
+ #include <linux/bits.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+@@ -1047,6 +1048,27 @@ static DEVICE_ATTR_RW(gpu_mux_mode);
+ #endif /* IS_ENABLED(CONFIG_ASUS_WMI_DEPRECATED_ATTRS) */
+ 
+ /* TUF Laptop Keyboard RGB Modes **********************************************/
++
++/* Command IDs passed in arg0 byte 0 for TUF RGB WMI methods */
++#define ASUS_WMI_TUF_RGB_STATE_CMD_ID	0xbd
++
++/* Bit mask for the save-to-BIOS command flag in kbd_rgb_state_store (arg0 bit 10) */
++#define TUF_RGB_STATE_SAVE	GENMASK(10, 10)
++
++/* Bit masks for kbd_rgb_state_store flags field (arg0 bits [23:16]) */
++#define TUF_RGB_STATE_BOOT	GENMASK(17, 17)
++#define TUF_RGB_STATE_AWAKE	GENMASK(19, 19)
++#define TUF_RGB_STATE_SLEEP	GENMASK(21, 21)
++#define TUF_RGB_STATE_KEYBOARD	GENMASK(23, 23)
++
++/* Bit masks for kbd_rgb_mode_store fields */
++#define TUF_RGB_MODE_CMD	GENMASK(7, 0)
++#define TUF_RGB_MODE_MODE	GENMASK(15, 8)
++#define TUF_RGB_MODE_RED	GENMASK(23, 16)
++#define TUF_RGB_MODE_GREEN	GENMASK(31, 24)
++#define TUF_RGB_MODE_BLUE	GENMASK(7, 0)
++#define TUF_RGB_MODE_SPEED	GENMASK(15, 8)
++
+ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
+@@ -1093,7 +1115,12 @@ static ssize_t kbd_rgb_mode_store(struct device *dev,
+ 	}
+ 
+ 	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS, asus->kbd_rgb_dev,
+-			cmd | (mode << 8) | (r << 16) | (g << 24), b | (speed << 8), NULL);
++			FIELD_PREP(TUF_RGB_MODE_CMD, cmd) |
++			FIELD_PREP(TUF_RGB_MODE_MODE, mode) |
++			FIELD_PREP(TUF_RGB_MODE_RED, r) |
++			FIELD_PREP(TUF_RGB_MODE_GREEN, g),
++			FIELD_PREP(TUF_RGB_MODE_BLUE, b) |
++			FIELD_PREP(TUF_RGB_MODE_SPEED, speed), NULL);
+ 	if (err)
+ 		return err;
+ 
+@@ -1119,28 +1146,29 @@ static ssize_t kbd_rgb_state_store(struct device *dev,
+ 				 struct device_attribute *attr,
+ 				 const char *buf, size_t count)
+ {
+-	u32 flags, cmd, boot, awake, sleep, keyboard;
++	u32 cmd, boot, awake, sleep, keyboard;
++	u32 arg0;
+ 	int err;
+ 
+ 	if (sscanf(buf, "%d %d %d %d %d", &cmd, &boot, &awake, &sleep, &keyboard) != 5)
+ 		return -EINVAL;
+ 
++	arg0 = ASUS_WMI_TUF_RGB_STATE_CMD_ID;
++
+ 	if (cmd)
+-		cmd = BIT(2);
++		arg0 |= FIELD_PREP(TUF_RGB_STATE_SAVE, 1);
+ 
+-	flags = 0;
+ 	if (boot)
+-		flags |= BIT(1);
++		arg0 |= FIELD_PREP(TUF_RGB_STATE_BOOT, 1);
+ 	if (awake)
+-		flags |= BIT(3);
++		arg0 |= FIELD_PREP(TUF_RGB_STATE_AWAKE, 1);
+ 	if (sleep)
+-		flags |= BIT(5);
++		arg0 |= FIELD_PREP(TUF_RGB_STATE_SLEEP, 1);
+ 	if (keyboard)
+-		flags |= BIT(7);
++		arg0 |= FIELD_PREP(TUF_RGB_STATE_KEYBOARD, 1);
+ 
+-	/* 0xbd is the required default arg0 for the method. Nothing happens otherwise */
+ 	err = asus_wmi_evaluate_method3(ASUS_WMI_METHODID_DEVS,
+-			ASUS_WMI_DEVID_TUF_RGB_STATE, 0xbd | cmd << 8 | (flags << 16), 0, NULL);
++			ASUS_WMI_DEVID_TUF_RGB_STATE, arg0, 0, NULL);
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.55.0
 
