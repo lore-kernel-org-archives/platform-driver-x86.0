@@ -1,33 +1,33 @@
 Received: from d2-2-bhs5.logotherapy.ca (d2-2-bhs5.logotherapy.ca [15.235.45.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1B037A829;
-	Wed,  2 Sep 2026 20:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62D6372691;
+	Wed,  2 Sep 2026 20:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.235.45.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788382065; cv=none; b=dQREDBUdvPtFrQQtRBx0CK8k8/oH2+KIDsT43rUsDXv0iA0GMeUfzBB6zE8LCUfbFNzGjv9zLvRXo4ksXox7a/yJC4kNSnLAB+pGGOJIuECLAJBI9bHuN4Om+ONB5O3fEtWRzCwyAUCDgCHdU/FqcCK+TWRcJ2enjUrwhoWE4fs=
+	t=1788382090; cv=none; b=iKDwARMHVL0v/a3vEOVGkfXl3Zwx+Ptzgz/dVr7tfvJ6G3WXHUhRqvcNnj7SzZ0S8o1NSVJ+w/1NXB5J0qnYqP14y/VmN83iaqlP53z2zXTyqL/mKBL8SmfwcvhHeYw8WNNQJZ4nnpYfDUEQa7gfWpeJpFDKC2BazpfBwi1/v5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788382065; c=relaxed/simple;
-	bh=Ti5BQIQ0m+7rJBWDuHacgW7X/JWz7gQzlZwA4i/Lwtw=;
+	s=arc-20240116; t=1788382090; c=relaxed/simple;
+	bh=FKKUWpAj4a654m3ukgZsH5S2SHU9VtRvBsRSPlGvN3U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Or106Rq1MT5d5Eqyj9a8axljUudp7zhOp4fcOw8RPXUMS3OgKZ4giSC5JFuKFNIwsYx55iCfTHFCZY9lc7EtiqbK1G4pirSFBsCRl2Eu//urOIDHLtLVUtopWqmukpnnwLoKCMdc1gjNXrE4AzBjocrwDGyBczDCbrECNNpznmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=petermarshall.ca; spf=pass smtp.mailfrom=logotherapy.ca; dkim=pass (2048-bit key) header.d=petermarshall.ca header.i=@petermarshall.ca header.b=Y+OlWeLU; arc=none smtp.client-ip=15.235.45.126
+	 MIME-Version; b=e1DMh0oiPPNZMrDhfO6ild5VYHPcG9at8Yc4R18VrR/1lVUp5tTlcodlANMl5uKPEF9FgMNC1Lm5T7CX/GmV00p3YdlVJ1VpkbZnadzmyx+opyrlSU1TO6w6h689001COMC8JEgdFa0VQ9DvnkR0wDOO3qoZec+qiopBSHoVTh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=petermarshall.ca; spf=pass smtp.mailfrom=logotherapy.ca; dkim=pass (2048-bit key) header.d=petermarshall.ca header.i=@petermarshall.ca header.b=WWGZfQUI; arc=none smtp.client-ip=15.235.45.126
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=petermarshall.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=logotherapy.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=petermarshall.ca header.i=@petermarshall.ca header.b="Y+OlWeLU"
+	dkim=pass (2048-bit key) header.d=petermarshall.ca header.i=@petermarshall.ca header.b="WWGZfQUI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=petermarshall.ca;
-	s=mail; t=1788381989;
-	bh=Ti5BQIQ0m+7rJBWDuHacgW7X/JWz7gQzlZwA4i/Lwtw=;
+	s=mail; t=1788381990;
+	bh=FKKUWpAj4a654m3ukgZsH5S2SHU9VtRvBsRSPlGvN3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y+OlWeLU+yrtAvhCa8zjz6Lxmv52TcKj3WgvMnXb0NOdc/BH0HEwPFbjYzBVsYUUg
-	 P2sC8xiMh0QffHwUJUZ6V3F4hVdY51lISCLW4gNH6fKxbKgxNqT0gK7Uw9HUhA6u2l
-	 0ZSBz34okfmrJus7Y6HNFJ11P5dM2yjfgV2lusDgzlXba+iNBzJOkVB6lI3t6cf0dP
-	 l4DpTVKM4VwEMlZrgtSpbMy9d+0yv28tzOyhlAUrk6FGCCPRKHDa/mc4SCIr6bG73n
-	 Qgn++BlRSa57jBD9o523/k2x69nXDoRvjhgFTn1YCA9xI14Y1W3Mtbu+9eRjFVHPxd
-	 CHy7zU67Az/uw==
-Received: by d2-2-bhs5.logotherapy.ca (Postfix) id 90B14223B4;
-	Wed, 02 Sep 2026 20:46:29 +0000 (UTC)
+	b=WWGZfQUIy1zTuwEwiOi95BIBOlh31tA9WV+KpCb+HUcWaOZHiTwEvUTG0u4q753lz
+	 ta0j7xCOLbGg0tFNJ8t1WVB4TTGFOXIZMRMjBPvBifULRU0qe9N7ghy4Fa1+uCvxtO
+	 VQuztB7Ohfu8q2fzf0HtkCX5ijigxhwJGdttx8PS/516IzBZ6I32ItgcNoCFhJGJij
+	 M4mMll9Sh3AZ/BTu9rZtbiuhEO56JbXBgDtuRAAK5+Yn0FeHdjVwiBWb1aVJBg72YK
+	 KKfGL1gvgjbk6MD3hYL0GaS4pzaprKOzSCHYX4tTeHr6tW7cyusUl5C9u409DQdN9a
+	 qXXq6lpv94ksQ==
+Received: by d2-2-bhs5.logotherapy.ca (Postfix) id 30597223B5;
+	Wed, 02 Sep 2026 20:46:30 +0000 (UTC)
 From: Peter Marshall <pm@petermarshall.ca>
 To: Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -37,10 +37,13 @@ Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-media@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	Peter Marshall <pm@petermarshall.ca>
-Subject: [PATCH 3/7] media: ipu-bridge: Add VD55G0 to the list of supported sensors
-Date: Wed,  2 Sep 2026 16:45:42 -0400
-Message-ID: <20260902204549.657228-4-pm@petermarshall.ca>
+	Peter Marshall <pm@petermarshall.ca>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 4/7] platform/x86: int3472: Add VD55G0 supply GPIO mapping
+Date: Wed,  2 Sep 2026 16:45:43 -0400
+Message-ID: <20260902204549.657228-5-pm@petermarshall.ca>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260902204549.657228-1-pm@petermarshall.ca>
 References: <20260902204549.657228-1-pm@petermarshall.ca>
@@ -52,28 +55,43 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add SMO55F0 ACPI HID for the ST VD55G0 sensor to the list of supported
-sensors. The sensor is found with this HID on a Microsoft Surface Pro
-9 tablet. Use the lowest supported link frequency.
+The vd55g sensor drivers / DT bindings expect non-standard supply names.
+Add a mapping to enable them.
 
 Signed-off-by: Peter Marshall <pm@petermarshall.ca>
 ---
- drivers/media/pci/intel/ipu-bridge.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/intel/int3472/discrete.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
-index 88581a4c0..527d1a81d 100644
---- a/drivers/media/pci/intel/ipu-bridge.c
-+++ b/drivers/media/pci/intel/ipu-bridge.c
-@@ -95,6 +95,8 @@ static const struct ipu_sensor_config ipu_supported_sensors[] = {
- 	IPU_SENSOR_CONFIG("OVTI5675", 1, 450000000),
- 	/* Omnivision OV8856 */
- 	IPU_SENSOR_CONFIG("OVTI8856", 3, 180000000, 360000000, 720000000),
-+	/* STMicroelectronics VD55G0 */
-+	IPU_SENSOR_CONFIG("SMO55F0", 1,  380000000),
- 	/* Sony IMX471 */
- 	IPU_SENSOR_CONFIG("SONY471A", 1, 200000000),
- 	/* Toshiba T4KA3 */
+diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
+index 115bb3757..1dc6a6722 100644
+--- a/drivers/platform/x86/intel/int3472/discrete.c
++++ b/drivers/platform/x86/intel/int3472/discrete.c
+@@ -164,6 +164,24 @@ static const struct int3472_gpio_map int3472_gpio_map[] = {
+ 		.con_id = "dvdd",
+ 		.enable_time_us = 45 * USEC_PER_MSEC,
+ 	},
++	{
++		.hid = "SMO55F0",
++		.type_from = INT3472_GPIO_TYPE_HANDSHAKE,
++		.type_to = INT3472_GPIO_TYPE_HANDSHAKE,
++		.con_id = "vcore",
++	},
++	{
++		.hid = "SMO55F0",
++		.type_from = INT3472_GPIO_TYPE_DOVDD,
++		.type_to = INT3472_GPIO_TYPE_DOVDD,
++		.con_id = "vddio",
++	},
++	{
++		.hid = "SMO55F0",
++		.type_from = INT3472_GPIO_TYPE_POWER_ENABLE,
++		.type_to = INT3472_GPIO_TYPE_POWER_ENABLE,
++		.con_id = "vana",
++	},
+ };
+ 
+ static void int3472_get_con_id_and_polarity(struct int3472_discrete_device *int3472, u8 *type,
 -- 
 2.55.0
 
