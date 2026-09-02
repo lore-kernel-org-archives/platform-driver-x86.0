@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B65740A927
-	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Sep 2026 09:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E183EC816
+	for <platform-driver-x86@vger.kernel.org>; Wed,  2 Sep 2026 09:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788339953; cv=none; b=lxgRfTwvLS39U2S2Vr7MhLZMwmpt2tU00puZtoXKIE2FJEHz7qLY8sueDNOEuNWRdBdJuJ9m72tuG1nW5nWlu7sgshxFA3TWE6Dim2Eelfy2n1ic5CxrV/z3uB99RMIXrPvFvKyisMYuCbRDxRvQjDXpo0DuPfqy0gSazDyIkDk=
+	t=1788340066; cv=none; b=Qryry8FS4uABWYUuS6YOgNodqialHx7eqEw8iqmdhw1GRw1IQy9QnSNng9qtXHNuf/33jUgIsWcjsA14/MS/lOedSOZjnfJ1Dh73vlE4v/Lyhrh2GXWgQVeokbha4obXvxZ8rVXJVZkgMhrdI7IG50yFtlHw2VyGQfKbZ4i4Y8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788339953; c=relaxed/simple;
-	bh=HV83HFsC/vRxarZreJHWDr4ZlsxcgpO0Br1Wo72qxiE=;
+	s=arc-20240116; t=1788340066; c=relaxed/simple;
+	bh=24uNEfkJ70aINnryHhjrdD1pIcsXRicv+Qr31a1Grjg=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eAkE9jD1VznrqQRAqKSx+x59Fr7oE26IMxw40DTX+lLR7kkFAfHZHUOSbDliecxAtXOhMAAac2l31tMG2+ZJ5uP/kzYTSMEs6GgyaAnjIWHguU364WzwgCUrrjs/KrHeMeEBxh1EcPafyHtYGik5S6ucog0yHCFUKWe1eAFv09c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHgIlgl5; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=aAURXbZH6S9z7UcMnIkq0M+aPuKmAiB4XeXWQ1afFJXdVJ+hFxpfyBPcQhqCznppTpKQqkHfdjPMrUjFNJ8ruiuJzStApgDwfx47NzNQ1GIq6Msofe9TPm9mRIm9Y5Tio1uHiROpumb3ypImvpTCSRNX6Nmb3CfaUpsgpyshE2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kpXfeor3; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHgIlgl5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kpXfeor3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788339952; x=1819875952;
+  t=1788340065; x=1819876065;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=HV83HFsC/vRxarZreJHWDr4ZlsxcgpO0Br1Wo72qxiE=;
-  b=QHgIlgl5oFn9pYPldQyb243Mwr6oP96IMuYxIK+3s8fmh6eq/RTkQXYP
-   a2SOKdV6h9eprLaFUCmNN0eIy1cWhR5AtR+gBegwNW4A3V6l4gGBBaU8T
-   HY2qVu8sCfvqXcj4/YzdCj0o+zGevbo5AVGQivr908XdffXKbekNeNdrI
-   oCYDvBvKJ9LZfx1hadbpFiomCX8OEWLBaz+YLp9WK767Ww1D9w5NDtQVy
-   jbCdEZQbPKdhMB8MsRJ8Enm366turLIIwnVyb3+4mGoce0YfDl9PMMCVx
-   vzD28VGhsYCddP5CN00W+zCMJnRASZxjAIztQK5CbTvyhEVaO17jatScs
+  bh=24uNEfkJ70aINnryHhjrdD1pIcsXRicv+Qr31a1Grjg=;
+  b=kpXfeor3IMoA5qe09PowWtathcPAs+lGNMHMnaLc/7sI45vzbTGZI26j
+   CVbLwCvApEUX33v8HcGPGN67+oBGu5fcxxvxocefvOvl2y0kPBl+tNUGv
+   8ZVolojTrUyAWQH7z6Hb3z0nzAahmVgAbejolz+Vt6loaKKG/qXYdwEcz
+   ZBuicoBbahuwdVnmB9HGoU6alNjTNelBxfTuJDJkDWzcXCWdWMAVoH0C9
+   CGrsAmOzStYMl7t/0tB46ytEy9Dnr5twq4VvXlsYE+Kk0TUnO2BRodDzT
+   7/8Aa7t+G1cuNVR5LYqF2RXxCCq3ZUsVX/Zb4+vC49xvt1lzlk7kzFDup
    w==;
-X-CSE-ConnectionGUID: BO5+4qPtRIWYZ+OU9n40lg==
-X-CSE-MsgGUID: /Kg2A63dQkymdbEOZuWbsw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="92660235"
+X-CSE-ConnectionGUID: 1kD6LceeSQG/W7/9QKHW6w==
+X-CSE-MsgGUID: mUDNVYXwTiG7UEXrrU97mQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="99954608"
 X-IronPort-AV: E=Sophos;i="6.25,257,1779174000"; 
-   d="scan'208";a="92660235"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 02:05:51 -0700
-X-CSE-ConnectionGUID: lDPv72KmT7SaEXQ8lv2azA==
-X-CSE-MsgGUID: n8zimOrxQTyHmLb5CGNLEQ==
+   d="scan'208";a="99954608"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 02:07:44 -0700
+X-CSE-ConnectionGUID: F1AxMNoJQ0aDIFdPLSvvww==
+X-CSE-MsgGUID: oUTL62K3Q/CeL0Ut1gQ3Bg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,257,1779174000"; 
-   d="scan'208";a="265057091"
-Received: from abityuts-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.185])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 02:05:46 -0700
+   d="scan'208";a="269912935"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.185])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2026 02:07:39 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 2 Sep 2026 12:05:37 +0300 (EEST)
+Date: Wed, 2 Sep 2026 12:07:32 +0300 (EEST)
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     Hans de Goede <hansg@kernel.org>, matthew.brost@intel.com, 
@@ -55,7 +55,7 @@ cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
 Subject: Re: [PATCH v4 02/18] platform/x86/intel/pmt: refactor rmw with a
  return value
 In-Reply-To: <20260901192736.626777-22-michael.j.ruhl@intel.com>
-Message-ID: <82808204-b8a3-9c94-779d-1b1851146d4d@linux.intel.com>
+Message-ID: <5a191af8-3432-4948-9f97-e562f1176557@linux.intel.com>
 References: <20260901192736.626777-20-michael.j.ruhl@intel.com> <20260901192736.626777-22-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -69,8 +69,16 @@ On Tue, 1 Sep 2026, Michael J. Ruhl wrote:
 
 > Upcoming changes will include possible failures from HW
 > accesses.
-> 
+
+Too short line.
+
 > Refactor pmt_crashlog_rwm with a return value.
+
+Also, please include () in the changelog to any function name.
+
+--
+ i.
+
 > 
 > Update all necessary usage to use the return code.
 > 
@@ -209,15 +217,6 @@ On Tue, 1 Sep 2026, Michael J. Ruhl wrote:
 >  
 > -	return count;
 > +	return ret ? ret : count;
-
-You can use the more concise form for these:
-
-	return ret ?: count;
-
-
--- 
- i.
-
 >  }
 >  static DEVICE_ATTR_RW(consumed);
 >  
@@ -318,3 +317,7 @@ You can use the more concise form for these:
 >  static DEVICE_ATTR_RW(trigger);
 >  
 > 
+
+-- 
+ i.
+
