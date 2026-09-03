@@ -1,474 +1,976 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5195B4A2624
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 12:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B85449CF24;
+	Thu,  3 Sep 2026 12:56:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788437343; cv=none; b=EF49/7+1sa9xz4L1tOAZiQQkpwAYSruS8E1KoiOXd2ZhyBkVmYwmIWyLmiyec1JN/nuJ/UjyIvGfL+kx4FmUtZLum4Yg6fg2+Qrkswomkzupmxyw/jdIQHu4Yq2NVd4S59aPPXDSe+3RwsZ0cfbXNYAzKY4bGVklO+Y00Q9j2Us=
+	t=1788440172; cv=none; b=Avz1VXXT0XBoComeY/Z9Pk4bQAm8gyIsEUSqYlaqPZ59X9B6HUIG0a/m16N94zx88eKgRr6S3n+nX6I1+pOSyDA7jHMzKXEI1AzPYxTI8v+QZEl1+KCcvuRifTozJifVLNmuAXBBJGYpVBVu6/5qriOPejLfyKYU5COuivIyOyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788437343; c=relaxed/simple;
-	bh=8zMCCFt2kdkh0qFuujHEFl/TvTjceg+rp/SOE5piDdA=;
-	h=Subject:Date:Message-ID:In-Reply-To:References:From:To:Cc:
-	 Content-Type:MIME-Version; b=rMtXqVudQK7avyWidhumD1Ug4eWPJll4IOLU3RfLRDhWTZsa8VSUR+dIkFf+l2/ZVkob58mXc1LQM98O43hO1jgo91AhzpIoiUcCZ4xWoOp8f0uZqqa+z4VpOm6oc8J7HRF/VCgGcsDmtEqi5UvDOzrYjw9l97N/z+hewRZXQCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5mlLBFb; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788440172; c=relaxed/simple;
+	bh=ipSLO2XbXUIHbamkefG624xhFVMemxrJePevsZE9eGk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iIVrYqGVOVOCCzusTtzL/eOscBVALOFUPdm+HA0B8sXQMPQexHsyqRjKQ9KH0o2SCYEw1/rYqazKxxOL2Lw3ODe2jNq+kyu5sm/cfryGvQzLfzO1nzvd+BSt1gWrMogArwjgS3XSFMVlH4cr5/LU7DlmfZNiBTLw8E+rqVcPvqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENtR/oHa; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5mlLBFb"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3964dfb5b9aso3043026a91.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 05:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788437341; x=1789042141; darn=vger.kernel.org;
-        h=mime-version:content-transfer-encoding:content-type:cc:to:from
-         :references:in-reply-to:message-id:date:subject:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=c/a03k/MuPRlTmtB5F3YuX+O633+V86tiPMiBZLx+n8=;
-        b=F5mlLBFbhnWpTE0eLM1PRpZ/mrBDkq6w2oNlEBQyX3fvmmgd4wuHmWs9dcu27ufGqQ
-         6/FEKvUwRuM6mTd6zIOkufmxhCWsTQBtEkewwO3tiA5kyB8/7qlj2ZyAdl+c1zSxlhWQ
-         Ar+wHt1oRW/yDV9UqgiiPWn0QtRd3ZbwkQXCo4s2gZnc3XDsVrv+xqWOY318zGDrrHuA
-         7U25QYjmx4k41uT3mNsDp8G7OdTi/M4Lf6HVG3jI65lrm3XDaTZuopTItbJGFC+njd/O
-         OPj5qO2BD4NJr6LaSrvsv76Zb2Ua5BYBgolP5P1XrO2/aoo64G+LIhmm9eFgBcTSJCcZ
-         jbhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788437341; x=1789042141;
-        h=mime-version:content-transfer-encoding:content-type:cc:to:from
-         :references:in-reply-to:message-id:date:subject:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c/a03k/MuPRlTmtB5F3YuX+O633+V86tiPMiBZLx+n8=;
-        b=ChRx0ktNex1Qt2Hp3JugqjQGgjo1GsbXN5xoJcv+4qLSfA/4x9XRBmv4QyhMZZLCkh
-         LnXAnublAebdI15LOMoe4ZyTE8v5hUzxbqbobj7KM+m3miRSTarG2OS/MNFtvjSMUtqg
-         lnB+zs56q0m+EkLW5wD8dt3Sr9r2Yt7JRONiw2XSqx/G+RDzDK/3XRhO81rWl2Gw6Dhc
-         NtWwTCCgjisJ/gzt1NjpYAOvq8jTCDcSHKkGlJddtK2x2fhPWV1Pbfup5CooBsN2FYiG
-         HtVho/JPdDMDaxPTtu04L0vzEyuOWXlWf6EUWyZKolggg0FhpjgKDkcInfZ80balpyMO
-         Cblw==
-X-Forwarded-Encrypted: i=1; AKwUvBzyFTCsBause7a4bZkrGdvWduuKUp+OLQrErb6tbGm8gocOe+hOckJyvntgGzpHnKgruKn67P4N3iSK+c3EnSXkI1b8@vger.kernel.org
-X-Gm-Message-State: AFuF++kbXnUmcvj65ADVedxKqtpcrVcFoyi1Xj1AwZo2eRxHSeu1k38x
-	HkLMNTFu6UbzcoCdnCG7jl2YO2MVwIoxjjjrMUZzt63SzSKdJm7TpfZc
-X-Gm-Gg: AYBFou0H3tHWV7DZ++ZKwDtu4iEYxN7M5SCl+USUSxZR5fQlIsjGFXbeAV85KyjDTi9
-	cJD18I5xJGGHNfQo+46kYmklHUPQCFzQCIC2fCyA6iCJtBiaVAQ7/WmwagniDXd5Ic9DShDV8IT
-	DV1w6zoBoBymeUzRbXC1wP/VxFEgEp15HRHhW+sg/dCicEgX/wnBzYKa1feKYIhc3KMA16qIByl
-	lJxuaHCO9Xe4wkRaGtiOrF89QMvWH0zuSI5fwC+t+cd1K3EBhNM3QfiA8NQkWBJS0KSeYIjKqzq
-	6qesZjF827GFOTcexO9OHSc7kCUL32yXAK+NnaLch2J2DNT4m+CAee39KTQwYEI0v4lUaS67BCt
-	TA+8IvWLOJrTi0vppjj7lDyvUH/lWAMTTbNB/wrLK9bmfXu9OTmmdzMpZOdO7nomeuQO7p6bihH
-	tmdwhcK+a2YhmMsnfW20k206i1YzzpUwzQRZHjeEsf1yojtSXdGRONmKoKgymOBUKABA==
-X-Received: by 2002:a17:90b:33c4:b0:38e:9045:bac0 with SMTP id 98e67ed59e1d1-39aedf644damr16055891a91.5.1788437340066;
-        Thu, 03 Sep 2026 05:09:00 -0700 (PDT)
-Received: from [192.168.71.146] ([240e:b8f:91e2:d400:ec2a:b15e:fef8:70a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc43d424edesm869853a12.22.2026.09.03.05.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 05:08:59 -0700 (PDT)
-Subject: [PATCH RFC v2 1/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
- for ROG NVMe enclosures
-Date: Thu, 03 Sep 2026 20:00:00 +0800
-Message-ID: <202609032000.RFCv2-1.lhw@gmail.com>
-In-Reply-To: <202609012200.RFC0.lhw@gmail.com>
-References:
- <202609012200.RFC0.lhw@gmail.com> <202609012200.RFC1.lhw@gmail.com>
-From: Liang Haowen <nbg2974@gmail.com>
-To: linux-leds@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Martin K. Petersen <mkp@kernel.org>, linux-scsi@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
- Hans de Goede <hansg@kernel.org>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENtR/oHa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788440170; x=1819976170;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ipSLO2XbXUIHbamkefG624xhFVMemxrJePevsZE9eGk=;
+  b=ENtR/oHaZ+5d0iNGA/myQG6/Tj/JBIBEHbN16kbOAhC1FEnYEc72DUgp
+   xc3EdN14tFZhGUAO/gZGETsL0cbYKOJymoO4VaurmhJtOJ1fm1Ubkb16W
+   xEI3JEyCJGfCtd4zr7Oz/RoV8wHgTNR6ruUbPeP4l98rGcFB8s1U+O3cQ
+   ai3UQfcjaQKN+YHOXsqxITYaeAsVfb2bTRPBOacvSZ47AQ/qewtkvDItS
+   MKQE55xtajLQH/jYzTXuDuF5yvXF3TRPfl3Bcp8tGrBTm/eb6iCMpolgs
+   kOCDD23hx+JXtzKC+ZztkVEdMyuzpG7ZF0zOB07KOSkP0Ylp2VsH8JVOz
+   w==;
+X-CSE-ConnectionGUID: bGXpcMwGQ9iRrhhHkL7HTA==
+X-CSE-MsgGUID: Jj/WX1DhTimz3FhcIio6eg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="100435012"
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="100435012"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 05:56:09 -0700
+X-CSE-ConnectionGUID: xD9F0zU/QSa8XSTIp130Kw==
+X-CSE-MsgGUID: TVJxToJwQvOTsEFVBAEn0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="266483690"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.119])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 05:56:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Sep 2026 15:55:59 +0300 (EEST)
+To: Xilin Wu <sophon@radxa.com>
+cc: Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+    Shuah Khan <skhan@linuxfoundation.org>, 
+    Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hansg@kernel.org>, 
+    Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform: arm64: Add Radxa SVC GLINK driver
+In-Reply-To: <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
+Message-ID: <135c74d2-5f66-83ac-4ffe-a214c735ccec@linux.intel.com>
+References: <20260831-radxa-svc-v1-0-7c028de6a387@radxa.com> <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-ASUS ROG external NVMe enclosures (ROG STRIX Arion, USB 0b05:1932) are
-plain USB mass-storage devices with no HID interface: the Aura LEDs
-hang off an ENE controller driven by vendor SCSI commands on the same
-LUN as the disk. The enclosure has 4 independently addressable LEDs,
-verified on hardware.
+On Mon, 31 Aug 2026, Xilin Wu wrote:
 
-Register a scsi_device_handler matched by INQUIRY (vendor "ROG",
-model "ESD-S1C"); it does not claim the sdev (sd keeps owning the
-disk) and exposes each LED as a multicolor LED class device,
-/sys/class/leds/asus-arion:led0 through led3.
+> Add an rpmsg client for the RADXA_SVC_ADSP_APPS firmware service used
+> on supported Radxa boards with Qualcomm SoCs.
+> 
+> Expose fan control through the standard hwmon pwm1 and pwm1_enable
+> attributes. SET_PROFILE only changes the fan curve, so map its quiet and
+> performance curves to automatic modes instead of platform_profile.
+> 
+> Signed-off-by: Xilin Wu <sophon@radxa.com>
+> ---
+>  Documentation/hwmon/index.rst            |   1 +
+>  Documentation/hwmon/radxa-svc-glink.rst  |  32 ++
+>  MAINTAINERS                              |   8 +
+>  drivers/platform/arm64/Kconfig           |  13 +
+>  drivers/platform/arm64/Makefile          |   1 +
+>  drivers/platform/arm64/radxa_svc_glink.c | 735 +++++++++++++++++++++++++++++++
+>  6 files changed, 790 insertions(+)
+> 
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index 9955a525436a..08a2062b4f84 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -234,6 +234,7 @@ Hardware Monitoring Kernel Drivers
+>     pwm-fan
+>     q54sj108a2
+>     qnap-mcu-hwmon
+> +   radxa-svc-glink
+>     raspberrypi-hwmon
+>     sbrmi
+>     sbtsi_temp
+> diff --git a/Documentation/hwmon/radxa-svc-glink.rst b/Documentation/hwmon/radxa-svc-glink.rst
+> new file mode 100644
+> index 000000000000..c464b130a4e4
+> --- /dev/null
+> +++ b/Documentation/hwmon/radxa-svc-glink.rst
+> @@ -0,0 +1,32 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
+> +
+> +Kernel driver radxa-svc-glink
+> +=============================
+> +
+> +Description
+> +-----------
+> +
+> +The Radxa SVC GLINK driver communicates with the ``RADXA_SVC_ADSP_APPS``
+> +firmware service found on supported Radxa boards with Qualcomm SoCs. The
+> +firmware provides fan control.
+> +
+> +Fan control
+> +-----------
+> +
+> +The fan controller provides the following attributes:
+> +
+> +=============== ======= ======================================================
+> +``pwm1``        RW      Current fan PWM value. Writes are accepted in manual
+> +                        mode and use values from 0 to 255.
+> +``pwm1_enable`` RW      Fan control mode, as described below.
+> +=============== ======= ======================================================
+> +
+> +The supported ``pwm1_enable`` values are:
+> +
+> +  - 0: fan at full speed
+> +  - 1: manual control using ``pwm1``
+> +  - 2: automatic control using the quiet curve
+> +  - 3: automatic control using the performance curve
+> +
+> +When manual mode is selected, the driver starts with the current fan speed. If
+> +the current speed cannot be determined, it starts at full speed.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3a19da74d00c..9e4685759194 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22719,6 +22719,14 @@ F:	Documentation/ABI/testing/sysfs-bus-rbd
+>  F:	drivers/block/rbd.c
+>  F:	drivers/block/rbd_types.h
+>  
+> +RADXA SVC GLINK DRIVER
+> +M:	Xilin Wu <sophon@radxa.com>
+> +L:	linux-arm-msm@vger.kernel.org
+> +L:	linux-hwmon@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/hwmon/radxa-svc-glink.rst
+> +F:	drivers/platform/arm64/radxa_svc_glink.c
+> +
+>  RAGE128 FRAMEBUFFER DISPLAY DRIVER
+>  L:	linux-fbdev@vger.kernel.org
+>  S:	Orphan
+> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+> index e32e01b2a9bd..60c1e541fe89 100644
+> --- a/drivers/platform/arm64/Kconfig
+> +++ b/drivers/platform/arm64/Kconfig
+> @@ -103,4 +103,17 @@ config EC_QCOM_HAMOA
+>  
+>  	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
+>  
+> +config RADXA_SVC_GLINK
+> +	tristate "Radxa SVC GLINK driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on RPMSG
+> +	depends on HWMON
+> +	help
+> +	  Enable support for the Radxa SVC firmware service found on supported
+> +	  Radxa boards using Qualcomm SoCs. The driver communicates with the
+> +	  RADXA_SVC_ADSP_APPS service over rpmsg and exposes fan control through
+> +	  the standard hwmon interface.
+> +
+> +	  Say M or Y here to include this support.
+> +
+>  endif # ARM64_PLATFORM_DEVICES
+> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+> index 7681be4a46e9..327acb7b983c 100644
+> --- a/drivers/platform/arm64/Makefile
+> +++ b/drivers/platform/arm64/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
+>  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+>  obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
+>  obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
+> +obj-$(CONFIG_RADXA_SVC_GLINK)	+= radxa_svc_glink.o
+> diff --git a/drivers/platform/arm64/radxa_svc_glink.c b/drivers/platform/arm64/radxa_svc_glink.c
+> new file mode 100644
+> index 000000000000..1c91bfabcd12
+> --- /dev/null
+> +++ b/drivers/platform/arm64/radxa_svc_glink.c
+> @@ -0,0 +1,735 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Radxa SVC GLINK driver.
+> + *
+> + * Copyright (c) 2026 Radxa Computer (Shenzhen) Co., Ltd.
+> + */
+> +
+> +#include <linux/completion.h>
+> +#include <linux/errno.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/minmax.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/rpmsg.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/string.h>
+> +
+> +#define RADXA_SVC_MAGIC		0x58444152 /* "RADX" */
+> +#define RADXA_SVC_VERSION	1
+> +#define RADXA_SVC_TIMEOUT	msecs_to_jiffies(5000)
+> +
+> +#define RADXA_SVC_MAX_TX_PAYLOAD	64
+> +#define RADXA_SVC_MAX_RX_PAYLOAD	2048
+> +
+> +#define RADXA_SVC_OP_GET_VERSION	0x02
+> +#define RADXA_SVC_OP_SET_PROFILE	0x10
+> +#define RADXA_SVC_OP_GET_PROFILE	0x11
+> +#define RADXA_SVC_OP_FAN_GET_STATE	0x50
+> +#define RADXA_SVC_OP_FAN_SET_CONTROL	0x51
+> +#define RADXA_SVC_OP_FAN_GET_CONTROL	0x52
+> +
+> +#define RADXA_SVC_PROFILE_QUIET		0
+> +#define RADXA_SVC_PROFILE_PERFORMANCE	1
+> +
+> +#define RADXA_SVC_FAN_CONTROL_FULL_SPEED	0
+> +#define RADXA_SVC_FAN_CONTROL_MANUAL		1
+> +#define RADXA_SVC_FAN_CONTROL_AUTO		2
+> +#define RADXA_SVC_FAN_PWM_MAX			255
+> +
+> +#define RADXA_SVC_PWM_MODE_FULL_SPEED		0
+> +#define RADXA_SVC_PWM_MODE_MANUAL		1
+> +#define RADXA_SVC_PWM_MODE_AUTO_QUIET		2
+> +#define RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE	3
+> +
+> +#define RADXA_SVC_CAP_PROFILE		BIT(1)
+> +#define RADXA_SVC_CAP_FANCTL		BIT(5)
+> +#define RADXA_SVC_CAP_FANCTL_CTRL	BIT(6)
 
-Protocol: a 16-byte vendor CDB (opcode 0xec, 'A' 'S' signature,
-register index, argument count in cdb[13]). MODE 0x8021 (Static) must
-be written first in every sequence or the device ignores it; colours
-go to 0x8160 + 3 * led and 0x8100 + 3 * led (3 bytes, order R, B, G;
-both tables are written because firmware revisions pull from one or
-the other); APPLY 0x80a0 takes 0x01 to apply and 0xaa to save.
+Add include for linux/bits.h.
 
-The CDB cannot go through scsi_execute_cmd(): it sizes the command
-via scsi_command_size(opcode), which maps vendor opcode 0xec to
-10 bytes, so cdb[13] is dropped and the device silently ignores the
-write (GOOD status, no error). The request is built with
-scsi_alloc_request() instead, which fully initializes the scsi_cmnd,
-with cmd_len forced to 16, mirroring what SG_IO does from userspace.
+> +
+> +#define RADXA_SVC_REQUIRED_CAPS		(RADXA_SVC_CAP_PROFILE | \
+> +					 RADXA_SVC_CAP_FANCTL | \
+> +					 RADXA_SVC_CAP_FANCTL_CTRL)
+> +
+> +struct radxa_svc_hdr {
+> +	__le32 magic;
+> +	__le16 version;
+> +	__le16 header_size;
+> +	__le32 opcode;
+> +	__le32 seq;
+> +	__le32 status;
+> +	__le32 payload_len;
+> +} __packed;
 
-brightness_set only caches the colour and marks the LED in a per-zone
-dirty bitmap; a single work item per zone then runs one ENE sequence
-for all pending LEDs (MODE, colour slots, APPLY, SAVE). Funneling
-every update through one work item keeps the sequences from
-interleaving between concurrent LED updates and batches multi-LED
-updates into a single APPLY/SAVE.
+Please add linux/types.h and include for __packed.
 
-This is the monolithic out-of-tree version as verified on hardware;
-the Kconfig/Makefile/MAINTAINERS wiring lands with the agreed split
-into a SCSI transport helper and a shared ASUS Aura LED interface.
+> +
+> +struct radxa_svc_version_resp {
+> +	__le16 major;
+> +	__le16 minor;
+> +	__le32 caps;
+> +} __packed;
+> +
+> +struct radxa_svc_fan_state_resp {
+> +	__le32 profile;
+> +	__le32 running;
+> +	__le32 emergency;
+> +	__le32 cpu_valid;
+> +	__le32 cpu_stale_ticks;
+> +	__le32 cpu_temp_deci_c;
+> +	__le32 gpu_valid;
+> +	__le32 gpu_stale_ticks;
+> +	__le32 gpu_temp_deci_c;
+> +	__le32 current_duty_ns;
+> +	__le32 target_duty_ns;
+> +	__le32 pwm_channel;
+> +	__le32 pwm_period_ns;
+> +	__le32 loop_count;
+> +	__le32 fault_count;
+> +	__le32 last_status;
+> +	__le32 control_mode;
+> +	__le32 manual_pwm;
+> +} __packed;
+> +
+> +struct radxa_svc_fan_control_req {
+> +	__le32 control_mode;
+> +	__le32 manual_pwm;
+> +} __packed;
+> +
+> +struct radxa_svc_fan_control_resp {
+> +	__le32 control_mode;
+> +	__le32 manual_pwm;
+> +} __packed;
+> +
+> +struct radxa_svc_glink {
+> +	struct device *dev;
+> +	struct rpmsg_device *rpdev;
+> +	struct device *hwmon_dev;
+> +
+> +	struct mutex xfer_lock; /* serializes request/response transactions */
+> +	struct mutex fan_lock; /* serializes multi-request fan configuration */
+> +	spinlock_t rsp_lock;
+> +	struct completion rsp;
+> +	bool pending;
+> +	bool shutting_down;
+> +	u32 pending_seq;
+> +	u32 seq;
+> +
+> +	u32 rsp_opcode;
+> +	int rsp_status;
+> +	size_t rsp_len;
+> +	u8 rsp_payload[RADXA_SVC_MAX_RX_PAYLOAD];
+> +	u32 caps;
+> +};
+> +
+> +static int radxa_svc_request(struct radxa_svc_glink *svc, u32 opcode,
+> +			     const void *req_payload, size_t req_len,
+> +			     void *rsp_payload, size_t *rsp_len);
+> +
+> +static int radxa_svc_get_version(struct radxa_svc_glink *svc,
+> +				 struct radxa_svc_version_resp *resp)
+> +{
+> +	size_t len = sizeof(*resp);
+> +	int ret;
+> +
+> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_GET_VERSION, NULL, 0,
+> +				resp, &len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (len < sizeof(*resp))
 
-Signed-off-by: Liang Haowen <nbg2974@gmail.com>
----
- drivers/leds/leds-asus-aura-scsi.c | 332 +++++++++++++++++++++++++++++
- 1 file changed, 332 insertions(+)
- create mode 100644 drivers/leds/leds-asus-aura-scsi.c
+Remove the empty line as this too is error handling for the call.
 
-diff --git a/drivers/leds/leds-asus-aura-scsi.c b/drivers/leds/leds-asus-aura=
--scsi.c
-new file mode 100644
-index 0000000..4dd559a
---- /dev/null
-+++ b/drivers/leds/leds-asus-aura-scsi.c
-@@ -0,0 +1,332 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * ASUS Aura RGB over SCSI for ROG external NVMe enclosures
-+ * (e.g. ROG STRIX Arion, USB 0b05:1932).
-+ *
-+ * USB mass-storage device, no HID; the ENE LED controller is driven via
-+ * vendor SCSI commands. Matched by INQUIRY (vendor "ROG", model "ESD-S1C"),
-+ * does NOT claim the sdev (sd keeps owning the disk).
-+ *
-+ * The Arion exposes 4 independently addressable LEDs (verified on hardware):
-+ * each is a multicolor LED class device (asus-arion:led0..led3). A colour
-+ * change writes that LED's slot only: EFFECT 0x8160 + 3*led, DIRECT
-+ * 0x8100 + 3*led (3 bytes, byte order R, B, G), then APPLY (0x01) and
-+ * SAVE (0xaa). MODE (0x8021 =3D Static) is written first in every sequence;
-+ * skipping it makes the device ignore the whole sequence.
-+ *
-+ * Scheduling: brightness_set (LED core fast path) caches the colour and
-+ * marks the LED in a per-zone dirty bitmap; a single work item per zone
-+ * runs one ENE sequence for all pending LEDs (MODE once, colour slots,
-+ * APPLY, SAVE). Funneling every update through that one work item also
-+ * serializes the sequences: the MODE/colour/APPLY/SAVE chain must never
-+ * interleave between concurrent LED updates.
-+ *
-+ * CDB length: scsi_execute_cmd() sizes the CDB via COMMAND_SIZE(opcode),
-+ * which maps vendor opcode 0xec to 10 bytes. The ENE protocol uses a 16-byte
-+ * CDB with the data length in cdb[13], so scsi_execute_cmd() drops cdb[13]
-+ * and the device silently ignores the write. ene_write() therefore mirrors
-+ * scsi_execute_cmd() on top of scsi_alloc_request() and forces cmd_len =3D =
-16
-+ * (what SG_IO does from userspace).
-+ *
-+ * Attach manually until a notifier lands:
-+ * echo asus_aura > /sys/block/sdX/device/dh_state
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/leds.h>
-+#include <linux/led-class-multicolor.h>
-+#include <linux/blk_types.h>
-+#include <linux/blkdev.h>
-+#include <linux/blk-mq.h>
-+#include <linux/workqueue.h>
-+#include <scsi/scsi.h>
-+#include <scsi/scsi_cmnd.h>
-+#include <scsi/scsi_device.h>
-+#include <scsi/scsi_dh.h>
-+
-+#define ARION_INQ_VENDOR	"ROG"
-+#define ARION_INQ_MODEL		"ESD-S1C"
-+
-+#define ENE_OPCODE		0xec
-+#define ENE_REG_MODE		0x8021	/* AuraMode value: Static=3D1, Breathe=3D2, ...=
- */
-+#define ENE_REG_APPLY		0x80a0
-+#define ENE_REG_COLORS		0x8160	/* + 3*led, 3 bytes per LED, order R,B,G */
-+#define ENE_REG_COLORS_DIRECT	0x8100	/* + 3*led, same layout */
-+#define ENE_APPLY		0x01
-+#define ENE_SAVE		0xaa
-+#define ENE_MODE_STATIC		1
-+#define ENE_CDB_LEN		16
-+#define ENE_RGB_LEN		3
-+#define ENE_TIMEOUT		(10 * HZ)
-+
-+/*
-+ * Verified on hardware: the enclosure has 4 independently settable LEDs.
-+ * (The colour table reserves 16 slots; only the first 4 drive anything.)
-+ */
-+#define ARION_NUM_LEDS		4
-+
-+struct asus_aura_led {
-+	struct asus_aura_zone	*zone;
-+	int			index;
-+	struct led_classdev_mc	mc_cdev;
-+	struct mc_subled	subled[3];
-+	u8			rgb[ENE_RGB_LEN];
-+};
-+
-+struct asus_aura_zone {
-+	struct scsi_device	*sdev;
-+	struct asus_aura_led	leds[ARION_NUM_LEDS];
-+	unsigned long		dirty;	/* bit i: led i needs a colour write */
-+	struct work_struct	work;
-+};
-+
-+static void ene_build_cdb(u8 *cdb, u16 reg, u8 arg_count)
-+{
-+	memset(cdb, 0, ENE_CDB_LEN);
-+	cdb[0] =3D ENE_OPCODE;
-+	cdb[1] =3D 'A';
-+	cdb[2] =3D 'S';
-+	cdb[3] =3D (reg >> 8) & 0xff;
-+	cdb[4] =3D reg & 0xff;
-+	cdb[13] =3D arg_count;
-+}
-+
-+/*
-+ * scsi_execute_cmd() with cmd_len forced to 16. scsi_alloc_request()
-+ * initializes the scsi_cmnd fully (scsi_initialize_rq(): zeroed cmnd, sense
-+ * and rcu head, retries), which a raw blk_mq_alloc_request() does not.
-+ */
-+static int ene_write(struct scsi_device *sdev, u16 reg,
-+		     const void *data, u8 arg_count)
-+{
-+	struct request *rq;
-+	struct scsi_cmnd *scmd;
-+	u8 cdb[ENE_CDB_LEN];
-+	int ret;
-+
-+	ene_build_cdb(cdb, reg, arg_count);
-+
-+	rq =3D scsi_alloc_request(sdev->request_queue, REQ_OP_DRV_OUT, 0);
-+	if (IS_ERR(rq))
-+		return PTR_ERR(rq);
-+
-+	if (arg_count) {
-+		ret =3D blk_rq_map_kern(rq, (void *)data, arg_count, GFP_NOIO);
-+		if (ret)
-+			goto out;
-+	}
-+
-+	scmd =3D blk_mq_rq_to_pdu(rq);
-+	scmd->cmd_len =3D ENE_CDB_LEN;
-+	memcpy(scmd->cmnd, cdb, ENE_CDB_LEN);
-+	scmd->allowed =3D 1;
-+	rq->timeout =3D ENE_TIMEOUT;
-+	rq->rq_flags |=3D RQF_QUIET;
-+
-+	blk_execute_rq(rq, true);
-+	ret =3D scmd->result;
-+out:
-+	blk_mq_free_request(rq);
-+	return ret;
-+}
-+
-+/*
-+ * Sleepable: runs on the system workqueue. One ENE sequence for every LED
-+ * marked in the dirty bitmap. test_and_clear_bit() pairs with the set_bit()
-+ * in asus_aura_set(): a colour cached while this runs requeues the work and
-+ * is picked up by the next sequence.
-+ */
-+static void asus_aura_zone_work(struct work_struct *work)
-+{
-+	struct asus_aura_zone *zone =3D
-+		container_of(work, struct asus_aura_zone, work);
-+	struct scsi_device *sdev =3D zone->sdev;
-+	u8 apply =3D ENE_APPLY;
-+	u8 save =3D ENE_SAVE;
-+	u8 mode =3D ENE_MODE_STATIC;
-+	int i, ret;
-+
-+	if (!scsi_device_online(sdev))
-+		return;
-+
-+	/* Mode first: without it the device ignores the whole sequence. */
-+	ret =3D ene_write(sdev, ENE_REG_MODE, &mode, 1);
-+	if (ret)
-+		goto err;
-+
-+	for (i =3D 0; i < ARION_NUM_LEDS; i++) {
-+		struct asus_aura_led *led =3D &zone->leds[i];
-+
-+		if (!test_and_clear_bit(i, &zone->dirty))
-+			continue;
-+
-+		ret =3D ene_write(sdev, ENE_REG_COLORS + i * ENE_RGB_LEN,
-+				led->rgb, ENE_RGB_LEN);
-+		if (ret)
-+			goto err;
-+
-+		/*
-+		 * Cover the DIRECT colour set too; some firmware revisions
-+		 * pull from 0x8100 instead of 0x8160.
-+		 */
-+		ret =3D ene_write(sdev, ENE_REG_COLORS_DIRECT + i * ENE_RGB_LEN,
-+				led->rgb, ENE_RGB_LEN);
-+		if (ret)
-+			goto err;
-+	}
-+
-+	ret =3D ene_write(sdev, ENE_REG_APPLY, &apply, 1);
-+	if (ret)
-+		goto err;
-+
-+	/*
-+	 * The change only takes effect after SAVE (0xaa). NOTE: saving on
-+	 * every brightness change writes flash each time; revisit for wear
-+	 * once confirmed.
-+	 */
-+	ret =3D ene_write(sdev, ENE_REG_APPLY, &save, 1);
-+	if (ret)
-+		goto err;
-+
-+	return;
-+err:
-+	dev_err(&sdev->sdev_gendev,
-+		"asus_aura: colour update failed: %d\n", ret);
-+}
-+
-+/* Non-blocking LED callback (LED core fast path). Cache colour, defer SCSI.=
- */
-+static void asus_aura_set(struct led_classdev *cdev,
-+			  enum led_brightness brightness)
-+{
-+	struct led_classdev_mc *mc =3D lcdev_to_mccdev(cdev);
-+	struct asus_aura_led *led =3D
-+		container_of(mc, struct asus_aura_led, mc_cdev);
-+
-+	led_mc_calc_color_components(mc, brightness);
-+	/* ENE colour register byte order is R, B, G. */
-+	led->rgb[0] =3D led->subled[0].brightness;
-+	led->rgb[1] =3D led->subled[2].brightness;
-+	led->rgb[2] =3D led->subled[1].brightness;
-+
-+	set_bit(led->index, &led->zone->dirty);
-+	schedule_work(&led->zone->work);
-+}
-+
-+static int asus_aura_register_led(struct asus_aura_zone *zone, int index)
-+{
-+	struct asus_aura_led *led =3D &zone->leds[index];
-+	struct led_classdev *cdev =3D &led->mc_cdev.led_cdev;
-+	int ret;
-+
-+	led->zone =3D zone;
-+	led->index =3D index;
-+
-+	led->subled[0].color_index =3D LED_COLOR_ID_RED;
-+	led->subled[1].color_index =3D LED_COLOR_ID_GREEN;
-+	led->subled[2].color_index =3D LED_COLOR_ID_BLUE;
-+	led->mc_cdev.num_colors =3D 3;
-+	led->mc_cdev.subled_info =3D led->subled;
-+
-+	cdev->name =3D kasprintf(GFP_KERNEL, "asus-arion:led%d", index);
-+	if (!cdev->name)
-+		return -ENOMEM;
-+	cdev->max_brightness =3D 255;
-+	cdev->brightness_set =3D asus_aura_set;
-+
-+	led_mc_calc_color_components(&led->mc_cdev, cdev->brightness);
-+
-+	/*
-+	 * Register with NULL parent: parenting the LED to the sdev takes a
-+	 * device reference, which blocks the sdev's final release on unplug,
-+	 * which is what calls scsi_dh_release_device() -> our .detach() that
-+	 * unregisters the LEDs. That reference cycle leaked the LED nodes and
-+	 * the module refcount on every hot-unplug.
-+	 */
-+	ret =3D led_classdev_multicolor_register(NULL, &led->mc_cdev);
-+	if (ret)
-+		kfree(cdev->name);
-+	return ret;
-+}
-+
-+/*
-+ * Unregister the LED devices before cancelling the work: unregistering
-+ * removes the sysfs attributes, so no new brightness_set can schedule the
-+ * zone work afterwards, and it waits for in-flight sysfs callbacks.
-+ * Cancelling first would leave a window where a brightness write requeues
-+ * the work after cancel_work_sync() returned, and the work would then run
-+ * on freed memory.
-+ */
-+static void asus_aura_release(struct asus_aura_zone *zone, int num_leds)
-+{
-+	int i;
-+
-+	for (i =3D 0; i < num_leds; i++)
-+		led_classdev_multicolor_unregister(&zone->leds[i].mc_cdev);
-+	cancel_work_sync(&zone->work);
-+	for (i =3D 0; i < num_leds; i++)
-+		kfree(zone->leds[i].mc_cdev.led_cdev.name);
-+	kfree(zone);
-+}
-+
-+static int asus_aura_attach(struct scsi_device *sdev)
-+{
-+	struct asus_aura_zone *zone;
-+	int i, ret;
-+
-+	if (strncmp(sdev->vendor, ARION_INQ_VENDOR, strlen(ARION_INQ_VENDOR)) ||
-+	    strncmp(sdev->model, ARION_INQ_MODEL, strlen(ARION_INQ_MODEL)))
-+		return SCSI_DH_DEV_UNSUPP;
-+
-+	zone =3D kzalloc_obj(*zone, GFP_KERNEL);
-+	if (!zone)
-+		return SCSI_DH_NOMEM;
-+	zone->sdev =3D sdev;
-+	INIT_WORK(&zone->work, asus_aura_zone_work);
-+
-+	for (i =3D 0; i < ARION_NUM_LEDS; i++) {
-+		ret =3D asus_aura_register_led(zone, i);
-+		if (ret) {
-+			asus_aura_release(zone, i);
-+			return SCSI_DH_NOMEM;
-+		}
-+	}
-+
-+	sdev->handler_data =3D zone;
-+	return SCSI_DH_OK;
-+}
-+
-+static void asus_aura_detach(struct scsi_device *sdev)
-+{
-+	struct asus_aura_zone *zone =3D sdev->handler_data;
-+
-+	if (!zone)
-+		return;
-+	asus_aura_release(zone, ARION_NUM_LEDS);
-+	sdev->handler_data =3D NULL;
-+}
-+
-+static struct scsi_device_handler asus_aura_dh =3D {
-+	.name	=3D "asus_aura",
-+	.module	=3D THIS_MODULE,
-+	.attach	=3D asus_aura_attach,
-+	.detach	=3D asus_aura_detach,
-+};
-+
-+static int __init asus_aura_init(void)
-+{
-+	return scsi_register_device_handler(&asus_aura_dh);
-+}
-+
-+static void __exit asus_aura_exit(void)
-+{
-+	scsi_unregister_device_handler(&asus_aura_dh);
-+}
-+
-+module_init(asus_aura_init);
-+module_exit(asus_aura_exit);
-+
-+MODULE_DESCRIPTION("ASUS Aura RGB over SCSI for ROG NVMe enclosures (per-LED=
-)");
-+MODULE_AUTHOR("Liang Haowen");
-+MODULE_LICENSE("GPL");
---=20
-2.55.0
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_check_version(struct device *dev,
+> +				   const struct radxa_svc_version_resp *resp,
+> +				   u32 *caps)
+> +{
+> +	u32 missing_caps;
+> +	u16 major;
+> +
+> +	major = le16_to_cpu(resp->major);
+> +	*caps = le32_to_cpu(resp->caps);
 
+Add include.
+
+> +
+> +	if (major != RADXA_SVC_VERSION)
+> +		return dev_err_probe(dev, -EPROTONOSUPPORT,
+> +				     "unsupported service major version %u\n",
+> +				     major);
+
+Add braces to blocks with multi-line constructs.
+
+Add include for dev_err_probe().
+
+> +
+> +	missing_caps = RADXA_SVC_REQUIRED_CAPS & ~*caps;
+> +	if (missing_caps)
+> +		return dev_err_probe(dev, -ENODEV,
+> +				     "service missing required caps 0x%08x\n",
+> +				     missing_caps);
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_get_profile(struct radxa_svc_glink *svc, u32 *profile)
+> +{
+> +	__le32 resp;
+> +	size_t len = sizeof(resp);
+> +	int ret;
+> +
+> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_GET_PROFILE, NULL, 0,
+> +				&resp, &len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (len < sizeof(resp))
+> +		return -EIO;
+> +
+> +	*profile = le32_to_cpu(resp);
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_set_profile(struct radxa_svc_glink *svc, u32 profile)
+> +{
+> +	__le32 payload;
+> +
+> +	switch (profile) {
+> +	case RADXA_SVC_PROFILE_QUIET:
+> +	case RADXA_SVC_PROFILE_PERFORMANCE:
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	payload = cpu_to_le32(profile);
+> +
+> +	return radxa_svc_request(svc, RADXA_SVC_OP_SET_PROFILE, &payload,
+> +				 sizeof(payload), NULL, NULL);
+> +}
+> +
+> +static int radxa_svc_fan_get_state(struct radxa_svc_glink *svc,
+> +				   struct radxa_svc_fan_state_resp *resp)
+> +{
+> +	size_t len = sizeof(*resp);
+> +	size_t base_len = offsetof(struct radxa_svc_fan_state_resp,
+> +				   control_mode);
+> +	int ret;
+> +
+> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_FAN_GET_STATE, NULL, 0,
+> +				resp, &len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (len < base_len)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_fan_get_control(struct radxa_svc_glink *svc,
+> +				     struct radxa_svc_fan_control_resp *resp)
+> +{
+> +	size_t len = sizeof(*resp);
+> +	u32 control_mode;
+> +	u32 manual_pwm;
+> +	int ret;
+> +
+> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_FAN_GET_CONTROL, NULL, 0,
+> +				resp, &len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (len < sizeof(*resp))
+> +		return -EIO;
+> +
+> +	control_mode = le32_to_cpu(resp->control_mode);
+> +	manual_pwm = le32_to_cpu(resp->manual_pwm);
+> +	if (control_mode > RADXA_SVC_FAN_CONTROL_AUTO ||
+> +	    manual_pwm > RADXA_SVC_FAN_PWM_MAX)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_fan_set_control(struct radxa_svc_glink *svc,
+> +				     u32 control_mode, u32 manual_pwm)
+> +{
+> +	struct radxa_svc_fan_control_req req;
+> +
+> +	if (control_mode > RADXA_SVC_FAN_CONTROL_AUTO ||
+> +	    manual_pwm > RADXA_SVC_FAN_PWM_MAX)
+> +		return -EINVAL;
+> +
+> +	req.control_mode = cpu_to_le32(control_mode);
+> +	req.manual_pwm = cpu_to_le32(manual_pwm);
+> +
+> +	return radxa_svc_request(svc, RADXA_SVC_OP_FAN_SET_CONTROL, &req,
+> +				 sizeof(req), NULL, NULL);
+> +}
+> +
+> +static int radxa_svc_fan_duty_to_pwm(u32 period_ns, u32 duty_ns, u32 *value)
+> +{
+> +	u64 pwm;
+> +
+> +	if (!period_ns)
+> +		return -ENODATA;
+> +
+> +	if (duty_ns > period_ns)
+> +		return -EPROTO;
+> +
+> +	pwm = (u64)(period_ns - duty_ns) * RADXA_SVC_FAN_PWM_MAX;
+> +	*value = min_t(u64, DIV_ROUND_CLOSEST_ULL(pwm, period_ns),
+
+Add include for DIV_ROUND_CLOSEST_ULL()
+
+> +		       RADXA_SVC_FAN_PWM_MAX);
+> +
+> +	return 0;
+> +}
+> +
+> +static int radxa_svc_request(struct radxa_svc_glink *svc, u32 opcode,
+> +			     const void *req_payload, size_t req_len,
+> +			     void *rsp_payload, size_t *rsp_len)
+> +{
+> +	struct radxa_svc_hdr *hdr;
+> +	unsigned long flags;
+> +	size_t tx_len;
+> +	u32 seq;
+> +	u8 *tx_buf;
+> +	int ret;
+> +
+> +	if (req_len > RADXA_SVC_MAX_TX_PAYLOAD)
+> +		return -EMSGSIZE;
+> +
+> +	tx_len = sizeof(*hdr) + req_len;
+> +	tx_buf = kzalloc(tx_len, GFP_KERNEL);
+> +	if (!tx_buf)
+> +		return -ENOMEM;
+> +
+> +	mutex_lock(&svc->xfer_lock);
+> +
+> +	if (!svc->rpdev || !svc->rpdev->ept) {
+> +		ret = -ENODEV;
+> +		goto out_unlock;
+> +	}
+> +
+> +	seq = ++svc->seq;
+> +	if (!seq)
+> +		seq = ++svc->seq;
+> +
+> +	hdr = (struct radxa_svc_hdr *)tx_buf;
+> +	hdr->magic = cpu_to_le32(RADXA_SVC_MAGIC);
+> +	hdr->version = cpu_to_le16(RADXA_SVC_VERSION);
+> +	hdr->header_size = cpu_to_le16(sizeof(*hdr));
+> +	hdr->opcode = cpu_to_le32(opcode);
+> +	hdr->seq = cpu_to_le32(seq);
+> +	hdr->status = cpu_to_le32(0);
+> +	hdr->payload_len = cpu_to_le32(req_len);
+> +
+> +	if (req_len)
+> +		memcpy(tx_buf + sizeof(*hdr), req_payload, req_len);
+> +
+> +	reinit_completion(&svc->rsp);
+> +
+> +	spin_lock_irqsave(&svc->rsp_lock, flags);
+> +	if (svc->shutting_down) {
+> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +		ret = -ENODEV;
+> +		goto out_unlock;
+> +	}
+> +
+> +	svc->pending = true;
+> +	svc->pending_seq = seq;
+> +	svc->rsp_opcode = 0;
+> +	svc->rsp_status = 0;
+> +	svc->rsp_len = 0;
+> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +
+> +	ret = rpmsg_send(svc->rpdev->ept, tx_buf, tx_len);
+> +	if (ret) {
+> +		spin_lock_irqsave(&svc->rsp_lock, flags);
+> +		svc->pending = false;
+> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +		goto out_unlock;
+> +	}
+> +
+> +	if (!wait_for_completion_timeout(&svc->rsp, RADXA_SVC_TIMEOUT)) {
+> +		spin_lock_irqsave(&svc->rsp_lock, flags);
+> +		svc->pending = false;
+> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +		ret = -ETIMEDOUT;
+> +		goto out_unlock;
+> +	}
+> +
+> +	spin_lock_irqsave(&svc->rsp_lock, flags);
+> +	if (svc->shutting_down) {
+> +		ret = -ENODEV;
+> +	} else if (svc->rsp_opcode != opcode) {
+> +		ret = -EIO;
+> +	} else {
+> +		ret = svc->rsp_status;
+> +		if (rsp_payload && rsp_len) {
+> +			size_t copy_len = min(*rsp_len, svc->rsp_len);
+> +
+> +			memcpy(rsp_payload, svc->rsp_payload, copy_len);
+> +			if (*rsp_len < svc->rsp_len && !ret)
+
+Doing !ret, without preceeding call nowhere in sight, is bit of a curve 
+ball. It would be better to name the variable differently.
+
+> +				ret = -EMSGSIZE;
+
+Is it correct that this just proceeds?
+
+Does this even want to do the memcpy() when it returns error? Why?
+
+> +			*rsp_len = svc->rsp_len;
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +
+> +out_unlock:
+> +	mutex_unlock(&svc->xfer_lock);
+> +	kfree(tx_buf);
+
+Please convert this function to use __free(), guard() and scoped_guard(). 
+Hopefully that makes the function a bit more readable (as is, I didn't 
+even bother trying to follow the code flow).
+
+> +
+> +	return ret;
+> +}
+> +
+> +static int radxa_svc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+> +				    int len, void *priv, u32 addr)
+> +{
+> +	struct radxa_svc_glink *svc = dev_get_drvdata(&rpdev->dev);
+> +	const struct radxa_svc_hdr *hdr = data;
+> +	unsigned long flags;
+> +	size_t header_size;
+> +	size_t payload_len;
+> +	bool do_complete = false;
+> +	u32 seq;
+> +
+> +	if (len < sizeof(*hdr))
+> +		goto bad_msg;
+> +
+> +	if (le32_to_cpu(hdr->magic) != RADXA_SVC_MAGIC ||
+> +	    le16_to_cpu(hdr->version) != RADXA_SVC_VERSION)
+> +		goto bad_msg;
+> +
+> +	header_size = le16_to_cpu(hdr->header_size);
+> +	if (header_size < sizeof(*hdr) || header_size > len)
+> +		goto bad_msg;
+> +
+> +	payload_len = le32_to_cpu(hdr->payload_len);
+> +	if (payload_len > len - header_size ||
+> +	    payload_len > RADXA_SVC_MAX_RX_PAYLOAD)
+> +		goto bad_msg;
+> +
+> +	seq = le32_to_cpu(hdr->seq);
+> +
+> +	spin_lock_irqsave(&svc->rsp_lock, flags);
+> +	if (svc->pending && seq == svc->pending_seq) {
+> +		svc->rsp_opcode = le32_to_cpu(hdr->opcode);
+> +		svc->rsp_status = (s32)le32_to_cpu(hdr->status);
+> +		svc->rsp_len = payload_len;
+> +		memcpy(svc->rsp_payload, data + header_size, payload_len);
+> +		svc->pending = false;
+> +		do_complete = true;
+> +	}
+> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +
+> +	if (do_complete)
+> +		complete(&svc->rsp);
+> +
+> +	return 0;
+> +
+> +bad_msg:
+> +	return 0;
+
+??
+
+> +}
+> +
+> +static int radxa_svc_fan_get_pwm_mode(struct radxa_svc_glink *svc,
+> +				      long *mode)
+> +{
+> +	struct radxa_svc_fan_control_resp control = {};
+> +	u32 control_mode;
+> +	u32 profile;
+> +	int ret;
+> +
+> +	ret = radxa_svc_fan_get_control(svc, &control);
+> +	if (ret)
+> +		return ret;
+> +
+> +	control_mode = le32_to_cpu(control.control_mode);
+> +
+> +	switch (control_mode) {
+> +	case RADXA_SVC_FAN_CONTROL_FULL_SPEED:
+> +		*mode = RADXA_SVC_PWM_MODE_FULL_SPEED;
+> +		return 0;
+> +	case RADXA_SVC_FAN_CONTROL_MANUAL:
+> +		*mode = RADXA_SVC_PWM_MODE_MANUAL;
+> +		return 0;
+> +	case RADXA_SVC_FAN_CONTROL_AUTO:
+> +		break;
+> +	default:
+> +		return -EIO;
+> +	}
+> +
+> +	ret = radxa_svc_get_profile(svc, &profile);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (profile) {
+> +	case RADXA_SVC_PROFILE_QUIET:
+> +		*mode = RADXA_SVC_PWM_MODE_AUTO_QUIET;
+> +		return 0;
+> +	case RADXA_SVC_PROFILE_PERFORMANCE:
+> +		*mode = RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE;
+> +		return 0;
+> +	default:
+> +		return -EIO;
+> +	}
+> +}
+> +
+> +static int radxa_svc_fan_set_auto_mode(struct radxa_svc_glink *svc,
+> +				       u32 profile)
+> +{
+> +	struct radxa_svc_fan_control_resp control = {};
+> +	int ret;
+> +
+> +	ret = radxa_svc_fan_get_control(svc, &control);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = radxa_svc_set_profile(svc, profile);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return radxa_svc_fan_set_control(svc, RADXA_SVC_FAN_CONTROL_AUTO,
+> +					 le32_to_cpu(control.manual_pwm));
+> +}
+> +
+> +static int radxa_svc_fan_set_pwm_mode(struct radxa_svc_glink *svc, long mode)
+> +{
+> +	struct radxa_svc_fan_state_resp state = {};
+> +	u32 duty_ns;
+> +	u32 manual_pwm;
+> +	u32 period_ns;
+> +	int ret;
+> +
+> +	switch (mode) {
+> +	case RADXA_SVC_PWM_MODE_FULL_SPEED:
+> +		return radxa_svc_fan_set_control(svc,
+> +						 RADXA_SVC_FAN_CONTROL_FULL_SPEED,
+> +						 RADXA_SVC_FAN_PWM_MAX);
+> +	case RADXA_SVC_PWM_MODE_MANUAL:
+> +		ret = radxa_svc_fan_get_state(svc, &state);
+> +		if (ret)
+> +			return ret;
+> +
+> +		period_ns = le32_to_cpu(state.pwm_period_ns);
+> +		duty_ns = le32_to_cpu(state.current_duty_ns);
+> +		if (!period_ns) {
+> +			manual_pwm = RADXA_SVC_FAN_PWM_MAX;
+> +		} else {
+> +			ret = radxa_svc_fan_duty_to_pwm(period_ns, duty_ns,
+> +							&manual_pwm);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +
+> +		return radxa_svc_fan_set_control(svc,
+> +						 RADXA_SVC_FAN_CONTROL_MANUAL,
+> +						 manual_pwm);
+> +	case RADXA_SVC_PWM_MODE_AUTO_QUIET:
+> +		return radxa_svc_fan_set_auto_mode(svc,
+> +						RADXA_SVC_PROFILE_QUIET);
+> +	case RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE:
+> +		return radxa_svc_fan_set_auto_mode(svc,
+> +						RADXA_SVC_PROFILE_PERFORMANCE);
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static umode_t radxa_svc_hwmon_is_visible(const void *data,
+> +					  enum hwmon_sensor_types type,
+> +					  u32 attr, int channel)
+> +{
+> +	if (type != hwmon_pwm || channel)
+> +		return 0;
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +	case hwmon_pwm_enable:
+> +		return 0644;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static int radxa_svc_hwmon_read(struct device *dev,
+> +				enum hwmon_sensor_types type, u32 attr,
+> +				int channel, long *val)
+> +{
+> +	struct radxa_svc_glink *svc = dev_get_drvdata(dev);
+> +	struct radxa_svc_fan_state_resp state = {};
+> +	u32 duty_ns;
+> +	u32 period_ns;
+> +	u32 pwm;
+> +	int ret;
+> +
+> +	if (type != hwmon_pwm || channel)
+> +		return -EOPNOTSUPP;
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		ret = radxa_svc_fan_get_state(svc, &state);
+> +		if (ret)
+> +			return ret;
+> +
+> +		period_ns = le32_to_cpu(state.pwm_period_ns);
+> +		duty_ns = le32_to_cpu(state.current_duty_ns);
+> +		ret = radxa_svc_fan_duty_to_pwm(period_ns, duty_ns, &pwm);
+> +		if (ret)
+> +			return ret;
+> +
+> +		*val = pwm;
+> +		return 0;
+> +	case hwmon_pwm_enable:
+> +		mutex_lock(&svc->fan_lock);
+> +		ret = radxa_svc_fan_get_pwm_mode(svc, val);
+> +		mutex_unlock(&svc->fan_lock);
+> +
+> +		return ret;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static int radxa_svc_hwmon_write(struct device *dev,
+> +				 enum hwmon_sensor_types type, u32 attr,
+> +				 int channel, long val)
+> +{
+> +	struct radxa_svc_glink *svc = dev_get_drvdata(dev);
+> +	struct radxa_svc_fan_control_resp control = {};
+> +	int ret;
+> +
+> +	if (type != hwmon_pwm || channel)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&svc->fan_lock);
+
+Use guard() so you can return early.
+
+> +
+> +	switch (attr) {
+> +	case hwmon_pwm_input:
+> +		if (val < 0 || val > RADXA_SVC_FAN_PWM_MAX) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		ret = radxa_svc_fan_get_control(svc, &control);
+> +		if (ret)
+> +			break;
+> +
+> +		if (le32_to_cpu(control.control_mode) !=
+> +		    RADXA_SVC_FAN_CONTROL_MANUAL) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		ret = radxa_svc_fan_set_control(svc,
+> +						RADXA_SVC_FAN_CONTROL_MANUAL,
+> +						val);
+> +		break;
+> +	case hwmon_pwm_enable:
+> +		ret = radxa_svc_fan_set_pwm_mode(svc, val);
+> +		break;
+> +	default:
+> +		ret = -EOPNOTSUPP;
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&svc->fan_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct hwmon_ops radxa_svc_hwmon_ops = {
+> +	.is_visible = radxa_svc_hwmon_is_visible,
+> +	.read = radxa_svc_hwmon_read,
+> +	.write = radxa_svc_hwmon_write,
+> +};
+> +
+> +static const struct hwmon_channel_info * const radxa_svc_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info radxa_svc_hwmon_chip_info = {
+> +	.ops = &radxa_svc_hwmon_ops,
+> +	.info = radxa_svc_hwmon_info,
+> +};
+> +
+> +static int radxa_svc_hwmon_init(struct radxa_svc_glink *svc)
+> +{
+> +	svc->hwmon_dev = devm_hwmon_device_register_with_info(svc->dev,
+> +							      "radxa_svc_glink",
+> +							      svc,
+> +							      &radxa_svc_hwmon_chip_info,
+> +							      NULL);
+> +
+> +	return PTR_ERR_OR_ZERO(svc->hwmon_dev);
+> +}
+> +
+> +static int radxa_svc_rpmsg_probe(struct rpmsg_device *rpdev)
+> +{
+> +	struct radxa_svc_version_resp version = {};
+> +	struct radxa_svc_glink *svc;
+> +	int ret;
+> +
+> +	svc = devm_kzalloc(&rpdev->dev, sizeof(*svc), GFP_KERNEL);
+> +	if (!svc)
+> +		return -ENOMEM;
+> +
+> +	svc->dev = &rpdev->dev;
+> +	svc->rpdev = rpdev;
+> +	mutex_init(&svc->xfer_lock);
+> +	mutex_init(&svc->fan_lock);
+
+Please use devm_mutex_init() + don't forget to add error handling as it 
+can fail.
+
+> +	spin_lock_init(&svc->rsp_lock);
+> +	init_completion(&svc->rsp);
+> +
+> +	dev_set_drvdata(&rpdev->dev, svc);
+> +
+> +	ret = radxa_svc_get_version(svc, &version);
+> +	if (ret)
+> +		return dev_err_probe(&rpdev->dev, ret,
+> +				     "failed to read service version\n");
+> +
+> +	ret = radxa_svc_check_version(&rpdev->dev, &version, &svc->caps);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = radxa_svc_hwmon_init(svc);
+> +	if (ret)
+> +		return dev_err_probe(&rpdev->dev, ret,
+> +				     "failed to register hwmon\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void radxa_svc_rpmsg_remove(struct rpmsg_device *rpdev)
+> +{
+> +	struct radxa_svc_glink *svc = dev_get_drvdata(&rpdev->dev);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&svc->rsp_lock, flags);
+> +	svc->shutting_down = true;
+> +	svc->pending = false;
+> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +	complete_all(&svc->rsp);
+> +
+> +	mutex_lock(&svc->xfer_lock);
+> +	svc->rpdev = NULL;
+> +	mutex_unlock(&svc->xfer_lock);
+> +}
+> +
+> +static const struct rpmsg_device_id radxa_svc_rpmsg_id_match[] = {
+> +	{ "RADXA_SVC_ADSP_APPS" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(rpmsg, radxa_svc_rpmsg_id_match);
+> +
+> +static struct rpmsg_driver radxa_svc_rpmsg_driver = {
+> +	.probe = radxa_svc_rpmsg_probe,
+> +	.remove = radxa_svc_rpmsg_remove,
+> +	.callback = radxa_svc_rpmsg_callback,
+> +	.id_table = radxa_svc_rpmsg_id_match,
+> +	.drv = {
+> +		.name = "radxa_svc_glink",
+> +	},
+> +};
+> +module_rpmsg_driver(radxa_svc_rpmsg_driver);
+> +
+> +MODULE_AUTHOR("Xilin Wu <sophon@radxa.com>");
+> +MODULE_DESCRIPTION("Radxa SVC GLINK driver");
+> +MODULE_LICENSE("GPL");
+> 
+> 
+
+-- 
+ i.
 
