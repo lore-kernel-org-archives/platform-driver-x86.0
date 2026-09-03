@@ -1,176 +1,174 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458633A718D
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 19:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98693511184
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 20:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788465504; cv=none; b=iYminBRIy0ENn9PONWQZNL4e6LLEeuKKujLzPboRComTRTZVWBsyg+kjS6WSy5KEIuRnABL9ckH+pPC/e4fDfSCnUCnCNQlDs1ETns4uSQvK0KsvmmIbNx5f+XMqy7mmg3N0fpQZ9MhjXgF8h930pLkQLMg4yeOtT26wCA0FYPM=
+	t=1788466221; cv=none; b=awH16INAFBuvu9O309QUU+K3VSRqKyy41v2Va0cqPdg20153hWAvNuXHl+y0VgrMequnQ0nQ4XmZGKgGWxhgwgrXE2z4Uo00uq9Ntl5VrAVnMcV1XWnocbgs50iuzXPAO6faIz2AmsTKS3mG3NNoSfXJf0OE/nRjPIqHkzZ9O9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788465504; c=relaxed/simple;
-	bh=fSgjqmuUEyPPrSsYbBfKKkIgRc8tfA1ByaC7MNerK1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfW0f7eYsInv7Y6syDferuWV8zTGOGCQwvKGYDjmDobt1sWcnI+GkSL69NEX6zaXNAjiUpZr+/UCgSkOWuOOFoqcR65y7CW5DTAmFIzHLKfWokxdOLdSHP7U4NTSS66NOqeVnkPtYuF7S3xT9rdstxx7NGV6cJWcWkOW3X+4b3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bD2HaIm5; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788466221; c=relaxed/simple;
+	bh=W6fjqsJDwHaCZEZdYgoC77amcD2ZW34klntyOaQhPR4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=KQQT6tGmRrbB6nF+OSA1ieDRctfAtl2SALH1WLbtp1yM+XCDucB8sADQzOZgT9IJscWNZJHT4lOcqbh6mjervJr7B+BwFeEgYE4HT1ohWTwwSKeokn2ueMoiMQfVFme+tb54kOQqYAKEZJ5HzG6/EN8Sw3odWwRJ/G0vj6Gz6o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dFmgC0L5; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD2HaIm5"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8525efa7274so165017b3a.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 12:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788465497; x=1789070297; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=t6j89Y3ln3EcTUJyuQHu9KwyOw32fASDwF7kJPYPSdA=;
-        b=bD2HaIm5+OOCL17Cv0iyS0u3AKUSt7948Ez7N8r5xufE5NqBLmkP+fFCSfuPNfgifV
-         6z4yZHKwdN47845DxQ/x5YgnU8K72j8VqLtII6pEI9vbJN8Z9MK/zZL6zdLDZshY/Vet
-         iHwZb/G4mvn5/b4qILQwhywg7ZEzoolHLdjSnZeloYV3Qg/BT4XjSyJIuBYuE26XHD4/
-         ocyI4yQhLSuZCkDCuslWh+BWnzWv1wAGyKATx4dyQHOjDLaRywCSMocuVSUmRLuwyGjf
-         jZGqJ+xJYAy5QDLCUOj+2sWjxt09XmVMCAsW8j4RCiHmmh/U2/NhfaxRO1+EzjIlqYI5
-         lkFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788465497; x=1789070297;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=t6j89Y3ln3EcTUJyuQHu9KwyOw32fASDwF7kJPYPSdA=;
-        b=hC4gRyV+Sk3/e+0nJ8q/J5mQzQh+6yD8ErwNRwcjpzzsWYNL7oZRsPyglkdowQG2O6
-         R2L1Y6lsr4sNZqq98oStA0DxnS7iybRAE1uBfU0AMyIQjr53ebA8kmILjZ4UhiE3svSW
-         +3bbw7d5EqqZpgJSQdYBPl8wgv3LDWyZH1LciA6DMha6UbU5K0n9teaLXb++3rNGJaUh
-         Ccfgh/HgOHFfr0spctjqEXGwGU4V66dMNMIwf6QErAigZrZXCXbYzYZHiJzEHnrQ05XY
-         XQzFgYXQdb+G4xkG+ayKZd4sS0984cL+9vaBnVOn6DHbE4Uq/D59AbU1rYGg7BVOpsli
-         +BQg==
-X-Gm-Message-State: AFuF++lr+0c/ZuCnrEluoI6y2kTlI2RR/cgtvy9QBuIGj37D6jouwUZc
-	VNQ5APYYNM6/0mrPUKTyEFQh5efX5Bo9ip6eSIy6kC+/ngJt3luny5J5lcZlvC92atA=
-X-Gm-Gg: AYBFou0eT04jhTALsZGCCZxdQ/+rH1xQvD1pTNZNQaNihIBMQnyOhBIcce6qJn9Grsv
-	t7dmo6R3mdWgPW2+dkJ13Cats2M9Kp2a9npeIqjScmWS7vp1S91Shsm9jarSV7frSTlDlLQIl0L
-	pzo2mJwqLjHuo3/udvZgKMJ0Z98UboszqItDuNGuRhtiZ1kSrKv/uEK679v2erBbEc2qv3kZgK2
-	0RgWgsAwVgMP0muzHVfMVMdg9dQnBrBoG38xZM3K6++pPZilfLl4zEv01gH/gSqfZe8hwzjQ3vM
-	UNIN3kK3iOe8+4ssf/7D3eRXbHrFB9YeUwPjriY7ikofUHl/bMBAQzAJT4Nts+FgOR/n5qjIJny
-	BT//2f2GiyYEw0PCPUKFHQCPsaWoFhCUNY55c56Qzaq3ZLtj3mugBeaqNJJVNffPaYFm+W8AkdU
-	jpQybeeKPsBdzQqQ+Tgw7V/V4JVg3V51JNy+62FvdmxMDXn8LAn/Ek/PI9G9ATbKHN75Pr
-X-Received: by 2002:a05:6a21:6487:b0:3d4:52bd:b89d with SMTP id adf61e73a8af0-3da3a0b2671mr1173471637.23.1788465496560;
-        Thu, 03 Sep 2026 12:58:16 -0700 (PDT)
-Received: from Omen-14.Dlink ([43.229.88.51])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432438497csm1451221c88.8.2026.09.03.12.58.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2026 12:58:15 -0700 (PDT)
-From: ShaunV334 <shaunvarghese43@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: hansg@kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFmgC0L5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788466218; x=1820002218;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=W6fjqsJDwHaCZEZdYgoC77amcD2ZW34klntyOaQhPR4=;
+  b=dFmgC0L5VJJjkpXwNtef3X0K+mrEtI0yDYQaINVGozY7EYSbaimj0cfA
+   Ld69XyC+0LjsWDl6E3diNMzB4Ol5x+u6hHHHhX+oM2ToEmm52jvW9xt98
+   h2YosI+j+VQobdPuvIjFwkb0UIrYvPkB6hoLEVG+FcMjtaU/YHy3i8PuS
+   MlNEAPHZMPYemlwCxtUnfmq3EzN0/SinIkAjyFqhOGwhRfH0ypbSC+ptv
+   N7hVFUF1/flgILHee6iSmpAIwuZibU/jI/Cd5ELkgKK7o2X/ZwOJBg4PK
+   mOyBBpVaNF7JTQIFniyMtpsKDTBfRCtWnc4XHq9CNo6vAkHTPAFCmS2Lh
+   A==;
+X-CSE-ConnectionGUID: Oo09ql1fSeaXSACAHMd7Yg==
+X-CSE-MsgGUID: +GIDaLP/Qji4yp0+9nUWrg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11895"; a="88994542"
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="88994542"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 13:10:13 -0700
+X-CSE-ConnectionGUID: oIiwQ9LpSraTmA4adPtbAg==
+X-CSE-MsgGUID: LZ117kLtRCOfXvQun/268A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="273347996"
+Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 13:10:12 -0700
+From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
+To: platform-driver-x86@vger.kernel.org,
+	intel-xe@lists.freedesktop.org,
+	hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	Shaun Varghese <shaunvarghese43@gmail.com>
-Subject: [PATCH] platform/x86: hp-wmi: add cTGP and PPAB support for Omen
-Date: Fri,  4 Sep 2026 01:26:26 +0530
-Message-ID: <20260903195626.39391-1-shaunvarghese43@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	matthew.brost@intel.com,
+	rodrigo.vivi@intel.com,
+	thomas.hellstrom@linux.intel.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	david.e.box@linux.intel.com,
+	anoop.c.vijay@intel.com,
+	badal.nilawar@intel.com,
+	matthew.d.roper@intel.com,
+	james.ausmus@intel.com,
+	karthik.poosa@intel.com
+Subject: [PATCH v5 00/18] Crescent Island PMT support
+Date: Thu,  3 Sep 2026 13:10:02 -0700
+Message-ID: <20260903201002.1064889-20-michael.j.ruhl@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Shaun Varghese <shaunvarghese43@gmail.com>
+The Crescent Island (CRI) GPU supports PMT via Xe driver
+registration.
 
-On supported Omen systems, the GPU can be limited to a lower power
-limit because cTGP and PPAB are not configured when changing the
-platform profile.
+The CRI PMT MMIO mapping is shared for each PMT feature and it is
+necessary to set an index register value to access the correct memory
+space.
 
-Configure the GPU cTGP and PPAB settings through the existing WMI 0x22
-GPU thermal profile interface. Performance enables both cTGP and PPAB,
-Balanced enables PPAB, and Cool disables both.
+The PMT driver has a callback infrastructure to access data areas with
+driver specific access. It is does not support the PMT control access.
 
-This allows the NVIDIA GPU to make use of the additional power budget
-provided by the platform, improving GPU performance compared to the
-lower power limit.
+CRI discovery/control spaces are part of the access window so a driver
+callback is necessary to allow for the correct window to be exposed.
 
-Tested on an HP Omen Transcend 14 (board 8C58) RTX 4060.
-The GPU was limited to 35 W before this change. With cTGP/PPAB
-enabled, the GPU was able to reach and maintain its boost clocks, with
-power draw increasing to 57 W, benchmark performance improving by
-approximately 10–15%.
+Add control path callback support to the PMT driver.
 
-Signed-off-by: Shaun Varghese <shaunvarghese43@gmail.com>
----
- drivers/platform/x86/hp/hp-wmi.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Add CRI PMT discovery information.
 
-diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-index b2773fc1aca4..54887a476c8e 100644
---- a/drivers/platform/x86/hp/hp-wmi.c
-+++ b/drivers/platform/x86/hp/hp-wmi.c
-@@ -1771,9 +1771,15 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
- 	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
- }
- 
-+static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
-+					    bool ppab_enable,
-+					    u8 dstate);
-+
- static int platform_profile_omen_set_ec(enum platform_profile_option profile)
- {
- 	int err, tp, tp_version;
-+	bool gpu_ctgp_enable;
-+	bool gpu_ppab_enable;
- 	enum hp_thermal_profile_omen_flags flags = 0;
- 
- 	tp_version = omen_get_thermal_policy_version();
-@@ -1787,19 +1793,31 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
- 			tp = HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE;
- 		else
- 			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
-+
-+		gpu_ctgp_enable = true;
-+		gpu_ppab_enable = true;
- 		break;
-+
- 	case PLATFORM_PROFILE_BALANCED:
- 		if (tp_version == 0)
- 			tp = HP_OMEN_V0_THERMAL_PROFILE_DEFAULT;
- 		else
- 			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
-+
-+		gpu_ctgp_enable = false;
-+		gpu_ppab_enable = true;
- 		break;
-+
- 	case PLATFORM_PROFILE_COOL:
- 		if (tp_version == 0)
- 			tp = HP_OMEN_V0_THERMAL_PROFILE_COOL;
- 		else
- 			tp = HP_OMEN_V1_THERMAL_PROFILE_COOL;
-+
-+		gpu_ctgp_enable = false;
-+		gpu_ppab_enable = false;
- 		break;
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -1808,6 +1826,18 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
- 	if (err < 0)
- 		return err;
- 
-+	/*
-+	 * Configure GPU cTGP / PPAB through WMI 0x22 according to
-+	 * the selected platform profile.
-+	 */
-+	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
-+					       gpu_ppab_enable,
-+					       1);
-+	if (err < 0) {
-+		pr_debug("hp-wmi: GPU cTGP/PPAB set returned %d\n", err);
-+		return err;
-+	}
-+
- 	if (has_omen_thermal_profile_ec_timer()) {
- 		err = omen_thermal_profile_ec_timer_set(0);
- 		if (err < 0)
+Update the Xe driver to support the CRI PMT access.
+
+The crashlog access needs to be done with power enabled (telem is only
+available when the device is powered).
+
+Determine which access is requested, and do the appropriate power
+request.
+
+CRI FW is loaded at device power.  Support the late-binding API to
+wait for FW readiness. (pending sysctl patch set implements the API).
+
+v2:
+  Address AI feedback:
+  - add missing entry->cb check
+  - address SRIOV VF concerns
+  - use xe_pm_runtime_put instead of _get in error path
+
+  Address review comments:
+  - redo power/lock sequencing
+  - support device hotplug events
+
+v3:
+  - cleanup power manangement flow
+  - fixed an out of order power management locking issue
+  - add a GUID caching mechanism, for GUID read
+  - removed unused parameter (mmio)
+
+v4:
+ - address various review comments
+ - refactor crashlog to allow for return values
+ - for callback usage, decouple PMT remap of data areas
+ - use IS_SRIOV_VF() rather than expose soc-remapper internals
+ - separate locking fixes intos distinct steps
+ - refactor define update patches to seperate BMG and CRI updates
+ - separate internal GUID into separate steps
+
+v5:
+ - removed callback helpers
+ - do not return error message with sysfs
+ - fix missed return code check in trigger_store
+ - return error value not false
+ - use DEFINE_RES_MEM
+ - document when base is unused
+ - return error on invalid GUID request
+
+Michael J. Ruhl (18):
+  platform/x86/intel/pmt: complete pcidev to device update
+  platform/x86/intel/pmt: refactor rmw with a return value
+  platform/x86/intel/pmt: refactor rc with a return value
+  platform/x86/intel/pmt: Add register access callbacks
+  platform/x86/intel/pmt: Do not remap when using callbacks
+  drm/xe/vsec: Do not register BMG PMT for VF
+  drm/xe/vsec: Correct locking order
+  drm/xe/vsec: Use correct pm state get
+  drm/xe/vsec: Add DOC text for VSEC
+  drm/xe/vsec: Support possible hotplug exit
+  drm/xe/vsec: Support Crescent Island PMT
+  drm/xe/vsec: Refactor BattleMage PMT defines
+  drm/xe/vsec: Crescent Island PMT decode
+  drm/xe/vsec: Crescent Island PMT callbacks
+  drm/xe/vsec: Support late bind fw information
+  drm/xe/vsec: Add PMT GUID internal access
+  drm/xe/vsec: Update PMT internal access
+  drm/xe/vsec: Refactor platform check
+
+ Documentation/gpu/xe/xe_vsec.rst           |  14 +
+ drivers/gpu/drm/xe/regs/xe_pmt.h           |  12 +-
+ drivers/gpu/drm/xe/xe_debugfs.c            |  45 +-
+ drivers/gpu/drm/xe/xe_device.c             |   4 +-
+ drivers/gpu/drm/xe/xe_device_types.h       |   9 +
+ drivers/gpu/drm/xe/xe_hwmon.c              |  10 +-
+ drivers/gpu/drm/xe/xe_pcode.c              |  10 +-
+ drivers/gpu/drm/xe/xe_vsec.c               | 539 +++++++++++++++++++--
+ drivers/gpu/drm/xe/xe_vsec.h               |   3 +-
+ drivers/platform/x86/intel/pmt/class.c     |  26 +-
+ drivers/platform/x86/intel/pmt/class.h     |   5 +-
+ drivers/platform/x86/intel/pmt/crashlog.c  | 237 ++++++---
+ drivers/platform/x86/intel/pmt/discovery.c |   2 +-
+ include/linux/intel_vsec.h                 |  14 +-
+ 14 files changed, 766 insertions(+), 164 deletions(-)
+ create mode 100644 Documentation/gpu/xe/xe_vsec.rst
+
 -- 
-2.55.0
+2.43.0
 
