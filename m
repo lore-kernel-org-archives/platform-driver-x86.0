@@ -1,156 +1,152 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011006.outbound.protection.outlook.com [40.93.194.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA464B204A
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 14:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E59447803;
+	Thu,  3 Sep 2026 18:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.6
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788444075; cv=pass; b=H1yByoM89hNgz5Cli0eZaC5aJfasH+2MIayux1DsN/lF9ndsfZIg5GxmZ0DDa92+rdtexo0BFC0MXUMPwVd9/JrFKz5+8tnXXD8SM2q8ixqRLBxx7ZuaVogbTO732y0r0WFf98CGcxE2F76KQVL78rnRlJxtgQpe85IAG5xO3d0=
+	t=1788460211; cv=fail; b=eNBYiQ+AxtadEWz6xeDXGd2R1WoMohsGX2wydI7p31GYoibmNGCqAkT48S7dfSQz8zr4mXCD5GHiwoOQq/6CCUrbxJUynyK9P1GJyImyWXoPIzmVoLUZOPm52PTGv7VIUeSzI0mJPkwfLsd9/SWUhh9lm50FPj5TWzsBDwdidcM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788444075; c=relaxed/simple;
-	bh=W/ZhzYyuVms2wSvCuj+zW2Oqgu5ZoLzyqaYyoEnm/KY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h+EFrZA0NFTeQKaDp/11JEFz4PH32yUWz5kxjpK7sxUTkTRVfrwHVTZCLPsmYD7XjULAOFCylDcdx/MvjSQQaddH61/Ek6bJypS55xSIn3fD/qAxjpJrYPI5Yd4+1MZO9uDUZWFQtdsi4tGbenZ+UtnSm+JAEzLtopFPHoB/k8o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CaHIehkY; arc=pass smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788460211; c=relaxed/simple;
+	bh=I3Q/qzK8/ToY3ogW8e56opCITrI9XPOXsZJTjHXBy4g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X1Z0L78P7FowmNxKI4qushQJ/eDm6/8GHt85vwWxD0j6jzwmcUTHtNOUiElQbR3SBawI7HW1nN80+7aIlZmHF1e4/JnqQV2szi5hAlOt4O9KrGhtiWRpjKwzHxsu3sbnkuStLRckyZjFjPLgcHoKDAeKqYzI9kmhXxFoCtNZvX8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OMS5ZRro; arc=fail smtp.client-ip=40.93.194.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CaHIehkY"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c15e2dab83eso107197666b.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 07:01:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788444065; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mU0PYYV9r2kxtxKljZS/X8G53HzspSi2IyIqG3EC0EQlr6UsCZZwB+kWaRvB661fsH
-         w0rkCxinOWY+q2sagfYiPdeSECmR9vyfV5uQMaF2c9lnpjnMVw93+uw7nHEk9d2vFtab
-         iQK1BFCHSrMJxBmC/jfydH3oSVtnJpRv5x2dG2A+fLm1aedy0W8MyFoMCSBi3Oek39yl
-         PZLsJPF0yi8FvHxOrtrbwyXRja2hohISe9z0CiHTy4Lb4OSw5xT6lZQSiOyJsGE8AYq9
-         9QdKJPeVxqG73BDcTlxpeDhOaKye+BebP8iSKAZAtxuF18QneZ5frsLjTtyJP40f054Y
-         G93g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=o7o2saOOdNbey7P8OnQtW1dHvAKknp6TT0oyR0mR9C0=;
-        fh=kh9Re3d9FWgH06/zxiaI2HFxPpBwxojub8wORknsthY=;
-        b=eKvPaQ7rewfyHMGUf041Efr0h0eWH/iEmudqO/XCo5kh0sAkeWFvDbMWqMYz67zDnR
-         fXYfJhEBtnfW/Di5rnuHmFm5mW54yy13Me6Gh0bJYdGRcs18KWgYF7RwhHdW6UUAsfVL
-         TuI31EgDGyCU1ynPsI/5WfKYCmujn5VYUCKUyNh8QhgdXiwJdjswWn/Flx+uRfQJ5Py1
-         44HAcV8EpOURdvdh7+3wbnBv0VkUpQ9b90atVME2zD/bcJDrDSp5rN5KG54gDMjYs5HG
-         NDnSXNrj/KRtZFn1tzc6oRyoyOYaJIdxG2Wu51JcQTBh/tTqkm1BrDfTXFcSmKQXI7Re
-         3IWQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788444065; x=1789048865; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=o7o2saOOdNbey7P8OnQtW1dHvAKknp6TT0oyR0mR9C0=;
-        b=CaHIehkYBVU3F4NVcMelqG9bkOH6YD8y4KiwfHW+yDR5TROAMH7naiLZiZa+AIzzIq
-         rbsZyfBtsSCFYcIy5w/iq17X+fasmYALTuwMKoZxxAq6TbElz8ji7WYXUH4nOPVtdGUI
-         BW43Y8q67P8jKEE+/K2MWlptPCemBVNWsCBsb7bn/E2QH+wUS3ZGVWjrzXS22D0P1nw4
-         0pOrCKKED4Y1lTNVCm4vqyRd4npPFRLgJeYZ1SI28GfmcTDRxPSmB3M5aHp+ProudAOd
-         6z1/MZhkLsIsdWFAVL74NkIEhpJ29LUqQqkUyl3+g5KfF4yq0dB1jTZqjPQ6j4AtoFz6
-         6MMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788444065; x=1789048865;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=o7o2saOOdNbey7P8OnQtW1dHvAKknp6TT0oyR0mR9C0=;
-        b=sDn1ZWjdj7oi8/10O2tvrCFf62l0396xVcvh3ssqAiXKc/B2KCCqfeeUNA/dlpdCmH
-         498lQwGLJldt9kMHYmebfcZz76voUOWq/yP2lgOpbH4N6sw2y78ocTLTq9jwDU+OZiSt
-         0DbasHAAgVwpKZPjvgPjuedKZmav7Z9GJhjn3x/rd3aURSXTpYDjQp7qYzvEbdfGKRwB
-         HAxb48neHzHNAVQLzNIg+KUNnP8sY45EYOfH8VxUuvn46jXyWJ+yEIIwnDr56KjHw6C+
-         ueKyktJJGmm2gDIUOOygxKJCMmxk1k17Iz4Vs4WhBMGjvu8SY36SeACDMOhmIzj6e8Fe
-         xGQA==
-X-Forwarded-Encrypted: i=1; AKwUvBzpcLnvLc5qNz8VviquOeUC3IWDespLddqckre9wMzsXAhz2xzgeRt5NJ9uYc7xvls/SB+OkJXvtcZ8lTE6mV3fDD3O@vger.kernel.org
-X-Gm-Message-State: AFuF++l+YnnY+a7ENZQp40m5WZ5VYN8n6N6VYXTTlVGDrgITZJrZYLNJ
-	1Zw9w8DZBeqUk1iRHaVk6u4LBvMN4snSNWBEG49yLLX8Zn6p05ZW6QDsFvnZRDYH//aUd5pvBuu
-	V6+I/tDT/z/aOWGjPFRTBv47VmWpN+NA=
-X-Gm-Gg: AYBFou0d96hPpFQkU6C21f5E7qrS71ACv+Elge88sZ0n12BmbArVf9YRIh2EQXvcit9
-	ruuOz95n4ws0Cn2LUCVJW4HYnmPhHsWAGkWBJej6hX55dDSXXXy11TW+PI1AKqKaZ7W8CGkPEKa
-	RCZkiO2kaE+gIDKa5s6XN1VSjHJ9fVlGr+EiXnfnHZU7FPV2tJqHVlw7QBvdzLvoSGIbNUeGyuq
-	mSC/tIlqBovUfU3FnlwnsWKfPzTQzFZPU92okILbxGI7dtE2X8/mGT0mDOxy5iyCSvr3y87a08f
-	U10G0a6Xy+E5r6vYJVTr5BBAEo3w5r7a/Jf4JHQl8blA4eVn+kS3k/mAxNPfiXWTa3h38MrRscf
-	eh4CELZGHhV9RXY4/FGdgiqEi6xBviSbPwh+S9MxYH/sdom4OX1fZ++I/8Q8Y1tyntlHYG+pELK
-	yZpuwV0xg//cTjqIsCvBkkVJZDYi6byg==
-X-Received: by 2002:a17:906:8e0e:b0:c25:c651:fa70 with SMTP id
- a640c23a62f3a-c260474e8dfmr39283966b.13.1788444055893; Thu, 03 Sep 2026
- 07:00:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OMS5ZRro"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eQWNkrju0Oc3HqupFyEPyXWM3krgV6nWk69MqiOE6ZM+p/ADAIgT1fD0v1xvFY6b9Osey9AqAq8ERX5y98+vx+pw6xSApFe6HbANB3DXn/Ef22yADSvTPYgOyo3yzdJn63xaEPhT5HR6hoJxRnHQWjhj2H30A7DlqnXir8P/DKqulFI64GT63Sg8uJuDXOVpOrdzopEte5rZS6h7SCxUy7mLL2u7GxsDOS0nbtz45QldzfuYZMD2D34Mjy/ZUcANztVSJME/fqH/ON/vdPHN9/xQQaRVBK0DgdLbPUlLeVg8zRJVeJ0e9TlzxRWDQ7KUpYIbPllFSSkKKdyh4RMSgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ysNBAje/hr0wxEqPz8aOz79DIaDsosNEAFnUyIYEitE=;
+ b=Gy3qgngV1AL+eY0Thm7sOM2tx9oUUzTD8e2ueKEwxY41zowp7hRlNguVTi1qJdlGwlz3kI7D9tDR4Lm7149BwKO9saEem97cDrZm10rutnzK04r8KGQuuB8UnF9M7uGWzpOZuSfUZz80CUcEjDEdnlGHqH6l7wdXWtq9Acdw+0rYFJvXGxKVaO0gwAc+Rnsp2Sf1B9en+BJ+se0WDlLz8IEaScS315BqjdumqZIpjKKhInb0+ZLYznHyv3XeG/fB1ZNuklYoV2tTGXYKp6S4OZczzAOU5r3i/RqPG7B8GhA/eyHQQQ90ABudiKmrC+vZ00CPHghOFC0C3WPErg996w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ysNBAje/hr0wxEqPz8aOz79DIaDsosNEAFnUyIYEitE=;
+ b=OMS5ZRro4Bb/cd/zwaKthEKIlMqXSXTt2rAz9kHFNMmIOX6iAjuFvWmqkF3XO0UfAldilwgD1hxyTKUaJfDPR6TI91d7upe2L1VwFFQauq0aojO8xCZyLTu/AODE8R8yDF5picBr3uWIbuaO9YdA1aFw1Nmabq+YAVAPFDqO8wM=
+Received: from CH0PR04CA0098.namprd04.prod.outlook.com (2603:10b6:610:75::13)
+ by LV8PR12MB9668.namprd12.prod.outlook.com (2603:10b6:408:295::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Thu, 3 Sep
+ 2026 18:29:54 +0000
+Received: from BL6PEPF00020E64.namprd04.prod.outlook.com
+ (2603:10b6:610:75:cafe::28) by CH0PR04CA0098.outlook.office365.com
+ (2603:10b6:610:75::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.12 via Frontend Transport; Thu, 3
+ Sep 2026 18:29:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF00020E64.mail.protection.outlook.com (10.167.249.25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.382.8 via Frontend Transport; Thu, 3 Sep 2026 18:29:54 +0000
+Received: from aus0006770c4n-lx01.amd.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 3 Sep 2026 13:29:53 -0500
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: <Shyam-sundar.S-k@amd.com>, <hansg@kernel.org>,
+	<ilpo.jarvinen@linux.intel.com>, <Patil.Reddy@amd.com>
+CC: Mario Limonciello <mario.limonciello@amd.com>, <stable@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86/amd/pmf: Validate the APTS state index
+Date: Thu, 3 Sep 2026 13:29:26 -0500
+Message-ID: <20260903182927.3556274-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260903081557.16603-1-germanpapulindez@gmail.com> <apkvE9kbfEWHrAte@kekkonen.localdomain>
-In-Reply-To: <apkvE9kbfEWHrAte@kekkonen.localdomain>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 3 Sep 2026 17:00:18 +0300
-X-Gm-Features: AcwNN1XMsw-TkkISsHavguNAtNCU7_fOI4nrPd6B4gIR-w9TMT3OopwVlR-oBR0
-Message-ID: <CAHp75Vco84AK9mU_HH8oubsVOmErB3utsTcoQpqtB0EG8KFAOQ@mail.gmail.com>
-Subject: Re: [BUG] platform/x86: int3472/discrete: unknown GPIO type 0x08
- breaks OV13858 rear camera on Surface Pro 11/12 Business (INT3472:00 / OVTID858)
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: German <germanpapulindez@gmail.com>, platform-driver-x86@vger.kernel.org, 
-	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E64:EE_|LV8PR12MB9668:EE_
+X-MS-Office365-Filtering-Correlation-Id: afe594e6-1c3c-4d81-df2e-08df09e95969
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700016|23010399003|1800799024|56012099006|10067099003|11063799006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	Ocgd7hbLU2NM/3zKkWblRw4scdmoQCdvSaZ0EPcsRanvOURWN8WsPegNZ6nTjowWZG9DmkJW4ItL5s9og5A/kVZyb8VJABmvW8seaFAy71Lf/PUBr4k3mwkN9EE0+dKoCLX+xnBw54itMPufU72oVYEWHDIhziG+Fw/+7KWCUZUiJJieGzTEfHuR18+qF7gP6i7vAW+xt3ZFlvXRy+ewklhB47ULbf2ee42Gi4eIEcqHLcHUvOvCaKdGOocSj4UoCgtDiyNOtqV4AzOOVBu0GHWVHl9tPf5qNz3d1pYGMbVFoDFZNqADmBopBzL0FRPbUmBS9um7e/knaZq5nWloIreW4Cj1btT1qEQ2mJ8ynVm+4hm/2pISlge+GZ9oEwxo86xYBi4FOtOI8EJ27xklTJ3gX5BWBItr6L1IDWN+u/PFfqXkG6mHKXKizG6qNk8iJkvBjB293y6K0dAsJn625mRyJdk5nEOOeE8WV8Tj+adnzAtUIVDzokqe9POIzUH8AXp8AfIrFgoX2dodL6KfPKLkpQWeE8gcdZZ2Z8CD+ig7egdv4E4Z14cleLHoVDLKVwJlvofqXgj/q8k/YFae9C/O8LrmuGqNZ70a8zOLOb5vkhs7P3LweubxKiQbVu3AaJEi4hJTqZYKpS5SCWQOB1+8T1UhL55+Q6ThuKJVgzThJ9qAxZdxWDePFOV58RRWRiB1kS4kaMwthTbWc5z4Rw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700016)(23010399003)(1800799024)(56012099006)(10067099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	CubenIej55wcha06thufq19isP4ZGVUeMX1O8Tj3q84bIiIYogkyqvc8coRoWR5OziTn6+ZURAE+wjBeZsjxpFZjvKTSaVlmp0zAzoSH26sKxBfv6W/BBIPlks2GPcx/66FJXtK98Py2sitAcijx/likMdPG9BtwOEDLPUXCvWZIXOT0nQwsbEwEzm7MELlQq3N4bHG3KgisyKPRjud0vQX+dhXkJ/kSU0f8GbBcFfcxEn3SJKcSYIeJpha1yNCFk88nYKQ817CGY4SksS8lnxP4j+KAE6l31/83QKnl8HVC4vxABxlPNZuQoUeNkWxqt+G+7EZZ23IF7uZKD+FBCa5XoWmxe82i9OLkC95OElLecO601jVmqPx1bbmV5ORgiLjGbfuG6Fmo7V4yi3iHrgdwb5U7BWIXE5Y3OaP+4cPqlGEPS5BKqaNGYUOMLphQ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2026 18:29:54.1605
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: afe594e6-1c3c-4d81-df2e-08df09e95969
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E64.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9668
 
-On Thu, Sep 3, 2026 at 11:26=E2=80=AFAM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> On Thu, Sep 03, 2026 at 10:15:56AM +0200, German wrote:
+The static slider APTS state index is supplied by the BIOS as an 8-bit
+value, but apts_config_store contains only APTS_MAX_STATES entries. An
+invalid firmware value can therefore cause amd_pmf_update_slider_v2() to
+read beyond the end of the array.
 
-> > On the Microsoft Surface Pro 11/12 Business (Intel Lunar Lake, IPU7),
-> > the rear camera sensor (ov13858, ACPI HID OVTID858) fails to probe.
-> > I've traced the root cause to int3472-discrete not recognizing one of
-> > the GPIO types described in the device's ACPI _DSM data, which leaves
-> > a power/reset-related GPIO unconfigured and the sensor unable to
-> > respond over I2C.
-> >
-> > System
-> > ------
-> > - Surface Pro for Business 11th Edition with Intel (Intel Lunar Lake, I=
-PU7)
-> > - Kernel: 7.2.2 (Arch Linux, vanilla)
->
-> It's usually best to test with linux-next, not with distro kernels, or in
-> this case, the media committers tree
-> <URL:https://gitlab.freedesktop.org/linux-media/media-committers> next
-> branch.
->
-> > - CONFIG_VIDEO_OV13858=3Dm
-> >
-> > Evidence
-> > --------
-> >
-> >   $ dmesg | grep -iE "int3472|OVTID858"
-> >   [    5.555231] int3472-discrete INT3472:00: GPIO type 0x08 unknown; t=
-he sensor may not work
-> >   [    5.788882] ov13858 i2c-OVTID858:00: failed to find sensor: -5
-> >   [    5.789321] ov13858 i2c-OVTID858:00: probe with driver ov13858 fai=
-led with error -5
-> >
-> > The "GPIO type 0x08 unknown" warning comes from the default case in
-> > skl_int3472_handle_gpio_resources() in drivers/platform/x86/intel/
-> > int3472/discrete.c:
-> >
-> >     default:
-> >         dev_warn(int3472->dev,
-> >                  "GPIO type 0x%02x unknown; the sensor may not work\n",
-> >                  type);
-> >         ret =3D 1;
-> >         break;
->
-> This should be addressed by commit 34e31390a3b939db2e0cbfef4c40d95052572d=
-f0
-> .
+Validate the selected index before applying the slider values and return
+an error when it is out of range.
 
-I can't see that commit in many trees from kernel.org nor in
-media.git. So, you mean it *will* be in Linux Next soon.
+Fixes: 8362e862fb87 ("platform/x86/amd/pmf: Update sps power thermals according to the platform-profiles")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/platform/x86/amd/pmf/sps.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+index 0b70a5153f465..0918fb388fde6 100644
+--- a/drivers/platform/x86/amd/pmf/sps.c
++++ b/drivers/platform/x86/amd/pmf/sps.c
+@@ -248,20 +248,24 @@ static int amd_pmf_update_sps_power_limits_v2(struct amd_pmf_dev *pdev, int pwr_
+ 	switch (pwr_mode) {
+ 	case POWER_MODE_PERFORMANCE:
+ 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BEST_PERFORMANCE];
+-		amd_pmf_update_slider_v2(pdev, index);
+ 		break;
+ 	case POWER_MODE_BALANCED_POWER:
+ 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BALANCED];
+-		amd_pmf_update_slider_v2(pdev, index);
+ 		break;
+ 	case POWER_MODE_POWER_SAVER:
+ 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BEST_POWER_EFFICIENCY];
+-		amd_pmf_update_slider_v2(pdev, index);
+ 		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+ 
++	if (index >= APTS_MAX_STATES) {
++		dev_err(pdev->dev, "Invalid APTS index: %d\n", index);
++		return -EINVAL;
++	}
++
++	amd_pmf_update_slider_v2(pdev, index);
++
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
+
