@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B85449CF24;
-	Thu,  3 Sep 2026 12:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DBD4A8FE2;
+	Thu,  3 Sep 2026 13:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788440172; cv=none; b=Avz1VXXT0XBoComeY/Z9Pk4bQAm8gyIsEUSqYlaqPZ59X9B6HUIG0a/m16N94zx88eKgRr6S3n+nX6I1+pOSyDA7jHMzKXEI1AzPYxTI8v+QZEl1+KCcvuRifTozJifVLNmuAXBBJGYpVBVu6/5qriOPejLfyKYU5COuivIyOyc=
+	t=1788440801; cv=none; b=FsODUkcr4Xct7Py+i+OhopUzuoGTw7XlzAzs2ZlYrsmDG+5B8qBLOzMmVmXF0phTff+w66j5HXUZYBa/i1IA0kGlJVimjGGhLqTwEFg7Vgp3ddEivXTyQ+1CbNKCSn7zZP9LyfGAM8H77xpyZM98a3wkBywuNXYI4qhyPOH5r+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788440172; c=relaxed/simple;
-	bh=ipSLO2XbXUIHbamkefG624xhFVMemxrJePevsZE9eGk=;
+	s=arc-20240116; t=1788440801; c=relaxed/simple;
+	bh=u6CCcpfBBMhSPai1f/0C2RvE3ezmhe8116+JGXX9g3I=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iIVrYqGVOVOCCzusTtzL/eOscBVALOFUPdm+HA0B8sXQMPQexHsyqRjKQ9KH0o2SCYEw1/rYqazKxxOL2Lw3ODe2jNq+kyu5sm/cfryGvQzLfzO1nzvd+BSt1gWrMogArwjgS3XSFMVlH4cr5/LU7DlmfZNiBTLw8E+rqVcPvqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENtR/oHa; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version:Content-Type; b=quqbwjc981itR5alsAd84W4Zq87lfHXfQr1WQLg6HCWOJzDlhHKXflR9cCGV3YLzaamc+CQ3zacRxPqxaHx0veBLWvSMqCuwYbYiewVMO6Uw4O2TFUSVC+HtrHiJ/soBToAk41cyRNxLypj8UzojafKdkz6i/KHQuVKy0U6nL6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPDFdFdo; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENtR/oHa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPDFdFdo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788440170; x=1819976170;
+  t=1788440786; x=1819976786;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=ipSLO2XbXUIHbamkefG624xhFVMemxrJePevsZE9eGk=;
-  b=ENtR/oHaZ+5d0iNGA/myQG6/Tj/JBIBEHbN16kbOAhC1FEnYEc72DUgp
-   xc3EdN14tFZhGUAO/gZGETsL0cbYKOJymoO4VaurmhJtOJ1fm1Ubkb16W
-   xEI3JEyCJGfCtd4zr7Oz/RoV8wHgTNR6ruUbPeP4l98rGcFB8s1U+O3cQ
-   ai3UQfcjaQKN+YHOXsqxITYaeAsVfb2bTRPBOacvSZ47AQ/qewtkvDItS
-   MKQE55xtajLQH/jYzTXuDuF5yvXF3TRPfl3Bcp8tGrBTm/eb6iCMpolgs
-   kOCDD23hx+JXtzKC+ZztkVEdMyuzpG7ZF0zOB07KOSkP0Ylp2VsH8JVOz
-   w==;
-X-CSE-ConnectionGUID: bGXpcMwGQ9iRrhhHkL7HTA==
-X-CSE-MsgGUID: Jj/WX1DhTimz3FhcIio6eg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="100435012"
+  bh=u6CCcpfBBMhSPai1f/0C2RvE3ezmhe8116+JGXX9g3I=;
+  b=lPDFdFdozHFoOfURFxqtiMWGXSEo7X/cbCSfm84Lc4PrbIfPEBazXTxp
+   NgD5cRx+pLAK5448nMBazWEhL5O3kd4I4l3EhElxEWbUVJayEHoZwFAAy
+   UiHcW6Wio3jUYqXS/gbTpqiBMAqG1rWAVtmnsaddMllOuoIDu8Oth/x0c
+   UCDE4vL7toHwpjTyoNNa8AQ2XgsJQFR42dwiDfasnqwjzs1gK68OL4mAQ
+   m0Wz58ihL30X7plDTk00qa6wSmiu8ZYj5+AT4ePx5219QZQ3f9apSbfm8
+   T/zNOq+JamD42lVsWQufcK1z+VyIpZd4c9XZfEROkympbgaYepJcZGZbb
+   A==;
+X-CSE-ConnectionGUID: gzuk0SbjRh28+SnY4p+Rpg==
+X-CSE-MsgGUID: NbpFdhm6Tai4dWxN8B/JJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="100080955"
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="100435012"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 05:56:09 -0700
-X-CSE-ConnectionGUID: xD9F0zU/QSa8XSTIp130Kw==
-X-CSE-MsgGUID: TVJxToJwQvOTsEFVBAEn0A==
+   d="scan'208";a="100080955"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 06:06:21 -0700
+X-CSE-ConnectionGUID: ok27+JMCRFeC5cVZwD3FYA==
+X-CSE-MsgGUID: ZDINB19BTrG3KsMxEeKoWA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
-   d="scan'208";a="266483690"
+   d="scan'208";a="299584297"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.119])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 05:56:03 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 06:06:15 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 3 Sep 2026 15:55:59 +0300 (EEST)
+Date: Thu, 3 Sep 2026 16:06:10 +0300 (EEST)
 To: Xilin Wu <sophon@radxa.com>
 cc: Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
     Shuah Khan <skhan@linuxfoundation.org>, 
@@ -52,10 +52,10 @@ cc: Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-hwmon@vger.kernel.org, 
     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
     linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform: arm64: Add Radxa SVC GLINK driver
-In-Reply-To: <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
-Message-ID: <135c74d2-5f66-83ac-4ffe-a214c735ccec@linux.intel.com>
-References: <20260831-radxa-svc-v1-0-7c028de6a387@radxa.com> <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
+Subject: Re: [PATCH 2/2] platform: arm64: radxa-svc: Add hwmon sensors
+In-Reply-To: <20260831-radxa-svc-v1-2-7c028de6a387@radxa.com>
+Message-ID: <8dc89d37-72ba-cefa-131b-8f7642a414af@linux.intel.com>
+References: <20260831-radxa-svc-v1-0-7c028de6a387@radxa.com> <20260831-radxa-svc-v1-2-7c028de6a387@radxa.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -66,908 +66,608 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Mon, 31 Aug 2026, Xilin Wu wrote:
 
-> Add an rpmsg client for the RADXA_SVC_ADSP_APPS firmware service used
-> on supported Radxa boards with Qualcomm SoCs.
+> Add support for the optional sensor discovery and sampling operations.
+> Expose firmware temperature, voltage, current, and combined sensors as
+> read-only hwmon devices.
 > 
-> Expose fan control through the standard hwmon pwm1 and pwm1_enable
-> attributes. SET_PROFILE only changes the fan curve, so map its quiet and
-> performance curves to automatic modes instead of platform_profile.
+> Validate firmware descriptors and samples, cache complete readings, and
+> calculate power for combined voltage and current sensors.
 > 
 > Signed-off-by: Xilin Wu <sophon@radxa.com>
 > ---
->  Documentation/hwmon/index.rst            |   1 +
->  Documentation/hwmon/radxa-svc-glink.rst  |  32 ++
->  MAINTAINERS                              |   8 +
->  drivers/platform/arm64/Kconfig           |  13 +
->  drivers/platform/arm64/Makefile          |   1 +
->  drivers/platform/arm64/radxa_svc_glink.c | 735 +++++++++++++++++++++++++++++++
->  6 files changed, 790 insertions(+)
+>  Documentation/hwmon/radxa-svc-glink.rst  |  11 +-
+>  drivers/platform/arm64/Kconfig           |   4 +-
+>  drivers/platform/arm64/radxa_svc_glink.c | 470 +++++++++++++++++++++++++++++++
+>  3 files changed, 482 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 9955a525436a..08a2062b4f84 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -234,6 +234,7 @@ Hardware Monitoring Kernel Drivers
->     pwm-fan
->     q54sj108a2
->     qnap-mcu-hwmon
-> +   radxa-svc-glink
->     raspberrypi-hwmon
->     sbrmi
->     sbtsi_temp
 > diff --git a/Documentation/hwmon/radxa-svc-glink.rst b/Documentation/hwmon/radxa-svc-glink.rst
-> new file mode 100644
-> index 000000000000..c464b130a4e4
-> --- /dev/null
+> index c464b130a4e4..99750a1f876e 100644
+> --- a/Documentation/hwmon/radxa-svc-glink.rst
 > +++ b/Documentation/hwmon/radxa-svc-glink.rst
-> @@ -0,0 +1,32 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Kernel driver radxa-svc-glink
-> +=============================
-> +
-> +Description
-> +-----------
-> +
-> +The Radxa SVC GLINK driver communicates with the ``RADXA_SVC_ADSP_APPS``
-> +firmware service found on supported Radxa boards with Qualcomm SoCs. The
-> +firmware provides fan control.
-> +
-> +Fan control
-> +-----------
-> +
-> +The fan controller provides the following attributes:
-> +
-> +=============== ======= ======================================================
-> +``pwm1``        RW      Current fan PWM value. Writes are accepted in manual
-> +                        mode and use values from 0 to 255.
-> +``pwm1_enable`` RW      Fan control mode, as described below.
-> +=============== ======= ======================================================
-> +
-> +The supported ``pwm1_enable`` values are:
-> +
-> +  - 0: fan at full speed
-> +  - 1: manual control using ``pwm1``
-> +  - 2: automatic control using the quiet curve
-> +  - 3: automatic control using the performance curve
-> +
-> +When manual mode is selected, the driver starts with the current fan speed. If
-> +the current speed cannot be determined, it starts at full speed.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3a19da74d00c..9e4685759194 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22719,6 +22719,14 @@ F:	Documentation/ABI/testing/sysfs-bus-rbd
->  F:	drivers/block/rbd.c
->  F:	drivers/block/rbd_types.h
+> @@ -8,7 +8,8 @@ Description
 >  
-> +RADXA SVC GLINK DRIVER
-> +M:	Xilin Wu <sophon@radxa.com>
-> +L:	linux-arm-msm@vger.kernel.org
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/hwmon/radxa-svc-glink.rst
-> +F:	drivers/platform/arm64/radxa_svc_glink.c
+>  The Radxa SVC GLINK driver communicates with the ``RADXA_SVC_ADSP_APPS``
+>  firmware service found on supported Radxa boards with Qualcomm SoCs. The
+> -firmware provides fan control.
+> +firmware provides fan control and dynamically discoverable temperature,
+> +voltage, current, and power sensors.
+>  
+>  Fan control
+>  -----------
+> @@ -30,3 +31,11 @@ The supported ``pwm1_enable`` values are:
+>  
+>  When manual mode is selected, the driver starts with the current fan speed. If
+>  the current speed cannot be determined, it starts at full speed.
 > +
->  RAGE128 FRAMEBUFFER DISPLAY DRIVER
->  L:	linux-fbdev@vger.kernel.org
->  S:	Orphan
+> +Sensors
+> +-------
+> +
+> +Each sensor discovered through the firmware service is registered as a
+> +separate hwmon device. Depending on the sensor type, it exposes the standard
+> +``temp1_input``, ``in0_input``, ``curr1_input``, and ``power1_input``
+> +attributes and their corresponding labels.
 > diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index e32e01b2a9bd..60c1e541fe89 100644
+> index 60c1e541fe89..c4e70a3c5089 100644
 > --- a/drivers/platform/arm64/Kconfig
 > +++ b/drivers/platform/arm64/Kconfig
-> @@ -103,4 +103,17 @@ config EC_QCOM_HAMOA
+> @@ -111,8 +111,8 @@ config RADXA_SVC_GLINK
+>  	help
+>  	  Enable support for the Radxa SVC firmware service found on supported
+>  	  Radxa boards using Qualcomm SoCs. The driver communicates with the
+> -	  RADXA_SVC_ADSP_APPS service over rpmsg and exposes fan control through
+> -	  the standard hwmon interface.
+> +	  RADXA_SVC_ADSP_APPS service over rpmsg and exposes fan control and
+> +	  sensor readings through the standard hwmon interface.
 >  
->  	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
+>  	  Say M or Y here to include this support.
 >  
-> +config RADXA_SVC_GLINK
-> +	tristate "Radxa SVC GLINK driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
-> +	depends on RPMSG
-> +	depends on HWMON
-> +	help
-> +	  Enable support for the Radxa SVC firmware service found on supported
-> +	  Radxa boards using Qualcomm SoCs. The driver communicates with the
-> +	  RADXA_SVC_ADSP_APPS service over rpmsg and exposes fan control through
-> +	  the standard hwmon interface.
-> +
-> +	  Say M or Y here to include this support.
-> +
->  endif # ARM64_PLATFORM_DEVICES
-> diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
-> index 7681be4a46e9..327acb7b983c 100644
-> --- a/drivers/platform/arm64/Makefile
-> +++ b/drivers/platform/arm64/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_EC_HUAWEI_GAOKUN)	+= huawei-gaokun-ec.o
->  obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
->  obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
->  obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
-> +obj-$(CONFIG_RADXA_SVC_GLINK)	+= radxa_svc_glink.o
 > diff --git a/drivers/platform/arm64/radxa_svc_glink.c b/drivers/platform/arm64/radxa_svc_glink.c
-> new file mode 100644
-> index 000000000000..1c91bfabcd12
-> --- /dev/null
+> index 1c91bfabcd12..b2a4f0c5317a 100644
+> --- a/drivers/platform/arm64/radxa_svc_glink.c
 > +++ b/drivers/platform/arm64/radxa_svc_glink.c
-> @@ -0,0 +1,735 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Radxa SVC GLINK driver.
-> + *
-> + * Copyright (c) 2026 Radxa Computer (Shenzhen) Co., Ltd.
-> + */
+> @@ -10,6 +10,7 @@
+>  #include <linux/hwmon.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+> +#include <linux/limits.h>
+>  #include <linux/minmax.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -31,6 +32,8 @@
+>  #define RADXA_SVC_OP_FAN_GET_STATE	0x50
+>  #define RADXA_SVC_OP_FAN_SET_CONTROL	0x51
+>  #define RADXA_SVC_OP_FAN_GET_CONTROL	0x52
+> +#define RADXA_SVC_OP_SENSOR_LIST		0x60
+> +#define RADXA_SVC_OP_SENSOR_READ		0x61
+>  
+>  #define RADXA_SVC_PROFILE_QUIET		0
+>  #define RADXA_SVC_PROFILE_PERFORMANCE	1
+> @@ -48,11 +51,29 @@
+>  #define RADXA_SVC_CAP_PROFILE		BIT(1)
+>  #define RADXA_SVC_CAP_FANCTL		BIT(5)
+>  #define RADXA_SVC_CAP_FANCTL_CTRL	BIT(6)
+> +#define RADXA_SVC_CAP_SENSORS		BIT(7)
+>  
+>  #define RADXA_SVC_REQUIRED_CAPS		(RADXA_SVC_CAP_PROFILE | \
+>  					 RADXA_SVC_CAP_FANCTL | \
+>  					 RADXA_SVC_CAP_FANCTL_CTRL)
+>  
+> +#define RADXA_SVC_SENSOR_MAX_SENSORS	64
+> +#define RADXA_SVC_SENSOR_NAME_LEN	32
+> +#define RADXA_SVC_SENSOR_PAGE_MAX	5
+> +#define RADXA_SVC_SENSOR_CACHE_TIME	msecs_to_jiffies(50)
 > +
-> +#include <linux/completion.h>
-> +#include <linux/errno.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/kernel.h>
-> +#include <linux/minmax.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/rpmsg.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/string.h>
+> +#define RADXA_SVC_SENSOR_TEMP		1
+> +#define RADXA_SVC_SENSOR_VOLTAGE		2
+> +#define RADXA_SVC_SENSOR_CURRENT		3
+> +#define RADXA_SVC_SENSOR_VOLTAGE_CURRENT	4
 > +
-> +#define RADXA_SVC_MAGIC		0x58444152 /* "RADX" */
-> +#define RADXA_SVC_VERSION	1
-> +#define RADXA_SVC_TIMEOUT	msecs_to_jiffies(5000)
+> +#define RADXA_SVC_SENSOR_VALID_TEMP	BIT(0)
+> +#define RADXA_SVC_SENSOR_VALID_VOLTAGE	BIT(1)
+> +#define RADXA_SVC_SENSOR_VALID_CURRENT	BIT(2)
+> +#define RADXA_SVC_SENSOR_VALID_MASK	(RADXA_SVC_SENSOR_VALID_TEMP | \
+> +					 RADXA_SVC_SENSOR_VALID_VOLTAGE | \
+> +					 RADXA_SVC_SENSOR_VALID_CURRENT)
 > +
-> +#define RADXA_SVC_MAX_TX_PAYLOAD	64
-> +#define RADXA_SVC_MAX_RX_PAYLOAD	2048
-> +
-> +#define RADXA_SVC_OP_GET_VERSION	0x02
-> +#define RADXA_SVC_OP_SET_PROFILE	0x10
-> +#define RADXA_SVC_OP_GET_PROFILE	0x11
-> +#define RADXA_SVC_OP_FAN_GET_STATE	0x50
-> +#define RADXA_SVC_OP_FAN_SET_CONTROL	0x51
-> +#define RADXA_SVC_OP_FAN_GET_CONTROL	0x52
-> +
-> +#define RADXA_SVC_PROFILE_QUIET		0
-> +#define RADXA_SVC_PROFILE_PERFORMANCE	1
-> +
-> +#define RADXA_SVC_FAN_CONTROL_FULL_SPEED	0
-> +#define RADXA_SVC_FAN_CONTROL_MANUAL		1
-> +#define RADXA_SVC_FAN_CONTROL_AUTO		2
-> +#define RADXA_SVC_FAN_PWM_MAX			255
-> +
-> +#define RADXA_SVC_PWM_MODE_FULL_SPEED		0
-> +#define RADXA_SVC_PWM_MODE_MANUAL		1
-> +#define RADXA_SVC_PWM_MODE_AUTO_QUIET		2
-> +#define RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE	3
-> +
-> +#define RADXA_SVC_CAP_PROFILE		BIT(1)
-> +#define RADXA_SVC_CAP_FANCTL		BIT(5)
-> +#define RADXA_SVC_CAP_FANCTL_CTRL	BIT(6)
-
-Add include for linux/bits.h.
-
-> +
-> +#define RADXA_SVC_REQUIRED_CAPS		(RADXA_SVC_CAP_PROFILE | \
-> +					 RADXA_SVC_CAP_FANCTL | \
-> +					 RADXA_SVC_CAP_FANCTL_CTRL)
-> +
-> +struct radxa_svc_hdr {
-> +	__le32 magic;
-> +	__le16 version;
-> +	__le16 header_size;
-> +	__le32 opcode;
-> +	__le32 seq;
-> +	__le32 status;
-> +	__le32 payload_len;
-> +} __packed;
-
-Please add linux/types.h and include for __packed.
-
-> +
-> +struct radxa_svc_version_resp {
-> +	__le16 major;
-> +	__le16 minor;
-> +	__le32 caps;
+>  struct radxa_svc_hdr {
+>  	__le32 magic;
+>  	__le16 version;
+> @@ -100,10 +121,57 @@ struct radxa_svc_fan_control_resp {
+>  	__le32 manual_pwm;
+>  } __packed;
+>  
+> +struct radxa_svc_sensor_list_req {
+> +	__le32 start_index;
+> +	__le32 max_entries;
 > +} __packed;
 > +
-> +struct radxa_svc_fan_state_resp {
-> +	__le32 profile;
-> +	__le32 running;
-> +	__le32 emergency;
-> +	__le32 cpu_valid;
-> +	__le32 cpu_stale_ticks;
-> +	__le32 cpu_temp_deci_c;
-> +	__le32 gpu_valid;
-> +	__le32 gpu_stale_ticks;
-> +	__le32 gpu_temp_deci_c;
-> +	__le32 current_duty_ns;
-> +	__le32 target_duty_ns;
-> +	__le32 pwm_channel;
-> +	__le32 pwm_period_ns;
-> +	__le32 loop_count;
-> +	__le32 fault_count;
-> +	__le32 last_status;
-> +	__le32 control_mode;
-> +	__le32 manual_pwm;
+> +struct radxa_svc_sensor_desc {
+> +	__le32 sensor_id;
+> +	__le32 sensor_type;
+> +	char name[RADXA_SVC_SENSOR_NAME_LEN];
 > +} __packed;
 > +
-> +struct radxa_svc_fan_control_req {
-> +	__le32 control_mode;
-> +	__le32 manual_pwm;
+> +struct radxa_svc_sensor_list_resp {
+> +	__le32 total_count;
+> +	__le32 returned_count;
+> +	struct radxa_svc_sensor_desc entries[];
 > +} __packed;
 > +
-> +struct radxa_svc_fan_control_resp {
-> +	__le32 control_mode;
-> +	__le32 manual_pwm;
+> +struct radxa_svc_sensor_read_req {
+> +	__le32 sensor_id;
 > +} __packed;
 > +
-> +struct radxa_svc_glink {
-> +	struct device *dev;
-> +	struct rpmsg_device *rpdev;
+> +struct radxa_svc_sensor_read_resp {
+> +	__le32 sensor_id;
+> +	__le32 valid_mask;
+> +	__le32 temp_millic;
+> +	__le32 voltage_mv;
+> +	__le32 current_ma;
+> +} __packed;
+> +
+> +struct radxa_svc_glink;
+> +
+> +struct radxa_svc_sensor {
+> +	struct radxa_svc_glink *svc;
 > +	struct device *hwmon_dev;
-> +
-> +	struct mutex xfer_lock; /* serializes request/response transactions */
-> +	struct mutex fan_lock; /* serializes multi-request fan configuration */
-> +	spinlock_t rsp_lock;
-> +	struct completion rsp;
-> +	bool pending;
-> +	bool shutting_down;
-> +	u32 pending_seq;
-> +	u32 seq;
-> +
-> +	u32 rsp_opcode;
-> +	int rsp_status;
-> +	size_t rsp_len;
-> +	u8 rsp_payload[RADXA_SVC_MAX_RX_PAYLOAD];
-> +	u32 caps;
+> +	struct mutex cache_lock; /* protects cached sample fields */
+> +	unsigned long last_updated;
+> +	u32 sensor_id;
+> +	u32 sensor_type;
+> +	char name[RADXA_SVC_SENSOR_NAME_LEN];
+> +	s32 temp_millic;
+> +	s32 voltage_mv;
+> +	s64 current_ma;
+> +	bool cache_valid;
 > +};
 > +
-> +static int radxa_svc_request(struct radxa_svc_glink *svc, u32 opcode,
-> +			     const void *req_payload, size_t req_len,
-> +			     void *rsp_payload, size_t *rsp_len);
-> +
-> +static int radxa_svc_get_version(struct radxa_svc_glink *svc,
-> +				 struct radxa_svc_version_resp *resp)
+>  struct radxa_svc_glink {
+>  	struct device *dev;
+>  	struct rpmsg_device *rpdev;
+>  	struct device *hwmon_dev;
+> +	struct radxa_svc_sensor *sensors;
+> +	u32 num_sensors;
+>  
+>  	struct mutex xfer_lock; /* serializes request/response transactions */
+>  	struct mutex fan_lock; /* serializes multi-request fan configuration */
+> @@ -428,6 +496,403 @@ static int radxa_svc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
+>  	return 0;
+>  }
+>  
+> +static u32 radxa_svc_sensor_expected_mask(u32 sensor_type)
 > +{
-> +	size_t len = sizeof(*resp);
-> +	int ret;
-> +
-> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_GET_VERSION, NULL, 0,
-> +				resp, &len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (len < sizeof(*resp))
-
-Remove the empty line as this too is error handling for the call.
-
-> +		return -EIO;
-> +
-> +	return 0;
+> +	switch (sensor_type) {
+> +	case RADXA_SVC_SENSOR_TEMP:
+> +		return RADXA_SVC_SENSOR_VALID_TEMP;
+> +	case RADXA_SVC_SENSOR_VOLTAGE:
+> +		return RADXA_SVC_SENSOR_VALID_VOLTAGE;
+> +	case RADXA_SVC_SENSOR_CURRENT:
+> +		return RADXA_SVC_SENSOR_VALID_CURRENT;
+> +	case RADXA_SVC_SENSOR_VOLTAGE_CURRENT:
+> +		return RADXA_SVC_SENSOR_VALID_VOLTAGE |
+> +		       RADXA_SVC_SENSOR_VALID_CURRENT;
+> +	default:
+> +		return 0;
+> +	}
 > +}
 > +
-> +static int radxa_svc_check_version(struct device *dev,
-> +				   const struct radxa_svc_version_resp *resp,
-> +				   u32 *caps)
+> +static int radxa_svc_sensor_update(struct radxa_svc_sensor *sensor)
 > +{
-> +	u32 missing_caps;
-> +	u16 major;
-> +
-> +	major = le16_to_cpu(resp->major);
-> +	*caps = le32_to_cpu(resp->caps);
-
-Add include.
-
-> +
-> +	if (major != RADXA_SVC_VERSION)
-> +		return dev_err_probe(dev, -EPROTONOSUPPORT,
-> +				     "unsupported service major version %u\n",
-> +				     major);
-
-Add braces to blocks with multi-line constructs.
-
-Add include for dev_err_probe().
-
-> +
-> +	missing_caps = RADXA_SVC_REQUIRED_CAPS & ~*caps;
-> +	if (missing_caps)
-> +		return dev_err_probe(dev, -ENODEV,
-> +				     "service missing required caps 0x%08x\n",
-> +				     missing_caps);
-> +
-> +	return 0;
-> +}
-> +
-> +static int radxa_svc_get_profile(struct radxa_svc_glink *svc, u32 *profile)
-> +{
-> +	__le32 resp;
+> +	struct radxa_svc_sensor_read_req req;
+> +	struct radxa_svc_sensor_read_resp resp = {};
+> +	unsigned long cache_expires;
+> +	u32 expected_mask;
+> +	u32 valid_mask;
 > +	size_t len = sizeof(resp);
 > +	int ret;
 > +
-> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_GET_PROFILE, NULL, 0,
-> +				&resp, &len);
+> +	mutex_lock(&sensor->cache_lock);
+
+Please use guard() so you can avoid gotos and the label.
+
+> +
+> +	cache_expires = sensor->last_updated + RADXA_SVC_SENSOR_CACHE_TIME;
+> +	if (sensor->cache_valid && time_before(jiffies, cache_expires)) {
+> +		ret = 0;
+> +		goto out_unlock;
+> +	}
+> +
+> +	req.sensor_id = cpu_to_le32(sensor->sensor_id);
+> +	ret = radxa_svc_request(sensor->svc, RADXA_SVC_OP_SENSOR_READ,
+> +				&req, sizeof(req), &resp, &len);
 > +	if (ret)
-> +		return ret;
+> +		goto out_unlock;
 > +
-> +	if (len < sizeof(resp))
-> +		return -EIO;
-> +
-> +	*profile = le32_to_cpu(resp);
-> +
-> +	return 0;
-> +}
-> +
-> +static int radxa_svc_set_profile(struct radxa_svc_glink *svc, u32 profile)
-> +{
-> +	__le32 payload;
-> +
-> +	switch (profile) {
-> +	case RADXA_SVC_PROFILE_QUIET:
-> +	case RADXA_SVC_PROFILE_PERFORMANCE:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	payload = cpu_to_le32(profile);
-> +
-> +	return radxa_svc_request(svc, RADXA_SVC_OP_SET_PROFILE, &payload,
-> +				 sizeof(payload), NULL, NULL);
-> +}
-> +
-> +static int radxa_svc_fan_get_state(struct radxa_svc_glink *svc,
-> +				   struct radxa_svc_fan_state_resp *resp)
-> +{
-> +	size_t len = sizeof(*resp);
-> +	size_t base_len = offsetof(struct radxa_svc_fan_state_resp,
-> +				   control_mode);
-> +	int ret;
-> +
-> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_FAN_GET_STATE, NULL, 0,
-> +				resp, &len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (len < base_len)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int radxa_svc_fan_get_control(struct radxa_svc_glink *svc,
-> +				     struct radxa_svc_fan_control_resp *resp)
-> +{
-> +	size_t len = sizeof(*resp);
-> +	u32 control_mode;
-> +	u32 manual_pwm;
-> +	int ret;
-> +
-> +	ret = radxa_svc_request(svc, RADXA_SVC_OP_FAN_GET_CONTROL, NULL, 0,
-> +				resp, &len);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (len < sizeof(*resp))
-> +		return -EIO;
-> +
-> +	control_mode = le32_to_cpu(resp->control_mode);
-> +	manual_pwm = le32_to_cpu(resp->manual_pwm);
-> +	if (control_mode > RADXA_SVC_FAN_CONTROL_AUTO ||
-> +	    manual_pwm > RADXA_SVC_FAN_PWM_MAX)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int radxa_svc_fan_set_control(struct radxa_svc_glink *svc,
-> +				     u32 control_mode, u32 manual_pwm)
-> +{
-> +	struct radxa_svc_fan_control_req req;
-> +
-> +	if (control_mode > RADXA_SVC_FAN_CONTROL_AUTO ||
-> +	    manual_pwm > RADXA_SVC_FAN_PWM_MAX)
-> +		return -EINVAL;
-> +
-> +	req.control_mode = cpu_to_le32(control_mode);
-> +	req.manual_pwm = cpu_to_le32(manual_pwm);
-> +
-> +	return radxa_svc_request(svc, RADXA_SVC_OP_FAN_SET_CONTROL, &req,
-> +				 sizeof(req), NULL, NULL);
-> +}
-> +
-> +static int radxa_svc_fan_duty_to_pwm(u32 period_ns, u32 duty_ns, u32 *value)
-> +{
-> +	u64 pwm;
-> +
-> +	if (!period_ns)
-> +		return -ENODATA;
-> +
-> +	if (duty_ns > period_ns)
-> +		return -EPROTO;
-> +
-> +	pwm = (u64)(period_ns - duty_ns) * RADXA_SVC_FAN_PWM_MAX;
-> +	*value = min_t(u64, DIV_ROUND_CLOSEST_ULL(pwm, period_ns),
-
-Add include for DIV_ROUND_CLOSEST_ULL()
-
-> +		       RADXA_SVC_FAN_PWM_MAX);
-> +
-> +	return 0;
-> +}
-> +
-> +static int radxa_svc_request(struct radxa_svc_glink *svc, u32 opcode,
-> +			     const void *req_payload, size_t req_len,
-> +			     void *rsp_payload, size_t *rsp_len)
-> +{
-> +	struct radxa_svc_hdr *hdr;
-> +	unsigned long flags;
-> +	size_t tx_len;
-> +	u32 seq;
-> +	u8 *tx_buf;
-> +	int ret;
-> +
-> +	if (req_len > RADXA_SVC_MAX_TX_PAYLOAD)
-> +		return -EMSGSIZE;
-> +
-> +	tx_len = sizeof(*hdr) + req_len;
-> +	tx_buf = kzalloc(tx_len, GFP_KERNEL);
-> +	if (!tx_buf)
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&svc->xfer_lock);
-> +
-> +	if (!svc->rpdev || !svc->rpdev->ept) {
-> +		ret = -ENODEV;
+> +	if (len != sizeof(resp) ||
+> +	    le32_to_cpu(resp.sensor_id) != sensor->sensor_id) {
+> +		ret = -EPROTO;
 > +		goto out_unlock;
 > +	}
 > +
-> +	seq = ++svc->seq;
-> +	if (!seq)
-> +		seq = ++svc->seq;
-> +
-> +	hdr = (struct radxa_svc_hdr *)tx_buf;
-> +	hdr->magic = cpu_to_le32(RADXA_SVC_MAGIC);
-> +	hdr->version = cpu_to_le16(RADXA_SVC_VERSION);
-> +	hdr->header_size = cpu_to_le16(sizeof(*hdr));
-> +	hdr->opcode = cpu_to_le32(opcode);
-> +	hdr->seq = cpu_to_le32(seq);
-> +	hdr->status = cpu_to_le32(0);
-> +	hdr->payload_len = cpu_to_le32(req_len);
-> +
-> +	if (req_len)
-> +		memcpy(tx_buf + sizeof(*hdr), req_payload, req_len);
-> +
-> +	reinit_completion(&svc->rsp);
-> +
-> +	spin_lock_irqsave(&svc->rsp_lock, flags);
-> +	if (svc->shutting_down) {
-> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
-> +		ret = -ENODEV;
+> +	valid_mask = le32_to_cpu(resp.valid_mask);
+> +	expected_mask = radxa_svc_sensor_expected_mask(sensor->sensor_type);
+> +	if ((valid_mask & RADXA_SVC_SENSOR_VALID_MASK) != expected_mask ||
+> +	    valid_mask & ~RADXA_SVC_SENSOR_VALID_MASK) {
+> +		ret = -EPROTO;
 > +		goto out_unlock;
 > +	}
 > +
-> +	svc->pending = true;
-> +	svc->pending_seq = seq;
-> +	svc->rsp_opcode = 0;
-> +	svc->rsp_status = 0;
-> +	svc->rsp_len = 0;
-> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
-> +
-> +	ret = rpmsg_send(svc->rpdev->ept, tx_buf, tx_len);
-> +	if (ret) {
-> +		spin_lock_irqsave(&svc->rsp_lock, flags);
-> +		svc->pending = false;
-> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
-> +		goto out_unlock;
-> +	}
-> +
-> +	if (!wait_for_completion_timeout(&svc->rsp, RADXA_SVC_TIMEOUT)) {
-> +		spin_lock_irqsave(&svc->rsp_lock, flags);
-> +		svc->pending = false;
-> +		spin_unlock_irqrestore(&svc->rsp_lock, flags);
-> +		ret = -ETIMEDOUT;
-> +		goto out_unlock;
-> +	}
-> +
-> +	spin_lock_irqsave(&svc->rsp_lock, flags);
-> +	if (svc->shutting_down) {
-> +		ret = -ENODEV;
-> +	} else if (svc->rsp_opcode != opcode) {
-> +		ret = -EIO;
-> +	} else {
-> +		ret = svc->rsp_status;
-> +		if (rsp_payload && rsp_len) {
-> +			size_t copy_len = min(*rsp_len, svc->rsp_len);
-> +
-> +			memcpy(rsp_payload, svc->rsp_payload, copy_len);
-> +			if (*rsp_len < svc->rsp_len && !ret)
-
-Doing !ret, without preceeding call nowhere in sight, is bit of a curve 
-ball. It would be better to name the variable differently.
-
-> +				ret = -EMSGSIZE;
-
-Is it correct that this just proceeds?
-
-Does this even want to do the memcpy() when it returns error? Why?
-
-> +			*rsp_len = svc->rsp_len;
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +	sensor->temp_millic = (s32)le32_to_cpu(resp.temp_millic);
+> +	sensor->voltage_mv = (s32)le32_to_cpu(resp.voltage_mv);
+> +	sensor->current_ma = (s32)le32_to_cpu(resp.current_ma);
+> +	sensor->last_updated = jiffies;
+> +	sensor->cache_valid = true;
+> +	ret = 0;
 > +
 > +out_unlock:
-> +	mutex_unlock(&svc->xfer_lock);
-> +	kfree(tx_buf);
-
-Please convert this function to use __free(), guard() and scoped_guard(). 
-Hopefully that makes the function a bit more readable (as is, I didn't 
-even bother trying to follow the code flow).
-
-> +
+> +	mutex_unlock(&sensor->cache_lock);
 > +	return ret;
 > +}
 > +
-> +static int radxa_svc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
-> +				    int len, void *priv, u32 addr)
+> +static int radxa_svc_sensor_hwmon_read(struct device *dev,
+> +				       enum hwmon_sensor_types type, u32 attr,
+> +				       int channel, long *val)
 > +{
-> +	struct radxa_svc_glink *svc = dev_get_drvdata(&rpdev->dev);
-> +	const struct radxa_svc_hdr *hdr = data;
-> +	unsigned long flags;
-> +	size_t header_size;
-> +	size_t payload_len;
-> +	bool do_complete = false;
-> +	u32 seq;
+> +	struct radxa_svc_sensor *sensor = dev_get_drvdata(dev);
+> +	s64 power;
+> +	int ret;
 > +
-> +	if (len < sizeof(*hdr))
-> +		goto bad_msg;
+> +	if (channel)
+> +		return -EOPNOTSUPP;
 > +
-> +	if (le32_to_cpu(hdr->magic) != RADXA_SVC_MAGIC ||
-> +	    le16_to_cpu(hdr->version) != RADXA_SVC_VERSION)
-> +		goto bad_msg;
+> +	ret = radxa_svc_sensor_update(sensor);
+> +	if (ret)
+> +		return ret;
 > +
-> +	header_size = le16_to_cpu(hdr->header_size);
-> +	if (header_size < sizeof(*hdr) || header_size > len)
-> +		goto bad_msg;
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (attr != hwmon_temp_input ||
+> +		    sensor->sensor_type != RADXA_SVC_SENSOR_TEMP)
+> +			return -EOPNOTSUPP;
+> +		*val = sensor->temp_millic;
+> +		return 0;
+> +	case hwmon_in:
+> +		if (attr != hwmon_in_input ||
+> +		    !(radxa_svc_sensor_expected_mask(sensor->sensor_type) &
+> +		      RADXA_SVC_SENSOR_VALID_VOLTAGE))
+> +			return -EOPNOTSUPP;
+> +		*val = sensor->voltage_mv;
+> +		return 0;
+> +	case hwmon_curr:
+> +		if (attr != hwmon_curr_input ||
+> +		    !(radxa_svc_sensor_expected_mask(sensor->sensor_type) &
+> +		      RADXA_SVC_SENSOR_VALID_CURRENT))
+> +			return -EOPNOTSUPP;
+> +		if (sensor->current_ma > LONG_MAX ||
+> +		    sensor->current_ma < LONG_MIN)
+> +			return -ERANGE;
+> +		*val = sensor->current_ma;
+> +		return 0;
+> +	case hwmon_power:
+> +		if (attr != hwmon_power_input ||
+> +		    sensor->sensor_type != RADXA_SVC_SENSOR_VOLTAGE_CURRENT)
+> +			return -EOPNOTSUPP;
 > +
-> +	payload_len = le32_to_cpu(hdr->payload_len);
-> +	if (payload_len > len - header_size ||
-> +	    payload_len > RADXA_SVC_MAX_RX_PAYLOAD)
-> +		goto bad_msg;
-> +
-> +	seq = le32_to_cpu(hdr->seq);
-> +
-> +	spin_lock_irqsave(&svc->rsp_lock, flags);
-> +	if (svc->pending && seq == svc->pending_seq) {
-> +		svc->rsp_opcode = le32_to_cpu(hdr->opcode);
-> +		svc->rsp_status = (s32)le32_to_cpu(hdr->status);
-> +		svc->rsp_len = payload_len;
-> +		memcpy(svc->rsp_payload, data + header_size, payload_len);
-> +		svc->pending = false;
-> +		do_complete = true;
+> +		power = (s64)sensor->voltage_mv * sensor->current_ma;
+> +		if (power > LONG_MAX || power < LONG_MIN)
+> +			return -ERANGE;
+> +		*val = power;
+> +		return 0;
+> +	default:
+> +		return -EOPNOTSUPP;
 > +	}
-> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
+> +}
 > +
-> +	if (do_complete)
-> +		complete(&svc->rsp);
+> +static int radxa_svc_sensor_hwmon_read_string(struct device *dev,
+> +					      enum hwmon_sensor_types type, u32 attr,
+> +					      int channel, const char **str)
+> +{
+> +	if (channel)
+> +		return -EOPNOTSUPP;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (attr == hwmon_temp_label)
+> +			*str = "Temperature";
+> +		else
+> +			return -EOPNOTSUPP;
+> +		break;
+> +	case hwmon_in:
+> +		if (attr == hwmon_in_label)
+> +			*str = "Voltage";
+> +		else
+> +			return -EOPNOTSUPP;
+> +		break;
+> +	case hwmon_curr:
+> +		if (attr == hwmon_curr_label)
+> +			*str = "Current";
+> +		else
+> +			return -EOPNOTSUPP;
+> +		break;
+> +	case hwmon_power:
+> +		if (attr == hwmon_power_label)
+> +			*str = "Power";
+> +		else
+> +			return -EOPNOTSUPP;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
 > +
 > +	return 0;
+> +}
 > +
-> +bad_msg:
+> +static umode_t radxa_svc_sensor_hwmon_is_visible(const void *data,
+> +						 enum hwmon_sensor_types type,
+> +						 u32 attr, int channel)
+> +{
+> +	const struct radxa_svc_sensor *sensor = data;
+> +
+> +	if (channel)
+> +		return 0;
+> +
+> +	switch (type) {
+> +	case hwmon_temp:
+> +		if (sensor->sensor_type == RADXA_SVC_SENSOR_TEMP &&
+> +		    (attr == hwmon_temp_input || attr == hwmon_temp_label))
+> +			return 0444;
+> +		break;
+> +	case hwmon_in:
+> +		if ((radxa_svc_sensor_expected_mask(sensor->sensor_type) &
+> +		     RADXA_SVC_SENSOR_VALID_VOLTAGE) &&
+> +		    (attr == hwmon_in_input || attr == hwmon_in_label))
+> +			return 0444;
+> +		break;
+> +	case hwmon_curr:
+> +		if ((radxa_svc_sensor_expected_mask(sensor->sensor_type) &
+> +		     RADXA_SVC_SENSOR_VALID_CURRENT) &&
+> +		    (attr == hwmon_curr_input || attr == hwmon_curr_label))
+> +			return 0444;
+> +		break;
+> +	case hwmon_power:
+> +		if (sensor->sensor_type == RADXA_SVC_SENSOR_VOLTAGE_CURRENT &&
+> +		    (attr == hwmon_power_input || attr == hwmon_power_label))
+> +			return 0444;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
 > +	return 0;
-
-??
-
 > +}
 > +
-> +static int radxa_svc_fan_get_pwm_mode(struct radxa_svc_glink *svc,
-> +				      long *mode)
-> +{
-> +	struct radxa_svc_fan_control_resp control = {};
-> +	u32 control_mode;
-> +	u32 profile;
-> +	int ret;
-> +
-> +	ret = radxa_svc_fan_get_control(svc, &control);
-> +	if (ret)
-> +		return ret;
-> +
-> +	control_mode = le32_to_cpu(control.control_mode);
-> +
-> +	switch (control_mode) {
-> +	case RADXA_SVC_FAN_CONTROL_FULL_SPEED:
-> +		*mode = RADXA_SVC_PWM_MODE_FULL_SPEED;
-> +		return 0;
-> +	case RADXA_SVC_FAN_CONTROL_MANUAL:
-> +		*mode = RADXA_SVC_PWM_MODE_MANUAL;
-> +		return 0;
-> +	case RADXA_SVC_FAN_CONTROL_AUTO:
-> +		break;
-> +	default:
-> +		return -EIO;
-> +	}
-> +
-> +	ret = radxa_svc_get_profile(svc, &profile);
-> +	if (ret)
-> +		return ret;
-> +
-> +	switch (profile) {
-> +	case RADXA_SVC_PROFILE_QUIET:
-> +		*mode = RADXA_SVC_PWM_MODE_AUTO_QUIET;
-> +		return 0;
-> +	case RADXA_SVC_PROFILE_PERFORMANCE:
-> +		*mode = RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE;
-> +		return 0;
-> +	default:
-> +		return -EIO;
-> +	}
-> +}
-> +
-> +static int radxa_svc_fan_set_auto_mode(struct radxa_svc_glink *svc,
-> +				       u32 profile)
-> +{
-> +	struct radxa_svc_fan_control_resp control = {};
-> +	int ret;
-> +
-> +	ret = radxa_svc_fan_get_control(svc, &control);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = radxa_svc_set_profile(svc, profile);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return radxa_svc_fan_set_control(svc, RADXA_SVC_FAN_CONTROL_AUTO,
-> +					 le32_to_cpu(control.manual_pwm));
-> +}
-> +
-> +static int radxa_svc_fan_set_pwm_mode(struct radxa_svc_glink *svc, long mode)
-> +{
-> +	struct radxa_svc_fan_state_resp state = {};
-> +	u32 duty_ns;
-> +	u32 manual_pwm;
-> +	u32 period_ns;
-> +	int ret;
-> +
-> +	switch (mode) {
-> +	case RADXA_SVC_PWM_MODE_FULL_SPEED:
-> +		return radxa_svc_fan_set_control(svc,
-> +						 RADXA_SVC_FAN_CONTROL_FULL_SPEED,
-> +						 RADXA_SVC_FAN_PWM_MAX);
-> +	case RADXA_SVC_PWM_MODE_MANUAL:
-> +		ret = radxa_svc_fan_get_state(svc, &state);
-> +		if (ret)
-> +			return ret;
-> +
-> +		period_ns = le32_to_cpu(state.pwm_period_ns);
-> +		duty_ns = le32_to_cpu(state.current_duty_ns);
-> +		if (!period_ns) {
-> +			manual_pwm = RADXA_SVC_FAN_PWM_MAX;
-> +		} else {
-> +			ret = radxa_svc_fan_duty_to_pwm(period_ns, duty_ns,
-> +							&manual_pwm);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +
-> +		return radxa_svc_fan_set_control(svc,
-> +						 RADXA_SVC_FAN_CONTROL_MANUAL,
-> +						 manual_pwm);
-> +	case RADXA_SVC_PWM_MODE_AUTO_QUIET:
-> +		return radxa_svc_fan_set_auto_mode(svc,
-> +						RADXA_SVC_PROFILE_QUIET);
-> +	case RADXA_SVC_PWM_MODE_AUTO_PERFORMANCE:
-> +		return radxa_svc_fan_set_auto_mode(svc,
-> +						RADXA_SVC_PROFILE_PERFORMANCE);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static umode_t radxa_svc_hwmon_is_visible(const void *data,
-> +					  enum hwmon_sensor_types type,
-> +					  u32 attr, int channel)
-> +{
-> +	if (type != hwmon_pwm || channel)
-> +		return 0;
-> +
-> +	switch (attr) {
-> +	case hwmon_pwm_input:
-> +	case hwmon_pwm_enable:
-> +		return 0644;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static int radxa_svc_hwmon_read(struct device *dev,
-> +				enum hwmon_sensor_types type, u32 attr,
-> +				int channel, long *val)
-> +{
-> +	struct radxa_svc_glink *svc = dev_get_drvdata(dev);
-> +	struct radxa_svc_fan_state_resp state = {};
-> +	u32 duty_ns;
-> +	u32 period_ns;
-> +	u32 pwm;
-> +	int ret;
-> +
-> +	if (type != hwmon_pwm || channel)
-> +		return -EOPNOTSUPP;
-> +
-> +	switch (attr) {
-> +	case hwmon_pwm_input:
-> +		ret = radxa_svc_fan_get_state(svc, &state);
-> +		if (ret)
-> +			return ret;
-> +
-> +		period_ns = le32_to_cpu(state.pwm_period_ns);
-> +		duty_ns = le32_to_cpu(state.current_duty_ns);
-> +		ret = radxa_svc_fan_duty_to_pwm(period_ns, duty_ns, &pwm);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val = pwm;
-> +		return 0;
-> +	case hwmon_pwm_enable:
-> +		mutex_lock(&svc->fan_lock);
-> +		ret = radxa_svc_fan_get_pwm_mode(svc, val);
-> +		mutex_unlock(&svc->fan_lock);
-> +
-> +		return ret;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static int radxa_svc_hwmon_write(struct device *dev,
-> +				 enum hwmon_sensor_types type, u32 attr,
-> +				 int channel, long val)
-> +{
-> +	struct radxa_svc_glink *svc = dev_get_drvdata(dev);
-> +	struct radxa_svc_fan_control_resp control = {};
-> +	int ret;
-> +
-> +	if (type != hwmon_pwm || channel)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&svc->fan_lock);
-
-Use guard() so you can return early.
-
-> +
-> +	switch (attr) {
-> +	case hwmon_pwm_input:
-> +		if (val < 0 || val > RADXA_SVC_FAN_PWM_MAX) {
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +
-> +		ret = radxa_svc_fan_get_control(svc, &control);
-> +		if (ret)
-> +			break;
-> +
-> +		if (le32_to_cpu(control.control_mode) !=
-> +		    RADXA_SVC_FAN_CONTROL_MANUAL) {
-> +			ret = -EINVAL;
-> +			break;
-> +		}
-> +
-> +		ret = radxa_svc_fan_set_control(svc,
-> +						RADXA_SVC_FAN_CONTROL_MANUAL,
-> +						val);
-> +		break;
-> +	case hwmon_pwm_enable:
-> +		ret = radxa_svc_fan_set_pwm_mode(svc, val);
-> +		break;
-> +	default:
-> +		ret = -EOPNOTSUPP;
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&svc->fan_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct hwmon_ops radxa_svc_hwmon_ops = {
-> +	.is_visible = radxa_svc_hwmon_is_visible,
-> +	.read = radxa_svc_hwmon_read,
-> +	.write = radxa_svc_hwmon_write,
+> +static const struct hwmon_ops radxa_svc_sensor_hwmon_ops = {
+> +	.is_visible = radxa_svc_sensor_hwmon_is_visible,
+> +	.read = radxa_svc_sensor_hwmon_read,
+> +	.read_string = radxa_svc_sensor_hwmon_read_string,
 > +};
 > +
-> +static const struct hwmon_channel_info * const radxa_svc_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+> +static const struct hwmon_channel_info * const radxa_svc_temp_info[] = {
+> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_LABEL),
 > +	NULL
 > +};
 > +
-> +static const struct hwmon_chip_info radxa_svc_hwmon_chip_info = {
-> +	.ops = &radxa_svc_hwmon_ops,
-> +	.info = radxa_svc_hwmon_info,
+> +static const struct hwmon_channel_info * const radxa_svc_voltage_info[] = {
+> +	HWMON_CHANNEL_INFO(in, HWMON_I_INPUT | HWMON_I_LABEL),
+> +	NULL
 > +};
 > +
-> +static int radxa_svc_hwmon_init(struct radxa_svc_glink *svc)
-> +{
-> +	svc->hwmon_dev = devm_hwmon_device_register_with_info(svc->dev,
-> +							      "radxa_svc_glink",
-> +							      svc,
-> +							      &radxa_svc_hwmon_chip_info,
-> +							      NULL);
+> +static const struct hwmon_channel_info * const radxa_svc_current_info[] = {
+> +	HWMON_CHANNEL_INFO(curr, HWMON_C_INPUT | HWMON_C_LABEL),
+> +	NULL
+> +};
 > +
-> +	return PTR_ERR_OR_ZERO(svc->hwmon_dev);
+> +static const struct hwmon_channel_info * const radxa_svc_voltage_current_info[] = {
+> +	HWMON_CHANNEL_INFO(in, HWMON_I_INPUT | HWMON_I_LABEL),
+> +	HWMON_CHANNEL_INFO(curr, HWMON_C_INPUT | HWMON_C_LABEL),
+> +	HWMON_CHANNEL_INFO(power, HWMON_P_INPUT | HWMON_P_LABEL),
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_chip_info radxa_svc_temp_chip_info = {
+> +	.ops = &radxa_svc_sensor_hwmon_ops,
+> +	.info = radxa_svc_temp_info,
+> +};
+> +
+> +static const struct hwmon_chip_info radxa_svc_voltage_chip_info = {
+> +	.ops = &radxa_svc_sensor_hwmon_ops,
+> +	.info = radxa_svc_voltage_info,
+> +};
+> +
+> +static const struct hwmon_chip_info radxa_svc_current_chip_info = {
+> +	.ops = &radxa_svc_sensor_hwmon_ops,
+> +	.info = radxa_svc_current_info,
+> +};
+> +
+> +static const struct hwmon_chip_info radxa_svc_voltage_current_chip_info = {
+> +	.ops = &radxa_svc_sensor_hwmon_ops,
+> +	.info = radxa_svc_voltage_current_info,
+> +};
+> +
+> +static const struct hwmon_chip_info *radxa_svc_sensor_chip_info(u32 sensor_type)
+> +{
+> +	switch (sensor_type) {
+> +	case RADXA_SVC_SENSOR_TEMP:
+> +		return &radxa_svc_temp_chip_info;
+> +	case RADXA_SVC_SENSOR_VOLTAGE:
+> +		return &radxa_svc_voltage_chip_info;
+> +	case RADXA_SVC_SENSOR_CURRENT:
+> +		return &radxa_svc_current_chip_info;
+> +	case RADXA_SVC_SENSOR_VOLTAGE_CURRENT:
+> +		return &radxa_svc_voltage_current_chip_info;
+> +	default:
+> +		return NULL;
+> +	}
 > +}
 > +
-> +static int radxa_svc_rpmsg_probe(struct rpmsg_device *rpdev)
+> +static int radxa_svc_sensor_validate_desc(struct radxa_svc_glink *svc,
+> +					  const struct radxa_svc_sensor_desc *desc,
+> +					  u32 index)
 > +{
-> +	struct radxa_svc_version_resp version = {};
-> +	struct radxa_svc_glink *svc;
-> +	int ret;
+> +	const char *nul;
+> +	u32 sensor_id = le32_to_cpu(desc->sensor_id);
+> +	u32 sensor_type = le32_to_cpu(desc->sensor_type);
+> +	u32 i;
 > +
-> +	svc = devm_kzalloc(&rpdev->dev, sizeof(*svc), GFP_KERNEL);
-> +	if (!svc)
-> +		return -ENOMEM;
+> +	nul = memchr(desc->name, '\0', sizeof(desc->name));
+> +	if (!nul || nul == desc->name || !radxa_svc_sensor_chip_info(sensor_type))
+> +		return -EPROTO;
 > +
-> +	svc->dev = &rpdev->dev;
-> +	svc->rpdev = rpdev;
-> +	mutex_init(&svc->xfer_lock);
-> +	mutex_init(&svc->fan_lock);
+> +	for (i = 0; i < index; i++) {
+> +		if (svc->sensors[i].sensor_id == sensor_id ||
+> +		    !strcmp(svc->sensors[i].name, desc->name))
+> +			return -EPROTO;
+> +	}
+> +
+> +	svc->sensors[index].svc = svc;
+> +	svc->sensors[index].sensor_id = sensor_id;
+> +	svc->sensors[index].sensor_type = sensor_type;
+> +	strscpy(svc->sensors[index].name, desc->name,
+> +		sizeof(svc->sensors[index].name));
 
-Please use devm_mutex_init() + don't forget to add error handling as it 
-can fail.
+You can use 2 params version of strscpy().
 
-> +	spin_lock_init(&svc->rsp_lock);
-> +	init_completion(&svc->rsp);
-> +
-> +	dev_set_drvdata(&rpdev->dev, svc);
-> +
-> +	ret = radxa_svc_get_version(svc, &version);
-> +	if (ret)
-> +		return dev_err_probe(&rpdev->dev, ret,
-> +				     "failed to read service version\n");
-> +
-> +	ret = radxa_svc_check_version(&rpdev->dev, &version, &svc->caps);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = radxa_svc_hwmon_init(svc);
-> +	if (ret)
-> +		return dev_err_probe(&rpdev->dev, ret,
-> +				     "failed to register hwmon\n");
+> +	mutex_init(&svc->sensors[index].cache_lock);
+
+Where's the pairing mutex_destroy(), though preferably use 
+devm_mutex_init().
+
 > +
 > +	return 0;
 > +}
 > +
-> +static void radxa_svc_rpmsg_remove(struct rpmsg_device *rpdev)
+> +static int radxa_svc_sensor_hwmon_init(struct radxa_svc_glink *svc)
 > +{
-> +	struct radxa_svc_glink *svc = dev_get_drvdata(&rpdev->dev);
-> +	unsigned long flags;
+> +	struct radxa_svc_sensor_list_resp *resp;
+> +	struct radxa_svc_sensor_list_req req;
+> +	const struct hwmon_chip_info *chip_info;
+> +	char *hwmon_name;
+> +	size_t max_len;
+> +	size_t len;
+> +	u32 returned;
+> +	u32 total = 0;
+> +	u32 start = 0;
+> +	u32 i;
+> +	int ret;
 > +
-> +	spin_lock_irqsave(&svc->rsp_lock, flags);
-> +	svc->shutting_down = true;
-> +	svc->pending = false;
-> +	spin_unlock_irqrestore(&svc->rsp_lock, flags);
-> +	complete_all(&svc->rsp);
+> +	if (!(svc->caps & RADXA_SVC_CAP_SENSORS))
+> +		return 0;
 > +
-> +	mutex_lock(&svc->xfer_lock);
-> +	svc->rpdev = NULL;
-> +	mutex_unlock(&svc->xfer_lock);
+> +	max_len = struct_size(resp, entries, RADXA_SVC_SENSOR_PAGE_MAX);
+
+Include for struct_size().
+
+> +	resp = kzalloc(max_len, GFP_KERNEL);
+
+Please use __free() and simplify the error handling in this function. 
+With __free(), define this variable here on this line (reasons explained 
+in the long comment in cleanup.h).
+
+> +	if (!resp)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +		req.start_index = cpu_to_le32(start);
+> +		req.max_entries = cpu_to_le32(RADXA_SVC_SENSOR_PAGE_MAX);
+> +		len = max_len;
+> +		ret = radxa_svc_request(svc, RADXA_SVC_OP_SENSOR_LIST,
+> +					&req, sizeof(req), resp, &len);
+> +		if (ret)
+> +			goto out_free;
+> +
+> +		if (len < sizeof(*resp)) {
+> +			ret = -EPROTO;
+> +			goto out_free;
+> +		}
+> +
+> +		returned = le32_to_cpu(resp->returned_count);
+> +		if (!start) {
+> +			total = le32_to_cpu(resp->total_count);
+> +			if (total > RADXA_SVC_SENSOR_MAX_SENSORS) {
+> +				ret = -EOVERFLOW;
+> +				goto out_free;
+> +			}
+> +
+> +			if (total) {
+> +				svc->sensors =
+> +					devm_kcalloc(svc->dev, total,
+> +						     sizeof(*svc->sensors), GFP_KERNEL);
+> +				if (!svc->sensors) {
+> +					ret = -ENOMEM;
+> +					goto out_free;
+> +				}
+> +			}
+> +		} else if (le32_to_cpu(resp->total_count) != total) {
+> +			ret = -EPROTO;
+> +			goto out_free;
+> +		}
+> +
+> +		if (returned > RADXA_SVC_SENSOR_PAGE_MAX || returned > total - start ||
+> +		    len != struct_size(resp, entries, returned) ||
+> +		    (start < total && !returned)) {
+> +			ret = -EPROTO;
+> +			goto out_free;
+> +		}
+> +
+> +		for (i = 0; i < returned; i++) {
+> +			ret = radxa_svc_sensor_validate_desc(svc, &resp->entries[i],
+> +							     start + i);
+> +			if (ret)
+> +				goto out_free;
+> +		}
+> +
+> +		start += returned;
+> +	} while (start < total);
+> +
+> +	svc->num_sensors = total;
+> +	for (i = 0; i < svc->num_sensors; i++) {
+> +		struct radxa_svc_sensor *sensor = &svc->sensors[i];
+> +
+> +		chip_info = radxa_svc_sensor_chip_info(sensor->sensor_type);
+> +		hwmon_name = devm_hwmon_sanitize_name(svc->dev, sensor->name);
+> +		if (IS_ERR(hwmon_name)) {
+
+Missing include for IS_ERR(). You're actually missing it from patch 1 
+already because of PTR_ERR_OR_ZERO().
+
+> +			ret = PTR_ERR(hwmon_name);
+> +			goto out_free;
+> +		}
+> +
+> +		sensor->hwmon_dev =
+> +			devm_hwmon_device_register_with_info(svc->dev, hwmon_name,
+> +							     sensor, chip_info, NULL);
+> +		if (IS_ERR(sensor->hwmon_dev)) {
+> +			ret = PTR_ERR(sensor->hwmon_dev);
+> +			dev_err_probe(svc->dev, ret,
+> +				      "failed to register sensor %s hwmon\n",
+> +				      sensor->name);
+> +			goto out_free;
+> +		}
+> +	}
+> +
+> +	ret = 0;
+> +
+> +out_free:
+> +	kfree(resp);
+> +	return ret;
 > +}
 > +
-> +static const struct rpmsg_device_id radxa_svc_rpmsg_id_match[] = {
-> +	{ "RADXA_SVC_ADSP_APPS" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(rpmsg, radxa_svc_rpmsg_id_match);
+>  static int radxa_svc_fan_get_pwm_mode(struct radxa_svc_glink *svc,
+>  				      long *mode)
+>  {
+> @@ -694,6 +1159,11 @@ static int radxa_svc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  		return dev_err_probe(&rpdev->dev, ret,
+>  				     "failed to register hwmon\n");
+>  
+> +	ret = radxa_svc_sensor_hwmon_init(svc);
+> +	if (ret)
+> +		return dev_err_probe(&rpdev->dev, ret,
+> +				     "failed to register sensor hwmon devices\n");
 > +
-> +static struct rpmsg_driver radxa_svc_rpmsg_driver = {
-> +	.probe = radxa_svc_rpmsg_probe,
-> +	.remove = radxa_svc_rpmsg_remove,
-> +	.callback = radxa_svc_rpmsg_callback,
-> +	.id_table = radxa_svc_rpmsg_id_match,
-> +	.drv = {
-> +		.name = "radxa_svc_glink",
-> +	},
-> +};
-> +module_rpmsg_driver(radxa_svc_rpmsg_driver);
-> +
-> +MODULE_AUTHOR("Xilin Wu <sophon@radxa.com>");
-> +MODULE_DESCRIPTION("Radxa SVC GLINK driver");
-> +MODULE_LICENSE("GPL");
+>  	return 0;
+>  }
+>  
 > 
 > 
 
