@@ -1,127 +1,169 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B39762809
-	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 07:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788419725; cv=pass; b=cfAJpWaGxrfumJBnL1boZ9oqyLr/Bj3iCyftbLkqy3hRjACobv8bcqLLUvJLTLu/IUSPwV/xsY49pY8in15r7SJV+VVch3R99Mpsps9nL7gW/B0cljboFwBnfpxJHvCouM/CeEImSaK+07yGX56JCzr8w/LNGQHWiGSDjezAzJg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788419725; c=relaxed/simple;
-	bh=BDxUrAidUvmdE4UU9/YWqxyp9t94nH6PJ+zSqrwq3lY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fZ0SwOA/gVe3YWztVUYZjBIFH+iIbO384Akc6wrn0ipuNQ2YkPm6iUfRHURlbHYzEPYNw1bKHe5Exx3UcmxD0SfthtyuOFtoM8KfEWdBBaCIipSvFpg5syi6OfRDCLU7xkrMLnwIxsVP/ddEn18sR7Q+4EsAJhfeBnJrDvs0hyE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b=pzybxd40; arc=pass smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0F642B756
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 08:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788423461; cv=none; b=r+u/6c2h2DE8ec1KOroTIOVX6kRD+Oz8sI1IU5R/L6Y1f3EDQ/m0Qz2UrIYM6wk/R2l7jGrQIfpxhaxKwdyo/GNEli1WGMf1LXkDkjlZDre26fYzh7jiHMlIkHZfegtVK6Z9TfL4zDwCJAqPXX5EFDUqEhVIGA2Yl1+ihnHygAc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788423461; c=relaxed/simple;
+	bh=SyjBTVgAfVH+5pZ96S0t5B+ExtC3L0RJbZJUJVgIiXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WcDAJQ58NgG/5gAujo5eC5Zy53c2IcHHn6xDYY5yzmIMKoc30J3K+xs9r88MTqspYFwyX3DIJWyZml1hSSTdQ+asB1G8KI9S1COCYSEyT6yX9oqdlFFZaBw8b7lgfnuyT94bUxOuou7abdo7opmlKTXAAVE7vDVTu3LcY57a9S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=plTG4T5T; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b="pzybxd40"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-52eaeddc837so16415311cf.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 00:15:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788419718; cv=none;
-        d=google.com; s=arc-20260327;
-        b=iLfqrWNLh5dsReb5Jt6iwYY/g8us7wm8fa4Jy37l58CVS1nJcAZ0x5mAaCGJow1CxF
-         /BjFhhH/y8xzHWy96hNoHh9UrGqF9f/jZxyTJTQXPVb/QuhKf/VN0E1mgbLgXcJhyli+
-         iizAqTJyZhm+NdCq5JJOxbqUnYZNjZiLjbcaU6GAmmhJTbEOZYKyRcMKkDGpzMnxhbZl
-         OdXXbdT29eaf1TczUSVwJztkaaMfuElnO8OMiEDsOJuNW4O+PvKV+ztR5e55ibOJhC3/
-         b4N8nA5ph100ssNDTWiPod2rDxBZJjAwhdWml8PazyGVpZDeXcJY0WNHYf64pPFDcK2w
-         5v3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=/3ZaVDaa28jmLpu92uijSHs8QLly3pVgpirsXkJfs5Q=;
-        fh=waKH5Ux/XR1iP6cPDYiiuQzd9AbUVIkjKYbvj4c2G1M=;
-        b=mRHSWtronCPLTnvZOLoNDb1Q0JcjbiNBdSsdU0mZ+7LJs60l7sA2NaPv0A1tj5LAY/
-         GTd0xQKARbaKDT0vRgz4UBk4p2zy9I7aXYfIeXSmV0qyma6h7KQ4xCrCZxZqDqooCMQV
-         Do3qf2H0526XoheC0njjD11x0XPSirsHfoqTCVHUf3ZhQZTN9HXGmJa5absbmw0YsOUJ
-         GGVk8iHTpFFB7pj4TGNjgIGsEU/VlolQ7gBL8FxiVu2f47CSxTzM/2djireyx+v8uf84
-         h8KHZpvDrufrGXUQOAmrICwPshox3rnZpvrhwET7D7br48xJtTJjauP+eCTL/308rjAi
-         Gruw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plTG4T5T"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-49cdc81f40eso14440645e9.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 01:17:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20251104.gappssmtp.com; s=20251104; t=1788419718; x=1789024518; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/3ZaVDaa28jmLpu92uijSHs8QLly3pVgpirsXkJfs5Q=;
-        b=pzybxd4057yCPXBfPDmQhjG7IRqXIMYi5LwPQaiYWrhpjRYbnC71NSqHTW0yLk6N2U
-         LeHXabKfKRXA0CEQb3JuWOAjp69N48QhVCXkkT+vykwFjgD3F4ox4ami1hatx8UkxJZw
-         gQOtiSo68ejMMfKhqyEDKC9YxEeXMFGtleuswKZ+pdRqUC0GtyvxPjqMeixIHfh4hmgV
-         kwDZ2+RUgjgXE/BCSMl+guzCYHe5ANExTik3oSyseo1WhizIPmyLZl94oAODsRM+jQug
-         Wp60Z+/PmQnbtaaTJE8iyy4DkoBOzZ6giL5q3oVKI12h/r0cZ6qPxXHrbydggsMeCFxk
-         tl/g==
+        d=gmail.com; s=20251104; t=1788423458; x=1789028258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=+82u+VPDiTqb4aWxxVynU7CqEmkdg56YaZZ1NJVLaO0=;
+        b=plTG4T5TqnzIG5nG1wiTWE+d8ECOzgpMwPS3hIWAClkNl1q25ZCmpGcsFy+U/dR+TM
+         u+4jdFD6tq1VR0x1WLz1mnv+wNGFEWUYDEea8znJWWwb+cQeQWoHP8YtqXfzEA1DSDby
+         aRQIBuNiv08Xnh67SBJDlgV0R5V4Wet2i6tRzw5fLTSkTE9S5HB1wdkKypWSU+ADf/gF
+         SeL/rQIkMtSnDieHGL0iYZUqD0lHfqmsN2YQaoQ7DgegyyET9SK/41EfeqdBLtSvplbV
+         SW2+XSRxa+CX75bd5QWc3BIV04ReOPYGOAl/HTbR669rCF5FE1osmwNcTht/9NNQ34Nt
+         /Llw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788419718; x=1789024518;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=/3ZaVDaa28jmLpu92uijSHs8QLly3pVgpirsXkJfs5Q=;
-        b=oR0pP2hrLm9J0/mMzJ8MitclzO0u01KEu4TvrEpSZ6c1NFqSrU48B9GNd/RauxHC4M
-         7zilxYo6KioZCjMWJf9NGKZ7yxB24vEZ/5cTSRqaj7m7ACPhXBBhYfEzIgqVTnI6NCUI
-         eBFkMa+RI1ekpnYEmYX+cSZr6cOunOyuT8dPk0JvpNHvYAUAKdh6/aRcUgHlMeTWiKjZ
-         pxXFBE2in1T2trCSuiQ/q/LAUzh5tr2BDvS0kRyg4SUxQquNj9e8gvzJsrquEU2x3KB4
-         Zuo/dlKRdW1/mxdPcnR9m6rhL62nxSI/RFHDL4TuFG4olMM3uP50PwAXflaOppGA9tg7
-         7mnA==
-X-Forwarded-Encrypted: i=1; AKwUvByCAnoGc8piyoP649vlSKYhTX/8FaiqWkQfMTSo/sKf4lo4jQYJpjcHT1MA4GW5RrKbTNb5XRYSkQeUSMh2/oLy2hO1@vger.kernel.org
-X-Gm-Message-State: AFuF++mKsHjPMZ5fM9yXbpr0QqApGIsGAkvsFDg+Eoko7QAJiRD0NAOU
-	+TMzYKhIiiXuFe6xP8lIgiLXj8Mu/HuSHUMewndQshw+EM80a5TNFaSY+QhSjOUc6qmGZZtIt7F
-	w9ypNvQxVzNlZvtnu3NYIPmjrNvQGYIptkROfgmD6jw==
-X-Gm-Gg: AYBFou0uyPCs8jocc2yrjXEtPGYoGYJrSzxqvYDwEUaiTFtD/Er6XiEFTzDzyDZC0Q9
-	S90trxUUwQqVZMD+NcssWVqiMRxdGPCQVb8dg9XkARKSf581s81irV0Kfytgfl/ODORoN0xKCp6
-	Cu2ao4nZN/PcFKp+KBt7GW6j4RKXjwl1BpBwZx6XU4CvJf0ASuxnCwhcLwvvOeMrceGZ4PRIYLR
-	AVT1DxV7QG0JXQZzD5IdLuGE90EYmT3b9HnNfYcG+4RKrz33MhJ8+HUEsvP1MjhPOXNcdo7X2ql
-	WyZlbAXtzSvNKIAM95KRZtDmM6EEuKz2sHfPqq8UEZGoa99LE3yjjbRwj6U5yS7gYJkWWMU7VDa
-	MbsU=
-X-Received: by 2002:a05:622a:138f:b0:530:1e1a:fc70 with SMTP id
- d75a77b69052e-53036bc87b3mr104794101cf.1.1788419718250; Thu, 03 Sep 2026
- 00:15:18 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788423458; x=1789028258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=+82u+VPDiTqb4aWxxVynU7CqEmkdg56YaZZ1NJVLaO0=;
+        b=Ksf6PVLSa4lOXhgL6fE1OJt3WuRxLnDcmXpQUpS90P0HDcYXMR+ouZVPrvyxphr1xM
+         lqPeIDEtvr7SqD01P78iavu0cE65mLco79bGmgsCcoIW0bp1+A0CHUjS3nD3IVuEKsha
+         /TPA8WnjPsvQeGUD0wc/22r9vUUaYKuRqQJRVRH5rcgOO8fFafmSWPd6FJKqVuZlGckA
+         oAzYU0eCd4mgyG2b51OMj9ahbr/PCUMHOkkB+W6CY7mHIOw8HmSu1JH5Sz5fB9AtHQU2
+         MG1Tv5e3Dp4lyLIJ058sx5pncybhRM9PmZB2NGBNijmKLKmFN2/MsqoHiWHK6ePzLptE
+         pG7w==
+X-Gm-Message-State: AFuF++mRUjRjGQkC6YKVb/4tp2K0yghlo1R/AIAafnPMionCQqrJmjXc
+	Axox2Q8v4nn2wGJWa6fD8L2GOlBW2ONDmpklO1wyuh4QBGWc4vOtBkt6oe9WFpO8
+X-Gm-Gg: AYBFou1PWJj2/X4r0YQ8jRB1VXOf7cim1d4/lYDQ1XQH0JBfGDz9M64FKPWLGHW3f27
+	3v4t7bXOIxJWY2/gImpEWPDnUdKh4ZOPTmdMH8IZA+/doq6iUHkjSCUjd61jA7jdJtiBKtlUUNq
+	Ncof/lCZqO49vpxSh0AdWhiY7LIQMMhHU4mBJtoRVtDoEb6K4CfjAmDS4K4haRgAR4EQY2ufj46
+	tB55ex35L1j1dPIEamGcY35Ltw/28VMX5WVakzf2SzVSe9OA1kxWABKi5CmqRtS/gmHqwtdh0AX
+	cczKKbaC33zS0otWPIMW0KJBX2v5ZQuMo80xLX1NDsn9OqGzxH0Ocwhy3AO/CplAiyP2v+oxPO1
+	/AjHMAKOkhdvogOQ3hG99aR4bGrAHBmobxF5jqx+jl+QyS1NesFUZXwUUFYv5JilSgSE7SXYjOd
+	IhwKGIWQqEpwP3YXm5yvM7wgGCbz1K/igLCdRRySadGGWssnnE0YuvsSWZOPevuPNSgHHRlbKL+
+	hDVbgfmDfuhYlwU5BRhNS9+F8mRJK+qwKHUE4L22CfDeY+i4ycHrA==
+X-Received: by 2002:a05:600c:1d14:b0:499:b65e:49c9 with SMTP id 5b1f17b1804b1-49ce583e94cmr170139925e9.10.1788423457493;
+        Thu, 03 Sep 2026 01:17:37 -0700 (PDT)
+Received: from localhost.localdomain (159.red-83-38-226.dynamicip.rima-tde.net. [83.38.226.159])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cf2531232sm25711605e9.7.2026.09.03.01.17.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 01:17:37 -0700 (PDT)
+From: German <germanpapulindez@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org
+Subject: [BUG] platform/x86: int3472/discrete: unknown GPIO type 0x08 breaks OV13858 rear camera on Surface Pro 11/12 Business (INT3472:00 / OVTID858)
+Date: Thu,  3 Sep 2026 10:15:56 +0200
+Message-ID: <20260903081557.16603-1-germanpapulindez@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260807-acpi-char-v1-0-742c450254dd@thegoodpenguin.co.uk>
- <20260807-acpi-char-v1-1-742c450254dd@thegoodpenguin.co.uk> <60e25773-b3c6-4aae-a687-92e1ab3b141e@app.fastmail.com>
-In-Reply-To: <60e25773-b3c6-4aae-a687-92e1ab3b141e@app.fastmail.com>
-From: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-Date: Thu, 3 Sep 2026 08:15:07 +0100
-X-Gm-Features: AcwNN1WIqW6SG0lDemdV894_p4DFDolE7YAmpidzaCNJPpqblz3q1bAvW3wQFoY
-Message-ID: <CAA6zWZJRpUzbz20daytHO4ygqKosM=YU8UyBcWnm2sUmaEHbnw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] char: use named initializers for acpi_device_id
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Clemens Ladisch <clemens@ladisch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Mattia Dongili <malattia@linux.it>, Weili Qian <qianweili@huawei.com>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Corey Minyard <corey@minyard.net>, Peter Huewe <peterhuewe@gmx.de>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> I don't think this is the right approach: I see around 1500 instances
-> of acpi_device_id data with plain initializers and only about 50
-> with named ones.  Converting all of them seems like a lot of
-> extra work, and I'm fairly sure you can just change the
-> driver_data to an anonymous union without this.
+Hi,
 
-Sorry for the late reply, I was away.
+On the Microsoft Surface Pro 11/12 Business (Intel Lunar Lake, IPU7),
+the rear camera sensor (ov13858, ACPI HID OVTID858) fails to probe.
+I've traced the root cause to int3472-discrete not recognizing one of
+the GPIO types described in the device's ACPI _DSM data, which leaves
+a power/reset-related GPIO unconfigured and the sensor unable to
+respond over I2C.
 
-You can change it to an anonymous union and the kernel modules can
-build and then you can go over the code and set the designator only
-for all of the entries that will make use of the driver_data_ptr field
-(which is the union's second named member). However, you will still
-get -Wmissing-braces in your build log for all other initializer
-entries that still rely on positioning and resolve to the first union
-member by default (the kernel_ulong_t). Adding an exception for this
-warning seems like a bad practice. On x86_64 all warnings are promoted
-to an actual hard build error via the defconfig. The other option is
-to use more brackets instead of designated initializers for the items
-that resolve to the kernel_ulong_t but that would arguably make the
-code worse, inconsistent, less readable and require the same amount of
-churn. Therefore, converting the tables first and using designated
-initializers everywhere to begin with, before adding the union - as
-proposed here - is the most sane and clean way forward, at least in my
-opinion. Perhaps I should add this extra explanation and information
-to the cover letters. Unless you meant something else.
+System
+------
+- Surface Pro for Business 11th Edition with Intel (Intel Lunar Lake, IPU7)
+- Kernel: 7.2.2 (Arch Linux, vanilla)
+- CONFIG_VIDEO_OV13858=m
+
+Evidence
+--------
+
+  $ dmesg | grep -iE "int3472|OVTID858"
+  [    5.555231] int3472-discrete INT3472:00: GPIO type 0x08 unknown; the sensor may not work
+  [    5.788882] ov13858 i2c-OVTID858:00: failed to find sensor: -5
+  [    5.789321] ov13858 i2c-OVTID858:00: probe with driver ov13858 failed with error -5
+
+The "GPIO type 0x08 unknown" warning comes from the default case in
+skl_int3472_handle_gpio_resources() in drivers/platform/x86/intel/
+int3472/discrete.c:
+
+    default:
+        dev_warn(int3472->dev,
+                 "GPIO type 0x%02x unknown; the sensor may not work\n",
+                 type);
+        ret = 1;
+        break;
+
+~230ms later, ov13858_probe() fails in ov13858_identify_module()
+with -EIO (-5) while trying to read the sensor's chip ID register
+over I2C - consistent with the sensor not being properly powered/
+reset because one of its GPIOs was left unconfigured.
+
+The currently known/handled GPIO types in common.h are:
+
+    INT3472_GPIO_TYPE_RESET        0x00
+    INT3472_GPIO_TYPE_POWERDOWN    0x01
+    INT3472_GPIO_TYPE_POWER_ENABLE 0x0b
+    INT3472_GPIO_TYPE_CLK_ENABLE   0x0c
+    INT3472_GPIO_TYPE_PRIVACY_LED  0x0d
+    INT3472_GPIO_TYPE_HANDSHAKE    0x12
+    INT3472_GPIO_TYPE_HOTPLUG_DETECT 0x13
+    (plus DOVDD/STROBE in newer trees)
+
+0x08 does not correspond to any of these, so it's silently skipped
+and the sensor is left without whatever line that pin controls.
+
+This is not a boot-time race: I tried unbinding and rebinding the
+ov13858 i2c driver well after boot had fully settled, and the probe
+fails identically both times, at very different uptimes:
+
+  $ echo "i2c-OVTID858:00" | sudo tee /sys/bus/i2c/drivers/ov13858/unbind
+  $ echo "i2c-OVTID858:00" | sudo tee /sys/bus/i2c/drivers/ov13858/bind
+  [  470.046844] ov13858 i2c-OVTID858:00: failed to find sensor: -5
+  [  470.046855] ov13858 i2c-OVTID858:00: probe with driver ov13858 failed with error -5
+  ...
+  [  703.417136] ov13858 i2c-OVTID858:00: failed to find sensor: -5
+  [  703.417153] ov13858 i2c-OVTID858:00: probe with driver ov13858 failed with error -5
+
+This rules out a probe-ordering/deferral issue and points at a
+persistent hardware-configuration gap: whatever pin type 0x08
+represents on this board is never toggled/configured, so the sensor
+stays in a bad power/reset state indefinitely.
+
+Possible precedent
+-------------------
+I noticed drivers/platform/x86/intel/int3472/discrete.c already has a
+per-ACPI-HID quirk table (int3472_gpio_map[]) for exactly this kind
+of situation - e.g. OVTI08F4 (ov08x40) needed its GPIO type remapped
+to INT3472_GPIO_TYPE_HANDSHAKE with a 45ms enable delay on some HP
+laptops. It's possible OVTID858 on this Surface board needs a similar
+per-HID quirk entry mapping type 0x08 to one of the existing known
+types (my guess, unverified, would be a reset/powerdown-adjacent
+line, given the symptom - sensor unreachable over I2C at all times,
+not just during a specific mode), but I don't have visibility into
+what the ACPI _DSM on this board actually intends by 0x08, so I'd
+rather report this precisely and let someone with more context
+(and/or ACPI table access) confirm than guess further.
+
+Happy to pull the full DSDT/SSDT for the INT3472 device, run with
+dynamic_debug enabled on int3472-discrete, or test any proposed
+patch on real hardware - just let me know what would help.
+
+Thanks,
+[TODO: German]
+[TODO: germanpapulindez@gmail.com]
