@@ -1,152 +1,176 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011006.outbound.protection.outlook.com [40.93.194.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E59447803;
-	Thu,  3 Sep 2026 18:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788460211; cv=fail; b=eNBYiQ+AxtadEWz6xeDXGd2R1WoMohsGX2wydI7p31GYoibmNGCqAkT48S7dfSQz8zr4mXCD5GHiwoOQq/6CCUrbxJUynyK9P1GJyImyWXoPIzmVoLUZOPm52PTGv7VIUeSzI0mJPkwfLsd9/SWUhh9lm50FPj5TWzsBDwdidcM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788460211; c=relaxed/simple;
-	bh=I3Q/qzK8/ToY3ogW8e56opCITrI9XPOXsZJTjHXBy4g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X1Z0L78P7FowmNxKI4qushQJ/eDm6/8GHt85vwWxD0j6jzwmcUTHtNOUiElQbR3SBawI7HW1nN80+7aIlZmHF1e4/JnqQV2szi5hAlOt4O9KrGhtiWRpjKwzHxsu3sbnkuStLRckyZjFjPLgcHoKDAeKqYzI9kmhXxFoCtNZvX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OMS5ZRro; arc=fail smtp.client-ip=40.93.194.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458633A718D
+	for <platform-driver-x86@vger.kernel.org>; Thu,  3 Sep 2026 19:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788465504; cv=none; b=iYminBRIy0ENn9PONWQZNL4e6LLEeuKKujLzPboRComTRTZVWBsyg+kjS6WSy5KEIuRnABL9ckH+pPC/e4fDfSCnUCnCNQlDs1ETns4uSQvK0KsvmmIbNx5f+XMqy7mmg3N0fpQZ9MhjXgF8h930pLkQLMg4yeOtT26wCA0FYPM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788465504; c=relaxed/simple;
+	bh=fSgjqmuUEyPPrSsYbBfKKkIgRc8tfA1ByaC7MNerK1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfW0f7eYsInv7Y6syDferuWV8zTGOGCQwvKGYDjmDobt1sWcnI+GkSL69NEX6zaXNAjiUpZr+/UCgSkOWuOOFoqcR65y7CW5DTAmFIzHLKfWokxdOLdSHP7U4NTSS66NOqeVnkPtYuF7S3xT9rdstxx7NGV6cJWcWkOW3X+4b3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bD2HaIm5; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OMS5ZRro"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eQWNkrju0Oc3HqupFyEPyXWM3krgV6nWk69MqiOE6ZM+p/ADAIgT1fD0v1xvFY6b9Osey9AqAq8ERX5y98+vx+pw6xSApFe6HbANB3DXn/Ef22yADSvTPYgOyo3yzdJn63xaEPhT5HR6hoJxRnHQWjhj2H30A7DlqnXir8P/DKqulFI64GT63Sg8uJuDXOVpOrdzopEte5rZS6h7SCxUy7mLL2u7GxsDOS0nbtz45QldzfuYZMD2D34Mjy/ZUcANztVSJME/fqH/ON/vdPHN9/xQQaRVBK0DgdLbPUlLeVg8zRJVeJ0e9TlzxRWDQ7KUpYIbPllFSSkKKdyh4RMSgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ysNBAje/hr0wxEqPz8aOz79DIaDsosNEAFnUyIYEitE=;
- b=Gy3qgngV1AL+eY0Thm7sOM2tx9oUUzTD8e2ueKEwxY41zowp7hRlNguVTi1qJdlGwlz3kI7D9tDR4Lm7149BwKO9saEem97cDrZm10rutnzK04r8KGQuuB8UnF9M7uGWzpOZuSfUZz80CUcEjDEdnlGHqH6l7wdXWtq9Acdw+0rYFJvXGxKVaO0gwAc+Rnsp2Sf1B9en+BJ+se0WDlLz8IEaScS315BqjdumqZIpjKKhInb0+ZLYznHyv3XeG/fB1ZNuklYoV2tTGXYKp6S4OZczzAOU5r3i/RqPG7B8GhA/eyHQQQ90ABudiKmrC+vZ00CPHghOFC0C3WPErg996w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ysNBAje/hr0wxEqPz8aOz79DIaDsosNEAFnUyIYEitE=;
- b=OMS5ZRro4Bb/cd/zwaKthEKIlMqXSXTt2rAz9kHFNMmIOX6iAjuFvWmqkF3XO0UfAldilwgD1hxyTKUaJfDPR6TI91d7upe2L1VwFFQauq0aojO8xCZyLTu/AODE8R8yDF5picBr3uWIbuaO9YdA1aFw1Nmabq+YAVAPFDqO8wM=
-Received: from CH0PR04CA0098.namprd04.prod.outlook.com (2603:10b6:610:75::13)
- by LV8PR12MB9668.namprd12.prod.outlook.com (2603:10b6:408:295::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Thu, 3 Sep
- 2026 18:29:54 +0000
-Received: from BL6PEPF00020E64.namprd04.prod.outlook.com
- (2603:10b6:610:75:cafe::28) by CH0PR04CA0098.outlook.office365.com
- (2603:10b6:610:75::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.12 via Frontend Transport; Thu, 3
- Sep 2026 18:29:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BL6PEPF00020E64.mail.protection.outlook.com (10.167.249.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.382.8 via Frontend Transport; Thu, 3 Sep 2026 18:29:54 +0000
-Received: from aus0006770c4n-lx01.amd.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 3 Sep 2026 13:29:53 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <Shyam-sundar.S-k@amd.com>, <hansg@kernel.org>,
-	<ilpo.jarvinen@linux.intel.com>, <Patil.Reddy@amd.com>
-CC: Mario Limonciello <mario.limonciello@amd.com>, <stable@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>
-Subject: [PATCH] platform/x86/amd/pmf: Validate the APTS state index
-Date: Thu, 3 Sep 2026 13:29:26 -0500
-Message-ID: <20260903182927.3556274-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD2HaIm5"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-8525efa7274so165017b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Sep 2026 12:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788465497; x=1789070297; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=t6j89Y3ln3EcTUJyuQHu9KwyOw32fASDwF7kJPYPSdA=;
+        b=bD2HaIm5+OOCL17Cv0iyS0u3AKUSt7948Ez7N8r5xufE5NqBLmkP+fFCSfuPNfgifV
+         6z4yZHKwdN47845DxQ/x5YgnU8K72j8VqLtII6pEI9vbJN8Z9MK/zZL6zdLDZshY/Vet
+         iHwZb/G4mvn5/b4qILQwhywg7ZEzoolHLdjSnZeloYV3Qg/BT4XjSyJIuBYuE26XHD4/
+         ocyI4yQhLSuZCkDCuslWh+BWnzWv1wAGyKATx4dyQHOjDLaRywCSMocuVSUmRLuwyGjf
+         jZGqJ+xJYAy5QDLCUOj+2sWjxt09XmVMCAsW8j4RCiHmmh/U2/NhfaxRO1+EzjIlqYI5
+         lkFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788465497; x=1789070297;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=t6j89Y3ln3EcTUJyuQHu9KwyOw32fASDwF7kJPYPSdA=;
+        b=hC4gRyV+Sk3/e+0nJ8q/J5mQzQh+6yD8ErwNRwcjpzzsWYNL7oZRsPyglkdowQG2O6
+         R2L1Y6lsr4sNZqq98oStA0DxnS7iybRAE1uBfU0AMyIQjr53ebA8kmILjZ4UhiE3svSW
+         +3bbw7d5EqqZpgJSQdYBPl8wgv3LDWyZH1LciA6DMha6UbU5K0n9teaLXb++3rNGJaUh
+         Ccfgh/HgOHFfr0spctjqEXGwGU4V66dMNMIwf6QErAigZrZXCXbYzYZHiJzEHnrQ05XY
+         XQzFgYXQdb+G4xkG+ayKZd4sS0984cL+9vaBnVOn6DHbE4Uq/D59AbU1rYGg7BVOpsli
+         +BQg==
+X-Gm-Message-State: AFuF++lr+0c/ZuCnrEluoI6y2kTlI2RR/cgtvy9QBuIGj37D6jouwUZc
+	VNQ5APYYNM6/0mrPUKTyEFQh5efX5Bo9ip6eSIy6kC+/ngJt3luny5J5lcZlvC92atA=
+X-Gm-Gg: AYBFou0eT04jhTALsZGCCZxdQ/+rH1xQvD1pTNZNQaNihIBMQnyOhBIcce6qJn9Grsv
+	t7dmo6R3mdWgPW2+dkJ13Cats2M9Kp2a9npeIqjScmWS7vp1S91Shsm9jarSV7frSTlDlLQIl0L
+	pzo2mJwqLjHuo3/udvZgKMJ0Z98UboszqItDuNGuRhtiZ1kSrKv/uEK679v2erBbEc2qv3kZgK2
+	0RgWgsAwVgMP0muzHVfMVMdg9dQnBrBoG38xZM3K6++pPZilfLl4zEv01gH/gSqfZe8hwzjQ3vM
+	UNIN3kK3iOe8+4ssf/7D3eRXbHrFB9YeUwPjriY7ikofUHl/bMBAQzAJT4Nts+FgOR/n5qjIJny
+	BT//2f2GiyYEw0PCPUKFHQCPsaWoFhCUNY55c56Qzaq3ZLtj3mugBeaqNJJVNffPaYFm+W8AkdU
+	jpQybeeKPsBdzQqQ+Tgw7V/V4JVg3V51JNy+62FvdmxMDXn8LAn/Ek/PI9G9ATbKHN75Pr
+X-Received: by 2002:a05:6a21:6487:b0:3d4:52bd:b89d with SMTP id adf61e73a8af0-3da3a0b2671mr1173471637.23.1788465496560;
+        Thu, 03 Sep 2026 12:58:16 -0700 (PDT)
+Received: from Omen-14.Dlink ([43.229.88.51])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432438497csm1451221c88.8.2026.09.03.12.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2026 12:58:15 -0700 (PDT)
+From: ShaunV334 <shaunvarghese43@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	Shaun Varghese <shaunvarghese43@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: add cTGP and PPAB support for Omen
+Date: Fri,  4 Sep 2026 01:26:26 +0530
+Message-ID: <20260903195626.39391-1-shaunvarghese43@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF00020E64:EE_|LV8PR12MB9668:EE_
-X-MS-Office365-Filtering-Correlation-Id: afe594e6-1c3c-4d81-df2e-08df09e95969
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700016|23010399003|1800799024|56012099006|10067099003|11063799006|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	Ocgd7hbLU2NM/3zKkWblRw4scdmoQCdvSaZ0EPcsRanvOURWN8WsPegNZ6nTjowWZG9DmkJW4ItL5s9og5A/kVZyb8VJABmvW8seaFAy71Lf/PUBr4k3mwkN9EE0+dKoCLX+xnBw54itMPufU72oVYEWHDIhziG+Fw/+7KWCUZUiJJieGzTEfHuR18+qF7gP6i7vAW+xt3ZFlvXRy+ewklhB47ULbf2ee42Gi4eIEcqHLcHUvOvCaKdGOocSj4UoCgtDiyNOtqV4AzOOVBu0GHWVHl9tPf5qNz3d1pYGMbVFoDFZNqADmBopBzL0FRPbUmBS9um7e/knaZq5nWloIreW4Cj1btT1qEQ2mJ8ynVm+4hm/2pISlge+GZ9oEwxo86xYBi4FOtOI8EJ27xklTJ3gX5BWBItr6L1IDWN+u/PFfqXkG6mHKXKizG6qNk8iJkvBjB293y6K0dAsJn625mRyJdk5nEOOeE8WV8Tj+adnzAtUIVDzokqe9POIzUH8AXp8AfIrFgoX2dodL6KfPKLkpQWeE8gcdZZ2Z8CD+ig7egdv4E4Z14cleLHoVDLKVwJlvofqXgj/q8k/YFae9C/O8LrmuGqNZ70a8zOLOb5vkhs7P3LweubxKiQbVu3AaJEi4hJTqZYKpS5SCWQOB1+8T1UhL55+Q6ThuKJVgzThJ9qAxZdxWDePFOV58RRWRiB1kS4kaMwthTbWc5z4Rw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700016)(23010399003)(1800799024)(56012099006)(10067099003)(11063799006)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	CubenIej55wcha06thufq19isP4ZGVUeMX1O8Tj3q84bIiIYogkyqvc8coRoWR5OziTn6+ZURAE+wjBeZsjxpFZjvKTSaVlmp0zAzoSH26sKxBfv6W/BBIPlks2GPcx/66FJXtK98Py2sitAcijx/likMdPG9BtwOEDLPUXCvWZIXOT0nQwsbEwEzm7MELlQq3N4bHG3KgisyKPRjud0vQX+dhXkJ/kSU0f8GbBcFfcxEn3SJKcSYIeJpha1yNCFk88nYKQ817CGY4SksS8lnxP4j+KAE6l31/83QKnl8HVC4vxABxlPNZuQoUeNkWxqt+G+7EZZ23IF7uZKD+FBCa5XoWmxe82i9OLkC95OElLecO601jVmqPx1bbmV5ORgiLjGbfuG6Fmo7V4yi3iHrgdwb5U7BWIXE5Y3OaP+4cPqlGEPS5BKqaNGYUOMLphQ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2026 18:29:54.1605
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afe594e6-1c3c-4d81-df2e-08df09e95969
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF00020E64.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9668
 
-The static slider APTS state index is supplied by the BIOS as an 8-bit
-value, but apts_config_store contains only APTS_MAX_STATES entries. An
-invalid firmware value can therefore cause amd_pmf_update_slider_v2() to
-read beyond the end of the array.
+From: Shaun Varghese <shaunvarghese43@gmail.com>
 
-Validate the selected index before applying the slider values and return
-an error when it is out of range.
+On supported Omen systems, the GPU can be limited to a lower power
+limit because cTGP and PPAB are not configured when changing the
+platform profile.
 
-Fixes: 8362e862fb87 ("platform/x86/amd/pmf: Update sps power thermals according to the platform-profiles")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Configure the GPU cTGP and PPAB settings through the existing WMI 0x22
+GPU thermal profile interface. Performance enables both cTGP and PPAB,
+Balanced enables PPAB, and Cool disables both.
+
+This allows the NVIDIA GPU to make use of the additional power budget
+provided by the platform, improving GPU performance compared to the
+lower power limit.
+
+Tested on an HP Omen Transcend 14 (board 8C58) RTX 4060.
+The GPU was limited to 35 W before this change. With cTGP/PPAB
+enabled, the GPU was able to reach and maintain its boost clocks, with
+power draw increasing to 57 W, benchmark performance improving by
+approximately 10–15%.
+
+Signed-off-by: Shaun Varghese <shaunvarghese43@gmail.com>
 ---
- drivers/platform/x86/amd/pmf/sps.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/platform/x86/hp/hp-wmi.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-index 0b70a5153f465..0918fb388fde6 100644
---- a/drivers/platform/x86/amd/pmf/sps.c
-+++ b/drivers/platform/x86/amd/pmf/sps.c
-@@ -248,20 +248,24 @@ static int amd_pmf_update_sps_power_limits_v2(struct amd_pmf_dev *pdev, int pwr_
- 	switch (pwr_mode) {
- 	case POWER_MODE_PERFORMANCE:
- 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BEST_PERFORMANCE];
--		amd_pmf_update_slider_v2(pdev, index);
- 		break;
- 	case POWER_MODE_BALANCED_POWER:
- 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BALANCED];
--		amd_pmf_update_slider_v2(pdev, index);
- 		break;
- 	case POWER_MODE_POWER_SAVER:
- 		index = config_store_v2.sps_idx.power_states[src][POWER_MODE_BEST_POWER_EFFICIENCY];
--		amd_pmf_update_slider_v2(pdev, index);
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
-+	if (index >= APTS_MAX_STATES) {
-+		dev_err(pdev->dev, "Invalid APTS index: %d\n", index);
-+		return -EINVAL;
-+	}
-+
-+	amd_pmf_update_slider_v2(pdev, index);
-+
- 	return 0;
+diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+index b2773fc1aca4..54887a476c8e 100644
+--- a/drivers/platform/x86/hp/hp-wmi.c
++++ b/drivers/platform/x86/hp/hp-wmi.c
+@@ -1771,9 +1771,15 @@ inline int omen_thermal_profile_ec_timer_set(u8 value)
+ 	return ec_write(HP_OMEN_EC_THERMAL_PROFILE_TIMER_OFFSET, value);
  }
  
++static int victus_s_gpu_thermal_profile_set(bool ctgp_enable,
++					    bool ppab_enable,
++					    u8 dstate);
++
+ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+ {
+ 	int err, tp, tp_version;
++	bool gpu_ctgp_enable;
++	bool gpu_ppab_enable;
+ 	enum hp_thermal_profile_omen_flags flags = 0;
+ 
+ 	tp_version = omen_get_thermal_policy_version();
+@@ -1787,19 +1793,31 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+ 			tp = HP_OMEN_V0_THERMAL_PROFILE_PERFORMANCE;
+ 		else
+ 			tp = HP_OMEN_V1_THERMAL_PROFILE_PERFORMANCE;
++
++		gpu_ctgp_enable = true;
++		gpu_ppab_enable = true;
+ 		break;
++
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		if (tp_version == 0)
+ 			tp = HP_OMEN_V0_THERMAL_PROFILE_DEFAULT;
+ 		else
+ 			tp = HP_OMEN_V1_THERMAL_PROFILE_DEFAULT;
++
++		gpu_ctgp_enable = false;
++		gpu_ppab_enable = true;
+ 		break;
++
+ 	case PLATFORM_PROFILE_COOL:
+ 		if (tp_version == 0)
+ 			tp = HP_OMEN_V0_THERMAL_PROFILE_COOL;
+ 		else
+ 			tp = HP_OMEN_V1_THERMAL_PROFILE_COOL;
++
++		gpu_ctgp_enable = false;
++		gpu_ppab_enable = false;
+ 		break;
++
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -1808,6 +1826,18 @@ static int platform_profile_omen_set_ec(enum platform_profile_option profile)
+ 	if (err < 0)
+ 		return err;
+ 
++	/*
++	 * Configure GPU cTGP / PPAB through WMI 0x22 according to
++	 * the selected platform profile.
++	 */
++	err = victus_s_gpu_thermal_profile_set(gpu_ctgp_enable,
++					       gpu_ppab_enable,
++					       1);
++	if (err < 0) {
++		pr_debug("hp-wmi: GPU cTGP/PPAB set returned %d\n", err);
++		return err;
++	}
++
+ 	if (has_omen_thermal_profile_ec_timer()) {
+ 		err = omen_thermal_profile_ec_timer_set(0);
+ 		if (err < 0)
 -- 
-2.43.0
+2.55.0
 
