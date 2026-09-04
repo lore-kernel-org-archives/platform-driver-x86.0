@@ -1,80 +1,88 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EE43FA5FC
-	for <platform-driver-x86@vger.kernel.org>; Fri,  4 Sep 2026 09:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC878449B3B
+	for <platform-driver-x86@vger.kernel.org>; Fri,  4 Sep 2026 09:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788513058; cv=none; b=oujTURPJLMQS7fvg67q1E/aycyHr62Ddm7vgzd+u254bjRrsXTfPJ2ticYurD2S7kaUE276uPIiuW7uWChtx4G3/r9l0OtZWziReHquhgvymor3xDgIJ2XI4aZzK4a3KSgFBZcdqlbDuNvdpts0gkxNA/FR3Uj5vD4mj4J1z9Ag=
+	t=1788515106; cv=none; b=cj1FwKn+WkjyRew9u5n5nPpANzAVrXVf+Zuh3KoUFZAONu9pH0p0/i2U5zabkQzmXgzJvF0jYmlrv6ZYA44E1/tM8p1+Qi90U0YlE4c2g1SU1Yq9JGPyDMxM+cRhxBbxettuoBV9UHXPxlRbJGtsoeJCcem9kO5qrEj24niYDIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788513058; c=relaxed/simple;
-	bh=FSqLmFFWynM3dhMtG+D32sIhYShCNas9l7dUuWNA9Ds=;
+	s=arc-20240116; t=1788515106; c=relaxed/simple;
+	bh=zVrsOBbUBsqRW8lZE59vCWEnEi6cLmNkhdl/0iaYt6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jdUiCsV33nSpjsgE8PzlgDrY9aLd0pumiHZD/Uif0xAu97zYbAf+iMBTONgFsbnYKyhJYQXySDRiyQXRV2WbPKQ/P/xVmzv4EEoCAHjZ+sKsMEhfz7e/ReyaDMSEwcyfxh7dUoy7JUiBIJ1oDBb2ZaQjkFZVinIaq7uuCOVJZDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gKWahthA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=guXWm3mU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dc5WYa2w; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NSgxGS7M; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=KfFXaXTmYIZS10ggYD0YzCTzyzIvW4YM4S1gDp6mYNCthwlD0tTrKxlvrUpPu0H73G7wDSDC4CIby+GbVlNDiSZMeL0AnE+p9aK58MZFT1s4Bh2neUTEEDkBkYzvXCQz07TR0nE5H6o/FgmTeCFMZBAN4FN9UlAuTgdx7W4QZS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I+ylvqLL; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=HlT7wDXP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gKWahthA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="guXWm3mU";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dc5WYa2w";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NSgxGS7M"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1483F21ADA
-	for <platform-driver-x86@vger.kernel.org>; Fri,  4 Sep 2026 09:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1788513051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S6jsTYpICTUf4u4QyZalLiQN/qK381mHNqNvyPemu3I=;
-	b=gKWahthAe16LZQthoIJzc6yMzwOkvQioLYwTFuZIyetOP0HfhcI8Ds5MHyy13oaKp1aoJ5
-	yYcHrh1qjr8b8xto7v4hiLuZBEakIcLI8txhJaREeuuhtPo6U3GWMENFUqX1aCWkNlFGed
-	Suwie64h6zIPeLitsW2mjgqIwteTrEo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1788513051;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S6jsTYpICTUf4u4QyZalLiQN/qK381mHNqNvyPemu3I=;
-	b=guXWm3mUQrItdrsnxQqpyEpWbYMjPXv/zAmiOTAme+RTYCaWjSX2HuJf7Ie0ZbNupddnEF
-	gPlux1FAdntSSNBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1788513047; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S6jsTYpICTUf4u4QyZalLiQN/qK381mHNqNvyPemu3I=;
-	b=dc5WYa2wF4aDRVxwgoEPxxPSr951QvaeJwOWNnXacoE3DLPk9IXncA83IAHB7YwSXrVEbA
-	8PIesOVJNBQSMkXLS4Gwk6Nvb3FkM47eFZNnsa794NWNe71TQwNbtEgiv6KVnI63UTEdhb
-	8jZGr+QSvQuh5qKW0n7T1Mc27ggLUE4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1788513047;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S6jsTYpICTUf4u4QyZalLiQN/qK381mHNqNvyPemu3I=;
-	b=NSgxGS7MJTUpgiBocjQPgLbMIOyIKcg73BVrSkKZBhgTcuy5Y8Ihv+BWcAKZniYxKP33eL
-	TYtZGPRW8qnfT7CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AF4B113738;
-	Fri,  4 Sep 2026 09:10:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hd5pKRWLmmqRdwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Fri, 04 Sep 2026 09:10:45 +0000
-Message-ID: <bccaf050-baee-4c16-97c4-1751ef3ecdb7@suse.de>
-Date: Fri, 4 Sep 2026 11:10:45 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I+ylvqLL";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="HlT7wDXP"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6847mnPB2351565
+	for <platform-driver-x86@vger.kernel.org>; Fri, 4 Sep 2026 09:45:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+8D5YW4aMjYqkv07n5OIFJYINICm6DBJu2yq9WVbe+8=; b=I+ylvqLLLLgJPGX0
+	J4MRCr1bKezTgXDYnj6VwxvaI14kiNq83vRgzc2OZShwpLAt65CC7bWQOOG4NDhS
+	eZDowL7tahOXy4y6LgcF/EBMEnjEtcI+4wxlhPEYGTBZEqqQwJhmIqgOf4C7NQ6w
+	13d6QSs7uQCmoydDb8q7HwMz2EHLEBg1XbPDTy0M5TkenpgtSw7PcoF9AvcoIqg6
+	787fNoKGjFPZEYr1yGKEQLGxwd6Gxy/M6zpeDaxACjYUWemAJxPxU7h8rTYogyvt
+	tXa5KmElgYFevjgXUEq4TNcPaI67wNgCiYMwiyUkTQNo3f0u8C++t8KAmwBa61/G
+	9jC7Og==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gfp1fh50d-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <platform-driver-x86@vger.kernel.org>; Fri, 04 Sep 2026 09:45:03 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-51bfd1772d8so1741151cf.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Sep 2026 02:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1788515098; x=1789119898; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+8D5YW4aMjYqkv07n5OIFJYINICm6DBJu2yq9WVbe+8=;
+        b=HlT7wDXPnnb/qidYJmjTQPMDy7Gzu6XStDjlrWvgsyj+OoeKbn5E1mfNv9ggjexgUJ
+         10UjBITdtyFdXi9djZ8S+doXg8Y7UwQGClbyk9+oFPW+EsSi5h/Xg4IKWBEwNHBCJIiI
+         HEeH4F81UG9qTrh11LvNJLeqN9At6dnrGbH/Q49O3U7qti+UW2PWQnkDCl2M2nWhKBPf
+         mXFuJCPZONEe8w7D6VHu3v0BqNcMuthmyBO34cS1Nq+YCDG06JzGJsYGTaUcBnutk9xV
+         3/AHZnFAaSuLkZwa43HiDRiLsewctUnO5XagxrZh2QjVqBK1uibu+fommufsg+gD5DfS
+         Q1oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788515098; x=1789119898;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=+8D5YW4aMjYqkv07n5OIFJYINICm6DBJu2yq9WVbe+8=;
+        b=LEgV00+3viugP+7nPHAl70tyhm5i9akWj23CMqiJ56m4UspeWdkce9JlPuwLtK/Av6
+         Nqpr4orZfi8Prf1z6qrS3f/IHNq55rhJLy4RY75ymdL9ULXtPih5h5pC9TH46M3Hs7Oh
+         W+vpx5/87ASmTq7sDaqrRkU/p8zWCNuIjKRpqPp1Ha2qzgcHHIzEQLPczGmW11vcrhx/
+         QxrfXy/cB1eSnd150NMr2j7ShcOBw0luDZb2POwDAJDc8Ijr9Vot70LI/2XBBW/xqcmg
+         eFbZC8L0VlHsBfjjQEikPVcLsgBXU0F2l4FsPvFChNYdmZfVkwy8r1WVI9gvU9SDmnLz
+         ttHQ==
+X-Forwarded-Encrypted: i=1; AKwUvByEEHRSezap5ezWFC7bs65rA8PLVp3nS7vrcRT1KGom6/SkHxceU292WIDONvM0N61+CbF0m6YHnbOevwraSJudX6hu@vger.kernel.org
+X-Gm-Message-State: AFuF++n6oUQgnZc55cck4TDeLYO79roElQoPr56IG5dpg/Z0MCRy+uTh
+	lLV7qOmOs/5ZfD/omaPsXbpff6RHnaNXvf6+mXywEBWeFUZQa7GQNxzJa0NBUSuAmP/UzGxaQcO
+	4rZmhmhqGFF/SxkpfBIAbLLeUmavQvU/FZz4KUh1NcAF2J21yXiPtGyISaAoO9SS2j4T8DXVIlT
+	8z
+X-Gm-Gg: AYBFou3SwknS9M22EbOKP2cyV1snvytHeeRpPOHcFIlXmqoEgPOoppZ1HQRUcpeM1zd
+	/OZ34+VNyZKMjHqjPAFSL/uvW1fzG6V7vorVFPxuGn6yZyijoe0jkorDdu7ZI2sYujVb1h2adgh
+	CbqQGa1pBvxc3DCpoweyvt4yQJSYGlJ8YZYli5sfZG9a43squk+6OZVht+t0/jRuDz7MlgvN0Yw
+	lvdPDGFZLMMaPTJbIcbmz4erNGjEGJpOFeP0EPgMTVQaod0aoZjr6mjfKT8TgDgYXQimU7AtHL5
+	fb36p0ikes/OyMfUWnVBlql01yMOd2munj9E1JJCF89SXQHythtyYBNiYAvqvwqW00bm7YhaWjm
+	CLfKLGpXV36g392SE7Yn4yg==
+X-Received: by 2002:a05:620a:4686:b0:939:47f4:935a with SMTP id af79cd13be357-939807adf30mr345133485a.5.1788515097820;
+        Fri, 04 Sep 2026 02:44:57 -0700 (PDT)
+X-Received: by 2002:a05:620a:4686:b0:939:47f4:935a with SMTP id af79cd13be357-939807adf30mr345131285a.5.1788515097419;
+        Fri, 04 Sep 2026 02:44:57 -0700 (PDT)
+Received: from [192.168.202.12] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c260d6dfad6sm83831366b.60.2026.09.04.02.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2026 02:44:56 -0700 (PDT)
+Message-ID: <62c7ed77-32c7-4e4a-ab44-64bb174a88f8@oss.qualcomm.com>
+Date: Fri, 4 Sep 2026 11:44:54 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -82,138 +90,88 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 3/5] drm/sysfb: Update coreboot framebuffer Kconfig
- symbol
-To: Sean Rhodes <sean@starlabs.systems>, linux-kernel@vger.kernel.org
-Cc: Hans de Goede <hansg@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Corentin Chary <corentin.chary@gmail.com>, "Luke D. Jones"
- <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>,
- Prasanth Ksr <prasanth.ksr@dell.com>, Jorge Lopez <jorge.lopez2@hp.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Joshua Grisham <josh@joshuagrisham.com>, Will Deacon <will@kernel.org>,
- Douglas Anderson <dianders@chromium.org>,
- "Kiryl Shutsemau (Meta)" <kas@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Chen-Yu Tsai <wenst@chromium.org>,
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
- Tzung-Bi Shih <tzungbi@kernel.org>, Brian Norris <briannorris@chromium.org>,
- Julius Werner <jwerner@chromium.org>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig_=28The_Capable_Hub=29?=
- <u.kleine-koenig@baylibre.com>,
- Titouan Ameline de Cadeville <titouan.ameline@gmail.com>,
- Laxman Acharya Padhya <acharyalaxman8848@gmail.com>,
- Yidi Lin <yidilin@google.com>, Kees Cook <kees@kernel.org>,
- Takashi Sakamoto <o-takashi@sakamocchi.jp>, chrome-platform@lists.linux.dev,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>,
- Eric Biggers <ebiggers@kernel.org>, Luca Weiss <luca.weiss@fairphone.com>,
- Michal Simek <michal.simek@amd.com>, Sven Peter <sven@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Linus Walleij <linusw@kernel.org>, Drew Fustini <fustini@kernel.org>,
- linux-arm-kernel@lists.infradead.org, soc@lists.linux.dev
-References: <cover.1788284852.git.sean@starlabs.systems>
- <1748b8899ec772cc435dc57dc55f76c15da95f0a.1788284852.git.sean@starlabs.systems>
+Subject: Re: [PATCH 1/2] platform: arm64: Add Radxa SVC GLINK driver
+To: Xilin Wu <sophon@radxa.com>, Guenter Roeck <linux@roeck-us.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hansg@kernel.org>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20260831-radxa-svc-v1-0-7c028de6a387@radxa.com>
+ <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
 Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <1748b8899ec772cc435dc57dc55f76c15da95f0a.1788284852.git.sean@starlabs.systems>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_GT_50(0.00)[51];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,ljones.dev,linux.dev,dell.com,hp.com,squebb.ca,joshuagrisham.com,chromium.org,vger.kernel.org,redhat.com,google.com,baylibre.com,sakamocchi.jp,lists.linux.dev,ffwll.ch,lists.freedesktop.org,oss.qualcomm.com,linux-m68k.org,arndb.de,fairphone.com,amd.com,bootlin.com,lists.infradead.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email,suse.com:url]
-X-Spam-Flag: NO
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260831-radxa-svc-v1-1-7c028de6a387@radxa.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=F+xnsKhN c=1 sm=1 tr=0 ts=6a9a931f cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=ksxQWNrZAAAA:8 a=oytB4wdSUnn8FBOm40sA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22 a=l7WU34MJF0Z5EO9KEJC3:22
+X-Proofpoint-ORIG-GUID: 7PMeFGemPfsR2kKjzfezVxzrWSdNhr_N
+X-Proofpoint-Spam-Info: AW1haW4tMjYwOTA0MDA4OCBTYWx0ZWRfX2Eo0B0fJYIJm
+ 3SXU1ZO3bnwT48XSjMed96r9HvJIcFV5Oe75AUiSoj+V7l8+LNCffNfduFjxm+EcehFIZtW6ISQ
+ m3LUqiP77S/SxgabAxfAKtxNzTa2bvc=
+X-Proofpoint-GUID: 7PMeFGemPfsR2kKjzfezVxzrWSdNhr_N
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA0MDA4OCBTYWx0ZWRfX79DYexxqzpT8
+ lNP6lFrSvAIyQ4NOE/YMahky1Ju9d5nfWwKMwQEt4t6Q0c/7T3qQSAoLlf/8NI66o2ps+3b9srW
+ ysmWm1apeRwtlyzhYgxZudfZDMJ8GFrb1sVNHiVIMX2/mucMe6Bj9oBTLviPbknQU8YZD8QjNKw
+ tJvVSkVSpnyBP4il91X12zCZONcGi5KISQ+Ev6IeiS0jPMcgr6jVuaqn/Z2GQoBKeJMNEq76vkO
+ IOnWhtBGeh9nns4TX/GXGkhJa0JqQwJar0racIAa0p1f/FixK8r0Wo/5qmvLb//pl77Tv620XnR
+ 6wqfMNRN6p+ScclUh+MtlUKvGfreGfK1JqtTsqR6u4vHGgxHvx10gFak9uy8Iqns8lFBt3vM309
+ 2nkW/0q/vUgT5ZuHEr2CZ7ce0Xhe/JFG6RgJCNM5kVhaxIFvmNn5b8+QZkk3KwM4IqWE7+dc6Kl
+ mE2bVvgiwMyBDD/ELQQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-09-04_02,2026-09-03_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 adultscore=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2609040088
 
-
-
-Am 01.09.26 um 19:48 schrieb Sean Rhodes:
-> The coreboot firmware directory rename introduces COREBOOT_FRAMEBUFFER as
-> the user-facing symbol while retaining GOOGLE_FRAMEBUFFER_COREBOOT as a
-> transitional compatibility symbol.
->
-> Make DRM_COREBOOTDRM depend on the new symbol. This keeps the DRM
-> dependency aligned with the renamed firmware option without changing
-> runtime behavior.
->
-> Signed-off-by: Sean Rhodes <sean@starlabs.systems>
-
-Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-
+On 8/31/26 5:09 PM, Xilin Wu wrote:
+> Add an rpmsg client for the RADXA_SVC_ADSP_APPS firmware service used
+> on supported Radxa boards with Qualcomm SoCs.
+> 
+> Expose fan control through the standard hwmon pwm1 and pwm1_enable
+> attributes. SET_PROFILE only changes the fan curve, so map its quiet and
+> performance curves to automatic modes instead of platform_profile.
+> 
+> Signed-off-by: Xilin Wu <sophon@radxa.com>
 > ---
->   drivers/gpu/drm/sysfb/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/sysfb/Kconfig b/drivers/gpu/drm/sysfb/Kconfig
-> index f7e48178885e..2bfcd59bfe6d 100644
-> --- a/drivers/gpu/drm/sysfb/Kconfig
-> +++ b/drivers/gpu/drm/sysfb/Kconfig
-> @@ -10,7 +10,7 @@ config DRM_SYSFB_HELPER
->   config DRM_COREBOOTDRM
->   	tristate "Coreboot framebuffer driver"
->   	depends on DRM && MMU
-> -	depends on GOOGLE_FRAMEBUFFER_COREBOOT
-> +	depends on COREBOOT_FRAMEBUFFER
->   	select APERTURE_HELPERS
->   	select DRM_CLIENT_SELECTION
->   	select DRM_GEM_SHMEM_HELPER
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstr. 146, 90461 Nürnberg, Germany, www.suse.com
-GF: Jochen Jaser, Andrew McDonald, (HRB 36809, AG Nürnberg)
+[...]
+
+> +static int radxa_svc_request(struct radxa_svc_glink *svc, u32 opcode,
+> +			     const void *req_payload, size_t req_len,
+> +			     void *rsp_payload, size_t *rsp_len);
+
+I don't think you need this forward-declaration
+
+[...]
 
 
+> +	reinit_completion(&svc->rsp);
+> +
+> +	spin_lock_irqsave(&svc->rsp_lock, flags);
+
+
+GPT says:
+
+High: A late response from a timed-out request can complete and corrupt
+the next transaction.
+
+In patch 1, radxa_svc_request() clears pending and returns after the
+5-second timeout, then a later request calls reinit_completion() and
+installs its new pending_seq (patch lines 526-540, 550-555). The callback
+sets do_complete under rsp_lock, drops the lock, and only then calls
+complete() (patch lines 612-624). 
+
+Konrad
