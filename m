@@ -1,37 +1,37 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D2B3655E0;
-	Fri,  4 Sep 2026 22:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D76374E79;
+	Fri,  4 Sep 2026 22:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788561947; cv=none; b=QxIyaiD22Be2hetl/3+eYJfLMIb/qZtoq8xiETscm/QH+b6/l4EvGehEBtKjiVhXGrMqzjdPRUhOQn3/bG/Tuxu40qUGuoZhhR1et8Eo5SFLuc8RLpm/PYB7vNGzt1SI2ud3MwwZc9HJVo3olU2KtlcfFd9+RtxP+bqwyJYoPgc=
+	t=1788561953; cv=none; b=TLhBAVGCICC5FZrspRf4jV/QPzr35WnctA1lEPw+ZVY00+v3qaDOT7QtK0lH4NZ1jG1AEm+M3HIv4dUXnG2dkfH0mVewvWUpaxgocdJEYQFlzWQ0bIb3VyyJan8hCAiawvzUqFF0npwv9hf0gaNXofD/WhzsoFsPLhBASUJEAGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788561947; c=relaxed/simple;
-	bh=DLcczIRtFJlYQzhwu6OA8bTZtJ+A67dJxBhCkspDBdk=;
+	s=arc-20240116; t=1788561953; c=relaxed/simple;
+	bh=5UgFXlacbJzo0eTMXqZHJPOmRwaIGw12637R9yTqZUE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F8/YrGCiUD/0aLsGa0aMMxRDyycDAPdhPkg/nvPUpNN+lqAU4nYBfbtLV8g3DPKy4LoFQ1GLclUWPHx6EJNm2qyi5lZq1BlfM8etIhpfcdKicoyQ7y+4ndUKdW+u185IifFRLZvqjgzJSov4lgXdq2cfANZVehzjtbnr64TEoBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=Fa3YHS6A; arc=none smtp.client-ip=212.227.15.18
+	 MIME-Version; b=n7PAbO8RLsTn3UIkS4nTVkVu8OfO1005qdho9P7Xn32zx3dEPStGA3+YHLFfF3k37KyqUCMj0qPcu95+Hp1On2IOSTMxQ9w/F8rNl1Dg44jnvyanFGIENKJHjxfjWQw0I/A5ENsM2dhFJxThbMWC9+NSK/2OyKcHSkJqUIdFrTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ZwyBJOQx; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="Fa3YHS6A"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ZwyBJOQx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1788561933; x=1789166733; i=w_armin@gmx.de;
-	bh=VE+g8fQJZAaIeO8K6NwZFUvQpO5eDi82WixYAVYPu70=;
+	s=s31663417; t=1788561932; x=1789166732; i=w_armin@gmx.de;
+	bh=3Zi9GuuGIIZTfa9yAYg/hRpQ65IwyYpoQtnyoHltRQU=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
 	 References:MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=Fa3YHS6AbJZDOih4IeoR++aU31z+hzI4dAkrEUeS3B/kaUOX/TUcKhpZHgEWWQVP
-	 V9x0OLEE7lPcU0m2edxj3IZ5nkpefWR2XslT9+1vdGzqWbLCvdvJHBbDwXLYFdgDS
-	 O+GW6sc0MfJb6qr01GKUzKBwx6ZJj1yOAuIIDqGQdQ9+63uxoU8zEX1ZxwuvNAvzu
-	 QopHWoSccVTog5WCjtxOtaYvKfOOJEDk2NYqDXK53+eaj1/42N6XZTBtX8qG9GVTr
-	 U38mlN8/4b/HpSWqZ9FDgMQJymSFiP/2UILlwWM7mozUrrur7lB9u2H0uSapmdxZ+
-	 No3PJGAx012ZaY1YMA==
+	b=ZwyBJOQxYcCWMgpq1yN8usNFvF8nXJbvS7wFQN8t2koa5GN5kDHz2pfmL5e1bHb0
+	 7VoyM1qtxBcxgj7EsWNqrzyTmFPl22RMH/8qVc6B7IWsOQy/1wbtlB6fVU3B1O3N2
+	 rmtYpwqE/tT2Wr/gSVR+/udz7wV1C4WqFMVqbAOzp7Wex1oFRq8+Ey5jHWCUGmCQt
+	 bU9ANdRP7xQCKB3spcuQuewNa9YnJ3zCn2Twgut9PNSIE6uuoIO3PcwgdCNrGlI7K
+	 C2eMbdIHi7J1uL7eA3kz68KLDYC8eaBW9VJzr6tJOjXlAuVAT2whm+tq9VMchV00i
+	 E1q2f1QHeYPCUL8trw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MeU4s-1wUfQ83AUm-00ciiP; Sat, 05
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4QsO-1wuTmP3oXu-010f6u; Sat, 05
  Sep 2026 00:45:32 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
@@ -46,9 +46,9 @@ Cc: platform-driver-x86@vger.kernel.org,
 	vlku.milos.fun@gmail.com,
 	mm3885525@gmail.com,
 	wleizc7319@gmail.com
-Subject: [PATCH 2/2] platform/x86: bitland-mifs-wmi: Treat WMI_FN_SYSTEM_AC_TYPE as optional
-Date: Sat,  5 Sep 2026 00:45:16 +0200
-Message-Id: <20260904224516.8893-3-W_Armin@gmx.de>
+Subject: [PATCH 1/2] platform/x86: bitland-mifs-wmi: Detect failed function calls
+Date: Sat,  5 Sep 2026 00:45:15 +0200
+Message-Id: <20260904224516.8893-2-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260904224516.8893-1-W_Armin@gmx.de>
 References: <20260904224516.8893-1-W_Armin@gmx.de>
@@ -59,159 +59,576 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZeGHrumJy98EUaXRzdOrosHECcLFmP1Xa6pR/8a/UnT6If6QPxt
- ktv43OL5UWxsYOniKDrRgqthG8v33x4B4cEo5zKJVbNHrR7dINoc33EVt1E7ZyNoby05fHg
- G+AhgG/wcln9AfTf4oLOi95/nl6VF7RFn3GMduwhWETLne4pnfCwdQHDqyfyBSf/QsXiy1h
- x8oqFx7j+nQv381wHoTjw==
+X-Provags-ID: V03:K1:mI7xJHwEoNTYdnUdtBQ9G+18Abb2XX3ZNPMyqqCnOEf3FD/OBdh
+ 9/rgtEf0AJPyDH//6lBDGYVfemKdKvagG/iJe6QJxnv7huzmzqpEOyfjr23NNTaxNGuQzxK
+ 4ofI93pWXQxEwtodgxH1dpmxLPkZ6uizXXBJF1wT9eXankz+aPJwv3Q4fQKybwhS1Z7hCoO
+ vfYJv7aGc0fHbPF4F9cUQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2N4CczevgnI=;OfwHp+IbUHh3K85FiGbqWMAX3Ho
- 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
- YwbWVSsbSsZdXevngFhkUdJi+w==
+UI-OutboundReport: notjunk:1;M01:P0:l9cm7+faBYs=;znio24lbwCetVnse9mHtKHi80Vj
+ 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
+ +RgIaJj/9Dd17fz3ydFrufmcrA==
 
-Some systems only support USB-C but can still enter performance mode
-if connected to a charger. Such systems usually do not support
-WMI_FN_SYSTEM_AC_TYPE, so bitland_check_performance_capability()
-currently always fails on them.
+The first 16-bit field inside the output data of a Mifs method call
+contains a return code that specifies if the method call succeeded
+(0x8000) or failed due to missing support (0xE000). The second 16-bit
+field should then contain the previously executed function id.
 
-Fix this by treating WMI_FN_SYSTEM_AC_TYPE as optional and skip
-the AC type check if WMI_FN_SYSTEM_AC_TYPE is not supported.
+Rework the layout of both input and output data to match the format
+used by the Mifs firmware and check the return code.
 
 Tested-by: Martiya Aryan Mehr <martiya.ar@gmail.com>
 Signed-off-by: Armin Wolf <W_Armin@gmx.de>
 =2D--
- Documentation/wmi/devices/bitland-mifs-wmi.rst | 3 ++-
- drivers/platform/x86/bitland-mifs-wmi.c        | 6 +++++-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ .../wmi/devices/bitland-mifs-wmi.rst          |  61 +++++---
+ drivers/platform/x86/bitland-mifs-wmi.c       | 140 +++++++++---------
+ 2 files changed, 110 insertions(+), 91 deletions(-)
 
 diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentatio=
 n/wmi/devices/bitland-mifs-wmi.rst
-index 314b3fbdda45..27c3fd248279 100644
+index 9e86ecc2993c..314b3fbdda45 100644
 =2D-- a/Documentation/wmi/devices/bitland-mifs-wmi.rst
 +++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-@@ -214,7 +214,8 @@ Performance Modes
- Changing the performance mode via Command ID 0x08 (SystemPerMode) affects=
- the
- power limits (PL1/PL2) and fan curves managed by the Embedded Controller =
-(EC).
- Note that the "Full-speed" and "Performance" mode (1, 3) is typically onl=
-y
--available when the system is connected to a DC power source (not USB-C/PD=
-).
-+available when the system is connected to a DC power source (not USB-C/PD=
- on
-+model with a dedicated DC connector).
+@@ -67,7 +67,7 @@ WMI Methods (MICommonInterface)
 =20
- In the driver implementation, switch to performance/full-speed mode witho=
-ut
- DC power connected will throw the EOPNOTSUPP error.
+ The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b=
+3434b}``)
+ is the primary control interface. It uses a 32-byte buffer for both input
+-(``InData``) and output (``OutData``).
++(``InData``) and output (``OutData`` + ``Reserved``).
+=20
+ Method Structure
+ ----------------
+@@ -77,53 +77,78 @@ The data packet follows a standardized format:
+ +----------+-------------------------------------------------------------=
+=2D----+
+ | Byte     | Description                                                 =
+     |
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D+
+-| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)           =
+     |
++| 1 and 2  | Method Type or Return Code                                  =
+     |
+ +----------+-------------------------------------------------------------=
+=2D----+
+-| 3        | Command ID (Method Name)                                    =
+     |
++| 3 and 4  | Command ID (Method Name)                                    =
+     |
+ +----------+-------------------------------------------------------------=
+=2D----+
+-| 4 - 31   | Arguments (for Set) or Return Data (for Get)                =
+     |
++| 5 - 32   | Arguments (for Set) or Return Data (for Get)                =
+     |
+ +----------+-------------------------------------------------------------=
+=2D----+
+=20
++Method Types
++------------
++
++The following Method types are understood by the underlying firmware:
++
+++--------+---------+
++| Type   | Meaning |
+++=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D+
++| 0xFA00 | Read    |
+++--------+---------+
++| 0xFB00 | Write   |
+++--------+---------+
++
++Return Codes
++------------
++
++The following Return Codes are know to be returned in response to a WMI m=
+ethod invocation:
++
+++--------+--------------------+
++| Code   | Meaning            |
+++=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D+
++| 0x8000 | Success            |
+++--------+--------------------+
++| 0xE000 | Invalid Command ID |
+++--------+--------------------+
+=20
+ Command IDs
+ -----------
+=20
+-The following Command IDs are used in the third byte of the buffer:
++The following Command IDs know to be used on some models:
+=20
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+ | ID       | Name                  | Values / Description                =
+     |
+ +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D+
+-| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet=
+,    |
++| 0x0800   | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet=
+,    |
+ |          |                       | 3: Full-speed                       =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA      =
+     |
++| 0x0900   | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA      =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB=
+     |
++| 0x0A00   | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB=
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 11       | FnLock                | 0: Off, 1: On                       =
+     |
++| 0x0B00   | FnLock                | 0: Off, 1: On                       =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)       =
+     |
++| 0x0C00   | TPLock                | 0: Unlock, 1: Lock (Touchpad)       =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:       =
+     |
++| 0x0D00   | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:       =
+     |
+ |          |                       | Bytes 4-5: CPU Fan RPM (Little Endia=
+n)   |
+ |          |                       | Bytes 6-7: GPU Fan RPM (Little Endia=
+n)   |
+ |          |                       | Bytes 10-11: SYS Fan RPM (Little End=
+ian) |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,   =
+     |
++| 0x1000   | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,   =
+     |
+ |          |                       | 3: Custom                           =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue valu=
+es   |
++| 0x1100   | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue valu=
+es   |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto  =
+     |
++| 0x1200   | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto  =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)    =
+     |
++| 0x1300   | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)    =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS=
+)    |
++| 0x1400   | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS=
+)    |
+ |          |                       | Byte 5: State (0: Off, 1: On)       =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle    =
+     |
++| 0x1500   | MaxFanSpeed           | Sets manual fan speed duty cycle    =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+-| 22       | CPUThermometer        | Returns CPU Temperature             =
+     |
++| 0x1600   | CPUThermometer        | Returns CPU Temperature             =
+     |
+ +----------+-----------------------+-------------------------------------=
+=2D----+
+=20
+ WMI Events (HID_EVENT20)
 diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x8=
 6/bitland-mifs-wmi.c
-index cdb930eb678d..dd1648b7de77 100644
+index 3a373184519d..cdb930eb678d 100644
 =2D-- a/drivers/platform/x86/bitland-mifs-wmi.c
 +++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -246,7 +246,11 @@ static int bitland_check_performance_capability(struc=
-t bitland_mifs_wmi_data *da
- 		return -EOPNOTSUPP;
+@@ -30,6 +30,7 @@
+ #include <linux/stddef.h>
+ #include <linux/string.h>
+ #include <linux/sysfs.h>
++#include <linux/types.h>
+ #include <linux/unaligned.h>
+ #include <linux/units.h>
+ #include <linux/wmi.h>
+@@ -39,25 +40,30 @@
+ #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
 =20
- 	ret =3D bitland_mifs_wmi_call(data, &input, &output);
--	if (ret)
-+	/* Not all systems support this function, do not perform further checks =
-on them */
-+	if (ret =3D=3D -EOPNOTSUPP)
-+		return 0;
+ enum bitland_mifs_operation {
+-	WMI_METHOD_GET	=3D 250,
+-	WMI_METHOD_SET	=3D 251,
++	WMI_METHOD_GET	=3D 0xFA00,
++	WMI_METHOD_SET	=3D 0xFB00,
+ };
+=20
+ enum bitland_mifs_function {
+-	WMI_FN_SYSTEM_PER_MODE		=3D 8,
+-	WMI_FN_GPU_MODE			=3D 9,
+-	WMI_FN_KBD_TYPE			=3D 10,
+-	WMI_FN_FN_LOCK			=3D 11,
+-	WMI_FN_TP_LOCK			=3D 12,
+-	WMI_FN_FAN_SPEEDS		=3D 13,
+-	WMI_FN_RGB_KB_MODE		=3D 16,
+-	WMI_FN_RGB_KB_COLOR		=3D 17,
+-	WMI_FN_RGB_KB_BRIGHTNESS	=3D 18,
+-	WMI_FN_SYSTEM_AC_TYPE		=3D 19,
+-	WMI_FN_MAX_FAN_SWITCH		=3D 20,
+-	WMI_FN_MAX_FAN_SPEED		=3D 21,
+-	WMI_FN_CPU_THERMOMETER		=3D 22,
+-	WMI_FN_CPU_POWER		=3D 23,
++	WMI_FN_SYSTEM_PER_MODE		=3D 0x0800,
++	WMI_FN_GPU_MODE			=3D 0x0900,
++	WMI_FN_KBD_TYPE			=3D 0x0A00,
++	WMI_FN_FN_LOCK			=3D 0x0B00,
++	WMI_FN_TP_LOCK			=3D 0x0C00,
++	WMI_FN_FAN_SPEEDS		=3D 0x0D00,
++	WMI_FN_RGB_KB_MODE		=3D 0x1000,
++	WMI_FN_RGB_KB_COLOR		=3D 0x1100,
++	WMI_FN_RGB_KB_BRIGHTNESS	=3D 0x1200,
++	WMI_FN_SYSTEM_AC_TYPE		=3D 0x1300,
++	WMI_FN_MAX_FAN_SWITCH		=3D 0x1400,
++	WMI_FN_MAX_FAN_SPEED		=3D 0x1500,
++	WMI_FN_CPU_THERMOMETER		=3D 0x1600,
++	WMI_FN_CPU_POWER		=3D 0x1700,
++};
 +
-+	if (ret < 0)
++enum bitland_mifs_return_code {
++	WMI_RETURN_CODE_SUCCESS			=3D 0x8000,
++	WMI_RETURN_CODE_UNKNOWN_FUNCTION	=3D 0xE000,
+ };
+=20
+ enum bitland_system_ac_mode {
+@@ -114,18 +120,14 @@ enum bitland_wmi_device_type {
+ };
+=20
+ struct bitland_mifs_input {
+-	u8 reserved1;
+-	u8 operation;
+-	u8 reserved2;
+-	u8 function;
++	__le16 operation;
++	__le16 function;
+ 	u8 payload[28];
+ } __packed;
+=20
+ struct bitland_mifs_output {
+-	u8 reserved1;
+-	u8 operation;
+-	u8 reserved2;
+-	u8 function;
++	__le16 return_code;
++	__le16 function;
+ 	u8 data[28];
+ } __packed;
+=20
+@@ -171,15 +173,27 @@ static int bitland_mifs_wmi_call(struct bitland_mifs=
+_wmi_data *data,
+=20
+ 	guard(mutex)(&data->lock);
+=20
+-	if (!output)
+-		return wmidev_invoke_procedure(data->wdev, 0, 1, &in_buf);
+-
+-	ret =3D wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf, sizeof=
+(*output));
++	ret =3D wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf,
++				   sizeof(struct bitland_mifs_output));
+ 	if (ret)
  		return ret;
 =20
- 	if (output.data[0] !=3D WMI_SYSTEM_AC_CIRCULARHOLE)
+-	memcpy(output, out_buf.data, sizeof(*output));
+-	kfree(out_buf.data);
++	struct bitland_mifs_output *result __free(kfree) =3D out_buf.data;
++
++	switch (le16_to_cpu(result->return_code)) {
++	case WMI_RETURN_CODE_SUCCESS:
++		break;
++	case WMI_RETURN_CODE_UNKNOWN_FUNCTION:
++		return -EOPNOTSUPP;
++	default:
++		return -EIO;
++	}
++
++	if (result->function !=3D input->function)
++		return -ENOMSG;
++
++	if (output)
++		memcpy(output, result, sizeof(*output));
+=20
+ 	return 0;
+ }
+@@ -189,10 +203,8 @@ static int laptop_profile_get(struct device *dev,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_GET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_SYSTEM_PER_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
++		.function =3D cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+ 	};
+ 	struct bitland_mifs_output result;
+ 	int ret;
+@@ -223,8 +235,8 @@ static int laptop_profile_get(struct device *dev,
+ static int bitland_check_performance_capability(struct bitland_mifs_wmi_d=
+ata *data)
+ {
+ 	struct bitland_mifs_input input =3D {
+-		.operation =3D WMI_METHOD_GET,
+-		.function =3D WMI_FN_SYSTEM_AC_TYPE,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
++		.function =3D cpu_to_le16(WMI_FN_SYSTEM_AC_TYPE),
+ 	};
+ 	struct bitland_mifs_output output;
+ 	int ret;
+@@ -248,10 +260,8 @@ static int laptop_profile_set(struct device *dev,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_SET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_SYSTEM_PER_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_SET),
++		.function =3D cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
+ 	};
+ 	int ret;
+ 	u8 val;
+@@ -344,22 +354,20 @@ static int laptop_hwmon_read(struct device *dev, enu=
+m hwmon_sensor_types type,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_GET,
+-		.reserved2 =3D 0,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
+ 	};
+ 	struct bitland_mifs_output res;
+ 	int ret;
+=20
+ 	switch (type) {
+ 	case hwmon_temp:
+-		input.function =3D WMI_FN_CPU_THERMOMETER;
++		input.function =3D cpu_to_le16(WMI_FN_CPU_THERMOMETER);
+ 		ret =3D bitland_mifs_wmi_call(data, &input, &res);
+ 		if (!ret)
+ 			*val =3D res.data[0] * MILLIDEGREE_PER_DEGREE;
+ 		return ret;
+ 	case hwmon_fan:
+-		input.function =3D WMI_FN_FAN_SPEEDS;
++		input.function =3D cpu_to_le16(WMI_FN_FAN_SPEEDS);
+ 		ret =3D bitland_mifs_wmi_call(data, &input, &res);
+ 		if (ret)
+ 			return ret;
+@@ -420,10 +428,8 @@ static int laptop_kbd_led_set(struct led_classdev *le=
+d_cdev,
+ 	struct bitland_mifs_wmi_data *data =3D
+ 		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_SET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_RGB_KB_BRIGHTNESS,
++		.operation =3D cpu_to_le16(WMI_METHOD_SET),
++		.function =3D cpu_to_le16(WMI_FN_RGB_KB_BRIGHTNESS),
+ 	};
+=20
+ 	input.payload[0] =3D (u8)value;
+@@ -436,10 +442,8 @@ static enum led_brightness laptop_kbd_led_get(struct =
+led_classdev *led_cdev)
+ 	struct bitland_mifs_wmi_data *data =3D
+ 		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_GET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_RGB_KB_BRIGHTNESS,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
++		.function =3D cpu_to_le16(WMI_FN_RGB_KB_BRIGHTNESS),
+ 	};
+ 	struct bitland_mifs_output res;
+ 	int ret;
+@@ -463,10 +467,8 @@ static ssize_t gpu_mode_show(struct device *dev, stru=
+ct device_attribute *attr,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_GET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_GPU_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
++		.function =3D cpu_to_le16(WMI_FN_GPU_MODE),
+ 	};
+ 	struct bitland_mifs_output res;
+ 	u8 mode_val;
+@@ -488,10 +490,8 @@ static ssize_t gpu_mode_store(struct device *dev, str=
+uct device_attribute *attr,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_SET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_GPU_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_SET),
++		.function =3D cpu_to_le16(WMI_FN_GPU_MODE),
+ 	};
+ 	int val;
+ 	int ret;
+@@ -521,10 +521,8 @@ static ssize_t kb_mode_show(struct device *dev, struc=
+t device_attribute *attr,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_GET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_RGB_KB_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_GET),
++		.function =3D cpu_to_le16(WMI_FN_RGB_KB_MODE),
+ 	};
+ 	struct bitland_mifs_output res;
+ 	u8 mode_val;
+@@ -546,10 +544,8 @@ static ssize_t kb_mode_store(struct device *dev, stru=
+ct device_attribute *attr,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_SET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_RGB_KB_MODE,
++		.operation =3D cpu_to_le16(WMI_METHOD_SET),
++		.function =3D cpu_to_le16(WMI_FN_RGB_KB_MODE),
+ 	};
+ 	// the wmi value (0, 1, 2 or 3)
+ 	int val;
+@@ -575,10 +571,8 @@ static ssize_t fan_boost_store(struct device *dev,
+ {
+ 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
+ 	struct bitland_mifs_input input =3D {
+-		.reserved1 =3D 0,
+-		.operation =3D WMI_METHOD_SET,
+-		.reserved2 =3D 0,
+-		.function =3D WMI_FN_MAX_FAN_SWITCH,
++		.operation =3D cpu_to_le16(WMI_METHOD_SET),
++		.function =3D cpu_to_le16(WMI_FN_MAX_FAN_SWITCH),
+ 	};
+ 	bool val;
+ 	int ret;
 =2D-=20
 2.39.5
 
