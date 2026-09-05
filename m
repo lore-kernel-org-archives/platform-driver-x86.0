@@ -1,634 +1,167 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D76374E79;
-	Fri,  4 Sep 2026 22:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E1F31F99C
+	for <platform-driver-x86@vger.kernel.org>; Sat,  5 Sep 2026 00:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788561953; cv=none; b=TLhBAVGCICC5FZrspRf4jV/QPzr35WnctA1lEPw+ZVY00+v3qaDOT7QtK0lH4NZ1jG1AEm+M3HIv4dUXnG2dkfH0mVewvWUpaxgocdJEYQFlzWQ0bIb3VyyJan8hCAiawvzUqFF0npwv9hf0gaNXofD/WhzsoFsPLhBASUJEAGs=
+	t=1788569594; cv=none; b=rM278LzLVt7D8qRqln+2GeSbXAvLueaLl7CqHWzhceTUGZYh6lrRTW3xIAvgT6NJ27oWd5Zm5AN0BGsO74ld6VSxj+xYT6q4+QWESeOdrxoY3neXwhc3+iJHhvYeYcuoGsKNsAKjemzRFfzqHGs7HtItz7v2h0FRBEXfPTFFMgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788561953; c=relaxed/simple;
-	bh=5UgFXlacbJzo0eTMXqZHJPOmRwaIGw12637R9yTqZUE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n7PAbO8RLsTn3UIkS4nTVkVu8OfO1005qdho9P7Xn32zx3dEPStGA3+YHLFfF3k37KyqUCMj0qPcu95+Hp1On2IOSTMxQ9w/F8rNl1Dg44jnvyanFGIENKJHjxfjWQw0I/A5ENsM2dhFJxThbMWC9+NSK/2OyKcHSkJqUIdFrTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ZwyBJOQx; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1788569594; c=relaxed/simple;
+	bh=B9uLmeH+dnuzw2PxWVBIv1M4LcX/W288sHORUODHjuc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=nwENlGIaUKp4rGfpjW7Sbq1j6W+rHf1g2EMkIa4P2qgGEG05nBwjjj9JXT2JZkskTf0tk4jDYkvn6uXy6aaspzFhLjkkDTH7jtUHMdM90JJYyiVlPDXdeEKn8KRg6I2YIrXgG6Wp5ESySkQiPeTqdghZMRsLV6FOM0FgQdQvVDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NGG4ceYq; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ZwyBJOQx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1788561932; x=1789166732; i=w_armin@gmx.de;
-	bh=3Zi9GuuGIIZTfa9yAYg/hRpQ65IwyYpoQtnyoHltRQU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ZwyBJOQxYcCWMgpq1yN8usNFvF8nXJbvS7wFQN8t2koa5GN5kDHz2pfmL5e1bHb0
-	 7VoyM1qtxBcxgj7EsWNqrzyTmFPl22RMH/8qVc6B7IWsOQy/1wbtlB6fVU3B1O3N2
-	 rmtYpwqE/tT2Wr/gSVR+/udz7wV1C4WqFMVqbAOzp7Wex1oFRq8+Ey5jHWCUGmCQt
-	 bU9ANdRP7xQCKB3spcuQuewNa9YnJ3zCn2Twgut9PNSIE6uuoIO3PcwgdCNrGlI7K
-	 C2eMbdIHi7J1uL7eA3kz68KLDYC8eaBW9VJzr6tJOjXlAuVAT2whm+tq9VMchV00i
-	 E1q2f1QHeYPCUL8trw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4QsO-1wuTmP3oXu-010f6u; Sat, 05
- Sep 2026 00:45:32 +0200
-From: Armin Wolf <W_Armin@gmx.de>
-To: hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	i@rsplwe.com,
-	rahulbheda131313@gmail.com,
-	kento@kekto.ru,
-	qby140326@gmail.com,
-	martiya.ar@gmail.com,
-	vlku.milos.fun@gmail.com,
-	mm3885525@gmail.com,
-	wleizc7319@gmail.com
-Subject: [PATCH 1/2] platform/x86: bitland-mifs-wmi: Detect failed function calls
-Date: Sat,  5 Sep 2026 00:45:15 +0200
-Message-Id: <20260904224516.8893-2-W_Armin@gmx.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260904224516.8893-1-W_Armin@gmx.de>
-References: <20260904224516.8893-1-W_Armin@gmx.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NGG4ceYq"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-97ccbba8e86so468661241.3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Sep 2026 17:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788569591; x=1789174391; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=yQpYgwKoD9pOq28LUV92Xbch9437/dA12rcderVjKds=;
+        b=NGG4ceYqrRtNGjxk9nTPd99fQ4JUxxzaRQTwTnMG0mnOBAULt0S7TMEyy1KvGQFXw4
+         WwJJUZlcURp6NlQcqvWc4Ihyc3JPCVN7LNZmVR72ZH7dQGRMj8W1zdGYZlC+pK+OvNxE
+         BF0ZcO1VmOUAtfEZH1mzPQTGsbe0Dn/wcxMv6fNcXg0VGMBFK1jhP05j0zPLabbXRpxI
+         GztQOFW5MZVS2kOepgJUSGD4Qk1zvAg26oO4DCFBReCleuABAxGn7DJzWwGP2RTT3ZBA
+         KUgHEck+zFNOf3KAy7lf6ykw6auLicSaI6yYYOfWcsfevbpGiY4+4jxCUrGDOWy2pCWn
+         2OvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788569591; x=1789174391;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yQpYgwKoD9pOq28LUV92Xbch9437/dA12rcderVjKds=;
+        b=d9SZYhsWC89OoQvSoHQwOpR87gpNSraZxFF/Vr0cWgt51UEnMudSSNOd2iK923NZ8Q
+         eJHKNOyqb5rWYjjt4wGgISnUiD5q0kGhiafMsSA1sBV297JFQDH0Ox00x8C0HRb/FjoC
+         MCwFrZ4Kym3N+/ZoksRycWrGDyS1gFM5xoDnSKx3yvJOfdlKLy55qy3I4ynahPkILUAf
+         0/5dtq3IKxZT8Rtbq8o6XB3PrSr4FWXIsWnlR+Bv/ksd3P0Hl9kvvXGQbnBfc3MQxLs3
+         LExyft1zHEW46CKxLBkI8rkdzWpqgXdOtVV8O0sMDSj1THEET/oCOiOL0HPvA5/qIwrO
+         oeBQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwrGcc3RzkFrAEZb1oDKFGSdwEvMFR+DQeZKizJhsDqMdVtf1M5YckWNRuaUCPzuoCaAOA1vtUbJK0peEqjD4j+XK2+@vger.kernel.org
+X-Gm-Message-State: AFuF++ngh1p9aEme0PMW/ABOzom/UpjTYp7tt8G20tYy+c1KK7qqrKlL
+	42KLTDNz9lfm8B2aZd4HuaHdFpHf87q0qY0LsOHUuxUHnGYHXeL0fI0MgwLqDA==
+X-Gm-Gg: AYBFou20+AazBYbQyQ/fOzrIK5qboI3Fhhk0wRRXOxB5jZ90D7LlcaiC2N8Ovix+Szc
+	S6BqSuZRdfZs+CIdx4NfOccuFHtN6CjP7vM6wzQ/H/mLPBh4x/aObxLdEVkPSWCtz//HolmoNiU
+	zmwmnC9TJjn6Gw06y0C/RPqSbLi9i5Y6pCb8orKLDR1AvutixBaRw7mjpZhRRqXkKWPDSGmCUyq
+	eVsPuepOI+XkqA93BF2W2T1CmRS4VTofgTLuKGUOItGztCG+kC4PKm8gjTFe1JqWlFb7t9wp6Al
+	8VWxwm3Zk1iE6egEOz1yB0gM7LLOsrbCWDKFusnLARSac9ZYTXxvOa7+1VBFtOyIZhTu/DM4SLH
+	52ChSmcdDu2v/Gh2azk+MGonRxZfVzylGMidaIqF7rVntp22PSlOvgTLkbRSt9Nm4cUBagNQU2t
+	6Muh1mdGQo/OFA405H+XcT46r/JAkSBTb1tp6cHiq6hlZRnKA=
+X-Received: by 2002:a05:6102:e0c:b0:778:721:53db with SMTP id ada2fe7eead31-78a4a4ca11amr2875243137.0.1788569591521;
+        Fri, 04 Sep 2026 17:53:11 -0700 (PDT)
+Received: from localhost ([2800:40:44:f1f5:f400:4c49:91c1:9905])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-78a47ae301fsm2932476137.7.2026.09.04.17.53.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2026 17:53:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mI7xJHwEoNTYdnUdtBQ9G+18Abb2XX3ZNPMyqqCnOEf3FD/OBdh
- 9/rgtEf0AJPyDH//6lBDGYVfemKdKvagG/iJe6QJxnv7huzmzqpEOyfjr23NNTaxNGuQzxK
- 4ofI93pWXQxEwtodgxH1dpmxLPkZ6uizXXBJF1wT9eXankz+aPJwv3Q4fQKybwhS1Z7hCoO
- vfYJv7aGc0fHbPF4F9cUQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:l9cm7+faBYs=;znio24lbwCetVnse9mHtKHi80Vj
- 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
- +RgIaJj/9Dd17fz3ydFrufmcrA==
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 04 Sep 2026 21:53:07 -0300
+Message-Id: <DL6Z05M2G2LP.2OVU37WYH5R3U@gmail.com>
+Cc: <kuurtb@gmail.com>, <ilpo.jarvinen@linux.intel.com>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Do not enable G-Mode
+ for Dell G-series
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Lewis Clement" <lewis@lewisclement.nl>,
+ <platform-driver-x86@vger.kernel.org>
+X-Mailer: aerc 0.21.0-0-g5549850facc2
+References: <20260902074053.59910-1-lewis@lewisclement.nl>
+In-Reply-To: <20260902074053.59910-1-lewis@lewisclement.nl>
 
-The first 16-bit field inside the output data of a Mifs method call
-contains a return code that specifies if the method call succeeded
-(0x8000) or failed due to missing support (0xE000). The second 16-bit
-field should then contain the previously executed function id.
+On Wed Sep 2, 2026 at 4:40 AM -03, Lewis Clement wrote:
+> The alienware-wmi-wmax driver auto-engages EC G-Mode (Game Shift) for
+> Dell G-series laptops when the platform profile is set to "performance".
+> On models like the Dell G5 SE 5505, this pins both fans at 100% (~5400 RP=
+M)
+> permanently on every boot.
 
-Rework the layout of both input and output data to match the format
-used by the Mifs firmware and check the return code.
+Hmmm... This seems like you are trying to fix a userspace problem by
+patching the driver. What is preventing you from just not selecting the
+"performance" profile if you don't like the fans spinning at 100%? With
+this patch you are promoting balanced-performance to performance so you
+*could* just do that in userspace right? I'm pretty sure Tuned can do
+it.
 
-Tested-by: Martiya Aryan Mehr <martiya.ar@gmail.com>
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- .../wmi/devices/bitland-mifs-wmi.rst          |  61 +++++---
- drivers/platform/x86/bitland-mifs-wmi.c       | 140 +++++++++---------
- 2 files changed, 110 insertions(+), 91 deletions(-)
+I actually do agree that fans at 100% can be annoying, but that is
+subjective. In Windows pressing the "G-Mode" button selects the maximum
+performance profile and ramps up fans to 100% too; this driver tries to
+mimic that behavior.
 
-diff --git a/Documentation/wmi/devices/bitland-mifs-wmi.rst b/Documentatio=
-n/wmi/devices/bitland-mifs-wmi.rst
-index 9e86ecc2993c..314b3fbdda45 100644
-=2D-- a/Documentation/wmi/devices/bitland-mifs-wmi.rst
-+++ b/Documentation/wmi/devices/bitland-mifs-wmi.rst
-@@ -67,7 +67,7 @@ WMI Methods (MICommonInterface)
-=20
- The ``MICommonInterface`` class (GUID: ``{b60bfb48-3e5b-49e4-a0e9-8cffe1b=
-3434b}``)
- is the primary control interface. It uses a 32-byte buffer for both input
--(``InData``) and output (``OutData``).
-+(``InData``) and output (``OutData`` + ``Reserved``).
-=20
- Method Structure
- ----------------
-@@ -77,53 +77,78 @@ The data packet follows a standardized format:
- +----------+-------------------------------------------------------------=
-=2D----+
- | Byte     | Description                                                 =
-     |
- +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
--| 1        | Method Type: Get (0xFA / 250) or Set (0xFB / 251)           =
-     |
-+| 1 and 2  | Method Type or Return Code                                  =
-     |
- +----------+-------------------------------------------------------------=
-=2D----+
--| 3        | Command ID (Method Name)                                    =
-     |
-+| 3 and 4  | Command ID (Method Name)                                    =
-     |
- +----------+-------------------------------------------------------------=
-=2D----+
--| 4 - 31   | Arguments (for Set) or Return Data (for Get)                =
-     |
-+| 5 - 32   | Arguments (for Set) or Return Data (for Get)                =
-     |
- +----------+-------------------------------------------------------------=
-=2D----+
-=20
-+Method Types
-+------------
-+
-+The following Method types are understood by the underlying firmware:
-+
-++--------+---------+
-+| Type   | Meaning |
-++=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D+
-+| 0xFA00 | Read    |
-++--------+---------+
-+| 0xFB00 | Write   |
-++--------+---------+
-+
-+Return Codes
-+------------
-+
-+The following Return Codes are know to be returned in response to a WMI m=
-ethod invocation:
-+
-++--------+--------------------+
-+| Code   | Meaning            |
-++=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-+| 0x8000 | Success            |
-++--------+--------------------+
-+| 0xE000 | Invalid Command ID |
-++--------+--------------------+
-=20
- Command IDs
- -----------
-=20
--The following Command IDs are used in the third byte of the buffer:
-+The following Command IDs know to be used on some models:
-=20
- +----------+-----------------------+-------------------------------------=
-=2D----+
- | ID       | Name                  | Values / Description                =
-     |
- +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D+
--| 8        | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet=
-,    |
-+| 0x0800   | SystemPerMode         | 0: Balance, 1: Performance, 2: Quiet=
-,    |
- |          |                       | 3: Full-speed                       =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 9        | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA      =
-     |
-+| 0x0900   | GPUMode               | 0: Hybrid, 1: Discrete, 2: UMA      =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 10       | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB=
-     |
-+| 0x0A00   | KeyboardType          | 0: White, 1: Single RGB, 2: Zone RGB=
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 11       | FnLock                | 0: Off, 1: On                       =
-     |
-+| 0x0B00   | FnLock                | 0: Off, 1: On                       =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 12       | TPLock                | 0: Unlock, 1: Lock (Touchpad)       =
-     |
-+| 0x0C00   | TPLock                | 0: Unlock, 1: Lock (Touchpad)       =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 13       | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:       =
-     |
-+| 0x0D00   | CPUGPUSYSFanSpeed     | Returns 12 bytes of fan data:       =
-     |
- |          |                       | Bytes 4-5: CPU Fan RPM (Little Endia=
-n)   |
- |          |                       | Bytes 6-7: GPU Fan RPM (Little Endia=
-n)   |
- |          |                       | Bytes 10-11: SYS Fan RPM (Little End=
-ian) |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 16       | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,   =
-     |
-+| 0x1000   | RGBKeyboardMode       | 0: Off, 1: Auto Cyclic, 2: Fixed,   =
-     |
- |          |                       | 3: Custom                           =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 17       | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue valu=
-es   |
-+| 0x1100   | RGBKeyboardColor      | Bytes 4, 5, 6: Red, Green, Blue valu=
-es   |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 18       | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto  =
-     |
-+| 0x1200   | RGBKeyboardBrightness | 0-10: Brightness Levels, 128: Auto  =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 19       | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)    =
-     |
-+| 0x1300   | SystemAcType          | 1: Type-C, 2: Circular Hole (DC)    =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 20       | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS=
-)    |
-+| 0x1400   | MaxFanSpeedSwitch     | Byte 4: Fan Type (0: CPU/GPU, 1: SYS=
-)    |
- |          |                       | Byte 5: State (0: Off, 1: On)       =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 21       | MaxFanSpeed           | Sets manual fan speed duty cycle    =
-     |
-+| 0x1500   | MaxFanSpeed           | Sets manual fan speed duty cycle    =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
--| 22       | CPUThermometer        | Returns CPU Temperature             =
-     |
-+| 0x1600   | CPUThermometer        | Returns CPU Temperature             =
-     |
- +----------+-----------------------+-------------------------------------=
-=2D----+
-=20
- WMI Events (HID_EVENT20)
-diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x8=
-6/bitland-mifs-wmi.c
-index 3a373184519d..cdb930eb678d 100644
-=2D-- a/drivers/platform/x86/bitland-mifs-wmi.c
-+++ b/drivers/platform/x86/bitland-mifs-wmi.c
-@@ -30,6 +30,7 @@
- #include <linux/stddef.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
-+#include <linux/types.h>
- #include <linux/unaligned.h>
- #include <linux/units.h>
- #include <linux/wmi.h>
-@@ -39,25 +40,30 @@
- #define BITLAND_EVENT_GUID	"46C93E13-EE9B-4262-8488-563BCA757FEF"
-=20
- enum bitland_mifs_operation {
--	WMI_METHOD_GET	=3D 250,
--	WMI_METHOD_SET	=3D 251,
-+	WMI_METHOD_GET	=3D 0xFA00,
-+	WMI_METHOD_SET	=3D 0xFB00,
- };
-=20
- enum bitland_mifs_function {
--	WMI_FN_SYSTEM_PER_MODE		=3D 8,
--	WMI_FN_GPU_MODE			=3D 9,
--	WMI_FN_KBD_TYPE			=3D 10,
--	WMI_FN_FN_LOCK			=3D 11,
--	WMI_FN_TP_LOCK			=3D 12,
--	WMI_FN_FAN_SPEEDS		=3D 13,
--	WMI_FN_RGB_KB_MODE		=3D 16,
--	WMI_FN_RGB_KB_COLOR		=3D 17,
--	WMI_FN_RGB_KB_BRIGHTNESS	=3D 18,
--	WMI_FN_SYSTEM_AC_TYPE		=3D 19,
--	WMI_FN_MAX_FAN_SWITCH		=3D 20,
--	WMI_FN_MAX_FAN_SPEED		=3D 21,
--	WMI_FN_CPU_THERMOMETER		=3D 22,
--	WMI_FN_CPU_POWER		=3D 23,
-+	WMI_FN_SYSTEM_PER_MODE		=3D 0x0800,
-+	WMI_FN_GPU_MODE			=3D 0x0900,
-+	WMI_FN_KBD_TYPE			=3D 0x0A00,
-+	WMI_FN_FN_LOCK			=3D 0x0B00,
-+	WMI_FN_TP_LOCK			=3D 0x0C00,
-+	WMI_FN_FAN_SPEEDS		=3D 0x0D00,
-+	WMI_FN_RGB_KB_MODE		=3D 0x1000,
-+	WMI_FN_RGB_KB_COLOR		=3D 0x1100,
-+	WMI_FN_RGB_KB_BRIGHTNESS	=3D 0x1200,
-+	WMI_FN_SYSTEM_AC_TYPE		=3D 0x1300,
-+	WMI_FN_MAX_FAN_SWITCH		=3D 0x1400,
-+	WMI_FN_MAX_FAN_SPEED		=3D 0x1500,
-+	WMI_FN_CPU_THERMOMETER		=3D 0x1600,
-+	WMI_FN_CPU_POWER		=3D 0x1700,
-+};
-+
-+enum bitland_mifs_return_code {
-+	WMI_RETURN_CODE_SUCCESS			=3D 0x8000,
-+	WMI_RETURN_CODE_UNKNOWN_FUNCTION	=3D 0xE000,
- };
-=20
- enum bitland_system_ac_mode {
-@@ -114,18 +120,14 @@ enum bitland_wmi_device_type {
- };
-=20
- struct bitland_mifs_input {
--	u8 reserved1;
--	u8 operation;
--	u8 reserved2;
--	u8 function;
-+	__le16 operation;
-+	__le16 function;
- 	u8 payload[28];
- } __packed;
-=20
- struct bitland_mifs_output {
--	u8 reserved1;
--	u8 operation;
--	u8 reserved2;
--	u8 function;
-+	__le16 return_code;
-+	__le16 function;
- 	u8 data[28];
- } __packed;
-=20
-@@ -171,15 +173,27 @@ static int bitland_mifs_wmi_call(struct bitland_mifs=
-_wmi_data *data,
-=20
- 	guard(mutex)(&data->lock);
-=20
--	if (!output)
--		return wmidev_invoke_procedure(data->wdev, 0, 1, &in_buf);
--
--	ret =3D wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf, sizeof=
-(*output));
-+	ret =3D wmidev_invoke_method(data->wdev, 0, 1, &in_buf, &out_buf,
-+				   sizeof(struct bitland_mifs_output));
- 	if (ret)
- 		return ret;
-=20
--	memcpy(output, out_buf.data, sizeof(*output));
--	kfree(out_buf.data);
-+	struct bitland_mifs_output *result __free(kfree) =3D out_buf.data;
-+
-+	switch (le16_to_cpu(result->return_code)) {
-+	case WMI_RETURN_CODE_SUCCESS:
-+		break;
-+	case WMI_RETURN_CODE_UNKNOWN_FUNCTION:
-+		return -EOPNOTSUPP;
-+	default:
-+		return -EIO;
-+	}
-+
-+	if (result->function !=3D input->function)
-+		return -ENOMSG;
-+
-+	if (output)
-+		memcpy(output, result, sizeof(*output));
-=20
- 	return 0;
- }
-@@ -189,10 +203,8 @@ static int laptop_profile_get(struct device *dev,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_GET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_SYSTEM_PER_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
-+		.function =3D cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
- 	};
- 	struct bitland_mifs_output result;
- 	int ret;
-@@ -223,8 +235,8 @@ static int laptop_profile_get(struct device *dev,
- static int bitland_check_performance_capability(struct bitland_mifs_wmi_d=
-ata *data)
- {
- 	struct bitland_mifs_input input =3D {
--		.operation =3D WMI_METHOD_GET,
--		.function =3D WMI_FN_SYSTEM_AC_TYPE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
-+		.function =3D cpu_to_le16(WMI_FN_SYSTEM_AC_TYPE),
- 	};
- 	struct bitland_mifs_output output;
- 	int ret;
-@@ -248,10 +260,8 @@ static int laptop_profile_set(struct device *dev,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_SET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_SYSTEM_PER_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_SET),
-+		.function =3D cpu_to_le16(WMI_FN_SYSTEM_PER_MODE),
- 	};
- 	int ret;
- 	u8 val;
-@@ -344,22 +354,20 @@ static int laptop_hwmon_read(struct device *dev, enu=
-m hwmon_sensor_types type,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_GET,
--		.reserved2 =3D 0,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
- 	};
- 	struct bitland_mifs_output res;
- 	int ret;
-=20
- 	switch (type) {
- 	case hwmon_temp:
--		input.function =3D WMI_FN_CPU_THERMOMETER;
-+		input.function =3D cpu_to_le16(WMI_FN_CPU_THERMOMETER);
- 		ret =3D bitland_mifs_wmi_call(data, &input, &res);
- 		if (!ret)
- 			*val =3D res.data[0] * MILLIDEGREE_PER_DEGREE;
- 		return ret;
- 	case hwmon_fan:
--		input.function =3D WMI_FN_FAN_SPEEDS;
-+		input.function =3D cpu_to_le16(WMI_FN_FAN_SPEEDS);
- 		ret =3D bitland_mifs_wmi_call(data, &input, &res);
- 		if (ret)
- 			return ret;
-@@ -420,10 +428,8 @@ static int laptop_kbd_led_set(struct led_classdev *le=
-d_cdev,
- 	struct bitland_mifs_wmi_data *data =3D
- 		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_SET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_RGB_KB_BRIGHTNESS,
-+		.operation =3D cpu_to_le16(WMI_METHOD_SET),
-+		.function =3D cpu_to_le16(WMI_FN_RGB_KB_BRIGHTNESS),
- 	};
-=20
- 	input.payload[0] =3D (u8)value;
-@@ -436,10 +442,8 @@ static enum led_brightness laptop_kbd_led_get(struct =
-led_classdev *led_cdev)
- 	struct bitland_mifs_wmi_data *data =3D
- 		container_of(led_cdev, struct bitland_mifs_wmi_data, kbd_led);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_GET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_RGB_KB_BRIGHTNESS,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
-+		.function =3D cpu_to_le16(WMI_FN_RGB_KB_BRIGHTNESS),
- 	};
- 	struct bitland_mifs_output res;
- 	int ret;
-@@ -463,10 +467,8 @@ static ssize_t gpu_mode_show(struct device *dev, stru=
-ct device_attribute *attr,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_GET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_GPU_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
-+		.function =3D cpu_to_le16(WMI_FN_GPU_MODE),
- 	};
- 	struct bitland_mifs_output res;
- 	u8 mode_val;
-@@ -488,10 +490,8 @@ static ssize_t gpu_mode_store(struct device *dev, str=
-uct device_attribute *attr,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_SET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_GPU_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_SET),
-+		.function =3D cpu_to_le16(WMI_FN_GPU_MODE),
- 	};
- 	int val;
- 	int ret;
-@@ -521,10 +521,8 @@ static ssize_t kb_mode_show(struct device *dev, struc=
-t device_attribute *attr,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_GET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_RGB_KB_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_GET),
-+		.function =3D cpu_to_le16(WMI_FN_RGB_KB_MODE),
- 	};
- 	struct bitland_mifs_output res;
- 	u8 mode_val;
-@@ -546,10 +544,8 @@ static ssize_t kb_mode_store(struct device *dev, stru=
-ct device_attribute *attr,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_SET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_RGB_KB_MODE,
-+		.operation =3D cpu_to_le16(WMI_METHOD_SET),
-+		.function =3D cpu_to_le16(WMI_FN_RGB_KB_MODE),
- 	};
- 	// the wmi value (0, 1, 2 or 3)
- 	int val;
-@@ -575,10 +571,8 @@ static ssize_t fan_boost_store(struct device *dev,
- {
- 	struct bitland_mifs_wmi_data *data =3D dev_get_drvdata(dev);
- 	struct bitland_mifs_input input =3D {
--		.reserved1 =3D 0,
--		.operation =3D WMI_METHOD_SET,
--		.reserved2 =3D 0,
--		.function =3D WMI_FN_MAX_FAN_SWITCH,
-+		.operation =3D cpu_to_le16(WMI_METHOD_SET),
-+		.function =3D cpu_to_le16(WMI_FN_MAX_FAN_SWITCH),
- 	};
- 	bool val;
- 	int ret;
-=2D-=20
-2.39.5
+>
+> Fix this by:
+> 1. Setting generic_quirks (gmode=3Dfalse) for G-series DMI entries so
+>    selecting "performance" no longer toggles G-Mode.
 
+You are removing the G-Mode profile for every G-Series laptop. As I
+said earlier, some users may like it and some may not at all so it
+qualifies as a regression, which would not be acceptable.
+
+> 2. In awcc_platform_profile_probe(), mapping PLATFORM_PROFILE_PERFORMANCE
+>    to balanced-performance when no dedicated performance profile exists,
+>    keeping the option available with sane fan behavior.
+
+This is a completely different change that would require a different
+patch. I'm not exactly against it because of how PPD usually does
+things.
+
+Do you know if the AWCC app in Windows does this? Does it map
+"performance" to the balanced-performance mode? Not that we have to
+follow everything Windows does but it can be a starting point.
+
+>
+> This mirrors commit e2468dc70074 ("Revert "platform/x86:
+> alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1"").
+
+This does not mirror that commit. That commit revers G-Mode because it
+has less performance than the plain "performance" mode. Does this happen
+in your case?
+
+>
+> Fixes: 202a86120590 ("platform/x86: alienware-wmi-wmax: Extend support to=
+ more laptops")
+
+Not a fix.
+
+> Tested-by: Lewis Clement <lewis@lewisclement.nl>
+> Signed-off-by: Lewis Clement <lewis@lewisclement.nl>
+> ---
+> Tested on a Dell G5 SE 5505 (Ryzen 4600H/4800H + RX 5600M, BIOS 1.24.0),
+> kernel 7.1.10 (module built out-of-tree against the running kernel):
+>
+> - Before: fans pinned at ~5400 RPM on every cold boot with
+>   profile=3Dperformance; cleared only by suspend/resume.
+> - After: fans normal (~2400 RPM, scaling with temperature) with
+>   profile=3Dperformance; survives cold reboot; "performance" remains in
+>   /sys/firmware/acpi/platform_profile_choices.
+> - Also validated the intermediate gmode=3Dfalse-only variant (option
+>   disappears -> tuned-ppd write rejected as EOPNOTSUPP), which confirmed
+>   G-Mode was the only fan-pinning path.
+>
+> Cc: platform-driver-x86@vger.kernel.org
+
+You dropped this Cc.
+
+> Cc: Kurt Borja <kuurtb@gmail.com>
+> Cc: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: stable@vger.kernel.org # 6.15+
+
+[...]
+
+Can you email me the acpidump for this model? I want to check what
+profiles are reported by the firmware.
+
+--=20
+Thanks,
+ ~ Kurt
