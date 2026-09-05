@@ -1,50 +1,47 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD16224AF2;
-	Sat,  5 Sep 2026 13:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BB8356766;
+	Sat,  5 Sep 2026 13:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788613309; cv=none; b=occ2f/m3TFuCt/F/47j0Ir0+Wp89eZMTvWSm00mylLU1SNUXEFplUFw4uEQ4+0P41M2UJhLpDU6U4CqV6VB9pSvIJVq+B9cPunKd1ZuuGCHWcvbKY2+a+jARUnEBoOdmkEJiJ3H4dBZ+GcVd/GRLtPPcz43dhcNRWpXyWOJExzk=
+	t=1788613316; cv=none; b=fzFESLHpjXl4bAU0d6vw2Ndc3RKocxDF++uIQjdHkOkZxJG5faz75iKS38Y0bQ1WNHv5HxsFSxolUjIE/dPBr+EiiuxQvrhzpsKQU4s7kzBihcDVfxbQYnSWSt1b6bK0mSmTNRIxyzpFyEb6DhgSPHtcOYi6RVZbELX5WBaNm4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788613309; c=relaxed/simple;
-	bh=G5jzq1Doh54ldkY1Bcnq5bZ8K6lVYalfQ11Aq9WEHSU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YuKteVnUimTUpaOCHmmFuckWJKNXDZOv476NXNCHrvmrzKRFszJxmHTCTSFyBQlyzd2OmMT04YEyDfXLDxngj5EuJ7HKrRm2APmP0JnLz5UFSjyCEzuo2ppcIQn9JG/XGhmXXvaoVcR4gHLxLygu26yQKeKmWehcniJdxWCWW+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aKm+fbwc; arc=none smtp.client-ip=212.227.15.19
+	s=arc-20240116; t=1788613316; c=relaxed/simple;
+	bh=6qdpqq9TjBRkgvDvSsLtlR6jvDgmjHBC4VJKoRx08UU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JekzZ8152Mj1DHbP2pu3zenQ+C8knYLfRVb/+/2ZLd9NIVJ0TlusnOp0jcXYPeo2iG2fQut59BKS7UX1LJdFll0NhtxXb1160VEqioWhn7qSBlTVov9SdomWfdF/amiD51rM9I4TzXzSLo1l2jiukifZ90qY2JCclxLyNKmmwK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=duBfEN1/; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aKm+fbwc"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="duBfEN1/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1788613305; x=1789218105; i=w_armin@gmx.de;
-	bh=+YNVNktWBBzePC4aJmJQezyQ0sDZ/JUJ1/SLrnwkA4I=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	s=s31663417; t=1788613301; x=1789218101; i=w_armin@gmx.de;
+	bh=OdKMYMa5WZ/PlJhgBne3tnqq+/5WAs+gxLrYV4bXLn0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
 	 content-transfer-encoding:content-type:date:from:message-id:
 	 mime-version:reply-to:subject:to;
-	b=aKm+fbwcMrMHM/+EtdEF0EZXq3SYbYtvRigKP6ndqLP4X5QzraedXLYRKkIgJRJs
-	 lYMeMWXySLXoZgzNgas7MktPoR1jNeLPjxjGAcek83nKVZ14XbrY0lAM7LxeNEXo1
-	 w0xoWBxkvZaX0eREeNCv3Lzu0zgzzRpaZJINQKfQOJhL/Zu3i6VbftI6W73KrgNPv
-	 sAXrPvZl1VdFbPFLw/GpbYUETPxat9PHVemZsghlPx3TFpzAC5Xe/0J+LffiAUHpv
-	 rQ5M5k2UgYSL1hlv7PZrxrTEz1X+zGjDCo0T+Xiti3M9y0jbp1inkE9wstr5aKJsz
-	 VlrGjlE+PQOGS9UHNQ==
+	b=duBfEN1/XJC8Uy9fysSgEKb5xF7wkGO4gvkpnijGwVph5ezsgYkVHRYTkdvfnpg+
+	 zOK5NA7R7uT38MgVlzf7JlmSMla56PJ3zr+u1wne5J8f30EFnV12bwdw6VZL6KuIN
+	 YT8WhdvWCR5heI01yxt07HCwWkhVNRv57EH5PU2UddCBN/DhyvYMUE+k4IW2y1TYq
+	 han4T/pVtgQOxDgqYJl9eHM/ChsDI3ERGlDGzxl3HAM+G7FF5jDP1V9LiEMh3BTE+
+	 +r7SXOZDKSrhwZdHl/cPnt+UZjrQHlWbvF7zozKv9ZQ0lpd3p1KLdmb0vvQsahHKs
+	 KkvfZTJ3my+8e+vnyQ==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N9dwd-1wp2gn3ggv-014Fyc; Sat, 05
- Sep 2026 15:01:44 +0200
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MlNpH-1wZbGy33BF-00je6S; Sat, 05
+ Sep 2026 15:01:41 +0200
 From: Armin Wolf <W_Armin@gmx.de>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
 Cc: wse@tuxedocomputers.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] platform/x86: uniwill-laptop: Extend support for the Intel NUC x15
-Date: Sat,  5 Sep 2026 15:01:38 +0200
-Message-Id: <20260905130138.6814-6-W_Armin@gmx.de>
+Subject: [PATCH 0/5] platform/x86: uniwill-laptop: Lightbar fixes
+Date: Sat,  5 Sep 2026 15:01:33 +0200
+Message-Id: <20260905130138.6814-1-W_Armin@gmx.de>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260905130138.6814-1-W_Armin@gmx.de>
-References: <20260905130138.6814-1-W_Armin@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -52,161 +49,129 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CCwrNnhoXQKoXqgjp0n+bbj0oZq1eQ9l099v3Umg5YPvRiu7Fes
- 1xNGYNgYUiTSjwunaxrOOx+HzRjEfCtAXw6yddNuD9923pzBufRW0cEHt8LoxJDL+3zIkaf
- +N+edacPn4RFi/h1o6kRDABlplQlv/vCw+fS1BLsO/uoo/zMuPn15xoR7xCSvF5Kx+/Jxt8
- c+NYBuZw8RYOa4TrRRYBg==
+X-Provags-ID: V03:K1:XLFQ8nWTtNsY8+Qfd53TEaLa+dQL/a0hgebg7WpvYDgBxfGa4pf
+ 45hEV1nhLrJn5St6Y+wDXL8eYeNWgZJKzYUkjR6DHMAnTsXxYoAy1H+iZUc0l2ILkuL/UTZ
+ azF3Qo4M7cn1hViSetHdibr+c/M7OnPnvDiwBTc13ei5YufqaxAHq2ogM+r2z4VuSJCED+Y
+ 1uu5edbnBj50E/3IjamsA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:D7PQ1Tqq6t4=;Yy3ARS3mW/C1s3LyS/uDe99VFTq
- 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
- GZ24jmf1WNxSUxvcMxMYw87qoyr2qeDyX8A==
+UI-OutboundReport: notjunk:1;M01:P0:MrnNPzIGBTw=;AHwrOjRPI9loORGoP24HbevZcS9
+ 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
+ WtiUT1pgE9pcd7BqexI4QjhC/odBZNj
 
-A user has reported that the LAPKC71E variant of the Intel NUC x15
-also works with the uniwill-laptop driver. The difference between the
-LAPKC71E and the LAPKC71F seems to be the dedicated NVidia GPU module.
+This patch series mainly deals with various issues inside the code
+responsible for controlling the lightbar on supported devices.
 
-Add support for this device as well. It is suspected that the LAPKC71F
-also supports the new UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL feature, but
-this would need to be verified on real hardware.
+The first patch utilizes the improved multicolor LED API to report
+the correct brightness of the lightbar to userspace. The next two
+patches fix issues discovered inside the code for controlling
+animations, while the fourth patch fixes an issue with the naming
+of the LEDs in general. The last patch also adds support for another
+variant of the Intel NUC x15 laptop kit.
 
-Link: https://github.com/Wer-Wolf/uniwill-laptop/issues/17
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-=2D--
- drivers/platform/x86/uniwill/uniwill-acpi.c | 22 +++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+All patches have been tested on said Intel NUC x15 laptop and appear
+to work.
 
-diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c b/drivers/platfor=
-m/x86/uniwill/uniwill-acpi.c
-index 27d5e54f0e1c..433a7a0eeba6 100644
-=2D-- a/drivers/platform/x86/uniwill/uniwill-acpi.c
-+++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
-@@ -2721,6 +2721,20 @@ static struct uniwill_device_descriptor lapac71h_de=
-scriptor __initdata =3D {
- 		    UNIWILL_FEATURE_SECONDARY_FAN,
- };
-=20
-+static struct uniwill_device_descriptor lapkc71e_descriptor __initdata =
-=3D {
-+	.features =3D UNIWILL_FEATURE_FN_LOCK |
-+		    UNIWILL_FEATURE_SUPER_KEY |
-+		    UNIWILL_FEATURE_TOUCHPAD_TOGGLE |
-+		    UNIWILL_FEATURE_LIGHTBAR |
-+		    UNIWILL_FEATURE_BATTERY_CHARGE_LIMIT |
-+		    UNIWILL_FEATURE_CPU_TEMP |
-+		    UNIWILL_FEATURE_GPU_TEMP |
-+		    UNIWILL_FEATURE_PRIMARY_FAN |
-+		    UNIWILL_FEATURE_SECONDARY_FAN |
-+		    UNIWILL_FEATURE_NVIDIA_CTGP_CONTROL,
-+	.lightbar_max_intensity =3D 200,
-+};
-+
- static struct uniwill_device_descriptor lapkc71f_descriptor __initdata =
-=3D {
- 	.features =3D UNIWILL_FEATURE_FN_LOCK |
- 		    UNIWILL_FEATURE_SUPER_KEY |
-@@ -2946,6 +2960,14 @@ static const struct dmi_system_id uniwill_dmi_table=
-[] __initconst =3D {
- 		},
- 		.driver_data =3D &lapac71h_descriptor,
- 	},
-+	{
-+		.ident =3D "Intel NUC x15",
-+		.matches =3D {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Intel(R) Client Systems"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "LAPKC71E"),
-+		},
-+		.driver_data =3D &lapkc71e_descriptor,
-+	},
- 	{
- 		.ident =3D "Intel NUC x15",
- 		.matches =3D {
+Armin Wolf (5):
+  platform/x86: uniwill-laptop: Report correct lightbar brightness
+  platform/x86: uniwill-laptop: Implement rainbow animation as trigger
+  platform/x86: uniwill-laptop: Fix breathing animation on Intel QC
+  platform/x86: uniwill-laptop: Label multicolor LEDs correctly
+  platform/x86: uniwill-laptop: Extend support for the Intel NUC x15
+
+ .../ABI/removed/sysfs-driver-uniwill-laptop   |  10 +
+ .../ABI/testing/sysfs-driver-uniwill-laptop   |  15 +-
+ .../admin-guide/laptops/uniwill-laptop.rst    |   9 +-
+ MAINTAINERS                                   |   1 +
+ drivers/platform/x86/uniwill/Kconfig          |   1 +
+ drivers/platform/x86/uniwill/uniwill-acpi.c   | 225 +++++++++++-------
+ 6 files changed, 161 insertions(+), 100 deletions(-)
+ create mode 100644 Documentation/ABI/removed/sysfs-driver-uniwill-laptop
+
 =2D-=20
 2.39.5
 
