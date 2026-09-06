@@ -1,408 +1,211 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from cs.upt.ro (smtp.cs.upt.ro [193.226.12.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC797368D4F
-	for <platform-driver-x86@vger.kernel.org>; Sun,  6 Sep 2026 18:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3D31C01;
+	Mon,  7 Sep 2026 00:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.226.12.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788721178; cv=none; b=X69KaNzoJ+Cma3eiWiLUPQ+hh4lG5fQPYoB5prmXGD6WRJAiUTr1eLpV0GBq5ngNcTWyvtA3vbrFoiH08cbmmHEoMgreBs+2ka3m78GbWi3z+Ov8y3zOyVYg3ksvfOlQDp5TiqtGmRg6D3WMOJXqmRIF88tRemEuwH8oZ3S0SUY=
+	t=1788739396; cv=none; b=VvKq2pMcqfKgBtSih8zegDUILvXptmQw2nk1RMx+r6PKXWE1PlPUKKcIrPiWSMXnhlVDh+WMMS5VIKWY7sUxeQrBSDzo6P4CZWfLhuN5HK9gMR499ByFWaFiZUVcq4P7lwq6VSrGQzrcSCB/Yube6d87gLVqeEjPxIJWQ40uZtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788721178; c=relaxed/simple;
-	bh=GMPYh/BDHr7AL+7oovYHgh1rFAozNMA+LI+Dt7ATe0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pHAdR25Qk8ecP6SY39rTh83XXXV2d49WLcF3zhrNonwHVllGp+gb1pKpHCE/KSjU9rkdApq6xvsZlIjJ4n4r+K7BArf5wgkNKobKWrl61Xf9FrueL74TzfxKsf94TKQxh6QImD5l4Df/4lMetls48c4z8gwfjQk5wfjkTDqzNco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXB8GS3c; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=UpJgGtmY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1788739396; c=relaxed/simple;
+	bh=jnRVkg2NJw4Wi+Kz19rdNc2kA6hn8OoCKr0MDXsDzm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IgQp2BVGtffeHrvylaZX3h+XvyXF2VZom3zZKmH/vTn8/xE+ZVjibUZk6P89KemFQjMc/zEgyFL9tRDM4WuCZHg7+ckzHEEVDZIIWeNCPJrrRotLBP759MrrKAJeeOy8OYCIQsz9qtAOmsutTvNYRio34kQGpSKaMLbHCLTs9UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.upt.ro; spf=pass smtp.mailfrom=cs.upt.ro; dkim=pass (1024-bit key) header.d=cs.upt.ro header.i=@cs.upt.ro header.b=tPScYgnE; arc=none smtp.client-ip=193.226.12.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.upt.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.upt.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXB8GS3c";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="UpJgGtmY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788721174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WsIbDGQjULL+F6DGJQ2UNVf4v0nalwigJPjkFSk+cAA=;
-	b=NXB8GS3cWp7Uq1iS2H/snkDJ1z3j4PEBTHNQvsSmcrt8YZrcxhH9pa2XlDCEdG8LiUnHbl
-	foMo09XH0voxuPd0gq0Vv7XOJNYwYvgfTB1ETDak54W/Vs0WKXxKz8Nj/aATF7Q7pQsb3n
-	pKo0ApyNOQvvv+HdrBfnHwhJjrKRMC8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-6wwLdH9HO3WEsKMQU4ZKTg-1; Sun, 06 Sep 2026 14:59:33 -0400
-X-MC-Unique: 6wwLdH9HO3WEsKMQU4ZKTg-1
-X-Mimecast-MFC-AGG-ID: 6wwLdH9HO3WEsKMQU4ZKTg_1788721172
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4843227cfcfso2214157f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Sep 2026 11:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1788721172; x=1789325972; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WsIbDGQjULL+F6DGJQ2UNVf4v0nalwigJPjkFSk+cAA=;
-        b=UpJgGtmYuRPDd2wwO7pAiNajvauDBmWYrnGuFGKN2NCqFir9j9s/5YZxQUAjMXqCPd
-         kjE31en6OlYL/VhvbOg7mMLu95wM/pPMe+U4F/rpHRXCGDFOq2n5Kpfvcvg6zfptvugs
-         8O1zAjGos65AYX7Aios3BMOcRuXm/qAOo6Q04gMjcz5OIscXOMdJfNRbD+mgAf9TZjgN
-         ng+4BOTbeUc3WsHU+WeFoP16GNXU/OQK245ei7vcXX1lz5Nwfcp8Rv2SldLJydta4p/9
-         34CgVx151gnCT7ecPYkFbHOnxEmLzwOmYTf5Fk5sW0xShboH1LUP0KF5NyMrIZF53uqO
-         WIMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788721172; x=1789325972;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WsIbDGQjULL+F6DGJQ2UNVf4v0nalwigJPjkFSk+cAA=;
-        b=Xxf2n/FfHGgWaxGh19j7rQmxJLascos4jQACZcGtF66fMPl3x3E+4rJoBrh3e9BLcS
-         eb6GsaxRLWvixAjB2qeclSOYAoIw5QgcN8SIb9Ph40YPmkzSFGcrapUhvJ6VGkvnY5fS
-         jKDZnyY86ifLfzgHXTaXN3Dy40gHhTIGN7dEx1pefwRXXS0Kkq9jtv+P3mqE7lzX+waX
-         5kV7xayVogT/dzkzt80am/t+6ODmbJmC45niCz+OS6b1eoW1gBCDR6IXlZtnHpCQn/ga
-         p3YZUQbe5k2W02GRg7NB7+MhD2DT4eVj4eZYJRX67FEZtTbEzUhnw2g6XaMYpkYA5QCK
-         tp3Q==
-X-Forwarded-Encrypted: i=1; AKwUvBzTajXdRMmSGip46FqMfxmDBMLZ5Pe/iJHqkX4Y0wJdv2qKMoKcxNucNEV+r2UgxxvyTeG6I6J8lVQ0tu49xsVTTgjn@vger.kernel.org
-X-Gm-Message-State: AFuF++mHAHJ0uf35CvLptcpL7eYgqpiprrTeOB1p8/1eXhi1vmqvVJBx
-	Fjl/G9yo7bPqYlDI0iS47jrR3pYOKWXW5fCQTmcOsnhVYsm3/d3UZfLom9TKG3m1vw9nrkDtLoh
-	Yr4wie3m8y0OSblL5Wk6McQrW52TRf8wpNg3dDWZJfoRKHcwI8SoZDtv6h1nYiIP3hWWLuUbzMC
-	0=
-X-Gm-Gg: AYBFou2Ug91IyQhrsBgOQi7eY/V4Cb1zY6McT2+Rl7geoYm+cVyGQz7wvEQTEb4xSC2
-	0XPsH99rUezXvVDfWo6Zr/lX1T6OaTsTdx+F0E0KHWnkqiiPT2jipgnvOrrvE8MO+qx+FdOg2Q8
-	iaoi2rhPf6rnvxJdx3wahEaxJ1L0xvl8VhUAA2Xcg7s0qNRiotunvU5m0+eAzqovRJWYLKJ/8ve
-	QY7McbTAFQeYrSWd1HxL3h+5mN/0hOPitESpmmPBsfmxxFuarvWXcvJgxHXjbNXNqWxO6yvVVsU
-	kuKmTFODdjKir5n96NDqFaK+RtlmPA/y0qNFAAxxbuGMOEFulsU7XTtYlk/IYhaMCuN6Z6z7Vy/
-	fx1X53rLkiBTpQIiNjt5Sq8g=
-X-Received: by 2002:a05:600c:3544:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-49cf82bea0amr164278285e9.3.1788721172192;
-        Sun, 06 Sep 2026 11:59:32 -0700 (PDT)
-X-Received: by 2002:a05:600c:3544:b0:49b:8f5e:51fb with SMTP id 5b1f17b1804b1-49cf82bea0amr164277895e9.3.1788721171624;
-        Sun, 06 Sep 2026 11:59:31 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ce5941cb4sm170369945e9.4.2026.09.06.11.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 11:59:30 -0700 (PDT)
-Date: Sun, 6 Sep 2026 14:59:26 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Jason Wang <jasowangio@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Pawel Moll <pawel.moll@arm.com>, Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	virtualization@lists.linux.dev, linux-input@vger.kernel.org,
-	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-	linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] virtio: implement synchronize_cbs for remaining
- transports
-Message-ID: <20260906145728-mutt-send-email-mst@kernel.org>
-References: <20260905152059.89560-1-kmehltretter@gmail.com>
- <20260905152059.89560-4-kmehltretter@gmail.com>
+	dkim=pass (1024-bit key) header.d=cs.upt.ro header.i=@cs.upt.ro header.b="tPScYgnE"
+Received: from localhost (localhost [127.0.0.1])
+	by cs.upt.ro (Postfix) with ESMTP id 3B988DFA3D;
+	Mon,  7 Sep 2026 02:54:22 +0300 (EEST)
+X-Virus-Scanned: Debian amavis at smtp.cs.upt.ro
+Received: from cs.upt.ro ([127.0.0.1])
+ by localhost (smtp.cs.upt.ro [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id zMjYZF1ykPA0; Mon,  7 Sep 2026 02:54:20 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cs.upt.ro; s=mail;
+	t=1788738860; bh=jnRVkg2NJw4Wi+Kz19rdNc2kA6hn8OoCKr0MDXsDzm8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tPScYgnE9dPX6wGGI/yLVTjBHM300XJFqaOP5ZPlljaehITQQ6VRh1JrliKhtNhGV
+	 vVvKGjfnLMuPPtzLW5zk1pgOqkj0jbLUXRHSgz+jxtgyZIJMj1Gwg0n31ezpdeiqYK
+	 mQdZBlhr4rMTbU5GEp8HMLdQA7h/thf/ymDZbFgc=
+Received: from kcstation.tailba65d9.ts.net (unknown [5.12.49.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by cs.upt.ro (Postfix) with ESMTPSA id 16376DF947;
+	Mon,  7 Sep 2026 02:54:20 +0300 (EEST)
+From: Catalin Cereanu <catalin.cereanu@cs.upt.ro>
+To: Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>
+Cc: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC] platform/x86: asus-wmi: no kbd backlight on Zenbook S 16 UM5606WA
+Date: Mon,  7 Sep 2026 02:53:55 +0300
+Message-ID: <20260906235355.13404-1-catalin.cereanu@cs.upt.ro>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260905152059.89560-4-kmehltretter@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Sep 05, 2026 at 05:20:59PM +0200, Karl Mehltretter wrote:
-> virtio_reset_device() now calls synchronize_cbs to wait for running
-> callbacks. Its synchronize_rcu() fallback does not cover workqueue or
-> sleepable callbacks.
-> 
-> Add the missing hooks. UML waits for its shared IRQ; TmFIFO takes the
-> existing per-direction locks held around vring_interrupt(). Virtio-vdpa
-> uses a per-device rwlock around its callbacks, which must already be
-> hard-IRQ safe.
-> 
-> Remoteproc callbacks can run in hard-IRQ or process context, and rpmsg
-> callbacks can sleep, so use one SRCU domain per rproc. Enter it before
-> looking up the queue. Initialize it in rproc_alloc(), returning NULL if
-> that fails, and clean it up at final release. cleanup_srcu_struct() can
-> sleep, so document that rproc_put() and rproc_free() may sleep when
-> dropping the last reference.
-> 
-> These hooks wait for callbacks already running. UML, TmFIFO and
-> remoteproc still allow new callbacks after reset.
-> 
-> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
-> Assisted-by: LLM
-> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Hi,
 
+On the ASUS Zenbook S 16 UM5606WA (Ryzen AI 9 HX 370), asus-wmi creates
+no asus::kbd_backlight LED and the factory Fn+F4 backlight key produces
+no input event at all. The keyboard backlight hardware itself works
+fine.
 
-sounds like sashiko sees some issues here.
-they seem legit.
-I would also maybe split, 1 patch per transport.
+I have tracked this to a single firmware flag and have a working
+out-of-tree fix, but I do not think the fix belongs in asus-wmi in its
+current form. I am sending this as an RFC to ask what shape, if any,
+would be acceptable.
 
+Hardware / software
+-------------------
+  Model        ASUS Zenbook S 16 UM5606WA
+  BIOS         UM5606WA.321, 10/14/2025
+  Kernel       6.17.0-35-generic (Ubuntu/Linux Mint 22.3)
+  asus_wmi     BIOS WMI version 9.4, SFUN 0x21, "Detected ATK, not ASUSWMI"
 
-> ---
->  arch/um/drivers/virtio_uml.c             | 10 ++++++++++
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 14 ++++++++++++++
->  drivers/remoteproc/remoteproc_core.c     | 10 ++++++++++
->  drivers/remoteproc/remoteproc_virtio.c   | 20 +++++++++++++++++---
->  drivers/virtio/virtio_vdpa.c             | 21 ++++++++++++++++++++-
->  include/linux/remoteproc.h               |  3 +++
->  6 files changed, 74 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
-> index 7425a8548141..baca6b09e9ac 100644
-> --- a/arch/um/drivers/virtio_uml.c
-> +++ b/arch/um/drivers/virtio_uml.c
-> @@ -20,6 +20,7 @@
->   *
->   * Based on Virtio MMIO driver by Pawel Moll, copyright 2011-2014, ARM Ltd.
->   */
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -869,6 +870,14 @@ static void vu_reset(struct virtio_device *vdev)
->  	vu_dev->status = 0;
->  }
->  
-> +static void vu_synchronize_cbs(struct virtio_device *vdev)
-> +{
-> +	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
-> +
-> +	if (vu_dev->irq >= 0)
-> +		synchronize_irq(vu_dev->irq);
-> +}
-> +
->  static void vu_del_vq(struct virtqueue *vq)
->  {
->  	struct virtio_uml_vq_info *info = vq->priv;
-> @@ -1121,6 +1130,7 @@ static const struct virtio_config_ops virtio_uml_config_ops = {
->  	.reset = vu_reset,
->  	.find_vqs = vu_find_vqs,
->  	.del_vqs = vu_del_vqs,
-> +	.synchronize_cbs = vu_synchronize_cbs,
->  	.get_features = vu_get_features,
->  	.finalize_features = vu_finalize_features,
->  	.bus_name = vu_bus_name,
-> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> index 3c6408581373..c260e3a1544e 100644
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -1135,6 +1135,19 @@ static void mlxbf_tmfifo_virtio_reset(struct virtio_device *vdev)
->  	tm_vdev->status = 0;
->  }
->  
-> +static void mlxbf_tmfifo_virtio_synchronize_cbs(struct virtio_device *vdev)
-> +{
-> +	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
-> +	struct mlxbf_tmfifo *fifo = tm_vdev->vrings[0].fifo;
-> +	unsigned long flags;
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(fifo->spin_lock); i++) {
-> +		spin_lock_irqsave(&fifo->spin_lock[i], flags);
-> +		spin_unlock_irqrestore(&fifo->spin_lock[i], flags);
-> +	}
-> +}
-> +
->  /* Read the value of a configuration field. */
->  static void mlxbf_tmfifo_virtio_get(struct virtio_device *vdev,
->  				    unsigned int offset,
-> @@ -1179,6 +1192,7 @@ static const struct virtio_config_ops mlxbf_tmfifo_virtio_config_ops = {
->  	.find_vqs = mlxbf_tmfifo_virtio_find_vqs,
->  	.del_vqs = mlxbf_tmfifo_virtio_del_vqs,
->  	.reset = mlxbf_tmfifo_virtio_reset,
-> +	.synchronize_cbs = mlxbf_tmfifo_virtio_synchronize_cbs,
->  	.set_status = mlxbf_tmfifo_virtio_set_status,
->  	.get_status = mlxbf_tmfifo_virtio_get_status,
->  	.get = mlxbf_tmfifo_virtio_get,
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 1ed406714849..1b139d25ab2b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2410,6 +2410,7 @@ static void rproc_type_release(struct device *dev)
->  
->  	dev_info(&rproc->dev, "releasing %s\n", rproc->name);
->  
-> +	cleanup_srcu_struct(&rproc->vq_srcu);
->  	idr_destroy(&rproc->notifyids);
->  
->  	if (rproc->index >= 0)
-> @@ -2507,6 +2508,11 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->  	if (!rproc)
->  		return NULL;
->  
-> +	if (init_srcu_struct(&rproc->vq_srcu)) {
-> +		kfree(rproc);
-> +		return NULL;
-> +	}
-> +
->  	rproc->priv = &rproc[1];
->  	rproc->auto_boot = true;
->  	rproc->elf_class = ELFCLASSNONE;
-> @@ -2571,6 +2577,8 @@ EXPORT_SYMBOL(rproc_alloc);
->   *
->   * If no one holds any reference to rproc anymore, then its refcount would
->   * now drop to zero, and it would be freed.
-> + *
-> + * Context: May sleep if this drops the last reference.
->   */
->  void rproc_free(struct rproc *rproc)
->  {
-> @@ -2586,6 +2594,8 @@ EXPORT_SYMBOL(rproc_free);
->   *
->   * If no one holds any reference to rproc anymore, then its refcount would
->   * now drop to zero, and it would be freed.
-> + *
-> + * Context: May sleep if this drops the last reference.
->   */
->  void rproc_put(struct rproc *rproc)
->  {
-> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-> index d5e9ff045a28..ecc022e354db 100644
-> --- a/drivers/remoteproc/remoteproc_virtio.c
-> +++ b/drivers/remoteproc/remoteproc_virtio.c
-> @@ -23,6 +23,7 @@
->  #include <linux/err.h>
->  #include <linux/kref.h>
->  #include <linux/slab.h>
-> +#include <linux/srcu.h>
->  
->  #include "remoteproc_internal.h"
->  
-> @@ -89,14 +90,19 @@ static bool rproc_virtio_notify(struct virtqueue *vq)
->  irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int notifyid)
->  {
->  	struct rproc_vring *rvring;
-> +	int srcu_idx;
-> +	irqreturn_t ret;
-> +
-> +	srcu_idx = srcu_read_lock(&rproc->vq_srcu);
->  
->  	dev_dbg(&rproc->dev, "vq index %d is interrupted\n", notifyid);
->  
->  	rvring = idr_find(&rproc->notifyids, notifyid);
-> -	if (!rvring || !rvring->vq)
-> -		return IRQ_NONE;
-> +	ret = rvring && rvring->vq ? vring_interrupt(0, rvring->vq) : IRQ_NONE;
-> +
-> +	srcu_read_unlock(&rproc->vq_srcu, srcu_idx);
->  
-> -	return vring_interrupt(0, rvring->vq);
-> +	return ret;
->  }
->  EXPORT_SYMBOL(rproc_vq_interrupt);
->  
-> @@ -242,6 +248,13 @@ static void rproc_virtio_reset(struct virtio_device *vdev)
->  	dev_dbg(&vdev->dev, "reset !\n");
->  }
->  
-> +static void rproc_virtio_synchronize_cbs(struct virtio_device *vdev)
-> +{
-> +	struct rproc *rproc = vdev_to_rproc(vdev);
-> +
-> +	synchronize_srcu(&rproc->vq_srcu);
-> +}
-> +
->  /* provide the vdev features as retrieved from the firmware */
->  static u64 rproc_virtio_get_features(struct virtio_device *vdev)
->  {
-> @@ -330,6 +343,7 @@ static const struct virtio_config_ops rproc_virtio_config_ops = {
->  	.find_vqs	= rproc_virtio_find_vqs,
->  	.del_vqs	= rproc_virtio_del_vqs,
->  	.reset		= rproc_virtio_reset,
-> +	.synchronize_cbs = rproc_virtio_synchronize_cbs,
->  	.set_status	= rproc_virtio_set_status,
->  	.get_status	= rproc_virtio_get_status,
->  	.get		= rproc_virtio_get,
-> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-> index de2af696de6c..4f9e70c1332e 100644
-> --- a/drivers/virtio/virtio_vdpa.c
-> +++ b/drivers/virtio/virtio_vdpa.c
-> @@ -27,6 +27,7 @@
->  struct virtio_vdpa_device {
->  	struct virtio_device vdev;
->  	struct vdpa_device *vdpa;
-> +	rwlock_t callback_lock;
->  	u64 features;
->  };
->  
-> @@ -123,8 +124,24 @@ static irqreturn_t virtio_vdpa_config_cb(void *private)
->  static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
->  {
->  	struct virtqueue *vq = private;
-> +	struct virtio_vdpa_device *vd_dev;
-> +	unsigned long flags;
-> +	irqreturn_t ret;
->  
-> -	return vring_interrupt(0, vq);
-> +	vd_dev = to_virtio_vdpa_device(vq->vdev);
-> +	read_lock_irqsave(&vd_dev->callback_lock, flags);
-> +	ret = vring_interrupt(0, vq);
-> +	read_unlock_irqrestore(&vd_dev->callback_lock, flags);
-> +
-> +	return ret;
-> +}
-> +
-> +static void virtio_vdpa_synchronize_cbs(struct virtio_device *vdev)
-> +{
-> +	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
-> +
-> +	write_lock_irq(&vd_dev->callback_lock);
-> +	write_unlock_irq(&vd_dev->callback_lock);
->  }
->  
->  static struct virtqueue *
-> @@ -439,6 +456,7 @@ static const struct virtio_config_ops virtio_vdpa_config_ops = {
->  	.reset		= virtio_vdpa_reset,
->  	.find_vqs	= virtio_vdpa_find_vqs,
->  	.del_vqs	= virtio_vdpa_del_vqs,
-> +	.synchronize_cbs = virtio_vdpa_synchronize_cbs,
->  	.get_features	= virtio_vdpa_get_features,
->  	.finalize_features = virtio_vdpa_finalize_features,
->  	.bus_name	= virtio_vdpa_bus_name,
-> @@ -472,6 +490,7 @@ static int virtio_vdpa_probe(struct vdpa_device *vdpa)
->  	vd_dev->vdev.config = &virtio_vdpa_config_ops;
->  	vd_dev->vdev.map = vdpa->map;
->  	vd_dev->vdpa = vdpa;
-> +	rwlock_init(&vd_dev->callback_lock);
->  
->  	vd_dev->vdev.id.device = ops->get_device_id(vdpa);
->  	if (vd_dev->vdev.id.device == 0)
-> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> index a44368737b39..ad6bccbdfabc 100644
-> --- a/include/linux/remoteproc.h
-> +++ b/include/linux/remoteproc.h
-> @@ -11,6 +11,7 @@
->  #include <linux/types.h>
->  #include <linux/mutex.h>
->  #include <linux/spinlock.h>
-> +#include <linux/srcu.h>
->  #include <linux/virtio.h>
->  #include <linux/cdev.h>
->  #include <linux/completion.h>
-> @@ -230,6 +231,7 @@ enum rproc_features {
->   * @rvdevs: list of remote virtio devices
->   * @subdevs: list of subdevices, to following the running state
->   * @notifyids: idr for dynamically assigning rproc-wide unique notify ids
-> + * @vq_srcu: SRCU domain for virtqueue callbacks
->   * @index: index of this rproc device
->   * @attach_work: workqueue for attaching rproc
->   * @crash_handler: workqueue for handling a crash
-> @@ -276,6 +278,7 @@ struct rproc {
->  	struct list_head rvdevs;
->  	struct list_head subdevs;
->  	struct idr notifyids;
-> +	struct srcu_struct vq_srcu;
->  	int index;
->  	struct work_struct attach_work;
->  	struct work_struct crash_handler;
-> -- 
-> 2.39.5 (Apple Git-154)
+Symptoms
+--------
+  * /sys/class/leds/ contains no asus::kbd_backlight (only platform::micmute)
+  * UPower exposes no KbdBacklight object
+  * The Fn+F4 media key emits nothing: no evdev event on any device, no ACPI
+    event, and no "Unknown key" message. The same key in its F4 function-layer
+    role emits KEY_F4 normally, so the key and the EC layer logic are fine.
 
+Root cause
+----------
+Both symptoms come from one flag: bit 7 of KBLC. From the DSDT:
+
+    OperationRegion (AECO, SystemMemory, AECB, 0x1E)
+    Field (AECO, AnyAcc, NoLock, Preserve)
+    {
+        ...
+        Offset (0x0F), KBLC, 8,
+        Offset (0x10), KBLV, 8,
+        ...
+    }
+
+    Method (KBLD, 0, NotSerialized)
+    {
+        If (ATKP)
+        {
+            Local1 = (KBLC & 0x80)
+            If (Local1)
+            {
+                ^^^^ATKD.IANE (0xC5)
+            }
+        }
+    }                                   /* note: no Else branch */
+
+    Method (KBLU, 0, NotSerialized)     /* same shape, IANE (0xC7) */
+    Method (_Q0C, 0, NotSerialized) { KBLD () }
+    Method (_Q0D, 0, NotSerialized) { KBLU () }
+
+The EC does fire _Q0C/_Q0D on the media key. With KBLC bit 7 clear the
+method falls through both conditionals and returns without notifying
+anyone, which is why the key is completely silent rather than producing
+an unknown scancode.
+
+The same flag gates the DSTS presence reply that asus-wmi relies on:
+
+    If ((IIA0 == 0x00050021))
+    {
+        If (^^PCI0.SBRG.EC0.GLKB (One))     /* returns One if (KBLC & 0x80) */
+        {
+            Local0 = ^^PCI0.SBRG.EC0.GLKB (0x03)
+            Local0 <<= 0x08
+            Local0 += ^^PCI0.SBRG.EC0.GLKB (0x02)
+            Local0 |= 0x00050000
+            Local0 |= 0x00200000
+            Local0 |= 0x00100000
+            Return (Local0)
+        }
+
+        Return (0x8000)                     /* no presence bit */
+    }
+
+So kbd_led_read() -> asus_wmi_get_devstate_bits() returns -ENODEV,
+kbd_led_avail stays false, and no LED is registered.
+
+Measured on this machine:
+
+    \_SB.ATKP                     = 0x1     (INIT ran, gate 1 passes)
+    GLKB(1)  i.e. KBLC & 0x80     = 0x0     (gate 2 fails)
+    GLKB(2)  current level        = 0x1
+    GLKB(3)  base                 = 0x80
+
+Note the DEVS *setter* is not gated:
+
+    If ((IIA0 == 0x00050021))
+    {
+        ^^PCI0.SBRG.EC0.SLKB (IIA1)
+        Return (One)
+    }
+
+so the backlight can be driven even while the firmware reports it
+absent.
+
+Nothing writes KBLC
+-------------------
+I dumped and decompiled all 48 ACPI tables on this machine (DSDT, 30
+SSDTs and 17 others). KBLC appears exactly four times: once in the field
+declaration above, and three times as a read (GLKB, KBLD, KBLU). No
+method in any table writes it. By contrast BLCT, the panel-backlight
+equivalent, does have a WMI setter at devid 0x00050011.
+
+So the BIOS simply never sets it on this SKU. An earlier ASUS laptop I
+owned (Vivobook S14, 2024) worked out of the box, so this looks like a
+firmware regression on the AMD SKU rather than an intentional
+configuration.
+
+Confirmed fix
+-------------
+Setting KBLC bit 7 fixes both symptoms. I wrote a small out-of-tree
+module that resolves the address two independent ways and sets the bit:
+
+    RAMW @ 0x70265000  ->  AECB @ +0x20  ->  AECO @ *AECB  ->  KBLC @ +0x0F
+
+On this machine AECB = 0x70265300. Cross-check: KBLV read directly from
+that mapping matches GLKB(2) evaluated through the ACPI interpreter.
+
+After setting the bit:
+
+    GLKB(1) 0x0 -> 0x1
+    asus_wmi: using asus-wmi for asus::kbd_backlight
+    /sys/class/leds/asus::kbd_backlight, max_brightness = 3
+
+and the factory Fn+F4 key now cycles the backlight normally.
+
+No "Unknown key" message appeared in testing and no keymap addition was
+needed. I have not separately confirmed whether IANE(0xC7) is actually
+emitted on this machine, so I cannot say whether the absence of a 0xC7
+entry in the asus-nb-wmi keymap matters here.
+
+Questions
+---------
+1. Would a DMI quirk that force-registers the LED (bypassing the DSTS presence
+   check, since the DEVS setter works regardless) be acceptable? That would
+   restore sysfs brightness control, but NOT the Fn+F4 key, since KBLD/KBLU
+   remain gated in firmware.
+
+2. Is there any appetite for setting KBLC from asus-wmi under a DMI quirk?
+   It would fix both, but it means mapping an ACPI NVS address by firmware
+   field plus a hardcoded structure offset, which feels out of place in this
+   driver. I would understand a no.
+
+3. Or is this purely a firmware bug to push to ASUS, with the out-of-tree
+   module as the practical answer for affected owners?
+
+I am happy to write and test whichever option you prefer. I can also
+provide the full decompiled DSDT and acpidump output.
+
+Thanks, Catalin Cereanu
