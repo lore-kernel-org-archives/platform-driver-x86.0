@@ -1,136 +1,82 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from outbound.soverin.net (outbound.soverin.net [185.233.34.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A601CAA6C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 01:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788743521; cv=pass; b=oWpa9j2f8JhtvGWwEQyX/GsRHGZ5rKF2GFpCjrnAG4nRhWeshILHZmakm6EPpU+08YaERPI9ug9fOKQBurSmShZ0RCyCALmS4GjKeGK0OG+QsYnmnxThtAbyGKbIBeyRIYVk6ZzkYX9+z2B1OFiWDiDP6Sx6C+FGGCYA9eXsaN8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788743521; c=relaxed/simple;
-	bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=J+3kNw7Oay4MOAm8bDJhNh8cPEKntHgWNtyQTpRtZYgtp1LKdLKwI1wYsKfPujkPcijfYULWeAvFtGdRixXDEcqyMGcdxe5QuXxKO9p2TJN0XtCxcxZcBUAMDg9J8K/FRlkO4HI3F4XanCPbbE+jxs5lUHEAHVW3eTn6/58C3VU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qwf6Gv4T; arc=pass smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D79385529
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 07:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788765855; cv=none; b=GTdi2wKV3tqQsFb9gLj77i/vAYSMGZX5FbGNGXedYJPSyEu/Bq0H02LgJZBhlCeEJUB+T/mmwTxk44xZROWzSAVtjdOs+qm6zBWeMwyWD8Tx4e1OS6W6BfSmfgj2twLq5v4eVN5nmjXaQXz7F6p0ysGsreRrHlyFRCxRcyrQ+0U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788765855; c=relaxed/simple;
+	bh=yM23ltILx4sxudnp9jBVacLVjTapD+p+bgo+u+4/Lg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TpBm7kwOUTfATKt4kbx3OhFHYy6ohYVBZZG1p0qxUYdscC6i4GDH7addvfpfGchr+rntylkkrI6EJbxzzF1wS3vMiviBbWnAdy5U0WkIu1CJTgtnkpDEFbq048bU7QWAlzVCQ6LoEQ5pvfnaSmFZEgg7pVti7mxwqHOEIpxhNA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lewisclement.nl; spf=pass smtp.mailfrom=lewisclement.nl; dkim=pass (2048-bit key) header.d=lewisclement.nl header.i=@lewisclement.nl header.b=gnWj0jkW; arc=none smtp.client-ip=185.233.34.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lewisclement.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lewisclement.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwf6Gv4T"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4a46a53abc9so2687786b6e.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Sep 2026 18:11:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788743519; cv=none;
-        d=google.com; s=arc-20260327;
-        b=TdG/koOJinlCnTUdZNG8IZTm9FJE7cKxzEBF+uHhMHzXjBDwGQLNNs2QCVzi6xTsiR
-         g4r4Fyyf/RYNiraMxjyNdpU5Sn3cHeBCXw+9Ts3DG27yeSL6rkuFX3XFzaJIv9SNDjnw
-         70St9s6qIiDM8+gTo+CBGt3cleSYCDN40H5dYwo5dA/vBadbvhCl3pyvsyfykWGdDx7X
-         DdyzvUIpw8hNmucgnYpKMk9MT/Y64uXGl7azTQ128qm+UdRrVK1KzO85HsGdFxIU0lDc
-         b0/lJj+RBHXoifYnQdnGv3i00xUb0oDjzFwtRYR+Q8DyOMLcgp6fmdLpnlIHzwYmfoBE
-         YBXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
-        fh=ImZAbQNqaN4NWMGiR7beqXZyNF7MBj1Ud54FGFLAEkU=;
-        b=P8SmfRIzkWLGGydjeWSCbtAQ1qX6tRIQBU/te0jd9XtMePTeGn8J/g2ZAJLTut0K7Q
-         RpIYDZ24eNKD+wTfi/bEpjmaI8L8zp1TN0wEJBFNfiG7qXVdQ3M4p1SFnC/qnLb3qMHK
-         guC8gxswpFysWxumoLh+JtptK/BwVpwbr5YIKOuaGnfWf6Zex8Nq8xNdTN2m9g+YrPY6
-         MGmHaYVRwfLwnlaz2DGMnGdi4L31XLksqNYPfHaBge5SEm00noeQgbPLmfNBiZQReBvB
-         A9fCdt3fYvx0NEVpcsyt5WlFTDBX8dXFEw1YGInto/sY8kKUAuDLFPMNx8fsiL7qcL7g
-         PCXA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788743519; x=1789348319; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
-        b=qwf6Gv4T9fkp8O4C5CzO/nJ7OJUED0G/kc39pA3A0flFG0Z1MB2zfArk/O8d0Jan2s
-         5ek0fHZHD00M33/cFQd+BIlBxkJA60pjl65ns9CmHoX1tBCsxzS5FaQvO4Gse/RTK6RL
-         RCCgm/aA0RF4quNchMEdbm6SxMtezOMoOBfujN6Lk+knNaQeMjpffC6OO0aTCLbByOtT
-         GPT9KL3E63pp97db88EjzbqBgos1Pa0QBtInhzK9CnufDcep4/CQvJj35j5xawVLgcSx
-         KDNclqI7YvwZPN9gFjtTwOATPtDQbTLoPzZ0ECOT7avChibAjswYFDPxnouCJg2VOE3v
-         vBbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788743519; x=1789348319;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
-        b=kgz9Rb/L3HdLeL/B2XlcWz3fkFREkZySpWPn+q8ZtuGxa02hcQmWSGn8dCw2XTE0JH
-         6Ba85xGY37WhYX/Gfjt/mWxwfGstnKpKJ3ghz4RK6Q+ZvLceAG9X7Nv/f5wdEUCjGLJQ
-         dLHfZfgeSU9mqNEKAEJwUV/fp0z9MNe/eg6eqNiUgrsgtV64e3iK3vceQmfvdNhBc5as
-         0dPabcP0ympVz2paW6BifAxjo38GC2sVO7Mo/AZAxQW4D9UXRdANlgehRu5qlZ7F6AtZ
-         BFWV7sV+4Z6gWbYz3WvkuviRZgCabpdFRt3mNSjnGbiCW6mXTgUJw33/dF5oJN7Pfm+2
-         BKWw==
-X-Forwarded-Encrypted: i=1; AKwUvBz+Aary+uVLcsibENv113Y2Qfp3JS8V6DpVbW6KyC4A+Zt0OBVfnRyQDwoT/V9L2rA31b5dsuT590lAhYa5pLu3tbMD@vger.kernel.org
-X-Gm-Message-State: AFuF++kXm4MmGYzcpXVRMMIuNEj/gXTFGXN7ivt9YtYbjBI5oDv2OYHE
-	8FFuNBNDpyDjPIF2o3aHXfdn58wj6bebGxjyyafhlCJgIUCO6AXF9SUAOvRbuLQK02X6g/BU2Te
-	T0EHe1JpEsnVa2d6xwN2ricyaHTl6WnjqHlCU
-X-Gm-Gg: AYBFou1+fvB8ff8aVvb2YpfIQTRbeJj713S51NcLT8jASqqn1+wUbwRUFY+CnHD/eQg
-	6uQxHm4gpk3UiX6gimXjaqbASGlvWWxrKEZ6aYwYP1FLza6MHuyOXdENQDof3BPo93hjhc+6Lq/
-	NS+JEychherRsYJVnfzc0JbIRLjRnmsTWDUMfHaezH4fsWUslN0ItPD+kPyBSZscJpyxJh3GuXv
-	i8Lp0JntZ8fDzx0OqsScMc9rgy2wAaHx++7CPjM//3CnoFZOG8fQcvU1n9VqvF4mm3LlEpC72CX
-	wWfPp/5Fsp/rVcCUyy8W48JL8x1fEahuB10htXdlLqRtgMY5kRsiGnD5rWW1E/NNBxh5cT4cVMn
-	GpGI1xYXn75alkWCS3U6hyzshqqkszOkUqun6upncUShL1LwIps1JgrFSQZano6AE
-X-Received: by 2002:a05:6808:251a:b0:4b3:17ae:16dc with SMTP id
- 5614622812f47-4b9616509e1mr14411599b6e.9.1788743518709; Sun, 06 Sep 2026
- 18:11:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lewisclement.nl header.i=@lewisclement.nl header.b="gnWj0jkW"
+Received: from smtp.soverin.net (unknown [10.10.4.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by outbound.soverin.net (Postfix) with ESMTPS id 4hddhF75VZz1xqS;
+	Mon,  7 Sep 2026 07:18:05 +0000 (UTC)
+Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4hddhF3wQGzJT;
+	Mon,  7 Sep 2026 07:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lewisclement.nl;
+	s=soverin1; t=1788765485;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DScAlIm04F+175xCrBvX683PBfjk0Inm0ljCU55iKE0=;
+	b=gnWj0jkWNYn2wlzsh6yM4w2A0/IUKNG/zEYQJW5ebCktX+FB93NP/Z63yYSdrwGQSXUe9d
+	fHYDaQqklbDndUVp8ORr0FXjEp87jKDLICcBi2BcAQd/wpoPpPixMM3nwZS2SGHQOFY9r5
+	VCPGZKGD5jy/Sy2IkSj8h+BDrRPBePDbjmyMfpsWgurfNY7nzzE244yYPGv0gYxloPHnoF
+	0Y8tydtbfcfkb26KxAIObPeep2l/UATgB9m2Qqx4HQEg7UdNX5k7jj0c9A6QwNCh1/q/Wn
+	ehhdamF1SBHP1sT/tYsDRvjqKjDEsgJauXFxT0idaHhUCjgePQOokr9zgNILVg==
+X-CM-Envelope: MS4xfA6FjRbdVsfdJL5f5Tn4/V1TaQduKe2VvlMnpiKBZ9iFjyImAgoWyFGBBSQqx+uLV7SLP8BquqiZYibIQfz2lT8OXSD+PZ1bV5opLrlmKTIn5b7LX3f9 wa6HlXGnLCaCHmRx1p4gHmwTkg3TH4m7o+0fBLOAzyZJ0aqdGo1dXmciXZc+v2pE6F6MUFbW4BPWtyXd3LBRU5ISyTkX98gkQEKO0WznHY0XnoSdx2N4RAwU VseSzgoMHY14qNgCCbe/oyxFaF5jQMH3RrZH/Ab6io/k8TngllcMAivVJJHSQsX8
+X-Soverin-Id: 01a07abb-37c8-73ea-8982-feba2b0a360b
+From: Lewis Clement <lewis@lewisclement.nl>
+To: platform-driver-x86@vger.kernel.org
+Cc: kuurtb@gmail.com,
+	ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Do not enable G-Mode for Dell G-series
+Date: Mon,  7 Sep 2026 09:17:35 +0200
+Message-ID: <20260907071735.35805-1-lewis@lewisclement.nl>
+In-Reply-To: <DL6Z05M2G2LP.2OVU37WYH5R3U@gmail.com>
+References: <DL6Z05M2G2LP.2OVU37WYH5R3U@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?B?TWFudWVsIEEuIFIuIGRlIE9yw7plIFLDrW9z?= <deor001@gmail.com>
-Date: Sun, 6 Sep 2026 22:11:47 -0300
-X-Gm-Features: AcwNN1WfCwyE2Thp24qJQjB-cmbXW2y9wnZ0IdGosAFwnibz2ilZw_V_6bfHbQc
-Message-ID: <CAOXykpgCPMB7fGGJXD0wdx-0boy3vdRZraFRhegrh7azJiYONA@mail.gmail.com>
-Subject: Dolphin (26.08.0): "Expandable" folders in Details view not working
- when per-folder view properties are enabled
-To: linux-kernel@vger.kernel.org, denis.benato@linux.dev, luke@ljones.dev, 
-	platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spampanel-Class: ham
 
-Hello, Denis and Luke.
+Hi Kurt, 
 
-I was wondering if you could help me communicate about, and get some
-information regarding, the following topic:"
-in Dolphin it's intentional (a design decision) or an oversight that
-hasn't been addressed yet.
+Thanks for taking a look. 
 
-Environment:
-- Dolphin 26.08.0
-- Fedora 44, KDE Plasma 6 (Wayland)
+I would agree that losing the option for enabling the "G-Mode" isn't desirable.
+However, there is a semantic issue in here: what is normally communicated as a
+separate gaming mode now replaces the normal performance mode. It took me this
+kernel driver investigation to find out that switching to balanced would've
+fixed my problem. Since my device configuration doesn't have a G-Mode button,
+I wasn't even aware of the feature for this machine before. As far as I
+understand it, performance is commonly the default selection by distros when
+the machine is plugged in, so this behavior can be triggered without the user
+explicitly choosing G-Mode.
+Also, I just found out that in Gnome desktop selecting balanced will enable the
+Balanced profile, while selecting power saver enables Balanced-Performance. 
+That seems confusing to me.
 
-Steps to reproduce:
-1. In Configure Dolphin -> View -> Details tab, enable "Folders: Expandable=
-".
-2. In Configure Dolphin -> General -> Behavior, enable "Remember
-display style for each folder" (i.e. GlobalViewProps=3Dfalse).
-3. Open any folder in Details view.
+If you think this should be addressed in userspace, 
+where would you suggest this needs to be handled?
 
-Observed result:
-The expand arrows for subfolders (the inline tree view) do not appear,
-even though "Expandable" is checked globally.
+Attached you'll find my acpidump. 
 
-Expected result:
-The expandable folder tree should work regardless of whether view
-properties are set globally or remembered per folder, since
-"Expandable" is configured as a global Details-view setting and is not
-something exposed as part of the per-folder properties.
-
-This looks related to Bug 524626, which reports a similar coupling
-issue in 26.08.0: the new per-folder zoom feature is tied to
-per-folder view properties (GlobalViewProps=3Dfalse) with no way to keep
-it independent. My case seems to be the same underlying pattern =E2=80=94 a
-setting that should logically be independent from the
-global/per-folder view-properties toggle ends up depending on it.
-
-Could you let me know whether this is expected/by design, or if it's a
-gap that hasn't been considered yet? Happy to provide more details,
-logs, or test further if useful.
-
-Regards,
-Manuel de Or=C3=BAe R=C3=ADos.
-___________________________
+Thanks, 
+Lewis
