@@ -1,86 +1,110 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E941039EF0C
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 21:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405EC282F15
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 21:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788816204; cv=none; b=ACzZXp2NMvdxiP+It6rDYPTVvKxvrMcrH0sfgwuVmqkfL3J21+48GjqO57gamc+Aw874zfWqxnCmM0pXn4KqjCDRMEYzp16CbpA7V/7vbYIzu1gJUOCXKGH2YZXyqMSyiw9ycQLFU00enQmRflSqVuA1PtBTUQGmN7SmV9LJeus=
+	t=1788817031; cv=none; b=uj5vE1/YDjyimKBv9TiSXPG8Fotjfw+MIZuHb8X8J0fJZ+QjvAFRv7if8BIFI6GgH5AQgsVRMy2s4Rea+cj2CmvzlRQ0LEo1VmSUHAYFD3ovl6EuZYFpJqfynvBXa9QFhkgwxB7h8J52/hfi8hpqacjVB+H3BuKDd7cNExZnMcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788816204; c=relaxed/simple;
-	bh=Gzcz3Zkq6mIgF9nN+/RZpdn2G6QVcg2SErOL9iM3Lwo=;
+	s=arc-20240116; t=1788817031; c=relaxed/simple;
+	bh=u9moGRlDLZ8iHd/B9nEQXt7hx/ef6HPudKfAAjLC8zY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/cTtrO03d/LeH8Hx1Ums9GxXjKlsQDKvuhQHFLUm17YH8Z7nOuKUE9UGcc+wjjZCVSKqofKje1NjuSNn63yTTGZLonleZrMPHHjtYjcjC+p+IuuIfBAdzGkSVKtNCGUAF8RY1Q00ct1bswdmW1CJopSyowHsQ7MfEldc+1PLQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dB90dpFH; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGXLEKsyfJfMiVUO5IdB5DMC17v0lkwBErFZVjdgXusDWImzZU97daf2ey8fMuOCieIKk29tzUCHJ1Rz7q2rGGcKXGS7LmIdg30FYkLa92CXuHBjGb5f0h1TnsA6Q5NB27jVaIQQuQv1hMr+o/fvxpltVJHQzhYke/eOqw2+WTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KSU67eTq; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=t1o/rb21; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dB90dpFH"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-47f96c5b722so2752875f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 14:23:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSU67eTq";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="t1o/rb21"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1788817028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SrHtKsbOCKteoqWFV7lfV/tXkTEj1Fv0IcHEJx72zjM=;
+	b=KSU67eTqCZ1VIXK4VMFtF4Fh1kKEqB7M58KKmWSyWIB+k0qvqwC50tYX/9mviAK3Zs/ZJH
+	ZVZ9B/19MPedjFrfi8FnouKpVAIFf4LHyBI8XeJ0pIBsID3yBvWiEyrYYlNveRW9UJQfOG
+	JSqvoJh3tSyJMXfHdPgMnzbKEkca3eU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-326-UgbIanHBOUul1tD96MTaTg-1; Mon, 07 Sep 2026 17:37:07 -0400
+X-MC-Unique: UgbIanHBOUul1tD96MTaTg-1
+X-Mimecast-MFC-AGG-ID: UgbIanHBOUul1tD96MTaTg_1788817026
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-484362cb000so2651885f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 14:37:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788816201; x=1789421001; darn=vger.kernel.org;
+        d=redhat.com; s=google; t=1788817026; x=1789421826; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=zj4alWZ0+Z5ViHZ+ZCYKHStoDMFk30/0JNVi4/sJSpo=;
-        b=dB90dpFHKckqTrmJjkDD5EUcDaUVt1xE4+JqKWmDR3ffIvrgUgRi0TAZJOpGZIijr3
-         r/gJhz7hTnDw0qeQtUWHPCJyMvEL5GJYheAVws5eMPQ+/xr0LhAuuMOsXifE3Ev3aN7p
-         yr25BWL5Y0XVgpuO5hLdUZU7udToKuVTxl0DxeCYuTOPpeqADHaqXa4AOQLR1GKxqPPE
-         mIaJEwlUqTmTEvBkpxsc/uOL8JUdoFiMsBzIKmjG2zLo2S04A396WnRs+D19swYmLDHr
-         s9E/nQut36rJRvxtRVcaoXwRTSnjMNWeIQYjAE5zGTXq2mGfq/awfBiz04y+azvUSlL3
-         Siag==
+        bh=SrHtKsbOCKteoqWFV7lfV/tXkTEj1Fv0IcHEJx72zjM=;
+        b=t1o/rb21F5Wjn2wBceJUmkjA25pu5UXVFpN9hWQjmAL3jHqg5BCcKSZcSXwncIUAvj
+         eH9yh2Ogtp7F2GdrWTuy3luH8enI/1c+03CLKkW8E3w7BZoTwfxkCqSRf2m9CIjDbhG8
+         4CtY7ZAcPjGDfwy0JXH5l6OrxvLr4UvzU1yYMDKgezNg2dh4zYv0MD6PAiOYVDsPjnjX
+         9kf/P3y4owYoQvA1+Euu+uC2+ZvLSHQpa5r5BHwBlS1tgahdiaz4TkSaAwbuXPXzkcyc
+         ZJLlVz6juZz0PmdWcxKBVZVmwvmihZ+RE/a/2wY2TbZ9eHqCeiuLjo++jQsKWHMMgJZi
+         AlXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788816201; x=1789421001;
+        d=1e100.net; s=20251104; t=1788817026; x=1789421826;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=zj4alWZ0+Z5ViHZ+ZCYKHStoDMFk30/0JNVi4/sJSpo=;
-        b=U+Z1hjdRGCkpUpV9wOq/9SOaDIQTg+gyJxEhTrWdWRK7ALHJzmHkUbAW0zHBLxGyDp
-         7dRddHwUW/EHVBOlnvy6YYjYKBn0S0kfH8Cp1YQq2qEZooLgGEJ7jbYgs8Y3e6uX9Snd
-         Z8oKV3T23n6oL57+6diSMUCSWNNVNQ3zYqIBnXLey1RFB+MkHDikL0NyBOi+G9uCXRVy
-         DxDjxgX7sP5EJZKwinn61mDuhRwskv+jGVCOpMVd6H2UI0wDGZGsH1JzieKCS1KmZpo3
-         X1RMQ8lbnlqCZAikeW2gDuUeNpv72t1OVD1p0k96Ez1nimoMVVv9VH1ek7wl1kaDhezE
-         kZrg==
-X-Forwarded-Encrypted: i=1; AKwUvBwD1lww7ERHNpnBBk0UZYMQIObAIyOMTRH8l9dpniayDVC0qp5cnQM77Xxk3Hz7Ad4YpYaK7+ALzYq9Bmok8YqYb7Mb@vger.kernel.org
-X-Gm-Message-State: AFuF++lLOYgFr6JOM4SSaJ88fvGoZRAxqFcmeuhuj6tC13vqQtxi9hYF
-	hkuH74S1krjlfd+iWkPeda42ojeHf811HqKo22S6rI0FJyyH3SJeSfQc
-X-Gm-Gg: AYBFou2IjrDd0yqQq2lWDd7x7rl9LDsauC8NfmALDZrn8uk1pXHd81BhSjppIDBL4we
-	qCq3V3QubG0YZzKFjN24tF4TWHcO02XWGfkjuEmRTKL6Zchyb9VORVW1e0RPUnEFOynmrs/w5/s
-	v5mflcTHzOByWWdkbnFNfdvPqxupyTido7Y0ZsAPecJTjknhK8Ry1D6HKqxSMf4DDCQ4/1lYGSk
-	9Nxv9i+fcvF8om4De7EEjU1mWoXUNgm92/kebDtvDJqG98zd7Xf+fjr2J2cl6Cg8360LUcVrmFn
-	2/niYJxMg0Wbq6xEjF+39yqIvswsdKgyzWlxOs/n7kx6LBTALcWxxPO5dXyL4p2XL3dh1/U2owA
-	tWdOd2ihvvucT1g0jPYHYOlkT8MrDe22WCi+TE6Y61dZJDm459qvU5ZyEtjuhb9cOhTqY/3T7xw
-	aiQ8TpfdfDZPFXbg5x8BOrLYeHEcExuhyRWPZG6jenermkHbWgOXc4E+ShtuxS6NUDMYq519RnC
-	UrdUl9u7/q36KIKZcor4FTCAndeK3w6kNJyJbrBKiI7kq1fwjVINKx3Oz0e1ysQqQs5Qb9AocKh
-	SvE7PlnTVo9AngiATVwnp1PdLuyyeCCr9LWrgGY/4w0PCvK4cXqvwiEPfxpzT1R+9/YNhpB/7V+
-	gxixTpiVapS8=
-X-Received: by 2002:a05:6000:4a0a:b0:484:3310:f39b with SMTP id ffacd0b85a97d-485872e05f9mr26354952f8f.28.1788816201067;
-        Mon, 07 Sep 2026 14:23:21 -0700 (PDT)
-Received: from MacBook-Pro-von-Karl.localdomain (dynamic-2a02-3100-b0c9-3601-cdce-ba4b-d0e3-dede.310.pool.telefonica.de. [2a02:3100:b0c9:3601:cdce:ba4b:d0e3:dede])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4858ac2b4cdsm29964718f8f.16.2026.09.07.14.23.19
+        bh=SrHtKsbOCKteoqWFV7lfV/tXkTEj1Fv0IcHEJx72zjM=;
+        b=KIqHxe2JCBahCsnDSdqtkkP8ifcjSyGPqHrw3pVSxgqa089+FYt7LJ/XJckxViMmaQ
+         bF5UOI8/AtE7n8pLyXyPkJ35zrk/COILNz6vUWIPnNqpZxnxJtQGdUIzRgPb/RJo2V+m
+         7Nz/XGPqsT8nXnVJ146PY4ijaMdhZIAnKlRPV1KVvPz1gjP9ASPyhz3dJ68tvdZmRCMT
+         iaOdCX+Knd8+2iQGyv/FNb82CzYzkZ6s3FEsfvJE4yRco+olOmhj4GY2rutZOlO8gQqQ
+         9dpOdJgkSj/7IAxClbo0tGgGT+In8IQ4pzpvUfUTT3zCCouMYN29s770BsuH2OEne3+1
+         jdaA==
+X-Forwarded-Encrypted: i=1; AKwUvBwcJao5XzsfqCvzMwueK+i9W+yLNIpwiEOaKhjpZyKxqKqqybS+5HLBjdb305dUJn6QaaVV5vM0NHRo6VgLRuSpTu3u@vger.kernel.org
+X-Gm-Message-State: AFuF++k0mg8lDhHyZvOnUt1RLrMHUilURx/cLgyBysI6CxjxufjfHq6K
+	6iB5f4FgONIXfEiEsXNyT5smdnbUnG2qL0P/72pidV4q68f0sD5gUgAMdLhlR1mbMrrjSGDF7uN
+	svrZJKXjKHmdSRDF9++QNyuMaOFVA5JTyX40lvEDjci1GGlIT2LzuAQ6k9JB0S9QZWFDqqY79c9
+	k=
+X-Gm-Gg: AYBFou3I7Aju0b9sSXpPlLWs/ApYUOG909BfQ5EDQnkKgiNH6WKcBcVDOAARBM/Ktyp
+	qQ8Ikd8bsgZB5K8IU3Qwh1JMxukBZd9ZQ+YeTz2zyM5A6g7U2mhKM0AcsKKcwi8TPga8Tc/GaiT
+	iXezVOk3vRhUB9y2NWN2WUQ3ozL7VHrkVHQsYZqfwPJW/YvuGwgzPduzof1rcFqvFDaXdE2hFdA
+	UdfbLnvGpsjmHlNGtFixBQUjOaMNhfqcZY/M3TfiGX4dI2jlgT5iCfW0LRzsSnOzJocB3bifYv1
+	euajOoIs7PZRe9lPDkbru0irmuPqyEGtHJkqlYjFpDLrcyQonLkP5wqumc0DwwYG0Qqu4QIDUjS
+	M15EYMfv6RvNFioch5AGRYww=
+X-Received: by 2002:adf:edc8:0:b0:482:e658:7a39 with SMTP id ffacd0b85a97d-4857e5171femr27162892f8f.11.1788817025770;
+        Mon, 07 Sep 2026 14:37:05 -0700 (PDT)
+X-Received: by 2002:adf:edc8:0:b0:482:e658:7a39 with SMTP id ffacd0b85a97d-4857e5171femr27162864f8f.11.1788817025220;
+        Mon, 07 Sep 2026 14:37:05 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-485883c6ba4sm35717372f8f.25.2026.09.07.14.37.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 14:23:20 -0700 (PDT)
-Date: Mon, 7 Sep 2026 23:23:19 +0200
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowangio@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rusty Russell <rusty@rustcorp.com.au>, 
-	Pawel Moll <pawel.moll@arm.com>, Cornelia Huck <cohuck@redhat.com>, 
-	Halil Pasic <pasic@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Hans de Goede <hansg@kernel.org>, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Vadim Pasternak <vadimp@nvidia.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	virtualization@lists.linux.dev, linux-input@vger.kernel.org, linux-s390@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-um@lists.infradead.org, 
-	platform-driver-x86@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] virtio: synchronize callbacks during device reset
-Message-ID: <ap8rCQII9fASEosZ@gmail.com>
+        Mon, 07 Sep 2026 14:37:03 -0700 (PDT)
+Date: Mon, 7 Sep 2026 17:36:59 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Karl Mehltretter <kmehltretter@gmail.com>
+Cc: Jason Wang <jasowangio@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rusty Russell <rusty@rustcorp.com.au>,
+	Pawel Moll <pawel.moll@arm.com>, Cornelia Huck <cohuck@redhat.com>,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	virtualization@lists.linux.dev, linux-input@vger.kernel.org,
+	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+	linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] virtio: synchronize callbacks during device reset
+Message-ID: <20260907172202-mutt-send-email-mst@kernel.org>
 References: <20260905152059.89560-1-kmehltretter@gmail.com>
- <20260907091033-mutt-send-email-mst@kernel.org>
+ <20260905152059.89560-2-kmehltretter@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -89,18 +113,170 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260907091033-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20260905152059.89560-2-kmehltretter@gmail.com>
 
-On Mon, Sep 07, 2026 at 09:13:28AM +0100, Michael S. Tsirkin wrote:
-> got all 3 patches now. it's a good start, thanks, but they need
-> a bit more work, in particular addressing sashiko comments.
-> I'd also prefer patch 1 to be split: moving code from pci to core
-> is separate from ccw fixes.
+On Sat, Sep 05, 2026 at 05:20:57PM +0200, Karl Mehltretter wrote:
+> virtio_reset_device() promises that vq callbacks have finished when it
+> returns. virtio-pci waits in vp_reset(), but other transports can return
+> with a callback still running.
 > 
-> Pls write or at least edit commit log messages yourself,
-> after reviewing Documentation/process/coding-assistants.rst
+> Call virtio_synchronize_cbs() after config->reset() and drop the duplicate
+> waits from both PCI reset methods. Add the wait to virtio_device_shutdown()
+> too, since it calls config->reset() directly. Keep the pre-reset call under
+> CONFIG_VIRTIO_HARDEN_NOTIFICATION so callbacks see vq->broken.
 > 
+> Always take irq_lock in the classic virtio-ccw interrupt handler so it
+> pairs with synchronize_cbs even without notification hardening. Use
+> is_thinint to choose the lock: airq_info can stay allocated after a
+> fallback to classic interrupts.
+> 
+> The transport reset must still stop new callbacks before this wait.
+> 
+> Fixes: d9679d0013a6 ("virtio: wrap config->reset calls")
+> Suggested-by: Michael S. Tsirkin <mst@redhat.com>
+> Assisted-by: LLM
+> Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+> ---
+>  drivers/s390/virtio/virtio_ccw.c   | 6 +-----
+>  drivers/virtio/virtio.c            | 2 ++
+>  drivers/virtio/virtio_pci_legacy.c | 2 --
+>  drivers/virtio/virtio_pci_modern.c | 3 ---
+>  include/linux/virtio_config.h      | 6 +++---
+>  5 files changed, 6 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index bab6cad3fd5c..552d77998012 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -1062,7 +1062,7 @@ static void virtio_ccw_synchronize_cbs(struct virtio_device *vdev)
+>  	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
+>  	struct airq_info *info = vcdev->airq_info;
+>  
+> -	if (info) {
+> +	if (vcdev->is_thinint && info) {
+>  		/*
+>  		 * This device uses adapter interrupts: synchronize with
+>  		 * vring_interrupt() called by virtio_airq_handler()
+> @@ -1204,13 +1204,11 @@ static void virtio_ccw_int_handler(struct ccw_device *cdev,
+>  			vcdev->err = -EIO;
+>  	}
+>  	virtio_ccw_check_activity(vcdev, activity);
+> -#ifdef CONFIG_VIRTIO_HARDEN_NOTIFICATION
+>  	/*
+>  	 * Paired with virtio_ccw_synchronize_cbs() and interrupts are
+>  	 * disabled here.
+>  	 */
+>  	read_lock(&vcdev->irq_lock);
+> -#endif
+>  	for_each_set_bit(i, indicators(vcdev),
+>  			 sizeof(*indicators(vcdev)) * BITS_PER_BYTE) {
+>  		/* The bit clear must happen before the vring kick. */
+> @@ -1219,9 +1217,7 @@ static void virtio_ccw_int_handler(struct ccw_device *cdev,
+>  		vq = virtio_ccw_vq_by_ind(vcdev, i);
+>  		vring_interrupt(0, vq);
+>  	}
+> -#ifdef CONFIG_VIRTIO_HARDEN_NOTIFICATION
+>  	read_unlock(&vcdev->irq_lock);
+> -#endif
+>  	if (test_bit(0, indicators2(vcdev))) {
+>  		virtio_config_changed(&vcdev->vdev);
+>  		clear_bit(0, indicators2(vcdev));
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index 75bb4ffe3b87..ad1c50b8a94e 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -264,6 +264,7 @@ void virtio_reset_device(struct virtio_device *dev)
+>  #endif
+>  
+>  	dev->config->reset(dev);
+> +	virtio_synchronize_cbs(dev);
 
-Thank you for the review and feedback. I'll work on a v2 now.
+I guess we want the "Flush VQ/config" comment here?
 
-Karl
+>  }
+>  EXPORT_SYMBOL_GPL(virtio_reset_device);
+>  
+> @@ -424,6 +425,7 @@ void virtio_device_shutdown(struct virtio_device *dev)
+>  	 * Some devices get wedged if this happens, so reset to make sure it does not.
+>  	 */
+>  	dev->config->reset(dev);
+> +	virtio_synchronize_cbs(dev);
+>  }
+
+shutdown is different. vq callbacks are not the issue at all.
+but config callback potentially could be.
+So while we could keep this, with "Flush config" comment, perhaps
+preferably, disable config callbacks like we do
+for remove, before the callback:
+
+static void virtio_dev_remove(struct device *_d)
+{
+        struct virtio_device *dev = dev_to_virtio(_d);
+        struct virtio_driver *drv = drv_to_virtio(dev->dev.driver);
+
+        virtio_config_core_disable(dev);
+
+        drv->remove(dev);
+
+....
+
+
+}
+
+
+
+
+>  EXPORT_SYMBOL_GPL(virtio_device_shutdown);
+>  
+> diff --git a/drivers/virtio/virtio_pci_legacy.c b/drivers/virtio/virtio_pci_legacy.c
+> index d9cbb02b35a1..8115aa39e01e 100644
+> --- a/drivers/virtio/virtio_pci_legacy.c
+> +++ b/drivers/virtio/virtio_pci_legacy.c
+> @@ -98,8 +98,6 @@ static void vp_reset(struct virtio_device *vdev)
+>  	/* Flush out the status write, and flush in device writes,
+>  	 * including MSi-X interrupts, if any. */
+>  	vp_legacy_get_status(&vp_dev->ldev);
+> -	/* Flush pending VQ/configuration callbacks. */
+> -	vp_synchronize_vectors(vdev);
+>  }
+>  
+>  static u16 vp_config_vector(struct virtio_pci_device *vp_dev, u16 vector)
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index 6d8ae2a6a8ca..c9e21317c51a 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -559,9 +559,6 @@ static void vp_reset(struct virtio_device *vdev)
+>  		msleep(1);
+>  
+>  	vp_modern_avq_cleanup(vdev);
+> -
+> -	/* Flush pending VQ/configuration callbacks. */
+> -	vp_synchronize_vectors(vdev);
+>  }
+>  
+>  static int vp_active_vq(struct virtqueue *vq, u16 msix_vec)
+
+
+
+
+
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 69f84ea85d71..8684a1e268ee 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -71,9 +71,9 @@ struct virtqueue_info {
+>   *	Returns 0 on success or error status
+>   * @del_vqs: free virtqueues found by find_vqs().
+>   * @synchronize_cbs: synchronize with the virtqueue callbacks (optional)
+> - *      The function guarantees that all memory operations on the
+> - *      queue before it are visible to the vring_interrupt() that is
+> - *      called after it.
+> + *      Wait for running callbacks to complete. Memory operations on the
+> + *      queue before this call must be visible to vring_interrupt() calls
+> + *      that follow it.
+>   *      vdev: the virtio_device
+>   * @get_features: get the array of feature bits for this device.
+>   *	vdev: the virtio_device
+> -- 
+> 2.39.5 (Apple Git-154)
+
