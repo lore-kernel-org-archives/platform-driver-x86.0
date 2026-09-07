@@ -1,235 +1,244 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azolkn19012056.outbound.protection.outlook.com [52.103.10.56])
+Received: from outbound.st.icloud.com (st-2002g-snip4-7.eps.apple.com [57.103.78.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED2B4D98EF;
-	Mon,  7 Sep 2026 13:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788789375; cv=fail; b=P+qXBkFoEbxXffVY89IQKWgacb6FGp8HAUcWApp9D674DATRYF1DLf/73IR5MT2nu3phXco1ts264FNRNsVXliyc4ibUPYpnUQt5CnzCWG5iYY1swh8VW/T7B7BVOggdzXOm66n78wbIRDxS1FLSE5Hfwdzv5sXxBv7wqkO2e50=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788789375; c=relaxed/simple;
-	bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uxs/d+2SCtP6lp0w0/tnIkug2DoXgVG1HANeyjtKKTuntuzzznqrrHnPlhw0tYW4/ZNAGST3j4obIkg//xYR9D0rp9NdV32Do/+RiHpb6HSVyFOoYtB6sAABw5iEgoZJKObAUB94+UVMDhWiufzxaAGEAFvF8TOnUqLvtPThP0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=meeRym2b; arc=fail smtp.client-ip=52.103.10.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9645133BBD7
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 16:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.78.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788796847; cv=none; b=er58xmVXHHkS3NjH7tEnsbxhjfWrezs6Bb4LZBvSTfyjg5bzornoIwJ1jq6HEWxV1PL3jcUfL30EJhtULelzEV2vPTPX1449Hv1ZPz8Xz9+hsIdnSAeqhXKD6qgLuUPEZT+bu6mUKaGbxQFu+IYWarhraCt4K3qriDwKXbgukak=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788796847; c=relaxed/simple;
+	bh=br2hmQZRkNwBbB2q7HS/COPZ3Snd9jCDeCk57A1JAGc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=kRz/3jQh+FzIZhLCerIJuuEQwGsUBoPSss74cjHJIGv2Cfn/VoznQaQUjVL0BJokK3v1vr0LphK9pbZo74wrJJyU9sTxf+j3GkrqoNTy20c9ODiIJdr86f52tYjrD7WlkO93X47hpxSDvTtU51WjHfF5pT/M0yRwHuWyoGcanVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Jf148OiD; arc=none smtp.client-ip=57.103.78.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="meeRym2b"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=atGwlB27uMLrwLQki1ZbbNeVAMIfd1mF7UoqrVklXy8iNq2mWLoQHtlxkdaT28BTvW07GzIHbo8bstp+27saGJtJ7ogutsFAgCTIBa4CValMKs/4PyBj3NMQdI2szyyI1kljNcPjrtVPLXj2+9A0JOsEAkTEC7yjW9v0wxAnizFWf2rfi8ExUZv+8WlGrSm9D7DZEEMfv7K6qTlPy5ZW4JTzMkNJRkdVgPnkTSkrKUCub28eeXIi+GKdZHzkTriU3v50n2b01Cqd5ilNn/QtuMLPyprR/Gs9h8nF3gaX4AXFwgKgPoJqDssyvLh0sUKW4YfDF8L+hkiJiwPtFAUUVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
- b=ikvV6g5wxCNH/ai+jlnpZPOj+A5BsVEY6CElo/PrUmB0fkoGegUvpES0msl8Oz/KVFg4BICYP6Ndf8tZk1fK4T3lFqbqA/FNhHqSGzh7UQANqfQ82Yx7w5AKCJERdwP//R2uqyU8mReoXHW7YQP9HO6x1JGEMP34ANVlIv0bw684xl4gaL5L3bSzqBhSnWGwVoJy/e/lixSvxmYwuJCLCJiRXjgivJBs47P17s93g/D+Dj5InrSWNlySsMjdURH2V/R4YBsAuGZWUC5nrOMNuI4Qe0KzFr+GKJ34QntYAXScZqFSwB4ANFtwxp/ka8nguqYRPE0pTgKx3nC9fGmLtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
- b=meeRym2boED/MzwH2vil1DO2lypjP9xmVG74fUvFf5sOQzO+YXE5OydOr+Zcg1MSTe3R50oNx8XkXp4TPFSkdhuVK/Eny7XY9DAzSA50nGWDXiJefgL3pEombMI3HTdk4TdFE3NVW/Mpl0ssyT13L3MiPpuNHzZRBfVr2GUDTTexG2llkeMhWNyZMx0dMngQ/FU7dTR39F3sght146WJ7GPMFbBbksYPBoEWCmdC+8caq/BYjv0TieqUj16n/tiTcAEtZ0uBjkV2fR51gbuFXK5USqyn0Uwk+8mHOCQC9iDUgy6vMd1QMRFFgB2K6zme0sZbQnVdgEyqBABZApWMnA==
-Received: from DS0PR18MB5477.namprd18.prod.outlook.com (2603:10b6:8:162::11)
- by SJ0PR18MB988518.namprd18.prod.outlook.com (2603:10b6:a03:404::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.13; Mon, 7 Sep
- 2026 13:56:11 +0000
-Received: from DS0PR18MB5477.namprd18.prod.outlook.com
- ([fe80::d67:de80:bff4:4306]) by DS0PR18MB5477.namprd18.prod.outlook.com
- ([fe80::d67:de80:bff4:4306%5]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
- 13:56:11 +0000
-From: Rodrigo Hernan Villarroel <hernandevbuddy@outlook.com>
-To: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"mradityadash@gmail.com" <mradityadash@gmail.com>, "i@rong.moe" <i@rong.moe>,
-	"derekjohn.clark@gmail.com" <derekjohn.clark@gmail.com>
-Subject: [RFC PATCH 3/3] platform/x86: lenovo: Add Legion Go Fan Method curve
- driver
-Thread-Topic: [RFC PATCH 3/3] platform/x86: lenovo: Add Legion Go Fan Method
- curve driver
-Thread-Index: AQHdPnfRc8WULaGpy0et3cchy+FZnbbDHeYD
-Date: Mon, 7 Sep 2026 13:56:11 +0000
-Message-ID:
- <DS0PR18MB5477DEB7537E814909B41586DBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
-References:
- <DS0PR18MB5477F22D326C79451CCB21CADBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
-In-Reply-To:
- <DS0PR18MB5477F22D326C79451CCB21CADBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
-Accept-Language: es-AR, es-ES, en-US
-Content-Language: es-AR
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS0PR18MB5477:EE_|SJ0PR18MB988518:EE_
-x-ms-office365-filtering-correlation-id: a6dd4079-13f8-4d4e-a62f-08df0ce7c67e
-x-microsoft-antispam:
- BCL:0;ARA:14566002|24121999003|22091999003|15080799012|6140399003|8062599012|8060799015|19110799012|15030799006|19101099003|31061999003|51005399006|440099028|3412199025|102099032|40105399003|3430499035|2607281247196008|26121999007;
-x-microsoft-antispam-message-info:
- =?Windows-1252?Q?kJAU8PZCpcjtgisAKSZHilqm8/8yXaONMrRYD6H1i9oG7+ujgNWlE6NI?=
- =?Windows-1252?Q?VjLMH9y8C5MaLipyC7p7ZTByO5JfvYJd8vyWL0LaqjhYmNUexW5GumKS?=
- =?Windows-1252?Q?hMSQnu2UNiP/YpfDcF2VFeAJgfbOm0/+l+khkTRG/pAjBI/G2odWf6pt?=
- =?Windows-1252?Q?cG999w40YXAlFXZKpPaBsQzShLjgw/UAqRXiLF/j2FJQUWIOovULnoF7?=
- =?Windows-1252?Q?/bNE3D9HDZvGxccr/CjSA98SqzbtPPA1ywgzocs3FSJ+n5eqt6fdefDL?=
- =?Windows-1252?Q?r32C0CqAW/c8+OLNyoEHsCGh/JvGBXRB3i+4tEwpaQpLwBg1fM2l8yYW?=
- =?Windows-1252?Q?8S+sbUD/sHJMFxt06ieXv8ZjB995j1FVSpkjgIzOQJqQAlUAx0h/z/xC?=
- =?Windows-1252?Q?mThd/i4RXSlz34/zwyhUX063okHHcV9dprnjCtGdjBTgdfPnzqu+ieUi?=
- =?Windows-1252?Q?smoczj4I2PP1gmllKlUQBbSz+P7yxVg1ZyI83IAd7AqTx5+wVG6gVHUS?=
- =?Windows-1252?Q?Kqg4U6bGMu4dW3Va2cDOB609J2xrmZplCwTqlvOowmCas45vAKL2G+/I?=
- =?Windows-1252?Q?X3m5mQUvcsnKwmDDOV+gnAd+DLj6+pi8eRwmxWHcuJUqh7sVYc0QP+49?=
- =?Windows-1252?Q?bJoyrRjNzHwFzNDnOKYN3kaXbo1wzRleISRym6ZuNe3aZ/mXkdd5TA4G?=
- =?Windows-1252?Q?qlzUvkqq2ARcvu+kXu59A9OgVIh+ZLhkwBmpBYjAZpbVNO4mPyaT4PpK?=
- =?Windows-1252?Q?AkCkheAvWiJEQL5xcFLIZ3B3gqMbYCpvWZwzsKTAejXKoAZi5thNakKS?=
- =?Windows-1252?Q?7e7Yr8gyByvadLbxxxBQRIgiLVzAmcy4ZJoYINwsamMiA7OWguAhwv0S?=
- =?Windows-1252?Q?KWFq/kSFWJbIsZMXZ2fmz6Ykr2/z7iwnLmMGpPIqxWB49anc4Fdqmakn?=
- =?Windows-1252?Q?ownGU/bnvkNqJbROAatGR5f3ozWsxQhXsd5dmcZ28kT7dcX8AmT74hco?=
- =?Windows-1252?Q?YYPQuqNftSAJJe8Eifvrrp1pbulbdeAhJ/coHL8i3bVEfmtBWuwDmIAz?=
- =?Windows-1252?Q?DzBKeNPikcxySFoZsLoWE3oGaw5B6Z4KBrL8x46x1fSeq3LqD8CRAJOA?=
- =?Windows-1252?Q?dH5LIdOXs2zkySmUtJEFXHd4?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?UHCP4vs9oTuL0z6/rW3fn4j9sO0enGyNJstwKyx0dushOC2RmokbTKM5?=
- =?Windows-1252?Q?Ptj/LEYtLL7WpNKkWmEKQcDDUS5f6HZX239SV8RDdHHmkUS20xGfcqhF?=
- =?Windows-1252?Q?hPsxTrMk9jab6v+4+OBZkSZdfnGrx2gpU8wf+6Sb+JvbaOQQbZ3X6s3Z?=
- =?Windows-1252?Q?WoxLRSWfzW7NNjAeoMgT+pAGYDjBvlXVcQaIXhBCi4V30+YZnrQH9VPx?=
- =?Windows-1252?Q?AxkV0i45h+C3Zv9T7mKQJMOVrM6kCZCn55nbgiMjEyFSu9xb1e8WKBkH?=
- =?Windows-1252?Q?5uIAyenIH/fhfzNcKb5hmts3wkhrgefMoUgEffr50uRI4rUOxcYnPB1H?=
- =?Windows-1252?Q?/NtKDTHDZaMC4+bbcTLscyVj2uJTJHHeGCc2877LRuQVp1uxSLx7Nhqf?=
- =?Windows-1252?Q?+Ctn/9u+o4NlZZCkcmkqCS0EwAWFI9h5xN8CjWbCrep2jUKhw6qRHpPD?=
- =?Windows-1252?Q?gQBssqXLgj/6qk2ZQtsz5Bi3AruqfnTxuj87ScMuw+1xBVCu0FblQu0h?=
- =?Windows-1252?Q?KY1oCKlZAmvIkr8yIlA2yK6Y9CGeANKp2emtL4NbGYCcZ7bik7JadOCp?=
- =?Windows-1252?Q?3bQc15/MMe9T7gcxSFil/6h4lSA/OCaUhrJ6x1ZlQPbwrDKYmRUl5ep7?=
- =?Windows-1252?Q?L0fo6bngnPcTpSPbDvZSnhNT6N3wtaza1a6jG+MCImNKrWs4zYIvYczR?=
- =?Windows-1252?Q?G/wgeGugRhrRhj7eUjaQHIw39+6itckfXwdds17McKm3yzZdLtzQ8Ko2?=
- =?Windows-1252?Q?dadUP0zarLitphRqAiotaRk2z1JgNMhOtdEfLlc2FWNI3UB2WlZPxsPy?=
- =?Windows-1252?Q?B9n1t6sHUDDepiOloCC/6apcuA0bIZ/2MntoQUx8qBa0n1b2QVsx+ic7?=
- =?Windows-1252?Q?QzW1yQXEPyQj2RNPszU/T4VhSn6HjQpPw2VJ6vXbpr3iey1GRR5L7mNh?=
- =?Windows-1252?Q?cgX0R83/MIEeeXBRIn85kmEhaM9dmTbMZbjO1Hzcsx8CKRSayEYmR+0q?=
- =?Windows-1252?Q?oWqlC/0xHuR/RS9Esa7v87omGEPQ0sal61rx4LNcKgogZn+6wwedatmi?=
- =?Windows-1252?Q?9PUTYYbRwd33X/ypoe3FH8c9Rp5V6odvNKZhmXTEclwYMQ00Emo6wQCu?=
- =?Windows-1252?Q?56bVi1vfHGb5Vi3geNftivSqKlNDZpatFXIfeRBS+Qa+hOO8ymWOvqZM?=
- =?Windows-1252?Q?7yT4VkmMkN03pU5KeYzKtRCclh5Aq3izBVwGfvLb7AGdxtGCloeIPJ5N?=
- =?Windows-1252?Q?OkauAoe04Y3R1nA4w7EJXaQ7Tr6yYx6LKni+Mn3q47rMM/aArXTb01Lm?=
- =?Windows-1252?Q?mOFjtSEv5ZNNpETTrwGVyoBT3Sy2TNix2Gn2RL4qq3bdp3c4Te96Sfyi?=
- =?Windows-1252?Q?vwar8O0RHl3MC7Cv+rC36VjOtCQCVFR2Gfe2gVCKp04tVQYx7tGTMkXX?=
- =?Windows-1252?Q?BAqmx/KndeG86wZ1cXjGEnafvyvLEQo9EipLHFExMb/u0nApDkgLyeHv?=
- =?Windows-1252?Q?Ayah2Rl1?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Jf148OiD"
+Received: from outbound.st.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-2 (Postfix) with ESMTPS id DB39B1800281;
+	Mon, 07 Sep 2026 16:00:41 +0000 (UTC)
+X-ICL-RepId: 01a07c99-af66-7f95-89cc-60047f7381e1
+X-ICL-Out-Info: HUtFAUMEWwJACUgATUQeDx5WFlZNRAJCTQhIC0MCRQNDCVYBXxcOVk1KGV0DWQpVCXkRUAFYHlZeWhdeTVEPDxlaFFwYU0VRH1RYQQ4KWBIYXBRcUFgeRhJWDV0JGRhGXlAbXwJCDxwTVhUTHUMZDysISgRDB0UCXgslEwlTVlsTVRdGCRkIXR0ZFVoJCldRQF1OAV0ACR8WDhlSQAMJVkIUGVVdAEYKElpPBAgDDwNECEpzBFQHXQVdVlACWlUSBEAIVlBeCF4fTBw=
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; t=1788796844; x=1791388844; bh=l2EAFQ5baqL8h49z6YZjQbaX6bImsKCuVJ95ybo9FZs=; h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type:x-icloud-hme; b=Jf148OiDfOgo1Aw9HB8G49fgGMMBgkw/6BTfHLkHACWpdpZDm9bsNOJzAL/OaMtXK0uH9JJMGr5QV/JuhlKQFO790aRMavdTM8S6fB2vY8fJSMJ2wC+dG/WdFZOHm2ifzaEhfIk5j49CqTKT+gOpBDhU6s22t9Dfek1KS37d/2cM6ffbTXMVfnQI54r9BrlF4oxLmyXnzQFmTBZuoszMproF6ts2vCqZ/eBKAKH8+X64ZeiGM16rjrKun+a93m7j/wDNx8QnWipGjg33taYkgVnaljSf0F+4CPKC5Yg1AzQd6Fn7vPh7ZFWPvApe9CIhWDStrIruKMIP/PiIoH6rYQ==
+Received: from [192.168.1.190] (unknown [17.156.216.30])
+	by p00-icloudmta-asmtp-us-east-1a-100-percent-2 (Postfix) with ESMTPSA id 5EC6F18002B9;
+	Mon, 07 Sep 2026 16:00:38 +0000 (UTC)
+Message-ID: <c0d6207b-f7aa-4bd2-af07-8bc77e4d1412@icloud.com>
+Date: Mon, 7 Sep 2026 12:00:37 -0400
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR18MB5477.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6dd4079-13f8-4d4e-a62f-08df0ce7c67e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2026 13:56:11.7042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR18MB988518
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-pm@vger.kernel.org
+Cc: rafael@kernel.org, platform-driver-x86@vger.kernel.org
+From: Sandor Nagy <sannnagy@icloud.com>
+Subject: [BUG] Lunar Lake: 400 MHz after s2idle; PL1 Tau affects reproduction
+ and recovery
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Info-Out: v=2.4 cv=TdWbdBQh c=1 sm=1 tr=0 ts=6a9edfaa
+ cx=c_apl:c_pps:t_out a=oyWFxbOnq+dmhQrAPgaJYA==:117
+ a=oyWFxbOnq+dmhQrAPgaJYA==:17 a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10
+ a=x7bEGLp0ZPQA:10 a=7VO5mNthaX4A:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=NEAV23lmAAAA:8 a=6Vj588pRnnhkDWG5z4wA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Pl_-z2dvTONE12QsGOFs2kma8rKGVqf3
+X-Proofpoint-ORIG-GUID: Pl_-z2dvTONE12QsGOFs2kma8rKGVqf3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTA3MDE3OCBTYWx0ZWRfX6dRlN81Wko+N
+ JU1a4tL76WVOaXOm+insjOgTSoYnh922ha6CEKPGAZ7alFL18VEQCw8B441B1peWoY0AGS9HIx5
+ zNXvw+oM/tHYvCvsp3j8iYiQDeBGk4SEwJw7rnKot3QGcWakOeCTi5nXwUO/dkhnJPJHSOon6H9
+ ifGytnoLfgBbaWzTJ0Thb6izLvidiY2525qdofTPOVckhW7OZCWtS8ldz3QKmkWV0Nnawogt4fd
+ HGCEqOoWGg3xp9squ7k1cwuA4ZrVohokzWBSxIc1tS9v3yKBKHm0YhC+NC/t0amfyeCko1lXp2m
+ YoEfx0HHuxSbQF8HExKsRYtn7J6fsHkMsayhmQr0F4ceTzG9mdHaYllP3Imh3g=
+X-JNJ: AAAAAAABI85zyNTr5QZjbG6nVihdvAMTJy/pGgg1GbPe/jgGcz5HtSEsQVHOrAyCLFoo2K9WWOELVFR9BeupzTmO04zjE4X/8Cm+vIRaGOMAFLi5chLnXI3uMLlkqboC9Jb4D7LOhLsX18KJ9OTy94KglBbtqneyanjwzWAYTYMEa/Hthll+Rsk3ya0YDTo9YskSFFL/t9aRO6+afxBImA3aPiWI3a8wkf1CVmY2wFpsHmvSj9AgFOO32oYv6Y8qeMg4zIfqkSYVoUeZm8egpFqj9BYVQfSfIJYoiewK28R4Tcml24iFVq9N0tfEEUdPU8+xVOkdLgEX2mJhMSjopTTemUxgf3YkBydbXtST9xQwaeyUHOTOFHh23ym/M3BucTGUX67LgRxBASr/Myg0gNniSQHukTMX5kVIowi9IQT/ePlO1wGL88NzP9oS1myREmlEfdTJmGNKQtiW8Mnsm1BaWSHV3S/WAxoVjJoYhqWp2NeYk2mTqcPaxFoE0b4egBv+Z4iwBs6c6YQwCOEkae9JLprrwJK2jRKIV0ZXyd+rFVyvgvJ9BS1CCsLQOG96i3yBDBwGCTlkRlYTMP1A9kJWUj2l4qJrGqXNUHE1/qeKCZlQcsnYV6apQiE/bwompHnqn5qEdzQF9Dq5l80HZ00aa14xsV8+4lkqdhP3HtWBZEZfXmFX03MuWZ8U+HF21oRoL3gdZRhzpipIjAPzyXzT23YezgG9ToFjj+UbA16BrtVdtgnTnOaV69acISVkUCBgR8cLN4hpW3I6YLv1QqvGBJtWp4HAM/cL/4B6EqDDnGBn972B0tu0jxvJuvNZLQ/XdqRVpKqh0jVBXmkm/EC20G5UfcLSAbCfdPBpSGvlTWLwbuyXe12DfQBjyy+7cSC3TfkQ4l0j2QefiGZjeiHs1lHm0ZILgaQ/w3xNh+61ocVb2BeZwzyXApKhRRE5K1L6tCqhiQpNJjsOWOdxnD3/2SV3OBo
+ G9wvtjPmrGfEDPayCXoSUzXWjrTGWMBEXsi1K1xYQuk9FhcslBfovlwbgR3UDmC6KvErJN7FWq7sOz7Wf6nyqMv1Bp2rt3NVcJOuFolAwKZGz70J1SN6b6ePq2BqTw5zNVs4b7CERqDKmhaDeH9eiAfY1CWDIGOpAWBxuVt0YcLAuDwCOIlbg0kDQgxac5f6S59XeYLdG8XKne7VnB31ymWigP2kX3Q4lk27C5j2J0FyxP+DXr2K4+J7/82JuSO80K8EcobBOKvRZKjBcsTu12eBTE/eLMOOugzTyFHeqlu6O
 
-Hi Aditya, Derek, Rong,=0A=
-Resending this message in plain text because the original version was rejec=
-ted by some mailing-list recipients due to HTML formatting.=0A=
-I=92m working on a project called Easy Hardware Control (EHC), a Windows de=
-sktop hardware discovery, diagnostics and safe-control platform.=0A=
-The long-term goal is not to hardcode support for individual laptop models,=
- but to discover the capabilities that each system actually exposes, unders=
-tand the appropriate OEM/firmware interfaces for that platform, validate wh=
-at is readable/writable, and then build diagnostics and safe configuration =
-profiles from that evidence.=0A=
-While reverse-engineering the current Lenovo Vantage stack on a Lenovo LOQ =
-15 (machine type 83GS), I found what may be a useful example of the =93same=
- GUID, different table layout=94 case discussed in this RFC.=0A=
-System:=0A=
-Lenovo LOQ 15 / machine type 83GS=0A=
-BIOS: NECN50WW=0A=
-The machine exposes:=0A=
-LENOVO_FAN_METHOD=0A=
-InstanceName =3D ACPI\PNP0C14\GMZN_0=0A=
-Fan_Set_Table(FanTable UInt8[64])=0A=
-By tracing Lenovo Vantage=92s Gaming.CustomMode.dll, I captured the exact 6=
-4-byte buffer submitted to Fan_Set_Table and then independently reproduced =
-the write through WMI.=0A=
-Observed write layout on this system:=0A=
-offset 0x00: 02 01=0A=
-offset 0x02: LE32 point count =3D 10=0A=
-offset 0x06: ten LE16 discrete fan-level values=0A=
-offset 0x1A..0x3F: zero=0A=
-Example:=0A=
-02 01 0A 00 00 00 03 00 0A 00 0A 00 ...=0A=
-I experimentally mapped the Vantage slider levels on this machine as:=0A=
-1 =3D 0 RPM=0A=
-2 =3D 1400 RPM=0A=
-3 =3D 1700 RPM=0A=
-4 =3D 1900 RPM=0A=
-5 =3D 2200 RPM=0A=
-6 =3D 2500 RPM=0A=
-7 =3D 3100 RPM=0A=
-8 =3D 3500 RPM=0A=
-9 =3D 4800 RPM=0A=
-10 =3D 4800 RPM=0A=
-I also independently replayed a Vantage-generated Fan_Set_Table buffer.=0A=
-With Vantage initially configured at level 2 / 1400 RPM for the first point=
-, changing only that value from:=0A=
-02 00 -> 03 00=0A=
-through my own WMI probe changed the reported CPU/GPU fan speed to 1700 RPM=
-.=0A=
-Lenovo Vantage subsequently reflected the 1700 RPM value, and the setting p=
-ersisted across a Windows reboot.=0A=
-This machine also exposes populated LENOVO_FAN_TABLE_DATA instances with fa=
-n/sensor-specific RPM and temperature tables.=0A=
-I noticed that the RFC=92s Legion Go layout contains additional temperature=
-/trailer data after the control values, while Vantage on this LOQ sends zer=
-os for the remainder of the 64-byte buffer. This appears to be a concrete e=
-xample of a different Fan Method layout behind the same general interface.=
-=0A=
-For EHC, I am especially interested in capability discovery rather than mod=
-el-specific hardcoding.=0A=
-If you are able to share or point me toward any public or redistributable i=
-nformation concerning Lenovo platform interfaces, I would be very intereste=
-d in learning about:=0A=
-known LENOVO_FAN_METHOD / LENOVO_OTHER_METHOD layout variants;=0A=
-the meaning of the first bytes in these payloads;=0A=
-WMI GUIDs and method variants used across Lenovo platform generations;=0A=
-capability / feature IDs and their semantics;=0A=
-reliable ways to identify which interface or payload schema applies to a sy=
-stem;=0A=
-valid ranges, enumerations and dependencies for writable capabilities;=0A=
-how LENOVO_FAN_TABLE_DATA and other Capability Data classes are intended to=
- be interpreted;=0A=
-broader platform capabilities covering thermals, CPU/GPU power, display, ba=
-ttery/power modes, sensors and other firmware-controlled features.=0A=
-I am not looking for confidential Lenovo material. Public documentation, re=
-distributable specifications, source references, known mappings, or guidanc=
-e on how the firmware advertises these capabilities would already be extrem=
-ely valuable.=0A=
-I would also be happy to contribute data back.=0A=
-I can provide:=0A=
-WMI class/schema dumps;=0A=
-Capability Data dumps;=0A=
-raw 64-byte Fan_Set_Table captures;=0A=
-exact full 64-byte payloads with the corresponding Vantage UI states;=0A=
-DMI/BIOS information;=0A=
-Vantage component/version information;=0A=
-controlled read/write experiments;=0A=
-persistence tests;=0A=
-comparisons across BIOS versions;=0A=
-testing on hardware I have physical access to.=0A=
-The goal of EHC is to build a discovery-driven compatibility layer that res=
-pects the interfaces and constraints intended by the hardware/OEM, rather t=
-han relying on unsafe generic tweaks or undocumented assumptions.=0A=
-If this data is useful for the Linux Lenovo work, I=92m happy to perform ad=
-ditional controlled tests on the 83GS as well.=0A=
-Thanks,=0A=
-Hern=E1n=0A=
-Easy Hardware Control=0A=
-hernandevbuddy@outlook.com=
+Hello,
+
+My ThinkPad X1 Carbon Gen 13 intermittently resumes from long s2idle 
+suspends with all eight CPUs stuck around 400 MHz. The issue also occurs 
+with
+Fedora’s standard packaged kernel.
+
+I have collected hardware telemetry, shortened reproduction of the 
+power-limiting behavior by changing the MMIO PL1 averaging window (Tau), 
+and observed
+promising recovery with an early post-resume Tau pulse.
+
+Could you help investigate this or direct the report to the appropriate 
+Intel power-management engineers?
+
+System:
+
+- ThinkPad X1 Carbon Gen 13, model 21NSCTO1WW
+- Intel Core Ultra 7 258V, family 6, model 189, stepping 1
+- BIOS N4BET77W 1.47, EC 1.41, microcode 0x128
+- Fedora 44 Workstation
+- intel_pstate active, HWP enabled, s2idle
+- Capture kernel: 7.1.13-200.btf.fc44.x86_64; recorded kernel taint: 0
+
+The capture kernel is a local rebuild of Fedora’s kernel-7.1.13-200.fc44 
+source RPM, with no additional kernel source patches, using 
+dwarves/pahole 1.31
+instead of 1.30 to correct BTF generation for sched_ext. The .btf suffix 
+identifies this rebuild. The suspend issue occurs on standard Fedora 
+kernels too
+and predates the rebuild.
+
+I have experienced it across multiple kernel versions but have no 
+known-good version or bisected regression. I have not yet verified 
+reproduction on
+current vanilla mainline.
+
+Normal reproduction and symptoms:
+
+The issue occurs after long s2idle suspends. Short sleeps resume 
+normally; longer sleeps produce the 400 MHz episode, and the lag 
+generally lasts longer
+after longer suspends. This matches my experience before instrumentation 
+as well as the recorded experiments. Under the sleep-power conditions 
+measured in
+several captures, our energy-based model predicts onset at roughly three 
+hours. The exact duration threshold can vary with energy consumption during
+suspend. To reproduce at the normal Tau setting, leave the laptop 
+suspended for several hours, preferably overnight, then resume.
+
+During an episode, all eight CPUs can remain around 400 MHz despite 
+active work. Package power is approximately 2–5 W and temperatures are low.
+Performance recovers spontaneously after several seconds to tens of 
+seconds. Shorter sleeps often resume normally.
+
+Instrumentation:
+
+I used custom diagnostic scripts to record a baseline before suspend and 
+repeated snapshots after resume. They read CPU MSRs, powercap sysfs 
+attributes,
+and Intel PMT telemetry.
+
+CPU frequency estimates use APERF/MPERF deltas over awake sampling 
+intervals; they are not calculated across suspend. PMT fields are 
+decoded using Intel’s
+published Lunar Lake XML mappings, checking the product and 
+crystal-frequency fields before converting residency counters. Residency 
+figures below are
+differences between counter readings.
+
+The recorder is read-only. Separate intervention code performs and logs 
+setting changes.
+
+During captured 400 MHz episodes:
+
+- PMT PL1_LIMITED_RESIDENCY advances at approximately one second per second.
+- Power-limiting residency advances on the core groups, ring, and graphics.
+- PROCHOT, VRHOT, thermal-limiting, and PSYS PL1 residency show no 
+corresponding increases.
+- MSR package PL1 remains 37 W; MMIO package PL1 remains 17 W.
+- The normal MMIO PL1 time window remains 27,983,872 us.
+- HWP requests remain unchanged.
+
+A verified MSR PL1 write from 37 W to 36 W and back did not promptly 
+release the fault. Cycling power profiles has also not helped.
+
+Shortened reproduction:
+
+The most informative experiments changed this setting before suspend:
+
+/sys/class/powercap/intel-rapl-mmio:0/constraint_0_time_window_us
+
+These trials used battery power, the balanced profile, and comparable 
+wake procedures:
+
+- Approximately 900 seconds suspended, Tau 27.984 seconds: no PL1 
+residency increase.
+- Approximately 900 seconds suspended, Tau 0.999 seconds: 1.316 seconds 
+of PL1 residency, with corresponding core/ring/graphics power limiting.
+- Approximately 60 seconds suspended, Tau 0.999 seconds: no PL1 
+residency increase.
+
+Shortening Tau therefore allowed reproduction of the limiter signature 
+after 15 minutes. The short-Tau event ended before the first valid frequency
+interval captured a 400 MHz lock, so this reproduced the power-limiting 
+behavior rather than the complete user-visible symptom.
+
+A separate experiment set Tau to approximately 2 seconds before a 
+45-minute suspend, then restored approximately 28 seconds immediately 
+after resume. It
+captured all eight CPUs around 400 MHz for roughly 18 seconds and 20.118 
+seconds of total PL1 residency. There is no matching untreated 
+2-second-Tau/45-
+minute control, so this does not establish how much the restore write 
+prolonged the episode.
+
+Automatic workaround experiment:
+
+The workaround is launched asynchronously from a systemd post-resume 
+hook. A small native helper saves the original MMIO Tau, writes 125,000 
+us, and
+verifies the readback, which is 124,928 us on this machine. It acts 
+before starting the more expensive Python sampler, without waiting for fault
+detection. The power-limit values themselves are unchanged.
+
+The monitor restores the original Tau after two consecutive intervals 
+with little PL1 limiting, or after an eight-second maximum hold. A 
+recovery journal
+and service cleanup path also attempt restoration after failure. 
+Busy-clock recovery is assessed separately from PL1 residency.
+
+In the latest natural suspend of 2 h 59 min:
+
+- CPU0’s power-limit status was active before the write, and PL1 
+residency had already advanced by 1.228 seconds since the pre-suspend 
+baseline.
+- The write landed approximately 0.254 seconds after the kernel’s 
+journalled suspend-exit message.
+- Total PL1 residency across the capture was 1.775 seconds.
+- The first valid clock interval after the write measured 1.89–3.05 GHz; 
+its sample completed 1.16 seconds after the write.
+- Restoration of the original Tau was verified, with no additional PL1 
+residency through approximately 12.8 seconds of subsequent recording.
+- I noticed no resume lag.
+
+Working hypothesis:
+
+The observations suggest that package energy accumulated during sleep is 
+mishandled in the PL1 averaging state or its timebase on resume. Historical
+clean/fault captures are consistent with an energy threshold related to 
+PL1 × Tau, and changing Tau changes the reproduction conditions.
+
+However, the energy measurements span before-suspend and after-resume 
+snapshots and include some awake activity. They do not expose the 
+controller’s
+internal state or establish whether the defect belongs to firmware, 
+hardware, or Linux resume initialization.
+
+A matching symptom has been reported on a ThinkPad X9-15 with the same 
+processor:
+
+
+https://github.com/intel/linux-intel-lts/issues/84
+
+I can provide timestamped raw captures, kernel logs, diagnostic scripts, 
+and intervention code with the corresponding revisions and command 
+sequences.
+
+LLM assistants helped develop the diagnostic and workaround code, 
+analyze the captures, and draft this report. I ran the experiments on 
+the affected
+machine. The underlying code and raw data are available so the decoding 
+and conclusions can be checked independently.
+
+Is this a known Lunar Lake issue? What additional instrumentation would 
+help distinguish incorrect energy-delta accounting from stale averaging 
+state
+across s2idle? Is there a supported way to resynchronize that state on 
+resume?
+
+Thanks,
+Sandor
+
+
+
