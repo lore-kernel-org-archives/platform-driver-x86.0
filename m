@@ -1,96 +1,97 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F123B7767
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 10:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7F445FFB6
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 10:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788777155; cv=pass; b=Qwie8MoCLcN/h0F8w286m9ECFS/mPVMwG+Ct2LcvH/Ig8GJLgAQH7/u7d0Si0TzRD+W4sDxZLWZrwlGQHd++5WwnWkyDyA8C7S8RU5WUzYJBLZw8A0SJsp2WEPFs5HmN0VyxIsKLzdOGo47HNDK6W1XIjBnEJfyYoS09+tMFvp0=
+	t=1788777268; cv=pass; b=JOPz6lH57vLvrrXPxvYPd3gz0Ft6d8kccJ7//rIKNPG4TkijI/r7LkWiwlphhx8ZlN52Gbbw4yUVukZnzCkBkIG/tibtRwANy3Oso0eUyiy4kvCc7kgvOsewxjFwOM+KdD97IeGH5PT/IMkFtn/2vqceBg11IMqKml/ARVeuCK4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788777155; c=relaxed/simple;
-	bh=X1qWDgE4nF+kcB5zeHXPeP2a0sHwXZUBovy4AQQ1Zh0=;
+	s=arc-20240116; t=1788777268; c=relaxed/simple;
+	bh=+yS+OWDWHgj8L1bOSAbU79jIY2VHoZj62mLc+Oc2Vlk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ux77xB2gqFMN8UXLKQ1ZfCeYTVl2nZrhg6XDXfKt1Bzij+CtFtpX84/J929KDvdVZ2WFwG+HZaDebNROmtXWRaO15Se0K2lMcAIxQJmoDthBCcVi8J1vZNhREBcovto80lh4+MTE9K7KTN6fPVoRZloPQ9dKL9eJssHFF+B1u7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aZUgWUGN; arc=pass smtp.client-ip=209.85.218.46
+	 To:Cc:Content-Type; b=Ttfv8PWheK6Z/rwp02YGuxMJl5DQmp7ljA+cXiMQn/0CEPHw/IRZHo5eotN5W9/HyErbSWzQUri3RO4ovutSNurMvqkbuUF2Cmw2F8hqprbOZ5Rk356qvr9yGGqZAASG623LZ8b528baEaCGx5Xab9T3w2QEdrzkIkgAg8aWAf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZn095UM; arc=pass smtp.client-ip=74.125.228.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZUgWUGN"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-c250c6a6a6eso437227766b.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 03:32:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788777152; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZn095UM"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254f9c60b9so1963666b.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 03:34:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788777264; cv=none;
         d=google.com; s=arc-20260327;
-        b=mGWS9anwJjeSwYVr+10xyfKCjDQ0FIupi84ayFn9fTQ/OendOdnkyVhp9uoEb+zZy/
-         kKLAE7dHP5arJ12aOgRSUmcU9yjJbHkKtRA8O/Bi7583AddPIFpu+idMmKmCLFKpdwTs
-         UxbML1KnVOg/pyWm9Wd8sK8GA7LeNoB/BIJW+CKMu6pw/bQ4DQZTzshChUJh2IfWX0ns
-         VhBiiew3xi/q1GZYch9zCbfbXcVT585sd0VlwE+ScU+1G9bQWJ09vpunUn4v0zahLrWx
-         04pO2ADMXoSKEzwzrkOYrK4mM/S4xKhq/7cs1ho3KzGxrgNmuw52+vRRm7+Er05H+EfI
-         DW/A==
+        b=o6z2hkRq49TNkNVqlVUwn1zwrQfEZDmPTiMFsvtb1+g8fbAIJ0YlBZwMkWmYB7/2U3
+         Hhh+3z9k5DKf+5ervio4dvqaDiKE9PnmtI8pJZLivUYLaz/tAgfq7111x/d/I4RdSyB4
+         sFNEEy9IgGEcgrSDeT9/ICQeigUQ1Tah4OjOTY+eTwkFyVO8PmEwnwbWR7ZWXYbrIBlA
+         9tGosktT5C/M/NUom/wFrfyQl5FzwXfRY1Er5sikKQL5X0qDCFqljhDZ5xRSy5I/NC6o
+         FFk69c1nVgo713p9QypZnf2TKZFDLkAo4bhfy8r7Hm9w6qQOZk0miDNpgmCTIe1FhWbl
+         DyVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=X1qWDgE4nF+kcB5zeHXPeP2a0sHwXZUBovy4AQQ1Zh0=;
-        fh=48h2xMTJ4ILj9xZ7KMts9jW5it0R9aL1dCIzeE/vWm0=;
-        b=LmyPJu5Wqly09bK6PToeX8blSSZegCI1gGTRUBsnGelTPmF6csVQyUr9CAn7hoAi4P
-         JxPf+f5vmLsu3MQyztolSL1xRT2GvnyHL8X6Ui5x1vBdSm84xUOk0OJGCpJxpnWemYQR
-         NZW7fZhQWvxTMR+zOnUJCo8ucQpYYEjskhDGbo4DvXkewLezu6mGxfS6Hxn58d2kePdE
-         9XjcaB+obx7to195ZioGk0D5s+y2We78zIW98s+UIOBq7I9ArFA/cP3eiDSGUhh7BfoB
-         EB0HBzLMkg4d8qhmiKJJOwIKOjsfg0XCq4BCEnT/Un+YhxZmItsvuwyG6sB1b1JbslSq
-         r3TA==;
+        bh=+yS+OWDWHgj8L1bOSAbU79jIY2VHoZj62mLc+Oc2Vlk=;
+        fh=PdtZ2pha6w7HbVXeCiWOJK+5Qw/eleFL++Qg3kvINwk=;
+        b=REvoSbB2HJLVszE/HPAc7c27Bb7sVrdyjzYrBpMvhA/eTt7Ax7sHG/3QViSbUDwnwl
+         /GpiKwyTJp1RXzVxII2FC8ZM06hakOfWy1HP9c/HumgWADULuS7zIaVr7LjGa2pM9E7c
+         2NrVXNu0a68Jn4AwsIeOf1/DLET9rj+4tgY8muXp8vDzBdxb5ZAIgdm8ePGJ7mkrjIYh
+         aTc+Iuqvkh0ShhrvM86ag9ifSaKxXIV5Nkh8fEQHJxLJBqW7ll3EOEDr8LS11SJtuUPG
+         KHliy0PmuPuSK+T2DDT7X81YSPnF+cDqirEe5Qy3JGh9JUroNyttpIJGTOZ/r6Ig6fWf
+         xFJg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788777152; x=1789381952; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788777264; x=1789382064; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=X1qWDgE4nF+kcB5zeHXPeP2a0sHwXZUBovy4AQQ1Zh0=;
-        b=aZUgWUGNhSKdU0nIKvkjb6Cw5yxj90QoLBEyhckqRrB0qA3hfhbB1fL0tnrHadsB5U
-         LG7IjEYz0rDxcSvEFjVx7fvlbg3pDh7h3v6v+K/BYz94ttnmlbq0JpSX6TUNgm4PwS93
-         IJl336Q5xTPjTQMAxlxOcW0n4z7iqZ/5eSjxpnFB68XlcwftBFdG6iFBjjbk44f+BjOU
-         uLjPES0qhxiDcClsu2cuU6Ws5IwGyt6nbF6KY0FFTNsMM4JyMeC0kEAYKcFx0xprScCz
-         8PodESrmtgT2HIXDHuW4B89WO4BTwoagjV3daDkEY3yba9yVoHHgDlNrTot2kAkN2Fuk
-         +H5w==
+        bh=+yS+OWDWHgj8L1bOSAbU79jIY2VHoZj62mLc+Oc2Vlk=;
+        b=IZn095UMZppKejO7xWluUfNsRQLG6pAamNXLKTIH8yO7tK/QVLuFjrwSdRrBorK/1/
+         nAYqJdjWITzkwcm8+S1MY+Z/TYzPDSvgaDNCij9ZKn1Vf4ziNGArQCDnbknFXi29vkJm
+         7FQXbeKLq5IWR0cQ62+OElB1VDCEPLFcUMG3C4xunXDYNST+jfWnPMQ1rDVr8YPQLUbT
+         xwdEgaDFTh5rd/L55cZFMYjbh7z04qsMGNBwy2Am6jmbjPyvlHI4ZPQ8gFv/nrU/Nzi1
+         Eft1RbDsdx38C8W8Jfv5SKAEdbwbCKRVud0dOl7wGwP9DN3MrSKKWkE9H2mJ/bw5RHzX
+         Bopg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788777152; x=1789381952;
+        d=1e100.net; s=20251104; t=1788777264; x=1789382064;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=X1qWDgE4nF+kcB5zeHXPeP2a0sHwXZUBovy4AQQ1Zh0=;
-        b=ZyuWJesflcAKqZUi5IrsGTkBWTxtLXojFPWXM+39A5E/zMGZZHPKvEp7JDQoU1L+hG
-         g3FJxx2x+1WQmmQwz1gV59ui+GJ9iYRvsJFc03D/G44nwnEHhgt7v9SRLgQYt0J3klUL
-         JjKAMTdEIIvH9JWH6ddxN1qxMeaOWA/YZMvZLxm8QhTlcr5oFL+o4IVeMEj8kaotqzMP
-         /BCu5oF7SLf+G3CDxhlzviipXOQzVC0hLGBol2GEj0fidw9RU4ygn6NiskjeJM1EhIrY
-         /VE6W+etwu1U23oMQz94Mc+MhvaMnzYCQoZgu6m+AITTHbEy9zyjWq9j+Af6YsfKkz6f
-         q9Hg==
-X-Forwarded-Encrypted: i=1; AKwUvBxFMtF9bG3taepLjjcbgvTwYK/Y4lzT6fi/LtvZmDV1f9ogu8CeRPzTVl0iHfafMfB4A2VXPncVsQkNra5/qbNXQhYS@vger.kernel.org
-X-Gm-Message-State: AFuF++mpte7Tj0GTmgx1bk3bJcfDJo2aolr74pL/gLo2In/GrJmIW2Ub
-	68dSS6RtaMv0kodQTL29p2xhtYyImhnb1zF4QKDW5RZbT4viuet7tZ21yPspHXLHoWqcSpx4e60
-	Twyy5JNhwXHnNDiLaE2+BOMqUMkoIF8U=
-X-Gm-Gg: AYBFou1frCiYNlQVeGm8xDo25uFCPIghxT6gpYrcA1G0eFwWdU1rX4KjoGirEJoyMia
-	4SzR2lWrGv7e4uBuPZDubzm9TEqW+kRCwuhCeQ7njXQ0q9MMbVbyu6Rchqon8GakgA4vU2DCYse
-	abfXIPH8JSSoygGtd2LQljie54tsuKsIygE0s+a4pilgtW5zeXRtyIweYHNmMHhqx5YK0nDIhAT
-	HfvGYulFDmFk0iQSxLOToNtrfH1UFZzjNKOS8XciNpIy+2RUr5oX1D84k1J4Ln6eckFQGpA2FZZ
-	SpvT1FrBv6ciFX5bIt+vOk/3Ccqoescojg++3EnNL790g7p+Fa8On4CecNYBjWBqeybcYGiH7Ck
-	idk92GMEdgboK+OWU+sJ4Qqp4L9vyvAGVPco4LCrFcWCquIKWuvfaojYp4idOw6OqD4bpFOee+G
-	jomLVoZeXTrG22kwTiQ9eTREvT1JwTVsM=
-X-Received: by 2002:a17:907:9490:b0:c26:19de:9ae5 with SMTP id
- a640c23a62f3a-c2619dea790mr625724566b.36.1788777151897; Mon, 07 Sep 2026
- 03:32:31 -0700 (PDT)
+        bh=+yS+OWDWHgj8L1bOSAbU79jIY2VHoZj62mLc+Oc2Vlk=;
+        b=spmH9rXa+me8RgGEc0dyfoZipI4S7nxphafEZlmM0YKRcboKeXUpC+wSP3pJnWh3M9
+         sY96ns/g/i4p1BmpDJKOa97bZ6yeio85qUVBt1K+kMTKOWp6OoD3uS2Zp65zciGMylNu
+         bZyqpWknR9mfpKHNu0PUGzNOP21Ipv8SdIZGTdyl4GHo07PSccYTeQu+GgstQvUaIcVC
+         kLtPmdulBUYBtjrbMBN6rEBA8n2znsZvPP6L3tazYdOMoEgh82aw1Hqtcmu0qSI2263s
+         GrSeSFsFNbVTVZOLkDyFza5kmLF2Ue2qPxP4hotZ4ESh7vMLjQj7IDNGxHIOvsQNCLUi
+         Yrew==
+X-Forwarded-Encrypted: i=1; AKwUvBwI2LGoM0jR065ubu36rWQvM9jhiWEXt62sSM/UbT6GbPXwIkvZc5Ea0SSh/evKvcQXDBuOQCRmlGAKJVbJ5b7J3EgQ@vger.kernel.org
+X-Gm-Message-State: AFuF++n+wmFzymiuW6hSImoDm3TFx+WAM+FMT6deqgTaeLOQUd0P7GT5
+	lvkqk781rvI8fLbHtP2bF3x9Rw2v80qvXs8TzeFJV/dqzMjdqgTtMVrPoj9rzu/cAHOSH3qxzAP
+	FCjxMBYsMVSW7D7+XUebLhvlxCPzTcUg=
+X-Gm-Gg: AYBFou02KcPUTGYgQybXoWGUr8t65kXc/7O3GZoOiRVfacXy94UGof9LezidGQKd5E2
+	cyZgd9PkzEfnvbf13j4F1RI0UjxySmw7rDqFH2d74ZZyID5L7wIu4K1L26Uyh5hd+cZtQX0udgg
+	4oB1Y5KScrmYoxtCiIoJPwumyz0UP9CIagVi8pLeDvBzAvH8na6V7MMFwYXgL8jA2Wwv8RqVBKD
+	BOdvEpeWh60/QaPhttC1PxdgVrMXNJ4JaByNg+OQLfHVKHhi58VuZhptXnpwcT/wgXUJdJdaWJS
+	6zvDkDJbdyzkmyN0TmBV1jkqB8NGqNM7dX7G/7DnygfhbnQstSvdb7/hcn/oGBF1dCt5xENBQGa
+	udGBekKypevude0pL8yI6/mvgtNfQxdGM6xnH6jrtyj2PjNJSzMNjwV8aI0uejbV5LPSstrIP4M
+	2ao2RGdz17AgHMpJIrOYyGYVrfjDSS6CAv
+X-Received: by 2002:a17:907:3f09:b0:c25:f7db:4bea with SMTP id
+ a640c23a62f3a-c290446b88cmr6398466b.16.1788777263623; Mon, 07 Sep 2026
+ 03:34:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260907084319.351688-4-blum@kernel.org>
-In-Reply-To: <20260907084319.351688-4-blum@kernel.org>
+References: <20260907084319.351688-4-blum@kernel.org> <20260907084319.351688-6-blum@kernel.org>
+In-Reply-To: <20260907084319.351688-6-blum@kernel.org>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 7 Sep 2026 13:31:55 +0300
-X-Gm-Features: AcwNN1WOOJgn8-p9-C3jUkiPvWDFmRlO5oCRAvc2gPgeLyW6w8fr-M5Dv74RW9U
-Message-ID: <CAHp75Ve4pcd=KHcJpGW9qtpNJLwWsQjf-FzoNtkxdryVfUB6Vg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Add and use supported/unsupported string helper
+Date: Mon, 7 Sep 2026 13:33:46 +0300
+X-Gm-Features: AcwNN1VffgvnaRhRlD6uHBYo6Fl574uE4g4_q78txLgAdLn8cRR-VrD4lzKeSJo
+Message-ID: <CAHp75VdrNu_7JzfrXFEv=ALoY4x07xD=Um8NxyVPNdiOk2fmGw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: thinkpad_acpi: Use
+ str_supported_unsupported() helper
 To: Thorsten Blum <blum@kernel.org>
 Cc: Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark" <derekjohn.clark@gmail.com>, 
 	Henrique de Moraes Holschuh <hmh@hmh.eng.br>, Hans de Goede <hansg@kernel.org>, 
@@ -104,13 +105,12 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Sep 7, 2026 at 11:44=E2=80=AFAM Thorsten Blum <blum@kernel.org> wro=
 te:
 >
-> Add a shared str_supported_unsupported() helper and use it to replace
-> thinkpad_acpi's custom implementation.
+> Remove the local str_supported() function and use the common
+> str_supported_unsupported() helper.
 >
-> Changes in v2:
-> - Add and use str_supported_unsupported() as suggested by Ilpo
+> Debug messages now use "unsupported" instead of "not supported".
 
-Suggested-by?
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 --=20
 With Best Regards,
