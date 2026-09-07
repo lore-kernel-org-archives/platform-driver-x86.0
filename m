@@ -1,82 +1,221 @@
-Received: from outbound.soverin.net (outbound.soverin.net [185.233.34.146])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D79385529
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 07:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.34.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320BC36F8EB
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 07:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788765855; cv=none; b=GTdi2wKV3tqQsFb9gLj77i/vAYSMGZX5FbGNGXedYJPSyEu/Bq0H02LgJZBhlCeEJUB+T/mmwTxk44xZROWzSAVtjdOs+qm6zBWeMwyWD8Tx4e1OS6W6BfSmfgj2twLq5v4eVN5nmjXaQXz7F6p0ysGsreRrHlyFRCxRcyrQ+0U=
+	t=1788767141; cv=none; b=Bde7H1FTLpq9ecM+e5JR+grjU+Z/s6wfrJfkMxViPS5mFpIS2NaZaZ1qakzY/D7elw5Ge1kEU7avpwrLcSzWXiar6P6aCAnzTDKdFfcYYSQXz9BJ0lEV7Nz9uEZdX7JSiS2DFg0N0cpN/no6Iqb6u3obA9/0iBImCfjSwTSRjxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788765855; c=relaxed/simple;
-	bh=yM23ltILx4sxudnp9jBVacLVjTapD+p+bgo+u+4/Lg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TpBm7kwOUTfATKt4kbx3OhFHYy6ohYVBZZG1p0qxUYdscC6i4GDH7addvfpfGchr+rntylkkrI6EJbxzzF1wS3vMiviBbWnAdy5U0WkIu1CJTgtnkpDEFbq048bU7QWAlzVCQ6LoEQ5pvfnaSmFZEgg7pVti7mxwqHOEIpxhNA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lewisclement.nl; spf=pass smtp.mailfrom=lewisclement.nl; dkim=pass (2048-bit key) header.d=lewisclement.nl header.i=@lewisclement.nl header.b=gnWj0jkW; arc=none smtp.client-ip=185.233.34.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lewisclement.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lewisclement.nl
+	s=arc-20240116; t=1788767141; c=relaxed/simple;
+	bh=5yWZl1jwei4RGUJo4VVTHvQQ/qhIpImbHnCijWHhCSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KyJDTDorCvpOHOhy+JbOPkU1A+h0oUqr3GuyrfndF+gxP1D6n/ZL3jWO20ObRigQV35qgHm3SdMhDGf5viRgI8iZMTMo9XnQ5ss1BQA0WcSheLPTrCHDnM6sdeQNDEBANcJiHeQSJasmBHDPhKaZVYt7PYvomXQSQ6ET7xFSfQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UO8szE6e; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lewisclement.nl header.i=@lewisclement.nl header.b="gnWj0jkW"
-Received: from smtp.soverin.net (unknown [10.10.4.100])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by outbound.soverin.net (Postfix) with ESMTPS id 4hddhF75VZz1xqS;
-	Mon,  7 Sep 2026 07:18:05 +0000 (UTC)
-Received: from smtp.soverin.net (smtp.soverin.net [10.10.4.100]) by soverin.net (Postfix) with ESMTPSA id 4hddhF3wQGzJT;
-	Mon,  7 Sep 2026 07:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lewisclement.nl;
-	s=soverin1; t=1788765485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DScAlIm04F+175xCrBvX683PBfjk0Inm0ljCU55iKE0=;
-	b=gnWj0jkWNYn2wlzsh6yM4w2A0/IUKNG/zEYQJW5ebCktX+FB93NP/Z63yYSdrwGQSXUe9d
-	fHYDaQqklbDndUVp8ORr0FXjEp87jKDLICcBi2BcAQd/wpoPpPixMM3nwZS2SGHQOFY9r5
-	VCPGZKGD5jy/Sy2IkSj8h+BDrRPBePDbjmyMfpsWgurfNY7nzzE244yYPGv0gYxloPHnoF
-	0Y8tydtbfcfkb26KxAIObPeep2l/UATgB9m2Qqx4HQEg7UdNX5k7jj0c9A6QwNCh1/q/Wn
-	ehhdamF1SBHP1sT/tYsDRvjqKjDEsgJauXFxT0idaHhUCjgePQOokr9zgNILVg==
-X-CM-Envelope: MS4xfA6FjRbdVsfdJL5f5Tn4/V1TaQduKe2VvlMnpiKBZ9iFjyImAgoWyFGBBSQqx+uLV7SLP8BquqiZYibIQfz2lT8OXSD+PZ1bV5opLrlmKTIn5b7LX3f9 wa6HlXGnLCaCHmRx1p4gHmwTkg3TH4m7o+0fBLOAzyZJ0aqdGo1dXmciXZc+v2pE6F6MUFbW4BPWtyXd3LBRU5ISyTkX98gkQEKO0WznHY0XnoSdx2N4RAwU VseSzgoMHY14qNgCCbe/oyxFaF5jQMH3RrZH/Ab6io/k8TngllcMAivVJJHSQsX8
-X-Soverin-Id: 01a07abb-37c8-73ea-8982-feba2b0a360b
-From: Lewis Clement <lewis@lewisclement.nl>
-To: platform-driver-x86@vger.kernel.org
-Cc: kuurtb@gmail.com,
-	ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH] platform/x86: alienware-wmi-wmax: Do not enable G-Mode for Dell G-series
-Date: Mon,  7 Sep 2026 09:17:35 +0200
-Message-ID: <20260907071735.35805-1-lewis@lewisclement.nl>
-In-Reply-To: <DL6Z05M2G2LP.2OVU37WYH5R3U@gmail.com>
-References: <DL6Z05M2G2LP.2OVU37WYH5R3U@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UO8szE6e"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49cca4ffdcfso26147045e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 00:45:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788767137; x=1789371937; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rD5WySJ1L49NgFFXB+bGCoZxLI27TU6b4IffLKrGf+c=;
+        b=UO8szE6eGPuPo5N2zez2anOdtuwbNZ4BohHeE/8jcYB1Ha0QT0dOgNFExzNx2N+uNF
+         g3OB6knIIOcX6ymZxcvPw+ccC6pkiXmjwxYZWB7ZyqqKkLZcu29zConw95XTJYm7xNk4
+         IY5MvJoQdOjoxo4QtiXY4tgbmueQsoEk6Ik5EZXBdJKa0uANCgV0U53o6aM33ne3ZVY+
+         0CAywYtDZk3x/wGRHAvqnSHWrnwVukPOqCP/PbI3qevfieaPjNb0Pu4G/29swqn0sUyB
+         Mry96Mi/5/Xcl6JELEHkMOll3WZJUAdNcQSS1dAG+Lr0wPbzTolJordkSiMvXj8KNjrZ
+         2yxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788767137; x=1789371937;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rD5WySJ1L49NgFFXB+bGCoZxLI27TU6b4IffLKrGf+c=;
+        b=WVaqL6dsaI81olKSUsbKOHzUKewqOi7XfjQEkWUeMyhsZA16uU0aPwXMPdN2jYhEen
+         /YIsFiJacvOMo/I1J44/aton+peKukKo1/0MKK+idAfZjHzDxXNsmyvkS1NHgzbrcGyq
+         qqsDda4eP5JnLF6smjLhO/1i1oDJWJ9owHWvFVQ1SoGfGu/0p8VeriXmAPD1xpwbL8rK
+         XdMcglG2z89BrwRZRTnv3ufCMLTgwDJ6y40vw4Xry/sTePT77uMydPMXoFhoFDbiRhV3
+         tOSDE13ddmUPXRw/RFahML05YShPspTkUTVmMKgFtsWdvrEictfVN9yNaw2faEBxF9DC
+         0IVA==
+X-Forwarded-Encrypted: i=1; AKwUvByseVtTiOO4+fPyXkZFvPE5kpxOcEDRb07cJMkhpO7FerjmsdCKQ7jyPdRMwjOPMB+G+peMdss1besn1P90zdN80fC7@vger.kernel.org
+X-Gm-Message-State: AFuF++lkH75WQ1XvKoUUrBQqAwl84XjSACOTQCx/82cLifigbJuCBiiF
+	wLIb0SiIIOfAwOz4j9gjK8cxmr1EIBgGUw9YfoPo9lpY2Q3/yfqt/1wH
+X-Gm-Gg: AYBFou2N/wSmr+T6WfHMHoHlaH8zVBlUodeZJY6gXjXLL9c+Pi9SikbRLFMXnrlUWWv
+	zWkhaSirGgkldbdFdWsNeyKlKBQnCsrDO3DO5CFuRRL45sYq0U4SCf5kJT55VoDa8OkEawB8vvT
+	Tp/PpgGIm6TLBPGsVa4ZpGgyDqLP6+uwoUzQO0LAJZ5wlOaZV5RKbW0sO+r/TN2dset3YMBcMty
+	zuvc6iZ6CmzIAkAmHKB6L12WXDXM8F7Q+A742iknPrlyNr9RrUDcqfSh4VI1n3fd9pw4AnAbqHP
+	OuSdOJKPeJn30hYG8jwC38N+rKdbScpbG65VsHOf8COgGryDUbDNaaCSB/ro3FTyBu2D1VzXv0h
+	cy7dbnuhW7kVtpQ7/zZL/jQ4hKVgOtcZCIDHwnYM+PonACnHTHeM6sxa4baZfChCzQqEtsZo9FG
+	EyXWFxHRk9gAJHVy+Sx8Lr0KAyOKRMloIDTmPbgfXjvnmKLnqnyfP5Ifr7iA/JhgTNepuaaA==
+X-Received: by 2002:a05:600c:3588:b0:49c:fc6e:a3d7 with SMTP id 5b1f17b1804b1-49cfc6ea7d5mr184672115e9.22.1788767136986;
+        Mon, 07 Sep 2026 00:45:36 -0700 (PDT)
+Received: from foxbook (bfg95.neoplus.adsl.tpnet.pl. [83.28.44.95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d08144037sm191147985e9.7.2026.09.07.00.45.35
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Mon, 07 Sep 2026 00:45:36 -0700 (PDT)
+Date: Mon, 7 Sep 2026 09:45:32 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: "Gordon Chen" <chengordon326@gmail.com>
+Cc: "Mathias Nyman" <mathias.nyman@linux.intel.com>, "Mario Limonciello"
+ <mario.limonciello@amd.com>, "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ <linux-usb@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Mathias Nyman"
+ <mathias.nyman@intel.com>, Ingo Haenlein <ingo.haenlein@gmx.de>
+Subject: Re: USB-audio isochronous Missed Service Errors on AMD Zen5 client
+ (Fire  Range) -- Data Fabric idle C-state? No OS-level knob found
+Message-ID: <20260907094532.4ffeddd5.michal.pecio@gmail.com>
+In-Reply-To: <18b4f8f0c2ce37be.8d4c4c4ee804b95a.4c2042ec04b99872@GordonMsi>
+References: <18b4f7b23ba6392f.e25301f473da0264.54f7bc72d1817dd4@GordonMsi>
+	<18b4f8f0c2ce37be.8d4c4c4ee804b95a.4c2042ec04b99872@GordonMsi>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spampanel-Class: ham
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Kurt, 
+On Mon, 1 Jun 2026 13:44:25 +0000, Gordon Chen wrote:
+> Hi all,
+> 
+> A quick correction and a sharper question after probing the PCIe side.
+> 
+> I checked the controller's PCIe config (lspci -vvv): the xHC function
+> (0000:6b:00.3) has no Latency Tolerance Reporting extended capability
+> at all and reports DevCap2 LTR-. Its upstream root port (00:08.1) is
+> LTR- as well. So the PCIe-layer variant I floated in my last mail is
+> a dead end -- there is no LTR register to write, and neither the
+> endpoint nor the root port advertises the mechanism.
+> 
+> That leaves an apparent contradiction I'd appreciate help squaring:
+> 
+>   - USB/xHCI layer: HCCPARAMS1 LTC = 1 (the controller advertises
+>     Latency Tolerance Messaging Capability).
+>   - PCIe layer: the same function is LTR- (no LTR capability at all).
+> 
+> So if I issue a Set LTV command (the driver-injected path you
+> mentioned), where does the xHC actually forward that aggregated
+> tolerance value to the fabric, given it has no PCIe LTR egress? Is
+> there an internal sideband path to the DF on these integrated AMD
+> controllers, or does LTC only affect USB link power states on this
+> silicon -- in which case Set LTV would never reach the Data Fabric?
+> 
+> If it's an internal/sideband path (Mario / Shyam?), a Set LTV PoC is
+> still worth trying. If LTC is purely USB-link-scoped here, it won't
+> touch the DF idle problem and I should look elsewhere. That
+> distinction decides whether I write the PoC at all.
 
-Thanks for taking a look. 
+Hi,
 
-I would agree that losing the option for enabling the "G-Mode" isn't desirable.
-However, there is a semantic issue in here: what is normally communicated as a
-separate gaming mode now replaces the normal performance mode. It took me this
-kernel driver investigation to find out that switching to balanced would've
-fixed my problem. Since my device configuration doesn't have a G-Mode button,
-I wasn't even aware of the feature for this machine before. As far as I
-understand it, performance is commonly the default selection by distros when
-the machine is plugged in, so this behavior can be triggered without the user
-explicitly choosing G-Mode.
-Also, I just found out that in Gnome desktop selecting balanced will enable the
-Balanced profile, while selecting power saver enables Balanced-Performance. 
-That seems confusing to me.
+I wrote a small debugfs interface for people to play with, it just
+issues the Set LTV command with given BELT parameter. You know it
+worked when you see "INFO unknown command type 20" in dmesg.
 
-If you think this should be addressed in userspace, 
-where would you suggest this needs to be handled?
+See USB 3.2 spec 8.5.6.2 for details of the BELT value. TL;DR:
 
-Attached you'll find my acpidump. 
+1024 + latency_us, must be given in decimal and latency_us <= 1023
 
-Thanks, 
-Lewis
+The spec says this only matters for non-isoc endpoints, so I guess HW
+is expected to be smart enough to manage it itself when isoc is active.
+Ergo, it will probably make jack all difference and we can comfortably
+go back to blaming AMD.
+
+Please also try 7.3-rc2, just in case you are actually running into
+known (hopefully fixed) problems with isoc URB scheduling.
+
+Regards,
+Michal
+
+---
+
+diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
+index 0f6f97cfe0b0..5f370e5e57ff 100644
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -670,6 +670,70 @@ static void xhci_debugfs_create_ports(struct xhci_hcd *xhci,
+ 	}
+ }
+ 
++static int belt_show(struct seq_file *s, void *unused)
++{
++	return 0;
++}
++
++static ssize_t belt_write(struct file *file,  const char __user *ubuf,
++			       size_t count, loff_t *ppos)
++{
++	struct seq_file         *s = file->private_data;
++	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
++	struct xhci_command	*cmd;
++	u16			belt;
++	int			ret;
++
++	/* Decimal number */
++	ret = kstrtou16_from_user(ubuf, count, 10, &belt);
++	if (ret)
++		return ret;
++
++	cmd = xhci_alloc_command(xhci, true, GFP_KERNEL);
++	if (!cmd)
++		return -ENOMEM;
++
++	spin_lock_irq(&xhci->lock);
++	ret = xhci_queue_vendor_command(xhci, cmd, 0, 0, 0, TRB_TYPE(TRB_SET_LT) | belt << 16);
++	if (!ret)
++		xhci_ring_cmd_db(xhci);
++	spin_unlock_irq(&xhci->lock);
++	if (ret)
++		goto free;
++
++	wait_for_completion(cmd->completion);
++
++	switch (cmd->status) {
++	case COMP_SUCCESS:
++		ret = count;
++		break;
++	case COMP_TRB_ERROR:
++		ret = -EBADR;
++		break;
++	case COMP_PARAMETER_ERROR:
++		ret = -EBADRQC;
++		break;
++	default:
++		ret = -EIO;
++	}
++free:
++	xhci_free_command(xhci, cmd);
++	return ret;
++}
++
++static int belt_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, belt_show, inode->i_private);
++}
++
++static const struct file_operations belt_fops = {
++	.open			= belt_open,
++	.read			= seq_read,
++	.write			= belt_write,
++	.llseek			= seq_lseek,
++	.release		= single_release,
++};
++
+ static int xhci_port_bw_show(struct xhci_hcd *xhci, u8 dev_speed,
+ 				struct seq_file *s)
+ {
+@@ -901,6 +965,8 @@ void xhci_debugfs_init(struct xhci_hcd *xhci)
+ 
+ 	xhci->debugfs_slots = debugfs_create_dir("devices", xhci->debugfs_root);
+ 
++	debugfs_create_file("belt", 0666, xhci->debugfs_root, xhci, &belt_fops);
++
+ 	xhci_debugfs_create_ports(xhci, xhci->debugfs_root);
+ 
+ 	xhci_debugfs_create_bandwidth(xhci, xhci->debugfs_root);
