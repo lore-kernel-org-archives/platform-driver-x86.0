@@ -1,94 +1,136 @@
-Received: from cs.upt.ro (smtp.cs.upt.ro [193.226.12.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEE72628D;
-	Mon,  7 Sep 2026 00:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.226.12.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788739612; cv=none; b=HhLTaQyNDz6Rbo+wzD50BVqI4LHTpMpsktDKtTJq5e/eq52xP7ZXRZKRsBbyJXpmcO9kLEd0a9VzI1VT09vCcViB+ouqdf5DvEq+Fzu3p2EO7juG13HCeglLq8vii1HPlz+fU8ZJXnvGY26CLlnJw3rMDkINiOc02Bd4Iz1Z78Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788739612; c=relaxed/simple;
-	bh=Sjn5sQa/1cU6LsTI0yua3qDEZLFnx1sxSShHuHNwaGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BTTFYOYcp/3feoDQb/2fNEI2pW8K4Lp752jNxNI97anvYdro/dqcX01dTTvHgaHvqBPs65E5NXeF6YKhlnDNaQTjMwhTq9OS8hsRbxCoiRIJJt/nBrjWQuoXYxZNqrskLNGKV+YwWUdYCAMPzqiYpdJSt1Tp/UMF2X8lR09Tcb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.upt.ro; spf=pass smtp.mailfrom=cs.upt.ro; dkim=pass (1024-bit key) header.d=cs.upt.ro header.i=@cs.upt.ro header.b=etiPi4yu; arc=none smtp.client-ip=193.226.12.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.upt.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.upt.ro
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A601CAA6C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 01:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788743521; cv=pass; b=oWpa9j2f8JhtvGWwEQyX/GsRHGZ5rKF2GFpCjrnAG4nRhWeshILHZmakm6EPpU+08YaERPI9ug9fOKQBurSmShZ0RCyCALmS4GjKeGK0OG+QsYnmnxThtAbyGKbIBeyRIYVk6ZzkYX9+z2B1OFiWDiDP6Sx6C+FGGCYA9eXsaN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788743521; c=relaxed/simple;
+	bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=J+3kNw7Oay4MOAm8bDJhNh8cPEKntHgWNtyQTpRtZYgtp1LKdLKwI1wYsKfPujkPcijfYULWeAvFtGdRixXDEcqyMGcdxe5QuXxKO9p2TJN0XtCxcxZcBUAMDg9J8K/FRlkO4HI3F4XanCPbbE+jxs5lUHEAHVW3eTn6/58C3VU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qwf6Gv4T; arc=pass smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.upt.ro header.i=@cs.upt.ro header.b="etiPi4yu"
-Received: from localhost (localhost [127.0.0.1])
-	by cs.upt.ro (Postfix) with ESMTP id 16FBBDFA3D;
-	Mon,  7 Sep 2026 03:06:47 +0300 (EEST)
-X-Virus-Scanned: Debian amavis at smtp.cs.upt.ro
-Received: from cs.upt.ro ([127.0.0.1])
- by localhost (smtp.cs.upt.ro [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 47ry4XIKlIcp; Mon,  7 Sep 2026 03:06:45 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cs.upt.ro; s=mail;
-	t=1788739604; bh=Sjn5sQa/1cU6LsTI0yua3qDEZLFnx1sxSShHuHNwaGY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=etiPi4yu7d5Wjm/Sivu+gFL7gKoqRp6opFDhTK7DGqbTO9E0Th9FMOrVoDILPr+zg
-	 9k0CiEHF8ncn911Dw+/rzhH6PzVSTVAPk4GhsxAPNQB2r2EGoRol6cHGUnHits9hHr
-	 ZVyrv7yjapLhdKxDtebNKJP//nC83KSZG2BwWyhk=
-Received: from kcstation.tailba65d9.ts.net (unknown [5.12.49.127])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by cs.upt.ro (Postfix) with ESMTPSA id A8FD0DF947;
-	Mon,  7 Sep 2026 03:06:44 +0300 (EEST)
-From: Catalin Cereanu <catalin.cereanu@cs.upt.ro>
-To: Corentin Chary <corentin.chary@gmail.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	Denis Benato <denis.benato@linux.dev>
-Cc: Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC] platform/x86: asus-wmi: no kbd backlight on Zenbook S 16 UM5606WA
-Date: Mon,  7 Sep 2026 03:06:31 +0300
-Message-ID: <20260907000631.18373-1-catalin.cereanu@cs.upt.ro>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260906235355.13404-1-catalin.cereanu@cs.upt.ro>
-References: <20260906235355.13404-1-catalin.cereanu@cs.upt.ro>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwf6Gv4T"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-4a46a53abc9so2687786b6e.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Sep 2026 18:11:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788743519; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TdG/koOJinlCnTUdZNG8IZTm9FJE7cKxzEBF+uHhMHzXjBDwGQLNNs2QCVzi6xTsiR
+         g4r4Fyyf/RYNiraMxjyNdpU5Sn3cHeBCXw+9Ts3DG27yeSL6rkuFX3XFzaJIv9SNDjnw
+         70St9s6qIiDM8+gTo+CBGt3cleSYCDN40H5dYwo5dA/vBadbvhCl3pyvsyfykWGdDx7X
+         DdyzvUIpw8hNmucgnYpKMk9MT/Y64uXGl7azTQ128qm+UdRrVK1KzO85HsGdFxIU0lDc
+         b0/lJj+RBHXoifYnQdnGv3i00xUb0oDjzFwtRYR+Q8DyOMLcgp6fmdLpnlIHzwYmfoBE
+         YBXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
+        fh=ImZAbQNqaN4NWMGiR7beqXZyNF7MBj1Ud54FGFLAEkU=;
+        b=P8SmfRIzkWLGGydjeWSCbtAQ1qX6tRIQBU/te0jd9XtMePTeGn8J/g2ZAJLTut0K7Q
+         RpIYDZ24eNKD+wTfi/bEpjmaI8L8zp1TN0wEJBFNfiG7qXVdQ3M4p1SFnC/qnLb3qMHK
+         guC8gxswpFysWxumoLh+JtptK/BwVpwbr5YIKOuaGnfWf6Zex8Nq8xNdTN2m9g+YrPY6
+         MGmHaYVRwfLwnlaz2DGMnGdi4L31XLksqNYPfHaBge5SEm00noeQgbPLmfNBiZQReBvB
+         A9fCdt3fYvx0NEVpcsyt5WlFTDBX8dXFEw1YGInto/sY8kKUAuDLFPMNx8fsiL7qcL7g
+         PCXA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788743519; x=1789348319; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
+        b=qwf6Gv4T9fkp8O4C5CzO/nJ7OJUED0G/kc39pA3A0flFG0Z1MB2zfArk/O8d0Jan2s
+         5ek0fHZHD00M33/cFQd+BIlBxkJA60pjl65ns9CmHoX1tBCsxzS5FaQvO4Gse/RTK6RL
+         RCCgm/aA0RF4quNchMEdbm6SxMtezOMoOBfujN6Lk+knNaQeMjpffC6OO0aTCLbByOtT
+         GPT9KL3E63pp97db88EjzbqBgos1Pa0QBtInhzK9CnufDcep4/CQvJj35j5xawVLgcSx
+         KDNclqI7YvwZPN9gFjtTwOATPtDQbTLoPzZ0ECOT7avChibAjswYFDPxnouCJg2VOE3v
+         vBbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788743519; x=1789348319;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7V96YHpQ/UziaMZvPPIkht0HHd3decCbH3O1UM1inNc=;
+        b=kgz9Rb/L3HdLeL/B2XlcWz3fkFREkZySpWPn+q8ZtuGxa02hcQmWSGn8dCw2XTE0JH
+         6Ba85xGY37WhYX/Gfjt/mWxwfGstnKpKJ3ghz4RK6Q+ZvLceAG9X7Nv/f5wdEUCjGLJQ
+         dLHfZfgeSU9mqNEKAEJwUV/fp0z9MNe/eg6eqNiUgrsgtV64e3iK3vceQmfvdNhBc5as
+         0dPabcP0ympVz2paW6BifAxjo38GC2sVO7Mo/AZAxQW4D9UXRdANlgehRu5qlZ7F6AtZ
+         BFWV7sV+4Z6gWbYz3WvkuviRZgCabpdFRt3mNSjnGbiCW6mXTgUJw33/dF5oJN7Pfm+2
+         BKWw==
+X-Forwarded-Encrypted: i=1; AKwUvBz+Aary+uVLcsibENv113Y2Qfp3JS8V6DpVbW6KyC4A+Zt0OBVfnRyQDwoT/V9L2rA31b5dsuT590lAhYa5pLu3tbMD@vger.kernel.org
+X-Gm-Message-State: AFuF++kXm4MmGYzcpXVRMMIuNEj/gXTFGXN7ivt9YtYbjBI5oDv2OYHE
+	8FFuNBNDpyDjPIF2o3aHXfdn58wj6bebGxjyyafhlCJgIUCO6AXF9SUAOvRbuLQK02X6g/BU2Te
+	T0EHe1JpEsnVa2d6xwN2ricyaHTl6WnjqHlCU
+X-Gm-Gg: AYBFou1+fvB8ff8aVvb2YpfIQTRbeJj713S51NcLT8jASqqn1+wUbwRUFY+CnHD/eQg
+	6uQxHm4gpk3UiX6gimXjaqbASGlvWWxrKEZ6aYwYP1FLza6MHuyOXdENQDof3BPo93hjhc+6Lq/
+	NS+JEychherRsYJVnfzc0JbIRLjRnmsTWDUMfHaezH4fsWUslN0ItPD+kPyBSZscJpyxJh3GuXv
+	i8Lp0JntZ8fDzx0OqsScMc9rgy2wAaHx++7CPjM//3CnoFZOG8fQcvU1n9VqvF4mm3LlEpC72CX
+	wWfPp/5Fsp/rVcCUyy8W48JL8x1fEahuB10htXdlLqRtgMY5kRsiGnD5rWW1E/NNBxh5cT4cVMn
+	GpGI1xYXn75alkWCS3U6hyzshqqkszOkUqun6upncUShL1LwIps1JgrFSQZano6AE
+X-Received: by 2002:a05:6808:251a:b0:4b3:17ae:16dc with SMTP id
+ 5614622812f47-4b9616509e1mr14411599b6e.9.1788743518709; Sun, 06 Sep 2026
+ 18:11:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: =?UTF-8?B?TWFudWVsIEEuIFIuIGRlIE9yw7plIFLDrW9z?= <deor001@gmail.com>
+Date: Sun, 6 Sep 2026 22:11:47 -0300
+X-Gm-Features: AcwNN1WfCwyE2Thp24qJQjB-cmbXW2y9wnZ0IdGosAFwnibz2ilZw_V_6bfHbQc
+Message-ID: <CAOXykpgCPMB7fGGJXD0wdx-0boy3vdRZraFRhegrh7azJiYONA@mail.gmail.com>
+Subject: Dolphin (26.08.0): "Expandable" folders in Details view not working
+ when per-folder view properties are enabled
+To: linux-kernel@vger.kernel.org, denis.benato@linux.dev, luke@ljones.dev, 
+	platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Following up on my own RFC: after sending it I came across prior art for
-the first of the three questions I raised, which makes that part much
-less open-ended than I posed it.
+Hello, Denis and Luke.
 
-The FA401 series has the same shape of problem with a different device -
-WMI device 0x00100057 is not reported by DSTS even though the EC does
-support it - and that was handled with a DMI quirk ORing a quirk_entry
-flag into the availability test rather than trusting the probe:
+I was wondering if you could help me communicate about, and get some
+information regarding, the following topic:"
+in Dolphin it's intentional (a design decision) or an oversight that
+hasn't been addressed yet.
 
-  https://lore.kernel.org/platform-driver-x86/20260902174718.16228-1-idotohors@gmail.com/
+Environment:
+- Dolphin 26.08.0
+- Fedora 44, KDE Plasma 6 (Wayland)
 
-If the same approach is acceptable for the keyboard backlight here, the
-equivalent would match DMI_SYS_VENDOR "ASUSTeK COMPUTER INC." and
-DMI_BOARD_NAME "UM5606WA", and do roughly:
+Steps to reproduce:
+1. In Configure Dolphin -> View -> Details tab, enable "Folders: Expandable=
+".
+2. In Configure Dolphin -> General -> Behavior, enable "Remember
+display style for each folder" (i.e. GlobalViewProps=3Dfalse).
+3. Open any folder in Details view.
 
-    static struct quirk_entry quirk_asus_um5606wa = {
-            .kbd_backlight_available = true,
-    };
+Observed result:
+The expand arrows for subfolders (the inline tree view) do not appear,
+even though "Expandable" is checked globally.
 
-with, in asus_wmi_led_init():
+Expected result:
+The expandable folder tree should work regardless of whether view
+properties are set globally or remembered per folder, since
+"Expandable" is configured as a global Details-view setting and is not
+something exposed as part of the per-folder properties.
 
-    asus->kbd_led_avail = !kbd_led_read(asus, &led_val, NULL) ||
-                          asus->driver->quirks->kbd_backlight_available;
+This looks related to Bug 524626, which reports a similar coupling
+issue in 26.08.0: the new per-folder zoom feature is tied to
+per-folder view properties (GlobalViewProps=3Dfalse) with no way to keep
+it independent. My case seems to be the same underlying pattern =E2=80=94 a
+setting that should logically be independent from the
+global/per-folder view-properties toggle ends up depending on it.
 
-That would restore sysfs brightness control, since the DEVS setter at
-0x00050021 works regardless of what DSTS reports.
+Could you let me know whether this is expected/by design, or if it's a
+gap that hasn't been considered yet? Happy to provide more details,
+logs, or test further if useful.
 
-It would not restore the Fn+F4 key, which stays gated on KBLC in
-firmware, so questions 2 and 3 in the original mail still stand as
-written.
-
-Happy to send this as a proper patch if the shape looks right.
-
-Thanks,
-Catalin Cereanu
+Regards,
+Manuel de Or=C3=BAe R=C3=ADos.
+___________________________
