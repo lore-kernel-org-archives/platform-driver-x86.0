@@ -1,221 +1,162 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320BC36F8EB
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 07:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788767141; cv=none; b=Bde7H1FTLpq9ecM+e5JR+grjU+Z/s6wfrJfkMxViPS5mFpIS2NaZaZ1qakzY/D7elw5Ge1kEU7avpwrLcSzWXiar6P6aCAnzTDKdFfcYYSQXz9BJ0lEV7Nz9uEZdX7JSiS2DFg0N0cpN/no6Iqb6u3obA9/0iBImCfjSwTSRjxg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788767141; c=relaxed/simple;
-	bh=5yWZl1jwei4RGUJo4VVTHvQQ/qhIpImbHnCijWHhCSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KyJDTDorCvpOHOhy+JbOPkU1A+h0oUqr3GuyrfndF+gxP1D6n/ZL3jWO20ObRigQV35qgHm3SdMhDGf5viRgI8iZMTMo9XnQ5ss1BQA0WcSheLPTrCHDnM6sdeQNDEBANcJiHeQSJasmBHDPhKaZVYt7PYvomXQSQ6ET7xFSfQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UO8szE6e; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9C944160C
+	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 08:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788770479; cv=pass; b=GnUqs7+9WyIb7p95+Op26aP2JnD8RCLjd2zicmYoYRSKNMwOiDZKzAXwCweYmxo27bKp30/Fog8Gy8Ug+h8pKZkDuMKmVkAc69lgkT16W7WaJRluawM7NnLd9RCU72fm1/++91+mYV3tb1lH7UwoFWKfKDELxMX+HewS5I2q+/E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788770479; c=relaxed/simple;
+	bh=MgdmZFVA7aoLec69DzzgoB9Mw7W2m2fcDmRBdrBokVc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=lon8NtQoolvSbmu+bTnJVE6ZlnOGS7f3pwvqgDSAkmMPAHkr6/QrTMDm+koRKgFqX+9t/uZRBxKljuBiAKywbFDax5qWV+8vkJlrDJbuegEhv9cTXrX19Haq/nkBcw0mrmh260YsniOw2YVrNnLOGZZhTG0SnoLrLKR+GU1rG/o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4E1Yskw; arc=pass smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UO8szE6e"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49cca4ffdcfso26147045e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 00:45:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4E1Yskw"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-49cd77e0f95so27577135e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 01:41:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788770475; cv=none;
+        d=google.com; s=arc-20260327;
+        b=EZbUSB1JrCoOw8Lw3oEME2MxeW9rNUEwS8ObrM9PQspvTYRfGkNEwTxllkvOd5A4d5
+         /U+uFryNG4vP0iZFwPZWlBeV0YqQU0EBy33I9c0M1je4In/XJUGRoz2kk/wFDLD/1VxA
+         8XwZcVGHbqphfUpcKQC4qS6K/QSzR+giGWuJarKbav/L4iBT+WR2s0n4U2A5PFLMnCtp
+         vsOZZD/QFfDO4Qa+y767Z79sUdb22ML82V+qg+q0WaXjTjinOkqSyMfuqyMMq/jwWuHw
+         z2HWydX4znCJF+433+bNsKsMb51GuW2+g9O43Ewk3ocsRLzliC97EyHDrtzpW6bZ7UI3
+         2MpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=RJ11KuNUShd+rjlNgZxIHhqbO1fsVeK35vNeu3wHqSs=;
+        fh=ci9brujSe/bGQHf6nPAvnKhjJ3QtXQm8R9OHtENhCvs=;
+        b=mRkMqlnAHxISKGiHyArI8xxvYTnZSMprbEIzLayE6F8vI5bQjsvI4D+BZLl31ciFXx
+         qU7jULjvs+LCN/HyCPnAHhW1Dbk4KL5fAJLYa6tJTJv4iyvGGRWnXkiALzJ81qoBYAPz
+         czq8dw6UNiwfnIuMrN1rjFZUxIPHulM+qbhLfa0X6slGfZKvyHvgFn9tObibvGywFUY3
+         cUpw2Z1YXCNlEWGp99M5NKZfuSK/wFQdgAiYYCxDxQYiUJeDF/5inmV+7OqKsSp1pldb
+         KEBRR2mzXes/we0iUHZ1gkiuaMLACCOTY7QzCGBy1X9zLzhUc+wiA8QM5/eUTRA5C8ye
+         XXlw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788767137; x=1789371937; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=rD5WySJ1L49NgFFXB+bGCoZxLI27TU6b4IffLKrGf+c=;
-        b=UO8szE6eGPuPo5N2zez2anOdtuwbNZ4BohHeE/8jcYB1Ha0QT0dOgNFExzNx2N+uNF
-         g3OB6knIIOcX6ymZxcvPw+ccC6pkiXmjwxYZWB7ZyqqKkLZcu29zConw95XTJYm7xNk4
-         IY5MvJoQdOjoxo4QtiXY4tgbmueQsoEk6Ik5EZXBdJKa0uANCgV0U53o6aM33ne3ZVY+
-         0CAywYtDZk3x/wGRHAvqnSHWrnwVukPOqCP/PbI3qevfieaPjNb0Pu4G/29swqn0sUyB
-         Mry96Mi/5/Xcl6JELEHkMOll3WZJUAdNcQSS1dAG+Lr0wPbzTolJordkSiMvXj8KNjrZ
-         2yxQ==
+        d=gmail.com; s=20251104; t=1788770475; x=1789375275; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=RJ11KuNUShd+rjlNgZxIHhqbO1fsVeK35vNeu3wHqSs=;
+        b=D4E1YskwRLmzotnZVx0ceCTOVnfGaHY/iopTns5MVhJ8ZdQwjG7d1WMKT2YIqrbnNl
+         8XFS5XUfBH3ema0u0VPrY3B4QhO420Vd5J5d/m63Bb6V6/JtZvAd2EvYoU9yRH7PJgob
+         oP5rUxFra74HiSBSBTCQpJ5eGwz8nvKTe8uXBg0JeIU6teNTeV2GPmRh6Xnp0FBVz/qA
+         jFDuFMD9GKTxLwIsYcr39UHLnJESc413as7+s/eQznPuFC+7hQIkaHhmr0f3roEnhu8q
+         g1XfggJi/DnpLZJfbi5NOovxomkugdTgH0QCfjv3HzX4YlUAm8vk3/YmWzlqV+JeiYgZ
+         rvxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788767137; x=1789371937;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rD5WySJ1L49NgFFXB+bGCoZxLI27TU6b4IffLKrGf+c=;
-        b=WVaqL6dsaI81olKSUsbKOHzUKewqOi7XfjQEkWUeMyhsZA16uU0aPwXMPdN2jYhEen
-         /YIsFiJacvOMo/I1J44/aton+peKukKo1/0MKK+idAfZjHzDxXNsmyvkS1NHgzbrcGyq
-         qqsDda4eP5JnLF6smjLhO/1i1oDJWJ9owHWvFVQ1SoGfGu/0p8VeriXmAPD1xpwbL8rK
-         XdMcglG2z89BrwRZRTnv3ufCMLTgwDJ6y40vw4Xry/sTePT77uMydPMXoFhoFDbiRhV3
-         tOSDE13ddmUPXRw/RFahML05YShPspTkUTVmMKgFtsWdvrEictfVN9yNaw2faEBxF9DC
-         0IVA==
-X-Forwarded-Encrypted: i=1; AKwUvByseVtTiOO4+fPyXkZFvPE5kpxOcEDRb07cJMkhpO7FerjmsdCKQ7jyPdRMwjOPMB+G+peMdss1besn1P90zdN80fC7@vger.kernel.org
-X-Gm-Message-State: AFuF++lkH75WQ1XvKoUUrBQqAwl84XjSACOTQCx/82cLifigbJuCBiiF
-	wLIb0SiIIOfAwOz4j9gjK8cxmr1EIBgGUw9YfoPo9lpY2Q3/yfqt/1wH
-X-Gm-Gg: AYBFou2N/wSmr+T6WfHMHoHlaH8zVBlUodeZJY6gXjXLL9c+Pi9SikbRLFMXnrlUWWv
-	zWkhaSirGgkldbdFdWsNeyKlKBQnCsrDO3DO5CFuRRL45sYq0U4SCf5kJT55VoDa8OkEawB8vvT
-	Tp/PpgGIm6TLBPGsVa4ZpGgyDqLP6+uwoUzQO0LAJZ5wlOaZV5RKbW0sO+r/TN2dset3YMBcMty
-	zuvc6iZ6CmzIAkAmHKB6L12WXDXM8F7Q+A742iknPrlyNr9RrUDcqfSh4VI1n3fd9pw4AnAbqHP
-	OuSdOJKPeJn30hYG8jwC38N+rKdbScpbG65VsHOf8COgGryDUbDNaaCSB/ro3FTyBu2D1VzXv0h
-	cy7dbnuhW7kVtpQ7/zZL/jQ4hKVgOtcZCIDHwnYM+PonACnHTHeM6sxa4baZfChCzQqEtsZo9FG
-	EyXWFxHRk9gAJHVy+Sx8Lr0KAyOKRMloIDTmPbgfXjvnmKLnqnyfP5Ifr7iA/JhgTNepuaaA==
-X-Received: by 2002:a05:600c:3588:b0:49c:fc6e:a3d7 with SMTP id 5b1f17b1804b1-49cfc6ea7d5mr184672115e9.22.1788767136986;
-        Mon, 07 Sep 2026 00:45:36 -0700 (PDT)
-Received: from foxbook (bfg95.neoplus.adsl.tpnet.pl. [83.28.44.95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d08144037sm191147985e9.7.2026.09.07.00.45.35
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Mon, 07 Sep 2026 00:45:36 -0700 (PDT)
-Date: Mon, 7 Sep 2026 09:45:32 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: "Gordon Chen" <chengordon326@gmail.com>
-Cc: "Mathias Nyman" <mathias.nyman@linux.intel.com>, "Mario Limonciello"
- <mario.limonciello@amd.com>, "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
- <linux-usb@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
- <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Mathias Nyman"
- <mathias.nyman@intel.com>, Ingo Haenlein <ingo.haenlein@gmx.de>
-Subject: Re: USB-audio isochronous Missed Service Errors on AMD Zen5 client
- (Fire  Range) -- Data Fabric idle C-state? No OS-level knob found
-Message-ID: <20260907094532.4ffeddd5.michal.pecio@gmail.com>
-In-Reply-To: <18b4f8f0c2ce37be.8d4c4c4ee804b95a.4c2042ec04b99872@GordonMsi>
-References: <18b4f7b23ba6392f.e25301f473da0264.54f7bc72d1817dd4@GordonMsi>
-	<18b4f8f0c2ce37be.8d4c4c4ee804b95a.4c2042ec04b99872@GordonMsi>
+        d=1e100.net; s=20251104; t=1788770475; x=1789375275;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=RJ11KuNUShd+rjlNgZxIHhqbO1fsVeK35vNeu3wHqSs=;
+        b=snJajcCwpJHHO9EARQQZCBLtWOVvbbM030kL0p+Gfm/FoMuu5ykRflgykq/hQhvxmm
+         r5m0dBmECp80Z0sS2LSMmgjWLrI90WGh1hBFzOMzl535LTzGM5Pu6Ic1uF3NWUzxxIrB
+         p3pxVhWdsrn30jFzSiIK3e/xjFUNQvgLZ++SKcxz6lVhvgl86X0DCACb38wgWOWuC5SW
+         JgO9reXqlsX5zLI/kGtGZ1hjhSCuooMcB4urWr2OXglV8DwxIAUeYXxzB6lhJQRhpDDS
+         yNq/KR76RDKofLoUiO3Aw5ER85oh8Q51gj99dFj+103lJOS9yOITeMTNj7yh3RiLfVla
+         fqvw==
+X-Gm-Message-State: AFuF++lVJU29sI+MugmTCJuJtuFMTCOpbuU9Vjwp9nFLqPAIA8yp/543
+	ngAtBgI4cgRustLqAij85TCRrzRQMDYUgmQG74lu5EoA7IntniL7nABCN+jUDS92l1cLu/1hbg0
+	5A0kt2Iyi/s7nmNvJUOZ5hsZuTEBUWm94LdElqw==
+X-Gm-Gg: AYBFou0tWALhNCcl9Cd7J516SdeR4kQB08K4WcYcxVlpCVr1uWp9Wna89PJ/jwI3ea6
+	/wQJJawHc0O2ILBT+MwA9XNAs/4VrU0q2V9z5lkirtD0g/ao98SWrawFyRQyKbzxJmCSuK5pMwi
+	viKqKyx+NNi41DIf7CsqQUowKBTunXGs+qAyCkBCzQELHA1IGbui2qq8f3T0LmzCHTgRaro+WEW
+	U+XiLlm6Oc5LffOUjsDzZNzhWfEjZcFhybG4I3WfdpBW3ccaiWs5LLTxVEKnXFeAkkWt3urQpjT
+	d2/bxtJYrIiy2aUtPS+Kj9Ztt+eHvdUxpnWp0Jo/CitUdx6dnVgljFSiIXVLxAyRTtZGL9ztBIt
+	z
+X-Received: by 2002:a05:600c:1548:b0:49c:fc6e:a3d4 with SMTP id
+ 5b1f17b1804b1-49cfc6ea70fmr186672845e9.19.1788770474779; Mon, 07 Sep 2026
+ 01:41:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Mon, 1 Jun 2026 13:44:25 +0000, Gordon Chen wrote:
-> Hi all,
-> 
-> A quick correction and a sharper question after probing the PCIe side.
-> 
-> I checked the controller's PCIe config (lspci -vvv): the xHC function
-> (0000:6b:00.3) has no Latency Tolerance Reporting extended capability
-> at all and reports DevCap2 LTR-. Its upstream root port (00:08.1) is
-> LTR- as well. So the PCIe-layer variant I floated in my last mail is
-> a dead end -- there is no LTR register to write, and neither the
-> endpoint nor the root port advertises the mechanism.
-> 
-> That leaves an apparent contradiction I'd appreciate help squaring:
-> 
->   - USB/xHCI layer: HCCPARAMS1 LTC = 1 (the controller advertises
->     Latency Tolerance Messaging Capability).
->   - PCIe layer: the same function is LTR- (no LTR capability at all).
-> 
-> So if I issue a Set LTV command (the driver-injected path you
-> mentioned), where does the xHC actually forward that aggregated
-> tolerance value to the fabric, given it has no PCIe LTR egress? Is
-> there an internal sideband path to the DF on these integrated AMD
-> controllers, or does LTC only affect USB link power states on this
-> silicon -- in which case Set LTV would never reach the Data Fabric?
-> 
-> If it's an internal/sideband path (Mario / Shyam?), a Set LTV PoC is
-> still worth trying. If LTC is purely USB-link-scoped here, it won't
-> touch the DF idle problem and I should look elsewhere. That
-> distinction decides whether I write the PoC at all.
+From: Charles <hanker007@gmail.com>
+Date: Mon, 7 Sep 2026 16:40:37 +0800
+X-Gm-Features: AcwNN1Wve0cfaWWssqpF8TliSN_UBvq318IdcvoIL6OvTaSZNOofWv15TZ-Tj9s
+Message-ID: <CAKtz0s8UYRQYW_0bh=0TMx47Axm-W-muEay-r3rqUBS1NHMPVw@mail.gmail.com>
+Subject: lenovo-wmi-other: LENOVO_CAPABILITY_DATA_01 fails to register on
+ ThinkBook 16 G6+ IMH (ACPI AE_AML_OPERAND_TYPE in \_SB.WMI5.GCD1)
+To: platform-driver-x86@vger.kernel.org
+Cc: mpearson-lenovo@squebb.ca
+Content-Type: text/plain; charset="UTF-8"
 
 Hi,
 
-I wrote a small debugfs interface for people to play with, it just
-issues the Set LTV command with given BELT parameter. You know it
-worked when you see "INFO unknown command type 20" in dmesg.
+Reporting a firmware AML defect that blocks the fan hwmon interface
+exposed by lenovo-wmi-other.
 
-See USB 3.2 spec 8.5.6.2 for details of the BELT value. TL;DR:
+Machine:
+  Product:      ThinkBook 16 G6+ IMH
+  Machine Type: 21LE
+  Baseboard:    LNVNB161216
+  CPU:          Intel Core Ultra 9 185H (Meteor Lake)
+  BIOS:         NJCN68WW (2025-12-17, latest available)
+  OS:           Ubuntu 26.04 LTS, kernel 7.0.0-30-generic
 
-1024 + latency_us, must be given in decimal and latency_us <= 1023
+Symptom:
+  The LENOVO_OTHER_MODE WMI device binds correctly, but no hwmon
+  device is created. Consequently fan RPM readback (fanX_input) and
+  target-speed control (fanX_target) are unavailable.
 
-The spec says this only matters for non-isoc endpoints, so I guess HW
-is expected to be smart enough to manage it itself when isoc is active.
-Ergo, it will probably make jack all difference and we can comfortably
-go back to blaming AMD.
+  $ ls /sys/class/hwmon/hwmon*/name
+  ACAD acpi_fan BAT1 nvme nvme ucsi_source_psy x2 coretemp iwlwifi_1
+    (no lenovo entry; acpi_fan reports fan1: 0 RPM, always)
 
-Please also try 7.3-rc2, just in case you are actually running into
-known (hopefully fixed) problems with isoc URB scheduling.
+dmesg:
+  ACPI Error: Aborting method \_SB.WMI5.GCD1 due to previous error
+              (AE_AML_OPERAND_TYPE)
+  ACPI Error: Aborting method \_SB.WMI5.WQB1 due to previous error
+              (AE_AML_OPERAND_TYPE)
+  lenovo_wmi_capdata 7A8F5407-CB67-4D6E-B547-39B3BE018154:
+      failed to register LENOVO_CAPABILITY_DATA_01: -19 (ENODEV)
+  lenovo_wmi_capdata 362A3AFE-3D96-4665-8530-96DAD5BB300E:
+      bound B642801B-3D21-45DE-90AE-6E86F164FB21
+      (ops lwmi_cd_sub_component_ops [lenovo_wmi_capdata])
+  lenovo_wmi_gamezone 887B54E3-DDDC-4B2C-8B88-68A26A8835D0:
+      platform_profile probe failed
 
-Regards,
-Michal
+Note the asymmetry, which I think is the useful clue:
+  - LENOVO_CAPABILITY_DATA_00 (362A3AFE-...) binds fine and
+    successfully attaches LENOVO_FAN_TEST_DATA (B642801B-...)
+  - LENOVO_CAPABILITY_DATA_01 (7A8F5407-...) fails with -ENODEV,
+    because its AML back-end methods \_SB.WMI5.GCD1 / \_SB.WMI5.WQB1
+    abort with AE_AML_OPERAND_TYPE
 
----
+The "_00" variants (GCD0/WQB0) apparently work; only the "_01"
+variants are broken. This is an AML operand-type defect in the
+firmware, OS-independent.
 
-diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
-index 0f6f97cfe0b0..5f370e5e57ff 100644
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -670,6 +670,70 @@ static void xhci_debugfs_create_ports(struct xhci_hcd *xhci,
- 	}
- }
- 
-+static int belt_show(struct seq_file *s, void *unused)
-+{
-+	return 0;
-+}
-+
-+static ssize_t belt_write(struct file *file,  const char __user *ubuf,
-+			       size_t count, loff_t *ppos)
-+{
-+	struct seq_file         *s = file->private_data;
-+	struct xhci_hcd		*xhci = (struct xhci_hcd *)s->private;
-+	struct xhci_command	*cmd;
-+	u16			belt;
-+	int			ret;
-+
-+	/* Decimal number */
-+	ret = kstrtou16_from_user(ubuf, count, 10, &belt);
-+	if (ret)
-+		return ret;
-+
-+	cmd = xhci_alloc_command(xhci, true, GFP_KERNEL);
-+	if (!cmd)
-+		return -ENOMEM;
-+
-+	spin_lock_irq(&xhci->lock);
-+	ret = xhci_queue_vendor_command(xhci, cmd, 0, 0, 0, TRB_TYPE(TRB_SET_LT) | belt << 16);
-+	if (!ret)
-+		xhci_ring_cmd_db(xhci);
-+	spin_unlock_irq(&xhci->lock);
-+	if (ret)
-+		goto free;
-+
-+	wait_for_completion(cmd->completion);
-+
-+	switch (cmd->status) {
-+	case COMP_SUCCESS:
-+		ret = count;
-+		break;
-+	case COMP_TRB_ERROR:
-+		ret = -EBADR;
-+		break;
-+	case COMP_PARAMETER_ERROR:
-+		ret = -EBADRQC;
-+		break;
-+	default:
-+		ret = -EIO;
-+	}
-+free:
-+	xhci_free_command(xhci, cmd);
-+	return ret;
-+}
-+
-+static int belt_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, belt_show, inode->i_private);
-+}
-+
-+static const struct file_operations belt_fops = {
-+	.open			= belt_open,
-+	.read			= seq_read,
-+	.write			= belt_write,
-+	.llseek			= seq_lseek,
-+	.release		= single_release,
-+};
-+
- static int xhci_port_bw_show(struct xhci_hcd *xhci, u8 dev_speed,
- 				struct seq_file *s)
- {
-@@ -901,6 +965,8 @@ void xhci_debugfs_init(struct xhci_hcd *xhci)
- 
- 	xhci->debugfs_slots = debugfs_create_dir("devices", xhci->debugfs_root);
- 
-+	debugfs_create_file("belt", 0666, xhci->debugfs_root, xhci, &belt_fops);
-+
- 	xhci_debugfs_create_ports(xhci, xhci->debugfs_root);
- 
- 	xhci_debugfs_create_bandwidth(xhci, xhci->debugfs_root);
+Verified present on the machine (all three GUIDs exist):
+  DC2A8805-3A8C-41BA-A6F7-092E0089CD3B  -> bound to lenovo_wmi_other
+  362A3AFE-3D96-4665-8530-96DAD5BB300E  -> bound to lenovo_wmi_capdata
+  B642801B-3D21-45DE-90AE-6E86F164FB21  -> bound as sub-component
+
+Questions / requests:
+
+1. Should hwmon registration be able to proceed with only
+   LENOVO_CAPABILITY_DATA_00 available? Since DATA_00 is bound and
+   LENOVO_FAN_TEST_DATA is attached, it looks like the RPM data may
+   already be reachable. If graceful degradation is feasible, that
+   would restore at least fan readback on this and similar machines
+   without waiting for a BIOS fix. Happy to test any such patch.
+
+2. Alternatively, is a DMI quirk the right mechanism here?
+
+Separately, on the same machine there is a second, independent
+firmware defect on the legacy ACPI thermal path:
+  \_TZ.FNCL references \_SB.PC00.LPCB.UPFS, which is undefined in
+  every ACPI table (verified across all 1 DSDT + 29 SSDTs). All 6
+  "Fan" cooling devices therefore fail on cur_state write.
+Full analysis of that one is in the Lenovo community forum thread;
+I can repost details here if useful.
+
+Thanks,
+Charles
