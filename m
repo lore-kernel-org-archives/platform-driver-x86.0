@@ -1,200 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azolkn19012056.outbound.protection.outlook.com [52.103.10.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A72438494
-	for <platform-driver-x86@vger.kernel.org>; Mon,  7 Sep 2026 13:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788786825; cv=none; b=DHIZ5LSb+P4N98MCOJVlv4kzHVP/+6mrUcebR/dp86DartreM6mHpZ5i5AflBCr3KHRKAFfYGwXehuiNvvnY2o962lFTkG5XvfL8WW42lXp8m54mJguqtYlqEiFJXGNpVrLvryBrbo2DT2M8XS1jtMv86ByaUkmv27lMTuYRE+4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788786825; c=relaxed/simple;
-	bh=bbyM8+xnMNKO6fyiNZM2V/dxEjYjP4AdG79mC8RAzeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVVca5c+J2a4N1uBJakVcJOuifvpbXnEn4ichxPc6jk0zvjqsOTOA7DWGc1whjG19n2Qrct/qM/2HvLwh9KVb3XWN6h7Ni0wZ5VSFa3wQJ9oB+fGzqfHpWZBzKrhdzzh2k0ZZenjeCRXr3tay6pYd2Bry8Hm+5fRrxoereUZt7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHNlFA48; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=gy0OdkN6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED2B4D98EF;
+	Mon,  7 Sep 2026 13:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.10.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788789375; cv=fail; b=P+qXBkFoEbxXffVY89IQKWgacb6FGp8HAUcWApp9D674DATRYF1DLf/73IR5MT2nu3phXco1ts264FNRNsVXliyc4ibUPYpnUQt5CnzCWG5iYY1swh8VW/T7B7BVOggdzXOm66n78wbIRDxS1FLSE5Hfwdzv5sXxBv7wqkO2e50=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788789375; c=relaxed/simple;
+	bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uxs/d+2SCtP6lp0w0/tnIkug2DoXgVG1HANeyjtKKTuntuzzznqrrHnPlhw0tYW4/ZNAGST3j4obIkg//xYR9D0rp9NdV32Do/+RiHpb6HSVyFOoYtB6sAABw5iEgoZJKObAUB94+UVMDhWiufzxaAGEAFvF8TOnUqLvtPThP0U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=meeRym2b; arc=fail smtp.client-ip=52.103.10.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHNlFA48";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="gy0OdkN6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788786816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5punYBPTQYCYDbZdD+Tip6UD659TFwSyiVivgWnd/bQ=;
-	b=BHNlFA48L6Asxjk6Ul+pWL3mabZqd5KTjnSteMGdxnnZyajaCr5ADj0iKLTlFUGCEO5+WY
-	YAMEizLB05z4sEZqsrsQPDfWoUgbFoV+jn7DI2SyMJWuZOgl9rx2C6l4WjjfohV8Mx7FQP
-	6MDH0UD/97lsDKfJ6/Lk9lzKva4/Idg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-120-hJB7RZAgMmqij0YAqELo7Q-1; Mon, 07 Sep 2026 09:13:34 -0400
-X-MC-Unique: hJB7RZAgMmqij0YAqELo7Q-1
-X-Mimecast-MFC-AGG-ID: hJB7RZAgMmqij0YAqELo7Q_1788786813
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-49cf9df1eadso26897425e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 06:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1788786813; x=1789391613; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=5punYBPTQYCYDbZdD+Tip6UD659TFwSyiVivgWnd/bQ=;
-        b=gy0OdkN6w26QFaOXv6fYnw8KuIo1/jlD0unXb1oGGSeoNrDrS7mYYQLaJiR6oDbzMF
-         teCyJbW66P7C3M/aCB9FZfW+5GRRyDB/Rq23ykl1KB6k6eksjLwb7l90ZQy4ALCGjylK
-         6ZOXfRnWwOfMy6iTBarbpaBKWoubHxdVWsuBaQu9mHs5IfpFxxQCrLk46MSzhThSPjri
-         hJsPXQCudWjdBKNId+zsEFwKwQ+gw1HAGxC4t2g7VTaF85nzmkRhKfrBlJyDA26flBYq
-         Qxwzw6UqsPJ8Xu/wgOVuhnlDkwpo6is8QNCtDEqp6tzuI+6LnV0tahMLVEy12wjsjcMr
-         fvtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788786813; x=1789391613;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=5punYBPTQYCYDbZdD+Tip6UD659TFwSyiVivgWnd/bQ=;
-        b=Uv8ODcVm8YQRQPOWGIAdYsW1x1MfrfwEJHVylzO3OVc/RzXYD/MVxS6cj5uNREcbMQ
-         rXyvvxm24NrDc2hJ+Q1r1XXBD3UcUOKnIZ/iEuu4s2KSVrS+DVp1Se6sLTmpZt9PTlU9
-         +0CUNHcvhTRZu8xJjYl90Z98ShUC9JDFXBrugUwgktYi+2n6WsC2dZ54mhUFGUDUD3Ri
-         uj/u/qQ/QizZgvyXVsI3e3LWHKwek+8dMqKKTW/xoT0JaE1bMxUVabUYlKem0U+988yi
-         nZ98VsemRl8T3eQZ4usJm25u6U+iGVSqEIlVaNTZNxS6/nD1ekBUgabDlC+srVwhq+gD
-         QfHA==
-X-Forwarded-Encrypted: i=1; AKwUvByNaJwIx6756K52Aq1k7dwGuESS+RlRP/IMWW/TUVyyPiUWl8PDQtUafTsD+ag4dYQAEqCfsX1bbD86+Z4BVvYZyYSz@vger.kernel.org
-X-Gm-Message-State: AFuF++l+yHo1aZ2s5NZlUKyb/0ggKjj8bti47unClFQ8Hm0PAszISSFy
-	gs5M8kSeuySxAidKihlJZzi/gkmcfZUU/rRIAwk6i/qe0RI7mccsMLFdHK9tlJmB5SRr/NxUum1
-	HHD9P02zx5Xu4Av9VEcQGezgcv1+kvAYtVEZXbJkk2kmBTavvaZqw3xOlC2Ks0RZzIf0a8G2tbq
-	Y=
-X-Gm-Gg: AYBFou1OY1hZ84BEtOfEBUoXfPkft0QXOhbubasFRexZwlIaGmtE/iacgKAezUJ7gzF
-	h1XGoDH1Qpcmw6UlZnnx34SpbB/FiivisNGyM4fE9pTrPHX0dft4bQoPrwYEVtLybdtsKpW8r21
-	EvgB64cyEnDTiBSaM7S4XL+xHj1dLv5Nf+4fEmJi93EAPUDkfkT63pW39oCnEbEA4qrSw06ivY4
-	e9yJCuTqjvAy8WO28TA83N51w27n5+kOpqE8mEKPVXA6waPh0lMVQyAeyeJbdAcOPy4AWoAwZjb
-	r/nb5eR2kaiNWFchMvteWCARyiCwO+PLXmaJAfllqXTGGEutgqkxWJmQcqYzerYgeZnnidxAfz8
-	wxxYgZtREkfE1JO1gY2NXOhk=
-X-Received: by 2002:a05:600c:4684:b0:49c:fc6c:be14 with SMTP id 5b1f17b1804b1-49cfc6cc10bmr197561165e9.26.1788786813419;
-        Mon, 07 Sep 2026 06:13:33 -0700 (PDT)
-X-Received: by 2002:a05:600c:4684:b0:49c:fc6c:be14 with SMTP id 5b1f17b1804b1-49cfc6cc10bmr197560545e9.26.1788786812906;
-        Mon, 07 Sep 2026 06:13:32 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cfd3f8192sm270920615e9.3.2026.09.07.06.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2026 06:13:32 -0700 (PDT)
-Date: Mon, 7 Sep 2026 09:13:28 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Jason Wang <jasowangio@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Pawel Moll <pawel.moll@arm.com>, Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	virtualization@lists.linux.dev, linux-input@vger.kernel.org,
-	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-	linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] virtio: synchronize callbacks during device reset
-Message-ID: <20260907091033-mutt-send-email-mst@kernel.org>
-References: <20260905152059.89560-1-kmehltretter@gmail.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="meeRym2b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=atGwlB27uMLrwLQki1ZbbNeVAMIfd1mF7UoqrVklXy8iNq2mWLoQHtlxkdaT28BTvW07GzIHbo8bstp+27saGJtJ7ogutsFAgCTIBa4CValMKs/4PyBj3NMQdI2szyyI1kljNcPjrtVPLXj2+9A0JOsEAkTEC7yjW9v0wxAnizFWf2rfi8ExUZv+8WlGrSm9D7DZEEMfv7K6qTlPy5ZW4JTzMkNJRkdVgPnkTSkrKUCub28eeXIi+GKdZHzkTriU3v50n2b01Cqd5ilNn/QtuMLPyprR/Gs9h8nF3gaX4AXFwgKgPoJqDssyvLh0sUKW4YfDF8L+hkiJiwPtFAUUVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
+ b=ikvV6g5wxCNH/ai+jlnpZPOj+A5BsVEY6CElo/PrUmB0fkoGegUvpES0msl8Oz/KVFg4BICYP6Ndf8tZk1fK4T3lFqbqA/FNhHqSGzh7UQANqfQ82Yx7w5AKCJERdwP//R2uqyU8mReoXHW7YQP9HO6x1JGEMP34ANVlIv0bw684xl4gaL5L3bSzqBhSnWGwVoJy/e/lixSvxmYwuJCLCJiRXjgivJBs47P17s93g/D+Dj5InrSWNlySsMjdURH2V/R4YBsAuGZWUC5nrOMNuI4Qe0KzFr+GKJ34QntYAXScZqFSwB4ANFtwxp/ka8nguqYRPE0pTgKx3nC9fGmLtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gMMOjv15yaEquSs2KqtxJiDo1MlJwSmnbsEv1MzmE1A=;
+ b=meeRym2boED/MzwH2vil1DO2lypjP9xmVG74fUvFf5sOQzO+YXE5OydOr+Zcg1MSTe3R50oNx8XkXp4TPFSkdhuVK/Eny7XY9DAzSA50nGWDXiJefgL3pEombMI3HTdk4TdFE3NVW/Mpl0ssyT13L3MiPpuNHzZRBfVr2GUDTTexG2llkeMhWNyZMx0dMngQ/FU7dTR39F3sght146WJ7GPMFbBbksYPBoEWCmdC+8caq/BYjv0TieqUj16n/tiTcAEtZ0uBjkV2fR51gbuFXK5USqyn0Uwk+8mHOCQC9iDUgy6vMd1QMRFFgB2K6zme0sZbQnVdgEyqBABZApWMnA==
+Received: from DS0PR18MB5477.namprd18.prod.outlook.com (2603:10b6:8:162::11)
+ by SJ0PR18MB988518.namprd18.prod.outlook.com (2603:10b6:a03:404::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.13; Mon, 7 Sep
+ 2026 13:56:11 +0000
+Received: from DS0PR18MB5477.namprd18.prod.outlook.com
+ ([fe80::d67:de80:bff4:4306]) by DS0PR18MB5477.namprd18.prod.outlook.com
+ ([fe80::d67:de80:bff4:4306%5]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
+ 13:56:11 +0000
+From: Rodrigo Hernan Villarroel <hernandevbuddy@outlook.com>
+To: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"mradityadash@gmail.com" <mradityadash@gmail.com>, "i@rong.moe" <i@rong.moe>,
+	"derekjohn.clark@gmail.com" <derekjohn.clark@gmail.com>
+Subject: [RFC PATCH 3/3] platform/x86: lenovo: Add Legion Go Fan Method curve
+ driver
+Thread-Topic: [RFC PATCH 3/3] platform/x86: lenovo: Add Legion Go Fan Method
+ curve driver
+Thread-Index: AQHdPnfRc8WULaGpy0et3cchy+FZnbbDHeYD
+Date: Mon, 7 Sep 2026 13:56:11 +0000
+Message-ID:
+ <DS0PR18MB5477DEB7537E814909B41586DBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
+References:
+ <DS0PR18MB5477F22D326C79451CCB21CADBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
+In-Reply-To:
+ <DS0PR18MB5477F22D326C79451CCB21CADBB22@DS0PR18MB5477.namprd18.prod.outlook.com>
+Accept-Language: es-AR, es-ES, en-US
+Content-Language: es-AR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DS0PR18MB5477:EE_|SJ0PR18MB988518:EE_
+x-ms-office365-filtering-correlation-id: a6dd4079-13f8-4d4e-a62f-08df0ce7c67e
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|24121999003|22091999003|15080799012|6140399003|8062599012|8060799015|19110799012|15030799006|19101099003|31061999003|51005399006|440099028|3412199025|102099032|40105399003|3430499035|2607281247196008|26121999007;
+x-microsoft-antispam-message-info:
+ =?Windows-1252?Q?kJAU8PZCpcjtgisAKSZHilqm8/8yXaONMrRYD6H1i9oG7+ujgNWlE6NI?=
+ =?Windows-1252?Q?VjLMH9y8C5MaLipyC7p7ZTByO5JfvYJd8vyWL0LaqjhYmNUexW5GumKS?=
+ =?Windows-1252?Q?hMSQnu2UNiP/YpfDcF2VFeAJgfbOm0/+l+khkTRG/pAjBI/G2odWf6pt?=
+ =?Windows-1252?Q?cG999w40YXAlFXZKpPaBsQzShLjgw/UAqRXiLF/j2FJQUWIOovULnoF7?=
+ =?Windows-1252?Q?/bNE3D9HDZvGxccr/CjSA98SqzbtPPA1ywgzocs3FSJ+n5eqt6fdefDL?=
+ =?Windows-1252?Q?r32C0CqAW/c8+OLNyoEHsCGh/JvGBXRB3i+4tEwpaQpLwBg1fM2l8yYW?=
+ =?Windows-1252?Q?8S+sbUD/sHJMFxt06ieXv8ZjB995j1FVSpkjgIzOQJqQAlUAx0h/z/xC?=
+ =?Windows-1252?Q?mThd/i4RXSlz34/zwyhUX063okHHcV9dprnjCtGdjBTgdfPnzqu+ieUi?=
+ =?Windows-1252?Q?smoczj4I2PP1gmllKlUQBbSz+P7yxVg1ZyI83IAd7AqTx5+wVG6gVHUS?=
+ =?Windows-1252?Q?Kqg4U6bGMu4dW3Va2cDOB609J2xrmZplCwTqlvOowmCas45vAKL2G+/I?=
+ =?Windows-1252?Q?X3m5mQUvcsnKwmDDOV+gnAd+DLj6+pi8eRwmxWHcuJUqh7sVYc0QP+49?=
+ =?Windows-1252?Q?bJoyrRjNzHwFzNDnOKYN3kaXbo1wzRleISRym6ZuNe3aZ/mXkdd5TA4G?=
+ =?Windows-1252?Q?qlzUvkqq2ARcvu+kXu59A9OgVIh+ZLhkwBmpBYjAZpbVNO4mPyaT4PpK?=
+ =?Windows-1252?Q?AkCkheAvWiJEQL5xcFLIZ3B3gqMbYCpvWZwzsKTAejXKoAZi5thNakKS?=
+ =?Windows-1252?Q?7e7Yr8gyByvadLbxxxBQRIgiLVzAmcy4ZJoYINwsamMiA7OWguAhwv0S?=
+ =?Windows-1252?Q?KWFq/kSFWJbIsZMXZ2fmz6Ykr2/z7iwnLmMGpPIqxWB49anc4Fdqmakn?=
+ =?Windows-1252?Q?ownGU/bnvkNqJbROAatGR5f3ozWsxQhXsd5dmcZ28kT7dcX8AmT74hco?=
+ =?Windows-1252?Q?YYPQuqNftSAJJe8Eifvrrp1pbulbdeAhJ/coHL8i3bVEfmtBWuwDmIAz?=
+ =?Windows-1252?Q?DzBKeNPikcxySFoZsLoWE3oGaw5B6Z4KBrL8x46x1fSeq3LqD8CRAJOA?=
+ =?Windows-1252?Q?dH5LIdOXs2zkySmUtJEFXHd4?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?Windows-1252?Q?UHCP4vs9oTuL0z6/rW3fn4j9sO0enGyNJstwKyx0dushOC2RmokbTKM5?=
+ =?Windows-1252?Q?Ptj/LEYtLL7WpNKkWmEKQcDDUS5f6HZX239SV8RDdHHmkUS20xGfcqhF?=
+ =?Windows-1252?Q?hPsxTrMk9jab6v+4+OBZkSZdfnGrx2gpU8wf+6Sb+JvbaOQQbZ3X6s3Z?=
+ =?Windows-1252?Q?WoxLRSWfzW7NNjAeoMgT+pAGYDjBvlXVcQaIXhBCi4V30+YZnrQH9VPx?=
+ =?Windows-1252?Q?AxkV0i45h+C3Zv9T7mKQJMOVrM6kCZCn55nbgiMjEyFSu9xb1e8WKBkH?=
+ =?Windows-1252?Q?5uIAyenIH/fhfzNcKb5hmts3wkhrgefMoUgEffr50uRI4rUOxcYnPB1H?=
+ =?Windows-1252?Q?/NtKDTHDZaMC4+bbcTLscyVj2uJTJHHeGCc2877LRuQVp1uxSLx7Nhqf?=
+ =?Windows-1252?Q?+Ctn/9u+o4NlZZCkcmkqCS0EwAWFI9h5xN8CjWbCrep2jUKhw6qRHpPD?=
+ =?Windows-1252?Q?gQBssqXLgj/6qk2ZQtsz5Bi3AruqfnTxuj87ScMuw+1xBVCu0FblQu0h?=
+ =?Windows-1252?Q?KY1oCKlZAmvIkr8yIlA2yK6Y9CGeANKp2emtL4NbGYCcZ7bik7JadOCp?=
+ =?Windows-1252?Q?3bQc15/MMe9T7gcxSFil/6h4lSA/OCaUhrJ6x1ZlQPbwrDKYmRUl5ep7?=
+ =?Windows-1252?Q?L0fo6bngnPcTpSPbDvZSnhNT6N3wtaza1a6jG+MCImNKrWs4zYIvYczR?=
+ =?Windows-1252?Q?G/wgeGugRhrRhj7eUjaQHIw39+6itckfXwdds17McKm3yzZdLtzQ8Ko2?=
+ =?Windows-1252?Q?dadUP0zarLitphRqAiotaRk2z1JgNMhOtdEfLlc2FWNI3UB2WlZPxsPy?=
+ =?Windows-1252?Q?B9n1t6sHUDDepiOloCC/6apcuA0bIZ/2MntoQUx8qBa0n1b2QVsx+ic7?=
+ =?Windows-1252?Q?QzW1yQXEPyQj2RNPszU/T4VhSn6HjQpPw2VJ6vXbpr3iey1GRR5L7mNh?=
+ =?Windows-1252?Q?cgX0R83/MIEeeXBRIn85kmEhaM9dmTbMZbjO1Hzcsx8CKRSayEYmR+0q?=
+ =?Windows-1252?Q?oWqlC/0xHuR/RS9Esa7v87omGEPQ0sal61rx4LNcKgogZn+6wwedatmi?=
+ =?Windows-1252?Q?9PUTYYbRwd33X/ypoe3FH8c9Rp5V6odvNKZhmXTEclwYMQ00Emo6wQCu?=
+ =?Windows-1252?Q?56bVi1vfHGb5Vi3geNftivSqKlNDZpatFXIfeRBS+Qa+hOO8ymWOvqZM?=
+ =?Windows-1252?Q?7yT4VkmMkN03pU5KeYzKtRCclh5Aq3izBVwGfvLb7AGdxtGCloeIPJ5N?=
+ =?Windows-1252?Q?OkauAoe04Y3R1nA4w7EJXaQ7Tr6yYx6LKni+Mn3q47rMM/aArXTb01Lm?=
+ =?Windows-1252?Q?mOFjtSEv5ZNNpETTrwGVyoBT3Sy2TNix2Gn2RL4qq3bdp3c4Te96Sfyi?=
+ =?Windows-1252?Q?vwar8O0RHl3MC7Cv+rC36VjOtCQCVFR2Gfe2gVCKp04tVQYx7tGTMkXX?=
+ =?Windows-1252?Q?BAqmx/KndeG86wZ1cXjGEnafvyvLEQo9EipLHFExMb/u0nApDkgLyeHv?=
+ =?Windows-1252?Q?Ayah2Rl1?=
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260905152059.89560-1-kmehltretter@gmail.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR18MB5477.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6dd4079-13f8-4d4e-a62f-08df0ce7c67e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2026 13:56:11.7042
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR18MB988518
 
-On Sat, Sep 05, 2026 at 05:20:56PM +0200, Karl Mehltretter wrote:
-> A virtqueue callback can outlive virtio_reset_device() and race with a
-> driver freeing the state it uses. The reset helper documents that no
-> callbacks remain in progress, but that depends on the transport:
-> virtio-pci waits in vp_reset(), while virtio-mmio does not.
-> 
-> virtio_input has a related ordering problem: it unregisters the input
-> device before resetting the virtio device, while an event callback may
-> still be using the input device.
-> 
-> Patch 1 moves the callback wait into the core, using the existing
-> virtio_synchronize_cbs() operation. Patch 2 fixes the virtio_input teardown
-> order. Patch 3 adds the missing synchronize_cbs hooks for UML, TmFIFO,
-> remoteproc and virtio-vdpa. Remoteproc uses one SRCU domain per processor.
-> 
-> The new hooks wait for callbacks already running. UML, TmFIFO and
-> remoteproc still allow new callbacks after reset; fixing that is separate
-> work. The event-virtqueue DMA mapping issue is also separate.
-> 
-> Changes in v2:
-> - Patch 1: move the wait into the core instead of fixing only MMIO, as
->   Michael suggested. Remove the duplicate PCI wait, preserve its shutdown
->   wait, and fix CCW callback locking. Drop the MMIO polling: reset polling
->   for v3 and newer is already in fa8833c085b6 ("virtio-mmio: add support
->   for transport version 3").
-> - Patch 2: keep draining completed events when ready becomes false,
->   instead of breaking out, so teardown does not truncate an input packet.
-> - Patch 3 is new, at Michael's request.
-
-got all 3 patches now. it's a good start, thanks, but they need
-a bit more work, in particular addressing sashiko comments.
-I'd also prefer patch 1 to be split: moving code from pci to core
-is separate from ccw fixes.
-
-Pls write or at least edit commit log messages yourself,
-after reviewing Documentation/process/coding-assistants.rst
-
-Thanks a lot!
-
-
-> I reran the 120-cycle unbind/rebind test in an arm64 KASAN guest with four
-> vCPUs and a 5 ms busy delay per event. With patch 2 alone over virtio-mmio,
-> reset returned with the callback still running in all 84 overlapping
-> cycles. With the series, it waited in all 103. Over PCI with per-queue
-> MSI-X, it waited in all 66, including runs with threadirqs. No KASAN or
-> lockdep reports. These runs predate the per-rproc change, which leaves
-> the tested MMIO and PCI paths unchanged. They confirmed the missing wait,
-> but did not reproduce a use-after-free: with evdev attached,
-> input_unregister_device() waits for an RCU grace period that the IRQ
-> callback blocks.
-> 
-> That version also passed QEMU input, rebind and shutdown checks on arm64
-> MMIO and x86-64 PCI, including arm64 RT, KASAN and KCSAN builds, and x86
-> UP/Tiny SRCU. A legacy INTx NIC was present for an additional x86
-> shutdown check. The changed objects built with W=1 without warnings on
-> arm64, x86-64, s390 and SMP UML. The per-rproc version built with W=1
-> on arm64 KASAN and x86 Tiny SRCU, and passed six remoteproc callback and
-> lifetime KUnit tests on each, using mock remoteproc devices.
-> 
-> Link: https://lore.kernel.org/r/20260818040433.66986-1-kmehltretter@gmail.com
-> 
-> Karl Mehltretter (3):
->   virtio: synchronize callbacks during device reset
->   virtio_input: stop callbacks before unregistering input device
->   virtio: implement synchronize_cbs for remaining transports
-> 
->  arch/um/drivers/virtio_uml.c             | 10 ++++++++++
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 14 ++++++++++++++
->  drivers/remoteproc/remoteproc_core.c     | 10 ++++++++++
->  drivers/remoteproc/remoteproc_virtio.c   | 20 +++++++++++++++++---
->  drivers/s390/virtio/virtio_ccw.c         |  6 +-----
->  drivers/virtio/virtio.c                  |  2 ++
->  drivers/virtio/virtio_input.c            |  8 ++++++--
->  drivers/virtio/virtio_pci_legacy.c       |  2 --
->  drivers/virtio/virtio_pci_modern.c       |  3 ---
->  drivers/virtio/virtio_vdpa.c             | 21 ++++++++++++++++++++-
->  include/linux/remoteproc.h               |  3 +++
->  include/linux/virtio_config.h            |  6 +++---
->  12 files changed, 86 insertions(+), 19 deletions(-)
-> 
-> base-commit: a500db7819c50db59e55f1b4fa1c3baa5a2616f3
-> -- 
-> 2.39.5 (Apple Git-154)
-
+Hi Aditya, Derek, Rong,=0A=
+Resending this message in plain text because the original version was rejec=
+ted by some mailing-list recipients due to HTML formatting.=0A=
+I=92m working on a project called Easy Hardware Control (EHC), a Windows de=
+sktop hardware discovery, diagnostics and safe-control platform.=0A=
+The long-term goal is not to hardcode support for individual laptop models,=
+ but to discover the capabilities that each system actually exposes, unders=
+tand the appropriate OEM/firmware interfaces for that platform, validate wh=
+at is readable/writable, and then build diagnostics and safe configuration =
+profiles from that evidence.=0A=
+While reverse-engineering the current Lenovo Vantage stack on a Lenovo LOQ =
+15 (machine type 83GS), I found what may be a useful example of the =93same=
+ GUID, different table layout=94 case discussed in this RFC.=0A=
+System:=0A=
+Lenovo LOQ 15 / machine type 83GS=0A=
+BIOS: NECN50WW=0A=
+The machine exposes:=0A=
+LENOVO_FAN_METHOD=0A=
+InstanceName =3D ACPI\PNP0C14\GMZN_0=0A=
+Fan_Set_Table(FanTable UInt8[64])=0A=
+By tracing Lenovo Vantage=92s Gaming.CustomMode.dll, I captured the exact 6=
+4-byte buffer submitted to Fan_Set_Table and then independently reproduced =
+the write through WMI.=0A=
+Observed write layout on this system:=0A=
+offset 0x00: 02 01=0A=
+offset 0x02: LE32 point count =3D 10=0A=
+offset 0x06: ten LE16 discrete fan-level values=0A=
+offset 0x1A..0x3F: zero=0A=
+Example:=0A=
+02 01 0A 00 00 00 03 00 0A 00 0A 00 ...=0A=
+I experimentally mapped the Vantage slider levels on this machine as:=0A=
+1 =3D 0 RPM=0A=
+2 =3D 1400 RPM=0A=
+3 =3D 1700 RPM=0A=
+4 =3D 1900 RPM=0A=
+5 =3D 2200 RPM=0A=
+6 =3D 2500 RPM=0A=
+7 =3D 3100 RPM=0A=
+8 =3D 3500 RPM=0A=
+9 =3D 4800 RPM=0A=
+10 =3D 4800 RPM=0A=
+I also independently replayed a Vantage-generated Fan_Set_Table buffer.=0A=
+With Vantage initially configured at level 2 / 1400 RPM for the first point=
+, changing only that value from:=0A=
+02 00 -> 03 00=0A=
+through my own WMI probe changed the reported CPU/GPU fan speed to 1700 RPM=
+.=0A=
+Lenovo Vantage subsequently reflected the 1700 RPM value, and the setting p=
+ersisted across a Windows reboot.=0A=
+This machine also exposes populated LENOVO_FAN_TABLE_DATA instances with fa=
+n/sensor-specific RPM and temperature tables.=0A=
+I noticed that the RFC=92s Legion Go layout contains additional temperature=
+/trailer data after the control values, while Vantage on this LOQ sends zer=
+os for the remainder of the 64-byte buffer. This appears to be a concrete e=
+xample of a different Fan Method layout behind the same general interface.=
+=0A=
+For EHC, I am especially interested in capability discovery rather than mod=
+el-specific hardcoding.=0A=
+If you are able to share or point me toward any public or redistributable i=
+nformation concerning Lenovo platform interfaces, I would be very intereste=
+d in learning about:=0A=
+known LENOVO_FAN_METHOD / LENOVO_OTHER_METHOD layout variants;=0A=
+the meaning of the first bytes in these payloads;=0A=
+WMI GUIDs and method variants used across Lenovo platform generations;=0A=
+capability / feature IDs and their semantics;=0A=
+reliable ways to identify which interface or payload schema applies to a sy=
+stem;=0A=
+valid ranges, enumerations and dependencies for writable capabilities;=0A=
+how LENOVO_FAN_TABLE_DATA and other Capability Data classes are intended to=
+ be interpreted;=0A=
+broader platform capabilities covering thermals, CPU/GPU power, display, ba=
+ttery/power modes, sensors and other firmware-controlled features.=0A=
+I am not looking for confidential Lenovo material. Public documentation, re=
+distributable specifications, source references, known mappings, or guidanc=
+e on how the firmware advertises these capabilities would already be extrem=
+ely valuable.=0A=
+I would also be happy to contribute data back.=0A=
+I can provide:=0A=
+WMI class/schema dumps;=0A=
+Capability Data dumps;=0A=
+raw 64-byte Fan_Set_Table captures;=0A=
+exact full 64-byte payloads with the corresponding Vantage UI states;=0A=
+DMI/BIOS information;=0A=
+Vantage component/version information;=0A=
+controlled read/write experiments;=0A=
+persistence tests;=0A=
+comparisons across BIOS versions;=0A=
+testing on hardware I have physical access to.=0A=
+The goal of EHC is to build a discovery-driven compatibility layer that res=
+pects the interfaces and constraints intended by the hardware/OEM, rather t=
+han relying on unsafe generic tweaks or undocumented assumptions.=0A=
+If this data is useful for the Linux Lenovo work, I=92m happy to perform ad=
+ditional controlled tests on the 83GS as well.=0A=
+Thanks,=0A=
+Hern=E1n=0A=
+Easy Hardware Control=0A=
+hernandevbuddy@outlook.com=
