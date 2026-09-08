@@ -1,65 +1,65 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1685C37F33E
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 05:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3909537DE9F
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 05:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788845989; cv=none; b=W24pzZ3r2ctrJ65ZjNwCoXhTRXDP68ZMV01lhySMNwBiEfA/qWO0YTmtugmkObZmIwgFNZE1lkNvCcJ+aDTDIc3Nh3OYHJXSqZb3XHsr1DE+qLOsOrh1nhWdJHN71J5IJv4BR7cAqUdIP0YsI4A05Upw/YRBez076bQ3c6mWv+c=
+	t=1788845992; cv=none; b=IVWKdo7NkoOwJkQnJGvM7VYh1wtM3QekZO08j1RYtoQgRCeVUvicCFdhmdbuscOpiPbWdJiOLM3bJQZu7+RZtrrPppbj0PXLOZ2Mo1ywacfh6rnDXWBH+9GCM//OHoe1UsnoaMWeafgDMooLv9T0RD7nuQGm+u2hMKKeGZN9XzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788845989; c=relaxed/simple;
-	bh=PkogetTRkUDafLifysmf44FPwJ2N6pmK+olIC+Y8gdc=;
+	s=arc-20240116; t=1788845992; c=relaxed/simple;
+	bh=+wdB7PxXXtKvNQ35EUFAY1t6ihDReA2lJ+JGlRl8HqU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aW/JYNCBT2r+9zwS4l8PHIGwQHAOgDRgs/n+MT5J0i3rGXxIqV14U3QGGJoW0iAZHU3iFaAdBRmC3tjbCrbWnxBcFIktnpi1cFp/OUoxMc/AhEqOZXaC9Z/4Z5fimB2XQVT2uRhEc4jmti/MyHivxkHjwzKBhejYO9yZNW8TuT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPxUVUoq; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=HAYLegAKrusSNmSukltQ0l6RpXamgnT8GsF88X0FS0eUUjqPQCQf5dV65Ge/Nwi4dD1/SPDovw1aH+C6XFAQXv8Bf5YQ+uD2KpJ+ER94GVS2tJlJVGsbtCsb3NyHMSCJ+DIQ7SpASHJ9Ijlvgm1y2iJzAgih5Dd9ENF3oH8LnYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dy6jspNb; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPxUVUoq"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49b9320423cso47297475e9.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 22:39:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy6jspNb"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-49a97714f5dso40940475e9.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 22:39:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788845983; x=1789450783; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788845986; x=1789450786; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=E0xn/sQ1syzuU4VFJfjc1woEjzltXnI10QEuTRC1ag8=;
-        b=aPxUVUoqrsoMXcgBoItTO2U9EeEn6I7bwayIUsMdkXCXsSLbjN9RqwmRId5rBPBRux
-         7QMCDsPgp3eeQGvDt9uQdbAHLa1hi9RFxQhRC5D6mZ28XC6fdpTr6TCsMAp/TMBlXaz5
-         BGPqRepNqeBbMHt4IFH8Ea5EbZLEurpA96ib54YHVvYpEc3iPzqmCuzMMxa1m05mgGU1
-         lHYbgmaG+6L6PuFoFHx8DC2rGb7Uf49K5qv39oPEB3IEy3WmqggeIhXLSVcctBiGLJps
-         eeQ8aaHRgm+NNKJ9VfKkEVhfKkYvSuVO6LWmhNXUp9yOeTTEUjkV/GyyYSgZdBmy/KF5
-         DHeA==
+        bh=iPvq113vaLkp19diB9PBTYq+aXRuG2muF34cABuckMo=;
+        b=dy6jspNbxGAKGG3lIe/bspSeQ5j6q6O7nVNct+gSf+FKrKUULLHhV4YZxLyD0FyzPP
+         5hCuizsetB/+39eiGzEi2UYzh/o2UrulEoDzGOEOimzTa7zUE3kIDqj6RdcmykWRNDMs
+         XaxvwNCZTh9iAOBYKGR+e9eCCk+LaMpQuppd9go90pCBSfbYMiQoQp6WFlCvE0ojmTI7
+         5EfY5SjAJE1+pJlnUwlgKZO9u6lhxwY0Sj1NYKXMko8BRuvXThgKVpdRSQWtILOlovgH
+         3UbNOCwk19AmEURMWAFD6nRY2x1FC3lAAHVAnNPos6nLvfItW/9fN5KJMKcMPtNn/DCb
+         4GAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788845983; x=1789450783;
+        d=1e100.net; s=20251104; t=1788845986; x=1789450786;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=E0xn/sQ1syzuU4VFJfjc1woEjzltXnI10QEuTRC1ag8=;
-        b=ixjsuM1ppYROqqr8uDEYgkgkprcP+qZSb9zHhNo5mSsMFftCO1F2N/5yNl3MVqwuz1
-         MZGh0Gq03Ky7+IlrFkiizKOwwL/234TlQaCqLt59eUl62Rn/TFRwH+KqFWn2SinS8rl/
-         Qpn/mrxnltpvdfWHvCw7+zsRySTdIk9TsstgSxkeCrPU0paCsruf/3T8bT8AEE8GwFHH
-         wmCStwZhAyb9OIaPsvYvq/ZaV3LzbNflVlVPXBMARvnSWH6gD7/1qlXdmNqQzbpXvJvy
-         sGfURav4lwZcJVLTiU392QM0+xSLoQr3MExJi1NWgi7yACbpj9wwglovWsmhmL7Osq+v
-         Pi4A==
-X-Forwarded-Encrypted: i=1; AKwUvBzjN6M1UmkDALc6cIrAaSsHW2GCPiiFTaIGKIJpCKFz+mKTjHKypynj7x24N7QDSwKc8dHeYJIlyjO2DzScp+KK6NGG@vger.kernel.org
-X-Gm-Message-State: AFuF++lsr54xil3pHbTsVRe4+G6km+Mly9HjEdt/4rQe2gHaPgkyt2D8
-	CimcFdfNncmMV52DK/GeXKbmtJQiE9b5ihIsrVeB58ac/n2ed30g2JwB
-X-Gm-Gg: AYBFou3UThfMLCaEh9LjHerLaP9HoK0yyzSePN2n4xidRS5R1IgnqKGT9CqRvodm4kS
-	jPDADDsW04JTKvk0mFLjqL/bo+w/bUAndiogL03JFVcSKH9yYXhEH+vu1a4A8rcJWr06gYrrjVr
-	2PPkjwwAU18lOpjfeuoeyof3hqITJe/oO/RLJY1mJbGzQCENS8cl0xNRQxmK2mnSvqSOZ5snnFV
-	aRlxV4wkH8xq7eQy0I6kmcizxg6+RkzXl/9AtPu/H2cy3VIKC1w45f9fC/ogUltC+DcdjKbZeEQ
-	cqAXnjq9NYpPnma+bp5oLr35+wmG7+Hnz44Q+VRoeqNUUdxjLOJC1Ye2ZxOfyv43Rwa/PCCQKCo
-	yfqy0EJpl6st+S3ryPHICxJ3NwKeI53pkl1OsqQ9Z26AK6r/yOj1U57vqN3yLyVd84GXdgQpsVU
-	WA6mr30KfexE7EXNl4EnSACUvb6nh60NKjougCPCECgqNIq15FcD89wbk0fCFOsWhvFPMOkCwJH
-	1G0P1NjTgoIwCL185hl+JUY4leEipQr4SyeEdsWserD8Tm3QuYAHAnfwSUHWjPMfE0nuoDj2/oi
-	wY2NmptHAjUzHRNM3X2WuP5/bntabjk=
-X-Received: by 2002:a05:600c:3f12:b0:49c:c8de:96a9 with SMTP id 5b1f17b1804b1-49cf7fdd2dfmr526948265e9.2.1788845982788;
-        Mon, 07 Sep 2026 22:39:42 -0700 (PDT)
+        bh=iPvq113vaLkp19diB9PBTYq+aXRuG2muF34cABuckMo=;
+        b=cOpi0jd2UQ9+ARP1GhyVZXnb5z0aOPMP42P35q8zAtSdEYMGgU+UkUNRvuDzhANcqu
+         BJdtMXeytLt5Tf4JPnqweWxGQl6OwzFK2rfqLavv8H1OBWAbpQ6pAGzXQruLI0rB/1Vj
+         aJkRi1Nrcm+HSt4+38LjaWZ2xN9LmA+QL5aDmN8m6AqkwwKAazKRpXzK+wMKAD3S3yyR
+         t20LXqfZOYH1AAhuxvIiFJC9aLO2BMuMjHjUWj2GUScARGrxASlbtqZwoKsRSXvVgJIL
+         ftO98uVN8Ia7kebhrEMrrTJG/iipb48NYJ4vAEsAlX2dYIhViIT1O8kg3bkfyFNnc0CJ
+         DMOQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxOUWbqOjbCrEO2PyE9OmfcDpXxoGI5ZNgPkhGf3FDy89kH30gF2SCAKeR9s0YKNM7sbWt9BxcH7UzTByeaBXC4LPT3@vger.kernel.org
+X-Gm-Message-State: AFuF++nnyNGJP2jyyaq8ZCkDAzkbfsn73DRONoXwe4rwO1Bpy3BrIqGJ
+	EIOr5N3J/DqAjceScf42w56W4os8OJyXiaelulcmzP5cij/Kd4m5yb4i
+X-Gm-Gg: AYBFou0gIOsRezP9MwCl11x7s+fubnl9OeYdiLklGtZrFuu1m+YCsHJWyhQx94oWfq+
+	jJvz8Kbnf3LbcFfxR7CfnkvJkniEAy+WLqssHcqRohX8ZThYCfoZvicW343R1l8JduTGN7NOtXF
+	DpVUP/WQfazlDYbdTWcWDsyib5/ZVxJjRsK9pWssLE6BxyX2Orh8TnmljigROqTKYUnLH2tEZlF
+	KQVu2EbzA/Mtw5I2ZtpSxPYDZOU8OYDdDzYLFRClE0uV0B/A5Fx2LByof++HboF4gGUFdbNniks
+	J6qJC81DFDFGmoxsOSzt20X1MvgmgUgtDUyxQdXqdeZztfxYU7u6d5+8phQ55H/IV/y4Fuzi3AX
+	koi08ALVpP72BwCDTxz4t2u1BzyqpOI6HWW4l4U2Cq3K/Jqlcp9sGI6qh4Jppzx1eSfHXZrlZY6
+	fKwSu0XoVgKo8lK/BWpL2Z7MxrO764NSs46AiFqhBfL+6BRXtT/3A8jGHsIhOSA5LiMl4+6XWCh
+	ZOVXwS+CEMOHomVLE8ErDHbFiU5AY8J1CEY4DfCkcmqfpw6HVgvy0q3rAaOl51ITi5iu+uj//mk
+	ohHvj8uDFpxqsZUMKTjlo6FtVDC9aXWOv+qmilxrsv4=
+X-Received: by 2002:a05:600c:620b:b0:49c:fa20:cc07 with SMTP id 5b1f17b1804b1-49cff19cbf4mr203278645e9.30.1788845986284;
+        Mon, 07 Sep 2026 22:39:46 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-095-117-170-066.95.117.pool.telefonica.de. [95.117.170.66])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee7fec25sm523841335e9.13.2026.09.07.22.39.40
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee7fec25sm523841335e9.13.2026.09.07.22.39.44
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Sep 2026 22:39:42 -0700 (PDT)
+        Mon, 07 Sep 2026 22:39:45 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>,
 	Jason Wang <jasowangio@gmail.com>,
@@ -94,9 +94,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	Alexander Gordeev <agordeev@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v3 3/6] remoteproc: implement synchronize_cbs() for virtio devices
-Date: Tue,  8 Sep 2026 07:38:14 +0200
-Message-Id: <20260908053817.26065-4-kmehltretter@gmail.com>
+Subject: [PATCH v3 5/6] platform/mellanox: mlxbf-tmfifo: implement synchronize_cbs()
+Date: Tue,  8 Sep 2026 07:38:16 +0200
+Message-Id: <20260908053817.26065-6-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260908053817.26065-1-kmehltretter@gmail.com>
 References: <20260908053817.26065-1-kmehltretter@gmail.com>
@@ -108,197 +108,55 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Platform drivers invoke rproc_vq_interrupt() from hard-IRQ handlers,
-threaded handlers, and work items. Because rpmsg callbacks may sleep,
-the virtio core's synchronize_rcu() fallback does not synchronize with
-callbacks across all these contexts. A device reset can therefore
-complete while a callback is still running.
+TmFIFO invokes virtqueue callbacks from its FIFO work item under
+spin_lock_irqsave(). The core's synchronize_rcu() fallback already
+covers those sections.
 
-Add an SRCU domain per rproc. Protect both the queue lookup and
-vring_interrupt() with it, and synchronize the domain in the new hook.
-
-__rproc_virtio_del_vqs() can race with rproc_vq_interrupt() too. Clear
-all queue pointers and synchronize the SRCU domain before freeing the
-queues, so callers that already found a queue can finish using it.
-Read rvring->vq once to avoid a second load after deletion starts.
-
-The SRCU domain has the same lifetime as struct rproc. Its cleanup can
-sleep, so document that rproc_free() and rproc_put() must not drop the
-last reference from atomic context.
+Implement synchronize_cbs() using the existing per-direction locks
+instead of waiting for an RCU grace period. fifo->spin_lock[0] covers
+the transmit callbacks, including the callback from the timeout
+handler. fifo->spin_lock[1] covers the receive callbacks. Take and
+release each lock in turn to synchronize with callbacks running
+under that lock.
 
 Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
- drivers/remoteproc/remoteproc_core.c   | 12 ++++++++
- drivers/remoteproc/remoteproc_virtio.c | 37 +++++++++++++++++++++-----
- include/linux/remoteproc.h             |  3 +++
- 3 files changed, 45 insertions(+), 7 deletions(-)
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index f003be006b1b..6756f2fe4ec5 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2367,6 +2367,7 @@ static void rproc_type_release(struct device *dev)
- 
- 	dev_info(&rproc->dev, "releasing %s\n", rproc->name);
- 
-+	cleanup_srcu_struct(&rproc->vq_srcu);
- 	idr_destroy(&rproc->notifyids);
- 
- 	if (rproc->index >= 0)
-@@ -2464,6 +2465,11 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
- 	if (!rproc)
- 		return NULL;
- 
-+	if (init_srcu_struct(&rproc->vq_srcu)) {
-+		kfree(rproc);
-+		return NULL;
-+	}
-+
- 	rproc->priv = &rproc[1];
- 	rproc->auto_boot = true;
- 	rproc->elf_class = ELFCLASSNONE;
-@@ -2526,6 +2532,9 @@ EXPORT_SYMBOL(rproc_alloc);
-  *
-  * If no one holds any reference to rproc anymore, then its refcount would
-  * now drop to zero, and it would be freed.
-+ *
-+ * Context: Any context, but the last reference must not be dropped from
-+ * atomic context.
-  */
- void rproc_free(struct rproc *rproc)
- {
-@@ -2541,6 +2550,9 @@ EXPORT_SYMBOL(rproc_free);
-  *
-  * If no one holds any reference to rproc anymore, then its refcount would
-  * now drop to zero, and it would be freed.
-+ *
-+ * Context: Any context, but the last reference must not be dropped from
-+ * atomic context.
-  */
- void rproc_put(struct rproc *rproc)
- {
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index d5e9ff045a28..7fefb4bd7adc 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -23,6 +23,7 @@
- #include <linux/err.h>
- #include <linux/kref.h>
- #include <linux/slab.h>
-+#include <linux/srcu.h>
- 
- #include "remoteproc_internal.h"
- 
-@@ -88,15 +89,23 @@ static bool rproc_virtio_notify(struct virtqueue *vq)
-  */
- irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int notifyid)
- {
-+	irqreturn_t ret = IRQ_NONE;
- 	struct rproc_vring *rvring;
-+	struct virtqueue *vq;
-+	int idx;
- 
- 	dev_dbg(&rproc->dev, "vq index %d is interrupted\n", notifyid);
- 
-+	idx = srcu_read_lock(&rproc->vq_srcu);
-+
- 	rvring = idr_find(&rproc->notifyids, notifyid);
--	if (!rvring || !rvring->vq)
--		return IRQ_NONE;
-+	vq = rvring ? READ_ONCE(rvring->vq) : NULL;
-+	if (vq)
-+		ret = vring_interrupt(0, vq);
- 
--	return vring_interrupt(0, rvring->vq);
-+	srcu_read_unlock(&rproc->vq_srcu, idx);
-+
-+	return ret;
- }
- EXPORT_SYMBOL(rproc_vq_interrupt);
- 
-@@ -153,7 +162,7 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
- 
- 	vq->num_max = num;
- 
--	rvring->vq = vq;
-+	WRITE_ONCE(rvring->vq, vq);
- 	vq->priv = rvring;
- 
- 	/* Update vring in resource table */
-@@ -165,14 +174,20 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
- 
- static void __rproc_virtio_del_vqs(struct virtio_device *vdev)
- {
-+	struct rproc *rproc = vdev_to_rproc(vdev);
- 	struct virtqueue *vq, *n;
- 	struct rproc_vring *rvring;
- 
--	list_for_each_entry_safe(vq, n, &vdev->vqs, list) {
-+	list_for_each_entry(vq, &vdev->vqs, list) {
- 		rvring = vq->priv;
--		rvring->vq = NULL;
--		vring_del_virtqueue(vq);
-+		WRITE_ONCE(rvring->vq, NULL);
- 	}
-+
-+	/* Synchronize with rproc_vq_interrupt() callers that found a queue. */
-+	synchronize_srcu(&rproc->vq_srcu);
-+
-+	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
-+		vring_del_virtqueue(vq);
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 3c6408581373..664bec20a7ae 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -1135,6 +1135,20 @@ static void mlxbf_tmfifo_virtio_reset(struct virtio_device *vdev)
+ 	tm_vdev->status = 0;
  }
  
- static void rproc_virtio_del_vqs(struct virtio_device *vdev)
-@@ -242,6 +257,13 @@ static void rproc_virtio_reset(struct virtio_device *vdev)
- 	dev_dbg(&vdev->dev, "reset !\n");
- }
- 
-+static void rproc_virtio_synchronize_cbs(struct virtio_device *vdev)
++/* Synchronize with callbacks running in the FIFO work item. */
++static void mlxbf_tmfifo_virtio_synchronize_cbs(struct virtio_device *vdev)
 +{
-+	struct rproc *rproc = vdev_to_rproc(vdev);
++	struct mlxbf_tmfifo_vdev *tm_vdev = mlxbf_vdev_to_tmfifo(vdev);
++	struct mlxbf_tmfifo *fifo = tm_vdev->vrings[0].fifo;
++	unsigned long flags;
++	int i;
 +
-+	synchronize_srcu(&rproc->vq_srcu);
++	for (i = 0; i < ARRAY_SIZE(fifo->spin_lock); i++) {
++		spin_lock_irqsave(&fifo->spin_lock[i], flags);
++		spin_unlock_irqrestore(&fifo->spin_lock[i], flags);
++	}
 +}
 +
- /* provide the vdev features as retrieved from the firmware */
- static u64 rproc_virtio_get_features(struct virtio_device *vdev)
- {
-@@ -330,6 +352,7 @@ static const struct virtio_config_ops rproc_virtio_config_ops = {
- 	.find_vqs	= rproc_virtio_find_vqs,
- 	.del_vqs	= rproc_virtio_del_vqs,
- 	.reset		= rproc_virtio_reset,
-+	.synchronize_cbs = rproc_virtio_synchronize_cbs,
- 	.set_status	= rproc_virtio_set_status,
- 	.get_status	= rproc_virtio_get_status,
- 	.get		= rproc_virtio_get,
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 7c1546d48008..93a182b1868a 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -41,6 +41,7 @@
- #include <linux/cdev.h>
- #include <linux/completion.h>
- #include <linux/idr.h>
-+#include <linux/srcu.h>
- #include <linux/of.h>
- #include <linux/rsc_table.h>
- 
-@@ -256,6 +257,7 @@ enum rproc_features {
-  * @mappings: list of iommu mappings we initiated, needed on shutdown
-  * @bootaddr: address of first instruction to boot rproc with (optional)
-  * @rvdevs: list of remote virtio devices
-+ * @vq_srcu: SRCU domain for the virtqueue callbacks of @rvdevs
-  * @subdevs: list of subdevices, to following the running state
-  * @notifyids: idr for dynamically assigning rproc-wide unique notify ids
-  * @index: index of this rproc device
-@@ -298,6 +300,7 @@ struct rproc {
- 	struct list_head mappings;
- 	u64 bootaddr;
- 	struct list_head rvdevs;
-+	struct srcu_struct vq_srcu;
- 	struct list_head subdevs;
- 	struct idr notifyids;
- 	int index;
+ /* Read the value of a configuration field. */
+ static void mlxbf_tmfifo_virtio_get(struct virtio_device *vdev,
+ 				    unsigned int offset,
+@@ -1179,6 +1193,7 @@ static const struct virtio_config_ops mlxbf_tmfifo_virtio_config_ops = {
+ 	.find_vqs = mlxbf_tmfifo_virtio_find_vqs,
+ 	.del_vqs = mlxbf_tmfifo_virtio_del_vqs,
+ 	.reset = mlxbf_tmfifo_virtio_reset,
++	.synchronize_cbs = mlxbf_tmfifo_virtio_synchronize_cbs,
+ 	.set_status = mlxbf_tmfifo_virtio_set_status,
+ 	.get_status = mlxbf_tmfifo_virtio_get_status,
+ 	.get = mlxbf_tmfifo_virtio_get,
 -- 
 2.39.5 (Apple Git-154)
