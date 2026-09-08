@@ -1,123 +1,90 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4703B525A93
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 09:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9EF4E66DB
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 09:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788859160; cv=none; b=demxUo28cenuPnxdPjU9rpOBCsRM2aPdR5M32HzR27TRBzhG1XHvCqUxpLI71dZdQ40nWt8E8ZBl5X6SOku97+4vWUjVGXF8yGR2gAPQU6jLtkzYXaXTG7LHh/11L4X2REYzSFGy8T1G3U1+y3HlmqVOmv0bqGoRYo50OLpzyL8=
+	t=1788861091; cv=none; b=L1rHUvMKM5Aa0SNdx5zX7DH3AJW3biGRvlVUunq2dM4UWk3hHXS/OR3ckDHcYTRXDJyE98UvlSrnkM2mOQ/9BBCAncjHsqPKWrVwdl+6XfNwMklHo+t45YWNd+hY97j2I8HNStCuZooDqjLziRX6g5Aj3p9ME0X/1ADr5G1QxuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788859160; c=relaxed/simple;
-	bh=xtgeItdy0OzALjOO+/MceqMtezUFrplKml5SLbPUvec=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WBIakucAF2L5blkHln6nF7pYrPCLpVZJrEaC0q0wRfkD4XLjFEY3zBIeAQOLgcv1LPKuU/iOJh9rjgPNMQrIPNk9mhiAvPz2G2GT5QBbpaQROR0iRJ2UOm5buCF3PZ2teaFQ/kUhqoTDnpuuOVh6adlmprtd22U1DBUkuOzU3V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b=LakehRZF; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
+	s=arc-20240116; t=1788861091; c=relaxed/simple;
+	bh=5CWTOwOGmV0tbIBmvdnUvKYui1xJoatPFsL+LsX19RE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SdnQ5ikyUtrvqAUmfakKCJS/st//nBvDMSlDLx6tbZU6NpWNNuH8TmKx92vUCnPu0aExVxbsKlZmdYQubAsR4+02gbNLH57LxOIp15kxvgK3qR2YwENpaOSdgoO7+RL+cowSbGdRI6iGZq5E7LnsfPfWEzRh40FW0krOMkKeuJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQRKJ3xX; arc=none smtp.client-ip=74.125.227.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b="LakehRZF"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3964e480f76so5092726a91.1
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 02:19:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQRKJ3xX"
+Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-396673bd283so744943a91.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 02:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20251104.gappssmtp.com; s=20251104; t=1788859158; x=1789463958; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1788861089; x=1789465889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=TtIpB1hhLYGZusTjT6rnPHQOVwY+sSeAbi/bl2xwBEA=;
-        b=LakehRZFsFY5Zn0t5WjpOX3Dx2j17EAlrGMVJsjOsnTVMibF6/sRvBfvEPrN64wWtM
-         HqTvoSlW9fxGqyg9Ssv0Ia8zB8X2xCQAYBnVxnHD3R4OK1C6HniLBQRZh3vId/QiWVBK
-         U1BEr05m2i1sqLZPFHID50C6vC0O620gCBdF0KVknTfSCQmWg/Mbgm7EZZrpNTWQW9Ah
-         njybgh3eabDmUg/dSvmOakj/4aF38H1dLXyKUZwYEo2YmjPKBvHAoSVeWYwZoFhyKwSi
-         KGB8+8hAhOhH6FwYiKzR29T5iJEA6rqYOfW1EZLlna1fiwLMjXdz3D4JYBCoePOSI9rM
-         b8PQ==
+        bh=5CWTOwOGmV0tbIBmvdnUvKYui1xJoatPFsL+LsX19RE=;
+        b=CQRKJ3xXgW74OfBTd/g6J7KyL4zGi32EJIk2VBzvm3Uxh97turAx1KhRC1nNklLW7M
+         UVho9kJ/5EnV2TEdq9i+J/pF2mDIYgvIHGux1aXTM2tzTZDFEeMNE7CdF7+ROA0aYIza
+         ZDHg9ozE2Hay70DEoE2nyjTHPeaUVRcLO2qtPZ3p2n0qhuSo4JfeHwJ8qzmAZumtYGep
+         NUEqnWF5GZ+Neeos/yH9fRHj0kSztsFJEYN+iv/EF5RvFZbyDJj/50MoPrMg3Yz06BUP
+         p332zIRrqNbcifLslKO+0aacvpKUJn7aFG3RgOaMkRJV6GJ8WiQ56Uk7fB08E26Vg92C
+         yuew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788859158; x=1789463958;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TtIpB1hhLYGZusTjT6rnPHQOVwY+sSeAbi/bl2xwBEA=;
-        b=stspVun3e5p6e+YCGzRimneC8iacZBx79QfaMFZ7WYqemClKWglwwN+ztNypQO7XkF
-         TfNTfKNM9eRKx8knkAaIcxVD90c3GmpFmuRGtgau2HtvWhBoPrYQ1VIoSLXLohGt7qhw
-         eUzKniOXqfqStUTS6aqjNcS7CDRTdwu2SwV1z5wvPu+WMQew9BDJeYgYGbmIgpP2ehdf
-         CLGT7/dvxC/TjqQMD4Bjr6syQtZAhMGu9QrUdGnZ+0Y6qlZ4eLGwALrOUaiUbYAhDu4K
-         VNN+mR8Kwuc139yHfb5fE205e3GX00Cali2vD8OQDSUk5YZmce4dZ1L9GFqIFDLxq6Jv
-         CgrA==
-X-Forwarded-Encrypted: i=1; AKwUvBzYrPJJuqNohNqvxEFt6ByEV6vweKpNUcxe+WKFJFe9EmWJOq7hh66uNXJWhKBzxPCloSNNzQ1HZ8Biih/1nXVlgkci@vger.kernel.org
-X-Gm-Message-State: AFuF++kDPy3zSTF7wEQ7K6vA9T9fcotG325KR1b+yENDtJCnXPfzJAga
-	OtV6WC6GFFKvfNh+a17cM4cBO117yGsEVU9Xwzga/l0RO0ZzJOUSTxr2KdjmZNIpkG7ff2c8s2y
-	OB5O7MBDxxA==
-X-Gm-Gg: AYBFou0FLKX+PonI0+w1U1eq/WDtYfjJ7cP+DrW//AIy0Gek4Q30+ApnFHCi0m6xw2N
-	fgMm9X1gG8roIfq94tMQhdXEXOL16oI0nMSyAJRuGvMlHD93kyswrWEY2dX3qnT5J3kSst7w6N0
-	EBxqIJxsc6KKdC6hbD55x3U2ZI7CkV1Xk/0qdiR+Lc1SIqIsaoPio6GsgxT8/PLWx0W/YMpkZ2e
-	BE4ydjkoClXjyP5W5RgR3hrq5B3ZjbRqj8lbLwKXbwmuhfDFzJBZyNSARRAF8LFkWCvZ+rmUAg8
-	baqeHnx2ZLd3WwVcCjqKA/7UyU2/3rf9WuMJ8bDl6GP8PjLCRrtkT/5onA8zP1MNW5IhjFdjLHp
-	IpqKfsvU8Iis0c+rcMJi7GlWA2mI8AKlnn3qjWzpPpMauhuIQvK5XI7paA483qH3cc8kyguS3Ex
-	UqX2fIJyG/aApHjw6bJ6oicNUTe80oeCCIgTI58Cfk96NcY5mgRPUoVCzkp/Juif424CjAVKR/d
-	XrT1w==
-X-Received: by 2002:a17:90b:2e0e:b0:398:9be5:b419 with SMTP id 98e67ed59e1d1-39b2622bfecmr41833249a91.20.1788859158105;
-        Tue, 08 Sep 2026 02:19:18 -0700 (PDT)
-Received: from [10.42.0.1] ([2a00:23c7:1d1a:9c01:75be:f01c:dde1:cb38])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14324410092sm32015722c88.14.2026.09.08.02.19.15
+        d=1e100.net; s=20251104; t=1788861089; x=1789465889;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5CWTOwOGmV0tbIBmvdnUvKYui1xJoatPFsL+LsX19RE=;
+        b=j5oxFk+MA9z5ejAijtnIZR4ipMcTLL4jZyygM/f8Kpi4Nt6e06WefK1U1inMOT294z
+         YelmuPcX8/w63lqGRHFo+kkMhfM7dwp41T5rvUq1h7yljgCsVsHIz9+d0KsRVQUrDXiG
+         nEYICx4vjY8R9QkqbtypZiFKWJoFC+PAx0CaR8tAzvDQJC5EnIdS5o9b6gyeU8b4wv60
+         4/dxewd1g/Rk+zF1fiXxQRNuOap1zhwhKL0aO5P/QYJWFLUC90KpOgfPBAhn3uIaEMev
+         x9OMzoUY/5/uNjDDv1RiLImmfojV9aKYADNZ2OdajzpL00MJmZR/mOmWqZQWQ5KITKaz
+         e4bQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwP0VUiFPE33/nt3n1sRFkMPqpnqpGwELvbPS5VI141EPo//MuyPWYuEgiSC8+rwwKnHMfUCtljfM6dklZlff9sbRZF@vger.kernel.org
+X-Gm-Message-State: AFuF++kIQE0lADPae5EK8YTUTbIOyU2TN1aBHqjaoC3ZkujmLgMhwTfy
+	YgzLFtPKmXJNEWP8uxUiWojPvetjJ+7SFObhBPvMLkGay6GZ72kmHJ5h3HZjPL5diuE=
+X-Gm-Gg: AYBFou092+Ii8ec023Idv4BDthJkFgQmGJemuQ/Hg6XoSWbYFy3QKeO+RC3X5GmcNx2
+	D1EBlIYKnVHyGmfr/H/KFRnUMZ+LWxSzKQPRwI3dcSiNLb1O0r/6hqLz/Ug4liyupBGeouny2oF
+	bfwEXfNTcWzeAN94nGNyiFtv37ukjbXlOop1vmkUqI6lSuk4cvjsiOXHLgFrwWJMhYwJPCOl1hC
+	PFuDYnP4uCwkfi9hro4nviykmj0ylQDkjnIVwyCpHkKBHcRVA/Wwl8BWNG3gXeVG8uncb0vUKap
+	1rI/iCZnnuNkH692EZ0ib4cYBMvoreOXOv6FZVb39t6Ns2XtmNR4mrAgJMP7KLpylqSjFdbulEj
+	iQPM+NX4dxjjiDBmVBKh9h9K+u/mROJ7OS4Hzct8dYfuLlnRvH+qdV7fDs8rSI0z64xcexymJT9
+	i2zg6MGXYK4ujwMbgt33EPGqovwWrrLS1wyI/Cno535MUZoqBecV6uV7M2+9wlXyao69g5bi2v5
+	jYDMzAEZExDkpW4O9gTdPeGZiC69A==
+X-Received: by 2002:a17:90b:3ccf:b0:39b:34ef:3b24 with SMTP id 98e67ed59e1d1-39b3d5aaa70mr19661739a91.1.1788861089072;
+        Tue, 08 Sep 2026 02:51:29 -0700 (PDT)
+Received: from cachyos-aura ([45.112.148.105])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339885ca07sm39414604eec.1.2026.09.08.02.51.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 02:19:17 -0700 (PDT)
-From: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-Date: Tue, 08 Sep 2026 10:19:05 +0100
-Subject: [PATCH 3/3] HID: surface-hid: use named initializers for
- acpi_device_id
+        Tue, 08 Sep 2026 02:51:28 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC v2] platform/x86: hp-wmi: Add charge behaviour support
+Date: Tue,  8 Sep 2026 15:21:22 +0530
+Message-ID: <20260908095122.442670-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <edbe584a-c241-c3e6-9993-2783934885d9@linux.intel.com>
+References: <20260531181326.1000801-1-navonjohnlukose@gmail.com> <edbe584a-c241-c3e6-9993-2783934885d9@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260908-acpi-hid-v1-3-08df24c4b139@thegoodpenguin.co.uk>
-References: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
-In-Reply-To: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
-To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Maximilian Luz <luzmaximilian@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
- platform-driver-x86@vger.kernel.org, 
- Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788859148; l=949;
- i=pzalewski@thegoodpenguin.co.uk; s=20260430; h=from:subject:message-id;
- bh=xtgeItdy0OzALjOO+/MceqMtezUFrplKml5SLbPUvec=;
- b=Bv7PIIbID1GVnQlHmUM/w6I/Dk/7/ZxTyv7MMza9p2ztJgGoB+kz78mu4kY+t8C8rVCMasMtZ
- uHNKMpfVlH4ACgJZ8jyEvtF5bC+fh9VtG+PEI5AhmcQ4SoYes01zUkm
-X-Developer-Key: i=pzalewski@thegoodpenguin.co.uk; a=ed25519;
- pk=vHq4n9IonORH2GTzLv8r6CWAFHzgfBuNkQPXA8NSly0=
+Content-Transfer-Encoding: 8bit
 
-Use a named initializer for the acpi_device_id fields which makes the code
-more readable and consistent with how lists are initialized in the rest of
-the kernel code base.
+Sorry for the slow reply.
 
-Unify the list terminator to have a single space between the brackets and
-no trailing comma.
+It was RFC because I wasn't sure the WMI interface was right for other HP
+models. But I've since changed laptops and no longer have the HP, so I
+can't test a v3 or anything on top of it.
 
-Signed-off-by: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
----
- drivers/hid/surface-hid/surface_kbd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Dropping it. Best of luck to anyone with the hardware who wants to pick
+it up.
 
-diff --git a/drivers/hid/surface-hid/surface_kbd.c b/drivers/hid/surface-hid/surface_kbd.c
-index 0be01b5e74258..036829ba47d42 100644
---- a/drivers/hid/surface-hid/surface_kbd.c
-+++ b/drivers/hid/surface-hid/surface_kbd.c
-@@ -277,8 +277,8 @@ static void surface_kbd_remove(struct platform_device *pdev)
- }
- 
- static const struct acpi_device_id surface_kbd_match[] = {
--	{ "MSHW0096" },
--	{ },
-+	{ .id = "MSHW0096" },
-+	{ }
- };
- MODULE_DEVICE_TABLE(acpi, surface_kbd_match);
- 
-
--- 
-2.43.0
-
+Navon
