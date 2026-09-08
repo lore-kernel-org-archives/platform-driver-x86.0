@@ -1,78 +1,81 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A281333E36A
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 16:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC575632BF
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 16:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788884082; cv=none; b=VolDtPfgVTYZr9w8kclw82bHpIcHqq4vAVUPLUF5YJuieQeyMzBHVuph81+kJWS4SJhS7SAghixLlKgUh5y21ASr5rl6B3oBXEnIVxBLewi9sek2Px+OV/zvoDDvUshzexYMn2RwCok6kLP62KVErGLejAswOddr6diA7rdIh2w=
+	t=1788884186; cv=none; b=EC/g/0EIXETgg7pHRyfLLp5YOb/4v6exVkrGGyH3tC0T7t5c0fVzZLLgtuTRpAJjRCSZRa2Kn9iFvH//NQD+ZRwIBkPWSID4DdP5sIp4LTPQCJW9Z2BLJwzkfWSVDIGPTH/SxLCIW5wq2NOYNXyHaVPM8Xu2rl7eqWRXPIqu1Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788884082; c=relaxed/simple;
-	bh=QLy9D33gx3rxFxSNIHfeF3FJcR5f6YTHRxMgJCM2dyE=;
+	s=arc-20240116; t=1788884186; c=relaxed/simple;
+	bh=CGZhEJ2/tDWk+P71VLdAS5cNFu0IAU6zV03Cwlzkac8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hdLv46nHX1o1nzcQ95np8biXmxulPWd7uiGwXc9f0p3+QuezjjjwjH+9x8x5p5KhnRyWXWwzsZrKtdX658PIFiY+AsmOR0FYVaPTMMIW25KDhGr35+z9MTor7fDOzTV89LW49SWtXNY1h+C1vJZ3YOYMki4lKG5uckbkwUSynEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hWdDhpl+; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=EX0kDPXftaVCmZ5EU6JZ43NAp+aRueiXydtWRnt6jFT/R8WGSvKEdRqhNAaJQ0V2hv5P0I98AWeK3t2VggwAnjlld/FHXfNGnHhQciKkPFTRFe0BmyyoJil5Q9GUU5MUGMhoNgKtY1uxwOQ5aU/P+ZcZ6IKZKjqJPUzEeHhYSwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqYKK2Uo; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hWdDhpl+"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-49b9320423cso54783295e9.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 09:14:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqYKK2Uo"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49d0d2d37ceso15771695e9.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 09:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788884079; x=1789488879; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788884182; x=1789488982; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=BfvgduGaY/V3KBXYd67nwwljCt2z7CswJ9hAh0BTkIw=;
-        b=hWdDhpl+V0A37W0sr2J4l91fajnxSG9VwxUNfY7VpqQP2txpo3cfoqa9yXRqzdh/ri
-         wv195JO/GQjtMbqaARwkh9jRyuxjTAECQ/Z8x1WHy082zs07Df6j1ifvhL/lYPdsFLVw
-         eBYf8tGNzFjqLOi6iH7n1EWZawSDxT8GfIS+RyBMFexxgTy0W7He4R42eORt1W4yqMI+
-         APzPBySaV1t6iPWJHQ6fIALN4vIV2HiuOtvLWQRThrZ6MBPaEeUQpVBBFrnfAmjBUFaS
-         vQ8gCBIAYN9xUcdRKsu5pj9H40TWybdhn20uubcCW/LSR0MJKTdjgJzecXIEw/tp+Xzm
-         DAwg==
+        bh=aW1yDnVQMbshAqUi9NqbYxbv2XerDdqOEtxHNL3um4w=;
+        b=AqYKK2UoO8a1IsUtaRfW5epIFS6SxscA/cxnXXf2GF6nulMREIGBCriLXiCU9iqgWj
+         crEnykrsexBxaD9B1lQWXIcur3i/EZp/UdX6mtlN95Wg4IB5EOUVoJJoRqveZeHEi3AY
+         LrYoNJH8wmOvC9oJVo5W9PfdrEOO61EK5g5C4I9ILnG/RnR8aDYpvL0kxxjjHPCD5KSU
+         0paghXsjR4Pd9YvcZVcYZJcFWbYBc+Tsz3lkx9uG4NyB1u/UOcBPrXE1wba4FRLV96ak
+         d9ipf8vNGLmJTV21Tb5mjmOPNWXe34v9drQwgaB7EZfdBQ/9tc5DFTi6Fc6/qy2wM7HY
+         5TGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788884079; x=1789488879;
+        d=1e100.net; s=20251104; t=1788884182; x=1789488982;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=BfvgduGaY/V3KBXYd67nwwljCt2z7CswJ9hAh0BTkIw=;
-        b=Sp+Y1GZdka0xPb45RrXGUsJNbd/nUAdXiAYkgHy7w5R3PaRIxZOgTahby3yoLRIqYt
-         ojUreN9Gi5uQNN0ctoQsQ2cjjrXVDjPfMIlr/1XB5wEW/8Ve4jHrHqlHPT1EC+FSNhOZ
-         jhpxUhGiLFvVKjaHA8e8sFfAuqqDiL3mlRx6jSBDJCqcDG7PlHSj0uqZCBjIDEIXm/21
-         vS4IZIHaFHayHQSBbjPSvWdgJBOEnHHO8d+yQbj0AvR14zz5olMQqxTnVFGzt9grXnWo
-         FursP3BXVaOhLfPTs+gL/VSQCEakSHCmLeCmOObt/tKVab9CM85GAp80iiiT3XAv5k0+
-         9A7Q==
-X-Forwarded-Encrypted: i=1; AKwUvBw4txDrAdLl1wUyuLDTukri4bWDOwgO4r1+lGYo12e/ZA1hdpFpreyUgjIvyiJEHE7Gu7MknrEMVeMqUXYsBG+1lodH@vger.kernel.org
-X-Gm-Message-State: AFuF++lGNxAMeoDeTgDhfdvMbJAR5BV7LtCv798T3hmvNsZmREMuIVgy
-	BsH5ooiBY5TwQ8kSqd89EgJmDJDkS2SW8ot4d7F+1GdZsKUk3PMlju0=
-X-Gm-Gg: AYBFou2jw4lp0HdTcjNhPm7TVoR4SLl36dPLDkm3QGqfgD72fw87VBx+8hdeE7ZB1tP
-	6Y5HPHgU1LDiEUJvqqz4yQvDf0hha7moT1SAvawftn4E+d6Zss7FZOZx+eKBqFGqGlRhg0lQ2VS
-	Xbo0phQ+8ALsNZS2uBE5BumxaDg9V9GImgbiN4Op+AH71SIbf8Yl1AFmQZQGyn7zOi6jBi8S9hh
-	xvP568B0nziE/LDBCX4cXeNif8HKHAPvXAGWL1UyeNh3uOH5hWsimOKQhMxZ+YcU5ruxK5NaJS8
-	l39RsqaV8cGXDVxjYtPf0tkBNsVVDYuOc8mmsDhfSd5uDmupJ5Sf+VuoGdXPpl37EEwL5BlrmXu
-	suc2Yw+1H9rdEMvad+ivjSl61P4ijraf0Wko9yKs6Vig4cvrsT73rsl82vDjCLhfreRLTRLkSMx
-	LBJLmdIRcGb/9s91Rmf1KQs/Pz38GN3hUKM1Mwc2+Sn/u04jRHyni8ZBwQLdn7o3CFp6WDsKiFE
-	ORv9TjwOx6/9nLfJuULGyGrGKWCHmjf3OOnYXT4YtdHhKaZ
-X-Received: by 2002:a05:600c:4e94:b0:498:943:ccc0 with SMTP id 5b1f17b1804b1-49cf81e368emr517102915e9.6.1788884078339;
-        Tue, 08 Sep 2026 09:14:38 -0700 (PDT)
+        bh=aW1yDnVQMbshAqUi9NqbYxbv2XerDdqOEtxHNL3um4w=;
+        b=VxFR9uSQemTU+NxLwhNeZxJPoBVen0EqKEi3icdTKiv1OIVQQZk+mSsVcL3tVVp58G
+         Bo96H/hkHxwKaMYD4Yd60+78QwZU3cgZgAb2TCHZugRH4erjQmBZcQPshZn8QkwQheBt
+         t08rap5KWEM9/OFrYAn/oE+a5mKiP5qxZnh7yZDl4sQUZ5Jsx/lsDsOv4QfFMGftAo0s
+         agIWc15bUdzRxprsoSh2EnRlQokTl0leTDK+/TY23ErK4aYDJbEbIfrt/IOPDd8oOVJj
+         3hHpuMkchEu3a7SWHlNnWbuKaP3r0yqELSsO62ugyXUgcLq76B4FJA6qfWxFXU0VgiYm
+         R/UA==
+X-Forwarded-Encrypted: i=1; AKwUvBxa59WA6pYWEy9MuzP4AJpyNRCFTHBRpxXX088hPPq3NToQeAKTDh1mhazDsvddQbNN91OD7TQXdyXCdP2R7on1kKp3@vger.kernel.org
+X-Gm-Message-State: AFuF++m030lt7vALS1Vau4uFPJ5sm3cyY5JSfti20u3bcvFuiEWe5wGG
+	6PubacYb0+fsfmg3P5AXWXToKlFqincAERrOI5kgSfw/5KaklqWwKpg=
+X-Gm-Gg: AYBFou0qa2IrdlQdgtbXIArsuiP3bkd3BoCUgk4dG2C3jSfqn5TLwJ1FrP4gX7GMEJY
+	Hp5+Qql1EbCo5CLmLusXmVKt7UeQqWddbB3kTnkrFIB41duO2wrV4evnLNhrprcAhoZQfkhhQ4/
+	6aul0ve/gQC8OnA16p6lbQua0/nt/py2a1P4gY5J9TcteqkP3E8SUf7VUNl63GWrC8CvTXkPiTd
+	YioHMmxfM0vdu2DTgQiyutBJflFk72BpAZZZHajVxfK8NwZrnx5viRCUkAWz18oD+O4wYWmRO79
+	DXaq4LnNsnvdmo8sySHjftNZh3G8MAwRg+h9qqE4FWdPJMmD8h5b+PLGP/sw/FH5NmOixUNN6hC
+	J7ybafWOrrJrICQg4DDXiqzfmMH3/NQ0VwhMXR00+9dl+OM28kcOir+GtFzPBOurhQR99WMzWB3
+	fYT9QjwaJqU2rSfNd/PIFNalIOjO1UUHwVgBGOIIexRpAUEMBKSWkon20nf0NAzp99klKyLiVZi
+	2DEXmUYqUaroWn0HbiOpwYeLruNWK9jmR3G67mqnYQRGIYjMQ==
+X-Received: by 2002:a05:600c:190b:b0:49c:fa21:e743 with SMTP id 5b1f17b1804b1-49cfa21e92amr288183415e9.25.1788884182199;
+        Tue, 08 Sep 2026 09:16:22 -0700 (PDT)
 Received: from latitude7275 (84.124.213.91.dyn.user.ono.com. [84.124.213.91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cfbe5b252sm353464655e9.3.2026.09.08.09.14.37
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ce4761dd1sm341499735e9.0.2026.09.08.09.16.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 09:14:37 -0700 (PDT)
+        Tue, 08 Sep 2026 09:16:21 -0700 (PDT)
 From: "D. Manresa" <dmanresa@gmail.com>
-To: Daniel Scally <dan.scally@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>,
+To: Lee Jones <lee@kernel.org>
+Cc: Thierry Chatard <tchatard@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Hans de Goede <hansg@kernel.org>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thierry Chatard <tchatard@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Daniel Scally <dan.scally@ideasonboard.com>,
+	linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] platform/x86: int3472: Add TPS68470 board data for Dell Latitude 7275
-Date: Tue,  8 Sep 2026 18:14:45 +0200
-Message-ID: <20260908161445.334910-1-dmanresa@gmail.com>
+	linux-media@vger.kernel.org
+Subject: [PATCH] mfd: intel-lpss: add Dell Latitude 7275 to the resource conflict quirk
+Date: Tue,  8 Sep 2026 18:16:29 +0200
+Message-ID: <20260908161629.335223-1-dmanresa@gmail.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260904062006.39209-1-dmanresa@gmail.com>
-References: <20260904062006.39209-1-dmanresa@gmail.com>
+In-Reply-To: <20260831160754.9857-2-tchatard@gmail.com>
+References: <20260831160754.9857-2-tchatard@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -81,68 +84,49 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Dell Latitude 7275 2-in-1 has the same camera design as the Latitude
-7212 Rugged Extreme Tablet: an OmniVision OV5670 front sensor (ACPI
-INT3479) powered by a TI TPS68470 PMIC, with GPIO 3 as reset and GPIO 4 as
-powerdown and the same regulator voltages. The only difference is that the
-PMIC ACPI node enumerates as INT3472:04 instead of INT3472:05, so the
-existing board data is not matched and the driver fails with "No
-board-data found for this model".
+The Dell Latitude 7275 2-in-1 has the same BIOS bug as the Latitude 5285:
+the ACPI GEXP device declares an OperationRegion (BAR0) on the GNVS
+variable SB04 and the I2C4 controller (INT3446) builds its _CRS from that
+same variable, so intel_lpss_acpi fails to bind the controller with
+-EBUSY and the front camera sensor (OV5670, INT3479) is never registered
+unless acpi_enforce_resources=lax is passed.
 
-Add a board data entry for the Latitude 7275 reusing the 7212 regulator
-and GPIO tables with the right device name.
+Add the machine to the DMI table so QUIRK_IGNORE_RESOURCE_CONFLICTS is
+applied to INT3446 on it as well.
 
 Assisted-by: Claude Code:claude-fable-5-1
 Signed-off-by: D. Manresa <dmanresa@gmail.com>
 ---
-Tested on a Latitude 7275 (BIOS 1.18.0): the PMIC probes, the OV5670
-binds and libcamera streams from the IPU3.
+Applies on top of "mfd: intel-lpss: add resource conflict quirk for Dell
+Latitude 5285" from Thierry Chatard's v10 series [1]. Thierry, feel free
+to fold this into v11 instead if you prefer.
 
-The sensor sits on the I2C4 controller (INT3446), whose MMIO region
-overlaps the ACPI OperationRegion \_SB.PCI0.GEXP.BAR0 (both use the
-GNVS variable SB04), so intel_lpss_acpi only binds with
-acpi_enforce_resources=lax. This is the same BIOS bug as on the Latitude
-5285, fixed by Thierry Chatard's "mfd: intel-lpss: add resource conflict
-quirk for Dell Latitude 5285" [1]; a follow-up patch adds the 7275 to
-that quirk's DMI table.
+The conflict was verified in the 7275 DSDT (BIOS 1.18.0): GEXP has
+OperationRegion (BAR0, SystemMemory, SB04, 0x0208) and INT3446._CRS
+returns LCRS (SMD4, SB04, SIR4). With acpi_enforce_resources=lax, which
+has the same effect as the quirk, the controller binds and the camera
+works with the board data from "platform/x86: int3472: Add TPS68470 board
+data for Dell Latitude 7275" [2]. The distribution kernel here builds
+intel-lpss-acpi in, so this exact patch has not been run yet.
 
 [1] https://lore.kernel.org/linux-media/20260831160754.9857-2-tchatard@gmail.com/
+[2] https://lore.kernel.org/platform-driver-x86/20260908161445.334910-1-dmanresa@gmail.com/
 
-Changes in v2:
-- Move the test notes and the I2C4/GEXP remark below the '---' line
-  (Sakari).
-- Point at the Latitude 5285 intel-lpss quirk for the resource conflict.
-- Add an Assisted-by tag.
+ drivers/mfd/intel-lpss-acpi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-+++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
-@@ -449,6 +449,15 @@
+--- a/drivers/mfd/intel-lpss-acpi.c
++++ b/drivers/mfd/intel-lpss-acpi.c
+@@ -191,6 +191,12 @@ static const struct dmi_system_id intel_lpss_quirk_dmi[] = {
+ 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 5285"),
+ 		},
  	},
- };
- 
-+static const struct int3472_tps68470_board_data dell_7275_tps68470_board_data = {
-+	.dev_name = "i2c-INT3472:04",
-+	.tps68470_regulator_pdata = &dell_7212_tps68470_pdata,
-+	.n_gpiod_lookups = 1,
-+	.tps68470_gpio_lookup_tables = {
-+		&dell_7212_int3479_gpios,
-+	},
-+};
-+
- static const struct int3472_tps68470_board_data msi_prestige_ai_evo_tps68470_board_data = {
- 	.dev_name = "i2c-INT3472:06",
- 	.tps68470_regulator_pdata = &msi_prestige_ai_evo_tps68470_pdata,
-@@ -500,6 +509,13 @@
- 	},
- 	{
- 		.matches = {
++	{
++		.matches = {
 +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
 +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Latitude 7275"),
 +		},
-+		.driver_data = (void *)&dell_7275_tps68470_board_data,
 +	},
-+	{
-+		.matches = {
- 			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Micro-Star International Co., Ltd."),
- 			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "Prestige 13 AI+ Evo A2VMG"),
- 			DMI_EXACT_MATCH(DMI_BOARD_NAME, "MS-13Q3"),
+ 	{ }
+ };
+ 
