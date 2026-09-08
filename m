@@ -1,157 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B85A0AC5
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 19:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD67383993
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 20:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788894264; cv=none; b=rE4R826q3dY63VBslQLt20uLpAzCyVDELu134sq+Y8t/m+jJQNmyaS4QzvKCAmZPX7HIoTFP/07E8uR1e2mcX0jxpZ8A7QCoqciZjQtSwlCIip1LCNId9cG/lVxNq476c9PZ8J+0osCWD/qxA1h8+anXu2DWj0oEU2ZlK/4Quts=
+	t=1788899669; cv=none; b=uuGXf0Gjjm1G4XcQO4fNpboPReydjbXpwa8qwBZAGStAMkQN4lKodUddq278hOS6d9TkEBZbufqA0vzBZsPPOOVM0Uwh7loMEypxrNBZNIswtOC1jyV9KhrTRfKVIk+YN1HlvMxOdnE5pHqze3FmtWhfStn67VFsggrQ0FeVT0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788894264; c=relaxed/simple;
-	bh=A/sZbFZG7ENxecMSUsV5fQXR0pvr/b+FHLCqlVwFL/g=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BXKCptHbu3RyoNZDuxQno5a/Y0ywq9EruA1UHaGnH/UT/JKSjmIHcaYbT3Kw5nKJcw0ptM5t/9NtDjcNt0jbF5//6GTQ96dsKI1T2+R7+1a16E/12ZSjO1TmQMaq4XzolGrslOZDQeOFBnv8NCWMOW9TUzJjU+1EuKQ4roGowr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H5DXKzXA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788899669; c=relaxed/simple;
+	bh=DMkGKouuzbbi1kd4aKqcu2oLZO+dptA9r8V345aiSyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TeNKGhwNgB4e9R4owjBaFkvQ980e4eH0j8Lx15UUoMsEY0lb34sroXKtCMldaIC7mzCAWw3qWMYa2xQ0vhmyVSRauzGTEd3lov6tm/VfqjGR7UU6ttcuZGORJXPZCql9icf3TZp5XpHBmUsaBaYaaxFzu64W2T3dfTM5eANi9L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mGsvuWAA; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H5DXKzXA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788894263; x=1820430263;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=A/sZbFZG7ENxecMSUsV5fQXR0pvr/b+FHLCqlVwFL/g=;
-  b=H5DXKzXAy9zpYs1weDZeo+BqeqqIbc8IZ9TqsoNn0+Atb/7w5lEd9kcw
-   Vy1R4tnSamlE7XDI0f6WUSdJymWTLHix4Rl1oara2tTda8+mYmMg9uaow
-   ME8EfCX1/WDHcyoOTOg8v9dOj120X8Jqw1PrX5wMLOPmXCZR0j0qmfwnf
-   1JpS6jwEg7Ff/j2OHgKODeDrWsnTGLTHsfOKCb8Aocs+2NUgTjzOHCpAI
-   zdE70BiaUpxxFiywzEv7g7binjLxp04BVLAnaFyOBMUl06Qd6L3vOce6R
-   nwiqSxB6RfHQ3cBGUUMFNL+qIDIhU7htBdzXHthHCUb7dYTLIABi0ruVK
-   Q==;
-X-CSE-ConnectionGUID: HlBo21xSTSOTPXISOVJB/w==
-X-CSE-MsgGUID: r1a72Yn6RTqO5ZYRxYbuDg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="93004742"
-X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
-   d="scan'208";a="93004742"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 12:04:23 -0700
-X-CSE-ConnectionGUID: RDj14NFLRSGy+w28yZH1gw==
-X-CSE-MsgGUID: BLvI4E9mQIGoGOrOFEBypg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
-   d="scan'208";a="271591347"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.109])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 12:04:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 8 Sep 2026 22:04:16 +0300 (EEST)
-To: Hans de Goede <johannes.goede@oss.qualcomm.com>
-cc: Andy Shevchenko <andy@kernel.org>, 
-    Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-    Bartosz Golaszewski <brgl@kernel.org>, Linus Walleij <linusw@kernel.org>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: x86-android-tablets: fix gpio_secondary_fwnode_init()
- not working
-In-Reply-To: <2666d5fe-994b-4f5f-ae5a-60ce9fffb867@oss.qualcomm.com>
-Message-ID: <1106cecc-3151-8fe5-e51b-b6c5816ae73a@linux.intel.com>
-References: <20260831201157.36397-1-johannes.goede@oss.qualcomm.com> <apcRAvoHkh9blDwK@black.igk.intel.com> <74f149f6-caa8-db4e-9ef4-5c15b7a5845f@linux.intel.com> <2666d5fe-994b-4f5f-ae5a-60ce9fffb867@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGsvuWAA"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-49b8687630fso43362455e9.3
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 13:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788899666; x=1789504466; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=creIK6w/RJsP6wNMNAa45yu25/0nc475hdrmkzg6PX0=;
+        b=mGsvuWAAeNj1aa0s0PdCG0frTPbPYjJ/d+N6YJBXnUFFclt4bRBlqI5gOsReBzuzTC
+         n1Xd9/Zqc3UicbaQqfQsWSMsmsdniiFjxNFVoyaXx6O7eOsXa6owDBR17AmVkpOO4Fb1
+         DG1UDPGi36eopU4Vr5mSTPsUSsGiOhjW1JRsDhC3I4CC8e7bZaBYBJBFy2lVcJIqvVRD
+         Z0BAxu4OZ848D3KN2WE4kZcn1c4UMhVVSnfBOZhO/yeiuzPQ4i+dGtEnVlEANaMbTI6e
+         qVizB0ZpeRrgiK1ZvZ5373hUsZ9hmKEXXJ5nvp6QTmv+UmkOHyqo5CLBY51pPMs5Xc43
+         fUcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788899666; x=1789504466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=creIK6w/RJsP6wNMNAa45yu25/0nc475hdrmkzg6PX0=;
+        b=YF/P++61s6VUJDk7G7J1e5mBGb5LWmj2N4peNMT8/y/3nyGSFihekYeugaw40mby9x
+         Prl78qOU/qZNhGHlNYdHYPSfl+E361ycFwKqp9Qk+eAVAmZSAJLZ07B4LyPWr0jFwPcP
+         XmuLxXORneuvNPse0PcwHWZR31UO9+r8nSKhzv4tjashKkU0nzIg2R0WVcCVz22SXSTV
+         g/kXxSVqj15zFTV+WVD89sgFst1/zVuCFJdqnFbRuKRXiNwI2E44EjMw3ABnlMS5Jx8d
+         zykI/4z4ciV7nfUpEAzOMZApviLSbS9wCkvwOCIEzDbRdnvTqCDz5kZN0Tr/ouvMC18m
+         ODbQ==
+X-Gm-Message-State: AFuF++kxASR4l7bCnTQdbA1Vwir7fvoNkORNT5b4Y4Dh6qetc4Stt5mF
+	mC6nVZFmDw5kYboHAs1fj77yLAmkiQ1mFU4nqs1v7zD33EYIbIOwWQHC
+X-Gm-Gg: AYBFou3848oKM9cX0dkIkfpifIXfTky4/WZpfqtQoNc3oN1n7qggom0uRQ6ZZhHReWa
+	tiDO+b5JxCxA5Kbi+/3imWzNJB3Zat87ZoBLDEztDuTggT1y+jxGt+IhbL5DXDU9NwfsFdLvxA3
+	BhsTgKDC2WQs4XdYcz2FCxFiD9Fy4m7FR5mdAz7pcvgcybYqRnFpJmcz2JR/D28KKcBZM5jSZgJ
+	tpP70dcmVU/BqS80gBXGB9Rlw4Bmlvc8ZWQ9tVkCybn8c+U24vhtgrs52mpF8MOz7Sl83rFb+gQ
+	fbeYTVL2W5vQwr1/8aYTJko5RHdDj/fSuNCaW8Sstis5Gdl86hpVM8SLZHoetMfhhI55BBS9Krz
+	XjFHk8LsTtLksLZgQCd7tYfIYwQ7LoDTHSEjmZ1/s4EQb0IejO17hlIzWyDN5qYykoWWpkGJvJj
+	JCD/SnDbr8ogVcaHVVT3EovWpK3V18uHV/bm33J7L+rmepFDLGVV7diw/T7+Ah5+9qqMAhCKxUW
+	9NM7qdW7fKU78nKYU2hiELWbYttML3WMFv5poF4dBQi
+X-Received: by 2002:a05:600c:8b8c:b0:49c:e3ad:41d3 with SMTP id 5b1f17b1804b1-49cf7f4aea6mr307532965e9.0.1788899665998;
+        Tue, 08 Sep 2026 13:34:25 -0700 (PDT)
+Received: from arch.home ([2a02:1210:2e28:2800:36a5:7f85:ccb8:1176])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cf772692dsm491652845e9.10.2026.09.08.13.34.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 13:34:25 -0700 (PDT)
+From: Gabriel Windlin <gawindlin@gmail.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	Gabriel Windlin <gawindlin@gmail.com>
+Subject: [PATCH] MAINTAINERS: fix sysfs-platform-ayaneo-ec documentation path
+Date: Tue,  8 Sep 2026 22:34:11 +0200
+Message-ID: <20260908203412.608606-1-gawindlin@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1431978843-1788894256=:1164"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The documentation file for the AYANEO platform EC driver was added as
+Documentation/ABI/testing/sysfs-platform-ayaneo-ec, but MAINTAINERS
+references it without the '-ec' suffix, causing 'make refcheckdocs'
+to report a broken reference.
 
---8323328-1431978843-1788894256=:1164
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Update the file entry to point to the correct file name.
 
-On Tue, 8 Sep 2026, Hans de Goede wrote:
+Signed-off-by: Gabriel Windlin <gawindlin@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Hi Ilpo,
->=20
-> On 3-Sep-26 13:54, Ilpo J=C3=A4rvinen wrote:
-> > On Tue, 1 Sep 2026, Andy Shevchenko wrote:
-> >=20
-> >> On Mon, Aug 31, 2026 at 10:11:57PM +0200, Hans de Goede wrote:
-> >>> acpi_bus_find_device_by_name() call returns a pointer to the device o=
-bject
-> >>> on the ACPI bus, aka the ACPI companion device.
-> >>>
-> >>> gpio_secondary_fwnode_init() then continues with setting the secondar=
-y
-> >>> fwnode on this device. But this is not the actual physical device for
-> >>> the GPIO controller (e.g. the GPIO controller platform bus device).
-> >>>
-> >>> This mismatch is causing GPIO lookups by secondary fwnode to not work=
-=2E
-> >>>
-> >>> Modify gpio_secondary_fwnode_init() to instead set the secondary fwno=
-de
-> >>> of the first physical device associated with the ACPI companion devic=
-e.
-> >>>
-> >>> This fixes the GPIO lookups not working.
-> >>
-> >> ...
-> >>
-> >>> static int gpio_secondary_fwnode_init(struct device *parent,
-> >>
-> >>>  =09=09if (WARN_ON(!fwnode))
-> >>>  =09=09=09return -ENOENT;
-> >>> =20
-> >>> -=09=09set_secondary_fwnode(dev, fwnode);
-> >>> +=09=09struct device *phys_dev =3D acpi_get_first_physical_node(to_ac=
-pi_device(dev));
-> >>
-> >> It doesn't look like an auto cleaning pointer, so let's make a declara=
-tion
-> >> outside of the code?
-> >>
-> >>> +=09=09if (!phys_dev)
-> >>> +=09=09=09return dev_err_probe(parent,
-> >>> +=09=09=09=09=09     -ENODEV, "No physical device for ACPI GPIO dev: =
-%s\n",
-> >>> +=09=09=09=09=09     (*swnode)->name);
-> >>
-> >> Hmm... Why not %pfwP?
-> >=20
-> > Hi Hans,
-> >=20
-> > I'm waiting for v2.
->=20
-> I see, thank you for quoting Andy's email since it never made the list (1=
-),
-> nor did it reach me.
->=20
-> I'll prepare a v2 addressing Andy's remarks.
->=20
-> Regards,
->=20
->=20
-> Hans
->=20
->=20
-> 1) If you go to:
->=20
-> https://lore.kernel.org/platform-driver-x86/20260831201157.36397-1-johann=
-es.goede@oss.qualcomm.com/#r
->=20
-> it shows a "not found" <apcRAvoHkh9blDwK@black.igk.intel.com> entry, whic=
-h it
-> only knows about because of this reply to it by you (Ilpo).
+diff --git a/MAINTAINERS b/MAINTAINERS
+index da3e42d2d190..4e76c618dede 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4512,7 +4512,7 @@ AYANEO PLATFORM EC DRIVER
+ M:	Antheas Kapenekakis <lkml@antheas.dev>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/ABI/testing/sysfs-platform-ayaneo
++F:	Documentation/ABI/testing/sysfs-platform-ayaneo-ec
+ F:	drivers/platform/x86/ayaneo-ec.c
+ 
+ AZ6007 DVB DRIVER
 
-Yeah, I noticed it didn't end up into patchwork either but figured you'd=20
-see the content from my reply if the original had failed to reach you.
+base-commit: 5acbae5f7eb3d5275120abfe698c394b7325dcec
+-- 
+2.55.0
 
-I've applied v2 now, thanks.
-
---=20
- i.
-
---8323328-1431978843-1788894256=:1164--
