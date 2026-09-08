@@ -1,217 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013053.outbound.protection.outlook.com [52.101.72.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237FA41F5D7
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 08:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788855965; cv=none; b=FV+vzrZ5VOwWtKcDZ2/RAbK5W9O8uBDBvRHjoJOo6XixBnf8zpeW+meo0ff9fc/HGTGy8Zd1y87NX2zgxm5EV0CDnP+eWrFtlSIhL2UAgMwfhhB3Unts/tytQb5pFTE0QLrjXpX2Dpz245RO92CPdq+seqz8mGVN+tGxYlskhsA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788855965; c=relaxed/simple;
-	bh=mtlzNqSHslbgTL1E+s1EGrdbdVuzUh95XoEfQxCcoHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sVxwh/YOXxa2II8GZoTNjq9Z6Lu8Dfd83BMQjfvSAI+gVQbxQbCQPRbGBFZpVCKVyZh5VFFGvahaHfLOi2F2ibeaxgw1XufpuOheqJkkrcsnJZkqmaiyXJge9hgfZ+96USOEoGlmDyYkGFhBz0R5oKLoZOSXs/m4sMne6f/eG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QUKW+cRB; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=OVKQQ9sj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC7C4A3418;
+	Tue,  8 Sep 2026 08:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788857332; cv=fail; b=FoqDTdJ/SIAe9kLwgFrn34Md024RUs3CRW28YYLjruurG4MzRsUZkXalUi4jA1tuwjXgl4+mmoyCyYhO4NPvi6yhXaKVEAypa1fXZ/bWIM6qQsU20x0FLtOpA4nvVK5afilPXVupYdr1deRQqRgGetY6pB6vg5DuuKAFyOiTAJI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788857332; c=relaxed/simple;
+	bh=uE3PHg4/+mRuTvk6eBiU2IP8GnT87xEyKepR9zZi33o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:CC:From:
+	 In-Reply-To:Content-Type; b=LVkrVcPZT8djZlC+vCc9mjgWUr5HMekWfodRaeNEPgozL0TaouSBSmjmOFdvPQQG20vf/nAsISjV6pfDVgzlnFFwES2ehfhZwMoMu11K/wYvp8Dm5lkypmbSXKdCsJzXuiGjsZuX6nHqiLzAwA/WF7SrQTtYZXY4/jLd83OHOeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=foX7b25W; arc=fail smtp.client-ip=52.101.72.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUKW+cRB";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="OVKQQ9sj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1788855962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cIx/FN1ld5ZUnvvOO4W6SfTMNv+qsyUKpor9qdoZ3s=;
-	b=QUKW+cRB1vgNMh8fgJCHLMmXMprE18hgjlH8ruQ4mKP0QEdME0Bd1bp6oFUehRhSOObasJ
-	J7EmHViJb1sqrLkkZGzcUu5I1kKHZvnXtnF8P6Ekqhe3jfIfD5aRcz6JqZzj3963hxYzOu
-	DKEer3pEpYfvnVv+cuhlM2gVxZon2X0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-0alH-vDcMIaT7kvploIwCQ-1; Tue, 08 Sep 2026 04:26:00 -0400
-X-MC-Unique: 0alH-vDcMIaT7kvploIwCQ-1
-X-Mimecast-MFC-AGG-ID: 0alH-vDcMIaT7kvploIwCQ_1788855960
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-49ccf17d3b0so30827415e9.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 01:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1788855959; x=1789460759; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=/cIx/FN1ld5ZUnvvOO4W6SfTMNv+qsyUKpor9qdoZ3s=;
-        b=OVKQQ9sjja2u+cSgzrZlhyMDC+wSccriL5b/zmv9m0Q6TYe/JodaodnbrRDcvXq+OY
-         PQZfXr3LVuJnYwYUnjNCctoMxJZza9Z8WVzIE8K5QObjCixThyQ2fLymQRglfTBWocHh
-         rWTfnV7AzHmOs2wDU5sVactymzJcNk1xU6IEuFXEGsqyUTQDKWQJGTjQZH9NSqhn59mf
-         fHIZ60pj6OLtUDI/1mkxNxKJbQPOb9USZQkkMWx4boDEz+kf9FEPDKYlv05pHma+yH1o
-         3eiUxGEmQUxOS/AcmSuX+fdAW+0Y2OhtFjap02uU1PsQCZWEOGi54qeDxsRmMbqBJwoW
-         TwPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788855959; x=1789460759;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/cIx/FN1ld5ZUnvvOO4W6SfTMNv+qsyUKpor9qdoZ3s=;
-        b=ioJgkK/5aFeryGNBL7dUgjY2rd4XnlkmsLBFjmmBYith7bRoiV+/TYzbjCkwMiTgCz
-         8pkE9L/igi6ZKkvWmv56b1S1m7sqnO494gXxqIJK1mN90Shb1mEt2c7oIPxlW3UkcR7K
-         DBsoyFGGb+ftvyZMJTgupGROtRh+5C4CxIuxkleKX2tYg3ss02ooZV7k/TZeo4fBWZf3
-         zAbPtBVqcMYypmPBjrYK5IoQFIra5CZ1i+hsvQ+FkDj2LgcZx/ABj/mdBwyaYy2Rqwz+
-         uOCRY3jwMJzU6P13nArHmpnFiO/K4uK91eNZv2yhWBSYseHhqnl+a8iPI1AvykLgs7TT
-         c/7Q==
-X-Forwarded-Encrypted: i=1; AKwUvByQiH39G1WVz0QJxf4QXee0dh+4/0bVDoL4NJUKKiefdzVPjFWIaktgZWf62ltLbJwJC0ZdPsReUlY5V/Zw2kVK7Rm/@vger.kernel.org
-X-Gm-Message-State: AFuF++nIMmAI+CY0u6D4HLzewdWA096fbV8+27ZN6Z5jTmrP9Cozeyxn
-	XFJxlq3cIGDv5RAsWa8cly32LxTHq/zApD+ErSEokgFYA3p14pG1eI5RZF6zYVNAdxrKqPuCQSA
-	pagBDyBSi/umB5euLBf/RPwotJCO9UO+MF3vuPiHLLpXilpsmxecI581oa6Wu73e/VDlannt/ov
-	M=
-X-Gm-Gg: AYBFou3yVdMDDzNfXH5w3buY1j25NyQ6kyRh/rki1RbekZZsZFM73qnYOSn+MrNN5UQ
-	USbQ++pgHABfpR1jedqWS8hH5zPXcrgX02/RfWCy7uOBMz5ogIoFvt9vWtVFTacb985p0XvtnR3
-	j+hu9wAJrMX3U02A6fOHgWW7G1KSuKhIHuL7akoNTlIFDfN/aYmpyO+oL3cANM5bg0s5+WNX7Jt
-	Wx/LqwmhMvlSAAMV2J4NEw28li6z5LsyDomNrgEYO076nyMlqzbY+fC+bT0YxslAI6zV/miu7Q+
-	dIBFN4QNVDqd0EOO5RfMig0Wq3gIxhC5mHoRQd5hPBW7WR6YpKW0PAVm0+csLTQUa9cUJwi6Uz3
-	GRVFr1I12FwhQvBUWCx6Wzw8=
-X-Received: by 2002:a05:600c:c4aa:b0:49c:e3c3:5efd with SMTP id 5b1f17b1804b1-49cf8241a84mr469629095e9.9.1788855959354;
-        Tue, 08 Sep 2026 01:25:59 -0700 (PDT)
-X-Received: by 2002:a05:600c:c4aa:b0:49c:e3c3:5efd with SMTP id 5b1f17b1804b1-49cf8241a84mr469628205e9.9.1788855958792;
-        Tue, 08 Sep 2026 01:25:58 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-79-236.inter.net.il. [80.230.79.236])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d04fe7f9dsm275644125e9.0.2026.09.08.01.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 01:25:58 -0700 (PDT)
-Date: Tue, 8 Sep 2026 04:25:53 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Karl Mehltretter <kmehltretter@gmail.com>
-Cc: Jason Wang <jasowangio@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Pawel Moll <pawel.moll@arm.com>, Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	virtualization@lists.linux.dev, linux-input@vger.kernel.org,
-	linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-	linux-um@lists.infradead.org, platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 0/6] virtio: fix and add callback synchronization hooks
-Message-ID: <20260908042440-mutt-send-email-mst@kernel.org>
-References: <20260908053817.26065-1-kmehltretter@gmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="foX7b25W"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K9Bh3LeQ10Ykf2opjtxk2NKs4PAAHAuf+SZZnQILCMi+hfJmBL3c7FrD4YoR/XiXVHJIWOSQwTjbXbe2fCo7MSe5XeFRuVwIB9CPg5mI18WqLdrHziFoMd1cwTs/sK7AA20kFQpDanVovuZWamN+kETTeEWds5OPAWMhQVKMW3X5OKxRNthgnAZJUuHD+jvg9+ZcS2BxpIL3fjFNrmDopcX+hshgHkpk0ejtTzGYGjD+br0RiTd/mzsbQnoj75hS1l9uqyMJh88qCddJISlWYydIrBTo6aFvOoHV20YFHmbpATXVNPZ+eWclkh+veyeS0lNGDmGVky11R9rMEyFgdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1rl3xiiubpg1uQ6fpFsTfO5RSpGsZgiuff1lS0Lw8+k=;
+ b=GDiR9eM4nGw4tHwOWNLUhf/JBV2OTzvSRqZ3ksD+RkT2nCwng6WLVXUTVmQXNeqAGvrL9Pjds6foqntGxq5WoflLkQ6owQ7LziBg61YOnKQG6Zrs0+6iSDMlFyC2o6BhvfepZL5CcK5nLoFzR8NEMj19pK3LP6goe6hiVi3+5yx5BgvTF2BT7osCjKbtquV6utnIsKHTTvlwTHIyXIwTgs/geJtZxJ0qkIXQHlXVfOVpWdrJFqmrDro7wAnnQ1pRP8lrUW9D09Ffw38Vmlr6DIrZfMY7Zx3UwDm/dZAyeONwd9GDqO2Ju/yZvXKDbbEu1UlEQWzEBhLT1HJCZedmBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 164.130.1.60) smtp.rcpttodomain=petermarshall.ca smtp.mailfrom=foss.st.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=foss.st.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rl3xiiubpg1uQ6fpFsTfO5RSpGsZgiuff1lS0Lw8+k=;
+ b=foX7b25WSp6jAyotPLo7/yzUQHAlluS0K2Nej8TPQH6orWYUDZOnDdeneSEbp8Dghp9KC+3B6xzO/rOAwtB2mRV5HqIroZ4aGo80ZpkZIfHk64kK5oldl8Wt27J3qf3KV/H0MpH9OY9Srw3ks3eJjhexiSPjlCaN9wxJeWV33BBe29yjp4cgzbgwlEpdxofb7FQ8eAvcOuZhTHjGVdpRJXXGoaemWz5+KdxAYfcflAPzyCm1KHN8DUxcbAmrz4HYEwcPPAkyWy6SkDwHNDjsqqish5jExFsppUCmdMJPf8eTXSikd4P0Vo6j7sYVktkfMIto8JAZ8EeTbbhr2hS9Bg==
+Received: from PR3P195CA0004.EURP195.PROD.OUTLOOK.COM (2603:10a6:102:b6::9) by
+ DB3PR10MB6857.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:439::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.382.15; Tue, 8 Sep 2026 08:48:30 +0000
+Received: from AM7PEPF00000055.EURPRD83.prod.outlook.com
+ (2603:10a6:102:b6:cafe::3e) by PR3P195CA0004.outlook.office365.com
+ (2603:10a6:102:b6::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.15 via Frontend Transport; Tue, 8
+ Sep 2026 08:48:30 +0000
+X-MS-Exchange-Authentication-Results: mx.microsoft.com 1; spf=fail (sender IP
+ is 164.130.1.60) smtp.mailfrom=foss.st.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=foss.st.com;
+Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
+ designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.60; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.60) by
+ AM7PEPF00000055.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.428.0 via Frontend Transport; Tue, 8 Sep 2026 08:48:30 +0000
+Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
+ (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 8 Sep
+ 2026 10:53:56 +0200
+Received: from [10.130.78.67] (10.130.78.67) by STKDAG1NODE2.st.com
+ (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 8 Sep
+ 2026 10:48:29 +0200
+Message-ID: <28b04ac3-6e52-4475-8c67-a52ff77fd223@foss.st.com>
+Date: Tue, 8 Sep 2026 10:48:29 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908053817.26065-1-kmehltretter@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add
+ VD55G0 support
+To: Peter Marshall <pm@petermarshall.ca>
+References: <20260902204549.657228-1-pm@petermarshall.ca>
+ <b7e8939f-646a-417b-b4ad-1785359c3343@foss.st.com>
+ <DL6TUYCM6AE9.3SFNKPI5T7CVS@petermarshall.ca>
+Content-Language: en-GB
+CC: Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Sylvain Petinot <sylvain.petinot@foss.st.com>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-media@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+	"Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <DL6TUYCM6AE9.3SFNKPI5T7CVS@petermarshall.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ENXCAS1NODE2.st.com (10.75.128.138) To STKDAG1NODE2.st.com
+ (10.75.128.133)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PEPF00000055:EE_|DB3PR10MB6857:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce3cd8c2-be0a-49db-6814-08df0d85f4ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|36860700016|82310400026|1800799024|376014|10067099003|6133799003|18002099003|22082099003|56012099006|11063799006|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	3wSWuHlSPUHYZrFesRzmBjaXj4ouDgtyVsLz0Rk2miWu5p7Co8WhtFTjC5UQksjjelMzP+bgND4SPvVV8dqAwXW1FWZkNJcXHkZPsAmTY+3052wzvcU2VAqZ/tizPqR1k1aJZPce21fm3jBqk+viPVbN8FDhUBa//m1cZPiDyMX9RcmNsUGsrDyEjqb7H36v9/TL4vlRXnkmu8KZdQ3taoEanWTj4HOVsIy7UZ7CqHefNjYiGwwZG2kZt7bgBScc9osmZqU7iRzMi5seyVIXDk2DB5VPLLJYyuFb9DkrmmRvDgDhBrnayjwhfA3rKF+FER3n72Imp3FvIqTKoWE3zUbrymOFC9LpPOp5MqgDurKjTRXkn9r7GYpQgcDPOFgyyXZf0y9g/3oejXJPFskAP1JSkFCxVGwPmogjB/N/fCSU6DoyPTvkHjeItssgkXl+imguK5w2C+VBvq3Vx6eRa+h4t6sUHxW0NPi/o7uOrmy1UUeB8PmonYklxvcGOkcVMO6ePjVYeKX9pkHmXW+bNRWUIYY8Ida0UWaqKYbpGi3pJNnC48X6fvn7GCvlyzt1wTOvZt/C2+FozyypzXpHsutkB+mBqdABsLJ8AIaeDvRU9bfhMzUcS1ars1pMoP3BuqKWetd2DvA7YCLZFSd1bYgaCNFjbykifSuoGXJxW0g=
+X-Forefront-Antispam-Report:
+	CIP:164.130.1.60;CTRY:;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(82310400026)(1800799024)(376014)(10067099003)(6133799003)(18002099003)(22082099003)(56012099006)(11063799006)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	j3UxlBXOPpTY+QQ9+KxLD9ZOXp0e3+8wAlH7bgMVLX7RfOuXKsBYF/UKJ4rG7eKCQsu5RsM9+f3rxBdqdSPqBc9n+Z/e8gmiEEwRpC3q4Ie8lEmlIVZXt1JEK6ePwDeAZd8Rl0elwPmV2r5g2vUnGKwfAbg90DamRB7zQiuBgsQS60xGGQgTeG3OhZwVgObTAM6m/ohRBG5I0GswAkCeS1eMlpl13EgFsU638THIqg6o08M/s7K/a0vm1D4ZYnpD/ZvN7TwciHjT86KP+C8Y8oo6uEXnL36pRw0CiOO/Zhbn8NpcNBdESFJGFYlndlwU/EDkfOfs5PrxcIFPrhodMzXjbiE7Fcbg2UzXJjHV7lr7Sl6njtwHMWZDu6my0gU7gd9U58Rh3dA3N8R8oke1auVxH2mgk4k3OXeDKOjOsPhhbs+Sy0sCvky8NxvKTyv7
+X-OriginatorOrg: foss.st.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2026 08:48:30.0057
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce3cd8c2-be0a-49db-6814-08df0d85f4ec
+X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM7PEPF00000055.EURPRD83.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR10MB6857
 
-On Tue, Sep 08, 2026 at 07:38:11AM +0200, Karl Mehltretter wrote:
-> This is v3 of the callback synchronization series. It is based on
-> Michael S. Tsirkin's linux-next branch at f49e6cf91942 ("virtio:
-> synchronize callbacks after device reset"), which already contains the
-> core change and the virtio_input teardown reorder from v2.
+Hi Peter,
 
+Adding back everyone to the CC list so they can see our discussion ;)
 
-Thanks I applied since this looks like a net improvement.
-Pls keep iterating on the core change.
-If you want to take a stab at some of the pre-existing issues -
-will be welcome.
-Pls do note which patches were tested and which were not.
+Le 04/09/2026 à 22:51, Peter Marshall a écrit :
+> Hi Benjamin,
+> 
+> Thanks for your initial review.
+> 
+> I chose to merge the new hardware support into the existing driver to avoid code
+> duplication and improve long-term maintainability. It looks like mainline is
+> moving toward generic interfaces, and away from the "copy-and-modify" status quo
+> common in vendor kernel trees.
 
-> Patches 1 and 2 fix two bugs in virtio-ccw's existing
-> synchronize_cbs() hook. After a fallback from adapter to classic
-> interrupts it selects the wrong lock, and the classic interrupt handler
-> only takes the matching lock when notification hardening is enabled.
-> Patch 3 adds SRCU tracking for remoteproc callbacks, which can sleep.
-> Patches 4 and 5 replace the RCU fallback with synchronization against
-> the UML IRQ and the TmFIFO callback locks. The fallback already covers
-> these IRQ handlers and spinlock sections. Patch 6 adds SRCU tracking
-> in virtio_vdpa so callback synchronization does not depend on the
-> context in which the vDPA driver invokes the callback.
+I'm not aware of such thing in the mainline tree, we can take for
+example imx sensors and every sensor tends to have it's own driver, but
+I may be wrong.
+
 > 
-> The UML, TmFIFO and remoteproc reset paths do not themselves prevent
-> new virtqueue callbacks. UML and TmFIFO only clear a status field, and
-> remoteproc does not wait for the remote side to acknowledge the reset.
-> Without notification hardening or driver-specific teardown protection,
-> callbacks can still start after reset. The new synchronization hooks
-> do not fix that. The TmFIFO hook also does not synchronize with the
-> rest of the FIFO work item outside the callback locks.
+> The vd55g1 appears to be a generational successor of the vd55g0 and the two are
+> similar enough that the driver only needs a few feature flags passed through
+> the ACPI/OF match table to support both of them. The added abstraction does not
+> obscure operational logic, although it might make it harder to verify according
+> to the datasheets.
+
+I tend to disagree, I still think it adds complexity and slowdown code
+iteration as we will have to test both drivers at the same time to see
+any regressions, which is not ideal.
+
+I'd like to have an advice from Sakari and or Laurent on this matter,
+what do you think ?
+
 > 
-> The virtio_input loop change from v2 (continue instead of break, so
-> events the device already completed are still delivered) and the
-> event buffer leak are sent separately.
+> Patches 3 and 4 add the required identifiers for the Microsoft Surface Pro 9 to
+> use its embedded vd55g0. The sensor isn't quite usable yet because of remaining
+> issues in the IPU6 subsystem. Most notably the stream fails to start if the
+> sensor sends less than a certain number of bytes per line (384 bytes or less
+> on my hardware), and the frame gets cut off causing flickering when the CPU is
+> idle. The latter issue was already documented by Hans de Goede on linux-media
+> (Oct 2025).
+
+Gotcha.
+
 > 
-> Changes in v3:
-> - Rebased on Michael's linux-next branch. Dropped the core change and
->   the virtio_input patch, which are there already.
-> - Split the virtio-ccw fixes out of the core patch, one per bug, and
->   the transport patch into one patch per transport. The CCW and TmFIFO
->   changes are functionally unchanged from v2.
-> - Patch 2: added a Fixes tag and described the existing shutdown
->   case. Removed the dependency note on the core reset change.
-> - remoteproc: read the queue pointer once in rproc_vq_interrupt(), and
->   synchronize with callbacks in __rproc_virtio_del_vqs() before
->   freeing the queues (Sashiko). Place vq_srcu next to rvdevs so the
->   hunk also applies to mainline, which added attach_work after index.
-> - virtio_uml: compare against UM_IRQ_ALLOC instead of a bare negative
->   check.
-> - virtio_vdpa: use SRCU instead of a per-device rwlock, so the
->   callback tracking uses per-CPU counters, and cover the config
->   callback (Sashiko).
-> - Rewrote the commit messages. Corrected the RCU fallback description
->   for UML, TmFIFO and the vDPA simulators. Dropped the claimed simulator
->   reset race: the simulators disable bottom halves around virtqueue
->   callbacks and serialize reset with the worker's mutex.
+> libcamera comes with generic defaults for unknown sensors and doesn't require
+> any modifications to stream successfully.
+
+Well yeah, the sensor will stream but will lack its medata to make it
+stream cleanly. Please note that for Raspberry Pi this is a hard
+requirement and it won't stream at without a cam_helper. Honestly that's
+not that big of a deal and I consider it a side effect, we could fix
+that easilly. I'm more concerned about the huge refactoring part.
+
 > 
-> Changes in v2:
-> - Moved callback synchronization from virtio-pci into the core, as
->   Michael suggested, and added the missing synchronize_cbs() hooks.
+> Unfortunately, patch 5 in my series is not split into logical steps and does
+> way too much at once. The renaming from vd55g1 to vd55g was unnecessary, and the
+> following patches 6 and 7 should have been squashed into it as they represent
+> cleanup steps instead of isolated logical changes. That makes this series
+> completely unbisectable and not suitable for merging. The next version will
+
+Indeed.
+
+> focus on abstracting vd55g1.c in logical steps before supporting
+> the vd55g0 revision.
+
+Thank you for your work. I'm eager to see this.
+
 > 
-> Testing: the changed objects build with W=1 without warnings, with
-> clang on arm64, x86-64 and s390 and with gcc on SMP UML, and the
-> patches also apply to current mainline and linux-next. The runtime
-> tests from v2 were not repeated on this version: the input, rebind and
-> shutdown checks on arm64 MMIO and x86 PCI covered code that is
-> unchanged here, and the remoteproc and virtio_vdpa hooks have only
-> been build-tested. No remoteproc, TmFIFO or s390 hardware was
-> available.
-> 
-> v2: https://lore.kernel.org/r/20260905152059.89560-1-kmehltretter@gmail.com
-> v1: https://lore.kernel.org/r/20260818040433.66986-1-kmehltretter@gmail.com
-> 
-> Karl Mehltretter (6):
->   virtio_ccw: fix synchronize_cbs() after interrupt fallback
->   virtio_ccw: always take irq_lock in the classic interrupt handler
->   remoteproc: implement synchronize_cbs() for virtio devices
->   um: virtio_uml: implement synchronize_cbs()
->   platform/mellanox: mlxbf-tmfifo: implement synchronize_cbs()
->   virtio_vdpa: implement synchronize_cbs()
-> 
->  arch/um/drivers/virtio_uml.c             | 10 +++++++
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 15 ++++++++++
->  drivers/remoteproc/remoteproc_core.c     | 12 ++++++++
->  drivers/remoteproc/remoteproc_virtio.c   | 37 +++++++++++++++++++-----
->  drivers/s390/virtio/virtio_ccw.c         |  6 +---
->  drivers/virtio/virtio_vdpa.c             | 34 ++++++++++++++++++++--
->  include/linux/remoteproc.h               |  3 ++
->  7 files changed, 102 insertions(+), 15 deletions(-)
-> 
-> 
-> base-commit: f49e6cf919425cc55f10fd7cda7e0fc895df4cc0
-> -- 
-> 2.39.5 (Apple Git-154)
+> Best regards,
+> Peter Marshall
+
+-- 
+Regards,
+Benjamin
 
