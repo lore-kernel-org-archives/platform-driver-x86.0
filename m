@@ -1,105 +1,39 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AA4379C33
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 05:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DAA38886B;
+	Tue,  8 Sep 2026 06:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788845994; cv=none; b=W5xk6G7cytA524pFPD6zRvQLdj3ehX4b8mKrwmjWD4baNdjCb3msjmtegyfues4U2jZs7v0Sni5yrATfNPj6Z+sn3+7FAjiGUkfbDaWWZoJZ9ZxMaM/AFUBeRv5mdhzrQZNcuW9fyDDyuOMXpAKOsKvlP7Yc03+mAPyjG1ib4lM=
+	t=1788850228; cv=none; b=u4G5YMQedgbR06haHA+YeGRl96Yb2Cye3TjuYYdldqoHonyOoBbNgkwOQivzru2DJFosJwYJDN6FVwjcQH+TF2y9TMBhnc34qR5TClbHRTGBafmu2lFgRbSZX1AjKz2IK9c7dt+bT8Wig+Ka1qJbKb8GWaUT6lAoVldRLnjAUnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788845994; c=relaxed/simple;
-	bh=Z1mqy3qNtdRxgKwEWqMkljOG1k4ekHUKiS2/6Ca17Yo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZJyOx2OwQTsHHrQ+7X8hICTOcyseKhsmbYbsDsWk9Cb6Q5X7GaAOtwV+0XviX8taKc/S2UKHaBgoTSiT/2phMGEodTkv64+HLPsYyiUxoYawdqBTpznvehVZj0yJHxSKbZSGTQ6R/FqOP2YEJNpxYRM93c2/lUYuzDhmFLvHa+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmjpCI8s; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788850228; c=relaxed/simple;
+	bh=NtjbLC7sUqFVEim0JQeGgw8EhYFbjMRlHjELuExr8hI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kYxzkFEvgZm1idbHijgQrxsknunwwWatD7N+llKTcct78Ku7qN/76UPgqM2NO5WNb4qR2PXlPLljwpmecuVWcbxV1X8yikGGKt7YT5rgHpE/7V8rrAfKYe6n10v/d+GzY+gR8QZYCWpKvNYO/YK25siB5289C2GeEwR7gtGfp68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWpNXeQu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmjpCI8s"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49ccfbe062eso40270965e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 22:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788845988; x=1789450788; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=l0UrpxibHZnDBNXE1bN5qrJqc7sTw2Bd+aGpZLtd0Ug=;
-        b=UmjpCI8s7t3E+4yRhKMceIDOKBrqYNOKBZjVaryoL+Wx8/5meM4sQ9XpZurZfH3zlS
-         fm9dPFfnx8NWhVMpEnO10cGpwzMYuIbKyGY2YuHQfXYqFDhg6uepkDSAbaDSU9HEDtlu
-         MwjTnuF26Niwb9CNviqGtmx4WwjStW+BJ1nPjnxMHE5c1ZoVPpi7WYhT0dm2ReieAxbi
-         CEV1OpQOMg3cbWpcFghWbSrBG5sOmvQMxBpbpHBVK0haUEZzsGRlCb+OqTdIr9oBGio4
-         6sDz2wkoyVcw+4UAETBV79kQRFAvgWv6+QUPewowi4qDn3CuhbBW78rMGb81BCHJCwo1
-         IlvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788845988; x=1789450788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=l0UrpxibHZnDBNXE1bN5qrJqc7sTw2Bd+aGpZLtd0Ug=;
-        b=R9+gCSaOHfXaMuUG24pCqvjMsKPXE3YKAmhLqjilKPw8z7jL48Usjq7kUjQFqMhXA/
-         Ex7TE572HVPRAPC/A56LYBbd2fPayKSzRjTqL1CkVy/HOS7oG2b3+oclC+7ty8/GuBOG
-         qggm+SI0gEa5t085RXhz1azJYJ15CcQBL7fb6IXgUp/eIAxoiKaMrpb75V8AZSxC9eVi
-         Jch9E8eHN9sHuN++yeXIT6M8nRQpqMES8gx6mlmTOSfzeSvlERAFWtcVZdwibojTTY15
-         Mi68ohvHwKzOuUDRAd8kSuKsTNZ4ywTMUchf0ZfF/XCNC8fniU33Hs04f7ELUZctvwoS
-         caEw==
-X-Forwarded-Encrypted: i=1; AKwUvBySAKqzzy1DLCwlw7AkG5vmXwyfZuZ2pQjrSyuOOaWmrgw3GNNDG9kvNk78GW5LTCkzB37+Yxw57yy5i4XgYAhYdivf@vger.kernel.org
-X-Gm-Message-State: AFuF++lIy6BZNzC77d/VefurE9w63VnMa1psDLslXMfZOBJEFtxN91Kz
-	sR2G9VSHcGlq3qAOb451zO41h1Y+R+MWMqdBlJV0aeYuf7P5nETiQBoY
-X-Gm-Gg: AYBFou0FFE4iziUlHBdnCn0BRcZeTALrlr1h4G22AynjUM21vJ4SzCtQEJi+LPaKlPt
-	Jrl/iitFIJu0JI8BGi1Cfegu1rAT4SYFE9/ypuDItvk0gQL2g8YfSWxF9Ueo5SMRXug5OImlBB6
-	Z18qpHBAajATIaI5C0Yurd27qP8kMZbzsTlX6E+sKzy78aUsLZQfDuxWEIKoCjJXSZbyV4u8T2h
-	gRNdre5mZjpY4Lzb6mz8KJ4U3H2ryJ5dgHTwDdRqVVEJJhPh2TTyeT0zCnNjKSe9IVYaWI3OA+L
-	an/Hjt4GKF7VqoZtoHaYj4ZMVeCe7hq4hAYS51x/XN9Asg0gJSrv2/R3SVP/uRIGlkrdIYrlfmW
-	ybeOdy786+ygAw8vQVxSvsIVXaWUNFyVJhdIB0YswlhX1BY4BEXLOD681rXi9ocHagkbhq1h7G0
-	fCTmPbsDy3oQnUBkIhX8XFISnHMysCssCcCc0HxrkVLGPSASy72evrdOGxdFwMLc2uS1RTlSfaN
-	+LzBKC9YOv2a5FyVYyM863ApbjP3exMzJJiE5m88f08Eh822I+voxcGB3ytPyQFMZEg98Tw0uHP
-	A1lpJuRiJjSMP3PJGMt8DMPa94cVYU8=
-X-Received: by 2002:a05:600c:3587:b0:49d:17d8:abec with SMTP id 5b1f17b1804b1-49d17d8abf5mr31972855e9.21.1788845987998;
-        Mon, 07 Sep 2026 22:39:47 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-095-117-170-066.95.117.pool.telefonica.de. [95.117.170.66])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee7fec25sm523841335e9.13.2026.09.07.22.39.46
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Sep 2026 22:39:47 -0700 (PDT)
-From: Karl Mehltretter <kmehltretter@gmail.com>
-To: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowangio@gmail.com>,
-	Gerd Hoffmann <kraxel@redhat.com>
-Cc: Karl Mehltretter <kmehltretter@gmail.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Pawel Moll <pawel.moll@arm.com>,
-	Cornelia Huck <cohuck@redhat.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	virtualization@lists.linux.dev,
-	linux-input@vger.kernel.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v3 6/6] virtio_vdpa: implement synchronize_cbs()
-Date: Tue,  8 Sep 2026 07:38:17 +0200
-Message-Id: <20260908053817.26065-7-kmehltretter@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260908053817.26065-1-kmehltretter@gmail.com>
-References: <20260908053817.26065-1-kmehltretter@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWpNXeQu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F9B1F00A3A;
+	Tue,  8 Sep 2026 06:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788850226;
+	bh=/PPp8rYmucxJLkZ72D3LWIniJqu+l1/sZxASHHNm1/s=;
+	h=From:To:Cc:Subject:Date;
+	b=FWpNXeQuK6+YaQ0QuePlmJm2pSLgQrsl4DiZTlXVFLN1KQ5oCrU3IL0fYf6OAGF5E
+	 eRPYcqQAmqGmnMC3XI+YKYWUWVyow8/x/ozRfBaKppuKF6YZRyNd/q9diMHRc7hNvF
+	 tet/ExPwo6L25cLZJ1Ejor6dI+6lhl8AeSlUWqGARw47i1vejKxEFqLbyV8L214j1k
+	 8BQSkPNr77oHu/ewscaum2zSJVD3ZFGm7YOmK4jJ9Xb66qlvb8eKndUYsg5GSTmyIt
+	 MXKrv47xKVQzvI8QJRJxYJx/tAPUkI8huGp7CNcreQGpFOD4MCA3IQc6oK/nI3JUaP
+	 0PUImbsPejKmA==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: srinivas.pandruvada@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH] tools/power/x86/intel-speed-select: clean all the produced files
+Date: Tue,  8 Sep 2026 08:50:23 +0200
+Message-ID: <20260908065023.168234-1-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -108,123 +42,38 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-virtio_vdpa relies on the core's synchronize_rcu() fallback for callback
-synchronization. That covers IRQ handlers and sections with interrupts,
-preemption or bottom halves disabled. virtio_vdpa does not enforce any
-of those contexts when a vDPA driver invokes a callback.
+1) The commit 7d440da009b6 ("tools/power/x86/intel-speed-select: HFI
+   support") added the thermal.h link, but did not remove it up on
+   cleanup. Do so.
+2) .*.cmd files were never deleted, so were left dangling. Clean them up
+   too.
+3) The "*.d" pattern was updated:
+   a) the backslash was superfluous,
+   b) it was made more explicit by specifying ".o" in ".*.o.d".
 
-Add an SRCU domain per device and enter it around the virtqueue and
-config callbacks. Implement synchronize_cbs() with synchronize_srcu()
-so it covers the callbacks regardless of the calling context.
-
-SRCU uses per-CPU reader accounting, avoiding a single callback lock
-shared by all queues. Cover the config callback too, as virtio-pci
-does for its config vector.
-
-Assisted-by: LLM
-Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/virtio/virtio_vdpa.c | 34 +++++++++++++++++++++++++++++++---
- 1 file changed, 31 insertions(+), 3 deletions(-)
+Cc: platform-driver-x86@vger.kernel.org
+---
+ tools/power/x86/intel-speed-select/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-index 6bcf4567a929..f9559b6b2e0b 100644
---- a/drivers/virtio/virtio_vdpa.c
-+++ b/drivers/virtio/virtio_vdpa.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-+#include <linux/srcu.h>
- #include <linux/uuid.h>
- #include <linux/group_cpus.h>
- #include <linux/virtio.h>
-@@ -27,6 +28,7 @@
- struct virtio_vdpa_device {
- 	struct virtio_device vdev;
- 	struct vdpa_device *vdpa;
-+	struct srcu_struct cb_srcu;
- 	u64 features;
- };
+diff --git a/tools/power/x86/intel-speed-select/Makefile b/tools/power/x86/intel-speed-select/Makefile
+index 6b299aae2ded..6f896f40c1a8 100644
+--- a/tools/power/x86/intel-speed-select/Makefile
++++ b/tools/power/x86/intel-speed-select/Makefile
+@@ -52,8 +52,8 @@ $(OUTPUT)intel-speed-select: $(ISST_IN)
  
-@@ -114,8 +116,11 @@ static bool virtio_vdpa_notify_with_data(struct virtqueue *vq)
- static irqreturn_t virtio_vdpa_config_cb(void *private)
- {
- 	struct virtio_vdpa_device *vd_dev = private;
-+	int idx;
+ clean:
+ 	rm -f $(ALL_PROGRAMS)
+-	rm -rf $(OUTPUT)include/linux/isst_if.h
+-	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
++	rm -rf $(OUTPUT)include/linux/isst_if.h $(OUTPUT)include/linux/thermal.h
++	find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '.*.o.d' -delete -o -name '.*.o.cmd' -delete
  
-+	idx = srcu_read_lock(&vd_dev->cb_srcu);
- 	virtio_config_changed(&vd_dev->vdev);
-+	srcu_read_unlock(&vd_dev->cb_srcu, idx);
- 
- 	return IRQ_HANDLED;
- }
-@@ -123,8 +128,22 @@ static irqreturn_t virtio_vdpa_config_cb(void *private)
- static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
- {
- 	struct virtqueue *vq = private;
-+	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vq->vdev);
-+	irqreturn_t ret;
-+	int idx;
-+
-+	idx = srcu_read_lock(&vd_dev->cb_srcu);
-+	ret = vring_interrupt(0, vq);
-+	srcu_read_unlock(&vd_dev->cb_srcu, idx);
-+
-+	return ret;
-+}
-+
-+static void virtio_vdpa_synchronize_cbs(struct virtio_device *vdev)
-+{
-+	struct virtio_vdpa_device *vd_dev = to_virtio_vdpa_device(vdev);
- 
--	return vring_interrupt(0, vq);
-+	synchronize_srcu(&vd_dev->cb_srcu);
- }
- 
- static struct virtqueue *
-@@ -440,6 +459,7 @@ static const struct virtio_config_ops virtio_vdpa_config_ops = {
- 	.reset		= virtio_vdpa_reset,
- 	.find_vqs	= virtio_vdpa_find_vqs,
- 	.del_vqs	= virtio_vdpa_del_vqs,
-+	.synchronize_cbs = virtio_vdpa_synchronize_cbs,
- 	.get_features	= virtio_vdpa_get_features,
- 	.finalize_features = virtio_vdpa_finalize_features,
- 	.bus_name	= virtio_vdpa_bus_name,
-@@ -454,6 +474,7 @@ static void virtio_vdpa_release_dev(struct device *_d)
- 	struct virtio_vdpa_device *vd_dev =
- 	       container_of(vdev, struct virtio_vdpa_device, vdev);
- 
-+	cleanup_srcu_struct(&vd_dev->cb_srcu);
- 	kfree(vd_dev);
- }
- 
-@@ -467,6 +488,11 @@ static int virtio_vdpa_probe(struct vdpa_device *vdpa)
- 	if (!vd_dev)
- 		return -ENOMEM;
- 
-+	if (init_srcu_struct(&vd_dev->cb_srcu)) {
-+		kfree(vd_dev);
-+		return -ENOMEM;
-+	}
-+
- 	vd_dev->vdev.dev.parent = vdpa->map ? &vdpa->dev :
- 				  vdpa_get_map(vdpa).dma_dev;
- 	vd_dev->vdev.dev.release = virtio_vdpa_release_dev;
-@@ -489,10 +515,12 @@ static int virtio_vdpa_probe(struct vdpa_device *vdpa)
- 	return 0;
- 
- err:
--	if (reg_dev)
-+	if (reg_dev) {
- 		put_device(&vd_dev->vdev.dev);
--	else
-+	} else {
-+		cleanup_srcu_struct(&vd_dev->cb_srcu);
- 		kfree(vd_dev);
-+	}
- 	return ret;
- }
- 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
 -- 
-2.39.5 (Apple Git-154)
+2.55.0
+
