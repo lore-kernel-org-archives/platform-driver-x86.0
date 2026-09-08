@@ -1,156 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE30470111;
-	Tue,  8 Sep 2026 21:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7295505F3;
+	Tue,  8 Sep 2026 21:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788903986; cv=none; b=i/AOArz4qcXf9dKklxx4M8UCBZmxN2RsSqV48nRSilmYQmvXwiKIKWcFJ3Xz58AElxy10KS3FLA6X6gJQfMMtjYH2A4ynNtsCbQdBfJ4iiDy/bXn6AOMiCV5Sqo9Dq05o30k0YzgUCdCqx+OkPpy0KRBRHzwuCgT4GY43BqtN1c=
+	t=1788904487; cv=none; b=T9btJdIFasWWALXBxzBwoOAz+u5RlJZhW8yj28GWIQg9USnlPqrxShgKoFL+45kV70YYW2IE/SuP5GXI2Lm4KdXuWg+G0EaNYM4bFT7ExQ1XGFwC8wWIHmI7dMA6vH9CYhfT4qb9UqwDpEKVwfu4MpfogoM0o6hZcGackWoLhdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788903986; c=relaxed/simple;
-	bh=Wo0ZL3M+Wywg41LZ2lwCb4eKYlm6h4hOEsw4Jfr5HHw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLtAyCKgKNNsKf6wq/S3YOa7k6yRD7y2nRbmr9W/B3IZAy62WShgUhXCaZRtqXvfA3PPi/CS3GvecjdmTQUrhuuazfdgAQg+UAfHYxsGfRPZX2LS8Ij16uYuujAwtcPreyT5CwRgtyT+1u+hT0N/Hf2yItSnXT9xAK2GkTehmvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nn9HoA7/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788904487; c=relaxed/simple;
+	bh=46D7DTped0o7Lg5mF3tCFCJ+EluhhFx6QATB5hfpgZ0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=T/pxjDYRlYFgPkAek9eKVbinRNJGia9amJlG1iyNE7fRtb6CMSdbCE7cCTUfpxEgFpj1VFhcG6nTnByTjZ8f5Nv5L9wEjv1FidsrovzO8ShQlMttf2rQKj11Tq+g0hDR2vvCOxpF0iYBDnLbGEflGhF9kvGxgNB08D1MjLhwcqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n4j2EOYS; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nn9HoA7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A671F00A3A;
-	Tue,  8 Sep 2026 21:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788903985;
-	bh=xDFCn0lNPOgF6i1hXkAPNA/hzn9F1hmDV3HSMIXSq0c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=nn9HoA7/zv9eZsVfjPpLIaUXQ1AcSJn3gqPzs9xYEePlkOn7S0lvlYywod2dHun3L
-	 foerzEURPNeUMkpPX/0fJgpvnW5hanvxrEMKuH+5BipFzkhtUjfL7RJHg8bxyCxVFz
-	 Qs4Fb1Kcy0XI7zKBZQQRzxgZNeBelnZNCaQ9inRYkvP3lamuwe+kFhHQR4RtoDs4nn
-	 q6ycyvD7WLV3dnYJSSDDKX1cRjwq/bDyb6BhqZEJ0UWt+ONgmdGgJ+SGY3ItqXpHXy
-	 mir2VMg1aCcwiW8Dc0Shrem2bALxQXlyj+Ju3HrtJHnpCuKIhPWYzFchgVT7e6dms4
-	 8I6eUApzOaZzA==
-Message-ID: <0fe7a8b6-f3df-4822-a03a-d072b86cdfa8@kernel.org>
-Date: Tue, 8 Sep 2026 23:46:21 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n4j2EOYS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788904485; x=1820440485;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=46D7DTped0o7Lg5mF3tCFCJ+EluhhFx6QATB5hfpgZ0=;
+  b=n4j2EOYSkv8so6bJI60RNw1u0wzV5Y8kfdhdQhWz1u6hXyr5Pameq+3X
+   HD1hWFCDbckYfWRMSeEY2ZJIfifelBKqYJWbZ/0R1yGXw/XtzNSeI2v1t
+   fVjwEb/R1cIRaCBhJRCXP7KBhcgzJu/qeG/LIRFLSV2iLVnl2J5E1YJ7C
+   ef2I9Natw/sW+mi1RF6oin4+ZeunfrLabNQeHT1ezOdohzYYfFoknm+pQ
+   gFOnq7D0s9C8SwJUGOplTI6jtlbVqDlQbnmXePVpAfNHtsqcoLbkz8HdT
+   ROAA3lOfbgSeFYalloZZY0CokmqrCl5gR6GDUS9hinYrPI9mjrOx81227
+   A==;
+X-CSE-ConnectionGUID: KiKFFUncQymNIpUAJyx1xw==
+X-CSE-MsgGUID: 8RsVIup2SACD9AWpiBQxPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="89361945"
+X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
+   d="scan'208";a="89361945"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 14:54:44 -0700
+X-CSE-ConnectionGUID: +4Z1+9LCR8mmUnyAn3HkAQ==
+X-CSE-MsgGUID: D25G1V3rQTOEJItnhnbDuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
+   d="scan'208";a="274658137"
+Received: from unknown (HELO [10.241.243.185]) ([10.241.243.185])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 14:54:44 -0700
+Message-ID: <3cb5cbdb227bee0b822f1550e10659faadd77a3d.camel@linux.intel.com>
+Subject: Re: Cache-aware scheduling does not work well with amd big/little
+ cores
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Klaus Kusche <klaus.kusche@computerix.info>, "Chen, Yu C"
+	 <yu.c.chen@intel.com>, Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Badole, Vishal" <Vishal.Badole@amd.com>, Peter Zijlstra
+	 <peterz@infradead.org>, linux-kernel@vger.kernel.org, "maintainer:X86
+ ARCHITECTURE (32-BIT AND 64-BIT)"
+	 <x86@kernel.org>, platform-driver-x86@vger.kernel.org, K Prateek Nayak
+	 <KPrateek.Nayak@amd.com>, ricardo.neri@intel.com
+Date: Tue, 08 Sep 2026 14:54:43 -0700
+In-Reply-To: <14630984-9287-4454-b52f-3a1e526e1fdf@computerix.info>
+References: <2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info>
+	 <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
+	 <b475039b-defe-46e7-ab85-46e3196da667@intel.com>
+	 <369d0bbb-db7a-4f86-bee2-332d5295c452@computerix.info>
+	 <406a5c407bbe60cafc24f715e089f5552a0791f9.camel@linux.intel.com>
+	 <14630984-9287-4454-b52f-3a1e526e1fdf@computerix.info>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: soc_button_array: ignored -EPROBE_DEFER loses the buttons on 68%
- of boots (Surface Pro 11)
-To: Sergey Lebedev <lsa.uz@pm.me>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Maximilian Luz <luzmaximilian@gmail.com>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260830141355.55898-1-lsa.uz@pm.me>
-From: Hans de Goede <hansg@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <20260830141355.55898-1-lsa.uz@pm.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 30-Aug-26 16:14, Sergey Lebedev wrote:
+On Sat, 2026-09-05 at 17:40 +0200, Klaus Kusche wrote:
 > Hello,
-> 
-> On a Microsoft Surface Pro 11 for Business (Intel, Lunar Lake) the power and
-> volume buttons fail to appear on most boots. The probe runs, gives up
-> silently, and the device is lost until something rebinds it by hand.
-> 
-> Measured across the 40 boots in this machine's journal, using the monotonic
-> offset of the first "input: gpio-keys" message:
-> 
->   driver attached on its own   13 boots   at 1.28 - 1.78 s
->   did not attach               27 boots   68 %
-> 
-> The timing is binary. Either the inputs appear at about 1.3 s, or they never
-> appear at all - no intermediate values in 40 boots.
-> 
-> Where it fails
-> --------------
-> 
-> Nothing at all is logged on a failing boot, so I built with
-> soc_button_array.dyndbg=+p on the kernel command line. On four consecutive
-> failing boots the probe printed exactly one line:
-> 
->   [    1.286567] soc_button_array MSHW0040:00: OEM Platform Revision 129
-> 
-> That eliminates most of the possibilities:
-> 
->   - the probe does run
->   - it passes soc_device_check_MSHW0040() - oem_platform_rev is 129, not 0
->   - it passes gpiod_count() - the dev_dbg("no GPIO attached, ignoring...")
->     would have printed with dyndbg on, and did not
-> 
-> By elimination the buttons are lost inside soc_button_device_create(), at
-> 
->         error = soc_button_lookup_gpio(&pdev->dev, info->acpi_index,
->                                        &gpio, &irq);
->         if (error || irq < 0) {
->                 /*
->                  * Skip GPIO if not present. Note we deliberately
->                  * ignore -EPROBE_DEFER errors here. ...
->                  */
->                 continue;
->         }
-> 
-> Every button is skipped, n_buttons stays 0, and the two returns that follow
-> are both silent:
-> 
->         if (n_buttons == 0) { error = -ENODEV; goto err_free_mem; }
->   and
->         if (!priv->children[0] && !priv->children[1]) return -ENODEV;
-> 
-> which is why nothing reaches the log.
-> 
-> The GPIO controller here is INTC105D, five gpiochips driven by
-> pinctrl-intel-platform. Both that and soc_button_array are modules in this
-> config:
-> 
->   CONFIG_INPUT_SOC_BUTTON_ARRAY=m
->   CONFIG_PINCTRL_INTEL_PLATFORM=m
-> 
-> A manual bind always works: 25 unbind/bind cycles at runtime gave 25
-> successes and 0 failures. The failure exists only in the early-boot window.
-> 
-> One hypothesis, tested and wrong
-> ---------------------------------
-> 
-> Since both are modules, load order looked like the cause, so I tried
-> 
->   softdep soc_button_array pre: pinctrl-intel-platform
-> 
-> verified applied (modprobe --show-depends inserts pinctrl first), with the
-> rescue that normally binds it by hand disabled so nothing masked the result.
-> Five boots: 2 successes, 3 failures - the same rate as before.
-> 
-> pinctrl_intel_platform is a dependency of fifteen other modules and is
-> loaded long before either way. softdep orders modules; the race is against
-> the asynchronous probe of the individual INTC105D:0N devices, which register
-> their gpiochips at their own pace. Reporting this so nobody else spends the
-> evening on it.
-> 
-> Why no patch
-> ------------
-> 
-> The comment says -EPROBE_DEFER is discarded because Intel uses "virtual
-> GPIOs" that never materialise, so deferring on them would hang the probe
-> forever. A fix has to tell that case apart from a controller that simply has
-> not probed yet, and I do not know which signal you would want to use for
-> that. Guessing would risk reintroducing the problem the workaround exists
-> for.
-> > Happy to test whatever shape you would prefer - the machine is here and I
-> can build and boot kernels on it.
+>=20
+> On 31/08/2026 19:29, Tim Chen wrote:
+> > On Mon, 2026-08-31 at 13:24 +0200, Klaus Kusche wrote:
+> > > Hello,
+> > >=20
+> > > both patches in combination seem to have the desired effect.
+> > >=20
+> > > But I just look at a bar graph showing the current load
+> > > of each core.=20
+> > > The graph suggests that long-running CPU-intensive processes=20
+> > > migrate to fast cores when fast cores become available.
+> > > And I have the impression that LTO compilations
+> > > finish significantly faster now.
+> > >=20
+> > > I don't have exact numbers or benchmarks.
+> >=20
+> > Thanks for testing the fix.
+> >=20
+> > If you just apply https://lore.kernel.org/lkml/20260825174112.2580942-1=
+-tim.c.chen@linux.intel.com/,
+> > with default aggr_tolerance, what numbers do you see?
+> >=20
+> > That will be helpful for further tuning.  Thanks.
+> >=20
+> > Tim=20
+>=20
+> I did some quick testing (no perfect benchmark environment,
+> just checking runtime and CPU consumption with "time").
+>=20
+> I timed a kernel build (-j 24 and full lto, my own .config)
+> and an application build (also with a lot of parallelism)
+> with three different kernels:
+>=20
+> a) Cache aware scheduling completely configured off
+>=20
+> b) Cache aware scheduling turned on, but without patch
+>=20
+> c) Cache aware scheduling turned on, with patch
+>=20
+> Big/little scheduling was always on,=20
+> Mario's patch was always applied
+> (without it, results are significantly worse,
 
-Thank you for your detailed bug report. I've just submitted a patch which
-I believe should fix this:
+Sorry, I am a bit confused.  You mentioned later the result for (b)
+and (c) are about the same with or without the patch
+exposing debugfs (commit c1e7fe5e75ed11fa85368e5a186472afd3858f3a
+Mario mentioned in another mail). =20
+But here you say the result is much worse without Mario's patch.
+Is Mario's patch the one above or some other patch?=20
 
-https://lore.kernel.org/platform-driver-x86/20260908214410.70422-1-johannes.goede@oss.qualcomm.com/
+> because I use kernels without debugfs,
+> so big/little scheduling is off without the patch).
+>=20
+> Results:
+>=20
+> There is no significant difference between b) and c)=20
+> (<=3D 1 % wallclock time)
 
-Please give this a try and confirm if it fixes things.
+Yes, I don't expect difference between (b) and (c).  My
+understanding is the patch in question is to only
+expose the default cache aware parameters via debugfs
+but don't acutally change them.
 
-Regards,
+> Sometimes b) is better, sometimes c) is better,
+> I'd say the differences are below the accuracy of my tests.
+>=20
+> But a) was reproducibly better than b) and c)
+> w.r.t. wallclock time: 2-2.6 %
+> It was also very slightly better w.r.t. total kernel CPU seconds.
+> The results w.r.t. total usermode CPU seconds varied too much.
+> (I always ran the application build twice,
+> and for all a), b) and c), the second run consumed
+> significantly more usermode CPU seconds,
+> but took a little less wallclock time - I don't know why).
 
-Hans
+Will have to look around to see if we have some similar CPUs
+as HX-370.  My understanding is that the 4 big cores are in
+one L3 and the 8 small cores are in another L3.
+
+BTW, we have also found two issues with the active load balance
+paths for CAS that need fixes.  You may want to add those patches
+and see if they are helpful to improve things.
+
+Active load balance fixes:
+https://lore.kernel.org/lkml/20260903020656.3793626-1-wanglu.priv@gmail.com=
+/
+https://lore.kernel.org/lkml/2b0a35122ee615c6fa51076e5d79330e633755ac.camel=
+@linux.intel.com/
 
 
+Tim
+
+>=20
+> So in short, at least for the two build benchmarks I made,
+> and with respect to the wallclock time they took, AMD Ryzen HX 370=20
+> does slightly better completely *without* cache aware scheduling,
+> but cache aware scheduling looses less than 3 %,
+> both with and without the patch.
+>=20
+> The big difference I observed when 7.2 came out=20
+> was perhaps due to the fact
+> that the older version of Mario's patch I had
+> did not apply correctly or did not work as expected with 7.2.
+>=20
+> Greetings
