@@ -1,68 +1,68 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76FD524AEF
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 09:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62685525A60
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 09:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788859155; cv=none; b=uwUuaYeqXoxGAveQBQoAZTb6Ekfo2SCwkV9eI4ZhyIrshfEwEQNLGl3c60vv5DK3J4wrysfJWMMsoJQYFIxMXCtw20yV9gdbm2FkWaUV9AZ3r5tjfq/eAHVxh+XUTc1a1pL2APx6+xh/+Z1fBUQB7r+u1u6Fo3PjP0aCGfkcsbo=
+	t=1788859157; cv=none; b=otp3IHkYGU0TiUN6kORve0dMH7GfGlYnjUoM6idq9f9PlsUTp9wdisAth7LWJdHnoEtVeQtl8Cv2Rwg2v2HMKJOX3appGXQwMUkdq+twnbEigrscnPFaXGDfmWjzmYii4N4DA0uKxqWi5WRQNH2bKGdwenmoqWc5RslavjJRpHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788859155; c=relaxed/simple;
-	bh=aRiB+/teBjIDoYnRyGta0AirMhnk2B3V+bGT69BxTT4=;
+	s=arc-20240116; t=1788859157; c=relaxed/simple;
+	bh=wzHJ5AZLh1S4sbm7NQXwPNEFKn8BKSSciphvCkw+aLw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rbqXNYdbtA/DddiOj4W08knzHR56jCmDbPhPGiMhxP58keNDELGIcG4X+9rIaIf5XyQZBDqKkqrZNfQ6SaR9EY6LUhSdJu92jy5opOFv4pJu/i06fz6GbfIsQpdbOIi2zUwkFuT6EnWMV7WlDZtxooKMDVu4ouPxXiNvw3YmQ+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b=hpN+HYXT; arc=none smtp.client-ip=209.85.215.180
+	 In-Reply-To:To:Cc; b=D/nenhHdkk+fHWEnNRi+p0+a6YTIo2BBdLFu/z72JmOuMGIVI0GuZ07kYJljQoFaSOlJ5v9zuP5WOV8uPOmB1zvnqqu5Unxu57YJEvD2ZPgZVqoxzOK6L/+IPPRa3Bv7couV5RQyDo9cMFcQtoUw3e6wjaeNhV2Km1IAU8JaOnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk; spf=pass smtp.mailfrom=thegoodpenguin.co.uk; dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b=qmOcj4U0; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thegoodpenguin.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thegoodpenguin.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b="hpN+HYXT"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cc1bcdb3c4cso2913003a12.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 02:19:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20251104.gappssmtp.com header.i=@thegoodpenguin-co-uk.20251104.gappssmtp.com header.b="qmOcj4U0"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-38e041ea211so3438182a91.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 02:19:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20251104.gappssmtp.com; s=20251104; t=1788859153; x=1789463953; darn=vger.kernel.org;
+        d=thegoodpenguin-co-uk.20251104.gappssmtp.com; s=20251104; t=1788859156; x=1789463956; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+p+eQJQq3ynMvnkReVl5XGX2RkMKrQ5ziE2R3ggq0Vw=;
-        b=hpN+HYXT5sygnHKi22fCWVMGkdcxPif1YITvIhnydpyIwUCnOfAVvx/JFf7XwnBUWs
-         x6e9prKs5xrXJhfakzFYV8J7FGuOx/GRUHGBAYiVI4pMifplt/scF5XvV4I+jOs2uNxl
-         D5sgxFd536p+PZoZEtz8fyxpQ8RyDzNz+cK9HBolRXrd0x6mh+iPu1tCYlqk5quD/R94
-         pj78x3r8oM+SVmjixPOr+A4/8yN5W3DlRQ2e9Dq1J7qO2a8B95tq6yIMwftAZq+745LF
-         UjMUo/GQhKC4OdfcsQj/1/J1uZFjyJW98P8aqEd6mnhBE/hhYspc7qvxdP9/uBjTMNCj
-         t2fg==
+        bh=xSKG1D/i01HPr9XPX9unVriFqaH3a/5SqIW/cS7CsCY=;
+        b=qmOcj4U0E6t5KqQ54AVBQUIKw1Xol4uBK0s/EXumSP5B9ETmZgbj4x6bLZhSvTqjcF
+         2xLbplzVLO+HD0jG2Qpgc2wnaKlZEbRiKIZS8b42sddQVfAVIAxuX944S9kDbNBvfE3w
+         yAm9X92+g6bexLWuglytjxE6Sk1Loal7RlpJYAbRIYbsP9f1IxGQZHz6pqPlIhtPZ28t
+         KUlzQ7gjwZF6zqokfSL+Yd5aDOK2dLurK3eFWA81FFd8T3eGrtcsi8TyemCeDsQqTAb4
+         UChozgxP0jvVypUYzmUMSgFfKT85gXk+dhiC+j1TxzxLFUi0JY4zzvjD0eRbaRHFm1tR
+         ywJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788859153; x=1789463953;
+        d=1e100.net; s=20251104; t=1788859156; x=1789463956;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=+p+eQJQq3ynMvnkReVl5XGX2RkMKrQ5ziE2R3ggq0Vw=;
-        b=jDMfNJBufmGwUwnXn+Ta2CK9lj7Hihg76jcpLL1PsDuJFPehfICforrTriKV++TMcS
-         QIIzcB3io1/LkgBCxce/XHIdOshxtsxSiOugZ02SpredtUcLT5/DGHReQFvUAp1d64XV
-         I5RBcuc1JQ2DPcswn561ASoPjO3ooIB8NDcJFzcqnuMlKSBLGSXTd6HcGOsAP55QMKjw
-         acXMIZ3gS32lusp2e7x5UoCUhnFAO3p8Rrkps+G3TTXkuDsQY4R0eUG7DNY//GqT8Xdi
-         C8RbjxW6JadFREwKelcA3lgh1asfT3vJAa2BBz8TKPlWDjE6GyYlndi5i2TeqVShcyhk
-         yKlA==
-X-Forwarded-Encrypted: i=1; AKwUvBz3HDOC/pzt8FrUQtLIij0bFglMWCFFJZAUnWrbeTw5oEW5bcswcTjjSHcO5PoYsc1zgXa9/e8Yl8Rx8xNLcHctvK40@vger.kernel.org
-X-Gm-Message-State: AFuF++ng8QPBTnj+PpLi7wa2umXf6gVyTpGguLiN92G7gEEVdMyRRjep
-	LzBVPXkQXfQnTuuvPIQylu2MbyVUL8oi1S1J+m8LA//nTYAhuhywT8//Xc2koPTJkQE=
-X-Gm-Gg: AYBFou1KkKj+Wq6vrjHYitvX4YZg7DsfgQYv0s7nTE0R2yN13rBSaWPGBciqjD2u/EC
-	6VXK+0vmco77/wFnLzy9ZVpvDpPOGDt03ruKcvk2vVfNuupKRsmYzIBYEauJdeLarEdonLUDcjE
-	ARBOxLsTJj9qGBeK9jBOyrX0HZxYnVcjZpExrqdVFNPjlL5v2aOENnAolKFy0aduLM3WtOEjGvr
-	MwdiTZKPWo+YEo8B2ujFQnDp3aupPMpBXT4wEK1VNoYPdWNE866VFKRHOkUtFQ5T9ddsCgxhxYz
-	uOqb9zgccmVWAL0yJTg95svw56WIq40QI4WxARb71ybnnb5jjvp+dD/67iD7gdnQGENJ9Iatsy3
-	nFnx+ZBfcfQxgPnkSKZqCJ1wOGU1dCbtIwAN4FcH+g/cFYhnsZbRn+MerKHRYtUUapu1s5oSrOp
-	bPtQw7Dr6BUk9k+C68fsURuAZLJe/k5d0+oLKc4kDYa83OT/u1E+2yxiNiaLpOnXtZ/2sXQCaYd
-	cMz3w==
-X-Received: by 2002:a17:90b:1343:b0:398:d93a:b343 with SMTP id 98e67ed59e1d1-39b26123302mr48843690a91.3.1788859153130;
-        Tue, 08 Sep 2026 02:19:13 -0700 (PDT)
+        bh=xSKG1D/i01HPr9XPX9unVriFqaH3a/5SqIW/cS7CsCY=;
+        b=VqGckFBTuWVlmOwgqdGXxqcIBJDwZkGRA8cw6eiSswtW8LjhA1FgCmOqZjJ7ZRVRbr
+         Wl0yIjGCsfn4auXZdJjtR0Rf/IA82M7PB4pu/IvShwV1u6LlXI8Adm+SeERKcBLIymRP
+         lJ7neRvaAohMwj+OOiyPW9AlNe0PbWsK6kXAEMMxzk+If9NFZI2LcmUKi9g6atuJ9m4H
+         qas/JjFkauR8yBBfjJoApIm9y7PCeLiytaGffPpepbCM5E0cTWvWSIfnIjeifUNJWmnf
+         t1viQoW4xC9qDy0zpbnOpdBeTbwnWan4YvwSDu+tXI64hJWW30MZGBBxzeiPR+H9/5xP
+         5VfQ==
+X-Forwarded-Encrypted: i=1; AKwUvByf+EbxP8rw2K6EnjdDWWKq8v97KugEzJrFKI5gpiU6IylMfaMv5PxlIYn6ZXLbnZYXCwCaf7iw7JsPdR7n+wYhp6mU@vger.kernel.org
+X-Gm-Message-State: AFuF++nbTjr7kCBN1MKAMr5bAWgFRcXBCm8qgnnZs1rq/KTT71dAriHy
+	n5s9P6otTi8xq/vxUcDfWfDMASV2wOjrHlSz8YCIDNFtZPsWVh8Rd6KpH92FH2BwXzA=
+X-Gm-Gg: AYBFou15R9HGpxQu2mbMQgbs9LYUi7vxQqPpZQMfqhuxgtjifP0caz6w2Y7vFJ1qFjs
+	7Bw87azHXqSM18ALc3NMlix9IE9OiAcDlzzI3k2/1otelTTuY2KWnIyIiKwtvYfCMgt4u6GR4Lo
+	s+CFEM15li4uHbDHyDMLfDkIVrgp3IJoqkioiUaneQ4Q8x7vRu0lO1d0yOXT0l+eZQJf98hvymw
+	/yAM74qOIptEVbpBB9TJF27UEH5+0IgFcvbPN/KExhEm9pAtilr5mkjrLIW3R6618AiCOBpqwEL
+	kjE4t2ufL0QE2VNqrX58KBzLza2OeDDSEwZzXQVWHavoUsO324M53LZ3vI8Aqb1/MtdLqdl0dL3
+	a8bqCBNRi8Ivm+nSMDRiJydW9g95aJDSVCTl1ziFzMmaM5iz5kdI25gZcSWgiBtwTWnlC5FagQR
+	HwwA70RqqEIFfvf5xzlKpXC3/SZw5xKiwmyl9uvb3Zah5YZwGI3x4ifcLf7Xw7o/ZKDRrs8SlgD
+	NLFNg==
+X-Received: by 2002:a17:90b:3804:b0:366:3517:1aa2 with SMTP id 98e67ed59e1d1-39b25f4397emr42321906a91.0.1788859155665;
+        Tue, 08 Sep 2026 02:19:15 -0700 (PDT)
 Received: from [10.42.0.1] ([2a00:23c7:1d1a:9c01:75be:f01c:dde1:cb38])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14324410092sm32015722c88.14.2026.09.08.02.19.10
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-14324410092sm32015722c88.14.2026.09.08.02.19.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 02:19:12 -0700 (PDT)
+        Tue, 08 Sep 2026 02:19:15 -0700 (PDT)
 From: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-Date: Tue, 08 Sep 2026 10:19:03 +0100
-Subject: [PATCH 1/3] HID: hid-google-hammer: use named initializers for
+Date: Tue, 08 Sep 2026 10:19:04 +0100
+Subject: [PATCH 2/3] HID: i2c-hid: use named initializers for
  acpi_device_id
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -72,7 +72,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260908-acpi-hid-v1-1-08df24c4b139@thegoodpenguin.co.uk>
+Message-Id: <20260908-acpi-hid-v1-2-08df24c4b139@thegoodpenguin.co.uk>
 References: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
 In-Reply-To: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
 To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
@@ -81,37 +81,53 @@ Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
  platform-driver-x86@vger.kernel.org, 
  Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788859148; l=889;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788859148; l=1319;
  i=pzalewski@thegoodpenguin.co.uk; s=20260430; h=from:subject:message-id;
- bh=aRiB+/teBjIDoYnRyGta0AirMhnk2B3V+bGT69BxTT4=;
- b=ud5CAEzaFbggl62JW7umNOg15pODvY1/dk9PuhlTmnx5RRzcWUGmdiHXEJjWArahDBqReD4/v
- HBKAzGJ268rA6jh4FRctvpEUBO+711N51N6NINJBX2KXCeRXSxLBc3U
+ bh=wzHJ5AZLh1S4sbm7NQXwPNEFKn8BKSSciphvCkw+aLw=;
+ b=uf+1mk4iLkcE9iwyWW0QFbX+TS2t6INT8BNRYRowZ2wjB0Qy+vICZc3tGfqptCelVoc1op7Qu
+ +JpstvANQhjBdDUDg4O8bmwkOnBbsfZyd1GPeWVbke2xBQanHvE7EBK
 X-Developer-Key: i=pzalewski@thegoodpenguin.co.uk; a=ed25519;
  pk=vHq4n9IonORH2GTzLv8r6CWAFHzgfBuNkQPXA8NSly0=
 
-Use a designated initializer for the acpi_device_id fields which makes the
-code more readable and consistent with how lists are initialized in the
-rest of the kernel code base. Also drop explicitly setting fields to 0
-where it is redundant.
+Use a named initializer for the acpi_device_id fields which makes the code
+more readable and consistent with how lists are initialized in the rest of
+the kernel code base.
 
 Signed-off-by: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
 ---
- drivers/hid/hid-google-hammer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-acpi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
-index c99c3c0d442e..847b1ddefeec 100644
---- a/drivers/hid/hid-google-hammer.c
-+++ b/drivers/hid/hid-google-hammer.c
-@@ -268,7 +268,7 @@ static void cbas_ec_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id cbas_ec_acpi_ids[] = {
--	{ "GOOG000B", 0 },
-+	{ .id = "GOOG000B" },
+diff --git a/drivers/hid/i2c-hid/i2c-hid-acpi.c b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+index 13f977d6aab6..9371db200fc4 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-acpi.c
++++ b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+@@ -39,12 +39,12 @@ static const struct acpi_device_id i2c_hid_acpi_blacklist[] = {
+ 	 * The CHPN0001 ACPI device, which is used to describe the Chipone
+ 	 * ICN8505 controller, has a _CID of PNP0C50 but is not HID compatible.
+ 	 */
+-	{ "CHPN0001" },
++	{ .id = "CHPN0001" },
+ 	/*
+ 	 * The IDEA5002 ACPI device causes high interrupt usage and spurious
+ 	 * wakeups from suspend.
+ 	 */
+-	{ "IDEA5002" },
++	{ .id = "IDEA5002" },
  	{ }
  };
- MODULE_DEVICE_TABLE(acpi, cbas_ec_acpi_ids);
+ 
+@@ -93,8 +93,8 @@ static int i2c_hid_acpi_probe(struct i2c_client *client)
+ }
+ 
+ static const struct acpi_device_id i2c_hid_acpi_match[] = {
+-	{ "ACPI0C50" },
+-	{ "PNP0C50" },
++	{ .id = "ACPI0C50" },
++	{ .id = "PNP0C50" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(acpi, i2c_hid_acpi_match);
 
 -- 
 2.43.0
