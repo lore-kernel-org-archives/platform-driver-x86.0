@@ -1,65 +1,65 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442C7379C22
-	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 05:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869BD379C22
+	for <platform-driver-x86@vger.kernel.org>; Tue,  8 Sep 2026 05:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788845986; cv=none; b=X9Wrr3jKImNzd6k3TtwLn0qelLOvSw5ny2XvtvtU7+t2feTk3fECj2b+3q6wwV7JekxpSXnLicWLCI/GuAAK5IeBkEK2nI77SHDT7GsoRUbtv6OidRbJ7PxpBw1tkIF8B9dPyNXwnsn0OqTNdO6QBok9SBOzAlTd808QH8pRp4A=
+	t=1788845990; cv=none; b=iAI1mn2OG2vnH6FXqmF5LxiDufhCOGAtd8ugj7EcTk+Mo8Ge2vazHNevLOMnHEVIuImnaSjffmJk9im4ql9JjyU9WEKatfY7QHD254R7S+zjxbnKqbpHeJ69AIs6Wz2ylzMSbV3I38RiQrLlr0z4Vfwy0awseLwHOl7gqI3ONWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788845986; c=relaxed/simple;
-	bh=faRvsNO+3ng5yp7scD2ooEy+g3RDxAsErW36M1n5UGc=;
+	s=arc-20240116; t=1788845990; c=relaxed/simple;
+	bh=+h/0zeWFw84evQw0JV7uXbRDUk9bZb6gKcvHxLChX5o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lhIlsWWJhqwxD3DQMqinjkiB+jhI2RkyhO2lBxW7wCxusoBdsBlyL90tvSqHd1tn8SPWs70IEni/+wWHCSCGbP/UJ0fwV+Jzp7Wllth/OcV6KL+sFDr0zrevvhhvMjsUTsW+/f30nRtpsXzV4pa/HqfUluJpfk6MN40IV2L60qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m3xFggSd; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=XnFQ1pIHIxTXJpmu5cOp/2Fsbug5bpLT6B6sIJXZtGgHf4hQyJdNSvdE5uRM0DiN7546NR6XSW2+VbXXIlEIkke7YCK452VJyF3TKXMT6qFOHfBJ45E6Lzm/Jedn0dKJd1rRfXqJIce1DuwWsVVsgzqRvp1bjh4alsXNkxiYt9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=sHuwC9Bh; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3xFggSd"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-49b96837ca3so33542905e9.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 22:39:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHuwC9Bh"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-499ae1c6471so40837905e9.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Sep 2026 22:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788845979; x=1789450779; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788845985; x=1789450785; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0Ry5IsRI3u6+OA2QrlJEuTetR9sltFKry3tbM/33hEE=;
-        b=m3xFggSdQQMBIZKvFKAVdG3FM6JbMZdD5AVitmU25Sw/nIYzpGh1jHuCl3u2qGnSX5
-         wbtEyT9jpSW+bzep6HhLaFnJGg+uDwbTI4v3MFZuRwitHS179JMx27LRgxfUmzjeuh8u
-         +PpXBYa0itQd4NkhxDzXKxEzcT7QpViN3cEn/UOjBjcS2hFhiMH0xf/H6FLLVfK2etrL
-         +6kvJ15Pc2chJKXRTmHAZtnE2V1p6uhYPT4S5n3usGkcuIoLmnyT7BS7Oec6UosEJoNm
-         qopxOEO/xlQyz0VI7aZSKdbbY4XX2t+2jeEWcqHt4j5goH0tv34Gaml7bxbJSjE4beak
-         mg+A==
+        bh=PyvGIpKH+MV7CFSZeFmHniXCtrADstZbtULW+SJuxFg=;
+        b=sHuwC9Bhp5zJInWrqmBxu6nKmmuz8oCAYfjUDOdy+MzmmMCZ8BHmkemWSq/lpT3/p9
+         djM+Fl9wI7+/uBR55wakXcithRh+RYU3GLhiQAs/ALwVNRmOrfNZlTOT7830giOknf7n
+         AuJ2oPRDiDHok8eRz2Kob1oyQoaWiOPZJ+8OObXzXpiz14+TaJfJjC8be2dZ1P2QBpF+
+         V8gHXAlvqTd8RyEQACUeakK5nOOXhw85zHlE1u/0FdKWylSd1Y2JLrTt23fxYTaCqyA6
+         ua4V5hqMpEUfUe02pFlhWgIiMzAhFmhp+202aXNx5q2OYFXkzBzrts9Z4DO0mEb8Jl92
+         DmPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788845979; x=1789450779;
+        d=1e100.net; s=20251104; t=1788845985; x=1789450785;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0Ry5IsRI3u6+OA2QrlJEuTetR9sltFKry3tbM/33hEE=;
-        b=dWI8LIEYbwPI0cdR3nJ8l6ikgFhXEqb5VtdkewAo+Lq51lHYXx76s1j5wNTlcUIeyz
-         mLCVPBP63+NO7b4HbvCUdcd/Wrc2Z4K+6eSfnaBGQalg6WaQQfMPu8Hn+ICrf9cHaMs8
-         5hTCKMZ5UVYRLgde1frlkK5akCQT2UMFlYn0AsEDFqodMXMosw0Jje+EnNkp8k2PDbNj
-         fyu6qXa4V0epAagRGSTmCBJtFoObR/212kpqh9LAUGgHtJyvUWMJOhzXSybGIpEwMhfo
-         0GSqClp/xP5cN+co2RhHJ6hh5hd3pLShxNUTCfc7G0Kqm13WtAKNPxpGNDWDV8Niwlq1
-         tkQQ==
-X-Forwarded-Encrypted: i=1; AKwUvBw8GCA5km5HwfXmRO+3CPfl7TqyfXfRVZutI5ta4xmVfXE9ig4bipZe/UBr2AZRI5hHJUaSJowmuNttIrNNj8BFSEux@vger.kernel.org
-X-Gm-Message-State: AFuF++mg+Eyav2dwwtLkuH+S6Dc+7MKxo7QWBHoWGsvhPyQVKBWAt+eT
-	UdCq8QCTB67JtTGk+g0/WFP1xep8VBmmF+4bzQuS/+Vi1HGaqzZ+ERN4
-X-Gm-Gg: AYBFou01q0PqOIa1wvSZuLDlQl3Wi82Rg9bUiMDta1wnWnfc/VB2HOuS8gnsCxnY2S1
-	Y1d4Kwqg2ePvSjUqiLzxqRkG0rv1C7mKqhFST/g/u+6iq0rtMWWUPMxFX6DI+YAuFHUO0SluAOE
-	2rtIHVCdV7Lq3WS0dOXOhSpOzoq4x34xWZM+yyMvvex74aWhvc+rwUnGbd0/2CE3iJjQk/9GXOq
-	Z4FfW+hsEJ9jtqDJCQcq2rFPenfk4jQv5vSS4bZj4uE5i27BMGapPPX1oU+9DmYdIdlZ3ePVFiw
-	6TMs8x6pgIg/W94D6gs2EoIL+RtKROsTzDIzQ6BrKeyADzsY8eBSFmLwoYrP+YTRmgSk4gFPWNq
-	o8m9WYKx73HEL0yYbetCzJePlPVhJWaeK5CQrvop1RUaBqtHqDF5nkuT4OsfdYaxiKPwu/g8uHg
-	9bjT/BgfIZ42P3AOv2hmUh1R455+cQWJcEqoLj4jyowqiu/Ud6TYjMjSE7kT5sfsfNtk1HUFBjb
-	yp9NVFSReBa1aZ/m2yzeqAHtPyRgrWpMv0i3E+nfhqgyd8uzCLY9+qH6N5vLqdCQEdRsKDbiRZP
-	EUAsZ09aaEanNXACPsyKDlr90FPvtL1e3WOngrPttQ==
-X-Received: by 2002:a05:600c:6748:b0:49c:fc6c:bdfa with SMTP id 5b1f17b1804b1-49cfc6cbfa2mr234336305e9.17.1788845978942;
-        Mon, 07 Sep 2026 22:39:38 -0700 (PDT)
+        bh=PyvGIpKH+MV7CFSZeFmHniXCtrADstZbtULW+SJuxFg=;
+        b=CYrgYWNWHvxxNF9gaD7IPVu0COAoaTeyu13bdd4Pbux+q+06PqRG6WTBE3qj5ITqh8
+         cFMrwvNd9NzKG01Whwx5QssWcTsfHFQdtANgeJWR4oozYKrl9bXcW1VBpNRJJH0DRUqn
+         99I+BRKmgun50qBE3swtcIhPq2S+4qLK1O6tg/TiNAiSKx9+LmpvPp9LO/0uRSvFIVS1
+         CUyYVHB7aHAcAvXIljuanohyAbRI4hl6cxJyAr65kYNwqLEB2x7P0oQTuGd+EKzRpPQP
+         5JhxIdNOkBDpZ1HQEPsvPJ/jyi5ag191Yl90ZeCHWq9iIrTqP2l4efHOqdNlp5hl+Phs
+         fY5Q==
+X-Forwarded-Encrypted: i=1; AKwUvBy4X70YQ7AhJFQnojwcirfQ1t2hhqL8Kvq09jiGNZ/rjLUJjz1bwf+onioVH088KhfLi4oL6cEq0uQE5B20G1dOxAc1@vger.kernel.org
+X-Gm-Message-State: AFuF++mRh2m2PdbOA5/bvLZodKF6zTdONTWAxyNudq2hdJlP9stbjnHs
+	KttYwNKHI5GfqjdZPZIi2r+7EecbxTEC78f9eeroQN7nG7/jPoItjkzu
+X-Gm-Gg: AYBFou2L88LaPdXMdXtyPCcV2bibpQyHd7Kqr4+qJ9lBIzS9vfL7pLI8WfamkK8MLbn
+	tOmBP23nBBvtPt4SRSj/rhY/HlRXp2AwFuRB+QG+Y/l0Cpb00ZM6p2XDgOZW6+wHIMkDeuXsNqx
+	9RQn4h7aGP4Mn0CXCcz4zlZfd4O5MS6p0Jf9D294aRWOarYR9KH0AQFvDMDl+ljtjsmAGNN84Sq
+	SRuOMM9NpDfxpdAq0NPovr46BfZPndIS/bwuX8fecDuwloUFdxD1Suji20/9b1z9X9BctmQFgpP
+	o7JjcatgD63qk0zFkHRnL53yDi4iYMKfsHLaeR5ZtIllCzIqJEYXOvgLFdFialfUhooVY1jvdzz
+	aofQmres0Z4IdI2daTasKdsdXqM4kVaGqZFRAdDQoIdaM1dNavHXQj3yP7A4RGWIB0lexrTUvkS
+	/bsREtZzL5a7HQtNl1se5uQXpHZgmhscpH+JJR7pQMRo4akTB0Cg0lR+N1r5xCZN7bkEnWDtY5D
+	6dJJcGQ3w9JJevyjOfdCJjMRIFpib68/1smtMduR5RdozNzJn9BzJI++gDIm/cTWGrNUTtmHh8p
+	aaBiUXB5x1PMaQlVONOgLSRUBz+SRZU=
+X-Received: by 2002:a05:600c:a0a:b0:49c:e1f1:3dd5 with SMTP id 5b1f17b1804b1-49cf81e6cebmr470253545e9.4.1788845984552;
+        Mon, 07 Sep 2026 22:39:44 -0700 (PDT)
 Received: from localhost.localdomain (dynamic-095-117-170-066.95.117.pool.telefonica.de. [95.117.170.66])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee7fec25sm523841335e9.13.2026.09.07.22.39.37
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cee7fec25sm523841335e9.13.2026.09.07.22.39.42
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Sep 2026 22:39:38 -0700 (PDT)
+        Mon, 07 Sep 2026 22:39:44 -0700 (PDT)
 From: Karl Mehltretter <kmehltretter@gmail.com>
 To: "Michael S. Tsirkin" <mst@redhat.com>,
 	Jason Wang <jasowangio@gmail.com>,
@@ -94,9 +94,9 @@ Cc: Karl Mehltretter <kmehltretter@gmail.com>,
 	Alexander Gordeev <agordeev@linux.ibm.com>,
 	Christian Borntraeger <borntraeger@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v3 1/6] virtio_ccw: fix synchronize_cbs() after interrupt fallback
-Date: Tue,  8 Sep 2026 07:38:12 +0200
-Message-Id: <20260908053817.26065-2-kmehltretter@gmail.com>
+Subject: [PATCH v3 4/6] um: virtio_uml: implement synchronize_cbs()
+Date: Tue,  8 Sep 2026 07:38:15 +0200
+Message-Id: <20260908053817.26065-5-kmehltretter@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260908053817.26065-1-kmehltretter@gmail.com>
 References: <20260908053817.26065-1-kmehltretter@gmail.com>
@@ -108,39 +108,53 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-virtio_ccw_synchronize_cbs() assumes the device uses adapter interrupts
-when vcdev->airq_info is not NULL. If registering adapter indicators
-fails, virtio_ccw_find_vqs() falls back to classic interrupts but can
-leave airq_info set.
+virtio_uml invokes virtqueue callbacks from vu_interrupt() and
+vu_req_interrupt(), which share vu_dev->irq. The core's
+synchronize_rcu() fallback already covers these IRQ handlers.
 
-With VIRTIO_HARDEN_NOTIFICATION enabled,
-virtio_ccw_int_handler() invokes callbacks under vcdev->irq_lock.
-synchronize_cbs() instead takes the indicator area lock, so it does
-not synchronize with those callbacks.
+Implement synchronize_cbs() with synchronize_irq() to synchronize with
+that IRQ instead of waiting for an RCU grace period.
 
-Use vcdev->is_thinint, which the fallback clears, to select the lock.
-Keep the airq_info check because is_thinint can be set before the
-first find_vqs() call, when airq_info is still NULL.
-
-Fixes: 3a232277c1ac ("virtio-ccw: implement synchronize_cbs()")
 Assisted-by: LLM
 Signed-off-by: Karl Mehltretter <kmehltretter@gmail.com>
 ---
- drivers/s390/virtio/virtio_ccw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/um/drivers/virtio_uml.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index bab6cad3fd5c..b90299205698 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -1062,7 +1062,7 @@ static void virtio_ccw_synchronize_cbs(struct virtio_device *vdev)
- 	struct virtio_ccw_device *vcdev = to_vc_device(vdev);
- 	struct airq_info *info = vcdev->airq_info;
+diff --git a/arch/um/drivers/virtio_uml.c b/arch/um/drivers/virtio_uml.c
+index 7425a8548141..1f2e62e29a27 100644
+--- a/arch/um/drivers/virtio_uml.c
++++ b/arch/um/drivers/virtio_uml.c
+@@ -20,6 +20,7 @@
+  *
+  * Based on Virtio MMIO driver by Pawel Moll, copyright 2011-2014, ARM Ltd.
+  */
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -869,6 +870,14 @@ static void vu_reset(struct virtio_device *vdev)
+ 	vu_dev->status = 0;
+ }
  
--	if (info) {
-+	if (vcdev->is_thinint && info) {
- 		/*
- 		 * This device uses adapter interrupts: synchronize with
- 		 * vring_interrupt() called by virtio_airq_handler()
++static void vu_synchronize_cbs(struct virtio_device *vdev)
++{
++	struct virtio_uml_device *vu_dev = to_virtio_uml_device(vdev);
++
++	if (vu_dev->irq != UM_IRQ_ALLOC)
++		synchronize_irq(vu_dev->irq);
++}
++
+ static void vu_del_vq(struct virtqueue *vq)
+ {
+ 	struct virtio_uml_vq_info *info = vq->priv;
+@@ -1121,6 +1130,7 @@ static const struct virtio_config_ops virtio_uml_config_ops = {
+ 	.reset = vu_reset,
+ 	.find_vqs = vu_find_vqs,
+ 	.del_vqs = vu_del_vqs,
++	.synchronize_cbs = vu_synchronize_cbs,
+ 	.get_features = vu_get_features,
+ 	.finalize_features = vu_finalize_features,
+ 	.bus_name = vu_bus_name,
 -- 
 2.39.5 (Apple Git-154)
