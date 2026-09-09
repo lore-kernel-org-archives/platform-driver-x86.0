@@ -1,66 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD66569F10;
-	Wed,  9 Sep 2026 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E981558200;
+	Wed,  9 Sep 2026 16:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788970176; cv=none; b=KyEx6XjHzNzqy3mTY1DLyuBXrUZRu7yJKA1wCAL5VWvVaiwd15+8OPcSRVrbSzZY7CDuj6OrKcF2yNQ0Em86yoCcyIA3t0ANbWERHr1tNkOY2Oxvx/kWDRsOEge/wgbCtsYQB90B2UmTmFnp4c49D2g7DaBNMeT3OaY8QCyRuxw=
+	t=1788972594; cv=none; b=Rul6lDIZk8cmcumc62RmfoG1rmdXR8dfAz31ECjjR28CHAMRk2UyDYicbedYhzSgd7bS8qpjDHORnQPj0sy2jSyldOvRnS2oxIidUa0zRRR4noNFz6OrXuF3r5ZVKsEZuui5SwBv6vlCZTJRPfWbLYOBTzzrF+0jFT3auz4ZGE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788970176; c=relaxed/simple;
-	bh=gpwJmr1Z9wbFfmease5tSCUjsCGjlUWYcCBpIZOqQSM=;
+	s=arc-20240116; t=1788972594; c=relaxed/simple;
+	bh=OUYePPaevWiw5zJaHm36L914ceMwDtozjQtedcNKVQE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgqfTaaXVSJf2WYRKvzwwTO18WFc0EOz0iw9arMtgKG5C5wM7gcWeoZluUqjd05bBiD9n2z/Nt6mciOJiXy8CiEGDe3OLlZ4ZbSJc5QMwzpUMPzIS5umPb9viMg5VgH9eTjxUNelbLUlNUlnIKKgPfsx+fXluIyJbSTcqNfft40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ThNtkhiW; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1HcXMZTy03rIhHTlOGgDQ9/pb+FMMXy6ZniEJYfMgpr/hYCIdH5Qs6FvQ4heVC/UeXq9RQBFZGKcbxduvQk7ZQkAn+fIQ5VSLPTOm5leLz6S0QtdrTMCuA6/czPwmFiAEegmu/CgDOA3wgnvrP23eaP25z881anxA2vDYmgIu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML1ozg7V; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ThNtkhiW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788970175; x=1820506175;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gpwJmr1Z9wbFfmease5tSCUjsCGjlUWYcCBpIZOqQSM=;
-  b=ThNtkhiWsZR/R2JA/EPik2SVrDmt+G3tb6vIKXkAHm8eYk4x87Q3CBuz
-   q7bZ4sf4DMqLOFfYQS8HVlkgiH3EQyep2y/BZ5KyXbMMOJ8oxoOdlCo5v
-   R5PFizX69rH1InFXOOpK5h6PHSrhg06C3/Q8DtpnqwsXYZ683Onir+hVQ
-   EFuJ6qO9xfo8igg3huBmSY7hOj9raT6zDzHKl3Kx/QfNZxmrQfmAEyTT9
-   vuDiR0P36chajzObSTEGQxXbVz4kgGuxHC0rBiRcukFeuejJlvdeXdgrY
-   6+vwQrxTQ8CkdS++m97G6pT1YcPStofm2gt9XkaDctmkCks9fXXj1BvSj
-   w==;
-X-CSE-ConnectionGUID: 2UFgQ8fpQoWsIkgZbSwmVw==
-X-CSE-MsgGUID: R9fiISb2RBGy/fMPseaRCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="89330408"
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="89330408"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 09:09:35 -0700
-X-CSE-ConnectionGUID: DDXEIkYQTISVk9zynfb0bA==
-X-CSE-MsgGUID: gTxWnXohRXCvK9XR3GxAlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="301244590"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.249])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 09:09:31 -0700
-Date: Wed, 9 Sep 2026 19:09:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: "D. Manresa" <dmanresa@gmail.com>, Thierry Chatard <tchatard@gmail.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML1ozg7V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED021F000FF;
+	Wed,  9 Sep 2026 16:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788972593;
+	bh=/QTXq5JkjQsJbXJORNnzSymarU5/NqZgo2qlaYhmOGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ML1ozg7VvYY8l7xIqENHlWc5AowZTlviG7M2gbywWNcCABnQ7uBP7eGXwagxp74Xu
+	 CqgXmmHxkDh32V9YcO5FHrLqBkSC5Q9eiETuk2HtyMb277G1YgXhwWwHrsU2+qYIP+
+	 jqy77g8kvE9S4m4Ll2VUKQ2evik6GSGAvm1B1aAoQIZw2a/60Fe+F+waSYAJplACIR
+	 W093FT9Tf/KujoYN5qK7vIF4q4DkPA9ob7rUeWE27x1Mr+JQ8BKzMe3TtEyK9PM5Un
+	 qJm+wpQpAdOY9joYNh3sdiiOzLM3VduLz810AWoN7QMA9lowEdP15znuAmcdDWjO6U
+	 R2V62TmPWnCHA==
+Date: Wed, 9 Sep 2026 18:49:48 +0200
+From: Thorsten Blum <blum@kernel.org>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
 	Hans de Goede <hansg@kernel.org>,
 	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH] mfd: intel-lpss: add Dell Latitude 7275 to the resource
- conflict quirk
-Message-ID: <aqGEuTVpGolbznxN@ashevche-desk.local>
-References: <20260831160754.9857-2-tchatard@gmail.com>
- <20260908161629.335223-1-dmanresa@gmail.com>
- <aqDkwTkAsvs8Escx@ashevche-desk.local>
- <20260909065104.15817-1-dmanresa@gmail.com>
- <20260909151027.GA2133376@google.com>
+	ibm-acpi-devel@lists.sourceforge.net,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unreachable code in
+ beep_read()
+Message-ID: <aqGOLBx_hU3a7ADQ@kernel.org>
+References: <20260907090103.352995-3-blum@kernel.org>
+ <254d9c60-d21e-4ef5-b70e-89dd18ff7147@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -69,27 +49,48 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260909151027.GA2133376@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <254d9c60-d21e-4ef5-b70e-89dd18ff7147@app.fastmail.com>
 
-On Wed, Sep 09, 2026 at 04:10:27PM +0100, Lee Jones wrote:
-> On Wed, 09 Sep 2026, D. Manresa wrote:
+On Wed, Sep 09, 2026 at 11:26:18AM -0400, Mark Pearson wrote:
+> Hi Thorsten,
 > 
-> > On Wed, 9 Sep 2026, Andy Shevchenko wrote:
-> > > Do not fold, just add into the series this one as patch 2, for example.
+> On Mon, Sep 7, 2026, at 5:01 AM, Thorsten Blum wrote:
+> > The procfs entry /proc/acpi/ibm/beep is only created if beep_init()
+> > succeeds, which requires beep_handle to be non-NULL. Remove the
+> > unreachable code branch from beep_read().
+> >
+> > Signed-off-by: Thorsten Blum <blum@kernel.org>
+> > ---
+> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > index 1082c36ae723..069c9f1c359f 100644
+> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> > @@ -5936,12 +5936,8 @@ static int __init beep_init(struct 
+> > ibm_init_struct *iibm)
 > > 
-> > Fine by me. Thierry, please carry it as patch 2 of v11 with Hans'
-> > Reviewed-by; no need to change anything else.
+> >  static int beep_read(struct seq_file *m)
+> >  {
+> > -	if (!beep_handle)
+> > -		seq_puts(m, "status:\t\tnot supported\n");
+> > -	else {
+> > -		seq_puts(m, "status:\t\tsupported\n");
+> > -		seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
+> > -	}
+> > +	seq_puts(m, "status:\t\tsupported\n");
+> > +	seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
+> > 
+> >  	return 0;
+> >  }
 > 
-> Why can't I just apply it?
+> Change looks good to me.
+> I guess the beep_write could be similarly updated?
 
-This patch on its own can't be applied as it relies on the one
-in the other series. You can apply both patches, from that series
-and this one. No objections from my side.
+No, beep_write() can be called via the beep= module parameter even if
+beep_init() failed, so that check is still needed.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Thorsten
