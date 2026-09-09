@@ -1,85 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-106118.protonmail.ch (mail-106118.protonmail.ch [79.135.106.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086CB3F8ECA;
-	Wed,  9 Sep 2026 09:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694AB49893B
+	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Sep 2026 10:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788946901; cv=none; b=ABg9vczGybapWP1xZ9mUFdTk7Lwyj+cgfxdjW+Yzk07TZyRE7VZ52YehhFjA6rkxn/RDt8BTJS23D7lbJ8BQIWN96FIXcmpKz6dahAYSpUn6lThLZv+KfgqPvkdhK7cCoA24/r89hit4/hIdt0/cVQt7X2ie+RVTv18pJhcGbuE=
+	t=1788949543; cv=none; b=ixaudaAcNzlReJ3cSbF/T0aOBzdah/W+ojKy5F9gB/Pz23Z2IlA/vsmH2dX6pB1iafnomQaiZuKzPQnHKHX79KX5G7UQUF/amfYLwEA+NW41Vm+2bBg1nku0p8VODxZALKf4zxFsyUm/oOB+J8qBGwx5M53PLvyx5pOZqAFJR0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788946901; c=relaxed/simple;
-	bh=efxjKCYATAi0YX4UYw7OKoX7V8KVsknnQ9ugNbh/9sc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Xz0agwWRxT4kfwroEdWzNmPgMx3AIPfOCjlP7sI9IB15YRAafsZzefrcAKDtnLs3l15TUMdJu1+elM0u5KCaebtG7g81aFw0N2LKwkqaOSLF++Sr0f5gtIHNuqyjuhzT2uY1dTUE9BXYSy8RhKVvv9Y8g3n4ej3GAn7Emx2XVSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwY2ebOs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788949543; c=relaxed/simple;
+	bh=X6CS8natN/FeN/v/5ZXPoQdCMzGosg/lTx3jrqNsSAg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t2KFyEm1UkjgsDoRmEveTHtjVEbXW6rXgKWpWrlrHGtj8B6rAkkSGllydGb1WlxSpq/LvxsW+HDjKD+NFQZwYq/gz3+9VnW4x6GXQfVIHeaufYO6jiJhtGwd+hXnhw0DOZDufk441K+OjfgAuMrGnTRyQSV8TikwHYDMogsQPyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=DRHdZGDq; arc=none smtp.client-ip=79.135.106.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwY2ebOs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950031F00A3A;
-	Wed,  9 Sep 2026 09:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788946896;
-	bh=Wm03WCPdVPyQWKmDSkyuLdbSZ5OQjr0lv3BS6M9u5cM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=nwY2ebOsj7mS3ttN3G3EWRjKiyWFZ0gtEMjIJN3K1wqUJsttsrTdbyfQBFm1jQCyB
-	 7vmTYYS839yuv1cX6tja905yvhkh9EcofdP9WnaPtUWoWvyrtAumDS2a4HHmBWIMve
-	 5dpueVdHkSghCcKpgrr7/QXpDnzIAKt4PvNyXS7RZRdlqRC/zafVeO6tpHPWHFrjmj
-	 xb9UQ0yzEoE/0FbkpwHs3moa+bsONVVPdXlHY/n8J2qWwRNYmuAN5ig7GnJ1qPq8sI
-	 tWGX4IgwHa6vbMA/pq4rqS0EcPsDMLoqAQMRGokrQveTjDWaqCF8WCv2Bc3cAHaJfx
-	 j0i+ERqvxbX6Q==
-Message-ID: <8a8a0fcb-1c93-4f0d-bfcd-ae92af0376e0@kernel.org>
-Date: Wed, 9 Sep 2026 11:41:33 +0200
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="DRHdZGDq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1788949532; x=1789208732;
+	bh=dceBWMYXZxkpNT6zH1rL/lZdha3FG9MrbZct7tilnUo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=DRHdZGDqhCLAkGAGUj8U+fvFj4X5M/DHA+Z8+sbfE0x6PS/dJGFv2n/X/EyjfX4BH
+	 A+omUHWmb7zGGICxo0hbGuX2+QVh0Yp9vqSa9LpTsdt7zfGlcCiStk0gmMDNql5PvA
+	 jFEITMrSqSzZRQAO77xy4wEPw4/134x+8V51oZZldOrMASbjoic1wdUBuoCw+6p9iY
+	 we8VzR1OUEbLCtt0MZx5EQHYhVKt4bd4naQ12sQyACsC//fAGw1P5P1lLKBhoiTmJp
+	 PyrTDJNynqkzDWrKvtrQCeh7LS17WuRjF0TKSxNNQTTUZyNdh+YNNKpo/G0d8MYMuZ
+	 xJ2cbsn4Usbxw==
+Date: Wed, 09 Sep 2026 10:25:28 +0000
+To: Hans de Goede <johannes.goede@oss.qualcomm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] Input: soc_button_array - fix MS Surface Pro 11 probe failure
+Message-ID: <20260909102521.67488-1-lsa.uz@pm.me>
+In-Reply-To: <20260909093934.29411-1-johannes.goede@oss.qualcomm.com>
+References: <20260909093934.29411-1-johannes.goede@oss.qualcomm.com>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: c74eb37c6e77e0b9bb4eea2612100284fe62ca97
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: soc_button_array: ignored -EPROBE_DEFER loses the buttons on 68%
- of boots (Surface Pro 11)
-From: Hans de Goede <hansg@kernel.org>
-To: Sergey Lebedev <lsa.uz@pm.me>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Maximilian Luz <luzmaximilian@gmail.com>
-Cc: linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260830141355.55898-1-lsa.uz@pm.me>
- <0fe7a8b6-f3df-4822-a03a-d072b86cdfa8@kernel.org>
-Content-Language: en-US, nl
-In-Reply-To: <0fe7a8b6-f3df-4822-a03a-d072b86cdfa8@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hans,
 
-On 8-Sep-26 23:46, Hans de Goede wrote:
+It fixes it. Sixteen consecutive boots on the Surface Pro 11, every one wit=
+h
+both gpio-keys devices present and MSHW0040:00 bound. The baseline in my
+report was 13 boots in 40.
 
-<snip>
+  boots                     16
+  buttons appeared          16
+  first input at            1.242 - 1.377 s
 
->> Why no patch
->> ------------
->>
->> The comment says -EPROBE_DEFER is discarded because Intel uses "virtual
->> GPIOs" that never materialise, so deferring on them would hang the probe
->> forever. A fix has to tell that case apart from a controller that simply has
->> not probed yet, and I do not know which signal you would want to use for
->> that. Guessing would risk reintroducing the problem the workaround exists
->> for.
->>> Happy to test whatever shape you would prefer - the machine is here and I
->> can build and boot kernels on it.
-> 
-> Thank you for your detailed bug report. I've just submitted a patch which
-> I believe should fix this:
-> 
-> https://lore.kernel.org/platform-driver-x86/20260908214410.70422-1-johannes.goede@oss.qualcomm.com/
-> 
-> Please give this a try and confirm if it fixes things.
+For comparison the 13 stock successes ran 1.28 - 1.78 s, so no boot here wa=
+s
+slower than stock managed when it worked, and the spread is tighter. The un=
+it
+that binds this device by hand was disabled for the whole run, so nothing
+masked the result.
 
-Shashiko review has lead to a v2 and then a v3 of the fix, please
-give v3 a try:
+Built on 7.0.0-30, Ubuntu 26.04; both patches apply to that kernel's copy o=
+f
+the file as-is, 2/2 at an offset. Ubuntu ships the file unmodified - an
+out-of-tree build of mainline v7.0's source carries the same srcversion as
+Ubuntu's own module - so the tested source differs from stock by your patch=
+es
+and nothing else.
 
-https://lore.kernel.org/linux-input/20260909093934.29411-1-johannes.goede@oss.qualcomm.com/
+One note for whoever tests this driver next rather than about the patch: on
+this install soc_button_array is in the initramfs under MODULES=3Dmost, so
+replacing the module under /lib/modules does nothing until update-initramfs
+runs, and modinfo will report the new one while the old one is loaded. Thre=
+e
+boots of mine were recorded before I noticed. I checked
+/sys/module/soc_button_array/srcversion on every boot above.
 
-Regards,
- 
-Hans
+Patch 2/2 was in the same build and caused no regression, but I am not
+claiming a test for it: the buttons appear here, so this machine's ACPI
+descriptor package is not empty and the new check is never reached. So for
+1/2 only:
+
+Tested-by: Sergey Lebedev <lsa.uz@pm.me>
+
+Sergey
 
