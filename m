@@ -1,101 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEC533F58D;
-	Wed,  9 Sep 2026 15:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16C158599F;
+	Wed,  9 Sep 2026 15:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788967169; cv=none; b=pki4ZO9l5BuB6bhF9/dkIfZdCtEPy+V0id7D2bUNdlQb3Efkkd9fzG6tloeiiGVPMO3x4+gJftnlraBMwZlErvBBzop60jHAzuC1BK0uQd5TwZPHTUY04+Qp+Dq2B5Ou79doPnOckebfRX5LT9yvKb94sDUwhjpG08ffwD3ZcGo=
+	t=1788967603; cv=none; b=l1LvASVV2R3O6RshGq72znQtPk9h0QkePUhBs1iNFwKv+atj1zPQZlcYjIwoNaPbV/r3y5Aau5PM2pWVNvPrjoRUXlFYUDfyTYquOsI+NqobTkMeuOJwEJrNx1B4Ndm7tiHvfyxmAMMMV+1phqIImjaBx1HCeSBpqfz1CrE57vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788967169; c=relaxed/simple;
-	bh=0mgrh78PgG7TwlNmjLhHCstIhvbN8+glVlBQXojHU5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TK72jecPBUqk/97UEro4NJK62ccEuCEDClpGibQWg0/+tHALCUCOGliR3/QNpdLL6oK1JPo4Ex8sIbsRDid34ZwrhtBeXO8AZUh/q3yT6Mp8UF+a7sHsv1LYFBwLWg0nWcsh/mcr8pD5vrdNOygNbhbczoVhIgvYnQ1Kfcc/WnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KTrtVNkx; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788967603; c=relaxed/simple;
+	bh=K+tPpcnxPlmZ+hTXPwaP9ZimJYGKFH4bAEXXpRkzTVc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YrXoDvKZ3fyEa5NfqFPWCM+ODF55Vkly9NRgfLEwBTL1gmtHeqpGVGnAqwbrv9VdDQx3slJYes5pP3eAzztmI1POyZkkRlEd5s5iA/rsJCPwbg3SvU4Im+tF16QtPZB+3n6adMh7LIhty+j8MEu1LQExffIg1rhlXOSSa6Jd9BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=jPUh/+lX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QR5qTOpO; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KTrtVNkx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788967168; x=1820503168;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0mgrh78PgG7TwlNmjLhHCstIhvbN8+glVlBQXojHU5E=;
-  b=KTrtVNkx5QzaoZJH6F3of74f91NdY94FvnkBvi43sFidzkv4wrirtmlf
-   KdD0h0lcrVyCMSkFiUIdACMZiw7IC0CGbwREx1t5zFCcU0ju22DED4H3G
-   h3iu13qvLej72sQEmTQqfZemQtH02Cp8Z0APQ5V23SO9Zbc1ty10rAYeK
-   hDSY3VpZTy5b68TBfnkkRGarq6XBkddvwC4a4UYkBmWrnNggq7TM8QTgz
-   x3F4X2D/2SSPNO/Ayw62zpQ+h318hnZou2mizgJMIlDupw4vZ2Bn4A//p
-   1/FKKwpbtCXmoeNXhE/Abyc/BkhZEbGFbKLsVAzeeZlhuArlaliuj/np5
-   g==;
-X-CSE-ConnectionGUID: SPZSu7tSTj6s/+rAKvWe5g==
-X-CSE-MsgGUID: peK9s1jyTD+Syu5SQWeReA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="93089175"
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="93089175"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 08:19:27 -0700
-X-CSE-ConnectionGUID: g73Yf+ncQSeV+JkYCy8oxw==
-X-CSE-MsgGUID: xXSRtAjCRySPPrNcTock2g==
-X-ExtLoop1: 1
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.132])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 08:19:24 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 601F4121BE3;
-	Wed, 09 Sep 2026 18:19:26 +0300 (EEST)
-Date: Wed, 9 Sep 2026 18:19:26 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: "D. Manresa" <dmanresa@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Thierry Chatard <tchatard@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH] mfd: intel-lpss: add Dell Latitude 7275 to the resource
- conflict quirk
-Message-ID: <aqF4_jwcqT2UFsNc@kekkonen.localdomain>
-References: <20260831160754.9857-2-tchatard@gmail.com>
- <20260908161629.335223-1-dmanresa@gmail.com>
- <aqDkwTkAsvs8Escx@ashevche-desk.local>
- <20260909065104.15817-1-dmanresa@gmail.com>
- <20260909151027.GA2133376@google.com>
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="jPUh/+lX";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QR5qTOpO"
+Received: from stl-compute-04.internal (stl-compute-04.internal [10.204.2.64])
+	by mailfout.stl.internal (Postfix) with ESMTP id 0C79C1D0007D;
+	Wed,  9 Sep 2026 11:26:40 -0400 (EDT)
+Received: from stl-imap-02 ([10.204.2.93])
+  by stl-compute-04.internal (MEProxy); Wed, 09 Sep 2026 11:26:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1788967600;
+	 x=1789054000; bh=ZPxVBLa4CvLLJKe83NmgL2WWM/qbgnI7dmZEJVlqqrU=; b=
+	jPUh/+lXlWS7tgD1oT6DJXiZZlrMPPDh4Tfv3XGlQ6umMqHXfdboh/PLx07ghan8
+	4QwE62dAYUR1q6MzISA/cDbM4TegLJT62ZbbWH8zaFbb0V14YglZZKXlD6jXi17F
+	REFDMPqNB7HCf/Sk15avPoWLdSGJ0Pxop9gM18KYf6W7LEeotJaTllglyrtaen2w
+	lNZwl4W+g8KNjkWGdr7g3kTb2qn89TKaBGrJ9iUIDbqrvrVopVR20P0sKqWL4U5G
+	re1LwBvJzQ6OMOHElksYq5Y0QqrkIVklIUXW6bcR4eSLkGHjE3frXwCPYDfiOfGB
+	sg1X2cn2h3pd9oWIp9a3NQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1788967600; x=
+	1789054000; bh=ZPxVBLa4CvLLJKe83NmgL2WWM/qbgnI7dmZEJVlqqrU=; b=Q
+	R5qTOpOE760RM+igCpevlhsB+VYQEZ+9eUK4uAqjshYtPLoC8D++jxx0AOzD7fz2
+	dKkjcqv9gL7noej2we8E8qCMlva+Dcu+MSYVhsI7myeItVyWXxlAC+B3k0wRp271
+	oq6YrJ1kN/W3nL+j/vaY8Uu7B1CySWxBkax1ytLcOLZaZ/WEwFtJXRRv0qh72G0M
+	L87CExw7Ln+GTvjxO4rFo9pG5OSLJs36a+QLNaZevkYpBqdJsbmDxSwTgVsxGKK2
+	4OVP032ZfGrhKuMMcwqjtHJdjdW3NTnk1khY6fMhlrf1wVDhz/Ku6vCPgjmLWhcR
+	VxltKqThjCKYWDdmeIspA==
+X-ME-Sender: <xms:r3qhahvIthtSedIno5tfbZCxWQ7wXvvmGEfLe-JpFa4CZG1ggVUeJA>
+    <xme:r3qhalRJDsPClNNgnFASnxwABWD1gGmUONYMmqw_xAQyfxpPB_K5vcmXPD-VCvkKe
+    uvPCIye4UITa-6R6u_HwCQs9FYPQwXaVvgg9yULAqlKd-zybsVS9jB1>
+X-ME-Proxy-Cause: dmFkZTE+w1Y6fFtlj5RcASlh8NEDiTG9A3MuPojYMbHu6zQa9usr/1G/TfV4grgL4ZYaJQ
+    bi23o9l74Ulc0IEixroAqBfx3hu5U4dmtZAe3a/6eP1HaHZISArRLlCH7Ysy+zRDOsYcDn
+    5U9hYAEQ93oUKoALTU+qWF6MF8zueCuDNoyKkxtSumVPOprRNBuPaHK8Iq8p2Q+2ObRRaS
+    KdzEGVRW3WC5ntSruZ+Hi8o3wpG/ESev8yr4qkotmGAaZhcrVNyyVIrBh30ZkjPp6AHTyk
+    NyD51Ii8qeRoLyr0yV3Scq6qYfN1jFSNd9KGKGi50Jr58AC0jbyvAC1lek7vv8L+/tTBHz
+    T87H+/9Bt4cb5F2YqI3yAcCBj1EbUJJ+1zMKX4IhqA2szc7KVXyJ08WrQ6m2KNPWAoyJty
+    I4xKuHHdYDCHwReQt3HC7hjAQcGXSSy851H7WFQT+9zpUdz3BJ4hdoVFr2/4vkWaV5p70/
+    WN70rhsCY7jaXLxfQWIRaY4CDLmg3up9kGRtG48gvJ1RorOP4E5i0q1WUg3AXDJCkVrRte
+    80J2aY9+KXOY6y3sLtDBeu2INIdQWhgn/kkgbuPuhHcoCubOa+Dp3HBfvRIURDEGF8Vrjz
+    6fuMEbyzaCWjxDrwHGoqR0TjFwKb68SYEtEmiPcXMoRQCGEIaEgBcP1WJKvA
+X-ME-Proxy: <xmx:r3qhan-Ws5rIRZbLCeRkXUOkS5YFxLKmh4V_Lmxrph6zpqaQ02uJTw>
+    <xmx:r3qhakLkYiiwl1xepSniucUFZ1BaQQTYSBcsCCFgxani-5CT4cBjvQ>
+    <xmx:r3qhalt4DX2vk8eoyxSakjHRYdvH6T4A0aML35mb_-aYqZyKU4i9sA>
+    <xmx:r3qharDnja5jjIPpNBauHLJ01QkDMHk8_XGXpc8zhyOxlG1o2wKH9A>
+    <xmx:sHqhaszSzhZ0cPbp4wBVTtyIyKJsoKQqo3Rf9sLxuzSqH1KWRFBURCby>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.stl.internal (Postfix, from userid 501)
+	id 7EFDA2C00064; Wed,  9 Sep 2026 11:26:39 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260909151027.GA2133376@google.com>
+X-ThreadId: AR8LNQcE3F07
+Date: Wed, 09 Sep 2026 11:26:18 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Thorsten Blum" <blum@kernel.org>,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Hans de Goede" <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: ibm-acpi-devel@lists.sourceforge.net,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <254d9c60-d21e-4ef5-b70e-89dd18ff7147@app.fastmail.com>
+In-Reply-To: <20260907090103.352995-3-blum@kernel.org>
+References: <20260907090103.352995-3-blum@kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unreachable code in
+ beep_read()
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Lee,
+Hi Thorsten,
 
-On Wed, Sep 09, 2026 at 04:10:27PM +0100, Lee Jones wrote:
-> On Wed, 09 Sep 2026, D. Manresa wrote:
+On Mon, Sep 7, 2026, at 5:01 AM, Thorsten Blum wrote:
+> The procfs entry /proc/acpi/ibm/beep is only created if beep_init()
+> succeeds, which requires beep_handle to be non-NULL. Remove the
+> unreachable code branch from beep_read().
+>
+> Signed-off-by: Thorsten Blum <blum@kernel.org>
+> ---
+>  drivers/platform/x86/lenovo/thinkpad_acpi.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
+> b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> index 1082c36ae723..069c9f1c359f 100644
+> --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
+> @@ -5936,12 +5936,8 @@ static int __init beep_init(struct 
+> ibm_init_struct *iibm)
 > 
-> > On Wed, 9 Sep 2026, Andy Shevchenko wrote:
-> > > Do not fold, just add into the series this one as patch 2, for example.
-> > 
-> > Fine by me. Thierry, please carry it as patch 2 of v11 with Hans'
-> > Reviewed-by; no need to change anything else.
+>  static int beep_read(struct seq_file *m)
+>  {
+> -	if (!beep_handle)
+> -		seq_puts(m, "status:\t\tnot supported\n");
+> -	else {
+> -		seq_puts(m, "status:\t\tsupported\n");
+> -		seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
+> -	}
+> +	seq_puts(m, "status:\t\tsupported\n");
+> +	seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
 > 
-> Why can't I just apply it?
+>  	return 0;
+>  }
 
-There are no direct dependencies to the rest. For the functionality, it
-might be nice to merge it via one tree and the rest of the set would go in
-via the media tree.
+Change looks good to me.
+I guess the beep_write could be similarly updated?
 
-In case you prefer to merge the patch,
-
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
--- 
-Regards,
-
-Sakari Ailus
+Mark
