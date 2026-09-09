@@ -1,96 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-93.mta1.migadu.com [95.215.58.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E981558200;
-	Wed,  9 Sep 2026 16:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E01368282
+	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Sep 2026 17:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788972594; cv=none; b=Rul6lDIZk8cmcumc62RmfoG1rmdXR8dfAz31ECjjR28CHAMRk2UyDYicbedYhzSgd7bS8qpjDHORnQPj0sy2jSyldOvRnS2oxIidUa0zRRR4noNFz6OrXuF3r5ZVKsEZuui5SwBv6vlCZTJRPfWbLYOBTzzrF+0jFT3auz4ZGE8=
+	t=1788974310; cv=none; b=AAhsNd7hg1yNvN9RMLqi/dMKe1wk8AOcC0J29DtpDfmfL+BuB7E4nI1xvr/jwvXEfwiAevEsIawbh68/eqYq/lmqKAlg6qVMfN+QdxCSA6qiJiaOGLvy2ex/lco096fntJoWXKs7Kcu5W/cLHyno5veb8R/78Q/7Fs9/njiqac4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788972594; c=relaxed/simple;
-	bh=OUYePPaevWiw5zJaHm36L914ceMwDtozjQtedcNKVQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1HcXMZTy03rIhHTlOGgDQ9/pb+FMMXy6ZniEJYfMgpr/hYCIdH5Qs6FvQ4heVC/UeXq9RQBFZGKcbxduvQk7ZQkAn+fIQ5VSLPTOm5leLz6S0QtdrTMCuA6/czPwmFiAEegmu/CgDOA3wgnvrP23eaP25z881anxA2vDYmgIu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ML1ozg7V; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788974310; c=relaxed/simple;
+	bh=H1VeEoAcvsOEyN36eN354CP9JC3HLD5TmWF+2n1ZU8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iv2w/knXcXVxixPo2qM9IOPlDzKkkEyNxtS7HU1AnVlmSY1AetyxeEJEsInBbzo5AIgPI8UzK5J3qQd1B2nJbNZFVdiZIK5QPhD2rmHspwnG0KAYwBrvm2RWKdk/WdVk8rM9/by0alqU6ZgBWhMq8NJUU6dbn0LUUCeeIKcUjT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wvfPfqzC; arc=none smtp.client-ip=95.215.58.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ML1ozg7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED021F000FF;
-	Wed,  9 Sep 2026 16:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788972593;
-	bh=/QTXq5JkjQsJbXJORNnzSymarU5/NqZgo2qlaYhmOGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ML1ozg7VvYY8l7xIqENHlWc5AowZTlviG7M2gbywWNcCABnQ7uBP7eGXwagxp74Xu
-	 CqgXmmHxkDh32V9YcO5FHrLqBkSC5Q9eiETuk2HtyMb277G1YgXhwWwHrsU2+qYIP+
-	 jqy77g8kvE9S4m4Ll2VUKQ2evik6GSGAvm1B1aAoQIZw2a/60Fe+F+waSYAJplACIR
-	 W093FT9Tf/KujoYN5qK7vIF4q4DkPA9ob7rUeWE27x1Mr+JQ8BKzMe3TtEyK9PM5Un
-	 qJm+wpQpAdOY9joYNh3sdiiOzLM3VduLz810AWoN7QMA9lowEdP15znuAmcdDWjO6U
-	 R2V62TmPWnCHA==
-Date: Wed, 9 Sep 2026 18:49:48 +0200
-From: Thorsten Blum <blum@kernel.org>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	"Derek J . Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	ibm-acpi-devel@lists.sourceforge.net,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Remove unreachable code in
- beep_read()
-Message-ID: <aqGOLBx_hU3a7ADQ@kernel.org>
-References: <20260907090103.352995-3-blum@kernel.org>
- <254d9c60-d21e-4ef5-b70e-89dd18ff7147@app.fastmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wvfPfqzC"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=H1VeEoAcvsOEyN36eN354CP9JC3HLD5TmWF+2n1ZU8c=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1788974304; v=1; x=1789579104;
+ b=wvfPfqzCzC9ERYpoRNPtOaMRdZuMB7/RKRx5yyixJ/x5vF7lVZmw85Sn6oa/DRW6nz5uPziT
+ EeheJJW0rAKEslaZQ4xXhHEcgaGaefHKI4bLtN5wkez8xaNhHmPw0Yc3tcN29AKub/OnGDYG0K5
+ CQlNpUMSFLEboNiM3G7zm7xg=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 76378e880c09277e;
+	Wed, 09 Sep 2026 17:18:24 +0000
+X-Mizu-Trace-ID: 76378e880c09277e
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <81e59a58-5691-4959-aa3b-2b9728349ddb@linux.dev>
+Date: Wed, 9 Sep 2026 19:18:23 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <254d9c60-d21e-4ef5-b70e-89dd18ff7147@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dolphin (26.08.0): "Expandable" folders in Details view not
+ working when per-folder view properties are enabled
+To: =?UTF-8?B?TWFudWVsIEEuIFIuIGRlIE9yw7plIFLDrW9z?= <deor001@gmail.com>,
+ linux-kernel@vger.kernel.org, luke@ljones.dev,
+ platform-driver-x86@vger.kernel.org
+References: <CAOXykpgCPMB7fGGJXD0wdx-0boy3vdRZraFRhegrh7azJiYONA@mail.gmail.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <CAOXykpgCPMB7fGGJXD0wdx-0boy3vdRZraFRhegrh7azJiYONA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 09, 2026 at 11:26:18AM -0400, Mark Pearson wrote:
-> Hi Thorsten,
-> 
-> On Mon, Sep 7, 2026, at 5:01 AM, Thorsten Blum wrote:
-> > The procfs entry /proc/acpi/ibm/beep is only created if beep_init()
-> > succeeds, which requires beep_handle to be non-NULL. Remove the
-> > unreachable code branch from beep_read().
-> >
-> > Signed-off-by: Thorsten Blum <blum@kernel.org>
-> > ---
-> >  drivers/platform/x86/lenovo/thinkpad_acpi.c | 8 ++------
-> >  1 file changed, 2 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/lenovo/thinkpad_acpi.c 
-> > b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > index 1082c36ae723..069c9f1c359f 100644
-> > --- a/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > +++ b/drivers/platform/x86/lenovo/thinkpad_acpi.c
-> > @@ -5936,12 +5936,8 @@ static int __init beep_init(struct 
-> > ibm_init_struct *iibm)
-> > 
-> >  static int beep_read(struct seq_file *m)
-> >  {
-> > -	if (!beep_handle)
-> > -		seq_puts(m, "status:\t\tnot supported\n");
-> > -	else {
-> > -		seq_puts(m, "status:\t\tsupported\n");
-> > -		seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
-> > -	}
-> > +	seq_puts(m, "status:\t\tsupported\n");
-> > +	seq_puts(m, "commands:\t<cmd> (<cmd> is 0-17)\n");
-> > 
-> >  	return 0;
-> >  }
-> 
-> Change looks good to me.
-> I guess the beep_write could be similarly updated?
 
-No, beep_write() can be called via the beep= module parameter even if
-beep_init() failed, so that check is still needed.
+On 9/7/26 03:11, Manuel A. R. de Orúe Ríos wrote:
+> Hello, Denis and Luke.
+Hello Manuel!
+> I was wondering if you could help me communicate about, and get some
+> information regarding, the following topic:"
+> in Dolphin it's intentional (a design decision) or an oversight that
+> hasn't been addressed yet.
+>
+> Environment:
+> - Dolphin 26.08.0
+> - Fedora 44, KDE Plasma 6 (Wayland)
+>
+> Steps to reproduce:
+> 1. In Configure Dolphin -> View -> Details tab, enable "Folders: Expandable".
+> 2. In Configure Dolphin -> General -> Behavior, enable "Remember
+> display style for each folder" (i.e. GlobalViewProps=false).
+> 3. Open any folder in Details view.
+>
+> Observed result:
+> The expand arrows for subfolders (the inline tree view) do not appear,
+> even though "Expandable" is checked globally.
+>
+> Expected result:
+> The expandable folder tree should work regardless of whether view
+> properties are set globally or remembered per folder, since
+> "Expandable" is configured as a global Details-view setting and is not
+> something exposed as part of the per-folder properties.
+>
+> This looks related to Bug 524626, which reports a similar coupling
+> issue in 26.08.0: the new per-folder zoom feature is tied to
+> per-folder view properties (GlobalViewProps=false) with no way to keep
+> it independent. My case seems to be the same underlying pattern — a
+> setting that should logically be independent from the
+> global/per-folder view-properties toggle ends up depending on it.
+>
+> Could you let me know whether this is expected/by design, or if it's a
+> gap that hasn't been considered yet? Happy to provide more details,
+> logs, or test further if useful.
+Sorry but I don't use said features, and this is the linux kernel mailing list
+so... Not the correct place to get answers about this.
 
-Thanks,
-Thorsten
+You should try KDE's own forum: https://discuss.kde.org/ or the KDE bug
+tracker: https://bugs.kde.org/index.cgi
+> Regards,
+> Manuel de Orúe Ríos.
+> ___________________________
+Anyway best of luck with solving this issue!
+
+Best regards,
+Denis B.
