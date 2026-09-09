@@ -1,90 +1,94 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD354856A;
-	Wed,  9 Sep 2026 13:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72256423A85
+	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Sep 2026 14:12:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788961494; cv=none; b=JTLPnYNBigTGPCtkfI/qNPxca1JppxbXNTbmc7Ugiod/5xf0nCovAhoAGZsvK6l++YlS294FNHAqtppRLTOf7W5+OdzDIrYcEKnCV87PM4OTH6qKIzYzQVP8UEf9NehqruxaiJKAtoHt2vSMIJJjN1DUPa79HffQiKOBKVC+ajk=
+	t=1788963126; cv=none; b=c1IktWLHFGX4fbjUvEp842fM2J+hwMB7KROAqcJn9awM12QgHOnibBZ0rN4c+L0lbzlFufFFQFbt8JK76RPum/pffw5FIsLh6P3l/P3+K1cNDWiqzGBKsopLMf93HJOt1KRAaY2K+3/ie11bMn/8sskEdqn972twh4EuF71PxiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788961494; c=relaxed/simple;
-	bh=MPqiRkGlZVTX++ODXxfaXxun80PggglEafJxYTlEUik=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kjTC5z+Lx1NRKy7CBSoWSmE6h5cPJL/bGd4MFCu3Sljmsi29RzUf8LBPmd2pYntX+7Uurcg0e/sLvlVKu1czG0HxAa4HCkqRKAYBv98Poptu0rQdurj3LdCsU1M0OtyXgtaGHBuf/UePSidy9YZh0pKZI1k9n613fBRCW4UCN28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f8z0lT6h; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788963126; c=relaxed/simple;
+	bh=R2hc4nJYNByGNuFXkvT9ryaFP81H3CQrVxptV/nw+9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXHGmsUdI9IRv7wVTv8/yXapwTIgexLdVbcifwXrWPRpGN1NKuohmWEOjaJmleSAcd5xFg82qal3HDeljICAa99TTyJSgpc6XSY+o8amtZ9sFv7/htyg9AmQQTTCHwNeANbel34Vrp27TGXyypJhb00zuaYklrYzP1F0AbXeWiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lx7NbqwJ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f8z0lT6h"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lx7NbqwJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788961492; x=1820497492;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=MPqiRkGlZVTX++ODXxfaXxun80PggglEafJxYTlEUik=;
-  b=f8z0lT6hqcfRizimUdcch3S2bzPqoseTG/on8vaXzT34VrFI86ZLS5n+
-   T2X7Ad5zTbv7W4PaLkSno5bp701Je8KUWCdToOD8VYAFGZDPr/l5JwXy3
-   0Rb5Ap2FCSzsm7CZ5UOcdJqYr9rwWzJimdAPH4yJpZ9AYeTCXaEZbfcKe
-   htsr6XRe8fJxVbfhI16Ab4yeG6HOkAiaOt4ekQhFTNsuK/a+CmSimGyCr
-   w12Neu40K/7WPuTIG1+tyA8VKDwi4ML1+BL2dnMSiHML/8hAsVRqkmQB2
-   XksZaL/OlB9VDfWNy5Q5jTJ0Qn1VZDk+p3fzOld8+tU4//wssFXlEh6Bd
-   g==;
-X-CSE-ConnectionGUID: PHNIkY1aRK2tWR7CUq1YHQ==
-X-CSE-MsgGUID: hqu/sv/hTM60+hreZwnKlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="106758127"
+  t=1788963125; x=1820499125;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=R2hc4nJYNByGNuFXkvT9ryaFP81H3CQrVxptV/nw+9Y=;
+  b=Lx7NbqwJu7pZVBNptQanKY0wcWwRj7iaK3vAO7RJh8TwCwTZJD4kKXv6
+   Its4lg2/1PxOjqQL6B5Ao2nxlIYafw9oItQjuf+qaAetMWBSJclctVeiR
+   wsF7kxhe0vrR74WLe/yobIP1ZsJgZzi4xNMboABco+WCaa630nKMXFU+q
+   mxlbP2dXhBj+rvjFsDPXtPC7gWKP1OyyANy5qcfrxCZDbzjgnS3jrcj9e
+   6cGDvcAUyiozRZXMEdsGaL/oak1zaT7vviORw5XZlgUtQbyIpfpK2mt+k
+   jcQiOp2FejJNAJ01TfbIVv7BznL/O9Pf/skH9LvBY7Gd4Sq1ghTXmHFVx
+   w==;
+X-CSE-ConnectionGUID: OlSBjI20S4K/QwGjU1WySg==
+X-CSE-MsgGUID: urfhsV8OR0S3wa8HqhaNSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="106761320"
 X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="106758127"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 06:44:52 -0700
-X-CSE-ConnectionGUID: q9FakGyGScS13XMsOhc7hg==
-X-CSE-MsgGUID: DWlK9O5HSaeAfo5wGo9ezQ==
+   d="scan'208";a="106761320"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 07:12:04 -0700
+X-CSE-ConnectionGUID: SYvnV8gOQNSLE1ie8eVR4g==
+X-CSE-MsgGUID: fJ0IDbndRjykRybAWav/Tw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="269978349"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.78])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 06:44:49 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Antheas Kapenekakis <lkml@antheas.dev>, 
- Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, 
- Gabriel Windlin <gawindlin@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260908203412.608606-1-gawindlin@gmail.com>
-References: <20260908203412.608606-1-gawindlin@gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: fix sysfs-platform-ayaneo-ec
- documentation path
-Message-Id: <178896148417.3928.3977515235268287434.b4-ty@b4>
-Date: Wed, 09 Sep 2026 16:44:44 +0300
+   d="scan'208";a="267045217"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.249])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 07:12:01 -0700
+Date: Wed, 9 Sep 2026 17:11:59 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Hans de Goede <johannes.goede@oss.qualcomm.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Linus Walleij <linusw@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: x86-android-tablets: fix
+ gpio_secondary_fwnode_init() not working
+Message-ID: <aqFpL__dXmuTnLey@ashevche-desk.local>
+References: <20260831201157.36397-1-johannes.goede@oss.qualcomm.com>
+ <apcRAvoHkh9blDwK@black.igk.intel.com>
+ <74f149f6-caa8-db4e-9ef4-5c15b7a5845f@linux.intel.com>
+ <2666d5fe-994b-4f5f-ae5a-60ce9fffb867@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2666d5fe-994b-4f5f-ae5a-60ce9fffb867@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, 08 Sep 2026 22:34:11 +0200, Gabriel Windlin wrote:
+On Tue, Sep 08, 2026 at 07:51:55PM +0200, Hans de Goede wrote:
+> On 3-Sep-26 13:54, Ilpo Järvinen wrote:
 
-> The documentation file for the AYANEO platform EC driver was added as
-> Documentation/ABI/testing/sysfs-platform-ayaneo-ec, but MAINTAINERS
-> references it without the '-ec' suffix, causing 'make refcheckdocs'
-> to report a broken reference.
-> 
-> Update the file entry to point to the correct file name.
-> 
-> [...]
+...
 
+> I see, thank you for quoting Andy's email since it never made the list (1),
+> nor did it reach me.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-fixes branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
-local branch there, which might take a while.
+Oh, it was not intended to be not public. Thanks, Ilpo, for sharing the content.
 
-The list of commits applied:
-[1/1] MAINTAINERS: fix sysfs-platform-ayaneo-ec documentation path
-      commit: d144a494d81fcf2d1c5cf58b01c655bb8bafc701
+> I'll prepare a v2 addressing Andy's remarks.
 
---
- i.
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
