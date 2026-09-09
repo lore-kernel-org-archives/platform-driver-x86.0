@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B253576ED2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E1E577E31
 	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Sep 2026 15:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788968886; cv=none; b=GFGAAiOYLRMzDaZHhNtFEmHmcGks4aJDledUfT17wIRoooopbKwZRl7A3ghRxsZzpsxQMolLW+xnxCqwjsGTYq/z3RoCFK9UGm0EMoELwlNgfiuwzP3BJcUQ4MRCq5uI6Av2paxToFQzytmWJhcilNJslUzC9mhCvmSuO+WZs/g=
+	t=1788968886; cv=none; b=haqhKlIVjX59SHdHf8bP0upSwTuRssLv3VMgdqdexud5njgRyYfjPcIYZfv8EQV+mdH+gcILXVwA3b/U4oywvK6CMyjKiS0WlBH/RcWlpaa3WlNrlcHxlKC1/S4HVZue1hhrdte0KGi8ZbwCAY6VEdDe0IVNrXjVlxbgW8JUrhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788968886; c=relaxed/simple;
-	bh=Y05JvbiBoc6hnW2yndM8nHg4xST78/jI1JnLeTfb6qQ=;
+	bh=hK10ala/CIbTCQRu+zYC4dqX517GLIuekh7Mdpmw/QE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b5tuT71rOvutD7d9DP1K7GJxzSooqYKx5SGVmeLyLVGsXa+uDsUUYfb4zz5bmo2GoJzP//GKrmYC8iGaVvz7/j7bG4PdAq+OP2ELHFTU1lbbaoi3suqn4fAlRdVjmVa/YDKOFoBxwbqpj/pC8KNuj5f45t0P/c6CgaWALl0HIHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GWTD+MMs; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=JOhMzvixBCTfC3QtgFNyBNMyHEwFTs8a0KROJf4Q41xtlyxfh8RhfpxAVTS6qufgf6afaXpAyNRDTThe1BxHsrh1LTK1wNPbMJ90s17J77ciHhWS1Fv14tvxKKf9rI2MUb1wujxGFckZzTJ7v3klHfqfn4wC2nH8IGmrRc0U3P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnCzWXnR; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GWTD+MMs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnCzWXnR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788968884; x=1820504884;
+  t=1788968885; x=1820504885;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=Y05JvbiBoc6hnW2yndM8nHg4xST78/jI1JnLeTfb6qQ=;
-  b=GWTD+MMslM6wmTnAMvL3Mret4sawErqUAUx2SKViEixWYefAzmVQhKdX
-   rnq/Izx4vJaUwi4elvC22ew9gQfaD3d+iSA16tcyhiqmjUrqTNZ5lvxNw
-   ZFWFc7ZqzEUKE0k84mklZrK5RhXj2vwRLUaNkKtWukkhnBhJONt5B93Nw
-   ea9uePDeMbUShk60DzuU0q4mSbg4VAwSlAN9EtnqMBoT4TLIkncu7OtTV
-   odtiKDHRNGBFrgD314eL5FLASGHcIxzjnqx9q1BM+6w8CKWOfpBCZ571e
-   egg7zGs2p6/w3jVOdr1VkX3PpQTqNRZx7bXzRBSg3c3JgVLKwY3UQ/1Li
-   Q==;
-X-CSE-ConnectionGUID: QU7ooDyYT2qs1eO48Uo6GQ==
-X-CSE-MsgGUID: M7VWdATuRpmrCsVPHlZ2uQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="93091838"
+  bh=hK10ala/CIbTCQRu+zYC4dqX517GLIuekh7Mdpmw/QE=;
+  b=NnCzWXnRHkycsBz+hWNtAN/Q5cr7Y2D0eu2vCioK6PinXDsOTVd4IrWS
+   4YG0wnqJBn4YO3+XXXwuiFMGMGr7EBn4iUv+zC99jsl93AMc5DsdKMu6K
+   xKFyRUANDYwH/ad6Wh6+uuZov8A22TPpmWJvkG/QaLQM5ayQGPb9jVg7D
+   8sro1++AOrLA2B3qJyQ4B7JeRDFdSr66NOL14fprmhVhTC2bgUGuLPaSi
+   mbg8XrsvIqfjMdC21RAtAKVabYMZXf6swrAz4fc2tx6RnHGi0ozyDersD
+   mQDXBOxLCHdsfqpz8nx+gxAbDcniv8taW0/CpI6Nlpgk1XuT/hCoocfdh
+   g==;
+X-CSE-ConnectionGUID: qG7Ck5mxRzKULfzw3YwgoQ==
+X-CSE-MsgGUID: BwYQ8memQy6nlZggjYeOJQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="93091840"
 X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="93091838"
+   d="scan'208";a="93091840"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 08:47:58 -0700
-X-CSE-ConnectionGUID: cTshm3adRxa8R0IKjw6WlQ==
-X-CSE-MsgGUID: OlSUFOATTfWGwr78wsomAg==
+X-CSE-ConnectionGUID: B6E/fVe8Rte/+cyYPMPypw==
+X-CSE-MsgGUID: kt7LQqMATlGcuJdio5aiJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="268102520"
+   d="scan'208";a="268102524"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
   by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 08:47:57 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
@@ -59,9 +59,9 @@ To: platform-driver-x86@vger.kernel.org,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v7 10/20] drm/xe/vsec: Support possible hotplug exit
-Date: Wed,  9 Sep 2026 08:47:49 -0700
-Message-ID: <20260909154739.1515514-32-michael.j.ruhl@intel.com>
+Subject: [PATCH v7 11/20] drm/xe/vsec: Refactor BattleMage PMT defines
+Date: Wed,  9 Sep 2026 08:47:50 -0700
+Message-ID: <20260909154739.1515514-33-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260909154739.1515514-22-michael.j.ruhl@intel.com>
 References: <20260909154739.1515514-22-michael.j.ruhl@intel.com>
@@ -73,97 +73,76 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DRM has an API that will verify that a device is valid in the hotplug
-context.
-
-Verify device is valid before access in the VSEC callback API.
+Rename generic defines to be BMG specific.
+Define several magic numbers.
 
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/gpu/drm/xe/xe_vsec.c | 35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/xe/xe_vsec.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index c0252f5b508f..3bea89f2a5c5 100644
+index 3bea89f2a5c5..ca8414441a69 100644
 --- a/drivers/gpu/drm/xe/xe_vsec.c
 +++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -10,6 +10,8 @@
- #include <linux/pci.h>
- #include <linux/types.h>
+@@ -90,10 +90,15 @@ static struct intel_vsec_platform_info xe_vsec_info[] = {
+ #define GUID_CAP_TYPE		GENMASK(29, 28)
+ #define GUID_RECORD_ID		GENMASK(31, 30)
  
-+#include <drm/drm_drv.h>
+-#define PUNIT_TELEMETRY_OFFSET		0x0200
+-#define PUNIT_WATCHER_OFFSET		0x14A0
+-#define OOBMSM_0_WATCHER_OFFSET		0x18D8
+-#define OOBMSM_1_TELEMETRY_OFFSET	0x1000
++#define BMG_IDX_TELEM_PUNIT		0x00
++#define BMG_IDX_TELEM_OOBMSM		0x01
++#define BMG_IDX_CRASHLOG_PUNIT		0x02
++#define BMG_IDX_CRASHLOG_OOBMSM		0x04
 +
- #include "xe_device.h"
- #include "xe_device_types.h"
- #include "xe_mmio.h"
-@@ -159,7 +161,12 @@ static int xe_guid_decode(u32 guid, int *index, u32 *offset)
-  * @user_offset: a user offset relative to the beginning of the data to read
-  * @count: bytes to read
-  *
-+ * This is a callback API.  I.e this can be accessed external to the XE driver
-+ * (PMT driver scope).  Because of this, DRM hotplug needs to be verified
-+ * (drm_dev_enter()).
-+ *
-  * Return:
-+ * * -ENODEV device is not available (hotplug)
-  * * -EINVAL for VF and PMT WATCHER requests
-  * * count   number of bytes read on success
-  */
-@@ -171,14 +178,20 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
- 	u32 cap_type = FIELD_GET(GUID_CAP_TYPE, guid);
- 	u32 mem_region;
- 	u32 offset;
--	int ret;
-+	int ret = 0;
-+	int idx;
++#define BMG_PUNIT_TELEMETRY_OFFSET	0x0200
++#define BMG_PUNIT_WATCHER_OFFSET	0x14A0
++#define BMG_OOBMSM_0_WATCHER_OFFSET	0x18D8
++#define BMG_OOBMSM_1_TELEMETRY_OFFSET	0x1000
  
--	if (IS_SRIOV_VF(xe))
--		return -EINVAL;
-+	if (!drm_dev_enter(&xe->drm, &idx))
-+		return -ENODEV;
-+
-+	if (IS_SRIOV_VF(xe)) {
-+		ret = -EINVAL;
-+		goto dev_exit;
-+	}
+ enum record_id {
+ 	PUNIT,
+@@ -122,29 +127,29 @@ static int xe_guid_decode(u32 guid, int *index, u32 *offset)
+ 	*offset = 0;
  
- 	ret = xe_guid_decode(guid, &mem_region, &offset);
- 	if (ret)
--		return ret;
-+		goto dev_exit;
- 
- 	telem_addr += offset + user_offset;
- 
-@@ -188,11 +201,14 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
- 		xe_pm_runtime_get(xe);
- 		break;
- 	case TELEMETRY:
--		if (!xe_pm_runtime_get_if_active(xe))
--			return -ENODATA;
-+		if (!xe_pm_runtime_get_if_active(xe)) {
-+			ret = -ENODATA;
-+			goto dev_exit;
-+		}
- 		break;
- 	case WATCHER:
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto dev_exit;
+ 	if (cap_type == CRASHLOG) {
+-		*index = record_id == PUNIT ? 2 : 4;
++		*index = record_id == PUNIT ? BMG_IDX_CRASHLOG_PUNIT : BMG_IDX_CRASHLOG_OOBMSM;
+ 		return 0;
  	}
  
- 	mutex_lock(&xe->pmt.lock);
-@@ -206,7 +222,10 @@ int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offse
+ 	switch (record_id) {
+ 	case PUNIT:
+-		*index = 0;
++		*index = BMG_IDX_TELEM_PUNIT;
+ 		if (cap_type == TELEMETRY)
+-			*offset = PUNIT_TELEMETRY_OFFSET;
++			*offset = BMG_PUNIT_TELEMETRY_OFFSET;
+ 		else
+-			*offset = PUNIT_WATCHER_OFFSET;
++			*offset = BMG_PUNIT_WATCHER_OFFSET;
+ 		break;
  
- 	xe_pm_runtime_put(xe);
+ 	case OOBMSM_0:
+-		*index = 1;
++		*index = BMG_IDX_TELEM_OOBMSM;
+ 		if (cap_type == WATCHER)
+-			*offset = OOBMSM_0_WATCHER_OFFSET;
++			*offset = BMG_OOBMSM_0_WATCHER_OFFSET;
+ 		break;
  
--	return count;
-+dev_exit:
-+	drm_dev_exit(idx);
-+
-+	return ret == 0 ? count : ret;
- }
- 
- static struct pmt_callbacks xe_pmt_cb = {
+ 	case OOBMSM_1:
+-		*index = 1;
++		*index = BMG_IDX_TELEM_OOBMSM;
+ 		if (cap_type == TELEMETRY)
+-			*offset = OOBMSM_1_TELEMETRY_OFFSET;
++			*offset = BMG_OOBMSM_1_TELEMETRY_OFFSET;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.43.0
 
