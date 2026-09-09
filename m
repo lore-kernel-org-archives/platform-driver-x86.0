@@ -1,95 +1,159 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www74.your-server.de (www74.your-server.de [213.133.104.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A095382F13
-	for <platform-driver-x86@vger.kernel.org>; Wed,  9 Sep 2026 06:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050A444A3E2;
+	Wed,  9 Sep 2026 08:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788936660; cv=none; b=VD8zjd8ixUDj1Jay5+TzkeGm02LuF2Ou7t9P1lGDMS1kRPfifvRL3B4dCJsl/cEVT3Jowf7MDeTeQNhWySpPxFGxv5ePYUSteAsCK+jVxnBfUzNvhaBtl/WtZHrK+7vf5M2aomSdSEGam0BiewM74XHlkjdnhSLhuTD2ZmX7lFQ=
+	t=1788944362; cv=none; b=XLpTdyKbDyKIzWG3s+zrUOImjwcisieIbLrLW3zMVKlMEo6e3CGWDhU8JGun/bv/olKoB0vDEanwXAtIDnjEqghLB68V+DQBEODbK/ASUEataBLNTS4lHAeM+YOJVd2eTu4JiW3ThC30QYbgrEmb15GjUOrkQy0FeRviWvrf4dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788936660; c=relaxed/simple;
-	bh=wLDEXefuJ6ysr65joIrk+CDBT5nG781r89dk8ZxIZWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s8Xfia1uXaRtma55tzCfwlY0WT1eX/FccqhA6QNPiIU1+O7BvChBPvU4f/0Rx4kYDBl+NbRgIffJhYYbtoMvYSHtXwCwb9lbLjsqRFGCPYwNYn2GCYcgzcvW90MEG/1PWMKcXE62oc9sT9eHWQD6ZRhmZdAhs5r9WbD7lsu4pfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DhG8vY9d; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788944362; c=relaxed/simple;
+	bh=qLSlmNrNFe6NYtMyKkuZl5338B2KH2OFevOnG7eyFMQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kOJ+T9O+Wwv8cPWUdme7+fbi8gpQNNEAHiBr9j1ZrhALcT3bLNx3n45yjj1wYJIogtiAlUzRcMnXAqpPvboZ9Pvp9q0VcVzFR+4GFfkKhOuY4EEki2TxOTNWiin3bbFzmEXjShriyZqqvYT4goKijjaAv6A0mtV2LGm38f+Utfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=computerix.info; spf=pass smtp.mailfrom=computerix.info; dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b=NGd3Xo3o; arc=none smtp.client-ip=213.133.104.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=computerix.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=computerix.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhG8vY9d"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-499b2981a7bso59058685e9.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Sep 2026 23:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788936654; x=1789541454; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wLDEXefuJ6ysr65joIrk+CDBT5nG781r89dk8ZxIZWg=;
-        b=DhG8vY9d+eTinmFNQm775o8Q7jFYyvD1+u3MTW/5lSvEBux2eigyr1PhU5mahAEzcP
-         dM/Nt2OYBu262Q5l5hHK86R8Bez+xHclP6auZyDq+STfLywu1/OK0TseoQL1ElVYfvtK
-         lSHQbb2s9eCEc/lxd6nzx+mWaQjtyayA3DDq7M80BCSvcebflez85PaMXHgMl9DyOsPg
-         ZGv1qBv52krNvgf3OtBtjcn4t9ebevLKaQmNEHoo/hRvmET+0Q5seEqqd9MTev5qjDXv
-         BWAorjpAKi5RUnst19QEjks8lkl6QpIHUkDxsN55Rg/dnmq+QP+eUVjf+p7WIYbEMxVk
-         8abg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788936654; x=1789541454;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wLDEXefuJ6ysr65joIrk+CDBT5nG781r89dk8ZxIZWg=;
-        b=qTMEi1PE/ZLHi8Jw/yG34UW7aVOLIAGeA6UgZouU7ui6uVrpAC46MDY1D08+u2x2KW
-         3/j9NnVvi3aN09zFRFNJM3g3+f+32dHiLyKBxRobj21c5NuWD60zr73ip3hsPino6MqR
-         Kko+fngJSbaxAuZr/Hbn4Z/OhLUlaEi9JFRzzsGkG+F/O/xBjcGFzzPqy+tid2o1k68C
-         Hg3+WOXjTS+p4ZUU9P0CFaoOYk8my6aEsGbTB+J1ggXApNyuKjg3skGnkBb/syJ6tQPB
-         Cnz9v8ARpPjU+b31oSMgG9ViYkTynSsHvsewXXvRFBeihz3D6dR1oZVzyEfvBjUBr8ih
-         HFtg==
-X-Forwarded-Encrypted: i=1; AKwUvByPxALISbQz4Dcio4vtcXnIfBN4F2tn0p708qVjYx6wHiA/IOjfXr8Ps3lX8/sBEWQpL+xGwAIqFeVq9FvtFk2k9iUL@vger.kernel.org
-X-Gm-Message-State: AFuF++lG+EXJqDXnBoeA6v6mSvcyDGhbLE1esX7A7jP5rYfRhq42C0Dy
-	iIVV6b6F6ao3f7q557NCEzn5AmkN7T+kD1uyLYaK+fTNBvmnKr9ojoY=
-X-Gm-Gg: AYBFou35DhvMKTbrBeT4nQ/taziCIVfkHkVaLECgs56Z09dZfN1aqTu24QAZIndyeFu
-	+2MJutJkShDeBllQQ367jrAceQdq0N2dyM1Ofn/gOiXABOS/vQok9XRfikKt0uQbGvhG2oo8pqY
-	cBjUVfcq4N9tM4qyF1iSpmYtIeQvfH8m1PcRUXr9u5AxgGA6VBWAqzH0lAKnNEJC7YXey7Aj2dR
-	GwLTizFUeO3sqP9LJy6mbaRVa2b/J5meece14LYmAgwFV6E7i9W017//TtJPh8f+hj5t+fGT0/V
-	6Oakjfe0KjohIELqX2D4q83O1/Z4wmTXY8KL8vXbx11tajzQkygupZz7qnn+pMcz+MS733aOPnU
-	6L6Oc/DpnRACeGEeX/r6UOwfGQ7wGHDcZ9huTZjrlFceW6qXT6VVlYZsPrUC1EQrx8q95yxKvQo
-	zayJNQX7ihgM3ELLiWKdOA+dX+41uqXHN2aCVqm3716+2WDdf99gbw+MkTajm2rc/++ux5M1SNN
-	c32QtZuThgvMrQW4XkhBCCs5mq/DYEs6e70WpT6b8af9iqL6yHfceaopYY=
-X-Received: by 2002:a05:600c:8715:b0:49d:17d4:aff2 with SMTP id 5b1f17b1804b1-49d17d4b01dmr219717855e9.1.1788936653490;
-        Tue, 08 Sep 2026 23:50:53 -0700 (PDT)
-Received: from latitude7275 (84.124.213.91.dyn.user.ono.com. [84.124.213.91])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49cf7736132sm443215855e9.12.2026.09.08.23.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2026 23:50:52 -0700 (PDT)
-From: "D. Manresa" <dmanresa@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Thierry Chatard <tchatard@gmail.com>
-Cc: Lee Jones <lee@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Daniel Scally <dan.scally@ideasonboard.com>,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH] mfd: intel-lpss: add Dell Latitude 7275 to the resource conflict quirk
-Date: Wed,  9 Sep 2026 08:51:04 +0200
-Message-ID: <20260909065104.15817-1-dmanresa@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <aqDkwTkAsvs8Escx@ashevche-desk.local>
-References: <20260831160754.9857-2-tchatard@gmail.com> <20260908161629.335223-1-dmanresa@gmail.com> <aqDkwTkAsvs8Escx@ashevche-desk.local>
+	dkim=pass (2048-bit key) header.d=computerix.info header.i=@computerix.info header.b="NGd3Xo3o"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=computerix.info; s=default2306; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=jyRWO5kreTeG1miRRc7E2bp5OOl/cxugwPpIIFWbAH4=; b=NGd3Xo3oAmLM56gwBlhBkRFUt7
+	TAeACSrlmvKyvhJRfxTJhDKOp4V1VW9uxU89mUTxmPvMC3MFstbhs6D2WnNRuxhoVwRvlEZBau3/L
+	fVpnP9pPGY1CBiF0edmWRapIalv/i8HhcQ2Ao8togQ6ImTKnDEiUIoAUXFTFqox3ZEAmkGULbebez
+	ADZrVRUx0XieqhLs7GIP4yGVDy1pa4oKjGvgpkA+mpMI40Myfc0OrEQqzFUo1hOKHCZ0fWzpAn010
+	vjDhPPGAWuqMF7l28dHKCPosDKfsCl1L4ySMUbGdG1H9fKelTJcuP1QxIlpescz+4R8WsL35RMZPz
+	gdr3fZVg==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www74.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <klaus.kusche@computerix.info>)
+	id 1x4E8z-0004ES-1q;
+	Wed, 09 Sep 2026 10:59:01 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <klaus.kusche@computerix.info>)
+	id 1x4E8y-000EVu-39;
+	Wed, 09 Sep 2026 10:59:01 +0200
+Message-ID: <e17ef3af-c1cd-4360-ba4b-9900ccc36ef6@computerix.info>
+Date: Wed, 9 Sep 2026 10:59:00 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Cache-aware scheduling does not work well with amd big/little
+ cores
+Content-Language: en-US
+To: Tim Chen <tim.c.chen@linux.intel.com>, "Chen, Yu C"
+ <yu.c.chen@intel.com>, Mario Limonciello <mario.limonciello@amd.com>
+Cc: "Badole, Vishal" <Vishal.Badole@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ platform-driver-x86@vger.kernel.org, K Prateek Nayak
+ <KPrateek.Nayak@amd.com>, ricardo.neri@intel.com
+References: <2180ea5a-eb28-4152-8d4d-cd00b0c24b2e@computerix.info>
+ <8064e1d8-b51c-48e5-a312-8c31581991f5@amd.com>
+ <b475039b-defe-46e7-ab85-46e3196da667@intel.com>
+ <369d0bbb-db7a-4f86-bee2-332d5295c452@computerix.info>
+ <406a5c407bbe60cafc24f715e089f5552a0791f9.camel@linux.intel.com>
+ <14630984-9287-4454-b52f-3a1e526e1fdf@computerix.info>
+ <3cb5cbdb227bee0b822f1550e10659faadd77a3d.camel@linux.intel.com>
+From: Klaus Kusche <klaus.kusche@computerix.info>
+In-Reply-To: <3cb5cbdb227bee0b822f1550e10659faadd77a3d.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: Clear (ClamAV 1.4.3/28118/Wed Sep  9 08:24:03 2026)
 
-On Wed, 9 Sep 2026, Andy Shevchenko wrote:
-> Do not fold, just add into the series this one as patch 2, for example.
 
-Fine by me. Thierry, please carry it as patch 2 of v11 with Hans'
-Reviewed-by; no need to change anything else.
+Hello,
 
-Thanks Hans and Andy for the quick review.
+On 08/09/2026 23:54, Tim Chen wrote:
+>> I did some quick testing (no perfect benchmark environment,
+>> just checking runtime and CPU consumption with "time").
+>>
+>> I timed a kernel build (-j 24 and full lto, my own .config)
+>> and an application build (also with a lot of parallelism)
+>> with three different kernels:
+>>
+>> a) Cache aware scheduling completely configured off
+>>
+>> b) Cache aware scheduling turned on, but without patch
+>>
+>> c) Cache aware scheduling turned on, with patch
+>>
+>> Big/little scheduling was always on, 
+>> Mario's patch was always applied
+>> (without it, results are significantly worse,
+> 
+> Sorry, I am a bit confused.  You mentioned later the result for (b)
+> and (c) are about the same with or without the patch
+> exposing debugfs (commit c1e7fe5e75ed11fa85368e5a186472afd3858f3a
+> Mario mentioned in another mail).  
+> But here you say the result is much worse without Mario's patch.
+> Is Mario's patch the one above or some other patch? 
 
-D.
+The with/without patch in (b) and (c)
+refers to the patch you sent on 31/08/2026
+( https://lore.kernel.org/lkml/20260825174112.2580942-1-tim.c.chen@linux.intel.com/ ),
+not to Mario's patch.
+
+>> because I use kernels without debugfs,
+>> so big/little scheduling is off without the patch).
+>>
+>> Results:
+>>
+>> There is no significant difference between b) and c) 
+>> (<= 1 % wallclock time)
+> 
+> Yes, I don't expect difference between (b) and (c).  My
+> understanding is the patch in question is to only
+> expose the default cache aware parameters via debugfs
+> but don't acutally change them.
+> 
+>> Sometimes b) is better, sometimes c) is better,
+>> I'd say the differences are below the accuracy of my tests.
+>>
+>> But a) was reproducibly better than b) and c)
+>> w.r.t. wallclock time: 2-2.6 %
+>> It was also very slightly better w.r.t. total kernel CPU seconds.
+>> The results w.r.t. total usermode CPU seconds varied too much.
+>> (I always ran the application build twice,
+>> and for all a), b) and c), the second run consumed
+>> significantly more usermode CPU seconds,
+>> but took a little less wallclock time - I don't know why).
+> 
+> Will have to look around to see if we have some similar CPUs
+> as HX-370.  My understanding is that the 4 big cores are in
+> one L3 and the 8 small cores are in another L3.
+
+Yes, as far as I know, it has 16 MB L3 cache for the 4 big cores
+and 8 MB L3 cache for the 8 little cores.
+
+> BTW, we have also found two issues with the active load balance
+> paths for CAS that need fixes.  You may want to add those patches
+> and see if they are helpful to improve things.
+
+Most likely not within the next few days.
+I'm still on holiday and quite busy:
+Ars Electronica Festival in Linz.
+
+> Active load balance fixes:
+> https://lore.kernel.org/lkml/20260903020656.3793626-1-wanglu.priv@gmail.com/
+> https://lore.kernel.org/lkml/2b0a35122ee615c6fa51076e5d79330e633755ac.camel@linux.intel.com/
+
+-- 
+Prof. Dr. Klaus Kusche
+Privat: Söllmnitz 32 d, D-07554 Gera/Söllmnitz
+036695/859909 klaus.kusche@computerix.info https://www.computerix.info
+Dienstlich: DHGE Gera, Weg der Freundschaft 4, D-07546 Gera
+klaus.kusche@dhge.de https://www.dhge.de
+
+
+
