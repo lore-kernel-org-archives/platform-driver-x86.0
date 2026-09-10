@@ -1,566 +1,221 @@
-Received: from sender6-op-o12.zoho.com (sender6-op-o12.zoho.com [165.173.180.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C11A55D866;
-	Thu, 10 Sep 2026 18:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789064572; cv=pass; b=elOFnxt7VTd2YUGMSfrUy2GcCZ1AfW7veARZXE9kmLAuoLqUdjNJDRskFvXtBcfdxtwbkEzJ3idlpZDytK81nCZOE74pMvZAHH3sFhfHoQa4+vRp2B0wKMxN3fVYY5oyOXW+aYSNyz3znGQKMKhkIq0s76YO1T5GNKbDZ9rCv+U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789064572; c=relaxed/simple;
-	bh=s6TAq6tZAe5Iy03lsRkZhtIpcRXvlBCzOMuGnnn79FA=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=MGpMH3ylMz4xjwfla8c31CKvVcNxA4PMJegL0FnSz9y6R8ux1MgPDBXrBoQhrU4td/9zRblVnI322FZQ5Jlvn95I2WoTJxEbo/u8AZZHO+utFpeUhng89tx/UysNMrM8Tot89u7xXX/+SOBDAPUybaIAXLdO7nGm3sod1gieOHY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=HTLdGj4n; arc=pass smtp.client-ip=165.173.180.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393EC53ECE4
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 18:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789064884; cv=none; b=fED84/wQ9TnbmA5Pz3n3MAq3I2zhn7+dxzKqInnrOxecTN1yzmDRMJV2F82whvD7WoljiWnYzyyVGG28FOzS0YMnt8gUWTEqSFRvR+ZvxZQrkfU2o1Y5+Z3fQd29aJsSQ55Jslmpdb4s9HX7Zyk4FX37CTWBoipxKyuqwH91NNM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789064884; c=relaxed/simple;
+	bh=gl76kPnji7/SjmEJkKirwkR/9jklfosMmKXFSu19XnE=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=MQYLIIjmgbASflOIjVOtuZYWwr/4OxGz+bxDUzXs6BsYXktxORH2zb5Y/Mpb7CiTXTOqDYIcSLsrKoNNDIe8uDZt3+furF9PCSSsS/5/Sx0USthJYlnpW0LeFCR4YzIhtz5EIB5jOzQS/kA8DLNXRLjs8TkFFbPos5GYNfy8arA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SHnHXsvL; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="HTLdGj4n"
-ARC-Seal: i=1; a=rsa-sha256; t=1789064543; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cit1RrELEv2NaJW3wBmLWanSVLvJDjkzUcEvYBykxBLjsiDTasa0TAplepU4y5/jdw/WF2zA6J490Sg00Y9gxU4+GNDrUVefjvnLXNK5o5xXjy0q4Bi7/QnUQH2P9aeo9MifJinN93SXicUYYR+cVwLho7jxEOr6gYkdTjviylM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789064543; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZmCjMTaiDn5377nlajvOBsqnIM1xWRVBKt/5Bd0oh9Y=; 
-	b=fR/ho3s6U77QJI6ZPF/UsoiqYOBWDlFJVPhry6ztFrzdNnSlDY1/GxEa/oNxLVWV3r4/bQ6uZT3rBq4/t5JPRRbtXtusyfzJm/j9AVc7+uZRO0mDvTQ/KrU8C9dlN5MP69W3EB6btiCxflAtxz8S+mty6wK19h8hBPzHOk4syhA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789064543;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:In-Reply-To:Content-Type:Content-Transfer-Encoding:Date:Date:MIME-Version:Message-Id:Reply-To;
-	bh=ZmCjMTaiDn5377nlajvOBsqnIM1xWRVBKt/5Bd0oh9Y=;
-	b=HTLdGj4ntSk86nZDBgeeOkItjVPaUrlfQZjUqcacnW9b/CULP41zp1Fdbop0CoSp
-	oAMJfqn5VMdB/hkDy2YyNH8cwDrm+crr843NWl/ptfAEv0Q7g0gOCPxpF7N/yywKJRt
-	wUoEUyfn3UPKRPsQS2oPQjZZJGOW4OgFoK3Ao4X1zcrDZptXeH3DgDbipehlZ3X7rDs
-	xahLao0GsF0/PMAlehZT03IIz/Y8ybfwKV6NL7WqPABftn0sAKnVjiBSNCrUJogv7ob
-	702zW7+I5jbzl7d7XjEZSeMTYa8mO6cBuI8bWVjUqAYlXmJ7uc/Sb0ffuzSbz0hek0u
-	565agKMRjA==
-Received: by mx.zohomail.com with SMTPS id 1789064542542466.8267106033461;
-	Thu, 10 Sep 2026 11:22:22 -0700 (PDT)
-Message-ID: <6745f76a53b1b36ea4354dbd6a4900793ee8108a.camel@rong.moe>
-Subject: Re: [PATCH v6 09/12] leds: trigger: Add
- led_trigger_notify_hw_control_changed() interface
-From: Rong Zhang <i@rong.moe>
-To: Lee Jones <lee@kernel.org>
-Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, Thomas =?ISO-8859-1?Q?Wei=DFschuh?=
- <linux@weissschuh.net>,  Benson Leung <bleung@chromium.org>, Guenter Roeck
- <groeck@chromium.org>, Marek =?ISO-8859-1?Q?Beh=FAn?=	 <kabel@kernel.org>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, "Derek J. Clark"	
- <derekjohn.clark@gmail.com>, Hans de Goede <hansg@kernel.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Ike Panhc
- <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>, Vishnu Sankar
- <vsankar@lenovo.com>, 	linux-leds@vger.kernel.org, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, 	platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260910154506.GH1051768@google.com>
-References: <20260902-leds-trigger-hw-changed-v6-0-55693cd78877@rong.moe>
-	 <20260902-leds-trigger-hw-changed-v6-9-55693cd78877@rong.moe>
-	 <20260910154506.GH1051768@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Sep 2026 02:17:15 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHnHXsvL"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2dcff8f44f2so28545235ad.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 11:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789064869; x=1789669669; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=M2WLzhDSGlJRIwT4fgBi4Xunvyq+ZSixXhqcDyi3QeA=;
+        b=SHnHXsvLecueYdrOa9NKBsMFTwrajV1PoyXGma1RB6xe95AyvwcZZQTsCZE1C25Fz/
+         oatei9lYBLWnBt3OcCRwPjXxco5ZCjQA9hdVbQJwis0nejgl3sB7vQxgUVrUNYDt5h0y
+         xDTshNtLmDyo5VvedgODHb+QE244FS+S/Dr58B66JmoU3sI8u/sAjjs/DCKeBxt+10vN
+         BEgTh3Q8EOaqJUSQXW7WeYD7QXsHp/sl3JSJ5QUl7BGzL4z4/rH1Slyaid6rLnBeMOtT
+         4me6aYuYjJ+zbZWN7z/k/8LZ43NEJN7ceQcNxhIAdNyQbB7aEo4c8SSaVFBE5iLdG2NE
+         n0bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789064869; x=1789669669;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=M2WLzhDSGlJRIwT4fgBi4Xunvyq+ZSixXhqcDyi3QeA=;
+        b=KLY9DaEchGItWVtigcwrcC9esyf22Ot4yRgDyrUyI7I0X39zekINPi7pvt7Kaqrfd7
+         X9QlcWlQ+Gd+5b0tDYRXS075e6IHGdLCnZwSZZmn3evxHx2I4IvDdj989KY7v6A++xki
+         5CR7rp19477gWzDO4B64RSVD/03gJnxWSbJPDMNKsw5rOkLHuzMl8K3CxYNbM4bl2pZD
+         DmJefzE8A4RnDDx+YgTKB94CMN4dRIb5SgFLEHcBlHd30grfi+vNYy7exGsvBYWYlH+O
+         YmVxca6bYS6B03mBop5H+9vqoYaLKbKPU+Y1gz58LncF9+/4gTwqP47Qc5UJvtF1kS0s
+         mHBg==
+X-Forwarded-Encrypted: i=1; AKwUvByN0LWSEpQB/8R+kCmhbZmxgHh92oLoEL/8ZyLmp7FGD3XEooC4AxPz5/7BC4jY9sS6rckjj9XdxrkSSKfWtYvJ8EH6@vger.kernel.org
+X-Gm-Message-State: AFuF++lHEXkf5TRHwnQf4w/DDo+7YWk8u3aHPtbeQZ0A0sDDt7jUlham
+	GIu5g1oxPN4HN0KqXf3s/y3PvfBOo8mrANaclRggpLLsgatXWt+H+J+h
+X-Gm-Gg: AYBFou1UkdxyKn5kSe7Xjiu0gxHKJGyZbH+EgrfWCNq/FN2TrwCPYXn0E4cn7uW10uu
+	lW8XOPCBAJhr3Sk7gIGrzeB61HausN0FpsoTcMaVZ75TyTA37ma7qvussxJNOgtM1OgwAORDESi
+	CzR1ZsLCexj1Z+dpl/4KZx511tmKzYubDlOcMCMgVljU+Q3uvn+jzSEomtHMWUdvX05XW2XTfPU
+	Ewdgv0a6EfsjrC1xRapPpOvjXjoi2jHhYObTkSnGpLloqEGLhhOFWuKJofoRfc9iPeC3sQVwMmd
+	8Dz8l95wwzL5yWccLKYkR3M6kuMGQKQJuljonoUOZdEzsP6yyx+O6Tpm4ELSbLvYCwGNt15pijr
+	ukylAuLAo6NEDRznfjyJOZB95Qzhjjv6aTmyB4vUl/XFydqTdzJKQ9/5gry5l3J9Zj15I7ysM1B
+	Ckw/cifrgYzW5KnliNNcc2Cx2AmYJ4IvxT+4DqjafUICitYX0LBL3sjGyLaIwZjAYdJ+lezf7Lt
+	4nqVdxLI70iS21qzJ4AVA034deG6rXIKX5bgackm1bvo2KlZ7qlV4CiJqjy4r0pamc0qQ==
+X-Received: by 2002:a17:90b:3d48:b0:396:5f7f:52f5 with SMTP id 98e67ed59e1d1-39b260e13e0mr64472132a91.3.1789064869037;
+        Thu, 10 Sep 2026 11:27:49 -0700 (PDT)
+Received: from ehlo.thunderbird.net (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-339770f0489sm24941258eec.8.2026.09.10.11.27.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2026 11:27:48 -0700 (PDT)
+Date: Thu, 10 Sep 2026 11:27:46 -0700
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Rong Zhang <i@rong.moe>, Charles <hanker007@gmail.com>,
+ platform-driver-x86@vger.kernel.org
+CC: mpearson-lenovo@squebb.ca
+Subject: =?US-ASCII?Q?Re=3A_lenovo-wmi-other=3A_LENOVO=5FCAPA?=
+ =?US-ASCII?Q?BILITY=5FDATA=5F01_fails_to_register_o?=
+ =?US-ASCII?Q?n_ThinkBook_16_G6+_IMH_=28ACPI_AE=5FA?=
+ =?US-ASCII?Q?ML=5FOPERAND=5FTYPE_in_=5C=5FSB=2EWMI5=2EGCD1=29?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <56c1c0bd65b2df9268cc0ad58b7733f4dceefc53.camel@rong.moe>
+References: <CAKtz0s8UYRQYW_0bh=0TMx47Axm-W-muEay-r3rqUBS1NHMPVw@mail.gmail.com> <56c1c0bd65b2df9268cc0ad58b7733f4dceefc53.camel@rong.moe>
+Message-ID: <E22512FC-87CE-4707-9CF8-B437388244A7@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.56.2-10+b1 
-X-ZohoMailClient: External
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Lee,
-
-Thanks for your review.
-
-On Thu, 2026-09-10 at 16:45 +0100, Lee Jones wrote:
-> On Wed, 02 Sep 2026, Rong Zhang wrote:
->=20
-> > Some hardware can autonomously activate/deactivate hardware control.
-> > After that, the LED hardware notifies the LED driver. Currently, there
-> > is no mechanism for LED drivers to notify the LED core about such event=
-s
-> > and initiate a trigger transition to reflect the hardware state.
-> >=20
-> > Add a new interface called led_trigger_notify_hw_control_changed(), so
-> > that LED drivers can call it to notify the LED core about the
-> > transition.
-> >=20
-> > The interface only allows two transitions:
-> >=20
-> > 1. "none" =3D> private trigger
-> > 2. private trigger =3D> "none"
-> >=20
-> > If the current trigger is neither the private trigger nor "none", no
-> > transition will be made. This protects the currently selected software
-> > trigger.
-> >=20
-> > Note that LED_OFF won't be emitted during the #2 transition, as some
-> > hardware may have selected a new brightness level during its hardware
-> > state transition (e.g., laptop keyboards with a shortcut cycling throug=
-h
-> > different backlight brightnesses and auto mode).
-> >=20
-> > The interface is designed as a void function as any failure should be
-> > non-fatal and the result of transition should not have any impact on th=
-e
-> > LED drivers' event handling procedures.
-> >=20
-> > To use the interface, the config LEDS_TRIGGERS_HW_CHANGED must be
-> > enabled, and the LED driver must set the LED_TRIG_HW_CHANGED flag for
-> > the classdev.
-> >=20
-> > By default, the config is enabled when LEDS_BRIGHTNESS_HW_CHANGED is
-> > enabled.
-> >=20
-> > Acked-by: Ike Panhc <ikepanhc@gmail.com>
-> > Signed-off-by: Rong Zhang <i@rong.moe>
-> > ---
-> > Changes in v6:
-> > - Implement workqueue deferal mechanism
-> >   - https://msgid.link/e2b081dfd8f96511a73b86ab3ec75e5cd759b79b.camel@r=
-ong.moe
-> >=20
-> > Changes in v5:
-> > - Address a concern from Sashiko:
-> >   - led_trigger_notify_hw_control_changed() might sleep, but without an=
-y
-> >     internal deferral mechanism or annotation
-> >   - Annotate the method with might_sleep(), since the very first users
-> >     of the interface, i.e., ideapad-laptop and (supposedly)
-> >     thinkpad_acpi, will call the interface from work contexts. It does
-> >     not deserve the overhead of internal deferral mechanism
-> >   - https://sashiko.dev/#/patchset/20260802-leds-trigger-hw-changed-v4-=
-0-f97e2ca976fe@rong.moe?part=3D9
-> >=20
-> > Changes in v4:
-> > - Enable LEDS_TRIGGERS_HW_CHANGED by default when
-> >   LEDS_BRIGHTNESS_HW_CHANGED is enabled
-> >=20
-> > Changes in v3:
-> > - Adopt guard() (Thanks Thomas Wei=C3=9Fschuh)
-> > - Reword documentations
-> > ---
-> >  Documentation/leds/leds-class.rst |  52 ++++++++++++++++++
-> >  drivers/leds/led-class.c          |   6 +++
-> >  drivers/leds/led-triggers.c       | 108 ++++++++++++++++++++++++++++++=
-+++++++-
-> >  drivers/leds/leds.h               |   8 +++
-> >  drivers/leds/trigger/Kconfig      |  10 ++++
-> >  include/linux/leds.h              |  13 +++++
-> >  6 files changed, 195 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/leds/leds-class.rst b/Documentation/leds/led=
-s-class.rst
-> > index 2d41a6db602c..adbc57b9f49c 100644
-> > --- a/Documentation/leds/leds-class.rst
-> > +++ b/Documentation/leds/leds-class.rst
-> > @@ -334,6 +334,58 @@ not necessary for them to coordinate via `hw_contr=
-ol_*` callbacks.
-> >  When the LED is in hw control, no software blink is possible and doing=
- so
-> >  will effectively disable hw control.
-> > =20
-> > +Hardware-initiated trigger transition
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Some hardware can autonomously activate/deactivate hardware control. A=
-fter that,
-> > +the LED hardware notifies the LED driver.
-> > +
-> > +If the driver can detect such transitions and thus wants to notify the=
- LED core
-> > +to update the current trigger then the `LED_TRIG_HW_CHANGED` flag must=
- be set in
-> > +flags before registering. To update the current trigger accordingly, c=
-all
-> > +`led_trigger_notify_hw_control_changed` on the LED classdev.
-> > +
-> > +This capability is restricted to the LED device's private trigger. The=
- private
-> > +trigger must have been properly registered (see above) and named after
-> > +`hw_control_trigger`.
-> > +
-> > +Only two transitions are defined:
-> > +
-> > +- "none" =3D> private trigger:
-> > +        This happens when the hardware autonomously activates hardware=
- control
-> > +        and when "none" (i.e., no trigger) is currently active. If the=
- private
-> > +        trigger is already active when the method is called, this is e=
-ssentially
-> > +        a no-op.
-> > +
-> > +        The activation sequence for the private trigger will be execut=
-ed as
-> > +        normal.
-> > +
-> > +        The LED driver and its private trigger must be able to handle =
-the
-> > +        activation sequence even if the hardware is currently in hardw=
-are
-> > +        control.
-> > +
-> > +        If error occurs in the activation sequence, the LED Trigger co=
-re reverts
-> > +        the effective trigger to "none".
-> > +
-> > +- private trigger =3D> "none"
-> > +        This happens when the hardware autonomously deactivates hardwa=
-re control
-> > +        and when the private trigger is currently active. If "none" (i=
-.e., no
-> > +        trigger) is active when the method is called, this is essentia=
-lly a
-> > +        no-op.
-> > +
-> > +        The deactivation sequence for the private trigger will be exec=
-uted as
-> > +        normal, except that the current LED brightness is retained. Th=
-e reason
-> > +        for keeping the brightness unchanged is that some hardware may=
- choose a
-> > +        specific brightness instead of simply turning off the LED afte=
-r
-> > +        autonomously deactivating hardware control.
-> > +
-> > +        The LED driver and its private trigger must be able to handle =
-the
-> > +        deactivation sequence even if the hardware is not currently in=
- hardware
-> > +        control.
-> > +
-> > +If the current trigger is neither the private trigger nor "none", no t=
-ransition
-> > +will be made.
-> > +
-> >  Known Issues
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > =20
-> > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> > index 7e571bd1de5b..3b438d8da5e0 100644
-> > --- a/drivers/leds/led-class.c
-> > +++ b/drivers/leds/led-class.c
-> > @@ -611,6 +611,9 @@ int led_classdev_register_ext(struct device *parent=
-,
-> >  	led_trigger_set_default(led_cdev);
-> >  #endif
-> > =20
-> > +	if (led_cdev->flags & LED_TRIG_HW_CHANGED)
-> > +		led_trigger_init_hw_changed(led_cdev);
-> > +
-> >  	mutex_unlock(&led_cdev->led_access);
-> > =20
-> >  	dev_dbg(parent, "Registered led device: %s\n",
-> > @@ -631,6 +634,9 @@ void led_classdev_unregister(struct led_classdev *l=
-ed_cdev)
-> >  	if (IS_ERR_OR_NULL(led_cdev->dev))
-> >  		return;
-> > =20
-> > +	if (led_cdev->flags & LED_TRIG_HW_CHANGED)
-> > +		led_trigger_destroy_hw_changed(led_cdev);
-> > +
-> >  #ifdef CONFIG_LEDS_TRIGGERS
-> >  	down_write(&led_cdev->trigger_lock);
-> >  	if (led_cdev->trigger)
-> > diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-> > index cb49a02a8b3c..a9d992a88616 100644
-> > --- a/drivers/leds/led-triggers.c
-> > +++ b/drivers/leds/led-triggers.c
-> > @@ -7,7 +7,9 @@
-> >   * Author: Richard Purdie <rpurdie@openedhand.com>
-> >   */
-> > =20
-> > +#include <linux/bug.h>
-> >  #include <linux/cleanup.h>
-> > +#include <linux/compiler.h>
-> >  #include <linux/export.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/list.h>
-> > @@ -193,7 +195,8 @@ ssize_t led_trigger_read(struct file *filp, struct =
-kobject *kobj,
-> >  EXPORT_SYMBOL_GPL(led_trigger_read);
-> > =20
-> >  /* Caller must ensure led_cdev->trigger_lock held */
-> > -int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger =
-*trig)
-> > +static int __led_trigger_set(struct led_classdev *led_cdev, struct led=
-_trigger *trig,
-> > +			     bool hw_triggered)
-> >  {
-> >  	char *event =3D NULL;
-> >  	char *envp[2];
-> > @@ -224,7 +227,21>  		led_cdev->trigger_data =3D NULL;
-> >  		led_cdev->activated =3D false;
-> >  		led_cdev->flags &=3D ~LED_INIT_DEFAULT_TRIGGER;
-> > -		led_set_brightness(led_cdev, LED_OFF);
-> > +
-> > +		/*
-> > +		 * Hardware may have selected a new brightness level during its
-> > +		 * hardware control transition, so only reset brightness if we
-> > +		 * are switching to another trigger or if the switching is not
-> > +		 * hardware triggered.
-> > +		 *
-> > +		 * Note that this does not apply to the error path, as running
-> > +		 * into the error path implies a none =3D> private trigger
-> > +		 * transition. This hints that the LED driver and its private
-> > +		 * trigger must have some fundamental bugs, so don't bother
->=20
-> "don't bother" sounds abrasive.  Please reword.
-
-ACK.
-
->=20
-> > +		 * leaving the LED in an undefined state.
-> > +		 */
-> > +		if (trig || !hw_triggered)
-> > +			led_set_brightness(led_cdev, LED_OFF);
-> >  	}
-> >  	if (trig) {
-> >  		spin_lock(&trig->leddev_list_lock);
-> > @@ -288,6 +305,11 @@ int led_trigger_set(struct led_classdev *led_cdev,=
- struct led_trigger *trig)
-> > =20
-> >  	return ret;
-> >  }
-> > +
-> > +int led_trigger_set(struct led_classdev *led_cdev, struct led_trigger =
-*trig)
-> > +{
-> > +	return __led_trigger_set(led_cdev, trig, false);
-> > +}
-> >  EXPORT_SYMBOL_GPL(led_trigger_set);
-> > =20
-> >  void led_trigger_remove(struct led_classdev *led_cdev)
-> > @@ -468,6 +490,88 @@ int devm_led_trigger_register(struct device *dev,
-> >  }
-> >  EXPORT_SYMBOL_GPL(devm_led_trigger_register);
-> > =20
-> > +#ifdef CONFIG_LEDS_TRIGGERS_HW_CHANGED
-> > +
-> > +static void led_trigger_do_hw_control_transition(struct led_classdev *=
-led_cdev, bool activate,
-> > +						 struct led_trigger *hc_trig)
-> > +{
-> > +	int err =3D 0;
->=20
-> 'ret' is used in this file.
-
-ACK.
-
->=20
-> > +
-> > +	if (!led_cdev->trigger) {
-> > +		/* "none" =3D> private trigger. */
-> > +		if (activate)
-> > +			err =3D __led_trigger_set(led_cdev, hc_trig, true);
-> > +	} else if (led_cdev->trigger =3D=3D hc_trig) {
-> > +		/* private trigger =3D> "none". */
-> > +		if (!activate)
-> > +			err =3D __led_trigger_set(led_cdev, NULL, true);
-> > +	} else {
-> > +		/* Other trigger is active. */
-> > +		dev_dbg(led_cdev->dev,
-> > +			"Ignoring hw control transition (%s %s) while %s is active",
-> > +			activate ? "activate" : "deactivate", hc_trig->name,
-> > +			led_cdev->trigger->name);
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	if (err)
-> > +		dev_warn(led_cdev->dev, "Failed to %s %s in hw control transition: %=
-d",
-> > +			 activate ? "activate" : "deactivate", hc_trig->name, err);
->=20
-> How helpful are these debug messages now development is complete, really?
-
-ACK. I will remove them.
-
->=20
-> > +}
-> > +
-> > +static void led_trigger_hw_control_changed_worker(struct work_struct *=
-work)
-> > +{
-> > +	struct led_classdev *led_cdev =3D
-> > +		container_of(work, struct led_classdev, triggers_hw_changed_work);
-> > +	bool activate =3D READ_ONCE(led_cdev->triggers_hw_changed);
-> > +
-> > +	scoped_guard(rwsem_read, &triggers_list_lock) {
-> > +		struct led_trigger *trig;
-> > +
-> > +		list_for_each_entry(trig, &trigger_list, next_trig) {
-> > +			if (trig->trigger_type =3D=3D led_cdev->trigger_type &&
-> > +			    !strcmp(trig->name, led_cdev->hw_control_trigger)) {
-> > +				guard(rwsem_write)(&led_cdev->trigger_lock);
-> > +
-> > +				led_trigger_do_hw_control_transition(led_cdev, activate, trig);
-> > +				return;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +	dev_err(led_cdev->dev,
-> > +		"%s() is called, but the private trigger (%s) is not properly regist=
-ered\n",
-> > +		__func__, led_cdev->hw_control_trigger);
->=20
-> Please make all user-facing messages user-friendly.
->=20
-> No internal function names please.
->=20
-> Also, since this is effectively an issue, it should be dev_warn().
-
-ACK to all three points.
-
->=20
-> > +}
-> > +
-> > +void led_trigger_notify_hw_control_changed(struct led_classdev *led_cd=
-ev, bool activate)
-> > +{
-> > +	/* Restricted to private triggers. */
-> > +	if (WARN_ON(!(led_cdev->flags & LED_TRIG_HW_CHANGED) ||
-> > +		    !led_cdev->hw_control_trigger || !led_cdev->trigger_type))
-> > +		return;
-> > +
-> > +	WRITE_ONCE(led_cdev->triggers_hw_changed, activate);
-> > +
-> > +	schedule_work(&led_cdev->triggers_hw_changed_work);
-> > +}
-> > +EXPORT_SYMBOL_GPL(led_trigger_notify_hw_control_changed);
-> > +
-> > +void led_trigger_init_hw_changed(struct led_classdev *led_cdev)
-> > +{
-> > +	INIT_WORK(&led_cdev->triggers_hw_changed_work, led_trigger_hw_control=
-_changed_worker);
-> > +}
-> > +EXPORT_SYMBOL_GPL(led_trigger_init_hw_changed);
->=20
-> Where is this exported to?
-
-led_classdev_register_ext() in led-class.c, see the beginning of the
-patch.
-
->=20
-> > +
-> > +void led_trigger_destroy_hw_changed(struct led_classdev *led_cdev)
-> > +{
-> > +	disable_work_sync(&led_cdev->triggers_hw_changed_work);
-> > +}
-> > +EXPORT_SYMBOL_GPL(led_trigger_destroy_hw_changed);
->=20
-> This to?
-
-led_classdev_unregister() in led-class.c, ditto.
-
-Should these two exports be eliminated,
-led_trigger_hw_control_changed_worker() must be exported, and multiple
-#ifdefs must be added to led-class.c.=C2=A0That way is also OK for me. I ju=
-st
-personally prefer leaving #ifdefs in the header file as much as possible.
-May I kindly ask about your preferences regarding the coding style for
-conditional compilation?
+On September 10, 2026 8:21:56 AM PDT, Rong Zhang <i@rong=2Emoe> wrote:
+>Hi Charles,
+>
+>Thanks for the report=2E
+>
+>On Mon, 2026-09-07 at 16:40 +0800, Charles wrote:
+>> Hi,
+>>=20
+>> Reporting a firmware AML defect that blocks the fan hwmon interface
+>> exposed by lenovo-wmi-other=2E
+>>=20
+>> Machine:
+>>   Product:      ThinkBook 16 G6+ IMH
+>>   Machine Type: 21LE
+>>   Baseboard:    LNVNB161216
+>>   CPU:          Intel Core Ultra 9 185H (Meteor Lake)
+>>   BIOS:         NJCN68WW (2025-12-17, latest available)
+>>   OS:           Ubuntu 26=2E04 LTS, kernel 7=2E0=2E0-30-generic
+>>=20
+>> Symptom:
+>>   The LENOVO_OTHER_MODE WMI device binds correctly, but no hwmon
+>>   device is created=2E Consequently fan RPM readback (fanX_input) and
+>>   target-speed control (fanX_target) are unavailable=2E
+>>=20
+>>   $ ls /sys/class/hwmon/hwmon*/name
+>>   ACAD acpi_fan BAT1 nvme nvme ucsi_source_psy x2 coretemp iwlwifi_1
+>>     (no lenovo entry; acpi_fan reports fan1: 0 RPM, always)
+>>=20
+>> dmesg:
+>>   ACPI Error: Aborting method \_SB=2EWMI5=2EGCD1 due to previous error
+>>               (AE_AML_OPERAND_TYPE)
+>>   ACPI Error: Aborting method \_SB=2EWMI5=2EWQB1 due to previous error
+>>               (AE_AML_OPERAND_TYPE)
+>>   lenovo_wmi_capdata 7A8F5407-CB67-4D6E-B547-39B3BE018154:
+>>       failed to register LENOVO_CAPABILITY_DATA_01: -19 (ENODEV)
+>>   lenovo_wmi_capdata 362A3AFE-3D96-4665-8530-96DAD5BB300E:
+>>       bound B642801B-3D21-45DE-90AE-6E86F164FB21
+>>       (ops lwmi_cd_sub_component_ops [lenovo_wmi_capdata])
+>>   lenovo_wmi_gamezone 887B54E3-DDDC-4B2C-8B88-68A26A8835D0:
+>>       platform_profile probe failed
+>>=20
+>> Note the asymmetry, which I think is the useful clue:
+>>   - LENOVO_CAPABILITY_DATA_00 (362A3AFE-=2E=2E=2E) binds fine and
+>>     successfully attaches LENOVO_FAN_TEST_DATA (B642801B-=2E=2E=2E)
+>>   - LENOVO_CAPABILITY_DATA_01 (7A8F5407-=2E=2E=2E) fails with -ENODEV,
+>>     because its AML back-end methods \_SB=2EWMI5=2EGCD1 / \_SB=2EWMI5=
+=2EWQB1
+>>     abort with AE_AML_OPERAND_TYPE
+>>=20
+>> The "_00" variants (GCD0/WQB0) apparently work; only the "_01"
+>> variants are broken=2E This is an AML operand-type defect in the
+>> firmware, OS-independent=2E
+>>=20
+>> Verified present on the machine (all three GUIDs exist):
+>>   DC2A8805-3A8C-41BA-A6F7-092E0089CD3B  -> bound to lenovo_wmi_other
+>>   362A3AFE-3D96-4665-8530-96DAD5BB300E  -> bound to lenovo_wmi_capdata
+>>   B642801B-3D21-45DE-90AE-6E86F164FB21  -> bound as sub-component
+>>=20
+>> Questions / requests:
+>>=20
+>> 1=2E Should hwmon registration be able to proceed with only
+>>    LENOVO_CAPABILITY_DATA_00 available? Since DATA_00 is bound and
+>>    LENOVO_FAN_TEST_DATA is attached, it looks like the RPM data may
+>>    already be reachable=2E If graceful degradation is feasible, that
+>>    would restore at least fan readback on this and similar machines
+>>    without waiting for a BIOS fix=2E Happy to test any such patch=2E
+>
+>Yes=2E The hwmon device does not depend on LENOVO_CAPABILITY_DATA_01=2E
+>
+>The current implementation enforces the binding between
+>LENOVO_CAPABILITY_DATA_00+01 and LENOVO_OTHER_MODE because of a
+>limitation of the device component framework=2E
+>
+>AFAIK, ThinkBook devices usually don't support any LENOVO_OTHER_MODE
+>method controlled by LENOVO_CAPABILITY_DATA_01=2E On my device, the
+>LENOVO_CAPABILITY_DATA_01 method is stubbed and always return a buffer
+>with zeros=2E
+>
+>Could you please dump the data from LENOVO_CAPABILITY_DATA_00 and
+>LENOVO_FAN_TEST_DATA via /sys/kernel/debug/lenovo_wmi? It would be
+>helpful to confirm if your device supports fan monitoring/tuning=2E
+>
+>>=20
+>> 2=2E Alternatively, is a DMI quirk the right mechanism here?
+>
+>(+CC Derek)
+>
+>I think there are two reasonable approaches=2E
+>
+>(1) DMI quirk=2E Both wmi-capdata and wmi-other need a WMI quirk table in
+>this case, so it's not very optimal=2E
+>
+>(2) Making WMI/ACPI failures non-fatal and provide empty data to wmi-
+>other, mimicking the behavior of my device=2E
+>
+>My preference is (2)=2E Derek, what do you think?
+>
+Hi Rong and Charles,
+Thanks for the Cc=2E I agree with (2)=2E Adding two DMI quirk tables will =
+introduce a maintenance burden and provide effectively the same results=2E =
+I would caveat that, though, given how loosely Lenovo seems to adhere to th=
+eir own spec, that it would be prudent to check if no capability data devic=
+es of any kind get bound and let the driver clean itself up unless the forc=
+e options are set=2E There's generally no reason for the driver to stay bou=
+nd in such a case, and I can't think of a reason why a BIOS would ship with=
+ nothing, but you never really know=2E
 
 Thanks,
-Rong=20
+Derek
 
->=20
-> > +
-> > +#endif /* CONFIG_LEDS_TRIGGERS_HW_CHANGED */
-> > +
-> >  /* Simple LED Trigger Interface */
-> > =20
-> >  void led_trigger_event(struct led_trigger *trig,
-> > diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
-> > index b08a289397e4..bdac2336012e 100644
-> > --- a/drivers/leds/leds.h
-> > +++ b/drivers/leds/leds.h
-> > @@ -33,4 +33,12 @@ ssize_t trigger_may_offload_show(struct device *dev,
-> >  extern struct rw_semaphore leds_list_lock;
-> >  extern struct list_head leds_list;
-> > =20
-> > +#ifdef CONFIG_LEDS_TRIGGERS_HW_CHANGED
-> > +void led_trigger_init_hw_changed(struct led_classdev *led_cdev);
-> > +void led_trigger_destroy_hw_changed(struct led_classdev *led_cdev);
-> > +#else /* !CONFIG_LEDS_TRIGGERS_HW_CHANGED */
-> > +static inline void led_trigger_init_hw_changed(struct led_classdev *le=
-d_cdev) { }
-> > +static inline void led_trigger_destroy_hw_changed(struct led_classdev =
-*led_cdev) { }
-> > +#endif /* CONFIG_LEDS_TRIGGERS_HW_CHANGED */
-> > +
-> >  #endif	/* __LEDS_H_INCLUDED */
-> > diff --git a/drivers/leds/trigger/Kconfig b/drivers/leds/trigger/Kconfi=
-g
-> > index c11282a74b5a..a11d04ce4ab2 100644
-> > --- a/drivers/leds/trigger/Kconfig
-> > +++ b/drivers/leds/trigger/Kconfig
-> > @@ -9,6 +9,16 @@ menuconfig LEDS_TRIGGERS
-> > =20
-> >  if LEDS_TRIGGERS
-> > =20
-> > +config LEDS_TRIGGERS_HW_CHANGED
-> > +	bool "LED hardware-initiated trigger transition support"
-> > +	default LEDS_BRIGHTNESS_HW_CHANGED
-> > +	help
-> > +	  This option enables support for hardware initiated hardware control
-> > +	  transitions, where the LED hardware autonomously switches between
-> > +	  "none" (i.e., no trigger) and its private trigger.
-> > +
-> > +	  See Documentation/leds/leds-class.rst for details.
-> > +
-> >  config LEDS_TRIGGER_TIMER
-> >  	tristate "LED Timer Trigger"
-> >  	help
-> > diff --git a/include/linux/leds.h b/include/linux/leds.h
-> > index bee2b4309a09..93b3fd7e5636 100644
-> > --- a/include/linux/leds.h
-> > +++ b/include/linux/leds.h
-> > @@ -109,6 +109,7 @@ struct led_classdev {
-> >  #define LED_INIT_DEFAULT_TRIGGER BIT(23)
-> >  #define LED_REJECT_NAME_CONFLICT BIT(24)
-> >  #define LED_MULTI_COLOR		BIT(25)
-> > +#define LED_TRIG_HW_CHANGED	BIT(26)
-> > =20
-> >  	/* set_brightness_work / blink_timer flags, atomic, private. */
-> >  	unsigned long		work_flags;
-> > @@ -239,6 +240,11 @@ struct led_classdev {
-> >  	struct kernfs_node	*brightness_hw_changed_kn;
-> >  #endif
-> > =20
-> > +#ifdef CONFIG_LEDS_TRIGGERS_HW_CHANGED
-> > +	bool			triggers_hw_changed;
-> > +	struct work_struct	triggers_hw_changed_work;
-> > +#endif
-> > +
-> >  	/* Ensures consistent access to the LED class device */
-> >  	struct mutex		led_access;
-> >  };
-> > @@ -609,6 +615,13 @@ led_trigger_get_brightness(const struct led_trigge=
-r *trigger)
-> > =20
-> >  #endif /* CONFIG_LEDS_TRIGGERS */
-> > =20
-> > +#ifdef CONFIG_LEDS_TRIGGERS_HW_CHANGED
-> > +void led_trigger_notify_hw_control_changed(struct led_classdev *led_cd=
-ev, bool activate);
-> > +#else
-> > +static inline void led_trigger_notify_hw_control_changed(struct led_cl=
-assdev *led_cdev,
-> > +							 bool activate) {}
-> > +#endif
-> > +
-> >  /* Trigger specific enum */
-> >  enum led_trigger_netdev_modes {
-> >  	TRIGGER_NETDEV_LINK =3D 0,
-> >=20
-> > --=20
-> > 2.55.0
-> >=20
+>I am developing a series to replace deprecated WMI API calls with calls
+>to the new ones, as well as making WMI/ACPI failures non-fatal=2E It shou=
+ld
+>word around the ACPI bug=2E
+>
+>>=20
+>> Separately, on the same machine there is a second, independent
+>> firmware defect on the legacy ACPI thermal path:
+>>   \_TZ=2EFNCL references \_SB=2EPC00=2ELPCB=2EUPFS, which is undefined =
+in
+>>   every ACPI table (verified across all 1 DSDT + 29 SSDTs)=2E All 6
+>>   "Fan" cooling devices therefore fail on cur_state write=2E
+>> Full analysis of that one is in the Lenovo community forum thread;
+>> I can repost details here if useful=2E
+>
+>For the independent firmware defect, you may want to file a bug on kernel
+>Bugzilla with detailed information and acpidump so that it can be
+>tracked=2E If you decide to file a bug there, please CC me then=2E
+>
+>Thanks,
+>Rong
+>
+>>=20
+>> Thanks,
+>> Charles
+
