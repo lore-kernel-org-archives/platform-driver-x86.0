@@ -1,64 +1,64 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AD23B3BE1
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 04:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A293B71D8
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 04:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789015517; cv=none; b=lgnGKAipSWU0F9x50tdCbBcIZYnRf2WScF9RjoOmxP7kntL/SRhKeuHaPtUfjFH33xT6nSxJZfCETNtJXdNpcqj45D/jQO1+H4iI8kC0uDJDXsUCFV+yZzxXG6fEOE16KXuRHXO+haXvf3diAB8w5Cv+Azg8kTlSOfgoyEXvV8w=
+	t=1789015522; cv=none; b=nh4uI1ZUi6tOpVSXoceh1hVwXLeOz+VdJAo9UXLt9+oHocM6bey++zggqthm7C30vMWDY9NzIrtWP1YDlckh9pDXto0BbiRTmPu5MP75P2j3KlyLG+MYc/z84ZaDCHc1y8CIVlMQMOhfVp0T0HF7wqSCFHOCMQr5ZBShBqQIP/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789015517; c=relaxed/simple;
-	bh=n/+GTYvLUZZ9pA5+4U9usoGSvJ8enP8PsX95i44Jayw=;
+	s=arc-20240116; t=1789015522; c=relaxed/simple;
+	bh=641/hAQ3PQ7EATgNp7+c16jNxnhK3Q/BjlKPdFMsvys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=seQ/jXFxT8iV8oADbHfc02wxjEGzj4wHMK6pDCTaGmyeviCduMIctt9CH92JsBKA86VnQB3K8CbZVyBY/TvYn8EjaUVq8QmQ30k7vNqS1OubDkP7U/ftVvLHVttaMyuI9Oda5Lb73XMjfkY0kShlo1mYMv19DbgVh6cLUhr44Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DYHwSVET; arc=none smtp.client-ip=209.85.215.174
+	 MIME-Version; b=ANcpequBI8OjH9c95ggoIYdG3Ob9L5ZSHyahFeKVT5DVKT+VbcDMcK6BB3K03YZAuv35A35j4inv996FJSYtMH8sgaYK5kIQwG7N5ogJxtffNoSP0tRpiEOZz4ibdTbwgbz6GLFRXqXrYkt4YDGHJ0eg+3smPxql9hEYmEHjF0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rtMo+DDa; arc=none smtp.client-ip=74.125.228.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DYHwSVET"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c96c92c0980so3648430a12.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Sep 2026 21:45:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtMo+DDa"
+Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469d249c4so566316b3a.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Sep 2026 21:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789015515; x=1789620315; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1789015520; x=1789620320; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=xagfVfFsWbuH9k8xQPhdcSwtP7FeIrzvWmgH85ROu0g=;
-        b=DYHwSVETGxzi/X+Bu95tNjJQk81goQVCKezkFTp74u4Ggf9D524rKFNl/oemFeDEw8
-         t17kP/o3C11tcDOIXXVhyP10ugJWFbDCPgDxIM+KU2v54kb4VUaGIMXCvhNWq0RWcwWO
-         +acpYbBaZGP8IgCZ4qIIgwxuidxkJcwFtMdeASKJWGm4xPBi4+CpDIcPDxXHPka5FBde
-         Bu61DpLwAuA0v4xtixawIhIqfLBTcjxdwf4MPQ0RJi+qNQEWi9wytsHsyenr79Ead8D+
-         us/q9Fwt0cLy0tUJ0Q7ZeESGt8d6dSL8+tJy9eZ4AIBoQYH5++CNDk/BcZqLWeLUOaF6
-         jrPg==
+        bh=IsQHftUl3QWGyxTvNBlAfPqa3Ul/K9RQ61lU4+ghrd0=;
+        b=rtMo+DDadpTU3bnib53DglY803p98uG2u4i2Sx1yECg32bUo7F5r0aFLogMRFz/mhu
+         cWD3dhHCViWRwAxHUtEGzOpk/b2wsYc8MoxqrpiU36MKFwHg2djPjhJzFjtGiuR2iNSc
+         nDX8MiEAxTSdzguodSob898ZRiIY9Obspv/PO8AB9uoGKJ54D2H4+K8Ezanl46BhhnsP
+         pyGPam8D6VTCfmfXB1ruNUhVJKk3gcOOZX6aMM0AHkf/FPOMQOPk1H9hLcGHeDix7riL
+         t4Igipw5mvOiZHEHjeUFNK+i9/m2pcldlmE1gBooMyeCUS+l4RAsnOEk1BAabFER+Ixl
+         0I6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789015515; x=1789620315;
+        d=1e100.net; s=20251104; t=1789015520; x=1789620320;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xagfVfFsWbuH9k8xQPhdcSwtP7FeIrzvWmgH85ROu0g=;
-        b=PAeB8i6mySYfRjtoBini9jMwQPjYlzLHuvbAq+p/AGtjx6jEc3BSj5W4BilBOSkIQk
-         0ev1ibWads3tuz2iCTWNTp3f9mSETpL9D/1Y6baMyN3fDN1Mo+ayXPbL5kXlElnQdELc
-         jXxIA5RnEGfQoeVBpl/+AQfaTor3rHYfgvA9Wu5KDqSI097ZjOVnvL17ZhNXiBqAqsyE
-         mFDNP/FPv82YGQY+73nJwaO11dYcxxw3N1N0xADz0m8RGbpbFwDgTevkn3sT4r7o7uaG
-         XLzHNl+CSVncjNz4bOKbjqEOjgf0G4xJ2L0UZKG00ZBEFEXes2Rm4aPmrWRsxnGvZo/d
-         vgXw==
-X-Forwarded-Encrypted: i=1; AKwUvBw8prrKwXYTkPuwOQS8zwht89lRluzrQbSG4ir52DXaTI2kJGqAv+zGFhvK9rMYMUiHuYkrANpqkDcV2fobgzc47kJO@vger.kernel.org
-X-Gm-Message-State: AFuF++mawX6pO74Kx7t9Li+Cc5Z3WhUGNadLiAgQDxHhvas6uSvfFqpZ
-	aME7DUrl29BVlZVtpy2hGjmD3fS7VuEkdHe1NWCL14zSR+BEPMwiTbqn
-X-Gm-Gg: AYBFou2DdHl2zelZRUDwshc1llyzy99V08R7WJUe8n3xAMujtwgIpakHidINc1BnTMA
-	Sbh//7xU6K7Nm8pSciMZbzdumKTByi8t3SRwzmAElnrcSkSGzyYNauQJG4rKEZhOYz6R4NX1HbB
-	x3B+qKEXG+R2jMr5zptAfyIpVhRUDGD2ONTaowmytSg+AwbdKS8ISg40MUL/7GK+LO8MP9g2evW
-	+AFVXfhN2TA0q/VJKRdZr8IH3c+QEJAlMGe9bHQUMT+BHUdYXXrwa8XPLJGWmhDzcUuqt1aKCSD
-	Mj/xK7m6tcuPp44j7LmG8Cz6xxXx8qJhq/ady6L9hCjTQHwy9qFJj4rGtC3N8vADf5dR8OboRKM
-	MnwvbKs1fWsMZ6r5yP6mlLPzGWDWSp6Lqvt3YKOeW9EkubqqyoqPJ0sc/XXhNcPTJcqOs2Z5GM/
-	mlgnnDUHAoTyk0h0tKRRi07tlCbVyhluTtWB5Jkn6IbRb4o3bspKC6GVcK+B7KWlRxduQ4V8nq8
-	3VtgbBpOwFMqJ3Bt+oh+2jS/Q==
-X-Received: by 2002:a17:90b:4c06:b0:396:b98b:a3c2 with SMTP id 98e67ed59e1d1-39b26116d9fmr50676984a91.8.1789015515410;
-        Wed, 09 Sep 2026 21:45:15 -0700 (PDT)
+        bh=IsQHftUl3QWGyxTvNBlAfPqa3Ul/K9RQ61lU4+ghrd0=;
+        b=ONR2QyqsMqRg3b9kpalamzes/nPEFS1AhWGxwHyW92T+YPLnpypbiYzuXdTjMFT8gI
+         VfR2PArBgtYIrjPO16ulQ4kn+6G+Gkv5yY6hOEI98CXXYOdgsW7Pp6RRFS8YRFyaALXL
+         Tm/Itgnci4ahYYl96RnEpnkmnoZPe9rpF6o3pjsVF5xYjWcXrIPkwwTiS3Ork0EIW2b0
+         HFvE/KCcGEGmS3e+BdbKHklvZ6kdxXzZvL1jG5fRSYTlAzSOMI5iF3moRzT29ckdUIMZ
+         RxWw98poMG8MDUfERSVVg6/y+/ksd/cNasa7jz1p4bLFy7y2k9tuAHhtHhX36+rsFzoS
+         gUIA==
+X-Forwarded-Encrypted: i=1; AKwUvByqC14JZfaG4qdW5uY6v0QJrAqmv9lDMkdjy9gDgi4DqS1MJyj5IxGYAKzJtOng4rEi9iPx5zPrcOOMk7CgwuCx71iH@vger.kernel.org
+X-Gm-Message-State: AFuF++mHjArdinXPRbofxCXFsPH4AndyWXpwhP+3ejWK7z7Hk9JzhuCL
+	g95qcmVGL4e88K2YuPKCOR+9IG4vAuqmuz7bjvLMMjRCYAitYoEPaAqj
+X-Gm-Gg: AYBFou33TdQG+okyxBUAcs2rjcKiJCTFdFKOrwqwrip0Hnjv9xykgQqYslNkDZQE9aS
+	3xJUeJZxSWoMOsG0ZWjB5Q0rmeZufz/Ep8FPjzXPrjWaZLC9k/8w5+FEH9Mat3XCOclQUrD9fW1
+	9WQXmxxbG0hQXdpkVj+D0n3pez2QMOg8FMyS3aBMhrTjHGclgErGBGmRCKmqRDamRjvHjBuYrg+
+	j9Xx9albgiwIuIKPSQYstNbYGCKlrVz1+PWJi50pbgWGjM3ptEMolWe78i0wW9rAYFxEnWZSLv/
+	VCbSG6B1Tvd1YqkJtXBmCwOYMLgOjX9nNTYNXm03qJGeMmjosc+5kVCMbNZTZzwK+ihtcNrlIXn
+	FXg/bSkvAF9mhJf7Td1T6otBwj2YbgURQV+rAB74Ha/lwEjpXWrrWYAzAx2yIAgRrvtLCOeHL4d
+	FxKG28IKcK+GFhLb+yyxmdQqyGc4e5avOEtCayRSEOk7URdTeL2vKU/Qbgvka1YInEMHgw6HYKI
+	IVqoYNixit3/WZOjePVas0p7Q==
+X-Received: by 2002:a05:6300:85:b0:398:8870:b58f with SMTP id adf61e73a8af0-3dacbeed903mr8921235637.14.1789015519940;
+        Wed, 09 Sep 2026 21:45:19 -0700 (PDT)
 Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435648esm58731485c88.5.2026.09.09.21.45.11
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435648esm58731485c88.5.2026.09.09.21.45.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2026 21:45:15 -0700 (PDT)
+        Wed, 09 Sep 2026 21:45:19 -0700 (PDT)
 From: Hemanth Selam <hemanth.selam@gmail.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -73,9 +73,9 @@ Cc: corentin.chary@gmail.com,
 	mpearson-lenovo@squebb.ca,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] platform/x86: msi-laptop: Fix typo in struct quirk_entry comment
-Date: Thu, 10 Sep 2026 10:14:40 +0530
-Message-ID: <2b5e16441db21479603772f0af0b47a1502e4667.1789015364.git.hemanth.selam@gmail.com>
+Subject: [PATCH v2 6/8] platform/x86: panasonic-laptop: Fix typo in the file history comment
+Date: Thu, 10 Sep 2026 10:14:41 +0530
+Message-ID: <ffc97dd04a02c81d433d031581d9a17c703bcbb3.1789015364.git.hemanth.selam@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1789015364.git.hemanth.selam@gmail.com>
 References: <cover.1789015364.git.hemanth.selam@gmail.com>
@@ -87,29 +87,30 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Correct "cann't" to "can't".  Comment only, no functional change.
+Correct "retrive" to "retrieve" in the v0.4 entry.  Comment only, no
+functional change.
 
 Assisted-by: Cursor:claude-opus-5
 Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Reviewed-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/msi-laptop.c | 2 +-
+ drivers/platform/x86/panasonic-laptop.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/msi-laptop.c b/drivers/platform/x86/msi-laptop.c
-index ddef6b78d2fa..0a0c756a5598 100644
---- a/drivers/platform/x86/msi-laptop.c
-+++ b/drivers/platform/x86/msi-laptop.c
-@@ -117,7 +117,7 @@ struct quirk_entry {
- 	 * Wlan/Bluetooth/3G, those netbook will load the SCM (windows app) to
- 	 * disable the original Wlan/Bluetooth control by BIOS when user press
- 	 * fn key, then control Wlan/Bluetooth/3G by SCM (software control by
--	 * OS). Without SCM, user cann't on/off 3G module on those 3G netbook.
-+	 * OS). Without SCM, user can't on/off 3G module on those 3G netbook.
- 	 * On Linux, msi-laptop driver will do the same thing to disable the
- 	 * original BIOS control, then might need use HAL or other userland
- 	 * application to do the software control that simulate with SCM.
+diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+index 19d194ff37ca..a3597344edef 100644
+--- a/drivers/platform/x86/panasonic-laptop.c
++++ b/drivers/platform/x86/panasonic-laptop.c
+@@ -107,7 +107,7 @@
+  *
+  *	Jul.25, 2004	Hiroshi Miura <miura@da-cha.org>
+  *		- v0.4  first post version
+- *		        add function to retrive SIFR
++ *		        add function to retrieve SIFR
+  *
+  *	Jul.24, 2004	Hiroshi Miura <miura@da-cha.org>
+  *		- v0.3  get proper status of hotkey
 -- 
 2.48.1
 
