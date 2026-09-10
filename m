@@ -1,64 +1,64 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC76536B919
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 04:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64F3AD52E
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 04:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789015504; cv=none; b=Sz10Q39dB1DX/h8KlVm6TIxBUUB5iMd+992zLLb8kPru4MQazx3cVftJyFNJz/iKiarDRUXQ3Uia/YoXW0ZovkjXCsTDjMIZX/eZrce29SMF+ByEBU0vLTBffvxzUhBormtlChHrbUnmc0tAX6v2RTMTUh6hAccJ6GG1HnnQhXY=
+	t=1789015508; cv=none; b=oEDyYSthXd1qf2qxWyTMnVn7mmTAYgVK1wm1sxf+oI9hRMlOpT01r3NKV6xWpYmkz8jMWj0e1Z5YkzuuReTo2uuuRwhbqYL8Cb+OKE8mEvXANOp+zcbNNlp2zHOHyEeMCZ9InQPbEXZpn98XLj+UaNvq9KoTr/5gx/W6IIuJfpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789015504; c=relaxed/simple;
-	bh=0bNxDq/vogn+h2ZSU9Q7KBh41Cn1MPO7OvkNK0LGHEU=;
+	s=arc-20240116; t=1789015508; c=relaxed/simple;
+	bh=DbAnA95/sQfPUsxRU86NrQeRnVVS8VlPgU3ZU52Ce6Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sv9Eu/7nwFmUtq5+Arr/dVxKhwCzud9zMoIIRJVFy/sIkQtMQyjexLMnC19eBsWOysJXXTbh7Fqo1VPTWOmwMveJDu6R2Cuv5rYf1GzCiWC7YQaYiOMUzWR97vQ2JvJwrxlOlE0eLUp15OVnsoQmupEVg0AVMr6xlaVXUnvRdpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rIlZBAUG; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=h8c5lu5cDmZCYLBHJMYq6SfxAtTOzouBs9Zr6STM2cjUvilQzoUXtz1JThr24zRSxbZNW5T81SDxussipRTYUSy9dppCy+MQV7k90W1Uhtb2yHMh5pIdK2PqIYPUhit0zzm7fSTVlugDVL6YlIG8rBJ8NWvBNQbyOTua7cQnHRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N+ivWM5Y; arc=none smtp.client-ip=209.85.215.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIlZBAUG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2d6f9e2f681so75491775ad.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Sep 2026 21:45:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+ivWM5Y"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-cc4b28b358eso451320a12.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Sep 2026 21:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789015502; x=1789620302; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1789015506; x=1789620306; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=McHzMY56Wzu/sCH2qesK/hXFVz4O3czH8rhM2GCpBPw=;
-        b=rIlZBAUGp/f/1R0x4HOd3CRmAPJyId5TQ+xOToFphzMeaOcP2Mr1v85G8dNILNZcse
-         mlAhOVIv83tiWSOcOo9iAdJxcw5pzrvMlBhsfZEf/6RRQ1cTqJSddz8DxXvSEadySNAT
-         QPRqgd5akQhzBOFaIFxoZN4bukh3LuTReo6ejbozKG6z+npkStXlfNv88/nU7Rdiwph2
-         LH3tdxDZAJ85zN/J83ciL1IFNMLwO92PQdDR4S+LjXUjtRVCNh1b7JcxXp2gtSeEIHiA
-         sJsXH5hJ1jhKx6LID910741gA8EyEs1suO7rRL2mgzLI85Jfi1X19xNW7Yh2tHMkjyBi
-         Iwkw==
+        bh=TqSgPddEDVHcqyf/hXdXD85X99gY1uI8qD2zQ4pN/mk=;
+        b=N+ivWM5Yz4QmpKd4jhQ8lmnIE7eoeOe9WR7aU1QW/pIhM6Gng7pAhYFZgXPv9JBESd
+         /xXpgvbIJtheucpSk4dFDMXdiRZqA8mZ1ntisWEHh2CBmGGaO4vaT/Ecw29ugi4kQ6/r
+         rkwsYBMML76sMAYpdrwLrc2rtALWROp5fHfwuxjLZfVEmtfC4U+YHwH/89yhS/3Y3ovQ
+         ypioH1qtnBJ/yxsoDfKGufpS29TQBk9IZwHnI83CkRhOMY3QcKt1PSueY6ZKYLm0tqSB
+         D3W8JMMiCZlVsRu28VGbOqOSxXo3Nb4FrYX5sD4ZMvvLSEyhudjIJBhjdoKktw5LwXrs
+         CvLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789015502; x=1789620302;
+        d=1e100.net; s=20251104; t=1789015506; x=1789620306;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=McHzMY56Wzu/sCH2qesK/hXFVz4O3czH8rhM2GCpBPw=;
-        b=puIZqJqrs8ZrCVV1ttQlyQiSVk/lbEm3aOIA7Z6EmGw3BaJeTN0KHpB578hHGty9D+
-         y8vXkMUgeq9aTKC3wb07LZe9bCMVP5Okn28g9rcvsEZy2GShF0Q8KkWrs0F8tBBOyyK8
-         Ktvhu5eyVH4eaYTJziME7S03yU2bHNYSAeLl2DCFLfZk/isO0gbZQ+HJKf6SXKICvgV5
-         GpizF/VAlOJeVBkSfmeaQakgxlL8IT4okjIp1o5Wpf7D+GgSkVRKoZW5D0savtK2CfpS
-         FLYCSvyUTGeeD5VFnzoeHHJj3pkizDOfs6gUTmOgRWG46UlFMDXyUqfLgPb/qX6uvSPZ
-         VB4w==
-X-Forwarded-Encrypted: i=1; AKwUvBzCa3EYssZr4s2G9NkPSgEFtip+0jB4c2LWbajJaCztWid7FE4bwLf9a/oLlYZIJ6v/DqrTO6f71DaZ5DTNgaIcfX/r@vger.kernel.org
-X-Gm-Message-State: AFuF++n88m16SMI6UvgpyJoCdJlyIhTAIow/2b0K/kbps5UsFpzRTPMw
-	0HfNQ/pCy7KtvsXEUkeoxz6RSqDJYnYhnQLnHPUt7aa7vK3AyzuBTliv
-X-Gm-Gg: AYBFou1FgECUQJnB/xhRSYqXGVha4m4LuQ4XWl9yjMC0OUBwuR2vqNiSvezGIrZA4C1
-	6R2sTvV0XI1gZKdI/RiRonhpNqlQ0tl8GIgTpMygfW3cws9fAbHsc/pfACOZojQkCesxrnqDvO8
-	2GaKOS2lRpOMdnF9lFAuSYIpvmC7YhJ/YYOb1IliiK6kXjK1AVXqOfjQusoYj4KoVvUMdbM5LTY
-	suH5xnq7uMtgHI4fKBIBbm0aJrsqkDqMkJRBstzRArOBGRYqQuTVyUygAVwmcFnMeiZminP3zz+
-	fqPMYUgdR8VDlmEKIXJIzRmsxyJmZ0xRL9rFXO74omeVAZPHEX1ANzTZ1Y9Oa4Y+sqcIO10Geph
-	vcvmwP9JdROIhQysfX7OkCoGAg1/oMyv9k0G8rAZxhz2kSlEhVIjbfzSRo6bv+woJJH+ipjDIl4
-	pOmpPAxg9g//kdBfJVOzROAdY+qT1c87WF4f+AOR4SVVQPvzqfJTsUqxKaiU3pi28biAHyUmTPs
-	xMAUNVh04tYuuGMBN/ClOna/g==
-X-Received: by 2002:a17:90b:538c:b0:38e:b400:a860 with SMTP id 98e67ed59e1d1-39b26204a3emr61559578a91.13.1789015501917;
-        Wed, 09 Sep 2026 21:45:01 -0700 (PDT)
+        bh=TqSgPddEDVHcqyf/hXdXD85X99gY1uI8qD2zQ4pN/mk=;
+        b=aeiDoP9Rl6UYsWvUu8mPG/H1JKzgxV5PoFL0sL94VnScFQH4spllBKzI5xQ66kG+Su
+         aQvy/Tf/JC0lGo6QtClCfSsvWULAYvOhb6e0vYDkkbVyzo1gvAUlNByNGvGwnsQdteqP
+         u54D9mlQLqnJPDgVL0lCLIQn92ZG849wqBw1dXC9HFr+nialPHPeW/DzVuJ2egaQMDAR
+         7/fyaOI7gnJfc74rxBPqFywlge3Zxg1FBvD8iq33Tn1zfF/2Rp6MJCI3rRRzHeyjCsWZ
+         khrD0OMUsLduOLtZRCQn/D7NKxldriasHlr4GxPEcLhyQGOGKYqp714cQNGF27xuhJvC
+         hiAw==
+X-Forwarded-Encrypted: i=1; AKwUvBx1g9Zx4jcvX9ZTYTD0N3+sSZtFDWVYUtqpJg1/tuGHBJj1gdHXnTjIl/rJ4eHAO1bQO5ffcNROjBxyOdlOc1Gt9G/6@vger.kernel.org
+X-Gm-Message-State: AFuF++kI2Jw6eOreFP5SLhJAKj5yqQLfVSRHX2ajpsW0xzJhdwNGO/sN
+	FmPxvNm1YaxVy9N+LpOUQpsbP/vGvkjdAlR53SMFvrozoI+xpxSZaAEd
+X-Gm-Gg: AYBFou2LtSQmJnsIdqbYOgwp4Kpq5uT0KZySFiJN423vBiDpq60xkDjaQKNhAh4a5FJ
+	xEqyn1lG463PiZM8IaMb3h6h4x/tbR0n8484lcIbTIq5yZakp/zs0P+OBrAYGdjr6k9ET0dm5ov
+	JcmOtr8W9N8pgJZoZyJKxOC9L/M9vuvMd68CZsqFuULrb8RW6TLul+dkYzNmIjZv7cB/HN5J2Qw
+	zmBs8X3fGQrDsNgJWFpW8z8K+fzQnye1KiBOPmknqt8omHuPPi2ttQkN6WI+x+qsuoh/Hg8W4qz
+	ikZS+4GqVBRvI6UPQyWebFMAnMrNs24LaGh/0YQqxvkYwPijp31xej5sPqaAlWkQejji6SFt2+2
+	kZI1vaMNViFNJr3jOxPqqB2CPTfXIcF/cqZchUR7vmR+uDPo/4IbutjQsjaheGdA/rgWiTF5ZBQ
+	khGSBmdBwvurCVAED2cZt6U6jExLKSAmVE2prxwuQPwKh3jwZvvqgNA4C7lzRK544V+0dCI39ke
+	jvcttLA46xVX4M4XobLIglhIA==
+X-Received: by 2002:a05:6a21:9103:b0:3d3:ae40:51e6 with SMTP id adf61e73a8af0-3da3a104fefmr61474616637.26.1789015506417;
+        Wed, 09 Sep 2026 21:45:06 -0700 (PDT)
 Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435648esm58731485c88.5.2026.09.09.21.44.57
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435648esm58731485c88.5.2026.09.09.21.45.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2026 21:45:01 -0700 (PDT)
+        Wed, 09 Sep 2026 21:45:06 -0700 (PDT)
 From: Hemanth Selam <hemanth.selam@gmail.com>
 To: hansg@kernel.org,
 	ilpo.jarvinen@linux.intel.com
@@ -73,9 +73,9 @@ Cc: corentin.chary@gmail.com,
 	mpearson-lenovo@squebb.ca,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/8] platform/x86: asus-nb-wmi: Fix typo in asus_nb_wmi_quirks() comment
-Date: Thu, 10 Sep 2026 10:14:37 +0530
-Message-ID: <accb5d1622035aadc423ceafab32f3e6f74bffb2.1789015364.git.hemanth.selam@gmail.com>
+Subject: [PATCH v2 3/8] platform/x86: hp_accel: Fix typo in lis3lv02d_acpi_write() comment
+Date: Thu, 10 Sep 2026 10:14:38 +0530
+Message-ID: <402a3251fcffa3b080415513b05e65843da69825.1789015364.git.hemanth.selam@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1789015364.git.hemanth.selam@gmail.com>
 References: <cover.1789015364.git.hemanth.selam@gmail.com>
@@ -87,30 +87,29 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Correct "paramater" to "parameter".  Comment only, no functional
-change.
+Correct "writting" to "writing".  Comment only, no functional change.
 
 Assisted-by: Cursor:claude-opus-5
 Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
 Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
 Reviewed-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 2 +-
+ drivers/platform/x86/hp/hp_accel.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index aeb461b1644d..9b729afb34f9 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -573,7 +573,7 @@ static void asus_nb_wmi_quirks(struct asus_wmi_driver *driver)
- 	driver->quirks = quirks;
- 	driver->panel_power = BACKLIGHT_POWER_ON;
+diff --git a/drivers/platform/x86/hp/hp_accel.c b/drivers/platform/x86/hp/hp_accel.c
+index 39b73dc473f1..40e1b9fb1b6d 100644
+--- a/drivers/platform/x86/hp/hp_accel.c
++++ b/drivers/platform/x86/hp/hp_accel.c
+@@ -122,7 +122,7 @@ static int lis3lv02d_acpi_read(struct lis3lv02d *lis3, int reg, u8 *ret)
+ static int lis3lv02d_acpi_write(struct lis3lv02d *lis3, int reg, u8 val)
+ {
+ 	struct acpi_device *dev = lis3->bus_priv;
+-	unsigned long long ret; /* Not used when writting */
++	unsigned long long ret; /* Not used when writing */
+ 	union acpi_object in_obj[2];
+ 	struct acpi_object_list args = { 2, in_obj };
  
--	/* overwrite the wapf setting if the wapf paramater is specified */
-+	/* overwrite the wapf setting if the wapf parameter is specified */
- 	if (wapf != -1)
- 		quirks->wapf = wapf;
- 	else
 -- 
 2.48.1
 
