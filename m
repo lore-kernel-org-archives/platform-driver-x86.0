@@ -1,583 +1,112 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mta0.migadu.com (out-26.mta0.migadu.com [91.218.175.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09A36212C
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 19:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789067668; cv=pass; b=Eyd9tjo0Ss7BHVB3mfs8arsHO9ncf5HWlBLfNUFx+5NFWOIoVdKflD37rzhxY40pIYZEagw12dnzwn4Qyrn1gBdl6bQfai/inw8UOfnkbFWayJOcIN/Kj38LRxAtsVwwm+gq4da4qSUKXwET38TK/pHKz4zzjFAIYL1beV3J1zQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789067668; c=relaxed/simple;
-	bh=cvS7IOof6i1Xi/NLdQmqFbT8Jx/Hm9q05dMIMNJ1fY4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=GP9gJ+6F3Q6P4Re/vOm4zbociJxlOESb4H/HYcEBBg0RMcLC7h1ZjDuAQMG+LBRlmybfepnSU9PcVBU9jmiHFEKlEEPbvP+6pfjumdEYCJZZPeHF+cFvHbYNpxyhtdLo0gFQ+lCHtsQAbAiDqEj6fNAZvW/mGLhVZ9ScbDrqqRo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BSTsPQ5h; arc=pass smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA1B3BD65A
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 20:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.26
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789073443; cv=none; b=UW0AzHFLYfMXF0T8XOqRmiJIfWdKmumUIWJ4zbkdbsqRXCB8ZyGJWKojePzzEkslpHkNLnM5V972kXtij2RJ98FQMlleZ4x5zBdS/Cri7qvUmRuRsb1/LKRi3BBw6MwBkqmu2kcW1S41Nq+TBI2uiAKwLG9cKTfdoBhGviypHPU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789073443; c=relaxed/simple;
+	bh=41+fTgHWFKSBVVp4XifXvnE3VNYqFnKT69tOOkfc8gY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KKaxTsZBVIcBrQfh2LMaXAw5by56zc+Cq64SMZkGf+bAepdvoCkU5XTcjQ3R74U+uXMDgiY+xCdjlVcqylut1rMRnYF2nUocCMH0xriHD7l+kEPT/2mgLw6VLyLrNti1QIQeBcVVG9+wpA6Xqp8+w2766WWgJaNEO+pDmevQteM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rQkMT9+A; arc=none smtp.client-ip=91.218.175.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSTsPQ5h"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-9103228ef53so588526d6.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 12:14:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789067666; cv=none;
-        d=google.com; s=arc-20260327;
-        b=pi7DXtH/mgyS9e3cpnB1IN7av1Rry72No0KlD/esbV3yZ2WWJeZ2yzojGGQ5kG0OCj
-         ujkd9yjUHzKarzT8mcdFRROAuKYDuLuVj0//rrg9GYBMSgOsJleJH9EHnm64vY8o2vTN
-         LRLnya1P5SVyYZcRtWzYaIQY6mjgoegaXyOop29tKUWzxYoMppMjhgBZUHK7QcujqN1j
-         3Xru6jU7CE6ertDRFdZMmQ4uC1Ao9kY54iLJXB47YHjjo2WveeyAMMxs7bsLfVmH21NZ
-         memkjxBhE/0r0++0K7/Xc9BisZZI+MN5uCY7l633eeHXT5i6YBGYD5tbHPNHFJM43o7F
-         aMFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
-        fh=+r32/9nwyqKGvxcb0QT78nK/SfLeOaXjO4BiBWT4ny8=;
-        b=VtaTGZ/m8JMs4TH6g56ww2ehv0BdBUWRWs/dtO3SexgeAV+pR1y3OA4ilRWoZNYxoq
-         vWj7G+40lA8iSiN6KceD8nzqZDXBXouuQZyqkIxB7RuGhiUF+FNg0PgbmEP9TKcHmaoS
-         JuJVriK8ViKjfvlZMlo4Gx3+FbOybomPmThpKON1p+YBYIPBIoafUIb5JEvNqbiDWc2R
-         kYbiCmqmYEFOQzH0jSBlvH0vlZgRn/pOpJL3qpex6xBL6FvUqxy6+epLrJyMn/9MqwXo
-         B2p5UvKtsYgIkEGtzBz4kh6I8YceKsaMbSPllA8t+Nf6Y6j7lfE0g4i+LiBCS4N71Kiu
-         Dkqw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789067666; x=1789672466; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
-        b=BSTsPQ5heUPyPVGRQkNYa+dzY3vB9iokgWwLOZ8q3pC/0pm3T8Yd4OHWyOtDdP8MFx
-         DXJW5tQ8/qY+Kw92DaOYXi0DznhK4Qk84KIhXCv95m6GFW6BudxSajMPF+bxCAYxL2mP
-         Nsm8jaqEIo5N/0GqR/z6drPdUDx/xnKp+zq0v47qe0/lB/kbSg+CnAh1MwfeH5sVFL/c
-         72IFWfiVm9fjOy64VhLOym4BdOdks4+UuXBODuLz+02zZxVIfRuR/nkn2riOEgErQEIw
-         fJhDZqS5FnDdnZ+q2rLCXreNGeR1mT5mewe57gZBcMMB7OJGUOP8RlvUfrIQsiCe02OI
-         zDug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789067666; x=1789672466;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
-        b=rfW9lc63wRa+BtVKkKI4UE8A1qqmkCoLuIV5O7o5b0+MM64As7qOA0eOwj1adD1zIk
-         iJ+dArDQa4an9rVrypo0wn5U3hYSo/zD5VacpixF0g8R2vIYlrBmOqwwJ4HXiVMCwJXJ
-         4UkdsYFeA8C5wlArsOoJBJEujKzQYj6dIQ0eGT9fdc7RbQOLPIlKRgmHfOmIePqbCqWL
-         ggSFTRbyjrdWatM0tGri5yYfndKvKcUNUiLUeUncaydX7lk9WDMmnx4N3mYm19PQmCJg
-         88+voY49NWSGCwUvUzf6uL1uV8OAtnuAnTcs4l4KVqrXS58DzFUIX0omyr+d09RMiEv8
-         o9gw==
-X-Gm-Message-State: AFuF++loRzWyuS5q80OFcShwdtCzKmgX+QhzDF4aUW3XThN/1SEsR0YT
-	QeU+78+c/4Z6KKC/mL7bSzpkHb/M3WOOiPY2Qc7XCmsbMKzLeTQaFUjdOloqp4Z1hSGEds93gEs
-	Rz+dubjQXvwwPlydNdC4Tk5U1Tqa7rvXiPEwqwLh6szec
-X-Gm-Gg: AYBFou3ax8d5ui0RdVoBtk8H6PkTBopb2Qc+aWGsfxUPW8ETlMuSMjfLSdbcAlAH4nA
-	CvLRLQWUANXUQ5Zt5Ap54bDvufb8TnhCOlAAkJZO4g3dUZ7Q+W+nqknYp+kH8dqzZy7kiUhWLfF
-	lWStW3b5h6LP23nwI76CvpfpcF1X+rGtX7VBClH3bXqmakjBcHEG4CB4zwo+TMhwCxCtqsa2xwx
-	lZKo3FOlDMVan0OAN80pARxQeLZ24o2dcZsaidDtJqSXBMcQNoJZ4WlbDcXTMQN0K1ks0bJVwWm
-	Ft61gM2DwsqLYxHFccdo5EDPLZSbaxwZWYJU8nB5b8qFDXThqVUx+mwNpTRyBIpfaoQDVfSu7yl
-	1JhuoD7ZKY8WCoHXYCXxB
-X-Received: by 2002:a05:620a:4446:b0:939:6c9a:8f8d with SMTP id
- af79cd13be357-939ea1dc406mr33474285a.28.1789067665479; Thu, 10 Sep 2026
- 12:14:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rQkMT9+A"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=41+fTgHWFKSBVVp4XifXvnE3VNYqFnKT69tOOkfc8gY=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789073434; v=1; x=1789678234;
+ b=rQkMT9+AFs0iblo3j+iJZOJA2LmX0DrfPjU4gvhUX377dDIE2CTu8PMLlM5TFxYOKargiM4h
+ I7A2JR04gvd/+ecFkie0bIHvFZmTwi8WglQ0YKwcbuS+5zBhY7ejUBU8zuOi2YlGxANOClDenfa
+ 2b6c02hxY0JEdxmduu6nq9zY=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 997b8a268c56b9b3;
+	Thu, 10 Sep 2026 20:50:34 +0000
+X-Mizu-Trace-ID: 997b8a268c56b9b3
+X-Migadu-Flow: FLOW_OUT
+From: Denis Benato <denis.benato@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	"Mateusz Schyboll" <dragonn@op.pl>,
+	"Denis Benato" <benato.denis96@gmail.com>,
+	Cymirk <Cymirk@icloud.com>,
+	Denis Benato <denis.benato@linux.dev>
+Subject: [PATCH] platform/x86: asus-armoury: add support for GX651AR
+Date: Thu, 10 Sep 2026 20:50:32 +0000
+Message-ID: <20260910205032.153165-1-denis.benato@linux.dev>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Abdalrhman Ahmed Mohamed Refaat <mebecausehewasanoop72@gmail.com>
-Date: Thu, 10 Sep 2026 22:14:14 +0300
-X-Gm-Features: AcwNN1WdViNoEKbeDKLVw2OTEI4ERzTfRwDkB0kYb1w3_tFjvNpz3OAdYsYMYCA
-Message-ID: <CAGJopWKOPVKpQKwh0J+NUig35gixh6eOJDxeXYyZSM83KGSk7w@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BBUG=5D_ACPI_=2F_NVPCF=3A_NPCF_SSDT_returns_zeroed_power_b?=
-	=?UTF-8?Q?udget_=E2=80=94_Dynamic_Boost_stuck_at_VBIOS_default?=
-To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-**Problem Description**
+From: Cymirk <Cymirk@icloud.com>
 
-On the Lenovo LOQ Essential 15IRX11 (83SC) with RTX 5050 (GB207M, 10DE:2D98=
-),
-Dynamic Boost never activates. The GPU stays at the VBIOS default 35W inste=
-ad of
-boosting to 65W (50W TGP + 15W PPAB).
+Add power limit data for the ASUS ROG Zephyrus Duo GX651AR.
 
-The root cause is that the stock BIOS NPCF SSDT returns zeroed power
-budget fields
-in all NVPCF DSM subfunctions. The driver constructs the PMO
-successfully (func 0x00
-bit 0 IS set), but all downstream budget data is zeroed =E2=80=94 so Dynami=
-c
-Boost offsets
-are computed as 0W and the GPU never leaves VBIOS defaults.
+The GX651AR uses the following limits:
+- CPU PL1: 30-75 W
+- CPU PL2: 38-80 W
+- NVIDIA Dynamic Boost: 5-25 W
+- NVIDIA TGP: 80-115 W
+- NVIDIA temperature target: 75-87 C
 
-This was confirmed on Windows 11 with stock BIOS as well =E2=80=94 same 45W
-flatline. The
-bug is in the ACPI tables, not the driver.
+The same CPU limits and temperature target are available on DC power.
 
-**System Specifications**
-
-    Machine:        Lenovo LOQ Essential 15IRX11, type 83SC
-    BIOS:           SECN22WW (Insyde H2O, 2026-05-21)
-    GPU:            NVIDIA GeForce RTX 5050 Laptop GPU, GB207M die
-    GPU PCI ID:     10DE:2D98 (SubSystem 0x8FFE17AA)
-    GPU Arch:       Blackwell
-    GPU Memory:     8151 MiB GDDR7
-    VBIOS Version:  98.07.27.00.43
-    VBIOS Limits:   TGP 50W / CTGP 35W / PPAB 15W / Max 65W
-    GPU Max Clocks: Graphics 3090 MHz / Memory 12001 MHz
-    PCIe:           Gen5 x16 max, Gen1 x8 current
-    CPU:            Intel Core i5-13450HX (Raptor Lake-HX, 10C/16T)
-    CPU Power:      PL1 configurable 25=E2=80=9360W, PL2 configurable 40=E2=
-=80=9385W
-    Kernel:         7.2.3-1-cachyos (x86_64, CONFIG_ACPI_TABLE_UPGRADE=3Dy)
-    NVIDIA Driver:  610.57.04 (open, nvidia-open)
-    GSP Firmware:   610.57.04
-    nvidia-powerd:  v2.0 (build 1)
-    Bootloader:     Limine (UEFI)
-
-**ACPI Table Inventory**
-
-The firmware exposes 38 CB-01 tables via XSDT. Key tables:
-
-    XSDT #  Type   Size      OEM Table ID  Contents
-    ------  ----   --------  ------------  --------
-    1       SSDT   86,813B   CB-01         Large peripheral SSDT
-    2       SSDT   262B      CB-01         Small auxiliary
-    3       SSDT   5,709B    CB-01         Peripheral config
-    4       SSDT   7,946B    CB-01         NPCF + GPS + PEGP =E2=80=94 the =
-buggy table
-    12      DSDT   660,250B  CB-01         Main DSDT (has
-External(NPCF) + Notify(NPCF))
-    5=E2=80=9322    SSDT   varies    CB-01         Remaining CB-01 tables
-
-All 22 CB-01 SSDTs share the identity tuple (SSDT, LENOVO, CB-01) with
-OEM Revision
-0x01. The NPCF-carrying table is SSDT #4 in XSDT order (0-indexed: #3).
-
-**NPCF Table Structure (7,946 bytes)**
-
-The NPCF SSDT contains:
-
-1. PEGP OperationRegions =E2=80=94 VBOR, NOPR (0x7387C018, 0x2027 bytes), H=
-GOP
-2. PEG1/PEGP scope =E2=80=94 RPCX config space, PEGP methods including GPS
-3. Scope(\_SB) Device(NPCF) =E2=80=94 NVDA0820, \_DSM with UUID
-   36b49710-2483-11e7-9598-0800200c9a66
-4. PEGP \_DOD/MXMX/MXDS/MXM =E2=80=94 display output methods
-
-The GPS method (lines 406=E2=80=93536) is inside PEGP scope. The NPCF devic=
-e
-(lines 844=E2=80=931186)
-is at \_SB scope.
-
-**Root Cause Analysis**
-
-***NPCF _DSM Structure***
-
-The NPCF device (\_SB.NPCF) implements
-_DSM(UUID=3D36b49710-2483-11e7-9598-0800200c9a66,
-rev=3D0x200) with these subfunctions:
-
-    Subfunc  Name                          Purpose
-    -------  ----                          -------
-    0x00     GET_SUPPORTED                  Bitmask of supported subfunctio=
-ns
-    0x01     GET_STATIC_CONFIG_TABLES       Static config (checksum-validat=
-ed)
-    0x02     GET_DYNAMIC_PARAMS             Dynamic power budget
-(TGPA/TPPA/MAGA)
-    0x08     GET_DC_SYSTEM_POWER_LIMITS     DC battery power limits (JPAC)
-
-***What the Driver Does With Each Subfunction***
-
-func 0x00 (client_resource.c:2942-3002):
-- Returns Buffer(4) =E2=80=94 bitmask of supported subfunctions
-- Driver tests only bit 0
-(FLD_TEST_DRF(..._FUNC_GET_SUPPORTED_IS_SUPPORTED, _NO, ...))
-- If bit 0 =3D 1 =E2=86=92 PMO constructs, driver proceeds to func 0x02
-- Stock BIOS returns Buffer(4){0xBF,0x06,0x00,0x00} =E2=80=94 bit 0 IS set
-- So driver enters dynamic boost path, but all data is zeroed
-
-func 0x02 (client_resource.c:3100-3173):
-Returns a 49-byte buffer with this layout:
-
-    Offset  Size  Field         Description
-    ------  ----  ------------  -----------
-    0x00    1     headerSize    Must be 0x05
-    0x01    1     commonSize    Must be 0x10
-    0x02    1     entrySize     Must be 0x1C
-    0x03    1     version       Must match driver's requested version
-    0x04    1     entryCount    Number of controller entries (1 on LOQ)
-    --- common section (0x10 bytes) ---
-    0x05    2     TGPA          CTGP AC offset in 125mW units
-    0x07    2     TGPD          CTGP DC offset
-    --- entry section (0x1C bytes per entry) ---
-    0x19    2     TPPA          Target PP AC offset
-    0x1B    2     TPPD          Target PP DC offset
-    0x1D    2     MAGA          Max AC GPU offset
-    0x21    2     MIGA          Max idle GPU offset
-    0x25    2     DROP          Delta response offset
-    0x29    4     LTBC          Long-term budget cap
-    0x2D    4     STBC          Short-term budget cap
-
-The driver validates at client_resource.c:3121-3135:
-
-    if ((headerOut.headerSize !=3D 0x05) ||
-        (headerOut.commonSize !=3D 0x10) ||
-        (headerOut.entrySize  !=3D 0x1C))
-    {
-        status =3D NV_ERR_INVALID_DATA;
-    }
-
-Stock BIOS returns all-zeroed fields =E2=80=94 TGPA=3D0x0000, TPPA=3D0x0000=
-, MAGA=3D0x0000.
-The driver computes:
-
-    ctgpOffsetmW =3D 125 * 0 =3D 0W       =E2=80=94 no CTGP boost
-    targetTppOffsetmW =3D 125 * 0 =3D 0W   =E2=80=94 no PP offset
-    maxOutputOffsetmW =3D 125 * 0 =3D 0W   =E2=80=94 no max output boost
-
-Result: Dynamic Boost is "supported" (bit 0 set) but all offsets are
-0W. GPU stays
-at VBIOS default 35W.
-
-func 0x01 =E2=80=94 14-byte static config with two's complement checksum:
-- Sum all bytes except the last
-- Negate: (~sum) + 1 (one-byte two's complement)
-- Must equal the last byte
-- Stock BIOS: checksum 0xAB, data correct
-
-func 0x08 =E2=80=94 22-byte DC system power limits (only used on battery, n=
-ot
-relevant to
-AC dynamic boost)
-
-***GPS Pipeline Issues (Secondary)***
-
-The GPS (GPU Power Steering) method in the same SSDT has three
-additional problems:
-
-1. GPSS guard blocks GPS calls: PEGP's _DSM checks If ((GPSS !=3D Zero)) be=
-fore
-   dispatching to GPS(). GPSS is a field in an OperationRegion (NOPR
-at 0x7387C018)
-   that may not be mapped when _INI runs. The nvidia driver probes GPS at b=
-oot
-   before NPCF's _INI sets GPSS=3D1.
-
-2. Missing GETPPL (func 0x24): The GPS switch statement has no Case(0x24), =
-so it
-   falls through to Default =E2=86=92 Return(0x80000002). The driver's
-   platform_request_handler_ctrl.c:629-641 expects a 12-byte buffer
-   {Version=3D0x00010000, PL1, PL2}. Without it, NV_ERR_INVALID_DATA fires =
-at
-   line 2174.
-
-3. GPSP buffer too small: The SSDT allocates Buffer(0x28) (40 bytes), but t=
-he
-   driver's PFM_REQ_HNDLR_PSHAREDATA struct is 44 bytes (0x2C). The ppmd fi=
-eld
-   at offset 0x28 is outside the buffer. The PPMD sensor is never populated=
-,
-   causing NV_ERR_INVALID_DATA at line 2117.
-
-**Evidence**
-
-Stock BIOS func 0x02 return (49 bytes):
-
-    TGPA (offset 0x05): 0x0000 =3D 0W    =E2=86=90 should be 65W (0x0208)
-    TGPD (offset 0x07): 0x0000 =3D 0W
-    TPPA (offset 0x19): 0x0000 =3D 0W    =E2=86=90 should be 135W (0x0438)
-    MAGA (offset 0x1D): 0x0000 =3D 0W    =E2=86=90 should be 120W (0x03C0)
-
-func 0x00 return: Buffer(4){0xBF,0x06,0x00,0x00} =E2=80=94 bit 0 IS set, so
-PMO constructs.
-But all downstream func 0x02/0x01 fields are zeroed.
-
-nvidia-smi after boot (stock):
-
-    Current Power Limit:  35.00W  (VBIOS default =E2=80=94 never boosts)
-    Default Power Limit:  35.00W
-    Max Power Limit:      65.00W  (hardware maximum, never reached)
-    Requested Power Limit: N/A    (nvidia-powerd never requests boost)
-
-nvidia-powerd: Runs, DBus connected, zero activity logs. Falls back to
-"SBIOS support not found for NVPCF GET_SUPPORTED" =E2=86=92 default TPP.
-
-dmesg:
-
-    NVRM: GPU0 PlatformRequestHandler failed to get target temp from SBIOS
-          @ platform_request_handler_ctrl.c:2174
-    NVRM: GPU0 PlatformRequestHandler failed to get platform power
-mode from SBIOS
-          @ platform_request_handler_ctrl.c:2117
-
-GPS func 0x24 (GETPPL): Returns 0x80000002 (not implemented =E2=80=94
-Case(0x24) missing)
-
-GPS func 0x2A (PSHAREPARAMS): Returns 40-byte buffer but RETN=3D0x00000000 =
-=E2=80=94 no
-sensors declared, PPMD never populated
-
-**Fix Description**
-
-ACPI SSDT override via CONFIG_ACPI_TABLE_UPGRADE initrd mechanism. Two chan=
-ges:
-
-***1. NPCF Device Embedded in DSDT***
-
-Embed Device(NPCF) at Scope(\_SB) in the DSDT. The nvidia-acpi driver hardc=
-odes
-pathname "\_SB.NPCF._DSM" (nv-acpi.c:785-793) =E2=80=94 NPCF must be at \_S=
-B scope.
-
-Complete NPCF device with corrected budgets:
-
-    Scope (\_SB)
-    {
-        Device (NPCF)
-        {
-            Name (\_HID, "NVDA0820")
-            Name (\_UID, "NPCF")
-            Name (\_STA, 0x0F)
-
-            Method (\_INI, 0, NotSerialized)
-            {
-                If (CondRefOf (\_SB.PC00.PEG1.PEGP.GPSS))
-                    ^^PC00.PEG1.PEGP.GPSS =3D One
-                If (CondRefOf (\_SB.PC00.PEG1.PEGP.NPCS))
-                    ^^PC00.PEG1.PEGP.NPCS =3D One
-            }
-
-            Method (\_DSM, 4, Serialized)
-            {
-                If ((Arg0 =3D=3D ToUUID ("36b49710-2483-11e7-9598-0800200c9=
-a66")))
-                {
-                    Return (NPCF (Arg0, Arg1, Arg2, Arg3))
-                }
-                Return (Buffer (One) { 0x00 })
-            }
-
-            Method (NPCF, 4, NotSerialized)
-            {
-                Switch (ToInteger (Arg2))
-                {
-                    Case (Zero)
-                    {
-                        Return (Buffer (4)
-                        {
-                            0x07, 0x01, 0x00, 0x00
-                        })
-                    }
-                    Case (One)
-                    {
-                        Return (Buffer (0x0E)
-                        {
-                            0x20, 0x03, 0x01, 0x00, 0x25, 0x04, 0x05,
-                            0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0xAB
-                        })
-                    }
-                    Case (0x02)
-                    {
-                        Name (PBD2, Buffer (0x31)
-                        {
-                            0x25, 0x05, 0x10, 0x1C, 0x01
-                        })
-                        CreateWordField (PBD2, 0x05, TGPA)
-                        CreateWordField (PBD2, 0x07, TGPD)
-                        CreateWordField (PBD2, 0x19, TPPA)
-                        CreateWordField (PBD2, 0x1B, TPPD)
-                        CreateWordField (PBD2, 0x1D, MAGA)
-                        CreateWordField (PBD2, 0x21, MIGA)
-                        TGPA =3D 0x0208   // 65W
-                        TPPA =3D 0x0438   // 135W
-                        MAGA =3D 0x03C0   // 120W
-                        Return (PBD2)
-                    }
-                    Case (0x08)
-                    {
-                        Return (Buffer (0x16)
-                        {
-                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                            0x00
-                        })
-                    }
-                }
-                Return (Buffer (One) { 0x00 })
-            }
-        }
-    }
-
-Budget values explained:
-
-    TGPA =3D 0x0208 =E2=86=92 520 =C3=97 125mW =3D 65,000mW =3D 65W (TGP + =
-CTGP + PPAB)
-    TPPA =3D 0x0438 =E2=86=92 1080 =C3=97 125mW =3D 135,000mW =3D 135W (tot=
-al platform
-power budget)
-    MAGA =3D 0x03C0 =E2=86=92 960 =C3=97 125mW =3D 120,000mW =3D 120W (max =
-AC GPU allocation)
-
-The driver extracts these at client_resource.c:3160-3173:
-
-    pParams->ctgpOffsetmW =3D (NvS32)125 *
-(NvS16)DRF_VAL(..._CMD0_CTGP_AC_OFFSET, commonOut.param0);
-    pParams->targetTppOffsetmW =3D (NvS32)125 *
-(NvS16)DRF_VAL(..._CMD0_SIGNED0, entriesOut.param1);
-    pParams->maxOutputOffsetmW =3D (NvS32)125 *
-(NvS16)DRF_VAL(..._CMD0_SIGNED0, entriesOut.param2);
-
-***2. GPS Pipeline Fix (SSDT#4)***
-
-The GPS method in the NPCF SSDT needs three patches:
-
-a) Remove GPSS guard from _DSM dispatcher (line 232):
-
-    // BEFORE:
-    If ((\_SB.PC00.PEG1.PEGP.GPSS !=3D Zero))
-    { Return (\_SB.PC00.PEG1.PEGP.GPS (Arg0, Arg1, Arg2, Arg3)) }
-
-    // AFTER: (guard removed)
-    Return (\_SB.PC00.PEG1.PEGP.GPS (Arg0, Arg1, Arg2, Arg3))
-
-b) Add Case(0x24) for GETPPL:
-
-    Case (0x24)  // GPS_FUNC_GETPPL
-    {
-        Return (Buffer (0x0C)
-        {
-            0x00, 0x00, 0x01, 0x00,  // Version: Major=3D1 (0x00010000)
-            0xC8, 0xAF, 0x00, 0x00,  // PL1: 45000 mW (45W)
-            0xE8, 0xFD, 0x00, 0x00   // PL2: 65000 mW (65W)
-        })
-    }
-
-The driver validates at platform_request_handler_ctrl.c:629-641:
-
-    if (FLD_TEST_DRF(0000_CTRL_PFM_REQ_HNDLR, _PPL_ARG0_VERSION, _MAJOR, _V=
-1,
-                     acpiParamsEx.output[0]))  // output[0] bits 31:16 must=
- =3D=3D 1
-
-c) Enlarge GPSP buffer from 0x28 to 0x2C and set PPMD status bit:
-
-    Name (GPSP, Buffer (0x2C) {})  // was 0x28 (40 bytes)
-    CreateDWordField (GPSP, 0x00, RETN)
-    CreateDWordField (GPSP, 0x04, VRV1)
-    CreateDWordField (GPSP, 0x08, TGPU)
-    CreateDWordField (GPSP, 0x0C, PDTS)
-    CreateDWordField (GPSP, 0x10, SFAN)
-    CreateDWordField (GPSP, 0x14, SKNT)
-    CreateDWordField (GPSP, 0x18, CPUE)
-    CreateDWordField (GPSP, 0x1C, TMP1)
-    CreateDWordField (GPSP, 0x20, TMP2)
-    CreateDWordField (GPSP, 0x24, CTGP)  // NEW: maps to driver ctgp
-at offset 0x24
-    CreateDWordField (GPSP, 0x28, PPMD)  // NEW: maps to driver ppmd
-at offset 0x28
-
-    // In Case(Zero) =E2=80=94 SUPPORTED_FIELDS query:
-    RETN =3D 0x00010100  // bit 8 =3D TGPU, bit 16 =3D PPMD
-    // was 0x00000000 =E2=80=94 no sensors declared
-
-The driver reads PPMD at platform_request_handler_ctrl.c:1208-1219:
-
-    if (0 !=3D DRF_VAL(..._PSHARE_PARAMS_STATUS, _PPMD, pPShareParams->stat=
-us))
-    {
-        _pfmreqhndlrUpdatePpmdLimit(pPlatformRequestHandler, pGpu, NV_TRUE)=
-;
-    }
-
-***3. OEM Revision Bump (All 22 CB-01 SSDTs)***
-
-Every CB-01 SSDT must have OEM Revision >=3D 0x02. The kernel's
-acpi_table_initrd_override() silently skips if firmware_rev >=3D initrd_rev=
-.
-Factory SSDTs have rev 0x01. Hex-patch byte offset 24-27 from
-01 00 00 00 to 02 00 00 00 and recalculate the ACPI checksum.
-
-**After Fix**
-
-    Current Power Limit:  65.00W  (Dynamic Boost active)
-    Synthetic load:       65W sustained (cuda-matmul 30s)
-    Genshin Impact avg:   53.1W (with CPU -75mV undervolt on shared heatsin=
-k)
-    AE_ALREADY_EXISTS:    0 (was 242)
-    Touchpad:             working (preserved)
-    GPS GETPPL:           {V1, PL1=3D45W, PL2=3D65W}
-    GPS PSHAREPARAMS:     44-byte buffer with PPMD=3D7 sensor
-
-**Key Driver Paths**
-
-- nv-acpi.c:785-793 =E2=80=94 hardcodes pathname "\_SB.NPCF._DSM" for all
-NVPCF DSM calls
-- nv-acpi.c:361-365 =E2=80=94 namespace walk discovers NPCF, overwrites
-globals unconditionally
-  (last-wins)
-- client_resource.c:2942-3002 =E2=80=94
-cliresCtrlCmdSystemNVPCFGetPowerModeInfo_IMPL dispatches
-  via osCallACPI_DSM
-- client_resource.c:2992-2994 =E2=80=94 GET_SUPPORTED checks only bit 0 of
-supportedFuncs
-- client_resource.c:3100-3173 =E2=80=94 func 0x02 validates header (0x05/0x=
-10/0x1C),
-  extracts TGPA/TPPA/MAGA
-- client_resource.c:2898-2940 =E2=80=94 func 0x01 _validateConfigStaticTabl=
-e_2x two's
-  complement checksum
-- dynamic-power.c:1202-1223 =E2=80=94 os_get_dynamic_boost_support probes v=
-ia func 0x00
-- platform_request_handler_ctrl.c:601-643 =E2=80=94 GETPPL (func 0x24) vali=
-dates Major
-  version =3D 1
-- platform_request_handler_ctrl.c:1060-1088 =E2=80=94 pfmreqhndlrCallACPI_E=
-X copies
-  input=E2=86=92output, calls osCallACPI_DSM
-- platform_request_handler_ctrl.c:2174 =E2=80=94 TGPU sensor update fails w=
-hen
-  PSHAREPARAMS incomplete
-- platform_request_handler_ctrl.c:2117 =E2=80=94 PPMD sensor update fails w=
-hen
-ppmd field
-  missing
-- os.c:2934-3048 =E2=80=94 osCallACPI_DSM maps function IDs to GUIDs and re=
-visions
-
-**Questions for Maintainers**
-
-1. Driver-side fallback: When func 0x02 returns all-zero budget
-fields, the driver
-   silently falls back to VBIOS defaults with no warning. A pr_warn when
-   ctgpOffsetmW =3D=3D 0 && maxOutputOffsetmW =3D=3D 0 (after func 0x00 rep=
-orts support)
-   would help users diagnose this class of firmware bug. Is this intentiona=
-l?
-
-2. Should the driver validate func 0x02 budget values? Currently
-client_resource.c
-   validates the header structure (sizes, version) but not whether the extr=
-acted
-   TGPA/TPPA/MAGA are non-zero when bit 0 of func 0x00 indicates
-support. Adding a
-   check like:
-     if (pParams->ctgpOffsetmW =3D=3D 0 && pParams->maxOutputOffsetmW =3D=
-=3D 0)
-         pr_warn(NV, "NPCF: zeroed power budget detected");
-   would surface Lenovo's firmware bug at boot.
-
-3. PPMD sensor initialization: The PlatformRequestHandler
-NV_ERR_INVALID_DATA errors
-   at lines 2174/2117 fire when PSHAREPARAMS doesn't populate the PPMD fiel=
-d. Is
-   this expected for laptops without platform power mode support, or should=
- the
-   driver handle the missing PPMD gracefully?
-
+Signed-off-by: Cymirk <Cymirk@icloud.com>
+Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
+ drivers/platform/x86/asus-armoury.h | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-Full patched SSDT source, scripts, and power measurement data available at:
-https://github.com/Punch-Pain/loq-npcf
+diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+index 0e301d663d0c..44ea9519560d 100644
+--- a/drivers/platform/x86/asus-armoury.h
++++ b/drivers/platform/x86/asus-armoury.h
+@@ -1881,6 +1881,33 @@ static const struct dmi_system_id power_limits[] = {
+ 			},
+ 		},
+ 	},
++		{
++			.matches = {
++				DMI_MATCH(DMI_BOARD_NAME, "GX651AR"),
++			},
++			.driver_data = &(struct power_data) {
++				.ac_data = &(struct power_limits) {
++					.ppt_pl1_spl_min = 30,
++					.ppt_pl1_spl_max = 75,
++					.ppt_pl2_sppt_min = 38,
++					.ppt_pl2_sppt_max = 80,
++					.nv_dynamic_boost_min = 5,
++					.nv_dynamic_boost_max = 25,
++					.nv_temp_target_min = 75,
++					.nv_temp_target_max = 87,
++					.nv_tgp_min = 80,
++					.nv_tgp_max = 115,
++				},
++				.dc_data = &(struct power_limits) {
++					.ppt_pl1_spl_min = 30,
++					.ppt_pl1_spl_max = 75,
++					.ppt_pl2_sppt_min = 38,
++					.ppt_pl2_sppt_max = 80,
++					.nv_temp_target_min = 75,
++					.nv_temp_target_max = 87,
++				},
++			},
++		},
+ 	{
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "GZ302EA"),
+-- 
+2.47.3
 
-System: Lenovo LOQ Essential 15IRX11 83SC | BIOS SECN22WW | RTX 5050 GB207M
-Kernel 7.2.3-1-cachyos | nvidia-open 610.57.04
