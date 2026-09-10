@@ -1,145 +1,321 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AB3483BD9
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 14:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789051735; cv=pass; b=iUy5rzf2nNs66WcmmrEBTgeCMKlgp/zKGjoWQJlMBN1c8blpsR8HxqRz1y/0lBiJxvtl8XuXFXq58cmgjrOSuK8OcniQnMty27708NL2KM5tAoy+yvT02FYSsz9XEtM3ozj/8RUTJ1eZmMiSfMsoPBxbrvm28rfIYc+cngeDMh0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789051735; c=relaxed/simple;
-	bh=6sLSQ8cAg3ps9NP43BI41ma/3AAke+r6Xg4OXL5Yf8I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PsMeCrSP8t6IPdxqmr5WyYAZ0e06dCAcgPXg4JSZi1yPiD+4LR12LKaWTBaG/32uNSAh9DSgK5tQoY7pmbESqjdxiAseQEgLWI7vnC2Cies2dOYgDLHCKssrILVExf1LzW1qnI4IY1Ony9gyQY4QfAA7ceFlTI/v/yo5yQY/cX4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AepMTpfi; arc=pass smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C2C4A6899;
+	Thu, 10 Sep 2026 15:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789052753; cv=none; b=dL3o+ygVr4si7s/ejR1j3Upp1WtIAmIelcLwvqcZj82/1JnvycjJ0tbUxDu+HG/OrFtpY/PhwBf43b1WX0WZxIvz3WIo6R1j3raFdLaLgPSVzj//kMajvQsybqhd6r+O7iOmNhyu+9YA0UmnM+58XIFbwVGSNnTldrxwSYAzoY0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789052753; c=relaxed/simple;
+	bh=Etl5JzVJqML9PmVs917q+ZC+bbgxKo3NsM+f9uGvFK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FlLvMwHUZCqm0GF20iLLUl+9dor2qC8E24NaG3/7IzDwW+OnA57J/K9ecH/pOSK7BZgFZ/t7854uWgd+ogAOYPdVlrDoD2PsIVS+HaupYLBqAlpd1v2KgiyeprcntUxozNu1oCm4WLEHtG/+SpLKA2AsA8mDO8BU/ElrxptuRz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AClqOoG8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AepMTpfi"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-866e57f63a3so83617627b3.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 07:48:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789051731; cv=none;
-        d=google.com; s=arc-20260327;
-        b=fmaVzXysVDQmvyOMXinuMfDkUMmwbBwnB9fBY+h/nXIQwvNK5DaCuPJ6beHk/mhZyq
-         ir4FqHI/C0EKxaspZeeBMDGwNRE2NPvjxpCeglDgWQIRUmSZNIvLjmyKJLG5Pa3aufY1
-         wDgvf/eFpbXbyyMA9kt9sWz3Ldi5WVvx1xs6sHFYCWLByhLF5HjfYKFh0aEvNpzxuMWA
-         PzdvBpUrvBkSci33qw8E7jtSlCxri4yI4LDz3lZ8sj5TgvArKZqYFe7FG9Q95lj4WICZ
-         ro1nXcjLhPLDK5rwildOtYlvGSNN5bovdSRUD6PZT3ZvBoyy+XjFvB4ikcuLxz7FTadb
-         pQbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=Ni8B91MG4UdENsQP1YfkoP8wKAwkCPFzn6Fz6uXhfug=;
-        fh=sbxZ5ffFU8v94SJ4G15SzjVApZfi6NXSWDVt5AAtT3s=;
-        b=hII0VMxzqQVouc78AnDYkQR/TyS0Pw5/tq9CT449lG9kZe7TIH/GjAAmc3ZZbGKNCE
-         CiToRor+ZQZkYFKLZMkPwGKyzhbtlIRwG3lxr0F2uAy3hxD3BgZOU0NPMEB8iCVQm/2W
-         f8nZJu+jRh0Oy6S+wLio3t0tn0GUcKf/aUBI5nB9CzShbbBmd3vbr6AC4sWcXGpp8t/k
-         k3bczYEcbAjOzlFPLhK3Ssxu7iPo6V74hN3i/cztQ/ea6Fe3D5Er4vqmKKivr7YsNkdz
-         9Lh/hfutnu+Va1Tly3qVzPwKL+/bELbZms2OYyPy9wmIusJiNs8lQqphhDcpWEz61r6a
-         6MkA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789051731; x=1789656531; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Ni8B91MG4UdENsQP1YfkoP8wKAwkCPFzn6Fz6uXhfug=;
-        b=AepMTpfiHUHfazLw4vE4KhhqyUE20jeRfnCzlS59z7nQtzWnLsHNknOZM+I/Des4Go
-         xPeuSaURbiQcCQs4dfSlXRF9cwtge7ZjS+EK8sLKFUoACItjQf9tkkP/++3UMXtk82+j
-         IugUwye2RgxiXZumv5d5GNU2dPsRCypRTX6FsbDJFKiOuWBqU1fIGFiGx4E2ZSThT85E
-         ZhdGtZz4WABsoplhbjSkrcwf801AAc5JnBWrj8pw13afyFoneI4q6E9+EhXgb6ZBm9jx
-         6Tdz5jgt7H4M9oI7FsmuX++oh+eOJRIlririkW+FKecZebHTDAlDpiTllDI0uAafNgkw
-         L+8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789051731; x=1789656531;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=Ni8B91MG4UdENsQP1YfkoP8wKAwkCPFzn6Fz6uXhfug=;
-        b=gaXK3SsoLkR6hYvB7S8rvATtKUeafHANHwFRfpmnCnOcDF7rEuTdKpQDPJm9VE24YV
-         rOgX+Oe8NmSWvbAjrdy6WBy8Wy7URXV1PDdhJAk3b5XndWJZD8yLUT87uinFjJksd3rL
-         BMW4oCZ8hkrG7DO40PAFu66jv5JW6FSEsAhnFpLLtYM/lXBUmdUZXTzZdUQaxLlbZ+By
-         CYZbZs37gagbToQraVv5PVijLPf2Suh8NJKynhw058SoXi7zlsJh2XXD3KVfaScNm54c
-         B8kfZynnqAhZwnC9ahNiJ5jYeNprAxdQfMw0taU38dyOQzscHZCdIcFMcws8Lvc8w4Mr
-         aUmA==
-X-Gm-Message-State: AFuF++nXrTto5QhpF/E0fS/hH2dOYYA/ZR2EOdEEonbXwoGZyfpoOu/W
-	Hr94JU2umstyfiX1aJhUj1KkVAW66eYmOAix1SblgiDTKRTFR+GmmISv3KbVciUHV3wC8HGzS5w
-	Pvindlil/v9U9oy1/WlgwGRIEExoRNRQ=
-X-Gm-Gg: AYBFou31ICXBQMcPpvf/TFQ+AwzW8w5+JQK+TMwPJwukmZFL9mrK04BGSDS8XtW5Vxo
-	AyGcJUUmQLwL9h0v7cppgnWBvqX1wj+3Z4hbuCNATrPZsxkQW84KiA94muSNq/dv2Mr8HYwj/X2
-	Es2MTVcBgjjfktFv4qLdLEv3Bkh8MJj9aH7GcCTERHqb3X4BNXMo8Q+3K+uiIf5de5+6x/cJJbZ
-	sI5F6zWpAb/dySsCzlHgU1ekqQTyc2eCOYcGVCY3qn7EY6r9fvbUua4wcJCnv1jIzOOEyu5DRri
-	+NN/p+XuEzaGULvYf5B8qphhZSKl/TxhcFQ9DIaNU2JdU/pjaOcoXZKVOmbHzMxJYAZ3oTkVsUX
-	U34H+UMugoa42cZEdUpkDUbFVoadTwVwMfGycIFT7dFTRFDklsVfH9ln2cA==
-X-Received: by 2002:a05:690c:e3cb:b0:883:b187:74dd with SMTP id
- 00721157ae682-883b187761dmr9015347b3.42.1789051731155; Thu, 10 Sep 2026
- 07:48:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AClqOoG8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E541F00893;
+	Thu, 10 Sep 2026 15:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789052743;
+	bh=2qSXLjhAjygcr+iubfm3t6D+tdBAD9pO+lEAOs4Tgrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=AClqOoG8fAdd+WfzrsI/BVzr5vLb7kNVYRigDBFAzV18qOToEIlxubozh0+9DY7IR
+	 3v1hDPcfcfi/rCkmuUy2hqqssTWP3Pkss9oR9rAdmADcf+OzRlbE40BSxPNR926s3E
+	 fDLPRm9CJGDrQGsKMHdwL/q6h9RJIPGXAc0jnT+J0JMFBaEspFW92JtS5NQiaNov9V
+	 UT5AfZd7Edlgsg/cFuDz1EE7ajLmEyEBNceBDW9KHEZUNn6q/X7JskX6Va4Nnvo22J
+	 4QLhlC3klw9Qy4NS8KdiZWNn+h9GdpFJQCqXNngyck3wnegzKTvm4pPgu43J2uVV02
+	 IY03/t/R7ixCw==
+Date: Thu, 10 Sep 2026 16:05:35 +0100
+From: Lee Jones <lee@kernel.org>
+To: Rong Zhang <i@rong.moe>
+Cc: Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ike Panhc <ikepanhc@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Vishnu Sankar <vishnuocv@gmail.com>,
+	Vishnu Sankar <vsankar@lenovo.com>, linux-leds@vger.kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 04/12] leds: trigger: Add offloaded() callback and
+ provide trigger_may_offload attribute
+Message-ID: <20260910150535.GG1051768@google.com>
+References: <20260902-leds-trigger-hw-changed-v6-0-55693cd78877@rong.moe>
+ <20260902-leds-trigger-hw-changed-v6-4-55693cd78877@rong.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Marcel Moosbrugger <marcelmoosbrugger@gmail.com>
-Date: Thu, 10 Sep 2026 16:48:39 +0200
-X-Gm-Features: AcwNN1WM_VnZ5aZPjuznbT7TLsBiCOIhoYyyVolPYFyCg5L86MoOXvG28Ov0rus
-Message-ID: <CABtUotPsNuAQERXacAs0fxrHVqa-Cxr4BFEED0xdE-nmwE=kgg@mail.gmail.com>
-Subject: Arrow Lake-H 285H: FATAL BERT records that are pure Intel SoC/PMC
- crashlogs - two raw blobs, asking for a decode
-To: david.e.box@linux.intel.com, xi.pardee@linux.intel.com, 
-	irenic.rajneesh@gmail.com
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260902-leds-trigger-hw-changed-v6-4-55693cd78877@rong.moe>
 
-Hello,
+On Wed, 02 Sep 2026, Rong Zhang wrote:
 
-I have a laptop that hard-freezes about once per 20 hours of uptime. Five of
-those freezes left FATAL BERT records consisting entirely of Intel SoC/PMC
-crashlog sections, and I now have two of the raw blobs. I cannot decode the
-payload and I do not think anyone outside Intel can.
+> There are multiple triggers implementing hardware control. However, the
+> LED trigger core doesn't really know the hardware control (offloaded)
+> state since the coordination is done directly between the trigger and
+> the LED driver. It can only assume private triggers as offloaded and
+> generic ones as not offloaded.
+> 
+> Add an offloaded() callback so that triggers can report their offloaded
+> states to the LED trigger core. When unimplemented, it defaults to true
+> for private triggers and false for generic ones to keep the current
+> behavior unchanged.
+> 
+> With that, provide a new attribute "trigger_may_offload", so that
+> userspace can determine:
+> 
+> - if the LED device supports hardware control (supported => visible)
+> - which trigger is the hardware control trigger selected by the LED
+>   device
+> - if the trigger is selected ("<foo_trigger>")
+> - if the trigger is offloaded ("[foo_trigger]")
+> 
+> Note: the documentation describes the attribute as "returning a list"
+> despite the LED core currently only supports one hardware control
+> trigger per LED device. This is intentional to make the attribute
+> extensible in the future without breaking userspace.
+> 
+> Acked-by: Ike Panhc <ikepanhc@gmail.com>
+> Signed-off-by: Rong Zhang <i@rong.moe>
+> ---
+> Changes in v6:
+> - Update Date: and KernelVersion: for the document of
+>   /sys/class/leds/<led>/trigger_may_offload
+> 
+> Changes in v3:
+> - Rearrange the series so that the code using the offloaded() callback is
+>   introduced before the driver implementation (thanks Thomas Weißschuh)
+> - Reword documentation (ditto)
+> - Adopt guard() and lockdep (ditto)
+> - Adopt __led_trigger_is_hw_controlled() from newly-integrated PATCH 1
+> ---
+>  Documentation/ABI/testing/sysfs-class-led | 22 ++++++++++++++++++++++
+>  Documentation/leds/leds-class.rst         | 20 ++++++++++++++++++++
+>  drivers/leds/led-class.c                  | 22 ++++++++++++++++++++++
+>  drivers/leds/led-triggers.c               | 30 ++++++++++++++++++++++++++++++
+>  drivers/leds/leds.h                       |  2 ++
+>  include/linux/leds.h                      |  1 +
+>  6 files changed, 97 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-led b/Documentation/ABI/testing/sysfs-class-led
+> index d4c918cc11a1..e3605fc55fa8 100644
+> --- a/Documentation/ABI/testing/sysfs-class-led
+> +++ b/Documentation/ABI/testing/sysfs-class-led
+> @@ -78,6 +78,28 @@ Description:
+>  		(which would often be configured in the device tree for the
+>  		hardware).
+>  
+> +What:		/sys/class/leds/<led>/trigger_may_offload
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=221923
+*_to_hw?
 
-ASUS ROG Zephyrus G16 GU605CW, Core Ultra 9 285H (family 6 model 197
-stepping 2), BIOS 311, microcode 0x122, Arch Linux. 22 freezes since
-2026-05-04, on every kernel tried up to 7.2.3. No console, no SysRq, no
-network; only a power-button hold recovers it. Every section in both records
-is type 81212a96-09ed-4996-9471-8d729c8e69ed with record GUID
-8f87f311-c998-4d9e-a0c4-6065518c4f6d. No IA32, memory or PCIe section, so
-this is not an MCA, not DRAM ECC and not PCIe.
+> +Date:		September 2026
+> +KernelVersion:	7.4
+> +Contact:	linux-leds@vger.kernel.org
+> +Description:
+> +		Names and states of triggers that may be offloaded to hardware.
+> +		Such triggers are also called "hardware control trigger" in some
+> +		context.
+> +
+> +		Only exists when the LED supports trigger offload.
+> +
+> +		Reading this file returns a list of triggers that are capable to
+> +		be offloaded. The optional brackets around the trigger name
+> +		indicate the state of the current trigger:
+> +
+> +		- `foo_trigger`: the trigger is not selected.
+> +		- `<foo_trigger>`: the trigger is selected, but falls back to
+> +		  software blink for some reason (e.g., incompatible trigger
+> +		  parameters)
+> +		- `[foo_trigger]`: the trigger is selected and offloaded to
+> +		  hardware.
+> +
+>  What:		/sys/class/leds/<led>/inverted
+>  Date:		January 2011
+>  KernelVersion:	2.6.38
+> diff --git a/Documentation/leds/leds-class.rst b/Documentation/leds/leds-class.rst
+> index 3913966cfdac..2d41a6db602c 100644
+> --- a/Documentation/leds/leds-class.rst
+> +++ b/Documentation/leds/leds-class.rst
+> @@ -242,6 +242,9 @@ ops and needs to declare specific support for the supported triggers.
+>  
+>  With hw control we refer to the LED driven by hardware.
+>  
+> +A sysfs attribute `trigger_may_offload` is provided for userspace to
+> +query supported triggers and their states.
+> +
+>  LED driver must define the following value to support hw control:
+>  
+>      - hw_control_trigger:
+> @@ -298,6 +301,15 @@ LED driver must implement the following API to support hw control:
+>                  Returns a pointer to a struct device or NULL if nothing
+>                  is currently attached.
+>  
+> +LED trigger should implement the following API to indicate hw control:
+> +    - offloaded:
 
-Two questions.
+hw_offloaded?
 
-1. Can someone map these crashlog sections to a failing IP block, or point
-   me to who can? Comparing the two records narrows it: their sections pair
-   one-to-one by the first payload dword, two sections are byte-identical
-   across two failures five days apart, four differ in under 3% of their
-   bytes, and two differ in 66% and 80%. So the ~83 dwords that differ
-   inside the near-identical sections are what changed between two
-   independent instances of the same fault. They are listed in the bug with
-   offsets and both values. That is as far as I can get blind.
+> +                return a boolean indicating if the trigger is currently
+> +                offloaded to hardware.
+> +
+> +                If a trigger doesn't implement this callback, the default
+> +                value will be true for private triggers and false for generic
+> +                ones.
+> +
+>  LED driver can activate additional modes by default to workaround the
+>  impossibility of supporting each different mode on the supported trigger.
+>  Examples are hardcoding the blink speed to a set interval, enable special
+> @@ -311,6 +323,14 @@ the end use hw_control_set to activate hw control.
+>  A trigger can use hw_control_get to check if a LED is already in hw control
+>  and init their flags.
+>  
+> +Alternatively, a private trigger can be implemented along with the LED driver if
+> +the LED's hardware control doesn't fit any generic trigger. To associate the
+> +private trigger with the LED classdev, their `trigger_type` must be the same. To
+> +declare that the private trigger provides hardware control for the associated
+> +LED classdev, set the `hw_control_trigger` string to the trigger's name. Since
+> +both the LED classdev and the private trigger are in the same LED driver, it's
+> +not necessary for them to coordinate via `hw_control_*` callbacks.
+> +
+>  When the LED is in hw control, no software blink is possible and doing so
+>  will effectively disable hw control.
+>  
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 39cc2f3ea63f..7e571bd1de5b 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -96,8 +96,30 @@ static const struct bin_attribute *const led_trigger_bin_attrs[] = {
+>  	&bin_attr_trigger,
+>  	NULL,
+>  };
+> +
+> +static DEVICE_ATTR_RO(trigger_may_offload);
+> +static struct attribute *led_trigger_attrs[] = {
+> +	&dev_attr_trigger_may_offload.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t led_trigger_is_visible(struct kobject *kobj,
 
-2. pmt_crashlog never binds here. The VSEC enumerates telemetry only
-   (intel_vsec.telemetry.0/1/2), there is no intel_vsec.crashlog device, and
-   /sys/class/intel_pmt/ has telem1..13 and nothing else. The PMC is clearly
-   capturing crashlogs since firmware publishes them through BERT. Is the
-   missing crashlog capability expected on Arrow Lake-H mobile? If it were
-   exposed, the driver that already exists could read this at runtime
-   instead of only on the boot after an unrecoverable failure.
+Why doesn't all of this live in the triggers file as well?
 
-This is not one machine: the same CPU and iGPU on a ThinkPad T14p (Fedora
-Discussion 183627) and an Arrow Lake desktop on Windows (Intel Community
-thread 1751966) show the same signature, the desktop one with the same
-0xdeadbeef-filled payload.
+> +				      struct attribute *attr,
+> +				      int idx)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +
+> +	if (attr == &dev_attr_trigger_may_offload.attr)
+> +		return led_cdev->hw_control_trigger ? attr->mode : 0;
+> +
+> +	return attr->mode;
+> +}
+> +
+>  static const struct attribute_group led_trigger_group = {
+>  	.bin_attrs = led_trigger_bin_attrs,
+> +	.attrs = led_trigger_attrs,
+> +	.is_visible = led_trigger_is_visible,
+>  };
+>  #endif
+>  
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index 804a04b326c4..de17a8bbb4d4 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -42,6 +42,10 @@ static bool __led_trigger_is_hw_controlled(struct led_classdev *led_cdev)
+>  	if (!led_cdev->trigger)
+>  		return false;
+>  
+> +	if (led_cdev->trigger->offloaded)
+> +		return led_cdev->trigger->offloaded(led_cdev);
+> +
+> +	/* Otherwise assume private triggers as always offloaded. */
 
-The bug sits under intel_idle because the one freeze that panicked did so on
-idle exit. I have since run intel_idle.max_cstate=2 for 79 hours of exposure
-and it froze anyway, so that lever is refuted here and the component is
-probably wrong. Please move the bug if there is a better home.
+s/as/are/
 
-I am happy to run patched kernels or any instrumentation you want, and I can
-supply further blobs - at the current rate there is a new one most weeks.
+>  	return led_cdev->trigger->trigger_type;
+>  }
+>  
+> @@ -341,6 +345,32 @@ void led_trigger_set_default(struct led_classdev *led_cdev)
+>  }
+>  EXPORT_SYMBOL_GPL(led_trigger_set_default);
+>  
+> +ssize_t trigger_may_offload_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct led_classdev *led_cdev = dev_get_drvdata(dev);
+> +	struct led_trigger *trig;
+> +	bool hit, offloaded;
+> +	int len;
+> +
+> +	guard(mutex)(&led_cdev->led_access);
+> +	guard(rwsem_read)(&led_cdev->trigger_lock);
+> +
+> +	trig = led_cdev->trigger;
+> +
+> +	offloaded = __led_trigger_is_hw_controlled(led_cdev);
+> +	hit = offloaded || (trig && !strcmp(led_cdev->hw_control_trigger, trig->name));
+> +
+> +	/* [offloaded] <active_but_not_offloaded> inactive */
 
-Thanks,
+Why do they have to live in different 'containers'?
 
->> DI Dr.techn. Marcel Moosbrugger, BSc
->> Computer Science - Researcher - Communicator
->> marcelmoos.com - linkedin.com/in/marcelmoos
+> +	len = sysfs_emit(buf, "%s%s%s\n",
+> +			 offloaded ? "[" : (hit ? "<" : ""),
+> +			 led_cdev->hw_control_trigger,
+> +			 offloaded ? "]" : (hit ? ">" : ""));
+> +
+> +	return len;
+> +}
+> +EXPORT_SYMBOL_GPL(trigger_may_offload_show);
+> +
+>  /* LED Trigger Interface */
+>  
+>  int led_trigger_register(struct led_trigger *trig)
+> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
+> index bee46651e068..b08a289397e4 100644
+> --- a/drivers/leds/leds.h
+> +++ b/drivers/leds/leds.h
+> @@ -27,6 +27,8 @@ ssize_t led_trigger_read(struct file *filp, struct kobject *kobj,
+>  ssize_t led_trigger_write(struct file *filp, struct kobject *kobj,
+>  			const struct bin_attribute *bin_attr, char *buf,
+>  			loff_t pos, size_t count);
+> +ssize_t trigger_may_offload_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf);
+>  
+>  extern struct rw_semaphore leds_list_lock;
+>  extern struct list_head leds_list;
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index d778709f5b1b..bee2b4309a09 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -485,6 +485,7 @@ struct led_trigger {
+>  	const char	 *name;
+>  	int		(*activate)(struct led_classdev *led_cdev);
+>  	void		(*deactivate)(struct led_classdev *led_cdev);
+> +	bool		(*offloaded)(struct led_classdev *led_cdev);
+>  
+>  	/* Brightness set by led_trigger_event */
+>  	enum led_brightness brightness;
+> 
+> -- 
+> 2.55.0
+> 
+
+-- 
+Lee Jones
