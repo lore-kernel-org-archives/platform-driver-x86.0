@@ -1,335 +1,583 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F7458FD26
-	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 18:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D09A36212C
+	for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 19:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789066573; cv=fail; b=CDdhpoUMkQjbtR40gU6ZySwUYLdQ7luaobempDvC3qyBSTA1nqgkJIdQEHJyWoKUpSV/uCAK/qZKaV9nDHXTnrrB5ezem0kHGglNk+Jyvmq3zqpmh7/gAUWZYB6IiCuYZkKIthcFh4/q7N7hz6ej5DcRX1XcMF3hMG66jr2/gw4=
+	t=1789067668; cv=pass; b=Eyd9tjo0Ss7BHVB3mfs8arsHO9ncf5HWlBLfNUFx+5NFWOIoVdKflD37rzhxY40pIYZEagw12dnzwn4Qyrn1gBdl6bQfai/inw8UOfnkbFWayJOcIN/Kj38LRxAtsVwwm+gq4da4qSUKXwET38TK/pHKz4zzjFAIYL1beV3J1zQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789066573; c=relaxed/simple;
-	bh=LpunQpg7dTyB1o52QRPbgBBsXu/IvCMgKzlnRJG274w=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WNqFjib05xZLlxoHjY12aZfsw3kNKnul1ktFKVfexgygMvy1ZwVK6oQfAp4jRKQf3p1Wk1NZQwgSGL9z4cyKfMZsUpE44euUazUmoWKSSceGRreO+5jDsuCuS1bMhSk2qqNn53PKlj4z2uHNmwkDlu6nI/Glj5bSPBDjAhdJj8A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qn162v7D; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789067668; c=relaxed/simple;
+	bh=cvS7IOof6i1Xi/NLdQmqFbT8Jx/Hm9q05dMIMNJ1fY4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=GP9gJ+6F3Q6P4Re/vOm4zbociJxlOESb4H/HYcEBBg0RMcLC7h1ZjDuAQMG+LBRlmybfepnSU9PcVBU9jmiHFEKlEEPbvP+6pfjumdEYCJZZPeHF+cFvHbYNpxyhtdLo0gFQ+lCHtsQAbAiDqEj6fNAZvW/mGLhVZ9ScbDrqqRo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BSTsPQ5h; arc=pass smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qn162v7D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789066571; x=1820602571;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=LpunQpg7dTyB1o52QRPbgBBsXu/IvCMgKzlnRJG274w=;
-  b=Qn162v7DmAdQtGRUNt4VXfI/sW83jgIS3Pwt6hvCjTDQ4Znvz/NVBdVz
-   Bs4I0dOFOCqERRBkVP2N6O2NSKygTc/PK9PJdINeaRsHdPqjQ2d/m6Kp5
-   KoGk0Gk2g7Y/B4qiX355iwVKRqkGORmXC8G2hIld8xUThqH8u9l2mRFy/
-   loDgtaQ2fD2tFANomDePqYgTV2j7G+DlDQ2og+xr3LLkXAdC5NbVQr65l
-   9hJBG5bnrypwto9p4grkHg1+iRHKc8j/Lyc4uTgM2/QgK/R7lC3NYUXDU
-   UHzEBt7fOIhELn+dA+m/YQfaCe5RvvS3gGC59IJ9BRpl88BRhHZ9Lj++O
-   w==;
-X-CSE-ConnectionGUID: c8ucBQbSR7qTQQ0tyWMFUA==
-X-CSE-MsgGUID: 5uF8FI8/QVuIXn9jbwsLmA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11901"; a="99856612"
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="99856612"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 11:56:10 -0700
-X-CSE-ConnectionGUID: +AAWOX+5SpWaMozdlmIIZg==
-X-CSE-MsgGUID: rPKSFPNmSm2q2ecmSJqq7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,95,1787036400"; 
-   d="scan'208";a="272227845"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2026 11:56:10 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 10 Sep 2026 11:56:09 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46 via Frontend Transport; Thu, 10 Sep 2026 11:56:09 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.6) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.46; Thu, 10 Sep 2026 11:56:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UcdmuxqDbOSvnJzEp/WASmpaIydGz7tlgnP6mEPWd9Cmvxfe8TeiyVPxKFx1gyOuqZofzxcL5dpuqxq2NJA0A8WRC7FmU7Nte7+Fv51Vaax3YE32+jEdZDg90bfHE4KgpN5EUILFDyZWNXgPWMjGrzaE73ssBf+ejLN/si4po/EYmNE02m7YNWy5Wn2SKyAmrGewzRPolxt8oEbDgN7q9569Qcj8XQJFOOqZaHu0AT/cEwoOUjrIWOH2xRaIDfAlUnoQPZIRLEj8hNr9Auio6UBmzwhnP1F6f0tEKXIA3H5sUnoWbqCEawDFu8sqpyl3bEemDdYqoLgDxgj6qC6eag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N9pM4s9ZJX0Ys6tHmyETbvFwghyucdpQgRuNufvpxp8=;
- b=jU/0HnDNsqKRITAOOPEaP+3O42PQGQUk3/OsxRajvhI8hhowJoRrfB0Ep3L508rFygV3ij3eCHuYSvT4Po+XvNwKGEkaHzUL9P5zsX7VpA5YbhtxGFS+FVEnq8wKQNqnY2T6wZBBkAPD2X3WFJbVbpkOLC1G87rb9cB7G9JYP51blyOUVL9ED8I2lm55/Ehs7PLg77DFMxkpcvKL6nayOUTfoscYI/aYWNLkzp/Y36gXize44HfUtGITCxSuDcDYkuAIjWzXgcYg8cZg7hc4FS7Fx9Rx9JMQ7ZqmNH9WEhJoLz3H94fS5pezIdiAhzTnZUe16EBqHUE7DlhNXiKh/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH0PR11MB5249.namprd11.prod.outlook.com (2603:10b6:610:e0::17)
- by DS4PPF2F49754B6.namprd11.prod.outlook.com (2603:10b6:f:fc02::1a) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.14; Thu, 10 Sep
- 2026 18:56:06 +0000
-Received: from CH0PR11MB5249.namprd11.prod.outlook.com
- ([fe80::a665:5444:d558:23c3]) by CH0PR11MB5249.namprd11.prod.outlook.com
- ([fe80::a665:5444:d558:23c3%6]) with mapi id 15.21.0406.007; Thu, 10 Sep 2026
- 18:56:06 +0000
-Message-ID: <babb052b-64f1-4fd4-9251-6759be728556@intel.com>
-Date: Fri, 11 Sep 2026 00:25:56 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 18/20] drm/xe/vsec: Add PMT GUID internal access
-To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-	<platform-driver-x86@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<hansg@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
-	<matthew.brost@intel.com>, <rodrigo.vivi@intel.com>,
-	<thomas.hellstrom@linux.intel.com>, <airlied@gmail.com>, <simona@ffwll.ch>,
-	<david.e.box@linux.intel.com>, <anoop.c.vijay@intel.com>,
-	<badal.nilawar@intel.com>, <matthew.d.roper@intel.com>,
-	<james.ausmus@intel.com>
-References: <20260909154739.1515514-22-michael.j.ruhl@intel.com>
- <20260909154739.1515514-40-michael.j.ruhl@intel.com>
-Content-Language: en-US
-From: "Poosa, Karthik" <karthik.poosa@intel.com>
-In-Reply-To: <20260909154739.1515514-40-michael.j.ruhl@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5PR01CA0076.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:1ad::17) To CH0PR11MB5249.namprd11.prod.outlook.com
- (2603:10b6:610:e0::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSTsPQ5h"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-9103228ef53so588526d6.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Sep 2026 12:14:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789067666; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pi7DXtH/mgyS9e3cpnB1IN7av1Rry72No0KlD/esbV3yZ2WWJeZ2yzojGGQ5kG0OCj
+         ujkd9yjUHzKarzT8mcdFRROAuKYDuLuVj0//rrg9GYBMSgOsJleJH9EHnm64vY8o2vTN
+         LRLnya1P5SVyYZcRtWzYaIQY6mjgoegaXyOop29tKUWzxYoMppMjhgBZUHK7QcujqN1j
+         3Xru6jU7CE6ertDRFdZMmQ4uC1Ao9kY54iLJXB47YHjjo2WveeyAMMxs7bsLfVmH21NZ
+         memkjxBhE/0r0++0K7/Xc9BisZZI+MN5uCY7l633eeHXT5i6YBGYD5tbHPNHFJM43o7F
+         aMFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
+        fh=+r32/9nwyqKGvxcb0QT78nK/SfLeOaXjO4BiBWT4ny8=;
+        b=VtaTGZ/m8JMs4TH6g56ww2ehv0BdBUWRWs/dtO3SexgeAV+pR1y3OA4ilRWoZNYxoq
+         vWj7G+40lA8iSiN6KceD8nzqZDXBXouuQZyqkIxB7RuGhiUF+FNg0PgbmEP9TKcHmaoS
+         JuJVriK8ViKjfvlZMlo4Gx3+FbOybomPmThpKON1p+YBYIPBIoafUIb5JEvNqbiDWc2R
+         kYbiCmqmYEFOQzH0jSBlvH0vlZgRn/pOpJL3qpex6xBL6FvUqxy6+epLrJyMn/9MqwXo
+         B2p5UvKtsYgIkEGtzBz4kh6I8YceKsaMbSPllA8t+Nf6Y6j7lfE0g4i+LiBCS4N71Kiu
+         Dkqw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789067666; x=1789672466; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
+        b=BSTsPQ5heUPyPVGRQkNYa+dzY3vB9iokgWwLOZ8q3pC/0pm3T8Yd4OHWyOtDdP8MFx
+         DXJW5tQ8/qY+Kw92DaOYXi0DznhK4Qk84KIhXCv95m6GFW6BudxSajMPF+bxCAYxL2mP
+         Nsm8jaqEIo5N/0GqR/z6drPdUDx/xnKp+zq0v47qe0/lB/kbSg+CnAh1MwfeH5sVFL/c
+         72IFWfiVm9fjOy64VhLOym4BdOdks4+UuXBODuLz+02zZxVIfRuR/nkn2riOEgErQEIw
+         fJhDZqS5FnDdnZ+q2rLCXreNGeR1mT5mewe57gZBcMMB7OJGUOP8RlvUfrIQsiCe02OI
+         zDug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789067666; x=1789672466;
+        h=content-transfer-encoding:content-type:to:subject:message-id:date
+         :from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=CsmhAGZ511xLKCbhHrz0yBkxu65Fa7Is/5gx5cOswys=;
+        b=rfW9lc63wRa+BtVKkKI4UE8A1qqmkCoLuIV5O7o5b0+MM64As7qOA0eOwj1adD1zIk
+         iJ+dArDQa4an9rVrypo0wn5U3hYSo/zD5VacpixF0g8R2vIYlrBmOqwwJ4HXiVMCwJXJ
+         4UkdsYFeA8C5wlArsOoJBJEujKzQYj6dIQ0eGT9fdc7RbQOLPIlKRgmHfOmIePqbCqWL
+         ggSFTRbyjrdWatM0tGri5yYfndKvKcUNUiLUeUncaydX7lk9WDMmnx4N3mYm19PQmCJg
+         88+voY49NWSGCwUvUzf6uL1uV8OAtnuAnTcs4l4KVqrXS58DzFUIX0omyr+d09RMiEv8
+         o9gw==
+X-Gm-Message-State: AFuF++loRzWyuS5q80OFcShwdtCzKmgX+QhzDF4aUW3XThN/1SEsR0YT
+	QeU+78+c/4Z6KKC/mL7bSzpkHb/M3WOOiPY2Qc7XCmsbMKzLeTQaFUjdOloqp4Z1hSGEds93gEs
+	Rz+dubjQXvwwPlydNdC4Tk5U1Tqa7rvXiPEwqwLh6szec
+X-Gm-Gg: AYBFou3ax8d5ui0RdVoBtk8H6PkTBopb2Qc+aWGsfxUPW8ETlMuSMjfLSdbcAlAH4nA
+	CvLRLQWUANXUQ5Zt5Ap54bDvufb8TnhCOlAAkJZO4g3dUZ7Q+W+nqknYp+kH8dqzZy7kiUhWLfF
+	lWStW3b5h6LP23nwI76CvpfpcF1X+rGtX7VBClH3bXqmakjBcHEG4CB4zwo+TMhwCxCtqsa2xwx
+	lZKo3FOlDMVan0OAN80pARxQeLZ24o2dcZsaidDtJqSXBMcQNoJZ4WlbDcXTMQN0K1ks0bJVwWm
+	Ft61gM2DwsqLYxHFccdo5EDPLZSbaxwZWYJU8nB5b8qFDXThqVUx+mwNpTRyBIpfaoQDVfSu7yl
+	1JhuoD7ZKY8WCoHXYCXxB
+X-Received: by 2002:a05:620a:4446:b0:939:6c9a:8f8d with SMTP id
+ af79cd13be357-939ea1dc406mr33474285a.28.1789067665479; Thu, 10 Sep 2026
+ 12:14:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR11MB5249:EE_|DS4PPF2F49754B6:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18c4f1b3-9f51-4f29-f30c-08df0f6d2b01
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|23010399003|1800799024|921020|10067099003|4143699003|11063799006|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: blTHu9tkI19+kKawDUed0XypfxDUojTgJvAAfz4bkwC6Ki6/oPBsakz/YfnAlKq8QoQtmziDjQNQYoHlK6f4MI8uq+7DitJLhS4J13HwLtc4cl8k9ak3MevZ8D/5E5M6EI7zBoBWmAi1czjyDhhOeWXEQZbms9y726TSf/DzbjrjWywKNfW47ZrW9Blp/mYg94iguKSUUvQrQhBYzkEa0lE70g3ooz3gWNZz/u8C2sZZk78UTVQa16epR0q6d+ZdSz2F3hgAUURG/P8WJ+VVtiZsCX9Egei8xbgAtiw35ZkrpS7E3rl6qe3R7CoiNV6VNdQZ0OMmjihgV9uY/yAT7B+Em+v6vgf4psJRAu3DeVbuPHnDji3Ydd9Ed+UlLk+g6QyJQlP6ilRp6Rn9dPZUxAwD7SLPT0+Aw4qm6Gm99pS0k5vz/xi71mW6WCP4psgTDKP6GLe5l3Fs1B/mJbLC3MfFGxAW94DqW1nkdX9ZByl8WYksEfcpb9LDwHASDx2s2Ir5AWc4mWcCvJrziE24uKXDDebxohUYwNFnokpLwACxIXpclIPPRXsMY0l+4sEozmZCxiBa3F7bMgPhcV1HKtLNBzjdG8kNOoI7/K+0HfxXByJVmh5VgbiUIj4eOYwnInJOeRtimuA3QQHpUS4IbZ3zav8rf/T+V+OOQDcQBrDBjtufXJhyr0eq4wCXqAmHIpbU7i+jsETExz2c0o+8FQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR11MB5249.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(1800799024)(921020)(10067099003)(4143699003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VXNzZm5BVGhwZi9QbDFidEc5SnAzVm1jYVhiMjdSQnl0T21naDhRWTcwNnll?=
- =?utf-8?B?TDRZR0o4M1FadlZSZ1pHTVY2aHVqR1RyTk55b0pCUUg2UXQ2eFc0OHlPWGor?=
- =?utf-8?B?Q0NTKzlFaGgwNUppc0xTencxaHVRdUhiS1pVVE9scHB1ZEY4cVA2bnZ0VTR6?=
- =?utf-8?B?YkRkM1BPMlJIblVGOG1pa0JrY0I2TW5kMTNqdW4rcFI2WFM0aXBIdWtPVzdl?=
- =?utf-8?B?bFd3Z0MzQlVHVC9NZUd3QmZhTXJSTUxwWlcwVXBRYnBDR3hoN1lieWc5aUhP?=
- =?utf-8?B?NUMzS0x5OUdRWERBeVgreWRIM1FZVVk5cC91MTFUUU16eUpBajlSamxxYVI2?=
- =?utf-8?B?cHNRNmhnSmdvUFF2NUF6WjJrSG1tRTIyYktIdDFMeHVZbzQ1SXluY0tlZGwv?=
- =?utf-8?B?a0ZRc1F5OFcwRGZ6WnB2TVZqQUpmUUJNWmVnaUdSOTFOUGtrSTY5akJrdVlr?=
- =?utf-8?B?THF5V3hIREw0YUk0ZDFQT1RtaGVNT1lyaTNEc3cyaFpzcEdwY3JKdnRlTlBi?=
- =?utf-8?B?VEw0TU1jUTRHVjUxSEpGUWx0WDM3cGR2dU8vbmQwdkZxUlNxcjFGSXYvYk1M?=
- =?utf-8?B?aWdwS04vUy9NSGJ2ZVBxWUUzMXQrd2lBVWRvK0pySWtDRDh5UC9tZmhkS1dl?=
- =?utf-8?B?cnVlYk9tUkUyRzdrL3R4SmNqakpaalB0YXlHMFZIZ1VLQW5LbExxS3J6ZElq?=
- =?utf-8?B?emxtTWZEN21rOHhLZWxScm1vZjIzbkhPQlBaZUhNUHROYXE2SXhqaG04YXdu?=
- =?utf-8?B?d2FtVGtnUkppV1hmd0RhSzl2VmZvWlBsTkRJVGNucVQzSVRreDN4M2dsbm83?=
- =?utf-8?B?dktaVlJraXNtMXhyTUxoVXJqNXRMbGhSeEh1WFY0SndUeHQ0bXh3MEZHWThX?=
- =?utf-8?B?L29wSTVtUk94cVZRMGFUVVpaSkdCLy9nZ3ZVaUV4VUlRWmVVNVBKaGZPSmNB?=
- =?utf-8?B?Y3lqZUpwaDY4Rm9PQXM5WTNZR1pmNGdRaVdWUW5aZU81TVE4UzMxKzFlR3Iv?=
- =?utf-8?B?TGthNllRbndHZEJueXhBSFlUS2FTZ2JEbmIyQWhsamFmQlJCTUN1eHFJSlhh?=
- =?utf-8?B?MlNSbTUyM3MrS29DL0dSZEtveTdhVWhKSzZkY0pJYmNFREpRMXcwWklkQ1V6?=
- =?utf-8?B?b1FUTit3RWNjNkRxUkZ5Y29IMlZRdFNULzQ4N0ErbUZXU0hmbXR5L1N0M3l2?=
- =?utf-8?B?STNSRmk3b0MyM2pKUlZydUord3g3RlV3Sk1zUjhibjREdXpTUFhuV0tQNHpq?=
- =?utf-8?B?WlZPT2pCaDI2WHQ3dmUvd1JmK2dIMmZ3eUM1R2E5eXNqelpKTVUyaGpGRUJI?=
- =?utf-8?B?clN0cGhwa3A0dUlJZVVZcHA4QUhFSk5Ob0lJVEd5TjVtbnpicW9kQ0FaUE1k?=
- =?utf-8?B?ZDhnTVkrYVBNTUo4VVJXL0VBSEFIODU2czFHUFhEWkFLc3c2K3lwQ05DZ3JR?=
- =?utf-8?B?a1Y1dER4TStiNUhIZlNIMG0xZllBOGJmVVRMTXhDK2RpaFB5R3R4YnFHYjI2?=
- =?utf-8?B?eVMzYW4yWmFVdHNXSjFNVkVGM3JBUlVIMGNyOGZ4QjBVVnI1YlVFcC9uaEpn?=
- =?utf-8?B?d3V2eG8zVjllTXNDcUYrYUtwc1BPRGdBRU4zck5qa0llOTg3U1pud1NTcmpq?=
- =?utf-8?B?eTE2dThmR1VLbTJFYlJzRFJOTGxzNythaloyWG82MVRXa1ZBSElEZjJKVEtk?=
- =?utf-8?B?blBEU0VYU0dadFVEQ3dLNVVMNTJsYmd2U3JobnRNMWRxd1BVajdGVGZhQ0x1?=
- =?utf-8?B?ZXhXc3V0SFJqalM3d3FGTm9BaEhmL2JmdTVUZ0d3bTAxTllsZTFHQThVeG8w?=
- =?utf-8?B?dkFpbW5STnVEaW5yL2p2Y29jZUJrV3k2TENUNlZHZEdDNnM3TGZ4dkNZYUQ4?=
- =?utf-8?B?cHNYOWZrUDFlR2xwbUtTT1pQczhmb1YwVzFmMktObnJxWnFLcU1ZcFFGUVNx?=
- =?utf-8?B?cHZiQjRUNTJzRHNuSmNiN3diVHd5MWU1cTlzSjZZN29wRG1OY0g5QVVuVjVB?=
- =?utf-8?B?NE5idDRXWllHd3NLZmJ4eXBDRE5ldnV6SUw3NWxsakpQWEFRM05qQUZMTlRu?=
- =?utf-8?B?TWJhVFVHdFp5aFJFUEtndmViZUNqZEtkTHg3MVBnVWNPcXVMWCtBRGZYbDlj?=
- =?utf-8?B?SUVmd2ZyTGE3WC9DZkx0c3dTZEg1QjFxcXR5dnJ4ZnhpcDNRWE9oZmRvQVE2?=
- =?utf-8?B?ZVFweXJoUTZQeVJURUJiWnpGRDh4eVppb1JCZHE2MnpacXh0MlNtKzk2cUxN?=
- =?utf-8?B?OTd2clpTVnA3Q1JrUDBjRnZZYUsxcjFpTWZYMHVYajMzcXRLTjFiMlBJRnpG?=
- =?utf-8?B?Zjc3eG5tanpYNUU5WVkvUjRIS1ZTczFzaEhEYzFtaEVuM3BoL1JGdz09?=
-X-Exchange-RoutingPolicyChecked: vZpzq2ds5UUuWIrxn4pr0vRAcqgd+EIxg5roIpTXPyrCLTZ8yC9FdoDysuvtLJeHoNq4WaYoZdHGi/jGDDr8K/lGKnwnaMks71x8a8Y9DhYWDJOQi8pq4O9CRHJR14U1Er4mNk22mLkxhbfJBs+BG+MilFvN4gMtU+lnPFV4/L3lxBSyhcIWlVgaotjSo+MhRq7lWg9BRutVgZlIvpoRhuNWYsb2KUathr6zWmudZ5yw0MYjLb9hBxNXgnXmVZb8CxXLBcYkEq7NpH9OdhG1PqrvRSV5u6wOT7Gnj2nKyC45MtN0bDKm20f+4fXvlzHnXmL8/CsgAY2BHuZ6K+xb7A==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18c4f1b3-9f51-4f29-f30c-08df0f6d2b01
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR11MB5249.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2026 18:56:06.1099
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 64mJSKDXRnyeE7HRsusU/D8Xfua5lf4k9wx7qX+m5Y7kmPSM7xrMuxIm4FVjH/rIvKzawSfgEcwvSKowqfHQRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF2F49754B6
-X-OriginatorOrg: intel.com
+From: Abdalrhman Ahmed Mohamed Refaat <mebecausehewasanoop72@gmail.com>
+Date: Thu, 10 Sep 2026 22:14:14 +0300
+X-Gm-Features: AcwNN1WdViNoEKbeDKLVw2OTEI4ERzTfRwDkB0kYb1w3_tFjvNpz3OAdYsYMYCA
+Message-ID: <CAGJopWKOPVKpQKwh0J+NUig35gixh6eOJDxeXYyZSM83KGSk7w@mail.gmail.com>
+Subject: =?UTF-8?Q?=5BBUG=5D_ACPI_=2F_NVPCF=3A_NPCF_SSDT_returns_zeroed_power_b?=
+	=?UTF-8?Q?udget_=E2=80=94_Dynamic_Boost_stuck_at_VBIOS_default?=
+To: platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+**Problem Description**
 
-On 09-09-2026 21:17, Michael J. Ruhl wrote:
-> Xe accesses the PMT infrastructure directly. The current usage is
-> supported ONLY by BMG devices.
->
-> CRI has further requirements for access.
->
-> Add the platform id to the GUID register define and use that for the
-> register access.
->
-> Add an API to allow access the GUID based on the platform.
->
-> Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-> ---
->   drivers/gpu/drm/xe/regs/xe_pmt.h     |  4 ++-
->   drivers/gpu/drm/xe/xe_debugfs.c      |  2 +-
->   drivers/gpu/drm/xe/xe_device_types.h |  2 ++
->   drivers/gpu/drm/xe/xe_hwmon.c        |  2 +-
->   drivers/gpu/drm/xe/xe_pcode.c        |  2 +-
->   drivers/gpu/drm/xe/xe_vsec.c         | 46 ++++++++++++++++++++++++++++
->   drivers/gpu/drm/xe/xe_vsec.h         |  1 +
->   7 files changed, 55 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/xe/regs/xe_pmt.h b/drivers/gpu/drm/xe/regs/xe_pmt.h
-> index 2f6658395587..fb5b5a8648ba 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_pmt.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_pmt.h
-> @@ -10,7 +10,7 @@
->   #define BMG_PMT_BASE_OFFSET		0xDB000
->   #define BMG_DISCOVERY_OFFSET		(SOC_BASE + BMG_PMT_BASE_OFFSET)
->   
-> -#define PUNIT_TELEMETRY_GUID		XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
-> +#define BMG_PUNIT_TELEMETRY_GUID	XE_REG(BMG_DISCOVERY_OFFSET + 0x4)
->   #define BMG_ENERGY_STATUS_PMT_OFFSET	(0x30)
->   #define	ENERGY_PKG			REG_GENMASK64(31, 0)
->   #define	ENERGY_CARD			REG_GENMASK64(63, 32)
-> @@ -24,6 +24,8 @@
->   /* for CRI discovery and telemetry are in an indexed window */
->   #define CRI_PMT_OFFSET			(SOC_BASE + XE_PMT_BASE_OFFSET)
->   
-> +#define CRI_PUNIT_TELEMETRY_GUID	XE_REG(CRI_PMT_OFFSET + 0x4)
-> +
->   #define BMG_MODS_RESIDENCY_OFFSET		(0x4D0)
->   #define BMG_G2_RESIDENCY_OFFSET		(0x530)
->   #define BMG_G6_RESIDENCY_OFFSET		(0x538)
-> diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-> index a7021a1b025f..ab666f6cf55d 100644
-> --- a/drivers/gpu/drm/xe/xe_debugfs.c
-> +++ b/drivers/gpu/drm/xe/xe_debugfs.c
-> @@ -153,7 +153,7 @@ static void read_residency_counter(struct xe_device *xe, struct xe_mmio *mmio,
->   	int ret;
->   
->   	ret = xe_pmt_telem_read(xe->drm.dev,
-> -				xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
-> +				xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID),
->   				&residency, offset, sizeof(residency));
->   	if (ret != sizeof(residency)) {
->   		if (ret != -EAGAIN)
-> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-> index fe0ed535766e..dcdd971bfa52 100644
-> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> @@ -474,6 +474,8 @@ struct xe_device {
->   		struct delayed_work work;
->   		/** @pmt.retry_count: late-bind probe retry */
->   		u32 retry_count;
-> +		/** @pmt.punit_guid_cache: cache of the PUINT GUID */
-> +		u32 punit_guid_cache;
->   	} pmt;
->   
->   	/** @soc_remapper: SoC remapper object */
-> diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
-> index ecd52a04175d..d53185d71a49 100644
-> --- a/drivers/gpu/drm/xe/xe_hwmon.c
-> +++ b/drivers/gpu/drm/xe/xe_hwmon.c
-> @@ -519,7 +519,7 @@ xe_hwmon_energy_get(struct xe_hwmon *hwmon, int channel, long *energy)
->   		u64 pmt_val;
->   
->   		ret = xe_pmt_telem_read(hwmon->xe->drm.dev,
-> -					xe_mmio_read32(mmio, PUNIT_TELEMETRY_GUID),
-> +					xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID),
->   					&pmt_val, BMG_ENERGY_STATUS_PMT_OFFSET,	sizeof(pmt_val));
->   		if (ret != sizeof(pmt_val)) {
->   			if (ret != -EAGAIN)
-> diff --git a/drivers/gpu/drm/xe/xe_pcode.c b/drivers/gpu/drm/xe/xe_pcode.c
-> index 8f9afa0d9440..48e8f169af40 100644
-> --- a/drivers/gpu/drm/xe/xe_pcode.c
-> +++ b/drivers/gpu/drm/xe/xe_pcode.c
-> @@ -369,7 +369,7 @@ int xe_get_pcode_version(struct xe_device *xe, struct xe_pcode_version *version)
->   	guard(xe_pm_runtime)(xe);
->   
->   	ret = xe_pmt_telem_read(xe->drm.dev,
-> -				xe_mmio_read32(xe_root_tile_mmio(xe), PUNIT_TELEMETRY_GUID),
-> +				xe_mmio_read32(xe_root_tile_mmio(xe), BMG_PUNIT_TELEMETRY_GUID),
->   				(u64 *)version, PUNIT_VERSION_OFFSET, sizeof(*version));
->   	if (ret != sizeof(*version)) {
->   		if (ret != -EAGAIN)
-> diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-> index bf75adb73f27..1c0d35232f0f 100644
-> --- a/drivers/gpu/drm/xe/xe_vsec.c
-> +++ b/drivers/gpu/drm/xe/xe_vsec.c
-> @@ -573,6 +573,52 @@ static void vsec_disable_late_bind_work(void *arg)
->   		xe_pm_runtime_put(xe);
->   }
->   
-> +int xe_vsec_get_guid(struct xe_device *xe, u32 *guid)
-> +{
-> +	struct xe_mmio *mmio = xe_root_tile_mmio(xe);
-> +	int ret = 0;
-> +
-> +	if (IS_SRIOV_VF(xe))
-> +		return -EINVAL;
-> +
-> +	if (!xe_pm_runtime_get_if_active(xe))
-> +		return -ENODATA;
-> +
-> +	mutex_lock(&xe->pmt.lock);
-> +
-> +	if (xe->pmt.punit_guid_cache) {
-> +		*guid = xe->pmt.punit_guid_cache;
-> +		goto unlock;
-> +	}
-> +
-> +	switch (xe->info.platform) {
-> +	case XE_BATTLEMAGE:
-> +		*guid = xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID);
-> +		break;
-> +
-> +	case XE_CRESCENTISLAND:
-> +		xe->soc_remapper.set_telem_region(xe, CRI_IDX_TELEM_DISCOVERY);
-> +		*guid = xe_mmio_read32(mmio, CRI_PUNIT_TELEMETRY_GUID);
-> +		break;
-> +
-> +	default:
-> +		*guid = 0;
-> +		drm_err(&xe->drm, "Unsupported platform: %u\n", xe->info.platform);
-> +		ret = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	/* the GUID is static, read once and cache for all requests */
-> +	if (*guid)
-> +		xe->pmt.punit_guid_cache = *guid;
-> +
-> +unlock:
-> +	mutex_unlock(&xe->pmt.lock);
-> +	xe_pm_runtime_put(xe);
-> +
-> +	return ret;
-> +}
-> +
->   /**
->    * xe_vsec_init - Initialize resources and add intel_vsec auxiliary
->    * interface
-> diff --git a/drivers/gpu/drm/xe/xe_vsec.h b/drivers/gpu/drm/xe/xe_vsec.h
-> index c4a1e2fc67d8..50187fdc1207 100644
-> --- a/drivers/gpu/drm/xe/xe_vsec.h
-> +++ b/drivers/gpu/drm/xe/xe_vsec.h
-> @@ -10,6 +10,7 @@ struct device;
->   struct xe_device;
->   
->   int xe_vsec_init(struct xe_device *xe);
-> +int xe_vsec_get_guid(struct xe_device *xe, u32 *guid);
->   int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset, u32 count);
->   
->   #endif
-LGTM.
-Reviewed-by: Karthik Poosa <karthik.poosa@intel.com>
+On the Lenovo LOQ Essential 15IRX11 (83SC) with RTX 5050 (GB207M, 10DE:2D98=
+),
+Dynamic Boost never activates. The GPU stays at the VBIOS default 35W inste=
+ad of
+boosting to 65W (50W TGP + 15W PPAB).
+
+The root cause is that the stock BIOS NPCF SSDT returns zeroed power
+budget fields
+in all NVPCF DSM subfunctions. The driver constructs the PMO
+successfully (func 0x00
+bit 0 IS set), but all downstream budget data is zeroed =E2=80=94 so Dynami=
+c
+Boost offsets
+are computed as 0W and the GPU never leaves VBIOS defaults.
+
+This was confirmed on Windows 11 with stock BIOS as well =E2=80=94 same 45W
+flatline. The
+bug is in the ACPI tables, not the driver.
+
+**System Specifications**
+
+    Machine:        Lenovo LOQ Essential 15IRX11, type 83SC
+    BIOS:           SECN22WW (Insyde H2O, 2026-05-21)
+    GPU:            NVIDIA GeForce RTX 5050 Laptop GPU, GB207M die
+    GPU PCI ID:     10DE:2D98 (SubSystem 0x8FFE17AA)
+    GPU Arch:       Blackwell
+    GPU Memory:     8151 MiB GDDR7
+    VBIOS Version:  98.07.27.00.43
+    VBIOS Limits:   TGP 50W / CTGP 35W / PPAB 15W / Max 65W
+    GPU Max Clocks: Graphics 3090 MHz / Memory 12001 MHz
+    PCIe:           Gen5 x16 max, Gen1 x8 current
+    CPU:            Intel Core i5-13450HX (Raptor Lake-HX, 10C/16T)
+    CPU Power:      PL1 configurable 25=E2=80=9360W, PL2 configurable 40=E2=
+=80=9385W
+    Kernel:         7.2.3-1-cachyos (x86_64, CONFIG_ACPI_TABLE_UPGRADE=3Dy)
+    NVIDIA Driver:  610.57.04 (open, nvidia-open)
+    GSP Firmware:   610.57.04
+    nvidia-powerd:  v2.0 (build 1)
+    Bootloader:     Limine (UEFI)
+
+**ACPI Table Inventory**
+
+The firmware exposes 38 CB-01 tables via XSDT. Key tables:
+
+    XSDT #  Type   Size      OEM Table ID  Contents
+    ------  ----   --------  ------------  --------
+    1       SSDT   86,813B   CB-01         Large peripheral SSDT
+    2       SSDT   262B      CB-01         Small auxiliary
+    3       SSDT   5,709B    CB-01         Peripheral config
+    4       SSDT   7,946B    CB-01         NPCF + GPS + PEGP =E2=80=94 the =
+buggy table
+    12      DSDT   660,250B  CB-01         Main DSDT (has
+External(NPCF) + Notify(NPCF))
+    5=E2=80=9322    SSDT   varies    CB-01         Remaining CB-01 tables
+
+All 22 CB-01 SSDTs share the identity tuple (SSDT, LENOVO, CB-01) with
+OEM Revision
+0x01. The NPCF-carrying table is SSDT #4 in XSDT order (0-indexed: #3).
+
+**NPCF Table Structure (7,946 bytes)**
+
+The NPCF SSDT contains:
+
+1. PEGP OperationRegions =E2=80=94 VBOR, NOPR (0x7387C018, 0x2027 bytes), H=
+GOP
+2. PEG1/PEGP scope =E2=80=94 RPCX config space, PEGP methods including GPS
+3. Scope(\_SB) Device(NPCF) =E2=80=94 NVDA0820, \_DSM with UUID
+   36b49710-2483-11e7-9598-0800200c9a66
+4. PEGP \_DOD/MXMX/MXDS/MXM =E2=80=94 display output methods
+
+The GPS method (lines 406=E2=80=93536) is inside PEGP scope. The NPCF devic=
+e
+(lines 844=E2=80=931186)
+is at \_SB scope.
+
+**Root Cause Analysis**
+
+***NPCF _DSM Structure***
+
+The NPCF device (\_SB.NPCF) implements
+_DSM(UUID=3D36b49710-2483-11e7-9598-0800200c9a66,
+rev=3D0x200) with these subfunctions:
+
+    Subfunc  Name                          Purpose
+    -------  ----                          -------
+    0x00     GET_SUPPORTED                  Bitmask of supported subfunctio=
+ns
+    0x01     GET_STATIC_CONFIG_TABLES       Static config (checksum-validat=
+ed)
+    0x02     GET_DYNAMIC_PARAMS             Dynamic power budget
+(TGPA/TPPA/MAGA)
+    0x08     GET_DC_SYSTEM_POWER_LIMITS     DC battery power limits (JPAC)
+
+***What the Driver Does With Each Subfunction***
+
+func 0x00 (client_resource.c:2942-3002):
+- Returns Buffer(4) =E2=80=94 bitmask of supported subfunctions
+- Driver tests only bit 0
+(FLD_TEST_DRF(..._FUNC_GET_SUPPORTED_IS_SUPPORTED, _NO, ...))
+- If bit 0 =3D 1 =E2=86=92 PMO constructs, driver proceeds to func 0x02
+- Stock BIOS returns Buffer(4){0xBF,0x06,0x00,0x00} =E2=80=94 bit 0 IS set
+- So driver enters dynamic boost path, but all data is zeroed
+
+func 0x02 (client_resource.c:3100-3173):
+Returns a 49-byte buffer with this layout:
+
+    Offset  Size  Field         Description
+    ------  ----  ------------  -----------
+    0x00    1     headerSize    Must be 0x05
+    0x01    1     commonSize    Must be 0x10
+    0x02    1     entrySize     Must be 0x1C
+    0x03    1     version       Must match driver's requested version
+    0x04    1     entryCount    Number of controller entries (1 on LOQ)
+    --- common section (0x10 bytes) ---
+    0x05    2     TGPA          CTGP AC offset in 125mW units
+    0x07    2     TGPD          CTGP DC offset
+    --- entry section (0x1C bytes per entry) ---
+    0x19    2     TPPA          Target PP AC offset
+    0x1B    2     TPPD          Target PP DC offset
+    0x1D    2     MAGA          Max AC GPU offset
+    0x21    2     MIGA          Max idle GPU offset
+    0x25    2     DROP          Delta response offset
+    0x29    4     LTBC          Long-term budget cap
+    0x2D    4     STBC          Short-term budget cap
+
+The driver validates at client_resource.c:3121-3135:
+
+    if ((headerOut.headerSize !=3D 0x05) ||
+        (headerOut.commonSize !=3D 0x10) ||
+        (headerOut.entrySize  !=3D 0x1C))
+    {
+        status =3D NV_ERR_INVALID_DATA;
+    }
+
+Stock BIOS returns all-zeroed fields =E2=80=94 TGPA=3D0x0000, TPPA=3D0x0000=
+, MAGA=3D0x0000.
+The driver computes:
+
+    ctgpOffsetmW =3D 125 * 0 =3D 0W       =E2=80=94 no CTGP boost
+    targetTppOffsetmW =3D 125 * 0 =3D 0W   =E2=80=94 no PP offset
+    maxOutputOffsetmW =3D 125 * 0 =3D 0W   =E2=80=94 no max output boost
+
+Result: Dynamic Boost is "supported" (bit 0 set) but all offsets are
+0W. GPU stays
+at VBIOS default 35W.
+
+func 0x01 =E2=80=94 14-byte static config with two's complement checksum:
+- Sum all bytes except the last
+- Negate: (~sum) + 1 (one-byte two's complement)
+- Must equal the last byte
+- Stock BIOS: checksum 0xAB, data correct
+
+func 0x08 =E2=80=94 22-byte DC system power limits (only used on battery, n=
+ot
+relevant to
+AC dynamic boost)
+
+***GPS Pipeline Issues (Secondary)***
+
+The GPS (GPU Power Steering) method in the same SSDT has three
+additional problems:
+
+1. GPSS guard blocks GPS calls: PEGP's _DSM checks If ((GPSS !=3D Zero)) be=
+fore
+   dispatching to GPS(). GPSS is a field in an OperationRegion (NOPR
+at 0x7387C018)
+   that may not be mapped when _INI runs. The nvidia driver probes GPS at b=
+oot
+   before NPCF's _INI sets GPSS=3D1.
+
+2. Missing GETPPL (func 0x24): The GPS switch statement has no Case(0x24), =
+so it
+   falls through to Default =E2=86=92 Return(0x80000002). The driver's
+   platform_request_handler_ctrl.c:629-641 expects a 12-byte buffer
+   {Version=3D0x00010000, PL1, PL2}. Without it, NV_ERR_INVALID_DATA fires =
+at
+   line 2174.
+
+3. GPSP buffer too small: The SSDT allocates Buffer(0x28) (40 bytes), but t=
+he
+   driver's PFM_REQ_HNDLR_PSHAREDATA struct is 44 bytes (0x2C). The ppmd fi=
+eld
+   at offset 0x28 is outside the buffer. The PPMD sensor is never populated=
+,
+   causing NV_ERR_INVALID_DATA at line 2117.
+
+**Evidence**
+
+Stock BIOS func 0x02 return (49 bytes):
+
+    TGPA (offset 0x05): 0x0000 =3D 0W    =E2=86=90 should be 65W (0x0208)
+    TGPD (offset 0x07): 0x0000 =3D 0W
+    TPPA (offset 0x19): 0x0000 =3D 0W    =E2=86=90 should be 135W (0x0438)
+    MAGA (offset 0x1D): 0x0000 =3D 0W    =E2=86=90 should be 120W (0x03C0)
+
+func 0x00 return: Buffer(4){0xBF,0x06,0x00,0x00} =E2=80=94 bit 0 IS set, so
+PMO constructs.
+But all downstream func 0x02/0x01 fields are zeroed.
+
+nvidia-smi after boot (stock):
+
+    Current Power Limit:  35.00W  (VBIOS default =E2=80=94 never boosts)
+    Default Power Limit:  35.00W
+    Max Power Limit:      65.00W  (hardware maximum, never reached)
+    Requested Power Limit: N/A    (nvidia-powerd never requests boost)
+
+nvidia-powerd: Runs, DBus connected, zero activity logs. Falls back to
+"SBIOS support not found for NVPCF GET_SUPPORTED" =E2=86=92 default TPP.
+
+dmesg:
+
+    NVRM: GPU0 PlatformRequestHandler failed to get target temp from SBIOS
+          @ platform_request_handler_ctrl.c:2174
+    NVRM: GPU0 PlatformRequestHandler failed to get platform power
+mode from SBIOS
+          @ platform_request_handler_ctrl.c:2117
+
+GPS func 0x24 (GETPPL): Returns 0x80000002 (not implemented =E2=80=94
+Case(0x24) missing)
+
+GPS func 0x2A (PSHAREPARAMS): Returns 40-byte buffer but RETN=3D0x00000000 =
+=E2=80=94 no
+sensors declared, PPMD never populated
+
+**Fix Description**
+
+ACPI SSDT override via CONFIG_ACPI_TABLE_UPGRADE initrd mechanism. Two chan=
+ges:
+
+***1. NPCF Device Embedded in DSDT***
+
+Embed Device(NPCF) at Scope(\_SB) in the DSDT. The nvidia-acpi driver hardc=
+odes
+pathname "\_SB.NPCF._DSM" (nv-acpi.c:785-793) =E2=80=94 NPCF must be at \_S=
+B scope.
+
+Complete NPCF device with corrected budgets:
+
+    Scope (\_SB)
+    {
+        Device (NPCF)
+        {
+            Name (\_HID, "NVDA0820")
+            Name (\_UID, "NPCF")
+            Name (\_STA, 0x0F)
+
+            Method (\_INI, 0, NotSerialized)
+            {
+                If (CondRefOf (\_SB.PC00.PEG1.PEGP.GPSS))
+                    ^^PC00.PEG1.PEGP.GPSS =3D One
+                If (CondRefOf (\_SB.PC00.PEG1.PEGP.NPCS))
+                    ^^PC00.PEG1.PEGP.NPCS =3D One
+            }
+
+            Method (\_DSM, 4, Serialized)
+            {
+                If ((Arg0 =3D=3D ToUUID ("36b49710-2483-11e7-9598-0800200c9=
+a66")))
+                {
+                    Return (NPCF (Arg0, Arg1, Arg2, Arg3))
+                }
+                Return (Buffer (One) { 0x00 })
+            }
+
+            Method (NPCF, 4, NotSerialized)
+            {
+                Switch (ToInteger (Arg2))
+                {
+                    Case (Zero)
+                    {
+                        Return (Buffer (4)
+                        {
+                            0x07, 0x01, 0x00, 0x00
+                        })
+                    }
+                    Case (One)
+                    {
+                        Return (Buffer (0x0E)
+                        {
+                            0x20, 0x03, 0x01, 0x00, 0x25, 0x04, 0x05,
+                            0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0xAB
+                        })
+                    }
+                    Case (0x02)
+                    {
+                        Name (PBD2, Buffer (0x31)
+                        {
+                            0x25, 0x05, 0x10, 0x1C, 0x01
+                        })
+                        CreateWordField (PBD2, 0x05, TGPA)
+                        CreateWordField (PBD2, 0x07, TGPD)
+                        CreateWordField (PBD2, 0x19, TPPA)
+                        CreateWordField (PBD2, 0x1B, TPPD)
+                        CreateWordField (PBD2, 0x1D, MAGA)
+                        CreateWordField (PBD2, 0x21, MIGA)
+                        TGPA =3D 0x0208   // 65W
+                        TPPA =3D 0x0438   // 135W
+                        MAGA =3D 0x03C0   // 120W
+                        Return (PBD2)
+                    }
+                    Case (0x08)
+                    {
+                        Return (Buffer (0x16)
+                        {
+                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                            0x00
+                        })
+                    }
+                }
+                Return (Buffer (One) { 0x00 })
+            }
+        }
+    }
+
+Budget values explained:
+
+    TGPA =3D 0x0208 =E2=86=92 520 =C3=97 125mW =3D 65,000mW =3D 65W (TGP + =
+CTGP + PPAB)
+    TPPA =3D 0x0438 =E2=86=92 1080 =C3=97 125mW =3D 135,000mW =3D 135W (tot=
+al platform
+power budget)
+    MAGA =3D 0x03C0 =E2=86=92 960 =C3=97 125mW =3D 120,000mW =3D 120W (max =
+AC GPU allocation)
+
+The driver extracts these at client_resource.c:3160-3173:
+
+    pParams->ctgpOffsetmW =3D (NvS32)125 *
+(NvS16)DRF_VAL(..._CMD0_CTGP_AC_OFFSET, commonOut.param0);
+    pParams->targetTppOffsetmW =3D (NvS32)125 *
+(NvS16)DRF_VAL(..._CMD0_SIGNED0, entriesOut.param1);
+    pParams->maxOutputOffsetmW =3D (NvS32)125 *
+(NvS16)DRF_VAL(..._CMD0_SIGNED0, entriesOut.param2);
+
+***2. GPS Pipeline Fix (SSDT#4)***
+
+The GPS method in the NPCF SSDT needs three patches:
+
+a) Remove GPSS guard from _DSM dispatcher (line 232):
+
+    // BEFORE:
+    If ((\_SB.PC00.PEG1.PEGP.GPSS !=3D Zero))
+    { Return (\_SB.PC00.PEG1.PEGP.GPS (Arg0, Arg1, Arg2, Arg3)) }
+
+    // AFTER: (guard removed)
+    Return (\_SB.PC00.PEG1.PEGP.GPS (Arg0, Arg1, Arg2, Arg3))
+
+b) Add Case(0x24) for GETPPL:
+
+    Case (0x24)  // GPS_FUNC_GETPPL
+    {
+        Return (Buffer (0x0C)
+        {
+            0x00, 0x00, 0x01, 0x00,  // Version: Major=3D1 (0x00010000)
+            0xC8, 0xAF, 0x00, 0x00,  // PL1: 45000 mW (45W)
+            0xE8, 0xFD, 0x00, 0x00   // PL2: 65000 mW (65W)
+        })
+    }
+
+The driver validates at platform_request_handler_ctrl.c:629-641:
+
+    if (FLD_TEST_DRF(0000_CTRL_PFM_REQ_HNDLR, _PPL_ARG0_VERSION, _MAJOR, _V=
+1,
+                     acpiParamsEx.output[0]))  // output[0] bits 31:16 must=
+ =3D=3D 1
+
+c) Enlarge GPSP buffer from 0x28 to 0x2C and set PPMD status bit:
+
+    Name (GPSP, Buffer (0x2C) {})  // was 0x28 (40 bytes)
+    CreateDWordField (GPSP, 0x00, RETN)
+    CreateDWordField (GPSP, 0x04, VRV1)
+    CreateDWordField (GPSP, 0x08, TGPU)
+    CreateDWordField (GPSP, 0x0C, PDTS)
+    CreateDWordField (GPSP, 0x10, SFAN)
+    CreateDWordField (GPSP, 0x14, SKNT)
+    CreateDWordField (GPSP, 0x18, CPUE)
+    CreateDWordField (GPSP, 0x1C, TMP1)
+    CreateDWordField (GPSP, 0x20, TMP2)
+    CreateDWordField (GPSP, 0x24, CTGP)  // NEW: maps to driver ctgp
+at offset 0x24
+    CreateDWordField (GPSP, 0x28, PPMD)  // NEW: maps to driver ppmd
+at offset 0x28
+
+    // In Case(Zero) =E2=80=94 SUPPORTED_FIELDS query:
+    RETN =3D 0x00010100  // bit 8 =3D TGPU, bit 16 =3D PPMD
+    // was 0x00000000 =E2=80=94 no sensors declared
+
+The driver reads PPMD at platform_request_handler_ctrl.c:1208-1219:
+
+    if (0 !=3D DRF_VAL(..._PSHARE_PARAMS_STATUS, _PPMD, pPShareParams->stat=
+us))
+    {
+        _pfmreqhndlrUpdatePpmdLimit(pPlatformRequestHandler, pGpu, NV_TRUE)=
+;
+    }
+
+***3. OEM Revision Bump (All 22 CB-01 SSDTs)***
+
+Every CB-01 SSDT must have OEM Revision >=3D 0x02. The kernel's
+acpi_table_initrd_override() silently skips if firmware_rev >=3D initrd_rev=
+.
+Factory SSDTs have rev 0x01. Hex-patch byte offset 24-27 from
+01 00 00 00 to 02 00 00 00 and recalculate the ACPI checksum.
+
+**After Fix**
+
+    Current Power Limit:  65.00W  (Dynamic Boost active)
+    Synthetic load:       65W sustained (cuda-matmul 30s)
+    Genshin Impact avg:   53.1W (with CPU -75mV undervolt on shared heatsin=
+k)
+    AE_ALREADY_EXISTS:    0 (was 242)
+    Touchpad:             working (preserved)
+    GPS GETPPL:           {V1, PL1=3D45W, PL2=3D65W}
+    GPS PSHAREPARAMS:     44-byte buffer with PPMD=3D7 sensor
+
+**Key Driver Paths**
+
+- nv-acpi.c:785-793 =E2=80=94 hardcodes pathname "\_SB.NPCF._DSM" for all
+NVPCF DSM calls
+- nv-acpi.c:361-365 =E2=80=94 namespace walk discovers NPCF, overwrites
+globals unconditionally
+  (last-wins)
+- client_resource.c:2942-3002 =E2=80=94
+cliresCtrlCmdSystemNVPCFGetPowerModeInfo_IMPL dispatches
+  via osCallACPI_DSM
+- client_resource.c:2992-2994 =E2=80=94 GET_SUPPORTED checks only bit 0 of
+supportedFuncs
+- client_resource.c:3100-3173 =E2=80=94 func 0x02 validates header (0x05/0x=
+10/0x1C),
+  extracts TGPA/TPPA/MAGA
+- client_resource.c:2898-2940 =E2=80=94 func 0x01 _validateConfigStaticTabl=
+e_2x two's
+  complement checksum
+- dynamic-power.c:1202-1223 =E2=80=94 os_get_dynamic_boost_support probes v=
+ia func 0x00
+- platform_request_handler_ctrl.c:601-643 =E2=80=94 GETPPL (func 0x24) vali=
+dates Major
+  version =3D 1
+- platform_request_handler_ctrl.c:1060-1088 =E2=80=94 pfmreqhndlrCallACPI_E=
+X copies
+  input=E2=86=92output, calls osCallACPI_DSM
+- platform_request_handler_ctrl.c:2174 =E2=80=94 TGPU sensor update fails w=
+hen
+  PSHAREPARAMS incomplete
+- platform_request_handler_ctrl.c:2117 =E2=80=94 PPMD sensor update fails w=
+hen
+ppmd field
+  missing
+- os.c:2934-3048 =E2=80=94 osCallACPI_DSM maps function IDs to GUIDs and re=
+visions
+
+**Questions for Maintainers**
+
+1. Driver-side fallback: When func 0x02 returns all-zero budget
+fields, the driver
+   silently falls back to VBIOS defaults with no warning. A pr_warn when
+   ctgpOffsetmW =3D=3D 0 && maxOutputOffsetmW =3D=3D 0 (after func 0x00 rep=
+orts support)
+   would help users diagnose this class of firmware bug. Is this intentiona=
+l?
+
+2. Should the driver validate func 0x02 budget values? Currently
+client_resource.c
+   validates the header structure (sizes, version) but not whether the extr=
+acted
+   TGPA/TPPA/MAGA are non-zero when bit 0 of func 0x00 indicates
+support. Adding a
+   check like:
+     if (pParams->ctgpOffsetmW =3D=3D 0 && pParams->maxOutputOffsetmW =3D=
+=3D 0)
+         pr_warn(NV, "NPCF: zeroed power budget detected");
+   would surface Lenovo's firmware bug at boot.
+
+3. PPMD sensor initialization: The PlatformRequestHandler
+NV_ERR_INVALID_DATA errors
+   at lines 2174/2117 fire when PSHAREPARAMS doesn't populate the PPMD fiel=
+d. Is
+   this expected for laptops without platform power mode support, or should=
+ the
+   driver handle the missing PPMD gracefully?
+
+---
+
+Full patched SSDT source, scripts, and power measurement data available at:
+https://github.com/Punch-Pain/loq-npcf
+
+System: Lenovo LOQ Essential 15IRX11 83SC | BIOS SECN22WW | RTX 5050 GB207M
+Kernel 7.2.3-1-cachyos | nvidia-open 610.57.04
