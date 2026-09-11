@@ -1,96 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed2-f12.google.com (mail-ed2-f12.google.com [74.125.228.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420FB40E8FA;
-	Fri, 11 Sep 2026 15:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE8E49BD99
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 18:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789141234; cv=none; b=Cfx2lViA3DfIeiJU+r7W8nu+hkwa7zAGYtkWEzkFk5yFnqwMhJmgcqCn8al3yxWj4+haDsr6dGHHSuqZzS+8a9eDiqjojHIOQDVBd4v26+GCZR+B5HAwWcCOTN11lleXaPtgmM/Hkq+0bvoBFEahgx6piWxaR0AuRzYdZiQQiZ0=
+	t=1789150915; cv=none; b=WmAGlS0NGxevGyhEFFaisWiNXsdLF5Zy65Mkoj8CiOZs17IsT9VW98YvqJvfonutufYDz41eQfCPfYJDDLLXDAYBuptxyzU612V3ol84JGizZuvsESE7YSB6yGnrb71lrWIMlJHBtSPrCFTX1m2nc/9ncinRUOmi6VngUa4K2Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789141234; c=relaxed/simple;
-	bh=6q0fEYtRDaQ3TnwgxKhvFA7rrQiEmKwTtJmYF+eXSsM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=dptCwGejjIx9erspwCT1broLmUvARL2RAoMXGt7N/cAW74EQcXS1K/L8J5ApkQ7RwprWLm6IhjKYrF/wQYjCOInnvWZ9KiODu6xh2xr9wN5hfh0qr+aucJE31DVMFZuySHNSO947qfDXi7rbk6L5XK/A2XT38aJDonGN3739XYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q13Y7ssR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789150915; c=relaxed/simple;
+	bh=kvFVf3Ybxs86CamvPsLjfp9ad3i/ysaCDWmsGWOSHoM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PxDG7IWjoJ4FaCo0XeU7FHVTWV/MRz7AHwEegFOCKXYO/9Ew0ktiwbCbS6xsElRJzrnBQ13GSfjlMn9nxCxMeINH2BpZ6dSh3mqXbOZ++tfhK+LsPJc0RJxgEQJaSCmnlS/qemgtUyN+VMTuj/AFjDDAr4AXl+4A9WhHVacgX3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com; spf=pass smtp.mailfrom=miget.com; dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b=GFqPhqeZ; arc=none smtp.client-ip=74.125.228.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=miget.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miget.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q13Y7ssR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2F961F000FF;
-	Fri, 11 Sep 2026 15:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789141230;
-	bh=ERdZYnFM2kdgLye6/mB0A1/pjZiD8pgvKOmh4lYlS7Y=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=Q13Y7ssRQqt7unMoxsyBWWuxBVsCK4Op6tOcd1tly8+GDbUK66BvLs13Ki33bjS4H
-	 zewSKIOyahJ4uKy9zsFhTI2uCfBSNQg4oYGL2JZ67m+HJcvTinrM1pKJ0RoAZbAxJz
-	 q52bHljDcrvzKT3DCqNldjDF6FG5Ak0AzPnidfhTzBMQ0Nz8OXnduojAvaFn5YZSsB
-	 Q360Wn262Z2HDEWvHxaV01BOYrp5jsY3mPlYVB8OZbIZuF73fUjaG2VqOXs0tl+Uxj
-	 htdjfSx1KGHOoN/uGojzP1asznVyViWOL0uaGsqcCDvQuIvX/nyNT1awdTUSxsT+nH
-	 A1At64xlSgAOw==
-Date: Fri, 11 Sep 2026 17:40:27 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-cc: Benjamin Tissoires <bentiss@kernel.org>, 
-    Maximilian Luz <luzmaximilian@gmail.com>, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 0/3] HID: use designated initializers for
- acpi_device_id
-In-Reply-To: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
-Message-ID: <r79s6r8r-8732-8832-n310-r2293pp2rqq3@xreary.bet>
-References: <20260908-acpi-hid-v1-0-08df24c4b139@thegoodpenguin.co.uk>
+	dkim=pass (1024-bit key) header.d=miget.com header.i=@miget.com header.b="GFqPhqeZ"
+Received: by mail-ed2-f12.google.com with SMTP id 4fb4d7f45d1cf-6a60591bb18so170311a12.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 11:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=miget.com; s=google; t=1789150912; x=1789755712; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=6vMZxd59EhYB9mHQG4h0mooWgrTvfO7t/x+y7pEl0dQ=;
+        b=GFqPhqeZdZeipDHoBja1YcI+VUKj2WKGBeRVQzI3scA6YF4+qg17TySrf5YuPWW7Ew
+         5lY1j2INmhWer/nMkET7qxkhBZyY12Jf/KqYgOu/eflY/eEoaiKhJjVfEgMR/KnqGCYg
+         8zruIWVqcE5CBqkZxgO2ruYvQepUZF2RWbzlg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789150912; x=1789755712;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=6vMZxd59EhYB9mHQG4h0mooWgrTvfO7t/x+y7pEl0dQ=;
+        b=K6ISTrN5u9Vdk90G/N30HjzrllX/HM9z2rCjQleU5ovxMB1QTyRBDku6lAgPbQVpS5
+         0LBUmgl4uLRdICLO+jQ7XbScF7ynuYqBqdxwzS23C+Rm003UGAI8iZRQNHzHu1e22qwr
+         Iu3fDNL0ilsl+lxE6MyQ3ilZcpeJDl6GtflPStJfgEGJ0LDEoOrShm3pf8SHLUTTV0dJ
+         Sn7OwWxe1yUSDfeAk2Hos8s5l3MGrzQaxD9s4fmCD83aXr6NAoQOxhyAeJUKvX40YFzS
+         85UdCqdn4Rz24J9frs8egwHRo9+kTSbFsWhR+UPmcEtj5slyrDV8uYHhr9AmXvL54M7M
+         NzRg==
+X-Gm-Message-State: AFuF++nMI33veIseH74X33aoB9audrFSfvlXa8CksWINTVfcWDj21u+g
+	vyK282mkZBQSJAyeUiUXhJ2bU6fKHKJCpENlxl42LjOwGiHI7JGnoPCqLW7hlLBLuhI=
+X-Gm-Gg: AYBFou3J/a3uUeFyJMSF9/RmpbHqCXcYluPxgdl5GA3TQO8vICAP8U3iWqq9nhXZHrm
+	9OAZUt0vPIn9l4LNJVFuJksjozFaf8wnId7jvggmrESDVSt4PHULmRtDps55Cxrobt/KCkLs84G
+	mJ3wSQvvMoTCijl/vkQ4h3XygVDujkCnM3NAgOWZfflZGJONnDmXfCMICB4B62q44WdiQ9RF+7U
+	bwm5YwXMNtlA/C+YqkFmyy5vLvjRh6mhWPNKuX9c/dHAZ312w6X10+fPwZb8DAJSr/s7t5Sygi9
+	78jxy4u//eUH9qgJPAvf3J8hhTqK31gZJL7DJHAZpjj4dmeEpFeFB7NEG/A27tqbkbEsVRQ6/JT
+	PIoA0UHe+t2EiNa55ikGtEXCpeGMCjPTial2hTi9pwpMv0ISloMK7xKn5iXouVFrqWxrWRztDAE
+	Zq9PnGwe6XKl2+D6S7tx6JEQDjeJlna9AFDl2lYciD4dxWnyULaoGBE5hBHvYuwSp30aQVR4R3b
+	JoxF5QwV6BGYbZ8pQ==
+X-Received: by 2002:a17:907:c308:b0:c08:580e:899a with SMTP id a640c23a62f3a-c2962ae852dmr283346666b.10.1789150911829;
+        Fri, 11 Sep 2026 11:21:51 -0700 (PDT)
+Received: from xia (user-46-112-84-99.play-internet.pl. [46.112.84.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c296608aee3sm114233666b.37.2026.09.11.11.21.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Sep 2026 11:21:51 -0700 (PDT)
+From: Chris Taraszka <chris@miget.com>
+To: Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mingyou Chen <qby140326@gmail.com>,
+	Armin Wolf <W_Armin@gmx.de>,
+	Chris Taraszka <chris@miget.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] platform/x86: bitland-mifs-wmi: Don't abort suspend when platform profile access fails
+Date: Fri, 11 Sep 2026 20:21:31 +0200
+Message-ID: <20260911182131.461415-1-chris@miget.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Tue, 8 Sep 2026, Pawel Zalewski wrote:
+On a Xiaomi Book Pro 14 (BIOS XMAPT4B0P0909), bitland_mifs_wmi_suspend()
+intermittently fails to read the platform profile and returns -EINVAL to
+the PM core, which aborts the entire system suspend:
 
-> This series is converting lists that contain the acpi_device_id struct,
-> which is defined in the include/linux/device-id/acpi.h to make use of named
-> initializers (which they do not use currently). This work is part of the on
-> going effort in the kernel associated with device-ids [1]
-> 
-> The plan is to convert acpi_device_id::driver_data to have an anonymous
-> union, similarly to what was introduced for PCI and I2C device ID tables.
-> The goal is to increase type-safety (most of the existing casts are gone),
-> to improve readability and to make use intent a bit more clear:
-> 
-> ```
-> union {
-> 	kernel_ulong_t driver_data;
-> 	const void *driver_data_ptr;
-> }
-> ```
-> 
-> But for that to work all lists containing the structs need to use named
-> initializers first to avoid triggering -Wmissing-braces. I already have
-> patches that implement this and touching a lot of kernel subsystmes that
-> use the acpi_device_id struct and that list keeps on growing. Therefore,
-> I have decided to split the series per every subsystem into:
-> - pre-clean-ups that convert the lists to use named initializers
->   (which is this series)
-> - actual implementations that make some of the modules use the new
->   driver_data_ptr member (does not apply here in the HID subsystem).
-> 
-> That way the task can be fragmented into manageable and independent chunks
-> of work and makes this effort easier to review.
-> 
-> Tested builds on x86-64 and a64 in Yocto using 7.3-rc2.
-> 
-> [1] https://lore.kernel.org/all/cover.1780048925.git.u.kleine-koenig@baylibre.com/
-> 
-> Signed-off-by: Pawel Zalewski <pzalewski@thegoodpenguin.co.uk>
-> ---
-> Pawel Zalewski (3):
->       HID: hid-google-hammer: use named initializers for acpi_device_id
->       HID: i2c-hid: use named initializers for acpi_device_id
->       HID: surface-hid: use named initializers for acpi_device_id
+  bitland-mifs-wmi B60BFB48-...-4: PM: dpm_run_callback():
+    bitland_mifs_wmi_suspend [bitland_mifs_wmi] returns -22
+  bitland-mifs-wmi B60BFB48-...-4: PM: failed to suspend: error -22
+  PM: Some devices failed to suspend, or early wake event detected
 
-Applied, thank you.
+The WMI method call itself succeeds. The WMI core reports its own
+failures as -EIO, -ENOMSG, -ENODATA or -EPROTO, so the -EINVAL comes from
+laptop_profile_get() when the SystemPerMode value returned by the
+firmware is not one of the four documented modes.
 
+How often this happens depends on firmware state. On a v7.2.2 boot the
+query failed persistently on battery: /sys/power/suspend_stats reported
+4628 failures against 2 successes, both of those on AC. Because logind
+re-issues the suspend while the lid stays closed, the machine looped
+awake and drained half the battery over one 8h42m lid-closed period at
+~7-8 W. On v7.3-rc2, whose driver, WMI core and platform_profile code are
+unchanged from v7.2, the query has so far failed only right after boot,
+when power-profiles-daemon first reads the profile.
+
+Commit d3666875c75e ("platform/x86: bitland-mifs-wmi: Fix NULL pointer
+dereference during suspend/resume") added a !data->pp_dev guard, but
+that only covers the event device. On the control device pp_dev is
+valid, so the guard does not apply and the error is returned verbatim.
+
+Saving the platform profile is best-effort. Failing to read it should
+not keep the system awake, so warn and continue instead, in line with
+that commit skipping profile operations rather than failing the
+transition. Do the same on resume: laptop_profile_set() returns
+-EOPNOTSUPP for the performance and full-speed modes without DC power
+(see Documentation/wmi/devices/bitland-mifs-wmi.rst), so a profile saved
+on DC power cannot be restored after unplugging during suspend, which
+would otherwise mark the resume as failed.
+
+Fixes: dc1ec4fa86b2 ("platform/x86: bitland-mifs-wmi: Add new Bitland MIFS WMI driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chris Taraszka <chris@miget.com>
+---
+Tested on the same machine with v7.3-rc2 plus this patch: 11 s2idle
+suspend cycles, including lid-closed suspends on battery of 7h42m, 4.9h
+and 75.8h, and repeated pm_test=devices cycles on battery all completed
+without errors. The failing firmware state could not be reproduced on
+demand on v7.3-rc2, so the new warnings have not been observed firing
+during a suspend; the failures described above were recorded on v7.2.2
+without this patch.
+
+ drivers/platform/x86/bitland-mifs-wmi.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/bitland-mifs-wmi.c b/drivers/platform/x86/bitland-mifs-wmi.c
+index 3a37318..788ef14 100644
+--- a/drivers/platform/x86/bitland-mifs-wmi.c
++++ b/drivers/platform/x86/bitland-mifs-wmi.c
+@@ -305,22 +305,31 @@ static int bitland_mifs_wmi_suspend(struct device *dev)
+ 		return 0;
+ 
+ 	ret = laptop_profile_get(data->pp_dev, &profile);
+-	if (ret == 0)
+-		data->saved_profile = profile;
++	if (ret) {
++		dev_warn(dev, "Failed to save platform profile: %d\n", ret);
++		return 0;
++	}
+ 
+-	return ret;
++	data->saved_profile = profile;
++
++	return 0;
+ }
+ 
+ static int bitland_mifs_wmi_resume(struct device *dev)
+ {
+ 	struct bitland_mifs_wmi_data *data = dev_get_drvdata(dev);
++	int ret;
+ 
+ 	/* Skip event device */
+ 	if (!data->pp_dev)
+ 		return 0;
+ 
+ 	dev_dbg(dev, "Resuming, restoring profile %d\n", data->saved_profile);
+-	return laptop_profile_set(dev, data->saved_profile);
++	ret = laptop_profile_set(dev, data->saved_profile);
++	if (ret)
++		dev_warn(dev, "Failed to restore platform profile: %d\n", ret);
++
++	return 0;
+ }
+ 
+ static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_ops,
 -- 
-Jiri Kosina
-SUSE Labs
+2.55.0
 
