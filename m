@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAEB598BEF
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 20:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E34A59B689
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 20:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789157542; cv=none; b=V5jjpVtb8V2pt5iDP7P28cLPq0vj+iqZuo8Wq6uWMciY+mhwgBpkEgNwlQlcEt93BrBQvndx7VmYmUZCRg4HaSNduEswFlO7Na+O6tDfx4653LcL8Uy9lh26nnSt1JT4kYHrm499NOTAtq3cqM9sw/wbBS0EAiFJh07fzyaNCQ4=
+	t=1789157544; cv=none; b=XkwyU3n84lTok9nnAtHnh6ArlvOruo/AAcDODiTI5Hef9mSm5bOLUwKOuCT/xsD6AZLpyNXJDIkzplCgvwB6ifiAF98NF6mIoH1hMfz6bxp3gyeuVcIuJ1gLW/exU0paaL4VpVv+gl0Yi0x8MY9JckZE1HzkduPjV8b7zi6y7kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789157542; c=relaxed/simple;
-	bh=DBKLN8FmLqkvBBAF+LqMH6CGh96m/3rHcRJHazJBsRA=;
+	s=arc-20240116; t=1789157544; c=relaxed/simple;
+	bh=hK10ala/CIbTCQRu+zYC4dqX517GLIuekh7Mdpmw/QE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kvzslYxKhphK8Vx3aHRlzgEcw403J4d3GTo/qnGCDxVWA89hhRBCDI+LQJXvyXLH4KGPSZDRcZJSTpL4EoeTDTo73oXqu9TV1+ZlP0rpnLVxo9QQsS/eMfQSue8lZF6FNGgMA1ptcFKlJklZG9HW6YH9R+8gLRJV+sME8qd1adA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IALWbHrQ; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=LDGigiNAuN2W51VGkKIDBc86cC3pDe0NtNNyTmxmBKjUa7LzqJX5P8o3pOnTLESjz/1gJakjxFJ9i9GwlFpOURfvaSDAvPnBlG8xe4sC1dzf1sa4ixObMurY/OSe6AnBXR1loXnnFyIr46iJaHb7XrCqF1LKIr0/YvhJR46BrcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z0GaWbhi; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IALWbHrQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z0GaWbhi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789157538; x=1820693538;
+  t=1789157537; x=1820693537;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=DBKLN8FmLqkvBBAF+LqMH6CGh96m/3rHcRJHazJBsRA=;
-  b=IALWbHrQyikxusXHdV0bZTmB0U+12NTXAu3qvEXLmc6BdhqdnevQZzca
-   g+LxCUCzQ85csMGNE9OXTdLswcmI/GZ8eQmue7Z6HDDiYnYeFcQ+lRG17
-   NI3ANYeTW74tATv5Km+WsOXfYY4Yr4IWr9BexA3VNTBWfJlezSlCq+BwD
-   um3A9fq1U+EMWZOu73TbxGGayI6CVWLmKu0G2GPtYXTJYyjNDNGrbs0oG
-   8YvDGVPccMUG7/3SwIOsykmGZHGzKZGc4/C9u37mRz3wrmUfoJXmq9MVU
-   mUREqmAdKIt5C7+QFhj79BEGqsskyL3rTgEacVru8cXHcsBXNgl80Ky8H
-   g==;
-X-CSE-ConnectionGUID: TlU+iooYST63Dwa2msE+xw==
-X-CSE-MsgGUID: O37vg4thRlOrpr7AT/eWdg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="115162409"
+  bh=hK10ala/CIbTCQRu+zYC4dqX517GLIuekh7Mdpmw/QE=;
+  b=Z0GaWbhiYCGer60jHXvq7YbK3Uquu0c2/t4F1PxnK9A54FncMckgs18l
+   jmJeYZh5HKB6sWQ1nDGZhpM1+Ka5ysSN2IE/ApBi95Lua+RF+ae+jVjln
+   opY1+bBQ32Cu302X1lFAt98/UvHzv15zxD8UVamcYKyXziSfLeZ3G5+od
+   0ppLTyrjcliIS4b7cYeysXWhkz07rytkbb0KbjOnAVanXiPyqw2MhPZC5
+   +iHpeHNH2KaGiEPQIR0fCqjLEqSKHQvjrrLbNgjtQIhBc1tLQHmkiGTYe
+   KeobDOvj7MXXi26ZiHjMECyv6XQFXSN87DeXQF0CmiGYXVp9NWcab9peB
+   Q==;
+X-CSE-ConnectionGUID: XANZ/v8BS8OVZK+rE50zyA==
+X-CSE-MsgGUID: 1cKMrX5gSguchj2YWidg6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="115162405"
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="115162409"
+   d="scan'208";a="115162405"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:11:59 -0700
-X-CSE-ConnectionGUID: m4u4whtPSh+cbulg4D/r4w==
-X-CSE-MsgGUID: YsUzVbUoRemJfAdYbN5ORQ==
+X-CSE-ConnectionGUID: chlvRRedTsqtXnojtLdGXw==
+X-CSE-MsgGUID: pN/Kr8SiTieRGcjIon1+0w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="277272103"
+   d="scan'208";a="277272100"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
   by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:11:59 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
@@ -59,9 +59,9 @@ To: platform-driver-x86@vger.kernel.org,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v8 12/20] drm/xe/vsec: Update VSEC probe order
-Date: Fri, 11 Sep 2026 13:12:00 -0700
-Message-ID: <20260911201148.1610547-34-michael.j.ruhl@intel.com>
+Subject: [PATCH v8 11/20] drm/xe/vsec: Refactor BattleMage PMT defines
+Date: Fri, 11 Sep 2026 13:11:59 -0700
+Message-ID: <20260911201148.1610547-33-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
 References: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
@@ -73,42 +73,76 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both debugfs and hwmon access the PMT data area before PMT is
-initialized.
-
-Hardwired offset usage allows this to work by accident.
-Upcoming changes will break this usage.
-
-Re-order the probe steps to initialize VSEC before the other
-features are initialized.
+Rename generic defines to be BMG specific.
+Define several magic numbers.
 
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/gpu/drm/xe/xe_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/xe/xe_vsec.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-index 205cb4e7f9e8..3ec950606e67 100644
---- a/drivers/gpu/drm/xe/xe_device.c
-+++ b/drivers/gpu/drm/xe/xe_device.c
-@@ -1053,6 +1053,8 @@ int xe_device_probe(struct xe_device *xe)
- 	if (err)
- 		goto err_unregister_display;
+diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
+index 3bea89f2a5c5..ca8414441a69 100644
+--- a/drivers/gpu/drm/xe/xe_vsec.c
++++ b/drivers/gpu/drm/xe/xe_vsec.c
+@@ -90,10 +90,15 @@ static struct intel_vsec_platform_info xe_vsec_info[] = {
+ #define GUID_CAP_TYPE		GENMASK(29, 28)
+ #define GUID_RECORD_ID		GENMASK(31, 30)
  
-+	xe_vsec_init(xe);
+-#define PUNIT_TELEMETRY_OFFSET		0x0200
+-#define PUNIT_WATCHER_OFFSET		0x14A0
+-#define OOBMSM_0_WATCHER_OFFSET		0x18D8
+-#define OOBMSM_1_TELEMETRY_OFFSET	0x1000
++#define BMG_IDX_TELEM_PUNIT		0x00
++#define BMG_IDX_TELEM_OOBMSM		0x01
++#define BMG_IDX_CRASHLOG_PUNIT		0x02
++#define BMG_IDX_CRASHLOG_OOBMSM		0x04
 +
- 	xe_debugfs_register(xe);
++#define BMG_PUNIT_TELEMETRY_OFFSET	0x0200
++#define BMG_PUNIT_WATCHER_OFFSET	0x14A0
++#define BMG_OOBMSM_0_WATCHER_OFFSET	0x18D8
++#define BMG_OOBMSM_1_TELEMETRY_OFFSET	0x1000
  
- 	err = xe_hwmon_register(xe);
-@@ -1066,8 +1068,6 @@ int xe_device_probe(struct xe_device *xe)
- 	for_each_gt(gt, xe, id)
- 		xe_gt_sanitize_freq(gt);
+ enum record_id {
+ 	PUNIT,
+@@ -122,29 +127,29 @@ static int xe_guid_decode(u32 guid, int *index, u32 *offset)
+ 	*offset = 0;
  
--	xe_vsec_init(xe);
--
- 	err = xe_sriov_init_late(xe);
- 	if (err)
- 		goto err_unregister_display;
+ 	if (cap_type == CRASHLOG) {
+-		*index = record_id == PUNIT ? 2 : 4;
++		*index = record_id == PUNIT ? BMG_IDX_CRASHLOG_PUNIT : BMG_IDX_CRASHLOG_OOBMSM;
+ 		return 0;
+ 	}
+ 
+ 	switch (record_id) {
+ 	case PUNIT:
+-		*index = 0;
++		*index = BMG_IDX_TELEM_PUNIT;
+ 		if (cap_type == TELEMETRY)
+-			*offset = PUNIT_TELEMETRY_OFFSET;
++			*offset = BMG_PUNIT_TELEMETRY_OFFSET;
+ 		else
+-			*offset = PUNIT_WATCHER_OFFSET;
++			*offset = BMG_PUNIT_WATCHER_OFFSET;
+ 		break;
+ 
+ 	case OOBMSM_0:
+-		*index = 1;
++		*index = BMG_IDX_TELEM_OOBMSM;
+ 		if (cap_type == WATCHER)
+-			*offset = OOBMSM_0_WATCHER_OFFSET;
++			*offset = BMG_OOBMSM_0_WATCHER_OFFSET;
+ 		break;
+ 
+ 	case OOBMSM_1:
+-		*index = 1;
++		*index = BMG_IDX_TELEM_OOBMSM;
+ 		if (cap_type == TELEMETRY)
+-			*offset = OOBMSM_1_TELEMETRY_OFFSET;
++			*offset = BMG_OOBMSM_1_TELEMETRY_OFFSET;
+ 		break;
+ 	default:
+ 		return -EINVAL;
 -- 
 2.43.0
 
