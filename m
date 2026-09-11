@@ -1,231 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40D859E335
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 20:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68DA5A5132;
+	Fri, 11 Sep 2026 20:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789157577; cv=none; b=s9PU9kbt/7Ae2SeMQ4Pm5tb8ITdl3UvifVy3SmCYgXA/mo9b47dtmYWzIJecweU8wZhAW1HQ9WJaBKppNyVSA8xlcwiV4Ls786svKUXCQ32FbqGxRhrAdBDSI/pTi8keBPyK9sRI1STMBiZBupiMvKIu2vylN8NyjBffaGHzrAk=
+	t=1789158357; cv=none; b=BIU4JQUUdpK2bw4mcPihbqekl/9KetxzO+ZEMSqZc+gaiqAwAgmbO5wCk0Qgg5xG+KFcgD+epPFoIKxKIOBIm1AN42M1be0kSXDFVjboL6tr9SQfUIrKKaC6IxCt6aZVHja3gjD6H+UGYsOqmNcfugzMJzRLOvkxwL99N8t9Jg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789157577; c=relaxed/simple;
-	bh=yFc5pwFHvElzTLAMMbHvxa26C+uq8vM1k/lb9THxGBU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pnERxpRJqkbWBundHTy/Zdk7YPCSiqOmt6iGduTkycH2KVtXA5rB5c/orro/NHorec2pK92XqWVOeuHf4QzfghGCTW0MwQQAULtaptzNZhz81ZxnrwJm11W8XCZu09eA0SQtn22lyNgcLV8QLhZsvoKpmtcs3tNZbC8FyB8hO0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K7HQxl/u; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789158357; c=relaxed/simple;
+	bh=6TwWv2XO8LyJXmGntkz0wNUrSJPv+7uE+G5a8NWsOVw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=hSsxGZU4muL+bUTqlS9+DGrd3nIgTs7BrLlM1+foWioRGPwEKEsjGxXdJHMvAv66PSxKl7FRFUw3EeW7KGaqO2bWc4LaU/ms8yfTMrvTNJgBWrFKLLpXh52EVy6PHyMTGHLNLjtp8ZIRo+dmTMnzB7RK83UalFqj7bAsjLQ2BqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgagxFJL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K7HQxl/u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789157566; x=1820693566;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=yFc5pwFHvElzTLAMMbHvxa26C+uq8vM1k/lb9THxGBU=;
-  b=K7HQxl/uUgoU9u38OSXLhZm8+9PYf9BkBHmdmzqmp4S3UGS9AgBdhBp/
-   /BCdOtxqqFbLBEXQWmc6wJWUym8fQG6Zb1thlEpQoh+fb2BDhZ35Tg72U
-   dvAT0B0U6oXR8e68iPRDye7mDGVmKVqTF+wf96joLNl/OE5JtF8fqupWO
-   73mC2/cmqL+ewUu6ayEaMe+L3LiF6ajHIRejPtI3jUUt73SScA5S3YG2S
-   aINDURptBisRQUAVUlES/9WIj7FbErhdBSC/M2jze4p9XSZIGuk98D+Fs
-   Tt2XkimRiR+8lgqCBY2svtJsexmy6Z6z4TgSCXAIlMpZqeLj/yoQ5frHh
-   A==;
-X-CSE-ConnectionGUID: Yvy93Ju4SQOYNUHRf61slw==
-X-CSE-MsgGUID: hiDhPG06RXekx9oR5ZU/LQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="115162444"
-X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="115162444"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:12:00 -0700
-X-CSE-ConnectionGUID: qC6/xSchQyOAxKPvYhh2mg==
-X-CSE-MsgGUID: tB5Ym+VWQLSSAosp6UkI+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="277272124"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:11:59 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com,
-	karthik.poosa@intel.com
-Subject: [PATCH v8 19/20] drm/xe/vsec: Update PMT internal access
-Date: Fri, 11 Sep 2026 13:12:07 -0700
-Message-ID: <20260911201148.1610547-41-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
-References: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgagxFJL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D0E1F000FF;
+	Fri, 11 Sep 2026 20:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789158347;
+	bh=3faQ76qNn7O6GnDutYwY3kYS1Pky1nKc9G2sWj2jD1o=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc;
+	b=dgagxFJLZqxniMLswUHC5IQtF+CtSA8H0ragCIgSzEKRH3MuZ2X6+D7RMRpWaZ+1l
+	 hTWXTthzWUB6p7FIEad2h5N7WonFsF8dAChZ/gnYiM+ZvsgPMFxgWCf1RJLJGlKPVo
+	 cuLpSoBzvGzfqiL9olg4N3HXbL7xedjwMtTuxMzjF9/UryQqfPdq3E9hY7kMO+CaNY
+	 ftYFXS+395p1sZ8QMx6Z/0xy44aQuRNG1s/RwVyyFyMKpzAhzvJhtRIybf9seG0H0m
+	 kLbo4k6o/416vtcJWWWX9y3Ch8b8XUPhR88b6EOnJSpCawxmqArS5c1B1SAJOlahRR
+	 /BldhG9epNDuA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D0C4C3924451;
+	Fri, 11 Sep 2026 20:24:45 +0000 (UTC)
+Subject: Re: [GIT PULL] platform-drivers-x86 for v7.3-2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <pdx86-pr-20260911130248-2488210644@linux.intel.com>
+References: <pdx86-pr-20260911130248-2488210644@linux.intel.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <pdx86-pr-20260911130248-2488210644@linux.intel.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.3-2
+X-PR-Tracked-Commit-Id: d144a494d81fcf2d1c5cf58b01c655bb8bafc701
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1235ff329981ecde9ccbf49b83bd4d71e827d541
+Message-Id: <178915828442.3095760.14319678150047728174.pr-tracker-bot@kernel.org>
+Date: Fri, 11 Sep 2026 20:24:44 +0000
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hansg@kernel.org>, Andy Shevchenko <andy@kernel.org>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Current PMT internal access assumes BMG devices.
+The pull request you sent on Fri, 11 Sep 2026 13:02:48 +0300:
 
-Use the new PMT GUID API to read the device specific guid.
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v7.3-2
 
-Minor cleanup for a newly unused parameter (mmio).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1235ff329981ecde9ccbf49b83bd4d71e827d541
 
-Reviewed-by: Karthik Poosa <karthik.poosa@intel.com>
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/xe_debugfs.c | 26 ++++++++++++++------------
- drivers/gpu/drm/xe/xe_hwmon.c   | 10 ++++++++--
- drivers/gpu/drm/xe/xe_pcode.c   | 10 ++++++++--
- 3 files changed, 30 insertions(+), 16 deletions(-)
+Thank you!
 
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index 958fb717640a..c56f0e4a9b90 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -5,6 +5,7 @@
- 
- #include "xe_debugfs.h"
- 
-+#include <linux/array_size.h>
- #include <linux/bits.h>
- #include <linux/debugfs.h>
- #include <linux/fault-inject.h>
-@@ -21,7 +22,6 @@
- #include "xe_gt_printk.h"
- #include "xe_guc_ads.h"
- #include "xe_hw_engine.h"
--#include "xe_mmio.h"
- #include "xe_pagefault.h"
- #include "xe_pcode.h"
- #include "xe_pm.h"
-@@ -146,15 +146,20 @@ static void xe_fault_inject_debugfs_register(struct xe_device *xe,
- 	}
- }
- 
--static void read_residency_counter(struct xe_device *xe, struct xe_mmio *mmio,
--				   u32 offset, const char *name, struct drm_printer *p)
-+static void read_residency_counter(struct xe_device *xe, u32 offset, const char *name,
-+				   struct drm_printer *p)
- {
- 	u64 residency = 0;
-+	u32 guid;
- 	int ret;
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID),
--				&residency, offset, sizeof(residency));
-+	ret = xe_vsec_get_guid(xe, &guid);
-+	if (ret) {
-+		drm_warn(&xe->drm, "PMT device is not available: %d\n", ret);
-+		return;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid, &residency, offset, sizeof(residency));
- 	if (ret != sizeof(residency)) {
- 		drm_warn(&xe->drm, "%s counter failed to read, ret %d\n", name, ret);
- 		return;
-@@ -293,13 +298,12 @@ static int pcode_info(struct seq_file *m, void *data)
- static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- {
- 	struct xe_device *xe;
--	struct xe_mmio *mmio;
- 	struct drm_printer p;
- 
- 	xe = node_to_xe(m->private);
- 	p = drm_seq_file_printer(m);
- 	guard(xe_pm_runtime)(xe);
--	mmio = xe_root_tile_mmio(xe);
-+
- 	static const struct {
- 		u32 offset;
- 		const char *name;
-@@ -313,7 +317,7 @@ static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- 	};
- 
- 	for (int i = 0; i < ARRAY_SIZE(residencies); i++)
--		read_residency_counter(xe, mmio, residencies[i].offset, residencies[i].name, &p);
-+		read_residency_counter(xe, residencies[i].offset, residencies[i].name, &p);
- 
- 	return 0;
- }
-@@ -321,13 +325,11 @@ static int dgfx_pkg_residencies_show(struct seq_file *m, void *data)
- static int dgfx_pcie_link_residencies_show(struct seq_file *m, void *data)
- {
- 	struct xe_device *xe;
--	struct xe_mmio *mmio;
- 	struct drm_printer p;
- 
- 	xe = node_to_xe(m->private);
- 	p = drm_seq_file_printer(m);
- 	guard(xe_pm_runtime)(xe);
--	mmio = xe_root_tile_mmio(xe);
- 
- 	static const struct {
- 		u32 offset;
-@@ -339,7 +341,7 @@ static int dgfx_pcie_link_residencies_show(struct seq_file *m, void *data)
- 	};
- 
- 	for (int i = 0; i < ARRAY_SIZE(residencies); i++)
--		read_residency_counter(xe, mmio, residencies[i].offset, residencies[i].name, &p);
-+		read_residency_counter(xe, residencies[i].offset, residencies[i].name, &p);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
-index 2032066d5f49..57b2fbefa4c3 100644
---- a/drivers/gpu/drm/xe/xe_hwmon.c
-+++ b/drivers/gpu/drm/xe/xe_hwmon.c
-@@ -512,9 +512,15 @@ xe_hwmon_energy_get(struct xe_hwmon *hwmon, int channel, long *energy)
- 
- 	if (hwmon->xe->info.platform == XE_BATTLEMAGE) {
- 		u64 pmt_val;
-+		u32 guid;
- 
--		ret = xe_pmt_telem_read(hwmon->xe->drm.dev,
--					xe_mmio_read32(mmio, BMG_PUNIT_TELEMETRY_GUID),
-+		ret = xe_vsec_get_guid(hwmon->xe, &guid);
-+		if (ret) {
-+			drm_warn(&hwmon->xe->drm, "PMT device is not available: %d\n", ret);
-+			*energy = 0;
-+			return;
-+		}
-+		ret = xe_pmt_telem_read(hwmon->xe->drm.dev, guid,
- 					&pmt_val, BMG_ENERGY_STATUS_PMT_OFFSET,	sizeof(pmt_val));
- 		if (ret != sizeof(pmt_val)) {
- 			drm_warn(&hwmon->xe->drm, "energy read from pmt failed, ret %d\n", ret);
-diff --git a/drivers/gpu/drm/xe/xe_pcode.c b/drivers/gpu/drm/xe/xe_pcode.c
-index 8c901e54f384..fa9f45d565cb 100644
---- a/drivers/gpu/drm/xe/xe_pcode.c
-+++ b/drivers/gpu/drm/xe/xe_pcode.c
-@@ -365,11 +365,17 @@ ALLOW_ERROR_INJECTION(xe_pcode_probe_early, ERRNO); /* See xe_pci_probe */
- int xe_get_pcode_version(struct xe_device *xe, struct xe_pcode_version *version)
- {
- 	int ret = 0;
-+	u32 guid;
- 
- 	guard(xe_pm_runtime)(xe);
- 
--	ret = xe_pmt_telem_read(xe->drm.dev,
--				xe_mmio_read32(xe_root_tile_mmio(xe), BMG_PUNIT_TELEMETRY_GUID),
-+	ret = xe_vsec_get_guid(xe, &guid);
-+	if (ret) {
-+		xe_warn(xe, "PMT device is not available: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = xe_pmt_telem_read(xe->drm.dev, guid,
- 				(u64 *)version, PUNIT_VERSION_OFFSET, sizeof(*version));
- 	if (ret != sizeof(*version)) {
- 		xe_warn(xe, "pcode version read from PMT failed, ret %pe\n", ERR_PTR(ret));
 -- 
-2.43.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
