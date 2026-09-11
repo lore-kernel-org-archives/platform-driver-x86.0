@@ -1,235 +1,362 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC4B5A0AC8;
-	Fri, 11 Sep 2026 20:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B12B4BEE52
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 21:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789160269; cv=none; b=KN8g6zhXGiNAnG25TJ12G9/ZhpNN5F2UDU3AVHw5msPt8nNcs0Dh0Br+PBhxab4oBlGK1j7SddGAI6Vs29a/cU+xZmB8Q6Qi30l0cPJMHbzDV4RkXW8fQf/XGFI+XFm2YKDjPOyXFEKslSHrvhBBh6pVOvCZ/yW93U87+uX/f7U=
+	t=1789163880; cv=none; b=V9lYhj34VysXqyCEdeyhJWKr/l8EZK2geIDI0KH8WVn52tH0dpAyM5DFqyIJNoVQfkF0s1b8Qa9TuwQhm8fqIku2vJGNlBqHwL9z/ZRxGSD8EwpBRMjOynEEwhmB3wB5RZWRyUJIv6sckpIE1lwR16NadaoEImz0ujjvqYpqtds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789160269; c=relaxed/simple;
-	bh=sZK7CbjdlSUgEkXgIfxnNweOVZmftjHUNEeTCUYTEUs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Br+DyEMxOWIInBOdo/a5nQ8th/7WPQ1juq2ata4q/0yAJdkEjnxJkWP0b/kqUwgi4jZjTtaA6S5iL6nMpMM3r8x+gbH6idYvY9Xpc9fTAYrEISjDuJflMawxmfH6v08AQ0Rksjp4NuHiuzUK5Vu97kQQ1bQvHKI05w73LsT6RAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ARaHvgr5; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1789163880; c=relaxed/simple;
+	bh=nSvx7nr4kRAgkezRgyU8+jjTXaVzH2/tL7tieH7jIDE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=CuPtJC0cc2bC4rptJ13Cf7OsSph94DIKDTLf1qPubxeBPHyV69ugcgvSMk/brmDOO6rov4+mJ5hs2choATkGcshikLMRrJODBp0MdIgdPk+z9sTBcIIV0LT5evyovSaK/eMGjQ9XJXYLYB3F93oP/lT87k4eBOak07n6J4ZgK8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.im; spf=pass smtp.mailfrom=fastmail.im; dkim=pass (2048-bit key) header.d=fastmail.im header.i=@fastmail.im header.b=NK3AoDxa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZQBrEWDD; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.im
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.im
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ARaHvgr5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1789160255; x=1789765055; i=w_armin@gmx.de;
-	bh=sZK7CbjdlSUgEkXgIfxnNweOVZmftjHUNEeTCUYTEUs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ARaHvgr5/6PSf1EJeLXnhFQwKSpDVEk5iKs7gvb60lf9/h6ddFjLiI7DYfMgNced
-	 Pim5wcum6sxZLDsXJqn0szXv3Rt2GzDAH6PC9d3Dk5cxEKyDWY64Lbt3YMbtV8a2L
-	 pDeIKeaBT2FWIXUNME2Esf7CQNSx/suQFI5TAc1inXUa2jDhk/F3YPe36Gis7Dhcv
-	 krJqnfFT3pJbl1qBaRB30X3RsGkczk0PCyFXbJHH+wGvXqGT+g9uR49xzPqFRwbGD
-	 IqKJJRCLCFaoS2jUwHi+0ICw482NYtBmW8JiRtcd2aQQKFDsU9CMvq1XedendooyJ
-	 8SX8+T0H/mXaci9GdA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MwQXH-1wmmXz3aQ1-00r1lY; Fri, 11
- Sep 2026 22:57:34 +0200
-Message-ID: <ee20cde5-a1f9-4f59-a651-a406952f3e78@gmx.de>
-Date: Fri, 11 Sep 2026 22:57:34 +0200
+	dkim=pass (2048-bit key) header.d=fastmail.im header.i=@fastmail.im header.b="NK3AoDxa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZQBrEWDD"
+Received: from ams-compute-01.internal (ams-compute-01.internal [10.64.2.61])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id EA12A140014E;
+	Fri, 11 Sep 2026 17:57:55 -0400 (EDT)
+Received: from ams-imap-09 ([10.64.2.29])
+  by ams-compute-01.internal (MEProxy); Fri, 11 Sep 2026 17:57:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.im; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1789163875;
+	 x=1789250275; bh=7YT2eIKZHMrm5M7otTetbzGZn6sY3RlOMMzOShOXJNg=; b=
+	NK3AoDxaFr9nMKgp2z7HpI93lRC9cPHg/eEWHrarFl2nj42mMo5u2fcDYLls6ECU
+	+o6Zi1651uK1LVyyrd3A0ux2yfzBxF9alBNXCbni45f7JV+U376dU3feP0XgjHgQ
+	LE5jAWfHdOzwPeNF4zgps4zKQikuY0KxxZ9oic1jdKO+Hbm+jURznkyWZC2UyIcY
+	4WZm2FEacyPjobl222eeVymHHhni1PTkFjhGwuTeTenRw+90azBuy/ZAjaPdII09
+	plQz+buaRukA9+OrvkNLrbqVdYpgWSQ14ZmX0smrrclTjsnb/DcsBlduYALr8FTn
+	ICfpxd/Hh97ebh6O9HjeGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1789163875; x=
+	1789250275; bh=7YT2eIKZHMrm5M7otTetbzGZn6sY3RlOMMzOShOXJNg=; b=Z
+	QBrEWDDlTrXEjNcu+N97jPAR/x1f+oaNXRFLy0Z5kgQ2ZFqx2NZGwDOZil6uNrsg
+	/l9KbvfDEn72aSfUz1dcWO1bMUJCBDMtVx00Ou4WYFXV7PBY9QfnB7kQsasq+6Ds
+	eSvz9NwVC+KhaamdszqOFPlKym3KGFxGyaIDMU32gIUG8rXC/db1ZB9dLVgqCuFQ
+	/V5KnUItnfAh3XPPns3S9p5xZ4udCUG1Xx7KHUEmBlmwDsvWglnrYRpTdtqXIadO
+	35+pweSy49c+PVCSdUGog2564d8fOAfzxQufQUhY9VkKfs/XLgNMUbDO/6WrwPbB
+	YKPldztJsCa/JUKQxX/sA==
+X-ME-Sender: <xms:YXmkapViqz-FkbZUrJt2DTPzjk261O_peEFhK1L0oBuBU8mHmV8wUw>
+    <xme:YXmkakardQl6DvpD6ezeq7F5-AUEVqH6qMqWoeBuWGJXD5-mhoRNVtRF5eKpLEtGb
+    Erwfb3_JQ_V0dazRTb6KPgdz2DH1IqexooJMJMu880OFQscbZOXut8>
+X-ME-Proxy-Cause: dmFkZTEDCJJ1Hj9+n/xoY75+BonH7Iz4f3STLqdjpCaM1/FbaBIoBat/G4KnzFY4XkeX5m
+    qoWJeLH7jWCzMIETAO+GSETQGRTp0W1kEATlCae8Q7WJ6DkZBavxkuN0kN12ninSdUJgWc
+    cTXgqCQRRk/5xGxn2Tnuo1w1xOzitRQdB58YIm3i7HmOpMSOugTniQmdNGnRRzmdI6nSVm
+    o+hG/101ih0x0ZIVVKIqBkBpB8LbdA+R/oOEmLyWnm71Vg7hvYLwgS95psTrHpPMTBhwCW
+    SbzkSDIxYIBGH5I01ByawTCZuawzeURvORnpH8tkCkyFcPPcR+YOPc9FX6LRsuQh3W0WCo
+    kYLOdRkddUVX5T5+4niWBi8SgDKvWCwapCLfglSHNQxjAE9vM2006MTsK+T2qmsClduQQ+
+    18TZLPXuI1TPQbdYxO8MHhPkR1nw+Ew99AtZC4jjrHueXqnYMYf+HdZ9hfcRMNOcoxLhQC
+    Xau1uduVjJfB3ZX7n5d44Gt8UBVpyoNpGjj95HcybCIvVMyLadqEZEeP3k92b2T37vrZ/Y
+    KCf5NqHbK99L0L4fIsu1stSkn/F8tJaKQb8TdRBHfRDT75z+gMlb0rshwOCcgtGn3f4cJl
+    HpfgBIN7HgBeylvf6O+fWg+Ie9/La+DVqWHpZ3xNrgpQ6FtSIrkVbwhahteA
+X-ME-Proxy: <xmx:Ynmkau6P9U4zXqatj_7TV3LeG8F0HaEmyv_asgh0jmLeDkgxDuQYDw>
+    <xmx:YnmkapZG59bgXLCOQLqhoObtQwbKbQgUsMQyRpbGte4joQjaaATchQ>
+    <xmx:YnmkatiOQaWcva8C1JDzOaNBno4-UAOKc7QSvj_WNjBCL5_kHB4CUw>
+    <xmx:Ynmkaq87XEZfWl0ZKbyTwsL81HAW_xw51VCvnGZuYwqUSvQOHRIUew>
+    <xmx:Y3mkar9PB8O7Gmye8X-Rquz2vvYvRbQS10ZFBqm8lYNSjUIaVP42Vbmm>
+Feedback-ID: i559e4809:Fastmail
+Received: by mailuser.ams.internal (Postfix, from userid 501)
+	id 1AF82180087; Fri, 11 Sep 2026 17:57:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] platform/x86: uniwill-laptop: Fix brightness
- notify for 3 level keyboards
-From: Armin Wolf <W_Armin@gmx.de>
-To: Werner Sembach <wse@tuxedocomputers.com>, Hans de Goede
- <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260822003012.851574-1-wse@tuxedocomputers.com>
- <c84328eb-0126-4558-8241-a41e641f9681@gmx.de>
-Content-Language: en-US
-In-Reply-To: <c84328eb-0126-4558-8241-a41e641f9681@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Sat, 12 Sep 2026 00:56:16 +0300
+From: "Alice Mikityanska" <alice.kernel@fastmail.im>
+To: "Kevin Charpentier" <kevinccharpentier@gmail.com>
+Cc: hansg@kernel.org, markgross@kernel.org,
+ platform-driver-x86@vger.kernel.org, maxtram95@gmail.com
+Message-Id: <a909064f-857f-448b-9e8e-5dcaf02f6170@app.fastmail.com>
+In-Reply-To: 
+ <CAH4z8xFHq9_cQME2qfjBi5Yt8KRHxc17U17rEP0nebX82zXtyA@mail.gmail.com>
+References: 
+ <CAH4z8xHUrb3nHM7SS9s_3h9qo_Bu7Susf8ug5E==nFbHQMPCJg@mail.gmail.com>
+ <5d11beec-b9ba-49ab-adfa-de5ad0cc4e69@app.fastmail.com>
+ <CAH4z8xFHq9_cQME2qfjBi5Yt8KRHxc17U17rEP0nebX82zXtyA@mail.gmail.com>
+Subject: Re: ideapad-laptop: duplicate KEY_MICMUTE events on ThinkBook 14 G7 ARP (ACPI
+ and WMI both report)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rTTft4mD9KhtmgPlYpja0XAfOHl+C89N+U6sSuo2CiLwZyOBRAf
- 5z32a3/cPNWp/gyS24vwFUlIzufNkP8mxE090HadyCok4xcRoQGDEgOPY9k1ca7uO+tUeLk
- ztaA3TF/ItTPloLxVKh3TO0Bqi1cenhNUq6qg00gmK4lhdZMfDYa6uok4Dj+O7A5b9pMkaC
- XweoEEz1VDPDlJa+HnTYg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:z7NnzfALCf0=;cig9D97FuiQpg3D5Y2qedpNuH+6
- R2gpgyCsP3OZeQYQhQ/el9CQNhXlBSt3lJAgDLaSm2J5dXMjTHbc4iIcEG+WeZkG0Ys5DazcL
- MyG0jOOcDInh7xkTbQgS23dmLHC1RHpm4yKvsApCc1QRx9VhsAPjLbqsCvz88UvMDcC2LhfS5
- wifXc9mh8MZD4109bt6q4b+X0LSKfEzRzyi2eZdx/4SLvIZMYWSpBW1FdgrJ34Kf/mpPhqOOq
- adpwxbxG6byri5/N0CPfzj3z07+kOwUi7qweZDMUL1SRL7JN0jj/99T5l6DCUp0BZbgDmQFHt
- PIC1uO9A8LJH6OUfMF1rmjorBxFRLtHp/lNTbge/1q7O7UpQeCqn+sBaW0b9dH2dPZUfIc4bg
- hiBfye1gXFErRpvCylwaKNEQnkzhg8M7MfNIKWuKZUDQMbXI7BL60LeDwBb+oV1mqtRi6zoih
- fXx5tQyFTvfHv2SGyJQr2z8kYcNb33cJ05PhNrDI1z1JDjD7umxPvIBHbVQ+xw3zc5Tscq/bh
- bWE5yLv+Il6NGNDxl2GWBRORA62g8rfn2eKU/jUAQsTuUdBH10vrRpyOWZhyNbCsnplmtZhvb
- nEiRQxDz0ERIdARzZVKwKBC2jdqGv3Eap0OU6D1WmYCnVSZYj7B+054dFojCViOC0CxQnoDvF
- xCgv905PZY4vDeVSNKur13UQeb302LuvhWWOwXqjotPv028QHl8AcVnGD1tIkr6AgFRgIEcZY
- qpTP6P7J37SP/ENyRk/VnjG9t/gzXcZnbj4KFA42XN8TXPeYfi+e8gydzq+dysY6DgMilG/j4
- 2plZBkYXlKThccHRAMurn4o7dg2mXXzPK/x8izL9dHmz8Let/Ps5Z5ohp3LJVC/TN003Q5xXf
- DQgeZwMGJtTphc4EJNND15d1g1nz4Sidq87h/NAMNqQ7p8/UYMevYnFYAoC5CRPmVlhDnxABr
- ds9nPBJbX2H8Z1FIIUxGDkK1MBGbAJ2ItU3UYxS8nszyqtFOCgXjesHmIVMfQ6trvHZjodHam
- MpvLcC0pzfJ1hUmhh2jkqDrlT73YD81pHGd+8bfeoz6Fsixf/7I7odqiHEc6bpVI/MaWkFmwC
- QIWTzO723FnC2EPRnYOQyNqbVeje/J1uoSslIxJOqNQRYAHXOxzVJqEEpPyaBYf+piPprt2hF
- wIQdSBnCeujGhY/G8/V+OokQEZIcMIaP28dPvEzklWEstHjpIb38ZM8VvcyqQFWsNaSNqBZJU
- +5UfNha2rYWMR8UxBAwqtHu74CWgS0wQS7+ea4mp0hKPoCoCeY7tdCkM29/8IU60AIJSdT9/T
- Tvuo6R1IX5HCa+iRLQGGo1Ce67qURx4c3BQuh4X9fy/DdM8h54NRtiiCz9wwenuzfNm/lyhBc
- +eEz8imwJntgdQhrXmHtGMykBWMSv1riX9ieqpheaYuEw7UNRv8fQKsIRKSIGWJLNZJFVqdMS
- OkRbcZC4nJNg2/QBClXNO/m9bMtkJEXnh3NRyHdAS/lfgffX6EUZXaOaignWEyacqw6upBlcP
- JEXMUbg8zCPOsF5cFFg3eZHZxvGHZLkQ3RjWhu/igR3szrY4kOkXjEls8VRVf12sInwE5k3lH
- SruKotRNakTq7RXCbQZSJGKf1Pcu1tSc83rpVRC6Tp1hzLr0P5apnOykCT5e/qQrj3I5yqWp8
- vLmuGCvscRsF4zPjuzj2hT4eF9TO//DwxnCD61lYdpa0ZDivJVoUVztotJ0xojIQdaQ+1Xp5L
- 9xiXRlvaGvrtOLU7j+o3TAZtHo2RY2/qd3d2C+71o153w9f4aWqI3hjOFyBy0WRHOBiPRZoz0
- tTQ7uBkChegE0NfTAzFVPSOD5v853/hNvG0qaDGbRKIYdiL24VqVKMnI66LOuY4VGnkgb0ZIa
- dDwtR62ma5APhnJPqyB/SBMJmsvirELr1XrJxiYEaer1NWnwyPMK7gHi9JAbVOjEVLKZPGpJe
- 59ckeMctcCbEMfZN6o8YNyMK/C6hztk0DpN/D/vjjEluHbbnwfTfOc/W6uWXpTJjDIv4GbGfG
- ttOTcjJ2VR60qE+v9/AJd9iyEPhpNJ/OgAyAQyoliROfC03aqSCUQKfAs5qFhYz4Qi9fuyWML
- HOGWsCEjv3QIN9D9ltLn1o2bLPJQNBKlC0Uy9qdLmqVzDYsUXOJjmcAvOCmJlrTNL67sSyOT9
- FU4yjJSOdYrxO06gZdWbVK870EztzwKsCwoUzduFGoFbzHQQthtrZYQAh9bKpt9R79RdBu54E
- Roej/xwoGsPYD5T3uzOhdYiRUlIYfl5++HZd7fXrnbgUxsAHpHvFagUllcgWXUaJoxrmzkCsA
- zjEHPpg4vLxy+wIuOvaM5XAM06PU6lfv1IT2plAFYcOF46MauX/XXerYZGhZbVFxbkrPaUeTi
- Yi9ZFg2xTRKD1YlhsaiuozyVXTzxrOQ4NZlvqLu9JXyzNDGi0VD9ZrFlYcILrRWS4UvlOpMZ4
- 5IOEb9Ft99FsPhaBlVaS436BBO9wvefWDmwf9BIUrSStlwQ1CGxg6c971C0vuMNr5CEJfcm6J
- Yd1Au/faQD6uo2pi3Qce6PNfhphhBZa67rwuOAQm5DnI+CQQBTBGt/pi3iDDPodD97qVFZH3M
- RLQ5R4aMHXf0TnvLiQJSLsxNOyBkwPelnAL6SNkAezO5Qjq8/TLL5AzRXdsCnW/VrXxJM/LDf
- ITELplG7TWhJBboYxoNGxO8zGEp5f6oCn54M6QRgAqtTLWMs4J/Bboq80M5Q7WVVonv2V44nK
- 7LFYXPZkgmR+IHqCjNdHtyglXqtxILG63YDPMgSQuhsn9ZwrwskD4yVt7Pu7FP5t8kcnRQ+n/
- d6aEfkhBREdeVNEYG0c6W5mNMWaUJuMbWQ8PFpOxCuqTGU59wdL1MfQ7gEntuhnbxX8CGuxxH
- 6scJa1mwJgDV+52vIMtIVN5mpEetBDMx3mITzpyj+ySUn8Q1CmhngDgpAGN3P2WASEFzWXKZD
- cOWprrch+iuh3vU7FfENQ95sNJlhuWLMOOMzF4erkLnkhIIQKbCH0g9x8SWJzjtPmSglRM2WY
- PMGbpov/wDU4Mzn1AzQzf05xEsxbL8rsTi/dVdZiy+2xRN/HPFdJP1dJLfVkUULd7xH12Pkqs
- Zz6bkv+qgAsAqndougn/uLSjfiaUKdYrRgqNKxm4AMVHccRIgZSBqrDhUjrU5AMuhxmlyqEuM
- CkuKgh01PLVLcLe4ffE7fkDGQPoYaKqEZIf2IyrPt36k2oxc+lrQLCz5VQrVJJrEenFvmebd5
- ivFvb2Pwm7zGY2YZ6dIM2UsNMOr9yWpuoOTEUPjG8ChhVYbwZVF8VcGPg85sUlpFZSj0NMLOG
- dUiDi+nFFup1ZM6uPy3VSiQb7CrxYH7PCiN/3vnHSNJtHsZyT3u8Igbia+5dAqqGc8nWYIVOf
- LDYBBERroIbibe56C5B95mCp3Hx66yckz8q71Zmq5JphXEoKwdh5DjmUmK7OLZoov2gAEbbp5
- VE4Fqv0CETpt8P4P7h2Wk7qPuLQ4+RP6Js1kFrgthPQmAObQV+j5qZH/h8quv3LPOTWekMy1x
- ZparI4Mhh6rgVYB5WZz6MmC8LyX2J6Hvgrkn/NbWrG7rdGijAEA35UNngRMmfpAvWLSNuGZhB
- ML6R4w+dYsa+GTZ0xoZoTZm17UI9ULgnihAkpOIqjBTrrpsSMtD9TXXGO+me+LtFrjR1hjWgC
- O6GIpbj+Cvg8r2V+GLx2wrgHp/rduGeoWvdn3UYrC0Qu/Yj8LYE17g3mqf7Ufj/JnBQfBuA3z
- SbUjDr8FGi7X14GaGkznZyoLC5EmPxXBBTtwKhtQ4HFUsIlqRurFIyzYmUr8AGEgza2D3GdaG
- 9cSojkVCU6raVX1r27uj8RnYRkpBsVzL7aznIJcYP/XeJrl5mISWLYXjC7I6KdqHUncOrOqjS
- 79I2eNetSSj0BqgGeuO0EfUeJNmRYZh4bmIlb6EbuZvRblaWr+5N4ku6I7eTyNx8AOFumO4GO
- QwTRjjjZ+IBQXdvrX+mIWO9YNm+YuteFMr/pDLC4rzrt2A3leJIE68HHAyMfe9jpQ/ljHE28E
- 7bNANPgFvdbbCRO1ika2/w8EMypJFlU/EfHZRQFjTpjWmtVB7OPo/2JAXGeuBb4yDlVzwB8AE
- 3W0quY9CXfFuvbmyfdY+MF7w6GJpgM+hJ9mVCQ61KlTACYT7XdAq9ARv5Dm/BI30b9zADah8/
- IfqyptZrLfEFg9mdWUnmNh8nfkxHR19WdhVa4+slXrDqxu9uP6PK6WUhzQ5ivjpC05MNhFA74
- 6Y1uz54E+fs9aGdPhIkGC1WlTyrc6tMX3NERIVofQkO0nshEIdETxa0+xJsam50Sgwm4ZMHmT
- y0huopkldf/J7WTsMhLTWlBhFyMTsyuygVJS6FtyDwsYS1myBWme1cyDUSdYRc4VZYA7wLRzJ
- 6QlhlhMWbUsl/mTuDLwGOCYWb+jQ1AA2d/UQWT5c8se9tfU1yyCAvFNwfo4B2FEB+EN8jOlDU
- uxW/rp2OrqAGyBBsGkxxz+/m8AQa7HBQTm0q/Y/zem3IFZbmNgwi7D6KiWQWOl/Z10490v7nq
- fXsgJ1tAUNGI6PAvTm4auWSIe6yKCuMadiJU3pvt9+fUhhh2SBW2OCSmxhKZOOoYi1z7MZ90O
- pbCRGVBX4aS1hbY8QZ6KyDMqKHyjRMWnma5/XYmps8JiMJcV2zTfk3ruoNbPIui/HWrWG6NzM
- VF6EOSt4SyDYlgbLRWOnGsKyOnZ/ptbyeyUoseMCUsxoKzBq+cTmnB+Jqq2PN/iPpu4bozj69
- Th+Bag+LEIfyxuLwAJ08tph9+gX8ZSML1KbJ8KpsoLJHA45uVlOs9/r/8cJP4nHFKfczc9iKZ
- kaSbQq9YWdRWmqdh2HPsEkW9aPFOW2xyAUh2WkpdVbG9yMGK4UZ+DBCD1Hqhq/at5ywtlemOp
- ma5F6GDfEHfub5bS56xdMUcA8R+5BkharijcrD9tSA1hyTEZYrv04uqU15so4QnbT+4i2Ti9G
- LUWoOIm7tBjUW/+1GxO6xoSX0zJKkmE/VRRhOH+vOrumNH6J24yoR4KVLQg2ZghKno5GAb+S1
- G9e0qaNCqa8ud+vEnfNZWZ0aOMwuvKOKImTG80pw0BR0OxA++u90e2WxMmVFLKUNXAK5EP+Dt
- kTlhQHsyPz/lZs248AwrGxKpD9FyV/BbdplTpMiKN9ZvxzK1pxybIHrKOuy4Vjr5UYdK9Lg8y
- D/C5lyDJIoHXHNjQxMAbzItiaOrotF9TPvNdaEDSNgUd7niOdcEFkQzp1Xsb5ioURLBf6WlYs
- DdXCjz2C/P7mjH50sDXgFQZZ1ejvmlBKh9Ag9ecjnoAC+vijhwNugiQmieFL9mozHE3baxFN5
- 8SHeoP5d6xkEedmtCZnyUa5PV6bu4FkEHb7+gf1xjuFFF4oeNWGRIK8YuPl3rHY553nyE5ovC
- osNBT6WWNV4XrzSrdsPJIIcAw4Rm68qgEWMkdWtv2MrsGlrdW+gAEOssl5s4JaroqEJX/2e1d
- vOQh7TzcBebs5neDG99PwkHttxzqXVjUspgrDpWGrFXTmsiFzXJveoyTYshWjfx6Uf/bwfO/b
- F7Wdk+arx1pK5e8RnynKduSfFctt+JXFpwU1MDl7ptaKoW3MLSOmijuWed/PIDDpsdv3M7fG5
- 9tnKJ9HR/SpIUHmsFrwdgWRXnmmJEJSI+G8owyhj3X4x7WveoCqeW4rQxUSUdIiRvb0BJJb9V
- IHp1Ox8D1Hrt/E27dCzBwgVXupwocMLQ7MmVhu3ik1WPAe5Fe8PfzsK/64uwMQcLWXlsweQBT
- 7tEOhVpq0rjGIR8R43eSs0sNrJjT3Cd1S1cw62XGU3WPxLk5P/MQek+W7F5s2IyEqwBkLP60S
- Kab2LJQCn9LcFjx7YYoVau7TqNuDY2Gxkwq7rMzkVPeyuVaLkAwY9boO08GnG6DzCJsgVCUpQ
- p01fSEccmyqE4MAAi3meTx4YQgnId7cqyZy7ZmHwa3MB3hby26ZEL1lO/D9JonN+PgRLoWxkE
- H+y9gjLzbFDFvaw7FKTTdy6ycuJD3p4RoN85vONUVIqxTisdFaKR9fsRQ5BGVTjPTJ8mtpyDs
- EYsLOSgXy0FGzcr6qpj8YI+/s4KryY6H2hgotstJPjIw/VJpdFvrps9kcfdUSZNPe9a9mMnDe
- ox3cIEmHA9MsaaRWCNzQaYf/8FvIrkKhT0I3u/t4eyDs8Yn6tAv/gYD2rSlfRO1bMuyKQxSV+
- M9fw9tU8xz+E6je8nNGCWYEqedqsA7s26Q+HLXHQn6nYwM971UeEuqzUXUBjjtsE6V0z3TXF6
- I8yHdqsMQuhy7en5pXUa6mGR/dvLDfPgaRGnPYKfQegc59qDn9RsZULkUMuICsiK0Qulv7cVD
- 7+EC8VICq1UVepP1eW9MxyxV6i9hLYqDnOA==
 
-Am 26.08.26 um 23:37 schrieb Armin Wolf:
+On Fri, Sep 11, 2026, at 17:45, Kevin Charpentier wrote:
+> On Fri, Sep 11, 2026, Alice wrote:
+>> Usually, duplicate keys are handled on udev level, see
+>> /lib/udev/hwdb.d/60-keyboard.hwdb [...] From the source code of
+>> ideapad-laptop, I see that MICMUTE scan codes are 8 and 0x13e - you n=
+eed
+>> to unmap one of those.
+>
+> That worked, thanks a lot. Confirming with details in case they are us=
+eful.
 
-> Am 22.08.26 um 02:28 schrieb Werner Sembach:
->
->> The devices with 3 brightness level keyboards send
->> UNIWILL_OSD_KB_LED_LEVEL0, UNIWILL_OSD_KB_LED_LEVEL2, and
->> UNIWILL_OSD_KB_LED_LEVEL4 and not UNIWILL_OSD_KB_LED_LEVEL0,
->> UNIWILL_OSD_KB_LED_LEVEL1, and UNIWILL_OSD_KB_LED_LEVEL2.
->>
->> This patch maps the events correctly to brightness levels 0, 1, and 2.
->
-> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->
-What is the status of this series?
+Glad that worked!
 
-Thanks,
-Armin Wolf
-
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> ---
->> V1->V2: Use the events as source of truth for brightness_hw_changed=20
->> value
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 again to avoid a race =
-condition as Armin had pointed out.
->> V2->V3: Return error for unexpected brightness level count.
->>
->> =C2=A0 drivers/platform/x86/uniwill/uniwill-acpi.c | 26 +++++++++++++++=
-++++++
->> =C2=A0 1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/platform/x86/uniwill/uniwill-acpi.c=20
->> b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> index 7a2eeaec4c961..5df3611919ce3 100644
->> --- a/drivers/platform/x86/uniwill/uniwill-acpi.c
->> +++ b/drivers/platform/x86/uniwill/uniwill-acpi.c
->> @@ -1631,6 +1631,32 @@ static int uniwill_notify_kbd_led(struct=20
->> uniwill_data *data, int brightness)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct led_classdev *led_cdev;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->> =C2=A0 +=C2=A0=C2=A0=C2=A0 /*
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * The devices with 3 brightness level keyboar=
-ds send
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * UNIWILL_OSD_KB_LED_LEVEL0, UNIWILL_OSD_KB_L=
-ED_LEVEL2, and
->> +=C2=A0=C2=A0=C2=A0=C2=A0 * UNIWILL_OSD_KB_LED_LEVEL4 which need to be =
-mapped to 0, 1,=20
->> and 2.
->> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->> +=C2=A0=C2=A0=C2=A0 switch (data->kbd_led_max_brightness) {
->> +=C2=A0=C2=A0=C2=A0 case 4:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->> +=C2=A0=C2=A0=C2=A0 case 2:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (brightness) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case 0:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case 2:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bri=
-ghtness =3D 1;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case 4:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bri=
-ghtness =3D 2;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
-ak;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
-urn -EINVAL;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break;
->> +=C2=A0=C2=A0=C2=A0 default:
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->> +=C2=A0=C2=A0=C2=A0 }
->> +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (data->kbd_led_single_color)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 led_cdev =3D &da=
-ta->kbd_led_cdev;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->>
->> base-commit: 54745d563114b74f6fecebce68cd020d06c1772b
+> The two paths do use different scan codes, so unmapping one is enough =
+and
+> the WMI driver can stay bound. Reading the raw evdev stream from "Idea=
+pad
+> extra buttons" while pressing Fn+F4 three times, before any change:
 >
+>   +7.176s  MSC_SCAN =3D 0x8    EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>   +7.182s  MSC_SCAN =3D 0x13e  EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>   +10.878s MSC_SCAN =3D 0x8    EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>   +10.878s MSC_SCAN =3D 0x13e  EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>   +14.747s MSC_SCAN =3D 0x8    EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>   +14.752s MSC_SCAN =3D 0x13e  EV_KEY 248 (KEY_MICMUTE) pressed/releas=
+ed
+>
+> 0x8 is the ACPI path (VPC2004:00) and 0x13e is the WMI path
+> (8FC0DE0C-B4E4-43FD-B0F3-8871711C1294-17). I verified this by unbinding
+> ideapad_wmi, which left only the 0x8 events.
+>
+> Your rule worked as written, with no changes and no reboot needed:
+>
+> evdev:name:Ideapad extra buttons:dmi:*:svnLENOVO:pn21MV:pvrThinkBook14=
+G7ARP:*
+>  KEYBOARD_KEY_13e=3Dunknown
+>
+> After `systemd-hwdb update` and `udevadm trigger --action=3Dchange
+> /sys/class/input/event12`, the second event is reported as KEY_UNKNOWN
+> (240) instead of KEY_MICMUTE, and the key now toggles the microphone
+> reliably on every press, including the mic-mute LED:
+>
+>   +5.268s  MSC_SCAN =3D 0x8    EV_KEY 248 pressed/released
+>   +5.273s  MSC_SCAN =3D 0x13e  EV_KEY 240 pressed/released
+>
+> I will submit this to systemd as a pull request against 60-keyboard.hw=
+db.
+>
+> One question, only if it is worth your time: is it expected that this
+> firmware reports the same key on both paths, or is the ThinkBook 14 G7=
+ ARP
+> simply a model that was never covered by a quirk?
+
+Unfortunately, no idea. Having duplicate key reports is not uncommon in
+various laptops. I don't know if this particular one is specific for
+your model or a wider family. You can start with submitting the hwdb
+rule for your specific model, and if other users with other models are
+affected too, they can generalize it.
+
+My old IdeaPad Z570 doesn't have a micmute button, as far as I remember.
+
+> I ask because there is no
+> entry for this machine (pn21MV) in 60-keyboard.hwdb, while several oth=
+er
+> ThinkBook models are listed, so I do not know whether other keys on th=
+is
+> laptop are affected in the same way and just have not been noticed yet.
+
+Well, you can test all special keys by pressing them and watching evdev
+events to identify all the buggy keys, to submit quirks for all of them
+at once. From what I see in the driver, KEY_PROG{1,2,3,4} can be
+generated both via ideapad_acpi and ideapad_wmi, so worth checking those
+(Fn+Q, dark mode, sound profile, star button, Lenovo proprietary stuff,
+and similar, if you have any of those on your laptop). But there is also
+a possibility that some keys can be reported via both ideapad_laptop and
+atkbd, so it's still worth checking all of the special keys.
+
+Regards,
+Alice
+
+> Thanks again for the quick and clear answer. As a first-time reporter,=
+ it
+> was much easier than I expected.
+>
+> Kevin Christian Charpentier
+>
+>
+> On Fri, Sep 11, 2026, Alice wrote:
+>>
+>> On Fri, Sep 11, 2026, at 05:49, Kevin Charpentier wrote:
+>> > Hi,
+>> >
+>> > I am reporting a bug where the mic-mute key (Fn+F4) is reported twi=
+ce by
+>> > ideapad-laptop on a Lenovo ThinkBook 14 G7 ARP, which makes the key=
+ appear
+>> > not to work at all under GNOME.
+>> >
+>> > This is my first report to this list, so please let me know if anyt=
+hing is
+>> > missing or should be sent differently.
+>> >
+>> > System
+>> > ------
+>> > Machine:  Lenovo ThinkBook 14 G7 ARP (21MV)
+>> > BIOS:     P6CN34WW, 03/10/2026 (EC 1.37, BIOS release 1.34)
+>> > Kernel:   7.2.4-200.fc44.x86_64 (Fedora 44)
+>> > Module:   drivers/platform/x86/lenovo/ideapad-laptop.ko
+>> >
+>> > DMI modalias:
+>> > dmi:bvnLENOVO:bvrP6CN34WW:bd03/10/2026:br1.34:efr1.37:svnLENOVO:pn2=
+1MV:pvrThinkBook14G7ARP:rvnLENOVO:rnLNVNB161216:rvrNODPK:cvnLENOVO:ct10:=
+cvrThinkBook14G7ARP:skuLENOVO_MT_21MV_BU_idea_FM_ThinkBook14G7ARP:pfaThi=
+nkBook14G7ARP:
+>> >
+>> > Symptom
+>> > -------
+>> > Pressing Fn+F4 appears to do nothing. The GNOME on-screen indicator=
+ does
+>> > appear and the mic-mute LED blinks, but the microphone mute state is
+>> > unchanged. Roughly one press out of several does take effect, which=
+ I
+>> > believe happens when the firmware drops one of the two notification=
+s.
+>> >
+>> > The key is not unmapped: KEY_MICMUTE is emitted correctly. It is em=
+itted
+>> > twice per physical keypress, 1-7 ms apart, so the userspace toggle =
+is
+>> > applied an even number of times and the state returns to its origin=
+al
+>> > value before anything can observe it.
+>> >
+>> > Note that polling the mute state does not reveal this. Both toggles=
+ happen
+>> > within ~7 ms, so a 100 ms poll of the PipeWire source sees no chang=
+e at all
+>> > and the key looks completely dead.
+>> >
+>> > Evidence
+>> > --------
+>> > Three physical keypresses, via `sudo libinput debug-events --show-k=
+eycodes`.
+>> > Note the millisecond-apart pairs, which cannot be produced by a fin=
+ger:
+>> >
+>> > -event12  KEYBOARD_KEY   +0.860s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +0.860s    KEY_MICMUTE (248) released
+>> >  event12  KEYBOARD_KEY   +0.867s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +0.868s    KEY_MICMUTE (248) released
+>> >  event12  KEYBOARD_KEY   +3.137s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +3.137s    KEY_MICMUTE (248) released
+>> >  event12  KEYBOARD_KEY   +3.140s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +3.140s    KEY_MICMUTE (248) released
+>> >  event12  KEYBOARD_KEY   +4.886s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +4.886s    KEY_MICMUTE (248) released
+>> >  event12  KEYBOARD_KEY   +4.891s    KEY_MICMUTE (248) pressed
+>> >  event12  KEYBOARD_KEY   +4.891s    KEY_MICMUTE (248) released
+>> >
+>> > All events come from the same input device, "Ideapad extra buttons"
+>> > (phys=3Dideapad/input0), created by ideapad-laptop.
+>> >
+>> > Analysis
+>> > --------
+>> > On this machine ideapad-laptop is bound to two devices at the same =
+time,
+>> > and both report this key into the same input device:
+>> >
+>> >   1. ACPI: platform device VPC2004:00 (driver ideapad_acpi)
+>> >   2. WMI:  8FC0DE0C-B4E4-43FD-B0F3-8871711C1294-17 (driver ideapad_=
+wmi),
+>> >            notify_id D0, instance_count 1
+>> >
+>> > Unbinding the WMI device removes the duplicate completely:
+>> >
+>> >   echo 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294-17 > \
+>> >        /sys/bus/wmi/drivers/ideapad_wmi/unbind
+>> >
+>> > After the unbind, the same three keypresses produce single events, =
+with
+>> > human-scale gaps instead of millisecond pairs:
+>> >
+>> >  event12  KEYBOARD_KEY   +0.298s    KEY_MICMUTE (248) pressed/relea=
+sed
+>> >  event12  KEYBOARD_KEY   +1.043s    KEY_MICMUTE (248) pressed/relea=
+sed
+>> >  event12  KEYBOARD_KEY   +2.880s    KEY_MICMUTE (248) pressed/relea=
+sed
+>> >
+>> > The key then works correctly in GNOME, and so does the mic-mute LED.
+>> >
+>> > I also verified that unbinding the WMI device does not regress anyt=
+hing
+>> > else exposed by the driver: fn_lock, conservation_mode, camera_powe=
+r,
+>> > usb_charging and fan_mode still respond, the platform::fnlock,
+>> > platform::kbd_backlight, platform::mute and platform::micmute LEDs =
+are
+>> > still present, and the kernel logs no errors.
+>> >
+>> > Questions
+>> > ---------
+>> > I am not sure where the fix belongs, so I am reporting rather than
+>> > proposing a patch:
+>> >
+>> >   - Is the firmware expected to notify this key on both the ACPI an=
+d the
+>> >     WMI path, with the driver responsible for reporting it only onc=
+e?
+>> >   - Or should ideapad-laptop not register the WMI hotkey path on mo=
+dels
+>> >     where the ACPI path already reports these keys?
+>> >
+>> > I am happy to test patches or gather any further information. I can=
+ also
+>> > provide the full acpidump, the WMI BMOF dump, or udev debug logs if=
+ that
+>> > helps.
+>>
+>> Hi Kevin,
+>>
+>> Thanks for the detailed report!
+>>
+>> Usually, duplicate keys are handled on udev level, see /lib/udev/hwdb=
+.d/60-
+>> keyboard.hwdb: it contains lots of definitions with "=3Dunknown", whi=
+ch
+>> unmap certain keys, often because they are already handled by another
+>> input device. Although adding a kernel quirk is also possible.
+>>
+>> There is no need to unbind or blacklist the entire WMI driver for thi=
+s.
+>> You can try adding a rule locally to /etc/udev/hwdb.d/61-keyboard-
+>> custom.hwdb, run `systemd-hwdb update`, and reboot to test it. The ru=
+le
+>> will probably look like this (I can't test it):
+>>
+>> evdev:name:Ideapad extra buttons:dmi:*:svnLENOVO:pn21MV:pvrThinkBook1=
+4G7ARP:*
+>>  KEYBOARD_KEY_13e=3Dunknown
+>>
+>> If it doesn't work on the first attempt, try making the DMI match more
+>> generic for testing. From the source code of ideapad-laptop, I see th=
+at
+>> MICMUTE scan codes are 8 and 0x13e =E2=80=94 you need to unmap one of=
+ those.
+>>
+>> If that works, you can submit a pull request to systemd.
+>>
+>> Hope that helps,
+>> Alice
+>>
+>> > Workaround for other users of this model
+>> > ----------------------------------------
+>> > A udev rule that unbinds the WMI device at boot:
+>> >
+>> > ACTION=3D=3D"bind", SUBSYSTEM=3D=3D"wmi",
+>> > ATTR{guid}=3D=3D"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", RUN+=3D"/bi=
+n/sh -c
+>> > 'grep -qx 21MV /sys/class/dmi/id/product_name && echo %k >
+>> > /sys/bus/wmi/drivers/ideapad_wmi/unbind'"
+>> >
+>> > Thanks,
+>> > Kevin Christian Charpentier
