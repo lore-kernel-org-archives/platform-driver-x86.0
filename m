@@ -1,133 +1,163 @@
-Received: from mta0.migadu.com (out-215.mta0.migadu.com [91.218.175.215])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B8246DFE7
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 09:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7CE39768F;
+	Fri, 11 Sep 2026 09:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789117834; cv=none; b=aazI52Uf+34hmz2HoiwmQHM0RMNxi6p5dZ9Fc3JyZL9u/1ENhWT7yd1YI0pnmVuX82O18IBEd7D3I/Xcw9o/SY+17gsKDa5/SY9Dys7haFJ7A4l0qNSgWuxL1f6xFs8ioH6rknF4J94rLAjkLRIw8pqmvOg99Bg178XUJINXJuc=
+	t=1789119489; cv=none; b=Ga0b24vCLW0SAwgWQddX5y3wxwP9TGyeCbIjYYTVSM7T6orBfVE1XawxkcW85MkOGMRDX+sRaCbuux1s3Wij5zz8NQOTMitdYosOOPoy4YFfkh6Ty71EW0AzaHQYteWI8o3El+wiBMpTTdfMWM3UyL0hM49kVohQtGtURokA9n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789117834; c=relaxed/simple;
-	bh=1UiFqdha0Je3xR9CoEQZhVfy8k5gYLDEkjsNuoazTlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RbDHZ7KgK9p9OC63DIiLktaq6EPXEtrBS84ibxmwCslRhfWFTX/pebVNsvc1uZEiq6GYa1qnZXaJk2F2NWLcwAlmQhw77Pa1mbvLdjsonFuPDMWWsjnYpeMK9cmSV+pZYXUaXWArCjsSQK2ZpZIosOVSaPHV+lPoVie9TWRObzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jimenezcarrero.com; spf=pass smtp.mailfrom=jimenezcarrero.com; dkim=pass (2048-bit key) header.d=jimenezcarrero.com header.i=@jimenezcarrero.com header.b=NfcQZ8DX; arc=none smtp.client-ip=91.218.175.215
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jimenezcarrero.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jimenezcarrero.com
+	s=arc-20240116; t=1789119489; c=relaxed/simple;
+	bh=sb6ClNqSQhPq2ZVhuU+8klKUwkLjODKU96QOOaqi6Cw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hAUe8WxEDOonDVIo3OzRL4HImhO1d9ZMNENjjmVvPvvBOWhgL/4+yoLeJvbuXs1Gi4mQniwFw2zCFZEKJvztZAIZGanE87Hpi/xZ+hPZHD83ANL9tfk6TIRhOrFsxBv3coqpUogi0VCHfz1Yt8OODoWE1335oAWZFtCRiXYIWHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DM9yb6wk; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jimenezcarrero.com header.i=@jimenezcarrero.com header.b="NfcQZ8DX"
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=1UiFqdha0Je3xR9CoEQZhVfy8k5gYLDEkjsNuoazTlU=;
- c=simple/simple; d=jimenezcarrero.com;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789117826; v=1; x=1789722626;
- b=NfcQZ8DX7jkgP757F3iNU2vI/J0SIjry/c1fsQ2Yl0z9QYKMzHnf/P33Z1xZ/vyENtoqBqJm
- uyJHqFjk60RB2KyjlULGwkAblkXn3rjePW251YiqQekWcLI6+SDA8nHnECADEw2Tb38GSbBFYA1
- pRfiTgWE2LgVyfU8pxVY4iuEYi0OXscScEeQkhdLCsrbUmp9RDOHJIlcwZYY+wU8ryuVpAtmtG8
- d3sB48oLN+VJQ3jCd9MhT9O4Az1MmNAiMQ/8lMr0XgqXRu5TeQhGvwntvSUO8R+e2KrS3aly+vk
- grU0laXQjP485SWT0pbWsbmDcIVndwmXxGzPcqNd9Cmzg==
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id a8b86de78718f879;
-	Fri, 11 Sep 2026 09:10:23 +0000
-X-Mizu-Trace-ID: a8b86de78718f879
-X-Migadu-Flow: FLOW_OUT
-From: Juan Jimenez Carrero <juan@jimenezcarrero.com>
-To: rf@opensource.cirrus.com
-Cc: khalil@rentman.nl,
-	broonie@kernel.org,
-	hansg@kernel.org,
-	linux-spi@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	khalilst@gmail.com,
-	daniel@zonque.org,
-	haojian.zhuang@gmail.com,
-	robert.jarzmik@free.fr,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with broken ACPI cs-gpios
-Date: Fri, 11 Sep 2026 11:10:11 +0200
-Message-ID: <20260911091011.76333-1-juan@jimenezcarrero.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <dad5e839-4932-4ae3-86d8-a3c2f4ce07d7@opensource.cirrus.com>
-References: <dad5e839-4932-4ae3-86d8-a3c2f4ce07d7@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DM9yb6wk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789119488; x=1820655488;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=sb6ClNqSQhPq2ZVhuU+8klKUwkLjODKU96QOOaqi6Cw=;
+  b=DM9yb6wkIw6H/4OUaxjgfsWqnlyifFSzuJm4auThBBtBwc0mV354yWRx
+   XtVaPKQt14wWQTHxwmAuXrNtLuI74H7+XGOopmobWMGCbssTFCTgK70GN
+   xPc/0fvgWUsW06yKDHuGJmgGIjUvm1V7dS7+MPTBjbLpMhgWAOSeQFKK8
+   CXvQwBVdRUh7PB3vVnm8I4Hbb6wYWM1MRgDUtsgLsesnWkjK2NOk6/5wg
+   tMkfigA95OrdDDeQGjA0+DXpjVm+sYk7WNYD5sMczGNu5j/1W9HF8+vvK
+   A11b1psKdcGb9tZV65ASr1A+m9roMLitbGJqHxiKH0mDnGtQeJfczTkfU
+   w==;
+X-CSE-ConnectionGUID: lv8LjnQ/RM2Ip6FtGVq2QA==
+X-CSE-MsgGUID: o8V6DDF0TnKqW/TDijK+BA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11901"; a="115120614"
+X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
+   d="scan'208";a="115120614"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:38:07 -0700
+X-CSE-ConnectionGUID: SRo+o97pTgCUDHnSfx1bsQ==
+X-CSE-MsgGUID: d5IlSxrWQfGb/hpk+vV9Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
+   d="scan'208";a="296857533"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 02:37:41 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 11 Sep 2026 12:37:38 +0300 (EEST)
+To: Juergen Gross <jgross@suse.com>
+cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
+    linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+    kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+    linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
+    linux-pm@vger.kernel.org, linux-coco@lists.linux.dev, 
+    linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org, 
+    dri-devel@lists.freedesktop.org, linux-crypto@vger.kernel.org, 
+    linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+    linux-fbdev@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>, 
+    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>, 
+    James Clark <james.clark@linaro.org>, 
+    "K. Y. Srinivasan" <kys@microsoft.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
+    Sean Christopherson <seanjc@google.com>, 
+    Paolo Bonzini <pbonzini@redhat.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+    Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+    Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+    Josh Poimboeuf <jpoimboe@kernel.org>, 
+    Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>, 
+    Tony Luck <tony.luck@intel.com>, 
+    Reinette Chatre <reinette.chatre@intel.com>, 
+    Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, 
+    Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 
+    Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+    Kiryl Shutsemau <kas@kernel.org>, 
+    Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+    Boris Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, 
+    Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+    David Airlie <airlied@redhat.com>, Olivia Mackall <olivia@selenic.com>, 
+    Herbert Xu <herbert@gondor.apana.org.au>, 
+    Viresh Kumar <viresh.kumar@linaro.org>, Huang Rui <ray.huang@amd.com>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+    Yazen Ghannam <yazen.ghannam@amd.com>, Linus Walleij <linusw@kernel.org>, 
+    Bartosz Golaszewski <brgl@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+    Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+    Artem Bityutskiy <dedekind1@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Miquel Raynal <miquel.raynal@bootlin.com>, 
+    Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+    Ashok Raj <ashok.raj.linux@gmail.com>, Hans de Goede <hansg@kernel.org>, 
+    Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+    Xi Pardee <xi.pardee@linux.intel.com>, 
+    Daniel Lezcano <daniel.lezcano@kernel.org>, 
+    Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
+    Helge Deller <deller@gmx.de>, xen-devel@lists.xenproject.org, 
+    linux-geode@lists.infradead.org, Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v3 12/13] treewide: convert rdmsrq() from a macro to an
+ inline function
+In-Reply-To: <20260911074530.3140830-13-jgross@suse.com>
+Message-ID: <b2baa471-0f6b-84e8-bda1-ae0964b72b04@linux.intel.com>
+References: <20260911074530.3140830-1-jgross@suse.com> <20260911074530.3140830-13-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-1162080221-1789119116=:1171"
+Content-ID: <b9134b99-a885-4c62-2abd-7195415a52e3@linux.intel.com>
 
-On 03/09/2026 10:21 am, Richard Fitzgerald wrote:
-> HP told us they have a BIOS with the cs-gpios fixed, and they can make
-> that available early if you post a support request for it.
->
-> Can you test that new BIOS? It would avoid the messy SPI workarounds.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I have affected hardware. I could raise a support request and
-test that BIOS, if a second machine doing so is useful:
+--8323328-1162080221-1789119116=:1171
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <085b47bf-864b-9802-2915-a51186e45c40@linux.intel.com>
 
-  HP EliteBook 8 G1i 14 inch, SKU D75TQET#ABE
-  BIOS X91 Ver. 01.05.02, 05/03/2026
-  Intel Core Ultra 5 238V (Lunar Lake-M)
-  SPI controller 8086:a827 (LPSS_CNL_SSP via tgl_spi_info)
-  Realtek ALC245, SSID 103c:8d8f
-  2x Cirrus Logic CS35L54 Rev B0 OTP4 fw:3.4.4, ACPI HID CSC3554
+On Fri, 11 Sep 2026, Juergen Gross wrote:
 
-This is the CS35L54 variant rather than CS35L56, so it may be a useful
-extra data point either way. The DSDT defect is identical:
+> Today rdmsrq() is a macro using its second parameter as the target for
+> storing the read MSR value.
+>=20
+> Convert rdmsrq() to an inline function returning the MSR value.
+>=20
+> The users have been converted using the following semantic patch:
+>=20
+>   // Options: --include-headers
+>=20
+>   virtual patch
+>   virtual report
+>=20
+>   @@
+>   expression msr, val;
+>   @@
+>   (
+>   - rdmsrq(msr,val)
+>   + val =3D rdmsrq(msr)
+>   )
+>=20
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> Acked-by: Damien Le Moal <dlemoal@kernel.org>      # ATA
 
-  Scope (_SB.PC00.SPI0)
-  {
-      Name (_DSD, Package (0x02)
-      {
-          ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-          Package (0x01)
-          {
-              Package (0x02) { "cs-gpios", Package (0x01) { Zero } }
-          }
-      })
-  }
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>=09=09# pdx86
 
-while GSPK._CRS declares SpiSerialBusV2 with DeviceSelection 0x0000 and
-0x0001, plus a GpioIo for the CS1 line.
+What is the plan for merging this?
 
-One difference from the cover letter's description: on this machine
-neither amplifier is instantiated on a stock kernel, not only the
-second. spi_add_device() rejects CS1 and serial-multi-instantiate then
-unwinds the whole set:
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com> # Hyper-V
 
-  pxa2xx-spi pxa2xx-spi.3: cs1 >= max 1
-  spi_master spi1: error -EINVAL: failed to add SPI device CSC3554:00 from ACPI
-  Serial bus multi instantiate pseudo device driver CSC3554:00: probe with
-    driver Serial bus multi instantiate pseudo device driver failed with error -22
-
-For reference, the LPSS capability register on this board reads
-caps[0xfc] = 0x220, so CS_EN (bits 12:9) is 0x1 and ffz() yields
-num_chipselect = 1, while ACPI describes two chip selects. The TYPE
-field of the same register reads 2 (LPSS_DEV_SPI), so the read itself
-is valid. (Obtained with a dev_info() added to spi-pxa2xx.c; the
-register is not reachable from userspace with CONFIG_IO_STRICT_DEVMEM)
-
-I have run the earlier two-patch version from your gist
-(serial-multi-instantiate + spi-pxa2xx), built out-of-tree as a DKMS
-module against 7.1.9. With those applied both amplifiers probe, load
-firmware and calibration, and bind to the codec. Internal speakers work
-across a cold boot:
-
-  serial-multi-instantiate CSC3554:00: Increasing num_chipselect from 1 to 2 for CS1
-  serial-multi-instantiate CSC3554:00: Got CS GPIO for amp CS1
-  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.0: DSP system name: '103C8D8F', amp name: 'AMP1'
-  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.1: DSP system name: '103C8D8F', amp name: 'AMP2'
-  snd_hda_codec_alc269 ehdaudio0D0: bound spi1-CSC3554:00-cs35l54-hda.0
-  snd_hda_codec_alc269 ehdaudio0D0: bound spi1-CSC3554:00-cs35l54-hda.1
-  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.0: Calibration applied
-  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.1: Calibration applied
-
-I have not tested v3, so I am deliberately not offering a Tested-by for
-it. I can test v3, the new BIOS or both on this machine (whichever is
-more useful).
-
-Juan Jimenez Carrero
+--=20
+ i.
+--8323328-1162080221-1789119116=:1171--
