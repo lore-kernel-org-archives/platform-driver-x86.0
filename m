@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F04C59E323
-	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 20:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC41B59C985
+	for <platform-driver-x86@vger.kernel.org>; Fri, 11 Sep 2026 20:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789157565; cv=none; b=WL9G1R3snAxb6DWxpT1ouhE4Ph+KWdmZQBrtKk1vPM8RSGB3RIMStLA0zdmSQWRpW0vvIB4abn8BetyBcOYXukxDAyM+rg/NRTXZjYbBLZ8X04eLEcL45SW91LgXNehDVYt1kGqG0GasMCWN6B4i0ECGUYpQ/iU4bCpQGyGPGi0=
+	t=1789157569; cv=none; b=e18lz9okmdCH8KBXxyiBxGV0G2kBOnPCob3Hggfo94/WKhBQcofiNpuQtCs4WAygnXzLY8CacXMdxjrX6V4/PYAGfKiVTeTVaIBp685zhYSOlnG+0yzyZaD142+Ld/zanLYC5kz0yc9SO0gxZw5gztzP/BEsKO8vAoN31guhsz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789157565; c=relaxed/simple;
-	bh=6xZI2nUZPwQ1n2c0MZhRQNAyy50kNhD54T6ccH7ON9A=;
+	s=arc-20240116; t=1789157569; c=relaxed/simple;
+	bh=GceCAcaaGJiGFn3WNl1vRm2/Wk+8/41/q/onpNyS8nQ=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZrPgRPqLGBKpqebL6RMGHCvRvDvD13MlAYU2wmxoRhVrp9UzznKRWCQz7Raj1Ge6PfzQtC85+MfNMs7oogh1P22UmboUwYmlYuxKF9RmzODwGaslmicbH/e0Gut71bc60GCkhqGgAtwWpuVWY/ejdBrwtg9HezKOQ8sAjWMNmWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TG4ZiErD; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=aGeHS8syrv0VzI5jLWdVqjtQmZhfqndI6MbmaUY1SlrUMlVwu1o2ZvUw9OJDy1tsUmZrXvhR0SKzgKPxSZeb6lFvQbD+4FLyEiNByl6K5nDRPLrU7Cw6d/Ah+lIXdIe6Rv6PrKJrwXDLfpaJEg8M9NPqNqJZAdMBHskEXVv5NOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TgTv7sie; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TG4ZiErD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TgTv7sie"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789157557; x=1820693557;
+  t=1789157564; x=1820693564;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=6xZI2nUZPwQ1n2c0MZhRQNAyy50kNhD54T6ccH7ON9A=;
-  b=TG4ZiErDW1O3iKXRklKaNn2Ix9uyfM4hC9gDA//GD58okQZ2lFhKKVmo
-   7RcwdyWlyvb5Iux4hugDW8BxcJiWOVdxKuO/pBbk9UU+4jeuM0Qw7NW1L
-   b927QEn80LZgg1Lbcuc7ThfXy4SxE9PVBRG7FzSrzYc3VdriugTsSe0gh
-   fn6JW6yvxabgSLLKWF8AYC+slftPxtfJcZoArkV76qReBV0EoFiyW/ZXO
-   iykU6C1pXoyKK/9joy/Z7c1hy1KHWtTws5sjUM22oSMNusuta7AxWDRKp
-   C/eDlqdK8obSgr1YsNxdMtUu7w7rtympj5z5kEZASjFV7gvuVA9D6pItt
-   Q==;
-X-CSE-ConnectionGUID: zcz5/X3CQxyzKddncKBlUg==
-X-CSE-MsgGUID: GU7JT3b3SFiLTW1q+GgBPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="115162419"
+  bh=GceCAcaaGJiGFn3WNl1vRm2/Wk+8/41/q/onpNyS8nQ=;
+  b=TgTv7sieRf7HbbULQ8uiDQ6NILoNfLQcAj3KjB+NARVDlTnEj/hCdpnn
+   T7CtexWc7WK4XdVE0hB/hpQXmJSeb1Xc6u4PR89DioJLcVWflZTbk+F3B
+   HAtbYP48wSzg71AWO7m25fB/TlZLrZyw0U27MXAYFA2LySYySPcMlef3u
+   Hm/tYD9XIFCiLO0lm7+Q34AsGOkIDJ+qTLuJH/bWnV/EW/gc00YUO4BoV
+   jYejustq5OTjB4BLekF7eXU4N55JkM89bFFBc1X3RjtUJ3ADOwRczuobL
+   LrZUGHJ4n9y37l9Dz+u4itzCVae1ULQtHpPBQ2Wq40SmRHGtCCaTlhaxP
+   g==;
+X-CSE-ConnectionGUID: GBdjf4+6Tjy/YqKjScRsWg==
+X-CSE-MsgGUID: nXtYoPzTRISpNJ5aHDfxXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11902"; a="115162448"
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="115162419"
+   d="scan'208";a="115162448"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:11:59 -0700
-X-CSE-ConnectionGUID: 8p4ffjTmT/SSNDGmLtqiWg==
-X-CSE-MsgGUID: djGQzLscS2eSg5DEjQdGaQ==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:12:00 -0700
+X-CSE-ConnectionGUID: zInIt84qRmCZ1bdtf0I16Q==
+X-CSE-MsgGUID: BeZnrszmR3KbCcrKDTsMnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,97,1787036400"; 
-   d="scan'208";a="277272109"
+   d="scan'208";a="277272126"
 Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
   by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2026 13:11:59 -0700
 From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
@@ -59,9 +59,9 @@ To: platform-driver-x86@vger.kernel.org,
 	matthew.d.roper@intel.com,
 	james.ausmus@intel.com,
 	karthik.poosa@intel.com
-Subject: [PATCH v8 14/20] drm/xe/vsec: Support Crescent Island PMT
-Date: Fri, 11 Sep 2026 13:12:02 -0700
-Message-ID: <20260911201148.1610547-36-michael.j.ruhl@intel.com>
+Subject: [PATCH v8 20/20] drm/xe/vsec: Refactor platform check
+Date: Fri, 11 Sep 2026 13:12:08 -0700
+Message-ID: <20260911201148.1610547-42-michael.j.ruhl@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
 References: <20260911201148.1610547-22-michael.j.ruhl@intel.com>
@@ -73,138 +73,54 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Crescent Island (CRI) supports PMT telemetry and crashlog.
+For debugfs, residencies and pcode_info are available on the BMG and
+CRI (!SRIOV_VF) platforms.
 
-Add Crescent Island (CRI) discovery structure (DVSEC) information to
-allow for Xe registration.
+Refactor to have one code path for adding the debugfs entries.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reviewed-by: Karthik Poosa <karthik.poosa@intel.com>
 Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
 ---
- drivers/gpu/drm/xe/regs/xe_pmt.h |  8 +++--
- drivers/gpu/drm/xe/xe_vsec.c     | 51 +++++++++++++++++++++++++++++---
- 2 files changed, 53 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/xe/xe_debugfs.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_pmt.h b/drivers/gpu/drm/xe/regs/xe_pmt.h
-index a62ab05c6b4c..2f6658395587 100644
---- a/drivers/gpu/drm/xe/regs/xe_pmt.h
-+++ b/drivers/gpu/drm/xe/regs/xe_pmt.h
-@@ -17,8 +17,12 @@
+diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
+index c56f0e4a9b90..d90fa2dc6231 100644
+--- a/drivers/gpu/drm/xe/xe_debugfs.c
++++ b/drivers/gpu/drm/xe/xe_debugfs.c
+@@ -761,23 +761,22 @@ void xe_debugfs_register(struct xe_device *xe)
+ 				 ARRAY_SIZE(debugfs_list),
+ 				 root, minor);
  
- #define PUNIT_VERSION_OFFSET		0xA0
- 
--#define BMG_TELEMETRY_BASE_OFFSET	0xE0000
--#define BMG_TELEMETRY_OFFSET		(SOC_BASE + BMG_TELEMETRY_BASE_OFFSET)
-+#define XE_PMT_BASE_OFFSET		0xE0000
+-	if (xe->info.platform == XE_BATTLEMAGE && !IS_SRIOV_VF(xe)) {
+-		drm_debugfs_create_files(debugfs_residencies,
+-					 ARRAY_SIZE(debugfs_residencies),
+-					 root, minor);
+-	}
+-
+ 	/*
+-	 * Pcode version read from PMT is currently only supported on CRI and BMG platforms in PF
+-	 * mode, as both platforms support the necessary telemetry read mechanism and have a fixed
+-	 * PUNIT_VERSION_OFFSET.
++	 * Residencies and Pcode version read from PMT is currently only supported on CRI and BMG
++	 * platforms in PF mode.  Both platforms support the necessary telemetry read mechanism
++	 * and have a fixed offsets for the required data.
+ 	 * Attempting this access on other platforms must be verified before enabling support.
+ 	 */
+ 	if (!IS_SRIOV_VF(xe) &&
+-	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE))
++	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE)) {
++		drm_debugfs_create_files(debugfs_residencies,
++					 ARRAY_SIZE(debugfs_residencies),
++					 root, minor);
 +
-+#define BMG_TELEMETRY_OFFSET		(SOC_BASE + XE_PMT_BASE_OFFSET)
-+
-+/* for CRI discovery and telemetry are in an indexed window */
-+#define CRI_PMT_OFFSET			(SOC_BASE + XE_PMT_BASE_OFFSET)
+ 		drm_debugfs_create_files(pcode_info_debugfs,
+ 					 ARRAY_SIZE(pcode_info_debugfs),
+ 					 root, minor);
++	}
  
- #define BMG_MODS_RESIDENCY_OFFSET		(0x4D0)
- #define BMG_G2_RESIDENCY_OFFSET		(0x530)
-diff --git a/drivers/gpu/drm/xe/xe_vsec.c b/drivers/gpu/drm/xe/xe_vsec.c
-index 856973473fd7..4a7c24a30b3f 100644
---- a/drivers/gpu/drm/xe/xe_vsec.c
-+++ b/drivers/gpu/drm/xe/xe_vsec.c
-@@ -8,6 +8,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/pci.h>
-+#include <linux/sizes.h>
- #include <linux/types.h>
- 
- #include <drm/drm_drv.h>
-@@ -32,12 +33,23 @@
-  * PMT usage.
-  */
- 
--/* PMT GUID value for BMG devices.  NOTE: this is NOT a PCI id */
-+/* PMT GUID value for BMG and CRI devices.  NOTE: this is NOT a PCI id */
- #define BMG_DEVICE_ID 0xE2F8
-+#define CRI_DEVICE_ID 0xE2FA
-+
-+/*
-+ * sizeof(Crashlog Type1 Version2) = 0x18 (24) bytes
-+ * For BMG and CRI PUNIT and OOBMSMS crashlogs are consecutive.
-+ */
-+#define BMG_CRASHLOG_PUNIT_DISC_OFFSET (0x60)
-+#define BMG_CRASHLOG_OOBMSM_DISC_OFFSET (BMG_CRASHLOG_PUNIT_DISC_OFFSET + 0x18)
-+
-+#define CRI_CRASHLOG_PUNIT_DISC_OFFSET (0x80)
-+#define CRI_CRASHLOG_OOBMSM_DISC_OFFSET (CRI_CRASHLOG_PUNIT_DISC_OFFSET + 0x18)
- 
- static struct intel_vsec_header bmg_telemetry = {
- 	.rev = 1,
--	.length = 0x10,
-+	.length = SZ_16,
- 	.id = VSEC_ID_TELEMETRY,
- 	.num_entries = 2,
- 	.entry_size = 4,
-@@ -47,12 +59,12 @@ static struct intel_vsec_header bmg_telemetry = {
- 
- static struct intel_vsec_header bmg_crashlog = {
- 	.rev = 1,
--	.length = 0x10,
-+	.length = SZ_16,
- 	.id = VSEC_ID_CRASHLOG,
- 	.num_entries = 2,
- 	.entry_size = 6,
- 	.tbir = 0,
--	.offset = BMG_DISCOVERY_OFFSET + 0x60,
-+	.offset = BMG_DISCOVERY_OFFSET + BMG_CRASHLOG_PUNIT_DISC_OFFSET,
- };
- 
- static struct intel_vsec_header *bmg_capabilities[] = {
-@@ -61,9 +73,36 @@ static struct intel_vsec_header *bmg_capabilities[] = {
- 	NULL
- };
- 
-+static struct intel_vsec_header cri_telemetry = {
-+	.rev = 1,
-+	.length = SZ_16,
-+	.id = VSEC_ID_TELEMETRY,
-+	.num_entries = 3,
-+	.entry_size = 4,
-+	.tbir = 0,
-+	.offset = CRI_PMT_OFFSET,
-+};
-+
-+static struct intel_vsec_header cri_crashlog = {
-+	.rev = 1,
-+	.length = SZ_16,
-+	.id = VSEC_ID_CRASHLOG,
-+	.num_entries = 2,
-+	.entry_size = 6,
-+	.tbir = 0,
-+	.offset = CRI_PMT_OFFSET + CRI_CRASHLOG_PUNIT_DISC_OFFSET,
-+};
-+
-+static struct intel_vsec_header *cri_capabilities[] = {
-+	&cri_telemetry,
-+	&cri_crashlog,
-+	NULL
-+};
-+
- enum xe_vsec {
- 	XE_VSEC_UNKNOWN = 0,
- 	XE_VSEC_BMG,
-+	XE_VSEC_CRI,
- };
- 
- static struct intel_vsec_platform_info xe_vsec_info[] = {
-@@ -71,6 +110,10 @@ static struct intel_vsec_platform_info xe_vsec_info[] = {
- 		.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_CRASHLOG,
- 		.headers = bmg_capabilities,
- 	},
-+	[XE_VSEC_CRI] = {
-+		.caps = VSEC_CAP_TELEMETRY | VSEC_CAP_CRASHLOG,
-+		.headers = cri_capabilities,
-+	},
- 	{ }
- };
- 
+ 	debugfs_create_file("forcewake_all", 0400, root, xe,
+ 			    &forcewake_all_fops);
 -- 
 2.43.0
 
