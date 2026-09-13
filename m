@@ -1,94 +1,114 @@
-Received: from sender6-op-o15.zoho.com (sender6-op-o15.zoho.com [165.173.180.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCF63783B4;
-	Sun, 13 Sep 2026 20:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789332713; cv=pass; b=ZWQrnbxGjnr9moWWrW6xqgye0quejNgp4wqjrImSB9zHdJ27UOhzOo+iKiArrjvsO3aXB1qed1H7sReUPWrFP8VhR/c4XgAIGHEGt5XjTz3LZajwBoZsWm8sNhQ2HbLv3rbWrJni7rq+QpFj7buYjFSuVGTtnku90uh645ur3tM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789332713; c=relaxed/simple;
-	bh=LTvCzRp12oClqrWsnpeiVMNof0cHXe4KvDJEs3CMNjE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lAgVqKM51BcBuxjy8ksWX3KESIGY/rVQw57RJXVmjkKTwR3e9jXaQ6ybf7xI6auyXbeBieuN4ZrWWzkfMJsxXhRY0zDNgVeaLumupUEJbiofNmJRzXlW9k3ndkT4wSFlCaV9ThldkQJ2u81NlOZQOoPl8lSfJLi8W7xGYjthaQA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=oOgaCkVm; arc=pass smtp.client-ip=165.173.180.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF624A35
+	for <platform-driver-x86@vger.kernel.org>; Sun, 13 Sep 2026 22:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789339682; cv=none; b=truPrQESgi8KgpIlHmj1N7kBs7lQiJVytA8NTzFwnb5mB5QWYDoHbt479jJFRnEf1VTU4uVvKnW/ecd1UWAcwlepjA9TImSf2qMYqqze4uBk8Uw7tapO7VZoeLkASxvGtYfICvoNDR89afIonT+LVKTQlAiqSd7z0lqo54/2JhE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789339682; c=relaxed/simple;
+	bh=9J39yLspIUiCYmkRfCmgGYZzHHZzoDfXyhWpklU8k7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jobQltnWoPJzfrAAd0fNesUAEFwqYODdp2nNWiiT+IHRdhzWaWp+LTAW6W8LFHZHpSne92mABeI4E5BaG/X5LoSKCrqGJod7GuYMOnbXHtFc1Drd/uwyfKYoalMOyTMZuBEEV2KOvYPpyFCCO7iGN6INbbdHaHiwWj+UREhZqyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ks7XTwvA; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="oOgaCkVm"
-ARC-Seal: i=1; a=rsa-sha256; t=1789332654; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=mUxibGHOgRBGjz8kzT3K1fi6qnvQBLLSpH1gbf6RP4THSgrj9GYPgOAxatvt8WYivEjIHh8zOv0ZgcGdwLsF45bkpb3FVGapOY4GpFxuVQslp0UiuU6TWX2hl8b1ckXHVKStAjLz2J+UZnF4mkpknCGkkPVaP4sWK+TgjBAXNUE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789332654; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/9RGclajS9AMvJ5UjvGYP7NKToYvyMliQF8dgJQOqjA=; 
-	b=FFwQKvskozk+b/B3B0hniignuVnObl5vx6+ysGH0ql8MWt56P0vli+N6uBlWie/9upqn3MJ/ljcn1FJhufyd2okvyCW8P4N7P5r0YLO0xpRD6vtkyKXxNVkwndTXolwyNyWcpQpSokYSz80oXMLfzyuJSqCyMDxY+bqVAmy+TVs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=rong.moe;
-	spf=pass  smtp.mailfrom=i@rong.moe;
-	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789332654;
-	s=zmail2048; d=rong.moe; i=i@rong.moe;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=/9RGclajS9AMvJ5UjvGYP7NKToYvyMliQF8dgJQOqjA=;
-	b=oOgaCkVmveTKmpTj9wXZsrzKCjI0EYdvxObNMvycoFx5sMLNE8UjCxRppN1rIyA6
-	dkkuzriHfjTerjV2caU5cCvWPJhkirMrxVYKBg3Z/CBkTwOW7LifQk15TeAKSZxkMP8
-	+gwG7KRGd1M3gor1l0ECzMBxi8yANWXVDFdrOsxALG726naBrCMVntKPaeFPedtSXl3
-	yqHFE0wX8afUDcYUYYMB7LzaZvSt1Z2gzbVY1qGDXQqVgQ86vYCIkxp+vVWL7dBm7OI
-	GFaVz1Qz7dZVrGSM3cWitvlsoZ3S2SN5vzGhsRHqPWPo0IRZ1PJIY8DpKkuzgEZhvrV
-	+UyiTH+Fnw==
-Received: by smtp.zohomail.com with SMTPS id 1789332653249314.3828254721873;
-	Sun, 13 Sep 2026 13:50:53 -0700 (PDT)
-From: Rong Zhang <i@rong.moe>
-Date: Mon, 14 Sep 2026 04:50:30 +0800
-Subject: [PATCH 9/9] platform/x86: Add myself as LENOVO drivers maintainer
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ks7XTwvA"
+Received: by mail-pj2-f13.google.com with SMTP id d9443c01a7336-2d6ff2f2c4eso2192975ad.1
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Sep 2026 15:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789339680; x=1789944480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3cZzu5pVka5ryTQQ2XqwnuE4e7coV/qer385o6D3Dpg=;
+        b=ks7XTwvAgA5Z0/Np9WrEqrt8eBlcMkKJEOsLySUYM7X8VDMTQ2V6W8JK6VTFUti9hf
+         +zy1Dy1S1w42ZuHf/NDyFGvx+xVzq2W/dBkQXUYN4SOYbbLVHsJDpBRd0JSweEsn6Ias
+         TKqv7K/hyfiGMVLKmDD5qRWIfPbl07GfVjkHMUdAvM41s4WfSdMnNLQYGV72j9QpwHOg
+         vCMx/N128Dai3Xh+hCkSp8zgouu4Y0zJFeYhgxzDb+BZdnm0b9qvwg2bYyrLiXKCmyC9
+         nQ5CIhEpbk2/kJj1BhlIMUCGZB155SaqnsKIn9pbmcIoHC56l1gvSVksDICXuoC/4fF+
+         X7kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789339680; x=1789944480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=3cZzu5pVka5ryTQQ2XqwnuE4e7coV/qer385o6D3Dpg=;
+        b=Kz9vSzVvdZCE3dUHJYL3NEZeWXGsZGojkxiitsDQazQq3JQoMy/D3I2fv12mXcQti7
+         FjvnqVsWgOWIXfeOOTQ0L57FyVMC8vx1W5xNfGMYjqVRVIaJgBVqtomT/O3SSBwt8NUP
+         Sp/biybhhV2dlowrufU6eHsJsHHeZ3gpEwXzio1TIbBTZFYGz7FEsGIxH1DigpVuuXEz
+         qBArZy62yPBG5zO9X6tHUVFh+DQ8m/c3RrYvztsgOs8GKPX98R0JbOxnitdNuls0WB4g
+         tMKSv5MBtg9BA2oM34IxihUzrZsonz2ZVV9gBiVSfFiiiFReihjy0JG4avbKQS0KgpFy
+         JRRA==
+X-Forwarded-Encrypted: i=1; AKwUvByb+q1l9dZEaksS7WMwyzbdxzrXTJkbvYBXHfNIx5DayH4P4B9i6tRvLergZGdGrHQyawoeRpZscjLX2ViY6CqhrdJT@vger.kernel.org
+X-Gm-Message-State: AFuF++lqf6+Q/W+sZpBDPyscdASG7urSfIpaDCV6US/UZVWtTl3RXUzF
+	tz6rs7BrD4q5dzwIoMgO1WqVd86A79Ny2mXvR38ZpZ//YCTpiJaDDDo0
+X-Gm-Gg: AYBFou2CVHg1BnBdUsY9Bgjv9AwtQdYCM6oq1nDm2v42ItDMnOrGWfXxmkJmT7oKGU6
+	Zx7PGs1tfS0e2ycTUQju2Cc3OqYybM1vdiO4vkbm+WWb6xOw7kQDTIGYV8JkRG3D2v0sA+VjwAH
+	H7wqy8fOAsMd5TM90JkCVwQ/HPv0NlmlqXtY36DvVYbwztuYNFShMFSkVYH3YqSeorDdXRX/Evf
+	sNGef5K6cAVpGF+sd8SaExdWN1XR60fNbTqo2AHn98TOJCZdd5MNJ0xY1OV0xw7CR2xobccS4lP
+	kfgJNC/cKj1rz6hfz+Sqx5Nhn/T7VnPS8fErD2/TPH0/t2PKRDoIqhHseoR5AaBu3mdYkaAKkQ0
+	TCaBvhI2wtqBs9r4J6p//6onWb4wkLcO+yiO9D9RrOgJz8KkvRSyUNVm3HNcLYndfyOgjJuEa9U
+	tvq/AoaV5nIB38OJO9pT2VFu12ySPAYJYpnHc2tkN1T352Mf2WxOoTx8GXpShVXUUGfxLJljl+P
+	2QP18OR309EhQGyn32R3XnJeHO7+tvBb2holdXuqEgTo4dbRBHOOHLqrkga72cwdk+byH8SCRdO
+	UMwuN9GT4mjxrovv/NT6
+X-Received: by 2002:a17:903:2987:b0:2d6:f09a:da1f with SMTP id d9443c01a7336-2dd2a72c2d3mr184202545ad.4.1789339680400;
+        Sun, 13 Sep 2026 15:48:00 -0700 (PDT)
+Received: from cachyos-aura ([45.112.148.109])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33ba4e52a60sm21992705eec.6.2026.09.13.15.47.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Sep 2026 15:47:59 -0700 (PDT)
+From: Navon John Lukose <navonjohnlukose@gmail.com>
+To: ikepanhc@gmail.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com
+Cc: mpearson-lenovo@squebb.ca,
+	derekjohn.clark@gmail.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Navon John Lukose <navonjohnlukose@gmail.com>
+Subject: [PATCH] platform/x86: ideapad-laptop: Add Yoga Pro 7 14IAH10 Mode key
+Date: Mon, 14 Sep 2026 04:17:53 +0530
+Message-ID: <20260913224753.30281-1-navonjohnlukose@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-lwmi-wmi-new-api-v1-9-7a400f2f69f8@rong.moe>
-References: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe>
-In-Reply-To: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
- "Derek J. Clark" <derekjohn.clark@gmail.com>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>
-Cc: Charles <hanker007@gmail.com>, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Rong Zhang <i@rong.moe>
-X-Mailer: b4 0.17-dev-1f2f7
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-I regularly improve LENOVO drivers (including lenovo-wmi-* and
-ideapad-laptop) and review patches posted on the pdx86 mailing list
-along with Derek J. Clark.
+The F9 "Mode" key emits WMI fn-key event 0x46, which the keymap does not
+cover, so it reaches userspace as KEY_UNKNOWN and cannot be remapped from
+there. Under Windows it opens a performance profile chooser, so it belongs
+in the keymap as a user-assignable key. Map it to KEY_PROG4.
 
-Add myself as a LENOVO drivers maintainer to reflect this.
-
-Suggested-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Link: https://msgid.link/782FE636-A06A-4E12-9563-786374805947@gmail.com
-Signed-off-by: Rong Zhang <i@rong.moe>
+Signed-off-by: Navon John Lukose <navonjohnlukose@gmail.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Lenovo Yoga Pro 7 14IAH10 (83KF), BIOS QGCN35WW. No other key on this
+machine emits 0x46, and pressing the Mode key leaves platform_profile
+unchanged.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c2414447892c..d69be560ee98 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14805,6 +14805,7 @@ F:	drivers/usb/misc/legousbtower.c
- LENOVO drivers
- M:	Mark Pearson <mpearson-lenovo@squebb.ca>
- M:	Derek J. Clark <derekjohn.clark@gmail.com>
-+M:	Rong Zhang <i@rong.moe>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
+KEY_PROG4 per Hans's note on the 0x3d key, that a key opening a settings
+dialog under Windows should get a free KEY_PROG#:
+https://lore.kernel.org/platform-driver-x86/35969669-48b6-469e-9cd2-26929fb33e5f@redhat.com/
 
--- 
-2.55.0
+ drivers/platform/x86/lenovo/ideapad-laptop.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/platform/x86/lenovo/ideapad-laptop.c b/drivers/platform/x86/lenovo/ideapad-laptop.c
+index 8213524..6fa72a3 100644
+--- a/drivers/platform/x86/lenovo/ideapad-laptop.c
++++ b/drivers/platform/x86/lenovo/ideapad-laptop.c
+@@ -1360,6 +1360,8 @@ static const struct key_entry ideapad_keymap[] = {
+ 	{ KE_KEY,	0x45 | IDEAPAD_WMI_KEY, { KEY_PROG3 } },
+ 	/* Performance toggle also Fn+Q, handled inside ideapad_wmi_notify() */
+ 	{ KE_KEY,	0x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
++	/* Mode (performance profile chooser) */
++	{ KE_KEY,	0x46 | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
+ 	/* shift + prtsc */
+ 	{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_SELECTIVE_SCREENSHOT } },
+ 	{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
+
+base-commit: 22098763a10d9c13
