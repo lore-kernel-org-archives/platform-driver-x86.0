@@ -1,711 +1,339 @@
-Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.186])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90CB23817E
-	for <platform-driver-x86@vger.kernel.org>; Sun, 13 Sep 2026 14:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574102F3C10;
+	Sun, 13 Sep 2026 20:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789310202; cv=none; b=Q4EFXcHoJwxar9RoUJDavToAGLib4rx8q18n1o3SMwPkacqYRJ1FwedyZ/8iQaXSEy6jJHFE9trCx4Vzmiodh7XjY/w7trXDA89KWzaB/dr6pBnwU7RauchWtxV6gyZvF/r/zOnKRicPu1k1Fm+w0RzSrFcu8Uws5o3z/RJQJpo=
+	t=1789332437; cv=none; b=kQX73uzWzPE/2jJoRlEIlcvzKKMZtO8vD1KvUJJsbHmJVyAj0HT0jKVDtjNyZtGEfsa9F9t6DLtqd/Qbva8SA7KIAtRJnJq3g63s6m+TwX94t/IUFQG5Mu9orDQQnAmuDDUOg62GilCmARqZRw8QGp75zV/ZLb2+vyWSpmydsjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789310202; c=relaxed/simple;
-	bh=2sCAf0nsAVbJwQbNsdaPxohLYFZdq0fnVaEk5GtxQSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wc7Y9GVRBqHTYEqIbQUgnLAVZBBGizyB5Jo6RdwU/ayPFpJyeI5FFXCkFAOFWZ3eE6tNMrbDf2J0DtclBKG7ZiSxO1G/meB7GPsDnRGSrlADEdoV/pv0JOkkVna0RdA0iZ4zQpu5t+xRXsmfkviNZcHzNwU0eUbHb/oS7Hfnt6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl; spf=fail smtp.mailfrom=vdwaa.nl; dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b=cCYc8h6f; arc=none smtp.client-ip=195.121.94.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=vdwaa.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=vdwaa.nl
+	s=arc-20240116; t=1789332437; c=relaxed/simple;
+	bh=RMieM0kE6G//7Cd+D3lycydrl5bs64X1RCo4kCEHjP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FWSEF9goaeaS+YdSEeYK61fURXhx6f8d9myVCH68JlJrWAg5d/15MIuBuSFOUTmot7PiUt0Im0PCgczsg1DrinU9kvBU+yB1GRf7TDVEncSimbGspPJI9ccIkBySPFtkzlIcmg0YOcSKZb7bqn58V1hxta62b9ZAPxDf2vpKY8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=R3ZLwoU4; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=kpnmail.nl header.i=@kpnmail.nl header.b="cCYc8h6f"
-X-KPN-MessageId: 5bdfe4aa-af80-11f1-bfbc-00505699b430
-Received: from smtp.kpnmail.nl (unknown [10.31.155.8])
-	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
-	id 5bdfe4aa-af80-11f1-bfbc-00505699b430;
-	Sun, 13 Sep 2026 16:35:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=kpnmail.nl; s=kpnmail01;
-	h=mime-version:message-id:date:subject:to:from;
-	bh=Cx/8G/qe6XPQqnPEiClunCU8kEzX4O3ibGboPoBaEZM=;
-	b=cCYc8h6fbR0D1Zqa9E6UQvsrLRk3fcYiqBcr2eY6eH5BsjeU3dbhbmRdxh0mGdDh2BQdavorIM5su
-	 y8hoeiLH1FiF631Iqr2OHmdJu/JwlEWylJtQX9dtodcZKIcU/bGokD6KQP9b6xhG22K2ZvreemU6j+
-	 fsCW/Q/VoeldbduQ=
-X-KPN-MID: 33|BAOMFDChVe/UfMLRkjxzxHHbgIWSpzZ6cvX6TObn+B3ZYpNS9J0t7vLOUvKZzJC
- MyNJV6+iTTpVj9a77OF9KeSs5OVb+8906KKiLUVkVNjM=
-X-KPN-VerifiedSender: No
-X-CMASSUN: 33|1iyV86li6cIhRmTq3fDJfLyh/vi86XEViz9DmhGPNWefHC0iez9ow2gLJMPuLEL
- WHJOP1GGZGv4EkjgJJNNPTw==
-Received: from natrium (77-171-66-179.fixed.kpn.net [77.171.66.179])
-	by smtp.kpnmail.nl (Halon) with ESMTPSA
-	id 5bd7d09b-af80-11f1-8ddf-00505699d6e5;
-	Sun, 13 Sep 2026 16:35:25 +0200 (CEST)
-From: Jelle van der Waa <jelle@vdwaa.nl>
-To: Armin Wolf <W_Armin@gmx.de>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jelle van der Waa <jelle@vdwaa.nl>,
-	platform-driver-x86@vger.kernel.org,
-	Frederik Harwath <frederik@harwath.name>,
-	Mohsen Tahmasebi <moh53n@moh53n.net>
-Subject: [PATCH v8 1/1] platform/x86: add Acer battery control driver
-Date: Sun, 13 Sep 2026 16:35:17 +0200
-Message-ID: <20260913143521.1190506-2-jelle@vdwaa.nl>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260913143521.1190506-1-jelle@vdwaa.nl>
-References: <20260913143521.1190506-1-jelle@vdwaa.nl>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="R3ZLwoU4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1789332428; x=1789937228; i=w_armin@gmx.de;
+	bh=o69aJ+JtgvfIQWVmcrxcTtmCNvklzMYvTEoU59Im4Ls=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=R3ZLwoU4J3Nca7LPZpJU/ND/eqqjW8E78npvOj5BskNto/r2iaLqiLp2Xr5zx3uW
+	 pVTld/KUAaMH1F1u44yDsQhzZR6O72NxN15lweYuxjQR8806rpMBLb0PfFag5wk97
+	 tzdypsKvlP60lIq7IOUtaWp3k2AlOETS0us/uhJsR3BRim3Y+LvILaOmN5qIaE058
+	 edElfGRJCPlgEJcoopQajewVkCSZp5ip33cJhYvA83glLpBlmUIiWxHZh9NY1RB2l
+	 gg9A80gUBJ5bvaF10wSTOC320KMPihO/31UpscChkHfLVB4aCtgHs4WKmsb+frmtt
+	 o18L6gRkSXMbT3HpBw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M5fIQ-1xBua61yDC-001YgQ; Sun, 13
+ Sep 2026 22:47:08 +0200
+Message-ID: <173a48cf-5f13-4b8c-ae5a-a294c2a12616@gmx.de>
+Date: Sun, 13 Sep 2026 22:47:07 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: bitland-mifs-wmi: Don't abort suspend when
+ platform profile access fails
+To: Chris Taraszka <chris@miget.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mingyou Chen <qby140326@gmail.com>, stable@vger.kernel.org
+References: <20260911182131.461415-1-chris@miget.com>
+ <de81ce50-a55d-4a02-85dc-419bb219cdf1@gmx.de>
+ <CAAcRvKOppipCzBsGeodOb4gpeG7hgL3TnP+a+GdETvHmGnTRNg@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAAcRvKOppipCzBsGeodOb4gpeG7hgL3TnP+a+GdETvHmGnTRNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9e7/vLagltj/U12/po5IcEnnweH0Yw78eZN4AIcajfV7xY52lvb
+ RdTD/R8AggOgQBR2FuePmQx2hUVvPQCRF51YOc9Eevvg5H/5b3OiaA+hZLoQjHVNo0UJ6x+
+ PN7IPKXzl8rGfcFYyGuMgB08gPuuFh+SMUY0+mP0kdu1jKKH/9vQ6b5y/PlFQz5JSDg+jBw
+ pYXuQVrBWyp8iD5uEUXNQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZQaQ7hVUYds=;TKiJhVaqGNoCupERy9LvygqMh9j
+ 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
+ N15j
 
-Some Acer laptops can configure battery related features through Acer
-Care Center on Windows. This driver uses the power supply extension to
-set a battery charge limit and exposes the battery
-temperature.
+Am 12.09.26 um 20:16 schrieb Chris Taraszka:
 
-This driver is based on the existing acer-wmi-battery project on GitHub
-and was tested on an Acer Aspire A315-510P.
+> Hi,
+>
+> gzip attached (~702K rather than 3.6M)
+>
+> Xiaomi Book Pro 14 (sys_vendor XIAOMI), BIOS XMAPT4B0P0909
+> /sys/firmware/acpi/platform_profile_choices: low-power balanced=20
+> performance
+>
+Thanks, it seems that the root cause for all of this is that your device u=
+ses different
+values for communicating the desired platform profile to the underlying AC=
+PI firmware.
+I strongly suspect that the platform profile mechanism will currently not =
+work on your device
+at all.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Signed-off-by: Jelle van der Waa <jelle@vdwaa.nl>
-Tested-by: Mohsen Tahmasebi <moh53n@moh53n.net>
+Some other users have already posted patch to work around this by implemen=
+ting a DMI whitelist,
+you can find those patches in the archives. I currently have a patch serie=
+s pending that fixes
+an issue inside the underlying WMI interface, after that i can take care o=
+f this problem.
 
----
-v8:
-- Add missing direct linux header includes
-v7:
-- Add Acer Aspire A315-58G to the DMI allowlist
-v6:
-- Mark health_mode static and use __ro_after_init
-- Convert output.data using kernel helper le32_to_cpup
-- Drop unneeded if-statement for health_mode check
-- Remove property_is_writeable for acer_wmi_battery_extension_v1
-- Move DMI whitelist above acer_wmi_battery_module_init
-v5:
-- Add Acer WMI Battery Interface documentation
-- Drop unneeded wmi_buffer output initialisation
-- Drop get_unaligned_le32, as wmi core returns aligned data
-- Derive temperature divider contsant from <linux/units.h> defines
-- Add trailing commas to any non-terminating entry in DMI match table
-- Remove duplicate DMI entry from DMI match table
-- Update set_battery_health_control_output members to be __le16 not u8
-  as WMI data suggests
-- Replace sizeof(u32) with sizeof(*result)
-- Add an empty line between if statements in POWER_SUPPLY_PROP_TEMP case
-- Drop unneeded .set_property callback in acer_wmi_battery_extension_v1
-- Introduce a force module parameter for easier testing of new notebook
-  models
-- Use "ret" instead of "r"
-- Check the "uReturn" value of SetBatteryHealthControl
-v4:
-- Add additional DMI ids from https://github.com/frederik-h/acer-wmi-battery/blob/main/MODELS.md
-  cross checked with DMI ids found in https://github.com/linuxhw/DMI
-- Move DMI matching to __init and make the DMI table __initconst
-- Port to the new wmidev_invoke_* API
-v3:
-- Add depends on DMI
-- Rename CamelCase struct member names
-- Simplify returning errors
-- Add comma to non-terminating entries
-- Simplified acer_wmi_battery_set_battery_health_control to acer_wmi_set_battery_health_control
-- Use sizeof for acpi_object buffer
-- Drop POWER_SUPPLY_EXTENSION macro
-v2:
-- Alphabetically sort linux headers
-- Include headers for types / _packed
-- Use cleanup.h instead of goto + label
-- Add missing prefix for set_battery_health_control
-- General code formatting fixes
-- Remove HWMON dependency in Kconfig
-- Use wmidev_evaluate_method()
-- Accept oversized ACPI buffers
-- Use DRIVER_NAME for battery extension name
-- Set no_singleton = true
-- Implement DMI matching to support laptops with only battery
-  temperature support.
----
- .../wmi/devices/acer-wmi-battery.rst          |  70 +++
- drivers/platform/x86/Kconfig                  |  12 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/acer-wmi-battery.c       | 457 ++++++++++++++++++
- 4 files changed, 540 insertions(+)
- create mode 100644 Documentation/wmi/devices/acer-wmi-battery.rst
- create mode 100644 drivers/platform/x86/acer-wmi-battery.c
+For now i suggest that you blacklist the driver until the DMI whitelist ha=
+s been integrated.
 
-diff --git a/Documentation/wmi/devices/acer-wmi-battery.rst b/Documentation/wmi/devices/acer-wmi-battery.rst
-new file mode 100644
-index 000000000000..8aa3e1334490
---- /dev/null
-+++ b/Documentation/wmi/devices/acer-wmi-battery.rst
-@@ -0,0 +1,70 @@
-+.. SPDX-License-Identifier: GPL-2.0-or-later
-+
-+====================================================
-+Acer WMI Battery interface driver (acer-wmi-battery)
-+====================================================
-+
-+Introduction
-+============
-+
-+Some Acer laptops support setting battery charge control limits and allow a
-+user to calibrate their battery.
-+
-+WMI interface description
-+=========================
-+
-+The WMI interface description can be decoded from the embedded binary MOF (bmof)
-+data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-+
-+::
-+
-+  [WMI, Dynamic, Provider("WmiProv"), Locale("MS\\0x409"), Description("Class used to control smart battery, Version 2.88"), guid("{79772EC5-04B1-4bfd-843C-61E7F77B6CC9}")]
-+  class BatteryControl {
-+    [key, read] string InstanceName;
-+    [read] boolean Active;
-+
-+    [WmiMethodId(19), Implemented, read, write, Description("Get battery Information Interface.")] void GetBattInfoInterface([in] uint32 uBatteryInfoIndex, [in] uint32 uBatteryNo, [out] uint32 uReturn);
-+    [WmiMethodId(20), Implemented, read, write, Description("Get Battery Health Control Status.")] void GetBatteryHealthControlStatus([in] uint8 uBatteryNo, [in] uint8 uFunctionQuery, [in] uint8 uReserved[2], [out] uint8 uFunctionList, [out] uint8 uReturn[2], [out] uint8 uFunctionStatus[5]);
-+    [WmiMethodId(21), Implemented, read, write, Description("Set Battery Health Control.")] void SetBatteryHealthControl([in] uint8 uBatteryNo, [in] uint8 uFunctionMask, [in] uint8 uFunctionStatus, [in] uint8 uReservedIn[5], [out] uint16 uReturn, [out] uint16 uReservedOut);
-+    [WmiMethodId(22), Implemented, read, write, Description("Get Battery Function Data.")] void GetBatteryFunctionData([in] uint8 uFunctionMask, [in] uint8 uReservedIn[3], [out] uint8 uReturnCode[2], [out] uint8 uBACStartTime[2], [out] uint8 uBACStopTime[2], [out] uint8 uBACStatus, [out] uint8 uReservedOut[9]);
-+    [WmiMethodId(23), Implemented, read, write, Description("Set Battery Function Data.")] void SetBatteryFunctionData([in] uint8 uFunctionMask, [in] uint8 uBACSwitch, [in] uint8 uReservedIn[6], [out] uint16 uReturnCode, [out] uint8 uReservedOut[2]);
-+  };
-+
-+For all methods the ``uBatteryNo`` is always ``0x1``, there are no known Acer
-+laptop models with two batteries.
-+
-+WMI method GetBatteryInfoInterface()
-+------------------------------------
-+
-+Returns additional battery information, the data seems to be based on the
-+"Smart Battery Data Specification". The only known value for
-+``uBatteryInfoIndex`` is ``0x8``, the battery temperature.
-+
-+WMI method GetBatteryHealthControlStatus()
-+------------------------------------------
-+
-+This interface does not exist on all Acer laptops, it returns whether battery
-+charge limiting or calibration mode is enabled.
-+
-+When calling this method, ``uFunctionList`` is a bitmask with known values:
-+
-++--------------------+------------------------------------+
-+| Value              | Description                        |
-++====================+====================================+
-+| 0x01               | Health mode supported              |
-++--------------------+------------------------------------+
-+| 0x02               | Calibration mode supported         |
-++--------------------+------------------------------------+
-+
-+``uFunctionStatus`` is a 5 byte array known elements are ``0`` for health mode
-+and ``1`` for calibration mode. A non-zero value means the mode is enabled.
-+
-+WMI method SetBatteryHealthControl()
-+------------------------------------
-+
-+This interface does not exist on all Acer laptops, it enables battery
-+charge limiting or battery calibration.
-+
-+The argument ``uFunctionMask`` is known to accept either ``0x01`` for setting
-+health mode or ``0x02`` for calibration mode; other values are unknown.
-+``uFunctionStatus`` is an uint8 value, a non-zero value enables the given mode.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 957034f39e4e..45f15f93afa7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -189,6 +189,18 @@ config ACER_WMI
- 	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
- 	  here.
- 
-+config ACER_WMI_BATTERY
-+	tristate "Acer WMI Battery"
-+	depends on ACPI_WMI
-+	depends on ACPI_BATTERY
-+	depends on DMI
-+	help
-+	  This is a driver for Acer laptops with battery health control. It
-+	  adds charge limit control and battery temperature reporting.
-+
-+	  If you have an ACPI-WMI Battery compatible Acer laptop, say Y or M
-+	  here.
-+
- source "drivers/platform/x86/amd/Kconfig"
- 
- config ADV_SWBUTTON
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 872ac3842391..a877acd937cd 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_BITLAND_MIFS_WMI)		+= bitland-mifs-wmi.o
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
- obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
- obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
-+obj-$(CONFIG_ACER_WMI_BATTERY)	+= acer-wmi-battery.o
- 
- # AMD
- obj-y				+= amd/
-diff --git a/drivers/platform/x86/acer-wmi-battery.c b/drivers/platform/x86/acer-wmi-battery.c
-new file mode 100644
-index 000000000000..a4f864408dfe
---- /dev/null
-+++ b/drivers/platform/x86/acer-wmi-battery.c
-@@ -0,0 +1,457 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * acer-wmi-battery.c: Acer battery health control driver
-+ *
-+ * This is a driver for the WMI battery health control interface found
-+ * on some Acer laptops.  This interface allows to enable/disable a
-+ * battery charge limit ("health mode") and exposes the battery temperature.
-+ *
-+ * Based on acer-wmi-battery https://github.com/frederik-h/acer-wmi-battery/
-+ *
-+ * Copyright (C) 2022-2025  Frederik Harwath <frederik@harwath.name>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/array_size.h>
-+#include <linux/bits.h>
-+#include <linux/byteorder/generic.h>
-+#include <linux/cleanup.h>
-+#include <linux/compiler_attributes.h>
-+#include <linux/dmi.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/limits.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+#include <linux/version.h>
-+#include <linux/wmi.h>
-+
-+#include <acpi/battery.h>
-+
-+#define DRIVER_NAME	"acer-wmi-battery"
-+
-+#define ACER_BATTERY_GUID "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
-+
-+/*
-+ * The Acer OEM software seems to always use this battery index,
-+ * so we emulate this behaviour to not confuse the underlying firmware.
-+ *
-+ * However this also means that we only fully support devices with a
-+ * single battery for now.
-+ */
-+#define ACER_BATTERY_INDEX	0x1
-+
-+static bool force;
-+module_param_unsafe(force, bool, 0);
-+MODULE_PARM_DESC(force, "Enable health mode control without checking for supported devices\n");
-+
-+struct get_battery_health_control_status_input {
-+	u8 battery_no;
-+	u8 function_query;
-+	u8 reserved[2];
-+} __packed;
-+
-+struct get_battery_health_control_status_output {
-+	u8 function_list;
-+	u8 ret[2];
-+	u8 function_status[5];
-+} __packed;
-+
-+struct set_battery_health_control_input {
-+	u8 battery_no;
-+	u8 function_mask;
-+	u8 function_status;
-+	u8 reserved_in[5];
-+} __packed;
-+
-+struct set_battery_health_control_output {
-+	__le16 ret;
-+	__le16 reserved_out;
-+} __packed;
-+
-+enum battery_mode {
-+	HEALTH_MODE = 1,
-+	CALIBRATION_MODE = 2,
-+};
-+
-+struct acer_wmi_battery_data {
-+	struct acpi_battery_hook hook;
-+	struct wmi_device *wdev;
-+	const struct power_supply_ext *battery_ext;
-+};
-+
-+static bool health_mode __ro_after_init;
-+
-+static int acer_wmi_battery_get_information(struct acer_wmi_battery_data *data,
-+					    u32 index, u32 battery, u32 *result)
-+{
-+	u32 args[2] = { index, battery };
-+	struct wmi_buffer input = { .length = sizeof(args), .data = args };
-+	struct wmi_buffer output;
-+	int ret;
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 19, &input, &output, sizeof(*result));
-+	if (ret)
-+		return ret;
-+
-+	*result = le32_to_cpup((__le32 *)output.data);
-+
-+	kfree(output.data);
-+
-+	return 0;
-+}
-+
-+static int acer_wmi_battery_get_health_control_status(struct acer_wmi_battery_data *data,
-+						      bool *health_mode)
-+{
-+	/*
-+	 * Acer Care Center seems to always call the WMI method
-+	 * with fixed parameters. This yields information about
-+	 * the availability and state of both health and
-+	 * calibration mode. The modes probably apply to
-+	 * all batteries of the system.
-+	 */
-+	struct get_battery_health_control_status_input args = {
-+		.battery_no = ACER_BATTERY_INDEX,
-+		.function_query = 0x1,
-+		.reserved = { 0x0, 0x0 },
-+	};
-+	struct wmi_buffer input = { .length = sizeof(args), .data = &args };
-+	struct wmi_buffer output;
-+	int ret;
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 20, &input, &output,
-+				   sizeof(struct get_battery_health_control_status_output));
-+	if (ret)
-+		return ret;
-+
-+	struct get_battery_health_control_status_output *status_output __free(kfree) = output.data;
-+
-+	if (!(status_output->function_list & HEALTH_MODE))
-+		return -EINVAL;
-+
-+	*health_mode = status_output->function_status[0] > 0;
-+
-+	return 0;
-+}
-+
-+static int acer_wmi_battery_set_health_control(struct acer_wmi_battery_data *data,
-+					       u8 function, bool function_status)
-+{
-+	struct set_battery_health_control_input args = {
-+		.battery_no = ACER_BATTERY_INDEX,
-+		.function_mask = function,
-+		.function_status = function_status ? 1 : 0,
-+		.reserved_in = { 0x0, 0x0, 0x0, 0x0, 0x0 },
-+	};
-+	struct wmi_buffer input = { .length = sizeof(args), .data = &args };
-+	struct wmi_buffer output;
-+	int ret;
-+
-+	ret = wmidev_invoke_method(data->wdev, 0, 21, &input, &output,
-+				   sizeof(struct set_battery_health_control_output));
-+	if (ret)
-+		return ret;
-+
-+	struct set_battery_health_control_output *status_output __free(kfree) = output.data;
-+	if (le16_to_cpu(status_output->ret) != 0)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int acer_battery_ext_property_get(struct power_supply *psy,
-+					 const struct power_supply_ext *ext,
-+					 void *ext_data,
-+					 enum power_supply_property psp,
-+					 union power_supply_propval *val)
-+{
-+	struct acer_wmi_battery_data *data = ext_data;
-+	bool health_mode;
-+	u32 value;
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-+		ret = acer_wmi_battery_get_health_control_status(data, &health_mode);
-+		if (ret)
-+			return ret;
-+
-+		val->intval = health_mode ? POWER_SUPPLY_CHARGE_TYPE_LONGLIFE
-+					  : POWER_SUPPLY_CHARGE_TYPE_STANDARD;
-+		break;
-+	case POWER_SUPPLY_PROP_TEMP:
-+		ret = acer_wmi_battery_get_information(data, 0x8, ACER_BATTERY_INDEX, &value);
-+		if (ret)
-+			return ret;
-+
-+		if (value > U16_MAX)
-+			return -ERANGE;
-+
-+		val->intval = value + ABSOLUTE_ZERO_MILLICELSIUS / MILLIDEGREE_PER_DECIDEGREE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int acer_battery_ext_property_set(struct power_supply *psy,
-+					 const struct power_supply_ext *ext,
-+					 void *ext_data,
-+					 enum power_supply_property psp,
-+					 const union power_supply_propval *val)
-+{
-+	struct acer_wmi_battery_data *data = ext_data;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-+		return acer_wmi_battery_set_health_control(data, HEALTH_MODE,
-+				val->intval == POWER_SUPPLY_CHARGE_TYPE_LONGLIFE);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int acer_battery_ext_property_is_writeable(struct power_supply *psy,
-+						  const struct power_supply_ext *ext,
-+						  void *ext_data,
-+						  enum power_supply_property psp)
-+{
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_TYPES:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const enum power_supply_property acer_battery_properties_v1[] = {
-+	POWER_SUPPLY_PROP_TEMP,
-+};
-+
-+static const enum power_supply_property acer_battery_properties_v2[] = {
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CHARGE_TYPES,
-+};
-+
-+static const struct power_supply_ext acer_wmi_battery_extension_v1 = {
-+	.name			= DRIVER_NAME,
-+	.properties		= acer_battery_properties_v1,
-+	.num_properties		= ARRAY_SIZE(acer_battery_properties_v1),
-+	.get_property		= acer_battery_ext_property_get,
-+};
-+
-+static const struct power_supply_ext acer_wmi_battery_extension_v2 = {
-+	.name			= DRIVER_NAME,
-+	.properties		= acer_battery_properties_v2,
-+	.num_properties		= ARRAY_SIZE(acer_battery_properties_v2),
-+	.charge_types           = BIT(POWER_SUPPLY_CHARGE_TYPE_STANDARD) |
-+				  BIT(POWER_SUPPLY_CHARGE_TYPE_LONGLIFE),
-+	.get_property		= acer_battery_ext_property_get,
-+	.set_property		= acer_battery_ext_property_set,
-+	.property_is_writeable	= acer_battery_ext_property_is_writeable,
-+};
-+
-+static int acer_battery_add(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	struct acer_wmi_battery_data *data = container_of(hook, struct acer_wmi_battery_data, hook);
-+
-+	return power_supply_register_extension(battery, data->battery_ext,
-+					       &data->wdev->dev, data);
-+}
-+
-+static int acer_battery_remove(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	struct acer_wmi_battery_data *data = container_of(hook, struct acer_wmi_battery_data, hook);
-+
-+	power_supply_unregister_extension(battery, data->battery_ext);
-+
-+	return 0;
-+}
-+
-+static int acer_wmi_battery_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct acer_wmi_battery_data *data;
-+
-+	data = devm_kzalloc(&wdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&wdev->dev, data);
-+	data->wdev = wdev;
-+	data->battery_ext = health_mode ? &acer_wmi_battery_extension_v2
-+					: &acer_wmi_battery_extension_v1;
-+	data->hook.name = "Acer Battery Extension";
-+	data->hook.add_battery = acer_battery_add;
-+	data->hook.remove_battery = acer_battery_remove;
-+
-+	return devm_battery_hook_register(&data->wdev->dev, &data->hook);
-+}
-+
-+static const struct wmi_device_id acer_wmi_battery_id_table[] = {
-+	{ ACER_BATTERY_GUID, NULL },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(wmi, acer_wmi_battery_id_table);
-+
-+static struct wmi_driver acer_wmi_battery_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.id_table = acer_wmi_battery_id_table,
-+	.probe = acer_wmi_battery_probe,
-+	.no_singleton = true,
-+};
-+
-+static const struct dmi_system_id acer_wmi_battery_health_mode_table[] __initconst = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-510P"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-24PT"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-44P"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-58G"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A315-59"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Aspire A715-42G"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro ANV15-51"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-57"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN515-58"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Nitro AN517-54"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PHN16-71"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-34"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-43"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFE16-44"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFG16-72"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX14-71G"),
-+		},
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Swift SFX16-61G"),
-+		},
-+	},
-+	{}
-+};
-+
-+static int __init acer_wmi_battery_module_init(void)
-+{
-+	int ret;
-+
-+	if (dmi_check_system(acer_wmi_battery_health_mode_table) || force)
-+		health_mode = true;
-+	else
-+		health_mode = false;
-+
-+	ret = wmi_driver_register(&acer_wmi_battery_driver);
-+	if (ret)
-+		return ret;
-+
-+	return ret;
-+}
-+
-+static void __exit acer_wmi_battery_module_exit(void)
-+{
-+	wmi_driver_unregister(&acer_wmi_battery_driver);
-+}
-+
-+module_init(acer_wmi_battery_module_init);
-+module_exit(acer_wmi_battery_module_exit);
-+
-+MODULE_AUTHOR("Frederik Harwath <frederik@harwath.name>");
-+MODULE_AUTHOR("Jelle van der Waa <jelle@vdwaa.nl>");
-+MODULE_DESCRIPTION("Acer battery health control WMI driver");
-+MODULE_LICENSE("GPL");
--- 
-2.55.0
+Thanks,
+Armin Wolf
 
+> On Fri, Sep 11, 2026 at 10:45=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wro=
+te:
+>
+>     Am 11.09.26 um 20:21 schrieb Chris Taraszka:
+>
+>     > On a Xiaomi Book Pro 14 (BIOS XMAPT4B0P0909),
+>     bitland_mifs_wmi_suspend()
+>     > intermittently fails to read the platform profile and returns
+>     -EINVAL to
+>     > the PM core, which aborts the entire system suspend:
+>     >
+>     >=C2=A0 =C2=A0 bitland-mifs-wmi B60BFB48-...-4: PM: dpm_run_callback=
+():
+>     >=C2=A0 =C2=A0 =C2=A0 bitland_mifs_wmi_suspend [bitland_mifs_wmi] re=
+turns -22
+>     >=C2=A0 =C2=A0 bitland-mifs-wmi B60BFB48-...-4: PM: failed to suspen=
+d: error -22
+>     >=C2=A0 =C2=A0 PM: Some devices failed to suspend, or early wake eve=
+nt detected
+>     >
+>     > The WMI method call itself succeeds. The WMI core reports its own
+>     > failures as -EIO, -ENOMSG, -ENODATA or -EPROTO, so the -EINVAL
+>     comes from
+>     > laptop_profile_get() when the SystemPerMode value returned by the
+>     > firmware is not one of the four documented modes.
+>     >
+>     > How often this happens depends on firmware state. On a v7.2.2
+>     boot the
+>     > query failed persistently on battery: /sys/power/suspend_stats
+>     reported
+>     > 4628 failures against 2 successes, both of those on AC. Because
+>     logind
+>     > re-issues the suspend while the lid stays closed, the machine loop=
+ed
+>     > awake and drained half the battery over one 8h42m lid-closed
+>     period at
+>     > ~7-8 W. On v7.3-rc2, whose driver, WMI core and platform_profile
+>     code are
+>     > unchanged from v7.2, the query has so far failed only right
+>     after boot,
+>     > when power-profiles-daemon first reads the profile.
+>     >
+>     > Commit d3666875c75e ("platform/x86: bitland-mifs-wmi: Fix NULL
+>     pointer
+>     > dereference during suspend/resume") added a !data->pp_dev guard, b=
+ut
+>     > that only covers the event device. On the control device pp_dev is
+>     > valid, so the guard does not apply and the error is returned
+>     verbatim.
+>     >
+>     > Saving the platform profile is best-effort. Failing to read it
+>     should
+>     > not keep the system awake, so warn and continue instead, in line
+>     with
+>     > that commit skipping profile operations rather than failing the
+>     > transition. Do the same on resume: laptop_profile_set() returns
+>     > -EOPNOTSUPP for the performance and full-speed modes without DC
+>     power
+>     > (see Documentation/wmi/devices/bitland-mifs-wmi.rst), so a
+>     profile saved
+>     > on DC power cannot be restored after unplugging during suspend,
+>     which
+>     > would otherwise mark the resume as failed.
+>
+>     Hi,
+>
+>     i think the root cause for this is that your device uses a
+>     different set of platform profiles.
+>     Can you share the output of "acpidump"?
+>
+>     Thanks,
+>     Armin Wolf
+>
+>     > Fixes: dc1ec4fa86b2 ("platform/x86: bitland-mifs-wmi: Add new
+>     Bitland MIFS WMI driver")
+>     > Cc: stable@vger.kernel.org
+>     > Signed-off-by: Chris Taraszka <chris@miget.com>
+>     > ---
+>     > Tested on the same machine with v7.3-rc2 plus this patch: 11 s2idl=
+e
+>     > suspend cycles, including lid-closed suspends on battery of
+>     7h42m, 4.9h
+>     > and 75.8h, and repeated pm_test=3Ddevices cycles on battery all
+>     completed
+>     > without errors. The failing firmware state could not be
+>     reproduced on
+>     > demand on v7.3-rc2, so the new warnings have not been observed
+>     firing
+>     > during a suspend; the failures described above were recorded on
+>     v7.2.2
+>     > without this patch.
+>     >
+>     >=C2=A0 =C2=A0drivers/platform/x86/bitland-mifs-wmi.c | 17 +++++++++=
+++++----
+>     >=C2=A0 =C2=A01 file changed, 13 insertions(+), 4 deletions(-)
+>     >
+>     > diff --git a/drivers/platform/x86/bitland-mifs-wmi.c
+>     b/drivers/platform/x86/bitland-mifs-wmi.c
+>     > index 3a37318..788ef14 100644
+>     > --- a/drivers/platform/x86/bitland-mifs-wmi.c
+>     > +++ b/drivers/platform/x86/bitland-mifs-wmi.c
+>     > @@ -305,22 +305,31 @@ static int bitland_mifs_wmi_suspend(struct
+>     device *dev)
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     >
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D laptop_profile_get(data->pp_dev,=
+ &profile);
+>     > -=C2=A0 =C2=A0 =C2=A0if (ret =3D=3D 0)
+>     > -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0data->saved_profi=
+le =3D profile;
+>     > +=C2=A0 =C2=A0 =C2=A0if (ret) {
+>     > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_warn(dev, "Fa=
+iled to save platform profile:
+>     %d\n", ret);
+>     > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     > +=C2=A0 =C2=A0 =C2=A0}
+>     >
+>     > -=C2=A0 =C2=A0 =C2=A0return ret;
+>     > +=C2=A0 =C2=A0 =C2=A0data->saved_profile =3D profile;
+>     > +
+>     > +=C2=A0 =C2=A0 =C2=A0return 0;
+>     >=C2=A0 =C2=A0}
+>     >
+>     >=C2=A0 =C2=A0static int bitland_mifs_wmi_resume(struct device *dev)
+>     >=C2=A0 =C2=A0{
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0struct bitland_mifs_wmi_data *data =3D d=
+ev_get_drvdata(dev);
+>     > +=C2=A0 =C2=A0 =C2=A0int ret;
+>     >
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0/* Skip event device */
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0if (!data->pp_dev)
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return 0;
+>     >
+>     >=C2=A0 =C2=A0 =C2=A0 =C2=A0dev_dbg(dev, "Resuming, restoring profil=
+e %d\n",
+>     data->saved_profile);
+>     > -=C2=A0 =C2=A0 =C2=A0return laptop_profile_set(dev, data->saved_pr=
+ofile);
+>     > +=C2=A0 =C2=A0 =C2=A0ret =3D laptop_profile_set(dev, data->saved_p=
+rofile);
+>     > +=C2=A0 =C2=A0 =C2=A0if (ret)
+>     > +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_warn(dev, "Fa=
+iled to restore platform profile:
+>     %d\n", ret);
+>     > +
+>     > +=C2=A0 =C2=A0 =C2=A0return 0;
+>     >=C2=A0 =C2=A0}
+>     >
+>     >=C2=A0 =C2=A0static DEFINE_SIMPLE_DEV_PM_OPS(bitland_mifs_wmi_pm_op=
+s,
+>
