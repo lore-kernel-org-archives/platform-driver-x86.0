@@ -1,48 +1,47 @@
-Received: from sender6-op-o15.zoho.com (sender6-op-o15.zoho.com [165.173.180.15])
+Received: from sender5-op-o15.zoho.com (sender5-op-o15.zoho.com [165.173.182.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7BE369D7C;
-	Sun, 13 Sep 2026 20:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.180.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901E937F00F;
+	Sun, 13 Sep 2026 20:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=165.173.182.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789332675; cv=pass; b=K4MEg/gPr6U5CKnbJFkr3aai9GO+hfDuIcZRfdwRD4hoB1RxKcVZseuFP4X68o6EUC/HRS2wL+lu9Ydni+QMw+IipYCDVawEdQdG1eTjoC2wpOXcC1Q2cojDRGQDuzkNtgf7XKEUa2gHCjfeWbGHsrnZp561N3Vqeh1dL+TEtkY=
+	t=1789332682; cv=pass; b=TgUQI8opqv2BAbOuP7blXvpEApAt1m6Aq+DKwxM4aEfUHkGX7NdyyEXiQuqzujy2KV2BvBiGtErseRqkWlLIHuWuT1YHvUon5J76QshfSnH5YdvluOqdNuSmlV+dwFW+aNKIVmrRGSx7Ksz87uMb8UeNg8+cRzJh7pnBXjZ5chw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789332675; c=relaxed/simple;
-	bh=4Iulpe0xHQceJQG8ACsvxWXwolEzEnojR200TkzITBA=;
+	s=arc-20240116; t=1789332682; c=relaxed/simple;
+	bh=NqV4g99CiI+mE+/BVC8ksJkgPBCvImucJphCyT4IBJc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bpt967jXjQnK9xbss22N4FNlikPnxI2X+Vpln++bKf2KM3qsKaILTucBBEgLvaqClyW0yYpy8i5IDD+jD5xJ0AHY7Ex6dhAU6IbeISOUaXC9C1jc8+3ugPXPqlz9PVKgBiXmm/DBo4TTWYCZTxMe+MIZ6VaT9n4y8rCrvEfFfQo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=pntnUv+f; arc=pass smtp.client-ip=165.173.180.15
+	 In-Reply-To:To:Cc; b=TIGAwEIFy+ycWHklSDwDgXQ8A2VcnG78SJ8ryze1e7iTiJvrmQqSjM5OTE03n9rbNJqXm70FJbrjPGA5A1d5tKevM3dhIwag6WxVPJxXviwaQumbuWBYngipDo9gosCOpsysco9fM551bEJVchEj/kF3BgX4vatURU0Hjg9YF0c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b=EYCELw9e; arc=pass smtp.client-ip=165.173.182.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rong.moe
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="pntnUv+f"
-ARC-Seal: i=1; a=rsa-sha256; t=1789332640; cv=none; 
+	dkim=pass (2048-bit key) header.d=rong.moe header.i=i@rong.moe header.b="EYCELw9e"
+ARC-Seal: i=1; a=rsa-sha256; t=1789332644; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=EgoM/CkBi2Dn0+gyosp+rgsbm47c3EqWYMFNtw1PS/Yd1Sw0MbRDSS8DUbdIf/E9EkFqZvKSaoEXy71tWnt5zfNCpOXGbWVJZ4TPmZ0z5OAqQcrpgd1EIdJZ4CXXBAFCUcoERrmHRxkvYvZnpSrjDhhSbtV1GX1smZFiBibjoRI=
+	b=UcGKL6CydZok+SnuZpj+nSxlhiSjEf90f8cffo4IQztOzML8PbTKyuXn6EBCoJw9KgMxY71RSoU00vVHpEmBicoZcNe20oDq42n1TKPUxePVVxONfUFDCWC4GMHf2ZSnxk9+AcTPxhIrceoMJjFp2y3HADwBoNzKTAAW2xs9nP8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1789332640; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=80ZfP9i37GSfGsF2Fhe7TLyYHVP9wOXmVluAG0L8mPo=; 
-	b=HFRB/GIfpMW7N9DTG3pCsIyRQWkW2yiXhV+shGWirEoAI4zGSNQ4bgRvgT5sHOLF9enp6gBvd/poEcjz0rjrp6DhRTbwdak8AVZGiNOSfe++wIw2p+uQZvKR0BOOLH4dlVKnGAhZiM9wLYbKTVy1eBI5Vk1o/9fE/OZddQ4Amuw=
+	t=1789332644; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RQjo7v7oGsuQGQPK2lmcMvmFjsRtk6ja27lpQpQTs9w=; 
+	b=OsADYDt8n94GNyrvJEhP6KFo/VjIoPi6CsJGyZslGSvHdGw8kk61E0mMci50dF8C14wZDjEkqgC3qVe6EaypcKuLAHednFaYZFtWVAV1+JdeCShxDVLFkHz0cNcxGfAAcCzSvnodibliB6+Q4xozWfco5LZlLUkJQlwl0sG2iqU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=rong.moe;
 	spf=pass  smtp.mailfrom=i@rong.moe;
 	dmarc=pass header.from=<i@rong.moe>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789332640;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1789332644;
 	s=zmail2048; d=rong.moe; i=i@rong.moe;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=80ZfP9i37GSfGsF2Fhe7TLyYHVP9wOXmVluAG0L8mPo=;
-	b=pntnUv+f6jEkD4xNQUWI3wprknj52TUEWq4mYzJhL2NYZzo8jUyinf0zdKL4g3qI
-	mu0BIs2If8gjn3hEqemXSmgHq3U4r8uMNHSgb8Ia2beSbwA06pUZil1gfKF3nVypYq/
-	0cYidKICsSITuyp/Kr8noChNS2AFV62a9WaA/ro4TRLkun22JqBbOkBH9Ehn/bUMLgC
-	6bdXCtM1QCrOkf8RmwBycPy2cxK/5+HF1Da7sJ5iiSpsl3D2okaNX13o1u9HIqua5MT
-	4dYeIqJxH8fI/GfFy7ipPWs1mKPO9J4VKKEaxB2AChCaIXt127YRzcxwVP+YoR3y4mj
-	nroH6g9CRA==
-Received: by smtp.zohomail.com with SMTPS id 178933263996357.370519965290555;
-	Sun, 13 Sep 2026 13:50:39 -0700 (PDT)
+	bh=RQjo7v7oGsuQGQPK2lmcMvmFjsRtk6ja27lpQpQTs9w=;
+	b=EYCELw9eSL5DU/K1Dpv6CRjac7vZCpHJn2n+MP6d4bG0+3Jo/YayJ+1p5Tttvfb5
+	XMDPuTBjY/HGjllwKkxyf1B+8Bi4K7hjMiDUGhffQU7fnZml4ZzkugvmYt++dRjIkF+
+	HNVg4sEuJBixhdVUAM2P40rwNJR7IUV01AraZV1jOX7adcD8OT3FVfIIHPm4wk6w+Gq
+	wMY/ooF6H7pwef7dd/J7DChub70Qy9Jfr3qfQHklTgTMG/20N6cCg4XHp4TZf2wjMMR
+	SrbHR5mkHD2892Sy85gL3cbr8HFUGt7MgffDJPE9JhI+zK97iMDnFC2dDbsxMvH/L+A
+	8S/D99j9BQ==
+Received: by smtp.zohomail.com with SMTPS id 1789332642647690.5731905717419;
+	Sun, 13 Sep 2026 13:50:42 -0700 (PDT)
 From: Rong Zhang <i@rong.moe>
-Date: Mon, 14 Sep 2026 04:50:25 +0800
-Subject: [PATCH 4/9] platform/x86: lenovo-wmi-{capdata,other}: Only
- allocate capdata list when necessary
+Date: Mon, 14 Sep 2026 04:50:26 +0800
+Subject: [PATCH 5/9] platform/x86: lenovo-wmi-capdata: Adopt new WMI API
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -51,7 +50,7 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260914-lwmi-wmi-new-api-v1-4-7a400f2f69f8@rong.moe>
+Message-Id: <20260914-lwmi-wmi-new-api-v1-5-7a400f2f69f8@rong.moe>
 References: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe>
 In-Reply-To: <20260914-lwmi-wmi-new-api-v1-0-7a400f2f69f8@rong.moe>
 To: Mark Pearson <mpearson-lenovo@squebb.ca>, 
@@ -64,175 +63,124 @@ Cc: Charles <hanker007@gmail.com>, platform-driver-x86@vger.kernel.org,
 X-Mailer: b4 0.17-dev-1f2f7
 X-ZohoMailClient: External
 
-When no capability data is available, there is no need to allocate
-capability data list as it's basically unused except for the
-priv->list->count == 0 placeholder.
+The new WMI API supports multiple ACPI types by converting them into a
+unified buffer that satisfies alignment and size requirements.
 
-Therefore, only allocate priv->list when necessary, otherwise its
-absence implies the absence of capability data. In this manner,
-lenovo-wmi-other can skip registering unavailable functionalities
-accordingly. Meanwhile, skip creating the debugfs directory as it
-provides nothing when there is no capability data.
+Adopt it to make our life easier.
+
+Note that the new WMI API only accepts a few ACPI types to conform to
+the behavior of the Windows WMI-ACPI driver. By adopting the new API, we
+intentionally rejects improper ACPI types instead of silently ignoring
+them.
+
+Meanwhile, considering that `struct_size(block, data, count * 3)' may
+overflow when calculating `count * 3', ignore Fan Test Data with count >
+U8_MAX instead of caping `count'.
 
 Signed-off-by: Rong Zhang <i@rong.moe>
 ---
- drivers/platform/x86/lenovo/wmi-capdata.c | 43 ++++++++++++++++++++++---------
- drivers/platform/x86/lenovo/wmi-other.c   | 11 +++++---
- 2 files changed, 38 insertions(+), 16 deletions(-)
+ drivers/platform/x86/lenovo/wmi-capdata.c | 72 ++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 39 deletions(-)
 
 diff --git a/drivers/platform/x86/lenovo/wmi-capdata.c b/drivers/platform/x86/lenovo/wmi-capdata.c
-index 0123ec8f7b53..793b5103d533 100644
+index 793b5103d533..5e66e6b52720 100644
 --- a/drivers/platform/x86/lenovo/wmi-capdata.c
 +++ b/drivers/platform/x86/lenovo/wmi-capdata.c
-@@ -313,8 +313,8 @@ static const struct component_ops lwmi_cd_component_ops = {
-  * @dev: The sub-master capdata basic device.
-  *
-  * Call component_bind_all to bind the sub-component device to the sub-master
-- * device. On success, collect the pointer to the sub-component list and try
-- * to call the master callback.
-+ * device. On success, collect the pointer (or ERR_PTR(-ENODEV) if it's stubbed)
-+ * to the sub-component list and try to call the master callback.
-  *
-  * Return: 0 on success, or an error code.
-  */
-@@ -328,7 +328,7 @@ static int lwmi_cd_sub_master_bind(struct device *dev)
- 	if (ret)
- 		return ret;
+@@ -626,17 +626,19 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
+ 	}
  
--	priv->sub_master->sub_component_list = sub_component_list;
-+	priv->sub_master->sub_component_list = sub_component_list ?: ERR_PTR(-ENODEV);
- 	lwmi_cd_call_master_cb(priv);
+ 	for (idx = 0; idx < priv->list->count; idx++, p += size) {
+-		union acpi_object *ret_obj __free(kfree) = NULL;
++		struct wmi_buffer wbuf;
++		int ret;
+ 
+-		ret_obj = wmidev_block_query(priv->wdev, idx);
+-		if (!ret_obj)
+-			return -ENODEV;
+-
+-		if (ret_obj->type != ACPI_TYPE_BUFFER ||
+-		    ret_obj->buffer.length < size)
++		ret = wmidev_query_block(priv->wdev, idx, &wbuf, size);
++		if (ret == -ENODATA) /* The block is too short, probably stubbed. */
+ 			continue;
++		if (ret)
++			return ret;
+ 
+-		memcpy(p, ret_obj->buffer.pointer, size);
++		/* Capdata 01 is an extension to capdata 00. */
++		struct capdata00 *capdata __free(kfree) = wbuf.data;
++
++		memcpy(p, capdata, size);
+ 	}
  
  	return 0;
-@@ -460,6 +460,9 @@ static const struct component_ops lwmi_cd_sub_component_ops = {
- 	{											\
- 		u8 idx;										\
- 												\
-+		if (WARN_ON(!list))								\
-+			return -EINVAL;								\
-+												\
- 		guard(mutex)(&list->list_mutex);						\
- 		for (idx = 0; idx < list->count; idx++) {					\
- 			if (list->_cdxx[idx].id != attribute_id)				\
-@@ -571,6 +574,9 @@ DEFINE_SHOW_ATTRIBUTE(lwmi_cd_debugfs);
+@@ -677,43 +679,35 @@ static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
   */
- static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
+ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
  {
-+	if (!priv->list)
-+		return;
-+
- 	priv->debugfs_dir = lwmi_debugfs_create_dir(priv->wdev);
++	struct wmi_buffer wbuf;
+ 	struct cd_list *list;
+-	size_t size;
++	int ret, idx;
+ 	u32 count;
+-	int idx;
  
- 	debugfs_create_file("capdata", 0444, priv->debugfs_dir, priv, &lwmi_cd_debugfs_fops);
-@@ -582,6 +588,7 @@ static void lwmi_cd_debugfs_add(struct lwmi_cd_priv *priv)
-  */
- static void lwmi_cd_debugfs_remove(struct lwmi_cd_priv *priv)
- {
-+	/* Debugfs can handle NULL dir, no need to check. */
- 	debugfs_remove_recursive(priv->debugfs_dir);
- 	priv->debugfs_dir = NULL;
- }
-@@ -645,6 +652,9 @@ static int __lwmi_cd_cache(struct lwmi_cd_priv *priv)
-  */
- static int lwmi_cd_cache(struct lwmi_cd_priv *priv)
- {
-+	if (!priv->list)
+-	/* Emit unaligned access to u8 buffer with __packed. */
+ 	struct cd_fan_block {
+ 		u32 nr;
+ 		u32 data[]; /* id[nr], max_rpm[nr], min_rpm[nr] */
+-	} __packed * block;
+-
+-	union acpi_object *ret_obj __free(kfree) = wmidev_block_query(priv->wdev, 0);
+-	if (!ret_obj)
+-		return -ENODEV;
+-
+-	if (ret_obj->type == ACPI_TYPE_BUFFER) {
+-		block = (struct cd_fan_block *)ret_obj->buffer.pointer;
+-		size = ret_obj->buffer.length;
+-
+-		count = size >= sizeof(*block) ? block->nr : 0;
+-		if (size < struct_size(block, data, count * 3)) {
+-			dev_warn(&priv->wdev->dev,
+-				 "incomplete fan test data block: %zu < %zu, ignoring\n",
+-				 size, struct_size(block, data, count * 3));
+-			count = 0;
+-		} else if (count > U8_MAX) {
+-			dev_warn(&priv->wdev->dev,
+-				 "too many fans reported: %u > %u, truncating\n",
+-				 count, U8_MAX);
+-			count = U8_MAX;
+-		}
+-	} else {
+-		/*
+-		 * This is usually caused by a dummy ACPI method. Do not return an error
+-		 * as failing to probe this device will result in sub-master device being
+-		 * unbound. This behavior aligns with lwmi_cd_cache().
+-		 */
++	};
++
++	ret = wmidev_query_block(priv->wdev, 0, &wbuf, sizeof(struct cd_fan_block));
++	if (ret == -ENODATA) /* The block is too short, probably stubbed. */
 +		return 0;
++	if (ret)
++		return ret;
 +
- 	if (!priv->initialized)
- 		return __lwmi_cd_cache(priv);
- 
-@@ -707,6 +717,9 @@ static int lwmi_cd_fan_list_alloc_cache(struct lwmi_cd_priv *priv)
++	struct cd_fan_block *block __free(kfree) = wbuf.data;
++
++	count = block->nr;
++
++	if (count > U8_MAX) {
++		dev_warn(&priv->wdev->dev,
++			 "too many fans reported: %u > %u, ignoring\n", count,
++			 U8_MAX);
++		count = 0;
++	} else if (wbuf.length < struct_size(block, data, count * 3)) {
++		dev_warn(&priv->wdev->dev,
++			 "incomplete fan test data block: %zu < %zu (%u fans), ignoring\n",
++			 wbuf.length, struct_size(block, data, count * 3), count);
  		count = 0;
  	}
  
-+	if (!count)
-+		return 0;
-+
- 	list = devm_kzalloc(&priv->wdev->dev, struct_size(list, cd_fan, count), GFP_KERNEL);
- 	if (!list)
- 		return -ENOMEM;
-@@ -742,6 +755,8 @@ static int lwmi_cd_alloc(struct lwmi_cd_priv *priv)
- 	int count;
- 
- 	count = wmidev_instance_count(priv->wdev);
-+	if (!count)
-+		return 0;
- 
- 	switch (priv->info->type) {
- 	case LENOVO_CAPABILITY_DATA_00:
-@@ -884,7 +899,9 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
- 		enum lwmi_cd_type sub_component_type = LENOVO_FAN_TEST_DATA;
- 		struct capdata00 capdata00;
- 
--		ret = lwmi_cd00_get_data(priv->list, LWMI_ATTR_ID_FAN_TEST, &capdata00);
-+		ret = priv->list
-+			? lwmi_cd00_get_data(priv->list, LWMI_ATTR_ID_FAN_TEST, &capdata00)
-+			: -ENODATA;
- 		if (ret || !(capdata00.supported & LWMI_SUPP_VALID)) {
- 			dev_dbg(&wdev->dev, "capdata00 declares no fan test support\n");
- 			sub_component_type = CD_TYPE_NONE;
-@@ -905,14 +922,16 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
- 	case LENOVO_CAPABILITY_DATA_01:
- 		priv->acpi_nb.notifier_call = lwmi_cd01_notifier_call;
- 
--		ret = register_acpi_notifier(&priv->acpi_nb);
--		if (ret)
--			goto out;
-+		if (priv->list) {
-+			ret = register_acpi_notifier(&priv->acpi_nb);
-+			if (ret)
-+				goto out;
- 
--		ret = devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister,
--					       &priv->acpi_nb);
--		if (ret)
--			goto out;
-+			ret = devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister,
-+						       &priv->acpi_nb);
-+			if (ret)
-+				goto out;
-+		}
- 
- 		ret = component_add(&wdev->dev, &lwmi_cd_component_ops);
- 		goto out;
-@@ -930,7 +949,7 @@ static int lwmi_cd_probe(struct wmi_device *wdev, const void *context)
- 		lwmi_cd_debugfs_add(priv);
- 
- 		dev_dbg(&wdev->dev, "registered %s with %u items\n",
--			info->name, priv->list->count);
-+			info->name, priv->list ? priv->list->count : 0);
- 	}
- 	return ret;
- }
-diff --git a/drivers/platform/x86/lenovo/wmi-other.c b/drivers/platform/x86/lenovo/wmi-other.c
-index fbb32bf404f2..e6c8f6bcf050 100644
---- a/drivers/platform/x86/lenovo/wmi-other.c
-+++ b/drivers/platform/x86/lenovo/wmi-other.c
-@@ -1643,16 +1643,19 @@ static int lwmi_om_master_bind(struct device *dev)
- 
- 	priv->cd00_list = binder.cd00_list;
- 	priv->cd01_list = binder.cd01_list;
--	if (!priv->cd00_list || !priv->cd01_list) {
-+	if (!priv->cd00_list && !priv->cd01_list) {
- 		component_unbind_all(dev, NULL);
- 
- 		return -ENODEV;
- 	}
- 
--	lwmi_om_fan_info_collect_cd00(priv);
--	lwmi_om_psy_ext_init(priv);
-+	if (priv->cd00_list) {
-+		lwmi_om_fan_info_collect_cd00(priv);
-+		lwmi_om_psy_ext_init(priv);
-+	}
- 
--	lwmi_om_fw_attr_add(priv);
-+	if (priv->cd01_list)
-+		lwmi_om_fw_attr_add(priv);
- 
- 	return 0;
- }
 
 -- 
 2.55.0
