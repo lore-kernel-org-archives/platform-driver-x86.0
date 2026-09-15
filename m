@@ -1,43 +1,39 @@
-Received: from mail-244121.protonmail.ch (mail-244121.protonmail.ch [109.224.244.121])
+Received: from mail-106120.protonmail.ch (mail-106120.protonmail.ch [79.135.106.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5C041E6D9;
-	Tue, 15 Sep 2026 17:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.121
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF95F431E71;
+	Tue, 15 Sep 2026 17:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789493785; cv=none; b=BAG0FidBSM0glaoGRBjyLQJLcWfIf2/OFDBpByZexqmheL7Qa2Lyrhrpq8IHz5cIbuiuqvTnYvALzDHrzjEy5nT0GozGKp0nwoXP6GQYLKhD8jfbrPEIQkgQZrOWmNlynDIEWEviqUYDZvLqWoS/dUhEYhbrznQAQt4mNdFTy74=
+	t=1789494097; cv=none; b=MOUDzGMZ2jY2U+Tgm7sGlVSD5VF4UZiCSf3laEU/UxJbEUpXTYn3gNFPvt8TNsqhP0ruWCzwMTHGYs/QEgaMUhdNG8zJqheWCxmNViulWeMRt31rBiFlAMSG0WIqEWaxdIwqdpyBs2OXxchzz8nxAEDgQqChxxdg4KXWMDjfkqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789493785; c=relaxed/simple;
-	bh=urqgFBe3Wi6DGd08ZgfJUDRP1MbBh8rdERHwKGNysNw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TNcetHATwjcJJ3S/aNnZZdzlX7f/6ZphBB4zpMoMijfz69g0Cs5dnHh5IMlwLo8AUUnNUAUJwCcEVfyH27cgf0zqgO6KxHi2Wv5S19i0a9icusmpeAkW/eByG4td6MniVyqECcnXUj4HkurXSBgIWTMm80AKobGUWXBLpGU48y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=ShkluQmz; arc=none smtp.client-ip=109.224.244.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1789494097; c=relaxed/simple;
+	bh=VHfGtWoinQrMM97ejRTtIlWyNV7swPR2DUVZHmqAprE=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ctg1pdqdt3vpsoB0w8LIMePtMI7QPmydFj9y671q7O4pS5onlBIoWk3rlRCdlAZi4mjoTaAuODihtXnygn97ctI21vNHXd5eBW8ZOxn1O8BY7d0kdWsaWaO5LdnMZbMEPPa0IG87yt+IuaQSfcf465sC5o9X30i9nSMc4mr273w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=pcR2s1C0; arc=none smtp.client-ip=79.135.106.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="ShkluQmz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1789493774; x=1789752974;
-	bh=bYkDKi/DEjIinF9dQE8tfaHzj59gkkksxWlOZrdaq2I=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=ShkluQmzs1YcjqN489jKeZLwo5KMqYQhDaxwAuCLSfR1BS01Z9XOH2cYubbBU9n2a
-	 rP/CrubG9QvxBWXIdy76OjNvRm45DbPZkLC3ogAuwort03NY2rAyNL9ZpTnmatsd0c
-	 1+hnieEs42sWflLDwMeJEqq945y2SRaNVeJ4uF7wNo/M6iwU7nLzGS/p6I168dnRzC
-	 jn3c/V3Et3V1S9Lge/P79joEBIqx6kFgfNepH8S6z7mauEAuGWcbiuLznTLx57FU5v
-	 MGMV5P1VXi87lcnjPcoqYEaE07DAuHLrqLoUubnWB1+AQcnHpyGt98RRR97VraKZP/
-	 Vq9ZLT5ueGQtQ==
-Date: Tue, 15 Sep 2026 17:36:09 +0000
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Peter Marshall <pm@petermarshall.ca>
-From: Sergey Lebedev <lsa.uz@pm.me>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add VD55G0 support
-Message-ID: <20260915173604.65023-1-lsa.uz@pm.me>
-In-Reply-To: <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
-References: <20260910213308.53429-1-lsa.uz@pm.me> <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com> <20260915100722.38504-1-lsa.uz@pm.me> <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
-Feedback-ID: 113843758:user:proton
-X-Pm-Message-ID: 368db0238073872b7b836241303c98d2931dc873
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="pcR2s1C0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1789494088; x=1789753288;
+	bh=O5e2TrZxGxcTGjWmSi86bJ+J0cJpI5jihZoK+vn0DVc=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=pcR2s1C0jn0eo7+DeayHlnzFDid3Ixi0j3q4cxRD/Cvx8tF1nsCmul074I3jsaCqn
+	 UT0W6D/Kfe8VpbOip9bY4bYc1JW1913znobNzz2pcaKTZlihCs2TE6Seras0reZ3/L
+	 Bf3Onz75iuOD+Lm8HR+Ni5vQoW8aLjsqcErWbXGg4UZN3DECJUzIQxuHp91PaIfInm
+	 e4I3HIq1igqOHxa3RVaDkfvqPsffR3H8TrJhQZKVCX3oTO+s5dk2SoJQOrLJczuq77
+	 ck76aDsKwGXX2ST22AGVSZNcgAm+MoAHxLWWuB+8qzZ1ZlqvaCMi1f/ZdNp7MwcNHP
+	 /Te1U4kEcNtZA==
+Date: Tue, 15 Sep 2026 17:41:20 +0000
+To: platform-driver-x86@vger.kernel.org, linux-sound@vger.kernel.org
+From: patryk.dankow@protonmail.com
+Cc: =?utf-8?Q?Patryk_Da=C5=84k=C3=B3w?= <patryk.dankow@protonmail.com>, corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, perex@perex.cz, tiwai@suse.com, zhangheng@kylinos.cn, dnaim@cachyos.org, damien.dagorn29@gmail.com, kailang@realtek.com, habilerenturker@hotmail.com, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add ASUS ExpertBook mute LED support
+Message-ID: <20260915174110.67871-1-patryk.dankow@protonmail.com>
+Feedback-ID: 221603438:user:proton
+X-Pm-Message-ID: 9b762a85624742ddfb9d3852884b0e6035fad857
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -47,79 +43,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Benjamin,
+From: Patryk Da=C5=84k=C3=B3w <patryk.dankow@protonmail.com>
 
-Thank you - for the explanation, for the link, and for saying where you
-stand. All three are worth more than an ack would have been.
+This series adds speaker mute LED support for the ASUS ExpertBook
+PM3406CKA.
 
-Sorry for the slow reply. I spent the hours reading rather than writing: th=
-e
-repository you pointed at, the two drivers side by side, and the in-tree
-binding. The checking changed what I have to say, so it seemed better than
-answering quickly. Three things below, separated so you can take whichever =
-is
-worth your time.
+The first patch adds the ASUS WMI mute LED endpoint and registers it as
+the platform::mute LED using the audio-mute trigger.
 
-1. The licence question, and my mistake
----------------------------------------
+The second patch enables vmaster mute LED handling for the PM3406CKA in
+the Realtek HDA codec driver. The existing CS35L41 I2C fixup is retained
+by chaining the new fixup to it.
 
-Settled, by your link. vd55g0_patches.h carries
-"SPDX-License-Identifier: GPL-2.0" and "Copyright (C) 2024 STMicroelectroni=
-cs
-SA", with cut1 and cut2 arrays. ST published the firmware itself, two years
-ago, under a licence that answers the question I was asking.
+The WMI device ID 0x0004001c is present in the PM3406CKA DSDT and is also
+used by GHelper for controlling the same LED.
 
-There is nothing for anyone to grant, and the right source to take those
-bytes from is yours rather than any third-party copy of them.
+Tested on ASUS ExpertBook PM3406CKA.
 
-I should have found that before raising the point twice. Your standalone
-driver was named to me in this thread and I did not open it. The blocker I
-reported on 7 September is not a blocker and never was.
+Patryk Da=C5=84k=C3=B3w (2):
+  platform/x86: asus-wmi: Add mute LED support
+  ALSA: hda/realtek: Add mute LED support for ASUS PM3406CKA
 
-2. What the work would actually be
-----------------------------------
+ drivers/platform/x86/asus-wmi.c            | 26 +++++++++++++++++++++-
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ sound/hda/codecs/realtek/alc269.c          | 18 ++++++++++++++-
+ 3 files changed, 43 insertions(+), 2 deletions(-)
 
-I measured it rather than guessed, so that we are talking about the same
-thing:
 
-  - twenty-five LINUX_VERSION_CODE guards, all of the form
-    "#if KERNEL_VERSION(x,y,z) > LINUX_VERSION_CODE", about 180 lines to dr=
-op
-  - s_stream to enable_streams and disable_streams, with vd55g1 in-tree as =
-a
-    line-by-line reference written by you
-  - st,vd55g0.yaml, adapted from the 3.3 KB st,vd55g1.yaml
-  - Kconfig, Makefile, MAINTAINERS
-  - checkpatch, sparse, builds across configurations, and testing here
+base-commit: 2f0c1cf72f4682178506f513bbf015e591b1aa4a
+--=20
+2.55.0
 
-That should not take as long as I expected.
-
-3. The question I cannot answer on your behalf
-----------------------------------------------
-
-A 2100-line driver arriving beside a 2100-line sibling by the same author
-invites "why is this not an extension of vd55g1". If I answer that badly,
-the third version is a rewrite in the direction you have already rejected.
-
-Reading the two files I can see arguments for your position. vd55g0 is
-monochrome-first, Y8_1X8 and Y10_1X10, where vd55g1 carries the Bayer codes=
-.
-vd55g0 has real strobe and flash handling that vd55g1 barely touches. The
-register namespaces are essentially disjoint.
-
-But those are my inferences from one reading. What I would be repeating to =
-a
-maintainer is your engineering judgement, and I would rather have it from
-you.
-
-So: you offered to elaborate. Please do, if you have the time. Not to
-convince me - I have no stake in either shape. It is so that when Sakari or
-Hans asks why VD55G0 is not folded into vd55g1, the answer comes from the
-person who wrote both parts.
-
-If a separate driver is right, I will start and send you something to look
-at. If the two really should converge, that is worth knowing now too, and
-Peter's series already points that way.
-
-Sergey
 
