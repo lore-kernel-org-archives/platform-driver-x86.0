@@ -1,118 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B698266576;
-	Tue, 15 Sep 2026 10:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CD7412BF8
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 10:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789466722; cv=none; b=eHMzthicM3z8rWTfvmUv4MK0ErMLDKkIQppstlUoseLdS6w4sJz1tcc16ipGAtlw58V31UbCdaazBjgFqisZ6F7z55yMNZKJMUGoZYen47HNMuOE7Ch52HbDgMdHpzQ7lKnwhH0adQrsi0f1ZZ/S5Bo4vvNO32QpUqhLKMRLl/s=
+	t=1789466866; cv=none; b=B7lBIWemo6RCYBJFEDfbmCiq8omjiviFE+Dd9ct91NC0sgtKZ9qAOqfomQFNU4w152DRkQYMdERtTJWNMYMvH1gKrz+MOF6y/i/PTOJNI7H6omRj+FoMo8yrmT5XH/lgSk4w6BtRd181erlLvSqHRMZIcFJCovaNudNICZTEJ0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789466722; c=relaxed/simple;
-	bh=QxaOOxrY/HNWkOuqj7hmTAKTaG77yAH6aXBwJtzUEqk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NWmg+Gs3RREZes3adfjO08Fwrf0SiNZNTBySa13NTU4mTSV/TkYywCPV0EJbrDlV1qAktIAi1g0CAkeN2DiWyY7+BHhMMqgLVGhWZNnZSjTKb3ScFTbolK/Wy5onJ7c45UpRhCKBD2nBgjH51dDI+n0hpDNGmE4m/T/xDA71a+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P+oxlGkD; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789466866; c=relaxed/simple;
+	bh=D1+wF3tc72/Ft+9Jnmi7RfbDB3LK4H+2mjkVDvdKxQ4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rob3wsJlmT4qtilKD/mr55WGnQpC7Xb4a5Sf+Dh4CvoZj7ZNyshU/TXoN4hOrxO1zm74GGzJY0fYbgF3EedZP4dEFAsd/oW6sc/iZLYWXxs9/1To7OrjrbvC3MA7vVHVCFDA/UMDVTpgWdumCIbhXzZ4X+UMLhxHK5iNlKH95ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=KzDt78EW; arc=none smtp.client-ip=109.224.244.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P+oxlGkD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789466721; x=1821002721;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QxaOOxrY/HNWkOuqj7hmTAKTaG77yAH6aXBwJtzUEqk=;
-  b=P+oxlGkDQyn16Ej/ixbJK2WZ+e9qRswoI1Y+JeE014NQ96Vwko9ca3Bk
-   2hVqAFYrOrCIkXmqFVQ09a0XkmzNtlnrTqL4JdWxIlzriamADlolwT+W1
-   jgSQQoOb3EHkrE+5uQOJOdQMGHgjTNO+NjblI/9Tv2CZxH63RFEJCxtur
-   Nx7cTBHXcDQG8/QiXp6WeFNH+5r+50fZ0yIbFhmLCICSv4PGmk/VxaZ5u
-   oB3ohizyUO+pzyTuQCJQX1M10io01/sGt6JYfSS6052Qbmu5hyTvjOZjz
-   +Qrv0oFE2+5mDlZCzy4lYeIMyvoJjKNYrbmXi2kQVM+rSVT5wJADqTFSL
-   w==;
-X-CSE-ConnectionGUID: vrX1ZvGYTW+1nNEwgSc6mA==
-X-CSE-MsgGUID: ZCHXoZ8HQomFE0ipHJioRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="89841241"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="89841241"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 03:05:21 -0700
-X-CSE-ConnectionGUID: m4pwH9yURqmuJ4ubn5UHzg==
-X-CSE-MsgGUID: E3shFvVGTDSIvo32Jtxm2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="1170964"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 03:05:18 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Sep 2026 13:05:13 +0300 (EEST)
-To: Mario Limonciello <mario.limonciello@amd.com>
-cc: Hans de Goede <hansg@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-    "open list:X86 PLATFORM DRIVERS" <platform-driver-x86@vger.kernel.org>, 
-    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: Re: [PATCH] platform/x86/amd/pmf: Add AMDI0112 ACPI ID
-In-Reply-To: <10788f18-2229-4165-ba5f-f2e2811281d9@amd.com>
-Message-ID: <f591b4d6-9619-42fd-31f5-639bf7bea8f9@linux.intel.com>
-References: <20260826163611.2268377-1-mario.limonciello@amd.com> <10788f18-2229-4165-ba5f-f2e2811281d9@amd.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="KzDt78EW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1789466859; x=1789726059;
+	bh=KvN0WtVDmz8KmooGIfjf37wi8q69l1XGO+yuAjSlKAw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=KzDt78EWmDEORf3n0EMJMWTrMmKhqtSPFrvTUo/tU9pzKku0oA5AkwSUuIiSk8QVv
+	 tcqkhK4NA4MoXYFh6nys9MEn0+OZ/FcYHVw8IL4B9wdg/krF212YaNggdb4Wrqx/An
+	 rzoaO33hmNlBsYFgx7PNjIqZQM1hKuSWoi50VjpMK3SratMuD4mTE3cdD7Hdgay2RS
+	 SZQpwv6wo35Dt4aNpQ359BZ3Vc46Le1APQIh44llsZ/8ojvXz6skFBh/yfjzfIV2gd
+	 Wzh/+aDKco9aw12EesxTc2v0WoVS0UX9XZAnTBjcsxMeDw9LvhzeMt7b8TvyJXSich
+	 yJo1ROJFJSZGw==
+Date: Tue, 15 Sep 2026 10:07:33 +0000
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Peter Marshall <pm@petermarshall.ca>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add VD55G0 support
+Message-ID: <20260915100722.38504-1-lsa.uz@pm.me>
+In-Reply-To: <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com>
+References: <20260910213308.53429-1-lsa.uz@pm.me> <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: 507a9e05b502dfdab6bda6049da2741f8b2f394e
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Sep 2026, Mario Limonciello wrote:
+Benjamin,
 
-> 
-> 
-> On 8/26/26 11:36, Mario Limonciello wrote:
-> > The AMDI0112 ID is used to bind the PMF driver to some platforms.
-> > It doesn't have any Linux side code changes relative to the most
-> > similar AMDI0105.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > ---
-> 
-> Hi Ilpo,
-> 
-> I sent this a few weeks ago, just want to make sure it wasn't lost in the
-> merge window and is still on your list.
-> 
-> Thanks!
+First, an apology: I wrote that badly. Reading it back I can see it lands a=
+s
+a request to move vd55g1 to request_firmware, and it was never meant as one=
+.
+You have had to defend a position I was not attacking, and that is my fault
+rather than yours.
 
-Hi,
+What I meant, and should have written: the VD55G0 firmware has to reach use=
+rs
+somehow, and I do not mind which of the two mechanisms carries it. Your thr=
+ee
+reasons settle the mechanism for me - built in, and no more about it. Peter
+preferred linux-firmware and I relayed that with his agreement; whether you=
+r
+answer changes his view is his to say, not mine.
 
-Please don't worry, my plan is to process most of the patch queue this 
-week.
+> I'm not sure I get you. Is this a licence problem of some sort ? Could
+> you rephrase ?
 
-I've been busy in dealing PCI regressions until now and still am one quirk 
-short to finish that work.
+Yes, and it is not about the API at all. It is about who may put ST's
+firmware into the kernel tree.
 
---
- i.
+vd55g1.c raises no question. ST holds the copyright and ST put its own arra=
+y
+in its own file, GPL-2.0, 3512 bytes, no request_firmware path anywhere.
+Nothing had to be granted, by anyone, to anyone.
 
-> >   drivers/platform/x86/amd/pmf/core.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/platform/x86/amd/pmf/core.c
-> > b/drivers/platform/x86/amd/pmf/core.c
-> > index b4eae65e675b8..5966190d1496b 100644
-> > --- a/drivers/platform/x86/amd/pmf/core.c
-> > +++ b/drivers/platform/x86/amd/pmf/core.c
-> > @@ -454,6 +454,7 @@ static const struct acpi_device_id amd_pmf_acpi_ids[] =
-> > {
-> >   	{"AMDI0107", 0},
-> >   	{"AMDI0108", 0},
-> >   	{"AMDI0109", 0},
-> > +	{"AMDI0112", 0},
-> >   	{ }
-> >   };
-> >   MODULE_DEVICE_TABLE(acpi, amd_pmf_acpi_ids);
-> > 
-> > base-commit: 5b05bb3f6c5716fab6911e12d60dd1f43ad9806a
-> 
+VD55G0 is not in that position today. The bytes this series would carry wer=
+e
+extracted from a third-party out-of-tree driver, by people who are not ST.
+That is the same question whether they land as a C array or as a file in
+linux-firmware - the mechanism does not change who owns them. linux-firmwar=
+e
+only makes it audible, because WHENCE asks for the grant out loud, where a
+built-in array lets the same question pass without being asked.
 
--- 
- i.
+So there are three routes, and only one of them is clean:
+
+  built in, sent by someone outside ST - which is the series as it stands.
+  Works technically. Leaves the provenance question unasked rather than
+  answered.
+
+  linux-firmware - needs an explicit grant from ST in WHENCE, and you have
+  now ruled out the API change it would require. So: closed.
+
+  ST upstreams VD55G0 itself, with its own array, exactly as you did for
+  vd55g1. Nobody outside ST has to ask for anything, because nothing is bei=
+ng
+  redistributed by anyone who does not own it.
+
+> By the way we didn't upstream the vd55g0 because it requires a bit of
+> cleaning, but this is something that could also be done.
+
+That is the one I would hope for, and it is worth more than getting my own
+machine working. It is the only route that ends the question rather than
+moving it. And it puts VD55G0 on the same footing as its sibling, rather th=
+an
+leaving it the part with an awkward history.
+
+If the cleaning is what stands in the way, say what would help and I will d=
+o
+what I can. I cannot clean code I do not have. I can carry the mechanical
+half of it - checkpatch and sparse, builds across configurations, dt-bindin=
+g
+checks, a review pass. And I can test on hardware you may not have: a Surfa=
+ce
+Pro 11 where the VD55G0 is the face-unlock sensor, so it is exercised by
+something real rather than by a capture tool. Peter's series in this thread
+already does a good deal of the genericising, if any of it is useful as a
+starting point.
+
+Whether GPL-2.0 on the surrounding code carries a blob with it is still a
+licence question, and still not one I will answer.
+
+Sergey
 
