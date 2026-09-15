@@ -1,142 +1,143 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71ECE4BB27F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 17:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F4A406834
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789494099; cv=none; b=OYAEx+veKEB0tQnQBl/fWoRY+Gk9KuWdAjsNhUHUA96qpdMS7WdtkcCQ9qLLTwTZlufGMYAoaxKIk+sUts7m/LyUdWIp5nJ4AV+sfm3uMTTMgvjd0s/H0wfFNxdlqJChvyaKB3QwcSHYEI2OGIMEf0R58bljCsmA8RqTtUrzRgM=
+	t=1789494393; cv=none; b=hGpYjzif3i2y2i5g20QLfF6mBxUt48sxotnN7gl6n11gmX/CNaSrM23sqVOLpmNaqodRSPCD627ShiGd1d47RtXLG6vOrzbD1u+Cx6wDYnZDAnR8cuUe/zNNwJp82PLM/Ki0F9Aygzhj4Dg57KWwivKi0dTz7VpB8NvQtiMRTSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789494099; c=relaxed/simple;
-	bh=KqrvaNzWNR8WvVI76kQ1FafPz3OW/UaLUaj6UxFIy8U=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YVS4kcgOk/yq05Hbv/f1Q3awzmUin9g0idpBk9h88KSPvWw0ZDAZRETASBelkPtyctuqr7zIvIHOrQrhxQso48GfkKA/YKoJa71Zt6bs+NG3OQsVPVv9/1JjN7Pi6vZSj7H6Bbkh/Uv81CAO8Dt0Mwx/P423a4eVdW0XlG3EtEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=STEPWMQv; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1789494393; c=relaxed/simple;
+	bh=WlQBNU+LBHOTy12vRSd1ePrcpVEBbXkmEd6JKJ3g0u0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EiDShrmbNt+0f4AiqHrWNVSqPXtdiKw+BHRR4xiphC10BV33AHj8I9HLxTeSwNo8l+lgBbnYXwyS8OtmeEjwhXOSyQzXI2TFVEkX/qTbiOWQcaXDNXf61v6OPv4mnJM9E6Vg1tuQL1rYGheH29p72xT2cqSlWCuWcLeOjGeTNP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NCDBC/8O; arc=none smtp.client-ip=74.125.225.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="STEPWMQv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1789494094; x=1789753294;
-	bh=uFvzRZC7YNb2HGF0G9uvjG4DqaPPiPsfLbWh3+PkvHQ=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=STEPWMQvy1TQ6avws+YRlAN070E55fuB+fmJA6tXvdbrcqbh+F7WwcaN0bFu5Get3
-	 OMuPFVgydtJHHG7v+teUhFqgaXMHpqRYsIbxlWSvay3deKW8EDGnoiEoyHjZR/8mqS
-	 qhZMFE0d0xtgerlXErHgyubKimJ3JKUVjnj9rIRmplOuq93s7MEnLum3Qo1C/IOHnn
-	 YO9KubtaJdqNu1RcN8F1Zxnw8dIzho8gQ57DjOepMeGg/K/kk0vaDcWKdh045hOybS
-	 L+k/GfOKFp6PC6+hPbhITrSoxcGWkuDRBAoGNVpQY3nASMogvwOmO6Gv1/OkH+UvrB
-	 /uXefs2N+ZSMQ==
-Date: Tue, 15 Sep 2026 17:41:28 +0000
-To: platform-driver-x86@vger.kernel.org
-From: patryk.dankow@protonmail.com
-Cc: =?utf-8?Q?Patryk_Da=C5=84k=C3=B3w?= <patryk.dankow@protonmail.com>, corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] platform/x86: asus-wmi: Add mute LED support
-Message-ID: <20260915174110.67871-2-patryk.dankow@protonmail.com>
-In-Reply-To: <20260915174110.67871-1-patryk.dankow@protonmail.com>
-References: <20260915174110.67871-1-patryk.dankow@protonmail.com>
-Feedback-ID: 221603438:user:proton
-X-Pm-Message-ID: 19d809f29e67ca9cbaf4c5d377e332c2e08e2215
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCDBC/8O"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49ccf3ca626so493245e9.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 10:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789494389; x=1790099189; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4kHhQGy3vIUJSO4i7ji0MZ5Fg5auge9rgj23eZwGEys=;
+        b=NCDBC/8OzeEsXDsKqGiYKWY0M67SdVEOP+jHaM+EbBm4wpV5Uh0p31rg3UE/NJMnpJ
+         pRIETjBmOdgrRnE4YwBvc2JcenbXic6PPLBF9HWhg5x8eIlRYxEFXUyj/3CBvQ/Jr0n4
+         cMPWrrFBfHFDOCDLh2b+fx1E1FmcEh15YzTLuTwFitosgm5dspjAm9wD4dM9pbt2hRBq
+         f2bZ4yeRK/ZQZf5re6AJX3+pcU4btcfnLf6Rt0zxy5jVWfMoiwOR07fwPhtScDxdnA4r
+         eDITvnakX74wbLOcoT3AEqGJzsA5GHqMqkzltG7meBoE7DWdE66Gsjf1wCDN+YUiOMjM
+         hdyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789494389; x=1790099189;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=4kHhQGy3vIUJSO4i7ji0MZ5Fg5auge9rgj23eZwGEys=;
+        b=G5Klhj99HBrQS4CLq3tHYwWwNgT7SToJruA017Yv15+g3jD/a8qKWTh/bawAtwT37Q
+         kMb8F3h/ef85/WGOrzWDUII7weW2Aj3Wjq5zdn/UrZcPdYrdNU9HymJeUP09GghO+nfh
+         +qjZZxAykr0f3Feg7s5aH6JfVpdEMTWz9HLSZzgVnIZP54sLsLdiFnSToDYeEQjktxAs
+         YhL/XAO5DweTLFwbqt8Dz7MBs/JTK2FBlMXv5wMmuffxXfXFOPDh7czRJN0FBYI8uJp/
+         qVeeMnM0LyNm+I/yt81aiWkzoiSOZXmbw+dUE6qzhedEfAjC3Fny0p5V7l856m+24EVF
+         aNpg==
+X-Forwarded-Encrypted: i=1; AKwUvBx5xizmR+8LnUvhr0thpK7Qxnqt7KJswSThDo4hAAPY/CuvpmKQ1RYT+2+SUN+4Q8vBQcoT68BrA/45Qbsz9+lUF3oI@vger.kernel.org
+X-Gm-Message-State: AFuF++kZN6TckyFzALCq2kQjDZn/grFupwjuBIvS/NLhjf/6cvS3PCqq
+	Cz8YCstsd8XiuBzLs8mQbxzhPQNItQ6hsmpT3yyiocPpA3wNXcVyhHbM
+X-Gm-Gg: AYBFou1cMyIdOShbik7LTO8V0PbCXaz2wrrXSM4Vb7Z2NUB7VDrYY3A4ldKua/LY868
+	rbsPDCjY8eYMADXfhmWMmwJABKvdD1oFRoTQY672rSjqBK2uayhaXVFKJJEvD0rZJMLev75isOB
+	wFAvHuZTkWj7bYl+473W2whtBNtyqQHUnBGqU26uDuv8khiBEwMO0fzbZDdlzuDKi6wlxd2RWjy
+	e6ZZ7lUZjh02NVjLl9h7fP2Q2B0T/YcBAnRTn18Z+5+I8T7tcNHbhJf04ll8MreZxSt6sK4KARI
+	Mm7puWUbuk6/TR01239hFdjdAcJsKM/NsvFm5ThLVOMwRFIH+eHY77tokbsiTPxPFyUhke94siy
+	IG/ORTjh9wYCAQjRVckRlC7+nMek0lqKs0ERRKGAiukr3Hgy2mNGuaYJn5xGv3QDiOEjajN8ejt
+	ulp040mpsYMVZNmZ5CqCeHDFBVj27R5inSvxJWVJou+DzoC9m2GFA2vjhPgBwYK67EnztC7c4ha
+	SSYEqsEVZmd9xSSEvj0kYBqnqpxaSuSa9ZvnUS/Pnq6qDOtxCab
+X-Received: by 2002:a05:600c:860b:b0:49c:fea1:f792 with SMTP id 5b1f17b1804b1-49e7a64889amr101393015e9.12.1789494389380;
+        Tue, 15 Sep 2026 10:46:29 -0700 (PDT)
+Received: from fedora ([202.47.63.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e83fc3da0sm3415955e9.1.2026.09.15.10.46.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2026 10:46:28 -0700 (PDT)
+From: Muhammad Bilal <meatuni001@gmail.com>
+To: Jorge Lopez <jorge.lopez2@hp.com>,
+	Hans de Goede <hansg@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Muhammad Bilal <meatuni001@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/x86: hp-bioscfg: fix slab-out-of-bounds write in hp_convert_hexstr_to_str
+Date: Tue, 15 Sep 2026 22:46:15 +0500
+Message-ID: <20260915174615.63924-1-meatuni001@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Patryk Da=C5=84k=C3=B3w <patryk.dankow@protonmail.com>
+hp_convert_hexstr_to_str() decodes an ACPI string made up of
+space-separated ASCII hex-byte tokens of the form "0xHH". For
+example, the four-byte input "0x41" decodes to the single
+character 'A', and the nine-byte input "0x09 0x41" decodes to
+"\tA": each token is read in a five-byte step (four characters for
+the token, one for the trailing delimiter), and produces one output
+byte, or two if that byte is '\\', '\r', '\n', or '\t', which are
+written back out as a backslash followed by the matching letter.
 
-Add support for WMI device 0x0004001c and register it as the
-platform::mute LED using the audio-mute trigger.
+The output buffer is sized with kmalloc(input_len, GFP_KERNEL), the
+raw encoded length of the input, not the decoded length. For
+well-formed input this is generous, since five input bytes never
+decode to more than two output bytes. But input_len comes directly
+from the ACPI string length reported by firmware and isn't
+guaranteed to respect the five-byte encoding, so a short input_len
+can undersize the allocation. With input_len == 1, only one byte is
+allocated, yet decoding still produces at least one output byte
+plus the NUL terminator written unconditionally afterwards, so two
+bytes are needed. That terminator write then lands one byte past
+the end of the allocation.
 
-The device ID is present in the PM3406CKA DSDT and is also used
-by GHelper for controlling the same LED.
+KASAN caught exactly this during BIOS attribute enumeration on
+boot, triggered by a one-byte encoded input value:
 
-Tested on ASUS ExpertBook PM3406CKA.
+BUG: KASAN: slab-out-of-bounds in hp_convert_hexstr_to_str+0x6d8/0x710 [hp_bioscfg]
+Write of size 1 at addr ffff8881032e5d81 by task (udev-worker)/520
+The buggy address is located 0 bytes to the right of
+allocated 1-byte region [ffff8881032e5d80, ffff8881032e5d81)
 
-Signed-off-by: Patryk Da=C5=84k=C3=B3w <patryk.dankow@protonmail.com>
+Size the allocation to the worst-case decoded length instead of the
+raw input length: two output bytes for every five-byte input chunk
+(DIV_ROUND_UP(input_len, 5)), plus one byte for the terminator.
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c            | 26 +++++++++++++++++++++-
- include/linux/platform_data/x86/asus-wmi.h |  1 +
- 2 files changed, 26 insertions(+), 1 deletion(-)
+v2: Expand the commit message to spell out the hex-token input
+    format and decoded output with a worked example, and explain
+    exactly how a short input_len undersizes the allocation, per
+    Ilpo Järvinen's review. No code change from v1.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wm=
-i.c
-index a65090429ca7..d7c100dc2020 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -262,6 +262,7 @@ struct asus_wmi {
- =09struct led_classdev lightbar_led;
- =09int lightbar_led_wk;
- =09struct led_classdev micmute_led;
-+=09struct led_classdev mute_led;
- =09struct led_classdev camera_led;
- =09struct workqueue_struct *led_workqueue;
- =09struct work_struct tpd_led_work;
-@@ -2054,6 +2055,16 @@ static int micmute_led_set(struct led_classdev *led_=
-cdev,
- =09return err < 0 ? err : 0;
- }
-=20
-+static int mute_led_set(struct led_classdev *led_cdev,
-+=09=09=09enum led_brightness brightness)
-+{
-+=09int state =3D brightness !=3D LED_OFF;
-+=09int err;
-+
-+=09err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_MUTE_LED, state, NULL);
-+=09return err < 0 ? err : 0;
-+}
-+
- static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
- {
- =09struct asus_wmi *asus;
-@@ -2084,6 +2095,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- =09led_classdev_unregister(&asus->wlan_led);
- =09led_classdev_unregister(&asus->lightbar_led);
- =09led_classdev_unregister(&asus->micmute_led);
-+=09led_classdev_unregister(&asus->mute_led);
- =09led_classdev_unregister(&asus->camera_led);
-=20
- =09if (asus->led_workqueue)
-@@ -2176,7 +2188,19 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- =09=09asus->micmute_led.default_trigger =3D "audio-micmute";
-=20
- =09=09rv =3D led_classdev_register(&asus->platform_device->dev,
--=09=09=09=09=09=09&asus->micmute_led);
-+=09=09=09=09=09   &asus->micmute_led);
-+=09=09if (rv)
-+=09=09=09goto error;
-+=09}
-+
-+=09if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MUTE_LED)) {
-+=09=09asus->mute_led.name =3D "platform::mute";
-+=09=09asus->mute_led.max_brightness =3D 1;
-+=09=09asus->mute_led.brightness_set_blocking =3D mute_led_set;
-+=09=09asus->mute_led.default_trigger =3D "audio-mute";
-+
-+=09=09rv =3D led_classdev_register(&asus->platform_device->dev,
-+=09=09=09=09=09   &asus->mute_led);
- =09=09if (rv)
- =09=09=09goto error;
- =09}
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/pla=
-tform_data/x86/asus-wmi.h
-index b5ed8c83ace1..3810c4a0da23 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -54,6 +54,7 @@
- #define ASUS_WMI_DEVID_LED5=09=090x00020015
- #define ASUS_WMI_DEVID_LED6=09=090x00020016
- #define ASUS_WMI_DEVID_MICMUTE_LED=09=090x00040017
-+#define ASUS_WMI_DEVID_MUTE_LED=090x0004001C
-=20
- /* Disable Camera LED */
- #define ASUS_WMI_DEVID_CAMERA_LED_NEG=090x00060078 /* 0 =3D on (unused) */
---=20
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 22c198680903..42331cf90581 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -442,7 +442,7 @@ int hp_convert_hexstr_to_str(const char *input, u32 input_len, char **str, int *
+ 	*len = 0;
+ 	*str = NULL;
+ 
+-	new_str = kmalloc(input_len, GFP_KERNEL);
++	new_str = kmalloc(2 * DIV_ROUND_UP(input_len, 5) + 1, GFP_KERNEL);
+ 	if (!new_str)
+ 		return -ENOMEM;
+ 
+-- 
 2.55.0
-
 
