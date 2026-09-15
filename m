@@ -1,287 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFE24BFE7F;
-	Tue, 15 Sep 2026 12:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BD4367F58;
+	Tue, 15 Sep 2026 12:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789474121; cv=none; b=bmi7b//gvMkHo+9GFudMPSkgZ0031R4m5bnP3Ug84kJk1ACzhbW/7nwZl34BHOMaZr6PTR9hzWYZPMXbxl7W3AW5W4kPeaexSN0UgmWxVZwJ/OE6RUqRTU/vWt3L6lI6/AKryMAClRomo6mxh0hpsHMRraSp8x+QOip4u4a6v2I=
+	t=1789474230; cv=none; b=ZWpkEPgozk8HKX+F5Y05n6PxaUTkqTSVpHaf4sTJqznMRtbfnnXXwqeZaurtxz79WbPUtTLx5MHxVaZ6FKpp+Kid7UOZG8gkhvLUC9ECxVdRfTVkTVcRd27OH9FbjC56564nOG5gNP1aNv3BXCRQuAiAjavfJnDWbHriaOo4CRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789474121; c=relaxed/simple;
-	bh=r4/etdnCcfrVsy/eyrNdRvVeg93egQng/TtPPPFnO+Q=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RM4Q0n2nla5COSiY46WgrmQFPRiV5NGJ9YUSvEANWezOV6jOGSoLZsde+BEyOjlmwRLCgdo7fYD4cmP1/Glx30p4QtgexZCBRSbUJ40n4SINxaPoSSDZR9Ra/8B0yD/7Y4ESBoLMYAEwNLte3gkRKne+q8TWHsDmE8mPTbNuTxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wfk/ZGNc; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789474230; c=relaxed/simple;
+	bh=ZGYe6w2pPCKtnhvFXoWByjdANZZAKeh6RT4pCiKErwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PyO69HHw1hotA7ydeIjgsjtuF+fSebWNQpYYvQgphuwdqGTxMYJOtiHoqCP+KeJeBPB2PVmOCNjBCJaKP7nTEDOIGgE/iJmAgUx6lf3JlDd1PTMTwIMaw5U7F6vvI6PZRAa3rWTbe/kT4mGHrtyDgMSblm7q0zy62Y46O5MPqLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XMDz9J0i; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wfk/ZGNc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789474119; x=1821010119;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=r4/etdnCcfrVsy/eyrNdRvVeg93egQng/TtPPPFnO+Q=;
-  b=Wfk/ZGNcJbis3m2ZuXTctJHCS/PbXZr02GAytjun7DmH910QC2bPjhzq
-   ALg5bEhULWNbmvvlALzU8a6BDWYp4u8wHi1vAjmoYBYopMTuDdm0RNleg
-   cEYVNd6EKqrqalCBsCah94a1ILUrAiwDbQV9oBIsGYp+jEOh7KG/7YzMw
-   UWzRwn16/pa0Z0HYbaLI9J7ewinsA6qOz933UjH6ii6/qq6Aky+1vpfDX
-   H0Fd4Gf02p9BDTUxe9JclUq7PRIkN6RwhdHumLDOnDGLvwDTdx2qEPFZF
-   f3CXbrKrJUFOPGCjhTFIqs0xBYaZWKgCa/fte65fk6iTJ3xHSFHFQRCBg
-   w==;
-X-CSE-ConnectionGUID: /vMKGoD3Q9iT/ajBTaBn7w==
-X-CSE-MsgGUID: RnODzkY2T12n5QThk3ZhPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="112603680"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="112603680"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:08:38 -0700
-X-CSE-ConnectionGUID: yEXKeHT/S1eM9WiIW6824Q==
-X-CSE-MsgGUID: +eCt4baJQ1ehGF/VxF7LQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="276752589"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:08:30 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Sep 2026 15:08:25 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-    "hansg@kernel.org" <hansg@kernel.org>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "linux@weissschuh.net" <linux@weissschuh.net>, 
-    "rafael@kernel.org" <rafael@kernel.org>, 
-    "lenb@kernel.org" <lenb@kernel.org>, 
-    "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-    "Koenig, Christian" <Christian.Koenig@amd.com>, 
-    "airlied@gmail.com" <airlied@gmail.com>, 
-    "simona@ffwll.ch" <simona@ffwll.ch>, 
-    "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-    "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-    "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>, 
-    "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
-    "mripard@kernel.org" <mripard@kernel.org>, 
-    "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-    "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, 
-    "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, 
-    "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, 
-    "tursulin@ursulin.net" <tursulin@ursulin.net>, 
-    "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-    "matthew.brost@intel.com" <matthew.brost@intel.com>, 
-    "thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, 
-    "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
-Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
- nvidia_wmi_ec_supported()
-In-Reply-To: <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
-Message-ID: <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
-References: <20260724025959.142826-1-W_Armin@gmx.de> <20260724025959.142826-3-W_Armin@gmx.de> <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com> <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XMDz9J0i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=aE
+	PJwYLN1OZnlAgx3iNSRwk/r3LrjTJvf045dXFvlQI=; b=XMDz9J0isqY5XLTW+3
+	AWHx1by/oCOU5sfGA52zb7FD9GqhZKOPeiaraKsyTLyuPB4c5qJsIKWnvdgAcfXZ
+	qMHkTb7WogWOw7ucmPA/tk3FbvWnSzZ3PqKaHSNFYx7tdP+io5AtlCQ3kPZgZ97H
+	MvCHE538kA2iu7t/tiaY4Bsyg=
+Received: from ubuntu.. (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnL7mNNalqxvxTAw--.38045S4;
+	Tue, 15 Sep 2026 20:09:52 +0800 (CST)
+From: Ma Ke <make_ruc2021@163.com>
+To: Shyam-sundar.S-k@amd.com,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	mario.limonciello@amd.com
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	Ma Ke <make_ruc2021@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] platform/x86/amd/pmc: Fix RTC reference leak in amd_pmc_verify_czn_rtc()
+Date: Tue, 15 Sep 2026 20:09:43 +0800
+Message-ID: <20260915120943.3988720-1-make_ruc2021@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnL7mNNalqxvxTAw--.38045S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CFW7ArWUGrW3tr1kuF4Durg_yoW8XFWkpa
+	nxCF4fGrZ8CF4UG3WxW3Wqya1Uury2vr4jkFyY9w1ava4SqFn3J3sY9w1aqr1DArWkCF17
+	XFZxt395ZFs8W3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUfwIhUUUUU=
+X-CM-SenderInfo: 5pdnvshuxfjiisr6il2tof0z/xtbC0xF2gWqpNZEZFwAA3c
 
-GPU people heads up!!
+amd_pmc_verify_czn_rtc() opens the RTC with rtc_class_open(), which
+takes both a device reference and a module reference on the RTC
+driver. rtc_class_close() is the matching release, but it is not
+called.
 
-On Wed, 2 Sep 2026, Armin Wolf wrote:
+Use a __free() to cleanup call on the declaration
 
-> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
-> 
-> > Public
-> > 
-> > > -----Original Message-----
-> > > From: Armin Wolf <W_Armin@gmx.de>
-> > > Sent: Thursday, July 23, 2026 11:00 PM
-> > > To: hansg@kernel.org; ilpo.jarvinen@linux.intel.com
-> > > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > linux@weissschuh.net; rafael@kernel.org; lenb@kernel.org; linux-
-> > > acpi@vger.kernel.org; Deucher, Alexander <Alexander.Deucher@amd.com>;
-> > > Koenig, Christian <Christian.Koenig@amd.com>; airlied@gmail.com;
-> > > simona@ffwll.ch; amd-gfx@lists.freedesktop.org; dri-
-> > > devel@lists.freedesktop.org; patrik.r.jakobsson@gmail.com;
-> > > maarten.lankhorst@linux.intel.com; mripard@kernel.org;
-> > > tzimmermann@suse.de; jani.nikula@linux.intel.com;
-> > > joonas.lahtinen@linux.intel.com; rodrigo.vivi@intel.com;
-> > > tursulin@ursulin.net; intel-gfx@lists.freedesktop.org;
-> > > matthew.brost@intel.com; thomas.hellstrom@linux.intel.com; intel-
-> > > xe@lists.freedesktop.org
-> > > Subject: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
-> > > nvidia_wmi_ec_supported()
-> > > 
-> > > The WMI-ACPI driver now supports architectures other than x86.
-> > > Remove the CONFIG_X86 handling from video-detect and the associated
-> > > drivers to simplify the resulting code.
-> > > 
-> > > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/acpi/Kconfig               | 2 +-
-> > >   drivers/acpi/video_detect.c        | 8 --------
-> > >   drivers/gpu/drm/amd/amdgpu/Kconfig | 4 +---
-> > >   drivers/gpu/drm/gma500/Kconfig     | 1 -
-> > >   drivers/gpu/drm/i915/Kconfig       | 1 -
-> > >   drivers/gpu/drm/radeon/Kconfig     | 4 +---
-> > >   drivers/gpu/drm/xe/Kconfig         | 5 ++---
-> > >   drivers/platform/loongarch/Kconfig | 1 +
-> > >   8 files changed, 6 insertions(+), 20 deletions(-)
-> > > 
-> > > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig index
-> > > f165d14cf61a..cc1e58fa664b 100644
-> > > --- a/drivers/acpi/Kconfig
-> > > +++ b/drivers/acpi/Kconfig
-> > > @@ -224,7 +224,7 @@ config ACPI_VIDEO
-> > >        tristate "Video"
-> > >        depends on BACKLIGHT_CLASS_DEVICE
-> > >        depends on INPUT
-> > > -     depends on ACPI_WMI || !X86
-> > > +     depends on ACPI_WMI
-> > >        select THERMAL
-> > >        help
-> > >          This driver implements the ACPI Extensions For Display Adapters
-> > > diff
-> > > --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c index
-> > > 458efa4fe9d4..af9280b244f1 100644
-> > > --- a/drivers/acpi/video_detect.c
-> > > +++ b/drivers/acpi/video_detect.c
-> > > @@ -82,8 +82,6 @@ find_video(acpi_handle handle, u32 lvl, void *context,
-> > > void **rv)
-> > >        return AE_OK;
-> > >   }
-> > > 
-> > > -/* This depends on ACPI_WMI which is X86 only */ -#ifdef CONFIG_X86
-> > > static bool nvidia_wmi_ec_supported(void)  {
-> > >        struct wmi_brightness_args args = {
-> > > @@ -105,12 +103,6 @@ static bool nvidia_wmi_ec_supported(void)
-> > >         */
-> > >        return args.ret == WMI_BRIGHTNESS_SOURCE_EC;  } -#else -static bool
-> > > nvidia_wmi_ec_supported(void) -{
-> > > -     return false;
-> > > -}
-> > > -#endif
-> > > 
-> > >   /* Force to use vendor driver when the ACPI device is known to be
-> > >    * buggy */
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > index 12e4a41bf1f0..50305630f533 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
-> > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
-> > >        # ACPI_VIDEO's dependencies must also be selected.
-> > >        select INPUT if ACPI
-> > >        select ACPI_VIDEO if ACPI
-> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
-> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
-> > The change below makes sense, but this one looks like it should remain
-> > unless X86_PLATFORM_DEVICES is handled some other way?
-> > 
-> > Alex
-> 
-> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary because
-> ACPI-WMI depended on it in the past.
-> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 anymore.
+Found by code review.
 
-Hi all,
+Fixes: 59348401ebed ("platform/x86: amd-pmc: Add special handling for timer based S0i3 wakeup")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ma Ke <make_ruc2021@163.com>
+---
+Changes in v2:
+- modified the patch, thanks for developer's suggestions.
+---
+ drivers/platform/x86/amd/pmc/pmc.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Could more GPU people besides Alex take a look on this. I'd want to make 
-progress with this series within this cycle but would prefer to have Acks 
-from GPU side.
-
-> > > -     select ACPI_WMI if ACPI && X86
-> > > +     select ACPI_WMI if ACPI
-> > >        help
-> > >          Choose this option if you have a recent AMD Radeon graphics card.
-> > > 
-> > > diff --git a/drivers/gpu/drm/gma500/Kconfig
-> > > b/drivers/gpu/drm/gma500/Kconfig index a2acaa699dd5..dc4c56638819
-> > > 100644
-> > > --- a/drivers/gpu/drm/gma500/Kconfig
-> > > +++ b/drivers/gpu/drm/gma500/Kconfig
-> > > @@ -11,7 +11,6 @@ config DRM_GMA500
-> > >        select ACPI_VIDEO if ACPI
-> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >        select INPUT if ACPI
-> > > -     select X86_PLATFORM_DEVICES if ACPI
-> > >        select ACPI_WMI if ACPI
-> > >        help
-> > >          Say yes for an experimental 2D KMS framebuffer driver for the
-> > > diff --
-> > > git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig index
-> > > 5e939004b646..71426b9c91f0 100644
-> > > --- a/drivers/gpu/drm/i915/Kconfig
-> > > +++ b/drivers/gpu/drm/i915/Kconfig
-> > > @@ -28,7 +28,6 @@ config DRM_I915
-> > >        # but for select to work, need to select ACPI_VIDEO's dependencies,
-> > > ick
-> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >        select INPUT if ACPI
-> > > -     select X86_PLATFORM_DEVICES if ACPI
-> > >        select ACPI_WMI if ACPI
-> > >        select ACPI_VIDEO if ACPI
-> > >        select SYNC_FILE
-> > > diff --git a/drivers/gpu/drm/radeon/Kconfig
-> > > b/drivers/gpu/drm/radeon/Kconfig index c479f0c0dd5c..3cd70aef770e
-> > > 100644
-> > > --- a/drivers/gpu/drm/radeon/Kconfig
-> > > +++ b/drivers/gpu/drm/radeon/Kconfig
-> > > @@ -25,9 +25,7 @@ config DRM_RADEON
-> > >        # ACPI_VIDEO's dependencies must also be selected.
-> > >        select INPUT if ACPI
-> > >        select ACPI_VIDEO if ACPI
-> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
-> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
-> > > -     select ACPI_WMI if ACPI && X86
-> > > +     select ACPI_WMI if ACPI
-> > >        help
-> > >          Choose this option if you have an ATI Radeon graphics card.
-> > > There
-> > >          are both PCI and AGP versions.  You don't need to choose this to
-> > > diff -
-> > > -git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig index
-> > > 4d7dcaff2b91..502c7b3c1f16 100644
-> > > --- a/drivers/gpu/drm/xe/Kconfig
-> > > +++ b/drivers/gpu/drm/xe/Kconfig
-> > > @@ -4,7 +4,6 @@ config DRM_XE
-> > >        depends on DRM && PCI
-> > >        depends on KUNIT || !KUNIT
-> > >        depends on INTEL_VSEC || !INTEL_VSEC
-> > > -     depends on X86_PLATFORM_DEVICES || !(X86 && ACPI)
-> > >        depends on PAGE_SIZE_4KB || COMPILE_TEST || BROKEN
-> > >        select INTERVAL_TREE
-> > >        # we need shmfs for the swappable backing store, and in particular
-> > > @@ -29,8 +28,8 @@ config DRM_XE
-> > >        # but for select to work, need to select ACPI_VIDEO's dependencies,
-> > > ick
-> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
-> > >        select INPUT if ACPI
-> > > -     select ACPI_VIDEO if X86 && ACPI
-> > > -     select ACPI_WMI if X86 && ACPI
-> > > +     select ACPI_VIDEO if ACPI
-> > > +     select ACPI_WMI if ACPI
-> > >        select SYNC_FILE
-> > >        select CRC32
-> > >        select SND_HDA_I915 if SND_HDA_CORE
-> > > diff --git a/drivers/platform/loongarch/Kconfig
-> > > b/drivers/platform/loongarch/Kconfig
-> > > index 447528797d07..db7833842142 100644
-> > > --- a/drivers/platform/loongarch/Kconfig
-> > > +++ b/drivers/platform/loongarch/Kconfig
-> > > @@ -23,6 +23,7 @@ config LOONGSON_LAPTOP
-> > >        depends on INPUT
-> > >        depends on MACH_LOONGSON64
-> > >        select ACPI_VIDEO
-> > > +     select ACPI_WMI
-> > >        select INPUT_SPARSEKMAP
-> > >        default y
-> > >        help
-> > > --
-> > > 2.39.5
-> > 
-> 
-
+diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
+index 6792aa2c6187..b1ad79b22c07 100644
+--- a/drivers/platform/x86/amd/pmc/pmc.c
++++ b/drivers/platform/x86/amd/pmc/pmc.c
+@@ -14,6 +14,7 @@
+ #include <linux/array_size.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
++#include <linux/cleanup.h>
+ #include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+@@ -646,9 +647,11 @@ static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
+ 	return 0;
+ }
+ 
++DEFINE_FREE(rtc_class_close, struct rtc_device *, rtc_class_close(_T));
++
+ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
+ {
+-	struct rtc_device *rtc_device;
++	struct rtc_device *rtc_device __free(rtc_class_close) = NULL;
+ 	time64_t then, now, duration;
+ 	struct rtc_wkalrm alarm;
+ 	struct rtc_time tm;
 -- 
- i.
+2.43.0
 
