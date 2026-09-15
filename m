@@ -1,127 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FF94A8A33;
-	Tue, 15 Sep 2026 12:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8D63C3429
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 12:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789474672; cv=none; b=TILoVF+RnYO6Lkg0kTg+8YqLVUtgHszHTV/BxNXM99/8u+sAJydUp2oZ4ThSpepkBtg2Lm7baiv7sDDV1O/7Iuf+nYGgjYfaNlpVyQT1ZV0suHLVG47CmZRn2FJOCf0QsSPP8JrJBZ1DUd0khnwUjazy23nwX4jaL/ra7rZpOHM=
+	t=1789475151; cv=none; b=PcZ26LI7YJUxB8nPY6+9+VzFPOEJsOE7xuXh7uyoBdH2fCotxSlflMFj2PMw/VT3qIErtI7qhUZaq7ymLHtLKFeZD2Lzlcy4c7PTshx/yYfWYX3uht9NfN9kiYKVGlTLZiQal8IE3QnGanCz1RfwcRcNrSH5Z80X4jAERmEccak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789474672; c=relaxed/simple;
-	bh=QWIzsJE0Kai3KownbKrQWHTGaGpa7cST5QF1p4oyIVc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Dw9CF+88WHv0odmUKPucod+nyy06lS775r0dpChd8bxw7H1x2V0Wg1IaejiLfmM98Z2GZJa+1wnImEA9rX1953DGongdNBCtYKqphf86gk2lEts27DAcCWy2fJiNJwHUszEuO3oWW+qtyrX+ZuEYpVrKih077lnHHsZKPohWcTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mv+l42g+; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789475151; c=relaxed/simple;
+	bh=TSGU6OJ0h4fUfeq573U3yF+hws662Cowi5xUNxY/Plc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMtJZD8+Q733mgGG9Jy/0fxJNS7byLeohjQpXPx8bwQGQ5v3T2qtwWVaTay+JfmFWVtT7MxoeQD3f8F2c44Pit3y63q9g/GA0RvGtJUhrHk4Saqx/g0gRYqu5Aqqvb2F4S8eRpz3LLPfgb3l1omUwbCPs2w9CDFMI7FIry8qmeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=Yp8lsIWW; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mv+l42g+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789474671; x=1821010671;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=QWIzsJE0Kai3KownbKrQWHTGaGpa7cST5QF1p4oyIVc=;
-  b=Mv+l42g+Gg25jwIJEjupqXVPAQxbRGdPD0THbF3LaiQxmyKgTBxM3aLZ
-   SrTaRkOv5kBGGAzpQFYPY7gE6MBLvoUdCcFkeAy1hatrlbR6nQiRSIi96
-   0pWwvSqiYK7FAYkW/QVkpHKyYTHJLpLVDlh+5bMumkk4RBuC8VJvQQ9vu
-   rAByw+RjCKGrQGZpo8JNc26oU3h5bc8K+5wiIQNmED5J394w7a7u7xqHT
-   XTSo9oVCvvPl6OyJDxWCKWG/ZdmZIBvPqkhiE4BhO1tPOyQgY9VZYjhkk
-   yMC9RPNSzllvDofaQ4rG4oL0OLn5hZdVq3kdQioiwboR/K6gD+2LJvgfl
-   w==;
-X-CSE-ConnectionGUID: rjGcIv2MQIGNPhYpMu1Rcg==
-X-CSE-MsgGUID: fPMX3L7fTZ+iFVcoM8rUqA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="112604460"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="112604460"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:17:50 -0700
-X-CSE-ConnectionGUID: TnyOsk/mR3ieOxzN4m1p0g==
-X-CSE-MsgGUID: 8U7stX10R/6Ese6/vpmuIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="276755304"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:17:47 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Sep 2026 15:17:42 +0300 (EEST)
-To: Ma Ke <make_ruc2021@163.com>
-cc: Shyam-sundar.S-k@amd.com, Hans de Goede <hansg@kernel.org>, 
-    mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, akpm@linux-foundation.org, 
-    stable@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86/amd/pmc: Fix RTC reference leak in
- amd_pmc_verify_czn_rtc()
-In-Reply-To: <20260915120943.3988720-1-make_ruc2021@163.com>
-Message-ID: <c6096e2c-0112-81d0-1940-35ba54a66305@linux.intel.com>
-References: <20260915120943.3988720-1-make_ruc2021@163.com>
+	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="Yp8lsIWW"
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 224843F2DC
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 12:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20251003; t=1789475145;
+	bh=OWz2Oh+f3I45WPvVMwnriAaMSjFo7OhzWowmJMieGyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=Yp8lsIWWV5r/jk8wC5l3ns4glaXn1V7ailoRvVoygRt5YgPYNFMFzi1fpyZcM4pcN
+	 OGWv1N3u8SETrNTKbwJIspLVWZAHhl5wOURtL79VGOvgN5INb0Bf9pu1vAumfjTqIg
+	 M6cwPFZ94UQhFSwjtK537WPgnFD1PIWFWcN4vY5DitDtVo+QP7jHmbX3jzjjn7bTMf
+	 2wcA0zY0tPlc9PJoS6t0RLv1LoXiZGuIwvESeE3cKiWv0GgnjEIeRXUAKB/ONGjZ2N
+	 jc8umcnc+qR4AfcWx2jDOoObiTuaexsRaYkI5CWTm8RvWGABgs8nKsSeTSFwy8jt7e
+	 SzjGQqPUHi7skt0owxiwb+Dwhz8dP6iui7LtOZx5D8JWEHiOVMpKJySKUCP8evgm5+
+	 Cv8/JW718vjFgwjaNqhZiMCmMH5SbKBD29yeaP3DOVhoaImKzX7BP/2JnkD4Qxob9z
+	 +2yLzzy44Kd+8IWqvdhHyERWte+zRmFn9XBGa+o0gPQUvjKqoKATaNW5ZhysSgoRsd
+	 yQbLC+wGBmfbqvknGsdFj9LK+Ipui1hGXUeynHfrRi0ypiUTmkEglLw9HKYn6DBPtB
+	 R9QsZScim/GiadeJLHk0szOBb8C7UoWADs3doNqZwWnURwrYvHX67eSwua/jASUCKq
+	 hIyJaf35uyti1xTIyYPbV7K0=
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8688139460bso4304090b3a.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 05:25:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789475143; x=1790079943;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=OWz2Oh+f3I45WPvVMwnriAaMSjFo7OhzWowmJMieGyI=;
+        b=eEbsdYrRqACMiJEf2lgtIBSs3ddsKheW1xKFRlcGHu3xudUlrXOmrGAx2B6eM7OD+3
+         dOS2jCZ3u9wmc5QWgFrPdJVhgmA31cMkL9ckmz9MP2X+xtfPOoqLucDo+/xx0L302Bds
+         QK7K5m2AGpjGq4WDxWI6lZcayKJOIAAgL43EkmDf4JScTh1T/v4zbGeGzq361QPhen1/
+         g0K92ULy26P9MqRRlMudOYrS3PqC13YEg0nsieePjR1yV45azCYvyAM/bofvLH1uoOqg
+         gdDKdin/3hyaJsBzBWHSgtWMtwgheRyP7ivjUuhauTcKDbg4/6+B28yDq5giTuvgnJ6w
+         woDQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxCoGNsUxKX31j1SSXRlrw6yA5tfKk5VFXJGSj273DDjUSgzdcVdPVV9A/bTdNtuycsAeDsI6zPeVeQPQva0iUaLhgK@vger.kernel.org
+X-Gm-Message-State: AFuF++mDnaC87vuxKOiTndYX0mWPLXDrqEp0S9shoKS/hUCVLaDcbIoC
+	7p4byjAIpcbaaVanU7Z+QLAprHbJ3mtwBJflfuy4DomhZyilc1+v3PP/zrvKItWBr+2lo2e+HhV
+	QGLaQBRE5DnJTeGBE+LrH49vs60/ClrpYNTxhqv5DHbGK3UtMf8M0LsDcya6lxc9b0WZ9lD/5Sa
+	0qoymjq8EYz++1Kmg=
+X-Gm-Gg: AYBFou2zjUHhZSqa+5OU0GSyylta5q2EpDp6Rzp6ddNhZuQ6G0grBaJA7zxGsdNY2XU
+	yUx8SKu7YdsmGnTikZdQ8xbCjwH9d6sjl3L/byE+HnGtg4gVmYYqYAD6qUNn5E0vOMd/kO4e3YG
+	9DfSsUVSlM/X+iqMVo+Bg0cDcrK8Y9OgrH2Pej81APveltmAvF/BPsfuh+lYcIPBe19xE1/B3Zu
+	QZIa0XdV8RiXiFd/tK78QpkOn0knZN3dK4bUg/vHjzCoH9+re002/0rNP1W0ynmQF9mRb8SGIpm
+	JY4DvE6K64Cy+3bdcqYBXO2DBjX6xXSfZCsHibEmXpMyd8Fwgq5lAwFnK5tc8SMcZ0jolRNQMEx
+	r2htMsMQ2rx5fDP2LbxU+ArOB2DKxXs04ltmZ+qFSybgwa9FtH41E
+X-Received: by 2002:a05:6a00:4c9c:b0:85f:b00b:8760 with SMTP id d2e1a72fcca58-86f82a5efbamr14761138b3a.5.1789475143129;
+        Tue, 15 Sep 2026 05:25:43 -0700 (PDT)
+X-Received: by 2002:a05:6a00:4c9c:b0:85f:b00b:8760 with SMTP id d2e1a72fcca58-86f82a5efbamr14761047b3a.5.1789475142601;
+        Tue, 15 Sep 2026 05:25:42 -0700 (PDT)
+Received: from acelan-Precision-5480 (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-86b28fc129csm6022017b3a.25.2026.09.15.05.25.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2026 05:25:42 -0700 (PDT)
+Date: Tue, 15 Sep 2026 20:25:37 +0800
+From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Shyam-sundar.S-k@amd.com, hansg@kernel.org, 
+	ilpo.jarvinen@linux.intel.com, Daniel Gibson <daniel@gibson.sh>, stable@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/amd: Stop counting intermediate cycles with
+ metrics table
+Message-ID: <aqk464fQ6JqlcCUX@acelan-Precision-5480>
+References: <20260914141734.2703545-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260914141734.2703545-1-mario.limonciello@amd.com>
 
-On Tue, 15 Sep 2026, Ma Ke wrote:
+On Mon, Sep 14, 2026 at 09:17:32AM -0500, Mario Limonciello wrote:
+> The metrics table doesn't increment for all cases that can cause an
+> intermediate wakeup if the cycle is very fast.  This can make the intent
+> from commit 9f5595d5f03fd ("platform/x86/amd: pmc: Require at least 2.5
+> seconds between HW sleep cycles") not work properly.
+>
+> That commit originally was measured to work properly, but it was
+> accidental due to a logic error.  The logic error was fixed in
+> commit 4dbd11796f3a8 ("platform/x86/amd: pmc: Clear metrics table at
+> start of cycle") but this now masked the table doesn't always update.
+>
+> Since that code was introduced, Daniel Gibson added a number of changes
+> to the logic which includes a state variable introduced in
+> commit 037f0b03c663a ("platform/x86/amd/pmc: Don't log during
+> intermediate wakeups").
+>
+> Utilize that state variable to instead decide if a single sequence has
+> started.
+This patch fixes my resume issue with TB4 dock.
+Thanks.
 
-> amd_pmc_verify_czn_rtc() opens the RTC with rtc_class_open(), which
-> takes both a device reference and a module reference on the RTC
-> driver. rtc_class_close() is the matching release, but it is not
-> called.
-> 
-> Use a __free() to cleanup call on the declaration
-> 
-> Found by code review.
-> 
-> Fixes: 59348401ebed ("platform/x86: amd-pmc: Add special handling for timer based S0i3 wakeup")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ma Ke <make_ruc2021@163.com>
+Tested-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
+
+>
+> Cc: Daniel Gibson <daniel@gibson.sh>
+> Cc: stable@vger.kernel.org # 7.1.y: 037f0b03c663a platform/x86/amd/pmc: Don't log during intermediate wakeups
+> Cc: stable@vger.kernel.org # 6.18.y: 037f0b03c663a platform/x86/amd/pmc: Don't log during intermediate wakeups
+> Fixes: 4dbd11796f3a8 ("platform/x86/amd: pmc: Clear metrics table at start of cycle")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
-> Changes in v2:
-> - modified the patch, thanks for developer's suggestions.
-> ---
->  drivers/platform/x86/amd/pmc/pmc.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+>  drivers/platform/x86/amd/pmc/pmc.c | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+>
 > diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index 6792aa2c6187..b1ad79b22c07 100644
+> index 6792aa2c61874..e384b56d67559 100644
 > --- a/drivers/platform/x86/amd/pmc/pmc.c
 > +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -14,6 +14,7 @@
->  #include <linux/array_size.h>
->  #include <linux/bitfield.h>
->  #include <linux/bits.h>
-> +#include <linux/cleanup.h>
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -646,9 +647,11 @@ static int amd_pmc_wa_irq1(struct amd_pmc_dev *pdev)
->  	return 0;
+> @@ -701,19 +701,6 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
+>  	return rc;
 >  }
->  
-> +DEFINE_FREE(rtc_class_close, struct rtc_device *, rtc_class_close(_T));
-
-I'm sorry, I only now realize this is not a local thing at all so it would 
-below to the header defining rtc_class_open/close().
-
-More importantly, rtc_class_close() does not handle NULL inputs so 
-this DEFINE_FREE() should have the if (_T) boilerplate.
-
-> +
->  static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
+>
+> -static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
+> -{
+> -	/*
+> -	 * Starting a new HW sleep cycle right after waking from one
+> -	 * can cause electrical problems triggering the over voltage protection.
+> -	 * That is avoided by delaying the next suspend a bit, see also
+> -	 * https://lore.kernel.org/all/20250414162446.3853194-1-superm1@kernel.org/
+> -	 */
+> -	struct smu_metrics table;
+> -
+> -	return get_metrics_table(pdev, &table) == 0 && table.s0i3_last_entry_status;
+> -}
+> -
+>  static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
 >  {
-> -	struct rtc_device *rtc_device;
-> +	struct rtc_device *rtc_device __free(rtc_class_close) = NULL;
-
-Please move this to where the actual assignment to rtc_device occurs as 
-explained in the long comment in cleanup.h.
-
->  	time64_t then, now, duration;
->  	struct rtc_wkalrm alarm;
->  	struct rtc_time tm;
-> 
-
--- 
- i.
-
+>  	/*
+> @@ -804,7 +791,7 @@ static void amd_pmc_s2idle_check(void)
+>  	struct amd_pmc_dev *pdev = &pmc;
+>  	int rc;
+>
+> -	if (amd_pmc_intermediate_wakeup_need_delay(pdev) ||
+> +	if (!pdev->is_first_check_after_suspend ||
+>  	    amd_pmc_want_suspend_delay(pdev))
+>  		msleep(2500);
+>
+> --
+> 2.43.0
+>
