@@ -1,59 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7F6468C13;
-	Tue, 15 Sep 2026 23:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216F53B05AF
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 23:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789514521; cv=none; b=PsLO954MAkB8cKJbq4IzsmSqiWsZJiicnPkIn9vBTB79GM5yQKu1l7vQQ3vRBumXIfN6UuoRdHZE9ooYcbFtEf+dlCJ1kP+fj9DXjEzveNT0bNCDaU/K0SfOAXTD7QfYAH2/zkM0CwKyHltslwQaW30r/hQqyyR9rjA02XMvM0M=
+	t=1789514528; cv=none; b=krjhDVN0L3cRUchIj4XLjLU0Ste8OPjlXsmQ1GzBqscch+O3VLz2Ls271fC31T5n4dzRbnzTaAQk+YS5mHW2i9hZ2RJyCMNme0EsbVpUomy3uUSeDozQvYxQxb0VFg2uNmRSSZ9cW3HxKsp2/N1/eceFN0vhJIMG1oUXdwla38Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789514521; c=relaxed/simple;
-	bh=yqk4nhCUfEfTjDaykCX4/ekEpNaqfBHnEv1Mx9dJIa0=;
+	s=arc-20240116; t=1789514528; c=relaxed/simple;
+	bh=lo7P6EQCzFCLepPFpGZ9w4qTLT10vzqqYogT/9s685w=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=MPFWffC48nlnMc9n+RGoGYawYk6MmY8zqBXE5PCmx2Z6WCZkDZ0lgik9Yc5BEhEgNK5s1cwI/HpcsdXMpf4chJT+4KX+Nuviou6YvKyQkBN1yFSFBcqjkvY4XVHAUQnVI73Tiy6LWcmBsJS/W3IfZ8bNSk2wJDLBs5YT72/0G+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEGWCj+k; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version:Content-Type; b=AadGfLkw5F9Q1VXxBbRdIJVgZ6I9tWZZiktqYrub0T07ubcmgvyGoW91x4YjDhr5j1OSVCNVtoSC338sJakBAauexSXhObxZXiS2QYlu12dMjoo6IL/P/+Z4ABR1briOQpg+4N8QNOMzXWzDtEqVwQ1ejML7OZ5JH4IQIkPytTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mgb2dOz9; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEGWCj+k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mgb2dOz9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789514519; x=1821050519;
+  t=1789514527; x=1821050527;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=yqk4nhCUfEfTjDaykCX4/ekEpNaqfBHnEv1Mx9dJIa0=;
-  b=JEGWCj+knnYralqxKtww6JY3wGMYNt0MP6l0UcJuCLLOdvTeQGv/yOJC
-   vFv3cfCt0kQogR6JUzcIDXa8Rs70B4ol+B9beIs2H3bJEc+7MHyQPQXim
-   +JKA907VaQaZNKYembzQdd6sSZCi5LqcLXheEscBIc3R5exjIKAzXFLn6
-   kcsuSGiMQNMdRkHDX3o92D4FMyhBvEJnZsW2Mq1NFwMyepJ+MN1y+b/sV
-   xRS7+s8yJ5C+N4GaX+D4bjIxLB6cujVoLlRn6sisBOHE+CgL6jYfXHm1d
-   5t8r4p2Q1VNFit1eZnhB0nuXPXnkBivFfyRi61ZlG8elvwhd6zYcmmsfD
-   A==;
-X-CSE-ConnectionGUID: 4pnGOBY3SlOAzEs2LPy+Qg==
-X-CSE-MsgGUID: TFE/s3M0QneXj2ntt0TOEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92398134"
+  bh=lo7P6EQCzFCLepPFpGZ9w4qTLT10vzqqYogT/9s685w=;
+  b=mgb2dOz9uW5D84Q2JdRsZrGaISfoA7O8g/KMuMOT4ZkdGxcjUtDgd7fX
+   5A+zLsJv3lRaPtXe1slLVRTvSJpCwh9wryrCO/w1a4p8P5PmAc27bAs4K
+   iJASeShRT+SI1wewegzlQ03clO/9RQ3FmdtfDzAgCzBAexT81zfk3b/sd
+   mPn7qT8aSW8kyAq5kGMZG/rlEpGPSdaRYjEdaCoAPbGOTF6OKFqwHEPHy
+   DF3fpJ1goVeKgdRb35GlNl159Ha5Lzam9bbrt8tou1lOeUHMU8IN6r1GW
+   IVK1h8KHco5t4OnhMdmAEo9UZ9oNG/qXk/nwz7wBknC1rnGty6nAfFbt1
+   Q==;
+X-CSE-ConnectionGUID: EIdUYpQeTl+rPrPP07uPHQ==
+X-CSE-MsgGUID: 2Ul6cH/9T1qPLZAug1nFwA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101042895"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="92398134"
-Received: from fmviesa011.fm.intel.com ([10.60.135.151])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 16:21:58 -0700
-X-CSE-ConnectionGUID: QIvuWcryQwGVEpBE+QXolg==
-X-CSE-MsgGUID: b3aSRi8VQ7GaU9kRLL/8Ug==
+   d="scan'208";a="101042895"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 16:22:06 -0700
+X-CSE-ConnectionGUID: uQsDbYf8QzKuAot63Y4jbg==
+X-CSE-MsgGUID: 6JXzKmMzSAufZ+qbKyGEQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="1378525"
+   d="scan'208";a="273124263"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 16:21:56 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 16:22:05 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: corentin.chary@gmail.com, denis.benato@linux.dev, hansg@kernel.org, 
- linux-kernel@vger.kernel.org, luke@ljones.dev, 
- platform-driver-x86@vger.kernel.org
-In-Reply-To: <20260811065703.6626-1-scardracs@disroot.org>
-References: <20260811065703.6626-1-scardracs@disroot.org>
-Subject: Re: [PATCH] platform/x86: asus-armoury: Add power limits quirk for
- GA401IHR
-Message-Id: <178951451098.41627.509900356602796552.b4-ty@b4>
-Date: Wed, 16 Sep 2026 02:21:50 +0300
+To: Armin Wolf <W_Armin@gmx.de>, Jelle van der Waa <jelle@vdwaa.nl>
+Cc: platform-driver-x86@vger.kernel.org, 
+ Frederik Harwath <frederik@harwath.name>
+In-Reply-To: <20260913143521.1190506-1-jelle@vdwaa.nl>
+References: <20260913143521.1190506-1-jelle@vdwaa.nl>
+Subject: Re: [PATCH v8 0/1] platform/x86: add Acer battery control driver
+Message-Id: <178951451906.41627.4343443082329834615.b4-ty@b4>
+Date: Wed, 16 Sep 2026 02:21:59 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -64,11 +62,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Tue, 11 Aug 2026 08:57:03 +0200, Marco Scardovi wrote:
+On Sun, 13 Sep 2026 16:35:16 +0200, Jelle van der Waa wrote:
 
-> Add power limits quirk entry for ASUS ROG GA401IHR laptop.
-> The limits are extracted from the device's ThrottleGear XML
-> configuration file.
+> This patch upstreams a part of the out of tree acer wmi battery
+> specifically the battery charge control and battery temperature. [1]
+> On my Acer Aspire A315-510P battery calibration did not work as expected
+> so for now this is left out.
+> 
+> Jelle van der Waa (1):
+>   platform/x86: add Acer battery control driver
+> 
+> [...]
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -81,8 +85,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86: asus-armoury: Add power limits quirk for GA401IHR
-      commit: f03ec815842c4593f0d743ae21b11bb399137668
+[1/1] platform/x86: add Acer battery control driver
+      commit: b36ee17b40037845eb2f29c151a65c698f273d4e
 
 --
  i.
