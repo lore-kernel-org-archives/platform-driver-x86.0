@@ -1,100 +1,324 @@
-Received: from forward206b.mail.yandex.net (forward206b.mail.yandex.net [178.154.239.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9A43CB8E5;
-	Tue, 15 Sep 2026 12:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A6E395D8E;
+	Tue, 15 Sep 2026 12:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789475370; cv=none; b=FyS1cNelbuPPWUwLsaHHkhWxvh0WilYmZB2UDRBsse+64C0hyrn2h6CRjfK2cXXYdeM93A2JXL6rOkORZQqWgc+YJV+WqVdc+vvhkllieEqQngiIfxUGje2J0G5WL3R3qRfpM6/2PfulDySbTsChwBzjs3R62Qh6xENwvpT608s=
+	t=1789475501; cv=none; b=NqlQTF7WHSBVd0aZWPhE/4RK89uAsYqhEnzEnZUIoupDhTcyi94Et4WQRpBtZG9hRjS8ToPJcO/KEY7x00gxlkk+p3gD2KCfUbLw6rOAqocWG0l59xn7d9k3f9BDOBZGkMII4xKkv2GZzff4/u6kuFD+mrMTMdPsyhLBhdp6Uqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789475370; c=relaxed/simple;
-	bh=43LQWZhAikthxrOGBI9C5nSqZPXDZnwF42Xyz+a6xWw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FnYFWaJ+baWNtaMSJVmvpv55R97mpBvEYwppFQKQN7ZcYGzC9hdur6HcGZkzRACAdnzqOFqEaF7LmYranC/7DuUzi1McSNQP0GFiKakKu7DDy73UeT+B0p5fBUx6qQ5o15TsQ7/jBWVdFo04KnU78Yjz5rVmAO1k0nCQYJ6mMd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=itb.spb.ru; spf=pass smtp.mailfrom=itb.spb.ru; dkim=pass (1024-bit key) header.d=itb.spb.ru header.i=@itb.spb.ru header.b=jEjXmaa7; arc=none smtp.client-ip=178.154.239.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=itb.spb.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itb.spb.ru
+	s=arc-20240116; t=1789475501; c=relaxed/simple;
+	bh=32KwHaouwkg2IFwHsP/xenwquCRjaCAgeCXIRNVazDA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uvIQcbpPf4DB4LQbE+JEgBr6JMwHJqp0bnOq/ZGsPWZsUfUTVLE1sSjOO11j9PCvmClXKqP0Yr3ceU9ab8dSkpNADA82i3R+9WMvw+7yYKjdXSU5KXeqDLfPffZURx3ryPJPlcPTnCLeh7II9JNbPy3k6b57JOsKMrpt8i6dm7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hJ+lJtZG; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itb.spb.ru header.i=@itb.spb.ru header.b="jEjXmaa7"
-Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d102])
-	by forward206b.mail.yandex.net (postfix) with ESMTPS id 6CF3584D29;
-	Tue, 15 Sep 2026 15:21:33 +0300 (MSK)
-Received: from forward103d.mail.yandex.net (forward103d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d103])
-	by forward102b.mail.yandex.net (postfix) with ESMTPS id 6A100C0C12;
-	Tue, 15 Sep 2026 15:21:25 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:27a5:0:640:d65c:0])
-	by forward103d.mail.yandex.net (postfix) with ESMTPS id 51561C0057;
-	Tue, 15 Sep 2026 15:21:25 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net (smtp) with ESMTPSA id FLTQTrXoXGk0-Yty1pZe7;
-	Tue, 15 Sep 2026 15:21:24 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itb.spb.ru; s=mail;
-	t=1789474884; bh=Wy6THidwzkWx4Qg/Iya0BoQZUihtoUwpaggeqqVSXdw=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=jEjXmaa7Ozoh9co+mDd7TxiEMmXwCSW16vaoGvX75P0AQJQ312/sCVj6wGkgNGrPa
-	 sylW9DqDI2rxQM3oy9ge1l7v85UXpPDgNyNGysv7oY7EEVdN2Y94SUEJae+XNONTnf
-	 6HnSSI9EINAq24zaEKTDIYjgfgoxypZtBOp+QiOM=
-Authentication-Results: mail-nwsmtp-smtp-production-main-88.iva.yp-c.yandex.net; dkim=pass header.i=@itb.spb.ru
-From: Aleksandrova Alyona <aga@itb.spb.ru>
-To: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	"David E . Box" <david.e.box@linux.intel.com>
-Cc: Aleksandrova Alyona <aga@itb.spb.ru>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Darren Hart <dvhart@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH v2] platform/x86: intel_telemetry: initialize default trace verbosity
-Date: Tue, 15 Sep 2026 15:21:07 +0300
-Message-Id: <20260915122107.9784-1-aga@itb.spb.ru>
-X-Mailer: git-send-email 2.26.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hJ+lJtZG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789475499; x=1821011499;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=32KwHaouwkg2IFwHsP/xenwquCRjaCAgeCXIRNVazDA=;
+  b=hJ+lJtZGPKUSn/L2DsFexOyf2JqhQaDaOwVNlMmc9pU/uK+IrMD4mRQJ
+   d4+SSKP/HhuFeM7ZyTqq05YWWj35cGG1smah6h5RJQd8LLuX326RgujVE
+   0YUIK/Og4VxzpZHyOITPsRAZ6ZZGlOfC0RDj/JPIrUapT8l5kLIeOoPbY
+   p8rpQx5InDr1kXNoUma9Gqa3kp6pz2NRT/Xf9WuzaQmMsT+dvrWitiIU9
+   6TMLUZMYM7cMrOZAF74qCLRltYyLRUIdaUjXWYptXA8IWkUNqIwl7xSmv
+   W6FNaGRUuEhe0ZGe+UfLXE1NIdp85wFUXSqPm8409w93TxidMQQopCPnf
+   Q==;
+X-CSE-ConnectionGUID: k+trTBR6SoerRQah2+hdcA==
+X-CSE-MsgGUID: 8Moda+stRkOxeUBSdu4pPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="89678868"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="89678868"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:31:38 -0700
+X-CSE-ConnectionGUID: 5CzhA7o5R7Oo8KIgkAMvug==
+X-CSE-MsgGUID: JuygdXRlSY+0CJx23WbFTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="266786085"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:31:32 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Armin
+ Wolf <W_Armin@gmx.de>
+Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>, "hansg@kernel.org"
+ <hansg@kernel.org>, "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux@weissschuh.net"
+ <linux@weissschuh.net>, "rafael@kernel.org" <rafael@kernel.org>,
+ "lenb@kernel.org" <lenb@kernel.org>, "linux-acpi@vger.kernel.org"
+ <linux-acpi@vger.kernel.org>, "Koenig, Christian"
+ <Christian.Koenig@amd.com>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "amd-gfx@lists.freedesktop.org"
+ <amd-gfx@lists.freedesktop.org>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "patrik.r.jakobsson@gmail.com"
+ <patrik.r.jakobsson@gmail.com>, "maarten.lankhorst@linux.intel.com"
+ <maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
+ <mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+ "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
+ <tursulin@ursulin.net>, "intel-gfx@lists.freedesktop.org"
+ <intel-gfx@lists.freedesktop.org>, "matthew.brost@intel.com"
+ <matthew.brost@intel.com>, "thomas.hellstrom@linux.intel.com"
+ <thomas.hellstrom@linux.intel.com>, "intel-xe@lists.freedesktop.org"
+ <intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
+ nvidia_wmi_ec_supported()
+In-Reply-To: <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
+ 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
+References: <20260724025959.142826-1-W_Armin@gmx.de>
+ <20260724025959.142826-3-W_Armin@gmx.de>
+ <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com>
+ <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
+ <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
+Date: Tue, 15 Sep 2026 15:31:29 +0300
+Message-ID: <11976ed3784675ad241646287a909286a42675a8@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-telemetry_def_get_trace_verbosity() returns success without initializing
-the output verbosity value.
+On Tue, 15 Sep 2026, Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wro=
+te:
+> GPU people heads up!!
+>
+> On Wed, 2 Sep 2026, Armin Wolf wrote:
+>
+>> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
+>>=20
+>> > Public
+>> >=20
+>> > > -----Original Message-----
+>> > > From: Armin Wolf <W_Armin@gmx.de>
+>> > > Sent: Thursday, July 23, 2026 11:00 PM
+>> > > To: hansg@kernel.org; ilpo.jarvinen@linux.intel.com
+>> > > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.or=
+g;
+>> > > linux@weissschuh.net; rafael@kernel.org; lenb@kernel.org; linux-
+>> > > acpi@vger.kernel.org; Deucher, Alexander <Alexander.Deucher@amd.com>;
+>> > > Koenig, Christian <Christian.Koenig@amd.com>; airlied@gmail.com;
+>> > > simona@ffwll.ch; amd-gfx@lists.freedesktop.org; dri-
+>> > > devel@lists.freedesktop.org; patrik.r.jakobsson@gmail.com;
+>> > > maarten.lankhorst@linux.intel.com; mripard@kernel.org;
+>> > > tzimmermann@suse.de; jani.nikula@linux.intel.com;
+>> > > joonas.lahtinen@linux.intel.com; rodrigo.vivi@intel.com;
+>> > > tursulin@ursulin.net; intel-gfx@lists.freedesktop.org;
+>> > > matthew.brost@intel.com; thomas.hellstrom@linux.intel.com; intel-
+>> > > xe@lists.freedesktop.org
+>> > > Subject: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
+>> > > nvidia_wmi_ec_supported()
+>> > >=20
+>> > > The WMI-ACPI driver now supports architectures other than x86.
+>> > > Remove the CONFIG_X86 handling from video-detect and the associated
+>> > > drivers to simplify the resulting code.
+>> > >=20
+>> > > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+>> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+>> > > ---
+>> > >   drivers/acpi/Kconfig               | 2 +-
+>> > >   drivers/acpi/video_detect.c        | 8 --------
+>> > >   drivers/gpu/drm/amd/amdgpu/Kconfig | 4 +---
+>> > >   drivers/gpu/drm/gma500/Kconfig     | 1 -
+>> > >   drivers/gpu/drm/i915/Kconfig       | 1 -
+>> > >   drivers/gpu/drm/radeon/Kconfig     | 4 +---
+>> > >   drivers/gpu/drm/xe/Kconfig         | 5 ++---
+>> > >   drivers/platform/loongarch/Kconfig | 1 +
+>> > >   8 files changed, 6 insertions(+), 20 deletions(-)
+>> > >=20
+>> > > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig index
+>> > > f165d14cf61a..cc1e58fa664b 100644
+>> > > --- a/drivers/acpi/Kconfig
+>> > > +++ b/drivers/acpi/Kconfig
+>> > > @@ -224,7 +224,7 @@ config ACPI_VIDEO
+>> > >        tristate "Video"
+>> > >        depends on BACKLIGHT_CLASS_DEVICE
+>> > >        depends on INPUT
+>> > > -     depends on ACPI_WMI || !X86
+>> > > +     depends on ACPI_WMI
+>> > >        select THERMAL
+>> > >        help
+>> > >          This driver implements the ACPI Extensions For Display Adap=
+ters
+>> > > diff
+>> > > --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c in=
+dex
+>> > > 458efa4fe9d4..af9280b244f1 100644
+>> > > --- a/drivers/acpi/video_detect.c
+>> > > +++ b/drivers/acpi/video_detect.c
+>> > > @@ -82,8 +82,6 @@ find_video(acpi_handle handle, u32 lvl, void *cont=
+ext,
+>> > > void **rv)
+>> > >        return AE_OK;
+>> > >   }
+>> > >=20
+>> > > -/* This depends on ACPI_WMI which is X86 only */ -#ifdef CONFIG_X86
+>> > > static bool nvidia_wmi_ec_supported(void)  {
+>> > >        struct wmi_brightness_args args =3D {
+>> > > @@ -105,12 +103,6 @@ static bool nvidia_wmi_ec_supported(void)
+>> > >         */
+>> > >        return args.ret =3D=3D WMI_BRIGHTNESS_SOURCE_EC;  } -#else -s=
+tatic bool
+>> > > nvidia_wmi_ec_supported(void) -{
+>> > > -     return false;
+>> > > -}
+>> > > -#endif
+>> > >=20
+>> > >   /* Force to use vendor driver when the ACPI device is known to be
+>> > >    * buggy */
+>> > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
+>> > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
+>> > > index 12e4a41bf1f0..50305630f533 100644
+>> > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+>> > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+>> > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
+>> > >        # ACPI_VIDEO's dependencies must also be selected.
+>> > >        select INPUT if ACPI
+>> > >        select ACPI_VIDEO if ACPI
+>> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
+>> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
+>> > The change below makes sense, but this one looks like it should remain
+>> > unless X86_PLATFORM_DEVICES is handled some other way?
+>> >=20
+>> > Alex
+>>=20
+>> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary because
+>> ACPI-WMI depended on it in the past.
+>> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 anymore.
+>
+> Hi all,
+>
+> Could more GPU people besides Alex take a look on this. I'd want to make=
+=20
+> progress with this series within this cycle but would prefer to have Acks=
+=20
+> from GPU side.
 
-The default telemetry operations are installed when the core driver is
-initialized and again by telemetry_clear_pltdata() when the platform
-driver is removed. The telemetry debugfs files can remain available after
-the platform driver removal.
+I share the same concern with Alex. It seems to me we could now end up
+with x86 configurations without X86_PLATFORM_DEVICES, which handle
+e.g. backlight on a lot of platforms.
 
-A subsequent read of pss_trace_verbosity or ioss_trace_verbosity calls
-telemetry_get_trace_verbosity(), which may use the default callback and
-return success without setting verbosity. The uninitialized value is then
-passed to seq_printf().
+I think the safer option might be to go for:
 
-Validate the output pointer and initialize the default verbosity to zero
-so callers never use an uninitialized value after a successful call.
+	depends on X86_PLATFORM_DEVICES || !X86
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+in all of the cases that select/depend on X86_PLATFORM_DEVICES in drm.
 
-Fixes: 378f956e3f93 ("platform/x86: Add Intel Telemetry Core Driver")
-Signed-off-by: Aleksandrova Alyona <aga@itb.spb.ru>
----
- drivers/platform/x86/intel/telemetry/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+The alternative is to find out, and handle the fallout, if any.
 
-diff --git a/drivers/platform/x86/intel/telemetry/core.c b/drivers/platform/x86/intel/telemetry/core.c
-index f312864b8d07a..62299524a07b2 100644
---- a/drivers/platform/x86/intel/telemetry/core.c
-+++ b/drivers/platform/x86/intel/telemetry/core.c
-@@ -24,6 +24,10 @@ static struct telemetry_core_config telm_core_conf;
- static int telemetry_def_get_trace_verbosity(enum telemetry_unit telem_unit,
- 					     u32 *verbosity)
- {
-+	if (!verbosity)
-+		return -EINVAL;
-+
-+	*verbosity = 0;
- 	return 0;
- }
- 
--- 
-2.26.2
 
+BR,
+Jani.
+
+
+>
+>> > > -     select ACPI_WMI if ACPI && X86
+>> > > +     select ACPI_WMI if ACPI
+>> > >        help
+>> > >          Choose this option if you have a recent AMD Radeon graphics=
+ card.
+>> > >=20
+>> > > diff --git a/drivers/gpu/drm/gma500/Kconfig
+>> > > b/drivers/gpu/drm/gma500/Kconfig index a2acaa699dd5..dc4c56638819
+>> > > 100644
+>> > > --- a/drivers/gpu/drm/gma500/Kconfig
+>> > > +++ b/drivers/gpu/drm/gma500/Kconfig
+>> > > @@ -11,7 +11,6 @@ config DRM_GMA500
+>> > >        select ACPI_VIDEO if ACPI
+>> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+>> > >        select INPUT if ACPI
+>> > > -     select X86_PLATFORM_DEVICES if ACPI
+>> > >        select ACPI_WMI if ACPI
+>> > >        help
+>> > >          Say yes for an experimental 2D KMS framebuffer driver for t=
+he
+>> > > diff --
+>> > > git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig in=
+dex
+>> > > 5e939004b646..71426b9c91f0 100644
+>> > > --- a/drivers/gpu/drm/i915/Kconfig
+>> > > +++ b/drivers/gpu/drm/i915/Kconfig
+>> > > @@ -28,7 +28,6 @@ config DRM_I915
+>> > >        # but for select to work, need to select ACPI_VIDEO's depende=
+ncies,
+>> > > ick
+>> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+>> > >        select INPUT if ACPI
+>> > > -     select X86_PLATFORM_DEVICES if ACPI
+>> > >        select ACPI_WMI if ACPI
+>> > >        select ACPI_VIDEO if ACPI
+>> > >        select SYNC_FILE
+>> > > diff --git a/drivers/gpu/drm/radeon/Kconfig
+>> > > b/drivers/gpu/drm/radeon/Kconfig index c479f0c0dd5c..3cd70aef770e
+>> > > 100644
+>> > > --- a/drivers/gpu/drm/radeon/Kconfig
+>> > > +++ b/drivers/gpu/drm/radeon/Kconfig
+>> > > @@ -25,9 +25,7 @@ config DRM_RADEON
+>> > >        # ACPI_VIDEO's dependencies must also be selected.
+>> > >        select INPUT if ACPI
+>> > >        select ACPI_VIDEO if ACPI
+>> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
+>> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
+>> > > -     select ACPI_WMI if ACPI && X86
+>> > > +     select ACPI_WMI if ACPI
+>> > >        help
+>> > >          Choose this option if you have an ATI Radeon graphics card.
+>> > > There
+>> > >          are both PCI and AGP versions.  You don't need to choose th=
+is to
+>> > > diff -
+>> > > -git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig index
+>> > > 4d7dcaff2b91..502c7b3c1f16 100644
+>> > > --- a/drivers/gpu/drm/xe/Kconfig
+>> > > +++ b/drivers/gpu/drm/xe/Kconfig
+>> > > @@ -4,7 +4,6 @@ config DRM_XE
+>> > >        depends on DRM && PCI
+>> > >        depends on KUNIT || !KUNIT
+>> > >        depends on INTEL_VSEC || !INTEL_VSEC
+>> > > -     depends on X86_PLATFORM_DEVICES || !(X86 && ACPI)
+>> > >        depends on PAGE_SIZE_4KB || COMPILE_TEST || BROKEN
+>> > >        select INTERVAL_TREE
+>> > >        # we need shmfs for the swappable backing store, and in parti=
+cular
+>> > > @@ -29,8 +28,8 @@ config DRM_XE
+>> > >        # but for select to work, need to select ACPI_VIDEO's depende=
+ncies,
+>> > > ick
+>> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+>> > >        select INPUT if ACPI
+>> > > -     select ACPI_VIDEO if X86 && ACPI
+>> > > -     select ACPI_WMI if X86 && ACPI
+>> > > +     select ACPI_VIDEO if ACPI
+>> > > +     select ACPI_WMI if ACPI
+>> > >        select SYNC_FILE
+>> > >        select CRC32
+>> > >        select SND_HDA_I915 if SND_HDA_CORE
+>> > > diff --git a/drivers/platform/loongarch/Kconfig
+>> > > b/drivers/platform/loongarch/Kconfig
+>> > > index 447528797d07..db7833842142 100644
+>> > > --- a/drivers/platform/loongarch/Kconfig
+>> > > +++ b/drivers/platform/loongarch/Kconfig
+>> > > @@ -23,6 +23,7 @@ config LOONGSON_LAPTOP
+>> > >        depends on INPUT
+>> > >        depends on MACH_LOONGSON64
+>> > >        select ACPI_VIDEO
+>> > > +     select ACPI_WMI
+>> > >        select INPUT_SPARSEKMAP
+>> > >        default y
+>> > >        help
+>> > > --
+>> > > 2.39.5
+>> >=20
+>>=20
+
+--=20
+Jani Nikula, Intel
