@@ -1,88 +1,66 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010053.outbound.protection.outlook.com [52.101.69.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1330347887F
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 09:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789464548; cv=none; b=AM++CHN/Z3EztJHZvOmE45/1kH+qnm9wlaolXaZoytyjhhvi/nXUtvnUzow163TjqrkIB5L0wiJmoD/5G14L3hM0uEs5mxFs9j4YQ8KGGgfmG3IEd22MIG66LuuPYFaVqMLk3Du+S7UxtZtWg41wj6sxU/lDfhXPrhAxcL3sO2Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789464548; c=relaxed/simple;
-	bh=vWQtMyp87j9Ha9llCugJJq5zN1XmecNf27SupPSieNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mMMij+TOFMePDanROL7W/2wtGT6/6zLQBsd1LKft9VF1dfSlcacZbuKBLCcMaDVwbzZi63btFRkX/BGleL0AwBEB737KOTlLnrx51cpffbWetczFT+BdshdGdCCklB2tWrAIXJLS+7c2I75PtEGi4W8jaNzx39BargBW5M9948E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=efn0Ba0k; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jqkdldKu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7125247ACC6;
+	Tue, 15 Sep 2026 09:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789464552; cv=fail; b=DttPHIw1fLio2NYSNmFc+Qre6z9ynOoz0/ZCbwhYBihKl5G3u3/IdOArq0xmxfCoetMynqHrxDjWNaNIZX4u+TFp8ksL2Ayu6DpEBWLnQkhzk7RgobDMAyRXJFQAA8df1Ydm9e8ijUdFDa+q64QL6+0fqEr8lON0cU/kHOaXZgc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789464552; c=relaxed/simple;
+	bh=/Rm/lqOGex6+3ifuvH20N6zIpzZPtgDkQ1X4Qsg6Fm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LQfbsXdQS0SYTVjyOhTciBYzkU+gbnsy7Rms6JB+cIIZbyCn5ttgdbXSPsGnedtzSi2gHH2tpRDP9zIWlFGCUQSEJGM0e1IJVtUdlC2nfmqKjHEUbY3MrmWGYQH42Oaqjs7Df5GktZJJos/YgYEdZqk3a94fOviiSo9UznWaZEA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=crZUzuBx; arc=fail smtp.client-ip=52.101.69.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="efn0Ba0k";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jqkdldKu"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 68F6ZeeP3126416
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 09:29:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z+kAMgubwvTeTdhpoS7fqfi1QF01vPTRr11UVCilXDU=; b=efn0Ba0kxOcA2NwR
-	3VY9xp4DE4smGs4ZWe/ZJ/AUJU24BbNwa5KA9Hez06Y7Y9Pqg59Vc2kdWrfB+GwR
-	SRIbVXDfyz8EkkEERpNR0bJX14lMrfKVwuYxSDHjBKyAgCQJKub0OGQAoI7eGPCr
-	FTi52JXTU/Aa//DxDjgRJoE8RB38/9w1PNFhtZD+1J5TH5O9YZuv0tOJgApzIU0u
-	L7thxy5aArP89g4M/HussbGDuJjyX0AeKvo3EyBgtpyBvzlargzVzvLGGcmLvVGH
-	JfJ0Lblb7LOJOwYCB3CyzeHxXyKzgb7qGAT1BAj9MOgurRg0JQO0woAIbzhp87r5
-	iJ2blQ==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4gpmx9uqm6-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 09:29:01 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-39e087a18deso698956a91.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 02:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1789464540; x=1790069340; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=z+kAMgubwvTeTdhpoS7fqfi1QF01vPTRr11UVCilXDU=;
-        b=jqkdldKuHh4rXgu6CHB9DVVjghuIyk0vgEI9ndLQhq2CDyEN3u1HuAn6EtRBrSPOKJ
-         DUecSQyqpetgGpeMAtHyilVppesmIuyKhPaSzmR+j0pnja3YCJp/k/K+Z8PiHE7CTciO
-         lnnpmMhhET/ucI96rIerxI1cP6qqXBVA7OH9LtNNNfiQB4cHxVkhOpCr0rkImJaPg/I3
-         jQsoNtT5oaBjAcxVvSi3E+9xwhF++5+W1SUF6Xwhb/efLc/fA+c9sx45Za0Tfh14pRrH
-         qFgftEtVTCaAc5HUg0nJtLtK9LOoBCtfOanhbtAK4QJPNV7NFEwHY0dtuEqRtWAtvrjY
-         gKDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789464540; x=1790069340;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=z+kAMgubwvTeTdhpoS7fqfi1QF01vPTRr11UVCilXDU=;
-        b=q+uuIiCBZe1BvcJk3HBJga0lyGaOust0idY0t1GCuXAHO7CYgRQYcrY3y6MZ+Q7re3
-         lTGHGV9gbLCG4PsyYAPbMexxFUbdWqx3mPfLptc8a/uDZJ0ZYp+aHOaG5BLi+0wcvB0r
-         blxmkPinjNoxpZV6Kw5LSvwokJ/6OHagq1Q6kgukZmRYAfvDvxz9sL3LjPM+M0wdlXPr
-         Qh9jldaplLvyMyQExzZank08SLLiu3YzPjEzIRs/XqjaKrITuU07V7NqXMnIWRap2QHV
-         kRlPiUkY+PAzNLHOCXeRfEhCHrPgl0zhoB9q6oFGc+ZemjmFB1mdhsmuHU/+oA4d2Sb2
-         H2yA==
-X-Forwarded-Encrypted: i=1; AKwUvBzQb0DjjDjwWISzmnAOQZ6RegR6kwTo0gSrv1qpNfT8PY2GRTP7JTLf4HuX1BeuNxshCwro7Q5JDEOGPFm2L502sGwU@vger.kernel.org
-X-Gm-Message-State: AFuF++nyV4M/kDu10jqR7yodSbm1lRvQi53SI5eMztYBqUdohhe1QYng
-	iC2iqqf24u/MAeKuah+aCS2BGyBqhL5dodVBqRCa/oeldaNvNZcJKBXW3DnlLR92wd+Ts0za42h
-	Ku2nyCb2T2utFKbSGoZ90yY9fuifgpPSe0n8Q2tJggleTpLsHZJ0cSJa+Ke6UXU7qcDiM6bmjUV
-	tA
-X-Gm-Gg: AYBFou1rEJ5amVNfKVlbdv7VIaErfZkwnxTQBDh08oTUTxC9hlsXsXIpXiCdY8frv4m
-	LW6mDuhT6dudROedEoRKSLittitJKDm2P2lzfc6MTdkXHAZPyVSgQLR3BNiRtlKtsqOY3JO/1e4
-	/WhEsBX/AxpPOsyhIDMOsmdElzpuRMOnpwkxoehJbaN9t0oJdMVLggkGLETIcZfWZmIIMzTPEZ3
-	nW0/z9y4mpq4Ic7aBmeMWdyGq70LBGQbOC3G1cUFH0RFgdpdvs7f/GsrVNfOalnz19tGPsNwr4J
-	S+44PdyHeY393BnpwfBYl+Z8rCMoZ3wxlM7a409HuX7ym+WLqMH8s4kl+Uvq+p52iyWCFlb2jqP
-	EZU2Z4gTiM+kxuHPB4qWmdP8=
-X-Received: by 2002:a17:90b:5865:b0:39e:433:23b5 with SMTP id 98e67ed59e1d1-39e04332517mr3852817a91.5.1789464539953;
-        Tue, 15 Sep 2026 02:28:59 -0700 (PDT)
-X-Received: by 2002:a17:90b:5865:b0:39e:433:23b5 with SMTP id 98e67ed59e1d1-39e04332517mr3852771a91.5.1789464539348;
-        Tue, 15 Sep 2026 02:28:59 -0700 (PDT)
-Received: from [192.168.1.6] ([171.76.86.190])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33ba4e9b359sm32526381eec.14.2026.09.15.02.28.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Sep 2026 02:28:58 -0700 (PDT)
-Message-ID: <7bfe0e0d-3fd4-4955-8b26-9feb1a8aef98@oss.qualcomm.com>
-Date: Tue, 15 Sep 2026 14:58:52 +0530
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="crZUzuBx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dhTVC8a5NdFX5QYgsex9GET3pTjCIi3yuGAYoS/OnkS9uDz/HXfcADEAC31dYuV1YDZE6A4kkThOov+s+4QKpzUwCJ/TjC1rf2R/bfATDyWHbjn7+ollvlUqG89sO4euxyrXs9QEt8Af67liheXnGK/uzEX7eqWvgN61VV49eCFIul4MLJusSVhnx6VZsU2T5ty7d2JbckPXPSfK9tw+IDXVzNZhUw8kNWZl0AFou7EYA1QZ1HbXs/Eah6DERt0Cbtxt0GxuDZGrhXriMpuW2aqUhGfZAvTVskPrCujY1sLfDCAyvW1HXaY9GpYOMoqR9Q88Xfw8TTXpW8qC0Qe1aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VTmvkfuY8i1LcGMOM0Cr7c5RCN6zQz/jx7Rc/JO9Juo=;
+ b=M6b1RS3Ocbqb1O2efOfquoE3mhJQAW4JOin/LkMwGiLGmnsgRYrzBK6BT+Z9R2HEm2LRH6b0uV4o9XTeTBNrLNFru6v7Nunf/vYtxrAgEWoPlJIITnWXmFjybMV26gz1rmx2/TRzxuGqZ2tuJxDnW6AFsBev32LkSW0g42SR0NK+mhNDG/g43fkNcOnG3/QsZ7MxN/SIqhYVoxKdjmQCQWIMemexYBrCQH0GtjDeYXrGUyIi0BYrL16tRN9PYEZNonFlJ+GYCtSFNA+CY4TMFoudge4P4lGOU5xF88t/jQ79giCciON9OvzoDUoGQC1VTXO2FWx1CgUorP9ErEYWGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 164.130.1.59) smtp.rcpttodomain=pm.me smtp.mailfrom=foss.st.com; dmarc=fail
+ (p=none sp=none pct=100) action=none header.from=foss.st.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VTmvkfuY8i1LcGMOM0Cr7c5RCN6zQz/jx7Rc/JO9Juo=;
+ b=crZUzuBxwWrVrxuwDMa/ptKt2UHzcj+f4PI7bzIjmUE7YErvX9qHnLHc40ANV9TtOEgsQhlKtCdQ/V2XwDVpWHijxBanuMzJyNc8FZSB+2LpZBNjcDy5jRMB6Fy9nkoNnnLWhJ+bZ8MkkMigUhUvNKMM6uciw8wkNSfKzYybKwm1G9wLnthBiKeGOhPxIyNW33+5/aUm+GRA6Rh/dOb5YNgY1GF8BtPfgwrIargamqHCPWNPHIWFYxjh6Jfsbdnr2H2j3VsQKOLqjg2VFpKi6DwyunPGNhRLgxiJVSHXp2NZka7lS18XD7+DVz03vEBdgg75Pbi3oleqANnDh6TfhQ==
+Received: from WA0P291CA0001.POLP291.PROD.OUTLOOK.COM (2603:10a6:1d0:1::27) by
+ DB8PR10MB3178.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:113::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.406.12; Tue, 15 Sep 2026 09:29:02 +0000
+Received: from WA1PEPF00009B39.eurprd05.prod.outlook.com
+ (2603:10a6:1d0:1:cafe::b) by WA0P291CA0001.outlook.office365.com
+ (2603:10a6:1d0:1::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.406.13 via Frontend Transport; Tue,
+ 15 Sep 2026 09:29:01 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.59)
+ smtp.mailfrom=foss.st.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=foss.st.com;
+Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
+ designate 164.130.1.59 as permitted sender) receiver=protection.outlook.com;
+ client-ip=164.130.1.59; helo=smtpO365.st.com;
+Received: from smtpO365.st.com (164.130.1.59) by
+ WA1PEPF00009B39.mail.protection.outlook.com (10.167.242.38) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.428.7 via Frontend Transport; Tue, 15 Sep 2026 09:29:01 +0000
+Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpo365.st.com
+ (10.250.44.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 15 Sep
+ 2026 11:35:05 +0200
+Received: from [10.130.78.67] (10.130.78.67) by STKDAG1NODE2.st.com
+ (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 15 Sep
+ 2026 11:29:00 +0200
+Message-ID: <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com>
+Date: Tue, 15 Sep 2026 11:29:05 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -90,428 +68,119 @@ List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/2] platform: arm64: qcom-hamoa-ec: monitor Slim
- 7x legacy sensors
-To: Birk Skyum <birk.skyum@pm.me>, Sibi Sankar
- <sibi.sankar@oss.qualcomm.com>,
-        Hans de Goede <hansg@kernel.org>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Randy Dunlap
- <rdunlap@infradead.org>,
-        Daniel J Blueman <daniel@quora.org>,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20260908135801.81436-1-birk.skyum@pm.me>
- <20260908135801.81436-2-birk.skyum@pm.me>
-Content-Language: en-US
-From: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
-In-Reply-To: <20260908135801.81436-2-birk.skyum@pm.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=G+KJgNk5 c=1 sm=1 tr=0 ts=6aa90fdd cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=YsbRjcmUuq6dkflYeO58cw==:17
- a=IkcTkHD0fZMA:10 a=VdqzKS8jKosA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22
- a=dfw2BTyuAAAA:20 a=IA0wh2spAAAA:8 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8
- a=BybPU-h1rPuJRbRll4sA:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
- a=bA3UWDv6hWIuX7UZL3qL:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwOTE1MDEzNSBTYWx0ZWRfX3lknLHvBfcZC
- jtQJmZbg8+Gt3mWomXsf+UDwMVdafXv+Yk7EMJgCxtkHkzfCctHKgfsGcquTTVBBVqKBehjCzij
- cDZXXVXIT12r9aYg6z6sGUNUiR2ygTy2cJpQHzs3IaweYd5TXW9qOKqie9jPNNGfDqe5dDP98Ro
- 7FXS59+G2e+sTtTD9jdIIOYwIe/XjUZyrl09usRog7P0pKanzGgFgUeyx9Q34lPHwJcJzAFi0Yy
- Zj3/GFk/pbRpPi7xnsRJyTu3HWDtbLCq3fF/a+F0XFISBdQLekLx0N6unBcIbqpYnf0+maapnCN
- o2OFndy+++TJePI1ddzB2KfayzsBmCKJG74T8C3OAi+kRtysVmhB2L0bZXJ3EqSpcriTOfIDd72
- nN3/v893D7W0HgD831FM6DzixPcduQzxyudgxnTZcMj6VxZfxV7YrQOQJr04SJ18kVqh8b9+KXz
- 5zmiQCG/6gDgHWp1w/w==
-X-Proofpoint-GUID: SB4BNzZDXPRrirJKpaOxBAGj-KvyoDfD
-X-Proofpoint-ORIG-GUID: SB4BNzZDXPRrirJKpaOxBAGj-KvyoDfD
-X-Proofpoint-Spam-Info: AW1haW4tMjYwOTE1MDEzNSBTYWx0ZWRfX+8ytKh1v4RNz
- ZmEXmFSMzAc460UDVdWWCD3mZZs3OkCIYeofUk9Viml4GsxuoPyg4embBRY/hgtcPxdSzm9pbuq
- tXWAhO5Wf/uDbRtcZddV+lmGHXvCKnM=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-09-15_02,2026-09-14_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 bulkscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2609040000 definitions=main-2609150135
+Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add
+ VD55G0 support
+To: Sergey Lebedev <lsa.uz@pm.me>, Peter Marshall <pm@petermarshall.ca>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus
+	<sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hansg@kernel.org>, Daniel Scally
+	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20260910213308.53429-1-lsa.uz@pm.me>
+Content-Language: en-GB
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <20260910213308.53429-1-lsa.uz@pm.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
+ (10.75.128.133)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: WA1PEPF00009B39:EE_|DB8PR10MB3178:EE_
+X-MS-Office365-Filtering-Correlation-Id: a11f17a1-c6de-4297-5e26-08df130bc71b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|36860700016|1800799024|376014|82310400026|56012099006|11063799006|10067099003|18002099003|22082099003|13003099007|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	AcKAokcdAmXVqahVrNDVtJZ6EY5QfJL8xvVrxeDBtspTNnu6PZOctbN1mzj0i0DOpsGbo+L0Wm1eJdCOiLv25YI4FKGyFKsKAGXnHuTD40I8k6s1YDrj9ED30mkmH7pgGatKG+S1BxXq7YDseKvX0es7wkLr6wNEzQ+Ve/mG1MdA9zrptoKGeIcexTCUDNImeYVOn0NhRGX/7W4BYK01WVWv+hVnOg5YFQeGaBZr4J2KKSEz8Z7U+WDHmYzZJrIyfNJYnODmuC4TjplAiKjD6pK+lz432N75J1VIgbN8nVyklM6h2E0dJb0Kb6OUq9vhYje3BYoHH7UrcaIBvN2T7zpvH3VOmeAmcUJUCzTuKloJ4s0ZSLYDKzAx0hqAPNdxTF66v/AvVkSN0tTWYco9LspUwrqLzYwYF9AeD90K13R0QKx5QStMc9/A+BRXMp/upQ0RCL0qiMfAawpbGcNBhzsi8Aj3GS1SUpJDslX1f2zmO4GjA4NmyiB8svhKClZHDgypvcI9nQI6vHCRfdN9v0Ho99+OKCoxXXyhXNs0dlICK3HYypkVNK+krJzqdHQ9jQPI1V5aYTYRTbJN4bu8o6RKqyjq8XFFVwZjcOiE32OHOoB8w94X26je6i6/T4LVQFVrjRWLjhRta9NmqrzsXAKm1DdCxzEFM0/s/eaB95InXyiSCHXsybY8F8bdZk0UPJL7k3KLPUlmaN+wcnNJTA==
+X-Forefront-Antispam-Report:
+	CIP:164.130.1.59;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(36860700016)(1800799024)(376014)(82310400026)(56012099006)(11063799006)(10067099003)(18002099003)(22082099003)(13003099007)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	653U3V6xB8uSjo51ejDvUBGMY5FYbWMVp6gtfYsd+GPe49knF0aSetnoAatuzq+h9ILbGEFwY6ELlTsgyKDHUYhWKLp6F+FUHqlTbhTrhsf8R2tf5kc0X8ZKNtjQlBRXOTCfRZojArnztn66Ndv8JN8ATmeiChqEawYpJJe3M3LK1mebyELOcA0nQ1TjkQ1AISpV2awZBquaIF3Tk65B/SqAUH913Uiuik9I6HPlJsfcK6XfnokjQf1u5ZknnH4pueWUgOVRIrobnMMygrUYJlKkMKSr0RiMs7PsMmGYp64DhRQvBm0jJn1kxjoYktDZ9g4qkHtOkflBFJM/MnWF9mNW1iHMOl3N7Asen/FVvwzPOJsEI3DIl7I8CI/adFAnpMhDde4q7T39e5VRsjL2N14BxkL2aPe0+D4inmq3Zr5jZstGUDVxvbpRva03vO6b
+X-OriginatorOrg: foss.st.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 09:29:01.4853
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a11f17a1-c6de-4297-5e26-08df130bc71b
+X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.59];Helo=[smtpO365.st.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	WA1PEPF00009B39.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3178
 
+Hi Sergey,
 
+Le 10/09/2026 à 23:33, Sergey Lebedev a écrit :
+> Following up on the firmware blocker I raised on 7 September, since it is
+> still the thing that stops anyone but the author from using VD55G0. Relayed
+> with Peter Marshall's agreement.
+> 
+> Peter sourced the firmware the same way I did for testing: the version 2.11
+> patch array in Andre Gilerson's out-of-tree VD55G0 driver, which he reports is
+> identical to the one in ST's standalone driver. He has published the extracted
+> blobs for testing at
+> 
+>   https://github.com/petm5/vd55g-firmware
+> 
+> and would prefer submission to linux-firmware over a built-in array, so that
+> firmware can be updated independently of the kernel version. I agree that is
+> the better end state.
+> 
+> Worth adding, because it may lower the bar for getting there: the built-in
+> arrangement is already in the tree, from ST, for the sibling part.
+> drivers/media/i2c/vd55g1.c is Copyright (C) 2025 STMicroelectronics SA under
+> SPDX-License-Identifier: GPL-2.0, and it carries vd55g1_patch_array[] - 3512
+> bytes, firmware revision 2.9 by its own defines. That file has no
+> request_firmware path at all; the built-in array is its only mechanism.
 
-On 9/8/2026 7:28 PM, Birk Skyum wrote:
-> The Yoga Slim 7x EC returns an all-zero response to the reference-board
-> thermal capability command. Probe fails even though its legacy RPM and
-> thermistor queries work and firmware controls the fan automatically.
-> 
-> Select a read-only path for the Lenovo compatible. Expose its first RPM
-> channel and thermistor through hwmon, validating the transfer length and
-> RPM payload count and treating the thermistor's 0xff sentinel as ENODATA.
-> Do not enable SCI, register manual cooling controls or send standby
-> commands on this path. Keep the reference-board behavior and strict
-> capability validation unchanged.
-> 
-> The transactions are documented by the Yoga's FC22 and FC29/TZ39 DSDT
-> methods and Maya Matuszczyk's EC protocol notes. Anvesh Jain P's pending
-> fan-profile series also documents the RPM query. This change does not
-> include its calibration, LUT programming or temperature reporting.
-> 
-> Link: https://github.com/aarch64-laptops/build/blob/2e58842f5fa2f87771c2df017ae4d8c65225ef10/misc/lenovo-yoga-slim-7x/acpi/dsdt.dsl
-> Link: https://lkml.iu.edu/hypermail/linux/kernel/2607.3/08806.html
-> Signed-off-by: Birk Skyum <birk.skyum@pm.me>
-> ---
-> Changes in v2:
-> - Move the platform-driver documentation to the laptop-driver guide and
->   update its index and MAINTAINERS entry, following Guenter's review.
-> - No driver code changes.
-> 
->  Documentation/admin-guide/laptops/index.rst   |   1 +
->  Documentation/admin-guide/laptops/qcom-ec.rst |  40 +++++
->  MAINTAINERS                                   |   1 +
->  drivers/platform/arm64/Kconfig                |   4 +-
->  drivers/platform/arm64/qcom-hamoa-ec.c        | 153 +++++++++++++++++-
->  5 files changed, 194 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/admin-guide/laptops/qcom-ec.rst
-> 
-> diff --git a/Documentation/admin-guide/laptops/index.rst b/Documentation/admin-guide/laptops/index.rst
-> index c0b911d05..44c9c7c08 100644
-> --- a/Documentation/admin-guide/laptops/index.rst
-> +++ b/Documentation/admin-guide/laptops/index.rst
-> @@ -11,6 +11,7 @@ Laptop Drivers
->     asus-laptop
->     disk-shock-protection
->     lg-laptop
-> +   qcom-ec
->     samsung-galaxybook
->     sony-laptop
->     sonypi
-> diff --git a/Documentation/admin-guide/laptops/qcom-ec.rst b/Documentation/admin-guide/laptops/qcom-ec.rst
-> new file mode 100644
-> index 000000000..11f9f2347
-> --- /dev/null
-> +++ b/Documentation/admin-guide/laptops/qcom-ec.rst
-> @@ -0,0 +1,40 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Kernel driver qcom-hamoa-ec
-> +==========================
-> +
-> +Supported systems:
-> +
-> +  * Lenovo Yoga Slim 7x (14Q8X9)
-> +
-> +    Prefix: 'qcom_ec'
-> +
-> +    I2C address: 0x76, instantiated from the device tree. No scanning.
-> +
-> +Description
-> +-----------
-> +
-> +The Yoga Slim 7x embedded controller provides a fan speed channel and a
-> +thermistor through a legacy interface. It does not provide the thermal
-> +capability response used by the Qualcomm reference-board interface.
-> +
-> +On this system the driver only reads sensors. Cooling remains under firmware
-> +control, including when the driver is unloaded. The driver does not change
-> +fan curves, fan profiles, PWM settings, SCI events or EC standby state.
-> +The exposed RPM channel does not establish the number of physical fans.
-> +
-> +The hwmon interface is selected by the ``lenovo,yoga-slim7x-ec`` compatible.
-> +It is not exposed on Qualcomm reference boards by this driver.
-> +
-> +Sysfs attributes
-> +----------------
-> +
-> +All attributes below are read-only.
-> +
-> +=============== ======================================================
-> +fan1_input      Fan speed in RPM. Zero is valid when the fan is stopped.
-> +temp1_input     EC thermistor temperature in millidegrees Celsius.
-> +=============== ======================================================
-> +
-> +An unavailable thermistor reading returns ``ENODATA``. A malformed fan
-> +response or an incomplete bus transfer returns an error, not a zero speed.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6215fcb07..c3c208602 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22440,6 +22440,7 @@ M:	Anvesh Jain P <anvesh.p@oss.qualcomm.com>
->  M:	Sibi Sankar <sibi.sankar@oss.qualcomm.com>
->  L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/admin-guide/laptops/qcom-ec.rst
->  F:	Documentation/devicetree/bindings/embedded-controller/qcom,hamoa-crd-ec.yaml
->  F:	drivers/platform/arm64/qcom-hamoa-ec.c
->  
-> diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
-> index e32e01b2a..4f338c715 100644
-> --- a/drivers/platform/arm64/Kconfig
-> +++ b/drivers/platform/arm64/Kconfig
-> @@ -94,6 +94,7 @@ config EC_QCOM_HAMOA
->  	tristate "Embedded Controller driver for Qualcomm Hamoa/Glymur reference devices"
->  	depends on ARCH_QCOM || COMPILE_TEST
->  	depends on I2C
-> +	depends on HWMON
->  	depends on THERMAL || THERMAL=n
->  	help
->  	  Say M or Y here to enable the Embedded Controller driver for Qualcomm
-> @@ -101,6 +102,7 @@ config EC_QCOM_HAMOA
->  	  control, temperature sensors, access to EC state changes and supports
->  	  reporting suspend entry/exit to the EC.
->  
-> -	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
-> +	  This driver supports Hamoa/Purwa/Glymur reference devices and read-only
-> +	  fan speed and temperature monitoring on the Lenovo Yoga Slim 7x.
->  
->  endif # ARM64_PLATFORM_DEVICES
-> diff --git a/drivers/platform/arm64/qcom-hamoa-ec.c b/drivers/platform/arm64/qcom-hamoa-ec.c
-> index 4d2ad042a..3a4ca8a0d 100644
-> --- a/drivers/platform/arm64/qcom-hamoa-ec.c
-> +++ b/drivers/platform/arm64/qcom-hamoa-ec.c
-> @@ -9,6 +9,7 @@
->  #include <linux/device.h>
->  #include <linux/dev_printk.h>
->  #include <linux/err.h>
-> +#include <linux/hwmon.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
->  #include <linux/kernel.h>
-> @@ -16,10 +17,13 @@
->  #include <linux/pm.h>
->  #include <linux/slab.h>
->  #include <linux/thermal.h>
-> +#include <linux/unaligned.h>
->  
->  #define EC_SCI_EVT_READ_CMD	0x05
->  #define EC_FW_VERSION_CMD	0x0e
-> +#define EC_FAN_RPM_QUERY_CMD	0x22
->  #define EC_MODERN_STANDBY_CMD	0x23
-> +#define EC_THERMISTOR1_CMD	0x29
->  #define EC_FAN_DBG_CONTROL_CMD	0x30
->  #define EC_SCI_EVT_CONTROL_CMD	0x35
->  #define EC_THERMAL_CAP_CMD	0x42
-> @@ -76,13 +80,126 @@ struct qcom_ec_cooling_dev {
->  	u8 state;
->  };
->  
-> +struct qcom_ec_variant {
-> +	bool monitor_only;
-> +};
-> +
->  struct qcom_ec {
-> +	const struct qcom_ec_variant *variant;
->  	struct qcom_ec_cooling_dev *ec_cdev;
->  	struct qcom_ec_thermal_cap thermal_cap;
->  	struct qcom_ec_version version;
->  	struct i2c_client *client;
->  };
->  
-> +/* FC22 in the Slim 7x DSDT: command, fan ID; count, little-endian RPM. */
-> +static int qcom_ec_read_fan_rpm(struct qcom_ec *ec, long *val)
-> +{
-> +	struct i2c_client *client = ec->client;
-> +	u8 request[] = { EC_FAN_RPM_QUERY_CMD, 1 };
-> +	u8 response[3];
-> +	struct i2c_msg messages[] = {
-> +		{
-> +			.addr = client->addr,
-> +			.len = sizeof(request),
-> +			.buf = request,
-> +		}, {
-> +			.addr = client->addr,
-> +			.flags = I2C_M_RD,
-> +			.len = sizeof(response),
-> +			.buf = response,
-> +		},
-> +	};
-> +	int ret;
-> +
-> +	ret = i2c_transfer(client->adapter, messages, ARRAY_SIZE(messages));
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != ARRAY_SIZE(messages))
-> +		return -EIO;
-> +	if (response[0] != sizeof(response) - 1)
-> +		return -EPROTO;
-> +
-> +	*val = get_unaligned_le16(&response[1]);
-> +
-> +	return 0;
-> +}
-> +
-> +static umode_t qcom_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-> +					u32 attr, int channel)
-> +{
-> +	if (channel)
-> +		return 0;
-> +	if ((type == hwmon_fan && attr == hwmon_fan_input) ||
-> +	    (type == hwmon_temp && attr == hwmon_temp_input))
-> +		return 0444;
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +			      u32 attr, int channel, long *val)
-> +{
-> +	struct qcom_ec *ec = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (channel)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (type == hwmon_fan && attr == hwmon_fan_input)
-> +		return qcom_ec_read_fan_rpm(ec, val);
-> +
-> +	if (type != hwmon_temp || attr != hwmon_temp_input)
-> +		return -EOPNOTSUPP;
-> +
-> +	/* FC29/TZ39 report degrees Celsius, or 0xff if unavailable. */
-> +	ret = i2c_smbus_read_byte_data(ec->client, EC_THERMISTOR1_CMD);
+We initially thought of using linux-firmware, and we didn't for several
+reasons :
+- The firmware is reasonably small.
+- The driver source code is directly dependant on the firmware, as some
+behaviors may be altered by the firmware. Keeping it in the source code
+allows easy synchronisation.
+- A lot of mainline sensor do the same thing, with exception for only 4
+drivers (ccs included) that use request-firmware.
 
-For the thermistor, it may be better to expose it as a thermal sensor
-and create a thermal zone instead of exposing it as a hwmon temperature
-attribute. The fan RPM can remain under hwmon.
+It has been discussed with maintainers back to the vgxy61.
 
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret == 0xff)
-> +		return -ENODATA;
-> +
-> +	*val = ret * 1000;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops qcom_ec_hwmon_ops = {
-> +	.is_visible = qcom_ec_hwmon_is_visible,
-> +	.read = qcom_ec_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_channel_info * const qcom_ec_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-> +	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +	NULL,
-> +};
-> +
-> +static const struct hwmon_chip_info qcom_ec_hwmon_chip_info = {
-> +	.ops = &qcom_ec_hwmon_ops,
-> +	.info = qcom_ec_hwmon_info,
-> +};
-> +
-> +static int qcom_ec_hwmon_probe(struct qcom_ec *ec)
-> +{
-> +	struct device *dev = &ec->client->dev;
-> +	struct device *hwmon;
-> +	long rpm;
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(ec->client->adapter,
-> +				     I2C_FUNC_I2C | I2C_FUNC_SMBUS_READ_BYTE_DATA))
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = qcom_ec_read_fan_rpm(ec, &rpm);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to read fan RPM\n");
-> +
-> +	hwmon = devm_hwmon_device_register_with_info(dev, "qcom_ec", ec,
-> +						     &qcom_ec_hwmon_chip_info, NULL);
-> +	return PTR_ERR_OR_ZERO(hwmon);
-> +}
-> +
->  static int qcom_ec_read(struct qcom_ec *ec, u8 cmd, u8 resp_len, u8 *resp)
->  {
->  	int ret;
-> @@ -331,6 +448,10 @@ static const struct thermal_cooling_device_ops qcom_ec_thermal_ops = {
->  static int qcom_ec_resume(struct device *dev)
->  {
->  	struct i2c_client *client = to_i2c_client(dev);
-> +	struct qcom_ec *ec = i2c_get_clientdata(client);
-> +
-> +	if (ec->variant->monitor_only)
-> +		return 0;
->  
->  	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
->  					 EC_MODERN_STANDBY_EXIT);
-> @@ -339,6 +460,10 @@ static int qcom_ec_resume(struct device *dev)
->  static int qcom_ec_suspend(struct device *dev)
->  {
->  	struct i2c_client *client = to_i2c_client(dev);
-> +	struct qcom_ec *ec = i2c_get_clientdata(client);
-> +
-> +	if (ec->variant->monitor_only)
-> +		return 0;
->  
->  	return i2c_smbus_write_byte_data(client, EC_MODERN_STANDBY_CMD,
->  					 EC_MODERN_STANDBY_ENTER);
-> @@ -356,14 +481,24 @@ static int qcom_ec_probe(struct i2c_client *client)
->  		return -ENOMEM;
->  
->  	ec->client = client;
-> +	ec->variant = i2c_get_match_data(client);
-> +	if (!ec->variant)
-> +		return -ENODEV;
-> +	i2c_set_clientdata(client, ec);
-> +
-> +	/*
-> +	 * The Slim 7x does not implement the reference-board capability command.
-> +	 * Its firmware controls cooling autonomously. Only expose its legacy
-> +	 * sensors; do not enable SCI, fan debug control or standby notifications.
-> +	 */
-> +	if (ec->variant->monitor_only)
-> +		return qcom_ec_hwmon_probe(ec);
->  
->  	ret = devm_request_threaded_irq(dev, client->irq, NULL, qcom_ec_irq,
->  					IRQF_ONESHOT, "qcom_ec", ec);
->  	if (ret < 0)
->  		return ret;
->  
-> -	i2c_set_clientdata(client, ec);
-> -
->  	ret = qcom_ec_read_fw_version(dev);
->  	if (ret < 0)
->  		return dev_err_probe(dev, ret, "Failed to read EC firmware version\n");
-> @@ -410,6 +545,9 @@ static void qcom_ec_remove(struct i2c_client *client)
->  	struct device *dev = &client->dev;
->  	int ret;
->  
-> +	if (ec->variant->monitor_only)
-> +		return;
-> +
->  	ret = qcom_ec_sci_evt_control(dev, false);
->  	if (ret < 0)
->  		dev_err(dev, "Failed to disable SCI events: %d\n", ret);
-> @@ -421,14 +559,21 @@ static void qcom_ec_remove(struct i2c_client *client)
->  	}
->  }
->  
-> +static const struct qcom_ec_variant qcom_ec_reference = {};
-> +
-> +static const struct qcom_ec_variant qcom_ec_slim7x = {
-> +	.monitor_only = true,
-> +};
-> +
->  static const struct of_device_id qcom_ec_of_match[] = {
-> -	{ .compatible = "qcom,hamoa-crd-ec" },
-> +	{ .compatible = "lenovo,yoga-slim7x-ec", .data = &qcom_ec_slim7x },
-> +	{ .compatible = "qcom,hamoa-crd-ec", .data = &qcom_ec_reference },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, qcom_ec_of_match);
->  
->  static const struct i2c_device_id qcom_ec_i2c_id_table[] = {
-> -	{ "qcom-hamoa-ec", },
-> +	{ "qcom-hamoa-ec", (kernel_ulong_t)&qcom_ec_reference },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(i2c, qcom_ec_i2c_id_table);
+Unless I'm proven moving to the request_firmware API allows more upsides
+than the above points, unfortunately I will not ack a serie that moves
+from the builtin patch to the request_firmware API.
+
+> 
+> Different sensor and a different binary from the VD55G0 one, which measures
+> 6868 bytes at revision 2.11, so it is precedent for the arrangement rather
+> than for the blob. But it does mean a built-in for VD55G0 would not be asking
+> ST for something they have not already done one part number over, whereas
+> linux-firmware needs an explicit redistribution grant in WHENCE from the
+> copyright holder.
+
+I'm not sure I get you. Is this a licence problem of some sort ? Could
+you rephrase ?
+
+Anyway if we don't move to request_firmware I guess this is a non issue ?
+
+By the way we didn't upstream the vd55g0 because it requires a bit of
+cleaning, but this is something that could also be done.
+
+> 
+> So the two routes are not equally hard today, and they are not exclusive: a
+> built-in now and linux-firmware when ST are ready is not a wasted step.
+> 
+> Whether GPL-2.0 on the surrounding code carries the blob with it is a licence
+> question and not one I will answer.
+> 
+> Benjamin, Sylvain - this is the one blocker on the series that nobody outside
+> ST can clear.
+> 
+> Sergey
+> 
 
 -- 
-Best Regards,
-Anvesh
+Regards,
+Benjamin
 
