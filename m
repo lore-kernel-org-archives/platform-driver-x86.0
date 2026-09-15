@@ -1,298 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E7317A314;
-	Tue, 15 Sep 2026 12:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9319D3939CE
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789476380; cv=none; b=S1NfoWBHaW1wnSrbIaolVSOiQixMylncnt2kYr8DlZmB1hIf8ZOQJIWb3pfQacmr434w3ytJtTET6Czu3EQ0iqRv+D2LqWsZUL005VbYxBhqWMkF7YXziB+olRFxX+ROE40UjEEnFn6ANPbpxDjvC+ol5YCDkHJB3Q0eIQze6J4=
+	t=1789476544; cv=none; b=oqsM2g/UBKYBZm0E+CQgl6nbS7Enk1uky/G9Bfo86xU3yzhbtD9zNTD/wqmeLjo7FRer9wzkVA+AswNnMZMihHkDts9P/7p/gnJfr/OyTXJL0foASihzBfSk5qRIUse0PMQ5yGrlJLGPjU4k+Bre6ECruaBXAQi1/g4xmbOPd1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789476380; c=relaxed/simple;
-	bh=Ly4sfqIkpha/Rxy8cpcf5FNQSLKPWny/MhKu5/RmrIk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=halS+mBMZmptP6Ym1nM/TQDFrQ1oHg6LCq5EwkUFOt1KjsvyMBVzlDMTb85JcppP8QVLN+xB2fsurX/sx8gVfnMe5wy50bza5H2kHd7oLgOyt0JFZcj+9JM+ziaUG8SAqvuYBHCJl/AMQdsOQjEGDgvn+cSN3X12w/BF2qDyIXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CFcBSVb9; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789476544; c=relaxed/simple;
+	bh=YFHzDuiSQXSIMebzDRCSKEz0SUhCBqu8HZ+JLzlNMtI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=ki0PLqrY95G5rcXvlfwjRqdVN5dfG11eYG3QBr1U+fjOSI3HsKoOneH6E921FUpPb1I2E6n9H/rx7y/94PH2QXhs46dH8McnrdSyEsulaPteMKKgc9FLXoNcF+z7IFX+6vp86DptwOTn48x5WhhTVWDOiNVGZhHFSg2bT/R4/tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DFb7u2Tr; arc=none smtp.client-ip=74.125.227.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CFcBSVb9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789476378; x=1821012378;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Ly4sfqIkpha/Rxy8cpcf5FNQSLKPWny/MhKu5/RmrIk=;
-  b=CFcBSVb9H/BMe90esa+Yh16qyrIV3uCY/k+DJb94tEUyIeBtMoone1b9
-   HMUcy7YS5MthvWmcS8VfzLoY8puvfWo82GlWdByqOClESY5acLrWS1LmQ
-   vqjAIjS46OAy+w0Y/fx5Kfoe96bjGbkvTe3/xdAmKDfTdtlKHpkP1Ibp0
-   RlFg41yaJOSLi94ubrUCJ25C+oJwg5sNmqJn6GiIhQ44qiTVjRoGZIPBM
-   W5Nq95xrdnbCRDef2nJpTRfcfAACC3U6/7kP1k6W86tK5tac4+j89Xqfj
-   Ow1Bh6SvmBzp4nDlp8wymiMoOoaiOJ7360Wxf4F/QpTikzzUix9FqTpvc
-   w==;
-X-CSE-ConnectionGUID: XiHCKJUpQEWs2O0Dnz5n6g==
-X-CSE-MsgGUID: RbMCf11jTy2n4TXW7FM3yw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="107349392"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="107349392"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:46:17 -0700
-X-CSE-ConnectionGUID: jTaiEFLxSgGAqPo2T0JwTA==
-X-CSE-MsgGUID: ocCfgf6BTamD/k/FYzt8xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="276761121"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:46:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Sep 2026 15:46:09 +0300 (EEST)
-To: Antheas Kapenekakis <lkml@antheas.dev>
-cc: Alexander Egorov <begeebe@gmail.com>, platform-driver-x86@vger.kernel.org, 
-    Hans de Goede <hansg@kernel.org>, derekjohn.clark@gmail.com, 
-    samsagax@gmail.com, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] platform/x86: oxpec: Report tablet mode on
- OneXPlayer detachables
-In-Reply-To: <CAGwozwFAcHh0iUsKRcvtMe=Cn+pdNXAoSYqZ09k2srsSrqWs_w@mail.gmail.com>
-Message-ID: <5e115a2e-5317-0238-86aa-d9e75cf18dbe@linux.intel.com>
-References: <20260727215947.118292-1-begeebe@gmail.com> <20260728083529.329772-1-begeebe@gmail.com> <20260728083529.329772-3-begeebe@gmail.com> <CAGwozwFAcHh0iUsKRcvtMe=Cn+pdNXAoSYqZ09k2srsSrqWs_w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFb7u2Tr"
+Received: by mail-pj2-f12.google.com with SMTP id d9443c01a7336-2d747ed1368so31515185ad.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 05:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789476542; x=1790081342; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=K4NEyPUzdcskfuL6SgD4LKloEIz4xPCUOIfMYZX8ltY=;
+        b=DFb7u2TrVWtDC6Qq5VonQ5y2Eno7vf7CBQVoAV63ywLB9WT0T+27nkyA6yjSyunuX9
+         ZUMSh76lb9z3WI87LNmWa5FIO1PoORJpclzrDvxLY+EpECdFtRyw2RF0/zdsI2Bgr45+
+         JdEJV4nb78TfntkjcgwYUZOrRI1qzSoW+D8J9yDZtY82hh/ABfe0NDCiBvdoerTYcd2F
+         urRnaPBZnfrq74XuRUX97vWmpv6dYpqTvwgoE5/GC3r309s3WZwSqS/JyNIh/jxIP5SU
+         3DOs13v36CcG5FSs9EnzSxfdBkqRNNoHpLRt6fWeG0YNwClKyvfAon1GjPllksjonoEe
+         qYnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789476542; x=1790081342;
+        h=message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=K4NEyPUzdcskfuL6SgD4LKloEIz4xPCUOIfMYZX8ltY=;
+        b=SHXgFjvAoQ/4yb82WpE6mfazbRkDSa0B3EY2vDXTfPivMmc1h3oq9je3PxgFsMkdXQ
+         4pQscp9t3Tc2F+w9mQEjWZcc46FIhPaEQmD5lWTyg9kajwz5SFeZqwhjFGkv48aOKcUc
+         +xPFEdoeyMgPViAAc2ysdIDYw3rtxNplKc4c0gK+4S3DENPS9gav+nDLinjlUFPO6Vaz
+         ud+GgVDvR7qHmZpkaH/TV56dyllMqzUXGCaWED+itAsn5yOfDyfRtjv54gaYnz8SovGl
+         5C5uP/JvzML9qcGn6Y184utcc33SEMEMjn6of78CGYNr4TNCyFbIVPn3n2RFGJtOO/31
+         VHew==
+X-Forwarded-Encrypted: i=1; AKwUvBxmcp7FJHtcmeVwbK8Oalflps6Fa2Sy6gBTKQOGcr8niNdqznhXHBWthdAlOXuO+KZ5gDxN4TEVU01oKanUNpTIPlJw@vger.kernel.org
+X-Gm-Message-State: AFuF++mgXE4w4jylnyaqpbsW85vYVgkPLKctNw0eE/e80+16gnA6hM+D
+	/sthpIzMr99cOq3Rz9Y5NKUc+dmOEosULqgZhYk0OPFNPfLUKSFOpXsR
+X-Gm-Gg: AYBFou1c3ZD6qDfr75hc5eI0EkhvdLsrzr+4aOzJOaboMNKHB1mdeFMk+JfmX2IoZgL
+	U0sMwViFUcEu08hNZgUU63lsQ/rMbksXJSrM2akcsMjp/cMEFJztoTlaMWJQSkpd19u3fM6ed2V
+	9LODriJSAtl6kAXVGfP7j2F6k2dX6lGMnC+VRa+L6bOQhNEiW171OzMRy0b7b/+AxWv8dW2d68g
+	MpnH+wC4Z8T/2kwS+Uj2b/tJlRQiVVDSV230Gyne0VyGvu7FYL/aZx+QqyBCtyj9rn1gFCr8Y3n
+	nwepoysvPer6h7dJQ06hipC12wvCZQoqfezqfwyD40F+w8S1REQ1SEKpaBK/fRcdWDfMOWGzWVR
+	zvFYGLYBmQ05uls6Zh4cDLPRKidlWGESUpjbtsQEZVNyXOFPznb4VlvC1+O2Lhwkaghc6PMH4Xv
+	myUgB9APQEbSFEdGnZFvp3jNYr2rDSkKYC+hQzsZzx4CcZkk0f6xGVC5I5TaVkyUx0NRONvg==
+X-Received: by 2002:a17:903:11cf:b0:2db:733c:fd1f with SMTP id d9443c01a7336-2dd6c5ee698mr129931065ad.8.1789476541491;
+        Tue, 15 Sep 2026 05:49:01 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:b8f:91e2:d400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2dd48ae3cacsm52866095ad.26.2026.09.15.05.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Sep 2026 05:49:00 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Martin K. Petersen <mkp@kernel.org>, linux-scsi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH RFC v4 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Date: Tue, 15 Sep 2026 12:48:57 -0000
+Message-Id: <202609152112.RFCv4-0.lhw@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 30 Jul 2026, Antheas Kapenekakis wrote:
+Hello,
 
-> On Tue, 28 Jul 2026 at 10:35, Alexander Egorov <begeebe@gmail.com> wrote:
-> >
-> > The OneXPlayer X1 family and Super X have detachable pogo-pin
-> > keyboards. The firmware does not expose a tablet-mode input switch.
-> >
-> > The Super X keyboard enumerates as 1a86:1305. The X1 family folio
-> > keyboard enumerates as 258a:001e.
-> >
-> > Register an input device on these boards and report SW_TABLET_MODE from
-> > the model-specific pogo keyboard USB hotplug state. Other USB and
-> > Bluetooth keyboards do not affect the switch.
-> >
-> > A complete dump of the 256-byte Super X EC register map was compared
-> > with the keyboard attached, detached, and reattached. No register
-> > changed predictably with the attachment state.
-> >
-> > Tested on a OneXPlayer Super X. Mutter enables accelerometer-driven
-> > display rotation only while the pogo keyboard is absent.
-> >
-> > Assisted-by: Codex:gpt-5.6
-> > Signed-off-by: Alexander Egorov <begeebe@gmail.com>
-> > ---
-> >  drivers/platform/x86/Kconfig |   2 +
-> >  drivers/platform/x86/oxpec.c | 103 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 105 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > index b54b521..3bcbd49 100644
-> > --- a/drivers/platform/x86/Kconfig
-> > +++ b/drivers/platform/x86/Kconfig
-> > @@ -1055,6 +1055,8 @@ config OXP_EC
-> >         depends on ACPI_EC
-> >         depends on ACPI_BATTERY
-> >         depends on HWMON
-> > +       depends on INPUT
-> > +       depends on USB
-> >         depends on X86
-> >         help
-> >                 Enables support for the platform EC of OneXPlayer and AOKZOE
-> > diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-> > index df29e41..5c07a35 100644
-> > --- a/drivers/platform/x86/oxpec.c
-> > +++ b/drivers/platform/x86/oxpec.c
-> > @@ -18,10 +18,12 @@
-> >  #include <linux/dmi.h>
-> >  #include <linux/hwmon.h>
-> >  #include <linux/init.h>
-> > +#include <linux/input.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/processor.h>
-> > +#include <linux/usb.h>
-> >  #include <acpi/battery.h>
-> >
-> >  /* Handle ACPI lock mechanism */
-> > @@ -55,6 +57,8 @@ enum oxp_board {
-> >
-> >  static enum oxp_board board;
-> >  static struct device *oxp_dev;
-> > +static struct input_dev *oxp_tablet_mode_input;
-> > +static struct notifier_block oxp_usb_notifier;
-> >
-> >  /* Fan reading and PWM */
-> >  #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
-> > @@ -293,6 +297,74 @@ static const struct dmi_system_id dmi_table[] = {
-> >         {},
-> >  };
-> >
-> > +#define OXP_KEYBOARD_VID_QINHENG       0x1a86
-> > +#define OXP_KEYBOARD_PID_K2445         0x1305
-> > +#define OXP_KEYBOARD_VID_HAILUCK       0x258a
-> > +#define OXP_KEYBOARD_PID_HAILUCK       0x001e
-> 
-> These defines need to go above with the other defines.
-> 
-> Can you explain the reasoning behind the name PID_K2445 and PID_HAILUCK?
-> 
-> > +
-> > +static int oxp_find_keyboard(struct usb_device *udev, void *data)
-> > +{
-> > +       bool *keyboard_attached = data;
-> > +       u16 vid = le16_to_cpu(udev->descriptor.idVendor);
-> > +       u16 pid = le16_to_cpu(udev->descriptor.idProduct);
-> > +
-> > +       switch (board) {
-> > +       case oxp_x1:
-> > +               if (vid == OXP_KEYBOARD_VID_HAILUCK &&
-> > +                   pid == OXP_KEYBOARD_PID_HAILUCK)
-> > +                       *keyboard_attached = true;
-> > +               break;
-> > +       case oxp_super_x:
-> > +               if (vid == OXP_KEYBOARD_VID_QINHENG &&
-> > +                   pid == OXP_KEYBOARD_PID_K2445)
-> > +                       *keyboard_attached = true;
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int oxp_usb_notify(struct notifier_block *nb,
-> > +                         unsigned long action, void *data)
-> > +{
-> > +       struct usb_device *udev = data;
-> > +       u16 vid = le16_to_cpu(udev->descriptor.idVendor);
-> > +       u16 pid = le16_to_cpu(udev->descriptor.idProduct);
-> > +       bool keyboard = false;
-> > +
-> > +       switch (board) {
-> > +       case oxp_x1:
-> > +               keyboard = vid == OXP_KEYBOARD_VID_HAILUCK &&
-> > +                          pid == OXP_KEYBOARD_PID_HAILUCK;
-> > +               break;
-> > +       case oxp_super_x:
-> > +               keyboard = vid == OXP_KEYBOARD_VID_QINHENG &&
-> > +                          pid == OXP_KEYBOARD_PID_K2445;
+v4, sent as its own thread this time, addressing the third sashiko
+review round (the Medium naming item is a real bug, the two Low ones
+are false positives again).
 
-Why are you doing these manually instead of constructing proper usb id 
-table, etc.?
+Changes since v3:
 
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> > +       if (!keyboard)
-> > +               return NOTIFY_DONE;
-> > +
-> > +       switch (action) {
-> > +       case USB_DEVICE_ADD:
-> > +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, false);
-> > +               break;
-> > +       case USB_DEVICE_REMOVE:
-> > +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE, true);
-> > +               break;
-> > +       default:
-> > +               return NOTIFY_DONE;
-> > +       }
-> > +
-> > +       input_sync(oxp_tablet_mode_input);
-> > +       return NOTIFY_OK;
-> > +}
-> > +
-> >  /* Helper functions to handle EC read/write */
-> >  static int read_from_ec(u8 reg, int size, long *val)
-> >  {
-> > @@ -948,6 +1020,7 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
-> >  /* Initialization logic */
-> >  static int oxp_platform_probe(struct platform_device *pdev)
-> >  {
-> > +       bool keyboard_attached = false;
-> >         struct device *dev = &pdev->dev;
-> >         struct device *hwdev;
-> >         int ret;
-> > @@ -965,6 +1038,33 @@ static int oxp_platform_probe(struct platform_device *pdev)
-> >                         return ret;
-> >         }
-> >
-> > +       switch (board) {
-> > +       case oxp_x1:
-> > +       case oxp_super_x:
-> > +               oxp_tablet_mode_input = devm_input_allocate_device(dev);
-> > +               if (!oxp_tablet_mode_input)
-> > +                       return -ENOMEM;
-> > +
-> > +               oxp_tablet_mode_input->name = "OneXPlayer Tablet Mode Switch";
-> > +               oxp_tablet_mode_input->phys = "oxp-platform/input0";
-> > +               oxp_tablet_mode_input->id.bustype = BUS_HOST;
-> > +               input_set_capability(oxp_tablet_mode_input, EV_SW, SW_TABLET_MODE);
-> > +
-> > +               ret = input_register_device(oxp_tablet_mode_input);
-> > +               if (ret)
-> > +                       return ret;
-> > +
-> > +               oxp_usb_notifier.notifier_call = oxp_usb_notify;
-> > +               usb_register_notify(&oxp_usb_notifier);
-> > +               usb_for_each_dev(&keyboard_attached, oxp_find_keyboard);
-> > +               input_report_switch(oxp_tablet_mode_input, SW_TABLET_MODE,
-> > +                                   !keyboard_attached);
-> > +               input_sync(oxp_tablet_mode_input);
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > +
-> >         return 0;
-> >  }
-> >
-> > @@ -1005,6 +1105,9 @@ static int __init oxp_platform_init(void)
-> >
-> >  static void __exit oxp_platform_exit(void)
-> >  {
-> > +       if (board == oxp_x1 || board == oxp_super_x)
-> > +               usb_unregister_notify(&oxp_usb_notifier);
-> 
-> You used a switch statement above. Match the logic and use a switch
-> statement here too.
+- LED class device names follow the devicename:color:function scheme
+  again. v3 embedded the sdev's H:C:T:L verbatim
+  (asus-arion-0:0:0:0:led0); the extra colons break the single
+  separator userspace parses LED names with. The colons are now
+  flattened to dashes (asus-arion-0-0-0-0:led0), keeping the
+  per-attachment uniqueness while leaving exactly one separator.
 
-Yes, definitely.
+The two low-severity items are the same false positives as before:
 
-> Give it a few days before sending a V3 for Ilpo to reply.
->
-> @Ilpo do you think this is an acceptable expansion for the EC driver?
+- kzalloc_obj() exists in include/linux/slab.h since v7.0 (Kees
+  Cook's overflow-refactor series); this driver builds against 7.2.
 
-Often platform drivers start with a one feature, and may even be very 
-specifically named after that feature, but then more platform stuff gets
-added.
+- blk_rq_map_kern() takes four arguments on current kernels
+  (rq, buf, len, gfp); drivers/scsi/scsi_lib.c calls it exactly this
+  way from scsi_execute_cmd().
 
-(Even our mailing list now bears "x86" in its name despite the scope of 
-platform drivers having expanded also to non-x86 platforms.)
+v4 was re-verified on hardware: per-LED colours, 100 sequential
+updates, concurrent updates from four writers, and unplug under load
+(zero splats, zero leaked LED nodes, clean rmmod).
 
--- 
- i.
+Everything else is unchanged: the hardware description, the
+scsi_device_handler that does not claim the sdev, the multicolor LED
+interface, the protocol handling and the known caveats (manual attach
+until a notifier lands; SAVE on every update writes the enclosure
+flash, wear uncharacterized; NULL-parent LED registration to avoid
+the sdev reference cycle).
 
-> The rest of the patch looks fine to me.
-> 
-> Best,
-> Antheas
-> 
-> > +
-> >         platform_device_unregister(oxp_platform_device);
-> >         platform_driver_unregister(&oxp_platform_driver);
-> >  }
-> > --
-> > 2.55.0
-> >
-> >
-> 
+The open question from v3 stands: the driver is deliberately not
+wired into Kconfig/Makefile/MAINTAINERS yet, because the agreed
+direction with the SCSI side is a split into a SCSI transport helper
+and a shared ASUS Aura LED interface, and the wiring would follow
+that shape. Is deferring the wiring to that split acceptable for an
+RFC, or would you rather have the driver buildable in-tree from this
+series already?
 
+Comments on the interface shape and on folding this into the shared
+Aura work with Denis remain very welcome.
+
+Signed-off-by: Liang Haowen <nbg2974@gmail.com>
