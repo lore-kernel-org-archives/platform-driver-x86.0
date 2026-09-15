@@ -1,212 +1,287 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010027.outbound.protection.outlook.com [52.101.84.27])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB874AE13F;
-	Tue, 15 Sep 2026 11:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789472890; cv=fail; b=NiGxg6CxFnq4IMUlLbGl9mA5kFYXcjv7qiYs/VD0yrQyChDDxAXPotG1KbXVnA2bfBV/HL7DVR5W1qsz44QoupAdpCly8KP5PxocXwcRIpTLywr92azKUtD/R/en80D9TOx4oMeucXCJGEWMuqb6iSc1iLHSnJAftkFxs/RpHGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789472890; c=relaxed/simple;
-	bh=KMM6eL0UbZzjA6KrzI7IpmUxEQW0M+E81rqUznoqvUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LiFGiRn/5byJSIplO6pCpG6c34FnhcJu8qA4fC+UN1jR4JPYgzt0GhdNK+6bSIJ/P/LqldZ1Fg1Z8/J1v+RrOnk7UHa1hJaWWUbt/kmghA81JLaH0QYJr7JtXubOJO3HPChohlcbWROK4Ag1di0mrfj523M52AcKHVjGyz8taDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lTsBCRu8; arc=fail smtp.client-ip=52.101.84.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFE24BFE7F;
+	Tue, 15 Sep 2026 12:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789474121; cv=none; b=bmi7b//gvMkHo+9GFudMPSkgZ0031R4m5bnP3Ug84kJk1ACzhbW/7nwZl34BHOMaZr6PTR9hzWYZPMXbxl7W3AW5W4kPeaexSN0UgmWxVZwJ/OE6RUqRTU/vWt3L6lI6/AKryMAClRomo6mxh0hpsHMRraSp8x+QOip4u4a6v2I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789474121; c=relaxed/simple;
+	bh=r4/etdnCcfrVsy/eyrNdRvVeg93egQng/TtPPPFnO+Q=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=RM4Q0n2nla5COSiY46WgrmQFPRiV5NGJ9YUSvEANWezOV6jOGSoLZsde+BEyOjlmwRLCgdo7fYD4cmP1/Glx30p4QtgexZCBRSbUJ40n4SINxaPoSSDZR9Ra/8B0yD/7Y4ESBoLMYAEwNLte3gkRKne+q8TWHsDmE8mPTbNuTxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wfk/ZGNc; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lTsBCRu8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bzlKMmctVluHo7GCPF23ITjjf1QrLLGy5q1685xaMkH4FRf4E5+CyQPOsbLI5pw9wJ2VTgIx1cx9KnlJ/logeG2TXuk+ZL/odHsXoL9JGrHY3co7gpNNYsUinL7XXtyjRKLxtbsMUISUJpOZ2+dEHMT3UDsfAcN1/6y+KVQrz4FUmHsdPa3XWElj2mk4qCbsGFT+y56s73RIOcteelsZIapEGQctmIAvaE8TIy09CbtyIn+Ksk7+X6LKdsgN8zB6xtEOXCORbjuALG2Prs+Nb397aS5A6UV2ZsKrNPMXwP6fCWW6CO/VjxeRF09q0q4WjwnrUAEXrlfOv+aAH1l/0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vaNZAyVMr9TQ0PhI2P+tfwgddyQY1zp845jlWmkLxoE=;
- b=RQnSXLi+zrmO+zGnkkSy8pXgBE/Q++q3YRI7Tw2ZJ8Z1NnpASMKeSe+65E+n2wtu32uMRPL3fbRPUBTyxxOFw2Ggy2BK3risu5oqV0HIV3doh9WyW9+UHkhDdhY4ijSLuMk6R7bKWeYseB3EtMG/omqXjRW4bQqRbMVuEAeXjSswwMkDP/xH6iTFqAl/hLj4RBO7qlyPyRsNXBYMaDjsSlwk40+XPCi2YlJSQQgHRZWRN7gI/l+78nkVmOKdd4z0jpr9ce/Xk3mwalMvS+izj3cb9G52UklJcdn2MNIktmBpgNb0zlWnSbKwvPZyv3VjR4PfMKvh3g7yH+7O2tgW0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.59) smtp.rcpttodomain=pm.me smtp.mailfrom=foss.st.com; dmarc=fail
- (p=none sp=none pct=100) action=none header.from=foss.st.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vaNZAyVMr9TQ0PhI2P+tfwgddyQY1zp845jlWmkLxoE=;
- b=lTsBCRu8mFzkDoh0Tf+UuprzfxeivHv1uVjH7UDpIuP6mYkbgOpQ73mG27VJzW5NGC4zYgKGKH03mBj51LLPJ6s43LVumNtlfabRlEpiTubhYBYo0NDod8DTq8rzVjbS2rLRocTJJE6piFmMx/PMGRU/3o6nXM12oWOrFOtgLRqcs8RJYMDLWl3JoIeh0nsD0kge6mGROkFCVtFD4SzRczljZ3Kti0Gn/UvrxUcM/cs/XF6dhrEsWBh1tLM1amOHYu1S9tNDQktJLa/21fRphQxwI7bw8Mk6bfp+Ch+MFCO30scAPzNeCN5CsUCkqjVfWQnkNFEKPDGGftMLwSPDOw==
-Received: from VIXP296CA0021.AUTP296.PROD.OUTLOOK.COM (2603:10a6:800:36c::6)
- by DB9PR10MB6714.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:3d2::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.12; Tue, 15 Sep
- 2026 11:48:00 +0000
-Received: from WA1PEPF000099D0.eurprd04.prod.outlook.com
- (2603:10a6:800:36c:cafe::86) by VIXP296CA0021.outlook.office365.com
- (2603:10a6:800:36c::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.9 via Frontend Transport; Tue, 15
- Sep 2026 11:48:00 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.59)
- smtp.mailfrom=foss.st.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=foss.st.com;
-Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.59 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.59; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.59) by
- WA1PEPF000099D0.mail.protection.outlook.com (10.167.242.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.428.7 via Frontend Transport; Tue, 15 Sep 2026 11:48:00 +0000
-Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpo365.st.com
- (10.250.44.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 15 Sep
- 2026 13:54:03 +0200
-Received: from [10.130.78.67] (10.130.78.67) by STKDAG1NODE2.st.com
- (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Tue, 15 Sep
- 2026 13:47:59 +0200
-Message-ID: <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
-Date: Tue, 15 Sep 2026 13:48:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wfk/ZGNc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789474119; x=1821010119;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=r4/etdnCcfrVsy/eyrNdRvVeg93egQng/TtPPPFnO+Q=;
+  b=Wfk/ZGNcJbis3m2ZuXTctJHCS/PbXZr02GAytjun7DmH910QC2bPjhzq
+   ALg5bEhULWNbmvvlALzU8a6BDWYp4u8wHi1vAjmoYBYopMTuDdm0RNleg
+   cEYVNd6EKqrqalCBsCah94a1ILUrAiwDbQV9oBIsGYp+jEOh7KG/7YzMw
+   UWzRwn16/pa0Z0HYbaLI9J7ewinsA6qOz933UjH6ii6/qq6Aky+1vpfDX
+   H0Fd4Gf02p9BDTUxe9JclUq7PRIkN6RwhdHumLDOnDGLvwDTdx2qEPFZF
+   f3CXbrKrJUFOPGCjhTFIqs0xBYaZWKgCa/fte65fk6iTJ3xHSFHFQRCBg
+   w==;
+X-CSE-ConnectionGUID: /vMKGoD3Q9iT/ajBTaBn7w==
+X-CSE-MsgGUID: RnODzkY2T12n5QThk3ZhPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="112603680"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="112603680"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:08:38 -0700
+X-CSE-ConnectionGUID: yEXKeHT/S1eM9WiIW6824Q==
+X-CSE-MsgGUID: +eCt4baJQ1ehGF/VxF7LQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="276752589"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:08:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 15 Sep 2026 15:08:25 +0300 (EEST)
+To: Armin Wolf <W_Armin@gmx.de>
+cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+    "hansg@kernel.org" <hansg@kernel.org>, 
+    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "linux@weissschuh.net" <linux@weissschuh.net>, 
+    "rafael@kernel.org" <rafael@kernel.org>, 
+    "lenb@kernel.org" <lenb@kernel.org>, 
+    "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+    "Koenig, Christian" <Christian.Koenig@amd.com>, 
+    "airlied@gmail.com" <airlied@gmail.com>, 
+    "simona@ffwll.ch" <simona@ffwll.ch>, 
+    "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+    "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+    "patrik.r.jakobsson@gmail.com" <patrik.r.jakobsson@gmail.com>, 
+    "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
+    "mripard@kernel.org" <mripard@kernel.org>, 
+    "tzimmermann@suse.de" <tzimmermann@suse.de>, 
+    "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, 
+    "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, 
+    "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, 
+    "tursulin@ursulin.net" <tursulin@ursulin.net>, 
+    "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
+    "matthew.brost@intel.com" <matthew.brost@intel.com>, 
+    "thomas.hellstrom@linux.intel.com" <thomas.hellstrom@linux.intel.com>, 
+    "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
+ nvidia_wmi_ec_supported()
+In-Reply-To: <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
+Message-ID: <80c4bb47-936b-976b-6ba8-b366f7a455cf@linux.intel.com>
+References: <20260724025959.142826-1-W_Armin@gmx.de> <20260724025959.142826-3-W_Armin@gmx.de> <BN9PR12MB514668975E87D570F50B2D91F7A82@BN9PR12MB5146.namprd12.prod.outlook.com> <86d0e015-a8f4-4e10-a9b6-a9714d3e0f07@gmx.de>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add
- VD55G0 support
-To: Sergey Lebedev <lsa.uz@pm.me>, Peter Marshall <pm@petermarshall.ca>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus
-	<sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hansg@kernel.org>, Daniel Scally
-	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20260910213308.53429-1-lsa.uz@pm.me>
- <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com>
- <20260915100722.38504-1-lsa.uz@pm.me>
-Content-Language: en-GB
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <20260915100722.38504-1-lsa.uz@pm.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
- (10.75.128.133)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: WA1PEPF000099D0:EE_|DB9PR10MB6714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 855fd9b3-a9ad-4a53-77ec-08df131f3154
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|82310400026|36860700016|6133799003|18002099003|22082099003|13003099007|4143699003|10067099003|5023799004|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	g2TO6f+/w5WIkpTV7ktE6CZAeh6YvYiTATIgY48jrRuFb0tVijX+zxPxZNt+47VHGyvzdnYrHzm/g4Hi7pPbOrlV48osBiZuI6uxtY9x4QluaK8hK7T2sl/nvdv2Ideo5O4fxFROK/zkt9tz/pLj3mIqgA4T5xsG4LHRECzm7FLAr7Cm9eiCbRu9uOgQSbi1w7182wk9i9xVYk5IdwUMM4TAXIlMoKKkRg/C4Yl8CChzSp7V141eA5AMMpqmm9tqu/wYMEXI94UAiNYtpLYzuB08Tqdhh+xstG9W9QGC2UxqGFsXx64Qlelf0wbPLjs0i4GGO6WP0FnI4AM/pNp1CmCVbHJKiQ1Wdd1N1lGCnPF4g8iqb7bQdOuPGhGFvUEu5duLmcjilSxNECQXgOcPLrcSsyBDAuC2oH3YQnm8CLjes3W1n/0DrtbUaXqClfNR195nKPr0ZnFiqO3tMGbFhC38TkNXV5ZckHh3Esp5rJgSFj1FLr796oRrxfbMrjz4VF8WnQ3p24j6xXVAAPBALREiY886h95ce2npPKpfMUuiUtfiQG6JOEszLNyPkGAJkfn50IGZsmk0dNlnkDRURbFkTLzxc86BxhBS3FCFvh3Sd7RYoop0qNy8Es0GshMKAyjTEJkCoTxC2LXyrtuxoeATQu1Ywlpz77hjNBoAytLaSuFThBiBjzNU0ZcR0kSKcorKvWxCiE77c5DD9RqZ2A==
-X-Forefront-Antispam-Report:
-	CIP:164.130.1.59;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(82310400026)(36860700016)(6133799003)(18002099003)(22082099003)(13003099007)(4143699003)(10067099003)(5023799004)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	eLJNt3vnBXQ7RUZuELUA047zKTP9q9DivrMf3O+gHWXQBRO+yzcG19tTLbPkPwsLW1T76kA4taKGNaa0gVUgaWDN6Mh4Ax6LZDKfZhzdmfIDLWKLd1LH5iU0YBlhpK3UGLveRL+Kxl28AWEbS9GqV7b70Td3bnOL2RXbjPLDjJBgUGSfRsemxn5VHnIQQ2TZd/SyLkKUGw5DsZ7a2pcZV/RRtLP4MIL0I8oFPd5b3HQY5OISXlB3veZNu5Z2r+Uz/BpctybykitMapI/fmrw2ZVjdggs2vdytvxJzUX8PqZgpEPPYxpadVcOrcFGf8Oe00/c6z1lW7DmbQ7nqRN+6yI+XGNv/pLkbXDDOko/Uw9jr9VgiEyLs1TtW8Br5utWgAHKAu++KLJFThmNawwR0UyngXJzkxfTmN28U/ETWLKNyNviicN0Zsg5m0ccelvm
-X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 11:48:00.1367
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 855fd9b3-a9ad-4a53-77ec-08df131f3154
-X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.59];Helo=[smtpO365.st.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	WA1PEPF000099D0.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB6714
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Sergey,
+GPU people heads up!!
 
-Le 15/09/2026 à 12:07, Sergey Lebedev a écrit :
-> Benjamin,
-> 
-> First, an apology: I wrote that badly. Reading it back I can see it lands as
-> a request to move vd55g1 to request_firmware, and it was never meant as one.
-> You have had to defend a position I was not attacking, and that is my fault
-> rather than yours.
+On Wed, 2 Sep 2026, Armin Wolf wrote:
 
-No worries, It didn't feel like an attack of any sort ;)
+> Am 01.09.26 um 23:30 schrieb Deucher, Alexander:
+> 
+> > Public
+> > 
+> > > -----Original Message-----
+> > > From: Armin Wolf <W_Armin@gmx.de>
+> > > Sent: Thursday, July 23, 2026 11:00 PM
+> > > To: hansg@kernel.org; ilpo.jarvinen@linux.intel.com
+> > > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > linux@weissschuh.net; rafael@kernel.org; lenb@kernel.org; linux-
+> > > acpi@vger.kernel.org; Deucher, Alexander <Alexander.Deucher@amd.com>;
+> > > Koenig, Christian <Christian.Koenig@amd.com>; airlied@gmail.com;
+> > > simona@ffwll.ch; amd-gfx@lists.freedesktop.org; dri-
+> > > devel@lists.freedesktop.org; patrik.r.jakobsson@gmail.com;
+> > > maarten.lankhorst@linux.intel.com; mripard@kernel.org;
+> > > tzimmermann@suse.de; jani.nikula@linux.intel.com;
+> > > joonas.lahtinen@linux.intel.com; rodrigo.vivi@intel.com;
+> > > tursulin@ursulin.net; intel-gfx@lists.freedesktop.org;
+> > > matthew.brost@intel.com; thomas.hellstrom@linux.intel.com; intel-
+> > > xe@lists.freedesktop.org
+> > > Subject: [PATCH v3 2/3] ACPI: video: Remove CONFIG_X86 handling from
+> > > nvidia_wmi_ec_supported()
+> > > 
+> > > The WMI-ACPI driver now supports architectures other than x86.
+> > > Remove the CONFIG_X86 handling from video-detect and the associated
+> > > drivers to simplify the resulting code.
+> > > 
+> > > Acked-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> > > ---
+> > >   drivers/acpi/Kconfig               | 2 +-
+> > >   drivers/acpi/video_detect.c        | 8 --------
+> > >   drivers/gpu/drm/amd/amdgpu/Kconfig | 4 +---
+> > >   drivers/gpu/drm/gma500/Kconfig     | 1 -
+> > >   drivers/gpu/drm/i915/Kconfig       | 1 -
+> > >   drivers/gpu/drm/radeon/Kconfig     | 4 +---
+> > >   drivers/gpu/drm/xe/Kconfig         | 5 ++---
+> > >   drivers/platform/loongarch/Kconfig | 1 +
+> > >   8 files changed, 6 insertions(+), 20 deletions(-)
+> > > 
+> > > diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig index
+> > > f165d14cf61a..cc1e58fa664b 100644
+> > > --- a/drivers/acpi/Kconfig
+> > > +++ b/drivers/acpi/Kconfig
+> > > @@ -224,7 +224,7 @@ config ACPI_VIDEO
+> > >        tristate "Video"
+> > >        depends on BACKLIGHT_CLASS_DEVICE
+> > >        depends on INPUT
+> > > -     depends on ACPI_WMI || !X86
+> > > +     depends on ACPI_WMI
+> > >        select THERMAL
+> > >        help
+> > >          This driver implements the ACPI Extensions For Display Adapters
+> > > diff
+> > > --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c index
+> > > 458efa4fe9d4..af9280b244f1 100644
+> > > --- a/drivers/acpi/video_detect.c
+> > > +++ b/drivers/acpi/video_detect.c
+> > > @@ -82,8 +82,6 @@ find_video(acpi_handle handle, u32 lvl, void *context,
+> > > void **rv)
+> > >        return AE_OK;
+> > >   }
+> > > 
+> > > -/* This depends on ACPI_WMI which is X86 only */ -#ifdef CONFIG_X86
+> > > static bool nvidia_wmi_ec_supported(void)  {
+> > >        struct wmi_brightness_args args = {
+> > > @@ -105,12 +103,6 @@ static bool nvidia_wmi_ec_supported(void)
+> > >         */
+> > >        return args.ret == WMI_BRIGHTNESS_SOURCE_EC;  } -#else -static bool
+> > > nvidia_wmi_ec_supported(void) -{
+> > > -     return false;
+> > > -}
+> > > -#endif
+> > > 
+> > >   /* Force to use vendor driver when the ACPI device is known to be
+> > >    * buggy */
+> > > diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > index 12e4a41bf1f0..50305630f533 100644
+> > > --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> > > @@ -30,9 +30,7 @@ config DRM_AMDGPU
+> > >        # ACPI_VIDEO's dependencies must also be selected.
+> > >        select INPUT if ACPI
+> > >        select ACPI_VIDEO if ACPI
+> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
+> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
+> > The change below makes sense, but this one looks like it should remain
+> > unless X86_PLATFORM_DEVICES is handled some other way?
+> > 
+> > Alex
+> 
+> AFAIK the dependency on X86_PLATFORM_DEVICES was only necessary because
+> ACPI-WMI depended on it in the past.
+> By now ACPI-WMI neither depends on X86_PLATFORM_DEVICES or X86 anymore.
 
-> 
-> What I meant, and should have written: the VD55G0 firmware has to reach users
-> somehow, and I do not mind which of the two mechanisms carries it. Your three
-> reasons settle the mechanism for me - built in, and no more about it. Peter
-> preferred linux-firmware and I relayed that with his agreement; whether your
-> answer changes his view is his to say, not mine.
-> 
->> I'm not sure I get you. Is this a licence problem of some sort ? Could
->> you rephrase ?
-> 
-> Yes, and it is not about the API at all. It is about who may put ST's
-> firmware into the kernel tree.
+Hi all,
 
-Ah I got you. I'm not a licence expert in any way but since we already
-disclosed the firmware patch in our out of tree driver as GPL2 [1], then
-I guess it's free to use it as long as you respect GPL2, whether you're
-from ST or not.
+Could more GPU people besides Alex take a look on this. I'd want to make 
+progress with this series within this cycle but would prefer to have Acks 
+from GPU side.
 
-[1]
-https://github.com/STMicroelectronics/vd55g0-linux-driver/blob/master/vd55g0_patches.h
-
-> 
-> vd55g1.c raises no question. ST holds the copyright and ST put its own array
-> in its own file, GPL-2.0, 3512 bytes, no request_firmware path anywhere.
-> Nothing had to be granted, by anyone, to anyone.
-> 
-> VD55G0 is not in that position today. The bytes this series would carry were
-> extracted from a third-party out-of-tree driver, by people who are not ST.
-> That is the same question whether they land as a C array or as a file in
-> linux-firmware - the mechanism does not change who owns them. linux-firmware
-> only makes it audible, because WHENCE asks for the grant out loud, where a
-> built-in array lets the same question pass without being asked.
-> 
-> So there are three routes, and only one of them is clean:
-> 
->   built in, sent by someone outside ST - which is the series as it stands.
->   Works technically. Leaves the provenance question unasked rather than
->   answered.
-> 
->   linux-firmware - needs an explicit grant from ST in WHENCE, and you have
->   now ruled out the API change it would require. So: closed.
-> 
->   ST upstreams VD55G0 itself, with its own array, exactly as you did for
->   vd55g1. Nobody outside ST has to ask for anything, because nothing is being
->   redistributed by anyone who does not own it.
-> 
->> By the way we didn't upstream the vd55g0 because it requires a bit of
->> cleaning, but this is something that could also be done.
-> 
-> That is the one I would hope for, and it is worth more than getting my own
-> machine working. It is the only route that ends the question rather than
-> moving it. And it puts VD55G0 on the same footing as its sibling, rather than
-> leaving it the part with an awkward history.
-> 
-> If the cleaning is what stands in the way, say what would help and I will do
-> what I can. I cannot clean code I do not have. I can carry the mechanical
-> half of it - checkpatch and sparse, builds across configurations, dt-binding
-> checks, a review pass. And I can test on hardware you may not have: a Surface
-> Pro 11 where the VD55G0 is the face-unlock sensor, so it is exercised by
-> something real rather than by a capture tool. Peter's series in this thread
-> already does a good deal of the genericising, if any of it is useful as a
-> starting point.
-
-I still stand against the refactoring and generalisation. I can
-elaborate on that point if needed.
-
-Now about mainlining vd55g0 out of tree module, my current priorities
-won't allow me to do it anytime soon, but if you want to start from the
-out of tree module and clean the driver to submit it I'll be happy to
-assist. On top of my head we need to remove the KERNEL_VERSION guards
-and move to streams api. Having the vd55g1 as reference is also a good
-idea. I can test on device trees platforms.
-
-> 
-> Whether GPL-2.0 on the surrounding code carries a blob with it is still a
-> licence question, and still not one I will answer.
-> 
-> Sergey
+> > > -     select ACPI_WMI if ACPI && X86
+> > > +     select ACPI_WMI if ACPI
+> > >        help
+> > >          Choose this option if you have a recent AMD Radeon graphics card.
+> > > 
+> > > diff --git a/drivers/gpu/drm/gma500/Kconfig
+> > > b/drivers/gpu/drm/gma500/Kconfig index a2acaa699dd5..dc4c56638819
+> > > 100644
+> > > --- a/drivers/gpu/drm/gma500/Kconfig
+> > > +++ b/drivers/gpu/drm/gma500/Kconfig
+> > > @@ -11,7 +11,6 @@ config DRM_GMA500
+> > >        select ACPI_VIDEO if ACPI
+> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >        select INPUT if ACPI
+> > > -     select X86_PLATFORM_DEVICES if ACPI
+> > >        select ACPI_WMI if ACPI
+> > >        help
+> > >          Say yes for an experimental 2D KMS framebuffer driver for the
+> > > diff --
+> > > git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig index
+> > > 5e939004b646..71426b9c91f0 100644
+> > > --- a/drivers/gpu/drm/i915/Kconfig
+> > > +++ b/drivers/gpu/drm/i915/Kconfig
+> > > @@ -28,7 +28,6 @@ config DRM_I915
+> > >        # but for select to work, need to select ACPI_VIDEO's dependencies,
+> > > ick
+> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >        select INPUT if ACPI
+> > > -     select X86_PLATFORM_DEVICES if ACPI
+> > >        select ACPI_WMI if ACPI
+> > >        select ACPI_VIDEO if ACPI
+> > >        select SYNC_FILE
+> > > diff --git a/drivers/gpu/drm/radeon/Kconfig
+> > > b/drivers/gpu/drm/radeon/Kconfig index c479f0c0dd5c..3cd70aef770e
+> > > 100644
+> > > --- a/drivers/gpu/drm/radeon/Kconfig
+> > > +++ b/drivers/gpu/drm/radeon/Kconfig
+> > > @@ -25,9 +25,7 @@ config DRM_RADEON
+> > >        # ACPI_VIDEO's dependencies must also be selected.
+> > >        select INPUT if ACPI
+> > >        select ACPI_VIDEO if ACPI
+> > > -     # On x86 ACPI_VIDEO also needs ACPI_WMI
+> > > -     select X86_PLATFORM_DEVICES if ACPI && X86
+> > > -     select ACPI_WMI if ACPI && X86
+> > > +     select ACPI_WMI if ACPI
+> > >        help
+> > >          Choose this option if you have an ATI Radeon graphics card.
+> > > There
+> > >          are both PCI and AGP versions.  You don't need to choose this to
+> > > diff -
+> > > -git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig index
+> > > 4d7dcaff2b91..502c7b3c1f16 100644
+> > > --- a/drivers/gpu/drm/xe/Kconfig
+> > > +++ b/drivers/gpu/drm/xe/Kconfig
+> > > @@ -4,7 +4,6 @@ config DRM_XE
+> > >        depends on DRM && PCI
+> > >        depends on KUNIT || !KUNIT
+> > >        depends on INTEL_VSEC || !INTEL_VSEC
+> > > -     depends on X86_PLATFORM_DEVICES || !(X86 && ACPI)
+> > >        depends on PAGE_SIZE_4KB || COMPILE_TEST || BROKEN
+> > >        select INTERVAL_TREE
+> > >        # we need shmfs for the swappable backing store, and in particular
+> > > @@ -29,8 +28,8 @@ config DRM_XE
+> > >        # but for select to work, need to select ACPI_VIDEO's dependencies,
+> > > ick
+> > >        select BACKLIGHT_CLASS_DEVICE if ACPI
+> > >        select INPUT if ACPI
+> > > -     select ACPI_VIDEO if X86 && ACPI
+> > > -     select ACPI_WMI if X86 && ACPI
+> > > +     select ACPI_VIDEO if ACPI
+> > > +     select ACPI_WMI if ACPI
+> > >        select SYNC_FILE
+> > >        select CRC32
+> > >        select SND_HDA_I915 if SND_HDA_CORE
+> > > diff --git a/drivers/platform/loongarch/Kconfig
+> > > b/drivers/platform/loongarch/Kconfig
+> > > index 447528797d07..db7833842142 100644
+> > > --- a/drivers/platform/loongarch/Kconfig
+> > > +++ b/drivers/platform/loongarch/Kconfig
+> > > @@ -23,6 +23,7 @@ config LOONGSON_LAPTOP
+> > >        depends on INPUT
+> > >        depends on MACH_LOONGSON64
+> > >        select ACPI_VIDEO
+> > > +     select ACPI_WMI
+> > >        select INPUT_SPARSEKMAP
+> > >        default y
+> > >        help
+> > > --
+> > > 2.39.5
+> > 
 > 
 
 -- 
-Regards,
-Benjamin
+ i.
 
