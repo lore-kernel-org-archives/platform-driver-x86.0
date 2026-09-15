@@ -1,143 +1,183 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F4A406834
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 17:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789494393; cv=none; b=hGpYjzif3i2y2i5g20QLfF6mBxUt48sxotnN7gl6n11gmX/CNaSrM23sqVOLpmNaqodRSPCD627ShiGd1d47RtXLG6vOrzbD1u+Cx6wDYnZDAnR8cuUe/zNNwJp82PLM/Ki0F9Aygzhj4Dg57KWwivKi0dTz7VpB8NvQtiMRTSs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789494393; c=relaxed/simple;
-	bh=WlQBNU+LBHOTy12vRSd1ePrcpVEBbXkmEd6JKJ3g0u0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EiDShrmbNt+0f4AiqHrWNVSqPXtdiKw+BHRR4xiphC10BV33AHj8I9HLxTeSwNo8l+lgBbnYXwyS8OtmeEjwhXOSyQzXI2TFVEkX/qTbiOWQcaXDNXf61v6OPv4mnJM9E6Vg1tuQL1rYGheH29p72xT2cqSlWCuWcLeOjGeTNP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NCDBC/8O; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3384BB27F
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 18:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789497400; cv=pass; b=rVTaDwhXTOOVppdF0yeQAHEXMfTNmVHu2QDkR3KJ9YKh1BLD0wkCmyuMKbltEo9Gt7uPxGp7PmFiobeaxHgT0jA759xRkgZaJSlWI9VGrPNDnbLKwaeZ15nd1LxT+RDfEaQ8uIOWLDgimb4S4/mEoQ8NSMWyPHcPj/jnL1K2DQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789497400; c=relaxed/simple;
+	bh=0fAJ96KToGBaJVYivQxfXHrnlsaMATy4LRpTL6ELZ7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HfXja001tglkTfNuyFmAl75hsFkKbGy3LUIyLgxSVQ/PYocHqiQP6Gy+cHa/SJ21o0gFjq/oXhE6VY6ynf8n3b44Wj1Jd7cQDzmukTpqHaNagJmp2KcXhxuvNjzzUPKLx5t1yy0Ugv4jNfUQCh0j81H/DdSjbF6kw0GpmfQqJBA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=imblA3iD; arc=pass smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCDBC/8O"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49ccf3ca626so493245e9.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 10:46:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imblA3iD"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-c169ae1cb26so140786366b.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 11:36:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789497393; cv=none;
+        d=google.com; s=arc-20260327;
+        b=L5M+kD+kmR16wv7riBRMPEIMaIVAKityMHPMTG34MgP1LZkq8CfP6MaZAoUKvau0Da
+         G+OwFuF2kHO8+Ja7Z5wEgnvUZ7QJGUc9sd8FuB0F4tcg49BeLUnrUEquhWEvI5r9wiyN
+         EZrD6yWEisbQ1S2JcMkdRGydcq9rphz2mHu5HBvlV3ySoKBan9rQT1lK4dM3+SVR8NMg
+         Ep5Fp4/7oXpeLvSYBw2NoVz1X2nG2EAI/uEJ5sTTU/97e0B0G3K+Xxpi/vLQUD+Vzszr
+         wm/aN5o6uMpLkc/Pm0seq9TMdg6GE7PoGv4JFL7wTjFR9XWjwJ13MfpYi5S/GF3ksqco
+         JYJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=gIXlRpFwzAqF+gXj9N4lNHJj37A+1bZjmxnWxX0j5Uc=;
+        fh=5L7D52bOsE513Uv8F7rOc8soiR7Np9hzdQN3oEUU6sU=;
+        b=qxQkgHIrtdQVvat49TfXhMUUiMKO+BSixYBlZ/6M+B9txXfbP3kW/LoIzai6A487Y6
+         PkXfuP/tIIRD6kGWnJwFaIAAedUgsNEBqrTahYEQkGSkcQbNNiZ7QM81n2zBHzvGGZab
+         5wH7YgIgdfncY6W4+RrQ4ZL/WJaM7DIgfGRhWDOiPBPYxWrQTeWDgMPlziJEPCBvbe7m
+         rAFDth+hbb0JGyH0oqjNHbk1eIbtD737nLdoCvpCmDBaaPkwP+c21YW/H88Aou5Vj796
+         cJ0cG+v/lVBLKZyOatPUI43p4QOMMJLAtxODGe9rmrTlDiMWbo/bvkvoOWWylduSj2Tn
+         IKEg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789494389; x=1790099189; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=4kHhQGy3vIUJSO4i7ji0MZ5Fg5auge9rgj23eZwGEys=;
-        b=NCDBC/8OzeEsXDsKqGiYKWY0M67SdVEOP+jHaM+EbBm4wpV5Uh0p31rg3UE/NJMnpJ
-         pRIETjBmOdgrRnE4YwBvc2JcenbXic6PPLBF9HWhg5x8eIlRYxEFXUyj/3CBvQ/Jr0n4
-         cMPWrrFBfHFDOCDLh2b+fx1E1FmcEh15YzTLuTwFitosgm5dspjAm9wD4dM9pbt2hRBq
-         f2bZ4yeRK/ZQZf5re6AJX3+pcU4btcfnLf6Rt0zxy5jVWfMoiwOR07fwPhtScDxdnA4r
-         eDITvnakX74wbLOcoT3AEqGJzsA5GHqMqkzltG7meBoE7DWdE66Gsjf1wCDN+YUiOMjM
-         hdyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789494389; x=1790099189;
-        h=content-transfer-encoding:content-type:mime-version:message-id:date
-         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20251104; t=1789497393; x=1790102193; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=4kHhQGy3vIUJSO4i7ji0MZ5Fg5auge9rgj23eZwGEys=;
-        b=G5Klhj99HBrQS4CLq3tHYwWwNgT7SToJruA017Yv15+g3jD/a8qKWTh/bawAtwT37Q
-         kMb8F3h/ef85/WGOrzWDUII7weW2Aj3Wjq5zdn/UrZcPdYrdNU9HymJeUP09GghO+nfh
-         +qjZZxAykr0f3Feg7s5aH6JfVpdEMTWz9HLSZzgVnIZP54sLsLdiFnSToDYeEQjktxAs
-         YhL/XAO5DweTLFwbqt8Dz7MBs/JTK2FBlMXv5wMmuffxXfXFOPDh7czRJN0FBYI8uJp/
-         qVeeMnM0LyNm+I/yt81aiWkzoiSOZXmbw+dUE6qzhedEfAjC3Fny0p5V7l856m+24EVF
-         aNpg==
-X-Forwarded-Encrypted: i=1; AKwUvBx5xizmR+8LnUvhr0thpK7Qxnqt7KJswSThDo4hAAPY/CuvpmKQ1RYT+2+SUN+4Q8vBQcoT68BrA/45Qbsz9+lUF3oI@vger.kernel.org
-X-Gm-Message-State: AFuF++kZN6TckyFzALCq2kQjDZn/grFupwjuBIvS/NLhjf/6cvS3PCqq
-	Cz8YCstsd8XiuBzLs8mQbxzhPQNItQ6hsmpT3yyiocPpA3wNXcVyhHbM
-X-Gm-Gg: AYBFou1cMyIdOShbik7LTO8V0PbCXaz2wrrXSM4Vb7Z2NUB7VDrYY3A4ldKua/LY868
-	rbsPDCjY8eYMADXfhmWMmwJABKvdD1oFRoTQY672rSjqBK2uayhaXVFKJJEvD0rZJMLev75isOB
-	wFAvHuZTkWj7bYl+473W2whtBNtyqQHUnBGqU26uDuv8khiBEwMO0fzbZDdlzuDKi6wlxd2RWjy
-	e6ZZ7lUZjh02NVjLl9h7fP2Q2B0T/YcBAnRTn18Z+5+I8T7tcNHbhJf04ll8MreZxSt6sK4KARI
-	Mm7puWUbuk6/TR01239hFdjdAcJsKM/NsvFm5ThLVOMwRFIH+eHY77tokbsiTPxPFyUhke94siy
-	IG/ORTjh9wYCAQjRVckRlC7+nMek0lqKs0ERRKGAiukr3Hgy2mNGuaYJn5xGv3QDiOEjajN8ejt
-	ulp040mpsYMVZNmZ5CqCeHDFBVj27R5inSvxJWVJou+DzoC9m2GFA2vjhPgBwYK67EnztC7c4ha
-	SSYEqsEVZmd9xSSEvj0kYBqnqpxaSuSa9ZvnUS/Pnq6qDOtxCab
-X-Received: by 2002:a05:600c:860b:b0:49c:fea1:f792 with SMTP id 5b1f17b1804b1-49e7a64889amr101393015e9.12.1789494389380;
-        Tue, 15 Sep 2026 10:46:29 -0700 (PDT)
-Received: from fedora ([202.47.63.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e83fc3da0sm3415955e9.1.2026.09.15.10.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 10:46:28 -0700 (PDT)
-From: Muhammad Bilal <meatuni001@gmail.com>
-To: Jorge Lopez <jorge.lopez2@hp.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Muhammad Bilal <meatuni001@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] platform/x86: hp-bioscfg: fix slab-out-of-bounds write in hp_convert_hexstr_to_str
-Date: Tue, 15 Sep 2026 22:46:15 +0500
-Message-ID: <20260915174615.63924-1-meatuni001@gmail.com>
-X-Mailer: git-send-email 2.55.0
+        bh=gIXlRpFwzAqF+gXj9N4lNHJj37A+1bZjmxnWxX0j5Uc=;
+        b=imblA3iDClAKSsVa2bgWVIUxEPPlq3RSc9OuP5ZY7CURKGVC/HGgz3MIldEi/rr4YN
+         ZUm+jBo5nbanqCuCwKJnTGfGlhqlcLBBZQkRP0828Mfe8KSMEHe6cIjHDP6MXL2+qr2J
+         Q8luU/6AvQ17yIa5idPBk775lNVjxzCWgrj5y8KXKM3o/avD+W9CkpacPSpFwNROOZga
+         FHF1rzCWwEpU2EAplRJXu073Zm6sxKuIlVaG/+7zzrx3B2Hqo8FxFnRTULzWdQwb41SJ
+         6VVru0zdOjUJStmjcZQzpXsxMA85i0oke/Z0PTFq1J7qOTxUqB8Tuf7iFVeVCWE1OB+t
+         FxjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789497393; x=1790102193;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=gIXlRpFwzAqF+gXj9N4lNHJj37A+1bZjmxnWxX0j5Uc=;
+        b=fAGuxF+h6tpcIltr3LvRAHg0HtEYjhFR2ae4RkvMMLIwL3/GonM+1M8HnhLZ7m8vNB
+         J2ZQYP9X2rsT1rNX9zHzwMpKcJ2mS2oeRbJTvpSGpKZhnLrJQPbVOkTmdW/TgU1382bj
+         Zofnkqty2RtCTrvbF1nDaVke8cvf9kIybmFUSl32fZNmZBzDyyNh5JSWASyd611/0TN2
+         coust2K92HvN8xDM6KyHXRV+R4WqJTnZBR9ZGgI0zGiybf6ifIC1/suI1vllefh7uDiz
+         dKjGWnNeufHX/wmuk6Z/hzEnU5tSVmfHWaw2n5rRPIicriayZs32Zrnje1tr30WIxOSH
+         NeUA==
+X-Gm-Message-State: AFuF++mSeLm7oCAirc7dVMIuFj8cT5iK+/LJY667nu4di5GaZsrVehiR
+	qFL/MMjes+AIMLP5Gq776W1Bgt52ifOcBK6Xtw1Q8qP6aocUvMnZFNcOHK9me6IXooqrSHPCeZi
+	7fRLr4SuUP5wVTLobp2Wah1b9T8mWs5E=
+X-Gm-Gg: AYBFou25zc4DIkG7Nckrn99zHlwonkV6vUMYkOxsEBp7og2Qt2dPtbdfKqKVuFfCzdp
+	WuQKxYU7o2PR6xTfX9A5HIt3SLSRzHIrWur3QnzHSYoagTz7QpoJyks33OepzIMheax3h+qX1Sn
+	gr1e2YpGFNSXR78JKLkBOISIIzoXeiJrT9Zmo1bKO5vFZfL7cZxQD69gJaIbWDzuLm/2jTWfTDu
+	ZAafx8ePKp04PFYZWgNAl7ND7TXJvUwxWJW816o876mP9CbIwecZ1Skk9GuvLd42OKN2+L93MEg
+	qHZ7sfACzQimk5DSrc+AK/7Ufl3bWVuBT38OgJF+oVymJZkXZIDmnIny9eBhvOP2yvFOHgleuF6
+	SOa3r4m1E43NhDRXlgvXi4IEb7Zg+jzz+NI0A5B+A
+X-Received: by 2002:a17:907:c0f:b0:c25:f7dc:2d3 with SMTP id
+ a640c23a62f3a-c29c8b917c2mr383788566b.20.1789497393092; Tue, 15 Sep 2026
+ 11:36:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20260826103012.240453-1-meatuni001@gmail.com>
+In-Reply-To: <20260826103012.240453-1-meatuni001@gmail.com>
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Tue, 15 Sep 2026 23:36:20 +0500
+X-Gm-Features: AcwNN1WcJfuWtzktYvt8Aa0_L2cgMeEC3hDziX2ljeuoLSbyMQO8ELH7LkNEO_U
+Message-ID: <CADqcGBnQMBwAHLfeg_1Jvr5A_w5D-MmNJpCBHVMisiBp7mqfNA@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: fix heap OOB read and memory
+ corruption in hp_wmi_perform_query()
+To: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-hp_convert_hexstr_to_str() decodes an ACPI string made up of
-space-separated ASCII hex-byte tokens of the form "0xHH". For
-example, the four-byte input "0x41" decodes to the single
-character 'A', and the nine-byte input "0x09 0x41" decodes to
-"\tA": each token is read in a five-byte step (four characters for
-the token, one for the trailing delimiter), and produces one output
-byte, or two if that byte is '\\', '\r', '\n', or '\t', which are
-written back out as a backslash followed by the matching letter.
+ping.
 
-The output buffer is sized with kmalloc(input_len, GFP_KERNEL), the
-raw encoded length of the input, not the decoded length. For
-well-formed input this is generous, since five input bytes never
-decode to more than two output bytes. But input_len comes directly
-from the ACPI string length reported by firmware and isn't
-guaranteed to respect the five-byte encoding, so a short input_len
-can undersize the allocation. With input_len == 1, only one byte is
-allocated, yet decoding still produces at least one output byte
-plus the NUL terminator written unconditionally afterwards, so two
-bytes are needed. That terminator write then lands one byte past
-the end of the allocation.
-
-KASAN caught exactly this during BIOS attribute enumeration on
-boot, triggered by a one-byte encoded input value:
-
-BUG: KASAN: slab-out-of-bounds in hp_convert_hexstr_to_str+0x6d8/0x710 [hp_bioscfg]
-Write of size 1 at addr ffff8881032e5d81 by task (udev-worker)/520
-The buggy address is located 0 bytes to the right of
-allocated 1-byte region [ffff8881032e5d80, ffff8881032e5d81)
-
-Size the allocation to the worst-case decoded length instead of the
-raw input length: two output bytes for every five-byte input chunk
-(DIV_ROUND_UP(input_len, 5)), plus one byte for the terminator.
-
-Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
-Cc: stable@vger.kernel.org
-Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
----
-v2: Expand the commit message to spell out the hex-token input
-    format and decoded output with a worked example, and explain
-    exactly how a short input_len undersizes the allocation, per
-    Ilpo Järvinen's review. No code change from v1.
-
- drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-index 22c198680903..42331cf90581 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-@@ -442,7 +442,7 @@ int hp_convert_hexstr_to_str(const char *input, u32 input_len, char **str, int *
- 	*len = 0;
- 	*str = NULL;
- 
--	new_str = kmalloc(input_len, GFP_KERNEL);
-+	new_str = kmalloc(2 * DIV_ROUND_UP(input_len, 5) + 1, GFP_KERNEL);
- 	if (!new_str)
- 		return -ENOMEM;
- 
--- 
-2.55.0
-
+On Wed, Aug 26, 2026 at 3:30=E2=80=AFPM Muhammad Bilal <meatuni001@gmail.co=
+m> wrote:
+>
+> hp_wmi_perform_query() evaluates an ACPI WMI method and expects a
+> struct bios_return header in the returned buffer. However, it only
+> checks that the ACPI object type is ACPI_TYPE_BUFFER without verifying
+> that obj->buffer.length is at least sizeof(*bios_return) (8 bytes).
+>
+> If the firmware or ACPI method returns a buffer shorter than 8 bytes:
+>
+> 1. bios_return->return_code at offset 4 reads out of bounds from the
+>    allocated ACPI buffer slab.
+>
+> 2. If return_code evaluates to 0 and outsize is non-zero,
+>    (int)(obj->buffer.length - sizeof(*bios_return)) evaluates to a
+>    negative integer (e.g. -8 for a 0-length buffer). actual_outsize is
+>    set to this negative value and passed to memcpy(buffer, ...,
+>    actual_outsize), where the signed negative value is cast to
+>    size_t (e.g. 0xfffffffffffffff8), attempting to copy ~18 Exabytes
+>    and triggering an immediate kernel crash. Additionally,
+>    memset(buffer + actual_outsize, ...) performs an out-of-bounds
+>    write before buffer.
+>
+> Fix this by ensuring obj->buffer.length is at least sizeof(*bios_return)
+> before accessing the return code, and compute actual_outsize safely
+> using min_t(u32, ...), which is sound specifically because the guard
+> above already rules out obj->buffer.length being smaller than
+> sizeof(*bios_return) by the time that subtraction runs.
+>
+> Fixes: c3021ea1beee ("hp-wmi: allow setting input and output buffer sizes=
+ separately")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+> ---
+> v2: Rebased onto current platform-drivers-x86.git 'fixes' (confirmed
+>     matching current mainline, blob b2773fc1aca414792b99406315496a2c3a64d=
+d06).
+>     v1 was diffed against a stale local copy of hp-wmi.c that predated
+>     a batch of unrelated upstream changes (GPU MUX switch support, new
+>     OMEN/Victus board IDs), so its hunks no longer applied. The fix
+>     itself is unchanged, only the base and line numbers moved. Also
+>     correcting the recipient list: Hans de Goede's address is
+>     hdegoede@redhat.com, not hansg@kernel.org as v1 had it.
+>
+>  drivers/platform/x86/hp/hp-wmi.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/h=
+p-wmi.c
+> index b2773fc..d7ad206 100644
+> --- a/drivers/platform/x86/hp/hp-wmi.c
+> +++ b/drivers/platform/x86/hp/hp-wmi.c
+> @@ -691,8 +691,9 @@ static int hp_wmi_perform_query(int query, enum hp_wm=
+i_command command,
+>                 goto out_free;
+>         }
+>
+> -       if (obj->type !=3D ACPI_TYPE_BUFFER) {
+> -               pr_warn("query 0x%x returned an invalid object 0x%x\n", q=
+uery, ret);
+> +       if (obj->type !=3D ACPI_TYPE_BUFFER ||
+> +           obj->buffer.length < sizeof(*bios_return)) {
+> +               pr_warn("query 0x%x returned wrong type or too small buff=
+er\n", query);
+>                 ret =3D -EINVAL;
+>                 goto out_free;
+>         }
+> @@ -711,7 +712,7 @@ static int hp_wmi_perform_query(int query, enum hp_wm=
+i_command command,
+>         if (!outsize)
+>                 goto out_free;
+>
+> -       actual_outsize =3D min(outsize, (int)(obj->buffer.length - sizeof=
+(*bios_return)));
+> +       actual_outsize =3D min_t(u32, outsize, obj->buffer.length - sizeo=
+f(*bios_return));
+>         memcpy(buffer, obj->buffer.pointer + sizeof(*bios_return), actual=
+_outsize);
+>         memset(buffer + actual_outsize, 0, outsize - actual_outsize);
+>
+> --
+> 2.55.0
+>
