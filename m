@@ -1,109 +1,125 @@
-Received: from mta0.migadu.com (out-203.mta0.migadu.com [91.218.175.203])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-244121.protonmail.ch (mail-244121.protonmail.ch [109.224.244.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E1A3DB311
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 17:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5C041E6D9;
+	Tue, 15 Sep 2026 17:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789493179; cv=none; b=ZZFmirZrsvyyHeWmrEMZDd4Avpvh0bgJ29PyCglyv3QngD5z95su8yWq2dOqaEyp6IZyjMFGJHNskqI/eJQ+3DlAT6N2mcSrzHNqRf+aCLafJHRYIs/5BX7pxzmBy9wjt5tp2R3Invj91BZDs6NlYxM1IMLnkNY9FFwB26eFUGQ=
+	t=1789493785; cv=none; b=BAG0FidBSM0glaoGRBjyLQJLcWfIf2/OFDBpByZexqmheL7Qa2Lyrhrpq8IHz5cIbuiuqvTnYvALzDHrzjEy5nT0GozGKp0nwoXP6GQYLKhD8jfbrPEIQkgQZrOWmNlynDIEWEviqUYDZvLqWoS/dUhEYhbrznQAQt4mNdFTy74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789493179; c=relaxed/simple;
-	bh=IObySP5kGPDx4B1PIEfAuPC/D06sFocz/fzz4DvddHY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=STTiWhvj1Qk3JsV6xqxQnZWN1BHmSoYJWCwxVNeToA1WYDnMP/QM4h4kOHJK10t3gg1LdfcCZibohXyM5HG9G24Z/dwtT4YO97egey6USZvnE8+bjiUWU3tQjj6W0rc6OPQDFRo1IgzTG+iEcxx0xAnWjW142dBue/hWWebc9cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T//im3oM; arc=none smtp.client-ip=91.218.175.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1789493785; c=relaxed/simple;
+	bh=urqgFBe3Wi6DGd08ZgfJUDRP1MbBh8rdERHwKGNysNw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TNcetHATwjcJJ3S/aNnZZdzlX7f/6ZphBB4zpMoMijfz69g0Cs5dnHh5IMlwLo8AUUnNUAUJwCcEVfyH27cgf0zqgO6KxHi2Wv5S19i0a9icusmpeAkW/eByG4td6MniVyqECcnXUj4HkurXSBgIWTMm80AKobGUWXBLpGU48y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=ShkluQmz; arc=none smtp.client-ip=109.224.244.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T//im3oM"
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=IObySP5kGPDx4B1PIEfAuPC/D06sFocz/fzz4DvddHY=;
- c=simple/simple; d=linux.dev;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789493174; v=1; x=1790097974;
- b=T//im3oMY91OOlQ6SC8Arc87Av+Sx/CPTCA3WXsQZ71m8wZG0wRqlGQ0YE2tj6KDb8mkbCbZ
- 5TFIxh0Jy8NFdGQyVRtBvtQ5rHKJ3wY6lUhH1OAK8MVBm8XiLX5kjZ/mBPi0t7sPL8POX14vP99
- ChkkKz/l0xUx4EJ87IUDLsFU=
-X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 7af38004fbef57db;
-	Tue, 15 Sep 2026 17:26:14 +0000
-X-Mizu-Trace-ID: 7af38004fbef57db
-X-Migadu-Flow: FLOW_OUT
-From: Denis Benato <denis.benato@linux.dev>
-To: linux-kernel@vger.kernel.org
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Luke D . Jones" <luke@ljones.dev>,
-	"Mateusz Schyboll" <dragonn@op.pl>,
-	"Denis Benato" <benato.denis96@gmail.com>,
-	Denis Benato <denis.benato@linux.dev>,
-	Hugo Baigue <hugobaigue2004@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: fix use-after-free unregistering kbd_led led
-Date: Tue, 15 Sep 2026 17:26:07 +0000
-Message-ID: <20260915172608.14234-1-denis.benato@linux.dev>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="ShkluQmz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1789493774; x=1789752974;
+	bh=bYkDKi/DEjIinF9dQE8tfaHzj59gkkksxWlOZrdaq2I=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=ShkluQmzs1YcjqN489jKeZLwo5KMqYQhDaxwAuCLSfR1BS01Z9XOH2cYubbBU9n2a
+	 rP/CrubG9QvxBWXIdy76OjNvRm45DbPZkLC3ogAuwort03NY2rAyNL9ZpTnmatsd0c
+	 1+hnieEs42sWflLDwMeJEqq945y2SRaNVeJ4uF7wNo/M6iwU7nLzGS/p6I168dnRzC
+	 jn3c/V3Et3V1S9Lge/P79joEBIqx6kFgfNepH8S6z7mauEAuGWcbiuLznTLx57FU5v
+	 MGMV5P1VXi87lcnjPcoqYEaE07DAuHLrqLoUubnWB1+AQcnHpyGt98RRR97VraKZP/
+	 Vq9ZLT5ueGQtQ==
+Date: Tue, 15 Sep 2026 17:36:09 +0000
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>, Peter Marshall <pm@petermarshall.ca>
+From: Sergey Lebedev <lsa.uz@pm.me>
+Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>, Daniel Scally <dan.scally@ideasonboard.com>, linux-media@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add VD55G0 support
+Message-ID: <20260915173604.65023-1-lsa.uz@pm.me>
+In-Reply-To: <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
+References: <20260910213308.53429-1-lsa.uz@pm.me> <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com> <20260915100722.38504-1-lsa.uz@pm.me> <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
+Feedback-ID: 113843758:user:proton
+X-Pm-Message-ID: 368db0238073872b7b836241303c98d2931dc873
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-kbd_led_update_all() registers asus->kbd_led with
-devm_led_classdev_register() on the platform device, but kbd_led is
-embedded in struct asus_wmi, which asus_wmi_remove() frees at its end.
-The driver core calls .remove() before devres_release_all(), so the
-deferred devres release runs led_classdev_unregister() on memory that
-has already been freed. Whether that faults depends on whether the
-slab has been reused in between, which makes the crash on module
-unload intermittent and silently corrupts the led classdev state in
-the remaining runs.
+Benjamin,
 
-Unregister the led classdev explicitly in asus_wmi_led_exit(), after
-the led workqueue has been destroyed: kbd_led_work can then neither
-run nor be queued anymore, since asus_ref.asus is NULL too, so
-kbd_led_registered is stable and the classdev can be released while
-the memory embedding it is still alive. devm_led_classdev_unregister()
-also drops the devres entry, leaving nothing to run at unbind cleanup
-time; it warns when no devres entry exists, hence the
-kbd_led_registered check.
+Thank you - for the explanation, for the link, and for saying where you
+stand. All three are worth more than an ack would have been.
 
-Fixes: fac55d29581f ("platform/x86: asus-wmi: Add support for multiple kbd led handlers")
-Closes: https://lore.kernel.org/all/CAO84+x+P2_xyHP89+nGVSMV6bL+dy0P9=vyEEfZGnFhv0hBNWw@mail.gmail.com
-Reported-by: Hugo Baigue <hugobaigue2004@gmail.com>
-Tested-by: Hugo Baigue <hugobaigue2004@gmail.com>
-Cc: stable@vger.kernel.org
-Assisted-by: zcode:glm-5.3-flash
-Signed-off-by: Denis Benato <denis.benato@linux.dev>
----
- drivers/platform/x86/asus-wmi.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Sorry for the slow reply. I spent the hours reading rather than writing: th=
+e
+repository you pointed at, the two drivers side by side, and the in-tree
+binding. The checking changed what I have to say, so it seemed better than
+answering quickly. Three things below, separated so you can take whichever =
+is
+worth your time.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index a65090429ca7..daf8bd17e638 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -2088,6 +2088,18 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
- 
- 	if (asus->led_workqueue)
- 		destroy_workqueue(asus->led_workqueue);
-+
-+	/*
-+	 * kbd_led is registered lazily by kbd_led_work: now that the
-+	 * workqueue is destroyed and asus_ref.asus is NULL, the work can
-+	 * neither run nor be queued anymore, furthermore leaving it to
-+	 * devres would run the unregister from devres_release_all(),
-+	 * after .remove() returned and the struct asus_wmi embedding
-+	 * kbd_led has been freed.
-+	 */
-+	if (asus->kbd_led_registered)
-+		devm_led_classdev_unregister(&asus->platform_device->dev,
-+					     &asus->kbd_led);
- }
- 
- static int asus_wmi_led_init(struct asus_wmi *asus)
--- 
-2.47.3
+1. The licence question, and my mistake
+---------------------------------------
+
+Settled, by your link. vd55g0_patches.h carries
+"SPDX-License-Identifier: GPL-2.0" and "Copyright (C) 2024 STMicroelectroni=
+cs
+SA", with cut1 and cut2 arrays. ST published the firmware itself, two years
+ago, under a licence that answers the question I was asking.
+
+There is nothing for anyone to grant, and the right source to take those
+bytes from is yours rather than any third-party copy of them.
+
+I should have found that before raising the point twice. Your standalone
+driver was named to me in this thread and I did not open it. The blocker I
+reported on 7 September is not a blocker and never was.
+
+2. What the work would actually be
+----------------------------------
+
+I measured it rather than guessed, so that we are talking about the same
+thing:
+
+  - twenty-five LINUX_VERSION_CODE guards, all of the form
+    "#if KERNEL_VERSION(x,y,z) > LINUX_VERSION_CODE", about 180 lines to dr=
+op
+  - s_stream to enable_streams and disable_streams, with vd55g1 in-tree as =
+a
+    line-by-line reference written by you
+  - st,vd55g0.yaml, adapted from the 3.3 KB st,vd55g1.yaml
+  - Kconfig, Makefile, MAINTAINERS
+  - checkpatch, sparse, builds across configurations, and testing here
+
+That should not take as long as I expected.
+
+3. The question I cannot answer on your behalf
+----------------------------------------------
+
+A 2100-line driver arriving beside a 2100-line sibling by the same author
+invites "why is this not an extension of vd55g1". If I answer that badly,
+the third version is a rewrite in the direction you have already rejected.
+
+Reading the two files I can see arguments for your position. vd55g0 is
+monochrome-first, Y8_1X8 and Y10_1X10, where vd55g1 carries the Bayer codes=
+.
+vd55g0 has real strobe and flash handling that vd55g1 barely touches. The
+register namespaces are essentially disjoint.
+
+But those are my inferences from one reading. What I would be repeating to =
+a
+maintainer is your engineering judgement, and I would rather have it from
+you.
+
+So: you offered to elaborate. Please do, if you have the time. Not to
+convince me - I have no stake in either shape. It is so that when Sakari or
+Hans asks why VD55G0 is not folded into vd55g1, the answer comes from the
+person who wrote both parts.
+
+If a separate driver is right, I will start and send you something to look
+at. If the two really should converge, that is worth knowing now too, and
+Peter's series already points that way.
+
+Sergey
 
