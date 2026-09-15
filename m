@@ -1,94 +1,90 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00565363C59;
-	Tue, 15 Sep 2026 14:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8350037DAA9;
+	Tue, 15 Sep 2026 14:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789481279; cv=none; b=VgLUqYgLzDu74Cl4BcBCXnfY6TaMVJwYEYXyI+w2KyRLYqZZDxU1hKB0LLtrDJ7oUvUMupsiTaqqU9EPNQd9cB8+2R8tjriu4Vr3wdDUxfW1JfHrq+wXJFnEUPGVwBoWLcD3rX8M1kP9tu+trQNLmnf0NoIDlG1G/qJp47UkulE=
+	t=1789481845; cv=none; b=IU4vofW1akGDXXSdd/zi6+Ssk4lQwiZkwbTZ/OBhOQ9F0lLRpyAhtH2IdP81Y9yzc1SAnszTrShOgGW7wyDYkAq6IlizMdS5PFwCHinoL/+beW2VgNU8v6Fg8hQAquw90xrj+h0fUDHP5nLA9tu/0SKUAmJSYY25QOWI4imXYIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789481279; c=relaxed/simple;
-	bh=11XC7wf5P6UWedewudfYlzEltmy2A2HCpUtrUfVI44o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AWiouZDYvyaBNKSyYyXWRGr+mBtpvvxpGND2SYGFkcXZ9YvcK/FQt6rEcAD1SdJcrP8NkthF/4gufdRDhz9aDm5lJggPMNLlb5TTTpLvMoMigvBziua5V5G80/OSuINWgZWOkfFN6708alItePQPff9lXwxMODmrQzp6g/FdjH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=XRQldClM; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1789481845; c=relaxed/simple;
+	bh=5KS1EgjYzXRO/LGwHSnOnFkVf2f169ADWg9LUHRlUEg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tUDLb6m7H2PtHUuRcGzLyEQAa+0IGvUe7H0gEwkARrokRZJMjktx9Mdz7uHg0tIuO8Kon+w6XbJ57LkrmXljiQmMRjcafQ/ihqR0jU3pneD5iLGwkFMVbkM2zPsinEu2xWl2Sv6xqbwnLDBNYbt2HXIzR5K6/dNkMGzGjiiwoMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=oQ7avwCU; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="XRQldClM"
-Received: from [10.235.78.2] (dynamic-176-002-017-114.176.2.pool.telefonica.de [176.2.17.114])
-	(Authenticated sender: a.erhardt@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 712742FC0057;
-	Tue, 15 Sep 2026 16:07:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1789481273;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sC8tfl7tvnZ3oMYuYH0zJsheUC/2cw32A1pysPrGc+4=;
-	b=XRQldClMBDIDusvcQfk7M1l/GD5DMFEMxvihvzCRKMrO/W2p0tKi7CxUDMDwNfjB4m88ID
-	D0FlnQpQM3MheLgVfdFEYsJzBZgMg6X782tHJF7tGZ6vNZqz7B6MogblXVsdF5JJgYVFvb
-	opqkbV3o3Ii3k5rwnLagnTkjZna8yDo=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=a.erhardt@tuxedocomputers.com smtp.mailfrom=aer@tuxedocomputers.com
-Message-ID: <7d7b5d84-e358-4745-8db1-69beb281c4d9@tuxedocomputers.com>
-Date: Tue, 15 Sep 2026 16:07:53 +0200
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="oQ7avwCU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1789481841; x=1789741041;
+	bh=YpZiKTdkBRV8HrUzJ48KBDYy9De2eBfD+hXdyRTErhs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=oQ7avwCULkbth4nZNaY+DX9Jp/itRJAYGdH3wSuloaqeppukUvLeLAXgZrTEwMVUe
+	 fPMKfqT0zWzE19I+pzKB6xS9aXrzKUTASoWqRQAgi84HB1hHJb/4WCQGLPVWrlFzsE
+	 KmdFEcoYBo6k3LVAiMiyPTxbmh4WZD9e+uQD0RHplTTqMguAOWG13vtdKqWj7+XOKh
+	 hAHAQ8O5bhghldL3VDLnP9pJlIB45gXQHwgAMaIm8zDTrmKCPc4fqCvvWPvEV0S5W2
+	 y1TDanyWK1DZXlEXgU5zKCp6vWnwAcIi87LaWfOe+0mYtYJKl6n0zFi3R8+UbCAtk5
+	 vGp49jxNF3BAw==
+Date: Tue, 15 Sep 2026 14:17:16 +0000
+To: Anvesh Jain P <anvesh.p@oss.qualcomm.com>
+From: Birk Skyum <birk.skyum@pm.me>
+Cc: Sibi Sankar <sibi.sankar@oss.qualcomm.com>, Hans de Goede <hansg@kernel.org>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, Daniel J Blueman <daniel@quora.org>, Maya Matuszczyk <maccraft123mc@gmail.com>, linux-arm-msm@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/2] Monitor Yoga Slim 7x EC sensors without taking over cooling
+Message-ID: <dQbSKN-LtVryTrUiryOnW7ur2YSJe4nzHx4QAltRbJRgsDHxWBYVQI3H0SPzxlqlCOAZg5NJx2Fe8dpgr7KjQkxLrLPRZuc8ISiUY1-v66Y=@pm.me>
+In-Reply-To: <73db10fb-7778-44be-aced-562aa1039404@oss.qualcomm.com>
+References: <20260908135801.81436-1-birk.skyum@pm.me> <73db10fb-7778-44be-aced-562aa1039404@oss.qualcomm.com>
+Feedback-ID: 21326998:user:proton
+X-Pm-Message-ID: 328f6d94d1881f1cbc1d19fe2dea1636ba71f5dc
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] platform/x86/tuxedo: Update and extend
- documentation
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: wse@tuxedocomputers.com, Hans de Goede <hansg@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org
-References: <20260826081149.235487-1-aer@tuxedocomputers.com>
- <20260826081149.235487-6-aer@tuxedocomputers.com>
- <7533530b-1d13-e977-df13-f7ebf4e92a29@linux.intel.com>
-Content-Language: en-US
-From: Aaron Erhardt <aer@tuxedocomputers.com>
-In-Reply-To: <7533530b-1d13-e977-df13-f7ebf4e92a29@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Am 15.09.26 um 15:08 schrieb Ilpo Järvinen:
-> On Wed, 26 Aug 2026, Aaron Erhardt wrote:
-> 
->> Remove an incorrect comment about the Microsoft MacroPad reference
->> implementation allegedly deviating from the spec and add more
->> information about the module and some other minor improvements.
-> 
-> Was it "incorrect" or was the spec clarified in a later version? If the 
-> latter, that would be worth to mention instead of claiming the original 
-> comment was "incorrect".
-> 
-> This is a honest question, I don't know the answer but I'm kind trying to 
-> read in between lines here how we ended up in this situation so my 
-> impression could be entirely wrong. ...Thus, please don't assume I know 
-> much about the content of these specs (despite me briefly looking into 
-> what I could find around this feature was introduced).
-> 
+Hi Anvesh,
 
-The MacroPad reference implementation never deviated from the spec in this
-area, at least not in the way the comment suggests. The comment removed here
-references another comment, which is removed alongside the code that was
-touched in patch 3/6 and assumed that intensities should allow multiple values
-to be assigned (e.g. 256 levels), but that was never required in the spec. Even
-version 1.4 (the initial driver had 1.5 as a basis) of the spec already
-suggests using only two intensities for on and off while everything else is
-done through the RGB channels unless the device has some sort of global
-brightness control in its hardware.
+Thanks for the review and for raising the firmware comparison with Daniel.
 
-I think the reason for this misconception might come from an actual bug in the
-reference implementation (which is fixed now:
-https://github.com/microsoft/RP2040MacropadHidSample/commit/cfc29120a3910c5772976da29ecd57392dfd44d6)
-and the natural assumption, that intensity should, similar to the RGB channels,
-have 8 bit. Therefore, the driver initially implemented brightness exactly that
-way with 256 levels, scaling the RGB intensities with integer arithmetic. But 
-since the hardware doesn't scale the brightness and the spec doesn't require
-this, there is no good reason to do this.
+Agreed on preserving the LUT match data. My v2 is based on
+28924df2a08f440c73991b83028032c901de2ae4, which does not contain that
+implementation, and I could not find it in the current mainline driver
+either. Could you point me to the latest series or branch you would like
+me to target? I can integrate the read-only variant with that match data
+without changing the existing LUT behavior.
+
+On your thermistor comment on patch 1, would a DT thermal sensor and a
+monitoring-only thermal zone, without cooling maps, be the interface you
+have in mind? I can keep fan RPM under hwmon and leave cooling under
+firmware control.
+
+I also agree that sharing the EC chip is not sufficient to justify the
+qcom,hamoa-crd-ec fallback. I would like to compare firmware behavior
+before treating the capability-query failure as a model-wide limitation,
+then coordinate any binding adjustment with Daniel's series.
+
+For that comparison, my existing September 8 test recorded:
+
+  Yoga Slim 7x 14Q8X9 / 83ED
+  BIOS NHCN62WW, EC 0.99.0
+  Firmware query 0x0e: 03 00 63 00
+  Capability query 0x42: 00 00 00, identical across three reads
+
+The capability transfer completed with three bytes, but its count byte
+was zero rather than two. The unmodified driver rejected it with EINVAL.
+The separate read-only sensor test successfully read RPM and temperature
+while firmware controlled the fans.
+
+These are the earlier results, not a fresh test or evidence that a BIOS
+update would or would not resolve it. Daniel, I am happy to compare your
+versions and capability response, or repeat targeted read-only checks if
+there is a useful difference to investigate.
+
+Thanks,
+Birk
 
