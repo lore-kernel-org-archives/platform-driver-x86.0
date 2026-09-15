@@ -1,74 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta0.migadu.com (out-233.mta0.migadu.com [91.218.175.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7700E4399EA
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 19:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2D5449B3D
+	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 19:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789499771; cv=none; b=YKMsBdWMLaaq3bqkT6/w4FvYOnKmMGREM9bWdJfxejdzxy4CeSfEnx5zWvfP3XKG3/tNLmAhwCMey/FtY3+HjlJojH4eBdhtFGbSHfR+1seYr5jpnhe8WsXw3Ef99WVQWbh9Bnnn4GL9cc++zwSYC8xrM9wU2alIXSy49XMVsF4=
+	t=1789501415; cv=none; b=nkKEgyqQKm7abSCUuDDL7M7pqPFIRWBOL7s7kDZUQE/A84oPpRj2qqOQ96BMnkLzagj2r/n6iiuo5o30WH+vgI0cDyiE91kk1/9Hc+6c9HwppQpNICMzYruADZ2mtq/IISwZoZaDKARaULVJo8pbWypwcZsawkk9JGeOvYuceXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789499771; c=relaxed/simple;
-	bh=nFP3AINVWxm2sKCqCTOQqzWOX1aVeyzHI8Kjg8oL7JA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VKw+z2QLVIGvnKwpBfOtH0sAg/+NBjyjtaJO68p2He9beCYglOIq7RrOLXknznQl/7GOcXjZGyK5RUUCjw2bNF2rKHeDlxMgrbXBEQ+vKMDTDusO6SUOU1xrFUqCmXu6Pvbjmp/CsZIKYB1J4m44SvwhcHUVhgf04myb8z0FzHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDMKVJLN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1789501415; c=relaxed/simple;
+	bh=bejGejOi3XB0BD4iPs0eKkqgKaLzUvW7zzsFhINP+rQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FjsS3VdO2nqVB1pZJu45IS+OO/ZZDB1LW307BRE2Q23C8mjIkG6oD28ubNqVuOYnPV/k42V8RNLp0YZ1eFbyrK2jul2Z9L1tuw0Ms+XYqWfjWK9Ucn9m+Ita4QjsdcmE57zs4/AF0GQzTDoY/mJhsfXJeJX20jYk/LxivHbjCwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mzarfBSs; arc=none smtp.client-ip=91.218.175.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDMKVJLN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B4F90C2BCB8
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 19:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1789499770;
-	bh=nFP3AINVWxm2sKCqCTOQqzWOX1aVeyzHI8Kjg8oL7JA=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=fDMKVJLNWQmK6Z96KxtpUnnTgKHDAVOhGGbhAlNvPIrcNvmyhlPhoYMgQurzcTS9E
-	 MUNFhDJ9srdr8jv+BNyNBZFCgfDehlMzJvsowoWihziftyh0NOaKNymcgaABZtLGCP
-	 zdhflu3OlRqZ6FQO/Wqw4Qdg7ytfsJO/xWiMwMGeh2QkL8otijvohN7u+ob5VAwxl/
-	 ICu0feC9Bd49oX4c0QcSbIVGi/ARkPfTaCSE70B3LNCtqYmWlGdj6DcKCv6OiykEI5
-	 cjASTS8P+SMfAJx16SfEDGQiYIRpUOztqtncLtZBw5N+dncDZY0D0uVTlaB1VMjLwQ
-	 t1TB8XkBWco+A==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-	id 99B51C3279F; Tue, 15 Sep 2026 19:16:10 +0000 (UTC)
-From: bugzilla-daemon@kernel.org
-To: platform-driver-x86@vger.kernel.org
-Subject: [Bug 222002] [BUG] alienware-wmi: Missing support for Alienware 16
- Area-51 (AA16250) lighting controller (AW-ELC 187c:0551)
-Date: Tue, 15 Sep 2026 19:16:10 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: enhancement
-X-Bugzilla-Who: W_Armin@gmx.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P3
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-222002-215701-O0yQd0IQw5@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-222002-215701@https.bugzilla.kernel.org/>
-References: <bug-222002-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mzarfBSs"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=bejGejOi3XB0BD4iPs0eKkqgKaLzUvW7zzsFhINP+rQ=;
+ c=simple/simple; d=linux.dev;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789501411; v=1; x=1790106211;
+ b=mzarfBSsurAgX+9ZPBZ1JsfY3ss/8IUE855sjmGmGZBl0u6bDhXt4QldIFhKgJV7GrQj3BwV
+ E2MMtuk8L4bxaDuxj+Pjr4hseAaTQL1zce/Qpu8F0lN+QsGwZsGzEoRvdtDKw76DH+A8zO3kq1i
+ PFANYhFACPLGA+CZYtHZx320=
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 42a97ccdf7443d1a;
+	Tue, 15 Sep 2026 19:43:31 +0000
+X-Mizu-Trace-ID: 42a97ccdf7443d1a
+X-Migadu-Flow: FLOW_OUT
+Message-ID: <f4512c6a-8ae3-4cb2-8a50-c2b1d2b55e53@linux.dev>
+Date: Tue, 15 Sep 2026 21:43:30 +0200
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] platform/x86: asus-wmi: Add mute LED support
+To: patryk.dankow@protonmail.com, platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com, luke@ljones.dev, hansg@kernel.org,
+ ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org
+References: <20260915174110.67871-1-patryk.dankow@protonmail.com>
+ <20260915174110.67871-2-patryk.dankow@protonmail.com>
+Content-Language: en-US
+From: Denis Benato <denis.benato@linux.dev>
+In-Reply-To: <20260915174110.67871-2-patryk.dankow@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D222002
 
---- Comment #3 from Armin Wolf (W_Armin@gmx.de) ---
-Can you share the output of "acpidump"?
+On 9/15/26 19:41, patryk.dankow@protonmail.com wrote:
+> From: Patryk Dańków <patryk.dankow@protonmail.com>
+>
+> Add support for WMI device 0x0004001c and register it as the
+> platform::mute LED using the audio-mute trigger.
+>
+> The device ID is present in the PM3406CKA DSDT and is also used
+> by GHelper for controlling the same LED.
+>
+> Tested on ASUS ExpertBook PM3406CKA.
+Hi Patryk,
 
---=20
-You may reply to this email to add a comment.
+Thank you for this! I haven't received the 2/2 but I saw it on lore,
+please next time also send to me :)
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Also I think that since this is a cross-subsystem patchset you
+are supposed to send the patchset as a whole to both
+lists.
+
+Reviewed-by: Denis Benato <denis.benato@linux.dev>
+> Signed-off-by: Patryk Dańków <patryk.dankow@protonmail.com>
+> ---
+>  drivers/platform/x86/asus-wmi.c            | 26 +++++++++++++++++++++-
+>  include/linux/platform_data/x86/asus-wmi.h |  1 +
+>  2 files changed, 26 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index a65090429ca7..d7c100dc2020 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -262,6 +262,7 @@ struct asus_wmi {
+>  	struct led_classdev lightbar_led;
+>  	int lightbar_led_wk;
+>  	struct led_classdev micmute_led;
+> +	struct led_classdev mute_led;
+>  	struct led_classdev camera_led;
+>  	struct workqueue_struct *led_workqueue;
+>  	struct work_struct tpd_led_work;
+> @@ -2054,6 +2055,16 @@ static int micmute_led_set(struct led_classdev *led_cdev,
+>  	return err < 0 ? err : 0;
+>  }
+>  
+> +static int mute_led_set(struct led_classdev *led_cdev,
+> +			enum led_brightness brightness)
+> +{
+> +	int state = brightness != LED_OFF;
+> +	int err;
+> +
+> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MUTE_LED, state, NULL);
+> +	return err < 0 ? err : 0;
+> +}
+> +
+>  static enum led_brightness camera_led_get(struct led_classdev *led_cdev)
+>  {
+>  	struct asus_wmi *asus;
+> @@ -2084,6 +2095,7 @@ static void asus_wmi_led_exit(struct asus_wmi *asus)
+>  	led_classdev_unregister(&asus->wlan_led);
+>  	led_classdev_unregister(&asus->lightbar_led);
+>  	led_classdev_unregister(&asus->micmute_led);
+> +	led_classdev_unregister(&asus->mute_led);
+>  	led_classdev_unregister(&asus->camera_led);
+>  
+>  	if (asus->led_workqueue)
+> @@ -2176,7 +2188,19 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
+>  		asus->micmute_led.default_trigger = "audio-micmute";
+>  
+>  		rv = led_classdev_register(&asus->platform_device->dev,
+> -						&asus->micmute_led);
+> +					   &asus->micmute_led);
+> +		if (rv)
+> +			goto error;
+> +	}
+> +
+> +	if (asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_MUTE_LED)) {
+> +		asus->mute_led.name = "platform::mute";
+> +		asus->mute_led.max_brightness = 1;
+> +		asus->mute_led.brightness_set_blocking = mute_led_set;
+> +		asus->mute_led.default_trigger = "audio-mute";
+> +
+> +		rv = led_classdev_register(&asus->platform_device->dev,
+> +					   &asus->mute_led);
+>  		if (rv)
+>  			goto error;
+>  	}
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index b5ed8c83ace1..3810c4a0da23 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -54,6 +54,7 @@
+>  #define ASUS_WMI_DEVID_LED5		0x00020015
+>  #define ASUS_WMI_DEVID_LED6		0x00020016
+>  #define ASUS_WMI_DEVID_MICMUTE_LED		0x00040017
+> +#define ASUS_WMI_DEVID_MUTE_LED	0x0004001C
+>  
+>  /* Disable Camera LED */
+>  #define ASUS_WMI_DEVID_CAMERA_LED_NEG	0x00060078 /* 0 = on (unused) */
