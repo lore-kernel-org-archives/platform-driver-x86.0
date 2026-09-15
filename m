@@ -1,163 +1,115 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8D63C3429
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 12:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB84A3D4E;
+	Tue, 15 Sep 2026 12:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789475151; cv=none; b=PcZ26LI7YJUxB8nPY6+9+VzFPOEJsOE7xuXh7uyoBdH2fCotxSlflMFj2PMw/VT3qIErtI7qhUZaq7ymLHtLKFeZD2Lzlcy4c7PTshx/yYfWYX3uht9NfN9kiYKVGlTLZiQal8IE3QnGanCz1RfwcRcNrSH5Z80X4jAERmEccak=
+	t=1789475201; cv=none; b=PqHj+hrnOn2ZO8vR2EDaU578ZrAaDuIO2Z5gjmN+zdzw8ZzceRSaqiJt0X4KRjPgds/F9BVAtgcMh/osrI+RKuYmievVQ8YTWXrYenzZP0TRN8oGb29e5fIGIaGmSViJ0HDeb1QaHdogKdragRf9H3XCqdLko7ywqmNuJYvKH/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789475151; c=relaxed/simple;
-	bh=TSGU6OJ0h4fUfeq573U3yF+hws662Cowi5xUNxY/Plc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fMtJZD8+Q733mgGG9Jy/0fxJNS7byLeohjQpXPx8bwQGQ5v3T2qtwWVaTay+JfmFWVtT7MxoeQD3f8F2c44Pit3y63q9g/GA0RvGtJUhrHk4Saqx/g0gRYqu5Aqqvb2F4S8eRpz3LLPfgb3l1omUwbCPs2w9CDFMI7FIry8qmeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=Yp8lsIWW; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1789475201; c=relaxed/simple;
+	bh=A4/6+kF8RuDC8yrL6PEbqZxi2axYHdvcQB8Cumovhjs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=gswkBO5DQSdOvUV3wLHDNtMf8W2DK56GVAR1T2d9dyfYAoza0nld0CK6QILJ9YIjwKpIU0J5ZYKGhn+GaRZ7q5XTxayeDuhOdnEtqYc1KCjlB+0+olRBk6TFe8bHbOUlUZ2jxyaZfW/ehZFlUzeJTnnho0cQXiPiW08kyAADY14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C1k+bbbY; arc=none smtp.client-ip=192.198.163.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="Yp8lsIWW"
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 224843F2DC
-	for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 12:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1789475145;
-	bh=OWz2Oh+f3I45WPvVMwnriAaMSjFo7OhzWowmJMieGyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=Yp8lsIWWV5r/jk8wC5l3ns4glaXn1V7ailoRvVoygRt5YgPYNFMFzi1fpyZcM4pcN
-	 OGWv1N3u8SETrNTKbwJIspLVWZAHhl5wOURtL79VGOvgN5INb0Bf9pu1vAumfjTqIg
-	 M6cwPFZ94UQhFSwjtK537WPgnFD1PIWFWcN4vY5DitDtVo+QP7jHmbX3jzjjn7bTMf
-	 2wcA0zY0tPlc9PJoS6t0RLv1LoXiZGuIwvESeE3cKiWv0GgnjEIeRXUAKB/ONGjZ2N
-	 jc8umcnc+qR4AfcWx2jDOoObiTuaexsRaYkI5CWTm8RvWGABgs8nKsSeTSFwy8jt7e
-	 SzjGQqPUHi7skt0owxiwb+Dwhz8dP6iui7LtOZx5D8JWEHiOVMpKJySKUCP8evgm5+
-	 Cv8/JW718vjFgwjaNqhZiMCmMH5SbKBD29yeaP3DOVhoaImKzX7BP/2JnkD4Qxob9z
-	 +2yLzzy44Kd+8IWqvdhHyERWte+zRmFn9XBGa+o0gPQUvjKqoKATaNW5ZhysSgoRsd
-	 yQbLC+wGBmfbqvknGsdFj9LK+Ipui1hGXUeynHfrRi0ypiUTmkEglLw9HKYn6DBPtB
-	 R9QsZScim/GiadeJLHk0szOBb8C7UoWADs3doNqZwWnURwrYvHX67eSwua/jASUCKq
-	 hIyJaf35uyti1xTIyYPbV7K0=
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8688139460bso4304090b3a.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Sep 2026 05:25:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789475143; x=1790079943;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OWz2Oh+f3I45WPvVMwnriAaMSjFo7OhzWowmJMieGyI=;
-        b=eEbsdYrRqACMiJEf2lgtIBSs3ddsKheW1xKFRlcGHu3xudUlrXOmrGAx2B6eM7OD+3
-         dOS2jCZ3u9wmc5QWgFrPdJVhgmA31cMkL9ckmz9MP2X+xtfPOoqLucDo+/xx0L302Bds
-         QK7K5m2AGpjGq4WDxWI6lZcayKJOIAAgL43EkmDf4JScTh1T/v4zbGeGzq361QPhen1/
-         g0K92ULy26P9MqRRlMudOYrS3PqC13YEg0nsieePjR1yV45azCYvyAM/bofvLH1uoOqg
-         gdDKdin/3hyaJsBzBWHSgtWMtwgheRyP7ivjUuhauTcKDbg4/6+B28yDq5giTuvgnJ6w
-         woDQ==
-X-Forwarded-Encrypted: i=1; AKwUvBxCoGNsUxKX31j1SSXRlrw6yA5tfKk5VFXJGSj273DDjUSgzdcVdPVV9A/bTdNtuycsAeDsI6zPeVeQPQva0iUaLhgK@vger.kernel.org
-X-Gm-Message-State: AFuF++mDnaC87vuxKOiTndYX0mWPLXDrqEp0S9shoKS/hUCVLaDcbIoC
-	7p4byjAIpcbaaVanU7Z+QLAprHbJ3mtwBJflfuy4DomhZyilc1+v3PP/zrvKItWBr+2lo2e+HhV
-	QGLaQBRE5DnJTeGBE+LrH49vs60/ClrpYNTxhqv5DHbGK3UtMf8M0LsDcya6lxc9b0WZ9lD/5Sa
-	0qoymjq8EYz++1Kmg=
-X-Gm-Gg: AYBFou2zjUHhZSqa+5OU0GSyylta5q2EpDp6Rzp6ddNhZuQ6G0grBaJA7zxGsdNY2XU
-	yUx8SKu7YdsmGnTikZdQ8xbCjwH9d6sjl3L/byE+HnGtg4gVmYYqYAD6qUNn5E0vOMd/kO4e3YG
-	9DfSsUVSlM/X+iqMVo+Bg0cDcrK8Y9OgrH2Pej81APveltmAvF/BPsfuh+lYcIPBe19xE1/B3Zu
-	QZIa0XdV8RiXiFd/tK78QpkOn0knZN3dK4bUg/vHjzCoH9+re002/0rNP1W0ynmQF9mRb8SGIpm
-	JY4DvE6K64Cy+3bdcqYBXO2DBjX6xXSfZCsHibEmXpMyd8Fwgq5lAwFnK5tc8SMcZ0jolRNQMEx
-	r2htMsMQ2rx5fDP2LbxU+ArOB2DKxXs04ltmZ+qFSybgwa9FtH41E
-X-Received: by 2002:a05:6a00:4c9c:b0:85f:b00b:8760 with SMTP id d2e1a72fcca58-86f82a5efbamr14761138b3a.5.1789475143129;
-        Tue, 15 Sep 2026 05:25:43 -0700 (PDT)
-X-Received: by 2002:a05:6a00:4c9c:b0:85f:b00b:8760 with SMTP id d2e1a72fcca58-86f82a5efbamr14761047b3a.5.1789475142601;
-        Tue, 15 Sep 2026 05:25:42 -0700 (PDT)
-Received: from acelan-Precision-5480 (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-86b28fc129csm6022017b3a.25.2026.09.15.05.25.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 05:25:42 -0700 (PDT)
-Date: Tue, 15 Sep 2026 20:25:37 +0800
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Shyam-sundar.S-k@amd.com, hansg@kernel.org, 
-	ilpo.jarvinen@linux.intel.com, Daniel Gibson <daniel@gibson.sh>, stable@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86/amd: Stop counting intermediate cycles with
- metrics table
-Message-ID: <aqk464fQ6JqlcCUX@acelan-Precision-5480>
-References: <20260914141734.2703545-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C1k+bbbY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789475200; x=1821011200;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=A4/6+kF8RuDC8yrL6PEbqZxi2axYHdvcQB8Cumovhjs=;
+  b=C1k+bbbYRjwk8XtAWzXpYZfJGwW7YF5NAEG7lwLWJ5wssnbfMDELDpKX
+   fC/3IJvKdURl113mc55gFGMWvqZ3TEtvNNtPfnF+1y9IEPpMrzw0kbx91
+   g6HD67JOUVass9adsWTK6KaHuUfigp58i2TgAcAysm9u7eORHM7V7HFIf
+   J8leCADTPKGD02+L1g4CRUSYVMtZN5HGjmNXzKpmCg0Xux3n/rwYVwxVJ
+   nyNWKnkR/mGKlg12KILcTxqIOoHK5ihG97fZlp5j7NcivqlxMtZA4CjQR
+   fdaiS1eFayABMjxVo9pxt/hw9criC/9ZGGaadDmTy0ytr3kkFBDu7MHqu
+   g==;
+X-CSE-ConnectionGUID: rz0JHls6Seuv2UQ22pzMhw==
+X-CSE-MsgGUID: PSNZFRUHSBmfNvf+869gaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="346216"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="346216"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa114.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:26:39 -0700
+X-CSE-ConnectionGUID: teEGA6qZQPyDxlt9m9EkLQ==
+X-CSE-MsgGUID: ySZU+udyRlC7ZQn0ZmQNhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="272517499"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.24])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 05:26:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 15 Sep 2026 15:26:31 +0300 (EEST)
+To: Aleksandrova Alyona <aga@itb.spb.ru>
+cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, 
+    "David E . Box" <david.e.box@linux.intel.com>, 
+    Hans de Goede <hansg@kernel.org>, Darren Hart <dvhart@linux.intel.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    lvc-project@linuxtesting.org
+Subject: Re: [PATCH v2] platform/x86: intel_telemetry: initialize default
+ trace verbosity
+In-Reply-To: <20260915122107.9784-1-aga@itb.spb.ru>
+Message-ID: <4ab722af-756d-0c68-3b25-4bd38e89cdb1@linux.intel.com>
+References: <20260915122107.9784-1-aga@itb.spb.ru>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260914141734.2703545-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Sep 14, 2026 at 09:17:32AM -0500, Mario Limonciello wrote:
-> The metrics table doesn't increment for all cases that can cause an
-> intermediate wakeup if the cycle is very fast.  This can make the intent
-> from commit 9f5595d5f03fd ("platform/x86/amd: pmc: Require at least 2.5
-> seconds between HW sleep cycles") not work properly.
->
-> That commit originally was measured to work properly, but it was
-> accidental due to a logic error.  The logic error was fixed in
-> commit 4dbd11796f3a8 ("platform/x86/amd: pmc: Clear metrics table at
-> start of cycle") but this now masked the table doesn't always update.
->
-> Since that code was introduced, Daniel Gibson added a number of changes
-> to the logic which includes a state variable introduced in
-> commit 037f0b03c663a ("platform/x86/amd/pmc: Don't log during
-> intermediate wakeups").
->
-> Utilize that state variable to instead decide if a single sequence has
-> started.
-This patch fixes my resume issue with TB4 dock.
-Thanks.
+On Tue, 15 Sep 2026, Aleksandrova Alyona wrote:
 
-Tested-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
-
->
-> Cc: Daniel Gibson <daniel@gibson.sh>
-> Cc: stable@vger.kernel.org # 7.1.y: 037f0b03c663a platform/x86/amd/pmc: Don't log during intermediate wakeups
-> Cc: stable@vger.kernel.org # 6.18.y: 037f0b03c663a platform/x86/amd/pmc: Don't log during intermediate wakeups
-> Fixes: 4dbd11796f3a8 ("platform/x86/amd: pmc: Clear metrics table at start of cycle")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> telemetry_def_get_trace_verbosity() returns success without initializing
+> the output verbosity value.
+> 
+> The default telemetry operations are installed when the core driver is
+> initialized and again by telemetry_clear_pltdata() when the platform
+> driver is removed. The telemetry debugfs files can remain available after
+> the platform driver removal.
+> 
+> A subsequent read of pss_trace_verbosity or ioss_trace_verbosity calls
+> telemetry_get_trace_verbosity(), which may use the default callback and
+> return success without setting verbosity. The uninitialized value is then
+> passed to seq_printf().
+> 
+> Validate the output pointer and initialize the default verbosity to zero
+> so callers never use an uninitialized value after a successful call.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Fixes: 378f956e3f93 ("platform/x86: Add Intel Telemetry Core Driver")
+> Signed-off-by: Aleksandrova Alyona <aga@itb.spb.ru>
 > ---
->  drivers/platform/x86/amd/pmc/pmc.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
->
-> diff --git a/drivers/platform/x86/amd/pmc/pmc.c b/drivers/platform/x86/amd/pmc/pmc.c
-> index 6792aa2c61874..e384b56d67559 100644
-> --- a/drivers/platform/x86/amd/pmc/pmc.c
-> +++ b/drivers/platform/x86/amd/pmc/pmc.c
-> @@ -701,19 +701,6 @@ static int amd_pmc_verify_czn_rtc(struct amd_pmc_dev *pdev, u32 *arg)
->  	return rc;
->  }
->
-> -static bool amd_pmc_intermediate_wakeup_need_delay(struct amd_pmc_dev *pdev)
-> -{
-> -	/*
-> -	 * Starting a new HW sleep cycle right after waking from one
-> -	 * can cause electrical problems triggering the over voltage protection.
-> -	 * That is avoided by delaying the next suspend a bit, see also
-> -	 * https://lore.kernel.org/all/20250414162446.3853194-1-superm1@kernel.org/
-> -	 */
-> -	struct smu_metrics table;
-> -
-> -	return get_metrics_table(pdev, &table) == 0 && table.s0i3_last_entry_status;
-> -}
-> -
->  static bool amd_pmc_want_suspend_delay(struct amd_pmc_dev *pdev)
+
+You're missing the information on what is changed in v2?!
+
+>  drivers/platform/x86/intel/telemetry/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel/telemetry/core.c b/drivers/platform/x86/intel/telemetry/core.c
+> index f312864b8d07a..62299524a07b2 100644
+> --- a/drivers/platform/x86/intel/telemetry/core.c
+> +++ b/drivers/platform/x86/intel/telemetry/core.c
+> @@ -24,6 +24,10 @@ static struct telemetry_core_config telm_core_conf;
+>  static int telemetry_def_get_trace_verbosity(enum telemetry_unit telem_unit,
+>  					     u32 *verbosity)
 >  {
->  	/*
-> @@ -804,7 +791,7 @@ static void amd_pmc_s2idle_check(void)
->  	struct amd_pmc_dev *pdev = &pmc;
->  	int rc;
->
-> -	if (amd_pmc_intermediate_wakeup_need_delay(pdev) ||
-> +	if (!pdev->is_first_check_after_suspend ||
->  	    amd_pmc_want_suspend_delay(pdev))
->  		msleep(2500);
->
-> --
-> 2.43.0
->
+> +	if (!verbosity)
+> +		return -EINVAL;
+> +
+> +	*verbosity = 0;
+>  	return 0;
+>  }
+>  
+> 
+
+-- 
+ i.
+
