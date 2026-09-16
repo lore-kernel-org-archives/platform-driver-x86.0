@@ -1,158 +1,112 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+Received: from mta0.migadu.com (out-139.mta0.migadu.com [91.218.175.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEDF4B1D0F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 20:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789590676; cv=pass; b=M/d90qD3azYqXhAn4ZUKfFXee1aCNOf9fEby2p2dEgP2V1pVn4R/UyKbDOpfr4K/Qv5um2mE7aM0/KU3HdvukZGLL2yMcf1FJULWGL48Zev/WnmS3Kcc8DlH1c9TFDf/3RJ6mVjrCCZEa9CUrhQXSlHq3Eh2ZszGKmmYvm0ouD8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789590676; c=relaxed/simple;
-	bh=G3zVfl1/na29i79t4HxZrzQpGfHgd/dNtdPq394Flfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K35TBuwo1pPYA2ulwisY9RTmNqLl1fe2CWTE3px5pTjdz3lxYkHTmRO6xnKVWIUYul9LonoiOaWuH2NDZXlhGsn2HuYvTfITBqlXAqmvgJQ2SAPXdvuSXXWU8VaPPqYmEE7wagUfo+HgHvLBu8uS5JSMx3RgcT8lvinjafwOMR8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=k50Z20r6; arc=pass smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03626448BA0
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 21:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789593864; cv=none; b=aO9mfOc4d1ega8JoDie3y0DelFBvFClVROhPZUFgxaHw5qFyImxOH5Y1zAbpzejwEAPP+5vYbTUE3rxoPm34Rv7+2benyKEbGQMw47jZy9PdnnbQczukwD/MNsnHNMrl5P6dVkpYj/+92WYEz4cl3vUUZdPY4ebzU85hSb6o2QI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789593864; c=relaxed/simple;
+	bh=W2j8a4jZDPmkymjfN1hItBmWKFDdSwH3LXIvlxtLS7E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DNXKLAsJDRlfvR5ZZ5mWkhWVCnhlYHRL16igXXozN85EWZNryzHW18471DtUgPMYhxsz0tQwxDw1fd3I6ebLY6Qikq72UHVhsJDu3OjrZ7tpFB1uqxzPMoRWbm50rMcF3rY5O0tsPS3w3LKx7WVDsAIVZvupqnI5Agke9JhXdpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jimenezcarrero.com; spf=pass smtp.mailfrom=jimenezcarrero.com; dkim=pass (2048-bit key) header.d=jimenezcarrero.com header.i=@jimenezcarrero.com header.b=LQYOZaaU; arc=none smtp.client-ip=91.218.175.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jimenezcarrero.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jimenezcarrero.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="k50Z20r6"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f633cd78so78967f8f.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 13:31:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789590659; cv=none;
-        d=google.com; s=arc-20260327;
-        b=atQoN7uczw+OzM+/kCPGLrylH9SGPjHBC3G1oBNMygof2WQaJNYTQPSxr2gq5BrsX4
-         +1PWulKkz34irksVvknkWMPCSpW4PpF2PKrI+7Z3xCxKybMRBM1Yiw6zEXmLZ2NJedOm
-         +oYzZ53FcMnU4um081J1YOBVs/k2eiJYp6BS3YzPed6JfBlLSAY6+YM3iB+YCPBGdVeP
-         d7CRiwzqyFp7hvFjGbZN8ZFuPR/o5NaN6MvA1vvrz3BQ+UZh5IoXowUjicx6xD2ARPz5
-         FROUPA46TAeSkoH/ZsQa5G0I58AymkroZRBD5DEizFDpSgDVcMEe0XxQ82Bd8TiFZjWR
-         MBUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
-        fh=Np+EdOq028fPtpPw46XF5JZpnQPHfO+AwlBH+S0HKOE=;
-        b=WjjwZlr5iiOYrtse5ubbtJKV+oumCtnRX/ic0+i3mtHqT8T7TsEQW5AdaMbd9zS6CX
-         tdA27AOhSIzxFANNUtfYeSA6HwEBf2D4oEzkgvrpJ7VxvqX2MYF7OC3Fgl409NHRQF53
-         wCqBiWF9/CHSPCt+vTm7Z3vDcVw6xfjmGbacaW4Fne1F+7wikjjyrE2gDf8DQS1H+XX7
-         W0muPwd4ohawau9oerH+8Nr0HKX8d6jYaw+/l25o6beKo6o8iVCv/8bYVdneFNjGotCF
-         ZDIISqOf6sIN3Dg1ZZ/cte/Syt4cURQ/WuHI26if1pVcVIj4BVLE4UQEPHN+LX9tPG3N
-         +i/w==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20251104; t=1789590659; x=1790195459; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
-        b=k50Z20r6gbRkXYJ0e50V578N9sLrcgg/7sSqIpuszz0YYVkw8NAeVz2vu0vbOdcTt9
-         Uear/5wl7mVfh0qHNHsacttvKARrzQjslbXjsB+ZJcdQGYNaQ8UwC9BsPCW5pXyUk5VA
-         66hXZlfgM8TJf8Z+H3wtoi3KoJTnGqxOPVjEJC+w34FvTSdAD7oTnx9U1iypOGNKiDJ/
-         rU85tXQsa/WgjOrNMsgkvb2AqPlKnC9XZHlKG29O//mGZmlIMkNLF42kq9uy3MEUU6I2
-         ael9qvqeg5iFGI434X4I466X6pdiWVApMS9o7Balx+16k96hCL1nCwxIOf0FLYKPhI95
-         UgjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789590659; x=1790195459;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
-        b=PAyitg98ezsriGNci1sqF0ZHp45XhE9oI1wducTyemHlFXZOVEKWB9Yuc/18cgav1/
-         5egT0aO6Y/mA1Q/mGeAymlyeIrPo5VlykVI/SWrWGMvHFp/Q1ba5e1vWQuqmTK0HO4A4
-         xD8Vc6qE87phXvzqUDBgMx5WlWmlP5301GaTwHVSoE4yhdoCSu+n55m5w+XsP6Ihgqhy
-         3SfggLms+ufLg3uwfuJ6tb9rLo5WC/rO4uE+8oAS8YepQb2GiXEO+lKYSHh5kuvfHZt/
-         iva0Eh86YMxJZrGnut8/GOUirRzqfPNFynSBswfX8xOALUbR/EMppMz6P1PRv3Lzdd2i
-         ui9Q==
-X-Gm-Message-State: AFuF++mKoVWXei9UzsSr9Ol8Gx18JIAgljkrsvTTq3vL1lf8/8L0Qk/A
-	I8Rg+WHKhhk2B31eXYKAr0IuX1vjQQqQz2/4hbVK/ImThm8pnspIO5LXKz6sP4k44aEOK35L50G
-	TEpaeeGOwRSBM4A4OWoyn3c9az6F1Bct5GB1bcOA=
-X-Gm-Gg: AYBFou0lc6wxrTHonJrLY7JXIebHQg8DrzjJaVzr9qu+wpAzdJnN2/MxAYDWmF8nzCl
-	noJD51SPhGKGOCTgcLRn5096/p3/7nPloeLtlGmIH5F0lF7rDrWETzH5VqbOtj2r9mLb0kpCpKV
-	FO2lIaoLkGNKF9z3FAuZnnyJvxBFyVLYKEzrVYBqsyG0YRm+wxZbxH58l8Fc2tqNx0xskvYziYv
-	ZmjCUSNoqNHgLuQvTbbWulVrg+J90+rZDg3fUYOjan0AKaWoRwKaY3360LdP+CQ7kWQ6j5G0bi4
-	TEy5dl11YRAduQENi1De9hbYN5mteZ73pOLzXfby1JmomQhArVTUN4I=
-X-Received: by 2002:a05:6000:402c:b0:487:a36:b2db with SMTP id
- ffacd0b85a97d-4870d052620mr4930706f8f.49.1789590658550; Wed, 16 Sep 2026
- 13:30:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jimenezcarrero.com header.i=@jimenezcarrero.com header.b="LQYOZaaU"
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+DKIM-Signature: a=rsa-sha256; bh=W2j8a4jZDPmkymjfN1hItBmWKFDdSwH3LXIvlxtLS7E=;
+ c=simple/simple; d=jimenezcarrero.com;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1789593849; v=1; x=1790198649;
+ b=LQYOZaaUV1A77d9PHytdeBHsAZaWaCBKA/RABbsa+jghYQCRrUs67t8cYBx/n5SWj8oo+3SV
+ +tTyDqkj2gHZIuIW7ccMYVG9IFYwfaXg7nas5spKiTSyDsvhS9jlZHPJVXF2fKO/Nm/kLXFRYT/
+ HzKgYRmHF7tx3HPClX3W9CDNzYWKnhtOmuvV3kpYXZofkjI4hlu8Q3d5yG5XcQmU+53BWIQsXwS
+ 4N0E+SJxnttYWqQGlON2v3GVH+yAP7HjcxSjLvT2nVgHZE7072ocXj5ZWWV3uIGjvZ9CM+5tnzM
+ sq4tbd7QCNtE5RPa2IEG0b8XpmApzdcdVUyJdpwqAQIzg==
+X-Envelope-To: platform-driver-x86@vger.kernel.org
+Received: by smtp.migadu.com with ESMTPS id 11e736fe78460d70;
+	Wed, 16 Sep 2026 21:24:08 +0000
+X-Mizu-Trace-ID: 11e736fe78460d70
+X-Migadu-Flow: FLOW_OUT
+From: Juan Jimenez Carrero <juan@jimenezcarrero.com>
+To: khalilst@gmail.com
+Cc: khalil@rentman.nl,
+	rf@opensource.cirrus.com,
+	broonie@kernel.org,
+	hansg@kernel.org,
+	ilpo.jarvinen@linux.intel.com,
+	patches@opensource.cirrus.com,
+	linux-spi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	daniel@zonque.org,
+	haojian.zhuang@gmail.com,
+	robert.jarzmik@free.fr
+Subject: Re: [PATCH v3 0/3] Fix CS35L56 amplifier on Intel LPSS SPI with broken ACPI cs-gpios
+Date: Wed, 16 Sep 2026 23:23:55 +0200
+Message-ID: <20260916212355.7216-1-juan@jimenezcarrero.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260901192625.1497791-1-khalil@rentman.nl>
+References: <20260901192625.1497791-1-khalil@rentman.nl>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAM=nh0S9e1+_U4WGR92HwOrNC2h2xYb6eKvgN5_skg-vvbSbqQ@mail.gmail.com>
- <d8d7a246-00f4-42a5-881f-66839eb6b302@amd.com> <CAM=nh0SB5uhsqGyH9v_1N1oZsv94SmrJTqWi_0YVbULgY-c_aw@mail.gmail.com>
- <c733990f-844c-4ba5-85fa-a0dad627ecad@amd.com>
-In-Reply-To: <c733990f-844c-4ba5-85fa-a0dad627ecad@amd.com>
-From: Karsten Wiese <fzuuzf@googlemail.com>
-Date: Wed, 16 Sep 2026 22:30:45 +0200
-X-Gm-Features: AcwNN1WKv7CaNi_QTv0xYctQjSvPHF1bxsb-ON97fYSduw019hk8yfeKjDemKJ8
-Message-ID: <CAM=nh0QY9-G2PJKpyrXe+h1FHvc1pv6v0-AKgPuMRQC=QtbRZQ@mail.gmail.com>
-Subject: Re: amd/pmc
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Am Mi., 16. Sept. 2026 um 22:05 Uhr schrieb Mario Limonciello
-<mario.limonciello@amd.com>:
->
->
->
-> On 9/16/26 15:04, Karsten Wiese wrote:
-> >> * What issue were you having before?
-> > The system would hang on suspend to RAM infinitely. Sometimes it
-> > suspended, but the fan kept spinning.
-> >
-> >> * Was it a problem on every single time, or just sometimes?
-> > Sometimes it would hang on the first try, sometimes it survived some
-> > suspend_to_ram/resume cycles.
-> > When the fan kept spinning, I woke it up and suspended it immediately again.
-> > It never survived more than 2 weeks with some 3 cycles daily.
-> >
-> >> * What is the new behavior with that module parameter in place?
-> > 17 days without the fan keeping spinning or the system hanging on
-> > suspend to ram.
-> > Followed by restarting into a newer kernel.
-> >
-> >> * What BIOS version do you have?
-> > MDCN30WW
-> >  From september 2023. Should update.
-> >
->
-> Yes; before we pick up the quirk, can you please try to update to see if
-> it helps?
+On Tue, 1 Sep 2026 21:26:22 +0200, Khalil wrote:
+> v3 of the patch series fixing dual CS35L56 amplifiers on HP laptops
 
-The latest BIOS Readme doesn't sound like updating helped:
--- Excerpt start --
-Summary of changes
-==================
-General Information:
+Following up on my earlier reply, where I had only run the earlier
+gist version: I have now tested v3 on the same machine.
 
-MDCN40WW:
-BIOS Notification    :
-1. Fixed
-  1) None.
-2. Add
-  1) None.
+  HP EliteBook 8 G1i 14 inch, DMI board 8D8A, SKU D75TQET#ABE
+  BIOS X91 Ver. 01.05.02
+  2x Cirrus Logic CS35L54 Rev B0 OTP4 fw:3.4.4, ACPI HID CSC3554
+  Kernel: linux-omarchy 7.2.5 (v7.2.5 plus the patch set of Omarchy,
+  an Arch-based distribution)
 
-3. Modified
-  1) Optimize network related logic.
-  2) Enhancement to address security vulnerability LEN-198949.
+What was tested: 2/3 and 3/3, built out of tree as modules against
+that kernel's headers. The distribution kernel carries a sound
+backport that also touches serial-multi-instantiate.c; 2/3 applies on
+top of it with --fuzz=0.
 
+1/3 was not applied, because CONFIG_SPI=y there. Looking at why the
+result still worked: on this path 2/3 installs the descriptor in
+ctlr->cs_gpiods and never presets spi->cs_gpiod, spi_alloc_device()
+zero-allocates, and __spi_add_device() is the only place the device's
+cs_gpiod is assigned. So the new check in 1/3 is always true here and
+does not change behaviour on this platform. I may be missing a case
+where 2/3 relies on it, but on this machine 2/3 + 3/3 alone were
+sufficient.
 
+Log from reloading the modules at runtime:
 
-EC Notification    :
-1. Fixed
-  1) None.
+  Serial bus multi instantiate pseudo device driver CSC3554:00: Applying CS GPIO quirk for HP EliteBook 8 G1i 16 inch
+  Serial bus multi instantiate pseudo device driver CSC3554:00: Extending num_chipselect from 1 to 2 for CS1
+  Serial bus multi instantiate pseudo device driver CSC3554:00: Acquired CS GPIO for CS1 from ACPI GpioIo[0]
+  Serial bus multi instantiate pseudo device driver CSC3554:00: Installed GPIO CS on controller for CS1
+  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.0: DSP system name: '103C8D8F', amp name: 'AMP1'
+  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.1: DSP system name: '103C8D8F', amp name: 'AMP2'
+  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.0: Calibration applied
+  cs35l56-hda spi1-CSC3554:00-cs35l54-hda.1: Calibration applied
 
-2. Add
-  1) None.
+A cold boot shows the same quirk, GPIO, AMP1/AMP2 and calibration
+lines. Both amplifiers bind to the codec and the internal speakers
+play in stereo.
 
-3. Modified
-  1) Modify the combination keys of fn which fix some key may been hold.
--- Excerpt end --
+One small note on the quirk table: the entry's .ident is "HP EliteBook
+8 G1i 16 inch", but this 14 inch model reports the same DMI board name
+8D8A (and has CS35L54 rather than CS35L56 amplifiers), so it matches
+too. Only the label is narrower than the match.
 
-No Windows on the Laptop, will take some.
+I'll send Tested-by on 2/3 and 3/3 individually, since 1/3 was not part
+of what I ran. The offer to test HP's fixed BIOS still stands.
 
-
-Thanks
+Juan Jimenez Carrero
