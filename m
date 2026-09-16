@@ -1,171 +1,126 @@
-Received: from mail-pz2-f9.google.com (mail-pz2-f9.google.com [74.125.228.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377F3545D96
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 18:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122EC3E1CFB;
+	Wed, 16 Sep 2026 18:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789583926; cv=none; b=Ba4xGzPapWBrE3MYf9mm3r9bPIvJ27kbu/35v3Nvo6jVU1+X+xp2Go++FdvjXXxtHFCzTMH91ZbAKJEEh4mxc3O2rNAb+TbllOn3Xvjasuh895kDlCmLb5/gnpdYYBSDfl7EJvTaAzU/lDOoAojZWuygcP6bab6c/bFnFEIT7r8=
+	t=1789584442; cv=none; b=DzxkI1ds7NHX9ssD1TP23QabKxZ7+o6FpNzSBGg9bc5WzFQMGAw+1fs1mrLjgHKbTsvfpEZxGcJUo0yGBFYWJVDjass7lZirMbkDp47wRBMAAkx5xJI5sC92Be+PFZ6WcYV8AwjiNvugLilozA4LRaj3ucwRwooxt4hUxwKvVS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789583926; c=relaxed/simple;
-	bh=gL63a7H40eYnPHpwXj+vmcavoE50KRdYhOSiWJgvpCU=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:References:
-	 To:Cc:Content-Type; b=tf+6aclNoOMx3JTTLmCx/fJPbX/EEXh130fCatLW2Kng/iqXoDUAv+Ne76oeKgNEHO59RVoK9iHVRYNQfCrw+vwJcodQrTJWRx62zvX/tdbLp9+LzlaM2ydzBTme5L6RwCHu515CFCFVpGJoQvW1G7GOQ6wyrgCMKzoiuO5bL38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sne.moe; spf=none smtp.mailfrom=sne.moe; dkim=pass (2048-bit key) header.d=sne.moe header.i=@sne.moe header.b=Gi2LWAYc; arc=none smtp.client-ip=74.125.228.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sne.moe
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=sne.moe
+	s=arc-20240116; t=1789584442; c=relaxed/simple;
+	bh=5qMDvgqidgBXluYQY0L+xIczwEmBMESJQxkz6VoaILQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ROOd9FQRL3ruIs5dhqXoNM0/XXsj0rtjUD1E5fwimBgiww/j//DPgTr16K0kEfuUgL33cStsBHmT/HxDqywcDljBdxd6WQPh5A+sVBhARd9bQKFIC2VZauDEgDASzVZKr4nynHy8R5G+OipkdmyOHDfJfDZVfiDmTJVIEPtKso8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=esWDwsqs; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sne.moe header.i=@sne.moe header.b="Gi2LWAYc"
-Received: by mail-pz2-f9.google.com with SMTP id 41be03b00d2f7-cc15f67b5b4so614274a12.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 11:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sne.moe; s=google; t=1789583917; x=1790188717; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:references:in-reply-to
-         :message-id:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XcUk3UaRbOyGEjinqyIXDL6LCWZo9vrOTEoez3yNJSc=;
-        b=Gi2LWAYcR4sAMVDAtxtGogwdC9nsQ7Ll02RN68RqWpHSv9Oy5IblBEShO0fJfKDlND
-         MVzZhJ7AGlcJHCn+tG58zJaLAOO63rjuk9YHT1pGHFqU6YMcnZHD4Hsd+CJUgQBTIpHv
-         IxGT9cMUtr0UAB7BjZGR7s02Ko59PrVAc4cwaEVhwZuZaXo3/lNymdn0UP5euOWUmsCa
-         11N+6cwth+q14ck7DdznKai9aD971S9QX9Luofo9U77vlkbflKBUI3ggHwyJVkwj+6Oz
-         usgCIYJS9UmrDzWGRJvoibVk69DJtnsSOdbaEsPfDIVqbrWbuCs6Tw5ggPh2HeDwzd+H
-         Km4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789583917; x=1790188717;
-        h=content-transfer-encoding:content-type:cc:to:references:in-reply-to
-         :message-id:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XcUk3UaRbOyGEjinqyIXDL6LCWZo9vrOTEoez3yNJSc=;
-        b=SwGomDIpM1bj83+nC/H9rMXz3CmfuHugsIrP3m3Yt/klwkYRIytlApRomfHnjpq2KF
-         mUMlbwxVc2XW5INDfyPljWwQl4u9vA+fWRDT4AYIMkiik/oZyVLZvAIWHQbNvnkZU5uk
-         DAZgB6+MlP96rdfCo1Lf7L+EJ9w1fh2zEFDevD9andP2UxY7uugDkzDjzJAogYuIFEZb
-         rolt5ajSnIb6Hipd48j8+4+Z7KY9WKcP0iDSf/zzp5fNFGG5PMYFCLML80pQOa/KTNPG
-         q5kCu+8AXbsw/bhbqHZhqzDhao8ScNEwf+gy8ua/oyq+t7UftSrR4ikhN2jadMV5iV+J
-         NDdA==
-X-Gm-Message-State: AFuF++mYvaavAcXGgjUT8MTNrj43BNbJU7sis4m9kKw9EbexBYZ+2gdl
-	NdK3pcn16kgOVnxjr0SVcBwslKsfi/+t52Sxz5Bkb7dIcgUSo1sv5/gWMVT8tJh2hDlpnFypjOl
-	6ckfVqW3TwCb/owlMuoVBg3NoqQneHbdARtPqmTOE34WtXBv6SlSAzarh76068FTYsxXce5E=
-X-Gm-Gg: AYBFou191wa9jo3onSawG6H4bEHyq4lowTf6iqCZwTm1l+90++intpxMoiJi8u2NhMq
-	8DPJvDexJhfEAXDdhXAAwzzEkiElVlsVCpIXT8fQ8f4AXt71KYMIJF+04+RNsBBYixM9HLE9UrU
-	U10BUPholxhzRTTxLr8WHiqvegNHQrU5IrSbxL1mqaOlt6IogYoVnsZqMc2CmSKKgunWyizVnOd
-	qnAf8ixBG7BlUhkjru3c927Rd23oeCbiAOL4VkaDDNeyiNYF0vQmlTCXnHs7WEXkH6oWq3DALfM
-	gp5nQUEnecrQTqmrFHuwsGCYFFq5PmvtP9jRGHId+xqgifazmsdaCvNywqey7X0y54+juElaJdH
-	OUvCuIW4m+MVBgrgOwZEDUHUCdJxIIJZjgyG7D4na0vhokwQQXXGhQ+1luLLaHJymTjExHVukZC
-	fT5cDXY7D0nlAcIYRkc1KCONAhFQdN8XNfHIVnYd/5PGAz+ZDevGfsjDlC+C7sui8=
-X-Received: by 2002:a17:90b:4c49:b0:39b:3510:4af7 with SMTP id 98e67ed59e1d1-39e1e2655f1mr5720832a91.1.1789583917465;
-        Wed, 16 Sep 2026 11:38:37 -0700 (PDT)
-Received: from [127.0.0.2] ([2403:18c0:1001:3a:74ea:baff:fe97:d2e7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e360aa230sm667330a91.14.2026.09.16.11.38.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2026 11:38:36 -0700 (PDT)
-From: Asai Neko <sugar@sne.moe>
-Date: Thu, 17 Sep 2026 02:38:24 +0800
-Subject: [PATCH v2] platform/x86: asus-wmi: don't warn when LPS0 is
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="esWDwsqs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789584426; x=1821120426;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5qMDvgqidgBXluYQY0L+xIczwEmBMESJQxkz6VoaILQ=;
+  b=esWDwsqsEBFqtSsplqDAqVuKMVqw/9/Y80e9mDVu7DFh8gIrSRzaVehH
+   m9OtJjxx1qM5L33M/+vLXRhXp7qbSrVPZtFRtnUjju9pazOqwRiRr/Azf
+   xHBN960xiOplqfvrznuDh1eGw10/pen3SzFPt1PLhpn9fYAJ8no01CPls
+   LdWvQZS6722pqu2A7HjnZ6GOd8X+nSFrepfhUXHjGoYKT5U1opvftAa4I
+   pk+4UjVlYS+c8k6GKqiq3Yke2Uf77ANynhg4Tu52gQ8N1+X4zXaez2usX
+   RBc3y5Mf9//h0jdcEl9imk35lzTYdWCtEmjsbQcUjR/GRk3WIf09AamrM
+   g==;
+X-CSE-ConnectionGUID: sau2zAkTT0WXR+UoCWg9eg==
+X-CSE-MsgGUID: ow5xCBHqR/CPlZh6a7VToQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101122984"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="101122984"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 11:47:03 -0700
+X-CSE-ConnectionGUID: oa6fmMu+TK2Dhrs34r+etQ==
+X-CSE-MsgGUID: jiX81ywERWa811dnKHayBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="272943685"
+Received: from lkp-server01.sh.intel.com (HELO 462990a40a85) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 16 Sep 2026 11:47:01 -0700
+Received: from kbuild by 462990a40a85 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1x6ueo-000000006a9-1xux;
+	Wed, 16 Sep 2026 18:46:58 +0000
+Date: Thu, 17 Sep 2026 02:46:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Asai Neko <sugar@sne.moe>, Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D. Jones" <luke@ljones.dev>,
+	Denis Benato <denis.benato@linux.dev>,
+	Hans de Goede <hansg@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Asai Neko <sugar@sne.moe>
+Subject: Re: [PATCH] platform/x86: asus-wmi: don't warn when LPS0 is
  unavailable
+Message-ID: <202609170232.23BqcT7n-lkp@intel.com>
+References: <20260916-asus-wmi-lps0-unavailable-warn-v1-1-9bd6fb4c10f9@sne.moe>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20260917-asus-wmi-lps0-unavailable-warn-v2-1-aa8e3d73634a@sne.moe>
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42OQQ6CMBBFr0Jm7Zi2IZi68h6GRQuDjIFiOlA0h
- LsLeAGXL3n57y8gFJkErtkCkRILD2EDc8qgal14EHK9MRhlCmV1gU4mwbln7F6icAouOe6c7wh
- nFwNadzGe8txbqmEbeUVq+H0E7uWPZfJPqsZ9dTdalnGIn+NB0rv3dyxp1Gh9XTQ+r7Rq7E0Cn
- fuBoFzX9Quti8Wm3AAAAA==
-X-Change-ID: 20260916-asus-wmi-lps0-unavailable-warn-9a72be44b9ed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20260916-asus-wmi-lps0-unavailable-warn-v1-1-9bd6fb4c10f9@sne.moe>
-References: <20260916-asus-wmi-lps0-unavailable-warn-v1-1-9bd6fb4c10f9@sne.moe>
-To: Corentin Chary <corentin.chary@gmail.com>, 
- "Luke D. Jones" <luke@ljones.dev>, Denis Benato <denis.benato@linux.dev>, 
- Hans de Goede <hansg@kernel.org>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Asai Neko <sugar@sne.moe>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2548; i=sugar@sne.moe;
- h=from:subject:message-id; bh=oIpR//feF5h7AD1VSBdYcyg/cFmtxitujGaVDAw2NKc=;
- b=owJ4nJvAy8zAJfZHZ3FlRAEbJ+NptSSGrFWPtGq+rr87j0XbeWvu7uzkKcHzhDqM800aFTvfz
- 3z5YdvBqj8dpSwMYlwMsmKKLJ1HugqfvJ734YCLLh/MHFYmkCEMXJwCMBHj2wz/jJnSNhezv7qy
- 3JSz+EVng8eCiLxfVSUvtmTI5EUFy4r2MvyP1tGRCJ20YMpsx/IX/0RCasxnRh1Lf5WSe+kXh+b
- zvkB+AFYkSaQ=
-X-Developer-Key: i=sugar@sne.moe; a=openpgp;
- fpr=89C48A71E4EB9EF0C0442D0EFC2CA37958700609
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-asus-wmi attempts to register its LPS0 suspend-to-idle callback during
-probe. acpi_register_lps0_dev() returns -ENODEV when the LPS0 interface
-is unavailable or explicitly disabled, but the driver treats this
-expected condition as a registration failure and prints:
+Hi Asai,
 
-  failed to register LPS0 sleep handler in asus-wmi
+kernel test robot noticed the following build warnings:
 
-This occurs on the ASUS ROG STRIX X670E-A GAMING WIFI with BIOS 2704.
-The system exposes no PNP0D80 ACPI device and uses deep suspend. The
-warning therefore misleadingly suggests a sleep-related malfunction
-on a platform where the LPS0 callback is not applicable.
+[auto build test WARNING on 587858367581b9c55c3690f4e63382ad622719d4]
 
-Suppress the warning for -ENODEV while retaining it for other errors.
-Leave callback registration and suspend/resume behavior unchanged.
+url:    https://github.com/intel-lab-lkp/linux/commits/Asai-Neko/platform-x86-asus-wmi-don-t-warn-when-LPS0-is-unavailable/20260916-003256
+base:   587858367581b9c55c3690f4e63382ad622719d4
+patch link:    https://lore.kernel.org/r/20260916-asus-wmi-lps0-unavailable-warn-v1-1-9bd6fb4c10f9%40sne.moe
+patch subject: [PATCH] platform/x86: asus-wmi: don't warn when LPS0 is unavailable
+config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20260917/202609170232.23BqcT7n-lkp@intel.com/config)
+compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
+rustc: rustc 1.96.0 (ac68faa20 2026-05-25)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260917/202609170232.23BqcT7n-lkp@intel.com/reproduce)
 
-Signed-off-by: Asai Neko <sugar@sne.moe>
----
-Avoid the misleading ASUS WMI warning when LPS0 is unavailable.
-The diagnosis and rationale are included in the patch commit
-message.
----
-Changes in v2:
-- Fix the missing format specifier for ret reported by kernel test robot.
-- Shorten the warning message to keep the format string on one line.
-- Report: https://lore.kernel.org/oe-kbuild-all/202609170237.IYNujwsM-lkp@i=
-ntel.com/
-- Link to v1: https://patch.msgid.link/20260916-asus-wmi-lps0-unavailable-w=
-arn-v1-1-9bd6fb4c10f9@sne.moe
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202609170232.23BqcT7n-lkp@intel.com/
 
-To: Corentin Chary <corentin.chary@gmail.com>
-To: "Luke D. Jones" <luke@ljones.dev>
-To: Denis Benato <denis.benato@linux.dev>
-To: Hans de Goede <hansg@kernel.org>
-To: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/platform/x86/asus-wmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wm=
-i.c
-index a65090429ca7..c2af1f049b67 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -5421,8 +5421,11 @@ static struct acpi_s2idle_dev_ops asus_ally_s2idle_d=
-ev_ops =3D {
-=20
- static void asus_s2idle_check_register(void)
- {
--	if (acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops))
--		pr_warn("failed to register LPS0 sleep handler in asus-wmi\n");
-+	int ret;
-+
-+	ret =3D acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
-+	if (ret && ret !=3D -ENODEV)
-+		pr_warn("failed to register LPS0 sleep handler: %d\n", ret);
- }
-=20
- static void asus_s2idle_check_unregister(void)
-
----
-base-commit: 587858367581b9c55c3690f4e63382ad622719d4
-change-id: 20260916-asus-wmi-lps0-unavailable-warn-9a72be44b9ed
-
-Best regards,
--- =20
-Asai Neko <sugar@sne.moe>
+>> drivers/platform/x86/asus-wmi.c:5428:66: warning: data argument not used by format string [-Wformat-extra-args]
+    5428 |                 pr_warn("failed to register LPS0 sleep handler in asus-wmi\n", ret);
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+   include/linux/printk.h:564:37: note: expanded from macro 'pr_warn'
+     564 |         printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+   include/linux/printk.h:511:60: note: expanded from macro 'printk'
+     511 | #define printk(fmt, ...) printk_index_wrap(_printk, fmt, ##__VA_ARGS__)
+         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+   include/linux/printk.h:483:19: note: expanded from macro 'printk_index_wrap'
+     483 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                         ~~~~    ^
+   1 warning generated.
 
 
---=20
-Asai Neko
+vim +5428 drivers/platform/x86/asus-wmi.c
 
+  5421	
+  5422	static void asus_s2idle_check_register(void)
+  5423	{
+  5424		int ret;
+  5425	
+  5426		ret = acpi_register_lps0_dev(&asus_ally_s2idle_dev_ops);
+  5427		if (ret && ret != -ENODEV)
+> 5428			pr_warn("failed to register LPS0 sleep handler in asus-wmi\n", ret);
+  5429	}
+  5430	
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
