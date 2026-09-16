@@ -1,126 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D4F4B0E58
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 20:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789589610; cv=none; b=HJ+Zs3iqyScFH2XdDq2GyE89V9JjCfitMJ0/k9GbJtfVTdKsFfjAC6fIgMIKfKsKVzr/PqvhwZvoFGHQBj+Dt4hjQP+T/nTTLHPBvUMYPlwWNSPVWK0B/FLxJJ5kjDKCGdOwEgOAxVDvAFeiL1I91QkLVWvRYAr3qAaj4MyhUHs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789589610; c=relaxed/simple;
-	bh=GceCAcaaGJiGFn3WNl1vRm2/Wk+8/41/q/onpNyS8nQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MAQA1/fhguBEydaZyxqkV969ODiyQdZlJ8EinR0oh1IcxIMnXUq5kpgH3hmHMB1IQfk5W2AThlXekegTEwtKPoy162KY+rAsO4K2TaG0kzwSF77nabIuQY2DCBIZ9SE2fe+mj7CzIFYvNLbKGkNAnpQ7gsVlWypMGW1Mqn2aZDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzvQxTUA; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEDF4B1D0F
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 20:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789590676; cv=pass; b=M/d90qD3azYqXhAn4ZUKfFXee1aCNOf9fEby2p2dEgP2V1pVn4R/UyKbDOpfr4K/Qv5um2mE7aM0/KU3HdvukZGLL2yMcf1FJULWGL48Zev/WnmS3Kcc8DlH1c9TFDf/3RJ6mVjrCCZEa9CUrhQXSlHq3Eh2ZszGKmmYvm0ouD8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789590676; c=relaxed/simple;
+	bh=G3zVfl1/na29i79t4HxZrzQpGfHgd/dNtdPq394Flfw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K35TBuwo1pPYA2ulwisY9RTmNqLl1fe2CWTE3px5pTjdz3lxYkHTmRO6xnKVWIUYul9LonoiOaWuH2NDZXlhGsn2HuYvTfITBqlXAqmvgJQ2SAPXdvuSXXWU8VaPPqYmEE7wagUfo+HgHvLBu8uS5JSMx3RgcT8lvinjafwOMR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=k50Z20r6; arc=pass smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzvQxTUA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789589593; x=1821125593;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=GceCAcaaGJiGFn3WNl1vRm2/Wk+8/41/q/onpNyS8nQ=;
-  b=RzvQxTUAS3VYGhpYp92OOMlm1QXgse+q8xyk2lCdAVK+EFI3t60IZqUO
-   7cTqD6CgDvEX37tyKzWnCsFuxnH3rs++6TbhstzU16qdw5KPZckigFzJv
-   UruH45gX+IkQ8PZlCKLUCZ2T9r8Dwdq3ROPvbAeQ7nFXogm3xUcYTlE72
-   MQVDU9vZeo1C9vnyHAflzphpXnPtKKUnIE19ZFAyQuKFutzyfcRSbXynw
-   8z+XtRi7wnGzGovyUDRNTiMVpmj7jfOwRLiL7d7rwtoHLN3U7A34If4gx
-   CpU2C9MW6iFkY7nHH28sm4ODfQ+TDJyR5Xfo6PSTlLDLJNAKMa4cLhbuN
-   A==;
-X-CSE-ConnectionGUID: XA/gU+bXQU6ZznGwbH4/BQ==
-X-CSE-MsgGUID: OIE+Wi5MQmmC5mDa8Fm0RA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="100296230"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="100296230"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 13:12:03 -0700
-X-CSE-ConnectionGUID: iI+oDpbdSBiICCgsvF82RA==
-X-CSE-MsgGUID: A03fA/9PTvGbnu6915z0wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="277574057"
-Received: from mjruhl-vm.amr.corp.intel.com ([10.11.186.166])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 13:12:03 -0700
-From: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	intel-xe@lists.freedesktop.org,
-	hansg@kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	matthew.brost@intel.com,
-	rodrigo.vivi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	david.e.box@linux.intel.com,
-	anoop.c.vijay@intel.com,
-	badal.nilawar@intel.com,
-	matthew.d.roper@intel.com,
-	james.ausmus@intel.com,
-	karthik.poosa@intel.com
-Subject: [PATCH v9 20/20] drm/xe/vsec: Refactor platform check
-Date: Wed, 16 Sep 2026 13:11:58 -0700
-Message-ID: <20260916201139.2374531-42-michael.j.ruhl@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260916201139.2374531-22-michael.j.ruhl@intel.com>
-References: <20260916201139.2374531-22-michael.j.ruhl@intel.com>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="k50Z20r6"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f633cd78so78967f8f.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 13:31:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789590659; cv=none;
+        d=google.com; s=arc-20260327;
+        b=atQoN7uczw+OzM+/kCPGLrylH9SGPjHBC3G1oBNMygof2WQaJNYTQPSxr2gq5BrsX4
+         +1PWulKkz34irksVvknkWMPCSpW4PpF2PKrI+7Z3xCxKybMRBM1Yiw6zEXmLZ2NJedOm
+         +oYzZ53FcMnU4um081J1YOBVs/k2eiJYp6BS3YzPed6JfBlLSAY6+YM3iB+YCPBGdVeP
+         d7CRiwzqyFp7hvFjGbZN8ZFuPR/o5NaN6MvA1vvrz3BQ+UZh5IoXowUjicx6xD2ARPz5
+         FROUPA46TAeSkoH/ZsQa5G0I58AymkroZRBD5DEizFDpSgDVcMEe0XxQ82Bd8TiFZjWR
+         MBUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
+        fh=Np+EdOq028fPtpPw46XF5JZpnQPHfO+AwlBH+S0HKOE=;
+        b=WjjwZlr5iiOYrtse5ubbtJKV+oumCtnRX/ic0+i3mtHqT8T7TsEQW5AdaMbd9zS6CX
+         tdA27AOhSIzxFANNUtfYeSA6HwEBf2D4oEzkgvrpJ7VxvqX2MYF7OC3Fgl409NHRQF53
+         wCqBiWF9/CHSPCt+vTm7Z3vDcVw6xfjmGbacaW4Fne1F+7wikjjyrE2gDf8DQS1H+XX7
+         W0muPwd4ohawau9oerH+8Nr0HKX8d6jYaw+/l25o6beKo6o8iVCv/8bYVdneFNjGotCF
+         ZDIISqOf6sIN3Dg1ZZ/cte/Syt4cURQ/WuHI26if1pVcVIj4BVLE4UQEPHN+LX9tPG3N
+         +i/w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20251104; t=1789590659; x=1790195459; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
+        b=k50Z20r6gbRkXYJ0e50V578N9sLrcgg/7sSqIpuszz0YYVkw8NAeVz2vu0vbOdcTt9
+         Uear/5wl7mVfh0qHNHsacttvKARrzQjslbXjsB+ZJcdQGYNaQ8UwC9BsPCW5pXyUk5VA
+         66hXZlfgM8TJf8Z+H3wtoi3KoJTnGqxOPVjEJC+w34FvTSdAD7oTnx9U1iypOGNKiDJ/
+         rU85tXQsa/WgjOrNMsgkvb2AqPlKnC9XZHlKG29O//mGZmlIMkNLF42kq9uy3MEUU6I2
+         ael9qvqeg5iFGI434X4I466X6pdiWVApMS9o7Balx+16k96hCL1nCwxIOf0FLYKPhI95
+         UgjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789590659; x=1790195459;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=W5pxHTrfs+GW0hVGwxC0S7jNRcDjOR4yV/CxTiMohJA=;
+        b=PAyitg98ezsriGNci1sqF0ZHp45XhE9oI1wducTyemHlFXZOVEKWB9Yuc/18cgav1/
+         5egT0aO6Y/mA1Q/mGeAymlyeIrPo5VlykVI/SWrWGMvHFp/Q1ba5e1vWQuqmTK0HO4A4
+         xD8Vc6qE87phXvzqUDBgMx5WlWmlP5301GaTwHVSoE4yhdoCSu+n55m5w+XsP6Ihgqhy
+         3SfggLms+ufLg3uwfuJ6tb9rLo5WC/rO4uE+8oAS8YepQb2GiXEO+lKYSHh5kuvfHZt/
+         iva0Eh86YMxJZrGnut8/GOUirRzqfPNFynSBswfX8xOALUbR/EMppMz6P1PRv3Lzdd2i
+         ui9Q==
+X-Gm-Message-State: AFuF++mKoVWXei9UzsSr9Ol8Gx18JIAgljkrsvTTq3vL1lf8/8L0Qk/A
+	I8Rg+WHKhhk2B31eXYKAr0IuX1vjQQqQz2/4hbVK/ImThm8pnspIO5LXKz6sP4k44aEOK35L50G
+	TEpaeeGOwRSBM4A4OWoyn3c9az6F1Bct5GB1bcOA=
+X-Gm-Gg: AYBFou0lc6wxrTHonJrLY7JXIebHQg8DrzjJaVzr9qu+wpAzdJnN2/MxAYDWmF8nzCl
+	noJD51SPhGKGOCTgcLRn5096/p3/7nPloeLtlGmIH5F0lF7rDrWETzH5VqbOtj2r9mLb0kpCpKV
+	FO2lIaoLkGNKF9z3FAuZnnyJvxBFyVLYKEzrVYBqsyG0YRm+wxZbxH58l8Fc2tqNx0xskvYziYv
+	ZmjCUSNoqNHgLuQvTbbWulVrg+J90+rZDg3fUYOjan0AKaWoRwKaY3360LdP+CQ7kWQ6j5G0bi4
+	TEy5dl11YRAduQENi1De9hbYN5mteZ73pOLzXfby1JmomQhArVTUN4I=
+X-Received: by 2002:a05:6000:402c:b0:487:a36:b2db with SMTP id
+ ffacd0b85a97d-4870d052620mr4930706f8f.49.1789590658550; Wed, 16 Sep 2026
+ 13:30:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAM=nh0S9e1+_U4WGR92HwOrNC2h2xYb6eKvgN5_skg-vvbSbqQ@mail.gmail.com>
+ <d8d7a246-00f4-42a5-881f-66839eb6b302@amd.com> <CAM=nh0SB5uhsqGyH9v_1N1oZsv94SmrJTqWi_0YVbULgY-c_aw@mail.gmail.com>
+ <c733990f-844c-4ba5-85fa-a0dad627ecad@amd.com>
+In-Reply-To: <c733990f-844c-4ba5-85fa-a0dad627ecad@amd.com>
+From: Karsten Wiese <fzuuzf@googlemail.com>
+Date: Wed, 16 Sep 2026 22:30:45 +0200
+X-Gm-Features: AcwNN1WKv7CaNi_QTv0xYctQjSvPHF1bxsb-ON97fYSduw019hk8yfeKjDemKJ8
+Message-ID: <CAM=nh0QY9-G2PJKpyrXe+h1FHvc1pv6v0-AKgPuMRQC=QtbRZQ@mail.gmail.com>
+Subject: Re: amd/pmc
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-For debugfs, residencies and pcode_info are available on the BMG and
-CRI (!SRIOV_VF) platforms.
+Am Mi., 16. Sept. 2026 um 22:05 Uhr schrieb Mario Limonciello
+<mario.limonciello@amd.com>:
+>
+>
+>
+> On 9/16/26 15:04, Karsten Wiese wrote:
+> >> * What issue were you having before?
+> > The system would hang on suspend to RAM infinitely. Sometimes it
+> > suspended, but the fan kept spinning.
+> >
+> >> * Was it a problem on every single time, or just sometimes?
+> > Sometimes it would hang on the first try, sometimes it survived some
+> > suspend_to_ram/resume cycles.
+> > When the fan kept spinning, I woke it up and suspended it immediately again.
+> > It never survived more than 2 weeks with some 3 cycles daily.
+> >
+> >> * What is the new behavior with that module parameter in place?
+> > 17 days without the fan keeping spinning or the system hanging on
+> > suspend to ram.
+> > Followed by restarting into a newer kernel.
+> >
+> >> * What BIOS version do you have?
+> > MDCN30WW
+> >  From september 2023. Should update.
+> >
+>
+> Yes; before we pick up the quirk, can you please try to update to see if
+> it helps?
 
-Refactor to have one code path for adding the debugfs entries.
+The latest BIOS Readme doesn't sound like updating helped:
+-- Excerpt start --
+Summary of changes
+==================
+General Information:
 
-Reviewed-by: Karthik Poosa <karthik.poosa@intel.com>
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
----
- drivers/gpu/drm/xe/xe_debugfs.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+MDCN40WW:
+BIOS Notification    :
+1. Fixed
+  1) None.
+2. Add
+  1) None.
 
-diff --git a/drivers/gpu/drm/xe/xe_debugfs.c b/drivers/gpu/drm/xe/xe_debugfs.c
-index c56f0e4a9b90..d90fa2dc6231 100644
---- a/drivers/gpu/drm/xe/xe_debugfs.c
-+++ b/drivers/gpu/drm/xe/xe_debugfs.c
-@@ -761,23 +761,22 @@ void xe_debugfs_register(struct xe_device *xe)
- 				 ARRAY_SIZE(debugfs_list),
- 				 root, minor);
- 
--	if (xe->info.platform == XE_BATTLEMAGE && !IS_SRIOV_VF(xe)) {
--		drm_debugfs_create_files(debugfs_residencies,
--					 ARRAY_SIZE(debugfs_residencies),
--					 root, minor);
--	}
--
- 	/*
--	 * Pcode version read from PMT is currently only supported on CRI and BMG platforms in PF
--	 * mode, as both platforms support the necessary telemetry read mechanism and have a fixed
--	 * PUNIT_VERSION_OFFSET.
-+	 * Residencies and Pcode version read from PMT is currently only supported on CRI and BMG
-+	 * platforms in PF mode.  Both platforms support the necessary telemetry read mechanism
-+	 * and have a fixed offsets for the required data.
- 	 * Attempting this access on other platforms must be verified before enabling support.
- 	 */
- 	if (!IS_SRIOV_VF(xe) &&
--	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE))
-+	    (xe->info.platform == XE_CRESCENTISLAND || xe->info.platform == XE_BATTLEMAGE)) {
-+		drm_debugfs_create_files(debugfs_residencies,
-+					 ARRAY_SIZE(debugfs_residencies),
-+					 root, minor);
-+
- 		drm_debugfs_create_files(pcode_info_debugfs,
- 					 ARRAY_SIZE(pcode_info_debugfs),
- 					 root, minor);
-+	}
- 
- 	debugfs_create_file("forcewake_all", 0400, root, xe,
- 			    &forcewake_all_fops);
--- 
-2.43.0
+3. Modified
+  1) Optimize network related logic.
+  2) Enhancement to address security vulnerability LEN-198949.
 
+
+
+EC Notification    :
+1. Fixed
+  1) None.
+
+2. Add
+  1) None.
+
+3. Modified
+  1) Modify the combination keys of fn which fix some key may been hold.
+-- Excerpt end --
+
+No Windows on the Laptop, will take some.
+
+
+Thanks
