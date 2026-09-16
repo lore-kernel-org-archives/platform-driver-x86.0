@@ -1,240 +1,437 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010025.outbound.protection.outlook.com [52.101.84.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf2-f13.google.com (mail-lf2-f13.google.com [74.125.229.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF5D46983C;
-	Wed, 16 Sep 2026 08:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42ABE4CC62D
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 10:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.229.205
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789548952; cv=fail; b=YXeSxVQKwHFMaN7JCQtiq0ksGz8YIo8iTlZoFnz8t4fQ87PV0yFhQYqPb7lfUn080w9qvQBRtqNozdwnR5QBARU2SFgkvRuC3Wxv4iPGMs0MbW0DrUO4QEmuslXvuFpNcuDjesQDA7unn65AUho/vwbwa5DNkxhkRCWf+uTuCM8=
+	t=1789553462; cv=pass; b=NtG0yONfD4nV9S6MyELw7n07k0hNClOA0HzlwNBDN3xyxytTejI3Mst910Vo/fSvgEOtOWRaWsRGEsijs0HMwUnIUf5CEtdPVeJHRbpYiirj6OT1YmKR+Mf/GfO5dvphr/fqE/uoYiKG/Ycy4B1raQ3S4G476Trt8yy+J7RE83E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789548952; c=relaxed/simple;
-	bh=j4llVGyXInZeNzrm+N2p7/gg3XlNce1XcKF9MOAopPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t09swqam+uNundMK+9K/vxVerO9O6lPxmV6OoRz6KxoiwybTPE2LO8hVHf9oBZ+W72ZBtPz3UefHwRlNBZEGL8Bn30BcC1LmtKd6rsLcN5fl0i3VMcRXV28AblkGZcuLunI6LwW4XTFiXX3lSqkoB3jGEErTZEE+QEsEa8PIP8M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eAVXADma; arc=fail smtp.client-ip=52.101.84.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1789553462; c=relaxed/simple;
+	bh=3PmnXUsDHMiy/ta9S1yq967wuEV7aKeXF0z8aMsi22I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RBTuw+C3vrPndkMQqMkxV0TBIVwl1Ov6GFMZlXfSP26h8rzmZj0JMH39tr8H1zo5HQ66ioLwwUzQt/hd86c4dTaUNdLrWaz/kxB2ddwmT6BwqQyLKTc19fo6zQowHYF239qocbl+nhEKcKh89a5ezlONg3DxD9m8NUR6nV4e1XQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hhQuo3P8; arc=pass smtp.client-ip=74.125.229.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eAVXADma"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fSNmyRrKkADBfm8FRBA/0bV0cOhbgJUXUQ/bN2cgwQKO3IOuKY2OR1tocqLFpmYLTg+1mkpK0R9WbuFd/zipsHzoWOrVGR1fF/2K8qzWLy59Mqd/med8PmjRMQX/L2puNuPrTjp7A+fB60Oou/fFfD6mnPZHeI27v/O8zPNbWeiHgdGxoUIKqIUETeWxkyFSlCVXquabUThsXLCTyRD4lsHotxFY33sjDJ12tuAV7tgo7+H0tiIbGZ5qYoREoBr9ikFbPRfcsOeQw4thpsq7IiELaiezLYiZ72pR2vpM81+AjQ62xQxhU0YdieeNjac4oIcfE3DaRmaaV3ks00qcgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3yu5AmusNpNON3i8F109QftsFIXrJ1jZplS02DN1eAs=;
- b=c9NsKiZ7DehZi0DnumXzdqfLGJR3dwXHtC78JGiRL7V2BB8eL6bem+XCZx2ooUrPK0TPeCdRd19kjZbg66wUtXrmzHED+LIge++SJtHM78BmZdepOLduG1lTIQs0n3aEx3rXYn59Dt1d8OdNLy1fu0dJwbuHPR6RZxPHSAJlNVEnw+M5w4lEZVToYstl6A02b2jueJ0SDOFiNaiYWaUm75rFwokzNtsZWrMAYeQ9dF9HtgD6N/hWnSDS+vHKE0PtZmp1DWu/IH67BgGAa3xDrhnY3/JxoiG8K7i+3pai4ct4vEDmp6pwCYEA6CwZR+ilJIsR5zdFlFsSVblDS+E9FA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 164.130.1.60) smtp.rcpttodomain=pm.me smtp.mailfrom=foss.st.com; dmarc=fail
- (p=none sp=none pct=100) action=none header.from=foss.st.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3yu5AmusNpNON3i8F109QftsFIXrJ1jZplS02DN1eAs=;
- b=eAVXADma4mYtdNZ20kKnpNNxpR0YCxZoIIrcUTcmDWuga4MbVSTqHb7pOpNZeosGGubV6EJAX24VEyD823CUjMhjxb/hFBL6sCJlXzyirTAOZvE7TsbR4nadydNOGkFf/Um7C33hsTZ7cpOXluIE/px+JzDUpmduEJcoo3WrBKkK7ek4cBL5ATKcn2roXiwBH5fNchbapKigWq3aoreLVL8prixbhoRtP0PTNlFnql4UXCLyrhNWaNOVE9Nuuh7CNsXBhH6Lan3V5FWLbDG51g7wwVNe4fCn2QbB7xKxi0heXdXa8eo35HjTuKWlLyWoYW9Yjcnkepqh5bX35qQi5w==
-Received: from DU7PR01CA0007.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50f::7) by DU4PR10MB8612.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:55c::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.406.13; Wed, 16 Sep
- 2026 08:55:27 +0000
-Received: from MAD0EPF000008B1.eurprd04.prod.outlook.com
- (2603:10a6:10:50f:cafe::a1) by DU7PR01CA0007.outlook.office365.com
- (2603:10a6:10:50f::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.428.11 via Frontend Transport; Wed,
- 16 Sep 2026 08:55:27 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 164.130.1.60)
- smtp.mailfrom=foss.st.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=foss.st.com;
-Received-SPF: Fail (protection.outlook.com: domain of foss.st.com does not
- designate 164.130.1.60 as permitted sender) receiver=protection.outlook.com;
- client-ip=164.130.1.60; helo=smtpO365.st.com;
-Received: from smtpO365.st.com (164.130.1.60) by
- MAD0EPF000008B1.mail.protection.outlook.com (10.167.241.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.428.7 via Frontend Transport; Wed, 16 Sep 2026 08:55:27 +0000
-Received: from STKDAG1NODE2.st.com (10.75.128.133) by smtpO365.st.com
- (10.250.44.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 16 Sep
- 2026 11:00:54 +0200
-Received: from [10.130.78.67] (10.130.78.67) by STKDAG1NODE2.st.com
- (10.75.128.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.43; Wed, 16 Sep
- 2026 10:55:23 +0200
-Message-ID: <df4edb95-82e9-4989-be43-7d9cc408d268@foss.st.com>
-Date: Wed, 16 Sep 2026 10:55:29 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhQuo3P8"
+Received: by mail-lf2-f13.google.com with SMTP id 2adb3069b0e04-5b5e4f13d77so919252e87.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 03:10:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789553456; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VxCthtp1zqDPeQPMXJyWYx+IXezOmWI/scZUAjKET3l7VF26Q5Sjd0N6Mc+NL6SSMB
+         BSt/Tkpk2FlBL1o9Qvq3pbsA+CeSaDe5SvWdsh68dnB1k60J3I37fnAWxiXSzsmLJ6hx
+         cvaqPI6O07+dO7LiiiI12gUIBzZkWjfEfTObg+vnv3TB5iOXgw9pyDpKT1M3WGxZN0ET
+         7gdyQZ99yJRYYEadbie8y+wOr5Q1hJTko7p4dfPuKWyOj3fD3Ft9s4CN9NfPxg2H6hj0
+         L7Q71B9SeVo/n3dwajMUrG4sBClygcD3isjO40z1px7aZ8OWAEUCERr53knrko0vRRoG
+         kRwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=QBfrrGxVZ8vwjb1F53gFkFYHEKgSrnYofiSpEh8Slt4=;
+        fh=wJZrRG79uYHuIxEPP/T9eFGumxsVVoYrJqIyvGOv+uc=;
+        b=hTRIU/rZWyL1CzrDYWoOfi3CgkI51wvItHAJ8OlZaANdPVYm2lV/0NEfVk2yJKQFSf
+         eFEquDqUVLHPE0jbbz5nF9JYlTDpbJXbh7ygTXx6Mwu6zwkjG2uUTP1ES0T+59Kc6EP+
+         F/w03/S8H+KIsKZVQEIpQQCOiRZCzwK37O5pX5RopWBtyjEQzr96awxxApM5x5VXd6w3
+         ZbV1L0Ars1BYCaXd98TPpI6Xn2tp7jwIhZ7xl1JZAr62o1NLgl2lHzW/q57ojZQ6Aziv
+         WI81h3JzoMoxYleWpMud3wEgPqnxu0Jy/gjXIk8hxQBEjaqayuYARfWop5QrtpINLy3L
+         Tf+w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789553456; x=1790158256; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=QBfrrGxVZ8vwjb1F53gFkFYHEKgSrnYofiSpEh8Slt4=;
+        b=hhQuo3P8cTsnI0OnwJKGu2zWlSiRXK9guaojiWclrxaeQLKo/Mty9E8J3P9p6cV0f7
+         jcprFOMAdoxXusfZluuEOVv2n0oGPMdfVWc/ALDRmdxjbCQm3ITw0Ix52j5GfsNirBTB
+         uavvOHIfv5R2jXz1Dq2Qpn/xdvTygssL9bbTkF5u55n3J9KfAzq20BBL+b07/tgUqo2w
+         9riKLxUn0o3S9U8uDGB3v50hOjtD3kj3Kcz85j58hh6bD9O/DCgvwK/aAOQwtCE3AT5H
+         9ng5ngY4b3Go0tkYsR2xCo2wPAO4iGRc+ZPtlUo4HbI/Z68a3Y+4ji3P9/7nHmVws3qa
+         WqOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789553456; x=1790158256;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=QBfrrGxVZ8vwjb1F53gFkFYHEKgSrnYofiSpEh8Slt4=;
+        b=xD9MUe0gnzv5kvEkXQkPQJ6o0KSEb+aTBkFwPF1okDxqt/W6O6C9VVO5n21IqrZfDs
+         aRygb9o3lwa6UJyp9+B0Qlkn1+B2EWKATsdvzOSivf47e52CWzaRjFWsBGziDCCL2Xp3
+         QfdgmzSK4FDPGymzqO5osjQx78H2PKvcTSQp4D5SnkoVLl6bMKrPRymjpjnU83+80r4d
+         vKmY2ksnh8lcyONV7gcexX53ZcwAe4bOrgddGG0mznZG1ELan7dnYXvvPuftEuVQAYvb
+         x3C9hi4JQkls8ymzIFlyAPZ3PbbBGsq+Lpe5+qwCsXo/96CGfbCXRx+qgSEQiWSlceWT
+         qvbw==
+X-Gm-Message-State: AFuF++m/8ik6BsgZmZikapMJ1HH9+A5pffh7ME47r4B9jinPOgWoOsSW
+	Cm79P6zgpXTsc0Jw0kiUHCajNFvtzPSmK9FGCc/PxfREGoaen1EngaWWRD09gJQ5W53L4zTr972
+	CEX85GqxPdrIULaNNYeSEsONQ4yRYvjk=
+X-Gm-Gg: AYBFou32x7tT9GHq9Q7OZz4He4iqX7jzWMJZ3ISobO+HUlLBf6ggx6PKNUrvmnSm1Lk
+	VcikZ5Ups82UaBJN2FPMJ9UyhyFTm6sF0vUFJIlKZSynA7OicBibXFwFc7QZ4HH69w9N5mqrEA7
+	SJk9ZzzsR9YvtCqgUvJqlEQUtZ7GinqIbw9sxLSgVmZ55eFAQkP2sDT1ihNkm2s1BifvmRcQt94
+	WuZqasoHV/xGHiJQYwaJPwfScxWnzXkfsuPsFM9pkah0ptbmi4Etzh2naIo5mkJmc+EHdXILPLd
+	LKjO76xauzfUQ6ShWxrbhaj3L+tFfT7bxKH/vHVWPt6CCAwSYoNLFdVYKFOa83B+iC3GN9WiHLZ
+	j5xWVhysnfgFd
+X-Received: by 2002:a05:6512:3d02:b0:5b6:1a7c:32 with SMTP id
+ 2adb3069b0e04-5b8b6656a6cmr525821e87.53.1789553455817; Wed, 16 Sep 2026
+ 03:10:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] media: i2c: st-vd55g1: Genericize driver and add
- VD55G0 support
-To: Sergey Lebedev <lsa.uz@pm.me>, Peter Marshall <pm@petermarshall.ca>
-CC: Sylvain Petinot <sylvain.petinot@foss.st.com>, Sakari Ailus
-	<sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans de Goede <hansg@kernel.org>, Daniel Scally
-	<dan.scally@ideasonboard.com>, <linux-media@vger.kernel.org>,
-	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20260910213308.53429-1-lsa.uz@pm.me>
- <1070f707-8a23-419e-a0a2-a6f295ceb5a0@foss.st.com>
- <20260915100722.38504-1-lsa.uz@pm.me>
- <1e798c12-2272-471a-9e71-82188439de82@foss.st.com>
- <20260915173604.65023-1-lsa.uz@pm.me>
-Content-Language: en-GB
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <20260915173604.65023-1-lsa.uz@pm.me>
+References: <CAL-my2=5V8Pk+R+aAoJ556-DFR-B0wnMLckRNDbAohdZvB15+Q@mail.gmail.com>
+ <2d5d8f5d-2672-4a4e-b9ab-53ad49d4c212@gmx.de>
+In-Reply-To: <2d5d8f5d-2672-4a4e-b9ab-53ad49d4c212@gmx.de>
+From: =?UTF-8?B?6auYIOS/iuaWhw==?= <btx342@gmail.com>
+Date: Wed, 16 Sep 2026 18:10:42 +0800
+X-Gm-Features: AcwNN1VH8nr_hunDWXUNce7GRa03BwxpKBJNiwqjE_1mWT8Am-VYUMxu5ARWff8
+Message-ID: <CAL-my2n6+GW_=eQS+v0u0kFqFRCRt28UAEig-8rF30XzO8rLXA@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BBUG=5D_Redmi_Book_Pro_14_2024_=28TM2307=29=3A_fans_neve?=
+	=?UTF-8?Q?r_spin_under_Linux_=E2=80=94_root_cause=3A_EC_gates_fan_engine_on_OS?=
+	=?UTF-8?Q?TP_byte_=28tested_workaround=29?=
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	qby140326@gmail.com, ilpo.jarvinen@linux.intel.com, hansg@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: STKCAS1NODE1.st.com (10.75.128.134) To STKDAG1NODE2.st.com
- (10.75.128.133)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MAD0EPF000008B1:EE_|DU4PR10MB8612:EE_
-X-MS-Office365-Filtering-Correlation-Id: fdc3fbfd-d3bb-41c6-6b22-08df13d0410b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|82310400026|36860700016|1800799024|376014|4143699003|56012099006|5023799004|11063799006|6133799003|10067099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	OTbLRlvjeXebzb9XMRmKh/qCylQQDdpB+WPSyIzIzB4q8to2/TBN6VkfzTzh3FHpo/tJHiUawnLFQ7sLCeiaisHFZz7rixPugLBFxcXpas2vLaPbcCqNS+icYZHxuur/keN3gjrsIJw8h7KqaEDEo/1ImtwE+sYzCgo05evhORvnk1s3u7uHz8/ZP3FBWuqowIcHlt4JiVmvIf1pjiKSThicbxqPe3zIsvPYfVZYvv9bpduuxdo8rvsBq4v2r1h+lucY+U3fznAO7XsgEm7RwS3ypZ0SAAclgk0sHb+PE8SqVRplshHdH1S1653A0wCNWp0Gwvg7MO/q09NikHcYR9hVnzSm0Wh0oc4zhFY+h4hyNtL2ku26gCP57ug3fJqPfmOKaC3AW/AtD5908Y7qybrxmq4VuEyfSkFST9Z39L9uPV6JaCKEk5HVyhpaBYfOuSJqgvvHy5o+RYeW+wLPi/lPzMNwhh/wUT+OyQ9Qg1ZaoJWbzXNUtCJsfEevrlxKcL/XZNT8O2M3nYUosS528u32TCd3uKaNjD+1Br4eItPLcg/+8Ju6FM7WQ7qT8H4/D2Qnc+OlkqgNsnQP1tv4F7otXwQBKMV5r3yQiue1If8twQwTejss/TOESi43vCLzuC9huiUC27z4GmbWRumV9SHVDK39hpq3zYjNEO4oYd61mIsNK+dXevBqI6t72cnGNg++MeI3PGeQZuVEc+GZUQ==
-X-Forefront-Antispam-Report:
-	CIP:164.130.1.60;CTRY:IT;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:smtpO365.st.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(36860700016)(1800799024)(376014)(4143699003)(56012099006)(5023799004)(11063799006)(6133799003)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	qnLEih50NNZbAc7QSzE32R/+aNyAbfbZTfOXwMRAZG3L9JaQpWQA1vNsftr+vKQfgTp3bTv+iWudjWya0bvKhIVYgGa+imfdBSnI3YlIYu7E+KN0UcJjPpxqFTHtuP5flItaB4GDntv4gFug4Dmdf0bFyDeWMSuNNkkq+skIqGiSo/Emgewqagit0+KIHEatejMkHHXv0Uor4Gv37OMHReGLI9HgWCST2/TOV42XT0E/IZ7kAg8PYnvAzJ2akyumYUBfcu7VG8c1pfdUcJdFiB8L+arQSHMwgn5CQ3GJFhyzFxfLWujdfoCbLPKuFfRxZJw2nA3KM5tijL4F+gHqxWAy4jqQHRulEUGNqj5eEj36yuEPgZcrzMUXg0tpsEcxvUfBnzUW9fZYO561I3GFx0gS3oemQJ16lA5pN8DRnVaGcq6CHQdN2M4jDAdo5mhT
-X-OriginatorOrg: foss.st.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2026 08:55:27.4042
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fdc3fbfd-d3bb-41c6-6b22-08df13d0410b
-X-MS-Exchange-CrossTenant-Id: 75e027c9-20d5-47d5-b82f-77d7cd041e8f
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=75e027c9-20d5-47d5-b82f-77d7cd041e8f;Ip=[164.130.1.60];Helo=[smtpO365.st.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MAD0EPF000008B1.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR10MB8612
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sergey,
+Hi Armin,
 
-Le 15/09/2026 à 19:36, Sergey Lebedev a écrit :
-> Benjamin,
-> 
-> Thank you - for the explanation, for the link, and for saying where you
-> stand. All three are worth more than an ack would have been.
-> 
-> Sorry for the slow reply. I spent the hours reading rather than writing: the
-> repository you pointed at, the two drivers side by side, and the in-tree
-> binding. The checking changed what I have to say, so it seemed better than
-> answering quickly. Three things below, separated so you can take whichever is
-> worth your time.
-> 
-> 1. The licence question, and my mistake
-> ---------------------------------------
-> 
-> Settled, by your link. vd55g0_patches.h carries
-> "SPDX-License-Identifier: GPL-2.0" and "Copyright (C) 2024 STMicroelectronics
-> SA", with cut1 and cut2 arrays. ST published the firmware itself, two years
-> ago, under a licence that answers the question I was asking.
-> 
-> There is nothing for anyone to grant, and the right source to take those
-> bytes from is yours rather than any third-party copy of them.
-> 
-> I should have found that before raising the point twice. Your standalone
-> driver was named to me in this thread and I did not open it. The blocker I
-> reported on 7 September is not a blocker and never was.
+Thanks for looking at this. Answers to your two questions first, then a
+correction to my original report that your questions prompted =E2=80=94 you=
+ were
+right to be suspicious, though it is not a probe failure on this unit.
 
-That's fine, I'm glad you're unblocked :)
+> what is the output of "cat /sys/bus/acpi/devices/PNP0C09:*/status"?
 
-> 
-> 2. What the work would actually be
-> ----------------------------------
-> 
-> I measured it rather than guessed, so that we are talking about the same
-> thing:
-> 
->   - twenty-five LINUX_VERSION_CODE guards, all of the form
->     "#if KERNEL_VERSION(x,y,z) > LINUX_VERSION_CODE", about 180 lines to drop
->   - s_stream to enable_streams and disable_streams, with vd55g1 in-tree as a
->     line-by-line reference written by you
->   - st,vd55g0.yaml, adapted from the 3.3 KB st,vd55g1.yaml
->   - Kconfig, Makefile, MAINTAINERS
->   - checkpatch, sparse, builds across configurations, and testing here
-> 
-> That should not take as long as I expected.
-> 
-> 3. The question I cannot answer on your behalf
-> ----------------------------------------------
-> 
-> A 2100-line driver arriving beside a 2100-line sibling by the same author
-> invites "why is this not an extension of vd55g1". If I answer that badly,
-> the third version is a rewrite in the direction you have already rejected.
-> 
-> Reading the two files I can see arguments for your position. vd55g0 is
-> monochrome-first, Y8_1X8 and Y10_1X10, where vd55g1 carries the Bayer codes.
-> vd55g0 has real strobe and flash handling that vd55g1 barely touches. The
-> register namespaces are essentially disjoint.
-> 
-> But those are my inferences from one reading. What I would be repeating to a
-> maintainer is your engineering judgement, and I would rather have it from
-> you.
-> 
-> So: you offered to elaborate. Please do, if you have the time. Not to
-> convince me - I have no stake in either shape. It is so that when Sakari or
-> Hans asks why VD55G0 is not folded into vd55g1, the answer comes from the
-> person who wrote both parts.
+  15
 
-I think the fact that the vgxy61, vd56g3 and vd55g1 already coexists as
-separate files in the kernel file structure, all reviewed by Sakari,
-could be seen as an implicit agreement. They all share some common IPs
-but are pretty different. Sakari, if you have anything to add, please do so.
+(single EC: PNP0C09:00 under \_SB.PC00.LPCB)
 
-Sorry for repeating myself but I personally think having everything
-separated is better for code clarity. As the register map is
-fundamentally different, you will need an indirection map pointing to
-each register i2c adress for each sensor, like shown in Peter's serie,
-i.e. :
+> Can you share the output of "dmesg"?
 
-  expoure_register[vd55g1_sensor_type]
+Attached, captured on the current boot (kernel 7.2.5-3-omarchy; the
+original report was on 7.2.3, same behavior). EC-relevant excerpt:
 
-While I appreciate the idea, IMHO this boilerplate adds unnecessary
-complexity and feels pretty error prone.
+  ACPI: EC: EC started
+  ACPI: EC: interrupt blocked
+  ACPI: EC: EC_CMD/EC_SC=3D0x66, EC_DATA=3D0x62
+  ACPI: \_SB_.PC00.LPCB.Q_EC: Boot DSDT EC used to handle transactions
+  ACPI: EC: interrupt unblocked
+  ACPI: EC: event unblocked
+  ACPI: EC: EC_CMD/EC_SC=3D0x66, EC_DATA=3D0x62
+  ACPI: EC: GPE=3D0x6e
+  ACPI: \_SB_.PC00.LPCB.Q_EC: Boot DSDT EC initialization complete
+  ACPI: \_SB_.PC00.LPCB.Q_EC: EC: Used to handle transactions and events
+  input: Lid Switch as .../0000:00:1f.0/PNP0C09:00/PNP0C0D:00/input/input0
 
-As you mentioned both sensors don't offer the same functionalities, so
-you will also need some kind of :
+The EC driver probes and binds fine here: PNP0C09:00 has a physical
+platform device bound to the acpi-ec driver, there is no ECDT (the EC is
+DSDT-only), and EC transactions demonstrably work at runtime (BAT0 _BST
+reports live voltage/energy/serial; the lid switch and GPE 0x6e events
+work). The only ACPI errors in the log are unrelated _PLD/_UPC failures
+in the XHCI/TXHC hubs (AE_AML_TOO_FEW_ARGUMENTS in a RUCC helper).
 
-  if (vd55g1_sensor_type)
-    foorbar();
+Your other concern =E2=80=94 that any firmware attempt to access the EC wou=
+ld
+error out =E2=80=94 does not apply to this board, and chasing it down expos=
+ed a
+real mistake in my original report:
 
-On top of that, it makes testing a bit more tedious as each change in a
-generalised driver might break the other sensor, which you might not
-want because, well, let's say you made a change for the vd55g0 and don't
-have a vd55g1 to test you didn't break anything on its flow. This issue
-disappear if both files are separated.
+1) No AML anywhere in our tables (DSDT + all 27 SSDTs) uses EC address
+   space. All 308 OperationRegions are 242 SystemMemory, 50 PCI_Config,
+   14 SystemIO, 2 SystemCMOS. The EC's data surface for AML is a plain
+   SystemMemory window:
 
-I'm also a bit concerned about the history, since an heavy refactoring
-will alter the git history and make git bisect harder. As we already
-have a v55g0 downstream driver, that I think is mature enough. I see it
-as a better idea to use it as a starting point.
+     OperationRegion (ERAM, SystemMemory, 0xFE0B0300, 0x0100)
 
-This are all the downsides I see while typing, of course I might have
-forgotten some, but you get the idea.
+2) Consequence: Q_EC._REG can never execute for an EC-space connect,
+   because no EC-space region object exists for ACPICA to fire it on =E2=80=
+=94
+   on any OS. The OSYS->OSTP mapping inside _REG is dead code (vendor
+   cruft from a reference design). Q_EC._INI sets ECAV=3D1 when
+   _REV>=3D2, and all methods proceed through the ERAM window instead.
 
-> 
-> If a separate driver is right, I will start and send you something to look
-> at. If the two really should converge, that is worth knowing now too, and
-> Peter's series already points that way.
+3) I misread the window layout in my report. The iasl field layout is:
 
-Thanks a ton, I really appreciate the work you and Peter are doing. If
-you start this journey please add yourself or/and Peter as MODULE_AUTHOR
-and in the maintainers file. Don't hesitate to contact me either.
+     Offset (0x60): QFAN, 8
+     Offset (0x62): SCFG (0x62), HBPF (0x63), PCMD (0x64), OSTP (0x65)
 
-> 
-> Sergey
-> 
+   The byte I called "OSTP" (0x64) is actually declared "PCMD" in the
+   vendor AML =E2=80=94 and PCMD is referenced by no AML method anywhere. T=
+he
+   real OSTP at 0x65 already reads 6 at every Linux boot with no help
+   from us (pre-fix dumps: 0x64=3D0x00, 0x65=3D0x06), so it is written by
+   the EC/UEFI firmware itself, not by AML.
 
--- 
-Regards,
-Benjamin
+4) Corrected root cause: the EC's autonomous fan engine is gated on
+   ERAM+0x64 ("PCMD"), which nothing ever sets under Linux. The
+   original experiment stands with cleaner isolation than I realized:
+   with OSTP (0x65) already 6 the whole time, control load runs stay
+   fan-silent; writing 6 to 0x64 engages the engine and the fans follow
+   the EC's own temperature curve; QFAN (0x60)=3D4 forces full speed.
+   That one-byte write has been running as a boot+resume oneshot since
+   2026-09-15 and the machine behaves exactly like the Windows side.
 
+So on this unit the EC driver is healthy, and "replicate the _REG
+OSYS mapping" (my original proposal) would be the wrong fix =E2=80=94 _REG
+never runs on this platform regardless of OS. The open question is
+narrower now: who sets ERAM+0x64 under Windows? Not AML (no
+references on any OS), so presumably EC-internal logic or an SMI
+path (there is an event-driven one: _Q35 writes 0xC2 to the port-0xB2
+SMI port). If Milo=C5=A1 (dual-boot) could dump ERAM 0x60..0x6C from
+Windows =E2=80=94 or even just byte 0x64 at idle and under load =E2=80=94 t=
+hat would
+pin down what state the EC expects to see.
+
+Happy to test any patch. If a quirk approach is still wanted, the
+effective workaround is "write ERAM+0x64=3D6 at boot/resume", not
+"replicate _REG". Full acpidump and the raw ERAM dumps available any
+time.
+
+Transparency note: the ACPI analysis, the experiments, and this email
+were prepared by an AI coding agent (Claude Code running the GLM 5.3
+Flash model) working on this machine. To be honest, I still find much
+of the ACPI detail confusing myself =E2=80=94 what I can vouch for firsthan=
+d
+is the hardware behavior: the fans were always silent under Linux, and
+after the one-byte write they spin and track the load exactly like on
+Windows. For anything deeper than that, please ask and I will relay
+it to the agent.
+
+Thanks,
+dista
+
+On Wed, Sep 16, 2026 at 5:47=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 15.09.26 um 14:09 schrieb =E9=AB=98 =E4=BF=8A=E6=96=87:
+>
+> > Hi,
+> >
+> > This follows up on the report from Milo=C5=A1 Vlku about the Redmi Book=
+ Pro 14
+> > 2024 (TM2307), where the fans never spin under Linux although the same
+> > hardware works fine under Windows:
+> >
+> > https://lkml.iu.edu/hypermail/linux/kernel/2608.1/13832.html
+> >
+> > We have now root-caused the problem on an identical machine (second
+> > TM2307,
+> > Core Ultra 7 155H) and have a one-byte, experimentally verified
+> > workaround.
+> > Summary: the EC only runs its autonomous fan engine when the OSTP "OS
+> > type"
+> > byte in its shared memory window indicates a detected host OS. Under
+> > Windows
+> > the DSDT _REG handler writes OSTP=3D6; under Linux nothing writes it, O=
+STP
+> > stays 0, and the EC never spins the fans. All OS-side fan paths (MIFS W=
+MI
+> > fan functions, ACPI PNP0C0B fans) are separately broken on this board, =
+so
+> > fans are unreachable from Linux even at 100 degC.
+> >
+> Nice work, what is the output of "cat /sys/bus/acpi/devices/PNP0C09:*/sta=
+tus"?
+> Can you share the output of "dmesg"?
+>
+> > Machine / software
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> >   DMI: XIAOMI / Redmi Book Pro 14 2024 / TM2307
+> >   CPU: Intel Core Ultra 7 155H (Meteor Lake-H)
+> >   BIOS: XIAOMI RMAMT4B0P0A0A (06/04/2024)
+> >   Kernel: 7.2.3-arch1-3 (bitland-mifs-wmi incl. d3666875c75e)
+> >
+> > Symptoms (all verified)
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> >   - Fans physically never spin under Linux, even with the package at
+> >     101 degC for minutes (verified by microphone recording: no acoustic
+> >     change; user-confirmed silence; multiple independent load tests).
+> >   - hwmon (bitland_mifs): fan1/2/3_input always 0, temp1 always 0.0 deg=
+C.
+> >   - fan_boost sysfs attribute (WMI function 20): write succeeds, no
+> > effect.
+> >   - No WMI fan events (26/32) ever fire (no hwmon uevents under load).
+> >   - Writing cur_state=3D1 to all five PNP0C0B cooling devices: no effec=
+t.
+> >   - acpitz thermal zone (SSDT23 TZ00) reports a constant ~26.9 degC whi=
+le
+> >     coretemp reads 56-101 degC.
+> >   - Under Windows, fans work normally (per Milo=C5=A1 Vlku's dual-boot =
+test on
+> >     the same board).
+> >
+> > Root cause =E2=80=94 DSDT/SSDT evidence chain
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > 1) The EC's memory window and the OSTP byte
+> >
+> >    Under \_SB.PC00.LPCB.Q_EC (PNP0C09):
+> >
+> >      OperationRegion (ERAM, SystemMemory, 0xFE0B0300, 0x0100)
+> >
+> >    Q_EC._REG (fires when EC region space becomes available) maps the OS
+> >    version (OSYS) to an OSTP byte and writes it:
+> >
+> >      OSYS 0x03E8 -> OSTP =3D 2      (Linux)
+> >      OSYS 0x07D9 -> OSTP =3D 3      (Windows 2009)
+> >      OSYS 0x07DC -> OSTP =3D 4      (Windows 2012)
+> >      OSYS 0x07DD -> OSTP =3D 5      (Windows 2015)
+> >      OSYS 0x07DF -> OSTP =3D 6      (Windows 2021)
+> >
+> >    On this machine OSTP (ERAM offset 0x64) reads 0x00 under Linux: the
+> >    _REG write never happens (verified by dumping the window via /dev/me=
+m;
+> >    the rest of the window is demonstrably live, e.g. live temperature
+> >    fields TSR0-TSRB at offsets 0x08-0x13, exposed to Linux via the SENx
+> >    DPTF sensors whose _TMP read these bytes directly).
+> >
+> > 2) OSTP gates the EC's autonomous fan engine =E2=80=94 experimentally v=
+erified
+> >
+> >    Writing OSTP=3D6 (/dev/mem, single byte) at idle, then running an
+> >    all-core load:
+> >
+> >      OSTP=3D0 (control):  101 -> 83 degC clamp, fans silent (no airflow=
+)
+> >      OSTP=3D6:            fans audibly engage and follow the EC's own
+> >                         temperature curve; package temperature bends do=
+wn
+> >                         mid-load (83 -> 70 degC) instead of plateauing
+> >      QFAN (ERAM 0x60)=3D4 ("full speed" performance mode value): fans s=
+pin
+> >                         at full speed regardless of temperature
+> >
+> >    After writing OSTP=3D6 once, fan behavior matches Windows (moderate =
+ramp,
+> >    full speed only near the EC's high thresholds). A systemd oneshot th=
+at
+> >    writes OSTP=3D6 at boot and after resume has kept the machine cool a=
+nd
+> >    correctly fan-cooled since installation.
+> >
+> > 3) The MIFS WMI fan functions are not implemented in this firmware
+> >
+> >    The MIFS WMI method is WMAA in SSDT20 (device WMID, _UID "MIFS"; _WD=
+G
+> >    entry for GUID B60BFB48-3E5B-49E4-A0E9-8CFFE1B3434B, object id "AA")=
+.
+> >    Its GET (0xFA) and SET (0xFB) switches implement only functions 0x08
+> >    (SystemPerMode), 0x0A (country/kbd, sub 5) and 0x10 (misc). The fan
+> >    functions used by bitland-mifs-wmi fall through to
+> >
+> >      Default { SGER =3D 0xE000 }        /* unsupported, zeroed buffer *=
+/
+> >
+> >    i.e. function 0x0D (WMI_FN_FAN_SPEEDS) returns an all-zero buffer
+> >    (hwmon zeros incl. WMI_FN_CPU_THERMOMETER 0x16), and functions 0x14
+> >    (WMI_FN_MAX_FAN_SWITCH / fan_boost) and 0x15 (WMI_FN_MAX_FAN_SPEED)
+> >    are silently ignored =E2=80=94 exactly the observed behavior. So thi=
+s board's
+> >    firmware is "MIFS reduced" in the same sense as the MIFS v2 machines
+> >    discussed in Yuming Sun's series, except here the WMI method exists
+> >    but the fan function cases are absent.
+> >
+> > 4) The ACPI fan path is gated on a device this board does not declare
+> >
+> >    SSDT23 declares the five PNP0C0B fans (FAN0-FAN4) with PowerResource=
+s
+> >    FN00-FN04. Their _ON/_OFF only set software flags CVF0-4 and call
+> >    FNCL(), which ends in:
+> >
+> >      \_SB.PC00.LPCB.UPFS (ETMD, Local0, Local1)
+> >
+> >    and LPCB.UPFS (DSDT) does nothing unless
+> >
+> >      If ((CondRefOf (\_SB.PC00.LPCB.H_EC) && Arg0)) ...
+> >
+> >    H_EC is not declared anywhere in any table on this machine, so the
+> >    entire ACPI fan-control path is a silent no-op. This is why writing
+> >    cur_state=3D1 to the cooling devices changes nothing.
+> >
+> > 5) The ACPI thermal zone yields to the (disabled) firmware controller
+> >
+> >    SSDT23 TZ00._TMP:
+> >
+> >      If (!ETMD) { Return (0x0BB8) }          /* constant 26.85 degC */
+> >      Return (\_SB.PC00.LPCB.MXTP ())
+> >
+> >    SSDT16 IETM._OSC sets \_TZ.ETMD =3D Zero when the firmware reports
+> >    native trip-point capability (CAP1 bit0 | bit1), selecting "firmware
+> >    manages thermals" mode. Combined with (1), the firmware never enable=
+s
+> >    fan control and the ACPI zone never reports real heat =E2=80=94 the =
+kernel
+> >    never sees a reason to act.
+> >
+> > 6) Tachometer caveat for this generation
+> >
+> >    The ERAM offsets 0x69/0x6B used by the MIFS v2 fan-tach patch do
+> >    exist here, but they do NOT live-update on TM2307: they hold stale
+> >    values (fan1=3D2, fan2=3D0) even while the fans audibly spin. Readin=
+g
+> >    tach on this model will need a different mechanism (or none).
+> >
+> > Proposed fix
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Short term (upstream): have bitland-mifs-wmi write OSTP=3D6 (or evaluat=
+e/
+> > replicate the _REG OSYS mapping) at probe time for boards where the
+> > firmware leaves it at 0 =E2=80=94 ideally behind a DMI quirk. Note the =
+pending
+> > DMI-matching problem reported by Milo=C5=A1: this board (DMI_SYS_VENDOR
+> > "XIAOMI", DMI_BOARD_NAME "TM2307") matches neither "Redmi" nor "TIMI"
+> > entries, so any Redmi-specific quirk table needs an explicit TM2307/XIA=
+OMI
+> > entry.
+> >
+> > Longer term: a hwmon pwm/fan interface for boards with the reduced
+> > firmware could drive QFAN (0x60) and read the SENx temperatures (ERAM
+> > 0x08-0x13 / TSR0-TSRB), giving Linux users real fan control on this
+> > generation.
+> >
+> I do not think this would really solve the problem, because any attempt b=
+y the
+> ACPI firmware to access the embedded controller would still result in an =
+error.
+>
+> The most important thing right now is to determine why the embedded contr=
+oller
+> driver fails to probe.
+>
+> Thanks,
+> Armin Wolf
+>
+> > Current workaround in place (for reference):
+> >
+> >   systemd oneshot service, runs at boot and after resume:
+> >
+> >     python3 - <<'EOF'
+> >     import os, mmap
+> >     f =3D os.open('/dev/mem', os.O_RDWR | os.O_SYNC)
+> >     m =3D mmap.mmap(f, 0x1000, offset=3D0xFE0B0000)
+> >     m[0x300 + 0x64] =3D 6   # ERAM offset 0x64 =3D OSTP
+> >     m.close()
+> >     EOF
+> >
+> > I have full acpidumps (DSDT + all 27 SSDTs, disassembled), the ERAM
+> > window dumps before/during/after experiments, and the load-test
+> > temperature logs. Happy to provide any of these, test patches, or help
+> > however useful.
+> >
+> > Thanks
+> >
+> > --
+> > @gaojunwen
+
+
+
+--=20
+@gaojunwen
