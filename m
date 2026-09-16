@@ -1,98 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96F14C041B;
-	Wed, 16 Sep 2026 11:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789556448; cv=none; b=a/uP60qeoKF75o9RfkUQdfCk8JwGfMGouluVtCT8JxtKHVZZFwPHfH9MgU9NLWDJ1/cr/i5LTLWd0xc5S04SXdGFbp9osh1Wo5KsNxKpaA2e6YgaNQayx0OSf4YMJrRjevqTVaOLjgge+JUxyO5NgiZfphwql0cb/WvC7jI8s7E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789556448; c=relaxed/simple;
-	bh=PJpQYbu415ELCrfr0jCIFjBdr7v2k5CCIebbxVzZso4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JYc4a+Zrs0lVaaCQf5avI4zcvmHPIgR9+B5hTZbEPsqTBolco+LcipEz5YQy5yPBLOiNmuhBjDjYmj6yNkNPTSM/yMzGDuFzC/2pQS+4MzbnXsrxjhO/kq94dzCFZIq6FJTiFs7gTMd4JbShxJ8P9b0S4vGKkVEd/CdP/W3rvxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uvn4mx7c; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3323BD1B
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 11:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789559217; cv=pass; b=bqJPCjbWrS2vOdqayiH1RcNfAtk54L/qGzwemGP5REO89jPWgh3E+HuTW/rAHYDWTcPwWLY4bCUC24CE7qCpcvUfNwJStxPJrx4Njt0OlFytLF4AmS4wegy6636RdTpYmcBOwqJStbMjvqotsz0mwG8KBUQoIAX4qequdRHomms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789559217; c=relaxed/simple;
+	bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=TzfNKjEocIPS2PpY3tCYrI+HDJGKmrTLjRZuo95dR1B0UIV7YV5JEm0whi/GIAKE54Tte1LK6nvRYsTELivIEr56BTWX6VOgDOWc+3BKyzgdlF+xQeqapuu/Vp2vUXbEFU9H9yg7Hpef06z2e+Rom+XIeJZZboNWLep1SgeMLq0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=eVt9KpH0; arc=pass smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uvn4mx7c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789556436; x=1821092436;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=PJpQYbu415ELCrfr0jCIFjBdr7v2k5CCIebbxVzZso4=;
-  b=Uvn4mx7cS4tObIELk60D3CVVB4dvk6VwMABjWaUmBt8l9i2utKKI9J+8
-   L7+5x94pv9tuxhQKdOOIwI9pC/OKCTR7QmWB4DomJZssniCx91u4Ws6LT
-   7M+w5ND9w2JWXWF7NOBZSzxq1Pl8ebJFe7XvhwFuVpvIpZOTQqtodbVFa
-   4Ir0E+7zDaSFsA/qTrPjAaQnjzNy1E8iaMPD/uLFM9fYm4Dc23W8HgpWn
-   fXsyv8hzY6PGD4+Tf8/G5wm5vIJAqMgnzjTGtQtn94WyWaYhH79nvjccm
-   6GhZO1/qK5UwvgFHJr9K8VgXm+HtW+ixgzFcRg35GDNhCtyUD0ll9IUN2
-   g==;
-X-CSE-ConnectionGUID: i1AXW/0cSM2EkfJALiyxCw==
-X-CSE-MsgGUID: 9UBsu7qhTl2ksZf6Fe2cFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92436558"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="92436558"
-Received: from fmviesa013.fm.intel.com ([10.60.135.153])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 04:00:30 -0700
-X-CSE-ConnectionGUID: wWRFzWo0S/KoLdVZnBZ0+Q==
-X-CSE-MsgGUID: 42a5cbN+SNqLFbCAPVCsSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="1708830"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 04:00:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Denis Benato <denis.benato@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, Hans de Goede <hansg@kernel.org>, 
- "Luke D . Jones" <luke@ljones.dev>, Mateusz Schyboll <dragonn@op.pl>, 
- Denis Benato <benato.denis96@gmail.com>, 
- Hugo Baigue <hugobaigue2004@gmail.com>, stable@vger.kernel.org
-In-Reply-To: <20260915172608.14234-1-denis.benato@linux.dev>
-References: <20260915172608.14234-1-denis.benato@linux.dev>
-Subject: Re: [PATCH] platform/x86: asus-wmi: fix use-after-free
- unregistering kbd_led led
-Message-Id: <178955642375.2305.2037186031246803284.b4-ty@b4>
-Date: Wed, 16 Sep 2026 14:00:23 +0300
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eVt9KpH0"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843f22dcb8so512326f8f.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 04:46:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789559211; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ja916epgowvcDoiN/69H/1L4OAGNe2IIVOVndzn/Qcr4UFSnKrxfogtebXvqw1gIRE
+         V3ltat5o0STDFu+XH3nQIHfgTfwmATL+1p3cDn9vTC0FQtw6kjs9Tf6CjTf+z2VyKpNR
+         KT+Jg8Jc8x3dPsi9mz8d5N6v3jJxTGcQQln7H4TbNoZ8JAuFN3QyxLEBWIuSQvfvLwdU
+         mkSgHZ1il9cKf61hTTqfqvTX+V+qWalT+Xz4QCzi+TjzOqdJEL9Bapp06YuQddH1Tbyc
+         fycQptnVlOVlp0/aeL2l+1NAWjrEbuxqkNkNPzgdhCEl70aQnLcY6vy1sLYVfZgrbsM3
+         gMLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
+        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
+        b=gX401yLS0IUzLpztx9pR/MqzbbdkrIgGOL8eIVj2wcisE7Qg7O0F8hxHQO+IoF96AU
+         lC1CO0R9jSR8QyzB9qjVpxmW8FINHoe0qudQ8j15VwiF7S3Z8IhSrr/8zz2unoqjCorl
+         aTcYBEBp9I80xmnSbFOxQoy0P9NxDeCXJ2qgpFVivxsdjYUixTDIbTTcDudXOpR/utx3
+         O99pZI1MWb1AZgloFdo5W54YysuLd1MJo+Pn97ekNQAn9WW1SBNPc0ciwwlb6P16BOuv
+         IkAN+QNFHN5K5fJ4tuCxFx/Qcuxm+mJqBc9qgXSBPF7KBwSlqKS1Lxm9u7tufaRRuD80
+         hVwQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20251104; t=1789559211; x=1790164011; darn=vger.kernel.org;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
+        b=eVt9KpH0WVInLaFn5DxmPmexSV4SxhpbXXIIPKfDXBjuE0nBO7fqd8Gj6uloImcqit
+         kRUfj9KhySaTr3f4UKj7RFwc1Rc7IL+T9XwTBsU1NTa2zxrR1NEM78e15mTLDxHLgTF9
+         jfCLvxCYz6M46FXyNmjw9FnTMOZT0m9zUa3HV8q3+qni3Zo9d2soNYfR+MZsr4rV1/YC
+         XbONx9bJvxsrR57W0/aSvGQzYuXZxxUATkC8uTelvIS6mYBEpAHns0XvFQ5K+X4lpKYv
+         zBsvsUOiangvWq26EWRu9lhURRzkCDFwQWuPRnA8SXDoZ77KQWGkzW6vdJfc6gPenl5l
+         suNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789559211; x=1790164011;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
+        b=JLcdDmQ0KmiGG+v7y8ikWPKiL9yfl6GhMNfbIP/OpzooVKeBiTUom3DfVE5E+ZLFR0
+         LE81qJHF9tqr7kE1h3jfCJAdeor1VlOxqIAASyxkThWncVLNpv4adzQ4VucnzI5tuB6w
+         Lyhhj9soGefFFSsECBbQI/l/PHVgGcJ2ApNRvGiSeRcQM38+p4LdZqqKh1gkt1iK1zsp
+         P77U/C6AwzJCdWvWtfQhru6uQ2vMno89vGXSkoACIbxiPPUXWxJPOj5Ngfel1LPnx/8+
+         gX/qduiAalywGK0R3UKq/HZ++tAhFynmFoF0SjwYi2otjvG49/YksI7MVSzV7aYExchl
+         YgTw==
+X-Gm-Message-State: AFuF++mCI0qLUzCKk3CubcW4rJ8Dny9PS7C6qNlRu5otUlh3SRtjjqAC
+	q3mATaXEm3HWd9At0xck85IM9qYCFzdIZNOAI92t606trfXTpsyA9BOS3aSIKZ7D72C9+C8FQS/
+	f/rr54arDPWU7G4LqC96kyGWKV3Mhi34kQYTg
+X-Gm-Gg: AYBFou3Nkfey5qaDiVtd3MJsh07l658u7gufnpfidzx8Rx0PUiNIWysndpOJ3KWBhbP
+	M+xzbDjCyi+zzH4TDU5VMfmrVyCeIP6XgMDYr5zeRhNJO9hn0B/tJ8msoAaRh4vFJVjA0a3wWR5
+	Y1B9Esxfw3A/LtQf+A4ZhaymRV6BOC1/uHpAEctMC0d8XytRbYLjpVN4kRbkkoQ3+eMpCw4S8BR
+	nstO1GZNGFoiiJMT7fq+MBcIL2E6FyzQTawlyhr7aNjuXG3HyQUnDN7ICF05DkZepS6jxC7sJZJ
+	yOC/UUSw7PxUR4VtRUKrD8KIXdVUWDioNGY1u/CV7vs8mB5ljQEy2zg=
+X-Received: by 2002:a05:6000:230f:b0:486:f1ec:f939 with SMTP id
+ ffacd0b85a97d-4870d26e897mr3159343f8f.40.1789559210826; Wed, 16 Sep 2026
+ 04:46:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
+From: Karsten Wiese <fzuuzf@googlemail.com>
+Date: Wed, 16 Sep 2026 13:46:38 +0200
+X-Gm-Features: AcwNN1WoYNyN3o9ZWAjfFNt4ubxLqstaGWx8NVmdcdjBF2doFCUpluSSMGxZRYQ
+Message-ID: <CAM=nh0S9e1+_U4WGR92HwOrNC2h2xYb6eKvgN5_skg-vvbSbqQ@mail.gmail.com>
+Subject: amd/pmc
+To: platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 15 Sep 2026 17:26:07 +0000, Denis Benato wrote:
+Hi,
 
-> kbd_led_update_all() registers asus->kbd_led with
-> devm_led_classdev_register() on the platform device, but kbd_led is
-> embedded in struct asus_wmi, which asus_wmi_remove() frees at its end.
-> The driver core calls .remove() before devres_release_all(), so the
-> deferred devres release runs led_classdev_unregister() on memory that
-> has already been freed. Whether that faults depends on whether the
-> slab has been reused in between, which makes the crash on module
-> unload intermittent and silently corrupts the led classdev state in
-> the remaining runs.
-> 
-> [...]
+your change makes a huge difference here, no more hangs suspending/resuming.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+amd_pmc AMDI0009:00: Delaying suspend by 2.5s because delay_suspend=1.
+If this solves problems on your machine, please report this whole line
+to: platform-driver-x86@vger.kernel.org so it can be automatically
+detected as affected in the future. System Vendor: "LENOVO" Product
+Name: "83AR" Product Family: "IdeaPad Pro 5 16APH8" Board Vendor:
+"LENOVO" Board Name: "LNVNB161216"
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent cycle or is clearly a regression
-fix.
-
-The list of commits applied:
-[1/1] platform/x86: asus-wmi: fix use-after-free unregistering kbd_led led
-      commit: 2f5005e261ed758254767a32c24587bfacc6db82
-
---
- i.
-
+Thanks,
+Karsten
