@@ -1,89 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577B84EE85E;
-	Wed, 16 Sep 2026 10:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A474E8DEA
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 10:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789555236; cv=none; b=ZYS9AKoH3i7klE8vGCJjTm4I7qNaFC2tClWJDIcHQmJumj1cqHx0T9iXwT6GB5oXh7BA/4lijIqUIVKDxfiHnccPPfRceWz/Z8Mu0qiwrGyn7+PndbhGGZx2AY5p1XqwK5Aph6zbs5g2JHYr/RNa9aMsJQLv+PdzrxRMhVWhgXg=
+	t=1789555315; cv=none; b=oYdY4cBQOF8Zdyr/Y8rPb/UMBTHRipadgmwHTjWMSgeHAp4J6TBliZ24gca+rwYLk8wIvPmJuRTci+fey4GlA2sDBBsjLDu0MeTVFKWts/xIrleEQbanq0uQFL+9rara+Wc1K0/XcQECwms9vhMBwVmvqfKh5J91U0pVtB5ouvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789555236; c=relaxed/simple;
-	bh=cyBgzkiDkuEa1lPgP4i0Xh1sLAaQLCUN2TiL7hwEUEU=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Kv9UfCTCuWq9qu/bfnGHQxpAPoskcy8Bv1zH0A+KPMq+dqdWRgMm3uulgUX2L39rN43bT8ygbdFSuWjJMtmpVkoUClHW08VsxHGIuBFz0eHcp6lzHw+IgxQDyEWHRn5Vfj6pSVcKThDMSRpUoM1Rrbme/btp47vkeOBt3nupDyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f4iD+4o+; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789555315; c=relaxed/simple;
+	bh=O4G0pKHDgHF+q98o/6z0OvPGkeobf8NXAxpcNAjEA+Q=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IZtxu2/vhbXIDFcBwl1IGhe8C/ItqYy0YAoCxzCfYVFUiFc8eCBOIMVppfGy+ROZrXgd0lJK7EDh/rfU4PCSTVFuQaT4mYFEbwfAdkDTMZjsV4ZMpvzJQZnQTexj1FzxwDdnM23+4JkM+bfNw+SorpIRRDdonlpo8YVkCs/ZgHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTy4axzA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f4iD+4o+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789555221; x=1821091221;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=cyBgzkiDkuEa1lPgP4i0Xh1sLAaQLCUN2TiL7hwEUEU=;
-  b=f4iD+4o+xMsLtN60TRAukz0DaluMKQVoRjTi/PrY95MtCtMTKnKpJL+H
-   roohsyVLscZXG61Darx6dEeOwdkFBd30+8l1yqNQzmM7g4zmto+/HJVmZ
-   S99TBtHjCXQgu4/k69FCvbIRwFc10+Z9izRPxtCnti0cVB9fGeFzQYcTZ
-   wIzlXRF/Y5fAWo2qPEOBzgr9gZC0maQoEUjwXLxgZdWkMPe6MNJ5K1iDI
-   LT9uVLnI0BAAvf+nuSDoM2MH5GKNU0Uslsrh22u+iFsNfuxG6R0lLIgHg
-   esNvDwYCEg3oaTK6Ppz2BlG4dyrSbUeGJZmo5cIXaFR7PxOItijV6wCPf
-   Q==;
-X-CSE-ConnectionGUID: sg2F96/qRLOT05FQrxGt+w==
-X-CSE-MsgGUID: WGvd0gDLQxiS2nqOaPpFrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93800314"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="93800314"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:40:13 -0700
-X-CSE-ConnectionGUID: N49HqL73SguYA9G2ydMjEA==
-X-CSE-MsgGUID: PyT8FfHNRXivrAI7PQLxyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="311586309"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:40:11 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
- linux-doc@vger.kernel.org
-In-Reply-To: <20260916054942.2054730-1-rdunlap@infradead.org>
-References: <20260916054942.2054730-1-rdunlap@infradead.org>
-Subject: Re: [PATCH] docs: TPMI: use literal block for commands
-Message-Id: <178955520546.1900.16871379298287316660.b4-ty@b4>
-Date: Wed, 16 Sep 2026 13:40:05 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTy4axzA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91584C2BCB9
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 10:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1789555313;
+	bh=O4G0pKHDgHF+q98o/6z0OvPGkeobf8NXAxpcNAjEA+Q=;
+	h=From:To:Subject:Date:From;
+	b=tTy4axzAgBmacHUk1YafkFmx+DDMWsz/YTzPgOP34zkHMwZ7GHMDRFtbX1YZTzmyt
+	 O9XfR4BXoFCIV2cC6Y2RABNneDtOhd2CD+1HC6ALJWXPJuplpua9GMJuCoTKBQ+mTY
+	 KE+CCqPykMYKkI87wLgzhk194ZnCmhFa/3orLuP5CH/DzDYouj3GSar/Jag/ghTxAd
+	 yavvl1u8Aj4jMtw4CNkh4Y1xgo5NQqDfXDKU5kAWgYh8jsCoBZmhBHmrAytAQ/51RA
+	 yiEO1IO97AAZA0ns6hVFnkukYXCzt/u/MqiRBNsbpxHD0yFmUnHcopNvmaYoDm99Hb
+	 INM17pUS7FrPw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 7A852C3279F; Wed, 16 Sep 2026 10:41:53 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: =?UTF-8?B?W0J1ZyAyMjIwMTldIE5ldzogYWNlci13bWk6IG5vIGRldmljZSBt?=
+ =?UTF-8?B?YXRjaGluZyBmb3IgQWNlciBBc3BpcmUgQTcxNS03OUcg4oCUIEVDIGF1dG9t?=
+ =?UTF-8?B?YXRpYyBmYW4gY29udHJvbCBpbmFjdGl2ZSBvbiBib290?=
+Date: Wed, 16 Sep 2026 10:41:53 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: muhammedanaspaika@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version rep_platform
+ op_sys bug_status bug_severity priority component assigned_to reporter
+ cf_regression
+Message-ID: <bug-222019-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15.2
 
-On Tue, 15 Sep 2026 22:49:41 -0700, Randy Dunlap wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222019
 
-> Use a literal block for 'echo' commands to separate them from
-> the surrounding text. Otherwise the lines run together, without any
-> clear break before or after the commands.
+            Bug ID: 222019
+           Summary: acer-wmi: no device matching for Acer Aspire A715-79G
+                    =E2=80=94 EC automatic fan control inactive on boot
+           Product: Drivers
+           Version: 2.5
+          Hardware: All
+                OS: Linux
+            Status: NEW
+          Severity: normal
+          Priority: P3
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: muhammedanaspaika@gmail.com
+        Regression: No
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo-next branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo-next branch only once I've pushed my
-local branch there, which might take a while.
+Summary:
+The Acer Aspire A715-79G (BIOS 1.07.01TACI, ITE 8222 EC) exposes WMI GUIDs
+ABBC0F6B / ABBC0F6C / ABBC0F6D, but acer-wmi carries no matching modalias, =
+so
+it never binds. With no driver claiming the GUIDs, the EC keeps its default
+quiet thermal profile and fans stay OFF at idle (60-75 C). The fan starts o=
+nly
+after pressing Fn+1 (Cooler Boost) or writing to the EC profile via the ACPI
+SCMD method.
 
-FYI [if applicable to your patch], as per Linus' policy change, also
-fixes are mostly routed through for-next unless the fix is for a
-commit introduced in the most recent cycle or is clearly a regression
-fix.
+Reproduction:
+1. Cold boot kernel 7.1.13 or 7.2.5 (Fedora 44).
+2. Observe: fans off, CPU ~60-75 C, no fan in sensors, no acer-wmi loaded.
 
-The list of commits applied:
-[1/1] docs: TPMI: use literal block for commands
-      commit: db1d44f20e3858c85fa8bf55ced0e833ecf26034
+Evidence:
+- modinfo acer_wmi aliases:
+  676AA15E-6A47-4D9F-A2CC-1E6D18D14026
+  6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3
+  67C3371D-95A3-4C37-BB61-DD47B491DAAB
+- Platform GUIDs (present, unbound):
+  ABBC0F6B-8EA1-11D1-00A0-C90629100000
+  ABBC0F6C-8EA1-11D1-00A0-C90629100000
+  ABBC0F6D-8EA1-11D1-00A0-C90629100000
 
---
- i.
+Workaround (verified working):
+Loader applies SCMD(0x69, BIT(2-1)) =3D balanced profile at boot. Fans then=
+ run
+~1300 RPM idle and ramp under load; automatic on every boot.
 
+Requested:
+- Add ABBC0F6B / ABBC0F6C / ABBC0F6D to acer-wmi device table.
+- Issue the EC fan-profile SCMD at boot or expose platform_profile so the f=
+an
+curve is activated on stock kernels.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
