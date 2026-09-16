@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-243.mta0.migadu.com [91.218.175.243])
+Received: from mta0.migadu.com (out-22.mta0.migadu.com [91.218.175.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2400C52941F
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 14:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E6E501F5E
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 14:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789569551; cv=none; b=Uh0vuErDCON00m7dPwcgw3IPFd7XNvcogGh9dNn55qOPitRVL5cW5oyAiqUJgCmygoQ9N9533Jeqe9IDfYFe6s/J71FfHJFUo+79o6nBbmVWnkiqyXA6IzUiSgAdC05df3DVh8vXqEbDciwIZKf3rBAgooFAFQsKncalsWAJtjs=
+	t=1789569556; cv=none; b=GGaPOrFAsp87i+E97Hk6QIe4AVL5AnftXD/mmppZhWSf8GuvZTI14cgbHO1PYXtAGyWSJTtJz7w/iR9ZBkqdSzvSRWfjyU3ySF/eMT+fiS69jALWjaa4zhu1m6KdU7jW2N5movLNZmYPjIDt+0oYFS2A5t6aQd4MOMuXkr6V6h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789569551; c=relaxed/simple;
-	bh=P9XV2XO4MmtDvdZItN3sTDDtWP1gBvv2w2g7tC4qrkE=;
+	s=arc-20240116; t=1789569556; c=relaxed/simple;
+	bh=yDRqn32T6OsTeld75ue/eGYhd366gSjMZAXI9ZW0rI0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gnv9f4j2CNCB/vEAuT8CdKtq+VtvuWOm3l0hBtXINt6fk0BP758TOlNLhDR9uVwB3iK6PtAxEBAUu2fCWdnb6LFWwb8a6BRO5uDRnkfoQH/2LavW2pq8035ITxqKnD0EPIuM6jmxzSX1XzFvochrAT6z8l1wFqQ9/c3W302reFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YgxtxcxK; arc=none smtp.client-ip=91.218.175.243
+	 MIME-Version; b=XGQ6LLnOrgdi0wGLJILSTJj6jianWpjs9BRKvbSDr/E9csZeDdjaPRBcSGYB2YkHWHdod7/8njxtFqDyXrP8GJJwD+wjtrC/8wIWj6Gs8fFXOg3TjUkw/iZqgwMbjMvqbBOrqflahg0rcK2KFCeuZWA21Uxl3SXZ7f28CvesTdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iajgI7HH; arc=none smtp.client-ip=91.218.175.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YgxtxcxK"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iajgI7HH"
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=P9XV2XO4MmtDvdZItN3sTDDtWP1gBvv2w2g7tC4qrkE=;
+DKIM-Signature: a=rsa-sha256; bh=yDRqn32T6OsTeld75ue/eGYhd366gSjMZAXI9ZW0rI0=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789569546; v=1; x=1790174346;
- b=YgxtxcxKaiVvUS22xU9HMVEsF0RkCep9yHAjwEezXrTbkB1k2jCmP4jBPyW01tG//zXDYqH1
- LtZAkKMhKoSdv5VhMPmt2eH68nKVIg+JhB6ETEVwgGjJu07L39zFM3PlRh/kcsiyGUg2NGAQ7a0
- wKNVLdeY9WN7TQAs9bwAw8t8=
+ t=1789569551; v=1; x=1790174351;
+ b=iajgI7HHLNHX1Xnn2IyFju6EY67RK2zcdyS6JxofPy0qgY3e6UP9VpigFRbMszcFebsqhiHF
+ q59w6m0NxgFELSJB64zLcNp0ofWe3WY9tpEvJky/OzRxn57bIBeAobM+3JpewuWxqZvDFzAfEEg
+ X8YYjvAcgwqlNs5WQOU5DDcE=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 97704f99edd96b49;
-	Wed, 16 Sep 2026 14:39:06 +0000
-X-Mizu-Trace-ID: 97704f99edd96b49
+Received: by smtp.migadu.com with ESMTPS id bc1733425284d87c;
+	Wed, 16 Sep 2026 14:39:11 +0000
+X-Mizu-Trace-ID: bc1733425284d87c
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: platform-driver-x86@vger.kernel.org
@@ -43,9 +43,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"Thorsten Leemhuis" <regressions@leemhuis.info>,
 	"Denis Benato" <benato.denis96@gmail.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v1 3/4] platform/x86: asus-wmi: use backlight_is_blank() for screenpad power
-Date: Wed, 16 Sep 2026 14:38:27 +0000
-Message-ID: <20260916143838.170950-4-denis.benato@linux.dev>
+Subject: [PATCH v1 4/4] platform/x86: asus-wmi: remove unused screenpad_brightness
+Date: Wed, 16 Sep 2026 14:38:28 +0000
+Message-ID: <20260916143838.170950-5-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260916143838.170950-1-denis.benato@linux.dev>
 References: <20260916143838.170950-1-denis.benato@linux.dev>
@@ -57,77 +57,58 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The screenpad backlight sets BL_CORE_SUSPENDRESUME, so the backlight
-core calls update_status() on suspend, resume and fb blanking with
-BL_CORE_SUSPENDED or BL_CORE_FBBLANK set in bd->props.state while
-bd->props.power keeps its value: the switch on bd->props.power alone
-ignored those flags, repowering the panel at suspend entry instead of
-turning it off, and ignoring fb blank requests.
+Nothing reads asus->driver->screenpad_brightness anymore: the last
+reader went away when the screenpad update path stopped relying on a
+driver-side copy of the brightness, leaving only the write in
+asus_screenpad_init(). ASUS_SCREENPAD_BRIGHT_DEFAULT became unused in
+the same rework.
 
-Replace the switch with backlight_is_blank(), which accounts for both
-bd->props.power and bd->props.state: the panel is powered off whenever
-the backlight is blank and powered on with backlight_get_brightness()
-otherwise. Writing a power state other than BACKLIGHT_POWER_ON or
-BACKLIGHT_POWER_OFF to bl_power now blanks the panel following the
-core convention instead of warning and failing with -EINVAL.
+Drop the field from struct asus_wmi_driver, the write and the unused
+define. Nothing in the current code depends on remembering the last
+brightness while the panel is off; should a model turn up that needs
+it (the original screenpad implementation did, and older DUO models
+may behave differently from the hardware tested so far), the field can
+be reintroduced then.
 
-The visible change is that the panel now actually powers off on
-suspend and fb blank, and is restored on unblank and resume.
-
-Suggested-by: Hugo Baigue <hugobaigue2004@gmail.com>
-Closes: https://lore.kernel.org/all/CAO84+xJ9aW3pj3x8e9b5biWtnNd4EyH7A4Uy7aqBR4qZMDcVvg@mail.gmail.com/
 Assisted-by: zcode:glm-5.3-flash
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/asus-wmi.c | 32 +++++++++-----------------------
- 1 file changed, 9 insertions(+), 23 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 2 --
+ drivers/platform/x86/asus-wmi.h | 1 -
+ 2 files changed, 3 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index ded1aa356cf3..e6f3a5c0dba9 100644
+index e6f3a5c0dba9..440b86549eb9 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -4536,32 +4536,18 @@ static int read_screenpad_brightness(struct backlight_device *bd)
+@@ -127,7 +127,6 @@ module_param(fnlock_default, bool, 0444);
+ #define NVIDIA_TEMP_MAX		87
  
- static int update_screenpad_bl_status(struct backlight_device *bd)
- {
--	u32 ctrl_param = bd->props.brightness;
--	int err = 0;
--
--	switch (bd->props.power) {
--	case BACKLIGHT_POWER_ON:
--		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
--		if (err < 0)
--			return err;
--
--		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT, ctrl_param, NULL);
--		if (err < 0)
--			return err;
--		break;
-+	int err;
+ #define ASUS_SCREENPAD_BRIGHT_MAX 255
+-#define ASUS_SCREENPAD_BRIGHT_DEFAULT 60
  
--	case BACKLIGHT_POWER_OFF:
--		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 0, NULL);
--		if (err < 0)
--			return err;
--		break;
-+	if (backlight_is_blank(bd))
-+		return asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER,
-+					     0, NULL);
+ #define ASUS_MINI_LED_MODE_MASK		0x03
+ /* Standard modes for devices with only on/off */
+@@ -4586,7 +4585,6 @@ static int asus_screenpad_init(struct asus_wmi *asus)
+ 	}
  
--	default:
--		pr_warn("Invalid screenpad backlight power state: %d\n", bd->props.power);
--		return -EINVAL;
--	}
-+	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_POWER, 1, NULL);
-+	if (err < 0)
-+		return err;
+ 	asus->screenpad_backlight_device = bd;
+-	asus->driver->screenpad_brightness = brightness;
+ 	bd->props.brightness = brightness;
+ 	bd->props.power = power;
+ 	backlight_update_status(bd);
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 5cd4392b964e..b45f81b38a47 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -57,7 +57,6 @@ struct quirk_entry {
+ struct asus_wmi_driver {
+ 	int			brightness;
+ 	int			panel_power;
+-	int			screenpad_brightness;
+ 	int			wlan_ctrl_by_user;
  
--	return err;
-+	return asus_wmi_set_devstate(ASUS_WMI_DEVID_SCREENPAD_LIGHT,
-+				     backlight_get_brightness(bd), NULL);
- }
- 
- static const struct backlight_ops asus_screenpad_bl_ops = {
+ 	const char		*name;
 -- 
 2.47.3
 
