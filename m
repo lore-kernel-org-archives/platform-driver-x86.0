@@ -1,126 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48C04E8E13;
-	Wed, 16 Sep 2026 10:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D144F30C8;
+	Wed, 16 Sep 2026 10:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789554623; cv=none; b=pgcFQFMZYfbb5Tc1A8iHf+biJBEzcNX+FfbXbqPcDXJF4ilqR5LpsMC5rGa+9OycJLz/7WHtPz9tt04ushyobwUqzzFk7V/Q8juQhLNpn1hCNN111aWi7GSUToOyY26YBjmWmhEBIsYXhMu3iJrUfCB8sRh/z7shjB7sicSwnak=
+	t=1789555007; cv=none; b=UFMBoWrYIhGx1OWXD2/9zLnaWfEWNNBSwyu+IV2+tUrbCUYtrLNU8ETYSQVNLelkf/dIV7aJuQ+teTpQ+Owo0CXq8Z+msaTOyG4KMMkIeJ6umqY91RXin6YKpc7lDPTDquL1TCLOIZr1+eE95Zk3BXu0Q7r+6RZYQWE/j32GFBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789554623; c=relaxed/simple;
-	bh=1hNWh+vmeBi6+YnEn/PERnilJw5MWJePco83DG34Skg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=K/ybebbj/LCdm7yaDnCv0nlACLKX5YUwFmAB0mmmUHQ+qds9AXEQKFbp721fBYK4TFgTF1n+Iragi0rmPunUzcu/M0VYDkdWkFFCep8k0aj/nR+gNL8I4jNU8yLtVwpGfdcD8F5lknADVLomjiCxIhey4bEvZifhRn0xh0a7b5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IsscYuN3; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1789555007; c=relaxed/simple;
+	bh=It6pVWCOEJQoZAi/+GplMBQtgO5LmFvL6bcIc9a7iY8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NrnQ2TRAfJobZzYZ91BgiI7OvAlVevBXaFPeeu/8CFJTjC2rNsgFijWsTl3iRKo6MbCidU9pHY2POmM/DH0fonYaKlXVGiJdjh63fiBT+Wr0pKf3RYH7VnzrigiJnxSy8z32c6sZzK9smDpRtdmFaF9KbdovX77glZG0bodhpKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3Gkz4tn; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IsscYuN3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3Gkz4tn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789554601; x=1821090601;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=1hNWh+vmeBi6+YnEn/PERnilJw5MWJePco83DG34Skg=;
-  b=IsscYuN3G/NAOhwTh7ukpHFtzkUsvUQQOPTqXQIWzt+eXYXAdf5ARYyi
-   SHuyThq+BlriZGqJuAB+41MIDzef3bfSDUfKIExm759W3C4ZsSaxfY4ej
-   Zat/eBlIIJikWbZ25RfX2mlbx8rXZYXuEZ0uKtvQO/iddfxlZW+yvWmaV
-   2+d+FckmeMw2fAKQi/Qhanoqoso/TYcvvZc1TcLGhZ78pefi8p6IRBGy8
-   ec2yBXC99cQP25n05KDRu4MA9JGkHPfQRvgQG0dYq9nfPOInDWvHeCxSp
-   LLG91kXEmxS3wwU9RVQVS6dGdkY3g4j96SySFwACd5p6n9FZ8YUOSMlHb
-   w==;
-X-CSE-ConnectionGUID: aVmfGorAS/q+dycdzCLNDQ==
-X-CSE-MsgGUID: O4EIuRb2SiOUrXU+qrq9gw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101445472"
+  t=1789554998; x=1821090998;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=It6pVWCOEJQoZAi/+GplMBQtgO5LmFvL6bcIc9a7iY8=;
+  b=n3Gkz4tn+q+nkdlFN1Iveu7nfPwcJ7slG5RykOR9fKHVLRZAOiQx3Zo6
+   1PSGcjmKJyklDHit+yDkvyn5QollB3BorYfDZWidVwUeG1bNIer9GkKIw
+   V7UToqi3yE9Tq3/zltM291MrQUXEBi4T78K0FbL8L+CFoIHwt97bfFrPn
+   /98DFyjuh6SOoAiBUHHaM2VonAMgHKfutO6TmIt1DqS2sAvMNsXRQnB2r
+   xrVwRlW76rzojSDCUaoLnnbIRB0ghAayR+UXrh6SKkg5gRlhgBhQKUfYq
+   xj5ApPFQ2E5FYKiRrbH/SvRrLnXMBTdQKIZPtVqKzh5kgKjzK8gPI4Ga8
+   Q==;
+X-CSE-ConnectionGUID: FXdLUV5nTvqN0aqbjCwCOA==
+X-CSE-MsgGUID: nwUmOCIFQjGOhZxonoTBcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92434674"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="101445472"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:29:56 -0700
-X-CSE-ConnectionGUID: pYxz78ALQmuMaWDtFtG53A==
-X-CSE-MsgGUID: u0hIuqo0R8SmfaVM91Nqjw==
+   d="scan'208";a="92434674"
+Received: from fmviesa011.fm.intel.com ([10.60.135.151])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:36:31 -0700
+X-CSE-ConnectionGUID: 9suvTPxqTEeSSMyp38x5vQ==
+X-CSE-MsgGUID: zrmIQs5ZQX6tFckbvQ9H6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="267088956"
+   d="scan'208";a="1524209"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.187])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:29:53 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2026 03:36:28 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 16 Sep 2026 13:29:49 +0300 (EEST)
-To: Muhammad Bilal <meatuni001@gmail.com>
-cc: Jorge Lopez <jorge.lopez2@hp.com>, Hans de Goede <hansg@kernel.org>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: hp-bioscfg: zero the hex-string decode
- buffer in hp_convert_hexstr_to_str
-In-Reply-To: <20260916004606.165065-1-meatuni001@gmail.com>
-Message-ID: <372e11de-9835-ef04-dba8-89faafa00ea6@linux.intel.com>
-References: <0380b8d6-cff5-383f-b47f-700d1d17fefa@linux.intel.com> <20260916004606.165065-1-meatuni001@gmail.com>
+To: hansg@kernel.org, Hemanth Selam <hemanth.selam@gmail.com>
+Cc: corentin.chary@gmail.com, luke@ljones.dev, denis.benato@linux.dev, 
+ W_Armin@gmx.de, eric.piel@tremplin-utc.net, kenneth.t.chan@gmail.com, 
+ jlee@suse.com, srinivas.pandruvada@linux.intel.com, 
+ mpearson-lenovo@squebb.ca, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <cover.1789015364.git.hemanth.selam@gmail.com>
+References: <cover.1789015364.git.hemanth.selam@gmail.com>
+Subject: Re: [PATCH v2 0/8] platform/x86: Fix typos in comments
+Message-Id: <178955498348.1723.15488888459425072981.b4-ty@b4>
+Date: Wed, 16 Sep 2026 13:36:23 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1481929546-1789554589=:2346"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15.2
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Thu, 10 Sep 2026 10:14:35 +0530, Hemanth Selam wrote:
 
---8323328-1481929546-1789554589=:2346
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> v1 was one patch touching eight drivers.  Denis Benato asked for it to be
+> split one patch per file or driver, so here it is as eight patches, one
+> per driver.  The corrections themselves are unchanged from v1.
+> 
+> The words all come from scripts/spelling.txt, which is the list
+> checkpatch.pl uses.  codespell finds nothing further in these eight files
+> except "ALS" in asus-laptop.c, which is the Ambient Light Sensor and must
+> stay as it is.
+> 
+> [...]
 
-On Wed, 16 Sep 2026, Muhammad Bilal wrote:
+Thank you for your contribution, it has been applied to my local
+review-ilpo-next branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-next branch only once I've pushed my
+local branch there, which might take a while.
 
-> hp_convert_hexstr_to_str() allocates its output buffer for the
-> worst-case decoded length, then fills in only as many bytes as the
-> input actually decodes to before shrinking the allocation down to
-> that length with krealloc(). Well-formed input can decode to
-> noticeably fewer bytes than the worst case, so the buffer is
-> frequently only partially written by the time it is realloc'd and
-> returned to the caller.
->=20
-> Use kzalloc() instead of kmalloc() for the initial allocation, so
-> any unused capacity starts out zeroed instead of holding leftover
-> heap contents, rather than relying on every current and future
-> caller and code path to fill the buffer exactly.
->=20
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
-> ---
-> Applies on top of "platform/x86: hp-bioscfg: fix slab-out-of-bounds
-> write in hp_convert_hexstr_to_str" (the DIV_ROUND_UP sizing fix),
-> which Ilpo has applied to review-ilpo-next but is not yet in
-> mainline. Sent as its own patch rather than a v3 of that one, since
-> the sizing fix itself was applied as-is; this is the separate change
-> requested on top of it.
+FYI [if applicable to your patch], as per Linus' policy change, also
+fixes are mostly routed through for-next unless the fix is for a
+commit introduced in the most recent cycle or is clearly a regression
+fix.
 
-Thanks, applied to review-ilpo-next.
-
-In future, please try to add parenthesis into function names in the=20
-shortlog (on Subject line) as well so I don't need to manually add them=20
-myself.
+The list of commits applied:
+[1/8] platform/x86: asus-laptop: Fix typo in infos_show() comment
+      commit: 3bf79c45d88b54c9a76f8bfb6733249acfc3c8b7
+[2/8] platform/x86: asus-nb-wmi: Fix typo in asus_nb_wmi_quirks() comment
+      commit: b6cf8c621b85648b82a6704b1a68106eb193616f
+[3/8] platform/x86: hp_accel: Fix typo in lis3lv02d_acpi_write() comment
+      commit: ad483da2140339400bc50c69b017f6fd0cc9774b
+[4/8] platform/x86/intel/tpmi: Fix typo in TPMI_FEATURE_NAME_LEN comment
+      commit: 65d3f988c5fae277a3ff732115697d252d5b3913
+[5/8] platform/x86: msi-laptop: Fix typo in struct quirk_entry comment
+      commit: d11503cd82f48242ccaf7b3d481a103d1a75105d
+[6/8] platform/x86: panasonic-laptop: Fix typo in the file history comment
+      commit: d766ef2dab2d718ca760e4f1771e883736ccb861
+[7/8] platform/x86: samsung-laptop: Fix typo in sabi_configs comment
+      commit: 0934b4b77a462240d591f90472b690788b3988b8
+[8/8] platform/x86: uniwill-laptop: Fix typo in the kbd LED brightness comment
+      commit: 974014bb4087fea3b481c0ac358873587f628663
 
 --
  i.
 
-> ---
->  drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platf=
-orm/x86/hp/hp-bioscfg/bioscfg.c
-> index ff28db7..2dab9c0 100644
-> --- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> +++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
-> @@ -442,7 +442,7 @@ int hp_convert_hexstr_to_str(const char *input, u32 i=
-nput_len, char **str, int *
->  =09*len =3D 0;
->  =09*str =3D NULL;
-> =20
-> -=09new_str =3D kmalloc(2 * DIV_ROUND_UP(input_len, 5) + 1, GFP_KERNEL);
-> +=09new_str =3D kzalloc(2 * DIV_ROUND_UP(input_len, 5) + 1, GFP_KERNEL);
->  =09if (!new_str)
->  =09=09return -ENOMEM;
-> =20
->=20
---8323328-1481929546-1789554589=:2346--
