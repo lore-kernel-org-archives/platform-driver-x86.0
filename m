@@ -1,100 +1,125 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3323BD1B
-	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 11:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789559217; cv=pass; b=bqJPCjbWrS2vOdqayiH1RcNfAtk54L/qGzwemGP5REO89jPWgh3E+HuTW/rAHYDWTcPwWLY4bCUC24CE7qCpcvUfNwJStxPJrx4Njt0OlFytLF4AmS4wegy6636RdTpYmcBOwqJStbMjvqotsz0mwG8KBUQoIAX4qequdRHomms=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789559217; c=relaxed/simple;
-	bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=TzfNKjEocIPS2PpY3tCYrI+HDJGKmrTLjRZuo95dR1B0UIV7YV5JEm0whi/GIAKE54Tte1LK6nvRYsTELivIEr56BTWX6VOgDOWc+3BKyzgdlF+xQeqapuu/Vp2vUXbEFU9H9yg7Hpef06z2e+Rom+XIeJZZboNWLep1SgeMLq0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=eVt9KpH0; arc=pass smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403014A4858
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 12:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789560929; cv=none; b=Ia4V46NHMUIuhuo2R1336H0uTu05TiOnF9k4Zs1UTkMFVtg2Y2OvqvQ1rMQmaFWWbIuArw75vBnGITUVlVhrTn9FyclzgB2HUuMy6+Gr3lAE4/8PnkmlmJ+1LjxSOwig8UtnTWuBHiCH6llWSL44bWItvkFVQUhdw0aDQjwu9nM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789560929; c=relaxed/simple;
+	bh=DqlshfivEwgnrB+qkDvakP7pvIL7ZOxMkNNV0cMvHsk=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=jRaVgb83Wvb9VP/WAfOLdApWVzOEdZXIyXlcvRFC0usq3dZrgG/uv+Ec4nTDmc9jhGRz8NK19mM+WFIiluuaJdkCYMdtNAHzqArGL/L6eEjC0vf3KCy83+cvwFLrT1qtliCPTB1Rkjaq4gnfH49QP63BnepE+ZX97ZiLjjAkfQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUkD+v9L; arc=none smtp.client-ip=74.125.228.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eVt9KpH0"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4843f22dcb8so512326f8f.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 04:46:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789559211; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ja916epgowvcDoiN/69H/1L4OAGNe2IIVOVndzn/Qcr4UFSnKrxfogtebXvqw1gIRE
-         V3ltat5o0STDFu+XH3nQIHfgTfwmATL+1p3cDn9vTC0FQtw6kjs9Tf6CjTf+z2VyKpNR
-         KT+Jg8Jc8x3dPsi9mz8d5N6v3jJxTGcQQln7H4TbNoZ8JAuFN3QyxLEBWIuSQvfvLwdU
-         mkSgHZ1il9cKf61hTTqfqvTX+V+qWalT+Xz4QCzi+TjzOqdJEL9Bapp06YuQddH1Tbyc
-         fycQptnVlOVlp0/aeL2l+1NAWjrEbuxqkNkNPzgdhCEl70aQnLcY6vy1sLYVfZgrbsM3
-         gMLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
-        fh=LAtpHtVR30q6rinFeyskR7Ff9QyURHB8q3bpp5R7hcA=;
-        b=gX401yLS0IUzLpztx9pR/MqzbbdkrIgGOL8eIVj2wcisE7Qg7O0F8hxHQO+IoF96AU
-         lC1CO0R9jSR8QyzB9qjVpxmW8FINHoe0qudQ8j15VwiF7S3Z8IhSrr/8zz2unoqjCorl
-         aTcYBEBp9I80xmnSbFOxQoy0P9NxDeCXJ2qgpFVivxsdjYUixTDIbTTcDudXOpR/utx3
-         O99pZI1MWb1AZgloFdo5W54YysuLd1MJo+Pn97ekNQAn9WW1SBNPc0ciwwlb6P16BOuv
-         IkAN+QNFHN5K5fJ4tuCxFx/Qcuxm+mJqBc9qgXSBPF7KBwSlqKS1Lxm9u7tufaRRuD80
-         hVwQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUkD+v9L"
+Received: by mail-pz2-f12.google.com with SMTP id 41be03b00d2f7-cc4bdf8abaaso693196a12.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 05:15:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20251104; t=1789559211; x=1790164011; darn=vger.kernel.org;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
-        b=eVt9KpH0WVInLaFn5DxmPmexSV4SxhpbXXIIPKfDXBjuE0nBO7fqd8Gj6uloImcqit
-         kRUfj9KhySaTr3f4UKj7RFwc1Rc7IL+T9XwTBsU1NTa2zxrR1NEM78e15mTLDxHLgTF9
-         jfCLvxCYz6M46FXyNmjw9FnTMOZT0m9zUa3HV8q3+qni3Zo9d2soNYfR+MZsr4rV1/YC
-         XbONx9bJvxsrR57W0/aSvGQzYuXZxxUATkC8uTelvIS6mYBEpAHns0XvFQ5K+X4lpKYv
-         zBsvsUOiangvWq26EWRu9lhURRzkCDFwQWuPRnA8SXDoZ77KQWGkzW6vdJfc6gPenl5l
-         suNw==
+        d=gmail.com; s=20251104; t=1789560928; x=1790165728; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=aayfnjV5p3GQV2kJBDU3d+V6F7p/7t4V6z/4sqcizKw=;
+        b=HUkD+v9LvPy+cCczmd/P1suhuDlH2yanOK46C+XKmg4doVR/eI2Pwbx4IioenIP+rR
+         QMegF6Cj65xc1fAcq2iAdJwhsgwA/cYRS4d1/gCtBix6v4xAAP4ik0aSJfnNUvXg5aXe
+         l0TiRh048htCYnQBG4xJJjtwhL9qfCYy1XrA8OW53VaoZ/NvTZuoWzYox/Cg6s2qMaAF
+         aPz5usg9kMCw4rmmS3KpWA3c+PT3dR7s2+t363LYrQPwLknsdAehM4QiTCQybJrtax8S
+         vGZHinoqzh2VTA0pfEhbubi2bmR1pNeWpqLBHAAO1BehgESbJxz+jTFioWa7jyjD/gvq
+         Zy3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789559211; x=1790164011;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Bk/Zhm46UsksqKxdCgEL1IXAFMmudAH/kvx9B8xFq6I=;
-        b=JLcdDmQ0KmiGG+v7y8ikWPKiL9yfl6GhMNfbIP/OpzooVKeBiTUom3DfVE5E+ZLFR0
-         LE81qJHF9tqr7kE1h3jfCJAdeor1VlOxqIAASyxkThWncVLNpv4adzQ4VucnzI5tuB6w
-         Lyhhj9soGefFFSsECBbQI/l/PHVgGcJ2ApNRvGiSeRcQM38+p4LdZqqKh1gkt1iK1zsp
-         P77U/C6AwzJCdWvWtfQhru6uQ2vMno89vGXSkoACIbxiPPUXWxJPOj5Ngfel1LPnx/8+
-         gX/qduiAalywGK0R3UKq/HZ++tAhFynmFoF0SjwYi2otjvG49/YksI7MVSzV7aYExchl
-         YgTw==
-X-Gm-Message-State: AFuF++mCI0qLUzCKk3CubcW4rJ8Dny9PS7C6qNlRu5otUlh3SRtjjqAC
-	q3mATaXEm3HWd9At0xck85IM9qYCFzdIZNOAI92t606trfXTpsyA9BOS3aSIKZ7D72C9+C8FQS/
-	f/rr54arDPWU7G4LqC96kyGWKV3Mhi34kQYTg
-X-Gm-Gg: AYBFou3Nkfey5qaDiVtd3MJsh07l658u7gufnpfidzx8Rx0PUiNIWysndpOJ3KWBhbP
-	M+xzbDjCyi+zzH4TDU5VMfmrVyCeIP6XgMDYr5zeRhNJO9hn0B/tJ8msoAaRh4vFJVjA0a3wWR5
-	Y1B9Esxfw3A/LtQf+A4ZhaymRV6BOC1/uHpAEctMC0d8XytRbYLjpVN4kRbkkoQ3+eMpCw4S8BR
-	nstO1GZNGFoiiJMT7fq+MBcIL2E6FyzQTawlyhr7aNjuXG3HyQUnDN7ICF05DkZepS6jxC7sJZJ
-	yOC/UUSw7PxUR4VtRUKrD8KIXdVUWDioNGY1u/CV7vs8mB5ljQEy2zg=
-X-Received: by 2002:a05:6000:230f:b0:486:f1ec:f939 with SMTP id
- ffacd0b85a97d-4870d26e897mr3159343f8f.40.1789559210826; Wed, 16 Sep 2026
- 04:46:50 -0700 (PDT)
+        d=1e100.net; s=20260707; t=1789560928; x=1790165728;
+        h=message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=aayfnjV5p3GQV2kJBDU3d+V6F7p/7t4V6z/4sqcizKw=;
+        b=F10iuJJP35jCO28h9xt63x5Z4FEbuWBPxxHeueig46YFMUxFbmZgnEBlwZ8K8fGzQG
+         kjhb/n1p9igSkPH+g1zMf0tULN54AkShKsHD0pexQwDY7ibnjKoNoTP5Vh5+CkNpBS6j
+         srxOOGazAsD7jWdXCGb6njzg2YQ3gEX/2GJ6B26GE8iA/NgNpTdvjUaOSTy25C3h5+sY
+         pLIsctCGhu5FCk8w/BZL2dSeIg0NOts7NF66jEhfm334lcu48d4YO4rzYgkFDo/48t1P
+         NzN6RHWcGRmRznVLgbwRHJ5bCTYuBHjCBbOXhe3IlInZw+hReSftDWiKjtykGU9mIIq1
+         0JHQ==
+X-Forwarded-Encrypted: i=1; AKwUvBwmPzW3EAkkorOXseidYHKzdgBGpYgA7RS3jL6+OWtHIlPSXLy2aEo6IelR2H3U/3PYHfdtVueyQ385tdqNqYXVV/bZ@vger.kernel.org
+X-Gm-Message-State: AFuF++k0Y0lccJUPslGUPN1nxbKzmTpKvgrDozsCwj18FsSubCqxzyJn
+	Fe3Kg6U5Jxk/wtVVhYatVrXbn5bEjC8zgcE2pBx/7MxVtrkguF5QwXScAsOe5NYFF0M=
+X-Gm-Gg: AYBFou3eXjCwQCv9Pzph4PtAfLV3EvbMpK5++NUANMiY5j9wJYpKjNykEp0+06xgBSb
+	FsHIfiQQa57kOwXWlj1/EkJ5pPHST8Cgezf+JCs+7BTRIHo/JQUw0cm7JiSHw+VkRIVzigo2m8h
+	rqF1NEZ739oPDug+LWlU5Ec8K46KfEAc8Gsq7+DM+tHoFH5WORJACw5su2hlaIo2vIjMIQSXT2o
+	NYR1NuOjIlmqZ6BeuBE8O4HaqGA6F+koMK2TE+j8OpVr5+Mph/KmFhcvDWva046tpOROK2/1tPY
+	31C+yMnpTOGpbLDH6zr40QKEXw1agzauQYl3W20f8iZMgffxUkjH/JFXDbFZdcA0rBjS2ptcu+R
+	y9JkxBUdtLJqrN8WRGXIebuenPAE7SdCh0KQ9aWaYVzOyQh2jP+qOdr91YjWZEhZZ4dps0ZBBuY
+	TxdOcRQEGjUkXzNXsMF+i/s1i9DjqgyAvujfjJjdoEzdigBdOP3Su0I75BT10KB6Zy7m4v+w==
+X-Received: by 2002:a05:6a20:e290:b0:3d3:aec2:4dcd with SMTP id adf61e73a8af0-3dd5f7a9ca3mr5599543637.25.1789560927153;
+        Wed, 16 Sep 2026 05:15:27 -0700 (PDT)
+Received: from [127.0.1.1] ([240e:b8f:977f:f400:ec2a:b15e:fef8:70a])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc50ab8ae01sm1512489a12.18.2026.09.16.05.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 05:15:26 -0700 (PDT)
+From: Liang Haowen <nbg2974@gmail.com>
+To: linux-leds@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+ Martin K. Petersen <mkp@kernel.org>, linux-scsi@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Denis Benato <denis.benato@linux.dev>, Armin Wolf <W_Armin@gmx.de>,
+ Hans de Goede <hansg@kernel.org>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH RFC v5 0/1] leds: asus-aura-scsi: Add ASUS Aura RGB LED driver
+ for ROG NVMe enclosures
+Date: Wed, 16 Sep 2026 12:15:22 -0000
+Message-Id: <202609162015.RFCv5-0.lhw@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: Karsten Wiese <fzuuzf@googlemail.com>
-Date: Wed, 16 Sep 2026 13:46:38 +0200
-X-Gm-Features: AcwNN1WoYNyN3o9ZWAjfFNt4ubxLqstaGWx8NVmdcdjBF2doFCUpluSSMGxZRYQ
-Message-ID: <CAM=nh0S9e1+_U4WGR92HwOrNC2h2xYb6eKvgN5_skg-vvbSbqQ@mail.gmail.com>
-Subject: amd/pmc
-To: platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello,
 
-your change makes a huge difference here, no more hangs suspending/resuming.
+v5, as its own thread, addressing the fourth sashiko round (one real
+Medium, the same two Low false positives).
 
-amd_pmc AMDI0009:00: Delaying suspend by 2.5s because delay_suspend=1.
-If this solves problems on your machine, please report this whole line
-to: platform-driver-x86@vger.kernel.org so it can be automatically
-detected as affected in the future. System Vendor: "LENOVO" Product
-Name: "83AR" Product Family: "IdeaPad Pro 5 16APH8" Board Vendor:
-"LENOVO" Board Name: "LNVNB161216"
+Changes since v4:
 
-Thanks,
-Karsten
+- led_mc_calc_color_components() now runs under the zone spinlock.
+  It writes the shared subled_info array, and the LED core allows
+  concurrent brightness_set callbacks for the same LED: sysfs stores
+  are serialized with led_access, but trigger events call
+  led_set_brightness() without it, so two concurrent setters could
+  interleave their component writes and the thread winning the lock
+  would cache a mix of their colours.
+
+The two low-severity items are the same false positives as in the
+previous three rounds:
+
+- kzalloc_obj() exists in include/linux/slab.h since v7.0 (Kees
+  Cook's overflow-refactor series); this driver builds against 7.2.
+
+- blk_rq_map_kern() takes four arguments on current kernels
+  (rq, buf, len, gfp); drivers/scsi/scsi_lib.c calls it exactly this
+  way from scsi_execute_cmd(). The five-argument form with the
+  request_queue first parameter is from older trees.
+
+v5 was re-verified on hardware: per-LED colours, 100 sequential
+updates, concurrent same-LED updates, concurrent four-writer updates,
+and unplug under load (zero splats, zero leaked LED nodes, clean
+rmmod).
+
+Everything else is unchanged: the hardware description, the
+scsi_device_handler that does not claim the sdev, the multicolor LED
+interface, the protocol handling and the known caveats (manual attach
+until a notifier lands; SAVE on every update writes the enclosure
+flash, wear uncharacterized; NULL-parent LED registration to avoid
+the sdev reference cycle).
+
+The open question from v3 and v4 stands: the driver is deliberately
+not wired into Kconfig/Makefile/MAINTAINERS yet, because the agreed
+direction with the SCSI side is a split into a SCSI transport helper
+and a shared ASUS Aura LED interface, and the wiring would follow
+that shape. Is deferring the wiring to that split acceptable for an
+RFC, or would you rather have the driver buildable in-tree from this
+series already?
+
+Comments on the interface shape and on folding this into the shared
+Aura work with Denis remain very welcome.
+
+Signed-off-by: Liang Haowen <nbg2974@gmail.com>
