@@ -1,88 +1,92 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7173CF95A;
-	Wed, 16 Sep 2026 05:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4A73E0C68
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 06:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789537789; cv=none; b=HFtVKIbwEO6tmVhWHqQkomsGQHk/CXT0PLKEIMTobnMupQTJMo8gHSyHH2mb0sAQq1OXM0/B+EUOIjxFM74UhOBVYDnbgTs+/O6vzD2p2/5IlWdXhE2w1Jp6EFqr9+oLkA6bVDLOqgXQFjKs5h+S2Jy8uC1W6+bk4dcR+shfEEE=
+	t=1789538592; cv=none; b=bKCoTTty5ommqWZ9PHgIsLVIecNmXFWvpBvSOynRlBBw8PxLN+/gAt/XywSknefa3qHqwl9U7bGpQu5fvEaycO8QfUcSXLj6OJzSuq6FrnhXFUt+xnpfXkOaflwYZ+lmh0rDBSW/HfNaU/sRnU33IV6YSAA7o0Xzrhmx0uPOUVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789537789; c=relaxed/simple;
-	bh=zo/NxocoJWYPn8eQbbCqSd8XccYRnk32G2OLAApak9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qg9brwPnu6d72xFjrDL1ZCApi9HraAa95I2FBGlNnVyHDQTVIevaLcNO6ax1mjJEF390hWWaX0u6RCD/QkGGEfjx8I1fQy4v1xAgMOWV4DOJ7HvfnHjxrf9AArrSODh+UQl4+RhjQ69OVb48Py8SmVMWZcrPncaiwHOWV1eyzbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SvCgZQfl; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1789538592; c=relaxed/simple;
+	bh=bgUkyGOnDVhb8RAyzbxkCxdj3RWBPxJG7l88275YLOY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pY8UIlSq9Vz1xN1PMwSXfAXl956sN1cNdiQEdJYqfHbBSxScFzyfxvr9xVHhy+y5dSdBbYy2byge+EO17NOdlqOBp5bjQ5Zq38WkVc6x89DIKzsGVH6cDwjDhWTEvCr0ooe5AU9r0OEFGH86FLu/JuiZTTqKVnm8k/rw2+/l1Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djMouWf5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SvCgZQfl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=3RFLNN/uqua2VShiFi6iCJVR1exNTstN1aXPfrn7u1Q=; b=SvCgZQflDvNhL9OrowcGO7hxIS
-	hUAZKV1XfkDmy/EbLgW61AqWBBCLPfXRx6tONGD9piffdUBsTLJ33zuwnBYnJuPZKuN3YFYUkjK2L
-	2QaJusWXovKHPr5+Ii8LeqFoTNi+sxu5opGofGESElzo7vvC4pPfZWASAXoQ7lgwd/FinqkI4qgC6
-	BxOGH+hZH1S0LhrAEljRfj4bGtjK9Dpjf/2xhmkMFSODOrDEzAgY8P2WkmTWbQvI7F91/sme3f8aF
-	UJMwyvV3tQfsSJ8KWdoLYF2FMJChBrWc/20K5ZzbRVD+BuD+JTKN5gD/vHyeJVP3E7QQBAA1APRvL
-	5iBtp3Bw==;
-Received: from [50.53.43.113] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x6iWd-00000008Pni-2e2a;
-	Wed, 16 Sep 2026 05:49:45 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH] docs: TPMI: use literal block for commands
-Date: Tue, 15 Sep 2026 22:49:41 -0700
-Message-ID: <20260916054942.2054730-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djMouWf5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ACAFAC2BCC7
+	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 06:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1789538591;
+	bh=bgUkyGOnDVhb8RAyzbxkCxdj3RWBPxJG7l88275YLOY=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=djMouWf5HKNfNYKQXbXWTzPOPHFzKzqS6IJS72tguAWzlbduzovxOc5Y2mTN2Te+e
+	 CHLMP88fueuJY+uzDb+RvmU/+3GGlIaK6gzBgbeFRypZ6q2WPwhz1EibE4EOxB5j7c
+	 FP/42ciCnxnW/7lEo9gmkpbRnyj8Tv6LIcHR3Cuob7cnS949OGfJW/pKpzJ3Z9kfHn
+	 KaEE4oaqbyjd2EV2/Tu6sVz6g87mMqEQsgb610OLOvnMeUiRixyQoAePTSZ2zN3E6Y
+	 D/7X9jRGlzb3Q6Syr3lPYHR7GJy6AcqKbrfwkrmdWhHr5gY17ScXKoga6dYf7RpL8O
+	 EECAe5m/8o6+Q==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+	id 8CB32C41612; Wed, 16 Sep 2026 06:03:11 +0000 (UTC)
+From: bugzilla-daemon@kernel.org
+To: platform-driver-x86@vger.kernel.org
+Subject: [Bug 222002] [BUG] alienware-wmi: Missing support for Alienware 16
+ Area-51 (AA16250) lighting controller (AW-ELC 187c:0551)
+Date: Wed, 16 Sep 2026 06:03:11 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: enhancement
+X-Bugzilla-Who: adrienpantovich@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P3
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-222002-215701-nOjSPEYFtg@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-222002-215701@https.bugzilla.kernel.org/>
+References: <bug-222002-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Use a literal block for 'echo' commands to separate them from
-the surrounding text. Otherwise the lines run together, without any
-clear break before or after the commands.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D222002
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
----
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-doc@vger.kernel.org
+--- Comment #4 from adrienpantovich@gmail.com (adrienpantovich@gmail.com) -=
+--
+Here is the output you requested. I am working on reverse engineering
+a way to send information to the controller manually from dual-booting
+windows and monitoring USBHID events that AWCC sends and receives to
+the LED components. OpenRGB hasn't worked for me at all when I tried
+installing it either, which is why I'm trying to do it myself lol.
 
- Documentation/ABI/testing/debugfs-tpmi |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+On Tue, Sep 15, 2026 at 2:16=E2=80=AFPM <bugzilla-daemon@kernel.org> wrote:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D222002
+>
+> --- Comment #3 from Armin Wolf (W_Armin@gmx.de) ---
+> Can you share the output of "acpidump"?
+>
+> --
+> You may reply to this email to add a comment.
+>
+> You are receiving this mail because:
+> You reported the bug.
 
---- linux-next-20260914.orig/Documentation/ABI/testing/debugfs-tpmi
-+++ linux-next-20260914/Documentation/ABI/testing/debugfs-tpmi
-@@ -25,9 +25,11 @@ Description:
- Allows to write at any offset. It doesn't check for Read/Write access
- as hardware will not allow to write at read-only memory. This write is
- at offset multiples of 4. The format is instance,offset,contents.
--Example:
--echo 0,0x20,0xff > mem_write
--echo 1,64,64 > mem_write
-+Example::
-+
-+  echo 0,0x20,0xff > mem_write
-+  echo 1,64,64 > mem_write
-+
- Users:		Debugging, any user space test suite
- 
- What:		/sys/kernel/debug/tpmi-<n>/plr/domain<n>/status
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
