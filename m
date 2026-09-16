@@ -1,33 +1,33 @@
-Received: from mta0.migadu.com (out-64.mta0.migadu.com [91.218.175.64])
+Received: from mta0.migadu.com (out-69.mta0.migadu.com [91.218.175.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB154D797D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C924AB3D3
 	for <platform-driver-x86@vger.kernel.org>; Wed, 16 Sep 2026 15:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.64
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789573348; cv=none; b=gH6QjthLJ9oUywEhVgbyL/Q1GJSF2pMIGIQ1Tj7kD9o9uZ7Fk10B23NLHJ2kwKWuMxm4Wzdr6BAsRt4qSS1jBHHvOB73gVVTfe0i20lA22NIPSxsb6ly808JtgXPp/RCnPjMtBOi9e1c3VUSPhFiZVll8/UaqJSCkxULmewoXY8=
+	t=1789573348; cv=none; b=Vt6qU7ktuhAJLGToS8V6j5hBHH6k7e4ETLKY9nLgsiLXsVSR+xTb+xjFn3RFoS29g+bGRMZojGo9Xtlns/46QO6eOy+Zmwy/XwBuR6OqVTAq9N0vb2VvQmfeR0Dm6kMDOcxYARRAwmgaYMcMPKUW3D9FfQ5YDBAkdwA62odU/EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789573348; c=relaxed/simple;
-	bh=pgJZycd6T5cegHfWjo8x3usfbnao0lmc6UEvZnSMqss=;
+	bh=RnycfHy3B/O20XaLemKi+nuu4GwL0rtcQeCeVAhEhic=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cY+W46+R8PTHdPJZ1iB4LOwvrD077EuIBRMxAyvJvwGRia8+4PAzNiSu4f1N3hwaZcUhwOOZbCUMAn321XRR9uPZW8sPzcq/WQIXxH3M9GEp6ol8RNwuhV5HOCxb5VsfaDwfvh3C0pkyZYREPQL4gs+Ft052scLowvlAZxJ4iho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jGTOcqKs; arc=none smtp.client-ip=91.218.175.64
+	 MIME-Version; b=UwPeY2lhhOGWBbxA2ipxnOSnbiVny8jfKj8OgfJzE60hhnlGX6siB5K50cXj7J68bbayo9ebPyadkxtXPb37pv0l5uacuQb2tQsKILNgfWJC4Q18+KEq7lvGagv895+7e7LnzDV1wMoou3pt3U9TwxoGpjQ9bbSfwLsTeY8zEZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kwZM64Hn; arc=none smtp.client-ip=91.218.175.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jGTOcqKs"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kwZM64Hn"
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-DKIM-Signature: a=rsa-sha256; bh=pgJZycd6T5cegHfWjo8x3usfbnao0lmc6UEvZnSMqss=;
+DKIM-Signature: a=rsa-sha256; bh=RnycfHy3B/O20XaLemKi+nuu4GwL0rtcQeCeVAhEhic=;
  c=simple/simple; d=linux.dev;
  h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789573341; v=1; x=1790178141;
- b=jGTOcqKs+7muO8UzrMmUr4viTfPp7tuLNoKwYQmwOQaq9/uujqL7daP5TsYsFG2BSvWi3rVf
- YwRddpVqqhoF1t8g+1h1Z8oDfFdZKAZ3h3wDQnjSWQj/o26+fcBPW+aUBZmaBp7W1MbXLPkX3bn
- jtTXCzEGNuuPO8aEMEd4IH3w=
+ t=1789573343; v=1; x=1790178143;
+ b=kwZM64HnIoPmP/8y8I/8XWTN/Zf52nA1H3UqJOC7u5hbBGVTkpsonj605rD4orLFcAr3+BmS
+ Vkd2WrQ1ceuOt6eBxNx+AIuWmCBgb3ck7BUafOcz1s8eCbjrYxL46080NANu1CP5VufMz79Z8qz
+ IzO2kLsIPRg4JortBaDLSXU8=
 X-Envelope-To: platform-driver-x86@vger.kernel.org
-Received: by smtp.migadu.com with ESMTPS id 0bca811407a263d2;
-	Wed, 16 Sep 2026 15:42:21 +0000
-X-Mizu-Trace-ID: 0bca811407a263d2
+Received: by smtp.migadu.com with ESMTPS id 1a96745af3f696f3;
+	Wed, 16 Sep 2026 15:42:22 +0000
+X-Mizu-Trace-ID: 1a96745af3f696f3
 X-Migadu-Flow: FLOW_OUT
 From: Denis Benato <denis.benato@linux.dev>
 To: platform-driver-x86@vger.kernel.org
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	"busybox11" <busybox11th@gmail.com>,
 	"Denis Benato" <benato.denis96@gmail.com>,
 	Denis Benato <denis.benato@linux.dev>
-Subject: [PATCH v1 1/2] platform/x86: asus-armoury: let attribute groups decide their own visibility
-Date: Wed, 16 Sep 2026 15:42:09 +0000
-Message-ID: <20260916154210.181441-2-denis.benato@linux.dev>
+Subject: [PATCH v1 2/2] platform/x86: asus-armoury: add dGPU disable fallback DEVID for ProArt H7606 series
+Date: Wed, 16 Sep 2026 15:42:10 +0000
+Message-ID: <20260916154210.181441-3-denis.benato@linux.dev>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260916154210.181441-1-denis.benato@linux.dev>
 References: <20260916154210.181441-1-denis.benato@linux.dev>
@@ -53,299 +53,57 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-mini_led_mode, gpu_mux_mode and dgpu_disable are created by ad-hoc
-conditional blocks in asus_fw_attr_add() which must be manually tracked
-by the error and exit paths; those paths also re-probe WMI to know which
-groups were actually created.
+Newer ASUS ProArt laptops (e.g. H7606 series) implement dGPU power
+control on WMI DEVID 0x00090120 instead of the usual 0x00090020.
+The default DEVID returns 0xFFFFFFE2 on these models, so the
+dgpu_disable firmware attribute is never created and the dGPU cannot
+be re-enabled from Linux at all.
 
-Give attribute groups whose support depends on a resolved device ID
-their own .is_visible() callback: the group is created unconditionally
-and sysfs hides it entirely (SYSFS_GROUP_INVISIBLE) when the backing WMI
-device is not present. The new ASUS_ATTR_GROUP_BOOL_VIS() and
-ASUS_ATTR_GROUP_ENUM_VIS() macros declare such attribute groups.
-Creation and removal become symmetric, groups can be removed
-unconditionally since sysfs_remove_group() is a no-op for groups that
-were never created, and no WMI probe is needed outside of
-initialization.
+Add a fallback probe for device ID 0x00090120 following the same
+approach as the gpu_mux_dev_id probe.
 
-The dgpu_disable attribute now goes through the same resolved device ID
-scheme as mini_led_mode and gpu_mux_mode, storing the device ID to use
-in asus_armoury.dgpu_disable_dev_id instead of always operating on
-ASUS_WMI_DEVID_DGPU.
+Details for 0x00090120 (confirmed on H7606W using direct WMNB calls
+and inspecting the DSDT DEVS handler):
+  - Reading DSTS returns 0x00010001 when the dGPU is off (CUMA=1),
+	or 0x00010000 when it's on.
+  - Writing DEVS: 0 enables the dGPU (calls PG00._ON() + Notifies
+	PEGP, Device Check), and 1 disables or ejects it.
 
-No functional change is intended.
+This behavior matches the dgpu_disable attribute (1 = disabled).
 
 Signed-off-by: Denis Benato <denis.benato@linux.dev>
 ---
- drivers/platform/x86/asus-armoury.c | 111 +++++++++++++++++-----------
- drivers/platform/x86/asus-armoury.h |  55 ++++++++++++++
- 2 files changed, 123 insertions(+), 43 deletions(-)
+ drivers/platform/x86/asus-armoury.c        | 2 ++
+ include/linux/platform_data/x86/asus-wmi.h | 3 +++
+ 2 files changed, 5 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
-index 2d5ca75bc727..8639902f084d 100644
+index 8639902f084d..3cbee734180a 100644
 --- a/drivers/platform/x86/asus-armoury.c
 +++ b/drivers/platform/x86/asus-armoury.c
-@@ -94,6 +94,7 @@ struct asus_armoury_priv {
+@@ -977,6 +977,8 @@ static int asus_fw_attr_add(void)
+ 	asus_armoury.dgpu_disable_dev_id = 0;
+ 	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU))
+ 		asus_armoury.dgpu_disable_dev_id = ASUS_WMI_DEVID_DGPU;
++	else if (armoury_has_devstate(ASUS_WMI_DEVID_GPU_MODE))
++		asus_armoury.dgpu_disable_dev_id = ASUS_WMI_DEVID_GPU_MODE;
  
- 	u32 mini_led_dev_id;
- 	u32 gpu_mux_dev_id;
-+	u32 dgpu_disable_dev_id;
+ 	err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
+ 				 &mini_led_mode_attr_group);
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 289be6ac7335..2cd2776ad6fb 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -138,6 +138,9 @@
+ /* dgpu on/off */
+ #define ASUS_WMI_DEVID_DGPU		0x00090020
  
- 	bool requires_fan_curve;
- };
-@@ -458,7 +459,13 @@ static ssize_t mini_led_mode_possible_values_show(struct kobject *kobj,
- 		return -ENODEV;
- 	}
- }
--ASUS_ATTR_GROUP_ENUM(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
++/* dgpu on/off - alternative to ASUS_WMI_DEVID_DGPU */
++#define ASUS_WMI_DEVID_GPU_MODE		0x00090120
 +
-+static bool mini_led_mode_group_visible(struct kobject *kobj)
-+{
-+	return asus_armoury.mini_led_dev_id;
-+}
-+
-+ASUS_ATTR_GROUP_ENUM_VIS(mini_led_mode, "mini_led_mode", "Set the mini-LED backlight mode");
+ #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
  
- static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
- 						struct kobj_attribute *attr,
-@@ -471,8 +478,8 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
- 	if (err)
- 		return err;
- 
--	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU)) {
--		err = armoury_get_devstate(NULL, &result, ASUS_WMI_DEVID_DGPU);
-+	if (asus_armoury.dgpu_disable_dev_id) {
-+		err = armoury_get_devstate(NULL, &result, asus_armoury.dgpu_disable_dev_id);
- 		if (err)
- 			return err;
- 		if (result && !optimus) {
-@@ -502,7 +509,13 @@ static ssize_t gpu_mux_mode_current_value_store(struct kobject *kobj,
- 	return count;
- }
- ASUS_WMI_SHOW_INT(gpu_mux_mode_current_value, asus_armoury.gpu_mux_dev_id);
--ASUS_ATTR_GROUP_BOOL(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
-+
-+static bool gpu_mux_mode_group_visible(struct kobject *kobj)
-+{
-+	return asus_armoury.gpu_mux_dev_id;
-+}
-+
-+ASUS_ATTR_GROUP_BOOL_VIS(gpu_mux_mode, "gpu_mux_mode", "Set the GPU display MUX mode");
- 
- static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
- 						struct kobj_attribute *attr, const char *buf,
-@@ -538,7 +551,8 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
- 	}
- 
- 	scoped_guard(mutex, &asus_armoury.egpu_mutex) {
--		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL, ASUS_WMI_DEVID_DGPU);
-+		err = armoury_set_devstate(attr, disable ? 1 : 0, NULL,
-+					   asus_armoury.dgpu_disable_dev_id);
- 		if (err)
- 			return err;
- 	}
-@@ -547,8 +561,14 @@ static ssize_t dgpu_disable_current_value_store(struct kobject *kobj,
- 
- 	return count;
- }
--ASUS_WMI_SHOW_INT(dgpu_disable_current_value, ASUS_WMI_DEVID_DGPU);
--ASUS_ATTR_GROUP_BOOL(dgpu_disable, "dgpu_disable", "Disable the dGPU");
-+
-+static bool dgpu_disable_group_visible(struct kobject *kobj)
-+{
-+	return asus_armoury.dgpu_disable_dev_id;
-+}
-+
-+ASUS_WMI_SHOW_INT(dgpu_disable_current_value, asus_armoury.dgpu_disable_dev_id);
-+ASUS_ATTR_GROUP_BOOL_VIS(dgpu_disable, "dgpu_disable", "Disable the dGPU");
- 
- /* Values map for eGPU activation requests. */
- static u32 egpu_status_map[] = {
-@@ -823,7 +843,6 @@ ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(nv_base_tgp, ATTR_NV_BASE_TGP, ASUS_WMI_DEVID_
- static const struct asus_attr_group armoury_attr_groups[] = {
- 	{ &egpu_connected_attr_group, ASUS_WMI_DEVID_EGPU_CONNECTED },
- 	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
--	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
- 	{ &dgpu_power_state_attr_group, ASUS_WMI_DEVID_DGPU_POWER_STATE },
- 	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
- 
-@@ -938,34 +957,46 @@ static int asus_fw_attr_add(void)
- 		goto err_destroy_kset;
- 	}
- 
-+	/*
-+	 * Device IDs with model-dependent alternatives are resolved once
-+	 * here: their attribute groups then decide visibility themselves
-+	 * through .is_visible.
-+	 */
- 	asus_armoury.mini_led_dev_id = 0;
- 	if (armoury_has_devstate(ASUS_WMI_DEVID_MINI_LED_MODE))
- 		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE;
- 	else if (armoury_has_devstate(ASUS_WMI_DEVID_MINI_LED_MODE2))
- 		asus_armoury.mini_led_dev_id = ASUS_WMI_DEVID_MINI_LED_MODE2;
- 
--	if (asus_armoury.mini_led_dev_id) {
--		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
--					 &mini_led_mode_attr_group);
--		if (err) {
--			pr_err("Failed to create sysfs-group for mini_led\n");
--			goto err_remove_file;
--		}
--	}
--
- 	asus_armoury.gpu_mux_dev_id = 0;
- 	if (armoury_has_devstate(ASUS_WMI_DEVID_GPU_MUX))
- 		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX;
- 	else if (armoury_has_devstate(ASUS_WMI_DEVID_GPU_MUX_VIVO))
- 		asus_armoury.gpu_mux_dev_id = ASUS_WMI_DEVID_GPU_MUX_VIVO;
- 
--	if (asus_armoury.gpu_mux_dev_id) {
--		err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
--					 &gpu_mux_mode_attr_group);
--		if (err) {
--			pr_err("Failed to create sysfs-group for gpu_mux\n");
--			goto err_remove_mini_led_group;
--		}
-+	asus_armoury.dgpu_disable_dev_id = 0;
-+	if (armoury_has_devstate(ASUS_WMI_DEVID_DGPU))
-+		asus_armoury.dgpu_disable_dev_id = ASUS_WMI_DEVID_DGPU;
-+
-+	err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+				 &mini_led_mode_attr_group);
-+	if (err) {
-+		pr_err("Failed to create sysfs-group for mini_led\n");
-+		goto err_remove_file;
-+	}
-+
-+	err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+				 &gpu_mux_mode_attr_group);
-+	if (err) {
-+		pr_err("Failed to create sysfs-group for gpu_mux\n");
-+		goto err_remove_mini_led_group;
-+	}
-+
-+	err = sysfs_create_group(&asus_armoury.fw_attr_kset->kobj,
-+				 &dgpu_disable_attr_group);
-+	if (err) {
-+		pr_err("Failed to create sysfs-group for dgpu_disable\n");
-+		goto err_remove_gpu_mux_group;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(armoury_attr_groups); i++) {
-@@ -1000,16 +1031,14 @@ static int asus_fw_attr_add(void)
- 	return 0;
- 
- err_remove_groups:
--	while (i--) {
--		if (armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
--			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
--					   armoury_attr_groups[i].attr_group);
--	}
--	if (asus_armoury.gpu_mux_dev_id)
--		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-+	while (i--)
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
-+				   armoury_attr_groups[i].attr_group);
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &dgpu_disable_attr_group);
-+err_remove_gpu_mux_group:
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
- err_remove_mini_led_group:
--	if (asus_armoury.mini_led_dev_id)
--		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
- err_remove_file:
- 	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
- err_destroy_kset:
-@@ -1182,17 +1211,13 @@ static void __exit asus_fw_exit(void)
- {
- 	int i;
- 
--	for (i = ARRAY_SIZE(armoury_attr_groups) - 1; i >= 0; i--) {
--		if (armoury_has_devstate(armoury_attr_groups[i].wmi_devid))
--			sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
--					   armoury_attr_groups[i].attr_group);
--	}
--
--	if (asus_armoury.gpu_mux_dev_id)
--		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-+	for (i = ARRAY_SIZE(armoury_attr_groups) - 1; i >= 0; i--)
-+		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj,
-+				   armoury_attr_groups[i].attr_group);
- 
--	if (asus_armoury.mini_led_dev_id)
--		sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &dgpu_disable_attr_group);
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &gpu_mux_mode_attr_group);
-+	sysfs_remove_group(&asus_armoury.fw_attr_kset->kobj, &mini_led_mode_attr_group);
- 
- 	sysfs_remove_file(&asus_armoury.fw_attr_kset->kobj, &pending_reboot.attr);
- 	kset_unregister(asus_armoury.fw_attr_kset);
-diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
-index 6dfe5ddfe4ac..44d12f20cd3c 100644
---- a/drivers/platform/x86/asus-armoury.h
-+++ b/drivers/platform/x86/asus-armoury.h
-@@ -198,6 +198,61 @@ ssize_t armoury_attr_uint_show(struct kobject *kobj, struct kobj_attribute *attr
- 		.name = _fsname, .attrs = _attrname##_attrs			\
- 	}
- 
-+/*
-+ * Same as ASUS_ATTR_GROUP_BOOL() but the whole attribute group is
-+ * created only when <name>_group_visible() returns true.
-+ * Requires <name>_current_value_show(), <name>_current_value_store()
-+ * and <name>_group_visible()
-+ */
-+#define ASUS_ATTR_GROUP_BOOL_VIS(_attrname, _fsname, _dispname)		\
-+	DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(_attrname)			\
-+	static struct kobj_attribute attr_##_attrname##_current_value =	\
-+		__ASUS_ATTR_RW(_attrname, current_value);		\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	__ATTR_SHOW_FMT(possible_values, _attrname, "%s\n", "0;1");	\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_possible_values.attr,		\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname,					\
-+		.is_visible = SYSFS_GROUP_VISIBLE(_attrname),		\
-+		.attrs = _attrname##_attrs				\
-+	}
-+
-+/*
-+ * Same as ASUS_ATTR_GROUP_ENUM() but the whole attribute group is
-+ * created only when <name>_group_visible() returns true.
-+ * Requires <name>_current_value_show(), <name>_current_value_store(),
-+ * <name>_possible_values_show() and <name>_group_visible()
-+ */
-+#define ASUS_ATTR_GROUP_ENUM_VIS(_attrname, _fsname, _dispname)		\
-+	DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(_attrname)			\
-+	static struct kobj_attribute attr_##_attrname##_current_value =	\
-+		__ASUS_ATTR_RW(_attrname, current_value);		\
-+	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
-+	static struct kobj_attribute attr_##_attrname##_possible_values =\
-+		__ASUS_ATTR_RO(_attrname, possible_values);		\
-+	static struct kobj_attribute attr_##_attrname##_type =		\
-+		__ASUS_ATTR_RO_AS(type, enum_type_show);		\
-+	static struct attribute *_attrname##_attrs[] = {		\
-+		&attr_##_attrname##_current_value.attr,			\
-+		&attr_##_attrname##_display_name.attr,			\
-+		&attr_##_attrname##_possible_values.attr,		\
-+		&attr_##_attrname##_type.attr,				\
-+		NULL							\
-+	};								\
-+	static const struct attribute_group _attrname##_attr_group = {	\
-+		.name = _fsname,					\
-+		.is_visible = SYSFS_GROUP_VISIBLE(_attrname),		\
-+		.attrs = _attrname##_attrs				\
-+	}
-+
- #define ASUS_ATTR_GROUP_INT_VALUE_ONLY_RO(_attrname, _fsname, _wmi, _dispname)	\
- 	ASUS_WMI_SHOW_INT(_attrname##_current_value, _wmi);		\
- 	static struct kobj_attribute attr_##_attrname##_current_value =		\
+ #define ASUS_WMI_DEVID_DGPU_POWER_STATE	0x00120097
 -- 
 2.47.3
 
