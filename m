@@ -1,57 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C51A23393E;
-	Thu, 17 Sep 2026 15:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33AA3DAADD;
+	Thu, 17 Sep 2026 15:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789657452; cv=none; b=F6JVUN7faOF1BfcMKEUOzxv3VKq7TESIp7W3oYDPmctaUBqs+JAIzsJR01U1kWP+2CD3lyLgLpardVamcrj65v0JfcWd3MExTvLPPsJwiixsXfxU3FxTKQn+qtSXlUb5QObQZxaSS76K5r7FSv6d3wYmpliv0AVM9rgDDxVAI38=
+	t=1789657457; cv=none; b=ql5yh5Ve+QCvlt/b/WR/QEOtsFESyms52cN1kCKtB6iEvHU97o8WYi/Llohgf8C8Rznp137PHFyE8ywSWC4P+P2I1jlYATyGOx0B6DmqJLvYkGEPzaXR2FicasdIS08ggahHe0RoHG4kSHBh4OPq2R1R6S3Cy8Nbf4Gpyy36uXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789657452; c=relaxed/simple;
-	bh=HyHgcbLfPHOa/yey9B6d+0L5ZvvCeaQqnk9X9rm5tws=;
+	s=arc-20240116; t=1789657457; c=relaxed/simple;
+	bh=CR8wXOZCs8JZ4Pnv+Uc+I+9zn7iCGsN0bBlV9B5ok8E=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YrraNxXdudI8ND5yBm7SrDgF0OXsTmjNzaalVDozC4XSzccUgVT9SAwEYArcR8q3966brTtusX9Bc+JH5Z3UYckfPcG58I3X/0fk9psbgrh88/JKbe7JijId859Afrrbiu0e0kglicPN36cuX3cuhTUfCutSCigdXg98UGeolIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJLXcy4M; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=J2FpU5OqIzsUnIN/yvz/R1O0PRf3mDJrFBlKQ0UTQ6NYmmzSiM0R2xnqIZBWewVx80ek+ef3F0FBbqN0HrwId9miKr8L3lCJdwtltyHEda78LtcerLA2bB2lsK4SWxVj0RRUfwAelMdOPSRhXK4C8Grh1CdTz7HwHeLiPMHSGaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F6x1Rbj2; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJLXcy4M"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F6x1Rbj2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789657441; x=1821193441;
+  t=1789657451; x=1821193451;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=HyHgcbLfPHOa/yey9B6d+0L5ZvvCeaQqnk9X9rm5tws=;
-  b=jJLXcy4Mg8gmSJ6GjijzrSUl4q5PFfHgFZmAoHpcoZ8GUM0ABE+UMMDR
-   Iqyt03uU2+8vYTL0n5Vdh4IPCnF34QwbgTepET6amcOzLUxpKRTNWvJ/+
-   0zMgnKJTq9OdPQHPaut1CCZe8oj/yP4KCmrMXtEjsuqz14mFT6av59vlM
-   mSzGtphvQQ2NfoOb9SmPWDIezcjCDz3h3msa6u5TQeRY7jBYjvEMTAyRy
-   /94XOmI9Pj1vxH1sJ56gN2GcmhLKFQ9Uj3skNuJaudOMD+maRhY1ovvBO
-   cG0o4N3eG/PkGL+PjxXD2mDRaRWbNbHzclxheKRcURsBYCXowOfqVpa9o
-   g==;
-X-CSE-ConnectionGUID: NSN8fe93RqaNi3tSr6s5Eg==
-X-CSE-MsgGUID: jJeMRRWRQSWMM0p1aQDRCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="107594070"
+  bh=CR8wXOZCs8JZ4Pnv+Uc+I+9zn7iCGsN0bBlV9B5ok8E=;
+  b=F6x1Rbj2TPGMTwXTXj4UFMibdT/PPZ24v1k0Jy89Hn7IA7G2LytlqEc4
+   5oR+MKWdUjMFDQl+FqoIJoLJqDZ7LpOkf0T+3lIpFinrH+toOho7v3zgy
+   70epqLT1Tu0CVdfpnrwBexpjCC3fX0ElWly7j51C6Ow90hhQSz1+sZ5rr
+   u2Fyew/jA05uolfsDscPew95kQhrkz5llIWINEPLdNxWGFoINg108b+6H
+   y7B8plz9p5iC1SyZ3ER07Ou4uK2PxJI2y+g4hJV8dLoWE4ld5km3djJGJ
+   UdnzowmkkRqC7G4Bi5x6K7oaAibMV0fI6DEr9iApKDFw0Vo8u60ncF3tJ
+   A==;
+X-CSE-ConnectionGUID: v9MmZMmfRn6jh701BXvXyA==
+X-CSE-MsgGUID: VSEF51IYRZuFyNClDEj9ZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92597419"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="107594070"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:03:48 -0700
-X-CSE-ConnectionGUID: W0CKoFcuQxO9FWEqB296XA==
-X-CSE-MsgGUID: Er3Po/fgTZSdDWBNK48zKw==
+   d="scan'208";a="92597419"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:04 -0700
+X-CSE-ConnectionGUID: m6SZ/YTuSO2Z4g+B6412Qg==
+X-CSE-MsgGUID: wNf1l5LcQjaehTxWD8SOiQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="297344329"
+   d="scan'208";a="279078492"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:03:46 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:01 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>, 
- Hans de Goede <hansg@kernel.org>, Thorsten Blum <thorsten.blum@linux.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260815092138.91072-3-thorsten.blum@linux.dev>
-References: <20260815092138.91072-3-thorsten.blum@linux.dev>
-Subject: Re: [PATCH] platform/x86/intel/vsec: Use bool for run_once
-Message-Id: <178965742178.22350.14812056740758633173.b4-ty@b4>
-Date: Thu, 17 Sep 2026 18:03:41 +0300
+To: platform-driver-x86@vger.kernel.org, 
+ Muhammad Bilal <meatuni001@gmail.com>
+Cc: jorge.lopez2@hp.com, hansg@kernel.org, linux@weissschuh.net, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+In-Reply-To: <20260818191120.38556-1-meatuni001@gmail.com>
+References: <20260818191120.38556-1-meatuni001@gmail.com>
+Subject: Re: [PATCH v3 0/2] platform/x86: hp-bioscfg: fix empty auth token
+ overflow and clean up audit log loop
+Message-Id: <178965743658.22350.7756455850249606782.b4-ty@b4>
+Date: Thu, 17 Sep 2026 18:03:56 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -62,9 +64,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Sat, 15 Aug 2026 11:21:39 +0200, Thorsten Blum wrote:
+On Wed, 19 Aug 2026 00:11:06 +0500, Muhammad Bilal wrote:
 
-> Use bool for run_once in intel_vsec_pci_init().
+> This is v3 for the remaining two patches (patches 4 and 5) from the v2
+> series [2], addressing your review feedback:
+> 
+> - Patch 1/2 (was patch 4 in v2): Remove the special-case "if (!authlen)"
+>   return entirely in hp_calculate_security_buffer(). The generic
+>   calculation already naturally yields 20 bytes for empty strings,
+>   eliminating duplicate logic and fixing the 16-byte heap overflow
+>   (reported earlier by Josh Snyder [3]).
+> 
+> [...]
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -77,8 +88,10 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/1] platform/x86/intel/vsec: Use bool for run_once
-      commit: 1ce2e8ee4ca47c0d4b788fbc791cdf82fcc98ef5
+[1/2] platform/x86: hp-bioscfg: fix 16-byte heap overflow for empty auth token
+      commit: 5714a846afa8d7b8363aa134d4acbd129f68d049
+[2/2] platform/x86: hp-bioscfg: remove dead bounds check in audit_log_entries_show
+      (no commit info)
 
 --
  i.
