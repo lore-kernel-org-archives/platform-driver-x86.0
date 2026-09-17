@@ -1,58 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E607E259C80;
-	Thu, 17 Sep 2026 15:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70E64E3243;
+	Thu, 17 Sep 2026 15:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789657591; cv=none; b=ostn52JYMunn9nMay4F1l3M9kIClGN7I60BgR1Ai43jOWEonzmu31ArUiWw5beTX0VrBqxDo8cRCF5J1S2hQ+R3Gbzhp6HK8FYQNyERSEJR9EXQvtXbxhgKFsD93eWuz40UO++p9Z8YrfYVPclM0ZVpJ1jKY3SYyAEn7Nh5Jt5g=
+	t=1789657634; cv=none; b=kA2lRQtHE3/o9KXMks2ed+WgnRtEKE1Y2LOiVIn445txTYG2MWBj2klUSUAP3/uOam+6zb3X/lsiHmUyYF2KPq7mY33/ySzp0pBAptIKI7swZdoqh+JNjJVJVVMYpAbxvpPLJjkOGAVIIqbulYI/ORs/K05luCHLeAq24rx1PdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789657591; c=relaxed/simple;
-	bh=ul6HdkyXtMQORe+nB4GohG78YZaNPoiGYQM+ak+UeYA=;
+	s=arc-20240116; t=1789657634; c=relaxed/simple;
+	bh=yVqWFSiV+ObwksnCrZ0HQp5TvTxFZ6LvDpTy5m9TEcA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eM+kcxp58lXISvrWCnloKqDxTumEtdRKoA+IUXrNP9KNSS2vXJqOQ0FHSD6ATbIwvQ9JIpzFq5SV1/frcPM8X2+DdW1dAX67BPNjrIzxTwPpCOtUGaghKuyLdBE2/nU8zHj68oGsx0AP+K7yGMi5eg3QeIjKzTqyXmJh4jj8mOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P4sknGW2; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version:Content-Type; b=N+CoYne+m8n+NEA7M4gJr88gs0CC1uXNLvx9vonrjSj6d6m8ncK042MUxmcojaxiN/y10vrgCXYH76JV/llntEGAlovcPoE3F10NThQCqJQ8A2knXqZ8CZm+Rkb9h1KfTRtCGWHRmZxL35S/7WFvhpezNzMcVFWxSqiIe3lyRSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4qA+iCB; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P4sknGW2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4qA+iCB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789657588; x=1821193588;
+  t=1789657621; x=1821193621;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=ul6HdkyXtMQORe+nB4GohG78YZaNPoiGYQM+ak+UeYA=;
-  b=P4sknGW2zGR7dsig1DX9MdwWyWnRHEOmD0O6WtPxlb6/B5HE0cHFN4G0
-   tkQG0t9AU/G3qPuPWDiwziTAWVs12rJ/TcI1P3SKLRP8F1lBJBKy3y/Lw
-   Wk008NcihmpXVClnsYdWBW6JDyio6RVTFCwSAwQRDn/YGErstY+eNmAER
-   RSkjuTWte4cvHcoq/MdjZUuI/4HqS/gQSLFHL7NY2VqitZ8JCZBtO41nK
-   tIvrtw/CSVTFWPAIHIbUqtEGb1ub+oSIyDiDPOWLGVpEnHfyXoZl61I+9
-   NTHs6mNtXV61Ovv1p0+zJhlE6bNc5kwjXHTvUN/5ALsT5IAlzzfV72e6/
-   g==;
-X-CSE-ConnectionGUID: Ds2F3pypTj+jOdPcoRsegQ==
-X-CSE-MsgGUID: Fv9lTX+cRtCbE8ob6tjlrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="101433731"
+  bh=yVqWFSiV+ObwksnCrZ0HQp5TvTxFZ6LvDpTy5m9TEcA=;
+  b=A4qA+iCByxoknODDIztqDSwAlm6B4IGmKJDlmMI5P12Qne8DzoVKsqaj
+   t9VmYcIJoUx6049l+0fa1gJgq1d+LiU5Sg0cofwW1qoXaAdksIOTSrpVK
+   gsKgB92B8EUPW56g98bbIpxXwtKaILxnGX2GCFFdnL5tXVFz5bv9enGvk
+   lUYyMHPdJWaf/W/sNI204pe8ZYq0A+RT3Zo1IrcCiwFmFYrsJh2Zq9ush
+   nC4oGc3iURkULImOQiRckg1y7axfMRdhfFYf2xObMRS+hlY2q/WNphxJF
+   1ZVFyN1aJzOt41NnXrM0ZqVjrBZdLCkqZnzo/k7SHV01Wdn6huxATMOaQ
+   w==;
+X-CSE-ConnectionGUID: uyH8RhFSRHaQ2dOnj5Kpgg==
+X-CSE-MsgGUID: BsxsxH8YQjK7j0VL4UbDVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="100685237"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="101433731"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:17 -0700
-X-CSE-ConnectionGUID: 8zJwTKhzQX+GiAQKPSR1Mw==
-X-CSE-MsgGUID: Svzg6cGcT+WHVbXIQxIoJA==
+   d="scan'208";a="100685237"
+Received: from fmviesa013.fm.intel.com ([10.60.135.153])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:31 -0700
+X-CSE-ConnectionGUID: vqvy+8jQSq6/cAPXwecKZA==
+X-CSE-MsgGUID: h73gKmJETLijBRsNi0mqUA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="275798196"
+   d="scan'208";a="2267683"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:14 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 08:04:29 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: "Lee, Chun-Yi" <jlee@suse.com>, Hans de Goede <hansg@kernel.org>, 
- Mohsen Tahmasebi <moh53n@moh53n.net>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260819150205.19453-1-moh53n@moh53n.net>
-References: <20260819150205.19453-1-moh53n@moh53n.net>
-Subject: Re: [PATCH v2 0/3] platform/x86: acer-wmi: enable hwmon on Aspire
- A315-58G
-Message-Id: <178965745060.22350.9970348302983102113.b4-ty@b4>
-Date: Thu, 17 Sep 2026 18:04:10 +0300
+To: Hans de Goede <hansg@kernel.org>, 
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+In-Reply-To: <20260819173933.1184291-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20260819173933.1184291-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v1] platform/x86: intel-uncore-freq: Add support for
+ rugged Panther Lake
+Message-Id: <178965746453.22350.1481484898271821669.b4-ty@b4>
+Date: Thu, 17 Sep 2026 18:04:24 +0300
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -63,16 +64,9 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15.2
 
-On Wed, 19 Aug 2026 18:31:55 +0330, Mohsen Tahmasebi wrote:
+On Wed, 19 Aug 2026 10:39:33 -0700, Kuppuswamy Sathyanarayanan wrote:
 
-> Some Acer laptops expose the same WMI sensor interface without necessarily
-> supporting platform profile functionality.
-> 
-> This series cleans up the quirk fields by using bool, separates hwmon from
-> platform profile support, renames the predator_v4 quirk field to
-> platform_profile, and enables hwmon support on the Acer Aspire A315-58G.
-> 
-> [...]
+> Add uncore frequency support for rugged Panther Lake.
 
 Thank you for your contribution, it has been applied to my local
 review-ilpo-next branch. Note it will show up in the public
@@ -85,12 +79,8 @@ commit introduced in the most recent cycle or is clearly a regression
 fix.
 
 The list of commits applied:
-[1/3] platform/x86: acer-wmi: use bool for boolean quirk fields
-      commit: 4b960cc3c9e7f26d2efbbb40828ae1b28f085b60
-[2/3] platform/x86: acer-wmi: split hwmon from platform profile quirk
-      commit: 09e0cadc540c56f7d7836cdbed915a04a10e18d2
-[3/3] platform/x86: acer-wmi: enable hwmon on Aspire A315-58G
-      commit: 8adc32a9553d4b61fdc41fb3a7ccce64e118c935
+[1/1] platform/x86: intel-uncore-freq: Add support for rugged Panther Lake
+      commit: 6dd5dfdc96dd33a94f3bf2135d2dcb14f3661d1e
 
 --
  i.
