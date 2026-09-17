@@ -1,48 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CCD490BEE
-	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2026 09:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00534BE433
+	for <platform-driver-x86@vger.kernel.org>; Thu, 17 Sep 2026 09:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789638993; cv=none; b=clzHGxPyfJPTfA1qPLYiGLRctwTHV50kKSWrw92Y1VApdKxO9LDmAWZ3NOFNHSoHihOA4Vd22JTDrT/ez/KQJP+hBpV9XuvGlxTRausIYIk/6zDDTXuytxrG+BmmbyIwUmF4aRzKo/lfRnDugnW0DZsFBLi+AeTPj+SS2/NnJRM=
+	t=1789639087; cv=none; b=Ke+OMXcSY6U1tZcLTKsTRGpcwxe91yBCZPVGt7gXJOQvIDFsJc9k8lFJOXf0J/9i+uXZ2MblFCFpFPv33XbMCZl5W9yGRs5KbRWQlwIxXPQuEvJQ7iuh6LrsZRe9Fc8BKei32nzwIgBXHxffEtcqwXENXm0RnQqonWAucMSa2t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789638993; c=relaxed/simple;
-	bh=XHthUUBv8aC4b/pOgdLB0Pd5CfyRHYHmbdtCdn80mHo=;
+	s=arc-20240116; t=1789639087; c=relaxed/simple;
+	bh=704lDvwiUJAT+9HP13Bp5IbIzhw2Gq/3QRfkri9KUI4=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kaW0nvLohgPQcycwMKb3qHt7bLX9wgMPnrAnv6fSDBqIOBkRi3MHTFdrIPzAQuJixYhxYivKQH15tBhpl5xZ6uZvZVyt++5RjSJV7QLXd0isqN/tSQA+fIVZFrW1+ffNDt86IFdF9bbXyfqk0tLWjO/yi1SKQ4Xxta9yx1RcpuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ASHagjHS; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version:Content-Type; b=SU86qkZZA3K6tzXXW8rUWoy/vf6OrNMOixc0UtxeiJfSL7sresmY3JHEIKZXX/eSqLp6LgTKRawgOdMrm61EpF4gQObtlld93iVEO6CH+Uhnk4/6u4tUSwq4r2S11E0OvtK+MNhey7+X7t6gjrHCPONjGgCUbwNtfbANVy9QPfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCucATOQ; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ASHagjHS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCucATOQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789638985; x=1821174985;
+  t=1789639074; x=1821175074;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=XHthUUBv8aC4b/pOgdLB0Pd5CfyRHYHmbdtCdn80mHo=;
-  b=ASHagjHS+MeNjXMEUO3R5FvjFEet2t5dG9LO0omonvDsjwwLvPcQXVoC
-   yWOqvRMMOdu8iTENGCCpyvBqgOJmU/IYXX1XWbgkPDtBPe6l1jmbzMBbi
-   sr/6ii60WydcDv63Pnrf/9V4zL4qgGm7UdPoyqmIIsYp4qJLY/Awf6xyj
-   VGblT0aQmGz+k9rMrAl/RGWX+wz3vP/gsTHVK5SX6V+1o7hLqzMV156JQ
-   EfXe9yID1+YCdsZiZU/fOsFVrL+TSemmD/xIlpFomNu5SjcBJnWFvQJJO
-   VIsHFbUv54eHysv2UEW9SbAgsDrm/dIlM8sozp/BRxjh3qJL/KXnPW1HJ
-   w==;
-X-CSE-ConnectionGUID: zMYJ2p6ySYy3OwueU5vjIA==
-X-CSE-MsgGUID: mKtizDLCRQeFq171RWQGGw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="100641915"
+  bh=704lDvwiUJAT+9HP13Bp5IbIzhw2Gq/3QRfkri9KUI4=;
+  b=ZCucATOQDGjBepSxf12k1yNempTFJd1N/uiuSx75b+q2tIw0PSKKOL4y
+   iYjh3Vcm6SqXIKWYb37jFlnL+d5258LqBTohDx+wqCHtS3tr2J9Bqaa5x
+   J7AOgpPpZ+9GuC2sinpepJPIzG8WPKpzTGpfo7gjlpuB+G91wvaZxQ5Yp
+   9zlT833X/PDSa+NW0LcHgAVy8mHCYkjPjp01iArA8zqe/MBvPNcpck73l
+   cABGYMPCE5YQQmIsh3atZ4zXwU2NHFAme44Yu+S+K75YSFh82L4UxqPl1
+   g1DXWlW7HPtAiUqn2NLTohcBQF7qY5YA4gVv9aBVHKv14iTx9YU97s2bh
+   Q==;
+X-CSE-ConnectionGUID: sbqe0KEmRFCXBAey43/o6g==
+X-CSE-MsgGUID: rUcoA4RbQ1yIiaHop7gfZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="115581591"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="100641915"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 02:56:19 -0700
-X-CSE-ConnectionGUID: OzEt0MIyRt+NVButa3HVuQ==
-X-CSE-MsgGUID: mEDQHYl5RMezoZMlXQgllQ==
+   d="scan'208";a="115581591"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 02:57:46 -0700
+X-CSE-ConnectionGUID: 3ALJsjb8Tr2Nu75qa9Pcug==
+X-CSE-MsgGUID: lGZcJOQlQzC0KhgwLVaKOw==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="275641091"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 02:56:14 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 02:57:42 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Sep 2026 12:56:09 +0300 (EEST)
+Date: Thu, 17 Sep 2026 12:57:38 +0300 (EEST)
 To: "Michael J. Ruhl" <michael.j.ruhl@intel.com>
 cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     Hans de Goede <hansg@kernel.org>, matthew.brost@intel.com, 
@@ -52,7 +54,7 @@ cc: platform-driver-x86@vger.kernel.org, intel-xe@lists.freedesktop.org,
     matthew.d.roper@intel.com, james.ausmus@intel.com, karthik.poosa@intel.com
 Subject: Re: [PATCH v9 09/20] drm/xe/vsec: Add DOC text for VSEC
 In-Reply-To: <20260916201139.2374531-31-michael.j.ruhl@intel.com>
-Message-ID: <9f6b61e5-a100-a27d-d8e8-b7327608721f@linux.intel.com>
+Message-ID: <054c50bc-7fc7-c5f1-e650-5233048b9188@linux.intel.com>
 References: <20260916201139.2374531-22-michael.j.ruhl@intel.com> <20260916201139.2374531-31-michael.j.ruhl@intel.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -120,11 +122,6 @@ On Wed, 16 Sep 2026, Michael J. Ruhl wrote:
 > + *
 > + * PMT is usually accessed through a PCI function.  However, that is not always
 > + * available, so the PMT intel_vsec_register() function can be used to setup up
-
-Wrong grammar: "setup up"
-
-(Found by sashiko.)
-
 > + * PMT usage.
 > + */
 > +
@@ -146,11 +143,8 @@ Wrong grammar: "setup up"
 > + * Return:
 > + * * -EINVAL for VF and PMT WATCHER requests
 > + * * count   number of bytes read on success
-> + */
->  int xe_pmt_telem_read(struct device *dev, u32 guid, u64 *data, loff_t user_offset,
->  		      u32 count)
->  {
-> 
+
+Please also check sashiko's comment on the set of return values.
 
 -- 
  i.
