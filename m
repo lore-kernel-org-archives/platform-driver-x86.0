@@ -1,144 +1,94 @@
-Received: from mail-10625.protonmail.ch (mail-10625.protonmail.ch [79.135.106.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE7F3DAAC8;
-	Thu, 17 Sep 2026 10:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109434CA795;
+	Thu, 17 Sep 2026 10:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789641752; cv=none; b=lHh72eX0HBGR5lfGFOhpschBfMpdE+wI4UThWKAnG7WH3GeIPjAstNw13FBqPh48Kt5d4LYWnMb58WbkAWwUX25YiGb5suG6qrBAOoLQ5pYW+w+5dxSd1ouR05qeCney3rLMjY1ukfS0Oh7VeNFLYCZdeEwhA9IJeNEPJEP8Ky4=
+	t=1789642526; cv=none; b=Q4PP310laj2I3BatiD9XLsgH9awrFFw22gv9PYLvCYqicuwigOAtu8IlIF95zpOgCH33kafQwq77g2eBEqudgkrPn53M/WryZd38T4n+7fwp1hSdz3DApcS3Tc6wT3iv/pF/J6uvCqrB5mVhjIiEQKaQBzODi0ABHqXv6Vp2X38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789641752; c=relaxed/simple;
-	bh=Sdu1QdJXLl5fKN2H1Zmr8q1Q9k4eyWvsiHunJN2BLbE=;
-	h=Date:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y/MywNT1NhlfQDV+PapdW8o7MMTJxEzShUvsIW3DRGFKXfHFTB6w2+hmxSSN7SQhOEgsdkL5fayXJWQrZBtc1OHZU15x2vwZghhHDtZNb4dKd+Qm1ctESlSxaF9uj491N72dgG3b989cg9BZWb3NQx/WQusELPm3wTlkRcIxMZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=e100mr5D; arc=none smtp.client-ip=79.135.106.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
+	s=arc-20240116; t=1789642526; c=relaxed/simple;
+	bh=75RsurQYI91g6hZC1//QG/T2wlUF1TEiwBSqlILT2BQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=g02UsPpA4ySQgHU7zpRHJ5L6xM43HkKqKRq30PIEKNg9C8V1rsbGsbiu4ucpifEPf4z4CfjV0nM9p7ujGNbS9L0idYCqI4YFOAh8ZBJA+djEUt8AQU0Ta4YpZuaWXnycZrO6wBzasTNWjXtuIN6KM9bGdp38zB/yTRRYdiVpV3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AA6kNZrE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="e100mr5D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
-	s=protonmail2; t=1789641745; x=1789900945;
-	bh=hilsoWfRYvib+HqLqQ7I1by3R5QMFgv9V6/EFQHPy9k=;
-	h=Date:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=e100mr5DSYey8COjJpcMsoaJK7nWKDs2yXQdviODXSmMNHY8KFwCegmzYd1EOA5iQ
-	 7m/FREGVroLRVAJwKZeKm07Rf9h2ChvCyOnAauoTW329/XnUOOU8Ka+/cxZWKebBTr
-	 S6qIU7/5b+4ZKLhGErRDkJAAPBSJdfWv0jV1qDHpBr/k7Uay7GGaa4Wf6M0ltlXTDs
-	 /ju/44Vcwrt+JcNY7nY2ir3/gbwDN5wQHX0s6m5ESq62ri+B4IDGe+dua3x3vxiKE8
-	 wNcctoT+HcWDDsEpoDGfaIb4OCj1ftnDDX5i8qU33xZ4SIpKU0+GPftwUlIYu3hs7n
-	 B/pkpYCVSsFkA==
-Date: Thu, 17 Sep 2026 10:42:18 +0000
-From: Ahmed Yaseen <yaseen@ghoul.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, Nir Yehoshua <nir@ciphersecuritylabs.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: validate custom fan curves on enable
-Message-ID: <475a75e6-6656-4f4b-a472-588c52ae3839@ghoul.dev>
-In-Reply-To: <20260831-fan-curve-validation-v2-1-36f4223aedf6@ghoul.dev>
-References: <20260831-fan-curve-validation-v2-1-36f4223aedf6@ghoul.dev>
-Feedback-ID: 177610485:user:proton
-X-Pm-Message-ID: bb4774e8e428a2b35ddfbe745889f913b3b7e5e0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AA6kNZrE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EE71F00893;
+	Thu, 17 Sep 2026 10:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789642511;
+	bh=HrPXLLqXr+zHbEe01HZ8JSqlxyzqsYTUSsfdx5SCbsw=;
+	h=From:Subject:Date:To:Cc;
+	b=AA6kNZrEpc/ScSZuGfkPzvtqaskwu4QGo/l2+ItVYSCnGUO8O0RmU7hk/qYNjgyP9
+	 eRHFNqSKgCtPqMCujRhR9cTsw1g9AVLOYTVXZ/UZ7EyEaT+szQPL/RHuV1mjxdGtt5
+	 aLb8/CxIS3FfKL5kiWuCA2utsmlNIBYfxysMu5tp81URxWi1ktUloD20cv+wsfUbjS
+	 h822HVbiFAtagJkdoh7csUsoWygeoK04bNX+rvzdLQ54pKlqe4r1BfJTjjxTISVqiK
+	 PCDmHvhpZFQx+q89BPaBfmAB/llABgHjUEv2S0hLJ3xWWXZzELp0TtpXMZ/PCVfk5i
+	 O88y2RlleZ0nA==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH 0/3] Asus Zenbook A16/A14 (UX3607OA/UX3407NA) EC driver
+Date: Thu, 17 Sep 2026 12:54:55 +0200
+Message-Id: <20260917-topic-asus_ec-v1-0-373516d347ae@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
 List-Subscribe: <mailto:platform-driver-x86+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMQQ5AMBBA0avIrDUpoYOriAg1GAukg0jE3RXLt
+ /j/AiHHJFAEFzg6WHiZPaIwADs280CKO2+IdWx0HqHalpWtamSXmqzSJkWT5JgRIvhmddTz+f3
+ K6rfs7UR2eydw3w8XQ5uIcQAAAA==
+X-Change-ID: 20260917-topic-asus_ec-065764978e77
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Hans de Goede <hansg@kernel.org>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Bjorn Andersson <andersson@kernel.org>, 
+ Abel Vesa <abelvesa@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789642507; l=1372;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=75RsurQYI91g6hZC1//QG/T2wlUF1TEiwBSqlILT2BQ=;
+ b=EE48ZzLPqwQhVcI19/BVPRRSN5Ksu7kp0HGVhAKFZIA7dOAiM5P503gOToNGhg3qt+CYOSpkd
+ MdsWw0cwKVnCBHYNl4zlxwZFYzFWeaO2jUWfkwOpO6EaupG//vrn+yo
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Hi, I have come to realize that this was delivered to all of you. This=20
-has no business being here. Apologies.
+The Snapdragon X2 series-based Zenbooks come with a bespoke embedded
+controller firmware, bearing some resemblence to the reference Qualcomm
+implementation (qcom-hamoa-ec.c), albeit with too many changes made to
+consider them anywhere near "compatible".
 
-Cause: b4 reflect misfire
+This series introduces a new driver to let the user retrieve current
+RPM of the two fans, the temperature readouts from 2 temperature
+sensors and get/let keyboard brightness levels. The driver also
+notifies the EC of system suspend entry/exit.
 
-On 8/31/26 23:45, Ahmed Yaseen wrote:
-> Custom fan curves reach firmware unchecked, so a curve whose temperature
-> or PWM decreases from one point to the next is accepted. The firmware
-> does not respect such a curve: a first point of 100% followed by 50%
-> leaves every point running at 100%. The kernel keeps reporting the
-> points that were written, so sysfs stops describing what the fans are
-> actually doing.
->
-> Check the curve when enabling and reject it if it is invalid. Validation
-> is done on enable rather than on write because fan curves are written
-> one point at a time and are inconsistent mid-write.
->
-> Fixes: 0f0ac158d28f ("platform/x86: asus-wmi: Add support for custom fan =
-curves")
-> Reported-by: Nir Yehoshua <nir@ciphersecuritylabs.com>
-> Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
-> ---
-> Changes in v2:
-> - Rephrased second paragraph of commit message (Ilpo)
-> - Link to v1: https://patch.msgid.link/20260828160743.31957-1-yaseen@ghou=
-l.dev
-> ---
->   drivers/platform/x86/asus-wmi.c | 32 ++++++++++++++++++++++++++++++++
->   1 file changed, 32 insertions(+)
->
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index a65090429ca7..3b743fec5c64 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -3714,6 +3714,33 @@ static int fan_curve_write(struct asus_wmi *asus,
->   =09=09=09=09=09 arg1, arg2, arg3, arg4, &ret);
->   }
->  =20
-> +/*
-> + * A fan curve is a set of points the firmware interpolates between, so =
-it
-> + * only makes sense if neither temperature nor PWM ever decreases along =
-it.
-> + */
-> +static int fan_curve_validate(struct device *dev, struct fan_curve_data =
-*data)
-> +{
-> +=09u8 *percents =3D data->percents;
-> +=09u8 *temps =3D data->temps;
-> +=09int i;
-> +
-> +=09for (i =3D 1; i < FAN_CURVE_POINTS; i++) {
-> +=09=09if (temps[i] < temps[i - 1]) {
-> +=09=09=09dev_warn(dev, "fan curve: temperature decreases at point %d (%u=
- < %u)\n",
-> +=09=09=09=09 i, temps[i], temps[i - 1]);
-> +=09=09=09return -EINVAL;
-> +=09=09}
-> +
-> +=09=09if (percents[i] < percents[i - 1]) {
-> +=09=09=09dev_warn(dev, "fan curve: pwm decreases at point %d (%u < %u)\n=
-",
-> +=09=09=09=09 i, percents[i], percents[i - 1]);
-> +=09=09=09return -EINVAL;
-> +=09=09}
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
->   static ssize_t fan_curve_store(struct device *dev,
->   =09=09=09       struct device_attribute *attr, const char *buf,
->   =09=09=09       size_t count)
-> @@ -3798,6 +3825,11 @@ static ssize_t fan_curve_enable_store(struct devic=
-e *dev,
->   =09}
->  =20
->   =09if (data->enabled) {
-> +=09=09err =3D fan_curve_validate(dev, data);
-> +=09=09if (err) {
-> +=09=09=09data->enabled =3D false;
-> +=09=09=09return err;
-> +=09=09}
->   =09=09err =3D fan_curve_write(asus, data);
->   =09=09if (err)
->   =09=09=09return err;
->
-> ---
-> base-commit: 6b8c8af514d739d0335f5579b585e02babe8a727
-> change-id: 20260831-fan-curve-validation-991770300ff3
->
-> Best regards,
-> --
-> Ahmed Yaseen <yaseen@ghoul.dev>
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (3):
+      dt-bindings: embedded-controller: Add ASUS Zenbook A16 EC
+      platform: arm64: Add a driver for the EC found on ASUS Glymur machines
+      arm64: dts: qcom: glymur-zenbook-a16: Add Embedded Controller
+
+ .../asus,zenbook-a16-ux3607oa-ec.yaml              |  65 +++
+ .../dts/qcom/glymur-asus-zenbook-a16-ux3607oa.dts  |  15 +-
+ drivers/platform/arm64/Kconfig                     |  16 +
+ drivers/platform/arm64/Makefile                    |   1 +
+ drivers/platform/arm64/asus-glymur-ec.c            | 592 +++++++++++++++++++++
+ 5 files changed, 687 insertions(+), 2 deletions(-)
+---
+base-commit: 0d9d0dbf2fddcff5859d623e90ca73c4054276e1
+change-id: 20260917-topic-asus_ec-065764978e77
+
+Best regards,
+--  
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
