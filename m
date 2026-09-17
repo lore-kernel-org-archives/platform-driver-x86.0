@@ -1,58 +1,58 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048BE4B66FC;
-	Thu, 17 Sep 2026 11:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A94D4FDE74;
+	Thu, 17 Sep 2026 12:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789644163; cv=none; b=b6ZKELF4/1xgP6mRs7SWX8/rX5ldrdtUqSgXcvhiyvMcZQzivUKp057Rnv5p0dKUE7Nl8rUev42lXYFzB9cKDBmJnbOhKV+ONFffxXS/BX2e3+3p76cQbV91Z9JjkTRu3Bj+JNcL1yvLR36XcALbkLaVvtV02ojTHC83yt57jU0=
+	t=1789648076; cv=none; b=RG1Fz8jmThPFY93Ag0oEDDsgOxoE09S8oFFwv7niCTh3v5ZryCZ4uEpk2npNihyXJkNgiyyrP0YNsOIndZUqewSqt0hohxO79IAub+rOsJe7wGL3q9RCzBzA2TjuOdEaZOBiLDIQbpu6xWAf6ZNLe9/gGUuIei/Sv3SgL5ZCMEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789644163; c=relaxed/simple;
-	bh=p2MqWyV0JMo1ew/2ZNAyjF2TwMFOGuUxMzjHIo4HBug=;
+	s=arc-20240116; t=1789648076; c=relaxed/simple;
+	bh=eieRPwPonrLr6k1TPvd2vHx+CwUXH2oUR3uiDTLhIqQ=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JyO2NNmDzzXawhHIR9RWvZ+3Rgrq+p5aDHIcsIUVSpNVGy6Qpb++xOtxYsXWYBTQAtTP2RPmrFUUHQEiZD76ATR4sFsLnUV/umt6+d5cJE0QYwfSmNQtDtUOsh/vzFaBeOwfy0ExHepi/uTm5nhBlMRIgxQOVKqhZl4irCrA0Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXGoIPX0; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version:Content-Type; b=U/8ta63GoVvXypb6mlTFkCE3acWOnC0JJlEsW8pvGYzIskUfoz7oJLuvbvFSFtgdHeiqRZYu84kQdjGBYL/0dN7YvFqa4GMuQrLkc4BKHhGQqui1AxHLp2YzgF8PM2CatU2qJP+gJ9H/tGrIdtKxQOb7+D5l+3aLiuhwqJeS/5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIpWYmNG; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXGoIPX0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIpWYmNG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789644157; x=1821180157;
+  t=1789648064; x=1821184064;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=p2MqWyV0JMo1ew/2ZNAyjF2TwMFOGuUxMzjHIo4HBug=;
-  b=aXGoIPX0bpIoEYAkvmxsW1KaEYT8qt/kt/h6MjZYi9nVKGsi1zmHy1w+
-   IjEDaALdWMpVEUfNXYKQj3VxAjyIfwEZ+4oYxkqrB4rcrElE41ZlW318Q
-   SJqAxDNc0sygmz5tfPD0RkQN+ionIL71BkWCuJHdINYW6AJWQ6fzrIY8/
-   O2ewFpjwSmPiEQPZCnZtT2DYY1eTiR5I8QpMH9tNokHiyjftpSmDsg8Xb
-   43rguSvn3MwGFTfBQAOuJuzqXiA7M8PLvmdz561wtxS43Em7X2FliTg3X
-   xqEgz30DkBX/Omyx8s9NS5v9A1zZfNN6zMfAm+AusEyUQS8d4Bu1G/Dhv
+  bh=eieRPwPonrLr6k1TPvd2vHx+CwUXH2oUR3uiDTLhIqQ=;
+  b=jIpWYmNGSElSZyW/Sw0RUoT0bbSLKKQPqBip33n4iVzHmWgPkkDYrSQu
+   q8VE2tQ8sTzjpCvMVhp4og6rTCI7DisecFBSJtWr+K3QFzicKbE9qSF99
+   W1/h+zjDYtk3Z0a5AiZXPexSauaWlMJv+2JS2tq8qyVVM5vpdq7POq1TU
+   LSaRcwD3m6T97+xNlVgU4xCWsZS7fJPAoKnHyJF/ZOTouq487ZgagtZ5F
+   Hxhn/wlkKXpkIDXw5Ip1jMvIWzgJnO7eYVth/sJHHQDcvmL5JmjEpZq/O
+   AJDD1R18XDfKRlR+R+fU3MYnk2OEtdVejHx+5ZhbLBfQQ1xqe1nN4SeeU
    w==;
-X-CSE-ConnectionGUID: VHdULOS2SMG9CphBpP3TEw==
-X-CSE-MsgGUID: 2xdIhzRFR0+cs39FjTiTaQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="89190096"
+X-CSE-ConnectionGUID: 8B/pMrMJS4OTE3IpInxc9g==
+X-CSE-MsgGUID: hm4kFvw5SF+T5CrnnAMeHw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="92573530"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="89190096"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:22:33 -0700
-X-CSE-ConnectionGUID: WZvK/kZBR1WSHTBjmbDK3g==
-X-CSE-MsgGUID: XDFj4KDCTLe7p721S6DpHg==
+   d="scan'208";a="92573530"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:27:39 -0700
+X-CSE-ConnectionGUID: P+HQzeDkQWarMObjHut31w==
+X-CSE-MsgGUID: acZHy5J+SJqGcM0/A57LNg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="278951413"
+   d="scan'208";a="270070629"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.62])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:22:31 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 05:27:36 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 17 Sep 2026 14:22:27 +0300 (EEST)
-To: Shang En Sim <sim@shangen.org>
-cc: Hans de Goede <hansg@kernel.org>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: hp-wmi: add charge_behaviour support for
- Spectre 8C17
-In-Reply-To: <20260812062113.27741-1-sim@shangen.org>
-Message-ID: <796e20eb-559f-4b7f-18a9-c7c7324dd731@linux.intel.com>
-References: <20260812062113.27741-1-sim@shangen.org>
+Date: Thu, 17 Sep 2026 15:27:31 +0300 (EEST)
+To: Hilgad Montelo <hilgad.montelo@gmail.com>
+cc: kenneth.t.chan@gmail.com, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] platform/x86: panasonic-laptop: Add driver for
+ CF-33 A1/A2 buttons (TBTN)
+In-Reply-To: <20260813221744.25668-3-hilgad.montelo@gmail.com>
+Message-ID: <963b17f0-2489-e5f5-709b-a8d1c07a1d39@linux.intel.com>
+References: <20260813221744.25668-1-hilgad.montelo@gmail.com> <20260813221744.25668-3-hilgad.montelo@gmail.com>
 Precedence: bulk
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 List-Id: <platform-driver-x86.vger.kernel.org>
@@ -61,344 +61,249 @@ List-Unsubscribe: <mailto:platform-driver-x86+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 11 Aug 2026, Shang En Sim wrote:
+On Thu, 13 Aug 2026, Hilgad Montelo wrote:
 
-> HP Spectre x360 16-aa0xxx (board 8C17) exposes battery charge mode control
-> through WMI command 0x2b (GBCO/SBCO). Inhibit charge, force discharge, and
-> restoring automatic charging all work through that command.
+> On the Panasonic Toughbook CF-33 the bezel A1/A2 buttons are wired to
+> a separate ACPI device, MAT003C (ACPI path \_SB.TBTN), rather than the
+> main Hotkey device (MAT0019/HKEY) this driver already talks to.
+> MAT003C was present in the ACPI namespace but had no driver bound to
+> it, so A1/A2 produced no signal through any channel: no evdev events,
+> no ACPI notify (nothing logged), no WMI device, and no correlated ACPI
+> GPE interrupt activity.
 > 
-> Unlike some other HP designs that restore automatic charging through WMI
-> command 0x1f (SBCC), that path fails on this BIOS. Keep the quirk limited
-> to board 8C17 and drive all three behaviours through 0x2b only.
+> Found by dumping and disassembling the platform's ACPI tables
+> (acpidump -b + iasl -d) and searching for EC _Qxx query handlers that
+> push scancodes into a hotkey queue. TBTN turned out to implement its
+> own HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's:
+> _Qxx handlers call TBTN.HIND(code) then Notify(TBTN, 0x80); HINF()
+> dequeues one scancode from a small EC-side FIFO. Confirmed scancodes:
+> 0x38/0x39 = A1 press/release, 0x42/0x43 = A2 press/release. Unlike
+> HKEY, TBTN's codes never set the high bit -- press and release are
+> distinct scancodes rather than one code plus an up/down flag.
 > 
-> Expose auto / inhibit-charge / force-discharge through the standard
-> power_supply charge_behaviour property. Seed the reported policy from
-> GBCO at setup because firmware retains inhibit across reboot. Cache that
-> policy afterwards: GBCO also encodes live status, so 0x01 means actively
-> charging and 0x02 is ambiguous between force-discharge and running on
-> battery alone.
+> TBTN.SQTY returns 1 (it has no brightness/battery data, just a
+> button-availability flag), so it cannot be probed via the existing
+> acpi_pcc_hotkey_probe(), which requires num_sifr > SINF_DC_CUR_BRIGHT
+> (assumes every device has the full brightness/eco-mode/battery SINF
+> block). Add a second, minimal platform_driver bound to MAT003C
+> instead, with its own small input device reporting KEY_PROG2 (A1) and
+> KEY_PROG3 (A2) -- both already carry standard XKB keysym mappings
+> (XF86Launch2/XF86Launch3), so no udev/hwdb work is needed for desktop
+> environments to bind them to actions.
 > 
-> Observed firmware mapping on this board:
-> - write 0x00 -> auto; write 0x02 -> force-discharge; write 0x05 -> inhibit
-> - read 0x00/0x01 -> auto (0x01 = actively charging)
-> - read 0x02 -> force-discharge (also seen on battery alone)
-> - read 0x04/0x05/0x06 -> inhibit
+> Verified on a CF-33 Mk1: evtest shows clean KEY_PROG2/KEY_PROG3
+> press/release pairs with real physical timing; confirmed bindable as
+> GNOME custom shortcuts and launching applications correctly.
 > 
-> Tested on HP Spectre x360 16-aa0xxx (board 8C17, BIOS F.16):
-> - inhibit stops charging on AC; GBCO reads 0x04
-> - force-discharge discharges on AC; GBCO reads 0x02
-> - restore-auto via 0x2b mode 0 resumes charging; GBCO reads 0x01
-> - inhibit persists across reboot (status Not charging, GBCO 0x04)
-> 
-> Signed-off-by: Shang En Sim <sim@shangen.org>
+> Signed-off-by: Hilgad Montelo <hilgad.montelo@gmail.com>
 > ---
->  drivers/platform/x86/hp/hp-wmi.c | 238 +++++++++++++++++++++++++++++++
->  1 file changed, 238 insertions(+)
+>  drivers/platform/x86/panasonic-laptop.c | 168 +++++++++++++++++++++++-
+>  1 file changed, 167 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
-> index 3c737ef38..1f9d11427 100644
-> --- a/drivers/platform/x86/hp/hp-wmi.c
-> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> @@ -15,6 +15,7 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/array_size.h>
-> +#include <linux/bitfield.h>
->  #include <linux/bits.h>
->  #include <linux/cleanup.h>
->  #include <linux/compiler_attributes.h>
-> @@ -39,6 +40,8 @@
->  #include <linux/types.h>
->  #include <linux/workqueue.h>
->  
-> +#include <acpi/battery.h>
-> +
->  MODULE_AUTHOR("Matthew Garrett <mjg59@srcf.ucam.org>");
->  MODULE_DESCRIPTION("HP laptop WMI driver");
->  MODULE_LICENSE("GPL");
-> @@ -392,6 +395,7 @@ enum hp_wmi_commandtype {
->  	HPWMI_FEATURE2_QUERY		= 0x0d,
->  	HPWMI_WIRELESS2_QUERY		= 0x1b,
->  	HPWMI_POSTCODEERROR_QUERY	= 0x2a,
-> +	HPWMI_BATTERY_CHARGE_MODE	= 0x2b,
->  	HPWMI_SYSTEM_DEVICE_MODE	= 0x40,
->  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
->  	HPWMI_GRAPHICS_MUX_QUERY	= 0x52,
-> @@ -461,6 +465,29 @@ enum hp_wireless2_bits {
->  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
->  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
->  
-> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
-> +#define HPWMI_CHARGE_BEHAVIOURS \
-> +	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO) | \
-> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE) | \
-> +	 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE))
-> +
-> +/*
-> + * SBCO reads the requested mode from bits 15:8 of the input value.
-> + * GBCO returns literal status values in bits 7:0.
-> + */
-> +#define HPWMI_CHARGE_MODE_MASK			GENMASK(15, 8)
-> +#define HPWMI_CHARGE_MODE_AUTO			0x00
-> +#define HPWMI_CHARGE_MODE_FORCE_DISCHARGE	0x02
-> +#define HPWMI_CHARGE_MODE_INHIBIT		0x05
-> +
-> +#define HPWMI_CHARGE_MODE_READ_AUTO		0x00
-> +#define HPWMI_CHARGE_MODE_READ_CHARGING		0x01
-> +#define HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE	0x02
-> +#define HPWMI_CHARGE_MODE_READ_INHIBIT		0x04
-> +#define HPWMI_CHARGE_MODE_READ_INHIBIT_SHPM	0x05
-> +#define HPWMI_CHARGE_MODE_READ_INHIBIT_EXT	0x06
-> +#endif
-> +
->  struct bios_rfkill2_device_state {
->  	u8 radio_type;
->  	u8 bus_type;
-> @@ -548,6 +575,19 @@ static const char * const tablet_chassis_types[] = {
->  	"32"  /* Detachable */
+> diff --git a/drivers/platform/x86/panasonic-laptop.c b/drivers/platform/x86/panasonic-laptop.c
+> index 0c0e4a6..93e6511 100644
+> --- a/drivers/platform/x86/panasonic-laptop.c
+> +++ b/drivers/platform/x86/panasonic-laptop.c
+> @@ -197,6 +197,42 @@ static const struct acpi_device_id pcc_device_ids[] = {
 >  };
+>  MODULE_DEVICE_TABLE(acpi, pcc_device_ids);
 >  
-> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
-> +static const struct dmi_system_id hp_wmi_charge_control_quirks[] __initconst = {
-> +	{
-> +		/* HP Spectre x360 16-aa0xxx */
-> +		.matches = {
-> +			DMI_MATCH(DMI_BOARD_VENDOR, "HP"),
-> +			DMI_MATCH(DMI_BOARD_NAME, "8C17"),
-> +		},
-> +	},
-> +	{}
-> +};
-> +#endif
+> +/*
+> + * On the CF-33 the bezel A1/A2 buttons are wired to a separate ACPI device
+> + * (MAT003C, ACPI path \_SB.TBTN) rather than the main Hotkey (MAT0019/HKEY)
+> + * device the rest of this driver talks to. TBTN implements its own
+> + * HINF/HIND/SQTY/SINF method quartet, structurally a clone of HKEY's, but
+> + * SQTY only reports a single SIFR element (a button-availability flag) --
+> + * it has none of HKEY's brightness/battery/backlight state, so it can't be
+> + * probed via acpi_pcc_hotkey_probe(), which requires the full SINF block.
+> + * Register a second, minimal platform_driver for it instead.
+> + */
+> +#define METHOD_TBTN_QUERY	"HINF"
+> +#define TBTN_NOTIFY		0x80
 > +
->  #define DEVICE_MODE_TABLET	0x06
->  
->  #define CPU_FAN 0
-> @@ -777,6 +817,200 @@ static int hp_wmi_read_int(int query)
->  	return val;
+> +static const struct acpi_device_id tbtn_device_ids[] = {
+> +	{ "MAT003C", 0},
+> +	{ "", 0},
+
+{ } is enough to initialize default values, and no trailing comma for the 
+terminator.
+
+> +};
+> +MODULE_DEVICE_TABLE(acpi, tbtn_device_ids);
+> +
+> +struct tbtn_acpi {
+> +	acpi_handle		handle;
+> +	struct input_dev	*input_dev;
+> +};
+> +
+> +static int tbtn_probe(struct platform_device *pdev);
+> +static void tbtn_remove(struct platform_device *pdev);
+
+Please reorganize the struct/code so that these forward-declarations are 
+avoided.
+
+> +static struct platform_driver acpi_tbtn_driver = {
+> +	.probe = tbtn_probe,
+> +	.remove = tbtn_remove,
+> +	.driver = {
+> +		.name = "Panasonic Tablet Buttons",
+> +		.acpi_match_table = tbtn_device_ids,
+> +	},
+> +};
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  static int acpi_pcc_hotkey_resume(struct device *dev);
+>  #endif
+> @@ -961,6 +997,112 @@ static void acpi_pcc_hotkey_notify(acpi_handle handle, u32 event, void *data)
+>  	}
 >  }
 >  
-> +#if IS_REACHABLE(CONFIG_ACPI_BATTERY)
-> +/* Protects hp_wmi_charge_behaviour */
-> +static DEFINE_MUTEX(hp_wmi_charge_lock);
-> +static enum power_supply_charge_behaviour hp_wmi_charge_behaviour =
-> +	POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-> +
-> +static int hp_wmi_charge_mode_to_behaviour(int mode,
-> +					   enum power_supply_charge_behaviour *behaviour)
+> +/*
+> + * TBTN's HINF dequeues one raw scancode from a small EC-side FIFO (0 if
+> + * empty) and re-Notify()s itself if more than one entry was pending, so a
+> + * single evaluate-and-report per notification is sufficient here -- unlike
+> + * HKEY, TBTN's codes never set the high bit, since press and release are
+> + * distinct scancodes rather than one code plus an up/down flag.
+> + */
+> +static void tbtn_report_key(struct tbtn_acpi *tbtn, unsigned int code)
 > +{
-> +	switch (mode) {
-> +	case HPWMI_CHARGE_MODE_READ_AUTO:
-> +	case HPWMI_CHARGE_MODE_READ_CHARGING:
-> +		/*
-> +		 * GBCO 0x01 reports active charging, rather than a separate
-> +		 * charge policy. Treat it as automatic charging.
-> +		 */
-> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-> +		return 0;
-> +	case HPWMI_CHARGE_MODE_READ_FORCE_DISCHARGE:
-> +		/*
-> +		 * Firmware also returns 0x02 while running on battery alone.
-> +		 * Treat it as force-discharge so a persisted AC policy is not
-> +		 * lost across reboot.
-> +		 */
-> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE;
-> +		return 0;
-> +	case HPWMI_CHARGE_MODE_READ_INHIBIT:
-> +	case HPWMI_CHARGE_MODE_READ_INHIBIT_SHPM:
-> +	case HPWMI_CHARGE_MODE_READ_INHIBIT_EXT:
-> +		*behaviour = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
+> +	static const struct {
+> +		unsigned int code;
+> +		unsigned int keycode;
+> +		bool down;
+> +	} keymap[] = {
+> +		{ 0x38, KEY_PROG2, true },  /* A1 press */
+> +		{ 0x39, KEY_PROG2, false }, /* A1 release */
+> +		{ 0x42, KEY_PROG3, true },  /* A2 press */
+> +		{ 0x43, KEY_PROG3, false }, /* A2 release */
+> +	};
+> +	int i;
 > +
-> +static int hp_wmi_charge_mode_read(void)
-> +{
-> +	int val = 0, ret;
-> +
-> +	ret = hp_wmi_perform_query(HPWMI_BATTERY_CHARGE_MODE, HPWMI_READ,
-> +				   &val, zero_if_sup(val), sizeof(val));
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret > 0)
-> +		return -EINVAL;
-> +
-> +	return val & 0xff;
+> +	for (i = 0; i < ARRAY_SIZE(keymap); i++) {
+> +		if (keymap[i].code != code)
+> +			continue;
+> +		input_report_key(tbtn->input_dev, keymap[i].keycode, keymap[i].down);
+> +		input_sync(tbtn->input_dev);
 
-Hi,
+Doesn't this duplicate input's sparse keymap handling?
 
-Thanks for the patch.
-
-Can the mask literal be named with a define (and make define use 
-GENMASK()) and FIELD_GET() be used here?
-
-> +}
-> +
-> +static int hp_wmi_charge_mode_write(u32 mode)
-> +{
-> +	int ret;
-> +
-> +	mode = FIELD_PREP(HPWMI_CHARGE_MODE_MASK, mode);
-> +	ret = hp_wmi_perform_query(HPWMI_BATTERY_CHARGE_MODE, HPWMI_WRITE,
-> +				   &mode, sizeof(mode), 0);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret > 0)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int hp_wmi_charge_set_behaviour(enum power_supply_charge_behaviour behaviour)
-> +{
-> +	int ret;
-> +
-> +	guard(mutex)(&hp_wmi_charge_lock);
-> +
-> +	switch (behaviour) {
-> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
-> +		ret = hp_wmi_charge_mode_write(HPWMI_CHARGE_MODE_AUTO);
-> +		break;
-> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
-> +		ret = hp_wmi_charge_mode_write(HPWMI_CHARGE_MODE_INHIBIT);
-> +		break;
-> +	case POWER_SUPPLY_CHARGE_BEHAVIOUR_FORCE_DISCHARGE:
-> +		ret = hp_wmi_charge_mode_write(HPWMI_CHARGE_MODE_FORCE_DISCHARGE);
-> +		break;
-> +	default:
-> +		return -EINVAL;
+> +		return;
 > +	}
 > +
-> +	if (ret)
-> +		return ret;
+> +	pr_info("Unknown TBTN hotkey event: 0x%02x\n", code);
+> +}
 > +
-> +	hp_wmi_charge_behaviour = behaviour;
+> +static void tbtn_notify(acpi_handle handle, u32 event, void *data)
+> +{
+> +	struct tbtn_acpi *tbtn = data;
+> +	unsigned long long result;
+> +	acpi_status status;
+> +
+> +	if (event != TBTN_NOTIFY)
+> +		return;
+> +
+> +	status = acpi_evaluate_integer(tbtn->handle, METHOD_TBTN_QUERY,
+> +				       NULL, &result);
+> +	if (ACPI_FAILURE(status)) {
+> +		pr_err("TBTN: error getting hotkey status\n");
+> +		return;
+> +	}
+> +
+> +	if (result)
+> +		tbtn_report_key(tbtn, result);
+> +}
+> +
+> +static int tbtn_probe(struct platform_device *pdev)
+> +{
+> +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+> +	struct tbtn_acpi *tbtn;
+> +	struct input_dev *input_dev;
+> +	int error;
+> +
+> +	if (!device)
+
+adev is usually used for acpi_device variables.
+
+> +		return -ENODEV;
+> +
+> +	tbtn = devm_kzalloc(&pdev->dev, sizeof(*tbtn), GFP_KERNEL);
+> +	if (!tbtn)
+> +		return -ENOMEM;
+> +
+> +	tbtn->handle = device->handle;
+> +	device->driver_data = tbtn;
+> +
+> +	input_dev = devm_input_allocate_device(&pdev->dev);
+> +	if (!input_dev)
+> +		return -ENOMEM;
+> +
+> +	input_dev->name = "Panasonic Tablet Buttons";
+> +	input_dev->phys = "panasonic/tbtn0";
+> +	input_dev->id.bustype = BUS_HOST;
+> +	input_dev->id.vendor = 0x0001;
+> +	input_dev->id.product = 0x0002;
+> +	input_dev->id.version = 0x0100;
+> +	input_set_capability(input_dev, EV_KEY, KEY_PROG2);
+> +	input_set_capability(input_dev, EV_KEY, KEY_PROG3);
+> +
+> +	error = input_register_device(input_dev);
+> +	if (error) {
+> +		pr_err("TBTN: unable to register input device\n");
+> +		return error;
+> +	}
+> +
+> +	tbtn->input_dev = input_dev;
+> +
+> +	error = acpi_dev_install_notify_handler(device, ACPI_DEVICE_NOTIFY,
+> +						tbtn_notify, tbtn);
+> +	if (error)
+> +		return error;
 > +
 > +	return 0;
 > +}
 > +
-> +static int hp_wmi_charge_get_property(struct power_supply *psy,
-> +				      const struct power_supply_ext *ext,
-> +				      void *data,
-> +				      enum power_supply_property psp,
-> +				      union power_supply_propval *val)
+> +static void tbtn_remove(struct platform_device *pdev)
 > +{
-> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
-> +		return -EINVAL;
+> +	struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
 > +
-> +	guard(mutex)(&hp_wmi_charge_lock);
-> +	val->intval = hp_wmi_charge_behaviour;
-> +
-> +	return 0;
+> +	acpi_dev_remove_notify_handler(device, ACPI_DEVICE_NOTIFY, tbtn_notify);
+> +	device->driver_data = NULL;
 > +}
 > +
-> +static int hp_wmi_charge_set_property(struct power_supply *psy,
-> +				      const struct power_supply_ext *ext,
-> +				      void *data,
-> +				      enum power_supply_property psp,
-> +				      const union power_supply_propval *val)
-> +{
-> +	if (psp != POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR)
-> +		return -EINVAL;
-> +
-> +	return hp_wmi_charge_set_behaviour(val->intval);
-> +}
-> +
-> +static int hp_wmi_charge_property_is_writeable(struct power_supply *psy,
-> +					       const struct power_supply_ext *ext,
-> +					       void *data,
-> +					       enum power_supply_property psp)
-> +{
-> +	return psp == POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR;
-> +}
-> +
-> +static const enum power_supply_property hp_wmi_charge_properties[] = {
-> +	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
-> +};
-> +
-> +static const struct power_supply_ext hp_wmi_charge_extension = {
-> +	.name			= "hp-wmi-charge-control",
-> +	.properties		= hp_wmi_charge_properties,
-> +	.num_properties		= ARRAY_SIZE(hp_wmi_charge_properties),
-> +	.charge_behaviours	= HPWMI_CHARGE_BEHAVIOURS,
-> +	.get_property		= hp_wmi_charge_get_property,
-> +	.set_property		= hp_wmi_charge_set_property,
-> +	.property_is_writeable	= hp_wmi_charge_property_is_writeable,
-> +};
-> +
-> +static int hp_wmi_charge_add_battery(struct power_supply *battery,
-> +				     struct acpi_battery_hook *hook)
-> +{
-> +	return power_supply_register_extension(battery, &hp_wmi_charge_extension,
-> +					       &hp_wmi_platform_dev->dev, NULL);
-> +}
-> +
-> +static int hp_wmi_charge_remove_battery(struct power_supply *battery,
-> +					struct acpi_battery_hook *hook)
-> +{
-> +	power_supply_unregister_extension(battery, &hp_wmi_charge_extension);
-> +	return 0;
-> +}
-> +
-> +static struct acpi_battery_hook hp_wmi_charge_battery_hook = {
-> +	.name			= "HP WMI charge control",
-> +	.add_battery		= hp_wmi_charge_add_battery,
-> +	.remove_battery		= hp_wmi_charge_remove_battery,
-> +};
-> +
-> +static int __init hp_wmi_charge_control_setup(struct device *dev)
-> +{
-> +	enum power_supply_charge_behaviour behaviour;
-> +	int ret;
-> +
-> +	if (!dmi_check_system(hp_wmi_charge_control_quirks))
-> +		return 0;
-> +
-> +	/*
-> +	 * Firmware retains inhibit across reboot, so seed from GBCO rather
-> +	 * than assuming auto.
-> +	 */
-> +	ret = hp_wmi_charge_mode_read();
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	ret = hp_wmi_charge_mode_to_behaviour(ret, &behaviour);
-> +	if (ret)
-> +		return 0;
-> +
-> +	scoped_guard(mutex, &hp_wmi_charge_lock)
-> +		hp_wmi_charge_behaviour = behaviour;
-> +
-> +	return devm_battery_hook_register(dev, &hp_wmi_charge_battery_hook);
-> +}
-> +#else
-> +static int __init hp_wmi_charge_control_setup(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int hp_wmi_get_dock_state(void)
+>  static void pcc_optd_notify(acpi_handle handle, u32 event, void *data)
 >  {
->  	int state = hp_wmi_read_int(HPWMI_HARDWARE_QUERY);
-> @@ -2528,6 +2762,10 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->  	if (err < 0)
->  		return err;
+>  	if (event != ACPI_NOTIFY_EJECT_REQUEST)
+> @@ -1221,4 +1363,28 @@ static void acpi_pcc_hotkey_remove(struct platform_device *pdev)
+>  	kfree(pcc);
+>  }
 >  
-> +	err = hp_wmi_charge_control_setup(&device->dev);
-> +	if (err)
-> +		return err;
-
-Sashiko found out there's a pre-existing issue in hp_wmi_hwmon_init() not 
-properly cancelling work on error, and now with this adding more error 
-returns, the same problem occurs in them as well.
-
-So I think it would be useful to preceed this change with another patch
-that converts INIT_DELAYED_WORK() in hp_wmi_hwmon_init() into 
-devm_delayed_work_autocancel() so we don't end up adding into that 
-problem here but fix it instead.
+> -module_platform_driver(acpi_pcc_driver);
+> +static int __init panasonic_module_init(void)
+> +{
+> +	int error;
+> +
+> +	error = platform_driver_register(&acpi_pcc_driver);
+> +	if (error)
+> +		return error;
+> +
+> +	error = platform_driver_register(&acpi_tbtn_driver);
+> +	if (error) {
+> +		platform_driver_unregister(&acpi_pcc_driver);
+> +		return error;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void __exit panasonic_module_exit(void)
+> +{
+> +	platform_driver_unregister(&acpi_tbtn_driver);
+> +	platform_driver_unregister(&acpi_pcc_driver);
+> +}
+> +
+> +module_init(panasonic_module_init);
+> +module_exit(panasonic_module_exit);
+> 
 
 -- 
  i.
